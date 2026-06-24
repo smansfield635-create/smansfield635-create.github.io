@@ -1,21 +1,22 @@
 /* /assets/compass/compass.crystals.js
-   DGB Compass Generation Two — true 3D WebGL crystal-artifact visualization layer.
+   DGB Compass Generation Two — true 3D WebGL crystal visualization layer with roomId selection bridge.
    Scope: compass.crystals.js only.
-   Owns visualization only. Does not own routes, labels, controller state, HTML, CSS, or navigation.
+   Owns visualization, visible room-node hit detection, coordinate placement, and controller selection requests.
+   Does not own routes, route execution, semantic labels, controller state, HTML, CSS, or navigation.
 */
 
 (() => {
   "use strict";
 
   const CONTRACT = Object.freeze({
-    id: "DGB_COMPASS_GENERATION_TWO_CRYSTALS_TNT_v1",
+    id: "DGB_COMPASS_GENERATION_TWO_CRYSTALS_ROOM_ID_BRIDGE_TNT_v1",
     file: "/assets/compass/compass.crystals.js",
     visualPassClaimed: false,
     productionAuthorized: false,
     deploymentAuthorized: false,
     fifthFileAuthorized: false,
-    owns: "single WebGL canvas visualization, scene graph, crystal-artifact meshes, lighting, animation, receipts",
-    doesNotOwn: "navigation, route execution, semantic labels, controller state, HTML panel content, CSS layout authority"
+    owns: "single WebGL canvas visualization, scene graph, crystal meshes, lighting, animation, room-node hit detection, controller selection requests, receipts",
+    doesNotOwn: "navigation, routes, route execution, semantic labels, controller state, HTML panel content, CSS layout authority"
   });
 
   const DEFAULT_ROOMS = Object.freeze({
@@ -51,42 +52,10 @@
   const WINGS = Object.freeze(["north", "east", "south", "west"]);
 
   const WING_THEMES = Object.freeze({
-    north: {
-      color: [0.68, 0.86, 1.0],
-      rx: 0.46,
-      rz: 0.34,
-      h: 0.94,
-      elongation: 1.0,
-      irregularity: 0.018,
-      rotationBias: 0.95
-    },
-    east: {
-      color: [0.48, 0.94, 0.86],
-      rx: 0.50,
-      rz: 0.37,
-      h: 0.90,
-      elongation: 1.04,
-      irregularity: 0.026,
-      rotationBias: 1.05
-    },
-    south: {
-      color: [0.98, 0.76, 0.42],
-      rx: 0.49,
-      rz: 0.34,
-      h: 0.88,
-      elongation: 0.98,
-      irregularity: 0.014,
-      rotationBias: 0.88
-    },
-    west: {
-      color: [0.88, 0.62, 0.50],
-      rx: 0.51,
-      rz: 0.36,
-      h: 0.91,
-      elongation: 1.08,
-      irregularity: 0.038,
-      rotationBias: 1.12
-    }
+    north: { color: [0.68, 0.86, 1.0], rx: 0.46, rz: 0.34, h: 0.94, elongation: 1.0, irregularity: 0.018, rotationBias: 0.95 },
+    east: { color: [0.48, 0.94, 0.86], rx: 0.50, rz: 0.37, h: 0.90, elongation: 1.04, irregularity: 0.026, rotationBias: 1.05 },
+    south: { color: [0.98, 0.76, 0.42], rx: 0.49, rz: 0.34, h: 0.88, elongation: 0.98, irregularity: 0.014, rotationBias: 0.88 },
+    west: { color: [0.88, 0.62, 0.50], rx: 0.51, rz: 0.36, h: 0.91, elongation: 1.08, irregularity: 0.038, rotationBias: 1.12 }
   });
 
   const RECEIPT = {
@@ -99,6 +68,13 @@
     visibleObjectCount: 0,
     currentModeObserved: "unknown",
     renderLoopStatus: "pending",
+    lastPointerAction: "none",
+    selectedVisualNodeId: "",
+    selectedVisualNodeType: "",
+    selectedVisualNodeWing: "",
+    selectedVisualNodeCoordinate: "",
+    controllerSelectionRequested: false,
+    controllerApiAvailable: false,
     failureReason: null,
     visualPassClaimed: false
   };
@@ -119,21 +95,20 @@
     width: 1,
     height: 1,
     pixelRatio: 1,
-    startTime: 0,
     lastTime: 0,
     raf: 0,
     running: false,
-    failHeld: false
+    failHeld: false,
+    view: null,
+    projection: null
   };
 
   function emitReceipt(extra = {}) {
-    const next = Object.assign({}, RECEIPT, extra);
-    Object.assign(RECEIPT, next);
+    Object.assign(RECEIPT, extra, { visualPassClaimed: false });
 
     if (state.root) {
       state.root.dataset.compassCrystalsReceipt = JSON.stringify(RECEIPT);
-      state.root.dataset.compassCrystalsStatus =
-        RECEIPT.failureReason ? "held" : "available";
+      state.root.dataset.compassCrystalsStatus = RECEIPT.failureReason ? "held" : "available";
     }
 
     if (state.canvas) {
@@ -141,15 +116,14 @@
       state.canvas.dataset.compassCrystalsReceipt = JSON.stringify(RECEIPT);
     }
 
-    globalThis.DGB_COMPASS_CRYSTALS_RECEIPT = Object.freeze(Object.assign({}, RECEIPT));
+    globalThis.DGB_COMPASS_CRYSTALS_RECEIPT = Object.freeze({ ...RECEIPT });
   }
 
   function hold(reason) {
     state.failHeld = true;
     emitReceipt({
       failureReason: reason,
-      renderLoopStatus: "held",
-      visualPassClaimed: false
+      renderLoopStatus: "held"
     });
   }
 
@@ -195,12 +169,11 @@
     canvas.style.height = "100%";
     canvas.style.position = "absolute";
     canvas.style.inset = "0";
-    canvas.style.pointerEvents = "none";
+    canvas.style.pointerEvents = "auto";
+    canvas.style.cursor = "pointer";
 
     const computed = getComputedStyle(mount);
-    if (computed.position === "static") {
-      mount.style.position = "relative";
-    }
+    if (computed.position === "static") mount.style.position = "relative";
 
     mount.prepend(canvas);
     return canvas;
@@ -321,6 +294,10 @@
     return [a[0] / len, a[1] / len, a[2] / len];
   }
 
+  function dot(a, b) {
+    return a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+  }
+
   function artifactOffset(index, irregularity) {
     if (!irregularity) return 1;
     return 1 + Math.sin(index * 2.17) * irregularity + Math.cos(index * 1.31) * irregularity * 0.55;
@@ -347,7 +324,6 @@
 
     const positions = [];
     const faces = [];
-
     const top = positions.push(v3(0, h * elongation, 0)) - 1;
     const bottom = positions.push(v3(0, -h, 0)) - 1;
 
@@ -362,8 +338,8 @@
       )) - 1);
     }
 
-    let crownRing = [];
-    let lowerRing = [];
+    const crownRing = [];
+    const lowerRing = [];
 
     if (crown) {
       for (let i = 0; i < segments; i += 1) {
@@ -465,6 +441,7 @@
 
     WINGS.forEach((wing) => {
       const theme = WING_THEMES[wing];
+
       meshes.set("wing-" + wing, buildGpuMesh(gl, createCrystalMesh({
         segments: 8,
         rx: theme.rx,
@@ -505,6 +482,14 @@
     return meshes;
   }
 
+  function coordinateFor(index, count) {
+    const four = ["NW", "NE", "SW", "SE"];
+    const five = ["N", "NE", "E", "SE", "CENTER"];
+    if (count === 4) return four[index] || "";
+    if (count === 5) return five[index] || "";
+    return String(index + 1);
+  }
+
   function node(id, type, opts = {}) {
     return {
       id,
@@ -512,6 +497,7 @@
       label: opts.label || id,
       wing: opts.wing || null,
       roomIndex: opts.roomIndex || 0,
+      coordinate: opts.coordinate || "",
       meshKey: opts.meshKey || type,
       rotationBias: opts.rotationBias || 1,
       visible: true,
@@ -551,11 +537,13 @@
         rotationBias: theme.rotationBias
       }));
 
-      DEFAULT_ROOMS[wing].forEach((room, index) => {
+      const rooms = DEFAULT_ROOMS[wing];
+      rooms.forEach((room, index) => {
         registry.set(room.id, node(room.id, "room", {
           label: room.label,
           wing,
           roomIndex: index,
+          coordinate: coordinateFor(index, rooms.length),
           meshKey: "room-" + wing,
           rotationBias: 0.82 + index * 0.035
         }));
@@ -571,53 +559,32 @@
     return registry;
   }
 
+  function normalizeWing(value) {
+    if (!value) return null;
+    const v = String(value).toLowerCase();
+    return WINGS.includes(v) ? v : null;
+  }
+
   function readControllerState() {
     const root = state.root || document.documentElement;
     const ds = root.dataset || {};
-
-    const rawMode =
-      ds.compassMode ||
-      ds.mode ||
-      document.body.dataset.compassMode ||
-      "COMPASS_MODE";
+    const rawMode = ds.compassMode || ds.mode || document.body.dataset.compassMode || "COMPASS_MODE";
 
     let mode = String(rawMode).toUpperCase();
     if (mode === "COMPASS") mode = "COMPASS_MODE";
     if (mode === "EXPANDED") mode = "EXPANDED_MODE";
     if (mode === "ROOM") mode = "ROOM_MODE";
-    if (!["COMPASS_MODE", "EXPANDED_MODE", "ROOM_MODE"].includes(mode)) {
-      mode = "COMPASS_MODE";
-    }
-
-    const selectedWing = normalizeWing(
-      ds.selectedWing ||
-      ds.activeWing ||
-      document.body.dataset.selectedWing ||
-      null
-    );
-
-    const selectedRoom =
-      ds.selectedRoom ||
-      ds.activeRoom ||
-      document.body.dataset.selectedRoom ||
-      null;
+    if (!["COMPASS_MODE", "EXPANDED_MODE", "ROOM_MODE"].includes(mode)) mode = "COMPASS_MODE";
 
     state.mode = mode;
-    state.selectedWing = selectedWing;
-    state.selectedRoom = selectedRoom;
-    state.reducedMotion = matchMedia("(prefers-reduced-motion: reduce)").matches ||
+    state.selectedWing = normalizeWing(ds.selectedWing || ds.activeWing || document.body.dataset.selectedWing || null);
+    state.selectedRoom = ds.selectedRoom || ds.activeRoom || document.body.dataset.selectedRoom || null;
+    state.reducedMotion =
+      matchMedia("(prefers-reduced-motion: reduce)").matches ||
       ds.reducedMotion === "true" ||
       document.body.dataset.reducedMotion === "true";
 
-    emitReceipt({
-      currentModeObserved: state.mode
-    });
-  }
-
-  function normalizeWing(value) {
-    if (!value) return null;
-    const v = String(value).toLowerCase();
-    return WINGS.includes(v) ? v : null;
+    emitReceipt({ currentModeObserved: state.mode });
   }
 
   function wingPosition(wing) {
@@ -631,14 +598,26 @@
   }
 
   function roomClusterPosition(index, count) {
-    const angle = (Math.PI * 2 * index) / Math.max(count, 1) - Math.PI / 2;
-    const radiusX = 1.55;
-    const radiusY = 0.92;
-    return [
-      Math.cos(angle) * radiusX,
-      Math.sin(angle) * radiusY,
-      -0.18 + Math.sin(angle) * 0.08
+    const map5 = [
+      [0, 1.08, -0.12],
+      [1.18, 0.58, -0.10],
+      [1.42, -0.28, -0.14],
+      [0.74, -1.00, -0.12],
+      [0, 0, 0.08]
     ];
+
+    const map4 = [
+      [-0.98, 0.72, -0.12],
+      [0.98, 0.72, -0.12],
+      [-0.98, -0.72, -0.12],
+      [0.98, -0.72, -0.12]
+    ];
+
+    if (count === 5) return map5[index] || [0, 0, 0];
+    if (count === 4) return map4[index] || [0, 0, 0];
+
+    const angle = (Math.PI * 2 * index) / Math.max(count, 1) - Math.PI / 2;
+    return [Math.cos(angle) * 1.45, Math.sin(angle) * 0.92, -0.12];
   }
 
   function setTarget(n, t) {
@@ -686,13 +665,15 @@
 
     if (state.mode === "EXPANDED_MODE" || state.mode === "ROOM_MODE") {
       const parent = state.registry.get(selectedWing);
-      parent.visible = true;
-      setTarget(parent, {
-        x: 0, y: 0, z: 0.15,
-        sx: 1.18, sy: 1.18, sz: 1.18,
-        prominence: 1.08,
-        rotationSpeed: 0.18 * parent.rotationBias
-      });
+      if (parent) {
+        parent.visible = true;
+        setTarget(parent, {
+          x: 0, y: 0, z: 0.15,
+          sx: 1.18, sy: 1.18, sz: 1.18,
+          prominence: 1.08,
+          rotationSpeed: 0.18 * parent.rotationBias
+        });
+      }
 
       WINGS.forEach((wing) => {
         if (wing === selectedWing) return;
@@ -717,10 +698,10 @@
           x: p[0],
           y: p[1],
           z: selected ? 0.45 : p[2],
-          sx: selected ? 0.82 : 0.58,
-          sy: selected ? 0.82 : 0.58,
-          sz: selected ? 0.82 : 0.58,
-          prominence: selected ? 1.0 : state.mode === "ROOM_MODE" ? 0.38 : 0.76,
+          sx: selected ? 0.86 : 0.60,
+          sy: selected ? 0.86 : 0.60,
+          sz: selected ? 0.86 : 0.60,
+          prominence: selected ? 1.0 : state.mode === "ROOM_MODE" ? 0.38 : 0.78,
           rotationSpeed: selected ? 0.18 * n.rotationBias : 0.12 * n.rotationBias
         });
       });
@@ -825,10 +806,6 @@
     ];
   }
 
-  function dot(a, b) {
-    return a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
-  }
-
   function normalMatrix3(model) {
     return [
       model[0], model[1], model[2],
@@ -852,6 +829,125 @@
         )
       )
     );
+  }
+
+  function transformPoint4(m, p) {
+    const x = p[0], y = p[1], z = p[2], w = p[3];
+    return [
+      m[0] * x + m[4] * y + m[8] * z + m[12] * w,
+      m[1] * x + m[5] * y + m[9] * z + m[13] * w,
+      m[2] * x + m[6] * y + m[10] * z + m[14] * w,
+      m[3] * x + m[7] * y + m[11] * z + m[15] * w
+    ];
+  }
+
+  function projectNode(n) {
+    if (!state.view || !state.projection) return null;
+
+    const model = modelMatrix(n);
+    const mv = multiply4(state.view, model);
+    const mvp = multiply4(state.projection, mv);
+    const clip = transformPoint4(mvp, [0, 0, 0, 1]);
+
+    if (!clip[3]) return null;
+
+    const ndcX = clip[0] / clip[3];
+    const ndcY = clip[1] / clip[3];
+
+    if (ndcX < -1.35 || ndcX > 1.35 || ndcY < -1.35 || ndcY > 1.35) return null;
+
+    return {
+      x: ((ndcX + 1) / 2) * state.width / state.pixelRatio,
+      y: ((1 - ndcY) / 2) * state.height / state.pixelRatio
+    };
+  }
+
+  function requestControllerRoomSelection(roomId, nodeHit) {
+    const api = globalThis.DGB_COMPASS_CONTROLLER;
+    const canRequest = !!api && (
+      typeof api.requestRoomSelection === "function" ||
+      typeof api.selectRoom === "function"
+    );
+
+    if (!canRequest) {
+      emitReceipt({
+        lastPointerAction: "controller-api-unavailable",
+        selectedVisualNodeId: nodeHit ? nodeHit.id : "",
+        selectedVisualNodeType: nodeHit ? nodeHit.type : "",
+        selectedVisualNodeWing: nodeHit ? nodeHit.wing || "" : "",
+        selectedVisualNodeCoordinate: nodeHit ? nodeHit.coordinate || "" : "",
+        controllerSelectionRequested: false,
+        controllerApiAvailable: false,
+        failureReason: "CONTROLLER_API_UNAVAILABLE"
+      });
+      return;
+    }
+
+    if (typeof api.requestRoomSelection === "function") {
+      api.requestRoomSelection(roomId);
+    } else {
+      api.selectRoom(roomId);
+    }
+
+    emitReceipt({
+      lastPointerAction: "room-selection-requested",
+      selectedVisualNodeId: nodeHit.id,
+      selectedVisualNodeType: nodeHit.type,
+      selectedVisualNodeWing: nodeHit.wing || "",
+      selectedVisualNodeCoordinate: nodeHit.coordinate || "",
+      controllerSelectionRequested: true,
+      controllerApiAvailable: true,
+      failureReason: null
+    });
+  }
+
+  function handlePointerSelection(event) {
+    if (!state.canvas || state.failHeld) return;
+
+    readControllerState();
+    updateTargets();
+    updateTransforms(0);
+
+    const rect = state.canvas.getBoundingClientRect();
+    const px = event.clientX - rect.left;
+    const py = event.clientY - rect.top;
+
+    let best = null;
+    let bestDistance = Infinity;
+    const hitRadius = Math.max(38, Math.min(64, rect.width * 0.075));
+
+    state.registry.forEach((n) => {
+      if (n.type !== "room") return;
+      if (!n.visible || n.transform.prominence < 0.12) return;
+
+      const screen = projectNode(n);
+      if (!screen) return;
+
+      const dx = px - screen.x;
+      const dy = py - screen.y;
+      const d = Math.hypot(dx, dy);
+
+      if (d < bestDistance && d <= hitRadius) {
+        best = n;
+        bestDistance = d;
+      }
+    });
+
+    if (!best) {
+      emitReceipt({
+        lastPointerAction: "pointer-no-room-hit",
+        selectedVisualNodeId: "",
+        selectedVisualNodeType: "",
+        selectedVisualNodeWing: "",
+        selectedVisualNodeCoordinate: "",
+        controllerSelectionRequested: false,
+        controllerApiAvailable: !!globalThis.DGB_COMPASS_CONTROLLER,
+        failureReason: null
+      });
+      return;
+    }
+
+    requestControllerRoomSelection(best.id, best);
   }
 
   function resize() {
@@ -921,6 +1017,9 @@
     const view = lookAt4([0, 0.82, cameraZ], [0, 0, 0], [0, 1, 0]);
     const projection = perspective4(Math.PI / 4.5, aspect, 0.1, 40);
 
+    state.view = view;
+    state.projection = projection;
+
     gl.useProgram(state.program);
     gl.uniform3f(state.uniforms.keyLightDirection, -0.4, -0.8, -0.7);
     gl.uniform3f(state.uniforms.fillLightDirection, 0.7, -0.35, -0.55);
@@ -936,11 +1035,20 @@
     emitReceipt({
       visibleObjectCount: visible,
       renderLoopStatus: state.reducedMotion ? "active-reduced-motion" : "active",
-      failureReason: null,
-      visualPassClaimed: false
+      failureReason: null
     });
 
     state.raf = requestAnimationFrame(render);
+  }
+
+  function bindPointerBridge() {
+    state.canvas.addEventListener("click", handlePointerSelection);
+    state.canvas.addEventListener("pointerdown", () => {
+      emitReceipt({
+        lastPointerAction: "pointer-down",
+        controllerApiAvailable: !!globalThis.DGB_COMPASS_CONTROLLER
+      });
+    });
   }
 
   function init() {
@@ -993,17 +1101,18 @@
       state.registry = buildRegistry();
       emitReceipt({ registryBuildStatus: "built" });
 
+      bindPointerBridge();
+
       state.running = true;
-      state.startTime = performance.now() * 0.001;
       state.raf = requestAnimationFrame(render);
 
       globalThis.DGB_COMPASS_CRYSTALS = Object.freeze({
         contract: CONTRACT,
-        receipt: () => Object.freeze(Object.assign({}, RECEIPT)),
+        receipt: () => Object.freeze({ ...RECEIPT }),
         stop: () => {
           state.running = false;
           cancelAnimationFrame(state.raf);
-          emitReceipt({ renderLoopStatus: "stopped", visualPassClaimed: false });
+          emitReceipt({ renderLoopStatus: "stopped" });
         },
         start: () => {
           if (!state.running && !state.failHeld) {

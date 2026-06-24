@@ -1,21 +1,19 @@
 /* /assets/compass/compass.crystals.js
-   DGB Compass Generation Two — compass-flower WebGL crystal visualization layer.
+   DGB Compass Generation Two — compass-flower WebGL crystal visualization layer with map-plane swipe/tap disambiguation.
    Scope: compass.crystals.js only.
-   Owns visualization, visible room-node hit detection, coordinate placement, and controller selection requests.
-   Does not own routes, route execution, semantic labels, controller state, HTML, CSS, or navigation.
 */
 
 (() => {
   "use strict";
 
   const CONTRACT = Object.freeze({
-    id: "DGB_COMPASS_GENERATION_TWO_CRYSTALS_COMPASS_FLOWER_TNT_v1",
+    id: "DGB_COMPASS_GENERATION_TWO_CRYSTALS_COMPASS_FLOWER_SWIPE_TAP_TNT_v2",
     file: "/assets/compass/compass.crystals.js",
     visualPassClaimed: false,
     productionAuthorized: false,
     deploymentAuthorized: false,
     fifthFileAuthorized: false,
-    owns: "single WebGL canvas visualization, compass-flower scene graph, crystal meshes, lighting, animation, room-node hit detection, controller selection requests, receipts",
+    owns: "single WebGL canvas visualization, compass-flower scene graph, crystal meshes, lighting, animation, room-node hit detection, swipe detection, controller selection requests, receipts",
     doesNotOwn: "navigation, routes, route execution, semantic labels, controller state, HTML panel content, CSS layout authority"
   });
 
@@ -58,6 +56,12 @@
     west: { color: [0.88, 0.62, 0.50], rx: 0.45, rz: 0.31, h: 0.82, elongation: 1.24, irregularity: 0.038, rotationBias: 1.12 }
   });
 
+  const GESTURE = Object.freeze({
+    minimumSwipeDistancePx: 42,
+    maximumTapDistancePx: 12,
+    directionalDominanceRatio: 1.25
+  });
+
   const RECEIPT = {
     contractId: CONTRACT.id,
     canvasMountStatus: "pending",
@@ -69,11 +73,13 @@
     currentModeObserved: "unknown",
     renderLoopStatus: "pending",
     lastPointerAction: "none",
+    lastSwipeDirection: "",
     selectedVisualNodeId: "",
     selectedVisualNodeType: "",
     selectedVisualNodeWing: "",
     selectedVisualNodeCoordinate: "",
     controllerSelectionRequested: false,
+    controllerDirectionRequested: false,
     controllerApiAvailable: false,
     failureReason: null,
     visualPassClaimed: false
@@ -100,7 +106,8 @@
     running: false,
     failHeld: false,
     view: null,
-    projection: null
+    projection: null,
+    pointer: null
   };
 
   function emitReceipt(extra = {}) {
@@ -122,10 +129,7 @@
 
   function hold(reason) {
     state.failHeld = true;
-    emitReceipt({
-      failureReason: reason,
-      renderLoopStatus: "held"
-    });
+    emitReceipt({ failureReason: reason, renderLoopStatus: "held" });
   }
 
   function qs(selectors) {
@@ -486,10 +490,8 @@
   function coordinateFor(index, count) {
     const four = ["NW", "NE", "SW", "SE"];
     const five = ["N", "NE", "E", "SE", "CENTER"];
-
     if (count === 4) return four[index] || "";
     if (count === 5) return five[index] || "";
-
     return String(index + 1);
   }
 
@@ -541,6 +543,7 @@
       }));
 
       const rooms = DEFAULT_ROOMS[wing];
+
       rooms.forEach((room, index) => {
         registry.set(room.id, node(room.id, "room", {
           label: room.label,
@@ -564,7 +567,6 @@
 
   function normalizeWing(value) {
     if (!value) return null;
-
     const v = String(value).toLowerCase();
     return WINGS.includes(v) ? v : null;
   }
@@ -920,6 +922,45 @@
     };
   }
 
+  function requestControllerDirectionSelection(direction) {
+    const api = globalThis.DGB_COMPASS_CONTROLLER;
+    const canRequest = !!api && (
+      typeof api.requestDirectionSelection === "function" ||
+      typeof api.selectWing === "function"
+    );
+
+    if (!canRequest) {
+      emitReceipt({
+        lastPointerAction: "controller-direction-api-unavailable",
+        lastSwipeDirection: direction,
+        controllerDirectionRequested: false,
+        controllerSelectionRequested: false,
+        controllerApiAvailable: false,
+        failureReason: "CONTROLLER_DIRECTION_API_UNAVAILABLE"
+      });
+      return;
+    }
+
+    if (typeof api.requestDirectionSelection === "function") {
+      api.requestDirectionSelection(direction);
+    } else {
+      api.selectWing(direction);
+    }
+
+    emitReceipt({
+      lastPointerAction: "swipe-direction-requested",
+      lastSwipeDirection: direction,
+      selectedVisualNodeId: "",
+      selectedVisualNodeType: "",
+      selectedVisualNodeWing: direction,
+      selectedVisualNodeCoordinate: "",
+      controllerDirectionRequested: true,
+      controllerSelectionRequested: false,
+      controllerApiAvailable: true,
+      failureReason: null
+    });
+  }
+
   function requestControllerRoomSelection(roomId, nodeHit) {
     const api = globalThis.DGB_COMPASS_CONTROLLER;
     const canRequest = !!api && (
@@ -929,14 +970,15 @@
 
     if (!canRequest) {
       emitReceipt({
-        lastPointerAction: "controller-api-unavailable",
+        lastPointerAction: "controller-room-api-unavailable",
         selectedVisualNodeId: nodeHit ? nodeHit.id : "",
         selectedVisualNodeType: nodeHit ? nodeHit.type : "",
         selectedVisualNodeWing: nodeHit ? nodeHit.wing || "" : "",
         selectedVisualNodeCoordinate: nodeHit ? nodeHit.coordinate || "" : "",
         controllerSelectionRequested: false,
+        controllerDirectionRequested: false,
         controllerApiAvailable: false,
-        failureReason: "CONTROLLER_API_UNAVAILABLE"
+        failureReason: "CONTROLLER_ROOM_API_UNAVAILABLE"
       });
       return;
     }
@@ -949,39 +991,30 @@
 
     emitReceipt({
       lastPointerAction: "room-selection-requested",
+      lastSwipeDirection: "",
       selectedVisualNodeId: nodeHit.id,
       selectedVisualNodeType: nodeHit.type,
       selectedVisualNodeWing: nodeHit.wing || "",
       selectedVisualNodeCoordinate: nodeHit.coordinate || "",
       controllerSelectionRequested: true,
+      controllerDirectionRequested: false,
       controllerApiAvailable: true,
       failureReason: null
     });
   }
 
-  function handlePointerSelection(event) {
-    if (!state.canvas || state.failHeld) return;
-
-    if (isSemanticInteractionTarget(event.target)) {
-      emitReceipt({
-        lastPointerAction: "semantic-control-ignored",
-        controllerSelectionRequested: false,
-        controllerApiAvailable: !!globalThis.DGB_COMPASS_CONTROLLER,
-        failureReason: null
-      });
-      return;
-    }
-
+  function findRoomHit(event) {
     readControllerState();
 
     if (!isBridgeModeActive()) {
       emitReceipt({
-        lastPointerAction: "pointer-ignored-compass-mode",
+        lastPointerAction: "tap-ignored-compass-mode",
         controllerSelectionRequested: false,
+        controllerDirectionRequested: false,
         controllerApiAvailable: !!globalThis.DGB_COMPASS_CONTROLLER,
         failureReason: null
       });
-      return;
+      return null;
     }
 
     updateTargets();
@@ -1013,21 +1046,149 @@
       }
     });
 
-    if (!best) {
+    return best;
+  }
+
+  function classifyGesture(start, end) {
+    const dx = end.x - start.x;
+    const dy = end.y - start.y;
+    const absX = Math.abs(dx);
+    const absY = Math.abs(dy);
+    const distance = Math.hypot(dx, dy);
+
+    if (distance <= GESTURE.maximumTapDistancePx) {
+      return { type: "tap" };
+    }
+
+    if (distance < GESTURE.minimumSwipeDistancePx) {
+      return { type: "ambiguous" };
+    }
+
+    if (absX > absY * GESTURE.directionalDominanceRatio) {
+      return {
+        type: "swipe",
+        direction: dx > 0 ? "east" : "west",
+        raw: dx > 0 ? "swipeRight" : "swipeLeft"
+      };
+    }
+
+    if (absY > absX * GESTURE.directionalDominanceRatio) {
+      return {
+        type: "swipe",
+        direction: dy > 0 ? "north" : "south",
+        raw: dy > 0 ? "swipeDown" : "swipeUp"
+      };
+    }
+
+    return { type: "ambiguous" };
+  }
+
+  function handlePointerDown(event) {
+    if (state.failHeld) return;
+
+    if (isSemanticInteractionTarget(event.target)) {
+      state.pointer = null;
       emitReceipt({
-        lastPointerAction: "pointer-no-room-hit",
-        selectedVisualNodeId: "",
-        selectedVisualNodeType: "",
-        selectedVisualNodeWing: "",
-        selectedVisualNodeCoordinate: "",
+        lastPointerAction: "semantic-control-ignored",
         controllerSelectionRequested: false,
+        controllerDirectionRequested: false,
         controllerApiAvailable: !!globalThis.DGB_COMPASS_CONTROLLER,
         failureReason: null
       });
       return;
     }
 
-    requestControllerRoomSelection(best.id, best);
+    state.pointer = {
+      id: event.pointerId,
+      x: event.clientX,
+      y: event.clientY,
+      target: event.target,
+      time: performance.now()
+    };
+
+    emitReceipt({
+      lastPointerAction: "pointer-down",
+      controllerSelectionRequested: false,
+      controllerDirectionRequested: false,
+      controllerApiAvailable: !!globalThis.DGB_COMPASS_CONTROLLER,
+      failureReason: null
+    });
+  }
+
+  function handlePointerUp(event) {
+    if (state.failHeld || !state.pointer) return;
+
+    if (event.pointerId !== state.pointer.id) {
+      state.pointer = null;
+      emitReceipt({
+        lastPointerAction: "pointer-id-mismatch",
+        controllerSelectionRequested: false,
+        controllerDirectionRequested: false,
+        failureReason: null
+      });
+      return;
+    }
+
+    if (isSemanticInteractionTarget(event.target)) {
+      state.pointer = null;
+      emitReceipt({
+        lastPointerAction: "semantic-control-ignored",
+        controllerSelectionRequested: false,
+        controllerDirectionRequested: false,
+        controllerApiAvailable: !!globalThis.DGB_COMPASS_CONTROLLER,
+        failureReason: null
+      });
+      return;
+    }
+
+    const gesture = classifyGesture(state.pointer, {
+      x: event.clientX,
+      y: event.clientY
+    });
+
+    state.pointer = null;
+
+    if (gesture.type === "swipe") {
+      requestControllerDirectionSelection(gesture.direction);
+      emitReceipt({
+        lastPointerAction: gesture.raw,
+        lastSwipeDirection: gesture.direction,
+        controllerDirectionRequested: true,
+        controllerSelectionRequested: false,
+        failureReason: null
+      });
+      return;
+    }
+
+    if (gesture.type === "ambiguous") {
+      emitReceipt({
+        lastPointerAction: "ambiguous-gesture-no-action",
+        lastSwipeDirection: "",
+        controllerDirectionRequested: false,
+        controllerSelectionRequested: false,
+        failureReason: null
+      });
+      return;
+    }
+
+    const hit = findRoomHit(event);
+    if (!hit) {
+      emitReceipt({
+        lastPointerAction: "tap-no-room-hit",
+        lastSwipeDirection: "",
+        selectedVisualNodeId: "",
+        selectedVisualNodeType: "",
+        selectedVisualNodeWing: "",
+        selectedVisualNodeCoordinate: "",
+        controllerSelectionRequested: false,
+        controllerDirectionRequested: false,
+        controllerApiAvailable: !!globalThis.DGB_COMPASS_CONTROLLER,
+        failureReason: null
+      });
+      return;
+    }
+
+    requestControllerRoomSelection(hit.id, hit);
   }
 
   function resize() {
@@ -1129,14 +1290,15 @@
       state.canvas.parentElement ||
       state.root;
 
-    surface.addEventListener("click", handlePointerSelection);
-
-    surface.addEventListener("pointerdown", (event) => {
-      if (isSemanticInteractionTarget(event.target)) return;
-
+    surface.addEventListener("pointerdown", handlePointerDown);
+    surface.addEventListener("pointerup", handlePointerUp);
+    surface.addEventListener("pointercancel", () => {
+      state.pointer = null;
       emitReceipt({
-        lastPointerAction: "pointer-down",
-        controllerApiAvailable: !!globalThis.DGB_COMPASS_CONTROLLER
+        lastPointerAction: "pointer-cancelled",
+        controllerSelectionRequested: false,
+        controllerDirectionRequested: false,
+        failureReason: null
       });
     });
   }
@@ -1167,6 +1329,7 @@
       gl.disable(gl.CULL_FACE);
 
       state.program = createProgram(gl);
+
       state.attribs = {
         position: gl.getAttribLocation(state.program, "aPosition"),
         normal: gl.getAttribLocation(state.program, "aNormal"),
@@ -1201,13 +1364,11 @@
       globalThis.DGB_COMPASS_CRYSTALS = Object.freeze({
         contract: CONTRACT,
         receipt: () => Object.freeze({ ...RECEIPT }),
-
         stop: () => {
           state.running = false;
           cancelAnimationFrame(state.raf);
           emitReceipt({ renderLoopStatus: "stopped" });
         },
-
         start: () => {
           if (!state.running && !state.failHeld) {
             state.running = true;

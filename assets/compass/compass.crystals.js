@@ -7,7 +7,7 @@
   "use strict";
 
   const CONTRACT = Object.freeze({
-    id: "DGB_COMPASS_COORDINATE_ORBIT_FLOWER_CRYSTALS_TNT_v3",
+    id: "DGB_COMPASS_COORDINATE_ORBIT_FLOWER_CRYSTALS_TNT_v4",
     file: "/assets/compass/compass.crystals.js",
     visualPassClaimed: false,
     productionAuthorized: false,
@@ -19,39 +19,53 @@
 
   const DEFAULT_ROOMS = Object.freeze({
     north: [
-      { id: "north-1", label: "Compass Desk" },
-      { id: "north-2", label: "Guide Desk" },
-      { id: "north-3", label: "Front Door" },
-      { id: "north-4", label: "About Sean" },
-      { id: "north-5", label: "Philosophy Library" }
+      { id: "north-1", label: "Compass Desk", short: "Reset orientation" },
+      { id: "north-2", label: "Guide Desk", short: "Read the map" },
+      { id: "north-3", label: "Front Door", short: "Enter formally" },
+      { id: "north-4", label: "About Sean", short: "Builder context" },
+      { id: "north-5", label: "Philosophy Library", short: "Founding thought" }
     ],
     east: [
-      { id: "east-1", label: "Atlas Study" },
-      { id: "east-2", label: "ZIONTS" },
-      { id: "east-3", label: "Audralia Conservatory" },
-      { id: "east-4", label: "Hearth" },
-      { id: "east-5", label: "H-Earth" }
+      { id: "east-1", label: "Atlas Study", short: "Open worlds" },
+      { id: "east-2", label: "ZIONTS", short: "Inspect Earth" },
+      { id: "east-3", label: "Audralia Conservatory", short: "Diagnostic world" },
+      { id: "east-4", label: "Hearth", short: "Living world" },
+      { id: "east-5", label: "H-Earth", short: "Parallel world" }
     ],
     south: [
-      { id: "south-1", label: "The Lab" },
-      { id: "south-2", label: "Law Library" },
-      { id: "south-3", label: "Council Room" },
-      { id: "south-4", label: "Control Cockpit" }
+      { id: "south-1", label: "The Lab", short: "Use instruments" },
+      { id: "south-2", label: "Law Library", short: "Read standards" },
+      { id: "south-3", label: "Council Room", short: "Inspect authority" },
+      { id: "south-4", label: "Control Cockpit", short: "Operate controls" }
     ],
     west: [
-      { id: "west-1", label: "Frontier Workshop Yard" },
-      { id: "west-2", label: "Energy Bench" },
-      { id: "west-3", label: "Water Bench" },
-      { id: "west-4", label: "Infrastructure Bay" },
-      { id: "west-5", label: "Vision Window" }
+      { id: "west-1", label: "Frontier Yard", short: "Workshop edge" },
+      { id: "west-2", label: "Energy Bench", short: "Inspect power" },
+      { id: "west-3", label: "Water Bench", short: "Inspect flow" },
+      { id: "west-4", label: "Infrastructure Bay", short: "Inspect support" },
+      { id: "west-5", label: "Vision Window", short: "See horizon" }
     ]
   });
 
+  const AXIS_COPY = Object.freeze({
+    north: { label: "Orientation", short: "Start and understand" },
+    east: { label: "Worlds", short: "Enter estate worlds" },
+    south: { label: "Instruments", short: "Measure and govern" },
+    west: { label: "Frontier", short: "Build what comes next" }
+  });
+
+  const GLASS_PALETTE = Object.freeze({
+    axis: [0.62, 0.82, 0.90],
+    axisWarm: [0.72, 0.82, 0.78],
+    petal: [0.68, 0.86, 0.92],
+    mirror: [0.70, 0.88, 0.94]
+  });
+
   const WING_THEMES = Object.freeze({
-    north: { color: [0.68, 0.86, 1.0], rx: 0.42, rz: 0.30, h: 0.84, elongation: 1.22, irregularity: 0.018, rotationBias: 0.95 },
-    east: { color: [0.48, 0.94, 0.86], rx: 0.44, rz: 0.31, h: 0.82, elongation: 1.18, irregularity: 0.026, rotationBias: 1.05 },
-    south: { color: [0.98, 0.76, 0.42], rx: 0.43, rz: 0.30, h: 0.80, elongation: 1.14, irregularity: 0.014, rotationBias: 0.88 },
-    west: { color: [0.88, 0.62, 0.50], rx: 0.45, rz: 0.31, h: 0.82, elongation: 1.24, irregularity: 0.038, rotationBias: 1.12 }
+    north: { color: GLASS_PALETTE.axis, rx: 0.34, rz: 0.25, h: 0.68, elongation: 1.16, irregularity: 0.012, rotationBias: 0.95 },
+    east: { color: GLASS_PALETTE.axis, rx: 0.35, rz: 0.25, h: 0.67, elongation: 1.14, irregularity: 0.014, rotationBias: 1.05 },
+    south: { color: GLASS_PALETTE.axisWarm, rx: 0.34, rz: 0.25, h: 0.66, elongation: 1.12, irregularity: 0.012, rotationBias: 0.88 },
+    west: { color: GLASS_PALETTE.axisWarm, rx: 0.35, rz: 0.25, h: 0.67, elongation: 1.15, irregularity: 0.015, rotationBias: 1.12 }
   });
 
   const ORBIT_ANGLES = Object.freeze({
@@ -241,11 +255,11 @@
     void main() {
       vec3 n = normalize(vNormal);
       float key = max(dot(n, normalize(-uKeyLightDirection)), 0.0);
-      float fill = max(dot(n, normalize(-uFillLightDirection)), 0.0) * 0.45;
-      float rim = pow(max(dot(n, normalize(-uRimLightDirection)), 0.0), 2.0) * 0.55;
-      float light = uAmbientStrength + key * 0.85 + fill + rim;
+      float fill = max(dot(n, normalize(-uFillLightDirection)), 0.0) * 0.42;
+      float rim = pow(max(dot(n, normalize(-uRimLightDirection)), 0.0), 2.0) * 0.52;
+      float light = uAmbientStrength + key * 0.84 + fill + rim;
       vec3 color = vColor * light * vProminence;
-      float alpha = clamp(0.24 + vProminence * 0.76, 0.12, 1.0);
+      float alpha = clamp(0.22 + vProminence * 0.72, 0.10, 0.94);
       gl_FragColor = vec4(color, alpha);
     }
   `;
@@ -303,9 +317,9 @@
 
   function mixColor(color, lift, warmth) {
     return [
-      Math.min(color[0] * lift + warmth * 0.10, 1),
-      Math.min(color[1] * lift + warmth * 0.075, 1),
-      Math.min(color[2] * lift + warmth * 0.025, 1)
+      Math.min(color[0] * lift + warmth * 0.08, 1),
+      Math.min(color[1] * lift + warmth * 0.06, 1),
+      Math.min(color[2] * lift + warmth * 0.03, 1)
     ];
   }
 
@@ -315,7 +329,7 @@
     const rz = params.rz || 0.38;
     const h = params.h || 1.0;
     const crown = !!params.crown;
-    const color = params.color || [0.6, 0.85, 1.0];
+    const color = params.color || GLASS_PALETTE.axis;
     const irregularity = params.irregularity || 0;
     const warmth = params.warmth || 0;
     const elongation = params.elongation || 1;
@@ -331,7 +345,7 @@
       const offset = artifactOffset(i, irregularity);
       equator.push(positions.push(v3(
         Math.cos(a) * rx * offset,
-        Math.sin(i * 1.7) * irregularity * 0.6,
+        Math.sin(i * 1.7) * irregularity * 0.5,
         Math.sin(a) * rz * (2 - offset)
       )) - 1);
     }
@@ -386,7 +400,7 @@
       const b = positions[face[1]];
       const c = positions[face[2]];
       const normal = normalize(cross(sub(b, a), sub(c, a)));
-      const facetLift = 0.82 + ((faceIndex % 6) * 0.043);
+      const facetLift = 0.84 + ((faceIndex % 6) * 0.035);
       const facetColor = mixColor(color, facetLift, warmth);
 
       [a, b, c].forEach((p) => {
@@ -426,25 +440,42 @@
     const meshes = new Map();
 
     meshes.set("mirrorland", buildGpuMesh(gl, createCrystalMesh({
-      segments: 12, rx: 0.66, rz: 0.48, h: 1.02, crown: true,
-      color: [0.72, 0.94, 1.0], irregularity: 0.012, warmth: 0.08, elongation: 1.03
+      segments: 12,
+      rx: 0.58,
+      rz: 0.42,
+      h: 0.90,
+      crown: true,
+      color: GLASS_PALETTE.mirror,
+      irregularity: 0.010,
+      warmth: 0.06,
+      elongation: 1.00
     })));
 
     WINGS.forEach((wing) => {
       const theme = WING_THEMES[wing];
 
       meshes.set("wing-" + wing, buildGpuMesh(gl, createCrystalMesh({
-        segments: 8, rx: theme.rx, rz: theme.rz, h: theme.h, crown: true,
-        color: theme.color, irregularity: theme.irregularity,
-        warmth: wing === "south" || wing === "west" ? 0.16 : 0.06,
+        segments: 8,
+        rx: theme.rx,
+        rz: theme.rz,
+        h: theme.h,
+        crown: true,
+        color: theme.color,
+        irregularity: theme.irregularity,
+        warmth: 0.06,
         elongation: theme.elongation
       })));
 
       meshes.set("room-" + wing, buildGpuMesh(gl, createCrystalMesh({
-        segments: 6, rx: 0.34, rz: 0.25, h: 0.56, crown: false,
-        color: theme.color, irregularity: theme.irregularity * 0.55,
-        warmth: wing === "south" || wing === "west" ? 0.12 : 0.04,
-        elongation: 1.10
+        segments: 6,
+        rx: 0.27,
+        rz: 0.20,
+        h: 0.44,
+        crown: false,
+        color: GLASS_PALETTE.petal,
+        irregularity: theme.irregularity * 0.40,
+        warmth: 0.045,
+        elongation: 1.04
       })));
     });
 
@@ -464,6 +495,7 @@
       id,
       type,
       label: opts.label || id,
+      short: opts.short || "",
       wing: opts.wing || "",
       roomIndex: opts.roomIndex || 0,
       coordinate: opts.coordinate || "",
@@ -480,15 +512,18 @@
 
     registry.set("mirrorland", node("mirrorland", "mirrorland", {
       label: "Mirrorland",
+      short: "Center fulcrum",
       meshKey: "mirrorland",
       rotationBias: 0.72
     }));
 
     WINGS.forEach((wing) => {
       const theme = WING_THEMES[wing];
+      const copy = AXIS_COPY[wing];
 
       registry.set(wing, node(wing, "cardinal", {
-        label: wing.charAt(0).toUpperCase() + wing.slice(1),
+        label: copy.label,
+        short: copy.short,
         wing,
         meshKey: "wing-" + wing,
         rotationBias: theme.rotationBias
@@ -499,6 +534,7 @@
       rooms.forEach((room, index) => {
         registry.set(room.id, node(room.id, "petal", {
           label: room.label,
+          short: room.short,
           wing,
           roomIndex: index,
           coordinate: coordinateFor(index, rooms.length),
@@ -553,10 +589,10 @@
 
   function baseWingPosition(wing) {
     switch (wing) {
-      case "north": return [0, 1.42, -0.12];
-      case "east": return [1.82, 0, -0.12];
-      case "south": return [0, -1.42, -0.12];
-      case "west": return [-1.82, 0, -0.12];
+      case "north": return [0, 1.36, -0.16];
+      case "east": return [1.68, 0, -0.16];
+      case "south": return [0, -1.36, -0.16];
+      case "west": return [-1.68, 0, -0.16];
       default: return [0, 0, 0];
     }
   }
@@ -567,25 +603,25 @@
 
   function roomPetalPosition(index, count) {
     const map5 = [
-      [0, 1.18, 0.14],
-      [1.12, 0.36, 0.10],
-      [0.70, -0.98, 0.10],
-      [-0.70, -0.98, 0.10],
-      [-1.12, 0.36, 0.10]
+      [0, 1.08, 0.14],
+      [1.00, 0.32, 0.10],
+      [0.62, -0.88, 0.10],
+      [-0.62, -0.88, 0.10],
+      [-1.00, 0.32, 0.10]
     ];
 
     const map4 = [
-      [0, 1.10, 0.12],
-      [1.10, 0, 0.10],
-      [0, -1.10, 0.10],
-      [-1.10, 0, 0.10]
+      [0, 1.00, 0.12],
+      [1.00, 0, 0.10],
+      [0, -1.00, 0.10],
+      [-1.00, 0, 0.10]
     ];
 
     if (count === 5) return map5[index] || [0, 0, 0];
     if (count === 4) return map4[index] || [0, 0, 0];
 
     const angle = (Math.PI * 2 * index) / Math.max(count, 1) - Math.PI / 2;
-    return [Math.cos(angle) * 1.08, Math.sin(angle) * 1.08, 0.10];
+    return [Math.cos(angle) * 1.00, Math.sin(angle) * 1.00, 0.10];
   }
 
   function setTarget(n, t) {
@@ -625,10 +661,14 @@
 
     if (!activeFlower) {
       setTarget(mirrorland, {
-        x: 0, y: 0, z: 0.04,
-        sx: 1.14, sy: 1.14, sz: 1.14,
-        prominence: 0.94,
-        rotationSpeed: 0.12
+        x: 0,
+        y: 0,
+        z: 0.04,
+        sx: 1.00,
+        sy: 1.00,
+        sz: 1.00,
+        prominence: 0.88,
+        rotationSpeed: 0.11
       });
 
       WINGS.forEach((wing) => {
@@ -640,12 +680,12 @@
         setTarget(n, {
           x: p[0],
           y: p[1],
-          z: focused ? 0.16 : p[2],
-          sx: focused ? 1.18 : 0.86,
-          sy: focused ? 1.44 : 1.10,
-          sz: focused ? 1.18 : 0.86,
-          prominence: focused ? 1.04 : 0.70,
-          rotationSpeed: focused ? 0.17 * n.rotationBias : 0.12 * n.rotationBias
+          z: focused ? 0.12 : p[2],
+          sx: focused ? 0.98 : 0.72,
+          sy: focused ? 1.18 : 0.92,
+          sz: focused ? 0.98 : 0.72,
+          prominence: focused ? 0.98 : 0.62,
+          rotationSpeed: focused ? 0.16 * n.rotationBias : 0.10 * n.rotationBias
         });
       });
 
@@ -653,9 +693,13 @@
     }
 
     setTarget(mirrorland, {
-      x: -1.72, y: -1.22, z: -1.46,
-      sx: 0.30, sy: 0.30, sz: 0.30,
-      prominence: 0.08,
+      x: -1.72,
+      y: -1.22,
+      z: -1.46,
+      sx: 0.26,
+      sy: 0.26,
+      sz: 0.26,
+      prominence: 0.06,
       rotationSpeed: 0.03
     });
 
@@ -665,18 +709,26 @@
       if (wing === state.selectedCardinal) {
         n.visible = true;
         setTarget(n, {
-          x: 0, y: 0, z: 0.10,
-          sx: 0.50, sy: 0.62, sz: 0.50,
-          prominence: 0.52,
-          rotationSpeed: 0.08 * n.rotationBias
+          x: 0,
+          y: 0,
+          z: 0.10,
+          sx: 0.42,
+          sy: 0.52,
+          sz: 0.42,
+          prominence: 0.44,
+          rotationSpeed: 0.07 * n.rotationBias
         });
         return;
       }
 
       n.visible = false;
       setTarget(n, {
-        x: 0, y: 0, z: -1.2,
-        sx: 0.18, sy: 0.18, sz: 0.18,
+        x: 0,
+        y: 0,
+        z: -1.2,
+        sx: 0.14,
+        sy: 0.14,
+        sz: 0.14,
         prominence: 0,
         rotationSpeed: 0.02
       });
@@ -691,12 +743,12 @@
       setTarget(n, {
         x: p[0],
         y: p[1],
-        z: selected ? 0.68 : p[2] + 0.16,
-        sx: selected ? 1.12 : 0.92,
-        sy: selected ? 1.12 : 0.92,
-        sz: selected ? 1.12 : 0.92,
-        prominence: selected ? 1.16 : 0.92,
-        rotationSpeed: selected ? 0.18 * n.rotationBias : 0.12 * n.rotationBias
+        z: selected ? 0.60 : p[2] + 0.12,
+        sx: selected ? 0.92 : 0.74,
+        sy: selected ? 0.92 : 0.74,
+        sz: selected ? 0.92 : 0.74,
+        prominence: selected ? 1.06 : 0.84,
+        rotationSpeed: selected ? 0.16 * n.rotationBias : 0.10 * n.rotationBias
       });
     });
   }
@@ -841,21 +893,38 @@
     return !!(state.surface && el && state.surface.contains(el));
   }
 
-  function resetSemanticElement(el) {
-    if (!el) return;
-    el.style.opacity = "";
-    el.style.pointerEvents = "";
-    el.style.left = "";
-    el.style.top = "";
-    el.style.right = "";
-    el.style.bottom = "";
-    el.style.transform = "";
-    el.style.zIndex = "";
+  function writeSemanticText(n, el) {
+    if (!n || !el) return;
+
+    const primary = el.querySelector("span:first-child");
+    const secondary = el.querySelector("span:last-child");
+
+    if (n.type === "cardinal") {
+      if (primary) primary.textContent = n.label;
+      if (secondary) secondary.textContent = n.short || "Tap to inspect";
+      el.setAttribute("aria-label", n.label + ": " + (n.short || "Tap to inspect"));
+      return;
+    }
+
+    if (n.type === "petal") {
+      if (primary) primary.textContent = n.label;
+      if (secondary) secondary.textContent = n.short || n.coordinate || "Tap to inspect";
+      el.setAttribute("aria-label", n.label + ": " + (n.short || n.coordinate || "Tap to inspect"));
+      return;
+    }
+
+    if (n.type === "mirrorland") {
+      if (primary) primary.textContent = "Mirrorland";
+      if (secondary) secondary.textContent = "Center fulcrum";
+      el.setAttribute("aria-label", "Mirrorland: Center fulcrum");
+    }
   }
 
   function syncSemanticNode(n) {
     const el = semanticElementForNode(n);
     if (!el || !sceneContains(el)) return;
+
+    writeSemanticText(n, el);
 
     const shouldShow = n.visible && n.transform.prominence >= 0.08;
     const screen = shouldShow ? projectNode(n) : null;
@@ -869,12 +938,13 @@
     const activeFlower = state.flowerExpanded && state.selectedCardinal;
     const isSelectedAnchor = activeFlower && n.type === "cardinal" && n.wing === state.selectedCardinal;
     const isFocusedCardinal = !activeFlower && n.type === "cardinal" && n.wing === (state.orbitFocus || "north");
+
     const scale =
-      n.type === "mirrorland" ? 1 :
-      isSelectedAnchor ? 0.72 :
-      isFocusedCardinal ? 1.05 :
-      n.type === "cardinal" ? 0.88 :
-      0.92;
+      n.type === "mirrorland" ? 0.92 :
+      isSelectedAnchor ? 0.64 :
+      isFocusedCardinal ? 0.96 :
+      n.type === "cardinal" ? 0.78 :
+      0.82;
 
     el.style.left = screen.x + "px";
     el.style.top = screen.y + "px";
@@ -886,10 +956,36 @@
     el.style.zIndex = n.type === "petal" ? "5" : isSelectedAnchor ? "4" : "3";
   }
 
+  function syncInstructionCopy() {
+    if (!state.root) return;
+
+    const panelTitle = state.root.querySelector("[data-compass-panel-title]");
+    const panelPurpose = state.root.querySelector("[data-compass-panel-purpose]");
+    const panelRelationship = state.root.querySelector("[data-compass-panel-relationship]");
+    const note = state.root.querySelector(".compass-accessibility-note");
+
+    if (!state.flowerExpanded && !state.selectedRoom) {
+      if (panelTitle && panelTitle.textContent.trim() === "Choose a direction") {
+        panelTitle.textContent = "Choose a coordinate";
+      }
+      if (panelPurpose && /Swipe/i.test(panelPurpose.textContent)) {
+        panelPurpose.textContent = "Swipe to rotate the orbit. Tap a crystal to inspect its path.";
+      }
+      if (panelRelationship && /Enter/i.test(panelRelationship.textContent)) {
+        panelRelationship.textContent = "Enter only after a path is selected.";
+      }
+    }
+
+    if (note) {
+      note.textContent = "Swipe to rotate the orbit. Tap a crystal to inspect. Use Enter Room only when you are ready to navigate.";
+    }
+  }
+
   function syncSemanticObjects() {
     if (!state.surface || !state.root) return;
 
     state.registry.forEach(syncSemanticNode);
+    syncInstructionCopy();
 
     emitReceipt({ semanticSyncStatus: "active" });
   }
@@ -1018,7 +1114,7 @@
 
     let best = null;
     let bestDistance = Infinity;
-    const hitRadius = Math.max(40, Math.min(76, rect.width * 0.085));
+    const hitRadius = Math.max(38, Math.min(68, rect.width * 0.078));
 
     state.registry.forEach((n) => {
       if (!n.visible || n.transform.prominence < 0.12) return;
@@ -1032,8 +1128,8 @@
 
       const localRadius =
         n.type === "mirrorland" || n.type === "cardinal"
-          ? hitRadius * 1.18
-          : hitRadius * 1.16;
+          ? hitRadius * 1.14
+          : hitRadius * 1.10;
 
       if (d < bestDistance && d <= localRadius) {
         best = n;
@@ -1231,10 +1327,10 @@
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
     const aspect = state.width / Math.max(1, state.height);
-    const cameraZ = aspect < 0.8 ? 7.9 : 6.3;
+    const cameraZ = aspect < 0.8 ? 8.2 : 6.7;
 
-    state.view = lookAt4([0, 0.72, cameraZ], [0, 0, 0], [0, 1, 0]);
-    state.projection = perspective4(Math.PI / 4.6, aspect, 0.1, 40);
+    state.view = lookAt4([0, 0.70, cameraZ], [0, 0, 0], [0, 1, 0]);
+    state.projection = perspective4(Math.PI / 4.8, aspect, 0.1, 40);
 
     syncSemanticObjects();
 
@@ -1242,7 +1338,7 @@
     gl.uniform3f(state.uniforms.keyLightDirection, -0.4, -0.8, -0.7);
     gl.uniform3f(state.uniforms.fillLightDirection, 0.7, -0.35, -0.55);
     gl.uniform3f(state.uniforms.rimLightDirection, 0.1, 0.4, 1.0);
-    gl.uniform1f(state.uniforms.ambientStrength, 0.22);
+    gl.uniform1f(state.uniforms.ambientStrength, 0.24);
 
     let visible = 0;
 

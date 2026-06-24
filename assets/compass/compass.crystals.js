@@ -7,7 +7,7 @@
   "use strict";
 
   const CONTRACT = Object.freeze({
-    id: "DGB_COMPASS_NAVIGATIONAL_STAR_ORBIT_FLOWER_TNT_v5",
+    id: "DGB_COMPASS_NAVIGATIONAL_STAR_ORBIT_FLOWER_TNT_v6_REAL_GLOW",
     file: "/assets/compass/compass.crystals.js",
     visualPassClaimed: false,
     productionAuthorized: false,
@@ -54,23 +54,19 @@
     west: { label: "Frontier", short: "Build next" }
   });
 
-  const STAR_PALETTE = Object.freeze({
-    north: [0.74, 0.88, 1.0],
-    east: [0.62, 0.86, 0.96],
-    south: [1.0, 0.88, 0.62],
-    west: [0.92, 0.76, 0.58],
-    petalNorth: [0.68, 0.84, 1.0],
-    petalEast: [0.62, 0.90, 0.96],
-    petalSouth: [1.0, 0.82, 0.56],
-    petalWest: [0.94, 0.72, 0.56],
-    mirror: [0.78, 0.92, 1.0]
+  const STAR = Object.freeze({
+    north: { rgb: [0.74, 0.88, 1.0], css: "rgba(170, 215, 255," },
+    east: { rgb: [0.62, 0.88, 0.96], css: "rgba(135, 230, 255," },
+    south: { rgb: [1.0, 0.86, 0.56], css: "rgba(255, 210, 120," },
+    west: { rgb: [0.94, 0.72, 0.56], css: "rgba(255, 180, 125," },
+    mirror: { rgb: [0.78, 0.92, 1.0], css: "rgba(185, 230, 255," }
   });
 
   const WING_THEMES = Object.freeze({
-    north: { color: STAR_PALETTE.north, rx: 0.31, rz: 0.23, h: 0.64, elongation: 1.18, irregularity: 0.010, rotationBias: 0.95, glow: 1.35 },
-    east: { color: STAR_PALETTE.east, rx: 0.31, rz: 0.23, h: 0.62, elongation: 1.14, irregularity: 0.012, rotationBias: 1.05, glow: 0.92 },
-    south: { color: STAR_PALETTE.south, rx: 0.30, rz: 0.22, h: 0.61, elongation: 1.12, irregularity: 0.010, rotationBias: 0.88, glow: 0.86 },
-    west: { color: STAR_PALETTE.west, rx: 0.31, rz: 0.23, h: 0.62, elongation: 1.15, irregularity: 0.013, rotationBias: 1.12, glow: 0.90 }
+    north: { color: STAR.north.rgb, rx: 0.31, rz: 0.23, h: 0.64, elongation: 1.18, irregularity: 0.010, rotationBias: 0.95, glow: 1.90 },
+    east: { color: STAR.east.rgb, rx: 0.31, rz: 0.23, h: 0.62, elongation: 1.14, irregularity: 0.012, rotationBias: 1.05, glow: 1.20 },
+    south: { color: STAR.south.rgb, rx: 0.30, rz: 0.22, h: 0.61, elongation: 1.12, irregularity: 0.010, rotationBias: 0.88, glow: 1.12 },
+    west: { color: STAR.west.rgb, rx: 0.31, rz: 0.23, h: 0.62, elongation: 1.15, irregularity: 0.013, rotationBias: 1.12, glow: 1.16 }
   });
 
   const ORBIT_ANGLES = Object.freeze({
@@ -88,14 +84,15 @@
 
   const RECEIPT = {
     contractId: CONTRACT.id,
-    visualSystem: "navigational-stars",
+    visualSystem: "navigational-stars-real-glow",
     canvasMountStatus: "pending",
+    haloLayerStatus: "pending",
     webglContextStatus: "pending",
     shaderStatus: "pending",
     meshBuildStatus: "pending",
     registryBuildStatus: "pending",
     starGlowStatus: "pending",
-    northStarGlow: "enabled",
+    northStarGlow: "enabled-strong",
     visibleObjectCount: 0,
     currentModeObserved: "unknown",
     orbitFocusObserved: "",
@@ -124,6 +121,7 @@
   const state = {
     root: null,
     canvas: null,
+    haloLayer: null,
     surface: null,
     gl: null,
     program: null,
@@ -150,6 +148,64 @@
     projection: null,
     pointer: null
   };
+
+  const vertexShaderSource = `
+    attribute vec3 aPosition;
+    attribute vec3 aNormal;
+    attribute vec3 aColor;
+
+    uniform mat4 uModel;
+    uniform mat4 uView;
+    uniform mat4 uProjection;
+    uniform mat3 uNormalMatrix;
+    uniform float uProminence;
+    uniform float uGlowStrength;
+    uniform vec3 uGlowColor;
+
+    varying vec3 vNormal;
+    varying vec3 vColor;
+    varying float vProminence;
+    varying float vGlowStrength;
+    varying vec3 vGlowColor;
+
+    void main() {
+      vNormal = normalize(uNormalMatrix * aNormal);
+      vColor = aColor;
+      vProminence = uProminence;
+      vGlowStrength = uGlowStrength;
+      vGlowColor = uGlowColor;
+      gl_Position = uProjection * uView * uModel * vec4(aPosition, 1.0);
+    }
+  `;
+
+  const fragmentShaderSource = `
+    precision mediump float;
+
+    varying vec3 vNormal;
+    varying vec3 vColor;
+    varying float vProminence;
+    varying float vGlowStrength;
+    varying vec3 vGlowColor;
+
+    uniform vec3 uKeyLightDirection;
+    uniform vec3 uFillLightDirection;
+    uniform vec3 uRimLightDirection;
+    uniform float uAmbientStrength;
+
+    void main() {
+      vec3 n = normalize(vNormal);
+      float key = max(dot(n, normalize(-uKeyLightDirection)), 0.0);
+      float fill = max(dot(n, normalize(-uFillLightDirection)), 0.0) * 0.40;
+      float rim = pow(max(dot(n, normalize(-uRimLightDirection)), 0.0), 1.65) * 0.92;
+      float core = pow(max(dot(n, vec3(0.0, 0.0, 1.0)), 0.0), 3.0);
+      float light = uAmbientStrength + key * 0.82 + fill + rim;
+      vec3 lit = vColor * light * vProminence;
+      vec3 star = vGlowColor * (rim * 0.80 + core * 0.90) * vGlowStrength * vProminence;
+      vec3 color = lit + star;
+      float alpha = clamp(0.16 + vProminence * 0.66 + vGlowStrength * 0.08, 0.10, 0.98);
+      gl_FragColor = vec4(color, alpha);
+    }
+  `;
 
   function emitReceipt(extra = {}) {
     Object.assign(RECEIPT, extra, { visualPassClaimed: false });
@@ -221,6 +277,24 @@
     return canvas;
   }
 
+  function ensureHaloLayer(mount) {
+    const existing = mount.querySelector("[data-compass-star-halo-layer]");
+    if (existing) return existing;
+
+    const layer = document.createElement("div");
+    layer.setAttribute("data-compass-star-halo-layer", "true");
+    layer.setAttribute("aria-hidden", "true");
+    layer.style.position = "absolute";
+    layer.style.inset = "0";
+    layer.style.pointerEvents = "none";
+    layer.style.zIndex = "1";
+    layer.style.overflow = "hidden";
+    layer.style.mixBlendMode = "screen";
+
+    mount.prepend(layer);
+    return layer;
+  }
+
   function getGL(canvas) {
     return canvas.getContext("webgl", {
       antialias: true,
@@ -230,64 +304,6 @@
       preserveDrawingBuffer: false
     });
   }
-
-  const vertexShaderSource = `
-    attribute vec3 aPosition;
-    attribute vec3 aNormal;
-    attribute vec3 aColor;
-
-    uniform mat4 uModel;
-    uniform mat4 uView;
-    uniform mat4 uProjection;
-    uniform mat3 uNormalMatrix;
-    uniform float uProminence;
-    uniform float uGlowStrength;
-    uniform vec3 uGlowColor;
-
-    varying vec3 vNormal;
-    varying vec3 vColor;
-    varying float vProminence;
-    varying float vGlowStrength;
-    varying vec3 vGlowColor;
-
-    void main() {
-      vNormal = normalize(uNormalMatrix * aNormal);
-      vColor = aColor;
-      vProminence = uProminence;
-      vGlowStrength = uGlowStrength;
-      vGlowColor = uGlowColor;
-      gl_Position = uProjection * uView * uModel * vec4(aPosition, 1.0);
-    }
-  `;
-
-  const fragmentShaderSource = `
-    precision mediump float;
-
-    varying vec3 vNormal;
-    varying vec3 vColor;
-    varying float vProminence;
-    varying float vGlowStrength;
-    varying vec3 vGlowColor;
-
-    uniform vec3 uKeyLightDirection;
-    uniform vec3 uFillLightDirection;
-    uniform vec3 uRimLightDirection;
-    uniform float uAmbientStrength;
-
-    void main() {
-      vec3 n = normalize(vNormal);
-      float key = max(dot(n, normalize(-uKeyLightDirection)), 0.0);
-      float fill = max(dot(n, normalize(-uFillLightDirection)), 0.0) * 0.38;
-      float rim = pow(max(dot(n, normalize(-uRimLightDirection)), 0.0), 2.0) * 0.70;
-      float starCore = pow(max(dot(n, vec3(0.0, 0.0, 1.0)), 0.0), 4.0);
-      float light = uAmbientStrength + key * 0.82 + fill + rim;
-      vec3 lit = vColor * light * vProminence;
-      vec3 glow = vGlowColor * (rim * 0.48 + starCore * 0.52) * vGlowStrength * vProminence;
-      vec3 color = lit + glow;
-      float alpha = clamp(0.18 + vProminence * 0.70 + vGlowStrength * 0.06, 0.10, 0.96);
-      gl_FragColor = vec4(color, alpha);
-    }
-  `;
 
   function compileShader(gl, type, source) {
     const shader = gl.createShader(type);
@@ -353,7 +369,7 @@
     const rz = params.rz || 0.30;
     const h = params.h || 0.76;
     const crown = !!params.crown;
-    const color = params.color || STAR_PALETTE.north;
+    const color = params.color || STAR.north.rgb;
     const irregularity = params.irregularity || 0;
     const warmth = params.warmth || 0;
     const elongation = params.elongation || 1;
@@ -366,8 +382,9 @@
 
     for (let i = 0; i < segments; i += 1) {
       const a = (Math.PI * 2 * i) / segments;
-      const pointLift = i % 2 === 0 ? 1.08 : 0.86;
+      const pointLift = i % 2 === 0 ? 1.12 : 0.82;
       const offset = artifactOffset(i, irregularity) * pointLift;
+
       equator.push(positions.push(v3(
         Math.cos(a) * rx * offset,
         Math.sin(i * 1.7) * irregularity * 0.45,
@@ -382,6 +399,7 @@
       for (let i = 0; i < segments; i += 1) {
         const a = (Math.PI * 2 * (i + 0.5)) / segments;
         const offset = artifactOffset(i + 3, irregularity * 0.85);
+
         crownRing.push(positions.push(v3(
           Math.cos(a) * rx * 0.54 * offset,
           h * 0.39 * elongation,
@@ -392,6 +410,7 @@
       for (let i = 0; i < segments; i += 1) {
         const a = (Math.PI * 2 * (i + 0.5)) / segments;
         const offset = artifactOffset(i + 7, irregularity * 0.75);
+
         lowerRing.push(positions.push(v3(
           Math.cos(a) * rx * 0.50 * offset,
           -h * 0.39,
@@ -425,7 +444,7 @@
       const b = positions[face[1]];
       const c = positions[face[2]];
       const normal = normalize(cross(sub(b, a), sub(c, a)));
-      const facetLift = 0.86 + ((faceIndex % 6) * 0.034);
+      const facetLift = 0.88 + ((faceIndex % 6) * 0.038);
       const facetColor = mixColor(color, facetLift, warmth);
 
       [a, b, c].forEach((p) => {
@@ -466,11 +485,11 @@
 
     meshes.set("mirrorland", buildGpuMesh(gl, createStarMesh({
       segments: 12,
-      rx: 0.54,
-      rz: 0.40,
-      h: 0.84,
+      rx: 0.52,
+      rz: 0.38,
+      h: 0.80,
       crown: true,
-      color: STAR_PALETTE.mirror,
+      color: STAR.mirror.rgb,
       irregularity: 0.010,
       warmth: 0.06,
       elongation: 1.00
@@ -478,11 +497,6 @@
 
     WINGS.forEach((wing) => {
       const theme = WING_THEMES[wing];
-      const petalColor =
-        wing === "north" ? STAR_PALETTE.petalNorth :
-        wing === "east" ? STAR_PALETTE.petalEast :
-        wing === "south" ? STAR_PALETTE.petalSouth :
-        STAR_PALETTE.petalWest;
 
       meshes.set("wing-" + wing, buildGpuMesh(gl, createStarMesh({
         segments: 8,
@@ -498,11 +512,11 @@
 
       meshes.set("room-" + wing, buildGpuMesh(gl, createStarMesh({
         segments: 6,
-        rx: 0.24,
-        rz: 0.18,
-        h: 0.39,
+        rx: 0.23,
+        rz: 0.17,
+        h: 0.37,
         crown: false,
-        color: petalColor,
+        color: theme.color,
         irregularity: theme.irregularity * 0.40,
         warmth: wing === "south" || wing === "west" ? 0.06 : 0.035,
         elongation: 1.04
@@ -522,6 +536,8 @@
   }
 
   function node(id, type, opts = {}) {
+    const baseGlow = opts.baseGlow || 0.72;
+
     return {
       id,
       type,
@@ -532,11 +548,13 @@
       coordinate: opts.coordinate || "",
       meshKey: opts.meshKey || type,
       rotationBias: opts.rotationBias || 1,
-      glowColor: opts.glowColor || [0.74, 0.88, 1.0],
-      baseGlow: opts.baseGlow || 0.72,
+      glowColor: opts.glowColor || STAR.north.rgb,
+      glowCss: opts.glowCss || STAR.north.css,
+      baseGlow,
+      halo: null,
       visible: true,
-      transform: { x: 0, y: 0, z: 0, rx: 0, ry: 0, rz: 0, sx: 1, sy: 1, sz: 1, prominence: 1, rotationSpeed: 0.25, glow: opts.baseGlow || 0.72 },
-      target: { x: 0, y: 0, z: 0, rx: 0, ry: 0, rz: 0, sx: 1, sy: 1, sz: 1, prominence: 1, rotationSpeed: 0.25, glow: opts.baseGlow || 0.72 }
+      transform: { x: 0, y: 0, z: 0, rx: 0, ry: 0, rz: 0, sx: 1, sy: 1, sz: 1, prominence: 1, rotationSpeed: 0.25, glow: baseGlow },
+      target: { x: 0, y: 0, z: 0, rx: 0, ry: 0, rz: 0, sx: 1, sy: 1, sz: 1, prominence: 1, rotationSpeed: 0.25, glow: baseGlow }
     };
   }
 
@@ -548,18 +566,14 @@
       short: "Center fulcrum",
       meshKey: "mirrorland",
       rotationBias: 0.72,
-      glowColor: STAR_PALETTE.mirror,
-      baseGlow: 0.82
+      glowColor: STAR.mirror.rgb,
+      glowCss: STAR.mirror.css,
+      baseGlow: 1.00
     }));
 
     WINGS.forEach((wing) => {
       const theme = WING_THEMES[wing];
       const copy = AXIS_COPY[wing];
-      const petalColor =
-        wing === "north" ? STAR_PALETTE.petalNorth :
-        wing === "east" ? STAR_PALETTE.petalEast :
-        wing === "south" ? STAR_PALETTE.petalSouth :
-        STAR_PALETTE.petalWest;
 
       registry.set(wing, node(wing, "cardinal", {
         label: copy.label,
@@ -568,6 +582,7 @@
         meshKey: "wing-" + wing,
         rotationBias: theme.rotationBias,
         glowColor: theme.color,
+        glowCss: STAR[wing].css,
         baseGlow: theme.glow
       }));
 
@@ -580,13 +595,41 @@
           coordinate: coordinateFor(index, DEFAULT_ROOMS[wing].length),
           meshKey: "room-" + wing,
           rotationBias: 0.82 + index * 0.035,
-          glowColor: petalColor,
-          baseGlow: 0.78
+          glowColor: theme.color,
+          glowCss: STAR[wing].css,
+          baseGlow: 0.92
         }));
       });
     });
 
     return registry;
+  }
+
+  function ensureHaloForNode(n) {
+    if (!state.haloLayer || n.halo) return;
+
+    const halo = document.createElement("div");
+    halo.setAttribute("data-compass-star-halo", n.id);
+    halo.style.position = "absolute";
+    halo.style.left = "50%";
+    halo.style.top = "50%";
+    halo.style.width = "180px";
+    halo.style.height = "180px";
+    halo.style.transform = "translate(-50%, -50%)";
+    halo.style.borderRadius = "999px";
+    halo.style.pointerEvents = "none";
+    halo.style.opacity = "0";
+    halo.style.filter = "blur(2px)";
+    halo.style.willChange = "transform, opacity";
+    halo.style.background =
+      "radial-gradient(circle, " +
+      n.glowCss + "0.78) 0%, " +
+      n.glowCss + "0.38) 14%, " +
+      n.glowCss + "0.18) 34%, " +
+      n.glowCss + "0.07) 58%, rgba(255,255,255,0) 76%)";
+
+    state.haloLayer.appendChild(halo);
+    n.halo = halo;
   }
 
   function normalizeWing(value) {
@@ -651,6 +694,7 @@
       [-0.59, -0.84, 0.10],
       [-0.96, 0.31, 0.10]
     ];
+
     const map4 = [
       [0, 0.96, 0.12],
       [0.96, 0, 0.10],
@@ -706,14 +750,14 @@
         sx: 0.96, sy: 0.96, sz: 0.96,
         prominence: 0.86,
         rotationSpeed: 0.10,
-        glow: 0.86
+        glow: 1.10
       });
 
       WINGS.forEach((wing) => {
         const n = state.registry.get(wing);
         const p = orbitWingPosition(wing);
         const focused = wing === focus;
-        const isNorthStar = wing === "north";
+        const north = wing === "north";
 
         n.visible = true;
         setTarget(n, {
@@ -725,7 +769,7 @@
           sz: focused ? 0.94 : 0.70,
           prominence: focused ? 1.0 : 0.62,
           rotationSpeed: focused ? 0.16 * n.rotationBias : 0.10 * n.rotationBias,
-          glow: focused ? (isNorthStar ? 1.62 : 1.08) : (isNorthStar ? 1.05 : 0.62)
+          glow: focused ? (north ? 2.65 : 1.80) : (north ? 1.65 : 0.95)
         });
       });
 
@@ -737,7 +781,7 @@
       sx: 0.24, sy: 0.24, sz: 0.24,
       prominence: 0.05,
       rotationSpeed: 0.03,
-      glow: 0.12
+      glow: 0.16
     });
 
     WINGS.forEach((wing) => {
@@ -750,7 +794,7 @@
           sx: 0.40, sy: 0.50, sz: 0.40,
           prominence: 0.44,
           rotationSpeed: 0.07 * n.rotationBias,
-          glow: wing === "north" ? 1.12 : 0.62
+          glow: wing === "north" ? 1.80 : 1.02
         });
         return;
       }
@@ -780,12 +824,14 @@
         sz: selected ? 0.88 : 0.70,
         prominence: selected ? 1.06 : 0.84,
         rotationSpeed: selected ? 0.16 * n.rotationBias : 0.10 * n.rotationBias,
-        glow: selected ? 1.14 : 0.72
+        glow: selected ? 1.92 : 1.14
       });
     });
   }
 
-  function lerp(a, b, t) { return a + (b - a) * t; }
+  function lerp(a, b, t) {
+    return a + (b - a) * t;
+  }
 
   function updateTransforms(dt) {
     const speed = Math.min(1, dt * 6.5);
@@ -812,38 +858,49 @@
 
   function multiply4(a, b) {
     const out = new Array(16).fill(0);
+
     for (let r = 0; r < 4; r += 1) {
       for (let c = 0; c < 4; c += 1) {
-        for (let k = 0; k < 4; k += 1) out[c * 4 + r] += a[k * 4 + r] * b[c * 4 + k];
+        for (let k = 0; k < 4; k += 1) {
+          out[c * 4 + r] += a[k * 4 + r] * b[c * 4 + k];
+        }
       }
     }
+
     return out;
   }
 
   function translate4(x, y, z) {
     const m = identity4();
-    m[12] = x; m[13] = y; m[14] = z;
+    m[12] = x;
+    m[13] = y;
+    m[14] = z;
     return m;
   }
 
   function scale4(x, y, z) {
     const m = identity4();
-    m[0] = x; m[5] = y; m[10] = z;
+    m[0] = x;
+    m[5] = y;
+    m[10] = z;
     return m;
   }
 
   function rotateX4(a) {
-    const c = Math.cos(a), s = Math.sin(a);
+    const c = Math.cos(a);
+    const s = Math.sin(a);
     return [1, 0, 0, 0, 0, c, s, 0, 0, -s, c, 0, 0, 0, 0, 1];
   }
 
   function rotateY4(a) {
-    const c = Math.cos(a), s = Math.sin(a);
+    const c = Math.cos(a);
+    const s = Math.sin(a);
     return [c, 0, -s, 0, 0, 1, 0, 0, s, 0, c, 0, 0, 0, 0, 1];
   }
 
   function rotateZ4(a) {
-    const c = Math.cos(a), s = Math.sin(a);
+    const c = Math.cos(a);
+    const s = Math.sin(a);
     return [c, s, 0, 0, -s, c, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
   }
 
@@ -873,7 +930,11 @@
   }
 
   function transformPoint4(m, p) {
-    const x = p[0], y = p[1], z = p[2], w = p[3];
+    const x = p[0];
+    const y = p[1];
+    const z = p[2];
+    const w = p[3];
+
     return [
       m[0] * x + m[4] * y + m[8] * z + m[12] * w,
       m[1] * x + m[5] * y + m[9] * z + m[13] * w,
@@ -901,6 +962,38 @@
       x: ((ndcX + 1) / 2) * state.width / state.pixelRatio,
       y: ((1 - ndcY) / 2) * state.height / state.pixelRatio
     };
+  }
+
+  function syncHaloNode(n) {
+    ensureHaloForNode(n);
+
+    if (!n.halo) return;
+
+    const screen = n.visible && n.transform.prominence > 0.04 ? projectNode(n) : null;
+
+    if (!screen) {
+      n.halo.style.opacity = "0";
+      return;
+    }
+
+    const glow = Math.max(0, n.transform.glow || 0);
+    const base =
+      n.type === "mirrorland" ? 210 :
+      n.type === "cardinal" ? 230 :
+      150;
+
+    const size = base * (0.55 + glow * 0.45) * Math.max(0.72, n.transform.sx);
+    const opacity =
+      n.type === "cardinal" && n.wing === "north"
+        ? Math.min(0.92, glow * n.transform.prominence * 0.34)
+        : Math.min(0.72, glow * n.transform.prominence * 0.28);
+
+    n.halo.style.width = size + "px";
+    n.halo.style.height = size + "px";
+    n.halo.style.left = screen.x + "px";
+    n.halo.style.top = screen.y + "px";
+    n.halo.style.opacity = String(opacity);
+    n.halo.style.transform = "translate(-50%, -50%) scale(" + (0.92 + glow * 0.08) + ")";
   }
 
   function semanticElementForNode(n) {
@@ -976,6 +1069,7 @@
     el.style.opacity = String(Math.max(0, Math.min(1, n.transform.prominence)));
     el.style.pointerEvents = n.transform.prominence >= 0.18 ? "auto" : "none";
     el.style.zIndex = n.type === "petal" ? "5" : isSelectedAnchor ? "4" : "3";
+    el.style.textShadow = "0 0 14px rgba(255,248,224,0.26), 0 0 24px rgba(120,190,255,0.18)";
   }
 
   function syncInstructionCopy() {
@@ -1005,9 +1099,14 @@
 
   function syncSemanticObjects() {
     if (!state.surface || !state.root) return;
-    state.registry.forEach(syncSemanticNode);
+
+    state.registry.forEach((n) => {
+      syncHaloNode(n);
+      syncSemanticNode(n);
+    });
+
     syncInstructionCopy();
-    emitReceipt({ semanticSyncStatus: "active" });
+    emitReceipt({ semanticSyncStatus: "active", starGlowStatus: "active-real-halo" });
   }
 
   function classifyGesture(start, end) {
@@ -1134,7 +1233,7 @@
 
     let best = null;
     let bestDistance = Infinity;
-    const hitRadius = Math.max(38, Math.min(68, rect.width * 0.078));
+    const hitRadius = Math.max(42, Math.min(76, rect.width * 0.086));
 
     state.registry.forEach((n) => {
       if (!n.visible || n.transform.prominence < 0.12) return;
@@ -1148,8 +1247,8 @@
 
       const localRadius =
         n.type === "mirrorland" || n.type === "cardinal"
-          ? hitRadius * 1.14
-          : hitRadius * 1.10;
+          ? hitRadius * 1.22
+          : hitRadius * 1.14;
 
       if (d < bestDistance && d <= localRadius) {
         best = n;
@@ -1361,7 +1460,7 @@
     gl.uniform3f(state.uniforms.keyLightDirection, -0.4, -0.8, -0.7);
     gl.uniform3f(state.uniforms.fillLightDirection, 0.7, -0.35, -0.55);
     gl.uniform3f(state.uniforms.rimLightDirection, 0.1, 0.4, 1.0);
-    gl.uniform1f(state.uniforms.ambientStrength, 0.26);
+    gl.uniform1f(state.uniforms.ambientStrength, 0.28);
 
     let visible = 0;
 
@@ -1400,9 +1499,13 @@
     try {
       state.root = findRoot();
       const mount = findCanvasMount(state.root);
+      state.haloLayer = ensureHaloLayer(mount);
       state.canvas = ensureCanvas(mount);
 
-      emitReceipt({ canvasMountStatus: "found" });
+      emitReceipt({
+        canvasMountStatus: "found",
+        haloLayerStatus: state.haloLayer ? "created" : "missing"
+      });
 
       const gl = getGL(state.canvas);
       if (!gl) {

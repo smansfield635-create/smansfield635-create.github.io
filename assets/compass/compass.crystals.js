@@ -1,541 +1,952 @@
-// /assets/compass/compass.crystals.js
-// DGB_COMPASS_GENERATION_ONE_CRYSTALS_TNT_v1
-// FULL-FILE
+/* /assets/compass/compass.crystals.js
+DGB Compass Generation One — true 3D WebGL crystal visualization layer.
+Scope: compass.crystals.js only.
+Owns visualization only. Does not own routes, labels, controller state, HTML, CSS, or navigation.
+*/
 
 (() => {
-  "use strict";
+"use strict";
 
-  if (typeof window === "undefined" || typeof document === "undefined") return;
+const CONTRACT = Object.freeze({
+id: "DGB_COMPASS_GENERATION_ONE_CRYSTALS_TNT_v1",
+file: "/assets/compass/compass.crystals.js",
+visualPassClaimed: false,
+productionAuthorized: false,
+deploymentAuthorized: false,
+fifthFileAuthorized: false,
+owns: "single WebGL canvas visualization, scene graph, crystal meshes, lighting, animation, receipts",
+doesNotOwn: "navigation, route execution, semantic labels, controller state, HTML panel content, CSS layout authority"
+});
 
-  const CONTRACT = "DGB_COMPASS_GENERATION_ONE_CRYSTALS_TNT_v1";
-  const GLOBAL = "DGBCompassCrystals";
+const DEFAULT_ROOMS = Object.freeze({
+north: [
+{ id: "north-1", label: "Compass Desk" },
+{ id: "north-2", label: "Guide Desk" },
+{ id: "north-3", label: "Front Door" },
+{ id: "north-4", label: "About Sean" },
+{ id: "north-5", label: "Philosophy Library" }
+],
+east: [
+{ id: "east-1", label: "Atlas Study" },
+{ id: "east-2", label: "ZIONTS" },
+{ id: "east-3", label: "Audralia Conservatory" },
+{ id: "east-4", label: "Hearth" },
+{ id: "east-5", label: "H-Earth" }
+],
+south: [
+{ id: "south-1", label: "The Lab" },
+{ id: "south-2", label: "Law Library" },
+{ id: "south-3", label: "Council Room" },
+{ id: "south-4", label: "Control Cockpit" }
+],
+west: [
+{ id: "west-1", label: "Frontier Workshop Yard" },
+{ id: "west-2", label: "Energy Bench" },
+{ id: "west-3", label: "Water Bench" },
+{ id: "west-4", label: "Infrastructure Bay" },
+{ id: "west-5", label: "Vision Window" }
+]
+});
 
-  const state = {
-    mounted: false,
-    running: false,
-    webglAvailable: false,
-    canvasCreated: false,
-    singleCanvas: true,
-    perObjectCanvas: false,
-    reducedMotion: false,
-    objectCount: 0,
-    visibleObjectCount: 0,
-    frameCount: 0,
-    errorCount: 0,
-    lastAction: "loaded",
-    updatedAt: stamp(),
-    raf: 0,
-    canvas: null,
-    gl: null,
-    program: null,
-    buffers: null,
-    locations: null,
-    stage: null
-  };
+const WINGS = Object.freeze(["north", "east", "south", "west"]);
 
-  const VERTEX = `
-    precision highp float;
+const RECEIPT = {
+contractId: CONTRACT.id,
+canvasMountStatus: "pending",
+webglContextStatus: "pending",
+shaderStatus: "pending",
+meshBuildStatus: "pending",
+registryBuildStatus: "pending",
+visibleObjectCount: 0,
+currentModeObserved: "unknown",
+renderLoopStatus: "pending",
+failureReason: null,
+visualPassClaimed: false
+};
 
-    attribute vec2 a_position;
+const state = {
+root: null,
+canvas: null,
+gl: null,
+program: null,
+attribs: null,
+uniforms: null,
+registry: new Map(),
+meshes: new Map(),
+mode: "COMPASS_MODE",
+selectedWing: null,
+selectedRoom: null,
+reducedMotion: false,
+width: 1,
+height: 1,
+pixelRatio: 1,
+startTime: 0,
+lastTime: 0,
+raf: 0,
+running: false,
+failHeld: false
+};
 
-    uniform vec2 u_resolution;
-    uniform vec2 u_center;
-    uniform float u_size;
-    uniform float u_rotation;
+function emitReceipt(extra = {}) {
+const next = Object.assign({}, RECEIPT, extra);
+Object.assign(RECEIPT, next);
 
-    varying vec2 v_local;
+if (state.root) {
+  state.root.dataset.compassCrystalsReceipt = JSON.stringify(RECEIPT);
+  state.root.dataset.compassCrystalsStatus =
+    RECEIPT.failureReason ? "held" : "available";
+}
 
-    void main(){
-      float c = cos(u_rotation);
-      float s = sin(u_rotation);
+if (state.canvas) {
+  state.canvas.dataset.visualPassClaimed = "false";
+  state.canvas.dataset.compassCrystalsReceipt = JSON.stringify(RECEIPT);
+}
 
-      vec2 local = a_position * u_size;
-      vec2 rotated = vec2(
-        local.x * c - local.y * s,
-        local.x * s + local.y * c
-      );
+globalThis.DGB_COMPASS_CRYSTALS_RECEIPT = Object.freeze(Object.assign({}, RECEIPT));
 
-      vec2 pixel = u_center + rotated;
-      vec2 clip = (pixel / u_resolution) * 2.0 - 1.0;
+}
 
-      gl_Position = vec4(clip.x, -clip.y, 0.0, 1.0);
-      v_local = a_position;
-    }
-  `;
+function hold(reason) {
+state.failHeld = true;
+emitReceipt({
+failureReason: reason,
+renderLoopStatus: "held",
+visualPassClaimed: false
+});
+}
 
-  const FRAGMENT = `
-    precision highp float;
+function qs(selectors) {
+for (const selector of selectors) {
+const el = document.querySelector(selector);
+if (el) return el;
+}
+return null;
+}
 
-    varying vec2 v_local;
+function findRoot() {
+return qs([
+"[data-compass-root]",
+"[data-dgb-compass]",
+".compass",
+".compass-shell",
+"#compass",
+"main"
+]) || document.body;
+}
 
-    uniform vec3 u_colorA;
-    uniform vec3 u_colorB;
-    uniform float u_alpha;
-    uniform float u_selected;
-    uniform float u_faded;
+function findCanvasMount(root) {
+return qs([
+"[data-compass-crystals-mount]",
+"[data-compass-canvas-mount]",
+".compass-crystals",
+".compass-visual",
+".compass-canvas"
+]) || root;
+}
 
-    void main(){
-      vec2 p = v_local;
+function ensureCanvas(mount) {
+const existing = mount.querySelector("canvas[data-compass-crystals-canvas]");
+if (existing) return existing;
 
-      float diamond = abs(p.x) + abs(p.y);
-      if (diamond > 1.0) discard;
+const canvas = document.createElement("canvas");
+canvas.setAttribute("data-compass-crystals-canvas", "true");
+canvas.setAttribute("aria-hidden", "true");
+canvas.setAttribute("role", "presentation");
+canvas.style.display = "block";
+canvas.style.width = "100%";
+canvas.style.height = "100%";
+canvas.style.position = "absolute";
+canvas.style.inset = "0";
+canvas.style.pointerEvents = "none";
 
-      float edge = smoothstep(1.0, 0.72, diamond);
-      float core = 1.0 - smoothstep(0.0, 0.92, diamond);
-      float facet = abs(p.x - p.y);
-      float rim = smoothstep(0.70, 1.0, diamond);
+const computed = getComputedStyle(mount);
+if (computed.position === "static") {
+  mount.style.position = "relative";
+}
 
-      vec3 color = mix(u_colorA, u_colorB, p.y * 0.5 + 0.5);
-      color += vec3(1.0, 0.82, 0.45) * rim * 0.32;
-      color += vec3(0.55, 0.78, 1.0) * (1.0 - facet) * 0.15;
-      color += vec3(1.0) * core * 0.20;
+mount.prepend(canvas);
+return canvas;
 
-      color *= 0.74 + u_selected * 0.30;
-      color *= mix(1.0, 0.35, u_faded);
+}
 
-      float alpha = edge * u_alpha * mix(1.0, 0.34, u_faded);
+function getGL(canvas) {
+return canvas.getContext("webgl", {
+antialias: true,
+alpha: true,
+depth: true,
+premultipliedAlpha: true,
+preserveDrawingBuffer: false
+});
+}
 
-      gl_FragColor = vec4(color, alpha);
-    }
-  `;
+const vertexShaderSource = `
+attribute vec3 aPosition;
+attribute vec3 aNormal;
+attribute vec3 aColor;
 
-  function stamp() {
-    return new Date().toISOString();
+uniform mat4 uModel;
+uniform mat4 uView;
+uniform mat4 uProjection;
+uniform mat3 uNormalMatrix;
+uniform float uProminence;
+
+varying vec3 vNormal;
+varying vec3 vColor;
+varying float vProminence;
+
+void main() {
+  vNormal = normalize(uNormalMatrix * aNormal);
+  vColor = aColor;
+  vProminence = uProminence;
+  gl_Position = uProjection * uView * uModel * vec4(aPosition, 1.0);
+}
+
+`;
+
+const fragmentShaderSource = `
+precision mediump float;
+
+varying vec3 vNormal;
+varying vec3 vColor;
+varying float vProminence;
+
+uniform vec3 uKeyLightDirection;
+uniform vec3 uFillLightDirection;
+uniform vec3 uRimLightDirection;
+uniform float uAmbientStrength;
+
+void main() {
+  vec3 n = normalize(vNormal);
+  float key = max(dot(n, normalize(-uKeyLightDirection)), 0.0);
+  float fill = max(dot(n, normalize(-uFillLightDirection)), 0.0) * 0.45;
+  float rim = pow(max(dot(n, normalize(-uRimLightDirection)), 0.0), 2.0) * 0.55;
+
+  float light = uAmbientStrength + key * 0.85 + fill + rim;
+  vec3 color = vColor * light * vProminence;
+  float alpha = clamp(0.28 + vProminence * 0.72, 0.18, 1.0);
+
+  gl_FragColor = vec4(color, alpha);
+}
+
+`;
+
+function compileShader(gl, type, source) {
+const shader = gl.createShader(type);
+gl.shaderSource(shader, source);
+gl.compileShader(shader);
+
+if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+  const info = gl.getShaderInfoLog(shader) || "unknown shader error";
+  gl.deleteShader(shader);
+  throw new Error(info);
+}
+
+return shader;
+
+}
+
+function createProgram(gl) {
+const vertex = compileShader(gl, gl.VERTEX_SHADER, vertexShaderSource);
+const fragment = compileShader(gl, gl.FRAGMENT_SHADER, fragmentShaderSource);
+const program = gl.createProgram();
+
+gl.attachShader(program, vertex);
+gl.attachShader(program, fragment);
+gl.linkProgram(program);
+
+gl.deleteShader(vertex);
+gl.deleteShader(fragment);
+
+if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+  const info = gl.getProgramInfoLog(program) || "unknown program link error";
+  gl.deleteProgram(program);
+  throw new Error(info);
+}
+
+return program;
+
+}
+
+function v3(x, y, z) {
+return [x, y, z];
+}
+
+function sub(a, b) {
+return [a[0] - b[0], a[1] - b[1], a[2] - b[2]];
+}
+
+function cross(a, b) {
+return [
+a[1] * b[2] - a[2] * b[1],
+a[2] * b[0] - a[0] * b[2],
+a[0] * b[1] - a[1] * b[0]
+];
+}
+
+function normalize(a) {
+const len = Math.hypot(a[0], a[1], a[2]) || 1;
+return [a[0] / len, a[1] / len, a[2] / len];
+}
+
+function createCrystalMesh(params) {
+const segments = params.segments || 8;
+const rx = params.rx || 0.55;
+const rz = params.rz || 0.38;
+const h = params.h || 1.0;
+const crown = !!params.crown;
+const color = params.color || [0.6, 0.85, 1.0];
+
+const positions = [];
+const faces = [];
+
+const top = positions.push(v3(0, h, 0)) - 1;
+const bottom = positions.push(v3(0, -h, 0)) - 1;
+
+const equator = [];
+for (let i = 0; i < segments; i += 1) {
+  const a = (Math.PI * 2 * i) / segments;
+  equator.push(positions.push(v3(Math.cos(a) * rx, 0, Math.sin(a) * rz)) - 1);
+}
+
+let crownRing = [];
+let lowerRing = [];
+
+if (crown) {
+  for (let i = 0; i < segments; i += 1) {
+    const a = (Math.PI * 2 * (i + 0.5)) / segments;
+    crownRing.push(positions.push(v3(Math.cos(a) * rx * 0.62, h * 0.42, Math.sin(a) * rz * 0.62)) - 1);
   }
 
-  function one(selector, root = document) {
-    return root.querySelector(selector);
+  for (let i = 0; i < segments; i += 1) {
+    const a = (Math.PI * 2 * (i + 0.5)) / segments;
+    lowerRing.push(positions.push(v3(Math.cos(a) * rx * 0.58, -h * 0.42, Math.sin(a) * rz * 0.58)) - 1);
   }
 
-  function all(selector, root = document) {
-    return Array.from(root.querySelectorAll(selector));
+  for (let i = 0; i < segments; i += 1) {
+    const n = (i + 1) % segments;
+    faces.push([top, crownRing[i], crownRing[n]]);
+    faces.push([crownRing[i], equator[i], crownRing[n]]);
+    faces.push([crownRing[n], equator[i], equator[n]]);
+    faces.push([equator[i], lowerRing[i], equator[n]]);
+    faces.push([equator[n], lowerRing[i], lowerRing[n]]);
+    faces.push([lowerRing[i], bottom, lowerRing[n]]);
   }
+} else {
+  for (let i = 0; i < segments; i += 1) {
+    const n = (i + 1) % segments;
+    faces.push([top, equator[i], equator[n]]);
+    faces.push([equator[i], bottom, equator[n]]);
+  }
+}
 
-  function prefersReducedMotion() {
-    return Boolean(
-      window.matchMedia &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+const outPositions = [];
+const outNormals = [];
+const outColors = [];
+
+faces.forEach((face, faceIndex) => {
+  const a = positions[face[0]];
+  const b = positions[face[1]];
+  const c = positions[face[2]];
+  const normal = normalize(cross(sub(b, a), sub(c, a)));
+  const facetLift = 0.86 + ((faceIndex % 5) * 0.045);
+
+  [a, b, c].forEach((p) => {
+    outPositions.push(p[0], p[1], p[2]);
+    outNormals.push(normal[0], normal[1], normal[2]);
+    outColors.push(
+      Math.min(color[0] * facetLift, 1),
+      Math.min(color[1] * facetLift, 1),
+      Math.min(color[2] * facetLift, 1)
     );
-  }
-
-  function recordError(error) {
-    state.errorCount += 1;
-    state.lastAction = "error";
-    state.lastError = error && error.message ? error.message : String(error);
-    publish();
-  }
-
-  function shader(gl, type, source) {
-    const item = gl.createShader(type);
-    if (!item) throw new Error("Shader allocation failed.");
-
-    gl.shaderSource(item, source);
-    gl.compileShader(item);
-
-    if (!gl.getShaderParameter(item, gl.COMPILE_STATUS)) {
-      const message = gl.getShaderInfoLog(item) || "Shader compile failed.";
-      gl.deleteShader(item);
-      throw new Error(message);
-    }
-
-    return item;
-  }
-
-  function program(gl) {
-    const vertex = shader(gl, gl.VERTEX_SHADER, VERTEX);
-    const fragment = shader(gl, gl.FRAGMENT_SHADER, FRAGMENT);
-    const item = gl.createProgram();
-
-    if (!item) throw new Error("Program allocation failed.");
-
-    gl.attachShader(item, vertex);
-    gl.attachShader(item, fragment);
-    gl.linkProgram(item);
-
-    gl.deleteShader(vertex);
-    gl.deleteShader(fragment);
-
-    if (!gl.getProgramParameter(item, gl.LINK_STATUS)) {
-      const message = gl.getProgramInfoLog(item) || "Program link failed.";
-      gl.deleteProgram(item);
-      throw new Error(message);
-    }
-
-    return item;
-  }
-
-  function createCanvas(stage) {
-    const canvas = document.createElement("canvas");
-
-    canvas.setAttribute("data-compass-crystal-scene", "true");
-    canvas.setAttribute("aria-hidden", "true");
-
-    canvas.style.position = "absolute";
-    canvas.style.inset = "0";
-    canvas.style.width = "100%";
-    canvas.style.height = "100%";
-    canvas.style.zIndex = "1";
-    canvas.style.pointerEvents = "none";
-
-    stage.insertBefore(canvas, one(".compass-scene", stage));
-
-    state.canvas = canvas;
-    state.canvasCreated = true;
-
-    return canvas;
-  }
-
-  function setupGL(canvas) {
-    const gl =
-      canvas.getContext("webgl", {
-        alpha: true,
-        antialias: true,
-        depth: false,
-        stencil: false,
-        premultipliedAlpha: true,
-        preserveDrawingBuffer: false
-      }) ||
-      canvas.getContext("experimental-webgl");
-
-    if (!gl) throw new Error("WebGL unavailable.");
-
-    const activeProgram = program(gl);
-
-    const positions = new Float32Array([
-      0, -1,
-      0.72, -0.72,
-      1, 0,
-      0.72, 0.72,
-      0, 1,
-      -0.72, 0.72,
-      -1, 0,
-      -0.72, -0.72
-    ]);
-
-    const buffer = gl.createBuffer();
-    if (!buffer) throw new Error("Buffer allocation failed.");
-
-    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-    gl.bufferData(gl.ARRAY_BUFFER, positions, gl.STATIC_DRAW);
-
-    gl.enable(gl.BLEND);
-    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
-
-    state.gl = gl;
-    state.program = activeProgram;
-    state.buffers = { position: buffer, count: positions.length / 2 };
-    state.locations = {
-      position: gl.getAttribLocation(activeProgram, "a_position"),
-      resolution: gl.getUniformLocation(activeProgram, "u_resolution"),
-      center: gl.getUniformLocation(activeProgram, "u_center"),
-      size: gl.getUniformLocation(activeProgram, "u_size"),
-      rotation: gl.getUniformLocation(activeProgram, "u_rotation"),
-      colorA: gl.getUniformLocation(activeProgram, "u_colorA"),
-      colorB: gl.getUniformLocation(activeProgram, "u_colorB"),
-      alpha: gl.getUniformLocation(activeProgram, "u_alpha"),
-      selected: gl.getUniformLocation(activeProgram, "u_selected"),
-      faded: gl.getUniformLocation(activeProgram, "u_faded")
-    };
-
-    state.webglAvailable = true;
-  }
-
-  function resize() {
-    if (!state.canvas || !state.stage || !state.gl) return;
-
-    const rect = state.stage.getBoundingClientRect();
-    const dpr = Math.min(2, Math.max(1, window.devicePixelRatio || 1));
-    const width = Math.max(1, Math.floor(rect.width * dpr));
-    const height = Math.max(1, Math.floor(rect.height * dpr));
-
-    if (state.canvas.width !== width || state.canvas.height !== height) {
-      state.canvas.width = width;
-      state.canvas.height = height;
-    }
-
-    state.gl.viewport(0, 0, width, height);
-  }
-
-  function objectPalette(node) {
-    const wing = node.dataset.compassWing || "";
-    const type = node.dataset.compassObject || "";
-
-    if (type === "mirrorland") return [[0.92, 0.72, 1.0], [1.0, 0.78, 0.32]];
-    if (type === "return") return [[0.78, 0.88, 1.0], [0.92, 0.76, 0.45]];
-    if (wing === "north") return [[1.0, 0.78, 0.34], [0.60, 0.86, 1.0]];
-    if (wing === "east") return [[0.44, 0.76, 1.0], [0.92, 0.78, 0.38]];
-    if (wing === "south") return [[0.52, 0.92, 0.72], [1.0, 0.70, 0.36]];
-    if (wing === "west") return [[1.0, 0.58, 0.30], [0.50, 0.68, 1.0]];
-
-    return [[0.72, 0.86, 1.0], [0.96, 0.76, 0.38]];
-  }
-
-  function objectScale(node) {
-    const type = node.dataset.compassObject || "";
-    const centered = node.dataset.compassCentered === "true";
-    const selected = node.dataset.compassSelected === "true";
-
-    if (type === "mirrorland") return 0.54;
-    if (type === "return") return 0.25;
-    if (type === "room") return selected ? 0.34 : 0.29;
-    if (centered) return 0.48;
-
-    return 0.40;
-  }
-
-  function visibleObjects() {
-    const stageRect = state.stage.getBoundingClientRect();
-
-    const objects = all("[data-compass-object]").filter((node) => {
-      if (node.hidden) return false;
-      if (node.dataset.compassVisible === "false") return false;
-      const rect = node.getBoundingClientRect();
-      return rect.width > 0 && rect.height > 0;
-    });
-
-    state.objectCount = all("[data-compass-object]").length;
-    state.visibleObjectCount = objects.length;
-
-    return objects.map((node) => {
-      const rect = node.getBoundingClientRect();
-      const size = Math.min(rect.width, rect.height) * objectScale(node);
-      const palette = objectPalette(node);
-
-      return {
-        node,
-        centerX: rect.left - stageRect.left + rect.width / 2,
-        centerY: rect.top - stageRect.top + rect.height / 2,
-        size,
-        palette,
-        selected: node.dataset.compassSelected === "true" ? 1 : 0,
-        faded: node.dataset.compassFaded === "true" ? 1 : 0,
-        type: node.dataset.compassObject || ""
-      };
-    });
-  }
-
-  function drawObject(item, time) {
-    const gl = state.gl;
-    const loc = state.locations;
-
-    const rotation =
-      state.reducedMotion
-        ? 0.785
-        : time * 0.00018 + item.centerX * 0.002 + item.centerY * 0.001;
-
-    const alpha = item.type === "return" ? 0.58 : 0.74;
-
-    gl.uniform2f(loc.center, item.centerX, item.centerY);
-    gl.uniform1f(loc.size, item.size);
-    gl.uniform1f(loc.rotation, rotation);
-    gl.uniform3fv(loc.colorA, item.palette[0]);
-    gl.uniform3fv(loc.colorB, item.palette[1]);
-    gl.uniform1f(loc.alpha, alpha);
-    gl.uniform1f(loc.selected, item.selected);
-    gl.uniform1f(loc.faded, item.faded);
-
-    gl.drawArrays(gl.TRIANGLE_FAN, 0, state.buffers.count);
-  }
-
-  function frame(time) {
-    state.raf = 0;
-    if (!state.running || !state.gl) return;
-
-    resize();
-
-    const gl = state.gl;
-    const loc = state.locations;
-    const objects = visibleObjects();
-
-    gl.clearColor(0, 0, 0, 0);
-    gl.clear(gl.COLOR_BUFFER_BIT);
-
-    gl.useProgram(state.program);
-    gl.bindBuffer(gl.ARRAY_BUFFER, state.buffers.position);
-    gl.enableVertexAttribArray(loc.position);
-    gl.vertexAttribPointer(loc.position, 2, gl.FLOAT, false, 0, 0);
-    gl.uniform2f(loc.resolution, state.canvas.width, state.canvas.height);
-
-    objects.forEach((item) => drawObject(item, time));
-
-    state.frameCount += 1;
-    state.lastAction = "frame";
-    publish();
-
-    if (!state.reducedMotion) {
-      state.raf = window.requestAnimationFrame(frame);
-    }
-  }
-
-  function start() {
-    if (state.running || !state.webglAvailable) return false;
-
-    state.running = true;
-    state.lastAction = "started";
-    state.raf = window.requestAnimationFrame(frame);
-    publish();
-
-    return true;
-  }
-
-  function stop() {
-    state.running = false;
-
-    if (state.raf) {
-      window.cancelAnimationFrame(state.raf);
-      state.raf = 0;
-    }
-
-    state.lastAction = "stopped";
-    publish();
-
-    return true;
-  }
-
-  function mount() {
-    if (state.mounted) return getStatus();
-
-    state.reducedMotion = prefersReducedMotion();
-    state.stage = one(".compass-stage");
-
-    if (!state.stage) {
-      state.mounted = false;
-      state.lastAction = "held:no-stage";
-      publish();
-      return getStatus();
-    }
-
-    try {
-      const existing = one("[data-compass-crystal-scene]", state.stage);
-      state.canvas = existing || createCanvas(state.stage);
-      setupGL(state.canvas);
-      state.mounted = true;
-      state.lastAction = "mounted";
-      start();
-    } catch (error) {
-      recordError(error);
-      state.mounted = false;
-      state.running = false;
-      state.webglAvailable = false;
-    }
-
-    publish();
-    return getStatus();
-  }
-
-  function destroy() {
-    stop();
-
-    if (state.gl) {
-      try {
-        if (state.buffers && state.buffers.position) {
-          state.gl.deleteBuffer(state.buffers.position);
-        }
-        if (state.program) {
-          state.gl.deleteProgram(state.program);
-        }
-      } catch (_error) {}
-    }
-
-    if (state.canvas && state.canvas.parentNode) {
-      state.canvas.parentNode.removeChild(state.canvas);
-    }
-
-    state.canvas = null;
-    state.gl = null;
-    state.program = null;
-    state.buffers = null;
-    state.locations = null;
-    state.mounted = false;
-    state.canvasCreated = false;
-    state.webglAvailable = false;
-    state.lastAction = "destroyed";
-
-    publish();
-    return getStatus();
-  }
-
-  function publish() {
-    state.updatedAt = stamp();
-
-    const status = getStatus();
-
-    window.DGB_COMPASS_CRYSTALS_STATUS = status;
-    window.DGB_COMPASS_CRYSTALS_RECEIPT = getReceiptLight();
-
-    document.documentElement.dataset.compassCrystalsContract = CONTRACT;
-    document.documentElement.dataset.compassCrystalsMounted = String(state.mounted);
-    document.documentElement.dataset.compassCrystalsRunning = String(state.running);
-    document.documentElement.dataset.compassCrystalsWebglAvailable = String(state.webglAvailable);
-    document.documentElement.dataset.compassCrystalsSingleCanvas = "true";
-
-    return status;
-  }
-
-  function getStatus() {
-    return {
-      contract: CONTRACT,
-      mounted: state.mounted,
-      running: state.running,
-      webglAvailable: state.webglAvailable,
-      canvasCreated: state.canvasCreated,
-      objectCount: state.objectCount,
-      visibleObjectCount: state.visibleObjectCount,
-      frameCount: state.frameCount,
-      errorCount: state.errorCount,
-      lastAction: state.lastAction,
-      updatedAt: state.updatedAt,
-      singleCanvas: true,
-      perObjectCanvas: false,
-      htmlOwnsCopy: true,
-      cssOwnsPresentation: true,
-      controllerOwnsBehavior: true,
-      crystalsOwnVisualization: true,
-      canvas2DFallback: false,
-      diagnosticChamber: false,
-      visualPassClaimed: false
-    };
-  }
-
-  function getReceiptLight() {
-    return {
-      contract: CONTRACT,
-      status: state.mounted && state.webglAvailable ? "READY" : "HELD",
-      running: state.running,
-      webglAvailable: state.webglAvailable,
-      canvasCreated: state.canvasCreated,
-      visibleObjectCount: state.visibleObjectCount,
-      frameCount: state.frameCount,
-      errorCount: state.errorCount,
-      singleCanvas: true,
-      perObjectCanvas: false,
-      visualPassClaimed: false,
-      updatedAt: state.updatedAt
-    };
-  }
-
-  function getReceipt() {
-    return {
-      ...getReceiptLight(),
-      statusDetail: getStatus(),
-      generatedAt: stamp()
-    };
-  }
-
-  window[GLOBAL] = Object.freeze({
-    contract: CONTRACT,
-    mount,
-    start,
-    stop,
-    destroy,
-    getStatus,
-    getReceiptLight,
-    getReceipt
+  });
+});
+
+return Object.freeze({
+  vertexCount: outPositions.length / 3,
+  positions: new Float32Array(outPositions),
+  normals: new Float32Array(outNormals),
+  colors: new Float32Array(outColors),
+  triangleCount: faces.length
+});
+
+}
+
+function createBuffer(gl, data, usage = gl.STATIC_DRAW) {
+const buffer = gl.createBuffer();
+gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+gl.bufferData(gl.ARRAY_BUFFER, data, usage);
+return buffer;
+}
+
+function buildGpuMesh(gl, mesh) {
+return {
+vertexCount: mesh.vertexCount,
+triangleCount: mesh.triangleCount,
+position: createBuffer(gl, mesh.positions),
+normal: createBuffer(gl, mesh.normals),
+color: createBuffer(gl, mesh.colors)
+};
+}
+
+function buildMeshes(gl) {
+const meshes = new Map();
+
+meshes.set("mirrorland", buildGpuMesh(gl, createCrystalMesh({
+  segments: 12,
+  rx: 0.72,
+  rz: 0.52,
+  h: 1.24,
+  crown: true,
+  color: [0.70, 0.92, 1.0]
+})));
+
+meshes.set("wing", buildGpuMesh(gl, createCrystalMesh({
+  segments: 8,
+  rx: 0.48,
+  rz: 0.35,
+  h: 0.92,
+  crown: true,
+  color: [0.62, 0.76, 1.0]
+})));
+
+meshes.set("room", buildGpuMesh(gl, createCrystalMesh({
+  segments: 8,
+  rx: 0.34,
+  rz: 0.25,
+  h: 0.58,
+  crown: false,
+  color: [0.66, 0.96, 0.88]
+})));
+
+meshes.set("returnObject", buildGpuMesh(gl, createCrystalMesh({
+  segments: 6,
+  rx: 0.24,
+  rz: 0.18,
+  h: 0.38,
+  crown: false,
+  color: [1.0, 0.82, 0.54]
+})));
+
+return meshes;
+
+}
+
+function node(id, type, opts = {}) {
+return {
+id,
+type,
+label: opts.label || id,
+wing: opts.wing || null,
+roomIndex: opts.roomIndex || 0,
+meshKey: opts.meshKey || type,
+visible: true,
+transform: {
+x: 0, y: 0, z: 0,
+rx: 0, ry: 0, rz: 0,
+sx: 1, sy: 1, sz: 1,
+prominence: 1,
+rotationSpeed: 0.25
+},
+target: {
+x: 0, y: 0, z: 0,
+rx: 0, ry: 0, rz: 0,
+sx: 1, sy: 1, sz: 1,
+prominence: 1,
+rotationSpeed: 0.25
+}
+};
+}
+
+function buildRegistry() {
+const registry = new Map();
+
+registry.set("mirrorland", node("mirrorland", "mirrorland", {
+  label: "Mirrorland",
+  meshKey: "mirrorland"
+}));
+
+WINGS.forEach((wing) => {
+  registry.set(wing, node(wing, "wing", {
+    label: wing.charAt(0).toUpperCase() + wing.slice(1),
+    wing,
+    meshKey: "wing"
+  }));
+
+  DEFAULT_ROOMS[wing].forEach((room, index) => {
+    registry.set(room.id, node(room.id, "room", {
+      label: room.label,
+      wing,
+      roomIndex: index,
+      meshKey: "room"
+    }));
+  });
+});
+
+registry.set("return", node("return", "returnObject", {
+  label: "Return",
+  meshKey: "returnObject"
+}));
+
+return registry;
+
+}
+
+function readControllerState() {
+const root = state.root || document.documentElement;
+const ds = root.dataset || {};
+
+const rawMode =
+  ds.compassMode ||
+  ds.mode ||
+  document.body.dataset.compassMode ||
+  "COMPASS_MODE";
+
+let mode = String(rawMode).toUpperCase();
+if (mode === "COMPASS") mode = "COMPASS_MODE";
+if (mode === "EXPANDED") mode = "EXPANDED_MODE";
+if (mode === "ROOM") mode = "ROOM_MODE";
+if (!["COMPASS_MODE", "EXPANDED_MODE", "ROOM_MODE"].includes(mode)) {
+  mode = "COMPASS_MODE";
+}
+
+const selectedWing = normalizeWing(
+  ds.selectedWing ||
+  ds.activeWing ||
+  document.body.dataset.selectedWing ||
+  null
+);
+
+const selectedRoom =
+  ds.selectedRoom ||
+  ds.activeRoom ||
+  document.body.dataset.selectedRoom ||
+  null;
+
+state.mode = mode;
+state.selectedWing = selectedWing;
+state.selectedRoom = selectedRoom;
+state.reducedMotion = matchMedia("(prefers-reduced-motion: reduce)").matches ||
+  ds.reducedMotion === "true" ||
+  document.body.dataset.reducedMotion === "true";
+
+emitReceipt({
+  currentModeObserved: state.mode
+});
+
+}
+
+function normalizeWing(value) {
+if (!value) return null;
+const v = String(value).toLowerCase();
+return WINGS.includes(v) ? v : null;
+}
+
+function wingPosition(wing) {
+switch (wing) {
+case "north": return [0, 1.55, 0];
+case "east": return [2.05, 0, 0];
+case "south": return [0, -1.55, 0];
+case "west": return [-2.05, 0, 0];
+default: return [0, 0, 0];
+}
+}
+
+function roomClusterPosition(index, count) {
+const angle = (Math.PI * 2 * index) / Math.max(count, 1) - Math.PI / 2;
+const radiusX = 1.55;
+const radiusY = 0.92;
+return [
+Math.cos(angle) * radiusX,
+Math.sin(angle) * radiusY,
+-0.18 + Math.sin(angle) * 0.08
+];
+}
+
+function setTarget(n, t) {
+Object.assign(n.target, t);
+}
+
+function updateTargets() {
+const selectedWing = state.selectedWing || "north";
+const selectedRooms = DEFAULT_ROOMS[selectedWing] || [];
+const selectedRoomId = state.selectedRoom;
+
+state.registry.forEach((n) => {
+  n.visible = false;
+  setTarget(n, {
+    x: 0, y: 0, z: 0,
+    sx: 1, sy: 1, sz: 1,
+    prominence: 0,
+    rotationSpeed: 0.15
+  });
+});
+
+const mirrorland = state.registry.get("mirrorland");
+if (state.mode === "COMPASS_MODE") {
+  mirrorland.visible = true;
+  setTarget(mirrorland, {
+    x: 0, y: 0, z: 0,
+    sx: 1.45, sy: 1.45, sz: 1.45,
+    prominence: 1.08,
+    rotationSpeed: 0.16
   });
 
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", mount, { once: true });
-  } else {
-    mount();
+  WINGS.forEach((wing) => {
+    const n = state.registry.get(wing);
+    const p = wingPosition(wing);
+    n.visible = true;
+    setTarget(n, {
+      x: p[0], y: p[1], z: p[2] - 0.15,
+      sx: 1, sy: 1, sz: 1,
+      prominence: 0.86,
+      rotationSpeed: 0.22
+    });
+  });
+}
+
+if (state.mode === "EXPANDED_MODE" || state.mode === "ROOM_MODE") {
+  const parent = state.registry.get(selectedWing);
+  parent.visible = true;
+  setTarget(parent, {
+    x: 0, y: 0, z: 0.15,
+    sx: 1.18, sy: 1.18, sz: 1.18,
+    prominence: 1.08,
+    rotationSpeed: 0.18
+  });
+
+  WINGS.forEach((wing) => {
+    if (wing === selectedWing) return;
+    const n = state.registry.get(wing);
+    const p = wingPosition(wing);
+    n.visible = true;
+    setTarget(n, {
+      x: p[0] * 1.35, y: p[1] * 1.35, z: -1.2,
+      sx: 0.62, sy: 0.62, sz: 0.62,
+      prominence: 0.28,
+      rotationSpeed: 0.06
+    });
+  });
+
+  selectedRooms.forEach((room, index) => {
+    const n = state.registry.get(room.id);
+    const p = roomClusterPosition(index, selectedRooms.length);
+    const selected = state.mode === "ROOM_MODE" && selectedRoomId === room.id;
+
+    n.visible = true;
+    setTarget(n, {
+      x: p[0],
+      y: p[1],
+      z: selected ? 0.45 : p[2],
+      sx: selected ? 0.82 : 0.58,
+      sy: selected ? 0.82 : 0.58,
+      sz: selected ? 0.82 : 0.58,
+      prominence: selected ? 1.0 : state.mode === "ROOM_MODE" ? 0.38 : 0.76,
+      rotationSpeed: selected ? 0.18 : 0.12
+    });
+  });
+
+  const ret = state.registry.get("return");
+  ret.visible = true;
+  setTarget(ret, {
+    x: -1.75, y: -1.15, z: 0.32,
+    sx: 0.52, sy: 0.52, sz: 0.52,
+    prominence: 0.92,
+    rotationSpeed: 0.28
+  });
+}
+
+}
+
+function lerp(a, b, t) {
+return a + (b - a) * t;
+}
+
+function updateTransforms(dt) {
+const speed = Math.min(1, dt * 6.5);
+state.registry.forEach((n) => {
+const a = n.transform;
+const b = n.target;
+
+  ["x", "y", "z", "sx", "sy", "sz", "prominence", "rotationSpeed"].forEach((k) => {
+    a[k] = lerp(a[k], b[k], speed);
+  });
+
+  if (!state.reducedMotion) {
+    a.ry += dt * a.rotationSpeed;
+    a.rx += dt * a.rotationSpeed * 0.23;
+    a.rz += dt * a.rotationSpeed * 0.11;
   }
+});
+
+}
+
+function identity4() {
+return [1, 0, 0, 0,  0, 1, 0, 0,  0, 0, 1, 0,  0, 0, 0, 1];
+}
+
+function multiply4(a, b) {
+const out = new Array(16).fill(0);
+for (let r = 0; r < 4; r += 1) {
+for (let c = 0; c < 4; c += 1) {
+for (let k = 0; k < 4; k += 1) {
+out[c * 4 + r] += a[k * 4 + r] * b[c * 4 + k];
+}
+}
+}
+return out;
+}
+
+function translate4(x, y, z) {
+const m = identity4();
+m[12] = x; m[13] = y; m[14] = z;
+return m;
+}
+
+function scale4(x, y, z) {
+const m = identity4();
+m[0] = x; m[5] = y; m[10] = z;
+return m;
+}
+
+function rotateX4(a) {
+const c = Math.cos(a), s = Math.sin(a);
+return [1, 0, 0, 0,  0, c, s, 0,  0, -s, c, 0,  0, 0, 0, 1];
+}
+
+function rotateY4(a) {
+const c = Math.cos(a), s = Math.sin(a);
+return [c, 0, -s, 0,  0, 1, 0, 0,  s, 0, c, 0,  0, 0, 0, 1];
+}
+
+function rotateZ4(a) {
+const c = Math.cos(a), s = Math.sin(a);
+return [c, s, 0, 0,  -s, c, 0, 0,  0, 0, 1, 0,  0, 0, 0, 1];
+}
+
+function perspective4(fovy, aspect, near, far) {
+const f = 1 / Math.tan(fovy / 2);
+const nf = 1 / (near - far);
+return [
+f / aspect, 0, 0, 0,
+0, f, 0, 0,
+0, 0, (far + near) * nf, -1,
+0, 0, (2 * far * near) * nf, 0
+];
+}
+
+function lookAt4(eye, center, up) {
+const z = normalize(sub(eye, center));
+const x = normalize(cross(up, z));
+const y = cross(z, x);
+
+return [
+  x[0], y[0], z[0], 0,
+  x[1], y[1], z[1], 0,
+  x[2], y[2], z[2], 0,
+  -dot(x, eye), -dot(y, eye), -dot(z, eye), 1
+];
+
+}
+
+function dot(a, b) {
+return a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+}
+
+function normalMatrix3(model) {
+return [
+model[0], model[1], model[2],
+model[4], model[5], model[6],
+model[8], model[9], model[10]
+];
+}
+
+function modelMatrix(n) {
+const t = n.transform;
+return multiply4(
+translate4(t.x, t.y, t.z),
+multiply4(
+rotateZ4(t.rz),
+multiply4(
+rotateY4(t.ry),
+multiply4(
+rotateX4(t.rx),
+scale4(t.sx, t.sy, t.sz)
+)
+)
+)
+);
+}
+
+function resize() {
+const canvas = state.canvas;
+const rect = canvas.getBoundingClientRect();
+const dpr = Math.min(globalThis.devicePixelRatio || 1, 2);
+const width = Math.max(1, Math.floor(rect.width * dpr));
+const height = Math.max(1, Math.floor(rect.height * dpr));
+
+if (canvas.width !== width || canvas.height !== height) {
+  canvas.width = width;
+  canvas.height = height;
+}
+
+state.pixelRatio = dpr;
+state.width = width;
+state.height = height;
+
+state.gl.viewport(0, 0, width, height);
+
+}
+
+function bindAttrib(gl, buffer, location, size) {
+gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+gl.enableVertexAttribArray(location);
+gl.vertexAttribPointer(location, size, gl.FLOAT, false, 0, 0);
+}
+
+function drawNode(n, view, projection) {
+if (!n.visible && n.transform.prominence < 0.03) return;
+
+const gl = state.gl;
+const mesh = state.meshes.get(n.meshKey);
+if (!mesh) return;
+
+bindAttrib(gl, mesh.position, state.attribs.position, 3);
+bindAttrib(gl, mesh.normal, state.attribs.normal, 3);
+bindAttrib(gl, mesh.color, state.attribs.color, 3);
+
+const model = modelMatrix(n);
+gl.uniformMatrix4fv(state.uniforms.model, false, new Float32Array(model));
+gl.uniformMatrix4fv(state.uniforms.view, false, new Float32Array(view));
+gl.uniformMatrix4fv(state.uniforms.projection, false, new Float32Array(projection));
+gl.uniformMatrix3fv(state.uniforms.normalMatrix, false, new Float32Array(normalMatrix3(model)));
+gl.uniform1f(state.uniforms.prominence, Math.max(0, n.transform.prominence));
+
+gl.drawArrays(gl.TRIANGLES, 0, mesh.vertexCount);
+
+}
+
+function render(now) {
+if (!state.running || state.failHeld) return;
+
+const t = now * 0.001;
+const dt = state.lastTime ? Math.min(0.05, t - state.lastTime) : 0.016;
+state.lastTime = t;
+
+readControllerState();
+updateTargets();
+updateTransforms(dt);
+resize();
+
+const gl = state.gl;
+gl.clearColor(0.02, 0.025, 0.04, 0);
+gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+const aspect = state.width / Math.max(1, state.height);
+const cameraZ = aspect < 0.8 ? 8.2 : 6.7;
+const view = lookAt4([0, 0.82, cameraZ], [0, 0, 0], [0, 1, 0]);
+const projection = perspective4(Math.PI / 4.5, aspect, 0.1, 40);
+
+gl.useProgram(state.program);
+gl.uniform3f(state.uniforms.keyLightDirection, -0.4, -0.8, -0.7);
+gl.uniform3f(state.uniforms.fillLightDirection, 0.7, -0.35, -0.55);
+gl.uniform3f(state.uniforms.rimLightDirection, 0.1, 0.4, 1.0);
+gl.uniform1f(state.uniforms.ambientStrength, 0.22);
+
+let visible = 0;
+state.registry.forEach((n) => {
+  if (n.visible && n.transform.prominence > 0.04) visible += 1;
+  drawNode(n, view, projection);
+});
+
+emitReceipt({
+  visibleObjectCount: visible,
+  renderLoopStatus: state.reducedMotion ? "active-reduced-motion" : "active",
+  failureReason: null,
+  visualPassClaimed: false
+});
+
+state.raf = requestAnimationFrame(render);
+
+}
+
+function init() {
+try {
+state.root = findRoot();
+const mount = findCanvasMount(state.root);
+state.canvas = ensureCanvas(mount);
+
+  emitReceipt({ canvasMountStatus: "found" });
+
+  const gl = getGL(state.canvas);
+  if (!gl) {
+    emitReceipt({ webglContextStatus: "unavailable" });
+    hold("WEBGL_CONTEXT_UNAVAILABLE");
+    return;
+  }
+
+  state.gl = gl;
+  emitReceipt({ webglContextStatus: "acquired" });
+
+  gl.enable(gl.DEPTH_TEST);
+  gl.depthFunc(gl.LEQUAL);
+  gl.enable(gl.BLEND);
+  gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+  gl.disable(gl.CULL_FACE);
+
+  state.program = createProgram(gl);
+  state.attribs = {
+    position: gl.getAttribLocation(state.program, "aPosition"),
+    normal: gl.getAttribLocation(state.program, "aNormal"),
+    color: gl.getAttribLocation(state.program, "aColor")
+  };
+  state.uniforms = {
+    model: gl.getUniformLocation(state.program, "uModel"),
+    view: gl.getUniformLocation(state.program, "uView"),
+    projection: gl.getUniformLocation(state.program, "uProjection"),
+    normalMatrix: gl.getUniformLocation(state.program, "uNormalMatrix"),
+    prominence: gl.getUniformLocation(state.program, "uProminence"),
+    keyLightDirection: gl.getUniformLocation(state.program, "uKeyLightDirection"),
+    fillLightDirection: gl.getUniformLocation(state.program, "uFillLightDirection"),
+    rimLightDirection: gl.getUniformLocation(state.program, "uRimLightDirection"),
+    ambientStrength: gl.getUniformLocation(state.program, "uAmbientStrength")
+  };
+
+  emitReceipt({ shaderStatus: "compiled-linked" });
+
+  state.meshes = buildMeshes(gl);
+  emitReceipt({ meshBuildStatus: "built" });
+
+  state.registry = buildRegistry();
+  emitReceipt({ registryBuildStatus: "built" });
+
+  state.running = true;
+  state.startTime = performance.now() * 0.001;
+  state.raf = requestAnimationFrame(render);
+
+  globalThis.DGB_COMPASS_CRYSTALS = Object.freeze({
+    contract: CONTRACT,
+    receipt: () => Object.freeze(Object.assign({}, RECEIPT)),
+    stop: () => {
+      state.running = false;
+      cancelAnimationFrame(state.raf);
+      emitReceipt({ renderLoopStatus: "stopped", visualPassClaimed: false });
+    },
+    start: () => {
+      if (!state.running && !state.failHeld) {
+        state.running = true;
+        state.raf = requestAnimationFrame(render);
+      }
+    }
+  });
+} catch (error) {
+  hold("CRYSTALS_INIT_FAILURE:" + (error && error.message ? error.message : String(error)));
+}
+
+}
+
+if (document.readyState === "loading") {
+document.addEventListener("DOMContentLoaded", init, { once: true });
+} else {
+init();
+}
 })();

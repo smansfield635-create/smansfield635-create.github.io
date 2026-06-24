@@ -1,4 +1,4 @@
-<!doctype html> 
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -14,8 +14,14 @@
     class="compass-estate"
     data-compass-root
     data-compass-mode="COMPASS_MODE"
+    data-orbit-focus=""
+    data-selected-cardinal=""
     data-selected-wing=""
     data-selected-room=""
+    data-selected-destination-type=""
+    data-selected-destination-id=""
+    data-flower-expanded="false"
+    data-panel-descended="false"
     data-reduced-motion="false"
     data-visual-pass-claimed="false"
   >
@@ -63,33 +69,125 @@
         </a>
       </nav>
 
-      <section class="compass-scene" aria-label="Estate navigation compass">
+      <section id="compass-orbit" class="compass-scene" aria-label="Estate navigation compass" data-compass-scene>
         <div class="compass-scene__visual" data-compass-crystals-mount aria-hidden="true"></div>
 
         <div class="compass-scene__semantic" data-compass-objects>
-          <a class="compass-object compass-object--mirrorland" href="/showroom/" data-compass-object="mirrorland" data-label="Mirrorland" data-route="/showroom/">
+          <a
+            class="compass-object compass-object--mirrorland"
+            href="/showroom/"
+            data-compass-object="mirrorland"
+            data-compass-destination
+            data-destination-type="mirrorland"
+            data-destination-id="mirrorland"
+            data-label="Mirrorland"
+            data-route="/showroom/"
+            data-panel-title="Mirrorland"
+            data-panel-body="Enter the estate core and move into the central showroom."
+            data-panel-why="Use Mirrorland when you are ready to step into the center of Diamond Gate Bridge."
+          >
             <span>Mirrorland</span>
             <span>Enter Estate Core</span>
           </a>
 
-          <button class="compass-object compass-object--wing" type="button" data-compass-wing data-wing="north" data-label="North" data-title="Orientation Wing" data-wing-identity="Orientation, guidance, entry, and personal context." data-wing-meaning="Start here when you want to understand where you are and how to move through the estate." data-wing-why="Use North to get your bearings before choosing a deeper path.">
+          <button
+            class="compass-object compass-object--wing"
+            type="button"
+            data-compass-wing
+            data-compass-cardinal
+            data-compass-destination
+            data-wing="north"
+            data-cardinal-id="north"
+            data-destination-type="cardinal"
+            data-destination-id="north"
+            data-label="North"
+            data-title="Orientation Wing"
+            data-route="/"
+            data-cardinal-route="/"
+            data-wing-identity="Orientation, guidance, entry, and personal context."
+            data-wing-meaning="Start here when you want to understand where you are and how to move through the estate."
+            data-wing-why="Use North to get your bearings before choosing a deeper path."
+            data-panel-title="Orientation Wing"
+            data-panel-body="Start with guidance, entry points, personal context, and the philosophy that orients the estate."
+            data-panel-why="Enter North when you want to get your bearings and choose a coherent first path."
+          >
             <span>North</span>
-            <span>Select Wing</span>
+            <span>Open Flower</span>
           </button>
 
-          <button class="compass-object compass-object--wing" type="button" data-compass-wing data-wing="east" data-label="East" data-title="World Wing" data-wing-identity="Worlds, planet rooms, atlas paths, and larger environments." data-wing-meaning="Explore the worlds, planet rooms, and larger environments connected to Diamond Gate Bridge." data-wing-why="Use East when you want to see the estate as a world system.">
+          <button
+            class="compass-object compass-object--wing"
+            type="button"
+            data-compass-wing
+            data-compass-cardinal
+            data-compass-destination
+            data-wing="east"
+            data-cardinal-id="east"
+            data-destination-type="cardinal"
+            data-destination-id="east"
+            data-label="East"
+            data-title="World Wing"
+            data-route="/showroom/globe/"
+            data-cardinal-route="/showroom/globe/"
+            data-wing-identity="Worlds, planet rooms, atlas paths, and larger environments."
+            data-wing-meaning="Explore the worlds, planet rooms, and larger environments connected to Diamond Gate Bridge."
+            data-wing-why="Use East when you want to see the estate as a world system."
+            data-panel-title="World Wing"
+            data-panel-body="Open the atlas path into worlds, planet rooms, and larger environments."
+            data-panel-why="Enter East when you want to explore the estate as a world system."
+          >
             <span>East</span>
-            <span>Select Wing</span>
+            <span>Open Flower</span>
           </button>
 
-          <button class="compass-object compass-object--wing" type="button" data-compass-wing data-wing="south" data-label="South" data-title="Instrument Wing" data-wing-identity="Tools, laws, diagnostics, governance, and control logic." data-wing-meaning="Open the tools, laws, diagnostics, and governance structures behind the work." data-wing-why="Use South when you want measurement, standards, and control logic.">
+          <button
+            class="compass-object compass-object--wing"
+            type="button"
+            data-compass-wing
+            data-compass-cardinal
+            data-compass-destination
+            data-wing="south"
+            data-cardinal-id="south"
+            data-destination-type="cardinal"
+            data-destination-id="south"
+            data-label="South"
+            data-title="Instrument Wing"
+            data-route="/gauges/"
+            data-cardinal-route="/gauges/"
+            data-wing-identity="Tools, laws, diagnostics, governance, and control logic."
+            data-wing-meaning="Open the tools, laws, diagnostics, and governance structures behind the work."
+            data-wing-why="Use South when you want measurement, standards, and control logic."
+            data-panel-title="Instrument Wing"
+            data-panel-body="Open the tools, laws, diagnostics, and governance structures behind the work."
+            data-panel-why="Enter South when you want measurement, standards, and control logic."
+          >
             <span>South</span>
-            <span>Select Wing</span>
+            <span>Open Flower</span>
           </button>
 
-          <button class="compass-object compass-object--wing" type="button" data-compass-wing data-wing="west" data-label="West" data-title="Frontier Wing" data-wing-identity="Workshop systems, energy, water, infrastructure, vision, and future construction." data-wing-meaning="Explore the workshop edge: energy, water, infrastructure, vision, and future construction." data-wing-why="Use West when you want to see what is being built next.">
+          <button
+            class="compass-object compass-object--wing"
+            type="button"
+            data-compass-wing
+            data-compass-cardinal
+            data-compass-destination
+            data-wing="west"
+            data-cardinal-id="west"
+            data-destination-type="cardinal"
+            data-destination-id="west"
+            data-label="West"
+            data-title="Frontier Wing"
+            data-route="/explore/frontier/"
+            data-cardinal-route="/explore/frontier/"
+            data-wing-identity="Workshop systems, energy, water, infrastructure, vision, and future construction."
+            data-wing-meaning="Explore the workshop edge: energy, water, infrastructure, vision, and future construction."
+            data-wing-why="Use West when you want to see what is being built next."
+            data-panel-title="Frontier Wing"
+            data-panel-body="Explore the workshop edge: energy, water, infrastructure, vision, and future construction."
+            data-panel-why="Enter West when you want to see what is being built next."
+          >
             <span>West</span>
-            <span>Select Wing</span>
+            <span>Open Flower</span>
           </button>
 
           <button class="compass-object compass-object--return" type="button" data-compass-return data-label="Return" hidden>
@@ -100,43 +198,46 @@
 
       <section class="compass-rooms" data-compass-room-declarations hidden>
         <div data-wing-group="north" data-title="Orientation Wing">
-          <a data-compass-room data-wing="north" data-room-id="north-1" data-label="Compass Desk" data-route="/" data-purpose="Return to the main estate desk." data-relationship="Orientation entry for the estate." data-preview="Return to the main desk and restart orientation from the center." data-why-enter="Enter to reset your position." href="/">Compass Desk</a>
-          <a data-compass-room data-wing="north" data-room-id="north-2" data-label="Guide Desk" data-route="/site-guide/" data-purpose="Learn how the estate is organized." data-relationship="Guidance room for visitors." data-preview="Learn how the site is organized and where each major path leads." data-why-enter="Enter to understand the estate map." href="/site-guide/">Guide Desk</a>
-          <a data-compass-room data-wing="north" data-room-id="north-3" data-label="Front Door" data-route="/door/" data-purpose="Enter through the formal front door." data-relationship="Primary threshold into the estate." data-preview="Step through the formal entry point and begin from the threshold." data-why-enter="Enter through the front door." href="/door/">Front Door</a>
-          <a data-compass-room data-wing="north" data-room-id="north-4" data-label="About Sean" data-route="/about-this-underdog/" data-purpose="Read the founder context." data-relationship="Personal orientation room." data-preview="Read the personal story and context behind the work." data-why-enter="Enter to understand the builder." href="/about-this-underdog/">About Sean</a>
-          <a data-compass-room data-wing="north" data-room-id="north-5" data-label="Philosophy Library" data-route="/nine-summits-of-love/" data-purpose="Enter the philosophy library." data-relationship="Orientation through thought and law." data-preview="Explore the philosophy, love, coherence, and higher-self ideas behind the estate." data-why-enter="Enter to read the deeper philosophy." href="/nine-summits-of-love/">Philosophy Library</a>
+          <a data-compass-room data-compass-destination data-destination-type="petal" data-wing="north" data-room-id="north-1" data-label="Compass Desk" data-route="/" data-purpose="Return to the main estate desk." data-relationship="Orientation entry for the estate." data-preview="Return to the main desk and restart orientation from the center." data-why-enter="Enter to reset your position." href="/">Compass Desk</a>
+          <a data-compass-room data-compass-destination data-destination-type="petal" data-wing="north" data-room-id="north-2" data-label="Guide Desk" data-route="/site-guide/" data-purpose="Learn how the estate is organized." data-relationship="Guidance room for visitors." data-preview="Learn how the site is organized and where each major path leads." data-why-enter="Enter to understand the estate map." href="/site-guide/">Guide Desk</a>
+          <a data-compass-room data-compass-destination data-destination-type="petal" data-wing="north" data-room-id="north-3" data-label="Front Door" data-route="/door/" data-purpose="Enter through the formal front door." data-relationship="Primary threshold into the estate." data-preview="Step through the formal entry point and begin from the threshold." data-why-enter="Enter through the front door." href="/door/">Front Door</a>
+          <a data-compass-room data-compass-destination data-destination-type="petal" data-wing="north" data-room-id="north-4" data-label="About Sean" data-route="/about-this-underdog/" data-purpose="Read the founder context." data-relationship="Personal orientation room." data-preview="Read the personal story and context behind the work." data-why-enter="Enter to understand the builder." href="/about-this-underdog/">About Sean</a>
+          <a data-compass-room data-compass-destination data-destination-type="petal" data-wing="north" data-room-id="north-5" data-label="Philosophy Library" data-route="/nine-summits-of-love/" data-purpose="Enter the philosophy library." data-relationship="Orientation through thought and law." data-preview="Explore the philosophy, love, coherence, and higher-self ideas behind the estate." data-why-enter="Enter to read the deeper philosophy." href="/nine-summits-of-love/">Philosophy Library</a>
         </div>
 
         <div data-wing-group="east" data-title="World Wing">
-          <a data-compass-room data-wing="east" data-room-id="east-1" data-label="Atlas Study" data-route="/showroom/globe/" data-purpose="Open the world atlas." data-relationship="World navigation entry." data-preview="Open the world map and choose where the larger estate begins." data-why-enter="Enter to explore the atlas." href="/showroom/globe/">Atlas Study</a>
-          <a data-compass-room data-wing="east" data-room-id="east-2" data-label="ZIONTS" data-route="/showroom/globe/earth/" data-purpose="Visit the Earth system." data-relationship="World-system room." data-preview="Visit the Earth system and inspect one of the estate’s world structures." data-why-enter="Enter to inspect Earth." href="/showroom/globe/earth/">ZIONTS</a>
-          <a data-compass-room data-wing="east" data-room-id="east-3" data-label="Audralia Conservatory" data-route="/showroom/globe/audralia/" data-purpose="Enter the Audralia conservatory." data-relationship="Diagnostic-world destination." data-preview="Explore Audralia as a diagnostic world and structured environment." data-why-enter="Enter to inspect Audralia." href="/showroom/globe/audralia/">Audralia Conservatory</a>
-          <a data-compass-room data-wing="east" data-room-id="east-4" data-label="Hearth" data-route="/showroom/globe/hearth/" data-purpose="Visit Hearth." data-relationship="Estate world destination." data-preview="Visit Hearth and explore one of the estate’s living world rooms." data-why-enter="Enter to visit Hearth." href="/showroom/globe/hearth/">Hearth</a>
-          <a data-compass-room data-wing="east" data-room-id="east-5" data-label="H-Earth" data-route="/showroom/globe/h-earth/" data-purpose="Visit H-Earth." data-relationship="Parallel world destination." data-preview="Open the parallel world room and compare another expression of Earth." data-why-enter="Enter to examine H-Earth." href="/showroom/globe/h-earth/">H-Earth</a>
+          <a data-compass-room data-compass-destination data-destination-type="petal" data-wing="east" data-room-id="east-1" data-label="Atlas Study" data-route="/showroom/globe/" data-purpose="Open the world atlas." data-relationship="World navigation entry." data-preview="Open the world map and choose where the larger estate begins." data-why-enter="Enter to explore the atlas." href="/showroom/globe/">Atlas Study</a>
+          <a data-compass-room data-compass-destination data-destination-type="petal" data-wing="east" data-room-id="east-2" data-label="ZIONTS" data-route="/showroom/globe/earth/" data-purpose="Visit the Earth system." data-relationship="World-system room." data-preview="Visit the Earth system and inspect one of the estate’s world structures." data-why-enter="Enter to inspect Earth." href="/showroom/globe/earth/">ZIONTS</a>
+          <a data-compass-room data-compass-destination data-destination-type="petal" data-wing="east" data-room-id="east-3" data-label="Audralia Conservatory" data-route="/showroom/globe/audralia/" data-purpose="Enter the Audralia conservatory." data-relationship="Diagnostic-world destination." data-preview="Explore Audralia as a diagnostic world and structured environment." data-why-enter="Enter to inspect Audralia." href="/showroom/globe/audralia/">Audralia Conservatory</a>
+          <a data-compass-room data-compass-destination data-destination-type="petal" data-wing="east" data-room-id="east-4" data-label="Hearth" data-route="/showroom/globe/hearth/" data-purpose="Visit Hearth." data-relationship="Estate world destination." data-preview="Visit Hearth and explore one of the estate’s living world rooms." data-why-enter="Enter to visit Hearth." href="/showroom/globe/hearth/">Hearth</a>
+          <a data-compass-room data-compass-destination data-destination-type="petal" data-wing="east" data-room-id="east-5" data-label="H-Earth" data-route="/showroom/globe/h-earth/" data-purpose="Visit H-Earth." data-relationship="Parallel world destination." data-preview="Open the parallel world room and compare another expression of Earth." data-why-enter="Enter to examine H-Earth." href="/showroom/globe/h-earth/">H-Earth</a>
         </div>
 
         <div data-wing-group="south" data-title="Instrument Wing">
-          <a data-compass-room data-wing="south" data-room-id="south-1" data-label="The Lab" data-route="/gauges/" data-purpose="Open the instrument lab." data-relationship="Measurement entry." data-preview="Use the lab to inspect gauges, measures, and diagnostic surfaces." data-why-enter="Enter to open the lab." href="/gauges/">The Lab</a>
-          <a data-compass-room data-wing="south" data-room-id="south-2" data-label="Law Library" data-route="/laws/" data-purpose="Read the law library." data-relationship="Rule and standard room." data-preview="Read the laws and standards that hold the system together." data-why-enter="Enter to read the laws." href="/laws/">Law Library</a>
-          <a data-compass-room data-wing="south" data-room-id="south-3" data-label="Council Room" data-route="/governance/" data-purpose="Enter the governance chamber." data-relationship="Authority and decision room." data-preview="Explore governance, decisions, authority, and coordination logic." data-why-enter="Enter to inspect governance." href="/governance/">Council Room</a>
-          <a data-compass-room data-wing="south" data-room-id="south-4" data-label="Control Cockpit" data-route="/showroom/globe/audralia/disposition/" data-purpose="Open the control cockpit." data-relationship="Audralia control destination." data-preview="Open the control surface for Audralia disposition and diagnostic direction." data-why-enter="Enter to open the cockpit." href="/showroom/globe/audralia/disposition/">Control Cockpit</a>
+          <a data-compass-room data-compass-destination data-destination-type="petal" data-wing="south" data-room-id="south-1" data-label="The Lab" data-route="/gauges/" data-purpose="Open the instrument lab." data-relationship="Measurement entry." data-preview="Use the lab to inspect gauges, measures, and diagnostic surfaces." data-why-enter="Enter to open the lab." href="/gauges/">The Lab</a>
+          <a data-compass-room data-compass-destination data-destination-type="petal" data-wing="south" data-room-id="south-2" data-label="Law Library" data-route="/laws/" data-purpose="Read the law library." data-relationship="Rule and standard room." data-preview="Read the laws and standards that hold the system together." data-why-enter="Enter to read the laws." href="/laws/">Law Library</a>
+          <a data-compass-room data-compass-destination data-destination-type="petal" data-wing="south" data-room-id="south-3" data-label="Council Room" data-route="/governance/" data-purpose="Enter the governance chamber." data-relationship="Authority and decision room." data-preview="Explore governance, decisions, authority, and coordination logic." data-why-enter="Enter to inspect governance." href="/governance/">Council Room</a>
+          <a data-compass-room data-compass-destination data-destination-type="petal" data-wing="south" data-room-id="south-4" data-label="Control Cockpit" data-route="/showroom/globe/audralia/disposition/" data-purpose="Open the control cockpit." data-relationship="Audralia control destination." data-preview="Open the control surface for Audralia disposition and diagnostic direction." data-why-enter="Enter to open the cockpit." href="/showroom/globe/audralia/disposition/">Control Cockpit</a>
         </div>
 
         <div data-wing-group="west" data-title="Frontier Wing">
-          <a data-compass-room data-wing="west" data-room-id="west-1" data-label="Frontier Workshop Yard" data-route="/explore/frontier/" data-purpose="Enter the frontier workshop." data-relationship="Exploration entry." data-preview="Enter the workshop edge where future systems begin taking shape." data-why-enter="Enter to see what is being built." href="/explore/frontier/">Frontier Workshop Yard</a>
-          <a data-compass-room data-wing="west" data-room-id="west-2" data-label="Energy Bench" data-route="/explore/frontier/energy/" data-purpose="Open the energy bench." data-relationship="Frontier energy room." data-preview="Inspect the energy bench and explore power, motion, and frontier utility." data-why-enter="Enter to inspect energy." href="/explore/frontier/energy/">Energy Bench</a>
-          <a data-compass-room data-wing="west" data-room-id="west-3" data-label="Water Bench" data-route="/explore/frontier/water/" data-purpose="Open the water bench." data-relationship="Frontier water room." data-preview="Inspect water systems, flow, support, and frontier infrastructure." data-why-enter="Enter to inspect water." href="/explore/frontier/water/">Water Bench</a>
-          <a data-compass-room data-wing="west" data-room-id="west-4" data-label="Infrastructure Bay" data-route="/explore/frontier/infrastructure/" data-purpose="Open the infrastructure bay." data-relationship="Frontier infrastructure room." data-preview="Explore the structural systems that could support future worlds and tools." data-why-enter="Enter to inspect infrastructure." href="/explore/frontier/infrastructure/">Infrastructure Bay</a>
-          <a data-compass-room data-wing="west" data-room-id="west-5" data-label="Vision Window" data-route="/explore/frontier/vision/" data-purpose="Open the vision window." data-relationship="Frontier vision room." data-preview="Look ahead at the direction, purpose, and next horizon of the estate." data-why-enter="Enter to see the vision." href="/explore/frontier/vision/">Vision Window</a>
+          <a data-compass-room data-compass-destination data-destination-type="petal" data-wing="west" data-room-id="west-1" data-label="Frontier Workshop Yard" data-route="/explore/frontier/" data-purpose="Enter the frontier workshop." data-relationship="Exploration entry." data-preview="Enter the workshop edge where future systems begin taking shape." data-why-enter="Enter to see what is being built." href="/explore/frontier/">Frontier Workshop Yard</a>
+          <a data-compass-room data-compass-destination data-destination-type="petal" data-wing="west" data-room-id="west-2" data-label="Energy Bench" data-route="/explore/frontier/energy/" data-purpose="Open the energy bench." data-relationship="Frontier energy room." data-preview="Inspect the energy bench and explore power, motion, and frontier utility." data-why-enter="Enter to inspect energy." href="/explore/frontier/energy/">Energy Bench</a>
+          <a data-compass-room data-compass-destination data-destination-type="petal" data-wing="west" data-room-id="west-3" data-label="Water Bench" data-route="/explore/frontier/water/" data-purpose="Open the water bench." data-relationship="Frontier water room." data-preview="Inspect water systems, flow, support, and frontier infrastructure." data-why-enter="Enter to inspect water." href="/explore/frontier/water/">Water Bench</a>
+          <a data-compass-room data-compass-destination data-destination-type="petal" data-wing="west" data-room-id="west-4" data-label="Infrastructure Bay" data-route="/explore/frontier/infrastructure/" data-purpose="Open the infrastructure bay." data-relationship="Frontier infrastructure room." data-preview="Explore the structural systems that could support future worlds and tools." data-why-enter="Enter to inspect infrastructure." href="/explore/frontier/infrastructure/">Infrastructure Bay</a>
+          <a data-compass-room data-compass-destination data-destination-type="petal" data-wing="west" data-room-id="west-5" data-label="Vision Window" data-route="/explore/frontier/vision/" data-purpose="Open the vision window." data-relationship="Frontier vision room." data-preview="Look ahead at the direction, purpose, and next horizon of the estate." data-why-enter="Enter to see the vision." href="/explore/frontier/vision/">Vision Window</a>
         </div>
       </section>
 
-      <aside class="compass-panel" data-compass-panel aria-live="polite">
-        <p class="compass-panel__eyebrow">Selected room</p>
-        <h2 data-compass-panel-title>Choose a wing</h2>
+      <aside id="compass-entry-panel" class="compass-panel" data-compass-panel aria-live="polite">
+        <p class="compass-panel__eyebrow" data-compass-panel-eyebrow>Selected destination</p>
+        <h2 data-compass-panel-title>Choose a direction</h2>
         <p data-compass-panel-purpose>A navigation system for coherence.</p>
-        <p data-compass-panel-relationship>Choose a direction. Explore a world. Open an instrument. Find what moves you forward.</p>
-        <button type="button" data-compass-enter disabled>Enter Room</button>
+        <p data-compass-panel-relationship>Swipe to move the orbit. Tap a gem or label to open meaning. Enter only when you are ready to navigate.</p>
+        <div class="compass-panel__actions">
+          <button type="button" data-compass-enter disabled>Enter Room</button>
+          <button type="button" data-compass-return-to-orbit hidden>Return To Orbit</button>
+        </div>
       </aside>
 
       <section class="compass-receipts" aria-label="Compass status" hidden>
@@ -145,7 +246,7 @@
       </section>
 
       <p class="compass-accessibility-note">
-        Use wing controls to reveal rooms. Select a room to preview its value, then use Enter Room to navigate. The crystal scene is visual support only.
+        Swipe to move the orbit. Tap a direction, room, or label to preview its meaning. Use Enter Room to navigate. Return To Orbit restores exploration without leaving the page.
       </p>
     </section>
   </main>

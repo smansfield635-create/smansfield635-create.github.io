@@ -1,6 +1,6 @@
 /* /assets/compass/compass.controller.js
    DGB Compass Generation Two — controller state machine with swipe/tap/Enter hardening.
-   Scope: compass.controller.js only.
+   Scope: compass.controller.js only. 
 */
 
 (() => {

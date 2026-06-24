@@ -1,5 +1,5 @@
 // /assets/compass/compass.controller.js
-// DGB_COMPASS_GENERATION_ONE_CONTROLLER_TNT_v1
+// DGB_COMPASS_GENERATION_ONE_CONTROLLER_TNT_v1_1
 // FULL-FILE
 
 (() => {
@@ -7,7 +7,8 @@
 
   if (typeof window === "undefined" || typeof document === "undefined") return;
 
-  const CONTRACT = "DGB_COMPASS_GENERATION_ONE_CONTROLLER_TNT_v1";
+  const CONTRACT = "DGB_COMPASS_GENERATION_ONE_CONTROLLER_TNT_v1_1";
+  const PREVIOUS_CONTRACT = "DGB_COMPASS_GENERATION_ONE_CONTROLLER_TNT_v1";
   const GLOBAL = "DGBCompassController";
 
   const S = Object.freeze({
@@ -52,7 +53,7 @@
   }
 
   function routeOf(node) {
-    return data(node, "compassRoute") || node.getAttribute("href") || "";
+    return data(node, "compassRoute") || (node ? node.getAttribute("href") || "" : "");
   }
 
   function setText(selector, value) {
@@ -60,10 +61,22 @@
     if (node) node.textContent = value || "";
   }
 
+  function escapeCss(value) {
+    if (window.CSS && typeof window.CSS.escape === "function") {
+      return window.CSS.escape(value);
+    }
+
+    return String(value).replace(/[^a-zA-Z0-9_-]/g, "\\$&");
+  }
+
+  function currentRoot() {
+    return one(S.root);
+  }
+
   function setMode(mode) {
     state.mode = mode;
 
-    const root = one(S.root);
+    const root = currentRoot();
     if (root) {
       root.dataset.compassMode = mode;
       root.dataset.compassActiveWing = state.activeWing;
@@ -75,50 +88,56 @@
     document.documentElement.dataset.compassActiveRoom = state.activeRoom;
   }
 
+  function objectInfo(node) {
+    const objectType = data(node, "compassObject");
+    const wing = data(node, "compassWing");
+    const room = data(node, "compassRoom");
+
+    return {
+      objectType,
+      wing,
+      room,
+      slot: data(node, "compassSlot"),
+      isMirrorland: Boolean(node.matches(S.mirrorland) || objectType === "mirrorland"),
+      isReturn: Boolean(node.matches(S.return) || objectType === "return"),
+      isWing: Boolean(wing && !room),
+      isRoom: Boolean(room)
+    };
+  }
+
   function updateObjects() {
     all(S.object).forEach((node) => {
-      const type = data(node, "compassObject");
-      const wing = data(node, "compassWing");
-      const room = data(node, "compassRoom");
-
-      const isRootObject = type === "root";
-      const isReturn = type === "return";
-      const isMirrorland = type === "mirrorland";
-      const isWing = Boolean(wing && !room);
-      const isRoom = Boolean(room);
+      const info = objectInfo(node);
 
       let visible = false;
       let centered = false;
-      let faded = false;
       let selected = false;
+      let faded = false;
 
       if (state.mode === "compass") {
-        visible = isRootObject || isMirrorland || isWing;
-        selected = false;
-        centered = isMirrorland;
-        faded = false;
+        visible = info.isMirrorland || info.isWing;
+        centered = info.isMirrorland;
       }
 
       if (state.mode === "expanded") {
         visible =
-          isReturn ||
-          (isWing && wing === state.activeWing) ||
-          (isRoom && wing === state.activeWing);
+          info.isReturn ||
+          (info.isWing && info.wing === state.activeWing) ||
+          (info.isRoom && info.wing === state.activeWing);
 
-        centered = isWing && wing === state.activeWing;
+        centered = info.isWing && info.wing === state.activeWing;
         selected = centered;
-        faded = false;
       }
 
       if (state.mode === "room") {
         visible =
-          isReturn ||
-          (isWing && wing === state.activeWing) ||
-          (isRoom && wing === state.activeWing);
+          info.isReturn ||
+          (info.isWing && info.wing === state.activeWing) ||
+          (info.isRoom && info.wing === state.activeWing);
 
-        centered = isWing && wing === state.activeWing;
-        selected = room === state.activeRoom || centered;
-        faded = isRoom && room !== state.activeRoom;
+        centered = info.isWing && info.wing === state.activeWing;
+        selected = centered || info.room === state.activeRoom;
+        faded = info.isRoom && info.room !== state.activeRoom;
       }
 
       node.hidden = !visible;
@@ -172,6 +191,68 @@
       enter.dataset.compassRoute = route;
       enter.setAttribute("aria-disabled", route ? "false" : "true");
     }
+  }
+
+  function roomsForWing(wing) {
+    return all(`${S.room}[data-compass-wing="${escapeCss(wing)}"]`);
+  }
+
+  function slotAudit() {
+    const warnings = [];
+    const rooms = all(S.room);
+
+    rooms.forEach((room) => {
+      const wing = data(room, "compassWing");
+      const id = data(room, "compassRoom");
+      const slot = data(room, "compassSlot");
+
+      if (!slot) {
+        warnings.push({
+          type: "missing-slot",
+          wing,
+          room: id
+        });
+      }
+
+      if (slot && !/^[1-5]$/.test(slot)) {
+        warnings.push({
+          type: "invalid-slot",
+          wing,
+          room: id,
+          slot
+        });
+      }
+    });
+
+    Object.keys(groupRoomsByWing()).forEach((wing) => {
+      const seen = new Set();
+
+      groupRoomsByWing()[wing].forEach((room) => {
+        const slot = data(room, "compassSlot");
+        if (!slot) return;
+
+        if (seen.has(slot)) {
+          warnings.push({
+            type: "duplicate-slot",
+            wing,
+            slot
+          });
+        }
+
+        seen.add(slot);
+      });
+    });
+
+    return warnings;
+  }
+
+  function groupRoomsByWing() {
+    return all(S.room).reduce((acc, room) => {
+      const wing = data(room, "compassWing") || "unknown";
+      if (!acc[wing]) acc[wing] = [];
+      acc[wing].push(room);
+      return acc;
+    }, {});
   }
 
   function publish() {
@@ -291,14 +372,6 @@
     }
   }
 
-  function escapeCss(value) {
-    if (window.CSS && typeof window.CSS.escape === "function") {
-      return window.CSS.escape(value);
-    }
-
-    return String(value).replace(/[^a-zA-Z0-9_-]/g, "\\$&");
-  }
-
   function mount() {
     if (state.mounted) return getStatus();
 
@@ -325,9 +398,21 @@
     return getStatus();
   }
 
+  function activeWingSlots() {
+    if (!state.activeWing) return [];
+
+    return roomsForWing(state.activeWing).map((room) => ({
+      room: data(room, "compassRoom"),
+      slot: data(room, "compassSlot")
+    }));
+  }
+
   function getStatus() {
+    const warnings = slotAudit();
+
     return {
       contract: CONTRACT,
+      previousContract: PREVIOUS_CONTRACT,
       mounted: state.mounted,
       mode: state.mode,
       activeWing: state.activeWing,
@@ -335,14 +420,23 @@
       lastAction: state.lastAction,
       lastNavigationTarget: state.lastNavigationTarget,
       updatedAt: state.updatedAt,
-      rootObjectCount: all("[data-compass-object='root']").length,
+
+      mirrorlandDirectRoute: routeOf(one(S.mirrorland)),
       wingCount: all(S.wing).length,
       roomCount: all(S.room).length,
-      mirrorlandDirectRoute: routeOf(one(S.mirrorland)),
+      activeWingRoomCount: state.activeWing ? roomsForWing(state.activeWing).length : 0,
+      activeWingSlots: activeWingSlots(),
+
+      roomSlotsPresent: warnings.filter((item) => item.type === "missing-slot").length === 0,
+      slotWarnings: warnings,
+
       htmlOwnsCopy: true,
-      cssOwnsPresentation: true,
+      htmlOwnsSlots: true,
+      cssConsumesSlots: true,
       controllerOwnsBehavior: true,
-      crystalsOwnVisualization: false,
+      controllerDoesNotOwnGeometry: true,
+      crystalsOwnVisualization: true,
+
       noFifthFile: true,
       canvas2DFallback: false,
       diagnosticChamber: false,
@@ -374,6 +468,7 @@
 
   window[GLOBAL] = Object.freeze({
     contract: CONTRACT,
+    previousContract: PREVIOUS_CONTRACT,
     mount,
     destroy,
     selectWing,

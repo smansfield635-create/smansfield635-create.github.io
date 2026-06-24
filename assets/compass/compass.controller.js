@@ -1,122 +1,58 @@
 // /assets/compass/compass.controller.js
-// DGB_COMPASS_CONTROLLER_ARCHITECTURE_v1
+// DGB_COMPASS_CONTROLLER_CINEMATIC_BOUNDARY_RESTRUCTURE_TNT_v2_1
 // FULL-FILE
-// Compass Authority + Runtime Controller.
-// Owns: authority model, wing membership, routes, selection, expansion, room panel, navigation.
-// Does not own: WebGL rendering, crystals, page styling, room content, Map Portal implementation.
+// Owns: state, wing selection, room selection, expansion state, focus state,
+// panel-slot updates from HTML-owned data attributes, and navigation execution.
+// Does not own: visitor copy, page markup, CSS presentation, WebGL rendering,
+// diagnostics, visual-pass claims, or room-specific content.
 
 (() => {
   "use strict";
 
   if (typeof window === "undefined" || typeof document === "undefined") return;
 
-  const CONTRACT = "DGB_COMPASS_CONTROLLER_ARCHITECTURE_v1";
+  const CONTRACT = "DGB_COMPASS_CONTROLLER_CINEMATIC_BOUNDARY_RESTRUCTURE_TNT_v2_1";
+  const PREVIOUS_CONTRACT = "DGB_COMPASS_CONTROLLER_CINEMATIC_REDESIGN_TNT_v2";
   const FILE = "/assets/compass/compass.controller.js";
   const GLOBAL = "DGBCompassController";
 
-  const ROUTE_MIRRORLAND = "/showroom/";
-
-  const MODEL = Object.freeze({
-    core: Object.freeze({
-      id: "mirrorland",
-      label: "Mirrorland",
-      route: ROUTE_MIRRORLAND,
-      role: "estate-core",
-      behavior: "navigate"
-    }),
-
-    primaryActions: Object.freeze([
-      Object.freeze({
-        id: "coherence-diagnostic",
-        label: "Coherence Diagnostic",
-        route: "/coherence-diagnostic/",
-        description: "Open the immediate public diagnostic assessment."
-      }),
-      Object.freeze({
-        id: "talk-to-house",
-        label: "Talk to the House",
-        route: "/showroom/globe/hearth/jeeves/",
-        description: "Speak with Jeeves and learn how to move through the estate."
-      })
-    ]),
-
-    wings: Object.freeze({
-      north: Object.freeze({
-        id: "north",
-        label: "North",
-        title: "Orientation Wing",
-        description: "Orientation, entry, guidance, identity, and philosophical grounding.",
-        rooms: Object.freeze([
-          room("compass-desk", "Compass Desk", "/", "Return to the estate navigation controller.", "The front orientation desk."),
-          room("guide-desk", "Guide Desk", "/site-guide/", "Learn how the site, rooms, gems, routes, and return paths work.", "The instruction desk."),
-          room("front-door", "Front Door", "/door/", "Cross the public threshold into the estate.", "The public threshold."),
-          room("about-sean", "About Sean", "/about-this-underdog/", "Meet the host and mission behind Diamond Gate Bridge.", "The host portrait room."),
-          room("philosophy-library", "Philosophy Library", "/nine-summits-of-love/", "Enter the philosophical book path.", "The philosophical library.")
-        ])
-      }),
-
-      east: Object.freeze({
-        id: "east",
-        label: "East",
-        title: "World Wing",
-        description: "World study, planetary rooms, living environments, and Mirrorland bodies.",
-        rooms: Object.freeze([
-          room("atlas-study", "Atlas Study", "/showroom/globe/", "Study the estate’s worlds and planetary doors.", "The world atlas room."),
-          room("zionts", "ZIONTS", "/showroom/globe/earth/", "Enter ZIONTS, pronounced Zience.", "The reference-world room."),
-          room("audralia-conservatory", "Audralia Conservatory", "/showroom/globe/audralia/", "Enter Audralia as the constructive living-world path.", "The living-world conservatory."),
-          room("hearth", "Hearth", "/showroom/globe/hearth/", "Study Hearth as a forming world.", "The Hearth world room."),
-          room("h-earth", "H-Earth", "/showroom/globe/h-earth/", "Study the H-Earth experimental world path.", "The H-Earth annex.")
-        ])
-      }),
-
-      south: Object.freeze({
-        id: "south",
-        label: "South",
-        title: "Instrument Wing",
-        description: "Measurement, law, governance, diagnostics, and controls.",
-        rooms: Object.freeze([
-          room("the-lab", "The Lab", "/gauges/", "Inspect status, signals, and measurement results.", "The measurement room."),
-          room("law-library", "Law Library", "/laws/", "Study the rules and constraints that keep the estate coherent.", "The law room."),
-          room("council-room", "Council Room", "/governance/", "Review governance, responsibility, and decision structure.", "The governance room."),
-          room("control-cockpit", "Control Cockpit", "/showroom/globe/audralia/disposition/", "Operate Audralia’s control and instrument-facing view.", "The control cockpit.")
-        ])
-      }),
-
-      west: Object.freeze({
-        id: "west",
-        label: "West",
-        title: "Frontier Wing",
-        description: "Applied systems, future infrastructure, and workshop benches.",
-        rooms: Object.freeze([
-          room("frontier-workshop-yard", "Frontier Workshop Yard", "/explore/frontier/", "Enter the applied-systems testing yard.", "The workshop yard."),
-          room("energy-bench", "Energy Bench", "/explore/frontier/energy/", "Study future power, storage, solar support, plasma, and fusion constraints.", "The energy bench."),
-          room("water-bench", "Water Bench", "/explore/frontier/water/", "Study capture, treatment, routing, reuse, storage, and continuity.", "The water systems bench."),
-          room("infrastructure-bay", "Infrastructure Bay", "/explore/frontier/infrastructure/", "Study roads, supports, utilities, corridors, and load-bearing systems.", "The infrastructure bay."),
-          room("vision-window", "Vision Window", "/explore/frontier/vision/", "Study horizon, future clarity, imagination, and long-range consequence.", "The vision window.")
-        ])
-      })
-    })
+  const SELECTORS = Object.freeze({
+    stage: "[data-compass-stage]",
+    primary: "[data-compass-primary-route]",
+    core: "[data-compass-core]",
+    wing: "[data-compass-wing]",
+    room: "[data-compass-room]",
+    reset: "[data-compass-reset]",
+    panel: "[data-compass-room-panel]",
+    panelWing: "[data-compass-panel-wing]",
+    panelTitle: "[data-compass-panel-title]",
+    panelPurpose: "[data-compass-panel-purpose]",
+    panelRelationship: "[data-compass-panel-relationship]",
+    panelEnter: "[data-compass-enter]"
   });
 
   const state = {
     mounted: false,
     activeWing: "",
     activeRoom: "",
+    expanded: false,
     focused: false,
+    roomPanelOpen: false,
     lastAction: "loaded",
     lastNavigationTarget: "",
-    updatedAt: iso()
+    updatedAt: now(),
+    bound: false
   };
 
-  function room(id, label, route, description, relationship) {
-    return Object.freeze({ id, label, route, description, relationship });
+  function now() {
+    try {
+      return new Date().toISOString();
+    } catch (_error) {
+      return "";
+    }
   }
 
-  function iso() {
-    return new Date().toISOString();
-  }
-
-  function $(selector, root = document) {
+  function one(selector, root = document) {
     return root.querySelector(selector);
   }
 
@@ -124,25 +60,31 @@
     return Array.from(root.querySelectorAll(selector));
   }
 
-  function wing(id) {
-    return MODEL.wings[String(id || "").toLowerCase()] || null;
+  function getText(node, name) {
+    return node && node.dataset && typeof node.dataset[name] === "string"
+      ? node.dataset[name]
+      : "";
   }
 
-  function findRoom(roomId) {
-    const id = String(roomId || "");
-    for (const wingItem of Object.values(MODEL.wings)) {
-      const found = wingItem.rooms.find((item) => item.id === id);
-      if (found) return { wing: wingItem, room: found };
-    }
-    return null;
+  function getRoute(node) {
+    if (!node) return "";
+
+    return (
+      getText(node, "compassRoute") ||
+      getText(node, "compassPrimaryRoute") ||
+      node.getAttribute("href") ||
+      ""
+    ).trim();
   }
 
-  function setRootDataset() {
-    const root = document.documentElement;
-    root.dataset.compassControllerContract = CONTRACT;
-    root.dataset.compassActiveWing = state.activeWing;
-    root.dataset.compassActiveRoom = state.activeRoom;
-    root.dataset.compassFocused = String(state.focused);
+  function setText(selector, value) {
+    const node = one(selector);
+    if (node) node.textContent = value || "";
+  }
+
+  function setHidden(node, hidden) {
+    if (!node) return;
+    node.hidden = Boolean(hidden);
   }
 
   function emit(name, detail) {
@@ -151,56 +93,171 @@
     } catch (_error) {}
   }
 
+  function setPageState() {
+    const root = document.documentElement;
+
+    root.dataset.compassControllerContract = CONTRACT;
+    root.dataset.compassControllerPreviousContract = PREVIOUS_CONTRACT;
+    root.dataset.compassActiveWing = state.activeWing;
+    root.dataset.compassActiveRoom = state.activeRoom;
+    root.dataset.compassExpanded = String(state.expanded);
+    root.dataset.compassFocused = String(state.focused);
+    root.dataset.compassRoomPanelOpen = String(state.roomPanelOpen);
+  }
+
+  function setSceneState(value) {
+    const stage = one(SELECTORS.stage);
+    if (stage) stage.dataset.compassSceneState = value;
+  }
+
+  function updateWingNodes() {
+    all(SELECTORS.wing).forEach((node) => {
+      const id = getText(node, "compassWing");
+      const selected = Boolean(state.activeWing && id === state.activeWing);
+      const faded = Boolean(state.activeWing && id !== state.activeWing);
+
+      node.dataset.compassSelected = String(selected);
+      node.dataset.compassFaded = String(faded);
+      node.setAttribute("aria-pressed", String(selected));
+    });
+  }
+
+  function updateRoomNodes() {
+    all(SELECTORS.room).forEach((node) => {
+      const wing = getText(node, "compassRoomWing");
+      const room = getText(node, "compassRoom");
+      const visible = Boolean(state.activeWing && wing === state.activeWing);
+      const selected = Boolean(state.activeRoom && room === state.activeRoom);
+
+      setHidden(node, !visible);
+      node.dataset.compassVisible = String(visible);
+      node.dataset.compassSelected = String(selected);
+      node.setAttribute("aria-pressed", String(selected));
+    });
+  }
+
+  function closePanel() {
+    const panel = one(SELECTORS.panel);
+
+    state.roomPanelOpen = false;
+
+    if (panel) {
+      panel.hidden = true;
+      panel.dataset.compassPanelState = "closed";
+    }
+
+    setText(SELECTORS.panelWing, "");
+    setText(SELECTORS.panelTitle, "");
+    setText(SELECTORS.panelPurpose, "");
+    setText(SELECTORS.panelRelationship, "");
+
+    const enter = one(SELECTORS.panelEnter);
+    if (enter) {
+      enter.dataset.compassEnter = "";
+      enter.hidden = true;
+      enter.setAttribute("aria-disabled", "true");
+    }
+  }
+
+  function openWingPanel(wingNode) {
+    const panel = one(SELECTORS.panel);
+
+    state.roomPanelOpen = true;
+
+    if (panel) {
+      panel.hidden = false;
+      panel.dataset.compassPanelState = "wing";
+    }
+
+    setText(SELECTORS.panelWing, getText(wingNode, "compassLabel") || getText(wingNode, "compassWing"));
+    setText(SELECTORS.panelTitle, getText(wingNode, "compassTitle"));
+    setText(SELECTORS.panelPurpose, getText(wingNode, "compassPurpose"));
+    setText(SELECTORS.panelRelationship, getText(wingNode, "compassRelationship"));
+
+    const enter = one(SELECTORS.panelEnter);
+    if (enter) {
+      enter.dataset.compassEnter = "";
+      enter.hidden = true;
+      enter.setAttribute("aria-disabled", "true");
+    }
+  }
+
+  function openRoomPanel(roomNode) {
+    const panel = one(SELECTORS.panel);
+
+    state.roomPanelOpen = true;
+
+    if (panel) {
+      panel.hidden = false;
+      panel.dataset.compassPanelState = "room";
+    }
+
+    setText(SELECTORS.panelWing, getText(roomNode, "compassWingTitle"));
+    setText(SELECTORS.panelTitle, getText(roomNode, "compassTitle"));
+    setText(SELECTORS.panelPurpose, getText(roomNode, "compassPurpose"));
+    setText(SELECTORS.panelRelationship, getText(roomNode, "compassRelationship"));
+
+    const enter = one(SELECTORS.panelEnter);
+    if (enter) {
+      const route = getRoute(roomNode);
+      enter.dataset.compassEnter = route;
+      enter.hidden = false;
+      enter.setAttribute("aria-disabled", route ? "false" : "true");
+    }
+  }
+
   function publish() {
-    state.updatedAt = iso();
-    setRootDataset();
-    window.DGB_COMPASS_CONTROLLER_STATUS = getStatus();
+    state.updatedAt = now();
+    setPageState();
+
+    const status = getStatus();
+
+    window.DGB_COMPASS_CONTROLLER_STATUS = status;
+    window.DGB_COMPASS_CONTROLLER_RECEIPT = getReceiptLight();
+
     emit("dgb-compass-controller-state", getReceiptLight());
-    return window.DGB_COMPASS_CONTROLLER_STATUS;
+
+    return status;
   }
 
   function selectWing(wingId) {
-    const selected = wing(wingId);
-    if (!selected) return false;
+    const clean = String(wingId || "").trim().toLowerCase();
+    const wingNode = one(`${SELECTORS.wing}[data-compass-wing="${cssEscape(clean)}"]`);
 
-    state.activeWing = selected.id;
+    if (!clean || !wingNode) return false;
+
+    state.activeWing = clean;
     state.activeRoom = "";
+    state.expanded = true;
     state.focused = true;
-    state.lastAction = "select-wing:" + selected.id;
+    state.lastAction = "select-wing:" + clean;
 
-    all("[data-compass-wing]").forEach((node) => {
-      const id = node.getAttribute("data-compass-wing");
-      node.dataset.compassSelected = String(id === selected.id);
-      node.dataset.compassFaded = String(id !== selected.id);
-    });
+    setSceneState("wing");
+    updateWingNodes();
+    updateRoomNodes();
+    openWingPanel(wingNode);
 
-    all("[data-compass-room]").forEach((node) => {
-      const belongs = node.getAttribute("data-compass-room-wing") === selected.id;
-      node.hidden = !belongs;
-      node.dataset.compassVisible = String(belongs);
-      node.dataset.compassSelected = "false";
-    });
-
-    renderPanelNeutral(selected);
     publish();
     return true;
   }
 
   function selectRoom(roomId) {
-    const found = findRoom(roomId);
-    if (!found) return false;
+    const clean = String(roomId || "").trim();
+    const roomNode = one(`${SELECTORS.room}[data-compass-room="${cssEscape(clean)}"]`);
 
-    state.activeWing = found.wing.id;
-    state.activeRoom = found.room.id;
+    if (!clean || !roomNode) return false;
+
+    state.activeWing = getText(roomNode, "compassRoomWing");
+    state.activeRoom = clean;
+    state.expanded = true;
     state.focused = true;
-    state.lastAction = "select-room:" + found.room.id;
+    state.lastAction = "select-room:" + clean;
 
-    all("[data-compass-room]").forEach((node) => {
-      const selected = node.getAttribute("data-compass-room") === found.room.id;
-      node.dataset.compassSelected = String(selected);
-    });
+    setSceneState("room");
+    updateWingNodes();
+    updateRoomNodes();
+    openRoomPanel(roomNode);
 
-    renderPanelRoom(found.wing, found.room);
     publish();
     return true;
   }
@@ -208,134 +265,81 @@
   function reset() {
     state.activeWing = "";
     state.activeRoom = "";
+    state.expanded = false;
     state.focused = false;
     state.lastAction = "reset";
 
-    all("[data-compass-wing]").forEach((node) => {
-      node.dataset.compassSelected = "false";
-      node.dataset.compassFaded = "false";
-    });
+    setSceneState("startup");
+    updateWingNodes();
+    updateRoomNodes();
+    closePanel();
 
-    all("[data-compass-room]").forEach((node) => {
-      node.hidden = true;
-      node.dataset.compassVisible = "false";
-      node.dataset.compassSelected = "false";
-    });
-
-    renderPanelInitial();
     publish();
     return true;
   }
 
   function navigate(route) {
-    const target = String(route || "");
+    const target = String(route || "").trim();
+
     if (!target) return false;
 
     state.lastNavigationTarget = target;
-    state.lastAction = "navigate:" + target;
+    state.lastAction = "navigate";
     publish();
 
     window.location.href = target;
     return true;
   }
 
-  function renderPanelInitial() {
-    const panel = $("[data-compass-room-panel]");
-    if (!panel) return;
+  function handleClick(event) {
+    const primary = event.target.closest(SELECTORS.primary);
+    if (primary) {
+      event.preventDefault();
+      navigate(getRoute(primary));
+      return;
+    }
 
-    panel.dataset.compassPanelState = "neutral";
-    panel.innerHTML = `
-      <p class="compass-panel__kicker">Estate Compass</p>
-      <h2>Choose a wing.</h2>
-      <p>Select North, East, South, or West to reveal the rooms inside that part of the estate.</p>
-    `;
+    const core = event.target.closest(SELECTORS.core);
+    if (core) {
+      event.preventDefault();
+      navigate(getRoute(core));
+      return;
+    }
+
+    const room = event.target.closest(SELECTORS.room);
+    if (room) {
+      event.preventDefault();
+      selectRoom(getText(room, "compassRoom"));
+      return;
+    }
+
+    const wing = event.target.closest(SELECTORS.wing);
+    if (wing) {
+      event.preventDefault();
+      selectWing(getText(wing, "compassWing"));
+      return;
+    }
+
+    const enter = event.target.closest(SELECTORS.panelEnter);
+    if (enter) {
+      event.preventDefault();
+      navigate(getText(enter, "compassEnter"));
+      return;
+    }
+
+    const resetNode = event.target.closest(SELECTORS.reset);
+    if (resetNode) {
+      event.preventDefault();
+      reset();
+    }
   }
 
-  function renderPanelNeutral(wingItem) {
-    const panel = $("[data-compass-room-panel]");
-    if (!panel) return;
+  function cssEscape(value) {
+    if (window.CSS && typeof window.CSS.escape === "function") {
+      return window.CSS.escape(value);
+    }
 
-    panel.dataset.compassPanelState = "wing";
-    panel.innerHTML = `
-      <p class="compass-panel__kicker">${escapeHtml(wingItem.label)} Wing</p>
-      <h2>${escapeHtml(wingItem.title)}</h2>
-      <p>${escapeHtml(wingItem.description)}</p>
-      <p class="compass-panel__hint">Select a room to reveal its entrance.</p>
-    `;
-  }
-
-  function renderPanelRoom(wingItem, roomItem) {
-    const panel = $("[data-compass-room-panel]");
-    if (!panel) return;
-
-    panel.dataset.compassPanelState = "room";
-    panel.innerHTML = `
-      <p class="compass-panel__kicker">${escapeHtml(wingItem.title)}</p>
-      <h2>${escapeHtml(roomItem.label)}</h2>
-      <p>${escapeHtml(roomItem.description)}</p>
-      <p class="compass-panel__relationship">${escapeHtml(roomItem.relationship)}</p>
-      <button class="compass-enter" type="button" data-compass-enter="${escapeAttr(roomItem.route)}">
-        Enter Room
-      </button>
-    `;
-  }
-
-  function escapeHtml(value) {
-    return String(value == null ? "" : value)
-      .replaceAll("&", "&amp;")
-      .replaceAll("<", "&lt;")
-      .replaceAll(">", "&gt;")
-      .replaceAll('"', "&quot;")
-      .replaceAll("'", "&#39;");
-  }
-
-  function escapeAttr(value) {
-    return escapeHtml(value).replaceAll("`", "&#96;");
-  }
-
-  function bind() {
-    document.addEventListener("click", (event) => {
-      const primary = event.target.closest("[data-compass-primary-route]");
-      if (primary) {
-        event.preventDefault();
-        navigate(primary.getAttribute("data-compass-primary-route"));
-        return;
-      }
-
-      const core = event.target.closest("[data-compass-core]");
-      if (core) {
-        event.preventDefault();
-        navigate(MODEL.core.route);
-        return;
-      }
-
-      const wingNode = event.target.closest("[data-compass-wing]");
-      if (wingNode) {
-        event.preventDefault();
-        selectWing(wingNode.getAttribute("data-compass-wing"));
-        return;
-      }
-
-      const roomNode = event.target.closest("[data-compass-room]");
-      if (roomNode) {
-        event.preventDefault();
-        selectRoom(roomNode.getAttribute("data-compass-room"));
-        return;
-      }
-
-      const enter = event.target.closest("[data-compass-enter]");
-      if (enter) {
-        event.preventDefault();
-        navigate(enter.getAttribute("data-compass-enter"));
-        return;
-      }
-
-      const resetNode = event.target.closest("[data-compass-reset]");
-      if (resetNode) {
-        event.preventDefault();
-        reset();
-      }
-    });
+    return String(value).replace(/[^a-zA-Z0-9_-]/g, "\\$&");
   }
 
   function mount() {
@@ -344,35 +348,58 @@
     state.mounted = true;
     state.lastAction = "mounted";
 
-    all("[data-compass-room]").forEach((node) => {
-      node.hidden = true;
-      node.dataset.compassVisible = "false";
-      node.dataset.compassSelected = "false";
-    });
+    setSceneState("startup");
+    updateWingNodes();
+    updateRoomNodes();
+    closePanel();
 
-    renderPanelInitial();
-    bind();
+    if (!state.bound) {
+      document.addEventListener("click", handleClick);
+      state.bound = true;
+    }
+
     publish();
+    return getStatus();
+  }
 
+  function destroy() {
+    if (state.bound) {
+      document.removeEventListener("click", handleClick);
+      state.bound = false;
+    }
+
+    state.mounted = false;
+    state.lastAction = "destroyed";
+
+    publish();
     return getStatus();
   }
 
   function getStatus() {
     return {
       contract: CONTRACT,
+      previousContract: PREVIOUS_CONTRACT,
       file: FILE,
       globalName: GLOBAL,
       mounted: state.mounted,
+      bound: state.bound,
       activeWing: state.activeWing,
       activeRoom: state.activeRoom,
+      expanded: state.expanded,
       focused: state.focused,
+      roomPanelOpen: state.roomPanelOpen,
       lastAction: state.lastAction,
       lastNavigationTarget: state.lastNavigationTarget,
       updatedAt: state.updatedAt,
-      wingCount: Object.keys(MODEL.wings).length,
-      roomCount: Object.values(MODEL.wings).reduce((sum, item) => sum + item.rooms.length, 0),
-      primaryActionCount: MODEL.primaryActions.length,
-      mirrorlandRoute: MODEL.core.route,
+      wingCount: all(SELECTORS.wing).length,
+      roomCount: all(SELECTORS.room).length,
+      primaryActionCount: all(SELECTORS.primary).length,
+      htmlOwnsCopy: true,
+      cssOwnsPresentation: true,
+      controllerOwnsBehavior: true,
+      crystalsOwnVisualization: true,
+      estateArchitectureShared: true,
+      pageExpressionLocal: true,
       noFifthFile: true,
       diagnosticChamber: false,
       canvas2DFallback: false,
@@ -390,6 +417,7 @@
       mounted: status.mounted,
       activeWing: status.activeWing,
       activeRoom: status.activeRoom,
+      expanded: status.expanded,
       lastAction: status.lastAction,
       updatedAt: status.updatedAt,
       visualPassClaimed: false
@@ -399,18 +427,18 @@
   function getReceipt() {
     return {
       ...getReceiptLight(),
-      model: MODEL,
       state: { ...state },
       status: getStatus(),
-      generatedAt: iso()
+      generatedAt: now()
     };
   }
 
   const API = Object.freeze({
     contract: CONTRACT,
+    previousContract: PREVIOUS_CONTRACT,
     file: FILE,
-    model: MODEL,
     mount,
+    destroy,
     reset,
     selectWing,
     selectRoom,

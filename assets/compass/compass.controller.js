@@ -1,15 +1,13 @@
 /* /assets/compass/compass.controller.js
-   DGB Compass — Orbit Flower Traversal Controller.
+   DGB Compass — Orbit Flower Traversal Controller with coordinate/function label state.
    Scope: compass.controller.js only.
-   Owns orbit focus, destination selection, route validation, Enter navigation, Return To Orbit, panel population, scroll orchestration, and receipts.
-   Does not own WebGL geometry, CSS presentation, or visual-pass claims.
 */
 
 (() => {
   "use strict";
 
   const CONTRACT = Object.freeze({
-    id: "DGB_COMPASS_ORBIT_FLOWER_TRAVERSAL_CONTROLLER_TNT_v1",
+    id: "DGB_COMPASS_COORDINATE_FUNCTION_CONTROLLER_TNT_v2",
     file: "/assets/compass/compass.controller.js",
     visualPassClaimed: false,
     productionAuthorized: false,
@@ -73,13 +71,15 @@
     selectedRoom: "",
     destinationType: "",
     destinationId: "",
+    destinationLabel: "",
     destinationRoute: "",
     routeSource: "",
     flowerExpanded: false,
     panelDescended: false,
     enterEnabled: false,
-    panelStatus: "pending",
-    returnToOrbitStatus: "pending",
+    coordinateFunction: "",
+    localCoordinate: "",
+    localFunction: "",
     lastAction: "init",
     lastOrientationInput: "init",
     failureReason: null,
@@ -108,53 +108,15 @@
     if (el) el.textContent = value || "";
   }
 
+  function setObjectText(el, primary, secondary) {
+    if (!el) return;
+    const spans = el.querySelectorAll("span");
+    if (spans[0]) spans[0].textContent = primary || "";
+    if (spans[1]) spans[1].textContent = secondary || "";
+  }
+
   function reducedScrollBehavior() {
     return state.reducedMotion ? "auto" : "smooth";
-  }
-
-  function emitReceipt(extra = {}) {
-    Object.assign(RECEIPT, {
-      rootStatus: state.root ? "found" : "missing",
-      cardinalCount: state.cardinals.length,
-      roomCount: state.rooms.length,
-      mode: state.mode,
-      orbitFocus: state.orbitFocus || "",
-      selectedCardinal: state.selectedCardinal || "",
-      selectedRoom: state.selectedRoom || "",
-      destinationType: state.selectedDestinationType || "",
-      destinationId: state.selectedDestinationId || "",
-      destinationRoute: state.selectedDestinationRoute || "",
-      routeSource: state.routeSource || "",
-      flowerExpanded: state.flowerExpanded === true,
-      panelDescended: state.panelDescended === true,
-      enterEnabled: state.enterEnabled === true,
-      panelStatus: state.panel ? "found" : "missing",
-      returnToOrbitStatus: state.returnToOrbitControl ? "found" : "missing",
-      lastAction: state.lastAction,
-      lastOrientationInput: state.lastOrientationInput,
-      failureReason: state.failureReason,
-      visualPassClaimed: false
-    }, extra, { visualPassClaimed: false });
-
-    if (state.receiptSlot) {
-      state.receiptSlot.value = JSON.stringify(RECEIPT);
-      state.receiptSlot.textContent = JSON.stringify(RECEIPT);
-      state.receiptSlot.dataset.visualPassClaimed = "false";
-    }
-
-    if (state.root) {
-      state.root.dataset.compassControllerReceipt = JSON.stringify(RECEIPT);
-      state.root.dataset.visualPassClaimed = "false";
-    }
-
-    globalThis.DGB_COMPASS_CONTROLLER_RECEIPT = Object.freeze({ ...RECEIPT });
-  }
-
-  function hold(reason) {
-    state.held = true;
-    state.failureReason = reason;
-    state.lastAction = "hold";
-    emitReceipt({ failureReason: reason });
   }
 
   function readCardinal(el) {
@@ -168,11 +130,15 @@
       wing,
       destinationId: wing,
       destinationType: "cardinal",
-      label: el.dataset.title || el.dataset.label || wing,
+      label: el.dataset.label || el.dataset.title || wing,
       route,
+      globalCoordinate: el.dataset.globalCoordinate || wing,
+      coordinateFunction: el.dataset.coordinateFunction || "",
+      orbitLabel: el.dataset.orbitLabel || el.dataset.label || wing,
+      flowerAnchorLabel: el.dataset.flowerAnchorLabel || "Anchor",
       panelTitle: el.dataset.panelTitle || el.dataset.title || el.dataset.label || wing,
-      panelBody: el.dataset.panelBody || el.dataset.wingMeaning || "Open this direction.",
-      panelWhy: el.dataset.panelWhy || el.dataset.wingWhy || "Enter this direction.",
+      panelBody: el.dataset.panelBody || el.dataset.wingMeaning || "Open this coordinate field.",
+      panelWhy: el.dataset.panelWhy || el.dataset.wingWhy || "Enter this coordinate.",
       validRoute: isValidRoute(route)
     };
   }
@@ -194,6 +160,8 @@
       destinationType: "petal",
       label: el.dataset.label || el.textContent.trim() || roomId,
       route,
+      localCoordinate: el.dataset.localCoordinate || "Petal",
+      localFunction: el.dataset.localFunction || "",
       preview: el.dataset.preview || el.dataset.purpose || "Open this estate room.",
       whyEnter: el.dataset.whyEnter || el.dataset.relationship || "Enter this room.",
       validRoute: isValidRoute(route)
@@ -211,6 +179,8 @@
       destinationId: "mirrorland",
       label: el.dataset.label || "Mirrorland",
       route,
+      coordinateFunction: el.dataset.coordinateFunction || "Center fulcrum",
+      orbitLabel: el.dataset.orbitLabel || "Center",
       panelTitle: el.dataset.panelTitle || "Mirrorland",
       panelBody: el.dataset.panelBody || "Enter the estate core and move into the central showroom.",
       panelWhy: el.dataset.panelWhy || "Use Mirrorland when you are ready to step into the center.",
@@ -237,29 +207,12 @@
     state.receiptSlot = $("[data-compass-controller-receipt]", state.root);
 
     state.mirrorland = readMirrorland($("[data-compass-object='mirrorland']", state.root));
+    state.cardinals = $all("[data-compass-cardinal][data-wing]", state.root).map(readCardinal).filter(Boolean);
+    state.rooms = $all("[data-compass-room][data-wing][data-room-id]", state.root).map(readRoom).filter(Boolean);
 
-    state.cardinals = $all("[data-compass-cardinal][data-wing]", state.root)
-      .map(readCardinal)
-      .filter(Boolean);
-
-    state.rooms = $all("[data-compass-room][data-wing][data-room-id]", state.root)
-      .map(readRoom)
-      .filter(Boolean);
-
-    if (!state.mirrorland) {
-      hold("MISSING_MIRRORLAND_DESTINATION");
-      return false;
-    }
-
-    if (state.cardinals.length < 4) {
-      hold("CARDINAL_DESTINATIONS_INCOMPLETE");
-      return false;
-    }
-
-    if (state.rooms.length < 1) {
-      hold("NO_VALID_ROOM_DECLARATIONS");
-      return false;
-    }
+    if (!state.mirrorland) return hold("MISSING_MIRRORLAND_DESTINATION"), false;
+    if (state.cardinals.length < 4) return hold("CARDINAL_DESTINATIONS_INCOMPLETE"), false;
+    if (state.rooms.length < 1) return hold("NO_VALID_ROOM_DECLARATIONS"), false;
 
     state.reducedMotion =
       globalThis.matchMedia("(prefers-reduced-motion: reduce)").matches ||
@@ -298,20 +251,32 @@
 
     if (!state.enterControl) return;
 
+    state.enterControl.disabled = !valid;
+    state.enterControl.setAttribute("aria-disabled", valid ? "false" : "true");
+
     if (valid) {
-      state.enterControl.disabled = false;
       state.enterControl.dataset.route = route;
       state.enterControl.dataset.routeSource = state.routeSource;
-      state.enterControl.setAttribute("aria-disabled", "false");
     } else {
-      state.enterControl.disabled = true;
       delete state.enterControl.dataset.route;
       delete state.enterControl.dataset.routeSource;
-      state.enterControl.setAttribute("aria-disabled", "true");
     }
   }
 
+  function currentCoordinatePayload() {
+    const cardinal = findCardinal(state.selectedCardinal || state.orbitFocus);
+    const room = findRoom(state.selectedRoom);
+
+    return {
+      coordinateFunction: cardinal ? cardinal.coordinateFunction : "",
+      localCoordinate: room ? room.localCoordinate : "",
+      localFunction: room ? room.localFunction : ""
+    };
+  }
+
   function writeRootState() {
+    const payload = currentCoordinatePayload();
+
     state.root.dataset.compassMode = state.mode;
     state.root.dataset.orbitFocus = state.orbitFocus || "";
     state.root.dataset.selectedCardinal = state.selectedCardinal || "";
@@ -319,23 +284,52 @@
     state.root.dataset.selectedRoom = state.selectedRoom || "";
     state.root.dataset.selectedDestinationType = state.selectedDestinationType || "";
     state.root.dataset.selectedDestinationId = state.selectedDestinationId || "";
+    state.root.dataset.selectedDestinationLabel = state.selectedDestinationLabel || "";
+    state.root.dataset.coordinateFunction = payload.coordinateFunction || "";
+    state.root.dataset.localCoordinate = payload.localCoordinate || "";
+    state.root.dataset.localFunction = payload.localFunction || "";
     state.root.dataset.flowerExpanded = state.flowerExpanded ? "true" : "false";
     state.root.dataset.panelDescended = state.panelDescended ? "true" : "false";
     state.root.dataset.reducedMotion = state.reducedMotion ? "true" : "false";
     state.root.dataset.visualPassClaimed = "false";
   }
 
-  function updateVisibility() {
+  function updateSemanticLabels() {
+    if (state.mirrorland && state.mirrorland.el) {
+      const withdrawn = state.flowerExpanded ? "true" : "false";
+      state.mirrorland.el.dataset.withdrawn = withdrawn;
+      setObjectText(state.mirrorland.el, "Mirrorland", state.flowerExpanded ? "Withdrawn Center" : "Center Fulcrum");
+    }
+
     state.cardinals.forEach((item) => {
-      item.el.dataset.active = item.wing === state.orbitFocus || item.wing === state.selectedCardinal ? "true" : "false";
-      item.el.dataset.flowerExpanded = item.wing === state.selectedCardinal && state.flowerExpanded ? "true" : "false";
+      const active = item.wing === state.orbitFocus || item.wing === state.selectedCardinal;
+      const flowerAnchor = item.wing === state.selectedCardinal && state.flowerExpanded;
+
+      item.el.dataset.active = active ? "true" : "false";
+      item.el.dataset.flowerExpanded = flowerAnchor ? "true" : "false";
+      item.el.dataset.withdrawn = state.flowerExpanded && !flowerAnchor ? "true" : "false";
+
+      if (flowerAnchor) {
+        setObjectText(item.el, item.flowerAnchorLabel, "Anchor");
+      } else if (state.flowerExpanded) {
+        setObjectText(item.el, item.orbitLabel, "Outside Field");
+      } else {
+        setObjectText(item.el, item.orbitLabel, active ? "Facing Coordinate" : "Orbit Coordinate");
+      }
     });
 
     state.rooms.forEach((room) => {
       const visible = state.flowerExpanded && room.wing === state.selectedCardinal;
       room.el.hidden = !visible;
       room.el.dataset.active = room.roomId === state.selectedRoom ? "true" : "false";
+      room.el.dataset.coordinateLabel = room.localCoordinate || "";
+      room.el.dataset.coordinateFunction = room.localFunction || "";
+      if (visible) room.el.textContent = `${room.localCoordinate}: ${room.label}`;
     });
+  }
+
+  function updateVisibility() {
+    updateSemanticLabels();
 
     if (state.returnControl) {
       state.returnControl.hidden = state.mode === MODES.COMPASS;
@@ -350,14 +344,14 @@
 
   function updatePanelDefault() {
     setText(state.panelEyebrow, "Orbit");
-    setText(state.panelTitle, "Choose a direction");
-    setText(state.panelPurpose, "Swipe to move the orbit. Tap a gem or label to open meaning.");
-    setText(state.panelRelationship, "Enter only when you are ready to navigate.");
+    setText(state.panelTitle, "Choose a coordinate");
+    setText(state.panelPurpose, "Swipe to rotate the orbit. Tap an axis, petal, or label to open meaning.");
+    setText(state.panelRelationship, "Enter only when the selected coordinate is the path you want.");
     setEnter("", "");
   }
 
   function updatePanelForCardinal(cardinal) {
-    setText(state.panelEyebrow, "Cardinal destination");
+    setText(state.panelEyebrow, "Coordinate axis");
     setText(state.panelTitle, cardinal.panelTitle);
     setText(state.panelPurpose, cardinal.panelBody);
     setText(state.panelRelationship, cardinal.panelWhy);
@@ -365,16 +359,16 @@
   }
 
   function updatePanelForRoom(room) {
-    setText(state.panelEyebrow, "Room destination");
+    setText(state.panelEyebrow, room.localCoordinate || "Room coordinate");
     setText(state.panelTitle, room.label);
     setText(state.panelPurpose, room.preview);
-    setText(state.panelRelationship, room.whyEnter);
+    setText(state.panelRelationship, room.localFunction || room.whyEnter);
     setEnter(room.validRoute ? room.route : "", "html-room-declaration");
   }
 
   function updatePanelForMirrorland() {
     const mirror = state.mirrorland;
-    setText(state.panelEyebrow, "Center destination");
+    setText(state.panelEyebrow, mirror.orbitLabel || "Center destination");
     setText(state.panelTitle, mirror.panelTitle);
     setText(state.panelPurpose, mirror.panelBody);
     setText(state.panelRelationship, mirror.panelWhy);
@@ -384,26 +378,66 @@
   function updatePanel() {
     if (!state.panel) return;
 
-    if (!state.selectedDestinationType) {
-      updatePanelDefault();
-      return;
-    }
-
-    if (state.selectedDestinationType === "mirrorland") {
-      updatePanelForMirrorland();
-      return;
-    }
-
+    if (!state.selectedDestinationType) return updatePanelDefault();
+    if (state.selectedDestinationType === "mirrorland") return updatePanelForMirrorland();
     if (state.selectedDestinationType === "cardinal") {
       const cardinal = findCardinal(state.selectedCardinal);
       if (cardinal) updatePanelForCardinal(cardinal);
       return;
     }
-
     if (state.selectedDestinationType === "petal") {
       const room = findRoom(state.selectedRoom);
       if (room) updatePanelForRoom(room);
     }
+  }
+
+  function emitReceipt(extra = {}) {
+    const payload = currentCoordinatePayload();
+
+    Object.assign(RECEIPT, {
+      rootStatus: state.root ? "found" : "missing",
+      cardinalCount: state.cardinals.length,
+      roomCount: state.rooms.length,
+      mode: state.mode,
+      orbitFocus: state.orbitFocus || "",
+      selectedCardinal: state.selectedCardinal || "",
+      selectedRoom: state.selectedRoom || "",
+      destinationType: state.selectedDestinationType || "",
+      destinationId: state.selectedDestinationId || "",
+      destinationLabel: state.selectedDestinationLabel || "",
+      destinationRoute: state.selectedDestinationRoute || "",
+      routeSource: state.routeSource || "",
+      flowerExpanded: state.flowerExpanded === true,
+      panelDescended: state.panelDescended === true,
+      enterEnabled: state.enterEnabled === true,
+      coordinateFunction: payload.coordinateFunction,
+      localCoordinate: payload.localCoordinate,
+      localFunction: payload.localFunction,
+      lastAction: state.lastAction,
+      lastOrientationInput: state.lastOrientationInput,
+      failureReason: state.failureReason,
+      visualPassClaimed: false
+    }, extra, { visualPassClaimed: false });
+
+    if (state.receiptSlot) {
+      state.receiptSlot.value = JSON.stringify(RECEIPT);
+      state.receiptSlot.textContent = JSON.stringify(RECEIPT);
+      state.receiptSlot.dataset.visualPassClaimed = "false";
+    }
+
+    if (state.root) {
+      state.root.dataset.compassControllerReceipt = JSON.stringify(RECEIPT);
+      state.root.dataset.visualPassClaimed = "false";
+    }
+
+    globalThis.DGB_COMPASS_CONTROLLER_RECEIPT = Object.freeze({ ...RECEIPT });
+  }
+
+  function hold(reason) {
+    state.held = true;
+    state.failureReason = reason;
+    state.lastAction = "hold";
+    emitReceipt({ failureReason: reason });
   }
 
   function commit(action) {
@@ -563,7 +597,6 @@
       state.lastAction = "enter-held-no-valid-destination-route";
       setEnter("", "");
       emitReceipt({
-        lastAction: state.lastAction,
         enterEnabled: false,
         failureReason: "ENTER_HELD_NO_VALID_DESTINATION_ROUTE"
       });
@@ -622,56 +655,21 @@
         navigateEnter();
       });
     }
-
-    document.addEventListener("keydown", (event) => {
-      const active = document.activeElement;
-      const isTypingTarget =
-        active &&
-        (active.tagName === "INPUT" ||
-          active.tagName === "TEXTAREA" ||
-          active.tagName === "SELECT" ||
-          active.isContentEditable);
-
-      if (isTypingTarget) return;
-
-      if (event.key === "Escape") {
-        event.preventDefault();
-        returnToOrbit();
-      }
-
-      if (event.key === "Enter" && event.target === state.enterControl) {
-        event.preventDefault();
-        navigateEnter();
-      }
-    });
-
-    const motionQuery = globalThis.matchMedia("(prefers-reduced-motion: reduce)");
-    if (motionQuery && typeof motionQuery.addEventListener === "function") {
-      motionQuery.addEventListener("change", () => {
-        state.reducedMotion = motionQuery.matches;
-        commit("reduced-motion-updated");
-      });
-    }
   }
 
   function exposeApi() {
     globalThis.DGB_COMPASS_CONTROLLER = Object.freeze({
       contract: CONTRACT,
       receipt: () => Object.freeze({ ...RECEIPT }),
-
       requestAxisSwipe,
       requestDirectionSelection,
       selectWing: requestDirectionSelection,
-
       selectCardinal,
       requestCardinalSelection: selectCardinal,
-
       selectRoom,
       requestRoomSelection: selectRoom,
-
       selectMirrorland,
       requestMirrorlandSelection: selectMirrorland,
-
       returnToOrbit,
       returnStep: returnToOrbit,
       enter: navigateEnter
@@ -680,17 +678,9 @@
 
   function init() {
     if (!acquireDom()) return;
-
     bindEvents();
     exposeApi();
     enterCompassMode("restore-compass-mode");
-
-    emitReceipt({
-      rootStatus: "found",
-      panelStatus: state.panel ? "found" : "missing",
-      returnToOrbitStatus: state.returnToOrbitControl ? "found" : "missing",
-      visualPassClaimed: false
-    });
   }
 
   if (document.readyState === "loading") {

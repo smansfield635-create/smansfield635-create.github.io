@@ -1,7 +1,7 @@
 /* /assets/compass/compass.css
-   DGB Compass Generation Two — presentation layer with visitor-value copy support.
+   DGB Compass — Orbit Flower Traversal presentation layer.
    Scope: compass.css only.
-   Owns atmosphere, layout, containment, layering, focus states, responsive behavior, reduced-motion presentation, capability treatment, and compact reveal presentation.
+   Owns atmosphere, layout, containment, layering, focus states, responsive behavior, reduced-motion presentation, capability treatment, labels, panel actions, and Return To Orbit presentation.
    Does not own controller state transitions, navigation execution, WebGL geometry, route membership, or visual-pass claims.
 */
 
@@ -33,6 +33,7 @@
 html {
   min-height: 100%;
   background: var(--compass-bg-0);
+  scroll-behavior: smooth;
 }
 
 body {
@@ -186,8 +187,8 @@ a:focus-visible {
   position: relative;
   display: grid;
   gap: 8px;
-  padding: 18px 20px;
   min-height: 122px;
+  padding: 18px 20px;
   border: 1px solid rgba(216, 184, 106, 0.24);
   border-radius: var(--compass-radius-md);
   background:
@@ -289,6 +290,7 @@ a:focus-visible {
   border: 1px solid rgba(216, 184, 106, 0.16);
   border-radius: var(--compass-radius-lg);
   overflow: hidden;
+  touch-action: pan-y;
   background:
     radial-gradient(ellipse at 50% 52%, rgba(124, 185, 214, 0.13), transparent 34%),
     radial-gradient(ellipse at 50% 100%, rgba(216, 184, 106, 0.08), transparent 50%),
@@ -339,9 +341,9 @@ a:focus-visible {
 }
 
 [data-compass-crystals-mount] canvas {
+  display: block;
   width: 100%;
   height: 100%;
-  display: block;
   pointer-events: none;
 }
 
@@ -392,7 +394,8 @@ a:focus-visible {
 }
 
 .compass-object:hover,
-.compass-object[data-active="true"] {
+.compass-object[data-active="true"],
+.compass-object[data-flower-expanded="true"] {
   border-color: var(--compass-line-strong);
   background:
     linear-gradient(135deg, rgba(216, 184, 106, 0.17), rgba(124, 185, 214, 0.08)),
@@ -410,8 +413,8 @@ a:focus-visible {
 .compass-object--mirrorland {
   left: 50%;
   top: 49%;
-  transform: translate(-50%, -50%);
   min-width: 152px;
+  transform: translate(-50%, -50%);
 }
 
 .compass-object--wing[data-wing="north"] {
@@ -438,22 +441,15 @@ a:focus-visible {
   transform: translateY(-50%);
 }
 
-.compass-object--return {
-  left: 7%;
-  bottom: 7%;
-  min-width: 96px;
+[data-compass-mode="ORBIT_MODE"] .compass-object--mirrorland,
+[data-compass-mode="DESTINATION_MODE"] .compass-object--mirrorland {
+  opacity: 0.42;
 }
 
-[data-compass-mode="EXPANDED_MODE"] .compass-object--mirrorland,
-[data-compass-mode="ROOM_MODE"] .compass-object--mirrorland {
-  opacity: 0.32;
-}
-
-[data-compass-mode="EXPANDED_MODE"] .compass-object--wing[data-active="true"],
-[data-compass-mode="ROOM_MODE"] .compass-object--wing[data-active="true"] {
-  left: 50%;
-  top: 48%;
-  transform: translate(-50%, -50%) scale(1.04);
+[data-compass-mode="ORBIT_MODE"] .compass-object--wing[data-active="true"],
+[data-compass-mode="DESTINATION_MODE"] .compass-object--wing[data-active="true"],
+[data-compass-mode="DESTINATION_MODE"] .compass-object--wing[data-flower-expanded="true"] {
+  border-color: rgba(216, 184, 106, 0.48);
 }
 
 .compass-rooms[hidden] {
@@ -497,7 +493,8 @@ a:focus-visible {
     rgba(8, 13, 22, 0.68);
 }
 
-[data-compass-mode="COMPASS_MODE"] [data-compass-room] {
+[data-compass-mode="COMPASS_MODE"] [data-compass-room],
+[data-compass-mode="ORBIT_MODE"] [data-compass-room] {
   display: none;
 }
 
@@ -507,6 +504,7 @@ a:focus-visible {
   display: grid;
   gap: 8px;
   max-width: 760px;
+  scroll-margin-top: clamp(18px, 4vw, 52px);
   padding: 18px 20px;
   border: 1px solid var(--compass-line);
   border-radius: var(--compass-radius-md);
@@ -519,15 +517,15 @@ a:focus-visible {
   backdrop-filter: blur(16px);
 }
 
-[data-compass-mode="EXPANDED_MODE"] .compass-panel,
-[data-compass-mode="ROOM_MODE"] .compass-panel {
-  border-color: rgba(216, 184, 106, 0.30);
+[data-panel-descended="true"] .compass-panel,
+[data-compass-mode="DESTINATION_MODE"] .compass-panel {
+  border-color: rgba(216, 184, 106, 0.34);
   background:
-    linear-gradient(135deg, rgba(216, 184, 106, 0.09), rgba(124, 185, 214, 0.04)),
-    rgba(7, 10, 16, 0.70);
+    linear-gradient(135deg, rgba(216, 184, 106, 0.10), rgba(124, 185, 214, 0.045)),
+    rgba(7, 10, 16, 0.72);
   box-shadow:
     0 18px 66px rgba(0, 0, 0, 0.34),
-    0 0 38px rgba(216, 184, 106, 0.06),
+    0 0 38px rgba(216, 184, 106, 0.07),
     inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
@@ -552,41 +550,60 @@ a:focus-visible {
 }
 
 .compass-panel p {
-  margin: 0;
   max-width: 62ch;
+  margin: 0;
   color: var(--compass-stone-dim);
   line-height: 1.5;
 }
 
-[data-compass-mode="EXPANDED_MODE"] .compass-panel p,
-[data-compass-mode="ROOM_MODE"] .compass-panel p {
-  color: rgba(225, 218, 198, 0.70);
+[data-compass-mode="DESTINATION_MODE"] .compass-panel p {
+  color: rgba(225, 218, 198, 0.72);
 }
 
-[data-compass-enter] {
-  justify-self: start;
-  min-width: 128px;
+.compass-panel__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
   margin-top: 8px;
+}
+
+[data-compass-enter],
+[data-compass-return-to-orbit] {
+  min-width: 128px;
   padding: 11px 18px;
-  border: 1px solid var(--compass-line-strong);
   border-radius: 999px;
-  color: #120f08;
-  background:
-    linear-gradient(135deg, #f2d989, #b98d3e);
-  box-shadow:
-    0 14px 34px rgba(216, 184, 106, 0.18),
-    inset 0 1px 0 rgba(255, 255, 255, 0.35);
   cursor: pointer;
   font-weight: 800;
 }
 
-[data-compass-enter]:disabled {
+[data-compass-enter] {
+  border: 1px solid var(--compass-line-strong);
+  color: #120f08;
+  background: linear-gradient(135deg, #f2d989, #b98d3e);
+  box-shadow:
+    0 14px 34px rgba(216, 184, 106, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.35);
+}
+
+[data-compass-return-to-orbit] {
+  border: 1px solid rgba(225, 218, 198, 0.20);
+  color: rgba(255, 248, 224, 0.86);
+  background:
+    linear-gradient(135deg, rgba(124, 185, 214, 0.13), rgba(216, 184, 106, 0.06)),
+    rgba(8, 13, 22, 0.70);
+  box-shadow:
+    0 12px 30px rgba(0, 0, 0, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+[data-compass-enter]:disabled,
+[data-compass-return-to-orbit]:disabled {
   cursor: not-allowed;
   opacity: 0.45;
   filter: grayscale(0.45);
 }
 
-[data-compass-mode="ROOM_MODE"] [data-compass-enter]:not(:disabled) {
+[data-compass-mode="DESTINATION_MODE"] [data-compass-enter]:not(:disabled) {
   box-shadow:
     0 16px 40px rgba(216, 184, 106, 0.24),
     0 0 24px rgba(216, 184, 106, 0.14),
@@ -690,14 +707,13 @@ a:focus-visible {
   .compass-object--wing[data-wing="west"] {
     left: 2%;
   }
-
-  [data-compass-mode="EXPANDED_MODE"] .compass-object--wing[data-active="true"],
-  [data-compass-mode="ROOM_MODE"] .compass-object--wing[data-active="true"] {
-    transform: translate(-50%, -50%) scale(0.96);
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
   *,
   *::before,
   *::after {

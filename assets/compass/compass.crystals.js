@@ -1,5 +1,5 @@
 /* /assets/compass/compass.crystals.js
-   DGB Compass — Coordinate Orbit Flower Traversal WebGL layer.
+   DGB Compass — Navigational Star Orbit Flower Traversal WebGL layer.
    Scope: compass.crystals.js only.
 */
 
@@ -7,7 +7,7 @@
   "use strict";
 
   const CONTRACT = Object.freeze({
-    id: "DGB_COMPASS_COORDINATE_ORBIT_FLOWER_CRYSTALS_TNT_v4",
+    id: "DGB_COMPASS_NAVIGATIONAL_STAR_ORBIT_FLOWER_TNT_v5",
     file: "/assets/compass/compass.crystals.js",
     visualPassClaimed: false,
     productionAuthorized: false,
@@ -27,9 +27,9 @@
     ],
     east: [
       { id: "east-1", label: "Atlas Study", short: "Open worlds" },
-      { id: "east-2", label: "ZIONTS", short: "Inspect Earth" },
-      { id: "east-3", label: "Audralia Conservatory", short: "Diagnostic world" },
-      { id: "east-4", label: "Hearth", short: "Living world" },
+      { id: "east-2", label: "ZIONTS", short: "Earth warning-path" },
+      { id: "east-3", label: "Audralia", short: "Audrey chamber" },
+      { id: "east-4", label: "Hearth", short: "Diagnostic chamber" },
       { id: "east-5", label: "H-Earth", short: "Parallel world" }
     ],
     south: [
@@ -48,24 +48,29 @@
   });
 
   const AXIS_COPY = Object.freeze({
-    north: { label: "Orientation", short: "Start and understand" },
-    east: { label: "Worlds", short: "Enter estate worlds" },
+    north: { label: "Orientation", short: "North Star path" },
+    east: { label: "Worlds", short: "Estate worlds" },
     south: { label: "Instruments", short: "Measure and govern" },
-    west: { label: "Frontier", short: "Build what comes next" }
+    west: { label: "Frontier", short: "Build next" }
   });
 
-  const GLASS_PALETTE = Object.freeze({
-    axis: [0.62, 0.82, 0.90],
-    axisWarm: [0.72, 0.82, 0.78],
-    petal: [0.68, 0.86, 0.92],
-    mirror: [0.70, 0.88, 0.94]
+  const STAR_PALETTE = Object.freeze({
+    north: [0.74, 0.88, 1.0],
+    east: [0.62, 0.86, 0.96],
+    south: [1.0, 0.88, 0.62],
+    west: [0.92, 0.76, 0.58],
+    petalNorth: [0.68, 0.84, 1.0],
+    petalEast: [0.62, 0.90, 0.96],
+    petalSouth: [1.0, 0.82, 0.56],
+    petalWest: [0.94, 0.72, 0.56],
+    mirror: [0.78, 0.92, 1.0]
   });
 
   const WING_THEMES = Object.freeze({
-    north: { color: GLASS_PALETTE.axis, rx: 0.34, rz: 0.25, h: 0.68, elongation: 1.16, irregularity: 0.012, rotationBias: 0.95 },
-    east: { color: GLASS_PALETTE.axis, rx: 0.35, rz: 0.25, h: 0.67, elongation: 1.14, irregularity: 0.014, rotationBias: 1.05 },
-    south: { color: GLASS_PALETTE.axisWarm, rx: 0.34, rz: 0.25, h: 0.66, elongation: 1.12, irregularity: 0.012, rotationBias: 0.88 },
-    west: { color: GLASS_PALETTE.axisWarm, rx: 0.35, rz: 0.25, h: 0.67, elongation: 1.15, irregularity: 0.015, rotationBias: 1.12 }
+    north: { color: STAR_PALETTE.north, rx: 0.31, rz: 0.23, h: 0.64, elongation: 1.18, irregularity: 0.010, rotationBias: 0.95, glow: 1.35 },
+    east: { color: STAR_PALETTE.east, rx: 0.31, rz: 0.23, h: 0.62, elongation: 1.14, irregularity: 0.012, rotationBias: 1.05, glow: 0.92 },
+    south: { color: STAR_PALETTE.south, rx: 0.30, rz: 0.22, h: 0.61, elongation: 1.12, irregularity: 0.010, rotationBias: 0.88, glow: 0.86 },
+    west: { color: STAR_PALETTE.west, rx: 0.31, rz: 0.23, h: 0.62, elongation: 1.15, irregularity: 0.013, rotationBias: 1.12, glow: 0.90 }
   });
 
   const ORBIT_ANGLES = Object.freeze({
@@ -83,11 +88,14 @@
 
   const RECEIPT = {
     contractId: CONTRACT.id,
+    visualSystem: "navigational-stars",
     canvasMountStatus: "pending",
     webglContextStatus: "pending",
     shaderStatus: "pending",
     meshBuildStatus: "pending",
     registryBuildStatus: "pending",
+    starGlowStatus: "pending",
+    northStarGlow: "enabled",
     visibleObjectCount: 0,
     currentModeObserved: "unknown",
     orbitFocusObserved: "",
@@ -227,39 +235,56 @@
     attribute vec3 aPosition;
     attribute vec3 aNormal;
     attribute vec3 aColor;
+
     uniform mat4 uModel;
     uniform mat4 uView;
     uniform mat4 uProjection;
     uniform mat3 uNormalMatrix;
     uniform float uProminence;
+    uniform float uGlowStrength;
+    uniform vec3 uGlowColor;
+
     varying vec3 vNormal;
     varying vec3 vColor;
     varying float vProminence;
+    varying float vGlowStrength;
+    varying vec3 vGlowColor;
+
     void main() {
       vNormal = normalize(uNormalMatrix * aNormal);
       vColor = aColor;
       vProminence = uProminence;
+      vGlowStrength = uGlowStrength;
+      vGlowColor = uGlowColor;
       gl_Position = uProjection * uView * uModel * vec4(aPosition, 1.0);
     }
   `;
 
   const fragmentShaderSource = `
     precision mediump float;
+
     varying vec3 vNormal;
     varying vec3 vColor;
     varying float vProminence;
+    varying float vGlowStrength;
+    varying vec3 vGlowColor;
+
     uniform vec3 uKeyLightDirection;
     uniform vec3 uFillLightDirection;
     uniform vec3 uRimLightDirection;
     uniform float uAmbientStrength;
+
     void main() {
       vec3 n = normalize(vNormal);
       float key = max(dot(n, normalize(-uKeyLightDirection)), 0.0);
-      float fill = max(dot(n, normalize(-uFillLightDirection)), 0.0) * 0.42;
-      float rim = pow(max(dot(n, normalize(-uRimLightDirection)), 0.0), 2.0) * 0.52;
-      float light = uAmbientStrength + key * 0.84 + fill + rim;
-      vec3 color = vColor * light * vProminence;
-      float alpha = clamp(0.22 + vProminence * 0.72, 0.10, 0.94);
+      float fill = max(dot(n, normalize(-uFillLightDirection)), 0.0) * 0.38;
+      float rim = pow(max(dot(n, normalize(-uRimLightDirection)), 0.0), 2.0) * 0.70;
+      float starCore = pow(max(dot(n, vec3(0.0, 0.0, 1.0)), 0.0), 4.0);
+      float light = uAmbientStrength + key * 0.82 + fill + rim;
+      vec3 lit = vColor * light * vProminence;
+      vec3 glow = vGlowColor * (rim * 0.48 + starCore * 0.52) * vGlowStrength * vProminence;
+      vec3 color = lit + glow;
+      float alpha = clamp(0.18 + vProminence * 0.70 + vGlowStrength * 0.06, 0.10, 0.96);
       gl_FragColor = vec4(color, alpha);
     }
   `;
@@ -286,7 +311,6 @@
     gl.attachShader(program, vertex);
     gl.attachShader(program, fragment);
     gl.linkProgram(program);
-
     gl.deleteShader(vertex);
     gl.deleteShader(fragment);
 
@@ -323,13 +347,13 @@
     ];
   }
 
-  function createCrystalMesh(params) {
+  function createStarMesh(params) {
     const segments = params.segments || 8;
-    const rx = params.rx || 0.55;
-    const rz = params.rz || 0.38;
-    const h = params.h || 1.0;
+    const rx = params.rx || 0.42;
+    const rz = params.rz || 0.30;
+    const h = params.h || 0.76;
     const crown = !!params.crown;
-    const color = params.color || GLASS_PALETTE.axis;
+    const color = params.color || STAR_PALETTE.north;
     const irregularity = params.irregularity || 0;
     const warmth = params.warmth || 0;
     const elongation = params.elongation || 1;
@@ -342,11 +366,12 @@
 
     for (let i = 0; i < segments; i += 1) {
       const a = (Math.PI * 2 * i) / segments;
-      const offset = artifactOffset(i, irregularity);
+      const pointLift = i % 2 === 0 ? 1.08 : 0.86;
+      const offset = artifactOffset(i, irregularity) * pointLift;
       equator.push(positions.push(v3(
         Math.cos(a) * rx * offset,
-        Math.sin(i * 1.7) * irregularity * 0.5,
-        Math.sin(a) * rz * (2 - offset)
+        Math.sin(i * 1.7) * irregularity * 0.45,
+        Math.sin(a) * rz * (2 - offset * 0.58)
       )) - 1);
     }
 
@@ -358,9 +383,9 @@
         const a = (Math.PI * 2 * (i + 0.5)) / segments;
         const offset = artifactOffset(i + 3, irregularity * 0.85);
         crownRing.push(positions.push(v3(
-          Math.cos(a) * rx * 0.62 * offset,
-          h * 0.42 * elongation,
-          Math.sin(a) * rz * 0.62 * (2 - offset)
+          Math.cos(a) * rx * 0.54 * offset,
+          h * 0.39 * elongation,
+          Math.sin(a) * rz * 0.54 * (2 - offset)
         )) - 1);
       }
 
@@ -368,9 +393,9 @@
         const a = (Math.PI * 2 * (i + 0.5)) / segments;
         const offset = artifactOffset(i + 7, irregularity * 0.75);
         lowerRing.push(positions.push(v3(
-          Math.cos(a) * rx * 0.58 * offset,
-          -h * 0.42,
-          Math.sin(a) * rz * 0.58 * (2 - offset)
+          Math.cos(a) * rx * 0.50 * offset,
+          -h * 0.39,
+          Math.sin(a) * rz * 0.50 * (2 - offset)
         )) - 1);
       }
 
@@ -400,7 +425,7 @@
       const b = positions[face[1]];
       const c = positions[face[2]];
       const normal = normalize(cross(sub(b, a), sub(c, a)));
-      const facetLift = 0.84 + ((faceIndex % 6) * 0.035);
+      const facetLift = 0.86 + ((faceIndex % 6) * 0.034);
       const facetColor = mixColor(color, facetLift, warmth);
 
       [a, b, c].forEach((p) => {
@@ -439,13 +464,13 @@
   function buildMeshes(gl) {
     const meshes = new Map();
 
-    meshes.set("mirrorland", buildGpuMesh(gl, createCrystalMesh({
+    meshes.set("mirrorland", buildGpuMesh(gl, createStarMesh({
       segments: 12,
-      rx: 0.58,
-      rz: 0.42,
-      h: 0.90,
+      rx: 0.54,
+      rz: 0.40,
+      h: 0.84,
       crown: true,
-      color: GLASS_PALETTE.mirror,
+      color: STAR_PALETTE.mirror,
       irregularity: 0.010,
       warmth: 0.06,
       elongation: 1.00
@@ -453,8 +478,13 @@
 
     WINGS.forEach((wing) => {
       const theme = WING_THEMES[wing];
+      const petalColor =
+        wing === "north" ? STAR_PALETTE.petalNorth :
+        wing === "east" ? STAR_PALETTE.petalEast :
+        wing === "south" ? STAR_PALETTE.petalSouth :
+        STAR_PALETTE.petalWest;
 
-      meshes.set("wing-" + wing, buildGpuMesh(gl, createCrystalMesh({
+      meshes.set("wing-" + wing, buildGpuMesh(gl, createStarMesh({
         segments: 8,
         rx: theme.rx,
         rz: theme.rz,
@@ -462,23 +492,24 @@
         crown: true,
         color: theme.color,
         irregularity: theme.irregularity,
-        warmth: 0.06,
+        warmth: wing === "south" || wing === "west" ? 0.08 : 0.04,
         elongation: theme.elongation
       })));
 
-      meshes.set("room-" + wing, buildGpuMesh(gl, createCrystalMesh({
+      meshes.set("room-" + wing, buildGpuMesh(gl, createStarMesh({
         segments: 6,
-        rx: 0.27,
-        rz: 0.20,
-        h: 0.44,
+        rx: 0.24,
+        rz: 0.18,
+        h: 0.39,
         crown: false,
-        color: GLASS_PALETTE.petal,
+        color: petalColor,
         irregularity: theme.irregularity * 0.40,
-        warmth: 0.045,
+        warmth: wing === "south" || wing === "west" ? 0.06 : 0.035,
         elongation: 1.04
       })));
     });
 
+    emitReceipt({ starGlowStatus: "configured" });
     return meshes;
   }
 
@@ -501,9 +532,11 @@
       coordinate: opts.coordinate || "",
       meshKey: opts.meshKey || type,
       rotationBias: opts.rotationBias || 1,
+      glowColor: opts.glowColor || [0.74, 0.88, 1.0],
+      baseGlow: opts.baseGlow || 0.72,
       visible: true,
-      transform: { x: 0, y: 0, z: 0, rx: 0, ry: 0, rz: 0, sx: 1, sy: 1, sz: 1, prominence: 1, rotationSpeed: 0.25 },
-      target: { x: 0, y: 0, z: 0, rx: 0, ry: 0, rz: 0, sx: 1, sy: 1, sz: 1, prominence: 1, rotationSpeed: 0.25 }
+      transform: { x: 0, y: 0, z: 0, rx: 0, ry: 0, rz: 0, sx: 1, sy: 1, sz: 1, prominence: 1, rotationSpeed: 0.25, glow: opts.baseGlow || 0.72 },
+      target: { x: 0, y: 0, z: 0, rx: 0, ry: 0, rz: 0, sx: 1, sy: 1, sz: 1, prominence: 1, rotationSpeed: 0.25, glow: opts.baseGlow || 0.72 }
     };
   }
 
@@ -514,32 +547,41 @@
       label: "Mirrorland",
       short: "Center fulcrum",
       meshKey: "mirrorland",
-      rotationBias: 0.72
+      rotationBias: 0.72,
+      glowColor: STAR_PALETTE.mirror,
+      baseGlow: 0.82
     }));
 
     WINGS.forEach((wing) => {
       const theme = WING_THEMES[wing];
       const copy = AXIS_COPY[wing];
+      const petalColor =
+        wing === "north" ? STAR_PALETTE.petalNorth :
+        wing === "east" ? STAR_PALETTE.petalEast :
+        wing === "south" ? STAR_PALETTE.petalSouth :
+        STAR_PALETTE.petalWest;
 
       registry.set(wing, node(wing, "cardinal", {
         label: copy.label,
         short: copy.short,
         wing,
         meshKey: "wing-" + wing,
-        rotationBias: theme.rotationBias
+        rotationBias: theme.rotationBias,
+        glowColor: theme.color,
+        baseGlow: theme.glow
       }));
 
-      const rooms = DEFAULT_ROOMS[wing];
-
-      rooms.forEach((room, index) => {
+      DEFAULT_ROOMS[wing].forEach((room, index) => {
         registry.set(room.id, node(room.id, "petal", {
           label: room.label,
           short: room.short,
           wing,
           roomIndex: index,
-          coordinate: coordinateFor(index, rooms.length),
+          coordinate: coordinateFor(index, DEFAULT_ROOMS[wing].length),
           meshKey: "room-" + wing,
-          rotationBias: 0.82 + index * 0.035
+          rotationBias: 0.82 + index * 0.035,
+          glowColor: petalColor,
+          baseGlow: 0.78
         }));
       });
     });
@@ -589,10 +631,10 @@
 
   function baseWingPosition(wing) {
     switch (wing) {
-      case "north": return [0, 1.36, -0.16];
-      case "east": return [1.68, 0, -0.16];
-      case "south": return [0, -1.36, -0.16];
-      case "west": return [-1.68, 0, -0.16];
+      case "north": return [0, 1.34, -0.16];
+      case "east": return [1.64, 0, -0.16];
+      case "south": return [0, -1.34, -0.16];
+      case "west": return [-1.64, 0, -0.16];
       default: return [0, 0, 0];
     }
   }
@@ -603,25 +645,24 @@
 
   function roomPetalPosition(index, count) {
     const map5 = [
-      [0, 1.08, 0.14],
-      [1.00, 0.32, 0.10],
-      [0.62, -0.88, 0.10],
-      [-0.62, -0.88, 0.10],
-      [-1.00, 0.32, 0.10]
+      [0, 1.04, 0.14],
+      [0.96, 0.31, 0.10],
+      [0.59, -0.84, 0.10],
+      [-0.59, -0.84, 0.10],
+      [-0.96, 0.31, 0.10]
     ];
-
     const map4 = [
-      [0, 1.00, 0.12],
-      [1.00, 0, 0.10],
-      [0, -1.00, 0.10],
-      [-1.00, 0, 0.10]
+      [0, 0.96, 0.12],
+      [0.96, 0, 0.10],
+      [0, -0.96, 0.10],
+      [-0.96, 0, 0.10]
     ];
 
     if (count === 5) return map5[index] || [0, 0, 0];
     if (count === 4) return map4[index] || [0, 0, 0];
 
     const angle = (Math.PI * 2 * index) / Math.max(count, 1) - Math.PI / 2;
-    return [Math.cos(angle) * 1.00, Math.sin(angle) * 1.00, 0.10];
+    return [Math.cos(angle) * 0.98, Math.sin(angle) * 0.98, 0.10];
   }
 
   function setTarget(n, t) {
@@ -653,7 +694,7 @@
 
     state.registry.forEach((n) => {
       n.visible = false;
-      setTarget(n, { x: 0, y: 0, z: 0, sx: 1, sy: 1, sz: 1, prominence: 0, rotationSpeed: 0.10 });
+      setTarget(n, { x: 0, y: 0, z: 0, sx: 1, sy: 1, sz: 1, prominence: 0, rotationSpeed: 0.10, glow: 0 });
     });
 
     const mirrorland = state.registry.get("mirrorland");
@@ -661,31 +702,30 @@
 
     if (!activeFlower) {
       setTarget(mirrorland, {
-        x: 0,
-        y: 0,
-        z: 0.04,
-        sx: 1.00,
-        sy: 1.00,
-        sz: 1.00,
-        prominence: 0.88,
-        rotationSpeed: 0.11
+        x: 0, y: 0, z: 0.04,
+        sx: 0.96, sy: 0.96, sz: 0.96,
+        prominence: 0.86,
+        rotationSpeed: 0.10,
+        glow: 0.86
       });
 
       WINGS.forEach((wing) => {
         const n = state.registry.get(wing);
         const p = orbitWingPosition(wing);
         const focused = wing === focus;
+        const isNorthStar = wing === "north";
 
         n.visible = true;
         setTarget(n, {
           x: p[0],
           y: p[1],
-          z: focused ? 0.12 : p[2],
-          sx: focused ? 0.98 : 0.72,
-          sy: focused ? 1.18 : 0.92,
-          sz: focused ? 0.98 : 0.72,
-          prominence: focused ? 0.98 : 0.62,
-          rotationSpeed: focused ? 0.16 * n.rotationBias : 0.10 * n.rotationBias
+          z: focused ? 0.14 : p[2],
+          sx: focused ? 0.94 : 0.70,
+          sy: focused ? 1.14 : 0.90,
+          sz: focused ? 0.94 : 0.70,
+          prominence: focused ? 1.0 : 0.62,
+          rotationSpeed: focused ? 0.16 * n.rotationBias : 0.10 * n.rotationBias,
+          glow: focused ? (isNorthStar ? 1.62 : 1.08) : (isNorthStar ? 1.05 : 0.62)
         });
       });
 
@@ -693,14 +733,11 @@
     }
 
     setTarget(mirrorland, {
-      x: -1.72,
-      y: -1.22,
-      z: -1.46,
-      sx: 0.26,
-      sy: 0.26,
-      sz: 0.26,
-      prominence: 0.06,
-      rotationSpeed: 0.03
+      x: -1.72, y: -1.22, z: -1.46,
+      sx: 0.24, sy: 0.24, sz: 0.24,
+      prominence: 0.05,
+      rotationSpeed: 0.03,
+      glow: 0.12
     });
 
     WINGS.forEach((wing) => {
@@ -709,28 +746,22 @@
       if (wing === state.selectedCardinal) {
         n.visible = true;
         setTarget(n, {
-          x: 0,
-          y: 0,
-          z: 0.10,
-          sx: 0.42,
-          sy: 0.52,
-          sz: 0.42,
+          x: 0, y: 0, z: 0.10,
+          sx: 0.40, sy: 0.50, sz: 0.40,
           prominence: 0.44,
-          rotationSpeed: 0.07 * n.rotationBias
+          rotationSpeed: 0.07 * n.rotationBias,
+          glow: wing === "north" ? 1.12 : 0.62
         });
         return;
       }
 
       n.visible = false;
       setTarget(n, {
-        x: 0,
-        y: 0,
-        z: -1.2,
-        sx: 0.14,
-        sy: 0.14,
-        sz: 0.14,
+        x: 0, y: 0, z: -1.2,
+        sx: 0.14, sy: 0.14, sz: 0.14,
         prominence: 0,
-        rotationSpeed: 0.02
+        rotationSpeed: 0.02,
+        glow: 0
       });
     });
 
@@ -744,11 +775,12 @@
         x: p[0],
         y: p[1],
         z: selected ? 0.60 : p[2] + 0.12,
-        sx: selected ? 0.92 : 0.74,
-        sy: selected ? 0.92 : 0.74,
-        sz: selected ? 0.92 : 0.74,
+        sx: selected ? 0.88 : 0.70,
+        sy: selected ? 0.88 : 0.70,
+        sz: selected ? 0.88 : 0.70,
         prominence: selected ? 1.06 : 0.84,
-        rotationSpeed: selected ? 0.16 * n.rotationBias : 0.10 * n.rotationBias
+        rotationSpeed: selected ? 0.16 * n.rotationBias : 0.10 * n.rotationBias,
+        glow: selected ? 1.14 : 0.72
       });
     });
   }
@@ -762,7 +794,7 @@
       const a = n.transform;
       const b = n.target;
 
-      ["x", "y", "z", "sx", "sy", "sz", "prominence", "rotationSpeed"].forEach((k) => {
+      ["x", "y", "z", "sx", "sy", "sz", "prominence", "rotationSpeed", "glow"].forEach((k) => {
         a[k] = lerp(a[k], b[k], speed);
       });
 
@@ -873,19 +905,9 @@
 
   function semanticElementForNode(n) {
     if (!state.root || !n) return null;
-
-    if (n.type === "mirrorland") {
-      return state.root.querySelector("[data-compass-object='mirrorland']");
-    }
-
-    if (n.type === "cardinal") {
-      return state.root.querySelector("[data-compass-cardinal][data-wing='" + n.wing + "']");
-    }
-
-    if (n.type === "petal") {
-      return state.root.querySelector("[data-compass-room][data-room-id='" + n.id + "']");
-    }
-
+    if (n.type === "mirrorland") return state.root.querySelector("[data-compass-object='mirrorland']");
+    if (n.type === "cardinal") return state.root.querySelector("[data-compass-cardinal][data-wing='" + n.wing + "']");
+    if (n.type === "petal") return state.root.querySelector("[data-compass-room][data-room-id='" + n.id + "']");
     return null;
   }
 
@@ -940,11 +962,11 @@
     const isFocusedCardinal = !activeFlower && n.type === "cardinal" && n.wing === (state.orbitFocus || "north");
 
     const scale =
-      n.type === "mirrorland" ? 0.92 :
-      isSelectedAnchor ? 0.64 :
-      isFocusedCardinal ? 0.96 :
-      n.type === "cardinal" ? 0.78 :
-      0.82;
+      n.type === "mirrorland" ? 0.90 :
+      isSelectedAnchor ? 0.62 :
+      isFocusedCardinal ? 0.94 :
+      n.type === "cardinal" ? 0.76 :
+      0.80;
 
     el.style.left = screen.x + "px";
     el.style.top = screen.y + "px";
@@ -969,7 +991,7 @@
         panelTitle.textContent = "Choose a coordinate";
       }
       if (panelPurpose && /Swipe/i.test(panelPurpose.textContent)) {
-        panelPurpose.textContent = "Swipe to rotate the orbit. Tap a crystal to inspect its path.";
+        panelPurpose.textContent = "Swipe to rotate the orbit. Tap a star to inspect its path.";
       }
       if (panelRelationship && /Enter/i.test(panelRelationship.textContent)) {
         panelRelationship.textContent = "Enter only after a path is selected.";
@@ -977,16 +999,14 @@
     }
 
     if (note) {
-      note.textContent = "Swipe to rotate the orbit. Tap a crystal to inspect. Use Enter Room only when you are ready to navigate.";
+      note.textContent = "Swipe to rotate the orbit. Tap a star to inspect. Use Enter Room only when you are ready to navigate.";
     }
   }
 
   function syncSemanticObjects() {
     if (!state.surface || !state.root) return;
-
     state.registry.forEach(syncSemanticNode);
     syncInstructionCopy();
-
     emitReceipt({ semanticSyncStatus: "active" });
   }
 
@@ -1299,12 +1319,15 @@
     bindAttrib(gl, mesh.color, state.attribs.color, 3);
 
     const model = modelMatrix(n);
+    const glow = Math.max(0, n.transform.glow || 0);
 
     gl.uniformMatrix4fv(state.uniforms.model, false, new Float32Array(model));
     gl.uniformMatrix4fv(state.uniforms.view, false, new Float32Array(state.view));
     gl.uniformMatrix4fv(state.uniforms.projection, false, new Float32Array(state.projection));
     gl.uniformMatrix3fv(state.uniforms.normalMatrix, false, new Float32Array(normalMatrix3(model)));
     gl.uniform1f(state.uniforms.prominence, Math.max(0, n.transform.prominence));
+    gl.uniform1f(state.uniforms.glowStrength, glow);
+    gl.uniform3f(state.uniforms.glowColor, n.glowColor[0], n.glowColor[1], n.glowColor[2]);
 
     gl.drawArrays(gl.TRIANGLES, 0, mesh.vertexCount);
   }
@@ -1338,7 +1361,7 @@
     gl.uniform3f(state.uniforms.keyLightDirection, -0.4, -0.8, -0.7);
     gl.uniform3f(state.uniforms.fillLightDirection, 0.7, -0.35, -0.55);
     gl.uniform3f(state.uniforms.rimLightDirection, 0.1, 0.4, 1.0);
-    gl.uniform1f(state.uniforms.ambientStrength, 0.24);
+    gl.uniform1f(state.uniforms.ambientStrength, 0.26);
 
     let visible = 0;
 
@@ -1411,6 +1434,8 @@
         projection: gl.getUniformLocation(state.program, "uProjection"),
         normalMatrix: gl.getUniformLocation(state.program, "uNormalMatrix"),
         prominence: gl.getUniformLocation(state.program, "uProminence"),
+        glowStrength: gl.getUniformLocation(state.program, "uGlowStrength"),
+        glowColor: gl.getUniformLocation(state.program, "uGlowColor"),
         keyLightDirection: gl.getUniformLocation(state.program, "uKeyLightDirection"),
         fillLightDirection: gl.getUniformLocation(state.program, "uFillLightDirection"),
         rimLightDirection: gl.getUniformLocation(state.program, "uRimLightDirection"),

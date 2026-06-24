@@ -1,7 +1,7 @@
 /* /assets/compass/compass.crystals.js
    DGB Compass — Orbit Flower Traversal WebGL visualization layer.
    Scope: compass.crystals.js only.
-   Owns visualization, protected scene gesture detection, hit detection, and controller selection requests.
+   Owns visualization, visible orbit rotation, protected scene gesture detection, hit detection, and controller selection requests.
    Does not own routes, route validation, navigation execution, labels, panel copy, CSS, or visual-pass claims.
 */
 
@@ -9,7 +9,7 @@
   "use strict";
 
   const CONTRACT = Object.freeze({
-    id: "DGB_COMPASS_ORBIT_FLOWER_GESTURE_ZONE_CRYSTALS_TNT_v2",
+    id: "DGB_COMPASS_VISIBLE_ORBIT_ROTATION_CRYSTALS_TNT_v1",
     file: "/assets/compass/compass.crystals.js",
     visualPassClaimed: false,
     productionAuthorized: false,
@@ -56,6 +56,13 @@
     west: { color: [0.88, 0.62, 0.50], rx: 0.45, rz: 0.31, h: 0.82, elongation: 1.24, irregularity: 0.038, rotationBias: 1.12 }
   });
 
+  const ORBIT_ANGLES = Object.freeze({
+    north: 0,
+    east: -Math.PI / 2,
+    south: Math.PI,
+    west: Math.PI / 2
+  });
+
   const GESTURE = Object.freeze({
     minimumSwipeDistancePx: 42,
     maximumTapDistancePx: 12,
@@ -72,6 +79,7 @@
     visibleObjectCount: 0,
     currentModeObserved: "unknown",
     orbitFocusObserved: "",
+    orbitAngleObserved: 0,
     selectedCardinalObserved: "",
     selectedRoomObserved: "",
     flowerExpandedObserved: false,
@@ -108,6 +116,8 @@
     selectedRoom: "",
     flowerExpanded: false,
     reducedMotion: false,
+    orbitAngle: 0,
+    targetOrbitAngle: 0,
     width: 1,
     height: 1,
     pixelRatio: 1,
@@ -560,16 +570,33 @@
       matchMedia("(prefers-reduced-motion: reduce)").matches ||
       ds.reducedMotion === "true";
 
+    state.targetOrbitAngle = ORBIT_ANGLES[state.orbitFocus] || 0;
+
     emitReceipt({
       currentModeObserved: state.mode,
       orbitFocusObserved: state.orbitFocus,
+      orbitAngleObserved: Number(state.orbitAngle.toFixed(4)),
       selectedCardinalObserved: state.selectedCardinal,
       selectedRoomObserved: state.selectedRoom,
       flowerExpandedObserved: state.flowerExpanded
     });
   }
 
-  function wingPosition(wing) {
+  function rotate2D(point, angle) {
+    const x = point[0];
+    const y = point[1];
+    const z = point[2] || 0;
+    const c = Math.cos(angle);
+    const s = Math.sin(angle);
+
+    return [
+      x * c - y * s,
+      x * s + y * c,
+      z
+    ];
+  }
+
+  function baseWingPosition(wing) {
     switch (wing) {
       case "north": return [0, 1.42, -0.12];
       case "east": return [1.82, 0, -0.12];
@@ -579,55 +606,61 @@
     }
   }
 
+  function orbitWingPosition(wing) {
+    return rotate2D(baseWingPosition(wing), state.orbitAngle);
+  }
+
   function inactiveWingPosition(wing) {
-    switch (wing) {
-      case "north": return [0, 1.82, -0.98];
-      case "east": return [2.22, 0, -0.98];
-      case "south": return [0, -1.82, -0.98];
-      case "west": return [-2.22, 0, -0.98];
-      default: return [0, 0, -0.98];
-    }
+    const p = rotate2D(baseWingPosition(wing), state.orbitAngle);
+    return [p[0] * 1.22, p[1] * 1.22, -0.98];
   }
 
   function roomPetalPosition(index, count) {
     const map5 = [
-      [0, 0.96, 0.10],
-      [0.84, 0.48, 0.06],
-      [1.02, -0.14, 0.02],
-      [0.54, -0.84, 0.06],
-      [0, 0, 0.24]
+      [0, 1.02, 0.10],
+      [0.97, 0.32, 0.06],
+      [0.60, -0.84, 0.06],
+      [-0.60, -0.84, 0.06],
+      [-0.97, 0.32, 0.06]
     ];
 
     const map4 = [
-      [-0.76, 0.60, 0.06],
-      [0.76, 0.60, 0.06],
-      [-0.76, -0.60, 0.06],
-      [0.76, -0.60, 0.06]
+      [0, 0.96, 0.06],
+      [0.96, 0, 0.06],
+      [0, -0.96, 0.06],
+      [-0.96, 0, 0.06]
     ];
 
     if (count === 5) return map5[index] || [0, 0, 0];
     if (count === 4) return map4[index] || [0, 0, 0];
 
     const angle = (Math.PI * 2 * index) / Math.max(count, 1) - Math.PI / 2;
-    return [Math.cos(angle) * 0.94, Math.sin(angle) * 0.64, 0.06];
+    return [Math.cos(angle) * 0.98, Math.sin(angle) * 0.98, 0.06];
   }
 
-  function rotatePointForWing(point, wing) {
-    const x = point[0];
-    const y = point[1];
-    const z = point[2];
-
-    switch (wing) {
-      case "north": return [x, y + 0.40, z];
-      case "east": return [y + 0.40, -x, z];
-      case "south": return [-x, -y - 0.40, z];
-      case "west": return [-y - 0.40, x, z];
-      default: return [x, y, z];
-    }
+  function petalPositionForWing(point, wing) {
+    return rotate2D(point, ORBIT_ANGLES[wing] || 0);
   }
 
   function setTarget(n, t) {
     Object.assign(n.target, t);
+  }
+
+  function shortestAngleDelta(from, to) {
+    let delta = to - from;
+    while (delta > Math.PI) delta -= Math.PI * 2;
+    while (delta < -Math.PI) delta += Math.PI * 2;
+    return delta;
+  }
+
+  function updateOrbitAngle(dt) {
+    if (state.reducedMotion) {
+      state.orbitAngle = state.targetOrbitAngle;
+      return;
+    }
+
+    const speed = Math.min(1, dt * 5.2);
+    state.orbitAngle += shortestAngleDelta(state.orbitAngle, state.targetOrbitAngle) * speed;
   }
 
   function updateTargets() {
@@ -649,27 +682,27 @@
         x: 0,
         y: 0,
         z: 0.04,
-        sx: state.mode === "DESTINATION_MODE" ? 1.02 : 1.14,
-        sy: state.mode === "DESTINATION_MODE" ? 1.02 : 1.14,
-        sz: state.mode === "DESTINATION_MODE" ? 1.02 : 1.14,
+        sx: 1.14,
+        sy: 1.14,
+        sz: 1.14,
         prominence: 0.94,
         rotationSpeed: 0.12
       });
 
       WINGS.forEach((wing) => {
         const n = state.registry.get(wing);
-        const p = wingPosition(wing);
+        const p = orbitWingPosition(wing);
         const focused = wing === focus;
 
         n.visible = true;
         setTarget(n, {
           x: p[0],
           y: p[1],
-          z: focused ? 0.12 : p[2],
-          sx: focused ? 1.16 : 0.88,
-          sy: focused ? 1.42 : 1.12,
-          sz: focused ? 1.16 : 0.88,
-          prominence: focused ? 1.02 : 0.72,
+          z: focused ? 0.16 : p[2],
+          sx: focused ? 1.18 : 0.86,
+          sy: focused ? 1.44 : 1.10,
+          sz: focused ? 1.18 : 0.86,
+          prominence: focused ? 1.04 : 0.70,
           rotationSpeed: focused ? 0.17 * n.rotationBias : 0.12 * n.rotationBias
         });
       });
@@ -697,10 +730,10 @@
           x: 0,
           y: 0,
           z: 0.12,
-          sx: 0.64,
-          sy: 0.78,
-          sz: 0.64,
-          prominence: 0.68,
+          sx: 0.58,
+          sy: 0.70,
+          sz: 0.58,
+          prominence: 0.62,
           rotationSpeed: 0.10 * n.rotationBias
         });
         return;
@@ -723,18 +756,18 @@
     selectedRooms.forEach((room, index) => {
       const n = state.registry.get(room.id);
       const base = roomPetalPosition(index, selectedRooms.length);
-      const p = rotatePointForWing(base, state.selectedCardinal);
+      const p = petalPositionForWing(base, state.selectedCardinal);
       const selected = selectedRoomId === room.id;
 
       n.visible = true;
       setTarget(n, {
         x: p[0],
         y: p[1],
-        z: selected ? 0.62 : p[2] + 0.14,
-        sx: selected ? 1.00 : 0.78,
-        sy: selected ? 1.00 : 0.78,
-        sz: selected ? 1.00 : 0.78,
-        prominence: selected ? 1.12 : 0.86,
+        z: selected ? 0.64 : p[2] + 0.14,
+        sx: selected ? 1.04 : 0.82,
+        sy: selected ? 1.04 : 0.82,
+        sz: selected ? 1.04 : 0.82,
+        prominence: selected ? 1.12 : 0.88,
         rotationSpeed: selected ? 0.17 * n.rotationBias : 0.11 * n.rotationBias
       });
     });
@@ -1248,6 +1281,7 @@
     state.lastTime = t;
 
     readControllerState();
+    updateOrbitAngle(dt);
     updateTargets();
     updateTransforms(dt);
     resize();

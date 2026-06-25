@@ -1,5 +1,5 @@
 /* /assets/compass/compass.crystals.js
-   DGB Compass — Renewed celestial diamond-star visual engine.
+   DGB Compass — Celestial atmosphere and state-guidance renewal.
    Scope: compass.crystals.js only.
 */
 
@@ -7,7 +7,7 @@
   "use strict";
 
   const CONTRACT = Object.freeze({
-    id: "DGB_COMPASS_CRYSTALS_CARDINAL_AUTHORITY_CALIBRATED_TNT_v1",
+    id: "DGB_COMPASS_CRYSTALS_CELESTIAL_ATMOSPHERE_GUIDANCE_TNT_v1",
     file: "/assets/compass/compass.crystals.js",
     visualPassClaimed: false,
     productionAuthorized: false,
@@ -34,6 +34,22 @@
     ROOM_ONLY: "ROOM_ISOLATION"
   });
 
+  const BACKGROUND = Object.freeze({
+    enabled: true,
+    starCount: 90,
+    twinkle: true,
+    shootingStars: true,
+    shootingStarIntervalMs: 7000,
+    shootingStarVarianceMs: 2200
+  });
+
+  const INSTRUCTION_COPY = Object.freeze({
+    orbit:
+      "Swipe to rotate the orbit. Tap an axis to inspect and unfold its petals.",
+    flower:
+      "Swipe to return to the compass orbit. Tap a petal to inspect its path. Enter Room opens the selected destination."
+  });
+
   const STAR_PALETTE = Object.freeze({
     mirror: [0.82, 0.94, 1.0],
     north: [0.72, 0.88, 1.0],
@@ -43,10 +59,30 @@
     roomNorth: [0.66, 0.84, 1.0],
     roomEast: [0.55, 0.90, 0.96],
     roomSouth: [1.0, 0.76, 0.42],
-    roomWest: [0.94, 0.62, 0.42]
+    roomWest: [0.94, 0.62, 0.42],
+    background: [0.70, 0.84, 1.0],
+    shooting: [0.86, 0.94, 1.0]
   });
 
   const MATERIALS = Object.freeze({
+    BACKGROUND_STAR: Object.freeze({
+      specular: 0.00,
+      rim: 0.00,
+      emissive: 0.26,
+      alpha: 0.42,
+      sparkle: 0.08,
+      halo: 0.00,
+      contrast: 1.00
+    }),
+    SHOOTING_STAR: Object.freeze({
+      specular: 0.00,
+      rim: 0.18,
+      emissive: 0.42,
+      alpha: 0.48,
+      sparkle: 0.12,
+      halo: 0.00,
+      contrast: 1.00
+    }),
     MIRRORLAND_HERO: Object.freeze({
       specular: 1.50,
       rim: 1.20,
@@ -157,17 +193,13 @@
     devicePixelRatioCap: 2,
     cardinalSegments: 8,
     roomSegments: 6,
-
     mirrorlandDefaultScale: 0,
     mirrorlandHeroScale: 2.35,
-
     cardinalScale: 1.05,
     focusedCardinalScale: 1.28,
     selectedCardinalScale: 1.38,
-
     roomScale: 0.92,
     selectedRoomScale: 1.14,
-
     maxYaw: 0.22,
     maxPitch: 0.14
   });
@@ -180,6 +212,17 @@
     MirrorlandDrawn: false,
     MirrorlandRemovedFromEntranceConstellation: true,
     centerReservedAndOpen: true,
+    backgroundStarsEnabled: BACKGROUND.enabled,
+    backgroundStarCount: BACKGROUND.starCount,
+    backgroundStarsInitialized: false,
+    backgroundTwinkleEnabled: BACKGROUND.twinkle,
+    shootingStarsEnabled: BACKGROUND.shootingStars,
+    shootingStarIntervalMs: BACKGROUND.shootingStarIntervalMs,
+    shootingStarActive: false,
+    backgroundDrawCallsLastFrame: 0,
+    reducedMotionBackgroundSuppressed: false,
+    instructionState: "orbit",
+    instructionCopy: INSTRUCTION_COPY.orbit,
     cardinalMeshCount: 0,
     roomMeshCount: 0,
     drawCallsLastFrame: 0,
@@ -265,6 +308,13 @@
       target: [0, 0, 0],
       nextEye: [0, 0.78, 6.7],
       nextTarget: [0, 0, 0]
+    },
+    shootingStar: {
+      active: false,
+      startMs: 0,
+      durationMs: 1700,
+      nextMs: 0,
+      seed: 0
     }
   };
 
@@ -360,6 +410,11 @@
   function normalizeWing(value) {
     const wing = String(value || "").trim().toLowerCase();
     return WINGS.includes(wing) ? wing : "";
+  }
+
+  function seeded(seed) {
+    const x = Math.sin(seed * 12.9898) * 43758.5453;
+    return x - Math.floor(x);
   }
 
   function findRoot() {
@@ -601,7 +656,8 @@
       index: null,
       indexType: null,
       indexCount: 0,
-      isMirrorland: mesh.isMirrorland === true
+      isMirrorland: mesh.isMirrorland === true,
+      isBackground: mesh.isBackground === true
     };
 
     if (mesh.indices) {
@@ -611,6 +667,105 @@
     }
 
     return Object.freeze(gpu);
+  }
+
+  function createQuadMeshFromRects(rects, color) {
+    const positions = [];
+    const normals = [];
+    const colors = [];
+
+    rects.forEach((r) => {
+      const x = r.x;
+      const y = r.y;
+      const z = r.z;
+      const w = r.w;
+      const h = r.h;
+      const c = r.color || color;
+      const points = [
+        [x - w, y - h, z],
+        [x + w, y - h, z],
+        [x + w, y + h, z],
+        [x - w, y - h, z],
+        [x + w, y + h, z],
+        [x - w, y + h, z]
+      ];
+
+      points.forEach((p) => {
+        positions.push(p[0], p[1], p[2]);
+        normals.push(0, 0, 1);
+        colors.push(c[0], c[1], c[2]);
+      });
+    });
+
+    return Object.freeze({
+      positions: new Float32Array(positions),
+      normals: new Float32Array(normals),
+      colors: new Float32Array(colors),
+      vertexCount: positions.length / 3,
+      triangleCount: positions.length / 9,
+      isBackground: true
+    });
+  }
+
+  function createBackgroundStarsMesh() {
+    const rects = [];
+
+    for (let i = 0; i < BACKGROUND.starCount; i += 1) {
+      const rx = seeded(i + 11);
+      const ry = seeded(i + 23);
+      const rz = seeded(i + 37);
+      const rs = seeded(i + 41);
+      const rc = seeded(i + 53);
+
+      const clearCenter =
+        Math.abs(rx - 0.5) < 0.19 &&
+        Math.abs(ry - 0.5) < 0.18;
+
+      const x = (rx - 0.5) * (clearCenter ? 9.2 : 8.2);
+      const y = (ry - 0.5) * (clearCenter ? 6.2 : 5.7);
+      const z = -7.6 - rz * 2.2;
+      const size = 0.006 + rs * 0.020;
+      const lift = 0.38 + rc * 0.34;
+
+      rects.push({
+        x,
+        y,
+        z,
+        w: size,
+        h: size,
+        color: [
+          STAR_PALETTE.background[0] * lift,
+          STAR_PALETTE.background[1] * lift,
+          STAR_PALETTE.background[2] * lift
+        ]
+      });
+    }
+
+    return createQuadMeshFromRects(rects, STAR_PALETTE.background);
+  }
+
+  function createShootingStarMesh() {
+    const rects = [];
+    const segments = 7;
+
+    for (let i = 0; i < segments; i += 1) {
+      const t = i / Math.max(1, segments - 1);
+      const alphaLift = 1.0 - t * 0.72;
+      rects.push({
+        x: t * 0.42,
+        y: -t * 0.18,
+        z: -7.0,
+        w: 0.075 * (1.0 - t * 0.70),
+        h: 0.010,
+        color: [
+          STAR_PALETTE.shooting[0] * alphaLift,
+          STAR_PALETTE.shooting[1] * alphaLift,
+          STAR_PALETTE.shooting[2] * alphaLift
+        ]
+      });
+    }
+
+    return createQuadMeshFromRects(rects, STAR_PALETTE.shooting);
   }
 
   function resolveMirrorlandObject() {
@@ -818,6 +973,15 @@
   function buildMeshes(gl) {
     const meshes = new Map();
 
+    if (BACKGROUND.enabled) {
+      meshes.set("background-stars", buildGpuMesh(gl, createBackgroundStarsMesh()));
+      meshes.set("shooting-star", buildGpuMesh(gl, createShootingStarMesh()));
+      emitReceipt({
+        backgroundStarsInitialized: true,
+        backgroundStarCount: BACKGROUND.starCount
+      });
+    }
+
     try {
       meshes.set("mirrorland", adaptMirrorlandObjectToGpuMesh(gl));
       emitReceipt({
@@ -916,6 +1080,18 @@
 
   function buildRegistry() {
     const registry = new Map();
+
+    registry.set("background-stars", node("background-stars", "background", {
+      meshKey: "background-stars",
+      material: "BACKGROUND_STAR",
+      phase: 0.1
+    }));
+
+    registry.set("shooting-star", node("shooting-star", "background", {
+      meshKey: "shooting-star",
+      material: "SHOOTING_STAR",
+      phase: 0.2
+    }));
 
     registry.set("mirrorland", node("mirrorland", "mirrorland", {
       label: "Mirrorland",
@@ -1050,6 +1226,31 @@
     return bestWing;
   }
 
+  function updateShootingStar(nowMs) {
+    if (!BACKGROUND.shootingStars || state.reducedMotion) {
+      state.shootingStar.active = false;
+      return;
+    }
+
+    if (!state.shootingStar.nextMs) {
+      state.shootingStar.nextMs = nowMs + BACKGROUND.shootingStarIntervalMs;
+    }
+
+    if (!state.shootingStar.active && nowMs >= state.shootingStar.nextMs) {
+      state.shootingStar.active = true;
+      state.shootingStar.startMs = nowMs;
+      state.shootingStar.seed += 1;
+    }
+
+    if (state.shootingStar.active && nowMs - state.shootingStar.startMs > state.shootingStar.durationMs) {
+      state.shootingStar.active = false;
+      state.shootingStar.nextMs =
+        nowMs +
+        BACKGROUND.shootingStarIntervalMs +
+        (seeded(state.shootingStar.seed + 201) - 0.5) * BACKGROUND.shootingStarVarianceMs;
+    }
+  }
+
   function updateTargets() {
     const topWing = topAuthorityWing();
     const focus = state.orbitFocus || topWing || "north";
@@ -1071,6 +1272,37 @@
         float: 0
       });
     });
+
+    const background = state.registry.get("background-stars");
+    if (background && BACKGROUND.enabled) {
+      background.visible = true;
+      setTarget(background, setUniformScale({
+        x: 0, y: 0, z: -2.2,
+        prominence: state.reducedMotion ? 0.34 : 0.46,
+        halo: 0,
+        rotationSpeed: 0,
+        float: 0
+      }, 1));
+    }
+
+    const shooting = state.registry.get("shooting-star");
+    if (shooting) {
+      const active = state.shootingStar.active && !state.reducedMotion;
+      const progress = active
+        ? Math.max(0, Math.min(1, (performance.now() - state.shootingStar.startMs) / state.shootingStar.durationMs))
+        : 0;
+
+      shooting.visible = active;
+      setTarget(shooting, setUniformScale({
+        x: -2.2 + progress * 1.1 + (seeded(state.shootingStar.seed + 12) - 0.5) * 0.7,
+        y: 1.82 - progress * 0.54 + (seeded(state.shootingStar.seed + 19) - 0.5) * 0.38,
+        z: -2.8,
+        prominence: active ? Math.sin(progress * Math.PI) * 0.58 : 0,
+        halo: 0,
+        rotationSpeed: 0,
+        float: 0
+      }, 1));
+    }
 
     const mirrorland = state.registry.get("mirrorland");
 
@@ -1174,6 +1406,12 @@
         return;
       }
 
+      if (n.type === "background") {
+        a.rx = 0;
+        a.ry = 0;
+        return;
+      }
+
       a.rz += dt * a.rotationSpeed;
       a.ry = Math.sin(state.time * 0.42 + n.phase) * QUALITY.maxYaw * Math.max(0.35, a.prominence);
       a.rx = Math.sin(state.time * 0.31 + n.phase * 0.73) * QUALITY.maxPitch * Math.max(0.35, a.prominence);
@@ -1264,7 +1502,7 @@
   function modelMatrix(n, haloPass) {
     const t = n.transform;
     const floatY =
-      !state.reducedMotion && n.type !== "mirrorland"
+      !state.reducedMotion && n.type !== "mirrorland" && n.type !== "background"
         ? Math.sin(state.time * 0.95 + n.roomIndex * 0.72 + n.phase) * t.float
         : 0;
 
@@ -1355,13 +1593,26 @@
     el.style.zIndex = n.type === "petal" ? "5" : n.type === "mirrorland" ? "6" : "4";
   }
 
-  function syncSemanticObjects() {
-    state.registry.forEach(syncSemanticNode);
+  function syncInstructionCopy() {
+    if (!state.root) return;
 
     const note = state.root.querySelector(".compass-accessibility-note");
-    if (note) {
-      note.textContent = "Swipe to rotate the orbit. Tap a star to inspect. Use Enter Room only when you are ready to navigate.";
-    }
+    if (!note) return;
+
+    const expanded = state.flowerExpanded === true;
+    const copy = expanded ? INSTRUCTION_COPY.flower : INSTRUCTION_COPY.orbit;
+
+    note.textContent = copy;
+
+    emitReceipt({
+      instructionState: expanded ? "flowerExpanded" : "orbit",
+      instructionCopy: copy
+    });
+  }
+
+  function syncSemanticObjects() {
+    state.registry.forEach(syncSemanticNode);
+    syncInstructionCopy();
   }
 
   function classifyGesture(start, end) {
@@ -1447,6 +1698,7 @@
     let bestDistance = Infinity;
 
     state.registry.forEach((n) => {
+      if (n.type === "background") return;
       if (!n.visible || n.transform.prominence < 0.12) return;
 
       const screen = projectNode(n);
@@ -1567,9 +1819,11 @@
       };
     }
 
-    if (state.reducedMotion) {
-      gl.uniform1f(state.uniforms.twinkle, 0);
-      gl.uniform1f(state.uniforms.sparkle, 0);
+    const atmospheric = materialName === "BACKGROUND_STAR" || materialName === "SHOOTING_STAR";
+
+    if (state.reducedMotion || atmospheric) {
+      gl.uniform1f(state.uniforms.twinkle, state.reducedMotion ? 0 : 0.42);
+      gl.uniform1f(state.uniforms.sparkle, atmospheric ? 0.04 : 0);
     } else {
       gl.uniform1f(state.uniforms.twinkle, 1);
       gl.uniform1f(state.uniforms.sparkle, material.sparkle);
@@ -1595,6 +1849,7 @@
     if (!n.visible || n.transform.prominence < 0.04 || !shouldDrawForDiagnostic(n)) return 0;
 
     if (state.diagnosticMode === DIAGNOSTIC_MODES.HALO_DISABLED && haloPass) return 0;
+    if (n.type === "background" && haloPass) return 0;
 
     const mesh = state.meshes.get(n.meshKey);
     if (!mesh) return 0;
@@ -1645,6 +1900,7 @@
     state.time = seconds;
 
     readControllerState();
+    updateShootingStar(now);
     updateOrbitAngle(dt);
     updateTargets();
     updateTransforms(dt);
@@ -1659,8 +1915,6 @@
     gl.clearColor(0.015, 0.018, 0.034, 0);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-    syncSemanticObjects();
-
     gl.useProgram(state.program);
     gl.uniform3f(state.uniforms.keyLight, -0.42, -0.82, -0.68);
     gl.uniform3f(state.uniforms.fillLight, 0.72, -0.24, -0.54);
@@ -1668,11 +1922,22 @@
     gl.uniform3f(state.uniforms.ambientColor, 0.10, 0.12, 0.18);
 
     let drawCalls = 0;
+    let backgroundDrawCalls = 0;
     let visible = 0;
+
+    gl.depthMask(false);
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+    ["background-stars", "shooting-star"].forEach((id) => {
+      const n = state.registry.get(id);
+      if (n && n.visible) {
+        backgroundDrawCalls += drawNode(n, false);
+      }
+    });
 
     gl.depthMask(false);
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
     state.registry.forEach((n) => {
+      if (n.type === "background") return;
       if (n.visible && n.transform.prominence > 0.04) {
         drawCalls += drawNode(n, true);
       }
@@ -1681,17 +1946,23 @@
     gl.depthMask(true);
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
     state.registry.forEach((n) => {
+      if (n.type === "background") return;
       if (n.visible && n.transform.prominence > 0.04 && shouldDrawForDiagnostic(n)) {
         visible += 1;
         drawCalls += drawNode(n, false);
       }
     });
 
+    syncSemanticObjects();
+
     const glError = gl.getError();
     emitReceipt({
       rendererInitialized: true,
-      drawCallsLastFrame: drawCalls,
+      drawCallsLastFrame: drawCalls + backgroundDrawCalls,
+      backgroundDrawCallsLastFrame: backgroundDrawCalls,
       visibleObjectCount: visible,
+      shootingStarActive: state.shootingStar.active,
+      reducedMotionBackgroundSuppressed: state.reducedMotion,
       glError: glError === gl.NO_ERROR ? "NO_ERROR" : String(glError),
       renderLoopStatus: state.reducedMotion ? "active-reduced-motion" : "active",
       cameraOrientation: "+Z_FRONT_BOUNDED_THREE_QUARTER",
@@ -1823,6 +2094,8 @@
       state.meshes = buildMeshes(gl);
       state.registry = buildRegistry();
       bindPointerBridge();
+
+      state.shootingStar.nextMs = performance.now() + BACKGROUND.shootingStarIntervalMs;
 
       state.running = true;
       state.raf = requestAnimationFrame(render);

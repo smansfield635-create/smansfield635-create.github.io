@@ -1,5 +1,5 @@
 /* /assets/compass/compass.css
-   DGB Compass — Estate Compass presentation layer.
+   DGB Compass — Estate Compass presentation layer with distant celestial atmosphere.
    Scope: compass.css only.
 */
 
@@ -529,10 +529,37 @@ summary:focus-visible {
   touch-action: none;
   overscroll-behavior: contain;
   background:
+    radial-gradient(circle at 14% 24%, rgba(124, 220, 255, 0.10) 0 1px, transparent 2px),
+    radial-gradient(circle at 32% 16%, rgba(255, 248, 224, 0.12) 0 1px, transparent 2px),
+    radial-gradient(circle at 48% 12%, rgba(216, 184, 106, 0.13) 0 1px, transparent 2px),
+    radial-gradient(circle at 72% 18%, rgba(124, 220, 255, 0.12) 0 1px, transparent 2px),
+    radial-gradient(circle at 88% 30%, rgba(255, 248, 224, 0.10) 0 1px, transparent 2px),
+    radial-gradient(circle at 20% 76%, rgba(255, 248, 224, 0.12) 0 1px, transparent 2px),
+    radial-gradient(circle at 64% 82%, rgba(124, 220, 255, 0.12) 0 1px, transparent 2px),
+    radial-gradient(circle at 84% 70%, rgba(216, 184, 106, 0.11) 0 1px, transparent 2px),
+    radial-gradient(circle at 13% 78%, rgba(68, 112, 148, 0.22), transparent 5.5rem),
+    radial-gradient(circle at 82% 22%, rgba(159, 137, 255, 0.16), transparent 6.8rem),
+    radial-gradient(circle at 76% 82%, rgba(216, 184, 106, 0.13), transparent 5.8rem),
     radial-gradient(ellipse at 50% 48%, rgba(124, 220, 255, 0.14), transparent 34%),
     radial-gradient(ellipse at 50% 100%, rgba(216, 184, 106, 0.09), transparent 50%),
     linear-gradient(180deg, rgba(255, 255, 255, 0.035), rgba(0, 0, 0, 0.28)),
     rgba(7, 10, 16, 0.74);
+  background-size:
+    420px 360px,
+    520px 420px,
+    580px 440px,
+    460px 380px,
+    640px 480px,
+    500px 400px,
+    560px 430px,
+    620px 460px,
+    auto,
+    auto,
+    auto,
+    auto,
+    auto,
+    auto,
+    auto;
   box-shadow:
     0 28px 100px rgba(0, 0, 0, 0.42),
     0 0 44px rgba(124, 220, 255, 0.08),
@@ -549,9 +576,21 @@ summary:focus-visible {
   border: 1px solid rgba(216, 184, 106, 0.10);
   border-radius: 999px;
   background:
+    radial-gradient(circle at 18% 18%, rgba(124, 220, 255, 0.16) 0 0.7px, transparent 1.6px),
+    radial-gradient(circle at 76% 22%, rgba(255, 248, 224, 0.15) 0 0.8px, transparent 1.8px),
+    radial-gradient(circle at 30% 82%, rgba(216, 184, 106, 0.12) 0 0.8px, transparent 1.8px),
+    radial-gradient(circle at 88% 72%, rgba(124, 220, 255, 0.13) 0 0.7px, transparent 1.6px),
     radial-gradient(circle, transparent 0 44%, rgba(216, 184, 106, 0.05) 44.5%, transparent 45%),
     conic-gradient(from 45deg, transparent 0 22%, rgba(124, 220, 255, 0.10) 24%, transparent 26% 48%, rgba(216, 184, 106, 0.07) 50%, transparent 52% 74%, rgba(124, 220, 255, 0.08) 76%, transparent 78%);
-  opacity: 0.68;
+  background-size:
+    280px 230px,
+    360px 260px,
+    320px 240px,
+    420px 300px,
+    auto,
+    auto;
+  opacity: 0.74;
+  animation: compass-celestial-twinkle 9.5s ease-in-out infinite alternate;
 }
 
 .compass-scene::after {
@@ -566,6 +605,7 @@ summary:focus-visible {
   border: 1px solid rgba(124, 220, 255, 0.13);
   border-radius: 50%;
   background:
+    linear-gradient(115deg, transparent 0 38%, rgba(255, 248, 224, 0.0) 39%, rgba(255, 248, 224, 0.22) 40%, rgba(124, 220, 255, 0.18) 41%, transparent 44%),
     radial-gradient(ellipse at 22% 50%, rgba(124, 220, 255, 0.18), transparent 28%),
     radial-gradient(ellipse at 78% 50%, rgba(216, 184, 106, 0.15), transparent 28%),
     linear-gradient(90deg, transparent, rgba(124, 220, 255, 0.06), transparent);
@@ -574,6 +614,9 @@ summary:focus-visible {
   box-shadow:
     0 0 34px rgba(124, 220, 255, 0.08),
     inset 0 0 28px rgba(216, 184, 106, 0.05);
+  animation:
+    compass-shooting-star 14s linear infinite,
+    compass-threshold-breathe 8s ease-in-out infinite alternate;
 }
 
 .compass-scene__visual,
@@ -583,6 +626,48 @@ summary:focus-visible {
   z-index: 1;
   min-height: 100%;
   pointer-events: none;
+}
+
+[data-compass-crystals-mount]::before,
+[data-compass-crystals-mount]::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  pointer-events: none;
+}
+
+[data-compass-crystals-mount]::before {
+  left: -14%;
+  top: 18%;
+  width: 52px;
+  height: 18px;
+  border-radius: 70% 28% 28% 70%;
+  background:
+    radial-gradient(circle at 82% 50%, rgba(255, 248, 224, 0.88) 0 2px, transparent 3px),
+    linear-gradient(90deg, transparent 0 8%, rgba(124, 220, 255, 0.0) 9%, rgba(124, 220, 255, 0.36) 18%, rgba(255, 248, 224, 0.38) 48%, rgba(124, 220, 255, 0.18) 78%, transparent 100%);
+  box-shadow:
+    -20px 0 24px rgba(124, 220, 255, 0.10),
+    0 0 18px rgba(255, 248, 224, 0.08);
+  opacity: 0;
+  transform: translate3d(0, 0, 0) rotate(-10deg) scale(0.72);
+  animation: compass-spaceship-flyby 26s linear infinite;
+}
+
+[data-compass-crystals-mount]::after {
+  right: 9%;
+  top: 12%;
+  width: 62px;
+  height: 62px;
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at 34% 30%, rgba(255, 248, 224, 0.18), transparent 18%),
+    radial-gradient(circle at 62% 68%, rgba(124, 220, 255, 0.12), transparent 28%),
+    radial-gradient(circle, rgba(68, 112, 148, 0.12), rgba(26, 41, 65, 0.08) 48%, transparent 70%);
+  box-shadow:
+    0 0 34px rgba(124, 220, 255, 0.055),
+    inset -10px -12px 18px rgba(0, 0, 0, 0.24);
+  opacity: 0.44;
+  filter: blur(0.1px);
 }
 
 [data-compass-crystals-mount] canvas {
@@ -880,6 +965,72 @@ summary:focus-visible {
   line-height: 1.5;
 }
 
+@keyframes compass-celestial-twinkle {
+  0% {
+    opacity: 0.56;
+    filter: brightness(0.88);
+  }
+
+  48% {
+    opacity: 0.76;
+    filter: brightness(1.05);
+  }
+
+  100% {
+    opacity: 0.64;
+    filter: brightness(0.96);
+  }
+}
+
+@keyframes compass-threshold-breathe {
+  0% {
+    opacity: 0.48;
+  }
+
+  100% {
+    opacity: 0.72;
+  }
+}
+
+@keyframes compass-shooting-star {
+  0%,
+  53% {
+    background-position: -90rem 0, 0 0, 0 0, 0 0;
+  }
+
+  58% {
+    background-position: 90rem 0, 0 0, 0 0, 0 0;
+  }
+
+  59%,
+  100% {
+    background-position: 90rem 0, 0 0, 0 0, 0 0;
+  }
+}
+
+@keyframes compass-spaceship-flyby {
+  0%,
+  67% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0) rotate(-10deg) scale(0.72);
+  }
+
+  70% {
+    opacity: 0.26;
+  }
+
+  76% {
+    opacity: 0.34;
+    transform: translate3d(128vw, 38px, 0) rotate(-8deg) scale(0.72);
+  }
+
+  79%,
+  100% {
+    opacity: 0;
+    transform: translate3d(148vw, 44px, 0) rotate(-8deg) scale(0.72);
+  }
+}
+
 @media (max-width: 920px) {
   .compass-discovery {
     grid-template-columns: 1fr;
@@ -991,6 +1142,20 @@ summary:focus-visible {
   .compass-object--wing[data-wing="west"] {
     left: 2%;
   }
+
+  [data-compass-crystals-mount]::after {
+    width: 44px;
+    height: 44px;
+    right: 7%;
+    top: 10%;
+    opacity: 0.36;
+  }
+
+  [data-compass-crystals-mount]::before {
+    width: 42px;
+    height: 15px;
+    animation-duration: 31s;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1005,5 +1170,15 @@ summary:focus-visible {
     transition-duration: 0.01ms !important;
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
+  }
+
+  .compass-scene::before,
+  .compass-scene::after,
+  [data-compass-crystals-mount]::before {
+    animation: none !important;
+  }
+
+  [data-compass-crystals-mount]::before {
+    opacity: 0 !important;
   }
 }

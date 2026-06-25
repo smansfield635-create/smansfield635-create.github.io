@@ -1,5 +1,5 @@
 /* /assets/compass/compass.controller.js
-   DGB Compass — Orbit Flower Traversal Controller with coordinate/function label state.
+   DGB Compass — Orbit Flower Traversal Controller with dynamic guidance.
    Scope: compass.controller.js only.
 */
 
@@ -7,7 +7,7 @@
   "use strict";
 
   const CONTRACT = Object.freeze({
-    id: "DGB_COMPASS_COORDINATE_FUNCTION_CONTROLLER_TNT_v2",
+    id: "DGB_COMPASS_COORDINATE_FUNCTION_CONTROLLER_TNT_v3",
     file: "/assets/compass/compass.controller.js",
     visualPassClaimed: false,
     productionAuthorized: false,
@@ -23,9 +23,19 @@
 
   const WINGS = Object.freeze(["north", "east", "south", "west"]);
 
+  const GUIDANCE = Object.freeze({
+    orbit:
+      "Swipe to rotate the constellation. Tap a star to inspect its path.",
+    flower:
+      "Tap a petal to inspect a destination. Swipe again to return to the orbit.",
+    petal:
+      "Inspect the selected destination. Enter only when this path is the one you want."
+  });
+
   const state = {
     root: null,
     scene: null,
+    guidance: null,
     panel: null,
     panelEyebrow: null,
     panelTitle: null,
@@ -77,6 +87,10 @@
     flowerExpanded: false,
     panelDescended: false,
     enterEnabled: false,
+    guidanceState: "pending",
+    guidanceCopy: "",
+    sceneReturnSuppressed: true,
+    panelReturnSuppressed: true,
     coordinateFunction: "",
     localCoordinate: "",
     localFunction: "",
@@ -188,6 +202,43 @@
     };
   }
 
+  function createGuidanceSurface() {
+    if (!state.scene) return null;
+
+    const existing =
+      $("[data-compass-runtime-guidance]", state.scene) ||
+      $(".compass-runtime-guidance", state.scene);
+
+    if (existing) return existing;
+
+    const guidance = document.createElement("p");
+    guidance.className = "compass-runtime-guidance";
+    guidance.setAttribute("data-compass-runtime-guidance", "true");
+    guidance.setAttribute("aria-live", "polite");
+
+    guidance.style.position = "absolute";
+    guidance.style.left = "50%";
+    guidance.style.top = "14px";
+    guidance.style.zIndex = "4";
+    guidance.style.width = "min(calc(100% - 32px), 560px)";
+    guidance.style.margin = "0";
+    guidance.style.padding = "10px 14px";
+    guidance.style.transform = "translateX(-50%)";
+    guidance.style.border = "1px solid rgba(124, 220, 255, 0.20)";
+    guidance.style.borderRadius = "999px";
+    guidance.style.color = "rgba(255, 248, 224, 0.84)";
+    guidance.style.background = "rgba(7, 10, 16, 0.46)";
+    guidance.style.boxShadow = "0 10px 30px rgba(0, 0, 0, 0.24), inset 0 1px 0 rgba(255, 255, 255, 0.08)";
+    guidance.style.backdropFilter = "blur(10px)";
+    guidance.style.fontSize = "clamp(0.72rem, 2.4vw, 0.9rem)";
+    guidance.style.lineHeight = "1.35";
+    guidance.style.textAlign = "center";
+    guidance.style.pointerEvents = "none";
+
+    state.scene.appendChild(guidance);
+    return guidance;
+  }
+
   function acquireDom() {
     state.root = $("[data-compass-root]");
     if (!state.root) {
@@ -196,6 +247,7 @@
     }
 
     state.scene = $("[data-compass-scene]", state.root) || $(".compass-scene", state.root);
+    state.guidance = createGuidanceSurface();
     state.panel = $("[data-compass-panel]", state.root);
     state.panelEyebrow = $("[data-compass-panel-eyebrow]", state.root);
     state.panelTitle = $("[data-compass-panel-title]", state.root);
@@ -274,6 +326,49 @@
     };
   }
 
+  function currentGuidancePayload() {
+    if (state.flowerExpanded && state.selectedRoom) {
+      return { state: "petal", copy: GUIDANCE.petal };
+    }
+
+    if (state.flowerExpanded) {
+      return { state: "flower", copy: GUIDANCE.flower };
+    }
+
+    return { state: "orbit", copy: GUIDANCE.orbit };
+  }
+
+  function updateGuidance() {
+    const payload = currentGuidancePayload();
+
+    if (state.guidance) {
+      state.guidance.textContent = payload.copy;
+      state.guidance.dataset.guidanceState = payload.state;
+      state.guidance.hidden = false;
+    }
+
+    state.root.dataset.compassGuidanceState = payload.state;
+    state.root.dataset.compassGuidanceCopy = payload.copy;
+
+    return payload;
+  }
+
+  function suppressReturnControls() {
+    if (state.returnControl) {
+      state.returnControl.hidden = true;
+      state.returnControl.disabled = true;
+      state.returnControl.setAttribute("aria-hidden", "true");
+      state.returnControl.setAttribute("tabindex", "-1");
+    }
+
+    if (state.returnToOrbitControl) {
+      state.returnToOrbitControl.hidden = true;
+      state.returnToOrbitControl.disabled = true;
+      state.returnToOrbitControl.setAttribute("aria-hidden", "true");
+      state.returnToOrbitControl.setAttribute("tabindex", "-1");
+    }
+  }
+
   function writeRootState() {
     const payload = currentCoordinatePayload();
 
@@ -296,8 +391,7 @@
 
   function updateSemanticLabels() {
     if (state.mirrorland && state.mirrorland.el) {
-      const withdrawn = state.flowerExpanded ? "true" : "false";
-      state.mirrorland.el.dataset.withdrawn = withdrawn;
+      state.mirrorland.el.dataset.withdrawn = state.flowerExpanded ? "true" : "false";
       setObjectText(state.mirrorland.el, "Mirrorland", state.flowerExpanded ? "Withdrawn Center" : "Center Fulcrum");
     }
 
@@ -310,7 +404,7 @@
       item.el.dataset.withdrawn = state.flowerExpanded && !flowerAnchor ? "true" : "false";
 
       if (flowerAnchor) {
-        setObjectText(item.el, item.flowerAnchorLabel, "Anchor");
+        setObjectText(item.el, item.flowerAnchorLabel, "Opened Path");
       } else if (state.flowerExpanded) {
         setObjectText(item.el, item.orbitLabel, "Outside Field");
       } else {
@@ -330,23 +424,15 @@
 
   function updateVisibility() {
     updateSemanticLabels();
-
-    if (state.returnControl) {
-      state.returnControl.hidden = state.mode === MODES.COMPASS;
-      state.returnControl.disabled = state.mode === MODES.COMPASS;
-    }
-
-    if (state.returnToOrbitControl) {
-      state.returnToOrbitControl.hidden = !state.panelDescended;
-      state.returnToOrbitControl.disabled = !state.panelDescended;
-    }
+    suppressReturnControls();
+    updateGuidance();
   }
 
   function updatePanelDefault() {
     setText(state.panelEyebrow, "Orbit");
     setText(state.panelTitle, "Choose a coordinate");
-    setText(state.panelPurpose, "Swipe to rotate the orbit. Tap an axis, petal, or label to open meaning.");
-    setText(state.panelRelationship, "Enter only when the selected coordinate is the path you want.");
+    setText(state.panelPurpose, "Swipe to rotate the constellation. Tap a star to inspect its path.");
+    setText(state.panelRelationship, "Enter only after a destination is selected.");
     setEnter("", "");
   }
 
@@ -354,7 +440,7 @@
     setText(state.panelEyebrow, "Coordinate axis");
     setText(state.panelTitle, cardinal.panelTitle);
     setText(state.panelPurpose, cardinal.panelBody);
-    setText(state.panelRelationship, cardinal.panelWhy);
+    setText(state.panelRelationship, "Tap a petal to inspect a destination. Swipe again to return to the orbit.");
     setEnter(cardinal.validRoute ? cardinal.route : "", "html-cardinal-declaration");
   }
 
@@ -393,6 +479,7 @@
 
   function emitReceipt(extra = {}) {
     const payload = currentCoordinatePayload();
+    const guidance = currentGuidancePayload();
 
     Object.assign(RECEIPT, {
       rootStatus: state.root ? "found" : "missing",
@@ -410,6 +497,10 @@
       flowerExpanded: state.flowerExpanded === true,
       panelDescended: state.panelDescended === true,
       enterEnabled: state.enterEnabled === true,
+      guidanceState: guidance.state,
+      guidanceCopy: guidance.copy,
+      sceneReturnSuppressed: true,
+      panelReturnSuppressed: true,
       coordinateFunction: payload.coordinateFunction,
       localCoordinate: payload.localCoordinate,
       localFunction: payload.localFunction,
@@ -445,6 +536,7 @@
     writeRootState();
     updateVisibility();
     updatePanel();
+    suppressReturnControls();
     emitReceipt();
   }
 
@@ -480,7 +572,7 @@
     state.orbitFocus = normalized;
     state.lastOrientationInput = input;
 
-    if (changed) {
+    if (changed || state.flowerExpanded) {
       state.flowerExpanded = false;
       state.selectedCardinal = "";
       clearDestination();
@@ -492,6 +584,10 @@
   }
 
   function requestAxisSwipe(axis) {
+    if (state.flowerExpanded && state.selectedCardinal) {
+      return focusOrbit(state.selectedCardinal, "swipe-return-to-orbit", "swipe-return");
+    }
+
     const current = state.orbitFocus;
     let next = "";
 
@@ -581,9 +677,17 @@
   }
 
   function returnToOrbit() {
+    const preserved = normalizeWing(state.selectedCardinal || state.orbitFocus);
+
     scrollToOrbit();
-    state.mode = state.orbitFocus ? MODES.ORBIT : MODES.COMPASS;
+    state.mode = preserved ? MODES.ORBIT : MODES.COMPASS;
+    state.orbitFocus = preserved;
+    state.selectedCardinal = "";
+    state.flowerExpanded = false;
+    state.panelDescended = false;
+    clearDestination();
     state.lastOrientationInput = "return-to-orbit";
+
     commit("return-to-orbit");
   }
 
@@ -680,6 +784,7 @@
     if (!acquireDom()) return;
     bindEvents();
     exposeApi();
+    suppressReturnControls();
     enterCompassMode("restore-compass-mode");
   }
 

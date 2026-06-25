@@ -7,7 +7,7 @@
   "use strict";
 
   const CONTRACT = Object.freeze({
-    id: "DGB_COMPASS_CRYSTALS_RENEWED_CELESTIAL_DIAMOND_STAR_ENGINE_TNT_v1",
+    id: "DGB_COMPASS_CRYSTALS_RENEWED_CELESTIAL_DIAMOND_STAR_ENGINE_TNT_v1_1",
     file: "/assets/compass/compass.crystals.js",
     visualPassClaimed: false,
     productionAuthorized: false,
@@ -47,58 +47,58 @@
 
   const MATERIALS = Object.freeze({
     MIRRORLAND_HERO: Object.freeze({
-      specular: 1.55,
-      rim: 1.25,
-      emissive: 0.32,
-      alpha: 0.96,
-      sparkle: 0.42,
-      halo: 1.35,
-      contrast: 1.18
+      specular: 1.72,
+      rim: 1.42,
+      emissive: 0.40,
+      alpha: 0.97,
+      sparkle: 0.48,
+      halo: 1.62,
+      contrast: 1.31
     }),
     CARDINAL_IDLE: Object.freeze({
-      specular: 1.10,
-      rim: 0.92,
-      emissive: 0.18,
-      alpha: 0.88,
-      sparkle: 0.28,
-      halo: 0.72,
-      contrast: 1.08
-    }),
-    CARDINAL_FOCUSED: Object.freeze({
-      specular: 1.42,
-      rim: 1.18,
-      emissive: 0.26,
-      alpha: 0.94,
-      sparkle: 0.38,
-      halo: 1.05,
-      contrast: 1.15
-    }),
-    CARDINAL_SELECTED: Object.freeze({
-      specular: 1.58,
-      rim: 1.28,
-      emissive: 0.34,
-      alpha: 0.96,
-      sparkle: 0.46,
-      halo: 1.18,
+      specular: 1.22,
+      rim: 1.04,
+      emissive: 0.25,
+      alpha: 0.90,
+      sparkle: 0.32,
+      halo: 0.90,
       contrast: 1.18
     }),
+    CARDINAL_FOCUSED: Object.freeze({
+      specular: 1.58,
+      rim: 1.35,
+      emissive: 0.34,
+      alpha: 0.95,
+      sparkle: 0.43,
+      halo: 1.28,
+      contrast: 1.28
+    }),
+    CARDINAL_SELECTED: Object.freeze({
+      specular: 1.76,
+      rim: 1.46,
+      emissive: 0.42,
+      alpha: 0.97,
+      sparkle: 0.50,
+      halo: 1.42,
+      contrast: 1.31
+    }),
     ROOM_IDLE: Object.freeze({
-      specular: 0.96,
-      rim: 0.78,
-      emissive: 0.14,
-      alpha: 0.86,
-      sparkle: 0.20,
-      halo: 0.52,
-      contrast: 1.02
+      specular: 1.10,
+      rim: 0.93,
+      emissive: 0.22,
+      alpha: 0.89,
+      sparkle: 0.24,
+      halo: 0.70,
+      contrast: 1.14
     }),
     ROOM_SELECTED: Object.freeze({
-      specular: 1.24,
-      rim: 1.02,
-      emissive: 0.24,
-      alpha: 0.94,
-      sparkle: 0.32,
-      halo: 0.88,
-      contrast: 1.12
+      specular: 1.42,
+      rim: 1.18,
+      emissive: 0.32,
+      alpha: 0.96,
+      sparkle: 0.38,
+      halo: 1.12,
+      contrast: 1.26
     })
   });
 
@@ -161,8 +161,8 @@
     cardinalScale: 1.26,
     focusedCardinalScale: 1.58,
     selectedCardinalScale: 1.72,
-    roomScale: 0.82,
-    selectedRoomScale: 1.04
+    roomScale: 0.92,
+    selectedRoomScale: 1.14
   });
 
   const RECEIPT = {
@@ -171,6 +171,12 @@
     shaderProgramsLinked: false,
     MirrorlandMeshLoaded: false,
     MirrorlandDrawn: false,
+    MirrorlandHiddenInCardinalFlower: false,
+    selectedCardinalHiddenInExpandedFlower: false,
+    nonselectedCardinalsHiddenInExpandedFlower: false,
+    MirrorlandSelectedStateShowsOnlyMirrorland: false,
+    roomScale: QUALITY.roomScale,
+    selectedRoomScale: QUALITY.selectedRoomScale,
     cardinalMeshCount: 0,
     roomMeshCount: 0,
     drawCallsLastFrame: 0,
@@ -472,35 +478,35 @@
       float key = max(dot(n, normalize(-uKeyLight)), 0.0);
       float fill = max(dot(n, normalize(-uFillLight)), 0.0);
       float rear = max(dot(n, normalize(-uRimLight)), 0.0);
-      float fresnel = pow(1.0 - max(dot(n, viewDir), 0.0), 2.1);
-      float facing = pow(max(dot(reflect(normalize(uKeyLight), n), viewDir), 0.0), 26.0);
+      float fresnel = pow(1.0 - max(dot(n, viewDir), 0.0), 1.85);
+      float facing = pow(max(dot(reflect(normalize(uKeyLight), n), viewDir), 0.0), 22.0);
 
-      float facetBand = pow(abs(dot(n, normalize(vec3(0.45, 0.72, 0.53)))), 5.0);
+      float facetBand = pow(abs(dot(n, normalize(vec3(0.45, 0.72, 0.53)))), 4.4);
       float sparkleSeed = hash31(floor((n + vWorldPosition) * 18.0));
-      float sparklePhase = sin(uTime * 2.0 + sparkleSeed * 6.28318);
-      float sparkle = smoothstep(0.72, 1.0, facing + facetBand * 0.34) * (0.74 + sparklePhase * 0.26) * uSparkle;
+      float sparklePhase = sin(uTime * 2.15 + sparkleSeed * 6.28318);
+      float sparkle = smoothstep(0.66, 1.0, facing + facetBand * 0.38) * (0.78 + sparklePhase * 0.22) * uSparkle;
 
-      float twinkle = 1.0 + sin(uTime * 0.82 + sparkleSeed * 6.28318) * 0.055 * uTwinkle;
+      float twinkle = 1.0 + sin(uTime * 0.86 + sparkleSeed * 6.28318) * 0.067 * uTwinkle;
 
       if (vHaloPass > 0.5) {
-        vec3 haloColor = base * (0.75 + fresnel * 1.35 + rear * 0.42) * uHaloStrength * twinkle;
-        float haloAlpha = clamp((0.045 + fresnel * 0.22 + rear * 0.08) * uProminence * uHaloStrength, 0.0, 0.42);
+        vec3 haloColor = base * (0.82 + fresnel * 1.55 + rear * 0.48) * uHaloStrength * twinkle;
+        float haloAlpha = clamp((0.055 + fresnel * 0.26 + rear * 0.09) * uProminence * uHaloStrength, 0.0, 0.46);
         gl_FragColor = vec4(haloColor, haloAlpha);
         return;
       }
 
-      float diffuse = 0.26 + key * 0.82 + fill * 0.28 + rear * 0.18;
-      diffuse = mix(diffuse, pow(diffuse, 0.72), clamp(uContrast - 1.0, 0.0, 0.6));
+      float diffuse = 0.24 + key * 0.88 + fill * 0.30 + rear * 0.20;
+      diffuse = mix(diffuse, pow(diffuse, 0.66), clamp(uContrast - 1.0, 0.0, 0.7));
 
       vec3 lit = base * diffuse * twinkle;
       vec3 spec = vec3(1.0, 0.96, 0.82) * facing * uSpecular;
-      vec3 rim = base * fresnel * uRim + vec3(0.68, 0.86, 1.0) * fresnel * uRim * 0.24;
+      vec3 rim = base * fresnel * uRim + vec3(0.68, 0.86, 1.0) * fresnel * uRim * 0.28;
       vec3 emissive = base * uEmissive;
       vec3 spark = vec3(1.0, 0.96, 0.78) * sparkle;
 
-      vec3 color = (lit + spec + rim + emissive + spark) * uProminence + uAmbientColor * base * 0.24;
+      vec3 color = (lit + spec + rim + emissive + spark) * uProminence + uAmbientColor * base * 0.25;
 
-      float alpha = clamp(uAlpha * (0.72 + uProminence * 0.30 + fresnel * 0.10), 0.12, 1.0);
+      float alpha = clamp(uAlpha * (0.74 + uProminence * 0.30 + fresnel * 0.10), 0.12, 1.0);
       gl_FragColor = vec4(color, alpha);
     }
   `;
@@ -537,10 +543,6 @@
     }
 
     return program;
-  }
-
-  function v3(x, y, z) {
-    return [x, y, z];
   }
 
   function sub(a, b) {
@@ -703,10 +705,6 @@
     }));
   }
 
-  function pushFace(source, faces, a, b, c) {
-    faces.push([a, b, c]);
-  }
-
   function createDiamondStarMesh(options) {
     const points = options.points || 8;
     const radius = options.radius || 0.62;
@@ -752,17 +750,16 @@
     for (let i = 0; i < count; i += 1) {
       const next = (i + 1) % count;
 
-      pushFace(verts, faces, frontApex, innerRing[i], innerRing[next]);
-      pushFace(verts, faces, frontCrown, frontBevel[next], frontBevel[i]);
-      pushFace(verts, faces, frontBevel[i], outer[i], outer[next]);
-      pushFace(verts, faces, frontBevel[i], outer[next], frontBevel[next]);
-      pushFace(verts, faces, innerRing[i], frontBevel[i], frontBevel[next]);
-      pushFace(verts, faces, innerRing[i], frontBevel[next], innerRing[next]);
-
-      pushFace(verts, faces, rearApex, rearBevel[next], rearBevel[i]);
-      pushFace(verts, faces, rearCrown, rearBevel[i], rearBevel[next]);
-      pushFace(verts, faces, rearBevel[i], outer[next], outer[i]);
-      pushFace(verts, faces, rearBevel[i], rearBevel[next], outer[next]);
+      faces.push([frontApex, innerRing[i], innerRing[next]]);
+      faces.push([frontCrown, frontBevel[next], frontBevel[i]]);
+      faces.push([frontBevel[i], outer[i], outer[next]]);
+      faces.push([frontBevel[i], outer[next], frontBevel[next]]);
+      faces.push([innerRing[i], frontBevel[i], frontBevel[next]]);
+      faces.push([innerRing[i], frontBevel[next], innerRing[next]]);
+      faces.push([rearApex, rearBevel[next], rearBevel[i]]);
+      faces.push([rearCrown, rearBevel[i], rearBevel[next]]);
+      faces.push([rearBevel[i], outer[next], outer[i]]);
+      faces.push([rearBevel[i], rearBevel[next], outer[next]]);
     }
 
     const outPositions = [];
@@ -774,8 +771,8 @@
       const b = verts[face[1]];
       const c = verts[face[2]];
       const normal = normalize(cross(sub(b, a), sub(c, a)));
-      const lift = 0.88 + (faceIndex % 7) * 0.032;
-      const sparkleLift = faceIndex % 5 === 0 ? 0.16 : 0;
+      const lift = 0.92 + (faceIndex % 7) * 0.036;
+      const sparkleLift = faceIndex % 5 === 0 ? 0.18 : 0;
 
       [a, b, c].forEach((p) => {
         outPositions.push(p[0], p[1], p[2]);
@@ -1040,24 +1037,46 @@
       if (mirrorlandSelected) {
         setTarget(mirrorland, setUniformScale({
           x: 0, y: 0.02, z: 0.34,
-          prominence: 1.10,
-          halo: 1.28,
+          prominence: 1.12,
+          halo: 1.48,
           rotationSpeed: 0.16,
           float: 0
         }, QUALITY.mirrorlandHeroScale));
-      } else if (activeFlower) {
+
+        WINGS.forEach((wing) => {
+          const cardinal = state.registry.get(wing);
+          if (!cardinal) return;
+          cardinal.visible = false;
+          setTarget(cardinal, setUniformScale({
+            x: 0, y: 0, z: -1.2,
+            prominence: 0,
+            halo: 0,
+            rotationSpeed: 0.04,
+            float: 0
+          }, 0.4));
+        });
+
+        state.camera.nextEye = [0, 0.74, state.width / Math.max(1, state.height) < 0.8 ? 7.2 : 5.75];
+        state.camera.nextTarget = [0, 0.02, 0.08];
+
+        emitReceipt({ MirrorlandSelectedStateShowsOnlyMirrorland: true });
+        return;
+      }
+
+      if (activeFlower) {
+        mirrorland.visible = false;
         setTarget(mirrorland, setUniformScale({
-          x: -1.64, y: -1.04, z: -0.48,
-          prominence: 0.34,
-          halo: 0.34,
-          rotationSpeed: 0.07,
+          x: 0, y: 0, z: -1.4,
+          prominence: 0,
+          halo: 0,
+          rotationSpeed: 0.04,
           float: 0
-        }, 1.18));
+        }, 0.6));
       } else {
         setTarget(mirrorland, setUniformScale({
           x: 0, y: 0, z: 0.10,
           prominence: 1.00,
-          halo: 1.04,
+          halo: 1.20,
           rotationSpeed: 0.12,
           float: 0
         }, QUALITY.mirrorlandDefaultScale));
@@ -1076,7 +1095,7 @@
         setTarget(n, setUniformScale({
           x: p[0], y: p[1], z: focused ? 0.44 : p[2],
           prominence: focused ? 1.0 : 0.72,
-          halo: focused ? 0.92 : 0.48,
+          halo: focused ? 1.08 : 0.60,
           rotationSpeed: focused ? 0.18 : 0.10,
           float: focused ? 0.018 : 0.008
         }, focused ? QUALITY.focusedCardinalScale : QUALITY.cardinalScale));
@@ -1089,18 +1108,18 @@
 
     WINGS.forEach((wing) => {
       const n = state.registry.get(wing);
-      const selected = wing === state.selectedCardinal;
+      if (!n) return;
 
-      n.visible = selected;
-      n.material = selected ? "CARDINAL_SELECTED" : "CARDINAL_IDLE";
+      n.visible = false;
+      n.material = "CARDINAL_SELECTED";
 
       setTarget(n, setUniformScale({
-        x: 0, y: 0.10, z: 0.44,
-        prominence: selected ? 0.92 : 0,
-        halo: selected ? 1.02 : 0,
-        rotationSpeed: 0.12,
-        float: 0.004
-      }, selected ? QUALITY.selectedCardinalScale : 0.4));
+        x: 0, y: 0.10, z: -1.20,
+        prominence: 0,
+        halo: 0,
+        rotationSpeed: 0.06,
+        float: 0
+      }, 0.4));
     });
 
     selectedRooms.forEach((room, index) => {
@@ -1115,8 +1134,8 @@
 
       setTarget(n, setUniformScale({
         x: p[0], y: p[1] - 0.14, z: selected ? 0.86 : 0.42,
-        prominence: selected ? 1.0 : 0.84,
-        halo: selected ? 0.82 : 0.42,
+        prominence: selected ? 1.0 : 0.88,
+        halo: selected ? 1.06 : 0.58,
         rotationSpeed: selected ? 0.14 : 0.09,
         float: selected ? 0.014 : 0.008
       }, selected ? QUALITY.selectedRoomScale : QUALITY.roomScale));
@@ -1124,6 +1143,12 @@
 
     state.camera.nextEye = [0, 0.66, state.width / Math.max(1, state.height) < 0.8 ? 7.5 : 5.85];
     state.camera.nextTarget = [0, 0.03, 0];
+
+    emitReceipt({
+      MirrorlandHiddenInCardinalFlower: true,
+      selectedCardinalHiddenInExpandedFlower: true,
+      nonselectedCardinalsHiddenInExpandedFlower: true
+    });
   }
 
   function lerp(a, b, t) {

@@ -1,21 +1,40 @@
 /* /assets/compass/compass.crystals.js
-   DGB Compass — Navigational Star Orbit Flower Traversal WebGL layer.
-   Prototype C: calmer canonical hub/blade navigational-star geometry.
+   DGB Compass — Mirrorland-integrated WebGL layer.
+   Scope: compass.crystals.js only.
 */
 
 (() => {
   "use strict";
 
   const CONTRACT = Object.freeze({
-    id: "DGB_COMPASS_NAVIGATIONAL_STAR_ORBIT_FLOWER_TNT_v9_CANONICAL_PROTOTYPE_C",
+    id: "DGB_COMPASS_MIRRORLAND_INTEGRATED_CRYSTALS_v1",
     file: "/assets/compass/compass.crystals.js",
     visualPassClaimed: false,
     productionAuthorized: false,
     deploymentAuthorized: false,
-    fifthFileAuthorized: false
+    createMirrorlandMeshAuthorized: false
   });
 
   const WINGS = Object.freeze(["north", "east", "south", "west"]);
+
+  const STAR_PALETTE = Object.freeze({
+    north: [0.74, 0.88, 1.0],
+    east: [0.62, 0.86, 0.96],
+    south: [1.0, 0.88, 0.62],
+    west: [0.92, 0.76, 0.58],
+    petalNorth: [0.68, 0.84, 1.0],
+    petalEast: [0.62, 0.90, 0.96],
+    petalSouth: [1.0, 0.82, 0.56],
+    petalWest: [0.94, 0.72, 0.56],
+    mirror: [0.82, 0.94, 1.0]
+  });
+
+  const WING_THEMES = Object.freeze({
+    north: { color: STAR_PALETTE.north, rx: 0.29, rz: 0.19, h: 0.68, elongation: 1.28, irregularity: 0.010, rotationBias: 0.95, glow: 1.44 },
+    east: { color: STAR_PALETTE.east, rx: 0.29, rz: 0.19, h: 0.66, elongation: 1.22, irregularity: 0.012, rotationBias: 1.05, glow: 0.96 },
+    south: { color: STAR_PALETTE.south, rx: 0.28, rz: 0.18, h: 0.65, elongation: 1.20, irregularity: 0.010, rotationBias: 0.88, glow: 0.90 },
+    west: { color: STAR_PALETTE.west, rx: 0.29, rz: 0.19, h: 0.66, elongation: 1.23, irregularity: 0.013, rotationBias: 1.12, glow: 0.94 }
+  });
 
   const DEFAULT_ROOMS = Object.freeze({
     north: [
@@ -54,25 +73,6 @@
     west: { label: "Frontier", short: "Build next" }
   });
 
-  const STAR_PALETTE = Object.freeze({
-    north: [0.74, 0.88, 1.0],
-    east: [0.62, 0.86, 0.96],
-    south: [1.0, 0.88, 0.62],
-    west: [0.92, 0.76, 0.58],
-    petalNorth: [0.68, 0.84, 1.0],
-    petalEast: [0.62, 0.90, 0.96],
-    petalSouth: [1.0, 0.82, 0.56],
-    petalWest: [0.94, 0.72, 0.56],
-    mirror: [0.82, 0.94, 1.0]
-  });
-
-  const WING_THEMES = Object.freeze({
-    north: { color: STAR_PALETTE.north, rx: 0.29, rz: 0.19, h: 0.68, elongation: 1.28, irregularity: 0.010, rotationBias: 0.95, glow: 1.44 },
-    east: { color: STAR_PALETTE.east, rx: 0.29, rz: 0.19, h: 0.66, elongation: 1.22, irregularity: 0.012, rotationBias: 1.05, glow: 0.96 },
-    south: { color: STAR_PALETTE.south, rx: 0.28, rz: 0.18, h: 0.65, elongation: 1.20, irregularity: 0.010, rotationBias: 0.88, glow: 0.90 },
-    west: { color: STAR_PALETTE.west, rx: 0.29, rz: 0.19, h: 0.66, elongation: 1.23, irregularity: 0.013, rotationBias: 1.12, glow: 0.94 }
-  });
-
   const ORBIT_ANGLES = Object.freeze({
     north: 0,
     east: Math.PI / 2,
@@ -86,39 +86,34 @@
     directionalDominanceRatio: 1.25
   });
 
+  const MIRRORLAND_FIXED_DISPLAY_SCALE = 0.96;
+
   const RECEIPT = {
     contractId: CONTRACT.id,
-    visualSystem: "canonical-hub-blade-prototype-c",
+    visualSystem: "mirrorland-integrated-webgl",
+    mirrorlandGeometryAuthority: "DGB_MIRRORLAND_SELF_CONTAINED_REVIEW_OBJECT_v1.generatedGeometry",
+    mirrorlandAdapter: "DGB_MIRRORLAND_INDEXED_TO_FLAT_WEBGL_ADAPTER_v1",
     canvasMountStatus: "pending",
     webglContextStatus: "pending",
     shaderStatus: "pending",
     meshBuildStatus: "pending",
     registryBuildStatus: "pending",
-    starGlowStatus: "pending",
-    haloPassStatus: "pending",
-    mirrorlandSelectionSync: "pending",
-    geometryRefinementStatus: "prototype-c-calm-navigational-artifact",
+    mirrorlandObjectStatus: "pending",
+    mirrorlandAdapterStatus: "pending",
+    mirrorlandLegacyFallback: false,
+    mirrorlandHaloPass: "disabled",
+    mirrorlandDynamicScale: false,
+    semanticSyncStatus: "pending",
+    renderLoopStatus: "pending",
     visibleObjectCount: 0,
     currentModeObserved: "unknown",
     orbitFocusObserved: "",
-    orbitAngleObserved: 0,
     selectedCardinalObserved: "",
     selectedRoomObserved: "",
     selectedDestinationTypeObserved: "",
     flowerExpandedObserved: false,
-    semanticSyncStatus: "pending",
-    renderLoopStatus: "pending",
     lastPointerAction: "none",
     gestureType: "",
-    gestureDx: 0,
-    gestureDy: 0,
-    lastSwipeAxis: "",
-    pointerCaptured: false,
-    selectedVisualNodeId: "",
-    selectedVisualNodeType: "",
-    selectedVisualNodeWing: "",
-    selectedVisualNodeCoordinate: "",
-    controllerRequest: "",
     controllerApiAvailable: false,
     failureReason: null,
     visualPassClaimed: false
@@ -173,9 +168,13 @@
     globalThis.DGB_COMPASS_CRYSTALS_RECEIPT = Object.freeze({ ...RECEIPT });
   }
 
-  function hold(reason) {
+  function hold(reason, extra = {}) {
     state.failHeld = true;
-    emitReceipt({ failureReason: reason, renderLoopStatus: "held" });
+    emitReceipt({
+      ...extra,
+      failureReason: reason,
+      renderLoopStatus: "held"
+    });
   }
 
   function qs(selectors) {
@@ -220,7 +219,9 @@
     canvas.style.inset = "0";
     canvas.style.pointerEvents = "none";
 
-    if (getComputedStyle(mount).position === "static") mount.style.position = "relative";
+    if (getComputedStyle(mount).position === "static") {
+      mount.style.position = "relative";
+    }
 
     mount.prepend(canvas);
     return canvas;
@@ -259,6 +260,7 @@
 
     void main() {
       vec3 pos = aPosition;
+
       if (uHaloPass > 0.5) {
         pos += normalize(aNormal) * (0.11 + uGlowStrength * 0.035);
       }
@@ -314,11 +316,11 @@
 
       float light = uAmbientStrength + key * 0.82 + fill + rim;
       vec3 lit = vColor * light * vProminence;
-      vec3 edgeGlow = uGlowColor * (fresnel * 0.48 + rim * 0.34 + core * 0.20) * vGlowStrength * vProminence;
-      vec3 specular = vec3(1.0, 0.94, 0.78) * pow(max(dot(reflect(normalize(uKeyLightDirection), n), viewDir), 0.0), 18.0) * 0.22;
+      vec3 edgeGlow = uGlowColor * (fresnel * 0.22 + rim * 0.18 + core * 0.10) * vGlowStrength * vProminence;
+      vec3 specular = vec3(1.0, 0.94, 0.78) * pow(max(dot(reflect(normalize(uKeyLightDirection), n), viewDir), 0.0), 18.0) * 0.18;
       vec3 color = lit + edgeGlow + specular;
 
-      float alpha = clamp(0.18 + vProminence * 0.70 + fresnel * 0.10 + vGlowStrength * 0.035, 0.10, 0.98);
+      float alpha = clamp(0.18 + vProminence * 0.70 + fresnel * 0.10 + vGlowStrength * 0.025, 0.10, 0.98);
       gl_FragColor = vec4(color, alpha);
     }
   `;
@@ -357,16 +359,30 @@
     return program;
   }
 
-  function v3(x, y, z) { return [x, y, z]; }
-  function sub(a, b) { return [a[0] - b[0], a[1] - b[1], a[2] - b[2]]; }
-  function cross(a, b) {
-    return [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
+  function v3(x, y, z) {
+    return [x, y, z];
   }
+
+  function sub(a, b) {
+    return [a[0] - b[0], a[1] - b[1], a[2] - b[2]];
+  }
+
+  function cross(a, b) {
+    return [
+      a[1] * b[2] - a[2] * b[1],
+      a[2] * b[0] - a[0] * b[2],
+      a[0] * b[1] - a[1] * b[0]
+    ];
+  }
+
   function normalize(a) {
     const len = Math.hypot(a[0], a[1], a[2]) || 1;
     return [a[0] / len, a[1] / len, a[2] / len];
   }
-  function dot(a, b) { return a[0] * b[0] + a[1] * b[1] + a[2] * b[2]; }
+
+  function dot(a, b) {
+    return a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+  }
 
   function artifactOffset(index, irregularity) {
     if (!irregularity) return 1;
@@ -450,14 +466,11 @@
       faces.push([rootLeftTop, dorsal, rootRightTop]);
       faces.push([rootLeftTop, tip, dorsal]);
       faces.push([dorsal, tip, rootRightTop]);
-
       faces.push([rootRightBottom, ventral, rootLeftBottom]);
       faces.push([rootLeftBottom, ventral, tip]);
       faces.push([ventral, rootRightBottom, tip]);
-
       faces.push([rootLeftTop, rootLeftBottom, tip]);
       faces.push([rootRightTop, tip, rootRightBottom]);
-
       faces.push([topHub, rootLeftTop, rootRightTop]);
       faces.push([bottomHub, rootRightBottom, rootLeftBottom]);
 
@@ -508,30 +521,235 @@
       triangleCount: mesh.triangleCount,
       position: createBuffer(gl, mesh.positions),
       normal: createBuffer(gl, mesh.normals),
-      color: createBuffer(gl, mesh.colors)
+      color: createBuffer(gl, mesh.colors),
+      isMirrorlandReviewGeometry: mesh.isMirrorlandReviewGeometry === true,
+      adapterValidation: mesh.adapterValidation || null
     };
+  }
+
+  function requireCorrectedMirrorlandObject() {
+    const mirrorlandObject =
+      DGB_MIRRORLAND_SELF_CONTAINED_REVIEW_OBJECT_v1;
+
+    if (
+      !mirrorlandObject ||
+      mirrorlandObject.identity !== "DGB_MIRRORLAND_SELF_CONTAINED_REVIEW_OBJECT_v1"
+    ) {
+      throw new Error("MIRRORLAND_REVIEW_OBJECT_MISSING");
+    }
+
+    if (
+      mirrorlandObject.result !== "REVIEW_PASS" ||
+      !mirrorlandObject.validation ||
+      mirrorlandObject.validation.result !== "REVIEW_PASS"
+    ) {
+      throw new Error("MIRRORLAND_REVIEW_OBJECT_NOT_VALIDATED");
+    }
+
+    if (
+      !mirrorlandObject.generatedGeometry ||
+      !mirrorlandObject.generatedGeometry.positions ||
+      !mirrorlandObject.generatedGeometry.triangleIndices
+    ) {
+      throw new Error("MIRRORLAND_GENERATED_GEOMETRY_MISSING");
+    }
+
+    return mirrorlandObject;
+  }
+
+  function computeMirrorlandFaceNormal(x0, y0, z0, x1, y1, z1, x2, y2, z2) {
+    const coordinates = [x0, y0, z0, x1, y1, z1, x2, y2, z2];
+
+    for (let index = 0; index < coordinates.length; index += 1) {
+      if (!Number.isFinite(coordinates[index])) {
+        throw new Error("MIRRORLAND_NONFINITE_TRIANGLE_COORDINATE:" + index);
+      }
+    }
+
+    const ux = x1 - x0;
+    const uy = y1 - y0;
+    const uz = z1 - z0;
+
+    const vx = x2 - x0;
+    const vy = y2 - y0;
+    const vz = z2 - z0;
+
+    const nx = uy * vz - uz * vy;
+    const ny = uz * vx - ux * vz;
+    const nz = ux * vy - uy * vx;
+
+    const length = Math.hypot(nx, ny, nz);
+
+    if (!Number.isFinite(length) || length <= 1e-14) {
+      throw new Error("MIRRORLAND_DEGENERATE_TRIANGLE");
+    }
+
+    return [nx / length, ny / length, nz / length];
+  }
+
+  function validateMirrorlandGeneratedGeometry(generatedGeometry) {
+    const positions = generatedGeometry && generatedGeometry.positions;
+    const indices = generatedGeometry && generatedGeometry.triangleIndices;
+
+    if (!positions || positions.length === 0 || positions.length % 3 !== 0) {
+      throw new Error("MIRRORLAND_POSITION_ARRAY_INVALID");
+    }
+
+    if (!indices || indices.length === 0 || indices.length % 3 !== 0) {
+      throw new Error("MIRRORLAND_INDEX_ARRAY_INVALID");
+    }
+
+    const sourceVertexCount = positions.length / 3;
+    let minimumDoubledArea = Infinity;
+    let maximumDoubledArea = 0;
+
+    for (let index = 0; index < positions.length; index += 1) {
+      if (!Number.isFinite(positions[index])) {
+        throw new Error("MIRRORLAND_NONFINITE_POSITION:" + index);
+      }
+    }
+
+    for (let index = 0; index < indices.length; index += 3) {
+      const index0 = indices[index];
+      const index1 = indices[index + 1];
+      const index2 = indices[index + 2];
+
+      if (
+        !Number.isInteger(index0) ||
+        !Number.isInteger(index1) ||
+        !Number.isInteger(index2) ||
+        index0 < 0 ||
+        index1 < 0 ||
+        index2 < 0 ||
+        index0 >= sourceVertexCount ||
+        index1 >= sourceVertexCount ||
+        index2 >= sourceVertexCount ||
+        index0 === index1 ||
+        index1 === index2 ||
+        index2 === index0
+      ) {
+        throw new Error("MIRRORLAND_INVALID_TRIANGLE_INDEX:" + index / 3);
+      }
+
+      const offset0 = index0 * 3;
+      const offset1 = index1 * 3;
+      const offset2 = index2 * 3;
+
+      const normal = computeMirrorlandFaceNormal(
+        positions[offset0], positions[offset0 + 1], positions[offset0 + 2],
+        positions[offset1], positions[offset1 + 1], positions[offset1 + 2],
+        positions[offset2], positions[offset2 + 1], positions[offset2 + 2]
+      );
+
+      const doubledArea = Math.hypot(normal[0], normal[1], normal[2]);
+      minimumDoubledArea = Math.min(minimumDoubledArea, doubledArea);
+      maximumDoubledArea = Math.max(maximumDoubledArea, doubledArea);
+    }
+
+    return Object.freeze({
+      result: "REVIEW_PASS",
+      sourceVertexCount,
+      triangleCount: indices.length / 3,
+      expandedVertexCount: indices.length,
+      minimumDoubledArea,
+      maximumDoubledArea
+    });
+  }
+
+  function expandMirrorlandIndexedTriangles(generatedGeometry, color) {
+    const validation = validateMirrorlandGeneratedGeometry(generatedGeometry);
+    const positions = generatedGeometry.positions;
+    const indices = generatedGeometry.triangleIndices;
+
+    const flatPositions = new Float32Array(indices.length * 3);
+    const flatNormals = new Float32Array(indices.length * 3);
+    const flatColors = new Float32Array(indices.length * 3);
+
+    let destinationOffset = 0;
+
+    for (let index = 0; index < indices.length; index += 3) {
+      const index0 = indices[index];
+      const index1 = indices[index + 1];
+      const index2 = indices[index + 2];
+
+      const offset0 = index0 * 3;
+      const offset1 = index1 * 3;
+      const offset2 = index2 * 3;
+
+      const triangle = [
+        positions[offset0], positions[offset0 + 1], positions[offset0 + 2],
+        positions[offset1], positions[offset1 + 1], positions[offset1 + 2],
+        positions[offset2], positions[offset2 + 1], positions[offset2 + 2]
+      ];
+
+      const normal = computeMirrorlandFaceNormal(
+        triangle[0], triangle[1], triangle[2],
+        triangle[3], triangle[4], triangle[5],
+        triangle[6], triangle[7], triangle[8]
+      );
+
+      for (let componentIndex = 0; componentIndex < 9; componentIndex += 1) {
+        const component = componentIndex % 3;
+
+        flatPositions[destinationOffset + componentIndex] = triangle[componentIndex];
+        flatNormals[destinationOffset + componentIndex] = normal[component];
+        flatColors[destinationOffset + componentIndex] = color[component];
+      }
+
+      destinationOffset += 9;
+    }
+
+    for (let index = 0; index < flatPositions.length; index += 1) {
+      if (!Number.isFinite(flatPositions[index])) {
+        throw new Error("MIRRORLAND_NONFINITE_EXPANDED_POSITION:" + index);
+      }
+
+      if (!Number.isFinite(flatNormals[index])) {
+        throw new Error("MIRRORLAND_NONFINITE_EXPANDED_NORMAL:" + index);
+      }
+    }
+
+    for (let index = 0; index < flatNormals.length; index += 3) {
+      const normalLength = Math.hypot(flatNormals[index], flatNormals[index + 1], flatNormals[index + 2]);
+
+      if (!Number.isFinite(normalLength) || Math.abs(normalLength - 1) > 1e-5) {
+        throw new Error("MIRRORLAND_NONUNIT_EXPANDED_NORMAL:" + index / 3);
+      }
+    }
+
+    return Object.freeze({
+      validation,
+      vertexCount: indices.length,
+      triangleCount: indices.length / 3,
+      positions: flatPositions,
+      normals: flatNormals,
+      colors: flatColors,
+      geometryMutationPerformed: false,
+      smoothingNormalsGenerated: false
+    });
+  }
+
+  function createMirrorlandWebGLMesh(gl, generatedGeometry) {
+    const expanded = expandMirrorlandIndexedTriangles(generatedGeometry, STAR_PALETTE.mirror);
+
+    return buildGpuMesh(gl, Object.freeze({
+      vertexCount: expanded.vertexCount,
+      triangleCount: expanded.triangleCount,
+      positions: expanded.positions,
+      normals: expanded.normals,
+      colors: expanded.colors,
+      isMirrorlandReviewGeometry: true,
+      adapterValidation: expanded.validation
+    }));
   }
 
   function buildMeshes(gl) {
     const meshes = new Map();
 
-    meshes.set("mirrorland", buildGpuMesh(gl, createStarMesh({
-      segments: 12,
-      outerX: 0.58,
-      outerZ: 0.34,
-      hubX: 0.20,
-      hubZ: 0.13,
-      h: 0.86,
-      elongation: 1.12,
-      bladeFill: 0.42,
-      bladeLength: 1.18,
-      bladeDepth: 0.42,
-      hubHeight: 0.22,
-      spireStrength: 0.16,
-      color: STAR_PALETTE.mirror,
-      irregularity: 0.003,
-      warmth: 0.04
-    })));
+    const mirrorlandObject = requireCorrectedMirrorlandObject();
+    const mirrorlandMesh = createMirrorlandWebGLMesh(gl, mirrorlandObject.generatedGeometry);
+
+    meshes.set("mirrorland", mirrorlandMesh);
 
     WINGS.forEach((wing) => {
       const theme = WING_THEMES[wing];
@@ -580,8 +798,12 @@
 
     emitReceipt({
       starGlowStatus: "configured",
-      haloPassStatus: "configured",
-      meshBuildStatus: "built-canonical-prototype-c"
+      haloPassStatus: "configured-generic-stars-only",
+      mirrorlandObjectStatus: "validated",
+      mirrorlandAdapterStatus: "validated",
+      mirrorlandVertexCount: mirrorlandMesh.vertexCount,
+      mirrorlandTriangleCount: mirrorlandMesh.triangleCount,
+      meshBuildStatus: "built-bounded-mirrorland-integration"
     });
 
     return meshes;
@@ -746,6 +968,18 @@
     Object.assign(n.target, t);
   }
 
+  function setMirrorlandTarget(mirrorland, values) {
+    setTarget(
+      mirrorland,
+      Object.assign({}, values, {
+        sx: MIRRORLAND_FIXED_DISPLAY_SCALE,
+        sy: MIRRORLAND_FIXED_DISPLAY_SCALE,
+        sz: MIRRORLAND_FIXED_DISPLAY_SCALE,
+        float: 0
+      })
+    );
+  }
+
   function shortestAngleDelta(from, to) {
     let delta = to - from;
     while (delta > Math.PI) delta -= Math.PI * 2;
@@ -779,17 +1013,13 @@
     mirrorland.visible = true;
 
     if (mirrorlandSelected) {
-      setTarget(mirrorland, {
+      setMirrorlandTarget(mirrorland, {
         x: 0,
         y: 0.02,
         z: 0.28,
-        sx: 1.08,
-        sy: 1.08,
-        sz: 1.08,
         prominence: 1.08,
         rotationSpeed: 0.12,
-        glow: 1.65,
-        float: 0.018
+        glow: 1.15
       });
 
       WINGS.forEach((wing) => {
@@ -814,17 +1044,13 @@
     }
 
     if (!activeFlower) {
-      setTarget(mirrorland, {
+      setMirrorlandTarget(mirrorland, {
         x: 0,
         y: 0,
         z: 0.04,
-        sx: 0.96,
-        sy: 0.96,
-        sz: 0.96,
         prominence: 0.86,
         rotationSpeed: 0.10,
-        glow: 0.92,
-        float: 0.012
+        glow: 0.72
       });
 
       WINGS.forEach((wing) => {
@@ -851,17 +1077,13 @@
       return;
     }
 
-    setTarget(mirrorland, {
+    setMirrorlandTarget(mirrorland, {
       x: -1.72,
       y: -1.22,
       z: -1.46,
-      sx: 0.23,
-      sy: 0.23,
-      sz: 0.23,
       prominence: 0.045,
       rotationSpeed: 0.025,
-      glow: 0.10,
-      float: 0
+      glow: 0.04
     });
 
     WINGS.forEach((wing) => {
@@ -920,7 +1142,9 @@
     });
   }
 
-  function lerp(a, b, t) { return a + (b - a) * t; }
+  function lerp(a, b, t) {
+    return a + (b - a) * t;
+  }
 
   function updateTransforms(dt) {
     const speed = Math.min(1, dt * 6.1);
@@ -949,7 +1173,9 @@
     const out = new Array(16).fill(0);
     for (let r = 0; r < 4; r += 1) {
       for (let c = 0; c < 4; c += 1) {
-        for (let k = 0; k < 4; k += 1) out[c * 4 + r] += a[k * 4 + r] * b[c * 4 + k];
+        for (let k = 0; k < 4; k += 1) {
+          out[c * 4 + r] += a[k * 4 + r] * b[c * 4 + k];
+        }
       }
     }
     return out;
@@ -957,13 +1183,17 @@
 
   function translate4(x, y, z) {
     const m = identity4();
-    m[12] = x; m[13] = y; m[14] = z;
+    m[12] = x;
+    m[13] = y;
+    m[14] = z;
     return m;
   }
 
   function scale4(x, y, z) {
     const m = identity4();
-    m[0] = x; m[5] = y; m[10] = z;
+    m[0] = x;
+    m[5] = y;
+    m[10] = z;
     return m;
   }
 
@@ -1001,8 +1231,22 @@
 
   function modelMatrix(n, halo = false) {
     const t = n.transform;
-    const floatY = !state.reducedMotion ? Math.sin(state.time * 1.1 + n.roomIndex * 0.7 + n.rotationBias) * t.float : 0;
-    const haloScale = halo ? 1.10 + Math.max(0, t.glow) * 0.035 : 1;
+    const isMirrorland = n.type === "mirrorland";
+
+    const floatY =
+      !isMirrorland && !state.reducedMotion
+        ? Math.sin(state.time * 1.1 + n.roomIndex * 0.7 + n.rotationBias) * t.float
+        : 0;
+
+    const haloScale =
+      halo && !isMirrorland
+        ? 1.10 + Math.max(0, t.glow) * 0.035
+        : 1;
+
+    const scaleX = isMirrorland ? MIRRORLAND_FIXED_DISPLAY_SCALE : t.sx * haloScale;
+    const scaleY = isMirrorland ? MIRRORLAND_FIXED_DISPLAY_SCALE : t.sy * haloScale;
+    const scaleZ = isMirrorland ? MIRRORLAND_FIXED_DISPLAY_SCALE : t.sz * haloScale;
+
     return multiply4(
       translate4(t.x, t.y + floatY, t.z),
       multiply4(
@@ -1011,7 +1255,7 @@
           rotateY4(t.ry),
           multiply4(
             rotateX4(t.rx),
-            scale4(t.sx * haloScale, t.sy * haloScale, t.sz * haloScale)
+            scale4(scaleX, scaleY, scaleZ)
           )
         )
       )
@@ -1020,6 +1264,7 @@
 
   function transformPoint4(m, p) {
     const x = p[0], y = p[1], z = p[2], w = p[3];
+
     return [
       m[0] * x + m[4] * y + m[8] * z + m[12] * w,
       m[1] * x + m[5] * y + m[9] * z + m[13] * w,
@@ -1041,7 +1286,9 @@
     const ndcX = clip[0] / clip[3];
     const ndcY = clip[1] / clip[3];
 
-    if (ndcX < -1.35 || ndcX > 1.35 || ndcY < -1.35 || ndcY > 1.35) return null;
+    if (ndcX < -1.35 || ndcX > 1.35 || ndcY < -1.35 || ndcY > 1.35) {
+      return null;
+    }
 
     return {
       x: ((ndcX + 1) / 2) * state.width / state.pixelRatio,
@@ -1138,9 +1385,11 @@
       if (panelTitle && panelTitle.textContent.trim() === "Choose a direction") {
         panelTitle.textContent = "Choose a coordinate";
       }
+
       if (panelPurpose && /Swipe/i.test(panelPurpose.textContent)) {
         panelPurpose.textContent = "Swipe to rotate the orbit. Tap a star to inspect its path.";
       }
+
       if (panelRelationship && /Enter/i.test(panelRelationship.textContent)) {
         panelRelationship.textContent = "Enter only after a path is selected.";
       }
@@ -1462,11 +1711,17 @@
     const mesh = state.meshes.get(n.meshKey);
     if (!mesh) return;
 
+    const isMirrorland = n.type === "mirrorland";
+
+    if (isMirrorland && haloPass) {
+      return;
+    }
+
     bindAttrib(gl, mesh.position, state.attribs.position, 3);
     bindAttrib(gl, mesh.normal, state.attribs.normal, 3);
     bindAttrib(gl, mesh.color, state.attribs.color, 3);
 
-    const model = modelMatrix(n, haloPass);
+    const model = modelMatrix(n, haloPass && !isMirrorland);
     const glow = Math.max(0, n.transform.glow || 0);
 
     gl.uniformMatrix4fv(state.uniforms.model, false, new Float32Array(model));
@@ -1475,7 +1730,7 @@
     gl.uniformMatrix3fv(state.uniforms.normalMatrix, false, new Float32Array(normalMatrix3(model)));
     gl.uniform1f(state.uniforms.prominence, Math.max(0, n.transform.prominence));
     gl.uniform1f(state.uniforms.glowStrength, glow);
-    gl.uniform1f(state.uniforms.haloPass, haloPass ? 1 : 0);
+    gl.uniform1f(state.uniforms.haloPass, haloPass && !isMirrorland ? 1 : 0);
     gl.uniform1f(state.uniforms.time, state.time);
     gl.uniform3f(state.uniforms.glowColor, n.glowColor[0], n.glowColor[1], n.glowColor[2]);
 
@@ -1521,7 +1776,9 @@
     gl.depthMask(false);
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
     state.registry.forEach((n) => {
-      if (n.visible && n.transform.prominence > 0.04) drawNode(n, true);
+      if (n.visible && n.transform.prominence > 0.04 && n.type !== "mirrorland") {
+        drawNode(n, true);
+      }
     });
 
     gl.depthMask(true);
@@ -1555,6 +1812,41 @@
     state.surface.addEventListener("pointermove", handlePointerMove, { passive: false });
     state.surface.addEventListener("pointerup", handlePointerUp, { passive: false });
     state.surface.addEventListener("pointercancel", handlePointerCancel, { passive: false });
+  }
+
+  function exposeApi() {
+    globalThis.DGB_COMPASS_CRYSTALS = Object.freeze({
+      contract: CONTRACT,
+
+      receipt: () => Object.freeze({ ...RECEIPT }),
+
+      stop: () => {
+        state.running = false;
+        cancelAnimationFrame(state.raf);
+        emitReceipt({ renderLoopStatus: "stopped" });
+      },
+
+      start: () => {
+        if (!state.running && !state.failHeld) {
+          state.running = true;
+          state.raf = requestAnimationFrame(render);
+        }
+      },
+
+      mirrorlandAdapterReceipt: () => {
+        const mesh = state.meshes.get("mirrorland");
+        return Object.freeze({
+          adapterIdentity: "DGB_MIRRORLAND_INDEXED_TO_FLAT_WEBGL_ADAPTER_v1",
+          meshAvailable: !!mesh,
+          vertexCount: mesh ? mesh.vertexCount : 0,
+          triangleCount: mesh ? mesh.triangleCount : 0,
+          adapterValidation: mesh ? mesh.adapterValidation : null,
+          legacyFallbackPermitted: false,
+          haloPassDisabledForMirrorland: true,
+          fixedUniformScale: MIRRORLAND_FIXED_DISPLAY_SCALE
+        });
+      }
+    });
   }
 
   function init() {
@@ -1618,21 +1910,7 @@
       state.running = true;
       state.raf = requestAnimationFrame(render);
 
-      globalThis.DGB_COMPASS_CRYSTALS = Object.freeze({
-        contract: CONTRACT,
-        receipt: () => Object.freeze({ ...RECEIPT }),
-        stop: () => {
-          state.running = false;
-          cancelAnimationFrame(state.raf);
-          emitReceipt({ renderLoopStatus: "stopped" });
-        },
-        start: () => {
-          if (!state.running && !state.failHeld) {
-            state.running = true;
-            state.raf = requestAnimationFrame(render);
-          }
-        }
-      });
+      exposeApi();
     } catch (error) {
       hold("CRYSTALS_INIT_FAILURE:" + (error && error.message ? error.message : String(error)));
     }

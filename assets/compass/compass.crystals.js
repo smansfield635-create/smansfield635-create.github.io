@@ -7,7 +7,7 @@
   "use strict";
 
   const CONTRACT = Object.freeze({
-    id: "DGB_COMPASS_NAVIGATIONAL_STAR_ORBIT_FLOWER_TNT_v7_STELLAR_SHARD_GEOMETRY",
+    id: "DGB_COMPASS_NAVIGATIONAL_STAR_ORBIT_FLOWER_TNT_v8_CANONICAL_PROTOTYPE_B",
     file: "/assets/compass/compass.crystals.js",
     visualPassClaimed: false,
     productionAuthorized: false,
@@ -88,7 +88,7 @@
 
   const RECEIPT = {
     contractId: CONTRACT.id,
-    visualSystem: "stellar-shard-geometry",
+    visualSystem: "canonical-hub-blade-prototype-b",
     canvasMountStatus: "pending",
     webglContextStatus: "pending",
     shaderStatus: "pending",
@@ -97,7 +97,7 @@
     starGlowStatus: "pending",
     haloPassStatus: "pending",
     mirrorlandSelectionSync: "pending",
-    geometryRefinementStatus: "stellar-shard-opened",
+    geometryRefinementStatus: "prototype-b-canonical-hub-blade",
     visibleObjectCount: 0,
     currentModeObserved: "unknown",
     orbitFocusObserved: "",
@@ -382,77 +382,87 @@
   }
 
   function createStarMesh(params) {
-    const segments = params.segments || 8;
-    const rx = params.rx || 0.42;
-    const rz = params.rz || 0.30;
-    const h = params.h || 0.76;
-    const crown = !!params.crown;
+    const bladeCount = params.segments || 8;
     const color = params.color || STAR_PALETTE.north;
-    const irregularity = params.irregularity || 0;
     const warmth = params.warmth || 0;
+    const irregularity = params.irregularity || 0;
+
+    const outerX = params.outerX || params.rx || 0.42;
+    const outerZ = params.outerZ || params.rz || 0.26;
+    const hubX = params.hubX || outerX * 0.22;
+    const hubZ = params.hubZ || outerZ * 0.18;
+    const h = params.h || 0.76;
     const elongation = params.elongation || 1;
-    const crownTightness = params.crownTightness || 0.42;
-    const lowerTightness = params.lowerTightness || 0.38;
-    const waistLift = params.waistLift || 0.34;
-    const shardDepth = params.shardDepth || 0.42;
+    const bladeFill = params.bladeFill || 0.48;
+    const bladeLength = params.bladeLength || 1.34;
+    const bladeDepth = params.bladeDepth || 0.46;
+    const hubHeight = params.hubHeight || 0.18;
 
     const positions = [];
     const faces = [];
-    const top = positions.push(v3(0, h * elongation, 0)) - 1;
-    const bottom = positions.push(v3(0, -h * 1.08, 0)) - 1;
-    const equator = [];
 
-    for (let i = 0; i < segments; i += 1) {
-      const a = (Math.PI * 2 * i) / segments;
-      const pointLift = i % 2 === 0 ? 1.28 : 0.62;
-      const offset = artifactOffset(i, irregularity) * pointLift;
-      const depthOffset = i % 2 === 0 ? shardDepth : shardDepth * 0.52;
-
-      equator.push(positions.push(v3(
-        Math.cos(a) * rx * offset,
-        Math.sin(i * 1.7) * irregularity * 0.36,
-        Math.sin(a) * rz * (1.0 + depthOffset * offset)
-      )) - 1);
+    function push(p) {
+      positions.push(p);
+      return positions.length - 1;
     }
 
-    const crownRing = [];
-    const lowerRing = [];
+    function ellipsePoint(angle, xRadius, zRadius, y) {
+      return v3(Math.cos(angle) * xRadius, y, Math.sin(angle) * zRadius);
+    }
 
-    if (crown) {
-      for (let i = 0; i < segments; i += 1) {
-        const a = (Math.PI * 2 * (i + 0.5)) / segments;
-        const offset = artifactOffset(i + 3, irregularity * 0.85);
-        crownRing.push(positions.push(v3(
-          Math.cos(a) * rx * crownTightness * offset,
-          h * waistLift * elongation,
-          Math.sin(a) * rz * crownTightness * (1.40 - offset * 0.28)
-        )) - 1);
-      }
+    const topHub = push(v3(0, h * hubHeight, 0));
+    const bottomHub = push(v3(0, -h * hubHeight, 0));
+    const topSpire = push(v3(0, h * elongation, 0));
+    const bottomSpire = push(v3(0, -h * elongation * 0.82, 0));
 
-      for (let i = 0; i < segments; i += 1) {
-        const a = (Math.PI * 2 * (i + 0.5)) / segments;
-        const offset = artifactOffset(i + 7, irregularity * 0.75);
-        lowerRing.push(positions.push(v3(
-          Math.cos(a) * rx * lowerTightness * offset,
-          -h * waistLift,
-          Math.sin(a) * rz * lowerTightness * (1.40 - offset * 0.24)
-        )) - 1);
-      }
+    for (let i = 0; i < bladeCount; i += 1) {
+      const center = (Math.PI * 2 * i) / bladeCount;
+      const half = ((Math.PI * 2) / bladeCount) * bladeFill * 0.5;
+      const left = center - half;
+      const right = center + half;
+      const artifact = artifactOffset(i, irregularity);
+      const alternating = i % 2 === 0 ? 1 : 0.78;
 
-      for (let i = 0; i < segments; i += 1) {
-        const n = (i + 1) % segments;
-        faces.push([top, crownRing[i], crownRing[n]]);
-        faces.push([crownRing[i], equator[i], crownRing[n]]);
-        faces.push([crownRing[n], equator[i], equator[n]]);
-        faces.push([equator[i], lowerRing[i], equator[n]]);
-        faces.push([equator[n], lowerRing[i], lowerRing[n]]);
-        faces.push([lowerRing[i], bottom, lowerRing[n]]);
-      }
-    } else {
-      for (let i = 0; i < segments; i += 1) {
-        const n = (i + 1) % segments;
-        faces.push([top, equator[i], equator[n]]);
-        faces.push([equator[i], bottom, equator[n]]);
+      const rootLeftTop = push(ellipsePoint(left, hubX, hubZ, h * 0.13));
+      const rootRightTop = push(ellipsePoint(right, hubX, hubZ, h * 0.13));
+      const rootLeftBottom = push(ellipsePoint(left, hubX * 0.92, hubZ * 0.92, -h * 0.13));
+      const rootRightBottom = push(ellipsePoint(right, hubX * 0.92, hubZ * 0.92, -h * 0.13));
+
+      const tip = push(v3(
+        Math.cos(center) * outerX * bladeLength * artifact * alternating,
+        Math.sin(i * 1.71) * irregularity * 0.22,
+        Math.sin(center) * outerZ * (1 + bladeDepth) * bladeLength * artifact * alternating
+      ));
+
+      const dorsal = push(v3(
+        Math.cos(center) * outerX * bladeLength * 0.52 * artifact,
+        h * 0.32 * elongation,
+        Math.sin(center) * outerZ * (1 + bladeDepth * 0.36) * bladeLength * 0.52 * artifact
+      ));
+
+      const ventral = push(v3(
+        Math.cos(center) * outerX * bladeLength * 0.46 * artifact,
+        -h * 0.30,
+        Math.sin(center) * outerZ * (1 + bladeDepth * 0.32) * bladeLength * 0.46 * artifact
+      ));
+
+      faces.push([rootLeftTop, dorsal, rootRightTop]);
+      faces.push([rootLeftTop, tip, dorsal]);
+      faces.push([dorsal, tip, rootRightTop]);
+
+      faces.push([rootRightBottom, ventral, rootLeftBottom]);
+      faces.push([rootLeftBottom, ventral, tip]);
+      faces.push([ventral, rootRightBottom, tip]);
+
+      faces.push([rootLeftTop, rootLeftBottom, tip]);
+      faces.push([rootRightTop, tip, rootRightBottom]);
+
+      faces.push([topHub, rootLeftTop, rootRightTop]);
+      faces.push([bottomHub, rootRightBottom, rootLeftBottom]);
+
+      if (i % 2 === 0) {
+        faces.push([topSpire, rootRightTop, rootLeftTop]);
+        faces.push([bottomSpire, rootLeftBottom, rootRightBottom]);
       }
     }
 
@@ -465,7 +475,7 @@
       const b = positions[face[1]];
       const c = positions[face[2]];
       const normal = normalize(cross(sub(b, a), sub(c, a)));
-      const facetLift = 0.88 + ((faceIndex % 6) * 0.030);
+      const facetLift = 0.91 + ((faceIndex % 5) * 0.024);
       const facetColor = mixColor(color, facetLift, warmth);
 
       [a, b, c].forEach((p) => {
@@ -506,18 +516,19 @@
 
     meshes.set("mirrorland", buildGpuMesh(gl, createStarMesh({
       segments: 12,
-      rx: 0.58,
-      rz: 0.36,
-      h: 0.88,
-      crown: true,
+      outerX: 0.70,
+      outerZ: 0.40,
+      hubX: 0.14,
+      hubZ: 0.09,
+      h: 0.98,
+      elongation: 1.42,
+      bladeFill: 0.38,
+      bladeLength: 1.38,
+      bladeDepth: 0.58,
+      hubHeight: 0.14,
       color: STAR_PALETTE.mirror,
-      irregularity: 0.010,
-      warmth: 0.06,
-      elongation: 1.18,
-      crownTightness: 0.40,
-      lowerTightness: 0.36,
-      waistLift: 0.30,
-      shardDepth: 0.50
+      irregularity: 0.004,
+      warmth: 0.04
     })));
 
     WINGS.forEach((wing) => {
@@ -530,35 +541,45 @@
 
       meshes.set("wing-" + wing, buildGpuMesh(gl, createStarMesh({
         segments: 8,
-        rx: theme.rx,
-        rz: theme.rz,
-        h: theme.h,
-        crown: true,
+        outerX: theme.rx * 1.20,
+        outerZ: theme.rz * 0.90,
+        hubX: theme.rx * 0.18,
+        hubZ: theme.rz * 0.14,
+        h: theme.h * 1.08,
+        elongation: theme.elongation * 1.14,
+        bladeFill: 0.42,
+        bladeLength: wing === "north" ? 1.46 : 1.34,
+        bladeDepth: 0.50,
+        hubHeight: 0.16,
         color: theme.color,
-        irregularity: theme.irregularity,
-        warmth: wing === "south" || wing === "west" ? 0.08 : 0.04,
-        elongation: theme.elongation,
-        crownTightness: 0.42,
-        lowerTightness: 0.38,
-        waistLift: 0.31,
-        shardDepth: 0.46
+        irregularity: theme.irregularity * 0.45,
+        warmth: wing === "south" || wing === "west" ? 0.07 : 0.035
       })));
 
       meshes.set("room-" + wing, buildGpuMesh(gl, createStarMesh({
         segments: 6,
-        rx: 0.20,
-        rz: 0.13,
+        outerX: 0.26,
+        outerZ: 0.13,
+        hubX: 0.045,
+        hubZ: 0.026,
         h: 0.42,
-        crown: false,
+        elongation: 1.22,
+        bladeFill: 0.40,
+        bladeLength: 1.24,
+        bladeDepth: 0.48,
+        hubHeight: 0.13,
         color: petalColor,
-        irregularity: theme.irregularity * 0.36,
-        warmth: wing === "south" || wing === "west" ? 0.06 : 0.035,
-        elongation: 1.20,
-        shardDepth: 0.54
+        irregularity: theme.irregularity * 0.22,
+        warmth: wing === "south" || wing === "west" ? 0.055 : 0.03
       })));
     });
 
-    emitReceipt({ starGlowStatus: "configured", haloPassStatus: "configured", meshBuildStatus: "built-stellar-shard" });
+    emitReceipt({
+      starGlowStatus: "configured",
+      haloPassStatus: "configured",
+      meshBuildStatus: "built-canonical-prototype-b"
+    });
+
     return meshes;
   }
 

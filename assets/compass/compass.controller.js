@@ -1,5 +1,5 @@
 /* /assets/compass/compass.controller.js
-   DGB Compass — Orbit Flower Traversal Controller with dynamic guidance.
+   DGB Compass — Orbit Flower Traversal Controller with non-overlay guidance.
    Scope: compass.controller.js only.
 */
 
@@ -7,7 +7,7 @@
   "use strict";
 
   const CONTRACT = Object.freeze({
-    id: "DGB_COMPASS_COORDINATE_FUNCTION_CONTROLLER_TNT_v3",
+    id: "DGB_COMPASS_COORDINATE_FUNCTION_CONTROLLER_TNT_v4",
     file: "/assets/compass/compass.controller.js",
     visualPassClaimed: false,
     productionAuthorized: false,
@@ -24,18 +24,14 @@
   const WINGS = Object.freeze(["north", "east", "south", "west"]);
 
   const GUIDANCE = Object.freeze({
-    orbit:
-      "Swipe to rotate the constellation. Tap a star to inspect its path.",
-    flower:
-      "Tap a petal to inspect a destination. Swipe again to return to the orbit.",
-    petal:
-      "Inspect the selected destination. Enter only when this path is the one you want."
+    orbit: "Swipe to rotate the constellation. Tap a star or label to inspect its path.",
+    flower: "Tap a petal or label to inspect a destination. Swipe again to return to the orbit.",
+    petal: "Inspect the selected destination. Enter only when this path is the one you want."
   });
 
   const state = {
     root: null,
     scene: null,
-    guidance: null,
     panel: null,
     panelEyebrow: null,
     panelTitle: null,
@@ -89,8 +85,10 @@
     enterEnabled: false,
     guidanceState: "pending",
     guidanceCopy: "",
+    sceneOverlayGuidanceCreated: false,
     sceneReturnSuppressed: true,
     panelReturnSuppressed: true,
+    labelTapDelegationEnabled: true,
     coordinateFunction: "",
     localCoordinate: "",
     localFunction: "",
@@ -149,7 +147,7 @@
       globalCoordinate: el.dataset.globalCoordinate || wing,
       coordinateFunction: el.dataset.coordinateFunction || "",
       orbitLabel: el.dataset.orbitLabel || el.dataset.label || wing,
-      flowerAnchorLabel: el.dataset.flowerAnchorLabel || "Anchor",
+      flowerAnchorLabel: el.dataset.flowerAnchorLabel || "Opened Path",
       panelTitle: el.dataset.panelTitle || el.dataset.title || el.dataset.label || wing,
       panelBody: el.dataset.panelBody || el.dataset.wingMeaning || "Open this coordinate field.",
       panelWhy: el.dataset.panelWhy || el.dataset.wingWhy || "Enter this coordinate.",
@@ -202,43 +200,6 @@
     };
   }
 
-  function createGuidanceSurface() {
-    if (!state.scene) return null;
-
-    const existing =
-      $("[data-compass-runtime-guidance]", state.scene) ||
-      $(".compass-runtime-guidance", state.scene);
-
-    if (existing) return existing;
-
-    const guidance = document.createElement("p");
-    guidance.className = "compass-runtime-guidance";
-    guidance.setAttribute("data-compass-runtime-guidance", "true");
-    guidance.setAttribute("aria-live", "polite");
-
-    guidance.style.position = "absolute";
-    guidance.style.left = "50%";
-    guidance.style.top = "14px";
-    guidance.style.zIndex = "4";
-    guidance.style.width = "min(calc(100% - 32px), 560px)";
-    guidance.style.margin = "0";
-    guidance.style.padding = "10px 14px";
-    guidance.style.transform = "translateX(-50%)";
-    guidance.style.border = "1px solid rgba(124, 220, 255, 0.20)";
-    guidance.style.borderRadius = "999px";
-    guidance.style.color = "rgba(255, 248, 224, 0.84)";
-    guidance.style.background = "rgba(7, 10, 16, 0.46)";
-    guidance.style.boxShadow = "0 10px 30px rgba(0, 0, 0, 0.24), inset 0 1px 0 rgba(255, 255, 255, 0.08)";
-    guidance.style.backdropFilter = "blur(10px)";
-    guidance.style.fontSize = "clamp(0.72rem, 2.4vw, 0.9rem)";
-    guidance.style.lineHeight = "1.35";
-    guidance.style.textAlign = "center";
-    guidance.style.pointerEvents = "none";
-
-    state.scene.appendChild(guidance);
-    return guidance;
-  }
-
   function acquireDom() {
     state.root = $("[data-compass-root]");
     if (!state.root) {
@@ -247,7 +208,6 @@
     }
 
     state.scene = $("[data-compass-scene]", state.root) || $(".compass-scene", state.root);
-    state.guidance = createGuidanceSurface();
     state.panel = $("[data-compass-panel]", state.root);
     state.panelEyebrow = $("[data-compass-panel-eyebrow]", state.root);
     state.panelTitle = $("[data-compass-panel-title]", state.root);
@@ -338,14 +298,8 @@
     return { state: "orbit", copy: GUIDANCE.orbit };
   }
 
-  function updateGuidance() {
+  function updateGuidanceDataset() {
     const payload = currentGuidancePayload();
-
-    if (state.guidance) {
-      state.guidance.textContent = payload.copy;
-      state.guidance.dataset.guidanceState = payload.state;
-      state.guidance.hidden = false;
-    }
 
     state.root.dataset.compassGuidanceState = payload.state;
     state.root.dataset.compassGuidanceCopy = payload.copy;
@@ -359,6 +313,7 @@
       state.returnControl.disabled = true;
       state.returnControl.setAttribute("aria-hidden", "true");
       state.returnControl.setAttribute("tabindex", "-1");
+      state.returnControl.style.display = "none";
     }
 
     if (state.returnToOrbitControl) {
@@ -366,6 +321,7 @@
       state.returnToOrbitControl.disabled = true;
       state.returnToOrbitControl.setAttribute("aria-hidden", "true");
       state.returnToOrbitControl.setAttribute("tabindex", "-1");
+      state.returnToOrbitControl.style.display = "none";
     }
   }
 
@@ -425,13 +381,13 @@
   function updateVisibility() {
     updateSemanticLabels();
     suppressReturnControls();
-    updateGuidance();
+    updateGuidanceDataset();
   }
 
   function updatePanelDefault() {
     setText(state.panelEyebrow, "Orbit");
     setText(state.panelTitle, "Choose a coordinate");
-    setText(state.panelPurpose, "Swipe to rotate the constellation. Tap a star to inspect its path.");
+    setText(state.panelPurpose, GUIDANCE.orbit);
     setText(state.panelRelationship, "Enter only after a destination is selected.");
     setEnter("", "");
   }
@@ -440,7 +396,7 @@
     setText(state.panelEyebrow, "Coordinate axis");
     setText(state.panelTitle, cardinal.panelTitle);
     setText(state.panelPurpose, cardinal.panelBody);
-    setText(state.panelRelationship, "Tap a petal to inspect a destination. Swipe again to return to the orbit.");
+    setText(state.panelRelationship, GUIDANCE.flower);
     setEnter(cardinal.validRoute ? cardinal.route : "", "html-cardinal-declaration");
   }
 
@@ -448,7 +404,7 @@
     setText(state.panelEyebrow, room.localCoordinate || "Room coordinate");
     setText(state.panelTitle, room.label);
     setText(state.panelPurpose, room.preview);
-    setText(state.panelRelationship, room.localFunction || room.whyEnter);
+    setText(state.panelRelationship, GUIDANCE.petal);
     setEnter(room.validRoute ? room.route : "", "html-room-declaration");
   }
 
@@ -465,12 +421,17 @@
     if (!state.panel) return;
 
     if (!state.selectedDestinationType) return updatePanelDefault();
-    if (state.selectedDestinationType === "mirrorland") return updatePanelForMirrorland();
+
+    if (state.selectedDestinationType === "mirrorland") {
+      return updatePanelForMirrorland();
+    }
+
     if (state.selectedDestinationType === "cardinal") {
       const cardinal = findCardinal(state.selectedCardinal);
       if (cardinal) updatePanelForCardinal(cardinal);
       return;
     }
+
     if (state.selectedDestinationType === "petal") {
       const room = findRoom(state.selectedRoom);
       if (room) updatePanelForRoom(room);
@@ -499,8 +460,10 @@
       enterEnabled: state.enterEnabled === true,
       guidanceState: guidance.state,
       guidanceCopy: guidance.copy,
+      sceneOverlayGuidanceCreated: false,
       sceneReturnSuppressed: true,
       panelReturnSuppressed: true,
+      labelTapDelegationEnabled: true,
       coordinateFunction: payload.coordinateFunction,
       localCoordinate: payload.localCoordinate,
       localFunction: payload.localFunction,
@@ -717,27 +680,39 @@
     window.location.assign(state.selectedDestinationRoute);
   }
 
-  function bindEvents() {
-    if (state.mirrorland && state.mirrorland.el) {
-      state.mirrorland.el.addEventListener("click", (event) => {
-        event.preventDefault();
-        selectMirrorland("tap-mirrorland-label");
-      });
+  function handleDelegatedActivation(event) {
+    const target = event.target && event.target.closest
+      ? event.target.closest("[data-compass-object='mirrorland'], [data-compass-cardinal][data-wing], [data-compass-room][data-room-id], [data-compass-enter]")
+      : null;
+
+    if (!target || !state.root.contains(target)) return;
+
+    if (target.matches("[data-compass-enter]")) {
+      event.preventDefault();
+      navigateEnter();
+      return;
     }
 
-    state.cardinals.forEach((cardinal) => {
-      cardinal.el.addEventListener("click", (event) => {
-        event.preventDefault();
-        selectCardinal(cardinal.wing, "tap-cardinal-label");
-      });
-    });
+    if (target.matches("[data-compass-object='mirrorland']")) {
+      event.preventDefault();
+      selectMirrorland("delegated-tap-mirrorland-label");
+      return;
+    }
 
-    state.rooms.forEach((room) => {
-      room.el.addEventListener("click", (event) => {
-        event.preventDefault();
-        selectRoom(room.roomId, "tap-petal-label");
-      });
-    });
+    if (target.matches("[data-compass-cardinal][data-wing]")) {
+      event.preventDefault();
+      selectCardinal(target.dataset.wing, "delegated-tap-cardinal-label");
+      return;
+    }
+
+    if (target.matches("[data-compass-room][data-room-id]")) {
+      event.preventDefault();
+      selectRoom(target.dataset.roomId, "delegated-tap-petal-label");
+    }
+  }
+
+  function bindEvents() {
+    state.root.addEventListener("click", handleDelegatedActivation, true);
 
     if (state.returnToOrbitControl) {
       state.returnToOrbitControl.addEventListener("click", (event) => {
@@ -750,13 +725,6 @@
       state.returnControl.addEventListener("click", (event) => {
         event.preventDefault();
         returnToOrbit();
-      });
-    }
-
-    if (state.enterControl) {
-      state.enterControl.addEventListener("click", (event) => {
-        event.preventDefault();
-        navigateEnter();
       });
     }
   }

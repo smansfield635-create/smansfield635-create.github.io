@@ -7,7 +7,7 @@
   "use strict";
 
   const CONTRACT = Object.freeze({
-    id: "DGB_COMPASS_NAVIGATIONAL_STAR_ORBIT_FLOWER_TNT_v6_PROGRESSIVE_RENDERING",
+    id: "DGB_COMPASS_NAVIGATIONAL_STAR_ORBIT_FLOWER_TNT_v7_STELLAR_SHARD_GEOMETRY",
     file: "/assets/compass/compass.crystals.js",
     visualPassClaimed: false,
     productionAuthorized: false,
@@ -67,10 +67,10 @@
   });
 
   const WING_THEMES = Object.freeze({
-    north: { color: STAR_PALETTE.north, rx: 0.31, rz: 0.23, h: 0.64, elongation: 1.18, irregularity: 0.010, rotationBias: 0.95, glow: 1.44 },
-    east: { color: STAR_PALETTE.east, rx: 0.31, rz: 0.23, h: 0.62, elongation: 1.14, irregularity: 0.012, rotationBias: 1.05, glow: 0.96 },
-    south: { color: STAR_PALETTE.south, rx: 0.30, rz: 0.22, h: 0.61, elongation: 1.12, irregularity: 0.010, rotationBias: 0.88, glow: 0.90 },
-    west: { color: STAR_PALETTE.west, rx: 0.31, rz: 0.23, h: 0.62, elongation: 1.15, irregularity: 0.013, rotationBias: 1.12, glow: 0.94 }
+    north: { color: STAR_PALETTE.north, rx: 0.29, rz: 0.19, h: 0.68, elongation: 1.28, irregularity: 0.010, rotationBias: 0.95, glow: 1.44 },
+    east: { color: STAR_PALETTE.east, rx: 0.29, rz: 0.19, h: 0.66, elongation: 1.22, irregularity: 0.012, rotationBias: 1.05, glow: 0.96 },
+    south: { color: STAR_PALETTE.south, rx: 0.28, rz: 0.18, h: 0.65, elongation: 1.20, irregularity: 0.010, rotationBias: 0.88, glow: 0.90 },
+    west: { color: STAR_PALETTE.west, rx: 0.29, rz: 0.19, h: 0.66, elongation: 1.23, irregularity: 0.013, rotationBias: 1.12, glow: 0.94 }
   });
 
   const ORBIT_ANGLES = Object.freeze({
@@ -88,7 +88,7 @@
 
   const RECEIPT = {
     contractId: CONTRACT.id,
-    visualSystem: "progressive-navigational-stars",
+    visualSystem: "stellar-shard-geometry",
     canvasMountStatus: "pending",
     webglContextStatus: "pending",
     shaderStatus: "pending",
@@ -97,6 +97,7 @@
     starGlowStatus: "pending",
     haloPassStatus: "pending",
     mirrorlandSelectionSync: "pending",
+    geometryRefinementStatus: "stellar-shard-opened",
     visibleObjectCount: 0,
     currentModeObserved: "unknown",
     orbitFocusObserved: "",
@@ -390,21 +391,27 @@
     const irregularity = params.irregularity || 0;
     const warmth = params.warmth || 0;
     const elongation = params.elongation || 1;
+    const crownTightness = params.crownTightness || 0.42;
+    const lowerTightness = params.lowerTightness || 0.38;
+    const waistLift = params.waistLift || 0.34;
+    const shardDepth = params.shardDepth || 0.42;
 
     const positions = [];
     const faces = [];
     const top = positions.push(v3(0, h * elongation, 0)) - 1;
-    const bottom = positions.push(v3(0, -h, 0)) - 1;
+    const bottom = positions.push(v3(0, -h * 1.08, 0)) - 1;
     const equator = [];
 
     for (let i = 0; i < segments; i += 1) {
       const a = (Math.PI * 2 * i) / segments;
-      const pointLift = i % 2 === 0 ? 1.07 : 0.88;
+      const pointLift = i % 2 === 0 ? 1.28 : 0.62;
       const offset = artifactOffset(i, irregularity) * pointLift;
+      const depthOffset = i % 2 === 0 ? shardDepth : shardDepth * 0.52;
+
       equator.push(positions.push(v3(
         Math.cos(a) * rx * offset,
-        Math.sin(i * 1.7) * irregularity * 0.42,
-        Math.sin(a) * rz * (2 - offset * 0.58)
+        Math.sin(i * 1.7) * irregularity * 0.36,
+        Math.sin(a) * rz * (1.0 + depthOffset * offset)
       )) - 1);
     }
 
@@ -416,9 +423,9 @@
         const a = (Math.PI * 2 * (i + 0.5)) / segments;
         const offset = artifactOffset(i + 3, irregularity * 0.85);
         crownRing.push(positions.push(v3(
-          Math.cos(a) * rx * 0.54 * offset,
-          h * 0.39 * elongation,
-          Math.sin(a) * rz * 0.54 * (2 - offset)
+          Math.cos(a) * rx * crownTightness * offset,
+          h * waistLift * elongation,
+          Math.sin(a) * rz * crownTightness * (1.40 - offset * 0.28)
         )) - 1);
       }
 
@@ -426,9 +433,9 @@
         const a = (Math.PI * 2 * (i + 0.5)) / segments;
         const offset = artifactOffset(i + 7, irregularity * 0.75);
         lowerRing.push(positions.push(v3(
-          Math.cos(a) * rx * 0.50 * offset,
-          -h * 0.39,
-          Math.sin(a) * rz * 0.50 * (2 - offset)
+          Math.cos(a) * rx * lowerTightness * offset,
+          -h * waistLift,
+          Math.sin(a) * rz * lowerTightness * (1.40 - offset * 0.24)
         )) - 1);
       }
 
@@ -458,7 +465,7 @@
       const b = positions[face[1]];
       const c = positions[face[2]];
       const normal = normalize(cross(sub(b, a), sub(c, a)));
-      const facetLift = 0.86 + ((faceIndex % 6) * 0.034);
+      const facetLift = 0.88 + ((faceIndex % 6) * 0.030);
       const facetColor = mixColor(color, facetLift, warmth);
 
       [a, b, c].forEach((p) => {
@@ -499,14 +506,18 @@
 
     meshes.set("mirrorland", buildGpuMesh(gl, createStarMesh({
       segments: 12,
-      rx: 0.54,
-      rz: 0.40,
-      h: 0.84,
+      rx: 0.58,
+      rz: 0.36,
+      h: 0.88,
       crown: true,
       color: STAR_PALETTE.mirror,
       irregularity: 0.010,
       warmth: 0.06,
-      elongation: 1.00
+      elongation: 1.18,
+      crownTightness: 0.40,
+      lowerTightness: 0.36,
+      waistLift: 0.30,
+      shardDepth: 0.50
     })));
 
     WINGS.forEach((wing) => {
@@ -526,23 +537,28 @@
         color: theme.color,
         irregularity: theme.irregularity,
         warmth: wing === "south" || wing === "west" ? 0.08 : 0.04,
-        elongation: theme.elongation
+        elongation: theme.elongation,
+        crownTightness: 0.42,
+        lowerTightness: 0.38,
+        waistLift: 0.31,
+        shardDepth: 0.46
       })));
 
       meshes.set("room-" + wing, buildGpuMesh(gl, createStarMesh({
         segments: 6,
-        rx: 0.24,
-        rz: 0.18,
-        h: 0.39,
+        rx: 0.20,
+        rz: 0.13,
+        h: 0.42,
         crown: false,
         color: petalColor,
-        irregularity: theme.irregularity * 0.40,
+        irregularity: theme.irregularity * 0.36,
         warmth: wing === "south" || wing === "west" ? 0.06 : 0.035,
-        elongation: 1.04
+        elongation: 1.20,
+        shardDepth: 0.54
       })));
     });
 
-    emitReceipt({ starGlowStatus: "configured", haloPassStatus: "configured" });
+    emitReceipt({ starGlowStatus: "configured", haloPassStatus: "configured", meshBuildStatus: "built-stellar-shard" });
     return meshes;
   }
 

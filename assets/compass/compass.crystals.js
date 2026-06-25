@@ -1,5 +1,5 @@
 /* /assets/compass/compass.crystals.js
-   DGB Compass — Celestial atmosphere and state-guidance renewal.
+   DGB Compass — Celestial atmosphere, path-star glow, and state-guidance renewal.
    Scope: compass.crystals.js only.
 */
 
@@ -7,7 +7,7 @@
   "use strict";
 
   const CONTRACT = Object.freeze({
-    id: "DGB_COMPASS_CRYSTALS_CELESTIAL_ATMOSPHERE_GUIDANCE_TNT_v1",
+    id: "DGB_COMPASS_CRYSTALS_CELESTIAL_PATH_STAR_GLOW_TNT_v2",
     file: "/assets/compass/compass.crystals.js",
     visualPassClaimed: false,
     productionAuthorized: false,
@@ -45,9 +45,9 @@
 
   const INSTRUCTION_COPY = Object.freeze({
     orbit:
-      "Swipe to rotate the orbit. Tap an axis to inspect and unfold its petals.",
+      "Swipe to rotate the orbit. Tap a star to inspect its path.",
     flower:
-      "Swipe to return to the compass orbit. Tap a petal to inspect its path. Enter Room opens the selected destination."
+      "Swipe to return to the compass orbit. Tap a path star to inspect its destination. Enter Room opens the selected path."
   });
 
   const STAR_PALETTE = Object.freeze({
@@ -120,22 +120,22 @@
       contrast: 1.28
     }),
     ROOM_IDLE: Object.freeze({
-      specular: 1.04,
-      rim: 0.90,
-      emissive: 0.15,
-      alpha: 0.88,
-      sparkle: 0.22,
-      halo: 0.64,
-      contrast: 1.10
+      specular: 1.12,
+      rim: 1.08,
+      emissive: 0.21,
+      alpha: 0.90,
+      sparkle: 0.27,
+      halo: 0.82,
+      contrast: 1.16
     }),
     ROOM_SELECTED: Object.freeze({
-      specular: 1.34,
-      rim: 1.14,
-      emissive: 0.24,
-      alpha: 0.95,
-      sparkle: 0.34,
-      halo: 0.96,
-      contrast: 1.20
+      specular: 1.38,
+      rim: 1.22,
+      emissive: 0.28,
+      alpha: 0.96,
+      sparkle: 0.38,
+      halo: 1.08,
+      contrast: 1.24
     })
   });
 
@@ -223,6 +223,8 @@
     reducedMotionBackgroundSuppressed: false,
     instructionState: "orbit",
     instructionCopy: INSTRUCTION_COPY.orbit,
+    userFacingPetalLanguageSuppressed: true,
+    pathStarIdleGlowIncreased: true,
     cardinalMeshCount: 0,
     roomMeshCount: 0,
     drawCallsLastFrame: 0,
@@ -1374,8 +1376,8 @@
 
       setTarget(n, setUniformScale({
         x: p[0], y: p[1] - 0.14, z: selected ? 0.86 : 0.42,
-        prominence: selected ? 1.0 : 0.86,
-        halo: selected ? 0.88 : 0.48,
+        prominence: selected ? 1.0 : 0.90,
+        halo: selected ? 1.02 : 0.68,
         rotationSpeed: selected ? 0.12 : 0.08,
         float: selected ? 0.012 : 0.006
       }, selected ? QUALITY.selectedRoomScale : QUALITY.roomScale));

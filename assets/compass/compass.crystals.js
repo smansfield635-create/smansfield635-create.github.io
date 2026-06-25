@@ -7,7 +7,7 @@
   "use strict";
 
   const CONTRACT = Object.freeze({
-    id: "DGB_COMPASS_CRYSTALS_ROTATING_CARDINAL_AUTHORITY_TNT_v1",
+    id: "DGB_COMPASS_CRYSTALS_CARDINAL_AUTHORITY_CALIBRATED_TNT_v1",
     file: "/assets/compass/compass.crystals.js",
     visualPassClaimed: false,
     productionAuthorized: false,
@@ -16,6 +16,7 @@
   });
 
   const WINGS = Object.freeze(["north", "east", "south", "west"]);
+
   const MODES = Object.freeze({
     COMPASS: "COMPASS_MODE",
     ORBIT: "ORBIT_MODE",
@@ -47,58 +48,58 @@
 
   const MATERIALS = Object.freeze({
     MIRRORLAND_HERO: Object.freeze({
-      specular: 1.55,
-      rim: 1.25,
-      emissive: 0.30,
-      alpha: 0.96,
-      sparkle: 0.38,
-      halo: 1.20,
-      contrast: 1.18
+      specular: 1.50,
+      rim: 1.20,
+      emissive: 0.28,
+      alpha: 0.95,
+      sparkle: 0.34,
+      halo: 1.05,
+      contrast: 1.16
     }),
     CARDINAL_IDLE: Object.freeze({
-      specular: 1.16,
-      rim: 0.98,
-      emissive: 0.16,
-      alpha: 0.88,
-      sparkle: 0.24,
+      specular: 1.18,
+      rim: 1.02,
+      emissive: 0.17,
+      alpha: 0.90,
+      sparkle: 0.26,
       halo: 0.82,
       contrast: 1.16
     }),
     CARDINAL_FOCUSED: Object.freeze({
       specular: 1.50,
-      rim: 1.25,
+      rim: 1.30,
       emissive: 0.24,
-      alpha: 0.94,
+      alpha: 0.96,
       sparkle: 0.36,
       halo: 1.18,
       contrast: 1.24
     }),
     CARDINAL_SELECTED: Object.freeze({
-      specular: 1.64,
-      rim: 1.34,
-      emissive: 0.30,
-      alpha: 0.96,
+      specular: 1.62,
+      rim: 1.38,
+      emissive: 0.28,
+      alpha: 0.97,
       sparkle: 0.42,
-      halo: 1.30,
-      contrast: 1.25
+      halo: 1.25,
+      contrast: 1.28
     }),
     ROOM_IDLE: Object.freeze({
       specular: 1.04,
-      rim: 0.86,
-      emissive: 0.16,
+      rim: 0.90,
+      emissive: 0.15,
       alpha: 0.88,
       sparkle: 0.22,
-      halo: 0.62,
+      halo: 0.64,
       contrast: 1.10
     }),
     ROOM_SELECTED: Object.freeze({
       specular: 1.34,
-      rim: 1.12,
-      emissive: 0.26,
+      rim: 1.14,
+      emissive: 0.24,
       alpha: 0.95,
       sparkle: 0.34,
-      halo: 0.98,
-      contrast: 1.18
+      halo: 0.96,
+      contrast: 1.20
     })
   });
 
@@ -156,13 +157,19 @@
     devicePixelRatioCap: 2,
     cardinalSegments: 8,
     roomSegments: 6,
+
     mirrorlandDefaultScale: 0,
-    mirrorlandHeroScale: 0,
+    mirrorlandHeroScale: 2.35,
+
     cardinalScale: 1.05,
     focusedCardinalScale: 1.28,
     selectedCardinalScale: 1.38,
+
     roomScale: 0.92,
-    selectedRoomScale: 1.14
+    selectedRoomScale: 1.14,
+
+    maxYaw: 0.22,
+    maxPitch: 0.14
   });
 
   const RECEIPT = {
@@ -177,17 +184,6 @@
     roomMeshCount: 0,
     drawCallsLastFrame: 0,
     cameraOrientation: "pending",
-    cardinalScale: QUALITY.cardinalScale,
-    focusedCardinalScale: QUALITY.focusedCardinalScale,
-    selectedCardinalScale: QUALITY.selectedCardinalScale,
-    northPosition: [0, 1.32, -0.10],
-    eastPosition: [1.48, 0, -0.10],
-    southPosition: [0, -1.32, -0.10],
-    westPosition: [-1.48, 0, -0.10],
-    topPositionAuthorityImplemented: true,
-    authorityTransfersOnSwipe: true,
-    selectedCardinalWithdraws: true,
-    selectedFlowerShowsPetalsOnly: true,
     activeMode: "pending",
     activeDestination: "",
     diagnosticModeAvailable: true,
@@ -203,6 +199,13 @@
     meshBuildStatus: "pending",
     registryBuildStatus: "pending",
     renderLoopStatus: "pending",
+    topAuthorityCardinal: "north",
+    cardinalScale: QUALITY.cardinalScale,
+    focusedCardinalScale: QUALITY.focusedCardinalScale,
+    selectedCardinalScale: QUALITY.selectedCardinalScale,
+    roomScale: QUALITY.roomScale,
+    selectedRoomScale: QUALITY.selectedRoomScale,
+    rotationModel: "BOUNDED_YAW_PITCH_WITH_DOMINANT_RZ",
     failureReason: null,
     remainingVisualDefects: [],
     visualPassClaimed: false
@@ -258,9 +261,9 @@
     view: null,
     projection: null,
     camera: {
-      eye: [0, 0.72, 6.05],
+      eye: [0, 0.78, 6.7],
       target: [0, 0, 0],
-      nextEye: [0, 0.72, 6.05],
+      nextEye: [0, 0.78, 6.7],
       nextTarget: [0, 0, 0]
     }
   };
@@ -294,9 +297,7 @@
   function exposeApi() {
     globalThis.DGB_COMPASS_CRYSTALS = Object.freeze({
       contract: CONTRACT,
-
       receipt: () => Object.freeze({ ...RECEIPT }),
-
       mirrorlandAdapterReceipt: () => Object.freeze({ ...ADAPTER_RECEIPT }),
 
       setDiagnosticMode: (mode) => {
@@ -481,40 +482,47 @@
         return;
       }
 
+      float facingToCamera = dot(n, viewDir);
+      float rearSuppression = smoothstep(-0.18, 0.34, facingToCamera);
+      float sideRim = pow(1.0 - abs(facingToCamera), 2.4);
+
       float key = max(dot(n, normalize(-uKeyLight)), 0.0);
       float fill = max(dot(n, normalize(-uFillLight)), 0.0);
       float rear = max(dot(n, normalize(-uRimLight)), 0.0);
-      float fresnel = pow(1.0 - max(dot(n, viewDir), 0.0), 2.15);
+      float fresnel = pow(1.0 - max(facingToCamera, 0.0), 2.05);
       float facing = pow(max(dot(reflect(normalize(uKeyLight), n), viewDir), 0.0), 28.0);
 
-      float facetBand = pow(abs(dot(n, normalize(vec3(0.42, 0.74, 0.52)))), 5.0);
-      float shadowFacet = pow(1.0 - abs(dot(n, normalize(vec3(-0.30, 0.62, 0.72)))), 2.0);
+      float facetBand = pow(abs(dot(n, normalize(vec3(0.45, 0.72, 0.53)))), 5.0);
       float sparkleSeed = hash31(floor((n + vWorldPosition) * 18.0));
-      float sparklePhase = sin(uTime * 1.75 + sparkleSeed * 6.28318);
-      float sparkle = smoothstep(0.74, 1.0, facing + facetBand * 0.32) * (0.78 + sparklePhase * 0.22) * uSparkle;
+      float sparklePhase = sin(uTime * 1.85 + sparkleSeed * 6.28318);
+      float sparkle = smoothstep(0.74, 1.0, facing + facetBand * 0.34) *
+        (0.76 + sparklePhase * 0.24) *
+        uSparkle *
+        rearSuppression;
 
-      float twinkle = 1.0 + sin(uTime * 0.70 + sparkleSeed * 6.28318) * 0.044 * uTwinkle;
+      float twinkle = 1.0 + sin(uTime * 0.70 + sparkleSeed * 6.28318) * 0.045 * uTwinkle;
 
       if (vHaloPass > 0.5) {
-        vec3 haloColor = base * (0.68 + fresnel * 1.18 + rear * 0.34) * uHaloStrength * twinkle;
-        float haloAlpha = clamp((0.032 + fresnel * 0.18 + rear * 0.06) * uProminence * uHaloStrength, 0.0, 0.34);
+        vec3 haloColor = base * (0.70 + fresnel * 1.18 + sideRim * 0.42 + rear * 0.24) * uHaloStrength * twinkle;
+        float haloAlpha = clamp((0.040 + fresnel * 0.18 + sideRim * 0.08) * uProminence * uHaloStrength, 0.0, 0.34);
         gl_FragColor = vec4(haloColor, haloAlpha);
         return;
       }
 
-      float diffuse = 0.24 + key * 0.78 + fill * 0.24 + rear * 0.16;
+      float diffuse = 0.24 + key * 0.82 + fill * 0.30 + rear * 0.14;
       diffuse = mix(diffuse, pow(diffuse, 0.68), clamp(uContrast - 1.0, 0.0, 0.7));
 
-      vec3 facetDefinition = base * shadowFacet * 0.12 * clamp(uContrast - 1.0, 0.0, 0.7);
       vec3 lit = base * diffuse * twinkle;
-      vec3 spec = vec3(1.0, 0.96, 0.82) * facing * uSpecular;
-      vec3 rim = base * fresnel * uRim + vec3(0.68, 0.86, 1.0) * fresnel * uRim * 0.22;
+      vec3 spec = vec3(1.0, 0.96, 0.82) * facing * uSpecular * rearSuppression;
+      vec3 rim = base * (fresnel * 0.72 + sideRim * 0.38) * uRim;
+      vec3 coolRim = vec3(0.68, 0.86, 1.0) * (fresnel * 0.22 + sideRim * 0.14) * uRim;
       vec3 emissive = base * uEmissive;
       vec3 spark = vec3(1.0, 0.96, 0.78) * sparkle;
 
-      vec3 color = (lit + spec + rim + emissive + spark + facetDefinition) * uProminence + uAmbientColor * base * 0.22;
+      float rearDim = mix(0.62, 1.0, rearSuppression);
+      vec3 color = ((lit + spec + rim + coolRim + emissive + spark) * uProminence + uAmbientColor * base * 0.20) * rearDim;
 
-      float alpha = clamp(uAlpha * (0.72 + uProminence * 0.28 + fresnel * 0.09), 0.12, 1.0);
+      float alpha = clamp(uAlpha * (0.70 + uProminence * 0.30 + fresnel * 0.08), 0.12, 1.0);
       gl_FragColor = vec4(color, alpha);
     }
   `;
@@ -730,7 +738,7 @@
       return verts.length - 1;
     }
 
-    function pushFace(a, b, c) {
+    function face(a, b, c) {
       faces.push([a, b, c]);
     }
 
@@ -762,29 +770,29 @@
     for (let i = 0; i < count; i += 1) {
       const next = (i + 1) % count;
 
-      pushFace(frontApex, innerRing[i], innerRing[next]);
-      pushFace(frontCrown, frontBevel[next], frontBevel[i]);
-      pushFace(frontBevel[i], outer[i], outer[next]);
-      pushFace(frontBevel[i], outer[next], frontBevel[next]);
-      pushFace(innerRing[i], frontBevel[i], frontBevel[next]);
-      pushFace(innerRing[i], frontBevel[next], innerRing[next]);
+      face(frontApex, innerRing[i], innerRing[next]);
+      face(frontCrown, frontBevel[next], frontBevel[i]);
+      face(frontBevel[i], outer[i], outer[next]);
+      face(frontBevel[i], outer[next], frontBevel[next]);
+      face(innerRing[i], frontBevel[i], frontBevel[next]);
+      face(innerRing[i], frontBevel[next], innerRing[next]);
 
-      pushFace(rearApex, rearBevel[next], rearBevel[i]);
-      pushFace(rearCrown, rearBevel[i], rearBevel[next]);
-      pushFace(rearBevel[i], outer[next], outer[i]);
-      pushFace(rearBevel[i], rearBevel[next], outer[next]);
+      face(rearApex, rearBevel[next], rearBevel[i]);
+      face(rearCrown, rearBevel[i], rearBevel[next]);
+      face(rearBevel[i], outer[next], outer[i]);
+      face(rearBevel[i], rearBevel[next], outer[next]);
     }
 
     const outPositions = [];
     const outNormals = [];
     const outColors = [];
 
-    faces.forEach((face, faceIndex) => {
-      const a = verts[face[0]];
-      const b = verts[face[1]];
-      const c = verts[face[2]];
+    faces.forEach((item, faceIndex) => {
+      const a = verts[item[0]];
+      const b = verts[item[1]];
+      const c = verts[item[2]];
       const normal = normalize(cross(sub(b, a), sub(c, a)));
-      const lift = 0.86 + (faceIndex % 7) * 0.034;
+      const lift = 0.84 + (faceIndex % 7) * 0.034;
       const sparkleLift = faceIndex % 5 === 0 ? 0.13 : 0;
 
       [a, b, c].forEach((p) => {
@@ -884,6 +892,7 @@
       material: opts.material || "CARDINAL_IDLE",
       baseMaterial: opts.material || "CARDINAL_IDLE",
       color: opts.color || STAR_PALETTE.north,
+      phase: opts.phase || 0,
       visible: true,
       transform: {
         x: 0, y: 0, z: 0,
@@ -910,13 +919,14 @@
 
     registry.set("mirrorland", node("mirrorland", "mirrorland", {
       label: "Mirrorland",
-      short: "Future center threshold",
+      short: "Center fulcrum",
       meshKey: "mirrorland",
       material: "MIRRORLAND_HERO",
-      color: STAR_PALETTE.mirror
+      color: STAR_PALETTE.mirror,
+      phase: 0.4
     }));
 
-    WINGS.forEach((wing) => {
+    WINGS.forEach((wing, wingIndex) => {
       const copy = AXIS_COPY[wing];
 
       registry.set(wing, node(wing, "cardinal", {
@@ -925,7 +935,8 @@
         wing,
         meshKey: "wing-" + wing,
         material: "CARDINAL_IDLE",
-        color: STAR_PALETTE[wing]
+        color: STAR_PALETTE[wing],
+        phase: wingIndex * 1.37 + 0.22
       }));
 
       DEFAULT_ROOMS[wing].forEach((room, index) => {
@@ -941,7 +952,8 @@
             wing === "north" ? STAR_PALETTE.roomNorth :
             wing === "east" ? STAR_PALETTE.roomEast :
             wing === "south" ? STAR_PALETTE.roomSouth :
-            STAR_PALETTE.roomWest
+            STAR_PALETTE.roomWest,
+          phase: wingIndex * 1.13 + index * 0.47
         }));
       });
     });
@@ -983,15 +995,14 @@
     return [point[0] * c - point[1] * s, point[0] * s + point[1] * c, point[2] || 0];
   }
 
-  function baseWingPosition(wing) {
-    if (wing === "north") return [0, 1.32, -0.10];
-    if (wing === "east") return [1.48, 0, -0.10];
-    if (wing === "south") return [0, -1.32, -0.10];
-    return [-1.48, 0, -0.10];
-  }
-
   function orbitWingPosition(wing) {
-    return rotate2D(baseWingPosition(wing), state.orbitAngle);
+    const base =
+      wing === "north" ? [0, 1.32, -0.10] :
+      wing === "east" ? [1.48, 0, -0.10] :
+      wing === "south" ? [0, -1.32, -0.10] :
+      [-1.48, 0, -0.10];
+
+    return rotate2D(base, state.orbitAngle);
   }
 
   function roomPetalPosition(index, count) {
@@ -1024,14 +1035,29 @@
     state.orbitAngle += delta * Math.min(1, dt * 4.8);
   }
 
-  function updateTargets() {
-    const focus = state.orbitFocus || "north";
-    const activeFlower =
-      state.flowerExpanded &&
-      state.selectedCardinal &&
-      state.selectedDestinationType !== "mirrorland";
+  function topAuthorityWing() {
+    let bestWing = "north";
+    let bestY = -Infinity;
 
+    WINGS.forEach((wing) => {
+      const p = orbitWingPosition(wing);
+      if (p[1] > bestY) {
+        bestY = p[1];
+        bestWing = wing;
+      }
+    });
+
+    return bestWing;
+  }
+
+  function updateTargets() {
+    const topWing = topAuthorityWing();
+    const focus = state.orbitFocus || topWing || "north";
+    const mirrorlandSelected = state.selectedDestinationType === "mirrorland";
+    const activeFlower = state.flowerExpanded && state.selectedCardinal && !mirrorlandSelected;
     const selectedRooms = DEFAULT_ROOMS[state.selectedCardinal || focus] || [];
+
+    emitReceipt({ topAuthorityCardinal: topWing });
 
     state.registry.forEach((n) => {
       n.visible = false;
@@ -1041,67 +1067,67 @@
         sx: 1, sy: 1, sz: 1,
         prominence: 0,
         halo: 0,
-        rotationSpeed: 0.05,
+        rotationSpeed: 0.06,
         float: 0
       });
     });
 
     const mirrorland = state.registry.get("mirrorland");
+
     if (mirrorland) {
       mirrorland.visible = false;
-      setTarget(mirrorland, setUniformScale({
-        x: 0, y: 0, z: -2,
-        prominence: 0,
-        halo: 0,
-        rotationSpeed: 0,
-        float: 0
-      }, 0));
+
+      if (mirrorlandSelected && state.meshes.has("mirrorland")) {
+        mirrorland.visible = true;
+        setTarget(mirrorland, setUniformScale({
+          x: 0, y: 0.02, z: 0.34,
+          prominence: 1.08,
+          halo: 1.05,
+          rotationSpeed: 0.10,
+          float: 0
+        }, QUALITY.mirrorlandHeroScale));
+      }
+    }
+
+    if (mirrorlandSelected) {
+      state.camera.nextEye = [0, 0.74, state.width / Math.max(1, state.height) < 0.8 ? 7.6 : 6.2];
+      state.camera.nextTarget = [0, 0, 0];
+      return;
     }
 
     if (!activeFlower) {
       WINGS.forEach((wing) => {
         const n = state.registry.get(wing);
         const p = orbitWingPosition(wing);
-        const focused = wing === focus;
+        const focused = wing === topWing;
 
         n.visible = true;
         n.material = focused ? "CARDINAL_FOCUSED" : "CARDINAL_IDLE";
 
         setTarget(n, setUniformScale({
-          x: p[0], y: p[1], z: focused ? 0.36 : p[2],
-          prominence: focused ? 1.0 : 0.68,
-          halo: focused ? 0.92 : 0.42,
-          rotationSpeed: focused ? 0.145 : 0.066,
-          float: focused ? 0.012 : 0.004
+          x: p[0], y: p[1], z: focused ? 0.34 : p[2],
+          prominence: focused ? 1.0 : 0.74,
+          halo: focused ? 1.0 : 0.52,
+          rotationSpeed: focused ? 0.16 : 0.09,
+          float: focused ? 0.012 : 0.006
         }, focused ? QUALITY.focusedCardinalScale : QUALITY.cardinalScale));
       });
 
-      state.camera.nextEye = [0, 0.72, state.width / Math.max(1, state.height) < 0.8 ? 6.95 : 5.75];
+      state.camera.nextEye = [0, 0.80, state.width / Math.max(1, state.height) < 0.8 ? 7.2 : 6.05];
       state.camera.nextTarget = [0, 0, 0];
-
-      emitReceipt({
-        centerReservedAndOpen: true,
-        MirrorlandRemovedFromEntranceConstellation: true,
-        topAuthorityCardinal: focus,
-        selectedCardinalWithdraws: false,
-        selectedFlowerShowsPetalsOnly: false
-      });
-
       return;
     }
 
     WINGS.forEach((wing) => {
       const n = state.registry.get(wing);
       n.visible = false;
-      n.material = wing === state.selectedCardinal ? "CARDINAL_SELECTED" : "CARDINAL_IDLE";
-
       setTarget(n, setUniformScale({
-        x: 0, y: 0.04, z: -0.8,
+        x: 0, y: 0.10, z: -0.6,
         prominence: 0,
         halo: 0,
-        rotationSpeed: 0.03,
+        rotationSpeed: 0.06,
         float: 0
-      }, 0.1));
+      }, 0.4));
     });
 
     selectedRooms.forEach((room, index) => {
@@ -1117,21 +1143,14 @@
       setTarget(n, setUniformScale({
         x: p[0], y: p[1] - 0.14, z: selected ? 0.86 : 0.42,
         prominence: selected ? 1.0 : 0.86,
-        halo: selected ? 0.86 : 0.46,
-        rotationSpeed: selected ? 0.12 : 0.075,
-        float: selected ? 0.010 : 0.005
+        halo: selected ? 0.88 : 0.48,
+        rotationSpeed: selected ? 0.12 : 0.08,
+        float: selected ? 0.012 : 0.006
       }, selected ? QUALITY.selectedRoomScale : QUALITY.roomScale));
     });
 
-    state.camera.nextEye = [0, 0.62, state.width / Math.max(1, state.height) < 0.8 ? 7.25 : 5.75];
+    state.camera.nextEye = [0, 0.66, state.width / Math.max(1, state.height) < 0.8 ? 7.5 : 5.85];
     state.camera.nextTarget = [0, 0.03, 0];
-
-    emitReceipt({
-      centerReservedAndOpen: false,
-      topAuthorityCardinal: state.selectedCardinal,
-      selectedCardinalWithdraws: true,
-      selectedFlowerShowsPetalsOnly: true
-    });
   }
 
   function lerp(a, b, t) {
@@ -1149,11 +1168,15 @@
         a[key] = lerp(a[key], b[key], speed);
       });
 
-      if (!state.reducedMotion) {
-        a.ry += dt * a.rotationSpeed;
-        a.rx += dt * a.rotationSpeed * 0.15;
-        a.rz += dt * a.rotationSpeed * 0.045;
+      if (state.reducedMotion) {
+        a.rx = 0;
+        a.ry = 0;
+        return;
       }
+
+      a.rz += dt * a.rotationSpeed;
+      a.ry = Math.sin(state.time * 0.42 + n.phase) * QUALITY.maxYaw * Math.max(0.35, a.prominence);
+      a.rx = Math.sin(state.time * 0.31 + n.phase * 0.73) * QUALITY.maxPitch * Math.max(0.35, a.prominence);
     });
 
     for (let i = 0; i < 3; i += 1) {
@@ -1242,7 +1265,7 @@
     const t = n.transform;
     const floatY =
       !state.reducedMotion && n.type !== "mirrorland"
-        ? Math.sin(state.time * 0.86 + n.roomIndex * 0.72) * t.float
+        ? Math.sin(state.time * 0.95 + n.roomIndex * 0.72 + n.phase) * t.float
         : 0;
 
     const haloScale = haloPass ? 1.0 + t.halo * 0.10 : 1;
@@ -1283,7 +1306,7 @@
     const x = clip[0] / clip[3];
     const y = clip[1] / clip[3];
 
-    if (x < -1.35 || x > 1.35 || y < -1.35 || y > 1.35) return null;
+    if (x < -1.30 || x > 1.30 || y < -1.30 || y > 1.30) return null;
 
     return {
       x: ((x + 1) / 2) * state.width / state.pixelRatio,
@@ -1315,11 +1338,11 @@
     const secondary = el.querySelector("span:last-child");
 
     if (primary) primary.textContent = n.type === "mirrorland" ? "Mirrorland" : n.label;
-    if (secondary) secondary.textContent = n.type === "mirrorland" ? "Future center threshold" : n.short;
+    if (secondary) secondary.textContent = n.type === "mirrorland" ? "Center fulcrum" : n.short;
 
     const labelScale =
-      n.type === "mirrorland" ? 0.88 :
-      n.type === "cardinal" ? 0.78 :
+      n.type === "mirrorland" ? 0.96 :
+      n.type === "cardinal" ? 0.80 :
       0.78;
 
     el.style.left = screen.x + "px";
@@ -1329,7 +1352,7 @@
     el.style.transform = "translate(-50%, -50%) scale(" + labelScale + ")";
     el.style.opacity = String(Math.max(0, Math.min(1, n.transform.prominence)));
     el.style.pointerEvents = n.transform.prominence >= 0.18 ? "auto" : "none";
-    el.style.zIndex = n.type === "petal" ? "5" : n.type === "mirrorland" ? "2" : "4";
+    el.style.zIndex = n.type === "petal" ? "5" : n.type === "mirrorland" ? "6" : "4";
   }
 
   function syncSemanticObjects() {
@@ -1337,7 +1360,7 @@
 
     const note = state.root.querySelector(".compass-accessibility-note");
     if (note) {
-      note.textContent = "Swipe to rotate the constellation. The star at the top holds current visual authority. Tap a star to unfold its petals.";
+      note.textContent = "Swipe to rotate the orbit. Tap a star to inspect. Use Enter Room only when you are ready to navigate.";
     }
   }
 
@@ -1419,7 +1442,7 @@
     const rect = state.surface.getBoundingClientRect();
     const px = event.clientX - rect.left;
     const py = event.clientY - rect.top;
-    const radius = Math.max(44, Math.min(78, rect.width * 0.085));
+    const radius = Math.max(46, Math.min(80, rect.width * 0.090));
     let best = null;
     let bestDistance = Infinity;
 
@@ -1589,7 +1612,7 @@
     gl.uniformMatrix3fv(state.uniforms.normalMatrix, false, new Float32Array(normalMatrix3(model)));
     gl.uniform1f(state.uniforms.time, state.time);
     gl.uniform1f(state.uniforms.haloPass, haloPass ? 1 : 0);
-    gl.uniform1f(state.uniforms.haloExpansion, n.type === "mirrorland" ? 0.0 : 0.075);
+    gl.uniform1f(state.uniforms.haloExpansion, n.type === "mirrorland" ? 0.030 : 0.075);
     gl.uniform1f(state.uniforms.diagnosticMode,
       state.diagnosticMode === DIAGNOSTIC_MODES.OPAQUE_UNLIT ? 1 :
       state.diagnosticMode === DIAGNOSTIC_MODES.NORMALS ? 2 :
@@ -1631,7 +1654,7 @@
     const aspect = state.width / Math.max(1, state.height);
 
     state.view = lookAt4(state.camera.eye, state.camera.target, [0, 1, 0]);
-    state.projection = perspective4(Math.PI / (aspect < 0.8 ? 4.25 : 4.65), aspect, 0.1, 60);
+    state.projection = perspective4(Math.PI / (aspect < 0.8 ? 4.45 : 4.85), aspect, 0.1, 60);
 
     gl.clearColor(0.015, 0.018, 0.034, 0);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
@@ -1671,7 +1694,7 @@
       visibleObjectCount: visible,
       glError: glError === gl.NO_ERROR ? "NO_ERROR" : String(glError),
       renderLoopStatus: state.reducedMotion ? "active-reduced-motion" : "active",
-      cameraOrientation: "+Z_FRONT_THREE_QUARTER_CARDINAL_CONSTELLATION",
+      cameraOrientation: "+Z_FRONT_BOUNDED_THREE_QUARTER",
       diagnosticMode: state.diagnosticMode,
       failureReason: null
     });

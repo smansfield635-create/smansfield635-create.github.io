@@ -7,7 +7,7 @@
   "use strict";
 
   const CONTRACT = Object.freeze({
-    id: "DGB_COMPASS_NAVIGATIONAL_STAR_ORBIT_FLOWER_TNT_v6_REAL_GLOW",
+    id: "DGB_COMPASS_NAVIGATIONAL_STAR_ORBIT_FLOWER_TNT_v6_PROGRESSIVE_RENDERING",
     file: "/assets/compass/compass.crystals.js",
     visualPassClaimed: false,
     productionAuthorized: false,
@@ -54,19 +54,23 @@
     west: { label: "Frontier", short: "Build next" }
   });
 
-  const STAR = Object.freeze({
-    north: { rgb: [0.74, 0.88, 1.0], css: "rgba(170, 215, 255," },
-    east: { rgb: [0.62, 0.88, 0.96], css: "rgba(135, 230, 255," },
-    south: { rgb: [1.0, 0.86, 0.56], css: "rgba(255, 210, 120," },
-    west: { rgb: [0.94, 0.72, 0.56], css: "rgba(255, 180, 125," },
-    mirror: { rgb: [0.78, 0.92, 1.0], css: "rgba(185, 230, 255," }
+  const STAR_PALETTE = Object.freeze({
+    north: [0.74, 0.88, 1.0],
+    east: [0.62, 0.86, 0.96],
+    south: [1.0, 0.88, 0.62],
+    west: [0.92, 0.76, 0.58],
+    petalNorth: [0.68, 0.84, 1.0],
+    petalEast: [0.62, 0.90, 0.96],
+    petalSouth: [1.0, 0.82, 0.56],
+    petalWest: [0.94, 0.72, 0.56],
+    mirror: [0.82, 0.94, 1.0]
   });
 
   const WING_THEMES = Object.freeze({
-    north: { color: STAR.north.rgb, rx: 0.31, rz: 0.23, h: 0.64, elongation: 1.18, irregularity: 0.010, rotationBias: 0.95, glow: 1.90 },
-    east: { color: STAR.east.rgb, rx: 0.31, rz: 0.23, h: 0.62, elongation: 1.14, irregularity: 0.012, rotationBias: 1.05, glow: 1.20 },
-    south: { color: STAR.south.rgb, rx: 0.30, rz: 0.22, h: 0.61, elongation: 1.12, irregularity: 0.010, rotationBias: 0.88, glow: 1.12 },
-    west: { color: STAR.west.rgb, rx: 0.31, rz: 0.23, h: 0.62, elongation: 1.15, irregularity: 0.013, rotationBias: 1.12, glow: 1.16 }
+    north: { color: STAR_PALETTE.north, rx: 0.31, rz: 0.23, h: 0.64, elongation: 1.18, irregularity: 0.010, rotationBias: 0.95, glow: 1.44 },
+    east: { color: STAR_PALETTE.east, rx: 0.31, rz: 0.23, h: 0.62, elongation: 1.14, irregularity: 0.012, rotationBias: 1.05, glow: 0.96 },
+    south: { color: STAR_PALETTE.south, rx: 0.30, rz: 0.22, h: 0.61, elongation: 1.12, irregularity: 0.010, rotationBias: 0.88, glow: 0.90 },
+    west: { color: STAR_PALETTE.west, rx: 0.31, rz: 0.23, h: 0.62, elongation: 1.15, irregularity: 0.013, rotationBias: 1.12, glow: 0.94 }
   });
 
   const ORBIT_ANGLES = Object.freeze({
@@ -84,21 +88,22 @@
 
   const RECEIPT = {
     contractId: CONTRACT.id,
-    visualSystem: "navigational-stars-real-glow",
+    visualSystem: "progressive-navigational-stars",
     canvasMountStatus: "pending",
-    haloLayerStatus: "pending",
     webglContextStatus: "pending",
     shaderStatus: "pending",
     meshBuildStatus: "pending",
     registryBuildStatus: "pending",
     starGlowStatus: "pending",
-    northStarGlow: "enabled-strong",
+    haloPassStatus: "pending",
+    mirrorlandSelectionSync: "pending",
     visibleObjectCount: 0,
     currentModeObserved: "unknown",
     orbitFocusObserved: "",
     orbitAngleObserved: 0,
     selectedCardinalObserved: "",
     selectedRoomObserved: "",
+    selectedDestinationTypeObserved: "",
     flowerExpandedObserved: false,
     semanticSyncStatus: "pending",
     renderLoopStatus: "pending",
@@ -121,7 +126,6 @@
   const state = {
     root: null,
     canvas: null,
-    haloLayer: null,
     surface: null,
     gl: null,
     program: null,
@@ -133,6 +137,7 @@
     orbitFocus: "",
     selectedCardinal: "",
     selectedRoom: "",
+    selectedDestinationType: "",
     flowerExpanded: false,
     reducedMotion: false,
     orbitAngle: 0,
@@ -146,66 +151,9 @@
     failHeld: false,
     view: null,
     projection: null,
-    pointer: null
+    pointer: null,
+    time: 0
   };
-
-  const vertexShaderSource = `
-    attribute vec3 aPosition;
-    attribute vec3 aNormal;
-    attribute vec3 aColor;
-
-    uniform mat4 uModel;
-    uniform mat4 uView;
-    uniform mat4 uProjection;
-    uniform mat3 uNormalMatrix;
-    uniform float uProminence;
-    uniform float uGlowStrength;
-    uniform vec3 uGlowColor;
-
-    varying vec3 vNormal;
-    varying vec3 vColor;
-    varying float vProminence;
-    varying float vGlowStrength;
-    varying vec3 vGlowColor;
-
-    void main() {
-      vNormal = normalize(uNormalMatrix * aNormal);
-      vColor = aColor;
-      vProminence = uProminence;
-      vGlowStrength = uGlowStrength;
-      vGlowColor = uGlowColor;
-      gl_Position = uProjection * uView * uModel * vec4(aPosition, 1.0);
-    }
-  `;
-
-  const fragmentShaderSource = `
-    precision mediump float;
-
-    varying vec3 vNormal;
-    varying vec3 vColor;
-    varying float vProminence;
-    varying float vGlowStrength;
-    varying vec3 vGlowColor;
-
-    uniform vec3 uKeyLightDirection;
-    uniform vec3 uFillLightDirection;
-    uniform vec3 uRimLightDirection;
-    uniform float uAmbientStrength;
-
-    void main() {
-      vec3 n = normalize(vNormal);
-      float key = max(dot(n, normalize(-uKeyLightDirection)), 0.0);
-      float fill = max(dot(n, normalize(-uFillLightDirection)), 0.0) * 0.40;
-      float rim = pow(max(dot(n, normalize(-uRimLightDirection)), 0.0), 1.65) * 0.92;
-      float core = pow(max(dot(n, vec3(0.0, 0.0, 1.0)), 0.0), 3.0);
-      float light = uAmbientStrength + key * 0.82 + fill + rim;
-      vec3 lit = vColor * light * vProminence;
-      vec3 star = vGlowColor * (rim * 0.80 + core * 0.90) * vGlowStrength * vProminence;
-      vec3 color = lit + star;
-      float alpha = clamp(0.16 + vProminence * 0.66 + vGlowStrength * 0.08, 0.10, 0.98);
-      gl_FragColor = vec4(color, alpha);
-    }
-  `;
 
   function emitReceipt(extra = {}) {
     Object.assign(RECEIPT, extra, { visualPassClaimed: false });
@@ -277,24 +225,6 @@
     return canvas;
   }
 
-  function ensureHaloLayer(mount) {
-    const existing = mount.querySelector("[data-compass-star-halo-layer]");
-    if (existing) return existing;
-
-    const layer = document.createElement("div");
-    layer.setAttribute("data-compass-star-halo-layer", "true");
-    layer.setAttribute("aria-hidden", "true");
-    layer.style.position = "absolute";
-    layer.style.inset = "0";
-    layer.style.pointerEvents = "none";
-    layer.style.zIndex = "1";
-    layer.style.overflow = "hidden";
-    layer.style.mixBlendMode = "screen";
-
-    mount.prepend(layer);
-    return layer;
-  }
-
   function getGL(canvas) {
     return canvas.getContext("webgl", {
       antialias: true,
@@ -304,6 +234,93 @@
       preserveDrawingBuffer: false
     });
   }
+
+  const vertexShaderSource = `
+    attribute vec3 aPosition;
+    attribute vec3 aNormal;
+    attribute vec3 aColor;
+
+    uniform mat4 uModel;
+    uniform mat4 uView;
+    uniform mat4 uProjection;
+    uniform mat3 uNormalMatrix;
+    uniform float uProminence;
+    uniform float uGlowStrength;
+    uniform float uHaloPass;
+    uniform float uTime;
+
+    varying vec3 vNormal;
+    varying vec3 vColor;
+    varying float vProminence;
+    varying float vGlowStrength;
+    varying float vHaloPass;
+    varying vec3 vViewPosition;
+
+    void main() {
+      vec3 pos = aPosition;
+      if (uHaloPass > 0.5) {
+        pos += normalize(aNormal) * (0.11 + uGlowStrength * 0.035);
+      }
+
+      vec4 world = uModel * vec4(pos, 1.0);
+      vec4 view = uView * world;
+
+      vNormal = normalize(uNormalMatrix * aNormal);
+      vColor = aColor;
+      vProminence = uProminence;
+      vGlowStrength = uGlowStrength;
+      vHaloPass = uHaloPass;
+      vViewPosition = view.xyz;
+
+      gl_Position = uProjection * view;
+    }
+  `;
+
+  const fragmentShaderSource = `
+    precision mediump float;
+
+    varying vec3 vNormal;
+    varying vec3 vColor;
+    varying float vProminence;
+    varying float vGlowStrength;
+    varying float vHaloPass;
+    varying vec3 vViewPosition;
+
+    uniform vec3 uGlowColor;
+    uniform vec3 uKeyLightDirection;
+    uniform vec3 uFillLightDirection;
+    uniform vec3 uRimLightDirection;
+    uniform float uAmbientStrength;
+    uniform float uTime;
+
+    void main() {
+      vec3 n = normalize(vNormal);
+      vec3 viewDir = normalize(-vViewPosition);
+
+      float key = max(dot(n, normalize(-uKeyLightDirection)), 0.0);
+      float fill = max(dot(n, normalize(-uFillLightDirection)), 0.0) * 0.34;
+      float rim = pow(max(dot(n, normalize(-uRimLightDirection)), 0.0), 2.0) * 0.74;
+      float fresnel = pow(1.0 - max(dot(n, viewDir), 0.0), 2.15);
+      float core = pow(max(dot(n, vec3(0.0, 0.0, 1.0)), 0.0), 4.0);
+      float pulse = 0.92 + sin(uTime * 1.45) * 0.08;
+
+      if (vHaloPass > 0.5) {
+        vec3 haloColor = uGlowColor * (0.68 + fresnel * 0.88 + rim * 0.38) * vGlowStrength * pulse;
+        float haloAlpha = clamp((0.025 + fresnel * 0.18 + rim * 0.06) * vProminence * vGlowStrength, 0.0, 0.34);
+        gl_FragColor = vec4(haloColor, haloAlpha);
+        return;
+      }
+
+      float light = uAmbientStrength + key * 0.82 + fill + rim;
+      vec3 lit = vColor * light * vProminence;
+      vec3 edgeGlow = uGlowColor * (fresnel * 0.48 + rim * 0.34 + core * 0.20) * vGlowStrength * vProminence;
+      vec3 specular = vec3(1.0, 0.94, 0.78) * pow(max(dot(reflect(normalize(uKeyLightDirection), n), viewDir), 0.0), 18.0) * 0.22;
+      vec3 color = lit + edgeGlow + specular;
+
+      float alpha = clamp(0.18 + vProminence * 0.70 + fresnel * 0.10 + vGlowStrength * 0.035, 0.10, 0.98);
+      gl_FragColor = vec4(color, alpha);
+    }
+  `;
 
   function compileShader(gl, type, source) {
     const shader = gl.createShader(type);
@@ -369,7 +386,7 @@
     const rz = params.rz || 0.30;
     const h = params.h || 0.76;
     const crown = !!params.crown;
-    const color = params.color || STAR.north.rgb;
+    const color = params.color || STAR_PALETTE.north;
     const irregularity = params.irregularity || 0;
     const warmth = params.warmth || 0;
     const elongation = params.elongation || 1;
@@ -382,12 +399,11 @@
 
     for (let i = 0; i < segments; i += 1) {
       const a = (Math.PI * 2 * i) / segments;
-      const pointLift = i % 2 === 0 ? 1.12 : 0.82;
+      const pointLift = i % 2 === 0 ? 1.07 : 0.88;
       const offset = artifactOffset(i, irregularity) * pointLift;
-
       equator.push(positions.push(v3(
         Math.cos(a) * rx * offset,
-        Math.sin(i * 1.7) * irregularity * 0.45,
+        Math.sin(i * 1.7) * irregularity * 0.42,
         Math.sin(a) * rz * (2 - offset * 0.58)
       )) - 1);
     }
@@ -399,7 +415,6 @@
       for (let i = 0; i < segments; i += 1) {
         const a = (Math.PI * 2 * (i + 0.5)) / segments;
         const offset = artifactOffset(i + 3, irregularity * 0.85);
-
         crownRing.push(positions.push(v3(
           Math.cos(a) * rx * 0.54 * offset,
           h * 0.39 * elongation,
@@ -410,7 +425,6 @@
       for (let i = 0; i < segments; i += 1) {
         const a = (Math.PI * 2 * (i + 0.5)) / segments;
         const offset = artifactOffset(i + 7, irregularity * 0.75);
-
         lowerRing.push(positions.push(v3(
           Math.cos(a) * rx * 0.50 * offset,
           -h * 0.39,
@@ -444,7 +458,7 @@
       const b = positions[face[1]];
       const c = positions[face[2]];
       const normal = normalize(cross(sub(b, a), sub(c, a)));
-      const facetLift = 0.88 + ((faceIndex % 6) * 0.038);
+      const facetLift = 0.86 + ((faceIndex % 6) * 0.034);
       const facetColor = mixColor(color, facetLift, warmth);
 
       [a, b, c].forEach((p) => {
@@ -485,11 +499,11 @@
 
     meshes.set("mirrorland", buildGpuMesh(gl, createStarMesh({
       segments: 12,
-      rx: 0.52,
-      rz: 0.38,
-      h: 0.80,
+      rx: 0.54,
+      rz: 0.40,
+      h: 0.84,
       crown: true,
-      color: STAR.mirror.rgb,
+      color: STAR_PALETTE.mirror,
       irregularity: 0.010,
       warmth: 0.06,
       elongation: 1.00
@@ -497,6 +511,11 @@
 
     WINGS.forEach((wing) => {
       const theme = WING_THEMES[wing];
+      const petalColor =
+        wing === "north" ? STAR_PALETTE.petalNorth :
+        wing === "east" ? STAR_PALETTE.petalEast :
+        wing === "south" ? STAR_PALETTE.petalSouth :
+        STAR_PALETTE.petalWest;
 
       meshes.set("wing-" + wing, buildGpuMesh(gl, createStarMesh({
         segments: 8,
@@ -512,18 +531,18 @@
 
       meshes.set("room-" + wing, buildGpuMesh(gl, createStarMesh({
         segments: 6,
-        rx: 0.23,
-        rz: 0.17,
-        h: 0.37,
+        rx: 0.24,
+        rz: 0.18,
+        h: 0.39,
         crown: false,
-        color: theme.color,
+        color: petalColor,
         irregularity: theme.irregularity * 0.40,
         warmth: wing === "south" || wing === "west" ? 0.06 : 0.035,
         elongation: 1.04
       })));
     });
 
-    emitReceipt({ starGlowStatus: "configured" });
+    emitReceipt({ starGlowStatus: "configured", haloPassStatus: "configured" });
     return meshes;
   }
 
@@ -536,8 +555,6 @@
   }
 
   function node(id, type, opts = {}) {
-    const baseGlow = opts.baseGlow || 0.72;
-
     return {
       id,
       type,
@@ -548,13 +565,11 @@
       coordinate: opts.coordinate || "",
       meshKey: opts.meshKey || type,
       rotationBias: opts.rotationBias || 1,
-      glowColor: opts.glowColor || STAR.north.rgb,
-      glowCss: opts.glowCss || STAR.north.css,
-      baseGlow,
-      halo: null,
+      glowColor: opts.glowColor || [0.74, 0.88, 1.0],
+      baseGlow: opts.baseGlow || 0.72,
       visible: true,
-      transform: { x: 0, y: 0, z: 0, rx: 0, ry: 0, rz: 0, sx: 1, sy: 1, sz: 1, prominence: 1, rotationSpeed: 0.25, glow: baseGlow },
-      target: { x: 0, y: 0, z: 0, rx: 0, ry: 0, rz: 0, sx: 1, sy: 1, sz: 1, prominence: 1, rotationSpeed: 0.25, glow: baseGlow }
+      transform: { x: 0, y: 0, z: 0, rx: 0, ry: 0, rz: 0, sx: 1, sy: 1, sz: 1, prominence: 1, rotationSpeed: 0.25, glow: opts.baseGlow || 0.72, float: 0 },
+      target: { x: 0, y: 0, z: 0, rx: 0, ry: 0, rz: 0, sx: 1, sy: 1, sz: 1, prominence: 1, rotationSpeed: 0.25, glow: opts.baseGlow || 0.72, float: 0 }
     };
   }
 
@@ -566,14 +581,18 @@
       short: "Center fulcrum",
       meshKey: "mirrorland",
       rotationBias: 0.72,
-      glowColor: STAR.mirror.rgb,
-      glowCss: STAR.mirror.css,
-      baseGlow: 1.00
+      glowColor: STAR_PALETTE.mirror,
+      baseGlow: 0.92
     }));
 
     WINGS.forEach((wing) => {
       const theme = WING_THEMES[wing];
       const copy = AXIS_COPY[wing];
+      const petalColor =
+        wing === "north" ? STAR_PALETTE.petalNorth :
+        wing === "east" ? STAR_PALETTE.petalEast :
+        wing === "south" ? STAR_PALETTE.petalSouth :
+        STAR_PALETTE.petalWest;
 
       registry.set(wing, node(wing, "cardinal", {
         label: copy.label,
@@ -582,7 +601,6 @@
         meshKey: "wing-" + wing,
         rotationBias: theme.rotationBias,
         glowColor: theme.color,
-        glowCss: STAR[wing].css,
         baseGlow: theme.glow
       }));
 
@@ -595,41 +613,13 @@
           coordinate: coordinateFor(index, DEFAULT_ROOMS[wing].length),
           meshKey: "room-" + wing,
           rotationBias: 0.82 + index * 0.035,
-          glowColor: theme.color,
-          glowCss: STAR[wing].css,
-          baseGlow: 0.92
+          glowColor: petalColor,
+          baseGlow: 0.82
         }));
       });
     });
 
     return registry;
-  }
-
-  function ensureHaloForNode(n) {
-    if (!state.haloLayer || n.halo) return;
-
-    const halo = document.createElement("div");
-    halo.setAttribute("data-compass-star-halo", n.id);
-    halo.style.position = "absolute";
-    halo.style.left = "50%";
-    halo.style.top = "50%";
-    halo.style.width = "180px";
-    halo.style.height = "180px";
-    halo.style.transform = "translate(-50%, -50%)";
-    halo.style.borderRadius = "999px";
-    halo.style.pointerEvents = "none";
-    halo.style.opacity = "0";
-    halo.style.filter = "blur(2px)";
-    halo.style.willChange = "transform, opacity";
-    halo.style.background =
-      "radial-gradient(circle, " +
-      n.glowCss + "0.78) 0%, " +
-      n.glowCss + "0.38) 14%, " +
-      n.glowCss + "0.18) 34%, " +
-      n.glowCss + "0.07) 58%, rgba(255,255,255,0) 76%)";
-
-    state.haloLayer.appendChild(halo);
-    n.halo = halo;
   }
 
   function normalizeWing(value) {
@@ -646,6 +636,7 @@
     state.orbitFocus = normalizeWing(ds.orbitFocus || ds.selectedCardinal || ds.selectedWing || "");
     state.selectedCardinal = normalizeWing(ds.selectedCardinal || "");
     state.selectedRoom = String(ds.selectedRoom || "");
+    state.selectedDestinationType = String(ds.selectedDestinationType || "").trim().toLowerCase();
     state.flowerExpanded = ds.flowerExpanded === "true";
     state.reducedMotion =
       matchMedia("(prefers-reduced-motion: reduce)").matches ||
@@ -659,7 +650,9 @@
       orbitAngleObserved: Number(state.orbitAngle.toFixed(4)),
       selectedCardinalObserved: state.selectedCardinal,
       selectedRoomObserved: state.selectedRoom,
-      flowerExpandedObserved: state.flowerExpanded
+      selectedDestinationTypeObserved: state.selectedDestinationType,
+      flowerExpandedObserved: state.flowerExpanded,
+      mirrorlandSelectionSync: state.selectedDestinationType === "mirrorland" ? "active" : "inactive"
     });
   }
 
@@ -694,7 +687,6 @@
       [-0.59, -0.84, 0.10],
       [-0.96, 0.31, 0.10]
     ];
-
     const map4 = [
       [0, 0.96, 0.12],
       [0.96, 0, 0.10],
@@ -726,50 +718,92 @@
       return;
     }
 
-    const speed = Math.min(1, dt * 5.2);
+    const speed = Math.min(1, dt * 4.65);
     state.orbitAngle += shortestAngleDelta(state.orbitAngle, state.targetOrbitAngle) * speed;
   }
 
   function updateTargets() {
     const focus = state.orbitFocus || "north";
-    const activeFlower = state.flowerExpanded && state.selectedCardinal;
+    const mirrorlandSelected = state.selectedDestinationType === "mirrorland";
+    const activeFlower = state.flowerExpanded && state.selectedCardinal && !mirrorlandSelected;
     const selectedRooms = DEFAULT_ROOMS[state.selectedCardinal || focus] || [];
     const selectedRoomId = state.selectedRoom;
 
     state.registry.forEach((n) => {
       n.visible = false;
-      setTarget(n, { x: 0, y: 0, z: 0, sx: 1, sy: 1, sz: 1, prominence: 0, rotationSpeed: 0.10, glow: 0 });
+      setTarget(n, { x: 0, y: 0, z: 0, sx: 1, sy: 1, sz: 1, prominence: 0, rotationSpeed: 0.10, glow: 0, float: 0 });
     });
 
     const mirrorland = state.registry.get("mirrorland");
     mirrorland.visible = true;
 
+    if (mirrorlandSelected) {
+      setTarget(mirrorland, {
+        x: 0,
+        y: 0.02,
+        z: 0.28,
+        sx: 1.08,
+        sy: 1.08,
+        sz: 1.08,
+        prominence: 1.08,
+        rotationSpeed: 0.12,
+        glow: 1.65,
+        float: 0.018
+      });
+
+      WINGS.forEach((wing) => {
+        const n = state.registry.get(wing);
+        const p = orbitWingPosition(wing);
+        n.visible = true;
+        setTarget(n, {
+          x: p[0],
+          y: p[1],
+          z: p[2] - 0.10,
+          sx: 0.60,
+          sy: 0.76,
+          sz: 0.60,
+          prominence: 0.42,
+          rotationSpeed: 0.08 * n.rotationBias,
+          glow: wing === "north" ? 0.78 : 0.42,
+          float: 0.006
+        });
+      });
+
+      return;
+    }
+
     if (!activeFlower) {
       setTarget(mirrorland, {
-        x: 0, y: 0, z: 0.04,
-        sx: 0.96, sy: 0.96, sz: 0.96,
+        x: 0,
+        y: 0,
+        z: 0.04,
+        sx: 0.96,
+        sy: 0.96,
+        sz: 0.96,
         prominence: 0.86,
         rotationSpeed: 0.10,
-        glow: 1.10
+        glow: 0.92,
+        float: 0.012
       });
 
       WINGS.forEach((wing) => {
         const n = state.registry.get(wing);
         const p = orbitWingPosition(wing);
         const focused = wing === focus;
-        const north = wing === "north";
+        const isNorthStar = wing === "north";
 
         n.visible = true;
         setTarget(n, {
           x: p[0],
           y: p[1],
-          z: focused ? 0.14 : p[2],
-          sx: focused ? 0.94 : 0.70,
-          sy: focused ? 1.14 : 0.90,
-          sz: focused ? 0.94 : 0.70,
+          z: focused ? 0.16 : p[2],
+          sx: focused ? 0.96 : 0.70,
+          sy: focused ? 1.16 : 0.90,
+          sz: focused ? 0.96 : 0.70,
           prominence: focused ? 1.0 : 0.62,
-          rotationSpeed: focused ? 0.16 * n.rotationBias : 0.10 * n.rotationBias,
-          glow: focused ? (north ? 2.65 : 1.80) : (north ? 1.65 : 0.95)
+          rotationSpeed: focused ? 0.15 * n.rotationBias : 0.09 * n.rotationBias,
+          glow: focused ? (isNorthStar ? 1.72 : 1.14) : (isNorthStar ? 1.05 : 0.62),
+          float: focused ? 0.018 : 0.008
         });
       });
 
@@ -777,11 +811,16 @@
     }
 
     setTarget(mirrorland, {
-      x: -1.72, y: -1.22, z: -1.46,
-      sx: 0.24, sy: 0.24, sz: 0.24,
-      prominence: 0.05,
-      rotationSpeed: 0.03,
-      glow: 0.16
+      x: -1.72,
+      y: -1.22,
+      z: -1.46,
+      sx: 0.23,
+      sy: 0.23,
+      sz: 0.23,
+      prominence: 0.045,
+      rotationSpeed: 0.025,
+      glow: 0.10,
+      float: 0
     });
 
     WINGS.forEach((wing) => {
@@ -790,22 +829,32 @@
       if (wing === state.selectedCardinal) {
         n.visible = true;
         setTarget(n, {
-          x: 0, y: 0, z: 0.10,
-          sx: 0.40, sy: 0.50, sz: 0.40,
-          prominence: 0.44,
-          rotationSpeed: 0.07 * n.rotationBias,
-          glow: wing === "north" ? 1.80 : 1.02
+          x: 0,
+          y: 0,
+          z: 0.08,
+          sx: 0.38,
+          sy: 0.48,
+          sz: 0.38,
+          prominence: 0.40,
+          rotationSpeed: 0.06 * n.rotationBias,
+          glow: wing === "north" ? 1.08 : 0.58,
+          float: 0.006
         });
         return;
       }
 
       n.visible = false;
       setTarget(n, {
-        x: 0, y: 0, z: -1.2,
-        sx: 0.14, sy: 0.14, sz: 0.14,
+        x: 0,
+        y: 0,
+        z: -1.2,
+        sx: 0.14,
+        sy: 0.14,
+        sz: 0.14,
         prominence: 0,
         rotationSpeed: 0.02,
-        glow: 0
+        glow: 0,
+        float: 0
       });
     });
 
@@ -818,36 +867,35 @@
       setTarget(n, {
         x: p[0],
         y: p[1],
-        z: selected ? 0.60 : p[2] + 0.12,
-        sx: selected ? 0.88 : 0.70,
-        sy: selected ? 0.88 : 0.70,
-        sz: selected ? 0.88 : 0.70,
-        prominence: selected ? 1.06 : 0.84,
-        rotationSpeed: selected ? 0.16 * n.rotationBias : 0.10 * n.rotationBias,
-        glow: selected ? 1.92 : 1.14
+        z: selected ? 0.68 : p[2] + 0.13,
+        sx: selected ? 0.92 : 0.70,
+        sy: selected ? 0.92 : 0.70,
+        sz: selected ? 0.92 : 0.70,
+        prominence: selected ? 1.10 : 0.86,
+        rotationSpeed: selected ? 0.15 * n.rotationBias : 0.09 * n.rotationBias,
+        glow: selected ? 1.28 : 0.76,
+        float: selected ? 0.018 : 0.010
       });
     });
   }
 
-  function lerp(a, b, t) {
-    return a + (b - a) * t;
-  }
+  function lerp(a, b, t) { return a + (b - a) * t; }
 
   function updateTransforms(dt) {
-    const speed = Math.min(1, dt * 6.5);
+    const speed = Math.min(1, dt * 6.1);
 
     state.registry.forEach((n) => {
       const a = n.transform;
       const b = n.target;
 
-      ["x", "y", "z", "sx", "sy", "sz", "prominence", "rotationSpeed", "glow"].forEach((k) => {
+      ["x", "y", "z", "sx", "sy", "sz", "prominence", "rotationSpeed", "glow", "float"].forEach((k) => {
         a[k] = lerp(a[k], b[k], speed);
       });
 
       if (!state.reducedMotion) {
         a.ry += dt * a.rotationSpeed;
-        a.rx += dt * a.rotationSpeed * 0.18;
-        a.rz += dt * a.rotationSpeed * 0.08;
+        a.rx += dt * a.rotationSpeed * 0.16;
+        a.rz += dt * a.rotationSpeed * 0.07;
       }
     });
   }
@@ -858,49 +906,38 @@
 
   function multiply4(a, b) {
     const out = new Array(16).fill(0);
-
     for (let r = 0; r < 4; r += 1) {
       for (let c = 0; c < 4; c += 1) {
-        for (let k = 0; k < 4; k += 1) {
-          out[c * 4 + r] += a[k * 4 + r] * b[c * 4 + k];
-        }
+        for (let k = 0; k < 4; k += 1) out[c * 4 + r] += a[k * 4 + r] * b[c * 4 + k];
       }
     }
-
     return out;
   }
 
   function translate4(x, y, z) {
     const m = identity4();
-    m[12] = x;
-    m[13] = y;
-    m[14] = z;
+    m[12] = x; m[13] = y; m[14] = z;
     return m;
   }
 
   function scale4(x, y, z) {
     const m = identity4();
-    m[0] = x;
-    m[5] = y;
-    m[10] = z;
+    m[0] = x; m[5] = y; m[10] = z;
     return m;
   }
 
   function rotateX4(a) {
-    const c = Math.cos(a);
-    const s = Math.sin(a);
+    const c = Math.cos(a), s = Math.sin(a);
     return [1, 0, 0, 0, 0, c, s, 0, 0, -s, c, 0, 0, 0, 0, 1];
   }
 
   function rotateY4(a) {
-    const c = Math.cos(a);
-    const s = Math.sin(a);
+    const c = Math.cos(a), s = Math.sin(a);
     return [c, 0, -s, 0, 0, 1, 0, 0, s, 0, c, 0, 0, 0, 0, 1];
   }
 
   function rotateZ4(a) {
-    const c = Math.cos(a);
-    const s = Math.sin(a);
+    const c = Math.cos(a), s = Math.sin(a);
     return [c, s, 0, 0, -s, c, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
   }
 
@@ -921,20 +958,27 @@
     return [model[0], model[1], model[2], model[4], model[5], model[6], model[8], model[9], model[10]];
   }
 
-  function modelMatrix(n) {
+  function modelMatrix(n, halo = false) {
     const t = n.transform;
+    const floatY = !state.reducedMotion ? Math.sin(state.time * 1.1 + n.roomIndex * 0.7 + n.rotationBias) * t.float : 0;
+    const haloScale = halo ? 1.10 + Math.max(0, t.glow) * 0.035 : 1;
     return multiply4(
-      translate4(t.x, t.y, t.z),
-      multiply4(rotateZ4(t.rz), multiply4(rotateY4(t.ry), multiply4(rotateX4(t.rx), scale4(t.sx, t.sy, t.sz))))
+      translate4(t.x, t.y + floatY, t.z),
+      multiply4(
+        rotateZ4(t.rz),
+        multiply4(
+          rotateY4(t.ry),
+          multiply4(
+            rotateX4(t.rx),
+            scale4(t.sx * haloScale, t.sy * haloScale, t.sz * haloScale)
+          )
+        )
+      )
     );
   }
 
   function transformPoint4(m, p) {
-    const x = p[0];
-    const y = p[1];
-    const z = p[2];
-    const w = p[3];
-
+    const x = p[0], y = p[1], z = p[2], w = p[3];
     return [
       m[0] * x + m[4] * y + m[8] * z + m[12] * w,
       m[1] * x + m[5] * y + m[9] * z + m[13] * w,
@@ -946,7 +990,7 @@
   function projectNode(n) {
     if (!state.view || !state.projection) return null;
 
-    const model = modelMatrix(n);
+    const model = modelMatrix(n, false);
     const mv = multiply4(state.view, model);
     const mvp = multiply4(state.projection, mv);
     const clip = transformPoint4(mvp, [0, 0, 0, 1]);
@@ -962,38 +1006,6 @@
       x: ((ndcX + 1) / 2) * state.width / state.pixelRatio,
       y: ((1 - ndcY) / 2) * state.height / state.pixelRatio
     };
-  }
-
-  function syncHaloNode(n) {
-    ensureHaloForNode(n);
-
-    if (!n.halo) return;
-
-    const screen = n.visible && n.transform.prominence > 0.04 ? projectNode(n) : null;
-
-    if (!screen) {
-      n.halo.style.opacity = "0";
-      return;
-    }
-
-    const glow = Math.max(0, n.transform.glow || 0);
-    const base =
-      n.type === "mirrorland" ? 210 :
-      n.type === "cardinal" ? 230 :
-      150;
-
-    const size = base * (0.55 + glow * 0.45) * Math.max(0.72, n.transform.sx);
-    const opacity =
-      n.type === "cardinal" && n.wing === "north"
-        ? Math.min(0.92, glow * n.transform.prominence * 0.34)
-        : Math.min(0.72, glow * n.transform.prominence * 0.28);
-
-    n.halo.style.width = size + "px";
-    n.halo.style.height = size + "px";
-    n.halo.style.left = screen.x + "px";
-    n.halo.style.top = screen.y + "px";
-    n.halo.style.opacity = String(opacity);
-    n.halo.style.transform = "translate(-50%, -50%) scale(" + (0.92 + glow * 0.08) + ")";
   }
 
   function semanticElementForNode(n) {
@@ -1050,11 +1062,13 @@
       return;
     }
 
-    const activeFlower = state.flowerExpanded && state.selectedCardinal;
+    const activeFlower = state.flowerExpanded && state.selectedCardinal && state.selectedDestinationType !== "mirrorland";
+    const isMirrorlandSelected = state.selectedDestinationType === "mirrorland" && n.type === "mirrorland";
     const isSelectedAnchor = activeFlower && n.type === "cardinal" && n.wing === state.selectedCardinal;
-    const isFocusedCardinal = !activeFlower && n.type === "cardinal" && n.wing === (state.orbitFocus || "north");
+    const isFocusedCardinal = !activeFlower && !state.selectedDestinationType && n.type === "cardinal" && n.wing === (state.orbitFocus || "north");
 
     const scale =
+      isMirrorlandSelected ? 0.98 :
       n.type === "mirrorland" ? 0.90 :
       isSelectedAnchor ? 0.62 :
       isFocusedCardinal ? 0.94 :
@@ -1068,8 +1082,7 @@
     el.style.transform = "translate(-50%, -50%) scale(" + scale + ")";
     el.style.opacity = String(Math.max(0, Math.min(1, n.transform.prominence)));
     el.style.pointerEvents = n.transform.prominence >= 0.18 ? "auto" : "none";
-    el.style.zIndex = n.type === "petal" ? "5" : isSelectedAnchor ? "4" : "3";
-    el.style.textShadow = "0 0 14px rgba(255,248,224,0.26), 0 0 24px rgba(120,190,255,0.18)";
+    el.style.zIndex = n.type === "petal" ? "5" : isMirrorlandSelected ? "6" : isSelectedAnchor ? "4" : "3";
   }
 
   function syncInstructionCopy() {
@@ -1080,7 +1093,7 @@
     const panelRelationship = state.root.querySelector("[data-compass-panel-relationship]");
     const note = state.root.querySelector(".compass-accessibility-note");
 
-    if (!state.flowerExpanded && !state.selectedRoom) {
+    if (!state.flowerExpanded && !state.selectedRoom && state.selectedDestinationType !== "mirrorland") {
       if (panelTitle && panelTitle.textContent.trim() === "Choose a direction") {
         panelTitle.textContent = "Choose a coordinate";
       }
@@ -1099,14 +1112,9 @@
 
   function syncSemanticObjects() {
     if (!state.surface || !state.root) return;
-
-    state.registry.forEach((n) => {
-      syncHaloNode(n);
-      syncSemanticNode(n);
-    });
-
+    state.registry.forEach(syncSemanticNode);
     syncInstructionCopy();
-    emitReceipt({ semanticSyncStatus: "active", starGlowStatus: "active-real-halo" });
+    emitReceipt({ semanticSyncStatus: "active" });
   }
 
   function classifyGesture(start, end) {
@@ -1233,7 +1241,7 @@
 
     let best = null;
     let bestDistance = Infinity;
-    const hitRadius = Math.max(42, Math.min(76, rect.width * 0.086));
+    const hitRadius = Math.max(38, Math.min(70, rect.width * 0.08));
 
     state.registry.forEach((n) => {
       if (!n.visible || n.transform.prominence < 0.12) return;
@@ -1247,8 +1255,8 @@
 
       const localRadius =
         n.type === "mirrorland" || n.type === "cardinal"
-          ? hitRadius * 1.22
-          : hitRadius * 1.14;
+          ? hitRadius * 1.16
+          : hitRadius * 1.10;
 
       if (d < bestDistance && d <= localRadius) {
         best = n;
@@ -1406,7 +1414,7 @@
     gl.vertexAttribPointer(location, size, gl.FLOAT, false, 0, 0);
   }
 
-  function drawNode(n) {
+  function drawNode(n, haloPass) {
     if (!n.visible && n.transform.prominence < 0.03) return;
 
     const gl = state.gl;
@@ -1417,7 +1425,7 @@
     bindAttrib(gl, mesh.normal, state.attribs.normal, 3);
     bindAttrib(gl, mesh.color, state.attribs.color, 3);
 
-    const model = modelMatrix(n);
+    const model = modelMatrix(n, haloPass);
     const glow = Math.max(0, n.transform.glow || 0);
 
     gl.uniformMatrix4fv(state.uniforms.model, false, new Float32Array(model));
@@ -1426,6 +1434,8 @@
     gl.uniformMatrix3fv(state.uniforms.normalMatrix, false, new Float32Array(normalMatrix3(model)));
     gl.uniform1f(state.uniforms.prominence, Math.max(0, n.transform.prominence));
     gl.uniform1f(state.uniforms.glowStrength, glow);
+    gl.uniform1f(state.uniforms.haloPass, haloPass ? 1 : 0);
+    gl.uniform1f(state.uniforms.time, state.time);
     gl.uniform3f(state.uniforms.glowColor, n.glowColor[0], n.glowColor[1], n.glowColor[2]);
 
     gl.drawArrays(gl.TRIANGLES, 0, mesh.vertexCount);
@@ -1437,6 +1447,7 @@
     const t = now * 0.001;
     const dt = state.lastTime ? Math.min(0.05, t - state.lastTime) : 0.016;
     state.lastTime = t;
+    state.time = t;
 
     readControllerState();
     updateOrbitAngle(dt);
@@ -1450,23 +1461,33 @@
 
     const aspect = state.width / Math.max(1, state.height);
     const cameraZ = aspect < 0.8 ? 8.2 : 6.7;
+    const mirrorlandSelected = state.selectedDestinationType === "mirrorland";
+    const cameraY = mirrorlandSelected ? 0.66 : 0.70;
 
-    state.view = lookAt4([0, 0.70, cameraZ], [0, 0, 0], [0, 1, 0]);
+    state.view = lookAt4([0, cameraY, cameraZ], [0, 0, 0], [0, 1, 0]);
     state.projection = perspective4(Math.PI / 4.8, aspect, 0.1, 40);
 
     syncSemanticObjects();
 
     gl.useProgram(state.program);
-    gl.uniform3f(state.uniforms.keyLightDirection, -0.4, -0.8, -0.7);
-    gl.uniform3f(state.uniforms.fillLightDirection, 0.7, -0.35, -0.55);
-    gl.uniform3f(state.uniforms.rimLightDirection, 0.1, 0.4, 1.0);
-    gl.uniform1f(state.uniforms.ambientStrength, 0.28);
+    gl.uniform3f(state.uniforms.keyLightDirection, -0.36, -0.84, -0.70);
+    gl.uniform3f(state.uniforms.fillLightDirection, 0.72, -0.34, -0.52);
+    gl.uniform3f(state.uniforms.rimLightDirection, 0.08, 0.38, 1.0);
+    gl.uniform1f(state.uniforms.ambientStrength, 0.26);
 
     let visible = 0;
 
+    gl.depthMask(false);
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
+    state.registry.forEach((n) => {
+      if (n.visible && n.transform.prominence > 0.04) drawNode(n, true);
+    });
+
+    gl.depthMask(true);
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
     state.registry.forEach((n) => {
       if (n.visible && n.transform.prominence > 0.04) visible += 1;
-      drawNode(n);
+      drawNode(n, false);
     });
 
     emitReceipt({
@@ -1499,13 +1520,9 @@
     try {
       state.root = findRoot();
       const mount = findCanvasMount(state.root);
-      state.haloLayer = ensureHaloLayer(mount);
       state.canvas = ensureCanvas(mount);
 
-      emitReceipt({
-        canvasMountStatus: "found",
-        haloLayerStatus: state.haloLayer ? "created" : "missing"
-      });
+      emitReceipt({ canvasMountStatus: "found" });
 
       const gl = getGL(state.canvas);
       if (!gl) {
@@ -1539,6 +1556,8 @@
         prominence: gl.getUniformLocation(state.program, "uProminence"),
         glowStrength: gl.getUniformLocation(state.program, "uGlowStrength"),
         glowColor: gl.getUniformLocation(state.program, "uGlowColor"),
+        haloPass: gl.getUniformLocation(state.program, "uHaloPass"),
+        time: gl.getUniformLocation(state.program, "uTime"),
         keyLightDirection: gl.getUniformLocation(state.program, "uKeyLightDirection"),
         fillLightDirection: gl.getUniformLocation(state.program, "uFillLightDirection"),
         rimLightDirection: gl.getUniformLocation(state.program, "uRimLightDirection"),

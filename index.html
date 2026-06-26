@@ -2,7 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1"
+  >
 
   <title>Diamond Gate Bridge Compass</title>
 
@@ -13,7 +17,7 @@
 
   <link
     rel="stylesheet"
-    href="/assets/compass/compass.css"
+    href="/assets/compass/compass.css?v=dgb-compass-mirrorland-reconstruction-v1"
   >
 </head>
 
@@ -22,6 +26,8 @@
     id="compass"
     class="compass-estate"
     data-compass-root
+    data-compass-contract-version="DGB_COMPASS_MIRRORLAND_FROZEN_CROSS_FILE_ARCHITECTURE_PACKET_v1"
+    data-compass-release="DGB_COMPASS_MIRRORLAND_SUBSYSTEM_RECONSTRUCTION_RELEASE_v1"
     data-compass-mode="COMPASS_MODE"
     data-orbit-focus=""
     data-selected-cardinal=""
@@ -30,17 +36,22 @@
     data-selected-destination-type=""
     data-selected-destination-id=""
     data-selected-destination-label=""
+    data-coordinate-function=""
+    data-local-coordinate=""
+    data-local-function=""
     data-flower-expanded="false"
     data-panel-descended="false"
     data-reduced-motion="false"
-    data-visual-pass-claimed="false"
+    data-compass-guidance-state="constellation"
+    data-compass-guidance-copy="Swipe to rotate the constellation. Tap a star or label to open its cluster."
     data-mirrorland-window-state="dormant"
     data-mirrorland-window-active="false"
     data-mirrorland-window-stable="false"
     data-mirrorland-enter-enabled="false"
     data-mirrorland-back-enabled="false"
-    data-preserved-orbit-focus=""
     data-mirrorland-transition-id="0"
+    data-preserved-orbit-focus=""
+    data-visual-pass-claimed="false"
   >
     <section
       class="compass-estate__hall"
@@ -130,6 +141,7 @@
                 aria-selected="true"
                 aria-controls="collapse-practical"
                 data-compass-lens-tab="practical"
+                data-compass-territory="panel-control"
               >
                 Practical
               </button>
@@ -141,6 +153,7 @@
                 aria-selected="false"
                 aria-controls="collapse-engineering"
                 data-compass-lens-tab="engineering"
+                data-compass-territory="panel-control"
               >
                 Engineering
               </button>
@@ -152,6 +165,7 @@
                 aria-selected="false"
                 aria-controls="collapse-evidence"
                 data-compass-lens-tab="evidence"
+                data-compass-territory="panel-control"
               >
                 Evidence
               </button>
@@ -259,7 +273,7 @@
         </h2>
 
         <p>
-          Tap a star to open its cluster. Tap a cluster star to inspect its path. Swipe or use Return To Orbit to return to the cluster.
+          Tap a star to open its cluster. Tap a cluster star to inspect its path. Swipe empty space to rotate the constellation or return from an open cluster.
         </p>
       </section>
 
@@ -268,16 +282,17 @@
         class="compass-scene"
         aria-label="Estate navigation compass"
         data-compass-scene
+        data-compass-gesture-surface
       >
         <div
-          class="compass-scene__mirrorland-window"
-          data-compass-mirrorland-window-mount
+          class="compass-scene__visual"
+          data-compass-crystals-mount
           aria-hidden="true"
         ></div>
 
         <div
-          class="compass-scene__visual"
-          data-compass-crystals-mount
+          class="compass-scene__mirrorland-window"
+          data-compass-mirrorland-window-mount
           aria-hidden="true"
         ></div>
 
@@ -288,10 +303,13 @@
           <a
             class="compass-object compass-object--mirrorland"
             href="/showroom/"
+            aria-label="Mirrorland Threshold"
             aria-controls="compass-entry-panel"
             aria-expanded="false"
+            aria-disabled="false"
             data-compass-object="mirrorland"
             data-compass-destination
+            data-compass-territory="mirrorland"
             data-destination-type="mirrorland"
             data-destination-id="mirrorland"
             data-label="Mirrorland"
@@ -318,6 +336,7 @@
             data-compass-wing
             data-compass-cardinal
             data-compass-destination
+            data-compass-territory="cardinal"
             data-wing="north"
             data-cardinal-id="north"
             data-destination-type="cardinal"
@@ -347,6 +366,7 @@
             data-compass-wing
             data-compass-cardinal
             data-compass-destination
+            data-compass-territory="cardinal"
             data-wing="east"
             data-cardinal-id="east"
             data-destination-type="cardinal"
@@ -376,6 +396,7 @@
             data-compass-wing
             data-compass-cardinal
             data-compass-destination
+            data-compass-territory="cardinal"
             data-wing="south"
             data-cardinal-id="south"
             data-destination-type="cardinal"
@@ -405,6 +426,7 @@
             data-compass-wing
             data-compass-cardinal
             data-compass-destination
+            data-compass-territory="cardinal"
             data-wing="west"
             data-cardinal-id="west"
             data-destination-type="cardinal"
@@ -427,357 +449,439 @@
               Build next
             </span>
           </button>
+
+          <div
+            class="compass-room-group"
+            data-wing-group="north"
+            data-title="Orientation"
+          >
+            <a
+              class="compass-object compass-object--room"
+              data-compass-room
+              data-compass-destination
+              data-compass-territory="room"
+              data-destination-type="petal"
+              data-wing="north"
+              data-room-id="north-1"
+              data-label="Compass Desk"
+              data-route="/"
+              data-local-coordinate="Path"
+              data-local-function="Reset orientation."
+              data-preview="Return to the desk where orientation begins."
+              data-why-enter="Inspect this path, then enter when ready."
+              href="/"
+              hidden
+            >
+              <span>Compass Desk</span>
+              <span>Reset orientation</span>
+            </a>
+
+            <a
+              class="compass-object compass-object--room"
+              data-compass-room
+              data-compass-destination
+              data-compass-territory="room"
+              data-destination-type="petal"
+              data-wing="north"
+              data-room-id="north-2"
+              data-label="Guide Desk"
+              data-route="/site-guide/"
+              data-local-coordinate="Path"
+              data-local-function="Read the estate map."
+              data-preview="Read the map before walking deeper."
+              data-why-enter="Inspect this path, then enter when ready."
+              href="/site-guide/"
+              hidden
+            >
+              <span>Guide Desk</span>
+              <span>Read the map</span>
+            </a>
+
+            <a
+              class="compass-object compass-object--room"
+              data-compass-room
+              data-compass-destination
+              data-compass-territory="room"
+              data-destination-type="petal"
+              data-wing="north"
+              data-room-id="north-3"
+              data-label="Front Door"
+              data-route="/door/"
+              data-local-coordinate="Path"
+              data-local-function="Cross the formal threshold."
+              data-preview="Cross the formal threshold."
+              data-why-enter="Inspect this path, then enter when ready."
+              href="/door/"
+              hidden
+            >
+              <span>Front Door</span>
+              <span>Enter formally</span>
+            </a>
+
+            <a
+              class="compass-object compass-object--room"
+              data-compass-room
+              data-compass-destination
+              data-compass-territory="room"
+              data-destination-type="petal"
+              data-wing="north"
+              data-room-id="north-4"
+              data-label="About Sean"
+              data-route="/about-this-underdog/"
+              data-local-coordinate="Path"
+              data-local-function="Understand the human origin."
+              data-preview="Understand the builder, the journey, and the pressure that shaped the work."
+              data-why-enter="Inspect this path, then enter when ready."
+              href="/about-this-underdog/"
+              hidden
+            >
+              <span>About Sean</span>
+              <span>Builder context</span>
+            </a>
+
+            <a
+              class="compass-object compass-object--room"
+              data-compass-room
+              data-compass-destination
+              data-compass-territory="room"
+              data-destination-type="petal"
+              data-wing="north"
+              data-room-id="north-5"
+              data-label="Philosophy Library"
+              data-route="/nine-summits-of-love/"
+              data-local-coordinate="Path"
+              data-local-function="Enter the deeper philosophy."
+              data-preview="Explore love, coherence, conviction, and the higher-self path beneath the estate."
+              data-why-enter="Inspect this path, then enter when ready."
+              href="/nine-summits-of-love/"
+              hidden
+            >
+              <span>Philosophy Library</span>
+              <span>Founding thought</span>
+            </a>
+          </div>
+
+          <div
+            class="compass-room-group"
+            data-wing-group="east"
+            data-title="Worlds"
+          >
+            <a
+              class="compass-object compass-object--room"
+              data-compass-room
+              data-compass-destination
+              data-compass-territory="room"
+              data-destination-type="petal"
+              data-wing="east"
+              data-room-id="east-1"
+              data-label="Atlas Study"
+              data-route="/showroom/globe/"
+              data-local-coordinate="Path"
+              data-local-function="Open the worlds."
+              data-preview="Open the map of worlds."
+              data-why-enter="Inspect this path, then enter when ready."
+              href="/showroom/globe/"
+              hidden
+            >
+              <span>Atlas Study</span>
+              <span>Open worlds</span>
+            </a>
+
+            <a
+              class="compass-object compass-object--room"
+              data-compass-room
+              data-compass-destination
+              data-compass-territory="room"
+              data-destination-type="petal"
+              data-wing="east"
+              data-room-id="east-2"
+              data-label="ZIONTS"
+              data-route="/showroom/globe/earth/"
+              data-local-coordinate="Path"
+              data-local-function="Inspect the warning-path world."
+              data-preview="Inspect Earth as a warning-path world."
+              data-why-enter="Inspect this path, then enter when ready."
+              href="/showroom/globe/earth/"
+              hidden
+            >
+              <span>ZIONTS</span>
+              <span>Earth warning-path</span>
+            </a>
+
+            <a
+              class="compass-object compass-object--room"
+              data-compass-room
+              data-compass-destination
+              data-compass-territory="room"
+              data-destination-type="petal"
+              data-wing="east"
+              data-room-id="east-3"
+              data-label="Audralia Conservatory"
+              data-route="/showroom/globe/audralia/"
+              data-local-coordinate="Path"
+              data-local-function="Study diagnostic civilization."
+              data-preview="Explore Audralia as a diagnostic conservatory for intelligence, integrity, and system behavior."
+              data-why-enter="Inspect this path, then enter when ready."
+              href="/showroom/globe/audralia/"
+              hidden
+            >
+              <span>Audralia Conservatory</span>
+              <span>Diagnostic civilization</span>
+            </a>
+
+            <a
+              class="compass-object compass-object--room"
+              data-compass-room
+              data-compass-destination
+              data-compass-territory="room"
+              data-destination-type="petal"
+              data-wing="east"
+              data-room-id="east-4"
+              data-label="Hearth"
+              data-route="/showroom/globe/hearth/"
+              data-local-coordinate="Path"
+              data-local-function="Visit a living diagnostic chamber."
+              data-preview="Visit Hearth as a living diagnostic chamber for worlds, systems, and future habitat."
+              data-why-enter="Inspect this path, then enter when ready."
+              href="/showroom/globe/hearth/"
+              hidden
+            >
+              <span>Hearth</span>
+              <span>Diagnostic chamber</span>
+            </a>
+
+            <a
+              class="compass-object compass-object--room"
+              data-compass-room
+              data-compass-destination
+              data-compass-territory="room"
+              data-destination-type="petal"
+              data-wing="east"
+              data-room-id="east-5"
+              data-label="H-Earth"
+              data-route="/showroom/globe/h-earth/"
+              data-local-coordinate="Path"
+              data-local-function="Compare parallel Earth expression."
+              data-preview="Open the parallel world room and compare another expression of Earth."
+              data-why-enter="Inspect this path, then enter when ready."
+              href="/showroom/globe/h-earth/"
+              hidden
+            >
+              <span>H-Earth</span>
+              <span>Parallel world</span>
+            </a>
+          </div>
+
+          <div
+            class="compass-room-group"
+            data-wing-group="south"
+            data-title="Instruments"
+          >
+            <a
+              class="compass-object compass-object--room"
+              data-compass-room
+              data-compass-destination
+              data-compass-territory="room"
+              data-destination-type="petal"
+              data-wing="south"
+              data-room-id="south-1"
+              data-label="The Lab"
+              data-route="/gauges/"
+              data-local-coordinate="Path"
+              data-local-function="Inspect measurement surfaces."
+              data-preview="Inspect gauges, measures, and diagnostic surfaces."
+              data-why-enter="Inspect this path, then enter when ready."
+              href="/gauges/"
+              hidden
+            >
+              <span>The Lab</span>
+              <span>Use instruments</span>
+            </a>
+
+            <a
+              class="compass-object compass-object--room"
+              data-compass-room
+              data-compass-destination
+              data-compass-territory="room"
+              data-destination-type="petal"
+              data-wing="south"
+              data-room-id="south-2"
+              data-label="Law Library"
+              data-route="/laws/"
+              data-local-coordinate="Path"
+              data-local-function="Read governing standards."
+              data-preview="Read the laws and standards that hold the system together."
+              data-why-enter="Inspect this path, then enter when ready."
+              href="/laws/"
+              hidden
+            >
+              <span>Law Library</span>
+              <span>Read standards</span>
+            </a>
+
+            <a
+              class="compass-object compass-object--room"
+              data-compass-room
+              data-compass-destination
+              data-compass-territory="room"
+              data-destination-type="petal"
+              data-wing="south"
+              data-room-id="south-3"
+              data-label="Council Room"
+              data-route="/governance/"
+              data-local-coordinate="Path"
+              data-local-function="Inspect authority and coordination."
+              data-preview="Explore governance, decisions, authority, and coordination logic."
+              data-why-enter="Inspect this path, then enter when ready."
+              href="/governance/"
+              hidden
+            >
+              <span>Council Room</span>
+              <span>Inspect authority</span>
+            </a>
+
+            <a
+              class="compass-object compass-object--room"
+              data-compass-room
+              data-compass-destination
+              data-compass-territory="room"
+              data-destination-type="petal"
+              data-wing="south"
+              data-room-id="south-4"
+              data-label="Control Cockpit"
+              data-route="/showroom/globe/audralia/disposition/"
+              data-local-coordinate="Path"
+              data-local-function="Operate diagnostic direction."
+              data-preview="Open the control surface for Audralia disposition and diagnostic direction."
+              data-why-enter="Inspect this path, then enter when ready."
+              href="/showroom/globe/audralia/disposition/"
+              hidden
+            >
+              <span>Control Cockpit</span>
+              <span>Operate controls</span>
+            </a>
+          </div>
+
+          <div
+            class="compass-room-group"
+            data-wing-group="west"
+            data-title="Frontier"
+          >
+            <a
+              class="compass-object compass-object--room"
+              data-compass-room
+              data-compass-destination
+              data-compass-territory="room"
+              data-destination-type="petal"
+              data-wing="west"
+              data-room-id="west-1"
+              data-label="Frontier Workshop Yard"
+              data-route="/explore/frontier/"
+              data-local-coordinate="Path"
+              data-local-function="Enter the workshop edge."
+              data-preview="Enter the workshop edge where future systems begin taking shape."
+              data-why-enter="Inspect this path, then enter when ready."
+              href="/explore/frontier/"
+              hidden
+            >
+              <span>Frontier Workshop Yard</span>
+              <span>Workshop edge</span>
+            </a>
+
+            <a
+              class="compass-object compass-object--room"
+              data-compass-room
+              data-compass-destination
+              data-compass-territory="room"
+              data-destination-type="petal"
+              data-wing="west"
+              data-room-id="west-2"
+              data-label="Energy Bench"
+              data-route="/explore/frontier/energy/"
+              data-local-coordinate="Path"
+              data-local-function="Inspect power and motion."
+              data-preview="Inspect power, motion, and frontier utility."
+              data-why-enter="Inspect this path, then enter when ready."
+              href="/explore/frontier/energy/"
+              hidden
+            >
+              <span>Energy Bench</span>
+              <span>Inspect power</span>
+            </a>
+
+            <a
+              class="compass-object compass-object--room"
+              data-compass-room
+              data-compass-destination
+              data-compass-territory="room"
+              data-destination-type="petal"
+              data-wing="west"
+              data-room-id="west-3"
+              data-label="Water Bench"
+              data-route="/explore/frontier/water/"
+              data-local-coordinate="Path"
+              data-local-function="Inspect flow and support."
+              data-preview="Inspect water systems, flow, support, and frontier infrastructure."
+              data-why-enter="Inspect this path, then enter when ready."
+              href="/explore/frontier/water/"
+              hidden
+            >
+              <span>Water Bench</span>
+              <span>Inspect flow</span>
+            </a>
+
+            <a
+              class="compass-object compass-object--room"
+              data-compass-room
+              data-compass-destination
+              data-compass-territory="room"
+              data-destination-type="petal"
+              data-wing="west"
+              data-room-id="west-4"
+              data-label="Infrastructure Bay"
+              data-route="/explore/frontier/infrastructure/"
+              data-local-coordinate="Path"
+              data-local-function="Inspect structural support."
+              data-preview="Explore structural systems that could support future worlds and tools."
+              data-why-enter="Inspect this path, then enter when ready."
+              href="/explore/frontier/infrastructure/"
+              hidden
+            >
+              <span>Infrastructure Bay</span>
+              <span>Inspect support</span>
+            </a>
+
+            <a
+              class="compass-object compass-object--room"
+              data-compass-room
+              data-compass-destination
+              data-compass-territory="room"
+              data-destination-type="petal"
+              data-wing="west"
+              data-room-id="west-5"
+              data-label="Vision Window"
+              data-route="/explore/frontier/vision/"
+              data-local-coordinate="Path"
+              data-local-function="Look toward the next horizon."
+              data-preview="Look ahead at direction, purpose, and the next horizon of the estate."
+              data-why-enter="Inspect this path, then enter when ready."
+              href="/explore/frontier/vision/"
+              hidden
+            >
+              <span>Vision Window</span>
+              <span>See horizon</span>
+            </a>
+          </div>
         </div>
       </section>
 
-      <section
-        class="compass-rooms"
-        data-compass-room-declarations
-        hidden
+      <p
+        class="compass-scene-guidance"
+        data-compass-guidance
+        aria-live="polite"
       >
-        <div
-          data-wing-group="north"
-          data-title="Orientation"
-        >
-          <a
-            data-compass-room
-            data-compass-destination
-            data-destination-type="petal"
-            data-wing="north"
-            data-room-id="north-1"
-            data-label="Compass Desk"
-            data-route="/"
-            data-local-coordinate="Path"
-            data-local-function="Reset orientation."
-            data-preview="Return to the desk where orientation begins."
-            data-why-enter="Inspect this path, then enter when ready."
-            href="/"
-          >
-            Compass Desk
-          </a>
-
-          <a
-            data-compass-room
-            data-compass-destination
-            data-destination-type="petal"
-            data-wing="north"
-            data-room-id="north-2"
-            data-label="Guide Desk"
-            data-route="/site-guide/"
-            data-local-coordinate="Path"
-            data-local-function="Read the estate map."
-            data-preview="Read the map before walking deeper."
-            data-why-enter="Inspect this path, then enter when ready."
-            href="/site-guide/"
-          >
-            Guide Desk
-          </a>
-
-          <a
-            data-compass-room
-            data-compass-destination
-            data-destination-type="petal"
-            data-wing="north"
-            data-room-id="north-3"
-            data-label="Front Door"
-            data-route="/door/"
-            data-local-coordinate="Path"
-            data-local-function="Cross the formal threshold."
-            data-preview="Cross the formal threshold."
-            data-why-enter="Inspect this path, then enter when ready."
-            href="/door/"
-          >
-            Front Door
-          </a>
-
-          <a
-            data-compass-room
-            data-compass-destination
-            data-destination-type="petal"
-            data-wing="north"
-            data-room-id="north-4"
-            data-label="About Sean"
-            data-route="/about-this-underdog/"
-            data-local-coordinate="Path"
-            data-local-function="Understand the human origin."
-            data-preview="Understand the builder, the journey, and the pressure that shaped the work."
-            data-why-enter="Inspect this path, then enter when ready."
-            href="/about-this-underdog/"
-          >
-            About Sean
-          </a>
-
-          <a
-            data-compass-room
-            data-compass-destination
-            data-destination-type="petal"
-            data-wing="north"
-            data-room-id="north-5"
-            data-label="Philosophy Library"
-            data-route="/nine-summits-of-love/"
-            data-local-coordinate="Path"
-            data-local-function="Enter the deeper philosophy."
-            data-preview="Explore love, coherence, conviction, and the higher-self path beneath the estate."
-            data-why-enter="Inspect this path, then enter when ready."
-            href="/nine-summits-of-love/"
-          >
-            Philosophy Library
-          </a>
-        </div>
-
-        <div
-          data-wing-group="east"
-          data-title="Worlds"
-        >
-          <a
-            data-compass-room
-            data-compass-destination
-            data-destination-type="petal"
-            data-wing="east"
-            data-room-id="east-1"
-            data-label="Atlas Study"
-            data-route="/showroom/globe/"
-            data-local-coordinate="Path"
-            data-local-function="Open the worlds."
-            data-preview="Open the map of worlds."
-            data-why-enter="Inspect this path, then enter when ready."
-            href="/showroom/globe/"
-          >
-            Atlas Study
-          </a>
-
-          <a
-            data-compass-room
-            data-compass-destination
-            data-destination-type="petal"
-            data-wing="east"
-            data-room-id="east-2"
-            data-label="ZIONTS"
-            data-route="/showroom/globe/earth/"
-            data-local-coordinate="Path"
-            data-local-function="Inspect the warning-path world."
-            data-preview="Inspect Earth as a warning-path world."
-            data-why-enter="Inspect this path, then enter when ready."
-            href="/showroom/globe/earth/"
-          >
-            ZIONTS
-          </a>
-
-          <a
-            data-compass-room
-            data-compass-destination
-            data-destination-type="petal"
-            data-wing="east"
-            data-room-id="east-3"
-            data-label="Audralia Conservatory"
-            data-route="/showroom/globe/audralia/"
-            data-local-coordinate="Path"
-            data-local-function="Study diagnostic civilization."
-            data-preview="Explore Audralia as a diagnostic conservatory for intelligence, integrity, and system behavior."
-            data-why-enter="Inspect this path, then enter when ready."
-            href="/showroom/globe/audralia/"
-          >
-            Audralia Conservatory
-          </a>
-
-          <a
-            data-compass-room
-            data-compass-destination
-            data-destination-type="petal"
-            data-wing="east"
-            data-room-id="east-4"
-            data-label="Hearth"
-            data-route="/showroom/globe/hearth/"
-            data-local-coordinate="Path"
-            data-local-function="Visit a living diagnostic chamber."
-            data-preview="Visit Hearth as a living diagnostic chamber for worlds, systems, and future habitat."
-            data-why-enter="Inspect this path, then enter when ready."
-            href="/showroom/globe/hearth/"
-          >
-            Hearth
-          </a>
-
-          <a
-            data-compass-room
-            data-compass-destination
-            data-destination-type="petal"
-            data-wing="east"
-            data-room-id="east-5"
-            data-label="H-Earth"
-            data-route="/showroom/globe/h-earth/"
-            data-local-coordinate="Path"
-            data-local-function="Compare parallel Earth expression."
-            data-preview="Open the parallel world room and compare another expression of Earth."
-            data-why-enter="Inspect this path, then enter when ready."
-            href="/showroom/globe/h-earth/"
-          >
-            H-Earth
-          </a>
-        </div>
-
-        <div
-          data-wing-group="south"
-          data-title="Instruments"
-        >
-          <a
-            data-compass-room
-            data-compass-destination
-            data-destination-type="petal"
-            data-wing="south"
-            data-room-id="south-1"
-            data-label="The Lab"
-            data-route="/gauges/"
-            data-local-coordinate="Path"
-            data-local-function="Inspect measurement surfaces."
-            data-preview="Inspect gauges, measures, and diagnostic surfaces."
-            data-why-enter="Inspect this path, then enter when ready."
-            href="/gauges/"
-          >
-            The Lab
-          </a>
-
-          <a
-            data-compass-room
-            data-compass-destination
-            data-destination-type="petal"
-            data-wing="south"
-            data-room-id="south-2"
-            data-label="Law Library"
-            data-route="/laws/"
-            data-local-coordinate="Path"
-            data-local-function="Read governing standards."
-            data-preview="Read the laws and standards that hold the system together."
-            data-why-enter="Inspect this path, then enter when ready."
-            href="/laws/"
-          >
-            Law Library
-          </a>
-
-          <a
-            data-compass-room
-            data-compass-destination
-            data-destination-type="petal"
-            data-wing="south"
-            data-room-id="south-3"
-            data-label="Council Room"
-            data-route="/governance/"
-            data-local-coordinate="Path"
-            data-local-function="Inspect authority and coordination."
-            data-preview="Explore governance, decisions, authority, and coordination logic."
-            data-why-enter="Inspect this path, then enter when ready."
-            href="/governance/"
-          >
-            Council Room
-          </a>
-
-          <a
-            data-compass-room
-            data-compass-destination
-            data-destination-type="petal"
-            data-wing="south"
-            data-room-id="south-4"
-            data-label="Control Cockpit"
-            data-route="/showroom/globe/audralia/disposition/"
-            data-local-coordinate="Path"
-            data-local-function="Operate diagnostic direction."
-            data-preview="Open the control surface for Audralia disposition and diagnostic direction."
-            data-why-enter="Inspect this path, then enter when ready."
-            href="/showroom/globe/audralia/disposition/"
-          >
-            Control Cockpit
-          </a>
-        </div>
-
-        <div
-          data-wing-group="west"
-          data-title="Frontier"
-        >
-          <a
-            data-compass-room
-            data-compass-destination
-            data-destination-type="petal"
-            data-wing="west"
-            data-room-id="west-1"
-            data-label="Frontier Workshop Yard"
-            data-route="/explore/frontier/"
-            data-local-coordinate="Path"
-            data-local-function="Enter the workshop edge."
-            data-preview="Enter the workshop edge where future systems begin taking shape."
-            data-why-enter="Inspect this path, then enter when ready."
-            href="/explore/frontier/"
-          >
-            Frontier Workshop Yard
-          </a>
-
-          <a
-            data-compass-room
-            data-compass-destination
-            data-destination-type="petal"
-            data-wing="west"
-            data-room-id="west-2"
-            data-label="Energy Bench"
-            data-route="/explore/frontier/energy/"
-            data-local-coordinate="Path"
-            data-local-function="Inspect power and motion."
-            data-preview="Inspect power, motion, and frontier utility."
-            data-why-enter="Inspect this path, then enter when ready."
-            href="/explore/frontier/energy/"
-          >
-            Energy Bench
-          </a>
-
-          <a
-            data-compass-room
-            data-compass-destination
-            data-destination-type="petal"
-            data-wing="west"
-            data-room-id="west-3"
-            data-label="Water Bench"
-            data-route="/explore/frontier/water/"
-            data-local-coordinate="Path"
-            data-local-function="Inspect flow and support."
-            data-preview="Inspect water systems, flow, support, and frontier infrastructure."
-            data-why-enter="Inspect this path, then enter when ready."
-            href="/explore/frontier/water/"
-          >
-            Water Bench
-          </a>
-
-          <a
-            data-compass-room
-            data-compass-destination
-            data-destination-type="petal"
-            data-wing="west"
-            data-room-id="west-4"
-            data-label="Infrastructure Bay"
-            data-route="/explore/frontier/infrastructure/"
-            data-local-coordinate="Path"
-            data-local-function="Inspect structural support."
-            data-preview="Explore structural systems that could support future worlds and tools."
-            data-why-enter="Inspect this path, then enter when ready."
-            href="/explore/frontier/infrastructure/"
-          >
-            Infrastructure Bay
-          </a>
-
-          <a
-            data-compass-room
-            data-compass-destination
-            data-destination-type="petal"
-            data-wing="west"
-            data-room-id="west-5"
-            data-label="Vision Window"
-            data-route="/explore/frontier/vision/"
-            data-local-coordinate="Path"
-            data-local-function="Look toward the next horizon."
-            data-preview="Look ahead at direction, purpose, and the next horizon of the estate."
-            data-why-enter="Inspect this path, then enter when ready."
-            href="/explore/frontier/vision/"
-          >
-            Vision Window
-          </a>
-        </div>
-      </section>
+        Swipe empty space to rotate the constellation. Tap a star or label to open its cluster. Activate the center Window to reveal Mirrorland.
+      </p>
 
       <aside
         id="compass-entry-panel"
@@ -802,14 +906,16 @@
         </p>
 
         <p data-compass-panel-relationship>
-          Tap a cluster star to inspect its path. Return To Orbit moves back to the open cluster. Swipe returns to the constellation.
+          Tap a cluster star to inspect its path. Swipe empty space to return to the constellation.
         </p>
 
         <div class="compass-panel__actions">
           <button
             type="button"
             data-compass-enter
+            data-compass-territory="panel-control"
             aria-disabled="true"
+            tabindex="-1"
             disabled
           >
             <span data-compass-enter-label>
@@ -820,18 +926,22 @@
           <button
             type="button"
             data-compass-return-to-orbit
+            data-compass-territory="panel-control"
             aria-hidden="true"
             aria-disabled="true"
             tabindex="-1"
             hidden
             disabled
           >
-            Return To Orbit
+            <span data-compass-control-label>
+              Back to Cluster
+            </span>
           </button>
 
           <button
             type="button"
             data-compass-mirrorland-back
+            data-compass-territory="panel-control"
             aria-hidden="true"
             aria-disabled="true"
             tabindex="-1"
@@ -905,6 +1015,7 @@
                   aria-selected="true"
                   aria-controls="minimum-practical"
                   data-compass-lens-tab="practical"
+                  data-compass-territory="panel-control"
                 >
                   Practical
                 </button>
@@ -916,6 +1027,7 @@
                   aria-selected="false"
                   aria-controls="minimum-engineering"
                   data-compass-lens-tab="engineering"
+                  data-compass-territory="panel-control"
                 >
                   Engineering
                 </button>
@@ -986,6 +1098,7 @@
                   aria-selected="true"
                   aria-controls="operational-practical"
                   data-compass-lens-tab="practical"
+                  data-compass-territory="panel-control"
                 >
                   Practical
                 </button>
@@ -997,6 +1110,7 @@
                   aria-selected="false"
                   aria-controls="operational-engineering"
                   data-compass-lens-tab="engineering"
+                  data-compass-territory="panel-control"
                 >
                   Engineering
                 </button>
@@ -1008,6 +1122,7 @@
                   aria-selected="false"
                   aria-controls="operational-evidence"
                   data-compass-lens-tab="evidence"
+                  data-compass-territory="panel-control"
                 >
                   Evidence
                 </button>
@@ -1087,6 +1202,7 @@
                   aria-selected="true"
                   aria-controls="compression-practical"
                   data-compass-lens-tab="practical"
+                  data-compass-territory="panel-control"
                 >
                   Practical
                 </button>
@@ -1098,6 +1214,7 @@
                   aria-selected="false"
                   aria-controls="compression-engineering"
                   data-compass-lens-tab="engineering"
+                  data-compass-territory="panel-control"
                 >
                   Engineering
                 </button>
@@ -1200,38 +1317,39 @@
 
         <output
           data-compass-mirrorland-window-receipt
+          data-receipt-global="DGB_MIRRORLAND_WINDOW_RECEIPT"
           data-visual-pass-claimed="false"
         ></output>
       </section>
 
       <p class="compass-accessibility-note">
-        Swipe inside the Compass scene to rotate the constellation. Tap a cardinal star or label to open its cluster. Tap a cluster star to inspect its path. Activate Mirrorland to reveal its stained-glass threshold. Enter Mirrorland only after the Window is stable, or use Back to Compass to restore the prior orientation.
+        Swipe empty space inside the Compass scene to rotate the constellation. Tap a cardinal star or label to open its cluster. Tap a cluster star or label to inspect its path. Activate the center Mirrorland threshold to reveal its stained-glass Window. Enter Mirrorland only after the Window is stable, or use Back to Compass to restore the prior orientation.
       </p>
     </section>
   </main>
 
   <script
-    src="/assets/compass/compass.controller.js"
+    src="/assets/compass/compass.controller.js?v=dgb-compass-mirrorland-reconstruction-v1"
     defer
   ></script>
 
   <script
-    src="/assets/compass/DGB_MIRRORLAND_ARCHITECTURAL_STAINED_GLASS_WINDOW_PREBUILD_v1.js"
+    src="/assets/compass/DGB_MIRRORLAND_ARCHITECTURAL_STAINED_GLASS_WINDOW_PREBUILD_v1.js?v=dgb-compass-mirrorland-reconstruction-v1"
     defer
   ></script>
 
   <script
-    src="/assets/compass/DGB_MIRRORLAND_ARCHITECTURAL_STAINED_GLASS_WINDOW_OBJECT_v1.js"
+    src="/assets/compass/DGB_MIRRORLAND_ARCHITECTURAL_STAINED_GLASS_WINDOW_OBJECT_v1.js?v=dgb-compass-mirrorland-reconstruction-v1"
     defer
   ></script>
 
   <script
-    src="/assets/compass/compass.mirrorland-window.js"
+    src="/assets/compass/compass.mirrorland-window.js?v=dgb-compass-mirrorland-reconstruction-v1"
     defer
   ></script>
 
   <script
-    src="/assets/compass/compass.crystals.js"
+    src="/assets/compass/compass.crystals.js?v=dgb-compass-mirrorland-reconstruction-v1"
     defer
   ></script>
 </body>

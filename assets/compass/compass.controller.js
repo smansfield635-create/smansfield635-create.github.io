@@ -7,7 +7,7 @@
   "use strict";
 
   const CONTRACT = Object.freeze({
-    id: "DGB_COMPASS_CONSTELLATION_CLUSTER_CONTROLLER_TNT_v5",
+    id: "DGB_COMPASS_CONSTELLATION_CLUSTER_CONTROLLER_TNT_v6",
     file: "/assets/compass/compass.controller.js",
     visualPassClaimed: false,
     productionAuthorized: false,
@@ -27,7 +27,7 @@
     constellation:
       "Swipe to rotate the constellation. Tap a star or label to open its cluster.",
     cluster:
-      "Tap a cluster star or label to inspect its path. Swipe to return to the constellation.",
+      "Tap a cluster star or label to inspect its path. Swipe or use Return to Orbit to return to the constellation.",
     path:
       "Inspect the selected path. Enter only when this is the path you want."
   });
@@ -92,7 +92,8 @@
     guidanceCopy: "",
     sceneOverlayGuidanceCreated: false,
     sceneReturnSuppressed: true,
-    panelReturnSuppressed: true,
+    panelReturnSuppressed: false,
+    panelReturnVisible: false,
     labelTapDelegationEnabled: true,
     lensSwitchingEnabled: true,
     lastLensSet: "",
@@ -315,7 +316,7 @@
     return payload;
   }
 
-  function suppressReturnControls() {
+  function updateReturnControls() {
     if (state.returnControl) {
       state.returnControl.hidden = true;
       state.returnControl.disabled = true;
@@ -324,13 +325,15 @@
       state.returnControl.style.display = "none";
     }
 
-    if (state.returnToOrbitControl) {
-      state.returnToOrbitControl.hidden = true;
-      state.returnToOrbitControl.disabled = true;
-      state.returnToOrbitControl.setAttribute("aria-hidden", "true");
-      state.returnToOrbitControl.setAttribute("tabindex", "-1");
-      state.returnToOrbitControl.style.display = "none";
-    }
+    if (!state.returnToOrbitControl) return;
+
+    const shouldShow = state.flowerExpanded === true;
+
+    state.returnToOrbitControl.hidden = !shouldShow;
+    state.returnToOrbitControl.disabled = !shouldShow;
+    state.returnToOrbitControl.setAttribute("aria-hidden", shouldShow ? "false" : "true");
+    state.returnToOrbitControl.setAttribute("tabindex", shouldShow ? "0" : "-1");
+    state.returnToOrbitControl.style.display = shouldShow ? "" : "none";
   }
 
   function writeRootState() {
@@ -392,7 +395,7 @@
 
   function updateVisibility() {
     updateSemanticLabels();
-    suppressReturnControls();
+    updateReturnControls();
     updateGuidanceDataset();
   }
 
@@ -518,6 +521,10 @@
   function emitReceipt(extra = {}) {
     const payload = currentCoordinatePayload();
     const guidance = currentGuidancePayload();
+    const panelReturnVisible =
+      !!state.returnToOrbitControl &&
+      state.returnToOrbitControl.hidden !== true &&
+      state.returnToOrbitControl.disabled !== true;
 
     Object.assign(RECEIPT, {
       rootStatus: state.root ? "found" : "missing",
@@ -539,7 +546,8 @@
       guidanceCopy: guidance.copy,
       sceneOverlayGuidanceCreated: false,
       sceneReturnSuppressed: true,
-      panelReturnSuppressed: true,
+      panelReturnSuppressed: !panelReturnVisible,
+      panelReturnVisible,
       labelTapDelegationEnabled: true,
       lensSwitchingEnabled: true,
       lastLensSet: state.lastLensSet,
@@ -579,7 +587,7 @@
     writeRootState();
     updateVisibility();
     updatePanel();
-    suppressReturnControls();
+    updateReturnControls();
     emitReceipt();
   }
 
@@ -763,7 +771,7 @@
   function handleDelegatedActivation(event) {
     const target = event.target && event.target.closest
       ? event.target.closest(
-          "[data-compass-lens-tab], [data-compass-object='mirrorland'], [data-compass-cardinal][data-wing], [data-compass-room][data-room-id], [data-compass-enter]"
+          "[data-compass-lens-tab], [data-compass-object='mirrorland'], [data-compass-cardinal][data-wing], [data-compass-room][data-room-id], [data-compass-enter], [data-compass-return-to-orbit]"
         )
       : null;
 
@@ -773,6 +781,12 @@
       event.preventDefault();
       event.stopPropagation();
       activateLens(target);
+      return;
+    }
+
+    if (target.matches("[data-compass-return-to-orbit]")) {
+      event.preventDefault();
+      returnToOrbit();
       return;
     }
 
@@ -843,7 +857,7 @@
     initializeLensSets();
     bindEvents();
     exposeApi();
-    suppressReturnControls();
+    updateReturnControls();
     enterCompassMode("restore-compass-mode");
   }
 

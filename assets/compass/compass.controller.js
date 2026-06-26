@@ -1,5 +1,5 @@
 /* /assets/compass/compass.controller.js
-   DGB Compass — Orbit Flower Traversal Controller with non-overlay guidance.
+   DGB Compass — Constellation Cluster Traversal Controller with lens switching.
    Scope: compass.controller.js only.
 */
 
@@ -7,7 +7,7 @@
   "use strict";
 
   const CONTRACT = Object.freeze({
-    id: "DGB_COMPASS_COORDINATE_FUNCTION_CONTROLLER_TNT_v4",
+    id: "DGB_COMPASS_CONSTELLATION_CLUSTER_CONTROLLER_TNT_v5",
     file: "/assets/compass/compass.controller.js",
     visualPassClaimed: false,
     productionAuthorized: false,
@@ -24,9 +24,12 @@
   const WINGS = Object.freeze(["north", "east", "south", "west"]);
 
   const GUIDANCE = Object.freeze({
-    orbit: "Swipe to rotate the constellation. Tap a star or label to inspect its path.",
-    flower: "Tap a petal or label to inspect a destination. Swipe again to return to the orbit.",
-    petal: "Inspect the selected destination. Enter only when this path is the one you want."
+    constellation:
+      "Swipe to rotate the constellation. Tap a star or label to open its cluster.",
+    cluster:
+      "Tap a cluster star or label to inspect its path. Swipe to return to the constellation.",
+    path:
+      "Inspect the selected path. Enter only when this is the path you want."
   });
 
   const state = {
@@ -61,6 +64,8 @@
 
     lastAction: "init",
     lastOrientationInput: "init",
+    lastLensSet: "",
+    lastLens: "",
     held: false,
     failureReason: null,
     invalidRooms: []
@@ -89,6 +94,9 @@
     sceneReturnSuppressed: true,
     panelReturnSuppressed: true,
     labelTapDelegationEnabled: true,
+    lensSwitchingEnabled: true,
+    lastLensSet: "",
+    lastLens: "",
     coordinateFunction: "",
     localCoordinate: "",
     localFunction: "",
@@ -147,10 +155,10 @@
       globalCoordinate: el.dataset.globalCoordinate || wing,
       coordinateFunction: el.dataset.coordinateFunction || "",
       orbitLabel: el.dataset.orbitLabel || el.dataset.label || wing,
-      flowerAnchorLabel: el.dataset.flowerAnchorLabel || "Opened Path",
+      clusterAnchorLabel: el.dataset.clusterAnchorLabel || "Opened Cluster",
       panelTitle: el.dataset.panelTitle || el.dataset.title || el.dataset.label || wing,
-      panelBody: el.dataset.panelBody || el.dataset.wingMeaning || "Open this coordinate field.",
-      panelWhy: el.dataset.panelWhy || el.dataset.wingWhy || "Enter this coordinate.",
+      panelBody: el.dataset.panelBody || el.dataset.wingMeaning || "Open this star field.",
+      panelWhy: el.dataset.panelWhy || el.dataset.wingWhy || "Inspect this path, then enter when ready.",
       validRoute: isValidRoute(route)
     };
   }
@@ -172,10 +180,10 @@
       destinationType: "petal",
       label: el.dataset.label || el.textContent.trim() || roomId,
       route,
-      localCoordinate: el.dataset.localCoordinate || "Petal",
+      localCoordinate: el.dataset.localCoordinate || "Path",
       localFunction: el.dataset.localFunction || "",
       preview: el.dataset.preview || el.dataset.purpose || "Open this estate room.",
-      whyEnter: el.dataset.whyEnter || el.dataset.relationship || "Enter this room.",
+      whyEnter: el.dataset.whyEnter || el.dataset.relationship || "Inspect this path, then enter when ready.",
       validRoute: isValidRoute(route)
     };
   }
@@ -288,14 +296,14 @@
 
   function currentGuidancePayload() {
     if (state.flowerExpanded && state.selectedRoom) {
-      return { state: "petal", copy: GUIDANCE.petal };
+      return { state: "path", copy: GUIDANCE.path };
     }
 
     if (state.flowerExpanded) {
-      return { state: "flower", copy: GUIDANCE.flower };
+      return { state: "cluster", copy: GUIDANCE.cluster };
     }
 
-    return { state: "orbit", copy: GUIDANCE.orbit };
+    return { state: "constellation", copy: GUIDANCE.constellation };
   }
 
   function updateGuidanceDataset() {
@@ -348,23 +356,27 @@
   function updateSemanticLabels() {
     if (state.mirrorland && state.mirrorland.el) {
       state.mirrorland.el.dataset.withdrawn = state.flowerExpanded ? "true" : "false";
-      setObjectText(state.mirrorland.el, "Mirrorland", state.flowerExpanded ? "Withdrawn Center" : "Center Fulcrum");
+      setObjectText(
+        state.mirrorland.el,
+        "Mirrorland",
+        state.flowerExpanded ? "Withdrawn Center" : "Center Fulcrum"
+      );
     }
 
     state.cardinals.forEach((item) => {
       const active = item.wing === state.orbitFocus || item.wing === state.selectedCardinal;
-      const flowerAnchor = item.wing === state.selectedCardinal && state.flowerExpanded;
+      const clusterAnchor = item.wing === state.selectedCardinal && state.flowerExpanded;
 
       item.el.dataset.active = active ? "true" : "false";
-      item.el.dataset.flowerExpanded = flowerAnchor ? "true" : "false";
-      item.el.dataset.withdrawn = state.flowerExpanded && !flowerAnchor ? "true" : "false";
+      item.el.dataset.flowerExpanded = clusterAnchor ? "true" : "false";
+      item.el.dataset.withdrawn = state.flowerExpanded && !clusterAnchor ? "true" : "false";
 
-      if (flowerAnchor) {
-        setObjectText(item.el, item.flowerAnchorLabel, "Opened Path");
+      if (clusterAnchor) {
+        setObjectText(item.el, item.clusterAnchorLabel, "Opened Cluster");
       } else if (state.flowerExpanded) {
-        setObjectText(item.el, item.orbitLabel, "Outside Field");
+        setObjectText(item.el, item.orbitLabel, "Outside Cluster");
       } else {
-        setObjectText(item.el, item.orbitLabel, active ? "Facing Coordinate" : "Orbit Coordinate");
+        setObjectText(item.el, item.orbitLabel, active ? "Facing Star" : "Constellation Star");
       }
     });
 
@@ -385,26 +397,26 @@
   }
 
   function updatePanelDefault() {
-    setText(state.panelEyebrow, "Orbit");
-    setText(state.panelTitle, "Choose a coordinate");
-    setText(state.panelPurpose, GUIDANCE.orbit);
-    setText(state.panelRelationship, "Enter only after a destination is selected.");
+    setText(state.panelEyebrow, "Constellation");
+    setText(state.panelTitle, "Choose a star");
+    setText(state.panelPurpose, GUIDANCE.constellation);
+    setText(state.panelRelationship, "Enter only after a path is selected.");
     setEnter("", "");
   }
 
   function updatePanelForCardinal(cardinal) {
-    setText(state.panelEyebrow, "Coordinate axis");
+    setText(state.panelEyebrow, "Star cluster");
     setText(state.panelTitle, cardinal.panelTitle);
     setText(state.panelPurpose, cardinal.panelBody);
-    setText(state.panelRelationship, GUIDANCE.flower);
+    setText(state.panelRelationship, GUIDANCE.cluster);
     setEnter(cardinal.validRoute ? cardinal.route : "", "html-cardinal-declaration");
   }
 
   function updatePanelForRoom(room) {
-    setText(state.panelEyebrow, room.localCoordinate || "Room coordinate");
+    setText(state.panelEyebrow, room.localCoordinate || "Path");
     setText(state.panelTitle, room.label);
     setText(state.panelPurpose, room.preview);
-    setText(state.panelRelationship, GUIDANCE.petal);
+    setText(state.panelRelationship, GUIDANCE.path);
     setEnter(room.validRoute ? room.route : "", "html-room-declaration");
   }
 
@@ -438,6 +450,71 @@
     }
   }
 
+  function findLensSet(target) {
+    return target && target.closest
+      ? target.closest("[data-compass-lens-set]")
+      : null;
+  }
+
+  function activateLens(tab) {
+    const lensSet = findLensSet(tab);
+    if (!lensSet) return false;
+
+    const requestedLens = String(tab.dataset.compassLensTab || "").trim();
+    if (!requestedLens) return false;
+
+    const tabs = $all("[data-compass-lens-tab]", lensSet);
+    const panels = $all("[data-compass-lens-panel]", lensSet);
+
+    tabs.forEach((item) => {
+      const active = item === tab;
+      item.setAttribute("aria-selected", active ? "true" : "false");
+      item.tabIndex = active ? 0 : -1;
+    });
+
+    panels.forEach((panel) => {
+      const active = panel.dataset.compassLensPanel === requestedLens;
+      panel.hidden = !active;
+    });
+
+    state.lastLensSet = lensSet.dataset.compassLensSet || "";
+    state.lastLens = requestedLens;
+    state.lastAction = "formula-lens-selected";
+
+    emitReceipt({
+      lastLensSet: state.lastLensSet,
+      lastLens: state.lastLens,
+      lastAction: state.lastAction,
+      lensSwitchingEnabled: true
+    });
+
+    return true;
+  }
+
+  function initializeLensSets() {
+    $all("[data-compass-lens-set]", state.root).forEach((lensSet) => {
+      const tabs = $all("[data-compass-lens-tab]", lensSet);
+      const panels = $all("[data-compass-lens-panel]", lensSet);
+      const selected =
+        tabs.find((tab) => tab.getAttribute("aria-selected") === "true") ||
+        tabs[0];
+
+      if (!selected) return;
+
+      const activeLens = selected.dataset.compassLensTab || "";
+
+      tabs.forEach((tab) => {
+        const active = tab === selected;
+        tab.setAttribute("aria-selected", active ? "true" : "false");
+        tab.tabIndex = active ? 0 : -1;
+      });
+
+      panels.forEach((panel) => {
+        panel.hidden = panel.dataset.compassLensPanel !== activeLens;
+      });
+    });
+  }
+
   function emitReceipt(extra = {}) {
     const payload = currentCoordinatePayload();
     const guidance = currentGuidancePayload();
@@ -464,6 +541,9 @@
       sceneReturnSuppressed: true,
       panelReturnSuppressed: true,
       labelTapDelegationEnabled: true,
+      lensSwitchingEnabled: true,
+      lastLensSet: state.lastLensSet,
+      lastLens: state.lastLens,
       coordinateFunction: payload.coordinateFunction,
       localCoordinate: payload.localCoordinate,
       localFunction: payload.localFunction,
@@ -548,7 +628,7 @@
 
   function requestAxisSwipe(axis) {
     if (state.flowerExpanded && state.selectedCardinal) {
-      return focusOrbit(state.selectedCardinal, "swipe-return-to-orbit", "swipe-return");
+      return focusOrbit(state.selectedCardinal, "swipe-return-to-constellation", "swipe-return");
     }
 
     const current = state.orbitFocus;
@@ -567,14 +647,14 @@
     }
 
     if (!next) return false;
-    return focusOrbit(next, "axis-swipe-orbit-focus", "swipe-" + axis);
+    return focusOrbit(next, "axis-swipe-constellation-focus", "swipe-" + axis);
   }
 
   function requestDirectionSelection(direction) {
     return focusOrbit(direction, "direction-selection-requested", "orientation-plane-request");
   }
 
-  function selectCardinal(wing, input = "tap-cardinal") {
+  function selectCardinal(wing, input = "tap-star") {
     const normalized = normalizeWing(wing);
     const cardinal = findCardinal(normalized);
     if (!cardinal) return false;
@@ -591,15 +671,15 @@
 
     setEnter(cardinal.validRoute ? cardinal.route : "", "html-cardinal-declaration");
     scrollToPanel();
-    commit("cardinal-destination-selected");
+    commit("star-cluster-selected");
     return true;
   }
 
-  function selectRoom(roomId, input = "tap-petal") {
+  function selectRoom(roomId, input = "tap-cluster-star") {
     const room = findRoom(roomId);
     if (!room) {
       clearDestination();
-      commit("room-selection-rejected");
+      commit("path-selection-rejected");
       return false;
     }
 
@@ -615,7 +695,7 @@
 
     setEnter(room.validRoute ? room.route : "", "html-room-declaration");
     scrollToPanel();
-    commit("petal-destination-selected");
+    commit("cluster-star-path-selected");
     return true;
   }
 
@@ -649,9 +729,9 @@
     state.flowerExpanded = false;
     state.panelDescended = false;
     clearDestination();
-    state.lastOrientationInput = "return-to-orbit";
+    state.lastOrientationInput = "return-to-constellation";
 
-    commit("return-to-orbit");
+    commit("return-to-constellation");
   }
 
   function navigateEnter() {
@@ -682,10 +762,19 @@
 
   function handleDelegatedActivation(event) {
     const target = event.target && event.target.closest
-      ? event.target.closest("[data-compass-object='mirrorland'], [data-compass-cardinal][data-wing], [data-compass-room][data-room-id], [data-compass-enter]")
+      ? event.target.closest(
+          "[data-compass-lens-tab], [data-compass-object='mirrorland'], [data-compass-cardinal][data-wing], [data-compass-room][data-room-id], [data-compass-enter]"
+        )
       : null;
 
     if (!target || !state.root.contains(target)) return;
+
+    if (target.matches("[data-compass-lens-tab]")) {
+      event.preventDefault();
+      event.stopPropagation();
+      activateLens(target);
+      return;
+    }
 
     if (target.matches("[data-compass-enter]")) {
       event.preventDefault();
@@ -701,13 +790,13 @@
 
     if (target.matches("[data-compass-cardinal][data-wing]")) {
       event.preventDefault();
-      selectCardinal(target.dataset.wing, "delegated-tap-cardinal-label");
+      selectCardinal(target.dataset.wing, "delegated-tap-star-label");
       return;
     }
 
     if (target.matches("[data-compass-room][data-room-id]")) {
       event.preventDefault();
-      selectRoom(target.dataset.roomId, "delegated-tap-petal-label");
+      selectRoom(target.dataset.roomId, "delegated-tap-cluster-star-label");
     }
   }
 
@@ -744,12 +833,14 @@
       requestMirrorlandSelection: selectMirrorland,
       returnToOrbit,
       returnStep: returnToOrbit,
-      enter: navigateEnter
+      enter: navigateEnter,
+      activateLens
     });
   }
 
   function init() {
     if (!acquireDom()) return;
+    initializeLensSets();
     bindEvents();
     exposeApi();
     suppressReturnControls();

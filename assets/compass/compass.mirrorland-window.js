@@ -1296,9 +1296,7 @@
   }
 
   function ensureFallbackGlint() {
-    if (
-      !state.mount
-    ) {
+    if (!state.mount) {
       return null;
     }
 
@@ -1350,9 +1348,7 @@
   }
 
   function hideFallbackGlint() {
-    if (
-      state.fallbackGlint
-    ) {
+    if (state.fallbackGlint) {
       state.fallbackGlint.hidden =
         true;
     }
@@ -4908,17 +4904,7 @@
       );
 
     state.matrices.model =
-      translate4(
-        0,
-        0,
-        0
-      );
-
-    state.matrices.model =
-      multiply4(
-        state.matrices.model,
-        rotated
-      );
+      rotated;
 
     state.matrices.view =
       lookAt4(
@@ -6156,6 +6142,14 @@
   }
 
   function bindStateObserver() {
+    if (
+      !state.root ||
+      state.resources
+        .stateObserver
+    ) {
+      return;
+    }
+
     const observer =
       new MutationObserver(
         (mutations) => {
@@ -6335,6 +6329,9 @@
       state.resources
         .stateObserver
         .disconnect();
+
+      state.resources.stateObserver =
+        null;
     }
 
     if (state.gl) {
@@ -6452,7 +6449,6 @@
     }
 
     ensureFallbackGlint();
-    bindStateObserver();
   }
 
   function initializeWebGl() {
@@ -6591,6 +6587,7 @@
       initializeWebGl();
 
       bindPointerParallax();
+      bindStateObserver();
 
       state.currentState =
         normalizeState(
@@ -6711,9 +6708,7 @@
               error
             );
 
-      if (
-        !state.root
-      ) {
+      if (!state.root) {
         RECEIPT.failureStage =
           stage;
 
@@ -6735,16 +6730,13 @@
         return;
       }
 
-      if (
-        state.mount
-      ) {
+      if (state.mount) {
         showFallbackGlint();
       }
 
       if (
         !state.resources
-          .stateObserver &&
-        state.root
+          .stateObserver
       ) {
         bindStateObserver();
       }

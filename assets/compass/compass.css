@@ -1,12 +1,18 @@
 /* /assets/compass/compass.css
    DGB Compass — Scientific-discovery interface inside an intergalactic estate landscape.
+   Mirrorland Window presentation and dedicated-layer renewal.
    Scope: compass.css only.
 */
 
 /* TNT renewal target:
    - preserve current intergalactic estate atmosphere
+   - preserve compass.crystals.js presentation ownership
+   - establish a dedicated Mirrorland Window renderer layer
    - keep obsolete scene-level Return hidden
-   - preserve panel return styling without forcing visibility
+   - preserve Back to Cluster styling without forcing visibility
+   - add separate Back to Compass styling
+   - present dormant, revealing, focused, withdrawing, and navigating states
+   - preserve pointer-inert WebGL surfaces
    - style formula lens controls to match Frontier-style tab surfaces
    - support Practical / Engineering / Evidence lens panels
 */
@@ -35,6 +41,21 @@
   --compass-radius-sm: 12px;
   --compass-max: 1180px;
   --compass-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+
+  --mirrorland-window-mount-z: 1;
+  --compass-crystals-mount-z: 2;
+  --compass-semantic-layer-z: 3;
+  --compass-guidance-layer-z: 7;
+
+  --mirrorland-dormant-frame-opacity: 0.62;
+  --mirrorland-transition-frame-opacity: 0.26;
+  --mirrorland-focused-frame-opacity: 0.12;
+  --mirrorland-navigating-frame-opacity: 0.08;
+
+  --mirrorland-focused-atmosphere-opacity: 0.30;
+  --mirrorland-transition-atmosphere-opacity: 0.46;
+  --mirrorland-context-control-opacity: 0.58;
+  --mirrorland-context-control-scale: 0.96;
 }
 
 * {
@@ -785,6 +806,7 @@ summary:focus-visible {
 
 .compass-scene {
   position: relative;
+  isolation: isolate;
   min-height: clamp(430px, 56vh, 680px);
   border: 1px solid rgba(124, 220, 255, 0.20);
   border-radius: var(--compass-radius-lg);
@@ -862,6 +884,9 @@ summary:focus-visible {
     auto;
   opacity: 0.72;
   animation: compass-celestial-twinkle 10.5s ease-in-out infinite alternate;
+  transition:
+    opacity 360ms var(--compass-ease),
+    filter 360ms var(--compass-ease);
 }
 
 .compass-scene::after {
@@ -880,18 +905,60 @@ summary:focus-visible {
     radial-gradient(ellipse at 78% 50%, rgba(216, 184, 106, 0.15), transparent 28%),
     linear-gradient(90deg, transparent, rgba(124, 220, 255, 0.06), transparent);
   filter: blur(0.2px);
-  opacity: 0.66;
+  opacity: var(--mirrorland-dormant-frame-opacity);
   box-shadow:
     0 0 34px rgba(124, 220, 255, 0.08),
     inset 0 0 28px rgba(216, 184, 106, 0.05);
   animation: compass-threshold-breathe 8s ease-in-out infinite alternate;
+  transition:
+    opacity 360ms var(--compass-ease),
+    transform 420ms var(--compass-ease),
+    filter 360ms var(--compass-ease),
+    border-color 360ms var(--compass-ease),
+    box-shadow 360ms var(--compass-ease);
 }
+
+/* Dedicated Mirrorland Window renderer layer.
+   HTML owns the mount. The renderer owns only its canvas contents. */
+
+[data-compass-mirrorland-window-mount] {
+  position: absolute;
+  inset: 0;
+  z-index: var(--mirrorland-window-mount-z);
+  min-height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+  touch-action: none;
+  user-select: none;
+  opacity: 1;
+  transform: translateZ(0);
+  transition:
+    opacity 280ms var(--compass-ease),
+    filter 280ms var(--compass-ease);
+}
+
+[data-compass-mirrorland-window-mount],
+[data-compass-mirrorland-window-mount] canvas {
+  pointer-events: none !important;
+}
+
+[data-compass-mirrorland-window-mount] canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+  user-select: none;
+}
+
+/* Protected crystals renderer remains above the Window layer. */
 
 .compass-scene__visual,
 [data-compass-crystals-mount] {
   position: absolute;
   inset: 0;
-  z-index: 1;
+  z-index: var(--compass-crystals-mount-z);
   min-height: 100%;
   pointer-events: none;
 }
@@ -902,6 +969,9 @@ summary:focus-visible {
   position: absolute;
   z-index: -1;
   pointer-events: none;
+  transition:
+    opacity 360ms var(--compass-ease),
+    filter 360ms var(--compass-ease);
 }
 
 [data-compass-crystals-mount]::before {
@@ -961,7 +1031,7 @@ summary:focus-visible {
   right: auto;
   top: auto !important;
   bottom: 14px !important;
-  z-index: 7;
+  z-index: var(--compass-guidance-layer-z);
   width: min(calc(100% - 42px), 520px);
   margin: 0;
   padding: 8px 13px;
@@ -982,6 +1052,10 @@ summary:focus-visible {
   text-align: center;
   pointer-events: none;
   opacity: 0.86;
+  transition:
+    opacity 260ms var(--compass-ease),
+    border-color 260ms var(--compass-ease),
+    background 260ms var(--compass-ease);
 }
 
 .compass-object--return,
@@ -992,7 +1066,7 @@ summary:focus-visible {
 .compass-scene__semantic {
   position: absolute;
   inset: 0;
-  z-index: 2;
+  z-index: var(--compass-semantic-layer-z);
   pointer-events: none;
 }
 
@@ -1022,7 +1096,8 @@ summary:focus-visible {
     transform 220ms var(--compass-ease),
     border-color 220ms var(--compass-ease),
     background 220ms var(--compass-ease),
-    box-shadow 220ms var(--compass-ease);
+    box-shadow 220ms var(--compass-ease),
+    filter 220ms var(--compass-ease);
 }
 
 .compass-object span:first-child {
@@ -1058,6 +1133,19 @@ summary:focus-visible {
   transform: translate(-50%, -50%);
 }
 
+.compass-object--mirrorland[data-active="true"] {
+  border-color: rgba(243, 217, 139, 0.54);
+  background:
+    radial-gradient(circle at 50% 0%, rgba(124, 220, 255, 0.16), transparent 80%),
+    linear-gradient(135deg, rgba(216, 184, 106, 0.20), rgba(124, 220, 255, 0.12)),
+    rgba(7, 10, 16, 0.70);
+  box-shadow:
+    0 14px 38px rgba(0, 0, 0, 0.30),
+    0 0 34px rgba(124, 220, 255, 0.14),
+    0 0 34px rgba(216, 184, 106, 0.10),
+    inset 0 1px 0 rgba(255, 255, 255, 0.11);
+}
+
 .compass-object--wing[data-wing="north"] {
   left: 50%;
   top: 14%;
@@ -1083,7 +1171,7 @@ summary:focus-visible {
 }
 
 [data-compass-mode="ORBIT_MODE"] .compass-object--mirrorland,
-[data-compass-mode="DESTINATION_MODE"] .compass-object--mirrorland {
+[data-compass-mode="DESTINATION_MODE"]:not([data-selected-destination-type="mirrorland"]) .compass-object--mirrorland {
   opacity: 0.42;
 }
 
@@ -1146,11 +1234,38 @@ summary:focus-visible {
     0 0 28px rgba(124, 220, 255, 0.04),
     inset 0 1px 0 rgba(255, 255, 255, 0.07);
   backdrop-filter: blur(16px);
+  transition:
+    border-color 260ms var(--compass-ease),
+    background 260ms var(--compass-ease),
+    box-shadow 260ms var(--compass-ease);
 }
 
 [data-panel-descended="true"] .compass-panel,
 [data-compass-mode="DESTINATION_MODE"] .compass-panel {
   border-color: rgba(216, 184, 106, 0.34);
+}
+
+[data-selected-destination-type="mirrorland"] .compass-panel {
+  border-color: rgba(124, 220, 255, 0.30);
+  background:
+    radial-gradient(circle at 14% 0%, rgba(124, 220, 255, 0.10), transparent 17rem),
+    radial-gradient(circle at 88% 100%, rgba(216, 184, 106, 0.08), transparent 18rem),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.065), rgba(124, 220, 255, 0.025)),
+    rgba(7, 10, 16, 0.70);
+  box-shadow:
+    0 18px 66px rgba(0, 0, 0, 0.34),
+    0 0 34px rgba(124, 220, 255, 0.07),
+    0 0 30px rgba(216, 184, 106, 0.045),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+[data-mirrorland-window-state="focused"] .compass-panel {
+  border-color: rgba(243, 217, 139, 0.38);
+  box-shadow:
+    0 18px 68px rgba(0, 0, 0, 0.36),
+    0 0 40px rgba(124, 220, 255, 0.09),
+    0 0 38px rgba(216, 184, 106, 0.065),
+    inset 0 1px 0 rgba(255, 255, 255, 0.09);
 }
 
 .compass-panel__eyebrow {
@@ -1189,12 +1304,20 @@ summary:focus-visible {
 }
 
 [data-compass-enter],
-[data-compass-return-to-orbit] {
+[data-compass-return-to-orbit],
+[data-compass-mirrorland-back] {
   min-width: 128px;
   padding: 11px 18px;
   border-radius: 999px;
   cursor: pointer;
   font-weight: 850;
+  transition:
+    opacity 180ms var(--compass-ease),
+    transform 180ms var(--compass-ease),
+    border-color 180ms var(--compass-ease),
+    background 180ms var(--compass-ease),
+    box-shadow 180ms var(--compass-ease),
+    filter 180ms var(--compass-ease);
 }
 
 [data-compass-enter] {
@@ -1207,7 +1330,8 @@ summary:focus-visible {
     inset 0 1px 0 rgba(255, 255, 255, 0.38);
 }
 
-[data-compass-return-to-orbit] {
+[data-compass-return-to-orbit],
+[data-compass-mirrorland-back] {
   border: 1px solid rgba(124, 220, 255, 0.30);
   color: rgba(255, 248, 224, 0.90);
   background:
@@ -1219,11 +1343,251 @@ summary:focus-visible {
     inset 0 1px 0 rgba(255, 255, 255, 0.10);
 }
 
+[data-compass-mirrorland-back] {
+  border-color: rgba(243, 217, 139, 0.32);
+  background:
+    linear-gradient(135deg, rgba(48, 39, 23, 0.92), rgba(10, 13, 19, 0.90)),
+    rgba(8, 13, 22, 0.78);
+  box-shadow:
+    0 12px 30px rgba(0, 0, 0, 0.28),
+    0 0 22px rgba(216, 184, 106, 0.075),
+    inset 0 1px 0 rgba(255, 255, 255, 0.10);
+}
+
+[data-compass-enter]:not(:disabled):hover,
+[data-compass-return-to-orbit]:not(:disabled):hover,
+[data-compass-mirrorland-back]:not(:disabled):hover {
+  transform: translateY(-1px);
+}
+
 [data-compass-enter]:disabled,
-[data-compass-return-to-orbit]:disabled {
+[data-compass-return-to-orbit]:disabled,
+[data-compass-mirrorland-back]:disabled {
   cursor: not-allowed;
   opacity: 0.45;
   filter: grayscale(0.45);
+}
+
+/* Mirrorland Window state presentation */
+
+[data-mirrorland-window-state="dormant"] [data-compass-mirrorland-window-mount] {
+  opacity: 1;
+  filter: saturate(0.88) brightness(0.82);
+}
+
+[data-mirrorland-window-state="revealing"] [data-compass-mirrorland-window-mount],
+[data-mirrorland-window-state="focused"] [data-compass-mirrorland-window-mount],
+[data-mirrorland-window-state="withdrawing"] [data-compass-mirrorland-window-mount] {
+  opacity: 1;
+  filter: saturate(1) brightness(1);
+}
+
+[data-mirrorland-window-state="navigating"] [data-compass-mirrorland-window-mount] {
+  opacity: 0.86;
+  filter: saturate(0.96) brightness(0.94);
+}
+
+[data-mirrorland-window-state="revealing"] .compass-scene::after,
+[data-mirrorland-window-state="withdrawing"] .compass-scene::after {
+  opacity: var(--mirrorland-transition-frame-opacity);
+  transform: translate(-50%, -50%) rotate(-10deg) scale(1.02);
+  border-color: rgba(124, 220, 255, 0.09);
+  filter: blur(0.35px);
+  animation-play-state: paused;
+}
+
+[data-mirrorland-window-state="focused"] .compass-scene::after {
+  opacity: var(--mirrorland-focused-frame-opacity);
+  transform: translate(-50%, -50%) rotate(-6deg) scale(1.04);
+  border-color: rgba(216, 184, 106, 0.07);
+  filter: blur(0.45px);
+  animation-play-state: paused;
+  box-shadow:
+    0 0 28px rgba(124, 220, 255, 0.04),
+    inset 0 0 24px rgba(216, 184, 106, 0.03);
+}
+
+[data-mirrorland-window-state="navigating"] .compass-scene::after {
+  opacity: var(--mirrorland-navigating-frame-opacity);
+  transform: translate(-50%, -50%) rotate(0deg) scale(1.06);
+  animation-play-state: paused;
+}
+
+[data-mirrorland-window-state="revealing"] .compass-scene::before,
+[data-mirrorland-window-state="withdrawing"] .compass-scene::before {
+  opacity: var(--mirrorland-transition-atmosphere-opacity);
+  filter: brightness(0.88) saturate(0.86);
+}
+
+[data-mirrorland-window-state="focused"] .compass-scene::before {
+  opacity: var(--mirrorland-focused-atmosphere-opacity);
+  filter: brightness(0.80) saturate(0.78);
+}
+
+[data-mirrorland-window-state="navigating"] .compass-scene::before {
+  opacity: 0.22;
+  filter: brightness(0.72) saturate(0.72);
+}
+
+[data-mirrorland-window-state="revealing"] [data-compass-crystals-mount]::before,
+[data-mirrorland-window-state="focused"] [data-compass-crystals-mount]::before,
+[data-mirrorland-window-state="withdrawing"] [data-compass-crystals-mount]::before,
+[data-mirrorland-window-state="navigating"] [data-compass-crystals-mount]::before {
+  opacity: 0 !important;
+  animation-play-state: paused;
+}
+
+[data-mirrorland-window-state="revealing"] [data-compass-crystals-mount]::after,
+[data-mirrorland-window-state="withdrawing"] [data-compass-crystals-mount]::after {
+  opacity: 0.24;
+  filter: blur(0.18px) brightness(0.80) saturate(0.78);
+  animation-play-state: paused;
+}
+
+[data-mirrorland-window-state="focused"] [data-compass-crystals-mount]::after {
+  opacity: 0.16;
+  filter: blur(0.22px) brightness(0.72) saturate(0.72);
+  animation-play-state: paused;
+}
+
+[data-mirrorland-window-state="navigating"] [data-compass-crystals-mount]::after {
+  opacity: 0.10;
+  filter: blur(0.28px) brightness(0.68) saturate(0.68);
+  animation-play-state: paused;
+}
+
+/* The threshold anchor remains the dormant semantic activation surface.
+   While the Window owns focus, it becomes inert and visually subordinate. */
+
+[data-mirrorland-window-state="revealing"] .compass-object--mirrorland,
+[data-mirrorland-window-state="focused"] .compass-object--mirrorland,
+[data-mirrorland-window-state="withdrawing"] .compass-object--mirrorland,
+[data-mirrorland-window-state="navigating"] .compass-object--mirrorland {
+  pointer-events: none;
+  cursor: default;
+}
+
+[data-mirrorland-window-state="revealing"] .compass-object--mirrorland,
+[data-mirrorland-window-state="withdrawing"] .compass-object--mirrorland {
+  opacity: 0.20;
+  filter: blur(0.15px);
+  transform: translate(-50%, -50%) scale(0.96);
+}
+
+[data-mirrorland-window-state="focused"] .compass-object--mirrorland {
+  opacity: 0;
+  visibility: hidden;
+  transform: translate(-50%, -50%) scale(0.94);
+}
+
+[data-mirrorland-window-state="navigating"] .compass-object--mirrorland {
+  opacity: 0;
+  visibility: hidden;
+  transform: translate(-50%, -50%) scale(0.90);
+}
+
+/* Cardinal labels remain visible as context but cannot compete for authority. */
+
+[data-mirrorland-window-state="revealing"] .compass-object--wing,
+[data-mirrorland-window-state="focused"] .compass-object--wing,
+[data-mirrorland-window-state="withdrawing"] .compass-object--wing,
+[data-mirrorland-window-state="navigating"] .compass-object--wing {
+  pointer-events: none;
+  cursor: default;
+  opacity: var(--mirrorland-context-control-opacity);
+  filter: saturate(0.76) brightness(0.84);
+}
+
+[data-mirrorland-window-state="revealing"] .compass-object--wing[data-wing="north"],
+[data-mirrorland-window-state="focused"] .compass-object--wing[data-wing="north"],
+[data-mirrorland-window-state="withdrawing"] .compass-object--wing[data-wing="north"],
+[data-mirrorland-window-state="navigating"] .compass-object--wing[data-wing="north"] {
+  transform:
+    translateX(-50%)
+    scale(var(--mirrorland-context-control-scale));
+}
+
+[data-mirrorland-window-state="revealing"] .compass-object--wing[data-wing="south"],
+[data-mirrorland-window-state="focused"] .compass-object--wing[data-wing="south"],
+[data-mirrorland-window-state="withdrawing"] .compass-object--wing[data-wing="south"],
+[data-mirrorland-window-state="navigating"] .compass-object--wing[data-wing="south"] {
+  transform:
+    translateX(-50%)
+    scale(var(--mirrorland-context-control-scale));
+}
+
+[data-mirrorland-window-state="revealing"] .compass-object--wing[data-wing="east"],
+[data-mirrorland-window-state="focused"] .compass-object--wing[data-wing="east"],
+[data-mirrorland-window-state="withdrawing"] .compass-object--wing[data-wing="east"],
+[data-mirrorland-window-state="navigating"] .compass-object--wing[data-wing="east"] {
+  transform:
+    translateY(-50%)
+    scale(var(--mirrorland-context-control-scale));
+}
+
+[data-mirrorland-window-state="revealing"] .compass-object--wing[data-wing="west"],
+[data-mirrorland-window-state="focused"] .compass-object--wing[data-wing="west"],
+[data-mirrorland-window-state="withdrawing"] .compass-object--wing[data-wing="west"],
+[data-mirrorland-window-state="navigating"] .compass-object--wing[data-wing="west"] {
+  transform:
+    translateY(-50%)
+    scale(var(--mirrorland-context-control-scale));
+}
+
+[data-mirrorland-window-state="revealing"] [data-compass-room],
+[data-mirrorland-window-state="focused"] [data-compass-room],
+[data-mirrorland-window-state="withdrawing"] [data-compass-room],
+[data-mirrorland-window-state="navigating"] [data-compass-room] {
+  display: none !important;
+  pointer-events: none !important;
+}
+
+[data-mirrorland-window-state="revealing"] .compass-runtime-guidance,
+[data-mirrorland-window-state="revealing"] .compass-scene-guidance,
+[data-mirrorland-window-state="revealing"] [data-compass-scene-guidance],
+[data-mirrorland-window-state="withdrawing"] .compass-runtime-guidance,
+[data-mirrorland-window-state="withdrawing"] .compass-scene-guidance,
+[data-mirrorland-window-state="withdrawing"] [data-compass-scene-guidance] {
+  opacity: 0.72;
+  border-color: rgba(216, 184, 106, 0.18);
+}
+
+[data-mirrorland-window-state="focused"] .compass-runtime-guidance,
+[data-mirrorland-window-state="focused"] .compass-scene-guidance,
+[data-mirrorland-window-state="focused"] [data-compass-scene-guidance] {
+  opacity: 0.62;
+  border-color: rgba(124, 220, 255, 0.16);
+  background:
+    linear-gradient(135deg, rgba(7, 10, 16, 0.66), rgba(14, 24, 36, 0.46)),
+    rgba(7, 10, 16, 0.52);
+}
+
+[data-mirrorland-window-state="navigating"] .compass-runtime-guidance,
+[data-mirrorland-window-state="navigating"] .compass-scene-guidance,
+[data-mirrorland-window-state="navigating"] [data-compass-scene-guidance] {
+  opacity: 0.46;
+}
+
+/* Controller datasets reinforce control visibility without replacing HTML state. */
+
+[data-mirrorland-enter-enabled="false"][data-selected-destination-type="mirrorland"] [data-compass-enter] {
+  opacity: 0.45;
+  filter: grayscale(0.45);
+}
+
+[data-mirrorland-enter-enabled="true"][data-mirrorland-window-state="focused"] [data-compass-enter] {
+  opacity: 1;
+  filter: none;
+}
+
+[data-mirrorland-back-enabled="false"] [data-compass-mirrorland-back] {
+  opacity: 0.45;
+  filter: grayscale(0.45);
+}
+
+[data-mirrorland-back-enabled="true"][data-mirrorland-window-state="focused"] [data-compass-mirrorland-back] {
+  opacity: 1;
+  filter: none;
 }
 
 .compass-closing {
@@ -1350,6 +1714,10 @@ summary:focus-visible {
   .compass-panel {
     max-width: none;
   }
+
+  [data-selected-destination-type="mirrorland"] .compass-panel__actions {
+    align-items: stretch;
+  }
 }
 
 @media (max-width: 560px) {
@@ -1440,6 +1808,11 @@ summary:focus-visible {
     font-size: 0.58rem;
   }
 
+  .compass-object--mirrorland {
+    top: 48%;
+    min-width: 118px;
+  }
+
   .compass-object--wing[data-wing="north"] {
     top: 9%;
   }
@@ -1478,6 +1851,24 @@ summary:focus-visible {
     padding: 7px 11px;
     font-size: 0.70rem;
   }
+
+  [data-selected-destination-type="mirrorland"] .compass-panel__actions {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  [data-selected-destination-type="mirrorland"] [data-compass-enter],
+  [data-selected-destination-type="mirrorland"] [data-compass-mirrorland-back] {
+    width: 100%;
+    min-width: 0;
+  }
+
+  [data-mirrorland-window-state="revealing"] .compass-object--wing,
+  [data-mirrorland-window-state="focused"] .compass-object--wing,
+  [data-mirrorland-window-state="withdrawing"] .compass-object--wing,
+  [data-mirrorland-window-state="navigating"] .compass-object--wing {
+    opacity: 0.48;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1503,5 +1894,27 @@ summary:focus-visible {
 
   [data-compass-crystals-mount]::before {
     opacity: 0 !important;
+  }
+
+  [data-compass-mirrorland-window-mount] {
+    transition: none !important;
+  }
+
+  [data-mirrorland-window-state="revealing"] .compass-scene::after,
+  [data-mirrorland-window-state="focused"] .compass-scene::after,
+  [data-mirrorland-window-state="withdrawing"] .compass-scene::after,
+  [data-mirrorland-window-state="navigating"] .compass-scene::after {
+    animation: none !important;
+  }
+
+  [data-mirrorland-window-state="revealing"] .compass-object--mirrorland,
+  [data-mirrorland-window-state="focused"] .compass-object--mirrorland,
+  [data-mirrorland-window-state="withdrawing"] .compass-object--mirrorland,
+  [data-mirrorland-window-state="navigating"] .compass-object--mirrorland,
+  [data-mirrorland-window-state="revealing"] .compass-object--wing,
+  [data-mirrorland-window-state="focused"] .compass-object--wing,
+  [data-mirrorland-window-state="withdrawing"] .compass-object--wing,
+  [data-mirrorland-window-state="navigating"] .compass-object--wing {
+    transition: none !important;
   }
 }

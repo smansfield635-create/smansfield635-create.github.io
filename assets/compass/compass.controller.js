@@ -1,5 +1,5 @@
 /* /assets/compass/compass.controller.js
-   DGB Compass — Constellation Cluster Traversal Controller with lens switching.
+   DGB Compass — Constellation Cluster Path Controller.
    Scope: compass.controller.js only.
 */
 
@@ -7,7 +7,7 @@
   "use strict";
 
   const CONTRACT = Object.freeze({
-    id: "DGB_COMPASS_CONSTELLATION_CLUSTER_CONTROLLER_TNT_v7",
+    id: "DGB_COMPASS_CONSTELLATION_CLUSTER_PATH_CONTROLLER_TNT_v8",
     file: "/assets/compass/compass.controller.js",
     visualPassClaimed: false,
     productionAuthorized: false,
@@ -96,6 +96,9 @@
     panelReturnVisible: false,
     labelTapDelegationEnabled: true,
     lensSwitchingEnabled: true,
+    stateMachine: "CONSTELLATION_TO_CLUSTER_TO_PATH",
+    returnToOrbitBehavior: "PATH_TO_CLUSTER",
+    swipeReturnBehavior: "CLUSTER_TO_CONSTELLATION",
     lastLensSet: "",
     lastLens: "",
     coordinateFunction: "",
@@ -300,7 +303,7 @@
       return { state: "path", copy: GUIDANCE.path };
     }
 
-    if (state.flowerExpanded) {
+    if (state.flowerExpanded && state.selectedCardinal) {
       return { state: "cluster", copy: GUIDANCE.cluster };
     }
 
@@ -329,8 +332,7 @@
 
     const shouldShow =
       state.flowerExpanded === true &&
-      state.selectedDestinationType === "petal" &&
-      !!state.selectedRoom;
+      !!state.selectedCardinal;
 
     state.returnToOrbitControl.hidden = !shouldShow;
     state.returnToOrbitControl.disabled = !shouldShow;
@@ -553,6 +555,9 @@
       panelReturnVisible,
       labelTapDelegationEnabled: true,
       lensSwitchingEnabled: true,
+      stateMachine: "CONSTELLATION_TO_CLUSTER_TO_PATH",
+      returnToOrbitBehavior: "PATH_TO_CLUSTER",
+      swipeReturnBehavior: "CLUSTER_TO_CONSTELLATION",
       lastLensSet: state.lastLensSet,
       lastLens: state.lastLens,
       coordinateFunction: payload.coordinateFunction,
@@ -616,28 +621,23 @@
     commit(action);
   }
 
-  function focusOrbit(wing, action = "orbit-focus-requested", input = "direct") {
+  function focusConstellationWing(wing, action = "constellation-focus-requested", input = "direct") {
     const normalized = normalizeWing(wing);
     if (!normalized) return false;
 
-    const changed = state.orbitFocus !== normalized;
-
     state.mode = MODES.ORBIT;
     state.orbitFocus = normalized;
-    state.lastOrientationInput = input;
-
-    if (changed || state.flowerExpanded) {
-      state.flowerExpanded = false;
-      state.selectedCardinal = "";
-      clearDestination();
-    }
-
+    state.selectedCardinal = "";
+    state.flowerExpanded = false;
     state.panelDescended = false;
+    state.lastOrientationInput = input;
+    clearDestination();
+
     commit(action);
     return true;
   }
 
-  function returnToConstellation(input = "swipe-return") {
+  function returnToConstellation(input = "swipe-return-to-constellation") {
     const preserved = normalizeWing(state.selectedCardinal || state.orbitFocus);
 
     state.mode = preserved ? MODES.ORBIT : MODES.COMPASS;
@@ -645,15 +645,15 @@
     state.selectedCardinal = "";
     state.flowerExpanded = false;
     state.panelDescended = false;
-    clearDestination();
     state.lastOrientationInput = input;
+    clearDestination();
 
-    scrollToOrbit();
     commit("return-to-constellation");
+    scrollToOrbit();
     return true;
   }
 
-  function returnToCluster(input = "panel-return-to-orbit") {
+  function returnToCluster(input = "panel-return-to-open-cluster") {
     const preserved = normalizeWing(state.selectedCardinal || state.orbitFocus);
 
     if (!preserved) {
@@ -673,12 +673,13 @@
     state.selectedDestinationId = preserved;
     state.selectedDestinationLabel = cardinal.label;
     state.flowerExpanded = true;
-    state.panelDescended = true;
+    state.panelDescended = false;
     state.lastOrientationInput = input;
 
     setEnter(cardinal.validRoute ? cardinal.route : "", "html-cardinal-declaration");
-    scrollToPanel();
+
     commit("return-to-open-cluster");
+    scrollToOrbit();
     return true;
   }
 
@@ -703,11 +704,11 @@
     }
 
     if (!next) return false;
-    return focusOrbit(next, "axis-swipe-constellation-focus", "swipe-" + axis);
+    return focusConstellationWing(next, "axis-swipe-constellation-focus", "swipe-" + axis);
   }
 
   function requestDirectionSelection(direction) {
-    return focusOrbit(direction, "direction-selection-requested", "orientation-plane-request");
+    return focusConstellationWing(direction, "direction-selection-requested", "orientation-plane-request");
   }
 
   function selectCardinal(wing, input = "tap-star") {
@@ -723,11 +724,12 @@
     state.selectedDestinationId = normalized;
     state.selectedDestinationLabel = cardinal.label;
     state.flowerExpanded = true;
+    state.panelDescended = true;
     state.lastOrientationInput = input;
 
     setEnter(cardinal.validRoute ? cardinal.route : "", "html-cardinal-declaration");
-    scrollToPanel();
     commit("star-cluster-selected");
+    scrollToPanel();
     return true;
   }
 
@@ -747,11 +749,12 @@
     state.selectedDestinationId = room.roomId;
     state.selectedDestinationLabel = room.label;
     state.flowerExpanded = true;
+    state.panelDescended = true;
     state.lastOrientationInput = input;
 
     setEnter(room.validRoute ? room.route : "", "html-room-declaration");
-    scrollToPanel();
     commit("cluster-star-path-selected");
+    scrollToPanel();
     return true;
   }
 
@@ -767,11 +770,12 @@
     state.selectedDestinationId = "mirrorland";
     state.selectedDestinationLabel = mirror.label;
     state.flowerExpanded = false;
+    state.panelDescended = true;
     state.lastOrientationInput = input;
 
     setEnter(mirror.validRoute ? mirror.route : "", "html-mirrorland-declaration");
-    scrollToPanel();
     commit("mirrorland-destination-selected");
+    scrollToPanel();
     return true;
   }
 

@@ -9,29 +9,12 @@
 </head>
 
 <body>
-  <main
-    id="compass"
-    class="compass-estate"
-    data-compass-root
-    data-compass-mode="COMPASS_MODE"
-    data-orbit-focus=""
-    data-selected-cardinal=""
-    data-selected-wing=""
-    data-selected-room=""
-    data-selected-destination-type=""
-    data-selected-destination-id=""
-    data-flower-expanded="false"
-    data-panel-descended="false"
-    data-reduced-motion="false"
-    data-visual-pass-claimed="false"
-  >
+  <main id="compass" class="compass-estate" data-compass-root data-compass-mode="COMPASS_MODE" data-orbit-focus="" data-selected-cardinal="" data-selected-wing="" data-selected-room="" data-selected-destination-type="" data-selected-destination-id="" data-flower-expanded="false" data-panel-descended="false" data-reduced-motion="false" data-visual-pass-claimed="false">
     <section class="compass-estate__hall" aria-labelledby="compass-title">
       <header class="compass-estate__header">
         <p class="compass-estate__kicker">Diamond Gate Bridge</p>
         <h1 id="compass-title">The Compass</h1>
-        <p class="compass-estate__sentence">
-          Begin where recurring patterns become direction.
-        </p>
+        <p class="compass-estate__sentence">Begin where recurring patterns become direction.</p>
       </header>
 
       <section class="compass-introduction compass-threshold" aria-label="Diamond Gate Bridge threshold">
@@ -59,16 +42,24 @@
             </span>
           </summary>
 
-          <div class="compass-formula-artifact__body">
-            <p>
-              <strong>Practical Lens:</strong> collapse is not declared because pressure exists. It becomes qualified only when burden is saturated, pressure is saturated, and one indispensable coherence axis has fallen to or below its threshold.
-            </p>
-            <p>
-              <strong>Engineering Lens:</strong> <i>B</i><sub>256</sub> represents the internal burden field. <i>P</i><sub>192</sub> represents the external pressure field. <i>E</i>, <i>I</i>, and <i>V</i> form the noncompensatory coherence spine. No stronger axis compensates for the weakest required axis.
-            </p>
-            <p>
-              <strong>Evidence Boundary:</strong> this predicate is under empirical reduction and validation. It is presented as a disciplined candidate structure, not a completed universal proof claim.
-            </p>
+          <div class="compass-formula-artifact__body" data-compass-lens-set="collapse-predicate">
+            <div class="compass-lens-tabs" role="tablist" aria-label="Collapse predicate lenses">
+              <button class="compass-lens-tab" type="button" role="tab" aria-selected="true" aria-controls="collapse-practical" data-compass-lens-tab="practical">Practical</button>
+              <button class="compass-lens-tab" type="button" role="tab" aria-selected="false" aria-controls="collapse-engineering" data-compass-lens-tab="engineering">Engineering</button>
+              <button class="compass-lens-tab" type="button" role="tab" aria-selected="false" aria-controls="collapse-evidence" data-compass-lens-tab="evidence">Evidence</button>
+            </div>
+
+            <div id="collapse-practical" class="compass-lens-panel" role="tabpanel" data-compass-lens-panel="practical">
+              <p>Collapse is not declared because pressure exists. It becomes qualified only when burden is saturated, pressure is saturated, and one indispensable coherence axis has fallen to or below its threshold.</p>
+            </div>
+
+            <div id="collapse-engineering" class="compass-lens-panel" role="tabpanel" data-compass-lens-panel="engineering" hidden>
+              <p><i>B</i><sub>256</sub> represents the internal burden field. <i>P</i><sub>192</sub> represents the external pressure field. <i>E</i>, <i>I</i>, and <i>V</i> form the noncompensatory coherence spine. No stronger axis compensates for the weakest required axis.</p>
+            </div>
+
+            <div id="collapse-evidence" class="compass-lens-panel" role="tabpanel" data-compass-lens-panel="evidence" hidden>
+              <p>This predicate is under empirical reduction and validation. It is presented as a disciplined candidate structure, not a completed universal proof claim.</p>
+            </div>
           </div>
         </details>
       </section>
@@ -92,28 +83,14 @@
       <section class="compass-orbit-intro" aria-labelledby="compass-orbit-title">
         <p class="compass-estate__kicker">Compass Standards</p>
         <h2 id="compass-orbit-title">Follow the stars.</h2>
-        <p>
-          Tap a star to open its cluster. Tap a cluster star to inspect its path. Swipe to return to the constellation.
-        </p>
+        <p>Tap a star to open its cluster. Tap a cluster star to inspect its path. Swipe to return to the constellation.</p>
       </section>
 
       <section id="compass-orbit" class="compass-scene" aria-label="Estate navigation compass" data-compass-scene>
         <div class="compass-scene__visual" data-compass-crystals-mount aria-hidden="true"></div>
 
         <div class="compass-scene__semantic" data-compass-objects>
-          <a
-            class="compass-object compass-object--mirrorland"
-            href="/showroom/"
-            data-compass-object="mirrorland"
-            data-compass-destination
-            data-destination-type="mirrorland"
-            data-destination-id="mirrorland"
-            data-label="Mirrorland"
-            data-route="/showroom/"
-            data-panel-title="Mirrorland"
-            data-panel-body="A future center threshold reserved for the estate beyond the Compass."
-            data-panel-why="Enter Mirrorland when the center portal is formally opened."
-          >
+          <a class="compass-object compass-object--mirrorland" href="/showroom/" data-compass-object="mirrorland" data-compass-destination data-destination-type="mirrorland" data-destination-id="mirrorland" data-label="Mirrorland" data-route="/showroom/" data-panel-title="Mirrorland" data-panel-body="A future center threshold reserved for the estate beyond the Compass." data-panel-why="Enter Mirrorland when the center portal is formally opened.">
             <span>Mirrorland</span>
             <span>Reserved Center</span>
           </a>
@@ -186,121 +163,107 @@
       <section class="compass-discovery" aria-label="Compass mathematical standards">
         <details class="compass-discovery__item">
           <summary>Recognition</summary>
-          <p>
-            Patterns often become visible before they become measurable. The first move is not certainty. The first move is noticing what keeps returning.
-          </p>
+          <p>Patterns often become visible before they become measurable. The first move is not certainty. The first move is noticing what keeps returning.</p>
           <details class="compass-introduction__more">
             <summary>Go deeper</summary>
-            <p>
-              Recognition turns repetition into signal. Once the signal is visible, the next task is to inspect whether it belongs to orientation, worlds, instruments, or frontier construction.
-            </p>
+            <p>Recognition turns repetition into signal. Once the signal is visible, the next task is to inspect whether it belongs to orientation, worlds, instruments, or frontier construction.</p>
           </details>
         </details>
 
         <details class="compass-discovery__item">
           <summary>Coherence</summary>
-          <p>
-            Coherence asks whether the required parts of a person, system, world, or decision can hold together under pressure.
-          </p>
+          <p>Coherence asks whether the required parts of a person, system, world, or decision can hold together under pressure.</p>
+
           <details class="compass-formula-artifact">
             <summary>
               <span class="compass-formula-artifact__title">The Minimum Principle</span>
-              <span class="compass-formula-artifact__math">
-                <i>S</i><sub>d</sub> = min(<i>E</i><sub>d</sub>, <i>I</i><sub>d</sub>, <i>V</i><sub>d</sub>)
-              </span>
+              <span class="compass-formula-artifact__math"><i>S</i><sub>d</sub> = min(<i>E</i><sub>d</sub>, <i>I</i><sub>d</sub>, <i>V</i><sub>d</sub>)</span>
             </summary>
-            <div class="compass-formula-artifact__body">
-              <p>
-                <strong>Practical Lens:</strong> the decisive question is often not “Where am I strongest?” but “Which required capacity is closest to failing?”
-              </p>
-              <p>
-                <strong>Engineering Lens:</strong> the coherence spine is noncompensatory. The system state is governed by the weakest required axis, not by an average of all axes.
-              </p>
+            <div class="compass-formula-artifact__body" data-compass-lens-set="minimum-principle">
+              <div class="compass-lens-tabs" role="tablist" aria-label="Minimum principle lenses">
+                <button class="compass-lens-tab" type="button" role="tab" aria-selected="true" aria-controls="minimum-practical" data-compass-lens-tab="practical">Practical</button>
+                <button class="compass-lens-tab" type="button" role="tab" aria-selected="false" aria-controls="minimum-engineering" data-compass-lens-tab="engineering">Engineering</button>
+              </div>
+              <div id="minimum-practical" class="compass-lens-panel" role="tabpanel" data-compass-lens-panel="practical">
+                <p>The decisive question is often not “Where am I strongest?” but “Which required capacity is closest to failing?”</p>
+              </div>
+              <div id="minimum-engineering" class="compass-lens-panel" role="tabpanel" data-compass-lens-panel="engineering" hidden>
+                <p>The coherence spine is noncompensatory. The system state is governed by the weakest required axis, not by an average of all axes.</p>
+              </div>
             </div>
           </details>
         </details>
 
         <details class="compass-discovery__item">
           <summary>Measurement</summary>
-          <p>
-            Measurement gives intuition a surface. It does not replace judgment; it gives judgment something stable enough to inspect.
-          </p>
+          <p>Measurement gives intuition a surface. It does not replace judgment; it gives judgment something stable enough to inspect.</p>
+
           <details class="compass-formula-artifact">
             <summary>
               <span class="compass-formula-artifact__title">Operational Coherence</span>
-              <span class="compass-formula-artifact__math">
-                <i>coherenceHolds</i> =
-                (<i>minimumConstraint</i> ≥ <i>appliedLoad</i>)
-                ∧
-                (<i>violationTrajectory</i> ≤ 0)
-              </span>
+              <span class="compass-formula-artifact__math"><i>coherenceHolds</i> = (<i>minimumConstraint</i> ≥ <i>appliedLoad</i>) ∧ (<i>violationTrajectory</i> ≤ 0)</span>
             </summary>
-            <div class="compass-formula-artifact__body">
-              <p>
-                <strong>Practical Lens:</strong> coherence holds when capacity is sufficient for the load and violations are not worsening.
-              </p>
-              <p>
-                <strong>Engineering Lens:</strong> this evaluates an operational coherence condition. It is not declared identical to the collapse predicate; the relationship remains future-derived.
-              </p>
+            <div class="compass-formula-artifact__body" data-compass-lens-set="operational-coherence">
+              <div class="compass-lens-tabs" role="tablist" aria-label="Operational coherence lenses">
+                <button class="compass-lens-tab" type="button" role="tab" aria-selected="true" aria-controls="operational-practical" data-compass-lens-tab="practical">Practical</button>
+                <button class="compass-lens-tab" type="button" role="tab" aria-selected="false" aria-controls="operational-engineering" data-compass-lens-tab="engineering">Engineering</button>
+              </div>
+              <div id="operational-practical" class="compass-lens-panel" role="tabpanel" data-compass-lens-panel="practical">
+                <p>Coherence holds when capacity is sufficient for the load and violations are not worsening.</p>
+              </div>
+              <div id="operational-engineering" class="compass-lens-panel" role="tabpanel" data-compass-lens-panel="engineering" hidden>
+                <p>This evaluates an operational coherence condition. It is not declared identical to the collapse predicate; the relationship remains future-derived.</p>
+              </div>
             </div>
           </details>
         </details>
 
         <details class="compass-discovery__item">
           <summary>Lattice</summary>
-          <p>
-            The lattice separates burden, pressure, and coherence spine so the framework does not collapse everything into one vague score.
-          </p>
+          <p>The lattice separates burden, pressure, and coherence spine so the framework does not collapse everything into one vague score.</p>
+
           <details class="compass-formula-artifact">
             <summary>
               <span class="compass-formula-artifact__title">Structural Compression</span>
-              <span class="compass-formula-artifact__math">
-                451 = 256 + 192 + 3
-              </span>
+              <span class="compass-formula-artifact__math">451 = 256 + 192 + 3</span>
             </summary>
-            <div class="compass-formula-artifact__body">
-              <p>
-                <strong>Practical Lens:</strong> different kinds of strain should not be blurred together. Internal burden, external pressure, and coherence capacity require distinct inspection.
-              </p>
-              <p>
-                <strong>Engineering Lens:</strong> 256 represents internal burden cells. 192 represents external pressure channels. 3 represents the noncompensatory coherence spine: <i>E</i>, <i>I</i>, and <i>V</i>.
-              </p>
+            <div class="compass-formula-artifact__body" data-compass-lens-set="structural-compression">
+              <div class="compass-lens-tabs" role="tablist" aria-label="Structural compression lenses">
+                <button class="compass-lens-tab" type="button" role="tab" aria-selected="true" aria-controls="compression-practical" data-compass-lens-tab="practical">Practical</button>
+                <button class="compass-lens-tab" type="button" role="tab" aria-selected="false" aria-controls="compression-engineering" data-compass-lens-tab="engineering">Engineering</button>
+              </div>
+              <div id="compression-practical" class="compass-lens-panel" role="tabpanel" data-compass-lens-panel="practical">
+                <p>Different kinds of strain should not be blurred together. Internal burden, external pressure, and coherence capacity require distinct inspection.</p>
+              </div>
+              <div id="compression-engineering" class="compass-lens-panel" role="tabpanel" data-compass-lens-panel="engineering" hidden>
+                <p>256 represents internal burden cells. 192 represents external pressure channels. 3 represents the noncompensatory coherence spine: <i>E</i>, <i>I</i>, and <i>V</i>.</p>
+              </div>
             </div>
           </details>
         </details>
 
         <details class="compass-discovery__item">
           <summary>Discovery</summary>
-          <p>
-            Equations become useful when they clarify movement. A pattern is observed, reduced, tested, and then used to choose a better path.
-          </p>
+          <p>Equations become useful when they clarify movement. A pattern is observed, reduced, tested, and then used to choose a better path.</p>
           <details class="compass-introduction__more">
             <summary>Evidence boundary</summary>
-            <p>
-              These equations are viable candidate structures under empirical testing and reduction. Their universal reach remains a disciplined research question, not a closed public claim.
-            </p>
+            <p>These equations are viable candidate structures under empirical testing and reduction. Their universal reach remains a disciplined research question, not a closed public claim.</p>
           </details>
         </details>
 
         <details class="compass-discovery__item">
           <summary>Construction</summary>
-          <p>
-            The estate is native-code construction: HTML, CSS, JavaScript, WebGL stars, controller state, receipts, lattice logic, and experience standards working as one navigable system.
-          </p>
+          <p>The estate is native-code construction: HTML, CSS, JavaScript, WebGL stars, controller state, receipts, lattice logic, and experience standards working as one navigable system.</p>
           <details class="compass-introduction__more">
             <summary>Platform value</summary>
-            <p>
-              The Compass is the interface where mathematical structure, estate traversal, visual experience, and practical direction meet.
-            </p>
+            <p>The Compass is the interface where mathematical structure, estate traversal, visual experience, and practical direction meet.</p>
           </details>
         </details>
       </section>
 
       <section class="compass-closing" aria-label="Compass closing invitation">
         <p class="compass-estate__kicker">Begin the Journey</p>
-        <p>
-          Follow the signal that keeps returning. The next star is enough.
-        </p>
+        <p>Follow the signal that keeps returning. The next star is enough.</p>
       </section>
 
       <section class="compass-receipts" aria-label="Compass status" hidden>

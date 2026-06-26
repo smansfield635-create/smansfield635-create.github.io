@@ -7,7 +7,7 @@
   "use strict";
 
   const CONTRACT = Object.freeze({
-    id: "DGB_COMPASS_CONSTELLATION_CLUSTER_CONTROLLER_TNT_v6",
+    id: "DGB_COMPASS_CONSTELLATION_CLUSTER_CONTROLLER_TNT_v7",
     file: "/assets/compass/compass.controller.js",
     visualPassClaimed: false,
     productionAuthorized: false,
@@ -27,9 +27,9 @@
     constellation:
       "Swipe to rotate the constellation. Tap a star or label to open its cluster.",
     cluster:
-      "Tap a cluster star or label to inspect its path. Swipe or use Return to Orbit to return to the constellation.",
+      "Tap a cluster star or label to inspect its path. Swipe to return to the constellation.",
     path:
-      "Inspect the selected path. Enter only when this is the path you want."
+      "Inspect the selected path. Enter only when this is the path you want. Return To Orbit moves back to the open cluster."
   });
 
   const state = {
@@ -327,7 +327,10 @@
 
     if (!state.returnToOrbitControl) return;
 
-    const shouldShow = state.flowerExpanded === true;
+    const shouldShow =
+      state.flowerExpanded === true &&
+      state.selectedDestinationType === "petal" &&
+      !!state.selectedRoom;
 
     state.returnToOrbitControl.hidden = !shouldShow;
     state.returnToOrbitControl.disabled = !shouldShow;
@@ -634,9 +637,54 @@
     return true;
   }
 
+  function returnToConstellation(input = "swipe-return") {
+    const preserved = normalizeWing(state.selectedCardinal || state.orbitFocus);
+
+    state.mode = preserved ? MODES.ORBIT : MODES.COMPASS;
+    state.orbitFocus = preserved;
+    state.selectedCardinal = "";
+    state.flowerExpanded = false;
+    state.panelDescended = false;
+    clearDestination();
+    state.lastOrientationInput = input;
+
+    scrollToOrbit();
+    commit("return-to-constellation");
+    return true;
+  }
+
+  function returnToCluster(input = "panel-return-to-orbit") {
+    const preserved = normalizeWing(state.selectedCardinal || state.orbitFocus);
+
+    if (!preserved) {
+      return returnToConstellation(input);
+    }
+
+    const cardinal = findCardinal(preserved);
+    if (!cardinal) {
+      return returnToConstellation(input);
+    }
+
+    state.mode = MODES.DESTINATION;
+    state.orbitFocus = preserved;
+    state.selectedCardinal = preserved;
+    state.selectedRoom = "";
+    state.selectedDestinationType = "cardinal";
+    state.selectedDestinationId = preserved;
+    state.selectedDestinationLabel = cardinal.label;
+    state.flowerExpanded = true;
+    state.panelDescended = true;
+    state.lastOrientationInput = input;
+
+    setEnter(cardinal.validRoute ? cardinal.route : "", "html-cardinal-declaration");
+    scrollToPanel();
+    commit("return-to-open-cluster");
+    return true;
+  }
+
   function requestAxisSwipe(axis) {
     if (state.flowerExpanded && state.selectedCardinal) {
-      return focusOrbit(state.selectedCardinal, "swipe-return-to-constellation", "swipe-return");
+      return returnToConstellation("swipe-return-to-constellation");
     }
 
     const current = state.orbitFocus;
@@ -727,21 +775,6 @@
     return true;
   }
 
-  function returnToOrbit() {
-    const preserved = normalizeWing(state.selectedCardinal || state.orbitFocus);
-
-    scrollToOrbit();
-    state.mode = preserved ? MODES.ORBIT : MODES.COMPASS;
-    state.orbitFocus = preserved;
-    state.selectedCardinal = "";
-    state.flowerExpanded = false;
-    state.panelDescended = false;
-    clearDestination();
-    state.lastOrientationInput = "return-to-constellation";
-
-    commit("return-to-constellation");
-  }
-
   function navigateEnter() {
     const routeIsValid =
       state.enterEnabled === true &&
@@ -786,7 +819,7 @@
 
     if (target.matches("[data-compass-return-to-orbit]")) {
       event.preventDefault();
-      returnToOrbit();
+      returnToCluster("panel-return-to-open-cluster");
       return;
     }
 
@@ -820,14 +853,14 @@
     if (state.returnToOrbitControl) {
       state.returnToOrbitControl.addEventListener("click", (event) => {
         event.preventDefault();
-        returnToOrbit();
+        returnToCluster("panel-return-to-open-cluster");
       });
     }
 
     if (state.returnControl) {
       state.returnControl.addEventListener("click", (event) => {
         event.preventDefault();
-        returnToOrbit();
+        returnToConstellation("scene-return-to-constellation");
       });
     }
   }
@@ -845,8 +878,10 @@
       requestRoomSelection: selectRoom,
       selectMirrorland,
       requestMirrorlandSelection: selectMirrorland,
-      returnToOrbit,
-      returnStep: returnToOrbit,
+      returnToCluster,
+      returnToOrbit: returnToCluster,
+      returnToConstellation,
+      returnStep: returnToCluster,
       enter: navigateEnter,
       activateLens
     });

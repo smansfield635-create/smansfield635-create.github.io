@@ -3,6 +3,14 @@
    Scope: compass.css only.
 */
 
+/* TNT renewal target:
+   - preserve current intergalactic estate atmosphere
+   - keep obsolete scene-level Return hidden
+   - preserve panel return styling without forcing visibility
+   - style formula lens controls to match Frontier-style tab surfaces
+   - support Practical / Engineering / Evidence lens panels
+*/
+
 :root {
   --compass-bg-0: #05070b;
   --compass-bg-1: #090d15;
@@ -564,6 +572,83 @@ summary:focus-visible {
 
 .compass-formula-artifact__body p {
   max-width: 74ch;
+  margin: 0;
+  padding: 0;
+  color: rgba(225, 218, 198, 0.72);
+  font-size: 0.94rem;
+  line-height: 1.62;
+}
+
+.compass-lens-tabs {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  padding: 8px;
+  border: 1px solid rgba(124, 220, 255, 0.18);
+  border-radius: 999px;
+  background:
+    linear-gradient(135deg, rgba(124, 220, 255, 0.08), rgba(216, 184, 106, 0.04)),
+    rgba(3, 5, 9, 0.42);
+  box-shadow:
+    0 12px 34px rgba(0, 0, 0, 0.24),
+    inset 0 1px 0 rgba(255, 255, 255, 0.07);
+}
+
+.compass-lens-tab {
+  min-height: 42px;
+  padding: 9px 12px;
+  border: 1px solid rgba(225, 218, 198, 0.13);
+  border-radius: 999px;
+  color: rgba(225, 218, 198, 0.68);
+  background:
+    linear-gradient(135deg, rgba(18, 28, 42, 0.76), rgba(7, 10, 16, 0.78)),
+    rgba(7, 10, 16, 0.66);
+  box-shadow:
+    0 10px 26px rgba(0, 0, 0, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.07);
+  cursor: pointer;
+  font-size: 0.76rem;
+  font-weight: 900;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  transition:
+    color 180ms var(--compass-ease),
+    background 180ms var(--compass-ease),
+    border-color 180ms var(--compass-ease),
+    box-shadow 180ms var(--compass-ease),
+    transform 180ms var(--compass-ease);
+}
+
+.compass-lens-tab:hover,
+.compass-lens-tab[aria-selected="true"] {
+  color: #120f08;
+  border-color: rgba(243, 217, 139, 0.64);
+  background: linear-gradient(135deg, #f6df97, #b98d3e);
+  box-shadow:
+    0 12px 28px rgba(216, 184, 106, 0.22),
+    0 0 26px rgba(243, 217, 139, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.36);
+  transform: translateY(-1px);
+}
+
+.compass-lens-panel {
+  padding: 16px 18px;
+  border: 1px solid rgba(225, 218, 198, 0.11);
+  border-radius: 18px;
+  background:
+    radial-gradient(circle at 16% 0%, rgba(124, 220, 255, 0.08), transparent 12rem),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.045), rgba(124, 220, 255, 0.025)),
+    rgba(4, 7, 12, 0.42);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.07),
+    0 10px 28px rgba(0, 0, 0, 0.20);
+}
+
+.compass-lens-panel[hidden] {
+  display: none;
+}
+
+.compass-lens-panel p {
   margin: 0;
   padding: 0;
   color: rgba(225, 218, 198, 0.72);
@@ -1303,6 +1388,22 @@ summary:focus-visible {
 
   .compass-formula-artifact__body {
     padding: 0 14px 16px;
+  }
+
+  .compass-lens-tabs {
+    gap: 6px;
+    padding: 6px;
+  }
+
+  .compass-lens-tab {
+    min-height: 38px;
+    padding: 8px 9px;
+    font-size: 0.66rem;
+    letter-spacing: 0.08em;
+  }
+
+  .compass-lens-panel {
+    padding: 14px 15px;
   }
 
   .compass-discovery__item summary {

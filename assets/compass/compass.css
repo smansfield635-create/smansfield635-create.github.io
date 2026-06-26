@@ -1,61 +1,84 @@
 /* /assets/compass/compass.css
    DGB Compass — Scientific-discovery interface inside an intergalactic estate landscape.
-   Mirrorland Window presentation and dedicated-layer renewal.
+   Architectural Mirrorland stained-glass Window presentation renewal.
    Scope: compass.css only.
-*/
 
-/* TNT renewal target:
-   - preserve current intergalactic estate atmosphere
-   - preserve compass.crystals.js presentation ownership
-   - establish a dedicated Mirrorland Window renderer layer
-   - keep obsolete scene-level Return hidden
-   - preserve Back to Cluster styling without forcing visibility
-   - add separate Back to Compass styling
-   - present dormant, revealing, focused, withdrawing, and navigating states
-   - preserve pointer-inert WebGL surfaces
-   - style formula lens controls to match Frontier-style tab surfaces
-   - support Practical / Engineering / Evidence lens panels
+   Layer order:
+   1. estate atmosphere
+   2. crystals renderer
+   3. Mirrorland Window renderer
+   4. semantic navigation controls
+   5. guidance and transient interface controls
+
+   Mirrorland behavior:
+   - dormant: centered architectural miniature remains visible;
+   - revealing: the same miniature expands;
+   - focused: full Window becomes the dominant inspection surface;
+   - withdrawing: the same Window contracts back to its miniature;
+   - navigating: the Window remains visible during controlled handoff.
+
+   Authority boundaries:
+   - compass.crystals.js owns cardinal and room rendering;
+   - compass.mirrorland-window.js owns Mirrorland Window rendering;
+   - HTML owns semantic activation and controls;
+   - the controller owns state and navigation.
 */
 
 :root {
   --compass-bg-0: #05070b;
   --compass-bg-1: #090d15;
   --compass-bg-2: #111827;
+
   --compass-stone: rgba(225, 218, 198, 0.82);
   --compass-stone-dim: rgba(225, 218, 198, 0.58);
   --compass-stone-soft: rgba(225, 218, 198, 0.42);
+
   --compass-gold: #d8b86a;
   --compass-gold-hot: #f3d98b;
   --compass-blue: #7cdcff;
+
   --compass-blue-soft: rgba(124, 220, 255, 0.22);
   --compass-violet: rgba(159, 137, 255, 0.22);
   --compass-gold-soft: rgba(216, 184, 106, 0.28);
+
   --compass-glass: rgba(124, 185, 214, 0.16);
   --compass-glass-strong: rgba(124, 185, 214, 0.30);
+
   --compass-line: rgba(225, 218, 198, 0.18);
   --compass-line-strong: rgba(216, 184, 106, 0.38);
+
   --compass-shadow: rgba(0, 0, 0, 0.58);
   --compass-focus: #f3d98b;
+
   --compass-radius-lg: 28px;
   --compass-radius-md: 18px;
   --compass-radius-sm: 12px;
+
   --compass-max: 1180px;
   --compass-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
 
-  --mirrorland-window-mount-z: 1;
-  --compass-crystals-mount-z: 2;
+  --compass-atmosphere-z: 0;
+  --compass-crystals-mount-z: 1;
+  --mirrorland-window-mount-z: 2;
   --compass-semantic-layer-z: 3;
   --compass-guidance-layer-z: 7;
 
-  --mirrorland-dormant-frame-opacity: 0.62;
-  --mirrorland-transition-frame-opacity: 0.26;
-  --mirrorland-focused-frame-opacity: 0.12;
-  --mirrorland-navigating-frame-opacity: 0.08;
+  --mirrorland-dormant-frame-opacity: 0.56;
+  --mirrorland-transition-frame-opacity: 0.22;
+  --mirrorland-focused-frame-opacity: 0.08;
+  --mirrorland-navigating-frame-opacity: 0.05;
 
-  --mirrorland-focused-atmosphere-opacity: 0.30;
-  --mirrorland-transition-atmosphere-opacity: 0.46;
-  --mirrorland-context-control-opacity: 0.58;
-  --mirrorland-context-control-scale: 0.96;
+  --mirrorland-focused-atmosphere-opacity: 0.24;
+  --mirrorland-transition-atmosphere-opacity: 0.40;
+
+  --mirrorland-context-control-opacity: 0.46;
+  --mirrorland-context-control-scale: 0.95;
+
+  --mirrorland-hit-size:
+    clamp(168px, 22vw, 224px);
+
+  --mirrorland-label-offset:
+    clamp(74px, 10vw, 104px);
 }
 
 * {
@@ -73,10 +96,27 @@ body {
   margin: 0;
   color: var(--compass-stone);
   background:
-    radial-gradient(circle at 18% 10%, rgba(124, 220, 255, 0.13), transparent 26rem),
-    radial-gradient(circle at 72% 18%, rgba(216, 184, 106, 0.13), transparent 30rem),
-    radial-gradient(circle at 78% 72%, rgba(159, 137, 255, 0.10), transparent 32rem),
-    linear-gradient(135deg, var(--compass-bg-0), var(--compass-bg-1) 48%, #030406);
+    radial-gradient(
+      circle at 18% 10%,
+      rgba(124, 220, 255, 0.13),
+      transparent 26rem
+    ),
+    radial-gradient(
+      circle at 72% 18%,
+      rgba(216, 184, 106, 0.13),
+      transparent 30rem
+    ),
+    radial-gradient(
+      circle at 78% 72%,
+      rgba(159, 137, 255, 0.10),
+      transparent 32rem
+    ),
+    linear-gradient(
+      135deg,
+      var(--compass-bg-0),
+      var(--compass-bg-1) 48%,
+      #030406
+    );
   font-family:
     Inter,
     ui-sans-serif,
@@ -94,11 +134,34 @@ body::before {
   inset: 0;
   pointer-events: none;
   background:
-    radial-gradient(circle at 12% 18%, rgba(124, 220, 255, 0.035), transparent 22rem),
-    radial-gradient(circle at 88% 16%, rgba(243, 217, 139, 0.035), transparent 24rem),
-    linear-gradient(90deg, transparent 0 8%, rgba(255, 255, 255, 0.025) 8.2%, transparent 8.6%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.035), transparent 22%, transparent 78%, rgba(0, 0, 0, 0.36)),
-    radial-gradient(circle at 50% 0%, rgba(255, 244, 199, 0.08), transparent 42rem);
+    radial-gradient(
+      circle at 12% 18%,
+      rgba(124, 220, 255, 0.035),
+      transparent 22rem
+    ),
+    radial-gradient(
+      circle at 88% 16%,
+      rgba(243, 217, 139, 0.035),
+      transparent 24rem
+    ),
+    linear-gradient(
+      90deg,
+      transparent 0 8%,
+      rgba(255, 255, 255, 0.025) 8.2%,
+      transparent 8.6%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.035),
+      transparent 22%,
+      transparent 78%,
+      rgba(0, 0, 0, 0.36)
+    ),
+    radial-gradient(
+      circle at 50% 0%,
+      rgba(255, 244, 199, 0.08),
+      transparent 42rem
+    );
   mix-blend-mode: screen;
   opacity: 0.72;
 }
@@ -156,14 +219,26 @@ summary:focus-visible {
   height: 100vh;
   transform: translateX(-50%);
   background:
-    linear-gradient(90deg, transparent, rgba(216, 184, 106, 0.08), transparent),
-    radial-gradient(ellipse at 50% 25%, rgba(99, 167, 202, 0.18), transparent 28rem);
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(216, 184, 106, 0.08),
+      transparent
+    ),
+    radial-gradient(
+      ellipse at 50% 25%,
+      rgba(99, 167, 202, 0.18),
+      transparent 28rem
+    );
   opacity: 0.58;
 }
 
 .compass-estate__hall {
   width: min(100%, var(--compass-max));
-  min-height: calc(100vh - clamp(36px, 6vw, 84px));
+  min-height:
+    calc(
+      100vh - clamp(36px, 6vw, 84px)
+    );
   margin: 0 auto;
   display: grid;
   grid-template-rows: auto;
@@ -187,8 +262,16 @@ summary:focus-visible {
 .compass-estate h1 {
   margin: 0;
   color: rgba(255, 248, 224, 0.96);
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: clamp(3rem, 8vw, 7.25rem);
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+  font-size:
+    clamp(
+      3rem,
+      8vw,
+      7.25rem
+    );
   line-height: 0.86;
   letter-spacing: -0.06em;
   text-shadow:
@@ -199,9 +282,21 @@ summary:focus-visible {
 
 .compass-estate__sentence {
   max-width: 820px;
-  margin: clamp(14px, 2vw, 20px) 0 0;
+  margin:
+    clamp(
+      14px,
+      2vw,
+      20px
+    )
+    0
+    0;
   color: rgba(255, 248, 224, 0.88);
-  font-size: clamp(1.08rem, 2.2vw, 1.55rem);
+  font-size:
+    clamp(
+      1.08rem,
+      2.2vw,
+      1.55rem
+    );
   line-height: 1.28;
   letter-spacing: 0.02em;
 }
@@ -210,14 +305,28 @@ summary:focus-visible {
   max-width: 780px;
   margin: 12px 0 0;
   color: rgba(225, 218, 198, 0.68);
-  font-size: clamp(0.98rem, 1.4vw, 1.08rem);
+  font-size:
+    clamp(
+      0.98rem,
+      1.4vw,
+      1.08rem
+    );
   line-height: 1.64;
 }
 
 .compass-value-deck {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: clamp(14px, 2vw, 22px);
+  grid-template-columns:
+    repeat(
+      2,
+      minmax(0, 1fr)
+    );
+  gap:
+    clamp(
+      14px,
+      2vw,
+      22px
+    );
   max-width: 940px;
   perspective: 1200px;
 }
@@ -228,12 +337,28 @@ summary:focus-visible {
   gap: 9px;
   min-height: 148px;
   padding: 20px 22px;
-  border: 1px solid rgba(124, 220, 255, 0.34);
-  border-radius: var(--compass-radius-md);
+  border:
+    1px solid
+    rgba(124, 220, 255, 0.34);
+  border-radius:
+    var(--compass-radius-md);
   background:
-    linear-gradient(145deg, rgba(255, 255, 255, 0.10), transparent 22%),
-    radial-gradient(circle at 18% 18%, rgba(124, 220, 255, 0.20), transparent 8.8rem),
-    linear-gradient(155deg, rgba(14, 24, 36, 0.96), rgba(5, 8, 14, 0.94) 56%, rgba(15, 20, 26, 0.98)),
+    linear-gradient(
+      145deg,
+      rgba(255, 255, 255, 0.10),
+      transparent 22%
+    ),
+    radial-gradient(
+      circle at 18% 18%,
+      rgba(124, 220, 255, 0.20),
+      transparent 8.8rem
+    ),
+    linear-gradient(
+      155deg,
+      rgba(14, 24, 36, 0.96),
+      rgba(5, 8, 14, 0.94) 56%,
+      rgba(15, 20, 26, 0.98)
+    ),
     rgba(5, 8, 14, 0.94);
   box-shadow:
     0 24px 0 rgba(0, 0, 0, 0.22),
@@ -256,20 +381,48 @@ summary:focus-visible {
 }
 
 .compass-value-card:first-child {
-  border-color: rgba(243, 217, 139, 0.52);
+  border-color:
+    rgba(243, 217, 139, 0.52);
   background:
-    linear-gradient(145deg, rgba(255, 248, 224, 0.14), transparent 23%),
-    radial-gradient(circle at 18% 18%, rgba(243, 217, 139, 0.28), transparent 9rem),
-    linear-gradient(155deg, rgba(41, 34, 20, 0.96), rgba(8, 9, 13, 0.95) 58%, rgba(19, 18, 16, 0.98)),
+    linear-gradient(
+      145deg,
+      rgba(255, 248, 224, 0.14),
+      transparent 23%
+    ),
+    radial-gradient(
+      circle at 18% 18%,
+      rgba(243, 217, 139, 0.28),
+      transparent 9rem
+    ),
+    linear-gradient(
+      155deg,
+      rgba(41, 34, 20, 0.96),
+      rgba(8, 9, 13, 0.95) 58%,
+      rgba(19, 18, 16, 0.98)
+    ),
     rgba(8, 9, 13, 0.94);
 }
 
 .compass-value-card:nth-child(2) {
-  border-color: rgba(124, 220, 255, 0.54);
+  border-color:
+    rgba(124, 220, 255, 0.54);
   background:
-    linear-gradient(145deg, rgba(225, 248, 255, 0.13), transparent 23%),
-    radial-gradient(circle at 18% 18%, rgba(124, 220, 255, 0.30), transparent 9rem),
-    linear-gradient(155deg, rgba(18, 38, 48, 0.96), rgba(7, 10, 16, 0.95) 58%, rgba(11, 19, 25, 0.98)),
+    linear-gradient(
+      145deg,
+      rgba(225, 248, 255, 0.13),
+      transparent 23%
+    ),
+    radial-gradient(
+      circle at 18% 18%,
+      rgba(124, 220, 255, 0.30),
+      transparent 9rem
+    ),
+    linear-gradient(
+      155deg,
+      rgba(18, 38, 48, 0.96),
+      rgba(7, 10, 16, 0.95) 58%,
+      rgba(11, 19, 25, 0.98)
+    ),
     rgba(7, 10, 16, 0.94);
 }
 
@@ -278,11 +431,24 @@ summary:focus-visible {
   position: absolute;
   inset: 12px;
   pointer-events: none;
-  border: 1px solid rgba(255, 248, 224, 0.13);
-  border-radius: calc(var(--compass-radius-md) - 8px);
+  border:
+    1px solid
+    rgba(255, 248, 224, 0.13);
+  border-radius:
+    calc(
+      var(--compass-radius-md) - 8px
+    );
   background:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.10), transparent 35%),
-    linear-gradient(315deg, rgba(0, 0, 0, 0.16), transparent 42%);
+    linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.10),
+      transparent 35%
+    ),
+    linear-gradient(
+      315deg,
+      rgba(0, 0, 0, 0.16),
+      transparent 42%
+    );
   transform: translateZ(18px);
 }
 
@@ -294,7 +460,8 @@ summary:focus-visible {
   width: 12px;
   height: 12px;
   border-radius: 999px;
-  background: rgba(124, 220, 255, 0.96);
+  background:
+    rgba(124, 220, 255, 0.96);
   box-shadow:
     0 0 18px rgba(124, 220, 255, 0.80),
     0 0 46px rgba(124, 220, 255, 0.36),
@@ -304,7 +471,8 @@ summary:focus-visible {
 }
 
 .compass-value-card:first-child::after {
-  background: rgba(243, 217, 139, 0.98);
+  background:
+    rgba(243, 217, 139, 0.98);
   box-shadow:
     0 0 18px rgba(243, 217, 139, 0.82),
     0 0 48px rgba(216, 184, 106, 0.42),
@@ -316,7 +484,8 @@ summary:focus-visible {
     translateY(-6px)
     rotateX(2deg)
     rotateY(-2deg);
-  border-color: rgba(255, 248, 224, 0.54);
+  border-color:
+    rgba(255, 248, 224, 0.54);
   box-shadow:
     0 29px 0 rgba(0, 0, 0, 0.20),
     0 38px 92px rgba(0, 0, 0, 0.58),
@@ -371,11 +540,23 @@ summary:focus-visible {
 .compass-closing {
   position: relative;
   max-width: 880px;
-  padding: clamp(18px, 2.4vw, 26px);
-  border: 1px solid rgba(216, 184, 106, 0.18);
-  border-radius: var(--compass-radius-md);
+  padding:
+    clamp(
+      18px,
+      2.4vw,
+      26px
+    );
+  border:
+    1px solid
+    rgba(216, 184, 106, 0.18);
+  border-radius:
+    var(--compass-radius-md);
   background:
-    linear-gradient(135deg, rgba(216, 184, 106, 0.075), rgba(124, 185, 214, 0.045)),
+    linear-gradient(
+      135deg,
+      rgba(216, 184, 106, 0.075),
+      rgba(124, 185, 214, 0.045)
+    ),
     rgba(7, 10, 16, 0.50);
   box-shadow:
     0 18px 58px rgba(0, 0, 0, 0.24),
@@ -391,8 +572,13 @@ summary:focus-visible {
   position: absolute;
   inset: 11px;
   pointer-events: none;
-  border: 1px solid rgba(216, 184, 106, 0.10);
-  border-radius: calc(var(--compass-radius-md) - 7px);
+  border:
+    1px solid
+    rgba(216, 184, 106, 0.10);
+  border-radius:
+    calc(
+      var(--compass-radius-md) - 7px
+    );
 }
 
 .compass-introduction p,
@@ -403,17 +589,35 @@ summary:focus-visible {
   max-width: 72ch;
   margin: 0;
   color: rgba(225, 218, 198, 0.74);
-  font-size: clamp(0.98rem, 1.35vw, 1.08rem);
+  font-size:
+    clamp(
+      0.98rem,
+      1.35vw,
+      1.08rem
+    );
   line-height: 1.64;
 }
 
 .compass-threshold {
   max-width: 960px;
-  border-color: rgba(243, 217, 139, 0.26);
+  border-color:
+    rgba(243, 217, 139, 0.26);
   background:
-    radial-gradient(ellipse at 12% 0%, rgba(243, 217, 139, 0.11), transparent 18rem),
-    radial-gradient(ellipse at 82% 20%, rgba(124, 220, 255, 0.10), transparent 18rem),
-    linear-gradient(135deg, rgba(216, 184, 106, 0.075), rgba(124, 185, 214, 0.045)),
+    radial-gradient(
+      ellipse at 12% 0%,
+      rgba(243, 217, 139, 0.11),
+      transparent 18rem
+    ),
+    radial-gradient(
+      ellipse at 82% 20%,
+      rgba(124, 220, 255, 0.10),
+      transparent 18rem
+    ),
+    linear-gradient(
+      135deg,
+      rgba(216, 184, 106, 0.075),
+      rgba(124, 185, 214, 0.045)
+    ),
     rgba(7, 10, 16, 0.56);
 }
 
@@ -421,7 +625,9 @@ summary:focus-visible {
   position: relative;
   z-index: 1;
   margin-top: 14px;
-  border-top: 1px solid rgba(225, 218, 198, 0.12);
+  border-top:
+    1px solid
+    rgba(225, 218, 198, 0.12);
   padding-top: 12px;
 }
 
@@ -449,9 +655,12 @@ summary:focus-visible {
   place-items: center;
   width: 20px;
   height: 20px;
-  border: 1px solid rgba(243, 217, 139, 0.32);
+  border:
+    1px solid
+    rgba(243, 217, 139, 0.32);
   border-radius: 999px;
-  background: rgba(7, 10, 16, 0.50);
+  background:
+    rgba(7, 10, 16, 0.50);
 }
 
 .compass-introduction__more[open] summary::after {
@@ -467,12 +676,26 @@ summary:focus-visible {
   position: relative;
   z-index: 1;
   margin-top: 16px;
-  border: 1px solid rgba(243, 217, 139, 0.30);
+  border:
+    1px solid
+    rgba(243, 217, 139, 0.30);
   border-radius: 22px;
   background:
-    radial-gradient(circle at 18% 0%, rgba(243, 217, 139, 0.14), transparent 15rem),
-    radial-gradient(circle at 88% 40%, rgba(124, 220, 255, 0.11), transparent 16rem),
-    linear-gradient(145deg, rgba(255, 255, 255, 0.075), transparent 28%),
+    radial-gradient(
+      circle at 18% 0%,
+      rgba(243, 217, 139, 0.14),
+      transparent 15rem
+    ),
+    radial-gradient(
+      circle at 88% 40%,
+      rgba(124, 220, 255, 0.11),
+      transparent 16rem
+    ),
+    linear-gradient(
+      145deg,
+      rgba(255, 255, 255, 0.075),
+      transparent 28%
+    ),
     rgba(5, 8, 14, 0.62);
   box-shadow:
     0 18px 54px rgba(0, 0, 0, 0.32),
@@ -486,12 +709,24 @@ summary:focus-visible {
   content: "";
   position: absolute;
   inset: 12px;
-  border: 1px solid rgba(255, 248, 224, 0.09);
+  border:
+    1px solid
+    rgba(255, 248, 224, 0.09);
   border-radius: 16px;
   pointer-events: none;
   background:
-    linear-gradient(90deg, transparent, rgba(243, 217, 139, 0.055), transparent),
-    radial-gradient(circle at 50% 50%, transparent 0 45%, rgba(124, 220, 255, 0.035) 46%, transparent 47%);
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(243, 217, 139, 0.055),
+      transparent
+    ),
+    radial-gradient(
+      circle at 50% 50%,
+      transparent 0 45%,
+      rgba(124, 220, 255, 0.035) 46%,
+      transparent 47%
+    );
   opacity: 0.9;
 }
 
@@ -500,7 +735,12 @@ summary:focus-visible {
   z-index: 1;
   display: grid;
   gap: 10px;
-  padding: clamp(16px, 2.2vw, 22px);
+  padding:
+    clamp(
+      16px,
+      2.2vw,
+      22px
+    );
   cursor: pointer;
   list-style: none;
 }
@@ -513,10 +753,14 @@ summary:focus-visible {
   content: "Expand";
   justify-self: start;
   padding: 6px 10px;
-  border: 1px solid rgba(216, 184, 106, 0.26);
+  border:
+    1px solid
+    rgba(216, 184, 106, 0.26);
   border-radius: 999px;
-  color: rgba(243, 217, 139, 0.88);
-  background: rgba(7, 10, 16, 0.45);
+  color:
+    rgba(243, 217, 139, 0.88);
+  background:
+    rgba(7, 10, 16, 0.45);
   font-size: 0.66rem;
   font-weight: 850;
   letter-spacing: 0.12em;
@@ -528,7 +772,8 @@ summary:focus-visible {
 }
 
 .compass-formula-artifact__title {
-  color: rgba(243, 217, 139, 0.94);
+  color:
+    rgba(243, 217, 139, 0.94);
   font-size: 0.72rem;
   font-weight: 900;
   letter-spacing: 0.18em;
@@ -538,13 +783,29 @@ summary:focus-visible {
 .compass-formula-artifact__math {
   display: block;
   max-width: 100%;
-  padding: clamp(13px, 2vw, 20px);
-  border: 1px solid rgba(255, 248, 224, 0.14);
+  padding:
+    clamp(
+      13px,
+      2vw,
+      20px
+    );
+  border:
+    1px solid
+    rgba(255, 248, 224, 0.14);
   border-radius: 18px;
-  color: rgba(255, 248, 224, 0.97);
+  color:
+    rgba(255, 248, 224, 0.97);
   background:
-    radial-gradient(ellipse at 50% 0%, rgba(255, 248, 224, 0.09), transparent 10rem),
-    linear-gradient(135deg, rgba(216, 184, 106, 0.08), rgba(124, 220, 255, 0.045)),
+    radial-gradient(
+      ellipse at 50% 0%,
+      rgba(255, 248, 224, 0.09),
+      transparent 10rem
+    ),
+    linear-gradient(
+      135deg,
+      rgba(216, 184, 106, 0.08),
+      rgba(124, 220, 255, 0.045)
+    ),
     rgba(3, 5, 9, 0.56);
   box-shadow:
     0 0 30px rgba(243, 217, 139, 0.07),
@@ -556,7 +817,12 @@ summary:focus-visible {
     "Times New Roman",
     Georgia,
     serif;
-  font-size: clamp(1.14rem, 3.2vw, 2.05rem);
+  font-size:
+    clamp(
+      1.14rem,
+      3.2vw,
+      2.05rem
+    );
   font-style: italic;
   font-weight: 400;
   line-height: 1.82;
@@ -588,27 +854,41 @@ summary:focus-visible {
   z-index: 1;
   display: grid;
   gap: 11px;
-  padding: 0 clamp(16px, 2.2vw, 22px) clamp(18px, 2.3vw, 24px);
+  padding:
+    0
+    clamp(16px, 2.2vw, 22px)
+    clamp(18px, 2.3vw, 24px);
 }
 
 .compass-formula-artifact__body p {
   max-width: 74ch;
   margin: 0;
   padding: 0;
-  color: rgba(225, 218, 198, 0.72);
+  color:
+    rgba(225, 218, 198, 0.72);
   font-size: 0.94rem;
   line-height: 1.62;
 }
 
 .compass-lens-tabs {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns:
+    repeat(
+      3,
+      minmax(0, 1fr)
+    );
   gap: 8px;
   padding: 8px;
-  border: 1px solid rgba(124, 220, 255, 0.18);
+  border:
+    1px solid
+    rgba(124, 220, 255, 0.18);
   border-radius: 999px;
   background:
-    linear-gradient(135deg, rgba(124, 220, 255, 0.08), rgba(216, 184, 106, 0.04)),
+    linear-gradient(
+      135deg,
+      rgba(124, 220, 255, 0.08),
+      rgba(216, 184, 106, 0.04)
+    ),
     rgba(3, 5, 9, 0.42);
   box-shadow:
     0 12px 34px rgba(0, 0, 0, 0.24),
@@ -618,11 +898,18 @@ summary:focus-visible {
 .compass-lens-tab {
   min-height: 42px;
   padding: 9px 12px;
-  border: 1px solid rgba(225, 218, 198, 0.13);
+  border:
+    1px solid
+    rgba(225, 218, 198, 0.13);
   border-radius: 999px;
-  color: rgba(225, 218, 198, 0.68);
+  color:
+    rgba(225, 218, 198, 0.68);
   background:
-    linear-gradient(135deg, rgba(18, 28, 42, 0.76), rgba(7, 10, 16, 0.78)),
+    linear-gradient(
+      135deg,
+      rgba(18, 28, 42, 0.76),
+      rgba(7, 10, 16, 0.78)
+    ),
     rgba(7, 10, 16, 0.66);
   box-shadow:
     0 10px 26px rgba(0, 0, 0, 0.22),
@@ -643,8 +930,14 @@ summary:focus-visible {
 .compass-lens-tab:hover,
 .compass-lens-tab[aria-selected="true"] {
   color: #120f08;
-  border-color: rgba(243, 217, 139, 0.64);
-  background: linear-gradient(135deg, #f6df97, #b98d3e);
+  border-color:
+    rgba(243, 217, 139, 0.64);
+  background:
+    linear-gradient(
+      135deg,
+      #f6df97,
+      #b98d3e
+    );
   box-shadow:
     0 12px 28px rgba(216, 184, 106, 0.22),
     0 0 26px rgba(243, 217, 139, 0.14),
@@ -654,11 +947,21 @@ summary:focus-visible {
 
 .compass-lens-panel {
   padding: 16px 18px;
-  border: 1px solid rgba(225, 218, 198, 0.11);
+  border:
+    1px solid
+    rgba(225, 218, 198, 0.11);
   border-radius: 18px;
   background:
-    radial-gradient(circle at 16% 0%, rgba(124, 220, 255, 0.08), transparent 12rem),
-    linear-gradient(135deg, rgba(255, 255, 255, 0.045), rgba(124, 220, 255, 0.025)),
+    radial-gradient(
+      circle at 16% 0%,
+      rgba(124, 220, 255, 0.08),
+      transparent 12rem
+    ),
+    linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.045),
+      rgba(124, 220, 255, 0.025)
+    ),
     rgba(4, 7, 12, 0.42);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.07),
@@ -672,30 +975,27 @@ summary:focus-visible {
 .compass-lens-panel p {
   margin: 0;
   padding: 0;
-  color: rgba(225, 218, 198, 0.72);
+  color:
+    rgba(225, 218, 198, 0.72);
   font-size: 0.94rem;
   line-height: 1.62;
 }
 
-.compass-discovery__item .compass-formula-artifact {
-  margin: 0 16px 18px;
-  border-color: rgba(124, 220, 255, 0.20);
-  background:
-    radial-gradient(circle at 22% 0%, rgba(124, 220, 255, 0.10), transparent 13rem),
-    linear-gradient(145deg, rgba(255, 255, 255, 0.055), transparent 28%),
-    rgba(5, 8, 14, 0.48);
-}
-
-.compass-discovery__item .compass-formula-artifact__math {
-  font-size: clamp(1.02rem, 2.6vw, 1.55rem);
-}
-
 .compass-orbit-intro {
   max-width: 960px;
-  border-color: rgba(124, 220, 255, 0.22);
+  border-color:
+    rgba(124, 220, 255, 0.22);
   background:
-    radial-gradient(ellipse at 24% 0%, rgba(124, 220, 255, 0.12), transparent 18rem),
-    linear-gradient(135deg, rgba(124, 220, 255, 0.075), rgba(216, 184, 106, 0.055)),
+    radial-gradient(
+      ellipse at 24% 0%,
+      rgba(124, 220, 255, 0.12),
+      transparent 18rem
+    ),
+    linear-gradient(
+      135deg,
+      rgba(124, 220, 255, 0.075),
+      rgba(216, 184, 106, 0.055)
+    ),
     rgba(7, 10, 16, 0.52);
 }
 
@@ -704,26 +1004,51 @@ summary:focus-visible {
   z-index: 1;
   max-width: 780px;
   margin: 0 0 10px;
-  color: rgba(255, 248, 224, 0.96);
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: clamp(1.75rem, 4vw, 3.35rem);
+  color:
+    rgba(255, 248, 224, 0.96);
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+  font-size:
+    clamp(
+      1.75rem,
+      4vw,
+      3.35rem
+    );
   line-height: 0.98;
   letter-spacing: -0.035em;
 }
 
 .compass-discovery {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: clamp(12px, 1.8vw, 18px);
+  grid-template-columns:
+    repeat(
+      2,
+      minmax(0, 1fr)
+    );
+  gap:
+    clamp(
+      12px,
+      1.8vw,
+      18px
+    );
   max-width: 1040px;
 }
 
 .compass-discovery__item {
   position: relative;
-  border: 1px solid rgba(225, 218, 198, 0.14);
-  border-radius: var(--compass-radius-md);
+  border:
+    1px solid
+    rgba(225, 218, 198, 0.14);
+  border-radius:
+    var(--compass-radius-md);
   background:
-    linear-gradient(135deg, rgba(124, 185, 214, 0.075), rgba(216, 184, 106, 0.045)),
+    linear-gradient(
+      135deg,
+      rgba(124, 185, 214, 0.075),
+      rgba(216, 184, 106, 0.045)
+    ),
     rgba(8, 13, 22, 0.54);
   box-shadow:
     0 14px 44px rgba(0, 0, 0, 0.24),
@@ -734,18 +1059,21 @@ summary:focus-visible {
 }
 
 .compass-discovery__item[open] {
-  border-color: rgba(216, 184, 106, 0.30);
+  border-color:
+    rgba(216, 184, 106, 0.30);
 }
 
 .compass-discovery__item > summary {
   position: relative;
   display: grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns:
+    1fr auto;
   align-items: center;
   gap: 12px;
   min-height: 62px;
   padding: 17px 18px;
-  color: rgba(255, 248, 224, 0.92);
+  color:
+    rgba(255, 248, 224, 0.92);
   cursor: pointer;
   font-size: 0.93rem;
   font-weight: 850;
@@ -764,10 +1092,13 @@ summary:focus-visible {
   place-items: center;
   width: 24px;
   height: 24px;
-  border: 1px solid rgba(216, 184, 106, 0.26);
+  border:
+    1px solid
+    rgba(216, 184, 106, 0.26);
   border-radius: 999px;
   color: var(--compass-gold);
-  background: rgba(7, 10, 16, 0.50);
+  background:
+    rgba(7, 10, 16, 0.50);
 }
 
 .compass-discovery__item[open] > summary::after {
@@ -777,7 +1108,8 @@ summary:focus-visible {
 .compass-discovery__item p {
   margin: 0;
   padding: 0 18px 18px;
-  color: rgba(225, 218, 198, 0.66);
+  color:
+    rgba(225, 218, 198, 0.66);
   font-size: 0.94rem;
   line-height: 1.56;
 }
@@ -785,51 +1117,165 @@ summary:focus-visible {
 .compass-discovery__item .compass-introduction__more {
   margin: 0 16px 16px;
   padding: 11px 12px 12px;
-  border: 1px solid rgba(225, 218, 198, 0.10);
+  border:
+    1px solid
+    rgba(225, 218, 198, 0.10);
   border-radius: 14px;
   background:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.035), rgba(124, 220, 255, 0.025)),
+    linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.035),
+      rgba(124, 220, 255, 0.025)
+    ),
     rgba(4, 7, 12, 0.28);
 }
 
 .compass-discovery__item .compass-introduction__more summary {
   font-size: 0.68rem;
-  color: rgba(243, 217, 139, 0.84);
+  color:
+    rgba(243, 217, 139, 0.84);
 }
 
 .compass-discovery__item .compass-introduction__more p {
   padding: 0;
   margin-top: 10px;
   font-size: 0.90rem;
-  color: rgba(225, 218, 198, 0.64);
+  color:
+    rgba(225, 218, 198, 0.64);
 }
+
+.compass-discovery__item .compass-formula-artifact {
+  margin: 0 16px 18px;
+  border-color:
+    rgba(124, 220, 255, 0.20);
+  background:
+    radial-gradient(
+      circle at 22% 0%,
+      rgba(124, 220, 255, 0.10),
+      transparent 13rem
+    ),
+    linear-gradient(
+      145deg,
+      rgba(255, 255, 255, 0.055),
+      transparent 28%
+    ),
+    rgba(5, 8, 14, 0.48);
+}
+
+.compass-discovery__item .compass-formula-artifact__math {
+  font-size:
+    clamp(
+      1.02rem,
+      2.6vw,
+      1.55rem
+    );
+}
+
+/* =========================================================
+   COMPASS SCENE
+   ========================================================= */
 
 .compass-scene {
   position: relative;
   isolation: isolate;
-  min-height: clamp(430px, 56vh, 680px);
-  border: 1px solid rgba(124, 220, 255, 0.20);
-  border-radius: var(--compass-radius-lg);
+  min-height:
+    clamp(
+      430px,
+      56vh,
+      680px
+    );
+  border:
+    1px solid
+    rgba(124, 220, 255, 0.20);
+  border-radius:
+    var(--compass-radius-lg);
   overflow: hidden;
   touch-action: none;
   overscroll-behavior: contain;
   background:
-    radial-gradient(circle at 8% 18%, rgba(255, 248, 224, 0.25) 0 1px, transparent 2px),
-    radial-gradient(circle at 19% 34%, rgba(124, 220, 255, 0.18) 0 1px, transparent 2px),
-    radial-gradient(circle at 37% 15%, rgba(255, 248, 224, 0.13) 0 1px, transparent 2px),
-    radial-gradient(circle at 53% 25%, rgba(216, 184, 106, 0.20) 0 1px, transparent 2px),
-    radial-gradient(circle at 71% 12%, rgba(124, 220, 255, 0.22) 0 1.2px, transparent 2.4px),
-    radial-gradient(circle at 88% 26%, rgba(255, 248, 224, 0.14) 0 1px, transparent 2px),
-    radial-gradient(circle at 14% 80%, rgba(124, 220, 255, 0.18) 0 1px, transparent 2px),
-    radial-gradient(circle at 42% 78%, rgba(255, 248, 224, 0.22) 0 1.2px, transparent 2.4px),
-    radial-gradient(circle at 68% 84%, rgba(216, 184, 106, 0.15) 0 1px, transparent 2px),
-    radial-gradient(circle at 91% 72%, rgba(124, 220, 255, 0.16) 0 1px, transparent 2px),
-    radial-gradient(circle at 84% 17%, rgba(48, 63, 112, 0.40), rgba(28, 31, 62, 0.20) 34%, transparent 72px),
-    radial-gradient(circle at 14% 74%, rgba(72, 118, 134, 0.30), rgba(20, 39, 56, 0.18) 38%, transparent 88px),
-    radial-gradient(circle at 76% 78%, rgba(148, 96, 62, 0.18), rgba(56, 34, 25, 0.12) 34%, transparent 82px),
-    radial-gradient(ellipse at 50% 48%, rgba(124, 220, 255, 0.14), transparent 34%),
-    radial-gradient(ellipse at 50% 100%, rgba(216, 184, 106, 0.09), transparent 50%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.035), rgba(0, 0, 0, 0.28)),
+    radial-gradient(
+      circle at 8% 18%,
+      rgba(255, 248, 224, 0.25) 0 1px,
+      transparent 2px
+    ),
+    radial-gradient(
+      circle at 19% 34%,
+      rgba(124, 220, 255, 0.18) 0 1px,
+      transparent 2px
+    ),
+    radial-gradient(
+      circle at 37% 15%,
+      rgba(255, 248, 224, 0.13) 0 1px,
+      transparent 2px
+    ),
+    radial-gradient(
+      circle at 53% 25%,
+      rgba(216, 184, 106, 0.20) 0 1px,
+      transparent 2px
+    ),
+    radial-gradient(
+      circle at 71% 12%,
+      rgba(124, 220, 255, 0.22) 0 1.2px,
+      transparent 2.4px
+    ),
+    radial-gradient(
+      circle at 88% 26%,
+      rgba(255, 248, 224, 0.14) 0 1px,
+      transparent 2px
+    ),
+    radial-gradient(
+      circle at 14% 80%,
+      rgba(124, 220, 255, 0.18) 0 1px,
+      transparent 2px
+    ),
+    radial-gradient(
+      circle at 42% 78%,
+      rgba(255, 248, 224, 0.22) 0 1.2px,
+      transparent 2.4px
+    ),
+    radial-gradient(
+      circle at 68% 84%,
+      rgba(216, 184, 106, 0.15) 0 1px,
+      transparent 2px
+    ),
+    radial-gradient(
+      circle at 91% 72%,
+      rgba(124, 220, 255, 0.16) 0 1px,
+      transparent 2px
+    ),
+    radial-gradient(
+      circle at 84% 17%,
+      rgba(48, 63, 112, 0.40),
+      rgba(28, 31, 62, 0.20) 34%,
+      transparent 72px
+    ),
+    radial-gradient(
+      circle at 14% 74%,
+      rgba(72, 118, 134, 0.30),
+      rgba(20, 39, 56, 0.18) 38%,
+      transparent 88px
+    ),
+    radial-gradient(
+      circle at 76% 78%,
+      rgba(148, 96, 62, 0.18),
+      rgba(56, 34, 25, 0.12) 34%,
+      transparent 82px
+    ),
+    radial-gradient(
+      ellipse at 50% 48%,
+      rgba(124, 220, 255, 0.14),
+      transparent 34%
+    ),
+    radial-gradient(
+      ellipse at 50% 100%,
+      rgba(216, 184, 106, 0.09),
+      transparent 50%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.035),
+      rgba(0, 0, 0, 0.28)
+    ),
     rgba(7, 10, 16, 0.74);
   background-size:
     310px 260px,
@@ -860,19 +1306,60 @@ summary:focus-visible {
   content: "";
   position: absolute;
   inset: 7%;
-  z-index: 0;
+  z-index:
+    var(--compass-atmosphere-z);
   pointer-events: none;
-  border: 1px solid rgba(216, 184, 106, 0.10);
+  border:
+    1px solid
+    rgba(216, 184, 106, 0.10);
   border-radius: 999px;
   background:
-    radial-gradient(circle at 10% 20%, rgba(255, 248, 224, 0.30) 0 0.8px, transparent 1.8px),
-    radial-gradient(circle at 22% 46%, rgba(124, 220, 255, 0.20) 0 0.7px, transparent 1.7px),
-    radial-gradient(circle at 41% 17%, rgba(216, 184, 106, 0.18) 0 0.9px, transparent 1.9px),
-    radial-gradient(circle at 65% 28%, rgba(255, 248, 224, 0.24) 0 0.9px, transparent 2px),
-    radial-gradient(circle at 84% 58%, rgba(124, 220, 255, 0.18) 0 0.8px, transparent 1.8px),
-    radial-gradient(circle at 30% 84%, rgba(216, 184, 106, 0.18) 0 0.8px, transparent 1.8px),
-    radial-gradient(circle, transparent 0 43%, rgba(216, 184, 106, 0.05) 44%, transparent 45%),
-    conic-gradient(from 45deg, transparent 0 22%, rgba(124, 220, 255, 0.10) 24%, transparent 26% 48%, rgba(216, 184, 106, 0.07) 50%, transparent 52% 74%, rgba(124, 220, 255, 0.08) 76%, transparent 78%);
+    radial-gradient(
+      circle at 10% 20%,
+      rgba(255, 248, 224, 0.30) 0 0.8px,
+      transparent 1.8px
+    ),
+    radial-gradient(
+      circle at 22% 46%,
+      rgba(124, 220, 255, 0.20) 0 0.7px,
+      transparent 1.7px
+    ),
+    radial-gradient(
+      circle at 41% 17%,
+      rgba(216, 184, 106, 0.18) 0 0.9px,
+      transparent 1.9px
+    ),
+    radial-gradient(
+      circle at 65% 28%,
+      rgba(255, 248, 224, 0.24) 0 0.9px,
+      transparent 2px
+    ),
+    radial-gradient(
+      circle at 84% 58%,
+      rgba(124, 220, 255, 0.18) 0 0.8px,
+      transparent 1.8px
+    ),
+    radial-gradient(
+      circle at 30% 84%,
+      rgba(216, 184, 106, 0.18) 0 0.8px,
+      transparent 1.8px
+    ),
+    radial-gradient(
+      circle,
+      transparent 0 43%,
+      rgba(216, 184, 106, 0.05) 44%,
+      transparent 45%
+    ),
+    conic-gradient(
+      from 45deg,
+      transparent 0 22%,
+      rgba(124, 220, 255, 0.10) 24%,
+      transparent 26% 48%,
+      rgba(216, 184, 106, 0.07) 50%,
+      transparent 52% 74%,
+      rgba(124, 220, 255, 0.08) 76%,
+      transparent 78%
+    );
   background-size:
     220px 180px,
     310px 230px,
@@ -883,7 +1370,12 @@ summary:focus-visible {
     auto,
     auto;
   opacity: 0.72;
-  animation: compass-celestial-twinkle 10.5s ease-in-out infinite alternate;
+  animation:
+    compass-celestial-twinkle
+    10.5s
+    ease-in-out
+    infinite
+    alternate;
   transition:
     opacity 360ms var(--compass-ease),
     filter 360ms var(--compass-ease);
@@ -894,22 +1386,46 @@ summary:focus-visible {
   position: absolute;
   left: 50%;
   top: 50%;
-  z-index: 0;
+  z-index:
+    var(--compass-atmosphere-z);
   width: min(70%, 640px);
   height: min(34%, 230px);
-  transform: translate(-50%, -50%) rotate(-16deg);
-  border: 1px solid rgba(124, 220, 255, 0.13);
+  transform:
+    translate(-50%, -50%)
+    rotate(-16deg);
+  border:
+    1px solid
+    rgba(124, 220, 255, 0.13);
   border-radius: 50%;
   background:
-    radial-gradient(ellipse at 22% 50%, rgba(124, 220, 255, 0.18), transparent 28%),
-    radial-gradient(ellipse at 78% 50%, rgba(216, 184, 106, 0.15), transparent 28%),
-    linear-gradient(90deg, transparent, rgba(124, 220, 255, 0.06), transparent);
+    radial-gradient(
+      ellipse at 22% 50%,
+      rgba(124, 220, 255, 0.18),
+      transparent 28%
+    ),
+    radial-gradient(
+      ellipse at 78% 50%,
+      rgba(216, 184, 106, 0.15),
+      transparent 28%
+    ),
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(124, 220, 255, 0.06),
+      transparent
+    );
   filter: blur(0.2px);
-  opacity: var(--mirrorland-dormant-frame-opacity);
+  opacity:
+    var(--mirrorland-dormant-frame-opacity);
   box-shadow:
     0 0 34px rgba(124, 220, 255, 0.08),
     inset 0 0 28px rgba(216, 184, 106, 0.05);
-  animation: compass-threshold-breathe 8s ease-in-out infinite alternate;
+  animation:
+    compass-threshold-breathe
+    8s
+    ease-in-out
+    infinite
+    alternate;
   transition:
     opacity 360ms var(--compass-ease),
     transform 420ms var(--compass-ease),
@@ -918,31 +1434,29 @@ summary:focus-visible {
     box-shadow 360ms var(--compass-ease);
 }
 
-/* Dedicated Mirrorland Window renderer layer.
-   HTML owns the mount. The renderer owns only its canvas contents. */
+/* =========================================================
+   CRYSTALS RENDERER
+   ========================================================= */
 
-[data-compass-mirrorland-window-mount] {
+.compass-scene__visual,
+[data-compass-crystals-mount] {
   position: absolute;
   inset: 0;
-  z-index: var(--mirrorland-window-mount-z);
+  z-index:
+    var(--compass-crystals-mount-z);
   min-height: 100%;
   overflow: hidden;
   pointer-events: none;
   touch-action: none;
   user-select: none;
-  opacity: 1;
-  transform: translateZ(0);
-  transition:
-    opacity 280ms var(--compass-ease),
-    filter 280ms var(--compass-ease);
 }
 
-[data-compass-mirrorland-window-mount],
-[data-compass-mirrorland-window-mount] canvas {
+[data-compass-crystals-mount],
+[data-compass-crystals-mount] canvas {
   pointer-events: none !important;
 }
 
-[data-compass-mirrorland-window-mount] canvas {
+[data-compass-crystals-mount] canvas {
   position: absolute;
   inset: 0;
   display: block;
@@ -950,17 +1464,6 @@ summary:focus-visible {
   height: 100%;
   touch-action: none;
   user-select: none;
-}
-
-/* Protected crystals renderer remains above the Window layer. */
-
-.compass-scene__visual,
-[data-compass-crystals-mount] {
-  position: absolute;
-  inset: 0;
-  z-index: var(--compass-crystals-mount-z);
-  min-height: 100%;
-  pointer-events: none;
 }
 
 [data-compass-crystals-mount]::before,
@@ -980,19 +1483,70 @@ summary:focus-visible {
   width: 88px;
   height: 34px;
   opacity: 0;
-  transform: translate3d(0, 0, 0) rotate(-8deg) scale(0.72);
-  border-radius: 70% 34% 34% 70%;
+  transform:
+    translate3d(0, 0, 0)
+    rotate(-8deg)
+    scale(0.72);
+  border-radius:
+    70% 34% 34% 70%;
   background:
-    radial-gradient(ellipse at 68% 42%, rgba(255, 248, 224, 0.95) 0 2px, transparent 3px),
-    radial-gradient(ellipse at 27% 50%, rgba(124, 220, 255, 0.65) 0 3px, transparent 5px),
-    linear-gradient(148deg, transparent 0 21%, rgba(124, 220, 255, 0.44) 22% 34%, transparent 35%),
-    linear-gradient(32deg, transparent 0 23%, rgba(124, 220, 255, 0.34) 24% 36%, transparent 37%),
-    linear-gradient(90deg, rgba(124, 220, 255, 0.0) 0 5%, rgba(124, 220, 255, 0.35) 11%, rgba(255, 248, 224, 0.58) 44%, rgba(124, 220, 255, 0.28) 72%, transparent 100%);
-  clip-path: polygon(0 50%, 13% 32%, 36% 18%, 50% 0, 76% 22%, 100% 50%, 76% 78%, 50% 100%, 36% 82%, 13% 68%);
+    radial-gradient(
+      ellipse at 68% 42%,
+      rgba(255, 248, 224, 0.95) 0 2px,
+      transparent 3px
+    ),
+    radial-gradient(
+      ellipse at 27% 50%,
+      rgba(124, 220, 255, 0.65) 0 3px,
+      transparent 5px
+    ),
+    linear-gradient(
+      148deg,
+      transparent 0 21%,
+      rgba(124, 220, 255, 0.44) 22% 34%,
+      transparent 35%
+    ),
+    linear-gradient(
+      32deg,
+      transparent 0 23%,
+      rgba(124, 220, 255, 0.34) 24% 36%,
+      transparent 37%
+    ),
+    linear-gradient(
+      90deg,
+      rgba(124, 220, 255, 0) 0 5%,
+      rgba(124, 220, 255, 0.35) 11%,
+      rgba(255, 248, 224, 0.58) 44%,
+      rgba(124, 220, 255, 0.28) 72%,
+      transparent 100%
+    );
+  clip-path:
+    polygon(
+      0 50%,
+      13% 32%,
+      36% 18%,
+      50% 0,
+      76% 22%,
+      100% 50%,
+      76% 78%,
+      50% 100%,
+      36% 82%,
+      13% 68%
+    );
   filter:
-    drop-shadow(-26px 0 22px rgba(124, 220, 255, 0.18))
-    drop-shadow(0 0 8px rgba(255, 248, 224, 0.10));
-  animation: compass-spaceship-flyby 34s linear infinite;
+    drop-shadow(
+      -26px 0 22px
+      rgba(124, 220, 255, 0.18)
+    )
+    drop-shadow(
+      0 0 8px
+      rgba(255, 248, 224, 0.10)
+    );
+  animation:
+    compass-spaceship-flyby
+    34s
+    linear
+    infinite;
 }
 
 [data-compass-crystals-mount]::after {
@@ -1002,71 +1556,99 @@ summary:focus-visible {
   height: 74px;
   border-radius: 999px;
   background:
-    radial-gradient(circle at 36% 26%, rgba(255, 248, 224, 0.22), transparent 15%),
-    radial-gradient(circle at 60% 68%, rgba(124, 220, 255, 0.16), transparent 24%),
-    radial-gradient(circle at 42% 54%, rgba(216, 184, 106, 0.08), transparent 28%),
-    linear-gradient(125deg, rgba(255, 255, 255, 0.08), transparent 42%),
-    radial-gradient(circle, rgba(68, 112, 148, 0.16), rgba(26, 41, 65, 0.10) 48%, transparent 72%);
+    radial-gradient(
+      circle at 36% 26%,
+      rgba(255, 248, 224, 0.22),
+      transparent 15%
+    ),
+    radial-gradient(
+      circle at 60% 68%,
+      rgba(124, 220, 255, 0.16),
+      transparent 24%
+    ),
+    radial-gradient(
+      circle at 42% 54%,
+      rgba(216, 184, 106, 0.08),
+      transparent 28%
+    ),
+    linear-gradient(
+      125deg,
+      rgba(255, 255, 255, 0.08),
+      transparent 42%
+    ),
+    radial-gradient(
+      circle,
+      rgba(68, 112, 148, 0.16),
+      rgba(26, 41, 65, 0.10) 48%,
+      transparent 72%
+    );
   box-shadow:
     0 0 36px rgba(124, 220, 255, 0.07),
     inset -12px -14px 20px rgba(0, 0, 0, 0.26),
     inset 8px 7px 14px rgba(255, 248, 224, 0.05);
   opacity: 0.52;
   filter: blur(0.08px);
-  animation: compass-living-planet 18s ease-in-out infinite alternate;
+  animation:
+    compass-living-planet
+    18s
+    ease-in-out
+    infinite
+    alternate;
 }
 
-[data-compass-crystals-mount] canvas {
+/* =========================================================
+   MIRRORLAND WINDOW RENDERER
+   ========================================================= */
+
+.compass-scene__mirrorland-window,
+[data-compass-mirrorland-window-mount] {
+  position: absolute;
+  inset: 0;
+  z-index:
+    var(--mirrorland-window-mount-z);
+  min-width: 100%;
+  min-height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+  touch-action: none;
+  user-select: none;
+  opacity: 1;
+  visibility: visible;
+  transform:
+    translateZ(0);
+  transition:
+    opacity 280ms var(--compass-ease),
+    filter 280ms var(--compass-ease);
+}
+
+[data-compass-mirrorland-window-mount],
+[data-compass-mirrorland-window-mount] canvas {
+  pointer-events: none !important;
+}
+
+[data-compass-mirrorland-window-mount] canvas {
+  position: absolute;
+  inset: 0;
   display: block;
   width: 100%;
   height: 100%;
-  pointer-events: none;
+  min-width: 100%;
+  min-height: 100%;
+  opacity: 1;
+  visibility: visible;
+  touch-action: none;
+  user-select: none;
 }
 
-.compass-runtime-guidance,
-.compass-scene-guidance,
-[data-compass-scene-guidance] {
-  position: absolute;
-  left: 50%;
-  right: auto;
-  top: auto !important;
-  bottom: 14px !important;
-  z-index: var(--compass-guidance-layer-z);
-  width: min(calc(100% - 42px), 520px);
-  margin: 0;
-  padding: 8px 13px;
-  transform: translateX(-50%);
-  border: 1px solid rgba(124, 220, 255, 0.20);
-  border-radius: 999px;
-  color: rgba(255, 248, 224, 0.84);
-  background:
-    linear-gradient(135deg, rgba(7, 10, 16, 0.74), rgba(14, 24, 36, 0.54)),
-    rgba(7, 10, 16, 0.58);
-  box-shadow:
-    0 10px 30px rgba(0, 0, 0, 0.24),
-    0 0 20px rgba(124, 220, 255, 0.06),
-    inset 0 1px 0 rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(10px);
-  font-size: clamp(0.70rem, 2.1vw, 0.86rem);
-  line-height: 1.3;
-  text-align: center;
-  pointer-events: none;
-  opacity: 0.86;
-  transition:
-    opacity 260ms var(--compass-ease),
-    border-color 260ms var(--compass-ease),
-    background 260ms var(--compass-ease);
-}
-
-.compass-object--return,
-[data-compass-return] {
-  display: none !important;
-}
+/* =========================================================
+   SEMANTIC CONTROLS
+   ========================================================= */
 
 .compass-scene__semantic {
   position: absolute;
   inset: 0;
-  z-index: var(--compass-semantic-layer-z);
+  z-index:
+    var(--compass-semantic-layer-z);
   pointer-events: none;
 }
 
@@ -1077,11 +1659,18 @@ summary:focus-visible {
   min-width: 118px;
   max-width: 172px;
   padding: 9px 12px;
-  border: 1px solid rgba(225, 218, 198, 0.16);
+  border:
+    1px solid
+    rgba(225, 218, 198, 0.16);
   border-radius: 999px;
-  color: rgba(255, 248, 224, 0.86);
+  color:
+    rgba(255, 248, 224, 0.86);
   background:
-    linear-gradient(135deg, rgba(7, 10, 16, 0.66), rgba(18, 28, 42, 0.40)),
+    linear-gradient(
+      135deg,
+      rgba(7, 10, 16, 0.66),
+      rgba(18, 28, 42, 0.40)
+    ),
     rgba(7, 10, 16, 0.40);
   box-shadow:
     0 12px 34px rgba(0, 0, 0, 0.24),
@@ -1093,6 +1682,7 @@ summary:focus-visible {
   pointer-events: auto;
   transition:
     opacity 220ms var(--compass-ease),
+    visibility 220ms var(--compass-ease),
     transform 220ms var(--compass-ease),
     border-color 220ms var(--compass-ease),
     background 220ms var(--compass-ease),
@@ -1108,7 +1698,8 @@ summary:focus-visible {
 }
 
 .compass-object span:last-child {
-  color: rgba(225, 218, 198, 0.66);
+  color:
+    rgba(225, 218, 198, 0.66);
   font-size: 0.68rem;
   line-height: 1.18;
 }
@@ -1116,9 +1707,14 @@ summary:focus-visible {
 .compass-object:hover,
 .compass-object[data-active="true"],
 .compass-object[data-flower-expanded="true"] {
-  border-color: rgba(243, 217, 139, 0.42);
+  border-color:
+    rgba(243, 217, 139, 0.42);
   background:
-    linear-gradient(135deg, rgba(216, 184, 106, 0.18), rgba(124, 220, 255, 0.10)),
+    linear-gradient(
+      135deg,
+      rgba(216, 184, 106, 0.18),
+      rgba(124, 220, 255, 0.10)
+    ),
     rgba(7, 10, 16, 0.56);
 }
 
@@ -1126,54 +1722,195 @@ summary:focus-visible {
   opacity: 0.48;
 }
 
+/* The Mirrorland anchor is a transparent semantic hit surface.
+   The rendered Window remains visible beneath it.
+   The text is placed below the dormant miniature instead of covering it. */
+
 .compass-object--mirrorland {
   left: 50%;
-  top: 49%;
-  min-width: 150px;
-  transform: translate(-50%, -50%);
+  top: 50%;
+  display: block;
+  width:
+    var(--mirrorland-hit-size);
+  height:
+    var(--mirrorland-hit-size);
+  min-width: 0;
+  max-width: none;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  color:
+    rgba(255, 248, 224, 0.92);
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+  transform:
+    translate(-50%, -50%);
 }
 
-.compass-object--mirrorland[data-active="true"] {
-  border-color: rgba(243, 217, 139, 0.54);
+.compass-object--mirrorland::before {
+  content: "";
+  position: absolute;
+  inset: 12%;
+  border:
+    1px solid
+    rgba(243, 217, 139, 0);
+  border-radius: 50%;
   background:
-    radial-gradient(circle at 50% 0%, rgba(124, 220, 255, 0.16), transparent 80%),
-    linear-gradient(135deg, rgba(216, 184, 106, 0.20), rgba(124, 220, 255, 0.12)),
-    rgba(7, 10, 16, 0.70);
+    radial-gradient(
+      circle,
+      transparent 56%,
+      rgba(124, 220, 255, 0) 72%
+    );
   box-shadow:
-    0 14px 38px rgba(0, 0, 0, 0.30),
-    0 0 34px rgba(124, 220, 255, 0.14),
-    0 0 34px rgba(216, 184, 106, 0.10),
-    inset 0 1px 0 rgba(255, 255, 255, 0.11);
+    0 0 0
+    rgba(124, 220, 255, 0);
+  transition:
+    border-color 220ms var(--compass-ease),
+    background 220ms var(--compass-ease),
+    box-shadow 220ms var(--compass-ease),
+    transform 220ms var(--compass-ease);
+}
+
+.compass-object--mirrorland:hover::before,
+.compass-object--mirrorland:focus-visible::before,
+.compass-object--mirrorland[data-active="true"]::before {
+  border-color:
+    rgba(243, 217, 139, 0.32);
+  background:
+    radial-gradient(
+      circle,
+      transparent 54%,
+      rgba(124, 220, 255, 0.055) 72%,
+      transparent 76%
+    );
+  box-shadow:
+    0 0 28px rgba(124, 220, 255, 0.11),
+    0 0 42px rgba(216, 184, 106, 0.08);
+  transform: scale(1.035);
+}
+
+.compass-object--mirrorland span {
+  position: absolute;
+  left: 50%;
+  display: block;
+  width: max-content;
+  max-width: 180px;
+  transform:
+    translateX(-50%);
+  pointer-events: none;
+}
+
+.compass-object--mirrorland span:first-child {
+  top:
+    calc(
+      50% +
+      var(--mirrorland-label-offset)
+    );
+  padding: 7px 13px 5px;
+  border:
+    1px solid
+    rgba(243, 217, 139, 0.28);
+  border-bottom: 0;
+  border-radius:
+    999px 999px 0 0;
+  color:
+    rgba(255, 248, 224, 0.94);
+  background:
+    linear-gradient(
+      135deg,
+      rgba(40, 33, 20, 0.90),
+      rgba(7, 10, 16, 0.88)
+    ),
+    rgba(7, 10, 16, 0.82);
+  box-shadow:
+    0 12px 30px rgba(0, 0, 0, 0.30),
+    0 0 20px rgba(216, 184, 106, 0.075),
+    inset 0 1px 0 rgba(255, 255, 255, 0.09);
+  backdrop-filter: blur(10px);
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+}
+
+.compass-object--mirrorland span:last-child {
+  top:
+    calc(
+      50% +
+      var(--mirrorland-label-offset) +
+      27px
+    );
+  padding: 3px 12px 6px;
+  border:
+    1px solid
+    rgba(124, 220, 255, 0.18);
+  border-top: 0;
+  border-radius:
+    0 0 999px 999px;
+  color:
+    rgba(225, 218, 198, 0.62);
+  background:
+    linear-gradient(
+      135deg,
+      rgba(7, 10, 16, 0.90),
+      rgba(13, 24, 35, 0.78)
+    ),
+    rgba(7, 10, 16, 0.80);
+  box-shadow:
+    0 10px 26px rgba(0, 0, 0, 0.24),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.045);
+  backdrop-filter: blur(10px);
+  font-size: 0.61rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.compass-object--mirrorland:hover,
+.compass-object--mirrorland[data-active="true"] {
+  border: 0;
+  background: transparent;
+  box-shadow: none;
 }
 
 .compass-object--wing[data-wing="north"] {
   left: 50%;
   top: 14%;
-  transform: translateX(-50%);
+  transform:
+    translateX(-50%);
 }
 
 .compass-object--wing[data-wing="east"] {
   right: 10%;
   top: 48%;
-  transform: translateY(-50%);
+  transform:
+    translateY(-50%);
 }
 
 .compass-object--wing[data-wing="south"] {
   left: 50%;
   bottom: 11%;
-  transform: translateX(-50%);
+  transform:
+    translateX(-50%);
 }
 
 .compass-object--wing[data-wing="west"] {
   left: 10%;
   top: 48%;
-  transform: translateY(-50%);
+  transform:
+    translateY(-50%);
 }
 
-[data-compass-mode="ORBIT_MODE"] .compass-object--mirrorland,
-[data-compass-mode="DESTINATION_MODE"]:not([data-selected-destination-type="mirrorland"]) .compass-object--mirrorland {
-  opacity: 0.42;
+[data-compass-mode="ORBIT_MODE"]
+.compass-object--mirrorland,
+[data-compass-mode="DESTINATION_MODE"]:not(
+  [data-selected-destination-type="mirrorland"]
+)
+.compass-object--mirrorland {
+  opacity: 0.58;
 }
+
+/* =========================================================
+   ROOM DECLARATIONS
+   ========================================================= */
 
 .compass-rooms[hidden] {
   display: none;
@@ -1193,28 +1930,107 @@ summary:focus-visible {
   min-height: 42px;
   margin: 5px;
   padding: 9px 14px;
-  border: 1px solid rgba(225, 218, 198, 0.14);
+  border:
+    1px solid
+    rgba(225, 218, 198, 0.14);
   border-radius: 999px;
-  color: rgba(255, 248, 224, 0.84);
-  background: rgba(8, 13, 22, 0.58);
-  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.22);
+  color:
+    rgba(255, 248, 224, 0.84);
+  background:
+    rgba(8, 13, 22, 0.58);
+  box-shadow:
+    0 10px 28px rgba(0, 0, 0, 0.22);
   backdrop-filter: blur(9px);
   font-size: 0.86rem;
 }
 
 [data-compass-room]:hover,
 [data-compass-room][data-active="true"] {
-  border-color: var(--compass-line-strong);
-  transform: translateY(-1px);
+  border-color:
+    var(--compass-line-strong);
+  transform:
+    translateY(-1px);
   background:
-    linear-gradient(135deg, rgba(216, 184, 106, 0.12), rgba(124, 185, 214, 0.055)),
+    linear-gradient(
+      135deg,
+      rgba(216, 184, 106, 0.12),
+      rgba(124, 185, 214, 0.055)
+    ),
     rgba(8, 13, 22, 0.68);
 }
 
-[data-compass-mode="COMPASS_MODE"] [data-compass-room],
-[data-compass-mode="ORBIT_MODE"] [data-compass-room] {
+[data-compass-mode="COMPASS_MODE"]
+[data-compass-room],
+[data-compass-mode="ORBIT_MODE"]
+[data-compass-room] {
   display: none;
 }
+
+/* =========================================================
+   GUIDANCE
+   ========================================================= */
+
+.compass-runtime-guidance,
+.compass-scene-guidance,
+[data-compass-scene-guidance] {
+  position: absolute;
+  left: 50%;
+  right: auto;
+  top: auto !important;
+  bottom: 14px !important;
+  z-index:
+    var(--compass-guidance-layer-z);
+  width:
+    min(
+      calc(100% - 42px),
+      520px
+    );
+  margin: 0;
+  padding: 8px 13px;
+  transform:
+    translateX(-50%);
+  border:
+    1px solid
+    rgba(124, 220, 255, 0.20);
+  border-radius: 999px;
+  color:
+    rgba(255, 248, 224, 0.84);
+  background:
+    linear-gradient(
+      135deg,
+      rgba(7, 10, 16, 0.74),
+      rgba(14, 24, 36, 0.54)
+    ),
+    rgba(7, 10, 16, 0.58);
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.24),
+    0 0 20px rgba(124, 220, 255, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(10px);
+  font-size:
+    clamp(
+      0.70rem,
+      2.1vw,
+      0.86rem
+    );
+  line-height: 1.3;
+  text-align: center;
+  pointer-events: none;
+  opacity: 0.86;
+  transition:
+    opacity 260ms var(--compass-ease),
+    border-color 260ms var(--compass-ease),
+    background 260ms var(--compass-ease);
+}
+
+.compass-object--return,
+[data-compass-return] {
+  display: none !important;
+}
+
+/* =========================================================
+   PANEL
+   ========================================================= */
 
 .compass-panel {
   position: relative;
@@ -1222,12 +2038,24 @@ summary:focus-visible {
   display: grid;
   gap: 8px;
   max-width: 820px;
-  scroll-margin-top: clamp(18px, 4vw, 52px);
+  scroll-margin-top:
+    clamp(
+      18px,
+      4vw,
+      52px
+    );
   padding: 18px 20px;
-  border: 1px solid var(--compass-line);
-  border-radius: var(--compass-radius-md);
+  border:
+    1px solid
+    var(--compass-line);
+  border-radius:
+    var(--compass-radius-md);
   background:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02)),
+    linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.06),
+      rgba(255, 255, 255, 0.02)
+    ),
     rgba(7, 10, 16, 0.64);
   box-shadow:
     0 16px 60px rgba(0, 0, 0, 0.30),
@@ -1240,17 +2068,34 @@ summary:focus-visible {
     box-shadow 260ms var(--compass-ease);
 }
 
-[data-panel-descended="true"] .compass-panel,
-[data-compass-mode="DESTINATION_MODE"] .compass-panel {
-  border-color: rgba(216, 184, 106, 0.34);
+[data-panel-descended="true"]
+.compass-panel,
+[data-compass-mode="DESTINATION_MODE"]
+.compass-panel {
+  border-color:
+    rgba(216, 184, 106, 0.34);
 }
 
-[data-selected-destination-type="mirrorland"] .compass-panel {
-  border-color: rgba(124, 220, 255, 0.30);
+[data-selected-destination-type="mirrorland"]
+.compass-panel {
+  border-color:
+    rgba(124, 220, 255, 0.30);
   background:
-    radial-gradient(circle at 14% 0%, rgba(124, 220, 255, 0.10), transparent 17rem),
-    radial-gradient(circle at 88% 100%, rgba(216, 184, 106, 0.08), transparent 18rem),
-    linear-gradient(135deg, rgba(255, 255, 255, 0.065), rgba(124, 220, 255, 0.025)),
+    radial-gradient(
+      circle at 14% 0%,
+      rgba(124, 220, 255, 0.10),
+      transparent 17rem
+    ),
+    radial-gradient(
+      circle at 88% 100%,
+      rgba(216, 184, 106, 0.08),
+      transparent 18rem
+    ),
+    linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.065),
+      rgba(124, 220, 255, 0.025)
+    ),
     rgba(7, 10, 16, 0.70);
   box-shadow:
     0 18px 66px rgba(0, 0, 0, 0.34),
@@ -1259,8 +2104,10 @@ summary:focus-visible {
     inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
-[data-mirrorland-window-state="focused"] .compass-panel {
-  border-color: rgba(243, 217, 139, 0.38);
+[data-mirrorland-window-state="focused"]
+.compass-panel {
+  border-color:
+    rgba(243, 217, 139, 0.38);
   box-shadow:
     0 18px 68px rgba(0, 0, 0, 0.36),
     0 0 40px rgba(124, 220, 255, 0.09),
@@ -1279,21 +2126,33 @@ summary:focus-visible {
 
 .compass-panel h2 {
   margin: 0;
-  color: rgba(255, 248, 224, 0.95);
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: clamp(1.5rem, 3vw, 2.35rem);
+  color:
+    rgba(255, 248, 224, 0.95);
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+  font-size:
+    clamp(
+      1.5rem,
+      3vw,
+      2.35rem
+    );
   line-height: 1;
 }
 
 .compass-panel p {
   max-width: 68ch;
   margin: 0;
-  color: var(--compass-stone-dim);
+  color:
+    var(--compass-stone-dim);
   line-height: 1.52;
 }
 
-[data-compass-mode="DESTINATION_MODE"] .compass-panel p {
-  color: rgba(225, 218, 198, 0.72);
+[data-compass-mode="DESTINATION_MODE"]
+.compass-panel p {
+  color:
+    rgba(225, 218, 198, 0.72);
 }
 
 .compass-panel__actions {
@@ -1321,9 +2180,16 @@ summary:focus-visible {
 }
 
 [data-compass-enter] {
-  border: 1px solid rgba(243, 217, 139, 0.56);
+  border:
+    1px solid
+    rgba(243, 217, 139, 0.56);
   color: #120f08;
-  background: linear-gradient(135deg, #f6df97, #b98d3e);
+  background:
+    linear-gradient(
+      135deg,
+      #f6df97,
+      #b98d3e
+    );
   box-shadow:
     0 14px 34px rgba(216, 184, 106, 0.22),
     0 0 26px rgba(243, 217, 139, 0.12),
@@ -1332,10 +2198,17 @@ summary:focus-visible {
 
 [data-compass-return-to-orbit],
 [data-compass-mirrorland-back] {
-  border: 1px solid rgba(124, 220, 255, 0.30);
-  color: rgba(255, 248, 224, 0.90);
+  border:
+    1px solid
+    rgba(124, 220, 255, 0.30);
+  color:
+    rgba(255, 248, 224, 0.90);
   background:
-    linear-gradient(135deg, rgba(18, 34, 46, 0.92), rgba(7, 10, 16, 0.86)),
+    linear-gradient(
+      135deg,
+      rgba(18, 34, 46, 0.92),
+      rgba(7, 10, 16, 0.86)
+    ),
     rgba(8, 13, 22, 0.76);
   box-shadow:
     0 12px 30px rgba(0, 0, 0, 0.26),
@@ -1344,9 +2217,14 @@ summary:focus-visible {
 }
 
 [data-compass-mirrorland-back] {
-  border-color: rgba(243, 217, 139, 0.32);
+  border-color:
+    rgba(243, 217, 139, 0.32);
   background:
-    linear-gradient(135deg, rgba(48, 39, 23, 0.92), rgba(10, 13, 19, 0.90)),
+    linear-gradient(
+      135deg,
+      rgba(48, 39, 23, 0.92),
+      rgba(10, 13, 19, 0.90)
+    ),
     rgba(8, 13, 22, 0.78);
   box-shadow:
     0 12px 30px rgba(0, 0, 0, 0.28),
@@ -1357,7 +2235,8 @@ summary:focus-visible {
 [data-compass-enter]:not(:disabled):hover,
 [data-compass-return-to-orbit]:not(:disabled):hover,
 [data-compass-mirrorland-back]:not(:disabled):hover {
-  transform: translateY(-1px);
+  transform:
+    translateY(-1px);
 }
 
 [data-compass-enter]:disabled,
@@ -1368,38 +2247,69 @@ summary:focus-visible {
   filter: grayscale(0.45);
 }
 
-/* Mirrorland Window state presentation */
+/* =========================================================
+   MIRRORLAND STATES
+   ========================================================= */
 
-[data-mirrorland-window-state="dormant"] [data-compass-mirrorland-window-mount] {
+[data-mirrorland-window-state="dormant"]
+[data-compass-mirrorland-window-mount] {
   opacity: 1;
-  filter: saturate(0.88) brightness(0.82);
+  visibility: visible;
+  filter:
+    saturate(0.90)
+    brightness(0.88)
+    contrast(1.04);
 }
 
-[data-mirrorland-window-state="revealing"] [data-compass-mirrorland-window-mount],
-[data-mirrorland-window-state="focused"] [data-compass-mirrorland-window-mount],
-[data-mirrorland-window-state="withdrawing"] [data-compass-mirrorland-window-mount] {
+[data-mirrorland-window-state="revealing"]
+[data-compass-mirrorland-window-mount],
+[data-mirrorland-window-state="focused"]
+[data-compass-mirrorland-window-mount],
+[data-mirrorland-window-state="withdrawing"]
+[data-compass-mirrorland-window-mount] {
   opacity: 1;
-  filter: saturate(1) brightness(1);
+  visibility: visible;
+  filter:
+    saturate(1)
+    brightness(1)
+    contrast(1);
 }
 
-[data-mirrorland-window-state="navigating"] [data-compass-mirrorland-window-mount] {
-  opacity: 0.86;
-  filter: saturate(0.96) brightness(0.94);
+[data-mirrorland-window-state="navigating"]
+[data-compass-mirrorland-window-mount] {
+  opacity: 0.90;
+  visibility: visible;
+  filter:
+    saturate(0.96)
+    brightness(0.94);
 }
 
-[data-mirrorland-window-state="revealing"] .compass-scene::after,
-[data-mirrorland-window-state="withdrawing"] .compass-scene::after {
-  opacity: var(--mirrorland-transition-frame-opacity);
-  transform: translate(-50%, -50%) rotate(-10deg) scale(1.02);
-  border-color: rgba(124, 220, 255, 0.09);
+[data-mirrorland-window-state="revealing"]
+.compass-scene::after,
+[data-mirrorland-window-state="withdrawing"]
+.compass-scene::after {
+  opacity:
+    var(--mirrorland-transition-frame-opacity);
+  transform:
+    translate(-50%, -50%)
+    rotate(-10deg)
+    scale(1.02);
+  border-color:
+    rgba(124, 220, 255, 0.09);
   filter: blur(0.35px);
   animation-play-state: paused;
 }
 
-[data-mirrorland-window-state="focused"] .compass-scene::after {
-  opacity: var(--mirrorland-focused-frame-opacity);
-  transform: translate(-50%, -50%) rotate(-6deg) scale(1.04);
-  border-color: rgba(216, 184, 106, 0.07);
+[data-mirrorland-window-state="focused"]
+.compass-scene::after {
+  opacity:
+    var(--mirrorland-focused-frame-opacity);
+  transform:
+    translate(-50%, -50%)
+    rotate(-6deg)
+    scale(1.04);
+  border-color:
+    rgba(216, 184, 106, 0.07);
   filter: blur(0.45px);
   animation-play-state: paused;
   box-shadow:
@@ -1407,188 +2317,305 @@ summary:focus-visible {
     inset 0 0 24px rgba(216, 184, 106, 0.03);
 }
 
-[data-mirrorland-window-state="navigating"] .compass-scene::after {
-  opacity: var(--mirrorland-navigating-frame-opacity);
-  transform: translate(-50%, -50%) rotate(0deg) scale(1.06);
+[data-mirrorland-window-state="navigating"]
+.compass-scene::after {
+  opacity:
+    var(--mirrorland-navigating-frame-opacity);
+  transform:
+    translate(-50%, -50%)
+    rotate(0deg)
+    scale(1.06);
   animation-play-state: paused;
 }
 
-[data-mirrorland-window-state="revealing"] .compass-scene::before,
-[data-mirrorland-window-state="withdrawing"] .compass-scene::before {
-  opacity: var(--mirrorland-transition-atmosphere-opacity);
-  filter: brightness(0.88) saturate(0.86);
+[data-mirrorland-window-state="revealing"]
+.compass-scene::before,
+[data-mirrorland-window-state="withdrawing"]
+.compass-scene::before {
+  opacity:
+    var(--mirrorland-transition-atmosphere-opacity);
+  filter:
+    brightness(0.88)
+    saturate(0.86);
 }
 
-[data-mirrorland-window-state="focused"] .compass-scene::before {
-  opacity: var(--mirrorland-focused-atmosphere-opacity);
-  filter: brightness(0.80) saturate(0.78);
+[data-mirrorland-window-state="focused"]
+.compass-scene::before {
+  opacity:
+    var(--mirrorland-focused-atmosphere-opacity);
+  filter:
+    brightness(0.78)
+    saturate(0.74);
 }
 
-[data-mirrorland-window-state="navigating"] .compass-scene::before {
-  opacity: 0.22;
-  filter: brightness(0.72) saturate(0.72);
+[data-mirrorland-window-state="navigating"]
+.compass-scene::before {
+  opacity: 0.18;
+  filter:
+    brightness(0.68)
+    saturate(0.66);
 }
 
-[data-mirrorland-window-state="revealing"] [data-compass-crystals-mount]::before,
-[data-mirrorland-window-state="focused"] [data-compass-crystals-mount]::before,
-[data-mirrorland-window-state="withdrawing"] [data-compass-crystals-mount]::before,
-[data-mirrorland-window-state="navigating"] [data-compass-crystals-mount]::before {
+[data-mirrorland-window-state="revealing"]
+[data-compass-crystals-mount],
+[data-mirrorland-window-state="withdrawing"]
+[data-compass-crystals-mount] {
+  opacity: 0.68;
+  filter:
+    brightness(0.76)
+    saturate(0.72);
+}
+
+[data-mirrorland-window-state="focused"]
+[data-compass-crystals-mount] {
+  opacity: 0.44;
+  filter:
+    brightness(0.64)
+    saturate(0.60)
+    blur(0.12px);
+}
+
+[data-mirrorland-window-state="navigating"]
+[data-compass-crystals-mount] {
+  opacity: 0.28;
+  filter:
+    brightness(0.56)
+    saturate(0.52)
+    blur(0.18px);
+}
+
+[data-mirrorland-window-state="revealing"]
+[data-compass-crystals-mount]::before,
+[data-mirrorland-window-state="focused"]
+[data-compass-crystals-mount]::before,
+[data-mirrorland-window-state="withdrawing"]
+[data-compass-crystals-mount]::before,
+[data-mirrorland-window-state="navigating"]
+[data-compass-crystals-mount]::before {
   opacity: 0 !important;
   animation-play-state: paused;
 }
 
-[data-mirrorland-window-state="revealing"] [data-compass-crystals-mount]::after,
-[data-mirrorland-window-state="withdrawing"] [data-compass-crystals-mount]::after {
-  opacity: 0.24;
-  filter: blur(0.18px) brightness(0.80) saturate(0.78);
-  animation-play-state: paused;
-}
-
-[data-mirrorland-window-state="focused"] [data-compass-crystals-mount]::after {
-  opacity: 0.16;
-  filter: blur(0.22px) brightness(0.72) saturate(0.72);
-  animation-play-state: paused;
-}
-
-[data-mirrorland-window-state="navigating"] [data-compass-crystals-mount]::after {
-  opacity: 0.10;
-  filter: blur(0.28px) brightness(0.68) saturate(0.68);
-  animation-play-state: paused;
-}
-
-/* The threshold anchor remains the dormant semantic activation surface.
-   While the Window owns focus, it becomes inert and visually subordinate. */
-
-[data-mirrorland-window-state="revealing"] .compass-object--mirrorland,
-[data-mirrorland-window-state="focused"] .compass-object--mirrorland,
-[data-mirrorland-window-state="withdrawing"] .compass-object--mirrorland,
-[data-mirrorland-window-state="navigating"] .compass-object--mirrorland {
-  pointer-events: none;
-  cursor: default;
-}
-
-[data-mirrorland-window-state="revealing"] .compass-object--mirrorland,
-[data-mirrorland-window-state="withdrawing"] .compass-object--mirrorland {
+[data-mirrorland-window-state="revealing"]
+[data-compass-crystals-mount]::after,
+[data-mirrorland-window-state="withdrawing"]
+[data-compass-crystals-mount]::after {
   opacity: 0.20;
-  filter: blur(0.15px);
-  transform: translate(-50%, -50%) scale(0.96);
+  filter:
+    blur(0.18px)
+    brightness(0.80)
+    saturate(0.78);
+  animation-play-state: paused;
 }
 
-[data-mirrorland-window-state="focused"] .compass-object--mirrorland {
-  opacity: 0;
-  visibility: hidden;
-  transform: translate(-50%, -50%) scale(0.94);
+[data-mirrorland-window-state="focused"]
+[data-compass-crystals-mount]::after {
+  opacity: 0.12;
+  filter:
+    blur(0.22px)
+    brightness(0.70)
+    saturate(0.68);
+  animation-play-state: paused;
 }
 
-[data-mirrorland-window-state="navigating"] .compass-object--mirrorland {
-  opacity: 0;
-  visibility: hidden;
-  transform: translate(-50%, -50%) scale(0.90);
+[data-mirrorland-window-state="navigating"]
+[data-compass-crystals-mount]::after {
+  opacity: 0.07;
+  filter:
+    blur(0.28px)
+    brightness(0.64)
+    saturate(0.62);
+  animation-play-state: paused;
 }
 
-/* Cardinal labels remain visible as context but cannot compete for authority. */
+/* The threshold anchor remains the dormant activation surface.
+   It becomes inert while the renderer owns the active visual state. */
 
-[data-mirrorland-window-state="revealing"] .compass-object--wing,
-[data-mirrorland-window-state="focused"] .compass-object--wing,
-[data-mirrorland-window-state="withdrawing"] .compass-object--wing,
-[data-mirrorland-window-state="navigating"] .compass-object--wing {
+[data-mirrorland-window-state="revealing"]
+.compass-object--mirrorland,
+[data-mirrorland-window-state="focused"]
+.compass-object--mirrorland,
+[data-mirrorland-window-state="withdrawing"]
+.compass-object--mirrorland,
+[data-mirrorland-window-state="navigating"]
+.compass-object--mirrorland {
   pointer-events: none;
   cursor: default;
-  opacity: var(--mirrorland-context-control-opacity);
-  filter: saturate(0.76) brightness(0.84);
 }
 
-[data-mirrorland-window-state="revealing"] .compass-object--wing[data-wing="north"],
-[data-mirrorland-window-state="focused"] .compass-object--wing[data-wing="north"],
-[data-mirrorland-window-state="withdrawing"] .compass-object--wing[data-wing="north"],
-[data-mirrorland-window-state="navigating"] .compass-object--wing[data-wing="north"] {
+[data-mirrorland-window-state="revealing"]
+.compass-object--mirrorland,
+[data-mirrorland-window-state="withdrawing"]
+.compass-object--mirrorland {
+  opacity: 0.18;
+  filter: blur(0.15px);
+  transform:
+    translate(-50%, -50%)
+    scale(0.97);
+}
+
+[data-mirrorland-window-state="focused"]
+.compass-object--mirrorland,
+[data-mirrorland-window-state="navigating"]
+.compass-object--mirrorland {
+  opacity: 0;
+  visibility: hidden;
+  transform:
+    translate(-50%, -50%)
+    scale(0.94);
+}
+
+/* Cardinal controls remain contextual but subordinate. */
+
+[data-mirrorland-window-state="revealing"]
+.compass-object--wing,
+[data-mirrorland-window-state="focused"]
+.compass-object--wing,
+[data-mirrorland-window-state="withdrawing"]
+.compass-object--wing,
+[data-mirrorland-window-state="navigating"]
+.compass-object--wing {
+  pointer-events: none;
+  cursor: default;
+  opacity:
+    var(--mirrorland-context-control-opacity);
+  filter:
+    saturate(0.70)
+    brightness(0.78);
+}
+
+[data-mirrorland-window-state="revealing"]
+.compass-object--wing[data-wing="north"],
+[data-mirrorland-window-state="focused"]
+.compass-object--wing[data-wing="north"],
+[data-mirrorland-window-state="withdrawing"]
+.compass-object--wing[data-wing="north"],
+[data-mirrorland-window-state="navigating"]
+.compass-object--wing[data-wing="north"],
+[data-mirrorland-window-state="revealing"]
+.compass-object--wing[data-wing="south"],
+[data-mirrorland-window-state="focused"]
+.compass-object--wing[data-wing="south"],
+[data-mirrorland-window-state="withdrawing"]
+.compass-object--wing[data-wing="south"],
+[data-mirrorland-window-state="navigating"]
+.compass-object--wing[data-wing="south"] {
   transform:
     translateX(-50%)
-    scale(var(--mirrorland-context-control-scale));
+    scale(
+      var(--mirrorland-context-control-scale)
+    );
 }
 
-[data-mirrorland-window-state="revealing"] .compass-object--wing[data-wing="south"],
-[data-mirrorland-window-state="focused"] .compass-object--wing[data-wing="south"],
-[data-mirrorland-window-state="withdrawing"] .compass-object--wing[data-wing="south"],
-[data-mirrorland-window-state="navigating"] .compass-object--wing[data-wing="south"] {
-  transform:
-    translateX(-50%)
-    scale(var(--mirrorland-context-control-scale));
-}
-
-[data-mirrorland-window-state="revealing"] .compass-object--wing[data-wing="east"],
-[data-mirrorland-window-state="focused"] .compass-object--wing[data-wing="east"],
-[data-mirrorland-window-state="withdrawing"] .compass-object--wing[data-wing="east"],
-[data-mirrorland-window-state="navigating"] .compass-object--wing[data-wing="east"] {
-  transform:
-    translateY(-50%)
-    scale(var(--mirrorland-context-control-scale));
-}
-
-[data-mirrorland-window-state="revealing"] .compass-object--wing[data-wing="west"],
-[data-mirrorland-window-state="focused"] .compass-object--wing[data-wing="west"],
-[data-mirrorland-window-state="withdrawing"] .compass-object--wing[data-wing="west"],
-[data-mirrorland-window-state="navigating"] .compass-object--wing[data-wing="west"] {
+[data-mirrorland-window-state="revealing"]
+.compass-object--wing[data-wing="east"],
+[data-mirrorland-window-state="focused"]
+.compass-object--wing[data-wing="east"],
+[data-mirrorland-window-state="withdrawing"]
+.compass-object--wing[data-wing="east"],
+[data-mirrorland-window-state="navigating"]
+.compass-object--wing[data-wing="east"],
+[data-mirrorland-window-state="revealing"]
+.compass-object--wing[data-wing="west"],
+[data-mirrorland-window-state="focused"]
+.compass-object--wing[data-wing="west"],
+[data-mirrorland-window-state="withdrawing"]
+.compass-object--wing[data-wing="west"],
+[data-mirrorland-window-state="navigating"]
+.compass-object--wing[data-wing="west"] {
   transform:
     translateY(-50%)
-    scale(var(--mirrorland-context-control-scale));
+    scale(
+      var(--mirrorland-context-control-scale)
+    );
 }
 
-[data-mirrorland-window-state="revealing"] [data-compass-room],
-[data-mirrorland-window-state="focused"] [data-compass-room],
-[data-mirrorland-window-state="withdrawing"] [data-compass-room],
-[data-mirrorland-window-state="navigating"] [data-compass-room] {
+[data-mirrorland-window-state="revealing"]
+[data-compass-room],
+[data-mirrorland-window-state="focused"]
+[data-compass-room],
+[data-mirrorland-window-state="withdrawing"]
+[data-compass-room],
+[data-mirrorland-window-state="navigating"]
+[data-compass-room] {
   display: none !important;
   pointer-events: none !important;
 }
 
-[data-mirrorland-window-state="revealing"] .compass-runtime-guidance,
-[data-mirrorland-window-state="revealing"] .compass-scene-guidance,
-[data-mirrorland-window-state="revealing"] [data-compass-scene-guidance],
-[data-mirrorland-window-state="withdrawing"] .compass-runtime-guidance,
-[data-mirrorland-window-state="withdrawing"] .compass-scene-guidance,
-[data-mirrorland-window-state="withdrawing"] [data-compass-scene-guidance] {
-  opacity: 0.72;
-  border-color: rgba(216, 184, 106, 0.18);
+[data-mirrorland-window-state="revealing"]
+.compass-runtime-guidance,
+[data-mirrorland-window-state="revealing"]
+.compass-scene-guidance,
+[data-mirrorland-window-state="revealing"]
+[data-compass-scene-guidance],
+[data-mirrorland-window-state="withdrawing"]
+.compass-runtime-guidance,
+[data-mirrorland-window-state="withdrawing"]
+.compass-scene-guidance,
+[data-mirrorland-window-state="withdrawing"]
+[data-compass-scene-guidance] {
+  opacity: 0.68;
+  border-color:
+    rgba(216, 184, 106, 0.18);
 }
 
-[data-mirrorland-window-state="focused"] .compass-runtime-guidance,
-[data-mirrorland-window-state="focused"] .compass-scene-guidance,
-[data-mirrorland-window-state="focused"] [data-compass-scene-guidance] {
-  opacity: 0.62;
-  border-color: rgba(124, 220, 255, 0.16);
+[data-mirrorland-window-state="focused"]
+.compass-runtime-guidance,
+[data-mirrorland-window-state="focused"]
+.compass-scene-guidance,
+[data-mirrorland-window-state="focused"]
+[data-compass-scene-guidance] {
+  opacity: 0.54;
+  border-color:
+    rgba(124, 220, 255, 0.16);
   background:
-    linear-gradient(135deg, rgba(7, 10, 16, 0.66), rgba(14, 24, 36, 0.46)),
+    linear-gradient(
+      135deg,
+      rgba(7, 10, 16, 0.66),
+      rgba(14, 24, 36, 0.46)
+    ),
     rgba(7, 10, 16, 0.52);
 }
 
-[data-mirrorland-window-state="navigating"] .compass-runtime-guidance,
-[data-mirrorland-window-state="navigating"] .compass-scene-guidance,
-[data-mirrorland-window-state="navigating"] [data-compass-scene-guidance] {
-  opacity: 0.46;
+[data-mirrorland-window-state="navigating"]
+.compass-runtime-guidance,
+[data-mirrorland-window-state="navigating"]
+.compass-scene-guidance,
+[data-mirrorland-window-state="navigating"]
+[data-compass-scene-guidance] {
+  opacity: 0.38;
 }
 
-/* Controller datasets reinforce control visibility without replacing HTML state. */
-
-[data-mirrorland-enter-enabled="false"][data-selected-destination-type="mirrorland"] [data-compass-enter] {
+[data-mirrorland-enter-enabled="false"]
+[data-selected-destination-type="mirrorland"]
+[data-compass-enter] {
   opacity: 0.45;
   filter: grayscale(0.45);
 }
 
-[data-mirrorland-enter-enabled="true"][data-mirrorland-window-state="focused"] [data-compass-enter] {
+[data-mirrorland-enter-enabled="true"]
+[data-mirrorland-window-state="focused"]
+[data-compass-enter] {
   opacity: 1;
   filter: none;
 }
 
-[data-mirrorland-back-enabled="false"] [data-compass-mirrorland-back] {
+[data-mirrorland-back-enabled="false"]
+[data-compass-mirrorland-back] {
   opacity: 0.45;
   filter: grayscale(0.45);
 }
 
-[data-mirrorland-back-enabled="true"][data-mirrorland-window-state="focused"] [data-compass-mirrorland-back] {
+[data-mirrorland-back-enabled="true"]
+[data-mirrorland-window-state="focused"]
+[data-compass-mirrorland-back] {
   opacity: 1;
   filter: none;
 }
+
+/* =========================================================
+   CLOSING AND RECEIPTS
+   ========================================================= */
 
 .compass-closing {
   max-width: 760px;
@@ -1601,10 +2628,15 @@ summary:focus-visible {
 .compass-accessibility-note {
   max-width: 820px;
   margin: 0;
-  color: rgba(225, 218, 198, 0.48);
+  color:
+    rgba(225, 218, 198, 0.48);
   font-size: 0.85rem;
   line-height: 1.5;
 }
+
+/* =========================================================
+   ANIMATION
+   ========================================================= */
 
 @keyframes compass-celestial-twinkle {
   0% {
@@ -1625,31 +2657,43 @@ summary:focus-visible {
 
 @keyframes compass-threshold-breathe {
   0% {
-    opacity: 0.48;
+    opacity: 0.44;
   }
 
   100% {
-    opacity: 0.72;
+    opacity: 0.64;
   }
 }
 
 @keyframes compass-living-planet {
   0% {
     opacity: 0.42;
-    filter: brightness(0.88) saturate(0.92);
-    transform: translate3d(0, 0, 0) scale(1);
+    filter:
+      brightness(0.88)
+      saturate(0.92);
+    transform:
+      translate3d(0, 0, 0)
+      scale(1);
   }
 
   50% {
     opacity: 0.58;
-    filter: brightness(1.08) saturate(1.08);
-    transform: translate3d(-4px, 2px, 0) scale(1.025);
+    filter:
+      brightness(1.08)
+      saturate(1.08);
+    transform:
+      translate3d(-4px, 2px, 0)
+      scale(1.025);
   }
 
   100% {
     opacity: 0.48;
-    filter: brightness(0.98) saturate(1.02);
-    transform: translate3d(2px, -2px, 0) scale(1.01);
+    filter:
+      brightness(0.98)
+      saturate(1.02);
+    transform:
+      translate3d(2px, -2px, 0)
+      scale(1.01);
   }
 }
 
@@ -1657,7 +2701,10 @@ summary:focus-visible {
   0%,
   64% {
     opacity: 0;
-    transform: translate3d(0, 0, 0) rotate(-8deg) scale(0.66);
+    transform:
+      translate3d(0, 0, 0)
+      rotate(-8deg)
+      scale(0.66);
   }
 
   67% {
@@ -1666,15 +2713,25 @@ summary:focus-visible {
 
   72% {
     opacity: 0.44;
-    transform: translate3d(118vw, 46px, 0) rotate(-6deg) scale(0.76);
+    transform:
+      translate3d(118vw, 46px, 0)
+      rotate(-6deg)
+      scale(0.76);
   }
 
   76%,
   100% {
     opacity: 0;
-    transform: translate3d(148vw, 60px, 0) rotate(-6deg) scale(0.76);
+    transform:
+      translate3d(148vw, 60px, 0)
+      rotate(-6deg)
+      scale(0.76);
   }
 }
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
 
 @media (max-width: 920px) {
   .compass-discovery,
@@ -1685,6 +2742,14 @@ summary:focus-visible {
 }
 
 @media (max-width: 820px) {
+  :root {
+    --mirrorland-hit-size:
+      clamp(156px, 30vw, 208px);
+
+    --mirrorland-label-offset:
+      clamp(70px, 13vw, 92px);
+  }
+
   .compass-estate {
     padding: 14px;
   }
@@ -1703,6 +2768,12 @@ summary:focus-visible {
     padding: 8px 10px;
   }
 
+  .compass-object--mirrorland {
+    min-width: 0;
+    max-width: none;
+    padding: 0;
+  }
+
   .compass-object--wing[data-wing="east"] {
     right: 4%;
   }
@@ -1715,14 +2786,28 @@ summary:focus-visible {
     max-width: none;
   }
 
-  [data-selected-destination-type="mirrorland"] .compass-panel__actions {
+  [data-selected-destination-type="mirrorland"]
+  .compass-panel__actions {
     align-items: stretch;
   }
 }
 
 @media (max-width: 560px) {
+  :root {
+    --mirrorland-hit-size:
+      clamp(142px, 40vw, 186px);
+
+    --mirrorland-label-offset:
+      clamp(62px, 17vw, 78px);
+  }
+
   .compass-estate h1 {
-    font-size: clamp(2.55rem, 18vw, 4.6rem);
+    font-size:
+      clamp(
+        2.55rem,
+        18vw,
+        4.6rem
+      );
   }
 
   .compass-estate__summary,
@@ -1749,7 +2834,12 @@ summary:focus-visible {
 
   .compass-formula-artifact__math {
     padding: 12px;
-    font-size: clamp(0.98rem, 5vw, 1.32rem);
+    font-size:
+      clamp(
+        0.98rem,
+        5vw,
+        1.32rem
+      );
     line-height: 1.72;
     text-align: center;
   }
@@ -1809,8 +2899,23 @@ summary:focus-visible {
   }
 
   .compass-object--mirrorland {
-    top: 48%;
-    min-width: 118px;
+    left: 50%;
+    top: 49%;
+    width:
+      var(--mirrorland-hit-size);
+    height:
+      var(--mirrorland-hit-size);
+    min-width: 0;
+    max-width: none;
+    padding: 0;
+  }
+
+  .compass-object--mirrorland span:first-child {
+    font-size: 0.65rem;
+  }
+
+  .compass-object--mirrorland span:last-child {
+    font-size: 0.56rem;
   }
 
   .compass-object--wing[data-wing="north"] {
@@ -1847,29 +2952,44 @@ summary:focus-visible {
   .compass-scene-guidance,
   [data-compass-scene-guidance] {
     bottom: 10px !important;
-    width: min(calc(100% - 32px), 460px);
+    width:
+      min(
+        calc(100% - 32px),
+        460px
+      );
     padding: 7px 11px;
     font-size: 0.70rem;
   }
 
-  [data-selected-destination-type="mirrorland"] .compass-panel__actions {
+  [data-selected-destination-type="mirrorland"]
+  .compass-panel__actions {
     display: grid;
     grid-template-columns: 1fr;
   }
 
-  [data-selected-destination-type="mirrorland"] [data-compass-enter],
-  [data-selected-destination-type="mirrorland"] [data-compass-mirrorland-back] {
+  [data-selected-destination-type="mirrorland"]
+  [data-compass-enter],
+  [data-selected-destination-type="mirrorland"]
+  [data-compass-mirrorland-back] {
     width: 100%;
     min-width: 0;
   }
 
-  [data-mirrorland-window-state="revealing"] .compass-object--wing,
-  [data-mirrorland-window-state="focused"] .compass-object--wing,
-  [data-mirrorland-window-state="withdrawing"] .compass-object--wing,
-  [data-mirrorland-window-state="navigating"] .compass-object--wing {
-    opacity: 0.48;
+  [data-mirrorland-window-state="revealing"]
+  .compass-object--wing,
+  [data-mirrorland-window-state="focused"]
+  .compass-object--wing,
+  [data-mirrorland-window-state="withdrawing"]
+  .compass-object--wing,
+  [data-mirrorland-window-state="navigating"]
+  .compass-object--wing {
+    opacity: 0.38;
   }
 }
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
 
 @media (prefers-reduced-motion: reduce) {
   html {
@@ -1900,21 +3020,33 @@ summary:focus-visible {
     transition: none !important;
   }
 
-  [data-mirrorland-window-state="revealing"] .compass-scene::after,
-  [data-mirrorland-window-state="focused"] .compass-scene::after,
-  [data-mirrorland-window-state="withdrawing"] .compass-scene::after,
-  [data-mirrorland-window-state="navigating"] .compass-scene::after {
+  [data-mirrorland-window-state="revealing"]
+  .compass-scene::after,
+  [data-mirrorland-window-state="focused"]
+  .compass-scene::after,
+  [data-mirrorland-window-state="withdrawing"]
+  .compass-scene::after,
+  [data-mirrorland-window-state="navigating"]
+  .compass-scene::after {
     animation: none !important;
   }
 
-  [data-mirrorland-window-state="revealing"] .compass-object--mirrorland,
-  [data-mirrorland-window-state="focused"] .compass-object--mirrorland,
-  [data-mirrorland-window-state="withdrawing"] .compass-object--mirrorland,
-  [data-mirrorland-window-state="navigating"] .compass-object--mirrorland,
-  [data-mirrorland-window-state="revealing"] .compass-object--wing,
-  [data-mirrorland-window-state="focused"] .compass-object--wing,
-  [data-mirrorland-window-state="withdrawing"] .compass-object--wing,
-  [data-mirrorland-window-state="navigating"] .compass-object--wing {
+  [data-mirrorland-window-state="revealing"]
+  .compass-object--mirrorland,
+  [data-mirrorland-window-state="focused"]
+  .compass-object--mirrorland,
+  [data-mirrorland-window-state="withdrawing"]
+  .compass-object--mirrorland,
+  [data-mirrorland-window-state="navigating"]
+  .compass-object--mirrorland,
+  [data-mirrorland-window-state="revealing"]
+  .compass-object--wing,
+  [data-mirrorland-window-state="focused"]
+  .compass-object--wing,
+  [data-mirrorland-window-state="withdrawing"]
+  .compass-object--wing,
+  [data-mirrorland-window-state="navigating"]
+  .compass-object--wing {
     transition: none !important;
   }
 }

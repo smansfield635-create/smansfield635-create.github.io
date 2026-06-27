@@ -23,7 +23,7 @@
    - Do not interpret ordinary drag release as return behavior.
    - Descend into the information panel only after actual room selection.
    - Return the viewport to the ARCHCOIN scene after Return To Orbit.
-   - Keep Return To Orbit distinct from the center compass menu.
+   - Keep Return To Orbit distinct from Return To Cluster.
    - Keep the center compass menu distinct from local restoration.
    - Fail soft.
 
@@ -120,7 +120,7 @@
     [STATES.ORBIT]: Object.freeze({ compass: 1, window: 0 }),
     [STATES.CLUSTER_OPEN]: Object.freeze({ compass: 1, window: 0 }),
     [STATES.INFO_OPEN]: Object.freeze({ compass: 0.94, window: 0 }),
-    [STATES.HELD]: Object.freeze({ compass: 0.80, window: 0 })
+    [STATES.HELD]: Object.freeze({ compass: 0.8, window: 0 })
   });
 
   const DEFAULT_PANEL = Object.freeze({
@@ -231,7 +231,9 @@
     controllerReceiptOutput: null,
     lensTabs: new Map(),
     lensPanels: new Map(),
+
     current: STATES.ORBIT,
+
     orbitFocus: "north",
     orbitPreviewFocus: "north",
     orbitPhase: ORIENTATION_PHASES.COMMITTED,
@@ -240,7 +242,9 @@
     orbitOrientation: null,
     committedOrbitOrientation: null,
     orbitGestureOrigin: null,
+
     clusters: new Map(),
+
     selectedWing: "",
     selectedCoin: "",
     selectedRoom: "",
@@ -248,12 +252,15 @@
     selectedDestinationId: "",
     selectedDestinationLabel: "",
     selectedRoute: "",
+
     activeTab: "overview",
     panelDescended: false,
+
     panelDescentFrame: 0,
     panelDescentCommitFrame: 0,
     sceneAscentFrame: 0,
     sceneAscentCommitFrame: 0,
+
     compassMenuOpen: false,
     initialized: false,
     reducedMotion: false
@@ -283,7 +290,7 @@
 
   function normalizeCoin(value) {
     const coin = String(value || "").trim().toLowerCase();
-    return COIN_BY_WING[WING_BY_COIN[coin]] ? coin : "";
+    return WING_BY_COIN[coin] ? coin : "";
   }
 
   function normalizeRoomId(value) {
@@ -645,7 +652,6 @@
       cancelAnimationFrame(state.panelDescentFrame);
       state.panelDescentFrame = 0;
     }
-
     if (state.panelDescentCommitFrame) {
       cancelAnimationFrame(state.panelDescentCommitFrame);
       state.panelDescentCommitFrame = 0;
@@ -657,7 +663,6 @@
       cancelAnimationFrame(state.sceneAscentFrame);
       state.sceneAscentFrame = 0;
     }
-
     if (state.sceneAscentCommitFrame) {
       cancelAnimationFrame(state.sceneAscentCommitFrame);
       state.sceneAscentCommitFrame = 0;
@@ -677,7 +682,6 @@
     clearViewportSchedules();
 
     const roomId = normalizeRoomId(expectedRoomId);
-
     if (!roomId || !state.panel) {
       return;
     }
@@ -688,11 +692,7 @@
       state.panelDescentCommitFrame = requestAnimationFrame(() => {
         state.panelDescentCommitFrame = 0;
 
-        if (
-          state.current !== STATES.INFO_OPEN ||
-          state.selectedRoom !== roomId ||
-          !state.panel
-        ) {
+        if (state.current !== STATES.INFO_OPEN || state.selectedRoom !== roomId || !state.panel) {
           return;
         }
 
@@ -714,7 +714,6 @@
     clearViewportSchedules();
 
     const wing = normalizeWing(expectedWing);
-
     if (!wing || !state.scene) {
       return;
     }
@@ -1057,7 +1056,6 @@
 
     if (state.current === STATES.CLUSTER_OPEN) {
       const coinElement = findCoinElement(state.selectedWing);
-
       if (coinElement) {
         setPanel(panelFromCoin(coinElement));
       }
@@ -1070,7 +1068,6 @@
 
     if (state.current === STATES.INFO_OPEN) {
       const roomElement = findRoomElement(state.selectedRoom);
-
       if (roomElement) {
         setPanel(panelFromRoom(roomElement));
       }
@@ -1109,9 +1106,10 @@
 
   function readReducedMotion() {
     state.reducedMotion =
-      (globalThis.matchMedia &&
-        globalThis.matchMedia("(prefers-reduced-motion: reduce)").matches) ||
-      state.root.dataset.reducedMotion === "true";
+      Boolean(
+        globalThis.matchMedia &&
+          globalThis.matchMedia("(prefers-reduced-motion: reduce)").matches
+      ) || state.root.dataset.reducedMotion === "true";
   }
 
   function initializeConstellationState() {
@@ -1119,7 +1117,6 @@
     let initialOrientation = canonicalConstellationOrientation(requestedFocus);
 
     const serialized = String(state.root.dataset.orbitQuaternion || "").trim();
-
     if (serialized) {
       try {
         initialOrientation = orientationFromQuaternion(JSON.parse(serialized), requestedFocus);
@@ -1142,10 +1139,7 @@
     WINGS.forEach(wing => {
       const cluster = createClusterState(wing);
 
-      cluster.roomIds = qsa(
-        `[data-archcoin-room][data-wing="${wing}"]`,
-        state.root
-      )
+      cluster.roomIds = qsa(`[data-archcoin-room][data-wing="${wing}"]`, state.root)
         .map(element => normalizeRoomId(element.dataset.roomId))
         .filter(Boolean);
 
@@ -1527,7 +1521,6 @@
     }
 
     const element = findCoinElement(normalizedWing);
-
     if (!element) {
       fail(`COIN_NOT_FOUND:${normalizedWing}`, "requestCoinSelection");
       return false;
@@ -1558,16 +1551,10 @@
 
     setPanel(panelFromCoin(element));
 
-    const committed = setState(
+    return setState(
       STATES.CLUSTER_OPEN,
       `coin-selected:${normalizedWing}:${String(source || "controller")}`
     );
-
-    if (!committed) {
-      return false;
-    }
-
-    return true;
   }
 
   function requestRoomSelection(roomId, source = "controller") {
@@ -1578,20 +1565,17 @@
     }
 
     const element = findRoomElement(id);
-
     if (!element) {
       fail(`ROOM_NOT_FOUND:${id}`, "requestRoomSelection");
       return false;
     }
 
     const wing = normalizeWing(element.dataset.wing);
-
     if (!wing || wing !== state.selectedWing) {
       return false;
     }
 
     const cluster = getCluster(wing);
-
     if (!cluster || !clusterContainsRoom(cluster, id)) {
       fail(`ROOM_CLUSTER_INVALID:${id}`, "requestRoomSelection");
       return false;
@@ -1719,6 +1703,52 @@
     return true;
   }
 
+  function requestReturnToCluster(options = {}) {
+    if (state.current !== STATES.INFO_OPEN) {
+      return false;
+    }
+
+    const wing = state.selectedWing;
+    const coinElement = findCoinElement(wing);
+
+    if (!coinElement) {
+      fail(`COIN_NOT_FOUND:${wing}`, "requestReturnToCluster");
+      return false;
+    }
+
+    clearPanelDescentSchedule();
+    setPanelDescended(false);
+    state.compassMenuOpen = false;
+
+    state.selectedRoom = "";
+    state.selectedDestinationType = "coin";
+    state.selectedDestinationId = coinForWing(wing);
+
+    const destination = destinationFromElement(coinElement);
+    state.selectedDestinationLabel =
+      destination.label || coinElement.dataset.panelTitle || wing;
+    state.selectedRoute = destination.route || "";
+
+    setPanel(panelFromCoin(coinElement));
+
+    const committed = setState(
+      STATES.CLUSTER_OPEN,
+      `return-to-cluster:${wing}:${String(options.source || "controller")}`
+    );
+
+    if (!committed) {
+      return false;
+    }
+
+    emitReceipt({
+      lastAction: `returned-to-cluster:${wing}`,
+      lastFailure: null,
+      returnSource: String(options.source || "controller")
+    });
+
+    return true;
+  }
+
   function requestLensTab(tab, source = "controller") {
     if (state.current === STATES.HELD) {
       return false;
@@ -1771,7 +1801,6 @@
     if (state.compassMenuOpen) {
       return requestCenterCompassClose(source);
     }
-
     return requestCenterCompassOpen(source);
   }
 
@@ -1826,15 +1855,12 @@
         if (event.key === "ArrowRight") {
           nextIndex = (currentIndex + 1) % buttons.length;
         }
-
         if (event.key === "ArrowLeft") {
           nextIndex = (currentIndex - 1 + buttons.length) % buttons.length;
         }
-
         if (event.key === "Home") {
           nextIndex = 0;
         }
-
         if (event.key === "End") {
           nextIndex = buttons.length - 1;
         }
@@ -1862,7 +1888,7 @@
     if (state.returnToClusterButton) {
       state.returnToClusterButton.addEventListener("click", event => {
         event.preventDefault();
-        requestReturnToOrbit({ source: "button-cluster" });
+        requestReturnToCluster({ source: "button" });
       });
     }
   }
@@ -1928,7 +1954,7 @@
       }
 
       if (state.current === STATES.INFO_OPEN) {
-        requestReturnToOrbit({ source: "escape" });
+        requestReturnToCluster({ source: "escape" });
         return;
       }
 
@@ -1961,29 +1987,37 @@
       contract: CONTRACT,
       constellationOrbit: CONSTELLATION_ORBIT,
       clusterOrbit: CLUSTER_ORBIT,
+
       receipt: () =>
         Object.freeze({
           ...RECEIPT,
           orbitQuaternion: Object.freeze(Array.from(RECEIPT.orbitQuaternion)),
           clusterQuaternion: Object.freeze(Array.from(RECEIPT.clusterQuaternion))
         }),
+
       beginOrbitGesture,
       requestOrbitPreview,
       requestOrbitCommit,
       requestOrbitCancel,
       requestOrbitFocus,
+
       beginClusterGesture,
       requestClusterPreview,
       requestClusterCommit,
       requestClusterCancel,
+
       requestCoinSelection,
       requestRoomSelection,
       requestReturnToOrbit,
+      requestReturnToCluster,
       requestReturnToConstellation,
+
       requestCenterCompassToggle,
       requestCenterCompassOpen,
       requestCenterCompassClose,
+
       requestLensTab,
+
       getFrameState: () => {
         const cluster = activeCluster();
 
@@ -2015,6 +2049,7 @@
           prominence: Object.freeze({ ...prominenceFor(state.current) })
         });
       },
+
       getClusterState: wing => clusterFrameSnapshot(getCluster(wing))
     });
   }

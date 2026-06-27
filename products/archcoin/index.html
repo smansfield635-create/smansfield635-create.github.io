@@ -2,18 +2,20 @@
 <html
   lang="en"
   data-route="/products/archcoin/"
-  data-page="archcoin-product-transaction-template-and-bond-layer"
-  data-contract="ARCHCOIN_TRANSACTION_TEMPLATE_AND_BOND_LAYER_REBUILD_v2"
-  data-previous-contract="ARCHCOIN_PRODUCT_GRANDCHILD_VALUE_ORBIT_ANIMATION_TNT_v4"
+  data-page="archcoin-product-coin-family-cluster-information-chamber"
+  data-contract="ARCHCOIN_FOUR_COIN_CONSTELLATION_CLUSTER_INFORMATION_ANCHOR_v3"
+  data-previous-contract="ARCHCOIN_TRANSACTION_TEMPLATE_AND_BOND_LAYER_REBUILD_v2"
   data-parent-route="/products/"
   data-grandparent-route="/"
   data-role="product-grandchild"
   data-product-chamber="archcoin"
-  data-product-type="transaction-template-and-bond-layer"
+  data-product-type="cryptocurrency-family-information-constellation"
   data-core-message="value-should-be-traceable-before-it-is-amplified"
+  data-archcoin-root
   data-archcoin-product="true"
-  data-archcoin-primary-model="four-coin-transaction-template"
-  data-archcoin-secondary-model="five-node-value-lifecycle"
+  data-archcoin-family="true"
+  data-archcoin-primary-model="four-coins-with-cluster-information-navigation"
+  data-archcoin-secondary-model="subordinate-value-lifecycle"
   data-js-required="false"
   data-generated-image="false"
   data-graphic-box="false"
@@ -28,7 +30,7 @@
   <title>ARCHCOIN · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="ARCHCOIN is a four-part transaction-template and bond-layer product chamber for contract authority, inbound value, outbound obligation, allocation, traceability, accountability, and adapter-aware crypto participation. It is concept architecture only, not financial advice or a live token sale."
+    content="ARCHCOIN is an early pre-launch cryptocurrency family organized as four distinct coins. Each coin opens into its own information cluster for engineering, platform, issuance, and governance inspection. This page is an architectural information chamber, not a wallet, exchange, token-sale page, or live financial execution surface."
   >
 
   <style>
@@ -48,16 +50,23 @@
       --line:rgba(184,205,255,.18);
       --line-gold:rgba(243,200,111,.32);
       --shadow:0 32px 110px rgba(0,0,0,.48);
-      --max:1180px;
+      --max:1220px;
+
+      --archcoin-scene-size:min(100%,48rem);
+      --archcoin-outer-radius:15rem;
+      --archcoin-cluster-radius:8.9rem;
+      --archcoin-center-size:10rem;
+      --archcoin-coin-width:10.3rem;
+      --archcoin-coin-height:7.35rem;
+      --archcoin-room-width:5.2rem;
+      --archcoin-room-height:3.9rem;
+
       --field-turn-duration:46s;
-      --orbit-duration:34s;
+      --outer-orbit-duration:36s;
+      --cluster-orbit-duration:31s;
       --gem-float-duration:6.8s;
       --center-pulse-duration:7.4s;
       --gem-cut:polygon(50% 0%,78% 9%,100% 35%,90% 75%,50% 100%,10% 75%,0% 35%,22% 9%);
-      --facet:polygon(0 18px,18px 0,calc(100% - 18px) 0,100% 18px,100% calc(100% - 18px),calc(100% - 18px) 100%,18px 100%,0 calc(100% - 18px));
-
-      --archcoin-transaction-prominence:1;
-      --archcoin-lifecycle-prominence:.82;
     }
 
     * { box-sizing:border-box; }
@@ -110,6 +119,11 @@
     [tabindex]:focus-visible {
       outline:2px solid var(--gold);
       outline-offset:4px;
+    }
+
+    button {
+      font:inherit;
+      color:inherit;
     }
 
     .svg-defs {
@@ -348,13 +362,13 @@
     }
 
     .lead {
-      max-width:930px;
+      max-width:940px;
       position:relative;
       z-index:2;
     }
 
     .subline {
-      max-width:930px;
+      max-width:940px;
       color:rgba(255,244,216,.90);
       font-size:clamp(1.08rem,2.8vw,1.34rem);
       font-weight:850;
@@ -363,7 +377,7 @@
     }
 
     .guardrail {
-      max-width:990px;
+      max-width:1000px;
       padding:1rem 1.1rem;
       border:1px solid rgba(143,240,195,.24);
       border-radius:1.2rem;
@@ -428,13 +442,28 @@
       gap:1.05rem;
     }
 
-    .value-stage {
-      position:relative;
-      min-height:clamp(32rem,62vw,45rem);
+    .scene-summary {
+      padding:1rem 1.1rem;
+      border:1px solid rgba(243,200,111,.22);
+      border-radius:1.2rem;
+      background:
+        radial-gradient(circle at 20% 0%,rgba(243,200,111,.10),transparent 60%),
+        rgba(243,200,111,.045);
       display:grid;
-      place-items:center;
-      overflow:hidden;
-      isolation:isolate;
+      gap:.62rem;
+    }
+
+    .scene-summary strong {
+      color:rgba(255,244,216,.98);
+      font-size:clamp(1.08rem,3vw,1.45rem);
+      line-height:1.08;
+      letter-spacing:-.03em;
+    }
+
+    .archcoin-scene {
+      position:relative;
+      display:grid;
+      gap:1rem;
       border:1px solid rgba(184,205,255,.13);
       border-radius:clamp(1.35rem,5vw,2.35rem);
       background:
@@ -442,22 +471,26 @@
         radial-gradient(circle at 50% 52%,rgba(36,120,255,.10),transparent 25rem),
         linear-gradient(180deg,rgba(1,5,16,.68),rgba(2,6,16,.92));
       box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
+      overflow:hidden;
+      isolation:isolate;
+      min-height:clamp(44rem,78vw,58rem);
+      padding:clamp(1rem,3vw,1.35rem);
     }
 
-    .value-stage::before,
-    .value-stage::after {
+    .archcoin-scene::before,
+    .archcoin-scene::after {
       content:"";
       position:absolute;
       left:50%;
-      top:50%;
+      top:44%;
       border-radius:50%;
       transform:translate(-50%,-50%);
       pointer-events:none;
     }
 
-    .value-stage::before {
-      width:min(80%,34rem);
-      height:min(80%,34rem);
+    .archcoin-scene::before {
+      width:min(82%,38rem);
+      height:min(82%,38rem);
       border:1px solid rgba(243,200,111,.10);
       background:
         conic-gradient(
@@ -477,9 +510,9 @@
       animation:valueFieldTurn var(--field-turn-duration) linear infinite;
     }
 
-    .value-stage::after {
-      width:min(52%,22rem);
-      height:min(52%,22rem);
+    .archcoin-scene::after {
+      width:min(56%,25rem);
+      height:min(56%,25rem);
       border:1px solid rgba(36,120,255,.15);
       box-shadow:
         inset 0 0 3rem rgba(36,120,255,.035),
@@ -496,66 +529,99 @@
       50% { opacity:.86; filter:brightness(1.12); }
     }
 
-    .center-gem {
+    .archcoin-scene-top {
+      position:relative;
+      z-index:3;
+      display:grid;
+      gap:.55rem;
+      max-width:74rem;
+    }
+
+    .scene-guidance {
+      color:rgba(255,244,216,.92);
+      font-size:.96rem;
+      font-weight:800;
+    }
+
+    .archcoin-scene-stack {
+      position:relative;
+      z-index:3;
+      min-height:clamp(29rem,62vw,37rem);
+      display:grid;
+      place-items:center;
+      overflow:hidden;
+    }
+
+    .archcoin-geometry-mount {
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      z-index:1;
+    }
+
+    .archcoin-objects {
+      position:relative;
+      width:var(--archcoin-scene-size);
+      aspect-ratio:1 / 1;
+      max-width:100%;
+      z-index:2;
+    }
+
+    .archcoin-orbit-shell,
+    .archcoin-cluster-shell {
+      position:absolute;
+      inset:0;
+      border-radius:50%;
+      pointer-events:none;
+    }
+
+    .archcoin-orbit-shell {
+      animation:valueOrbitTurn var(--outer-orbit-duration) linear infinite;
+    }
+
+    .archcoin-cluster-shell {
+      animation:valueOrbitTurn var(--cluster-orbit-duration) linear infinite reverse;
+      opacity:0;
+      visibility:hidden;
+      transition:opacity .24s ease,visibility .24s ease;
+    }
+
+    [data-archcoin-state="cluster-open"] .archcoin-cluster-shell,
+    [data-archcoin-state="info-open"] .archcoin-cluster-shell {
+      opacity:1;
+      visibility:visible;
+    }
+
+    .archcoin-center {
       position:absolute;
       left:50%;
       top:50%;
-      z-index:5;
-      width:clamp(10.9rem,25vw,15.4rem);
-      height:clamp(8rem,18vw,11.2rem);
+      z-index:6;
+      width:var(--archcoin-center-size);
+      height:calc(var(--archcoin-center-size) * .74);
       transform:translate(-50%,-50%);
       display:grid;
       place-items:center;
-      text-align:center;
-      pointer-events:none;
     }
 
-    .transaction-orbit {
-      position:absolute;
-      left:50%;
-      top:50%;
-      z-index:4;
-      width:min(80%,34rem);
-      height:min(80%,34rem);
-      border-radius:999px;
-      transform:translate(-50%,-50%);
-      pointer-events:none;
-      animation:valueOrbitTurn var(--orbit-duration) linear infinite;
-      transform-origin:50% 50%;
-      will-change:transform;
+    .archcoin-center-button {
+      position:relative;
+      width:100%;
+      height:100%;
+      border:0;
+      padding:0;
+      display:grid;
+      place-items:center;
+      background:transparent;
+      cursor:pointer;
     }
 
-    .lifecycle-orbit {
-      position:absolute;
-      left:50%;
-      top:50%;
-      z-index:3;
-      width:min(58%,25rem);
-      height:min(58%,25rem);
-      border-radius:999px;
-      transform:translate(-50%,-50%);
-      pointer-events:none;
-      animation:valueOrbitTurn calc(var(--orbit-duration) * 1.2) linear infinite reverse;
-      opacity:.84;
-    }
-
-    @keyframes valueOrbitTurn {
-      from { transform:translate(-50%,-50%) rotate(0deg); }
-      to { transform:translate(-50%,-50%) rotate(360deg); }
-    }
-
-    .center-gem-core,
-    .orbit-gem-core,
-    .orbit-upright {
+    .archcoin-center-button .center-gem-core {
       position:absolute;
       inset:0;
       display:grid;
       place-items:center;
       text-align:center;
-      transform-origin:50% 50%;
-    }
-
-    .center-gem-core {
       animation:centerPulse var(--center-pulse-duration) ease-in-out infinite;
     }
 
@@ -564,33 +630,162 @@
       50% { transform:scale(1.035); filter:brightness(1.13); }
     }
 
-    .orbit-point {
+    .archcoin-center-button .arch-gem-svg {
+      filter:
+        drop-shadow(0 1.55rem 1.85rem rgba(0,0,0,.42))
+        drop-shadow(0 0 1.65rem rgba(243,200,111,.26))
+        drop-shadow(0 0 .85rem rgba(36,120,255,.10));
+    }
+
+    .archcoin-center-menu {
+      position:absolute;
+      left:50%;
+      top:50%;
+      z-index:7;
+      width:min(21rem,88vw);
+      display:grid;
+      gap:.55rem;
+      padding:1rem;
+      border:1px solid rgba(243,200,111,.22);
+      border-radius:1.25rem;
+      background:
+        radial-gradient(circle at 50% 0%,rgba(243,200,111,.12),transparent 60%),
+        rgba(6,10,22,.96);
+      box-shadow:0 1.25rem 3rem rgba(0,0,0,.44);
+      transform:translate(-50%,-50%) scale(.9);
+      opacity:0;
+      visibility:hidden;
+      transition:opacity .22s ease,transform .22s ease,visibility .22s ease;
+    }
+
+    [data-archcoin-compass-menu="open"] .archcoin-center-menu {
+      opacity:1;
+      visibility:visible;
+      transform:translate(-50%,-50%) scale(1);
+    }
+
+    .archcoin-center-menu h3 {
+      font-size:1rem;
+      color:var(--gold);
+    }
+
+    .archcoin-center-menu p {
+      font-size:.9rem;
+      color:var(--muted);
+    }
+
+    .archcoin-compass-grid {
+      display:grid;
+      gap:.55rem;
+    }
+
+    .archcoin-compass-option {
+      display:grid;
+      gap:.18rem;
+      width:100%;
+      text-align:left;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:1rem;
+      padding:.82rem .9rem;
+      background:rgba(255,255,255,.035);
+      cursor:pointer;
+    }
+
+    .archcoin-compass-option b {
+      color:var(--gold);
+      font-size:.68rem;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    .archcoin-compass-option strong {
+      color:rgba(255,244,216,.98);
+      font-size:1rem;
+      line-height:1.08;
+    }
+
+    .archcoin-compass-option span {
+      color:var(--muted);
+      font-size:.88rem;
+      line-height:1.35;
+    }
+
+    .archcoin-compass-close {
+      justify-self:end;
+      min-height:2.25rem;
+      padding:.5rem .8rem;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:999px;
+      background:rgba(255,255,255,.035);
+      color:rgba(241,246,255,.88);
+      font-size:.72rem;
+      font-weight:950;
+      letter-spacing:.09em;
+      text-transform:uppercase;
+      cursor:pointer;
+    }
+
+    .archcoin-coin,
+    .archcoin-room {
       --angle:0deg;
       --radius:-15rem;
       --value-delay:0s;
       position:absolute;
       left:50%;
       top:50%;
-      width:clamp(7.4rem,16vw,9.4rem);
-      height:clamp(5.4rem,12vw,6.95rem);
-      margin-left:calc(clamp(7.4rem,16vw,9.4rem) / -2);
-      margin-top:calc(clamp(5.4rem,12vw,6.95rem) / -2);
+      margin-left:calc(var(--archcoin-coin-width) / -2);
+      margin-top:calc(var(--archcoin-coin-height) / -2);
+      width:var(--archcoin-coin-width);
+      height:var(--archcoin-coin-height);
+      border:0;
+      padding:0;
+      background:transparent;
       display:grid;
       place-items:center;
       text-align:center;
-      pointer-events:auto;
-      background:transparent;
-      border:0;
+      cursor:pointer;
       transform:
         rotate(var(--angle))
         translateY(var(--radius))
         rotate(calc(-1 * var(--angle)));
-      transition:filter .18s ease,scale .18s ease;
+      transition:filter .18s ease,scale .18s ease,opacity .22s ease;
+      pointer-events:auto;
     }
 
-    .orbit-point .orbit-upright {
-      animation:valueLabelGravityLock var(--orbit-duration) linear infinite reverse;
-      will-change:transform;
+    .archcoin-room {
+      margin-left:calc(var(--archcoin-room-width) / -2);
+      margin-top:calc(var(--archcoin-room-height) / -2);
+      width:var(--archcoin-room-width);
+      height:var(--archcoin-room-height);
+      opacity:0;
+      visibility:hidden;
+      pointer-events:none;
+    }
+
+    [data-archcoin-state="cluster-open"] .archcoin-room,
+    [data-archcoin-state="info-open"] .archcoin-room {
+      opacity:1;
+      visibility:visible;
+      pointer-events:auto;
+    }
+
+    .archcoin-coin-upright,
+    .archcoin-room-upright,
+    .archcoin-gem-core {
+      position:absolute;
+      inset:0;
+      display:grid;
+      place-items:center;
+      text-align:center;
+      transform-origin:50% 50%;
+    }
+
+    .archcoin-coin-upright {
+      animation:valueLabelGravityLock var(--outer-orbit-duration) linear infinite reverse;
+    }
+
+    .archcoin-room-upright {
+      animation:valueLabelGravityLock var(--cluster-orbit-duration) linear infinite reverse;
     }
 
     @keyframes valueLabelGravityLock {
@@ -598,7 +793,7 @@
       to { transform:rotate(360deg); }
     }
 
-    .orbit-point .orbit-gem-core {
+    .archcoin-gem-core {
       animation:valueGemFloat var(--gem-float-duration) ease-in-out infinite;
       animation-delay:var(--value-delay);
     }
@@ -608,34 +803,36 @@
       50% { transform:translateY(-8px) scale(1.025); filter:brightness(1.12); }
     }
 
-    .orbit-point:hover,
-    .orbit-point:focus-visible {
+    .archcoin-coin:hover,
+    .archcoin-coin:focus-visible,
+    .archcoin-room:hover,
+    .archcoin-room:focus-visible,
+    .archcoin-center-button:hover,
+    .archcoin-center-button:focus-visible {
       filter:brightness(1.12) saturate(1.08);
       scale:1.045;
       outline:none;
     }
 
-    .orbit-point:hover .orbit-gem-core,
-    .orbit-point:focus-visible .orbit-gem-core {
+    .archcoin-coin:hover .archcoin-gem-core,
+    .archcoin-coin:focus-visible .archcoin-gem-core,
+    .archcoin-room:hover .archcoin-gem-core,
+    .archcoin-room:focus-visible .archcoin-gem-core {
       animation-play-state:paused;
       transform:translateY(-10px) scale(1.045);
       filter:brightness(1.18);
     }
 
-    .transaction-point {
-      width:clamp(8rem,18vw,10.1rem);
-      height:clamp(5.9rem,13vw,7.35rem);
-      margin-left:calc(clamp(8rem,18vw,10.1rem) / -2);
-      margin-top:calc(clamp(5.9rem,13vw,7.35rem) / -2);
+    .archcoin-coin[data-selected="true"],
+    .archcoin-room[data-selected="true"] {
+      filter:brightness(1.16) saturate(1.12);
+      scale:1.055;
     }
 
-    .lifecycle-point {
-      width:clamp(5.1rem,11vw,6.2rem);
-      height:clamp(3.75rem,8vw,4.6rem);
-      margin-left:calc(clamp(5.1rem,11vw,6.2rem) / -2);
-      margin-top:calc(clamp(3.75rem,8vw,4.6rem) / -2);
-      opacity:.94;
-    }
+    .archcoin-room[data-wing="north"] { --radius:calc(var(--archcoin-cluster-radius) * -1); }
+    .archcoin-room[data-wing="east"] { --radius:calc(var(--archcoin-cluster-radius) * -1); }
+    .archcoin-room[data-wing="south"] { --radius:calc(var(--archcoin-cluster-radius) * -1); }
+    .archcoin-room[data-wing="west"] { --radius:calc(var(--archcoin-cluster-radius) * -1); }
 
     .arch-gem-svg {
       position:absolute;
@@ -650,17 +847,10 @@
         drop-shadow(0 0 .55rem rgba(141,216,255,.10));
     }
 
-    .center-gem .arch-gem-svg {
-      filter:
-        drop-shadow(0 1.55rem 1.85rem rgba(0,0,0,.42))
-        drop-shadow(0 0 1.65rem rgba(243,200,111,.26))
-        drop-shadow(0 0 .85rem rgba(36,120,255,.10));
-    }
-
     .gem-label {
       position:relative;
       z-index:3;
-      width:76%;
+      width:78%;
       display:grid;
       gap:.12rem;
       place-items:center;
@@ -675,11 +865,20 @@
     .gem-label b {
       display:block;
       color:rgba(255,244,216,.98);
-      font-size:clamp(.58rem,1.5vw,.82rem);
+      font-size:clamp(.56rem,1.42vw,.8rem);
       font-weight:950;
-      letter-spacing:.075em;
+      letter-spacing:.08em;
       line-height:1.02;
       text-transform:uppercase;
+    }
+
+    .gem-label strong {
+      display:block;
+      color:rgba(255,244,216,.98);
+      font-size:clamp(.86rem,1.7vw,1.08rem);
+      line-height:1.02;
+      letter-spacing:-.03em;
+      text-transform:none;
     }
 
     .gem-label span {
@@ -690,80 +889,228 @@
       text-transform:uppercase;
     }
 
-    .center-gem .gem-label b {
-      color:var(--gold);
-      font-size:clamp(.72rem,1.65vw,.95rem);
-      letter-spacing:.16em;
+    .archcoin-room .gem-label {
+      width:84%;
     }
 
-    .center-gem .gem-label strong {
-      display:block;
-      color:rgba(255,244,216,.98);
-      font-size:clamp(.95rem,2.2vw,1.3rem);
-      line-height:1.05;
-      letter-spacing:-.035em;
-      text-transform:none;
-    }
-
-    .lifecycle-point .gem-label b {
-      font-size:clamp(.38rem,.95vw,.5rem);
+    .archcoin-room .gem-label b {
+      font-size:clamp(.36rem,.9vw,.48rem);
       letter-spacing:.09em;
     }
 
-    .lifecycle-point .gem-label span {
+    .archcoin-room .gem-label strong {
+      font-size:clamp(.54rem,1.05vw,.68rem);
+    }
+
+    .archcoin-room .gem-label span {
       display:none;
     }
 
-    .arch-glint {
-      animation:archGlint 8.5s ease-in-out infinite;
-      transform-origin:110px 80px;
-    }
-
-    .arch-star {
-      animation:archFacetTurn 28s linear infinite;
-      transform-origin:110px 80px;
-    }
-
-    @keyframes archGlint {
-      0%,100% { opacity:.08; transform:translateX(-34px); }
-      48%,55% { opacity:.56; transform:translateX(34px); }
-    }
-
-    @keyframes archFacetTurn {
-      to { transform:rotate(360deg); }
-    }
-
-    .card-grid {
+    .archcoin-panel {
+      position:relative;
+      z-index:3;
       display:grid;
-      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:.9rem;
+      padding:1rem;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:1.25rem;
+      background:
+        radial-gradient(circle at 20% 0%,rgba(243,200,111,.08),transparent 60%),
+        rgba(255,255,255,.035);
+    }
+
+    .archcoin-panel-top {
+      display:grid;
+      gap:.35rem;
+    }
+
+    .archcoin-panel-kicker {
+      color:var(--gold);
+      font-size:.68rem;
+      font-weight:950;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    .archcoin-panel-title {
+      color:rgba(255,244,216,.98);
+      font-size:clamp(1.22rem,3.5vw,1.9rem);
+      line-height:1.04;
+      letter-spacing:-.04em;
+    }
+
+    .archcoin-panel-copy {
+      max-width:70rem;
+    }
+
+    .archcoin-panel-actions {
+      display:flex;
+      flex-wrap:wrap;
+      gap:.55rem;
+    }
+
+    .archcoin-panel-button {
+      min-height:2.4rem;
+      padding:.55rem .84rem;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:999px;
+      background:rgba(255,255,255,.035);
+      color:rgba(241,246,255,.88);
+      font-size:.72rem;
+      font-weight:950;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      cursor:pointer;
+    }
+
+    .archcoin-panel-button[hidden] {
+      display:none!important;
+    }
+
+    .archcoin-tabs {
+      display:flex;
+      flex-wrap:wrap;
+      gap:.5rem;
+    }
+
+    .archcoin-tab {
+      min-height:2.3rem;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:999px;
+      padding:.5rem .78rem;
+      background:rgba(255,255,255,.03);
+      color:rgba(230,238,255,.84);
+      font-size:.72rem;
+      font-weight:950;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      cursor:pointer;
+    }
+
+    .archcoin-tab[aria-selected="true"] {
+      border-color:rgba(243,200,111,.88);
+      color:#060811;
+      background:linear-gradient(135deg,#fff2a8,#f3c86f);
+    }
+
+    .archcoin-tab-panels {
+      display:grid;
       gap:.85rem;
     }
 
-    .four-grid {
+    .archcoin-tab-panel {
       display:grid;
-      grid-template-columns:repeat(4,minmax(0,1fr));
-      gap:.85rem;
+      gap:.8rem;
+      padding:1rem;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:1rem;
+      background:rgba(255,255,255,.025);
     }
 
-    .loop-grid {
-      display:grid;
-      grid-template-columns:repeat(5,minmax(0,1fr));
-      gap:.85rem;
+    .archcoin-tab-panel[hidden] {
+      display:none!important;
     }
 
-    .use-grid,
+    .archcoin-panel-grid {
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:.8rem;
+    }
+
+    .archcoin-panel-card {
+      display:grid;
+      gap:.32rem;
+      min-height:100%;
+      padding:.9rem;
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:1rem;
+      background:rgba(255,255,255,.022);
+    }
+
+    .archcoin-panel-card b {
+      color:var(--gold);
+      font-size:.64rem;
+      font-weight:950;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    .archcoin-panel-card strong {
+      color:rgba(255,244,216,.98);
+      font-size:1rem;
+      line-height:1.06;
+    }
+
+    .archcoin-panel-card span {
+      color:var(--muted);
+      font-size:.9rem;
+      line-height:1.42;
+    }
+
+    .dossier-grid {
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:.9rem;
+    }
+
+    .dossier {
+      display:grid;
+      gap:.82rem;
+      padding:1rem;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:1.2rem;
+      background:
+        radial-gradient(circle at 20% 0%,rgba(243,200,111,.08),transparent 60%),
+        rgba(255,255,255,.035);
+    }
+
+    .dossier b {
+      color:var(--gold);
+      font-size:.68rem;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    .dossier strong {
+      color:rgba(255,244,216,.98);
+      font-size:1.1rem;
+      line-height:1.08;
+    }
+
+    .dossier-grid-inner {
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:.7rem;
+    }
+
+    .dossier-card {
+      display:grid;
+      gap:.3rem;
+      padding:.85rem;
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:1rem;
+      background:rgba(255,255,255,.022);
+    }
+
+    .dossier-card b {
+      color:var(--blue);
+      font-size:.62rem;
+      letter-spacing:.12em;
+    }
+
+    .dossier-card strong {
+      font-size:.95rem;
+    }
+
     .guardrail-grid,
-    .route-card-grid,
-    .adapter-grid {
+    .route-card-grid {
       display:grid;
       grid-template-columns:repeat(4,minmax(0,1fr));
       gap:.85rem;
     }
 
     .card,
-    .loop-card,
-    .route-card,
-    .adapter-card {
+    .route-card {
       display:grid;
       gap:.6rem;
       min-height:100%;
@@ -779,18 +1126,14 @@
     .card:hover,
     .card:focus-within,
     .route-card:hover,
-    .route-card:focus-visible,
-    .adapter-card:hover,
-    .adapter-card:focus-within {
+    .route-card:focus-visible {
       transform:translateY(-3px);
       border-color:rgba(243,200,111,.46);
       outline:none;
     }
 
     .card b,
-    .loop-card b,
-    .route-card b,
-    .adapter-card b {
+    .route-card b {
       color:var(--gold);
       font-size:.68rem;
       letter-spacing:.12em;
@@ -798,18 +1141,14 @@
     }
 
     .card strong,
-    .loop-card strong,
-    .route-card strong,
-    .adapter-card strong {
+    .route-card strong {
       color:rgba(255,244,216,.98);
-      font-size:1.1rem;
+      font-size:1.15rem;
       line-height:1.1;
     }
 
     .card span,
-    .loop-card span,
-    .route-card span,
-    .adapter-card span {
+    .route-card span {
       color:var(--muted);
       font-size:.94rem;
       line-height:1.42;
@@ -824,35 +1163,6 @@
 
     .guardrail-card b {
       color:var(--green);
-    }
-
-    .adapter-card {
-      border-color:rgba(141,216,255,.16);
-      background:
-        radial-gradient(circle at 20% 0%,rgba(141,216,255,.08),transparent 60%),
-        rgba(141,216,255,.035);
-    }
-
-    .adapter-card b {
-      color:var(--blue);
-    }
-
-    .transaction-summary {
-      padding:1rem 1.1rem;
-      border:1px solid rgba(243,200,111,.22);
-      border-radius:1.2rem;
-      background:
-        radial-gradient(circle at 20% 0%,rgba(243,200,111,.10),transparent 60%),
-        rgba(243,200,111,.045);
-      display:grid;
-      gap:.62rem;
-    }
-
-    .transaction-summary strong {
-      color:rgba(255,244,216,.98);
-      font-size:clamp(1.1rem,3.2vw,1.45rem);
-      line-height:1.08;
-      letter-spacing:-.03em;
     }
 
     .final-direction {
@@ -882,11 +1192,11 @@
       text-transform:uppercase;
     }
 
+    .receipt,
     .route-receipt,
     [data-route-receipt],
     [data-contract-receipt],
-    [data-debug-receipt],
-    .receipt {
+    [data-debug-receipt] {
       display:none!important;
       visibility:hidden!important;
       overflow:hidden!important;
@@ -913,20 +1223,14 @@
     }
 
     @media (max-width:1080px) {
-      .four-grid,
-      .use-grid,
       .guardrail-grid,
-      .route-card-grid,
-      .adapter-grid {
+      .route-card-grid {
         grid-template-columns:repeat(2,minmax(0,1fr));
       }
 
-      .card-grid {
+      .dossier-grid,
+      .archcoin-panel-grid {
         grid-template-columns:1fr;
-      }
-
-      .loop-grid {
-        grid-template-columns:repeat(3,minmax(0,1fr));
       }
     }
 
@@ -938,6 +1242,10 @@
 
       .nav {
         justify-content:flex-start;
+      }
+
+      .dossier-grid-inner {
+        grid-template-columns:1fr;
       }
     }
 
@@ -963,34 +1271,31 @@
         width:100%;
       }
 
-      .value-stage {
-        min-height:29rem;
+      .archcoin-scene {
+        min-height:52rem;
       }
 
-      .transaction-orbit {
-        width:20rem;
-        height:20rem;
+      .archcoin-objects {
+        width:min(100%,22rem);
       }
 
-      .lifecycle-orbit {
-        width:13rem;
-        height:13rem;
+      .archcoin-coin {
+        width:5.95rem;
+        height:4.35rem;
+        margin-left:-2.975rem;
+        margin-top:-2.175rem;
       }
 
-      .transaction-point {
-        --radius:-9.1rem;
-        width:5.7rem;
-        height:4.15rem;
-        margin-left:-2.85rem;
-        margin-top:-2.075rem;
+      .archcoin-room {
+        width:3.75rem;
+        height:2.8rem;
+        margin-left:-1.875rem;
+        margin-top:-1.4rem;
       }
 
-      .lifecycle-point {
-        --radius:-5.85rem;
-        width:3.65rem;
-        height:2.7rem;
-        margin-left:-1.825rem;
-        margin-top:-1.35rem;
+      .archcoin-center {
+        width:7.2rem;
+        height:5.2rem;
       }
 
       .gem-label b {
@@ -1001,67 +1306,53 @@
         display:none;
       }
 
-      .center-gem {
-        width:7.4rem;
-        height:5.4rem;
+      .gem-label strong {
+        font-size:.74rem;
       }
 
-      .center-gem .gem-label b {
-        font-size:.50rem;
+      .archcoin-panel-actions,
+      .archcoin-tabs {
+        display:grid;
       }
 
-      .center-gem .gem-label strong {
-        font-size:.82rem;
+      .archcoin-panel-button,
+      .archcoin-tab {
+        width:100%;
       }
 
-      .four-grid,
-      .loop-grid,
-      .use-grid,
       .guardrail-grid,
       .route-card-grid,
-      .adapter-grid {
+      .dossier-grid {
         grid-template-columns:1fr;
       }
     }
 
     @media (max-width:460px) {
-      .value-stage {
-        min-height:27rem;
+      .archcoin-scene {
+        min-height:49rem;
       }
 
-      .transaction-orbit {
-        width:17.4rem;
-        height:17.4rem;
+      .archcoin-objects {
+        width:min(100%,18.5rem);
       }
 
-      .lifecycle-orbit {
-        width:11rem;
-        height:11rem;
-      }
-
-      .transaction-point {
-        --radius:-7.75rem;
-        width:5rem;
+      .archcoin-coin {
+        width:5.05rem;
         height:3.7rem;
-        margin-left:-2.5rem;
+        margin-left:-2.525rem;
         margin-top:-1.85rem;
       }
 
-      .lifecycle-point {
-        --radius:-4.95rem;
-        width:3.15rem;
+      .archcoin-room {
+        width:3.2rem;
         height:2.35rem;
-        margin-left:-1.575rem;
+        margin-left:-1.6rem;
         margin-top:-1.175rem;
       }
 
-      .gem-label b {
-        font-size:.33rem;
-      }
-
-      .center-gem {
-        width:6.75rem;
-        height:4.9rem;
+      .archcoin-center {
+        width:6.3rem;
+        height:4.6rem;
       }
     }
 
@@ -1075,13 +1366,14 @@
         transition-duration:.01ms!important;
       }
 
-      .value-stage::before,
-      .value-stage::after,
-      .transaction-orbit,
-      .lifecycle-orbit,
-      .orbit-point .orbit-upright,
+      .archcoin-scene::before,
+      .archcoin-scene::after,
+      .archcoin-orbit-shell,
+      .archcoin-cluster-shell,
+      .archcoin-coin-upright,
+      .archcoin-room-upright,
       .center-gem-core,
-      .orbit-point .orbit-gem-core,
+      .archcoin-gem-core,
       .arch-glint,
       .arch-star {
         animation:none!important;
@@ -1224,384 +1516,983 @@
 
     <main id="archcoin-main">
       <section class="panel hero" aria-labelledby="page-title">
-        <div class="kicker">ARCHCOIN · Product Chamber</div>
-        <h1 id="page-title">Value should be traceable before it is amplified.</h1>
+        <div class="kicker">ARCHCOIN · Early Pre-Launch Coin Family</div>
+        <h1 id="page-title">Four coins. Four clusters. One family field.</h1>
 
-        <p class="subline">Authority. Inbound value. Obligation. Allocation.</p>
+        <p class="subline">
+          Contract Coin. Receivable Coin. Payable Coin. Allocation Coin.
+        </p>
 
         <p class="lead">
-          ARCHCOIN is a four-part transaction-template and bonding chamber for contract authority, inbound value, outbound obligation, allocation, traceability, accountability, and adapter-aware asset participation. It starts before hype, before amplification, and before automatic chain-merger claims.
+          ARCHCOIN is an early pre-launch cryptocurrency family structured as four distinct coins inside one navigable inspection field. Each coin opens its own cluster. Each cluster opens information. Return to Orbit restores local inspection. The center compass opens higher-order compass choices for leaving the local chamber deliberately.
         </p>
 
         <div class="guardrail">
-          This page presents product architecture and concept development only. ARCHCOIN is not a wallet, not an exchange, not a trading platform, not a token-sale page, not a live financial product, not an automatic protocol-level chain merger, and not financial, legal, tax, or investment advice.
+          This page is an architectural information chamber. It is not a wallet, not an exchange, not a trading platform, not a token-sale page, not a custody surface, not a live financial execution surface, and not financial, legal, tax, or investment advice.
         </div>
 
         <div class="actions">
-          <a class="button gold" href="#transaction-orbit">Transaction Orbit</a>
-          <a class="button green" href="#value-lifecycle">Value Lifecycle</a>
-          <a class="button" href="#adapter-layer">Adapter Layer</a>
+          <a class="button gold" href="#archcoin-scene">Open Coin Field</a>
+          <a class="button green" href="#coin-dossiers">Read Coin Dossiers</a>
           <a class="button" href="#guardrails">Guardrails</a>
           <a class="button" href="/products/">Back to Products</a>
         </div>
       </section>
 
-      <section class="panel section" id="transaction-orbit" aria-labelledby="transaction-title">
-        <div class="kicker">Primary transaction architecture</div>
-        <h2 id="transaction-title">ARCHCOIN is a four-coin transaction template and bond layer.</h2>
+      <section class="panel section" id="archcoin-scene" aria-labelledby="scene-title">
+        <div class="kicker">Four-coin constellation</div>
+        <h2 id="scene-title">ARCHCOIN behaves like a Compass-derived inspection system.</h2>
 
-        <div class="transaction-summary">
-          <strong>Every transaction requires authority, inflow, obligation, and allocation.</strong>
+        <div class="scene-summary">
+          <strong>The outer orbit is the family field. Each coin opens its own cluster. Each cluster opens information. Return to Orbit restores the family field.</strong>
           <p>
-            ARCHCOIN does not begin as an ordinary single coin. It begins as a transaction architecture that makes four positions visible: the contract that authorizes movement, the value that enters, the obligation that must be settled, and the allocation or growth path that remains inside the bond frame.
+            The page is no longer a simple vertical brochure. It is a controlled coin inspection chamber. The four cardinal coins open local cluster paths. Those paths open information points. The center compass is reserved for higher-order compass selection, not local orbit restoration.
           </p>
         </div>
 
         <div
-          id="archcoin-orbit-stage"
-          class="value-stage"
-          aria-label="ARCHCOIN transaction orbit and subordinate value lifecycle"
-          data-archcoin-transaction-orbit="true"
+          class="archcoin-scene"
+          data-archcoin-scene
+          data-archcoin-state="orbit"
+          data-archcoin-selected-wing=""
+          data-archcoin-selected-room=""
+          data-archcoin-active-tab="overview"
+          data-archcoin-compass-menu="closed"
         >
-          <div id="archcoin-geometry-mount" aria-hidden="true"></div>
-
-          <div class="center-gem" aria-hidden="true">
-            <span class="center-gem-core">
-              <svg class="arch-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false">
-                <use href="#archDigitalGem"></use>
-              </svg>
-              <span class="gem-label">
-                <b>ARCHCOIN</b>
-                <strong>Transaction Bond Field</strong>
-              </span>
-            </span>
+          <div class="archcoin-scene-top">
+            <p class="scene-guidance" data-archcoin-guidance>
+              Drag or rotate through the four-coin field. Select a coin to open its cluster. Select a cluster path to inspect information. Return to Orbit restores the coin family field.
+            </p>
           </div>
 
-          <div class="transaction-orbit" aria-label="Primary four-coin transaction orbit">
-            <button
-              class="orbit-point transaction-point"
-              type="button"
-              style="--angle:0deg;--value-delay:-.2s"
-              data-archcoin-coin-position
-              data-archcoin-coin-position="contract"
-            >
-              <span class="orbit-upright">
-                <span class="orbit-gem-core">
-                  <svg class="arch-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#archDigitalGem"></use></svg>
-                  <span class="gem-label"><b>Contract</b><span>Authority binds movement</span></span>
-                </span>
-              </span>
-            </button>
+          <div class="archcoin-scene-stack">
+            <div
+              id="archcoin-geometry-mount"
+              class="archcoin-geometry-mount"
+              data-archcoin-crystals-mount
+              aria-hidden="true"
+            ></div>
 
-            <button
-              class="orbit-point transaction-point"
-              type="button"
-              style="--angle:90deg;--value-delay:-1.5s"
-              data-archcoin-coin-position
-              data-archcoin-coin-position="receivable"
+            <div
+              class="archcoin-objects"
+              data-archcoin-objects
+              aria-label="ARCHCOIN four-coin family field"
             >
-              <span class="orbit-upright">
-                <span class="orbit-gem-core">
-                  <svg class="arch-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#archDigitalGem"></use></svg>
-                  <span class="gem-label"><b>Receivable</b><span>Inbound value arrives</span></span>
-                </span>
-              </span>
-            </button>
+              <div class="archcoin-orbit-shell" aria-hidden="true"></div>
+              <div class="archcoin-cluster-shell" aria-hidden="true"></div>
 
-            <button
-              class="orbit-point transaction-point"
-              type="button"
-              style="--angle:180deg;--value-delay:-2.8s"
-              data-archcoin-coin-position
-              data-archcoin-coin-position="payable"
-            >
-              <span class="orbit-upright">
-                <span class="orbit-gem-core">
-                  <svg class="arch-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#archDigitalGem"></use></svg>
-                  <span class="gem-label"><b>Payable</b><span>Obligation must settle</span></span>
-                </span>
-              </span>
-            </button>
+              <div class="archcoin-center">
+                <button
+                  type="button"
+                  class="archcoin-center-button"
+                  data-archcoin-center-compass
+                  data-archcoin-destination="compass-selector"
+                  aria-expanded="false"
+                  aria-controls="archcoin-center-menu"
+                >
+                  <span class="center-gem-core">
+                    <svg class="arch-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false">
+                      <use href="#archDigitalGem"></use>
+                    </svg>
+                    <span class="gem-label">
+                      <b>Compass</b>
+                      <strong>Choose Compass</strong>
+                      <span>Leave local chamber deliberately</span>
+                    </span>
+                  </span>
+                </button>
 
-            <button
-              class="orbit-point transaction-point"
-              type="button"
-              style="--angle:270deg;--value-delay:-4.1s"
-              data-archcoin-coin-position
-              data-archcoin-coin-position="allocation"
-            >
-              <span class="orbit-upright">
-                <span class="orbit-gem-core">
-                  <svg class="arch-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#archDigitalGem"></use></svg>
-                  <span class="gem-label"><b>Allocation</b><span>Growth stays governed</span></span>
-                </span>
-              </span>
-            </button>
+                <div
+                  id="archcoin-center-menu"
+                  class="archcoin-center-menu"
+                  data-archcoin-compass-shell
+                  hidden
+                >
+                  <button type="button" class="archcoin-compass-close" data-archcoin-compass-close>
+                    Close
+                  </button>
+
+                  <h3>Choose the next compass.</h3>
+                  <p>
+                    This control does not restore the local orbit. It opens the higher-order compass selector for leaving the ARCHCOIN chamber intentionally.
+                  </p>
+
+                  <div class="archcoin-compass-grid">
+                    <a
+                      class="archcoin-compass-option"
+                      href="/"
+                      data-archcoin-compass-destination
+                      data-compass-id="home"
+                    >
+                      <b>Home Compass</b>
+                      <strong>Return to the root Compass.</strong>
+                      <span>Use the governing top-level Compass for full-estate navigation.</span>
+                    </a>
+
+                    <a
+                      class="archcoin-compass-option"
+                      href="/products/"
+                      data-archcoin-compass-destination
+                      data-compass-id="products"
+                    >
+                      <b>Products Compass</b>
+                      <strong>Return to the Products Compass.</strong>
+                      <span>Use the nearest product-wing compass for local chamber switching.</span>
+                    </a>
+
+                    <a
+                      class="archcoin-compass-option"
+                      href="/explore/"
+                      data-archcoin-compass-destination
+                      data-compass-id="frontier"
+                    >
+                      <b>Frontier Compass</b>
+                      <strong>Open the frontier-facing compass layer.</strong>
+                      <span>Use the exploratory compass to move outward to adjacent discovery surfaces.</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              <div data-archcoin-cardinal-declarations>
+                <button
+                  type="button"
+                  class="archcoin-coin"
+                  style="--angle:0deg;--radius:calc(var(--archcoin-outer-radius) * -1);--value-delay:-.2s"
+                  data-archcoin-cardinal
+                  data-wing="north"
+                  data-coin-id="contract"
+                  data-destination-type="coin"
+                  data-destination-id="contract"
+                  data-label="Contract Coin"
+                  data-preview="The contract coin opens the authority and frame logic for the transaction family."
+                  data-route=""
+                  data-coordinate-label="North Coin"
+                  data-panel-title="Contract Coin"
+                  data-panel-body="Contract Coin governs authority, permissions, terms, signatures, execution frame, and what authorizes movement before value proceeds any farther."
+                  data-panel-why="Use Contract Coin to inspect how ARCHCOIN binds movement before it is amplified."
+                  data-selected="false"
+                  data-primary="true"
+                  aria-label="Contract Coin. Open the north coin cluster."
+                >
+                  <span class="archcoin-coin-upright">
+                    <span class="archcoin-gem-core">
+                      <svg class="arch-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false">
+                        <use href="#archDigitalGem"></use>
+                      </svg>
+                      <span class="gem-label">
+                        <b>North Coin</b>
+                        <strong>Contract</strong>
+                        <span>Authority frame</span>
+                      </span>
+                    </span>
+                  </span>
+                </button>
+
+                <button
+                  type="button"
+                  class="archcoin-coin"
+                  style="--angle:90deg;--radius:calc(var(--archcoin-outer-radius) * -1);--value-delay:-1.4s"
+                  data-archcoin-cardinal
+                  data-wing="east"
+                  data-coin-id="receivable"
+                  data-destination-type="coin"
+                  data-destination-id="receivable"
+                  data-label="Receivable Coin"
+                  data-preview="The receivable coin opens inflow, intake, receipts, and arrival visibility."
+                  data-route=""
+                  data-coordinate-label="East Coin"
+                  data-panel-title="Receivable Coin"
+                  data-panel-body="Receivable Coin governs inbound value, arrival visibility, inflow accounting, source reading, and how received value becomes legible inside the family field."
+                  data-panel-why="Use Receivable Coin to inspect how value enters and becomes visible."
+                  data-selected="false"
+                  data-primary="false"
+                  aria-label="Receivable Coin. Open the east coin cluster."
+                >
+                  <span class="archcoin-coin-upright">
+                    <span class="archcoin-gem-core">
+                      <svg class="arch-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false">
+                        <use href="#archDigitalGem"></use>
+                      </svg>
+                      <span class="gem-label">
+                        <b>East Coin</b>
+                        <strong>Receivable</strong>
+                        <span>Inbound value</span>
+                      </span>
+                    </span>
+                  </span>
+                </button>
+
+                <button
+                  type="button"
+                  class="archcoin-coin"
+                  style="--angle:180deg;--radius:calc(var(--archcoin-outer-radius) * -1);--value-delay:-2.6s"
+                  data-archcoin-cardinal
+                  data-wing="south"
+                  data-coin-id="payable"
+                  data-destination-type="coin"
+                  data-destination-id="payable"
+                  data-label="Payable Coin"
+                  data-preview="The payable coin opens obligation, settlement, duty, and financial pressure surfaces."
+                  data-route=""
+                  data-coordinate-label="South Coin"
+                  data-panel-title="Payable Coin"
+                  data-panel-body="Payable Coin governs obligation, settlement pressure, what is owed, how duty is carried, and how outgoing liability remains visible rather than disappearing behind vague movement."
+                  data-panel-why="Use Payable Coin to inspect how ARCHCOIN keeps obligation visible."
+                  data-selected="false"
+                  data-primary="false"
+                  aria-label="Payable Coin. Open the south coin cluster."
+                >
+                  <span class="archcoin-coin-upright">
+                    <span class="archcoin-gem-core">
+                      <svg class="arch-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false">
+                        <use href="#archDigitalGem"></use>
+                      </svg>
+                      <span class="gem-label">
+                        <b>South Coin</b>
+                        <strong>Payable</strong>
+                        <span>Obligation pressure</span>
+                      </span>
+                    </span>
+                  </span>
+                </button>
+
+                <button
+                  type="button"
+                  class="archcoin-coin"
+                  style="--angle:270deg;--radius:calc(var(--archcoin-outer-radius) * -1);--value-delay:-3.8s"
+                  data-archcoin-cardinal
+                  data-wing="west"
+                  data-coin-id="allocation"
+                  data-destination-type="coin"
+                  data-destination-id="allocation"
+                  data-label="Allocation Coin"
+                  data-preview="The allocation coin opens growth, distribution, retention, and governed expansion."
+                  data-route=""
+                  data-coordinate-label="West Coin"
+                  data-panel-title="Allocation Coin"
+                  data-panel-body="Allocation Coin governs distribution, retained value, growth channels, allocation rules, and how expansion remains disciplined inside the family frame."
+                  data-panel-why="Use Allocation Coin to inspect how ARCHCOIN governs growth instead of treating it as an afterthought."
+                  data-selected="false"
+                  data-primary="false"
+                  aria-label="Allocation Coin. Open the west coin cluster."
+                >
+                  <span class="archcoin-coin-upright">
+                    <span class="archcoin-gem-core">
+                      <svg class="arch-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false">
+                        <use href="#archDigitalGem"></use>
+                      </svg>
+                      <span class="gem-label">
+                        <b>West Coin</b>
+                        <strong>Allocation</strong>
+                        <span>Governed growth</span>
+                      </span>
+                    </span>
+                  </span>
+                </button>
+              </div>
+
+              <div data-archcoin-room-declarations>
+                <button
+                  type="button"
+                  class="archcoin-room"
+                  style="--angle:0deg;--value-delay:-.4s"
+                  data-archcoin-room
+                  data-wing="north"
+                  data-room-id="contract-overview"
+                  data-destination-type="info"
+                  data-destination-id="contract-overview"
+                  data-label="Contract Overview"
+                  data-tab="overview"
+                  data-local-coordinate="North Overview"
+                  data-local-function="Contract Coin overview"
+                  data-preview="Read the authority role, framing logic, and why the contract coin sits at the top of the family map."
+                  data-why-enter="Use this information point to inspect contract authority in plain language."
+                  aria-label="Contract Overview. Open overview information for Contract Coin."
+                >
+                  <span class="archcoin-room-upright">
+                    <span class="archcoin-gem-core">
+                      <svg class="arch-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#archDigitalGem"></use></svg>
+                      <span class="gem-label"><b>Overview</b><strong>Contract</strong></span>
+                    </span>
+                  </span>
+                </button>
+
+                <button
+                  type="button"
+                  class="archcoin-room"
+                  style="--angle:90deg;--value-delay:-1.2s"
+                  data-archcoin-room
+                  data-wing="north"
+                  data-room-id="contract-engineering"
+                  data-destination-type="info"
+                  data-destination-id="contract-engineering"
+                  data-label="Contract Engineering"
+                  data-tab="engineering"
+                  data-local-coordinate="North Engineering"
+                  data-local-function="Contract Coin engineering"
+                  data-preview="Inspect rule engine expectations, authority surfaces, and implementation assumptions."
+                  data-why-enter="Use this information point to inspect technical contract surfaces."
+                  aria-label="Contract Engineering. Open engineering information for Contract Coin."
+                >
+                  <span class="archcoin-room-upright">
+                    <span class="archcoin-gem-core">
+                      <svg class="arch-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#archDigitalGem"></use></svg>
+                      <span class="gem-label"><b>Engineering</b><strong>Contract</strong></span>
+                    </span>
+                  </span>
+                </button>
+
+                <button
+                  type="button"
+                  class="archcoin-room"
+                  style="--angle:180deg;--value-delay:-2s"
+                  data-archcoin-room
+                  data-wing="north"
+                  data-room-id="contract-platform"
+                  data-destination-type="info"
+                  data-destination-id="contract-platform"
+                  data-label="Contract Platform"
+                  data-tab="platform"
+                  data-local-coordinate="North Platform"
+                  data-local-function="Contract Coin platform"
+                  data-preview="Inspect platform role, where contract-facing interfaces appear, and what the coin does for operators."
+                  data-why-enter="Use this information point to inspect platform-facing contract surfaces."
+                  aria-label="Contract Platform. Open platform information for Contract Coin."
+                >
+                  <span class="archcoin-room-upright">
+                    <span class="archcoin-gem-core">
+                      <svg class="arch-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#archDigitalGem"></use></svg>
+                      <span class="gem-label"><b>Platform</b><strong>Contract</strong></span>
+                    </span>
+                  </span>
+                </button>
+
+                <button
+                  type="button"
+                  class="archcoin-room"
+                  style="--angle:270deg;--value-delay:-2.8s"
+                  data-archcoin-room
+                  data-wing="north"
+                  data-room-id="contract-governance"
+                  data-destination-type="info"
+                  data-destination-id="contract-governance"
+                  data-label="Contract Governance"
+                  data-tab="governance"
+                  data-local-coordinate="North Governance"
+                  data-local-function="Contract Coin governance"
+                  data-preview="Inspect change control, approval boundary, and what authority cannot be silently bypassed."
+                  data-why-enter="Use this information point to inspect authority and governance boundaries."
+                  aria-label="Contract Governance. Open governance information for Contract Coin."
+                >
+                  <span class="archcoin-room-upright">
+                    <span class="archcoin-gem-core">
+                      <svg class="arch-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#archDigitalGem"></use></svg>
+                      <span class="gem-label"><b>Governance</b><strong>Contract</strong></span>
+                    </span>
+                  </span>
+                </button>
+
+                <button
+                  type="button"
+                  class="archcoin-room"
+                  style="--angle:0deg;--value-delay:-.5s"
+                  data-archcoin-room
+                  data-wing="east"
+                  data-room-id="receivable-overview"
+                  data-destination-type="info"
+                  data-destination-id="receivable-overview"
+                  data-label="Receivable Overview"
+                  data-tab="overview"
+                  data-local-coordinate="East Overview"
+                  data-local-function="Receivable Coin overview"
+                  data-preview="Read inflow role, intake logic, and why inbound value must remain visible."
+                  data-why-enter="Use this information point to inspect receivable visibility in plain language."
+                  aria-label="Receivable Overview. Open overview information for Receivable Coin."
+                >
+                  <span class="archcoin-room-upright">
+                    <span class="archcoin-gem-core">
+                      <svg class="arch-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#archDigitalGem"></use></svg>
+                      <span class="gem-label"><b>Overview</b><strong>Receivable</strong></span>
+                    </span>
+                  </span>
+                </button>
+
+                <button
+                  type="button"
+                  class="archcoin-room"
+                  style="--angle:90deg;--value-delay:-1.3s"
+                  data-archcoin-room
+                  data-wing="east"
+                  data-room-id="receivable-engineering"
+                  data-destination-type="info"
+                  data-destination-id="receivable-engineering"
+                  data-label="Receivable Engineering"
+                  data-tab="engineering"
+                  data-local-coordinate="East Engineering"
+                  data-local-function="Receivable Coin engineering"
+                  data-preview="Inspect receipt logic, source capture, settlement intake assumptions, and inflow measurement rules."
+                  data-why-enter="Use this information point to inspect the technical inflow layer."
+                  aria-label="Receivable Engineering. Open engineering information for Receivable Coin."
+                >
+                  <span class="archcoin-room-upright">
+                    <span class="archcoin-gem-core">
+                      <svg class="arch-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#archDigitalGem"></use></svg>
+                      <span class="gem-label"><b>Engineering</b><strong>Receivable</strong></span>
+                    </span>
+                  </span>
+                </button>
+
+                <button
+                  type="button"
+                  class="archcoin-room"
+                  style="--angle:180deg;--value-delay:-2.1s"
+                  data-archcoin-room
+                  data-wing="east"
+                  data-room-id="receivable-platform"
+                  data-destination-type="info"
+                  data-destination-id="receivable-platform"
+                  data-label="Receivable Platform"
+                  data-tab="platform"
+                  data-local-coordinate="East Platform"
+                  data-local-function="Receivable Coin platform"
+                  data-preview="Inspect inbound platform surfaces, depositor reads, and what the arrival side looks like to operators."
+                  data-why-enter="Use this information point to inspect how the platform presents inbound value."
+                  aria-label="Receivable Platform. Open platform information for Receivable Coin."
+                >
+                  <span class="archcoin-room-upright">
+                    <span class="archcoin-gem-core">
+                      <svg class="arch-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#archDigitalGem"></use></svg>
+                      <span class="gem-label"><b>Platform</b><strong>Receivable</strong></span>
+                    </span>
+                  </span>
+                </button>
+
+                <button
+                  type="button"
+                  class="archcoin-room"
+                  style="--angle:270deg;--value-delay:-2.9s"
+                  data-archcoin-room
+                  data-wing="east"
+                  data-room-id="receivable-governance"
+                  data-destination-type="info"
+                  data-destination-id="receivable-governance"
+                  data-label="Receivable Governance"
+                  data-tab="governance"
+                  data-local-coordinate="East Governance"
+                  data-local-function="Receivable Coin governance"
+                  data-preview="Inspect intake approval boundaries, admission rules, and what counts as accepted value."
+                  data-why-enter="Use this information point to inspect how inbound value is governed."
+                  aria-label="Receivable Governance. Open governance information for Receivable Coin."
+                >
+                  <span class="archcoin-room-upright">
+                    <span class="archcoin-gem-core">
+                      <svg class="arch-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#archDigitalGem"></use></svg>
+                      <span class="gem-label"><b>Governance</b><strong>Receivable</strong></span>
+                    </span>
+                  </span>
+                </button>
+
+                <button
+                  type="button"
+                  class="archcoin-room"
+                  style="--angle:0deg;--value-delay:-.6s"
+                  data-archcoin-room
+                  data-wing="south"
+                  data-room-id="payable-overview"
+                  data-destination-type="info"
+                  data-destination-id="payable-overview"
+                  data-label="Payable Overview"
+                  data-tab="overview"
+                  data-local-coordinate="South Overview"
+                  data-local-function="Payable Coin overview"
+                  data-preview="Read outgoing duty, settlement pressure, and why obligation must remain visible."
+                  data-why-enter="Use this information point to inspect payable duty in plain language."
+                  aria-label="Payable Overview. Open overview information for Payable Coin."
+                >
+                  <span class="archcoin-room-upright">
+                    <span class="archcoin-gem-core">
+                      <svg class="arch-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#archDigitalGem"></use></svg>
+                      <span class="gem-label"><b>Overview</b><strong>Payable</strong></span>
+                    </span>
+                  </span>
+                </button>
+
+                <button
+                  type="button"
+                  class="archcoin-room"
+                  style="--angle:90deg;--value-delay:-1.4s"
+                  data-archcoin-room
+                  data-wing="south"
+                  data-room-id="payable-engineering"
+                  data-destination-type="info"
+                  data-destination-id="payable-engineering"
+                  data-label="Payable Engineering"
+                  data-tab="engineering"
+                  data-local-coordinate="South Engineering"
+                  data-local-function="Payable Coin engineering"
+                  data-preview="Inspect settlement logic, outbound duty handling, liability visibility, and execution constraints."
+                  data-why-enter="Use this information point to inspect the technical payable layer."
+                  aria-label="Payable Engineering. Open engineering information for Payable Coin."
+                >
+                  <span class="archcoin-room-upright">
+                    <span class="archcoin-gem-core">
+                      <svg class="arch-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#archDigitalGem"></use></svg>
+                      <span class="gem-label"><b>Engineering</b><strong>Payable</strong></span>
+                    </span>
+                  </span>
+                </button>
+
+                <button
+                  type="button"
+                  class="archcoin-room"
+                  style="--angle:180deg;--value-delay:-2.2s"
+                  data-archcoin-room
+                  data-wing="south"
+                  data-room-id="payable-platform"
+                  data-destination-type="info"
+                  data-destination-id="payable-platform"
+                  data-label="Payable Platform"
+                  data-tab="platform"
+                  data-local-coordinate="South Platform"
+                  data-local-function="Payable Coin platform"
+                  data-preview="Inspect how the platform exposes obligations, deadlines, and outgoing settlement surfaces to operators."
+                  data-why-enter="Use this information point to inspect the platform-facing obligation layer."
+                  aria-label="Payable Platform. Open platform information for Payable Coin."
+                >
+                  <span class="archcoin-room-upright">
+                    <span class="archcoin-gem-core">
+                      <svg class="arch-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#archDigitalGem"></use></svg>
+                      <span class="gem-label"><b>Platform</b><strong>Payable</strong></span>
+                    </span>
+                  </span>
+                </button>
+
+                <button
+                  type="button"
+                  class="archcoin-room"
+                  style="--angle:270deg;--value-delay:-3s"
+                  data-archcoin-room
+                  data-wing="south"
+                  data-room-id="payable-governance"
+                  data-destination-type="info"
+                  data-destination-id="payable-governance"
+                  data-label="Payable Governance"
+                  data-tab="governance"
+                  data-local-coordinate="South Governance"
+                  data-local-function="Payable Coin governance"
+                  data-preview="Inspect duty boundaries, approval constraints, and what outgoing value may or may not do automatically."
+                  data-why-enter="Use this information point to inspect how obligation remains governed."
+                  aria-label="Payable Governance. Open governance information for Payable Coin."
+                >
+                  <span class="archcoin-room-upright">
+                    <span class="archcoin-gem-core">
+                      <svg class="arch-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#archDigitalGem"></use></svg>
+                      <span class="gem-label"><b>Governance</b><strong>Payable</strong></span>
+                    </span>
+                  </span>
+                </button>
+
+                <button
+                  type="button"
+                  class="archcoin-room"
+                  style="--angle:0deg;--value-delay:-.7s"
+                  data-archcoin-room
+                  data-wing="west"
+                  data-room-id="allocation-overview"
+                  data-destination-type="info"
+                  data-destination-id="allocation-overview"
+                  data-label="Allocation Overview"
+                  data-tab="overview"
+                  data-local-coordinate="West Overview"
+                  data-local-function="Allocation Coin overview"
+                  data-preview="Read growth role, distribution logic, and why expansion must remain governed."
+                  data-why-enter="Use this information point to inspect allocation in plain language."
+                  aria-label="Allocation Overview. Open overview information for Allocation Coin."
+                >
+                  <span class="archcoin-room-upright">
+                    <span class="archcoin-gem-core">
+                      <svg class="arch-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#archDigitalGem"></use></svg>
+                      <span class="gem-label"><b>Overview</b><strong>Allocation</strong></span>
+                    </span>
+                  </span>
+                </button>
+
+                <button
+                  type="button"
+                  class="archcoin-room"
+                  style="--angle:90deg;--value-delay:-1.5s"
+                  data-archcoin-room
+                  data-wing="west"
+                  data-room-id="allocation-engineering"
+                  data-destination-type="info"
+                  data-destination-id="allocation-engineering"
+                  data-label="Allocation Engineering"
+                  data-tab="engineering"
+                  data-local-coordinate="West Engineering"
+                  data-local-function="Allocation Coin engineering"
+                  data-preview="Inspect allocation rules, distribution engines, retention logic, and managed growth constraints."
+                  data-why-enter="Use this information point to inspect the technical allocation layer."
+                  aria-label="Allocation Engineering. Open engineering information for Allocation Coin."
+                >
+                  <span class="archcoin-room-upright">
+                    <span class="archcoin-gem-core">
+                      <svg class="arch-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#archDigitalGem"></use></svg>
+                      <span class="gem-label"><b>Engineering</b><strong>Allocation</strong></span>
+                    </span>
+                  </span>
+                </button>
+
+                <button
+                  type="button"
+                  class="archcoin-room"
+                  style="--angle:180deg;--value-delay:-2.3s"
+                  data-archcoin-room
+                  data-wing="west"
+                  data-room-id="allocation-platform"
+                  data-destination-type="info"
+                  data-destination-id="allocation-platform"
+                  data-label="Allocation Platform"
+                  data-tab="platform"
+                  data-local-coordinate="West Platform"
+                  data-local-function="Allocation Coin platform"
+                  data-preview="Inspect how operators read distribution, retention, and growth controls inside the platform surface."
+                  data-why-enter="Use this information point to inspect the platform-facing growth layer."
+                  aria-label="Allocation Platform. Open platform information for Allocation Coin."
+                >
+                  <span class="archcoin-room-upright">
+                    <span class="archcoin-gem-core">
+                      <svg class="arch-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#archDigitalGem"></use></svg>
+                      <span class="gem-label"><b>Platform</b><strong>Allocation</strong></span>
+                    </span>
+                  </span>
+                </button>
+
+                <button
+                  type="button"
+                  class="archcoin-room"
+                  style="--angle:270deg;--value-delay:-3.1s"
+                  data-archcoin-room
+                  data-wing="west"
+                  data-room-id="allocation-governance"
+                  data-destination-type="info"
+                  data-destination-id="allocation-governance"
+                  data-label="Allocation Governance"
+                  data-tab="governance"
+                  data-local-coordinate="West Governance"
+                  data-local-function="Allocation Coin governance"
+                  data-preview="Inspect approval rules, growth boundaries, and how expansion avoids becoming uncontrolled drift."
+                  data-why-enter="Use this information point to inspect governance over distribution and growth."
+                  aria-label="Allocation Governance. Open governance information for Allocation Coin."
+                >
+                  <span class="archcoin-room-upright">
+                    <span class="archcoin-gem-core">
+                      <svg class="arch-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#archDigitalGem"></use></svg>
+                      <span class="gem-label"><b>Governance</b><strong>Allocation</strong></span>
+                    </span>
+                  </span>
+                </button>
+              </div>
+            </div>
           </div>
 
-          <div class="lifecycle-orbit" aria-label="Secondary value lifecycle ring">
-            <span
-              class="orbit-point lifecycle-point"
-              style="--angle:0deg;--radius:-9rem;--value-delay:-.2s"
-              data-archcoin-value-lifecycle-node="contribute"
-              aria-hidden="true"
-            >
-              <span class="orbit-upright">
-                <span class="orbit-gem-core">
-                  <svg class="arch-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#archDigitalGem"></use></svg>
-                  <span class="gem-label"><b>Contribute</b></span>
-                </span>
-              </span>
-            </span>
+          <section
+            class="archcoin-panel"
+            data-archcoin-panel
+            aria-labelledby="archcoin-panel-title"
+          >
+            <div class="archcoin-panel-top">
+              <div class="archcoin-panel-kicker" data-archcoin-panel-eyebrow>Selected path</div>
+              <div class="archcoin-panel-title" id="archcoin-panel-title" data-archcoin-panel-title>Choose a coin.</div>
+              <p class="archcoin-panel-copy" data-archcoin-panel-purpose>
+                Start with one of the four outer coins. Each coin opens a local cluster. Each local cluster opens information. Return to Orbit restores the family field. The center compass opens higher-order compass destinations.
+              </p>
+              <p class="archcoin-panel-copy" data-archcoin-panel-relationship>
+                Local inspection and cross-chamber navigation remain separate. Return to Orbit is not the same as the center compass.
+              </p>
+            </div>
 
-            <span
-              class="orbit-point lifecycle-point"
-              style="--angle:72deg;--radius:-9rem;--value-delay:-1.4s"
-              data-archcoin-value-lifecycle-node="trace"
-              aria-hidden="true"
-            >
-              <span class="orbit-upright">
-                <span class="orbit-gem-core">
-                  <svg class="arch-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#archDigitalGem"></use></svg>
-                  <span class="gem-label"><b>Trace</b></span>
-                </span>
-              </span>
-            </span>
+            <div class="archcoin-panel-actions">
+              <button
+                type="button"
+                class="archcoin-panel-button"
+                data-archcoin-return-to-orbit
+                hidden
+              >
+                Return to Orbit
+              </button>
 
-            <span
-              class="orbit-point lifecycle-point"
-              style="--angle:144deg;--radius:-9rem;--value-delay:-2.6s"
-              data-archcoin-value-lifecycle-node="record"
-              aria-hidden="true"
-            >
-              <span class="orbit-upright">
-                <span class="orbit-gem-core">
-                  <svg class="arch-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#archDigitalGem"></use></svg>
-                  <span class="gem-label"><b>Record</b></span>
-                </span>
-              </span>
-            </span>
+              <button
+                type="button"
+                class="archcoin-panel-button"
+                data-archcoin-return-to-cluster
+                hidden
+              >
+                Return to Cluster
+              </button>
+            </div>
 
-            <span
-              class="orbit-point lifecycle-point"
-              style="--angle:216deg;--radius:-9rem;--value-delay:-3.8s"
-              data-archcoin-value-lifecycle-node="allocate"
-              aria-hidden="true"
-            >
-              <span class="orbit-upright">
-                <span class="orbit-gem-core">
-                  <svg class="arch-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#archDigitalGem"></use></svg>
-                  <span class="gem-label"><b>Allocate</b></span>
-                </span>
-              </span>
-            </span>
+            <div class="archcoin-tabs" data-archcoin-lens-set>
+              <button
+                type="button"
+                class="archcoin-tab"
+                data-archcoin-lens-tab="overview"
+                aria-selected="true"
+              >
+                Overview
+              </button>
+              <button
+                type="button"
+                class="archcoin-tab"
+                data-archcoin-lens-tab="engineering"
+                aria-selected="false"
+                tabindex="-1"
+              >
+                Engineering
+              </button>
+              <button
+                type="button"
+                class="archcoin-tab"
+                data-archcoin-lens-tab="platform"
+                aria-selected="false"
+                tabindex="-1"
+              >
+                Platform
+              </button>
+              <button
+                type="button"
+                class="archcoin-tab"
+                data-archcoin-lens-tab="governance"
+                aria-selected="false"
+                tabindex="-1"
+              >
+                Governance
+              </button>
+            </div>
 
-            <span
-              class="orbit-point lifecycle-point"
-              style="--angle:288deg;--radius:-9rem;--value-delay:-5s"
-              data-archcoin-value-lifecycle-node="trust"
-              aria-hidden="true"
-            >
-              <span class="orbit-upright">
-                <span class="orbit-gem-core">
-                  <svg class="arch-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#archDigitalGem"></use></svg>
-                  <span class="gem-label"><b>Trust</b></span>
-                </span>
-              </span>
-            </span>
-          </div>
+            <div class="archcoin-tab-panels">
+              <section class="archcoin-tab-panel" data-archcoin-lens-panel="overview">
+                <div class="archcoin-panel-grid">
+                  <article class="archcoin-panel-card">
+                    <b>Family read</b>
+                    <strong>ARCHCOIN is one family with four distinct coins.</strong>
+                    <span>The local orbit does not describe four vague functions inside one undifferentiated coin. It describes four distinct coins operating inside one family field.</span>
+                  </article>
+
+                  <article class="archcoin-panel-card">
+                    <b>Local behavior</b>
+                    <strong>Coin → cluster → information.</strong>
+                    <span>The inspection grammar follows the Compass model: outer field, cluster state, information state, and local restoration through Return to Orbit.</span>
+                  </article>
+                </div>
+              </section>
+
+              <section class="archcoin-tab-panel" data-archcoin-lens-panel="engineering" hidden>
+                <div class="archcoin-panel-grid">
+                  <article class="archcoin-panel-card">
+                    <b>Runtime contract</b>
+                    <strong>Preview, selection, and return stay separate.</strong>
+                    <span>The controller should distinguish front focus, selected coin, selected cluster path, active information tab, and return behavior without collapsing them into one state.</span>
+                  </article>
+
+                  <article class="archcoin-panel-card">
+                    <b>Motion contract</b>
+                    <strong>Outer orbit and cluster orbit share the Compass model.</strong>
+                    <span>The geometry can reuse the same motion logic, drag classification, and settlement standard already proven in the Compass system.</span>
+                  </article>
+                </div>
+              </section>
+
+              <section class="archcoin-tab-panel" data-archcoin-lens-panel="platform" hidden>
+                <div class="archcoin-panel-grid">
+                  <article class="archcoin-panel-card">
+                    <b>Platform read</b>
+                    <strong>This chamber is for inspection, not live execution.</strong>
+                    <span>The page exists to inspect coin architecture, not to execute custody, exchange, or token-sale behavior.</span>
+                  </article>
+
+                  <article class="archcoin-panel-card">
+                    <b>Compass integration</b>
+                    <strong>The center object leaves the local chamber deliberately.</strong>
+                    <span>The center compass is a higher-order chamber navigation control. It is not a substitute for Return to Orbit.</span>
+                  </article>
+                </div>
+              </section>
+
+              <section class="archcoin-tab-panel" data-archcoin-lens-panel="governance" hidden>
+                <div class="archcoin-panel-grid">
+                  <article class="archcoin-panel-card">
+                    <b>Governance read</b>
+                    <strong>Every coin needs explicit boundaries.</strong>
+                    <span>The family model does not justify automatic custody, automatic exchange execution, or automatic chain unification. Each claim still requires explicit implementation and review.</span>
+                  </article>
+
+                  <article class="archcoin-panel-card">
+                    <b>Inspection rule</b>
+                    <strong>Information comes before larger public claims.</strong>
+                    <span>The chamber exists to slow the read down, separate surfaces, and make the system understandable before launch-state claims dominate interpretation.</span>
+                  </article>
+                </div>
+              </section>
+            </div>
+          </section>
         </div>
       </section>
 
-      <section class="panel section" aria-labelledby="four-coins-title">
-        <div class="kicker">Four coin positions</div>
-        <h2 id="four-coins-title">The primary orbit shows the minimum transaction structure.</h2>
+      <section class="panel section" id="coin-dossiers" aria-labelledby="dossiers-title">
+        <div class="kicker">Visible-first coin dossiers</div>
+        <h2 id="dossiers-title">All four coins remain readable even before the runtime opens the field.</h2>
 
-        <div class="four-grid">
-          <article class="card">
-            <b>Contract Authority</b>
-            <strong>Movement begins under an authorized frame.</strong>
-            <span>The contract position governs permissions, terms, signatures, scope, and the authority that allows value to move in a disciplined way.</span>
+        <div class="dossier-grid">
+          <article class="dossier" id="dossier-contract">
+            <b>North Coin</b>
+            <strong>Contract Coin</strong>
+            <p>
+              Contract Coin governs authority, permissions, terms, signatures, and what must authorize movement before value travels deeper into the family structure.
+            </p>
+            <div class="dossier-grid-inner">
+              <article class="dossier-card">
+                <b>Overview</b>
+                <strong>Authority frame</strong>
+                <span>The contract layer explains why disciplined movement starts with explicit authority instead of vague permission.</span>
+              </article>
+              <article class="dossier-card">
+                <b>Engineering</b>
+                <strong>Rule surfaces</strong>
+                <span>This coin eventually needs clear rule engines, signature expectations, and bounded contract validation surfaces.</span>
+              </article>
+              <article class="dossier-card">
+                <b>Platform</b>
+                <strong>Operator view</strong>
+                <span>The platform layer should make authority visible before downstream movement begins.</span>
+              </article>
+              <article class="dossier-card">
+                <b>Governance</b>
+                <strong>Change boundary</strong>
+                <span>This coin must prevent silent authority drift and force declared change-control boundaries.</span>
+              </article>
+            </div>
           </article>
 
-          <article class="card">
-            <b>Inbound Value / Receivable</b>
-            <strong>Value arriving must be visible.</strong>
-            <span>The receivable position names what entered, from where, through which route, and for what purpose it is being received.</span>
+          <article class="dossier" id="dossier-receivable">
+            <b>East Coin</b>
+            <strong>Receivable Coin</strong>
+            <p>
+              Receivable Coin governs inbound value, intake visibility, arrival reading, and how the family makes received value legible instead of treating arrival as an opaque event.
+            </p>
+            <div class="dossier-grid-inner">
+              <article class="dossier-card">
+                <b>Overview</b>
+                <strong>Inbound legibility</strong>
+                <span>The receivable layer asks what entered, from where, and under which frame it should be understood.</span>
+              </article>
+              <article class="dossier-card">
+                <b>Engineering</b>
+                <strong>Receipt logic</strong>
+                <span>This coin needs explicit inflow capture, source reading, and intake-side accounting surfaces.</span>
+              </article>
+              <article class="dossier-card">
+                <b>Platform</b>
+                <strong>Arrival surface</strong>
+                <span>The platform layer should make incoming value readable to users and operators.</span>
+              </article>
+              <article class="dossier-card">
+                <b>Governance</b>
+                <strong>Admission rule</strong>
+                <span>This coin must define what is accepted, what is rejected, and which inbound claims require review.</span>
+              </article>
+            </div>
           </article>
 
-          <article class="card">
-            <b>Outbound Obligation / Payable</b>
-            <strong>Every movement carries responsibility.</strong>
-            <span>The payable position keeps duty, settlement pressure, and what is owed visible instead of letting obligations vanish behind vague motion.</span>
+          <article class="dossier" id="dossier-payable">
+            <b>South Coin</b>
+            <strong>Payable Coin</strong>
+            <p>
+              Payable Coin governs outgoing obligation, duty, settlement pressure, and how what is owed remains visible rather than vanishing behind motion language.
+            </p>
+            <div class="dossier-grid-inner">
+              <article class="dossier-card">
+                <b>Overview</b>
+                <strong>Obligation visibility</strong>
+                <span>The payable layer keeps what is owed visible and resists the tendency to narrate movement without duty.</span>
+              </article>
+              <article class="dossier-card">
+                <b>Engineering</b>
+                <strong>Settlement rules</strong>
+                <span>This coin needs bounded settlement logic, duty tracking, and outgoing obligation controls.</span>
+              </article>
+              <article class="dossier-card">
+                <b>Platform</b>
+                <strong>Liability surface</strong>
+                <span>The platform layer should expose deadlines, liabilities, and obligation state clearly.</span>
+              </article>
+              <article class="dossier-card">
+                <b>Governance</b>
+                <strong>Duty boundary</strong>
+                <span>This coin must constrain what outgoing value may do automatically and what requires review.</span>
+              </article>
+            </div>
           </article>
 
-          <article class="card">
-            <b>Allocation / Growth</b>
-            <strong>Expansion remains inside the bond frame.</strong>
-            <span>The allocation position governs distribution, reinvestment, growth, and pressure routing without pretending that discipline is optional.</span>
-          </article>
-        </div>
-      </section>
-
-      <section class="panel section" id="value-lifecycle" aria-labelledby="lifecycle-title">
-        <div class="kicker">Secondary value lifecycle</div>
-        <h2 id="lifecycle-title">The five-node loop explains the lifecycle inside the four-coin model.</h2>
-
-        <div class="transaction-summary">
-          <strong>The lifecycle explains what happens across the transaction. It does not replace the transaction architecture.</strong>
-          <p>
-            Contribution, trace, record, allocation, and trust remain useful, but only as subordinate explanatory logic within the primary four-coin transaction and bond framework.
-          </p>
-        </div>
-
-        <div class="loop-grid">
-          <article class="loop-card">
-            <b>01</b>
-            <strong>Contribute</strong>
-            <span>Time, labor, money, attention, assets, or another defined input enters the transaction field.</span>
-          </article>
-
-          <article class="loop-card">
-            <b>02</b>
-            <strong>Trace</strong>
-            <span>The source, route, and purpose of value are clarified before amplification claims are allowed to dominate interpretation.</span>
-          </article>
-
-          <article class="loop-card">
-            <b>03</b>
-            <strong>Record</strong>
-            <span>The event is recorded through accountable transaction logic, receipt logic, ledger logic, or another readable bond surface.</span>
-          </article>
-
-          <article class="loop-card">
-            <b>04</b>
-            <strong>Allocate</strong>
-            <span>Distribution follows a defined rule frame instead of being treated as an afterthought once value has already moved.</span>
-          </article>
-
-          <article class="loop-card">
-            <b>05</b>
-            <strong>Trust</strong>
-            <span>Trust grows when authority, inflow, obligation, and allocation can be checked rather than merely asserted.</span>
-          </article>
-        </div>
-      </section>
-
-      <section class="panel section" id="adapter-layer" aria-labelledby="adapter-title">
-        <div class="kicker">Adapter-aware asset participation</div>
-        <h2 id="adapter-title">Existing assets may participate without being replaced.</h2>
-
-        <div class="adapter-grid">
-          <article class="adapter-card" data-archcoin-adapter-slot="referenced">
-            <b>Referenced</b>
-            <strong>Read the asset inside the transaction frame.</strong>
-            <span>ARCHCOIN may classify and account for an external asset without claiming custody or protocol-level merger.</span>
-          </article>
-
-          <article class="adapter-card" data-archcoin-adapter-slot="wrapped">
-            <b>Wrapped</b>
-            <strong>Represent value through a declared wrapper.</strong>
-            <span>A wrapped participation mode still requires explicit implementation, custody assumptions, and settlement logic outside mere page declaration.</span>
-          </article>
-
-          <article class="adapter-card" data-archcoin-adapter-slot="routed">
-            <b>Routed</b>
-            <strong>Assign the asset a transaction role.</strong>
-            <span>An asset may be routed into contract, receivable, payable, or allocation positions without pretending the underlying chain has been automatically unified.</span>
-          </article>
-
-          <article class="adapter-card" data-archcoin-adapter-slot="accounted">
-            <b>Accounted For</b>
-            <strong>Bind the movement into one bond representation.</strong>
-            <span>ARCHCOIN may create one readable accountability layer across heterogeneous assets while leaving protocol security and execution claims outside this page.</span>
-          </article>
-        </div>
-      </section>
-
-      <section class="panel section" aria-labelledby="interoperability-title">
-        <div class="kicker">Interoperability boundary</div>
-        <h2 id="interoperability-title">ARCHCOIN may unify the transaction model, not the underlying chains by declaration.</h2>
-
-        <div class="card-grid">
-          <article class="card">
-            <b>May define</b>
-            <strong>Classification, routing, binding, accountability.</strong>
-            <span>ARCHCOIN may define transaction-role assignment, value-route mapping, obligation binding, traceability records, allocation records, adapter interfaces, and unified bond representation.</span>
-          </article>
-
-          <article class="card">
-            <b>Does not automatically claim</b>
-            <strong>No automatic protocol merger.</strong>
-            <span>The page does not claim automatic cross-chain finality, automatic bridge security, automatic custody, automatic exchange execution, automatic legal enforceability, or automatic oracle truth.</span>
-          </article>
-
-          <article class="card">
-            <b>Practical read</b>
-            <strong>Adapters still matter.</strong>
-            <span>Any real interoperability path still requires explicit adapters, wrappers, bridges, oracles, accounting bindings, legal review, operational controls, and implementation evidence.</span>
-          </article>
-        </div>
-      </section>
-
-      <section class="panel section" aria-labelledby="use-cases-title">
-        <div class="kicker">Use cases</div>
-        <h2 id="use-cases-title">Where transaction-template discipline belongs.</h2>
-
-        <div class="use-grid">
-          <article class="card">
-            <b>Contribution systems</b>
-            <strong>Make participation visible.</strong>
-            <span>Show which authority frame accepted the contribution, what entered, what obligation followed, and where allocation pressure sits.</span>
-          </article>
-
-          <article class="card">
-            <b>Project accounting</b>
-            <strong>Clarify movement and duty.</strong>
-            <span>Separate contract, receivable, payable, and allocation into one readable financial-transaction map instead of one vague bucket.</span>
-          </article>
-
-          <article class="card">
-            <b>Bond-layer views</b>
-            <strong>Explain heterogeneous assets together.</strong>
-            <span>Use one adapter-aware accountability surface to classify how existing crypto assets participate inside a shared transaction model.</span>
-          </article>
-
-          <article class="card">
-            <b>Future exchange architecture</b>
-            <strong>Prepare before launch.</strong>
-            <span>Any live financial system would still require legal, tax, accounting, securities, compliance, operational, and custody review before activation.</span>
+          <article class="dossier" id="dossier-allocation">
+            <b>West Coin</b>
+            <strong>Allocation Coin</strong>
+            <p>
+              Allocation Coin governs growth, distribution, retained value, and the rule frame that keeps expansion from becoming undefined drift.
+            </p>
+            <div class="dossier-grid-inner">
+              <article class="dossier-card">
+                <b>Overview</b>
+                <strong>Governed expansion</strong>
+                <span>The allocation layer exists so growth and distribution are still legible, bounded, and accountable.</span>
+              </article>
+              <article class="dossier-card">
+                <b>Engineering</b>
+                <strong>Distribution rules</strong>
+                <span>This coin needs explicit allocation engines, retention surfaces, and controlled growth pathways.</span>
+              </article>
+              <article class="dossier-card">
+                <b>Platform</b>
+                <strong>Operator control</strong>
+                <span>The platform layer should expose how value is retained, distributed, or expanded.</span>
+              </article>
+              <article class="dossier-card">
+                <b>Governance</b>
+                <strong>Growth boundary</strong>
+                <span>This coin must define what expansion is allowed, what is prohibited, and who may alter those rules.</span>
+              </article>
+            </div>
           </article>
         </div>
       </section>
 
       <section class="panel section" id="guardrails" aria-labelledby="guardrails-title">
         <div class="kicker">Guardrails</div>
-        <h2 id="guardrails-title">ARCHCOIN is not a financial offer or automatic chain-merger claim.</h2>
+        <h2 id="guardrails-title">ARCHCOIN is an information chamber, not a live execution claim.</h2>
 
         <div class="guardrail-grid">
           <article class="card guardrail-card">
             <b>No offer</b>
             <strong>Not an offer to sell or solicitation to buy.</strong>
-            <span>This page describes concept architecture only. It does not offer any asset, token, security, or investment product.</span>
+            <span>This page does not offer any token, security, or investment product for sale.</span>
+          </article>
+
+          <article class="card guardrail-card">
+            <b>No live execution</b>
+            <strong>Not a wallet, exchange, or custody surface.</strong>
+            <span>The page does not claim live execution, active custody, exchange operation, or launch-state settlement control.</span>
           </article>
 
           <article class="card guardrail-card">
             <b>No advice</b>
             <strong>Not financial, legal, tax, or investment advice.</strong>
-            <span>Any financial, legal, tax, securities, accounting, or compliance matter requires qualified professional review.</span>
-          </article>
-
-          <article class="card guardrail-card">
-            <b>No execution claim</b>
-            <strong>Not a wallet, exchange, or live execution surface.</strong>
-            <span>This page does not claim custody, exchange execution, protocol finality, or live transaction control.</span>
+            <span>Qualified review is still required for legal, tax, accounting, securities, compliance, and launch matters.</span>
           </article>
 
           <article class="card guardrail-card">
             <b>No automatic merger claim</b>
-            <strong>Adapters are still required.</strong>
-            <span>This page does not claim that disparate chains, assets, or protocols are automatically merged merely by ARCHCOIN being named as the bond layer.</span>
+            <strong>Family naming does not unify chains by declaration.</strong>
+            <span>No coin on this page automatically merges protocols, secures bridges, or creates custody truth merely by being named inside the family.</span>
           </article>
         </div>
       </section>
@@ -1612,30 +2503,30 @@
 
         <div class="route-card-grid">
           <a class="route-card" href="/products/">
-            <b>Products</b>
-            <strong>Return to the wing.</strong>
-            <span>ARCHCOIN remains a product chamber inside the wider product estate.</span>
+            <b>Products Compass</b>
+            <strong>Return to the nearest local compass.</strong>
+            <span>The Products page remains the nearest product-wing compass for chamber switching.</span>
             <span class="open-path">Open Products</span>
           </a>
 
-          <a class="route-card" href="/products/on-your-side-ai/">
-            <b>On Your Side AAI</b>
-            <strong>Open support.</strong>
-            <span>The support chamber helps sort forms, letters, choices, and next steps without taking control.</span>
-            <span class="open-path">Open AAI</span>
+          <a class="route-card" href="/">
+            <b>Home Compass</b>
+            <strong>Return to the top-level compass.</strong>
+            <span>Use the governing root Compass for full-estate navigation.</span>
+            <span class="open-path">Open Compass</span>
           </a>
 
-          <a class="route-card" href="/products/education/">
-            <b>Education</b>
-            <strong>Open learning.</strong>
-            <span>The learning chamber turns words into working understanding.</span>
-            <span class="open-path">Open Education</span>
+          <a class="route-card" href="/explore/">
+            <b>Frontier Compass</b>
+            <strong>Open the frontier-facing compass layer.</strong>
+            <span>Use the exploratory compass to move outward to discovery surfaces.</span>
+            <span class="open-path">Open Frontier</span>
           </a>
 
           <a class="route-card" href="/gauges/">
             <b>Gauges</b>
-            <strong>Measure the route.</strong>
-            <span>Gauges checks served source truth and contract alignment.</span>
+            <strong>Read system measurements.</strong>
+            <span>Use Gauges to inspect measurement-oriented surfaces outside the local coin family chamber.</span>
             <span class="open-path">Read Gauges</span>
           </a>
         </div>
@@ -1643,43 +2534,43 @@
 
       <section class="panel section" aria-labelledby="final-title">
         <div class="final-direction">
-          <strong id="final-title">ARCHCOIN is the four-coin transaction-template and bond-layer chamber.</strong>
+          <strong id="final-title">ARCHCOIN is one family field composed of four distinct coins.</strong>
           <p>
-            Its controlling read is simple: value should be traceable before it is amplified, and every transaction should make authority, inflow, obligation, and allocation visible before broader claims are allowed to dominate the frame.
+            The page’s controlling behavior is simple: outer coin field, local cluster, information inspection, Return to Orbit for local restoration, and a separate center compass for higher-order chamber navigation.
           </p>
 
           <div class="actions">
-            <a class="button gold" href="/products/">Back to Products</a>
-            <a class="button green" href="/products/on-your-side-ai/">Open On Your Side AAI</a>
-            <a class="button" href="/products/education/">Open Education</a>
-            <a class="button" href="/showroom/">Open Showroom</a>
-            <a class="button" href="/gauges/">Read Gauges</a>
+            <a class="button gold" href="#archcoin-scene">Back to Coin Field</a>
+            <a class="button green" href="/products/">Open Products Compass</a>
+            <a class="button" href="/">Open Home Compass</a>
+            <a class="button" href="/explore/">Open Frontier Compass</a>
           </div>
         </div>
       </section>
 
-      <output id="archcoin-receipt-output" class="receipt" aria-hidden="true"></output>
+      <output id="archcoin-receipt-output" class="receipt" data-archcoin-controller-receipt aria-hidden="true"></output>
+      <output class="receipt" data-archcoin-crystals-receipt aria-hidden="true"></output>
+      <output class="receipt" data-archcoin-center-compass-receipt aria-hidden="true"></output>
 
       <template id="route-receipt" data-route-receipt>
-ARCHCOIN_TRANSACTION_TEMPLATE_AND_BOND_LAYER_REBUILD_v2
-previous=ARCHCOIN_PRODUCT_GRANDCHILD_VALUE_ORBIT_ANIMATION_TNT_v4
+ARCHCOIN_FOUR_COIN_CONSTELLATION_CLUSTER_INFORMATION_ANCHOR_v3
+previous=ARCHCOIN_TRANSACTION_TEMPLATE_AND_BOND_LAYER_REBUILD_v2
 route=/products/archcoin/
 page=archcoin
 role=product_grandchild
 parent=/products/
 grandparent=/
-product_type=transaction_template_and_bond_layer
+product_type=cryptocurrency_family_information_constellation
 public_label=ARCHCOIN
 canonical_spelling=A_R_C_H_C_O_I_N
-canonical_one_line=ARCHCOIN is a four-part transaction-template and bonding chamber for contract authority, inbound value, outbound obligation, allocation, traceability, accountability, and adapter-aware crypto participation.
-core_message=Value should be traceable before it is amplified.
-primary_architecture=contract,receivable,payable,allocation
-secondary_lifecycle=contribute,trace,record,allocate,trust
-four_coin_primary=true
-five_node_secondary=true
-automatic_protocol_level_chain_merger=false
-existing_assets_may_participate=referenced,wrapped,routed,adapter_bound,accounted_for
-visible_first=true
+core_message=four_coins_four_clusters_one_family_field
+archcoin_family=true
+outer_model=four_cardinal_coins
+cluster_model=per_coin_information_cluster
+local_return=return_to_orbit
+center_compass=expandable_compass_selector
+coins=north_contract,east_receivable,south_payable,west_allocation
+cluster_paths_per_coin=overview,engineering,platform,governance
 js_required=false
 heavy_runtime_loaded=false
 generated_image=false
@@ -1697,21 +2588,22 @@ not_wallet=true
 not_exchange=true
 not_trading_platform=true
 not_live_financial_product=true
-not_automatic_bridge_security_claim=true
-not_automatic_custody_claim=true
-not_automatic_exchange_execution_claim=true
-requires_legal_tax_accounting_securities_compliance_review_before_any_live_financial_launch=true
-retained_hooks=archcoin-orbit-stage,archcoin-geometry-mount,archcoin-receipt-output,data-archcoin-product
-primary_bindings=data-archcoin-coin-position(contract,receivable,payable,allocation)
-secondary_bindings=data-archcoin-value-lifecycle-node,data-archcoin-adapter-slot,data-archcoin-observation
-route_owns=archcoin_public_transaction_template_chamber,four_coin_primary_architecture,secondary_value_lifecycle,adapter_aware_bond_layer_explanation,financial_guardrails,product_chamber_receipt
-route_does_not_own=products_root,other_product_chambers,showroom,gauges_logic,runtime,render_files,live_financial_launch,automatic_chain_merger
+not_live_execution_surface=true
+not_custody_surface=true
+not_automatic_chain_merger=true
+retained_hooks=archcoin-geometry-mount,archcoin-receipt-output,data-archcoin-root,data-archcoin-scene,data-archcoin-objects,data-archcoin-panel
+primary_bindings=data-archcoin-cardinal(data-wing=north,east,south,west)
+secondary_bindings=data-archcoin-room,data-archcoin-lens-tab,data-archcoin-lens-panel,data-archcoin-center-compass,data-archcoin-compass-destination,data-archcoin-return-to-orbit
+route_owns=archcoin_four_coin_family_field,coin_clusters,information_points,local_return_to_orbit,center_compass_selector,visible_first_dossiers,financial_guardrails,product_chamber_receipt
+route_does_not_own=products_root,other_product_chambers,global_compass_logic,gauges_logic,live_financial_launch,automatic_chain_merger,exchange_execution,custody_runtime
       </template>
     </main>
 
     <footer>
-      ARCHCOIN_TRANSACTION_TEMPLATE_AND_BOND_LAYER_REBUILD_v2 · ARCHCOIN · Product Grandchild · Four-coin transaction orbit with subordinate lifecycle layer.
+      ARCHCOIN_FOUR_COIN_CONSTELLATION_CLUSTER_INFORMATION_ANCHOR_v3 · ARCHCOIN · Product Grandchild · Four-coin family field with per-coin clusters and local information descent.
     </footer>
   </div>
+
+  <script src="./index.js" defer></script>
 </body>
 </html>

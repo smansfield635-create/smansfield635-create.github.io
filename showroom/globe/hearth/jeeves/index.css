@@ -1,20 +1,24 @@
 /* TARGET FILE: /showroom/globe/hearth/jeeves/index.css */
 /* TNT FULL-FILE REPLACEMENT */
-/* DIAMOND_GATE_BRIDGE_JEEVES_ESTATE_THRESHOLD_HOST_AND_ROUTING_SURFACE_CSS_TNT_v15 */
+/* DIAMOND_GATE_BRIDGE_JEEVES_TWO_STAGE_ESTATE_THRESHOLD_HOST_AND_ROUTING_SURFACE_CSS_TNT_v16 */
 /*
   Purpose:
   - Present “Talk to the House” as an approach to the estate entrance.
-  - Render the Mirrorland stained-glass Window as a guided threshold.
+  - Render the Mirrorland stained-glass Window as a two-stage threshold.
+  - Begin with a compact threshold Window.
+  - Grow the Window to full presentation size after the first continuation.
   - Introduce Jeeves as the host receiving the visitor at the front door.
   - Make the hosted conversation the dominant page experience.
   - Distinguish typing, reading, listening, handoff, and route states.
   - Keep supporting information compact through native disclosure panels.
   - Preserve mobile access, keyboard focus, reduced motion, high contrast,
     graceful runtime failure, and print behavior.
+  - Remove continuous threshold motion that could present as image jitter.
 
   Owns:
   - Jeeves threshold presentation
-  - threshold phase presentation
+  - two-stage threshold phase presentation
+  - compact-to-full threshold growth
   - threshold canvas mounts
   - guided and open page states
   - estate-arrival presentation
@@ -102,6 +106,9 @@
   --jeeves-ease:
     cubic-bezier(.22,.78,.28,1);
 
+  --jeeves-threshold-growth-ease:
+    cubic-bezier(.18,.82,.24,1);
+
   --jeeves-gem:
     polygon(
       50% 0%,
@@ -136,7 +143,6 @@ body{
   margin:0;
   min-width:320px;
   min-height:100vh;
-  min-height:100svh;
   overflow-x:hidden;
 
   color:var(--jeeves-ivory);
@@ -366,9 +372,11 @@ summary:focus-visible,
 
 .jeeves-page[data-jeeves-access="guided"]{
   opacity:.20;
+
   filter:
     saturate(.62)
     blur(2px);
+
   transform:scale(.995);
   pointer-events:none;
   user-select:none;
@@ -485,7 +493,6 @@ summary:focus-visible,
 
   min-width:320px;
   min-height:100vh;
-  min-height:100svh;
 
   overflow:auto;
   overscroll-behavior:contain;
@@ -518,8 +525,8 @@ summary:focus-visible,
   visibility:visible;
 
   transition:
-    opacity .45s var(--jeeves-ease),
-    visibility .45s linear;
+    opacity .36s var(--jeeves-ease),
+    visibility .36s linear;
 }
 
 .jeeves-threshold[aria-hidden="true"]{
@@ -585,7 +592,6 @@ summary:focus-visible,
 
   width:min(1180px,calc(100% - 1.5rem));
   min-height:100vh;
-  min-height:100svh;
 
   margin:0 auto;
 
@@ -608,6 +614,7 @@ summary:focus-visible,
 
 .jeeves-threshold-progress{
   min-width:0;
+
   display:grid;
   gap:.38rem;
 
@@ -632,7 +639,7 @@ summary:focus-visible,
 .jeeves-threshold-progress-value{
   display:block;
 
-  width:25%;
+  width:50%;
   height:100%;
 
   border-radius:inherit;
@@ -686,6 +693,7 @@ summary:focus-visible,
 .jeeves-threshold-skip:hover,
 .jeeves-threshold-skip:focus-visible{
   transform:translateY(-1px);
+
   color:var(--jeeves-ivory);
   border-color:var(--jeeves-line-strong);
   background:rgba(137,228,244,.06);
@@ -703,13 +711,16 @@ summary:focus-visible,
 .jeeves-threshold-window-stage{
   position:relative;
 
-  min-height:min(70svh,48rem);
+  min-height:clamp(31rem,52vw,46rem);
 
   display:grid;
   align-items:center;
   justify-items:center;
 
   isolation:isolate;
+
+  transition:
+    min-height .76s var(--jeeves-threshold-growth-ease);
 }
 
 .jeeves-threshold-window-stage::before{
@@ -721,6 +732,9 @@ summary:focus-visible,
 
   border-radius:50%;
 
+  opacity:.82;
+  transform:none;
+
   background:
     radial-gradient(
       circle,
@@ -731,47 +745,73 @@ summary:focus-visible,
 
   filter:blur(34px);
 
-  animation:
-    jeevesThresholdAura
-    6s
-    ease-in-out
-    infinite
-    alternate;
-}
-
-@keyframes jeevesThresholdAura{
-  from{
-    opacity:.55;
-    transform:scale(.95);
-  }
-
-  to{
-    opacity:1;
-    transform:scale(1.04);
-  }
+  transition:
+    opacity .76s var(--jeeves-threshold-growth-ease),
+    inset .76s var(--jeeves-threshold-growth-ease);
 }
 
 .jeeves-threshold-window{
   position:relative;
 
-  width:min(100%,30rem);
   aspect-ratio:2 / 3;
 
   filter:
     drop-shadow(0 2rem 4rem rgba(0,0,0,.58))
     drop-shadow(0 0 2rem rgba(137,228,244,.16));
+
+  transform:translateZ(0);
+  backface-visibility:hidden;
+
+  transition:
+    width .76s var(--jeeves-threshold-growth-ease),
+    filter .76s var(--jeeves-threshold-growth-ease);
+}
+
+.jeeves-threshold[
+  data-threshold-window-size="compact"
+]
+.jeeves-threshold-window{
+  width:min(100%,18rem);
+}
+
+.jeeves-threshold[
+  data-threshold-window-size="full"
+]
+.jeeves-threshold-window{
+  width:min(100%,30rem);
+
+  filter:
+    drop-shadow(0 2.2rem 4.5rem rgba(0,0,0,.62))
+    drop-shadow(0 0 3rem rgba(137,228,244,.22));
+}
+
+.jeeves-threshold[
+  data-threshold-window-size="compact"
+]
+.jeeves-threshold-window-stage::before{
+  inset:18% 15%;
+  opacity:.60;
+}
+
+.jeeves-threshold[
+  data-threshold-window-size="full"
+]
+.jeeves-threshold-window-stage::before{
+  inset:7% 0;
+  opacity:1;
 }
 
 .jeeves-threshold-window canvas{
   width:100%;
   height:100%;
+
+  display:block;
 }
 
 .jeeves-threshold-window-caption{
   position:absolute;
   left:50%;
   bottom:4%;
-  transform:translateX(-50%);
 
   width:max-content;
   max-width:90%;
@@ -790,7 +830,12 @@ summary:focus-visible,
   text-align:center;
   text-transform:uppercase;
 
+  transform:translateX(-50%);
   backdrop-filter:blur(14px);
+
+  transition:
+    bottom .76s var(--jeeves-threshold-growth-ease),
+    opacity .3s ease;
 }
 
 .jeeves-threshold-copy-stage{
@@ -832,6 +877,11 @@ summary:focus-visible,
   backdrop-filter:
     blur(28px)
     saturate(1.08);
+
+  transition:
+    border-color .4s ease,
+    box-shadow .4s ease,
+    background .4s ease;
 }
 
 .jeeves-threshold-copy-stage::before{
@@ -859,7 +909,7 @@ summary:focus-visible,
 
   animation:
     jeevesThresholdCopyIn
-    .48s
+    .42s
     var(--jeeves-ease)
     both;
 }
@@ -867,7 +917,7 @@ summary:focus-visible,
 @keyframes jeevesThresholdCopyIn{
   from{
     opacity:0;
-    transform:translateY(.75rem);
+    transform:translateY(.55rem);
   }
 
   to{
@@ -968,7 +1018,10 @@ summary:focus-visible,
   transition:
     transform .18s var(--jeeves-ease),
     filter .18s ease,
-    box-shadow .18s ease;
+    box-shadow .18s ease,
+    color .3s ease,
+    background .3s ease,
+    border-color .3s ease;
 }
 
 .jeeves-threshold-advance:hover,
@@ -1001,32 +1054,60 @@ summary:focus-visible,
   text-align:center;
 }
 
-.jeeves-threshold[data-threshold-phase="arrival"]
+.jeeves-threshold[
+  data-threshold-phase="arrival"
+]
 .jeeves-threshold-copy-stage{
   border-color:rgba(137,228,244,.18);
 }
 
-.jeeves-threshold[data-threshold-phase="host"]
+.jeeves-threshold[
+  data-threshold-phase="welcome"
+]
 .jeeves-threshold-copy-stage{
-  border-color:rgba(157,134,232,.22);
-}
+  border-color:rgba(231,188,104,.29);
 
-.jeeves-threshold[data-threshold-phase="conversation"]
-.jeeves-threshold-copy-stage{
-  border-color:rgba(137,228,244,.30);
-  box-shadow:
-    0 2rem 7rem rgba(0,0,0,.46),
-    var(--jeeves-cyan-glow),
-    inset 0 1px 0 rgba(255,255,255,.07);
-}
+  background:
+    radial-gradient(
+      circle at 0% 0%,
+      rgba(137,228,244,.09),
+      transparent 20rem
+    ),
+    radial-gradient(
+      circle at 100% 100%,
+      rgba(231,188,104,.10),
+      transparent 24rem
+    ),
+    linear-gradient(
+      145deg,
+      rgba(17,31,47,.84),
+      rgba(5,10,18,.91)
+    );
 
-.jeeves-threshold[data-threshold-phase="access"]
-.jeeves-threshold-copy-stage{
-  border-color:rgba(231,188,104,.28);
   box-shadow:
     0 2rem 7rem rgba(0,0,0,.46),
     var(--jeeves-gold-glow),
     inset 0 1px 0 rgba(255,255,255,.07);
+}
+
+.jeeves-threshold[
+  data-threshold-phase="welcome"
+]
+.jeeves-threshold-advance{
+  color:#171006;
+
+  border-color:rgba(231,188,104,.50);
+
+  background:
+    linear-gradient(
+      135deg,
+      var(--jeeves-gold-soft),
+      var(--jeeves-gold)
+    );
+
+  box-shadow:
+    var(--jeeves-gold-glow),
+    inset 0 1px 0 rgba(255,255,255,.48);
 }
 
 /* HEADER */
@@ -1104,6 +1185,7 @@ summary:focus-visible,
 
 .jeeves-brand-copy{
   min-width:0;
+
   display:grid;
   gap:.12rem;
 }
@@ -1178,6 +1260,7 @@ summary:focus-visible,
 .jeeves-replay-welcome:hover,
 .jeeves-house-paths > summary:hover{
   transform:translateY(-1px);
+
   border-color:var(--jeeves-line-strong);
   background:rgba(137,228,244,.06);
 }
@@ -1269,6 +1352,7 @@ summary:focus-visible,
 .jeeves-house-menu a:hover,
 .jeeves-house-menu a:focus-visible{
   transform:translateX(2px);
+
   border-color:var(--jeeves-line);
   background:rgba(137,228,244,.055);
 }
@@ -1285,7 +1369,7 @@ summary:focus-visible,
   align-items:center;
   gap:clamp(1rem,4vw,3rem);
 
-  min-height:clamp(18rem,40svh,29rem);
+  min-height:clamp(18rem,40vh,29rem);
 
   padding:
     clamp(1.2rem,4vw,2.4rem);
@@ -1366,6 +1450,8 @@ summary:focus-visible,
 .jeeves-arrival-window-seal canvas{
   width:100%;
   height:100%;
+
+  display:block;
 }
 
 .jeeves-arrival-copy{
@@ -1453,6 +1539,7 @@ summary:focus-visible,
 .jeeves-arrival-action:hover,
 .jeeves-arrival-action:focus-visible{
   transform:translateY(-2px);
+
   border-color:rgba(137,228,244,.54);
   background:rgba(137,228,244,.11);
 }
@@ -1609,6 +1696,7 @@ summary:focus-visible,
 
 .jeeves-console-identity-copy{
   min-width:0;
+
   display:grid;
   gap:.12rem;
 }
@@ -1899,6 +1987,7 @@ summary:focus-visible,
 @keyframes jeevesBubbleIn{
   from{
     opacity:0;
+
     transform:
       translateY(.5rem)
       scale(.986);
@@ -2136,6 +2225,7 @@ summary:focus-visible,
 .jeeves-rush-control:hover,
 .jeeves-rush-control:focus-visible{
   transform:translateY(-1px);
+
   border-color:var(--jeeves-line-strong);
   background:rgba(137,228,244,.09);
 }
@@ -3207,6 +3297,24 @@ html[data-jeeves-runtime-ready="true"]
     gap:2rem;
   }
 
+  .jeeves-threshold-window-stage{
+    min-height:clamp(28rem,48vw,40rem);
+  }
+
+  .jeeves-threshold[
+    data-threshold-window-size="compact"
+  ]
+  .jeeves-threshold-window{
+    width:min(100%,16rem);
+  }
+
+  .jeeves-threshold[
+    data-threshold-window-size="full"
+  ]
+  .jeeves-threshold-window{
+    width:min(100%,25rem);
+  }
+
   .jeeves-team-grid,
   .jeeves-public-paths-grid{
     grid-template-columns:repeat(2,minmax(0,1fr));
@@ -3225,6 +3333,7 @@ html[data-jeeves-runtime-ready="true"]
 
   .jeeves-threshold-stage{
     width:min(100% - .8rem,42rem);
+    min-height:100vh;
   }
 
   .jeeves-threshold-toolbar{
@@ -3238,20 +3347,51 @@ html[data-jeeves-runtime-ready="true"]
   .jeeves-threshold-scene{
     grid-template-columns:1fr;
     align-items:start;
-    gap:.5rem;
+    gap:.65rem;
   }
 
   .jeeves-threshold-window-stage{
-    min-height:40svh;
-    max-height:24rem;
+    min-height:27rem;
+    max-height:none;
   }
 
+  .jeeves-threshold[
+    data-threshold-window-size="compact"
+  ]
+  .jeeves-threshold-window-stage{
+    min-height:18rem;
+  }
+
+  .jeeves-threshold[
+    data-threshold-window-size="full"
+  ]
+  .jeeves-threshold-window-stage{
+    min-height:31rem;
+  }
+
+  .jeeves-threshold[
+    data-threshold-window-size="compact"
+  ]
   .jeeves-threshold-window{
-    width:min(56vw,13.5rem);
+    width:min(44vw,11rem);
+  }
+
+  .jeeves-threshold[
+    data-threshold-window-size="full"
+  ]
+  .jeeves-threshold-window{
+    width:min(78vw,20rem);
   }
 
   .jeeves-threshold-window-caption{
-    bottom:1%;
+    bottom:.35rem;
+  }
+
+  .jeeves-threshold[
+    data-threshold-window-size="compact"
+  ]
+  .jeeves-threshold-window-caption{
+    bottom:.5rem;
   }
 
   .jeeves-threshold-copy-stage{
@@ -3460,12 +3600,32 @@ html[data-jeeves-runtime-ready="true"]
     font-size:.59rem;
   }
 
+  .jeeves-threshold[
+    data-threshold-window-size="compact"
+  ]
   .jeeves-threshold-window-stage{
-    min-height:32svh;
+    min-height:16rem;
   }
 
+  .jeeves-threshold[
+    data-threshold-window-size="full"
+  ]
+  .jeeves-threshold-window-stage{
+    min-height:28rem;
+  }
+
+  .jeeves-threshold[
+    data-threshold-window-size="compact"
+  ]
   .jeeves-threshold-window{
-    width:min(50vw,11rem);
+    width:min(42vw,9.5rem);
+  }
+
+  .jeeves-threshold[
+    data-threshold-window-size="full"
+  ]
+  .jeeves-threshold-window{
+    width:min(82vw,18rem);
   }
 
   .jeeves-threshold-copy-stage{
@@ -3680,10 +3840,6 @@ html[data-jeeves-runtime-ready="true"]
   .jeeves-guide-disclosure-body{
     opacity:1;
     transform:none;
-  }
-
-  .jeeves-threshold-window-stage::before{
-    animation:none;
   }
 }
 

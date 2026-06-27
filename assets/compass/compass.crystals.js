@@ -10,16 +10,18 @@
    - Recede stars through scale, outward drift, z-depth, saturation,
      material softness, halo reduction, and label reduction.
    - Preserve stars as visible orientation context.
-   - Generate visible room semantic proxies from hidden authoritative
+   - Generate nonvisual room semantic proxies from hidden authoritative
      room declarations.
+   - Keep room proxy metadata, aria-labels, and keyboard access.
+   - Use rendered room-star hit testing as the ordinary pointer surface.
    - Suppress star interaction while Mirrorland owns visual focus.
 
    Ownership:
    - Celestial scene background.
    - Four cardinal crystal stars.
    - Nineteen room crystal stars.
-   - Crystal shaders, materials, camera, projection, labels, hit testing,
-     and empty-scene gesture interpretation.
+   - Crystal shaders, materials, camera, projection, cardinal labels,
+     room accessibility proxies, hit testing, and empty-scene gestures.
 
    Non-ownership:
    - Mirrorland geometry, materials, hit testing, state, or rendering.
@@ -159,13 +161,6 @@
     maxPitch: 0.14
   });
 
-  /*
-   * The controller owns state identity.
-   * This renderer owns the visual interpretation of that state.
-   *
-   * Mirrorland advances through its own expansion.
-   * Compass objects preserve orientation through recession.
-   */
   const RECESSION = Object.freeze({
     NORMAL: Object.freeze({
       scale: 1,
@@ -278,6 +273,7 @@
     registryRoomCount: 0,
     mirrorlandRegistryPresent: false,
     roomProxyCount: 0,
+    roomProxyPresentation: "NONVISUAL_ACCESSIBILITY_CONTROL",
     recessionProfile: "NORMAL",
     lastPointerTerritory: "",
     lastGestureType: "",
@@ -432,22 +428,49 @@
           clamp(uSaturation, 0.0, 1.0)
         );
 
-      float facingToCamera = dot(n, viewDir);
+      float facingToCamera =
+        dot(n, viewDir);
 
       float rearSuppression =
-        smoothstep(-0.18, 0.34, facingToCamera);
+        smoothstep(
+          -0.18,
+          0.34,
+          facingToCamera
+        );
 
       float sideRim =
-        pow(1.0 - abs(facingToCamera), 2.4);
+        pow(
+          1.0 -
+          abs(facingToCamera),
+          2.4
+        );
 
       float key =
-        max(dot(n, normalize(-uKeyLight)), 0.0);
+        max(
+          dot(
+            n,
+            normalize(-uKeyLight)
+          ),
+          0.0
+        );
 
       float fill =
-        max(dot(n, normalize(-uFillLight)), 0.0);
+        max(
+          dot(
+            n,
+            normalize(-uFillLight)
+          ),
+          0.0
+        );
 
       float rear =
-        max(dot(n, normalize(-uRimLight)), 0.0);
+        max(
+          dot(
+            n,
+            normalize(-uRimLight)
+          ),
+          0.0
+        );
 
       float fresnel =
         pow(
@@ -668,6 +691,24 @@
     );
   }
 
+  function cssEscape(value) {
+    const text =
+      String(value || "");
+
+    if (
+      globalThis.CSS &&
+      typeof globalThis.CSS.escape ===
+        "function"
+    ) {
+      return globalThis.CSS.escape(text);
+    }
+
+    return text.replace(
+      /["\\]/g,
+      "\\$&"
+    );
+  }
+
   function emitReceipt(extra = {}) {
     Object.assign(
       RECEIPT,
@@ -682,9 +723,12 @@
       extra
     );
 
+    const serialized =
+      JSON.stringify(RECEIPT);
+
     if (state.root) {
       state.root.dataset.compassCrystalsReceipt =
-        JSON.stringify(RECEIPT);
+        serialized;
 
       state.root.dataset.compassCrystalsStatus =
         RECEIPT.status;
@@ -695,16 +739,13 @@
 
     if (state.canvas) {
       state.canvas.dataset.compassCrystalsReceipt =
-        JSON.stringify(RECEIPT);
+        serialized;
 
       state.canvas.dataset.visualPassClaimed =
         "false";
     }
 
     if (state.receiptOutput) {
-      const serialized =
-        JSON.stringify(RECEIPT);
-
       state.receiptOutput.value =
         serialized;
 
@@ -937,10 +978,18 @@
     canvas.style.position =
       "absolute";
 
-    canvas.style.inset = "0";
-    canvas.style.width = "100%";
-    canvas.style.height = "100%";
-    canvas.style.display = "block";
+    canvas.style.inset =
+      "0";
+
+    canvas.style.width =
+      "100%";
+
+    canvas.style.height =
+      "100%";
+
+    canvas.style.display =
+      "block";
+
     canvas.style.pointerEvents =
       "none";
 
@@ -2045,9 +2094,77 @@
     roomId
   ) {
     return qs(
-      `[data-compass-room-declarations] [data-compass-room][data-room-id="${CSS.escape(roomId)}"]`,
+      `[data-compass-room-declarations] [data-compass-room][data-room-id="${cssEscape(roomId)}"]`,
       state.root
     );
+  }
+
+  function applyNonvisualProxyPresentation(
+    proxy
+  ) {
+    proxy.style.position =
+      "absolute";
+
+    proxy.style.display =
+      "block";
+
+    proxy.style.width =
+      "44px";
+
+    proxy.style.height =
+      "44px";
+
+    proxy.style.minWidth =
+      "0";
+
+    proxy.style.maxWidth =
+      "none";
+
+    proxy.style.padding =
+      "0";
+
+    proxy.style.margin =
+      "0";
+
+    proxy.style.border =
+      "0";
+
+    proxy.style.borderRadius =
+      "999px";
+
+    proxy.style.background =
+      "transparent";
+
+    proxy.style.boxShadow =
+      "none";
+
+    proxy.style.backdropFilter =
+      "none";
+
+    proxy.style.color =
+      "transparent";
+
+    proxy.style.fontSize =
+      "0";
+
+    proxy.style.lineHeight =
+      "0";
+
+    proxy.style.overflow =
+      "visible";
+
+    /*
+     * Pointer input belongs to the rendered WebGL room star.
+     * Keyboard focus remains available through tabIndex.
+     */
+    proxy.style.pointerEvents =
+      "none";
+
+    proxy.style.cursor =
+      "default";
+
+    proxy.style.webkitTapHighlightColor =
+      "transparent";
   }
 
   function createRoomProxy(node) {
@@ -2064,11 +2181,17 @@
 
     const existing =
       qs(
-        `[data-compass-room-proxy][data-room-id="${CSS.escape(node.id)}"]`,
+        `[data-compass-room-proxy][data-room-id="${cssEscape(node.id)}"]`,
         state.semanticLayer
       );
 
     if (existing) {
+      applyNonvisualProxyPresentation(
+        existing
+      );
+
+      existing.textContent = "";
+
       return existing;
     }
 
@@ -2080,7 +2203,7 @@
     proxy.type = "button";
 
     proxy.className =
-      "compass-object compass-object--room-proxy";
+      "compass-room-proxy-control";
 
     proxy.dataset.compassRoomProxy =
       "true";
@@ -2143,6 +2266,9 @@
     proxy.dataset.selected =
       "false";
 
+    proxy.dataset.presentation =
+      "nonvisual";
+
     proxy.setAttribute(
       "aria-label",
       `${node.label}. ${
@@ -2151,25 +2277,15 @@
       }`
     );
 
-    const primary =
-      document.createElement(
-        "span"
-      );
+    /*
+     * No visible room title or description is inserted.
+     * The room identity remains available through aria-label
+     * and the copied declaration metadata.
+     */
+    proxy.textContent = "";
 
-    primary.textContent =
-      node.label;
-
-    const secondary =
-      document.createElement(
-        "span"
-      );
-
-    secondary.textContent =
-      node.short;
-
-    proxy.append(
-      primary,
-      secondary
+    applyNonvisualProxyPresentation(
+      proxy
     );
 
     state.semanticLayer.appendChild(
@@ -2207,7 +2323,10 @@
 
     emitReceipt({
       roomProxyCount:
-        proxies.size
+        proxies.size,
+
+      roomProxyPresentation:
+        "NONVISUAL_ACCESSIBILITY_CONTROL"
     });
 
     return proxies;
@@ -2401,10 +2520,6 @@
     const mirrorlandActive =
       isMirrorlandLifecycleState();
 
-    /*
-     * Preserve the prior room cluster as orientation context when
-     * Mirrorland was revealed from an open cardinal or selected room.
-     */
     const clusterOpen =
       frame.state ===
         "CLUSTER_OPEN" ||
@@ -2420,6 +2535,7 @@
     state.registry.forEach(
       (node) => {
         node.visible = false;
+
         node.material =
           node.baseMaterial;
 
@@ -2982,40 +3098,11 @@
     return null;
   }
 
-  function syncSemanticNode(node) {
-    const element =
-      semanticElementForNode(
-        node
-      );
-
-    if (!element) {
-      return;
-    }
-
-    const screen =
-      node.visible &&
-      node.transform.prominence >=
-        0.08
-        ? projectNode(node)
-        : null;
-
-    if (!screen) {
-      element.style.opacity =
-        "0";
-
-      element.style.pointerEvents =
-        "none";
-
-      element.setAttribute(
-        "aria-hidden",
-        "true"
-      );
-
-      element.tabIndex = -1;
-
-      return;
-    }
-
+  function syncCardinalSemanticNode(
+    node,
+    element,
+    screen
+  ) {
     const primary =
       element.querySelector(
         "span:first-child"
@@ -3036,14 +3123,8 @@
         node.short;
     }
 
-    const ordinaryLabelScale =
-      node.type ===
-      NODE_TYPES.CARDINAL
-        ? 0.80
-        : 0.78;
-
     const labelScale =
-      ordinaryLabelScale *
+      0.80 *
       state.recession.labelScale;
 
     const labelOpacity =
@@ -3058,14 +3139,9 @@
       );
 
     const selected =
-      node.type ===
-        NODE_TYPES.CARDINAL
-        ? state.frame
-            .selectedCardinal ===
-          node.wing
-        : state.frame
-            .selectedRoom ===
-          node.id;
+      state.frame
+        .selectedCardinal ===
+      node.wing;
 
     element.dataset.selected =
       selected
@@ -3125,10 +3201,177 @@
         : -1;
 
     element.style.zIndex =
+      "4";
+  }
+
+  function syncRoomProxyNode(
+    node,
+    element,
+    screen
+  ) {
+    applyNonvisualProxyPresentation(
+      element
+    );
+
+    element.textContent = "";
+
+    element.style.left =
+      `${screen.x}px`;
+
+    element.style.top =
+      `${screen.y}px`;
+
+    element.style.right =
+      "auto";
+
+    element.style.bottom =
+      "auto";
+
+    element.style.transform =
+      "translate(-50%, -50%)";
+
+    /*
+     * The control itself has no visible fill, border, label, or shadow.
+     * Opacity remains 1 so the browser can paint a keyboard focus outline.
+     */
+    element.style.opacity =
+      "1";
+
+    element.style.zIndex =
+      "5";
+
+    element.style.pointerEvents =
+      "none";
+
+    const keyboardAvailable =
+      state.recession
+        .interactive &&
+      node.visible &&
+      node.transform.prominence >=
+        0.18;
+
+    element.setAttribute(
+      "aria-hidden",
+      keyboardAvailable
+        ? "false"
+        : "true"
+    );
+
+    element.tabIndex =
+      keyboardAvailable
+        ? 0
+        : -1;
+
+    const selected =
+      state.frame
+        .selectedRoom ===
+      node.id;
+
+    element.dataset.selected =
+      selected
+        ? "true"
+        : "false";
+
+    if (selected) {
+      element.setAttribute(
+        "aria-current",
+        "true"
+      );
+    } else {
+      element.removeAttribute(
+        "aria-current"
+      );
+    }
+  }
+
+  function hideSemanticNode(
+    node,
+    element
+  ) {
+    if (
       node.type ===
       NODE_TYPES.ROOM
-        ? "5"
-        : "4";
+    ) {
+      applyNonvisualProxyPresentation(
+        element
+      );
+
+      element.style.opacity =
+        "0";
+
+      element.style.pointerEvents =
+        "none";
+
+      element.setAttribute(
+        "aria-hidden",
+        "true"
+      );
+
+      element.tabIndex =
+        -1;
+
+      return;
+    }
+
+    element.style.opacity =
+      "0";
+
+    element.style.pointerEvents =
+      "none";
+
+    element.setAttribute(
+      "aria-hidden",
+      "true"
+    );
+
+    element.tabIndex =
+      -1;
+  }
+
+  function syncSemanticNode(node) {
+    const element =
+      semanticElementForNode(
+        node
+      );
+
+    if (!element) {
+      return;
+    }
+
+    const screen =
+      node.visible &&
+      node.transform.prominence >=
+        0.08
+        ? projectNode(node)
+        : null;
+
+    if (!screen) {
+      hideSemanticNode(
+        node,
+        element
+      );
+
+      return;
+    }
+
+    if (
+      node.type ===
+      NODE_TYPES.ROOM
+    ) {
+      syncRoomProxyNode(
+        node,
+        element,
+        screen
+      );
+
+      return;
+    }
+
+    syncCardinalSemanticNode(
+      node,
+      element,
+      screen
+    );
   }
 
   function syncSemanticObjects() {
@@ -3664,6 +3907,7 @@
             bestDistance
         ) {
           best = node;
+
           bestDistance =
             distance;
         }
@@ -3703,7 +3947,7 @@
 
     if (
       target.closest(
-        "[data-compass-room], [data-compass-room-proxy]"
+        "[data-compass-room-proxy]"
       )
     ) {
       return POINTER_TERRITORIES
@@ -4676,6 +4920,9 @@
       roomProxyCount:
         state.roomProxies.size,
 
+      roomProxyPresentation:
+        "NONVISUAL_ACCESSIBILITY_CONTROL",
+
       recessionProfile:
         state.recessionName,
 
@@ -4764,6 +5011,7 @@
       () => {
         emitReceipt({
           status: "held",
+
           rendererInitialized:
             false,
 
@@ -5107,6 +5355,8 @@
         mirrorlandRegistryPresent: false,
         roomProxyCount:
           state.roomProxies.size,
+        roomProxyPresentation:
+          "NONVISUAL_ACCESSIBILITY_CONTROL",
         recessionProfile: "NORMAL",
         glError: "NO_ERROR"
       });

@@ -2,16 +2,20 @@
 <html
   lang="en"
   data-route="/coherence-diagnostic/"
-  data-page="coherence-diagnostic-guided-three-stage-flow"
-  data-contract="COHERENCE_DIAGNOSTIC_GUIDED_THREE_STAGE_PROGRESSIVE_DISCLOSURE_TNT_v11"
-  data-previous-contract="COHERENCE_DIAGNOSTIC_PUBLIC_TECHNICAL_FACE_SEGREGATION_TNT_v10"
-  data-change-type="guided-flow-progressive-disclosure"
+  data-page="coherence-diagnostic-guided-practical-results-flow"
+  data-contract="COHERENCE_DIAGNOSTIC_GUIDED_PRACTICAL_RESULTS_TNT_v12"
+  data-previous-contract="COHERENCE_DIAGNOSTIC_GUIDED_THREE_STAGE_PROGRESSIVE_DISCLOSURE_TNT_v11"
+  data-change-type="presentation-guidance-practical-results"
   data-public-face-default="true"
   data-technical-face-available="true"
   data-guided-stage-count="3"
   data-stage-one="self-rating"
   data-stage-two="archetype-selection"
   data-stage-three="pressure-scenarios"
+  data-stage-contrast="active-upcoming-complete"
+  data-stage-two-guidance="true"
+  data-stage-two-auto-progression="true"
+  data-practical-public-results="true"
   data-archetype-dialog="true"
   data-technical-dropdowns="true"
   data-one-scenario-visible="true"
@@ -632,7 +636,7 @@
       align-content:start;
       gap:.5rem;
 
-      border:1px solid var(--line);
+      border:1px solid rgba(255,255,255,.09);
       border-radius:1.25rem;
 
       padding:1rem;
@@ -640,10 +644,16 @@
       background:
         linear-gradient(
           180deg,
-          rgba(255,255,255,.035),
-          rgba(255,255,255,.012)
+          rgba(255,255,255,.022),
+          rgba(255,255,255,.006)
         ),
-        rgba(0,0,0,.14);
+        rgba(0,0,0,.18);
+
+      transition:
+        border-color .18s ease,
+        background .18s ease,
+        opacity .18s ease,
+        box-shadow .18s ease;
     }
 
     .path-number{
@@ -653,9 +663,53 @@
       display:grid;
       place-items:center;
 
+      border:1px solid rgba(255,255,255,.13);
       border-radius:.7rem;
 
+      color:rgba(235,243,252,.62);
+      background:rgba(255,255,255,.035);
+
+      font-weight:950;
+    }
+
+    .path-card strong{
+      color:rgba(255,255,255,.66);
+
+      font-size:1rem;
+      line-height:1.18;
+    }
+
+    .path-card span{
+      color:rgba(226,237,249,.48);
+
+      font-size:.84rem;
+      line-height:1.42;
+    }
+
+    .path-card[data-state="active"]{
+      border-color:rgba(244,207,131,.58);
+
+      background:
+        radial-gradient(
+          circle at 0% 0%,
+          rgba(244,207,131,.12),
+          transparent 12rem
+        ),
+        linear-gradient(
+          180deg,
+          rgba(255,255,255,.045),
+          rgba(255,255,255,.012)
+        ),
+        rgba(0,0,0,.14);
+
+      box-shadow:
+        0 0 0 1px rgba(244,207,131,.06),
+        0 .9rem 2.2rem rgba(0,0,0,.18);
+    }
+
+    .path-card[data-state="active"] .path-number{
       color:#06101c;
+      border-color:rgba(244,207,131,.76);
 
       background:
         linear-gradient(
@@ -663,22 +717,18 @@
           #fff0b8,
           var(--gold)
         );
-
-      font-weight:950;
     }
 
-    .path-card strong{
+    .path-card[data-state="active"] strong{
       color:#ffffff;
-
-      font-size:1rem;
-      line-height:1.18;
     }
 
-    .path-card span{
+    .path-card[data-state="active"] span{
       color:var(--muted);
+    }
 
-      font-size:.84rem;
-      line-height:1.42;
+    .path-card[data-state="upcoming"]{
+      opacity:.76;
     }
 
     .compact-disclosures{
@@ -817,12 +867,12 @@
       gap:.65rem;
       align-items:center;
 
-      border:1px solid var(--line);
+      border:1px solid rgba(255,255,255,.085);
       border-radius:1rem;
 
       padding:.75rem;
 
-      background:rgba(255,255,255,.024);
+      background:rgba(255,255,255,.014);
     }
 
     .wizard-step-number{
@@ -832,11 +882,11 @@
       display:grid;
       place-items:center;
 
-      border:1px solid var(--line-strong);
+      border:1px solid rgba(255,255,255,.12);
       border-radius:.7rem;
 
-      color:var(--muted);
-      background:rgba(255,255,255,.035);
+      color:rgba(235,243,252,.48);
+      background:rgba(255,255,255,.025);
 
       font-weight:950;
     }
@@ -847,7 +897,7 @@
     }
 
     .wizard-step-copy b{
-      color:rgba(255,244,216,.88);
+      color:rgba(255,244,216,.58);
 
       font-size:.7rem;
       letter-spacing:.1em;
@@ -855,27 +905,31 @@
     }
 
     .wizard-step-copy span{
-      color:var(--faint);
+      color:rgba(226,237,249,.38);
 
       font-size:.75rem;
       line-height:1.25;
     }
 
     .wizard-step[data-state="active"]{
-      border-color:rgba(244,207,131,.56);
+      border-color:rgba(244,207,131,.62);
 
       background:
         radial-gradient(
           circle at 0% 0%,
-          rgba(244,207,131,.10),
+          rgba(244,207,131,.12),
           transparent 10rem
         ),
         rgba(255,255,255,.03);
+
+      box-shadow:
+        0 0 0 1px rgba(244,207,131,.05),
+        0 .75rem 1.8rem rgba(0,0,0,.14);
     }
 
     .wizard-step[data-state="active"] .wizard-step-number{
       color:#06101c;
-      border-color:rgba(244,207,131,.70);
+      border-color:rgba(244,207,131,.76);
 
       background:
         linear-gradient(
@@ -885,8 +939,24 @@
         );
     }
 
+    .wizard-step[data-state="active"] .wizard-step-copy b{
+      color:rgba(255,244,216,.98);
+    }
+
+    .wizard-step[data-state="active"] .wizard-step-copy span{
+      color:var(--muted);
+    }
+
     .wizard-step[data-state="complete"]{
       border-color:rgba(167,243,198,.36);
+
+      background:
+        radial-gradient(
+          circle at 0% 0%,
+          rgba(167,243,198,.08),
+          transparent 10rem
+        ),
+        rgba(255,255,255,.02);
     }
 
     .wizard-step[data-state="complete"] .wizard-step-number{
@@ -899,6 +969,14 @@
           #dcfff0,
           var(--mint)
         );
+    }
+
+    .wizard-step[data-state="complete"] .wizard-step-copy b{
+      color:rgba(214,255,232,.88);
+    }
+
+    .wizard-step[data-state="complete"] .wizard-step-copy span{
+      color:rgba(226,237,249,.62);
     }
 
     .wizard-stage{
@@ -1155,10 +1233,114 @@
       text-transform:uppercase;
     }
 
+    .stage-guidance{
+      display:grid;
+      grid-template-columns:auto minmax(0,1fr);
+      gap:.75rem;
+      align-items:center;
+
+      border:1px solid rgba(244,207,131,.28);
+      border-radius:1.1rem;
+
+      padding:.85rem .95rem;
+
+      color:rgba(255,244,216,.96);
+
+      background:
+        radial-gradient(
+          circle at 0% 0%,
+          rgba(244,207,131,.10),
+          transparent 12rem
+        ),
+        rgba(244,207,131,.035);
+    }
+
+    .stage-guidance::before{
+      content:"1";
+
+      width:2rem;
+      height:2rem;
+
+      display:grid;
+      place-items:center;
+
+      border:1px solid rgba(244,207,131,.55);
+      border-radius:.7rem;
+
+      color:#06101c;
+
+      background:
+        linear-gradient(
+          135deg,
+          #fff0b8,
+          var(--gold)
+        );
+
+      font-weight:950;
+    }
+
+    .stage-guidance[data-guidance-state="support"]{
+      border-color:rgba(141,216,255,.34);
+
+      background:
+        radial-gradient(
+          circle at 0% 0%,
+          rgba(141,216,255,.10),
+          transparent 12rem
+        ),
+        rgba(141,216,255,.035);
+    }
+
+    .stage-guidance[data-guidance-state="support"]::before{
+      content:"2";
+
+      border-color:rgba(141,216,255,.62);
+
+      background:
+        linear-gradient(
+          135deg,
+          #d9f5ff,
+          var(--blue)
+        );
+    }
+
+    .stage-guidance[data-guidance-state="ready"]{
+      border-color:rgba(167,243,198,.38);
+
+      background:
+        radial-gradient(
+          circle at 0% 0%,
+          rgba(167,243,198,.10),
+          transparent 12rem
+        ),
+        rgba(167,243,198,.035);
+    }
+
+    .stage-guidance[data-guidance-state="ready"]::before{
+      content:"✓";
+
+      border-color:rgba(167,243,198,.62);
+
+      background:
+        linear-gradient(
+          135deg,
+          #dcfff0,
+          var(--mint)
+        );
+    }
+
+    .stage-guidance strong{
+      color:inherit;
+
+      font-size:.9rem;
+      line-height:1.4;
+    }
+
     .pattern-pickers{
       display:grid;
       grid-template-columns:repeat(2,minmax(0,1fr));
       gap:.7rem;
+      align-items:start;
     }
 
     .pattern-picker{
@@ -1168,6 +1350,11 @@
       border-radius:1.2rem;
 
       background:rgba(0,0,0,.13);
+
+      transition:
+        border-color .18s ease,
+        background .18s ease,
+        box-shadow .18s ease;
     }
 
     .pattern-picker.primary-picker{
@@ -1176,6 +1363,26 @@
 
     .pattern-picker.support-picker{
       border-color:rgba(141,216,255,.27);
+    }
+
+    .pattern-picker[data-picker-state="active"]{
+      box-shadow:
+        0 0 0 1px rgba(244,207,131,.07),
+        0 .9rem 2.2rem rgba(0,0,0,.18);
+    }
+
+    .pattern-picker.primary-picker[data-picker-state="active"]{
+      border-color:rgba(244,207,131,.64);
+      background:rgba(244,207,131,.035);
+    }
+
+    .pattern-picker.support-picker[data-picker-state="active"]{
+      border-color:rgba(141,216,255,.62);
+      background:rgba(141,216,255,.035);
+    }
+
+    .pattern-picker[data-picker-state="complete"]{
+      border-color:rgba(167,243,198,.38);
     }
 
     .pattern-picker summary{
@@ -1791,6 +1998,37 @@
       line-height:1.4;
     }
 
+    .practical-result{
+      display:grid;
+      gap:.75rem;
+
+      border:1px solid rgba(244,207,131,.30);
+      border-radius:1.2rem;
+
+      padding:1rem;
+
+      background:
+        radial-gradient(
+          circle at 6% 0%,
+          rgba(244,207,131,.11),
+          transparent 18rem
+        ),
+        rgba(244,207,131,.025);
+    }
+
+    .practical-result h3{
+      font-size:clamp(1.2rem,3vw,1.8rem);
+    }
+
+    .practical-result p{
+      max-width:900px;
+
+      color:rgba(244,248,255,.90);
+
+      font-size:.96rem;
+      line-height:1.58;
+    }
+
     .result-summary-grid{
       display:grid;
       grid-template-columns:repeat(3,minmax(0,1fr));
@@ -1837,6 +2075,30 @@
     .result-summary ul{
       margin:0;
       padding-left:1rem;
+    }
+
+    .result-summary.processing{
+      border-color:rgba(141,216,255,.24);
+    }
+
+    .result-summary.processing b{
+      color:var(--blue);
+    }
+
+    .result-summary.personality{
+      border-color:rgba(173,140,255,.24);
+    }
+
+    .result-summary.personality b{
+      color:var(--violet);
+    }
+
+    .result-summary.pressure{
+      border-color:rgba(255,179,109,.24);
+    }
+
+    .result-summary.pressure b{
+      color:#ffbe80;
     }
 
     .technical-invite{
@@ -2335,7 +2597,10 @@
             class="three-path"
             aria-label="Three assessment stages"
           >
-            <article class="path-card">
+            <article
+              class="path-card"
+              data-state="active"
+            >
               <span class="path-number">1</span>
 
               <strong>
@@ -2348,7 +2613,10 @@
               </span>
             </article>
 
-            <article class="path-card">
+            <article
+              class="path-card"
+              data-state="upcoming"
+            >
               <span class="path-number">2</span>
 
               <strong>
@@ -2361,7 +2629,10 @@
               </span>
             </article>
 
-            <article class="path-card">
+            <article
+              class="path-card"
+              data-state="upcoming"
+            >
               <span class="path-number">3</span>
 
               <strong>
@@ -2397,9 +2668,10 @@
 
               <div class="detail-content">
                 <p>
-                  Your result includes a coherence score or pattern-only
-                  read, a primary pattern, a support pattern, strengths,
-                  risks, calibration, and one recommended next step.
+                  Your result includes a practical Coherence Index or
+                  pattern-only read, a primary pattern, a support
+                  pattern, strengths, risks, calibration, processing
+                  signals, and one recommended next step.
                 </p>
               </div>
             </details>
@@ -2759,12 +3031,12 @@
                       <b>Standard Result</b>
 
                       <strong>
-                        Show my coherence score
+                        Show my Coherence Index
                       </strong>
 
                       <span>
-                        Includes score, band, calibration, patterns,
-                        strengths, risks, and next step.
+                        Includes the practical index, decision patterns,
+                        strengths, risks, calibration, and next step.
                       </span>
                     </label>
 
@@ -2778,12 +3050,12 @@
                       <b>Pattern Only</b>
 
                       <strong>
-                        Hide the numeric score
+                        Hide the numeric index
                       </strong>
 
                       <span>
                         Shows patterns, strengths, risks, and next step
-                        without a public numeric score.
+                        without a public numeric index.
                       </span>
                     </label>
                   </div>
@@ -2851,9 +3123,24 @@
                 aria-label="Four archetypes"
               ></div>
 
+              <div
+                id="pattern-guidance"
+                class="stage-guidance"
+                data-guidance-state="primary"
+                role="status"
+                aria-live="polite"
+              >
+                <strong>
+                  Choose the pattern you rely on first.
+                </strong>
+              </div>
+
               <div class="pattern-pickers">
                 <details
+                  id="primary-pattern-picker"
                   class="pattern-picker primary-picker"
+                  data-pattern-picker="primary"
+                  data-picker-state="active"
                   open
                 >
                   <summary>
@@ -2867,7 +3154,10 @@
                 </details>
 
                 <details
+                  id="support-pattern-picker"
                   class="pattern-picker support-picker"
+                  data-pattern-picker="support"
+                  data-picker-state="upcoming"
                 >
                   <summary>
                     Choose your support pattern
@@ -2887,7 +3177,10 @@
               ></div>
 
               <div class="stage-actions">
-                <span class="stage-actions-copy">
+                <span
+                  id="pattern-action-copy"
+                  class="stage-actions-copy"
+                >
                   Your primary and support patterns must be different.
                 </span>
 
@@ -3003,7 +3296,7 @@
       "use strict";
 
       const CONTRACT =
-        "COHERENCE_DIAGNOSTIC_GUIDED_THREE_STAGE_PROGRESSIVE_DISCLOSURE_TNT_v11";
+        "COHERENCE_DIAGNOSTIC_GUIDED_PRACTICAL_RESULTS_TNT_v12";
 
       const MAX_COHERENCE_VALUE =
         4;
@@ -4167,6 +4460,26 @@
           "archetype-overview"
         );
 
+      const primaryPatternPicker =
+        document.getElementById(
+          "primary-pattern-picker"
+        );
+
+      const supportPatternPicker =
+        document.getElementById(
+          "support-pattern-picker"
+        );
+
+      const patternGuidance =
+        document.getElementById(
+          "pattern-guidance"
+        );
+
+      const patternActionCopy =
+        document.getElementById(
+          "pattern-action-copy"
+        );
+
       const archetypeDialog =
         document.getElementById(
           "archetype-dialog"
@@ -4469,6 +4782,104 @@
         return checked
           ? checked.value
           : "";
+      }
+
+      function updatePatternGuidance(
+        options = {}
+      ){
+        const {
+          advance = false
+        } = options;
+
+        const primary =
+          getRadioValue(
+            "claimedPrimaryArchetype"
+          );
+
+        const secondary =
+          getRadioValue(
+            "claimedSecondaryArchetype"
+          );
+
+        if (
+          primary &&
+          secondary &&
+          primary !== secondary
+        ) {
+          patternGuidance.dataset.guidanceState =
+            "ready";
+
+          patternGuidance.querySelector(
+            "strong"
+          ).textContent =
+            "Both patterns are selected. Continue to the pressure scenarios.";
+
+          patternActionCopy.textContent =
+            `${primary} primary · ${secondary} support · Ready to continue.`;
+
+          primaryPatternPicker.dataset.pickerState =
+            "complete";
+
+          supportPatternPicker.dataset.pickerState =
+            "complete";
+
+          return;
+        }
+
+        if (primary) {
+          patternGuidance.dataset.guidanceState =
+            "support";
+
+          patternGuidance.querySelector(
+            "strong"
+          ).textContent =
+            "Primary selected. Now choose a different pattern that supports how you operate.";
+
+          patternActionCopy.textContent =
+            `${primary} is selected as your primary pattern. Choose a different support pattern.`;
+
+          primaryPatternPicker.dataset.pickerState =
+            "complete";
+
+          supportPatternPicker.dataset.pickerState =
+            "active";
+
+          if (advance) {
+            primaryPatternPicker.open =
+              false;
+
+            supportPatternPicker.open =
+              true;
+
+            window.requestAnimationFrame(
+              () => {
+                supportPatternPicker.scrollIntoView({
+                  behavior:"smooth",
+                  block:"center"
+                });
+              }
+            );
+          }
+
+          return;
+        }
+
+        patternGuidance.dataset.guidanceState =
+          "primary";
+
+        patternGuidance.querySelector(
+          "strong"
+        ).textContent =
+          "Choose the pattern you rely on first.";
+
+        patternActionCopy.textContent =
+          "Your primary and support patterns must be different.";
+
+        primaryPatternPicker.dataset.pickerState =
+          "active";
+
+        supportPatternPicker.dataset.pickerState =
+          "upcoming";
       }
 
       function openArchetypeDialog(name){
@@ -5145,8 +5556,10 @@
               <span class="flow-note">
                 ${
                   valid
-                    ? "Both choices are ready."
-                    : "Complete the visible choices to continue."
+                    ? "Both choices are ready. Continue to the next scenario."
+                    : primarySelected
+                      ? "Choose a different support move to continue."
+                      : "Choose your first move to continue."
                 }
               </span>
 
@@ -5396,34 +5809,34 @@
         if (score < 3) {
           return {
             label:"Low Coherence",
-            text:"The pattern shows several breaks in sequence, accountability, evidence handling, or decision alignment."
+            text:"Your decisions lose structure quickly when pressure rises. Sequence, evidence, accountability, or follow-through may separate before a stable direction is established."
           };
         }
 
         if (score < 5) {
           return {
             label:"Developing Coherence",
-            text:"The pattern shows usable instincts with noticeable drift under pressure."
+            text:"You have usable decision instincts, but pressure can pull your choices away from the structure, evidence, or accountability needed to keep them aligned."
           };
         }
 
         if (score < 7) {
           return {
             label:"Functional Coherence",
-            text:"The pattern functions under normal pressure, though some choices may drift as ambiguity or accountability rises."
+            text:"Your decisions usually hold together in ordinary conditions. Ambiguity, conflict, or rising accountability may still create drift."
           };
         }
 
         if (score < 8.5) {
           return {
             label:"High Coherence",
-            text:"The pattern shows strong alignment across responsibility, signal, sequence, and correction."
+            text:"Your decisions generally remain organized under pressure. You tend to preserve direction, evidence, responsibility, and the ability to correct course."
           };
         }
 
         return {
           label:"Exceptional Coherence",
-          text:"The pattern shows unusually strong alignment under scenario pressure."
+          text:"Your decisions remained unusually well aligned across pressure, uncertainty, evidence, responsibility, and correction."
         };
       }
 
@@ -5497,30 +5910,30 @@
           gap >= -1 &&
           gap <= 1
         ) {
-          return "Your self-rating is close to the pattern revealed by your scenario choices.";
+          return "Your self-rating was close to how you actually responded in the pressure scenarios.";
         }
 
         if (
           gap > 1 &&
           gap <= 2.5
         ) {
-          return "Your self-rating is moderately higher than the pattern revealed under pressure.";
+          return "You see yourself as somewhat more coherent than your pressure choices showed in this assessment.";
         }
 
         if (
           gap > 2.5
         ) {
-          return "Your self-rating is substantially higher than the pattern revealed under pressure.";
+          return "You see yourself as substantially more coherent than your pressure choices showed in this assessment.";
         }
 
         if (
           gap < -1 &&
           gap >= -2.5
         ) {
-          return "Your self-rating is moderately lower than the pattern supported by your choices.";
+          return "Your pressure choices were somewhat stronger than the coherence level you gave yourself.";
         }
 
-        return "Your self-rating is substantially lower than the pattern supported by your choices.";
+        return "Your pressure choices were substantially stronger than the coherence level you gave yourself.";
       }
 
       function calibrationDirection(gap){
@@ -5550,6 +5963,17 @@
         }
 
         return "Moderate underclaim";
+      }
+
+      function practicalCalibrationTitle(direction){
+        return {
+          "Calibrated":"Your self-view was close",
+          "Moderate overclaim":"Your self-view ran somewhat high",
+          "High overclaim":"Your self-view ran much higher",
+          "Moderate underclaim":"You rated yourself somewhat low",
+          "High underclaim":"You rated yourself much lower"
+        }[direction] ||
+        "Your self-view was compared";
       }
 
       function claimMatchText(
@@ -5598,6 +6022,45 @@
         }
 
         return "Mismatch / Recalibration Suggested";
+      }
+
+      function practicalClaimMatch(
+        claimMatch
+      ){
+        return {
+          "Exact Blend Match":{
+            title:"You read your pattern accurately",
+            text:"The primary and support patterns you selected matched the patterns revealed by your scenario choices."
+          },
+
+          "Blend Match / Order Reversal":{
+            title:"You identified the right pair",
+            text:"You recognized both patterns correctly, but the scenarios showed that you lead with them in the opposite order."
+          },
+
+          "Primary Match":{
+            title:"You recognized how you lead",
+            text:"Your selected primary pattern matched the pattern revealed most strongly by your scenario choices."
+          },
+
+          "Secondary Match":{
+            title:"You recognized one important support",
+            text:"Your selected support pattern matched the support pattern revealed by your scenario choices."
+          },
+
+          "Partial Match":{
+            title:"Part of your self-read matched",
+            text:"One of the patterns you selected appeared in the revealed blend, but the full combination differed."
+          },
+
+          "Mismatch / Recalibration Suggested":{
+            title:"Your scenario pattern differed",
+            text:"The patterns revealed by your pressure choices were different from the patterns you selected at the beginning."
+          }
+        }[claimMatch] || {
+          title:"Your selected and revealed patterns were compared",
+          text:"The assessment compared how you described yourself with how you responded under pressure."
+        };
       }
 
       function claimAlignmentScore(claimMatch){
@@ -5667,6 +6130,26 @@
         }
 
         return "Exceptional Processing Signal";
+      }
+
+      function practicalProcessingText(index){
+        if (index < 40) {
+          return "Your responses suggest that pressure can interrupt how consistently you organize evidence, sequence, contradiction, and correction.";
+        }
+
+        if (index < 60) {
+          return "Your responses suggest a functional ability to organize information and decisions, with room to become more consistent when pressure rises.";
+        }
+
+        if (index < 75) {
+          return "Your responses suggest strong pattern recognition and decision processing within this assessment.";
+        }
+
+        if (index < 90) {
+          return "Your responses suggest advanced pattern recognition, evidence handling, correction, and decision organization within this assessment.";
+        }
+
+        return "Your responses suggest unusually strong pattern recognition, evidence handling, contradiction detection, correction, and decision organization within this assessment.";
       }
 
       function projectedIqStyleRange(index){
@@ -5836,6 +6319,89 @@
           : options.join(" / ");
       }
 
+      function practicalPreferenceText(preference){
+        const orientation =
+          preference.orientation.label ===
+          "Balanced"
+            ? "balance internal reflection with external engagement"
+            : preference.orientation.label ===
+              "Internal"
+              ? "process inwardly before acting outwardly"
+              : "process through outward engagement and response";
+
+        const information =
+          preference.information.label ===
+          "Balanced"
+            ? "balance patterns with concrete details"
+            : preference.information.label ===
+              "Pattern"
+              ? "look for patterns, relationships, and larger structure"
+              : "focus on concrete details and immediate reality";
+
+        const judgment =
+          preference.judgment.label ===
+          "Balanced"
+            ? "balance logic with relational impact"
+            : preference.judgment.label ===
+              "Logic"
+              ? "lean on logic, evidence, and consistency"
+              : "lean on relational impact, stability, and human context";
+
+        const closure =
+          preference.closure.label ===
+          "Balanced"
+            ? "balance structure with adaptation"
+            : preference.closure.label ===
+              "Structured"
+              ? "prefer decisions to become ordered and settled"
+              : "prefer flexibility and adjustment as conditions change";
+
+        return `You tend to ${orientation}, ${information}, ${judgment}, and ${closure}.`;
+      }
+
+      function practicalPressureSummary(fragmentation){
+        if (
+          fragmentation.rate === 0
+        ) {
+          return {
+            title:"Your choices held together",
+            text:"No major pressure-break pattern appeared across the submitted choices."
+          };
+        }
+
+        if (
+          fragmentation.rate < 10
+        ) {
+          return {
+            title:"Pressure created limited drift",
+            text:"A small number of choices moved away from your stronger decision pattern, but the overall structure remained intact."
+          };
+        }
+
+        if (
+          fragmentation.rate < 20
+        ) {
+          return {
+            title:"Pressure created noticeable drift",
+            text:"Several choices moved away from evidence, accountability, sequence, stability, or follow-through."
+          };
+        }
+
+        if (
+          fragmentation.rate < 35
+        ) {
+          return {
+            title:"Pressure changed your decision pattern",
+            text:"A meaningful portion of your choices shifted toward avoidance, unsupported certainty, comfort, blame, motion without proof, or disengagement."
+          };
+        }
+
+        return {
+          title:"Pressure repeatedly broke the pattern",
+          text:"Many choices moved away from evidence, accountability, sequence, stability, correction, or follow-through."
+        };
+      }
+
       function nextStepFor(
         primary,
         secondary,
@@ -5843,19 +6409,19 @@
         fragmentationRate
       ){
         const step = {
-          Strategist:"Practice adding listening, evidence checks, and adaptive room-read before locking direction.",
-          Builder:"Practice building smaller, reversible proofs before scaling momentum.",
-          Mitigator:"Practice preserving stability without delaying accountability, correction, or decision.",
-          Auditor:"Practice applying truth pressure with a constructive closure path."
+          Strategist:"Before locking direction, add one listening check, one evidence check, and one opportunity to adapt.",
+          Builder:"Before scaling action, build the smallest reversible proof and verify what it actually shows.",
+          Mitigator:"Preserve stability without postponing the decision, correction, or accountability the situation requires.",
+          Auditor:"Apply truth pressure with a clear path toward correction, repair, or closure."
         }[primary] ||
-        "Retake later and compare the pattern.";
+        "Retake the assessment later and compare whether the same pattern returns.";
 
         const pressure =
           fragmentationRate >= 10
-            ? " Review the pressure-break markers before treating the score as the whole result."
+            ? " Review the pressure-risk section first, because that is where your strongest pattern became less reliable."
             : "";
 
-        return `${step} Your support pattern is ${secondary}. Current band: ${bandLabel}.${pressure}`;
+        return `${step} Use your ${secondary} support pattern deliberately rather than waiting for it to appear automatically.${pressure}`;
       }
 
       function calculateResult(){
@@ -6802,24 +7368,37 @@
       }
 
       function resultText(data){
+        const practicalMatch =
+          practicalClaimMatch(
+            data.claimMatch
+          );
+
+        const practicalPressure =
+          practicalPressureSummary(
+            data.engineering.fragmentation
+          );
+
         return [
           "COHERENCE DIAGNOSTIC RESULT",
           `Generated: ${data.generatedAt}`,
           "",
-          `Coherence score: ${
+          `Coherence Index: ${
             data.mode === "graded"
               ? `${data.scaledScore}/10`
               : "Hidden by selected mode"
           }`,
-          `Coherence band: ${
+          `Practical meaning: ${
             data.mode === "graded"
-              ? data.band.label
-              : "Hidden by selected mode"
+              ? data.band.text
+              : "Pattern-only mode selected"
           }`,
           `Primary pattern: ${data.revealedPrimary}`,
           `Support pattern: ${data.revealedSecondary}`,
-          `Calibration: ${data.engineering.calibrationDirection}`,
-          `Claim alignment: ${data.claimMatch}`,
+          `Self-view: ${practicalCalibrationTitle(data.engineering.calibrationDirection)}`,
+          `Pattern fit: ${practicalMatch.title}`,
+          `Under pressure: ${practicalPressure.title}`,
+          `Processing range: ${data.projectedIqStyleRange} · experimental estimate only`,
+          `Decision-style hypothesis: ${data.possibleMbtiStyleType}`,
           `Top strengths: ${data.strengths.join(", ")}`,
           `Top risks: ${data.risks.join(", ")}`,
           `Recommended next step: ${data.nextStep}`,
@@ -6841,21 +7420,25 @@
           data.mode ===
           "graded";
 
+        const practicalMatch =
+          practicalClaimMatch(
+            data.claimMatch
+          );
+
         const pressureSummary =
-          data.engineering.fragmentation.rate >=
-          10
-            ? {
-              title:
-                data.engineering.fragmentation.band,
-              note:
-                "Some responses showed a break in decision coherence under pressure."
-            }
-            : {
-              title:
-                "No major pressure break detected",
-              note:
-                "No significant pressure-break pattern appeared across the submitted choices."
-            };
+          practicalPressureSummary(
+            data.engineering.fragmentation
+          );
+
+        const processingText =
+          practicalProcessingText(
+            data.engineering.cognitiveProcessingIndex
+          );
+
+        const preferenceText =
+          practicalPreferenceText(
+            data.engineering.preference
+          );
 
         result.innerHTML = `
           <section class="result-card">
@@ -6871,8 +7454,8 @@
               <p>
                 ${
                   showScore
-                    ? escapeHtml(data.band.text)
-                    : "Pattern-only mode was selected, so the public result does not display a numeric coherence score."
+                    ? "The Coherence Index shows how well your decisions held together when pressure, uncertainty, evidence, and accountability increased."
+                    : "Pattern-only mode was selected, so the public result does not display a numeric Coherence Index."
                 }
               </p>
             </div>
@@ -6883,7 +7466,7 @@
                   <span class="result-label">
                     ${
                       showScore
-                        ? "Coherence Score"
+                        ? "Coherence Index"
                         : "Result Format"
                     }
                   </span>
@@ -6900,7 +7483,7 @@
                     ${
                       showScore
                         ? escapeHtml(data.band.label)
-                        : "Numeric score hidden."
+                        : "Numeric index hidden."
                     }
                   </span>
                 </article>
@@ -6934,14 +7517,40 @@
                 </article>
               </div>
 
+              <section class="practical-result">
+                <p class="eyebrow">
+                  What This Means
+                </p>
+
+                <h3>
+                  ${
+                    showScore
+                      ? escapeHtml(data.band.label)
+                      : "Your pattern under pressure"
+                  }
+                </h3>
+
+                <p>
+                  ${
+                    showScore
+                      ? escapeHtml(data.band.text)
+                      : `You led primarily through the ${escapeHtml(data.revealedPrimary)} pattern and relied on ${escapeHtml(data.revealedSecondary)} for support.`
+                  }
+                </p>
+              </section>
+
               <div class="result-summary-grid">
                 <article class="result-summary">
                   <b>
-                    Calibration
+                    Your Self-View
                   </b>
 
                   <strong>
-                    ${escapeHtml(data.engineering.calibrationDirection)}
+                    ${escapeHtml(
+                      practicalCalibrationTitle(
+                        data.engineering.calibrationDirection
+                      )
+                    )}
                   </strong>
 
                   <span>
@@ -6951,23 +7560,21 @@
 
                 <article class="result-summary">
                   <b>
-                    Claimed vs. Revealed
+                    Pattern Fit
                   </b>
 
                   <strong>
-                    ${escapeHtml(data.claimMatch)}
+                    ${escapeHtml(practicalMatch.title)}
                   </strong>
 
                   <span>
-                    Claimed ${escapeHtml(data.claimedPrimary)}
-                    +
-                    ${escapeHtml(data.claimedSecondary)}
+                    ${escapeHtml(practicalMatch.text)}
                   </span>
                 </article>
 
-                <article class="result-summary">
+                <article class="result-summary pressure">
                   <b>
-                    Pressure Risk
+                    Under Pressure
                   </b>
 
                   <strong>
@@ -6975,28 +7582,40 @@
                   </strong>
 
                   <span>
-                    ${escapeHtml(pressureSummary.note)}
+                    ${escapeHtml(pressureSummary.text)}
                   </span>
                 </article>
 
-                <article class="result-summary">
+                <article class="result-summary processing">
                   <b>
-                    Strongest Advantages
+                    Processing Range
                   </b>
 
-                  <ul>
-                    ${listItems(data.strengths)}
-                  </ul>
+                  <strong>
+                    ${escapeHtml(data.projectedIqStyleRange)}
+                  </strong>
+
+                  <span>
+                    ${escapeHtml(processingText)}
+                    This is an experimental range from this assessment,
+                    not an IQ score or IQ test.
+                  </span>
                 </article>
 
-                <article class="result-summary">
+                <article class="result-summary personality">
                   <b>
-                    Main Risks
+                    Decision Style
                   </b>
 
-                  <ul>
-                    ${listItems(data.risks)}
-                  </ul>
+                  <strong>
+                    ${escapeHtml(data.possibleMbtiStyleType)}
+                  </strong>
+
+                  <span>
+                    ${escapeHtml(preferenceText)}
+                    This is a preference hypothesis, not an official
+                    MBTI result.
+                  </span>
                 </article>
 
                 <article class="result-summary">
@@ -7012,6 +7631,53 @@
                     ${escapeHtml(data.nextStep)}
                   </span>
                 </article>
+
+                <article class="result-summary">
+                  <b>
+                    What Holds
+                  </b>
+
+                  <strong>
+                    Your strongest advantages
+                  </strong>
+
+                  <ul>
+                    ${listItems(data.strengths)}
+                  </ul>
+                </article>
+
+                <article class="result-summary">
+                  <b>
+                    What Bends
+                  </b>
+
+                  <strong>
+                    Your main pressure risks
+                  </strong>
+
+                  <ul>
+                    ${listItems(data.risks)}
+                  </ul>
+                </article>
+
+                <article class="result-summary">
+                  <b>
+                    Pattern Combination
+                  </b>
+
+                  <strong>
+                    ${escapeHtml(data.revealedPrimary)}
+                    +
+                    ${escapeHtml(data.revealedSecondary)}
+                  </strong>
+
+                  <span>
+                    You tend to lead through
+                    ${escapeHtml(data.revealedPrimary)}
+                    and reinforce that approach with
+                    ${escapeHtml(data.revealedSecondary)}.
+                  </span>
+                </article>
               </div>
 
               <section class="technical-invite">
@@ -7020,9 +7686,9 @@
                 </h3>
 
                 <p>
-                  Open the Engineering Lens for scoring, calibration,
-                  subscales, pressure-break markers, processing
-                  estimates, and preference hypotheses.
+                  Open the Engineering Lens for raw scoring,
+                  calibration error, subscales, pressure-break markers,
+                  processing calculations, and preference-axis details.
                 </p>
 
                 <div class="button-cluster">
@@ -7214,6 +7880,8 @@
             validationMessage
           );
 
+          updatePatternGuidance();
+
           return;
         }
 
@@ -7299,6 +7967,14 @@
         clearValidation(
           scenarioValidation
         );
+
+        primaryPatternPicker.open =
+          true;
+
+        supportPatternPicker.open =
+          false;
+
+        updatePatternGuidance();
 
         introShell.hidden =
           false;
@@ -7448,6 +8124,8 @@
             "archetypes"
           );
 
+          updatePatternGuidance();
+
           archetypeStage.scrollIntoView({
             behavior:"smooth",
             block:"start"
@@ -7497,6 +8175,10 @@
             target.name ===
               "claimedSecondaryArchetype"
           ) {
+            const changedPrimary =
+              target.name ===
+              "claimedPrimaryArchetype";
+
             const primary =
               getRadioValue(
                 "claimedPrimaryArchetype"
@@ -7524,6 +8206,16 @@
                 archetypeValidation
               );
             }
+
+            updatePatternGuidance({
+              advance:
+                changedPrimary &&
+                Boolean(
+                  getRadioValue(
+                    "claimedPrimaryArchetype"
+                  )
+                )
+            });
 
             if (
               generatedQuestions.length
@@ -7595,6 +8287,14 @@
                 scenarioValidation
               );
 
+              primaryPatternPicker.open =
+                true;
+
+              supportPatternPicker.open =
+                false;
+
+              updatePatternGuidance();
+
               setWizardStage(
                 "rating"
               );
@@ -7642,6 +8342,7 @@
       );
 
       renderArchetypes();
+      updatePatternGuidance();
       activateFace("public");
       setWizardStage("rating");
 
@@ -7668,7 +8369,7 @@
           CONTRACT,
 
         previousContract:
-          "COHERENCE_DIAGNOSTIC_PUBLIC_TECHNICAL_FACE_SEGREGATION_TNT_v10",
+          "COHERENCE_DIAGNOSTIC_GUIDED_THREE_STAGE_PROGRESSIVE_DISCLOSURE_TNT_v11",
 
         route:
           "/coherence-diagnostic/",
@@ -7687,6 +8388,18 @@
 
         stageThree:
           "pressure-scenarios",
+
+        stageContrast:
+          "active-upcoming-complete",
+
+        stageTwoGuidance:
+          true,
+
+        stageTwoAutoProgression:
+          true,
+
+        practicalPublicResults:
+          true,
 
         progressiveDisclosure:
           true,

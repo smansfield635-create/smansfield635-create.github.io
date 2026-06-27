@@ -1,28 +1,52 @@
 /* TARGET FILE: /showroom/globe/hearth/jeeves/jeeves.threshold.js */
 /* TNT FULL-FILE REPLACEMENT */
-/* DIAMOND_GATE_BRIDGE_JEEVES_ESTATE_THRESHOLD_RENDERER_TNT_v1 */
+/* DIAMOND_GATE_BRIDGE_JEEVES_TWO_STAGE_ESTATE_THRESHOLD_RENDERER_TNT_v2 */
 /*
   Purpose:
   - Render the Mirrorland stained-glass Window at the estate entrance.
   - Consume /assets/shared/mirrorland-window.geometry.js.
-  - Coordinate the four-phase Jeeves estate-arrival introduction.
-  - Present the visitor's transition from “Talk to the House” to Jeeves.
-  - Freeze the page during guided arrival and restore normal access afterward.
-  - Preserve skip, replay, keyboard, reduced-motion, and failure fallbacks.
-  - Render a smaller settled stained-glass seal after the introduction.
-  - Dispatch threshold lifecycle events consumed by the Jeeves runtime.
+  - Reduce the estate tutorial from four prompts to two deliberate stages.
+  - Begin with a compact threshold Window.
+  - Grow the Window to full presentation size after the first continuation.
+  - Open the page after the second continuation.
+  - Eliminate canvas jitter, repeated resizing, perpetual shimmer,
+    positional drift, recurring sparkles, and unnecessary animation loops.
+  - Freeze page access during the guided arrival and restore it afterward.
+  - Preserve skip, replay, keyboard, reduced-motion, session-memory,
+    and graceful-failure behavior.
+  - Render a smaller static settled stained-glass seal after entry.
+  - Dispatch lifecycle events consumed by the Jeeves conversation runtime.
+
+  Two-stage path:
+  1. arrival
+     - compact Window
+     - partial reveal
+     - first existing arrival panel
+     - Continue
+  2. welcome
+     - full-size Window
+     - complete reveal
+     - existing host panel
+     - Enter the estate
+
+  Compatibility:
+  - The current HTML may still contain four threshold panels.
+  - This runtime uses only the existing arrival and host panels.
+  - Existing conversation and access panels remain suppressed.
+  - A later HTML renewal may rename the host panel to welcome without
+    changing the public threshold lifecycle.
 
   Owns:
   - Jeeves threshold DOM coordination
   - threshold canvas creation
-  - threshold stained-glass rendering
-  - settled entrance-seal rendering
-  - four-phase onboarding state
-  - introduction progress
-  - threshold reveal animation
+  - static stained-glass drawing
+  - compact-to-full Window growth state
+  - two-stage onboarding state
+  - reveal-transition animation
   - page scroll locking during onboarding
   - skip and replay controls
   - session-level completion memory
+  - settled entrance-seal drawing
   - threshold lifecycle events
   - threshold renderer receipt
 
@@ -44,15 +68,21 @@
   const GLOBAL_NAME =
     "JEEVES_THRESHOLD";
 
+  const RECEIPT_GLOBAL_NAME =
+    "JEEVES_THRESHOLD_RECEIPT";
+
   const CONTRACT = Object.freeze({
     id:
+      "DIAMOND_GATE_BRIDGE_JEEVES_TWO_STAGE_ESTATE_THRESHOLD_RENDERER_TNT_v2",
+
+    previousContract:
       "DIAMOND_GATE_BRIDGE_JEEVES_ESTATE_THRESHOLD_RENDERER_TNT_v1",
 
     file:
       "/showroom/globe/hearth/jeeves/jeeves.threshold.js",
 
     version:
-      "1.0.0",
+      "2.0.0",
 
     geometryAuthority:
       "/assets/shared/mirrorland-window.geometry.js",
@@ -61,13 +91,31 @@
       "DGB_MIRRORLAND_WINDOW_GEOMETRY",
 
     phaseCount:
-      4,
+      2,
 
     arrivalMetaphor:
       "ESTATE_FRONT_DOOR",
 
     rendererClass:
-      "JEEVES_MIRRORLAND_THRESHOLD_2D_CANVAS",
+      "STATIC_REVEAL_TRANSITION_2D_CANVAS",
+
+    rendererLoop:
+      "TRANSITION_ONLY",
+
+    perFrameResize:
+      false,
+
+    positionalDrift:
+      false,
+
+    perpetualShimmer:
+      false,
+
+    perpetualPulse:
+      false,
+
+    recurringSparkles:
+      false,
 
     conversationAuthority:
       false,
@@ -166,6 +214,9 @@
       id:
         "arrival",
 
+      panelId:
+        "arrival",
+
       index:
         1,
 
@@ -173,115 +224,72 @@
         "Arrival",
 
       button:
-        "Approach the entrance",
+        "Continue",
 
       note:
-        "Continue through the guided arrival sequence.",
+        "Continue to meet the host at the estate entrance.",
 
       status:
         "The Mirrorland threshold is coming into view.",
 
       reveal:
-        0.30,
+        0.34,
 
       emphasis:
-        "crown"
+        "crown",
+
+      windowSize:
+        "compact"
     }),
 
     Object.freeze({
       id:
+        "welcome",
+
+      panelId:
         "host",
 
       index:
         2,
 
       label:
-        "Your Host",
-
-      button:
-        "Meet Jeeves",
-
-      note:
-        "Jeeves is waiting at the front door.",
-
-      status:
-        "Jeeves is receiving you at the estate entrance.",
-
-      reveal:
-        0.58,
-
-      emphasis:
-        "center"
-    }),
-
-    Object.freeze({
-      id:
-        "conversation",
-
-      index:
-        3,
-
-      label:
-        "Conversation",
-
-      button:
-        "Learn the conversation",
-
-      note:
-        "Messages arrive one at a time and may be advanced individually.",
-
-      status:
-        "The hosted conversation is being prepared.",
-
-      reveal:
-        0.82,
-
-      emphasis:
-        "center"
-    }),
-
-    Object.freeze({
-      id:
-        "access",
-
-      index:
-        4,
-
-      label:
-        "Estate Access",
+        "Welcome",
 
       button:
         "Enter the estate",
 
       note:
-        "Open the full page and begin with Jeeves.",
+        "Open the page and begin the hosted conversation with Jeeves.",
 
       status:
-        "The estate is ready to open.",
+        "Jeeves is ready to receive you at the front door.",
 
       reveal:
         1,
 
       emphasis:
-        "branches"
+        "all",
+
+      windowSize:
+        "full"
     })
   ]);
 
   const TIMING = Object.freeze({
     revealMs:
+      720,
+
+    growthMs:
       760,
 
-    phaseRevealMs:
-      620,
-
-    settleMs:
-      520,
-
     closeMs:
-      460,
+      360,
 
-    replayOpenMs:
+    settledRevealMs:
       420,
+
+    replayResetMs:
+      280,
 
     reducedMs:
       1,
@@ -292,18 +300,15 @@
     maximumDevicePixelRatio:
       2,
 
-    dormantPulseSeconds:
-      7.8,
-
-    focusedPulseSeconds:
-      4.2,
-
-    sparklePeriodSeconds:
-      2.9
+    resizeToleranceCssPixels:
+      2
   });
 
   const STORAGE = Object.freeze({
     key:
+      "DGB_JEEVES_ESTATE_THRESHOLD_COMPLETED_v2",
+
+    legacyKey:
       "DGB_JEEVES_ESTATE_THRESHOLD_COMPLETED_v1",
 
     completed:
@@ -368,9 +373,6 @@
     ready:
       false,
 
-    running:
-      false,
-
     replaying:
       false,
 
@@ -389,6 +391,9 @@
     completionTimer:
       null,
 
+    focusTimer:
+      null,
+
     lastAction:
       "",
 
@@ -399,6 +404,9 @@
   const RECEIPT = {
     contractId:
       CONTRACT.id,
+
+    previousContract:
+      CONTRACT.previousContract,
 
     status:
       "pending",
@@ -439,6 +447,9 @@
     activePhaseIndex:
       0,
 
+    windowSize:
+      "compact",
+
     thresholdState:
       "pending",
 
@@ -452,6 +463,24 @@
       false,
 
     replaying:
+      false,
+
+    primaryRendererRunning:
+      false,
+
+    settledRendererRunning:
+      false,
+
+    perFrameResize:
+      false,
+
+    positionalDrift:
+      false,
+
+    perpetualShimmer:
+      false,
+
+    recurringSparkles:
       false,
 
     lastAction:
@@ -488,7 +517,8 @@
   const normalize = value => {
     if (
       value === null ||
-      typeof value === "undefined"
+      typeof value ===
+        "undefined"
     ) {
       return "";
     }
@@ -504,7 +534,10 @@
     maximum
   ) => Math.max(
     minimum,
-    Math.min(maximum, value)
+    Math.min(
+      maximum,
+      value
+    )
   );
 
   const lerp = (
@@ -519,18 +552,6 @@
     ) *
     amount
   );
-
-  const easeOutCubic = value => {
-    const inverse =
-      1 - value;
-
-    return (
-      1 -
-      inverse *
-      inverse *
-      inverse
-    );
-  };
 
   const easeInOutCubic = value => (
     value < 0.5
@@ -587,9 +608,83 @@
     );
   };
 
+  const setText = (
+    node,
+    value
+  ) => {
+    if (!node) {
+      return;
+    }
+
+    node.textContent =
+      normalize(value);
+  };
+
+  const publishReceipt = () => {
+    const frozenReceipt =
+      Object.freeze({
+        ...RECEIPT
+      });
+
+    if (state.threshold) {
+      state.threshold.dataset
+        .jeevesThresholdReceipt =
+        JSON.stringify(
+          frozenReceipt
+        );
+    }
+
+    if (
+      !Object.prototype
+        .hasOwnProperty.call(
+          globalThis,
+          RECEIPT_GLOBAL_NAME
+        )
+    ) {
+      Object.defineProperty(
+        globalThis,
+        RECEIPT_GLOBAL_NAME,
+        {
+          value:
+            frozenReceipt,
+
+          enumerable:
+            true,
+
+          configurable:
+            true,
+
+          writable:
+            true
+        }
+      );
+
+      return;
+    }
+
+    try {
+      globalThis[
+        RECEIPT_GLOBAL_NAME
+      ] =
+        frozenReceipt;
+    } catch {
+      /* Receipt publication is noncritical. */
+    }
+  };
+
   const updateReceipt = (
     extra = {}
   ) => {
+    const currentPhase =
+      PHASES[
+        clamp(
+          state.phaseIndex,
+          0,
+          PHASES.length - 1
+        )
+      ] ||
+      null;
+
     Object.assign(
       RECEIPT,
       {
@@ -637,24 +732,34 @@
         geometryContract:
           state.geometry &&
           state.geometry.contract
-            ? state.geometry.contract.id
+            ? state.geometry
+                .contract.id
             : "",
 
         paneCount:
           state.geometry
-            ? state.geometry.paneCount
+            ? state.geometry
+                .paneCount
             : 0,
 
         phaseCount:
           PHASES.length,
 
         activePhase:
-          PHASES[state.phaseIndex]
-            ? PHASES[state.phaseIndex].id
+          currentPhase
+            ? currentPhase.id
             : "",
 
         activePhaseIndex:
-          state.phaseIndex + 1,
+          currentPhase
+            ? currentPhase.index
+            : 0,
+
+        windowSize:
+          currentPhase
+            ? currentPhase
+                .windowSize
+            : "compact",
 
         thresholdState:
           state.thresholdState,
@@ -662,9 +767,10 @@
         pageAccess:
           state.page
             ? normalize(
-                state.page.getAttribute(
-                  "data-jeeves-access"
-                )
+                state.page
+                  .getAttribute(
+                    "data-jeeves-access"
+                  )
               ) ||
               "guided"
             : "guided",
@@ -678,6 +784,18 @@
         replaying:
           state.replaying,
 
+        primaryRendererRunning:
+          Boolean(
+            state.primaryRenderer &&
+            state.primaryRenderer.running
+          ),
+
+        settledRendererRunning:
+          Boolean(
+            state.settledRenderer &&
+            state.settledRenderer.running
+          ),
+
         lastAction:
           state.lastAction,
 
@@ -690,78 +808,7 @@
       extra
     );
 
-    const frozen =
-      Object.freeze({
-        ...RECEIPT
-      });
-
-    if (state.threshold) {
-      state.threshold.dataset
-        .jeevesThresholdReceipt =
-        JSON.stringify(frozen);
-    }
-
-    globalThis
-      .JEEVES_THRESHOLD_RECEIPT =
-      frozen;
-  };
-
-  const fail = (
-    code,
-    error = null
-  ) => {
-    const reason =
-      error &&
-      error.message
-        ? `${code}:${error.message}`
-        : code;
-
-    state.lastFailure =
-      reason;
-
-    state.lastAction =
-      "threshold-failure";
-
-    state.thresholdState =
-      "held";
-
-    if (state.threshold) {
-      state.threshold.setAttribute(
-        "data-threshold-state",
-        "held"
-      );
-    }
-
-    unlockPageScroll();
-
-    openPageAccess();
-
-    hideThresholdImmediately();
-
-    updateReceipt();
-
-    emit(
-      EVENTS.ERROR,
-      {
-        code,
-        reason,
-        fallback:
-          "page-opened"
-      }
-    );
-
-    emit(
-      EVENTS.COMPLETE,
-      {
-        source:
-          "threshold-failure-fallback",
-
-        failed:
-          true,
-
-        reason
-      }
-    );
+    publishReceipt();
   };
 
   const readReducedMotion = () => {
@@ -781,7 +828,8 @@
       (
         state.threshold &&
         state.threshold.dataset
-          .reducedMotion === "true"
+          .reducedMotion ===
+          "true"
       );
 
     if (
@@ -799,7 +847,8 @@
             (
               state.threshold &&
               state.threshold.dataset
-                .reducedMotion === "true"
+                .reducedMotion ===
+                "true"
             );
 
           if (
@@ -833,7 +882,12 @@
           .getItem(
             STORAGE.key
           ) ===
-        STORAGE.completed
+          STORAGE.completed ||
+        globalThis.sessionStorage
+          .getItem(
+            STORAGE.legacyKey
+          ) ===
+          STORAGE.completed
       );
     } catch {
       return false;
@@ -847,8 +901,13 @@
           STORAGE.key,
           STORAGE.completed
         );
+
+      globalThis.sessionStorage
+        .removeItem(
+          STORAGE.legacyKey
+        );
     } catch {
-      /* Storage is optional. */
+      /* Session storage is optional. */
     }
   };
 
@@ -858,8 +917,13 @@
         .removeItem(
           STORAGE.key
         );
+
+      globalThis.sessionStorage
+        .removeItem(
+          STORAGE.legacyKey
+        );
     } catch {
-      /* Storage is optional. */
+      /* Session storage is optional. */
     }
   };
 
@@ -883,11 +947,10 @@
         "true"
       );
 
-    document.body
-      .setAttribute(
-        "data-jeeves-scroll-lock",
-        "true"
-      );
+    document.body.setAttribute(
+      "data-jeeves-scroll-lock",
+      "true"
+    );
 
     document.body.style.position =
       "fixed";
@@ -910,7 +973,7 @@
     updateReceipt();
   };
 
-  function unlockPageScroll() {
+  const unlockPageScroll = () => {
     if (
       !state.scrollLocked ||
       !document.body
@@ -923,10 +986,9 @@
         "data-jeeves-scroll-lock"
       );
 
-    document.body
-      .removeAttribute(
-        "data-jeeves-scroll-lock"
-      );
+    document.body.removeAttribute(
+      "data-jeeves-scroll-lock"
+    );
 
     document.body.style.position =
       "";
@@ -952,7 +1014,7 @@
       false;
 
     updateReceipt();
-  }
+  };
 
   const openPageAccess = () => {
     if (state.page) {
@@ -1008,17 +1070,23 @@
       geometry.ready !== true ||
       typeof geometry.getPanes !==
         "function" ||
-      typeof geometry.getFrameSegments !==
+      typeof geometry
+        .getFrameSegments !==
         "function" ||
-      typeof geometry.tracePolygon !==
+      typeof geometry
+        .tracePolygon !==
         "function" ||
-      typeof geometry.traceOuterWindow !==
+      typeof geometry
+        .traceOuterWindow !==
         "function" ||
-      typeof geometry.traceInnerWindow !==
+      typeof geometry
+        .traceInnerWindow !==
         "function" ||
-      typeof geometry.appendOuterWindow !==
+      typeof geometry
+        .appendOuterWindow !==
         "function" ||
-      typeof geometry.appendInnerWindow !==
+      typeof geometry
+        .appendInnerWindow !==
         "function"
     ) {
       return null;
@@ -1130,8 +1198,8 @@
       canvas.getContext(
         "2d",
         {
-          alpha: true,
-          desynchronized: true
+          alpha:
+            true
         }
       );
 
@@ -1154,17 +1222,23 @@
       height:
         1,
 
+      cssWidth:
+        0,
+
+      cssHeight:
+        0,
+
       pixelRatio:
         1,
 
       reveal:
         settled
-          ? 0.62
+          ? 0.68
           : 0,
 
       targetReveal:
         settled
-          ? 0.62
+          ? 0.68
           : 0,
 
       transition: {
@@ -1173,12 +1247,12 @@
 
         from:
           settled
-            ? 0.62
+            ? 0.68
             : 0,
 
         to:
           settled
-            ? 0.62
+            ? 0.68
             : 0,
 
         start:
@@ -1197,7 +1271,7 @@
         state.reducedMotion,
 
       running:
-        true,
+        false,
 
       raf:
         0,
@@ -1205,12 +1279,53 @@
       resizeObserver:
         null,
 
-      time:
-        0,
+      fallbackResizeHandler:
+        null,
 
-      resize() {
+      resize(
+        force = false
+      ) {
         const rect =
-          mount.getBoundingClientRect();
+          mount
+            .getBoundingClientRect();
+
+        const nextCssWidth =
+          Math.max(
+            1,
+            rect.width
+          );
+
+        const nextCssHeight =
+          Math.max(
+            1,
+            rect.height
+          );
+
+        const widthDifference =
+          Math.abs(
+            nextCssWidth -
+            this.cssWidth
+          );
+
+        const heightDifference =
+          Math.abs(
+            nextCssHeight -
+            this.cssHeight
+          );
+
+        if (
+          !force &&
+          this.cssWidth > 0 &&
+          this.cssHeight > 0 &&
+          widthDifference <
+            TIMING
+              .resizeToleranceCssPixels &&
+          heightDifference <
+            TIMING
+              .resizeToleranceCssPixels
+        ) {
+          return false;
+        }
 
         const ratio =
           Math.min(
@@ -1221,72 +1336,97 @@
               .maximumDevicePixelRatio
           );
 
-        const width =
+        const nextWidth =
           Math.max(
             1,
-            Math.floor(
-              rect.width *
+            Math.round(
+              nextCssWidth *
               ratio
             )
           );
 
-        const height =
+        const nextHeight =
           Math.max(
             1,
-            Math.floor(
-              rect.height *
+            Math.round(
+              nextCssHeight *
               ratio
             )
           );
 
-        if (
-          canvas.width !== width ||
-          canvas.height !== height
-        ) {
-          canvas.width =
-            width;
+        this.cssWidth =
+          nextCssWidth;
 
-          canvas.height =
-            height;
-        }
-
-        canvas.style.width =
-          `${Math.max(
-            1,
-            rect.width
-          )}px`;
-
-        canvas.style.height =
-          `${Math.max(
-            1,
-            rect.height
-          )}px`;
-
-        this.width =
-          width;
-
-        this.height =
-          height;
+        this.cssHeight =
+          nextCssHeight;
 
         this.pixelRatio =
           ratio;
+
+        this.width =
+          nextWidth;
+
+        this.height =
+          nextHeight;
+
+        if (
+          canvas.width !==
+            nextWidth ||
+          canvas.height !==
+            nextHeight
+        ) {
+          canvas.width =
+            nextWidth;
+
+          canvas.height =
+            nextHeight;
+        }
+
+        canvas.style.width =
+          `${nextCssWidth}px`;
+
+        canvas.style.height =
+          `${nextCssHeight}px`;
+
+        this.draw();
+
+        return true;
       },
 
       setReducedMotion(value) {
         this.reducedMotion =
           Boolean(value);
+
+        if (
+          this.reducedMotion &&
+          this.transition.active
+        ) {
+          this.reveal =
+            this.transition.to;
+
+          this.targetReveal =
+            this.transition.to;
+
+          this.transition.active =
+            false;
+
+          this.stop();
+          this.draw();
+        }
       },
 
       setPhaseEmphasis(value) {
         this.phaseEmphasis =
           normalize(value) ||
-          "center";
+          "all";
+
+        this.draw();
       },
 
       setReveal(
         target,
         duration =
-          TIMING.phaseRevealMs
+          TIMING.revealMs
       ) {
         const normalizedTarget =
           clamp(
@@ -1295,23 +1435,24 @@
             1
           );
 
+        this.targetReveal =
+          normalizedTarget;
+
         if (
-          this.reducedMotion
+          this.reducedMotion ||
+          duration <= 1
         ) {
           this.reveal =
-            normalizedTarget;
-
-          this.targetReveal =
             normalizedTarget;
 
           this.transition.active =
             false;
 
+          this.stop();
+          this.draw();
+
           return;
         }
-
-        this.targetReveal =
-          normalizedTarget;
 
         this.transition = {
           active:
@@ -1330,16 +1471,18 @@
             Math.max(
               1,
               Number(duration) ||
-              TIMING.phaseRevealMs
+              TIMING.revealMs
             )
         };
+
+        this.start();
       },
 
       updateTransition(now) {
         if (
           !this.transition.active
         ) {
-          return;
+          return false;
         }
 
         const elapsed =
@@ -1375,6 +1518,8 @@
           this.transition.active =
             false;
         }
+
+        return true;
       },
 
       getPaneEmphasis(pane) {
@@ -1393,7 +1538,7 @@
               "upper"
             )
               ? 1
-              : 0.70
+              : 0.72
           );
         }
 
@@ -1411,52 +1556,34 @@
             id ===
               "mid-center"
               ? 1
-              : 0.76
-          );
-        }
-
-        if (
-          this.phaseEmphasis ===
-          "branches"
-        ) {
-          return (
-            id.startsWith(
-              "lower"
-            ) ||
-            id.startsWith(
-              "base"
-            )
-              ? 1
-              : 0.82
+              : 0.80
           );
         }
 
         return 1;
       },
 
-      createPaneGradient(
-        pane,
-        shimmer
-      ) {
+      createPaneGradient(pane) {
         const bounds =
           geometry.getBounds(
             pane.points
           );
 
         const gradient =
-          context.createLinearGradient(
-            bounds.minimumX,
-            bounds.minimumY,
-            bounds.maximumX,
-            bounds.maximumY
-          );
+          context
+            .createLinearGradient(
+              bounds.minimumX,
+              bounds.minimumY,
+              bounds.maximumX,
+              bounds.maximumY
+            );
 
         const panePresence =
           geometry.revealWeight(
             this.reveal,
             settled
-              ? 0.34
-              : 0.20,
+              ? 0.48
+              : 0.22,
             1
           );
 
@@ -1476,11 +1603,7 @@
             pane.color,
             clamp(
               alpha *
-              (
-                0.62 +
-                shimmer *
-                0.07
-              ),
+              0.66,
               0,
               1
             )
@@ -1493,11 +1616,7 @@
             pane.color,
             clamp(
               alpha *
-              (
-                0.86 +
-                shimmer *
-                  0.10
-              ),
+              0.90,
               0,
               1
             )
@@ -1510,7 +1629,7 @@
             pane.color,
             clamp(
               alpha *
-              0.50,
+              0.52,
               0,
               1
             )
@@ -1521,27 +1640,9 @@
       },
 
       drawPane(pane) {
-        const shimmer =
-          this.reducedMotion
-            ? 0
-            : Math.sin(
-                this.time *
-                  0.72 +
-                pane.phase
-              );
-
         const emphasis =
           this.getPaneEmphasis(
             pane
-          );
-
-        const depthShift =
-          pane.depth *
-          this.reveal *
-          (
-            settled
-              ? 0.8
-              : 2.2
           );
 
         const paneGlowWeight =
@@ -1553,19 +1654,6 @@
 
         context.save();
 
-        context.translate(
-          shimmer *
-            pane.depth *
-            (
-              settled
-                ? 0.18
-                : 0.55
-            ),
-
-          -depthShift *
-            0.18
-        );
-
         geometry.tracePolygon(
           context,
           pane.points
@@ -1573,8 +1661,7 @@
 
         context.fillStyle =
           this.createPaneGradient(
-            pane,
-            shimmer
+            pane
           );
 
         context.shadowBlur =
@@ -1584,7 +1671,7 @@
             (
               8 +
               pane.glow *
-              25
+              22
             ) *
             emphasis
           );
@@ -1594,7 +1681,7 @@
             pane.color,
             pane.glow *
               paneGlowWeight *
-              0.54 *
+              0.50 *
               emphasis
           );
 
@@ -1604,12 +1691,13 @@
           0;
 
         const highlight =
-          context.createLinearGradient(
-            0,
-            0,
-            dimensions.designWidth,
-            dimensions.designHeight
-          );
+          context
+            .createLinearGradient(
+              0,
+              0,
+              dimensions.designWidth,
+              dimensions.designHeight
+            );
 
         const highlightWeight =
           geometry.revealWeight(
@@ -1623,7 +1711,7 @@
           0,
           `rgba(255, 255, 255, ${
             pane.highlight *
-            0.68 *
+            0.64 *
             highlightWeight
           })`
         );
@@ -1637,7 +1725,7 @@
           1,
           `rgba(255, 255, 255, ${
             pane.highlight *
-            0.15 *
+            0.14 *
             highlightWeight
           })`
         );
@@ -1654,7 +1742,7 @@
               0.012,
               0.035 +
               pane.highlight *
-                0.24
+                0.22
             ) *
             emphasis
           })`;
@@ -1682,31 +1770,19 @@
 
         context.clip();
 
-        const pulse =
-          this.reducedMotion
-            ? 0.5
-            : (
-                Math.sin(
-                  this.time *
-                  (
-                    settled
-                      ? 0.72
-                      : 1.32
-                  )
-                ) *
-                  0.5 +
-                0.5
-              );
+        const fixedPulse =
+          0.5;
 
         const centerGlow =
-          context.createRadialGradient(
-            240,
-            356,
-            20,
-            240,
-            356,
-            310
-          );
+          context
+            .createRadialGradient(
+              240,
+              356,
+              20,
+              240,
+              356,
+              310
+            );
 
         centerGlow.addColorStop(
           0,
@@ -1716,8 +1792,8 @@
               this.reveal *
               (
                 0.17 +
-                pulse *
-                  0.07
+                fixedPulse *
+                0.05
               )
             ) *
             (
@@ -1734,7 +1810,7 @@
             (
               0.025 +
               this.reveal *
-                0.11
+              0.11
             ) *
             (
               settled
@@ -1750,7 +1826,7 @@
             (
               0.015 +
               this.reveal *
-                0.08
+              0.08
             ) *
             (
               settled
@@ -1774,52 +1850,6 @@
           dimensions.designWidth,
           dimensions.designHeight
         );
-
-        if (
-          !this.reducedMotion &&
-          this.reveal > 0.20 &&
-          !settled
-        ) {
-          const beam =
-            context.createLinearGradient(
-              70,
-              80,
-              410,
-              650
-            );
-
-          beam.addColorStop(
-            0,
-            "rgba(255, 255, 255, 0)"
-          );
-
-          beam.addColorStop(
-            0.48,
-            `rgba(255, 255, 255, ${
-              this.reveal *
-              (
-                0.022 +
-                pulse *
-                  0.018
-              )
-            })`
-          );
-
-          beam.addColorStop(
-            0.58,
-            "rgba(255, 255, 255, 0)"
-          );
-
-          context.fillStyle =
-            beam;
-
-          context.fillRect(
-            0,
-            0,
-            dimensions.designWidth,
-            dimensions.designHeight
-          );
-        }
 
         context.restore();
       },
@@ -2034,12 +2064,13 @@
         context.save();
 
         const frameGradient =
-          context.createLinearGradient(
-            0,
-            0,
-            dimensions.designWidth,
-            0
-          );
+          context
+            .createLinearGradient(
+              0,
+              0,
+              dimensions.designWidth,
+              0
+            );
 
         frameGradient.addColorStop(
           0,
@@ -2099,8 +2130,8 @@
             this.reveal,
             4,
             settled
-              ? 20
-              : 52
+              ? 18
+              : 44
           );
 
         context.shadowColor =
@@ -2110,7 +2141,7 @@
               0.02,
               settled
                 ? 0.13
-                : 0.24
+                : 0.22
             )
           })`;
 
@@ -2162,119 +2193,6 @@
           );
 
         context.stroke();
-
-        context.restore();
-      },
-
-      drawSparkles() {
-        if (
-          this.reducedMotion ||
-          this.reveal < 0.44 ||
-          settled
-        ) {
-          return;
-        }
-
-        context.save();
-
-        geometry.traceInnerWindow(
-          context
-        );
-
-        context.clip();
-
-        const points = [
-          [186, 180, 0],
-          [292, 248, 1.4],
-          [234, 340, 2.7],
-          [148, 418, 4.1],
-          [320, 516, 5.3],
-          [248, 592, 6.4]
-        ];
-
-        points.forEach(point => {
-          const pulse =
-            Math.sin(
-              this.time *
-              (
-                Math.PI *
-                2 /
-                TIMING
-                  .sparklePeriodSeconds
-              ) +
-              point[2]
-            );
-
-          const alpha =
-            clamp(
-              (
-                pulse -
-                0.52
-              ) *
-              1.9,
-              0,
-              1
-            ) *
-            this.reveal *
-            0.52;
-
-          if (
-            alpha <= 0.01
-          ) {
-            return;
-          }
-
-          const radius =
-            1.2 +
-            alpha *
-              2.4;
-
-          const gradient =
-            context.createRadialGradient(
-              point[0],
-              point[1],
-              0,
-              point[0],
-              point[1],
-              radius *
-                5
-            );
-
-          gradient.addColorStop(
-            0,
-            `rgba(255, 250, 224, ${alpha})`
-          );
-
-          gradient.addColorStop(
-            0.28,
-            `rgba(187, 229, 255, ${
-              alpha *
-              0.48
-            })`
-          );
-
-          gradient.addColorStop(
-            1,
-            "rgba(255, 255, 255, 0)"
-          );
-
-          context.fillStyle =
-            gradient;
-
-          context.beginPath();
-
-          context.arc(
-            point[0],
-            point[1],
-            radius *
-              5,
-            0,
-            Math.PI *
-              2
-          );
-
-          context.fill();
-        });
 
         context.restore();
       },
@@ -2348,51 +2266,11 @@
                 reveal
               );
 
-        const horizontalDrift =
-          this.reducedMotion
-            ? 0
-            : Math.sin(
-                this.time *
-                0.24
-              ) *
-              (
-                settled
-                  ? 0.18
-                  : 0.72
-              ) *
-              (
-                1 -
-                reveal *
-                  0.62
-              );
-
-        const verticalDrift =
-          this.reducedMotion
-            ? 0
-            : Math.sin(
-                this.time *
-                  0.31 +
-                1.2
-              ) *
-              (
-                settled
-                  ? 0.22
-                  : 0.88
-              ) *
-              (
-                1 -
-                reveal *
-                  0.56
-              );
-
         context.translate(
           cssWidth /
-            2 +
-            horizontalDrift,
-
+            2,
           cssHeight /
-            2 +
-            verticalDrift
+            2
         );
 
         context.scale(
@@ -2405,7 +2283,6 @@
         context.translate(
           -dimensions.designWidth /
             2,
-
           -dimensions.designHeight /
             2
         );
@@ -2436,7 +2313,6 @@
         this.drawLeadLines();
         this.drawFrameRibs();
         this.drawOuterFrame();
-        this.drawSparkles();
 
         context.restore();
       },
@@ -2448,32 +2324,33 @@
           return;
         }
 
-        this.time =
-          now *
-          0.001;
-
-        this.resize();
-
         this.updateTransition(
           now
         );
 
         this.draw();
 
-        this.raf =
-          requestAnimationFrame(
-            nextNow =>
-              this.frame(
-                nextNow
-              )
-          );
+        if (
+          this.transition.active
+        ) {
+          this.raf =
+            globalThis
+              .requestAnimationFrame(
+                nextNow =>
+                  this.frame(
+                    nextNow
+                  )
+              );
+
+          return;
+        }
+
+        this.stop();
+        this.draw();
       },
 
       start() {
-        if (
-          this.running &&
-          this.raf
-        ) {
+        if (this.running) {
           return;
         }
 
@@ -2481,10 +2358,13 @@
           true;
 
         this.raf =
-          requestAnimationFrame(
-            now =>
-              this.frame(now)
-          );
+          globalThis
+            .requestAnimationFrame(
+              now =>
+                this.frame(now)
+            );
+
+        updateReceipt();
       },
 
       stop() {
@@ -2492,12 +2372,43 @@
           false;
 
         if (this.raf) {
-          cancelAnimationFrame(
-            this.raf
-          );
+          globalThis
+            .cancelAnimationFrame(
+              this.raf
+            );
 
           this.raf =
             0;
+        }
+
+        updateReceipt();
+      },
+
+      destroy() {
+        this.stop();
+
+        if (
+          this.resizeObserver
+        ) {
+          this.resizeObserver
+            .disconnect();
+
+          this.resizeObserver =
+            null;
+        }
+
+        if (
+          this.fallbackResizeHandler
+        ) {
+          globalThis
+            .removeEventListener(
+              "resize",
+              this
+                .fallbackResizeHandler
+            );
+
+          this.fallbackResizeHandler =
+            null;
         }
       }
     };
@@ -2508,8 +2419,18 @@
     ) {
       renderer.resizeObserver =
         new ResizeObserver(
-          () =>
-            renderer.resize()
+          entries => {
+            const entry =
+              entries[0];
+
+            if (!entry) {
+              return;
+            }
+
+            renderer.resize(
+              false
+            );
+          }
         );
 
       renderer.resizeObserver
@@ -2517,10 +2438,18 @@
           mount
         );
     } else {
+      renderer
+        .fallbackResizeHandler =
+        () => {
+          renderer.resize(
+            false
+          );
+        };
+
       globalThis.addEventListener(
         "resize",
-        () =>
-          renderer.resize(),
+        renderer
+          .fallbackResizeHandler,
         {
           passive:
             true
@@ -2528,22 +2457,13 @@
       );
     }
 
-    renderer.resize();
-    renderer.start();
+    renderer.resize(
+      true
+    );
+
+    renderer.draw();
 
     return renderer;
-  };
-
-  const setText = (
-    node,
-    value
-  ) => {
-    if (!node) {
-      return;
-    }
-
-    node.textContent =
-      normalize(value);
   };
 
   const setThresholdState = value => {
@@ -2582,6 +2502,13 @@
       )
     ];
 
+  const resolvePanelId = panel =>
+    normalize(
+      panel.getAttribute(
+        "data-jeeves-threshold-panel"
+      )
+    );
+
   const updatePhasePresentation = ({
     announce = true
   } = {}) => {
@@ -2599,6 +2526,16 @@
       state.threshold.setAttribute(
         "data-threshold-phase",
         phase.id
+      );
+
+      state.threshold.setAttribute(
+        "data-threshold-source-panel",
+        phase.panelId
+      );
+
+      state.threshold.setAttribute(
+        "data-threshold-window-size",
+        phase.windowSize
       );
 
       state.threshold.setAttribute(
@@ -2624,12 +2561,8 @@
     state.panels.forEach(
       panel => {
         const isActive =
-          normalize(
-            panel.getAttribute(
-              "data-jeeves-threshold-panel"
-            )
-          ) ===
-          phase.id;
+          resolvePanelId(panel) ===
+          phase.panelId;
 
         panel.hidden =
           !isActive;
@@ -2649,8 +2582,7 @@
     );
 
     if (state.progressValue) {
-      state.progressValue.style
-        .width =
+      state.progressValue.style.width =
         `${
           (
             phase.index /
@@ -2688,7 +2620,12 @@
           phase.reveal,
           state.reducedMotion
             ? TIMING.reducedMs
-            : TIMING.phaseRevealMs
+            : (
+                phase.windowSize ===
+                  "full"
+                  ? TIMING.growthMs
+                  : TIMING.revealMs
+              )
         );
     }
 
@@ -2704,6 +2641,9 @@
           phase:
             phase.id,
 
+          sourcePanel:
+            phase.panelId,
+
           phaseIndex:
             phase.index,
 
@@ -2714,10 +2654,32 @@
             phase.reveal,
 
           emphasis:
-            phase.emphasis
+            phase.emphasis,
+
+          windowSize:
+            phase.windowSize
         }
       );
     }
+  };
+
+  const hideThresholdImmediately = () => {
+    if (!state.threshold) {
+      return;
+    }
+
+    state.threshold.hidden =
+      true;
+
+    state.threshold.setAttribute(
+      "aria-hidden",
+      "true"
+    );
+
+    state.threshold.setAttribute(
+      "inert",
+      ""
+    );
   };
 
   const showThreshold = ({
@@ -2728,11 +2690,20 @@
     }
 
     if (state.completionTimer) {
-      clearTimeout(
+      globalThis.clearTimeout(
         state.completionTimer
       );
 
       state.completionTimer =
+        null;
+    }
+
+    if (state.focusTimer) {
+      globalThis.clearTimeout(
+        state.focusTimer
+      );
+
+      state.focusTimer =
         null;
     }
 
@@ -2768,11 +2739,21 @@
       state.primaryRenderer
     ) {
       state.primaryRenderer
+        .resize(
+          true
+        );
+
+      state.primaryRenderer
+        .setPhaseEmphasis(
+          "crown"
+        );
+
+      state.primaryRenderer
         .setReveal(
           0,
           state.reducedMotion
             ? TIMING.reducedMs
-            : TIMING.replayOpenMs
+            : TIMING.replayResetMs
         );
     }
 
@@ -2781,19 +2762,20 @@
         true
     });
 
-    globalThis.setTimeout(
-      () => {
-        if (state.advance) {
-          state.advance.focus({
-            preventScroll:
-              true
-          });
-        }
-      },
-      state.reducedMotion
-        ? 0
-        : 120
-    );
+    state.focusTimer =
+      globalThis.setTimeout(
+        () => {
+          if (state.advance) {
+            state.advance.focus({
+              preventScroll:
+                true
+            });
+          }
+        },
+        state.reducedMotion
+          ? 0
+          : 120
+      );
 
     state.lastAction =
       replay
@@ -2803,29 +2785,15 @@
     updateReceipt();
   };
 
-  const hideThresholdImmediately = () => {
-    if (!state.threshold) {
-      return;
-    }
-
-    state.threshold.hidden =
-      true;
-
-    state.threshold.setAttribute(
-      "aria-hidden",
-      "true"
-    );
-
-    state.threshold.setAttribute(
-      "inert",
-      ""
-    );
-  };
-
   const settleThresholdWindow = () => {
     if (!state.settledRenderer) {
       return;
     }
+
+    state.settledRenderer
+      .resize(
+        true
+      );
 
     state.settledRenderer
       .setPhaseEmphasis(
@@ -2837,7 +2805,8 @@
         0.68,
         state.reducedMotion
           ? TIMING.reducedMs
-          : TIMING.settleMs
+          : TIMING
+              .settledRevealMs
       );
   };
 
@@ -2868,19 +2837,14 @@
       rememberCompletion();
     }
 
-    if (
-      state.primaryRenderer
-    ) {
-      state.primaryRenderer
-        .setReveal(
-          1,
-          state.reducedMotion
-            ? TIMING.reducedMs
-            : TIMING.closeMs
-        );
-    }
-
     const finish = () => {
+      if (
+        state.primaryRenderer
+      ) {
+        state.primaryRenderer
+          .stop();
+      }
+
       hideThresholdImmediately();
 
       unlockPageScroll();
@@ -2912,6 +2876,7 @@
         {
           source,
           skipped,
+
           phase:
             getCurrentPhase()
               ? getCurrentPhase().id
@@ -2921,7 +2886,13 @@
             state.phaseIndex + 1,
 
           phaseCount:
-            PHASES.length
+            PHASES.length,
+
+          windowSize:
+            getCurrentPhase()
+              ? getCurrentPhase()
+                  .windowSize
+              : "full"
         }
       );
     };
@@ -2951,30 +2922,29 @@
     }
 
     if (
-      state.phaseIndex >=
-      PHASES.length - 1
+      state.phaseIndex === 0
     ) {
-      completeIntroduction({
-        source:
-          state.replaying
-            ? "replay-complete"
-            : "guided-complete",
+      state.phaseIndex =
+        1;
 
-        skipped:
-          false,
-
-        remember:
+      updatePhasePresentation({
+        announce:
           true
       });
 
       return;
     }
 
-    state.phaseIndex +=
-      1;
+    completeIntroduction({
+      source:
+        state.replaying
+          ? "replay-complete"
+          : "guided-complete",
 
-    updatePhasePresentation({
-      announce:
+      skipped:
+        false,
+
+      remember:
         true
     });
   };
@@ -3082,7 +3052,14 @@
             typeof target.closest ===
               "function" &&
             target.closest(
-              "button, a, summary, input, textarea, select"
+              [
+                "button",
+                "a",
+                "summary",
+                "input",
+                "textarea",
+                "select"
+              ].join(", ")
             )
           ) {
             return;
@@ -3111,70 +3088,71 @@
       query(
         SELECTORS.windowMount,
         state.threshold ||
-        document
+          document
       );
 
     state.settledWindowMount =
       query(
-        SELECTORS.settledWindowMount,
+        SELECTORS
+          .settledWindowMount,
         state.page ||
-        document
+          document
       );
 
     state.advance =
       query(
         SELECTORS.advance,
         state.threshold ||
-        document
+          document
       );
 
     state.skip =
       query(
         SELECTORS.skip,
         state.threshold ||
-        document
+          document
       );
 
     state.status =
       query(
         SELECTORS.status,
         state.threshold ||
-        document
+          document
       );
 
     state.progressLabel =
       query(
         SELECTORS.progressLabel,
         state.threshold ||
-        document
+          document
       );
 
     state.progressValue =
       query(
         SELECTORS.progressValue,
         state.threshold ||
-        document
+          document
       );
 
     state.actionNote =
       query(
         SELECTORS.actionNote,
         state.threshold ||
-        document
+          document
       );
 
     state.panels =
       queryAll(
         SELECTORS.panels,
         state.threshold ||
-        document
+          document
       );
 
     state.replayControls =
       queryAll(
         SELECTORS.replay,
         state.page ||
-        document
+          document
       );
 
     if (!state.threshold) {
@@ -3195,7 +3173,9 @@
       );
     }
 
-    if (!state.settledWindowMount) {
+    if (
+      !state.settledWindowMount
+    ) {
       throw new Error(
         "JEEVES_SETTLED_WINDOW_MOUNT_NOT_FOUND"
       );
@@ -3213,14 +3193,24 @@
       );
     }
 
-    if (
-      state.panels.length !==
-      PHASES.length
-    ) {
-      throw new Error(
-        `JEEVES_THRESHOLD_PANEL_COUNT_INVALID:${state.panels.length}`
+    const availablePanelIds =
+      new Set(
+        state.panels.map(
+          resolvePanelId
+        )
       );
-    }
+
+    PHASES.forEach(phase => {
+      if (
+        !availablePanelIds.has(
+          phase.panelId
+        )
+      ) {
+        throw new Error(
+          `JEEVES_THRESHOLD_REQUIRED_PANEL_MISSING:${phase.panelId}`
+        );
+      }
+    });
   };
 
   const initializeRenderers = () => {
@@ -3239,7 +3229,8 @@
     state.settledRenderer =
       createRenderer({
         mount:
-          state.settledWindowMount,
+          state
+            .settledWindowMount,
 
         role:
           "settled",
@@ -3256,6 +3247,9 @@
         "JEEVES_THRESHOLD_RENDERER_CREATION_FAILED"
       );
     }
+
+    state.settledRenderer.stop();
+    state.settledRenderer.draw();
   };
 
   const exposeApi = () => {
@@ -3280,20 +3274,35 @@
       },
 
       getState() {
+        const phase =
+          getCurrentPhase();
+
         return Object.freeze({
           thresholdState:
             state.thresholdState,
 
           phase:
-            getCurrentPhase()
-              ? getCurrentPhase().id
+            phase
+              ? phase.id
+              : "",
+
+          sourcePanel:
+            phase
+              ? phase.panelId
               : "",
 
           phaseIndex:
-            state.phaseIndex + 1,
+            phase
+              ? phase.index
+              : 0,
 
           phaseCount:
             PHASES.length,
+
+          windowSize:
+            phase
+              ? phase.windowSize
+              : "compact",
 
           replaying:
             state.replaying,
@@ -3339,11 +3348,18 @@
       },
 
       setPhase(phaseId) {
+        const normalizedId =
+          normalize(
+            phaseId
+          );
+
         const index =
           PHASES.findIndex(
             phase =>
               phase.id ===
-              normalize(phaseId)
+                normalizedId ||
+              phase.panelId ===
+                normalizedId
           );
 
         if (index < 0) {
@@ -3362,9 +3378,7 @@
       }
     };
 
-    Object.freeze(
-      API
-    );
+    Object.freeze(API);
 
     Object.defineProperty(
       globalThis,
@@ -3393,6 +3407,13 @@
       announce:
         false
     });
+
+    if (
+      state.primaryRenderer
+    ) {
+      state.primaryRenderer
+        .stop();
+    }
 
     hideThresholdImmediately();
 
@@ -3426,13 +3447,16 @@
               false,
 
             phase:
-              "access",
+              "welcome",
 
             phaseIndex:
               PHASES.length,
 
             phaseCount:
-              PHASES.length
+              PHASES.length,
+
+            windowSize:
+              "full"
           }
         );
       },
@@ -3457,9 +3481,6 @@
     state.ready =
       true;
 
-    state.running =
-      true;
-
     state.lastAction =
       "threshold-renderer-initialized";
 
@@ -3473,10 +3494,12 @@
       EVENTS.READY,
       {
         geometryContract:
-          state.geometry.contract.id,
+          state.geometry
+            .contract.id,
 
         paneCount:
-          state.geometry.paneCount,
+          state.geometry
+            .paneCount,
 
         phaseCount:
           PHASES.length,
@@ -3495,6 +3518,69 @@
     }
   };
 
+  const fail = (
+    code,
+    error = null
+  ) => {
+    const reason =
+      error &&
+      error.message
+        ? `${code}:${error.message}`
+        : code;
+
+    state.lastFailure =
+      reason;
+
+    state.lastAction =
+      "threshold-failure";
+
+    state.thresholdState =
+      "held";
+
+    if (state.primaryRenderer) {
+      state.primaryRenderer.stop();
+    }
+
+    if (state.threshold) {
+      state.threshold.setAttribute(
+        "data-threshold-state",
+        "held"
+      );
+    }
+
+    unlockPageScroll();
+
+    openPageAccess();
+
+    hideThresholdImmediately();
+
+    updateReceipt();
+
+    emit(
+      EVENTS.ERROR,
+      {
+        code,
+        reason,
+
+        fallback:
+          "page-opened"
+      }
+    );
+
+    emit(
+      EVENTS.COMPLETE,
+      {
+        source:
+          "threshold-failure-fallback",
+
+        failed:
+          true,
+
+        reason
+      }
+    );
+  };
+
   const initializeWithGeometry = () => {
     if (state.initialized) {
       return;
@@ -3509,7 +3595,7 @@
       }
 
       if (state.geometryTimer) {
-        clearTimeout(
+        globalThis.clearTimeout(
           state.geometryTimer
         );
 
@@ -3538,7 +3624,7 @@
 
   const scheduleGeometryFailure = () => {
     if (state.geometryTimer) {
-      clearTimeout(
+      globalThis.clearTimeout(
         state.geometryTimer
       );
     }
@@ -3595,7 +3681,7 @@
 
   if (
     document.readyState ===
-    "loading"
+      "loading"
   ) {
     document.addEventListener(
       "DOMContentLoaded",

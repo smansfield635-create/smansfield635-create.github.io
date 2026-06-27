@@ -1,11 +1,15 @@
 // TARGET FILE: /showroom/globe/hearth/jeeves/index.js
 // TNT FULL-FILE REPLACEMENT
-// DIAMOND_GATE_BRIDGE_JEEVES_ESTATE_HOST_CONVERSATION_RUNTIME_TNT_v2
+// DIAMOND_GATE_BRIDGE_JEEVES_ESTATE_HOST_CONVERSATION_RUNTIME_TNT_v2_1
 //
 // Purpose:
 // - Consume /assets/hearth/jeeves/jeeves.voice.js through window.JEEVES_VOICE.
 // - Mount Jeeves's estate-host conversation surface.
 // - Coordinate conversation activation with the estate-threshold introduction.
+// - Deliver every ordinary response as a two-message elevator pitch aimed
+//   toward one declared and verified handoff.
+// - Preserve the voice authority's recognition and intended-handoff surfaces.
+// - Independently verify that the declared handoff and contextual route agree.
 // - Keep automatic opening dialogue limited to two messages.
 // - Separate typing delay from reading dwell.
 // - Reveal one Jeeves message at a time.
@@ -14,7 +18,9 @@
 //   and one contextual route card at a time.
 // - Maintain live conversation telemetry and prompt-state guidance.
 // - Preserve real anchor navigation for every room and specialist handoff.
-// - Coordinate replay controls and compact supporting disclosures.
+// - Coordinate replay-control visibility without duplicating threshold-owned
+//   replay click listeners.
+// - Coordinate compact supporting disclosures.
 // - Support keyboard use, reduced motion, controlled thread scrolling,
 //   cancellation, restart, graceful threshold fallback, and graceful
 //   voice-authority failure.
@@ -26,9 +32,11 @@
 // - current-wait rush behavior
 // - prompt locking
 // - live thread telemetry
+// - intended-handoff runtime verification
 // - contextual route-card rendering
 // - threshold-to-conversation activation coordination
-// - replay-welcome control dispatch
+// - replay-welcome control visibility
+// - public replay-request API dispatch
 // - compact disclosure coordination
 // - runtime receipts and public API
 //
@@ -38,6 +46,7 @@
 // - Mirrorland geometry
 // - threshold rendering
 // - threshold phase presentation
+// - threshold-owned replay-control click handling
 // - page styling
 // - specialist interpretation
 // - destination-page content
@@ -48,6 +57,9 @@
   "use strict";
 
   const CONTRACT =
+    "DIAMOND_GATE_BRIDGE_JEEVES_ESTATE_HOST_CONVERSATION_RUNTIME_TNT_v2_1";
+
+  const PREVIOUS_CONTRACT =
     "DIAMOND_GATE_BRIDGE_JEEVES_ESTATE_HOST_CONVERSATION_RUNTIME_TNT_v2";
 
   const GLOBAL_NAME =
@@ -118,15 +130,23 @@
 
   const WAIT_STATES =
     Object.freeze({
-      IDLE: "idle",
-      TYPING: "typing",
-      READING: "reading"
+      IDLE:
+        "idle",
+
+      TYPING:
+        "typing",
+
+      READING:
+        "reading"
     });
 
   const THRESHOLD_STATES =
     Object.freeze({
-      GUIDED: "guided",
-      OPEN: "open"
+      GUIDED:
+        "guided",
+
+      OPEN:
+        "open"
     });
 
   const instances =
@@ -153,19 +173,24 @@
   const query = (
     selector,
     root = document
-  ) => root.querySelector(selector);
+  ) => root.querySelector(
+    selector
+  );
 
   const queryAll = (
     selector,
     root = document
   ) => Array.from(
-    root.querySelectorAll(selector)
+    root.querySelectorAll(
+      selector
+    )
   );
 
   const normalize = value => {
     if (
       value === null ||
-      typeof value === "undefined"
+      typeof value ===
+        "undefined"
     ) {
       return "";
     }
@@ -184,7 +209,10 @@
     maximum
   ) => Math.max(
     minimum,
-    Math.min(maximum, value)
+    Math.min(
+      maximum,
+      value
+    )
   );
 
   const clearNode = node => {
@@ -192,7 +220,9 @@
       return;
     }
 
-    while (node.firstChild) {
+    while (
+      node.firstChild
+    ) {
       node.removeChild(
         node.firstChild
       );
@@ -216,9 +246,10 @@
       new CustomEvent(
         name,
         {
-          detail: Object.freeze({
-            ...detail
-          })
+          detail:
+            Object.freeze({
+              ...detail
+            })
         }
       )
     );
@@ -231,8 +262,11 @@
     emit(
       ERROR_EVENT,
       {
-        contract: CONTRACT,
+        contract:
+          CONTRACT,
+
         code,
+
         ...detail
       }
     );
@@ -260,6 +294,8 @@
       typeof voice.getOpening !==
         "function" ||
       typeof voice.getRoute !==
+        "function" ||
+      typeof voice.getPathway !==
         "function"
     ) {
       return null;
@@ -291,18 +327,19 @@
     return generated;
   };
 
-  const prefersReducedMotion = () => {
-    if (
-      typeof window.matchMedia !==
-        "function"
-    ) {
-      return false;
-    }
+  const prefersReducedMotion =
+    () => {
+      if (
+        typeof window.matchMedia !==
+          "function"
+      ) {
+        return false;
+      }
 
-    return window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
-    ).matches;
-  };
+      return window.matchMedia(
+        "(prefers-reduced-motion: reduce)"
+      ).matches;
+    };
 
   const countWords = text => {
     const normalized =
@@ -318,18 +355,22 @@
       .length;
   };
 
-  const isNearThreadBottom = thread => {
-    if (!thread) {
-      return true;
-    }
+  const isNearThreadBottom =
+    thread => {
+      if (!thread) {
+        return true;
+      }
 
-    const remaining =
-      thread.scrollHeight -
-      thread.scrollTop -
-      thread.clientHeight;
+      const remaining =
+        thread.scrollHeight -
+        thread.scrollTop -
+        thread.clientHeight;
 
-    return remaining < 120;
-  };
+      return (
+        remaining <
+        120
+      );
+    };
 
   const scrollThread = (
     state,
@@ -356,7 +397,9 @@
         "function"
     ) {
       state.thread.scrollTo({
-        top: state.thread.scrollHeight,
+        top:
+          state.thread.scrollHeight,
+
         behavior
       });
 
@@ -391,7 +434,9 @@
       voice &&
       voice.ui &&
       voice.ui.status
-        ? voice.ui.status[statusKey]
+        ? voice.ui.status[
+            statusKey
+          ]
         : "";
 
     const message =
@@ -437,10 +482,11 @@
       state.rushTarget &&
       threadState
     ) {
-      state.rushTarget.setAttribute(
-        "data-jeeves-thread-state",
-        threadState
-      );
+      state.rushTarget
+        .setAttribute(
+          "data-jeeves-thread-state",
+          threadState
+        );
     }
   };
 
@@ -464,7 +510,9 @@
 
     state.root.setAttribute(
       "data-jeeves-speaking",
-      active ? "true" : "false"
+      active
+        ? "true"
+        : "false"
     );
 
     state.root.setAttribute(
@@ -478,12 +526,16 @@
 
     state.typing.setAttribute(
       "data-jeeves-typing",
-      active ? "true" : "false"
+      active
+        ? "true"
+        : "false"
     );
 
     state.typing.setAttribute(
       "aria-hidden",
-      active ? "false" : "true"
+      active
+        ? "false"
+        : "true"
     );
 
     state.typing.hidden =
@@ -499,7 +551,9 @@
 
     state.root.setAttribute(
       "data-jeeves-options-locked",
-      locked ? "true" : "false"
+      locked
+        ? "true"
+        : "false"
     );
 
     if (!state.options) {
@@ -515,7 +569,9 @@
 
       button.setAttribute(
         "aria-disabled",
-        locked ? "true" : "false"
+        locked
+          ? "true"
+          : "false"
       );
     });
   };
@@ -526,7 +582,9 @@
   ) => {
     state.root.setAttribute(
       "data-jeeves-options-ready",
-      visible ? "true" : "false"
+      visible
+        ? "true"
+        : "false"
     );
 
     if (state.options) {
@@ -546,8 +604,9 @@
     } = {}
   ) => {
     const normalizedState =
-      Object.values(WAIT_STATES)
-        .includes(waitState)
+      Object.values(
+        WAIT_STATES
+      ).includes(waitState)
         ? waitState
         : WAIT_STATES.IDLE;
 
@@ -569,48 +628,59 @@
         : "false"
     );
 
-    if (state.rushTarget) {
-      state.rushTarget.setAttribute(
-        "data-jeeves-rush-available",
-        rushAvailable
-          ? "true"
-          : "false"
-      );
+    if (
+      state.rushTarget
+    ) {
+      state.rushTarget
+        .setAttribute(
+          "data-jeeves-rush-available",
+          rushAvailable
+            ? "true"
+            : "false"
+        );
     }
 
-    if (state.rushControl) {
+    if (
+      state.rushControl
+    ) {
       state.rushControl.hidden =
         !rushAvailable;
 
       state.rushControl.disabled =
         !rushAvailable;
 
-      state.rushControl.setAttribute(
-        "aria-disabled",
-        rushAvailable
-          ? "false"
-          : "true"
-      );
+      state.rushControl
+        .setAttribute(
+          "aria-disabled",
+          rushAvailable
+            ? "false"
+            : "true"
+        );
 
       if (
         normalizedState ===
         WAIT_STATES.TYPING
       ) {
-        state.rushControl.textContent =
+        state.rushControl
+          .textContent =
           "Reveal this message";
       } else if (
         normalizedState ===
         WAIT_STATES.READING
       ) {
-        state.rushControl.textContent =
+        state.rushControl
+          .textContent =
           "Continue when ready";
       } else {
-        state.rushControl.textContent =
+        state.rushControl
+          .textContent =
           "Continue";
       }
     }
 
-    if (state.conversationCue) {
+    if (
+      state.conversationCue
+    ) {
       const cueText =
         normalize(cue);
 
@@ -619,7 +689,8 @@
         !cueText;
 
       if (cueText) {
-        state.conversationCue.textContent =
+        state.conversationCue
+          .textContent =
           cueText;
       }
     }
@@ -644,8 +715,12 @@
       state,
       WAIT_STATES.IDLE,
       {
-        rushAvailable: false,
-        signal: "Host ready",
+        rushAvailable:
+          false,
+
+        signal:
+          "Host ready",
+
         promptStatus:
           state.options &&
           !state.options.hidden
@@ -662,9 +737,14 @@
     setThreadTelemetry(
       state,
       {
-        stage: "Reception channel",
-        signal: "Host ready",
-        threadState: "ready"
+        stage:
+          "Reception channel",
+
+        signal:
+          "Host ready",
+
+        threadState:
+          "ready"
       }
     );
   };
@@ -793,9 +873,15 @@
     appendBubble(
       state,
       createBubble({
-        kind: "user",
-        register: "clarification",
-        label: "Visitor",
+        kind:
+          "user",
+
+        register:
+          "clarification",
+
+        label:
+          "Visitor",
+
         text
       })
     );
@@ -804,13 +890,17 @@
   const appendSystemMessage = (
     state,
     text,
-    register = "boundary"
+    register =
+      "boundary"
   ) => {
     appendBubble(
       state,
       createBubble({
-        kind: "system",
+        kind:
+          "system",
+
         register,
+
         text
       })
     );
@@ -818,7 +908,8 @@
 
   const clearTimer = state => {
     if (
-      state.pendingTimer !== null
+      state.pendingTimer !==
+      null
     ) {
       window.clearTimeout(
         state.pendingTimer
@@ -837,7 +928,10 @@
       typeof state.pendingResolve !==
         "function"
     ) {
-      clearTimer(state);
+      clearTimer(
+        state
+      );
+
       return false;
     }
 
@@ -847,7 +941,9 @@
     state.pendingResolve =
       null;
 
-    clearTimer(state);
+    clearTimer(
+      state
+    );
 
     resolve({
       advanced:
@@ -858,7 +954,8 @@
   };
 
   const cancelSequence = state => {
-    state.sequenceToken += 1;
+    state.sequenceToken +=
+      1;
 
     releasePendingWait(
       state,
@@ -882,7 +979,8 @@
       state,
       WAIT_STATES.IDLE,
       {
-        rushAvailable: false
+        rushAvailable:
+          false
       }
     );
   };
@@ -900,8 +998,12 @@
       state.sequenceToken
     ) {
       resolve({
-        cancelled: true,
-        advanced: false,
+        cancelled:
+          true,
+
+        advanced:
+          false,
+
         kind
       });
 
@@ -911,31 +1013,36 @@
     let finished =
       false;
 
-    const complete = advanced => {
-      if (finished) {
-        return;
-      }
+    const complete =
+      advanced => {
+        if (finished) {
+          return;
+        }
 
-      finished =
-        true;
+        finished =
+          true;
 
-      state.pendingResolve =
-        null;
+        state.pendingResolve =
+          null;
 
-      state.pendingWaitKind =
-        WAIT_STATES.IDLE;
+        state.pendingWaitKind =
+          WAIT_STATES.IDLE;
 
-      clearTimer(state);
+        clearTimer(
+          state
+        );
 
-      resolve({
-        cancelled:
-          token !==
-          state.sequenceToken,
-        advanced:
-          Boolean(advanced),
-        kind
-      });
-    };
+        resolve({
+          cancelled:
+            token !==
+            state.sequenceToken,
+
+          advanced:
+            Boolean(advanced),
+
+          kind
+        });
+      };
 
     state.pendingResolve =
       complete;
@@ -949,7 +1056,8 @@
     ) {
       state.pendingTimer =
         window.setTimeout(
-          () => complete(false),
+          () =>
+            complete(false),
           0
         );
 
@@ -958,7 +1066,8 @@
 
     state.pendingTimer =
       window.setTimeout(
-        () => complete(false),
+        () =>
+          complete(false),
         delay
       );
   });
@@ -975,9 +1084,10 @@
       return null;
     }
 
-    return state.voice.getRegister(
-      registerId
-    );
+    return state.voice
+      .getRegister(
+        registerId
+      );
   };
 
   const getTypingDelay = (
@@ -986,7 +1096,9 @@
     text,
     index
   ) => {
-    if (state.reducedMotion) {
+    if (
+      state.reducedMotion
+    ) {
       return 0;
     }
 
@@ -1002,15 +1114,26 @@
         : "deliberate";
 
     const baseByPacing = {
-      immediate: 240,
-      responsive: 520,
-      measured: 720,
-      deliberate: 900,
-      soft: 820
+      immediate:
+        240,
+
+      responsive:
+        520,
+
+      measured:
+        720,
+
+      deliberate:
+        900,
+
+      soft:
+        820
     };
 
     const base =
-      baseByPacing[pacing] ??
+      baseByPacing[
+        pacing
+      ] ??
       760;
 
     const characterCount =
@@ -1019,7 +1142,8 @@
     const characterWeight =
       Math.min(
         900,
-        characterCount * 4
+        characterCount *
+        4
       );
 
     const sequenceWeight =
@@ -1043,7 +1167,9 @@
     registerId,
     text
   ) => {
-    if (state.reducedMotion) {
+    if (
+      state.reducedMotion
+    ) {
       return 0;
     }
 
@@ -1051,35 +1177,62 @@
       countWords(text);
 
     const baseByRegister = {
-      welcome: 900,
-      orientation: 1000,
-      clarification: 900,
-      boundary: 1200,
-      warning: 1250,
-      handoff: 1100
+      welcome:
+        900,
+
+      orientation:
+        1000,
+
+      clarification:
+        900,
+
+      boundary:
+        1200,
+
+      warning:
+        1250,
+
+      handoff:
+        1100
     };
 
     const perWordByRegister = {
-      welcome: 220,
-      orientation: 225,
-      clarification: 210,
-      boundary: 240,
-      warning: 245,
-      handoff: 230
+      welcome:
+        220,
+
+      orientation:
+        225,
+
+      clarification:
+        210,
+
+      boundary:
+        240,
+
+      warning:
+        245,
+
+      handoff:
+        230
     };
 
     const base =
-      baseByRegister[registerId] ??
+      baseByRegister[
+        registerId
+      ] ??
       950;
 
     const perWord =
-      perWordByRegister[registerId] ??
+      perWordByRegister[
+        registerId
+      ] ??
       220;
 
     return Math.round(
       clamp(
         base +
-        wordCount * perWord,
+        wordCount *
+        perWord,
         1500,
         5600
       )
@@ -1108,27 +1261,27 @@
         );
       } else if (
         registerId ===
-          "handoff"
+        "handoff"
       ) {
         setStatus(
           state,
           "handoff",
-          "Jeeves found the right door."
+          "Jeeves has prepared the next door."
         );
       } else if (
         registerId ===
-          "clarification"
+        "clarification"
       ) {
         setStatus(
           state,
           "clarifying",
-          "Jeeves is considering your request."
+          "Jeeves is identifying the useful distinction."
         );
       } else {
         setStatus(
           state,
           "speaking",
-          "Jeeves is preparing a response."
+          "Jeeves is preparing the essential introduction."
         );
       }
 
@@ -1142,7 +1295,7 @@
       setStatus(
         state,
         "reading",
-        "Jeeves is allowing the message to settle."
+        "Continue when you are ready."
       );
 
       return;
@@ -1155,136 +1308,158 @@
     );
   };
 
-  const beginTypingWait = async (
-    state,
-    {
-      registerId,
-      text,
-      index,
-      token
-    }
-  ) => {
-    setTyping(
-      state,
-      true,
-      registerId
-    );
-
-    setRegisterStatus(
-      state,
-      registerId,
-      WAIT_STATES.TYPING
-    );
-
-    setThreadTelemetry(
+  const beginTypingWait =
+    async (
       state,
       {
-        stage: "Incoming response",
-        signal: "Jeeves is typing",
-        threadState: "typing"
+        registerId,
+        text,
+        index,
+        token
       }
-    );
+    ) => {
+      setTyping(
+        state,
+        true,
+        registerId
+      );
 
-    setWaitState(
-      state,
-      WAIT_STATES.TYPING,
-      {
-        rushAvailable: true,
-        cue:
-          "Tap the conversation to reveal Jeeves’s current message sooner.",
-        signal:
-          "Jeeves is typing",
-        promptStatus:
-          "Jeeves is preparing the next message."
-      }
-    );
+      setRegisterStatus(
+        state,
+        registerId,
+        WAIT_STATES.TYPING
+      );
 
-    return waitForSequence(
+      setThreadTelemetry(
+        state,
+        {
+          stage:
+            "Incoming response",
+
+          signal:
+            "Jeeves is typing",
+
+          threadState:
+            "typing"
+        }
+      );
+
+      setWaitState(
+        state,
+        WAIT_STATES.TYPING,
+        {
+          rushAvailable:
+            true,
+
+          cue:
+            "Tap the conversation to reveal Jeeves’s current message sooner.",
+
+          signal:
+            "Jeeves is typing",
+
+          promptStatus:
+            "Jeeves is preparing the current message."
+        }
+      );
+
+      return waitForSequence(
+        state,
+        {
+          delay:
+            getTypingDelay(
+              state,
+              registerId,
+              text,
+              index
+            ),
+
+          token,
+
+          kind:
+            WAIT_STATES.TYPING
+        }
+      );
+    };
+
+  const beginReadingWait =
+    async (
       state,
       {
-        delay:
-          getTypingDelay(
-            state,
-            registerId,
-            text,
-            index
-          ),
+        registerId,
+        text,
         token,
-        kind:
-          WAIT_STATES.TYPING
+        hasNextMessage
       }
-    );
-  };
+    ) => {
+      setTyping(
+        state,
+        false,
+        registerId
+      );
 
-  const beginReadingWait = async (
-    state,
-    {
-      registerId,
-      text,
-      token,
-      hasNextMessage
-    }
-  ) => {
-    setTyping(
-      state,
-      false,
-      registerId
-    );
+      setRegisterStatus(
+        state,
+        registerId,
+        WAIT_STATES.READING
+      );
 
-    setRegisterStatus(
-      state,
-      registerId,
-      WAIT_STATES.READING
-    );
+      setThreadTelemetry(
+        state,
+        {
+          stage:
+            "Message received",
 
-    setThreadTelemetry(
-      state,
-      {
-        stage: "Message received",
-        signal:
-          hasNextMessage
-            ? "Reading interval"
-            : "Response settling",
-        threadState: "reading"
-      }
-    );
+          signal:
+            hasNextMessage
+              ? "Reading interval"
+              : "Response complete",
 
-    setWaitState(
-      state,
-      WAIT_STATES.READING,
-      {
-        rushAvailable:
-          hasNextMessage,
-        cue:
-          hasNextMessage
-            ? "Read at your own pace. Tap the conversation when you are ready for Jeeves’s next message."
-            : "",
-        signal:
-          hasNextMessage
-            ? "Reading interval"
-            : "Response settling",
-        promptStatus:
-          hasNextMessage
-            ? "The next message will begin after this reading interval."
-            : "Jeeves is finishing the response."
-      }
-    );
+          threadState:
+            "reading"
+        }
+      );
 
-    return waitForSequence(
-      state,
-      {
-        delay:
-          getReadingDelay(
-            state,
-            registerId,
-            text
-          ),
-        token,
-        kind:
-          WAIT_STATES.READING
-      }
-    );
-  };
+      setWaitState(
+        state,
+        WAIT_STATES.READING,
+        {
+          rushAvailable:
+            hasNextMessage,
+
+          cue:
+            hasNextMessage
+              ? "Read at your own pace. Tap the conversation when you are ready for Jeeves’s next message."
+              : "",
+
+          signal:
+            hasNextMessage
+              ? "Reading interval"
+              : "Response complete",
+
+          promptStatus:
+            hasNextMessage
+              ? "The intended handoff follows when you are ready."
+              : "Jeeves has completed the response."
+        }
+      );
+
+      return waitForSequence(
+        state,
+        {
+          delay:
+            getReadingDelay(
+              state,
+              registerId,
+              text
+            ),
+
+          token,
+
+          kind:
+            WAIT_STATES.READING
+        }
+      );
+    };
 
   const speakMessages = async ({
     state,
@@ -1324,7 +1499,9 @@
         typeof list[index] ===
           "string"
           ? {
-              text: list[index],
+              text:
+                list[index],
+
               register
             }
           : list[index];
@@ -1375,16 +1552,24 @@
       appendBubble(
         state,
         createBubble({
-          kind: "jeeves",
-          register: registerId,
-          label: "Jeeves",
+          kind:
+            "jeeves",
+
+          register:
+            registerId,
+
+          label:
+            "Jeeves",
+
           text
         })
       );
 
       const hasNextMessage =
         list
-          .slice(index + 1)
+          .slice(
+            index + 1
+          )
           .some(item => {
             if (
               typeof item ===
@@ -1493,6 +1678,15 @@
       );
 
       if (
+        option.intendedHandoff
+      ) {
+        button.setAttribute(
+          "data-jeeves-intended-handoff",
+          option.intendedHandoff
+        );
+      }
+
+      if (
         option.contextualRoute
       ) {
         button.setAttribute(
@@ -1505,7 +1699,9 @@
     button.textContent =
       utilityAction
         ? normalize(option)
-        : normalize(option.label);
+        : normalize(
+            option.label
+          );
 
     button.addEventListener(
       "click",
@@ -1542,7 +1738,8 @@
     state,
     options,
     {
-      includeMainReturn = false
+      includeMainReturn =
+        false
     } = {}
   ) => {
     if (!state.options) {
@@ -1555,17 +1752,19 @@
 
     const normalizedOptions =
       Array.isArray(options)
-        ? options.filter(Boolean)
+        ? options
+            .filter(Boolean)
         : [];
 
     normalizedOptions
       .forEach(option => {
-        state.options.appendChild(
-          createPromptButton({
-            state,
-            option
-          })
-        );
+        state.options
+          .appendChild(
+            createPromptButton({
+              state,
+              option
+            })
+          );
       });
 
     if (
@@ -1578,13 +1777,17 @@
           .returnLabel ||
         "Return to the main welcome";
 
-      state.options.appendChild(
-        createPromptButton({
-          state,
-          option: returnLabel,
-          utilityAction: "main"
-        })
-      );
+      state.options
+        .appendChild(
+          createPromptButton({
+            state,
+            option:
+              returnLabel,
+
+            utilityAction:
+              "main"
+          })
+        );
     }
 
     const hasOptions =
@@ -1598,8 +1801,11 @@
       hasOptions
     );
 
-    if (state.promptLabel) {
-      state.promptLabel.textContent =
+    if (
+      state.promptLabel
+    ) {
+      state.promptLabel
+        .textContent =
         state.voice.ui &&
         state.voice.ui.console
           ? state.voice.ui.console
@@ -1616,7 +1822,7 @@
       state,
       hasOptions
         ? "Choose the direction that best matches your visit."
-        : "No further prompt is available in this path."
+        : "This path has reached its natural stopping point."
     );
   };
 
@@ -1629,16 +1835,14 @@
     }
 
     const pathway =
-      typeof state.voice.getPathway ===
-        "function"
-        ? state.voice.getPathway(
-            routeId
-          )
-        : null;
+      state.voice.getPathway(
+        routeId
+      );
 
     if (pathway) {
       return {
         pathway,
+
         route:
           state.voice.getRoute(
             pathway.route
@@ -1659,18 +1863,24 @@
       pathway: {
         id:
           `${route.id}-pathway`,
+
         eyebrow:
           route.owner ||
           "Continue",
+
         title:
           route.label,
+
         description:
           route.purpose,
+
         route:
-          route.id,
+          routeId,
+
         voiceLine:
           ""
       },
+
       route
     };
   };
@@ -1829,16 +2039,19 @@
     return card;
   };
 
-  const clearContextualPathway = state => {
-    if (state.routeMount) {
-      clearNode(
+  const clearContextualPathway =
+    state => {
+      if (
         state.routeMount
-      );
-    }
+      ) {
+        clearNode(
+          state.routeMount
+        );
+      }
 
-    state.root.removeAttribute(
-      "data-jeeves-context-route-active"
-    );
+      state.root.removeAttribute(
+        "data-jeeves-context-route-active"
+      );
   };
 
   const renderContextualPathway = (
@@ -1863,12 +2076,27 @@
       );
 
     if (!card) {
+      emitError(
+        "contextual-route-card-unavailable",
+        {
+          instance:
+            state.id,
+
+          dialogue:
+            state.currentDialogueId,
+
+          route:
+            routeId
+        }
+      );
+
       return;
     }
 
-    state.routeMount.appendChild(
-      card
-    );
+    state.routeMount
+      .appendChild(
+        card
+      );
 
     state.root.setAttribute(
       "data-jeeves-context-route-active",
@@ -1878,69 +2106,209 @@
     emit(
       PATHWAY_EVENT,
       {
-        contract: CONTRACT,
-        instance: state.id,
-        mode: state.modeId,
+        contract:
+          CONTRACT,
+
+        instance:
+          state.id,
+
+        mode:
+          state.modeId,
+
         dialogue:
           state.currentDialogueId,
-        route: routeId
+
+        recognition:
+          state.currentRecognition ||
+          "",
+
+        intendedHandoff:
+          state.currentIntendedHandoff ||
+          null,
+
+        route:
+          routeId
       }
     );
   };
 
-  const renderMainOptions = state => {
-    clearContextualPathway(
-      state
-    );
-
-    state.currentDialogueId =
-      "";
-
-    state.root.removeAttribute(
-      "data-jeeves-current-dialogue"
-    );
-
-    const options =
-      state.voice.getMainOptions(
-        state.modeId
+  const renderMainOptions =
+    state => {
+      clearContextualPathway(
+        state
       );
 
-    renderPromptOptions(
-      state,
-      options,
-      {
-        includeMainReturn: false
-      }
-    );
+      state.currentDialogueId =
+        "";
 
-    setIdleState(
-      state
-    );
+      state.currentRecognition =
+        "";
 
-    setStatus(
-      state,
-      "listening",
-      "Jeeves is listening."
-    );
-  };
+      state.currentIntendedHandoff =
+        "";
+
+      state.root.removeAttribute(
+        "data-jeeves-current-dialogue"
+      );
+
+      state.root.removeAttribute(
+        "data-jeeves-intended-handoff"
+      );
+
+      const options =
+        state.voice.getMainOptions(
+          state.modeId
+        );
+
+      renderPromptOptions(
+        state,
+        options,
+        {
+          includeMainReturn:
+            false
+        }
+      );
+
+      setIdleState(
+        state
+      );
+
+      setStatus(
+        state,
+        "listening",
+        "Jeeves is listening."
+      );
+    };
 
   const renderFollowupOptions = (
     state,
     dialogue
   ) => {
     const followups =
-      state.voice.getFollowupOptions(
-        dialogue.id,
-        state.modeId
-      );
+      state.voice
+        .getFollowupOptions(
+          dialogue.id,
+          state.modeId
+        );
 
     renderPromptOptions(
       state,
       followups,
       {
-        includeMainReturn: true
+        includeMainReturn:
+          true
       }
     );
+  };
+
+  const verifyIntendedHandoff = (
+    state,
+    dialogue
+  ) => {
+    const intendedHandoff =
+      normalize(
+        dialogue &&
+        dialogue.intendedHandoff
+      );
+
+    const contextualRoute =
+      normalize(
+        dialogue &&
+        dialogue.contextualRoute
+      );
+
+    const isBoundary =
+      normalize(
+        dialogue &&
+        dialogue.register
+      ) ===
+      "boundary";
+
+    if (
+      isBoundary &&
+      !intendedHandoff &&
+      !contextualRoute
+    ) {
+      return {
+        valid:
+          true,
+
+        intendedHandoff:
+          null,
+
+        contextualRoute:
+          null
+      };
+    }
+
+    if (
+      !intendedHandoff
+    ) {
+      return {
+        valid:
+          false,
+
+        reason:
+          "missing-intended-handoff"
+      };
+    }
+
+    if (
+      !contextualRoute
+    ) {
+      return {
+        valid:
+          false,
+
+        reason:
+          "missing-contextual-route"
+      };
+    }
+
+    if (
+      intendedHandoff !==
+      contextualRoute
+    ) {
+      return {
+        valid:
+          false,
+
+        reason:
+          "intended-handoff-route-mismatch",
+
+        intendedHandoff,
+
+        contextualRoute
+      };
+    }
+
+    const route =
+      state.voice.getRoute(
+        intendedHandoff
+      );
+
+    if (!route) {
+      return {
+        valid:
+          false,
+
+        reason:
+          "unknown-intended-handoff",
+
+        intendedHandoff
+      };
+    }
+
+    return {
+      valid:
+        true,
+
+      intendedHandoff,
+
+      contextualRoute,
+
+      route
+    };
   };
 
   const beginDialogue = (
@@ -1965,7 +2333,7 @@
     if (!dialogue) {
       appendSystemMessage(
         state,
-        "That route is not available right now."
+        "That response is not available from this entrance."
       );
 
       renderMainOptions(
@@ -1983,7 +2351,7 @@
     ) {
       appendSystemMessage(
         state,
-        "That question belongs to another routing path."
+        "That question is not available from this entrance."
       );
 
       renderMainOptions(
@@ -1994,17 +2362,19 @@
     }
 
     const validation =
-      state.voice.validateDialogue(
-        dialogue
-      );
+      state.voice
+        .validateDialogue(
+          dialogue
+        );
 
     if (
       !validation ||
-      validation.valid !== true
+      validation.valid !==
+        true
     ) {
       appendSystemMessage(
         state,
-        "Jeeves withheld that response because it did not pass the routing boundary."
+        "That response could not be opened safely."
       );
 
       renderMainOptions(
@@ -2014,13 +2384,62 @@
       emitError(
         "dialogue-validation-failed",
         {
-          instance: state.id,
-          dialogue: dialogueId,
+          instance:
+            state.id,
+
+          dialogue:
+            dialogueId,
+
           reason:
             validation &&
             validation.reason
               ? validation.reason
               : "unknown"
+        }
+      );
+
+      return;
+    }
+
+    const handoffValidation =
+      verifyIntendedHandoff(
+        state,
+        dialogue
+      );
+
+    if (
+      !handoffValidation.valid
+    ) {
+      appendSystemMessage(
+        state,
+        "The introduction and its next door did not agree, so Jeeves withheld the route."
+      );
+
+      renderMainOptions(
+        state
+      );
+
+      emitError(
+        "intended-handoff-validation-failed",
+        {
+          instance:
+            state.id,
+
+          dialogue:
+            dialogueId,
+
+          reason:
+            handoffValidation.reason,
+
+          intendedHandoff:
+            handoffValidation
+              .intendedHandoff ||
+            null,
+
+          contextualRoute:
+            handoffValidation
+              .contextualRoute ||
+            null
         }
       );
 
@@ -2047,10 +2466,33 @@
     state.currentDialogueId =
       dialogue.id;
 
+    state.currentRecognition =
+      normalize(
+        dialogue.recognition
+      );
+
+    state.currentIntendedHandoff =
+      handoffValidation
+        .intendedHandoff ||
+      "";
+
     state.root.setAttribute(
       "data-jeeves-current-dialogue",
       dialogue.id
     );
+
+    if (
+      state.currentIntendedHandoff
+    ) {
+      state.root.setAttribute(
+        "data-jeeves-intended-handoff",
+        state.currentIntendedHandoff
+      );
+    } else {
+      state.root.removeAttribute(
+        "data-jeeves-intended-handoff"
+      );
+    }
 
     appendUserPrompt(
       state,
@@ -2062,11 +2504,15 @@
 
     speakMessages({
       state,
+
       messages:
         dialogue.responses,
+
       register:
         dialogue.register,
+
       token,
+
       onComplete: () => {
         if (
           token !==
@@ -2077,7 +2523,8 @@
 
         renderContextualPathway(
           state,
-          dialogue.contextualRoute
+          handoffValidation
+            .contextualRoute
         );
 
         renderFollowupOptions(
@@ -2088,15 +2535,39 @@
         emit(
           DIALOGUE_EVENT,
           {
-            contract: CONTRACT,
-            instance: state.id,
-            mode: state.modeId,
-            dialogue: dialogue.id,
+            contract:
+              CONTRACT,
+
+            instance:
+              state.id,
+
+            mode:
+              state.modeId,
+
+            dialogue:
+              dialogue.id,
+
             register:
               dialogue.register,
+
+            recognition:
+              state.currentRecognition ||
+              "",
+
+            intendedHandoff:
+              state.currentIntendedHandoff ||
+              null,
+
             contextualRoute:
-              dialogue.contextualRoute ||
-              null
+              handoffValidation
+                .contextualRoute ||
+              null,
+
+            elevatorPitch:
+              true,
+
+            handoffVerified:
+              true
           }
         );
       }
@@ -2123,7 +2594,9 @@
       emitError(
         "missing-mode",
         {
-          instance: state.id,
+          instance:
+            state.id,
+
           requestedMode:
             modeId
         }
@@ -2142,7 +2615,15 @@
     state.currentDialogueId =
       "";
 
-    if (!preserveThread) {
+    state.currentRecognition =
+      "";
+
+    state.currentIntendedHandoff =
+      "";
+
+    if (
+      !preserveThread
+    ) {
       clearNode(
         state.thread
       );
@@ -2170,6 +2651,10 @@
       "data-jeeves-current-dialogue"
     );
 
+    state.root.removeAttribute(
+      "data-jeeves-intended-handoff"
+    );
+
     if (silent) {
       renderMainOptions(
         state
@@ -2178,10 +2663,17 @@
       emit(
         MODE_EVENT,
         {
-          contract: CONTRACT,
-          instance: state.id,
-          mode: mode.id,
-          silent: true
+          contract:
+            CONTRACT,
+
+          instance:
+            state.id,
+
+          mode:
+            mode.id,
+
+          silent:
+            true
         }
       );
 
@@ -2201,17 +2693,28 @@
 
     const opening =
       state.voice
-        .getOpening(mode.id)
-        .slice(0, 2);
+        .getOpening(
+          mode.id
+        )
+        .slice(
+          0,
+          2
+        );
 
     const token =
       state.sequenceToken;
 
     speakMessages({
       state,
-      messages: opening,
-      register: "welcome",
+
+      messages:
+        opening,
+
+      register:
+        "welcome",
+
       token,
+
       onComplete: () => {
         if (
           token !==
@@ -2232,10 +2735,17 @@
     emit(
       MODE_EVENT,
       {
-        contract: CONTRACT,
-        instance: state.id,
-        mode: mode.id,
-        silent: false
+        contract:
+          CONTRACT,
+
+        instance:
+          state.id,
+
+        mode:
+          mode.id,
+
+        silent:
+          false
       }
     );
   };
@@ -2244,7 +2754,10 @@
     state,
     action
   ) => {
-    if (action === "main") {
+    if (
+      action ===
+      "main"
+    ) {
       cancelSequence(
         state
       );
@@ -2256,209 +2769,237 @@
       return;
     }
 
-    if (action === "restart") {
+    if (
+      action ===
+      "restart"
+    ) {
       activateMode(
         state,
         state.modeId,
         {
-          silent: false
+          silent:
+            false
         }
       );
     }
   };
 
-  const advanceCurrentWait = state => {
-    if (
-      !state ||
-      !state.rushAvailable ||
-      typeof state.pendingResolve !==
-        "function"
-    ) {
-      return false;
-    }
-
-    return releasePendingWait(
-      state,
-      true
-    );
-  };
-
-  const installRestartListeners = state => {
-    queryAll(
-      "[data-jeeves-restart]",
-      state.scope
-    ).forEach(button => {
-      button.addEventListener(
-        "click",
-        () => {
-          handleUtilityAction(
-            state,
-            "restart"
-          );
-        }
-      );
-    });
-  };
-
-  const installAdvanceListeners = state => {
-    if (state.rushTarget) {
-      state.rushTarget.addEventListener(
-        "pointerdown",
-        event => {
-          const target =
-            event.target;
-
-          if (
-            isElement(target) &&
-            target.closest(
-              INTERACTIVE_SELECTOR
-            )
-          ) {
-            return;
-          }
-
-          advanceCurrentWait(
-            state
-          );
-        }
-      );
-
-      state.rushTarget.addEventListener(
-        "keydown",
-        event => {
-          if (
-            event.key !==
-              "Enter" &&
-            event.key !==
-              " "
-          ) {
-            return;
-          }
-
-          const target =
-            event.target;
-
-          if (
-            isElement(target) &&
-            target.closest(
-              INTERACTIVE_SELECTOR
-            )
-          ) {
-            return;
-          }
-
-          if (
-            advanceCurrentWait(
-              state
-            )
-          ) {
-            event.preventDefault();
-          }
-        }
-      );
-    }
-
-    if (state.rushControl) {
-      state.rushControl.addEventListener(
-        "click",
-        () => {
-          advanceCurrentWait(
-            state
-          );
-        }
-      );
-    }
-  };
-
-  const installThreadScrollListener = state => {
-    if (!state.thread) {
-      return;
-    }
-
-    state.thread.addEventListener(
-      "scroll",
-      () => {
-        state.userNearBottom =
-          isNearThreadBottom(
-            state.thread
-          );
-      },
-      {
-        passive: true
+  const advanceCurrentWait =
+    state => {
+      if (
+        !state ||
+        !state.rushAvailable ||
+        typeof state.pendingResolve !==
+          "function"
+      ) {
+        return false;
       }
-    );
-  };
 
-  const installDisclosureCoordination = state => {
-    const disclosures =
+      return releasePendingWait(
+        state,
+        true
+      );
+    };
+
+  const installRestartListeners =
+    state => {
       queryAll(
-        "[data-jeeves-guide-disclosure]",
+        "[data-jeeves-restart]",
         state.scope
-      );
-
-    disclosures.forEach(disclosure => {
-      disclosure.addEventListener(
-        "toggle",
-        () => {
-          const control =
-            query(
-              ".jeeves-guide-summary-control",
-              disclosure
+      ).forEach(button => {
+        button.addEventListener(
+          "click",
+          () => {
+            handleUtilityAction(
+              state,
+              "restart"
             );
-
-          if (control) {
-            control.textContent =
-              disclosure.open
-                ? "Close"
-                : "Open";
           }
+        );
+      });
+    };
 
-          if (!disclosure.open) {
-            return;
-          }
+  const installAdvanceListeners =
+    state => {
+      if (
+        state.rushTarget
+      ) {
+        state.rushTarget
+          .addEventListener(
+            "pointerdown",
+            event => {
+              const target =
+                event.target;
 
-          disclosures
-            .filter(
-              other =>
-                other !== disclosure &&
-                other.open
-            )
-            .forEach(other => {
-              other.open =
-                false;
-            });
-        }
-      );
-    });
-  };
+              if (
+                isElement(target) &&
+                target.closest(
+                  INTERACTIVE_SELECTOR
+                )
+              ) {
+                return;
+              }
 
-  const requestThresholdReplay = () => {
-    emit(
-      THRESHOLD_REPLAY_REQUEST_EVENT,
-      {
-        contract: CONTRACT,
-        source:
-          "jeeves-runtime"
+              advanceCurrentWait(
+                state
+              );
+            }
+          );
+
+        state.rushTarget
+          .addEventListener(
+            "keydown",
+            event => {
+              if (
+                event.key !==
+                  "Enter" &&
+                event.key !==
+                  " "
+              ) {
+                return;
+              }
+
+              const target =
+                event.target;
+
+              if (
+                isElement(target) &&
+                target.closest(
+                  INTERACTIVE_SELECTOR
+                )
+              ) {
+                return;
+              }
+
+              if (
+                advanceCurrentWait(
+                  state
+                )
+              ) {
+                event.preventDefault();
+              }
+            }
+          );
       }
-    );
-  };
 
-  const installReplayControls = state => {
-    queryAll(
-      "[data-jeeves-replay-welcome]",
-      state.scope
-    ).forEach(button => {
-      button.hidden =
-        false;
+      if (
+        state.rushControl
+      ) {
+        state.rushControl
+          .addEventListener(
+            "click",
+            () => {
+              advanceCurrentWait(
+                state
+              );
+            }
+          );
+      }
+    };
 
-      button.addEventListener(
-        "click",
-        () => {
-          requestThresholdReplay();
+  const installThreadScrollListener =
+    state => {
+      if (!state.thread) {
+        return;
+      }
+
+      state.thread
+        .addEventListener(
+          "scroll",
+          () => {
+            state.userNearBottom =
+              isNearThreadBottom(
+                state.thread
+              );
+          },
+          {
+            passive:
+              true
+          }
+        );
+    };
+
+  const installDisclosureCoordination =
+    state => {
+      const disclosures =
+        queryAll(
+          "[data-jeeves-guide-disclosure]",
+          state.scope
+        );
+
+      disclosures.forEach(
+        disclosure => {
+          disclosure
+            .addEventListener(
+              "toggle",
+              () => {
+                const control =
+                  query(
+                    ".jeeves-guide-summary-control",
+                    disclosure
+                  );
+
+                if (control) {
+                  control.textContent =
+                    disclosure.open
+                      ? "Close"
+                      : "Open";
+                }
+
+                if (
+                  !disclosure.open
+                ) {
+                  return;
+                }
+
+                disclosures
+                  .filter(
+                    other =>
+                      other !==
+                        disclosure &&
+                      other.open
+                  )
+                  .forEach(
+                    other => {
+                      other.open =
+                        false;
+                    }
+                  );
+              }
+            );
         }
       );
-    });
-  };
+    };
+
+  const requestThresholdReplay =
+    () => {
+      emit(
+        THRESHOLD_REPLAY_REQUEST_EVENT,
+        {
+          contract:
+            CONTRACT,
+
+          source:
+            "jeeves-runtime-public-api"
+        }
+      );
+    };
+
+  const revealReplayControls =
+    state => {
+      queryAll(
+        "[data-jeeves-replay-welcome]",
+        state.scope
+      ).forEach(button => {
+        button.hidden =
+          false;
+
+        button.setAttribute(
+          "data-jeeves-replay-owner",
+          "threshold"
+        );
+      });
+    };
 
   const setPageAccess = (
     state,
@@ -2473,7 +3014,9 @@
     state.pageAccess =
       normalizedAccess;
 
-    if (state.page) {
+    if (
+      state.page
+    ) {
       state.page.setAttribute(
         "data-jeeves-access",
         normalizedAccess
@@ -2486,11 +3029,14 @@
         normalizedAccess
       );
 
-    if (document.body) {
-      document.body.setAttribute(
-        "data-jeeves-access",
-        normalizedAccess
-      );
+    if (
+      document.body
+    ) {
+      document.body
+        .setAttribute(
+          "data-jeeves-access",
+          normalizedAccess
+        );
     }
   };
 
@@ -2499,7 +3045,9 @@
     {
       source =
         "threshold-complete",
-      silentOpening = false
+
+      silentOpening =
+        false
     } = {}
   ) => {
     if (
@@ -2531,8 +3079,10 @@
       {
         stage:
           "Front Door Reception",
+
         signal:
           "Host connected",
+
         threadState:
           "ready"
       }
@@ -2543,188 +3093,208 @@
       state.modeId,
       {
         silent:
-          Boolean(silentOpening)
+          Boolean(
+            silentOpening
+          )
       }
     );
 
     emit(
       CONVERSATION_ACTIVATED_EVENT,
       {
-        contract: CONTRACT,
-        instance: state.id,
+        contract:
+          CONTRACT,
+
+        instance:
+          state.id,
+
         source,
+
         silentOpening:
-          Boolean(silentOpening)
+          Boolean(
+            silentOpening
+          )
       }
     );
 
     return true;
   };
 
-  const suspendConversationForReplay = state => {
-    cancelSequence(
-      state
-    );
-
-    state.conversationActivated =
-      false;
-
-    state.openingCompleted =
-      false;
-
-    state.root.setAttribute(
-      "data-jeeves-conversation-activated",
-      "false"
-    );
-
-    setPageAccess(
-      state,
-      THRESHOLD_STATES.GUIDED
-    );
-
-    setStatus(
-      state,
-      "paused",
-      "The estate welcome is being replayed."
-    );
-
-    setThreadTelemetry(
-      state,
-      {
-        stage:
-          "Reception paused",
-        signal:
-          "Welcome replay",
-        threadState:
-          "paused"
-      }
-    );
-
-    setPromptStatus(
-      state,
-      "Conversation resumes after the estate welcome."
-    );
-
-    setOptionsLocked(
-      state,
-      true
-    );
-
-    setOptionsVisibility(
-      state,
-      false
-    );
-  };
-
-  const thresholdIsOpen = state => {
-    const pageAccess =
-      normalize(
-        state.page &&
-        state.page.getAttribute(
-          "data-jeeves-access"
-        )
+  const suspendConversationForReplay =
+    state => {
+      cancelSequence(
+        state
       );
 
-    const documentAccess =
-      normalize(
-        document.documentElement
-          .getAttribute(
+      state.conversationActivated =
+        false;
+
+      state.openingCompleted =
+        false;
+
+      state.root.setAttribute(
+        "data-jeeves-conversation-activated",
+        "false"
+      );
+
+      setPageAccess(
+        state,
+        THRESHOLD_STATES.GUIDED
+      );
+
+      setStatus(
+        state,
+        "paused",
+        "The estate welcome is being replayed."
+      );
+
+      setThreadTelemetry(
+        state,
+        {
+          stage:
+            "Reception paused",
+
+          signal:
+            "Welcome replay",
+
+          threadState:
+            "paused"
+        }
+      );
+
+      setPromptStatus(
+        state,
+        "Conversation resumes after the estate welcome."
+      );
+
+      setOptionsLocked(
+        state,
+        true
+      );
+
+      setOptionsVisibility(
+        state,
+        false
+      );
+    };
+
+  const thresholdIsOpen =
+    state => {
+      const pageAccess =
+        normalize(
+          state.page &&
+          state.page.getAttribute(
             "data-jeeves-access"
           )
+        );
+
+      const documentAccess =
+        normalize(
+          document.documentElement
+            .getAttribute(
+              "data-jeeves-access"
+            )
+        );
+
+      const thresholdState =
+        normalize(
+          state.threshold &&
+          state.threshold.getAttribute(
+            "data-threshold-state"
+          )
+        );
+
+      return (
+        pageAccess ===
+          THRESHOLD_STATES.OPEN ||
+        documentAccess ===
+          THRESHOLD_STATES.OPEN ||
+        thresholdState ===
+          "complete" ||
+        thresholdState ===
+          "skipped" ||
+        thresholdState ===
+          "open"
       );
+    };
 
-    const thresholdState =
-      normalize(
-        state.threshold &&
-        state.threshold.getAttribute(
-          "data-threshold-state"
-        )
-      );
+  const coordinateInitialActivation =
+    state => {
+      if (
+        !state.threshold
+      ) {
+        activateConversation(
+          state,
+          {
+            source:
+              "threshold-absent"
+          }
+        );
 
-    return (
-      pageAccess ===
-        THRESHOLD_STATES.OPEN ||
-      documentAccess ===
-        THRESHOLD_STATES.OPEN ||
-      thresholdState ===
-        "complete" ||
-      thresholdState ===
-        "skipped" ||
-      thresholdState ===
-        "open"
-    );
-  };
-
-  const coordinateInitialActivation = state => {
-    if (!state.threshold) {
-      activateConversation(
-        state,
-        {
-          source:
-            "threshold-absent"
-        }
-      );
-
-      return;
-    }
-
-    if (
-      thresholdIsOpen(state)
-    ) {
-      activateConversation(
-        state,
-        {
-          source:
-            "threshold-already-open"
-        }
-      );
-
-      return;
-    }
-
-    setPageAccess(
-      state,
-      THRESHOLD_STATES.GUIDED
-    );
-
-    state.root.setAttribute(
-      "data-jeeves-conversation-activated",
-      "false"
-    );
-
-    setStatus(
-      state,
-      "waiting",
-      "Jeeves is waiting at the front door."
-    );
-
-    setThreadTelemetry(
-      state,
-      {
-        stage:
-          "Reception channel",
-        signal:
-          "Awaiting arrival",
-        threadState:
-          "waiting"
+        return;
       }
-    );
 
-    setPromptStatus(
-      state,
-      "The conversation begins after the estate introduction."
-    );
+      if (
+        thresholdIsOpen(
+          state
+        )
+      ) {
+        activateConversation(
+          state,
+          {
+            source:
+              "threshold-already-open"
+          }
+        );
 
-    setOptionsLocked(
-      state,
-      true
-    );
+        return;
+      }
 
-    setOptionsVisibility(
-      state,
-      false
-    );
-  };
+      setPageAccess(
+        state,
+        THRESHOLD_STATES.GUIDED
+      );
+
+      state.root.setAttribute(
+        "data-jeeves-conversation-activated",
+        "false"
+      );
+
+      setStatus(
+        state,
+        "waiting",
+        "Jeeves is waiting at the front door."
+      );
+
+      setThreadTelemetry(
+        state,
+        {
+          stage:
+            "Reception channel",
+
+          signal:
+            "Awaiting arrival",
+
+          threadState:
+            "waiting"
+        }
+      );
+
+      setPromptStatus(
+        state,
+        "The conversation begins after the estate introduction."
+      );
+
+      setOptionsLocked(
+        state,
+        true
+      );
+
+      setOptionsVisibility(
+        state,
+        false
+      );
+    };
 
   const markMounted = state => {
     state.root.setAttribute(
@@ -2757,13 +3327,20 @@
       "false"
     );
 
+    state.root.setAttribute(
+      "data-jeeves-elevator-pitch-runtime",
+      "true"
+    );
+
     document.documentElement
       .setAttribute(
         "data-jeeves-runtime-ready",
         "true"
       );
 
-    if (document.body) {
+    if (
+      document.body
+    ) {
       document.body.setAttribute(
         "data-jeeves-runtime-ready",
         "true"
@@ -2797,15 +3374,19 @@
 
     return {
       id:
-        getStateId(root),
+        getStateId(
+          root
+        ),
 
       root,
+
       page:
         page instanceof Element
           ? page
           : null,
 
       scope,
+
       voice,
 
       threshold:
@@ -2905,25 +3486,48 @@
         ) ||
         DEFAULT_MODE,
 
-      currentDialogueId: "",
-      sequenceToken: 0,
-      pendingTimer: null,
-      pendingResolve: null,
+      currentDialogueId:
+        "",
+
+      currentRecognition:
+        "",
+
+      currentIntendedHandoff:
+        "",
+
+      sequenceToken:
+        0,
+
+      pendingTimer:
+        null,
+
+      pendingResolve:
+        null,
+
       pendingWaitKind:
         WAIT_STATES.IDLE,
 
-      speaking: false,
-      optionsLocked: false,
+      speaking:
+        false,
+
+      optionsLocked:
+        false,
+
       reducedMotion:
         prefersReducedMotion(),
-      userNearBottom: true,
+
+      userNearBottom:
+        true,
 
       waitState:
         WAIT_STATES.IDLE,
-      rushAvailable: false,
+
+      rushAvailable:
+        false,
 
       conversationActivated:
         false,
+
       openingCompleted:
         false,
 
@@ -2940,7 +3544,8 @@
       !root ||
       root.getAttribute(
         "data-jeeves-runtime-mounted"
-      ) === "true"
+      ) ===
+        "true"
     ) {
       return null;
     }
@@ -2963,11 +3568,18 @@
       emitError(
         "missing-required-mount",
         {
-          instance: state.id,
+          instance:
+            state.id,
+
           hasThread:
-            Boolean(state.thread),
+            Boolean(
+              state.thread
+            ),
+
           hasOptions:
-            Boolean(state.options)
+            Boolean(
+              state.options
+            )
         }
       );
 
@@ -2991,7 +3603,7 @@
       state
     );
 
-    installReplayControls(
+    revealReplayControls(
       state
     );
 
@@ -3018,7 +3630,9 @@
       return [];
     }
 
-    if (voiceFailureTimer) {
+    if (
+      voiceFailureTimer
+    ) {
       window.clearTimeout(
         voiceFailureTimer
       );
@@ -3040,20 +3654,38 @@
         )
         .filter(Boolean);
 
-    if (mounted.length) {
+    if (
+      mounted.length
+    ) {
       emit(
         RUNTIME_EVENT,
         {
-          contract: CONTRACT,
+          contract:
+            CONTRACT,
+
+          previousContract:
+            PREVIOUS_CONTRACT,
+
           voiceContract:
             voice.contract,
+
           instanceCount:
             mounted.length,
+
           instances:
             mounted.map(
               state =>
                 state.id
-            )
+            ),
+
+          elevatorPitchRuntime:
+            true,
+
+          intendedHandoffValidation:
+            true,
+
+          replayControlClickOwnership:
+            "threshold"
         }
       );
     }
@@ -3062,7 +3694,9 @@
   };
 
   const markVoiceFailure = () => {
-    if (getVoice()) {
+    if (
+      getVoice()
+    ) {
       return;
     }
 
@@ -3072,7 +3706,8 @@
       if (
         root.getAttribute(
           "data-jeeves-runtime-mounted"
-        ) === "true"
+        ) ===
+          "true"
       ) {
         return;
       }
@@ -3090,7 +3725,7 @@
 
       if (status) {
         status.textContent =
-          "Jeeves's voice authority is unavailable. Direct public paths remain open.";
+          "Jeeves’s voice authority is unavailable. Direct public paths remain open.";
       }
     });
 
@@ -3099,90 +3734,96 @@
     );
   };
 
-  const markThresholdFailureOpen = () => {
-    if (
-      !instances.size
-    ) {
-      return;
-    }
-
-    instances.forEach(state => {
+  const markThresholdFailureOpen =
+    () => {
       if (
-        state.conversationActivated
+        !instances.size
       ) {
         return;
       }
 
-      activateConversation(
-        state,
-        {
-          source:
-            "threshold-fallback-timeout"
+      instances.forEach(
+        state => {
+          if (
+            state.conversationActivated
+          ) {
+            return;
+          }
+
+          activateConversation(
+            state,
+            {
+              source:
+                "threshold-fallback-timeout"
+            }
+          );
         }
       );
-    });
 
-    emitError(
-      "threshold-activation-timeout",
-      {
-        fallback:
-          "conversation-opened"
-      }
-    );
-  };
-
-  const resolveState = reference => {
-    if (!reference) {
-      return (
-        instances.values()
-          .next()
-          .value ||
-        null
+      emitError(
+        "threshold-activation-timeout",
+        {
+          fallback:
+            "conversation-opened"
+        }
       );
-    }
+    };
 
-    if (
-      typeof reference ===
-        "string"
-    ) {
-      return (
-        instances.get(
-          reference
-        ) ||
-        null
-      );
-    }
-
-    if (
-      reference instanceof
-        Element
-    ) {
-      const root =
-        reference.matches(
-          ROOT_SELECTOR
-        )
-          ? reference
-          : reference.closest(
-              ROOT_SELECTOR
-            );
-
-      if (!root) {
-        return null;
-      }
-
-      const id =
-        root.getAttribute(
-          "data-jeeves-instance"
+  const resolveState =
+    reference => {
+      if (!reference) {
+        return (
+          instances.values()
+            .next()
+            .value ||
+          null
         );
+      }
 
-      return (
-        instances.get(id) ||
-        null
-      );
-    }
+      if (
+        typeof reference ===
+          "string"
+      ) {
+        return (
+          instances.get(
+            reference
+          ) ||
+          null
+        );
+      }
 
-    return null;
-  };
+      if (
+        reference instanceof
+          Element
+      ) {
+        const root =
+          reference.matches(
+            ROOT_SELECTOR
+          )
+            ? reference
+            : reference.closest(
+                ROOT_SELECTOR
+              );
+
+        if (!root) {
+          return null;
+        }
+
+        const id =
+          root.getAttribute(
+            "data-jeeves-instance"
+          );
+
+        return (
+          instances.get(
+            id
+          ) ||
+          null
+        );
+      }
+
+      return null;
+    };
 
   const publicActivateMode = (
     reference,
@@ -3228,59 +3869,62 @@
     return true;
   };
 
-  const publicRestart = reference => {
-    const state =
-      resolveState(
-        reference
+  const publicRestart =
+    reference => {
+      const state =
+        resolveState(
+          reference
+        );
+
+      if (!state) {
+        return false;
+      }
+
+      handleUtilityAction(
+        state,
+        "restart"
       );
 
-    if (!state) {
-      return false;
-    }
+      return true;
+    };
 
-    handleUtilityAction(
-      state,
-      "restart"
-    );
+  const publicAdvance =
+    reference => {
+      const state =
+        resolveState(
+          reference
+        );
 
-    return true;
-  };
+      if (!state) {
+        return false;
+      }
 
-  const publicAdvance = reference => {
-    const state =
-      resolveState(
-        reference
+      return advanceCurrentWait(
+        state
+      );
+    };
+
+  const publicRenderMain =
+    reference => {
+      const state =
+        resolveState(
+          reference
+        );
+
+      if (!state) {
+        return false;
+      }
+
+      cancelSequence(
+        state
       );
 
-    if (!state) {
-      return false;
-    }
-
-    return advanceCurrentWait(
-      state
-    );
-  };
-
-  const publicRenderMain = reference => {
-    const state =
-      resolveState(
-        reference
+      renderMainOptions(
+        state
       );
 
-    if (!state) {
-      return false;
-    }
-
-    cancelSequence(
-      state
-    );
-
-    renderMainOptions(
-      state
-    );
-
-    return true;
-  };
+      return true;
+    };
 
   const publicActivateConversation = (
     reference,
@@ -3301,47 +3945,68 @@
     );
   };
 
-  const publicReplayWelcome = () => {
-    requestThresholdReplay();
-    return true;
-  };
+  const publicReplayWelcome =
+    () => {
+      requestThresholdReplay();
+
+      return true;
+    };
 
   const API = {
-    contract: CONTRACT,
-    version: 2,
+    contract:
+      CONTRACT,
+
+    previousContract:
+      PREVIOUS_CONTRACT,
+
+    version:
+      "2.1.0",
 
     events:
       Object.freeze({
         voiceReady:
           VOICE_EVENT,
+
         runtimeReady:
           RUNTIME_EVENT,
+
         thresholdReady:
           THRESHOLD_READY_EVENT,
+
         thresholdComplete:
           THRESHOLD_COMPLETE_EVENT,
+
         thresholdSkip:
           THRESHOLD_SKIP_EVENT,
+
         thresholdReplayRequest:
           THRESHOLD_REPLAY_REQUEST_EVENT,
+
         thresholdReplay:
           THRESHOLD_REPLAY_EVENT,
+
         conversationActivated:
           CONVERSATION_ACTIVATED_EVENT,
+
         modeChange:
           MODE_EVENT,
+
         dialogueComplete:
           DIALOGUE_EVENT,
+
         pathwayReveal:
           PATHWAY_EVENT,
+
         runtimeError:
           ERROR_EVENT
       }),
 
     get ready() {
       return (
-        getVoice() !== null &&
-        instances.size > 0
+        getVoice() !==
+          null &&
+        instances.size >
+          0
       );
     },
 
@@ -3351,7 +4016,9 @@
 
     mountAll,
 
-    getInstance(reference) {
+    getInstance(
+      reference
+    ) {
       return resolveState(
         reference
       );
@@ -3379,60 +4046,78 @@
       publicReplayWelcome
   };
 
-  Object.freeze(API);
+  Object.freeze(
+    API
+  );
 
   Object.defineProperty(
     window,
     GLOBAL_NAME,
     {
-      value: API,
-      enumerable: true,
-      configurable: false,
-      writable: false
+      value:
+        API,
+
+      enumerable:
+        true,
+
+      configurable:
+        false,
+
+      writable:
+        false
     }
   );
 
-  const handleThresholdComplete = event => {
-    if (thresholdFallbackTimer) {
-      window.clearTimeout(
+  const handleThresholdComplete =
+    event => {
+      if (
         thresholdFallbackTimer
-      );
+      ) {
+        window.clearTimeout(
+          thresholdFallbackTimer
+        );
 
-      thresholdFallbackTimer =
-        null;
-    }
+        thresholdFallbackTimer =
+          null;
+      }
 
-    const detail =
-      event &&
-      event.detail
-        ? event.detail
-        : {};
+      const detail =
+        event &&
+        event.detail
+          ? event.detail
+          : {};
 
-    instances.forEach(state => {
-      activateConversation(
-        state,
-        {
-          source:
-            normalize(
-              detail.source
-            ) ||
-            event.type,
-          silentOpening:
-            Boolean(
-              detail.silentOpening
-            )
+      instances.forEach(
+        state => {
+          activateConversation(
+            state,
+            {
+              source:
+                normalize(
+                  detail.source
+                ) ||
+                event.type,
+
+              silentOpening:
+                Boolean(
+                  detail.silentOpening
+                )
+            }
+          );
         }
       );
-    });
-  };
+    };
 
-  const handleThresholdReplay = () => {
-    instances.forEach(state => {
-      suspendConversationForReplay(
-        state
+  const handleThresholdReplay =
+    () => {
+      instances.forEach(
+        state => {
+          suspendConversationForReplay(
+            state
+          );
+        }
       );
-    });
-  };
+    };
 
   window.addEventListener(
     THRESHOLD_COMPLETE_EVENT,
@@ -3456,8 +4141,12 @@
     const mounted =
       mountAll();
 
-    if (!mounted.length) {
-      if (!getVoice()) {
+    if (
+      !mounted.length
+    ) {
+      if (
+        !getVoice()
+      ) {
         voiceFailureTimer =
           window.setTimeout(
             markVoiceFailure,
@@ -3472,10 +4161,13 @@
       mounted.some(
         state =>
           state.threshold &&
-          !state.conversationActivated
+          !state
+            .conversationActivated
       );
 
-    if (hasPendingThreshold) {
+    if (
+      hasPendingThreshold
+    ) {
       thresholdFallbackTimer =
         window.setTimeout(
           markThresholdFailureOpen,
@@ -3493,7 +4185,8 @@
         "DOMContentLoaded",
         boot,
         {
-          once: true
+          once:
+            true
         }
       );
 
@@ -3523,19 +4216,23 @@
   window.addEventListener(
     THRESHOLD_READY_EVENT,
     () => {
-      instances.forEach(state => {
-        if (
-          thresholdIsOpen(state)
-        ) {
-          activateConversation(
-            state,
-            {
-              source:
-                THRESHOLD_READY_EVENT
-            }
-          );
+      instances.forEach(
+        state => {
+          if (
+            thresholdIsOpen(
+              state
+            )
+          ) {
+            activateConversation(
+              state,
+              {
+                source:
+                  THRESHOLD_READY_EVENT
+              }
+            );
+          }
         }
-      });
+      );
     }
   );
 

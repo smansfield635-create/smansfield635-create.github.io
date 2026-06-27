@@ -1,55 +1,41 @@
 /* /assets/compass/compass.controller.js
-   DGB Compass — State, interaction, transition, and navigation authority.
+   Diamond Gate Bridge Compass
+   Controller authority for state, selection, panel presentation,
+   Mirrorland lifecycle, navigation, lens tabs, and receipts.
 
-   Protected behavior:
-   - cardinal star → open cluster;
-   - cluster star → select path;
-   - Return to Orbit → selected path back to its open cluster;
-   - cluster swipe → constellation;
-   - constellation swipe → change facing wing;
-   - Mirrorland → reveal, focus, enter, withdraw, or recover.
-
-   Scope: compass.controller.js only.
+   This file does not render crystals or Mirrorland geometry.
 */
 
 (() => {
   "use strict";
 
   const CONTRACT = Object.freeze({
-    id: "DGB_COMPASS_CONTROLLER_v11",
+    id: "DGB_COMPASS_CONTROLLER_FIVE_FILE_REBUILD_v1",
     file: "/assets/compass/compass.controller.js",
-    architecture: "FIVE_FILE_SELF_CONTAINED_MIRRORLAND",
-    stateAuthority: true,
-    navigationAuthority: true,
-    pointerClassificationAuthority: false,
-    crystalsProtected: true,
-    visualPassClaimed: false
+    releaseId: "dgb-compass-mirrorland-rebuild-v1",
+    visualPassClaimed: false,
+    productionAuthorized: false,
+    deploymentAuthorized: false
   });
 
-  const MODES = Object.freeze({
-    COMPASS: "COMPASS_MODE",
-    ORBIT: "ORBIT_MODE",
-    DESTINATION: "DESTINATION_MODE"
+  const STATES = Object.freeze({
+    CONSTELLATION: "CONSTELLATION",
+    CLUSTER_OPEN: "CLUSTER_OPEN",
+    ROOM_SELECTED: "ROOM_SELECTED",
+    MIRRORLAND_REVEALING: "MIRRORLAND_REVEALING",
+    MIRRORLAND_FOCUSED: "MIRRORLAND_FOCUSED",
+    MIRRORLAND_WITHDRAWING: "MIRRORLAND_WITHDRAWING",
+    NAVIGATING: "NAVIGATING",
+    HELD: "HELD"
   });
 
-  const WINDOW_STATES = Object.freeze({
-    DORMANT: "dormant",
-    REVEALING: "revealing",
-    FOCUSED: "focused",
-    WITHDRAWING: "withdrawing",
-    NAVIGATING: "navigating"
+  const MIRRORLAND_STATES = Object.freeze({
+    DORMANT: "DORMANT",
+    REVEALING: "MIRRORLAND_REVEALING",
+    FOCUSED: "MIRRORLAND_FOCUSED",
+    WITHDRAWING: "MIRRORLAND_WITHDRAWING",
+    HELD: "HELD"
   });
-
-  const WINDOW_EVENTS = Object.freeze({
-    REVEAL_COMPLETE: "MIRRORLAND_WINDOW_REVEAL_COMPLETE",
-    WITHDRAWAL_COMPLETE: "MIRRORLAND_WINDOW_WITHDRAWAL_COMPLETE",
-    FAILURE: "MIRRORLAND_WINDOW_RENDER_FAILURE"
-  });
-
-  const WINDOW_SOURCE = "compass.mirrorland-window";
-  const MIRRORLAND_ROUTE = "/showroom/";
-  const REVEAL_TIMEOUT_MS = 8000;
-  const WITHDRAWAL_TIMEOUT_MS = 6000;
 
   const WINGS = Object.freeze([
     "north",
@@ -58,98 +44,150 @@
     "west"
   ]);
 
-  const COPY = Object.freeze({
-    constellation:
-      "Swipe to rotate the constellation. Tap a star or label to open its cluster.",
+  const ORBIT_SEQUENCE = Object.freeze([
+    "north",
+    "east",
+    "south",
+    "west"
+  ]);
 
-    cluster:
-      "Tap a cluster star or label to inspect its path. Swipe to return to the constellation.",
+  const PROMINENCE = Object.freeze({
+    [STATES.CONSTELLATION]: Object.freeze({
+      compass: 1.0,
+      window: 0.36
+    }),
 
-    path:
-      "Inspect the selected path. Enter only when this is the path you want. Back to Cluster moves back to the open cluster.",
+    [STATES.CLUSTER_OPEN]: Object.freeze({
+      compass: 1.0,
+      window: 0.34
+    }),
 
-    mirrorland: Object.freeze({
-      eyebrow: "Mirrorland Threshold",
-      title: "Mirrorland",
-      purpose:
-        "A stained-glass window into the world beyond the Compass.",
-      relationship:
-        "Inspect the threshold. Enter Mirrorland when ready, or return to the Compass without losing your orientation.",
-      revealing:
-        "The Mirrorland threshold is resolving. Enter and Back remain unavailable until the Window is stable.",
-      focused:
-        "Inspect the Mirrorland threshold. Enter Mirrorland or return to the Compass.",
-      withdrawing:
-        "The Mirrorland threshold is withdrawing and the prior Compass orientation is being restored.",
-      navigating:
-        "Entering Mirrorland.",
-      enter: "Enter Mirrorland",
-      back: "Back to Compass"
+    [STATES.ROOM_SELECTED]: Object.freeze({
+      compass: 0.94,
+      window: 0.32
+    }),
+
+    [STATES.MIRRORLAND_REVEALING]: Object.freeze({
+      compass: 0.62,
+      window: 1.0
+    }),
+
+    [STATES.MIRRORLAND_FOCUSED]: Object.freeze({
+      compass: 0.36,
+      window: 1.0
+    }),
+
+    [STATES.MIRRORLAND_WITHDRAWING]: Object.freeze({
+      compass: 0.70,
+      window: 0.82
+    }),
+
+    [STATES.NAVIGATING]: Object.freeze({
+      compass: 0.22,
+      window: 1.0
+    }),
+
+    [STATES.HELD]: Object.freeze({
+      compass: 0.80,
+      window: 0.0
     })
   });
+
+  const TIMEOUTS = Object.freeze({
+    mirrorlandRevealMs: 8000,
+    mirrorlandWithdrawalMs: 6000,
+    rendererReadyMs: 3000
+  });
+
+  const DEFAULT_PANEL = Object.freeze({
+    eyebrow: "Selected path",
+    title: "Choose a star",
+    purpose: "Tap a star to open its cluster.",
+    relationship:
+      "Tap a cluster star to inspect its path. Return To Orbit moves back to the open cluster. Swipe returns to the constellation."
+  });
+
+  const GUIDANCE = Object.freeze({
+    CONSTELLATION:
+      "Tap a star to open its cluster. Swipe across open space to rotate the constellation.",
+
+    CLUSTER_OPEN:
+      "Tap a cluster star to inspect its path. Swipe across open space to return to the constellation.",
+
+    ROOM_SELECTED:
+      "Inspect the selected path. Use Enter Room to navigate, or Return To Orbit to reopen the cluster.",
+
+    MIRRORLAND_DORMANT:
+      "Activate the center threshold to reveal Mirrorland without losing your Compass position.",
+
+    MIRRORLAND_REVEALING:
+      "Mirrorland is revealing. Wait for the Window to stabilize.",
+
+    MIRRORLAND_FOCUSED:
+      "Mirrorland is stable. Enter when ready, or use Back to Compass to restore the prior state.",
+
+    MIRRORLAND_WITHDRAWING:
+      "Mirrorland is withdrawing. Your prior Compass state will be restored.",
+
+    HELD:
+      "The Compass remains available, but one visual subsystem is temporarily held."
+  });
+
+  const RECEIPT = {
+    contractId: CONTRACT.id,
+    status: "pending",
+    state: STATES.CONSTELLATION,
+    orbitFocus: "",
+    selectedCardinal: "",
+    selectedRoom: "",
+    selectedDestinationType: "",
+    selectedRoute: "",
+    mirrorlandState: MIRRORLAND_STATES.DORMANT,
+    mirrorlandTransitionId: "",
+    lastAction: "",
+    lastFailure: null,
+    visualPassClaimed: false
+  };
 
   const state = {
     root: null,
     scene: null,
     panel: null,
-
     panelEyebrow: null,
     panelTitle: null,
     panelPurpose: null,
     panelRelationship: null,
+    enterButton: null,
+    enterLabel: null,
+    returnButton: null,
+    mirrorlandBackButton: null,
+    guidance: null,
+    controllerReceiptOutput: null,
 
-    enterControl: null,
-    returnToOrbitControl: null,
-    legacyReturnControl: null,
-    mirrorlandBackControl: null,
-    receiptSlot: null,
-
-    cardinals: [],
-    rooms: [],
-    mirrorland: null,
-
-    mode: MODES.COMPASS,
+    current: STATES.CONSTELLATION,
     orbitFocus: "",
     selectedCardinal: "",
     selectedRoom: "",
+    selectedDestinationType: "",
+    selectedDestinationId: "",
+    selectedDestinationLabel: "",
+    selectedRoute: "",
 
-    destinationType: "",
-    destinationId: "",
-    destinationLabel: "",
-    destinationRoute: "",
-    routeSource: "",
+    mirrorlandState: MIRRORLAND_STATES.DORMANT,
+    mirrorlandTransitionId: "",
+    mirrorlandTimeout: 0,
+    rendererReadyTimeout: 0,
 
-    flowerExpanded: false,
-    panelDescended: false,
-    enterEnabled: false,
-    reducedMotion: false,
-
-    windowState: WINDOW_STATES.DORMANT,
-    windowStable: false,
-    windowEnterEnabled: false,
-    windowBackEnabled: false,
-    windowRouteValid: false,
-    preservedOrbitFocus: "",
-
-    transitionId: 0,
-    transitionTimer: 0,
-    transitionExpectedState: "",
-    transitionTimeoutMs: 0,
-    lastCompletionKey: "",
-
-    lastAction: "init",
-    lastOrientationInput: "init",
-    lastWindowAction: "init",
-    lastLensSet: "",
-    lastLens: "",
-    failureReason: null
+    preserved: null,
+    initialized: false,
+    reducedMotion: false
   };
 
-  function $(selector, root = document) {
+  function qs(selector, root = document) {
     return root.querySelector(selector);
   }
 
-  function $all(selector, root = document) {
+  function qsa(selector, root = document) {
     return Array.from(root.querySelectorAll(selector));
   }
 
@@ -158,1692 +196,1262 @@
     return WINGS.includes(wing) ? wing : "";
   }
 
-  function validRoute(value) {
+  function normalizeRoute(value) {
     const route = String(value || "").trim();
     return route.startsWith("/") ? route : "";
   }
 
-  function validMirrorlandRoute(value) {
-    return validRoute(value) === MIRRORLAND_ROUTE;
+  function makeTransitionId(prefix = "mirrorland") {
+    const time = Date.now().toString(36);
+    const random = Math.random().toString(36).slice(2, 8);
+    return `${prefix}-${time}-${random}`;
   }
 
-  function setText(element, value) {
-    if (element) {
-      element.textContent = value || "";
-    }
-  }
-
-  function setControlText(control, value) {
+  function setHiddenControl(control, hidden) {
     if (!control) return;
 
-    const label =
-      $("[data-compass-control-label]", control) ||
-      $("[data-compass-enter-label]", control);
+    control.hidden = hidden;
+    control.disabled = hidden;
+    control.setAttribute("aria-hidden", hidden ? "true" : "false");
+    control.setAttribute("aria-disabled", hidden ? "true" : "false");
 
-    if (label) {
-      label.textContent = value || "";
+    if (hidden) {
+      control.setAttribute("tabindex", "-1");
     } else {
-      control.textContent = value || "";
+      control.removeAttribute("tabindex");
     }
   }
 
-  function setObjectText(element, primary, secondary) {
-    if (!element) return;
+  function setEnterEnabled(enabled, label = "Enter Room") {
+    if (!state.enterButton) return;
 
-    const spans = element.querySelectorAll("span");
-
-    if (spans[0]) {
-      spans[0].textContent = primary || "";
-    }
-
-    if (spans[1]) {
-      spans[1].textContent = secondary || "";
-    }
-  }
-
-  function setControlState(control, visible, enabled) {
-    if (!control) return;
-
-    control.hidden = !visible;
-    control.disabled = !enabled;
-    control.style.display = visible ? "" : "none";
-
-    control.setAttribute(
-      "aria-hidden",
-      visible ? "false" : "true"
-    );
-
-    control.setAttribute(
+    state.enterButton.disabled = !enabled;
+    state.enterButton.setAttribute(
       "aria-disabled",
       enabled ? "false" : "true"
     );
 
-    control.setAttribute(
-      "tabindex",
-      visible && enabled ? "0" : "-1"
-    );
-  }
-
-  function readCardinal(element) {
-    const wing = normalizeWing(
-      element.dataset.wing ||
-      element.dataset.cardinalId
-    );
-
-    if (!wing) return null;
-
-    const route = validRoute(
-      element.dataset.cardinalRoute ||
-      element.dataset.route
-    );
-
-    return {
-      element,
-      wing,
-      route,
-      label:
-        element.dataset.label ||
-        element.dataset.title ||
-        wing,
-      orbitLabel:
-        element.dataset.orbitLabel ||
-        element.dataset.label ||
-        wing,
-      clusterAnchorLabel:
-        element.dataset.clusterAnchorLabel ||
-        "Opened Cluster",
-      title:
-        element.dataset.panelTitle ||
-        element.dataset.title ||
-        element.dataset.label ||
-        wing,
-      purpose:
-        element.dataset.panelBody ||
-        element.dataset.wingMeaning ||
-        "Open this star field.",
-      coordinateFunction:
-        element.dataset.coordinateFunction || ""
-    };
-  }
-
-  function readRoom(element) {
-    const wing = normalizeWing(element.dataset.wing);
-    const id = String(element.dataset.roomId || "").trim();
-
-    if (!wing || !id) return null;
-
-    const route = validRoute(
-      element.dataset.route ||
-      element.getAttribute("href")
-    );
-
-    return {
-      element,
-      wing,
-      id,
-      route,
-      label:
-        element.dataset.label ||
-        element.textContent.trim() ||
-        id,
-      coordinate:
-        element.dataset.localCoordinate ||
-        "Path",
-      localFunction:
-        element.dataset.localFunction || "",
-      purpose:
-        element.dataset.preview ||
-        element.dataset.purpose ||
-        "Open this estate room."
-    };
-  }
-
-  function readMirrorland(element) {
-    if (!element) return null;
-
-    const route = String(
-      element.dataset.route ||
-      element.getAttribute("href") ||
-      MIRRORLAND_ROUTE
-    ).trim();
-
-    return {
-      element,
-      route,
-      validRoute: validMirrorlandRoute(route),
-      label:
-        element.dataset.label ||
-        COPY.mirrorland.title
-    };
-  }
-
-  function acquireDom() {
-    state.root = $("[data-compass-root]");
-
-    if (!state.root) {
-      return false;
-    }
-
-    state.scene =
-      $("[data-compass-scene]", state.root) ||
-      $(".compass-scene", state.root);
-
-    state.panel =
-      $("[data-compass-panel]", state.root);
-
-    state.panelEyebrow =
-      $("[data-compass-panel-eyebrow]", state.root);
-
-    state.panelTitle =
-      $("[data-compass-panel-title]", state.root);
-
-    state.panelPurpose =
-      $("[data-compass-panel-purpose]", state.root);
-
-    state.panelRelationship =
-      $("[data-compass-panel-relationship]", state.root);
-
-    state.enterControl =
-      $("[data-compass-enter]", state.root);
-
-    state.returnToOrbitControl =
-      $("[data-compass-return-to-orbit]", state.root);
-
-    state.legacyReturnControl =
-      $("[data-compass-return]", state.root);
-
-    state.mirrorlandBackControl =
-      $("[data-compass-mirrorland-back]", state.root);
-
-    state.receiptSlot =
-      $("[data-compass-controller-receipt]", state.root);
-
-    state.mirrorland = readMirrorland(
-      $("[data-compass-object='mirrorland']", state.root)
-    );
-
-    state.cardinals = $all(
-      "[data-compass-cardinal][data-wing]",
-      state.root
-    )
-      .map(readCardinal)
-      .filter(Boolean);
-
-    state.rooms = $all(
-      "[data-compass-room][data-wing][data-room-id]",
-      state.root
-    )
-      .map(readRoom)
-      .filter(Boolean);
-
-    state.reducedMotion =
-      (
-        typeof globalThis.matchMedia === "function" &&
-        globalThis.matchMedia(
-          "(prefers-reduced-motion: reduce)"
-        ).matches
-      ) ||
-      state.root.dataset.reducedMotion === "true";
-
-    state.windowRouteValid =
-      !!state.mirrorland &&
-      state.mirrorland.validRoute;
-
-    return (
-      !!state.scene &&
-      !!state.mirrorland &&
-      state.cardinals.length >= 4 &&
-      state.rooms.length > 0
-    );
-  }
-
-  function findCardinal(wing) {
-    const normalized = normalizeWing(wing);
-
-    return (
-      state.cardinals.find(
-        (cardinal) => cardinal.wing === normalized
-      ) ||
-      null
-    );
-  }
-
-  function findRoom(roomId) {
-    return (
-      state.rooms.find(
-        (room) => room.id === String(roomId || "")
-      ) ||
-      null
-    );
-  }
-
-  function mirrorlandBlocksCompass() {
-    return state.windowState !== WINDOW_STATES.DORMANT;
-  }
-
-  function clearDestination() {
-    state.selectedRoom = "";
-    state.destinationType = "";
-    state.destinationId = "";
-    state.destinationLabel = "";
-    state.destinationRoute = "";
-    state.routeSource = "";
-    state.enterEnabled = false;
-  }
-
-  function setDestination({
-    type = "",
-    id = "",
-    label = "",
-    route = "",
-    source = "",
-    enterEnabled = false
-  } = {}) {
-    const normalizedRoute = validRoute(route);
-
-    state.destinationType = type;
-    state.destinationId = id;
-    state.destinationLabel = label;
-    state.destinationRoute = normalizedRoute;
-    state.routeSource = normalizedRoute ? source : "";
-    state.enterEnabled =
-      !!normalizedRoute &&
-      enterEnabled === true;
-  }
-
-  function setEnterControl(label) {
-    const control = state.enterControl;
-
-    if (!control) return;
-
-    setControlText(control, label);
-
-    control.disabled = !state.enterEnabled;
-
-    control.setAttribute(
-      "aria-disabled",
-      state.enterEnabled ? "false" : "true"
-    );
-
-    if (state.destinationRoute) {
-      control.dataset.route = state.destinationRoute;
-      control.dataset.routeSource = state.routeSource;
+    if (state.enterLabel) {
+      state.enterLabel.textContent = label;
     } else {
-      delete control.dataset.route;
-      delete control.dataset.routeSource;
+      state.enterButton.textContent = label;
     }
   }
 
-  function currentGuidance() {
-    if (state.windowState === WINDOW_STATES.REVEALING) {
-      return {
-        key: "mirrorland-revealing",
-        copy: COPY.mirrorland.revealing
-      };
+  function setPanel({
+    eyebrow,
+    title,
+    purpose,
+    relationship
+  }) {
+    if (state.panelEyebrow) {
+      state.panelEyebrow.textContent =
+        eyebrow || DEFAULT_PANEL.eyebrow;
     }
 
-    if (state.windowState === WINDOW_STATES.FOCUSED) {
-      return {
-        key: "mirrorland-focused",
-        copy: COPY.mirrorland.focused
-      };
+    if (state.panelTitle) {
+      state.panelTitle.textContent =
+        title || DEFAULT_PANEL.title;
     }
 
-    if (state.windowState === WINDOW_STATES.WITHDRAWING) {
-      return {
-        key: "mirrorland-withdrawing",
-        copy: COPY.mirrorland.withdrawing
-      };
+    if (state.panelPurpose) {
+      state.panelPurpose.textContent =
+        purpose || DEFAULT_PANEL.purpose;
     }
 
-    if (state.windowState === WINDOW_STATES.NAVIGATING) {
-      return {
-        key: "mirrorland-navigating",
-        copy: COPY.mirrorland.navigating
-      };
+    if (state.panelRelationship) {
+      state.panelRelationship.textContent =
+        relationship || DEFAULT_PANEL.relationship;
     }
-
-    if (state.flowerExpanded && state.selectedRoom) {
-      return {
-        key: "path",
-        copy: COPY.path
-      };
-    }
-
-    if (state.flowerExpanded && state.selectedCardinal) {
-      return {
-        key: "cluster",
-        copy: COPY.cluster
-      };
-    }
-
-    return {
-      key: "constellation",
-      copy: COPY.constellation
-    };
   }
 
-  function coordinatePayload() {
-    const cardinal = findCardinal(
-      state.selectedCardinal ||
-      state.orbitFocus
+  function setGuidance(message) {
+    if (state.guidance) {
+      state.guidance.textContent = message || "";
+    }
+  }
+
+  function prominenceFor(currentState) {
+    return (
+      PROMINENCE[currentState] ||
+      PROMINENCE[STATES.HELD]
     );
-
-    const room = findRoom(state.selectedRoom);
-
-    return {
-      coordinateFunction:
-        cardinal
-          ? cardinal.coordinateFunction
-          : "",
-      localCoordinate:
-        room
-          ? room.coordinate
-          : "",
-      localFunction:
-        room
-          ? room.localFunction
-          : ""
-    };
   }
 
-  function writeRootState() {
-    const root = state.root;
-    const coordinate = coordinatePayload();
-    const guidance = currentGuidance();
+  function syncDatasets() {
+    if (!state.root) return;
 
-    root.dataset.compassMode = state.mode;
-    root.dataset.orbitFocus = state.orbitFocus;
-    root.dataset.selectedCardinal = state.selectedCardinal;
-    root.dataset.selectedWing = state.selectedCardinal;
-    root.dataset.selectedRoom = state.selectedRoom;
+    const prominence = prominenceFor(state.current);
 
-    root.dataset.selectedDestinationType =
-      state.destinationType;
-
-    root.dataset.selectedDestinationId =
-      state.destinationId;
-
-    root.dataset.selectedDestinationLabel =
-      state.destinationLabel;
-
-    root.dataset.coordinateFunction =
-      coordinate.coordinateFunction;
-
-    root.dataset.localCoordinate =
-      coordinate.localCoordinate;
-
-    root.dataset.localFunction =
-      coordinate.localFunction;
-
-    root.dataset.flowerExpanded =
-      state.flowerExpanded ? "true" : "false";
-
-    root.dataset.panelDescended =
-      state.panelDescended ? "true" : "false";
-
-    root.dataset.reducedMotion =
-      state.reducedMotion ? "true" : "false";
-
-    root.dataset.mirrorlandWindowState =
-      state.windowState;
-
-    root.dataset.mirrorlandWindowActive =
-      mirrorlandBlocksCompass()
+    state.root.dataset.compassMode = state.current;
+    state.root.dataset.orbitFocus = state.orbitFocus;
+    state.root.dataset.selectedCardinal = state.selectedCardinal;
+    state.root.dataset.selectedWing = state.selectedCardinal;
+    state.root.dataset.selectedRoom = state.selectedRoom;
+    state.root.dataset.selectedDestinationType =
+      state.selectedDestinationType;
+    state.root.dataset.selectedDestinationId =
+      state.selectedDestinationId;
+    state.root.dataset.selectedDestinationLabel =
+      state.selectedDestinationLabel;
+    state.root.dataset.selectedRoute = state.selectedRoute;
+    state.root.dataset.flowerExpanded =
+      state.current === STATES.CLUSTER_OPEN ||
+      state.current === STATES.ROOM_SELECTED
         ? "true"
         : "false";
+    state.root.dataset.panelDescended =
+      state.selectedDestinationType ? "true" : "false";
+    state.root.dataset.reducedMotion =
+      state.reducedMotion ? "true" : "false";
 
-    root.dataset.mirrorlandWindowStable =
-      state.windowStable ? "true" : "false";
-
-    root.dataset.mirrorlandEnterEnabled =
-      state.windowEnterEnabled ? "true" : "false";
-
-    root.dataset.mirrorlandBackEnabled =
-      state.windowBackEnabled ? "true" : "false";
-
-    root.dataset.preservedOrbitFocus =
-      state.preservedOrbitFocus;
-
-    root.dataset.mirrorlandTransitionId =
-      String(state.transitionId);
-
-    root.dataset.compassGuidanceState =
-      guidance.key;
-
-    root.dataset.compassGuidanceCopy =
-      guidance.copy;
-
-    root.dataset.visualPassClaimed =
-      "false";
-  }
-
-  function updateSemanticObjects() {
-    const mirrorlandBlocking =
-      mirrorlandBlocksCompass();
-
-    if (state.mirrorland) {
-      const element = state.mirrorland.element;
-
-      element.dataset.active =
-        state.destinationType === "mirrorland"
+    state.root.dataset.mirrorlandWindowState =
+      state.mirrorlandState;
+    state.root.dataset.mirrorlandWindowActive =
+      state.mirrorlandState === MIRRORLAND_STATES.REVEALING ||
+      state.mirrorlandState === MIRRORLAND_STATES.FOCUSED ||
+      state.mirrorlandState === MIRRORLAND_STATES.WITHDRAWING
+        ? "true"
+        : "false";
+    state.root.dataset.mirrorlandWindowStable =
+      state.mirrorlandState === MIRRORLAND_STATES.FOCUSED
+        ? "true"
+        : state.mirrorlandState === MIRRORLAND_STATES.DORMANT
           ? "true"
           : "false";
+    state.root.dataset.mirrorlandEnterEnabled =
+      state.current === STATES.MIRRORLAND_FOCUSED
+        ? "true"
+        : "false";
+    state.root.dataset.mirrorlandBackEnabled =
+      state.current === STATES.MIRRORLAND_REVEALING ||
+      state.current === STATES.MIRRORLAND_FOCUSED
+        ? "true"
+        : "false";
+    state.root.dataset.mirrorlandTransitionId =
+      state.mirrorlandTransitionId;
+    state.root.dataset.compassProminence =
+      String(prominence.compass);
+    state.root.dataset.windowProminence =
+      String(prominence.window);
+    state.root.dataset.visualPassClaimed = "false";
 
-      element.dataset.withdrawn =
-        state.flowerExpanded &&
-        !mirrorlandBlocking
-          ? "true"
-          : "false";
+    if (state.preserved) {
+      state.root.dataset.preservedCompassMode =
+        state.preserved.current || "";
+      state.root.dataset.preservedOrbitFocus =
+        state.preserved.orbitFocus || "";
+      state.root.dataset.preservedSelectedCardinal =
+        state.preserved.selectedCardinal || "";
+      state.root.dataset.preservedSelectedRoom =
+        state.preserved.selectedRoom || "";
+    } else {
+      state.root.dataset.preservedCompassMode = "";
+      state.root.dataset.preservedOrbitFocus = "";
+      state.root.dataset.preservedSelectedCardinal = "";
+      state.root.dataset.preservedSelectedRoom = "";
+    }
 
-      element.dataset.windowState =
-        state.windowState;
+    const mirrorlandControl = qs(
+      "[data-compass-object='mirrorland']",
+      state.root
+    );
 
-      element.setAttribute(
+    if (mirrorlandControl) {
+      mirrorlandControl.setAttribute(
         "aria-expanded",
-        mirrorlandBlocking ? "true" : "false"
-      );
-
-      element.setAttribute(
-        "aria-disabled",
-        mirrorlandBlocking ? "true" : "false"
-      );
-
-      if (mirrorlandBlocking) {
-        element.setAttribute("tabindex", "-1");
-      } else {
-        element.removeAttribute("tabindex");
-      }
-
-      setObjectText(
-        element,
-        COPY.mirrorland.title,
-        "Threshold"
+        state.mirrorlandState === MIRRORLAND_STATES.REVEALING ||
+        state.mirrorlandState === MIRRORLAND_STATES.FOCUSED
+          ? "true"
+          : "false"
       );
     }
 
-    state.cardinals.forEach((cardinal) => {
-      const active =
-        cardinal.wing === state.orbitFocus ||
-        cardinal.wing === state.selectedCardinal;
-
-      const clusterAnchor =
-        state.flowerExpanded &&
-        cardinal.wing === state.selectedCardinal;
-
-      cardinal.element.dataset.active =
-        active ? "true" : "false";
-
-      cardinal.element.dataset.flowerExpanded =
-        clusterAnchor ? "true" : "false";
-
-      cardinal.element.dataset.withdrawn =
-        state.flowerExpanded &&
-        !clusterAnchor
-          ? "true"
-          : "false";
-
-      cardinal.element.dataset.mirrorlandContext =
-        mirrorlandBlocking ? "true" : "false";
-
-      cardinal.element.disabled =
-        mirrorlandBlocking;
-
-      cardinal.element.setAttribute(
-        "aria-disabled",
-        mirrorlandBlocking ? "true" : "false"
-      );
-
-      cardinal.element.setAttribute(
-        "tabindex",
-        mirrorlandBlocking ? "-1" : "0"
-      );
-
-      if (clusterAnchor) {
-        setObjectText(
-          cardinal.element,
-          cardinal.clusterAnchorLabel,
-          "Opened Cluster"
+    qsa("[data-compass-cardinal]", state.root).forEach((element) => {
+      const wing = normalizeWing(element.dataset.wing);
+      const selected =
+        wing === state.selectedCardinal &&
+        (
+          state.current === STATES.CLUSTER_OPEN ||
+          state.current === STATES.ROOM_SELECTED
         );
-      } else if (state.flowerExpanded) {
-        setObjectText(
-          cardinal.element,
-          cardinal.orbitLabel,
-          "Outside Cluster"
-        );
+
+      element.dataset.selected = selected ? "true" : "false";
+
+      if (selected) {
+        element.setAttribute("aria-current", "true");
       } else {
-        setObjectText(
-          cardinal.element,
-          cardinal.orbitLabel,
-          active
-            ? "Facing Star"
-            : "Constellation Star"
-        );
+        element.removeAttribute("aria-current");
       }
     });
 
-    state.rooms.forEach((room) => {
-      const visible =
-        !mirrorlandBlocking &&
-        state.flowerExpanded &&
-        room.wing === state.selectedCardinal;
+    qsa("[data-compass-room]", state.root).forEach((element) => {
+      const selected =
+        element.dataset.roomId === state.selectedRoom;
 
-      room.element.hidden = !visible;
+      element.dataset.selected = selected ? "true" : "false";
 
-      room.element.dataset.active =
-        room.id === state.selectedRoom
-          ? "true"
-          : "false";
-
-      room.element.dataset.coordinateLabel =
-        room.coordinate;
-
-      room.element.dataset.coordinateFunction =
-        room.localFunction;
-
-      room.element.setAttribute(
-        "aria-disabled",
-        mirrorlandBlocking ? "true" : "false"
-      );
-
-      if (mirrorlandBlocking) {
-        room.element.setAttribute("tabindex", "-1");
+      if (selected) {
+        element.setAttribute("aria-current", "true");
       } else {
-        room.element.removeAttribute("tabindex");
+        element.removeAttribute("aria-current");
       }
-
-      if (visible) {
-        room.element.textContent =
-          `${room.coordinate}: ${room.label}`;
-      }
-    });
-  }
-
-  function updateControls() {
-    if (state.legacyReturnControl) {
-      setControlState(
-        state.legacyReturnControl,
-        false,
-        false
-      );
-    }
-
-    const clusterReturnVisible =
-      state.windowState === WINDOW_STATES.DORMANT &&
-      state.flowerExpanded &&
-      !!state.selectedCardinal;
-
-    setControlState(
-      state.returnToOrbitControl,
-      clusterReturnVisible,
-      clusterReturnVisible
-    );
-
-    const mirrorlandBackVisible =
-      state.windowState === WINDOW_STATES.FOCUSED;
-
-    setControlState(
-      state.mirrorlandBackControl,
-      mirrorlandBackVisible,
-      mirrorlandBackVisible &&
-      state.windowBackEnabled
-    );
-
-    setControlText(
-      state.mirrorlandBackControl,
-      COPY.mirrorland.back
-    );
-  }
-
-  function updatePanel() {
-    if (!state.panel) return;
-
-    if (state.destinationType === "mirrorland") {
-      setText(
-        state.panelEyebrow,
-        COPY.mirrorland.eyebrow
-      );
-
-      setText(
-        state.panelTitle,
-        COPY.mirrorland.title
-      );
-
-      setText(
-        state.panelPurpose,
-        COPY.mirrorland.purpose
-      );
-
-      setText(
-        state.panelRelationship,
-        COPY.mirrorland.relationship
-      );
-
-      setEnterControl(COPY.mirrorland.enter);
-      return;
-    }
-
-    if (state.destinationType === "petal") {
-      const room = findRoom(state.selectedRoom);
-
-      if (room) {
-        setText(
-          state.panelEyebrow,
-          room.coordinate
-        );
-
-        setText(
-          state.panelTitle,
-          room.label
-        );
-
-        setText(
-          state.panelPurpose,
-          room.purpose
-        );
-
-        setText(
-          state.panelRelationship,
-          COPY.path
-        );
-      }
-
-      setEnterControl("Enter Room");
-      return;
-    }
-
-    if (state.destinationType === "cardinal") {
-      const cardinal = findCardinal(
-        state.selectedCardinal
-      );
-
-      if (cardinal) {
-        setText(
-          state.panelEyebrow,
-          "Star cluster"
-        );
-
-        setText(
-          state.panelTitle,
-          cardinal.title
-        );
-
-        setText(
-          state.panelPurpose,
-          cardinal.purpose
-        );
-
-        setText(
-          state.panelRelationship,
-          COPY.cluster
-        );
-      }
-
-      setEnterControl("Enter Room");
-      return;
-    }
-
-    setText(
-      state.panelEyebrow,
-      "Constellation"
-    );
-
-    setText(
-      state.panelTitle,
-      "Choose a star"
-    );
-
-    setText(
-      state.panelPurpose,
-      COPY.constellation
-    );
-
-    setText(
-      state.panelRelationship,
-      "Enter only after a path is selected."
-    );
-
-    setEnterControl("Enter Room");
-  }
-
-  function receiptPayload(extra = {}) {
-    const coordinate = coordinatePayload();
-    const guidance = currentGuidance();
-
-    return Object.freeze({
-      contractId: CONTRACT.id,
-      rootStatus: state.root ? "found" : "missing",
-
-      mode: state.mode,
-      orbitFocus: state.orbitFocus,
-      selectedCardinal: state.selectedCardinal,
-      selectedRoom: state.selectedRoom,
-
-      destinationType: state.destinationType,
-      destinationId: state.destinationId,
-      destinationLabel: state.destinationLabel,
-      destinationRoute: state.destinationRoute,
-      routeSource: state.routeSource,
-
-      flowerExpanded: state.flowerExpanded,
-      panelDescended: state.panelDescended,
-      enterEnabled: state.enterEnabled,
-
-      coordinateFunction:
-        coordinate.coordinateFunction,
-
-      localCoordinate:
-        coordinate.localCoordinate,
-
-      localFunction:
-        coordinate.localFunction,
-
-      guidanceState: guidance.key,
-      guidanceCopy: guidance.copy,
-
-      mirrorlandWindowState: state.windowState,
-      mirrorlandWindowActive:
-        mirrorlandBlocksCompass(),
-      mirrorlandWindowStable:
-        state.windowStable,
-      mirrorlandEnterEnabled:
-        state.windowEnterEnabled,
-      mirrorlandBackEnabled:
-        state.windowBackEnabled,
-      mirrorlandRouteValid:
-        state.windowRouteValid,
-      preservedOrbitFocus:
-        state.preservedOrbitFocus,
-      mirrorlandTransitionId:
-        state.transitionId,
-      mirrorlandTransitionTimeoutArmed:
-        !!state.transitionTimer,
-      mirrorlandTransitionTimeoutMs:
-        state.transitionTimeoutMs,
-      mirrorlandTransitionTimeoutState:
-        state.transitionExpectedState,
-
-      returnToOrbitBehavior:
-        "PATH_TO_OPEN_CLUSTER",
-      swipeReturnBehavior:
-        "OPEN_CLUSTER_TO_CONSTELLATION",
-
-      lastAction: state.lastAction,
-      lastOrientationInput:
-        state.lastOrientationInput,
-      lastMirrorlandWindowAction:
-        state.lastWindowAction,
-      lastLensSet: state.lastLensSet,
-      lastLens: state.lastLens,
-      failureReason: state.failureReason,
-
-      crystalsProtected: true,
-      visualPassClaimed: false,
-
-      ...extra,
-
-      visualPassClaimed: false
     });
   }
 
   function emitReceipt(extra = {}) {
-    const receipt = receiptPayload(extra);
-    const serialized = JSON.stringify(receipt);
-
-    if (state.receiptSlot) {
-      state.receiptSlot.value = serialized;
-      state.receiptSlot.textContent = serialized;
-    }
+    Object.assign(RECEIPT, {
+      status:
+        state.current === STATES.HELD
+          ? "held"
+          : "available",
+      state: state.current,
+      orbitFocus: state.orbitFocus,
+      selectedCardinal: state.selectedCardinal,
+      selectedRoom: state.selectedRoom,
+      selectedDestinationType:
+        state.selectedDestinationType,
+      selectedRoute: state.selectedRoute,
+      mirrorlandState: state.mirrorlandState,
+      mirrorlandTransitionId:
+        state.mirrorlandTransitionId,
+      visualPassClaimed: false
+    }, extra);
 
     if (state.root) {
       state.root.dataset.compassControllerReceipt =
-        serialized;
+        JSON.stringify(RECEIPT);
+      state.root.dataset.compassControllerStatus =
+        RECEIPT.status;
+      state.root.dataset.visualPassClaimed = "false";
+    }
+
+    if (state.controllerReceiptOutput) {
+      state.controllerReceiptOutput.value =
+        JSON.stringify(RECEIPT);
+      state.controllerReceiptOutput.textContent =
+        JSON.stringify(RECEIPT);
+      state.controllerReceiptOutput.dataset.visualPassClaimed =
+        "false";
     }
 
     globalThis.DGB_COMPASS_CONTROLLER_RECEIPT =
-      receipt;
+      Object.freeze({ ...RECEIPT });
   }
 
-  function commit(action, extra = {}) {
-    state.lastAction = action;
+  function fail(reason, action = "controller-failure") {
+    clearMirrorlandTimers();
 
-    writeRootState();
-    updateSemanticObjects();
-    updateControls();
-    updatePanel();
-    emitReceipt(extra);
-  }
+    state.current = STATES.HELD;
+    state.mirrorlandState = MIRRORLAND_STATES.HELD;
 
-  function scrollTo(element) {
-    if (!element) return;
+    syncPresentation();
 
-    element.scrollIntoView({
-      behavior:
-        state.reducedMotion
-          ? "auto"
-          : "smooth",
-      block: "center"
+    emitReceipt({
+      lastAction: action,
+      lastFailure: String(reason || "UNKNOWN_FAILURE")
     });
   }
 
-  function scrollToPanel() {
-    state.panelDescended = true;
-    scrollTo(state.panel);
-  }
-
-  function scrollToOrbit() {
-    state.panelDescended = false;
-    scrollTo(state.scene);
-  }
-
-  function clearTransitionTimer() {
-    if (state.transitionTimer) {
-      globalThis.clearTimeout(
-        state.transitionTimer
-      );
+  function clearMirrorlandTimers() {
+    if (state.mirrorlandTimeout) {
+      clearTimeout(state.mirrorlandTimeout);
+      state.mirrorlandTimeout = 0;
     }
 
-    state.transitionTimer = 0;
-    state.transitionExpectedState = "";
-    state.transitionTimeoutMs = 0;
-  }
-
-  function nextTransitionId() {
-    state.transitionId += 1;
-
-    if (
-      !Number.isSafeInteger(state.transitionId) ||
-      state.transitionId > 999999
-    ) {
-      state.transitionId = 1;
-    }
-
-    return state.transitionId;
-  }
-
-  function armTransition(
-    expectedState,
-    transitionId,
-    timeoutMs,
-    reason
-  ) {
-    clearTransitionTimer();
-
-    state.transitionExpectedState =
-      expectedState;
-
-    state.transitionTimeoutMs =
-      timeoutMs;
-
-    state.transitionTimer =
-      globalThis.setTimeout(() => {
-        state.transitionTimer = 0;
-
-        if (
-          state.windowState === expectedState &&
-          state.transitionId === transitionId
-        ) {
-          recoverFromMirrorlandFailure(reason);
-        }
-      }, timeoutMs);
-  }
-
-  function resetWindowState({
-    preserveFailure = false
-  } = {}) {
-    clearTransitionTimer();
-
-    state.windowState = WINDOW_STATES.DORMANT;
-    state.windowStable = false;
-    state.windowEnterEnabled = false;
-    state.windowBackEnabled = false;
-    state.lastCompletionKey = "";
-    state.lastWindowAction = "mirrorland-reset";
-
-    if (!preserveFailure) {
-      state.failureReason = null;
+    if (state.rendererReadyTimeout) {
+      clearTimeout(state.rendererReadyTimeout);
+      state.rendererReadyTimeout = 0;
     }
   }
 
-  function focusConstellationWing(
-    wing,
-    input = "direct"
-  ) {
-    if (mirrorlandBlocksCompass()) {
-      return false;
-    }
-
-    const normalized = normalizeWing(wing);
-
-    if (!normalized) {
-      return false;
-    }
-
-    state.mode = MODES.ORBIT;
-    state.orbitFocus = normalized;
-    state.selectedCardinal = "";
-    state.selectedRoom = "";
-    state.flowerExpanded = false;
-    state.panelDescended = false;
-    state.preservedOrbitFocus = "";
-    state.lastOrientationInput = input;
-
-    clearDestination();
-
-    commit("constellation-focus-requested");
-    return true;
-  }
-
-  function returnToConstellation(
-    input = "swipe-return-to-constellation"
-  ) {
-    if (mirrorlandBlocksCompass()) {
-      return false;
-    }
-
-    const preserved = normalizeWing(
-      state.selectedCardinal ||
-      state.orbitFocus
-    );
-
-    state.mode =
-      preserved
-        ? MODES.ORBIT
-        : MODES.COMPASS;
-
-    state.orbitFocus = preserved;
-    state.selectedCardinal = "";
-    state.selectedRoom = "";
-    state.flowerExpanded = false;
-    state.panelDescended = false;
-    state.preservedOrbitFocus = "";
-    state.lastOrientationInput = input;
-
-    clearDestination();
-
-    commit("return-to-constellation");
-    scrollToOrbit();
-
-    return true;
-  }
-
-  function returnToCluster(
-    input = "panel-return-to-open-cluster"
-  ) {
-    if (mirrorlandBlocksCompass()) {
-      return false;
-    }
-
-    const wing = normalizeWing(
-      state.selectedCardinal ||
-      state.orbitFocus
-    );
-
-    const cardinal = findCardinal(wing);
-
-    if (!cardinal) {
-      return returnToConstellation(input);
-    }
-
-    state.mode = MODES.DESTINATION;
-    state.orbitFocus = wing;
-    state.selectedCardinal = wing;
-    state.selectedRoom = "";
-    state.flowerExpanded = true;
-    state.panelDescended = false;
-    state.preservedOrbitFocus = "";
-    state.lastOrientationInput = input;
-
-    setDestination({
-      type: "cardinal",
-      id: wing,
-      label: cardinal.label,
-      route: cardinal.route,
-      source: "html-cardinal-declaration",
-      enterEnabled: !!cardinal.route
-    });
-
-    commit("return-to-open-cluster");
-    scrollToOrbit();
-
-    return true;
-  }
-
-  function requestAxisSwipe(axis) {
-    if (mirrorlandBlocksCompass()) {
-      emitReceipt({
-        lastAction:
-          "axis-swipe-held-during-mirrorland-window"
-      });
-
-      return false;
-    }
-
-    if (
-      state.flowerExpanded &&
-      state.selectedCardinal
-    ) {
-      return returnToConstellation(
-        "swipe-return-to-constellation"
-      );
-    }
-
-    const current = state.orbitFocus;
-    let next = "";
-
-    if (axis === "vertical") {
-      next =
-        current === "north"
-          ? "south"
-          : current === "south"
-            ? "north"
-            : "north";
-    }
-
-    if (axis === "horizontal") {
-      next =
-        current === "east"
-          ? "west"
-          : current === "west"
-            ? "east"
-            : "east";
-    }
-
-    return next
-      ? focusConstellationWing(
-          next,
-          "swipe-" + axis
-        )
-      : false;
-  }
-
-  function selectCardinal(
-    wing,
-    input = "tap-star"
-  ) {
-    if (mirrorlandBlocksCompass()) {
-      return false;
-    }
-
-    const cardinal = findCardinal(wing);
-
-    if (!cardinal) {
-      return false;
-    }
-
-    state.mode = MODES.DESTINATION;
-    state.orbitFocus = cardinal.wing;
-    state.selectedCardinal = cardinal.wing;
-    state.selectedRoom = "";
-    state.flowerExpanded = true;
-    state.panelDescended = true;
-    state.preservedOrbitFocus = "";
-    state.lastOrientationInput = input;
-
-    setDestination({
-      type: "cardinal",
-      id: cardinal.wing,
-      label: cardinal.label,
-      route: cardinal.route,
-      source: "html-cardinal-declaration",
-      enterEnabled: !!cardinal.route
-    });
-
-    commit("star-cluster-selected");
-    scrollToPanel();
-
-    return true;
-  }
-
-  function selectRoom(
-    roomId,
-    input = "tap-cluster-star"
-  ) {
-    if (mirrorlandBlocksCompass()) {
-      return false;
-    }
-
-    const room = findRoom(roomId);
-
-    if (!room) {
-      return false;
-    }
-
-    state.mode = MODES.DESTINATION;
-    state.orbitFocus = room.wing;
-    state.selectedCardinal = room.wing;
-    state.selectedRoom = room.id;
-    state.flowerExpanded = true;
-    state.panelDescended = true;
-    state.preservedOrbitFocus = "";
-    state.lastOrientationInput = input;
-
-    setDestination({
-      type: "petal",
-      id: room.id,
-      label: room.label,
-      route: room.route,
-      source: "html-room-declaration",
-      enterEnabled: !!room.route
-    });
-
-    commit("cluster-star-path-selected");
-    scrollToPanel();
-
-    return true;
-  }
-
-  function requestMirrorlandFocus(
-    input = "tap-mirrorland"
-  ) {
-    if (
-      !state.mirrorland ||
-      state.windowState !== WINDOW_STATES.DORMANT
-    ) {
-      return false;
-    }
-
-    state.preservedOrbitFocus =
-      normalizeWing(
-        state.selectedCardinal ||
-        state.orbitFocus
-      );
-
-    state.mode = MODES.DESTINATION;
-    state.orbitFocus = state.preservedOrbitFocus;
-    state.selectedCardinal = "";
-    state.selectedRoom = "";
-    state.flowerExpanded = false;
-    state.panelDescended = true;
-    state.lastOrientationInput = input;
-
-    state.windowState = WINDOW_STATES.REVEALING;
-    state.windowStable = false;
-    state.windowEnterEnabled = false;
-    state.windowBackEnabled = false;
-    state.failureReason = null;
-    state.lastCompletionKey = "";
-    state.lastWindowAction =
-      "mirrorland-reveal-requested";
-
-    setDestination({
-      type: "mirrorland",
-      id: "mirrorland",
-      label: state.mirrorland.label,
-      route: state.mirrorland.route,
-      source: "html-mirrorland-declaration",
-      enterEnabled: false
-    });
-
-    const transitionId =
-      nextTransitionId();
-
-    armTransition(
-      WINDOW_STATES.REVEALING,
-      transitionId,
-      REVEAL_TIMEOUT_MS,
-      "MIRRORLAND_WINDOW_REVEAL_TIMEOUT"
-    );
-
-    commit("mirrorland-window-reveal-requested");
-    scrollToPanel();
-
-    return true;
-  }
-
-  function requestBackToCompass(
-    input = "mirrorland-back-control"
-  ) {
-    if (state.windowState !== WINDOW_STATES.FOCUSED) {
-      return false;
-    }
-
-    state.windowState = WINDOW_STATES.WITHDRAWING;
-    state.windowStable = false;
-    state.windowEnterEnabled = false;
-    state.windowBackEnabled = false;
-    state.enterEnabled = false;
-    state.lastOrientationInput = input;
-    state.lastCompletionKey = "";
-    state.lastWindowAction =
-      "mirrorland-withdrawal-requested";
-
-    const transitionId =
-      nextTransitionId();
-
-    armTransition(
-      WINDOW_STATES.WITHDRAWING,
-      transitionId,
-      WITHDRAWAL_TIMEOUT_MS,
-      "MIRRORLAND_WINDOW_WITHDRAWAL_TIMEOUT"
-    );
-
-    commit("mirrorland-window-withdrawal-requested");
-    return true;
-  }
-
-  function eventDetail(event) {
-    return (
-      event &&
-      event.detail &&
-      typeof event.detail === "object"
-        ? event.detail
-        : {}
-    );
-  }
-
-  function completionIsValid(
-    event,
-    controllerState,
-    reportedState
-  ) {
-    if (state.windowState !== controllerState) {
-      return false;
-    }
-
-    const detail = eventDetail(event);
-
-    if (detail.source !== WINDOW_SOURCE) {
-      return false;
-    }
-
-    if (detail.windowState !== reportedState) {
-      return false;
-    }
-
-    if (
-      String(detail.completionId) !==
-      String(state.transitionId)
-    ) {
-      return false;
-    }
-
-    const key =
-      `${event.type}:${detail.completionId}`;
-
-    if (key === state.lastCompletionKey) {
-      return false;
-    }
-
-    state.lastCompletionKey = key;
-    return true;
-  }
-
-  function completeReveal(event) {
-    if (
-      !completionIsValid(
-        event,
-        WINDOW_STATES.REVEALING,
-        WINDOW_STATES.FOCUSED
-      )
-    ) {
-      return false;
-    }
-
-    clearTransitionTimer();
-
-    state.windowState = WINDOW_STATES.FOCUSED;
-    state.windowStable = true;
-    state.windowEnterEnabled =
-      state.windowRouteValid;
-    state.windowBackEnabled = true;
-    state.enterEnabled =
-      state.windowRouteValid;
-    state.lastWindowAction =
-      "mirrorland-reveal-complete";
-
-    commit("mirrorland-window-focused");
-    return true;
-  }
-
-  function restoreCompass() {
-    const restored = normalizeWing(
-      state.preservedOrbitFocus
-    );
-
-    state.mode =
-      restored
-        ? MODES.ORBIT
-        : MODES.COMPASS;
-
-    state.orbitFocus = restored;
-    state.selectedCardinal = "";
-    state.selectedRoom = "";
-    state.flowerExpanded = false;
-    state.panelDescended = false;
-
-    clearDestination();
-    resetWindowState({
-      preserveFailure: true
-    });
-  }
-
-  function completeWithdrawal(event) {
-    if (
-      !completionIsValid(
-        event,
-        WINDOW_STATES.WITHDRAWING,
-        WINDOW_STATES.DORMANT
-      )
-    ) {
-      return false;
-    }
-
-    restoreCompass();
-
-    state.lastWindowAction =
-      "mirrorland-withdrawal-complete";
-
-    commit("mirrorland-window-dormant-restored");
-    scrollToOrbit();
-
-    return true;
-  }
-
-  function recoverFromMirrorlandFailure(reason) {
-    state.failureReason =
-      String(
-        reason ||
-        "MIRRORLAND_WINDOW_RENDER_FAILURE"
-      )
+  function destinationFromElement(element) {
+    if (!element) return null;
+
+    const destinationType =
+      String(element.dataset.destinationType || "")
         .trim()
-        .toUpperCase()
-        .replace(/[^A-Z0-9:_-]+/g, "_")
-        .slice(0, 120);
+        .toLowerCase();
 
-    restoreCompass();
-
-    state.lastWindowAction =
-      "mirrorland-render-failure";
-
-    commit("mirrorland-window-render-failure");
-    scrollToOrbit();
-
-    return true;
-  }
-
-  function handleMirrorlandFailure(event) {
-    const detail = eventDetail(event);
-
-    if (detail.source !== WINDOW_SOURCE) {
-      return false;
-    }
-
-    return recoverFromMirrorlandFailure(
-      detail.reasonCode
-    );
-  }
-
-  function navigateEnter() {
-    if (state.destinationType === "mirrorland") {
-      const allowed =
-        state.windowState === WINDOW_STATES.FOCUSED &&
-        state.windowStable &&
-        state.windowEnterEnabled &&
-        state.enterEnabled &&
-        state.windowRouteValid &&
-        validMirrorlandRoute(
-          state.destinationRoute
-        );
-
-      if (!allowed) {
-        state.enterEnabled = false;
-
-        emitReceipt({
-          failureReason:
-            "MIRRORLAND_ENTER_HELD_INVALID_WINDOW_STATE"
-        });
-
-        return false;
-      }
-
-      clearTransitionTimer();
-
-      state.windowState = WINDOW_STATES.NAVIGATING;
-      state.windowEnterEnabled = false;
-      state.windowBackEnabled = false;
-      state.enterEnabled = false;
-      state.lastWindowAction =
-        "mirrorland-navigation-authorized";
-
-      commit("mirrorland-enter-navigation");
-
-      globalThis.location.assign(
-        state.destinationRoute
-      );
-
-      return true;
-    }
-
-    if (
-      !state.enterEnabled ||
-      !state.destinationRoute ||
-      !state.routeSource
-    ) {
-      emitReceipt({
-        failureReason:
-          "ENTER_HELD_NO_VALID_DESTINATION_ROUTE"
-      });
-
-      return false;
-    }
-
-    state.lastAction = "enter-navigation";
-    emitReceipt();
-
-    globalThis.location.assign(
-      state.destinationRoute
-    );
-
-    return true;
-  }
-
-  function activateLens(tab) {
-    const lensSet =
-      tab &&
-      tab.closest
-        ? tab.closest(
-            "[data-compass-lens-set]"
-          )
-        : null;
-
-    if (!lensSet) return false;
-
-    const requested =
+    const destinationId =
       String(
-        tab.dataset.compassLensTab ||
+        element.dataset.destinationId ||
+        element.dataset.roomId ||
+        element.dataset.cardinalId ||
         ""
       ).trim();
 
-    if (!requested) return false;
+    const label =
+      String(
+        element.dataset.label ||
+        element.dataset.coordinateLabel ||
+        element.textContent ||
+        ""
+      ).trim();
 
-    $all(
+    const route = normalizeRoute(
+      element.dataset.route ||
+      element.getAttribute("href") ||
+      ""
+    );
+
+    return {
+      element,
+      destinationType,
+      destinationId,
+      label,
+      route
+    };
+  }
+
+  function panelFromCardinal(element) {
+    return {
+      eyebrow:
+        element.dataset.coordinateLabel ||
+        "Selected coordinate",
+      title:
+        element.dataset.panelTitle ||
+        element.dataset.title ||
+        element.dataset.coordinateLabel ||
+        "Selected coordinate",
+      purpose:
+        element.dataset.panelBody ||
+        element.dataset.coordinateFunction ||
+        "",
+      relationship:
+        element.dataset.panelWhy ||
+        "Inspect this coordinate before entering."
+    };
+  }
+
+  function panelFromRoom(element) {
+    return {
+      eyebrow:
+        element.dataset.localCoordinate ||
+        "Selected path",
+      title:
+        element.dataset.label ||
+        element.textContent.trim(),
+      purpose:
+        element.dataset.preview ||
+        element.dataset.localFunction ||
+        "",
+      relationship:
+        element.dataset.whyEnter ||
+        "Inspect this path, then enter when ready."
+    };
+  }
+
+  function panelFromMirrorland(element) {
+    return {
+      eyebrow:
+        element.dataset.panelEyebrow ||
+        element.dataset.orbitLabel ||
+        "Mirrorland Threshold",
+      title:
+        element.dataset.panelTitle ||
+        "Mirrorland",
+      purpose:
+        element.dataset.panelBody ||
+        element.dataset.coordinateFunction ||
+        "",
+      relationship:
+        element.dataset.panelWhy ||
+        "Reveal the threshold before entering."
+    };
+  }
+
+  function resetSelection() {
+    state.selectedCardinal = "";
+    state.selectedRoom = "";
+    state.selectedDestinationType = "";
+    state.selectedDestinationId = "";
+    state.selectedDestinationLabel = "";
+    state.selectedRoute = "";
+  }
+
+  function setState(nextState, action) {
+    if (!Object.values(STATES).includes(nextState)) {
+      fail(`INVALID_STATE:${nextState}`, action);
+      return false;
+    }
+
+    state.current = nextState;
+    syncPresentation();
+
+    emitReceipt({
+      lastAction: action || `state:${nextState}`,
+      lastFailure: null
+    });
+
+    return true;
+  }
+
+  function syncPresentation() {
+    syncDatasets();
+
+    const mirrorlandActive =
+      state.current === STATES.MIRRORLAND_REVEALING ||
+      state.current === STATES.MIRRORLAND_FOCUSED ||
+      state.current === STATES.MIRRORLAND_WITHDRAWING;
+
+    if (mirrorlandActive) {
+      setHiddenControl(state.returnButton, true);
+      setHiddenControl(
+        state.mirrorlandBackButton,
+        state.current === STATES.MIRRORLAND_WITHDRAWING
+      );
+
+      setEnterEnabled(
+        state.current === STATES.MIRRORLAND_FOCUSED,
+        "Enter Mirrorland"
+      );
+
+      if (state.current === STATES.MIRRORLAND_REVEALING) {
+        setGuidance(GUIDANCE.MIRRORLAND_REVEALING);
+      } else if (
+        state.current === STATES.MIRRORLAND_FOCUSED
+      ) {
+        setGuidance(GUIDANCE.MIRRORLAND_FOCUSED);
+      } else {
+        setGuidance(GUIDANCE.MIRRORLAND_WITHDRAWING);
+      }
+
+      return;
+    }
+
+    if (state.current === STATES.CONSTELLATION) {
+      setPanel(DEFAULT_PANEL);
+      setEnterEnabled(false, "Enter Room");
+      setHiddenControl(state.returnButton, true);
+      setHiddenControl(state.mirrorlandBackButton, true);
+      setGuidance(GUIDANCE.CONSTELLATION);
+      return;
+    }
+
+    if (state.current === STATES.CLUSTER_OPEN) {
+      setEnterEnabled(
+        Boolean(state.selectedRoute),
+        "Enter Coordinate"
+      );
+      setHiddenControl(state.returnButton, true);
+      setHiddenControl(state.mirrorlandBackButton, true);
+      setGuidance(GUIDANCE.CLUSTER_OPEN);
+      return;
+    }
+
+    if (state.current === STATES.ROOM_SELECTED) {
+      setEnterEnabled(
+        Boolean(state.selectedRoute),
+        "Enter Room"
+      );
+      setHiddenControl(state.returnButton, false);
+      setHiddenControl(state.mirrorlandBackButton, true);
+      setGuidance(GUIDANCE.ROOM_SELECTED);
+      return;
+    }
+
+    if (state.current === STATES.NAVIGATING) {
+      setEnterEnabled(false, "Entering…");
+      setHiddenControl(state.returnButton, true);
+      setHiddenControl(state.mirrorlandBackButton, true);
+      return;
+    }
+
+    if (state.current === STATES.HELD) {
+      setEnterEnabled(false, "Unavailable");
+      setHiddenControl(state.returnButton, true);
+      setHiddenControl(state.mirrorlandBackButton, true);
+      setGuidance(GUIDANCE.HELD);
+    }
+  }
+
+  function requestCardinalSelection(cardinalId) {
+    const wing = normalizeWing(cardinalId);
+
+    if (!wing) {
+      fail(
+        `INVALID_CARDINAL:${cardinalId}`,
+        "requestCardinalSelection"
+      );
+      return false;
+    }
+
+    if (
+      state.current === STATES.MIRRORLAND_REVEALING ||
+      state.current === STATES.MIRRORLAND_FOCUSED ||
+      state.current === STATES.MIRRORLAND_WITHDRAWING ||
+      state.current === STATES.NAVIGATING
+    ) {
+      return false;
+    }
+
+    const element = qs(
+      `[data-compass-cardinal][data-wing="${wing}"]`,
+      state.root
+    );
+
+    if (!element) {
+      fail(
+        `CARDINAL_NOT_FOUND:${wing}`,
+        "requestCardinalSelection"
+      );
+      return false;
+    }
+
+    const destination = destinationFromElement(element);
+
+    state.orbitFocus = wing;
+    state.selectedCardinal = wing;
+    state.selectedRoom = "";
+    state.selectedDestinationType = "cardinal";
+    state.selectedDestinationId = wing;
+    state.selectedDestinationLabel =
+      destination.label ||
+      element.dataset.coordinateLabel ||
+      wing;
+    state.selectedRoute = destination.route;
+
+    setPanel(panelFromCardinal(element));
+
+    return setState(
+      STATES.CLUSTER_OPEN,
+      `cardinal-selected:${wing}`
+    );
+  }
+
+  function requestRoomSelection(roomId) {
+    const id = String(roomId || "").trim();
+
+    if (
+      !id ||
+      (
+        state.current !== STATES.CLUSTER_OPEN &&
+        state.current !== STATES.ROOM_SELECTED
+      )
+    ) {
+      return false;
+    }
+
+    const element = qs(
+      `[data-compass-room][data-room-id="${CSS.escape(id)}"]`,
+      state.root
+    );
+
+    if (!element) {
+      fail(
+        `ROOM_NOT_FOUND:${id}`,
+        "requestRoomSelection"
+      );
+      return false;
+    }
+
+    const wing = normalizeWing(element.dataset.wing);
+
+    if (
+      state.selectedCardinal &&
+      wing !== state.selectedCardinal
+    ) {
+      return false;
+    }
+
+    const destination = destinationFromElement(element);
+
+    state.orbitFocus = wing;
+    state.selectedCardinal = wing;
+    state.selectedRoom = id;
+    state.selectedDestinationType = "petal";
+    state.selectedDestinationId = id;
+    state.selectedDestinationLabel =
+      destination.label;
+    state.selectedRoute = destination.route;
+
+    setPanel(panelFromRoom(element));
+
+    return setState(
+      STATES.ROOM_SELECTED,
+      `room-selected:${id}`
+    );
+  }
+
+  function requestAxisSwipe(axis) {
+    const normalized = String(axis || "")
+      .trim()
+      .toLowerCase();
+
+    if (
+      state.current === STATES.MIRRORLAND_REVEALING ||
+      state.current === STATES.MIRRORLAND_FOCUSED ||
+      state.current === STATES.MIRRORLAND_WITHDRAWING ||
+      state.current === STATES.NAVIGATING
+    ) {
+      return false;
+    }
+
+    if (
+      state.current === STATES.CLUSTER_OPEN ||
+      state.current === STATES.ROOM_SELECTED
+    ) {
+      resetSelection();
+
+      return setState(
+        STATES.CONSTELLATION,
+        `cluster-closed-by-${normalized || "swipe"}`
+      );
+    }
+
+    const currentIndex = Math.max(
+      0,
+      ORBIT_SEQUENCE.indexOf(
+        state.orbitFocus || "north"
+      )
+    );
+
+    let step = 1;
+
+    if (
+      normalized === "vertical" ||
+      normalized === "up" ||
+      normalized === "left"
+    ) {
+      step = -1;
+    }
+
+    const nextIndex =
+      (
+        currentIndex +
+        step +
+        ORBIT_SEQUENCE.length
+      ) % ORBIT_SEQUENCE.length;
+
+    state.orbitFocus = ORBIT_SEQUENCE[nextIndex];
+
+    syncPresentation();
+
+    emitReceipt({
+      lastAction:
+        `orbit-rotated:${state.orbitFocus}`,
+      lastFailure: null
+    });
+
+    return true;
+  }
+
+  function requestReturnToOrbit() {
+    if (state.current !== STATES.ROOM_SELECTED) {
+      return false;
+    }
+
+    state.selectedRoom = "";
+    state.selectedDestinationType = "cardinal";
+    state.selectedDestinationId =
+      state.selectedCardinal;
+
+    const cardinal = qs(
+      `[data-compass-cardinal][data-wing="${state.selectedCardinal}"]`,
+      state.root
+    );
+
+    if (cardinal) {
+      const destination =
+        destinationFromElement(cardinal);
+
+      state.selectedDestinationLabel =
+        destination.label ||
+        cardinal.dataset.coordinateLabel ||
+        state.selectedCardinal;
+      state.selectedRoute = destination.route;
+
+      setPanel(panelFromCardinal(cardinal));
+    }
+
+    return setState(
+      STATES.CLUSTER_OPEN,
+      "return-to-orbit"
+    );
+  }
+
+  function preserveCompassState() {
+    state.preserved = Object.freeze({
+      current:
+        state.current === STATES.MIRRORLAND_REVEALING ||
+        state.current === STATES.MIRRORLAND_FOCUSED ||
+        state.current === STATES.MIRRORLAND_WITHDRAWING
+          ? STATES.CONSTELLATION
+          : state.current,
+      orbitFocus: state.orbitFocus,
+      selectedCardinal: state.selectedCardinal,
+      selectedRoom: state.selectedRoom,
+      selectedDestinationType:
+        state.selectedDestinationType,
+      selectedDestinationId:
+        state.selectedDestinationId,
+      selectedDestinationLabel:
+        state.selectedDestinationLabel,
+      selectedRoute: state.selectedRoute
+    });
+  }
+
+  function requestMirrorlandReveal() {
+    if (
+      state.current === STATES.MIRRORLAND_REVEALING ||
+      state.current === STATES.MIRRORLAND_FOCUSED ||
+      state.current === STATES.MIRRORLAND_WITHDRAWING ||
+      state.current === STATES.NAVIGATING
+    ) {
+      return false;
+    }
+
+    const element = qs(
+      "[data-compass-object='mirrorland']",
+      state.root
+    );
+
+    if (!element) {
+      fail(
+        "MIRRORLAND_CONTROL_NOT_FOUND",
+        "requestMirrorlandReveal"
+      );
+      return false;
+    }
+
+    preserveCompassState();
+    clearMirrorlandTimers();
+
+    const destination = destinationFromElement(element);
+
+    state.selectedDestinationType = "mirrorland";
+    state.selectedDestinationId = "mirrorland";
+    state.selectedDestinationLabel =
+      destination.label || "Mirrorland";
+    state.selectedRoute = destination.route;
+    state.mirrorlandTransitionId =
+      makeTransitionId("reveal");
+    state.mirrorlandState =
+      MIRRORLAND_STATES.REVEALING;
+
+    setPanel(panelFromMirrorland(element));
+
+    setState(
+      STATES.MIRRORLAND_REVEALING,
+      "mirrorland-reveal-requested"
+    );
+
+    dispatchWindowCommand(
+      "DGB_MIRRORLAND_WINDOW_REVEAL_REQUEST",
+      {
+        transitionId:
+          state.mirrorlandTransitionId,
+        reducedMotion:
+          state.reducedMotion
+      }
+    );
+
+    state.mirrorlandTimeout = globalThis.setTimeout(
+      () => {
+        if (
+          state.current ===
+          STATES.MIRRORLAND_REVEALING
+        ) {
+          handleMirrorlandFailure(
+            "MIRRORLAND_REVEAL_TIMEOUT",
+            state.mirrorlandTransitionId
+          );
+        }
+      },
+      TIMEOUTS.mirrorlandRevealMs
+    );
+
+    return true;
+  }
+
+  function requestMirrorlandBack() {
+    if (
+      state.current !== STATES.MIRRORLAND_REVEALING &&
+      state.current !== STATES.MIRRORLAND_FOCUSED
+    ) {
+      return false;
+    }
+
+    clearMirrorlandTimers();
+
+    state.mirrorlandTransitionId =
+      makeTransitionId("withdraw");
+    state.mirrorlandState =
+      MIRRORLAND_STATES.WITHDRAWING;
+
+    setState(
+      STATES.MIRRORLAND_WITHDRAWING,
+      "mirrorland-withdrawal-requested"
+    );
+
+    dispatchWindowCommand(
+      "DGB_MIRRORLAND_WINDOW_WITHDRAW_REQUEST",
+      {
+        transitionId:
+          state.mirrorlandTransitionId,
+        reducedMotion:
+          state.reducedMotion
+      }
+    );
+
+    state.mirrorlandTimeout = globalThis.setTimeout(
+      () => {
+        if (
+          state.current ===
+          STATES.MIRRORLAND_WITHDRAWING
+        ) {
+          handleMirrorlandFailure(
+            "MIRRORLAND_WITHDRAWAL_TIMEOUT",
+            state.mirrorlandTransitionId
+          );
+        }
+      },
+      TIMEOUTS.mirrorlandWithdrawalMs
+    );
+
+    return true;
+  }
+
+  function restorePreservedCompassState() {
+    const preserved = state.preserved;
+
+    state.preserved = null;
+    state.mirrorlandState =
+      MIRRORLAND_STATES.DORMANT;
+    state.mirrorlandTransitionId = "";
+
+    if (!preserved) {
+      resetSelection();
+      state.current = STATES.CONSTELLATION;
+      setPanel(DEFAULT_PANEL);
+      syncPresentation();
+
+      emitReceipt({
+        lastAction:
+          "mirrorland-withdrawal-complete-default",
+        lastFailure: null
+      });
+
+      return;
+    }
+
+    state.current = preserved.current;
+    state.orbitFocus = preserved.orbitFocus;
+    state.selectedCardinal =
+      preserved.selectedCardinal;
+    state.selectedRoom = preserved.selectedRoom;
+    state.selectedDestinationType =
+      preserved.selectedDestinationType;
+    state.selectedDestinationId =
+      preserved.selectedDestinationId;
+    state.selectedDestinationLabel =
+      preserved.selectedDestinationLabel;
+    state.selectedRoute = preserved.selectedRoute;
+
+    if (
+      state.current === STATES.ROOM_SELECTED &&
+      state.selectedRoom
+    ) {
+      const room = qs(
+        `[data-compass-room][data-room-id="${CSS.escape(state.selectedRoom)}"]`,
+        state.root
+      );
+
+      if (room) {
+        setPanel(panelFromRoom(room));
+      }
+    } else if (
+      state.current === STATES.CLUSTER_OPEN &&
+      state.selectedCardinal
+    ) {
+      const cardinal = qs(
+        `[data-compass-cardinal][data-wing="${state.selectedCardinal}"]`,
+        state.root
+      );
+
+      if (cardinal) {
+        setPanel(panelFromCardinal(cardinal));
+      }
+    } else {
+      state.current = STATES.CONSTELLATION;
+      resetSelection();
+      setPanel(DEFAULT_PANEL);
+    }
+
+    syncPresentation();
+
+    emitReceipt({
+      lastAction:
+        "mirrorland-withdrawal-complete-restored",
+      lastFailure: null
+    });
+  }
+
+  function requestEnterSelection() {
+    if (!state.selectedRoute) {
+      return false;
+    }
+
+    if (
+      state.selectedDestinationType === "mirrorland" &&
+      state.current !== STATES.MIRRORLAND_FOCUSED
+    ) {
+      return false;
+    }
+
+    if (
+      state.current !== STATES.CLUSTER_OPEN &&
+      state.current !== STATES.ROOM_SELECTED &&
+      state.current !== STATES.MIRRORLAND_FOCUSED
+    ) {
+      return false;
+    }
+
+    const route = normalizeRoute(state.selectedRoute);
+
+    if (!route) {
+      fail(
+        "INVALID_SELECTED_ROUTE",
+        "requestEnterSelection"
+      );
+      return false;
+    }
+
+    setState(
+      STATES.NAVIGATING,
+      `navigate:${route}`
+    );
+
+    globalThis.location.assign(route);
+    return true;
+  }
+
+  function dispatchWindowCommand(type, detail) {
+    globalThis.dispatchEvent(
+      new CustomEvent(type, {
+        detail: Object.freeze({
+          ...detail
+        })
+      })
+    );
+  }
+
+  function handleMirrorlandRevealComplete(event) {
+    const detail = event.detail || {};
+
+    if (
+      state.current !== STATES.MIRRORLAND_REVEALING ||
+      !detail.transitionId ||
+      detail.transitionId !==
+        state.mirrorlandTransitionId
+    ) {
+      return;
+    }
+
+    clearMirrorlandTimers();
+
+    state.mirrorlandState =
+      MIRRORLAND_STATES.FOCUSED;
+
+    setState(
+      STATES.MIRRORLAND_FOCUSED,
+      "mirrorland-reveal-complete"
+    );
+  }
+
+  function handleMirrorlandWithdrawalComplete(event) {
+    const detail = event.detail || {};
+
+    if (
+      state.current !==
+        STATES.MIRRORLAND_WITHDRAWING ||
+      !detail.transitionId ||
+      detail.transitionId !==
+        state.mirrorlandTransitionId
+    ) {
+      return;
+    }
+
+    clearMirrorlandTimers();
+    restorePreservedCompassState();
+  }
+
+  function handleMirrorlandFailure(reason, transitionId) {
+    if (
+      transitionId &&
+      state.mirrorlandTransitionId &&
+      transitionId !== state.mirrorlandTransitionId
+    ) {
+      return;
+    }
+
+    clearMirrorlandTimers();
+
+    state.mirrorlandState =
+      MIRRORLAND_STATES.DORMANT;
+    state.mirrorlandTransitionId = "";
+
+    const preserved = state.preserved;
+    state.preserved = null;
+
+    if (preserved) {
+      state.current = preserved.current;
+      state.orbitFocus = preserved.orbitFocus;
+      state.selectedCardinal =
+        preserved.selectedCardinal;
+      state.selectedRoom = preserved.selectedRoom;
+      state.selectedDestinationType =
+        preserved.selectedDestinationType;
+      state.selectedDestinationId =
+        preserved.selectedDestinationId;
+      state.selectedDestinationLabel =
+        preserved.selectedDestinationLabel;
+      state.selectedRoute = preserved.selectedRoute;
+    } else {
+      state.current = STATES.CONSTELLATION;
+      resetSelection();
+    }
+
+    syncPresentation();
+
+    emitReceipt({
+      status: "available",
+      lastAction:
+        "mirrorland-failure-compass-preserved",
+      lastFailure:
+        String(reason || "MIRRORLAND_RENDER_FAILURE")
+    });
+  }
+
+  function handleMirrorlandFailureEvent(event) {
+    const detail = event.detail || {};
+
+    handleMirrorlandFailure(
+      detail.reason ||
+        "MIRRORLAND_RENDER_FAILURE",
+      detail.transitionId || ""
+    );
+  }
+
+  function handleCrystalsFailureEvent(event) {
+    const detail = event.detail || {};
+
+    emitReceipt({
+      status: "available",
+      lastAction:
+        "crystals-render-failure-semantic-fallback-active",
+      lastFailure:
+        detail.reason ||
+        "COMPASS_CRYSTALS_RENDER_FAILURE"
+    });
+
+    setGuidance(
+      "The visual star field is temporarily unavailable. Semantic Compass controls remain active."
+    );
+  }
+
+  function handleSemanticDestination(event) {
+    const control = event.target.closest(
+      "[data-compass-destination]"
+    );
+
+    if (!control || !state.root.contains(control)) {
+      return;
+    }
+
+    const type = String(
+      control.dataset.destinationType || ""
+    ).toLowerCase();
+
+    if (type === "mirrorland") {
+      event.preventDefault();
+      requestMirrorlandReveal();
+      return;
+    }
+
+    if (
+      control.matches("[data-compass-cardinal]")
+    ) {
+      event.preventDefault();
+      requestCardinalSelection(
+        control.dataset.wing ||
+        control.dataset.cardinalId
+      );
+      return;
+    }
+
+    if (control.matches("[data-compass-room]")) {
+      event.preventDefault();
+      requestRoomSelection(
+        control.dataset.roomId
+      );
+    }
+  }
+
+  function bindPanelControls() {
+    if (state.enterButton) {
+      state.enterButton.addEventListener(
+        "click",
+        () => requestEnterSelection()
+      );
+    }
+
+    if (state.returnButton) {
+      state.returnButton.addEventListener(
+        "click",
+        () => requestReturnToOrbit()
+      );
+    }
+
+    if (state.mirrorlandBackButton) {
+      state.mirrorlandBackButton.addEventListener(
+        "click",
+        () => requestMirrorlandBack()
+      );
+    }
+  }
+
+  function bindSemanticControls() {
+    state.root.addEventListener(
+      "click",
+      handleSemanticDestination
+    );
+  }
+
+  function bindRendererEvents() {
+    globalThis.addEventListener(
+      "MIRRORLAND_WINDOW_REVEAL_COMPLETE",
+      handleMirrorlandRevealComplete
+    );
+
+    globalThis.addEventListener(
+      "MIRRORLAND_WINDOW_WITHDRAWAL_COMPLETE",
+      handleMirrorlandWithdrawalComplete
+    );
+
+    globalThis.addEventListener(
+      "MIRRORLAND_WINDOW_RENDER_FAILURE",
+      handleMirrorlandFailureEvent
+    );
+
+    globalThis.addEventListener(
+      "COMPASS_CRYSTALS_RENDER_FAILURE",
+      handleCrystalsFailureEvent
+    );
+  }
+
+  function activateLensTab(tab) {
+    const set = tab.closest(
+      "[data-compass-lens-set]"
+    );
+
+    if (!set) return;
+
+    const requested =
+      tab.dataset.compassLensTab;
+
+    qsa(
       "[data-compass-lens-tab]",
-      lensSet
+      set
     ).forEach((candidate) => {
-      const active = candidate === tab;
+      const selected =
+        candidate === tab;
 
       candidate.setAttribute(
         "aria-selected",
-        active ? "true" : "false"
+        selected ? "true" : "false"
       );
 
-      candidate.tabIndex =
-        active ? 0 : -1;
+      candidate.tabIndex = selected ? 0 : -1;
     });
 
-    $all(
+    qsa(
       "[data-compass-lens-panel]",
-      lensSet
+      set
     ).forEach((panel) => {
       panel.hidden =
         panel.dataset.compassLensPanel !==
         requested;
     });
-
-    state.lastLensSet =
-      lensSet.dataset.compassLensSet || "";
-
-    state.lastLens = requested;
-
-    emitReceipt({
-      lastAction: "formula-lens-selected"
-    });
-
-    return true;
   }
 
-  function initializeLensSets() {
-    $all(
+  function bindLensTabs() {
+    qsa(
       "[data-compass-lens-set]",
       state.root
-    ).forEach((lensSet) => {
-      const selected =
-        $(
-          "[data-compass-lens-tab][aria-selected='true']",
-          lensSet
-        ) ||
-        $(
-          "[data-compass-lens-tab]",
-          lensSet
-        );
+    ).forEach((set) => {
+      const tabs = qsa(
+        "[data-compass-lens-tab]",
+        set
+      );
 
-      if (selected) {
-        activateLens(selected);
-      }
+      tabs.forEach((tab, index) => {
+        tab.tabIndex =
+          tab.getAttribute("aria-selected") === "true"
+            ? 0
+            : -1;
+
+        tab.addEventListener("click", () => {
+          activateLensTab(tab);
+        });
+
+        tab.addEventListener(
+          "keydown",
+          (event) => {
+            if (
+              event.key !== "ArrowRight" &&
+              event.key !== "ArrowLeft" &&
+              event.key !== "Home" &&
+              event.key !== "End"
+            ) {
+              return;
+            }
+
+            event.preventDefault();
+
+            let nextIndex = index;
+
+            if (event.key === "ArrowRight") {
+              nextIndex =
+                (index + 1) % tabs.length;
+            }
+
+            if (event.key === "ArrowLeft") {
+              nextIndex =
+                (
+                  index -
+                  1 +
+                  tabs.length
+                ) % tabs.length;
+            }
+
+            if (event.key === "Home") {
+              nextIndex = 0;
+            }
+
+            if (event.key === "End") {
+              nextIndex =
+                tabs.length - 1;
+            }
+
+            activateLensTab(
+              tabs[nextIndex]
+            );
+
+            tabs[nextIndex].focus();
+          }
+        );
+      });
     });
   }
 
-  function delegatedActivation(event) {
-    const target =
-      event.target &&
-      event.target.closest
-        ? event.target.closest(
-            [
-              "[data-compass-lens-tab]",
-              "[data-compass-object='mirrorland']",
-              "[data-compass-cardinal][data-wing]",
-              "[data-compass-room][data-room-id]",
-              "[data-compass-enter]",
-              "[data-compass-return-to-orbit]",
-              "[data-compass-mirrorland-back]"
-            ].join(", ")
-          )
-        : null;
-
-    if (
-      !target ||
-      !state.root.contains(target)
-    ) {
-      return;
-    }
-
-    if (
-      target.matches(
-        "[data-compass-lens-tab]"
-      )
-    ) {
-      event.preventDefault();
-      event.stopPropagation();
-      activateLens(target);
-      return;
-    }
-
-    if (
-      target.matches(
-        "[data-compass-mirrorland-back]"
-      )
-    ) {
-      event.preventDefault();
-      event.stopPropagation();
-      requestBackToCompass();
-      return;
-    }
-
-    if (
-      target.matches(
-        "[data-compass-return-to-orbit]"
-      )
-    ) {
-      event.preventDefault();
-      event.stopPropagation();
-      returnToCluster();
-      return;
-    }
-
-    if (
-      target.matches(
-        "[data-compass-enter]"
-      )
-    ) {
-      event.preventDefault();
-      event.stopPropagation();
-      navigateEnter();
-      return;
-    }
-
-    if (
-      target.matches(
-        "[data-compass-object='mirrorland']"
-      )
-    ) {
-      event.preventDefault();
-      event.stopPropagation();
-      requestMirrorlandFocus(
-        "semantic-mirrorland-activation"
-      );
-      return;
-    }
-
-    if (
-      target.matches(
-        "[data-compass-cardinal][data-wing]"
-      )
-    ) {
-      event.preventDefault();
-      event.stopPropagation();
-      selectCardinal(
-        target.dataset.wing,
-        "semantic-cardinal-activation"
-      );
-      return;
-    }
-
-    if (
-      target.matches(
-        "[data-compass-room][data-room-id]"
-      )
-    ) {
-      event.preventDefault();
-      event.stopPropagation();
-      selectRoom(
-        target.dataset.roomId,
-        "semantic-room-activation"
-      );
-    }
-  }
-
-  function bindEvents() {
-    state.root.addEventListener(
-      "click",
-      delegatedActivation,
-      true
-    );
-
-    state.root.addEventListener(
-      WINDOW_EVENTS.REVEAL_COMPLETE,
-      completeReveal
-    );
-
-    state.root.addEventListener(
-      WINDOW_EVENTS.WITHDRAWAL_COMPLETE,
-      completeWithdrawal
-    );
-
-    state.root.addEventListener(
-      WINDOW_EVENTS.FAILURE,
-      handleMirrorlandFailure
-    );
+  function readReducedMotion() {
+    state.reducedMotion =
+      globalThis.matchMedia(
+        "(prefers-reduced-motion: reduce)"
+      ).matches ||
+      state.root.dataset.reducedMotion === "true";
   }
 
   function exposeApi() {
@@ -1851,67 +1459,193 @@
       Object.freeze({
         contract: CONTRACT,
 
-        receipt() {
-          return receiptPayload();
-        },
+        receipt: () =>
+          Object.freeze({ ...RECEIPT }),
 
         requestAxisSwipe,
 
-        requestDirectionSelection:
-          focusConstellationWing,
+        requestCardinalSelection,
 
-        requestCardinalSelection:
-          selectCardinal,
+        requestRoomSelection,
 
-        requestRoomSelection:
-          selectRoom,
+        requestReturnToOrbit,
 
-        requestMirrorlandFocus,
+        requestMirrorlandReveal,
 
-        requestMirrorlandSelection:
-          requestMirrorlandFocus,
+        requestMirrorlandBack,
 
-        requestBackToCompass,
+        requestEnterSelection,
 
-        returnToCluster,
-
-        returnToOrbit:
-          returnToCluster,
-
-        returnToConstellation,
-
-        enter:
-          navigateEnter,
-
-        activateLens
+        getFrameState: () =>
+          Object.freeze({
+            state: state.current,
+            orbitFocus: state.orbitFocus,
+            selectedCardinal:
+              state.selectedCardinal,
+            selectedRoom:
+              state.selectedRoom,
+            selectedDestinationType:
+              state.selectedDestinationType,
+            selectedDestinationId:
+              state.selectedDestinationId,
+            selectedDestinationLabel:
+              state.selectedDestinationLabel,
+            selectedRoute:
+              state.selectedRoute,
+            mirrorlandState:
+              state.mirrorlandState,
+            mirrorlandTransitionId:
+              state.mirrorlandTransitionId,
+            reducedMotion:
+              state.reducedMotion,
+            prominence:
+              Object.freeze({
+                ...prominenceFor(
+                  state.current
+                )
+              })
+          })
       });
   }
 
-  function init() {
-    if (!acquireDom()) {
-      state.failureReason =
-        "COMPASS_REQUIRED_DOM_INCOMPLETE";
+  function resolveDom() {
+    state.root = qs("[data-compass-root]");
 
-      emitReceipt();
-      return;
+    if (!state.root) {
+      throw new Error(
+        "COMPASS_ROOT_NOT_FOUND"
+      );
     }
 
-    bindEvents();
-    exposeApi();
-    initializeLensSets();
+    state.scene = qs(
+      "[data-compass-scene]",
+      state.root
+    );
 
-    state.mode = MODES.COMPASS;
-    state.orbitFocus = "";
-    state.selectedCardinal = "";
-    state.selectedRoom = "";
-    state.flowerExpanded = false;
-    state.panelDescended = false;
-    state.preservedOrbitFocus = "";
+    state.panel = qs(
+      "[data-compass-panel]",
+      state.root
+    );
 
-    clearDestination();
-    resetWindowState();
+    state.panelEyebrow = qs(
+      "[data-compass-panel-eyebrow]",
+      state.root
+    );
 
-    commit("restore-compass-mode");
+    state.panelTitle = qs(
+      "[data-compass-panel-title]",
+      state.root
+    );
+
+    state.panelPurpose = qs(
+      "[data-compass-panel-purpose]",
+      state.root
+    );
+
+    state.panelRelationship = qs(
+      "[data-compass-panel-relationship]",
+      state.root
+    );
+
+    state.enterButton = qs(
+      "[data-compass-enter]",
+      state.root
+    );
+
+    state.enterLabel = qs(
+      "[data-compass-enter-label]",
+      state.root
+    );
+
+    state.returnButton = qs(
+      "[data-compass-return-to-orbit]",
+      state.root
+    );
+
+    state.mirrorlandBackButton = qs(
+      "[data-compass-mirrorland-back]",
+      state.root
+    );
+
+    state.guidance = qs(
+      "[data-compass-guidance]",
+      state.root
+    );
+
+    state.controllerReceiptOutput = qs(
+      "[data-compass-controller-receipt]",
+      state.root
+    );
+
+    if (!state.scene) {
+      throw new Error(
+        "COMPASS_SCENE_NOT_FOUND"
+      );
+    }
+
+    if (!state.panel) {
+      throw new Error(
+        "COMPASS_PANEL_NOT_FOUND"
+      );
+    }
+  }
+
+  function init() {
+    try {
+      resolveDom();
+      readReducedMotion();
+      exposeApi();
+      bindSemanticControls();
+      bindPanelControls();
+      bindRendererEvents();
+      bindLensTabs();
+
+      state.current =
+        STATES.CONSTELLATION;
+      state.mirrorlandState =
+        MIRRORLAND_STATES.DORMANT;
+      state.orbitFocus =
+        normalizeWing(
+          state.root.dataset.orbitFocus
+        );
+
+      resetSelection();
+      setPanel(DEFAULT_PANEL);
+      syncPresentation();
+
+      state.initialized = true;
+
+      emitReceipt({
+        status: "available",
+        lastAction:
+          "controller-initialized",
+        lastFailure: null
+      });
+    } catch (error) {
+      const reason =
+        error && error.message
+          ? error.message
+          : String(error);
+
+      RECEIPT.status = "held";
+      RECEIPT.lastFailure =
+        `CONTROLLER_INIT_FAILURE:${reason}`;
+
+      globalThis.DGB_COMPASS_CONTROLLER_RECEIPT =
+        Object.freeze({ ...RECEIPT });
+
+      globalThis.dispatchEvent(
+        new CustomEvent(
+          "COMPASS_CONTROLLER_FAILURE",
+          {
+            detail: Object.freeze({
+              reason:
+                RECEIPT.lastFailure
+            })
+          }
+        )
+      );
+    }
   }
 
   if (document.readyState === "loading") {

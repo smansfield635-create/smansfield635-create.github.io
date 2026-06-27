@@ -1,6 +1,6 @@
 /* ==========================================================================
    /products/archcoin/index.js
-   ARCHCOIN · TRANSACTION TEMPLATE AND BOND LAYER RUNTIME · v2
+   ARCHCOIN · TRANSACTION TEMPLATE AND BOND LAYER RUNTIME · v2.1
 
    PURPOSE:
    - Renew the ARCHCOIN runtime against the corrected four-coin primary model.
@@ -10,6 +10,8 @@
    - Keep adapter-aware participation explanatory only.
    - Keep same-origin manifest hydration guarded and dormant-safe.
    - Keep receipts bounded.
+   - Provide a stronger geometric transaction orbit with controlled drag,
+     settlement, focus, selection, and return-to-transaction-orbit behavior.
    - No external dependency.
    - No heavy framework.
    - No financial execution.
@@ -37,8 +39,54 @@
     HELD: "HELD"
   });
 
-  const COIN_POSITIONS = Object.freeze(["contract", "receivable", "payable", "allocation"]);
-  const LIFECYCLE_NODES = Object.freeze(["contribute", "trace", "record", "allocate", "trust"]);
+  const COIN_POSITIONS = Object.freeze([
+    "contract",
+    "receivable",
+    "payable",
+    "allocation"
+  ]);
+
+  const LIFECYCLE_NODES = Object.freeze([
+    "contribute",
+    "trace",
+    "record",
+    "allocate",
+    "trust"
+  ]);
+
+  const MANIFEST_SCHEMA = Object.freeze({
+    version: "ARCHCOIN_MANIFEST_SCHEMA_DEFERRED",
+    frozen: false,
+    allowedKeys: Object.freeze([])
+  });
+
+  const ORBIT = Object.freeze({
+    primaryAnchorDegrees: -90,
+    settleSpeed: 8.2,
+    dragRadiansPerViewport: Math.PI * 1.18,
+    focusScaleFront: 1.16,
+    selectedScaleFront: 1.22,
+    ordinaryScaleBase: 0.78,
+    ordinaryScaleDepthLift: 0.34,
+    innerScaleBase: 0.76,
+    innerScaleDepthLift: 0.22,
+    primaryRadiusFactor: 0.40,
+    secondaryRadiusFactor: 0.25,
+    primaryDepthAmplitude: 0.22,
+    secondaryDepthAmplitude: 0.13,
+    suppressClickMs: 520,
+    dragDeadZonePx: 7,
+    maximumTapDistancePx: 12,
+    sampleWindowMs: 140,
+    maximumSamples: 18,
+    flickMaximumDurationMs: 260,
+    flickMinimumDistancePx: 48,
+    flickMinimumAverageVelocityPxPerMs: 0.55,
+    flickMinimumReleaseVelocityPxPerMs: 0.72,
+    flickMinimumDirectionalRatio: 1.22,
+    flickMaximumPauseBeforeReleaseMs: 96,
+    flickMaximumPathEfficiencyLoss: 0.24
+  });
 
   const POSITION_CONTENT = Object.freeze({
     contract: Object.freeze({
@@ -206,12 +254,6 @@
     })
   });
 
-  const MANIFEST_SCHEMA = Object.freeze({
-    version: "ARCHCOIN_MANIFEST_SCHEMA_DEFERRED",
-    frozen: false,
-    allowedKeys: Object.freeze([])
-  });
-
   const RECEIPT = {
     contractId: CONTRACT.id,
     previousContractId: CONTRACT.previousId,
@@ -238,6 +280,9 @@
     orbitStage: null,
     geometryMount: null,
     receiptOutput: null,
+    transactionOrbit: null,
+    lifecycleOrbit: null,
+    centerGem: null,
     transactionPoints: [],
     lifecycleNodes: [],
     adapterSlots: [],
@@ -255,6 +300,17 @@
     manifestHydrationAttempted: false,
     manifestHydrationSucceeded: false,
     manifestData: null,
+    reducedMotion: false,
+    orbit: {
+      angle: 0,
+      targetAngle: 0,
+      innerAngle: 0,
+      targetInnerAngle: 0,
+      frame: 0,
+      running: false,
+      pointer: null,
+      suppressClickUntil: 0
+    },
     field: {
       canvas: null,
       context: null,
@@ -265,8 +321,7 @@
       pointerX: 0.5,
       pointerY: 0.5,
       running: false,
-      frame: 0,
-      reducedMotion: false
+      frame: 0
     }
   };
 
@@ -278,9 +333,20 @@
     return Array.from(root.querySelectorAll(selector));
   }
 
+  function clamp(value, minimum, maximum) {
+    return Math.max(minimum, Math.min(maximum, value));
+  }
+
   function finiteNumber(value, fallback = 0) {
     const number = Number(value);
     return Number.isFinite(number) ? number : fallback;
+  }
+
+  function wrapRadians(value) {
+    let angle = finiteNumber(value, 0);
+    while (angle > Math.PI) angle -= Math.PI * 2;
+    while (angle < -Math.PI) angle += Math.PI * 2;
+    return angle;
   }
 
   function normalizeCoinPosition(value) {
@@ -313,16 +379,61 @@
     return true;
   }
 
+  function anchorAngleRadians() {
+    return (ORBIT.primaryAnchorDegrees * Math.PI) / 180;
+  }
+
+  function baseAngleForIndex(index, count) {
+    return anchorAngleRadians() + (Math.PI * 2 * index) / Math.max(1, count);
+  }
+
+  function baseAngleForCoinPosition(position) {
+    const index = COIN_POSITIONS.indexOf(position);
+    return baseAngleForIndex(Math.max(index, 0), COIN_POSITIONS.length);
+  }
+
+  function nearestCoinPositionForOrbitAngle(angle) {
+    let best = COIN_POSITIONS[0];
+    let bestDistance = Infinity;
+
+    COIN_POSITIONS.forEach((position, index) => {
+      const effective = wrapRadians(baseAngleForIndex(index, COIN_POSITIONS.length) + angle);
+      const distance = Math.abs(wrapRadians(effective - anchorAngleRadians()));
+      if (distance < bestDistance) {
+        bestDistance = distance;
+        best = position;
+      }
+    });
+
+    return best;
+  }
+
+  function settledAngleForCoinPosition(position) {
+    return wrapRadians(anchorAngleRadians() - baseAngleForCoinPosition(position));
+  }
+
   function makeRow(key, value) {
     const row = document.createElement("div");
     row.className = "receiptRow";
+    row.style.display = "grid";
+    row.style.gridTemplateColumns = "minmax(0,1fr) auto";
+    row.style.gap = ".65rem";
 
     const k = document.createElement("span");
     k.className = "receiptKey";
+    k.style.color = "rgba(230,238,255,.68)";
+    k.style.fontSize = ".78rem";
+    k.style.fontWeight = "800";
+    k.style.letterSpacing = ".05em";
+    k.style.textTransform = "uppercase";
     k.textContent = key;
 
     const v = document.createElement("strong");
     v.className = "receiptValue";
+    v.style.color = "rgba(255,244,216,.96)";
+    v.style.fontSize = ".82rem";
+    v.style.textAlign = "right";
+    v.style.lineHeight = "1.2";
     v.textContent = value;
 
     row.append(k, v);
@@ -405,7 +516,7 @@
       const core = qs(".orbit-gem-core", button);
       if (core) {
         core.style.filter = isSelected
-          ? "brightness(1.18) saturate(1.08)"
+          ? "brightness(1.22) saturate(1.10)"
           : isFocused
             ? "brightness(1.10)"
             : "";
@@ -418,8 +529,10 @@
       const key = normalizeLifecycleNode(node.dataset.archcoinValueLifecycleNode);
       const selected = key === state.selectedLifecycleNode;
       node.dataset.selected = selected ? "true" : "false";
-      node.style.opacity = selected ? "1" : "";
-      node.style.filter = selected ? "brightness(1.16)" : "";
+      const core = qs(".orbit-gem-core", node);
+      if (core) {
+        core.style.filter = selected ? "brightness(1.16)" : "";
+      }
     });
   }
 
@@ -484,8 +597,9 @@
     state.transactionLayerDescended = false;
     syncTransactionSelectionPresentation();
 
-    focusCoinPosition(state.primaryCoinPosition || "contract", `${source}-focus`);
+    const focusTarget = state.primaryCoinPosition || "contract";
     setState(STATES.RETURNING_TO_TRANSACTION_ORBIT, `${source}:transaction-orbit-return`);
+    focusCoinPosition(focusTarget, `${source}-focus`);
 
     emitArchcoinReceipt({
       selectedCoinPosition: "",
@@ -538,46 +652,431 @@
     return true;
   }
 
+  function pointerDistance(pointer, clientX, clientY) {
+    return Math.hypot(clientX - pointer.startX, clientY - pointer.startY);
+  }
+
+  function addPointerSample(pointer, clientX, clientY, time) {
+    pointer.samples.push({
+      x: clientX,
+      y: clientY,
+      time
+    });
+
+    const minimumTime = time - Math.max(ORBIT.sampleWindowMs * 2, 260);
+    pointer.samples = pointer.samples
+      .filter((sample) => sample.time >= minimumTime)
+      .slice(-ORBIT.maximumSamples);
+  }
+
+  function gestureMetrics(pointer, endX, endY, endTime) {
+    const dx = endX - pointer.startX;
+    const dy = endY - pointer.startY;
+    const distance = Math.hypot(dx, dy);
+    const durationMs = Math.max(1, endTime - pointer.startTime);
+    const averageVelocity = distance / durationMs;
+
+    const recentSamples = pointer.samples.filter(
+      (sample) => sample.time >= endTime - ORBIT.sampleWindowMs
+    );
+
+    const releaseStart = recentSamples.length
+      ? recentSamples[0]
+      : { x: pointer.startX, y: pointer.startY, time: pointer.startTime };
+
+    const releaseDistance = Math.hypot(endX - releaseStart.x, endY - releaseStart.y);
+    const releaseDuration = Math.max(1, endTime - releaseStart.time);
+    const releaseVelocity = releaseDistance / releaseDuration;
+
+    let pathLength = 0;
+    let previous = { x: pointer.startX, y: pointer.startY };
+    pointer.samples.forEach((sample) => {
+      pathLength += Math.hypot(sample.x - previous.x, sample.y - previous.y);
+      previous = sample;
+    });
+    pathLength += Math.hypot(endX - previous.x, endY - previous.y);
+
+    const pathEfficiency = pathLength > 0 ? distance / pathLength : 1;
+    const absX = Math.abs(dx);
+    const absY = Math.abs(dy);
+    const directionalRatio =
+      Math.max(absX, absY) / Math.max(1, Math.min(absX, absY));
+
+    const lastSample = pointer.samples.length
+      ? pointer.samples[pointer.samples.length - 1]
+      : null;
+
+    const pauseBeforeRelease = lastSample ? Math.max(0, endTime - lastSample.time) : durationMs;
+
+    return {
+      dx,
+      dy,
+      distance,
+      durationMs,
+      averageVelocity,
+      releaseVelocity,
+      pathEfficiency,
+      directionalRatio,
+      pauseBeforeRelease
+    };
+  }
+
+  function isQuickReturnFlick(metrics) {
+    return (
+      metrics.durationMs <= ORBIT.flickMaximumDurationMs &&
+      metrics.distance >= ORBIT.flickMinimumDistancePx &&
+      metrics.averageVelocity >= ORBIT.flickMinimumAverageVelocityPxPerMs &&
+      metrics.releaseVelocity >= ORBIT.flickMinimumReleaseVelocityPxPerMs &&
+      metrics.directionalRatio >= ORBIT.flickMinimumDirectionalRatio &&
+      metrics.pauseBeforeRelease <= ORBIT.flickMaximumPauseBeforeReleaseMs &&
+      (1 - metrics.pathEfficiency) <= ORBIT.flickMaximumPathEfficiencyLoss
+    );
+  }
+
+  function angleFromPointerDelta(pointer, clientX) {
+    const width = Math.max(1, state.orbitStage.getBoundingClientRect().width);
+    const dx = clientX - pointer.startX;
+    return (dx / width) * ORBIT.dragRadiansPerViewport;
+  }
+
+  function handleOrbitPointerDown(event) {
+    if (!state.orbitStage || state.orbit.pointer) return;
+    if (event.button !== undefined && event.button !== 0) return;
+
+    const buttonTarget = event.target.closest("[data-archcoin-coin-position]");
+    const now = performance.now();
+
+    state.orbit.pointer = {
+      id: event.pointerId,
+      startX: event.clientX,
+      startY: event.clientY,
+      lastX: event.clientX,
+      lastY: event.clientY,
+      startTime: now,
+      dragging: false,
+      downCoinPosition: buttonTarget
+        ? normalizeCoinPosition(buttonTarget.dataset.archcoinCoinPosition)
+        : "",
+      startAngle: state.orbit.angle,
+      samples: [{ x: event.clientX, y: event.clientY, time: now }]
+    };
+
+    try {
+      state.orbitStage.setPointerCapture(event.pointerId);
+    } catch (_) {}
+  }
+
+  function handleOrbitPointerMove(event) {
+    const pointer = state.orbit.pointer;
+    if (!pointer || event.pointerId !== pointer.id) return;
+
+    const now = performance.now();
+    pointer.lastX = event.clientX;
+    pointer.lastY = event.clientY;
+    addPointerSample(pointer, event.clientX, event.clientY, now);
+
+    const distance = pointerDistance(pointer, event.clientX, event.clientY);
+
+    if (!pointer.dragging && distance < ORBIT.dragDeadZonePx) {
+      return;
+    }
+
+    if (!pointer.dragging) {
+      pointer.dragging = true;
+      state.orbit.suppressClickUntil = now + ORBIT.suppressClickMs;
+      if (state.transactionOrbit) state.transactionOrbit.style.animationPlayState = "paused";
+      if (state.lifecycleOrbit) state.lifecycleOrbit.style.animationPlayState = "paused";
+    }
+
+    event.preventDefault();
+
+    const deltaAngle = angleFromPointerDelta(pointer, event.clientX);
+    state.orbit.angle = wrapRadians(pointer.startAngle + deltaAngle);
+    state.orbit.targetAngle = state.orbit.angle;
+
+    const focused = nearestCoinPositionForOrbitAngle(state.orbit.angle);
+    if (!state.selectedCoinPosition) {
+      focusCoinPosition(focused, "drag-focus");
+    } else {
+      state.focusedCoinPosition = focused;
+      state.primaryCoinPosition = focused;
+      syncTransactionSelectionPresentation();
+      emitArchcoinReceipt({
+        orbitFocus: focused,
+        primaryCoinPosition: focused,
+        lastAction: `drag-focus:${focused}`,
+        lastFailure: null
+      });
+    }
+  }
+
+  function releaseOrbitPointerCapture(event) {
+    try {
+      if (
+        state.orbitStage &&
+        state.orbitStage.hasPointerCapture &&
+        state.orbitStage.hasPointerCapture(event.pointerId)
+      ) {
+        state.orbitStage.releasePointerCapture(event.pointerId);
+      }
+    } catch (_) {}
+  }
+
+  function finishOrbitDrag(pointer, event, metrics) {
+    const nearest = nearestCoinPositionForOrbitAngle(state.orbit.angle);
+    state.focusedCoinPosition = nearest;
+    state.primaryCoinPosition = nearest;
+    state.orbit.targetAngle = settledAngleForCoinPosition(nearest);
+
+    if (state.selectedCoinPosition && isQuickReturnFlick(metrics)) {
+      returnToTransactionOrbit("flick");
+      emitArchcoinReceipt({
+        orbitFocus: nearest,
+        primaryCoinPosition: nearest,
+        lastAction: `flick-return:${nearest}`,
+        lastFailure: null
+      });
+      return;
+    }
+
+    focusCoinPosition(nearest, "settle");
+    emitArchcoinReceipt({
+      orbitFocus: nearest,
+      primaryCoinPosition: nearest,
+      lastAction: `settle:${nearest}`,
+      lastFailure: null
+    });
+
+    event.preventDefault();
+  }
+
+  function finishOrbitTap(pointer, event, metrics) {
+    if (
+      metrics.distance <= ORBIT.maximumTapDistancePx &&
+      pointer.downCoinPosition &&
+      performance.now() >= state.orbit.suppressClickUntil
+    ) {
+      selectCoinPosition(pointer.downCoinPosition, "tap");
+      event.preventDefault();
+      return;
+    }
+
+    if (metrics.distance <= ORBIT.maximumTapDistancePx && state.selectedCoinPosition) {
+      returnToTransactionOrbit("tap-background");
+      event.preventDefault();
+    }
+  }
+
+  function handleOrbitPointerUp(event) {
+    const pointer = state.orbit.pointer;
+    if (!pointer || event.pointerId !== pointer.id) return;
+
+    const now = performance.now();
+    addPointerSample(pointer, event.clientX, event.clientY, now);
+    const metrics = gestureMetrics(pointer, event.clientX, event.clientY, now);
+
+    releaseOrbitPointerCapture(event);
+    state.orbit.pointer = null;
+
+    if (pointer.dragging) {
+      finishOrbitDrag(pointer, event, metrics);
+      return;
+    }
+
+    finishOrbitTap(pointer, event, metrics);
+  }
+
+  function handleOrbitPointerCancel(event) {
+    const pointer = state.orbit.pointer;
+    if (!pointer || event.pointerId !== pointer.id) return;
+
+    releaseOrbitPointerCapture(event);
+    state.orbit.pointer = null;
+    state.orbit.targetAngle = state.orbit.angle;
+
+    emitArchcoinReceipt({
+      lastAction: "pointer-cancelled",
+      lastFailure: null
+    });
+  }
+
+  function handleOrbitClickCapture(event) {
+    if (performance.now() < state.orbit.suppressClickUntil) {
+      event.preventDefault();
+      event.stopPropagation();
+      event.stopImmediatePropagation();
+    }
+  }
+
+  function pauseCssAnimations() {
+    if (state.transactionOrbit) state.transactionOrbit.style.animation = "none";
+    if (state.lifecycleOrbit) state.lifecycleOrbit.style.animation = "none";
+
+    state.transactionPoints.forEach((point) => {
+      const upright = qs(".orbit-upright", point);
+      const core = qs(".orbit-gem-core", point);
+      if (upright) upright.style.animation = "none";
+      if (core) core.style.animation = "none";
+    });
+
+    state.lifecycleNodes.forEach((node) => {
+      const upright = qs(".orbit-upright", node);
+      const core = qs(".orbit-gem-core", node);
+      if (upright) upright.style.animation = "none";
+      if (core) core.style.animation = "none";
+    });
+
+    if (state.centerGem) {
+      const core = qs(".center-gem-core", state.centerGem);
+      if (core) core.style.animation = "none";
+    }
+  }
+
+  function layoutOrbitElements() {
+    if (!state.orbitStage) return;
+
+    const rect = state.orbitStage.getBoundingClientRect();
+    const width = Math.max(1, rect.width);
+    const height = Math.max(1, rect.height);
+    const centerX = width * 0.5;
+    const centerY = height * 0.5;
+
+    const primaryRadius = Math.min(width, height) * ORBIT.primaryRadiusFactor;
+    const secondaryRadius = Math.min(width, height) * ORBIT.secondaryRadiusFactor;
+
+    state.transactionPoints.forEach((button, index) => {
+      const position = normalizeCoinPosition(button.dataset.archcoinCoinPosition);
+      const angle = baseAngleForIndex(index, COIN_POSITIONS.length) + state.orbit.angle;
+      const depth = Math.sin(angle);
+      const projectionX = Math.cos(angle) * primaryRadius;
+      const projectionY = Math.sin(angle) * primaryRadius * 0.32;
+      const isFocused = position === state.focusedCoinPosition;
+      const isSelected = position === state.selectedCoinPosition;
+
+      const scale =
+        (isSelected
+          ? ORBIT.selectedScaleFront
+          : isFocused
+            ? ORBIT.focusScaleFront
+            : ORBIT.ordinaryScaleBase + ((depth + 1) * 0.5) * ORBIT.ordinaryScaleDepthLift);
+
+      const brightness = 0.82 + ((depth + 1) * 0.5) * 0.30 + (isSelected ? 0.10 : 0);
+      const translate =
+        `translate3d(${(centerX + projectionX).toFixed(2)}px, ${(centerY + projectionY).toFixed(2)}px, 0) translate(-50%, -50%) scale(${scale.toFixed(4)})`;
+
+      button.style.position = "absolute";
+      button.style.left = "0";
+      button.style.top = "0";
+      button.style.margin = "0";
+      button.style.transform = translate;
+      button.style.zIndex = String(40 + Math.round(((depth + 1) * 0.5) * 40) + (isSelected ? 12 : isFocused ? 8 : 0));
+
+      const core = qs(".orbit-gem-core", button);
+      if (core) {
+        const floatY = state.reducedMotion ? 0 : Math.sin(performance.now() * 0.0014 + index * 0.8) * 6;
+        core.style.transform = `translateY(${floatY.toFixed(2)}px)`;
+        core.style.filter = `${core.style.filter || ""} brightness(${brightness.toFixed(3)})`.trim();
+      }
+
+      const upright = qs(".orbit-upright", button);
+      if (upright) {
+        upright.style.transform = `rotate(${(-state.orbit.angle).toFixed(4)}rad)`;
+      }
+    });
+
+    state.lifecycleNodes.forEach((node, index) => {
+      const key = normalizeLifecycleNode(node.dataset.archcoinValueLifecycleNode);
+      const angle = baseAngleForIndex(index, LIFECYCLE_NODES.length) + state.orbit.innerAngle;
+      const depth = Math.sin(angle);
+      const projectionX = Math.cos(angle) * secondaryRadius;
+      const projectionY = Math.sin(angle) * secondaryRadius * 0.42;
+      const selected = key === state.selectedLifecycleNode;
+
+      const scale =
+        ORBIT.innerScaleBase + ((depth + 1) * 0.5) * ORBIT.innerScaleDepthLift + (selected ? 0.08 : 0);
+
+      node.style.position = "absolute";
+      node.style.left = "0";
+      node.style.top = "0";
+      node.style.margin = "0";
+      node.style.transform =
+        `translate3d(${(centerX + projectionX).toFixed(2)}px, ${(centerY + projectionY).toFixed(2)}px, 0) translate(-50%, -50%) scale(${scale.toFixed(4)})`;
+      node.style.zIndex = String(20 + Math.round(((depth + 1) * 0.5) * 20) + (selected ? 8 : 0));
+
+      const core = qs(".orbit-gem-core", node);
+      if (core) {
+        const floatY = state.reducedMotion ? 0 : Math.sin(performance.now() * 0.0018 + index * 1.1) * 4;
+        core.style.transform = `translateY(${floatY.toFixed(2)}px)`;
+      }
+
+      const upright = qs(".orbit-upright", node);
+      if (upright) {
+        upright.style.transform = `rotate(${(-state.orbit.innerAngle).toFixed(4)}rad)`;
+      }
+    });
+
+    if (state.centerGem) {
+      const core = qs(".center-gem-core", state.centerGem);
+      if (core) {
+        const glow = state.reducedMotion ? 0 : Math.sin(performance.now() * 0.0012) * 0.015;
+        core.style.transform = `scale(${(1 + glow).toFixed(4)})`;
+      }
+    }
+  }
+
+  function animateOrbitFrame() {
+    if (!state.orbit.running) return;
+
+    const settleFactor = state.reducedMotion ? 1 : 0.12;
+    state.orbit.angle = wrapRadians(
+      state.orbit.angle + wrapRadians(state.orbit.targetAngle - state.orbit.angle) * settleFactor
+    );
+
+    const desiredInnerBase = wrapRadians(-state.orbit.angle * 0.62);
+    state.orbit.targetInnerAngle = desiredInnerBase;
+    state.orbit.innerAngle = wrapRadians(
+      state.orbit.innerAngle + wrapRadians(state.orbit.targetInnerAngle - state.orbit.innerAngle) * (state.reducedMotion ? 1 : 0.10)
+    );
+
+    layoutOrbitElements();
+    state.orbit.frame = window.requestAnimationFrame(animateOrbitFrame);
+  }
+
   function bindTransactionControls() {
     state.transactionPoints.forEach((button) => {
       const position = normalizeCoinPosition(button.dataset.archcoinCoinPosition);
       if (!position) return;
 
       button.addEventListener("mouseenter", () => {
-        if (state.selectedCoinPosition) return;
+        if (state.selectedCoinPosition || state.orbit.pointer?.dragging) return;
         focusCoinPosition(position, "hover");
       });
 
       button.addEventListener("focus", () => {
-        if (state.selectedCoinPosition) return;
+        if (state.selectedCoinPosition || state.orbit.pointer?.dragging) return;
         focusCoinPosition(position, "focus");
-      });
-
-      button.addEventListener("click", () => {
-        selectCoinPosition(position, "click");
-      });
-
-      button.addEventListener("keydown", (event) => {
-        if (event.key === "Escape" && state.selectedCoinPosition) {
-          event.preventDefault();
-          returnToTransactionOrbit("escape");
-        }
       });
     });
 
     if (state.orbitStage) {
-      state.orbitStage.addEventListener("keydown", (event) => {
-        if (event.key === "Escape" && state.selectedCoinPosition) {
-          event.preventDefault();
-          returnToTransactionOrbit("orbit-stage-escape");
-        }
-      });
+      state.orbitStage.style.touchAction = "none";
+      state.orbitStage.style.overscrollBehavior = "contain";
+
+      state.orbitStage.addEventListener("pointerdown", handleOrbitPointerDown, { passive: false });
+      state.orbitStage.addEventListener("pointermove", handleOrbitPointerMove, { passive: false });
+      state.orbitStage.addEventListener("pointerup", handleOrbitPointerUp, { passive: false });
+      state.orbitStage.addEventListener("pointercancel", handleOrbitPointerCancel, { passive: false });
+      state.orbitStage.addEventListener("click", handleOrbitClickCapture, true);
     }
   }
 
   function bootArchcoinTransactionOrbit() {
+    state.transactionOrbit = qs(".transaction-orbit");
+    state.lifecycleOrbit = qs(".lifecycle-orbit");
+    state.centerGem = qs(".center-gem");
     state.transactionPoints = qsa("[data-archcoin-coin-position]", document);
-    if (!state.transactionPoints.length) {
+
+    if (!state.transactionPoints.length || !state.orbitStage) {
       emitArchcoinReceipt({
         status: "held",
         lastAction: "bootArchcoinTransactionOrbit",
@@ -586,8 +1085,18 @@
       return false;
     }
 
+    pauseCssAnimations();
     bindTransactionControls();
+
+    state.orbit.angle = settledAngleForCoinPosition("contract");
+    state.orbit.targetAngle = state.orbit.angle;
+    state.orbit.innerAngle = -state.orbit.angle * 0.62;
+    state.orbit.targetInnerAngle = state.orbit.innerAngle;
+    state.orbit.running = true;
+
     focusCoinPosition("contract", "boot");
+    layoutOrbitElements();
+    state.orbit.frame = window.requestAnimationFrame(animateOrbitFrame);
     return true;
   }
 
@@ -606,12 +1115,12 @@
       if (!lifecycleKey) return;
 
       node.addEventListener("mouseenter", () => {
-        if (state.selectedCoinPosition) return;
+        if (state.selectedCoinPosition || state.orbit.pointer?.dragging) return;
         selectLifecycleNode(lifecycleKey, "hover");
       });
 
       node.addEventListener("focus", () => {
-        if (state.selectedCoinPosition) return;
+        if (state.selectedCoinPosition || state.orbit.pointer?.dragging) return;
         selectLifecycleNode(lifecycleKey, "focus");
       });
     });
@@ -639,12 +1148,12 @@
       if (!Object.prototype.hasOwnProperty.call(ADAPTER_CONTENT, key)) return;
 
       slot.addEventListener("mouseenter", () => {
-        if (state.selectedCoinPosition) return;
+        if (state.orbit.pointer?.dragging) return;
         selectAdapterSlot(key, "hover");
       });
 
       slot.addEventListener("focusin", () => {
-        if (state.selectedCoinPosition) return;
+        if (state.orbit.pointer?.dragging) return;
         selectAdapterSlot(key, "focus");
       });
     });
@@ -825,7 +1334,7 @@
       Math.max(state.field.width, state.field.height) * 0.48
     );
 
-    grad.addColorStop(0, "rgba(243,200,111,0.048)");
+    grad.addColorStop(0, "rgba(243,200,111,0.050)");
     grad.addColorStop(0.45, "rgba(126,203,255,0.030)");
     grad.addColorStop(1, "rgba(0,0,0,0)");
 
@@ -849,17 +1358,7 @@
       return false;
     }
 
-    state.field.reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     resizeFieldCanvas();
-
-    if (state.field.reducedMotion) {
-      drawField();
-      emitArchcoinReceipt({
-        lastAction: "bootArchcoinVisualField",
-        lastFailure: null
-      });
-      return true;
-    }
 
     state.field.running = true;
     state.field.frame = window.requestAnimationFrame(frameField);
@@ -873,7 +1372,10 @@
       { passive: true }
     );
 
-    window.addEventListener("resize", resizeFieldCanvas, { passive: true });
+    window.addEventListener("resize", () => {
+      resizeFieldCanvas();
+      layoutOrbitElements();
+    }, { passive: true });
 
     emitArchcoinReceipt({
       lastAction: "bootArchcoinVisualField",
@@ -933,6 +1435,7 @@
     state.orbitStage = qs("#archcoin-orbit-stage");
     state.geometryMount = qs("#archcoin-geometry-mount");
     state.receiptOutput = qs("#archcoin-receipt-output");
+    state.reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   }
 
   function boot() {
@@ -960,7 +1463,7 @@
       }
     });
 
-    state.root.dataset.archcoinRuntime = "v2-active";
+    state.root.dataset.archcoinRuntime = "v2-1-active";
 
     emitArchcoinReceipt({
       lastAction: "archcoin-runtime-booted",

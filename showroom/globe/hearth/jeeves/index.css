@@ -1,6 +1,6 @@
 /* TARGET FILE: /showroom/globe/hearth/jeeves/index.css */
 /* TNT FULL-FILE REPLACEMENT */
-/* DIAMOND_GATE_BRIDGE_JEEVES_CHARACTER_HOME_AND_ROUTING_SURFACE_CSS_TNT_v14 */
+/* DIAMOND_GATE_BRIDGE_JEEVES_CHARACTER_HOME_AND_ROUTING_SURFACE_CSS_TNT_v14_1 */
 /*
   Purpose:
   - Present Jeeves as a modern Diamond Gate Bridge character homepage.
@@ -8,6 +8,8 @@
   - Replace the legacy chatbot chamber with a compact routing instrument.
   - Distinguish Jeeves visually from Elara while preserving the same
     presentation standard.
+  - Give the conversation, contextual handoff, and follow-up options
+    distinct breathing zones so the exchange reads as a natural thread.
   - Style dialogue, handoff cards, role boundaries, team ownership,
     public routes, responsive states, and fallbacks.
 
@@ -16,6 +18,7 @@
   - character identity hierarchy
   - conversation shell
   - dialogue bubbles
+  - conversation spacing rhythm
   - prompt controls
   - contextual route cards
   - dossier and boundary presentation
@@ -1078,7 +1081,7 @@ summary:focus-visible,
 
 .jeeves-thread{
   min-height:12rem;
-  max-height:min(48svh,31rem);
+  max-height:min(52svh,34rem);
 
   overflow-y:auto;
   overscroll-behavior:contain;
@@ -1090,12 +1093,16 @@ summary:focus-visible,
 
   display:flex;
   flex-direction:column;
-  gap:.72rem;
+  gap:1.08rem;
 
   padding:
-    clamp(1rem,4vw,1.45rem);
+    clamp(1.15rem,4vw,1.65rem)
+    clamp(1rem,4vw,1.45rem)
+    clamp(2rem,5vw,2.6rem);
 
-  scroll-padding-block:1rem;
+  scroll-padding-block:
+    1.25rem
+    2.2rem;
 }
 
 .jeeves-thread::-webkit-scrollbar{
@@ -1137,9 +1144,11 @@ summary:focus-visible,
   max-width:min(88%,44rem);
 
   display:grid;
-  gap:.28rem;
+  gap:.36rem;
 
-  padding:.86rem .98rem;
+  padding:
+    1rem
+    1.08rem;
 
   border:1px solid var(--jeeves-line);
   border-radius:
@@ -1166,6 +1175,23 @@ summary:focus-visible,
     .38s
     var(--jeeves-ease)
     both;
+}
+
+.jeeves-bubble + .jeeves-bubble{
+  margin-top:.08rem;
+}
+
+.jeeves-bubble-user + .jeeves-bubble-jeeves,
+.jeeves-bubble-user + .jeeves-register-orientation,
+.jeeves-bubble-user + .jeeves-register-boundary,
+.jeeves-bubble-user + .jeeves-register-welcome{
+  margin-top:.34rem;
+}
+
+.jeeves-register-orientation + .jeeves-register-handoff,
+.jeeves-register-boundary + .jeeves-register-handoff,
+.jeeves-register-welcome + .jeeves-register-orientation{
+  margin-top:.18rem;
 }
 
 @keyframes jeevesBubbleIn{
@@ -1197,7 +1223,7 @@ summary:focus-visible,
   color:inherit;
 
   font-size:clamp(.94rem,2.5vw,1.06rem);
-  line-height:1.54;
+  line-height:1.62;
 }
 
 .jeeves-bubble-user{
@@ -1229,7 +1255,7 @@ summary:focus-visible,
   border-color:rgba(255,255,255,.10);
   border-radius:999px;
 
-  padding:.58rem .85rem;
+  padding:.64rem .9rem;
 
   color:var(--jeeves-copy-soft);
   background:rgba(255,255,255,.022);
@@ -1314,7 +1340,7 @@ summary:focus-visible,
 .jeeves-typing{
   position:absolute;
   left:clamp(1rem,4vw,1.45rem);
-  bottom:.45rem;
+  bottom:.65rem;
 
   width:fit-content;
 
@@ -1378,13 +1404,34 @@ summary:focus-visible,
 /* CONTEXTUAL ROUTE */
 
 .jeeves-context-route{
+  position:relative;
+
   display:grid;
-  gap:.65rem;
+  gap:.8rem;
 
   padding:
-    0
+    .5rem
     clamp(1rem,4vw,1.45rem)
-    .85rem;
+    1.85rem;
+}
+
+.jeeves-context-route:not(:empty)::before{
+  content:"";
+
+  height:1px;
+
+  margin:
+    0
+    6%
+    .55rem;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(231,195,118,.22),
+      transparent
+    );
 }
 
 .jeeves-context-route:empty{
@@ -1393,9 +1440,10 @@ summary:focus-visible,
 
 .jeeves-pathway-card{
   display:grid;
-  gap:.8rem;
+  gap:.95rem;
 
-  padding:.95rem;
+  padding:
+    1.08rem;
 
   border:1px solid var(--jeeves-line-gold);
   border-radius:1.15rem;
@@ -1413,6 +1461,7 @@ summary:focus-visible,
     );
 
   box-shadow:
+    0 1rem 2.4rem rgba(0,0,0,.18),
     inset 0 1px 0 rgba(255,255,255,.05);
 
   animation:
@@ -1436,7 +1485,7 @@ summary:focus-visible,
 
 .jeeves-pathway-copy{
   display:grid;
-  gap:.22rem;
+  gap:.3rem;
 }
 
 .jeeves-pathway-eyebrow{
@@ -1459,11 +1508,11 @@ summary:focus-visible,
   color:var(--jeeves-copy-soft);
 
   font-size:.82rem;
-  line-height:1.5;
+  line-height:1.56;
 }
 
 .jeeves-pathway-voice{
-  margin-top:.24rem;
+  margin-top:.35rem;
 
   color:var(--jeeves-cyan-soft);
 
@@ -1474,11 +1523,11 @@ summary:focus-visible,
 
   font-size:.82rem;
   font-style:italic;
-  line-height:1.48;
+  line-height:1.54;
 }
 
 .jeeves-pathway-action{
-  min-height:2.75rem;
+  min-height:2.9rem;
 
   display:inline-flex;
   align-items:center;
@@ -1487,7 +1536,7 @@ summary:focus-visible,
   border:1px solid rgba(231,195,118,.42);
   border-radius:999px;
 
-  padding:.66rem .95rem;
+  padding:.7rem 1rem;
 
   color:#171006;
 
@@ -1529,24 +1578,46 @@ summary:focus-visible,
 /* PROMPT DOCK */
 
 .jeeves-prompt-dock{
+  position:relative;
+
   display:grid;
-  gap:.65rem;
+  gap:.95rem;
 
   padding:
-    .9rem
+    1.7rem
     clamp(1rem,4vw,1.45rem)
-    clamp(1rem,4vw,1.35rem);
+    clamp(1.25rem,4vw,1.65rem);
 
-  border-top:1px solid var(--jeeves-line);
+  border-top:0;
 
   background:
     linear-gradient(
       180deg,
-      rgba(255,255,255,.012),
-      rgba(255,255,255,.032)
+      rgba(3,9,17,.20),
+      rgba(255,255,255,.018) 22%,
+      rgba(255,255,255,.035)
     );
 
   backdrop-filter:blur(14px);
+}
+
+.jeeves-prompt-dock::before{
+  content:"";
+
+  position:absolute;
+  left:clamp(1rem,4vw,1.45rem);
+  right:clamp(1rem,4vw,1.45rem);
+  top:.7rem;
+
+  height:1px;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(142,223,243,.26),
+      transparent
+    );
 }
 
 .jeeves-prompt-label{
@@ -1555,13 +1626,14 @@ summary:focus-visible,
   font-size:.64rem;
   font-weight:850;
   letter-spacing:.11em;
+  line-height:1.45;
   text-transform:uppercase;
 }
 
 .jeeves-options{
   display:grid;
   grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:.48rem;
+  gap:.78rem;
 }
 
 .jeeves-options:empty{
@@ -1569,15 +1641,18 @@ summary:focus-visible,
 }
 
 .jeeves-option{
-  min-height:3rem;
+  min-height:3.3rem;
 
   display:flex;
   align-items:center;
+  gap:.72rem;
 
   border:1px solid var(--jeeves-line);
-  border-radius:.9rem;
+  border-radius:1rem;
 
-  padding:.7rem .78rem;
+  padding:
+    .84rem
+    .9rem;
 
   color:var(--jeeves-copy);
 
@@ -1590,7 +1665,7 @@ summary:focus-visible,
 
   font-size:.76rem;
   font-weight:760;
-  line-height:1.35;
+  line-height:1.42;
   text-align:left;
 
   cursor:pointer;
@@ -1637,6 +1712,8 @@ summary:focus-visible,
 }
 
 .jeeves-option-utility{
+  margin-top:.12rem;
+
   color:var(--jeeves-copy-soft);
 
   border-style:dashed;
@@ -2306,12 +2383,56 @@ html[data-jeeves-runtime-ready="true"]
   }
 
   .jeeves-thread{
-    min-height:11rem;
-    max-height:46svh;
+    min-height:12rem;
+    max-height:52svh;
+
+    gap:1.14rem;
+
+    padding:
+      1.25rem
+      1rem
+      2.35rem;
+  }
+
+  .jeeves-bubble{
+    padding:
+      1rem
+      1.05rem;
+  }
+
+  .jeeves-context-route{
+    padding:
+      .55rem
+      1rem
+      1.95rem;
+  }
+
+  .jeeves-prompt-dock{
+    gap:1rem;
+
+    padding:
+      1.85rem
+      1rem
+      1.45rem;
+  }
+
+  .jeeves-prompt-dock::before{
+    left:1rem;
+    right:1rem;
+    top:.72rem;
   }
 
   .jeeves-options{
     grid-template-columns:1fr;
+    gap:.86rem;
+  }
+
+  .jeeves-option{
+    min-height:3.55rem;
+
+    padding:
+      .92rem
+      .95rem;
   }
 
   .jeeves-dossier-grid,
@@ -2350,12 +2471,52 @@ html[data-jeeves-runtime-ready="true"]
     text-align:left;
   }
 
+  .jeeves-thread{
+    gap:1.18rem;
+
+    padding:
+      1.15rem
+      .9rem
+      2.4rem;
+  }
+
   .jeeves-bubble{
     max-width:94%;
+
+    padding:
+      .95rem
+      1rem;
+  }
+
+  .jeeves-context-route{
+    padding:
+      .5rem
+      .9rem
+      1.9rem;
   }
 
   .jeeves-pathway-card{
-    padding:.85rem;
+    padding:1rem;
+  }
+
+  .jeeves-prompt-dock{
+    padding:
+      1.85rem
+      .9rem
+      1.35rem;
+  }
+
+  .jeeves-prompt-dock::before{
+    left:.9rem;
+    right:.9rem;
+  }
+
+  .jeeves-options{
+    gap:.9rem;
+  }
+
+  .jeeves-option{
+    min-height:3.65rem;
   }
 
   .jeeves-footer{
@@ -2384,6 +2545,34 @@ html[data-jeeves-runtime-ready="true"]
   .jeeves-console-shell{
     width:min(1120px,100%);
     margin-inline:auto;
+  }
+
+  .jeeves-thread{
+    gap:1.15rem;
+
+    padding:
+      1.6rem
+      1.65rem
+      2.7rem;
+  }
+
+  .jeeves-context-route{
+    padding:
+      .55rem
+      1.65rem
+      2rem;
+  }
+
+  .jeeves-prompt-dock{
+    padding:
+      1.85rem
+      1.65rem
+      1.6rem;
+  }
+
+  .jeeves-prompt-dock::before{
+    left:1.65rem;
+    right:1.65rem;
   }
 }
 

@@ -7,6 +7,7 @@
    - Preserve the existing controller state model.
    - Preserve all routes, room declarations, and cardinal declarations.
    - Descend into the page panel after room-star selection.
+   - Return the viewport to the Compass scene after Return To Orbit.
    - Keep Return To Orbit distinct from constellation-closing swipe behavior.
    - Restore cardinal or room panel content after Mirrorland withdrawal
      and Mirrorland renderer failure.
@@ -189,6 +190,9 @@
     panelDescentFrame: 0,
     panelDescentCommitFrame: 0,
 
+    sceneAscentFrame: 0,
+    sceneAscentCommitFrame: 0,
+
     mirrorlandState: MIRRORLAND_STATES.DORMANT,
     mirrorlandTransitionId: "",
     mirrorlandTimeout: 0,
@@ -365,6 +369,29 @@
     }
   }
 
+  function clearSceneAscentSchedule() {
+    if (state.sceneAscentFrame) {
+      cancelAnimationFrame(
+        state.sceneAscentFrame
+      );
+
+      state.sceneAscentFrame = 0;
+    }
+
+    if (state.sceneAscentCommitFrame) {
+      cancelAnimationFrame(
+        state.sceneAscentCommitFrame
+      );
+
+      state.sceneAscentCommitFrame = 0;
+    }
+  }
+
+  function clearViewportSchedules() {
+    clearPanelDescentSchedule();
+    clearSceneAscentSchedule();
+  }
+
   function setPanelDescended(descended) {
     state.panelDescended =
       Boolean(descended);
@@ -373,7 +400,7 @@
   function schedulePanelDescent(
     expectedRoomId
   ) {
-    clearPanelDescentSchedule();
+    clearViewportSchedules();
 
     const roomId =
       String(expectedRoomId || "")
@@ -418,6 +445,62 @@
             emitReceipt({
               lastAction:
                 `panel-descended:${roomId}`,
+              lastFailure: null
+            });
+          });
+      });
+  }
+
+  function scheduleSceneAscent(
+    expectedWing
+  ) {
+    clearViewportSchedules();
+
+    const wing =
+      normalizeWing(
+        expectedWing
+      );
+
+    if (
+      !wing ||
+      !state.scene
+    ) {
+      return;
+    }
+
+    state.sceneAscentFrame =
+      requestAnimationFrame(() => {
+        state.sceneAscentFrame = 0;
+
+        state.sceneAscentCommitFrame =
+          requestAnimationFrame(() => {
+            state.sceneAscentCommitFrame =
+              0;
+
+            if (
+              state.current !==
+                STATES.CLUSTER_OPEN ||
+              state.selectedCardinal !==
+                wing ||
+              state.selectedRoom ||
+              !state.scene
+            ) {
+              return;
+            }
+
+            state.scene.scrollIntoView({
+              behavior:
+                state.reducedMotion
+                  ? "auto"
+                  : "smooth",
+
+              block: "start",
+              inline: "nearest"
+            });
+
+            emitReceipt({
+              lastAction:
+                `returned-to-orbit:${wing}`,
               lastFailure: null
             });
           });
@@ -492,11 +575,6 @@
         ? "true"
         : "false";
 
-    /*
-     * Stable means the renderer is not in transition.
-     * Entry permission remains separately governed by
-     * mirrorlandEnterEnabled and MIRRORLAND_FOCUSED.
-     */
     state.root.dataset.mirrorlandWindowStable =
       state.mirrorlandState ===
         MIRRORLAND_STATES.FOCUSED ||
@@ -726,7 +804,7 @@
     action = "controller-failure"
   ) {
     clearMirrorlandTimers();
-    clearPanelDescentSchedule();
+    clearViewportSchedules();
 
     state.current =
       STATES.HELD;
@@ -1275,7 +1353,7 @@
       return false;
     }
 
-    clearPanelDescentSchedule();
+    clearViewportSchedules();
     setPanelDescended(false);
 
     const destination =
@@ -1374,6 +1452,8 @@
       return false;
     }
 
+    clearViewportSchedules();
+
     const destination =
       destinationFromElement(
         element
@@ -1449,7 +1529,7 @@
       state.current ===
         STATES.ROOM_SELECTED
     ) {
-      clearPanelDescentSchedule();
+      clearViewportSchedules();
       resetSelection();
 
       return setState(
@@ -1517,7 +1597,7 @@
       return false;
     }
 
-    clearPanelDescentSchedule();
+    clearViewportSchedules();
     setPanelDescended(false);
 
     state.selectedRoom =
@@ -1563,10 +1643,24 @@
       )
     );
 
-    return setState(
-      STATES.CLUSTER_OPEN,
-      "return-to-orbit"
+    const wing =
+      state.selectedCardinal;
+
+    const committed =
+      setState(
+        STATES.CLUSTER_OPEN,
+        "return-to-orbit"
+      );
+
+    if (!committed) {
+      return false;
+    }
+
+    scheduleSceneAscent(
+      wing
     );
+
+    return true;
   }
 
   function preserveCompassState() {
@@ -1639,7 +1733,7 @@
 
     preserveCompassState();
     clearMirrorlandTimers();
-    clearPanelDescentSchedule();
+    clearViewportSchedules();
 
     setPanelDescended(false);
 
@@ -1727,6 +1821,7 @@
     }
 
     clearMirrorlandTimers();
+    clearViewportSchedules();
 
     state.mirrorlandTransitionId =
       makeTransitionId(
@@ -1853,7 +1948,7 @@
     state.mirrorlandTransitionId =
       "";
 
-    clearPanelDescentSchedule();
+    clearViewportSchedules();
 
     if (!preserved) {
       resetSelection();
@@ -1934,7 +2029,7 @@
       return false;
     }
 
-    clearPanelDescentSchedule();
+    clearViewportSchedules();
 
     const committed =
       setState(
@@ -2031,7 +2126,7 @@
     }
 
     clearMirrorlandTimers();
-    clearPanelDescentSchedule();
+    clearViewportSchedules();
 
     state.mirrorlandState =
       MIRRORLAND_STATES.DORMANT;

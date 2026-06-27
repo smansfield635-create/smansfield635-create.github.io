@@ -1,31 +1,43 @@
 /* /assets/compass/compass.crystals.js
    Diamond Gate Bridge Compass
-   Cardinal and room crystal renderer only.
+   Cardinal and room crystal renderer with spherical constellation control.
 
-   Surgical correction scope:
+   Full-file replacement scope:
    - Preserve all four cardinal stars and nineteen room stars.
-   - Preserve existing cardinal and room geometry and routes.
-   - Add controller-state-driven visual recession during Mirrorland reveal,
-     focus, withdrawal, and navigation.
-   - Recede stars through scale, outward drift, z-depth, saturation,
-     material softness, halo reduction, and label reduction.
-   - Preserve stars as visible orientation context.
-   - Generate nonvisual room semantic proxies from hidden authoritative
-     room declarations.
-   - Keep room proxy metadata, aria-labels, and keyboard access.
-   - Use rendered room-star hit testing as the ordinary pointer surface.
-   - Suppress star interaction while Mirrorland owns visual focus.
+   - Preserve authoritative cardinal declarations, room declarations,
+     routes, accessibility metadata, semantic controls, materials,
+     Mirrorland recession behavior, WebGL rendering, and receipts.
+   - Replace the former flat four-position carousel with a shared
+     right-handed Euclidean X/Y/Z spherical orientation.
+   - Rotate every cardinal star through one unit-quaternion orientation.
+   - Allow dragging to begin on a cardinal star, its label, or open scene.
+   - Retain pointer capture for the full gesture.
+   - Apply continuous yaw and pitch while the pointer moves.
+   - Preserve diagonal movement rather than discarding it.
+   - Compute depth, scale, prominence, halo, label opacity, and stacking
+     from each star's rotated Z position.
+   - Determine the cardinal nearest the front-primary anchor on release.
+   - Snap the shared sphere to that cardinal and commit the resulting
+     quaternion through DGB_COMPASS_CONTROLLER.requestOrbitCommit().
+   - Keep drag-to-primary distinct from tap-to-open-cluster.
+   - Keep room-star selection and Return To Orbit behavior intact.
+   - Do not close an open cluster merely because a swipe occurred.
+   - Suppress accidental semantic clicks after a completed drag.
+   - Support reduced motion with immediate deterministic settling.
+   - Suppress constellation manipulation while Mirrorland owns focus.
 
    Ownership:
    - Celestial scene background.
    - Four cardinal crystal stars.
    - Nineteen room crystal stars.
+   - Shared spherical orientation rendering.
    - Crystal shaders, materials, camera, projection, cardinal labels,
-     room accessibility proxies, hit testing, and empty-scene gestures.
+     room accessibility proxies, hit testing, pointer gestures,
+     front-cardinal detection, and release settling.
 
    Non-ownership:
+   - Controller state commitment beyond published controller APIs.
    - Mirrorland geometry, materials, hit testing, state, or rendering.
-   - Controller state commitment.
    - Navigation.
 */
 
@@ -33,12 +45,26 @@
   "use strict";
 
   const CONTRACT = Object.freeze({
-    id: "DGB_COMPASS_CRYSTALS_FIVE_FILE_REBUILD_v1",
-    file: "/assets/compass/compass.crystals.js",
-    releaseId: "dgb-compass-mirrorland-rebuild-v1",
-    visualPassClaimed: false,
-    productionAuthorized: false,
-    deploymentAuthorized: false
+    id:
+      "DGB_COMPASS_CRYSTALS_SPHERICAL_ORBIT_REBUILD_v2",
+
+    previousId:
+      "DGB_COMPASS_CRYSTALS_FIVE_FILE_REBUILD_v1",
+
+    file:
+      "/assets/compass/compass.crystals.js",
+
+    releaseId:
+      "dgb-compass-spherical-orbit-v2",
+
+    visualPassClaimed:
+      false,
+
+    productionAuthorized:
+      false,
+
+    deploymentAuthorized:
+      false
   });
 
   const WINGS = Object.freeze([
@@ -49,291 +75,815 @@
   ]);
 
   const NODE_TYPES = Object.freeze({
-    CARDINAL: "cardinal",
-    ROOM: "room"
+    CARDINAL:
+      "cardinal",
+
+    ROOM:
+      "room"
   });
 
   const POINTER_TERRITORIES = Object.freeze({
-    SEMANTIC_CONTROL: "SEMANTIC_CONTROL",
-    RENDERED_CARDINAL: "RENDERED_CARDINAL",
-    RENDERED_ROOM: "RENDERED_ROOM",
-    MIRRORLAND_THRESHOLD: "MIRRORLAND_THRESHOLD",
-    EMPTY_SCENE: "EMPTY_SCENE",
-    OUTSIDE_SCENE: "OUTSIDE_SCENE"
+    BLOCKED_CONTROL:
+      "BLOCKED_CONTROL",
+
+    RENDERED_CARDINAL:
+      "RENDERED_CARDINAL",
+
+    RENDERED_ROOM:
+      "RENDERED_ROOM",
+
+    MIRRORLAND_THRESHOLD:
+      "MIRRORLAND_THRESHOLD",
+
+    EMPTY_SCENE:
+      "EMPTY_SCENE",
+
+    OUTSIDE_SCENE:
+      "OUTSIDE_SCENE"
   });
 
   const GESTURE = Object.freeze({
-    minimumSwipeDistancePx: 42,
-    maximumTapDistancePx: 12,
-    directionalDominanceRatio: 1.25
+    dragDeadZonePx:
+      6,
+
+    maximumTapDistancePx:
+      12,
+
+    minimumCommitDistancePx:
+      8,
+
+    radiansPerViewport:
+      Math.PI * 1.12,
+
+    maximumPitchRadians:
+      Math.PI * 0.46,
+
+    minimumPitchRadians:
+      -Math.PI * 0.46,
+
+    settleSpeed:
+      7.4,
+
+    suppressClickMs:
+      520
   });
 
-  const ORBIT_ANGLES = Object.freeze({
-    north: 0,
-    east: Math.PI / 2,
-    south: Math.PI,
-    west: -Math.PI / 2
+  const SPHERE = Object.freeze({
+    coordinateSystem:
+      "RIGHT_HANDED_EUCLIDEAN_XYZ",
+
+    orientationRepresentation:
+      "UNIT_QUATERNION",
+
+    horizontalRadius:
+      1.50,
+
+    verticalRadius:
+      1.34,
+
+    depthRadius:
+      1.16,
+
+    primaryAnchor:
+      Object.freeze([
+        0,
+        0.78,
+        0.625
+      ]),
+
+    frontDirection:
+      Object.freeze([
+        0,
+        0,
+        1
+      ]),
+
+    upDirection:
+      Object.freeze([
+        0,
+        1,
+        0
+      ]),
+
+    cardinalVectors:
+      Object.freeze({
+        north:
+          Object.freeze([
+            0,
+            1,
+            0
+          ]),
+
+        east:
+          Object.freeze([
+            1,
+            0,
+            0
+          ]),
+
+        south:
+          Object.freeze([
+            0,
+            -1,
+            0
+          ]),
+
+        west:
+          Object.freeze([
+            -1,
+            0,
+            0
+          ])
+      })
   });
 
   const STAR_PALETTE = Object.freeze({
-    north: Object.freeze([0.72, 0.88, 1.0]),
-    east: Object.freeze([0.56, 0.92, 1.0]),
-    south: Object.freeze([1.0, 0.82, 0.48]),
-    west: Object.freeze([0.96, 0.68, 0.46]),
+    north:
+      Object.freeze([
+        0.72,
+        0.88,
+        1
+      ]),
 
-    roomNorth: Object.freeze([0.66, 0.84, 1.0]),
-    roomEast: Object.freeze([0.55, 0.90, 0.96]),
-    roomSouth: Object.freeze([1.0, 0.76, 0.42]),
-    roomWest: Object.freeze([0.94, 0.62, 0.42])
+    east:
+      Object.freeze([
+        0.56,
+        0.92,
+        1
+      ]),
+
+    south:
+      Object.freeze([
+        1,
+        0.82,
+        0.48
+      ]),
+
+    west:
+      Object.freeze([
+        0.96,
+        0.68,
+        0.46
+      ]),
+
+    roomNorth:
+      Object.freeze([
+        0.66,
+        0.84,
+        1
+      ]),
+
+    roomEast:
+      Object.freeze([
+        0.55,
+        0.90,
+        0.96
+      ]),
+
+    roomSouth:
+      Object.freeze([
+        1,
+        0.76,
+        0.42
+      ]),
+
+    roomWest:
+      Object.freeze([
+        0.94,
+        0.62,
+        0.42
+      ])
   });
 
   const MATERIALS = Object.freeze({
-    CARDINAL_IDLE: Object.freeze({
-      specular: 1.18,
-      rim: 1.02,
-      emissive: 0.17,
-      alpha: 0.90,
-      sparkle: 0.26,
-      halo: 0.82,
-      contrast: 1.16
-    }),
+    CARDINAL_IDLE:
+      Object.freeze({
+        specular:
+          1.18,
 
-    CARDINAL_FOCUSED: Object.freeze({
-      specular: 1.50,
-      rim: 1.30,
-      emissive: 0.24,
-      alpha: 0.96,
-      sparkle: 0.36,
-      halo: 1.18,
-      contrast: 1.24
-    }),
+        rim:
+          1.02,
 
-    CARDINAL_SELECTED: Object.freeze({
-      specular: 1.62,
-      rim: 1.38,
-      emissive: 0.28,
-      alpha: 0.97,
-      sparkle: 0.42,
-      halo: 1.25,
-      contrast: 1.28
-    }),
+        emissive:
+          0.17,
 
-    ROOM_IDLE: Object.freeze({
-      specular: 1.04,
-      rim: 0.90,
-      emissive: 0.15,
-      alpha: 0.88,
-      sparkle: 0.22,
-      halo: 0.64,
-      contrast: 1.10
-    }),
+        alpha:
+          0.90,
 
-    ROOM_SELECTED: Object.freeze({
-      specular: 1.34,
-      rim: 1.14,
-      emissive: 0.24,
-      alpha: 0.95,
-      sparkle: 0.34,
-      halo: 0.96,
-      contrast: 1.20
-    })
+        sparkle:
+          0.26,
+
+        halo:
+          0.82,
+
+        contrast:
+          1.16
+      }),
+
+    CARDINAL_FOCUSED:
+      Object.freeze({
+        specular:
+          1.50,
+
+        rim:
+          1.30,
+
+        emissive:
+          0.24,
+
+        alpha:
+          0.96,
+
+        sparkle:
+          0.36,
+
+        halo:
+          1.18,
+
+        contrast:
+          1.24
+      }),
+
+    CARDINAL_SELECTED:
+      Object.freeze({
+        specular:
+          1.62,
+
+        rim:
+          1.38,
+
+        emissive:
+          0.28,
+
+        alpha:
+          0.97,
+
+        sparkle:
+          0.42,
+
+        halo:
+          1.25,
+
+        contrast:
+          1.28
+      }),
+
+    ROOM_IDLE:
+      Object.freeze({
+        specular:
+          1.04,
+
+        rim:
+          0.90,
+
+        emissive:
+          0.15,
+
+        alpha:
+          0.88,
+
+        sparkle:
+          0.22,
+
+        halo:
+          0.64,
+
+        contrast:
+          1.10
+      }),
+
+    ROOM_SELECTED:
+      Object.freeze({
+        specular:
+          1.34,
+
+        rim:
+          1.14,
+
+        emissive:
+          0.24,
+
+        alpha:
+          0.95,
+
+        sparkle:
+          0.34,
+
+        halo:
+          0.96,
+
+        contrast:
+          1.20
+      })
   });
 
   const QUALITY = Object.freeze({
-    normalDevicePixelRatioCap: 2,
-    lowPowerDevicePixelRatioCap: 1.5,
+    normalDevicePixelRatioCap:
+      2,
 
-    mobileAspectThreshold: 0.82,
-    atmosphereReductionWidthPx: 520,
-    bloomDisableWidthPx: 420,
+    lowPowerDevicePixelRatioCap:
+      1.5,
 
-    cardinalSegments: 8,
-    roomSegments: 6,
+    mobileAspectThreshold:
+      0.82,
 
-    cardinalScale: 1.05,
-    focusedCardinalScale: 1.28,
-    selectedCardinalScale: 1.38,
+    atmosphereReductionWidthPx:
+      520,
 
-    roomScale: 0.92,
-    selectedRoomScale: 1.14,
+    bloomDisableWidthPx:
+      420,
 
-    maxYaw: 0.22,
-    maxPitch: 0.14
+    cardinalSegments:
+      8,
+
+    roomSegments:
+      6,
+
+    cardinalScale:
+      0.96,
+
+    focusedCardinalScale:
+      1.30,
+
+    selectedCardinalScale:
+      1.38,
+
+    roomScale:
+      0.92,
+
+    selectedRoomScale:
+      1.14,
+
+    maxYaw:
+      0.22,
+
+    maxPitch:
+      0.14
   });
 
   const RECESSION = Object.freeze({
-    NORMAL: Object.freeze({
-      scale: 1,
-      outwardDesktop: 1,
-      outwardMobile: 1,
-      zOffset: 0,
-      prominence: 1,
-      controllerProminenceFloor: 0,
-      halo: 1,
-      material: 1,
-      saturation: 1,
-      labelScale: 1,
-      labelOpacity: 1,
-      rotation: 1,
-      float: 1,
-      interactive: true
-    }),
+    NORMAL:
+      Object.freeze({
+        scale:
+          1,
 
-    REVEALING: Object.freeze({
-      scale: 0.86,
-      outwardDesktop: 1.075,
-      outwardMobile: 1.04,
-      zOffset: -0.50,
-      prominence: 0.88,
-      controllerProminenceFloor: 0.76,
-      halo: 0.52,
-      material: 0.74,
-      saturation: 0.76,
-      labelScale: 0.90,
-      labelOpacity: 0.82,
-      rotation: 0.68,
-      float: 0.64,
-      interactive: false
-    }),
+        outwardDesktop:
+          1,
 
-    FOCUSED: Object.freeze({
-      scale: 0.72,
-      outwardDesktop: 1.14,
-      outwardMobile: 1.075,
-      zOffset: -0.92,
-      prominence: 0.78,
-      controllerProminenceFloor: 0.62,
-      halo: 0.30,
-      material: 0.58,
-      saturation: 0.61,
-      labelScale: 0.78,
-      labelOpacity: 0.68,
-      rotation: 0.42,
-      float: 0.36,
-      interactive: false
-    }),
+        outwardMobile:
+          1,
 
-    WITHDRAWING: Object.freeze({
-      scale: 0.82,
-      outwardDesktop: 1.09,
-      outwardMobile: 1.05,
-      zOffset: -0.60,
-      prominence: 0.84,
-      controllerProminenceFloor: 0.70,
-      halo: 0.44,
-      material: 0.68,
-      saturation: 0.70,
-      labelScale: 0.86,
-      labelOpacity: 0.76,
-      rotation: 0.58,
-      float: 0.54,
-      interactive: false
-    }),
+        zOffset:
+          0,
 
-    NAVIGATING: Object.freeze({
-      scale: 0.66,
-      outwardDesktop: 1.16,
-      outwardMobile: 1.08,
-      zOffset: -1.08,
-      prominence: 0.68,
-      controllerProminenceFloor: 0.50,
-      halo: 0.20,
-      material: 0.46,
-      saturation: 0.50,
-      labelScale: 0.72,
-      labelOpacity: 0.54,
-      rotation: 0.26,
-      float: 0.20,
-      interactive: false
-    }),
+        prominence:
+          1,
 
-    HELD: Object.freeze({
-      scale: 0.90,
-      outwardDesktop: 1,
-      outwardMobile: 1,
-      zOffset: -0.20,
-      prominence: 0.74,
-      controllerProminenceFloor: 0.68,
-      halo: 0.22,
-      material: 0.50,
-      saturation: 0.44,
-      labelScale: 0.90,
-      labelOpacity: 0.66,
-      rotation: 0,
-      float: 0,
-      interactive: false
-    })
+        controllerProminenceFloor:
+          0,
+
+        halo:
+          1,
+
+        material:
+          1,
+
+        saturation:
+          1,
+
+        labelScale:
+          1,
+
+        labelOpacity:
+          1,
+
+        rotation:
+          1,
+
+        float:
+          1,
+
+        interactive:
+          true
+      }),
+
+    REVEALING:
+      Object.freeze({
+        scale:
+          0.86,
+
+        outwardDesktop:
+          1.075,
+
+        outwardMobile:
+          1.04,
+
+        zOffset:
+          -0.50,
+
+        prominence:
+          0.88,
+
+        controllerProminenceFloor:
+          0.76,
+
+        halo:
+          0.52,
+
+        material:
+          0.74,
+
+        saturation:
+          0.76,
+
+        labelScale:
+          0.90,
+
+        labelOpacity:
+          0.82,
+
+        rotation:
+          0.68,
+
+        float:
+          0.64,
+
+        interactive:
+          false
+      }),
+
+    FOCUSED:
+      Object.freeze({
+        scale:
+          0.72,
+
+        outwardDesktop:
+          1.14,
+
+        outwardMobile:
+          1.075,
+
+        zOffset:
+          -0.92,
+
+        prominence:
+          0.78,
+
+        controllerProminenceFloor:
+          0.62,
+
+        halo:
+          0.30,
+
+        material:
+          0.58,
+
+        saturation:
+          0.61,
+
+        labelScale:
+          0.78,
+
+        labelOpacity:
+          0.68,
+
+        rotation:
+          0.42,
+
+        float:
+          0.36,
+
+        interactive:
+          false
+      }),
+
+    WITHDRAWING:
+      Object.freeze({
+        scale:
+          0.82,
+
+        outwardDesktop:
+          1.09,
+
+        outwardMobile:
+          1.05,
+
+        zOffset:
+          -0.60,
+
+        prominence:
+          0.84,
+
+        controllerProminenceFloor:
+          0.70,
+
+        halo:
+          0.44,
+
+        material:
+          0.68,
+
+        saturation:
+          0.70,
+
+        labelScale:
+          0.86,
+
+        labelOpacity:
+          0.76,
+
+        rotation:
+          0.58,
+
+        float:
+          0.54,
+
+        interactive:
+          false
+      }),
+
+    NAVIGATING:
+      Object.freeze({
+        scale:
+          0.66,
+
+        outwardDesktop:
+          1.16,
+
+        outwardMobile:
+          1.08,
+
+        zOffset:
+          -1.08,
+
+        prominence:
+          0.68,
+
+        controllerProminenceFloor:
+          0.50,
+
+        halo:
+          0.20,
+
+        material:
+          0.46,
+
+        saturation:
+          0.50,
+
+        labelScale:
+          0.72,
+
+        labelOpacity:
+          0.54,
+
+        rotation:
+          0.26,
+
+        float:
+          0.20,
+
+        interactive:
+          false
+      }),
+
+    HELD:
+      Object.freeze({
+        scale:
+          0.90,
+
+        outwardDesktop:
+          1,
+
+        outwardMobile:
+          1,
+
+        zOffset:
+          -0.20,
+
+        prominence:
+          0.74,
+
+        controllerProminenceFloor:
+          0.68,
+
+        halo:
+          0.22,
+
+        material:
+          0.50,
+
+        saturation:
+          0.44,
+
+        labelScale:
+          0.90,
+
+        labelOpacity:
+          0.66,
+
+        rotation:
+          0,
+
+        float:
+          0,
+
+        interactive:
+          false
+      })
   });
 
   const RECEIPT = {
-    contractId: CONTRACT.id,
-    status: "pending",
-    rendererInitialized: false,
-    registryCardinalCount: 0,
-    registryRoomCount: 0,
-    mirrorlandRegistryPresent: false,
-    roomProxyCount: 0,
-    roomProxyPresentation: "NONVISUAL_ACCESSIBILITY_CONTROL",
-    recessionProfile: "NORMAL",
-    lastPointerTerritory: "",
-    lastGestureType: "",
-    glError: "not-checked",
-    visualPassClaimed: false
+    contractId:
+      CONTRACT.id,
+
+    previousContractId:
+      CONTRACT.previousId,
+
+    status:
+      "pending",
+
+    rendererInitialized:
+      false,
+
+    registryCardinalCount:
+      0,
+
+    registryRoomCount:
+      0,
+
+    mirrorlandRegistryPresent:
+      false,
+
+    roomProxyCount:
+      0,
+
+    roomProxyPresentation:
+      "NONVISUAL_ACCESSIBILITY_CONTROL",
+
+    recessionProfile:
+      "NORMAL",
+
+    sphericalOrbitEnabled:
+      true,
+
+    coordinateSystem:
+      SPHERE.coordinateSystem,
+
+    orientationRepresentation:
+      SPHERE.orientationRepresentation,
+
+    primaryWing:
+      "north",
+
+    gestureActive:
+      false,
+
+    lastPointerTerritory:
+      "",
+
+    lastGestureType:
+      "",
+
+    lastGestureDistance:
+      0,
+
+    glError:
+      "not-checked",
+
+    visualPassClaimed:
+      false
   };
 
   const state = {
-    root: null,
-    scene: null,
-    mount: null,
-    semanticLayer: null,
-    receiptOutput: null,
+    root:
+      null,
 
-    canvas: null,
-    gl: null,
-    program: null,
-    attribs: null,
-    uniforms: null,
+    scene:
+      null,
 
-    meshes: new Map(),
-    registry: new Map(),
-    roomProxies: new Map(),
+    mount:
+      null,
 
-    width: 1,
-    height: 1,
-    cssWidth: 1,
-    cssHeight: 1,
-    pixelRatio: 1,
+    semanticLayer:
+      null,
 
-    frame: null,
-    recessionName: "NORMAL",
-    recession: RECESSION.NORMAL,
+    receiptOutput:
+      null,
 
-    orbitAngle: 0,
-    targetOrbitAngle: 0,
+    canvas:
+      null,
 
-    view: null,
-    projection: null,
+    gl:
+      null,
+
+    program:
+      null,
+
+    attribs:
+      null,
+
+    uniforms:
+      null,
+
+    meshes:
+      new Map(),
+
+    registry:
+      new Map(),
+
+    roomProxies:
+      new Map(),
+
+    width:
+      1,
+
+    height:
+      1,
+
+    cssWidth:
+      1,
+
+    cssHeight:
+      1,
+
+    pixelRatio:
+      1,
+
+    frame:
+      null,
+
+    recessionName:
+      "NORMAL",
+
+    recession:
+      RECESSION.NORMAL,
+
+    renderQuaternion:
+      [0, 0, 0, 1],
+
+    targetQuaternion:
+      [0, 0, 0, 1],
+
+    settledPrimaryWing:
+      "north",
+
+    visualPrimaryWing:
+      "north",
+
+    view:
+      null,
+
+    projection:
+      null,
 
     camera: {
-      eye: [0, 0.78, 6.7],
-      target: [0, 0, 0],
-      nextEye: [0, 0.78, 6.7],
-      nextTarget: [0, 0, 0]
+      eye:
+        [0, 0.78, 6.7],
+
+      target:
+        [0, 0, 0],
+
+      nextEye:
+        [0, 0.78, 6.7],
+
+      nextTarget:
+        [0, 0, 0]
     },
 
-    time: 0,
-    lastTime: 0,
-    raf: 0,
-    running: false,
-    reducedMotion: false,
+    time:
+      0,
 
-    pointer: null,
+    lastTime:
+      0,
+
+    raf:
+      0,
+
+    running:
+      false,
+
+    reducedMotion:
+      false,
+
+    pointer:
+      null,
+
+    suppressClickUntil:
+      0,
 
     atmosphere: {
-      stars: [],
-      initialized: false,
-      canvas: null,
-      context: null
+      stars:
+        [],
+
+      initialized:
+        false,
+
+      canvas:
+        null,
+
+      context:
+        null
     }
   };
 
@@ -403,33 +953,59 @@
 
     float hash31(vec3 p) {
       return fract(
-        sin(dot(p, vec3(12.9898, 78.233, 37.719))) *
+        sin(
+          dot(
+            p,
+            vec3(
+              12.9898,
+              78.233,
+              37.719
+            )
+          )
+        ) *
         43758.5453
       );
     }
 
     void main() {
-      vec3 n = normalize(vNormal);
-      vec3 viewDir = normalize(-vViewPosition);
+      vec3 n =
+        normalize(vNormal);
+
+      vec3 viewDir =
+        normalize(-vViewPosition);
 
       vec3 sourceBase =
-        max(vColor, vec3(0.02));
+        max(
+          vColor,
+          vec3(0.02)
+        );
 
       float luminance =
         dot(
           sourceBase,
-          vec3(0.2126, 0.7152, 0.0722)
+          vec3(
+            0.2126,
+            0.7152,
+            0.0722
+          )
         );
 
       vec3 base =
         mix(
           vec3(luminance),
           sourceBase,
-          clamp(uSaturation, 0.0, 1.0)
+          clamp(
+            uSaturation,
+            0.0,
+            1.0
+          )
         );
 
       float facingToCamera =
-        dot(n, viewDir);
+        dot(
+          n,
+          viewDir
+        );
 
       float rearSuppression =
         smoothstep(
@@ -449,7 +1025,9 @@
         max(
           dot(
             n,
-            normalize(-uKeyLight)
+            normalize(
+              -uKeyLight
+            )
           ),
           0.0
         );
@@ -458,7 +1036,9 @@
         max(
           dot(
             n,
-            normalize(-uFillLight)
+            normalize(
+              -uFillLight
+            )
           ),
           0.0
         );
@@ -467,7 +1047,9 @@
         max(
           dot(
             n,
-            normalize(-uRimLight)
+            normalize(
+              -uRimLight
+            )
           ),
           0.0
         );
@@ -475,7 +1057,10 @@
       float fresnel =
         pow(
           1.0 -
-          max(facingToCamera, 0.0),
+          max(
+            facingToCamera,
+            0.0
+          ),
           2.05
         );
 
@@ -484,7 +1069,9 @@
           max(
             dot(
               reflect(
-                normalize(uKeyLight),
+                normalize(
+                  uKeyLight
+                ),
                 n
               ),
               viewDir
@@ -500,7 +1087,11 @@
             dot(
               n,
               normalize(
-                vec3(0.45, 0.72, 0.53)
+                vec3(
+                  0.45,
+                  0.72,
+                  0.53
+                )
               )
             )
           ),
@@ -510,15 +1101,20 @@
       float sparkleSeed =
         hash31(
           floor(
-            (n + vWorldPosition) *
+            (
+              n +
+              vWorldPosition
+            ) *
             18.0
           )
         );
 
       float sparklePhase =
         sin(
-          uTime * 1.85 +
-          sparkleSeed * 6.28318
+          uTime *
+          1.85 +
+          sparkleSeed *
+          6.28318
         );
 
       float sparkle =
@@ -526,11 +1122,13 @@
           0.74,
           1.0,
           facing +
-          facetBand * 0.34
+          facetBand *
+          0.34
         ) *
         (
           0.76 +
-          sparklePhase * 0.24
+          sparklePhase *
+          0.24
         ) *
         uSparkle *
         rearSuppression;
@@ -538,20 +1136,28 @@
       float twinkle =
         1.0 +
         sin(
-          uTime * 0.70 +
-          sparkleSeed * 6.28318
+          uTime *
+          0.70 +
+          sparkleSeed *
+          6.28318
         ) *
         0.045 *
         uTwinkle;
 
-      if (vHaloPass > 0.5) {
+      if (
+        vHaloPass >
+        0.5
+      ) {
         vec3 haloColor =
           base *
           (
             0.70 +
-            fresnel * 1.18 +
-            sideRim * 0.42 +
-            rear * 0.24
+            fresnel *
+            1.18 +
+            sideRim *
+            0.42 +
+            rear *
+            0.24
           ) *
           uHaloStrength *
           twinkle;
@@ -560,8 +1166,10 @@
           clamp(
             (
               0.040 +
-              fresnel * 0.18 +
-              sideRim * 0.08
+              fresnel *
+              0.18 +
+              sideRim *
+              0.08
             ) *
             uProminence *
             uHaloStrength,
@@ -580,16 +1188,23 @@
 
       float diffuse =
         0.24 +
-        key * 0.82 +
-        fill * 0.30 +
-        rear * 0.14;
+        key *
+        0.82 +
+        fill *
+        0.30 +
+        rear *
+        0.14;
 
       diffuse =
         mix(
           diffuse,
-          pow(diffuse, 0.68),
+          pow(
+            diffuse,
+            0.68
+          ),
           clamp(
-            uContrast - 1.0,
+            uContrast -
+            1.0,
             0.0,
             0.7
           )
@@ -601,7 +1216,11 @@
         twinkle;
 
       vec3 spec =
-        vec3(1.0, 0.96, 0.82) *
+        vec3(
+          1.0,
+          0.96,
+          0.82
+        ) *
         facing *
         uSpecular *
         rearSuppression;
@@ -609,16 +1228,24 @@
       vec3 rim =
         base *
         (
-          fresnel * 0.72 +
-          sideRim * 0.38
+          fresnel *
+          0.72 +
+          sideRim *
+          0.38
         ) *
         uRim;
 
       vec3 coolRim =
-        vec3(0.68, 0.86, 1.0) *
+        vec3(
+          0.68,
+          0.86,
+          1.0
+        ) *
         (
-          fresnel * 0.22 +
-          sideRim * 0.14
+          fresnel *
+          0.22 +
+          sideRim *
+          0.14
         ) *
         uRim;
 
@@ -627,7 +1254,11 @@
         uEmissive;
 
       vec3 spark =
-        vec3(1.0, 0.96, 0.78) *
+        vec3(
+          1.0,
+          0.96,
+          0.78
+        ) *
         sparkle;
 
       float rearDim =
@@ -659,8 +1290,10 @@
           uAlpha *
           (
             0.70 +
-            uProminence * 0.30 +
-            fresnel * 0.08
+            uProminence *
+            0.30 +
+            fresnel *
+            0.08
           ),
           0.12,
           1.0
@@ -674,33 +1307,71 @@
     }
   `;
 
-  function qs(selector, root = document) {
-    return root.querySelector(selector);
-  }
-
-  function qsa(selector, root = document) {
-    return Array.from(
-      root.querySelectorAll(selector)
+  function qs(
+    selector,
+    root = document
+  ) {
+    return root.querySelector(
+      selector
     );
   }
 
-  function clamp(value, minimum, maximum) {
+  function qsa(
+    selector,
+    root = document
+  ) {
+    return Array.from(
+      root.querySelectorAll(
+        selector
+      )
+    );
+  }
+
+  function clamp(
+    value,
+    minimum,
+    maximum
+  ) {
     return Math.max(
       minimum,
-      Math.min(maximum, value)
+      Math.min(
+        maximum,
+        value
+      )
     );
   }
 
-  function cssEscape(value) {
+  function finiteNumber(
+    value,
+    fallback = 0
+  ) {
+    const number =
+      Number(value);
+
+    return Number.isFinite(
+      number
+    )
+      ? number
+      : fallback;
+  }
+
+  function cssEscape(
+    value
+  ) {
     const text =
-      String(value || "");
+      String(
+        value ||
+        ""
+      );
 
     if (
       globalThis.CSS &&
       typeof globalThis.CSS.escape ===
         "function"
     ) {
-      return globalThis.CSS.escape(text);
+      return globalThis.CSS.escape(
+        text
+      );
     }
 
     return text.replace(
@@ -709,7 +1380,27 @@
     );
   }
 
-  function emitReceipt(extra = {}) {
+  function normalizeWing(
+    value
+  ) {
+    const wing =
+      String(
+        value ||
+        ""
+      )
+        .trim()
+        .toLowerCase();
+
+    return WINGS.includes(
+      wing
+    )
+      ? wing
+      : "";
+  }
+
+  function emitReceipt(
+    extra = {}
+  ) {
     Object.assign(
       RECEIPT,
       {
@@ -717,16 +1408,42 @@
           RECEIPT.status ||
           "available",
 
+        sphericalOrbitEnabled:
+          true,
+
+        coordinateSystem:
+          SPHERE.coordinateSystem,
+
+        orientationRepresentation:
+          SPHERE
+            .orientationRepresentation,
+
+        primaryWing:
+          state.visualPrimaryWing ||
+          state.settledPrimaryWing ||
+          "north",
+
+        gestureActive:
+          Boolean(
+            state.pointer &&
+            state.pointer.dragging
+          ),
+
         visualPassClaimed:
           false
       },
+
       extra
     );
 
     const serialized =
-      JSON.stringify(RECEIPT);
+      JSON.stringify(
+        RECEIPT
+      );
 
-    if (state.root) {
+    if (
+      state.root
+    ) {
       state.root.dataset.compassCrystalsReceipt =
         serialized;
 
@@ -737,7 +1454,9 @@
         "false";
     }
 
-    if (state.canvas) {
+    if (
+      state.canvas
+    ) {
       state.canvas.dataset.compassCrystalsReceipt =
         serialized;
 
@@ -745,7 +1464,9 @@
         "false";
     }
 
-    if (state.receiptOutput) {
+    if (
+      state.receiptOutput
+    ) {
       state.receiptOutput.value =
         serialized;
 
@@ -762,20 +1483,30 @@
       });
   }
 
-  function emitFailure(reason) {
-    state.running = false;
+  function emitFailure(
+    reason
+  ) {
+    state.running =
+      false;
 
-    if (state.raf) {
+    if (
+      state.raf
+    ) {
       cancelAnimationFrame(
         state.raf
       );
 
-      state.raf = 0;
+      state.raf =
+        0;
     }
 
     emitReceipt({
-      status: "held",
-      rendererInitialized: false,
+      status:
+        "held",
+
+      rendererInitialized:
+        false,
+
       glError:
         String(
           reason ||
@@ -787,21 +1518,707 @@
       new CustomEvent(
         "COMPASS_CRYSTALS_RENDER_FAILURE",
         {
-          detail: Object.freeze({
-            reason:
-              String(
-                reason ||
-                "UNKNOWN_ERROR"
-              )
-          })
+          detail:
+            Object.freeze({
+              reason:
+                String(
+                  reason ||
+                  "UNKNOWN_ERROR"
+                )
+            })
         }
+      )
+    );
+  }
+
+  function vectorLength(
+    vector
+  ) {
+    return Math.hypot(
+      vector[0],
+      vector[1],
+      vector[2]
+    );
+  }
+
+  function normalizeVector(
+    vector,
+    fallback = [
+      0,
+      0,
+      1
+    ]
+  ) {
+    const length =
+      vectorLength(
+        vector
+      );
+
+    if (
+      !Number.isFinite(
+        length
+      ) ||
+      length <=
+        1e-12
+    ) {
+      return fallback.slice();
+    }
+
+    return [
+      vector[0] /
+        length,
+
+      vector[1] /
+        length,
+
+      vector[2] /
+        length
+    ];
+  }
+
+  function dot(
+    a,
+    b
+  ) {
+    return (
+      a[0] *
+        b[0] +
+      a[1] *
+        b[1] +
+      a[2] *
+        b[2]
+    );
+  }
+
+  function cross(
+    a,
+    b
+  ) {
+    return [
+      a[1] *
+        b[2] -
+      a[2] *
+        b[1],
+
+      a[2] *
+        b[0] -
+      a[0] *
+        b[2],
+
+      a[0] *
+        b[1] -
+      a[1] *
+        b[0]
+    ];
+  }
+
+  function subtract(
+    a,
+    b
+  ) {
+    return [
+      a[0] -
+        b[0],
+
+      a[1] -
+        b[1],
+
+      a[2] -
+        b[2]
+    ];
+  }
+
+  function quaternionNormalize(
+    value,
+    fallback = [
+      0,
+      0,
+      0,
+      1
+    ]
+  ) {
+    const source =
+      Array.isArray(value) ||
+      ArrayBuffer.isView(
+        value
+      )
+        ? Array.from(value)
+        : [];
+
+    if (
+      source.length !==
+      4
+    ) {
+      return fallback.slice();
+    }
+
+    const quaternion = [
+      finiteNumber(
+        source[0],
+        0
+      ),
+
+      finiteNumber(
+        source[1],
+        0
+      ),
+
+      finiteNumber(
+        source[2],
+        0
+      ),
+
+      finiteNumber(
+        source[3],
+        1
+      )
+    ];
+
+    const length =
+      Math.hypot(
+        quaternion[0],
+        quaternion[1],
+        quaternion[2],
+        quaternion[3]
+      );
+
+    if (
+      !Number.isFinite(
+        length
+      ) ||
+      length <=
+        1e-12
+    ) {
+      return fallback.slice();
+    }
+
+    return quaternion.map(
+      component =>
+        component /
+        length
+    );
+  }
+
+  function quaternionMultiply(
+    a,
+    b
+  ) {
+    return quaternionNormalize([
+      a[3] *
+        b[0] +
+      a[0] *
+        b[3] +
+      a[1] *
+        b[2] -
+      a[2] *
+        b[1],
+
+      a[3] *
+        b[1] -
+      a[0] *
+        b[2] +
+      a[1] *
+        b[3] +
+      a[2] *
+        b[0],
+
+      a[3] *
+        b[2] +
+      a[0] *
+        b[1] -
+      a[1] *
+        b[0] +
+      a[2] *
+        b[3],
+
+      a[3] *
+        b[3] -
+      a[0] *
+        b[0] -
+      a[1] *
+        b[1] -
+      a[2] *
+        b[2]
+    ]);
+  }
+
+  function quaternionConjugate(
+    quaternion
+  ) {
+    return [
+      -quaternion[0],
+      -quaternion[1],
+      -quaternion[2],
+      quaternion[3]
+    ];
+  }
+
+  function quaternionFromAxisAngle(
+    axis,
+    angle
+  ) {
+    const normalizedAxis =
+      normalizeVector(
+        axis
+      );
+
+    const half =
+      angle *
+      0.5;
+
+    const sine =
+      Math.sin(
+        half
+      );
+
+    return quaternionNormalize([
+      normalizedAxis[0] *
+        sine,
+
+      normalizedAxis[1] *
+        sine,
+
+      normalizedAxis[2] *
+        sine,
+
+      Math.cos(
+        half
+      )
+    ]);
+  }
+
+  function quaternionRotateVector(
+    quaternion,
+    vector
+  ) {
+    const q =
+      quaternionNormalize(
+        quaternion
+      );
+
+    const pure = [
+      vector[0],
+      vector[1],
+      vector[2],
+      0
+    ];
+
+    const rotated =
+      quaternionMultiplyRaw(
+        quaternionMultiplyRaw(
+          q,
+          pure
+        ),
+        quaternionConjugate(
+          q
+        )
+      );
+
+    return [
+      rotated[0],
+      rotated[1],
+      rotated[2]
+    ];
+  }
+
+  function quaternionMultiplyRaw(
+    a,
+    b
+  ) {
+    return [
+      a[3] *
+        b[0] +
+      a[0] *
+        b[3] +
+      a[1] *
+        b[2] -
+      a[2] *
+        b[1],
+
+      a[3] *
+        b[1] -
+      a[0] *
+        b[2] +
+      a[1] *
+        b[3] +
+      a[2] *
+        b[0],
+
+      a[3] *
+        b[2] +
+      a[0] *
+        b[1] -
+      a[1] *
+        b[0] +
+      a[2] *
+        b[3],
+
+      a[3] *
+        b[3] -
+      a[0] *
+        b[0] -
+      a[1] *
+        b[1] -
+      a[2] *
+        b[2]
+    ];
+  }
+
+  function quaternionFromUnitVectors(
+    fromVector,
+    toVector
+  ) {
+    const from =
+      normalizeVector(
+        fromVector
+      );
+
+    const to =
+      normalizeVector(
+        toVector
+      );
+
+    const cosine =
+      clamp(
+        dot(
+          from,
+          to
+        ),
+        -1,
+        1
+      );
+
+    if (
+      cosine >
+      0.999999
+    ) {
+      return [
+        0,
+        0,
+        0,
+        1
+      ];
+    }
+
+    if (
+      cosine <
+      -0.999999
+    ) {
+      let axis =
+        cross(
+          [1, 0, 0],
+          from
+        );
+
+      if (
+        vectorLength(
+          axis
+        ) <
+        1e-6
+      ) {
+        axis =
+          cross(
+            [0, 1, 0],
+            from
+          );
+      }
+
+      return quaternionFromAxisAngle(
+        normalizeVector(
+          axis
+        ),
+        Math.PI
+      );
+    }
+
+    const axis =
+      cross(
+        from,
+        to
+      );
+
+    return quaternionNormalize([
+      axis[0],
+      axis[1],
+      axis[2],
+      1 +
+      cosine
+    ]);
+  }
+
+  function quaternionSlerp(
+    fromValue,
+    toValue,
+    amount
+  ) {
+    const from =
+      quaternionNormalize(
+        fromValue
+      );
+
+    let to =
+      quaternionNormalize(
+        toValue
+      );
+
+    let cosine =
+      (
+        from[0] *
+          to[0] +
+        from[1] *
+          to[1] +
+        from[2] *
+          to[2] +
+        from[3] *
+          to[3]
+      );
+
+    if (
+      cosine <
+      0
+    ) {
+      to = [
+        -to[0],
+        -to[1],
+        -to[2],
+        -to[3]
+      ];
+
+      cosine =
+        -cosine;
+    }
+
+    if (
+      cosine >
+      0.9995
+    ) {
+      return quaternionNormalize([
+        from[0] +
+          (
+            to[0] -
+            from[0]
+          ) *
+          amount,
+
+        from[1] +
+          (
+            to[1] -
+            from[1]
+          ) *
+          amount,
+
+        from[2] +
+          (
+            to[2] -
+            from[2]
+          ) *
+          amount,
+
+        from[3] +
+          (
+            to[3] -
+            from[3]
+          ) *
+          amount
+      ]);
+    }
+
+    const theta =
+      Math.acos(
+        clamp(
+          cosine,
+          -1,
+          1
+        )
+      );
+
+    const sineTheta =
+      Math.sin(
+        theta
+      );
+
+    const weightFrom =
+      Math.sin(
+        (
+          1 -
+          amount
+        ) *
+        theta
+      ) /
+      sineTheta;
+
+    const weightTo =
+      Math.sin(
+        amount *
+        theta
+      ) /
+      sineTheta;
+
+    return quaternionNormalize([
+      from[0] *
+        weightFrom +
+      to[0] *
+        weightTo,
+
+      from[1] *
+        weightFrom +
+      to[1] *
+        weightTo,
+
+      from[2] *
+        weightFrom +
+      to[2] *
+        weightTo,
+
+      from[3] *
+        weightFrom +
+      to[3] *
+        weightTo
+    ]);
+  }
+
+  function quaternionFromControllerFrame(
+    frame
+  ) {
+    if (
+      frame &&
+      frame.orbitOrientation &&
+      (
+        Array.isArray(
+          frame.orbitOrientation
+            .quaternion
+        ) ||
+        ArrayBuffer.isView(
+          frame.orbitOrientation
+            .quaternion
+        )
+      )
+    ) {
+      return quaternionNormalize(
+        frame.orbitOrientation
+          .quaternion
+      );
+    }
+
+    const datasetValue =
+      state.root &&
+      state.root.dataset
+        ? state.root.dataset
+            .orbitQuaternion
+        : "";
+
+    if (
+      datasetValue
+    ) {
+      try {
+        return quaternionNormalize(
+          JSON.parse(
+            datasetValue
+          )
+        );
+      } catch (_) {}
+    }
+
+    return state.targetQuaternion.slice();
+  }
+
+  function primaryAnchorVector() {
+    return normalizeVector(
+      SPHERE.primaryAnchor
+    );
+  }
+
+  function rotatedCardinalUnitVector(
+    wing,
+    quaternion =
+      state.renderQuaternion
+  ) {
+    const base =
+      SPHERE.cardinalVectors[
+        wing
+      ] ||
+      SPHERE.cardinalVectors
+        .north;
+
+    return normalizeVector(
+      quaternionRotateVector(
+        quaternion,
+        base
+      )
+    );
+  }
+
+  function nearestPrimaryWing(
+    quaternion =
+      state.renderQuaternion
+  ) {
+    const anchor =
+      primaryAnchorVector();
+
+    let bestWing =
+      "north";
+
+    let bestScore =
+      -Infinity;
+
+    WINGS.forEach(
+      wing => {
+        const vector =
+          rotatedCardinalUnitVector(
+            wing,
+            quaternion
+          );
+
+        const score =
+          dot(
+            vector,
+            anchor
+          );
+
+        if (
+          score >
+          bestScore
+        ) {
+          bestScore =
+            score;
+
+          bestWing =
+            wing;
+        }
+      }
+    );
+
+    return bestWing;
+  }
+
+  function settledQuaternionForWing(
+    wing,
+    currentQuaternion
+  ) {
+    const currentVector =
+      rotatedCardinalUnitVector(
+        wing,
+        currentQuaternion
+      );
+
+    const alignment =
+      quaternionFromUnitVectors(
+        currentVector,
+        primaryAnchorVector()
+      );
+
+    return quaternionNormalize(
+      quaternionMultiply(
+        alignment,
+        currentQuaternion
       )
     );
   }
 
   function getControllerFrame() {
     const api =
-      globalThis.DGB_COMPASS_CONTROLLER;
+      globalThis
+        .DGB_COMPASS_CONTROLLER;
 
     if (
       api &&
@@ -811,59 +2228,111 @@
       return api.getFrameState();
     }
 
-    const ds =
+    const dataset =
       state.root &&
       state.root.dataset
         ? state.root.dataset
         : {};
 
+    let quaternion =
+      state.targetQuaternion.slice();
+
+    if (
+      dataset.orbitQuaternion
+    ) {
+      try {
+        quaternion =
+          quaternionNormalize(
+            JSON.parse(
+              dataset.orbitQuaternion
+            )
+          );
+      } catch (_) {}
+    }
+
     return Object.freeze({
       state:
-        ds.compassMode ||
+        dataset.compassMode ||
         "CONSTELLATION",
 
       orbitFocus:
-        ds.orbitFocus || "",
+        dataset.orbitFocus ||
+        "north",
+
+      orbitPreviewFocus:
+        dataset.orbitPreviewFocus ||
+        dataset.orbitFocus ||
+        "north",
+
+      orbitPhase:
+        dataset.orbitPhase ||
+        "COMMITTED",
+
+      orbitGestureActive:
+        dataset.orbitGestureActive ===
+        "true",
+
+      orbitOrientation:
+        Object.freeze({
+          quaternion:
+            Object.freeze(
+              quaternion
+            ),
+
+          primaryWing:
+            dataset.orbitPreviewFocus ||
+            dataset.orbitFocus ||
+            "north"
+        }),
 
       selectedCardinal:
-        ds.selectedCardinal || "",
+        dataset.selectedCardinal ||
+        "",
 
       selectedRoom:
-        ds.selectedRoom || "",
+        dataset.selectedRoom ||
+        "",
 
       selectedDestinationType:
-        ds.selectedDestinationType || "",
+        dataset.selectedDestinationType ||
+        "",
 
       selectedDestinationId:
-        ds.selectedDestinationId || "",
+        dataset.selectedDestinationId ||
+        "",
 
       selectedDestinationLabel:
-        ds.selectedDestinationLabel || "",
+        dataset.selectedDestinationLabel ||
+        "",
 
       selectedRoute:
-        ds.selectedRoute || "",
+        dataset.selectedRoute ||
+        "",
 
       reducedMotion:
-        ds.reducedMotion === "true",
+        dataset.reducedMotion ===
+        "true",
 
       prominence:
         Object.freeze({
           compass:
             Number(
-              ds.compassProminence ||
+              dataset.compassProminence ||
               1
             ),
 
           window:
             Number(
-              ds.windowProminence ||
+              dataset.windowProminence ||
               0
             )
         })
     });
   }
 
-  function recessionNameForFrame(frame) {
+  function recessionNameForFrame(
+    frame
+  ) {
     if (!frame) {
       return "NORMAL";
     }
@@ -932,6 +2401,17 @@
     );
   }
 
+  function constellationCanRotate() {
+    return Boolean(
+      state.frame &&
+      state.frame.state ===
+        "CONSTELLATION" &&
+      state.recession
+        .interactive &&
+      !isMirrorlandLifecycleState()
+    );
+  }
+
   function activeOutwardMultiplier() {
     const aspect =
       state.cssWidth /
@@ -941,9 +2421,12 @@
       );
 
     return aspect <
-      QUALITY.mobileAspectThreshold
-      ? state.recession.outwardMobile
-      : state.recession.outwardDesktop;
+      QUALITY
+        .mobileAspectThreshold
+      ? state.recession
+          .outwardMobile
+      : state.recession
+          .outwardDesktop;
   }
 
   function createCanvas() {
@@ -1000,15 +2483,26 @@
     return canvas;
   }
 
-  function getGL(canvas) {
+  function getGL(
+    canvas
+  ) {
     return canvas.getContext(
       "webgl",
       {
-        antialias: true,
-        alpha: true,
-        depth: true,
-        premultipliedAlpha: true,
-        preserveDrawingBuffer: false
+        antialias:
+          true,
+
+        alpha:
+          true,
+
+        depth:
+          true,
+
+        premultipliedAlpha:
+          true,
+
+        preserveDrawingBuffer:
+          false
       }
     );
   }
@@ -1019,7 +2513,9 @@
     source
   ) {
     const shader =
-      gl.createShader(type);
+      gl.createShader(
+        type
+      );
 
     gl.shaderSource(
       shader,
@@ -1046,13 +2542,17 @@
         shader
       );
 
-      throw new Error(info);
+      throw new Error(
+        info
+      );
     }
 
     return shader;
   }
 
-  function createProgram(gl) {
+  function createProgram(
+    gl
+  ) {
     const vertex =
       compileShader(
         gl,
@@ -1108,61 +2608,12 @@
         program
       );
 
-      throw new Error(info);
+      throw new Error(
+        info
+      );
     }
 
     return program;
-  }
-
-  function sub(a, b) {
-    return [
-      a[0] - b[0],
-      a[1] - b[1],
-      a[2] - b[2]
-    ];
-  }
-
-  function cross(a, b) {
-    return [
-      a[1] * b[2] -
-        a[2] * b[1],
-
-      a[2] * b[0] -
-        a[0] * b[2],
-
-      a[0] * b[1] -
-        a[1] * b[0]
-    ];
-  }
-
-  function normalize(a) {
-    const length =
-      Math.hypot(
-        a[0],
-        a[1],
-        a[2]
-      );
-
-    if (
-      !Number.isFinite(length) ||
-      length <= 1e-14
-    ) {
-      return [0, 0, 1];
-    }
-
-    return [
-      a[0] / length,
-      a[1] / length,
-      a[2] / length
-    ];
-  }
-
-  function dot(a, b) {
-    return (
-      a[0] * b[0] +
-      a[1] * b[1] +
-      a[2] * b[2]
-    );
   }
 
   function identity4() {
@@ -1174,9 +2625,13 @@
     ];
   }
 
-  function multiply4(a, b) {
-    const out =
-      new Array(16).fill(0);
+  function multiply4(
+    a,
+    b
+  ) {
+    const output =
+      new Array(16)
+        .fill(0);
 
     for (
       let row = 0;
@@ -1193,20 +2648,26 @@
           index < 4;
           index += 1
         ) {
-          out[
-            column * 4 + row
+          output[
+            column *
+            4 +
+            row
           ] +=
             a[
-              index * 4 + row
+              index *
+              4 +
+              row
             ] *
             b[
-              column * 4 + index
+              column *
+              4 +
+              index
             ];
         }
       }
     }
 
-    return out;
+    return output;
   }
 
   function translate4(
@@ -1217,9 +2678,14 @@
     const matrix =
       identity4();
 
-    matrix[12] = x;
-    matrix[13] = y;
-    matrix[14] = z;
+    matrix[12] =
+      x;
+
+    matrix[13] =
+      y;
+
+    matrix[14] =
+      z;
 
     return matrix;
   }
@@ -1232,19 +2698,30 @@
     const matrix =
       identity4();
 
-    matrix[0] = x;
-    matrix[5] = y;
-    matrix[10] = z;
+    matrix[0] =
+      x;
+
+    matrix[5] =
+      y;
+
+    matrix[10] =
+      z;
 
     return matrix;
   }
 
-  function rotateX4(angle) {
+  function rotateX4(
+    angle
+  ) {
     const cosine =
-      Math.cos(angle);
+      Math.cos(
+        angle
+      );
 
     const sine =
-      Math.sin(angle);
+      Math.sin(
+        angle
+      );
 
     return [
       1, 0, 0, 0,
@@ -1254,12 +2731,18 @@
     ];
   }
 
-  function rotateY4(angle) {
+  function rotateY4(
+    angle
+  ) {
     const cosine =
-      Math.cos(angle);
+      Math.cos(
+        angle
+      );
 
     const sine =
-      Math.sin(angle);
+      Math.sin(
+        angle
+      );
 
     return [
       cosine, 0, -sine, 0,
@@ -1269,12 +2752,18 @@
     ];
   }
 
-  function rotateZ4(angle) {
+  function rotateZ4(
+    angle
+  ) {
     const cosine =
-      Math.cos(angle);
+      Math.cos(
+        angle
+      );
 
     const sine =
-      Math.sin(angle);
+      Math.sin(
+        angle
+      );
 
     return [
       cosine, sine, 0, 0,
@@ -1290,25 +2779,27 @@
     near,
     far
   ) {
-    const f =
+    const factor =
       1 /
       Math.tan(
-        fieldOfView / 2
+        fieldOfView /
+        2
       );
 
     const range =
       1 /
-      (near - far);
+      (
+        near -
+        far
+      );
 
     return [
-      f / aspect, 0, 0, 0,
-      0, f, 0, 0,
+      factor / aspect, 0, 0, 0,
+      0, factor, 0, 0,
       0, 0,
-      (far + near) * range,
-      -1,
+      (far + near) * range, -1,
       0, 0,
-      2 * far * near * range,
-      0
+      2 * far * near * range, 0
     ];
   }
 
@@ -1318,15 +2809,15 @@
     up
   ) {
     const z =
-      normalize(
-        sub(
+      normalizeVector(
+        subtract(
           eye,
           center
         )
       );
 
     const x =
-      normalize(
+      normalizeVector(
         cross(
           up,
           z
@@ -1350,7 +2841,9 @@
     ];
   }
 
-  function normalMatrix3(model) {
+  function normalMatrix3(
+    model
+  ) {
     return [
       model[0],
       model[1],
@@ -1371,25 +2864,41 @@
     point
   ) {
     return [
-      matrix[0] * point[0] +
-      matrix[4] * point[1] +
-      matrix[8] * point[2] +
-      matrix[12] * point[3],
+      matrix[0] *
+        point[0] +
+      matrix[4] *
+        point[1] +
+      matrix[8] *
+        point[2] +
+      matrix[12] *
+        point[3],
 
-      matrix[1] * point[0] +
-      matrix[5] * point[1] +
-      matrix[9] * point[2] +
-      matrix[13] * point[3],
+      matrix[1] *
+        point[0] +
+      matrix[5] *
+        point[1] +
+      matrix[9] *
+        point[2] +
+      matrix[13] *
+        point[3],
 
-      matrix[2] * point[0] +
-      matrix[6] * point[1] +
-      matrix[10] * point[2] +
-      matrix[14] * point[3],
+      matrix[2] *
+        point[0] +
+      matrix[6] *
+        point[1] +
+      matrix[10] *
+        point[2] +
+      matrix[14] *
+        point[3],
 
-      matrix[3] * point[0] +
-      matrix[7] * point[1] +
-      matrix[11] * point[2] +
-      matrix[15] * point[3]
+      matrix[3] *
+        point[0] +
+      matrix[7] *
+        point[1] +
+      matrix[11] *
+        point[2] +
+      matrix[15] *
+        point[3]
     ];
   }
 
@@ -1419,51 +2928,85 @@
     options = {}
   ) {
     const points =
-      options.points || 8;
+      options.points ||
+      8;
 
     const radius =
-      options.radius || 0.62;
+      options.radius ||
+      0.62;
 
     const inner =
       options.inner ||
-      radius * 0.46;
+      radius *
+      0.46;
 
     const depth =
-      options.depth || 0.42;
+      options.depth ||
+      0.42;
 
     const crown =
-      options.crown || 0.22;
+      options.crown ||
+      0.22;
 
     const color =
       options.color ||
       STAR_PALETTE.north;
 
     const warmth =
-      options.warmth || 0;
+      options.warmth ||
+      0;
 
-    const vertices = [];
-    const faces = [];
+    const vertices =
+      [];
 
-    function add(point) {
-      vertices.push(point);
-      return vertices.length - 1;
+    const faces =
+      [];
+
+    function add(
+      point
+    ) {
+      vertices.push(
+        point
+      );
+
+      return (
+        vertices.length -
+        1
+      );
     }
 
-    function face(a, b, c) {
-      faces.push([a, b, c]);
+    function face(
+      a,
+      b,
+      c
+    ) {
+      faces.push([
+        a,
+        b,
+        c
+      ]);
     }
 
     const frontApex =
-      add([0, 0, depth]);
+      add([
+        0,
+        0,
+        depth
+      ]);
 
     const rearApex =
-      add([0, 0, -depth]);
+      add([
+        0,
+        0,
+        -depth
+      ]);
 
     const frontCrown =
       add([
         0,
         0,
-        depth + crown
+        depth +
+        crown
       ]);
 
     const rearCrown =
@@ -1471,21 +3014,32 @@
         0,
         0,
         -depth -
-        crown * 0.72
+        crown *
+        0.72
       ]);
 
-    const outer = [];
-    const innerRing = [];
-    const frontBevel = [];
-    const rearBevel = [];
+    const outer =
+      [];
+
+    const innerRing =
+      [];
+
+    const frontBevel =
+      [];
+
+    const rearBevel =
+      [];
 
     for (
       let index = 0;
-      index < points * 2;
+      index <
+      points * 2;
       index += 1
     ) {
       const isPoint =
-        index % 2 === 0;
+        index %
+        2 ===
+        0;
 
       const angle =
         (
@@ -1493,15 +3047,20 @@
           2 *
           index
         ) /
-        (points * 2) -
-        Math.PI / 2;
+        (
+          points *
+          2
+        ) -
+        Math.PI /
+        2;
 
       const activeRadius =
         isPoint
           ? radius
           : inner;
 
-      const yScale = 0.78;
+      const yScale =
+        0.78;
 
       const ridge =
         isPoint
@@ -1510,12 +3069,16 @@
 
       outer.push(
         add([
-          Math.cos(angle) *
-            activeRadius,
+          Math.cos(
+            angle
+          ) *
+          activeRadius,
 
-          Math.sin(angle) *
-            activeRadius *
-            yScale,
+          Math.sin(
+            angle
+          ) *
+          activeRadius *
+          yScale,
 
           ridge
         ])
@@ -1523,46 +3086,61 @@
 
       innerRing.push(
         add([
-          Math.cos(angle) *
-            activeRadius *
-            0.38,
+          Math.cos(
+            angle
+          ) *
+          activeRadius *
+          0.38,
 
-          Math.sin(angle) *
-            activeRadius *
-            yScale *
-            0.38,
+          Math.sin(
+            angle
+          ) *
+          activeRadius *
+          yScale *
+          0.38,
 
-          depth * 0.14
+          depth *
+          0.14
         ])
       );
 
       frontBevel.push(
         add([
-          Math.cos(angle) *
-            activeRadius *
-            0.72,
+          Math.cos(
+            angle
+          ) *
+          activeRadius *
+          0.72,
 
-          Math.sin(angle) *
-            activeRadius *
-            yScale *
-            0.72,
+          Math.sin(
+            angle
+          ) *
+          activeRadius *
+          yScale *
+          0.72,
 
-          depth * 0.52
+          depth *
+          0.52
         ])
       );
 
       rearBevel.push(
         add([
-          Math.cos(angle) *
-            activeRadius *
-            0.68,
+          Math.cos(
+            angle
+          ) *
+          activeRadius *
+          0.68,
 
-          Math.sin(angle) *
-            activeRadius *
-            yScale *
-            0.68,
+          Math.sin(
+            angle
+          ) *
+          activeRadius *
+          yScale *
+          0.68,
 
-          -depth * 0.48
+          -depth *
+          0.48
         ])
       );
     }
@@ -1572,11 +3150,15 @@
 
     for (
       let index = 0;
-      index < count;
+      index <
+      count;
       index += 1
     ) {
       const next =
-        (index + 1) %
+        (
+          index +
+          1
+        ) %
         count;
 
       face(
@@ -1640,9 +3222,14 @@
       );
     }
 
-    const positions = [];
-    const normals = [];
-    const colors = [];
+    const positions =
+      [];
+
+    const normals =
+      [];
+
+    const colors =
+      [];
 
     faces.forEach(
       (
@@ -1665,27 +3252,40 @@
           ];
 
         const normal =
-          normalize(
+          normalizeVector(
             cross(
-              sub(b, a),
-              sub(c, a)
+              subtract(
+                b,
+                a
+              ),
+              subtract(
+                c,
+                a
+              )
             )
           );
 
         const lift =
           0.84 +
           (
-            faceIndex % 7
+            faceIndex %
+            7
           ) *
           0.034;
 
         const sparkleLift =
-          faceIndex % 5 === 0
+          faceIndex %
+          5 ===
+          0
             ? 0.13
             : 0;
 
-        [a, b, c].forEach(
-          (point) => {
+        [
+          a,
+          b,
+          c
+        ].forEach(
+          point => {
             positions.push(
               point[0],
               point[1],
@@ -1701,25 +3301,28 @@
             colors.push(
               Math.min(
                 color[0] *
-                  lift +
-                  warmth * 0.06 +
-                  sparkleLift,
+                lift +
+                warmth *
+                0.06 +
+                sparkleLift,
                 1
               ),
 
               Math.min(
                 color[1] *
-                  lift +
-                  warmth * 0.04 +
-                  sparkleLift,
+                lift +
+                warmth *
+                0.04 +
+                sparkleLift,
                 1
               ),
 
               Math.min(
                 color[2] *
-                  lift +
-                  warmth * 0.02 +
-                  sparkleLift,
+                lift +
+                warmth *
+                0.02 +
+                sparkleLift,
                 1
               )
             );
@@ -1745,7 +3348,8 @@
         ),
 
       vertexCount:
-        positions.length / 3
+        positions.length /
+        3
     });
   }
 
@@ -1783,46 +3387,74 @@
   function roomColorForWing(
     wing
   ) {
-    if (wing === "north") {
-      return STAR_PALETTE.roomNorth;
+    if (
+      wing ===
+      "north"
+    ) {
+      return STAR_PALETTE
+        .roomNorth;
     }
 
-    if (wing === "east") {
-      return STAR_PALETTE.roomEast;
+    if (
+      wing ===
+      "east"
+    ) {
+      return STAR_PALETTE
+        .roomEast;
     }
 
-    if (wing === "south") {
-      return STAR_PALETTE.roomSouth;
+    if (
+      wing ===
+      "south"
+    ) {
+      return STAR_PALETTE
+        .roomSouth;
     }
 
-    return STAR_PALETTE.roomWest;
+    return STAR_PALETTE
+      .roomWest;
   }
 
-  function buildMeshes(gl) {
+  function buildMeshes(
+    gl
+  ) {
     const meshes =
       new Map();
 
     WINGS.forEach(
-      (wing) => {
+      wing => {
         const warm =
-          wing === "south" ||
-          wing === "west";
+          wing ===
+            "south" ||
+          wing ===
+            "west";
 
         meshes.set(
           `cardinal-${wing}`,
+
           buildGpuMesh(
             gl,
             createDiamondStarMesh({
               points:
-                QUALITY.cardinalSegments,
+                QUALITY
+                  .cardinalSegments,
 
-              radius: 0.72,
-              inner: 0.30,
-              depth: 0.42,
-              crown: 0.20,
+              radius:
+                0.72,
+
+              inner:
+                0.30,
+
+              depth:
+                0.42,
+
+              crown:
+                0.20,
 
               color:
-                STAR_PALETTE[wing],
+                STAR_PALETTE[
+                  wing
+                ],
 
               warmth:
                 warm
@@ -1834,16 +3466,25 @@
 
         meshes.set(
           `room-${wing}`,
+
           buildGpuMesh(
             gl,
             createDiamondStarMesh({
               points:
-                QUALITY.roomSegments,
+                QUALITY
+                  .roomSegments,
 
-              radius: 0.42,
-              inner: 0.20,
-              depth: 0.25,
-              crown: 0.10,
+              radius:
+                0.42,
+
+              inner:
+                0.20,
+
+              depth:
+                0.25,
+
+              crown:
+                0.10,
 
               color:
                 roomColorForWing(
@@ -1884,43 +3525,99 @@
       roomIndex,
       roomCount,
       meshKey,
-      baseMaterial: material,
+      baseMaterial:
+        material,
       material,
       phase,
-      visible: true,
+      visible:
+        true,
+
+      sphereVector:
+        type ===
+        NODE_TYPES.CARDINAL
+          ? SPHERE
+              .cardinalVectors[
+                wing
+              ].slice()
+          : null,
+
+      depthScore:
+        0,
+
+      primaryScore:
+        0,
 
       transform: {
-        x: 0,
-        y: 0,
-        z: 0,
+        x:
+          0,
 
-        rx: 0,
-        ry: 0,
-        rz: 0,
+        y:
+          0,
 
-        sx: 1,
-        sy: 1,
-        sz: 1,
+        z:
+          0,
 
-        prominence: 1,
-        halo: 0,
-        rotationSpeed: 0.12,
-        float: 0
+        rx:
+          0,
+
+        ry:
+          0,
+
+        rz:
+          0,
+
+        sx:
+          1,
+
+        sy:
+          1,
+
+        sz:
+          1,
+
+        prominence:
+          1,
+
+        halo:
+          0,
+
+        rotationSpeed:
+          0.12,
+
+        float:
+          0
       },
 
       target: {
-        x: 0,
-        y: 0,
-        z: 0,
+        x:
+          0,
 
-        sx: 1,
-        sy: 1,
-        sz: 1,
+        y:
+          0,
 
-        prominence: 1,
-        halo: 0,
-        rotationSpeed: 0.12,
-        float: 0
+        z:
+          0,
+
+        sx:
+          1,
+
+        sy:
+          1,
+
+        sz:
+          1,
+
+        prominence:
+          1,
+
+        halo:
+          0,
+
+        rotationSpeed:
+          0.12,
+
+        float:
+          0
       }
     };
   }
@@ -1948,24 +3645,31 @@
 
         registry.set(
           wing,
+
           makeNode({
-            id: wing,
+            id:
+              wing,
+
             type:
               NODE_TYPES.CARDINAL,
+
             wing,
 
             label:
               semantic.dataset
                 .coordinateLabel ||
-              semantic.dataset.label ||
+              semantic.dataset
+                .label ||
               wing,
 
             short:
               (
                 semantic.querySelector(
                   "span:last-child"
-                ) || {}
-              ).textContent || "",
+                ) ||
+                {}
+              ).textContent ||
+              "",
 
             meshKey:
               `cardinal-${wing}`,
@@ -1975,7 +3679,7 @@
 
             phase:
               wingIndex *
-                1.37 +
+              1.37 +
               0.22
           })
         );
@@ -2006,10 +3710,13 @@
 
             registry.set(
               id,
+
               makeNode({
                 id,
+
                 type:
                   NODE_TYPES.ROOM,
+
                 wing,
 
                 label:
@@ -2036,9 +3743,9 @@
 
                 phase:
                   wingIndex *
-                    1.13 +
+                  1.13 +
                   roomIndex *
-                    0.47
+                  0.47
               })
             );
           }
@@ -2050,7 +3757,7 @@
       Array.from(
         registry.values()
       ).filter(
-        (node) =>
+        node =>
           node.type ===
           NODE_TYPES.CARDINAL
       ).length;
@@ -2059,18 +3766,24 @@
       Array.from(
         registry.values()
       ).filter(
-        (node) =>
+        node =>
           node.type ===
           NODE_TYPES.ROOM
       ).length;
 
-    if (cardinalCount !== 4) {
+    if (
+      cardinalCount !==
+      4
+    ) {
       throw new Error(
         `CARDINAL_COUNT_INVALID:${cardinalCount}`
       );
     }
 
-    if (roomCount !== 19) {
+    if (
+      roomCount !==
+      19
+    ) {
       throw new Error(
         `ROOM_COUNT_INVALID:${roomCount}`
       );
@@ -2153,10 +3866,6 @@
     proxy.style.overflow =
       "visible";
 
-    /*
-     * Pointer input belongs to the rendered WebGL room star.
-     * Keyboard focus remains available through tabIndex.
-     */
     proxy.style.pointerEvents =
       "none";
 
@@ -2167,13 +3876,17 @@
       "transparent";
   }
 
-  function createRoomProxy(node) {
+  function createRoomProxy(
+    node
+  ) {
     const declaration =
       authoritativeRoomElement(
         node.id
       );
 
-    if (!declaration) {
+    if (
+      !declaration
+    ) {
       throw new Error(
         `ROOM_DECLARATION_NOT_FOUND:${node.id}`
       );
@@ -2185,12 +3898,15 @@
         state.semanticLayer
       );
 
-    if (existing) {
+    if (
+      existing
+    ) {
       applyNonvisualProxyPresentation(
         existing
       );
 
-      existing.textContent = "";
+      existing.textContent =
+        "";
 
       return existing;
     }
@@ -2200,7 +3916,8 @@
         "button"
       );
 
-    proxy.type = "button";
+    proxy.type =
+      "button";
 
     proxy.className =
       "compass-room-proxy-control";
@@ -2233,18 +3950,21 @@
       node.id;
 
     proxy.dataset.label =
-      declaration.dataset.label ||
+      declaration.dataset
+        .label ||
       node.label;
 
     proxy.dataset.route =
-      declaration.dataset.route ||
+      declaration.dataset
+        .route ||
       declaration.getAttribute(
         "href"
       ) ||
       "";
 
     proxy.dataset.preview =
-      declaration.dataset.preview ||
+      declaration.dataset
+        .preview ||
       "";
 
     proxy.dataset.localCoordinate =
@@ -2277,12 +3997,8 @@
       }`
     );
 
-    /*
-     * No visible room title or description is inserted.
-     * The room identity remains available through aria-label
-     * and the copied declaration metadata.
-     */
-    proxy.textContent = "";
+    proxy.textContent =
+      "";
 
     applyNonvisualProxyPresentation(
       proxy
@@ -2300,7 +4016,7 @@
       new Map();
 
     state.registry.forEach(
-      (node) => {
+      node => {
         if (
           node.type !==
           NODE_TYPES.ROOM
@@ -2310,12 +4026,17 @@
 
         proxies.set(
           node.id,
-          createRoomProxy(node)
+          createRoomProxy(
+            node
+          )
         );
       }
     );
 
-    if (proxies.size !== 19) {
+    if (
+      proxies.size !==
+      19
+    ) {
       throw new Error(
         `ROOM_PROXY_COUNT_INVALID:${proxies.size}`
       );
@@ -2332,43 +4053,50 @@
     return proxies;
   }
 
-  function rotate2D(
-    point,
-    angle
-  ) {
-    const cosine =
-      Math.cos(angle);
-
-    const sine =
-      Math.sin(angle);
-
-    return [
-      point[0] * cosine -
-        point[1] * sine,
-
-      point[0] * sine +
-        point[1] * cosine,
-
-      point[2] || 0
-    ];
-  }
-
-  function orbitWingPosition(
+  function sphericalCardinalPosition(
     wing
   ) {
-    const base =
-      wing === "north"
-        ? [0, 1.32, -0.10]
-        : wing === "east"
-          ? [1.48, 0, -0.10]
-          : wing === "south"
-            ? [0, -1.32, -0.10]
-            : [-1.48, 0, -0.10];
+    const unit =
+      rotatedCardinalUnitVector(
+        wing
+      );
 
-    return rotate2D(
-      base,
-      state.orbitAngle
-    );
+    return {
+      unit,
+
+      x:
+        unit[0] *
+        SPHERE.horizontalRadius,
+
+      y:
+        unit[1] *
+        SPHERE.verticalRadius,
+
+      z:
+        unit[2] *
+        SPHERE.depthRadius,
+
+      depth:
+        (
+          unit[2] +
+          1
+        ) /
+        2,
+
+      primary:
+        clamp(
+          (
+            dot(
+              unit,
+              primaryAnchorVector()
+            ) +
+            1
+          ) /
+          2,
+          0,
+          1
+        )
+    };
   }
 
   function roomPetalPosition(
@@ -2376,7 +4104,8 @@
     count
   ) {
     const radius =
-      count === 4
+      count ===
+      4
         ? 1.24
         : 1.34;
 
@@ -2390,48 +4119,23 @@
         count,
         1
       ) -
-      Math.PI / 2;
+      Math.PI /
+      2;
 
     return [
-      Math.cos(angle) *
-        radius,
+      Math.cos(
+        angle
+      ) *
+      radius,
 
-      Math.sin(angle) *
-        radius *
-        0.78,
+      Math.sin(
+        angle
+      ) *
+      radius *
+      0.78,
 
       0.26
     ];
-  }
-
-  function topAuthorityWing() {
-    let bestWing =
-      "north";
-
-    let bestY =
-      -Infinity;
-
-    WINGS.forEach(
-      (wing) => {
-        const position =
-          orbitWingPosition(
-            wing
-          );
-
-        if (
-          position[1] >
-          bestY
-        ) {
-          bestY =
-            position[1];
-
-          bestWing =
-            wing;
-        }
-      }
-    );
-
-    return bestWing;
   }
 
   function setTarget(
@@ -2448,54 +4152,65 @@
     values,
     scale
   ) {
-    values.sx = scale;
-    values.sy = scale;
-    values.sz = scale;
+    values.sx =
+      scale;
+
+    values.sy =
+      scale;
+
+    values.sz =
+      scale;
 
     return values;
   }
 
-  function updateOrbitAngle(
+  function updateTargetQuaternion(
     deltaTime
   ) {
-    const focus =
-      state.frame.orbitFocus ||
-      "";
+    const controllerQuaternion =
+      quaternionFromControllerFrame(
+        state.frame
+      );
 
-    state.targetOrbitAngle =
-      ORBIT_ANGLES[focus] ||
-      0;
+    if (
+      state.pointer &&
+      state.pointer.dragging
+    ) {
+      state.targetQuaternion =
+        state.pointer.currentQuaternion
+          .slice();
 
-    if (state.reducedMotion) {
-      state.orbitAngle =
-        state.targetOrbitAngle;
+      state.renderQuaternion =
+        state.pointer.currentQuaternion
+          .slice();
 
       return;
     }
 
-    let delta =
-      state.targetOrbitAngle -
-      state.orbitAngle;
+    state.targetQuaternion =
+      controllerQuaternion;
 
-    while (
-      delta > Math.PI
+    if (
+      state.reducedMotion
     ) {
-      delta -=
-        Math.PI * 2;
+      state.renderQuaternion =
+        controllerQuaternion.slice();
+
+      return;
     }
 
-    while (
-      delta < -Math.PI
-    ) {
-      delta +=
-        Math.PI * 2;
-    }
-
-    state.orbitAngle +=
-      delta *
+    const amount =
       Math.min(
         1,
-        deltaTime * 4.8
+        deltaTime *
+        GESTURE.settleSpeed
+      );
+
+    state.renderQuaternion =
+      quaternionSlerp(
+        state.renderQuaternion,
+        state.targetQuaternion,
+        amount
       );
   }
 
@@ -2509,16 +4224,14 @@
     const outward =
       activeOutwardMultiplier();
 
-    const topWing =
-      topAuthorityWing();
+    const mirrorlandActive =
+      isMirrorlandLifecycleState();
 
     const activeWing =
       frame.selectedCardinal ||
       frame.orbitFocus ||
-      topWing;
-
-    const mirrorlandActive =
-      isMirrorlandLifecycleState();
+      state.settledPrimaryWing ||
+      "north";
 
     const clusterOpen =
       frame.state ===
@@ -2532,36 +4245,67 @@
         )
       );
 
+    state.visualPrimaryWing =
+      nearestPrimaryWing(
+        state.renderQuaternion
+      );
+
     state.registry.forEach(
-      (node) => {
-        node.visible = false;
+      node => {
+        node.visible =
+          false;
 
         node.material =
           node.baseMaterial;
 
+        node.depthScore =
+          0;
+
+        node.primaryScore =
+          0;
+
         setTarget(
           node,
           {
-            x: 0,
-            y: 0,
-            z: -1,
+            x:
+              0,
 
-            sx: 0.5,
-            sy: 0.5,
-            sz: 0.5,
+            y:
+              0,
 
-            prominence: 0,
-            halo: 0,
-            rotationSpeed: 0.06,
-            float: 0
+            z:
+              -1,
+
+            sx:
+              0.5,
+
+            sy:
+              0.5,
+
+            sz:
+              0.5,
+
+            prominence:
+              0,
+
+            halo:
+              0,
+
+            rotationSpeed:
+              0.06,
+
+            float:
+              0
           }
         );
       }
     );
 
-    if (!clusterOpen) {
+    if (
+      !clusterOpen
+    ) {
       WINGS.forEach(
-        (wing) => {
+        wing => {
           const node =
             state.registry.get(
               wing
@@ -2571,76 +4315,97 @@
             return;
           }
 
-          const position =
-            orbitWingPosition(
+          const sphere =
+            sphericalCardinalPosition(
               wing
             );
 
-          const focused =
-            wing === topWing;
+          const primary =
+            wing ===
+            state.visualPrimaryWing;
 
-          const selected =
-            frame.selectedCardinal ===
-            wing;
+          const committedPrimary =
+            wing ===
+            frame.orbitFocus;
 
-          node.visible = true;
+          node.visible =
+            true;
+
+          node.depthScore =
+            sphere.depth;
+
+          node.primaryScore =
+            sphere.primary;
 
           node.material =
-            selected
-              ? "CARDINAL_SELECTED"
-              : focused
-                ? "CARDINAL_FOCUSED"
+            primary
+              ? "CARDINAL_FOCUSED"
+              : committedPrimary
+                ? "CARDINAL_SELECTED"
                 : "CARDINAL_IDLE";
 
+          const depthScale =
+            0.72 +
+            sphere.depth *
+            0.42;
+
+          const primaryLift =
+            primary
+              ? 1.14
+              : 1;
+
           const ordinaryScale =
-            selected
-              ? QUALITY
-                  .selectedCardinalScale
-              : focused
+            (
+              primary
                 ? QUALITY
                     .focusedCardinalScale
-                : QUALITY
-                    .cardinalScale;
-
-          const normalZ =
-            selected ||
-            focused
-              ? 0.34
-              : position[2];
+                : committedPrimary
+                  ? QUALITY
+                      .cardinalScale *
+                    1.06
+                  : QUALITY
+                      .cardinalScale
+            ) *
+            depthScale *
+            primaryLift;
 
           const prominence =
             (
-              selected ||
-              focused
-                ? 1
-                : 0.74
+              0.34 +
+              sphere.depth *
+              0.46 +
+              sphere.primary *
+              0.30
             ) *
             recession.prominence;
 
           const halo =
             (
-              selected ||
-              focused
-                ? 1
-                : 0.52
+              0.24 +
+              sphere.depth *
+              0.34 +
+              sphere.primary *
+              0.54
             ) *
             recession.halo;
 
           const rotationSpeed =
             (
-              selected ||
-              focused
+              primary
                 ? 0.16
-                : 0.09
+                : 0.08 +
+                  sphere.depth *
+                  0.05
             ) *
             recession.rotation;
 
           const float =
             (
-              selected ||
-              focused
+              primary
                 ? 0.012
-                : 0.006
+                : 0.004 +
+                  sphere.depth *
+                  0.005
             ) *
             recession.float;
 
@@ -2649,20 +4414,34 @@
             withUniformScale(
               {
                 x:
-                  position[0] *
+                  sphere.x *
                   outward,
 
                 y:
-                  position[1] *
+                  sphere.y *
                   outward,
 
                 z:
-                  normalZ +
-                  recession.zOffset,
+                  sphere.z +
+                  recession
+                    .zOffset,
 
-                prominence,
-                halo,
+                prominence:
+                  clamp(
+                    prominence,
+                    0.10,
+                    1.12
+                  ),
+
+                halo:
+                  clamp(
+                    halo,
+                    0,
+                    1.24
+                  ),
+
                 rotationSpeed,
+
                 float
               },
 
@@ -2675,22 +4454,23 @@
 
       state.camera.nextEye = [
         0,
-        0.80,
+        0.76,
 
         state.cssWidth /
           Math.max(
             1,
             state.cssHeight
           ) <
-        QUALITY.mobileAspectThreshold
-          ? 7.2
-          : 6.05
+        QUALITY
+          .mobileAspectThreshold
+          ? 7.30
+          : 6.20
       ];
 
       state.camera.nextTarget = [
         0,
-        0,
-        0
+        0.03,
+        0.06
       ];
 
       return;
@@ -2700,7 +4480,7 @@
       Array.from(
         state.registry.values()
       ).filter(
-        (node) =>
+        node =>
           node.type ===
             NODE_TYPES.ROOM &&
           node.wing ===
@@ -2722,17 +4502,13 @@
           frame.selectedRoom ===
           node.id;
 
-        node.visible = true;
+        node.visible =
+          true;
 
         node.material =
           selected
             ? "ROOM_SELECTED"
             : "ROOM_IDLE";
-
-        const normalZ =
-          selected
-            ? 0.86
-            : 0.42;
 
         setTarget(
           node,
@@ -2750,7 +4526,11 @@
                 outward,
 
               z:
-                normalZ +
+                (
+                  selected
+                    ? 0.86
+                    : 0.42
+                ) +
                 recession.zOffset,
 
               prominence:
@@ -2808,7 +4588,8 @@
           1,
           state.cssHeight
         ) <
-      QUALITY.mobileAspectThreshold
+      QUALITY
+        .mobileAspectThreshold
         ? 7.5
         : 5.85
     ];
@@ -2827,7 +4608,10 @@
   ) {
     return (
       a +
-      (b - a) *
+      (
+        b -
+        a
+      ) *
       amount
     );
   }
@@ -2840,11 +4624,12 @@
         ? 1
         : Math.min(
             1,
-            deltaTime * 6.2
+            deltaTime *
+            6.2
           );
 
     state.registry.forEach(
-      (node) => {
+      node => {
         const current =
           node.transform;
 
@@ -2863,7 +4648,7 @@
           "rotationSpeed",
           "float"
         ].forEach(
-          (key) => {
+          key => {
             current[key] =
               lerp(
                 current[key],
@@ -2876,9 +4661,14 @@
         if (
           state.reducedMotion
         ) {
-          current.rx = 0;
-          current.ry = 0;
-          current.rz = 0;
+          current.rx =
+            0;
+
+          current.ry =
+            0;
+
+          current.rz =
+            0;
 
           return;
         }
@@ -2890,7 +4680,7 @@
         current.ry =
           Math.sin(
             state.time *
-              0.42 +
+            0.42 +
             node.phase
           ) *
           QUALITY.maxYaw *
@@ -2902,9 +4692,9 @@
         current.rx =
           Math.sin(
             state.time *
-              0.31 +
+            0.31 +
             node.phase *
-              0.73
+            0.73
           ) *
           QUALITY.maxPitch *
           Math.max(
@@ -2949,9 +4739,9 @@
         ? 0
         : Math.sin(
             state.time *
-              0.95 +
+            0.95 +
             node.roomIndex *
-              0.72 +
+            0.72 +
             node.phase
           ) *
           transform.float;
@@ -2967,7 +4757,7 @@
       translate4(
         transform.x,
         transform.y +
-          floatY,
+        floatY,
         transform.z
       ),
 
@@ -2988,13 +4778,13 @@
 
             scale4(
               transform.sx *
-                haloScale,
+              haloScale,
 
               transform.sy *
-                haloScale,
+              haloScale,
 
               transform.sz *
-                haloScale
+              haloScale
             )
           )
         )
@@ -3002,7 +4792,9 @@
     );
   }
 
-  function projectNode(node) {
+  function projectNode(
+    node
+  ) {
     if (
       !state.view ||
       !state.projection
@@ -3032,7 +4824,9 @@
         [0, 0, 0, 1]
       );
 
-    if (!clip[3]) {
+    if (
+      !clip[3]
+    ) {
       return null;
     }
 
@@ -3045,10 +4839,14 @@
       clip[3];
 
     if (
-      x < -1.30 ||
-      x > 1.30 ||
-      y < -1.30 ||
-      y > 1.30
+      x <
+      -1.30 ||
+      x >
+      1.30 ||
+      y <
+      -1.30 ||
+      y >
+      1.30
     ) {
       return null;
     }
@@ -3056,14 +4854,20 @@
     return {
       x:
         (
-          (x + 1) /
+          (
+            x +
+            1
+          ) /
           2
         ) *
         state.cssWidth,
 
       y:
         (
-          (1 - y) /
+          (
+            1 -
+            y
+          ) /
           2
         ) *
         state.cssHeight
@@ -3103,52 +4907,97 @@
     element,
     screen
   ) {
-    const primary =
+    const primaryLabel =
       element.querySelector(
         "span:first-child"
       );
 
-    const secondary =
+    const secondaryLabel =
       element.querySelector(
         "span:last-child"
       );
 
-    if (primary) {
-      primary.textContent =
+    if (
+      primaryLabel
+    ) {
+      primaryLabel.textContent =
         node.label;
     }
 
-    if (secondary) {
-      secondary.textContent =
+    if (
+      secondaryLabel
+    ) {
+      secondaryLabel.textContent =
         node.short;
     }
 
-    const labelScale =
-      0.80 *
-      state.recession.labelScale;
-
-    const labelOpacity =
-      clamp(
-        Math.max(
-          node.transform.prominence,
-          0.44
-        ) *
-        state.recession.labelOpacity,
-        0,
-        1
-      );
+    const primary =
+      node.wing ===
+      state.visualPrimaryWing;
 
     const selected =
       state.frame
         .selectedCardinal ===
       node.wing;
 
+    const depth =
+      clamp(
+        node.depthScore,
+        0,
+        1
+      );
+
+    const scale =
+      (
+        0.64 +
+        depth *
+        0.22 +
+        (
+          primary
+            ? 0.18
+            : 0
+        )
+      ) *
+      state.recession
+        .labelScale;
+
+    const opacity =
+      clamp(
+        (
+          0.22 +
+          depth *
+          0.54 +
+          (
+            primary
+              ? 0.24
+              : 0
+          )
+        ) *
+        state.recession
+          .labelOpacity,
+        0.10,
+        1
+      );
+
     element.dataset.selected =
       selected
         ? "true"
         : "false";
 
-    if (selected) {
+    element.dataset.primary =
+      primary
+        ? "true"
+        : "false";
+
+    element.dataset.depth =
+      depth.toFixed(
+        4
+      );
+
+    if (
+      selected ||
+      primary
+    ) {
       element.setAttribute(
         "aria-current",
         "true"
@@ -3172,16 +5021,19 @@
       "auto";
 
     element.style.transform =
-      `translate(-50%, -50%) scale(${labelScale})`;
+      `translate(-50%, -50%) scale(${scale})`;
 
     element.style.opacity =
-      String(labelOpacity);
+      String(
+        opacity
+      );
 
     const interactive =
       state.recession
         .interactive &&
-      node.transform.prominence >=
-        0.18;
+      node.transform
+        .prominence >=
+        0.12;
 
     element.style.pointerEvents =
       interactive
@@ -3201,7 +5053,18 @@
         : -1;
 
     element.style.zIndex =
-      "4";
+      String(
+        10 +
+        Math.round(
+          depth *
+          80
+        ) +
+        (
+          primary
+            ? 20
+            : 0
+        )
+      );
   }
 
   function syncRoomProxyNode(
@@ -3213,7 +5076,8 @@
       element
     );
 
-    element.textContent = "";
+    element.textContent =
+      "";
 
     element.style.left =
       `${screen.x}px`;
@@ -3230,10 +5094,6 @@
     element.style.transform =
       "translate(-50%, -50%)";
 
-    /*
-     * The control itself has no visible fill, border, label, or shadow.
-     * Opacity remains 1 so the browser can paint a keyboard focus outline.
-     */
     element.style.opacity =
       "1";
 
@@ -3247,7 +5107,8 @@
       state.recession
         .interactive &&
       node.visible &&
-      node.transform.prominence >=
+      node.transform
+        .prominence >=
         0.18;
 
     element.setAttribute(
@@ -3272,7 +5133,9 @@
         ? "true"
         : "false";
 
-    if (selected) {
+    if (
+      selected
+    ) {
       element.setAttribute(
         "aria-current",
         "true"
@@ -3295,22 +5158,6 @@
       applyNonvisualProxyPresentation(
         element
       );
-
-      element.style.opacity =
-        "0";
-
-      element.style.pointerEvents =
-        "none";
-
-      element.setAttribute(
-        "aria-hidden",
-        "true"
-      );
-
-      element.tabIndex =
-        -1;
-
-      return;
     }
 
     element.style.opacity =
@@ -3328,7 +5175,9 @@
       -1;
   }
 
-  function syncSemanticNode(node) {
+  function syncSemanticNode(
+    node
+  ) {
     const element =
       semanticElementForNode(
         node
@@ -3340,9 +5189,12 @@
 
     const screen =
       node.visible &&
-      node.transform.prominence >=
+      node.transform
+        .prominence >=
         0.08
-        ? projectNode(node)
+        ? projectNode(
+            node
+          )
         : null;
 
     if (!screen) {
@@ -3386,7 +5238,7 @@
         .getBoundingClientRect();
 
     const lowPower =
-      state.cssWidth <=
+      rect.width <=
         QUALITY
           .atmosphereReductionWidthPx ||
       (
@@ -3408,7 +5260,7 @@
       Math.min(
         globalThis
           .devicePixelRatio ||
-          1,
+        1,
         cap
       );
 
@@ -3500,11 +5352,14 @@
   function effectiveControllerProminence() {
     const controllerValue =
       Number(
-        state.frame.prominence &&
-        state.frame.prominence
+        state.frame
+          .prominence &&
+        state.frame
+          .prominence
           .compass !==
-          undefined
-          ? state.frame.prominence
+        undefined
+          ? state.frame
+              .prominence
               .compass
           : 1
       );
@@ -3528,7 +5383,8 @@
       MATERIALS[
         materialName
       ] ||
-      MATERIALS.CARDINAL_IDLE;
+      MATERIALS
+        .CARDINAL_IDLE;
 
     const bloomDisabled =
       state.cssWidth <=
@@ -3536,10 +5392,12 @@
         .bloomDisableWidthPx;
 
     const softness =
-      state.recession.material;
+      state.recession
+        .material;
 
     gl.uniform1f(
-      state.uniforms.twinkle,
+      state.uniforms
+        .twinkle,
 
       state.reducedMotion
         ? 0
@@ -3547,7 +5405,8 @@
     );
 
     gl.uniform1f(
-      state.uniforms.sparkle,
+      state.uniforms
+        .sparkle,
 
       state.reducedMotion
         ? 0
@@ -3556,35 +5415,46 @@
     );
 
     gl.uniform1f(
-      state.uniforms.prominence,
+      state.uniforms
+        .prominence,
+
       prominence
     );
 
     gl.uniform1f(
-      state.uniforms.specular,
+      state.uniforms
+        .specular,
+
       material.specular *
       softness
     );
 
     gl.uniform1f(
-      state.uniforms.rim,
+      state.uniforms
+        .rim,
+
       material.rim *
       softness
     );
 
     gl.uniform1f(
-      state.uniforms.emissive,
+      state.uniforms
+        .emissive,
+
       material.emissive *
       softness
     );
 
     gl.uniform1f(
-      state.uniforms.alpha,
+      state.uniforms
+        .alpha,
+
       material.alpha
     );
 
     gl.uniform1f(
-      state.uniforms.contrast,
+      state.uniforms
+        .contrast,
 
       1 +
       (
@@ -3595,7 +5465,8 @@
     );
 
     gl.uniform1f(
-      state.uniforms.haloStrength,
+      state.uniforms
+        .haloStrength,
 
       bloomDisabled
         ? 0
@@ -3605,7 +5476,9 @@
     );
 
     gl.uniform1f(
-      state.uniforms.saturation,
+      state.uniforms
+        .saturation,
+
       state.recession
         .saturation
     );
@@ -3617,7 +5490,8 @@
   ) {
     if (
       !node.visible ||
-      node.transform.prominence <
+      node.transform
+        .prominence <
         0.04
     ) {
       return 0;
@@ -3638,21 +5512,24 @@
     bindAttrib(
       gl,
       mesh.position,
-      state.attribs.position,
+      state.attribs
+        .position,
       3
     );
 
     bindAttrib(
       gl,
       mesh.normal,
-      state.attribs.normal,
+      state.attribs
+        .normal,
       3
     );
 
     bindAttrib(
       gl,
       mesh.color,
-      state.attribs.color,
+      state.attribs
+        .color,
       3
     );
 
@@ -3663,7 +5540,8 @@
       );
 
     gl.uniformMatrix4fv(
-      state.uniforms.model,
+      state.uniforms
+        .model,
       false,
       new Float32Array(
         model
@@ -3671,7 +5549,8 @@
     );
 
     gl.uniformMatrix4fv(
-      state.uniforms.view,
+      state.uniforms
+        .view,
       false,
       new Float32Array(
         state.view
@@ -3679,7 +5558,8 @@
     );
 
     gl.uniformMatrix4fv(
-      state.uniforms.projection,
+      state.uniforms
+        .projection,
       false,
       new Float32Array(
         state.projection
@@ -3687,7 +5567,8 @@
     );
 
     gl.uniformMatrix3fv(
-      state.uniforms.normalMatrix,
+      state.uniforms
+        .normalMatrix,
       false,
       new Float32Array(
         normalMatrix3(
@@ -3697,19 +5578,23 @@
     );
 
     gl.uniform1f(
-      state.uniforms.time,
+      state.uniforms
+        .time,
       state.time
     );
 
     gl.uniform1f(
-      state.uniforms.haloPass,
+      state.uniforms
+        .haloPass,
+
       haloPass
         ? 1
         : 0
     );
 
     gl.uniform1f(
-      state.uniforms.haloExpansion,
+      state.uniforms
+        .haloExpansion,
       0.075
     );
 
@@ -3720,7 +5605,8 @@
         .prominence *
       effectiveControllerProminence(),
 
-      node.transform.halo
+      node.transform
+        .halo
     );
 
     gl.drawArrays(
@@ -3732,105 +5618,25 @@
     return 1;
   }
 
-  function classifyGesture(
-    start,
-    end
+  function pointerDistance(
+    pointer,
+    clientX,
+    clientY
   ) {
-    const dx =
-      end.x -
-      start.x;
+    return Math.hypot(
+      clientX -
+      pointer.startX,
 
-    const dy =
-      end.y -
-      start.y;
-
-    const absX =
-      Math.abs(dx);
-
-    const absY =
-      Math.abs(dy);
-
-    const distance =
-      Math.hypot(
-        dx,
-        dy
-      );
-
-    if (
-      distance <=
-      GESTURE
-        .maximumTapDistancePx
-    ) {
-      return {
-        type: "tap",
-        dx,
-        dy
-      };
-    }
-
-    if (
-      distance <
-      GESTURE
-        .minimumSwipeDistancePx
-    ) {
-      return {
-        type: "ambiguous",
-        dx,
-        dy
-      };
-    }
-
-    if (
-      absX >
-      absY *
-      GESTURE
-        .directionalDominanceRatio
-    ) {
-      return {
-        type: "swipe",
-        axis: "horizontal",
-
-        raw:
-          dx > 0
-            ? "swipeRight"
-            : "swipeLeft",
-
-        dx,
-        dy
-      };
-    }
-
-    if (
-      absY >
-      absX *
-      GESTURE
-        .directionalDominanceRatio
-    ) {
-      return {
-        type: "swipe",
-        axis: "vertical",
-
-        raw:
-          dy > 0
-            ? "swipeDown"
-            : "swipeUp",
-
-        dx,
-        dy
-      };
-    }
-
-    return {
-      type: "ambiguous",
-      dx,
-      dy
-    };
+      clientY -
+      pointer.startY
+    );
   }
 
   function findHitAtClientPoint(
     clientX,
     clientY,
-    allowedTypes = null
+    allowedTypes =
+      null
   ) {
     if (
       !state.recession
@@ -3851,22 +5657,24 @@
       clientY -
       rect.top;
 
-    const radius =
+    const baseRadius =
       Math.max(
-        46,
+        42,
         Math.min(
-          80,
+          82,
           rect.width *
-            0.090
+          0.092
         )
       );
 
-    let best = null;
-    let bestDistance =
+    let best =
+      null;
+
+    let bestScore =
       Infinity;
 
     state.registry.forEach(
-      (node) => {
+      node => {
         if (
           allowedTypes &&
           !allowedTypes.includes(
@@ -3880,7 +5688,7 @@
           !node.visible ||
           node.transform
             .prominence <
-            0.12
+            0.10
         ) {
           return;
         }
@@ -3894,22 +5702,55 @@
           return;
         }
 
+        const depthBonus =
+          node.type ===
+          NODE_TYPES.CARDINAL
+            ? node.depthScore *
+              16
+            : 0;
+
+        const radius =
+          baseRadius +
+          depthBonus;
+
         const distance =
           Math.hypot(
-            x - screen.x,
-            y - screen.y
+            x -
+            screen.x,
+            y -
+            screen.y
           );
 
         if (
-          distance <=
-            radius &&
-          distance <
-            bestDistance
+          distance >
+          radius
         ) {
-          best = node;
+          return;
+        }
 
-          bestDistance =
-            distance;
+        const depthPenalty =
+          node.type ===
+          NODE_TYPES.CARDINAL
+            ? (
+                1 -
+                node.depthScore
+              ) *
+              12
+            : 0;
+
+        const score =
+          distance +
+          depthPenalty;
+
+        if (
+          score <
+          bestScore
+        ) {
+          best =
+            node;
+
+          bestScore =
+            score;
         }
       }
     );
@@ -3917,53 +5758,31 @@
     return best;
   }
 
-  function semanticTerritory(
+  function blockedSemanticControl(
     target
   ) {
     if (
       !target ||
       !target.closest
     ) {
-      return "";
+      return null;
     }
 
-    if (
-      target.closest(
-        "[data-compass-object='mirrorland']"
-      )
-    ) {
-      return POINTER_TERRITORIES
-        .MIRRORLAND_THRESHOLD;
-    }
-
-    if (
-      target.closest(
-        "[data-compass-cardinal]"
-      )
-    ) {
-      return POINTER_TERRITORIES
-        .SEMANTIC_CONTROL;
-    }
-
-    if (
-      target.closest(
-        "[data-compass-room-proxy]"
-      )
-    ) {
-      return POINTER_TERRITORIES
-        .SEMANTIC_CONTROL;
-    }
-
-    if (
-      target.closest(
-        "[data-compass-enter], [data-compass-return-to-orbit], [data-compass-mirrorland-back], a, button"
-      )
-    ) {
-      return POINTER_TERRITORIES
-        .SEMANTIC_CONTROL;
-    }
-
-    return "";
+    return target.closest(
+      [
+        "[data-compass-enter]",
+        "[data-compass-return-to-orbit]",
+        "[data-compass-mirrorland-back]",
+        "[data-compass-lens-tab]",
+        "[data-compass-lens-panel] a",
+        "[data-compass-panel] a",
+        "[data-compass-panel] button",
+        "summary",
+        "input",
+        "textarea",
+        "select"
+      ].join(", ")
+    );
   }
 
   function classifyPointerTerritory(
@@ -3989,21 +5808,94 @@
           POINTER_TERRITORIES
             .OUTSIDE_SCENE,
 
-        nodeId: ""
+        nodeId:
+          ""
       };
     }
 
-    const semantic =
-      semanticTerritory(
-        event.target
-      );
-
-    if (semantic) {
+    if (
+      event.target &&
+      event.target.closest &&
+      event.target.closest(
+        "[data-compass-object='mirrorland']"
+      )
+    ) {
       return {
         territory:
-          semantic,
+          POINTER_TERRITORIES
+            .MIRRORLAND_THRESHOLD,
 
-        nodeId: ""
+        nodeId:
+          ""
+      };
+    }
+
+    if (
+      blockedSemanticControl(
+        event.target
+      )
+    ) {
+      return {
+        territory:
+          POINTER_TERRITORIES
+            .BLOCKED_CONTROL,
+
+        nodeId:
+          ""
+      };
+    }
+
+    const semanticCardinal =
+      event.target &&
+      event.target.closest
+        ? event.target.closest(
+            "[data-compass-cardinal]"
+          )
+        : null;
+
+    if (
+      semanticCardinal
+    ) {
+      const wing =
+        normalizeWing(
+          semanticCardinal.dataset
+            .wing ||
+          semanticCardinal.dataset
+            .cardinalId
+        );
+
+      return {
+        territory:
+          POINTER_TERRITORIES
+            .RENDERED_CARDINAL,
+
+        nodeId:
+          wing
+      };
+    }
+
+    const roomProxy =
+      event.target &&
+      event.target.closest
+        ? event.target.closest(
+            "[data-compass-room-proxy]"
+          )
+        : null;
+
+    if (
+      roomProxy
+    ) {
+      return {
+        territory:
+          POINTER_TERRITORIES
+            .RENDERED_ROOM,
+
+        nodeId:
+          String(
+            roomProxy.dataset
+              .roomId ||
+            ""
+          )
       };
     }
 
@@ -4016,7 +5908,8 @@
           POINTER_TERRITORIES
             .EMPTY_SCENE,
 
-        nodeId: ""
+        nodeId:
+          ""
       };
     }
 
@@ -4029,7 +5922,9 @@
         ]
       );
 
-    if (cardinalHit) {
+    if (
+      cardinalHit
+    ) {
       return {
         territory:
           POINTER_TERRITORIES
@@ -4049,7 +5944,9 @@
         ]
       );
 
-    if (roomHit) {
+    if (
+      roomHit
+    ) {
       return {
         territory:
           POINTER_TERRITORIES
@@ -4065,53 +5962,117 @@
         POINTER_TERRITORIES
           .EMPTY_SCENE,
 
-      nodeId: ""
+      nodeId:
+        ""
     };
   }
 
-  function requestAxisSwipe(
-    axis,
-    gesture
+  function requestControllerOrbitBegin(
+    pointer
   ) {
     const api =
       globalThis
         .DGB_COMPASS_CONTROLLER;
 
-    const available =
+    if (
       api &&
-      typeof api
-        .requestAxisSwipe ===
-        "function";
+      typeof api.beginOrbitGesture ===
+        "function"
+    ) {
+      return api.beginOrbitGesture({
+        quaternion:
+          pointer
+            .startQuaternion,
 
-    if (available) {
-      api.requestAxisSwipe(
-        axis
-      );
+        primaryWing:
+          state.visualPrimaryWing,
+
+        source:
+          "crystals-pointer"
+      }) !==
+      false;
     }
 
-    emitReceipt({
-      status:
-        available
-          ? "available"
-          : "held",
+    return false;
+  }
 
-      lastPointerTerritory:
-        POINTER_TERRITORIES
-          .EMPTY_SCENE,
+  function requestControllerOrbitPreview(
+    quaternion,
+    primaryWing
+  ) {
+    const api =
+      globalThis
+        .DGB_COMPASS_CONTROLLER;
 
-      lastGestureType:
-        gesture.type,
+    if (
+      api &&
+      typeof api.requestOrbitPreview ===
+        "function"
+    ) {
+      return api.requestOrbitPreview({
+        quaternion,
 
-      glError:
-        available
-          ? "NO_ERROR"
-          : "CONTROLLER_AXIS_API_UNAVAILABLE"
-    });
+        primaryWing,
+
+        source:
+          "crystals-drag"
+      }) !==
+      false;
+    }
+
+    return false;
+  }
+
+  function requestControllerOrbitCommit(
+    quaternion,
+    primaryWing
+  ) {
+    const api =
+      globalThis
+        .DGB_COMPASS_CONTROLLER;
+
+    if (
+      api &&
+      typeof api.requestOrbitCommit ===
+        "function"
+    ) {
+      return api.requestOrbitCommit({
+        quaternion,
+
+        primaryWing,
+
+        source:
+          "crystals-release-snap"
+      }) !==
+      false;
+    }
+
+    return false;
+  }
+
+  function requestControllerOrbitCancel(
+    reason
+  ) {
+    const api =
+      globalThis
+        .DGB_COMPASS_CONTROLLER;
+
+    if (
+      api &&
+      typeof api.requestOrbitCancel ===
+        "function"
+    ) {
+      return api.requestOrbitCancel(
+        reason
+      ) !==
+      false;
+    }
+
+    return false;
   }
 
   function requestNodeSelection(
     node,
-    gesture,
     territory
   ) {
     const api =
@@ -4125,28 +6086,28 @@
       node.type ===
         NODE_TYPES.CARDINAL &&
       api &&
-      typeof api
-        .requestCardinalSelection ===
+      typeof api.requestCardinalSelection ===
         "function"
     ) {
       available =
         api.requestCardinalSelection(
           node.wing
-        ) !== false;
+        ) !==
+        false;
     }
 
     if (
       node.type ===
         NODE_TYPES.ROOM &&
       api &&
-      typeof api
-        .requestRoomSelection ===
+      typeof api.requestRoomSelection ===
         "function"
     ) {
       available =
         api.requestRoomSelection(
           node.id
-        ) !== false;
+        ) !==
+        false;
     }
 
     emitReceipt({
@@ -4159,22 +6120,141 @@
         territory,
 
       lastGestureType:
-        gesture.type,
+        "tap",
 
       glError:
         available
           ? "NO_ERROR"
           : "CONTROLLER_SELECTION_API_UNAVAILABLE"
     });
+
+    return available;
+  }
+
+  function dragQuaternionFromPointer(
+    pointer,
+    clientX,
+    clientY
+  ) {
+    const width =
+      Math.max(
+        1,
+        state.cssWidth
+      );
+
+    const height =
+      Math.max(
+        1,
+        state.cssHeight
+      );
+
+    const dx =
+      clientX -
+      pointer.startX;
+
+    const dy =
+      clientY -
+      pointer.startY;
+
+    const yaw =
+      (
+        dx /
+        width
+      ) *
+      GESTURE
+        .radiansPerViewport;
+
+    const pitch =
+      (
+        dy /
+        height
+      ) *
+      GESTURE
+        .radiansPerViewport;
+
+    const yawQuaternion =
+      quaternionFromAxisAngle(
+        [0, 1, 0],
+        yaw
+      );
+
+    const pitchQuaternion =
+      quaternionFromAxisAngle(
+        [1, 0, 0],
+        pitch
+      );
+
+    return quaternionNormalize(
+      quaternionMultiply(
+        pitchQuaternion,
+
+        quaternionMultiply(
+          yawQuaternion,
+          pointer
+            .startQuaternion
+        )
+      )
+    );
   }
 
   function handlePointerDown(
     event
   ) {
+    if (
+      state.pointer
+    ) {
+      return;
+    }
+
     const classification =
       classifyPointerTerritory(
         event
       );
+
+    if (
+      classification.territory ===
+        POINTER_TERRITORIES
+          .OUTSIDE_SCENE ||
+      classification.territory ===
+        POINTER_TERRITORIES
+          .BLOCKED_CONTROL ||
+      classification.territory ===
+        POINTER_TERRITORIES
+          .MIRRORLAND_THRESHOLD
+    ) {
+      emitReceipt({
+        lastPointerTerritory:
+          classification
+            .territory,
+
+        lastGestureType:
+          "blocked"
+      });
+
+      return;
+    }
+
+    const frameState =
+      state.frame
+        ? state.frame.state
+        : "";
+
+    const constellationGesture =
+      frameState ===
+      "CONSTELLATION";
+
+    const roomGesture =
+      frameState ===
+        "CLUSTER_OPEN" ||
+      frameState ===
+        "ROOM_SELECTED";
+
+    if (
+      !constellationGesture &&
+      !roomGesture
+    ) {
+      return;
+    }
 
     try {
       event.currentTarget
@@ -4187,11 +6267,24 @@
       id:
         event.pointerId,
 
-      x:
+      pointerType:
+        event.pointerType ||
+        "unknown",
+
+      startX:
         event.clientX,
 
-      y:
+      startY:
         event.clientY,
+
+      lastX:
+        event.clientX,
+
+      lastY:
+        event.clientY,
+
+      startTime:
+        performance.now(),
 
       territory:
         classification
@@ -4199,119 +6292,262 @@
 
       nodeId:
         classification
-          .nodeId
+          .nodeId,
+
+      dragging:
+        false,
+
+      orbitGestureBegan:
+        false,
+
+      constellationGesture,
+
+      roomGesture,
+
+      startQuaternion:
+        state.renderQuaternion
+          .slice(),
+
+      currentQuaternion:
+        state.renderQuaternion
+          .slice()
     };
 
     emitReceipt({
       lastPointerTerritory:
         classification
-          .territory
+          .territory,
+
+      lastGestureType:
+        "pointerdown"
     });
   }
 
   function handlePointerMove(
     event
   ) {
+    const pointer =
+      state.pointer;
+
     if (
-      !state.pointer ||
+      !pointer ||
       event.pointerId !==
-        state.pointer.id
+        pointer.id
     ) {
       return;
     }
 
+    pointer.lastX =
+      event.clientX;
+
+    pointer.lastY =
+      event.clientY;
+
     if (
-      state.pointer
-        .territory !==
-      POINTER_TERRITORIES
-        .EMPTY_SCENE
+      !pointer.constellationGesture ||
+      !constellationCanRotate()
     ) {
       return;
     }
 
     const distance =
-      Math.hypot(
-        event.clientX -
-          state.pointer.x,
-
-        event.clientY -
-          state.pointer.y
+      pointerDistance(
+        pointer,
+        event.clientX,
+        event.clientY
       );
 
     if (
-      distance >=
+      !pointer.dragging &&
+      distance <
       GESTURE
-        .minimumSwipeDistancePx
-    ) {
-      event.preventDefault();
-    }
-  }
-
-  function handlePointerUp(
-    event
-  ) {
-    if (
-      !state.pointer ||
-      event.pointerId !==
-        state.pointer.id
+        .dragDeadZonePx
     ) {
       return;
     }
 
-    const pointer =
-      state.pointer;
+    if (
+      !pointer.dragging
+    ) {
+      pointer.dragging =
+        true;
 
-    state.pointer = null;
+      pointer.orbitGestureBegan =
+        requestControllerOrbitBegin(
+          pointer
+        );
 
-    const gesture =
-      classifyGesture(
+      state.scene.dataset.compassDragging =
+        "true";
+
+      state.root.dataset.compassDragging =
+        "true";
+    }
+
+    event.preventDefault();
+
+    pointer.currentQuaternion =
+      dragQuaternionFromPointer(
         pointer,
-        {
-          x:
-            event.clientX,
-
-          y:
-            event.clientY
-        }
+        event.clientX,
+        event.clientY
       );
 
+    state.renderQuaternion =
+      pointer.currentQuaternion
+        .slice();
+
+    state.targetQuaternion =
+      pointer.currentQuaternion
+        .slice();
+
+    const primaryWing =
+      nearestPrimaryWing(
+        pointer.currentQuaternion
+      );
+
+    state.visualPrimaryWing =
+      primaryWing;
+
+    requestControllerOrbitPreview(
+      pointer.currentQuaternion,
+      primaryWing
+    );
+
     emitReceipt({
+      status:
+        "available",
+
       lastPointerTerritory:
         pointer.territory,
 
       lastGestureType:
-        gesture.type
+        "spherical-drag",
+
+      lastGestureDistance:
+        distance,
+
+      primaryWing,
+
+      gestureActive:
+        true,
+
+      glError:
+        "NO_ERROR"
     });
+  }
 
-    if (
-      pointer.territory ===
-      POINTER_TERRITORIES
-        .EMPTY_SCENE
-    ) {
+  function releasePointerCapture(
+    event
+  ) {
+    try {
       if (
-        gesture.type ===
-          "swipe" &&
-        state.recession
-          .interactive
+        event.currentTarget
+          .hasPointerCapture &&
+        event.currentTarget
+          .hasPointerCapture(
+            event.pointerId
+          )
       ) {
-        event.preventDefault();
-
-        requestAxisSwipe(
-          gesture.axis,
-          gesture
-        );
+        event.currentTarget
+          .releasePointerCapture(
+            event.pointerId
+          );
       }
+    } catch (_) {}
+  }
 
-      return;
-    }
+  function finishSphericalDrag(
+    pointer,
+    event
+  ) {
+    const currentQuaternion =
+      pointer.currentQuaternion
+        .slice();
+
+    const primaryWing =
+      nearestPrimaryWing(
+        currentQuaternion
+      );
+
+    const settledQuaternion =
+      settledQuaternionForWing(
+        primaryWing,
+        currentQuaternion
+      );
+
+    state.settledPrimaryWing =
+      primaryWing;
+
+    state.visualPrimaryWing =
+      primaryWing;
+
+    state.targetQuaternion =
+      settledQuaternion
+        .slice();
 
     if (
-      gesture.type !==
-      "tap"
+      state.reducedMotion
     ) {
-      return;
+      state.renderQuaternion =
+        settledQuaternion
+          .slice();
     }
 
+    const committed =
+      requestControllerOrbitCommit(
+        settledQuaternion,
+        primaryWing
+      );
+
+    state.suppressClickUntil =
+      performance.now() +
+      GESTURE
+        .suppressClickMs;
+
+    state.scene.dataset.compassDragging =
+      "false";
+
+    state.root.dataset.compassDragging =
+      "false";
+
+    event.preventDefault();
+
+    emitReceipt({
+      status:
+        committed
+          ? "available"
+          : "held",
+
+      lastPointerTerritory:
+        pointer.territory,
+
+      lastGestureType:
+        "spherical-release-snap",
+
+      lastGestureDistance:
+        pointerDistance(
+          pointer,
+          event.clientX,
+          event.clientY
+        ),
+
+      primaryWing,
+
+      gestureActive:
+        false,
+
+      glError:
+        committed
+          ? "NO_ERROR"
+          : "CONTROLLER_ORBIT_COMMIT_UNAVAILABLE"
+    });
+  }
+
+  function finishTap(
+    pointer,
+    event
+  ) {
     if (
       !state.recession
         .interactive
@@ -4319,64 +6555,251 @@
       return;
     }
 
-    if (
-      pointer.territory ===
-      POINTER_TERRITORIES
-        .RENDERED_CARDINAL
-    ) {
-      const node =
-        state.registry.get(
-          pointer.nodeId
-        );
+    let node =
+      pointer.nodeId
+        ? state.registry.get(
+            pointer.nodeId
+          )
+        : null;
 
-      if (node) {
-        requestNodeSelection(
-          node,
-          gesture,
-          pointer.territory
+    if (
+      !node
+    ) {
+      node =
+        findHitAtClientPoint(
+          event.clientX,
+          event.clientY
         );
-      }
+    }
+
+    if (!node) {
+      emitReceipt({
+        lastPointerTerritory:
+          pointer.territory,
+
+        lastGestureType:
+          "empty-tap",
+
+        lastGestureDistance:
+          pointerDistance(
+            pointer,
+            event.clientX,
+            event.clientY
+          )
+      });
+
+      return;
+    }
+
+    const frameState =
+      state.frame
+        ? state.frame.state
+        : "";
+
+    if (
+      node.type ===
+        NODE_TYPES.CARDINAL &&
+      frameState !==
+        "CONSTELLATION"
+    ) {
+      return;
+    }
+
+    if (
+      node.type ===
+        NODE_TYPES.ROOM &&
+      frameState !==
+        "CLUSTER_OPEN" &&
+      frameState !==
+        "ROOM_SELECTED"
+    ) {
+      return;
+    }
+
+    state.suppressClickUntil =
+      performance.now() +
+      GESTURE
+        .suppressClickMs;
+
+    event.preventDefault();
+
+    requestNodeSelection(
+      node,
+      pointer.territory
+    );
+  }
+
+  function handlePointerUp(
+    event
+  ) {
+    const pointer =
+      state.pointer;
+
+    if (
+      !pointer ||
+      event.pointerId !==
+        pointer.id
+    ) {
+      return;
+    }
+
+    state.pointer =
+      null;
+
+    releasePointerCapture(
+      event
+    );
+
+    const distance =
+      pointerDistance(
+        pointer,
+        event.clientX,
+        event.clientY
+      );
+
+    if (
+      pointer.dragging &&
+      pointer.constellationGesture
+    ) {
+      finishSphericalDrag(
+        pointer,
+        event
+      );
 
       return;
     }
 
     if (
-      pointer.territory ===
-      POINTER_TERRITORIES
-        .RENDERED_ROOM
+      distance <=
+      GESTURE
+        .maximumTapDistancePx
     ) {
-      const node =
-        state.registry.get(
-          pointer.nodeId
-        );
+      finishTap(
+        pointer,
+        event
+      );
 
-      if (node) {
-        requestNodeSelection(
-          node,
-          gesture,
-          pointer.territory
-        );
-      }
+      return;
     }
+
+    if (
+      pointer.orbitGestureBegan
+    ) {
+      requestControllerOrbitCancel(
+        "ambiguous-release"
+      );
+    }
+
+    state.scene.dataset.compassDragging =
+      "false";
+
+    state.root.dataset.compassDragging =
+      "false";
+
+    emitReceipt({
+      lastPointerTerritory:
+        pointer.territory,
+
+      lastGestureType:
+        "ambiguous",
+
+      lastGestureDistance:
+        distance,
+
+      gestureActive:
+        false
+    });
   }
 
-  function handlePointerCancel() {
-    state.pointer = null;
+  function handlePointerCancel(
+    event
+  ) {
+    const pointer =
+      state.pointer;
+
+    if (
+      !pointer ||
+      event.pointerId !==
+        pointer.id
+    ) {
+      return;
+    }
+
+    state.pointer =
+      null;
+
+    releasePointerCapture(
+      event
+    );
+
+    if (
+      pointer.orbitGestureBegan
+    ) {
+      requestControllerOrbitCancel(
+        "pointer-cancel"
+      );
+    }
+
+    state.targetQuaternion =
+      pointer.startQuaternion
+        .slice();
+
+    state.scene.dataset.compassDragging =
+      "false";
+
+    state.root.dataset.compassDragging =
+      "false";
+
+    emitReceipt({
+      lastPointerTerritory:
+        pointer.territory,
+
+      lastGestureType:
+        "cancelled",
+
+      gestureActive:
+        false
+    });
+  }
+
+  function handleSceneClickCapture(
+    event
+  ) {
+    if (
+      performance.now() <
+      state.suppressClickUntil
+    ) {
+      event.preventDefault();
+      event.stopPropagation();
+      event.stopImmediatePropagation();
+    }
   }
 
   function bindPointerBridge() {
     state.scene.style.touchAction =
       "none";
 
-    state.scene.style
-      .overscrollBehavior =
+    state.scene.style.overscrollBehavior =
       "contain";
+
+    state.scene.style.webkitUserSelect =
+      "none";
+
+    state.scene.style.userSelect =
+      "none";
+
+    state.scene.dataset.compassDragging =
+      "false";
+
+    state.root.dataset.compassDragging =
+      "false";
 
     state.scene.addEventListener(
       "pointerdown",
       handlePointerDown,
       {
-        passive: false
+        passive:
+          false
       }
     );
 
@@ -4384,7 +6807,8 @@
       "pointermove",
       handlePointerMove,
       {
-        passive: false
+        passive:
+          false
       }
     );
 
@@ -4392,7 +6816,8 @@
       "pointerup",
       handlePointerUp,
       {
-        passive: false
+        passive:
+          false
       }
     );
 
@@ -4400,8 +6825,15 @@
       "pointercancel",
       handlePointerCancel,
       {
-        passive: false
+        passive:
+          false
       }
+    );
+
+    state.scene.addEventListener(
+      "click",
+      handleSceneClickCapture,
+      true
     );
   }
 
@@ -4447,7 +6879,8 @@
       state.atmosphere.stars =
         Array.from(
           {
-            length: count
+            length:
+              count
           },
 
           (
@@ -4458,9 +6891,9 @@
               (
                 Math.sin(
                   index *
-                    47.17
+                  47.17
                 ) *
-                  0.5 +
+                0.5 +
                 0.5
               ) *
               width,
@@ -4469,10 +6902,10 @@
               (
                 Math.sin(
                   index *
-                    19.31 +
+                  19.31 +
                   1.8
                 ) *
-                  0.5 +
+                0.5 +
                 0.5
               ) *
               height,
@@ -4480,21 +6913,22 @@
             radius:
               0.45 +
               (
-                index % 5
+                index %
+                5
               ) *
               0.16,
 
             alpha:
               0.18 +
               (
-                index % 7
+                index %
+                7
               ) *
               0.055
           })
         );
 
-      state.atmosphere
-        .initialized =
+      state.atmosphere.initialized =
         true;
     }
 
@@ -4527,9 +6961,9 @@
               : 0.78 +
                 Math.sin(
                   state.time *
-                    0.32 +
+                  0.32 +
                   index *
-                    0.73
+                  0.73
                 ) *
                 0.22;
 
@@ -4550,7 +6984,8 @@
             star.y,
             star.radius,
             0,
-            Math.PI * 2
+            Math.PI *
+            2
           );
 
           context.fill();
@@ -4563,18 +6998,46 @@
         atmosphereWeight
       })`;
 
-    context.lineWidth = 1;
+    context.lineWidth =
+      1;
+
+    const orientationVector =
+      quaternionRotateVector(
+        state.renderQuaternion,
+        [0, 1, 0]
+      );
+
+    const ellipseRotation =
+      clamp(
+        orientationVector[0] *
+        0.34,
+        -0.34,
+        0.34
+      );
+
+    const verticalCompression =
+      0.82 +
+      Math.abs(
+        orientationVector[2]
+      ) *
+      0.18;
 
     context.beginPath();
 
     context.ellipse(
-      width * 0.5,
-      height * 0.5,
-      width * 0.29,
-      height * 0.20,
-      -0.14,
+      width *
+      0.5,
+      height *
+      0.5,
+      width *
+      0.29,
+      height *
+      0.20 *
+      verticalCompression,
+      ellipseRotation,
       0,
-      Math.PI * 2
+      Math.PI *
+      2
     );
 
     context.stroke();
@@ -4582,13 +7045,20 @@
     context.beginPath();
 
     context.ellipse(
-      width * 0.5,
-      height * 0.5,
-      width * 0.36,
-      height * 0.25,
-      0.18,
+      width *
+      0.5,
+      height *
+      0.5,
+      width *
+      0.36,
+      height *
+      0.25 *
+      verticalCompression,
+      -ellipseRotation *
+      0.72,
       0,
-      Math.PI * 2
+      Math.PI *
+      2
     );
 
     context.stroke();
@@ -4609,9 +7079,10 @@
         "canvas"
       );
 
-    if (!existing) {
-      canvas.dataset
-        .compassAtmosphereCanvas =
+    if (
+      !existing
+    ) {
+      canvas.dataset.compassAtmosphereCanvas =
         "true";
 
       canvas.setAttribute(
@@ -4634,8 +7105,7 @@
       canvas.style.display =
         "block";
 
-      canvas.style
-        .pointerEvents =
+      canvas.style.pointerEvents =
         "none";
 
       state.mount.prepend(
@@ -4714,26 +7184,43 @@
           0
         );
 
-      state.atmosphere
-        .initialized =
+      state.atmosphere.initialized =
         false;
     }
   }
 
-  function render(now) {
-    if (!state.running) {
+  function sortNodesForDraw(
+    nodes
+  ) {
+    return nodes.sort(
+      (
+        a,
+        b
+      ) =>
+        a.transform.z -
+        b.transform.z
+    );
+  }
+
+  function render(
+    now
+  ) {
+    if (
+      !state.running
+    ) {
       return;
     }
 
     const seconds =
-      now * 0.001;
+      now *
+      0.001;
 
     const deltaTime =
       state.lastTime
         ? Math.min(
             0.05,
             seconds -
-              state.lastTime
+            state.lastTime
           )
         : 0.016;
 
@@ -4757,7 +7244,7 @@
     resize();
     resizeAtmosphere();
 
-    updateOrbitAngle(
+    updateTargetQuaternion(
       deltaTime
     );
 
@@ -4784,13 +7271,13 @@
     state.projection =
       perspective4(
         Math.PI /
-          (
-            aspect <
-            QUALITY
-              .mobileAspectThreshold
-              ? 4.45
-              : 4.85
-          ),
+        (
+          aspect <
+          QUALITY
+            .mobileAspectThreshold
+            ? 4.45
+            : 4.85
+        ),
 
         aspect,
         0.1,
@@ -4821,41 +7308,55 @@
     );
 
     gl.uniform3f(
-      state.uniforms.keyLight,
+      state.uniforms
+        .keyLight,
       -0.42,
       -0.82,
       -0.68
     );
 
     gl.uniform3f(
-      state.uniforms.fillLight,
+      state.uniforms
+        .fillLight,
       0.72,
       -0.24,
       -0.54
     );
 
     gl.uniform3f(
-      state.uniforms.rimLight,
+      state.uniforms
+        .rimLight,
       0.08,
       0.46,
-      1.0
+      1
     );
 
     gl.uniform3f(
-      state.uniforms.ambientColor,
+      state.uniforms
+        .ambientColor,
       0.10,
       0.12,
       0.18
     );
 
-    let drawCalls = 0;
+    let drawCalls =
+      0;
 
     const bloomDisabled =
       state.cssWidth <=
       QUALITY
         .bloomDisableWidthPx;
 
-    if (!bloomDisabled) {
+    const drawNodes =
+      sortNodesForDraw(
+        Array.from(
+          state.registry.values()
+        )
+      );
+
+    if (
+      !bloomDisabled
+    ) {
       gl.depthMask(
         false
       );
@@ -4865,8 +7366,8 @@
         gl.ONE
       );
 
-      state.registry.forEach(
-        (node) => {
+      drawNodes.forEach(
+        node => {
           drawCalls +=
             drawNode(
               node,
@@ -4885,8 +7386,8 @@
       gl.ONE_MINUS_SRC_ALPHA
     );
 
-    state.registry.forEach(
-      (node) => {
+    drawNodes.forEach(
+      node => {
         drawCalls +=
           drawNode(
             node,
@@ -4918,7 +7419,8 @@
         false,
 
       roomProxyCount:
-        state.roomProxies.size,
+        state.roomProxies
+          .size,
 
       roomProxyPresentation:
         "NONVISUAL_ACCESSIBILITY_CONTROL",
@@ -4926,11 +7428,22 @@
       recessionProfile:
         state.recessionName,
 
+      primaryWing:
+        state.visualPrimaryWing,
+
+      gestureActive:
+        Boolean(
+          state.pointer &&
+          state.pointer.dragging
+        ),
+
       glError:
         error ===
         gl.NO_ERROR
           ? "NO_ERROR"
-          : String(error),
+          : String(
+              error
+            ),
 
       drawCallsLastFrame:
         drawCalls
@@ -4943,19 +7456,38 @@
   }
 
   function disposeResources() {
-    state.running = false;
+    state.running =
+      false;
 
-    if (state.raf) {
+    if (
+      state.raf
+    ) {
       cancelAnimationFrame(
         state.raf
       );
 
-      state.raf = 0;
+      state.raf =
+        0;
     }
 
-    if (state.gl) {
+    if (
+      state.pointer &&
+      state.pointer
+        .orbitGestureBegan
+    ) {
+      requestControllerOrbitCancel(
+        "renderer-dispose"
+      );
+    }
+
+    state.pointer =
+      null;
+
+    if (
+      state.gl
+    ) {
       state.meshes.forEach(
-        (mesh) => {
+        mesh => {
           state.gl.deleteBuffer(
             mesh.position
           );
@@ -4970,7 +7502,9 @@
         }
       );
 
-      if (state.program) {
+      if (
+        state.program
+      ) {
         state.gl.deleteProgram(
           state.program
         );
@@ -4978,7 +7512,7 @@
     }
 
     state.roomProxies.forEach(
-      (proxy) => {
+      proxy => {
         proxy.remove();
       }
     );
@@ -4988,16 +7522,24 @@
     state.roomProxies.clear();
 
     emitReceipt({
-      status: "disposed",
-      rendererInitialized: false,
-      roomProxyCount: 0
+      status:
+        "disposed",
+
+      rendererInitialized:
+        false,
+
+      roomProxyCount:
+        0,
+
+      gestureActive:
+        false
     });
   }
 
   function bindContextLifecycle() {
     state.canvas.addEventListener(
       "webglcontextlost",
-      (event) => {
+      event => {
         event.preventDefault();
 
         emitFailure(
@@ -5010,7 +7552,8 @@
       "webglcontextrestored",
       () => {
         emitReceipt({
-          status: "held",
+          status:
+            "held",
 
           rendererInitialized:
             false,
@@ -5028,7 +7571,9 @@
         "[data-compass-root]"
       );
 
-    if (!state.root) {
+    if (
+      !state.root
+    ) {
       throw new Error(
         "COMPASS_ROOT_NOT_FOUND"
       );
@@ -5040,7 +7585,9 @@
         state.root
       );
 
-    if (!state.scene) {
+    if (
+      !state.scene
+    ) {
       throw new Error(
         "COMPASS_SCENE_NOT_FOUND"
       );
@@ -5052,7 +7599,9 @@
         state.root
       );
 
-    if (!state.mount) {
+    if (
+      !state.mount
+    ) {
       throw new Error(
         "CRYSTALS_MOUNT_NOT_FOUND"
       );
@@ -5064,7 +7613,9 @@
         state.root
       );
 
-    if (!state.semanticLayer) {
+    if (
+      !state.semanticLayer
+    ) {
       throw new Error(
         "SEMANTIC_LAYER_NOT_FOUND"
       );
@@ -5083,55 +7634,123 @@
         contract:
           CONTRACT,
 
-        receipt: () =>
-          Object.freeze({
-            ...RECEIPT
-          }),
+        sphere:
+          SPHERE,
 
-        stop: () => {
-          state.running =
-            false;
+        receipt:
+          () =>
+            Object.freeze({
+              ...RECEIPT
+            }),
 
-          if (state.raf) {
-            cancelAnimationFrame(
-              state.raf
-            );
+        getOrientation:
+          () =>
+            Object.freeze({
+              quaternion:
+                Object.freeze(
+                  state.renderQuaternion
+                    .slice()
+                ),
 
-            state.raf = 0;
-          }
+              targetQuaternion:
+                Object.freeze(
+                  state.targetQuaternion
+                    .slice()
+                ),
 
-          emitReceipt({
-            status: "stopped"
-          });
-        },
+              primaryWing:
+                state.visualPrimaryWing,
 
-        start: () => {
-          if (
-            !state.running &&
-            state.gl &&
-            state.program
-          ) {
+              settledPrimaryWing:
+                state.settledPrimaryWing,
+
+              gestureActive:
+                Boolean(
+                  state.pointer &&
+                  state.pointer
+                    .dragging
+                )
+            }),
+
+        stop:
+          () => {
             state.running =
-              true;
+              false;
 
-            state.lastTime =
-              0;
-
-            state.raf =
-              requestAnimationFrame(
-                render
+            if (
+              state.raf
+            ) {
+              cancelAnimationFrame(
+                state.raf
               );
+
+              state.raf =
+                0;
+            }
 
             emitReceipt({
               status:
-                "available"
+                "stopped"
             });
-          }
-        },
+          },
+
+        start:
+          () => {
+            if (
+              !state.running &&
+              state.gl &&
+              state.program
+            ) {
+              state.running =
+                true;
+
+              state.lastTime =
+                0;
+
+              state.raf =
+                requestAnimationFrame(
+                  render
+                );
+
+              emitReceipt({
+                status:
+                  "available"
+              });
+            }
+          },
 
         dispose:
           disposeResources
       });
+  }
+
+  function initializeOrientation() {
+    state.frame =
+      getControllerFrame();
+
+    const initialQuaternion =
+      quaternionFromControllerFrame(
+        state.frame
+      );
+
+    state.renderQuaternion =
+      initialQuaternion.slice();
+
+    state.targetQuaternion =
+      initialQuaternion.slice();
+
+    state.settledPrimaryWing =
+      normalizeWing(
+        state.frame.orbitFocus
+      ) ||
+      nearestPrimaryWing(
+        initialQuaternion
+      );
+
+    state.visualPrimaryWing =
+      nearestPrimaryWing(
+        initialQuaternion
+      );
   }
 
   function init() {
@@ -5155,7 +7774,8 @@
         );
       }
 
-      state.gl = gl;
+      state.gl =
+        gl;
 
       bindContextLifecycle();
 
@@ -5181,7 +7801,9 @@
       );
 
       state.program =
-        createProgram(gl);
+        createProgram(
+          gl
+        );
 
       state.attribs =
         Object.freeze({
@@ -5334,7 +7956,9 @@
         });
 
       state.meshes =
-        buildMeshes(gl);
+        buildMeshes(
+          gl
+        );
 
       state.registry =
         buildRegistry();
@@ -5342,36 +7966,77 @@
       state.roomProxies =
         buildRoomProxies();
 
+      initializeOrientation();
+
       bindPointerBridge();
 
       state.running =
         true;
 
+      state.root.dataset.sphericalOrbitEnabled =
+        "true";
+
+      state.root.dataset.orbitCoordinateSystem =
+        SPHERE.coordinateSystem;
+
+      state.root.dataset.orbitRepresentation =
+        SPHERE
+          .orientationRepresentation;
+
       emitReceipt({
-        status: "available",
-        rendererInitialized: true,
-        registryCardinalCount: 4,
-        registryRoomCount: 19,
-        mirrorlandRegistryPresent: false,
+        status:
+          "available",
+
+        rendererInitialized:
+          true,
+
+        registryCardinalCount:
+          4,
+
+        registryRoomCount:
+          19,
+
+        mirrorlandRegistryPresent:
+          false,
+
         roomProxyCount:
-          state.roomProxies.size,
+          state.roomProxies
+            .size,
+
         roomProxyPresentation:
           "NONVISUAL_ACCESSIBILITY_CONTROL",
-        recessionProfile: "NORMAL",
-        glError: "NO_ERROR"
+
+        recessionProfile:
+          "NORMAL",
+
+        sphericalOrbitEnabled:
+          true,
+
+        primaryWing:
+          state.visualPrimaryWing,
+
+        gestureActive:
+          false,
+
+        glError:
+          "NO_ERROR"
       });
 
       state.raf =
         requestAnimationFrame(
           render
         );
-    } catch (error) {
+    } catch (
+      error
+    ) {
       emitFailure(
         `CRYSTALS_INIT_FAILURE:${
           error &&
           error.message
             ? error.message
-            : String(error)
+            : String(
+                error
+              )
         }`
       );
     }
@@ -5385,7 +8050,8 @@
       "DOMContentLoaded",
       init,
       {
-        once: true
+        once:
+          true
       }
     );
   } else {

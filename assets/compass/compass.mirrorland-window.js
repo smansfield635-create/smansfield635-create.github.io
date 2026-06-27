@@ -2,6 +2,14 @@
    Diamond Gate Bridge Compass
    Self-contained Mirrorland Window renderer.
 
+   Surgical correction scope:
+   - Preserve the existing 21-pane stained-glass design.
+   - Preserve reveal and withdrawal lifecycle contracts.
+   - Keep the full-scene canvas.
+   - Render dormant Mirrorland as a smaller, quieter threshold.
+   - Strengthen frame, ribs, panes, and light progressively during reveal.
+   - Draw a true frame ring without erasing stained-glass content.
+
    Ownership:
    - Mirrorland Window canvas creation.
    - Stained-glass geometry.
@@ -66,7 +74,7 @@
     reducedRevealMs: 120,
     reducedWithdrawalMs: 100,
 
-    dormantPulseSeconds: 6.8,
+    dormantPulseSeconds: 7.8,
     focusedPulseSeconds: 4.2,
 
     sparklePeriodSeconds: 2.9
@@ -76,28 +84,34 @@
     designWidth: 480,
     designHeight: 720,
 
-    leadWidth: 8,
-    innerLeadWidth: 4,
+    leadWidthDormant: 4.5,
+    leadWidthFocused: 8,
 
-    dormantScale: 0.72,
+    innerLeadWidthDormant: 1.4,
+    innerLeadWidthFocused: 4,
+
+    ribWidthDormant: 7,
+    ribWidthFocused: 14,
+
+    ribHighlightWidthDormant: 1.2,
+    ribHighlightWidthFocused: 3,
+
+    dormantScale: 0.30,
     focusedScale: 1,
 
-    dormantOpacity: 0.62,
+    dormantOpacity: 0.38,
     focusedOpacity: 1,
-
-    dormantDepth: 0.14,
-    focusedDepth: 1,
 
     maximumDevicePixelRatio: 2
   });
 
   const COLORS = Object.freeze({
-    frameNearBlack: "#05080f",
-    frameMid: "#101622",
-    frameEdge: "#253044",
+    frameNearBlack: Object.freeze([5, 8, 15]),
+    frameMid: Object.freeze([16, 22, 34]),
+    frameEdge: Object.freeze([37, 48, 68]),
 
-    leadDark: "#11151d",
-    leadLight: "#455065",
+    leadDark: Object.freeze([17, 21, 29]),
+    leadLight: Object.freeze([69, 80, 101]),
 
     cyan: Object.freeze([87, 210, 231]),
     blue: Object.freeze([67, 112, 204]),
@@ -203,6 +217,18 @@
 
   function rgba(color, alpha) {
     return `rgba(${color[0]}, ${color[1]}, ${color[2]}, ${alpha})`;
+  }
+
+  function revealWeight(
+    revealAmount,
+    dormantValue,
+    focusedValue
+  ) {
+    return lerp(
+      dormantValue,
+      focusedValue,
+      clamp(revealAmount, 0, 1)
+    );
   }
 
   function emitReceipt(extra = {}) {
@@ -422,6 +448,7 @@
     return Object.freeze({
       id,
       color,
+
       points:
         Object.freeze(
           points.map((point) =>
@@ -453,7 +480,7 @@
   }
 
   function buildPanes() {
-    const panes = [
+    return [
       createPane(
         "crown-left",
         COLORS.paleCyan,
@@ -821,8 +848,6 @@
         }
       )
     ];
-
-    return panes;
   }
 
   function buildFrameSegments() {
@@ -882,11 +907,9 @@
     context.closePath();
   }
 
-  function traceOuterWindow(
+  function appendOuterWindow(
     context
   ) {
-    context.beginPath();
-
     context.moveTo(
       240,
       24
@@ -949,11 +972,9 @@
     context.closePath();
   }
 
-  function traceInnerWindow(
+  function appendInnerWindow(
     context
   ) {
-    context.beginPath();
-
     context.moveTo(
       240,
       48
@@ -1016,6 +1037,20 @@
     context.closePath();
   }
 
+  function traceOuterWindow(
+    context
+  ) {
+    context.beginPath();
+    appendOuterWindow(context);
+  }
+
+  function traceInnerWindow(
+    context
+  ) {
+    context.beginPath();
+    appendInnerWindow(context);
+  }
+
   function createPaneGradient(
     context,
     pane,
@@ -1065,12 +1100,16 @@
         bounds.maximumY
       );
 
+    const panePresence =
+      revealWeight(
+        revealAmount,
+        0.24,
+        1
+      );
+
     const alpha =
       pane.alpha *
-      (
-        0.52 +
-        revealAmount * 0.48
-      );
+      panePresence;
 
     gradient.addColorStop(
       0,
@@ -1079,8 +1118,8 @@
         clamp(
           alpha *
             (
-              0.68 +
-              shimmer * 0.10
+              0.62 +
+              shimmer * 0.07
             ),
           0,
           1
@@ -1095,8 +1134,8 @@
         clamp(
           alpha *
             (
-              0.92 +
-              shimmer * 0.12
+              0.86 +
+              shimmer * 0.10
             ),
           0,
           1
@@ -1109,7 +1148,7 @@
       rgba(
         pane.color,
         clamp(
-          alpha * 0.58,
+          alpha * 0.50,
           0,
           1
         )
@@ -1138,12 +1177,20 @@
       revealAmount *
       2.2;
 
+    const paneGlowWeight =
+      revealWeight(
+        revealAmount,
+        0.10,
+        1
+      );
+
     context.save();
 
     context.translate(
       shimmer *
         pane.depth *
         0.6,
+
       -depthShift * 0.18
     );
 
@@ -1161,19 +1208,19 @@
       );
 
     context.shadowBlur =
-      10 +
-      pane.glow *
-        26 *
-        revealAmount;
+      revealWeight(
+        revealAmount,
+        2,
+        10 +
+          pane.glow * 26
+      );
 
     context.shadowColor =
       rgba(
         pane.color,
         pane.glow *
-          (
-            0.20 +
-            revealAmount * 0.42
-          )
+          paneGlowWeight *
+          0.56
       );
 
     context.fill();
@@ -1188,14 +1235,19 @@
         DIMENSIONS.designHeight
       );
 
+    const highlightWeight =
+      revealWeight(
+        revealAmount,
+        0.08,
+        1
+      );
+
     highlight.addColorStop(
       0,
       `rgba(255, 255, 255, ${
         pane.highlight *
-        (
-          0.18 +
-          revealAmount * 0.50
-        )
+        0.68 *
+        highlightWeight
       })`
     );
 
@@ -1208,7 +1260,8 @@
       1,
       `rgba(255, 255, 255, ${
         pane.highlight *
-        0.15
+        0.15 *
+        highlightWeight
       })`
     );
 
@@ -1219,19 +1272,27 @@
 
     context.strokeStyle =
       `rgba(255, 255, 255, ${
-        0.035 +
-        pane.highlight *
-          revealAmount *
-          0.26
+        revealWeight(
+          revealAmount,
+          0.015,
+          0.035 +
+            pane.highlight * 0.26
+        )
       })`;
 
-    context.lineWidth = 1.4;
+    context.lineWidth =
+      revealWeight(
+        revealAmount,
+        0.7,
+        1.4
+      );
 
     context.stroke();
 
     if (
       !state.reducedMotion &&
-      pane.grain > 0
+      pane.grain > 0 &&
+      revealAmount >= 0.30
     ) {
       context.globalCompositeOperation =
         "screen";
@@ -1292,6 +1353,34 @@
     context,
     revealAmount
   ) {
+    const darkOpacity =
+      revealWeight(
+        revealAmount,
+        0.24,
+        0.94
+      );
+
+    const lightOpacity =
+      revealWeight(
+        revealAmount,
+        0.07,
+        0.38
+      );
+
+    const outerWidth =
+      revealWeight(
+        revealAmount,
+        DIMENSIONS.leadWidthDormant,
+        DIMENSIONS.leadWidthFocused
+      );
+
+    const innerWidth =
+      revealWeight(
+        revealAmount,
+        DIMENSIONS.innerLeadWidthDormant,
+        DIMENSIONS.innerLeadWidthFocused
+      );
+
     context.save();
 
     context.lineJoin =
@@ -1301,13 +1390,13 @@
       "round";
 
     context.strokeStyle =
-      `rgba(7, 10, 16, ${
-        0.88 +
-        revealAmount * 0.08
-      })`;
+      rgba(
+        COLORS.leadDark,
+        darkOpacity
+      );
 
     context.lineWidth =
-      DIMENSIONS.leadWidth;
+      outerWidth;
 
     state.panes.forEach(
       (pane) => {
@@ -1321,13 +1410,13 @@
     );
 
     context.strokeStyle =
-      `rgba(74, 83, 102, ${
-        0.22 +
-        revealAmount * 0.16
-      })`;
+      rgba(
+        COLORS.leadLight,
+        lightOpacity
+      );
 
     context.lineWidth =
-      DIMENSIONS.innerLeadWidth;
+      innerWidth;
 
     state.panes.forEach(
       (pane) => {
@@ -1347,9 +1436,42 @@
     context,
     revealAmount
   ) {
-    context.save();
+    const frameOpacity =
+      revealWeight(
+        revealAmount,
+        0.28,
+        1
+      );
 
-    traceOuterWindow(context);
+    const edgeOpacity =
+      revealWeight(
+        revealAmount,
+        0.14,
+        0.70
+      );
+
+    const innerEdgeOpacity =
+      revealWeight(
+        revealAmount,
+        0.07,
+        0.34
+      );
+
+    const shadowBlur =
+      revealWeight(
+        revealAmount,
+        5,
+        52
+      );
+
+    const shadowOpacity =
+      revealWeight(
+        revealAmount,
+        0.025,
+        0.24
+      );
+
+    context.save();
 
     const frameGradient =
       context.createLinearGradient(
@@ -1361,62 +1483,99 @@
 
     frameGradient.addColorStop(
       0,
-      COLORS.frameNearBlack
+      rgba(
+        COLORS.frameNearBlack,
+        frameOpacity
+      )
     );
 
     frameGradient.addColorStop(
       0.22,
-      COLORS.frameMid
+      rgba(
+        COLORS.frameMid,
+        frameOpacity
+      )
     );
 
     frameGradient.addColorStop(
       0.50,
-      COLORS.frameNearBlack
+      rgba(
+        COLORS.frameNearBlack,
+        frameOpacity
+      )
     );
 
     frameGradient.addColorStop(
       0.78,
-      COLORS.frameMid
+      rgba(
+        COLORS.frameMid,
+        frameOpacity
+      )
     );
 
     frameGradient.addColorStop(
       1,
-      COLORS.frameNearBlack
+      rgba(
+        COLORS.frameNearBlack,
+        frameOpacity
+      )
     );
+
+    /*
+     * Build one compound path and fill it with the even-odd rule.
+     * This produces a frame ring without erasing panes, lead lines,
+     * internal light, or ribs already drawn inside the Window.
+     */
+    context.beginPath();
+    appendOuterWindow(context);
+    appendInnerWindow(context);
 
     context.fillStyle =
       frameGradient;
 
     context.shadowBlur =
-      28 +
-      revealAmount * 34;
+      shadowBlur;
 
     context.shadowColor =
-      `rgba(65, 132, 183, ${
-        0.08 +
-        revealAmount * 0.16
-      })`;
+      `rgba(65, 132, 183, ${shadowOpacity})`;
 
-    context.fill();
+    context.fill("evenodd");
 
     context.shadowBlur = 0;
 
-    context.strokeStyle =
-      `rgba(94, 108, 132, ${
-        0.46 +
-        revealAmount * 0.24
-      })`;
+    traceOuterWindow(context);
 
-    context.lineWidth = 7;
+    context.strokeStyle =
+      rgba(
+        COLORS.frameEdge,
+        edgeOpacity
+      );
+
+    context.lineWidth =
+      revealWeight(
+        revealAmount,
+        3,
+        7
+      );
 
     context.stroke();
 
     traceInnerWindow(context);
 
-    context.globalCompositeOperation =
-      "destination-out";
+    context.strokeStyle =
+      rgba(
+        COLORS.leadLight,
+        innerEdgeOpacity
+      );
 
-    context.fill();
+    context.lineWidth =
+      revealWeight(
+        revealAmount,
+        1.2,
+        3
+      );
+
+    context.stroke();
 
     context.restore();
   }
@@ -1425,6 +1584,34 @@
     context,
     revealAmount
   ) {
+    const darkOpacity =
+      revealWeight(
+        revealAmount,
+        0.22,
+        0.98
+      );
+
+    const lightOpacity =
+      revealWeight(
+        revealAmount,
+        0.055,
+        0.36
+      );
+
+    const darkWidth =
+      revealWeight(
+        revealAmount,
+        DIMENSIONS.ribWidthDormant,
+        DIMENSIONS.ribWidthFocused
+      );
+
+    const lightWidth =
+      revealWeight(
+        revealAmount,
+        DIMENSIONS.ribHighlightWidthDormant,
+        DIMENSIONS.ribHighlightWidthFocused
+      );
+
     context.save();
 
     context.lineJoin =
@@ -1454,21 +1641,19 @@
         }
 
         context.strokeStyle =
-          `rgba(9, 12, 18, ${
-            0.92 +
-            revealAmount * 0.06
-          })`;
+          `rgba(9, 12, 18, ${darkOpacity})`;
 
-        context.lineWidth = 14;
+        context.lineWidth =
+          darkWidth;
+
         context.stroke();
 
         context.strokeStyle =
-          `rgba(79, 89, 110, ${
-            0.20 +
-            revealAmount * 0.16
-          })`;
+          `rgba(79, 89, 110, ${lightOpacity})`;
 
-        context.lineWidth = 3;
+        context.lineWidth =
+          lightWidth;
+
         context.stroke();
       }
     );
@@ -1499,12 +1684,19 @@
                   state.rendererState ===
                   STATES.FOCUSED
                     ? 1.45
-                    : 0.86
+                    : 0.72
                 )
             ) *
               0.5 +
             0.5
           );
+
+    const dormantLight =
+      revealWeight(
+        revealAmount,
+        0.20,
+        1
+      );
 
     const centerGlow =
       context.createRadialGradient(
@@ -1519,28 +1711,37 @@
     centerGlow.addColorStop(
       0,
       `rgba(202, 240, 255, ${
-        0.10 +
-        revealAmount *
-          (
-            0.16 +
-            pulse * 0.08
-          )
+        (
+          0.08 +
+          revealAmount *
+            (
+              0.18 +
+              pulse * 0.08
+            )
+        ) *
+        dormantLight
       })`
     );
 
     centerGlow.addColorStop(
       0.30,
       `rgba(95, 151, 221, ${
-        0.06 +
-        revealAmount * 0.10
+        (
+          0.035 +
+          revealAmount * 0.12
+        ) *
+        dormantLight
       })`
     );
 
     centerGlow.addColorStop(
       0.62,
       `rgba(118, 74, 169, ${
-        0.04 +
-        revealAmount * 0.08
+        (
+          0.02 +
+          revealAmount * 0.09
+        ) *
+        dormantLight
       })`
     );
 
@@ -1559,7 +1760,10 @@
       DIMENSIONS.designHeight
     );
 
-    if (!state.reducedMotion) {
+    if (
+      !state.reducedMotion &&
+      revealAmount > 0.18
+    ) {
       const beam =
         context.createLinearGradient(
           70,
@@ -1576,12 +1780,11 @@
       beam.addColorStop(
         0.48,
         `rgba(255, 255, 255, ${
-          0.018 +
           revealAmount *
-            (
-              0.024 +
-              pulse * 0.018
-            )
+          (
+            0.024 +
+            pulse * 0.018
+          )
         })`
       );
 
@@ -1623,18 +1826,18 @@
 
     context.strokeStyle =
       `rgba(193, 171, 118, ${
-        0.08 +
-        dormantWeight * 0.08
+        dormantWeight * 0.045
       })`;
 
-    context.lineWidth = 2;
+    context.lineWidth =
+      1.2;
 
     context.shadowBlur =
-      18;
+      6;
 
     context.shadowColor =
       `rgba(94, 158, 202, ${
-        dormantWeight * 0.10
+        dormantWeight * 0.035
       })`;
 
     context.stroke();
@@ -1716,9 +1919,7 @@
 
         gradient.addColorStop(
           0,
-          `rgba(255, 250, 224, ${
-            alpha
-          })`
+          `rgba(255, 250, 224, ${alpha})`
         );
 
         gradient.addColorStop(
@@ -1819,10 +2020,10 @@
         : Math.sin(
             state.time * 0.24
           ) *
-          1.2 *
+          0.75 *
           (
             1 -
-            reveal * 0.65
+            reveal * 0.72
           );
 
     const verticalDrift =
@@ -1832,10 +2033,10 @@
             state.time * 0.31 +
             1.2
           ) *
-          1.6 *
+          0.92 *
           (
             1 -
-            reveal * 0.52
+            reveal * 0.62
           );
 
     context.translate(

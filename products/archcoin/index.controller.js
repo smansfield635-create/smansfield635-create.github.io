@@ -1,302 +1,203 @@
-/* ==========================================================================
-   /products/archcoin/index.controller.js
-
+/* products/archcoin/index.controller.js
    ARCHCOIN
-   TRANSACTION ORBIT CONTROLLER
-   PRODUCT-LOCAL STATE AUTHORITY
+   Four-coin constellation controller with per-coin cluster descent,
+   information-panel state authority, local return logic, and center-compass menu control.
 
-   Contract:
-   - Own durable page state for the anchored ARCHCOIN HTML.
-   - Keep four-coin orbit focus distinct from selected information node.
-   - Open a per-coin information cluster without requiring HTML renewal.
-   - Support semantic fallback controls even before the motion runtime loads.
-   - Expose bounded request APIs for the later geometry/runtime layer.
-   - Preserve non-financial-offer posture and fail-soft behavior.
+   Anchor-role intent:
+   - This file is the controlling state authority for the ARCHCOIN page rebuild.
+   - Runtime geometry must conform to this controller.
+   - HTML hooks and panel surfaces must conform to this controller.
+   - Local return-to-orbit is distinct from center-compass navigation.
+   - Coin selection, cluster preview, cluster commitment, information selection,
+     lens/tab selection, and compass-menu state remain distinct.
 
-   Owns:
-   - orbit state
-   - focused coin
-   - selected coin
-   - selected information node
-   - return-to-orbit behavior
-   - semantic fallback cluster controls
-   - controller receipts
+   Ownership:
+   - Page state machine.
+   - Published controller APIs.
+   - DOM dataset synchronization.
+   - Information panel synchronization.
+   - Return-to-orbit / return-to-cluster behavior.
+   - Center-compass menu open/close state.
+   - Guidance text.
+   - Controller receipt emission.
 
-   Does not own:
-   - specialized geometry rendering
-   - per-frame motion
-   - drag/flick sampling
-   - canvas/WebGL drawing
-   - remote data authority
-   - legal/financial authority
-========================================================================== */
+   Non-ownership:
+   - 3D crystal rendering.
+   - WebGL geometry, shaders, depth scoring, projection, or hit testing.
+   - External navigation execution beyond ordinary links already present in HTML.
+   - Financial execution, custody, exchange behavior, or launch claims.
+*/
 
 (() => {
   "use strict";
 
   const CONTRACT = Object.freeze({
-    id: "ARCHCOIN_TRANSACTION_ORBIT_CONTROLLER_REBUILD_v1",
-    previousId: "ARCHCOIN_TRANSACTION_TEMPLATE_AND_BOND_LAYER_REBUILD_v2_HTML_ANCHOR",
+    id: "ARCHCOIN_CONTROLLER_FOUR_COIN_CONSTELLATION_CLUSTER_INFORMATION_REBUILD_v1",
     file: "/products/archcoin/index.controller.js",
-    releaseId: "archcoin-transaction-orbit-controller-v1",
+    releaseId: "archcoin-controller-constellation-v1",
     visualPassClaimed: false,
     productionAuthorized: false,
     deploymentAuthorized: false
   });
 
   const STATES = Object.freeze({
-    ORBIT: "ARCHCOIN_TRANSACTION_ORBIT",
-    CLUSTER_OPEN: "FOUR_COIN_POSITION_SELECTED",
-    NODE_SELECTED: "TRANSACTION_LAYER_DESCENDED",
-    RETURNING: "RETURNING_TO_TRANSACTION_ORBIT",
+    ORBIT: "ORBIT",
+    CLUSTER_OPEN: "CLUSTER_OPEN",
+    INFO_OPEN: "INFO_OPEN",
     HELD: "HELD"
   });
 
-  const COINS = Object.freeze(["contract", "receivable", "payable", "allocation"]);
+  const PHASES = Object.freeze({
+    COMMITTED: "COMMITTED",
+    PREVIEWING: "PREVIEWING"
+  });
 
-  const NODE_TYPES = Object.freeze({
-    ENGINEERING: "engineering",
-    PLATFORM: "platform",
-    ACCOUNTABILITY: "accountability",
-    GUARDRAILS: "guardrails"
+  const WINGS = Object.freeze(["north", "east", "south", "west"]);
+  const LENS_TABS = Object.freeze(["overview", "engineering", "platform", "governance"]);
+
+  const COIN_BY_WING = Object.freeze({
+    north: "contract",
+    east: "receivable",
+    south: "payable",
+    west: "allocation"
+  });
+
+  const WING_BY_COIN = Object.freeze({
+    contract: "north",
+    receivable: "east",
+    payable: "south",
+    allocation: "west"
+  });
+
+  const DEFAULT_PANEL_COPY = Object.freeze({
+    eyebrow: "Selected path",
+    title: "Choose a coin.",
+    purpose:
+      "Start with one of the four outer coins. Each coin opens a local cluster. Each local cluster opens information. Return to Orbit restores the family field. The center compass opens higher-order compass destinations.",
+    relationship:
+      "Local inspection and cross-chamber navigation remain separate. Return to Orbit is not the same as the center compass."
+  });
+
+  const DEFAULT_GUIDANCE =
+    "Drag or rotate through the four-coin field. Select a coin to open its cluster. Select a cluster path to inspect information. Return to Orbit restores the coin family field.";
+
+  const COIN_PANEL_COPY = Object.freeze({
+    north: Object.freeze({
+      eyebrow: "North Coin",
+      title: "Contract Coin",
+      purpose:
+        "Contract Coin governs authority, permissions, terms, signatures, execution frame, and what authorizes movement before value proceeds any farther.",
+      relationship:
+        "Contract Coin is the local north authority surface. Open one of its cluster points to inspect overview, engineering, platform, or governance."
+    }),
+    east: Object.freeze({
+      eyebrow: "East Coin",
+      title: "Receivable Coin",
+      purpose:
+        "Receivable Coin governs inbound value, arrival visibility, inflow accounting, source reading, and how received value becomes legible inside the family field.",
+      relationship:
+        "Receivable Coin is the local east intake surface. Open one of its cluster points to inspect overview, engineering, platform, or governance."
+    }),
+    south: Object.freeze({
+      eyebrow: "South Coin",
+      title: "Payable Coin",
+      purpose:
+        "Payable Coin governs obligation, settlement pressure, what is owed, how duty is carried, and how outgoing liability remains visible rather than disappearing behind vague movement.",
+      relationship:
+        "Payable Coin is the local south obligation surface. Open one of its cluster points to inspect overview, engineering, platform, or governance."
+    }),
+    west: Object.freeze({
+      eyebrow: "West Coin",
+      title: "Allocation Coin",
+      purpose:
+        "Allocation Coin governs distribution, retained value, growth channels, allocation rules, and how expansion remains disciplined inside the family frame.",
+      relationship:
+        "Allocation Coin is the local west growth surface. Open one of its cluster points to inspect overview, engineering, platform, or governance."
+    })
   });
 
   const RECEIPT = {
     contractId: CONTRACT.id,
-    previousContractId: CONTRACT.previousId,
     status: "pending",
+    controllerInitialized: false,
     state: STATES.ORBIT,
-    orbitFocus: "contract",
-    selectedCoinPosition: "",
-    selectedNodeId: "",
-    selectedNodeType: "",
-    selectedSectionId: "",
-    panelDescended: false,
-    lifecycleVisible: true,
-    runtimePresent: false,
-    lastAction: "",
-    lastFailure: null,
-    visualPassClaimed: false
+    selectedWing: "",
+    selectedCoin: "",
+    selectedRoom: "",
+    activeTab: "overview",
+    orbitGestureActive: false,
+    clusterGestureActive: false,
+    orbitPhase: PHASES.COMMITTED,
+    clusterPhase: PHASES.COMMITTED,
+    orbitFocus: "north",
+    orbitPreviewFocus: "north",
+    clusterPrimaryRoom: "",
+    clusterPreviewPrimaryRoom: "",
+    activeClusterWing: "",
+    compassMenuOpen: false,
+    visualPassClaimed: false,
+    failureReason: ""
   };
-
-  const COIN_CONFIG = Object.freeze({
-    contract: Object.freeze({
-      id: "contract",
-      label: "Contract",
-      short: "Authority binds movement",
-      panelTitle: "Contract Authority",
-      panelBody:
-        "This position governs permissions, signatures, scope, terms, and the authorization frame that allows value to move inside a readable transaction structure.",
-      sectionId: "four-coins-title",
-      nodes: Object.freeze([
-        Object.freeze({
-          id: "contract-engineering",
-          type: NODE_TYPES.ENGINEERING,
-          label: "Engineering",
-          title: "Contract authority as system entry logic.",
-          body:
-            "The contract position is the first gate. It defines which movement is authorized, who can initiate it, and what rule frame governs the rest of the transaction orbit.",
-          sectionId: "four-coins-title"
-        }),
-        Object.freeze({
-          id: "contract-platform",
-          type: NODE_TYPES.PLATFORM,
-          label: "Platform",
-          title: "Contract becomes the transaction frame.",
-          body:
-            "In platform terms, this position acts like the declared ruleset for the movement. It is not the value itself. It is the permissioned frame that makes downstream movement interpretable.",
-          sectionId: "transaction-orbit"
-        }),
-        Object.freeze({
-          id: "contract-accountability",
-          type: NODE_TYPES.ACCOUNTABILITY,
-          label: "Accountability",
-          title: "Authority must stay inspectable.",
-          body:
-            "If the contract frame is vague, the rest of the transaction becomes vague. Accountability begins by making authority readable before value, obligation, and allocation claims spread outward.",
-          sectionId: "interoperability-title"
-        }),
-        Object.freeze({
-          id: "contract-guardrails",
-          type: NODE_TYPES.GUARDRAILS,
-          label: "Guardrails",
-          title: "Authority is not automatic legal finality.",
-          body:
-            "This page can describe authority structure, but it does not itself create legal enforceability, custody, settlement finality, or live financial execution.",
-          sectionId: "guardrails"
-        })
-      ])
-    }),
-
-    receivable: Object.freeze({
-      id: "receivable",
-      label: "Receivable",
-      short: "Inbound value arrives",
-      panelTitle: "Inbound Value / Receivable",
-      panelBody:
-        "This position names what entered, from where, for what purpose, and through which route. Inbound value must be visible before larger system claims are trusted.",
-      sectionId: "four-coins-title",
-      nodes: Object.freeze([
-        Object.freeze({
-          id: "receivable-engineering",
-          type: NODE_TYPES.ENGINEERING,
-          label: "Engineering",
-          title: "Inbound value needs a named arrival surface.",
-          body:
-            "A receivable is not just 'money showed up.' It is a declared arrival event: source, amount class, route, timing, and intended support all need a readable frame.",
-          sectionId: "four-coins-title"
-        }),
-        Object.freeze({
-          id: "receivable-platform",
-          type: NODE_TYPES.PLATFORM,
-          label: "Platform",
-          title: "Receivable creates the inbound ledger edge.",
-          body:
-            "Inside the ARCHCOIN template, receivable is the inbound side of the bond map. It identifies the incoming side of the transaction before obligation and allocation are interpreted.",
-          sectionId: "value-lifecycle"
-        }),
-        Object.freeze({
-          id: "receivable-accountability",
-          type: NODE_TYPES.ACCOUNTABILITY,
-          label: "Accountability",
-          title: "Inbound movement should be checkable.",
-          body:
-            "The receivable position increases trust when the source and purpose of incoming value can be checked rather than inferred from hype or vague public claims.",
-          sectionId: "use-cases-title"
-        }),
-        Object.freeze({
-          id: "receivable-guardrails",
-          type: NODE_TYPES.GUARDRAILS,
-          label: "Guardrails",
-          title: "Receivable visibility is not a live custody claim.",
-          body:
-            "Making inbound value visible does not mean this page controls a wallet, exchange, bridge, or custody layer. Visibility is not execution authority.",
-          sectionId: "guardrails"
-        })
-      ])
-    }),
-
-    payable: Object.freeze({
-      id: "payable",
-      label: "Payable",
-      short: "Obligation must settle",
-      panelTitle: "Outbound Obligation / Payable",
-      panelBody:
-        "Every transaction carries responsibility. The payable position names the pressure owed, what must be settled, and where outbound duty remains active.",
-      sectionId: "four-coins-title",
-      nodes: Object.freeze([
-        Object.freeze({
-          id: "payable-engineering",
-          type: NODE_TYPES.ENGINEERING,
-          label: "Engineering",
-          title: "Outbound duty belongs in the architecture.",
-          body:
-            "A system that tracks inflow but hides obligation is incomplete. Payable keeps settlement pressure visible so the transaction can be read as a whole instead of as one optimistic half.",
-          sectionId: "four-coins-title"
-        }),
-        Object.freeze({
-          id: "payable-platform",
-          type: NODE_TYPES.PLATFORM,
-          label: "Platform",
-          title: "Payable names what the system owes outward.",
-          body:
-            "In platform terms, payable is the outbound commitment surface. It is where duty, settlement, and responsibility stay attached to the movement rather than being left outside the model.",
-          sectionId: "transaction-orbit"
-        }),
-        Object.freeze({
-          id: "payable-accountability",
-          type: NODE_TYPES.ACCOUNTABILITY,
-          label: "Accountability",
-          title: "Responsibility is part of trust.",
-          body:
-            "Trust does not come only from recording what came in. It also comes from naming what is owed, what pressure remains, and what must still be settled inside the bond frame.",
-          sectionId: "interoperability-title"
-        }),
-        Object.freeze({
-          id: "payable-guardrails",
-          type: NODE_TYPES.GUARDRAILS,
-          label: "Guardrails",
-          title: "Obligation visibility is not settlement execution.",
-          body:
-            "This controller can describe payable logic, but it does not execute settlement, guarantee finality, or claim operational control over a live financial payment network.",
-          sectionId: "guardrails"
-        })
-      ])
-    }),
-
-    allocation: Object.freeze({
-      id: "allocation",
-      label: "Allocation",
-      short: "Growth stays governed",
-      panelTitle: "Allocation / Growth",
-      panelBody:
-        "Allocation governs distribution, reinvestment, expansion pressure, and growth movement without pretending that value can expand safely outside a declared bond frame.",
-      sectionId: "four-coins-title",
-      nodes: Object.freeze([
-        Object.freeze({
-          id: "allocation-engineering",
-          type: NODE_TYPES.ENGINEERING,
-          label: "Engineering",
-          title: "Allocation is the governed expansion path.",
-          body:
-            "This position prevents growth language from floating free of transaction structure. It names where value is directed, what rule set governs that direction, and how expansion stays bounded.",
-          sectionId: "four-coins-title"
-        }),
-        Object.freeze({
-          id: "allocation-platform",
-          type: NODE_TYPES.PLATFORM,
-          label: "Platform",
-          title: "Allocation is not an afterthought bucket.",
-          body:
-            "Inside the ARCHCOIN model, allocation is a primary coin position. It belongs in the transaction template from the beginning, not as an informal decision after value already moved.",
-          sectionId: "adapter-layer"
-        }),
-        Object.freeze({
-          id: "allocation-accountability",
-          type: NODE_TYPES.ACCOUNTABILITY,
-          label: "Accountability",
-          title: "Growth should remain readable.",
-          body:
-            "Allocation becomes more trustworthy when downstream distribution, reinvestment, or expansion pressure can be inspected as part of the same bond-layer transaction model.",
-          sectionId: "use-cases-title"
-        }),
-        Object.freeze({
-          id: "allocation-guardrails",
-          type: NODE_TYPES.GUARDRAILS,
-          label: "Guardrails",
-          title: "Allocation framing is not a profit promise.",
-          body:
-            "Naming allocation or growth does not promise yield, return, appreciation, tradability, or live investment performance. Growth structure is not a financial promise.",
-          sectionId: "guardrails"
-        })
-      ])
-    })
-  });
 
   const state = {
     root: null,
-    orbitStage: null,
-    geometryMount: null,
-    receiptOutput: null,
-    coinButtons: [],
-    lifecycleNodes: [],
-    adapterCards: [],
-    generatedPanel: null,
-    generatedEyebrow: null,
-    generatedTitle: null,
-    generatedBody: null,
-    generatedNodeBar: null,
-    generatedNodeDetails: null,
-    generatedReturnButton: null,
-    generatedScrollButton: null,
+    scene: null,
+    objects: null,
+    guidance: null,
 
-    current: STATES.ORBIT,
-    orbitFocus: "contract",
-    selectedCoinPosition: "",
-    selectedNodeId: "",
-    panelDescended: false,
-    lifecycleVisible: true,
-    initialized: false
+    centerCompassButton: null,
+    centerCompassShell: null,
+    centerCompassClose: null,
+
+    panel: null,
+    panelEyebrow: null,
+    panelTitle: null,
+    panelPurpose: null,
+    panelRelationship: null,
+    returnToOrbitButton: null,
+    returnToClusterButton: null,
+
+    lensTabs: new Map(),
+    lensPanels: new Map(),
+
+    receiptOutput: null,
+
+    currentState: STATES.ORBIT,
+
+    orbit: {
+      focusWing: "north",
+      previewFocusWing: "north",
+      phase: PHASES.COMMITTED,
+      gestureActive: false,
+      quaternion: [0, 0, 0, 1]
+    },
+
+    cluster: {
+      wing: "",
+      primaryRoom: "",
+      previewPrimaryRoom: "",
+      phase: PHASES.COMMITTED,
+      gestureActive: false,
+      quaternionByWing: new Map()
+    },
+
+    selected: {
+      wing: "",
+      coinId: "",
+      roomId: "",
+      destinationType: "",
+      destinationId: "",
+      destinationLabel: "",
+      route: ""
+    },
+
+    activeTab: "overview",
+    compassMenuOpen: false,
+
+    held: false,
+    failureReason: "",
+
+    suppressClickUntil: 0
   };
 
   function qs(selector, root = document) {
@@ -307,55 +208,114 @@
     return Array.from(root.querySelectorAll(selector));
   }
 
-  function normalizeCoin(value) {
+  function normalizeWing(value) {
+    const wing = String(value || "").trim().toLowerCase();
+    return WINGS.includes(wing) ? wing : "";
+  }
+
+  function normalizeCoinId(value) {
     const coin = String(value || "").trim().toLowerCase();
-    return COINS.includes(coin) ? coin : "";
+    return WING_BY_COIN[coin] ? coin : "";
   }
 
-  function findCoinConfig(coin) {
-    const normalized = normalizeCoin(coin);
-    return normalized ? COIN_CONFIG[normalized] || null : null;
+  function normalizeRoomId(value) {
+    return String(value || "").trim();
   }
 
-  function findNodeById(coin, nodeId) {
-    const config = findCoinConfig(coin);
-    if (!config) return null;
-    return config.nodes.find((node) => node.id === String(nodeId || "").trim()) || null;
+  function normalizeTab(value) {
+    const tab = String(value || "").trim().toLowerCase();
+    return LENS_TABS.includes(tab) ? tab : "overview";
+  }
+
+  function now() {
+    return performance.now();
+  }
+
+  function roomElementsForWing(wing) {
+    return qsa(`[data-archcoin-room][data-wing="${wing}"]`, state.root);
+  }
+
+  function roomElementById(roomId) {
+    return qs(`[data-archcoin-room][data-room-id="${cssEscape(roomId)}"]`, state.root);
+  }
+
+  function coinElementByWing(wing) {
+    return qs(`[data-archcoin-cardinal][data-wing="${wing}"]`, state.root);
+  }
+
+  function cssEscape(value) {
+    const text = String(value || "");
+    if (globalThis.CSS && typeof globalThis.CSS.escape === "function") {
+      return globalThis.CSS.escape(text);
+    }
+    return text.replace(/["\\]/g, "\\$&");
+  }
+
+  function getRoomTab(roomId) {
+    const element = roomElementById(roomId);
+    return element ? normalizeTab(element.dataset.tab) : "overview";
+  }
+
+  function firstRoomIdForWing(wing) {
+    const rooms = roomElementsForWing(wing);
+    return rooms.length ? normalizeRoomId(rooms[0].dataset.roomId) : "";
+  }
+
+  function coinIdForWing(wing) {
+    return COIN_BY_WING[wing] || "";
+  }
+
+  function wingForCoinId(coinId) {
+    return WING_BY_COIN[coinId] || "";
+  }
+
+  function getCoinPanelCopy(wing) {
+    return COIN_PANEL_COPY[wing] || DEFAULT_PANEL_COPY;
+  }
+
+  function dispatch(type, detail = {}) {
+    globalThis.dispatchEvent(
+      new CustomEvent(type, {
+        detail: Object.freeze({ ...detail })
+      })
+    );
   }
 
   function emitReceipt(extra = {}) {
-    const runtimePresent = Boolean(globalThis.ARCHCOIN_ORBIT_RUNTIME);
-    const selectedNode = findNodeById(state.selectedCoinPosition, state.selectedNodeId);
-
-    Object.assign(
-      RECEIPT,
-      {
-        status: state.current === STATES.HELD ? "held" : "available",
-        state: state.current,
-        orbitFocus: state.orbitFocus,
-        selectedCoinPosition: state.selectedCoinPosition,
-        selectedNodeId: state.selectedNodeId,
-        selectedNodeType: selectedNode ? selectedNode.type : "",
-        selectedSectionId: selectedNode ? selectedNode.sectionId : "",
-        panelDescended: state.panelDescended,
-        lifecycleVisible: state.lifecycleVisible,
-        runtimePresent,
-        visualPassClaimed: false
-      },
-      extra
-    );
+    Object.assign(RECEIPT, {
+      status: state.held ? "held" : "available",
+      controllerInitialized: Boolean(state.root),
+      state: state.currentState,
+      selectedWing: state.selected.wing,
+      selectedCoin: state.selected.coinId,
+      selectedRoom: state.selected.roomId,
+      activeTab: state.activeTab,
+      orbitGestureActive: state.orbit.gestureActive,
+      clusterGestureActive: state.cluster.gestureActive,
+      orbitPhase: state.orbit.phase,
+      clusterPhase: state.cluster.phase,
+      orbitFocus: state.orbit.focusWing,
+      orbitPreviewFocus: state.orbit.previewFocusWing,
+      clusterPrimaryRoom: state.cluster.primaryRoom,
+      clusterPreviewPrimaryRoom: state.cluster.previewPrimaryRoom,
+      activeClusterWing: state.cluster.wing,
+      compassMenuOpen: state.compassMenuOpen,
+      visualPassClaimed: false,
+      failureReason: state.failureReason || "",
+      ...extra
+    });
 
     const serialized = JSON.stringify(RECEIPT);
 
     if (state.root) {
       state.root.dataset.archcoinControllerReceipt = serialized;
       state.root.dataset.archcoinControllerStatus = RECEIPT.status;
-      state.root.dataset.archcoinState = state.current;
-      state.root.dataset.archcoinOrbitFocus = state.orbitFocus;
-      state.root.dataset.archcoinSelectedCoinPosition = state.selectedCoinPosition;
-      state.root.dataset.archcoinSelectedNodeId = state.selectedNodeId;
-      state.root.dataset.archcoinPanelDescended = state.panelDescended ? "true" : "false";
       state.root.dataset.visualPassClaimed = "false";
+    }
+
+    if (state.scene) {
+      state.scene.dataset.archcoinControllerStatus = RECEIPT.status;
+      state.scene.dataset.visualPassClaimed = "false";
     }
 
     if (state.receiptOutput) {
@@ -364,579 +324,983 @@
       state.receiptOutput.dataset.visualPassClaimed = "false";
     }
 
-    globalThis.ARCHCOIN_ORBIT_CONTROLLER_RECEIPT = Object.freeze({
-      ...RECEIPT
-    });
+    globalThis.DGB_ARCHCOIN_CONTROLLER_RECEIPT = Object.freeze({ ...RECEIPT });
   }
 
-  function setState(nextState, action) {
-    state.current = nextState;
-    syncPresentation();
-    emitReceipt({
-      lastAction: action || `state:${nextState}`,
-      lastFailure: null
-    });
-    return true;
+  function failHeld(reason) {
+    state.held = true;
+    state.failureReason = String(reason || "UNKNOWN_CONTROLLER_FAILURE");
+    state.currentState = STATES.HELD;
+    syncAll();
+    emitReceipt({ status: "held" });
   }
 
-  function createGeneratedPanel() {
-    const panel = document.createElement("section");
-    panel.className = "panel section";
-    panel.id = "archcoin-controller-panel";
-    panel.setAttribute("aria-labelledby", "archcoin-controller-title");
-    panel.dataset.archcoinControllerPanel = "true";
-
-    panel.innerHTML = `
-      <div class="kicker">Transaction orbit controller</div>
-      <h2 id="archcoin-controller-title">Select a coin to inspect its information cluster.</h2>
-      <div class="transaction-summary" data-archcoin-controller-summary="true">
-        <strong data-archcoin-controller-eyebrow="true">ARCHCOIN Orbit</strong>
-        <p data-archcoin-controller-body="true">
-          The four outer positions behave as the primary transaction orbit. Selecting a coin opens its information cluster. Selecting a cluster item takes you to the relevant page section. Return to Orbit closes the descended state.
-        </p>
-      </div>
-      <div class="actions" data-archcoin-controller-nodebar="true"></div>
-      <div class="card" data-archcoin-controller-details="true" aria-live="polite">
-        <b>Cluster node</b>
-        <strong data-archcoin-controller-node-title="true">No node selected yet.</strong>
-        <span data-archcoin-controller-node-body="true">
-          Choose a node after opening a coin cluster.
-        </span>
-      </div>
-      <div class="actions">
-        <button class="button gold" type="button" data-archcoin-return-orbit="true" hidden>Return to Orbit</button>
-        <button class="button" type="button" data-archcoin-scroll-target="true" hidden>Open related section</button>
-      </div>
-    `;
-
-    const transactionSection = qs("#transaction-orbit", state.root);
-    if (!transactionSection || !transactionSection.parentNode) {
-      throw new Error("ARCHCOIN_TRANSACTION_SECTION_NOT_FOUND");
+  function safeQuaternion(value, fallback = [0, 0, 0, 1]) {
+    const source =
+      Array.isArray(value) || ArrayBuffer.isView(value) ? Array.from(value) : [];
+    if (source.length !== 4) {
+      return fallback.slice();
     }
-
-    transactionSection.insertAdjacentElement("afterend", panel);
-
-    state.generatedPanel = panel;
-    state.generatedEyebrow = qs("[data-archcoin-controller-eyebrow]", panel);
-    state.generatedTitle = qs("#archcoin-controller-title", panel);
-    state.generatedBody = qs("[data-archcoin-controller-body]", panel);
-    state.generatedNodeBar = qs("[data-archcoin-controller-nodebar]", panel);
-    state.generatedNodeDetails = {
-      title: qs("[data-archcoin-controller-node-title]", panel),
-      body: qs("[data-archcoin-controller-node-body]", panel)
-    };
-    state.generatedReturnButton = qs("[data-archcoin-return-orbit]", panel);
-    state.generatedScrollButton = qs("[data-archcoin-scroll-target]", panel);
+    const x = Number(source[0]);
+    const y = Number(source[1]);
+    const z = Number(source[2]);
+    const w = Number(source[3]);
+    if (![x, y, z, w].every(Number.isFinite)) {
+      return fallback.slice();
+    }
+    const length = Math.hypot(x, y, z, w);
+    if (!Number.isFinite(length) || length <= 1e-12) {
+      return fallback.slice();
+    }
+    return [x / length, y / length, z / length, w / length];
   }
 
-  function scrollToSection(sectionId) {
-    const target =
-      qs(`#${CSS.escape(sectionId)}`, state.root) ||
-      qs(`#${CSS.escape(sectionId)}`, document);
+  function syncDatasets() {
+    if (!state.root || !state.scene) {
+      return;
+    }
 
-    if (!target) return false;
+    state.root.dataset.archcoinState = state.currentState.toLowerCase();
+    state.scene.dataset.archcoinState =
+      state.currentState === STATES.ORBIT
+        ? "orbit"
+        : state.currentState === STATES.CLUSTER_OPEN
+          ? "cluster-open"
+          : state.currentState === STATES.INFO_OPEN
+            ? "info-open"
+            : "held";
 
-    target.scrollIntoView({
-      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
-      block: "start",
-      inline: "nearest"
-    });
+    state.scene.dataset.archcoinSelectedWing = state.selected.wing;
+    state.scene.dataset.archcoinSelectedRoom = state.selected.roomId;
+    state.scene.dataset.archcoinActiveTab = state.activeTab;
+    state.scene.dataset.archcoinCompassMenu = state.compassMenuOpen ? "open" : "closed";
 
-    return true;
+    state.root.dataset.selectedCardinal = state.selected.wing;
+    state.root.dataset.selectedCoin = state.selected.coinId;
+    state.root.dataset.selectedRoom = state.selected.roomId;
+    state.root.dataset.selectedDestinationType = state.selected.destinationType;
+    state.root.dataset.selectedDestinationId = state.selected.destinationId;
+    state.root.dataset.selectedDestinationLabel = state.selected.destinationLabel;
+    state.root.dataset.selectedRoute = state.selected.route;
+
+    state.root.dataset.orbitFocus = state.orbit.focusWing;
+    state.root.dataset.orbitPreviewFocus = state.orbit.previewFocusWing;
+    state.root.dataset.orbitPhase = state.orbit.phase;
+    state.root.dataset.orbitGestureActive = String(state.orbit.gestureActive);
+    state.root.dataset.orbitQuaternion = JSON.stringify(state.orbit.quaternion);
+
+    state.root.dataset.activeClusterWing = state.cluster.wing;
+    state.root.dataset.clusterPrimaryRoom = state.cluster.primaryRoom;
+    state.root.dataset.clusterPreviewPrimaryRoom = state.cluster.previewPrimaryRoom;
+    state.root.dataset.clusterPhase = state.cluster.phase;
+    state.root.dataset.clusterGestureActive = String(state.cluster.gestureActive);
+
+    const activeClusterQuaternion =
+      state.cluster.wing && state.cluster.quaternionByWing.has(state.cluster.wing)
+        ? state.cluster.quaternionByWing.get(state.cluster.wing)
+        : [0, 0, 0, 1];
+
+    state.root.dataset.clusterQuaternion = JSON.stringify(activeClusterQuaternion);
+    state.root.dataset.panelDescended = String(state.currentState === STATES.INFO_OPEN);
+    state.root.dataset.archcoinCompassMenuOpen = String(state.compassMenuOpen);
   }
 
-  function clearNodeBar() {
-    if (!state.generatedNodeBar) return;
-    state.generatedNodeBar.replaceChildren();
-  }
+  function syncSelectionAttributes() {
+    qsa("[data-archcoin-cardinal]", state.root).forEach(element => {
+      const wing = normalizeWing(element.dataset.wing || element.dataset.coinId);
+      const selected = wing && wing === state.selected.wing;
+      const primary = wing && wing === state.orbit.focusWing;
 
-  function rebuildNodeBar(coin) {
-    clearNodeBar();
-
-    const config = findCoinConfig(coin);
-    if (!config || !state.generatedNodeBar) return;
-
-    config.nodes.forEach((node) => {
-      const button = document.createElement("button");
-      button.type = "button";
-      button.className = "button";
-      button.dataset.archcoinClusterNode = node.id;
-      button.dataset.archcoinClusterCoin = config.id;
-      button.textContent = node.label;
-      button.setAttribute("aria-pressed", node.id === state.selectedNodeId ? "true" : "false");
-      state.generatedNodeBar.appendChild(button);
-    });
-  }
-
-  function updateControllerPanelForOrbit() {
-    if (!state.generatedPanel) return;
-
-    if (state.generatedTitle) {
-      state.generatedTitle.textContent = "Select a coin to inspect its information cluster.";
-    }
-
-    if (state.generatedEyebrow) {
-      state.generatedEyebrow.textContent = "ARCHCOIN Orbit";
-    }
-
-    if (state.generatedBody) {
-      state.generatedBody.textContent =
-        "The four outer positions behave as the primary transaction orbit. Selecting a coin opens its information cluster. Selecting a cluster item takes you to the relevant page section. Return to Orbit closes the descended state.";
-    }
-
-    if (state.generatedNodeDetails.title) {
-      state.generatedNodeDetails.title.textContent = "No node selected yet.";
-    }
-
-    if (state.generatedNodeDetails.body) {
-      state.generatedNodeDetails.body.textContent =
-        "Choose a coin first, then inspect one of its cluster nodes.";
-    }
-
-    clearNodeBar();
-
-    if (state.generatedReturnButton) {
-      state.generatedReturnButton.hidden = true;
-      state.generatedReturnButton.disabled = true;
-    }
-
-    if (state.generatedScrollButton) {
-      state.generatedScrollButton.hidden = true;
-      state.generatedScrollButton.disabled = true;
-      delete state.generatedScrollButton.dataset.sectionId;
-    }
-  }
-
-  function updateControllerPanelForCoin(coin) {
-    const config = findCoinConfig(coin);
-    if (!config || !state.generatedPanel) return;
-
-    if (state.generatedTitle) {
-      state.generatedTitle.textContent = `${config.panelTitle} cluster is open.`;
-    }
-
-    if (state.generatedEyebrow) {
-      state.generatedEyebrow.textContent = config.label;
-    }
-
-    if (state.generatedBody) {
-      state.generatedBody.textContent = config.panelBody;
-    }
-
-    if (state.generatedNodeDetails.title) {
-      state.generatedNodeDetails.title.textContent = `${config.label} cluster`;
-    }
-
-    if (state.generatedNodeDetails.body) {
-      state.generatedNodeDetails.body.textContent =
-        "Select one of the cluster nodes below to descend into the related information surface on this page.";
-    }
-
-    rebuildNodeBar(coin);
-
-    if (state.generatedReturnButton) {
-      state.generatedReturnButton.hidden = false;
-      state.generatedReturnButton.disabled = false;
-    }
-
-    if (state.generatedScrollButton) {
-      state.generatedScrollButton.hidden = false;
-      state.generatedScrollButton.disabled = false;
-      state.generatedScrollButton.textContent = "Open related section";
-      state.generatedScrollButton.dataset.sectionId = config.sectionId;
-    }
-  }
-
-  function updateControllerPanelForNode(coin, nodeId) {
-    const config = findCoinConfig(coin);
-    const node = findNodeById(coin, nodeId);
-
-    if (!config || !node || !state.generatedPanel) return;
-
-    if (state.generatedTitle) {
-      state.generatedTitle.textContent = `${config.panelTitle} · ${node.label}`;
-    }
-
-    if (state.generatedEyebrow) {
-      state.generatedEyebrow.textContent = `${config.label} · ${node.label}`;
-    }
-
-    if (state.generatedBody) {
-      state.generatedBody.textContent = config.panelBody;
-    }
-
-    if (state.generatedNodeDetails.title) {
-      state.generatedNodeDetails.title.textContent = node.title;
-    }
-
-    if (state.generatedNodeDetails.body) {
-      state.generatedNodeDetails.body.textContent = node.body;
-    }
-
-    rebuildNodeBar(coin);
-
-    qsa("[data-archcoin-cluster-node]", state.generatedPanel).forEach((button) => {
-      const selected = button.dataset.archcoinClusterNode === node.id;
-      button.setAttribute("aria-pressed", selected ? "true" : "false");
-      button.classList.toggle("green", selected);
-    });
-
-    if (state.generatedReturnButton) {
-      state.generatedReturnButton.hidden = false;
-      state.generatedReturnButton.disabled = false;
-    }
-
-    if (state.generatedScrollButton) {
-      state.generatedScrollButton.hidden = false;
-      state.generatedScrollButton.disabled = false;
-      state.generatedScrollButton.textContent = "Open related section";
-      state.generatedScrollButton.dataset.sectionId = node.sectionId;
-    }
-  }
-
-  function syncCoinButtons() {
-    state.coinButtons.forEach((button) => {
-      const coin = normalizeCoin(button.dataset.archcoinCoinPosition);
-      const focused = coin === state.orbitFocus;
-      const selected = coin === state.selectedCoinPosition;
-
-      button.dataset.archcoinFocused = focused ? "true" : "false";
-      button.dataset.archcoinSelected = selected ? "true" : "false";
-      button.setAttribute("aria-pressed", selected ? "true" : "false");
-
-      if (focused || selected) {
-        button.setAttribute("aria-current", "true");
+      element.dataset.selected = selected ? "true" : "false";
+      element.dataset.primary = primary ? "true" : "false";
+      if (selected || primary) {
+        element.setAttribute("aria-current", "true");
       } else {
-        button.removeAttribute("aria-current");
+        element.removeAttribute("aria-current");
+      }
+    });
+
+    qsa("[data-archcoin-room]", state.root).forEach(element => {
+      const roomId = normalizeRoomId(element.dataset.roomId);
+      const wing = normalizeWing(element.dataset.wing);
+      const selected = roomId && roomId === state.selected.roomId;
+      const primary = wing && roomId && wing === state.cluster.wing && roomId === state.cluster.primaryRoom;
+
+      element.dataset.selected = selected ? "true" : "false";
+      element.dataset.primary = primary ? "true" : "false";
+      if (selected || primary) {
+        element.setAttribute("aria-current", "true");
+      } else {
+        element.removeAttribute("aria-current");
       }
     });
   }
 
-  function syncLifecycleNodes() {
-    const visible = state.lifecycleVisible ? "true" : "false";
-    state.lifecycleNodes.forEach((node) => {
-      node.dataset.archcoinLifecycleVisible = visible;
-      node.style.opacity = state.lifecycleVisible ? "" : "0.4";
-    });
-  }
-
-  function syncAdapterCards() {
-    state.adapterCards.forEach((card) => {
-      card.dataset.archcoinOrbitState = state.current;
-      card.dataset.archcoinSelectedCoinPosition = state.selectedCoinPosition;
-    });
-  }
-
-  function syncPresentation() {
-    syncCoinButtons();
-    syncLifecycleNodes();
-    syncAdapterCards();
-
-    if (state.current === STATES.ORBIT) {
-      updateControllerPanelForOrbit();
+  function syncCompassMenu() {
+    if (!state.centerCompassButton || !state.centerCompassShell) {
       return;
     }
 
-    if (state.current === STATES.CLUSTER_OPEN) {
-      updateControllerPanelForCoin(state.selectedCoinPosition);
-      return;
-    }
-
-    if (state.current === STATES.NODE_SELECTED) {
-      updateControllerPanelForNode(state.selectedCoinPosition, state.selectedNodeId);
-      return;
-    }
-
-    if (state.current === STATES.RETURNING) {
-      updateControllerPanelForOrbit();
-      return;
-    }
-
-    if (state.current === STATES.HELD && state.generatedTitle) {
-      state.generatedTitle.textContent = "ARCHCOIN controller is held.";
-      if (state.generatedBody) {
-        state.generatedBody.textContent =
-          "The page remains readable, but one controller subsystem is temporarily unavailable.";
-      }
-    }
-  }
-
-  function requestCoinFocus(coin, options = {}) {
-    const config = findCoinConfig(coin);
-    if (!config) {
-      emitReceipt({
-        lastAction: "coin-focus-rejected",
-        lastFailure: `INVALID_COIN:${String(coin || "")}`
-      });
-      return false;
-    }
-
-    state.orbitFocus = config.id;
-
-    if (options.commit !== false) {
-      syncPresentation();
-      emitReceipt({
-        lastAction: `coin-focused:${config.id}`,
-        lastFailure: null
-      });
-    }
-
-    return true;
-  }
-
-  function requestCoinSelection(coin, options = {}) {
-    const config = findCoinConfig(coin);
-    if (!config) {
-      emitReceipt({
-        lastAction: "coin-selection-rejected",
-        lastFailure: `INVALID_COIN:${String(coin || "")}`
-      });
-      return false;
-    }
-
-    state.orbitFocus = config.id;
-    state.selectedCoinPosition = config.id;
-    state.selectedNodeId = "";
-    state.panelDescended = false;
-    state.lifecycleVisible = true;
-
-    const committed = setState(STATES.CLUSTER_OPEN, `coin-selected:${config.id}`);
-    if (!committed) return false;
-
-    if (options.scrollToPanel !== false && state.generatedPanel) {
-      state.generatedPanel.scrollIntoView({
-        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
-        block: "start",
-        inline: "nearest"
-      });
-    }
-
-    return true;
-  }
-
-  function requestNodeSelection(coin, nodeId, options = {}) {
-    const config = findCoinConfig(coin);
-    const node = findNodeById(coin, nodeId);
-
-    if (!config || !node) {
-      emitReceipt({
-        lastAction: "node-selection-rejected",
-        lastFailure: `INVALID_NODE:${String(nodeId || "")}`
-      });
-      return false;
-    }
-
-    state.orbitFocus = config.id;
-    state.selectedCoinPosition = config.id;
-    state.selectedNodeId = node.id;
-    state.panelDescended = true;
-    state.lifecycleVisible = true;
-
-    const committed = setState(STATES.NODE_SELECTED, `node-selected:${node.id}`);
-    if (!committed) return false;
-
-    if (options.scrollToSection !== false) {
-      scrollToSection(node.sectionId);
-    }
-
-    return true;
-  }
-
-  function requestReturnToOrbit(options = {}) {
-    const fallbackCoin = state.selectedCoinPosition || state.orbitFocus || "contract";
-
-    state.current = STATES.RETURNING;
-    state.selectedNodeId = "";
-    state.selectedCoinPosition = "";
-    state.panelDescended = false;
-    state.lifecycleVisible = true;
-    state.orbitFocus = normalizeCoin(fallbackCoin) || "contract";
-
-    syncPresentation();
-
-    emitReceipt({
-      lastAction: `returned-to-orbit:${state.orbitFocus}`,
-      lastFailure: null
-    });
-
-    state.current = STATES.ORBIT;
-    syncPresentation();
-
-    if (options.scrollToOrbit !== false && state.orbitStage) {
-      state.orbitStage.scrollIntoView({
-        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
-        block: "start",
-        inline: "nearest"
-      });
-    }
-
-    emitReceipt({
-      lastAction: `orbit-restored:${state.orbitFocus}`,
-      lastFailure: null
-    });
-
-    return true;
-  }
-
-  function requestOpenCurrentSection() {
-    if (state.current === STATES.NODE_SELECTED) {
-      const node = findNodeById(state.selectedCoinPosition, state.selectedNodeId);
-      if (!node) return false;
-      return scrollToSection(node.sectionId);
-    }
-
-    if (state.current === STATES.CLUSTER_OPEN) {
-      const config = findCoinConfig(state.selectedCoinPosition);
-      if (!config) return false;
-      return scrollToSection(config.sectionId);
-    }
-
-    return false;
-  }
-
-  function buildSemanticFallbackControls() {
-    if (!state.generatedPanel) return;
-
-    state.generatedNodeBar.addEventListener("click", (event) => {
-      const button = event.target.closest("[data-archcoin-cluster-node]");
-      if (!button) return;
-
-      const coin = button.dataset.archcoinClusterCoin;
-      const nodeId = button.dataset.archcoinClusterNode;
-      requestNodeSelection(coin, nodeId, { scrollToSection: true });
-    });
-
-    if (state.generatedReturnButton) {
-      state.generatedReturnButton.addEventListener("click", () => {
-        requestReturnToOrbit({ scrollToOrbit: true });
-      });
-    }
-
-    if (state.generatedScrollButton) {
-      state.generatedScrollButton.addEventListener("click", () => {
-        requestOpenCurrentSection();
-      });
-    }
-  }
-
-  function bindCoinButtons() {
-    state.coinButtons.forEach((button) => {
-      button.addEventListener("click", () => {
-        const coin = button.dataset.archcoinCoinPosition;
-        requestCoinSelection(coin, { scrollToPanel: true });
-      });
-    });
-  }
-
-  function bindFallbackLinks() {
-    const transactionButton = qsa(".actions a.button", state.root).find(
-      (link) => link.getAttribute("href") === "#transaction-orbit"
+    state.centerCompassButton.setAttribute(
+      "aria-expanded",
+      state.compassMenuOpen ? "true" : "false"
     );
 
-    if (transactionButton) {
-      transactionButton.addEventListener("click", () => {
-        requestReturnToOrbit({ scrollToOrbit: true });
-      });
+    if (state.compassMenuOpen) {
+      state.centerCompassShell.hidden = false;
+    } else {
+      state.centerCompassShell.hidden = true;
     }
   }
 
-  function getFrameState() {
-    const selectedNode = findNodeById(state.selectedCoinPosition, state.selectedNodeId);
+  function syncGuidance() {
+    if (!state.guidance) {
+      return;
+    }
 
-    return Object.freeze({
-      state: state.current,
-      orbitFocus: state.orbitFocus,
-      selectedCoinPosition: state.selectedCoinPosition,
-      selectedNodeId: state.selectedNodeId,
-      selectedNodeType: selectedNode ? selectedNode.type : "",
-      selectedSectionId: selectedNode ? selectedNode.sectionId : "",
-      panelDescended: state.panelDescended,
-      lifecycleVisible: state.lifecycleVisible
+    let text = DEFAULT_GUIDANCE;
+
+    if (state.currentState === STATES.CLUSTER_OPEN && state.selected.wing) {
+      const copy = getCoinPanelCopy(state.selected.wing);
+      text =
+        `${copy.title} is open. Select one of the four local information stars, or use Return to Orbit to restore the family field.`;
+    }
+
+    if (state.currentState === STATES.INFO_OPEN && state.selected.roomId) {
+      const room = roomElementById(state.selected.roomId);
+      const label = room ? room.dataset.label || state.selected.roomId : state.selected.roomId;
+      text =
+        `${label} is open. Return to Cluster restores the local four-path ring. Return to Orbit restores the four-coin family field.`;
+    }
+
+    if (state.currentState === STATES.HELD) {
+      text = "ARCHCOIN controller is held. Interactive descent is unavailable until the controller is restored.";
+    }
+
+    state.guidance.textContent = text;
+  }
+
+  function syncPanel() {
+    if (!state.panel) {
+      return;
+    }
+
+    let eyebrow = DEFAULT_PANEL_COPY.eyebrow;
+    let title = DEFAULT_PANEL_COPY.title;
+    let purpose = DEFAULT_PANEL_COPY.purpose;
+    let relationship = DEFAULT_PANEL_COPY.relationship;
+
+    if (state.currentState === STATES.CLUSTER_OPEN && state.selected.wing) {
+      const copy = getCoinPanelCopy(state.selected.wing);
+      eyebrow = copy.eyebrow;
+      title = copy.title;
+      purpose = copy.purpose;
+      relationship = copy.relationship;
+    }
+
+    if (state.currentState === STATES.INFO_OPEN && state.selected.roomId) {
+      const room = roomElementById(state.selected.roomId);
+      if (room) {
+        eyebrow = room.dataset.localCoordinate || room.dataset.label || "Information point";
+        title = room.dataset.label || room.dataset.roomId || "Information";
+        purpose =
+          room.dataset.preview ||
+          room.dataset.whyEnter ||
+          "This information point explains the selected ARCHCOIN path.";
+        relationship =
+          room.dataset.localFunction ||
+          "This information point remains local to the selected coin cluster.";
+      }
+    }
+
+    if (state.currentState === STATES.HELD) {
+      eyebrow = "Controller held";
+      title = "ARCHCOIN controller is unavailable.";
+      purpose =
+        "The page has entered a held state. Interactive constellation, cluster, and local information descent are suspended until the controller is restored.";
+      relationship = state.failureReason || "No failure reason was published.";
+    }
+
+    if (state.panelEyebrow) {
+      state.panelEyebrow.textContent = eyebrow;
+    }
+    if (state.panelTitle) {
+      state.panelTitle.textContent = title;
+    }
+    if (state.panelPurpose) {
+      state.panelPurpose.textContent = purpose;
+    }
+    if (state.panelRelationship) {
+      state.panelRelationship.textContent = relationship;
+    }
+
+    if (state.returnToOrbitButton) {
+      state.returnToOrbitButton.hidden = !(state.currentState === STATES.CLUSTER_OPEN || state.currentState === STATES.INFO_OPEN);
+      state.returnToOrbitButton.disabled = state.currentState === STATES.HELD;
+    }
+
+    if (state.returnToClusterButton) {
+      state.returnToClusterButton.hidden = state.currentState !== STATES.INFO_OPEN;
+      state.returnToClusterButton.disabled = state.currentState !== STATES.INFO_OPEN || state.currentState === STATES.HELD;
+    }
+  }
+
+  function syncLensTabs() {
+    const selectedTab = normalizeTab(state.activeTab);
+
+    state.lensTabs.forEach((button, tab) => {
+      const active = tab === selectedTab;
+      button.setAttribute("aria-selected", active ? "true" : "false");
+      button.tabIndex = active ? 0 : -1;
+    });
+
+    state.lensPanels.forEach((panel, tab) => {
+      panel.hidden = tab !== selectedTab;
+    });
+  }
+
+  function syncAll() {
+    syncDatasets();
+    syncSelectionAttributes();
+    syncCompassMenu();
+    syncGuidance();
+    syncPanel();
+    syncLensTabs();
+  }
+
+  function setActiveTab(tab, source = "internal") {
+    const nextTab = normalizeTab(tab);
+    state.activeTab = nextTab;
+    syncAll();
+    emitReceipt({ activeTab: nextTab, lastAction: `tab:${source}:${nextTab}` });
+    return true;
+  }
+
+  function commitOrbitFocus(wing, quaternion = null) {
+    const nextWing = normalizeWing(wing) || "north";
+    state.orbit.focusWing = nextWing;
+    state.orbit.previewFocusWing = nextWing;
+    state.orbit.phase = PHASES.COMMITTED;
+    state.orbit.gestureActive = false;
+
+    if (quaternion) {
+      state.orbit.quaternion = safeQuaternion(quaternion, state.orbit.quaternion);
+    }
+
+    emitReceipt({ orbitFocus: nextWing, lastAction: "orbit-commit" });
+  }
+
+  function commitClusterPrimary(wing, roomId, quaternion = null) {
+    const nextWing = normalizeWing(wing);
+    const nextRoom = normalizeRoomId(roomId);
+
+    if (!nextWing) {
+      return false;
+    }
+
+    state.cluster.wing = nextWing;
+    state.cluster.primaryRoom = nextRoom;
+    state.cluster.previewPrimaryRoom = nextRoom;
+    state.cluster.phase = PHASES.COMMITTED;
+    state.cluster.gestureActive = false;
+
+    if (quaternion) {
+      state.cluster.quaternionByWing.set(
+        nextWing,
+        safeQuaternion(quaternion, state.cluster.quaternionByWing.get(nextWing) || [0, 0, 0, 1])
+      );
+    }
+
+    emitReceipt({
+      activeClusterWing: nextWing,
+      clusterPrimaryRoom: nextRoom,
+      lastAction: "cluster-commit"
+    });
+
+    return true;
+  }
+
+  function enterOrbitState(source = "internal") {
+    state.currentState = STATES.ORBIT;
+
+    state.selected.wing = "";
+    state.selected.coinId = "";
+    state.selected.roomId = "";
+    state.selected.destinationType = "";
+    state.selected.destinationId = "";
+    state.selected.destinationLabel = "";
+    state.selected.route = "";
+
+    state.cluster.wing = "";
+    state.cluster.primaryRoom = "";
+    state.cluster.previewPrimaryRoom = "";
+    state.cluster.phase = PHASES.COMMITTED;
+    state.cluster.gestureActive = false;
+
+    state.compassMenuOpen = false;
+
+    syncAll();
+    emitReceipt({ lastAction: `state:${source}:orbit` });
+    return true;
+  }
+
+  function enterClusterState(wing, source = "internal") {
+    const nextWing = normalizeWing(wing);
+    if (!nextWing) {
+      return false;
+    }
+
+    const coinId = coinIdForWing(nextWing);
+    const primaryRoom =
+      state.cluster.primaryRoom && state.cluster.wing === nextWing
+        ? state.cluster.primaryRoom
+        : firstRoomIdForWing(nextWing);
+
+    state.currentState = STATES.CLUSTER_OPEN;
+
+    state.selected.wing = nextWing;
+    state.selected.coinId = coinId;
+    state.selected.roomId = "";
+    state.selected.destinationType = "coin";
+    state.selected.destinationId = coinId;
+    state.selected.destinationLabel = getCoinPanelCopy(nextWing).title;
+    state.selected.route = "";
+
+    commitOrbitFocus(nextWing);
+    commitClusterPrimary(nextWing, primaryRoom);
+
+    state.compassMenuOpen = false;
+
+    syncAll();
+    emitReceipt({ lastAction: `state:${source}:cluster-open` });
+    return true;
+  }
+
+  function enterInfoState(roomId, source = "internal") {
+    const room = roomElementById(roomId);
+    if (!room) {
+      return false;
+    }
+
+    const wing = normalizeWing(room.dataset.wing);
+    const tab = normalizeTab(room.dataset.tab);
+    const coinId = coinIdForWing(wing);
+
+    state.currentState = STATES.INFO_OPEN;
+
+    state.selected.wing = wing;
+    state.selected.coinId = coinId;
+    state.selected.roomId = normalizeRoomId(roomId);
+    state.selected.destinationType = "info";
+    state.selected.destinationId = normalizeRoomId(roomId);
+    state.selected.destinationLabel = room.dataset.label || roomId;
+    state.selected.route = room.dataset.route || "";
+
+    commitOrbitFocus(wing);
+    commitClusterPrimary(wing, normalizeRoomId(roomId));
+
+    state.compassMenuOpen = false;
+    setActiveTab(tab, source);
+
+    syncAll();
+    emitReceipt({ lastAction: `state:${source}:info-open` });
+    return true;
+  }
+
+  function openCompassMenu(source = "internal") {
+    if (state.held) {
+      return false;
+    }
+
+    state.compassMenuOpen = true;
+    syncAll();
+    emitReceipt({ compassMenuOpen: true, lastAction: `compass-menu:${source}:open` });
+    return true;
+  }
+
+  function closeCompassMenu(source = "internal") {
+    state.compassMenuOpen = false;
+    syncAll();
+    emitReceipt({ compassMenuOpen: false, lastAction: `compass-menu:${source}:close` });
+    return true;
+  }
+
+  function bindOrdinaryUi() {
+    qsa("[data-archcoin-lens-tab]", state.root).forEach(button => {
+      const tab = normalizeTab(button.dataset.archcoinLensTab);
+      state.lensTabs.set(tab, button);
+
+      button.addEventListener("click", event => {
+        event.preventDefault();
+        if (state.held) {
+          return;
+        }
+
+        if (state.currentState !== STATES.INFO_OPEN) {
+          state.activeTab = tab;
+          syncAll();
+          emitReceipt({ lastAction: `tab:preselect:${tab}` });
+          return;
+        }
+
+        requestLensTab(tab, "ui-click");
+      });
+    });
+
+    qsa("[data-archcoin-lens-panel]", state.root).forEach(panel => {
+      const tab = normalizeTab(panel.dataset.archcoinLensPanel);
+      state.lensPanels.set(tab, panel);
+    });
+
+    if (state.returnToOrbitButton) {
+      state.returnToOrbitButton.addEventListener("click", event => {
+        event.preventDefault();
+        requestReturnToOrbit({ source: "button" });
+      });
+    }
+
+    if (state.returnToClusterButton) {
+      state.returnToClusterButton.addEventListener("click", event => {
+        event.preventDefault();
+        requestReturnToCluster({ source: "button" });
+      });
+    }
+
+    if (state.centerCompassButton) {
+      state.centerCompassButton.addEventListener("click", event => {
+        event.preventDefault();
+        requestCenterCompassToggle("button");
+      });
+    }
+
+    if (state.centerCompassClose) {
+      state.centerCompassClose.addEventListener("click", event => {
+        event.preventDefault();
+        closeCompassMenu("close-button");
+      });
+    }
+
+    qsa("[data-archcoin-compass-destination]", state.root).forEach(link => {
+      link.addEventListener("click", () => {
+        closeCompassMenu("navigate-away");
+      });
+    });
+
+    qsa("[data-archcoin-cardinal]", state.root).forEach(element => {
+      element.addEventListener("click", event => {
+        if (now() < state.suppressClickUntil) {
+          event.preventDefault();
+          event.stopPropagation();
+          return;
+        }
+
+        const wing = normalizeWing(element.dataset.wing || element.dataset.coinId);
+        if (!wing || state.held) {
+          return;
+        }
+
+        requestCoinSelection(wing, "semantic-click");
+      });
+    });
+
+    qsa("[data-archcoin-room]", state.root).forEach(element => {
+      element.addEventListener("click", event => {
+        if (now() < state.suppressClickUntil) {
+          event.preventDefault();
+          event.stopPropagation();
+          return;
+        }
+
+        const roomId = normalizeRoomId(element.dataset.roomId);
+        if (!roomId || state.held) {
+          return;
+        }
+
+        requestRoomSelection(roomId, "semantic-click");
+      });
+    });
+
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape") {
+        if (state.compassMenuOpen) {
+          closeCompassMenu("escape");
+          return;
+        }
+
+        if (state.currentState === STATES.INFO_OPEN) {
+          requestReturnToCluster({ source: "escape" });
+          return;
+        }
+
+        if (state.currentState === STATES.CLUSTER_OPEN) {
+          requestReturnToOrbit({ source: "escape" });
+        }
+      }
     });
   }
 
   function resolveDom() {
-    state.root = qs("[data-archcoin-product='true']");
+    state.root = qs("[data-archcoin-root]");
     if (!state.root) {
       throw new Error("ARCHCOIN_ROOT_NOT_FOUND");
     }
 
-    state.orbitStage = qs("#archcoin-orbit-stage", state.root);
-    if (!state.orbitStage) {
-      throw new Error("ARCHCOIN_ORBIT_STAGE_NOT_FOUND");
+    state.scene = qs("[data-archcoin-scene]", state.root);
+    if (!state.scene) {
+      throw new Error("ARCHCOIN_SCENE_NOT_FOUND");
     }
 
-    state.geometryMount = qs("#archcoin-geometry-mount", state.root);
-    if (!state.geometryMount) {
-      throw new Error("ARCHCOIN_GEOMETRY_MOUNT_NOT_FOUND");
+    state.objects = qs("[data-archcoin-objects]", state.root);
+    if (!state.objects) {
+      throw new Error("ARCHCOIN_OBJECT_LAYER_NOT_FOUND");
     }
 
-    state.receiptOutput = qs("#archcoin-receipt-output", state.root);
-    if (!state.receiptOutput) {
-      throw new Error("ARCHCOIN_RECEIPT_OUTPUT_NOT_FOUND");
+    state.guidance = qs("[data-archcoin-guidance]", state.root);
+
+    state.centerCompassButton = qs("[data-archcoin-center-compass]", state.root);
+    state.centerCompassShell = qs("[data-archcoin-compass-shell]", state.root);
+    state.centerCompassClose = qs("[data-archcoin-compass-close]", state.root);
+
+    state.panel = qs("[data-archcoin-panel]", state.root);
+    state.panelEyebrow = qs("[data-archcoin-panel-eyebrow]", state.root);
+    state.panelTitle = qs("[data-archcoin-panel-title]", state.root);
+    state.panelPurpose = qs("[data-archcoin-panel-purpose]", state.root);
+    state.panelRelationship = qs("[data-archcoin-panel-relationship]", state.root);
+    state.returnToOrbitButton = qs("[data-archcoin-return-to-orbit]", state.root);
+    state.returnToClusterButton = qs("[data-archcoin-return-to-cluster]", state.root);
+
+    state.receiptOutput = qs("[data-archcoin-controller-receipt]", state.root);
+
+    if (!state.centerCompassButton) {
+      throw new Error("ARCHCOIN_CENTER_COMPASS_BUTTON_NOT_FOUND");
     }
 
-    state.coinButtons = qsa("[data-archcoin-coin-position]", state.root).filter(
-      (button) => normalizeCoin(button.dataset.archcoinCoinPosition)
+    if (!state.centerCompassShell) {
+      throw new Error("ARCHCOIN_CENTER_COMPASS_SHELL_NOT_FOUND");
+    }
+
+    if (!state.panel) {
+      throw new Error("ARCHCOIN_PANEL_NOT_FOUND");
+    }
+  }
+
+  function initializeClusterMaps() {
+    WINGS.forEach(wing => {
+      state.cluster.quaternionByWing.set(wing, [0, 0, 0, 1]);
+    });
+  }
+
+  function getFrameState() {
+    return Object.freeze({
+      state: state.currentState,
+      orbitFocus: state.orbit.focusWing,
+      orbitPreviewFocus: state.orbit.previewFocusWing,
+      orbitPhase: state.orbit.phase,
+      orbitGestureActive: state.orbit.gestureActive,
+      orbitOrientation: Object.freeze({
+        quaternion: Object.freeze(state.orbit.quaternion.slice()),
+        primaryId: state.orbit.previewFocusWing || state.orbit.focusWing || "north"
+      }),
+      activeClusterWing: state.cluster.wing,
+      cluster:
+        state.cluster.wing
+          ? Object.freeze({
+              wing: state.cluster.wing,
+              roomIds: Object.freeze(
+                roomElementsForWing(state.cluster.wing).map(element =>
+                  normalizeRoomId(element.dataset.roomId)
+                )
+              ),
+              primaryRoom: state.cluster.primaryRoom,
+              previewPrimaryRoom: state.cluster.previewPrimaryRoom,
+              phase: state.cluster.phase,
+              gestureActive: state.cluster.gestureActive,
+              revision: 1,
+              orientation: Object.freeze({
+                quaternion: Object.freeze(
+                  (
+                    state.cluster.quaternionByWing.get(state.cluster.wing) || [0, 0, 0, 1]
+                  ).slice()
+                ),
+                primaryId:
+                  state.cluster.previewPrimaryRoom || state.cluster.primaryRoom || ""
+              })
+            })
+          : null,
+      selectedCardinal: state.selected.wing,
+      selectedRoom: state.selected.roomId,
+      selectedDestinationType: state.selected.destinationType,
+      selectedDestinationId: state.selected.destinationId,
+      selectedDestinationLabel: state.selected.destinationLabel,
+      selectedRoute: state.selected.route,
+      reducedMotion:
+        state.root && state.root.dataset.reducedMotion === "true"
+          ? true
+          : globalThis.matchMedia &&
+              globalThis.matchMedia("(prefers-reduced-motion: reduce)").matches,
+      prominence: Object.freeze({
+        compass: 1,
+        window: 0
+      })
+    });
+  }
+
+  function beginOrbitGesture(payload = {}) {
+    if (state.held || state.currentState !== STATES.ORBIT) {
+      return false;
+    }
+
+    state.orbit.gestureActive = true;
+    state.orbit.phase = PHASES.PREVIEWING;
+    state.orbit.quaternion = safeQuaternion(payload.quaternion, state.orbit.quaternion);
+    state.orbit.previewFocusWing =
+      normalizeWing(payload.primaryWing) || state.orbit.focusWing || "north";
+
+    state.suppressClickUntil = now() + 520;
+
+    syncAll();
+    emitReceipt({ lastAction: "orbit-gesture-begin" });
+    return true;
+  }
+
+  function requestOrbitPreview(payload = {}) {
+    if (state.held || state.currentState !== STATES.ORBIT) {
+      return false;
+    }
+
+    state.orbit.phase = PHASES.PREVIEWING;
+    state.orbit.gestureActive = true;
+    state.orbit.quaternion = safeQuaternion(payload.quaternion, state.orbit.quaternion);
+    state.orbit.previewFocusWing =
+      normalizeWing(payload.primaryWing) || state.orbit.previewFocusWing || state.orbit.focusWing;
+
+    syncAll();
+    emitReceipt({ lastAction: "orbit-preview" });
+    return true;
+  }
+
+  function requestOrbitCommit(payload = {}) {
+    if (state.held || state.currentState !== STATES.ORBIT) {
+      return false;
+    }
+
+    const wing = normalizeWing(payload.primaryWing) || state.orbit.previewFocusWing || state.orbit.focusWing;
+    commitOrbitFocus(wing, payload.quaternion || state.orbit.quaternion);
+    syncAll();
+    emitReceipt({ lastAction: "orbit-commit-api" });
+    return true;
+  }
+
+  function requestOrbitCancel(reason = "orbit-cancel") {
+    if (state.held || state.currentState !== STATES.ORBIT) {
+      return false;
+    }
+
+    state.orbit.gestureActive = false;
+    state.orbit.phase = PHASES.COMMITTED;
+    state.orbit.previewFocusWing = state.orbit.focusWing;
+
+    syncAll();
+    emitReceipt({ lastAction: String(reason || "orbit-cancel") });
+    return true;
+  }
+
+  function beginClusterGesture(wing, payload = {}) {
+    const nextWing = normalizeWing(wing);
+
+    if (
+      state.held ||
+      !nextWing ||
+      (state.currentState !== STATES.CLUSTER_OPEN && state.currentState !== STATES.INFO_OPEN) ||
+      nextWing !== state.selected.wing
+    ) {
+      return false;
+    }
+
+    state.cluster.wing = nextWing;
+    state.cluster.gestureActive = true;
+    state.cluster.phase = PHASES.PREVIEWING;
+    state.cluster.primaryRoom =
+      state.cluster.primaryRoom || firstRoomIdForWing(nextWing);
+    state.cluster.previewPrimaryRoom =
+      normalizeRoomId(payload.primaryRoom) || state.cluster.primaryRoom;
+
+    const safe = safeQuaternion(
+      payload.quaternion,
+      state.cluster.quaternionByWing.get(nextWing) || [0, 0, 0, 1]
+    );
+    state.cluster.quaternionByWing.set(nextWing, safe);
+
+    state.suppressClickUntil = now() + 520;
+
+    syncAll();
+    emitReceipt({ lastAction: "cluster-gesture-begin" });
+    return true;
+  }
+
+  function requestClusterPreview(wing, payload = {}) {
+    const nextWing = normalizeWing(wing);
+
+    if (
+      state.held ||
+      !nextWing ||
+      (state.currentState !== STATES.CLUSTER_OPEN && state.currentState !== STATES.INFO_OPEN)
+    ) {
+      return false;
+    }
+
+    state.cluster.wing = nextWing;
+    state.cluster.gestureActive = true;
+    state.cluster.phase = PHASES.PREVIEWING;
+    state.cluster.previewPrimaryRoom =
+      normalizeRoomId(payload.primaryRoom) ||
+      state.cluster.previewPrimaryRoom ||
+      state.cluster.primaryRoom ||
+      firstRoomIdForWing(nextWing);
+
+    state.cluster.quaternionByWing.set(
+      nextWing,
+      safeQuaternion(
+        payload.quaternion,
+        state.cluster.quaternionByWing.get(nextWing) || [0, 0, 0, 1]
+      )
     );
 
-    if (state.coinButtons.length !== 4) {
-      throw new Error(`ARCHCOIN_PRIMARY_COIN_COUNT_INVALID:${state.coinButtons.length}`);
+    if (state.currentState === STATES.CLUSTER_OPEN && !state.selected.roomId) {
+      const roomId = state.cluster.previewPrimaryRoom;
+      if (roomId) {
+        const tab = getRoomTab(roomId);
+        state.activeTab = tab;
+      }
     }
 
-    state.lifecycleNodes = qsa("[data-archcoin-value-lifecycle-node]", state.root);
-    state.adapterCards = qsa("[data-archcoin-adapter-slot]", state.root);
+    syncAll();
+    emitReceipt({ lastAction: "cluster-preview" });
+    return true;
+  }
+
+  function requestClusterCommit(wing, payload = {}) {
+    const nextWing = normalizeWing(wing);
+    if (
+      state.held ||
+      !nextWing ||
+      (state.currentState !== STATES.CLUSTER_OPEN && state.currentState !== STATES.INFO_OPEN)
+    ) {
+      return false;
+    }
+
+    const roomId =
+      normalizeRoomId(payload.primaryRoom) ||
+      state.cluster.previewPrimaryRoom ||
+      state.cluster.primaryRoom ||
+      firstRoomIdForWing(nextWing);
+
+    commitClusterPrimary(nextWing, roomId, payload.quaternion);
+
+    if (state.currentState === STATES.CLUSTER_OPEN && !state.selected.roomId) {
+      state.activeTab = getRoomTab(roomId);
+    }
+
+    syncAll();
+    emitReceipt({ lastAction: "cluster-commit-api" });
+    return true;
+  }
+
+  function requestClusterCancel(wing, reason = "cluster-cancel") {
+    const nextWing = normalizeWing(wing);
+
+    if (
+      state.held ||
+      !nextWing ||
+      (state.currentState !== STATES.CLUSTER_OPEN && state.currentState !== STATES.INFO_OPEN)
+    ) {
+      return false;
+    }
+
+    state.cluster.wing = nextWing;
+    state.cluster.gestureActive = false;
+    state.cluster.phase = PHASES.COMMITTED;
+    state.cluster.previewPrimaryRoom = state.cluster.primaryRoom;
+
+    syncAll();
+    emitReceipt({ lastAction: String(reason || "cluster-cancel") });
+    return true;
+  }
+
+  function requestCoinSelection(wing, source = "api") {
+    const nextWing = normalizeWing(wing);
+    if (state.held || !nextWing) {
+      return false;
+    }
+
+    const ok = enterClusterState(nextWing, source);
+    if (ok) {
+      dispatch("ARCHCOIN_COIN_SELECTED", {
+        wing: nextWing,
+        coinId: coinIdForWing(nextWing),
+        source
+      });
+    }
+    return ok;
+  }
+
+  function requestRoomSelection(roomId, source = "api") {
+    const nextRoom = normalizeRoomId(roomId);
+    if (state.held || !nextRoom) {
+      return false;
+    }
+
+    const ok = enterInfoState(nextRoom, source);
+    if (ok) {
+      dispatch("ARCHCOIN_ROOM_SELECTED", {
+        roomId: nextRoom,
+        wing: state.selected.wing,
+        tab: state.activeTab,
+        source
+      });
+    }
+    return ok;
+  }
+
+  function requestReturnToOrbit(options = {}) {
+    if (state.held) {
+      return false;
+    }
+
+    enterOrbitState(options.source || "api");
+    dispatch("ARCHCOIN_RETURN_TO_ORBIT", {
+      source: options.source || "api",
+      scrollToScene: Boolean(options.scrollToScene)
+    });
+    return true;
+  }
+
+  function requestReturnToCluster(options = {}) {
+    if (state.held || state.currentState !== STATES.INFO_OPEN || !state.selected.wing) {
+      return false;
+    }
+
+    const wing = state.selected.wing;
+    const ok = enterClusterState(wing, options.source || "api");
+    if (ok) {
+      dispatch("ARCHCOIN_RETURN_TO_CLUSTER", {
+        wing,
+        source: options.source || "api"
+      });
+    }
+    return ok;
+  }
+
+  function requestReturnToConstellation(options = {}) {
+    return requestReturnToOrbit(options);
+  }
+
+  function requestCenterCompassToggle(source = "api") {
+    if (state.held) {
+      return false;
+    }
+
+    if (state.compassMenuOpen) {
+      return closeCompassMenu(source);
+    }
+
+    return openCompassMenu(source);
+  }
+
+  function requestCenterCompassOpen(source = "api") {
+    return openCompassMenu(source);
+  }
+
+  function requestCenterCompassClose(source = "api") {
+    return closeCompassMenu(source);
+  }
+
+  function requestLensTab(tab, source = "api") {
+    if (state.held) {
+      return false;
+    }
+    return setActiveTab(tab, source);
+  }
+
+  function syncReducedMotionFlag() {
+    if (!globalThis.matchMedia) {
+      return;
+    }
+
+    const media = globalThis.matchMedia("(prefers-reduced-motion: reduce)");
+    const apply = matches => {
+      state.root.dataset.reducedMotion = matches ? "true" : "false";
+      emitReceipt({ lastAction: "reduced-motion-sync" });
+    };
+
+    apply(media.matches);
+
+    if (typeof media.addEventListener === "function") {
+      media.addEventListener("change", event => {
+        apply(event.matches);
+      });
+    }
   }
 
   function exposeApi() {
-    globalThis.ARCHCOIN_ORBIT_CONTROLLER = Object.freeze({
+    globalThis.DGB_ARCHCOIN_CONTROLLER = Object.freeze({
       contract: CONTRACT,
-      states: STATES,
-      receipt: () =>
-        Object.freeze({
-          ...RECEIPT
-        }),
+      receipt: () => Object.freeze({ ...RECEIPT }),
       getFrameState,
-      requestCoinFocus,
+      beginOrbitGesture,
+      requestOrbitPreview,
+      requestOrbitCommit,
+      requestOrbitCancel,
+      beginClusterGesture,
+      requestClusterPreview,
+      requestClusterCommit,
+      requestClusterCancel,
       requestCoinSelection,
-      requestNodeSelection,
+      requestRoomSelection,
       requestReturnToOrbit,
-      requestOpenCurrentSection
+      requestReturnToConstellation,
+      requestReturnToCluster,
+      requestCenterCompassToggle,
+      requestCenterCompassOpen,
+      requestCenterCompassClose,
+      requestLensTab
     });
   }
 
   function init() {
     try {
       resolveDom();
-      createGeneratedPanel();
-      bindCoinButtons();
-      buildSemanticFallbackControls();
-      bindFallbackLinks();
+      initializeClusterMaps();
       exposeApi();
+      bindOrdinaryUi();
+      syncReducedMotionFlag();
 
-      state.current = STATES.ORBIT;
-      state.orbitFocus = "contract";
-      state.selectedCoinPosition = "";
-      state.selectedNodeId = "";
-      state.panelDescended = false;
-      state.lifecycleVisible = true;
-      state.initialized = true;
+      state.currentState = STATES.ORBIT;
+      state.orbit.focusWing = "north";
+      state.orbit.previewFocusWing = "north";
+      state.orbit.phase = PHASES.COMMITTED;
+      state.orbit.gestureActive = false;
+      state.orbit.quaternion = [0, 0, 0, 1];
 
-      syncPresentation();
+      state.cluster.wing = "";
+      state.cluster.primaryRoom = "";
+      state.cluster.previewPrimaryRoom = "";
+      state.cluster.phase = PHASES.COMMITTED;
+      state.cluster.gestureActive = false;
 
-      emitReceipt({
-        status: "available",
-        lastAction: "archcoin-controller-initialized",
-        lastFailure: null
-      });
+      state.activeTab = "overview";
+      state.compassMenuOpen = false;
+      state.held = false;
+      state.failureReason = "";
+
+      syncAll();
+      emitReceipt({ status: "available", lastAction: "controller-initialized" });
     } catch (error) {
-      state.current = STATES.HELD;
-      syncPresentation();
-      emitReceipt({
-        status: "held",
-        lastAction: "archcoin-controller-init-failed",
-        lastFailure: error && error.message ? error.message : String(error)
-      });
+      failHeld(
+        `ARCHCOIN_CONTROLLER_INIT_FAILURE:${
+          error && error.message ? error.message : String(error)
+        }`
+      );
     }
   }
 

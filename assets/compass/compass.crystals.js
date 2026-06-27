@@ -1,39 +1,50 @@
 /* /assets/compass/compass.crystals.js
    Diamond Gate Bridge Compass
-   Cardinal and room crystal renderer with spherical constellation control.
+   Cardinal and room crystal renderer with spherical constellation and
+   spherical room-cluster manipulation.
 
    Full-file replacement scope:
    - Preserve all four cardinal stars and nineteen room stars.
    - Preserve authoritative cardinal declarations, room declarations,
      routes, accessibility metadata, semantic controls, materials,
      Mirrorland recession behavior, WebGL rendering, and receipts.
-   - Replace the former flat four-position carousel with a shared
-     right-handed Euclidean X/Y/Z spherical orientation.
-   - Rotate every cardinal star through one unit-quaternion orientation.
-   - Allow dragging to begin on a cardinal star, its label, or open scene.
-   - Retain pointer capture for the full gesture.
-   - Apply continuous yaw and pitch while the pointer moves.
-   - Preserve diagonal movement rather than discarding it.
-   - Compute depth, scale, prominence, halo, label opacity, and stacking
-     from each star's rotated Z position.
-   - Determine the cardinal nearest the front-primary anchor on release.
-   - Snap the shared sphere to that cardinal and commit the resulting
-     quaternion through DGB_COMPASS_CONTROLLER.requestOrbitCommit().
-   - Keep drag-to-primary distinct from tap-to-open-cluster.
-   - Keep room-star selection and Return To Orbit behavior intact.
-   - Do not close an open cluster merely because a swipe occurred.
-   - Suppress accidental semantic clicks after a completed drag.
-   - Support reduced motion with immediate deterministic settling.
-   - Suppress constellation manipulation while Mirrorland owns focus.
+   - Preserve the shared right-handed Euclidean X/Y/Z cardinal sphere.
+   - Add an independent right-handed Euclidean X/Y/Z sphere for each
+     cardinal room cluster.
+   - Allow controlled pulls to rotate the active room cluster continuously.
+   - Distinguish systematic drags from quick swipe/flick gestures using
+     duration, travel, release velocity, and recent motion samples.
+   - Treat controlled release as cluster settlement.
+   - Treat a short, fast, clearly directional flick as a request to return
+     to the cardinal constellation.
+   - Never interpret a slow or systematic pull as a return swipe merely
+     because the finger was lifted.
+   - Allow constellation drag from a cardinal star, cardinal label, or
+     open constellation space.
+   - Allow cluster drag from a room star, room proxy position, or open
+     cluster space.
+   - Keep tap-to-open-cardinal and tap-to-select-room behavior distinct
+     from drag and flick behavior.
+   - Compute position, depth, scale, prominence, halo, label opacity,
+     semantic stacking, and hit priority from rotated three-dimensional
+     vectors.
+   - Snap the nearest cardinal or room star to the primary anchor after
+     controlled drag release.
+   - Preserve constellation and cluster orientations through Mirrorland
+     recession and controller restoration.
+   - Suppress accidental semantic clicks after drag, flick, or rendered
+     star selection.
+   - Support pointer capture, cancellation, reduced motion, and context loss.
 
    Ownership:
    - Celestial scene background.
    - Four cardinal crystal stars.
    - Nineteen room crystal stars.
-   - Shared spherical orientation rendering.
-   - Crystal shaders, materials, camera, projection, cardinal labels,
-     room accessibility proxies, hit testing, pointer gestures,
-     front-cardinal detection, and release settling.
+   - Cardinal spherical orientation rendering.
+   - Active room-cluster spherical orientation rendering.
+   - Crystal shaders, materials, camera, projection, semantic positioning,
+     accessibility proxies, hit testing, gesture sampling, drag/flick
+     classification, front-star detection, and release settlement.
 
    Non-ownership:
    - Controller state commitment beyond published controller APIs.
@@ -46,16 +57,16 @@
 
   const CONTRACT = Object.freeze({
     id:
-      "DGB_COMPASS_CRYSTALS_SPHERICAL_ORBIT_REBUILD_v2",
+      "DGB_COMPASS_CRYSTALS_SPHERICAL_CONSTELLATION_AND_CLUSTER_REBUILD_v3",
 
     previousId:
-      "DGB_COMPASS_CRYSTALS_FIVE_FILE_REBUILD_v1",
+      "DGB_COMPASS_CRYSTALS_SPHERICAL_ORBIT_REBUILD_v2",
 
     file:
       "/assets/compass/compass.crystals.js",
 
     releaseId:
-      "dgb-compass-spherical-orbit-v2",
+      "dgb-compass-spherical-clusters-v3",
 
     visualPassClaimed:
       false,
@@ -102,6 +113,41 @@
       "OUTSIDE_SCENE"
   });
 
+  const GESTURE_TYPES = Object.freeze({
+    POINTER_DOWN:
+      "pointerdown",
+
+    TAP:
+      "tap",
+
+    EMPTY_TAP:
+      "empty-tap",
+
+    CONSTELLATION_DRAG:
+      "constellation-drag",
+
+    CONSTELLATION_SETTLE:
+      "constellation-settle",
+
+    CLUSTER_DRAG:
+      "cluster-drag",
+
+    CLUSTER_SETTLE:
+      "cluster-settle",
+
+    CLUSTER_FLICK_RETURN:
+      "cluster-flick-return",
+
+    AMBIGUOUS:
+      "ambiguous",
+
+    CANCELLED:
+      "cancelled",
+
+    BLOCKED:
+      "blocked"
+  });
+
   const GESTURE = Object.freeze({
     dragDeadZonePx:
       6,
@@ -109,23 +155,44 @@
     maximumTapDistancePx:
       12,
 
-    minimumCommitDistancePx:
+    minimumDragDistancePx:
       8,
 
     radiansPerViewport:
       Math.PI * 1.12,
 
-    maximumPitchRadians:
-      Math.PI * 0.46,
-
-    minimumPitchRadians:
-      -Math.PI * 0.46,
-
     settleSpeed:
       7.4,
 
     suppressClickMs:
-      520
+      520,
+
+    sampleWindowMs:
+      140,
+
+    maximumSamples:
+      18,
+
+    flickMaximumDurationMs:
+      260,
+
+    flickMinimumDistancePx:
+      52,
+
+    flickMinimumAverageVelocityPxPerMs:
+      0.55,
+
+    flickMinimumReleaseVelocityPxPerMs:
+      0.72,
+
+    flickMinimumDirectionalRatio:
+      1.28,
+
+    flickMaximumPauseBeforeReleaseMs:
+      90,
+
+    flickMaximumPathEfficiencyLoss:
+      0.22
   });
 
   const SPHERE = Object.freeze({
@@ -135,66 +202,78 @@
     orientationRepresentation:
       "UNIT_QUATERNION",
 
-    horizontalRadius:
-      1.50,
+    constellation: Object.freeze({
+      horizontalRadius:
+        1.50,
 
-    verticalRadius:
-      1.34,
+      verticalRadius:
+        1.34,
 
-    depthRadius:
-      1.16,
+      depthRadius:
+        1.16,
 
-    primaryAnchor:
-      Object.freeze([
-        0,
-        0.78,
-        0.625
-      ]),
+      primaryAnchor:
+        Object.freeze([
+          0,
+          0.78,
+          0.625
+        ]),
 
-    frontDirection:
-      Object.freeze([
-        0,
-        0,
-        1
-      ]),
+      vectors:
+        Object.freeze({
+          north:
+            Object.freeze([
+              0,
+              1,
+              0
+            ]),
 
-    upDirection:
-      Object.freeze([
-        0,
-        1,
-        0
-      ]),
+          east:
+            Object.freeze([
+              1,
+              0,
+              0
+            ]),
 
-    cardinalVectors:
-      Object.freeze({
-        north:
-          Object.freeze([
-            0,
-            1,
-            0
-          ]),
+          south:
+            Object.freeze([
+              0,
+              -1,
+              0
+            ]),
 
-        east:
-          Object.freeze([
-            1,
-            0,
-            0
-          ]),
+          west:
+            Object.freeze([
+              -1,
+              0,
+              0
+            ])
+        })
+    }),
 
-        south:
-          Object.freeze([
-            0,
-            -1,
-            0
-          ]),
+    cluster: Object.freeze({
+      horizontalRadius:
+        1.36,
 
-        west:
-          Object.freeze([
-            -1,
-            0,
-            0
-          ])
-      })
+      verticalRadius:
+        1.18,
+
+      depthRadius:
+        1.04,
+
+      primaryAnchor:
+        Object.freeze([
+          0,
+          0.70,
+          0.714
+        ]),
+
+      latitudeAmplitude:
+        0.48,
+
+      latitudeFrequency:
+        1.73
+    })
   });
 
   const STAR_PALETTE = Object.freeze({
@@ -352,6 +431,30 @@
           1.10
       }),
 
+    ROOM_PRIMARY:
+      Object.freeze({
+        specular:
+          1.24,
+
+        rim:
+          1.08,
+
+        emissive:
+          0.21,
+
+        alpha:
+          0.94,
+
+        sparkle:
+          0.30,
+
+        halo:
+          0.86,
+
+        contrast:
+          1.17
+      }),
+
     ROOM_SELECTED:
       Object.freeze({
         specular:
@@ -409,10 +512,13 @@
       1.38,
 
     roomScale:
-      0.92,
+      0.88,
+
+    primaryRoomScale:
+      1.12,
 
     selectedRoomScale:
-      1.14,
+      1.18,
 
     maxYaw:
       0.22,
@@ -724,7 +830,10 @@
     recessionProfile:
       "NORMAL",
 
-    sphericalOrbitEnabled:
+    sphericalConstellationEnabled:
+      true,
+
+    sphericalClustersEnabled:
       true,
 
     coordinateSystem:
@@ -736,6 +845,12 @@
     primaryWing:
       "north",
 
+    activeClusterWing:
+      "",
+
+    primaryRoom:
+      "",
+
     gestureActive:
       false,
 
@@ -746,6 +861,15 @@
       "",
 
     lastGestureDistance:
+      0,
+
+    lastGestureDurationMs:
+      0,
+
+    lastAverageVelocityPxPerMs:
+      0,
+
+    lastReleaseVelocityPxPerMs:
       0,
 
     glError:
@@ -819,17 +943,26 @@
     recession:
       RECESSION.NORMAL,
 
-    renderQuaternion:
+    constellationQuaternion:
       [0, 0, 0, 1],
 
-    targetQuaternion:
+    constellationTargetQuaternion:
       [0, 0, 0, 1],
+
+    visualPrimaryWing:
+      "north",
 
     settledPrimaryWing:
       "north",
 
-    visualPrimaryWing:
-      "north",
+    clusterQuaternions:
+      new Map(),
+
+    clusterTargetQuaternions:
+      new Map(),
+
+    visualPrimaryRooms:
+      new Map(),
 
     view:
       null,
@@ -1144,10 +1277,7 @@
         0.045 *
         uTwinkle;
 
-      if (
-        vHaloPass >
-        0.5
-      ) {
+      if (vHaloPass > 0.5) {
         vec3 haloColor =
           base *
           (
@@ -1348,21 +1478,36 @@
     const number =
       Number(value);
 
-    return Number.isFinite(
-      number
-    )
+    return Number.isFinite(number)
       ? number
       : fallback;
+  }
+
+  function normalizeWing(
+    value
+  ) {
+    const wing =
+      String(value || "")
+        .trim()
+        .toLowerCase();
+
+    return WINGS.includes(wing)
+      ? wing
+      : "";
+  }
+
+  function normalizeRoomId(
+    value
+  ) {
+    return String(value || "")
+      .trim();
   }
 
   function cssEscape(
     value
   ) {
     const text =
-      String(
-        value ||
-        ""
-      );
+      String(value || "");
 
     if (
       globalThis.CSS &&
@@ -1380,27 +1525,15 @@
     );
   }
 
-  function normalizeWing(
-    value
-  ) {
-    const wing =
-      String(
-        value ||
-        ""
-      )
-        .trim()
-        .toLowerCase();
-
-    return WINGS.includes(
-      wing
-    )
-      ? wing
-      : "";
-  }
-
   function emitReceipt(
     extra = {}
   ) {
+    const frameCluster =
+      state.frame &&
+      state.frame.cluster
+        ? state.frame.cluster
+        : null;
+
     Object.assign(
       RECEIPT,
       {
@@ -1408,20 +1541,41 @@
           RECEIPT.status ||
           "available",
 
-        sphericalOrbitEnabled:
+        recessionProfile:
+          state.recessionName,
+
+        sphericalConstellationEnabled:
+          true,
+
+        sphericalClustersEnabled:
           true,
 
         coordinateSystem:
           SPHERE.coordinateSystem,
 
         orientationRepresentation:
-          SPHERE
-            .orientationRepresentation,
+          SPHERE.orientationRepresentation,
 
         primaryWing:
           state.visualPrimaryWing ||
           state.settledPrimaryWing ||
           "north",
+
+        activeClusterWing:
+          frameCluster
+            ? frameCluster.wing
+            : "",
+
+        primaryRoom:
+          frameCluster
+            ? (
+                state.visualPrimaryRooms.get(
+                  frameCluster.wing
+                ) ||
+                frameCluster.primaryRoom ||
+                ""
+              )
+            : "",
 
         gestureActive:
           Boolean(
@@ -1441,9 +1595,7 @@
         RECEIPT
       );
 
-    if (
-      state.root
-    ) {
+    if (state.root) {
       state.root.dataset.compassCrystalsReceipt =
         serialized;
 
@@ -1454,9 +1606,7 @@
         "false";
     }
 
-    if (
-      state.canvas
-    ) {
+    if (state.canvas) {
       state.canvas.dataset.compassCrystalsReceipt =
         serialized;
 
@@ -1464,9 +1614,7 @@
         "false";
     }
 
-    if (
-      state.receiptOutput
-    ) {
+    if (state.receiptOutput) {
       state.receiptOutput.value =
         serialized;
 
@@ -1489,9 +1637,7 @@
     state.running =
       false;
 
-    if (
-      state.raf
-    ) {
+    if (state.raf) {
       cancelAnimationFrame(
         state.raf
       );
@@ -1555,24 +1701,16 @@
       );
 
     if (
-      !Number.isFinite(
-        length
-      ) ||
-      length <=
-        1e-12
+      !Number.isFinite(length) ||
+      length <= 1e-12
     ) {
       return fallback.slice();
     }
 
     return [
-      vector[0] /
-        length,
-
-      vector[1] /
-        length,
-
-      vector[2] /
-        length
+      vector[0] / length,
+      vector[1] / length,
+      vector[2] / length
     ];
   }
 
@@ -1581,12 +1719,9 @@
     b
   ) {
     return (
-      a[0] *
-        b[0] +
-      a[1] *
-        b[1] +
-      a[2] *
-        b[2]
+      a[0] * b[0] +
+      a[1] * b[1] +
+      a[2] * b[2]
     );
   }
 
@@ -1595,20 +1730,14 @@
     b
   ) {
     return [
-      a[1] *
-        b[2] -
-      a[2] *
-        b[1],
+      a[1] * b[2] -
+        a[2] * b[1],
 
-      a[2] *
-        b[0] -
-      a[0] *
-        b[2],
+      a[2] * b[0] -
+        a[0] * b[2],
 
-      a[0] *
-        b[1] -
-      a[1] *
-        b[0]
+      a[0] * b[1] -
+        a[1] * b[0]
     ];
   }
 
@@ -1617,14 +1746,9 @@
     b
   ) {
     return [
-      a[0] -
-        b[0],
-
-      a[1] -
-        b[1],
-
-      a[2] -
-        b[2]
+      a[0] - b[0],
+      a[1] - b[1],
+      a[2] - b[2]
     ];
   }
 
@@ -1639,39 +1763,19 @@
   ) {
     const source =
       Array.isArray(value) ||
-      ArrayBuffer.isView(
-        value
-      )
+      ArrayBuffer.isView(value)
         ? Array.from(value)
         : [];
 
-    if (
-      source.length !==
-      4
-    ) {
+    if (source.length !== 4) {
       return fallback.slice();
     }
 
     const quaternion = [
-      finiteNumber(
-        source[0],
-        0
-      ),
-
-      finiteNumber(
-        source[1],
-        0
-      ),
-
-      finiteNumber(
-        source[2],
-        0
-      ),
-
-      finiteNumber(
-        source[3],
-        1
-      )
+      finiteNumber(source[0], 0),
+      finiteNumber(source[1], 0),
+      finiteNumber(source[2], 0),
+      finiteNumber(source[3], 1)
     ];
 
     const length =
@@ -1683,63 +1787,55 @@
       );
 
     if (
-      !Number.isFinite(
-        length
-      ) ||
-      length <=
-        1e-12
+      !Number.isFinite(length) ||
+      length <= 1e-12
     ) {
       return fallback.slice();
     }
 
     return quaternion.map(
       component =>
-        component /
-        length
+        component / length
     );
+  }
+
+  function quaternionMultiplyRaw(
+    a,
+    b
+  ) {
+    return [
+      a[3] * b[0] +
+        a[0] * b[3] +
+        a[1] * b[2] -
+        a[2] * b[1],
+
+      a[3] * b[1] -
+        a[0] * b[2] +
+        a[1] * b[3] +
+        a[2] * b[0],
+
+      a[3] * b[2] +
+        a[0] * b[1] -
+        a[1] * b[0] +
+        a[2] * b[3],
+
+      a[3] * b[3] -
+        a[0] * b[0] -
+        a[1] * b[1] -
+        a[2] * b[2]
+    ];
   }
 
   function quaternionMultiply(
     a,
     b
   ) {
-    return quaternionNormalize([
-      a[3] *
-        b[0] +
-      a[0] *
-        b[3] +
-      a[1] *
-        b[2] -
-      a[2] *
-        b[1],
-
-      a[3] *
-        b[1] -
-      a[0] *
-        b[2] +
-      a[1] *
-        b[3] +
-      a[2] *
-        b[0],
-
-      a[3] *
-        b[2] +
-      a[0] *
-        b[1] -
-      a[1] *
-        b[0] +
-      a[2] *
-        b[3],
-
-      a[3] *
-        b[3] -
-      a[0] *
-        b[0] -
-      a[1] *
-        b[1] -
-      a[2] *
-        b[2]
-    ]);
+    return quaternionNormalize(
+      quaternionMultiplyRaw(
+        a,
+        b
+      )
+    );
   }
 
   function quaternionConjugate(
@@ -1763,8 +1859,7 @@
       );
 
     const half =
-      angle *
-      0.5;
+      angle * 0.5;
 
     const sine =
       Math.sin(
@@ -1772,18 +1867,10 @@
       );
 
     return quaternionNormalize([
-      normalizedAxis[0] *
-        sine,
-
-      normalizedAxis[1] *
-        sine,
-
-      normalizedAxis[2] *
-        sine,
-
-      Math.cos(
-        half
-      )
+      normalizedAxis[0] * sine,
+      normalizedAxis[1] * sine,
+      normalizedAxis[2] * sine,
+      Math.cos(half)
     ]);
   }
 
@@ -1809,58 +1896,13 @@
           q,
           pure
         ),
-        quaternionConjugate(
-          q
-        )
+        quaternionConjugate(q)
       );
 
     return [
       rotated[0],
       rotated[1],
       rotated[2]
-    ];
-  }
-
-  function quaternionMultiplyRaw(
-    a,
-    b
-  ) {
-    return [
-      a[3] *
-        b[0] +
-      a[0] *
-        b[3] +
-      a[1] *
-        b[2] -
-      a[2] *
-        b[1],
-
-      a[3] *
-        b[1] -
-      a[0] *
-        b[2] +
-      a[1] *
-        b[3] +
-      a[2] *
-        b[0],
-
-      a[3] *
-        b[2] +
-      a[0] *
-        b[1] -
-      a[1] *
-        b[0] +
-      a[2] *
-        b[3],
-
-      a[3] *
-        b[3] -
-      a[0] *
-        b[0] -
-      a[1] *
-        b[1] -
-      a[2] *
-        b[2]
     ];
   }
 
@@ -1888,10 +1930,7 @@
         1
       );
 
-    if (
-      cosine >
-      0.999999
-    ) {
+    if (cosine > 0.999999) {
       return [
         0,
         0,
@@ -1900,10 +1939,7 @@
       ];
     }
 
-    if (
-      cosine <
-      -0.999999
-    ) {
+    if (cosine < -0.999999) {
       let axis =
         cross(
           [1, 0, 0],
@@ -1911,9 +1947,7 @@
         );
 
       if (
-        vectorLength(
-          axis
-        ) <
+        vectorLength(axis) <
         1e-6
       ) {
         axis =
@@ -1924,9 +1958,7 @@
       }
 
       return quaternionFromAxisAngle(
-        normalizeVector(
-          axis
-        ),
+        normalizeVector(axis),
         Math.PI
       );
     }
@@ -1941,8 +1973,7 @@
       axis[0],
       axis[1],
       axis[2],
-      1 +
-      cosine
+      1 + cosine
     ]);
   }
 
@@ -1963,20 +1994,13 @@
 
     let cosine =
       (
-        from[0] *
-          to[0] +
-        from[1] *
-          to[1] +
-        from[2] *
-          to[2] +
-        from[3] *
-          to[3]
+        from[0] * to[0] +
+        from[1] * to[1] +
+        from[2] * to[2] +
+        from[3] * to[3]
       );
 
-    if (
-      cosine <
-      0
-    ) {
+    if (cosine < 0) {
       to = [
         -to[0],
         -to[1],
@@ -1988,10 +2012,7 @@
         -cosine;
     }
 
-    if (
-      cosine >
-      0.9995
-    ) {
+    if (cosine > 0.9995) {
       return quaternionNormalize([
         from[0] +
           (
@@ -2055,164 +2076,128 @@
       sineTheta;
 
     return quaternionNormalize([
-      from[0] *
-        weightFrom +
-      to[0] *
-        weightTo,
+      from[0] * weightFrom +
+        to[0] * weightTo,
 
-      from[1] *
-        weightFrom +
-      to[1] *
-        weightTo,
+      from[1] * weightFrom +
+        to[1] * weightTo,
 
-      from[2] *
-        weightFrom +
-      to[2] *
-        weightTo,
+      from[2] * weightFrom +
+        to[2] * weightTo,
 
-      from[3] *
-        weightFrom +
-      to[3] *
-        weightTo
+      from[3] * weightFrom +
+        to[3] * weightTo
     ]);
   }
 
-  function quaternionFromControllerFrame(
-    frame
+  function orientationQuaternion(
+    orientation,
+    fallback
   ) {
     if (
-      frame &&
-      frame.orbitOrientation &&
+      orientation &&
       (
         Array.isArray(
-          frame.orbitOrientation
-            .quaternion
+          orientation.quaternion
         ) ||
         ArrayBuffer.isView(
-          frame.orbitOrientation
-            .quaternion
+          orientation.quaternion
         )
       )
     ) {
       return quaternionNormalize(
-        frame.orbitOrientation
-          .quaternion
+        orientation.quaternion,
+        fallback
       );
     }
 
-    const datasetValue =
+    return quaternionNormalize(
+      fallback
+    );
+  }
+
+  function constellationQuaternionFromFrame(
+    frame
+  ) {
+    if (
+      frame &&
+      frame.orbitOrientation
+    ) {
+      return orientationQuaternion(
+        frame.orbitOrientation,
+        state.constellationTargetQuaternion
+      );
+    }
+
+    const serialized =
       state.root &&
       state.root.dataset
         ? state.root.dataset
             .orbitQuaternion
         : "";
 
-    if (
-      datasetValue
-    ) {
+    if (serialized) {
       try {
         return quaternionNormalize(
           JSON.parse(
-            datasetValue
-          )
+            serialized
+          ),
+          state.constellationTargetQuaternion
         );
       } catch (_) {}
     }
 
-    return state.targetQuaternion.slice();
+    return state.constellationTargetQuaternion.slice();
   }
 
-  function primaryAnchorVector() {
-    return normalizeVector(
-      SPHERE.primaryAnchor
-    );
-  }
-
-  function rotatedCardinalUnitVector(
-    wing,
-    quaternion =
-      state.renderQuaternion
+  function clusterQuaternionFromFrame(
+    frame,
+    wing
   ) {
-    const base =
-      SPHERE.cardinalVectors[
+    if (
+      frame &&
+      frame.cluster &&
+      frame.cluster.wing === wing &&
+      frame.cluster.orientation
+    ) {
+      return orientationQuaternion(
+        frame.cluster.orientation,
+        state.clusterTargetQuaternions.get(
+          wing
+        ) ||
+        [0, 0, 0, 1]
+      );
+    }
+
+    const serialized =
+      state.root &&
+      state.root.dataset &&
+      state.root.dataset
+        .activeClusterWing === wing
+        ? state.root.dataset
+            .clusterQuaternion
+        : "";
+
+    if (serialized) {
+      try {
+        return quaternionNormalize(
+          JSON.parse(
+            serialized
+          ),
+          state.clusterTargetQuaternions.get(
+            wing
+          ) ||
+          [0, 0, 0, 1]
+        );
+      } catch (_) {}
+    }
+
+    return (
+      state.clusterTargetQuaternions.get(
         wing
-      ] ||
-      SPHERE.cardinalVectors
-        .north;
-
-    return normalizeVector(
-      quaternionRotateVector(
-        quaternion,
-        base
-      )
-    );
-  }
-
-  function nearestPrimaryWing(
-    quaternion =
-      state.renderQuaternion
-  ) {
-    const anchor =
-      primaryAnchorVector();
-
-    let bestWing =
-      "north";
-
-    let bestScore =
-      -Infinity;
-
-    WINGS.forEach(
-      wing => {
-        const vector =
-          rotatedCardinalUnitVector(
-            wing,
-            quaternion
-          );
-
-        const score =
-          dot(
-            vector,
-            anchor
-          );
-
-        if (
-          score >
-          bestScore
-        ) {
-          bestScore =
-            score;
-
-          bestWing =
-            wing;
-        }
-      }
-    );
-
-    return bestWing;
-  }
-
-  function settledQuaternionForWing(
-    wing,
-    currentQuaternion
-  ) {
-    const currentVector =
-      rotatedCardinalUnitVector(
-        wing,
-        currentQuaternion
-      );
-
-    const alignment =
-      quaternionFromUnitVectors(
-        currentVector,
-        primaryAnchorVector()
-      );
-
-    return quaternionNormalize(
-      quaternionMultiply(
-        alignment,
-        currentQuaternion
-      )
-    );
+      ) ||
+      [0, 0, 0, 1]
+    ).slice();
   }
 
   function getControllerFrame() {
@@ -2234,14 +2219,14 @@
         ? state.root.dataset
         : {};
 
-    let quaternion =
-      state.targetQuaternion.slice();
+    let orbitQuaternion =
+      state.constellationTargetQuaternion.slice();
 
     if (
       dataset.orbitQuaternion
     ) {
       try {
-        quaternion =
+        orbitQuaternion =
           quaternionNormalize(
             JSON.parse(
               dataset.orbitQuaternion
@@ -2249,6 +2234,31 @@
           );
       } catch (_) {}
     }
+
+    let clusterQuaternion = [
+      0,
+      0,
+      0,
+      1
+    ];
+
+    if (
+      dataset.clusterQuaternion
+    ) {
+      try {
+        clusterQuaternion =
+          quaternionNormalize(
+            JSON.parse(
+              dataset.clusterQuaternion
+            )
+          );
+      } catch (_) {}
+    }
+
+    const activeWing =
+      normalizeWing(
+        dataset.activeClusterWing
+      );
 
     return Object.freeze({
       state:
@@ -2276,14 +2286,63 @@
         Object.freeze({
           quaternion:
             Object.freeze(
-              quaternion
+              orbitQuaternion
             ),
 
-          primaryWing:
+          primaryId:
             dataset.orbitPreviewFocus ||
             dataset.orbitFocus ||
             "north"
         }),
+
+      activeClusterWing:
+        activeWing,
+
+      cluster:
+        activeWing
+          ? Object.freeze({
+              wing:
+                activeWing,
+
+              roomIds:
+                Object.freeze([]),
+
+              primaryRoom:
+                dataset.clusterPrimaryRoom ||
+                "",
+
+              previewPrimaryRoom:
+                dataset.clusterPreviewPrimaryRoom ||
+                "",
+
+              phase:
+                dataset.clusterPhase ||
+                "COMMITTED",
+
+              gestureActive:
+                dataset.clusterGestureActive ===
+                "true",
+
+              revision:
+                Number(
+                  dataset.clusterRevision ||
+                  0
+                ),
+
+              orientation:
+                Object.freeze({
+                  quaternion:
+                    Object.freeze(
+                      clusterQuaternion
+                    ),
+
+                  primaryId:
+                    dataset.clusterPreviewPrimaryRoom ||
+                    dataset.clusterPrimaryRoom ||
+                    ""
+                })
+            })
+          : null,
 
       selectedCardinal:
         dataset.selectedCardinal ||
@@ -2406,8 +2465,23 @@
       state.frame &&
       state.frame.state ===
         "CONSTELLATION" &&
-      state.recession
-        .interactive &&
+      state.recession.interactive &&
+      !isMirrorlandLifecycleState()
+    );
+  }
+
+  function clusterCanRotate() {
+    return Boolean(
+      state.frame &&
+      (
+        state.frame.state ===
+          "CLUSTER_OPEN" ||
+        state.frame.state ===
+          "ROOM_SELECTED"
+      ) &&
+      state.frame.cluster &&
+      state.frame.cluster.wing &&
+      state.recession.interactive &&
       !isMirrorlandLifecycleState()
     );
   }
@@ -2421,12 +2495,9 @@
       );
 
     return aspect <
-      QUALITY
-        .mobileAspectThreshold
-      ? state.recession
-          .outwardMobile
-      : state.recession
-          .outwardDesktop;
+      QUALITY.mobileAspectThreshold
+      ? state.recession.outwardMobile
+      : state.recession.outwardDesktop;
   }
 
   function createCanvas() {
@@ -2649,18 +2720,15 @@
           index += 1
         ) {
           output[
-            column *
-            4 +
+            column * 4 +
             row
           ] +=
             a[
-              index *
-              4 +
+              index * 4 +
               row
             ] *
             b[
-              column *
-              4 +
+              column * 4 +
               index
             ];
         }
@@ -2782,8 +2850,7 @@
     const factor =
       1 /
       Math.tan(
-        fieldOfView /
-        2
+        fieldOfView / 2
       );
 
     const range =
@@ -2864,41 +2931,25 @@
     point
   ) {
     return [
-      matrix[0] *
-        point[0] +
-      matrix[4] *
-        point[1] +
-      matrix[8] *
-        point[2] +
-      matrix[12] *
-        point[3],
+      matrix[0] * point[0] +
+        matrix[4] * point[1] +
+        matrix[8] * point[2] +
+        matrix[12] * point[3],
 
-      matrix[1] *
-        point[0] +
-      matrix[5] *
-        point[1] +
-      matrix[9] *
-        point[2] +
-      matrix[13] *
-        point[3],
+      matrix[1] * point[0] +
+        matrix[5] * point[1] +
+        matrix[9] * point[2] +
+        matrix[13] * point[3],
 
-      matrix[2] *
-        point[0] +
-      matrix[6] *
-        point[1] +
-      matrix[10] *
-        point[2] +
-      matrix[14] *
-        point[3],
+      matrix[2] * point[0] +
+        matrix[6] * point[1] +
+        matrix[10] * point[2] +
+        matrix[14] * point[3],
 
-      matrix[3] *
-        point[0] +
-      matrix[7] *
-        point[1] +
-      matrix[11] *
-        point[2] +
-      matrix[15] *
-        point[3]
+      matrix[3] * point[0] +
+        matrix[7] * point[1] +
+        matrix[11] * point[2] +
+        matrix[15] * point[3]
     ];
   }
 
@@ -2937,8 +2988,7 @@
 
     const inner =
       options.inner ||
-      radius *
-      0.46;
+      radius * 0.46;
 
     const depth =
       options.depth ||
@@ -2956,11 +3006,8 @@
       options.warmth ||
       0;
 
-    const vertices =
-      [];
-
-    const faces =
-      [];
+    const vertices = [];
+    const faces = [];
 
     function add(
       point
@@ -2969,10 +3016,8 @@
         point
       );
 
-      return (
-        vertices.length -
-        1
-      );
+      return vertices.length -
+        1;
     }
 
     function face(
@@ -3014,31 +3059,21 @@
         0,
         0,
         -depth -
-        crown *
-        0.72
+        crown * 0.72
       ]);
 
-    const outer =
-      [];
-
-    const innerRing =
-      [];
-
-    const frontBevel =
-      [];
-
-    const rearBevel =
-      [];
+    const outer = [];
+    const innerRing = [];
+    const frontBevel = [];
+    const rearBevel = [];
 
     for (
       let index = 0;
-      index <
-      points * 2;
+      index < points * 2;
       index += 1
     ) {
       const isPoint =
-        index %
-        2 ===
+        index % 2 ===
         0;
 
       const angle =
@@ -3051,8 +3086,7 @@
           points *
           2
         ) -
-        Math.PI /
-        2;
+        Math.PI / 2;
 
       const activeRadius =
         isPoint
@@ -3069,16 +3103,12 @@
 
       outer.push(
         add([
-          Math.cos(
-            angle
-          ) *
-          activeRadius,
+          Math.cos(angle) *
+            activeRadius,
 
-          Math.sin(
-            angle
-          ) *
-          activeRadius *
-          yScale,
+          Math.sin(angle) *
+            activeRadius *
+            yScale,
 
           ridge
         ])
@@ -3086,61 +3116,46 @@
 
       innerRing.push(
         add([
-          Math.cos(
-            angle
-          ) *
-          activeRadius *
-          0.38,
+          Math.cos(angle) *
+            activeRadius *
+            0.38,
 
-          Math.sin(
-            angle
-          ) *
-          activeRadius *
-          yScale *
-          0.38,
+          Math.sin(angle) *
+            activeRadius *
+            yScale *
+            0.38,
 
-          depth *
-          0.14
+          depth * 0.14
         ])
       );
 
       frontBevel.push(
         add([
-          Math.cos(
-            angle
-          ) *
-          activeRadius *
-          0.72,
+          Math.cos(angle) *
+            activeRadius *
+            0.72,
 
-          Math.sin(
-            angle
-          ) *
-          activeRadius *
-          yScale *
-          0.72,
+          Math.sin(angle) *
+            activeRadius *
+            yScale *
+            0.72,
 
-          depth *
-          0.52
+          depth * 0.52
         ])
       );
 
       rearBevel.push(
         add([
-          Math.cos(
-            angle
-          ) *
-          activeRadius *
-          0.68,
+          Math.cos(angle) *
+            activeRadius *
+            0.68,
 
-          Math.sin(
-            angle
-          ) *
-          activeRadius *
-          yScale *
-          0.68,
+          Math.sin(angle) *
+            activeRadius *
+            yScale *
+            0.68,
 
-          -depth *
-          0.48
+          -depth * 0.48
         ])
       );
     }
@@ -3150,8 +3165,7 @@
 
     for (
       let index = 0;
-      index <
-      count;
+      index < count;
       index += 1
     ) {
       const next =
@@ -3222,14 +3236,9 @@
       );
     }
 
-    const positions =
-      [];
-
-    const normals =
-      [];
-
-    const colors =
-      [];
+    const positions = [];
+    const normals = [];
+    const colors = [];
 
     faces.forEach(
       (
@@ -3268,23 +3277,16 @@
         const lift =
           0.84 +
           (
-            faceIndex %
-            7
+            faceIndex % 7
           ) *
           0.034;
 
         const sparkleLift =
-          faceIndex %
-          5 ===
-          0
+          faceIndex % 5 === 0
             ? 0.13
             : 0;
 
-        [
-          a,
-          b,
-          c
-        ].forEach(
+        [a, b, c].forEach(
           point => {
             positions.push(
               point[0],
@@ -3301,28 +3303,25 @@
             colors.push(
               Math.min(
                 color[0] *
-                lift +
-                warmth *
-                0.06 +
-                sparkleLift,
+                  lift +
+                  warmth * 0.06 +
+                  sparkleLift,
                 1
               ),
 
               Math.min(
                 color[1] *
-                lift +
-                warmth *
-                0.04 +
-                sparkleLift,
+                  lift +
+                  warmth * 0.04 +
+                  sparkleLift,
                 1
               ),
 
               Math.min(
                 color[2] *
-                lift +
-                warmth *
-                0.02 +
-                sparkleLift,
+                  lift +
+                  warmth * 0.02 +
+                  sparkleLift,
                 1
               )
             );
@@ -3348,8 +3347,7 @@
         ),
 
       vertexCount:
-        positions.length /
-        3
+        positions.length / 3
     });
   }
 
@@ -3387,32 +3385,19 @@
   function roomColorForWing(
     wing
   ) {
-    if (
-      wing ===
-      "north"
-    ) {
-      return STAR_PALETTE
-        .roomNorth;
+    if (wing === "north") {
+      return STAR_PALETTE.roomNorth;
     }
 
-    if (
-      wing ===
-      "east"
-    ) {
-      return STAR_PALETTE
-        .roomEast;
+    if (wing === "east") {
+      return STAR_PALETTE.roomEast;
     }
 
-    if (
-      wing ===
-      "south"
-    ) {
-      return STAR_PALETTE
-        .roomSouth;
+    if (wing === "south") {
+      return STAR_PALETTE.roomSouth;
     }
 
-    return STAR_PALETTE
-      .roomWest;
+    return STAR_PALETTE.roomWest;
   }
 
   function buildMeshes(
@@ -3424,10 +3409,8 @@
     WINGS.forEach(
       wing => {
         const warm =
-          wing ===
-            "south" ||
-          wing ===
-            "west";
+          wing === "south" ||
+          wing === "west";
 
         meshes.set(
           `cardinal-${wing}`,
@@ -3436,8 +3419,7 @@
             gl,
             createDiamondStarMesh({
               points:
-                QUALITY
-                  .cardinalSegments,
+                QUALITY.cardinalSegments,
 
               radius:
                 0.72,
@@ -3452,9 +3434,7 @@
                 0.20,
 
               color:
-                STAR_PALETTE[
-                  wing
-                ],
+                STAR_PALETTE[wing],
 
               warmth:
                 warm
@@ -3471,8 +3451,7 @@
             gl,
             createDiamondStarMesh({
               points:
-                QUALITY
-                  .roomSegments,
+                QUALITY.roomSegments,
 
               radius:
                 0.42,
@@ -3502,6 +3481,53 @@
     );
 
     return meshes;
+  }
+
+  function clusterBaseVector(
+    index,
+    count
+  ) {
+    const safeCount =
+      Math.max(
+        1,
+        count
+      );
+
+    const longitude =
+      (
+        Math.PI *
+        2 *
+        index
+      ) /
+      safeCount -
+      Math.PI / 2;
+
+    const latitude =
+      Math.sin(
+        (
+          index +
+          0.5
+        ) *
+        SPHERE.cluster
+          .latitudeFrequency
+      ) *
+      SPHERE.cluster
+        .latitudeAmplitude;
+
+    const cosineLatitude =
+      Math.cos(
+        latitude
+      );
+
+    return normalizeVector([
+      Math.cos(longitude) *
+        cosineLatitude,
+
+      Math.sin(latitude),
+
+      Math.sin(longitude) *
+        cosineLatitude
+    ]);
   }
 
   function makeNode({
@@ -3535,11 +3561,14 @@
       sphereVector:
         type ===
         NODE_TYPES.CARDINAL
-          ? SPHERE
-              .cardinalVectors[
+          ? SPHERE.constellation
+              .vectors[
                 wing
               ].slice()
-          : null,
+          : clusterBaseVector(
+              roomIndex,
+              roomCount
+            ),
 
       depthScore:
         0,
@@ -3658,8 +3687,7 @@
             label:
               semantic.dataset
                 .coordinateLabel ||
-              semantic.dataset
-                .label ||
+              semantic.dataset.label ||
               wing,
 
             short:
@@ -3678,8 +3706,7 @@
               "CARDINAL_IDLE",
 
             phase:
-              wingIndex *
-              1.37 +
+              wingIndex * 1.37 +
               0.22
           })
         );
@@ -3696,11 +3723,9 @@
             roomIndex
           ) => {
             const id =
-              String(
-                element.dataset
-                  .roomId ||
-                ""
-              ).trim();
+              normalizeRoomId(
+                element.dataset.roomId
+              );
 
             if (!id) {
               throw new Error(
@@ -3720,14 +3745,12 @@
                 wing,
 
                 label:
-                  element.dataset
-                    .label ||
+                  element.dataset.label ||
                   element.textContent
                     .trim(),
 
                 short:
-                  element.dataset
-                    .localFunction ||
+                  element.dataset.localFunction ||
                   "",
 
                 roomIndex,
@@ -3742,10 +3765,8 @@
                   "ROOM_IDLE",
 
                 phase:
-                  wingIndex *
-                  1.13 +
-                  roomIndex *
-                  0.47
+                  wingIndex * 1.13 +
+                  roomIndex * 0.47
               })
             );
           }
@@ -3771,19 +3792,13 @@
           NODE_TYPES.ROOM
       ).length;
 
-    if (
-      cardinalCount !==
-      4
-    ) {
+    if (cardinalCount !== 4) {
       throw new Error(
         `CARDINAL_COUNT_INVALID:${cardinalCount}`
       );
     }
 
-    if (
-      roomCount !==
-      19
-    ) {
+    if (roomCount !== 19) {
       throw new Error(
         `ROOM_COUNT_INVALID:${roomCount}`
       );
@@ -3884,9 +3899,7 @@
         node.id
       );
 
-    if (
-      !declaration
-    ) {
+    if (!declaration) {
       throw new Error(
         `ROOM_DECLARATION_NOT_FOUND:${node.id}`
       );
@@ -3898,9 +3911,7 @@
         state.semanticLayer
       );
 
-    if (
-      existing
-    ) {
+    if (existing) {
       applyNonvisualProxyPresentation(
         existing
       );
@@ -3950,21 +3961,18 @@
       node.id;
 
     proxy.dataset.label =
-      declaration.dataset
-        .label ||
+      declaration.dataset.label ||
       node.label;
 
     proxy.dataset.route =
-      declaration.dataset
-        .route ||
+      declaration.dataset.route ||
       declaration.getAttribute(
         "href"
       ) ||
       "";
 
     proxy.dataset.preview =
-      declaration.dataset
-        .preview ||
+      declaration.dataset.preview ||
       "";
 
     proxy.dataset.localCoordinate =
@@ -3979,11 +3987,13 @@
       "";
 
     proxy.dataset.whyEnter =
-      declaration.dataset
-        .whyEnter ||
+      declaration.dataset.whyEnter ||
       "";
 
     proxy.dataset.selected =
+      "false";
+
+    proxy.dataset.primary =
       "false";
 
     proxy.dataset.presentation =
@@ -4033,10 +4043,7 @@
       }
     );
 
-    if (
-      proxies.size !==
-      19
-    ) {
+    if (proxies.size !== 19) {
       throw new Error(
         `ROOM_PROXY_COUNT_INVALID:${proxies.size}`
       );
@@ -4053,6 +4060,217 @@
     return proxies;
   }
 
+  function constellationAnchorVector() {
+    return normalizeVector(
+      SPHERE.constellation
+        .primaryAnchor
+    );
+  }
+
+  function clusterAnchorVector() {
+    return normalizeVector(
+      SPHERE.cluster
+        .primaryAnchor
+    );
+  }
+
+  function rotatedCardinalUnitVector(
+    wing,
+    quaternion =
+      state.constellationQuaternion
+  ) {
+    const base =
+      SPHERE.constellation
+        .vectors[
+          wing
+        ] ||
+      SPHERE.constellation
+        .vectors.north;
+
+    return normalizeVector(
+      quaternionRotateVector(
+        quaternion,
+        base
+      )
+    );
+  }
+
+  function rotatedRoomUnitVector(
+    node,
+    quaternion
+  ) {
+    return normalizeVector(
+      quaternionRotateVector(
+        quaternion,
+        node.sphereVector
+      )
+    );
+  }
+
+  function nearestPrimaryWing(
+    quaternion =
+      state.constellationQuaternion
+  ) {
+    const anchor =
+      constellationAnchorVector();
+
+    let bestWing =
+      "north";
+
+    let bestScore =
+      -Infinity;
+
+    WINGS.forEach(
+      wing => {
+        const vector =
+          rotatedCardinalUnitVector(
+            wing,
+            quaternion
+          );
+
+        const score =
+          dot(
+            vector,
+            anchor
+          );
+
+        if (score > bestScore) {
+          bestScore =
+            score;
+
+          bestWing =
+            wing;
+        }
+      }
+    );
+
+    return bestWing;
+  }
+
+  function activeRoomNodes(
+    wing
+  ) {
+    return Array.from(
+      state.registry.values()
+    ).filter(
+      node =>
+        node.type ===
+          NODE_TYPES.ROOM &&
+        node.wing ===
+          wing
+    );
+  }
+
+  function nearestPrimaryRoom(
+    wing,
+    quaternion
+  ) {
+    const anchor =
+      clusterAnchorVector();
+
+    const rooms =
+      activeRoomNodes(
+        wing
+      );
+
+    let bestRoom =
+      rooms[0]
+        ? rooms[0].id
+        : "";
+
+    let bestScore =
+      -Infinity;
+
+    rooms.forEach(
+      node => {
+        const vector =
+          rotatedRoomUnitVector(
+            node,
+            quaternion
+          );
+
+        const score =
+          dot(
+            vector,
+            anchor
+          );
+
+        if (score > bestScore) {
+          bestScore =
+            score;
+
+          bestRoom =
+            node.id;
+        }
+      }
+    );
+
+    return bestRoom;
+  }
+
+  function settledConstellationQuaternion(
+    wing,
+    currentQuaternion
+  ) {
+    const currentVector =
+      rotatedCardinalUnitVector(
+        wing,
+        currentQuaternion
+      );
+
+    const alignment =
+      quaternionFromUnitVectors(
+        currentVector,
+        constellationAnchorVector()
+      );
+
+    return quaternionNormalize(
+      quaternionMultiply(
+        alignment,
+        currentQuaternion
+      )
+    );
+  }
+
+  function settledClusterQuaternion(
+    roomId,
+    wing,
+    currentQuaternion
+  ) {
+    const node =
+      state.registry.get(
+        roomId
+      );
+
+    if (
+      !node ||
+      node.type !==
+        NODE_TYPES.ROOM ||
+      node.wing !== wing
+    ) {
+      return currentQuaternion.slice();
+    }
+
+    const currentVector =
+      rotatedRoomUnitVector(
+        node,
+        currentQuaternion
+      );
+
+    const alignment =
+      quaternionFromUnitVectors(
+        currentVector,
+        clusterAnchorVector()
+      );
+
+    return quaternionNormalize(
+      quaternionMultiply(
+        alignment,
+        currentQuaternion
+      )
+    );
+  }
+
   function sphericalCardinalPosition(
     wing
   ) {
@@ -4066,15 +4284,18 @@
 
       x:
         unit[0] *
-        SPHERE.horizontalRadius,
+        SPHERE.constellation
+          .horizontalRadius,
 
       y:
         unit[1] *
-        SPHERE.verticalRadius,
+        SPHERE.constellation
+          .verticalRadius,
 
       z:
         unit[2] *
-        SPHERE.depthRadius,
+        SPHERE.constellation
+          .depthRadius,
 
       depth:
         (
@@ -4088,7 +4309,7 @@
           (
             dot(
               unit,
-              primaryAnchorVector()
+              constellationAnchorVector()
             ) +
             1
           ) /
@@ -4099,43 +4320,55 @@
     };
   }
 
-  function roomPetalPosition(
-    index,
-    count
+  function sphericalRoomPosition(
+    node,
+    quaternion
   ) {
-    const radius =
-      count ===
-      4
-        ? 1.24
-        : 1.34;
+    const unit =
+      rotatedRoomUnitVector(
+        node,
+        quaternion
+      );
 
-    const angle =
-      (
-        Math.PI *
-        2 *
-        index
-      ) /
-      Math.max(
-        count,
-        1
-      ) -
-      Math.PI /
-      2;
+    return {
+      unit,
 
-    return [
-      Math.cos(
-        angle
-      ) *
-      radius,
+      x:
+        unit[0] *
+        SPHERE.cluster
+          .horizontalRadius,
 
-      Math.sin(
-        angle
-      ) *
-      radius *
-      0.78,
+      y:
+        unit[1] *
+        SPHERE.cluster
+          .verticalRadius,
 
-      0.26
-    ];
+      z:
+        unit[2] *
+        SPHERE.cluster
+          .depthRadius,
+
+      depth:
+        (
+          unit[2] +
+          1
+        ) /
+        2,
+
+      primary:
+        clamp(
+          (
+            dot(
+              unit,
+              clusterAnchorVector()
+            ) +
+            1
+          ) /
+          2,
+          0,
+          1
+        )
+    };
   }
 
   function setTarget(
@@ -4164,54 +4397,117 @@
     return values;
   }
 
-  function updateTargetQuaternion(
+  function syncQuaternionTargets(
     deltaTime
   ) {
-    const controllerQuaternion =
-      quaternionFromControllerFrame(
+    const frameConstellationQuaternion =
+      constellationQuaternionFromFrame(
         state.frame
       );
 
     if (
       state.pointer &&
-      state.pointer.dragging
+      state.pointer.dragging &&
+      state.pointer.gestureScope ===
+        "constellation"
     ) {
-      state.targetQuaternion =
-        state.pointer.currentQuaternion
+      state.constellationTargetQuaternion =
+        state.pointer
+          .currentQuaternion
           .slice();
 
-      state.renderQuaternion =
-        state.pointer.currentQuaternion
+      state.constellationQuaternion =
+        state.pointer
+          .currentQuaternion
           .slice();
+    } else {
+      state.constellationTargetQuaternion =
+        frameConstellationQuaternion;
 
-      return;
+      if (state.reducedMotion) {
+        state.constellationQuaternion =
+          frameConstellationQuaternion.slice();
+      } else {
+        state.constellationQuaternion =
+          quaternionSlerp(
+            state.constellationQuaternion,
+            state.constellationTargetQuaternion,
+            Math.min(
+              1,
+              deltaTime *
+              GESTURE.settleSpeed
+            )
+          );
+      }
     }
 
-    state.targetQuaternion =
-      controllerQuaternion;
+    WINGS.forEach(
+      wing => {
+        const frameQuaternion =
+          clusterQuaternionFromFrame(
+            state.frame,
+            wing
+          );
 
-    if (
-      state.reducedMotion
-    ) {
-      state.renderQuaternion =
-        controllerQuaternion.slice();
+        if (
+          state.pointer &&
+          state.pointer.dragging &&
+          state.pointer.gestureScope ===
+            "cluster" &&
+          state.pointer.wing ===
+            wing
+        ) {
+          state.clusterTargetQuaternions.set(
+            wing,
+            state.pointer
+              .currentQuaternion
+              .slice()
+          );
 
-      return;
-    }
+          state.clusterQuaternions.set(
+            wing,
+            state.pointer
+              .currentQuaternion
+              .slice()
+          );
 
-    const amount =
-      Math.min(
-        1,
-        deltaTime *
-        GESTURE.settleSpeed
-      );
+          return;
+        }
 
-    state.renderQuaternion =
-      quaternionSlerp(
-        state.renderQuaternion,
-        state.targetQuaternion,
-        amount
-      );
+        state.clusterTargetQuaternions.set(
+          wing,
+          frameQuaternion.slice()
+        );
+
+        const current =
+          state.clusterQuaternions.get(
+            wing
+          ) ||
+          frameQuaternion.slice();
+
+        if (state.reducedMotion) {
+          state.clusterQuaternions.set(
+            wing,
+            frameQuaternion.slice()
+          );
+
+          return;
+        }
+
+        state.clusterQuaternions.set(
+          wing,
+          quaternionSlerp(
+            current,
+            frameQuaternion,
+            Math.min(
+              1,
+              deltaTime *
+              GESTURE.settleSpeed
+            )
+          )
+        );
+      }
+    );
   }
 
   function updateTargets() {
@@ -4228,9 +4524,11 @@
       isMirrorlandLifecycleState();
 
     const activeWing =
-      frame.selectedCardinal ||
-      frame.orbitFocus ||
-      state.settledPrimaryWing ||
+      normalizeWing(
+        frame.selectedCardinal ||
+        frame.activeClusterWing ||
+        frame.orbitFocus
+      ) ||
       "north";
 
     const clusterOpen =
@@ -4247,7 +4545,7 @@
 
     state.visualPrimaryWing =
       nearestPrimaryWing(
-        state.renderQuaternion
+        state.constellationQuaternion
       );
 
     state.registry.forEach(
@@ -4301,9 +4599,7 @@
       }
     );
 
-    if (
-      !clusterOpen
-    ) {
+    if (!clusterOpen) {
       WINGS.forEach(
         wing => {
           const node =
@@ -4423,8 +4719,7 @@
 
                 z:
                   sphere.z +
-                  recession
-                    .zOffset,
+                  recession.zOffset,
 
                 prominence:
                   clamp(
@@ -4461,8 +4756,7 @@
             1,
             state.cssHeight
           ) <
-        QUALITY
-          .mobileAspectThreshold
+        QUALITY.mobileAspectThreshold
           ? 7.30
           : 6.20
       ];
@@ -4476,103 +4770,182 @@
       return;
     }
 
+    const clusterQuaternion =
+      state.clusterQuaternions.get(
+        activeWing
+      ) ||
+      [0, 0, 0, 1];
+
+    const primaryRoom =
+      nearestPrimaryRoom(
+        activeWing,
+        clusterQuaternion
+      );
+
+    state.visualPrimaryRooms.set(
+      activeWing,
+      primaryRoom
+    );
+
     const activeRooms =
-      Array.from(
-        state.registry.values()
-      ).filter(
-        node =>
-          node.type ===
-            NODE_TYPES.ROOM &&
-          node.wing ===
-            activeWing
+      activeRoomNodes(
+        activeWing
       );
 
     activeRooms.forEach(
-      (
-        node,
-        index
-      ) => {
-        const position =
-          roomPetalPosition(
-            index,
-            activeRooms.length
+      node => {
+        const sphere =
+          sphericalRoomPosition(
+            node,
+            clusterQuaternion
           );
 
         const selected =
           frame.selectedRoom ===
           node.id;
 
+        const primary =
+          primaryRoom ===
+          node.id;
+
         node.visible =
           true;
+
+        node.depthScore =
+          sphere.depth;
+
+        node.primaryScore =
+          sphere.primary;
 
         node.material =
           selected
             ? "ROOM_SELECTED"
-            : "ROOM_IDLE";
+            : primary
+              ? "ROOM_PRIMARY"
+              : "ROOM_IDLE";
+
+        const depthScale =
+          0.70 +
+          sphere.depth *
+          0.38;
+
+        const primaryLift =
+          primary
+            ? 1.14
+            : 1;
+
+        const selectedLift =
+          selected
+            ? 1.08
+            : 1;
+
+        const ordinaryScale =
+          (
+            selected
+              ? QUALITY
+                  .selectedRoomScale
+              : primary
+                ? QUALITY
+                    .primaryRoomScale
+                : QUALITY
+                    .roomScale
+          ) *
+          depthScale *
+          primaryLift *
+          selectedLift;
+
+        const prominence =
+          (
+            0.30 +
+            sphere.depth *
+            0.48 +
+            sphere.primary *
+            0.28 +
+            (
+              selected
+                ? 0.08
+                : 0
+            )
+          ) *
+          recession.prominence;
+
+        const halo =
+          (
+            0.20 +
+            sphere.depth *
+            0.30 +
+            sphere.primary *
+            0.44 +
+            (
+              selected
+                ? 0.18
+                : 0
+            )
+          ) *
+          recession.halo;
+
+        const rotationSpeed =
+          (
+            primary ||
+            selected
+              ? 0.13
+              : 0.07 +
+                sphere.depth *
+                0.04
+          ) *
+          recession.rotation;
+
+        const float =
+          (
+            primary ||
+            selected
+              ? 0.012
+              : 0.004 +
+                sphere.depth *
+                0.004
+          ) *
+          recession.float;
 
         setTarget(
           node,
           withUniformScale(
             {
               x:
-                position[0] *
+                sphere.x *
                 outward,
 
               y:
                 (
-                  position[1] -
-                  0.14
+                  sphere.y -
+                  0.08
                 ) *
                 outward,
 
               z:
-                (
-                  selected
-                    ? 0.86
-                    : 0.42
-                ) +
+                sphere.z +
+                0.18 +
                 recession.zOffset,
 
               prominence:
-                (
-                  selected
-                    ? 1
-                    : 0.86
-                ) *
-                recession.prominence,
+                clamp(
+                  prominence,
+                  0.10,
+                  1.14
+                ),
 
               halo:
-                (
-                  selected
-                    ? 0.88
-                    : 0.48
-                ) *
-                recession.halo,
+                clamp(
+                  halo,
+                  0,
+                  1.12
+                ),
 
-              rotationSpeed:
-                (
-                  selected
-                    ? 0.12
-                    : 0.08
-                ) *
-                recession.rotation,
+              rotationSpeed,
 
-              float:
-                (
-                  selected
-                    ? 0.012
-                    : 0.006
-                ) *
-                recession.float
+              float
             },
 
-            (
-              selected
-                ? QUALITY
-                    .selectedRoomScale
-                : QUALITY
-                    .roomScale
-            ) *
+            ordinaryScale *
             recession.scale
           )
         );
@@ -4581,23 +4954,22 @@
 
     state.camera.nextEye = [
       0,
-      0.66,
+      0.62,
 
       state.cssWidth /
         Math.max(
           1,
           state.cssHeight
         ) <
-      QUALITY
-        .mobileAspectThreshold
-        ? 7.5
-        : 5.85
+      QUALITY.mobileAspectThreshold
+        ? 7.62
+        : 6.08
     ];
 
     state.camera.nextTarget = [
       0,
-      0.03,
-      0
+      0.02,
+      0.06
     ];
   }
 
@@ -4624,8 +4996,7 @@
         ? 1
         : Math.min(
             1,
-            deltaTime *
-            6.2
+            deltaTime * 6.2
           );
 
     state.registry.forEach(
@@ -4658,9 +5029,7 @@
           }
         );
 
-        if (
-          state.reducedMotion
-        ) {
+        if (state.reducedMotion) {
           current.rx =
             0;
 
@@ -4679,8 +5048,7 @@
 
         current.ry =
           Math.sin(
-            state.time *
-            0.42 +
+            state.time * 0.42 +
             node.phase
           ) *
           QUALITY.maxYaw *
@@ -4691,10 +5059,8 @@
 
         current.rx =
           Math.sin(
-            state.time *
-            0.31 +
-            node.phase *
-            0.73
+            state.time * 0.31 +
+            node.phase * 0.73
           ) *
           QUALITY.maxPitch *
           Math.max(
@@ -4738,10 +5104,8 @@
       state.reducedMotion
         ? 0
         : Math.sin(
-            state.time *
-            0.95 +
-            node.roomIndex *
-            0.72 +
+            state.time * 0.95 +
+            node.roomIndex * 0.72 +
             node.phase
           ) *
           transform.float;
@@ -4749,15 +5113,14 @@
     const haloScale =
       haloPass
         ? 1 +
-          transform.halo *
-          0.10
+          transform.halo * 0.10
         : 1;
 
     return multiply4(
       translate4(
         transform.x,
         transform.y +
-        floatY,
+          floatY,
         transform.z
       ),
 
@@ -4778,13 +5141,13 @@
 
             scale4(
               transform.sx *
-              haloScale,
+                haloScale,
 
               transform.sy *
-              haloScale,
+                haloScale,
 
               transform.sz *
-              haloScale
+                haloScale
             )
           )
         )
@@ -4824,9 +5187,7 @@
         [0, 0, 0, 1]
       );
 
-    if (
-      !clip[3]
-    ) {
+    if (!clip[3]) {
       return null;
     }
 
@@ -4839,14 +5200,10 @@
       clip[3];
 
     if (
-      x <
-      -1.30 ||
-      x >
-      1.30 ||
-      y <
-      -1.30 ||
-      y >
-      1.30
+      x < -1.30 ||
+      x > 1.30 ||
+      y < -1.30 ||
+      y > 1.30
     ) {
       return null;
     }
@@ -4855,8 +5212,7 @@
       x:
         (
           (
-            x +
-            1
+            x + 1
           ) /
           2
         ) *
@@ -4865,8 +5221,7 @@
       y:
         (
           (
-            1 -
-            y
+            1 - y
           ) /
           2
         ) *
@@ -4917,16 +5272,12 @@
         "span:last-child"
       );
 
-    if (
-      primaryLabel
-    ) {
+    if (primaryLabel) {
       primaryLabel.textContent =
         node.label;
     }
 
-    if (
-      secondaryLabel
-    ) {
+    if (secondaryLabel) {
       secondaryLabel.textContent =
         node.short;
     }
@@ -4936,8 +5287,7 @@
       state.visualPrimaryWing;
 
     const selected =
-      state.frame
-        .selectedCardinal ===
+      state.frame.selectedCardinal ===
       node.wing;
 
     const depth =
@@ -4950,31 +5300,27 @@
     const scale =
       (
         0.64 +
-        depth *
-        0.22 +
+        depth * 0.22 +
         (
           primary
             ? 0.18
             : 0
         )
       ) *
-      state.recession
-        .labelScale;
+      state.recession.labelScale;
 
     const opacity =
       clamp(
         (
           0.22 +
-          depth *
-          0.54 +
+          depth * 0.54 +
           (
             primary
               ? 0.24
               : 0
           )
         ) *
-        state.recession
-          .labelOpacity,
+        state.recession.labelOpacity,
         0.10,
         1
       );
@@ -4990,9 +5336,7 @@
         : "false";
 
     element.dataset.depth =
-      depth.toFixed(
-        4
-      );
+      depth.toFixed(4);
 
     if (
       selected ||
@@ -5024,15 +5368,11 @@
       `translate(-50%, -50%) scale(${scale})`;
 
     element.style.opacity =
-      String(
-        opacity
-      );
+      String(opacity);
 
     const interactive =
-      state.recession
-        .interactive &&
-      node.transform
-        .prominence >=
+      state.recession.interactive &&
+      node.transform.prominence >=
         0.12;
 
     element.style.pointerEvents =
@@ -5056,8 +5396,7 @@
       String(
         10 +
         Math.round(
-          depth *
-          80
+          depth * 80
         ) +
         (
           primary
@@ -5098,17 +5437,25 @@
       "1";
 
     element.style.zIndex =
-      "5";
+      String(
+        10 +
+        Math.round(
+          node.depthScore * 80
+        ) +
+        (
+          node.primaryScore > 0.92
+            ? 20
+            : 0
+        )
+      );
 
     element.style.pointerEvents =
       "none";
 
     const keyboardAvailable =
-      state.recession
-        .interactive &&
+      state.recession.interactive &&
       node.visible &&
-      node.transform
-        .prominence >=
+      node.transform.prominence >=
         0.18;
 
     element.setAttribute(
@@ -5124,17 +5471,45 @@
         : -1;
 
     const selected =
-      state.frame
-        .selectedRoom ===
+      state.frame.selectedRoom ===
       node.id;
+
+    const activeWing =
+      state.frame.cluster
+        ? state.frame.cluster.wing
+        : "";
+
+    const primaryRoom =
+      activeWing
+        ? state.visualPrimaryRooms.get(
+            activeWing
+          )
+        : "";
+
+    const primary =
+      node.id ===
+      primaryRoom;
 
     element.dataset.selected =
       selected
         ? "true"
         : "false";
 
+    element.dataset.primary =
+      primary
+        ? "true"
+        : "false";
+
+    element.dataset.depth =
+      clamp(
+        node.depthScore,
+        0,
+        1
+      ).toFixed(4);
+
     if (
-      selected
+      selected ||
+      primary
     ) {
       element.setAttribute(
         "aria-current",
@@ -5189,12 +5564,9 @@
 
     const screen =
       node.visible &&
-      node.transform
-        .prominence >=
+      node.transform.prominence >=
         0.08
-        ? projectNode(
-            node
-          )
+        ? projectNode(node)
         : null;
 
     if (!screen) {
@@ -5242,10 +5614,8 @@
         QUALITY
           .atmosphereReductionWidthPx ||
       (
-        navigator
-          .hardwareConcurrency &&
-        navigator
-          .hardwareConcurrency <=
+        navigator.hardwareConcurrency &&
+        navigator.hardwareConcurrency <=
           4
       );
 
@@ -5258,8 +5628,7 @@
 
     const pixelRatio =
       Math.min(
-        globalThis
-          .devicePixelRatio ||
+        globalThis.devicePixelRatio ||
         1,
         cap
       );
@@ -5352,14 +5721,11 @@
   function effectiveControllerProminence() {
     const controllerValue =
       Number(
-        state.frame
-          .prominence &&
-        state.frame
-          .prominence
+        state.frame.prominence &&
+        state.frame.prominence
           .compass !==
         undefined
-          ? state.frame
-              .prominence
+          ? state.frame.prominence
               .compass
           : 1
       );
@@ -5383,21 +5749,17 @@
       MATERIALS[
         materialName
       ] ||
-      MATERIALS
-        .CARDINAL_IDLE;
+      MATERIALS.CARDINAL_IDLE;
 
     const bloomDisabled =
       state.cssWidth <=
-      QUALITY
-        .bloomDisableWidthPx;
+      QUALITY.bloomDisableWidthPx;
 
     const softness =
-      state.recession
-        .material;
+      state.recession.material;
 
     gl.uniform1f(
-      state.uniforms
-        .twinkle,
+      state.uniforms.twinkle,
 
       state.reducedMotion
         ? 0
@@ -5405,8 +5767,7 @@
     );
 
     gl.uniform1f(
-      state.uniforms
-        .sparkle,
+      state.uniforms.sparkle,
 
       state.reducedMotion
         ? 0
@@ -5415,46 +5776,35 @@
     );
 
     gl.uniform1f(
-      state.uniforms
-        .prominence,
-
+      state.uniforms.prominence,
       prominence
     );
 
     gl.uniform1f(
-      state.uniforms
-        .specular,
-
+      state.uniforms.specular,
       material.specular *
       softness
     );
 
     gl.uniform1f(
-      state.uniforms
-        .rim,
-
+      state.uniforms.rim,
       material.rim *
       softness
     );
 
     gl.uniform1f(
-      state.uniforms
-        .emissive,
-
+      state.uniforms.emissive,
       material.emissive *
       softness
     );
 
     gl.uniform1f(
-      state.uniforms
-        .alpha,
-
+      state.uniforms.alpha,
       material.alpha
     );
 
     gl.uniform1f(
-      state.uniforms
-        .contrast,
+      state.uniforms.contrast,
 
       1 +
       (
@@ -5465,8 +5815,7 @@
     );
 
     gl.uniform1f(
-      state.uniforms
-        .haloStrength,
+      state.uniforms.haloStrength,
 
       bloomDisabled
         ? 0
@@ -5476,11 +5825,8 @@
     );
 
     gl.uniform1f(
-      state.uniforms
-        .saturation,
-
-      state.recession
-        .saturation
+      state.uniforms.saturation,
+      state.recession.saturation
     );
   }
 
@@ -5490,8 +5836,7 @@
   ) {
     if (
       !node.visible ||
-      node.transform
-        .prominence <
+      node.transform.prominence <
         0.04
     ) {
       return 0;
@@ -5512,24 +5857,21 @@
     bindAttrib(
       gl,
       mesh.position,
-      state.attribs
-        .position,
+      state.attribs.position,
       3
     );
 
     bindAttrib(
       gl,
       mesh.normal,
-      state.attribs
-        .normal,
+      state.attribs.normal,
       3
     );
 
     bindAttrib(
       gl,
       mesh.color,
-      state.attribs
-        .color,
+      state.attribs.color,
       3
     );
 
@@ -5540,8 +5882,7 @@
       );
 
     gl.uniformMatrix4fv(
-      state.uniforms
-        .model,
+      state.uniforms.model,
       false,
       new Float32Array(
         model
@@ -5549,8 +5890,7 @@
     );
 
     gl.uniformMatrix4fv(
-      state.uniforms
-        .view,
+      state.uniforms.view,
       false,
       new Float32Array(
         state.view
@@ -5558,8 +5898,7 @@
     );
 
     gl.uniformMatrix4fv(
-      state.uniforms
-        .projection,
+      state.uniforms.projection,
       false,
       new Float32Array(
         state.projection
@@ -5567,8 +5906,7 @@
     );
 
     gl.uniformMatrix3fv(
-      state.uniforms
-        .normalMatrix,
+      state.uniforms.normalMatrix,
       false,
       new Float32Array(
         normalMatrix3(
@@ -5578,35 +5916,29 @@
     );
 
     gl.uniform1f(
-      state.uniforms
-        .time,
+      state.uniforms.time,
       state.time
     );
 
     gl.uniform1f(
-      state.uniforms
-        .haloPass,
-
+      state.uniforms.haloPass,
       haloPass
         ? 1
         : 0
     );
 
     gl.uniform1f(
-      state.uniforms
-        .haloExpansion,
+      state.uniforms.haloExpansion,
       0.075
     );
 
     applyMaterial(
       node.material,
 
-      node.transform
-        .prominence *
+      node.transform.prominence *
       effectiveControllerProminence(),
 
-      node.transform
-        .halo
+      node.transform.halo
     );
 
     gl.drawArrays(
@@ -5632,16 +5964,244 @@
     );
   }
 
+  function addPointerSample(
+    pointer,
+    clientX,
+    clientY,
+    time
+  ) {
+    pointer.samples.push({
+      x:
+        clientX,
+
+      y:
+        clientY,
+
+      time
+    });
+
+    const minimumTime =
+      time -
+      Math.max(
+        GESTURE.sampleWindowMs *
+        2,
+        260
+      );
+
+    pointer.samples =
+      pointer.samples
+        .filter(
+          sample =>
+            sample.time >=
+            minimumTime
+        )
+        .slice(
+          -GESTURE.maximumSamples
+        );
+  }
+
+  function gestureMetrics(
+    pointer,
+    endX,
+    endY,
+    endTime
+  ) {
+    const dx =
+      endX -
+      pointer.startX;
+
+    const dy =
+      endY -
+      pointer.startY;
+
+    const distance =
+      Math.hypot(
+        dx,
+        dy
+      );
+
+    const durationMs =
+      Math.max(
+        1,
+        endTime -
+        pointer.startTime
+      );
+
+    const averageVelocity =
+      distance /
+      durationMs;
+
+    const recentSamples =
+      pointer.samples.filter(
+        sample =>
+          sample.time >=
+          endTime -
+          GESTURE.sampleWindowMs
+      );
+
+    const releaseStart =
+      recentSamples.length
+        ? recentSamples[0]
+        : {
+            x:
+              pointer.startX,
+
+            y:
+              pointer.startY,
+
+            time:
+              pointer.startTime
+          };
+
+    const releaseDistance =
+      Math.hypot(
+        endX -
+        releaseStart.x,
+
+        endY -
+        releaseStart.y
+      );
+
+    const releaseDuration =
+      Math.max(
+        1,
+        endTime -
+        releaseStart.time
+      );
+
+    const releaseVelocity =
+      releaseDistance /
+      releaseDuration;
+
+    let pathLength =
+      0;
+
+    let previous = {
+      x:
+        pointer.startX,
+
+      y:
+        pointer.startY
+    };
+
+    pointer.samples.forEach(
+      sample => {
+        pathLength +=
+          Math.hypot(
+            sample.x -
+            previous.x,
+
+            sample.y -
+            previous.y
+          );
+
+        previous =
+          sample;
+      }
+    );
+
+    pathLength +=
+      Math.hypot(
+        endX -
+        previous.x,
+
+        endY -
+        previous.y
+      );
+
+    const pathEfficiency =
+      pathLength > 0
+        ? distance /
+          pathLength
+        : 1;
+
+    const absX =
+      Math.abs(dx);
+
+    const absY =
+      Math.abs(dy);
+
+    const directionalRatio =
+      Math.max(
+        absX,
+        absY
+      ) /
+      Math.max(
+        1,
+        Math.min(
+          absX,
+          absY
+        )
+      );
+
+    const lastSample =
+      pointer.samples.length
+        ? pointer.samples[
+            pointer.samples.length -
+            1
+          ]
+        : null;
+
+    const pauseBeforeRelease =
+      lastSample
+        ? Math.max(
+            0,
+            endTime -
+            lastSample.time
+          )
+        : durationMs;
+
+    return {
+      dx,
+      dy,
+      distance,
+      durationMs,
+      averageVelocity,
+      releaseVelocity,
+      pathLength,
+      pathEfficiency,
+      directionalRatio,
+      pauseBeforeRelease
+    };
+  }
+
+  function isQuickClusterFlick(
+    metrics
+  ) {
+    return (
+      metrics.durationMs <=
+        GESTURE
+          .flickMaximumDurationMs &&
+      metrics.distance >=
+        GESTURE
+          .flickMinimumDistancePx &&
+      metrics.averageVelocity >=
+        GESTURE
+          .flickMinimumAverageVelocityPxPerMs &&
+      metrics.releaseVelocity >=
+        GESTURE
+          .flickMinimumReleaseVelocityPxPerMs &&
+      metrics.directionalRatio >=
+        GESTURE
+          .flickMinimumDirectionalRatio &&
+      metrics.pauseBeforeRelease <=
+        GESTURE
+          .flickMaximumPauseBeforeReleaseMs &&
+      (
+        1 -
+        metrics.pathEfficiency
+      ) <=
+        GESTURE
+          .flickMaximumPathEfficiencyLoss
+    );
+  }
+
   function findHitAtClientPoint(
     clientX,
     clientY,
-    allowedTypes =
-      null
+    allowedTypes = null
   ) {
-    if (
-      !state.recession
-        .interactive
-    ) {
+    if (!state.recession.interactive) {
       return null;
     }
 
@@ -5662,8 +6222,7 @@
         42,
         Math.min(
           82,
-          rect.width *
-          0.092
+          rect.width * 0.092
         )
       );
 
@@ -5686,8 +6245,7 @@
 
         if (
           !node.visible ||
-          node.transform
-            .prominence <
+          node.transform.prominence <
             0.10
         ) {
           return;
@@ -5703,11 +6261,7 @@
         }
 
         const depthBonus =
-          node.type ===
-          NODE_TYPES.CARDINAL
-            ? node.depthScore *
-              16
-            : 0;
+          node.depthScore * 16;
 
         const radius =
           baseRadius +
@@ -5721,31 +6275,22 @@
             screen.y
           );
 
-        if (
-          distance >
-          radius
-        ) {
+        if (distance > radius) {
           return;
         }
 
         const depthPenalty =
-          node.type ===
-          NODE_TYPES.CARDINAL
-            ? (
-                1 -
-                node.depthScore
-              ) *
-              12
-            : 0;
+          (
+            1 -
+            node.depthScore
+          ) *
+          12;
 
         const score =
           distance +
           depthPenalty;
 
-        if (
-          score <
-          bestScore
-        ) {
+        if (score < bestScore) {
           best =
             node;
 
@@ -5853,24 +6398,17 @@
           )
         : null;
 
-    if (
-      semanticCardinal
-    ) {
-      const wing =
-        normalizeWing(
-          semanticCardinal.dataset
-            .wing ||
-          semanticCardinal.dataset
-            .cardinalId
-        );
-
+    if (semanticCardinal) {
       return {
         territory:
           POINTER_TERRITORIES
             .RENDERED_CARDINAL,
 
         nodeId:
-          wing
+          normalizeWing(
+            semanticCardinal.dataset.wing ||
+            semanticCardinal.dataset.cardinalId
+          )
       };
     }
 
@@ -5882,27 +6420,20 @@
           )
         : null;
 
-    if (
-      roomProxy
-    ) {
+    if (roomProxy) {
       return {
         territory:
           POINTER_TERRITORIES
             .RENDERED_ROOM,
 
         nodeId:
-          String(
-            roomProxy.dataset
-              .roomId ||
-            ""
+          normalizeRoomId(
+            roomProxy.dataset.roomId
           )
       };
     }
 
-    if (
-      !state.recession
-        .interactive
-    ) {
+    if (!state.recession.interactive) {
       return {
         territory:
           POINTER_TERRITORIES
@@ -5922,9 +6453,7 @@
         ]
       );
 
-    if (
-      cardinalHit
-    ) {
+    if (cardinalHit) {
       return {
         territory:
           POINTER_TERRITORIES
@@ -5944,9 +6473,7 @@
         ]
       );
 
-    if (
-      roomHit
-    ) {
+    if (roomHit) {
       return {
         territory:
           POINTER_TERRITORIES
@@ -5974,26 +6501,21 @@
       globalThis
         .DGB_COMPASS_CONTROLLER;
 
-    if (
+    return Boolean(
       api &&
       typeof api.beginOrbitGesture ===
-        "function"
-    ) {
-      return api.beginOrbitGesture({
+        "function" &&
+      api.beginOrbitGesture({
         quaternion:
-          pointer
-            .startQuaternion,
+          pointer.startQuaternion,
 
         primaryWing:
           state.visualPrimaryWing,
 
         source:
           "crystals-pointer"
-      }) !==
-      false;
-    }
-
-    return false;
+      }) !== false
+    );
   }
 
   function requestControllerOrbitPreview(
@@ -6004,23 +6526,17 @@
       globalThis
         .DGB_COMPASS_CONTROLLER;
 
-    if (
+    return Boolean(
       api &&
       typeof api.requestOrbitPreview ===
-        "function"
-    ) {
-      return api.requestOrbitPreview({
+        "function" &&
+      api.requestOrbitPreview({
         quaternion,
-
         primaryWing,
-
         source:
           "crystals-drag"
-      }) !==
-      false;
-    }
-
-    return false;
+      }) !== false
+    );
   }
 
   function requestControllerOrbitCommit(
@@ -6031,23 +6547,17 @@
       globalThis
         .DGB_COMPASS_CONTROLLER;
 
-    if (
+    return Boolean(
       api &&
       typeof api.requestOrbitCommit ===
-        "function"
-    ) {
-      return api.requestOrbitCommit({
+        "function" &&
+      api.requestOrbitCommit({
         quaternion,
-
         primaryWing,
-
         source:
           "crystals-release-snap"
-      }) !==
-      false;
-    }
-
-    return false;
+      }) !== false
+    );
   }
 
   function requestControllerOrbitCancel(
@@ -6057,18 +6567,131 @@
       globalThis
         .DGB_COMPASS_CONTROLLER;
 
-    if (
+    return Boolean(
       api &&
       typeof api.requestOrbitCancel ===
-        "function"
-    ) {
-      return api.requestOrbitCancel(
+        "function" &&
+      api.requestOrbitCancel(
         reason
-      ) !==
-      false;
-    }
+      ) !== false
+    );
+  }
 
-    return false;
+  function requestControllerClusterBegin(
+    pointer
+  ) {
+    const api =
+      globalThis
+        .DGB_COMPASS_CONTROLLER;
+
+    return Boolean(
+      api &&
+      typeof api.beginClusterGesture ===
+        "function" &&
+      api.beginClusterGesture(
+        pointer.wing,
+        {
+          quaternion:
+            pointer.startQuaternion,
+
+          primaryRoom:
+            state.visualPrimaryRooms.get(
+              pointer.wing
+            ) ||
+            "",
+
+          source:
+            "crystals-cluster-pointer"
+        }
+      ) !== false
+    );
+  }
+
+  function requestControllerClusterPreview(
+    wing,
+    quaternion,
+    primaryRoom
+  ) {
+    const api =
+      globalThis
+        .DGB_COMPASS_CONTROLLER;
+
+    return Boolean(
+      api &&
+      typeof api.requestClusterPreview ===
+        "function" &&
+      api.requestClusterPreview(
+        wing,
+        {
+          quaternion,
+          primaryRoom,
+          source:
+            "crystals-cluster-drag"
+        }
+      ) !== false
+    );
+  }
+
+  function requestControllerClusterCommit(
+    wing,
+    quaternion,
+    primaryRoom
+  ) {
+    const api =
+      globalThis
+        .DGB_COMPASS_CONTROLLER;
+
+    return Boolean(
+      api &&
+      typeof api.requestClusterCommit ===
+        "function" &&
+      api.requestClusterCommit(
+        wing,
+        {
+          quaternion,
+          primaryRoom,
+          source:
+            "crystals-cluster-release-snap"
+        }
+      ) !== false
+    );
+  }
+
+  function requestControllerClusterCancel(
+    wing,
+    reason
+  ) {
+    const api =
+      globalThis
+        .DGB_COMPASS_CONTROLLER;
+
+    return Boolean(
+      api &&
+      typeof api.requestClusterCancel ===
+        "function" &&
+      api.requestClusterCancel(
+        wing,
+        reason
+      ) !== false
+    );
+  }
+
+  function requestControllerReturnToConstellation() {
+    const api =
+      globalThis
+        .DGB_COMPASS_CONTROLLER;
+
+    return Boolean(
+      api &&
+      typeof api.requestReturnToConstellation ===
+        "function" &&
+      api.requestReturnToConstellation({
+        source:
+          "cluster-flick",
+        scrollToScene:
+          true
+      }) !== false
+    );
   }
 
   function requestNodeSelection(
@@ -6092,8 +6715,7 @@
       available =
         api.requestCardinalSelection(
           node.wing
-        ) !==
-        false;
+        ) !== false;
     }
 
     if (
@@ -6106,8 +6728,7 @@
       available =
         api.requestRoomSelection(
           node.id
-        ) !==
-        false;
+        ) !== false;
     }
 
     emitReceipt({
@@ -6120,7 +6741,7 @@
         territory,
 
       lastGestureType:
-        "tap",
+        GESTURE_TYPES.TAP,
 
       glError:
         available
@@ -6161,16 +6782,14 @@
         dx /
         width
       ) *
-      GESTURE
-        .radiansPerViewport;
+      GESTURE.radiansPerViewport;
 
     const pitch =
       (
         dy /
         height
       ) *
-      GESTURE
-        .radiansPerViewport;
+      GESTURE.radiansPerViewport;
 
     const yawQuaternion =
       quaternionFromAxisAngle(
@@ -6190,8 +6809,7 @@
 
         quaternionMultiply(
           yawQuaternion,
-          pointer
-            .startQuaternion
+          pointer.startQuaternion
         )
       )
     );
@@ -6200,9 +6818,7 @@
   function handlePointerDown(
     event
   ) {
-    if (
-      state.pointer
-    ) {
+    if (state.pointer) {
       return;
     }
 
@@ -6213,22 +6829,18 @@
 
     if (
       classification.territory ===
-        POINTER_TERRITORIES
-          .OUTSIDE_SCENE ||
+        POINTER_TERRITORIES.OUTSIDE_SCENE ||
       classification.territory ===
-        POINTER_TERRITORIES
-          .BLOCKED_CONTROL ||
+        POINTER_TERRITORIES.BLOCKED_CONTROL ||
       classification.territory ===
-        POINTER_TERRITORIES
-          .MIRRORLAND_THRESHOLD
+        POINTER_TERRITORIES.MIRRORLAND_THRESHOLD
     ) {
       emitReceipt({
         lastPointerTerritory:
-          classification
-            .territory,
+          classification.territory,
 
         lastGestureType:
-          "blocked"
+          GESTURE_TYPES.BLOCKED
       });
 
       return;
@@ -6239,19 +6851,38 @@
         ? state.frame.state
         : "";
 
-    const constellationGesture =
+    const gestureScope =
       frameState ===
-      "CONSTELLATION";
+        "CONSTELLATION"
+        ? "constellation"
+        : (
+            frameState ===
+              "CLUSTER_OPEN" ||
+            frameState ===
+              "ROOM_SELECTED"
+          )
+          ? "cluster"
+          : "";
 
-    const roomGesture =
-      frameState ===
-        "CLUSTER_OPEN" ||
-      frameState ===
-        "ROOM_SELECTED";
+    if (!gestureScope) {
+      return;
+    }
+
+    const wing =
+      gestureScope ===
+        "cluster"
+        ? normalizeWing(
+            state.frame &&
+            state.frame.cluster
+              ? state.frame.cluster.wing
+              : state.frame.selectedCardinal
+          )
+        : "";
 
     if (
-      !constellationGesture &&
-      !roomGesture
+      gestureScope ===
+        "cluster" &&
+      !wing
     ) {
       return;
     }
@@ -6262,6 +6893,21 @@
           event.pointerId
         );
     } catch (_) {}
+
+    const startQuaternion =
+      gestureScope ===
+        "constellation"
+        ? state.constellationQuaternion
+            .slice()
+        : (
+            state.clusterQuaternions.get(
+              wing
+            ) ||
+            [0, 0, 0, 1]
+          ).slice();
+
+    const now =
+      performance.now();
 
     state.pointer = {
       id:
@@ -6284,42 +6930,49 @@
         event.clientY,
 
       startTime:
-        performance.now(),
+        now,
 
       territory:
-        classification
-          .territory,
+        classification.territory,
 
       nodeId:
-        classification
-          .nodeId,
+        classification.nodeId,
+
+      gestureScope,
+
+      wing,
 
       dragging:
         false,
 
-      orbitGestureBegan:
+      controllerGestureBegan:
         false,
 
-      constellationGesture,
-
-      roomGesture,
-
-      startQuaternion:
-        state.renderQuaternion
-          .slice(),
+      startQuaternion,
 
       currentQuaternion:
-        state.renderQuaternion
-          .slice()
+        startQuaternion.slice(),
+
+      samples: [
+        {
+          x:
+            event.clientX,
+
+          y:
+            event.clientY,
+
+          time:
+            now
+        }
+      ]
     };
 
     emitReceipt({
       lastPointerTerritory:
-        classification
-          .territory,
+        classification.territory,
 
       lastGestureType:
-        "pointerdown"
+        GESTURE_TYPES.POINTER_DOWN
     });
   }
 
@@ -6337,16 +6990,29 @@
       return;
     }
 
+    const now =
+      performance.now();
+
     pointer.lastX =
       event.clientX;
 
     pointer.lastY =
       event.clientY;
 
-    if (
-      !pointer.constellationGesture ||
-      !constellationCanRotate()
-    ) {
+    addPointerSample(
+      pointer,
+      event.clientX,
+      event.clientY,
+      now
+    );
+
+    const canRotate =
+      pointer.gestureScope ===
+        "constellation"
+        ? constellationCanRotate()
+        : clusterCanRotate();
+
+    if (!canRotate) {
       return;
     }
 
@@ -6360,28 +7026,33 @@
     if (
       !pointer.dragging &&
       distance <
-      GESTURE
-        .dragDeadZonePx
+        GESTURE.dragDeadZonePx
     ) {
       return;
     }
 
-    if (
-      !pointer.dragging
-    ) {
+    if (!pointer.dragging) {
       pointer.dragging =
         true;
 
-      pointer.orbitGestureBegan =
-        requestControllerOrbitBegin(
-          pointer
-        );
+      pointer.controllerGestureBegan =
+        pointer.gestureScope ===
+          "constellation"
+          ? requestControllerOrbitBegin(
+              pointer
+            )
+          : requestControllerClusterBegin(
+              pointer
+            );
 
       state.scene.dataset.compassDragging =
         "true";
 
       state.root.dataset.compassDragging =
         "true";
+
+      state.root.dataset.compassGestureScope =
+        pointer.gestureScope;
     }
 
     event.preventDefault();
@@ -6393,25 +7064,80 @@
         event.clientY
       );
 
-    state.renderQuaternion =
-      pointer.currentQuaternion
-        .slice();
+    if (
+      pointer.gestureScope ===
+      "constellation"
+    ) {
+      state.constellationQuaternion =
+        pointer.currentQuaternion.slice();
 
-    state.targetQuaternion =
-      pointer.currentQuaternion
-        .slice();
+      state.constellationTargetQuaternion =
+        pointer.currentQuaternion.slice();
 
-    const primaryWing =
-      nearestPrimaryWing(
+      const primaryWing =
+        nearestPrimaryWing(
+          pointer.currentQuaternion
+        );
+
+      state.visualPrimaryWing =
+        primaryWing;
+
+      requestControllerOrbitPreview(
+        pointer.currentQuaternion,
+        primaryWing
+      );
+
+      emitReceipt({
+        status:
+          "available",
+
+        lastPointerTerritory:
+          pointer.territory,
+
+        lastGestureType:
+          GESTURE_TYPES
+            .CONSTELLATION_DRAG,
+
+        lastGestureDistance:
+          distance,
+
+        primaryWing,
+
+        gestureActive:
+          true,
+
+        glError:
+          "NO_ERROR"
+      });
+
+      return;
+    }
+
+    state.clusterQuaternions.set(
+      pointer.wing,
+      pointer.currentQuaternion.slice()
+    );
+
+    state.clusterTargetQuaternions.set(
+      pointer.wing,
+      pointer.currentQuaternion.slice()
+    );
+
+    const primaryRoom =
+      nearestPrimaryRoom(
+        pointer.wing,
         pointer.currentQuaternion
       );
 
-    state.visualPrimaryWing =
-      primaryWing;
+    state.visualPrimaryRooms.set(
+      pointer.wing,
+      primaryRoom
+    );
 
-    requestControllerOrbitPreview(
+    requestControllerClusterPreview(
+      pointer.wing,
       pointer.currentQuaternion,
-      primaryWing
+      primaryRoom
     );
 
     emitReceipt({
@@ -6422,12 +7148,15 @@
         pointer.territory,
 
       lastGestureType:
-        "spherical-drag",
+        GESTURE_TYPES.CLUSTER_DRAG,
 
       lastGestureDistance:
         distance,
 
-      primaryWing,
+      activeClusterWing:
+        pointer.wing,
+
+      primaryRoom,
 
       gestureActive:
         true,
@@ -6457,13 +7186,13 @@
     } catch (_) {}
   }
 
-  function finishSphericalDrag(
+  function finishConstellationDrag(
     pointer,
-    event
+    event,
+    metrics
   ) {
     const currentQuaternion =
-      pointer.currentQuaternion
-        .slice();
+      pointer.currentQuaternion.slice();
 
     const primaryWing =
       nearestPrimaryWing(
@@ -6471,7 +7200,7 @@
       );
 
     const settledQuaternion =
-      settledQuaternionForWing(
+      settledConstellationQuaternion(
         primaryWing,
         currentQuaternion
       );
@@ -6482,16 +7211,12 @@
     state.visualPrimaryWing =
       primaryWing;
 
-    state.targetQuaternion =
-      settledQuaternion
-        .slice();
+    state.constellationTargetQuaternion =
+      settledQuaternion.slice();
 
-    if (
-      state.reducedMotion
-    ) {
-      state.renderQuaternion =
-        settledQuaternion
-          .slice();
+    if (state.reducedMotion) {
+      state.constellationQuaternion =
+        settledQuaternion.slice();
     }
 
     const committed =
@@ -6502,14 +7227,7 @@
 
     state.suppressClickUntil =
       performance.now() +
-      GESTURE
-        .suppressClickMs;
-
-    state.scene.dataset.compassDragging =
-      "false";
-
-    state.root.dataset.compassDragging =
-      "false";
+      GESTURE.suppressClickMs;
 
     event.preventDefault();
 
@@ -6523,14 +7241,20 @@
         pointer.territory,
 
       lastGestureType:
-        "spherical-release-snap",
+        GESTURE_TYPES
+          .CONSTELLATION_SETTLE,
 
       lastGestureDistance:
-        pointerDistance(
-          pointer,
-          event.clientX,
-          event.clientY
-        ),
+        metrics.distance,
+
+      lastGestureDurationMs:
+        metrics.durationMs,
+
+      lastAverageVelocityPxPerMs:
+        metrics.averageVelocity,
+
+      lastReleaseVelocityPxPerMs:
+        metrics.releaseVelocity,
 
       primaryWing,
 
@@ -6544,14 +7268,161 @@
     });
   }
 
-  function finishTap(
+  function finishClusterDrag(
     pointer,
-    event
+    event,
+    metrics
   ) {
     if (
-      !state.recession
-        .interactive
+      isQuickClusterFlick(
+        metrics
+      )
     ) {
+      requestControllerClusterCancel(
+        pointer.wing,
+        "cluster-flick-return"
+      );
+
+      const returned =
+        requestControllerReturnToConstellation();
+
+      state.suppressClickUntil =
+        performance.now() +
+        GESTURE.suppressClickMs;
+
+      event.preventDefault();
+
+      emitReceipt({
+        status:
+          returned
+            ? "available"
+            : "held",
+
+        lastPointerTerritory:
+          pointer.territory,
+
+        lastGestureType:
+          GESTURE_TYPES
+            .CLUSTER_FLICK_RETURN,
+
+        lastGestureDistance:
+          metrics.distance,
+
+        lastGestureDurationMs:
+          metrics.durationMs,
+
+        lastAverageVelocityPxPerMs:
+          metrics.averageVelocity,
+
+        lastReleaseVelocityPxPerMs:
+          metrics.releaseVelocity,
+
+        activeClusterWing:
+          pointer.wing,
+
+        gestureActive:
+          false,
+
+        glError:
+          returned
+            ? "NO_ERROR"
+            : "CONTROLLER_RETURN_TO_CONSTELLATION_UNAVAILABLE"
+      });
+
+      return;
+    }
+
+    const currentQuaternion =
+      pointer.currentQuaternion.slice();
+
+    const primaryRoom =
+      nearestPrimaryRoom(
+        pointer.wing,
+        currentQuaternion
+      );
+
+    const settledQuaternion =
+      settledClusterQuaternion(
+        primaryRoom,
+        pointer.wing,
+        currentQuaternion
+      );
+
+    state.clusterTargetQuaternions.set(
+      pointer.wing,
+      settledQuaternion.slice()
+    );
+
+    if (state.reducedMotion) {
+      state.clusterQuaternions.set(
+        pointer.wing,
+        settledQuaternion.slice()
+      );
+    }
+
+    state.visualPrimaryRooms.set(
+      pointer.wing,
+      primaryRoom
+    );
+
+    const committed =
+      requestControllerClusterCommit(
+        pointer.wing,
+        settledQuaternion,
+        primaryRoom
+      );
+
+    state.suppressClickUntil =
+      performance.now() +
+      GESTURE.suppressClickMs;
+
+    event.preventDefault();
+
+    emitReceipt({
+      status:
+        committed
+          ? "available"
+          : "held",
+
+      lastPointerTerritory:
+        pointer.territory,
+
+      lastGestureType:
+        GESTURE_TYPES.CLUSTER_SETTLE,
+
+      lastGestureDistance:
+        metrics.distance,
+
+      lastGestureDurationMs:
+        metrics.durationMs,
+
+      lastAverageVelocityPxPerMs:
+        metrics.averageVelocity,
+
+      lastReleaseVelocityPxPerMs:
+        metrics.releaseVelocity,
+
+      activeClusterWing:
+        pointer.wing,
+
+      primaryRoom,
+
+      gestureActive:
+        false,
+
+      glError:
+        committed
+          ? "NO_ERROR"
+          : "CONTROLLER_CLUSTER_COMMIT_UNAVAILABLE"
+    });
+  }
+
+  function finishTap(
+    pointer,
+    event,
+    metrics
+  ) {
+    if (!state.recession.interactive) {
       return;
     }
 
@@ -6562,9 +7433,7 @@
           )
         : null;
 
-    if (
-      !node
-    ) {
+    if (!node) {
       node =
         findHitAtClientPoint(
           event.clientX,
@@ -6578,14 +7447,13 @@
           pointer.territory,
 
         lastGestureType:
-          "empty-tap",
+          GESTURE_TYPES.EMPTY_TAP,
 
         lastGestureDistance:
-          pointerDistance(
-            pointer,
-            event.clientX,
-            event.clientY
-          )
+          metrics.distance,
+
+        lastGestureDurationMs:
+          metrics.durationMs
       });
 
       return;
@@ -6618,8 +7486,7 @@
 
     state.suppressClickUntil =
       performance.now() +
-      GESTURE
-        .suppressClickMs;
+      GESTURE.suppressClickMs;
 
     event.preventDefault();
 
@@ -6627,6 +7494,17 @@
       node,
       pointer.territory
     );
+  }
+
+  function clearGestureDatasets() {
+    state.scene.dataset.compassDragging =
+      "false";
+
+    state.root.dataset.compassDragging =
+      "false";
+
+    state.root.dataset.compassGestureScope =
+      "";
   }
 
   function handlePointerUp(
@@ -6643,6 +7521,24 @@
       return;
     }
 
+    const now =
+      performance.now();
+
+    addPointerSample(
+      pointer,
+      event.clientX,
+      event.clientY,
+      now
+    );
+
+    const metrics =
+      gestureMetrics(
+        pointer,
+        event.clientX,
+        event.clientY,
+        now
+      );
+
     state.pointer =
       null;
 
@@ -6650,61 +7546,83 @@
       event
     );
 
-    const distance =
-      pointerDistance(
-        pointer,
-        event.clientX,
-        event.clientY
-      );
+    clearGestureDatasets();
 
     if (
       pointer.dragging &&
-      pointer.constellationGesture
+      pointer.gestureScope ===
+        "constellation"
     ) {
-      finishSphericalDrag(
+      finishConstellationDrag(
         pointer,
-        event
+        event,
+        metrics
       );
 
       return;
     }
 
     if (
-      distance <=
-      GESTURE
-        .maximumTapDistancePx
+      pointer.dragging &&
+      pointer.gestureScope ===
+        "cluster"
+    ) {
+      finishClusterDrag(
+        pointer,
+        event,
+        metrics
+      );
+
+      return;
+    }
+
+    if (
+      metrics.distance <=
+        GESTURE.maximumTapDistancePx
     ) {
       finishTap(
         pointer,
-        event
+        event,
+        metrics
       );
 
       return;
     }
 
-    if (
-      pointer.orbitGestureBegan
-    ) {
-      requestControllerOrbitCancel(
-        "ambiguous-release"
-      );
+    if (pointer.controllerGestureBegan) {
+      if (
+        pointer.gestureScope ===
+        "constellation"
+      ) {
+        requestControllerOrbitCancel(
+          "ambiguous-release"
+        );
+      } else {
+        requestControllerClusterCancel(
+          pointer.wing,
+          "ambiguous-release"
+        );
+      }
     }
-
-    state.scene.dataset.compassDragging =
-      "false";
-
-    state.root.dataset.compassDragging =
-      "false";
 
     emitReceipt({
       lastPointerTerritory:
         pointer.territory,
 
       lastGestureType:
-        "ambiguous",
+        GESTURE_TYPES.AMBIGUOUS,
 
       lastGestureDistance:
-        distance,
+        metrics.distance,
+
+      lastGestureDurationMs:
+        metrics.durationMs,
+
+      lastAverageVelocityPxPerMs:
+        metrics.averageVelocity,
+
+      lastReleaseVelocityPxPerMs:
+        metrics.releaseVelocity,
 
       gestureActive:
         false
@@ -6732,30 +7650,43 @@
       event
     );
 
+    if (pointer.controllerGestureBegan) {
+      if (
+        pointer.gestureScope ===
+        "constellation"
+      ) {
+        requestControllerOrbitCancel(
+          "pointer-cancel"
+        );
+      } else {
+        requestControllerClusterCancel(
+          pointer.wing,
+          "pointer-cancel"
+        );
+      }
+    }
+
     if (
-      pointer.orbitGestureBegan
+      pointer.gestureScope ===
+      "constellation"
     ) {
-      requestControllerOrbitCancel(
-        "pointer-cancel"
+      state.constellationTargetQuaternion =
+        pointer.startQuaternion.slice();
+    } else {
+      state.clusterTargetQuaternions.set(
+        pointer.wing,
+        pointer.startQuaternion.slice()
       );
     }
 
-    state.targetQuaternion =
-      pointer.startQuaternion
-        .slice();
-
-    state.scene.dataset.compassDragging =
-      "false";
-
-    state.root.dataset.compassDragging =
-      "false";
+    clearGestureDatasets();
 
     emitReceipt({
       lastPointerTerritory:
         pointer.territory,
 
       lastGestureType:
-        "cancelled",
+        GESTURE_TYPES.CANCELLED,
 
       gestureActive:
         false
@@ -6793,6 +7724,9 @@
 
     state.root.dataset.compassDragging =
       "false";
+
+    state.root.dataset.compassGestureScope =
+      "";
 
     state.scene.addEventListener(
       "pointerdown",
@@ -6839,8 +7773,7 @@
 
   function drawAtmosphere() {
     const context =
-      state.atmosphere
-        .context;
+      state.atmosphere.context;
 
     if (!context) {
       return;
@@ -6870,10 +7803,8 @@
         : 78;
 
     if (
-      !state.atmosphere
-        .initialized ||
-      state.atmosphere
-        .stars.length !==
+      !state.atmosphere.initialized ||
+      state.atmosphere.stars.length !==
         count
     ) {
       state.atmosphere.stars =
@@ -6890,8 +7821,7 @@
             x:
               (
                 Math.sin(
-                  index *
-                  47.17
+                  index * 47.17
                 ) *
                 0.5 +
                 0.5
@@ -6901,8 +7831,7 @@
             y:
               (
                 Math.sin(
-                  index *
-                  19.31 +
+                  index * 19.31 +
                   1.8
                 ) *
                 0.5 +
@@ -6913,16 +7842,14 @@
             radius:
               0.45 +
               (
-                index %
-                5
+                index % 5
               ) *
               0.16,
 
             alpha:
               0.18 +
               (
-                index %
-                7
+                index % 7
               ) *
               0.055
           })
@@ -6949,48 +7876,44 @@
 
     context.save();
 
-    state.atmosphere
-      .stars.forEach(
-        (
-          star,
-          index
-        ) => {
-          const twinkle =
-            state.reducedMotion
-              ? 1
-              : 0.78 +
-                Math.sin(
-                  state.time *
-                  0.32 +
-                  index *
-                  0.73
-                ) *
-                0.22;
+    state.atmosphere.stars.forEach(
+      (
+        star,
+        index
+      ) => {
+        const twinkle =
+          state.reducedMotion
+            ? 1
+            : 0.78 +
+              Math.sin(
+                state.time * 0.32 +
+                index * 0.73
+              ) *
+              0.22;
 
-          context.beginPath();
+        context.beginPath();
 
-          context.fillStyle =
-            `rgba(210, 232, 255, ${
-              Math.max(
-                0,
-                star.alpha *
-                twinkle *
-                atmosphereWeight
-              )
-            })`;
+        context.fillStyle =
+          `rgba(210, 232, 255, ${
+            Math.max(
+              0,
+              star.alpha *
+              twinkle *
+              atmosphereWeight
+            )
+          })`;
 
-          context.arc(
-            star.x,
-            star.y,
-            star.radius,
-            0,
-            Math.PI *
-            2
-          );
+        context.arc(
+          star.x,
+          star.y,
+          star.radius,
+          0,
+          Math.PI * 2
+        );
 
-          context.fill();
-        }
-      );
+        context.fill();
+      }
+    );
 
     context.strokeStyle =
       `rgba(143, 187, 224, ${
@@ -7001,9 +7924,26 @@
     context.lineWidth =
       1;
 
+    const activeQuaternion =
+      state.frame &&
+      state.frame.cluster &&
+      (
+        state.frame.state ===
+          "CLUSTER_OPEN" ||
+        state.frame.state ===
+          "ROOM_SELECTED"
+      )
+        ? (
+            state.clusterQuaternions.get(
+              state.frame.cluster.wing
+            ) ||
+            [0, 0, 0, 1]
+          )
+        : state.constellationQuaternion;
+
     const orientationVector =
       quaternionRotateVector(
-        state.renderQuaternion,
+        activeQuaternion,
         [0, 1, 0]
       );
 
@@ -7025,19 +7965,14 @@
     context.beginPath();
 
     context.ellipse(
-      width *
-      0.5,
-      height *
-      0.5,
-      width *
-      0.29,
-      height *
-      0.20 *
+      width * 0.5,
+      height * 0.5,
+      width * 0.29,
+      height * 0.20 *
       verticalCompression,
       ellipseRotation,
       0,
-      Math.PI *
-      2
+      Math.PI * 2
     );
 
     context.stroke();
@@ -7045,20 +7980,14 @@
     context.beginPath();
 
     context.ellipse(
-      width *
-      0.5,
-      height *
-      0.5,
-      width *
-      0.36,
-      height *
-      0.25 *
+      width * 0.5,
+      height * 0.5,
+      width * 0.36,
+      height * 0.25 *
       verticalCompression,
-      -ellipseRotation *
-      0.72,
+      -ellipseRotation * 0.72,
       0,
-      Math.PI *
-      2
+      Math.PI * 2
     );
 
     context.stroke();
@@ -7079,9 +8008,7 @@
         "canvas"
       );
 
-    if (
-      !existing
-    ) {
+    if (!existing) {
       canvas.dataset.compassAtmosphereCanvas =
         "true";
 
@@ -7124,8 +8051,7 @@
 
   function resizeAtmosphere() {
     const canvas =
-      state.atmosphere
-        .canvas;
+      state.atmosphere.canvas;
 
     if (!canvas) {
       return;
@@ -7173,8 +8099,7 @@
       canvas.style.height =
         `${state.cssHeight}px`;
 
-      state.atmosphere
-        .context
+      state.atmosphere.context
         .setTransform(
           ratio,
           0,
@@ -7205,15 +8130,12 @@
   function render(
     now
   ) {
-    if (
-      !state.running
-    ) {
+    if (!state.running) {
       return;
     }
 
     const seconds =
-      now *
-      0.001;
+      now * 0.001;
 
     const deltaTime =
       state.lastTime
@@ -7235,8 +8157,7 @@
 
     state.reducedMotion =
       Boolean(
-        state.frame
-          .reducedMotion
+        state.frame.reducedMotion
       );
 
     updateRecessionProfile();
@@ -7244,7 +8165,7 @@
     resize();
     resizeAtmosphere();
 
-    updateTargetQuaternion(
+    syncQuaternionTargets(
       deltaTime
     );
 
@@ -7273,8 +8194,7 @@
         Math.PI /
         (
           aspect <
-          QUALITY
-            .mobileAspectThreshold
+          QUALITY.mobileAspectThreshold
             ? 4.45
             : 4.85
         ),
@@ -7308,32 +8228,28 @@
     );
 
     gl.uniform3f(
-      state.uniforms
-        .keyLight,
+      state.uniforms.keyLight,
       -0.42,
       -0.82,
       -0.68
     );
 
     gl.uniform3f(
-      state.uniforms
-        .fillLight,
+      state.uniforms.fillLight,
       0.72,
       -0.24,
       -0.54
     );
 
     gl.uniform3f(
-      state.uniforms
-        .rimLight,
+      state.uniforms.rimLight,
       0.08,
       0.46,
       1
     );
 
     gl.uniform3f(
-      state.uniforms
-        .ambientColor,
+      state.uniforms.ambientColor,
       0.10,
       0.12,
       0.18
@@ -7344,8 +8260,7 @@
 
     const bloomDisabled =
       state.cssWidth <=
-      QUALITY
-        .bloomDisableWidthPx;
+      QUALITY.bloomDisableWidthPx;
 
     const drawNodes =
       sortNodesForDraw(
@@ -7354,9 +8269,7 @@
         )
       );
 
-    if (
-      !bloomDisabled
-    ) {
+    if (!bloomDisabled) {
       gl.depthMask(
         false
       );
@@ -7419,8 +8332,7 @@
         false,
 
       roomProxyCount:
-        state.roomProxies
-          .size,
+        state.roomProxies.size,
 
       roomProxyPresentation:
         "NONVISUAL_ACCESSIBILITY_CONTROL",
@@ -7430,6 +8342,21 @@
 
       primaryWing:
         state.visualPrimaryWing,
+
+      activeClusterWing:
+        state.frame.cluster
+          ? state.frame.cluster.wing
+          : "",
+
+      primaryRoom:
+        state.frame.cluster
+          ? (
+              state.visualPrimaryRooms.get(
+                state.frame.cluster.wing
+              ) ||
+              ""
+            )
+          : "",
 
       gestureActive:
         Boolean(
@@ -7441,9 +8368,7 @@
         error ===
         gl.NO_ERROR
           ? "NO_ERROR"
-          : String(
-              error
-            ),
+          : String(error),
 
       drawCallsLastFrame:
         drawCalls
@@ -7459,9 +8384,7 @@
     state.running =
       false;
 
-    if (
-      state.raf
-    ) {
+    if (state.raf) {
       cancelAnimationFrame(
         state.raf
       );
@@ -7473,19 +8396,27 @@
     if (
       state.pointer &&
       state.pointer
-        .orbitGestureBegan
+        .controllerGestureBegan
     ) {
-      requestControllerOrbitCancel(
-        "renderer-dispose"
-      );
+      if (
+        state.pointer.gestureScope ===
+        "constellation"
+      ) {
+        requestControllerOrbitCancel(
+          "renderer-dispose"
+        );
+      } else {
+        requestControllerClusterCancel(
+          state.pointer.wing,
+          "renderer-dispose"
+        );
+      }
     }
 
     state.pointer =
       null;
 
-    if (
-      state.gl
-    ) {
+    if (state.gl) {
       state.meshes.forEach(
         mesh => {
           state.gl.deleteBuffer(
@@ -7502,9 +8433,7 @@
         }
       );
 
-      if (
-        state.program
-      ) {
+      if (state.program) {
         state.gl.deleteProgram(
           state.program
         );
@@ -7520,6 +8449,9 @@
     state.meshes.clear();
     state.registry.clear();
     state.roomProxies.clear();
+    state.clusterQuaternions.clear();
+    state.clusterTargetQuaternions.clear();
+    state.visualPrimaryRooms.clear();
 
     emitReceipt({
       status:
@@ -7571,9 +8503,7 @@
         "[data-compass-root]"
       );
 
-    if (
-      !state.root
-    ) {
+    if (!state.root) {
       throw new Error(
         "COMPASS_ROOT_NOT_FOUND"
       );
@@ -7585,9 +8515,7 @@
         state.root
       );
 
-    if (
-      !state.scene
-    ) {
+    if (!state.scene) {
       throw new Error(
         "COMPASS_SCENE_NOT_FOUND"
       );
@@ -7599,9 +8527,7 @@
         state.root
       );
 
-    if (
-      !state.mount
-    ) {
+    if (!state.mount) {
       throw new Error(
         "CRYSTALS_MOUNT_NOT_FOUND"
       );
@@ -7613,9 +8539,7 @@
         state.root
       );
 
-    if (
-      !state.semanticLayer
-    ) {
+    if (!state.semanticLayer) {
       throw new Error(
         "SEMANTIC_LAYER_NOT_FOUND"
       );
@@ -7637,6 +8561,9 @@
         sphere:
           SPHERE,
 
+        gesture:
+          GESTURE,
+
         receipt:
           () =>
             Object.freeze({
@@ -7644,42 +8571,84 @@
             }),
 
         getOrientation:
-          () =>
-            Object.freeze({
-              quaternion:
+          () => {
+            const clusters =
+              {};
+
+            WINGS.forEach(
+              wing => {
+                clusters[wing] =
+                  Object.freeze({
+                    quaternion:
+                      Object.freeze(
+                        (
+                          state.clusterQuaternions.get(
+                            wing
+                          ) ||
+                          [0, 0, 0, 1]
+                        ).slice()
+                      ),
+
+                    targetQuaternion:
+                      Object.freeze(
+                        (
+                          state.clusterTargetQuaternions.get(
+                            wing
+                          ) ||
+                          [0, 0, 0, 1]
+                        ).slice()
+                      ),
+
+                    primaryRoom:
+                      state.visualPrimaryRooms.get(
+                        wing
+                      ) ||
+                      ""
+                  });
+              }
+            );
+
+            return Object.freeze({
+              constellation:
+                Object.freeze({
+                  quaternion:
+                    Object.freeze(
+                      state.constellationQuaternion
+                        .slice()
+                    ),
+
+                  targetQuaternion:
+                    Object.freeze(
+                      state.constellationTargetQuaternion
+                        .slice()
+                    ),
+
+                  primaryWing:
+                    state.visualPrimaryWing,
+
+                  settledPrimaryWing:
+                    state.settledPrimaryWing
+                }),
+
+              clusters:
                 Object.freeze(
-                  state.renderQuaternion
-                    .slice()
+                  clusters
                 ),
-
-              targetQuaternion:
-                Object.freeze(
-                  state.targetQuaternion
-                    .slice()
-                ),
-
-              primaryWing:
-                state.visualPrimaryWing,
-
-              settledPrimaryWing:
-                state.settledPrimaryWing,
 
               gestureActive:
                 Boolean(
                   state.pointer &&
-                  state.pointer
-                    .dragging
+                  state.pointer.dragging
                 )
-            }),
+            });
+          },
 
         stop:
           () => {
             state.running =
               false;
 
-            if (
-              state.raf
-            ) {
+            if (state.raf) {
               cancelAnimationFrame(
                 state.raf
               );
@@ -7724,33 +8693,61 @@
       });
   }
 
-  function initializeOrientation() {
+  function initializeOrientations() {
     state.frame =
       getControllerFrame();
 
-    const initialQuaternion =
-      quaternionFromControllerFrame(
+    const constellationQuaternion =
+      constellationQuaternionFromFrame(
         state.frame
       );
 
-    state.renderQuaternion =
-      initialQuaternion.slice();
+    state.constellationQuaternion =
+      constellationQuaternion.slice();
 
-    state.targetQuaternion =
-      initialQuaternion.slice();
+    state.constellationTargetQuaternion =
+      constellationQuaternion.slice();
 
     state.settledPrimaryWing =
       normalizeWing(
         state.frame.orbitFocus
       ) ||
       nearestPrimaryWing(
-        initialQuaternion
+        constellationQuaternion
       );
 
     state.visualPrimaryWing =
       nearestPrimaryWing(
-        initialQuaternion
+        constellationQuaternion
       );
+
+    WINGS.forEach(
+      wing => {
+        const quaternion =
+          clusterQuaternionFromFrame(
+            state.frame,
+            wing
+          );
+
+        state.clusterQuaternions.set(
+          wing,
+          quaternion.slice()
+        );
+
+        state.clusterTargetQuaternions.set(
+          wing,
+          quaternion.slice()
+        );
+
+        state.visualPrimaryRooms.set(
+          wing,
+          nearestPrimaryRoom(
+            wing,
+            quaternion
+          )
+        );
+      }
+    );
   }
 
   function init() {
@@ -7966,7 +8963,7 @@
       state.roomProxies =
         buildRoomProxies();
 
-      initializeOrientation();
+      initializeOrientations();
 
       bindPointerBridge();
 
@@ -7976,12 +8973,14 @@
       state.root.dataset.sphericalOrbitEnabled =
         "true";
 
+      state.root.dataset.sphericalClustersEnabled =
+        "true";
+
       state.root.dataset.orbitCoordinateSystem =
         SPHERE.coordinateSystem;
 
       state.root.dataset.orbitRepresentation =
-        SPHERE
-          .orientationRepresentation;
+        SPHERE.orientationRepresentation;
 
       emitReceipt({
         status:
@@ -8000,8 +8999,7 @@
           false,
 
         roomProxyCount:
-          state.roomProxies
-            .size,
+          state.roomProxies.size,
 
         roomProxyPresentation:
           "NONVISUAL_ACCESSIBILITY_CONTROL",
@@ -8009,7 +9007,10 @@
         recessionProfile:
           "NORMAL",
 
-        sphericalOrbitEnabled:
+        sphericalConstellationEnabled:
+          true,
+
+        sphericalClustersEnabled:
           true,
 
         primaryWing:
@@ -8026,17 +9027,13 @@
         requestAnimationFrame(
           render
         );
-    } catch (
-      error
-    ) {
+    } catch (error) {
       emitFailure(
         `CRYSTALS_INIT_FAILURE:${
           error &&
           error.message
             ? error.message
-            : String(
-                error
-              )
+            : String(error)
         }`
       );
     }

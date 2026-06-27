@@ -1,29 +1,53 @@
 <!-- TARGET FILE: /showroom/globe/hearth/jeeves/index.html -->
 <!-- TNT FULL-FILE REPLACEMENT -->
-<!-- DIAMOND_GATE_BRIDGE_JEEVES_ESTATE_THRESHOLD_HOST_AND_ROUTING_SURFACE_HTML_TNT_v15 -->
+<!-- DIAMOND_GATE_BRIDGE_JEEVES_TWO_STAGE_ESTATE_THRESHOLD_HOST_AND_ROUTING_SURFACE_HTML_TNT_v16_1 -->
 <!--
   Purpose:
   - Present “Talk to the House” as an approach to the estate entrance.
   - Introduce Jeeves as the host receiving the visitor at the front door.
-  - Provide a phased, game-like onboarding sequence before full page access.
-  - Mount the shared Mirrorland stained-glass geometry as the estate threshold.
-  - Make the hosted conversation the primary experience of the page.
+  - Reduce threshold onboarding to two deliberate stages.
+  - Begin with a compact stained-glass threshold.
+  - Grow the threshold to full presentation size after the first continuation.
+  - Open the page and begin Jeeves’s welcome after the second continuation.
+  - Mount the shared Mirrorland stained-glass geometry.
+  - Make the hosted conversation the primary page experience.
   - Preserve deliberate typing, reading, and single-message rush surfaces.
-  - Replace the giant linear document with compact supporting disclosure panels.
+  - Keep supporting information compact through native disclosure panels.
   - Reveal one contextual room, route, or specialist handoff at a time.
-  - Preserve real anchor navigation, accessibility, and non-JavaScript fallbacks.
+  - Preserve real anchor navigation, accessibility, and non-JavaScript access.
+
+  Two-stage threshold path:
+  1. Arrival
+     - compact threshold Window
+     - entrance context
+     - Continue
+  2. Welcome
+     - full threshold Window
+     - Jeeves introduction and conversation instruction
+     - Enter the estate
+
+  Accessibility corrections:
+  - The threshold begins hidden and inert until its runtime activates it.
+  - The threshold declares modal-dialog semantics when activated.
+  - The threshold uses a permanent accessible label rather than references
+    to headings that become hidden between stages.
+  - The visible threshold skip control remains the single introduction-skip
+    control owned by the threshold runtime.
+  - The main page begins open so the non-JavaScript fallback remains usable.
+  - The threshold runtime changes the page to guided access when onboarding
+    actually begins.
 
   Owns:
   - Jeeves public page structure
-  - estate-threshold onboarding structure
+  - two-stage estate-threshold onboarding structure
   - stained-glass threshold mount
-  - onboarding phase copy and controls
+  - threshold copy and controls
   - explicit Talk to the House handoff
   - primary conversation mounts
   - current-message rush target
   - contextual handoff mount
   - compact supporting disclosure structure
-  - replay-welcome control
+  - replay-welcome controls
   - non-JavaScript public fallback
 
   Does not own:
@@ -48,8 +72,8 @@
   lang="en"
   data-route="/showroom/globe/hearth/jeeves/"
   data-page="jeeves-estate-threshold"
-  data-contract="DIAMOND_GATE_BRIDGE_JEEVES_ESTATE_THRESHOLD_HOST_AND_ROUTING_SURFACE_HTML_TNT_v15"
-  data-previous-contract="DIAMOND_GATE_BRIDGE_JEEVES_CHARACTER_HOME_AND_ROUTING_SURFACE_HTML_TNT_v14"
+  data-contract="DIAMOND_GATE_BRIDGE_JEEVES_TWO_STAGE_ESTATE_THRESHOLD_HOST_AND_ROUTING_SURFACE_HTML_TNT_v16_1"
+  data-previous-contract="DIAMOND_GATE_BRIDGE_JEEVES_TWO_STAGE_ESTATE_THRESHOLD_HOST_AND_ROUTING_SURFACE_HTML_TNT_v16"
   data-status="active"
   data-agent="jeeves"
   data-agent-name-lock="Jeeves"
@@ -59,8 +83,9 @@
   data-arrival-metaphor="estate-front-door"
   data-entry-source="talk-to-the-house"
   data-threshold-onboarding="true"
-  data-threshold-phase-count="4"
-  data-page-access="guided"
+  data-threshold-phase-count="2"
+  data-threshold-growth-path="compact-to-full"
+  data-page-access="open"
   data-character-homepage="true"
   data-conversation-first="true"
   data-conversation-primary-stage="true"
@@ -111,26 +136,27 @@
 </head>
 
 <body>
-  <a
-    class="skip-link"
-    href="#jeeves-conversation"
-  >
-    Skip introduction and talk to Jeeves
-  </a>
-
   <!--
-    PHASED ESTATE-THRESHOLD INTRODUCTION
+    TWO-STAGE ESTATE-THRESHOLD INTRODUCTION
+
+    The threshold begins hidden so it cannot trap a visitor before the
+    geometry and threshold runtimes are ready.
 
     The threshold runtime controls:
-    - active phase
+    - activation
+    - active stage
+    - compact-to-full Window growth
+    - stained-glass reveal amount
     - focus movement
-    - window reveal amount
     - page scroll locking
     - skip behavior
     - completion and replay state
 
-    The HTML preserves all phase copy so the arrival context remains available
-    without relying on dialogue generation.
+    The HTML owns only the two public tutorial panels:
+    - arrival
+    - host
+
+    The runtime exposes the host panel publicly as the welcome stage.
   -->
 
   <section
@@ -138,10 +164,16 @@
     data-jeeves-threshold
     data-threshold-state="pending"
     data-threshold-phase="arrival"
+    data-threshold-source-panel="arrival"
+    data-threshold-window-size="compact"
     data-threshold-phase-index="1"
-    data-threshold-phase-total="4"
-    aria-labelledby="jeeves-threshold-title"
-    aria-describedby="jeeves-threshold-description"
+    data-threshold-phase-total="2"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Diamond Gate Bridge estate entrance introduction"
+    aria-hidden="true"
+    inert
+    hidden
   >
     <div
       class="jeeves-threshold-backdrop"
@@ -156,7 +188,7 @@
           aria-label="Introduction progress"
         >
           <span data-jeeves-threshold-progress-label>
-            Arrival · 1 of 4
+            Arrival · 1 of 2
           </span>
 
           <div
@@ -171,6 +203,7 @@
         </div>
 
         <button
+          id="jeeves-threshold-skip-control"
           class="jeeves-threshold-skip"
           type="button"
           data-jeeves-threshold-skip
@@ -193,6 +226,7 @@
           <div
             class="jeeves-threshold-window-caption"
             data-jeeves-threshold-window-caption
+            aria-hidden="true"
           >
             Mirrorland threshold
           </div>
@@ -211,11 +245,11 @@
               You chose Talk to the House
             </div>
 
-            <h1 id="jeeves-threshold-title">
+            <h1>
               You have reached the entrance to the estate.
             </h1>
 
-            <p id="jeeves-threshold-description">
+            <p>
               This stained-glass threshold marks the approach to Mirrorland
               and the public rooms of Diamond Gate Bridge.
             </p>
@@ -225,6 +259,7 @@
             class="jeeves-threshold-phase"
             data-jeeves-threshold-panel="host"
             data-threshold-panel-index="2"
+            aria-hidden="true"
             hidden
           >
             <div class="jeeves-threshold-eyebrow">
@@ -236,55 +271,15 @@
             </h2>
 
             <p>
-              He will help you understand where you are, clarify what brought
-              you to the estate, and introduce the correct room, path, or
-              specialist.
-            </p>
-          </div>
-
-          <div
-            class="jeeves-threshold-phase"
-            data-jeeves-threshold-panel="conversation"
-            data-threshold-panel-index="3"
-            hidden
-          >
-            <div class="jeeves-threshold-eyebrow">
-              A hosted conversation
-            </div>
-
-            <h2>
-              Tell Jeeves what brought you here.
-            </h2>
-
-            <p>
-              Jeeves will respond one message at a time. Each message is given
-              time to arrive and time to be read before the conversation moves
-              forward.
+              Tell Jeeves what brought you to the estate. He will help you
+              understand where you are and introduce the correct room, path,
+              or specialist.
             </p>
 
             <p class="jeeves-threshold-instruction">
-              While Jeeves is typing or waiting, tap the conversation stage to
-              advance only the current message.
-            </p>
-          </div>
-
-          <div
-            class="jeeves-threshold-phase"
-            data-jeeves-threshold-panel="access"
-            data-threshold-panel-index="4"
-            hidden
-          >
-            <div class="jeeves-threshold-eyebrow">
-              Estate access
-            </div>
-
-            <h2>
-              The conversation is the front desk. The estate remains open.
-            </h2>
-
-            <p>
-              After the welcome, you may continue with Jeeves, inspect the
-              supporting guide panels, or enter a public path directly.
+              Jeeves responds one message at a time. While he is typing or
+              waiting, tap the conversation stage to advance only the current
+              message.
             </p>
           </div>
 
@@ -295,7 +290,7 @@
               data-jeeves-threshold-advance
               aria-describedby="jeeves-threshold-action-note"
             >
-              Approach the entrance
+              Continue
             </button>
 
             <p
@@ -303,7 +298,7 @@
               class="jeeves-threshold-action-note"
               data-jeeves-threshold-action-note
             >
-              Continue through the guided arrival sequence.
+              Continue to meet the host at the estate entrance.
             </p>
           </div>
         </div>
@@ -314,7 +309,7 @@
         data-jeeves-threshold-status
         aria-live="polite"
       >
-        Preparing the estate entrance.
+        The Mirrorland threshold is coming into view.
       </div>
     </div>
   </section>
@@ -324,9 +319,16 @@
     class="jeeves-page"
     data-jeeves-page="true"
     data-agent-root-page="true"
-    data-jeeves-access="guided"
+    data-jeeves-access="open"
     aria-describedby="jeeves-arrival-summary"
   >
+    <a
+      class="skip-link"
+      href="#jeeves-conversation"
+    >
+      Skip to the Jeeves conversation
+    </a>
+
     <header
       class="jeeves-header"
       aria-label="Jeeves header"
@@ -465,13 +467,12 @@
       </div>
     </section>
 
-    <!-- PRIMARY EXPERIENCE -->
-
     <section
       id="jeeves-conversation"
       class="jeeves-console-section"
       data-jeeves-primary-stage
       aria-labelledby="jeeves-console-title"
+      tabindex="-1"
     >
       <div
         class="jeeves-stage-label"
@@ -676,8 +677,6 @@
         </div>
       </div>
     </section>
-
-    <!-- COMPACT SUPPORTING GUIDE -->
 
     <section
       class="jeeves-section jeeves-guide-index"
@@ -1173,8 +1172,8 @@
   <noscript>
     <section class="jeeves-runtime-fallback">
       <p>
-        Jeeves’s interactive guide requires JavaScript. You have reached the
-        estate entrance, and the primary public paths remain available.
+        Jeeves’s interactive guide requires JavaScript. The estate’s primary
+        public paths and page content remain available.
       </p>
 
       <div class="jeeves-runtime-fallback-links">
@@ -1208,7 +1207,7 @@
   ></script>
 
   <script
-    src="/showroom/globe/hearth/jeeves/jeeves.threshold.js?v=DIAMOND_GATE_BRIDGE_JEEVES_ESTATE_THRESHOLD_RENDERER_TNT_v1"
+    src="/showroom/globe/hearth/jeeves/jeeves.threshold.js?v=DIAMOND_GATE_BRIDGE_JEEVES_TWO_STAGE_ESTATE_THRESHOLD_RENDERER_TNT_v2"
     defer
     data-jeeves-child="threshold"
   ></script>

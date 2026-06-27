@@ -2,19 +2,18 @@
 <html
   lang="en"
   data-route="/products/archcoin/"
-  data-page="archcoin-product-grandchild-value-traceability"
-  data-contract="ARCHCOIN_PRODUCT_GRANDCHILD_VALUE_ORBIT_ANIMATION_TNT_v4"
-  data-previous-contract="ARCHCOIN_PRODUCT_GRANDCHILD_VALUE_FIELD_ANIMATION_TNT_v3"
+  data-page="archcoin-product-transaction-template-and-bond-layer"
+  data-contract="ARCHCOIN_TRANSACTION_TEMPLATE_AND_BOND_LAYER_REBUILD_v2"
+  data-previous-contract="ARCHCOIN_PRODUCT_GRANDCHILD_VALUE_ORBIT_ANIMATION_TNT_v4"
   data-parent-route="/products/"
   data-grandparent-route="/"
   data-role="product-grandchild"
   data-product-chamber="archcoin"
-  data-product-type="value-traceability-architecture"
+  data-product-type="transaction-template-and-bond-layer"
   data-core-message="value-should-be-traceable-before-it-is-amplified"
-  data-value-loop="contribution-trace-record-allocate-trust"
-  data-animation-method="css-only"
-  data-orbit-animation="active"
-  data-label-gravity-lock="true"
+  data-archcoin-product="true"
+  data-archcoin-primary-model="four-coin-transaction-template"
+  data-archcoin-secondary-model="five-node-value-lifecycle"
   data-js-required="false"
   data-generated-image="false"
   data-graphic-box="false"
@@ -29,7 +28,7 @@
   <title>ARCHCOIN · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="ARCHCOIN is a product chamber for value design, contribution, traceability, accountability, allocation, and future exchange architecture. It is concept architecture only, not financial advice or a live token sale."
+    content="ARCHCOIN is a four-part transaction-template and bond-layer product chamber for contract authority, inbound value, outbound obligation, allocation, traceability, accountability, and adapter-aware crypto participation. It is concept architecture only, not financial advice or a live token sale."
   >
 
   <style>
@@ -44,6 +43,7 @@
       --blue:#8dd8ff;
       --green:#8ff0c3;
       --amber:#f8b94e;
+      --rose:#ffb39a;
       --panel:rgba(9,15,31,.88);
       --line:rgba(184,205,255,.18);
       --line-gold:rgba(243,200,111,.32);
@@ -55,6 +55,9 @@
       --center-pulse-duration:7.4s;
       --gem-cut:polygon(50% 0%,78% 9%,100% 35%,90% 75%,50% 100%,10% 75%,0% 35%,22% 9%);
       --facet:polygon(0 18px,18px 0,calc(100% - 18px) 0,100% 18px,100% calc(100% - 18px),calc(100% - 18px) 100%,18px 100%,0 calc(100% - 18px));
+
+      --archcoin-transaction-prominence:1;
+      --archcoin-lifecycle-prominence:.82;
     }
 
     * { box-sizing:border-box; }
@@ -345,13 +348,13 @@
     }
 
     .lead {
-      max-width:910px;
+      max-width:930px;
       position:relative;
       z-index:2;
     }
 
     .subline {
-      max-width:920px;
+      max-width:930px;
       color:rgba(255,244,216,.90);
       font-size:clamp(1.08rem,2.8vw,1.34rem);
       font-weight:850;
@@ -360,7 +363,7 @@
     }
 
     .guardrail {
-      max-width:980px;
+      max-width:990px;
       padding:1rem 1.1rem;
       border:1px solid rgba(143,240,195,.24);
       border-radius:1.2rem;
@@ -489,15 +492,8 @@
     }
 
     @keyframes valueInnerFieldBreathe {
-      0%,100% {
-        opacity:.54;
-        filter:brightness(.94);
-      }
-
-      50% {
-        opacity:.86;
-        filter:brightness(1.12);
-      }
+      0%,100% { opacity:.54; filter:brightness(.94); }
+      50% { opacity:.86; filter:brightness(1.12); }
     }
 
     .center-gem {
@@ -505,8 +501,8 @@
       left:50%;
       top:50%;
       z-index:5;
-      width:clamp(10.5rem,24vw,15rem);
-      height:clamp(7.7rem,17vw,10.9rem);
+      width:clamp(10.9rem,25vw,15.4rem);
+      height:clamp(8rem,18vw,11.2rem);
       transform:translate(-50%,-50%);
       display:grid;
       place-items:center;
@@ -514,7 +510,7 @@
       pointer-events:none;
     }
 
-    .value-orbit {
+    .transaction-orbit {
       position:absolute;
       left:50%;
       top:50%;
@@ -529,14 +525,28 @@
       will-change:transform;
     }
 
+    .lifecycle-orbit {
+      position:absolute;
+      left:50%;
+      top:50%;
+      z-index:3;
+      width:min(58%,25rem);
+      height:min(58%,25rem);
+      border-radius:999px;
+      transform:translate(-50%,-50%);
+      pointer-events:none;
+      animation:valueOrbitTurn calc(var(--orbit-duration) * 1.2) linear infinite reverse;
+      opacity:.84;
+    }
+
     @keyframes valueOrbitTurn {
       from { transform:translate(-50%,-50%) rotate(0deg); }
       to { transform:translate(-50%,-50%) rotate(360deg); }
     }
 
     .center-gem-core,
-    .value-gem-core,
-    .value-upright {
+    .orbit-gem-core,
+    .orbit-upright {
       position:absolute;
       inset:0;
       display:grid;
@@ -550,18 +560,11 @@
     }
 
     @keyframes centerPulse {
-      0%,100% {
-        transform:scale(1);
-        filter:brightness(1);
-      }
-
-      50% {
-        transform:scale(1.035);
-        filter:brightness(1.13);
-      }
+      0%,100% { transform:scale(1); filter:brightness(1); }
+      50% { transform:scale(1.035); filter:brightness(1.13); }
     }
 
-    .value-point {
+    .orbit-point {
       --angle:0deg;
       --radius:-15rem;
       --value-delay:0s;
@@ -585,7 +588,7 @@
       transition:filter .18s ease,scale .18s ease;
     }
 
-    .value-point .value-upright {
+    .orbit-point .orbit-upright {
       animation:valueLabelGravityLock var(--orbit-duration) linear infinite reverse;
       will-change:transform;
     }
@@ -595,35 +598,43 @@
       to { transform:rotate(360deg); }
     }
 
-    .value-point .value-gem-core {
+    .orbit-point .orbit-gem-core {
       animation:valueGemFloat var(--gem-float-duration) ease-in-out infinite;
       animation-delay:var(--value-delay);
     }
 
     @keyframes valueGemFloat {
-      0%,100% {
-        transform:translateY(0) scale(1);
-        filter:brightness(1);
-      }
-
-      50% {
-        transform:translateY(-8px) scale(1.025);
-        filter:brightness(1.12);
-      }
+      0%,100% { transform:translateY(0) scale(1); filter:brightness(1); }
+      50% { transform:translateY(-8px) scale(1.025); filter:brightness(1.12); }
     }
 
-    .value-point:hover,
-    .value-point:focus-visible {
+    .orbit-point:hover,
+    .orbit-point:focus-visible {
       filter:brightness(1.12) saturate(1.08);
       scale:1.045;
       outline:none;
     }
 
-    .value-point:hover .value-gem-core,
-    .value-point:focus-visible .value-gem-core {
+    .orbit-point:hover .orbit-gem-core,
+    .orbit-point:focus-visible .orbit-gem-core {
       animation-play-state:paused;
       transform:translateY(-10px) scale(1.045);
       filter:brightness(1.18);
+    }
+
+    .transaction-point {
+      width:clamp(8rem,18vw,10.1rem);
+      height:clamp(5.9rem,13vw,7.35rem);
+      margin-left:calc(clamp(8rem,18vw,10.1rem) / -2);
+      margin-top:calc(clamp(5.9rem,13vw,7.35rem) / -2);
+    }
+
+    .lifecycle-point {
+      width:clamp(5.1rem,11vw,6.2rem);
+      height:clamp(3.75rem,8vw,4.6rem);
+      margin-left:calc(clamp(5.1rem,11vw,6.2rem) / -2);
+      margin-top:calc(clamp(3.75rem,8vw,4.6rem) / -2);
+      opacity:.94;
     }
 
     .arch-gem-svg {
@@ -649,7 +660,7 @@
     .gem-label {
       position:relative;
       z-index:3;
-      width:72%;
+      width:76%;
       display:grid;
       gap:.12rem;
       place-items:center;
@@ -688,10 +699,19 @@
     .center-gem .gem-label strong {
       display:block;
       color:rgba(255,244,216,.98);
-      font-size:clamp(1rem,2.2vw,1.38rem);
+      font-size:clamp(.95rem,2.2vw,1.3rem);
       line-height:1.05;
       letter-spacing:-.035em;
       text-transform:none;
+    }
+
+    .lifecycle-point .gem-label b {
+      font-size:clamp(.38rem,.95vw,.5rem);
+      letter-spacing:.09em;
+    }
+
+    .lifecycle-point .gem-label span {
+      display:none;
     }
 
     .arch-glint {
@@ -719,6 +739,12 @@
       gap:.85rem;
     }
 
+    .four-grid {
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:.85rem;
+    }
+
     .loop-grid {
       display:grid;
       grid-template-columns:repeat(5,minmax(0,1fr));
@@ -727,7 +753,8 @@
 
     .use-grid,
     .guardrail-grid,
-    .route-card-grid {
+    .route-card-grid,
+    .adapter-grid {
       display:grid;
       grid-template-columns:repeat(4,minmax(0,1fr));
       gap:.85rem;
@@ -735,7 +762,8 @@
 
     .card,
     .loop-card,
-    .route-card {
+    .route-card,
+    .adapter-card {
       display:grid;
       gap:.6rem;
       min-height:100%;
@@ -751,7 +779,9 @@
     .card:hover,
     .card:focus-within,
     .route-card:hover,
-    .route-card:focus-visible {
+    .route-card:focus-visible,
+    .adapter-card:hover,
+    .adapter-card:focus-within {
       transform:translateY(-3px);
       border-color:rgba(243,200,111,.46);
       outline:none;
@@ -759,7 +789,8 @@
 
     .card b,
     .loop-card b,
-    .route-card b {
+    .route-card b,
+    .adapter-card b {
       color:var(--gold);
       font-size:.68rem;
       letter-spacing:.12em;
@@ -768,15 +799,17 @@
 
     .card strong,
     .loop-card strong,
-    .route-card strong {
+    .route-card strong,
+    .adapter-card strong {
       color:rgba(255,244,216,.98);
-      font-size:1.15rem;
+      font-size:1.1rem;
       line-height:1.1;
     }
 
     .card span,
     .loop-card span,
-    .route-card span {
+    .route-card span,
+    .adapter-card span {
       color:var(--muted);
       font-size:.94rem;
       line-height:1.42;
@@ -791,6 +824,35 @@
 
     .guardrail-card b {
       color:var(--green);
+    }
+
+    .adapter-card {
+      border-color:rgba(141,216,255,.16);
+      background:
+        radial-gradient(circle at 20% 0%,rgba(141,216,255,.08),transparent 60%),
+        rgba(141,216,255,.035);
+    }
+
+    .adapter-card b {
+      color:var(--blue);
+    }
+
+    .transaction-summary {
+      padding:1rem 1.1rem;
+      border:1px solid rgba(243,200,111,.22);
+      border-radius:1.2rem;
+      background:
+        radial-gradient(circle at 20% 0%,rgba(243,200,111,.10),transparent 60%),
+        rgba(243,200,111,.045);
+      display:grid;
+      gap:.62rem;
+    }
+
+    .transaction-summary strong {
+      color:rgba(255,244,216,.98);
+      font-size:clamp(1.1rem,3.2vw,1.45rem);
+      line-height:1.08;
+      letter-spacing:-.03em;
     }
 
     .final-direction {
@@ -851,15 +913,20 @@
     }
 
     @media (max-width:1080px) {
-      .loop-grid,
+      .four-grid,
       .use-grid,
       .guardrail-grid,
-      .route-card-grid {
+      .route-card-grid,
+      .adapter-grid {
         grid-template-columns:repeat(2,minmax(0,1fr));
       }
 
       .card-grid {
         grid-template-columns:1fr;
+      }
+
+      .loop-grid {
+        grid-template-columns:repeat(3,minmax(0,1fr));
       }
     }
 
@@ -900,17 +967,30 @@
         min-height:29rem;
       }
 
-      .value-orbit {
+      .transaction-orbit {
         width:20rem;
         height:20rem;
       }
 
-      .value-point {
-        --radius:-9.25rem;
-        width:5.2rem;
-        height:3.82rem;
-        margin-left:-2.6rem;
-        margin-top:-1.91rem;
+      .lifecycle-orbit {
+        width:13rem;
+        height:13rem;
+      }
+
+      .transaction-point {
+        --radius:-9.1rem;
+        width:5.7rem;
+        height:4.15rem;
+        margin-left:-2.85rem;
+        margin-top:-2.075rem;
+      }
+
+      .lifecycle-point {
+        --radius:-5.85rem;
+        width:3.65rem;
+        height:2.7rem;
+        margin-left:-1.825rem;
+        margin-top:-1.35rem;
       }
 
       .gem-label b {
@@ -934,10 +1014,12 @@
         font-size:.82rem;
       }
 
+      .four-grid,
       .loop-grid,
       .use-grid,
       .guardrail-grid,
-      .route-card-grid {
+      .route-card-grid,
+      .adapter-grid {
         grid-template-columns:1fr;
       }
     }
@@ -947,17 +1029,30 @@
         min-height:27rem;
       }
 
-      .value-orbit {
-        width:17.3rem;
-        height:17.3rem;
+      .transaction-orbit {
+        width:17.4rem;
+        height:17.4rem;
       }
 
-      .value-point {
-        --radius:-8rem;
-        width:4.7rem;
-        height:3.45rem;
-        margin-left:-2.35rem;
-        margin-top:-1.725rem;
+      .lifecycle-orbit {
+        width:11rem;
+        height:11rem;
+      }
+
+      .transaction-point {
+        --radius:-7.75rem;
+        width:5rem;
+        height:3.7rem;
+        margin-left:-2.5rem;
+        margin-top:-1.85rem;
+      }
+
+      .lifecycle-point {
+        --radius:-4.95rem;
+        width:3.15rem;
+        height:2.35rem;
+        margin-left:-1.575rem;
+        margin-top:-1.175rem;
       }
 
       .gem-label b {
@@ -982,10 +1077,11 @@
 
       .value-stage::before,
       .value-stage::after,
-      .value-orbit,
-      .value-point .value-upright,
+      .transaction-orbit,
+      .lifecycle-orbit,
+      .orbit-point .orbit-upright,
       .center-gem-core,
-      .value-point .value-gem-core,
+      .orbit-point .orbit-gem-core,
       .arch-glint,
       .arch-star {
         animation:none!important;
@@ -1131,29 +1227,44 @@
         <div class="kicker">ARCHCOIN · Product Chamber</div>
         <h1 id="page-title">Value should be traceable before it is amplified.</h1>
 
-        <p class="subline">Contribution. Trace. Record. Allocate. Trust.</p>
+        <p class="subline">Authority. Inbound value. Obligation. Allocation.</p>
 
         <p class="lead">
-          ARCHCOIN is a value-design chamber for contribution, traceability, accountability, allocation, and future exchange architecture. It starts before hype, before amplification, and before unclear promises.
+          ARCHCOIN is a four-part transaction-template and bonding chamber for contract authority, inbound value, outbound obligation, allocation, traceability, accountability, and adapter-aware asset participation. It starts before hype, before amplification, and before automatic chain-merger claims.
         </p>
 
         <div class="guardrail">
-          This page presents product architecture and concept development only. ARCHCOIN is not a wallet, not an exchange, not a trading platform, not a token-sale page, not a live financial product, and not financial, legal, tax, or investment advice.
+          This page presents product architecture and concept development only. ARCHCOIN is not a wallet, not an exchange, not a trading platform, not a token-sale page, not a live financial product, not an automatic protocol-level chain merger, and not financial, legal, tax, or investment advice.
         </div>
 
         <div class="actions">
-          <a class="button gold" href="#value-loop">Value Loop</a>
-          <a class="button green" href="#guardrails">Guardrails</a>
+          <a class="button gold" href="#transaction-orbit">Transaction Orbit</a>
+          <a class="button green" href="#value-lifecycle">Value Lifecycle</a>
+          <a class="button" href="#adapter-layer">Adapter Layer</a>
+          <a class="button" href="#guardrails">Guardrails</a>
           <a class="button" href="/products/">Back to Products</a>
-          <a class="button" href="/gauges/">Read Gauges</a>
         </div>
       </section>
 
-      <section class="panel section" aria-labelledby="five-points-title">
-        <div class="kicker">Five value points</div>
-        <h2 id="five-points-title">The chamber turns value movement into a checkable path.</h2>
+      <section class="panel section" id="transaction-orbit" aria-labelledby="transaction-title">
+        <div class="kicker">Primary transaction architecture</div>
+        <h2 id="transaction-title">ARCHCOIN is a four-coin transaction template and bond layer.</h2>
 
-        <div class="value-stage" aria-label="Contribution trace record allocate trust value field">
+        <div class="transaction-summary">
+          <strong>Every transaction requires authority, inflow, obligation, and allocation.</strong>
+          <p>
+            ARCHCOIN does not begin as an ordinary single coin. It begins as a transaction architecture that makes four positions visible: the contract that authorizes movement, the value that enters, the obligation that must be settled, and the allocation or growth path that remains inside the bond frame.
+          </p>
+        </div>
+
+        <div
+          id="archcoin-orbit-stage"
+          class="value-stage"
+          aria-label="ARCHCOIN transaction orbit and subordinate value lifecycle"
+          data-archcoin-transaction-orbit="true"
+        >
+          <div id="archcoin-geometry-mount" aria-hidden="true"></div>
+
           <div class="center-gem" aria-hidden="true">
             <span class="center-gem-core">
               <svg class="arch-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false">
@@ -1161,162 +1272,318 @@
               </svg>
               <span class="gem-label">
                 <b>ARCHCOIN</b>
-                <strong>Value Field</strong>
+                <strong>Transaction Bond Field</strong>
               </span>
             </span>
           </div>
 
-          <div class="value-orbit" aria-label="Animated value orbit">
-            <a class="value-point" style="--angle:0deg;--value-delay:-.2s" href="#value-loop">
-              <span class="value-upright">
-                <span class="value-gem-core">
+          <div class="transaction-orbit" aria-label="Primary four-coin transaction orbit">
+            <button
+              class="orbit-point transaction-point"
+              type="button"
+              style="--angle:0deg;--value-delay:-.2s"
+              data-archcoin-coin-position
+              data-archcoin-coin-position="contract"
+            >
+              <span class="orbit-upright">
+                <span class="orbit-gem-core">
                   <svg class="arch-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#archDigitalGem"></use></svg>
-                  <span class="gem-label"><b>Contribute</b><span>Value enters</span></span>
+                  <span class="gem-label"><b>Contract</b><span>Authority binds movement</span></span>
                 </span>
               </span>
-            </a>
+            </button>
 
-            <a class="value-point" style="--angle:72deg;--value-delay:-1.4s" href="#value-loop">
-              <span class="value-upright">
-                <span class="value-gem-core">
+            <button
+              class="orbit-point transaction-point"
+              type="button"
+              style="--angle:90deg;--value-delay:-1.5s"
+              data-archcoin-coin-position
+              data-archcoin-coin-position="receivable"
+            >
+              <span class="orbit-upright">
+                <span class="orbit-gem-core">
                   <svg class="arch-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#archDigitalGem"></use></svg>
-                  <span class="gem-label"><b>Trace</b><span>Source and purpose</span></span>
+                  <span class="gem-label"><b>Receivable</b><span>Inbound value arrives</span></span>
                 </span>
               </span>
-            </a>
+            </button>
 
-            <a class="value-point" style="--angle:144deg;--value-delay:-2.6s" href="#value-loop">
-              <span class="value-upright">
-                <span class="value-gem-core">
+            <button
+              class="orbit-point transaction-point"
+              type="button"
+              style="--angle:180deg;--value-delay:-2.8s"
+              data-archcoin-coin-position
+              data-archcoin-coin-position="payable"
+            >
+              <span class="orbit-upright">
+                <span class="orbit-gem-core">
                   <svg class="arch-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#archDigitalGem"></use></svg>
-                  <span class="gem-label"><b>Record</b><span>Event and ledger</span></span>
+                  <span class="gem-label"><b>Payable</b><span>Obligation must settle</span></span>
                 </span>
               </span>
-            </a>
+            </button>
 
-            <a class="value-point" style="--angle:216deg;--value-delay:-3.8s" href="#value-loop">
-              <span class="value-upright">
-                <span class="value-gem-core">
+            <button
+              class="orbit-point transaction-point"
+              type="button"
+              style="--angle:270deg;--value-delay:-4.1s"
+              data-archcoin-coin-position
+              data-archcoin-coin-position="allocation"
+            >
+              <span class="orbit-upright">
+                <span class="orbit-gem-core">
                   <svg class="arch-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#archDigitalGem"></use></svg>
-                  <span class="gem-label"><b>Allocate</b><span>Defined rules</span></span>
+                  <span class="gem-label"><b>Allocation</b><span>Growth stays governed</span></span>
                 </span>
               </span>
-            </a>
+            </button>
+          </div>
 
-            <a class="value-point" style="--angle:288deg;--value-delay:-5s" href="#value-loop">
-              <span class="value-upright">
-                <span class="value-gem-core">
+          <div class="lifecycle-orbit" aria-label="Secondary value lifecycle ring">
+            <span
+              class="orbit-point lifecycle-point"
+              style="--angle:0deg;--radius:-9rem;--value-delay:-.2s"
+              data-archcoin-value-lifecycle-node="contribute"
+              aria-hidden="true"
+            >
+              <span class="orbit-upright">
+                <span class="orbit-gem-core">
                   <svg class="arch-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#archDigitalGem"></use></svg>
-                  <span class="gem-label"><b>Trust</b><span>Checkable movement</span></span>
+                  <span class="gem-label"><b>Contribute</b></span>
                 </span>
               </span>
-            </a>
+            </span>
+
+            <span
+              class="orbit-point lifecycle-point"
+              style="--angle:72deg;--radius:-9rem;--value-delay:-1.4s"
+              data-archcoin-value-lifecycle-node="trace"
+              aria-hidden="true"
+            >
+              <span class="orbit-upright">
+                <span class="orbit-gem-core">
+                  <svg class="arch-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#archDigitalGem"></use></svg>
+                  <span class="gem-label"><b>Trace</b></span>
+                </span>
+              </span>
+            </span>
+
+            <span
+              class="orbit-point lifecycle-point"
+              style="--angle:144deg;--radius:-9rem;--value-delay:-2.6s"
+              data-archcoin-value-lifecycle-node="record"
+              aria-hidden="true"
+            >
+              <span class="orbit-upright">
+                <span class="orbit-gem-core">
+                  <svg class="arch-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#archDigitalGem"></use></svg>
+                  <span class="gem-label"><b>Record</b></span>
+                </span>
+              </span>
+            </span>
+
+            <span
+              class="orbit-point lifecycle-point"
+              style="--angle:216deg;--radius:-9rem;--value-delay:-3.8s"
+              data-archcoin-value-lifecycle-node="allocate"
+              aria-hidden="true"
+            >
+              <span class="orbit-upright">
+                <span class="orbit-gem-core">
+                  <svg class="arch-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#archDigitalGem"></use></svg>
+                  <span class="gem-label"><b>Allocate</b></span>
+                </span>
+              </span>
+            </span>
+
+            <span
+              class="orbit-point lifecycle-point"
+              style="--angle:288deg;--radius:-9rem;--value-delay:-5s"
+              data-archcoin-value-lifecycle-node="trust"
+              aria-hidden="true"
+            >
+              <span class="orbit-upright">
+                <span class="orbit-gem-core">
+                  <svg class="arch-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#archDigitalGem"></use></svg>
+                  <span class="gem-label"><b>Trust</b></span>
+                </span>
+              </span>
+            </span>
           </div>
         </div>
       </section>
 
-      <section class="panel section" aria-labelledby="concept-title">
-        <div class="kicker">Product concept</div>
-        <h2 id="concept-title">ARCHCOIN starts with disciplined value design, not hype.</h2>
+      <section class="panel section" aria-labelledby="four-coins-title">
+        <div class="kicker">Four coin positions</div>
+        <h2 id="four-coins-title">The primary orbit shows the minimum transaction structure.</h2>
 
-        <div class="card-grid">
+        <div class="four-grid">
           <article class="card">
-            <b>Contribution</b>
-            <strong>Value needs a source.</strong>
-            <span>The chamber begins by asking what contribution entered, who it came from, and what purpose it is meant to serve.</span>
+            <b>Contract Authority</b>
+            <strong>Movement begins under an authorized frame.</strong>
+            <span>The contract position governs permissions, terms, signatures, scope, and the authority that allows value to move in a disciplined way.</span>
           </article>
 
           <article class="card">
-            <b>Traceability</b>
-            <strong>Movement should be checkable.</strong>
-            <span>Value movement should leave a readable path instead of disappearing into vague claims.</span>
+            <b>Inbound Value / Receivable</b>
+            <strong>Value arriving must be visible.</strong>
+            <span>The receivable position names what entered, from where, through which route, and for what purpose it is being received.</span>
           </article>
 
           <article class="card">
-            <b>Discipline</b>
-            <strong>Allocation needs rules.</strong>
-            <span>Value becomes more trustworthy when allocation is defined before amplification begins.</span>
+            <b>Outbound Obligation / Payable</b>
+            <strong>Every movement carries responsibility.</strong>
+            <span>The payable position keeps duty, settlement pressure, and what is owed visible instead of letting obligations vanish behind vague motion.</span>
+          </article>
+
+          <article class="card">
+            <b>Allocation / Growth</b>
+            <strong>Expansion remains inside the bond frame.</strong>
+            <span>The allocation position governs distribution, reinvestment, growth, and pressure routing without pretending that discipline is optional.</span>
           </article>
         </div>
       </section>
 
-      <section class="panel section" id="value-loop" aria-labelledby="loop-title">
-        <div class="kicker">Value loop</div>
-        <h2 id="loop-title">Contribution → Trace → Record → Allocate → Trust.</h2>
+      <section class="panel section" id="value-lifecycle" aria-labelledby="lifecycle-title">
+        <div class="kicker">Secondary value lifecycle</div>
+        <h2 id="lifecycle-title">The five-node loop explains the lifecycle inside the four-coin model.</h2>
+
+        <div class="transaction-summary">
+          <strong>The lifecycle explains what happens across the transaction. It does not replace the transaction architecture.</strong>
+          <p>
+            Contribution, trace, record, allocation, and trust remain useful, but only as subordinate explanatory logic within the primary four-coin transaction and bond framework.
+          </p>
+        </div>
 
         <div class="loop-grid">
           <article class="loop-card">
             <b>01</b>
-            <strong>Make the contribution.</strong>
-            <span>A contribution enters the system as time, value, work, money, support, attention, or another defined input.</span>
+            <strong>Contribute</strong>
+            <span>Time, labor, money, attention, assets, or another defined input enters the transaction field.</span>
           </article>
 
           <article class="loop-card">
             <b>02</b>
-            <strong>Trace the source and purpose.</strong>
-            <span>The chamber clarifies where the value came from, what it is attached to, and what it is supposed to support.</span>
+            <strong>Trace</strong>
+            <span>The source, route, and purpose of value are clarified before amplification claims are allowed to dominate interpretation.</span>
           </article>
 
           <article class="loop-card">
             <b>03</b>
-            <strong>Record the event.</strong>
-            <span>The event becomes readable through ledger-style architecture, receipt logic, or an accountability surface.</span>
+            <strong>Record</strong>
+            <span>The event is recorded through accountable transaction logic, receipt logic, ledger logic, or another readable bond surface.</span>
           </article>
 
           <article class="loop-card">
             <b>04</b>
-            <strong>Allocate with discipline.</strong>
-            <span>Allocation follows defined rules rather than impulse, hype, or unclear promises.</span>
+            <strong>Allocate</strong>
+            <span>Distribution follows a defined rule frame instead of being treated as an afterthought once value has already moved.</span>
           </article>
 
           <article class="loop-card">
             <b>05</b>
-            <strong>Build trust through checkability.</strong>
-            <span>Trust increases when the movement of value can be seen, checked, and understood.</span>
+            <strong>Trust</strong>
+            <span>Trust grows when authority, inflow, obligation, and allocation can be checked rather than merely asserted.</span>
+          </article>
+        </div>
+      </section>
+
+      <section class="panel section" id="adapter-layer" aria-labelledby="adapter-title">
+        <div class="kicker">Adapter-aware asset participation</div>
+        <h2 id="adapter-title">Existing assets may participate without being replaced.</h2>
+
+        <div class="adapter-grid">
+          <article class="adapter-card" data-archcoin-adapter-slot="referenced">
+            <b>Referenced</b>
+            <strong>Read the asset inside the transaction frame.</strong>
+            <span>ARCHCOIN may classify and account for an external asset without claiming custody or protocol-level merger.</span>
+          </article>
+
+          <article class="adapter-card" data-archcoin-adapter-slot="wrapped">
+            <b>Wrapped</b>
+            <strong>Represent value through a declared wrapper.</strong>
+            <span>A wrapped participation mode still requires explicit implementation, custody assumptions, and settlement logic outside mere page declaration.</span>
+          </article>
+
+          <article class="adapter-card" data-archcoin-adapter-slot="routed">
+            <b>Routed</b>
+            <strong>Assign the asset a transaction role.</strong>
+            <span>An asset may be routed into contract, receivable, payable, or allocation positions without pretending the underlying chain has been automatically unified.</span>
+          </article>
+
+          <article class="adapter-card" data-archcoin-adapter-slot="accounted">
+            <b>Accounted For</b>
+            <strong>Bind the movement into one bond representation.</strong>
+            <span>ARCHCOIN may create one readable accountability layer across heterogeneous assets while leaving protocol security and execution claims outside this page.</span>
+          </article>
+        </div>
+      </section>
+
+      <section class="panel section" aria-labelledby="interoperability-title">
+        <div class="kicker">Interoperability boundary</div>
+        <h2 id="interoperability-title">ARCHCOIN may unify the transaction model, not the underlying chains by declaration.</h2>
+
+        <div class="card-grid">
+          <article class="card">
+            <b>May define</b>
+            <strong>Classification, routing, binding, accountability.</strong>
+            <span>ARCHCOIN may define transaction-role assignment, value-route mapping, obligation binding, traceability records, allocation records, adapter interfaces, and unified bond representation.</span>
+          </article>
+
+          <article class="card">
+            <b>Does not automatically claim</b>
+            <strong>No automatic protocol merger.</strong>
+            <span>The page does not claim automatic cross-chain finality, automatic bridge security, automatic custody, automatic exchange execution, automatic legal enforceability, or automatic oracle truth.</span>
+          </article>
+
+          <article class="card">
+            <b>Practical read</b>
+            <strong>Adapters still matter.</strong>
+            <span>Any real interoperability path still requires explicit adapters, wrappers, bridges, oracles, accounting bindings, legal review, operational controls, and implementation evidence.</span>
           </article>
         </div>
       </section>
 
       <section class="panel section" aria-labelledby="use-cases-title">
         <div class="kicker">Use cases</div>
-        <h2 id="use-cases-title">Where value-design discipline belongs.</h2>
+        <h2 id="use-cases-title">Where transaction-template discipline belongs.</h2>
 
         <div class="use-grid">
           <article class="card">
             <b>Contribution systems</b>
             <strong>Make participation visible.</strong>
-            <span>Track who contributed, what moved, and what the contribution supports.</span>
+            <span>Show which authority frame accepted the contribution, what entered, what obligation followed, and where allocation pressure sits.</span>
           </article>
 
           <article class="card">
             <b>Project accounting</b>
-            <strong>Clarify movement.</strong>
-            <span>Separate incoming value, outgoing obligations, allocation rules, and proof surfaces.</span>
+            <strong>Clarify movement and duty.</strong>
+            <span>Separate contract, receivable, payable, and allocation into one readable financial-transaction map instead of one vague bucket.</span>
           </article>
 
           <article class="card">
-            <b>Trust surfaces</b>
-            <strong>Reduce vague claims.</strong>
-            <span>Design receipts, ledgers, and public-facing summaries that make value movement easier to inspect.</span>
+            <b>Bond-layer views</b>
+            <strong>Explain heterogeneous assets together.</strong>
+            <span>Use one adapter-aware accountability surface to classify how existing crypto assets participate inside a shared transaction model.</span>
           </article>
 
           <article class="card">
-            <b>Future exchange</b>
+            <b>Future exchange architecture</b>
             <strong>Prepare before launch.</strong>
-            <span>Any live financial system would require legal, tax, accounting, securities, and compliance review first.</span>
+            <span>Any live financial system would still require legal, tax, accounting, securities, compliance, operational, and custody review before activation.</span>
           </article>
         </div>
       </section>
 
       <section class="panel section" id="guardrails" aria-labelledby="guardrails-title">
         <div class="kicker">Guardrails</div>
-        <h2 id="guardrails-title">ARCHCOIN is not a financial offer.</h2>
+        <h2 id="guardrails-title">ARCHCOIN is not a financial offer or automatic chain-merger claim.</h2>
 
         <div class="guardrail-grid">
           <article class="card guardrail-card">
             <b>No offer</b>
             <strong>Not an offer to sell or solicitation to buy.</strong>
-            <span>This page describes concept architecture. It does not offer any asset, token, security, or investment product.</span>
+            <span>This page describes concept architecture only. It does not offer any asset, token, security, or investment product.</span>
           </article>
 
           <article class="card guardrail-card">
@@ -1326,15 +1593,15 @@
           </article>
 
           <article class="card guardrail-card">
-            <b>No profit promise</b>
-            <strong>No guaranteed return or live tradable token claim.</strong>
-            <span>This page does not claim that a tradable asset currently exists and does not promise profit, yield, appreciation, or return.</span>
+            <b>No execution claim</b>
+            <strong>Not a wallet, exchange, or live execution surface.</strong>
+            <span>This page does not claim custody, exchange execution, protocol finality, or live transaction control.</span>
           </article>
 
           <article class="card guardrail-card">
-            <b>No platform claim</b>
-            <strong>Not a wallet, exchange, or trading platform.</strong>
-            <span>ARCHCOIN is presented here as product architecture only, not a live financial product.</span>
+            <b>No automatic merger claim</b>
+            <strong>Adapters are still required.</strong>
+            <span>This page does not claim that disparate chains, assets, or protocols are automatically merged merely by ARCHCOIN being named as the bond layer.</span>
           </article>
         </div>
       </section>
@@ -1347,7 +1614,7 @@
           <a class="route-card" href="/products/">
             <b>Products</b>
             <strong>Return to the wing.</strong>
-            <span>ARCHCOIN sits inside the larger product chamber system.</span>
+            <span>ARCHCOIN remains a product chamber inside the wider product estate.</span>
             <span class="open-path">Open Products</span>
           </a>
 
@@ -1376,9 +1643,9 @@
 
       <section class="panel section" aria-labelledby="final-title">
         <div class="final-direction">
-          <strong id="final-title">ARCHCOIN is the value-design and traceability chamber.</strong>
+          <strong id="final-title">ARCHCOIN is the four-coin transaction-template and bond-layer chamber.</strong>
           <p>
-            Its first principle is simple: value should be traceable before it is amplified.
+            Its controlling read is simple: value should be traceable before it is amplified, and every transaction should make authority, inflow, obligation, and allocation visible before broader claims are allowed to dominate the frame.
           </p>
 
           <div class="actions">
@@ -1391,75 +1658,59 @@
         </div>
       </section>
 
+      <output id="archcoin-receipt-output" class="receipt" aria-hidden="true"></output>
+
       <template id="route-receipt" data-route-receipt>
-ARCHCOIN_PRODUCT_GRANDCHILD_VALUE_ORBIT_ANIMATION_TNT_v4
-previous=ARCHCOIN_PRODUCT_GRANDCHILD_VALUE_FIELD_ANIMATION_TNT_v3
+ARCHCOIN_TRANSACTION_TEMPLATE_AND_BOND_LAYER_REBUILD_v2
+previous=ARCHCOIN_PRODUCT_GRANDCHILD_VALUE_ORBIT_ANIMATION_TNT_v4
 route=/products/archcoin/
 page=archcoin
 role=product_grandchild
 parent=/products/
 grandparent=/
-product_type=value_traceability_architecture
+product_type=transaction_template_and_bond_layer
 public_label=ARCHCOIN
 canonical_spelling=A_R_C_H_C_O_I_N
-canonical_one_line=ARCHCOIN is a value-design chamber for contribution, traceability, accountability, allocation, and future exchange architecture.
+canonical_one_line=ARCHCOIN is a four-part transaction-template and bonding chamber for contract authority, inbound value, outbound obligation, allocation, traceability, accountability, and adapter-aware crypto participation.
 core_message=Value should be traceable before it is amplified.
-core_mechanic=contribution_trace_record_allocate_trust
-value_points=contribute,trace,record,allocate,trust
-value_loop=make_contribution,trace_source_and_purpose,record_event,allocate_with_discipline,build_trust_through_checkability
-animation_method=css_only
+primary_architecture=contract,receivable,payable,allocation
+secondary_lifecycle=contribute,trace,record,allocate,trust
+four_coin_primary=true
+five_node_secondary=true
+automatic_protocol_level_chain_merger=false
+existing_assets_may_participate=referenced,wrapped,routed,adapter_bound,accounted_for
+visible_first=true
 js_required=false
-structural_correction=value_orbit_wrapper_added
-animated=value_orbit_turn,value_label_gravity_lock,value_field_turn,value_inner_field_breathe,value_gem_float,center_pulse,arch_glint,arch_facet_turn
-label_gravity_lock=true
-public_goal=disciplined_value_design_before_amplification
-helps_with=contribution_systems,project_accounting,trust_surfaces,future_exchange_architecture,ledger_style_receipts,allocation_rules
-visible_label_corrections=Explore_not_Manor,On_Your_Side_AAI_not_On_Your_Side_AI
-guardrail=ARCHCOIN_is_concept_and_product_architecture_only_unless_legally_authorized_launch_materials_later_supersede_this_baseline
+heavy_runtime_loaded=false
+generated_image=false
+graphic_box=false
+streaming=false
+visual_pass_claimed=false
 not_financial_advice=true
 not_legal_advice=true
 not_tax_advice=true
 not_investment_advice=true
 not_offer_to_sell=true
 not_solicitation_to_buy=true
-not_guaranteed_return=true
-not_profit_promise=true
 not_live_token_sale=true
-not_live_tradable_token_claim=true
 not_wallet=true
 not_exchange=true
 not_trading_platform=true
 not_live_financial_product=true
-not_securities_offering=true
+not_automatic_bridge_security_claim=true
+not_automatic_custody_claim=true
+not_automatic_exchange_execution_claim=true
 requires_legal_tax_accounting_securities_compliance_review_before_any_live_financial_launch=true
-parent_products=/products/
-five_flags=/products/five-flags/
-on_your_side_aai=/products/on-your-side-ai/
-education=/products/education/
-nutrition=/products/nutrition/
-showroom=/showroom/
-gauges=/gauges/
-compass=/
-explore=/explore/
-visual_system=code_rendered_value_traceability_digital_gem_orbit
-animation=floating_value_gem_glints,background_anchor_pulse,field_turn,actual_value_orbit,center_pulse,facet_turn,hover_lift
-mobile_law=stacked_value_points_no_clipping_no_hidden_nodes
-receipt_visibility=hidden_template_only
-route_owns=archcoin_public_value_traceability_chamber,value_loop,traceability_explanation,financial_guardrails,use_cases,product_chamber_receipt,archcoin_visual_field,css_only_orbit_animation
-route_does_not_own=products_root,other_product_chambers,showroom,gauges_logic,runtime,render_files,instrument_state,live_financial_launch,javascript_animation_runtime
-heavy_runtime_loaded=false
-render_files_touched=false
-instrument_touched=false
-gauges_logic_touched=false
-generated_image=false
-graphic_box=false
-streaming=false
-visual_pass_claimed=false
+retained_hooks=archcoin-orbit-stage,archcoin-geometry-mount,archcoin-receipt-output,data-archcoin-product
+primary_bindings=data-archcoin-coin-position(contract,receivable,payable,allocation)
+secondary_bindings=data-archcoin-value-lifecycle-node,data-archcoin-adapter-slot,data-archcoin-observation
+route_owns=archcoin_public_transaction_template_chamber,four_coin_primary_architecture,secondary_value_lifecycle,adapter_aware_bond_layer_explanation,financial_guardrails,product_chamber_receipt
+route_does_not_own=products_root,other_product_chambers,showroom,gauges_logic,runtime,render_files,live_financial_launch,automatic_chain_merger
       </template>
     </main>
 
     <footer>
-      ARCHCOIN_PRODUCT_GRANDCHILD_VALUE_ORBIT_ANIMATION_TNT_v4 · ARCHCOIN · Product Grandchild · CSS-only value orbit animation.
+      ARCHCOIN_TRANSACTION_TEMPLATE_AND_BOND_LAYER_REBUILD_v2 · ARCHCOIN · Product Grandchild · Four-coin transaction orbit with subordinate lifecycle layer.
     </footer>
   </div>
 </body>

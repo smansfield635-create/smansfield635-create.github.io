@@ -13,7 +13,7 @@
 
   <link
     rel="stylesheet"
-    href="/assets/compass/compass.css?v=dgb-compass-mirrorland-rebuild-v1"
+    href="/assets/compass/compass.css?v=dgb-compass-navigation-rebuild-v2"
   >
 </head>
 
@@ -30,8 +30,6 @@
     data-selected-destination-type=""
     data-selected-destination-id=""
     data-selected-destination-label=""
-    data-selected-route=""
-    data-flower-expanded="false"
     data-panel-descended="false"
     data-reduced-motion="false"
     data-visual-pass-claimed="false"
@@ -40,13 +38,9 @@
     data-mirrorland-window-stable="true"
     data-mirrorland-enter-enabled="false"
     data-mirrorland-back-enabled="false"
-    data-preserved-compass-mode=""
+    data-preserved-compass-state=""
     data-preserved-orbit-focus=""
-    data-preserved-selected-cardinal=""
-    data-preserved-selected-room=""
-    data-mirrorland-transition-id=""
-    data-compass-prominence="1"
-    data-window-prominence="0.36"
+    data-mirrorland-transition-id="0"
   >
     <section
       class="compass-estate__hall"
@@ -265,7 +259,7 @@
         </h2>
 
         <p>
-          Tap a star to open its cluster. Tap a cluster star to inspect its path. Swipe or use Return To Orbit to return to the cluster.
+          Tap a cardinal star to open its room cluster. Tap a room star to inspect its path. Swipe across empty space to rotate or return to the constellation.
         </p>
       </section>
 
@@ -440,7 +434,7 @@
           data-compass-guidance
           aria-live="polite"
         >
-          Tap a star to open its cluster. Swipe across open space to rotate the constellation.
+          Tap a cardinal star to open its cluster. Tap a room star to inspect its path. Swipe across empty space to rotate the constellation.
         </p>
       </section>
 
@@ -812,11 +806,11 @@
         </h2>
 
         <p data-compass-panel-purpose>
-          Tap a star to open its cluster.
+          Tap a cardinal star to open its room cluster.
         </p>
 
         <p data-compass-panel-relationship>
-          Tap a cluster star to inspect its path. Return To Orbit moves back to the open cluster. Swipe returns to the constellation.
+          Tap a room star to inspect its path. Return to Orbit restores the open cluster. Swipe across empty space to return to the constellation.
         </p>
 
         <div class="compass-panel__actions">
@@ -840,7 +834,7 @@
             hidden
             disabled
           >
-            Return To Orbit
+            Return to Orbit
           </button>
 
           <button
@@ -1219,23 +1213,23 @@
       </section>
 
       <p class="compass-accessibility-note">
-        Swipe inside the Compass scene to rotate the constellation. Tap a cardinal star or label to open its cluster. Tap a cluster star to inspect its path. Activate Mirrorland to reveal its stained-glass threshold. Enter Mirrorland only after the Window is stable, or use Back to Compass to restore the prior orientation.
+        Swipe across empty space inside the Compass scene to rotate or return to the constellation. Tap a cardinal star or label to open its room cluster. Tap a room star to inspect its path. Activate Mirrorland to reveal its stained-glass threshold. Enter Mirrorland only after the Window is stable, or use Back to Compass to restore the prior orientation.
       </p>
     </section>
   </main>
 
   <script
-    src="/assets/compass/compass.controller.js?v=dgb-compass-mirrorland-rebuild-v1"
+    src="/assets/compass/compass.controller.js?v=dgb-compass-navigation-rebuild-v2"
     defer
   ></script>
 
   <script
-    src="/assets/compass/compass.crystals.js?v=dgb-compass-mirrorland-rebuild-v1"
+    src="/assets/compass/compass.crystals.js?v=dgb-compass-navigation-rebuild-v2"
     defer
   ></script>
 
   <script
-    src="/assets/compass/compass.mirrorland-window.js?v=dgb-compass-mirrorland-rebuild-v1"
+    src="/assets/compass/compass.mirrorland-window.js?v=dgb-compass-navigation-rebuild-v2"
     defer
   ></script>
 </body>

@@ -1,31 +1,27 @@
 /* /assets/compass/compass.controller.js
    Diamond Gate Bridge Compass
-   Controller authority for state, selection, panel presentation,
-   spherical orbit commitment, Mirrorland lifecycle, navigation,
-   lens tabs, and receipts.
+   Controller authority for constellation state, cluster state, selection,
+   panel presentation, spherical orientation commitment, Mirrorland lifecycle,
+   navigation, lens tabs, and receipts.
 
-   Spherical-orbit correction scope:
-   - Preserve the existing controller state model, routes, room declarations,
-     cardinal declarations, panel descent, Return To Orbit behavior,
-     Mirrorland lifecycle, navigation, lens tabs, and receipts.
-   - Replace the former flat four-step axis command with a committed
-     three-dimensional spherical-orientation contract.
-   - Preserve orbitFocus as the committed primary cardinal.
-   - Expose preview, commit, cancel, and direct-focus orbit APIs for the
-     crystal renderer.
-   - Accept normalized quaternions as the authoritative orientation form.
-   - Preserve yaw, pitch, roll, revision, gesture, and primary-cardinal
-     telemetry for inspection and renderer synchronization.
-   - Keep continuous pointer tracking and visual projection in
-     compass.crystals.js.
-   - Keep a drag-to-primary action distinct from tapping a cardinal to open
-     its cluster.
-   - Prevent an ordinary spherical drag from closing an open cluster.
-   - Preserve committed spherical orientation through Mirrorland reveal,
-     focus, withdrawal, renderer failure, and state restoration.
+   Full-file replacement scope:
+   - Preserve all existing routes, room declarations, cardinal declarations,
+     panel behavior, Mirrorland lifecycle, navigation, lens tabs, and receipts.
+   - Preserve the four-cardinal spherical constellation contract.
+   - Add one independently preserved spherical room-cluster orientation
+     for each cardinal wing.
+   - Keep orbitFocus distinct from selectedCardinal.
+   - Keep primaryRoom distinct from selectedRoom.
+   - Support controlled room-cluster drag preview, commitment, cancellation,
+     and deterministic room focus.
+   - Keep room-cluster manipulation distinct from room selection.
+   - Permit a quick flick to invoke requestReturnToConstellation().
+   - Do not interpret an ordinary drag release as a return gesture.
+   - Preserve constellation and cluster orientations through Mirrorland reveal,
+     focus, withdrawal, timeout, and renderer failure.
    - Descend into the page panel after room-star selection.
    - Return the viewport to the Compass scene after Return To Orbit.
-   - Keep Return To Orbit distinct from constellation manipulation.
+   - Keep Return To Orbit distinct from constellation restoration.
    - Restore cardinal or room panel content after Mirrorland withdrawal
      and Mirrorland renderer failure.
    - Keep Back available during Mirrorland reveal and focus.
@@ -34,9 +30,10 @@
 
    This file does not:
    - Render crystals.
-   - Project spherical coordinates.
-   - Bind pointer gestures.
    - Calculate rendered hit targets.
+   - Bind pointer gestures.
+   - Classify drag velocity.
+   - Project spherical geometry.
    - Own Mirrorland geometry.
 */
 
@@ -45,16 +42,16 @@
 
   const CONTRACT = Object.freeze({
     id:
-      "DGB_COMPASS_CONTROLLER_SPHERICAL_ORBIT_REBUILD_v2",
+      "DGB_COMPASS_CONTROLLER_SPHERICAL_CONSTELLATION_AND_CLUSTER_REBUILD_v3",
 
     previousId:
-      "DGB_COMPASS_CONTROLLER_FIVE_FILE_REBUILD_v1",
+      "DGB_COMPASS_CONTROLLER_SPHERICAL_ORBIT_REBUILD_v2",
 
     file:
       "/assets/compass/compass.controller.js",
 
     releaseId:
-      "dgb-compass-spherical-orbit-v2",
+      "dgb-compass-spherical-clusters-v3",
 
     visualPassClaimed:
       false,
@@ -109,7 +106,7 @@
       "HELD"
   });
 
-  const ORBIT_PHASES = Object.freeze({
+  const ORIENTATION_PHASES = Object.freeze({
     IDLE:
       "IDLE",
 
@@ -133,62 +130,26 @@
     "west"
   ]);
 
-  const LEGACY_ORBIT_SEQUENCE =
-    Object.freeze([
-      "north",
-      "east",
-      "south",
-      "west"
-    ]);
+  const LEGACY_ORBIT_SEQUENCE = Object.freeze([
+    "north",
+    "east",
+    "south",
+    "west"
+  ]);
 
-  const SPHERICAL_ORBIT = Object.freeze({
+  const CONSTELLATION_ORBIT = Object.freeze({
     coordinateSystem:
       "RIGHT_HANDED_EUCLIDEAN_XYZ",
 
     orientationRepresentation:
       "UNIT_QUATERNION",
 
-    xAxis:
-      "horizontal",
-
-    yAxis:
-      "vertical",
-
-    zAxis:
-      "viewer-depth",
-
-    frontDirection:
-      Object.freeze([
-        0,
-        0,
-        1
-      ]),
-
-    upDirection:
-      Object.freeze([
-        0,
-        1,
-        0
-      ]),
-
-    minimumQuaternionLength:
-      1e-8,
-
-    maximumPitchRadians:
-      Math.PI * 0.46,
-
-    minimumPitchRadians:
-      -Math.PI * 0.46,
-
-    canonicalRollRadians:
-      0,
-
-    allowPreviewInStates:
+    manipulationStates:
       Object.freeze([
         STATES.CONSTELLATION
       ]),
 
-    allowCommitInStates:
+    commitStates:
       Object.freeze([
         STATES.CONSTELLATION
       ]),
@@ -200,45 +161,86 @@
       false,
 
     dragCommitClosesCluster:
-      false,
-
-    clusterRotationEnabled:
-      false,
-
-    roomRotationEnabled:
       false
   });
 
-  const CANONICAL_FOCUS_EULER =
-    Object.freeze({
-      north:
-        Object.freeze({
-          yaw: 0,
-          pitch: 0,
-          roll: 0
-        }),
+  const CLUSTER_ORBIT = Object.freeze({
+    coordinateSystem:
+      "RIGHT_HANDED_EUCLIDEAN_XYZ",
 
-      east:
-        Object.freeze({
-          yaw: -Math.PI / 2,
-          pitch: 0,
-          roll: 0
-        }),
+    orientationRepresentation:
+      "UNIT_QUATERNION",
 
-      south:
-        Object.freeze({
-          yaw: Math.PI,
-          pitch: 0,
-          roll: 0
-        }),
+    manipulationStates:
+      Object.freeze([
+        STATES.CLUSTER_OPEN,
+        STATES.ROOM_SELECTED
+      ]),
 
-      west:
-        Object.freeze({
-          yaw: Math.PI / 2,
-          pitch: 0,
-          roll: 0
-        })
-    });
+    commitStates:
+      Object.freeze([
+        STATES.CLUSTER_OPEN,
+        STATES.ROOM_SELECTED
+      ]),
+
+    dragCommitSelectsRoom:
+      false,
+
+    dragCommitDescendsPanel:
+      false,
+
+    flickReturnsToConstellation:
+      true,
+
+    ordinaryDragReturnsToConstellation:
+      false,
+
+    roomSelectionCommitsPrimary:
+      false
+  });
+
+  const QUATERNION = Object.freeze({
+    minimumLength:
+      1e-8,
+
+    identity:
+      Object.freeze([
+        0,
+        0,
+        0,
+        1
+      ])
+  });
+
+  const CANONICAL_CONSTELLATION_EULER = Object.freeze({
+    north:
+      Object.freeze({
+        yaw: 0,
+        pitch: 0,
+        roll: 0
+      }),
+
+    east:
+      Object.freeze({
+        yaw: -Math.PI / 2,
+        pitch: 0,
+        roll: 0
+      }),
+
+    south:
+      Object.freeze({
+        yaw: Math.PI,
+        pitch: 0,
+        roll: 0
+      }),
+
+    west:
+      Object.freeze({
+        yaw: Math.PI / 2,
+        pitch: 0,
+        roll: 0
+      })
+  });
 
   const PROMINENCE = Object.freeze({
     [STATES.CONSTELLATION]:
@@ -295,10 +297,7 @@
       8000,
 
     mirrorlandWithdrawalMs:
-      6000,
-
-    rendererReadyMs:
-      3000
+      6000
   });
 
   const DEFAULT_PANEL = Object.freeze({
@@ -312,21 +311,18 @@
       "Tap a star to open its cluster.",
 
     relationship:
-      "Drag the constellation like a globe to bring a cardinal star forward. Tap the primary star to open its cluster."
+      "Drag the constellation to bring a cardinal star forward. Tap the primary star to open its cluster."
   });
 
   const GUIDANCE = Object.freeze({
     CONSTELLATION:
-      "Drag any star, label, or open part of the constellation to rotate the shared sphere. Release to make the nearest front-facing cardinal primary. Tap a star to open its cluster.",
+      "Drag any star, label, or open part of the constellation to rotate the shared sphere. Release to bring the nearest cardinal forward. Tap a star to open its cluster.",
 
     CLUSTER_OPEN:
-      "Tap a room star to inspect its path. Return To Orbit restores the open cluster after room inspection. Spherical constellation rotation resumes after returning to the constellation.",
+      "Pull and hold to rotate the room stars as one cluster. Release a controlled drag to settle the nearest room forward. Use a quick swipe to return to the constellation.",
 
     ROOM_SELECTED:
-      "Inspect the selected path. Use Enter Room to navigate, or Return To Orbit to reopen the cluster.",
-
-    MIRRORLAND_DORMANT:
-      "Activate the center threshold to reveal Mirrorland without losing your Compass position.",
+      "Inspect the selected path. A controlled pull still rotates the room cluster. Use Enter Room to navigate, Return To Orbit to reopen the cluster, or a quick swipe to return to the constellation.",
 
     MIRRORLAND_REVEALING:
       "Mirrorland is revealing. Wait for the Window to stabilize.",
@@ -361,7 +357,7 @@
       "north",
 
     orbitPhase:
-      ORBIT_PHASES.IDLE,
+      ORIENTATION_PHASES.COMMITTED,
 
     orbitGestureActive:
       false,
@@ -369,25 +365,29 @@
     orbitRevision:
       0,
 
-    orbitYaw:
-      0,
-
-    orbitPitch:
-      0,
-
-    orbitRoll:
-      0,
-
     orbitQuaternion:
-      Object.freeze([
-        0,
-        0,
-        0,
-        1
-      ]),
+      QUATERNION.identity,
 
-    sphericalOrbitEnabled:
-      true,
+    activeClusterWing:
+      "",
+
+    clusterPrimaryRoom:
+      "",
+
+    clusterPreviewPrimaryRoom:
+      "",
+
+    clusterPhase:
+      ORIENTATION_PHASES.IDLE,
+
+    clusterGestureActive:
+      false,
+
+    clusterRevision:
+      0,
+
+    clusterQuaternion:
+      QUATERNION.identity,
 
     selectedCardinal:
       "",
@@ -409,6 +409,12 @@
 
     mirrorlandTransitionId:
       "",
+
+    sphericalConstellationEnabled:
+      true,
+
+    sphericalClustersEnabled:
+      true,
 
     lastAction:
       "",
@@ -470,7 +476,7 @@
       "north",
 
     orbitPhase:
-      ORBIT_PHASES.IDLE,
+      ORIENTATION_PHASES.COMMITTED,
 
     orbitGestureActive:
       false,
@@ -486,6 +492,9 @@
 
     orbitGestureOrigin:
       null,
+
+    clusters:
+      new Map(),
 
     selectedCardinal:
       "",
@@ -527,9 +536,6 @@
       "",
 
     mirrorlandTimeout:
-      0,
-
-    rendererReadyTimeout:
       0,
 
     preserved:
@@ -583,9 +589,7 @@
     const number =
       Number(value);
 
-    return Number.isFinite(
-      number
-    )
+    return Number.isFinite(number)
       ? number
       : fallback;
   }
@@ -598,11 +602,16 @@
         .trim()
         .toLowerCase();
 
-    return WINGS.includes(
-      wing
-    )
+    return WINGS.includes(wing)
       ? wing
       : "";
+  }
+
+  function normalizeRoomId(
+    value
+  ) {
+    return String(value || "")
+      .trim();
   }
 
   function normalizeRoute(
@@ -612,9 +621,7 @@
       String(value || "")
         .trim();
 
-    return route.startsWith(
-      "/"
-    )
+    return route.startsWith("/")
       ? route
       : "";
   }
@@ -628,16 +635,12 @@
         0
       );
 
-    while (
-      angle > Math.PI
-    ) {
+    while (angle > Math.PI) {
       angle -=
         Math.PI * 2;
     }
 
-    while (
-      angle < -Math.PI
-    ) {
+    while (angle < -Math.PI) {
       angle +=
         Math.PI * 2;
     }
@@ -658,12 +661,7 @@
 
   function normalizeQuaternion(
     value,
-    fallback = [
-      0,
-      0,
-      0,
-      1
-    ]
+    fallback = QUATERNION.identity
   ) {
     const source =
       Array.isArray(value) ||
@@ -671,33 +669,15 @@
         ? Array.from(value)
         : [];
 
-    if (
-      source.length !==
-      4
-    ) {
-      return fallback.slice();
+    if (source.length !== 4) {
+      return Array.from(fallback);
     }
 
     const quaternion = [
-      finiteNumber(
-        source[0],
-        0
-      ),
-
-      finiteNumber(
-        source[1],
-        0
-      ),
-
-      finiteNumber(
-        source[2],
-        0
-      ),
-
-      finiteNumber(
-        source[3],
-        1
-      )
+      finiteNumber(source[0], 0),
+      finiteNumber(source[1], 0),
+      finiteNumber(source[2], 0),
+      finiteNumber(source[3], 1)
     ];
 
     const length =
@@ -707,17 +687,14 @@
 
     if (
       !Number.isFinite(length) ||
-      length <
-        SPHERICAL_ORBIT
-          .minimumQuaternionLength
+      length < QUATERNION.minimumLength
     ) {
-      return fallback.slice();
+      return Array.from(fallback);
     }
 
     return quaternion.map(
       component =>
-        component /
-        length
+        component / length
     );
   }
 
@@ -731,16 +708,9 @@
 
     const safePitch =
       clamp(
-        finiteNumber(
-          pitch,
-          0
-        ),
-
-        SPHERICAL_ORBIT
-          .minimumPitchRadians,
-
-        SPHERICAL_ORBIT
-          .maximumPitchRadians
+        finiteNumber(pitch, 0),
+        -Math.PI / 2,
+        Math.PI / 2
       );
 
     const safeRoll =
@@ -814,16 +784,10 @@
       );
 
     const pitch =
-      Math.abs(sinPitch) >=
-        1
-        ? Math.sign(
-            sinPitch
-          ) *
-          Math.PI /
-          2
-        : Math.asin(
-            sinPitch
-          );
+      Math.abs(sinPitch) >= 1
+        ? Math.sign(sinPitch) *
+          Math.PI / 2
+        : Math.asin(sinPitch);
 
     const yaw =
       Math.atan2(
@@ -864,12 +828,8 @@
       pitch:
         clamp(
           pitch,
-
-          SPHERICAL_ORBIT
-            .minimumPitchRadians,
-
-          SPHERICAL_ORBIT
-            .maximumPitchRadians
+          -Math.PI / 2,
+          Math.PI / 2
         ),
 
       roll:
@@ -881,55 +841,40 @@
     yaw,
     pitch,
     roll,
-    primaryWing = ""
+    primaryId = ""
   ) {
-    const safeYaw =
-      wrapRadians(yaw);
-
-    const safePitch =
-      clamp(
-        finiteNumber(
-          pitch,
-          0
-        ),
-
-        SPHERICAL_ORBIT
-          .minimumPitchRadians,
-
-        SPHERICAL_ORBIT
-          .maximumPitchRadians
+    const quaternion =
+      quaternionFromEuler(
+        yaw,
+        pitch,
+        roll
       );
-
-    const safeRoll =
-      wrapRadians(roll);
 
     return {
       yaw:
-        safeYaw,
+        wrapRadians(yaw),
 
       pitch:
-        safePitch,
-
-      roll:
-        safeRoll,
-
-      quaternion:
-        quaternionFromEuler(
-          safeYaw,
-          safePitch,
-          safeRoll
+        clamp(
+          finiteNumber(pitch, 0),
+          -Math.PI / 2,
+          Math.PI / 2
         ),
 
-      primaryWing:
-        normalizeWing(
-          primaryWing
-        )
+      roll:
+        wrapRadians(roll),
+
+      quaternion,
+
+      primaryId:
+        String(primaryId || "")
+          .trim()
     };
   }
 
   function orientationFromQuaternion(
     quaternion,
-    primaryWing = ""
+    primaryId = ""
   ) {
     const normalized =
       normalizeQuaternion(
@@ -954,33 +899,10 @@
       quaternion:
         normalized,
 
-      primaryWing:
-        normalizeWing(
-          primaryWing
-        )
+      primaryId:
+        String(primaryId || "")
+          .trim()
     };
-  }
-
-  function canonicalOrientationForWing(
-    wing
-  ) {
-    const normalized =
-      normalizeWing(
-        wing
-      ) ||
-      "north";
-
-    const canonical =
-      CANONICAL_FOCUS_EULER[
-        normalized
-      ];
-
-    return orientationFromEuler(
-      canonical.yaw,
-      canonical.pitch,
-      canonical.roll,
-      normalized
-    );
   }
 
   function cloneOrientation(
@@ -988,8 +910,8 @@
   ) {
     const source =
       orientation ||
-      canonicalOrientationForWing(
-        "north"
+      orientationFromQuaternion(
+        QUATERNION.identity
       );
 
     return {
@@ -1016,10 +938,13 @@
           source.quaternion
         ),
 
-      primaryWing:
-        normalizeWing(
-          source.primaryWing
-        )
+      primaryId:
+        String(
+          source.primaryId ||
+          source.primaryWing ||
+          source.primaryRoom ||
+          ""
+        ).trim()
     };
   }
 
@@ -1046,12 +971,12 @@
           clone.quaternion.slice()
         ),
 
-      primaryWing:
-        clone.primaryWing
+      primaryId:
+        clone.primaryId
     });
   }
 
-  function resolveOrbitOrientation(
+  function resolveOrientation(
     payload,
     fallbackOrientation
   ) {
@@ -1062,31 +987,30 @@
 
     if (
       !payload ||
-      typeof payload !==
-        "object"
+      typeof payload !== "object"
     ) {
       return fallback;
     }
 
-    const primaryWing =
-      normalizeWing(
+    const primaryId =
+      String(
+        payload.primaryId ||
         payload.primaryWing ||
-        payload.orbitFocus ||
+        payload.primaryRoom ||
         payload.focus ||
-        fallback.primaryWing
-      );
+        fallback.primaryId ||
+        ""
+      ).trim();
 
     if (
-      Array.isArray(
-        payload.quaternion
-      ) ||
+      Array.isArray(payload.quaternion) ||
       ArrayBuffer.isView(
         payload.quaternion
       )
     ) {
       return orientationFromQuaternion(
         payload.quaternion,
-        primaryWing
+        primaryId
       );
     }
 
@@ -1094,48 +1018,139 @@
       payload.orientation &&
       (
         Array.isArray(
-          payload.orientation
-            .quaternion
+          payload.orientation.quaternion
         ) ||
         ArrayBuffer.isView(
-          payload.orientation
-            .quaternion
+          payload.orientation.quaternion
         )
       )
     ) {
       return orientationFromQuaternion(
-        payload.orientation
-          .quaternion,
+        payload.orientation.quaternion,
 
-        primaryWing ||
-        payload.orientation
-          .primaryWing
+        primaryId ||
+        payload.orientation.primaryId
       );
     }
 
-    const yaw =
-      payload.yaw !==
-        undefined
+    return orientationFromEuler(
+      payload.yaw !== undefined
         ? payload.yaw
-        : fallback.yaw;
+        : fallback.yaw,
 
-    const pitch =
-      payload.pitch !==
-        undefined
+      payload.pitch !== undefined
         ? payload.pitch
-        : fallback.pitch;
+        : fallback.pitch,
 
-    const roll =
-      payload.roll !==
-        undefined
+      payload.roll !== undefined
         ? payload.roll
-        : fallback.roll;
+        : fallback.roll,
+
+      primaryId
+    );
+  }
+
+  function canonicalConstellationOrientation(
+    wing
+  ) {
+    const normalizedWing =
+      normalizeWing(wing) ||
+      "north";
+
+    const canonical =
+      CANONICAL_CONSTELLATION_EULER[
+        normalizedWing
+      ];
 
     return orientationFromEuler(
-      yaw,
-      pitch,
-      roll,
-      primaryWing
+      canonical.yaw,
+      canonical.pitch,
+      canonical.roll,
+      normalizedWing
+    );
+  }
+
+  function createClusterState(
+    wing
+  ) {
+    return {
+      wing,
+
+      roomIds:
+        [],
+
+      primaryRoom:
+        "",
+
+      previewPrimaryRoom:
+        "",
+
+      phase:
+        ORIENTATION_PHASES.IDLE,
+
+      gestureActive:
+        false,
+
+      revision:
+        0,
+
+      orientation:
+        orientationFromQuaternion(
+          QUATERNION.identity
+        ),
+
+      committedOrientation:
+        orientationFromQuaternion(
+          QUATERNION.identity
+        ),
+
+      gestureOrigin:
+        null
+    };
+  }
+
+  function getCluster(
+    wing
+  ) {
+    const normalizedWing =
+      normalizeWing(
+        wing
+      );
+
+    if (!normalizedWing) {
+      return null;
+    }
+
+    return (
+      state.clusters.get(
+        normalizedWing
+      ) ||
+      null
+    );
+  }
+
+  function activeClusterWing() {
+    return normalizeWing(
+      state.selectedCardinal ||
+      state.orbitFocus
+    );
+  }
+
+  function activeCluster() {
+    return getCluster(
+      activeClusterWing()
+    );
+  }
+
+  function clusterContainsRoom(
+    cluster,
+    roomId
+  ) {
+    return Boolean(
+      cluster &&
+      cluster.roomIds.includes(
+        normalizeRoomId(roomId)
+      )
     );
   }
 
@@ -1154,10 +1169,10 @@
     return `${prefix}-${time}-${random}`;
   }
 
-  function canManipulateOrbit() {
+  function canManipulateConstellation() {
     return (
-      SPHERICAL_ORBIT
-        .allowPreviewInStates
+      CONSTELLATION_ORBIT
+        .manipulationStates
         .includes(
           state.current
         ) &&
@@ -1166,15 +1181,51 @@
     );
   }
 
-  function canCommitOrbit() {
+  function canCommitConstellation() {
     return (
-      SPHERICAL_ORBIT
-        .allowCommitInStates
+      CONSTELLATION_ORBIT
+        .commitStates
         .includes(
           state.current
         ) &&
       state.mirrorlandState ===
         MIRRORLAND_STATES.DORMANT
+    );
+  }
+
+  function canManipulateCluster(
+    wing = activeClusterWing()
+  ) {
+    return Boolean(
+      normalizeWing(wing) &&
+      CLUSTER_ORBIT
+        .manipulationStates
+        .includes(
+          state.current
+        ) &&
+      state.mirrorlandState ===
+        MIRRORLAND_STATES.DORMANT &&
+      normalizeWing(
+        state.selectedCardinal
+      ) === normalizeWing(wing)
+    );
+  }
+
+  function canCommitCluster(
+    wing = activeClusterWing()
+  ) {
+    return Boolean(
+      normalizeWing(wing) &&
+      CLUSTER_ORBIT
+        .commitStates
+        .includes(
+          state.current
+        ) &&
+      state.mirrorlandState ===
+        MIRRORLAND_STATES.DORMANT &&
+      normalizeWing(
+        state.selectedCardinal
+      ) === normalizeWing(wing)
     );
   }
 
@@ -1251,33 +1302,25 @@
     purpose,
     relationship
   }) {
-    if (
-      state.panelEyebrow
-    ) {
+    if (state.panelEyebrow) {
       state.panelEyebrow.textContent =
         eyebrow ||
         DEFAULT_PANEL.eyebrow;
     }
 
-    if (
-      state.panelTitle
-    ) {
+    if (state.panelTitle) {
       state.panelTitle.textContent =
         title ||
         DEFAULT_PANEL.title;
     }
 
-    if (
-      state.panelPurpose
-    ) {
+    if (state.panelPurpose) {
       state.panelPurpose.textContent =
         purpose ||
         DEFAULT_PANEL.purpose;
     }
 
-    if (
-      state.panelRelationship
-    ) {
+    if (state.panelRelationship) {
       state.panelRelationship.textContent =
         relationship ||
         DEFAULT_PANEL.relationship;
@@ -1287,12 +1330,9 @@
   function setGuidance(
     message
   ) {
-    if (
-      state.guidance
-    ) {
+    if (state.guidance) {
       state.guidance.textContent =
-        message ||
-        "";
+        message || "";
     }
   }
 
@@ -1300,19 +1340,13 @@
     currentState
   ) {
     return (
-      PROMINENCE[
-        currentState
-      ] ||
-      PROMINENCE[
-        STATES.HELD
-      ]
+      PROMINENCE[currentState] ||
+      PROMINENCE[STATES.HELD]
     );
   }
 
   function clearPanelDescentSchedule() {
-    if (
-      state.panelDescentFrame
-    ) {
+    if (state.panelDescentFrame) {
       cancelAnimationFrame(
         state.panelDescentFrame
       );
@@ -1334,9 +1368,7 @@
   }
 
   function clearSceneAscentSchedule() {
-    if (
-      state.sceneAscentFrame
-    ) {
+    if (state.sceneAscentFrame) {
       cancelAnimationFrame(
         state.sceneAscentFrame
       );
@@ -1375,10 +1407,9 @@
     clearViewportSchedules();
 
     const roomId =
-      String(
-        expectedRoomId ||
-        ""
-      ).trim();
+      normalizeRoomId(
+        expectedRoomId
+      );
 
     if (
       !roomId ||
@@ -1501,18 +1532,14 @@
       );
   }
 
-  function setOrbitOrientation(
+  function setConstellationOrientation(
     orientation,
     {
       committed = false,
       phase =
-        ORBIT_PHASES.PREVIEW,
-
-      gestureActive =
-        false,
-
-      incrementRevision =
-        false
+        ORIENTATION_PHASES.PREVIEW,
+      gestureActive = false,
+      incrementRevision = false
     } = {}
   ) {
     const normalized =
@@ -1520,14 +1547,22 @@
         orientation
       );
 
+    const primaryWing =
+      normalizeWing(
+        normalized.primaryId
+      );
+
+    normalized.primaryId =
+      primaryWing ||
+      state.orbitPreviewFocus ||
+      state.orbitFocus ||
+      "north";
+
     state.orbitOrientation =
       normalized;
 
     state.orbitPreviewFocus =
-      normalized.primaryWing ||
-      state.orbitPreviewFocus ||
-      state.orbitFocus ||
-      "north";
+      normalized.primaryId;
 
     state.orbitPhase =
       phase;
@@ -1537,9 +1572,7 @@
         gestureActive
       );
 
-    if (
-      incrementRevision
-    ) {
+    if (incrementRevision) {
       state.orbitRevision +=
         1;
     }
@@ -1550,33 +1583,95 @@
           normalized
         );
 
-      const committedWing =
-        normalizeWing(
-          normalized.primaryWing
+      state.orbitFocus =
+        normalized.primaryId;
+
+      state.orbitPreviewFocus =
+        normalized.primaryId;
+    }
+  }
+
+  function setClusterOrientation(
+    cluster,
+    orientation,
+    {
+      committed = false,
+      phase =
+        ORIENTATION_PHASES.PREVIEW,
+      gestureActive = false,
+      incrementRevision = false
+    } = {}
+  ) {
+    if (!cluster) {
+      return false;
+    }
+
+    const normalized =
+      cloneOrientation(
+        orientation
+      );
+
+    const primaryRoom =
+      normalizeRoomId(
+        normalized.primaryId
+      );
+
+    normalized.primaryId =
+      clusterContainsRoom(
+        cluster,
+        primaryRoom
+      )
+        ? primaryRoom
+        : cluster.previewPrimaryRoom ||
+          cluster.primaryRoom ||
+          cluster.roomIds[0] ||
+          "";
+
+    cluster.orientation =
+      normalized;
+
+    cluster.previewPrimaryRoom =
+      normalized.primaryId;
+
+    cluster.phase =
+      phase;
+
+    cluster.gestureActive =
+      Boolean(
+        gestureActive
+      );
+
+    if (incrementRevision) {
+      cluster.revision +=
+        1;
+    }
+
+    if (committed) {
+      cluster.committedOrientation =
+        cloneOrientation(
+          normalized
         );
 
-      if (committedWing) {
-        state.orbitFocus =
-          committedWing;
+      cluster.primaryRoom =
+        normalized.primaryId;
 
-        state.orbitPreviewFocus =
-          committedWing;
-      }
+      cluster.previewPrimaryRoom =
+        normalized.primaryId;
     }
+
+    return true;
   }
 
   function beginOrbitGesture(
     payload = {}
   ) {
     if (
-      !canManipulateOrbit()
+      !canManipulateConstellation()
     ) {
       return false;
     }
 
-    if (
-      state.orbitGestureActive
-    ) {
+    if (state.orbitGestureActive) {
       return true;
     }
 
@@ -1586,37 +1681,25 @@
         state.orbitOrientation
       );
 
-    state.orbitGestureActive =
-      true;
-
-    state.orbitPhase =
-      ORBIT_PHASES.PREVIEW;
-
-    if (
-      payload &&
-      typeof payload ===
-        "object"
-    ) {
-      const preview =
-        resolveOrbitOrientation(
-          payload,
-          state.orbitOrientation
-        );
-
-      setOrbitOrientation(
-        preview,
-        {
-          committed:
-            false,
-
-          phase:
-            ORBIT_PHASES.PREVIEW,
-
-          gestureActive:
-            true
-        }
+    const preview =
+      resolveOrientation(
+        payload,
+        state.orbitOrientation
       );
-    }
+
+    setConstellationOrientation(
+      preview,
+      {
+        committed:
+          false,
+
+        phase:
+          ORIENTATION_PHASES.PREVIEW,
+
+        gestureActive:
+          true
+      }
+    );
 
     syncPresentation();
 
@@ -1635,31 +1718,29 @@
     payload = {}
   ) {
     if (
-      !canManipulateOrbit()
+      !canManipulateConstellation()
     ) {
       return false;
     }
 
-    if (
-      !state.orbitGestureActive
-    ) {
+    if (!state.orbitGestureActive) {
       beginOrbitGesture();
     }
 
     const orientation =
-      resolveOrbitOrientation(
+      resolveOrientation(
         payload,
         state.orbitOrientation
       );
 
-    setOrbitOrientation(
+    setConstellationOrientation(
       orientation,
       {
         committed:
           false,
 
         phase:
-          ORBIT_PHASES.PREVIEW,
+          ORIENTATION_PHASES.PREVIEW,
 
         gestureActive:
           true
@@ -1675,29 +1756,28 @@
     payload = {}
   ) {
     if (
-      !canCommitOrbit()
+      !canCommitConstellation()
     ) {
       return false;
     }
 
     const orientation =
-      resolveOrbitOrientation(
+      resolveOrientation(
         payload,
         state.orbitOrientation ||
         state.committedOrbitOrientation
       );
 
-    const requestedWing =
+    const primaryWing =
       normalizeWing(
         payload.primaryWing ||
-        payload.orbitFocus ||
-        payload.focus ||
-        orientation.primaryWing ||
+        payload.primaryId ||
+        orientation.primaryId ||
         state.orbitPreviewFocus ||
         state.orbitFocus
       );
 
-    if (!requestedWing) {
+    if (!primaryWing) {
       emitReceipt({
         lastAction:
           "orbit-commit-rejected",
@@ -1709,17 +1789,17 @@
       return false;
     }
 
-    orientation.primaryWing =
-      requestedWing;
+    orientation.primaryId =
+      primaryWing;
 
-    setOrbitOrientation(
+    setConstellationOrientation(
       orientation,
       {
         committed:
           true,
 
         phase:
-          ORBIT_PHASES.COMMITTED,
+          ORIENTATION_PHASES.COMMITTED,
 
         gestureActive:
           false,
@@ -1740,7 +1820,7 @@
 
     emitReceipt({
       lastAction:
-        `orbit-committed:${requestedWing}`,
+        `orbit-committed:${primaryWing}`,
 
       lastFailure:
         null,
@@ -1756,13 +1836,12 @@
   }
 
   function requestOrbitCancel(
-    reason =
-      "cancelled"
+    reason = "cancelled"
   ) {
     if (
       !state.orbitGestureActive &&
       state.orbitPhase !==
-        ORBIT_PHASES.PREVIEW
+        ORIENTATION_PHASES.PREVIEW
     ) {
       return false;
     }
@@ -1771,19 +1850,19 @@
       cloneOrientation(
         state.orbitGestureOrigin ||
         state.committedOrbitOrientation ||
-        canonicalOrientationForWing(
+        canonicalConstellationOrientation(
           state.orbitFocus
         )
       );
 
-    setOrbitOrientation(
+    setConstellationOrientation(
       restored,
       {
         committed:
           false,
 
         phase:
-          ORBIT_PHASES.CANCELLED,
+          ORIENTATION_PHASES.CANCELLED,
 
         gestureActive:
           false
@@ -1820,13 +1899,13 @@
 
     if (
       !normalizedWing ||
-      !canCommitOrbit()
+      !canCommitConstellation()
     ) {
       return false;
     }
 
     const canonical =
-      canonicalOrientationForWing(
+      canonicalConstellationOrientation(
         normalizedWing
       );
 
@@ -1842,11 +1921,421 @@
     });
   }
 
+  function beginClusterGesture(
+    wingOrPayload,
+    maybePayload = {}
+  ) {
+    const wing =
+      typeof wingOrPayload ===
+        "string"
+        ? normalizeWing(
+            wingOrPayload
+          )
+        : activeClusterWing();
+
+    const payload =
+      typeof wingOrPayload ===
+        "object" &&
+      wingOrPayload !== null
+        ? wingOrPayload
+        : maybePayload;
+
+    const cluster =
+      getCluster(
+        wing
+      );
+
+    if (
+      !cluster ||
+      !canManipulateCluster(
+        wing
+      )
+    ) {
+      return false;
+    }
+
+    if (cluster.gestureActive) {
+      return true;
+    }
+
+    cluster.gestureOrigin =
+      cloneOrientation(
+        cluster.committedOrientation ||
+        cluster.orientation
+      );
+
+    const preview =
+      resolveOrientation(
+        payload,
+        cluster.orientation
+      );
+
+    setClusterOrientation(
+      cluster,
+      preview,
+      {
+        committed:
+          false,
+
+        phase:
+          ORIENTATION_PHASES.PREVIEW,
+
+        gestureActive:
+          true
+      }
+    );
+
+    syncPresentation();
+
+    emitReceipt({
+      lastAction:
+        `cluster-gesture-began:${wing}`,
+
+      lastFailure:
+        null
+    });
+
+    return true;
+  }
+
+  function requestClusterPreview(
+    wingOrPayload,
+    maybePayload = {}
+  ) {
+    const wing =
+      typeof wingOrPayload ===
+        "string"
+        ? normalizeWing(
+            wingOrPayload
+          )
+        : activeClusterWing();
+
+    const payload =
+      typeof wingOrPayload ===
+        "object" &&
+      wingOrPayload !== null
+        ? wingOrPayload
+        : maybePayload;
+
+    const cluster =
+      getCluster(
+        wing
+      );
+
+    if (
+      !cluster ||
+      !canManipulateCluster(
+        wing
+      )
+    ) {
+      return false;
+    }
+
+    if (!cluster.gestureActive) {
+      beginClusterGesture(
+        wing
+      );
+    }
+
+    const orientation =
+      resolveOrientation(
+        payload,
+        cluster.orientation
+      );
+
+    const primaryRoom =
+      normalizeRoomId(
+        payload.primaryRoom ||
+        payload.primaryId ||
+        orientation.primaryId
+      );
+
+    if (
+      primaryRoom &&
+      !clusterContainsRoom(
+        cluster,
+        primaryRoom
+      )
+    ) {
+      return false;
+    }
+
+    orientation.primaryId =
+      primaryRoom ||
+      orientation.primaryId ||
+      cluster.previewPrimaryRoom ||
+      cluster.primaryRoom ||
+      cluster.roomIds[0] ||
+      "";
+
+    setClusterOrientation(
+      cluster,
+      orientation,
+      {
+        committed:
+          false,
+
+        phase:
+          ORIENTATION_PHASES.PREVIEW,
+
+        gestureActive:
+          true
+      }
+    );
+
+    syncDatasets();
+
+    return true;
+  }
+
+  function requestClusterCommit(
+    wingOrPayload,
+    maybePayload = {}
+  ) {
+    const wing =
+      typeof wingOrPayload ===
+        "string"
+        ? normalizeWing(
+            wingOrPayload
+          )
+        : activeClusterWing();
+
+    const payload =
+      typeof wingOrPayload ===
+        "object" &&
+      wingOrPayload !== null
+        ? wingOrPayload
+        : maybePayload;
+
+    const cluster =
+      getCluster(
+        wing
+      );
+
+    if (
+      !cluster ||
+      !canCommitCluster(
+        wing
+      )
+    ) {
+      return false;
+    }
+
+    const orientation =
+      resolveOrientation(
+        payload,
+        cluster.orientation ||
+        cluster.committedOrientation
+      );
+
+    const primaryRoom =
+      normalizeRoomId(
+        payload.primaryRoom ||
+        payload.primaryId ||
+        orientation.primaryId ||
+        cluster.previewPrimaryRoom ||
+        cluster.primaryRoom
+      );
+
+    if (
+      !primaryRoom ||
+      !clusterContainsRoom(
+        cluster,
+        primaryRoom
+      )
+    ) {
+      emitReceipt({
+        lastAction:
+          `cluster-commit-rejected:${wing}`,
+
+        lastFailure:
+          "CLUSTER_PRIMARY_ROOM_REQUIRED"
+      });
+
+      return false;
+    }
+
+    orientation.primaryId =
+      primaryRoom;
+
+    setClusterOrientation(
+      cluster,
+      orientation,
+      {
+        committed:
+          true,
+
+        phase:
+          ORIENTATION_PHASES.COMMITTED,
+
+        gestureActive:
+          false,
+
+        incrementRevision:
+          true
+      }
+    );
+
+    cluster.gestureOrigin =
+      null;
+
+    /*
+     * A cluster-orientation commitment does not select the room,
+     * descend the panel, or change the current controller state.
+     */
+    syncPresentation();
+
+    emitReceipt({
+      lastAction:
+        `cluster-committed:${wing}:${primaryRoom}`,
+
+      lastFailure:
+        null,
+
+      clusterCommitSource:
+        String(
+          payload.source ||
+          "renderer"
+        )
+    });
+
+    return true;
+  }
+
+  function requestClusterCancel(
+    wingOrReason,
+    maybeReason = "cancelled"
+  ) {
+    const possibleWing =
+      normalizeWing(
+        wingOrReason
+      );
+
+    const wing =
+      possibleWing ||
+      activeClusterWing();
+
+    const reason =
+      possibleWing
+        ? maybeReason
+        : wingOrReason ||
+          maybeReason;
+
+    const cluster =
+      getCluster(
+        wing
+      );
+
+    if (
+      !cluster ||
+      (
+        !cluster.gestureActive &&
+        cluster.phase !==
+          ORIENTATION_PHASES.PREVIEW
+      )
+    ) {
+      return false;
+    }
+
+    const restored =
+      cloneOrientation(
+        cluster.gestureOrigin ||
+        cluster.committedOrientation ||
+        orientationFromQuaternion(
+          QUATERNION.identity,
+          cluster.primaryRoom
+        )
+      );
+
+    setClusterOrientation(
+      cluster,
+      restored,
+      {
+        committed:
+          false,
+
+        phase:
+          ORIENTATION_PHASES.CANCELLED,
+
+        gestureActive:
+          false
+      }
+    );
+
+    cluster.gestureOrigin =
+      null;
+
+    syncPresentation();
+
+    emitReceipt({
+      lastAction:
+        `cluster-preview-cancelled:${wing}:${String(
+          reason ||
+          "cancelled"
+        )}`,
+
+      lastFailure:
+        null
+    });
+
+    return true;
+  }
+
+  function requestClusterFocus(
+    wing,
+    roomId,
+    options = {}
+  ) {
+    const normalizedWing =
+      normalizeWing(
+        wing
+      );
+
+    const normalizedRoom =
+      normalizeRoomId(
+        roomId
+      );
+
+    const cluster =
+      getCluster(
+        normalizedWing
+      );
+
+    if (
+      !cluster ||
+      !canCommitCluster(
+        normalizedWing
+      ) ||
+      !clusterContainsRoom(
+        cluster,
+        normalizedRoom
+      )
+    ) {
+      return false;
+    }
+
+    return requestClusterCommit(
+      normalizedWing,
+      {
+        quaternion:
+          cluster.committedOrientation
+            .quaternion,
+
+        primaryRoom:
+          normalizedRoom,
+
+        source:
+          options.source ||
+          "direct-cluster-focus"
+      }
+    );
+  }
+
   function requestAxisSwipe(
     axis
   ) {
     if (
-      !canCommitOrbit()
+      !canCommitConstellation()
     ) {
       return false;
     }
@@ -1865,26 +2354,20 @@
     const currentIndex =
       Math.max(
         0,
-        LEGACY_ORBIT_SEQUENCE
-          .indexOf(
-            currentWing
-          )
+        LEGACY_ORBIT_SEQUENCE.indexOf(
+          currentWing
+        )
       );
 
     let step =
       1;
 
     if (
-      normalized ===
-        "vertical" ||
-      normalized ===
-        "up" ||
-      normalized ===
-        "left" ||
-      normalized ===
-        "swipeup" ||
-      normalized ===
-        "swipeleft"
+      normalized === "vertical" ||
+      normalized === "up" ||
+      normalized === "left" ||
+      normalized === "swipeup" ||
+      normalized === "swipeleft"
     ) {
       step =
         -1;
@@ -1898,13 +2381,10 @@
       ) %
       LEGACY_ORBIT_SEQUENCE.length;
 
-    const nextWing =
+    return requestOrbitFocus(
       LEGACY_ORBIT_SEQUENCE[
         nextIndex
-      ];
-
-    return requestOrbitFocus(
-      nextWing,
+      ],
       {
         source:
           `legacy-axis:${normalized || "unspecified"}`
@@ -1912,10 +2392,65 @@
     );
   }
 
+  function clusterReceiptState() {
+    const cluster =
+      activeCluster();
+
+    if (!cluster) {
+      return {
+        activeClusterWing:
+          "",
+
+        clusterPrimaryRoom:
+          "",
+
+        clusterPreviewPrimaryRoom:
+          "",
+
+        clusterPhase:
+          ORIENTATION_PHASES.IDLE,
+
+        clusterGestureActive:
+          false,
+
+        clusterRevision:
+          0,
+
+        clusterQuaternion:
+          QUATERNION.identity
+      };
+    }
+
+    return {
+      activeClusterWing:
+        cluster.wing,
+
+      clusterPrimaryRoom:
+        cluster.primaryRoom,
+
+      clusterPreviewPrimaryRoom:
+        cluster.previewPrimaryRoom,
+
+      clusterPhase:
+        cluster.phase,
+
+      clusterGestureActive:
+        cluster.gestureActive,
+
+      clusterRevision:
+        cluster.revision,
+
+      clusterQuaternion:
+        Object.freeze(
+          cluster.orientation
+            .quaternion
+            .slice()
+        )
+    };
+  }
+
   function syncDatasets() {
-    if (
-      !state.root
-    ) {
+    if (!state.root) {
       return;
     }
 
@@ -1924,13 +2459,16 @@
         state.current
       );
 
-    const orientation =
+    const orbit =
       cloneOrientation(
         state.orbitOrientation ||
-        canonicalOrientationForWing(
+        canonicalConstellationOrientation(
           state.orbitFocus
         )
       );
+
+    const cluster =
+      activeCluster();
 
     state.root.dataset.compassMode =
       state.current;
@@ -1954,35 +2492,56 @@
         state.orbitRevision
       );
 
-    state.root.dataset.orbitYaw =
-      String(
-        orientation.yaw
-      );
-
-    state.root.dataset.orbitPitch =
-      String(
-        orientation.pitch
-      );
-
-    state.root.dataset.orbitRoll =
-      String(
-        orientation.roll
-      );
-
     state.root.dataset.orbitQuaternion =
       JSON.stringify(
-        orientation.quaternion
+        orbit.quaternion
       );
 
-    state.root.dataset.orbitCoordinateSystem =
-      SPHERICAL_ORBIT
-        .coordinateSystem;
-
-    state.root.dataset.orbitRepresentation =
-      SPHERICAL_ORBIT
-        .orientationRepresentation;
-
     state.root.dataset.sphericalOrbitEnabled =
+      "true";
+
+    state.root.dataset.activeClusterWing =
+      cluster
+        ? cluster.wing
+        : "";
+
+    state.root.dataset.clusterPrimaryRoom =
+      cluster
+        ? cluster.primaryRoom
+        : "";
+
+    state.root.dataset.clusterPreviewPrimaryRoom =
+      cluster
+        ? cluster.previewPrimaryRoom
+        : "";
+
+    state.root.dataset.clusterPhase =
+      cluster
+        ? cluster.phase
+        : ORIENTATION_PHASES.IDLE;
+
+    state.root.dataset.clusterGestureActive =
+      cluster &&
+      cluster.gestureActive
+        ? "true"
+        : "false";
+
+    state.root.dataset.clusterRevision =
+      String(
+        cluster
+          ? cluster.revision
+          : 0
+      );
+
+    state.root.dataset.clusterQuaternion =
+      cluster
+        ? JSON.stringify(
+            cluster.orientation
+              .quaternion
+          )
+        : "";
+
+    state.root.dataset.sphericalClustersEnabled =
       "true";
 
     state.root.dataset.selectedCardinal =
@@ -2075,57 +2634,13 @@
     state.root.dataset.visualPassClaimed =
       "false";
 
-    if (
-      state.preserved
-    ) {
-      state.root.dataset.preservedCompassMode =
-        state.preserved.current ||
-        "";
-
-      state.root.dataset.preservedOrbitFocus =
-        state.preserved.orbitFocus ||
-        "";
-
-      state.root.dataset.preservedOrbitQuaternion =
-        JSON.stringify(
-          state.preserved
-            .orbitOrientation
-            .quaternion
-        );
-
-      state.root.dataset.preservedSelectedCardinal =
-        state.preserved.selectedCardinal ||
-        "";
-
-      state.root.dataset.preservedSelectedRoom =
-        state.preserved.selectedRoom ||
-        "";
-    } else {
-      state.root.dataset.preservedCompassMode =
-        "";
-
-      state.root.dataset.preservedOrbitFocus =
-        "";
-
-      state.root.dataset.preservedOrbitQuaternion =
-        "";
-
-      state.root.dataset.preservedSelectedCardinal =
-        "";
-
-      state.root.dataset.preservedSelectedRoom =
-        "";
-    }
-
     const mirrorlandControl =
       qs(
         "[data-compass-object='mirrorland']",
         state.root
       );
 
-    if (
-      mirrorlandControl
-    ) {
+    if (mirrorlandControl) {
       mirrorlandControl.setAttribute(
         "aria-expanded",
 
@@ -2195,16 +2710,36 @@
       state.root
     ).forEach(
       element => {
+        const roomId =
+          normalizeRoomId(
+            element.dataset.roomId
+          );
+
         const selected =
-          element.dataset.roomId ===
+          roomId ===
           state.selectedRoom;
+
+        const primary =
+          Boolean(
+            cluster &&
+            roomId ===
+              cluster.primaryRoom
+          );
 
         element.dataset.selected =
           selected
             ? "true"
             : "false";
 
-        if (selected) {
+        element.dataset.primary =
+          primary
+            ? "true"
+            : "false";
+
+        if (
+          selected ||
+          primary
+        ) {
           element.setAttribute(
             "aria-current",
             "true"
@@ -2221,13 +2756,16 @@
   function emitReceipt(
     extra = {}
   ) {
-    const orientation =
+    const orbit =
       cloneOrientation(
         state.orbitOrientation ||
-        canonicalOrientationForWing(
+        canonicalConstellationOrientation(
           state.orbitFocus
         )
       );
+
+    const clusterState =
+      clusterReceiptState();
 
     Object.assign(
       RECEIPT,
@@ -2256,24 +2794,12 @@
         orbitRevision:
           state.orbitRevision,
 
-        orbitYaw:
-          orientation.yaw,
-
-        orbitPitch:
-          orientation.pitch,
-
-        orbitRoll:
-          orientation.roll,
-
         orbitQuaternion:
           Object.freeze(
-            orientation
-              .quaternion
-              .slice()
+            orbit.quaternion.slice()
           ),
 
-        sphericalOrbitEnabled:
-          true,
+        ...clusterState,
 
         selectedCardinal:
           state.selectedCardinal,
@@ -2296,6 +2822,12 @@
         mirrorlandTransitionId:
           state.mirrorlandTransitionId,
 
+        sphericalConstellationEnabled:
+          true,
+
+        sphericalClustersEnabled:
+          true,
+
         visualPassClaimed:
           false
       },
@@ -2308,9 +2840,7 @@
         RECEIPT
       );
 
-    if (
-      state.root
-    ) {
+    if (state.root) {
       state.root.dataset.compassControllerReceipt =
         serialized;
 
@@ -2321,9 +2851,7 @@
         "false";
     }
 
-    if (
-      state.controllerReceiptOutput
-    ) {
+    if (state.controllerReceiptOutput) {
       state.controllerReceiptOutput.value =
         serialized;
 
@@ -2341,22 +2869,47 @@
         orbitQuaternion:
           Object.freeze(
             Array.from(
-              RECEIPT
-                .orbitQuaternion
+              RECEIPT.orbitQuaternion
+            )
+          ),
+
+        clusterQuaternion:
+          Object.freeze(
+            Array.from(
+              RECEIPT.clusterQuaternion
             )
           )
       });
   }
 
+  function cancelAllGestures(
+    reason
+  ) {
+    if (state.orbitGestureActive) {
+      requestOrbitCancel(
+        reason
+      );
+    }
+
+    state.clusters.forEach(
+      cluster => {
+        if (cluster.gestureActive) {
+          requestClusterCancel(
+            cluster.wing,
+            reason
+          );
+        }
+      }
+    );
+  }
+
   function fail(
     reason,
-    action =
-      "controller-failure"
+    action = "controller-failure"
   ) {
     clearMirrorlandTimers();
     clearViewportSchedules();
-
-    requestOrbitCancel(
+    cancelAllGestures(
       "controller-failure"
     );
 
@@ -2385,25 +2938,12 @@
   }
 
   function clearMirrorlandTimers() {
-    if (
-      state.mirrorlandTimeout
-    ) {
+    if (state.mirrorlandTimeout) {
       clearTimeout(
         state.mirrorlandTimeout
       );
 
       state.mirrorlandTimeout =
-        0;
-    }
-
-    if (
-      state.rendererReadyTimeout
-    ) {
-      clearTimeout(
-        state.rendererReadyTimeout
-      );
-
-      state.rendererReadyTimeout =
         0;
     }
   }
@@ -2417,8 +2957,7 @@
 
     const destinationType =
       String(
-        element.dataset
-          .destinationType ||
+        element.dataset.destinationType ||
         ""
       )
         .trim()
@@ -2426,20 +2965,16 @@
 
     const destinationId =
       String(
-        element.dataset
-          .destinationId ||
-        element.dataset
-          .roomId ||
-        element.dataset
-          .cardinalId ||
+        element.dataset.destinationId ||
+        element.dataset.roomId ||
+        element.dataset.cardinalId ||
         ""
       ).trim();
 
     const label =
       String(
         element.dataset.label ||
-        element.dataset
-          .coordinateLabel ||
+        element.dataset.coordinateLabel ||
         element.textContent ||
         ""
       ).trim();
@@ -2447,9 +2982,7 @@
     const route =
       normalizeRoute(
         element.dataset.route ||
-        element.getAttribute(
-          "href"
-        ) ||
+        element.getAttribute("href") ||
         ""
       );
 
@@ -2467,28 +3000,22 @@
   ) {
     return {
       eyebrow:
-        element.dataset
-          .coordinateLabel ||
+        element.dataset.coordinateLabel ||
         "Selected coordinate",
 
       title:
-        element.dataset
-          .panelTitle ||
+        element.dataset.panelTitle ||
         element.dataset.title ||
-        element.dataset
-          .coordinateLabel ||
+        element.dataset.coordinateLabel ||
         "Selected coordinate",
 
       purpose:
-        element.dataset
-          .panelBody ||
-        element.dataset
-          .coordinateFunction ||
+        element.dataset.panelBody ||
+        element.dataset.coordinateFunction ||
         "",
 
       relationship:
-        element.dataset
-          .panelWhy ||
+        element.dataset.panelWhy ||
         "Inspect this coordinate before entering."
     };
   }
@@ -2498,8 +3025,7 @@
   ) {
     return {
       eyebrow:
-        element.dataset
-          .localCoordinate ||
+        element.dataset.localCoordinate ||
         "Selected path",
 
       title:
@@ -2508,13 +3034,11 @@
 
       purpose:
         element.dataset.preview ||
-        element.dataset
-          .localFunction ||
+        element.dataset.localFunction ||
         "",
 
       relationship:
-        element.dataset
-          .whyEnter ||
+        element.dataset.whyEnter ||
         "Inspect this path, then enter when ready."
     };
   }
@@ -2524,27 +3048,21 @@
   ) {
     return {
       eyebrow:
-        element.dataset
-          .panelEyebrow ||
-        element.dataset
-          .orbitLabel ||
+        element.dataset.panelEyebrow ||
+        element.dataset.orbitLabel ||
         "Mirrorland Threshold",
 
       title:
-        element.dataset
-          .panelTitle ||
+        element.dataset.panelTitle ||
         "Mirrorland",
 
       purpose:
-        element.dataset
-          .panelBody ||
-        element.dataset
-          .coordinateFunction ||
+        element.dataset.panelBody ||
+        element.dataset.coordinateFunction ||
         "",
 
       relationship:
-        element.dataset
-          .panelWhy ||
+        element.dataset.panelWhy ||
         "Reveal the threshold before entering."
     };
   }
@@ -2578,11 +3096,10 @@
     action
   ) {
     if (
-      !Object.values(
-        STATES
-      ).includes(
-        nextState
-      )
+      !Object.values(STATES)
+        .includes(
+          nextState
+        )
     ) {
       fail(
         `INVALID_STATE:${nextState}`,
@@ -2620,9 +3137,7 @@
       state.current ===
         STATES.MIRRORLAND_WITHDRAWING;
 
-    if (
-      mirrorlandActive
-    ) {
+    if (mirrorlandActive) {
       setHiddenControl(
         state.returnButton,
         true
@@ -2647,21 +3162,18 @@
         STATES.MIRRORLAND_REVEALING
       ) {
         setGuidance(
-          GUIDANCE
-            .MIRRORLAND_REVEALING
+          GUIDANCE.MIRRORLAND_REVEALING
         );
       } else if (
         state.current ===
         STATES.MIRRORLAND_FOCUSED
       ) {
         setGuidance(
-          GUIDANCE
-            .MIRRORLAND_FOCUSED
+          GUIDANCE.MIRRORLAND_FOCUSED
         );
       } else {
         setGuidance(
-          GUIDANCE
-            .MIRRORLAND_WITHDRAWING
+          GUIDANCE.MIRRORLAND_WITHDRAWING
         );
       }
 
@@ -2825,22 +3337,31 @@
     roomId
   ) {
     const id =
-      String(
-        roomId ||
-        ""
-      ).trim();
+      normalizeRoomId(
+        roomId
+      );
 
     if (!id) {
       return null;
     }
 
+    const escaped =
+      globalThis.CSS &&
+      typeof globalThis.CSS.escape ===
+        "function"
+        ? globalThis.CSS.escape(id)
+        : id.replace(
+            /["\\]/g,
+            "\\$&"
+          );
+
     return (
       qs(
-        `[data-compass-room-declarations] [data-compass-room][data-room-id="${CSS.escape(id)}"]`,
+        `[data-compass-room-declarations] [data-compass-room][data-room-id="${escaped}"]`,
         state.root
       ) ||
       qs(
-        `[data-compass-room][data-room-id="${CSS.escape(id)}"]`,
+        `[data-compass-room][data-room-id="${escaped}"]`,
         state.root
       )
     );
@@ -2878,9 +3399,7 @@
           state.selectedCardinal
         );
 
-      if (
-        cardinal
-      ) {
+      if (cardinal) {
         setPanel(
           panelFromCardinal(
             cardinal
@@ -2893,7 +3412,7 @@
 
     if (
       state.current ===
-        STATES.CONSTELLATION
+      STATES.CONSTELLATION
     ) {
       setPanel(
         DEFAULT_PANEL
@@ -2923,25 +3442,15 @@
     }
 
     if (
-      state.current ===
-        STATES.MIRRORLAND_REVEALING ||
-      state.current ===
-        STATES.MIRRORLAND_FOCUSED ||
-      state.current ===
-        STATES.MIRRORLAND_WITHDRAWING ||
-      state.current ===
-        STATES.NAVIGATING
+      state.current !==
+        STATES.CONSTELLATION
     ) {
       return false;
     }
 
     if (
-      state.current !==
-        STATES.CONSTELLATION &&
-      state.current !==
-        STATES.CLUSTER_OPEN &&
-      state.current !==
-        STATES.ROOM_SELECTED
+      state.mirrorlandState !==
+        MIRRORLAND_STATES.DORMANT
     ) {
       return false;
     }
@@ -2960,19 +3469,15 @@
       return false;
     }
 
-    if (
-      state.orbitGestureActive
-    ) {
+    if (state.orbitGestureActive) {
       requestOrbitCancel(
         "cardinal-selection"
       );
     }
 
     if (
-      SPHERICAL_ORBIT
-        .directCardinalSelectionCommitsFocus &&
-      state.current ===
-        STATES.CONSTELLATION
+      CONSTELLATION_ORBIT
+        .directCardinalSelectionCommitsFocus
     ) {
       requestOrbitFocus(
         wing,
@@ -2984,7 +3489,6 @@
     }
 
     clearViewportSchedules();
-
     setPanelDescended(
       false
     );
@@ -3014,8 +3518,7 @@
 
     state.selectedDestinationLabel =
       destination.label ||
-      element.dataset
-        .coordinateLabel ||
+      element.dataset.coordinateLabel ||
       wing;
 
     state.selectedRoute =
@@ -3037,10 +3540,9 @@
     roomId
   ) {
     const id =
-      String(
-        roomId ||
-        ""
-      ).trim();
+      normalizeRoomId(
+        roomId
+      );
 
     if (
       !id ||
@@ -3073,21 +3575,39 @@
         element.dataset.wing
       );
 
-    if (!wing) {
+    if (
+      !wing ||
+      wing !==
+        state.selectedCardinal
+    ) {
+      return false;
+    }
+
+    const cluster =
+      getCluster(
+        wing
+      );
+
+    if (
+      !cluster ||
+      !clusterContainsRoom(
+        cluster,
+        id
+      )
+    ) {
       fail(
-        `ROOM_WING_INVALID:${id}`,
+        `ROOM_CLUSTER_INVALID:${id}`,
         "requestRoomSelection"
       );
 
       return false;
     }
 
-    if (
-      state.selectedCardinal &&
-      wing !==
-        state.selectedCardinal
-    ) {
-      return false;
+    if (cluster.gestureActive) {
+      requestClusterCancel(
+        wing,
+        "room-selection"
+      );
     }
 
     clearViewportSchedules();
@@ -3096,15 +3616,6 @@
       destinationFromElement(
         element
       );
-
-    state.orbitFocus =
-      wing;
-
-    state.orbitPreviewFocus =
-      wing;
-
-    state.selectedCardinal =
-      wing;
 
     state.selectedRoom =
       id;
@@ -3152,39 +3663,97 @@
     return true;
   }
 
-  function requestReturnToConstellation() {
+  function requestReturnToConstellation(
+    options = {}
+  ) {
     if (
       state.current !==
-        STATES.CLUSTER_OPEN
+        STATES.CLUSTER_OPEN &&
+      state.current !==
+        STATES.ROOM_SELECTED
     ) {
       return false;
     }
 
-    clearViewportSchedules();
-
-    const preservedFocus =
+    const wing =
       normalizeWing(
         state.selectedCardinal ||
         state.orbitFocus
       ) ||
       "north";
 
+    const cluster =
+      getCluster(
+        wing
+      );
+
+    if (
+      cluster &&
+      cluster.gestureActive
+    ) {
+      requestClusterCancel(
+        wing,
+        "return-to-constellation"
+      );
+    }
+
+    clearViewportSchedules();
     resetSelection();
 
     state.orbitFocus =
-      preservedFocus;
+      wing;
 
     state.orbitPreviewFocus =
-      preservedFocus;
+      wing;
 
     setPanel(
       DEFAULT_PANEL
     );
 
-    return setState(
-      STATES.CONSTELLATION,
-      `returned-to-constellation:${preservedFocus}`
-    );
+    const committed =
+      setState(
+        STATES.CONSTELLATION,
+        `returned-to-constellation:${wing}`
+      );
+
+    if (!committed) {
+      return false;
+    }
+
+    if (
+      options.scrollToScene !==
+      false &&
+      state.scene
+    ) {
+      state.scene.scrollIntoView({
+        behavior:
+          state.reducedMotion
+            ? "auto"
+            : "smooth",
+
+        block:
+          "start",
+
+        inline:
+          "nearest"
+      });
+    }
+
+    emitReceipt({
+      lastAction:
+        `returned-to-constellation:${wing}`,
+
+      lastFailure:
+        null,
+
+      returnSource:
+        String(
+          options.source ||
+          "controller"
+        )
+    });
+
+    return true;
   }
 
   function requestReturnToOrbit() {
@@ -3195,8 +3764,24 @@
       return false;
     }
 
-    clearViewportSchedules();
+    const wing =
+      state.selectedCardinal;
 
+    const cardinal =
+      findCardinalElement(
+        wing
+      );
+
+    if (!cardinal) {
+      fail(
+        `CARDINAL_NOT_FOUND:${wing}`,
+        "requestReturnToOrbit"
+      );
+
+      return false;
+    }
+
+    clearViewportSchedules();
     setPanelDescended(
       false
     );
@@ -3208,21 +3793,7 @@
       "cardinal";
 
     state.selectedDestinationId =
-      state.selectedCardinal;
-
-    const cardinal =
-      findCardinalElement(
-        state.selectedCardinal
-      );
-
-    if (!cardinal) {
-      fail(
-        `CARDINAL_NOT_FOUND:${state.selectedCardinal}`,
-        "requestReturnToOrbit"
-      );
-
-      return false;
-    }
+      wing;
 
     const destination =
       destinationFromElement(
@@ -3231,9 +3802,8 @@
 
     state.selectedDestinationLabel =
       destination.label ||
-      cardinal.dataset
-        .coordinateLabel ||
-      state.selectedCardinal;
+      cardinal.dataset.coordinateLabel ||
+      wing;
 
     state.selectedRoute =
       destination.route;
@@ -3243,9 +3813,6 @@
         cardinal
       )
     );
-
-    const wing =
-      state.selectedCardinal;
 
     const committed =
       setState(
@@ -3264,14 +3831,61 @@
     return true;
   }
 
+  function cloneClusterSnapshot(
+    cluster
+  ) {
+    return Object.freeze({
+      wing:
+        cluster.wing,
+
+      roomIds:
+        Object.freeze(
+          cluster.roomIds.slice()
+        ),
+
+      primaryRoom:
+        cluster.primaryRoom,
+
+      previewPrimaryRoom:
+        cluster.previewPrimaryRoom,
+
+      phase:
+        cluster.phase,
+
+      gestureActive:
+        false,
+
+      revision:
+        cluster.revision,
+
+      orientation:
+        freezeOrientation(
+          cluster.orientation
+        ),
+
+      committedOrientation:
+        freezeOrientation(
+          cluster.committedOrientation
+        )
+    });
+  }
+
   function preserveCompassState() {
-    if (
-      state.orbitGestureActive
-    ) {
-      requestOrbitCancel(
-        "mirrorland-preserve"
-      );
-    }
+    cancelAllGestures(
+      "mirrorland-preserve"
+    );
+
+    const clusters =
+      {};
+
+    state.clusters.forEach(
+      cluster => {
+        clusters[cluster.wing] =
+          cloneClusterSnapshot(
+            cluster
+          );
+      }
+    );
 
     state.preserved =
       Object.freeze({
@@ -3305,6 +3919,11 @@
         committedOrbitOrientation:
           freezeOrientation(
             state.committedOrbitOrientation
+          ),
+
+        clusters:
+          Object.freeze(
+            clusters
           ),
 
         selectedCardinal:
@@ -3434,8 +4053,7 @@
           }
         },
 
-        TIMEOUTS
-          .mirrorlandRevealMs
+        TIMEOUTS.mirrorlandRevealMs
       );
 
     return true;
@@ -3497,11 +4115,84 @@
           }
         },
 
-        TIMEOUTS
-          .mirrorlandWithdrawalMs
+        TIMEOUTS.mirrorlandWithdrawalMs
       );
 
     return true;
+  }
+
+  function applyClusterSnapshots(
+    snapshots
+  ) {
+    if (
+      !snapshots ||
+      typeof snapshots !==
+        "object"
+    ) {
+      return;
+    }
+
+    WINGS.forEach(
+      wing => {
+        const source =
+          snapshots[wing];
+
+        const cluster =
+          getCluster(
+            wing
+          );
+
+        if (
+          !source ||
+          !cluster
+        ) {
+          return;
+        }
+
+        cluster.primaryRoom =
+          clusterContainsRoom(
+            cluster,
+            source.primaryRoom
+          )
+            ? source.primaryRoom
+            : cluster.roomIds[0] ||
+              "";
+
+        cluster.previewPrimaryRoom =
+          clusterContainsRoom(
+            cluster,
+            source.previewPrimaryRoom
+          )
+            ? source.previewPrimaryRoom
+            : cluster.primaryRoom;
+
+        cluster.phase =
+          source.phase ||
+          ORIENTATION_PHASES.COMMITTED;
+
+        cluster.gestureActive =
+          false;
+
+        cluster.revision =
+          finiteNumber(
+            source.revision,
+            cluster.revision
+          );
+
+        cluster.orientation =
+          cloneOrientation(
+            source.orientation
+          );
+
+        cluster.committedOrientation =
+          cloneOrientation(
+            source.committedOrientation
+          );
+
+        cluster.gestureOrigin =
+          null;
+      }
+    );
   }
 
   function applyPreservedState(
@@ -3524,7 +4215,7 @@
 
     state.orbitPhase =
       preserved.orbitPhase ||
-      ORBIT_PHASES.COMMITTED;
+      ORIENTATION_PHASES.COMMITTED;
 
     state.orbitRevision =
       finiteNumber(
@@ -3539,8 +4230,7 @@
 
     state.committedOrbitOrientation =
       cloneOrientation(
-        preserved
-          .committedOrbitOrientation
+        preserved.committedOrbitOrientation
       );
 
     state.orbitGestureActive =
@@ -3549,6 +4239,10 @@
     state.orbitGestureOrigin =
       null;
 
+    applyClusterSnapshots(
+      preserved.clusters
+    );
+
     state.selectedCardinal =
       preserved.selectedCardinal;
 
@@ -3556,16 +4250,13 @@
       preserved.selectedRoom;
 
     state.selectedDestinationType =
-      preserved
-        .selectedDestinationType;
+      preserved.selectedDestinationType;
 
     state.selectedDestinationId =
-      preserved
-        .selectedDestinationId;
+      preserved.selectedDestinationId;
 
     state.selectedDestinationLabel =
-      preserved
-        .selectedDestinationLabel;
+      preserved.selectedDestinationLabel;
 
     state.selectedRoute =
       preserved.selectedRoute;
@@ -3631,8 +4322,8 @@
       state.current =
         STATES.CONSTELLATION;
 
-      setOrbitOrientation(
-        canonicalOrientationForWing(
+      setConstellationOrientation(
+        canonicalConstellationOrientation(
           state.orbitFocus ||
           "north"
         ),
@@ -3641,7 +4332,7 @@
             true,
 
           phase:
-            ORBIT_PHASES.COMMITTED,
+            ORIENTATION_PHASES.COMMITTED,
 
           gestureActive:
             false
@@ -3683,9 +4374,7 @@
   }
 
   function requestEnterSelection() {
-    if (
-      !state.selectedRoute
-    ) {
+    if (!state.selectedRoute) {
       return false;
     }
 
@@ -3724,6 +4413,9 @@
     }
 
     clearViewportSchedules();
+    cancelAllGestures(
+      "navigation"
+    );
 
     const committed =
       setState(
@@ -3849,9 +4541,9 @@
 
       resetSelection();
 
-      setOrbitOrientation(
+      setConstellationOrientation(
         state.committedOrbitOrientation ||
-        canonicalOrientationForWing(
+        canonicalConstellationOrientation(
           state.orbitFocus
         ),
         {
@@ -3859,7 +4551,7 @@
             true,
 
           phase:
-            ORBIT_PHASES.COMMITTED,
+            ORIENTATION_PHASES.COMMITTED,
 
           gestureActive:
             false
@@ -3897,10 +4589,10 @@
 
     handleMirrorlandFailure(
       detail.reason ||
-        "MIRRORLAND_RENDER_FAILURE",
+      "MIRRORLAND_RENDER_FAILURE",
 
       detail.transitionId ||
-        ""
+      ""
     );
   }
 
@@ -3911,13 +4603,9 @@
       event.detail ||
       {};
 
-    if (
-      state.orbitGestureActive
-    ) {
-      requestOrbitCancel(
-        "crystals-render-failure"
-      );
-    }
+    cancelAllGestures(
+      "crystals-render-failure"
+    );
 
     emitReceipt({
       status:
@@ -3955,19 +4643,13 @@
 
     const type =
       String(
-        control.dataset
-          .destinationType ||
+        control.dataset.destinationType ||
         ""
       ).toLowerCase();
 
-    if (
-      type ===
-      "mirrorland"
-    ) {
+    if (type === "mirrorland") {
       event.preventDefault();
-
       requestMirrorlandReveal();
-
       return;
     }
 
@@ -3980,8 +4662,7 @@
 
       requestCardinalSelection(
         control.dataset.wing ||
-        control.dataset
-          .cardinalId
+        control.dataset.cardinalId
       );
 
       return;
@@ -4001,9 +4682,7 @@
   }
 
   function bindPanelControls() {
-    if (
-      state.enterButton
-    ) {
+    if (state.enterButton) {
       state.enterButton.addEventListener(
         "click",
         () => {
@@ -4012,9 +4691,7 @@
       );
     }
 
-    if (
-      state.returnButton
-    ) {
+    if (state.returnButton) {
       state.returnButton.addEventListener(
         "click",
         () => {
@@ -4023,16 +4700,13 @@
       );
     }
 
-    if (
-      state.mirrorlandBackButton
-    ) {
-      state.mirrorlandBackButton
-        .addEventListener(
-          "click",
-          () => {
-            requestMirrorlandBack();
-          }
-        );
+    if (state.mirrorlandBackButton) {
+      state.mirrorlandBackButton.addEventListener(
+        "click",
+        () => {
+          requestMirrorlandBack();
+        }
+      );
     }
   }
 
@@ -4078,8 +4752,7 @@
     }
 
     const requested =
-      tab.dataset
-        .compassLensTab;
+      tab.dataset.compassLensTab;
 
     qsa(
       "[data-compass-lens-tab]",
@@ -4087,8 +4760,7 @@
     ).forEach(
       candidate => {
         const selected =
-          candidate ===
-          tab;
+          candidate === tab;
 
         candidate.setAttribute(
           "aria-selected",
@@ -4110,8 +4782,7 @@
     ).forEach(
       panel => {
         panel.hidden =
-          panel.dataset
-            .compassLensPanel !==
+          panel.dataset.compassLensPanel !==
           requested;
       }
     );
@@ -4137,8 +4808,7 @@
             tab.tabIndex =
               tab.getAttribute(
                 "aria-selected"
-              ) ===
-                "true"
+              ) === "true"
                 ? 0
                 : -1;
 
@@ -4178,8 +4848,7 @@
                 ) {
                   nextIndex =
                     (
-                      index +
-                      1
+                      index + 1
                     ) %
                     tabs.length;
                 }
@@ -4210,19 +4879,15 @@
                   "End"
                 ) {
                   nextIndex =
-                    tabs.length -
-                    1;
+                    tabs.length - 1;
                 }
 
                 activateLensTab(
-                  tabs[
-                    nextIndex
-                  ]
+                  tabs[nextIndex]
                 );
 
-                tabs[
-                  nextIndex
-                ].focus();
+                tabs[nextIndex]
+                  .focus();
               }
             );
           }
@@ -4236,9 +4901,51 @@
       globalThis.matchMedia(
         "(prefers-reduced-motion: reduce)"
       ).matches ||
-      state.root.dataset
-        .reducedMotion ===
+      state.root.dataset.reducedMotion ===
         "true";
+  }
+
+  function clusterFrameSnapshot(
+    cluster
+  ) {
+    if (!cluster) {
+      return null;
+    }
+
+    return Object.freeze({
+      wing:
+        cluster.wing,
+
+      roomIds:
+        Object.freeze(
+          cluster.roomIds.slice()
+        ),
+
+      primaryRoom:
+        cluster.primaryRoom,
+
+      previewPrimaryRoom:
+        cluster.previewPrimaryRoom,
+
+      phase:
+        cluster.phase,
+
+      gestureActive:
+        cluster.gestureActive,
+
+      revision:
+        cluster.revision,
+
+      orientation:
+        freezeOrientation(
+          cluster.orientation
+        ),
+
+      committedOrientation:
+        freezeOrientation(
+          cluster.committedOrientation
+        )
+    });
   }
 
   function exposeApi() {
@@ -4247,8 +4954,11 @@
         contract:
           CONTRACT,
 
-        sphericalOrbit:
-          SPHERICAL_ORBIT,
+        constellationOrbit:
+          CONSTELLATION_ORBIT,
+
+        clusterOrbit:
+          CLUSTER_ORBIT,
 
         receipt:
           () =>
@@ -4258,8 +4968,14 @@
               orbitQuaternion:
                 Object.freeze(
                   Array.from(
-                    RECEIPT
-                      .orbitQuaternion
+                    RECEIPT.orbitQuaternion
+                  )
+                ),
+
+              clusterQuaternion:
+                Object.freeze(
+                  Array.from(
+                    RECEIPT.clusterQuaternion
                   )
                 )
             }),
@@ -4273,6 +4989,16 @@
         requestOrbitCancel,
 
         requestOrbitFocus,
+
+        beginClusterGesture,
+
+        requestClusterPreview,
+
+        requestClusterCommit,
+
+        requestClusterCancel,
+
+        requestClusterFocus,
 
         requestAxisSwipe,
 
@@ -4292,16 +5018,8 @@
 
         getFrameState:
           () => {
-            const orientation =
-              cloneOrientation(
-                state.orbitOrientation
-              );
-
-            const committed =
-              cloneOrientation(
-                state
-                  .committedOrbitOrientation
-              );
+            const cluster =
+              activeCluster();
 
             return Object.freeze({
               state:
@@ -4324,16 +5042,29 @@
 
               orbitOrientation:
                 freezeOrientation(
-                  orientation
+                  state.orbitOrientation
                 ),
 
               committedOrbitOrientation:
                 freezeOrientation(
-                  committed
+                  state.committedOrbitOrientation
                 ),
 
-              sphericalOrbit:
-                SPHERICAL_ORBIT,
+              activeClusterWing:
+                cluster
+                  ? cluster.wing
+                  : "",
+
+              cluster:
+                clusterFrameSnapshot(
+                  cluster
+                ),
+
+              sphericalConstellation:
+                CONSTELLATION_ORBIT,
+
+              sphericalCluster:
+                CLUSTER_ORBIT,
 
               selectedCardinal:
                 state.selectedCardinal,
@@ -4342,16 +5073,13 @@
                 state.selectedRoom,
 
               selectedDestinationType:
-                state
-                  .selectedDestinationType,
+                state.selectedDestinationType,
 
               selectedDestinationId:
-                state
-                  .selectedDestinationId,
+                state.selectedDestinationId,
 
               selectedDestinationLabel:
-                state
-                  .selectedDestinationLabel,
+                state.selectedDestinationLabel,
 
               selectedRoute:
                 state.selectedRoute,
@@ -4363,8 +5091,7 @@
                 state.mirrorlandState,
 
               mirrorlandTransitionId:
-                state
-                  .mirrorlandTransitionId,
+                state.mirrorlandTransitionId,
 
               reducedMotion:
                 state.reducedMotion,
@@ -4376,7 +5103,15 @@
                   )
                 })
             });
-          }
+          },
+
+        getClusterState:
+          wing =>
+            clusterFrameSnapshot(
+              getCluster(
+                wing
+              )
+            )
       });
   }
 
@@ -4386,9 +5121,7 @@
         "[data-compass-root]"
       );
 
-    if (
-      !state.root
-    ) {
+    if (!state.root) {
       throw new Error(
         "COMPASS_ROOT_NOT_FOUND"
       );
@@ -4466,99 +5199,45 @@
         state.root
       );
 
-    if (
-      !state.scene
-    ) {
+    if (!state.scene) {
       throw new Error(
         "COMPASS_SCENE_NOT_FOUND"
       );
     }
 
-    if (
-      !state.panel
-    ) {
+    if (!state.panel) {
       throw new Error(
         "COMPASS_PANEL_NOT_FOUND"
       );
     }
   }
 
-  function initializeOrbitState() {
+  function initializeConstellationState() {
     const requestedFocus =
       normalizeWing(
-        state.root.dataset
-          .orbitFocus
+        state.root.dataset.orbitFocus
       ) ||
       "north";
 
     let initialOrientation =
-      canonicalOrientationForWing(
+      canonicalConstellationOrientation(
         requestedFocus
       );
 
-    const datasetQuaternion =
+    const serialized =
       String(
-        state.root.dataset
-          .orbitQuaternion ||
+        state.root.dataset.orbitQuaternion ||
         ""
       ).trim();
 
-    if (
-      datasetQuaternion
-    ) {
+    if (serialized) {
       try {
-        const parsed =
-          JSON.parse(
-            datasetQuaternion
-          );
-
         initialOrientation =
           orientationFromQuaternion(
-            parsed,
+            JSON.parse(serialized),
             requestedFocus
           );
       } catch (_) {}
-    } else {
-      const datasetYaw =
-        state.root.dataset
-          .orbitYaw;
-
-      const datasetPitch =
-        state.root.dataset
-          .orbitPitch;
-
-      const datasetRoll =
-        state.root.dataset
-          .orbitRoll;
-
-      if (
-        datasetYaw !==
-          undefined ||
-        datasetPitch !==
-          undefined ||
-        datasetRoll !==
-          undefined
-      ) {
-        initialOrientation =
-          orientationFromEuler(
-            finiteNumber(
-              datasetYaw,
-              initialOrientation.yaw
-            ),
-
-            finiteNumber(
-              datasetPitch,
-              initialOrientation.pitch
-            ),
-
-            finiteNumber(
-              datasetRoll,
-              initialOrientation.roll
-            ),
-
-            requestedFocus
-          );
-      }
     }
 
     state.orbitFocus =
@@ -4568,15 +5247,14 @@
       requestedFocus;
 
     state.orbitPhase =
-      ORBIT_PHASES.COMMITTED;
+      ORIENTATION_PHASES.COMMITTED;
 
     state.orbitGestureActive =
       false;
 
     state.orbitRevision =
       finiteNumber(
-        state.root.dataset
-          .orbitRevision,
+        state.root.dataset.orbitRevision,
         0
       );
 
@@ -4594,11 +5272,88 @@
       null;
   }
 
+  function initializeClusterStates() {
+    state.clusters.clear();
+
+    WINGS.forEach(
+      wing => {
+        const cluster =
+          createClusterState(
+            wing
+          );
+
+        cluster.roomIds =
+          qsa(
+            `[data-compass-room-declarations] [data-compass-room][data-wing="${wing}"]`,
+            state.root
+          )
+            .map(
+              element =>
+                normalizeRoomId(
+                  element.dataset.roomId
+                )
+            )
+            .filter(Boolean);
+
+        if (!cluster.roomIds.length) {
+          throw new Error(
+            `CLUSTER_ROOM_DECLARATIONS_MISSING:${wing}`
+          );
+        }
+
+        cluster.primaryRoom =
+          cluster.roomIds[0];
+
+        cluster.previewPrimaryRoom =
+          cluster.roomIds[0];
+
+        cluster.phase =
+          ORIENTATION_PHASES.COMMITTED;
+
+        cluster.orientation =
+          orientationFromQuaternion(
+            QUATERNION.identity,
+            cluster.primaryRoom
+          );
+
+        cluster.committedOrientation =
+          cloneOrientation(
+            cluster.orientation
+          );
+
+        state.clusters.set(
+          wing,
+          cluster
+        );
+      }
+    );
+
+    const roomCount =
+      Array.from(
+        state.clusters.values()
+      ).reduce(
+        (
+          total,
+          cluster
+        ) =>
+          total +
+          cluster.roomIds.length,
+        0
+      );
+
+    if (roomCount !== 19) {
+      throw new Error(
+        `CLUSTER_ROOM_COUNT_INVALID:${roomCount}`
+      );
+    }
+  }
+
   function init() {
     try {
       resolveDom();
       readReducedMotion();
-      initializeOrbitState();
+      initializeConstellationState();
+      initializeClusterStates();
       exposeApi();
       bindSemanticControls();
       bindPanelControls();
@@ -4627,17 +5382,16 @@
           "available",
 
         lastAction:
-          "controller-initialized-spherical-orbit",
+          "controller-initialized-spherical-constellation-and-clusters",
 
         lastFailure:
           null,
 
-        sphericalOrbitEnabled:
+        sphericalConstellationEnabled:
           true,
 
-        orbitContract:
-          SPHERICAL_ORBIT
-            .orientationRepresentation
+        sphericalClustersEnabled:
+          true
       });
     } catch (error) {
       const reason =
@@ -4664,8 +5418,7 @@
             detail:
               Object.freeze({
                 reason:
-                  RECEIPT
-                    .lastFailure
+                  RECEIPT.lastFailure
               })
           }
         )

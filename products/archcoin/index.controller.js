@@ -1,38 +1,23 @@
 /* /products/archcoin/index.controller.js
    ARCHCOIN
-   Controller anchor for four-coin constellation state, per-wing cluster state,
-   panel presentation, spherical orientation commitment, local return behavior,
-   center-compass menu behavior, lens tabs, and receipts.
+   SIMPLIFIED CONSTELLATION CONTROLLER
 
    Full-file replacement scope:
-   - Anchor ARCHCOIN to the crystal-aware controller contract.
-   - Preserve visible-first HTML behavior when crystals/runtime are absent.
-   - Preserve all four coin declarations, all sixteen room declarations,
-     panel behavior, lens tabs, center-compass menu behavior, navigation,
-     and receipts.
-   - Preserve one shared spherical constellation orientation for the outer
-     four-coin field.
-   - Preserve one independently maintained spherical room-cluster orientation
-     for each wing.
-   - Keep orbitFocus distinct from selectedWing.
-   - Keep primaryRoom distinct from selectedRoom.
-   - Support controlled room-cluster drag preview, commitment, cancellation,
-     and deterministic room focus.
-   - Keep room-cluster manipulation distinct from room selection.
-   - Permit quick flick return through requestReturnToConstellation().
-   - Do not interpret ordinary drag release as return behavior.
-   - Descend into the information panel only after actual room selection.
-   - Return the viewport to the ARCHCOIN scene after Return To Orbit.
-   - Keep Return To Orbit distinct from Return To Cluster.
-   - Keep the center compass menu distinct from local restoration.
-   - Fail soft.
+   - Preserve ARCHCOIN as a visible-first four-coin chamber.
+   - Preserve controller authority for semantic page state and panel state.
+   - Keep one outer orbit focus for the four main coins.
+   - Cut back the room cluster system hard.
+   - Treat room stars as selectable local paths, not a second fully independent orbit system.
+   - Keep panel behavior below the field controlled and stable.
+   - Keep "Return to Orbit" as the only local restoration control.
+   - Remove dependence on center-compass behavior.
+   - Preserve receipts and fail-soft behavior.
+   - Preserve enough public API compatibility for the crystal renderer to attach.
 
    This file does not:
    - Render crystals.
-   - Calculate rendered hit targets.
-   - Bind pointer gestures for 3D rendering.
-   - Classify drag velocity.
-   - Project spherical geometry.
+   - Calculate hit targets.
+   - Own visual geometry.
    - Execute financial behavior.
    - Own external navigation beyond ordinary links already present in HTML.
 */
@@ -41,10 +26,10 @@
   "use strict";
 
   const CONTRACT = Object.freeze({
-    id: "ARCHCOIN_CONTROLLER_SPHERICAL_CONSTELLATION_AND_CLUSTER_REBUILD_v2",
-    previousId: "ARCHCOIN_CONTROLLER_FOUR_COIN_CONSTELLATION_CLUSTER_INFORMATION_REBUILD_v1",
+    id: "ARCHCOIN_CONTROLLER_SIMPLIFIED_FIELD_AND_PANEL_v3",
+    previousId: "ARCHCOIN_CONTROLLER_SPHERICAL_CONSTELLATION_AND_CLUSTER_REBUILD_v2",
     file: "/products/archcoin/index.controller.js",
-    releaseId: "archcoin-controller-spherical-clusters-v2",
+    releaseId: "archcoin-controller-simplified-field-and-panel-v3",
     visualPassClaimed: false,
     productionAuthorized: false,
     deploymentAuthorized: false
@@ -60,7 +45,6 @@
   const ORIENTATION_PHASES = Object.freeze({
     IDLE: "IDLE",
     PREVIEW: "PREVIEW",
-    SETTLING: "SETTLING",
     COMMITTED: "COMMITTED",
     CANCELLED: "CANCELLED"
   });
@@ -82,6 +66,18 @@
     allocation: "west"
   });
 
+  const QUATERNION = Object.freeze({
+    minimumLength: 1e-8,
+    identity: Object.freeze([0, 0, 0, 1])
+  });
+
+  const CANONICAL_CONSTELLATION_EULER = Object.freeze({
+    north: Object.freeze({ yaw: 0, pitch: 0, roll: 0 }),
+    east: Object.freeze({ yaw: -Math.PI / 2, pitch: 0, roll: 0 }),
+    south: Object.freeze({ yaw: Math.PI, pitch: 0, roll: 0 }),
+    west: Object.freeze({ yaw: Math.PI / 2, pitch: 0, roll: 0 })
+  });
+
   const CONSTELLATION_ORBIT = Object.freeze({
     coordinateSystem: "RIGHT_HANDED_EUCLIDEAN_XYZ",
     orientationRepresentation: "UNIT_QUATERNION",
@@ -101,25 +97,13 @@
     dragCommitDescendsPanel: false,
     flickReturnsToConstellation: true,
     ordinaryDragReturnsToConstellation: false,
-    roomSelectionCommitsPrimary: false
-  });
-
-  const QUATERNION = Object.freeze({
-    minimumLength: 1e-8,
-    identity: Object.freeze([0, 0, 0, 1])
-  });
-
-  const CANONICAL_CONSTELLATION_EULER = Object.freeze({
-    north: Object.freeze({ yaw: 0, pitch: 0, roll: 0 }),
-    east: Object.freeze({ yaw: -Math.PI / 2, pitch: 0, roll: 0 }),
-    south: Object.freeze({ yaw: Math.PI, pitch: 0, roll: 0 }),
-    west: Object.freeze({ yaw: Math.PI / 2, pitch: 0, roll: 0 })
+    roomSelectionCommitsPrimary: true
   });
 
   const PROMINENCE = Object.freeze({
     [STATES.ORBIT]: Object.freeze({ compass: 1, window: 0 }),
     [STATES.CLUSTER_OPEN]: Object.freeze({ compass: 1, window: 0 }),
-    [STATES.INFO_OPEN]: Object.freeze({ compass: 0.94, window: 0 }),
+    [STATES.INFO_OPEN]: Object.freeze({ compass: 0.96, window: 0 }),
     [STATES.HELD]: Object.freeze({ compass: 0.8, window: 0 })
   });
 
@@ -127,20 +111,20 @@
     eyebrow: "Selected path",
     title: "Choose a coin.",
     purpose:
-      "Start with one of the four outer coins. Each coin opens a local cluster. Each local cluster opens information. Return to Orbit restores the family field. The center compass opens higher-order compass destinations.",
+      "Start with one of the four outer coins. Each coin opens its local stars. Select a local star to inspect that path below. Return to Orbit restores the family field.",
     relationship:
-      "Local inspection and cross-chamber navigation remain separate. Return to Orbit is not the same as the center compass."
+      "The field changes only when you select something else. The reading surface below remains stable until another coin or star is selected."
   });
 
   const DEFAULT_GUIDANCE = Object.freeze({
     ORBIT:
-      "Drag or rotate through the four-coin field. Select a coin to open its cluster. Select a cluster path to inspect information. Return to Orbit restores the coin family field.",
+      "Drag the four-coin field or tap a coin to open its local stars. The reading surface below changes only after selection.",
     CLUSTER_OPEN:
-      "Pull and hold to rotate the local room cluster as one spherical set. Release a controlled drag to settle the nearest room forward. Tap a room to inspect information. A quick flick returns to the constellation.",
+      "Select a local star to inspect that path below. Return to Orbit restores the family field.",
     INFO_OPEN:
-      "Inspect the selected path. A controlled pull still rotates the room cluster. Return to Cluster restores the local ring. Return to Orbit restores the family field.",
+      "Inspect the selected path below. Return to Orbit restores the family field.",
     HELD:
-      "ARCHCOIN controller is held. Interactive constellation, cluster, and information descent are unavailable until the controller is restored."
+      "ARCHCOIN controller is held. Interactive field and information descent are unavailable until the controller is restored."
   });
 
   const COIN_PANEL_COPY = Object.freeze({
@@ -150,7 +134,7 @@
       purpose:
         "Contract Coin governs authority, permissions, terms, signatures, execution frame, and what authorizes movement before value proceeds any farther.",
       relationship:
-        "Contract Coin is the local north authority surface. Rotate its cluster without selecting a room, or choose one of its four room paths to inspect information."
+        "Contract Coin opens four local stars: overview, engineering, platform, and governance."
     }),
     east: Object.freeze({
       eyebrow: "East Coin",
@@ -158,7 +142,7 @@
       purpose:
         "Receivable Coin governs inbound value, arrival visibility, inflow accounting, source reading, and how received value becomes legible inside the family field.",
       relationship:
-        "Receivable Coin is the local east intake surface. Rotate its cluster without selecting a room, or choose one of its four room paths to inspect information."
+        "Receivable Coin opens four local stars: overview, engineering, platform, and governance."
     }),
     south: Object.freeze({
       eyebrow: "South Coin",
@@ -166,7 +150,7 @@
       purpose:
         "Payable Coin governs obligation, settlement pressure, what is owed, how duty is carried, and how outgoing liability remains visible rather than disappearing behind vague movement.",
       relationship:
-        "Payable Coin is the local south obligation surface. Rotate its cluster without selecting a room, or choose one of its four room paths to inspect information."
+        "Payable Coin opens four local stars: overview, engineering, platform, and governance."
     }),
     west: Object.freeze({
       eyebrow: "West Coin",
@@ -174,7 +158,7 @@
       purpose:
         "Allocation Coin governs distribution, retained value, growth channels, allocation rules, and how expansion remains disciplined inside the family frame.",
       relationship:
-        "Allocation Coin is the local west growth surface. Rotate its cluster without selecting a room, or choose one of its four room paths to inspect information."
+        "Allocation Coin opens four local stars: overview, engineering, platform, and governance."
     })
   });
 
@@ -207,7 +191,7 @@
     panelDescended: false,
     compassMenuOpen: false,
     sphericalConstellationEnabled: true,
-    sphericalClustersEnabled: true,
+    sphericalClustersEnabled: false,
     lastAction: "",
     lastFailure: null,
     visualPassClaimed: false
@@ -225,9 +209,6 @@
     returnToOrbitButton: null,
     returnToClusterButton: null,
     guidance: null,
-    centerCompassButton: null,
-    centerCompassShell: null,
-    centerCompassClose: null,
     controllerReceiptOutput: null,
     lensTabs: new Map(),
     lensPanels: new Map(),
@@ -288,11 +269,6 @@
     return WINGS.includes(wing) ? wing : "";
   }
 
-  function normalizeCoin(value) {
-    const coin = String(value || "").trim().toLowerCase();
-    return WING_BY_COIN[coin] ? coin : "";
-  }
-
   function normalizeRoomId(value) {
     return String(value || "").trim();
   }
@@ -304,7 +280,7 @@
 
   function normalizeRoute(value) {
     const route = String(value || "").trim();
-    return route.startsWith("/") ? route : "";
+    return route.startsWith("/") || route.startsWith("#") ? route : "";
   }
 
   function cssEscape(value) {
@@ -601,7 +577,7 @@
         "This information point explains the selected ARCHCOIN path.",
       relationship:
         element.dataset.localFunction ||
-        "This information point remains local to the selected coin cluster."
+        "This information point remains local to the selected coin."
     };
   }
 
@@ -797,7 +773,7 @@
 
     normalized.primaryId = clusterContainsRoom(cluster, primaryRoom)
       ? primaryRoom
-      : cluster.previewPrimaryRoom || cluster.primaryRoom || cluster.roomIds[0] || "";
+      : cluster.primaryRoom || cluster.roomIds[0] || "";
 
     cluster.orientation = normalized;
     cluster.previewPrimaryRoom = normalized.primaryId;
@@ -829,19 +805,8 @@
   }
 
   function syncCompassMenu() {
-    if (!state.centerCompassButton || !state.centerCompassShell) {
-      return;
-    }
-
-    state.centerCompassButton.setAttribute(
-      "aria-expanded",
-      state.compassMenuOpen ? "true" : "false"
-    );
-
-    state.centerCompassShell.hidden = !state.compassMenuOpen;
-
     if (state.scene) {
-      state.scene.dataset.archcoinCompassMenu = state.compassMenuOpen ? "open" : "closed";
+      state.scene.dataset.archcoinCompassMenu = "closed";
     }
   }
 
@@ -909,7 +874,7 @@
     state.root.dataset.reducedMotion = state.reducedMotion ? "true" : "false";
     state.root.dataset.compassProminence = String(prominence.compass);
     state.root.dataset.windowProminence = String(prominence.window);
-    state.root.dataset.archcoinCompassMenuOpen = state.compassMenuOpen ? "true" : "false";
+    state.root.dataset.archcoinCompassMenuOpen = "false";
     state.root.dataset.visualPassClaimed = "false";
 
     if (state.scene) {
@@ -925,7 +890,7 @@
       state.scene.dataset.archcoinSelectedWing = state.selectedWing;
       state.scene.dataset.archcoinSelectedRoom = state.selectedRoom;
       state.scene.dataset.archcoinActiveTab = state.activeTab;
-      state.scene.dataset.archcoinCompassMenu = state.compassMenuOpen ? "open" : "closed";
+      state.scene.dataset.archcoinCompassMenu = "closed";
       state.scene.dataset.visualPassClaimed = "false";
     }
 
@@ -997,9 +962,9 @@
         selectedRoute: state.selectedRoute,
         activeTab: state.activeTab,
         panelDescended: state.panelDescended,
-        compassMenuOpen: state.compassMenuOpen,
+        compassMenuOpen: false,
         sphericalConstellationEnabled: true,
-        sphericalClustersEnabled: true,
+        sphericalClustersEnabled: false,
         visualPassClaimed: false
       },
       extra
@@ -1036,7 +1001,7 @@
         eyebrow: "Controller held",
         title: "ARCHCOIN controller is unavailable.",
         purpose:
-          "The page has entered a held state. Interactive constellation, cluster, and local information descent are suspended until the controller is restored.",
+          "The page has entered a held state. Interactive field and local information descent are suspended until the controller is restored.",
         relationship: "Controller recovery is required before interactive descent resumes."
       });
 
@@ -1074,7 +1039,7 @@
 
       setGuidance(DEFAULT_GUIDANCE.INFO_OPEN);
       setHiddenControl(state.returnToOrbitButton, false);
-      setHiddenControl(state.returnToClusterButton, false);
+      setHiddenControl(state.returnToClusterButton, true);
     }
   }
 
@@ -1082,7 +1047,6 @@
     clearViewportSchedules();
     cancelAllGestures("controller-failure");
     state.current = STATES.HELD;
-    state.compassMenuOpen = false;
     setPanelDescended(false);
     syncPresentation();
 
@@ -1405,8 +1369,6 @@
 
     orientation.primaryId =
       primaryRoom ||
-      orientation.primaryId ||
-      cluster.previewPrimaryRoom ||
       cluster.primaryRoom ||
       cluster.roomIds[0] ||
       "";
@@ -1445,7 +1407,6 @@
       payload.primaryRoom ||
         payload.primaryId ||
         orientation.primaryId ||
-        cluster.previewPrimaryRoom ||
         cluster.primaryRoom
     );
 
@@ -1536,9 +1497,9 @@
 
     clearViewportSchedules();
     setPanelDescended(false);
-    state.compassMenuOpen = false;
 
     const destination = destinationFromElement(element);
+    const cluster = getCluster(normalizedWing);
 
     state.selectedWing = normalizedWing;
     state.selectedCoin = coinForWing(normalizedWing);
@@ -1548,6 +1509,12 @@
     state.selectedDestinationLabel =
       destination.label || element.dataset.panelTitle || normalizedWing;
     state.selectedRoute = destination.route || "";
+
+    if (cluster) {
+      cluster.primaryRoom = cluster.primaryRoom || cluster.roomIds[0] || "";
+      cluster.previewPrimaryRoom = cluster.primaryRoom;
+      cluster.phase = ORIENTATION_PHASES.COMMITTED;
+    }
 
     setPanel(panelFromCoin(element));
 
@@ -1586,7 +1553,10 @@
     }
 
     clearViewportSchedules();
-    state.compassMenuOpen = false;
+
+    cluster.primaryRoom = id;
+    cluster.previewPrimaryRoom = id;
+    cluster.phase = ORIENTATION_PHASES.COMMITTED;
 
     const destination = destinationFromElement(element);
 
@@ -1631,7 +1601,6 @@
     resetSelection();
     state.orbitFocus = wing;
     state.orbitPreviewFocus = wing;
-    state.compassMenuOpen = false;
     state.activeTab = "overview";
 
     setPanel(DEFAULT_PANEL);
@@ -1663,11 +1632,11 @@
   }
 
   function requestReturnToOrbit(options = {}) {
-    if (state.current !== STATES.INFO_OPEN) {
+    if (state.current !== STATES.CLUSTER_OPEN && state.current !== STATES.INFO_OPEN) {
       return false;
     }
 
-    const wing = state.selectedWing;
+    const wing = normalizeWing(state.selectedWing || state.orbitFocus);
     const coinElement = findCoinElement(wing);
 
     if (!coinElement) {
@@ -1677,8 +1646,9 @@
 
     clearViewportSchedules();
     setPanelDescended(false);
-    state.compassMenuOpen = false;
 
+    state.selectedWing = wing;
+    state.selectedCoin = coinForWing(wing);
     state.selectedRoom = "";
     state.selectedDestinationType = "coin";
     state.selectedDestinationId = coinForWing(wing);
@@ -1704,49 +1674,7 @@
   }
 
   function requestReturnToCluster(options = {}) {
-    if (state.current !== STATES.INFO_OPEN) {
-      return false;
-    }
-
-    const wing = state.selectedWing;
-    const coinElement = findCoinElement(wing);
-
-    if (!coinElement) {
-      fail(`COIN_NOT_FOUND:${wing}`, "requestReturnToCluster");
-      return false;
-    }
-
-    clearPanelDescentSchedule();
-    setPanelDescended(false);
-    state.compassMenuOpen = false;
-
-    state.selectedRoom = "";
-    state.selectedDestinationType = "coin";
-    state.selectedDestinationId = coinForWing(wing);
-
-    const destination = destinationFromElement(coinElement);
-    state.selectedDestinationLabel =
-      destination.label || coinElement.dataset.panelTitle || wing;
-    state.selectedRoute = destination.route || "";
-
-    setPanel(panelFromCoin(coinElement));
-
-    const committed = setState(
-      STATES.CLUSTER_OPEN,
-      `return-to-cluster:${wing}:${String(options.source || "controller")}`
-    );
-
-    if (!committed) {
-      return false;
-    }
-
-    emitReceipt({
-      lastAction: `returned-to-cluster:${wing}`,
-      lastFailure: null,
-      returnSource: String(options.source || "controller")
-    });
-
-    return true;
+    return requestReturnToOrbit(options);
   }
 
   function requestLensTab(tab, source = "controller") {
@@ -1765,43 +1693,16 @@
     return true;
   }
 
-  function requestCenterCompassOpen(source = "controller") {
-    if (state.current === STATES.HELD) {
-      return false;
-    }
-
-    state.compassMenuOpen = true;
-    syncPresentation();
-
-    emitReceipt({
-      lastAction: `center-compass-open:${String(source || "controller")}`,
-      lastFailure: null
-    });
-
-    return true;
+  function requestCenterCompassOpen() {
+    return false;
   }
 
-  function requestCenterCompassClose(source = "controller") {
-    if (state.current === STATES.HELD) {
-      return false;
-    }
-
-    state.compassMenuOpen = false;
-    syncPresentation();
-
-    emitReceipt({
-      lastAction: `center-compass-close:${String(source || "controller")}`,
-      lastFailure: null
-    });
-
-    return true;
+  function requestCenterCompassClose() {
+    return false;
   }
 
-  function requestCenterCompassToggle(source = "controller") {
-    if (state.compassMenuOpen) {
-      return requestCenterCompassClose(source);
-    }
-    return requestCenterCompassOpen(source);
+  function requestCenterCompassToggle() {
+    return false;
   }
 
   function setState(nextState, action) {
@@ -1893,28 +1794,6 @@
     }
   }
 
-  function bindCenterCompassControls() {
-    if (state.centerCompassButton) {
-      state.centerCompassButton.addEventListener("click", event => {
-        event.preventDefault();
-        requestCenterCompassToggle("button");
-      });
-    }
-
-    if (state.centerCompassClose) {
-      state.centerCompassClose.addEventListener("click", event => {
-        event.preventDefault();
-        requestCenterCompassClose("close-button");
-      });
-    }
-
-    qsa("[data-archcoin-compass-destination]", state.root).forEach(link => {
-      link.addEventListener("click", () => {
-        requestCenterCompassClose("navigate-away");
-      });
-    });
-  }
-
   function handleSemanticDestination(event) {
     const roomControl =
       event.target && event.target.closest
@@ -1948,17 +1827,7 @@
         return;
       }
 
-      if (state.compassMenuOpen) {
-        requestCenterCompassClose("escape");
-        return;
-      }
-
-      if (state.current === STATES.INFO_OPEN) {
-        requestReturnToCluster({ source: "escape" });
-        return;
-      }
-
-      if (state.current === STATES.CLUSTER_OPEN) {
+      if (state.current === STATES.INFO_OPEN || state.current === STATES.CLUSTER_OPEN) {
         requestReturnToConstellation({ source: "escape", scrollToScene: false });
       }
     });
@@ -2044,7 +1913,7 @@
           selectedRoute: state.selectedRoute,
           activeTab: state.activeTab,
           panelDescended: state.panelDescended,
-          compassMenuOpen: state.compassMenuOpen,
+          compassMenuOpen: false,
           reducedMotion: state.reducedMotion,
           prominence: Object.freeze({ ...prominenceFor(state.current) })
         });
@@ -2082,9 +1951,6 @@
     state.returnToOrbitButton = qs("[data-archcoin-return-to-orbit]", state.root);
     state.returnToClusterButton = qs("[data-archcoin-return-to-cluster]", state.root);
     state.guidance = qs("[data-archcoin-guidance]", state.root);
-    state.centerCompassButton = qs("[data-archcoin-center-compass]", state.root);
-    state.centerCompassShell = qs("[data-archcoin-compass-shell]", state.root);
-    state.centerCompassClose = qs("[data-archcoin-compass-close]", state.root);
     state.controllerReceiptOutput = qs("[data-archcoin-controller-receipt]", state.root);
   }
 
@@ -2097,14 +1963,12 @@
       exposeApi();
       bindSemanticControls();
       bindPanelControls();
-      bindCenterCompassControls();
       bindKeyboardControls();
       bindLensTabs();
 
       state.current = STATES.ORBIT;
       resetSelection();
       state.activeTab = "overview";
-      state.compassMenuOpen = false;
 
       setPanel(DEFAULT_PANEL);
       syncPresentation();
@@ -2113,10 +1977,10 @@
 
       emitReceipt({
         status: "available",
-        lastAction: "controller-initialized-spherical-constellation-and-clusters",
+        lastAction: "controller-initialized-simplified-field-and-panel",
         lastFailure: null,
         sphericalConstellationEnabled: true,
-        sphericalClustersEnabled: true
+        sphericalClustersEnabled: false
       });
     } catch (error) {
       const reason = error && error.message ? error.message : String(error);

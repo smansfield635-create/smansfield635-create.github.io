@@ -10,7 +10,7 @@
   <title>ARCHCOIN</title>
   <meta
     name="description"
-    content="ARCHCOIN navigation surface for Contract, Receivable, Payable, and Allocation."
+    content="ARCHCOIN introduces four financial paths—Contract, Receivable, Payable, and Allocation—through a single navigation compass and handoff surface."
   >
   <link
     rel="stylesheet"
@@ -58,20 +58,28 @@
       aria-labelledby="archcoin-title"
     >
       <header class="archcoin-header">
-        <p class="archcoin-header__kicker">ARCHCOIN</p>
+        <p class="archcoin-header__kicker">
+          ARCHCOIN
+        </p>
 
         <h1 id="archcoin-title">
-          Financial architecture, made navigable.
+          Financial architecture begins with the right path.
         </h1>
 
         <p class="archcoin-header__sentence">
-          Most financial systems do not break because information is missing. They break because contracts, receivables, payables, and allocations get mixed together until no one can tell what is owed, what is arriving, what is leaving, or what is being distributed. ARCHCOIN turns that confusion into a navigable construct: enter through the right coin, inspect the right room, and move forward with more precision.
+          Most financial systems fail long before execution because the wrong problem is opened first. ARCHCOIN introduces four disciplined entry paths—Contract, Receivable, Payable, and Allocation—so a team can orient to the right domain, open the right room, and move forward with far less confusion.
         </p>
 
-        <details class="archcoin-header__more">
-          <summary>Read more</summary>
+        <details
+          class="archcoin-header__more"
+          data-archcoin-read-more
+        >
+          <summary>
+            Read more
+          </summary>
+
           <p>
-            Each coin opens four rooms: Overview, Engineering, Platform, and Governance. The compass is the handoff standard. It gives you the shortest path from the right question to the right room without forcing the entire architecture onto one page.
+            The compass is the handoff standard. Select a coin to open its cluster. Select a room to bring forward a short briefing beneath the field. From there, either continue reading at this level or enter the room directly.
           </p>
         </details>
       </header>
@@ -82,15 +90,13 @@
         aria-labelledby="archcoin-scene-title"
       >
         <div class="archcoin-scene__header">
-          <p class="archcoin-scene__kicker">Compass</p>
+          <p class="archcoin-scene__kicker">
+            Navigation Compass
+          </p>
 
           <h2 id="archcoin-scene-title">
             Choose the right coin. Then choose the right room.
           </h2>
-
-          <p class="archcoin-scene__sentence">
-            Tap a coin to open its room cluster. Tap a room to update the handoff box below. Read more if needed, or enter the room directly.
-          </p>
         </div>
 
         <div
@@ -117,8 +123,8 @@
             data-route="/products/archcoin/contract/"
             data-panel-eyebrow="Contract Coin"
             data-panel-title="Contract"
-            data-panel-purpose="Start here when the question is what has been agreed, what must be honored, and what the governing terms actually require."
-            data-panel-relationship="Open this coin to inspect the Contract rooms: Overview, Engineering, Platform, and Governance."
+            data-panel-purpose="The Contract coin is the entry point for questions about what the agreement means, what it binds, how it should be interpreted, and which room should govern the next step."
+            data-panel-relationship="Open this cluster when the issue is definitional, structural, operational, or governed by the contract layer."
             aria-controls="archcoin-panel"
           >
             <span>Contract</span>
@@ -139,8 +145,8 @@
             data-route="/products/archcoin/receivable/"
             data-panel-eyebrow="Receivable Coin"
             data-panel-title="Receivable"
-            data-panel-purpose="Start here when the question is what should come in, what can be recognized, and how incoming value should be handled."
-            data-panel-relationship="Open this coin to inspect the Receivable rooms: Overview, Engineering, Platform, and Governance."
+            data-panel-purpose="The Receivable coin is the entry point for questions about incoming value, recognition, expected payment, collection posture, and the systems that govern what should arrive."
+            data-panel-relationship="Open this cluster when the issue concerns what is owed to the organization and how it is recognized, tracked, and governed."
             aria-controls="archcoin-panel"
           >
             <span>Receivable</span>
@@ -161,8 +167,8 @@
             data-route="/products/archcoin/payable/"
             data-panel-eyebrow="Payable Coin"
             data-panel-title="Payable"
-            data-panel-purpose="Start here when the question is what must go out, what must be settled, and how outgoing obligations should be executed."
-            data-panel-relationship="Open this coin to inspect the Payable rooms: Overview, Engineering, Platform, and Governance."
+            data-panel-purpose="The Payable coin is the entry point for questions about outgoing obligation, settlement, payment execution, timing discipline, and the controls that authorize what must be paid."
+            data-panel-relationship="Open this cluster when the issue concerns what leaves the organization, how it is executed, and which room governs the obligation."
             aria-controls="archcoin-panel"
           >
             <span>Payable</span>
@@ -183,8 +189,8 @@
             data-route="/products/archcoin/allocation/"
             data-panel-eyebrow="Allocation Coin"
             data-panel-title="Allocation"
-            data-panel-purpose="Start here when the question is where value goes next, how it is distributed, and what logic controls that distribution."
-            data-panel-relationship="Open this coin to inspect the Allocation rooms: Overview, Engineering, Platform, and Governance."
+            data-panel-purpose="The Allocation coin is the entry point for questions about how recognized value is distributed, routed, constrained, partitioned, and governed after it has entered the system."
+            data-panel-relationship="Open this cluster when the issue concerns distribution logic, downstream routing, and the rules that shape where value goes next."
             aria-controls="archcoin-panel"
           >
             <span>Allocation</span>
@@ -197,7 +203,7 @@
           data-archcoin-guidance
           aria-live="polite"
         >
-          Tap a coin to open its room cluster. Tap a room to update the handoff box. Drag to rotate. Quick flick returns to the outer constellation.
+          Tap a coin to open its room cluster. Tap a room to bring forward the briefing box below. Drag to rotate. Quick flick returns to the outer constellation.
         </p>
       </section>
 
@@ -220,11 +226,11 @@
         </h2>
 
         <p data-archcoin-panel-purpose>
-          Begin with the coin that matches the financial question in front of you.
+          Start with the domain that matches the problem in front of you. Then open the room that clarifies the next move.
         </p>
 
         <p data-archcoin-panel-relationship>
-          Open a coin cluster, inspect a room, and use this handoff chamber to decide whether to read more or enter the room directly.
+          The box below the compass is a handoff surface, not an archive. Select a coin or room to receive a compact briefing and proceed only when the path is clear.
         </p>
 
         <div class="archcoin-panel__actions">
@@ -234,7 +240,9 @@
             aria-disabled="true"
             disabled
           >
-            <span data-archcoin-enter-label>Enter Room</span>
+            <span data-archcoin-enter-label>
+              Enter Room
+            </span>
           </button>
 
           <button
@@ -246,281 +254,14 @@
           >
             Return to Orbit
           </button>
-
-          <a
-            href="#archcoin-reading-surface"
-            data-archcoin-read-more
-            aria-label="Read more"
-          >
-            Read More
-          </a>
         </div>
       </aside>
 
       <section
-        id="archcoin-reading-surface"
-        class="archcoin-reading-surface"
-        aria-labelledby="archcoin-reading-title"
-      >
-        <div class="archcoin-reading-surface__header">
-          <p class="archcoin-reading-surface__kicker">Room Introductions</p>
-
-          <h2 id="archcoin-reading-title">
-            One paragraph for every room.
-          </h2>
-
-          <p>
-            This page introduces the rooms. The rooms themselves carry the full weight.
-          </p>
-        </div>
-
-        <div class="archcoin-content-records">
-          <article
-            class="archcoin-content-record"
-            data-archcoin-content-record
-            data-content-id="contract-overview"
-            aria-labelledby="contract-overview-title"
-          >
-            <header class="archcoin-content-record__header">
-              <p class="archcoin-content-record__eyebrow">Contract</p>
-              <h3 id="contract-overview-title">Contract Overview</h3>
-            </header>
-            <p>
-              Contract Overview frames the agreement itself: what exists, what binds, and what the rest of the Contract rooms are actually trying to protect.
-            </p>
-          </article>
-
-          <article
-            class="archcoin-content-record"
-            data-archcoin-content-record
-            data-content-id="contract-engineering"
-            aria-labelledby="contract-engineering-title"
-          >
-            <header class="archcoin-content-record__header">
-              <p class="archcoin-content-record__eyebrow">Contract</p>
-              <h3 id="contract-engineering-title">Contract Engineering</h3>
-            </header>
-            <p>
-              Contract Engineering focuses on translation: how terms become enforceable logic, system behavior, and exact operational consequence.
-            </p>
-          </article>
-
-          <article
-            class="archcoin-content-record"
-            data-archcoin-content-record
-            data-content-id="contract-platform"
-            aria-labelledby="contract-platform-title"
-          >
-            <header class="archcoin-content-record__header">
-              <p class="archcoin-content-record__eyebrow">Contract</p>
-              <h3 id="contract-platform-title">Contract Platform</h3>
-            </header>
-            <p>
-              Contract Platform looks at where agreement logic appears on the surface: workflows, controls, states, and the user-facing shape of the deal.
-            </p>
-          </article>
-
-          <article
-            class="archcoin-content-record"
-            data-archcoin-content-record
-            data-content-id="contract-governance"
-            aria-labelledby="contract-governance-title"
-          >
-            <header class="archcoin-content-record__header">
-              <p class="archcoin-content-record__eyebrow">Contract</p>
-              <h3 id="contract-governance-title">Contract Governance</h3>
-            </header>
-            <p>
-              Contract Governance defines who can approve, revise, interpret, or challenge the contract layer once real-world pressure arrives.
-            </p>
-          </article>
-
-          <article
-            class="archcoin-content-record"
-            data-archcoin-content-record
-            data-content-id="receivable-overview"
-            aria-labelledby="receivable-overview-title"
-          >
-            <header class="archcoin-content-record__header">
-              <p class="archcoin-content-record__eyebrow">Receivable</p>
-              <h3 id="receivable-overview-title">Receivable Overview</h3>
-            </header>
-            <p>
-              Receivable Overview defines what is expected to come in, what counts, and how incoming value should be understood before it is recognized.
-            </p>
-          </article>
-
-          <article
-            class="archcoin-content-record"
-            data-archcoin-content-record
-            data-content-id="receivable-engineering"
-            aria-labelledby="receivable-engineering-title"
-          >
-            <header class="archcoin-content-record__header">
-              <p class="archcoin-content-record__eyebrow">Receivable</p>
-              <h3 id="receivable-engineering-title">Receivable Engineering</h3>
-            </header>
-            <p>
-              Receivable Engineering examines the machinery behind recognition, posting, timing, validation, and the technical conditions for claiming arrival.
-            </p>
-          </article>
-
-          <article
-            class="archcoin-content-record"
-            data-archcoin-content-record
-            data-content-id="receivable-platform"
-            aria-labelledby="receivable-platform-title"
-          >
-            <header class="archcoin-content-record__header">
-              <p class="archcoin-content-record__eyebrow">Receivable</p>
-              <h3 id="receivable-platform-title">Receivable Platform</h3>
-            </header>
-            <p>
-              Receivable Platform shows how incoming-value logic appears in interfaces, workflows, dashboards, and operator decisions on the actual surface.
-            </p>
-          </article>
-
-          <article
-            class="archcoin-content-record"
-            data-archcoin-content-record
-            data-content-id="receivable-governance"
-            aria-labelledby="receivable-governance-title"
-          >
-            <header class="archcoin-content-record__header">
-              <p class="archcoin-content-record__eyebrow">Receivable</p>
-              <h3 id="receivable-governance-title">Receivable Governance</h3>
-            </header>
-            <p>
-              Receivable Governance deals with authority: who may recognize, defer, dispute, or audit incoming value when the answer is not automatic.
-            </p>
-          </article>
-
-          <article
-            class="archcoin-content-record"
-            data-archcoin-content-record
-            data-content-id="payable-overview"
-            aria-labelledby="payable-overview-title"
-          >
-            <header class="archcoin-content-record__header">
-              <p class="archcoin-content-record__eyebrow">Payable</p>
-              <h3 id="payable-overview-title">Payable Overview</h3>
-            </header>
-            <p>
-              Payable Overview frames what must go out, what must be honored, and how an outgoing obligation should be understood before execution begins.
-            </p>
-          </article>
-
-          <article
-            class="archcoin-content-record"
-            data-archcoin-content-record
-            data-content-id="payable-engineering"
-            aria-labelledby="payable-engineering-title"
-          >
-            <header class="archcoin-content-record__header">
-              <p class="archcoin-content-record__eyebrow">Payable</p>
-              <h3 id="payable-engineering-title">Payable Engineering</h3>
-            </header>
-            <p>
-              Payable Engineering focuses on execution logic: timing, settlement mechanics, validation rules, and the system behavior behind paying correctly.
-            </p>
-          </article>
-
-          <article
-            class="archcoin-content-record"
-            data-archcoin-content-record
-            data-content-id="payable-platform"
-            aria-labelledby="payable-platform-title"
-          >
-            <header class="archcoin-content-record__header">
-              <p class="archcoin-content-record__eyebrow">Payable</p>
-              <h3 id="payable-platform-title">Payable Platform</h3>
-            </header>
-            <p>
-              Payable Platform examines where outgoing obligations appear in screens, approvals, workflows, and visible operating consequences.
-            </p>
-          </article>
-
-          <article
-            class="archcoin-content-record"
-            data-archcoin-content-record
-            data-content-id="payable-governance"
-            aria-labelledby="payable-governance-title"
-          >
-            <header class="archcoin-content-record__header">
-              <p class="archcoin-content-record__eyebrow">Payable</p>
-              <h3 id="payable-governance-title">Payable Governance</h3>
-            </header>
-            <p>
-              Payable Governance defines who can authorize, stop, review, or challenge outgoing-value decisions when money is actually leaving the system.
-            </p>
-          </article>
-
-          <article
-            class="archcoin-content-record"
-            data-archcoin-content-record
-            data-content-id="allocation-overview"
-            aria-labelledby="allocation-overview-title"
-          >
-            <header class="archcoin-content-record__header">
-              <p class="archcoin-content-record__eyebrow">Allocation</p>
-              <h3 id="allocation-overview-title">Allocation Overview</h3>
-            </header>
-            <p>
-              Allocation Overview explains where value goes next, how distribution is framed, and which deeper room should govern the actual decision.
-            </p>
-          </article>
-
-          <article
-            class="archcoin-content-record"
-            data-archcoin-content-record
-            data-content-id="allocation-engineering"
-            aria-labelledby="allocation-engineering-title"
-          >
-            <header class="archcoin-content-record__header">
-              <p class="archcoin-content-record__eyebrow">Allocation</p>
-              <h3 id="allocation-engineering-title">Allocation Engineering</h3>
-            </header>
-            <p>
-              Allocation Engineering examines transformation rules, distribution logic, constraints, and the technical mechanisms that move value with precision.
-            </p>
-          </article>
-
-          <article
-            class="archcoin-content-record"
-            data-archcoin-content-record
-            data-content-id="allocation-platform"
-            aria-labelledby="allocation-platform-title"
-          >
-            <header class="archcoin-content-record__header">
-              <p class="archcoin-content-record__eyebrow">Allocation</p>
-              <h3 id="allocation-platform-title">Allocation Platform</h3>
-            </header>
-            <p>
-              Allocation Platform shows how distribution logic appears in interfaces, operating flows, decision surfaces, and visible product behavior.
-            </p>
-          </article>
-
-          <article
-            class="archcoin-content-record"
-            data-archcoin-content-record
-            data-content-id="allocation-governance"
-            aria-labelledby="allocation-governance-title"
-          >
-            <header class="archcoin-content-record__header">
-              <p class="archcoin-content-record__eyebrow">Allocation</p>
-              <h3 id="allocation-governance-title">Allocation Governance</h3>
-            </header>
-            <p>
-              Allocation Governance defines who controls distribution, who approves exceptions, and what authority stands over value movement when stakes rise.
-            </p>
-          </article>
-        </div>
-      </section>
-
-      <section
-        class="archcoin-source-records"
-        aria-label="ARCHCOIN room declarations"
+        class="archcoin-room-declarations"
+        data-archcoin-room-declarations
         hidden
+        aria-hidden="true"
       >
         <a
           href="/products/archcoin/contract/overview/"
@@ -536,9 +277,9 @@
           data-route="/products/archcoin/contract/overview/"
           data-panel-eyebrow="Contract / Overview"
           data-panel-title="Contract Overview"
-          data-panel-purpose="Start here when the issue is the contract itself in plain view: what it is, what it binds, and what deeper room should follow."
-          data-panel-relationship="Read more to stay in the handoff chamber, or enter the room to continue inside the Contract architecture."
-          data-why-enter="Enter when the question is foundational before it becomes technical."
+          data-panel-purpose="Contract Overview introduces the contract domain at the highest level so a team can orient to what the agreement layer is responsible for before moving deeper."
+          data-panel-relationship="Enter this room when the first need is to understand the scope, function, and purpose of the contract layer before addressing implementation or authority."
+          data-why-enter="Use this room when the question is what the contract domain is."
         >Contract Overview</a>
 
         <a
@@ -555,9 +296,9 @@
           data-route="/products/archcoin/contract/engineering/"
           data-panel-eyebrow="Contract / Engineering"
           data-panel-title="Contract Engineering"
-          data-panel-purpose="Use this room when the contract has to become exact logic, enforceable rules, and operational implementation."
-          data-panel-relationship="Stay in the chamber to orient yourself, or enter the room to work inside the implementation layer."
-          data-why-enter="Enter when translation into exact behavior is the real work."
+          data-panel-purpose="Contract Engineering focuses on how agreement logic is translated into exact rules, validations, and operational behavior inside the system."
+          data-panel-relationship="Enter this room when the contract must be examined as executable structure rather than as summary or policy."
+          data-why-enter="Use this room when the question is how the contract gets implemented."
         >Contract Engineering</a>
 
         <a
@@ -574,9 +315,9 @@
           data-route="/products/archcoin/contract/platform/"
           data-panel-eyebrow="Contract / Platform"
           data-panel-title="Contract Platform"
-          data-panel-purpose="Use this room when you need to see how contract logic appears on the product surface and in real operator flow."
-          data-panel-relationship="Read more for the short briefing, or enter the room for the live platform-facing layer."
-          data-why-enter="Enter when the issue is visible behavior, not just hidden logic."
+          data-panel-purpose="Contract Platform shows how the contract layer appears on the product surface, inside workflows, and across the visible operational environment."
+          data-panel-relationship="Enter this room when the question is where contract logic becomes visible, interactive, or operational for users and teams."
+          data-why-enter="Use this room when the question is how the contract appears on the platform."
         >Contract Platform</a>
 
         <a
@@ -593,9 +334,9 @@
           data-route="/products/archcoin/contract/governance/"
           data-panel-eyebrow="Contract / Governance"
           data-panel-title="Contract Governance"
-          data-panel-purpose="Use this room when authority, approval, and accountability determine what the contract layer can or cannot become."
-          data-panel-relationship="Read more here, or enter the room to continue in the authority layer."
-          data-why-enter="Enter when power and permission matter as much as meaning."
+          data-panel-purpose="Contract Governance addresses authority, approval, audit, and control boundaries governing how the contract layer may be changed or interpreted."
+          data-panel-relationship="Enter this room when the key question is who may decide, who must verify, and what constrains movement in the contract domain."
+          data-why-enter="Use this room when the question is who governs the contract layer."
         >Contract Governance</a>
 
         <a
@@ -612,9 +353,9 @@
           data-route="/products/archcoin/receivable/overview/"
           data-panel-eyebrow="Receivable / Overview"
           data-panel-title="Receivable Overview"
-          data-panel-purpose="Start here when the issue is incoming value in principle: what should arrive, what counts, and what should happen next."
-          data-panel-relationship="Read more for the chamber briefing, or enter the room to move into the Receivable domain."
-          data-why-enter="Enter when the first task is naming the incoming claim correctly."
+          data-panel-purpose="Receivable Overview introduces the incoming-value domain so the team can understand what should arrive, why it matters, and which deeper room should be opened next."
+          data-panel-relationship="Enter this room when the first need is domain orientation rather than implementation or authority detail."
+          data-why-enter="Use this room when the question is what the receivable domain is."
         >Receivable Overview</a>
 
         <a
@@ -631,9 +372,9 @@
           data-route="/products/archcoin/receivable/engineering/"
           data-panel-eyebrow="Receivable / Engineering"
           data-panel-title="Receivable Engineering"
-          data-panel-purpose="Use this room when receivable logic has to be implemented, validated, posted, and timed precisely."
-          data-panel-relationship="Read more in the chamber, or enter the room for the implementation layer."
-          data-why-enter="Enter when recognition must become exact system behavior."
+          data-panel-purpose="Receivable Engineering focuses on recognition rules, posting sequence, timing logic, and the system behavior that governs incoming value."
+          data-panel-relationship="Enter this room when the issue is how receivable logic is implemented and enforced rather than merely described."
+          data-why-enter="Use this room when the question is how receivable behavior gets implemented."
         >Receivable Engineering</a>
 
         <a
@@ -650,9 +391,9 @@
           data-route="/products/archcoin/receivable/platform/"
           data-panel-eyebrow="Receivable / Platform"
           data-panel-title="Receivable Platform"
-          data-panel-purpose="Use this room when the question is how receivable logic appears in workflows, interfaces, and operator visibility."
-          data-panel-relationship="Read more here, or enter the room to continue on the platform surface."
-          data-why-enter="Enter when the issue is where incoming value becomes visible."
+          data-panel-purpose="Receivable Platform shows where receivable behavior becomes visible inside dashboards, workflows, statuses, and user-facing financial operations."
+          data-panel-relationship="Enter this room when the concern is how incoming-value logic appears and behaves on the platform surface."
+          data-why-enter="Use this room when the question is how receivable behavior appears on the platform."
         >Receivable Platform</a>
 
         <a
@@ -669,9 +410,9 @@
           data-route="/products/archcoin/receivable/governance/"
           data-panel-eyebrow="Receivable / Governance"
           data-panel-title="Receivable Governance"
-          data-panel-purpose="Use this room when authority determines whether incoming value can be recognized, deferred, disputed, or audited."
-          data-panel-relationship="Read more briefly here, or enter the room to continue inside governance."
-          data-why-enter="Enter when the real issue is permission, not just process."
+          data-panel-purpose="Receivable Governance addresses approval, exception handling, control boundaries, and audit responsibility for incoming-value processes."
+          data-panel-relationship="Enter this room when the real issue is not what is owed, but who may authorize, revise, or govern its recognition."
+          data-why-enter="Use this room when the question is who governs receivable behavior."
         >Receivable Governance</a>
 
         <a
@@ -688,9 +429,9 @@
           data-route="/products/archcoin/payable/overview/"
           data-panel-eyebrow="Payable / Overview"
           data-panel-title="Payable Overview"
-          data-panel-purpose="Start here when the issue is the outgoing obligation itself: what must be paid, why it exists, and what room should come next."
-          data-panel-relationship="Read more in the chamber, or enter the room to continue in the Payable domain."
-          data-why-enter="Enter when the obligation must be understood before it is executed."
+          data-panel-purpose="Payable Overview introduces the outgoing-obligation domain so the team can orient to what must be paid, why it exists, and which deeper room should follow."
+          data-panel-relationship="Enter this room when the first need is to understand the payable domain before moving into execution detail."
+          data-why-enter="Use this room when the question is what the payable domain is."
         >Payable Overview</a>
 
         <a
@@ -707,9 +448,9 @@
           data-route="/products/archcoin/payable/engineering/"
           data-panel-eyebrow="Payable / Engineering"
           data-panel-title="Payable Engineering"
-          data-panel-purpose="Use this room when settlement timing, execution logic, and exact payable behavior are the problem to solve."
-          data-panel-relationship="Read more first, or enter the room to continue at the implementation layer."
-          data-why-enter="Enter when paying correctly is a systems problem."
+          data-panel-purpose="Payable Engineering focuses on settlement logic, timing, validation, and the exact system behavior that executes outgoing obligation."
+          data-panel-relationship="Enter this room when the key issue is how payable behavior is implemented and controlled operationally."
+          data-why-enter="Use this room when the question is how payable behavior gets implemented."
         >Payable Engineering</a>
 
         <a
@@ -726,9 +467,9 @@
           data-route="/products/archcoin/payable/platform/"
           data-panel-eyebrow="Payable / Platform"
           data-panel-title="Payable Platform"
-          data-panel-purpose="Use this room when the question is how outgoing obligations appear on the product surface and inside real workflows."
-          data-panel-relationship="Read more in the chamber, or enter the room to continue on the operating surface."
-          data-why-enter="Enter when the visible payable experience is the real point of failure."
+          data-panel-purpose="Payable Platform shows where payment logic becomes visible inside workflows, operational screens, status surfaces, and execution pathways."
+          data-panel-relationship="Enter this room when the question is how outgoing obligation is experienced and managed on the platform."
+          data-why-enter="Use this room when the question is how payable behavior appears on the platform."
         >Payable Platform</a>
 
         <a
@@ -745,9 +486,9 @@
           data-route="/products/archcoin/payable/governance/"
           data-panel-eyebrow="Payable / Governance"
           data-panel-title="Payable Governance"
-          data-panel-purpose="Use this room when authority, approval, and accountability determine whether value can leave the system."
-          data-panel-relationship="Read more here, or enter the room to continue inside governance."
-          data-why-enter="Enter when payment is governed before it is executed."
+          data-panel-purpose="Payable Governance addresses authority, approval, audit, and control boundaries governing outgoing obligation and payment execution."
+          data-panel-relationship="Enter this room when the central question is who may authorize settlement and what controls constrain the process."
+          data-why-enter="Use this room when the question is who governs payable behavior."
         >Payable Governance</a>
 
         <a
@@ -764,9 +505,9 @@
           data-route="/products/archcoin/allocation/overview/"
           data-panel-eyebrow="Allocation / Overview"
           data-panel-title="Allocation Overview"
-          data-panel-purpose="Start here when the question is how value should be distributed, routed, or constrained before deeper detail is required."
-          data-panel-relationship="Read more briefly here, or enter the room to continue inside Allocation."
-          data-why-enter="Enter when the first question is where value goes next."
+          data-panel-purpose="Allocation Overview introduces the distribution domain so the team can understand how value gets routed, partitioned, and constrained after recognition."
+          data-panel-relationship="Enter this room when the first need is to understand the allocation domain before moving into execution or authority."
+          data-why-enter="Use this room when the question is what the allocation domain is."
         >Allocation Overview</a>
 
         <a
@@ -783,9 +524,9 @@
           data-route="/products/archcoin/allocation/engineering/"
           data-panel-eyebrow="Allocation / Engineering"
           data-panel-title="Allocation Engineering"
-          data-panel-purpose="Use this room when distribution logic has to be implemented, transformed, constrained, and enforced in exact sequence."
-          data-panel-relationship="Read more in the chamber, or enter the room to continue at the implementation layer."
-          data-why-enter="Enter when allocation becomes a precision problem."
+          data-panel-purpose="Allocation Engineering focuses on the rules, transformations, and technical mechanisms that determine where value goes next."
+          data-panel-relationship="Enter this room when the issue is how distribution logic is actually implemented rather than merely described."
+          data-why-enter="Use this room when the question is how allocation behavior gets implemented."
         >Allocation Engineering</a>
 
         <a
@@ -802,9 +543,9 @@
           data-route="/products/archcoin/allocation/platform/"
           data-panel-eyebrow="Allocation / Platform"
           data-panel-title="Allocation Platform"
-          data-panel-purpose="Use this room when the issue is how distribution logic appears in workflows, controls, dashboards, and visible system behavior."
-          data-panel-relationship="Read more here, or enter the room to continue on the platform-facing surface."
-          data-why-enter="Enter when the surface expression of distribution matters most."
+          data-panel-purpose="Allocation Platform shows how value-routing and distribution logic appear inside workflows, screens, dashboards, and user-facing operational surfaces."
+          data-panel-relationship="Enter this room when the question is how allocation becomes visible and actionable on the platform."
+          data-why-enter="Use this room when the question is how allocation behavior appears on the platform."
         >Allocation Platform</a>
 
         <a
@@ -821,16 +562,16 @@
           data-route="/products/archcoin/allocation/governance/"
           data-panel-eyebrow="Allocation / Governance"
           data-panel-title="Allocation Governance"
-          data-panel-purpose="Use this room when authority determines how value may be distributed, constrained, overridden, or audited."
-          data-panel-relationship="Read more in the chamber, or enter the room to continue inside the authority layer."
-          data-why-enter="Enter when allocation is ultimately a governance problem."
+          data-panel-purpose="Allocation Governance addresses authority, exception handling, audit, and control boundaries shaping how value may be distributed or redirected."
+          data-panel-relationship="Enter this room when the real issue is who may govern distribution behavior and how change is constrained."
+          data-why-enter="Use this room when the question is who governs allocation behavior."
         >Allocation Governance</a>
       </section>
 
       <section
         class="archcoin-receipts"
-        aria-label="ARCHCOIN receipts"
         hidden
+        aria-hidden="true"
       >
         <output
           data-archcoin-controller-receipt
@@ -849,7 +590,6 @@
     src="/products/archcoin/index.controller.js"
     defer
   ></script>
-
   <script
     src="/products/archcoin/index.crystals.js"
     defer

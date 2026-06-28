@@ -16,6 +16,13 @@
    - No atmosphere canvas ownership in CSS.
    - No decorative background stars.
    - No decorative orbit-line scenery.
+
+   Integration refinement:
+   - Reserve a protected center field for the shared upstream Compass.
+   - Keep scene heading, center instrument space, and guidance visually separated.
+   - Prevent mobile guidance overlap with the center projection lane.
+   - Support the upstream Compass mount contract when present without requiring
+     page-local geometry ownership in CSS.
 */
 
 :root {
@@ -56,6 +63,12 @@
   --archcoin-max: 1240px;
   --archcoin-copy-max: 74ch;
   --archcoin-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+
+  --archcoin-scene-header-space: clamp(120px, 16vw, 176px);
+  --archcoin-scene-guidance-space: clamp(74px, 8vw, 108px);
+  --archcoin-scene-center-size: clamp(196px, 24vw, 320px);
+  --archcoin-scene-center-safe-top: clamp(92px, 12vw, 148px);
+  --archcoin-scene-center-safe-bottom: clamp(84px, 10vw, 124px);
 }
 
 * {
@@ -212,7 +225,6 @@ summary:focus-visible {
   margin: 0;
   font-family: Georgia, "Times New Roman", serif;
   font-weight: 700;
-  line-height: 0.95;
   letter-spacing: -0.04em;
   color: rgba(249, 251, 253, 0.98);
   text-wrap: balance;
@@ -221,11 +233,18 @@ summary:focus-visible {
 .archcoin-header h1 {
   max-width: 12ch;
   font-size: clamp(2.9rem, 7.8vw, 6.4rem);
+  line-height: 0.95;
 }
 
-.archcoin-scene h2,
+.archcoin-scene h2 {
+  max-width: 18ch;
+  font-size: clamp(1.42rem, 2.7vw, 2.26rem);
+  line-height: 1.02;
+}
+
 .archcoin-panel h2 {
   font-size: clamp(1.7rem, 3.6vw, 3rem);
+  line-height: 0.98;
 }
 
 .archcoin-header__sentence,
@@ -301,30 +320,62 @@ summary:focus-visible {
 /* -------------------------------------------------------------------------- */
 
 .archcoin-scene {
-  padding: 0;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  align-items: stretch;
+  padding: 0 clamp(18px, 3vw, 30px) clamp(18px, 2.4vw, 26px);
 }
 
 .archcoin-scene__header {
   position: relative;
-  z-index: 3;
+  z-index: 4;
   display: grid;
   gap: 8px;
   max-width: 760px;
-  padding: clamp(20px, 3vw, 28px) clamp(20px, 3vw, 30px) 0;
+  padding: clamp(20px, 3vw, 28px) 0 0;
 }
 
 .archcoin-scene__field {
   position: absolute;
-  inset: 0;
+  inset:
+    calc(var(--archcoin-scene-header-space) + 6px)
+    clamp(14px, 2vw, 24px)
+    calc(var(--archcoin-scene-guidance-space) + 18px)
+    clamp(14px, 2vw, 24px);
   z-index: 1;
   overflow: hidden;
+  pointer-events: none;
+  border-radius: calc(var(--archcoin-radius-xl) - 14px);
+}
+
+.archcoin-scene__field::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: clamp(220px, 30vw, 390px);
+  height: clamp(220px, 30vw, 390px);
+  transform: translate(-50%, -50%);
+  border-radius: 999px;
+  background:
+    radial-gradient(
+      circle,
+      rgba(144, 197, 234, 0.08) 0%,
+      rgba(144, 197, 234, 0.04) 38%,
+      rgba(144, 197, 234, 0.015) 56%,
+      transparent 74%
+    );
   pointer-events: none;
 }
 
 .archcoin-scene__semantic {
   position: relative;
-  z-index: 2;
-  min-height: clamp(460px, 62vh, 760px);
+  z-index: 3;
+  min-height: clamp(540px, 68vh, 820px);
+  padding:
+    var(--archcoin-scene-center-safe-top)
+    0
+    var(--archcoin-scene-center-safe-bottom);
   isolation: isolate;
   pointer-events: none;
 }
@@ -332,6 +383,53 @@ summary:focus-visible {
 [data-archcoin-scene] {
   touch-action: none;
   overscroll-behavior: contain;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Shared upstream Compass mount support                                       */
+/* -------------------------------------------------------------------------- */
+
+[data-upstream-compass-mount] {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 2;
+  width: min(100%, clamp(220px, 28vw, 348px));
+  aspect-ratio: 1 / 1;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+[data-upstream-compass-control] {
+  position: absolute;
+  inset: 0;
+  display: block;
+  border-radius: 999px;
+  pointer-events: auto;
+}
+
+[data-upstream-compass-fallback] {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+}
+
+[data-upstream-compass-fallback] > svg,
+[data-upstream-compass-fallback] svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+[data-upstream-compass-mount][data-held-variant="STATIC_FALLBACK"] [data-upstream-compass-fallback] {
+  display: grid;
+}
+
+[data-upstream-compass-control]:focus-visible {
+  outline: 3px solid var(--archcoin-focus);
+  outline-offset: 5px;
+  border-radius: 999px;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -384,7 +482,7 @@ summary:focus-visible {
 
 .archcoin-coin--north {
   left: 50%;
-  top: 12%;
+  top: 8.5%;
   transform: translate(-50%, -50%);
 }
 
@@ -396,7 +494,7 @@ summary:focus-visible {
 
 .archcoin-coin--south {
   left: 50%;
-  bottom: 10%;
+  bottom: 6.5%;
   transform: translate(-50%, 50%);
 }
 
@@ -479,14 +577,11 @@ summary:focus-visible {
 /* -------------------------------------------------------------------------- */
 
 .archcoin-guidance {
-  position: absolute;
-  left: 50%;
-  bottom: 16px;
-  z-index: 3;
-  width: min(calc(100% - 34px), 760px);
-  margin: 0;
+  position: relative;
+  z-index: 4;
+  width: min(100%, 760px);
+  margin: 0 auto;
   padding: 12px 18px;
-  transform: translateX(-50%);
   border: 1px solid var(--archcoin-line);
   border-radius: 999px;
   background:
@@ -666,6 +761,13 @@ summary:focus-visible {
   .archcoin-panel h2 {
     max-width: 100%;
   }
+
+  .archcoin-scene {
+    --archcoin-scene-header-space: clamp(116px, 18vw, 160px);
+    --archcoin-scene-guidance-space: clamp(78px, 10vw, 106px);
+    --archcoin-scene-center-safe-top: clamp(90px, 14vw, 136px);
+    --archcoin-scene-center-safe-bottom: clamp(82px, 11vw, 114px);
+  }
 }
 
 @media (max-width: 720px) {
@@ -681,6 +783,15 @@ summary:focus-visible {
   .archcoin-panel {
     padding: 18px;
     border-radius: 26px;
+  }
+
+  .archcoin-scene {
+    padding: 0 14px 16px;
+    border-radius: 26px;
+    --archcoin-scene-header-space: 122px;
+    --archcoin-scene-guidance-space: 76px;
+    --archcoin-scene-center-safe-top: 104px;
+    --archcoin-scene-center-safe-bottom: 92px;
   }
 
   .archcoin-header::before,
@@ -708,11 +819,22 @@ summary:focus-visible {
   }
 
   .archcoin-scene__header {
-    padding: 18px 18px 0;
+    padding: 18px 2px 0;
+    gap: 6px;
+  }
+
+  .archcoin-scene h2 {
+    max-width: 14ch;
+    font-size: clamp(1.28rem, 5.4vw, 1.82rem);
+    line-height: 1.04;
   }
 
   .archcoin-scene__semantic {
-    min-height: 520px;
+    min-height: 560px;
+  }
+
+  [data-upstream-compass-mount] {
+    width: min(100%, clamp(208px, 56vw, 300px));
   }
 
   .archcoin-coin {
@@ -729,17 +851,24 @@ summary:focus-visible {
     font-size: 0.58rem;
   }
 
+  .archcoin-coin--north {
+    top: 7%;
+  }
+
   .archcoin-coin--east {
-    right: 4%;
+    right: 3.5%;
+  }
+
+  .archcoin-coin--south {
+    bottom: 5.5%;
   }
 
   .archcoin-coin--west {
-    left: 4%;
+    left: 3.5%;
   }
 
   .archcoin-guidance {
-    width: min(calc(100% - 20px), 560px);
-    bottom: 10px;
+    width: min(100%, 560px);
     padding: 10px 12px;
     font-size: 0.82rem;
     line-height: 1.34;
@@ -763,13 +892,25 @@ summary:focus-visible {
     padding: 16px;
   }
 
+  .archcoin-scene {
+    --archcoin-scene-header-space: 112px;
+    --archcoin-scene-guidance-space: 72px;
+    --archcoin-scene-center-safe-top: 98px;
+    --archcoin-scene-center-safe-bottom: 86px;
+  }
+
   .archcoin-scene__semantic {
-    min-height: 470px;
+    min-height: 520px;
   }
 
   .archcoin-scene h2,
   .archcoin-panel h2 {
     font-size: clamp(1.55rem, 8vw, 2.3rem);
+  }
+
+  .archcoin-scene h2 {
+    font-size: clamp(1.18rem, 6.6vw, 1.6rem);
+    max-width: 13ch;
   }
 
   .archcoin-panel [data-archcoin-panel-purpose] {
@@ -781,12 +922,16 @@ summary:focus-visible {
     font-size: 0.94rem;
   }
 
+  [data-upstream-compass-mount] {
+    width: min(100%, clamp(188px, 62vw, 264px));
+  }
+
   .archcoin-coin--north {
-    top: 10%;
+    top: 6%;
   }
 
   .archcoin-coin--south {
-    bottom: 8%;
+    bottom: 4.5%;
   }
 }
 

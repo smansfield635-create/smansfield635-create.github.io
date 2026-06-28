@@ -10,7 +10,7 @@
   <title>ARCHCOIN</title>
   <meta
     name="description"
-    content="ARCHCOIN navigation surface for Contract, Receivable, Payable, and Allocation. Inspect the coin cluster, select a room, and review the reading surface before proceeding."
+    content="ARCHCOIN introduction and handoff chamber for Contract, Receivable, Payable, and Allocation."
   >
   <link
     rel="stylesheet"
@@ -64,26 +64,26 @@
         </p>
 
         <h1 id="archcoin-title">
-          Architectural finance navigation
+          Introduction and handoff chamber
         </h1>
 
         <p class="archcoin-header__sentence">
-          Enter through the coin that matches the financial question in front of you. Open its room cluster, inspect the reading surface, and proceed only after the path is clear.
+          ARCHCOIN is a compact navigation surface built to hand you into the right financial room. The four coins are Contract, Receivable, Payable, and Allocation. Open the correct coin, inspect the active path, read the short briefing below the compass, and then continue into the room when ready.
         </p>
+
+        <details
+          class="archcoin-introduction__more"
+          data-archcoin-read-more
+        >
+          <summary>
+            Read More
+          </summary>
+
+          <p>
+            This page is not an archive. It is an introduction and transfer point. The compass does the work: the outer field selects the domain, the active inner cluster selects the room, and the box beneath the compass gives the immediate explanation for the selected path. Contract handles agreement meaning and enforcement. Receivable handles incoming value and recognition. Payable handles outgoing obligation and execution. Allocation handles distribution and downstream assignment. Use this chamber to orient, inspect, and hand off.
+          </p>
+        </details>
       </header>
-
-      <section
-        class="archcoin-introduction"
-        aria-label="ARCHCOIN introduction"
-      >
-        <p>
-          ARCHCOIN organizes its navigation around four financial domains: Contract, Receivable, Payable, and Allocation. Each coin opens a four-room cluster: Overview, Engineering, Platform, and Governance.
-        </p>
-
-        <p>
-          The outer constellation selects the domain. The inner cluster selects the informational room. Room selection updates the reading surface. Return to Orbit restores the active cluster. Return to Constellation restores the four-coin field.
-        </p>
-      </section>
 
       <section
         class="archcoin-scene"
@@ -96,11 +96,11 @@
           </p>
 
           <h2 id="archcoin-scene-title">
-            Follow the active coin
+            Select the right coin
           </h2>
 
           <p class="archcoin-scene__sentence">
-            Tap a coin to open its room cluster. Tap a room to project its reading surface. Drag within the field to rotate. Quick flick returns to the outer constellation.
+            Tap a coin to open its cluster. Tap a room to load the briefing box beneath the compass. Drag to reorient. Quick flick returns to the outer constellation.
           </p>
         </div>
 
@@ -129,7 +129,7 @@
             data-panel-eyebrow="Contract Coin"
             data-panel-title="Contract"
             data-panel-purpose="Open the Contract cluster to inspect overview, engineering, platform, and governance paths."
-            data-panel-relationship="Begin here when the question is what the agreement means, how it is implemented, what surface carries it, or what governs it."
+            data-panel-relationship="Use Contract when the immediate question is what the agreement means, how it is built, where it appears, or what authority governs it."
             aria-controls="archcoin-panel"
           >
             <span>Contract</span>
@@ -150,8 +150,8 @@
             data-route="/products/archcoin/receivable/"
             data-panel-eyebrow="Receivable Coin"
             data-panel-title="Receivable"
-            data-panel-purpose="Open the Receivable cluster to inspect incoming obligations, posting logic, operating surfaces, and authority boundaries."
-            data-panel-relationship="Begin here when the question is what should arrive, how it is recognized, where it appears, or who controls the process."
+            data-panel-purpose="Open the Receivable cluster to inspect overview, engineering, platform, and governance paths."
+            data-panel-relationship="Use Receivable when the immediate question is what should arrive, how it is recognized, where it appears, or who controls acceptance."
             aria-controls="archcoin-panel"
           >
             <span>Receivable</span>
@@ -172,8 +172,8 @@
             data-route="/products/archcoin/payable/"
             data-panel-eyebrow="Payable Coin"
             data-panel-title="Payable"
-            data-panel-purpose="Open the Payable cluster to inspect outgoing obligations, settlement behavior, operating surfaces, and governance boundaries."
-            data-panel-relationship="Begin here when the question is what must be paid, how it is executed, where the liability sits, or what authority authorizes it."
+            data-panel-purpose="Open the Payable cluster to inspect overview, engineering, platform, and governance paths."
+            data-panel-relationship="Use Payable when the immediate question is what must be paid, how it is executed, where it appears, or what authority authorizes it."
             aria-controls="archcoin-panel"
           >
             <span>Payable</span>
@@ -194,8 +194,8 @@
             data-route="/products/archcoin/allocation/"
             data-panel-eyebrow="Allocation Coin"
             data-panel-title="Allocation"
-            data-panel-purpose="Open the Allocation cluster to inspect distribution logic, operating rules, platform handling, and governing controls."
-            data-panel-relationship="Begin here when the question is how value is distributed, constrained, posted, or governed after recognition."
+            data-panel-purpose="Open the Allocation cluster to inspect overview, engineering, platform, and governance paths."
+            data-panel-relationship="Use Allocation when the immediate question is how value is distributed, constrained, surfaced, or governed after recognition."
             aria-controls="archcoin-panel"
           >
             <span>Allocation</span>
@@ -208,409 +208,8 @@
           data-archcoin-guidance
           aria-live="polite"
         >
-          Tap a coin to open its room cluster. Tap a room to inspect its reading surface. Drag within the field to rotate. Quick flick returns to the outer constellation.
+          Tap a coin to open its room cluster. Tap a room to inspect the briefing box. Drag to rotate. Quick flick returns to the outer constellation.
         </p>
-      </section>
-
-      <section
-        class="archcoin-room-library"
-        aria-labelledby="archcoin-room-library-title"
-      >
-        <div class="archcoin-room-library__header">
-          <p class="archcoin-room-library__kicker">
-            Static fallback inventory
-          </p>
-
-          <h2 id="archcoin-room-library-title">
-            ARCHCOIN room declarations
-          </h2>
-
-          <p>
-            These declarations remain available as the authored room library and no-JavaScript fallback surface.
-          </p>
-        </div>
-
-        <div class="archcoin-room-library__groups">
-          <section
-            class="archcoin-room-group"
-            aria-labelledby="archcoin-contract-group-title"
-          >
-            <h3 id="archcoin-contract-group-title">
-              Contract
-            </h3>
-
-            <div class="archcoin-room-group__list">
-              <a
-                href="/products/archcoin/contract/overview/"
-                data-archcoin-room
-                data-archcoin-destination
-                data-wing="north"
-                data-room-id="contract-overview"
-                data-destination-type="room"
-                data-destination-id="contract-overview"
-                data-content-id="contract-overview"
-                data-lens="overview"
-                data-label="Contract Overview"
-                data-route="/products/archcoin/contract/overview/"
-                data-panel-eyebrow="Contract / Overview"
-                data-panel-title="Contract Overview"
-                data-panel-purpose="Review the contract domain at the summary level before entering the deeper operational layers."
-                data-panel-relationship="Use this room when the immediate need is orientation: what the contract domain is, why it exists, and which deeper room should follow next."
-                data-why-enter="Enter when the first question is what the contract layer is responsible for."
-              >
-                Contract Overview
-              </a>
-
-              <a
-                href="/products/archcoin/contract/engineering/"
-                data-archcoin-room
-                data-archcoin-destination
-                data-wing="north"
-                data-room-id="contract-engineering"
-                data-destination-type="room"
-                data-destination-id="contract-engineering"
-                data-content-id="contract-engineering"
-                data-lens="overview"
-                data-label="Contract Engineering"
-                data-route="/products/archcoin/contract/engineering/"
-                data-panel-eyebrow="Contract / Engineering"
-                data-panel-title="Contract Engineering"
-                data-panel-purpose="Inspect how contract rules are encoded, validated, and preserved across the operating surface."
-                data-panel-relationship="Use this room when the question is implementation detail rather than domain summary."
-                data-why-enter="Enter when the contract must be translated into exact operational behavior."
-              >
-                Contract Engineering
-              </a>
-
-              <a
-                href="/products/archcoin/contract/platform/"
-                data-archcoin-room
-                data-archcoin-destination
-                data-wing="north"
-                data-room-id="contract-platform"
-                data-destination-type="room"
-                data-destination-id="contract-platform"
-                data-content-id="contract-platform"
-                data-lens="overview"
-                data-label="Contract Platform"
-                data-route="/products/archcoin/contract/platform/"
-                data-panel-eyebrow="Contract / Platform"
-                data-panel-title="Contract Platform"
-                data-panel-purpose="Inspect where the contract domain appears in the product surface, workflows, and user-facing platform behavior."
-                data-panel-relationship="Use this room when the question is how the contract domain is experienced, surfaced, or operated on the platform."
-                data-why-enter="Enter when product-surface consequences matter more than internal rule construction."
-              >
-                Contract Platform
-              </a>
-
-              <a
-                href="/products/archcoin/contract/governance/"
-                data-archcoin-room
-                data-archcoin-destination
-                data-wing="north"
-                data-room-id="contract-governance"
-                data-destination-type="room"
-                data-destination-id="contract-governance"
-                data-content-id="contract-governance"
-                data-lens="overview"
-                data-label="Contract Governance"
-                data-route="/products/archcoin/contract/governance/"
-                data-panel-eyebrow="Contract / Governance"
-                data-panel-title="Contract Governance"
-                data-panel-purpose="Inspect authority, approval, audit boundaries, and change-control logic for the contract domain."
-                data-panel-relationship="Use this room when the question is who may decide, who must verify, and what constrains change."
-                data-why-enter="Enter when contract meaning alone is insufficient without authority and accountability."
-              >
-                Contract Governance
-              </a>
-            </div>
-          </section>
-
-          <section
-            class="archcoin-room-group"
-            aria-labelledby="archcoin-receivable-group-title"
-          >
-            <h3 id="archcoin-receivable-group-title">
-              Receivable
-            </h3>
-
-            <div class="archcoin-room-group__list">
-              <a
-                href="/products/archcoin/receivable/overview/"
-                data-archcoin-room
-                data-archcoin-destination
-                data-wing="east"
-                data-room-id="receivable-overview"
-                data-destination-type="room"
-                data-destination-id="receivable-overview"
-                data-content-id="receivable-overview"
-                data-lens="overview"
-                data-label="Receivable Overview"
-                data-route="/products/archcoin/receivable/overview/"
-                data-panel-eyebrow="Receivable / Overview"
-                data-panel-title="Receivable Overview"
-                data-panel-purpose="Review what is expected to arrive, how it is recognized, and which deeper room governs the unresolved question."
-                data-panel-relationship="Use this room when the receivable domain must be understood before implementation detail."
-                data-why-enter="Enter when the first question is what the incoming value represents."
-              >
-                Receivable Overview
-              </a>
-
-              <a
-                href="/products/archcoin/receivable/engineering/"
-                data-archcoin-room
-                data-archcoin-destination
-                data-wing="east"
-                data-room-id="receivable-engineering"
-                data-destination-type="room"
-                data-destination-id="receivable-engineering"
-                data-content-id="receivable-engineering"
-                data-lens="overview"
-                data-label="Receivable Engineering"
-                data-route="/products/archcoin/receivable/engineering/"
-                data-panel-eyebrow="Receivable / Engineering"
-                data-panel-title="Receivable Engineering"
-                data-panel-purpose="Inspect recognition rules, posting logic, timing controls, and implementation constraints for receivable behavior."
-                data-panel-relationship="Use this room when the question is how receivable behavior is actually encoded."
-                data-why-enter="Enter when implementation precision matters more than summary."
-              >
-                Receivable Engineering
-              </a>
-
-              <a
-                href="/products/archcoin/receivable/platform/"
-                data-archcoin-room
-                data-archcoin-destination
-                data-wing="east"
-                data-room-id="receivable-platform"
-                data-destination-type="room"
-                data-destination-id="receivable-platform"
-                data-content-id="receivable-platform"
-                data-lens="overview"
-                data-label="Receivable Platform"
-                data-route="/products/archcoin/receivable/platform/"
-                data-panel-eyebrow="Receivable / Platform"
-                data-panel-title="Receivable Platform"
-                data-panel-purpose="Inspect the platform surfaces, workflows, and user-visible states that carry receivable behavior."
-                data-panel-relationship="Use this room when the question is where receivable logic appears operationally."
-                data-why-enter="Enter when surface behavior and platform consequences are the immediate concern."
-              >
-                Receivable Platform
-              </a>
-
-              <a
-                href="/products/archcoin/receivable/governance/"
-                data-archcoin-room
-                data-archcoin-destination
-                data-wing="east"
-                data-room-id="receivable-governance"
-                data-destination-type="room"
-                data-destination-id="receivable-governance"
-                data-content-id="receivable-governance"
-                data-lens="overview"
-                data-label="Receivable Governance"
-                data-route="/products/archcoin/receivable/governance/"
-                data-panel-eyebrow="Receivable / Governance"
-                data-panel-title="Receivable Governance"
-                data-panel-purpose="Inspect approval boundaries, exception handling, audit constraints, and change authority for receivable processes."
-                data-panel-relationship="Use this room when incoming value recognition depends on governed authority."
-                data-why-enter="Enter when the problem is not only what arrives, but who may accept, revise, or reject it."
-              >
-                Receivable Governance
-              </a>
-            </div>
-          </section>
-
-          <section
-            class="archcoin-room-group"
-            aria-labelledby="archcoin-payable-group-title"
-          >
-            <h3 id="archcoin-payable-group-title">
-              Payable
-            </h3>
-
-            <div class="archcoin-room-group__list">
-              <a
-                href="/products/archcoin/payable/overview/"
-                data-archcoin-room
-                data-archcoin-destination
-                data-wing="south"
-                data-room-id="payable-overview"
-                data-destination-type="room"
-                data-destination-id="payable-overview"
-                data-content-id="payable-overview"
-                data-lens="overview"
-                data-label="Payable Overview"
-                data-route="/products/archcoin/payable/overview/"
-                data-panel-eyebrow="Payable / Overview"
-                data-panel-title="Payable Overview"
-                data-panel-purpose="Review the payable domain at the summary level before entering execution, platform, or governance specifics."
-                data-panel-relationship="Use this room when the central question is what must be paid and why."
-                data-why-enter="Enter when the liability must be understood before it is executed."
-              >
-                Payable Overview
-              </a>
-
-              <a
-                href="/products/archcoin/payable/engineering/"
-                data-archcoin-room
-                data-archcoin-destination
-                data-wing="south"
-                data-room-id="payable-engineering"
-                data-destination-type="room"
-                data-destination-id="payable-engineering"
-                data-content-id="payable-engineering"
-                data-lens="overview"
-                data-label="Payable Engineering"
-                data-route="/products/archcoin/payable/engineering/"
-                data-panel-eyebrow="Payable / Engineering"
-                data-panel-title="Payable Engineering"
-                data-panel-purpose="Inspect settlement logic, execution timing, posting discipline, and implementation constraints for payable behavior."
-                data-panel-relationship="Use this room when the immediate problem is how the payable domain is executed."
-                data-why-enter="Enter when implementation detail controls risk."
-              >
-                Payable Engineering
-              </a>
-
-              <a
-                href="/products/archcoin/payable/platform/"
-                data-archcoin-room
-                data-archcoin-destination
-                data-wing="south"
-                data-room-id="payable-platform"
-                data-destination-type="room"
-                data-destination-id="payable-platform"
-                data-content-id="payable-platform"
-                data-lens="overview"
-                data-label="Payable Platform"
-                data-route="/products/archcoin/payable/platform/"
-                data-panel-eyebrow="Payable / Platform"
-                data-panel-title="Payable Platform"
-                data-panel-purpose="Inspect the platform states, workflows, and user-facing consequences of payable operations."
-                data-panel-relationship="Use this room when the question is how payable execution appears in product behavior."
-                data-why-enter="Enter when operational visibility and platform flow matter most."
-              >
-                Payable Platform
-              </a>
-
-              <a
-                href="/products/archcoin/payable/governance/"
-                data-archcoin-room
-                data-archcoin-destination
-                data-wing="south"
-                data-room-id="payable-governance"
-                data-destination-type="room"
-                data-destination-id="payable-governance"
-                data-content-id="payable-governance"
-                data-lens="overview"
-                data-label="Payable Governance"
-                data-route="/products/archcoin/payable/governance/"
-                data-panel-eyebrow="Payable / Governance"
-                data-panel-title="Payable Governance"
-                data-panel-purpose="Inspect approvals, authority boundaries, exceptions, and audit discipline for outgoing obligations."
-                data-panel-relationship="Use this room when the question is who may authorize or constrain settlement."
-                data-why-enter="Enter when execution authority is the real blocker."
-              >
-                Payable Governance
-              </a>
-            </div>
-          </section>
-
-          <section
-            class="archcoin-room-group"
-            aria-labelledby="archcoin-allocation-group-title"
-          >
-            <h3 id="archcoin-allocation-group-title">
-              Allocation
-            </h3>
-
-            <div class="archcoin-room-group__list">
-              <a
-                href="/products/archcoin/allocation/overview/"
-                data-archcoin-room
-                data-archcoin-destination
-                data-wing="west"
-                data-room-id="allocation-overview"
-                data-destination-type="room"
-                data-destination-id="allocation-overview"
-                data-content-id="allocation-overview"
-                data-lens="overview"
-                data-label="Allocation Overview"
-                data-route="/products/archcoin/allocation/overview/"
-                data-panel-eyebrow="Allocation / Overview"
-                data-panel-title="Allocation Overview"
-                data-panel-purpose="Review the allocation domain at the summary level before entering implementation, platform, or governance detail."
-                data-panel-relationship="Use this room when the first question is how value is distributed and constrained."
-                data-why-enter="Enter when allocation logic must be understood before it is changed."
-              >
-                Allocation Overview
-              </a>
-
-              <a
-                href="/products/archcoin/allocation/engineering/"
-                data-archcoin-room
-                data-archcoin-destination
-                data-wing="west"
-                data-room-id="allocation-engineering"
-                data-destination-type="room"
-                data-destination-id="allocation-engineering"
-                data-content-id="allocation-engineering"
-                data-lens="overview"
-                data-label="Allocation Engineering"
-                data-route="/products/archcoin/allocation/engineering/"
-                data-panel-eyebrow="Allocation / Engineering"
-                data-panel-title="Allocation Engineering"
-                data-panel-purpose="Inspect distribution rules, transformation logic, implementation constraints, and technical enforcement for allocation behavior."
-                data-panel-relationship="Use this room when the question is how allocation actually happens in the system."
-                data-why-enter="Enter when rule execution and system behavior must be examined directly."
-              >
-                Allocation Engineering
-              </a>
-
-              <a
-                href="/products/archcoin/allocation/platform/"
-                data-archcoin-room
-                data-archcoin-destination
-                data-wing="west"
-                data-room-id="allocation-platform"
-                data-destination-type="room"
-                data-destination-id="allocation-platform"
-                data-content-id="allocation-platform"
-                data-lens="overview"
-                data-label="Allocation Platform"
-                data-route="/products/archcoin/allocation/platform/"
-                data-panel-eyebrow="Allocation / Platform"
-                data-panel-title="Allocation Platform"
-                data-panel-purpose="Inspect where allocation logic appears in the product, workflows, and operational surface."
-                data-panel-relationship="Use this room when platform visibility and operator consequences matter more than abstract policy."
-                data-why-enter="Enter when allocation is a surface problem as much as a rule problem."
-              >
-                Allocation Platform
-              </a>
-
-              <a
-                href="/products/archcoin/allocation/governance/"
-                data-archcoin-room
-                data-archcoin-destination
-                data-wing="west"
-                data-room-id="allocation-governance"
-                data-destination-type="room"
-                data-destination-id="allocation-governance"
-                data-content-id="allocation-governance"
-                data-lens="overview"
-                data-label="Allocation Governance"
-                data-route="/products/archcoin/allocation/governance/"
-                data-panel-eyebrow="Allocation / Governance"
-                data-panel-title="Allocation Governance"
-                data-panel-purpose="Inspect authority, approval boundaries, exception handling, and audit expectations for allocation changes."
-                data-panel-relationship="Use this room when distribution logic cannot be separated from governed responsibility."
-                data-why-enter="Enter when allocation authority is the actual unresolved layer."
-              >
-                Allocation Governance
-              </a>
-            </div>
-          </section>
-        </div>
       </section>
 
       <aside
@@ -636,7 +235,7 @@
         </p>
 
         <p data-archcoin-panel-relationship>
-          Open a coin cluster, inspect a room, and continue only after the path is clear. Return to Orbit restores the active cluster. Quick flick returns to the outer constellation.
+          This chamber gives orientation and handoff only. Open a coin, inspect a room, read the briefing, and enter the room when ready.
         </p>
 
         <div class="archcoin-panel__actions">
@@ -660,469 +259,350 @@
           >
             Return to Orbit
           </button>
-
-          <a
-            href="#archcoin-reading-surface"
-            data-archcoin-read-more
-            aria-label="Read more"
-          >
-            Read More
-          </a>
         </div>
       </aside>
 
       <section
-        id="archcoin-reading-surface"
-        class="archcoin-reading-surface"
-        aria-labelledby="archcoin-reading-title"
+        class="archcoin-room-declarations"
+        data-archcoin-room-declarations
+        hidden
+        aria-hidden="true"
       >
-        <div class="archcoin-reading-surface__header">
-          <p class="archcoin-reading-surface__kicker">
-            Reading Surface
-          </p>
+        <a
+          href="/products/archcoin/contract/overview/"
+          data-archcoin-room
+          data-archcoin-destination
+          data-wing="north"
+          data-room-id="contract-overview"
+          data-destination-type="room"
+          data-destination-id="contract-overview"
+          data-content-id=""
+          data-lens="overview"
+          data-label="Contract Overview"
+          data-route="/products/archcoin/contract/overview/"
+          data-panel-eyebrow="Contract / Overview"
+          data-panel-title="Contract Overview"
+          data-panel-purpose="Review the contract domain at the summary level before entering the deeper operational layers."
+          data-panel-relationship="Use this room when the immediate need is orientation: what the contract layer is, why it exists, and which deeper room should follow next."
+          data-why-enter="Enter when the first question is what the contract layer is responsible for."
+        >
+          Contract Overview
+        </a>
 
-          <h2 id="archcoin-reading-title">
-            Selected ARCHCOIN content
-          </h2>
+        <a
+          href="/products/archcoin/contract/engineering/"
+          data-archcoin-room
+          data-archcoin-destination
+          data-wing="north"
+          data-room-id="contract-engineering"
+          data-destination-type="room"
+          data-destination-id="contract-engineering"
+          data-content-id=""
+          data-lens="overview"
+          data-label="Contract Engineering"
+          data-route="/products/archcoin/contract/engineering/"
+          data-panel-eyebrow="Contract / Engineering"
+          data-panel-title="Contract Engineering"
+          data-panel-purpose="Inspect how contract rules are encoded, validated, and preserved across the operating surface."
+          data-panel-relationship="Use this room when the question is implementation detail rather than domain summary."
+          data-why-enter="Enter when the contract must be translated into exact operational behavior."
+        >
+          Contract Engineering
+        </a>
 
-          <p>
-            Each room record below is a domain-specific reading surface. Runtime selection will project the selected room and lens without changing cluster orientation.
-          </p>
-        </div>
+        <a
+          href="/products/archcoin/contract/platform/"
+          data-archcoin-room
+          data-archcoin-destination
+          data-wing="north"
+          data-room-id="contract-platform"
+          data-destination-type="room"
+          data-destination-id="contract-platform"
+          data-content-id=""
+          data-lens="overview"
+          data-label="Contract Platform"
+          data-route="/products/archcoin/contract/platform/"
+          data-panel-eyebrow="Contract / Platform"
+          data-panel-title="Contract Platform"
+          data-panel-purpose="Inspect where the contract domain appears in the product surface, workflows, and user-facing platform behavior."
+          data-panel-relationship="Use this room when the question is how the contract domain is experienced, surfaced, or operated on the platform."
+          data-why-enter="Enter when product-surface consequences matter more than internal rule construction."
+        >
+          Contract Platform
+        </a>
 
-        <div class="archcoin-content-records">
-          <article
-            class="archcoin-content-record"
-            data-archcoin-content-record
-            data-content-id="contract-overview"
-            aria-labelledby="contract-overview-title"
-          >
-            <header class="archcoin-content-record__header">
-              <p class="archcoin-content-record__eyebrow">
-                Contract
-              </p>
-              <h3 id="contract-overview-title">
-                Contract Overview
-              </h3>
-            </header>
+        <a
+          href="/products/archcoin/contract/governance/"
+          data-archcoin-room
+          data-archcoin-destination
+          data-wing="north"
+          data-room-id="contract-governance"
+          data-destination-type="room"
+          data-destination-id="contract-governance"
+          data-content-id=""
+          data-lens="overview"
+          data-label="Contract Governance"
+          data-route="/products/archcoin/contract/governance/"
+          data-panel-eyebrow="Contract / Governance"
+          data-panel-title="Contract Governance"
+          data-panel-purpose="Inspect authority, approval, audit boundaries, and change-control logic for the contract domain."
+          data-panel-relationship="Use this room when the question is who may decide, who must verify, and what constrains change."
+          data-why-enter="Enter when contract meaning alone is insufficient without authority and accountability."
+        >
+          Contract Governance
+        </a>
 
-            <div
-              class="archcoin-lens-set"
-              data-archcoin-lens-set="contract-overview"
-            >
-              <div
-                class="archcoin-lens-tabs"
-                role="tablist"
-                aria-label="Contract Overview lenses"
-              >
-                <button
-                  type="button"
-                  role="tab"
-                  aria-selected="true"
-                  aria-controls="contract-overview-lens-overview"
-                  data-archcoin-lens-tab="overview"
-                >
-                  Overview
-                </button>
-                <button
-                  type="button"
-                  role="tab"
-                  aria-selected="false"
-                  aria-controls="contract-overview-lens-engineering"
-                  data-archcoin-lens-tab="engineering"
-                >
-                  Engineering
-                </button>
-                <button
-                  type="button"
-                  role="tab"
-                  aria-selected="false"
-                  aria-controls="contract-overview-lens-governance"
-                  data-archcoin-lens-tab="governance"
-                >
-                  Governance
-                </button>
-              </div>
+        <a
+          href="/products/archcoin/receivable/overview/"
+          data-archcoin-room
+          data-archcoin-destination
+          data-wing="east"
+          data-room-id="receivable-overview"
+          data-destination-type="room"
+          data-destination-id="receivable-overview"
+          data-content-id=""
+          data-lens="overview"
+          data-label="Receivable Overview"
+          data-route="/products/archcoin/receivable/overview/"
+          data-panel-eyebrow="Receivable / Overview"
+          data-panel-title="Receivable Overview"
+          data-panel-purpose="Review what is expected to arrive, how it is recognized, and which deeper room governs the unresolved question."
+          data-panel-relationship="Use this room when the receivable domain must be understood before implementation detail."
+          data-why-enter="Enter when the first question is what the incoming value represents."
+        >
+          Receivable Overview
+        </a>
 
-              <section
-                id="contract-overview-lens-overview"
-                role="tabpanel"
-                data-archcoin-lens-panel="overview"
-              >
-                <p>
-                  The Contract overview room establishes what the agreement layer is responsible for, what it names, and which deeper room should be opened next.
-                </p>
-              </section>
+        <a
+          href="/products/archcoin/receivable/engineering/"
+          data-archcoin-room
+          data-archcoin-destination
+          data-wing="east"
+          data-room-id="receivable-engineering"
+          data-destination-type="room"
+          data-destination-id="receivable-engineering"
+          data-content-id=""
+          data-lens="overview"
+          data-label="Receivable Engineering"
+          data-route="/products/archcoin/receivable/engineering/"
+          data-panel-eyebrow="Receivable / Engineering"
+          data-panel-title="Receivable Engineering"
+          data-panel-purpose="Inspect recognition rules, posting logic, timing controls, and implementation constraints for receivable behavior."
+          data-panel-relationship="Use this room when the question is how receivable behavior is actually encoded."
+          data-why-enter="Enter when implementation precision matters more than summary."
+        >
+          Receivable Engineering
+        </a>
 
-              <section
-                id="contract-overview-lens-engineering"
-                role="tabpanel"
-                data-archcoin-lens-panel="engineering"
-                hidden
-              >
-                <p>
-                  Use the engineering lens when the summary must be translated into enforceable rules, validation surfaces, and deterministic implementation behavior.
-                </p>
-              </section>
+        <a
+          href="/products/archcoin/receivable/platform/"
+          data-archcoin-room
+          data-archcoin-destination
+          data-wing="east"
+          data-room-id="receivable-platform"
+          data-destination-type="room"
+          data-destination-id="receivable-platform"
+          data-content-id=""
+          data-lens="overview"
+          data-label="Receivable Platform"
+          data-route="/products/archcoin/receivable/platform/"
+          data-panel-eyebrow="Receivable / Platform"
+          data-panel-title="Receivable Platform"
+          data-panel-purpose="Inspect the platform surfaces, workflows, and user-visible states that carry receivable behavior."
+          data-panel-relationship="Use this room when the question is where receivable logic appears operationally."
+          data-why-enter="Enter when surface behavior and platform consequences are the immediate concern."
+        >
+          Receivable Platform
+        </a>
 
-              <section
-                id="contract-overview-lens-governance"
-                role="tabpanel"
-                data-archcoin-lens-panel="governance"
-                hidden
-              >
-                <p>
-                  Use the governance lens when contract meaning alone is insufficient without authority, approval, and accountability boundaries.
-                </p>
-              </section>
-            </div>
-          </article>
+        <a
+          href="/products/archcoin/receivable/governance/"
+          data-archcoin-room
+          data-archcoin-destination
+          data-wing="east"
+          data-room-id="receivable-governance"
+          data-destination-type="room"
+          data-destination-id="receivable-governance"
+          data-content-id=""
+          data-lens="overview"
+          data-label="Receivable Governance"
+          data-route="/products/archcoin/receivable/governance/"
+          data-panel-eyebrow="Receivable / Governance"
+          data-panel-title="Receivable Governance"
+          data-panel-purpose="Inspect approval boundaries, exception handling, audit constraints, and change authority for receivable processes."
+          data-panel-relationship="Use this room when incoming value recognition depends on governed authority."
+          data-why-enter="Enter when the problem is not only what arrives, but who may accept, revise, or reject it."
+        >
+          Receivable Governance
+        </a>
 
-          <article class="archcoin-content-record" data-archcoin-content-record data-content-id="contract-engineering" aria-labelledby="contract-engineering-title">
-            <header class="archcoin-content-record__header">
-              <p class="archcoin-content-record__eyebrow">Contract</p>
-              <h3 id="contract-engineering-title">Contract Engineering</h3>
-            </header>
-            <div class="archcoin-lens-set" data-archcoin-lens-set="contract-engineering">
-              <div class="archcoin-lens-tabs" role="tablist" aria-label="Contract Engineering lenses">
-                <button type="button" role="tab" aria-selected="true" aria-controls="contract-engineering-lens-overview" data-archcoin-lens-tab="overview">Overview</button>
-                <button type="button" role="tab" aria-selected="false" aria-controls="contract-engineering-lens-platform" data-archcoin-lens-tab="platform">Platform</button>
-                <button type="button" role="tab" aria-selected="false" aria-controls="contract-engineering-lens-governance" data-archcoin-lens-tab="governance">Governance</button>
-              </div>
-              <section id="contract-engineering-lens-overview" role="tabpanel" data-archcoin-lens-panel="overview">
-                <p>Contract Engineering addresses rule construction, validation logic, timing discipline, and the exact behavioral consequences of contract changes.</p>
-              </section>
-              <section id="contract-engineering-lens-platform" role="tabpanel" data-archcoin-lens-panel="platform" hidden>
-                <p>The platform lens tracks where engineering decisions surface in product behavior, operational controls, and visible workflows.</p>
-              </section>
-              <section id="contract-engineering-lens-governance" role="tabpanel" data-archcoin-lens-panel="governance" hidden>
-                <p>The governance lens identifies which changes require approval, verification, or audit retention before implementation may proceed.</p>
-              </section>
-            </div>
-          </article>
+        <a
+          href="/products/archcoin/payable/overview/"
+          data-archcoin-room
+          data-archcoin-destination
+          data-wing="south"
+          data-room-id="payable-overview"
+          data-destination-type="room"
+          data-destination-id="payable-overview"
+          data-content-id=""
+          data-lens="overview"
+          data-label="Payable Overview"
+          data-route="/products/archcoin/payable/overview/"
+          data-panel-eyebrow="Payable / Overview"
+          data-panel-title="Payable Overview"
+          data-panel-purpose="Review the payable domain at the summary level before entering execution, platform, or governance specifics."
+          data-panel-relationship="Use this room when the central question is what must be paid and why."
+          data-why-enter="Enter when the liability must be understood before it is executed."
+        >
+          Payable Overview
+        </a>
 
-          <article class="archcoin-content-record" data-archcoin-content-record data-content-id="contract-platform" aria-labelledby="contract-platform-title">
-            <header class="archcoin-content-record__header">
-              <p class="archcoin-content-record__eyebrow">Contract</p>
-              <h3 id="contract-platform-title">Contract Platform</h3>
-            </header>
-            <div class="archcoin-lens-set" data-archcoin-lens-set="contract-platform">
-              <div class="archcoin-lens-tabs" role="tablist" aria-label="Contract Platform lenses">
-                <button type="button" role="tab" aria-selected="true" aria-controls="contract-platform-lens-overview" data-archcoin-lens-tab="overview">Overview</button>
-                <button type="button" role="tab" aria-selected="false" aria-controls="contract-platform-lens-engineering" data-archcoin-lens-tab="engineering">Engineering</button>
-                <button type="button" role="tab" aria-selected="false" aria-controls="contract-platform-lens-governance" data-archcoin-lens-tab="governance">Governance</button>
-              </div>
-              <section id="contract-platform-lens-overview" role="tabpanel" data-archcoin-lens-panel="overview">
-                <p>Contract Platform shows how agreement logic appears across screens, workflows, operator decisions, and visible product states.</p>
-              </section>
-              <section id="contract-platform-lens-engineering" role="tabpanel" data-archcoin-lens-panel="engineering" hidden>
-                <p>The engineering lens clarifies which implementation choices shape the platform surface and where they may drift from the intended contract.</p>
-              </section>
-              <section id="contract-platform-lens-governance" role="tabpanel" data-archcoin-lens-panel="governance" hidden>
-                <p>The governance lens identifies who may authorize platform-level changes to contract presentation and operational behavior.</p>
-              </section>
-            </div>
-          </article>
+        <a
+          href="/products/archcoin/payable/engineering/"
+          data-archcoin-room
+          data-archcoin-destination
+          data-wing="south"
+          data-room-id="payable-engineering"
+          data-destination-type="room"
+          data-destination-id="payable-engineering"
+          data-content-id=""
+          data-lens="overview"
+          data-label="Payable Engineering"
+          data-route="/products/archcoin/payable/engineering/"
+          data-panel-eyebrow="Payable / Engineering"
+          data-panel-title="Payable Engineering"
+          data-panel-purpose="Inspect settlement logic, execution timing, posting discipline, and implementation constraints for payable behavior."
+          data-panel-relationship="Use this room when the immediate problem is how the payable domain is executed."
+          data-why-enter="Enter when implementation detail controls risk."
+        >
+          Payable Engineering
+        </a>
 
-          <article class="archcoin-content-record" data-archcoin-content-record data-content-id="contract-governance" aria-labelledby="contract-governance-title">
-            <header class="archcoin-content-record__header">
-              <p class="archcoin-content-record__eyebrow">Contract</p>
-              <h3 id="contract-governance-title">Contract Governance</h3>
-            </header>
-            <div class="archcoin-lens-set" data-archcoin-lens-set="contract-governance">
-              <div class="archcoin-lens-tabs" role="tablist" aria-label="Contract Governance lenses">
-                <button type="button" role="tab" aria-selected="true" aria-controls="contract-governance-lens-overview" data-archcoin-lens-tab="overview">Overview</button>
-                <button type="button" role="tab" aria-selected="false" aria-controls="contract-governance-lens-platform" data-archcoin-lens-tab="platform">Platform</button>
-                <button type="button" role="tab" aria-selected="false" aria-controls="contract-governance-lens-risk" data-archcoin-lens-tab="risk">Risk</button>
-              </div>
-              <section id="contract-governance-lens-overview" role="tabpanel" data-archcoin-lens-panel="overview">
-                <p>Contract Governance defines authority, approval, exception handling, and audit boundaries for the agreement layer.</p>
-              </section>
-              <section id="contract-governance-lens-platform" role="tabpanel" data-archcoin-lens-panel="platform" hidden>
-                <p>The platform lens shows where governance decisions become visible in workflows, permissions, and review surfaces.</p>
-              </section>
-              <section id="contract-governance-lens-risk" role="tabpanel" data-archcoin-lens-panel="risk" hidden>
-                <p>The risk lens identifies where uncontrolled changes to the contract layer could create operational or legal drift.</p>
-              </section>
-            </div>
-          </article>
+        <a
+          href="/products/archcoin/payable/platform/"
+          data-archcoin-room
+          data-archcoin-destination
+          data-wing="south"
+          data-room-id="payable-platform"
+          data-destination-type="room"
+          data-destination-id="payable-platform"
+          data-content-id=""
+          data-lens="overview"
+          data-label="Payable Platform"
+          data-route="/products/archcoin/payable/platform/"
+          data-panel-eyebrow="Payable / Platform"
+          data-panel-title="Payable Platform"
+          data-panel-purpose="Inspect the platform states, workflows, and user-facing consequences of payable operations."
+          data-panel-relationship="Use this room when the question is how payable execution appears in product behavior."
+          data-why-enter="Enter when operational visibility and platform flow matter most."
+        >
+          Payable Platform
+        </a>
 
-          <article class="archcoin-content-record" data-archcoin-content-record data-content-id="receivable-overview" aria-labelledby="receivable-overview-title">
-            <header class="archcoin-content-record__header">
-              <p class="archcoin-content-record__eyebrow">Receivable</p>
-              <h3 id="receivable-overview-title">Receivable Overview</h3>
-            </header>
-            <div class="archcoin-lens-set" data-archcoin-lens-set="receivable-overview">
-              <div class="archcoin-lens-tabs" role="tablist" aria-label="Receivable Overview lenses">
-                <button type="button" role="tab" aria-selected="true" aria-controls="receivable-overview-lens-overview" data-archcoin-lens-tab="overview">Overview</button>
-                <button type="button" role="tab" aria-selected="false" aria-controls="receivable-overview-lens-engineering" data-archcoin-lens-tab="engineering">Engineering</button>
-                <button type="button" role="tab" aria-selected="false" aria-controls="receivable-overview-lens-governance" data-archcoin-lens-tab="governance">Governance</button>
-              </div>
-              <section id="receivable-overview-lens-overview" role="tabpanel" data-archcoin-lens-panel="overview">
-                <p>Receivable Overview establishes what is expected to arrive, how it is recognized, and which deeper room should be opened next.</p>
-              </section>
-              <section id="receivable-overview-lens-engineering" role="tabpanel" data-archcoin-lens-panel="engineering" hidden>
-                <p>The engineering lens explains how recognition, posting, timing, and exception logic become enforceable system behavior.</p>
-              </section>
-              <section id="receivable-overview-lens-governance" role="tabpanel" data-archcoin-lens-panel="governance" hidden>
-                <p>The governance lens clarifies who may approve, revise, suspend, or audit receivable recognition behavior.</p>
-              </section>
-            </div>
-          </article>
+        <a
+          href="/products/archcoin/payable/governance/"
+          data-archcoin-room
+          data-archcoin-destination
+          data-wing="south"
+          data-room-id="payable-governance"
+          data-destination-type="room"
+          data-destination-id="payable-governance"
+          data-content-id=""
+          data-lens="overview"
+          data-label="Payable Governance"
+          data-route="/products/archcoin/payable/governance/"
+          data-panel-eyebrow="Payable / Governance"
+          data-panel-title="Payable Governance"
+          data-panel-purpose="Inspect approvals, authority boundaries, exceptions, and audit discipline for outgoing obligations."
+          data-panel-relationship="Use this room when the question is who may authorize or constrain settlement."
+          data-why-enter="Enter when execution authority is the real blocker."
+        >
+          Payable Governance
+        </a>
 
-          <article class="archcoin-content-record" data-archcoin-content-record data-content-id="receivable-engineering" aria-labelledby="receivable-engineering-title">
-            <header class="archcoin-content-record__header">
-              <p class="archcoin-content-record__eyebrow">Receivable</p>
-              <h3 id="receivable-engineering-title">Receivable Engineering</h3>
-            </header>
-            <div class="archcoin-lens-set" data-archcoin-lens-set="receivable-engineering">
-              <div class="archcoin-lens-tabs" role="tablist" aria-label="Receivable Engineering lenses">
-                <button type="button" role="tab" aria-selected="true" aria-controls="receivable-engineering-lens-overview" data-archcoin-lens-tab="overview">Overview</button>
-                <button type="button" role="tab" aria-selected="false" aria-controls="receivable-engineering-lens-platform" data-archcoin-lens-tab="platform">Platform</button>
-                <button type="button" role="tab" aria-selected="false" aria-controls="receivable-engineering-lens-governance" data-archcoin-lens-tab="governance">Governance</button>
-              </div>
-              <section id="receivable-engineering-lens-overview" role="tabpanel" data-archcoin-lens-panel="overview">
-                <p>Receivable Engineering addresses rule implementation, posting sequence, validation boundaries, and exact timing behavior.</p>
-              </section>
-              <section id="receivable-engineering-lens-platform" role="tabpanel" data-archcoin-lens-panel="platform" hidden>
-                <p>The platform lens identifies where engineering choices shape the visible receivable surface and workflow consequences.</p>
-              </section>
-              <section id="receivable-engineering-lens-governance" role="tabpanel" data-archcoin-lens-panel="governance" hidden>
-                <p>The governance lens identifies which engineering changes require explicit approval or audited release control.</p>
-              </section>
-            </div>
-          </article>
+        <a
+          href="/products/archcoin/allocation/overview/"
+          data-archcoin-room
+          data-archcoin-destination
+          data-wing="west"
+          data-room-id="allocation-overview"
+          data-destination-type="room"
+          data-destination-id="allocation-overview"
+          data-content-id=""
+          data-lens="overview"
+          data-label="Allocation Overview"
+          data-route="/products/archcoin/allocation/overview/"
+          data-panel-eyebrow="Allocation / Overview"
+          data-panel-title="Allocation Overview"
+          data-panel-purpose="Review the allocation domain at the summary level before entering implementation, platform, or governance detail."
+          data-panel-relationship="Use this room when the first question is how value is distributed and constrained."
+          data-why-enter="Enter when allocation logic must be understood before it is changed."
+        >
+          Allocation Overview
+        </a>
 
-          <article class="archcoin-content-record" data-archcoin-content-record data-content-id="receivable-platform" aria-labelledby="receivable-platform-title">
-            <header class="archcoin-content-record__header">
-              <p class="archcoin-content-record__eyebrow">Receivable</p>
-              <h3 id="receivable-platform-title">Receivable Platform</h3>
-            </header>
-            <div class="archcoin-lens-set" data-archcoin-lens-set="receivable-platform">
-              <div class="archcoin-lens-tabs" role="tablist" aria-label="Receivable Platform lenses">
-                <button type="button" role="tab" aria-selected="true" aria-controls="receivable-platform-lens-overview" data-archcoin-lens-tab="overview">Overview</button>
-                <button type="button" role="tab" aria-selected="false" aria-controls="receivable-platform-lens-engineering" data-archcoin-lens-tab="engineering">Engineering</button>
-                <button type="button" role="tab" aria-selected="false" aria-controls="receivable-platform-lens-governance" data-archcoin-lens-tab="governance">Governance</button>
-              </div>
-              <section id="receivable-platform-lens-overview" role="tabpanel" data-archcoin-lens-panel="overview">
-                <p>Receivable Platform shows how incoming-value logic appears in dashboards, workflow surfaces, status communication, and operational visibility.</p>
-              </section>
-              <section id="receivable-platform-lens-engineering" role="tabpanel" data-archcoin-lens-panel="engineering" hidden>
-                <p>The engineering lens connects platform behavior to the underlying recognition and posting implementation.</p>
-              </section>
-              <section id="receivable-platform-lens-governance" role="tabpanel" data-archcoin-lens-panel="governance" hidden>
-                <p>The governance lens clarifies who may alter the receivable platform surface and under what control conditions.</p>
-              </section>
-            </div>
-          </article>
+        <a
+          href="/products/archcoin/allocation/engineering/"
+          data-archcoin-room
+          data-archcoin-destination
+          data-wing="west"
+          data-room-id="allocation-engineering"
+          data-destination-type="room"
+          data-destination-id="allocation-engineering"
+          data-content-id=""
+          data-lens="overview"
+          data-label="Allocation Engineering"
+          data-route="/products/archcoin/allocation/engineering/"
+          data-panel-eyebrow="Allocation / Engineering"
+          data-panel-title="Allocation Engineering"
+          data-panel-purpose="Inspect distribution rules, transformation logic, implementation constraints, and technical enforcement for allocation behavior."
+          data-panel-relationship="Use this room when the question is how allocation actually happens in the system."
+          data-why-enter="Enter when rule execution and system behavior must be examined directly."
+        >
+          Allocation Engineering
+        </a>
 
-          <article class="archcoin-content-record" data-archcoin-content-record data-content-id="receivable-governance" aria-labelledby="receivable-governance-title">
-            <header class="archcoin-content-record__header">
-              <p class="archcoin-content-record__eyebrow">Receivable</p>
-              <h3 id="receivable-governance-title">Receivable Governance</h3>
-            </header>
-            <div class="archcoin-lens-set" data-archcoin-lens-set="receivable-governance">
-              <div class="archcoin-lens-tabs" role="tablist" aria-label="Receivable Governance lenses">
-                <button type="button" role="tab" aria-selected="true" aria-controls="receivable-governance-lens-overview" data-archcoin-lens-tab="overview">Overview</button>
-                <button type="button" role="tab" aria-selected="false" aria-controls="receivable-governance-lens-platform" data-archcoin-lens-tab="platform">Platform</button>
-                <button type="button" role="tab" aria-selected="false" aria-controls="receivable-governance-lens-risk" data-archcoin-lens-tab="risk">Risk</button>
-              </div>
-              <section id="receivable-governance-lens-overview" role="tabpanel" data-archcoin-lens-panel="overview">
-                <p>Receivable Governance defines approval, exception handling, audit retention, and authority boundaries for incoming-value control.</p>
-              </section>
-              <section id="receivable-governance-lens-platform" role="tabpanel" data-archcoin-lens-panel="platform" hidden>
-                <p>The platform lens identifies where governance rules appear as permissions, review steps, or visible process constraints.</p>
-              </section>
-              <section id="receivable-governance-lens-risk" role="tabpanel" data-archcoin-lens-panel="risk" hidden>
-                <p>The risk lens identifies where weak governance could distort recognition, posting, or accountability.</p>
-              </section>
-            </div>
-          </article>
+        <a
+          href="/products/archcoin/allocation/platform/"
+          data-archcoin-room
+          data-archcoin-destination
+          data-wing="west"
+          data-room-id="allocation-platform"
+          data-destination-type="room"
+          data-destination-id="allocation-platform"
+          data-content-id=""
+          data-lens="overview"
+          data-label="Allocation Platform"
+          data-route="/products/archcoin/allocation/platform/"
+          data-panel-eyebrow="Allocation / Platform"
+          data-panel-title="Allocation Platform"
+          data-panel-purpose="Inspect where allocation logic appears in the product, workflows, and operational surface."
+          data-panel-relationship="Use this room when platform visibility and operator consequences matter more than abstract policy."
+          data-why-enter="Enter when allocation is a surface problem as much as a rule problem."
+        >
+          Allocation Platform
+        </a>
 
-          <article class="archcoin-content-record" data-archcoin-content-record data-content-id="payable-overview" aria-labelledby="payable-overview-title">
-            <header class="archcoin-content-record__header">
-              <p class="archcoin-content-record__eyebrow">Payable</p>
-              <h3 id="payable-overview-title">Payable Overview</h3>
-            </header>
-            <div class="archcoin-lens-set" data-archcoin-lens-set="payable-overview">
-              <div class="archcoin-lens-tabs" role="tablist" aria-label="Payable Overview lenses">
-                <button type="button" role="tab" aria-selected="true" aria-controls="payable-overview-lens-overview" data-archcoin-lens-tab="overview">Overview</button>
-                <button type="button" role="tab" aria-selected="false" aria-controls="payable-overview-lens-engineering" data-archcoin-lens-tab="engineering">Engineering</button>
-                <button type="button" role="tab" aria-selected="false" aria-controls="payable-overview-lens-governance" data-archcoin-lens-tab="governance">Governance</button>
-              </div>
-              <section id="payable-overview-lens-overview" role="tabpanel" data-archcoin-lens-panel="overview">
-                <p>Payable Overview establishes what must be paid, how obligation is framed, and which deeper room should be opened next.</p>
-              </section>
-              <section id="payable-overview-lens-engineering" role="tabpanel" data-archcoin-lens-panel="engineering" hidden>
-                <p>The engineering lens explains how execution, settlement timing, and posting boundaries become exact system behavior.</p>
-              </section>
-              <section id="payable-overview-lens-governance" role="tabpanel" data-archcoin-lens-panel="governance" hidden>
-                <p>The governance lens identifies who may authorize settlement, exception handling, or execution changes.</p>
-              </section>
-            </div>
-          </article>
-
-          <article class="archcoin-content-record" data-archcoin-content-record data-content-id="payable-engineering" aria-labelledby="payable-engineering-title">
-            <header class="archcoin-content-record__header">
-              <p class="archcoin-content-record__eyebrow">Payable</p>
-              <h3 id="payable-engineering-title">Payable Engineering</h3>
-            </header>
-            <div class="archcoin-lens-set" data-archcoin-lens-set="payable-engineering">
-              <div class="archcoin-lens-tabs" role="tablist" aria-label="Payable Engineering lenses">
-                <button type="button" role="tab" aria-selected="true" aria-controls="payable-engineering-lens-overview" data-archcoin-lens-tab="overview">Overview</button>
-                <button type="button" role="tab" aria-selected="false" aria-controls="payable-engineering-lens-platform" data-archcoin-lens-tab="platform">Platform</button>
-                <button type="button" role="tab" aria-selected="false" aria-controls="payable-engineering-lens-governance" data-archcoin-lens-tab="governance">Governance</button>
-              </div>
-              <section id="payable-engineering-lens-overview" role="tabpanel" data-archcoin-lens-panel="overview">
-                <p>Payable Engineering addresses execution sequencing, control logic, validation boundaries, and exact settlement implementation.</p>
-              </section>
-              <section id="payable-engineering-lens-platform" role="tabpanel" data-archcoin-lens-panel="platform" hidden>
-                <p>The platform lens identifies how engineering choices shape the payable workflow and visible operational consequences.</p>
-              </section>
-              <section id="payable-engineering-lens-governance" role="tabpanel" data-archcoin-lens-panel="governance" hidden>
-                <p>The governance lens identifies which engineering changes require controlled approval before release.</p>
-              </section>
-            </div>
-          </article>
-
-          <article class="archcoin-content-record" data-archcoin-content-record data-content-id="payable-platform" aria-labelledby="payable-platform-title">
-            <header class="archcoin-content-record__header">
-              <p class="archcoin-content-record__eyebrow">Payable</p>
-              <h3 id="payable-platform-title">Payable Platform</h3>
-            </header>
-            <div class="archcoin-lens-set" data-archcoin-lens-set="payable-platform">
-              <div class="archcoin-lens-tabs" role="tablist" aria-label="Payable Platform lenses">
-                <button type="button" role="tab" aria-selected="true" aria-controls="payable-platform-lens-overview" data-archcoin-lens-tab="overview">Overview</button>
-                <button type="button" role="tab" aria-selected="false" aria-controls="payable-platform-lens-engineering" data-archcoin-lens-tab="engineering">Engineering</button>
-                <button type="button" role="tab" aria-selected="false" aria-controls="payable-platform-lens-governance" data-archcoin-lens-tab="governance">Governance</button>
-              </div>
-              <section id="payable-platform-lens-overview" role="tabpanel" data-archcoin-lens-panel="overview">
-                <p>Payable Platform shows how outgoing-obligation logic appears in operational screens, workflow surfaces, and user-visible process states.</p>
-              </section>
-              <section id="payable-platform-lens-engineering" role="tabpanel" data-archcoin-lens-panel="engineering" hidden>
-                <p>The engineering lens links platform behavior to the underlying settlement and posting implementation.</p>
-              </section>
-              <section id="payable-platform-lens-governance" role="tabpanel" data-archcoin-lens-panel="governance" hidden>
-                <p>The governance lens clarifies who may change the visible payable surface and under what authority.</p>
-              </section>
-            </div>
-          </article>
-
-          <article class="archcoin-content-record" data-archcoin-content-record data-content-id="payable-governance" aria-labelledby="payable-governance-title">
-            <header class="archcoin-content-record__header">
-              <p class="archcoin-content-record__eyebrow">Payable</p>
-              <h3 id="payable-governance-title">Payable Governance</h3>
-            </header>
-            <div class="archcoin-lens-set" data-archcoin-lens-set="payable-governance">
-              <div class="archcoin-lens-tabs" role="tablist" aria-label="Payable Governance lenses">
-                <button type="button" role="tab" aria-selected="true" aria-controls="payable-governance-lens-overview" data-archcoin-lens-tab="overview">Overview</button>
-                <button type="button" role="tab" aria-selected="false" aria-controls="payable-governance-lens-platform" data-archcoin-lens-tab="platform">Platform</button>
-                <button type="button" role="tab" aria-selected="false" aria-controls="payable-governance-lens-risk" data-archcoin-lens-tab="risk">Risk</button>
-              </div>
-              <section id="payable-governance-lens-overview" role="tabpanel" data-archcoin-lens-panel="overview">
-                <p>Payable Governance defines authority, approval, exception handling, and audit boundaries for outgoing-value execution.</p>
-              </section>
-              <section id="payable-governance-lens-platform" role="tabpanel" data-archcoin-lens-panel="platform" hidden>
-                <p>The platform lens identifies where governance rules appear as review surfaces, permissions, and visible settlement controls.</p>
-              </section>
-              <section id="payable-governance-lens-risk" role="tabpanel" data-archcoin-lens-panel="risk" hidden>
-                <p>The risk lens identifies where weak governance could distort obligation execution or accountability.</p>
-              </section>
-            </div>
-          </article>
-
-          <article class="archcoin-content-record" data-archcoin-content-record data-content-id="allocation-overview" aria-labelledby="allocation-overview-title">
-            <header class="archcoin-content-record__header">
-              <p class="archcoin-content-record__eyebrow">Allocation</p>
-              <h3 id="allocation-overview-title">Allocation Overview</h3>
-            </header>
-            <div class="archcoin-lens-set" data-archcoin-lens-set="allocation-overview">
-              <div class="archcoin-lens-tabs" role="tablist" aria-label="Allocation Overview lenses">
-                <button type="button" role="tab" aria-selected="true" aria-controls="allocation-overview-lens-overview" data-archcoin-lens-tab="overview">Overview</button>
-                <button type="button" role="tab" aria-selected="false" aria-controls="allocation-overview-lens-engineering" data-archcoin-lens-tab="engineering">Engineering</button>
-                <button type="button" role="tab" aria-selected="false" aria-controls="allocation-overview-lens-governance" data-archcoin-lens-tab="governance">Governance</button>
-              </div>
-              <section id="allocation-overview-lens-overview" role="tabpanel" data-archcoin-lens-panel="overview">
-                <p>Allocation Overview establishes how value is distributed, constrained, and directed before deeper implementation or governance detail is opened.</p>
-              </section>
-              <section id="allocation-overview-lens-engineering" role="tabpanel" data-archcoin-lens-panel="engineering" hidden>
-                <p>The engineering lens explains how allocation rules, transformations, and constraint logic become enforceable behavior.</p>
-              </section>
-              <section id="allocation-overview-lens-governance" role="tabpanel" data-archcoin-lens-panel="governance" hidden>
-                <p>The governance lens clarifies who may alter distribution logic and how those changes are bounded.</p>
-              </section>
-            </div>
-          </article>
-
-          <article class="archcoin-content-record" data-archcoin-content-record data-content-id="allocation-engineering" aria-labelledby="allocation-engineering-title">
-            <header class="archcoin-content-record__header">
-              <p class="archcoin-content-record__eyebrow">Allocation</p>
-              <h3 id="allocation-engineering-title">Allocation Engineering</h3>
-            </header>
-            <div class="archcoin-lens-set" data-archcoin-lens-set="allocation-engineering">
-              <div class="archcoin-lens-tabs" role="tablist" aria-label="Allocation Engineering lenses">
-                <button type="button" role="tab" aria-selected="true" aria-controls="allocation-engineering-lens-overview" data-archcoin-lens-tab="overview">Overview</button>
-                <button type="button" role="tab" aria-selected="false" aria-controls="allocation-engineering-lens-platform" data-archcoin-lens-tab="platform">Platform</button>
-                <button type="button" role="tab" aria-selected="false" aria-controls="allocation-engineering-lens-governance" data-archcoin-lens-tab="governance">Governance</button>
-              </div>
-              <section id="allocation-engineering-lens-overview" role="tabpanel" data-archcoin-lens-panel="overview">
-                <p>Allocation Engineering addresses rule construction, transformation sequencing, implementation constraints, and technical enforcement of distribution behavior.</p>
-              </section>
-              <section id="allocation-engineering-lens-platform" role="tabpanel" data-archcoin-lens-panel="platform" hidden>
-                <p>The platform lens identifies where engineering choices shape visible allocation surfaces and workflows.</p>
-              </section>
-              <section id="allocation-engineering-lens-governance" role="tabpanel" data-archcoin-lens-panel="governance" hidden>
-                <p>The governance lens identifies which engineering changes require bounded approval and audit retention.</p>
-              </section>
-            </div>
-          </article>
-
-          <article class="archcoin-content-record" data-archcoin-content-record data-content-id="allocation-platform" aria-labelledby="allocation-platform-title">
-            <header class="archcoin-content-record__header">
-              <p class="archcoin-content-record__eyebrow">Allocation</p>
-              <h3 id="allocation-platform-title">Allocation Platform</h3>
-            </header>
-            <div class="archcoin-lens-set" data-archcoin-lens-set="allocation-platform">
-              <div class="archcoin-lens-tabs" role="tablist" aria-label="Allocation Platform lenses">
-                <button type="button" role="tab" aria-selected="true" aria-controls="allocation-platform-lens-overview" data-archcoin-lens-tab="overview">Overview</button>
-                <button type="button" role="tab" aria-selected="false" aria-controls="allocation-platform-lens-engineering" data-archcoin-lens-tab="engineering">Engineering</button>
-                <button type="button" role="tab" aria-selected="false" aria-controls="allocation-platform-lens-governance" data-archcoin-lens-tab="governance">Governance</button>
-              </div>
-              <section id="allocation-platform-lens-overview" role="tabpanel" data-archcoin-lens-panel="overview">
-                <p>Allocation Platform shows how distribution logic appears in workflows, controls, dashboards, and user-visible product behavior.</p>
-              </section>
-              <section id="allocation-platform-lens-engineering" role="tabpanel" data-archcoin-lens-panel="engineering" hidden>
-                <p>The engineering lens connects platform behavior to the exact implementation of allocation rules.</p>
-              </section>
-              <section id="allocation-platform-lens-governance" role="tabpanel" data-archcoin-lens-panel="governance" hidden>
-                <p>The governance lens clarifies who may alter allocation surfaces and under what change-control conditions.</p>
-              </section>
-            </div>
-          </article>
-
-          <article class="archcoin-content-record" data-archcoin-content-record data-content-id="allocation-governance" aria-labelledby="allocation-governance-title">
-            <header class="archcoin-content-record__header">
-              <p class="archcoin-content-record__eyebrow">Allocation</p>
-              <h3 id="allocation-governance-title">Allocation Governance</h3>
-            </header>
-            <div class="archcoin-lens-set" data-archcoin-lens-set="allocation-governance">
-              <div class="archcoin-lens-tabs" role="tablist" aria-label="Allocation Governance lenses">
-                <button type="button" role="tab" aria-selected="true" aria-controls="allocation-governance-lens-overview" data-archcoin-lens-tab="overview">Overview</button>
-                <button type="button" role="tab" aria-selected="false" aria-controls="allocation-governance-lens-platform" data-archcoin-lens-tab="platform">Platform</button>
-                <button type="button" role="tab" aria-selected="false" aria-controls="allocation-governance-lens-risk" data-archcoin-lens-tab="risk">Risk</button>
-              </div>
-              <section id="allocation-governance-lens-overview" role="tabpanel" data-archcoin-lens-panel="overview">
-                <p>Allocation Governance defines authority, approval, exception handling, and audit boundaries for value distribution logic.</p>
-              </section>
-              <section id="allocation-governance-lens-platform" role="tabpanel" data-archcoin-lens-panel="platform" hidden>
-                <p>The platform lens identifies where governance rules appear in visible allocation workflows, permissions, and control surfaces.</p>
-              </section>
-              <section id="allocation-governance-lens-risk" role="tabpanel" data-archcoin-lens-panel="risk" hidden>
-                <p>The risk lens identifies where weak governance could distort distribution behavior or undermine accountability.</p>
-              </section>
-            </div>
-          </article>
-        </div>
+        <a
+          href="/products/archcoin/allocation/governance/"
+          data-archcoin-room
+          data-archcoin-destination
+          data-wing="west"
+          data-room-id="allocation-governance"
+          data-destination-type="room"
+          data-destination-id="allocation-governance"
+          data-content-id=""
+          data-lens="overview"
+          data-label="Allocation Governance"
+          data-route="/products/archcoin/allocation/governance/"
+          data-panel-eyebrow="Allocation / Governance"
+          data-panel-title="Allocation Governance"
+          data-panel-purpose="Inspect authority, approval boundaries, exception handling, and audit expectations for allocation changes."
+          data-panel-relationship="Use this room when distribution logic cannot be separated from governed responsibility."
+          data-why-enter="Enter when allocation authority is the actual unresolved layer."
+        >
+          Allocation Governance
+        </a>
       </section>
 
       <section
@@ -1134,9 +614,9 @@
         </p>
 
         <ul>
-          <li>ARCHCOIN is an informational product surface and not a substitute for legal, tax, accounting, or regulatory advice.</li>
-          <li>Room selection does not authorize action by itself; domain decisions still require the appropriate operational and governance review.</li>
-          <li>Static visibility must remain intact even if controller or WebGL runtime fails.</li>
+          <li>ARCHCOIN is an orientation and handoff surface, not a substitute for legal, tax, accounting, or regulatory advice.</li>
+          <li>Selecting a coin or room does not authorize action by itself; downstream review still belongs to the appropriate room and authority chain.</li>
+          <li>Static page visibility must remain intact even if controller logic or WebGL rendering fails.</li>
         </ul>
       </section>
 

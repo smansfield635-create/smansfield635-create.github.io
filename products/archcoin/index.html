@@ -3,7 +3,7 @@
   lang="en"
   data-route="/products/archcoin/"
   data-page="archcoin-product-chamber"
-  data-contract="ARCHCOIN_TED_STAGE_FOUR_COIN_FIELD_HTML_v1"
+  data-contract="ARCHCOIN_TED_STAGE_FOUR_COIN_FIELD_HTML_v2"
   data-parent-route="/products/"
   data-grandparent-route="/"
   data-role="product-grandchild"
@@ -39,41 +39,46 @@
 
   <meta
     name="description"
-    content="ARCHCOIN is a four-coin financial architecture chamber organized around contract authority, inbound value, outbound obligation, and governed allocation. This page is a visible-first inspection surface, not a wallet, exchange, token sale, or live execution product."
+    content="ARCHCOIN is a four-coin financial architecture chamber organized around contract authority, inbound value, outbound obligation, and governed allocation. This page is a visible-first inspection surface, not a wallet, exchange, token sale, custody interface, or live execution product."
   >
 
   <style>
     :root {
       color-scheme: dark;
-      --bg: #050811;
-      --bg-2: #0b1020;
-      --panel: rgba(14, 20, 38, 0.82);
+      --bg: #040811;
+      --bg-2: #0b1222;
+      --panel: rgba(11, 17, 34, 0.84);
       --panel-2: rgba(255, 255, 255, 0.04);
       --line: rgba(255, 255, 255, 0.12);
-      --line-gold: rgba(243, 200, 111, 0.42);
-      --ink: #fff3d7;
-      --muted: rgba(234, 240, 255, 0.78);
-      --faint: rgba(234, 240, 255, 0.56);
+      --line-gold: rgba(243, 200, 111, 0.38);
+      --ink: #fff4d8;
+      --muted: rgba(234, 240, 255, 0.80);
+      --faint: rgba(234, 240, 255, 0.58);
       --gold: #f3c86f;
-      --gold-soft: #ffe7a2;
-      --blue: #8fdcff;
+      --gold-soft: #ffe6a0;
+      --blue: #8edcff;
       --green: #8ff0c3;
-      --amber: #ffbc58;
-      --rose: #ffb194;
-      --shadow: 0 28px 90px rgba(0, 0, 0, 0.46);
-      --radius: 1.5rem;
-      --max: 1240px;
+      --rose: #ffb39a;
+      --amber: #ffbf63;
+      --shadow: 0 28px 96px rgba(0, 0, 0, 0.48);
+      --radius-xl: 2rem;
+      --radius-lg: 1.35rem;
+      --radius-md: 1rem;
+      --max: 1260px;
+      --scene-size: min(100%, 47rem);
     }
 
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
 
     html {
       min-width: 320px;
       background:
-        radial-gradient(circle at 50% -8%, rgba(243,200,111,.16), transparent 28rem),
-        radial-gradient(circle at 12% 20%, rgba(73,143,255,.12), transparent 24rem),
-        radial-gradient(circle at 88% 28%, rgba(255,188,88,.10), transparent 24rem),
-        linear-gradient(180deg, #060914 0%, #050811 58%, #03050b 100%);
+        radial-gradient(circle at 50% -8%, rgba(243, 200, 111, 0.16), transparent 28rem),
+        radial-gradient(circle at 12% 18%, rgba(73, 143, 255, 0.12), transparent 25rem),
+        radial-gradient(circle at 88% 24%, rgba(255, 188, 88, 0.10), transparent 24rem),
+        linear-gradient(180deg, #060914 0%, #040811 56%, #02040a 100%);
       scroll-behavior: smooth;
     }
 
@@ -83,33 +88,30 @@
       color: var(--ink);
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       line-height: 1.5;
+      background: transparent;
       -webkit-font-smoothing: antialiased;
       text-rendering: geometricPrecision;
-      background: transparent;
+      overflow-x: hidden;
     }
 
     body::before {
       content: "";
       position: fixed;
       inset: 0;
+      z-index: 0;
       pointer-events: none;
       background-image:
         radial-gradient(circle, rgba(255,255,255,.18) 0 1px, transparent 1.5px),
         linear-gradient(rgba(243,200,111,.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(143,220,255,.03) 1px, transparent 1px);
-      background-size: 210px 240px, 56px 56px, 56px 56px;
+        linear-gradient(90deg, rgba(142,220,255,.03) 1px, transparent 1px);
+      background-size: 220px 250px, 56px 56px, 56px 56px;
       opacity: .18;
-      mask-image: linear-gradient(180deg, rgba(0,0,0,.95), rgba(0,0,0,.55) 64%, rgba(0,0,0,.25));
-      z-index: 0;
+      mask-image: linear-gradient(180deg, rgba(0,0,0,.96), rgba(0,0,0,.58) 64%, rgba(0,0,0,.24));
     }
 
-    a { color: inherit; text-decoration: none; }
-
-    a:focus-visible,
-    button:focus-visible,
-    [tabindex]:focus-visible {
-      outline: 2px solid var(--gold);
-      outline-offset: 4px;
+    a {
+      color: inherit;
+      text-decoration: none;
     }
 
     button {
@@ -119,34 +121,43 @@
       border: 0;
     }
 
+    a:focus-visible,
+    button:focus-visible,
+    [tabindex]:focus-visible {
+      outline: 2px solid var(--gold);
+      outline-offset: 4px;
+    }
+
     .skip-link {
       position: absolute;
       left: -999px;
       top: 12px;
       z-index: 100;
-      padding: .8rem 1rem;
+      padding: .82rem 1rem;
       border-radius: 999px;
       background: var(--gold);
       color: #050811;
       font-weight: 900;
     }
 
-    .skip-link:focus { left: 12px; }
+    .skip-link:focus {
+      left: 12px;
+    }
 
     .page-shell {
       position: relative;
       z-index: 1;
       width: min(var(--max), calc(100% - 28px));
       margin: 0 auto;
-      padding: max(20px, env(safe-area-inset-top)) 0 max(48px, env(safe-area-inset-bottom));
+      padding: max(20px, env(safe-area-inset-top)) 0 max(52px, env(safe-area-inset-bottom));
     }
 
     .topbar {
       display: grid;
       grid-template-columns: auto 1fr;
-      gap: 1.25rem;
+      gap: 1.2rem;
       align-items: center;
-      padding: .4rem 0 1rem;
+      padding: .45rem 0 1rem;
     }
 
     .brand {
@@ -167,7 +178,7 @@
       transform: rotate(45deg);
       background:
         radial-gradient(circle at 50% 28%, rgba(255,255,255,.26), transparent 40%),
-        linear-gradient(145deg, rgba(255,231,162,.24), rgba(8,12,24,.96));
+        linear-gradient(145deg, rgba(255,230,160,.24), rgba(8,12,24,.96));
       box-shadow:
         0 0 1.8rem rgba(243,200,111,.18),
         inset 0 1px 0 rgba(255,255,255,.16);
@@ -181,7 +192,7 @@
 
     .brand-copy {
       display: grid;
-      gap: .14rem;
+      gap: .16rem;
     }
 
     .brand-copy span {
@@ -232,7 +243,7 @@
       border-radius: clamp(1.2rem, 4vw, 2rem);
       background:
         radial-gradient(circle at 18% 0%, rgba(243,200,111,.08), transparent 32rem),
-        radial-gradient(circle at 84% 14%, rgba(143,220,255,.08), transparent 30rem),
+        radial-gradient(circle at 84% 14%, rgba(142,220,255,.08), transparent 30rem),
         linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02)),
         var(--panel);
       box-shadow: var(--shadow), inset 0 1px 0 rgba(255,255,255,.06);
@@ -242,22 +253,22 @@
     .hero {
       display: grid;
       gap: 1rem;
-      padding: clamp(1.2rem, 4vw, 2.6rem);
-      margin-top: .6rem;
-      min-height: clamp(24rem, 42vw, 34rem);
       align-content: center;
+      min-height: clamp(25rem, 43vw, 35rem);
+      padding: clamp(1.2rem, 4vw, 2.8rem);
+      margin-top: .65rem;
     }
 
     .kicker {
       width: fit-content;
       display: inline-flex;
       align-items: center;
-      gap: .55rem;
-      padding: .56rem .92rem;
+      gap: .56rem;
+      padding: .56rem .95rem;
       border: 1px solid rgba(255,255,255,.12);
       border-radius: 999px;
       background: rgba(255,255,255,.04);
-      color: rgba(233,239,255,.88);
+      color: rgba(234,240,255,.88);
       font-size: .72rem;
       font-weight: 900;
       letter-spacing: .14em;
@@ -271,15 +282,15 @@
       border-radius: .16rem;
       transform: rotate(45deg);
       background: linear-gradient(135deg, var(--gold-soft), var(--gold));
-      box-shadow: 0 0 1rem rgba(243,200,111,.36);
+      box-shadow: 0 0 1rem rgba(243,200,111,.34);
     }
 
     h1 {
       margin: 0;
-      max-width: 1040px;
-      font-size: clamp(3.1rem, 9vw, 6.8rem);
+      max-width: 1080px;
+      font-size: clamp(3rem, 9vw, 6.85rem);
       line-height: .88;
-      letter-spacing: -.105em;
+      letter-spacing: -.108em;
       text-wrap: balance;
     }
 
@@ -295,7 +306,7 @@
     h3 {
       margin: 0;
       color: rgba(255,244,216,.98);
-      font-size: clamp(1.05rem, 3vw, 1.35rem);
+      font-size: clamp(1.06rem, 3vw, 1.35rem);
       line-height: 1.08;
       letter-spacing: -.04em;
     }
@@ -304,35 +315,36 @@
       margin: 0;
       color: var(--muted);
       font-size: clamp(.98rem, 2.4vw, 1.12rem);
-      line-height: 1.56;
+      line-height: 1.58;
     }
 
     .subline {
       max-width: 960px;
       color: rgba(255,244,216,.92);
-      font-size: clamp(1.08rem, 3vw, 1.32rem);
+      font-size: clamp(1.08rem, 3vw, 1.34rem);
       font-weight: 850;
     }
 
-    .lead {
-      max-width: 960px;
+    .lead,
+    .stage-copy {
+      max-width: 980px;
     }
 
     .talk-pain {
-      max-width: 1020px;
-      padding: 1rem 1.08rem;
+      max-width: 1040px;
+      padding: 1rem 1.12rem;
       border: 1px solid rgba(255,179,154,.24);
-      border-radius: 1.1rem;
-      color: rgba(255,227,219,.95);
-      background: rgba(122, 46, 18, .16);
+      border-radius: 1.15rem;
+      color: rgba(255,229,220,.95);
+      background: rgba(119, 44, 18, .16);
       font-weight: 800;
     }
 
     .guardrail {
-      max-width: 1020px;
-      padding: 1rem 1.08rem;
+      max-width: 1040px;
+      padding: 1rem 1.12rem;
       border: 1px solid rgba(143,240,195,.24);
-      border-radius: 1.1rem;
+      border-radius: 1.15rem;
       color: rgba(201,255,229,.94);
       background: rgba(24, 80, 58, .16);
       font-weight: 800;
@@ -380,23 +392,61 @@
       gap: 1rem;
     }
 
-    .stage-copy {
+    .grid-2,
+    .pain-grid,
+    .proof-grid,
+    .route-grid,
+    .dossier-grid,
+    .coin-template-grid,
+    .archcoin-panel-grid {
       display: grid;
-      gap: .72rem;
-      max-width: 900px;
+      gap: .85rem;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .card {
+      display: grid;
+      gap: .42rem;
+      min-height: 100%;
+      padding: 1rem;
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: 1.05rem;
+      background:
+        radial-gradient(circle at 20% 0%, rgba(243,200,111,.06), transparent 60%),
+        rgba(255,255,255,.025);
+    }
+
+    .card b {
+      color: var(--gold);
+      font-size: .66rem;
+      font-weight: 900;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .card strong {
+      color: rgba(255,244,216,.98);
+      font-size: 1.04rem;
+      line-height: 1.08;
+    }
+
+    .card span {
+      color: var(--muted);
+      font-size: .92rem;
+      line-height: 1.45;
     }
 
     .archcoin-scene {
       position: relative;
       display: grid;
       gap: 1rem;
-      min-height: clamp(40rem, 76vw, 54rem);
-      padding: clamp(1rem, 2.5vw, 1.35rem);
-      border: 1px solid rgba(255,255,255,.1);
-      border-radius: 1.3rem;
+      min-height: clamp(42rem, 74vw, 55rem);
+      padding: clamp(1rem, 2.8vw, 1.4rem);
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: 1.35rem;
       background:
-        radial-gradient(circle at 50% 42%, rgba(243,200,111,.15), transparent 20rem),
-        radial-gradient(circle at 50% 50%, rgba(143,220,255,.09), transparent 24rem),
+        radial-gradient(circle at 50% 42%, rgba(243,200,111,.14), transparent 21rem),
+        radial-gradient(circle at 50% 50%, rgba(142,220,255,.09), transparent 25rem),
         linear-gradient(180deg, rgba(4,8,18,.72), rgba(4,8,18,.94));
       overflow: hidden;
       isolation: isolate;
@@ -416,18 +466,18 @@
     .archcoin-scene::before {
       width: min(78%, 38rem);
       height: min(78%, 38rem);
-      border: 1px solid rgba(243,200,111,.1);
+      border: 1px solid rgba(243,200,111,.10);
       background:
         conic-gradient(
           from 0deg,
           transparent 0deg,
-          rgba(243,200,111,.12) 32deg,
-          transparent 64deg,
-          rgba(143,220,255,.08) 108deg,
+          rgba(243,200,111,.12) 34deg,
+          transparent 66deg,
+          rgba(142,220,255,.08) 108deg,
           transparent 152deg,
-          rgba(243,200,111,.1) 220deg,
-          transparent 284deg,
-          rgba(143,220,255,.07) 324deg,
+          rgba(243,200,111,.10) 220deg,
+          transparent 286deg,
+          rgba(142,220,255,.07) 324deg,
           transparent 360deg
         );
       opacity: .82;
@@ -436,10 +486,10 @@
     .archcoin-scene::after {
       width: min(54%, 24rem);
       height: min(54%, 24rem);
-      border: 1px solid rgba(143,220,255,.15);
+      border: 1px solid rgba(142,220,255,.14);
       box-shadow:
-        inset 0 0 3rem rgba(143,220,255,.03),
-        0 0 2rem rgba(143,220,255,.06);
+        inset 0 0 3rem rgba(142,220,255,.03),
+        0 0 2rem rgba(142,220,255,.06);
     }
 
     .archcoin-scene-top {
@@ -459,7 +509,7 @@
     .archcoin-scene-stack {
       position: relative;
       z-index: 3;
-      min-height: clamp(25rem, 58vw, 34rem);
+      min-height: clamp(28rem, 58vw, 35rem);
       display: grid;
       place-items: center;
       overflow: hidden;
@@ -474,87 +524,292 @@
 
     .archcoin-objects {
       position: relative;
-      width: min(100%, 46rem);
+      width: var(--scene-size);
       aspect-ratio: 1 / 1;
       max-width: 100%;
       z-index: 2;
     }
 
-    .archcoin-center-menu {
+    .archcoin-void {
       position: absolute;
       left: 50%;
       top: 50%;
-      z-index: 8;
-      width: min(22rem, 88vw);
-      display: grid;
-      gap: .55rem;
-      padding: 1rem;
-      border: 1px solid rgba(243,200,111,.22);
-      border-radius: 1.2rem;
+      z-index: 6;
+      width: min(28vw, 11.5rem);
+      aspect-ratio: 1 / 1;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      border: 1px solid rgba(243,200,111,.18);
       background:
-        radial-gradient(circle at 50% 0%, rgba(243,200,111,.1), transparent 60%),
-        rgba(8,12,24,.96);
-      box-shadow: 0 1.25rem 3rem rgba(0,0,0,.44);
-      transform: translate(-50%, -50%) scale(.92);
-      opacity: 0;
-      visibility: hidden;
-      transition: opacity .2s ease, transform .2s ease, visibility .2s ease;
-    }
-
-    [data-archcoin-compass-menu-open="true"] .archcoin-center-menu {
-      opacity: 1;
-      visibility: visible;
-      transform: translate(-50%, -50%) scale(1);
-    }
-
-    .archcoin-compass-grid {
+        radial-gradient(circle at 50% 34%, rgba(255,255,255,.10), rgba(243,200,111,.05), rgba(4,8,18,.96) 72%),
+        linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,0));
+      box-shadow:
+        inset 0 0 2.5rem rgba(0,0,0,.44),
+        0 0 2.4rem rgba(243,200,111,.10);
       display: grid;
-      gap: .55rem;
+      place-items: center;
+      text-align: center;
+      pointer-events: none;
     }
 
-    .archcoin-compass-option {
+    .archcoin-void::before {
+      content: "";
+      position: absolute;
+      inset: 10%;
+      border: 1px dashed rgba(142,220,255,.12);
+      border-radius: 50%;
+    }
+
+    .archcoin-void-copy {
+      position: relative;
+      z-index: 1;
       display: grid;
       gap: .2rem;
+      padding: 1rem;
       width: 100%;
-      text-align: left;
-      padding: .82rem .9rem;
-      border: 1px solid rgba(255,255,255,.12);
-      border-radius: 1rem;
-      background: rgba(255,255,255,.035);
     }
 
-    .archcoin-compass-option b {
+    .archcoin-void-copy b {
       color: var(--gold);
-      font-size: .66rem;
+      font-size: .68rem;
+      font-weight: 900;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+
+    .archcoin-void-copy strong {
+      color: rgba(255,244,216,.96);
+      font-size: clamp(.92rem, 2vw, 1.14rem);
+      line-height: 1.06;
+      letter-spacing: -.03em;
+    }
+
+    .archcoin-void-copy span {
+      color: var(--faint);
+      font-size: .70rem;
+      font-weight: 800;
+      line-height: 1.3;
+    }
+
+    .archcoin-coin,
+    .archcoin-room {
+      position: absolute;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      cursor: pointer;
+      transition: transform .18s ease, border-color .18s ease, background .18s ease, opacity .18s ease;
+    }
+
+    .archcoin-coin {
+      z-index: 5;
+      width: 8.6rem;
+      min-height: 5.3rem;
+      padding: .7rem .8rem;
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 1.05rem;
+      background:
+        radial-gradient(circle at 50% 18%, rgba(255,255,255,.09), transparent 48%),
+        rgba(255,255,255,.04);
+      box-shadow:
+        0 1rem 2rem rgba(0,0,0,.18),
+        inset 0 1px 0 rgba(255,255,255,.06);
+    }
+
+    .archcoin-coin:hover,
+    .archcoin-coin:focus-visible,
+    .archcoin-room:hover,
+    .archcoin-room:focus-visible {
+      transform: translateY(-2px);
+      outline: none;
+    }
+
+    .archcoin-coin[data-selected="true"],
+    .archcoin-coin[data-primary="true"] {
+      border-color: rgba(243,200,111,.48);
+      background:
+        radial-gradient(circle at 50% 18%, rgba(255,255,255,.14), transparent 48%),
+        rgba(255,255,255,.07);
+    }
+
+    .archcoin-coin[data-wing="north"] {
+      left: 50%;
+      top: 8%;
+      transform: translateX(-50%);
+    }
+
+    .archcoin-coin[data-wing="east"] {
+      right: 8%;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .archcoin-coin[data-wing="south"] {
+      left: 50%;
+      bottom: 8%;
+      transform: translateX(-50%);
+    }
+
+    .archcoin-coin[data-wing="west"] {
+      left: 8%;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .archcoin-coin-copy,
+    .archcoin-room-copy {
+      display: grid;
+      gap: .12rem;
+      width: 100%;
+      pointer-events: none;
+    }
+
+    .archcoin-coin-copy b {
+      font-size: .56rem;
+      font-weight: 900;
       letter-spacing: .12em;
       text-transform: uppercase;
+      color: var(--gold);
     }
 
-    .archcoin-compass-option strong {
-      color: rgba(255,244,216,.98);
-      font-size: 1rem;
-      line-height: 1.08;
-    }
-
-    .archcoin-compass-option span {
-      color: var(--muted);
-      font-size: .88rem;
-      line-height: 1.35;
-    }
-
-    .archcoin-compass-close {
-      justify-self: end;
-      min-height: 2.25rem;
-      padding: .5rem .8rem;
-      border: 1px solid rgba(255,255,255,.12);
-      border-radius: 999px;
-      background: rgba(255,255,255,.035);
-      color: rgba(241,246,255,.88);
-      font-size: .72rem;
+    .archcoin-coin-copy strong {
+      font-size: .98rem;
       font-weight: 900;
-      letter-spacing: .08em;
+      line-height: 1.04;
+      letter-spacing: -.03em;
+      color: rgba(255,244,216,.98);
+    }
+
+    .archcoin-coin-copy span {
+      font-size: .66rem;
+      font-weight: 800;
+      color: var(--muted);
+      line-height: 1.28;
+    }
+
+    .archcoin-room {
+      z-index: 4;
+      width: 5rem;
+      min-height: 3.4rem;
+      padding: .48rem .44rem;
+      border: 1px solid rgba(255,255,255,.09);
+      border-radius: .9rem;
+      background: rgba(255,255,255,.03);
+      opacity: .72;
+    }
+
+    .archcoin-room[data-selected="true"],
+    .archcoin-room[data-primary="true"] {
+      border-color: rgba(243,200,111,.34);
+      opacity: 1;
+    }
+
+    .archcoin-room-copy b {
+      font-size: .46rem;
+      font-weight: 900;
+      letter-spacing: .12em;
       text-transform: uppercase;
-      cursor: pointer;
+      color: var(--gold);
+    }
+
+    .archcoin-room-copy strong {
+      font-size: .62rem;
+      font-weight: 900;
+      line-height: 1.06;
+      letter-spacing: -.02em;
+      color: rgba(255,244,216,.98);
+    }
+
+    .archcoin-room-copy span {
+      display: none;
+    }
+
+    .archcoin-room[data-wing="north"][data-room-id="contract-overview"] {
+      left: 50%;
+      top: 18%;
+      transform: translateX(-50%);
+    }
+
+    .archcoin-room[data-wing="north"][data-room-id="contract-engineering"] {
+      left: 62%;
+      top: 29%;
+    }
+
+    .archcoin-room[data-wing="north"][data-room-id="contract-platform"] {
+      left: 38%;
+      top: 29%;
+    }
+
+    .archcoin-room[data-wing="north"][data-room-id="contract-governance"] {
+      left: 50%;
+      top: 35%;
+      transform: translateX(-50%);
+    }
+
+    .archcoin-room[data-wing="east"][data-room-id="receivable-overview"] {
+      right: 18%;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .archcoin-room[data-wing="east"][data-room-id="receivable-engineering"] {
+      right: 29%;
+      top: 37%;
+    }
+
+    .archcoin-room[data-wing="east"][data-room-id="receivable-platform"] {
+      right: 29%;
+      top: 63%;
+    }
+
+    .archcoin-room[data-wing="east"][data-room-id="receivable-governance"] {
+      right: 36%;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .archcoin-room[data-wing="south"][data-room-id="payable-overview"] {
+      left: 50%;
+      bottom: 18%;
+      transform: translateX(-50%);
+    }
+
+    .archcoin-room[data-wing="south"][data-room-id="payable-engineering"] {
+      left: 38%;
+      bottom: 29%;
+    }
+
+    .archcoin-room[data-wing="south"][data-room-id="payable-platform"] {
+      left: 62%;
+      bottom: 29%;
+    }
+
+    .archcoin-room[data-wing="south"][data-room-id="payable-governance"] {
+      left: 50%;
+      bottom: 35%;
+      transform: translateX(-50%);
+    }
+
+    .archcoin-room[data-wing="west"][data-room-id="allocation-overview"] {
+      left: 18%;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .archcoin-room[data-wing="west"][data-room-id="allocation-engineering"] {
+      left: 29%;
+      top: 37%;
+    }
+
+    .archcoin-room[data-wing="west"][data-room-id="allocation-platform"] {
+      left: 29%;
+      top: 63%;
+    }
+
+    .archcoin-room[data-wing="west"][data-room-id="allocation-governance"] {
+      left: 36%;
+      top: 50%;
+      transform: translateY(-50%);
     }
 
     .archcoin-panel {
@@ -563,7 +818,7 @@
       display: grid;
       gap: .9rem;
       padding: 1rem;
-      border: 1px solid rgba(255,255,255,.1);
+      border: 1px solid rgba(255,255,255,.10);
       border-radius: 1.2rem;
       background:
         radial-gradient(circle at 20% 0%, rgba(243,200,111,.07), transparent 60%),
@@ -585,7 +840,7 @@
 
     .archcoin-panel-title {
       color: rgba(255,244,216,.98);
-      font-size: clamp(1.2rem, 3.4vw, 1.85rem);
+      font-size: clamp(1.18rem, 3.4vw, 1.85rem);
       line-height: 1.04;
       letter-spacing: -.04em;
     }
@@ -610,7 +865,9 @@
       cursor: pointer;
     }
 
-    .archcoin-panel-button[hidden] { display: none !important; }
+    .archcoin-panel-button[hidden] {
+      display: none !important;
+    }
 
     .archcoin-tabs {
       display: flex;
@@ -647,36 +904,58 @@
       display: grid;
       gap: .8rem;
       padding: 1rem;
-      border: 1px solid rgba(255,255,255,.1);
+      border: 1px solid rgba(255,255,255,.10);
       border-radius: 1rem;
       background: rgba(255,255,255,.025);
     }
 
-    .archcoin-tab-panel[hidden] { display: none !important; }
-
-    .archcoin-panel-grid,
-    .pain-grid,
-    .proof-grid,
-    .dossier-grid,
-    .route-grid {
-      display: grid;
-      gap: .85rem;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+    .archcoin-tab-panel[hidden] {
+      display: none !important;
     }
 
-    .card {
+    .coin-template {
+      scroll-margin-top: 1.5rem;
+    }
+
+    .coin-template-header {
       display: grid;
-      gap: .4rem;
-      min-height: 100%;
-      padding: 1rem;
-      border: 1px solid rgba(255,255,255,.1);
-      border-radius: 1.1rem;
+      gap: .55rem;
+      max-width: 980px;
+      margin-bottom: .25rem;
+    }
+
+    .coin-template-header p {
+      max-width: 900px;
+    }
+
+    .coin-template-callout {
+      padding: 1rem 1.08rem;
+      border: 1px solid rgba(243,200,111,.18);
+      border-radius: 1rem;
       background:
-        radial-gradient(circle at 20% 0%, rgba(243,200,111,.06), transparent 60%),
+        radial-gradient(circle at 18% 0%, rgba(243,200,111,.06), transparent 60%),
         rgba(255,255,255,.025);
+      color: rgba(255,244,216,.92);
+      font-weight: 780;
     }
 
-    .card b {
+    .coin-room-section {
+      scroll-margin-top: 1.25rem;
+      display: grid;
+      gap: .8rem;
+      padding: 1rem;
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: 1.15rem;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.035), rgba(255,255,255,.02));
+    }
+
+    .coin-room-section-head {
+      display: grid;
+      gap: .28rem;
+    }
+
+    .coin-room-section-head b {
       color: var(--gold);
       font-size: .66rem;
       font-weight: 900;
@@ -684,30 +963,54 @@
       text-transform: uppercase;
     }
 
-    .card strong {
+    .coin-room-section-head strong {
       color: rgba(255,244,216,.98);
-      font-size: 1.05rem;
+      font-size: clamp(1.04rem, 3vw, 1.35rem);
       line-height: 1.08;
+      letter-spacing: -.04em;
     }
 
-    .card span {
-      color: var(--muted);
-      font-size: .92rem;
-      line-height: 1.44;
+    .coin-room-section-copy {
+      max-width: 900px;
+      display: grid;
+      gap: .72rem;
+    }
+
+    .coin-room-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .5rem;
+    }
+
+    .coin-room-links a {
+      min-height: 2.15rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: .5rem .78rem;
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 999px;
+      background: rgba(255,255,255,.035);
+      color: rgba(240,246,255,.88);
+      font-size: .70rem;
+      font-weight: 900;
+      letter-spacing: .08em;
+      text-transform: uppercase;
     }
 
     .auren-panel {
       padding: 1.1rem;
-      border: 1px solid rgba(143,220,255,.22);
+      border: 1px solid rgba(142,220,255,.22);
       border-radius: 1.2rem;
       background:
-        radial-gradient(circle at 20% 0%, rgba(143,220,255,.08), transparent 60%),
-        rgba(143,220,255,.035);
+        radial-gradient(circle at 20% 0%, rgba(142,220,255,.08), transparent 60%),
+        rgba(142,220,255,.035);
       display: grid;
-      gap: .7rem;
+      gap: .72rem;
     }
 
     .auren-panel strong {
+      color: rgba(255,244,216,.98);
       font-size: clamp(1.18rem, 3.5vw, 1.8rem);
       line-height: 1.05;
       letter-spacing: -.04em;
@@ -741,13 +1044,29 @@
       }
     }
 
-    @media (max-width: 820px) {
-      .archcoin-panel-grid,
+    @media (max-width: 860px) {
+      .grid-2,
       .pain-grid,
       .proof-grid,
+      .route-grid,
       .dossier-grid,
-      .route-grid {
+      .coin-template-grid,
+      .archcoin-panel-grid {
         grid-template-columns: 1fr;
+      }
+
+      .archcoin-objects {
+        width: min(100%, 34rem);
+      }
+
+      .archcoin-coin {
+        width: 7rem;
+        min-height: 4.7rem;
+      }
+
+      .archcoin-room {
+        width: 4.3rem;
+        min-height: 3rem;
       }
     }
 
@@ -773,7 +1092,60 @@
       }
 
       .archcoin-scene {
-        min-height: 44rem;
+        min-height: 42rem;
+      }
+
+      .archcoin-objects {
+        width: min(100%, 22rem);
+      }
+
+      .archcoin-coin {
+        width: 5.6rem;
+        min-height: 4rem;
+        padding: .55rem .45rem;
+        border-radius: .9rem;
+      }
+
+      .archcoin-coin-copy b {
+        font-size: .44rem;
+      }
+
+      .archcoin-coin-copy strong {
+        font-size: .78rem;
+      }
+
+      .archcoin-coin-copy span {
+        display: none;
+      }
+
+      .archcoin-room {
+        width: 3.2rem;
+        min-height: 2.5rem;
+        padding: .34rem .2rem;
+      }
+
+      .archcoin-room-copy b {
+        font-size: .36rem;
+      }
+
+      .archcoin-room-copy strong {
+        font-size: .50rem;
+      }
+
+      .archcoin-void {
+        width: 6.8rem;
+      }
+
+      .archcoin-void-copy b {
+        font-size: .48rem;
+      }
+
+      .archcoin-void-copy strong {
+        font-size: .72rem;
+      }
+
+      .archcoin-void-copy span {
+        display: none;
       }
     }
 
@@ -818,19 +1190,19 @@
         <div class="kicker">ARCHCOIN · Four-Coin Financial Architecture</div>
 
         <h1 id="archcoin-title">
-          Finance keeps collapsing different problems into one vague surface.
+          Finance keeps forcing different truths into one blurred machine.
         </h1>
 
         <p class="subline">
-          ARCHCOIN separates the transaction family into four distinct coins so authority, arrival, obligation, and allocation stop hiding inside each other.
+          ARCHCOIN separates the transaction family into four distinct coins so authority, arrival, obligation, and allocation stop disappearing inside a single vague financial surface.
         </p>
 
         <p class="lead">
-          Most financial systems ask users to trust a single blurred machine. Money comes in, money goes out, duties appear late, authority is assumed, and allocation gets explained after the fact. ARCHCOIN begins from the opposite direction. It treats the transaction family as four different realities that must remain inspectable from the start.
+          Most financial systems ask the user to accept a black box. Something gets authorized somewhere. Something arrives somehow. Something is still owed later. Something gets retained or distributed after that. The user is expected to trust the motion before being allowed to inspect the structure. ARCHCOIN starts from the opposite direction. It makes the structure legible first.
         </p>
 
         <div class="talk-pain">
-          The pain point is not only “bad finance.” The pain point is structural confusion: who authorized the movement, what actually arrived, what is still owed, and where retained value is being governed. When those questions collapse into one black box, trust becomes performance instead of traceability.
+          The pain point is not merely “bad finance.” The pain point is structural confusion: who had the right to authorize the movement, what actually became receivable, what is still payable, and where retained value is being allocated. When those realities collapse into one object, trust becomes theater instead of traceability.
         </div>
 
         <div class="guardrail">
@@ -840,7 +1212,7 @@
         <div class="actions">
           <a class="button gold" href="#archcoin-stage">Open the field</a>
           <a class="button green" href="#auren-prototype">Read the Auren attachment</a>
-          <a class="button" href="#coin-dossiers">Read the dossiers</a>
+          <a class="button" href="#coin-templates">Read the coin templates</a>
           <a class="button" href="/products/">Back to Products</a>
         </div>
       </section>
@@ -853,42 +1225,42 @@
           <article class="card">
             <b>Pain 01</b>
             <strong>Authority is usually buried.</strong>
-            <span>Financial movement often appears long before the user can inspect who had the right to authorize it, under what terms, and with which constraints.</span>
+            <span>Financial movement often appears before the user can inspect who had the right to authorize it, under what terms, and with which bounded conditions.</span>
           </article>
 
           <article class="card">
             <b>Pain 02</b>
             <strong>Inbound value becomes opaque.</strong>
-            <span>Arrival is too often treated as a binary event instead of a legible surface with source, condition, and intake meaning.</span>
+            <span>Arrival is too often treated as a binary event instead of a legible intake surface with source, admission logic, and receipt meaning.</span>
           </article>
 
           <article class="card">
             <b>Pain 03</b>
-            <strong>Obligation shows up late.</strong>
-            <span>Systems love celebrating movement and hiding duty. Liability, settlement pressure, and what is still owed are routinely underexposed.</span>
+            <strong>Obligation shows up too late.</strong>
+            <span>Systems love displaying movement and hiding duty. Liability, settlement pressure, and what is still owed are routinely underexposed.</span>
           </article>
 
           <article class="card">
             <b>Pain 04</b>
-            <strong>Allocation gets narrated after damage.</strong>
-            <span>Distribution, retention, and growth are frequently treated as downstream storytelling instead of a governed architecture with bounded rules.</span>
+            <strong>Allocation becomes after-the-fact storytelling.</strong>
+            <span>Distribution, retention, and expansion are often described after damage instead of being governed as first-class architecture.</span>
           </article>
         </div>
 
         <div class="stage-copy">
           <p>
-            ARCHCOIN does not begin by promising a coin. It begins by correcting the structure through which coin behavior is understood. The argument is simple: these four surfaces are different enough that they should not be forced to live inside one undifferentiated financial object.
+            ARCHCOIN does not begin by asking the reader to believe in a coin. It begins by correcting the architecture through which coin behavior is understood. The claim is disciplined and narrow: these four surfaces are different enough that they should not be trapped inside one undifferentiated financial object.
           </p>
         </div>
       </section>
 
       <section class="panel section" id="archcoin-stage" aria-labelledby="stage-title">
         <div class="kicker">The demonstration moment</div>
-        <h2 id="stage-title">Four coins. Four clusters. One family field.</h2>
+        <h2 id="stage-title">Four coins. Four local clusters. One family field.</h2>
 
         <div class="stage-copy">
           <p>
-            The outer orbit is the family field. Each outer coin opens a local cluster. Each local cluster opens information. Return to Orbit restores the family field. The center compass is reserved for deliberate chamber switching, not for local restoration.
+            The outer orbit is the family field. Each outer coin opens a local cluster. Each local cluster opens coin-specific information. Return to Orbit restores the family field. The center is presently a void placeholder with enough room for later compass integration; it is not the local return mechanism.
           </p>
         </div>
 
@@ -899,7 +1271,7 @@
         >
           <div class="archcoin-scene-top">
             <p class="scene-guidance" data-archcoin-guidance>
-              Drag or rotate through the four-coin field. Select a coin to open its cluster. Select a cluster path to inspect information. Return to Orbit restores the coin family field.
+              Drag inside this box to rotate the field. Select a coin to open its local cluster. Select a smaller star to inspect that category for that coin. Return to Orbit restores the family field.
             </p>
           </div>
 
@@ -915,95 +1287,41 @@
               data-archcoin-objects
               aria-label="ARCHCOIN coin and cluster controls"
             >
-              <button
-                type="button"
-                data-archcoin-center-compass
-                aria-expanded="false"
-                aria-controls="archcoin-center-menu"
-                aria-label="Open chamber compass menu"
-                style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:7;width:10rem;height:10rem;border-radius:50%;border:1px solid rgba(243,200,111,.22);background:radial-gradient(circle at 50% 35%,rgba(255,255,255,.14),rgba(243,200,111,.08),rgba(8,12,24,.95));box-shadow:0 0 2.4rem rgba(243,200,111,.12);"
-              >
-                <span style="display:grid;gap:.16rem;text-align:center;padding:1rem;pointer-events:none;">
-                  <span style="color:var(--gold);font-size:.68rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase;">Compass</span>
-                  <span style="font-size:1rem;font-weight:900;line-height:1.05;">Choose Chamber</span>
-                  <span style="color:var(--muted);font-size:.72rem;font-weight:800;">Leave local field deliberately</span>
-                </span>
-              </button>
-
-              <div
-                id="archcoin-center-menu"
-                class="archcoin-center-menu"
-                data-archcoin-compass-shell
-                hidden
-              >
-                <button type="button" class="archcoin-compass-close" data-archcoin-compass-close>
-                  Close
-                </button>
-
-                <h3>Choose the next chamber.</h3>
-                <p>
-                  This control is not the local return behavior. Local restoration belongs to Return to Orbit. This menu is for deliberate chamber switching.
-                </p>
-
-                <div class="archcoin-compass-grid">
-                  <a
-                    class="archcoin-compass-option"
-                    href="/"
-                    data-archcoin-compass-destination
-                  >
-                    <b>Home Compass</b>
-                    <strong>Return to the top-level Compass.</strong>
-                    <span>Use the governing estate compass for wider navigation.</span>
-                  </a>
-
-                  <a
-                    class="archcoin-compass-option"
-                    href="/products/"
-                    data-archcoin-compass-destination
-                  >
-                    <b>Products Compass</b>
-                    <strong>Return to the Products chamber family.</strong>
-                    <span>Move back to the nearest product-level navigation surface.</span>
-                  </a>
-
-                  <a
-                    class="archcoin-compass-option"
-                    href="#auren-prototype"
-                    data-archcoin-compass-destination
-                  >
-                    <b>Auren Attachment</b>
-                    <strong>Jump to the Auren prototype section.</strong>
-                    <span>Read how the intelligence prototype attaches to ARCHCOIN.</span>
-                  </a>
+              <div class="archcoin-void" aria-hidden="true">
+                <div class="archcoin-void-copy">
+                  <b>Void</b>
+                  <strong>Reserved center</strong>
+                  <span>Future compass integration belongs here, not in the current baseline.</span>
                 </div>
               </div>
 
               <button
                 type="button"
+                class="archcoin-coin"
                 data-archcoin-cardinal
                 data-wing="north"
                 data-coin-id="contract"
                 data-destination-type="coin"
                 data-destination-id="contract"
                 data-label="Contract Coin"
-                data-preview="The contract coin opens the authority and frame logic for the family."
-                data-route=""
+                data-preview="The contract coin opens the authority and frame logic for the transaction family."
+                data-route="#coin-contract"
                 data-coordinate-label="North Coin"
                 data-panel-title="Contract Coin"
                 data-panel-body="Contract Coin governs authority, permissions, terms, signatures, execution frame, and what authorizes movement before value proceeds any farther."
                 data-panel-why="Use Contract Coin to inspect how ARCHCOIN binds movement before amplification."
                 aria-label="Contract Coin. Open the north coin cluster."
-                style="position:absolute;left:50%;top:8%;transform:translateX(-50%);z-index:5;width:10rem;min-height:6rem;padding:1rem;border:1px solid rgba(243,200,111,.24);border-radius:1.2rem;background:rgba(255,255,255,.04);"
               >
-                <span style="display:grid;gap:.15rem;pointer-events:none;">
-                  <span style="color:var(--gold);font-size:.66rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase;">North Coin</span>
-                  <span style="font-size:1.02rem;font-weight:900;">Contract</span>
-                  <span style="color:var(--muted);font-size:.72rem;">Authority frame</span>
+                <span class="archcoin-coin-copy">
+                  <b>North</b>
+                  <strong>Contract</strong>
+                  <span>Authority frame</span>
                 </span>
               </button>
 
               <button
                 type="button"
+                class="archcoin-coin"
                 data-archcoin-cardinal
                 data-wing="east"
                 data-coin-id="receivable"
@@ -1011,23 +1329,23 @@
                 data-destination-id="receivable"
                 data-label="Receivable Coin"
                 data-preview="The receivable coin opens inflow, intake, receipts, and arrival visibility."
-                data-route=""
+                data-route="#coin-receivable"
                 data-coordinate-label="East Coin"
                 data-panel-title="Receivable Coin"
                 data-panel-body="Receivable Coin governs inbound value, arrival visibility, inflow accounting, source reading, and how received value becomes legible inside the family field."
                 data-panel-why="Use Receivable Coin to inspect how value enters and becomes visible."
                 aria-label="Receivable Coin. Open the east coin cluster."
-                style="position:absolute;right:8%;top:50%;transform:translateY(-50%);z-index:5;width:10rem;min-height:6rem;padding:1rem;border:1px solid rgba(143,220,255,.24);border-radius:1.2rem;background:rgba(255,255,255,.04);"
               >
-                <span style="display:grid;gap:.15rem;pointer-events:none;">
-                  <span style="color:var(--blue);font-size:.66rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase;">East Coin</span>
-                  <span style="font-size:1.02rem;font-weight:900;">Receivable</span>
-                  <span style="color:var(--muted);font-size:.72rem;">Inbound value</span>
+                <span class="archcoin-coin-copy">
+                  <b>East</b>
+                  <strong>Receivable</strong>
+                  <span>Inbound value</span>
                 </span>
               </button>
 
               <button
                 type="button"
+                class="archcoin-coin"
                 data-archcoin-cardinal
                 data-wing="south"
                 data-coin-id="payable"
@@ -1035,23 +1353,23 @@
                 data-destination-id="payable"
                 data-label="Payable Coin"
                 data-preview="The payable coin opens obligation, settlement pressure, duty, and liability surfaces."
-                data-route=""
+                data-route="#coin-payable"
                 data-coordinate-label="South Coin"
                 data-panel-title="Payable Coin"
                 data-panel-body="Payable Coin governs obligation, settlement pressure, what is owed, how duty is carried, and how outgoing liability remains visible rather than disappearing behind vague movement."
                 data-panel-why="Use Payable Coin to inspect how ARCHCOIN keeps obligation visible."
                 aria-label="Payable Coin. Open the south coin cluster."
-                style="position:absolute;left:50%;bottom:8%;transform:translateX(-50%);z-index:5;width:10rem;min-height:6rem;padding:1rem;border:1px solid rgba(255,177,148,.24);border-radius:1.2rem;background:rgba(255,255,255,.04);"
               >
-                <span style="display:grid;gap:.15rem;pointer-events:none;">
-                  <span style="color:var(--rose);font-size:.66rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase;">South Coin</span>
-                  <span style="font-size:1.02rem;font-weight:900;">Payable</span>
-                  <span style="color:var(--muted);font-size:.72rem;">Obligation pressure</span>
+                <span class="archcoin-coin-copy">
+                  <b>South</b>
+                  <strong>Payable</strong>
+                  <span>Obligation pressure</span>
                 </span>
               </button>
 
               <button
                 type="button"
+                class="archcoin-coin"
                 data-archcoin-cardinal
                 data-wing="west"
                 data-coin-id="allocation"
@@ -1059,43 +1377,388 @@
                 data-destination-id="allocation"
                 data-label="Allocation Coin"
                 data-preview="The allocation coin opens distribution, retention, and governed expansion."
-                data-route=""
+                data-route="#coin-allocation"
                 data-coordinate-label="West Coin"
                 data-panel-title="Allocation Coin"
                 data-panel-body="Allocation Coin governs distribution, retained value, growth channels, allocation rules, and how expansion remains disciplined inside the family frame."
                 data-panel-why="Use Allocation Coin to inspect how ARCHCOIN governs growth instead of treating it as an afterthought."
                 aria-label="Allocation Coin. Open the west coin cluster."
-                style="position:absolute;left:8%;top:50%;transform:translateY(-50%);z-index:5;width:10rem;min-height:6rem;padding:1rem;border:1px solid rgba(143,240,195,.24);border-radius:1.2rem;background:rgba(255,255,255,.04);"
               >
-                <span style="display:grid;gap:.15rem;pointer-events:none;">
-                  <span style="color:var(--green);font-size:.66rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase;">West Coin</span>
-                  <span style="font-size:1.02rem;font-weight:900;">Allocation</span>
-                  <span style="color:var(--muted);font-size:.72rem;">Governed growth</span>
+                <span class="archcoin-coin-copy">
+                  <b>West</b>
+                  <strong>Allocation</strong>
+                  <span>Governed growth</span>
                 </span>
               </button>
 
-              <div aria-hidden="true" style="position:absolute;inset:0;pointer-events:none;"></div>
-
               <div data-archcoin-room-declarations>
-                <button type="button" data-archcoin-room data-wing="north" data-room-id="contract-overview" data-destination-type="info" data-destination-id="contract-overview" data-label="Contract Overview" data-tab="overview" data-local-coordinate="North Overview" data-local-function="Contract Coin overview" data-preview="Read the authority role, framing logic, and why the contract coin sits at the top of the family map." data-why-enter="Use this information point to inspect contract authority in plain language." aria-label="Contract Overview." style="position:absolute;left:50%;top:20%;transform:translateX(-50%);z-index:4;width:6.2rem;min-height:4rem;padding:.7rem;border:1px solid rgba(243,200,111,.16);border-radius:1rem;background:rgba(255,255,255,.03);"><span style="display:grid;gap:.1rem;pointer-events:none;"><span style="color:var(--gold);font-size:.54rem;font-weight:900;letter-spacing:.1em;text-transform:uppercase;">Overview</span><span style="font-size:.74rem;font-weight:900;">Contract</span></span></button>
-                <button type="button" data-archcoin-room data-wing="north" data-room-id="contract-engineering" data-destination-type="info" data-destination-id="contract-engineering" data-label="Contract Engineering" data-tab="engineering" data-local-coordinate="North Engineering" data-local-function="Contract Coin engineering" data-preview="Inspect rule engine expectations, authority surfaces, and implementation assumptions." data-why-enter="Use this information point to inspect technical contract surfaces." aria-label="Contract Engineering." style="position:absolute;left:63%;top:31%;z-index:4;width:6.2rem;min-height:4rem;padding:.7rem;border:1px solid rgba(243,200,111,.16);border-radius:1rem;background:rgba(255,255,255,.03);"><span style="display:grid;gap:.1rem;pointer-events:none;"><span style="color:var(--gold);font-size:.54rem;font-weight:900;letter-spacing:.1em;text-transform:uppercase;">Engineering</span><span style="font-size:.74rem;font-weight:900;">Contract</span></span></button>
-                <button type="button" data-archcoin-room data-wing="north" data-room-id="contract-platform" data-destination-type="info" data-destination-id="contract-platform" data-label="Contract Platform" data-tab="platform" data-local-coordinate="North Platform" data-local-function="Contract Coin platform" data-preview="Inspect platform role, where contract-facing interfaces appear, and what the coin does for operators." data-why-enter="Use this information point to inspect platform-facing contract surfaces." aria-label="Contract Platform." style="position:absolute;left:37%;top:31%;z-index:4;width:6.2rem;min-height:4rem;padding:.7rem;border:1px solid rgba(243,200,111,.16);border-radius:1rem;background:rgba(255,255,255,.03);"><span style="display:grid;gap:.1rem;pointer-events:none;"><span style="color:var(--gold);font-size:.54rem;font-weight:900;letter-spacing:.1em;text-transform:uppercase;">Platform</span><span style="font-size:.74rem;font-weight:900;">Contract</span></span></button>
-                <button type="button" data-archcoin-room data-wing="north" data-room-id="contract-governance" data-destination-type="info" data-destination-id="contract-governance" data-label="Contract Governance" data-tab="governance" data-local-coordinate="North Governance" data-local-function="Contract Coin governance" data-preview="Inspect change control, approval boundary, and what authority cannot be silently bypassed." data-why-enter="Use this information point to inspect authority and governance boundaries." aria-label="Contract Governance." style="position:absolute;left:50%;top:36%;transform:translateX(-50%);z-index:4;width:6.2rem;min-height:4rem;padding:.7rem;border:1px solid rgba(243,200,111,.16);border-radius:1rem;background:rgba(255,255,255,.03);"><span style="display:grid;gap:.1rem;pointer-events:none;"><span style="color:var(--gold);font-size:.54rem;font-weight:900;letter-spacing:.1em;text-transform:uppercase;">Governance</span><span style="font-size:.74rem;font-weight:900;">Contract</span></span></button>
+                <button
+                  type="button"
+                  class="archcoin-room"
+                  data-archcoin-room
+                  data-wing="north"
+                  data-room-id="contract-overview"
+                  data-destination-type="info"
+                  data-destination-id="contract-overview"
+                  data-label="Contract Overview"
+                  data-route="#contract-overview-section"
+                  data-tab="overview"
+                  data-local-coordinate="North Overview"
+                  data-local-function="Contract Coin overview"
+                  data-preview="Read the authority role, framing logic, and why the contract coin sits at the top of the family map."
+                  data-why-enter="Use this information point to inspect contract authority in plain language."
+                  aria-label="Contract overview."
+                >
+                  <span class="archcoin-room-copy">
+                    <b>North</b>
+                    <strong>Overview</strong>
+                  </span>
+                </button>
 
-                <button type="button" data-archcoin-room data-wing="east" data-room-id="receivable-overview" data-destination-type="info" data-destination-id="receivable-overview" data-label="Receivable Overview" data-tab="overview" data-local-coordinate="East Overview" data-local-function="Receivable Coin overview" data-preview="Read inflow role, intake logic, and why inbound value must remain visible." data-why-enter="Use this information point to inspect receivable visibility in plain language." aria-label="Receivable Overview." style="position:absolute;right:20%;top:50%;transform:translateY(-50%);z-index:4;width:6.2rem;min-height:4rem;padding:.7rem;border:1px solid rgba(143,220,255,.16);border-radius:1rem;background:rgba(255,255,255,.03);"><span style="display:grid;gap:.1rem;pointer-events:none;"><span style="color:var(--blue);font-size:.54rem;font-weight:900;letter-spacing:.1em;text-transform:uppercase;">Overview</span><span style="font-size:.74rem;font-weight:900;">Receivable</span></span></button>
-                <button type="button" data-archcoin-room data-wing="east" data-room-id="receivable-engineering" data-destination-type="info" data-destination-id="receivable-engineering" data-label="Receivable Engineering" data-tab="engineering" data-local-coordinate="East Engineering" data-local-function="Receivable Coin engineering" data-preview="Inspect receipt logic, source capture, settlement intake assumptions, and inflow measurement rules." data-why-enter="Use this information point to inspect the technical inflow layer." aria-label="Receivable Engineering." style="position:absolute;right:31%;top:37%;z-index:4;width:6.2rem;min-height:4rem;padding:.7rem;border:1px solid rgba(143,220,255,.16);border-radius:1rem;background:rgba(255,255,255,.03);"><span style="display:grid;gap:.1rem;pointer-events:none;"><span style="color:var(--blue);font-size:.54rem;font-weight:900;letter-spacing:.1em;text-transform:uppercase;">Engineering</span><span style="font-size:.74rem;font-weight:900;">Receivable</span></span></button>
-                <button type="button" data-archcoin-room data-wing="east" data-room-id="receivable-platform" data-destination-type="info" data-destination-id="receivable-platform" data-label="Receivable Platform" data-tab="platform" data-local-coordinate="East Platform" data-local-function="Receivable Coin platform" data-preview="Inspect inbound platform surfaces, depositor reads, and what the arrival side looks like to operators." data-why-enter="Use this information point to inspect how the platform presents inbound value." aria-label="Receivable Platform." style="position:absolute;right:31%;top:63%;z-index:4;width:6.2rem;min-height:4rem;padding:.7rem;border:1px solid rgba(143,220,255,.16);border-radius:1rem;background:rgba(255,255,255,.03);"><span style="display:grid;gap:.1rem;pointer-events:none;"><span style="color:var(--blue);font-size:.54rem;font-weight:900;letter-spacing:.1em;text-transform:uppercase;">Platform</span><span style="font-size:.74rem;font-weight:900;">Receivable</span></span></button>
-                <button type="button" data-archcoin-room data-wing="east" data-room-id="receivable-governance" data-destination-type="info" data-destination-id="receivable-governance" data-label="Receivable Governance" data-tab="governance" data-local-coordinate="East Governance" data-local-function="Receivable Coin governance" data-preview="Inspect intake approval boundaries, admission rules, and what counts as accepted value." data-why-enter="Use this information point to inspect how inbound value is governed." aria-label="Receivable Governance." style="position:absolute;right:20%;top:50%;transform:translateY(-50%) translateX(-8rem);z-index:4;width:6.2rem;min-height:4rem;padding:.7rem;border:1px solid rgba(143,220,255,.16);border-radius:1rem;background:rgba(255,255,255,.03);"><span style="display:grid;gap:.1rem;pointer-events:none;"><span style="color:var(--blue);font-size:.54rem;font-weight:900;letter-spacing:.1em;text-transform:uppercase;">Governance</span><span style="font-size:.74rem;font-weight:900;">Receivable</span></span></button>
+                <button
+                  type="button"
+                  class="archcoin-room"
+                  data-archcoin-room
+                  data-wing="north"
+                  data-room-id="contract-engineering"
+                  data-destination-type="info"
+                  data-destination-id="contract-engineering"
+                  data-label="Contract Engineering"
+                  data-route="#contract-engineering-section"
+                  data-tab="engineering"
+                  data-local-coordinate="North Engineering"
+                  data-local-function="Contract Coin engineering"
+                  data-preview="Inspect rule engine expectations, authority surfaces, and implementation assumptions."
+                  data-why-enter="Use this information point to inspect technical contract surfaces."
+                  aria-label="Contract engineering."
+                >
+                  <span class="archcoin-room-copy">
+                    <b>North</b>
+                    <strong>Engineering</strong>
+                  </span>
+                </button>
 
-                <button type="button" data-archcoin-room data-wing="south" data-room-id="payable-overview" data-destination-type="info" data-destination-id="payable-overview" data-label="Payable Overview" data-tab="overview" data-local-coordinate="South Overview" data-local-function="Payable Coin overview" data-preview="Read outgoing duty, settlement pressure, and why obligation must remain visible." data-why-enter="Use this information point to inspect payable duty in plain language." aria-label="Payable Overview." style="position:absolute;left:50%;bottom:20%;transform:translateX(-50%);z-index:4;width:6.2rem;min-height:4rem;padding:.7rem;border:1px solid rgba(255,177,148,.16);border-radius:1rem;background:rgba(255,255,255,.03);"><span style="display:grid;gap:.1rem;pointer-events:none;"><span style="color:var(--rose);font-size:.54rem;font-weight:900;letter-spacing:.1em;text-transform:uppercase;">Overview</span><span style="font-size:.74rem;font-weight:900;">Payable</span></span></button>
-                <button type="button" data-archcoin-room data-wing="south" data-room-id="payable-engineering" data-destination-type="info" data-destination-id="payable-engineering" data-label="Payable Engineering" data-tab="engineering" data-local-coordinate="South Engineering" data-local-function="Payable Coin engineering" data-preview="Inspect settlement logic, outbound duty handling, liability visibility, and execution constraints." data-why-enter="Use this information point to inspect the technical payable layer." aria-label="Payable Engineering." style="position:absolute;left:37%;bottom:31%;z-index:4;width:6.2rem;min-height:4rem;padding:.7rem;border:1px solid rgba(255,177,148,.16);border-radius:1rem;background:rgba(255,255,255,.03);"><span style="display:grid;gap:.1rem;pointer-events:none;"><span style="color:var(--rose);font-size:.54rem;font-weight:900;letter-spacing:.1em;text-transform:uppercase;">Engineering</span><span style="font-size:.74rem;font-weight:900;">Payable</span></span></button>
-                <button type="button" data-archcoin-room data-wing="south" data-room-id="payable-platform" data-destination-type="info" data-destination-id="payable-platform" data-label="Payable Platform" data-tab="platform" data-local-coordinate="South Platform" data-local-function="Payable Coin platform" data-preview="Inspect how the platform exposes obligations, deadlines, and outgoing settlement surfaces to operators." data-why-enter="Use this information point to inspect the platform-facing obligation layer." aria-label="Payable Platform." style="position:absolute;left:63%;bottom:31%;z-index:4;width:6.2rem;min-height:4rem;padding:.7rem;border:1px solid rgba(255,177,148,.16);border-radius:1rem;background:rgba(255,255,255,.03);"><span style="display:grid;gap:.1rem;pointer-events:none;"><span style="color:var(--rose);font-size:.54rem;font-weight:900;letter-spacing:.1em;text-transform:uppercase;">Platform</span><span style="font-size:.74rem;font-weight:900;">Payable</span></span></button>
-                <button type="button" data-archcoin-room data-wing="south" data-room-id="payable-governance" data-destination-type="info" data-destination-id="payable-governance" data-label="Payable Governance" data-tab="governance" data-local-coordinate="South Governance" data-local-function="Payable Coin governance" data-preview="Inspect duty boundaries, approval constraints, and what outgoing value may or may not do automatically." data-why-enter="Use this information point to inspect how obligation remains governed." aria-label="Payable Governance." style="position:absolute;left:50%;bottom:36%;transform:translateX(-50%);z-index:4;width:6.2rem;min-height:4rem;padding:.7rem;border:1px solid rgba(255,177,148,.16);border-radius:1rem;background:rgba(255,255,255,.03);"><span style="display:grid;gap:.1rem;pointer-events:none;"><span style="color:var(--rose);font-size:.54rem;font-weight:900;letter-spacing:.1em;text-transform:uppercase;">Governance</span><span style="font-size:.74rem;font-weight:900;">Payable</span></span></button>
+                <button
+                  type="button"
+                  class="archcoin-room"
+                  data-archcoin-room
+                  data-wing="north"
+                  data-room-id="contract-platform"
+                  data-destination-type="info"
+                  data-destination-id="contract-platform"
+                  data-label="Contract Platform"
+                  data-route="#contract-platform-section"
+                  data-tab="platform"
+                  data-local-coordinate="North Platform"
+                  data-local-function="Contract Coin platform"
+                  data-preview="Inspect platform role, where contract-facing interfaces appear, and what the coin does for operators."
+                  data-why-enter="Use this information point to inspect platform-facing contract surfaces."
+                  aria-label="Contract platform."
+                >
+                  <span class="archcoin-room-copy">
+                    <b>North</b>
+                    <strong>Platform</strong>
+                  </span>
+                </button>
 
-                <button type="button" data-archcoin-room data-wing="west" data-room-id="allocation-overview" data-destination-type="info" data-destination-id="allocation-overview" data-label="Allocation Overview" data-tab="overview" data-local-coordinate="West Overview" data-local-function="Allocation Coin overview" data-preview="Read growth role, distribution logic, and why expansion must remain governed." data-why-enter="Use this information point to inspect allocation in plain language." aria-label="Allocation Overview." style="position:absolute;left:20%;top:50%;transform:translateY(-50%);z-index:4;width:6.2rem;min-height:4rem;padding:.7rem;border:1px solid rgba(143,240,195,.16);border-radius:1rem;background:rgba(255,255,255,.03);"><span style="display:grid;gap:.1rem;pointer-events:none;"><span style="color:var(--green);font-size:.54rem;font-weight:900;letter-spacing:.1em;text-transform:uppercase;">Overview</span><span style="font-size:.74rem;font-weight:900;">Allocation</span></span></button>
-                <button type="button" data-archcoin-room data-wing="west" data-room-id="allocation-engineering" data-destination-type="info" data-destination-id="allocation-engineering" data-label="Allocation Engineering" data-tab="engineering" data-local-coordinate="West Engineering" data-local-function="Allocation Coin engineering" data-preview="Inspect allocation rules, distribution engines, retention logic, and managed growth constraints." data-why-enter="Use this information point to inspect the technical allocation layer." aria-label="Allocation Engineering." style="position:absolute;left:31%;top:37%;z-index:4;width:6.2rem;min-height:4rem;padding:.7rem;border:1px solid rgba(143,240,195,.16);border-radius:1rem;background:rgba(255,255,255,.03);"><span style="display:grid;gap:.1rem;pointer-events:none;"><span style="color:var(--green);font-size:.54rem;font-weight:900;letter-spacing:.1em;text-transform:uppercase;">Engineering</span><span style="font-size:.74rem;font-weight:900;">Allocation</span></span></button>
-                <button type="button" data-archcoin-room data-wing="west" data-room-id="allocation-platform" data-destination-type="info" data-destination-id="allocation-platform" data-label="Allocation Platform" data-tab="platform" data-local-coordinate="West Platform" data-local-function="Allocation Coin platform" data-preview="Inspect how operators read distribution, retention, and growth controls inside the platform surface." data-why-enter="Use this information point to inspect the platform-facing growth layer." aria-label="Allocation Platform." style="position:absolute;left:31%;top:63%;z-index:4;width:6.2rem;min-height:4rem;padding:.7rem;border:1px solid rgba(143,240,195,.16);border-radius:1rem;background:rgba(255,255,255,.03);"><span style="display:grid;gap:.1rem;pointer-events:none;"><span style="color:var(--green);font-size:.54rem;font-weight:900;letter-spacing:.1em;text-transform:uppercase;">Platform</span><span style="font-size:.74rem;font-weight:900;">Allocation</span></span></button>
-                <button type="button" data-archcoin-room data-wing="west" data-room-id="allocation-governance" data-destination-type="info" data-destination-id="allocation-governance" data-label="Allocation Governance" data-tab="governance" data-local-coordinate="West Governance" data-local-function="Allocation Coin governance" data-preview="Inspect approval rules, growth boundaries, and how expansion avoids becoming uncontrolled drift." data-why-enter="Use this information point to inspect governance over distribution and growth." aria-label="Allocation Governance." style="position:absolute;left:20%;top:50%;transform:translateY(-50%) translateX(8rem);z-index:4;width:6.2rem;min-height:4rem;padding:.7rem;border:1px solid rgba(143,240,195,.16);border-radius:1rem;background:rgba(255,255,255,.03);"><span style="display:grid;gap:.1rem;pointer-events:none;"><span style="color:var(--green);font-size:.54rem;font-weight:900;letter-spacing:.1em;text-transform:uppercase;">Governance</span><span style="font-size:.74rem;font-weight:900;">Allocation</span></span></button>
+                <button
+                  type="button"
+                  class="archcoin-room"
+                  data-archcoin-room
+                  data-wing="north"
+                  data-room-id="contract-governance"
+                  data-destination-type="info"
+                  data-destination-id="contract-governance"
+                  data-label="Contract Governance"
+                  data-route="#contract-governance-section"
+                  data-tab="governance"
+                  data-local-coordinate="North Governance"
+                  data-local-function="Contract Coin governance"
+                  data-preview="Inspect change control, approval boundary, and what authority cannot be silently bypassed."
+                  data-why-enter="Use this information point to inspect authority and governance boundaries."
+                  aria-label="Contract governance."
+                >
+                  <span class="archcoin-room-copy">
+                    <b>North</b>
+                    <strong>Governance</strong>
+                  </span>
+                </button>
+
+                <button
+                  type="button"
+                  class="archcoin-room"
+                  data-archcoin-room
+                  data-wing="east"
+                  data-room-id="receivable-overview"
+                  data-destination-type="info"
+                  data-destination-id="receivable-overview"
+                  data-label="Receivable Overview"
+                  data-route="#receivable-overview-section"
+                  data-tab="overview"
+                  data-local-coordinate="East Overview"
+                  data-local-function="Receivable Coin overview"
+                  data-preview="Read inflow role, intake logic, and why inbound value must remain visible."
+                  data-why-enter="Use this information point to inspect receivable visibility in plain language."
+                  aria-label="Receivable overview."
+                >
+                  <span class="archcoin-room-copy">
+                    <b>East</b>
+                    <strong>Overview</strong>
+                  </span>
+                </button>
+
+                <button
+                  type="button"
+                  class="archcoin-room"
+                  data-archcoin-room
+                  data-wing="east"
+                  data-room-id="receivable-engineering"
+                  data-destination-type="info"
+                  data-destination-id="receivable-engineering"
+                  data-label="Receivable Engineering"
+                  data-route="#receivable-engineering-section"
+                  data-tab="engineering"
+                  data-local-coordinate="East Engineering"
+                  data-local-function="Receivable Coin engineering"
+                  data-preview="Inspect receipt logic, source capture, settlement intake assumptions, and inflow measurement rules."
+                  data-why-enter="Use this information point to inspect the technical inflow layer."
+                  aria-label="Receivable engineering."
+                >
+                  <span class="archcoin-room-copy">
+                    <b>East</b>
+                    <strong>Engineering</strong>
+                  </span>
+                </button>
+
+                <button
+                  type="button"
+                  class="archcoin-room"
+                  data-archcoin-room
+                  data-wing="east"
+                  data-room-id="receivable-platform"
+                  data-destination-type="info"
+                  data-destination-id="receivable-platform"
+                  data-label="Receivable Platform"
+                  data-route="#receivable-platform-section"
+                  data-tab="platform"
+                  data-local-coordinate="East Platform"
+                  data-local-function="Receivable Coin platform"
+                  data-preview="Inspect inbound platform surfaces, depositor reads, and what the arrival side looks like to operators."
+                  data-why-enter="Use this information point to inspect how the platform presents inbound value."
+                  aria-label="Receivable platform."
+                >
+                  <span class="archcoin-room-copy">
+                    <b>East</b>
+                    <strong>Platform</strong>
+                  </span>
+                </button>
+
+                <button
+                  type="button"
+                  class="archcoin-room"
+                  data-archcoin-room
+                  data-wing="east"
+                  data-room-id="receivable-governance"
+                  data-destination-type="info"
+                  data-destination-id="receivable-governance"
+                  data-label="Receivable Governance"
+                  data-route="#receivable-governance-section"
+                  data-tab="governance"
+                  data-local-coordinate="East Governance"
+                  data-local-function="Receivable Coin governance"
+                  data-preview="Inspect intake approval boundaries, admission rules, and what counts as accepted value."
+                  data-why-enter="Use this information point to inspect how inbound value is governed."
+                  aria-label="Receivable governance."
+                >
+                  <span class="archcoin-room-copy">
+                    <b>East</b>
+                    <strong>Governance</strong>
+                  </span>
+                </button>
+
+                <button
+                  type="button"
+                  class="archcoin-room"
+                  data-archcoin-room
+                  data-wing="south"
+                  data-room-id="payable-overview"
+                  data-destination-type="info"
+                  data-destination-id="payable-overview"
+                  data-label="Payable Overview"
+                  data-route="#payable-overview-section"
+                  data-tab="overview"
+                  data-local-coordinate="South Overview"
+                  data-local-function="Payable Coin overview"
+                  data-preview="Read outgoing duty, settlement pressure, and why obligation must remain visible."
+                  data-why-enter="Use this information point to inspect payable duty in plain language."
+                  aria-label="Payable overview."
+                >
+                  <span class="archcoin-room-copy">
+                    <b>South</b>
+                    <strong>Overview</strong>
+                  </span>
+                </button>
+
+                <button
+                  type="button"
+                  class="archcoin-room"
+                  data-archcoin-room
+                  data-wing="south"
+                  data-room-id="payable-engineering"
+                  data-destination-type="info"
+                  data-destination-id="payable-engineering"
+                  data-label="Payable Engineering"
+                  data-route="#payable-engineering-section"
+                  data-tab="engineering"
+                  data-local-coordinate="South Engineering"
+                  data-local-function="Payable Coin engineering"
+                  data-preview="Inspect settlement logic, outbound duty handling, liability visibility, and execution constraints."
+                  data-why-enter="Use this information point to inspect the technical payable layer."
+                  aria-label="Payable engineering."
+                >
+                  <span class="archcoin-room-copy">
+                    <b>South</b>
+                    <strong>Engineering</strong>
+                  </span>
+                </button>
+
+                <button
+                  type="button"
+                  class="archcoin-room"
+                  data-archcoin-room
+                  data-wing="south"
+                  data-room-id="payable-platform"
+                  data-destination-type="info"
+                  data-destination-id="payable-platform"
+                  data-label="Payable Platform"
+                  data-route="#payable-platform-section"
+                  data-tab="platform"
+                  data-local-coordinate="South Platform"
+                  data-local-function="Payable Coin platform"
+                  data-preview="Inspect how the platform exposes obligations, deadlines, and outgoing settlement surfaces to operators."
+                  data-why-enter="Use this information point to inspect the platform-facing obligation layer."
+                  aria-label="Payable platform."
+                >
+                  <span class="archcoin-room-copy">
+                    <b>South</b>
+                    <strong>Platform</strong>
+                  </span>
+                </button>
+
+                <button
+                  type="button"
+                  class="archcoin-room"
+                  data-archcoin-room
+                  data-wing="south"
+                  data-room-id="payable-governance"
+                  data-destination-type="info"
+                  data-destination-id="payable-governance"
+                  data-label="Payable Governance"
+                  data-route="#payable-governance-section"
+                  data-tab="governance"
+                  data-local-coordinate="South Governance"
+                  data-local-function="Payable Coin governance"
+                  data-preview="Inspect duty boundaries, approval constraints, and what outgoing value may or may not do automatically."
+                  data-why-enter="Use this information point to inspect how obligation remains governed."
+                  aria-label="Payable governance."
+                >
+                  <span class="archcoin-room-copy">
+                    <b>South</b>
+                    <strong>Governance</strong>
+                  </span>
+                </button>
+
+                <button
+                  type="button"
+                  class="archcoin-room"
+                  data-archcoin-room
+                  data-wing="west"
+                  data-room-id="allocation-overview"
+                  data-destination-type="info"
+                  data-destination-id="allocation-overview"
+                  data-label="Allocation Overview"
+                  data-route="#allocation-overview-section"
+                  data-tab="overview"
+                  data-local-coordinate="West Overview"
+                  data-local-function="Allocation Coin overview"
+                  data-preview="Read growth role, distribution logic, and why expansion must remain governed."
+                  data-why-enter="Use this information point to inspect allocation in plain language."
+                  aria-label="Allocation overview."
+                >
+                  <span class="archcoin-room-copy">
+                    <b>West</b>
+                    <strong>Overview</strong>
+                  </span>
+                </button>
+
+                <button
+                  type="button"
+                  class="archcoin-room"
+                  data-archcoin-room
+                  data-wing="west"
+                  data-room-id="allocation-engineering"
+                  data-destination-type="info"
+                  data-destination-id="allocation-engineering"
+                  data-label="Allocation Engineering"
+                  data-route="#allocation-engineering-section"
+                  data-tab="engineering"
+                  data-local-coordinate="West Engineering"
+                  data-local-function="Allocation Coin engineering"
+                  data-preview="Inspect allocation rules, distribution engines, retention logic, and managed growth constraints."
+                  data-why-enter="Use this information point to inspect the technical allocation layer."
+                  aria-label="Allocation engineering."
+                >
+                  <span class="archcoin-room-copy">
+                    <b>West</b>
+                    <strong>Engineering</strong>
+                  </span>
+                </button>
+
+                <button
+                  type="button"
+                  class="archcoin-room"
+                  data-archcoin-room
+                  data-wing="west"
+                  data-room-id="allocation-platform"
+                  data-destination-type="info"
+                  data-destination-id="allocation-platform"
+                  data-label="Allocation Platform"
+                  data-route="#allocation-platform-section"
+                  data-tab="platform"
+                  data-local-coordinate="West Platform"
+                  data-local-function="Allocation Coin platform"
+                  data-preview="Inspect how operators read distribution, retention, and growth controls inside the platform surface."
+                  data-why-enter="Use this information point to inspect the platform-facing growth layer."
+                  aria-label="Allocation platform."
+                >
+                  <span class="archcoin-room-copy">
+                    <b>West</b>
+                    <strong>Platform</strong>
+                  </span>
+                </button>
+
+                <button
+                  type="button"
+                  class="archcoin-room"
+                  data-archcoin-room
+                  data-wing="west"
+                  data-room-id="allocation-governance"
+                  data-destination-type="info"
+                  data-destination-id="allocation-governance"
+                  data-label="Allocation Governance"
+                  data-route="#allocation-governance-section"
+                  data-tab="governance"
+                  data-local-coordinate="West Governance"
+                  data-local-function="Allocation Coin governance"
+                  data-preview="Inspect approval rules, growth boundaries, and how expansion avoids becoming uncontrolled drift."
+                  data-why-enter="Use this information point to inspect governance over distribution and growth."
+                  aria-label="Allocation governance."
+                >
+                  <span class="archcoin-room-copy">
+                    <b>West</b>
+                    <strong>Governance</strong>
+                  </span>
+                </button>
               </div>
             </div>
           </div>
@@ -1110,10 +1773,10 @@
               <div class="archcoin-panel-kicker" data-archcoin-panel-eyebrow>Selected path</div>
               <div class="archcoin-panel-title" data-archcoin-panel-title>Choose a coin.</div>
               <p data-archcoin-panel-purpose>
-                Start with one of the four outer coins. Each coin opens a local cluster. Each local cluster opens information. Return to Orbit restores the family field. The center compass opens higher-order compass destinations.
+                Start with one of the four outer coins. Each coin opens a local cluster. Each local cluster opens information. Return to Orbit restores the family field. The center is reserved void space for later compass integration.
               </p>
               <p data-archcoin-panel-relationship>
-                Local inspection and cross-chamber navigation remain separate. Return to Orbit is not the same as the center compass.
+                Local inspection and cross-chamber navigation remain separate. Return to Orbit is the local restoration behavior. The center is not the current return mechanism.
               </p>
             </div>
 
@@ -1138,10 +1801,44 @@
             </div>
 
             <div class="archcoin-tabs" data-archcoin-lens-set>
-              <button type="button" class="archcoin-tab" data-archcoin-lens-tab="overview" aria-selected="true">Overview</button>
-              <button type="button" class="archcoin-tab" data-archcoin-lens-tab="engineering" aria-selected="false" tabindex="-1">Engineering</button>
-              <button type="button" class="archcoin-tab" data-archcoin-lens-tab="platform" aria-selected="false" tabindex="-1">Platform</button>
-              <button type="button" class="archcoin-tab" data-archcoin-lens-tab="governance" aria-selected="false" tabindex="-1">Governance</button>
+              <button
+                type="button"
+                class="archcoin-tab"
+                data-archcoin-lens-tab="overview"
+                aria-selected="true"
+              >
+                Overview
+              </button>
+
+              <button
+                type="button"
+                class="archcoin-tab"
+                data-archcoin-lens-tab="engineering"
+                aria-selected="false"
+                tabindex="-1"
+              >
+                Engineering
+              </button>
+
+              <button
+                type="button"
+                class="archcoin-tab"
+                data-archcoin-lens-tab="platform"
+                aria-selected="false"
+                tabindex="-1"
+              >
+                Platform
+              </button>
+
+              <button
+                type="button"
+                class="archcoin-tab"
+                data-archcoin-lens-tab="governance"
+                aria-selected="false"
+                tabindex="-1"
+              >
+                Governance
+              </button>
             </div>
 
             <div class="archcoin-tab-panels">
@@ -1154,9 +1851,9 @@
                   </article>
 
                   <article class="card">
-                    <b>Inspection grammar</b>
+                    <b>Interaction grammar</b>
                     <strong>Coin → cluster → information.</strong>
-                    <span>The interaction model follows a disciplined chamber grammar: outer field, local cluster, information descent, local restoration.</span>
+                    <span>The baseline follows a clean chamber grammar: outer field, local cluster, information descent, local restoration.</span>
                   </article>
                 </div>
               </section>
@@ -1166,13 +1863,13 @@
                   <article class="card">
                     <b>Runtime contract</b>
                     <strong>Preview, selection, and return remain distinct.</strong>
-                    <span>The renderer should not collapse focus, selected coin, selected room, active tab, and return behavior into one state.</span>
+                    <span>The runtime should not collapse focus, selected coin, selected room, active tab, and return behavior into one state.</span>
                   </article>
 
                   <article class="card">
                     <b>Motion contract</b>
-                    <strong>The field inherits Compass-grade orbit behavior.</strong>
-                    <span>Outer orbit, cluster orbit, drag classification, controlled settle, and flick-return logic remain bounded and inspectable.</span>
+                    <strong>The field inherits orbit-grade behavior.</strong>
+                    <span>Outer orbit, local cluster orbit, controlled settle, and bounded return behavior remain inspectable and separate from content meaning.</span>
                   </article>
                 </div>
               </section>
@@ -1186,9 +1883,9 @@
                   </article>
 
                   <article class="card">
-                    <b>Chamber switching</b>
-                    <strong>The center object is deliberate navigation.</strong>
-                    <span>The center compass is a higher-order chamber selector. It does not replace Return to Orbit.</span>
+                    <b>Center rule</b>
+                    <strong>The center is reserved void space.</strong>
+                    <span>The center is intentionally empty enough for later compass integration. It is not supposed to be carrying the local restoration job in this baseline.</span>
                   </article>
                 </div>
               </section>
@@ -1215,7 +1912,7 @@
 
       <section class="panel section" aria-labelledby="proof-title">
         <div class="kicker">Why one coin is not enough</div>
-        <h2 id="proof-title">The four-coin separation is the point</h2>
+        <h2 id="proof-title">The four-coin separation is the argument</h2>
 
         <div class="proof-grid">
           <article class="card">
@@ -1249,14 +1946,14 @@
         <h2 id="auren-title">Auren attaches here as the intelligence-facing prototype layer.</h2>
 
         <div class="auren-panel">
-          <strong>Auren is not the four-coin logic. Auren is the guided interface layer that can interpret, inspect, and help navigate it.</strong>
+          <strong>Auren is not the four-coin logic. Auren is the guided intelligence-facing surface that can help inspect, explain, and navigate it.</strong>
 
           <p>
-            ARCHCOIN provides the chambered financial architecture. Auren provides the prototype intelligence surface attached to that architecture. That attachment matters because most financial systems overwhelm the user at the exact point where legibility is most needed. Auren is where the family field becomes explainable in guided form.
+            ARCHCOIN provides the chambered financial architecture. Auren provides the prototype intelligence layer attached to that architecture. That attachment matters because most financial systems overwhelm the user at the exact point where legibility is most needed. Auren is where the family field becomes explainable without collapsing the distinctions again.
           </p>
 
           <p>
-            Strategically, that means this page should not read like a token brochure. It should read like a staged argument: here is the pain, here is the structural correction, here is the four-coin family, and here is the intelligence prototype that helps the user inspect it without collapsing the distinctions again.
+            Strategically, that means this page should not read like a token brochure. It should read like a staged argument: here is the pain, here is the structural correction, here is the four-coin family, and here is the intelligence prototype that helps the user inspect it in guided form.
           </p>
 
           <div class="actions">
@@ -1266,9 +1963,320 @@
         </div>
       </section>
 
+      <section class="panel section" id="coin-templates" aria-labelledby="coin-templates-title">
+        <div class="kicker">Coin-specific information shell</div>
+        <h2 id="coin-templates-title">Each coin deserves its own readable template on the page.</h2>
+
+        <div class="stage-copy">
+          <p>
+            The field is the selector. The sections below are the readable templates. A reader should be able to select a coin, inspect its local categories, and then read that coin’s material without mixing it into the wrong financial surface.
+          </p>
+        </div>
+
+        <section class="coin-template" id="coin-contract">
+          <div class="coin-template-header">
+            <div class="kicker">North Coin Template</div>
+            <h3>Contract Coin</h3>
+            <p>
+              Contract Coin is the authority-facing coin in the family. It exists so permissions, signatures, terms, execution boundaries, and authorization rules do not remain invisible while the rest of the system is already moving.
+            </p>
+            <div class="coin-template-callout">
+              In practical terms: if authority is vague, every downstream record inherits that vagueness. Contract Coin exists to stop that ambiguity at the beginning instead of explaining it later.
+            </div>
+          </div>
+
+          <div class="coin-template-grid">
+            <section class="coin-room-section" id="contract-overview-section">
+              <div class="coin-room-section-head">
+                <b>Overview</b>
+                <strong>Why Contract Coin exists</strong>
+              </div>
+              <div class="coin-room-section-copy">
+                <p>
+                  Contract Coin governs the frame of legitimacy. It asks the question that finance too often postpones: by what declared authority is this movement allowed to occur? Without that first answer, everything downstream is already structurally weaker than it appears.
+                </p>
+                <p>
+                  The purpose of the coin is not ceremonial paperwork. Its purpose is to ensure that the family field has a visible source of permission before value is amplified.
+                </p>
+              </div>
+            </section>
+
+            <section class="coin-room-section" id="contract-engineering-section">
+              <div class="coin-room-section-head">
+                <b>Engineering</b>
+                <strong>Rule engines and signature surfaces</strong>
+              </div>
+              <div class="coin-room-section-copy">
+                <p>
+                  Engineering-wise, Contract Coin eventually requires bounded rule evaluation, declared signature expectations, execution preconditions, and explicit failure behavior when authority is missing or incomplete.
+                </p>
+                <p>
+                  The important point is architectural, not promotional: authority should be machine-legible before downstream movement starts pretending it is valid.
+                </p>
+              </div>
+            </section>
+
+            <section class="coin-room-section" id="contract-platform-section">
+              <div class="coin-room-section-head">
+                <b>Platform</b>
+                <strong>What operators should be able to see</strong>
+              </div>
+              <div class="coin-room-section-copy">
+                <p>
+                  On the platform surface, Contract Coin should make authorization visible rather than assumed. An operator should be able to inspect the relevant terms, signatures, conditions, and execution frame without reverse-engineering the transaction after the fact.
+                </p>
+                <p>
+                  That makes the platform harder to fake and easier to trust for the right reasons.
+                </p>
+              </div>
+            </section>
+
+            <section class="coin-room-section" id="contract-governance-section">
+              <div class="coin-room-section-head">
+                <b>Governance</b>
+                <strong>Who may change the frame</strong>
+              </div>
+              <div class="coin-room-section-copy">
+                <p>
+                  Governance is where Contract Coin becomes real rather than decorative. Someone must define who may alter contract logic, what must be reviewed before rules change, and which authority shifts are prohibited from happening silently.
+                </p>
+                <p>
+                  If governance is weak here, the entire family inherits silent drift from the top.
+                </p>
+              </div>
+            </section>
+          </div>
+        </section>
+
+        <section class="coin-template" id="coin-receivable">
+          <div class="coin-template-header">
+            <div class="kicker">East Coin Template</div>
+            <h3>Receivable Coin</h3>
+            <p>
+              Receivable Coin is the arrival-facing coin in the family. It exists so inbound value becomes inspectable as an intake event rather than being treated as a magical yes-or-no change in balance.
+            </p>
+            <div class="coin-template-callout">
+              In practical terms: the question is not only whether something arrived. The question is what arrived, from where, under what condition, and by which admissibility rule it became receivable.
+            </div>
+          </div>
+
+          <div class="coin-template-grid">
+            <section class="coin-room-section" id="receivable-overview-section">
+              <div class="coin-room-section-head">
+                <b>Overview</b>
+                <strong>Why Receivable Coin exists</strong>
+              </div>
+              <div class="coin-room-section-copy">
+                <p>
+                  Receivable Coin governs the legibility of arrival. Its purpose is to ensure that inbound value is read as a structured event with source, intake meaning, and bounded admission status rather than a vague increase in numbers.
+                </p>
+                <p>
+                  That distinction matters because an opaque arrival surface forces trust onto the user precisely where evidence should be strongest.
+                </p>
+              </div>
+            </section>
+
+            <section class="coin-room-section" id="receivable-engineering-section">
+              <div class="coin-room-section-head">
+                <b>Engineering</b>
+                <strong>Receipt capture and intake logic</strong>
+              </div>
+              <div class="coin-room-section-copy">
+                <p>
+                  Engineering-wise, Receivable Coin requires source capture, admission logic, bounded receipt states, and readable event classification. The arrival side should not be a black box that simply claims success when a balance changes.
+                </p>
+                <p>
+                  The coin exists so the intake surface is explicit enough to be audited rather than merely narrated.
+                </p>
+              </div>
+            </section>
+
+            <section class="coin-room-section" id="receivable-platform-section">
+              <div class="coin-room-section-head">
+                <b>Platform</b>
+                <strong>How inbound value should appear</strong>
+              </div>
+              <div class="coin-room-section-copy">
+                <p>
+                  Platform-side, Receivable Coin should show who or what is arriving, under what condition it was admitted, and how that arrival became part of the family field. A user should not need to infer admission logic from downstream totals.
+                </p>
+                <p>
+                  Clarity here prevents arrival from being faked by presentation alone.
+                </p>
+              </div>
+            </section>
+
+            <section class="coin-room-section" id="receivable-governance-section">
+              <div class="coin-room-section-head">
+                <b>Governance</b>
+                <strong>What counts as admissible</strong>
+              </div>
+              <div class="coin-room-section-copy">
+                <p>
+                  Governance for Receivable Coin defines what counts as accepted value, what remains pending, what must be rejected, and who holds authority over those admission rules.
+                </p>
+                <p>
+                  Without governance here, the intake side becomes politically convenient rather than structurally disciplined.
+                </p>
+              </div>
+            </section>
+          </div>
+        </section>
+
+        <section class="coin-template" id="coin-payable">
+          <div class="coin-template-header">
+            <div class="kicker">South Coin Template</div>
+            <h3>Payable Coin</h3>
+            <p>
+              Payable Coin is the obligation-facing coin in the family. It exists so outgoing duty, settlement pressure, and liability do not vanish behind clean-looking movement language.
+            </p>
+            <div class="coin-template-callout">
+              In practical terms: a system can look healthy because movement is visible while duty is concealed. Payable Coin exists to keep the pressure surface legible.
+            </div>
+          </div>
+
+          <div class="coin-template-grid">
+            <section class="coin-room-section" id="payable-overview-section">
+              <div class="coin-room-section-head">
+                <b>Overview</b>
+                <strong>Why Payable Coin exists</strong>
+              </div>
+              <div class="coin-room-section-copy">
+                <p>
+                  Payable Coin governs what is owed. Its purpose is to keep settlement duty visible instead of allowing the system to celebrate movement while quietly relocating responsibility elsewhere.
+                </p>
+                <p>
+                  In other words, it forces obligation to remain part of the surface the user can inspect.
+                </p>
+              </div>
+            </section>
+
+            <section class="coin-room-section" id="payable-engineering-section">
+              <div class="coin-room-section-head">
+                <b>Engineering</b>
+                <strong>Bounded settlement and duty logic</strong>
+              </div>
+              <div class="coin-room-section-copy">
+                <p>
+                  Engineering-wise, Payable Coin requires explicit duty states, settlement constraints, deadline visibility, and rule-bounded outgoing execution. The system should not be able to narrate completion while the underlying obligation remains unresolved.
+                </p>
+                <p>
+                  This is where clean-looking movement meets actual responsibility.
+                </p>
+              </div>
+            </section>
+
+            <section class="coin-room-section" id="payable-platform-section">
+              <div class="coin-room-section-head">
+                <b>Platform</b>
+                <strong>How obligation should be presented</strong>
+              </div>
+              <div class="coin-room-section-copy">
+                <p>
+                  Platform-side, Payable Coin should make deadlines, settlement posture, and unresolved obligations plainly visible to the operator. A healthy interface should not require a legal or accounting detective to figure out what is still due.
+                </p>
+                <p>
+                  The platform should display pressure honestly, not cosmetically.
+                </p>
+              </div>
+            </section>
+
+            <section class="coin-room-section" id="payable-governance-section">
+              <div class="coin-room-section-head">
+                <b>Governance</b>
+                <strong>What may or may not move automatically</strong>
+              </div>
+              <div class="coin-room-section-copy">
+                <p>
+                  Governance for Payable Coin determines what outgoing behavior is allowed to occur automatically, what requires review, and which forms of duty cannot be silently deferred or reclassified.
+                </p>
+                <p>
+                  Weak governance here invites the exact kind of pressure-hiding the coin is meant to prevent.
+                </p>
+              </div>
+            </section>
+          </div>
+        </section>
+
+        <section class="coin-template" id="coin-allocation">
+          <div class="coin-template-header">
+            <div class="kicker">West Coin Template</div>
+            <h3>Allocation Coin</h3>
+            <p>
+              Allocation Coin is the growth-facing coin in the family. It exists so retained value, distribution, and expansion remain governed instead of being justified after the fact through vague narratives of growth.
+            </p>
+            <div class="coin-template-callout">
+              In practical terms: growth is not proof of structure. Allocation Coin exists so the system can explain where value is going, why it is going there, and under which bounded rule that distribution is legitimate.
+            </div>
+          </div>
+
+          <div class="coin-template-grid">
+            <section class="coin-room-section" id="allocation-overview-section">
+              <div class="coin-room-section-head">
+                <b>Overview</b>
+                <strong>Why Allocation Coin exists</strong>
+              </div>
+              <div class="coin-room-section-copy">
+                <p>
+                  Allocation Coin governs how retained value is distributed, how growth channels are defined, and how expansion remains accountable rather than becoming strategic fog.
+                </p>
+                <p>
+                  It exists because systems regularly describe growth as success while leaving the underlying distribution rules obscure.
+                </p>
+              </div>
+            </section>
+
+            <section class="coin-room-section" id="allocation-engineering-section">
+              <div class="coin-room-section-head">
+                <b>Engineering</b>
+                <strong>Distribution engines and retention rules</strong>
+              </div>
+              <div class="coin-room-section-copy">
+                <p>
+                  Engineering-wise, Allocation Coin requires explicit allocation logic, retention surfaces, rule-bounded distribution engines, and inspectable expansion pathways. The growth layer should not be hand-waved into existence by narrative alone.
+                </p>
+                <p>
+                  This is where ambition must survive structure.
+                </p>
+              </div>
+            </section>
+
+            <section class="coin-room-section" id="allocation-platform-section">
+              <div class="coin-room-section-head">
+                <b>Platform</b>
+                <strong>How distribution should appear</strong>
+              </div>
+              <div class="coin-room-section-copy">
+                <p>
+                  Platform-side, Allocation Coin should let operators inspect where retained value is going, why it is being allocated that way, and what growth logic is actually governing those movements.
+                </p>
+                <p>
+                  A credible platform should make expansion more understandable, not more theatrical.
+                </p>
+              </div>
+            </section>
+
+            <section class="coin-room-section" id="allocation-governance-section">
+              <div class="coin-room-section-head">
+                <b>Governance</b>
+                <strong>Who may alter the growth rules</strong>
+              </div>
+              <div class="coin-room-section-copy">
+                <p>
+                  Governance for Allocation Coin determines which growth rules are fixed, which can be adjusted, who may authorize that adjustment, and what distribution behavior is prohibited even when expansion pressure is high.
+                </p>
+                <p>
+                  Without governance here, allocation becomes drift with good branding.
+                </p>
+              </div>
+            </section>
+          </div>
+        </section>
+      </section>
+
       <section class="panel section" id="coin-dossiers" aria-labelledby="dossiers-title">
         <div class="kicker">Visible-first dossiers</div>
-        <h2 id="dossiers-title">All four coins remain readable even before the runtime opens the field.</h2>
+        <h2 id="dossiers-title">All four coins remain readable even before the runtime moves the field.</h2>
 
         <div class="dossier-grid">
           <article class="card">
@@ -1365,14 +2373,16 @@
 
         <div class="stage-copy">
           <p>
-            The controlling grammar is simple: outer coin field, local cluster, information inspection, Return to Orbit for local restoration, and a separate center compass for higher-order chamber navigation. That is the correct baseline for the product page.
+            The controlling grammar is simple: outer coin field, local cluster, coin-specific information, Return to Orbit for local restoration, and a reserved center void for later expansion. That is the right HTML baseline for this page.
           </p>
         </div>
 
-        <div class="actions">
-          <a class="button gold" href="#archcoin-stage">Back to the field</a>
-          <a class="button green" href="/products/">Open Products Compass</a>
-          <a class="button" href="/">Open Home Compass</a>
+        <div class="coin-room-links">
+          <a href="#archcoin-stage">Back to the field</a>
+          <a href="#coin-contract">Contract template</a>
+          <a href="#coin-receivable">Receivable template</a>
+          <a href="#coin-payable">Payable template</a>
+          <a href="#coin-allocation">Allocation template</a>
         </div>
       </section>
 

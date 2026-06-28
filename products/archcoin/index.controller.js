@@ -11,6 +11,7 @@
    - Enforce atomic cardinal selection with one public commitment receipt.
    - Freeze wing-to-coin identity mapping.
    - Preserve navigation-only scope and intentional empty bounded void.
+   - Add bounded shared upstream Compass integration glue only.
 */
 
 (() => {
@@ -89,6 +90,17 @@
     ])
   });
 
+  const UPSTREAM_COMPASS = Object.freeze({
+    parentNodeId: "master-compass",
+    failureEvent: "DGB_UPSTREAM_COMPASS_RENDERER_FAILURE",
+    defaultResponseRatio: -0.18,
+    mobileWidth: 767,
+    heldVariants: Object.freeze({
+      ENHANCED: "ENHANCED",
+      STATIC_FALLBACK: "STATIC_FALLBACK"
+    })
+  });
+
   const RECEIPT = {
     contractId: CONTRACT.id,
     sourceContractId: CONTRACT.sourceContractId,
@@ -117,6 +129,9 @@
     selectedContentId: "",
     selectedLens: "overview",
     panelDescended: false,
+    upstreamCompassMounted: false,
+    upstreamCompassStatus: "pending",
+    upstreamCompassFailure: "",
     lastAction: "",
     lastFailure: null,
     visualPassClaimed: false
@@ -136,6 +151,13 @@
     returnToOrbitButton: null,
     guidance: null,
     controllerReceiptOutput: null,
+    upstreamCompassMount: null,
+    upstreamCompassControl: null,
+    upstreamCompassFallback: null,
+    upstreamCompassHandle: null,
+    upstreamCompassMounted: false,
+    upstreamCompassStatus: "pending",
+    upstreamCompassFailure: "",
     current: STATES.CONSTELLATION,
     orbitFocus: "north",
     orbitPreviewFocus: "north",
@@ -162,6 +184,13 @@
     sceneAscentCommitFrame: 0,
     reducedMotion: false,
     initialized: false
+  };
+
+  const upstreamCompassSubscribers = {
+    gestureDelta: new Set(),
+    gestureRelease: new Set(),
+    reducedMotion: new Set(),
+    heldState: new Set()
   };
 
   function qs(selector, root = document) {
@@ -422,6 +451,93 @@
     return allowed.includes(toState);
   }
 
+  function subscribeToChannel(channel, callback) {
+    if (typeof callback !== "function") {
+      return () => false;
+    }
+
+    const set = upstreamCompassSubscribers[channel];
+
+    if (!set) {
+      return () => false;
+    }
+
+    set.add(callback);
+
+    return () => {
+      set.delete(callback);
+      return true;
+    };
+  }
+
+  function publishToChannel(channel, payload) {
+    const set = upstreamCompassSubscribers[channel];
+
+    if (!set) {
+      return;
+    }
+
+    set.forEach(callback => {
+      try {
+        callback(payload);
+      } catch (_) {}
+    });
+  }
+
+  function createUpstreamCompassHeldState() {
+    if (state.current === STATES.HELD) {
+      return Object.freeze({
+        active: true,
+        variant: UPSTREAM_COMPASS.heldVariants.STATIC_FALLBACK
+      });
+    }
+
+    return Object.freeze({
+      active: false,
+      variant: UPSTREAM_COMPASS.heldVariants.ENHANCED
+    });
+  }
+
+  function publishUpstreamCompassHeldState() {
+    publishToChannel("heldState", createUpstreamCompassHeldState());
+  }
+
+  function publishUpstreamCompassReducedMotion() {
+    publishToChannel("reducedMotion", state.reducedMotion === true);
+  }
+
+  function publishUpstreamCompassGestureDelta(deltaThetaGesture) {
+    const delta = finiteNumber(deltaThetaGesture, 0);
+
+    if (Math.abs(delta) <= 1e-9) {
+      return;
+    }
+
+    publishToChannel("gestureDelta", delta);
+  }
+
+  function publishUpstreamCompassGestureRelease() {
+    publishToChannel("gestureRelease");
+  }
+
+  function deriveGestureDeltaRadians(payload, previousOrientation, nextOrientation) {
+    if (payload && typeof payload.deltaThetaGesture === "number") {
+      return finiteNumber(payload.deltaThetaGesture, 0);
+    }
+
+    const previousYaw =
+      previousOrientation && typeof previousOrientation.yaw === "number"
+        ? previousOrientation.yaw
+        : 0;
+
+    const nextYaw =
+      nextOrientation && typeof nextOrientation.yaw === "number"
+        ? nextOrientation.yaw
+        : previousYaw;
+
+    return wrapRadians(nextYaw - previousYaw);
+  }
+
   function clearPanelDescentSchedule() {
     if (state.panelDescentFrame) {
       cancelAnimationFrame(state.panelDescentFrame);
@@ -657,6 +773,11 @@
     state.root.dataset.panelDescended = state.panelDescended ? "true" : "false";
     state.root.dataset.reducedMotion = state.reducedMotion ? "true" : "false";
     state.root.dataset.visualPassClaimed = "false";
+    state.root.dataset.archcoinUpstreamCompassMounted = state.upstreamCompassMounted
+      ? "true"
+      : "false";
+    state.root.dataset.archcoinUpstreamCompassStatus = state.upstreamCompassStatus;
+    state.root.dataset.archcoinUpstreamCompassFailure = state.upstreamCompassFailure;
 
     qsa("[data-archcoin-coin]", state.root).forEach(element => {
       const wing = normalizeWing(element.dataset.wing || element.dataset.coinId);
@@ -730,6 +851,9 @@
       selectedContentId: state.selectedContentId,
       selectedLens: state.selectedLens,
       panelDescended: state.panelDescended,
+      upstreamCompassMounted: state.upstreamCompassMounted,
+      upstreamCompassStatus: state.upstreamCompassStatus,
+      upstreamCompassFailure: state.upstreamCompassFailure,
       visualPassClaimed: false
     }, extra);
 
@@ -765,6 +889,7 @@
       setGuidance(
         "Tap a coin to open its cluster. Drag the constellation to bring the nearest coin forward."
       );
+      publishUpstreamCompassHeldState();
       return;
     }
 
@@ -775,6 +900,7 @@
       setGuidance(
         "Pull and hold to rotate the room cluster. Release a controlled drag to settle the nearest room forward. Use a quick swipe to return to the constellation."
       );
+      publishUpstreamCompassHeldState();
       return;
     }
 
@@ -785,6 +911,7 @@
       setGuidance(
         "Inspect the selected room. Return to Orbit restores the room cluster. A quick swipe returns to the outer constellation."
       );
+      publishUpstreamCompassHeldState();
       return;
     }
 
@@ -793,6 +920,7 @@
       setReadMoreLink("", false);
       setHiddenControl(state.returnToOrbitButton, true);
       setGuidance("The ARCHCOIN controller is held. Static content remains visible.");
+      publishUpstreamCompassHeldState();
     }
   }
 
@@ -1073,6 +1201,8 @@
       lastFailure: null
     });
 
+    publishUpstreamCompassHeldState();
+
     return true;
   }
 
@@ -1185,6 +1315,7 @@
       beginOrbitGesture();
     }
 
+    const previousOrientation = cloneOrientation(state.orbitOrientation);
     const orientation = resolveOrientation(payload, state.orbitOrientation);
 
     setConstellationOrientation(orientation, {
@@ -1192,6 +1323,10 @@
       phase: ORIENTATION_PHASES.PREVIEW,
       gestureActive: true
     });
+
+    publishUpstreamCompassGestureDelta(
+      deriveGestureDeltaRadians(payload, previousOrientation, orientation)
+    );
 
     syncDatasets();
     return true;
@@ -1234,6 +1369,8 @@
 
     state.orbitGestureOrigin = null;
 
+    publishUpstreamCompassGestureRelease();
+
     syncPresentation();
     emitReceipt({
       lastAction: `orbit-committed:${primaryWing}`,
@@ -1262,6 +1399,8 @@
     });
 
     state.orbitGestureOrigin = null;
+
+    publishUpstreamCompassGestureRelease();
 
     syncPresentation();
     emitReceipt({
@@ -1359,6 +1498,7 @@
       beginClusterGesture(wing);
     }
 
+    const previousOrientation = cloneOrientation(cluster.orientation);
     const orientation = resolveOrientation(payload, cluster.orientation);
     const primaryRoom = normalizeRoomId(
       payload.primaryRoom || payload.primaryId || orientation.primaryId
@@ -1381,6 +1521,10 @@
       phase: ORIENTATION_PHASES.PREVIEW,
       gestureActive: true
     });
+
+    publishUpstreamCompassGestureDelta(
+      deriveGestureDeltaRadians(payload, previousOrientation, orientation)
+    );
 
     syncDatasets();
     return true;
@@ -1439,6 +1583,8 @@
 
     cluster.gestureOrigin = null;
 
+    publishUpstreamCompassGestureRelease();
+
     syncPresentation();
     emitReceipt({
       lastAction: `cluster-committed:${wing}:${primaryRoom}`,
@@ -1473,6 +1619,8 @@
     });
 
     cluster.gestureOrigin = null;
+
+    publishUpstreamCompassGestureRelease();
 
     syncPresentation();
     emitReceipt({
@@ -1622,6 +1770,8 @@
       panelDescended: false
     });
 
+    publishUpstreamCompassGestureRelease();
+
     return commitAtomicTransition(
       transaction,
       `cardinal-selected:${wing}`,
@@ -1693,6 +1843,8 @@
       panelDescended: true
     });
 
+    publishUpstreamCompassGestureRelease();
+
     const committed = commitAtomicTransition(
       transaction,
       `room-selected:${id}`,
@@ -1746,6 +1898,8 @@
       panelDescended: false
     });
 
+    publishUpstreamCompassGestureRelease();
+
     const committed = commitAtomicTransition(
       transaction,
       "return-to-orbit",
@@ -1787,6 +1941,8 @@
       panelDescended: false
     });
 
+    publishUpstreamCompassGestureRelease();
+
     const committed = commitAtomicTransition(
       transaction,
       `returned-to-constellation:${previousWing}`,
@@ -1814,6 +1970,20 @@
       returnSource: String(options.source || "controller")
     });
 
+    return true;
+  }
+
+  function requestReturnToUpstream() {
+    const route =
+      normalizeRoute(
+        (state.upstreamCompassControl &&
+          state.upstreamCompassControl.getAttribute("href")) ||
+          (state.upstreamCompassMount &&
+            state.upstreamCompassMount.getAttribute("data-upstream-compass-parent-route")) ||
+          "/"
+      ) || "/";
+
+    globalThis.location.assign(route);
     return true;
   }
 
@@ -1850,6 +2020,21 @@
     setGuidance(
       "The visual ARCHCOIN field is temporarily unavailable. Static content remains visible."
     );
+  }
+
+  function handleUpstreamCompassFailureEvent(event) {
+    const detail = event.detail || {};
+
+    state.upstreamCompassStatus = "held";
+    state.upstreamCompassFailure = String(
+      detail.reason || "DGB_UPSTREAM_COMPASS_RENDERER_FAILURE"
+    );
+
+    syncDatasets();
+    emitReceipt({
+      lastAction: "upstream-compass-renderer-failure",
+      lastFailure: state.upstreamCompassFailure
+    });
   }
 
   function bindPanelControls() {
@@ -1973,6 +2158,40 @@
       "ARCHCOIN_CRYSTALS_RENDER_FAILURE",
       handleCrystalsFailureEvent
     );
+
+    globalThis.addEventListener(
+      UPSTREAM_COMPASS.failureEvent,
+      handleUpstreamCompassFailureEvent
+    );
+  }
+
+  function bindReducedMotionPreference() {
+    const mediaQuery = globalThis.matchMedia("(prefers-reduced-motion: reduce)");
+
+    if (typeof mediaQuery.addEventListener === "function") {
+      mediaQuery.addEventListener("change", event => {
+        state.reducedMotion = event.matches || state.root.dataset.reducedMotion === "true";
+        syncDatasets();
+        publishUpstreamCompassReducedMotion();
+        emitReceipt({
+          lastAction: "reduced-motion-updated",
+          lastFailure: null
+        });
+      });
+      return;
+    }
+
+    if (typeof mediaQuery.addListener === "function") {
+      mediaQuery.addListener(event => {
+        state.reducedMotion = event.matches || state.root.dataset.reducedMotion === "true";
+        syncDatasets();
+        publishUpstreamCompassReducedMotion();
+        emitReceipt({
+          lastAction: "reduced-motion-updated",
+          lastFailure: null
+        });
+      });
+    }
   }
 
   function readReducedMotion() {
@@ -2002,6 +2221,10 @@
     state.returnToOrbitButton = qs("[data-archcoin-return-to-orbit]", state.root);
     state.guidance = qs("[data-archcoin-guidance]", state.root);
     state.controllerReceiptOutput = qs("[data-archcoin-controller-receipt]", state.root);
+
+    state.upstreamCompassMount = qs("[data-upstream-compass-mount]", state.root);
+    state.upstreamCompassControl = qs("[data-upstream-compass-control]", state.root);
+    state.upstreamCompassFallback = qs("[data-upstream-compass-fallback]", state.root);
 
     if (!state.scene) {
       throw new Error("ARCHCOIN_SCENE_NOT_FOUND");
@@ -2070,6 +2293,81 @@
     }
   }
 
+  function resolveUpstreamCompassQualityProfileId() {
+    return globalThis.innerWidth <= UPSTREAM_COMPASS.mobileWidth ? "mobile" : "desktop";
+  }
+
+  function mountUpstreamCompassIfPresent() {
+    if (!state.upstreamCompassMount) {
+      state.upstreamCompassMounted = false;
+      state.upstreamCompassStatus = "absent";
+      state.upstreamCompassFailure = "";
+      return false;
+    }
+
+    if (!state.upstreamCompassControl || !state.upstreamCompassFallback) {
+      throw new Error("ARCHCOIN_UPSTREAM_COMPASS_HTML_CONTRACT_INCOMPLETE");
+    }
+
+    const renderer = globalThis.DGB_UPSTREAM_COMPASS_RENDERER;
+
+    if (!renderer || typeof renderer.mount !== "function") {
+      throw new Error("DGB_UPSTREAM_COMPASS_RENDERER_NOT_AVAILABLE");
+    }
+
+    const parentRoute =
+      normalizeRoute(
+        state.upstreamCompassMount.getAttribute("data-upstream-compass-parent-route") ||
+          state.upstreamCompassControl.getAttribute("href") ||
+          "/"
+      ) || "/";
+
+    const pageContext = Object.freeze({
+      pageNodeId:
+        String(
+          state.upstreamCompassMount.getAttribute("data-upstream-compass-page-node") ||
+            "archcoin"
+        ).trim() || "archcoin",
+      parentNodeId:
+        String(
+          state.upstreamCompassMount.getAttribute("data-upstream-compass-parent-node") ||
+            UPSTREAM_COMPASS.parentNodeId
+        ).trim() || UPSTREAM_COMPASS.parentNodeId,
+      parentRoute,
+      root: state.root,
+      scene: state.scene,
+      mount: state.upstreamCompassMount,
+      semanticControl: state.upstreamCompassControl,
+      fallback: state.upstreamCompassFallback,
+      controller: globalThis.DGB_ARCHCOIN_CONTROLLER || null,
+      requestReturnToUpstream,
+      heldState: createUpstreamCompassHeldState(),
+      reducedMotion: state.reducedMotion === true,
+      getHeldState: () => createUpstreamCompassHeldState(),
+      getReducedMotion: () => state.reducedMotion === true,
+      subscribeGestureDelta: callback =>
+        subscribeToChannel("gestureDelta", callback),
+      subscribeGestureRelease: callback =>
+        subscribeToChannel("gestureRelease", callback),
+      subscribeReducedMotion: callback =>
+        subscribeToChannel("reducedMotion", callback),
+      subscribeHeldState: callback =>
+        subscribeToChannel("heldState", callback),
+      motionResponseRatio: UPSTREAM_COMPASS.defaultResponseRatio,
+      qualityProfileId: resolveUpstreamCompassQualityProfileId()
+    });
+
+    state.upstreamCompassHandle = renderer.mount(pageContext);
+    state.upstreamCompassMounted = true;
+    state.upstreamCompassStatus = "available";
+    state.upstreamCompassFailure = "";
+
+    publishUpstreamCompassReducedMotion();
+    publishUpstreamCompassHeldState();
+
+    return true;
+  }
+
   function exposeApi() {
     globalThis.DGB_ARCHCOIN_CONTROLLER = Object.freeze({
       contract: CONTRACT,
@@ -2117,7 +2415,10 @@
           selectedContentId: state.selectedContentId,
           selectedLens: state.selectedLens,
           panelDescended: state.panelDescended,
-          reducedMotion: state.reducedMotion
+          reducedMotion: state.reducedMotion,
+          upstreamCompassMounted: state.upstreamCompassMounted,
+          upstreamCompassStatus: state.upstreamCompassStatus,
+          upstreamCompassFailure: state.upstreamCompassFailure
         });
       },
 
@@ -2141,6 +2442,7 @@
         });
       },
 
+      requestReturnToUpstream,
       beginOrbitGesture,
       requestOrbitPreview,
       requestOrbitCommit,
@@ -2168,6 +2470,8 @@
       bindPanelControls();
       bindRendererEvents();
       bindLensTabs();
+      bindReducedMotionPreference();
+      mountUpstreamCompassIfPresent();
 
       resetSelection();
       setPanel(defaultPanel());
@@ -2185,6 +2489,8 @@
 
       RECEIPT.status = "held";
       RECEIPT.lastFailure = `CONTROLLER_INIT_FAILURE:${reason}`;
+      state.upstreamCompassStatus = "held";
+      state.upstreamCompassFailure = RECEIPT.lastFailure;
 
       globalThis.DGB_ARCHCOIN_CONTROLLER_RECEIPT = Object.freeze({
         ...RECEIPT

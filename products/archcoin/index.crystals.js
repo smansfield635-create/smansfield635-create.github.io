@@ -7,9 +7,13 @@
    - Publish DGB_ARCHCOIN_CRYSTALS and DGB_ARCHCOIN_CRYSTALS_RECEIPT.
    - Render only the four outer ARCHCOIN coins and the active room cluster.
    - Preserve spherical constellation behavior and per-wing spherical room clusters.
-   - Preserve tap, drag, settle, quick-flick return, pointer capture,
-     click suppression, reduced motion, context loss handling, semantic sync,
+   - Preserve tap, drag, settle, pointer capture, click suppression,
+     reduced motion, context loss handling, semantic sync,
      and nonvisual room proxies.
+   - Exclude the shared upstream Compass semantic control from ARCHCOIN
+     pointer and gesture territory.
+   - Remove quick-flick return behavior so every valid cluster drag release
+     settles and commits normally.
    - Exclude Mirrorland, cosmos, atmosphere canvas, background stars,
      decorative orbit lines, Hearth, Jeeves, and environmental systems.
    - Preserve intentional empty bounded void.
@@ -52,7 +56,6 @@
     CONSTELLATION_SETTLE: "constellation-settle",
     CLUSTER_DRAG: "cluster-drag",
     CLUSTER_SETTLE: "cluster-settle",
-    CLUSTER_FLICK_RETURN: "cluster-flick-return",
     AMBIGUOUS: "ambiguous",
     CANCELLED: "cancelled",
     BLOCKED: "blocked"
@@ -66,14 +69,7 @@
     settleSpeed: 7.4,
     suppressClickMs: 520,
     sampleWindowMs: 140,
-    maximumSamples: 18,
-    flickMaximumDurationMs: 260,
-    flickMinimumDistancePx: 52,
-    flickMinimumAverageVelocityPxPerMs: 0.55,
-    flickMinimumReleaseVelocityPxPerMs: 0.72,
-    flickMinimumDirectionalRatio: 1.28,
-    flickMaximumPauseBeforeReleaseMs: 90,
-    flickMaximumPathEfficiencyLoss: 0.22
+    maximumSamples: 18
   });
 
   const SPHERE = Object.freeze({
@@ -2185,18 +2181,6 @@
     };
   }
 
-  function isQuickClusterFlick(metrics) {
-    return (
-      metrics.durationMs <= GESTURE.flickMaximumDurationMs &&
-      metrics.distance >= GESTURE.flickMinimumDistancePx &&
-      metrics.averageVelocity >= GESTURE.flickMinimumAverageVelocityPxPerMs &&
-      metrics.releaseVelocity >= GESTURE.flickMinimumReleaseVelocityPxPerMs &&
-      metrics.directionalRatio >= GESTURE.flickMinimumDirectionalRatio &&
-      metrics.pauseBeforeRelease <= GESTURE.flickMaximumPauseBeforeReleaseMs &&
-      1 - metrics.pathEfficiency <= GESTURE.flickMaximumPathEfficiencyLoss
-    );
-  }
-
   function findHitAtClientPoint(clientX, clientY, allowedTypes = null) {
     const rect = state.scene.getBoundingClientRect();
     const x = clientX - rect.left;
@@ -2247,6 +2231,7 @@
     }
 
     return target.closest([
+      "[data-upstream-compass-control]",
       "[data-archcoin-enter]",
       "[data-archcoin-return-to-orbit]",
       "[data-archcoin-read-more]",
@@ -2439,19 +2424,6 @@
       api &&
       typeof api.requestClusterCancel === "function" &&
       api.requestClusterCancel(wing, reason) !== false
-    );
-  }
-
-  function requestControllerReturnToConstellation() {
-    const api = globalThis.DGB_ARCHCOIN_CONTROLLER;
-
-    return Boolean(
-      api &&
-      typeof api.requestReturnToConstellation === "function" &&
-      api.requestReturnToConstellation({
-        source: "cluster-flick",
-        scrollToScene: true
-      }) !== false
     );
   }
 
@@ -2728,31 +2700,6 @@
   }
 
   function finishClusterDrag(pointer, event, metrics) {
-    if (isQuickClusterFlick(metrics)) {
-      requestControllerClusterCancel(pointer.wing, "cluster-flick-return");
-
-      const returned = requestControllerReturnToConstellation();
-
-      state.suppressClickUntil = performance.now() + GESTURE.suppressClickMs;
-
-      event.preventDefault();
-
-      emitReceipt({
-        status: returned ? "available" : "held",
-        lastPointerTerritory: pointer.territory,
-        lastGestureType: GESTURE_TYPES.CLUSTER_FLICK_RETURN,
-        lastGestureDistance: metrics.distance,
-        lastGestureDurationMs: metrics.durationMs,
-        lastAverageVelocityPxPerMs: metrics.averageVelocity,
-        lastReleaseVelocityPxPerMs: metrics.releaseVelocity,
-        activeClusterWing: pointer.wing,
-        gestureActive: false,
-        glError: returned ? "NO_ERROR" : "CONTROLLER_RETURN_TO_CONSTELLATION_UNAVAILABLE"
-      });
-
-      return;
-    }
-
     const currentQuaternion = pointer.currentQuaternion.slice();
     const primaryRoom = nearestPrimaryRoom(pointer.wing, currentQuaternion);
     const settledQuaternion = settledClusterQuaternion(

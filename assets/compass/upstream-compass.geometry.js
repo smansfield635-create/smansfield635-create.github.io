@@ -1,560 +1,367 @@
 /* /assets/compass/upstream-compass.geometry.js
+   Shared Home Compass geometry authority.
 
-   Universal Compass shared geometry implementation candidate.
+   Dependency position:
+   1. /products/archcoin/index.controller.js
+   2. /assets/compass/upstream-compass.geometry.js
+   3. /assets/compass/upstream-compass.renderer.js
+   4. /products/archcoin/index.crystals.js
+   5. /products/archcoin/index.html
+   6. /assets/compass/upstream-compass.css
+   7. /products/archcoin/index.css
 
-   Purpose:
-   - define the exact UGC-04 integrated-center geometry occurrence;
-   - construct deterministic three-dimensional mesh data;
-   - enforce the shared noncumulative depth envelope;
-   - expose one renderer-consumable buildModel() surface;
-   - preserve buildBaselineMeshes() as a compatibility construction surface;
-   - publish stable material identity on every finalized component mesh;
-   - expose geometry validation, front-projection data, and static SVG fallback;
-   - provide the anchoring geometry authority for the shared Universal Compass
-     family.
+   Governing boundaries:
+   - The controller owns selection, navigation, restoration, and route law.
+   - This file owns the physical form of the embedded Home Compass.
+   - The renderer owns camera interpolation, lighting, GPU resources, and
+     enhanced/fallback promotion.
+   - Crystals owns constellation and room-cluster scene execution.
+   - HTML and CSS declare and present already-closed contracts.
 
-   Candidate:
-   UGC-04
-   HYBRID_DOUBLE_RING_NORTH_NEEDLE_FOUR_POINT_ROSE
+   Interaction relationship:
+   - The Compass has no independent drag authority.
+   - The Compass receives no independent gesture-delta stream.
+   - The Compass inherits the constellation's parent orientation.
+   - The Compass exposes only local presentation transforms.
+   - The Compass is a selectable Home Compass destination.
+   - Selection meaning remains controller-owned.
 
-   Physical model:
-   INTEGRATED_CONSTELLATION_CENTER
+   Renderer-facing surface:
+   DGB_UPSTREAM_COMPASS_GEOMETRY.buildModel(options)
 
-   Semantic model:
-   UPSTREAM_RETURN_CONTROL
-
-   Architectural rule:
-   THE PAGE KNOWS ABOUT THE SHARED UNIVERSAL COMPASS.
-   THE SHARED UNIVERSAL COMPASS DOES NOT KNOW THE ESTATE.
-
-   Authorization boundary:
-
-   SHARED_IMPLEMENTATION_CANDIDATE
-   !=
-   PRODUCTION_AUTHORIZATION
-
-   Not authorized:
-   - deployment;
-   - public release;
-   - final geometry freeze;
-   - visual-pass claims.
+   Compatibility surface:
+   DGB_UPSTREAM_COMPASS_GEOMETRY.buildBaselineMeshes(options)
 */
 
 const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
   "use strict";
 
-  const MODULE_ID =
-    "DGB_UPSTREAM_COMPASS_GEOMETRY";
+  const MODULE = Object.freeze({
+    id: "DGB_UPSTREAM_COMPASS_GEOMETRY",
+    version: "2.0.0-generational-embedded-form",
+    file: "/assets/compass/upstream-compass.geometry.js"
+  });
 
-  const MODULE_VERSION =
-    "1.1.0-integrated-center-candidate";
+  const MODEL_ID =
+    "DGB_HOME_COMPASS_EMBEDDED_INSTRUMENT_v2";
 
-  const OCCURRENCE_ID =
-    "UGC_04_INTEGRATED_CENTER_OCCURRENCE_002";
+  const OBJECT_IDENTITY = Object.freeze({
+    objectClass: "HOME_COMPASS_EMBEDDED_INSTRUMENT",
+    physicalProjection: "INTEGRATED_CONSTELLATION_CENTER",
+    destinationType: "home-compass",
+    destinationId: "home-compass",
+    inheritsParentOrientation: true,
+    receivesIndependentGestureDeltas: false,
+    ownsNavigation: false,
+    ownsSelectionState: false,
+    ownsCameraTiming: false,
+    ownsPointerListeners: false
+  });
 
-  const CANDIDATE_ID =
-    "UGC-04";
-
-  const PHYSICAL_PROJECTION =
-    "INTEGRATED_CONSTELLATION_CENTER";
-
-  const SEMANTIC_RELATIONSHIP =
-    "UPSTREAM_RETURN_CONTROL";
-
-  const EPSILON =
-    1e-9;
-
-  const TAU =
-    Math.PI * 2;
+  const EPSILON = 1e-7;
+  const TAU = Math.PI * 2;
 
   const MATERIAL_KEYS = Object.freeze({
-    OUTER_RING:
-      "OUTER_RING",
-
-    INNER_RING:
-      "INNER_RING",
-
-    PRINCIPAL_DIRECTION:
-      "PRINCIPAL_DIRECTION",
-
-    NORTH_NEEDLE:
-      "NORTH_NEEDLE",
-
-    CENTRAL_HUB:
-      "CENTRAL_HUB",
-
-    INTERCARDINAL_TICK:
-      "INTERCARDINAL_TICK"
+    OUTER_HOUSING: "OUTER_HOUSING",
+    OUTER_BEZEL: "OUTER_BEZEL",
+    INNER_BEZEL: "INNER_BEZEL",
+    DIAL_BED: "DIAL_BED",
+    PRINCIPAL_DIRECTION: "PRINCIPAL_DIRECTION",
+    PRINCIPAL_DIRECTION_FACET: "PRINCIPAL_DIRECTION_FACET",
+    NORTH_NEEDLE: "NORTH_NEEDLE",
+    NORTH_NEEDLE_FACET: "NORTH_NEEDLE_FACET",
+    HUB_BASE: "HUB_BASE",
+    HUB_CROWN: "HUB_CROWN",
+    HUB_JEWEL: "HUB_JEWEL",
+    INTERCARDINAL_TICK: "INTERCARDINAL_TICK"
   });
 
-  const STATUS = Object.freeze({
-    artifactClass:
-      "UNIVERSAL_COMPASS_SHARED_GEOMETRY_IMPLEMENTATION_CANDIDATE",
-
-    candidateId:
-      CANDIDATE_ID,
-
-    occurrenceId:
-      OCCURRENCE_ID,
-
-    physicalProjection:
-      PHYSICAL_PROJECTION,
-
-    semanticRelationship:
-      SEMANTIC_RELATIONSHIP,
-
-    sharedReusableComponent:
-      true,
-
-    productionAuthorized:
-      false,
-
-    repositoryIntegrationAuthorized:
-      false,
-
-    deploymentAuthorized:
-      false,
-
-    publicReleaseAuthorized:
-      false,
-
-    finalGeometryFrozen:
-      false,
-
-    canonical:
-      false,
-
-    visualPassClaimed:
-      false
-  });
+  const MATERIAL_KEY_SET =
+    new Set(Object.values(MATERIAL_KEYS));
 
   const COORDINATE_SYSTEM = Object.freeze({
-    dimensionality:
-      3,
-
-    handedness:
-      "RIGHT_HANDED",
-
-    axes:
-      Object.freeze({
-        x:
-          "EAST_WEST",
-
-        y:
-          "NORTH_SOUTH",
-
-        z:
-          "REAR_FRONT_DEPTH"
-      }),
-
-    origin:
-      Object.freeze([0, 0, 0]),
-
-    north:
-      Object.freeze([0, 1, 0]),
-
-    east:
-      Object.freeze([1, 0, 0]),
-
-    south:
-      Object.freeze([0, -1, 0]),
-
-    west:
-      Object.freeze([-1, 0, 0]),
-
-    cameraFacingDirection:
-      Object.freeze([0, 0, 1]),
-
-    canonicalObjectPlaneZ:
-      0
+    dimensionality: 3,
+    handedness: "RIGHT_HANDED",
+    axes: Object.freeze({
+      x: "EAST_WEST",
+      y: "NORTH_SOUTH",
+      z: "REAR_FRONT_DEPTH"
+    }),
+    origin: Object.freeze([0, 0, 0]),
+    north: Object.freeze([0, 1, 0]),
+    east: Object.freeze([1, 0, 0]),
+    south: Object.freeze([0, -1, 0]),
+    west: Object.freeze([-1, 0, 0]),
+    cameraFacingDirection: Object.freeze([0, 0, 1])
   });
 
   /*
-   * Renewed dimensional envelope.
+   * All component intervals occupy one noncumulative object envelope.
    *
-   * The original 0.20 total depth read as a lightly extruded badge under a
-   * front-biased camera. This envelope remains bounded and noncumulative, but
-   * supplies enough front/rear separation for the shared renderer to expose
-   * ring walls, needle depth, hub depth, and controlled parallax.
+   * Actual occupied model depth:
+   * rear-most geometry:  -0.18
+   * front-most geometry:  0.30
+   * total occupied depth:  0.48
    */
   const DEPTH_ENVELOPE = Object.freeze({
-    canonicalObjectPlaneZ:
-      0,
-
-    rearLimitZ:
-      -0.18,
-
-    frontLimitZ:
-      0.28,
-
-    baselineTotalDepth:
-      0.46,
-
-    absoluteRearLimitZ:
-      -0.22,
-
-    absoluteFrontLimitZ:
-      0.32,
-
-    absoluteMaximumTotalDepth:
-      0.54,
-
+    rearLimitZ: -0.18,
+    frontLimitZ: 0.30,
+    occupiedTotalDepth: 0.48,
+    absoluteRearLimitZ: -0.21,
+    absoluteFrontLimitZ: 0.33,
+    absoluteMaximumTotalDepth: 0.54,
+    minimumInstrumentDepth: 0.40,
     componentDepthsAre:
-      "BOUNDED_WITHIN_SHARED_DEPTH_ENVELOPE_NOT_CUMULATIVELY_STACKED",
-
-    outerRingZInterval:
-      Object.freeze([-0.14, 0.14]),
-
-    innerRingZInterval:
-      Object.freeze([-0.10, 0.10]),
-
-    principalDirectionZInterval:
-      Object.freeze([-0.08, 0.18]),
-
-    centralHubZInterval:
-      Object.freeze([-0.12, 0.24]),
-
-    northNeedleZInterval:
-      Object.freeze([-0.04, 0.28]),
-
-    intercardinalTickZInterval:
-      Object.freeze([-0.06, 0.12])
+      "BOUNDED_WITHIN_ONE_SHARED_NONCUMULATIVE_OBJECT_ENVELOPE"
   });
 
-  const CONSTANTS = Object.freeze({
-    normalizedOuterRadius:
-      1,
+  const COMPONENT_DIMENSIONS = Object.freeze({
+    outerHousing: Object.freeze({
+      outerRadius: 1.0,
+      innerRadius: 0.89,
+      zRear: -0.18,
+      zFront: 0.14,
+      bevelDepth: 0.045,
+      outerBevelWidth: 0.035,
+      innerBevelWidth: 0.025
+    }),
 
-    outerRing:
-      Object.freeze({
-        outerRadius:
-          1.0,
+    outerBezel: Object.freeze({
+      outerRadius: 0.865,
+      innerRadius: 0.805,
+      zRear: -0.13,
+      zFront: 0.17,
+      bevelDepth: 0.035,
+      outerBevelWidth: 0.022,
+      innerBevelWidth: 0.018
+    }),
 
-        innerRadius:
-          0.925,
+    innerBezel: Object.freeze({
+      outerRadius: 0.745,
+      innerRadius: 0.685,
+      zRear: -0.11,
+      zFront: 0.16,
+      bevelDepth: 0.032,
+      outerBevelWidth: 0.020,
+      innerBevelWidth: 0.016
+    }),
 
-        desktopSegments:
-          48,
+    dialBed: Object.freeze({
+      radius: 0.675,
+      zRear: -0.16,
+      zFront: -0.035,
+      bevelDepth: 0.025,
+      bevelWidth: 0.025
+    }),
 
-        mobileSegments:
-          24,
+    principalDirection: Object.freeze({
+      zRear: -0.075,
+      zFront: 0.17,
+      bevelDepth: 0.034,
+      bevelInset: 0.075
+    }),
 
-        lowPowerSegments:
-          16
-      }),
+    principalDirectionFacet: Object.freeze({
+      zRear: 0.135,
+      zFront: 0.205,
+      bevelDepth: 0.016,
+      bevelInset: 0.12
+    }),
 
-    innerRing:
-      Object.freeze({
-        outerRadius:
-          0.735,
+    northNeedle: Object.freeze({
+      zRear: -0.055,
+      zFront: 0.235,
+      bevelDepth: 0.040,
+      bevelInset: 0.065
+    }),
 
-        innerRadius:
-          0.705,
+    northNeedleFacet: Object.freeze({
+      zRear: 0.195,
+      zFront: 0.30,
+      bevelDepth: 0.020,
+      bevelInset: 0.13
+    }),
 
-        desktopSegments:
-          48,
+    hubBase: Object.freeze({
+      radius: 0.205,
+      zRear: -0.10,
+      zFront: 0.205,
+      bevelDepth: 0.035,
+      bevelWidth: 0.025
+    }),
 
-        mobileSegments:
-          24,
+    hubCrown: Object.freeze({
+      radius: 0.145,
+      zRear: 0.16,
+      zFront: 0.265,
+      bevelDepth: 0.025,
+      bevelWidth: 0.018
+    }),
 
-        lowPowerSegments:
-          16
-      }),
+    hubJewel: Object.freeze({
+      radius: 0.078,
+      zRear: 0.235,
+      zFront: 0.292,
+      bevelDepth: 0.014,
+      bevelWidth: 0.012
+    }),
 
-    hub:
-      Object.freeze({
-        radius:
-          0.18,
+    intercardinalTick: Object.freeze({
+      radialCenter: 0.775,
+      radialLength: 0.105,
+      tangentialWidth: 0.035,
+      zRear: -0.025,
+      zFront: 0.11,
+      bevelDepth: 0.018,
+      bevelInset: 0.12
+    })
+  });
 
-        desktopSegments:
-          32,
+  const SHAPES = Object.freeze({
+    northNeedle: Object.freeze([
+      Object.freeze([0.0, 0.855]),
+      Object.freeze([-0.064, 0.31]),
+      Object.freeze([-0.118, 0.12]),
+      Object.freeze([0.118, 0.12]),
+      Object.freeze([0.064, 0.31])
+    ]),
 
-        mobileSegments:
-          24,
+    northNeedleFacet: Object.freeze([
+      Object.freeze([0.0, 0.79]),
+      Object.freeze([-0.029, 0.32]),
+      Object.freeze([-0.052, 0.18]),
+      Object.freeze([0.052, 0.18]),
+      Object.freeze([0.029, 0.32])
+    ]),
 
-        lowPowerSegments:
-          16
-      }),
+    southDirection: Object.freeze([
+      Object.freeze([-0.092, -0.10]),
+      Object.freeze([0.0, -0.49]),
+      Object.freeze([0.092, -0.10])
+    ]),
 
-    northNeedle:
-      Object.freeze({
-        xyVertices:
-          Object.freeze([
-            Object.freeze([0.0, 0.82]),
-            Object.freeze([-0.055, 0.22]),
-            Object.freeze([-0.09, 0.10]),
-            Object.freeze([0.09, 0.10]),
-            Object.freeze([0.055, 0.22])
-          ])
-      }),
+    southFacet: Object.freeze([
+      Object.freeze([-0.040, -0.14]),
+      Object.freeze([0.0, -0.405]),
+      Object.freeze([0.040, -0.14])
+    ]),
 
-    southDirection:
-      Object.freeze({
-        xyVertices:
-          Object.freeze([
-            Object.freeze([-0.075, -0.12]),
-            Object.freeze([0.0, -0.44]),
-            Object.freeze([0.075, -0.12])
-          ])
-      }),
+    eastDirection: Object.freeze([
+      Object.freeze([0.10, -0.09]),
+      Object.freeze([0.47, 0.0]),
+      Object.freeze([0.10, 0.09])
+    ]),
 
-    eastDirection:
-      Object.freeze({
-        xyVertices:
-          Object.freeze([
-            Object.freeze([0.12, -0.07]),
-            Object.freeze([0.40, 0.0]),
-            Object.freeze([0.12, 0.07])
-          ])
-      }),
+    eastFacet: Object.freeze([
+      Object.freeze([0.14, -0.040]),
+      Object.freeze([0.385, 0.0]),
+      Object.freeze([0.14, 0.040])
+    ]),
 
-    westDirection:
-      Object.freeze({
-        xyVertices:
-          Object.freeze([
-            Object.freeze([-0.12, 0.07]),
-            Object.freeze([-0.40, 0.0]),
-            Object.freeze([-0.12, -0.07])
-          ])
-      }),
+    westDirection: Object.freeze([
+      Object.freeze([-0.10, 0.09]),
+      Object.freeze([-0.47, 0.0]),
+      Object.freeze([-0.10, -0.09])
+    ]),
 
-    intercardinalTicks:
-      Object.freeze({
-        baselineEnabled:
-          false,
-
-        radialCenter:
-          0.72,
-
-        radialLength:
-          0.10,
-
-        tangentialWidth:
-          0.035,
-
-        anglesRadians:
-          Object.freeze([
-            Math.PI / 4,
-            (3 * Math.PI) / 4,
-            (5 * Math.PI) / 4,
-            (7 * Math.PI) / 4
-          ])
-      }),
-
-    semanticHitEnvelope:
-      Object.freeze({
-        radius:
-          1.08,
-
-        zInterval:
-          Object.freeze([-0.22, 0.32]),
-
-        preferredCssTarget:
-          Object.freeze([44, 44]),
-
-        governedMinimumCssTarget:
-          Object.freeze([24, 24])
-      }),
-
-    placement:
-      Object.freeze({
-        physicalProjection:
-          PHYSICAL_PROJECTION,
-
-        semanticRelationship:
-          SEMANTIC_RELATIONSHIP,
-
-        defaultPosition:
-          Object.freeze([0, 0, 0]),
-
-        defaultScale:
-          Object.freeze([1, 1, 1]),
-
-        /*
-         * A shallow permanent compound tilt allows depth to remain legible even
-         * before gesture response is applied. The renderer may add bounded
-         * axial response, but does not inherit ARCHCOIN orbital settlement.
-         */
-        defaultQuaternion:
-          Object.freeze([
-            -0.103553,
-            0.153046,
-            -0.015929,
-            0.982635
-          ]),
-
-        localQuaternionShared:
-          false,
-
-        localSettlementParticipation:
-          false
-      })
+    westFacet: Object.freeze([
+      Object.freeze([-0.14, 0.040]),
+      Object.freeze([-0.385, 0.0]),
+      Object.freeze([-0.14, -0.040])
+    ])
   });
 
   const QUALITY_PROFILES = Object.freeze({
-    desktop:
-      Object.freeze({
-        id:
-          "desktop",
+    desktop: Object.freeze({
+      id: "desktop",
+      annulusSegments: 72,
+      dialSegments: 64,
+      hubSegments: 48,
+      includeIntercardinalTicks: true
+    }),
 
-        outerRingSegments:
-          CONSTANTS.outerRing.desktopSegments,
+    mobile: Object.freeze({
+      id: "mobile",
+      annulusSegments: 44,
+      dialSegments: 40,
+      hubSegments: 32,
+      includeIntercardinalTicks: true
+    }),
 
-        innerRingSegments:
-          CONSTANTS.innerRing.desktopSegments,
-
-        hubSegments:
-          CONSTANTS.hub.desktopSegments
-      }),
-
-    mobile:
-      Object.freeze({
-        id:
-          "mobile",
-
-        outerRingSegments:
-          CONSTANTS.outerRing.mobileSegments,
-
-        innerRingSegments:
-          CONSTANTS.innerRing.mobileSegments,
-
-        hubSegments:
-          CONSTANTS.hub.mobileSegments
-      }),
-
-    lowPower:
-      Object.freeze({
-        id:
-          "lowPower",
-
-        outerRingSegments:
-          CONSTANTS.outerRing.lowPowerSegments,
-
-        innerRingSegments:
-          CONSTANTS.innerRing.lowPowerSegments,
-
-        hubSegments:
-          CONSTANTS.hub.lowPowerSegments
-      })
+    lowPower: Object.freeze({
+      id: "lowPower",
+      annulusSegments: 28,
+      dialSegments: 28,
+      hubSegments: 24,
+      includeIntercardinalTicks: false
+    })
   });
 
-  const ARRAY_BUFFER_VIEW_POLICY_CLARIFICATION = Object.freeze({
-    recursiveFreezeExemptionClass:
-      "ALL_ARRAYBUFFER_VIEWS",
-
-    expectedFinalizedMeshBufferClass:
-      Object.freeze([
-        "Float32Array",
-        "Uint16Array",
-        "Uint32Array"
+  /*
+   * These transforms are local object postures only.
+   *
+   * The renderer must compose them beneath the parent constellation
+   * orientation supplied by the controller/crystals frame.
+   */
+  const PRESENTATION_TRANSFORMS = Object.freeze({
+    embedded: Object.freeze({
+      id: "embedded",
+      position: Object.freeze([0, 0, 0]),
+      quaternion: Object.freeze([
+        -0.067790,
+        0.105687,
+        -0.007225,
+        0.992061
       ]),
+      scale: Object.freeze([1, 1, 1])
+    }),
 
-    dataViewStatus:
-      "EXEMPT_IF_ENCOUNTERED_BUT_NOT_AN_EXPECTED_FINALIZED_MESH_BUFFER_SURFACE"
-  });
-
-  const BUFFER_MUTATION_CONTRACT = Object.freeze({
-    typedArrayObjectsRecursivelyFrozen:
-      false,
-
-    containingMeshRecordsFrozen:
-      true,
-
-    bufferContentsMutableDuringConstruction:
-      true,
-
-    bufferContentsMutableAfterFinalization:
-      false,
-
-    postFinalizationMutationPolicy:
-      "PROHIBITED_BY_MODULE_CONTRACT",
-
-    externalMutationAuthority:
-      false,
-
-    structuralImmutabilityClaim:
-      true,
-
-    typedArrayElementImmutabilityClaim:
-      false,
-
-    expectedFinalizedMeshBufferClass:
-      Object.freeze([
-        "Float32Array",
-        "Uint16Array",
-        "Uint32Array"
+    decisionApproach: Object.freeze({
+      id: "decisionApproach",
+      position: Object.freeze([0, -0.015, 0.035]),
+      quaternion: Object.freeze([
+        -0.112964,
+        0.071895,
+        -0.008176,
+        0.990957
       ]),
-
-    dataViewExpectedAsFinalizedMeshBuffer:
-      false,
-
-    rendererMutationPermitted:
-      false,
-
-    validationMutationPermitted:
-      false,
-
-    fallbackMutationPermitted:
-      false,
-
-    productionGradeImmutableBufferStrategy:
-      "UNRESOLVED_AND_NOT_REQUIRED_FOR_SHARED_IMPLEMENTATION_CANDIDATE"
+      scale: Object.freeze([1.035, 1.035, 1.035])
+    })
   });
 
-  const FALLBACK_EMISSION_AUTHORITY = Object.freeze({
-    ownership:
-      MODULE_ID,
+  const ROOT_TRANSFORM = Object.freeze({
+    parentOrientationMode: "INHERIT",
+    independentGestureAuthority: false,
+    independentSettlementAuthority: false,
+    localTransformOrder:
+      "PARENT_ORIENTATION * PRESENTATION_LOCAL_TRANSFORM",
+    defaultPresentationTransform:
+      PRESENTATION_TRANSFORMS.embedded
+  });
 
-    projectionSchemaSurface:
-      "createFrontProjectionSchema",
-
-    concreteEmissionSurface:
-      "buildStaticSvgFallback",
-
-    emissionFormat:
-      "INLINE_SVG_STRING",
-
-    canonicalViewBox:
-      "0 0 200 200",
-
-    sourceOfGeometry:
-      "UGC_04_INTEGRATED_CENTER_OCCURRENCE_002_CONSTANTS_AND_FRONT_PROJECTION_SCHEMA",
-
-    separateFallbackBuilderRequired:
-      false,
-
-    separateHandAuthoredFallbackGeometry:
-      false,
-
-    monochromeCapable:
-      true,
-
-    animationRequired:
-      false,
-
-    rendererRequired:
-      false,
-
-    intentionallyTwoDimensional:
-      true,
-
-    productionAuthorized:
-      false
+  const SEMANTIC_HIT_ENVELOPE = Object.freeze({
+    shape: "CIRCULAR_DISC",
+    localCenter: Object.freeze([0, 0, 0.04]),
+    radius: 1.06,
+    zInterval: Object.freeze([
+      DEPTH_ENVELOPE.absoluteRearLimitZ,
+      DEPTH_ENVELOPE.absoluteFrontLimitZ
+    ]),
+    preferredCssTarget: Object.freeze([44, 44]),
+    governedMinimumCssTarget: Object.freeze([24, 24]),
+    geometryIsSemanticListener: false,
+    semanticControlOwnedByHtml: true
   });
 
   function invariant(condition, code, details = null) {
-    if (!condition) {
-      const error =
-        new Error(code);
-
-      error.code =
-        code;
-
-      error.details =
-        details;
-
-      throw error;
+    if (condition) {
+      return;
     }
+
+    const error = new Error(code);
+    error.code = code;
+    error.details = details;
+    throw error;
   }
 
   function isFiniteNumber(value) {
@@ -571,14 +378,12 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
     );
   }
 
-  function cloneVector(vector) {
-    return vector.slice();
+  function cloneVector(value) {
+    return Array.from(value);
   }
 
-  function freezeVector(vector) {
-    return Object.freeze(
-      cloneVector(vector)
-    );
+  function freezeVector(value) {
+    return Object.freeze(cloneVector(value));
   }
 
   function deepFreeze(value) {
@@ -603,6 +408,23 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
     return value;
   }
 
+  function clamp(value, minimum, maximum) {
+    return Math.max(
+      minimum,
+      Math.min(maximum, value)
+    );
+  }
+
+  function validateSegmentCount(value, code) {
+    invariant(
+      Number.isInteger(value) &&
+      value >= 12 &&
+      value <= 256,
+      code,
+      { value }
+    );
+  }
+
   function resolveQualityProfile(profile) {
     if (
       typeof profile === "string" &&
@@ -615,197 +437,126 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
       profile &&
       typeof profile === "object"
     ) {
-      const candidate = {
-        id:
-          String(
-            profile.id ||
-            "custom"
-          ),
+      const resolved = {
+        id: String(profile.id || "custom"),
 
-        outerRingSegments:
-          Number(
-            profile.outerRingSegments
-          ),
+        annulusSegments:
+          Number(profile.annulusSegments),
 
-        innerRingSegments:
-          Number(
-            profile.innerRingSegments
-          ),
+        dialSegments:
+          Number(profile.dialSegments),
 
         hubSegments:
-          Number(
-            profile.hubSegments
-          )
+          Number(profile.hubSegments),
+
+        includeIntercardinalTicks:
+          profile.includeIntercardinalTicks !== false
       };
 
       validateSegmentCount(
-        candidate.outerRingSegments,
-        "CUSTOM_OUTER_RING_SEGMENT_COUNT_INVALID"
+        resolved.annulusSegments,
+        "CUSTOM_ANNULUS_SEGMENT_COUNT_INVALID"
       );
 
       validateSegmentCount(
-        candidate.innerRingSegments,
-        "CUSTOM_INNER_RING_SEGMENT_COUNT_INVALID"
+        resolved.dialSegments,
+        "CUSTOM_DIAL_SEGMENT_COUNT_INVALID"
       );
 
       validateSegmentCount(
-        candidate.hubSegments,
+        resolved.hubSegments,
         "CUSTOM_HUB_SEGMENT_COUNT_INVALID"
       );
 
-      return Object.freeze(candidate);
+      return Object.freeze(resolved);
     }
 
     return QUALITY_PROFILES.desktop;
   }
 
-  function validateSegmentCount(value, code) {
-    invariant(
-      Number.isInteger(value) &&
-      value >= 8 &&
-      value <= 256,
-      code,
-      {
-        value
-      }
-    );
-  }
-
   function validateMaterialKey(materialKey) {
     invariant(
-      Object.values(MATERIAL_KEYS).includes(materialKey),
+      MATERIAL_KEY_SET.has(materialKey),
       "MESH_MATERIAL_KEY_INVALID",
-      {
-        materialKey
-      }
+      { materialKey }
     );
   }
 
-  function createEmptyMesh(
-    componentId,
-    primitive,
-    materialKey
-  ) {
-    validateMaterialKey(materialKey);
-
-    return {
-      componentId,
-      primitive,
-      materialKey,
-      positions:
-        [],
-      normals:
-        [],
-      indices:
-        [],
-      groups:
-        [],
-      metadata:
-        {}
-    };
-  }
-
-  function pushVertex(mesh, position, normal) {
-    invariant(
-      Array.isArray(position) &&
-      position.length === 3 &&
-      position.every(isFiniteNumber),
-      "VERTEX_POSITION_INVALID",
-      {
-        componentId:
-          mesh.componentId,
-        position
-      }
-    );
-
-    invariant(
-      Array.isArray(normal) &&
-      normal.length === 3 &&
-      normal.every(isFiniteNumber),
-      "VERTEX_NORMAL_INVALID",
-      {
-        componentId:
-          mesh.componentId,
-        normal
-      }
-    );
-
-    mesh.positions.push(
-      position[0],
-      position[1],
-      position[2]
-    );
-
-    mesh.normals.push(
-      normal[0],
-      normal[1],
-      normal[2]
-    );
-
-    return (
-      mesh.positions.length / 3 -
-      1
+  function vectorLength3(vector) {
+    return Math.hypot(
+      vector[0],
+      vector[1],
+      vector[2]
     );
   }
 
-  function pushTriangle(mesh, a, b, c) {
-    invariant(
-      [a, b, c].every(
-        (value) =>
-          Number.isInteger(value) &&
-          value >= 0
-      ),
-      "TRIANGLE_INDEX_INVALID",
-      {
-        componentId:
-          mesh.componentId,
-        indices:
-          [a, b, c]
-      }
-    );
-
-    mesh.indices.push(a, b, c);
-  }
-
-  function normalize2(x, y) {
-    const length =
-      Math.hypot(x, y);
+  function normalize3(vector) {
+    const length = vectorLength3(vector);
 
     invariant(
       length > EPSILON,
-      "ZERO_LENGTH_VECTOR_FORBIDDEN"
+      "ZERO_LENGTH_VECTOR_FORBIDDEN",
+      { vector }
     );
 
     return [
-      x / length,
-      y / length
+      vector[0] / length,
+      vector[1] / length,
+      vector[2] / length
     ];
   }
 
+  function subtract3(a, b) {
+    return [
+      a[0] - b[0],
+      a[1] - b[1],
+      a[2] - b[2]
+    ];
+  }
+
+  function cross3(a, b) {
+    return [
+      a[1] * b[2] -
+        a[2] * b[1],
+
+      a[2] * b[0] -
+        a[0] * b[2],
+
+      a[0] * b[1] -
+        a[1] * b[0]
+    ];
+  }
+
+  function faceNormal(a, b, c) {
+    return normalize3(
+      cross3(
+        subtract3(b, a),
+        subtract3(c, a)
+      )
+    );
+  }
+
   function polygonSignedArea(vertices) {
-    let sum =
-      0;
+    let area = 0;
 
     for (
       let index = 0;
       index < vertices.length;
       index += 1
     ) {
-      const current =
-        vertices[index];
-
+      const current = vertices[index];
       const next =
         vertices[
           (index + 1) %
           vertices.length
         ];
 
-      sum +=
+      area +=
         current[0] * next[1] -
         next[0] * current[1];
     }
 
-    return sum / 2;
+    return area * 0.5;
   }
 
   function validatePolygon(vertices, code) {
@@ -844,6 +595,190 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
     );
   }
 
+  function polygonCentroid(vertices) {
+    let x = 0;
+    let y = 0;
+
+    for (const vertex of vertices) {
+      x += vertex[0];
+      y += vertex[1];
+    }
+
+    return [
+      x / vertices.length,
+      y / vertices.length
+    ];
+  }
+
+  function scalePolygonAroundCentroid(
+    vertices,
+    scale
+  ) {
+    invariant(
+      isFiniteNumber(scale) &&
+      scale > 0 &&
+      scale <= 1,
+      "POLYGON_SCALE_INVALID",
+      { scale }
+    );
+
+    const centroid =
+      polygonCentroid(vertices);
+
+    return vertices.map(([x, y]) => [
+      centroid[0] +
+        (x - centroid[0]) * scale,
+
+      centroid[1] +
+        (y - centroid[1]) * scale
+    ]);
+  }
+
+  function createEmptyMesh(
+    componentId,
+    primitive,
+    materialKey
+  ) {
+    validateMaterialKey(materialKey);
+
+    return {
+      componentId,
+      primitive,
+      materialKey,
+      positions: [],
+      normals: [],
+      indices: [],
+      groups: [],
+      metadata: {}
+    };
+  }
+
+  function pushVertex(mesh, position, normal) {
+    invariant(
+      Array.isArray(position) &&
+      position.length === 3 &&
+      position.every(isFiniteNumber),
+      "VERTEX_POSITION_INVALID",
+      {
+        componentId:
+          mesh.componentId,
+        position
+      }
+    );
+
+    invariant(
+      Array.isArray(normal) &&
+      normal.length === 3 &&
+      normal.every(isFiniteNumber),
+      "VERTEX_NORMAL_INVALID",
+      {
+        componentId:
+          mesh.componentId,
+        normal
+      }
+    );
+
+    const normalizedNormal =
+      normalize3(normal);
+
+    mesh.positions.push(
+      position[0],
+      position[1],
+      position[2]
+    );
+
+    mesh.normals.push(
+      normalizedNormal[0],
+      normalizedNormal[1],
+      normalizedNormal[2]
+    );
+
+    return (
+      mesh.positions.length / 3 -
+      1
+    );
+  }
+
+  function pushTriangle(mesh, a, b, c) {
+    invariant(
+      [a, b, c].every(
+        value =>
+          Number.isInteger(value) &&
+          value >= 0
+      ),
+      "TRIANGLE_INDEX_INVALID",
+      {
+        componentId:
+          mesh.componentId,
+        indices: [a, b, c]
+      }
+    );
+
+    mesh.indices.push(a, b, c);
+  }
+
+  function pushFlatTriangle(
+    mesh,
+    a,
+    b,
+    c,
+    reverse = false
+  ) {
+    const normal =
+      reverse
+        ? faceNormal(c, b, a)
+        : faceNormal(a, b, c);
+
+    const ia =
+      pushVertex(mesh, a, normal);
+
+    const ib =
+      pushVertex(mesh, b, normal);
+
+    const ic =
+      pushVertex(mesh, c, normal);
+
+    if (reverse) {
+      pushTriangle(mesh, ic, ib, ia);
+    } else {
+      pushTriangle(mesh, ia, ib, ic);
+    }
+  }
+
+  function pushFlatQuad(
+    mesh,
+    a,
+    b,
+    c,
+    d,
+    reverse = false
+  ) {
+    const normal =
+      reverse
+        ? faceNormal(d, c, b)
+        : faceNormal(a, b, c);
+
+    const ia =
+      pushVertex(mesh, a, normal);
+
+    const ib =
+      pushVertex(mesh, b, normal);
+
+    const ic =
+      pushVertex(mesh, c, normal);
+
+    const id =
+      pushVertex(mesh, d, normal);
+
+    if (reverse) {
+      pushTriangle(mesh, id, ic, ib);
+      pushTriangle(mesh, id, ib, ia);
+    } else {
+      pushTriangle(mesh, ia, ib, ic);
+      pushTriangle(mesh, ia, ic, id);
+    }
+  }
+
   function computeBoundsFromPositions(positions) {
     invariant(
       positions &&
@@ -852,37 +787,21 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
       "BOUNDING_POSITION_BUFFER_INVALID"
     );
 
-    let minimumX =
-      Infinity;
-
-    let minimumY =
-      Infinity;
-
-    let minimumZ =
-      Infinity;
-
-    let maximumX =
-      -Infinity;
-
-    let maximumY =
-      -Infinity;
-
-    let maximumZ =
-      -Infinity;
+    let minimumX = Infinity;
+    let minimumY = Infinity;
+    let minimumZ = Infinity;
+    let maximumX = -Infinity;
+    let maximumY = -Infinity;
+    let maximumZ = -Infinity;
 
     for (
       let index = 0;
       index < positions.length;
       index += 3
     ) {
-      const x =
-        positions[index];
-
-      const y =
-        positions[index + 1];
-
-      const z =
-        positions[index + 2];
+      const x = positions[index];
+      const y = positions[index + 1];
+      const z = positions[index + 2];
 
       minimumX =
         Math.min(minimumX, x);
@@ -904,26 +823,29 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
     }
 
     return Object.freeze({
-      minimum:
-        freezeVector([
-          minimumX,
-          minimumY,
-          minimumZ
-        ]),
+      minimum: freezeVector([
+        minimumX,
+        minimumY,
+        minimumZ
+      ]),
 
-      maximum:
-        freezeVector([
-          maximumX,
-          maximumY,
-          maximumZ
-        ]),
+      maximum: freezeVector([
+        maximumX,
+        maximumY,
+        maximumZ
+      ]),
 
-      size:
-        freezeVector([
-          maximumX - minimumX,
-          maximumY - minimumY,
-          maximumZ - minimumZ
-        ])
+      size: freezeVector([
+        maximumX - minimumX,
+        maximumY - minimumY,
+        maximumZ - minimumZ
+      ]),
+
+      center: freezeVector([
+        (minimumX + maximumX) * 0.5,
+        (minimumY + maximumY) * 0.5,
+        (minimumZ + maximumZ) * 0.5
+      ])
     });
   }
 
@@ -933,6 +855,7 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
     );
 
     invariant(
+      mesh.positions.length > 0 &&
       mesh.positions.length % 3 === 0,
       "POSITION_BUFFER_ALIGNMENT_FAILURE",
       {
@@ -952,6 +875,7 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
     );
 
     invariant(
+      mesh.indices.length > 0 &&
       mesh.indices.length % 3 === 0,
       "INDEX_BUFFER_TRIANGLE_ALIGNMENT_FAILURE",
       {
@@ -1012,18 +936,15 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
             ),
 
       groups:
-        mesh.groups.map(
-          (group) =>
-            Object.freeze({
-              ...group
-            })
+        mesh.groups.map(group =>
+          Object.freeze({
+            ...group
+          })
         ),
 
       metadata:
         deepFreeze({
-          ...mesh.metadata,
-          materialKey:
-            mesh.materialKey
+          ...mesh.metadata
         }),
 
       bounds,
@@ -1035,13 +956,413 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
     });
   }
 
-  function createExtrudedAnnulus({
+  function createCirclePoint(
+    radius,
+    theta,
+    z
+  ) {
+    return [
+      radius * Math.cos(theta),
+      radius * Math.sin(theta),
+      z
+    ];
+  }
+
+  function pushAnnularSurfaceBand(
+    mesh,
+    {
+      outerRadius,
+      innerRadius,
+      z,
+      segments,
+      normal
+    }
+  ) {
+    const start =
+      mesh.indices.length;
+
+    const outer = [];
+    const inner = [];
+
+    for (
+      let index = 0;
+      index < segments;
+      index += 1
+    ) {
+      const theta =
+        TAU * index / segments;
+
+      outer.push(
+        pushVertex(
+          mesh,
+          createCirclePoint(
+            outerRadius,
+            theta,
+            z
+          ),
+          normal
+        )
+      );
+
+      inner.push(
+        pushVertex(
+          mesh,
+          createCirclePoint(
+            innerRadius,
+            theta,
+            z
+          ),
+          normal
+        )
+      );
+    }
+
+    for (
+      let index = 0;
+      index < segments;
+      index += 1
+    ) {
+      const next =
+        (index + 1) % segments;
+
+      if (normal[2] > 0) {
+        pushTriangle(
+          mesh,
+          outer[index],
+          outer[next],
+          inner[index]
+        );
+
+        pushTriangle(
+          mesh,
+          outer[next],
+          inner[next],
+          inner[index]
+        );
+      } else {
+        pushTriangle(
+          mesh,
+          outer[index],
+          inner[index],
+          outer[next]
+        );
+
+        pushTriangle(
+          mesh,
+          outer[next],
+          inner[index],
+          inner[next]
+        );
+      }
+    }
+
+    return {
+      indexStart: start,
+      indexCount:
+        mesh.indices.length - start
+    };
+  }
+
+  function pushCircularSlopeBand(
+    mesh,
+    {
+      radiusA,
+      zA,
+      radiusB,
+      zB,
+      segments,
+      inward = false
+    }
+  ) {
+    const start =
+      mesh.indices.length;
+
+    const deltaRadius =
+      radiusB - radiusA;
+
+    const deltaZ =
+      zB - zA;
+
+    const radialSign =
+      inward ? -1 : 1;
+
+    for (
+      let index = 0;
+      index < segments;
+      index += 1
+    ) {
+      const next =
+        (index + 1) % segments;
+
+      const thetaA =
+        TAU * index / segments;
+
+      const thetaB =
+        TAU * next / segments;
+
+      const a =
+        createCirclePoint(
+          radiusA,
+          thetaA,
+          zA
+        );
+
+      const b =
+        createCirclePoint(
+          radiusA,
+          thetaB,
+          zA
+        );
+
+      const c =
+        createCirclePoint(
+          radiusB,
+          thetaB,
+          zB
+        );
+
+      const d =
+        createCirclePoint(
+          radiusB,
+          thetaA,
+          zB
+        );
+
+      const slopeNormalA =
+        normalize3([
+          radialSign *
+            Math.cos(thetaA) *
+            Math.abs(deltaZ),
+
+          radialSign *
+            Math.sin(thetaA) *
+            Math.abs(deltaZ),
+
+          inward
+            ? Math.abs(deltaRadius)
+            : -Math.abs(deltaRadius)
+        ]);
+
+      const slopeNormalB =
+        normalize3([
+          radialSign *
+            Math.cos(thetaB) *
+            Math.abs(deltaZ),
+
+          radialSign *
+            Math.sin(thetaB) *
+            Math.abs(deltaZ),
+
+          inward
+            ? Math.abs(deltaRadius)
+            : -Math.abs(deltaRadius)
+        ]);
+
+      const ia =
+        pushVertex(
+          mesh,
+          a,
+          slopeNormalA
+        );
+
+      const ib =
+        pushVertex(
+          mesh,
+          b,
+          slopeNormalB
+        );
+
+      const ic =
+        pushVertex(
+          mesh,
+          c,
+          slopeNormalB
+        );
+
+      const id =
+        pushVertex(
+          mesh,
+          d,
+          slopeNormalA
+        );
+
+      if (inward) {
+        pushTriangle(
+          mesh,
+          ia,
+          ic,
+          ib
+        );
+
+        pushTriangle(
+          mesh,
+          ia,
+          id,
+          ic
+        );
+      } else {
+        pushTriangle(
+          mesh,
+          ia,
+          ib,
+          ic
+        );
+
+        pushTriangle(
+          mesh,
+          ia,
+          ic,
+          id
+        );
+      }
+    }
+
+    return {
+      indexStart: start,
+      indexCount:
+        mesh.indices.length - start
+    };
+  }
+
+  function pushCircularWall(
+    mesh,
+    {
+      radius,
+      zRear,
+      zFront,
+      segments,
+      inward = false
+    }
+  ) {
+    const start =
+      mesh.indices.length;
+
+    for (
+      let index = 0;
+      index < segments;
+      index += 1
+    ) {
+      const next =
+        (index + 1) % segments;
+
+      const thetaA =
+        TAU * index / segments;
+
+      const thetaB =
+        TAU * next / segments;
+
+      const normalA = [
+        (inward ? -1 : 1) *
+          Math.cos(thetaA),
+
+        (inward ? -1 : 1) *
+          Math.sin(thetaA),
+
+        0
+      ];
+
+      const normalB = [
+        (inward ? -1 : 1) *
+          Math.cos(thetaB),
+
+        (inward ? -1 : 1) *
+          Math.sin(thetaB),
+
+        0
+      ];
+
+      const aFront =
+        pushVertex(
+          mesh,
+          createCirclePoint(
+            radius,
+            thetaA,
+            zFront
+          ),
+          normalA
+        );
+
+      const bFront =
+        pushVertex(
+          mesh,
+          createCirclePoint(
+            radius,
+            thetaB,
+            zFront
+          ),
+          normalB
+        );
+
+      const aRear =
+        pushVertex(
+          mesh,
+          createCirclePoint(
+            radius,
+            thetaA,
+            zRear
+          ),
+          normalA
+        );
+
+      const bRear =
+        pushVertex(
+          mesh,
+          createCirclePoint(
+            radius,
+            thetaB,
+            zRear
+          ),
+          normalB
+        );
+
+      if (inward) {
+        pushTriangle(
+          mesh,
+          aFront,
+          aRear,
+          bFront
+        );
+
+        pushTriangle(
+          mesh,
+          bFront,
+          aRear,
+          bRear
+        );
+      } else {
+        pushTriangle(
+          mesh,
+          aFront,
+          bFront,
+          aRear
+        );
+
+        pushTriangle(
+          mesh,
+          bFront,
+          bRear,
+          aRear
+        );
+      }
+    }
+
+    return {
+      indexStart: start,
+      indexCount:
+        mesh.indices.length - start
+    };
+  }
+
+  function createBeveledAnnulus({
     componentId,
     materialKey,
     outerRadius,
     innerRadius,
     zRear,
     zFront,
+    bevelDepth,
+    outerBevelWidth,
+    innerBevelWidth,
     segments
   }) {
     validateSegmentCount(
@@ -1063,8 +1384,6 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
     );
 
     invariant(
-      isFiniteNumber(zRear) &&
-      isFiniteNumber(zFront) &&
       zFront > zRear,
       "ANNULUS_DEPTH_INTERVAL_INVALID",
       {
@@ -1074,343 +1393,205 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
       }
     );
 
+    invariant(
+      bevelDepth > 0 &&
+      bevelDepth * 2 <
+        zFront - zRear,
+      "ANNULUS_BEVEL_DEPTH_INVALID",
+      {
+        componentId,
+        bevelDepth
+      }
+    );
+
+    invariant(
+      outerBevelWidth > 0 &&
+      innerBevelWidth > 0 &&
+      outerRadius - outerBevelWidth >
+        innerRadius + innerBevelWidth,
+      "ANNULUS_BEVEL_WIDTH_INVALID",
+      {
+        componentId,
+        outerBevelWidth,
+        innerBevelWidth
+      }
+    );
+
     const mesh =
       createEmptyMesh(
         componentId,
-        "EXTRUDED_ANNULUS",
+        "BEVELED_ANNULUS",
         materialKey
       );
 
-    const frontOuter =
-      [];
+    const outerFaceRadius =
+      outerRadius -
+      outerBevelWidth;
 
-    const frontInner =
-      [];
+    const innerFaceRadius =
+      innerRadius +
+      innerBevelWidth;
 
-    const rearOuter =
-      [];
+    const zFrontShoulder =
+      zFront - bevelDepth;
 
-    const rearInner =
-      [];
+    const zRearShoulder =
+      zRear + bevelDepth;
 
-    for (
-      let index = 0;
-      index < segments;
-      index += 1
-    ) {
-      const theta =
-        (TAU * index) /
-        segments;
-
-      const cosine =
-        Math.cos(theta);
-
-      const sine =
-        Math.sin(theta);
-
-      frontOuter.push(
-        pushVertex(
-          mesh,
-          [
-            outerRadius * cosine,
-            outerRadius * sine,
-            zFront
-          ],
-          [0, 0, 1]
-        )
-      );
-
-      frontInner.push(
-        pushVertex(
-          mesh,
-          [
-            innerRadius * cosine,
-            innerRadius * sine,
-            zFront
-          ],
-          [0, 0, 1]
-        )
-      );
-
-      rearOuter.push(
-        pushVertex(
-          mesh,
-          [
-            outerRadius * cosine,
-            outerRadius * sine,
-            zRear
-          ],
-          [0, 0, -1]
-        )
-      );
-
-      rearInner.push(
-        pushVertex(
-          mesh,
-          [
-            innerRadius * cosine,
-            innerRadius * sine,
-            zRear
-          ],
-          [0, 0, -1]
-        )
-      );
-    }
-
-    for (
-      let index = 0;
-      index < segments;
-      index += 1
-    ) {
-      const next =
-        (index + 1) %
-        segments;
-
-      pushTriangle(
+    const frontFace =
+      pushAnnularSurfaceBand(
         mesh,
-        frontOuter[index],
-        frontOuter[next],
-        frontInner[index]
+        {
+          outerRadius:
+            outerFaceRadius,
+          innerRadius:
+            innerFaceRadius,
+          z: zFront,
+          segments,
+          normal: [0, 0, 1]
+        }
       );
 
-      pushTriangle(
+    const frontOuterBevel =
+      pushCircularSlopeBand(
         mesh,
-        frontOuter[next],
-        frontInner[next],
-        frontInner[index]
+        {
+          radiusA:
+            outerFaceRadius,
+          zA: zFront,
+          radiusB:
+            outerRadius,
+          zB:
+            zFrontShoulder,
+          segments,
+          inward: false
+        }
       );
 
-      pushTriangle(
+    const outerWall =
+      pushCircularWall(
         mesh,
-        rearOuter[index],
-        rearInner[index],
-        rearOuter[next]
+        {
+          radius:
+            outerRadius,
+          zRear:
+            zRearShoulder,
+          zFront:
+            zFrontShoulder,
+          segments,
+          inward: false
+        }
       );
 
-      pushTriangle(
+    const rearOuterBevel =
+      pushCircularSlopeBand(
         mesh,
-        rearOuter[next],
-        rearInner[index],
-        rearInner[next]
+        {
+          radiusA:
+            outerRadius,
+          zA:
+            zRearShoulder,
+          radiusB:
+            outerFaceRadius,
+          zB: zRear,
+          segments,
+          inward: false
+        }
       );
-    }
 
-    const outerWallStart =
-      mesh.indices.length;
-
-    for (
-      let index = 0;
-      index < segments;
-      index += 1
-    ) {
-      const next =
-        (index + 1) %
-        segments;
-
-      const thetaA =
-        (TAU * index) /
-        segments;
-
-      const thetaB =
-        (TAU * next) /
-        segments;
-
-      const aNormal = [
-        Math.cos(thetaA),
-        Math.sin(thetaA),
-        0
-      ];
-
-      const bNormal = [
-        Math.cos(thetaB),
-        Math.sin(thetaB),
-        0
-      ];
-
-      const aFront =
-        pushVertex(
-          mesh,
-          [
-            outerRadius * aNormal[0],
-            outerRadius * aNormal[1],
-            zFront
-          ],
-          aNormal
-        );
-
-      const bFront =
-        pushVertex(
-          mesh,
-          [
-            outerRadius * bNormal[0],
-            outerRadius * bNormal[1],
-            zFront
-          ],
-          bNormal
-        );
-
-      const aRear =
-        pushVertex(
-          mesh,
-          [
-            outerRadius * aNormal[0],
-            outerRadius * aNormal[1],
-            zRear
-          ],
-          aNormal
-        );
-
-      const bRear =
-        pushVertex(
-          mesh,
-          [
-            outerRadius * bNormal[0],
-            outerRadius * bNormal[1],
-            zRear
-          ],
-          bNormal
-        );
-
-      pushTriangle(
+    const rearFace =
+      pushAnnularSurfaceBand(
         mesh,
-        aFront,
-        bFront,
-        aRear
+        {
+          outerRadius:
+            outerFaceRadius,
+          innerRadius:
+            innerFaceRadius,
+          z: zRear,
+          segments,
+          normal: [0, 0, -1]
+        }
       );
 
-      pushTriangle(
+    const rearInnerBevel =
+      pushCircularSlopeBand(
         mesh,
-        bFront,
-        bRear,
-        aRear
+        {
+          radiusA:
+            innerFaceRadius,
+          zA: zRear,
+          radiusB:
+            innerRadius,
+          zB:
+            zRearShoulder,
+          segments,
+          inward: true
+        }
       );
-    }
 
-    const innerWallStart =
-      mesh.indices.length;
-
-    for (
-      let index = 0;
-      index < segments;
-      index += 1
-    ) {
-      const next =
-        (index + 1) %
-        segments;
-
-      const thetaA =
-        (TAU * index) /
-        segments;
-
-      const thetaB =
-        (TAU * next) /
-        segments;
-
-      const aNormal = [
-        -Math.cos(thetaA),
-        -Math.sin(thetaA),
-        0
-      ];
-
-      const bNormal = [
-        -Math.cos(thetaB),
-        -Math.sin(thetaB),
-        0
-      ];
-
-      const aFront =
-        pushVertex(
-          mesh,
-          [
-            -innerRadius * aNormal[0],
-            -innerRadius * aNormal[1],
-            zFront
-          ],
-          aNormal
-        );
-
-      const bFront =
-        pushVertex(
-          mesh,
-          [
-            -innerRadius * bNormal[0],
-            -innerRadius * bNormal[1],
-            zFront
-          ],
-          bNormal
-        );
-
-      const aRear =
-        pushVertex(
-          mesh,
-          [
-            -innerRadius * aNormal[0],
-            -innerRadius * aNormal[1],
-            zRear
-          ],
-          aNormal
-        );
-
-      const bRear =
-        pushVertex(
-          mesh,
-          [
-            -innerRadius * bNormal[0],
-            -innerRadius * bNormal[1],
-            zRear
-          ],
-          bNormal
-        );
-
-      pushTriangle(
+    const innerWall =
+      pushCircularWall(
         mesh,
-        aFront,
-        aRear,
-        bFront
+        {
+          radius:
+            innerRadius,
+          zRear:
+            zRearShoulder,
+          zFront:
+            zFrontShoulder,
+          segments,
+          inward: true
+        }
       );
 
-      pushTriangle(
+    const frontInnerBevel =
+      pushCircularSlopeBand(
         mesh,
-        bFront,
-        aRear,
-        bRear
+        {
+          radiusA:
+            innerRadius,
+          zA:
+            zFrontShoulder,
+          radiusB:
+            innerFaceRadius,
+          zB: zFront,
+          segments,
+          inward: true
+        }
       );
-    }
 
     mesh.groups.push(
       {
-        id:
-          "ANNULUS_FRONT_AND_REAR",
-
-        indexStart:
-          0,
-
-        indexCount:
-          outerWallStart
+        id: "FRONT_FACE",
+        ...frontFace
       },
-
       {
-        id:
-          "ANNULUS_OUTER_WALL",
-
-        indexStart:
-          outerWallStart,
-
-        indexCount:
-          innerWallStart -
-          outerWallStart
+        id: "FRONT_OUTER_BEVEL",
+        ...frontOuterBevel
       },
-
       {
-        id:
-          "ANNULUS_INNER_WALL",
-
-        indexStart:
-          innerWallStart,
-
-        indexCount:
-          mesh.indices.length -
-          innerWallStart
+        id: "OUTER_WALL",
+        ...outerWall
+      },
+      {
+        id: "REAR_OUTER_BEVEL",
+        ...rearOuterBevel
+      },
+      {
+        id: "REAR_FACE",
+        ...rearFace
+      },
+      {
+        id: "REAR_INNER_BEVEL",
+        ...rearInnerBevel
+      },
+      {
+        id: "INNER_WALL",
+        ...innerWall
+      },
+      {
+        id: "FRONT_INNER_BEVEL",
+        ...frontInnerBevel
       }
     );
 
@@ -1419,35 +1600,487 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
       innerRadius,
       zRear,
       zFront,
+      bevelDepth,
+      outerBevelWidth,
+      innerBevelWidth,
       segments
     };
 
     return finalizeMesh(mesh);
   }
 
-  function createExtrudedConvexPolygon({
+  function createBeveledDisc({
+    componentId,
+    materialKey,
+    radius,
+    zRear,
+    zFront,
+    bevelDepth,
+    bevelWidth,
+    segments
+  }) {
+    validateSegmentCount(
+      segments,
+      "DISC_SEGMENT_COUNT_INVALID"
+    );
+
+    invariant(
+      radius > 0 &&
+      bevelWidth > 0 &&
+      radius > bevelWidth,
+      "DISC_RADIUS_INVALID",
+      {
+        componentId,
+        radius,
+        bevelWidth
+      }
+    );
+
+    invariant(
+      zFront > zRear &&
+      bevelDepth > 0 &&
+      bevelDepth * 2 <
+        zFront - zRear,
+      "DISC_DEPTH_INVALID",
+      {
+        componentId,
+        zRear,
+        zFront,
+        bevelDepth
+      }
+    );
+
+    const mesh =
+      createEmptyMesh(
+        componentId,
+        "BEVELED_DISC",
+        materialKey
+      );
+
+    const faceRadius =
+      radius - bevelWidth;
+
+    const zFrontShoulder =
+      zFront - bevelDepth;
+
+    const zRearShoulder =
+      zRear + bevelDepth;
+
+    const frontStart =
+      mesh.indices.length;
+
+    const frontCenter =
+      pushVertex(
+        mesh,
+        [0, 0, zFront],
+        [0, 0, 1]
+      );
+
+    const frontRim = [];
+
+    for (
+      let index = 0;
+      index < segments;
+      index += 1
+    ) {
+      const theta =
+        TAU * index / segments;
+
+      frontRim.push(
+        pushVertex(
+          mesh,
+          createCirclePoint(
+            faceRadius,
+            theta,
+            zFront
+          ),
+          [0, 0, 1]
+        )
+      );
+    }
+
+    for (
+      let index = 0;
+      index < segments;
+      index += 1
+    ) {
+      const next =
+        (index + 1) % segments;
+
+      pushTriangle(
+        mesh,
+        frontCenter,
+        frontRim[index],
+        frontRim[next]
+      );
+    }
+
+    const frontFace = {
+      indexStart: frontStart,
+      indexCount:
+        mesh.indices.length -
+        frontStart
+    };
+
+    const frontBevel =
+      pushCircularSlopeBand(
+        mesh,
+        {
+          radiusA:
+            faceRadius,
+          zA: zFront,
+          radiusB:
+            radius,
+          zB:
+            zFrontShoulder,
+          segments,
+          inward: false
+        }
+      );
+
+    const wall =
+      pushCircularWall(
+        mesh,
+        {
+          radius,
+          zRear:
+            zRearShoulder,
+          zFront:
+            zFrontShoulder,
+          segments,
+          inward: false
+        }
+      );
+
+    const rearBevel =
+      pushCircularSlopeBand(
+        mesh,
+        {
+          radiusA:
+            radius,
+          zA:
+            zRearShoulder,
+          radiusB:
+            faceRadius,
+          zB: zRear,
+          segments,
+          inward: false
+        }
+      );
+
+    const rearStart =
+      mesh.indices.length;
+
+    const rearCenter =
+      pushVertex(
+        mesh,
+        [0, 0, zRear],
+        [0, 0, -1]
+      );
+
+    const rearRim = [];
+
+    for (
+      let index = 0;
+      index < segments;
+      index += 1
+    ) {
+      const theta =
+        TAU * index / segments;
+
+      rearRim.push(
+        pushVertex(
+          mesh,
+          createCirclePoint(
+            faceRadius,
+            theta,
+            zRear
+          ),
+          [0, 0, -1]
+        )
+      );
+    }
+
+    for (
+      let index = 0;
+      index < segments;
+      index += 1
+    ) {
+      const next =
+        (index + 1) % segments;
+
+      pushTriangle(
+        mesh,
+        rearCenter,
+        rearRim[next],
+        rearRim[index]
+      );
+    }
+
+    const rearFace = {
+      indexStart: rearStart,
+      indexCount:
+        mesh.indices.length -
+        rearStart
+    };
+
+    mesh.groups.push(
+      {
+        id: "FRONT_FACE",
+        ...frontFace
+      },
+      {
+        id: "FRONT_BEVEL",
+        ...frontBevel
+      },
+      {
+        id: "SIDE_WALL",
+        ...wall
+      },
+      {
+        id: "REAR_BEVEL",
+        ...rearBevel
+      },
+      {
+        id: "REAR_FACE",
+        ...rearFace
+      }
+    );
+
+    mesh.metadata = {
+      radius,
+      zRear,
+      zFront,
+      bevelDepth,
+      bevelWidth,
+      segments
+    };
+
+    return finalizeMesh(mesh);
+  }
+
+  function pushPolygonFace(
+    mesh,
+    vertices,
+    z,
+    frontFacing
+  ) {
+    const start =
+      mesh.indices.length;
+
+    const normal =
+      frontFacing
+        ? [0, 0, 1]
+        : [0, 0, -1];
+
+    const indices =
+      vertices.map(vertex =>
+        pushVertex(
+          mesh,
+          [
+            vertex[0],
+            vertex[1],
+            z
+          ],
+          normal
+        )
+      );
+
+    for (
+      let index = 1;
+      index < vertices.length - 1;
+      index += 1
+    ) {
+      if (frontFacing) {
+        pushTriangle(
+          mesh,
+          indices[0],
+          indices[index],
+          indices[index + 1]
+        );
+      } else {
+        pushTriangle(
+          mesh,
+          indices[0],
+          indices[index + 1],
+          indices[index]
+        );
+      }
+    }
+
+    return {
+      indexStart: start,
+      indexCount:
+        mesh.indices.length - start
+    };
+  }
+
+  function pushPolygonBand(
+    mesh,
+    outerVertices,
+    outerZ,
+    innerVertices,
+    innerZ,
+    reverse = false
+  ) {
+    invariant(
+      outerVertices.length ===
+      innerVertices.length,
+      "POLYGON_BAND_VERTEX_COUNT_MISMATCH"
+    );
+
+    const start =
+      mesh.indices.length;
+
+    for (
+      let index = 0;
+      index < outerVertices.length;
+      index += 1
+    ) {
+      const next =
+        (index + 1) %
+        outerVertices.length;
+
+      const a = [
+        outerVertices[index][0],
+        outerVertices[index][1],
+        outerZ
+      ];
+
+      const b = [
+        outerVertices[next][0],
+        outerVertices[next][1],
+        outerZ
+      ];
+
+      const c = [
+        innerVertices[next][0],
+        innerVertices[next][1],
+        innerZ
+      ];
+
+      const d = [
+        innerVertices[index][0],
+        innerVertices[index][1],
+        innerZ
+      ];
+
+      pushFlatQuad(
+        mesh,
+        a,
+        b,
+        c,
+        d,
+        reverse
+      );
+    }
+
+    return {
+      indexStart: start,
+      indexCount:
+        mesh.indices.length - start
+    };
+  }
+
+  function pushPolygonWall(
+    mesh,
+    vertices,
+    zRear,
+    zFront
+  ) {
+    const start =
+      mesh.indices.length;
+
+    for (
+      let index = 0;
+      index < vertices.length;
+      index += 1
+    ) {
+      const next =
+        (index + 1) %
+        vertices.length;
+
+      const a = vertices[index];
+      const b = vertices[next];
+
+      const frontA = [
+        a[0],
+        a[1],
+        zFront
+      ];
+
+      const frontB = [
+        b[0],
+        b[1],
+        zFront
+      ];
+
+      const rearB = [
+        b[0],
+        b[1],
+        zRear
+      ];
+
+      const rearA = [
+        a[0],
+        a[1],
+        zRear
+      ];
+
+      pushFlatQuad(
+        mesh,
+        frontA,
+        frontB,
+        rearB,
+        rearA,
+        false
+      );
+    }
+
+    return {
+      indexStart: start,
+      indexCount:
+        mesh.indices.length - start
+    };
+  }
+
+  function createBeveledConvexPolygon({
     componentId,
     materialKey,
     xyVertices,
     zRear,
     zFront,
+    bevelDepth,
+    bevelInset,
     primitive =
-      "EXTRUDED_CONVEX_POLYGON"
+      "BEVELED_CONVEX_POLYGON"
   }) {
     validatePolygon(
       xyVertices,
-      "EXTRUDED_POLYGON_INVALID"
+      "BEVELED_POLYGON_INVALID"
     );
 
     invariant(
-      isFiniteNumber(zRear) &&
-      isFiniteNumber(zFront) &&
-      zFront > zRear,
-      "EXTRUDED_POLYGON_DEPTH_INVALID",
+      zFront > zRear &&
+      bevelDepth > 0 &&
+      bevelDepth * 2 <
+        zFront - zRear,
+      "BEVELED_POLYGON_DEPTH_INVALID",
       {
         componentId,
         zRear,
-        zFront
+        zFront,
+        bevelDepth
+      }
+    );
+
+    invariant(
+      bevelInset > 0 &&
+      bevelInset < 0.45,
+      "BEVELED_POLYGON_INSET_INVALID",
+      {
+        componentId,
+        bevelInset
       }
     );
 
@@ -1458,451 +2091,104 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
         materialKey
       );
 
-    const front =
-      [];
+    const faceScale =
+      1 - bevelInset;
 
-    const rear =
-      [];
-
-    for (const vertex of xyVertices) {
-      front.push(
-        pushVertex(
-          mesh,
-          [
-            vertex[0],
-            vertex[1],
-            zFront
-          ],
-          [0, 0, 1]
-        )
+    const faceVertices =
+      scalePolygonAroundCentroid(
+        xyVertices,
+        faceScale
       );
 
-      rear.push(
-        pushVertex(
-          mesh,
-          [
-            vertex[0],
-            vertex[1],
-            zRear
-          ],
-          [0, 0, -1]
-        )
-      );
-    }
+    const zFrontShoulder =
+      zFront - bevelDepth;
 
-    for (
-      let index = 1;
-      index <
-      xyVertices.length - 1;
-      index += 1
-    ) {
-      pushTriangle(
+    const zRearShoulder =
+      zRear + bevelDepth;
+
+    const frontFace =
+      pushPolygonFace(
         mesh,
-        front[0],
-        front[index],
-        front[index + 1]
+        faceVertices,
+        zFront,
+        true
       );
 
-      pushTriangle(
+    const frontBevel =
+      pushPolygonBand(
         mesh,
-        rear[0],
-        rear[index + 1],
-        rear[index]
+        faceVertices,
+        zFront,
+        xyVertices,
+        zFrontShoulder,
+        false
       );
-    }
 
-    const sideStart =
-      mesh.indices.length;
-
-    for (
-      let index = 0;
-      index < xyVertices.length;
-      index += 1
-    ) {
-      const next =
-        (index + 1) %
-        xyVertices.length;
-
-      const a =
-        xyVertices[index];
-
-      const b =
-        xyVertices[next];
-
-      const edgeX =
-        b[0] - a[0];
-
-      const edgeY =
-        b[1] - a[1];
-
-      const normal2 =
-        normalize2(
-          edgeY,
-          -edgeX
-        );
-
-      const normal = [
-        normal2[0],
-        normal2[1],
-        0
-      ];
-
-      const aFront =
-        pushVertex(
-          mesh,
-          [
-            a[0],
-            a[1],
-            zFront
-          ],
-          normal
-        );
-
-      const bFront =
-        pushVertex(
-          mesh,
-          [
-            b[0],
-            b[1],
-            zFront
-          ],
-          normal
-        );
-
-      const aRear =
-        pushVertex(
-          mesh,
-          [
-            a[0],
-            a[1],
-            zRear
-          ],
-          normal
-        );
-
-      const bRear =
-        pushVertex(
-          mesh,
-          [
-            b[0],
-            b[1],
-            zRear
-          ],
-          normal
-        );
-
-      pushTriangle(
+    const wall =
+      pushPolygonWall(
         mesh,
-        aFront,
-        bFront,
-        aRear
+        xyVertices,
+        zRearShoulder,
+        zFrontShoulder
       );
 
-      pushTriangle(
+    const rearBevel =
+      pushPolygonBand(
         mesh,
-        bFront,
-        bRear,
-        aRear
+        xyVertices,
+        zRearShoulder,
+        faceVertices,
+        zRear,
+        false
       );
-    }
+
+    const rearFace =
+      pushPolygonFace(
+        mesh,
+        faceVertices,
+        zRear,
+        false
+      );
 
     mesh.groups.push(
       {
-        id:
-          "POLYGON_FRONT_AND_REAR",
-
-        indexStart:
-          0,
-
-        indexCount:
-          sideStart
+        id: "FRONT_FACE",
+        ...frontFace
       },
-
       {
-        id:
-          "POLYGON_SIDE_WALLS",
-
-        indexStart:
-          sideStart,
-
-        indexCount:
-          mesh.indices.length -
-          sideStart
+        id: "FRONT_BEVEL",
+        ...frontBevel
+      },
+      {
+        id: "SIDE_WALL",
+        ...wall
+      },
+      {
+        id: "REAR_BEVEL",
+        ...rearBevel
+      },
+      {
+        id: "REAR_FACE",
+        ...rearFace
       }
     );
 
     mesh.metadata = {
       xyVertices:
-        xyVertices.map(
-          cloneVector
-        ),
-
-      zRear,
-
-      zFront
-    };
-
-    return finalizeMesh(mesh);
-  }
-
-  function createExtrudedCylinder({
-    componentId,
-    materialKey,
-    radius,
-    zRear,
-    zFront,
-    segments
-  }) {
-    validateSegmentCount(
-      segments,
-      "CYLINDER_SEGMENT_COUNT_INVALID"
-    );
-
-    invariant(
-      isFiniteNumber(radius) &&
-      radius > 0,
-      "CYLINDER_RADIUS_INVALID",
-      {
-        componentId,
-        radius
-      }
-    );
-
-    invariant(
-      isFiniteNumber(zRear) &&
-      isFiniteNumber(zFront) &&
-      zFront > zRear,
-      "CYLINDER_DEPTH_INTERVAL_INVALID",
-      {
-        componentId,
-        zRear,
-        zFront
-      }
-    );
-
-    const mesh =
-      createEmptyMesh(
-        componentId,
-        "EXTRUDED_CYLINDER",
-        materialKey
-      );
-
-    const frontCenter =
-      pushVertex(
-        mesh,
-        [0, 0, zFront],
-        [0, 0, 1]
-      );
-
-    const rearCenter =
-      pushVertex(
-        mesh,
-        [0, 0, zRear],
-        [0, 0, -1]
-      );
-
-    const front =
-      [];
-
-    const rear =
-      [];
-
-    for (
-      let index = 0;
-      index < segments;
-      index += 1
-    ) {
-      const theta =
-        (TAU * index) /
-        segments;
-
-      const cosine =
-        Math.cos(theta);
-
-      const sine =
-        Math.sin(theta);
-
-      front.push(
-        pushVertex(
-          mesh,
-          [
-            radius * cosine,
-            radius * sine,
-            zFront
-          ],
-          [0, 0, 1]
-        )
-      );
-
-      rear.push(
-        pushVertex(
-          mesh,
-          [
-            radius * cosine,
-            radius * sine,
-            zRear
-          ],
-          [0, 0, -1]
-        )
-      );
-    }
-
-    for (
-      let index = 0;
-      index < segments;
-      index += 1
-    ) {
-      const next =
-        (index + 1) %
-        segments;
-
-      pushTriangle(
-        mesh,
-        frontCenter,
-        front[index],
-        front[next]
-      );
-
-      pushTriangle(
-        mesh,
-        rearCenter,
-        rear[next],
-        rear[index]
-      );
-    }
-
-    const sideStart =
-      mesh.indices.length;
-
-    for (
-      let index = 0;
-      index < segments;
-      index += 1
-    ) {
-      const next =
-        (index + 1) %
-        segments;
-
-      const thetaA =
-        (TAU * index) /
-        segments;
-
-      const thetaB =
-        (TAU * next) /
-        segments;
-
-      const normalA = [
-        Math.cos(thetaA),
-        Math.sin(thetaA),
-        0
-      ];
-
-      const normalB = [
-        Math.cos(thetaB),
-        Math.sin(thetaB),
-        0
-      ];
-
-      const aFront =
-        pushVertex(
-          mesh,
-          [
-            radius * normalA[0],
-            radius * normalA[1],
-            zFront
-          ],
-          normalA
-        );
-
-      const bFront =
-        pushVertex(
-          mesh,
-          [
-            radius * normalB[0],
-            radius * normalB[1],
-            zFront
-          ],
-          normalB
-        );
-
-      const aRear =
-        pushVertex(
-          mesh,
-          [
-            radius * normalA[0],
-            radius * normalA[1],
-            zRear
-          ],
-          normalA
-        );
-
-      const bRear =
-        pushVertex(
-          mesh,
-          [
-            radius * normalB[0],
-            radius * normalB[1],
-            zRear
-          ],
-          normalB
-        );
-
-      pushTriangle(
-        mesh,
-        aFront,
-        bFront,
-        aRear
-      );
-
-      pushTriangle(
-        mesh,
-        bFront,
-        bRear,
-        aRear
-      );
-    }
-
-    mesh.groups.push(
-      {
-        id:
-          "CYLINDER_CAPS",
-
-        indexStart:
-          0,
-
-        indexCount:
-          sideStart
-      },
-
-      {
-        id:
-          "CYLINDER_SIDE_WALL",
-
-        indexStart:
-          sideStart,
-
-        indexCount:
-          mesh.indices.length -
-          sideStart
-      }
-    );
-
-    mesh.metadata = {
-      radius,
+        xyVertices.map(cloneVector),
       zRear,
       zFront,
-      segments
+      bevelDepth,
+      bevelInset
     };
 
     return finalizeMesh(mesh);
   }
 
-  function createIntercardinalTickPolygon(
-    angle,
-    radialCenter,
-    radialLength,
-    tangentialWidth
-  ) {
+  function createIntercardinalTickPolygon(angle) {
+    const definition =
+      COMPONENT_DIMENSIONS.intercardinalTick;
+
     const direction = [
       Math.cos(angle),
       Math.sin(angle)
@@ -1914,20 +2200,20 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
     ];
 
     const radialHalf =
-      radialLength / 2;
+      definition.radialLength * 0.5;
 
-    const tangentHalf =
-      tangentialWidth / 2;
+    const tangentialHalf =
+      definition.tangentialWidth * 0.5;
 
     const center = [
       direction[0] *
-        radialCenter,
+        definition.radialCenter,
 
       direction[1] *
-        radialCenter
+        definition.radialCenter
     ];
 
-    const rearCenter = [
+    const innerCenter = [
       center[0] -
         direction[0] *
         radialHalf,
@@ -1937,7 +2223,7 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
         radialHalf
     ];
 
-    const frontCenter = [
+    const outerCenter = [
       center[0] +
         direction[0] *
         radialHalf,
@@ -1949,43 +2235,43 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
 
     return [
       [
-        rearCenter[0] -
+        innerCenter[0] -
           tangent[0] *
-          tangentHalf,
+          tangentialHalf,
 
-        rearCenter[1] -
+        innerCenter[1] -
           tangent[1] *
-          tangentHalf
+          tangentialHalf
       ],
 
       [
-        frontCenter[0] -
+        outerCenter[0] -
           tangent[0] *
-          tangentHalf,
+          tangentialHalf,
 
-        frontCenter[1] -
+        outerCenter[1] -
           tangent[1] *
-          tangentHalf
+          tangentialHalf
       ],
 
       [
-        frontCenter[0] +
+        outerCenter[0] +
           tangent[0] *
-          tangentHalf,
+          tangentialHalf,
 
-        frontCenter[1] +
+        outerCenter[1] +
           tangent[1] *
-          tangentHalf
+          tangentialHalf
       ],
 
       [
-        rearCenter[0] +
+        innerCenter[0] +
           tangent[0] *
-          tangentHalf,
+          tangentialHalf,
 
-        rearCenter[1] +
+        innerCenter[1] +
           tangent[1] *
-          tangentHalf
+          tangentialHalf
       ]
     ];
   }
@@ -1997,14 +2283,10 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
       "MESH_COLLECTION_REQUIRED"
     );
 
-    let vertexCount =
-      0;
+    let vertexCount = 0;
+    let triangleCount = 0;
 
-    let triangleCount =
-      0;
-
-    const aggregatePositions =
-      [];
+    const aggregatePositions = [];
 
     for (const mesh of meshes) {
       vertexCount +=
@@ -2031,11 +2313,8 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
 
     return deepFreeze({
       vertexCount,
-
       triangleCount,
-
       bounds,
-
       actualTotalDepth:
         bounds.size[2]
     });
@@ -2053,9 +2332,7 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
         DEPTH_ENVELOPE.absoluteRearLimitZ -
         EPSILON,
       "ABSOLUTE_REAR_DEPTH_LIMIT_EXCEEDED",
-      {
-        minimumZ
-      }
+      { minimumZ }
     );
 
     invariant(
@@ -2063,9 +2340,7 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
         DEPTH_ENVELOPE.absoluteFrontLimitZ +
         EPSILON,
       "ABSOLUTE_FRONT_DEPTH_LIMIT_EXCEEDED",
-      {
-        maximumZ
-      }
+      { maximumZ }
     );
 
     invariant(
@@ -2099,7 +2374,9 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
 
       invariant(
         radius <=
-          CONSTANTS.normalizedOuterRadius +
+          COMPONENT_DIMENSIONS
+            .outerHousing
+            .outerRadius +
           EPSILON,
         "COMPONENT_EXCEEDS_OUTER_RADIUS",
         {
@@ -2113,470 +2390,209 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
     }
   }
 
-  function validateEastWestMirror() {
-    const east =
-      CONSTANTS.eastDirection.xyVertices;
-
-    const west =
-      CONSTANTS.westDirection.xyVertices;
-
+  function validateMesh(mesh) {
     invariant(
-      east.length === west.length,
-      "EAST_WEST_VERTEX_COUNT_MISMATCH"
+      mesh &&
+      typeof mesh === "object",
+      "MESH_RECORD_REQUIRED"
     );
 
-    const mirroredEast =
-      east.map(
-        ([x, y]) =>
-          [-x, y]
-      );
+    invariant(
+      typeof mesh.componentId ===
+        "string" &&
+      mesh.componentId.length > 0,
+      "MESH_COMPONENT_ID_REQUIRED"
+    );
 
-    const normalizedWest = [
-      west[2],
-      west[1],
-      west[0]
-    ];
+    validateMaterialKey(
+      mesh.materialKey
+    );
 
-    for (
-      let index = 0;
-      index < mirroredEast.length;
-      index += 1
-    ) {
+    invariant(
+      mesh.positions instanceof
+        Float32Array,
+      "MESH_POSITION_BUFFER_INVALID",
+      {
+        componentId:
+          mesh.componentId
+      }
+    );
+
+    invariant(
+      mesh.normals instanceof
+        Float32Array,
+      "MESH_NORMAL_BUFFER_INVALID",
+      {
+        componentId:
+          mesh.componentId
+      }
+    );
+
+    invariant(
+      mesh.indices instanceof
+        Uint16Array ||
+      mesh.indices instanceof
+        Uint32Array,
+      "MESH_INDEX_BUFFER_INVALID",
+      {
+        componentId:
+          mesh.componentId
+      }
+    );
+
+    invariant(
+      mesh.positions.length ===
+        mesh.normals.length,
+      "MESH_POSITION_NORMAL_LENGTH_MISMATCH",
+      {
+        componentId:
+          mesh.componentId
+      }
+    );
+
+    invariant(
+      mesh.positions.length % 3 === 0,
+      "MESH_POSITION_ALIGNMENT_INVALID",
+      {
+        componentId:
+          mesh.componentId
+      }
+    );
+
+    invariant(
+      mesh.indices.length % 3 === 0,
+      "MESH_INDEX_ALIGNMENT_INVALID",
+      {
+        componentId:
+          mesh.componentId
+      }
+    );
+
+    const vertexCount =
+      mesh.positions.length / 3;
+
+    for (const index of mesh.indices) {
       invariant(
-        Math.abs(
-          mirroredEast[index][0] -
-          normalizedWest[index][0]
-        ) <= EPSILON &&
-        Math.abs(
-          mirroredEast[index][1] -
-          normalizedWest[index][1]
-        ) <= EPSILON,
-        "EAST_WEST_MIRROR_SYMMETRY_FAILURE",
+        index >= 0 &&
+        index < vertexCount,
+        "MESH_INDEX_OUT_OF_RANGE",
         {
+          componentId:
+            mesh.componentId,
           index,
-          mirroredEast:
-            mirroredEast[index],
-          normalizedWest:
-            normalizedWest[index]
+          vertexCount
         }
       );
     }
-  }
 
-  function validateNorthDominance() {
-    const northMaximum =
-      Math.max(
-        ...CONSTANTS.northNeedle.xyVertices.map(
-          ([, y]) => y
-        )
-      );
+    validateDepthBounds(mesh.bounds);
+    validateRadialBounds(mesh);
 
-    const otherMaximum =
-      Math.max(
-        Math.abs(
-          Math.min(
-            ...CONSTANTS.southDirection.xyVertices.map(
-              ([, y]) => y
-            )
-          )
-        ),
-
-        Math.max(
-          ...CONSTANTS.eastDirection.xyVertices.map(
-            ([x]) =>
-              Math.abs(x)
-          )
-        ),
-
-        Math.max(
-          ...CONSTANTS.westDirection.xyVertices.map(
-            ([x]) =>
-              Math.abs(x)
-          )
-        )
-      );
-
-    invariant(
-      northMaximum >
-        otherMaximum,
-      "NORTH_NEEDLE_NOT_DOMINANT",
-      {
-        northMaximum,
-        otherMaximum
-      }
-    );
-  }
-
-  function validateRingSeparation() {
-    invariant(
-      CONSTANTS.innerRing.outerRadius <
-        CONSTANTS.outerRing.innerRadius,
-      "INNER_RING_INTERSECTS_OUTER_RING",
-      {
-        innerRingOuterRadius:
-          CONSTANTS.innerRing.outerRadius,
-
-        outerRingInnerRadius:
-          CONSTANTS.outerRing.innerRadius
-      }
-    );
-  }
-
-  function validateHubOverlap() {
-    const hubRadius =
-      CONSTANTS.hub.radius;
-
-    const requiredVertices = [
-      CONSTANTS.northNeedle.xyVertices,
-      CONSTANTS.southDirection.xyVertices,
-      CONSTANTS.eastDirection.xyVertices,
-      CONSTANTS.westDirection.xyVertices
-    ];
-
-    for (
-      let polygonIndex = 0;
-      polygonIndex < requiredVertices.length;
-      polygonIndex += 1
-    ) {
-      const polygon =
-        requiredVertices[polygonIndex];
-
-      const intersectsHub =
-        polygon.some(
-          ([x, y]) =>
-            Math.hypot(x, y) <=
-            hubRadius +
-            EPSILON
-        );
-
-      invariant(
-        intersectsHub,
-        "PRINCIPAL_COMPONENT_DOES_NOT_OVERLAP_HUB",
-        {
-          polygonIndex,
-          hubRadius
-        }
-      );
-    }
-  }
-
-  function buildBaselineMeshes(options = {}) {
-    const quality =
-      resolveQualityProfile(
-        options.quality ||
-        "desktop"
-      );
-
-    const includeIntercardinalTicks =
-      options.includeIntercardinalTicks ===
-      true;
-
-    const outerRing =
-      createExtrudedAnnulus({
-        componentId:
-          "UGC04_OUTER_HOUSING_RING",
-
-        materialKey:
-          MATERIAL_KEYS.OUTER_RING,
-
-        outerRadius:
-          CONSTANTS.outerRing.outerRadius,
-
-        innerRadius:
-          CONSTANTS.outerRing.innerRadius,
-
-        zRear:
-          DEPTH_ENVELOPE.outerRingZInterval[0],
-
-        zFront:
-          DEPTH_ENVELOPE.outerRingZInterval[1],
-
-        segments:
-          quality.outerRingSegments
-      });
-
-    const innerRing =
-      createExtrudedAnnulus({
-        componentId:
-          "UGC04_INNER_DIRECTION_RING",
-
-        materialKey:
-          MATERIAL_KEYS.INNER_RING,
-
-        outerRadius:
-          CONSTANTS.innerRing.outerRadius,
-
-        innerRadius:
-          CONSTANTS.innerRing.innerRadius,
-
-        zRear:
-          DEPTH_ENVELOPE.innerRingZInterval[0],
-
-        zFront:
-          DEPTH_ENVELOPE.innerRingZInterval[1],
-
-        segments:
-          quality.innerRingSegments
-      });
-
-    const southDirection =
-      createExtrudedConvexPolygon({
-        componentId:
-          "UGC04_SOUTH_DIRECTION",
-
-        materialKey:
-          MATERIAL_KEYS.PRINCIPAL_DIRECTION,
-
-        primitive:
-          "EXTRUDED_TRIANGULAR_BLADE",
-
-        xyVertices:
-          CONSTANTS.southDirection.xyVertices,
-
-        zRear:
-          DEPTH_ENVELOPE.principalDirectionZInterval[0],
-
-        zFront:
-          DEPTH_ENVELOPE.principalDirectionZInterval[1]
-      });
-
-    const eastDirection =
-      createExtrudedConvexPolygon({
-        componentId:
-          "UGC04_EAST_DIRECTION",
-
-        materialKey:
-          MATERIAL_KEYS.PRINCIPAL_DIRECTION,
-
-        primitive:
-          "EXTRUDED_TRIANGULAR_BLADE",
-
-        xyVertices:
-          CONSTANTS.eastDirection.xyVertices,
-
-        zRear:
-          DEPTH_ENVELOPE.principalDirectionZInterval[0],
-
-        zFront:
-          DEPTH_ENVELOPE.principalDirectionZInterval[1]
-      });
-
-    const westDirection =
-      createExtrudedConvexPolygon({
-        componentId:
-          "UGC04_WEST_DIRECTION",
-
-        materialKey:
-          MATERIAL_KEYS.PRINCIPAL_DIRECTION,
-
-        primitive:
-          "EXTRUDED_TRIANGULAR_BLADE",
-
-        xyVertices:
-          CONSTANTS.westDirection.xyVertices,
-
-        zRear:
-          DEPTH_ENVELOPE.principalDirectionZInterval[0],
-
-        zFront:
-          DEPTH_ENVELOPE.principalDirectionZInterval[1]
-      });
-
-    const northNeedle =
-      createExtrudedConvexPolygon({
-        componentId:
-          "UGC04_DOMINANT_NORTH_NEEDLE",
-
-        materialKey:
-          MATERIAL_KEYS.NORTH_NEEDLE,
-
-        primitive:
-          "EXTRUDED_NORTH_NEEDLE",
-
-        xyVertices:
-          CONSTANTS.northNeedle.xyVertices,
-
-        zRear:
-          DEPTH_ENVELOPE.northNeedleZInterval[0],
-
-        zFront:
-          DEPTH_ENVELOPE.northNeedleZInterval[1]
-      });
-
-    const centralHub =
-      createExtrudedCylinder({
-        componentId:
-          "UGC04_CENTRAL_HUB",
-
-        materialKey:
-          MATERIAL_KEYS.CENTRAL_HUB,
-
-        radius:
-          CONSTANTS.hub.radius,
-
-        zRear:
-          DEPTH_ENVELOPE.centralHubZInterval[0],
-
-        zFront:
-          DEPTH_ENVELOPE.centralHubZInterval[1],
-
-        segments:
-          quality.hubSegments
-      });
-
-    const meshes = [
-      outerRing,
-      innerRing,
-      southDirection,
-      eastDirection,
-      westDirection,
-      northNeedle,
-      centralHub
-    ];
-
-    if (includeIntercardinalTicks) {
-      for (
-        let index = 0;
-        index <
-        CONSTANTS.intercardinalTicks.anglesRadians.length;
-        index += 1
-      ) {
-        const angle =
-          CONSTANTS.intercardinalTicks.anglesRadians[index];
-
-        const polygon =
-          createIntercardinalTickPolygon(
-            angle,
-            CONSTANTS.intercardinalTicks.radialCenter,
-            CONSTANTS.intercardinalTicks.radialLength,
-            CONSTANTS.intercardinalTicks.tangentialWidth
-          );
-
-        meshes.push(
-          createExtrudedConvexPolygon({
-            componentId:
-              `UGC04_INTERCARDINAL_TICK_${index + 1}`,
-
-            materialKey:
-              MATERIAL_KEYS.INTERCARDINAL_TICK,
-
-            primitive:
-              "EXTRUDED_INTERCARDINAL_TICK",
-
-            xyVertices:
-              polygon,
-
-            zRear:
-              DEPTH_ENVELOPE.intercardinalTickZInterval[0],
-
-            zFront:
-              DEPTH_ENVELOPE.intercardinalTickZInterval[1]
-          })
-        );
-      }
-    }
-
-    const model =
-      deepFreeze({
-        moduleId:
-          MODULE_ID,
-
-        moduleVersion:
-          MODULE_VERSION,
-
-        occurrenceId:
-          OCCURRENCE_ID,
-
-        candidateId:
-          CANDIDATE_ID,
-
-        qualityProfile:
-          quality,
-
-        includeIntercardinalTicks,
-
-        physicalProjection:
-          PHYSICAL_PROJECTION,
-
-        semanticRelationship:
-          SEMANTIC_RELATIONSHIP,
-
-        componentCount:
-          meshes.length,
-
-        meshes,
-
-        semanticHitEnvelope:
-          CONSTANTS.semanticHitEnvelope,
-
-        rootTransform:
-          CONSTANTS.placement,
-
-        aggregate:
-          summarizeMeshes(meshes)
-      });
-
-    validateModel(model);
-
-    return model;
-  }
-
-  /*
-   * Canonical renderer-consumable model builder.
-   *
-   * buildBaselineMeshes() remains exposed for compatibility, but buildModel()
-   * is the stable shared renderer entry surface.
-   */
-  function buildModel(options = {}) {
-    return buildBaselineMeshes(options);
+    return true;
   }
 
   function validateModel(model) {
     invariant(
       model &&
-      model.moduleId === MODULE_ID,
+      model.moduleId === MODULE.id,
       "MODEL_MODULE_ID_MISMATCH"
     );
 
     invariant(
-      model.occurrenceId ===
-      OCCURRENCE_ID,
-      "MODEL_OCCURRENCE_ID_MISMATCH"
+      model.modelId === MODEL_ID,
+      "MODEL_ID_MISMATCH"
     );
 
     invariant(
-      model.physicalProjection ===
-      PHYSICAL_PROJECTION,
-      "INTEGRATED_CONSTELLATION_CENTER_MODEL_REQUIRED"
+      model.objectIdentity &&
+      model.objectIdentity
+        .inheritsParentOrientation ===
+        true,
+      "MODEL_PARENT_ORIENTATION_INHERITANCE_REQUIRED"
     );
 
     invariant(
-      model.semanticRelationship ===
-      SEMANTIC_RELATIONSHIP,
-      "UPSTREAM_SEMANTIC_RELATION_REQUIRED"
+      model.objectIdentity
+        .receivesIndependentGestureDeltas ===
+        false,
+      "MODEL_INDEPENDENT_GESTURE_AUTHORITY_FORBIDDEN"
     );
 
-    validateRingSeparation();
-    validateNorthDominance();
-    validateEastWestMirror();
-    validateHubOverlap();
+    invariant(
+      Array.isArray(model.meshes) &&
+      model.meshes.length >= 14,
+      "MODEL_COMPONENT_COLLECTION_INVALID",
+      {
+        componentCount:
+          model.meshes
+            ? model.meshes.length
+            : 0
+      }
+    );
+
+    const componentIds =
+      new Set();
 
     for (const mesh of model.meshes) {
-      validateMaterialKey(
-        mesh.materialKey
+      validateMesh(mesh);
+
+      invariant(
+        !componentIds.has(
+          mesh.componentId
+        ),
+        "MODEL_DUPLICATE_COMPONENT_ID",
+        {
+          componentId:
+            mesh.componentId
+        }
       );
 
-      validateDepthBounds(
-        mesh.bounds
-      );
-
-      validateRadialBounds(
-        mesh
+      componentIds.add(
+        mesh.componentId
       );
     }
 
     validateDepthBounds(
-      model.aggregate.bounds
+      model.bounds
+    );
+
+    invariant(
+      model.bounds.minimum[2] <=
+        DEPTH_ENVELOPE.rearLimitZ +
+        EPSILON,
+      "MODEL_REAR_OCCUPANCY_INCOMPLETE",
+      {
+        actual:
+          model.bounds.minimum[2],
+        expected:
+          DEPTH_ENVELOPE.rearLimitZ
+      }
+    );
+
+    invariant(
+      model.bounds.maximum[2] >=
+        DEPTH_ENVELOPE.frontLimitZ -
+        EPSILON,
+      "MODEL_FRONT_OCCUPANCY_INCOMPLETE",
+      {
+        actual:
+          model.bounds.maximum[2],
+        expected:
+          DEPTH_ENVELOPE.frontLimitZ
+      }
+    );
+
+    invariant(
+      model.aggregate.actualTotalDepth >=
+        DEPTH_ENVELOPE.minimumInstrumentDepth -
+        EPSILON,
+      "MODEL_INSTRUMENT_DEPTH_INSUFFICIENT",
+      {
+        actual:
+          model.aggregate.actualTotalDepth,
+        minimum:
+          DEPTH_ENVELOPE.minimumInstrumentDepth
+      }
     );
 
     invariant(
@@ -2587,79 +2603,426 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
     );
 
     invariant(
-      model.aggregate.actualTotalDepth >=
-        DEPTH_ENVELOPE.baselineTotalDepth -
-        EPSILON,
-      "MODEL_TOTAL_DEPTH_BELOW_RENEWED_BASELINE"
+      model.rootTransform
+        .parentOrientationMode ===
+        "INHERIT",
+      "MODEL_PARENT_ORIENTATION_MODE_INVALID"
     );
 
     invariant(
-      model.rootTransform.localQuaternionShared ===
-      false,
-      "LOCAL_QUATERNION_SHARING_FORBIDDEN"
+      model.rootTransform
+        .independentGestureAuthority ===
+        false,
+      "MODEL_INDEPENDENT_GESTURE_AUTHORITY_INVALID"
     );
 
     invariant(
-      model.rootTransform.localSettlementParticipation ===
-      false,
-      "LOCAL_SETTLEMENT_PARTICIPATION_FORBIDDEN"
+      model.presentationTransforms &&
+      model.presentationTransforms
+        .embedded &&
+      model.presentationTransforms
+        .decisionApproach,
+      "MODEL_PRESENTATION_TRANSFORMS_REQUIRED"
     );
 
     invariant(
-      Array.isArray(
-        model.rootTransform.defaultQuaternion
-      ) &&
-      model.rootTransform.defaultQuaternion.length ===
-        4,
-      "DEFAULT_QUATERNION_REQUIRED"
+      model.semanticHitEnvelope &&
+      model.semanticHitEnvelope
+        .geometryIsSemanticListener ===
+        false,
+      "GEOMETRY_SEMANTIC_LISTENER_AUTHORITY_FORBIDDEN"
     );
 
-    return deepFreeze({
-      pass:
-        true,
+    return true;
+  }
 
-      moduleId:
-        MODULE_ID,
+  function buildModel(options = {}) {
+    const quality =
+      resolveQualityProfile(
+        options.quality ||
+        options.qualityProfileId ||
+        "desktop"
+      );
 
-      occurrenceId:
-        OCCURRENCE_ID,
+    const includeIntercardinalTicks =
+      options.includeIntercardinalTicks !==
+      undefined
+        ? options.includeIntercardinalTicks ===
+          true
+        : quality.includeIntercardinalTicks;
 
-      candidateId:
-        CANDIDATE_ID,
+    const meshes = [];
 
-      componentCount:
-        model.componentCount,
+    meshes.push(
+      createBeveledAnnulus({
+        componentId:
+          "HOME_COMPASS_OUTER_HOUSING",
 
-      vertexCount:
-        model.aggregate.vertexCount,
+        materialKey:
+          MATERIAL_KEYS.OUTER_HOUSING,
 
-      triangleCount:
-        model.aggregate.triangleCount,
+        ...COMPONENT_DIMENSIONS
+          .outerHousing,
 
-      bounds:
-        model.aggregate.bounds,
+        segments:
+          quality.annulusSegments
+      })
+    );
 
-      actualTotalDepth:
-        model.aggregate.actualTotalDepth,
+    meshes.push(
+      createBeveledAnnulus({
+        componentId:
+          "HOME_COMPASS_OUTER_BEZEL",
 
-      physicalProjection:
-        PHYSICAL_PROJECTION,
+        materialKey:
+          MATERIAL_KEYS.OUTER_BEZEL,
 
-      semanticRelationship:
-        SEMANTIC_RELATIONSHIP,
+        ...COMPONENT_DIMENSIONS
+          .outerBezel,
 
-      materialIdentityPresent:
-        model.meshes.every(
-          (mesh) =>
-            typeof mesh.materialKey ===
-              "string" &&
-            mesh.materialKey.length >
-              0
-        ),
+        segments:
+          quality.annulusSegments
+      })
+    );
 
-      productionAuthorized:
-        false
-    });
+    meshes.push(
+      createBeveledAnnulus({
+        componentId:
+          "HOME_COMPASS_INNER_BEZEL",
+
+        materialKey:
+          MATERIAL_KEYS.INNER_BEZEL,
+
+        ...COMPONENT_DIMENSIONS
+          .innerBezel,
+
+        segments:
+          quality.annulusSegments
+      })
+    );
+
+    meshes.push(
+      createBeveledDisc({
+        componentId:
+          "HOME_COMPASS_RECESSED_DIAL_BED",
+
+        materialKey:
+          MATERIAL_KEYS.DIAL_BED,
+
+        ...COMPONENT_DIMENSIONS
+          .dialBed,
+
+        segments:
+          quality.dialSegments
+      })
+    );
+
+    meshes.push(
+      createBeveledConvexPolygon({
+        componentId:
+          "HOME_COMPASS_SOUTH_DIRECTION",
+
+        materialKey:
+          MATERIAL_KEYS
+            .PRINCIPAL_DIRECTION,
+
+        primitive:
+          "BEVELED_SOUTH_BLADE",
+
+        xyVertices:
+          SHAPES.southDirection,
+
+        ...COMPONENT_DIMENSIONS
+          .principalDirection
+      })
+    );
+
+    meshes.push(
+      createBeveledConvexPolygon({
+        componentId:
+          "HOME_COMPASS_SOUTH_DIRECTION_FACET",
+
+        materialKey:
+          MATERIAL_KEYS
+            .PRINCIPAL_DIRECTION_FACET,
+
+        primitive:
+          "RAISED_SOUTH_BLADE_FACET",
+
+        xyVertices:
+          SHAPES.southFacet,
+
+        ...COMPONENT_DIMENSIONS
+          .principalDirectionFacet
+      })
+    );
+
+    meshes.push(
+      createBeveledConvexPolygon({
+        componentId:
+          "HOME_COMPASS_EAST_DIRECTION",
+
+        materialKey:
+          MATERIAL_KEYS
+            .PRINCIPAL_DIRECTION,
+
+        primitive:
+          "BEVELED_EAST_BLADE",
+
+        xyVertices:
+          SHAPES.eastDirection,
+
+        ...COMPONENT_DIMENSIONS
+          .principalDirection
+      })
+    );
+
+    meshes.push(
+      createBeveledConvexPolygon({
+        componentId:
+          "HOME_COMPASS_EAST_DIRECTION_FACET",
+
+        materialKey:
+          MATERIAL_KEYS
+            .PRINCIPAL_DIRECTION_FACET,
+
+        primitive:
+          "RAISED_EAST_BLADE_FACET",
+
+        xyVertices:
+          SHAPES.eastFacet,
+
+        ...COMPONENT_DIMENSIONS
+          .principalDirectionFacet
+      })
+    );
+
+    meshes.push(
+      createBeveledConvexPolygon({
+        componentId:
+          "HOME_COMPASS_WEST_DIRECTION",
+
+        materialKey:
+          MATERIAL_KEYS
+            .PRINCIPAL_DIRECTION,
+
+        primitive:
+          "BEVELED_WEST_BLADE",
+
+        xyVertices:
+          SHAPES.westDirection,
+
+        ...COMPONENT_DIMENSIONS
+          .principalDirection
+      })
+    );
+
+    meshes.push(
+      createBeveledConvexPolygon({
+        componentId:
+          "HOME_COMPASS_WEST_DIRECTION_FACET",
+
+        materialKey:
+          MATERIAL_KEYS
+            .PRINCIPAL_DIRECTION_FACET,
+
+        primitive:
+          "RAISED_WEST_BLADE_FACET",
+
+        xyVertices:
+          SHAPES.westFacet,
+
+        ...COMPONENT_DIMENSIONS
+          .principalDirectionFacet
+      })
+    );
+
+    meshes.push(
+      createBeveledConvexPolygon({
+        componentId:
+          "HOME_COMPASS_DOMINANT_NORTH_NEEDLE",
+
+        materialKey:
+          MATERIAL_KEYS.NORTH_NEEDLE,
+
+        primitive:
+          "BEVELED_DOMINANT_NORTH_NEEDLE",
+
+        xyVertices:
+          SHAPES.northNeedle,
+
+        ...COMPONENT_DIMENSIONS
+          .northNeedle
+      })
+    );
+
+    meshes.push(
+      createBeveledConvexPolygon({
+        componentId:
+          "HOME_COMPASS_NORTH_NEEDLE_FACET",
+
+        materialKey:
+          MATERIAL_KEYS
+            .NORTH_NEEDLE_FACET,
+
+        primitive:
+          "RAISED_NORTH_NEEDLE_FACET",
+
+        xyVertices:
+          SHAPES.northNeedleFacet,
+
+        ...COMPONENT_DIMENSIONS
+          .northNeedleFacet
+      })
+    );
+
+    if (includeIntercardinalTicks) {
+      const angles = [
+        Math.PI / 4,
+        3 * Math.PI / 4,
+        5 * Math.PI / 4,
+        7 * Math.PI / 4
+      ];
+
+      for (
+        let index = 0;
+        index < angles.length;
+        index += 1
+      ) {
+        meshes.push(
+          createBeveledConvexPolygon({
+            componentId:
+              `HOME_COMPASS_INTERCARDINAL_TICK_${index + 1}`,
+
+            materialKey:
+              MATERIAL_KEYS
+                .INTERCARDINAL_TICK,
+
+            primitive:
+              "BEVELED_INTERCARDINAL_TICK",
+
+            xyVertices:
+              createIntercardinalTickPolygon(
+                angles[index]
+              ),
+
+            ...COMPONENT_DIMENSIONS
+              .intercardinalTick
+          })
+        );
+      }
+    }
+
+    meshes.push(
+      createBeveledDisc({
+        componentId:
+          "HOME_COMPASS_HUB_BASE",
+
+        materialKey:
+          MATERIAL_KEYS.HUB_BASE,
+
+        ...COMPONENT_DIMENSIONS
+          .hubBase,
+
+        segments:
+          quality.hubSegments
+      })
+    );
+
+    meshes.push(
+      createBeveledDisc({
+        componentId:
+          "HOME_COMPASS_HUB_CROWN",
+
+        materialKey:
+          MATERIAL_KEYS.HUB_CROWN,
+
+        ...COMPONENT_DIMENSIONS
+          .hubCrown,
+
+        segments:
+          quality.hubSegments
+      })
+    );
+
+    meshes.push(
+      createBeveledDisc({
+        componentId:
+          "HOME_COMPASS_HUB_JEWEL",
+
+        materialKey:
+          MATERIAL_KEYS.HUB_JEWEL,
+
+        ...COMPONENT_DIMENSIONS
+          .hubJewel,
+
+        segments:
+          quality.hubSegments
+      })
+    );
+
+    const aggregate =
+      summarizeMeshes(meshes);
+
+    const model =
+      deepFreeze({
+        moduleId: MODULE.id,
+        moduleVersion: MODULE.version,
+        modelId: MODEL_ID,
+
+        objectIdentity:
+          OBJECT_IDENTITY,
+
+        coordinateSystem:
+          COORDINATE_SYSTEM,
+
+        qualityProfile:
+          quality,
+
+        includeIntercardinalTicks,
+
+        materialKeys:
+          MATERIAL_KEYS,
+
+        componentCount:
+          meshes.length,
+
+        meshes,
+
+        rootTransform:
+          ROOT_TRANSFORM,
+
+        presentationTransforms:
+          PRESENTATION_TRANSFORMS,
+
+        semanticHitEnvelope:
+          SEMANTIC_HIT_ENVELOPE,
+
+        depthEnvelope:
+          DEPTH_ENVELOPE,
+
+        bounds:
+          aggregate.bounds,
+
+        aggregate,
+
+        fallbackProjection:
+          createFrontProjectionSchema({
+            includeIntercardinalTicks
+          })
+      });
+
+    validateModel(model);
+
+    return model;
+  }
+
+  /*
+   * Compatibility construction surface.
+   * It intentionally returns the same model contract as buildModel().
+   */
+  function buildBaselineMeshes(options = {}) {
+    return buildModel(options);
   }
 
   function createFrontProjectionSchema(options = {}) {
@@ -2667,182 +3030,319 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
       options.includeIntercardinalTicks ===
       true;
 
-    const schema = {
+    const layers = [
+      {
+        id:
+          "OUTER_HOUSING",
+
+        materialKey:
+          MATERIAL_KEYS.OUTER_HOUSING,
+
+        type:
+          "ANNULUS",
+
+        outerRadius:
+          COMPONENT_DIMENSIONS
+            .outerHousing
+            .outerRadius,
+
+        innerRadius:
+          COMPONENT_DIMENSIONS
+            .outerHousing
+            .innerRadius
+      },
+
+      {
+        id:
+          "OUTER_BEZEL",
+
+        materialKey:
+          MATERIAL_KEYS.OUTER_BEZEL,
+
+        type:
+          "ANNULUS",
+
+        outerRadius:
+          COMPONENT_DIMENSIONS
+            .outerBezel
+            .outerRadius,
+
+        innerRadius:
+          COMPONENT_DIMENSIONS
+            .outerBezel
+            .innerRadius
+      },
+
+      {
+        id:
+          "INNER_BEZEL",
+
+        materialKey:
+          MATERIAL_KEYS.INNER_BEZEL,
+
+        type:
+          "ANNULUS",
+
+        outerRadius:
+          COMPONENT_DIMENSIONS
+            .innerBezel
+            .outerRadius,
+
+        innerRadius:
+          COMPONENT_DIMENSIONS
+            .innerBezel
+            .innerRadius
+      },
+
+      {
+        id:
+          "DIAL_BED",
+
+        materialKey:
+          MATERIAL_KEYS.DIAL_BED,
+
+        type:
+          "CIRCLE",
+
+        radius:
+          COMPONENT_DIMENSIONS
+            .dialBed
+            .radius
+      },
+
+      {
+        id:
+          "SOUTH_DIRECTION",
+
+        materialKey:
+          MATERIAL_KEYS
+            .PRINCIPAL_DIRECTION,
+
+        type:
+          "POLYGON",
+
+        vertices:
+          SHAPES.southDirection
+      },
+
+      {
+        id:
+          "SOUTH_DIRECTION_FACET",
+
+        materialKey:
+          MATERIAL_KEYS
+            .PRINCIPAL_DIRECTION_FACET,
+
+        type:
+          "POLYGON",
+
+        vertices:
+          SHAPES.southFacet
+      },
+
+      {
+        id:
+          "EAST_DIRECTION",
+
+        materialKey:
+          MATERIAL_KEYS
+            .PRINCIPAL_DIRECTION,
+
+        type:
+          "POLYGON",
+
+        vertices:
+          SHAPES.eastDirection
+      },
+
+      {
+        id:
+          "EAST_DIRECTION_FACET",
+
+        materialKey:
+          MATERIAL_KEYS
+            .PRINCIPAL_DIRECTION_FACET,
+
+        type:
+          "POLYGON",
+
+        vertices:
+          SHAPES.eastFacet
+      },
+
+      {
+        id:
+          "WEST_DIRECTION",
+
+        materialKey:
+          MATERIAL_KEYS
+            .PRINCIPAL_DIRECTION,
+
+        type:
+          "POLYGON",
+
+        vertices:
+          SHAPES.westDirection
+      },
+
+      {
+        id:
+          "WEST_DIRECTION_FACET",
+
+        materialKey:
+          MATERIAL_KEYS
+            .PRINCIPAL_DIRECTION_FACET,
+
+        type:
+          "POLYGON",
+
+        vertices:
+          SHAPES.westFacet
+      },
+
+      {
+        id:
+          "NORTH_NEEDLE",
+
+        materialKey:
+          MATERIAL_KEYS.NORTH_NEEDLE,
+
+        type:
+          "POLYGON",
+
+        vertices:
+          SHAPES.northNeedle
+      },
+
+      {
+        id:
+          "NORTH_NEEDLE_FACET",
+
+        materialKey:
+          MATERIAL_KEYS
+            .NORTH_NEEDLE_FACET,
+
+        type:
+          "POLYGON",
+
+        vertices:
+          SHAPES.northNeedleFacet
+      },
+
+      {
+        id:
+          "HUB_BASE",
+
+        materialKey:
+          MATERIAL_KEYS.HUB_BASE,
+
+        type:
+          "CIRCLE",
+
+        radius:
+          COMPONENT_DIMENSIONS
+            .hubBase
+            .radius
+      },
+
+      {
+        id:
+          "HUB_CROWN",
+
+        materialKey:
+          MATERIAL_KEYS.HUB_CROWN,
+
+        type:
+          "CIRCLE",
+
+        radius:
+          COMPONENT_DIMENSIONS
+            .hubCrown
+            .radius
+      },
+
+      {
+        id:
+          "HUB_JEWEL",
+
+        materialKey:
+          MATERIAL_KEYS.HUB_JEWEL,
+
+        type:
+          "CIRCLE",
+
+        radius:
+          COMPONENT_DIMENSIONS
+            .hubJewel
+            .radius
+      }
+    ];
+
+    if (includeIntercardinalTicks) {
+      const angles = [
+        Math.PI / 4,
+        3 * Math.PI / 4,
+        5 * Math.PI / 4,
+        7 * Math.PI / 4
+      ];
+
+      const tickLayers =
+        angles.map((angle, index) => ({
+          id:
+            `INTERCARDINAL_TICK_${index + 1}`,
+
+          materialKey:
+            MATERIAL_KEYS
+              .INTERCARDINAL_TICK,
+
+          type:
+            "POLYGON",
+
+          vertices:
+            createIntercardinalTickPolygon(
+              angle
+            )
+        }));
+
+      layers.splice(
+        4,
+        0,
+        ...tickLayers
+      );
+    }
+
+    return deepFreeze({
       sourceModule:
-        MODULE_ID,
+        MODULE.id,
 
-      candidateId:
-        CANDIDATE_ID,
+      sourceVersion:
+        MODULE.version,
 
-      occurrenceId:
-        OCCURRENCE_ID,
+      modelId:
+        MODEL_ID,
 
-      physicalProjection:
-        PHYSICAL_PROJECTION,
-
-      projectionSchemaBacked:
-        true,
-
-      intentionallyTwoDimensional:
-        true,
+      objectIdentity:
+        OBJECT_IDENTITY,
 
       viewBox:
         "0 0 200 200",
 
       normalizedToSvg:
         Object.freeze({
-          scale:
-            90,
-
-          centerX:
-            100,
-
-          centerY:
-            100,
-
-          x:
-            "100 + 90*x",
-
-          y:
-            "100 - 90*y"
+          scale: 90,
+          centerX: 100,
+          centerY: 100,
+          x: "100 + 90*x",
+          y: "100 - 90*y"
         }),
 
-      layers:
-        [
-          {
-            id:
-              "OUTER_RING",
+      intentionallyTwoDimensional:
+        true,
 
-            materialKey:
-              MATERIAL_KEYS.OUTER_RING,
+      includeIntercardinalTicks,
 
-            type:
-              "ANNULUS",
-
-            outerRadius:
-              CONSTANTS.outerRing.outerRadius,
-
-            innerRadius:
-              CONSTANTS.outerRing.innerRadius
-          },
-
-          {
-            id:
-              "INNER_RING",
-
-            materialKey:
-              MATERIAL_KEYS.INNER_RING,
-
-            type:
-              "ANNULUS",
-
-            outerRadius:
-              CONSTANTS.innerRing.outerRadius,
-
-            innerRadius:
-              CONSTANTS.innerRing.innerRadius
-          },
-
-          {
-            id:
-              "SOUTH_DIRECTION",
-
-            materialKey:
-              MATERIAL_KEYS.PRINCIPAL_DIRECTION,
-
-            type:
-              "POLYGON",
-
-            vertices:
-              CONSTANTS.southDirection.xyVertices
-          },
-
-          {
-            id:
-              "EAST_DIRECTION",
-
-            materialKey:
-              MATERIAL_KEYS.PRINCIPAL_DIRECTION,
-
-            type:
-              "POLYGON",
-
-            vertices:
-              CONSTANTS.eastDirection.xyVertices
-          },
-
-          {
-            id:
-              "WEST_DIRECTION",
-
-            materialKey:
-              MATERIAL_KEYS.PRINCIPAL_DIRECTION,
-
-            type:
-              "POLYGON",
-
-            vertices:
-              CONSTANTS.westDirection.xyVertices
-          },
-
-          {
-            id:
-              "NORTH_NEEDLE",
-
-            materialKey:
-              MATERIAL_KEYS.NORTH_NEEDLE,
-
-            type:
-              "POLYGON",
-
-            vertices:
-              CONSTANTS.northNeedle.xyVertices
-          },
-
-          {
-            id:
-              "CENTRAL_HUB",
-
-            materialKey:
-              MATERIAL_KEYS.CENTRAL_HUB,
-
-            type:
-              "CIRCLE",
-
-            radius:
-              CONSTANTS.hub.radius
-          }
-        ]
-    };
-
-    if (includeIntercardinalTicks) {
-      schema.layers.splice(
-        2,
-        0,
-        ...CONSTANTS.intercardinalTicks.anglesRadians.map(
-          (angle, index) => ({
-            id:
-              `INTERCARDINAL_TICK_${index + 1}`,
-
-            materialKey:
-              MATERIAL_KEYS.INTERCARDINAL_TICK,
-
-            type:
-              "POLYGON",
-
-            vertices:
-              createIntercardinalTickPolygon(
-                angle,
-                CONSTANTS.intercardinalTicks.radialCenter,
-                CONSTANTS.intercardinalTicks.radialLength,
-                CONSTANTS.intercardinalTicks.tangentialWidth
-              )
-          })
-        )
-      );
-    }
-
-    return deepFreeze(schema);
+      layers
+    });
   }
 
   function mapSvgX(x) {
@@ -2855,30 +3355,15 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
 
   function escapeXmlText(value) {
     return String(value)
-      .replace(
-        /&/g,
-        "&amp;"
-      )
-      .replace(
-        /</g,
-        "&lt;"
-      )
-      .replace(
-        />/g,
-        "&gt;"
-      );
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;");
   }
 
   function escapeXmlAttribute(value) {
     return escapeXmlText(value)
-      .replace(
-        /"/g,
-        "&quot;"
-      )
-      .replace(
-        /'/g,
-        "&apos;"
-      );
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&apos;");
   }
 
   function createAnnulusEvenOddPath(
@@ -2909,142 +3394,15 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
       .join(" ");
   }
 
-  function getUtf8ByteLength(value) {
-    if (
-      typeof TextEncoder !==
-      "undefined"
-    ) {
-      return new TextEncoder()
-        .encode(value)
-        .byteLength;
-    }
-
-    return unescape(
-      encodeURIComponent(value)
-    ).length;
-  }
-
-  function createSvgStringFromProjectionSchema(
-    schema,
-    options
-  ) {
-    const title =
-      String(options.title);
-
-    const className =
-      String(options.className);
-
-    const includeTitle =
-      options.includeTitle ===
-      true;
-
-    const ariaHidden =
-      options.ariaHidden ===
-      true;
-
-    const focusable =
-      options.focusable ===
-      true;
-
-    invariant(
-      ariaHidden ||
-      includeTitle,
-      "ACCESSIBLE_SVG_REQUIRES_TITLE_WHEN_NOT_ARIA_HIDDEN"
-    );
-
-    const lines = [
-      `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${escapeXmlAttribute(schema.viewBox)}" class="${escapeXmlAttribute(className)}" aria-hidden="${ariaHidden ? "true" : "false"}" focusable="${focusable ? "true" : "false"}" data-ugc04-fallback="true" data-ugc04-source-module="${escapeXmlAttribute(MODULE_ID)}" data-ugc04-occurrence-id="${escapeXmlAttribute(OCCURRENCE_ID)}" data-ugc04-physical-projection="${escapeXmlAttribute(PHYSICAL_PROJECTION)}">`
-    ];
-
-    if (includeTitle) {
-      lines.push(
-        `<title>${escapeXmlText(title)}</title>`
-      );
-    }
-
-    for (const layer of schema.layers) {
-      if (
-        layer.type ===
-        "ANNULUS"
-      ) {
-        lines.push(
-          `<path data-ugc04-layer="${escapeXmlAttribute(layer.id)}" data-ugc04-material-key="${escapeXmlAttribute(layer.materialKey)}" d="${escapeXmlAttribute(
-            createAnnulusEvenOddPath(
-              layer.outerRadius,
-              layer.innerRadius
-            )
-          )}" fill="currentColor" fill-rule="evenodd"/>`
-        );
-
-        continue;
-      }
-
-      if (
-        layer.type ===
-        "POLYGON"
-      ) {
-        lines.push(
-          `<polygon data-ugc04-layer="${escapeXmlAttribute(layer.id)}" data-ugc04-material-key="${escapeXmlAttribute(layer.materialKey)}" points="${escapeXmlAttribute(
-            createPolygonPoints(
-              layer.vertices
-            )
-          )}" fill="currentColor"/>`
-        );
-
-        continue;
-      }
-
-      if (
-        layer.type ===
-        "CIRCLE"
-      ) {
-        lines.push(
-          `<circle data-ugc04-layer="${escapeXmlAttribute(layer.id)}" data-ugc04-material-key="${escapeXmlAttribute(layer.materialKey)}" cx="100" cy="100" r="${escapeXmlAttribute(
-            String(
-              layer.radius * 90
-            )
-          )}" fill="currentColor"/>`
-        );
-
-        continue;
-      }
-
-      invariant(
-        false,
-        "UNSUPPORTED_PROJECTION_LAYER_TYPE",
-        {
-          layerId:
-            layer.id,
-          type:
-            layer.type
-        }
-      );
-    }
-
-    lines.push("</svg>");
-
-    return lines.join("");
-  }
-
   function buildStaticSvgFallback(options = {}) {
     const {
-      title =
-        "Return to Master Compass",
-
+      title = "Home Compass",
       className =
-        "ugc04-static-fallback",
-
-      includeTitle =
-        true,
-
-      includeIntercardinalTicks =
-        false,
-
-      ariaHidden =
-        true,
-
-      focusable =
-        false
+        "dgb-upstream-compass-static-fallback",
+      includeTitle = true,
+      includeIntercardinalTicks = true,
+      ariaHidden = true,
+      focusable = false
     } = options;
 
     invariant(
@@ -3058,17 +3416,68 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
         includeIntercardinalTicks
       });
 
-    const svgString =
-      createSvgStringFromProjectionSchema(
-        schema,
+    const lines = [
+      `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${escapeXmlAttribute(schema.viewBox)}" class="${escapeXmlAttribute(className)}" aria-hidden="${ariaHidden ? "true" : "false"}" focusable="${focusable ? "true" : "false"}" data-upstream-compass-fallback="true" data-upstream-compass-model="${escapeXmlAttribute(MODEL_ID)}" data-upstream-compass-destination-type="${escapeXmlAttribute(OBJECT_IDENTITY.destinationType)}">`
+    ];
+
+    if (includeTitle) {
+      lines.push(
+        `<title>${escapeXmlText(title)}</title>`
+      );
+    }
+
+    for (const layer of schema.layers) {
+      if (layer.type === "ANNULUS") {
+        lines.push(
+          `<path data-compass-layer="${escapeXmlAttribute(layer.id)}" data-material-key="${escapeXmlAttribute(layer.materialKey)}" d="${escapeXmlAttribute(
+            createAnnulusEvenOddPath(
+              layer.outerRadius,
+              layer.innerRadius
+            )
+          )}" fill="currentColor" fill-rule="evenodd"/>`
+        );
+
+        continue;
+      }
+
+      if (layer.type === "POLYGON") {
+        lines.push(
+          `<polygon data-compass-layer="${escapeXmlAttribute(layer.id)}" data-material-key="${escapeXmlAttribute(layer.materialKey)}" points="${escapeXmlAttribute(
+            createPolygonPoints(
+              layer.vertices
+            )
+          )}" fill="currentColor"/>`
+        );
+
+        continue;
+      }
+
+      if (layer.type === "CIRCLE") {
+        lines.push(
+          `<circle data-compass-layer="${escapeXmlAttribute(layer.id)}" data-material-key="${escapeXmlAttribute(layer.materialKey)}" cx="100" cy="100" r="${escapeXmlAttribute(
+            String(layer.radius * 90)
+          )}" fill="currentColor"/>`
+        );
+
+        continue;
+      }
+
+      invariant(
+        false,
+        "UNSUPPORTED_FALLBACK_LAYER_TYPE",
         {
-          title,
-          className,
-          includeTitle,
-          ariaHidden,
-          focusable
+          layerId:
+            layer.id,
+          type:
+            layer.type
         }
       );
+    }
+
+    lines.push("</svg>");
+
+    const svgString =
+      lines.join("");
 
     return deepFreeze({
       viewBox:
@@ -3076,761 +3485,48 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
 
       svgString,
 
-      stringLength:
-        svgString.length,
-
-      utf8ByteLength:
-        getUtf8ByteLength(
-          svgString
-        ),
-
       layerCount:
         schema.layers.length,
 
-      projectionSchemaBacked:
-        true,
+      sourceModule:
+        MODULE.id,
+
+      sourceVersion:
+        MODULE.version,
+
+      modelId:
+        MODEL_ID,
+
+      destinationType:
+        OBJECT_IDENTITY
+          .destinationType,
 
       intentionallyTwoDimensional:
         true,
 
-      sourceModule:
-        MODULE_ID,
-
-      candidateId:
-        CANDIDATE_ID,
-
-      occurrenceId:
-        OCCURRENCE_ID,
-
-      physicalProjection:
-        PHYSICAL_PROJECTION,
-
-      includeIntercardinalTicks,
-
-      monochromeCapable:
-        true,
-
-      animationRequired:
-        false,
-
       rendererRequired:
         false,
 
-      productionAuthorized:
-        false
-    });
-  }
-
-  function createPrototypeReceipt(options = {}) {
-    const model =
-      options.model ||
-      buildModel({
-        quality:
-          options.quality ||
-          "desktop",
-
-        includeIntercardinalTicks:
-          options.includeIntercardinalTicks ===
-          true
-      });
-
-    const validation =
-      validateModel(model);
-
-    const fallback =
-      buildStaticSvgFallback({
-        includeIntercardinalTicks:
-          model.includeIntercardinalTicks
-      });
-
-    return deepFreeze({
-      receiptSchema:
-        "DGB_UPSTREAM_COMPASS_GEOMETRY_PROTOTYPE_RECEIPT_v2",
-
-      moduleId:
-        MODULE_ID,
-
-      moduleVersion:
-        MODULE_VERSION,
-
-      candidateId:
-        CANDIDATE_ID,
-
-      occurrenceId:
-        OCCURRENCE_ID,
-
-      artifactClass:
-        STATUS.artifactClass,
-
-      geometryVersion:
-        MODULE_VERSION,
-
-      buildSurface:
-        "buildModel",
-
-      compatibilityBuildSurface:
-        "buildBaselineMeshes",
-
-      physicalProjection:
-        PHYSICAL_PROJECTION,
-
-      semanticRelationship:
-        SEMANTIC_RELATIONSHIP,
-
-      qualityProfile:
-        model.qualityProfile.id,
-
-      intercardinalTicksEnabled:
-        model.includeIntercardinalTicks,
-
-      componentCount:
-        model.componentCount,
-
-      vertexCount:
-        model.aggregate.vertexCount,
-
-      triangleCount:
-        model.aggregate.triangleCount,
-
-      aggregateBounds:
-        model.aggregate.bounds,
-
-      actualTotalDepth:
-        model.aggregate.actualTotalDepth,
-
-      depthEnvelope:
-        DEPTH_ENVELOPE,
-
-      materialKeys:
-        MATERIAL_KEYS,
-
-      componentMaterialIdentity:
-        Object.freeze(
-          model.meshes.map(
-            (mesh) =>
-              Object.freeze({
-                componentId:
-                  mesh.componentId,
-
-                materialKey:
-                  mesh.materialKey
-              })
-          )
-        ),
-
-      semanticHitEnvelope:
-        CONSTANTS.semanticHitEnvelope,
-
-      rootTransform:
-        CONSTANTS.placement,
-
-      arrayBufferViewPolicyClarification:
-        ARRAY_BUFFER_VIEW_POLICY_CLARIFICATION,
-
-      bufferMutationContract:
-        BUFFER_MUTATION_CONTRACT,
-
-      fallbackEmission:
-        Object.freeze({
-          authority:
-            MODULE_ID,
-
-          projectionSchemaSurface:
-            "createFrontProjectionSchema",
-
-          concreteEmissionSurface:
-            "buildStaticSvgFallback",
-
-          generated:
-            true,
-
-          projectionSchemaBacked:
-            true,
-
-          intentionallyTwoDimensional:
-            true,
-
-          separateHandAuthoredGeometry:
-            false,
-
-          canonicalViewBox:
-            fallback.viewBox,
-
-          stringLength:
-            fallback.stringLength,
-
-          utf8ByteLength:
-            fallback.utf8ByteLength,
-
-          layerCount:
-            fallback.layerCount,
-
-          productionAuthorized:
-            false
-        }),
-
-      validation,
-
-      authorization:
-        Object.freeze({
-          productionAuthorized:
-            false,
-
-          repositoryIntegrationAuthorized:
-            false,
-
-          deploymentAuthorized:
-            false,
-
-          publicReleaseAuthorized:
-            false,
-
-          finalGeometryFrozen:
-            false
-        }),
-
-      disposition:
-        "UNIVERSAL_COMPASS_INTEGRATED_CENTER_GEOMETRY_CANDIDATE_CONSTRUCTED_AND_READY_FOR_SHARED_RENDERER_CONSUMPTION"
-    });
-  }
-
-  function assertBooleanChecks(
-    checks,
-    codePrefix
-  ) {
-    invariant(
-      checks &&
-      typeof checks ===
-        "object" &&
-      !Array.isArray(checks),
-      `${codePrefix}_CHECK_RECORD_INVALID`,
-      {
-        checks
-      }
-    );
-
-    for (
-      const [name, passed]
-      of Object.entries(checks)
-    ) {
-      invariant(
-        typeof passed ===
-        "boolean",
-        `${codePrefix}_${name}_NOT_BOOLEAN`,
-        {
-          check:
-            name,
-          passed
-        }
-      );
-
-      invariant(
-        passed ===
-        true,
-        `${codePrefix}_${name}`,
-        {
-          check:
-            name,
-          passed
-        }
-      );
-    }
-
-    return true;
-  }
-
-  function runSelfTest() {
-    const desktop =
-      buildModel({
-        quality:
-          "desktop"
-      });
-
-    const mobile =
-      buildModel({
-        quality:
-          "mobile"
-      });
-
-    const lowPower =
-      buildModel({
-        quality:
-          "lowPower"
-      });
-
-    const optionalTicks =
-      buildModel({
-        quality:
-          "desktop",
-
-        includeIntercardinalTicks:
-          true
-      });
-
-    const compatibilityDesktop =
-      buildBaselineMeshes({
-        quality:
-          "desktop"
-      });
-
-    const firstMesh =
-      desktop.meshes[0];
-
-    const geometryChecks =
-      deepFreeze({
-        canonicalBuildModelSurfacePresent:
-          typeof buildModel ===
-          "function",
-
-        compatibilityBuildSurfacePresent:
-          typeof buildBaselineMeshes ===
-          "function",
-
-        buildSurfacesEquivalent:
-          desktop.componentCount ===
-            compatibilityDesktop.componentCount &&
-          desktop.aggregate.vertexCount ===
-            compatibilityDesktop.aggregate.vertexCount &&
-          desktop.aggregate.triangleCount ===
-            compatibilityDesktop.aggregate.triangleCount,
-
-        desktopModelValid:
-          validateModel(desktop).pass ===
-          true,
-
-        mobileModelValid:
-          validateModel(mobile).pass ===
-          true,
-
-        lowPowerModelValid:
-          validateModel(lowPower).pass ===
-          true,
-
-        optionalTicksModelValid:
-          validateModel(optionalTicks).pass ===
-          true,
-
-        integratedCenterIdentity:
-          desktop.physicalProjection ===
-          PHYSICAL_PROJECTION,
-
-        upstreamReturnSemanticIdentity:
-          desktop.semanticRelationship ===
-          SEMANTIC_RELATIONSHIP,
-
-        dimensionalEnvelopeExpanded:
-          desktop.aggregate.actualTotalDepth >=
-          DEPTH_ENVELOPE.baselineTotalDepth -
-            EPSILON,
-
-        materialIdentityPresent:
-          desktop.meshes.every(
-            (mesh) =>
-              Object.values(
-                MATERIAL_KEYS
-              ).includes(
-                mesh.materialKey
-              )
-          ),
-
-        outerRingMaterialIdentity:
-          desktop.meshes.some(
-            (mesh) =>
-              mesh.componentId ===
-                "UGC04_OUTER_HOUSING_RING" &&
-              mesh.materialKey ===
-                MATERIAL_KEYS.OUTER_RING
-          ),
-
-        innerRingMaterialIdentity:
-          desktop.meshes.some(
-            (mesh) =>
-              mesh.componentId ===
-                "UGC04_INNER_DIRECTION_RING" &&
-              mesh.materialKey ===
-                MATERIAL_KEYS.INNER_RING
-          ),
-
-        northNeedleMaterialIdentity:
-          desktop.meshes.some(
-            (mesh) =>
-              mesh.componentId ===
-                "UGC04_DOMINANT_NORTH_NEEDLE" &&
-              mesh.materialKey ===
-                MATERIAL_KEYS.NORTH_NEEDLE
-          ),
-
-        centralHubMaterialIdentity:
-          desktop.meshes.some(
-            (mesh) =>
-              mesh.componentId ===
-                "UGC04_CENTRAL_HUB" &&
-              mesh.materialKey ===
-                MATERIAL_KEYS.CENTRAL_HUB
-          ),
-
-        localQuaternionSharingExcluded:
-          desktop.rootTransform.localQuaternionShared ===
-          false,
-
-        localSettlementParticipationExcluded:
-          desktop.rootTransform.localSettlementParticipation ===
-          false
-      });
-
-    assertBooleanChecks(
-      geometryChecks,
-      "SELF_TEST_GEOMETRY_CHECK_FAILED"
-    );
-
-    const ordinaryObjectFreezeProbe =
-      deepFreeze({
-        a:
-          {
-            b:
-              {
-                c:
-                  1
-              }
-          }
-      });
-
-    const bufferChecks =
-      deepFreeze({
-        meshRecordFrozen:
-          Object.isFrozen(
-            firstMesh
-          ) === true,
-
-        positionsAreArrayBufferView:
-          isArrayBufferView(
-            firstMesh.positions
-          ) === true,
-
-        normalsAreArrayBufferView:
-          isArrayBufferView(
-            firstMesh.normals
-          ) === true,
-
-        indicesAreArrayBufferView:
-          isArrayBufferView(
-            firstMesh.indices
-          ) === true,
-
-        positionsTypeValid:
-          firstMesh.positions.constructor.name ===
-          "Float32Array",
-
-        normalsTypeValid:
-          firstMesh.normals.constructor.name ===
-          "Float32Array",
-
-        indicesTypeValid:
-          firstMesh.indices.constructor.name ===
-            "Uint16Array" ||
-          firstMesh.indices.constructor.name ===
-            "Uint32Array",
-
-        materialKeyPresent:
-          typeof firstMesh.materialKey ===
-            "string" &&
-          firstMesh.materialKey.length >
-            0,
-
-        typedArrayElementImmutabilityNotClaimed:
-          BUFFER_MUTATION_CONTRACT.typedArrayElementImmutabilityClaim ===
-          false,
-
-        bufferMutationAfterFinalizationContractuallyProhibited:
-          BUFFER_MUTATION_CONTRACT.bufferContentsMutableAfterFinalization ===
-            false &&
-          BUFFER_MUTATION_CONTRACT.postFinalizationMutationPolicy ===
-            "PROHIBITED_BY_MODULE_CONTRACT",
-
-        externalMutationAuthorityDenied:
-          BUFFER_MUTATION_CONTRACT.externalMutationAuthority ===
-          false,
-
-        rendererMutationAuthorityDenied:
-          BUFFER_MUTATION_CONTRACT.rendererMutationPermitted ===
-          false
-      });
-
-    assertBooleanChecks(
-      bufferChecks,
-      "SELF_TEST_BUFFER_CHECK_FAILED"
-    );
-
-    const baselineSvg =
-      buildStaticSvgFallback();
-
-    const optionalTickSvg =
-      buildStaticSvgFallback({
-        includeIntercardinalTicks:
-          true
-      });
-
-    const accessibleSvg =
-      buildStaticSvgFallback({
-        ariaHidden:
-          false,
-
-        includeTitle:
-          true
-      });
-
-    const fallbackChecks =
-      deepFreeze({
-        buildSurfacePresent:
-          typeof buildStaticSvgFallback ===
-          "function",
-
-        projectionSchemaPresent:
-          typeof createFrontProjectionSchema ===
-          "function",
-
-        projectionSchemaBacked:
-          baselineSvg.projectionSchemaBacked ===
-          true,
-
-        intentionallyTwoDimensional:
-          baselineSvg.intentionallyTwoDimensional ===
-          true,
-
-        noIndependentGeometryConstants:
-          FALLBACK_EMISSION_AUTHORITY.separateHandAuthoredFallbackGeometry ===
-          false,
-
-        svgStringNonempty:
-          typeof baselineSvg.svgString ===
-            "string" &&
-          baselineSvg.svgString.length >
-            0,
-
-        svgElementPresent:
-          baselineSvg.svgString
-            .trimStart()
-            .startsWith("<svg"),
-
-        canonicalViewBoxPresent:
-          baselineSvg.svgString.includes(
-            'viewBox="0 0 200 200"'
-          ),
-
-        physicalProjectionPresent:
-          baselineSvg.svgString.includes(
-            `data-ugc04-physical-projection="${PHYSICAL_PROJECTION}"`
-          ),
-
-        outerRingPresent:
-          baselineSvg.svgString.includes(
-            'data-ugc04-layer="OUTER_RING"'
-          ),
-
-        innerRingPresent:
-          baselineSvg.svgString.includes(
-            'data-ugc04-layer="INNER_RING"'
-          ),
-
-        northNeedlePresent:
-          baselineSvg.svgString.includes(
-            'data-ugc04-layer="NORTH_NEEDLE"'
-          ),
-
-        centralHubPresent:
-          baselineSvg.svgString.includes(
-            'data-ugc04-layer="CENTRAL_HUB"'
-          ),
-
-        materialIdentityPresent:
-          baselineSvg.svgString.includes(
-            'data-ugc04-material-key="OUTER_RING"'
-          ) &&
-          baselineSvg.svgString.includes(
-            'data-ugc04-material-key="NORTH_NEEDLE"'
-          ),
-
-        baselineTicksAbsent:
-          !baselineSvg.svgString.includes(
-            "INTERCARDINAL_TICK_"
-          ),
-
-        optionalTicksPresent:
-          optionalTickSvg.svgString.includes(
-            "INTERCARDINAL_TICK_"
-          ),
-
-        accessibleTitleRulePass:
-          accessibleSvg.svgString.includes(
-            "<title"
-          ) &&
-          accessibleSvg.svgString.includes(
-            "Return to Master Compass"
-          ),
-
-        monochromeCapable:
-          baselineSvg.monochromeCapable ===
-          true,
-
-        animationNotRequired:
-          baselineSvg.animationRequired ===
-          false,
-
-        rendererNotRequired:
-          baselineSvg.rendererRequired ===
-          false,
-
-        productionAuthorizationFalse:
-          baselineSvg.productionAuthorized ===
-          false
-      });
-
-    assertBooleanChecks(
-      fallbackChecks,
-      "SELF_TEST_FALLBACK_CHECK_FAILED"
-    );
-
-    const receipt =
-      createPrototypeReceipt({
-        model:
-          desktop
-      });
-
-    const receiptChecks =
-      deepFreeze({
-        canonicalBuildSurfaceDeclared:
-          receipt.buildSurface ===
-          "buildModel",
-
-        compatibilityBuildSurfaceDeclared:
-          receipt.compatibilityBuildSurface ===
-          "buildBaselineMeshes",
-
-        componentMaterialIdentityPresent:
-          Array.isArray(
-            receipt.componentMaterialIdentity
-          ) &&
-          receipt.componentMaterialIdentity.length ===
-            desktop.componentCount,
-
-        expandedDepthRecorded:
-          receipt.actualTotalDepth >=
-          DEPTH_ENVELOPE.baselineTotalDepth -
-            EPSILON,
-
-        fallbackEvidencePresent:
-          receipt.fallbackEmission &&
-          receipt.fallbackEmission.generated ===
-            true,
-
-        productionAuthorizationFalse:
-          receipt.authorization.productionAuthorized ===
-          false
-      });
-
-    assertBooleanChecks(
-      receiptChecks,
-      "SELF_TEST_RECEIPT_CHECK_FAILED"
-    );
-
-    const ordinaryObjectFreezeChecks =
-      deepFreeze({
-        deepFreezeOrdinaryObjectPass:
-          Object.isFrozen(
-            ordinaryObjectFreezeProbe
-          ) &&
-          Object.isFrozen(
-            ordinaryObjectFreezeProbe.a
-          ) &&
-          Object.isFrozen(
-            ordinaryObjectFreezeProbe.a.b
-          )
-      });
-
-    assertBooleanChecks(
-      ordinaryObjectFreezeChecks,
-      "SELF_TEST_ORDINARY_OBJECT_FREEZE_CHECK_FAILED"
-    );
-
-    return deepFreeze({
-      pass:
-        true,
-
-      moduleId:
-        MODULE_ID,
-
-      moduleVersion:
-        MODULE_VERSION,
-
-      occurrenceId:
-        OCCURRENCE_ID,
-
-      physicalProjection:
-        PHYSICAL_PROJECTION,
-
-      semanticRelationship:
-        SEMANTIC_RELATIONSHIP,
-
-      profiles:
-        Object.freeze({
-          desktop:
-            validateModel(desktop),
-
-          mobile:
-            validateModel(mobile),
-
-          lowPower:
-            validateModel(lowPower),
-
-          optionalTicks:
-            validateModel(optionalTicks)
-        }),
-
-      geometryChecks,
-
-      bufferChecks,
-
-      fallbackChecks,
-
-      receiptChecks,
-
-      ordinaryObjectFreezeChecks,
-
-      productionAuthorized:
+      animationRequired:
         false
     });
   }
 
   return deepFreeze({
     moduleId:
-      MODULE_ID,
+      MODULE.id,
 
     moduleVersion:
-      MODULE_VERSION,
+      MODULE.version,
 
-    occurrenceId:
-      OCCURRENCE_ID,
+    modelId:
+      MODEL_ID,
 
-    candidateId:
-      CANDIDATE_ID,
-
-    physicalProjection:
-      PHYSICAL_PROJECTION,
-
-    semanticRelationship:
-      SEMANTIC_RELATIONSHIP,
-
-    status:
-      STATUS,
+    objectIdentity:
+      OBJECT_IDENTITY,
 
     coordinateSystem:
       COORDINATE_SYSTEM,
-
-    depthEnvelope:
-      DEPTH_ENVELOPE,
-
-    constants:
-      CONSTANTS,
 
     materialKeys:
       MATERIAL_KEYS,
@@ -3838,14 +3534,20 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
     qualityProfiles:
       QUALITY_PROFILES,
 
-    arrayBufferViewPolicyClarification:
-      ARRAY_BUFFER_VIEW_POLICY_CLARIFICATION,
+    depthEnvelope:
+      DEPTH_ENVELOPE,
 
-    bufferMutationContract:
-      BUFFER_MUTATION_CONTRACT,
+    componentDimensions:
+      COMPONENT_DIMENSIONS,
 
-    fallbackEmissionAuthority:
-      FALLBACK_EMISSION_AUTHORITY,
+    presentationTransforms:
+      PRESENTATION_TRANSFORMS,
+
+    rootTransform:
+      ROOT_TRANSFORM,
+
+    semanticHitEnvelope:
+      SEMANTIC_HIT_ENVELOPE,
 
     buildModel,
 
@@ -3855,25 +3557,19 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
 
     buildStaticSvgFallback,
 
-    createPrototypeReceipt,
-
-    validateModel,
-
-    runSelfTest
+    validateModel
   });
 })();
 
 if (
-  typeof globalThis !==
-  "undefined"
+  typeof globalThis !== "undefined"
 ) {
   globalThis.DGB_UPSTREAM_COMPASS_GEOMETRY =
     DGB_UPSTREAM_COMPASS_GEOMETRY;
 }
 
 if (
-  typeof module !==
-    "undefined" &&
+  typeof module !== "undefined" &&
   module.exports
 ) {
   module.exports =

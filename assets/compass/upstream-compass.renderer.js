@@ -20,6 +20,18 @@
    Semantic model:
    UPSTREAM_RETURN_CONTROL
 
+   Bounded runtime correction:
+   - retain the static fallback until one enhanced frame completes without a
+     WebGL error;
+   - publish renderer, canvas, fallback, held, and reduced-motion state through
+     the existing shared-CSS dataset contract;
+   - report mount and render failure state on both the mount and receipt;
+   - preserve native anchor navigation when an upstream callback does not
+     explicitly handle the navigation;
+   - suppress enhanced drawing only for the STATIC_FALLBACK held variant;
+   - preserve geometry, shader, material, motion, subscription, receipt, and
+     public API architecture.
+
    Architectural rule:
    THE PAGE KNOWS ABOUT THE SHARED UNIVERSAL COMPASS.
    THE SHARED UNIVERSAL COMPASS DOES NOT KNOW THE ESTATE.
@@ -49,6 +61,20 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
 
   const FAILURE_EVENT =
     "DGB_UPSTREAM_COMPASS_RENDERER_FAILURE";
+
+  const RENDERER_STATUS = Object.freeze({
+    INITIALIZING:
+      "initializing",
+
+    AVAILABLE:
+      "available",
+
+    FAILED:
+      "failed",
+
+    DISPOSED:
+      "disposed"
+  });
 
   const HELD_VARIANTS = Object.freeze({
     ENHANCED:
@@ -200,6 +226,12 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
 
     lastParentRoute:
       "",
+
+    lastRendererStatus:
+      "",
+
+    firstEnhancedFrameCompleted:
+      false,
 
     fixedCenterHub:
       true,
@@ -365,12 +397,6 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
       : fallback;
   }
 
-  function shallowFreezeRecord(record) {
-    return Object.freeze({
-      ...record
-    });
-  }
-
   function normalizeArray3(value, fallback) {
     if (
       Array.isArray(value) &&
@@ -434,64 +460,6 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
     return normalizeQuaternion(
       quaternionMultiplyRaw(a, b)
     );
-  }
-
-  function quaternionSlerp(a, b, amount) {
-    let from =
-      normalizeQuaternion(a);
-
-    let to =
-      normalizeQuaternion(b);
-
-    let cosine =
-      from[0] * to[0] +
-      from[1] * to[1] +
-      from[2] * to[2] +
-      from[3] * to[3];
-
-    if (cosine < 0) {
-      to = [
-        -to[0],
-        -to[1],
-        -to[2],
-        -to[3]
-      ];
-
-      cosine =
-        -cosine;
-    }
-
-    if (cosine > 0.9995) {
-      return normalizeQuaternion([
-        from[0] + (to[0] - from[0]) * amount,
-        from[1] + (to[1] - from[1]) * amount,
-        from[2] + (to[2] - from[2]) * amount,
-        from[3] + (to[3] - from[3]) * amount
-      ]);
-    }
-
-    const theta =
-      Math.acos(
-        clamp(cosine, -1, 1)
-      );
-
-    const sineTheta =
-      Math.sin(theta);
-
-    const weightFrom =
-      Math.sin((1 - amount) * theta) /
-      sineTheta;
-
-    const weightTo =
-      Math.sin(amount * theta) /
-      sineTheta;
-
-    return normalizeQuaternion([
-      from[0] * weightFrom + to[0] * weightTo,
-      from[1] * weightFrom + to[1] * weightTo,
-      from[2] * weightFrom + to[2] * weightTo,
-      from[3] * weightFrom + to[3] * weightTo
-    ]);
   }
 
   function quaternionFromAxisAngle(axis, angle) {
@@ -561,21 +529,6 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
       z;
 
     return matrix;
-  }
-
-  function rotateZ4(angle) {
-    const cosine =
-      Math.cos(angle);
-
-    const sine =
-      Math.sin(angle);
-
-    return [
-      cosine, sine, 0, 0,
-      -sine, cosine, 0, 0,
-      0, 0, 1, 0,
-      0, 0, 0, 1
-    ];
   }
 
   function perspective4(fieldOfView, aspect, near, far) {
@@ -781,32 +734,6 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
     );
   }
 
-  function emitFailure(reason, details = null) {
-    RECEIPT.status =
-      "held";
-    RECEIPT.lastFailure =
-      String(reason || "UNKNOWN_FAILURE");
-
-    globalThis[RECEIPT_SYMBOL] =
-      Object.freeze({
-        ...RECEIPT
-      });
-
-    globalThis.dispatchEvent(
-      new CustomEvent(
-        FAILURE_EVENT,
-        {
-          detail:
-            Object.freeze({
-              reason:
-                String(reason || "UNKNOWN_FAILURE"),
-              details
-            })
-        }
-      )
-    );
-  }
-
   function publishReceipt(extra = {}) {
     Object.assign(
       RECEIPT,
@@ -837,6 +764,32 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
       Object.freeze({
         ...RECEIPT
       });
+  }
+
+  function emitFailure(reason, details = null) {
+    RECEIPT.status =
+      "held";
+    RECEIPT.lastFailure =
+      String(reason || "UNKNOWN_FAILURE");
+
+    globalThis[RECEIPT_SYMBOL] =
+      Object.freeze({
+        ...RECEIPT
+      });
+
+    globalThis.dispatchEvent(
+      new CustomEvent(
+        FAILURE_EVENT,
+        {
+          detail:
+            Object.freeze({
+              reason:
+                String(reason || "UNKNOWN_FAILURE"),
+              details
+            })
+        }
+      )
+    );
   }
 
   function resolveGeometryAuthority() {
@@ -874,6 +827,9 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
 
     canvas.dataset.upstreamCompassCanvas =
       "true";
+    canvas.dataset.upstreamCompassCanvasVisible =
+      "false";
+
     canvas.setAttribute(
       "aria-hidden",
       "true"
@@ -1088,11 +1044,11 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
         ? pageContext.requestReturnToUpstream
         : () => {
             if (control.tagName === "A") {
-              globalThis.location.assign(parentRoute);
-              return true;
+              return false;
             }
 
-            return false;
+            globalThis.location.assign(parentRoute);
+            return true;
           };
 
     const getHeldState =
@@ -1195,18 +1151,148 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
       "true";
   }
 
-  function restoreStaticFallback(instance) {
+  function setMountRendererStatus(instance, status) {
+    instance.rendererStatus =
+      String(status || RENDERER_STATUS.INITIALIZING);
+
     if (
       instance.context &&
-      instance.context.fallback
+      instance.context.mount
     ) {
-      instance.context.fallback.hidden =
-        false;
-      instance.context.fallback.style.display =
-        "";
-      instance.context.fallback.dataset.upstreamCompassFallbackVisible =
-        "true";
+      instance.context.mount.dataset.upstreamCompassRendererStatus =
+        instance.rendererStatus;
     }
+  }
+
+  function setCanvasVisible(instance, visible) {
+    const active =
+      visible === true;
+
+    if (!instance.canvas) {
+      return;
+    }
+
+    instance.canvas.dataset.upstreamCompassCanvasVisible =
+      active ? "true" : "false";
+
+    /*
+     * Inline opacity remains only as a defensive compatibility surface.
+     * The shared CSS dataset selector is the primary presentation authority.
+     */
+    instance.canvas.style.opacity =
+      active ? "1" : "0";
+  }
+
+  function setFallbackVisible(instance, visible) {
+    const active =
+      visible === true;
+
+    if (
+      !instance.context ||
+      !instance.context.fallback
+    ) {
+      return;
+    }
+
+    const fallback =
+      instance.context.fallback;
+
+    fallback.dataset.upstreamCompassFallbackVisible =
+      active ? "true" : "false";
+
+    fallback.hidden =
+      !active;
+
+    fallback.style.display =
+      active ? "" : "none";
+
+    fallback.style.opacity =
+      active ? "1" : "0";
+
+    fallback.style.visibility =
+      active ? "visible" : "hidden";
+  }
+
+  function publishMountState(instance) {
+    if (
+      !instance.context ||
+      !instance.context.mount
+    ) {
+      return;
+    }
+
+    const mount =
+      instance.context.mount;
+
+    mount.dataset.upstreamCompassHeld =
+      instance.heldState.active
+        ? "true"
+        : "false";
+
+    mount.dataset.upstreamCompassHeldVariant =
+      instance.heldState.variant;
+
+    mount.dataset.upstreamCompassReducedMotion =
+      instance.reducedMotion
+        ? "true"
+        : "false";
+
+    mount.dataset.upstreamCompassFirstEnhancedFrame =
+      instance.firstEnhancedFrameCompleted
+        ? "true"
+        : "false";
+  }
+
+  function applyPresentationState(instance) {
+    publishMountState(instance);
+
+    if (
+      instance.destroyed ||
+      instance.rendererStatus === RENDERER_STATUS.DISPOSED
+    ) {
+      setCanvasVisible(instance, false);
+      setFallbackVisible(instance, true);
+      return;
+    }
+
+    if (
+      instance.renderFailureEmitted ||
+      instance.rendererStatus === RENDERER_STATUS.FAILED
+    ) {
+      setCanvasVisible(instance, false);
+      setFallbackVisible(instance, true);
+      return;
+    }
+
+    if (
+      instance.heldState.active &&
+      instance.heldState.variant === HELD_VARIANTS.STATIC_FALLBACK
+    ) {
+      setCanvasVisible(instance, false);
+      setFallbackVisible(instance, true);
+      return;
+    }
+
+    if (
+      instance.firstEnhancedFrameCompleted &&
+      instance.gl
+    ) {
+      setCanvasVisible(instance, true);
+      setFallbackVisible(instance, false);
+      return;
+    }
+
+    /*
+     * Fallback-first startup:
+     * the static SVG remains visible until an enhanced frame has completed
+     * without a WebGL error.
+     */
+    setCanvasVisible(instance, false);
+    setFallbackVisible(instance, true);
+  }
+
+  function restoreStaticFallback(instance) {
+    applyPresentationState(instance);
   }
 
   function createInstance(context) {
@@ -1295,8 +1381,19 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
       onSemanticControlClick:
         null,
       renderFailureEmitted:
-        false
+        false,
+      firstEnhancedFrameCompleted:
+        false,
+      rendererStatus:
+        RENDERER_STATUS.INITIALIZING
     };
+
+    setMountRendererStatus(
+      instance,
+      RENDERER_STATUS.INITIALIZING
+    );
+
+    applyPresentationState(instance);
 
     return instance;
   }
@@ -1309,6 +1406,13 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
     instance.renderFailureEmitted =
       true;
 
+    setMountRendererStatus(
+      instance,
+      RENDERER_STATUS.FAILED
+    );
+
+    applyPresentationState(instance);
+
     publishReceipt({
       status:
         "held",
@@ -1320,6 +1424,10 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
         instance.context.pageNodeId,
       lastParentRoute:
         instance.context.parentRoute,
+      lastRendererStatus:
+        RENDERER_STATUS.FAILED,
+      firstEnhancedFrameCompleted:
+        instance.firstEnhancedFrameCompleted,
       rendererInitialized:
         false
     });
@@ -1533,11 +1641,6 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
         instance.running =
           false;
 
-        restoreStaticFallback(instance);
-
-        instance.canvas.style.opacity =
-          "0";
-
         safeEmitInstanceFailure(
           instance,
           "WEBGL_CONTEXT_LOST"
@@ -1548,10 +1651,6 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
     instance.canvas.addEventListener(
       "webglcontextrestored",
       () => {
-        restoreStaticFallback(instance);
-        instance.canvas.style.opacity =
-          "0";
-
         safeEmitInstanceFailure(
           instance,
           "WEBGL_CONTEXT_RESTORED_RELOAD_REQUIRED"
@@ -1572,11 +1671,15 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
       instance.settleActive =
         false;
     }
+
+    publishMountState(instance);
   }
 
   function setHeldState(instance, heldInput) {
     instance.heldState =
       normalizeHeldState(heldInput);
+
+    publishMountState(instance);
   }
 
   function subscribeContextSignals(instance) {
@@ -1664,6 +1767,8 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
               instance,
               value === true
             );
+
+            applyPresentationState(instance);
           }
         );
 
@@ -1692,13 +1797,43 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
 
     instance.onSemanticControlClick =
       (event) => {
-        event.preventDefault();
+        const control =
+          instance.context.semanticControl;
 
-        if (
-          instance.context &&
-          typeof instance.context.requestReturnToUpstream === "function"
-        ) {
-          instance.context.requestReturnToUpstream();
+        const requestReturn =
+          instance.context.requestReturnToUpstream;
+
+        let handled =
+          false;
+
+        try {
+          handled =
+            requestReturn({
+              source:
+                "upstream-compass-control",
+              pageNodeId:
+                instance.context.pageNodeId,
+              parentNodeId:
+                instance.context.parentNodeId,
+              parentRoute:
+                instance.context.parentRoute
+            }) === true;
+        } catch (_) {
+          handled =
+            false;
+        }
+
+        if (handled) {
+          event.preventDefault();
+          return;
+        }
+
+        /*
+         * When an anchor callback does not explicitly handle navigation, its
+         * native href remains the fail-safe upstream route.
+         */
+        if (control.tagName !== "A") {
+          event.preventDefault();
         }
       };
 
@@ -1795,7 +1930,12 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
       );
     }
 
-    restoreStaticFallback(instance);
+    setMountRendererStatus(
+      instance,
+      RENDERER_STATUS.DISPOSED
+    );
+
+    applyPresentationState(instance);
 
     INSTANCES.delete(instance.id);
 
@@ -1807,7 +1947,11 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
       mountedInstanceCount:
         INSTANCES.size,
       lastInstanceId:
-        instance.id
+        instance.id,
+      lastRendererStatus:
+        RENDERER_STATUS.DISPOSED,
+      firstEnhancedFrameCompleted:
+        instance.firstEnhancedFrameCompleted
     });
   }
 
@@ -1880,40 +2024,7 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
   }
 
   function applyHeldPresentation(instance) {
-    const held =
-      instance.heldState;
-    const fallback =
-      instance.context.fallback;
-
-    if (
-      held.active &&
-      held.variant === HELD_VARIANTS.STATIC_FALLBACK
-    ) {
-      instance.canvas.style.opacity =
-        "0";
-      fallback.hidden =
-        false;
-      fallback.style.display =
-        "";
-      fallback.dataset.upstreamCompassFallbackVisible =
-        "true";
-      return;
-    }
-
-    fallback.hidden =
-      true;
-    fallback.style.display =
-      "none";
-    fallback.dataset.upstreamCompassFallbackVisible =
-      "false";
-
-    if (
-      instance.gl &&
-      !instance.renderFailureEmitted
-    ) {
-      instance.canvas.style.opacity =
-        "1";
-    }
+    applyPresentationState(instance);
   }
 
   function applyMaterial(instance, material, baseColor, haloPass) {
@@ -2064,11 +2175,16 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
     applyMaterial(
       instance,
       gpuMesh.material,
-      componentBaseColor(gpuMesh.material === MATERIALS.OUTER_RING ? "OUTER_RING" :
-        gpuMesh.material === MATERIALS.INNER_RING ? "INNER_RING" :
-        gpuMesh.material === MATERIALS.NORTH_NEEDLE ? "NORTH_NEEDLE" :
-        gpuMesh.material === MATERIALS.CENTRAL_HUB ? "CENTRAL_HUB" :
-        "PRINCIPAL_DIRECTION"
+      componentBaseColor(
+        gpuMesh.material === MATERIALS.OUTER_RING
+          ? "OUTER_RING"
+          : gpuMesh.material === MATERIALS.INNER_RING
+            ? "INNER_RING"
+            : gpuMesh.material === MATERIALS.NORTH_NEEDLE
+              ? "NORTH_NEEDLE"
+              : gpuMesh.material === MATERIALS.CENTRAL_HUB
+                ? "CENTRAL_HUB"
+                : "PRINCIPAL_DIRECTION"
       ),
       haloPass
     );
@@ -2187,6 +2303,22 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
         Math.min(1, deltaSeconds * QUALITY.settleSpeed);
   }
 
+  function commitFirstEnhancedFrame(instance) {
+    if (instance.firstEnhancedFrameCompleted) {
+      return;
+    }
+
+    instance.firstEnhancedFrameCompleted =
+      true;
+
+    setMountRendererStatus(
+      instance,
+      RENDERER_STATUS.AVAILABLE
+    );
+
+    applyPresentationState(instance);
+  }
+
   function renderFrame(instance, timeMs) {
     if (
       !instance.running ||
@@ -2255,12 +2387,16 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
       gl.DEPTH_BUFFER_BIT
     );
 
-    if (instance.heldState.active) {
+    if (
+      instance.heldState.active &&
+      instance.heldState.variant === HELD_VARIANTS.STATIC_FALLBACK
+    ) {
       instance.raf =
         requestAnimationFrame(
           (nextTime) =>
             renderFrame(instance, nextTime)
         );
+
       return;
     }
 
@@ -2311,10 +2447,6 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
       gl.getError();
 
     if (error !== gl.NO_ERROR) {
-      restoreStaticFallback(instance);
-      instance.canvas.style.opacity =
-        "0";
-
       safeEmitInstanceFailure(
         instance,
         "WEBGL_RENDER_FAILURE",
@@ -2329,11 +2461,15 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
       return;
     }
 
+    commitFirstEnhancedFrame(instance);
+
     publishReceipt({
       status:
         "available",
       rendererInitialized:
         true,
+      lastFailure:
+        "",
       lastInstanceId:
         instance.id,
       lastHeldVariant:
@@ -2343,7 +2479,11 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
       lastMountPageNodeId:
         instance.context.pageNodeId,
       lastParentRoute:
-        instance.context.parentRoute
+        instance.context.parentRoute,
+      lastRendererStatus:
+        instance.rendererStatus,
+      firstEnhancedFrameCompleted:
+        instance.firstEnhancedFrameCompleted
     });
 
     instance.raf =
@@ -2432,6 +2572,8 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
       active === true
     );
 
+    applyPresentationState(instance);
+
     return true;
   }
 
@@ -2459,9 +2601,16 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
 
     try {
       replaceFallbackContent(instance);
+
+      setMountRendererStatus(
+        instance,
+        RENDERER_STATUS.INITIALIZING
+      );
+
+      applyPresentationState(instance);
+
       initializeGL(instance);
       subscribeContextSignals(instance);
-      applyHeldPresentation(instance);
 
       INSTANCES.set(
         instance.id,
@@ -2470,11 +2619,17 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
 
       start(instance.id);
 
+      /*
+       * Initialization is available, but the enhanced presentation is not
+       * exposed until the first error-free rendered frame.
+       */
       publishReceipt({
         status:
-          "available",
+          "initializing",
         rendererInitialized:
           true,
+        lastFailure:
+          "",
         lastInstanceId:
           instance.id,
         lastMountPageNodeId:
@@ -2484,7 +2639,11 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
         lastHeldVariant:
           instance.heldState.variant,
         lastReducedMotion:
-          instance.reducedMotion
+          instance.reducedMotion,
+        lastRendererStatus:
+          RENDERER_STATUS.INITIALIZING,
+        firstEnhancedFrameCompleted:
+          false
       });
 
       return Object.freeze({
@@ -2521,7 +2680,6 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
           )
       });
     } catch (error) {
-      restoreStaticFallback(instance);
       unbindSubscriptions(instance);
 
       if (
@@ -2598,7 +2756,13 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
       running:
         instance.running,
       destroyed:
-        instance.destroyed
+        instance.destroyed,
+      rendererStatus:
+        instance.rendererStatus,
+      firstEnhancedFrameCompleted:
+        instance.firstEnhancedFrameCompleted,
+      renderFailureEmitted:
+        instance.renderFailureEmitted
     });
   }
 
@@ -2612,6 +2776,10 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
     status:
       "available",
     rendererInitialized:
+      false,
+    lastRendererStatus:
+      "",
+    firstEnhancedFrameCompleted:
       false
   });
 

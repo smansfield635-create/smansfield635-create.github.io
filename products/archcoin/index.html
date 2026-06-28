@@ -12,6 +12,7 @@
     name="description"
     content="ARCHCOIN introduces four financial domains—Contract, Receivable, Payable, and Allocation—through a single compass-based operating surface."
   >
+
   <link
     rel="stylesheet"
     href="/assets/compass/upstream-compass.css"
@@ -71,7 +72,10 @@
         </h1>
 
         <p class="archcoin-header__sentence">
-          ARCHCOIN turns four financial domains—Contract, Receivable, Payable, and Allocation—into one navigable operating field. Open the right coin, inspect the active path beneath the compass, and continue into the room that matches the question in front of you.
+          ARCHCOIN turns four financial domains—Contract, Receivable, Payable,
+          and Allocation—into one navigable operating field. Open the right
+          coin, inspect the active path beneath the compass, and continue into
+          the room that matches the question in front of you.
         </p>
 
         <details
@@ -83,7 +87,10 @@
           </summary>
 
           <p>
-            Most financial confusion starts with opening the wrong domain first. This surface is designed to orient quickly, reduce misclassification, and hand the visitor into the correct room without turning the landing page into an archive.
+            Most financial confusion starts with opening the wrong domain first.
+            This surface is designed to orient quickly, reduce
+            misclassification, and hand the visitor into the correct room
+            without turning the landing page into an archive.
           </p>
         </details>
       </header>
@@ -113,86 +120,97 @@
             aria-hidden="true"
           ></div>
 
-          <div
-            class="archcoin-scene__upstream-compass"
-            data-upstream-compass-mount
-            data-upstream-compass-page-node="archcoin"
-            data-upstream-compass-parent-node="products"
-            data-upstream-compass-parent-route="/products/"
-            data-upstream-compass-physical-projection="FIXED_CENTER_HUB"
-            data-upstream-compass-semantic-model="UPSTREAM_RETURN_CONTROL"
-            data-upstream-compass-quality-profile="desktop"
-          >
-            <a
-              class="archcoin-scene__upstream-compass-control"
-              data-upstream-compass-control
-              href="/products/"
-              aria-label="Return to Master Compass"
+          <!--
+            ARCHCOIN page-owned placement slot.
+
+            This wrapper owns only page placement, centering, responsive width,
+            and page-relative layer position.
+
+            The inner data-upstream-compass-mount remains the shared component
+            entry node governed by /assets/compass/upstream-compass.css and the
+            shared renderer.
+          -->
+          <div class="archcoin-scene__upstream-compass">
+            <div
+              data-upstream-compass-mount
+              data-upstream-compass-page-node="archcoin"
+              data-upstream-compass-parent-node="products"
+              data-upstream-compass-parent-route="/products/"
+              data-upstream-compass-physical-projection="FIXED_CENTER_HUB"
+              data-upstream-compass-semantic-model="UPSTREAM_RETURN_CONTROL"
+              data-upstream-compass-quality-profile="desktop"
             >
-              <span
-                class="archcoin-scene__upstream-compass-fallback"
-                data-upstream-compass-fallback
-                aria-hidden="true"
+              <a
+                class="archcoin-scene__upstream-compass-control"
+                data-upstream-compass-control
+                href="/products/"
+                aria-label="Return to Master Compass"
               >
-                <svg
-                  class="ugc04-static-fallback"
-                  viewBox="0 0 200 200"
-                  xmlns="http://www.w3.org/2000/svg"
-                  focusable="false"
+                <span
+                  class="archcoin-scene__upstream-compass-fallback"
+                  data-upstream-compass-fallback
+                  aria-hidden="true"
                 >
-                  <title>Return to Master Compass</title>
+                  <svg
+                    class="ugc04-static-fallback"
+                    viewBox="0 0 200 200"
+                    xmlns="http://www.w3.org/2000/svg"
+                    focusable="false"
+                  >
+                    <title>Return to Master Compass</title>
 
-                  <path
-                    data-ugc04-layer="OUTER_RING"
-                    fill-rule="evenodd"
-                    d="M 190 100
-                       A 90 90 0 1 1 10 100
-                       A 90 90 0 1 1 190 100
-                       M 183.25 100
-                       A 83.25 83.25 0 1 0 16.75 100
-                       A 83.25 83.25 0 1 0 183.25 100 Z"
-                  ></path>
+                    <path
+                      data-ugc04-layer="OUTER_RING"
+                      fill-rule="evenodd"
+                      d="M 190 100
+                         A 90 90 0 1 1 10 100
+                         A 90 90 0 1 1 190 100
+                         M 183.25 100
+                         A 83.25 83.25 0 1 0 16.75 100
+                         A 83.25 83.25 0 1 0 183.25 100 Z"
+                    ></path>
 
-                  <path
-                    data-ugc04-layer="INNER_RING"
-                    fill-rule="evenodd"
-                    d="M 166.15 100
-                       A 66.15 66.15 0 1 1 33.85 100
-                       A 66.15 66.15 0 1 1 166.15 100
-                       M 163.45 100
-                       A 63.45 63.45 0 1 0 36.55 100
-                       A 63.45 63.45 0 1 0 163.45 100 Z"
-                  ></path>
+                    <path
+                      data-ugc04-layer="INNER_RING"
+                      fill-rule="evenodd"
+                      d="M 166.15 100
+                         A 66.15 66.15 0 1 1 33.85 100
+                         A 66.15 66.15 0 1 1 166.15 100
+                         M 163.45 100
+                         A 63.45 63.45 0 1 0 36.55 100
+                         A 63.45 63.45 0 1 0 163.45 100 Z"
+                    ></path>
 
-                  <polygon
-                    data-ugc04-layer="SOUTH_DIRECTION"
-                    points="93.25,110.8 100,139.6 106.75,110.8"
-                  ></polygon>
+                    <polygon
+                      data-ugc04-layer="SOUTH_DIRECTION"
+                      points="93.25,110.8 100,139.6 106.75,110.8"
+                    ></polygon>
 
-                  <polygon
-                    data-ugc04-layer="EAST_DIRECTION"
-                    points="110.8,106.3 136,100 110.8,93.7"
-                  ></polygon>
+                    <polygon
+                      data-ugc04-layer="EAST_DIRECTION"
+                      points="110.8,106.3 136,100 110.8,93.7"
+                    ></polygon>
 
-                  <polygon
-                    data-ugc04-layer="WEST_DIRECTION"
-                    points="89.2,93.7 64,100 89.2,106.3"
-                  ></polygon>
+                    <polygon
+                      data-ugc04-layer="WEST_DIRECTION"
+                      points="89.2,93.7 64,100 89.2,106.3"
+                    ></polygon>
 
-                  <polygon
-                    data-ugc04-layer="NORTH_NEEDLE"
-                    points="100,26.2 95.05,80.2 91.9,91 108.1,91 104.95,80.2"
-                  ></polygon>
+                    <polygon
+                      data-ugc04-layer="NORTH_NEEDLE"
+                      points="100,26.2 95.05,80.2 91.9,91 108.1,91 104.95,80.2"
+                    ></polygon>
 
-                  <circle
-                    data-ugc04-layer="CENTRAL_HUB"
-                    cx="100"
-                    cy="100"
-                    r="16.2"
-                  ></circle>
-                </svg>
-              </span>
-            </a>
+                    <circle
+                      data-ugc04-layer="CENTRAL_HUB"
+                      cx="100"
+                      cy="100"
+                      r="16.2"
+                    ></circle>
+                  </svg>
+                </span>
+              </a>
+            </div>
           </div>
 
           <div
@@ -294,7 +312,9 @@
           data-archcoin-guidance
           aria-live="polite"
         >
-          Tap a coin to open its room cluster. Tap a room to project its briefing below. Drag to rotate. Quick flick returns to the outer constellation.
+          Tap a coin to open its room cluster. Tap a room to project its
+          briefing below. Drag to rotate. Quick flick returns to the outer
+          constellation.
         </p>
       </section>
 
@@ -317,7 +337,8 @@
         </h2>
 
         <p data-archcoin-panel-purpose>
-          Start with the domain that best matches the financial problem in front of you.
+          Start with the domain that best matches the financial problem in
+          front of you.
         </p>
 
         <p data-archcoin-panel-relationship>

@@ -179,9 +179,12 @@ button:focus-visible,
   height: 4.2rem;
   display: grid;
   place-items: center;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  transform: rotate(45deg);
   border: 1px solid rgba(243, 200, 111, 0.44);
   border-radius: 1.1rem;
-  transform: rotate(45deg);
   background:
     linear-gradient(35deg, transparent 0 20%, rgba(255, 255, 255, 0.24) 21% 23%, transparent 24%),
     conic-gradient(
@@ -198,65 +201,16 @@ button:focus-visible,
     0 0 2rem rgba(36, 120, 255, 0.28),
     0 1.2rem 2.8rem rgba(0, 0, 0, 0.46),
     inset 0 1px 0 rgba(255, 255, 255, 0.16);
-}
-
-.products-brand__mark {
+  font-size: 1rem;
+  line-height: 1;
   font-weight: 950;
   letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  user-select: none;
+  pointer-events: none;
   color: rgba(255, 244, 216, 0.98);
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.85);
-}
-
-.products-brand__mark::before {
-  content: "";
-}
-
-.products-brand__mark {
-  position: relative;
-}
-
-.products-brand__mark {
-  transform-style: preserve-3d;
-}
-
-.products-brand__mark {
-  isolation: isolate;
-}
-
-.products-brand__mark {
-  overflow: hidden;
-}
-
-.products-brand__mark {
-  display: grid;
-}
-
-.products-brand__mark {
-  place-items: center;
-}
-
-.products-brand__mark {
-  font-size: 1rem;
-}
-
-.products-brand__mark {
-  line-height: 1;
-}
-
-.products-brand__mark {
-  text-transform: uppercase;
-}
-
-.products-brand__mark {
-  white-space: nowrap;
-}
-
-.products-brand__mark {
-  user-select: none;
-}
-
-.products-brand__mark {
-  pointer-events: none;
 }
 
 .products-brand__copy {
@@ -398,106 +352,69 @@ button:focus-visible,
   pointer-events: none;
 }
 
+.products-semantic canvas[data-products-crystals-canvas] {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
 .products-star {
   position: absolute;
   left: 50%;
   top: 50%;
-  min-width: 0;
-  width: clamp(7rem, 15vw, 9.6rem);
-  height: clamp(5.2rem, 11vw, 7rem);
-  display: grid;
-  place-items: center;
-  gap: 0.12rem;
-  padding: 0.6rem;
-  text-align: center;
-  border: 1px solid rgba(184, 205, 255, 0.16);
-  border-radius: 1.4rem;
-  background:
-    linear-gradient(145deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.015)),
-    rgba(4, 10, 22, 0.22);
-  color: var(--products-ink);
-  box-shadow:
-    0 1rem 1.8rem rgba(0, 0, 0, 0.32),
-    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  min-width: 44px;
+  min-height: 44px;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: transparent;
+  box-shadow: none;
   transform: translate(-50%, -50%);
   transition:
-    transform var(--products-transition-fast),
-    border-color var(--products-transition-fast),
-    background var(--products-transition-fast),
-    box-shadow var(--products-transition-fast),
-    opacity var(--products-transition-fast);
+    opacity var(--products-transition-fast),
+    transform var(--products-transition-fast);
   pointer-events: auto;
   cursor: pointer;
+  overflow: visible;
+}
+
+.products-star::before {
+  content: "";
+  position: absolute;
+  inset: 50% auto auto 50%;
+  width: clamp(7rem, 15vw, 9.6rem);
+  height: clamp(5.2rem, 11vw, 7rem);
+  transform: translate(-50%, -50%);
+  border-radius: 1.4rem;
+  background: transparent;
+  pointer-events: none;
+}
+
+.products-star--primary::before {
+  width: clamp(10rem, 23vw, 14rem);
+  height: clamp(7.6rem, 17vw, 10rem);
 }
 
 .products-star:hover,
 .products-star:focus-visible {
-  transform: translate(-50%, -50%) scale(1.05);
-  border-color: rgba(243, 200, 111, 0.52);
+  box-shadow: var(--products-focus);
 }
 
 .products-star[hidden] {
   display: none !important;
 }
 
-.products-star[data-selected="true"] {
-  border-color: rgba(243, 200, 111, 0.76);
-  box-shadow:
-    0 1.2rem 2.4rem rgba(0, 0, 0, 0.40),
-    0 0 1.4rem rgba(243, 200, 111, 0.18),
-    inset 0 1px 0 rgba(255, 255, 255, 0.12);
-}
-
-.products-star[data-primary="true"] {
-  border-color: rgba(141, 216, 255, 0.56);
-  box-shadow:
-    0 1rem 2rem rgba(0, 0, 0, 0.36),
-    0 0 1.2rem rgba(141, 216, 255, 0.16),
-    inset 0 1px 0 rgba(255, 255, 255, 0.11);
-}
-
-.products-star--primary {
-  width: clamp(10rem, 23vw, 14rem);
-  height: clamp(7.6rem, 17vw, 10rem);
-  border-color: rgba(243, 200, 111, 0.36);
-  background:
-    radial-gradient(circle at 50% 22%, rgba(255, 232, 163, 0.10), transparent 48%),
-    radial-gradient(circle at 50% 72%, rgba(141, 216, 255, 0.14), transparent 62%),
-    linear-gradient(145deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.016)),
-    rgba(6, 10, 22, 0.20);
-}
-
-.products-star__label {
-  display: block;
-  color: rgba(255, 244, 216, 0.98);
-  font-size: clamp(0.58rem, 1.5vw, 0.84rem);
-  font-weight: 950;
-  letter-spacing: 0.08em;
-  line-height: 1.02;
-  text-transform: uppercase;
-  text-shadow:
-    0 2px 12px rgba(0, 0, 0, 0.95),
-    0 0 10px rgba(0, 28, 90, 0.80);
-}
-
+.products-star__label,
 .products-star__short {
-  display: block;
-  color: rgba(230, 238, 255, 0.78);
-  font-size: clamp(0.40rem, 0.95vw, 0.56rem);
-  font-weight: 900;
-  letter-spacing: 0.08em;
-  line-height: 1.1;
-  text-transform: uppercase;
-}
-
-.products-star--primary .products-star__label {
-  color: var(--products-gold);
-  font-size: clamp(0.82rem, 2vw, 1.06rem);
-  letter-spacing: 0.14em;
-}
-
-.products-star--primary .products-star__short {
-  font-size: clamp(0.58rem, 1.2vw, 0.76rem);
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 
 .products-guidance {
@@ -600,6 +517,7 @@ button:focus-visible,
   padding: clamp(1rem, 3vw, 1.35rem);
   display: grid;
   gap: 0.9rem;
+  opacity: 0.92;
 }
 
 .products-fallback__title {
@@ -635,7 +553,8 @@ button:focus-visible,
   transition:
     transform var(--products-transition-fast),
     border-color var(--products-transition-fast),
-    background var(--products-transition-fast);
+    background var(--products-transition-fast),
+    opacity var(--products-transition-fast);
 }
 
 .products-fallback__link:hover,
@@ -698,7 +617,8 @@ button:focus-visible,
 }
 
 [data-page-id="products"][data-products-state="PRIMARY_ENTRY"] [data-products-primary-entry] {
-  display: grid;
+  display: block;
+  opacity: 1;
 }
 
 [data-page-id="products"][data-products-state="PRIMARY_ENTRY"] [data-products-product] {
@@ -712,7 +632,8 @@ button:focus-visible,
 
 [data-page-id="products"][data-products-state="CLUSTER_OPEN"] [data-products-product],
 [data-page-id="products"][data-products-state="PRODUCT_SELECTED"] [data-products-product] {
-  display: grid;
+  display: block;
+  opacity: 1;
 }
 
 [data-page-id="products"][data-products-state="HELD"] .products-scene {
@@ -728,14 +649,22 @@ button:focus-visible,
   border-color: rgba(243, 200, 111, 0.24);
 }
 
+[data-page-id="products"][data-products-controller-status="available"] .products-fallback,
+[data-page-id="products"][data-products-crystals-status="available"] .products-fallback {
+  opacity: 0.66;
+}
+
+[data-page-id="products"][data-products-state="PRIMARY_ENTRY"] .products-preview {
+  scroll-margin-top: 1.5rem;
+}
+
+[data-page-id="products"][data-products-state="PRODUCT_SELECTED"] .products-preview {
+  border-color: rgba(243, 200, 111, 0.26);
+}
+
 @media (max-width: 1080px) {
   .products-fallback__grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .products-star {
-    width: clamp(6.4rem, 16vw, 8.9rem);
-    height: clamp(4.7rem, 11.5vw, 6.55rem);
   }
 }
 
@@ -769,30 +698,14 @@ button:focus-visible,
     padding: 1rem 0.9rem;
   }
 
-  .products-star {
+  .products-star::before {
     width: 6.35rem;
     height: 4.7rem;
   }
 
-  .products-star__label {
-    font-size: 0.44rem;
-  }
-
-  .products-star__short {
-    font-size: 0.32rem;
-  }
-
-  .products-star--primary {
+  .products-star--primary::before {
     width: 8.9rem;
     height: 6.45rem;
-  }
-
-  .products-star--primary .products-star__label {
-    font-size: 0.66rem;
-  }
-
-  .products-star--primary .products-star__short {
-    font-size: 0.46rem;
   }
 
   .products-fallback__grid {
@@ -805,12 +718,12 @@ button:focus-visible,
     min-height: 23rem;
   }
 
-  .products-star {
+  .products-star::before {
     width: 5.95rem;
     height: 4.38rem;
   }
 
-  .products-star--primary {
+  .products-star--primary::before {
     width: 8.2rem;
     height: 6rem;
   }

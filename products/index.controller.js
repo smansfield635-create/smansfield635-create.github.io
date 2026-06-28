@@ -4,12 +4,17 @@
    orientation, semantic selection, preview-panel projection, return behavior,
    failure-safe receipts, and Products datasets.
 
-   Surgical correction scope:
-   - Bind final authority only to the single body-contained [data-page-id="products"] root.
+   New-file construction scope:
    - Preserve Compass -> ARCHCOIN -> Products lineage.
    - Publish DGB_PRODUCTS_CONTROLLER and DGB_PRODUCTS_CONTROLLER_RECEIPT.
-   - Keep fallback links outside enhanced semantic control handling.
+   - Bind final authority only to [data-page-id="products"].
+   - Recognize legacy runtime selectors as compatibility aliases only.
+   - Preserve Compass-derived renderer-facing method grammar with Products-specific
+     domain substitution.
+   - Enforce atomic primary selection and atomic product selection with one
+     public commitment receipt per committed transaction.
    - Preserve preview-before-navigation, identity separation, return separation,
+     panel descent on product selection, scene return on Return to Orbit,
      and intentional empty bounded void.
 */
 
@@ -18,8 +23,7 @@
 
   const CONTRACT = Object.freeze({
     id: "PRODUCTS_CONTROLLER_COMPASS_NAVIGATION_ANCHOR_v2",
-    sourceContractId:
-      "DGB_COMPASS_CONTROLLER_SPHERICAL_CONSTELLATION_AND_CLUSTER_REBUILD_v3",
+    sourceContractId: "DGB_COMPASS_CONTROLLER_SPHERICAL_CONSTELLATION_AND_CLUSTER_REBUILD_v3",
     continuationAnchorId: "ARCHCOIN_CONTROLLER_COMPASS_NAVIGATION_ANCHOR_v3",
     file: "/products/index.controller.js",
     releaseId: "products-compass-navigation-anchor-v2",
@@ -169,8 +173,6 @@
     semanticLayer: "[data-products-semantic]",
     primaryEntry: "[data-products-primary-entry]",
     productRecord: "[data-products-product]",
-    fallbackRoot: "[data-products-fallback]",
-    fallbackLink: "[data-products-fallback-link]",
     previewPanel: "[data-products-preview-panel]",
     previewEyebrow: "[data-products-preview-eyebrow]",
     previewTitle: "[data-products-preview-title]",
@@ -180,8 +182,7 @@
     returnToOrbit: "[data-products-return-to-orbit]",
     returnToConstellation: "[data-products-return-to-constellation]",
     guidance: "[data-products-guidance]",
-    controllerReceipt: "[data-products-controller-receipt]",
-    crystalsReceipt: "[data-products-crystals-receipt]"
+    controllerReceipt: "[data-products-controller-receipt]"
   });
 
   const LEGACY_SELECTORS = Object.freeze({
@@ -214,11 +215,10 @@
     selectedDestinationLabel: "",
     selectedRoute: "",
     panelDescended: false,
-    fallbackHiddenForEnhanced: false,
-    legacyRuntimeRootPresent: false,
-    legacyRuntimeMountPresent: false,
     lastAction: "",
     lastFailure: null,
+    legacyRuntimeRootPresent: false,
+    legacyRuntimeMountPresent: false,
     visualPassClaimed: false
   };
 
@@ -226,8 +226,6 @@
     root: null,
     scene: null,
     semanticLayer: null,
-    fallbackRoot: null,
-    fallbackLinks: [],
     previewPanel: null,
     previewEyebrow: null,
     previewTitle: null,
@@ -240,10 +238,7 @@
     returnToConstellationButton: null,
     guidance: null,
     controllerReceiptOutput: null,
-    crystalsReceiptOutput: null,
-
     current: STATES.PRIMARY_ENTRY,
-
     orbitFocus: PRIMARY_ENTRY.id,
     orbitPreviewFocus: PRIMARY_ENTRY.id,
     orbitPhase: ORIENTATION_PHASES.COMMITTED,
@@ -252,7 +247,6 @@
     orbitOrientation: null,
     committedOrbitOrientation: null,
     orbitGestureOrigin: null,
-
     activeClusterId: "",
     clusterPrimaryProduct: "",
     clusterPreviewPrimaryProduct: "",
@@ -262,15 +256,17 @@
     clusterOrientation: null,
     committedClusterOrientation: null,
     clusterGestureOrigin: null,
-
     selectedProductId: "",
     selectedDestinationType: "",
     selectedDestinationId: "",
     selectedDestinationLabel: "",
     selectedRoute: "",
     selectedPreviewRecord: null,
-
     panelDescended: false,
+    panelDescentFrame: 0,
+    panelDescentCommitFrame: 0,
+    sceneAscentFrame: 0,
+    sceneAscentCommitFrame: 0,
     reducedMotion: false,
     initialized: false
   };
@@ -393,6 +389,109 @@
     state.panelDescended = false;
   }
 
+  function clearPanelDescentSchedule() {
+    if (state.panelDescentFrame) {
+      cancelAnimationFrame(state.panelDescentFrame);
+      state.panelDescentFrame = 0;
+    }
+
+    if (state.panelDescentCommitFrame) {
+      cancelAnimationFrame(state.panelDescentCommitFrame);
+      state.panelDescentCommitFrame = 0;
+    }
+  }
+
+  function clearSceneAscentSchedule() {
+    if (state.sceneAscentFrame) {
+      cancelAnimationFrame(state.sceneAscentFrame);
+      state.sceneAscentFrame = 0;
+    }
+
+    if (state.sceneAscentCommitFrame) {
+      cancelAnimationFrame(state.sceneAscentCommitFrame);
+      state.sceneAscentCommitFrame = 0;
+    }
+  }
+
+  function clearViewportSchedules() {
+    clearPanelDescentSchedule();
+    clearSceneAscentSchedule();
+  }
+
+  function schedulePanelDescent(expectedProductId) {
+    clearPanelDescentSchedule();
+
+    const productId = normalizeProductId(expectedProductId);
+
+    if (!productId || !state.previewPanel) {
+      return;
+    }
+
+    state.panelDescentFrame = requestAnimationFrame(() => {
+      state.panelDescentFrame = 0;
+
+      state.panelDescentCommitFrame = requestAnimationFrame(() => {
+        state.panelDescentCommitFrame = 0;
+
+        if (
+          state.current !== STATES.PRODUCT_SELECTED ||
+          state.selectedProductId !== productId ||
+          !state.previewPanel
+        ) {
+          return;
+        }
+
+        state.previewPanel.scrollIntoView({
+          behavior: state.reducedMotion ? "auto" : "smooth",
+          block: "start",
+          inline: "nearest"
+        });
+
+        emitReceipt({
+          lastAction: `panel-descended:${productId}`,
+          lastFailure: null
+        });
+      });
+    });
+  }
+
+  function scheduleSceneAscent(expectedClusterId) {
+    clearSceneAscentSchedule();
+
+    const clusterId = String(expectedClusterId || "").trim();
+
+    if (!clusterId || !state.scene) {
+      return;
+    }
+
+    state.sceneAscentFrame = requestAnimationFrame(() => {
+      state.sceneAscentFrame = 0;
+
+      state.sceneAscentCommitFrame = requestAnimationFrame(() => {
+        state.sceneAscentCommitFrame = 0;
+
+        if (
+          state.current !== STATES.CLUSTER_OPEN ||
+          state.activeClusterId !== clusterId ||
+          state.selectedProductId
+        ) {
+          return;
+        }
+
+        state.scene.scrollIntoView({
+          behavior: state.reducedMotion ? "auto" : "smooth",
+          block: "start",
+          inline: "nearest"
+        });
+
+        emitReceipt({
+          lastAction: `returned-to-orbit:${clusterId}`,
+          lastFailure: null
+        });
+      });
+    });
+  }
+
   function defaultPanel() {
     return {
       eyebrow: "Products",
@@ -404,6 +503,15 @@
     };
   }
 
+  function panelFromProduct(product) {
+    return {
+      eyebrow: product.shortLabel,
+      title: product.previewTitle,
+      summary: product.previewSummary,
+      relationship: product.relationshipCopy
+    };
+  }
+
   function clusterPanel() {
     return {
       eyebrow: "Products cluster",
@@ -412,15 +520,6 @@
         "Rotate the cluster, bring a product forward, and select one to populate the preview panel.",
       relationship:
         "Selection opens a preview first. Navigation requires explicit Enter Product."
-    };
-  }
-
-  function panelFromProduct(product) {
-    return {
-      eyebrow: product.shortLabel,
-      title: product.previewTitle,
-      summary: product.previewSummary,
-      relationship: product.relationshipCopy
     };
   }
 
@@ -450,12 +549,9 @@
       return;
     }
 
-    state.enterButton.hidden = false;
+    state.enterButton.disabled = !enabled;
     state.enterButton.setAttribute("aria-disabled", enabled ? "false" : "true");
-
-    if ("disabled" in state.enterButton) {
-      state.enterButton.disabled = !enabled;
-    }
+    state.enterButton.hidden = false;
 
     if (state.enterButton.tagName === "A") {
       if (enabled && state.selectedRoute) {
@@ -475,26 +571,13 @@
 
     control.hidden = hidden;
     control.setAttribute("aria-hidden", hidden ? "true" : "false");
-    control.setAttribute("aria-disabled", hidden ? "true" : "false");
 
     if ("disabled" in control) {
       control.disabled = hidden;
     }
 
+    control.setAttribute("aria-disabled", hidden ? "true" : "false");
     control.tabIndex = hidden ? -1 : 0;
-  }
-
-  function setFallbackEnhancedState(isEnhancedVisible) {
-    if (!state.fallbackRoot) {
-      return;
-    }
-
-    state.fallbackRoot.dataset.enhancedSuppressed = isEnhancedVisible ? "true" : "false";
-    state.fallbackRoot.setAttribute("aria-hidden", isEnhancedVisible ? "true" : "false");
-
-    state.fallbackLinks.forEach(link => {
-      link.tabIndex = isEnhancedVisible ? -1 : 0;
-    });
   }
 
   function syncDatasets() {
@@ -544,11 +627,7 @@
       const primaryVisible = state.current === STATES.PRIMARY_ENTRY;
       state.primaryEntry.dataset.primary = primaryVisible ? "true" : "false";
       state.primaryEntry.dataset.selected = "false";
-      if (primaryVisible) {
-        state.primaryEntry.setAttribute("aria-current", "true");
-      } else {
-        state.primaryEntry.removeAttribute("aria-current");
-      }
+      state.primaryEntry.setAttribute("aria-current", primaryVisible ? "true" : "false");
       state.primaryEntry.hidden = state.current === STATES.HELD;
     }
 
@@ -564,18 +643,13 @@
       const primary = productId && productId === state.clusterPrimaryProduct;
       const visible =
         state.current === STATES.CLUSTER_OPEN ||
-        state.current === STATES.PRODUCT_SELECTED;
+        state.current === STATES.PRODUCT_SELECTED ||
+        state.current === STATES.HELD;
 
       element.dataset.selected = selected ? "true" : "false";
       element.dataset.primary = primary ? "true" : "false";
-
-      if (selected || primary) {
-        element.setAttribute("aria-current", "true");
-      } else {
-        element.removeAttribute("aria-current");
-      }
-
-      element.hidden = !visible;
+      element.setAttribute("aria-current", selected || primary ? "true" : "false");
+      element.hidden = !visible && !element.closest("[data-products-fallback]");
     });
   }
 
@@ -593,11 +667,6 @@
         primaryId: state.clusterPrimaryProduct || defaultClusterPrimaryProduct()
       }
     );
-
-    const fallbackHiddenForEnhanced =
-      state.current === STATES.PRIMARY_ENTRY ||
-      state.current === STATES.CLUSTER_OPEN ||
-      state.current === STATES.PRODUCT_SELECTED;
 
     Object.assign(RECEIPT, {
       contractId: CONTRACT.id,
@@ -624,7 +693,6 @@
       selectedDestinationLabel: state.selectedDestinationLabel,
       selectedRoute: state.selectedRoute,
       panelDescended: state.panelDescended,
-      fallbackHiddenForEnhanced,
       legacyRuntimeRootPresent: Boolean(qs(LEGACY_SELECTORS.runtimeRoot)),
       legacyRuntimeMountPresent: Boolean(qs(LEGACY_SELECTORS.runtimeMount)),
       visualPassClaimed: false
@@ -654,23 +722,14 @@
   function syncPresentation() {
     syncDatasets();
 
-    const enhancedActive =
-      state.current === STATES.PRIMARY_ENTRY ||
-      state.current === STATES.CLUSTER_OPEN ||
-      state.current === STATES.PRODUCT_SELECTED;
-
-    setFallbackEnhancedState(enhancedActive && state.current !== STATES.HELD);
-
     if (state.current === STATES.PRIMARY_ENTRY) {
       setPanel(defaultPanel());
       setEnterEnabled(false);
       setHiddenControl(state.returnToOrbitButton, true);
       setHiddenControl(state.returnToConstellationButton, true);
-      setGuidance("Select the PRODUCTS star to open the six-product cluster.");
-      emitReceipt({
-        lastAction: RECEIPT.lastAction,
-        lastFailure: RECEIPT.lastFailure
-      });
+      setGuidance(
+        "Select the PRODUCTS star to open the six-product cluster."
+      );
       return;
     }
 
@@ -682,10 +741,6 @@
       setGuidance(
         "Rotate the cluster to bring the nearest product forward. Select a product to populate the preview panel."
       );
-      emitReceipt({
-        lastAction: RECEIPT.lastAction,
-        lastFailure: RECEIPT.lastFailure
-      });
       return;
     }
 
@@ -701,10 +756,6 @@
       setGuidance(
         "Review the selected product preview. Enter Product commits navigation. Return to Orbit restores the six-product cluster."
       );
-      emitReceipt({
-        lastAction: RECEIPT.lastAction,
-        lastFailure: RECEIPT.lastFailure
-      });
       return;
     }
 
@@ -722,7 +773,6 @@
     setGuidance(
       "The enhanced Products controller is held. Static content remains readable and navigable."
     );
-    setFallbackEnhancedState(false);
   }
 
   function canTransition(fromState, toState) {
@@ -740,7 +790,6 @@
     const transaction = {
       currentState,
       nextState,
-
       orbitFocus:
         next.orbitFocus !== undefined ? next.orbitFocus : state.orbitFocus,
       orbitPreviewFocus:
@@ -834,6 +883,7 @@
       const previewPrimaryProduct = normalizeProductId(
         transaction.clusterPreviewPrimaryProduct
       ) || primaryProduct;
+
       transaction.clusterPreviewPrimaryProduct = previewPrimaryProduct;
 
       if (normalizeProductId(transaction.selectedProductId)) {
@@ -957,15 +1007,26 @@
   }
 
   function setHeld(reason) {
-    state.current = STATES.HELD;
-    state.orbitFocus = PRIMARY_ENTRY.id;
-    state.orbitPreviewFocus = PRIMARY_ENTRY.id;
-    state.orbitPhase = ORIENTATION_PHASES.CANCELLED;
-    state.orbitGestureActive = false;
+    clearViewportSchedules();
+
+    const heldTransaction = beginAtomicTransition({
+      state: STATES.HELD,
+      orbitFocus: PRIMARY_ENTRY.id,
+      orbitPreviewFocus: PRIMARY_ENTRY.id,
+      orbitPhase: ORIENTATION_PHASES.CANCELLED,
+      orbitGestureActive: false,
+      clusterPhase: ORIENTATION_PHASES.CANCELLED,
+      clusterGestureActive: false
+    });
+
+    state.current = heldTransaction.nextState;
+    state.orbitFocus = heldTransaction.orbitFocus;
+    state.orbitPreviewFocus = heldTransaction.orbitPreviewFocus;
+    state.orbitPhase = heldTransaction.orbitPhase;
+    state.orbitGestureActive = heldTransaction.orbitGestureActive;
     state.orbitGestureOrigin = null;
 
     state.activeClusterId = "";
-    state.clusterPhase = ORIENTATION_PHASES.CANCELLED;
     state.clusterGestureActive = false;
     state.clusterGestureOrigin = null;
 
@@ -992,6 +1053,8 @@
       return false;
     }
 
+    clearViewportSchedules();
+
     const committedOrbit = cloneOrientation(
       state.committedOrbitOrientation || {
         quaternion: QUATERNION.identity,
@@ -1015,7 +1078,6 @@
 
     const transaction = beginAtomicTransition({
       state: STATES.CLUSTER_OPEN,
-
       orbitFocus: PRIMARY_ENTRY.id,
       orbitPreviewFocus: PRIMARY_ENTRY.id,
       orbitPhase: ORIENTATION_PHASES.COMMITTED,
@@ -1023,7 +1085,6 @@
       orbitOrientation: committedOrbit,
       committedOrbitOrientation: committedOrbit,
       orbitGestureOrigin: null,
-
       activeClusterId: PRIMARY_ENTRY.id,
       clusterPrimaryProduct: primaryProduct,
       clusterPreviewPrimaryProduct: primaryProduct,
@@ -1032,7 +1093,6 @@
       clusterOrientation: committedCluster,
       committedClusterOrientation: committedCluster,
       clusterGestureOrigin: null,
-
       selectedProductId: "",
       selectedDestinationType: "",
       selectedDestinationId: "",
@@ -1070,6 +1130,8 @@
       requestClusterCancel("semantic-product-selection");
     }
 
+    clearViewportSchedules();
+
     const transaction = beginAtomicTransition({
       state: STATES.PRODUCT_SELECTED,
       activeClusterId: PRIMARY_ENTRY.id,
@@ -1089,16 +1151,25 @@
       panelDescended: true
     });
 
-    return commitAtomicTransition(
+    const committed = commitAtomicTransition(
       transaction,
       `product-selected:${product.id}`
     );
+
+    if (!committed) {
+      return false;
+    }
+
+    schedulePanelDescent(product.id);
+    return true;
   }
 
   function requestReturnToOrbit() {
     if (state.current !== STATES.PRODUCT_SELECTED) {
       return false;
     }
+
+    clearViewportSchedules();
 
     const transaction = beginAtomicTransition({
       state: STATES.CLUSTER_OPEN,
@@ -1119,25 +1190,16 @@
       panelDescended: false
     });
 
-    const committed = commitAtomicTransition(transaction, "return-to-orbit");
+    const committed = commitAtomicTransition(
+      transaction,
+      "return-to-orbit"
+    );
 
     if (!committed) {
       return false;
     }
 
-    if (state.scene) {
-      state.scene.scrollIntoView({
-        behavior: state.reducedMotion ? "auto" : "smooth",
-        block: "start",
-        inline: "nearest"
-      });
-    }
-
-    emitReceipt({
-      lastAction: "return-to-orbit",
-      lastFailure: null
-    });
-
+    scheduleSceneAscent(PRIMARY_ENTRY.id);
     return true;
   }
 
@@ -1149,12 +1211,7 @@
       return false;
     }
 
-    const committedOrbit = cloneOrientation(
-      state.committedOrbitOrientation || {
-        quaternion: QUATERNION.identity,
-        primaryId: PRIMARY_ENTRY.id
-      }
-    );
+    clearViewportSchedules();
 
     const transaction = beginAtomicTransition({
       state: STATES.PRIMARY_ENTRY,
@@ -1162,10 +1219,21 @@
       orbitPreviewFocus: PRIMARY_ENTRY.id,
       orbitPhase: ORIENTATION_PHASES.COMMITTED,
       orbitGestureActive: false,
-      orbitOrientation: committedOrbit,
-      committedOrbitOrientation: committedOrbit,
+      orbitOrientation:
+        cloneOrientation(
+          state.committedOrbitOrientation || {
+            quaternion: QUATERNION.identity,
+            primaryId: PRIMARY_ENTRY.id
+          }
+        ),
+      committedOrbitOrientation:
+        cloneOrientation(
+          state.committedOrbitOrientation || {
+            quaternion: QUATERNION.identity,
+            primaryId: PRIMARY_ENTRY.id
+          }
+        ),
       orbitGestureOrigin: null,
-
       activeClusterId: "",
       selectedProductId: "",
       selectedDestinationType: "",
@@ -1362,10 +1430,11 @@
     const primaryProduct =
       normalizeProductId(
         payload.primaryProductId ||
-          payload.primaryId ||
-          state.clusterPreviewPrimaryProduct ||
-          state.clusterPrimaryProduct
-      ) || defaultClusterPrimaryProduct();
+        payload.primaryId ||
+        state.clusterPreviewPrimaryProduct ||
+        state.clusterPrimaryProduct
+      ) ||
+      defaultClusterPrimaryProduct();
 
     const orientation = orientationFromPayload(
       payload,
@@ -1405,10 +1474,11 @@
     const primaryProduct =
       normalizeProductId(
         payload.primaryProductId ||
-          payload.primaryId ||
-          state.clusterPreviewPrimaryProduct ||
-          state.clusterPrimaryProduct
-      ) || defaultClusterPrimaryProduct();
+        payload.primaryId ||
+        state.clusterPreviewPrimaryProduct ||
+        state.clusterPrimaryProduct
+      ) ||
+      defaultClusterPrimaryProduct();
 
     const orientation = orientationFromPayload(
       payload,
@@ -1438,9 +1508,9 @@
     const primaryProduct =
       normalizeProductId(
         payload.primaryProductId ||
-          payload.primaryId ||
-          state.clusterPreviewPrimaryProduct ||
-          state.clusterPrimaryProduct
+        payload.primaryId ||
+        state.clusterPreviewPrimaryProduct ||
+        state.clusterPrimaryProduct
       );
 
     if (!primaryProduct) {
@@ -1509,32 +1579,16 @@
     return true;
   }
 
-  function shouldBlockEnhancedSemanticClick() {
-    const crystalsReceipt = globalThis[RECEIPT_SYMBOL.replace("CONTROLLER", "CRYSTALS")];
-    if (crystalsReceipt && crystalsReceipt.gestureActive) {
-      return true;
-    }
-
-    const rootBlockedUntil = finiteNumber(state.root?.dataset?.productsSemanticBlockedUntil, 0);
-    if (rootBlockedUntil && performance.now() < rootBlockedUntil) {
-      return true;
-    }
-
-    return false;
-  }
-
   function handleSemanticClick(event) {
-    if (shouldBlockEnhancedSemanticClick()) {
-      event.preventDefault();
-      event.stopPropagation();
-      return;
-    }
-
     const control = event.target.closest(
       `${SELECTORS.primaryEntry}, ${SELECTORS.productRecord}`
     );
 
-    if (!control || !state.semanticLayer.contains(control)) {
+    if (!control || !state.root.contains(control)) {
+      return;
+    }
+
+    if (control.closest("[data-products-fallback]")) {
       return;
     }
 
@@ -1560,7 +1614,7 @@
   }
 
   function bindSemanticControls() {
-    state.semanticLayer.addEventListener("click", handleSemanticClick);
+    state.root.addEventListener("click", handleSemanticClick);
   }
 
   function bindPanelControls() {
@@ -1588,24 +1642,16 @@
 
   function readReducedMotion() {
     state.reducedMotion =
-      Boolean(
-        globalThis.matchMedia &&
-          typeof globalThis.matchMedia === "function" &&
-          globalThis.matchMedia("(prefers-reduced-motion: reduce)").matches
-      );
+      globalThis.matchMedia &&
+      typeof globalThis.matchMedia === "function" &&
+      globalThis.matchMedia("(prefers-reduced-motion: reduce)").matches;
   }
 
   function resolveDom() {
-    const roots = qsa(SELECTORS.pageRoot);
+    state.root = qs(SELECTORS.pageRoot);
 
-    if (roots.length !== 1) {
-      throw new Error(`PRODUCTS_ROOT_COUNT_INVALID:${roots.length}`);
-    }
-
-    state.root = roots[0];
-
-    if (state.root.tagName.toLowerCase() === "html") {
-      throw new Error("PRODUCTS_ROOT_MAY_NOT_BE_HTML");
+    if (!state.root) {
+      throw new Error("PRODUCTS_ROOT_NOT_FOUND");
     }
 
     state.scene = qs(SELECTORS.sceneRoot, state.root);
@@ -1618,43 +1664,32 @@
       throw new Error("PRODUCTS_SEMANTIC_LAYER_NOT_FOUND");
     }
 
-    state.fallbackRoot = qs(SELECTORS.fallbackRoot, state.root);
-    if (!state.fallbackRoot) {
-      throw new Error("PRODUCTS_FALLBACK_NOT_FOUND");
-    }
-
-    state.fallbackLinks = qsa(SELECTORS.fallbackLink, state.fallbackRoot);
-    if (state.fallbackLinks.length !== PRODUCTS.length) {
-      throw new Error(`PRODUCTS_FALLBACK_COUNT_INVALID:${state.fallbackLinks.length}`);
-    }
-
     state.previewPanel = qs(SELECTORS.previewPanel, state.root);
     if (!state.previewPanel) {
       throw new Error("PRODUCTS_PREVIEW_PANEL_NOT_FOUND");
     }
 
-    state.primaryEntry = qs(SELECTORS.primaryEntry, state.semanticLayer);
+    state.primaryEntry = qs(SELECTORS.primaryEntry, state.root);
     if (!state.primaryEntry) {
       throw new Error("PRODUCTS_PRIMARY_ENTRY_NOT_FOUND");
     }
 
     state.productRecords = qsa(SELECTORS.productRecord, state.semanticLayer);
+
     if (state.productRecords.length !== PRODUCTS.length) {
       throw new Error(`PRODUCTS_SEMANTIC_PRODUCT_COUNT_INVALID:${state.productRecords.length}`);
     }
 
-    state.previewEyebrow = qs(SELECTORS.previewEyebrow, state.previewPanel);
-    state.previewTitle = qs(SELECTORS.previewTitle, state.previewPanel);
-    state.previewSummary = qs(SELECTORS.previewSummary, state.previewPanel);
-    state.previewRelationship = qs(SELECTORS.previewRelationship, state.previewPanel);
+    state.previewEyebrow = qs(SELECTORS.previewEyebrow, state.root);
+    state.previewTitle = qs(SELECTORS.previewTitle, state.root);
+    state.previewSummary = qs(SELECTORS.previewSummary, state.root);
+    state.previewRelationship = qs(SELECTORS.previewRelationship, state.root);
 
-    state.enterButton = qs(SELECTORS.enterProduct, state.previewPanel);
-    state.returnToOrbitButton = qs(SELECTORS.returnToOrbit, state.previewPanel);
-    state.returnToConstellationButton = qs(SELECTORS.returnToConstellation, state.previewPanel);
-
+    state.enterButton = qs(SELECTORS.enterProduct, state.root);
+    state.returnToOrbitButton = qs(SELECTORS.returnToOrbit, state.root);
+    state.returnToConstellationButton = qs(SELECTORS.returnToConstellation, state.root);
     state.guidance = qs(SELECTORS.guidance, state.root);
     state.controllerReceiptOutput = qs(SELECTORS.controllerReceipt, state.root);
-    state.crystalsReceiptOutput = qs(SELECTORS.crystalsReceipt, state.root);
   }
 
   function initializeState() {
@@ -1774,6 +1809,7 @@
       requestPrimaryProductsSelection,
       requestProductSelection,
 
+      /* DOM-facing extensions outside the frozen renderer-facing grammar. */
       requestReturnToOrbit,
       requestEnterProduct
     });

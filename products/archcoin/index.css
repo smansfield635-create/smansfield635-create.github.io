@@ -1,82 +1,63 @@
 /* /products/archcoin/index.css
    ARCHCOIN
-   TED-talk product chamber presentation with Compass-derived coin field.
+   TED-stage product chamber presentation for the v2 HTML structural anchor.
 
-   Full-file replacement scope:
-   - Preserve the current ARCHCOIN HTML as the live structural reference.
-   - Preserve compatibility with index.controller.js and index.crystals.js.
-   - Move presentation responsibility out of inline HTML styling and into CSS.
-   - Present ARCHCOIN as a visible-first product chamber, not a long brochure box.
-   - Preserve the four-coin field, local cluster reveal, information panel, tabs,
-     dossier surfaces, route cards, guardrails, and receipts.
-   - Keep the chamber in a keynote / TED-talk register: clear stage, strong headline,
-     controlled reading width, high-contrast hierarchy, and deliberate motion.
-   - Keep the scene readable before runtime and still compatible with runtime takeover.
-   - Fail soft.
+   Lane:
+   - CSS owns presentation only.
+   - HTML owns structure, content, ids, anchors, and data hooks.
+   - Controller owns state, panel behavior, tab behavior, return behavior, and routing to sections.
+   - Crystals own visual rendering only.
 
    This file does not:
-   - Own controller state.
-   - Own crystal rendering.
-   - Own navigation decisions.
-   - Claim live financial execution.
+   - create or alter controller meaning
+   - create or alter runtime state
+   - create or alter crystal rendering contracts
+   - claim live financial execution
 */
 
 :root {
   color-scheme: dark;
 
-  --archcoin-bg-0: #02040b;
-  --archcoin-bg-1: #060a14;
-  --archcoin-bg-2: #0b1220;
-  --archcoin-bg-3: #101a2d;
+  --archcoin-bg-0: #040811;
+  --archcoin-bg-1: #0b1222;
+  --archcoin-bg-2: #121d34;
 
-  --archcoin-ink: rgba(255, 244, 216, 0.98);
-  --archcoin-text-primary: rgba(244, 239, 225, 0.92);
-  --archcoin-text-secondary: rgba(230, 238, 255, 0.80);
-  --archcoin-text-muted: rgba(230, 238, 255, 0.58);
+  --archcoin-panel: rgba(11, 17, 34, 0.84);
+  --archcoin-panel-soft: rgba(255, 255, 255, 0.025);
+  --archcoin-panel-strong: rgba(8, 13, 26, 0.96);
+
+  --archcoin-line: rgba(255, 255, 255, 0.12);
+  --archcoin-line-soft: rgba(255, 255, 255, 0.08);
+  --archcoin-line-gold: rgba(243, 200, 111, 0.38);
+  --archcoin-line-blue: rgba(142, 220, 255, 0.22);
+  --archcoin-line-green: rgba(143, 240, 195, 0.22);
+  --archcoin-line-rose: rgba(255, 179, 154, 0.22);
+
+  --archcoin-ink: #fff4d8;
+  --archcoin-text-primary: rgba(255, 244, 216, 0.96);
+  --archcoin-text-secondary: rgba(234, 240, 255, 0.80);
+  --archcoin-text-muted: rgba(234, 240, 255, 0.58);
 
   --archcoin-gold: #f3c86f;
-  --archcoin-gold-hot: #ffe8a3;
-  --archcoin-blue: #8dd8ff;
+  --archcoin-gold-soft: #ffe6a0;
+  --archcoin-blue: #8edcff;
   --archcoin-green: #8ff0c3;
-  --archcoin-amber: #f8b94e;
   --archcoin-rose: #ffb39a;
+  --archcoin-amber: #ffbf63;
 
-  --archcoin-line: rgba(184, 205, 255, 0.16);
-  --archcoin-line-strong: rgba(243, 200, 111, 0.34);
-  --archcoin-line-soft: rgba(255, 255, 255, 0.08);
-
-  --archcoin-panel: rgba(9, 15, 31, 0.88);
-  --archcoin-panel-strong: rgba(7, 12, 24, 0.96);
-  --archcoin-glass: rgba(255, 255, 255, 0.035);
-
-  --archcoin-shadow-lg: 0 32px 110px rgba(0, 0, 0, 0.48);
+  --archcoin-shadow-lg: 0 28px 96px rgba(0, 0, 0, 0.48);
   --archcoin-shadow-md: 0 18px 52px rgba(0, 0, 0, 0.34);
-  --archcoin-shadow-sm: 0 10px 28px rgba(0, 0, 0, 0.24);
+  --archcoin-shadow-sm: 0 10px 28px rgba(0, 0, 0, 0.22);
 
-  --archcoin-radius-xl: 38px;
-  --archcoin-radius-lg: 28px;
-  --archcoin-radius-md: 20px;
-  --archcoin-radius-sm: 14px;
+  --archcoin-radius-xl: 2rem;
+  --archcoin-radius-lg: 1.35rem;
+  --archcoin-radius-md: 1rem;
+  --archcoin-radius-sm: 0.85rem;
 
-  --archcoin-max: 1280px;
-  --archcoin-copy-max: 78rem;
+  --archcoin-max: 1260px;
+  --archcoin-copy-max: 980px;
+  --archcoin-scene-size: min(100%, 47rem);
 
-  --archcoin-scene-size: min(100%, 48rem);
-  --archcoin-outer-radius: 15rem;
-  --archcoin-cluster-radius: 8.9rem;
-  --archcoin-center-size: 10rem;
-  --archcoin-coin-width: 10.3rem;
-  --archcoin-coin-height: 7.35rem;
-  --archcoin-room-width: 5.2rem;
-  --archcoin-room-height: 3.9rem;
-
-  --field-turn-duration: 46s;
-  --outer-orbit-duration: 36s;
-  --cluster-orbit-duration: 31s;
-  --gem-float-duration: 6.8s;
-  --center-pulse-duration: 7.4s;
-
-  --gem-cut: polygon(50% 0%, 78% 9%, 100% 35%, 90% 75%, 50% 100%, 10% 75%, 0% 35%, 22% 9%);
   --archcoin-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 
@@ -86,17 +67,17 @@
 
 html {
   min-width: 320px;
-  min-height: 100%;
-  background: var(--archcoin-bg-0);
+  background:
+    radial-gradient(circle at 50% -8%, rgba(243, 200, 111, 0.16), transparent 28rem),
+    radial-gradient(circle at 12% 18%, rgba(73, 143, 255, 0.12), transparent 25rem),
+    radial-gradient(circle at 88% 24%, rgba(255, 188, 88, 0.10), transparent 24rem),
+    linear-gradient(180deg, #060914 0%, #040811 56%, #02040a 100%);
   scroll-behavior: smooth;
-  overflow-x: hidden;
 }
 
 body {
-  position: relative;
-  min-width: 320px;
-  min-height: 100vh;
   margin: 0;
+  min-height: 100vh;
   color: var(--archcoin-ink);
   font-family:
     Inter,
@@ -107,15 +88,10 @@ body {
     "Segoe UI",
     sans-serif;
   line-height: 1.5;
-  overflow-x: hidden;
-  background:
-    radial-gradient(circle at 50% -8%, rgba(243, 200, 111, 0.24), transparent 28rem),
-    radial-gradient(circle at 12% 18%, rgba(36, 120, 255, 0.16), transparent 28rem),
-    radial-gradient(circle at 88% 30%, rgba(248, 185, 78, 0.14), transparent 28rem),
-    radial-gradient(circle at 50% 78%, rgba(141, 216, 255, 0.10), transparent 34rem),
-    linear-gradient(180deg, #080c17 0%, #030713 58%, #010207 100%);
+  background: transparent;
   -webkit-font-smoothing: antialiased;
   text-rendering: geometricPrecision;
+  overflow-x: hidden;
 }
 
 body::before {
@@ -126,11 +102,11 @@ body::before {
   pointer-events: none;
   background-image:
     radial-gradient(circle, rgba(255, 255, 255, 0.18) 0 1px, transparent 1.5px),
-    linear-gradient(rgba(243, 200, 111, 0.045) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(141, 216, 255, 0.045) 1px, transparent 1px);
-  background-size: 220px 260px, 54px 54px, 54px 54px;
-  opacity: 0.22;
-  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.92), rgba(0, 0, 0, 0.52) 64%, rgba(0, 0, 0, 0.24));
+    linear-gradient(rgba(243, 200, 111, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(142, 220, 255, 0.03) 1px, transparent 1px);
+  background-size: 220px 250px, 56px 56px, 56px 56px;
+  opacity: 0.18;
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.96), rgba(0, 0, 0, 0.58) 64%, rgba(0, 0, 0, 0.24));
 }
 
 a {
@@ -141,6 +117,8 @@ a {
 button {
   font: inherit;
   color: inherit;
+  background: none;
+  border: 0;
 }
 
 a:focus-visible,
@@ -150,54 +128,46 @@ button:focus-visible,
   outline-offset: 4px;
 }
 
-p {
-  margin: 0;
-  color: var(--archcoin-text-secondary);
-  font-size: clamp(0.98rem, 2.2vw, 1.14rem);
-  line-height: 1.62;
-}
-
 h1,
 h2,
 h3,
 strong,
-b {
+b,
+p {
   margin: 0;
 }
 
-.svg-defs {
-  position: absolute;
-  width: 0;
-  height: 0;
-  overflow: hidden;
-  pointer-events: none;
+p {
+  color: var(--archcoin-text-secondary);
+  font-size: clamp(0.98rem, 2.4vw, 1.12rem);
+  line-height: 1.58;
 }
 
-.skip {
+.skip-link {
   position: absolute;
   left: -999px;
-  top: 8px;
-  z-index: 60;
-  padding: 0.75rem 1rem;
+  top: 12px;
+  z-index: 100;
+  padding: 0.82rem 1rem;
   border-radius: 999px;
-  color: #05070d;
   background: var(--archcoin-gold);
-  font-weight: 950;
+  color: #050811;
+  font-weight: 900;
 }
 
-.skip:focus {
-  left: 8px;
+.skip-link:focus {
+  left: 12px;
 }
 
-.shell {
+.page-shell {
   position: relative;
-  z-index: 2;
-  width: min(var(--archcoin-max), calc(100% - 30px));
+  z-index: 1;
+  width: min(var(--archcoin-max), calc(100% - 28px));
   margin: 0 auto;
   padding:
     max(20px, env(safe-area-inset-top))
     0
-    max(46px, env(safe-area-inset-bottom));
+    max(52px, env(safe-area-inset-bottom));
 }
 
 /* -------------------------------------------------------------------------- */
@@ -207,78 +177,65 @@ b {
 .topbar {
   display: grid;
   grid-template-columns: auto 1fr;
+  gap: 1.2rem;
   align-items: center;
-  gap: 18px;
-  padding: 12px 0 22px;
+  padding: 0.45rem 0 1rem;
 }
 
 .brand {
   display: grid;
   grid-template-columns: auto 1fr;
+  gap: 0.9rem;
   align-items: center;
-  gap: 0.95rem;
   min-width: 260px;
 }
 
 .brand-mark {
-  width: 4.2rem;
-  height: 4.2rem;
+  width: 4rem;
+  height: 4rem;
+  border: 1px solid rgba(243, 200, 111, 0.48);
+  border-radius: 1rem;
   display: grid;
   place-items: center;
-  border: 1px solid rgba(243, 200, 111, 0.48);
   transform: rotate(45deg);
-  clip-path: var(--gem-cut);
   background:
-    linear-gradient(35deg, transparent 0 20%, rgba(255, 255, 255, 0.28) 21% 23%, transparent 24%),
-    conic-gradient(
-      from 45deg at 50% 50%,
-      rgba(255, 255, 255, 0.28),
-      rgba(248, 185, 78, 0.24),
-      rgba(45, 22, 4, 0.64),
-      rgba(36, 120, 255, 0.16),
-      rgba(255, 255, 255, 0.28)
-    ),
-    radial-gradient(circle at 48% 22%, rgba(255, 255, 255, 0.32), transparent 42%),
-    linear-gradient(145deg, rgba(121, 72, 15, 0.95), rgba(5, 8, 20, 0.98));
+    radial-gradient(circle at 50% 28%, rgba(255, 255, 255, 0.26), transparent 40%),
+    linear-gradient(145deg, rgba(255, 230, 160, 0.24), rgba(8, 12, 24, 0.96));
   box-shadow:
-    0 0 2rem rgba(243, 200, 111, 0.24),
-    0 1.2rem 2.8rem rgba(0, 0, 0, 0.46),
+    0 0 1.8rem rgba(243, 200, 111, 0.18),
     inset 0 1px 0 rgba(255, 255, 255, 0.16);
 }
 
 .brand-mark span {
   transform: rotate(-45deg);
-  color: rgba(255, 244, 216, 0.98);
   font-weight: 950;
   letter-spacing: 0.04em;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.85);
 }
 
 .brand-copy {
   display: grid;
-  gap: 0.18rem;
-}
-
-.brand-copy strong {
-  color: rgba(255, 244, 216, 0.98);
-  font-size: clamp(1.08rem, 3vw, 1.7rem);
-  line-height: 1;
-  letter-spacing: -0.045em;
+  gap: 0.16rem;
 }
 
 .brand-copy span {
   color: var(--archcoin-text-secondary);
-  font-size: 0.74rem;
-  font-weight: 950;
+  font-size: 0.72rem;
+  font-weight: 900;
   letter-spacing: 0.14em;
   text-transform: uppercase;
+}
+
+.brand-copy strong {
+  font-size: clamp(1.1rem, 3vw, 1.55rem);
+  line-height: 1;
+  letter-spacing: -0.05em;
 }
 
 .nav {
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-end;
-  gap: 0.48rem;
+  gap: 0.45rem;
 }
 
 .nav a {
@@ -286,15 +243,14 @@ b {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.5rem 0.74rem;
-  border: 1px solid rgba(255, 255, 255, 0.13);
+  padding: 0.52rem 0.78rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 999px;
-  color: rgba(241, 246, 255, 0.84);
   background: rgba(255, 255, 255, 0.035);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  color: rgba(241, 246, 255, 0.86);
   font-size: 0.68rem;
-  font-weight: 950;
-  letter-spacing: 0.055em;
+  font-weight: 900;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   transition:
     transform 180ms var(--archcoin-ease),
@@ -302,33 +258,33 @@ b {
     background 180ms var(--archcoin-ease);
 }
 
-.nav a:hover {
+.nav a:hover,
+.nav a:focus-visible {
   transform: translateY(-1px);
-  border-color: rgba(243, 200, 111, 0.34);
+  border-color: rgba(243, 200, 111, 0.32);
+  outline: none;
 }
 
 .nav a[aria-current="page"] {
-  border-color: rgba(243, 200, 111, 0.88);
-  color: #060811;
-  background: linear-gradient(135deg, #fff2a8, #f3c86f);
+  color: #050811;
+  background: linear-gradient(135deg, var(--archcoin-gold-soft), var(--archcoin-gold));
+  border-color: rgba(243, 200, 111, 0.86);
 }
 
 /* -------------------------------------------------------------------------- */
-/* Reusable surfaces                                                          */
+/* Reusable panels                                                            */
 /* -------------------------------------------------------------------------- */
 
 .panel {
   position: relative;
   border: 1px solid var(--archcoin-line);
-  border-radius: clamp(1.35rem, 5vw, 2.35rem);
+  border-radius: clamp(1.2rem, 4vw, 2rem);
   background:
-    radial-gradient(circle at 14% 0%, rgba(243, 200, 111, 0.10), transparent 28rem),
-    radial-gradient(circle at 86% 18%, rgba(36, 120, 255, 0.12), transparent 28rem),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.022)),
+    radial-gradient(circle at 18% 0%, rgba(243, 200, 111, 0.08), transparent 32rem),
+    radial-gradient(circle at 84% 14%, rgba(142, 220, 255, 0.08), transparent 30rem),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02)),
     var(--archcoin-panel);
-  box-shadow:
-    var(--archcoin-shadow-lg),
-    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  box-shadow: var(--archcoin-shadow-lg), inset 0 1px 0 rgba(255, 255, 255, 0.06);
   overflow: hidden;
 }
 
@@ -337,31 +293,29 @@ b {
   position: absolute;
   inset: 12px;
   border: 1px solid rgba(255, 255, 255, 0.05);
-  border-radius: calc(clamp(1.35rem, 5vw, 2.35rem) - 10px);
+  border-radius: calc(clamp(1.2rem, 4vw, 2rem) - 10px);
   pointer-events: none;
 }
 
 .section {
-  margin-top: 1.2rem;
-  padding: clamp(1rem, 3vw, 1.45rem);
+  margin-top: 1rem;
+  padding: clamp(1rem, 3vw, 1.3rem);
   display: grid;
-  gap: 1.05rem;
+  gap: 1rem;
 }
 
 .kicker {
-  position: relative;
-  z-index: 2;
   width: fit-content;
   display: inline-flex;
   align-items: center;
-  gap: 0.58rem;
-  padding: 0.58rem 0.95rem;
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  gap: 0.56rem;
+  padding: 0.56rem 0.95rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 999px;
-  color: rgba(230, 238, 255, 0.86);
   background: rgba(255, 255, 255, 0.04);
+  color: rgba(234, 240, 255, 0.88);
   font-size: 0.72rem;
-  font-weight: 950;
+  font-weight: 900;
   letter-spacing: 0.14em;
   text-transform: uppercase;
 }
@@ -370,93 +324,91 @@ b {
   content: "";
   width: 0.72rem;
   height: 0.72rem;
-  border-radius: 0.18rem;
+  border-radius: 0.16rem;
   transform: rotate(45deg);
-  background: linear-gradient(135deg, var(--archcoin-gold-hot), var(--archcoin-gold));
-  box-shadow: 0 0 1.1rem rgba(243, 200, 111, 0.46);
+  background: linear-gradient(135deg, var(--archcoin-gold-soft), var(--archcoin-gold));
+  box-shadow: 0 0 1rem rgba(243, 200, 111, 0.34);
 }
 
 h1 {
-  position: relative;
-  z-index: 2;
-  max-width: 1100px;
-  color: rgba(255, 244, 216, 0.98);
-  font-size: clamp(3rem, 8.5vw, 7rem);
-  line-height: 0.86;
-  letter-spacing: -0.102em;
+  max-width: 1080px;
+  font-size: clamp(3rem, 9vw, 6.85rem);
+  line-height: 0.88;
+  letter-spacing: -0.108em;
   text-wrap: balance;
+  color: var(--archcoin-text-primary);
 }
 
 h2 {
-  position: relative;
-  z-index: 2;
   max-width: 920px;
   color: var(--archcoin-gold);
-  font-size: clamp(1.45rem, 4.7vw, 2.8rem);
+  font-size: clamp(1.55rem, 4.6vw, 2.7rem);
   line-height: 0.98;
   letter-spacing: -0.07em;
   text-wrap: balance;
 }
 
 h3 {
-  color: rgba(255, 244, 216, 0.98);
-  font-size: clamp(1.02rem, 2.5vw, 1.4rem);
+  color: var(--archcoin-text-primary);
+  font-size: clamp(1.06rem, 3vw, 1.35rem);
   line-height: 1.08;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.04em;
 }
 
 .subline {
-  position: relative;
-  z-index: 2;
-  max-width: 940px;
-  color: rgba(255, 244, 216, 0.90);
-  font-size: clamp(1.08rem, 2.8vw, 1.34rem);
+  max-width: 960px;
+  color: rgba(255, 244, 216, 0.92);
+  font-size: clamp(1.08rem, 3vw, 1.34rem);
   font-weight: 850;
 }
 
-.lead {
-  position: relative;
-  z-index: 2;
-  max-width: min(68rem, var(--archcoin-copy-max));
+.lead,
+.stage-copy {
+  max-width: var(--archcoin-copy-max);
+}
+
+.talk-pain {
+  max-width: 1040px;
+  padding: 1rem 1.12rem;
+  border: 1px solid rgba(255, 179, 154, 0.24);
+  border-radius: 1.15rem;
+  color: rgba(255, 229, 220, 0.95);
+  background: rgba(119, 44, 18, 0.16);
+  font-weight: 800;
+  line-height: 1.56;
 }
 
 .guardrail {
-  position: relative;
-  z-index: 2;
-  max-width: 1000px;
-  padding: 1rem 1.1rem;
+  max-width: 1040px;
+  padding: 1rem 1.12rem;
   border: 1px solid rgba(143, 240, 195, 0.24);
-  border-radius: 1.2rem;
-  color: rgba(200, 255, 228, 0.94);
-  background: rgba(28, 80, 58, 0.16);
-  font-size: clamp(0.94rem, 2vw, 1.02rem);
-  font-weight: 850;
+  border-radius: 1.15rem;
+  color: rgba(201, 255, 229, 0.94);
+  background: rgba(24, 80, 58, 0.16);
+  font-weight: 800;
   line-height: 1.56;
 }
 
 .actions {
-  position: relative;
-  z-index: 2;
   display: flex;
   flex-wrap: wrap;
-  gap: 0.62rem;
-  margin-top: 0.15rem;
+  gap: 0.6rem;
+  margin-top: 0.1rem;
 }
 
 .button {
-  min-height: 2.65rem;
+  min-height: 2.6rem;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   padding: 0.65rem 1rem;
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.13);
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.045);
-  color: rgba(241, 246, 255, 0.88);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07);
-  font-size: 0.76rem;
-  font-weight: 950;
-  letter-spacing: 0.055em;
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(240, 246, 255, 0.88);
+  font-size: 0.74rem;
+  font-weight: 900;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   transition:
     transform 180ms var(--archcoin-ease),
@@ -467,21 +419,19 @@ h3 {
 .button:hover,
 .button:focus-visible {
   transform: translateY(-2px);
-  border-color: rgba(243, 200, 111, 0.62);
   outline: none;
 }
 
 .button.gold {
-  border-color: rgba(243, 200, 111, 0.9);
-  color: #060811;
-  background: linear-gradient(135deg, #fff2a8, #f3c86f);
-  box-shadow: 0 0.8rem 1.8rem rgba(243, 200, 111, 0.13);
+  color: #050811;
+  border-color: rgba(243, 200, 111, 0.86);
+  background: linear-gradient(135deg, var(--archcoin-gold-soft), var(--archcoin-gold));
 }
 
 .button.green {
-  border-color: rgba(143, 240, 195, 0.42);
   color: var(--archcoin-green);
-  background: rgba(143, 240, 195, 0.07);
+  border-color: rgba(143, 240, 195, 0.3);
+  background: rgba(143, 240, 195, 0.08);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -489,90 +439,81 @@ h3 {
 /* -------------------------------------------------------------------------- */
 
 .hero {
-  position: relative;
-  min-height: clamp(24rem, 40vw, 33rem);
   display: grid;
-  align-content: center;
   gap: 1rem;
-  padding: clamp(1.4rem, 4.8vw, 3.3rem);
-  margin-top: 0.55rem;
-  isolation: isolate;
-}
-
-.hero::after {
-  content: "";
-  position: absolute;
-  right: clamp(1rem, 6vw, 5.5rem);
-  top: 50%;
-  z-index: 0;
-  width: clamp(9rem, 25vw, 18rem);
-  height: clamp(9rem, 25vw, 18rem);
-  border: 1px solid rgba(243, 200, 111, 0.18);
-  border-radius: 2.9rem;
-  transform: translateY(-50%) rotate(45deg);
-  background:
-    radial-gradient(circle at 50% 42%, rgba(255, 232, 163, 0.16), transparent 48%),
-    radial-gradient(circle at 50% 72%, rgba(36, 120, 255, 0.14), transparent 62%),
-    linear-gradient(145deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.01));
-  animation: archcoin-anchor-pulse 8s ease-in-out infinite;
-  pointer-events: none;
-  opacity: 0.54;
-}
-
-@keyframes archcoin-anchor-pulse {
-  0%,
-  100% {
-    opacity: 0.42;
-    filter: brightness(0.95);
-  }
-
-  50% {
-    opacity: 0.60;
-    filter: brightness(1.1);
-  }
+  align-content: center;
+  min-height: clamp(25rem, 43vw, 35rem);
+  padding: clamp(1.2rem, 4vw, 2.8rem);
+  margin-top: 0.65rem;
 }
 
 /* -------------------------------------------------------------------------- */
-/* Scene intro                                                                */
+/* Standard cards and grids                                                   */
 /* -------------------------------------------------------------------------- */
 
-.scene-summary {
-  padding: 1rem 1.1rem;
-  border: 1px solid rgba(243, 200, 111, 0.22);
-  border-radius: 1.2rem;
-  background:
-    radial-gradient(circle at 20% 0%, rgba(243, 200, 111, 0.10), transparent 60%),
-    rgba(243, 200, 111, 0.045);
+.grid-2,
+.pain-grid,
+.proof-grid,
+.route-grid,
+.dossier-grid,
+.coin-template-grid,
+.archcoin-panel-grid {
   display: grid;
-  gap: 0.62rem;
+  gap: 0.85rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
-.scene-summary strong {
-  color: rgba(255, 244, 216, 0.98);
-  font-size: clamp(1.08rem, 3vw, 1.45rem);
+.card {
+  display: grid;
+  gap: 0.42rem;
+  min-height: 100%;
+  padding: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 1.05rem;
+  background:
+    radial-gradient(circle at 20% 0%, rgba(243, 200, 111, 0.06), transparent 60%),
+    rgba(255, 255, 255, 0.025);
+}
+
+.card b {
+  color: var(--archcoin-gold);
+  font-size: 0.66rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.card strong {
+  color: var(--archcoin-text-primary);
+  font-size: 1.04rem;
   line-height: 1.08;
-  letter-spacing: -0.03em;
+}
+
+.card span {
+  color: var(--archcoin-text-secondary);
+  font-size: 0.92rem;
+  line-height: 1.45;
 }
 
 /* -------------------------------------------------------------------------- */
-/* ARCHCOIN scene                                                             */
+/* Scene                                                                       */
 /* -------------------------------------------------------------------------- */
 
 .archcoin-scene {
   position: relative;
   display: grid;
   gap: 1rem;
-  min-height: clamp(39rem, 64vw, 47rem);
-  padding: clamp(1rem, 3vw, 1.35rem);
-  border: 1px solid rgba(184, 205, 255, 0.13);
-  border-radius: clamp(1.35rem, 5vw, 2.35rem);
+  min-height: clamp(42rem, 74vw, 55rem);
+  padding: clamp(1rem, 2.8vw, 1.4rem);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 1.35rem;
   background:
-    radial-gradient(circle at 50% 42%, rgba(243, 200, 111, 0.16), transparent 20rem),
-    radial-gradient(circle at 50% 52%, rgba(36, 120, 255, 0.10), transparent 25rem),
-    linear-gradient(180deg, rgba(1, 5, 16, 0.68), rgba(2, 6, 16, 0.92));
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    radial-gradient(circle at 50% 42%, rgba(243, 200, 111, 0.14), transparent 21rem),
+    radial-gradient(circle at 50% 50%, rgba(142, 220, 255, 0.09), transparent 25rem),
+    linear-gradient(180deg, rgba(4, 8, 18, 0.72), rgba(4, 8, 18, 0.94));
   overflow: hidden;
   isolation: isolate;
+  touch-action: auto;
 }
 
 .archcoin-scene::before,
@@ -580,82 +521,59 @@ h3 {
   content: "";
   position: absolute;
   left: 50%;
-  top: 43%;
+  top: 46%;
   border-radius: 50%;
   transform: translate(-50%, -50%);
   pointer-events: none;
 }
 
 .archcoin-scene::before {
-  width: min(82%, 38rem);
-  height: min(82%, 38rem);
+  width: min(78%, 38rem);
+  height: min(78%, 38rem);
   border: 1px solid rgba(243, 200, 111, 0.10);
   background:
     conic-gradient(
       from 0deg,
       transparent 0deg,
-      rgba(243, 200, 111, 0.12) 28deg,
-      transparent 58deg,
-      rgba(141, 216, 255, 0.08) 108deg,
-      transparent 154deg,
-      rgba(243, 200, 111, 0.10) 214deg,
-      transparent 270deg,
-      rgba(141, 216, 255, 0.07) 320deg,
+      rgba(243, 200, 111, 0.12) 34deg,
+      transparent 66deg,
+      rgba(142, 220, 255, 0.08) 108deg,
+      transparent 152deg,
+      rgba(243, 200, 111, 0.10) 220deg,
+      transparent 286deg,
+      rgba(142, 220, 255, 0.07) 324deg,
       transparent 360deg
     );
-  box-shadow: 0 0 3rem rgba(243, 200, 111, 0.10);
   opacity: 0.82;
-  animation: archcoin-value-field-turn var(--field-turn-duration) linear infinite;
 }
 
 .archcoin-scene::after {
-  width: min(56%, 25rem);
-  height: min(56%, 25rem);
-  border: 1px solid rgba(36, 120, 255, 0.15);
+  width: min(54%, 24rem);
+  height: min(54%, 24rem);
+  border: 1px solid rgba(142, 220, 255, 0.14);
   box-shadow:
-    inset 0 0 3rem rgba(36, 120, 255, 0.035),
-    0 0 2.4rem rgba(36, 120, 255, 0.08);
-  animation: archcoin-inner-field-breathe 8s ease-in-out infinite;
-}
-
-@keyframes archcoin-value-field-turn {
-  to {
-    transform: translate(-50%, -50%) rotate(360deg);
-  }
-}
-
-@keyframes archcoin-inner-field-breathe {
-  0%,
-  100% {
-    opacity: 0.54;
-    filter: brightness(0.94);
-  }
-
-  50% {
-    opacity: 0.86;
-    filter: brightness(1.12);
-  }
+    inset 0 0 3rem rgba(142, 220, 255, 0.03),
+    0 0 2rem rgba(142, 220, 255, 0.06);
 }
 
 .archcoin-scene-top {
   position: relative;
-  z-index: 5;
+  z-index: 3;
   display: grid;
-  gap: 0.55rem;
-  max-width: 74rem;
+  gap: 0.5rem;
+  max-width: 72rem;
 }
 
-.scene-guidance,
-[data-archcoin-guidance] {
+.scene-guidance {
   color: rgba(255, 244, 216, 0.92);
-  font-size: 0.96rem;
+  font-size: 0.95rem;
   font-weight: 800;
 }
 
 .archcoin-scene-stack {
   position: relative;
-  z-index: 4;
-  min-height: clamp(26rem, 50vw, 34rem);
+  z-index: 3;
+  min-height: clamp(28rem, 58vw, 35rem);
   display: grid;
   place-items: center;
   overflow: hidden;
@@ -665,8 +583,8 @@ h3 {
 [data-archcoin-crystals-mount] {
   position: absolute;
   inset: 0;
-  z-index: 1;
   pointer-events: none;
+  z-index: 1;
 }
 
 [data-archcoin-crystals-mount] canvas {
@@ -678,448 +596,315 @@ h3 {
   pointer-events: none;
 }
 
-.archcoin-objects,
-[data-archcoin-objects] {
+.archcoin-objects {
   position: relative;
-  z-index: 2;
   width: var(--archcoin-scene-size);
   aspect-ratio: 1 / 1;
   max-width: 100%;
+  z-index: 2;
 }
 
-.archcoin-orbit-shell,
-.archcoin-cluster-shell {
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  pointer-events: none;
-}
-
-.archcoin-orbit-shell {
-  animation: archcoin-orbit-turn var(--outer-orbit-duration) linear infinite;
-}
-
-.archcoin-cluster-shell {
-  animation: archcoin-orbit-turn var(--cluster-orbit-duration) linear infinite reverse;
-  opacity: 0;
-  visibility: hidden;
-  transition:
-    opacity 240ms var(--archcoin-ease),
-    visibility 240ms var(--archcoin-ease);
-}
-
-[data-archcoin-state="cluster-open"] .archcoin-cluster-shell,
-[data-archcoin-state="info-open"] .archcoin-cluster-shell {
-  opacity: 1;
-  visibility: visible;
-}
-
-@keyframes archcoin-orbit-turn {
-  from {
-    transform: rotate(0deg);
-  }
-
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.archcoin-center {
+.archcoin-void {
   position: absolute;
   left: 50%;
   top: 50%;
   z-index: 6;
-  width: var(--archcoin-center-size);
-  height: calc(var(--archcoin-center-size) * 0.74);
+  width: min(28vw, 11.5rem);
+  aspect-ratio: 1 / 1;
   transform: translate(-50%, -50%);
-  display: grid;
-  place-items: center;
-}
-
-.archcoin-center-button {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  border: 0;
-  padding: 0;
-  display: grid;
-  place-items: center;
-  background: transparent;
-  cursor: pointer;
-}
-
-.archcoin-center-button .center-gem-core {
-  position: absolute;
-  inset: 0;
+  border-radius: 50%;
+  border: 1px solid rgba(243, 200, 111, 0.18);
+  background:
+    radial-gradient(circle at 50% 34%, rgba(255, 255, 255, 0.10), rgba(243, 200, 111, 0.05), rgba(4, 8, 18, 0.96) 72%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0));
+  box-shadow:
+    inset 0 0 2.5rem rgba(0, 0, 0, 0.44),
+    0 0 2.4rem rgba(243, 200, 111, 0.10);
   display: grid;
   place-items: center;
   text-align: center;
-  animation: archcoin-center-pulse var(--center-pulse-duration) ease-in-out infinite;
+  pointer-events: none;
 }
 
-@keyframes archcoin-center-pulse {
-  0%,
-  100% {
-    transform: scale(1);
-    filter: brightness(1);
-  }
-
-  50% {
-    transform: scale(1.035);
-    filter: brightness(1.13);
-  }
-}
-
-.archcoin-center-button .arch-gem-svg {
-  filter:
-    drop-shadow(0 1.55rem 1.85rem rgba(0, 0, 0, 0.42))
-    drop-shadow(0 0 1.65rem rgba(243, 200, 111, 0.26))
-    drop-shadow(0 0 0.85rem rgba(36, 120, 255, 0.10));
-}
-
-.archcoin-center-menu {
+.archcoin-void::before {
+  content: "";
   position: absolute;
-  left: 50%;
-  top: 50%;
-  z-index: 7;
-  width: min(21rem, 88vw);
+  inset: 10%;
+  border: 1px dashed rgba(142, 220, 255, 0.12);
+  border-radius: 50%;
+}
+
+.archcoin-void-copy {
+  position: relative;
+  z-index: 1;
   display: grid;
-  gap: 0.55rem;
+  gap: 0.2rem;
   padding: 1rem;
-  border: 1px solid rgba(243, 200, 111, 0.22);
-  border-radius: 1.25rem;
-  background:
-    radial-gradient(circle at 50% 0%, rgba(243, 200, 111, 0.12), transparent 60%),
-    rgba(6, 10, 22, 0.96);
-  box-shadow: 0 1.25rem 3rem rgba(0, 0, 0, 0.44);
-  transform: translate(-50%, -50%) scale(0.9);
-  opacity: 0;
-  visibility: hidden;
-  transition:
-    opacity 220ms var(--archcoin-ease),
-    transform 220ms var(--archcoin-ease),
-    visibility 220ms var(--archcoin-ease);
-}
-
-[data-archcoin-compass-menu="open"] .archcoin-center-menu,
-[data-archcoin-compass-menu-open="true"] .archcoin-center-menu,
-[data-archcoin-compass-menu="open"] [data-archcoin-compass-shell],
-[data-archcoin-compass-menu-open="true"] [data-archcoin-compass-shell],
-[data-archcoin-compass-menu="open"] .archcoin-center-menu[hidden],
-[data-archcoin-compass-menu-open="true"] .archcoin-center-menu[hidden] {
-  opacity: 1;
-  visibility: visible;
-  transform: translate(-50%, -50%) scale(1);
-}
-
-[data-archcoin-compass-menu="open"] .archcoin-center-menu[hidden],
-[data-archcoin-compass-menu-open="true"] .archcoin-center-menu[hidden] {
-  display: grid;
-}
-
-.archcoin-center-menu h3 {
-  color: var(--archcoin-gold);
-  font-size: 1rem;
-}
-
-.archcoin-center-menu p {
-  font-size: 0.9rem;
-  color: var(--archcoin-text-secondary);
-}
-
-.archcoin-compass-grid {
-  display: grid;
-  gap: 0.55rem;
-}
-
-.archcoin-compass-option {
-  display: grid;
-  gap: 0.18rem;
   width: 100%;
-  text-align: left;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 1rem;
-  padding: 0.82rem 0.9rem;
-  background: rgba(255, 255, 255, 0.035);
-  transition:
-    transform 180ms var(--archcoin-ease),
-    border-color 180ms var(--archcoin-ease),
-    background 180ms var(--archcoin-ease);
 }
 
-.archcoin-compass-option:hover,
-.archcoin-compass-option:focus-visible {
-  transform: translateY(-2px);
-  border-color: rgba(243, 200, 111, 0.42);
-  background: rgba(255, 255, 255, 0.05);
-  outline: none;
-}
-
-.archcoin-compass-option b {
+.archcoin-void-copy b {
   color: var(--archcoin-gold);
   font-size: 0.68rem;
-  letter-spacing: 0.12em;
+  font-weight: 900;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
 }
 
-.archcoin-compass-option strong {
-  color: rgba(255, 244, 216, 0.98);
-  font-size: 1rem;
-  line-height: 1.08;
+.archcoin-void-copy strong {
+  color: var(--archcoin-text-primary);
+  font-size: clamp(0.92rem, 2vw, 1.14rem);
+  line-height: 1.06;
+  letter-spacing: -0.03em;
 }
 
-.archcoin-compass-option span {
-  color: var(--archcoin-text-secondary);
-  font-size: 0.88rem;
-  line-height: 1.35;
-}
-
-.archcoin-compass-close {
-  justify-self: end;
-  min-height: 2.25rem;
-  padding: 0.5rem 0.8rem;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.035);
-  color: rgba(241, 246, 255, 0.88);
-  font-size: 0.72rem;
-  font-weight: 950;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
-  cursor: pointer;
+.archcoin-void-copy span {
+  color: var(--archcoin-text-muted);
+  font-size: 0.70rem;
+  font-weight: 800;
+  line-height: 1.3;
 }
 
 /* -------------------------------------------------------------------------- */
-/* Coin and room semantic objects                                             */
+/* Coins and rooms                                                            */
 /* -------------------------------------------------------------------------- */
 
 .archcoin-coin,
 .archcoin-room {
-  --angle: 0deg;
-  --radius: -15rem;
-  --value-delay: 0s;
-
   position: absolute;
-  left: 50%;
-  top: 50%;
-  margin-left: calc(var(--archcoin-coin-width) / -2);
-  margin-top: calc(var(--archcoin-coin-height) / -2);
-  width: var(--archcoin-coin-width);
-  height: var(--archcoin-coin-height);
-  border: 0;
-  padding: 0;
-  background: transparent;
   display: grid;
   place-items: center;
   text-align: center;
   cursor: pointer;
-  transform:
-    rotate(var(--angle))
-    translateY(var(--radius))
-    rotate(calc(-1 * var(--angle)));
   transition:
-    filter 180ms var(--archcoin-ease),
-    scale 180ms var(--archcoin-ease),
-    opacity 220ms var(--archcoin-ease),
-    transform 220ms var(--archcoin-ease);
-  pointer-events: auto;
+    transform 180ms var(--archcoin-ease),
+    border-color 180ms var(--archcoin-ease),
+    background 180ms var(--archcoin-ease),
+    opacity 180ms var(--archcoin-ease),
+    filter 180ms var(--archcoin-ease);
+}
+
+.archcoin-coin {
+  z-index: 5;
+  width: 8.6rem;
+  min-height: 5.3rem;
+  padding: 0.7rem 0.8rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 1.05rem;
+  background:
+    radial-gradient(circle at 50% 18%, rgba(255, 255, 255, 0.09), transparent 48%),
+    rgba(255, 255, 255, 0.04);
+  box-shadow:
+    0 1rem 2rem rgba(0, 0, 0, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
 
 .archcoin-room {
-  margin-left: calc(var(--archcoin-room-width) / -2);
-  margin-top: calc(var(--archcoin-room-height) / -2);
-  width: var(--archcoin-room-width);
-  height: var(--archcoin-room-height);
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-}
-
-[data-archcoin-state="cluster-open"] .archcoin-room,
-[data-archcoin-state="info-open"] .archcoin-room {
-  opacity: 1;
-  visibility: visible;
-  pointer-events: auto;
-}
-
-.archcoin-coin-upright,
-.archcoin-room-upright,
-.archcoin-gem-core {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  place-items: center;
-  text-align: center;
-  transform-origin: 50% 50%;
-}
-
-.archcoin-coin-upright {
-  animation: archcoin-label-lock var(--outer-orbit-duration) linear infinite reverse;
-}
-
-.archcoin-room-upright {
-  animation: archcoin-label-lock var(--cluster-orbit-duration) linear infinite reverse;
-}
-
-@keyframes archcoin-label-lock {
-  from {
-    transform: rotate(0deg);
-  }
-
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.archcoin-gem-core {
-  animation: archcoin-gem-float var(--gem-float-duration) ease-in-out infinite;
-  animation-delay: var(--value-delay);
-}
-
-@keyframes archcoin-gem-float {
-  0%,
-  100% {
-    transform: translateY(0) scale(1);
-    filter: brightness(1);
-  }
-
-  50% {
-    transform: translateY(-8px) scale(1.025);
-    filter: brightness(1.12);
-  }
+  z-index: 4;
+  width: 5rem;
+  min-height: 3.4rem;
+  padding: 0.48rem 0.44rem;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 0.9rem;
+  background: rgba(255, 255, 255, 0.03);
+  opacity: 0.72;
 }
 
 .archcoin-coin:hover,
 .archcoin-coin:focus-visible,
 .archcoin-room:hover,
-.archcoin-room:focus-visible,
-.archcoin-center-button:hover,
-.archcoin-center-button:focus-visible {
-  filter: brightness(1.12) saturate(1.08);
-  scale: 1.045;
+.archcoin-room:focus-visible {
+  transform: translateY(-2px);
   outline: none;
-}
-
-.archcoin-coin:hover .archcoin-gem-core,
-.archcoin-coin:focus-visible .archcoin-gem-core,
-.archcoin-room:hover .archcoin-gem-core,
-.archcoin-room:focus-visible .archcoin-gem-core {
-  animation-play-state: paused;
-  transform: translateY(-10px) scale(1.045);
-  filter: brightness(1.18);
+  filter: brightness(1.06);
 }
 
 .archcoin-coin[data-selected="true"],
+.archcoin-coin[data-primary="true"] {
+  border-color: rgba(243, 200, 111, 0.48);
+  background:
+    radial-gradient(circle at 50% 18%, rgba(255, 255, 255, 0.14), transparent 48%),
+    rgba(255, 255, 255, 0.07);
+}
+
 .archcoin-room[data-selected="true"],
-.archcoin-coin[data-primary="true"],
 .archcoin-room[data-primary="true"] {
-  filter: brightness(1.14) saturate(1.10);
+  border-color: rgba(243, 200, 111, 0.34);
+  opacity: 1;
 }
 
-.archcoin-coin[data-selected="true"] {
-  scale: 1.055;
-}
-
-.archcoin-room[data-selected="true"] {
-  scale: 1.05;
-}
-
-.archcoin-room[data-wing="north"],
-.archcoin-room[data-wing="east"],
-.archcoin-room[data-wing="south"],
-.archcoin-room[data-wing="west"] {
-  --radius: calc(var(--archcoin-cluster-radius) * -1);
-}
-
-.arch-gem-svg {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  overflow: visible;
-  pointer-events: none;
-  filter:
-    drop-shadow(0 1.15rem 1.35rem rgba(0, 0, 0, 0.36))
-    drop-shadow(0 0 1.15rem rgba(243, 200, 111, 0.20))
-    drop-shadow(0 0 0.55rem rgba(141, 216, 255, 0.10));
-}
-
-.gem-label {
-  position: relative;
-  z-index: 3;
-  width: 78%;
+.archcoin-coin-copy,
+.archcoin-room-copy {
   display: grid;
   gap: 0.12rem;
-  place-items: center;
-  text-align: center;
+  width: 100%;
   pointer-events: none;
-  text-shadow:
-    0 2px 12px rgba(0, 0, 0, 0.94),
-    0 0 10px rgba(65, 30, 0, 0.82),
-    0 0 2px rgba(255, 255, 255, 0.42);
 }
 
-.gem-label b {
-  display: block;
-  color: rgba(255, 244, 216, 0.98);
-  font-size: clamp(0.56rem, 1.42vw, 0.8rem);
-  font-weight: 950;
-  letter-spacing: 0.08em;
-  line-height: 1.02;
-  text-transform: uppercase;
-}
-
-.gem-label strong {
-  display: block;
-  color: rgba(255, 244, 216, 0.98);
-  font-size: clamp(0.86rem, 1.7vw, 1.08rem);
-  line-height: 1.02;
-  letter-spacing: -0.03em;
-  text-transform: none;
-}
-
-.gem-label span {
-  color: rgba(230, 238, 255, 0.78);
-  font-size: clamp(0.42rem, 1vw, 0.55rem);
+.archcoin-coin-copy b {
+  font-size: 0.56rem;
   font-weight: 900;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
+  color: var(--archcoin-gold);
 }
 
-.archcoin-room .gem-label {
-  width: 84%;
+.archcoin-coin-copy strong {
+  font-size: 0.98rem;
+  font-weight: 900;
+  line-height: 1.04;
+  letter-spacing: -0.03em;
+  color: var(--archcoin-text-primary);
 }
 
-.archcoin-room .gem-label b {
-  font-size: clamp(0.36rem, 0.9vw, 0.48rem);
-  letter-spacing: 0.09em;
+.archcoin-coin-copy span {
+  font-size: 0.66rem;
+  font-weight: 800;
+  color: var(--archcoin-text-secondary);
+  line-height: 1.28;
 }
 
-.archcoin-room .gem-label strong {
-  font-size: clamp(0.54rem, 1.05vw, 0.68rem);
+.archcoin-room-copy b {
+  font-size: 0.46rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--archcoin-gold);
 }
 
-.archcoin-room .gem-label span {
+.archcoin-room-copy strong {
+  font-size: 0.62rem;
+  font-weight: 900;
+  line-height: 1.06;
+  letter-spacing: -0.02em;
+  color: var(--archcoin-text-primary);
+}
+
+.archcoin-room-copy span {
   display: none;
 }
 
+/* outer coins */
+.archcoin-coin[data-wing="north"] {
+  left: 50%;
+  top: 8%;
+  transform: translateX(-50%);
+}
+
+.archcoin-coin[data-wing="east"] {
+  right: 8%;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.archcoin-coin[data-wing="south"] {
+  left: 50%;
+  bottom: 8%;
+  transform: translateX(-50%);
+}
+
+.archcoin-coin[data-wing="west"] {
+  left: 8%;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* north rooms */
+.archcoin-room[data-wing="north"][data-room-id="contract-overview"] {
+  left: 50%;
+  top: 18%;
+  transform: translateX(-50%);
+}
+.archcoin-room[data-wing="north"][data-room-id="contract-engineering"] {
+  left: 62%;
+  top: 29%;
+}
+.archcoin-room[data-wing="north"][data-room-id="contract-platform"] {
+  left: 38%;
+  top: 29%;
+}
+.archcoin-room[data-wing="north"][data-room-id="contract-governance"] {
+  left: 50%;
+  top: 35%;
+  transform: translateX(-50%);
+}
+
+/* east rooms */
+.archcoin-room[data-wing="east"][data-room-id="receivable-overview"] {
+  right: 18%;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.archcoin-room[data-wing="east"][data-room-id="receivable-engineering"] {
+  right: 29%;
+  top: 37%;
+}
+.archcoin-room[data-wing="east"][data-room-id="receivable-platform"] {
+  right: 29%;
+  top: 63%;
+}
+.archcoin-room[data-wing="east"][data-room-id="receivable-governance"] {
+  right: 36%;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* south rooms */
+.archcoin-room[data-wing="south"][data-room-id="payable-overview"] {
+  left: 50%;
+  bottom: 18%;
+  transform: translateX(-50%);
+}
+.archcoin-room[data-wing="south"][data-room-id="payable-engineering"] {
+  left: 38%;
+  bottom: 29%;
+}
+.archcoin-room[data-wing="south"][data-room-id="payable-platform"] {
+  left: 62%;
+  bottom: 29%;
+}
+.archcoin-room[data-wing="south"][data-room-id="payable-governance"] {
+  left: 50%;
+  bottom: 35%;
+  transform: translateX(-50%);
+}
+
+/* west rooms */
+.archcoin-room[data-wing="west"][data-room-id="allocation-overview"] {
+  left: 18%;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.archcoin-room[data-wing="west"][data-room-id="allocation-engineering"] {
+  left: 29%;
+  top: 37%;
+}
+.archcoin-room[data-wing="west"][data-room-id="allocation-platform"] {
+  left: 29%;
+  top: 63%;
+}
+.archcoin-room[data-wing="west"][data-room-id="allocation-governance"] {
+  left: 36%;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
 /* -------------------------------------------------------------------------- */
-/* Information panel                                                          */
+/* Panel                                                                      */
 /* -------------------------------------------------------------------------- */
 
-.archcoin-panel,
-[data-archcoin-panel] {
+.archcoin-panel {
   position: relative;
-  z-index: 5;
+  z-index: 3;
   display: grid;
   gap: 0.9rem;
   padding: 1rem;
   border: 1px solid rgba(255, 255, 255, 0.10);
-  border-radius: 1.25rem;
+  border-radius: 1.2rem;
   background:
-    radial-gradient(circle at 20% 0%, rgba(243, 200, 111, 0.08), transparent 60%),
-    rgba(255, 255, 255, 0.035);
-  scroll-margin-top: clamp(18px, 4vw, 52px);
+    radial-gradient(circle at 20% 0%, rgba(243, 200, 111, 0.07), transparent 60%),
+    rgba(255, 255, 255, 0.03);
+  scroll-margin-top: 1.2rem;
 }
 
 .archcoin-panel-top {
@@ -1127,27 +912,19 @@ h3 {
   gap: 0.35rem;
 }
 
-.archcoin-panel-kicker,
-[data-archcoin-panel-eyebrow] {
+.archcoin-panel-kicker {
   color: var(--archcoin-gold);
   font-size: 0.68rem;
-  font-weight: 950;
+  font-weight: 900;
   letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 
-.archcoin-panel-title,
-[data-archcoin-panel-title] {
-  color: rgba(255, 244, 216, 0.98);
-  font-size: clamp(1.22rem, 3.5vw, 1.9rem);
+.archcoin-panel-title {
+  color: var(--archcoin-text-primary);
+  font-size: clamp(1.18rem, 3.4vw, 1.85rem);
   line-height: 1.04;
   letter-spacing: -0.04em;
-}
-
-.archcoin-panel-copy,
-[data-archcoin-panel-purpose],
-[data-archcoin-panel-relationship] {
-  max-width: 70rem;
 }
 
 .archcoin-panel-actions {
@@ -1156,41 +933,28 @@ h3 {
   gap: 0.55rem;
 }
 
-.archcoin-panel-button,
-[data-archcoin-return-to-orbit],
-[data-archcoin-return-to-cluster] {
-  min-height: 2.4rem;
+.archcoin-panel-button {
+  min-height: 2.35rem;
   padding: 0.55rem 0.84rem;
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.035);
   color: rgba(241, 246, 255, 0.88);
   font-size: 0.72rem;
-  font-weight: 950;
+  font-weight: 900;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   cursor: pointer;
-  transition:
-    transform 180ms var(--archcoin-ease),
-    border-color 180ms var(--archcoin-ease),
-    background 180ms var(--archcoin-ease);
 }
 
 .archcoin-panel-button:hover,
-.archcoin-panel-button:focus-visible,
-[data-archcoin-return-to-orbit]:hover,
-[data-archcoin-return-to-orbit]:focus-visible,
-[data-archcoin-return-to-cluster]:hover,
-[data-archcoin-return-to-cluster]:focus-visible {
-  transform: translateY(-1px);
-  border-color: rgba(243, 200, 111, 0.42);
+.archcoin-panel-button:focus-visible {
+  border-color: rgba(243, 200, 111, 0.34);
   background: rgba(255, 255, 255, 0.05);
   outline: none;
 }
 
-.archcoin-panel-button[hidden],
-[data-archcoin-return-to-orbit][hidden],
-[data-archcoin-return-to-cluster][hidden] {
+.archcoin-panel-button[hidden] {
   display: none !important;
 }
 
@@ -1204,38 +968,30 @@ h3 {
   gap: 0.5rem;
 }
 
-.archcoin-tab,
-[data-archcoin-lens-tab] {
+.archcoin-tab {
   min-height: 2.3rem;
+  padding: 0.5rem 0.8rem;
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 999px;
-  padding: 0.5rem 0.78rem;
   background: rgba(255, 255, 255, 0.03);
   color: rgba(230, 238, 255, 0.84);
   font-size: 0.72rem;
-  font-weight: 950;
+  font-weight: 900;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   cursor: pointer;
-  transition:
-    transform 180ms var(--archcoin-ease),
-    border-color 180ms var(--archcoin-ease),
-    background 180ms var(--archcoin-ease);
 }
 
 .archcoin-tab:hover,
-.archcoin-tab:focus-visible,
-[data-archcoin-lens-tab]:hover,
-[data-archcoin-lens-tab]:focus-visible {
-  transform: translateY(-1px);
+.archcoin-tab:focus-visible {
+  border-color: rgba(243, 200, 111, 0.34);
   outline: none;
 }
 
-.archcoin-tab[aria-selected="true"],
-[data-archcoin-lens-tab][aria-selected="true"] {
-  border-color: rgba(243, 200, 111, 0.88);
-  color: #060811;
-  background: linear-gradient(135deg, #fff2a8, #f3c86f);
+.archcoin-tab[aria-selected="true"] {
+  color: #050811;
+  background: linear-gradient(135deg, var(--archcoin-gold-soft), var(--archcoin-gold));
+  border-color: rgba(243, 200, 111, 0.86);
 }
 
 .archcoin-tab-panels {
@@ -1243,8 +999,7 @@ h3 {
   gap: 0.85rem;
 }
 
-.archcoin-tab-panel,
-[data-archcoin-lens-panel] {
+.archcoin-tab-panel {
   display: grid;
   gap: 0.8rem;
   padding: 1rem;
@@ -1253,264 +1008,164 @@ h3 {
   background: rgba(255, 255, 255, 0.025);
 }
 
-.archcoin-tab-panel[hidden],
-[data-archcoin-lens-panel][hidden] {
+.archcoin-tab-panel[hidden] {
   display: none !important;
 }
 
-.archcoin-panel-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.8rem;
-}
-
-.archcoin-panel-card {
-  display: grid;
-  gap: 0.32rem;
-  min-height: 100%;
-  padding: 0.9rem;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 1rem;
-  background: rgba(255, 255, 255, 0.022);
-}
-
-.archcoin-panel-card b {
-  color: var(--archcoin-gold);
-  font-size: 0.64rem;
-  font-weight: 950;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-
-.archcoin-panel-card strong {
-  color: rgba(255, 244, 216, 0.98);
-  font-size: 1rem;
-  line-height: 1.06;
-}
-
-.archcoin-panel-card span {
-  color: var(--archcoin-text-secondary);
-  font-size: 0.9rem;
-  line-height: 1.42;
-}
-
 /* -------------------------------------------------------------------------- */
-/* Dossiers                                                                   */
+/* Coin templates                                                             */
 /* -------------------------------------------------------------------------- */
 
-.dossier-grid {
+.coin-template {
+  scroll-margin-top: 1.5rem;
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 0.9rem;
 }
 
-.dossier {
+.coin-template-header {
   display: grid;
-  gap: 0.82rem;
-  padding: 1rem;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 1.2rem;
-  background:
-    radial-gradient(circle at 20% 0%, rgba(243, 200, 111, 0.08), transparent 60%),
-    rgba(255, 255, 255, 0.035);
+  gap: 0.55rem;
+  max-width: 980px;
+  margin-bottom: 0.2rem;
 }
 
-.dossier b {
+.coin-template-header p {
+  max-width: 900px;
+}
+
+.coin-template-callout {
+  padding: 1rem 1.08rem;
+  border: 1px solid rgba(243, 200, 111, 0.18);
+  border-radius: 1rem;
+  background:
+    radial-gradient(circle at 18% 0%, rgba(243, 200, 111, 0.06), transparent 60%),
+    rgba(255, 255, 255, 0.025);
+  color: rgba(255, 244, 216, 0.92);
+  font-weight: 780;
+  line-height: 1.56;
+}
+
+.coin-room-section {
+  scroll-margin-top: 1.25rem;
+  display: grid;
+  gap: 0.8rem;
+  padding: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 1.15rem;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0.02));
+}
+
+.coin-room-section-head {
+  display: grid;
+  gap: 0.28rem;
+}
+
+.coin-room-section-head b {
   color: var(--archcoin-gold);
-  font-size: 0.68rem;
+  font-size: 0.66rem;
+  font-weight: 900;
   letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 
-.dossier strong {
-  color: rgba(255, 244, 216, 0.98);
-  font-size: 1.1rem;
+.coin-room-section-head strong {
+  color: var(--archcoin-text-primary);
+  font-size: clamp(1.04rem, 3vw, 1.35rem);
   line-height: 1.08;
+  letter-spacing: -0.04em;
 }
 
-.dossier-grid-inner {
+.coin-room-section-copy {
+  max-width: 900px;
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.7rem;
+  gap: 0.72rem;
 }
 
-.dossier-card {
-  display: grid;
-  gap: 0.3rem;
-  padding: 0.85rem;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 1rem;
-  background: rgba(255, 255, 255, 0.022);
+.coin-room-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
 }
 
-.dossier-card b {
-  color: var(--archcoin-blue);
-  font-size: 0.62rem;
-  letter-spacing: 0.12em;
-}
-
-.dossier-card strong {
-  font-size: 0.95rem;
-}
-
-.dossier-card span {
-  color: var(--archcoin-text-secondary);
-  font-size: 0.88rem;
-  line-height: 1.42;
-}
-
-/* -------------------------------------------------------------------------- */
-/* Guardrails and route cards                                                 */
-/* -------------------------------------------------------------------------- */
-
-.guardrail-grid,
-.route-card-grid {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 0.85rem;
-}
-
-.card,
-.route-card {
-  display: grid;
-  gap: 0.6rem;
-  min-height: 100%;
-  padding: 1rem;
+.coin-room-links a {
+  min-height: 2.15rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 0.78rem;
   border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 1.2rem;
-  background:
-    radial-gradient(circle at 20% 0%, rgba(243, 200, 111, 0.08), transparent 60%),
-    rgba(255, 255, 255, 0.035);
-  transition:
-    transform 180ms var(--archcoin-ease),
-    border-color 180ms var(--archcoin-ease),
-    background 180ms var(--archcoin-ease);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.035);
+  color: rgba(240, 246, 255, 0.88);
+  font-size: 0.70rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
-.card:hover,
-.card:focus-within,
-.route-card:hover,
-.route-card:focus-visible {
-  transform: translateY(-3px);
-  border-color: rgba(243, 200, 111, 0.46);
+.coin-room-links a:hover,
+.coin-room-links a:focus-visible {
+  border-color: rgba(243, 200, 111, 0.34);
   outline: none;
 }
 
-.card b,
-.route-card b {
-  color: var(--archcoin-gold);
-  font-size: 0.68rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-
-.card strong,
-.route-card strong {
-  color: rgba(255, 244, 216, 0.98);
-  font-size: 1.15rem;
-  line-height: 1.1;
-}
-
-.card span,
-.route-card span {
-  color: var(--archcoin-text-secondary);
-  font-size: 0.94rem;
-  line-height: 1.42;
-}
-
-.guardrail-card {
-  border-color: rgba(143, 240, 195, 0.18);
-  background:
-    radial-gradient(circle at 20% 0%, rgba(143, 240, 195, 0.08), transparent 60%),
-    rgba(143, 240, 195, 0.035);
-}
-
-.guardrail-card b {
-  color: var(--archcoin-green);
-}
-
-.open-path {
-  margin-top: auto;
-  color: rgba(230, 238, 255, 0.88);
-  font-size: 0.76rem;
-  font-weight: 950;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-
 /* -------------------------------------------------------------------------- */
-/* Final section                                                              */
+/* Auren                                                                      */
 /* -------------------------------------------------------------------------- */
 
-.final-direction {
+.auren-panel {
   padding: 1.1rem;
-  border: 1px solid rgba(243, 200, 111, 0.22);
+  border: 1px solid rgba(142, 220, 255, 0.22);
   border-radius: 1.2rem;
   background:
-    radial-gradient(circle at 20% 0%, rgba(243, 200, 111, 0.10), transparent 60%),
-    rgba(243, 200, 111, 0.045);
+    radial-gradient(circle at 20% 0%, rgba(142, 220, 255, 0.08), transparent 60%),
+    rgba(142, 220, 255, 0.035);
   display: grid;
-  gap: 0.65rem;
+  gap: 0.72rem;
 }
 
-.final-direction strong {
-  color: rgba(255, 244, 216, 0.98);
-  font-size: clamp(1.2rem, 3.6vw, 2rem);
+.auren-panel strong {
+  color: var(--archcoin-text-primary);
+  font-size: clamp(1.18rem, 3.5vw, 1.8rem);
   line-height: 1.05;
   letter-spacing: -0.04em;
 }
 
 /* -------------------------------------------------------------------------- */
-/* Footer and receipts                                                        */
+/* Receipts                                                                   */
 /* -------------------------------------------------------------------------- */
 
-.receipt,
-.route-receipt,
-[data-route-receipt],
-[data-contract-receipt],
-[data-debug-receipt],
+.receipts,
 [data-archcoin-controller-receipt],
-[data-archcoin-crystals-receipt],
-[data-archcoin-center-compass-receipt] {
+[data-archcoin-crystals-receipt] {
   display: none !important;
-  visibility: hidden !important;
-  overflow: hidden !important;
   width: 0 !important;
   height: 0 !important;
-  max-width: 0 !important;
-  max-height: 0 !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  border: 0 !important;
+  overflow: hidden !important;
   opacity: 0 !important;
   pointer-events: none !important;
   position: absolute !important;
-  inset: auto !important;
-  clip-path: inset(50%) !important;
-  white-space: nowrap !important;
 }
 
+/* -------------------------------------------------------------------------- */
+/* Footer                                                                     */
+/* -------------------------------------------------------------------------- */
+
 footer {
-  padding: 1.35rem 0 0.5rem;
+  padding: 1.25rem 0 0.4rem;
   color: var(--archcoin-text-muted);
   text-align: center;
   font-size: 0.76rem;
 }
 
 /* -------------------------------------------------------------------------- */
-/* Runtime-aware scene behavior                                               */
+/* Runtime-aware accents                                                      */
 /* -------------------------------------------------------------------------- */
-
-[data-archcoin-root][data-archcoin-state="orbit"] .archcoin-panel {
-  border-color: rgba(255, 255, 255, 0.10);
-}
 
 [data-archcoin-root][data-archcoin-state="cluster-open"] .archcoin-panel,
 [data-archcoin-root][data-archcoin-state="info-open"] .archcoin-panel {
-  border-color: rgba(243, 200, 111, 0.24);
-  background:
-    radial-gradient(circle at 20% 0%, rgba(243, 200, 111, 0.10), transparent 60%),
-    rgba(255, 255, 255, 0.042);
+  border-color: rgba(243, 200, 111, 0.22);
 }
 
 [data-archcoin-root][data-archcoin-state="held"] .archcoin-scene {
@@ -1521,71 +1176,9 @@ footer {
   border-color: rgba(255, 179, 154, 0.26);
 }
 
-[data-archcoin-root][data-archcoin-dragging="true"] .archcoin-coin,
-[data-archcoin-root][data-archcoin-dragging="true"] .archcoin-room {
-  transition: none;
-}
-
-[data-archcoin-root][data-reduced-motion="true"] .archcoin-scene::before,
-[data-archcoin-root][data-reduced-motion="true"] .archcoin-scene::after,
-[data-archcoin-root][data-reduced-motion="true"] .archcoin-orbit-shell,
-[data-archcoin-root][data-reduced-motion="true"] .archcoin-cluster-shell,
-[data-archcoin-root][data-reduced-motion="true"] .archcoin-coin-upright,
-[data-archcoin-root][data-reduced-motion="true"] .archcoin-room-upright,
-[data-archcoin-root][data-reduced-motion="true"] .archcoin-gem-core,
-[data-archcoin-root][data-reduced-motion="true"] .center-gem-core {
-  animation: none !important;
-}
-
-/* -------------------------------------------------------------------------- */
-/* Larger-screen TED-talk layout tuning                                       */
-/* -------------------------------------------------------------------------- */
-
-@media (min-width: 1100px) {
-  .hero {
-    min-height: clamp(26rem, 42vw, 35rem);
-  }
-
-  .section {
-    padding: 1.25rem 1.35rem 1.4rem;
-  }
-
-  .archcoin-scene {
-    grid-template-columns: minmax(0, 1.25fr) minmax(24rem, 0.78fr);
-    grid-template-rows: auto 1fr;
-    align-items: start;
-    min-height: clamp(36rem, 46vw, 42rem);
-  }
-
-  .archcoin-scene-top {
-    grid-column: 1 / -1;
-  }
-
-  .archcoin-scene-stack {
-    min-height: clamp(31rem, 36vw, 36rem);
-  }
-
-  .archcoin-panel {
-    align-self: stretch;
-    min-height: 100%;
-  }
-}
-
 /* -------------------------------------------------------------------------- */
 /* Responsive                                                                 */
 /* -------------------------------------------------------------------------- */
-
-@media (max-width: 1080px) {
-  .guardrail-grid,
-  .route-card-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .dossier-grid,
-  .archcoin-panel-grid {
-    grid-template-columns: 1fr;
-  }
-}
 
 @media (max-width: 980px) {
   .topbar {
@@ -1596,20 +1189,36 @@ footer {
   .nav {
     justify-content: flex-start;
   }
+}
 
-  .dossier-grid-inner {
+@media (max-width: 860px) {
+  .grid-2,
+  .pain-grid,
+  .proof-grid,
+  .route-grid,
+  .dossier-grid,
+  .coin-template-grid,
+  .archcoin-panel-grid {
     grid-template-columns: 1fr;
   }
 
-  .hero::after {
-    opacity: 0.34;
-    width: 13rem;
-    height: 13rem;
+  .archcoin-objects {
+    width: min(100%, 34rem);
+  }
+
+  .archcoin-coin {
+    width: 7rem;
+    min-height: 4.7rem;
+  }
+
+  .archcoin-room {
+    width: 4.3rem;
+    min-height: 3rem;
   }
 }
 
 @media (max-width: 720px) {
-  .shell {
+  .page-shell {
     width: min(100% - 22px, var(--archcoin-max));
   }
 
@@ -1617,21 +1226,22 @@ footer {
     font-size: clamp(3rem, 17vw, 5rem);
   }
 
-  .hero {
-    min-height: 27rem;
-    padding: 1rem;
-  }
-
-  .actions {
+  .actions,
+  .archcoin-panel-actions,
+  .archcoin-tabs,
+  .coin-room-links {
     display: grid;
   }
 
-  .button {
+  .button,
+  .archcoin-panel-button,
+  .archcoin-tab,
+  .coin-room-links a {
     width: 100%;
   }
 
   .archcoin-scene {
-    min-height: 50rem;
+    min-height: 42rem;
   }
 
   .archcoin-objects {
@@ -1639,119 +1249,62 @@ footer {
   }
 
   .archcoin-coin {
-    width: 5.95rem;
-    height: 4.35rem;
-    margin-left: -2.975rem;
-    margin-top: -2.175rem;
+    width: 5.6rem;
+    min-height: 4rem;
+    padding: 0.55rem 0.45rem;
+    border-radius: 0.9rem;
   }
 
-  .archcoin-room {
-    width: 3.75rem;
-    height: 2.8rem;
-    margin-left: -1.875rem;
-    margin-top: -1.4rem;
+  .archcoin-coin-copy b {
+    font-size: 0.44rem;
   }
 
-  .archcoin-center {
-    width: 7.2rem;
-    height: 5.2rem;
+  .archcoin-coin-copy strong {
+    font-size: 0.78rem;
   }
 
-  .gem-label b {
-    font-size: 0.38rem;
-  }
-
-  .gem-label span {
+  .archcoin-coin-copy span {
     display: none;
-  }
-
-  .gem-label strong {
-    font-size: 0.74rem;
-  }
-
-  .archcoin-panel-actions,
-  .archcoin-tabs {
-    display: grid;
-  }
-
-  .archcoin-panel-button,
-  .archcoin-tab,
-  [data-archcoin-return-to-orbit],
-  [data-archcoin-return-to-cluster] {
-    width: 100%;
-  }
-
-  .guardrail-grid,
-  .route-card-grid,
-  .dossier-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 460px) {
-  .archcoin-scene {
-    min-height: 47rem;
-  }
-
-  .archcoin-objects {
-    width: min(100%, 18.5rem);
-  }
-
-  .archcoin-coin {
-    width: 5.05rem;
-    height: 3.7rem;
-    margin-left: -2.525rem;
-    margin-top: -1.85rem;
   }
 
   .archcoin-room {
     width: 3.2rem;
-    height: 2.35rem;
-    margin-left: -1.6rem;
-    margin-top: -1.175rem;
+    min-height: 2.5rem;
+    padding: 0.34rem 0.2rem;
   }
 
-  .archcoin-center {
-    width: 6.3rem;
-    height: 4.6rem;
+  .archcoin-room-copy b {
+    font-size: 0.36rem;
   }
 
-  .scene-summary,
-  .guardrail,
-  .final-direction,
-  .archcoin-panel,
-  .dossier,
-  .card,
-  .route-card {
-    padding-left: 0.9rem;
-    padding-right: 0.9rem;
+  .archcoin-room-copy strong {
+    font-size: 0.50rem;
+  }
+
+  .archcoin-void {
+    width: 6.8rem;
+  }
+
+  .archcoin-void-copy b {
+    font-size: 0.48rem;
+  }
+
+  .archcoin-void-copy strong {
+    font-size: 0.72rem;
+  }
+
+  .archcoin-void-copy span {
+    display: none;
   }
 }
-
-/* -------------------------------------------------------------------------- */
-/* Reduced motion                                                             */
-/* -------------------------------------------------------------------------- */
 
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
   *::after {
-    scroll-behavior: auto !important;
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
-  }
-
-  .archcoin-scene::before,
-  .archcoin-scene::after,
-  .archcoin-orbit-shell,
-  .archcoin-cluster-shell,
-  .archcoin-coin-upright,
-  .archcoin-room-upright,
-  .center-gem-core,
-  .archcoin-gem-core,
-  .arch-glint,
-  .arch-star {
-    animation: none !important;
+    scroll-behavior: auto !important;
   }
 }

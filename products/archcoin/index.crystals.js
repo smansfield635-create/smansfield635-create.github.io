@@ -1,68 +1,44 @@
 /* /products/archcoin/index.crystals.js
    ARCHCOIN
-   SIMPLIFIED FOUR-COIN CRYSTAL RENDERER
+   Four-coin constellation and active room-cluster renderer.
 
-   Full-file replacement scope:
-   - Preserve DGB_ARCHCOIN_CONTROLLER as the sole durable state authority.
-   - Preserve four semantic outer coins and sixteen semantic room controls.
-   - Render volumetric WebGL crystals for coins and stars.
-   - Keep one shared outer constellation orbit.
-   - Cut back the room cluster hard: no second full orbit system.
-   - Present local room stars as a tight coin-adjacent star fan around the selected coin.
-   - Allow controlled outer orbit drag from coin, label, or open scene space.
-   - Allow room-star taps directly on rendered stars or semantic labels.
-   - Keep semantic controls authoritative and accessible.
-   - Fail soft when controller or WebGL is unavailable.
-
-   Owns:
-   - WebGL crystal rendering
-   - atmosphere field canvas
-   - volumetric crystal meshes
-   - outer constellation presentation
-   - local room-star presentation
-   - gesture sampling for outer orbit drag
-   - semantic positioning synchronization
-   - runtime receipts
-
-   Does not own:
-   - durable page state authority
-   - panel meaning
-   - financial claims
-   - navigation beyond controller-published APIs
-   - non-ARCHCOIN page systems
+   Scope:
+   - Consume DGB_ARCHCOIN_CONTROLLER exactly.
+   - Publish DGB_ARCHCOIN_CRYSTALS and DGB_ARCHCOIN_CRYSTALS_RECEIPT.
+   - Render only the four outer ARCHCOIN coins and the active room cluster.
+   - Preserve spherical constellation behavior and per-wing spherical room clusters.
+   - Preserve tap, drag, settle, quick-flick return, pointer capture,
+     click suppression, reduced motion, context loss handling, semantic sync,
+     and nonvisual room proxies.
+   - Exclude Mirrorland, cosmos, atmosphere canvas, background stars,
+     decorative orbit lines, Hearth, Jeeves, and environmental systems.
+   - Preserve intentional empty bounded void.
 */
 
 (() => {
   "use strict";
 
   const CONTRACT = Object.freeze({
-    id: "ARCHCOIN_CRYSTALS_SIMPLIFIED_FIELD_RENDERER_v3",
-    previousId: "ARCHCOIN_CRYSTALS_VIABLE_RENDERER_BASELINE_v2",
+    id: "ARCHCOIN_CRYSTALS_COMPASS_RENDERER_ANCHOR_v1",
+    sourceContractId:
+      "DGB_COMPASS_CRYSTALS_SPHERICAL_CONSTELLATION_AND_CLUSTER_REBUILD_v3",
     file: "/products/archcoin/index.crystals.js",
-    releaseId: "archcoin-crystals-simplified-field-renderer-v3",
+    releaseId: "archcoin-crystals-compass-renderer-anchor-v1",
     visualPassClaimed: false,
     productionAuthorized: false,
     deploymentAuthorized: false
   });
 
-  const CONTROLLER_STATES = Object.freeze({
-    ORBIT: "ORBIT",
-    CLUSTER_OPEN: "CLUSTER_OPEN",
-    INFO_OPEN: "INFO_OPEN",
-    HELD: "HELD"
-  });
-
   const WINGS = Object.freeze(["north", "east", "south", "west"]);
-  const TABS = Object.freeze(["overview", "engineering", "platform", "governance"]);
 
   const NODE_TYPES = Object.freeze({
-    COIN: "coin",
+    CARDINAL: "cardinal",
     ROOM: "room"
   });
 
   const POINTER_TERRITORIES = Object.freeze({
     BLOCKED_CONTROL: "BLOCKED_CONTROL",
-    RENDERED_COIN: "RENDERED_COIN",
+    RENDERED_CARDINAL: "RENDERED_CARDINAL",
     RENDERED_ROOM: "RENDERED_ROOM",
     EMPTY_SCENE: "EMPTY_SCENE",
     OUTSIDE_SCENE: "OUTSIDE_SCENE"
@@ -72,35 +48,32 @@
     POINTER_DOWN: "pointerdown",
     TAP: "tap",
     EMPTY_TAP: "empty-tap",
-    ORBIT_DRAG: "orbit-drag",
-    ORBIT_SETTLE: "orbit-settle",
+    CONSTELLATION_DRAG: "constellation-drag",
+    CONSTELLATION_SETTLE: "constellation-settle",
+    CLUSTER_DRAG: "cluster-drag",
+    CLUSTER_SETTLE: "cluster-settle",
+    CLUSTER_FLICK_RETURN: "cluster-flick-return",
     AMBIGUOUS: "ambiguous",
     CANCELLED: "cancelled",
     BLOCKED: "blocked"
   });
 
-  const COIN_BY_WING = Object.freeze({
-    north: "contract",
-    east: "receivable",
-    south: "payable",
-    west: "allocation"
-  });
-
-  const WING_BY_COIN = Object.freeze({
-    contract: "north",
-    receivable: "east",
-    payable: "south",
-    allocation: "west"
-  });
-
   const GESTURE = Object.freeze({
     dragDeadZonePx: 6,
     maximumTapDistancePx: 12,
-    radiansPerViewport: Math.PI * 1.10,
-    settleSpeed: 7.2,
+    minimumDragDistancePx: 8,
+    radiansPerViewport: Math.PI * 1.12,
+    settleSpeed: 7.4,
     suppressClickMs: 520,
     sampleWindowMs: 140,
-    maximumSamples: 18
+    maximumSamples: 18,
+    flickMaximumDurationMs: 260,
+    flickMinimumDistancePx: 52,
+    flickMinimumAverageVelocityPxPerMs: 0.55,
+    flickMinimumReleaseVelocityPxPerMs: 0.72,
+    flickMinimumDirectionalRatio: 1.28,
+    flickMaximumPauseBeforeReleaseMs: 90,
+    flickMaximumPathEfficiencyLoss: 0.22
   });
 
   const SPHERE = Object.freeze({
@@ -108,9 +81,9 @@
     orientationRepresentation: "UNIT_QUATERNION",
 
     constellation: Object.freeze({
-      horizontalRadius: 1.50,
-      verticalRadius: 1.34,
-      depthRadius: 1.16,
+      horizontalRadius: 1.46,
+      verticalRadius: 1.28,
+      depthRadius: 1.14,
       primaryAnchor: Object.freeze([0, 0.78, 0.625]),
       vectors: Object.freeze({
         north: Object.freeze([0, 1, 0]),
@@ -120,112 +93,89 @@
       })
     }),
 
-    localStars: Object.freeze({
-      radius: 0.72,
-      forwardLift: 0.34,
-      sideLift: 0.42,
-      verticalLift: 0.42,
-      depthLift: 0.22,
-      anchors: Object.freeze({
-        north: Object.freeze([
-          Object.freeze([0.00, -0.78, 0.16]),
-          Object.freeze([0.62, -0.38, 0.20]),
-          Object.freeze([-0.62, -0.38, 0.20]),
-          Object.freeze([0.00, -0.18, 0.24])
-        ]),
-        east: Object.freeze([
-          Object.freeze([-0.78, 0.00, 0.16]),
-          Object.freeze([-0.38, -0.62, 0.20]),
-          Object.freeze([-0.38, 0.62, 0.20]),
-          Object.freeze([-0.18, 0.00, 0.24])
-        ]),
-        south: Object.freeze([
-          Object.freeze([0.00, 0.78, 0.16]),
-          Object.freeze([-0.62, 0.38, 0.20]),
-          Object.freeze([0.62, 0.38, 0.20]),
-          Object.freeze([0.00, 0.18, 0.24])
-        ]),
-        west: Object.freeze([
-          Object.freeze([0.78, 0.00, 0.16]),
-          Object.freeze([0.38, 0.62, 0.20]),
-          Object.freeze([0.38, -0.62, 0.20]),
-          Object.freeze([0.18, 0.00, 0.24])
-        ])
-      })
+    cluster: Object.freeze({
+      horizontalRadius: 1.28,
+      verticalRadius: 1.10,
+      depthRadius: 1.00,
+      primaryAnchor: Object.freeze([0, 0.70, 0.714]),
+      latitudeAmplitude: 0.48,
+      latitudeFrequency: 1.73
     })
   });
 
-  const STAR_PALETTE = Object.freeze({
-    north: Object.freeze([0.95, 0.82, 0.44]),
-    east: Object.freeze([0.58, 0.88, 1.00]),
-    south: Object.freeze([1.00, 0.72, 0.52]),
-    west: Object.freeze([0.56, 0.94, 0.76]),
+  const ARCHCOIN_WING_TO_COIN = Object.freeze({
+    north: "contract",
+    east: "receivable",
+    south: "payable",
+    west: "allocation"
+  });
 
-    roomNorth: Object.freeze([0.98, 0.84, 0.54]),
-    roomEast: Object.freeze([0.66, 0.90, 1.00]),
-    roomSouth: Object.freeze([1.00, 0.78, 0.58]),
-    roomWest: Object.freeze([0.66, 0.96, 0.80])
+  const PALETTE = Object.freeze({
+    north: Object.freeze([0.79, 0.84, 1.0]),
+    east: Object.freeze([0.48, 0.88, 0.96]),
+    south: Object.freeze([1.0, 0.73, 0.42]),
+    west: Object.freeze([0.98, 0.58, 0.40]),
+
+    roomNorth: Object.freeze([0.72, 0.80, 1.0]),
+    roomEast: Object.freeze([0.44, 0.82, 0.92]),
+    roomSouth: Object.freeze([0.98, 0.68, 0.38]),
+    roomWest: Object.freeze([0.94, 0.52, 0.34])
   });
 
   const MATERIALS = Object.freeze({
-    COIN_IDLE: Object.freeze({
-      specular: 1.22,
+    CARDINAL_IDLE: Object.freeze({
+      specular: 1.12,
+      rim: 0.98,
+      emissive: 0.14,
+      alpha: 0.92,
+      sparkle: 0.18,
+      halo: 0.62,
+      contrast: 1.14
+    }),
+    CARDINAL_FOCUSED: Object.freeze({
+      specular: 1.38,
+      rim: 1.18,
+      emissive: 0.19,
+      alpha: 0.96,
+      sparkle: 0.24,
+      halo: 0.90,
+      contrast: 1.22
+    }),
+    CARDINAL_SELECTED: Object.freeze({
+      specular: 1.46,
+      rim: 1.24,
+      emissive: 0.21,
+      alpha: 0.97,
+      sparkle: 0.28,
+      halo: 0.98,
+      contrast: 1.24
+    }),
+    ROOM_IDLE: Object.freeze({
+      specular: 1.02,
+      rim: 0.88,
+      emissive: 0.12,
+      alpha: 0.88,
+      sparkle: 0.14,
+      halo: 0.44,
+      contrast: 1.08
+    }),
+    ROOM_PRIMARY: Object.freeze({
+      specular: 1.18,
+      rim: 1.02,
+      emissive: 0.16,
+      alpha: 0.92,
+      sparkle: 0.18,
+      halo: 0.62,
+      contrast: 1.14
+    }),
+    ROOM_SELECTED: Object.freeze({
+      specular: 1.26,
       rim: 1.08,
       emissive: 0.18,
-      alpha: 0.92,
-      sparkle: 0.28,
-      halo: 0.86,
-      contrast: 1.18
-    }),
-
-    COIN_FOCUSED: Object.freeze({
-      specular: 1.56,
-      rim: 1.34,
-      emissive: 0.26,
-      alpha: 0.97,
-      sparkle: 0.40,
-      halo: 1.20,
-      contrast: 1.26
-    }),
-
-    COIN_SELECTED: Object.freeze({
-      specular: 1.68,
-      rim: 1.42,
-      emissive: 0.30,
-      alpha: 0.98,
-      sparkle: 0.44,
-      halo: 1.28,
-      contrast: 1.30
-    }),
-
-    ROOM_IDLE: Object.freeze({
-      specular: 1.06,
-      rim: 0.92,
-      emissive: 0.15,
-      alpha: 0.88,
-      sparkle: 0.22,
-      halo: 0.66,
-      contrast: 1.10
-    }),
-
-    ROOM_PRIMARY: Object.freeze({
-      specular: 1.26,
-      rim: 1.10,
-      emissive: 0.21,
       alpha: 0.94,
-      sparkle: 0.30,
-      halo: 0.88,
+      sparkle: 0.22,
+      halo: 0.72,
       contrast: 1.18
-    }),
-
-    ROOM_SELECTED: Object.freeze({
-      specular: 1.36,
-      rim: 1.16,
-      emissive: 0.24,
-      alpha: 0.96,
-      sparkle: 0.34,
-      halo: 0.98,
-      contrast: 1.21
     })
   });
 
@@ -233,34 +183,32 @@
     normalDevicePixelRatioCap: 2,
     lowPowerDevicePixelRatioCap: 1.5,
     mobileAspectThreshold: 0.82,
-    atmosphereReductionWidthPx: 520,
     bloomDisableWidthPx: 420,
-    coinSegments: 8,
+    cardinalSegments: 8,
     roomSegments: 6,
-    coinScale: 0.96,
-    focusedCoinScale: 1.28,
-    selectedCoinScale: 1.36,
-    roomScale: 0.74,
-    primaryRoomScale: 0.94,
-    selectedRoomScale: 1.00,
-    maxYaw: 0.22,
-    maxPitch: 0.14,
-    roomSemanticBaseRadiusPx: 42,
-    coinSemanticBaseRadiusPx: 58
+    cardinalScale: 0.96,
+    focusedCardinalScale: 1.28,
+    selectedCardinalScale: 1.34,
+    roomScale: 0.84,
+    primaryRoomScale: 1.08,
+    selectedRoomScale: 1.14,
+    maxYaw: 0.20,
+    maxPitch: 0.13
   });
 
   const RECEIPT = {
     contractId: CONTRACT.id,
-    previousContractId: CONTRACT.previousId,
+    sourceContractId: CONTRACT.sourceContractId,
     status: "pending",
     rendererInitialized: false,
-    registryCoinCount: 0,
+    registryCardinalCount: 0,
     registryRoomCount: 0,
-    runtimeControllerPresent: false,
+    roomProxyCount: 0,
+    roomProxyPresentation: "NONVISUAL_ACCESSIBILITY_CONTROL",
+    sphericalConstellationEnabled: true,
+    sphericalClustersEnabled: true,
     coordinateSystem: SPHERE.coordinateSystem,
     orientationRepresentation: SPHERE.orientationRepresentation,
-    sphericalConstellationEnabled: true,
-    sphericalClustersEnabled: false,
     primaryWing: "north",
     activeClusterWing: "",
     primaryRoom: "",
@@ -271,9 +219,7 @@
     lastGestureDurationMs: 0,
     lastAverageVelocityPxPerMs: 0,
     lastReleaseVelocityPxPerMs: 0,
-    reducedMotion: false,
     glError: "not-checked",
-    failureReason: "",
     visualPassClaimed: false
   };
 
@@ -283,60 +229,42 @@
     mount: null,
     semanticLayer: null,
     receiptOutput: null,
-    controller: null,
-
     canvas: null,
-    atmosphereCanvas: null,
-    atmosphereContext: null,
-
     gl: null,
     program: null,
     attribs: null,
     uniforms: null,
-
     meshes: new Map(),
     registry: new Map(),
-
+    roomProxies: new Map(),
     width: 1,
     height: 1,
     cssWidth: 1,
     cssHeight: 1,
     pixelRatio: 1,
-
     frame: null,
-
     constellationQuaternion: [0, 0, 0, 1],
     constellationTargetQuaternion: [0, 0, 0, 1],
     visualPrimaryWing: "north",
     settledPrimaryWing: "north",
-
-    roomPrimaryByWing: new Map(),
-
+    clusterQuaternions: new Map(),
+    clusterTargetQuaternions: new Map(),
+    visualPrimaryRooms: new Map(),
     view: null,
     projection: null,
-
     camera: {
-      eye: [0, 0.78, 6.7],
+      eye: [0, 0.78, 6.45],
       target: [0, 0, 0],
-      nextEye: [0, 0.78, 6.7],
+      nextEye: [0, 0.78, 6.45],
       nextTarget: [0, 0, 0]
     },
-
-    reducedMotion: false,
     time: 0,
     lastTime: 0,
     raf: 0,
     running: false,
-    initialized: false,
-    failureReason: "",
-
+    reducedMotion: false,
     pointer: null,
-    suppressClickUntil: 0,
-
-    atmosphere: {
-      stars: [],
-      initialized: false
-    }
+    suppressClickUntil: 0
   };
 
   const vertexShaderSource = `
@@ -404,7 +332,9 @@
     uniform vec3 uAmbientColor;
 
     float hash31(vec3 p) {
-      return fract(sin(dot(p, vec3(12.9898, 78.233, 37.719))) * 43758.5453);
+      return fract(
+        sin(dot(p, vec3(12.9898, 78.233, 37.719))) * 43758.5453
+      );
     }
 
     void main() {
@@ -424,8 +354,16 @@
       float rear = max(dot(n, normalize(-uRimLight)), 0.0);
 
       float fresnel = pow(1.0 - max(facingToCamera, 0.0), 2.05);
-      float facing = pow(max(dot(reflect(normalize(uKeyLight), n), viewDir), 0.0), 28.0);
-      float facetBand = pow(abs(dot(n, normalize(vec3(0.45, 0.72, 0.53)))), 5.0);
+
+      float facing = pow(
+        max(dot(reflect(normalize(uKeyLight), n), viewDir), 0.0),
+        28.0
+      );
+
+      float facetBand = pow(
+        abs(dot(n, normalize(vec3(0.45, 0.72, 0.53)))),
+        5.0
+      );
 
       float sparkleSeed = hash31(floor((n + vWorldPosition) * 18.0));
       float sparklePhase = sin(uTime * 1.85 + sparkleSeed * 6.28318);
@@ -455,18 +393,28 @@
       }
 
       float diffuse = 0.24 + key * 0.82 + fill * 0.30 + rear * 0.14;
-      diffuse = mix(diffuse, pow(diffuse, 0.68), clamp(uContrast - 1.0, 0.0, 0.7));
+      diffuse = mix(
+        diffuse,
+        pow(diffuse, 0.68),
+        clamp(uContrast - 1.0, 0.0, 0.7)
+      );
 
       vec3 lit = base * diffuse * twinkle;
       vec3 spec = vec3(1.0, 0.96, 0.82) * facing * uSpecular * rearSuppression;
       vec3 rim = base * (fresnel * 0.72 + sideRim * 0.38) * uRim;
-      vec3 coolRim = vec3(0.68, 0.86, 1.0) * (fresnel * 0.22 + sideRim * 0.14) * uRim;
+      vec3 coolRim = vec3(0.68, 0.86, 1.0) *
+        (fresnel * 0.22 + sideRim * 0.14) *
+        uRim;
       vec3 emissive = base * uEmissive;
       vec3 spark = vec3(1.0, 0.96, 0.78) * sparkle;
 
       float rearDim = mix(0.62, 1.0, rearSuppression);
 
-      vec3 color = ((lit + spec + rim + coolRim + emissive + spark) * uProminence + uAmbientColor * base * 0.20) * rearDim;
+      vec3 color = (
+        (lit + spec + rim + coolRim + emissive + spark) *
+        uProminence +
+        uAmbientColor * base * 0.20
+      ) * rearDim;
 
       float alpha = clamp(
         uAlpha * (0.70 + uProminence * 0.30 + fresnel * 0.08),
@@ -490,10 +438,6 @@
     return Math.max(minimum, Math.min(maximum, value));
   }
 
-  function lerp(a, b, amount) {
-    return a + (b - a) * amount;
-  }
-
   function finiteNumber(value, fallback = 0) {
     const number = Number(value);
     return Number.isFinite(number) ? number : fallback;
@@ -508,21 +452,77 @@
     return String(value || "").trim();
   }
 
-  function normalizeTab(value) {
-    const tab = String(value || "").trim().toLowerCase();
-    return TABS.includes(tab) ? tab : "overview";
-  }
-
   function cssEscape(value) {
     const text = String(value || "");
     if (globalThis.CSS && typeof globalThis.CSS.escape === "function") {
       return globalThis.CSS.escape(text);
     }
-    return text.replace(/["\\\\]/g, "\\$&");
+    return text.replace(/["\\]/g, "\\$&");
   }
 
-  function roomElementsForWing(wing) {
-    return qsa(`[data-archcoin-room][data-wing="${cssEscape(wing)}"]`, state.root);
+  function emitReceipt(extra = {}) {
+    const frameCluster = state.frame && state.frame.cluster ? state.frame.cluster : null;
+
+    Object.assign(RECEIPT, {
+      status: RECEIPT.status || "available",
+      sphericalConstellationEnabled: true,
+      sphericalClustersEnabled: true,
+      coordinateSystem: SPHERE.coordinateSystem,
+      orientationRepresentation: SPHERE.orientationRepresentation,
+      primaryWing: state.visualPrimaryWing || state.settledPrimaryWing || "north",
+      activeClusterWing: frameCluster ? frameCluster.wing : "",
+      primaryRoom: frameCluster
+        ? state.visualPrimaryRooms.get(frameCluster.wing) || frameCluster.primaryRoom || ""
+        : "",
+      gestureActive: Boolean(state.pointer && state.pointer.dragging),
+      visualPassClaimed: false
+    }, extra);
+
+    const serialized = JSON.stringify(RECEIPT);
+
+    if (state.root) {
+      state.root.dataset.archcoinCrystalsReceipt = serialized;
+      state.root.dataset.archcoinCrystalsStatus = RECEIPT.status;
+      state.root.dataset.visualPassClaimed = "false";
+    }
+
+    if (state.canvas) {
+      state.canvas.dataset.archcoinCrystalsReceipt = serialized;
+      state.canvas.dataset.visualPassClaimed = "false";
+    }
+
+    if (state.receiptOutput) {
+      state.receiptOutput.value = serialized;
+      state.receiptOutput.textContent = serialized;
+      state.receiptOutput.dataset.visualPassClaimed = "false";
+    }
+
+    globalThis.DGB_ARCHCOIN_CRYSTALS_RECEIPT = Object.freeze({
+      ...RECEIPT
+    });
+  }
+
+  function emitFailure(reason) {
+    state.running = false;
+
+    if (state.raf) {
+      cancelAnimationFrame(state.raf);
+      state.raf = 0;
+    }
+
+    emitReceipt({
+      status: "held",
+      rendererInitialized: false,
+      glError: String(reason || "UNKNOWN_ERROR")
+    });
+
+    globalThis.dispatchEvent(
+      new CustomEvent("ARCHCOIN_CRYSTALS_RENDER_FAILURE", {
+        detail: Object.freeze({
+          reason: String(reason || "UNKNOWN_ERROR")
+        })
+      })
+    );
   }
 
   function vectorLength(vector) {
@@ -531,9 +531,11 @@
 
   function normalizeVector(vector, fallback = [0, 0, 1]) {
     const length = vectorLength(vector);
+
     if (!Number.isFinite(length) || length <= 1e-12) {
       return fallback.slice();
     }
+
     return [vector[0] / length, vector[1] / length, vector[2] / length];
   }
 
@@ -553,14 +555,6 @@
     return [a[0] - b[0], a[1] - b[1], a[2] - b[2]];
   }
 
-  function add(a, b) {
-    return [a[0] + b[0], a[1] + b[1], a[2] + b[2]];
-  }
-
-  function scaleVector(vector, scalar) {
-    return [vector[0] * scalar, vector[1] * scalar, vector[2] * scalar];
-  }
-
   function quaternionNormalize(value, fallback = [0, 0, 0, 1]) {
     const source =
       Array.isArray(value) || ArrayBuffer.isView(value) ? Array.from(value) : [];
@@ -576,7 +570,12 @@
       finiteNumber(source[3], 1)
     ];
 
-    const length = Math.hypot(quaternion[0], quaternion[1], quaternion[2], quaternion[3]);
+    const length = Math.hypot(
+      quaternion[0],
+      quaternion[1],
+      quaternion[2],
+      quaternion[3]
+    );
 
     if (!Number.isFinite(length) || length <= 1e-12) {
       return fallback.slice();
@@ -637,13 +636,16 @@
 
     if (cosine < -0.999999) {
       let axis = cross([1, 0, 0], from);
+
       if (vectorLength(axis) < 1e-6) {
         axis = cross([0, 1, 0], from);
       }
+
       return quaternionFromAxisAngle(normalizeVector(axis), Math.PI);
     }
 
     const axis = cross(from, to);
+
     return quaternionNormalize([axis[0], axis[1], axis[2], 1 + cosine]);
   }
 
@@ -673,7 +675,6 @@
 
     const theta = Math.acos(clamp(cosine, -1, 1));
     const sineTheta = Math.sin(theta);
-
     const weightFrom = Math.sin((1 - amount) * theta) / sineTheta;
     const weightTo = Math.sin(amount * theta) / sineTheta;
 
@@ -685,84 +686,78 @@
     ]);
   }
 
-  function emitReceipt(extra = {}) {
-    const frameCluster = state.frame && state.frame.cluster ? state.frame.cluster : null;
-    const held = Boolean(state.failureReason) ||
-      (state.frame && state.frame.state === CONTROLLER_STATES.HELD);
-
-    Object.assign(
-      RECEIPT,
-      {
-        status: held ? "held" : "available",
-        rendererInitialized: state.initialized,
-        runtimeControllerPresent: Boolean(state.controller),
-        primaryWing: state.visualPrimaryWing || state.settledPrimaryWing || "north",
-        activeClusterWing: frameCluster ? frameCluster.wing : "",
-        primaryRoom: frameCluster
-          ? state.roomPrimaryByWing.get(frameCluster.wing) || frameCluster.primaryRoom || ""
-          : "",
-        gestureActive: Boolean(state.pointer && state.pointer.dragging),
-        reducedMotion: state.reducedMotion,
-        failureReason: state.failureReason || "",
-        sphericalConstellationEnabled: true,
-        sphericalClustersEnabled: false,
-        visualPassClaimed: false
-      },
-      extra
-    );
-
-    const serialized = JSON.stringify(RECEIPT);
-
-    if (state.root) {
-      state.root.dataset.archcoinCrystalsReceipt = serialized;
-      state.root.dataset.archcoinCrystalsStatus = RECEIPT.status;
-      state.root.dataset.visualPassClaimed = "false";
+  function orientationQuaternion(orientation, fallback) {
+    if (
+      orientation &&
+      (Array.isArray(orientation.quaternion) ||
+        ArrayBuffer.isView(orientation.quaternion))
+    ) {
+      return quaternionNormalize(orientation.quaternion, fallback);
     }
 
-    if (state.canvas) {
-      state.canvas.dataset.archcoinCrystalsReceipt = serialized;
-      state.canvas.dataset.visualPassClaimed = "false";
-    }
-
-    if (state.receiptOutput) {
-      state.receiptOutput.value = serialized;
-      state.receiptOutput.textContent = serialized;
-      state.receiptOutput.dataset.visualPassClaimed = "false";
-    }
-
-    globalThis.DGB_ARCHCOIN_CRYSTALS_RECEIPT = Object.freeze({ ...RECEIPT });
+    return quaternionNormalize(fallback);
   }
 
-  function emitFailure(reason) {
-    state.running = false;
-    state.failureReason = String(reason || "UNKNOWN_ERROR");
-
-    if (state.raf) {
-      cancelAnimationFrame(state.raf);
-      state.raf = 0;
+  function constellationQuaternionFromFrame(frame) {
+    if (frame && frame.orbitOrientation) {
+      return orientationQuaternion(frame.orbitOrientation, state.constellationTargetQuaternion);
     }
 
-    emitReceipt({
-      status: "held",
-      rendererInitialized: false,
-      glError: state.failureReason
-    });
+    const serialized = state.root && state.root.dataset ? state.root.dataset.orbitQuaternion : "";
 
-    globalThis.dispatchEvent(
-      new CustomEvent("ARCHCOIN_CRYSTALS_RENDER_FAILURE", {
-        detail: Object.freeze({
-          reason: state.failureReason
-        })
-      })
-    );
+    if (serialized) {
+      try {
+        return quaternionNormalize(
+          JSON.parse(serialized),
+          state.constellationTargetQuaternion
+        );
+      } catch (_) {}
+    }
+
+    return state.constellationTargetQuaternion.slice();
+  }
+
+  function clusterQuaternionFromFrame(frame, wing) {
+    if (
+      frame &&
+      frame.cluster &&
+      frame.cluster.wing === wing &&
+      frame.cluster.orientation
+    ) {
+      return orientationQuaternion(
+        frame.cluster.orientation,
+        state.clusterTargetQuaternions.get(wing) || [0, 0, 0, 1]
+      );
+    }
+
+    const serialized =
+      state.root &&
+      state.root.dataset &&
+      state.root.dataset.activeClusterWing === wing
+        ? state.root.dataset.clusterQuaternion
+        : "";
+
+    if (serialized) {
+      try {
+        return quaternionNormalize(
+          JSON.parse(serialized),
+          state.clusterTargetQuaternions.get(wing) || [0, 0, 0, 1]
+        );
+      } catch (_) {}
+    }
+
+    return (state.clusterTargetQuaternions.get(wing) || [0, 0, 0, 1]).slice();
   }
 
   function getControllerFrame() {
-    if (state.controller && typeof state.controller.getFrameState === "function") {
-      return state.controller.getFrameState();
+    const api = globalThis.DGB_ARCHCOIN_CONTROLLER;
+
+    if (api && typeof api.getFrameState === "function") {
+      return api.getFrameState();
     }
 
     const dataset = state.root && state.root.dataset ? state.root.dataset : {};
+
     let orbitQuaternion = state.constellationTargetQuaternion.slice();
 
     if (dataset.orbitQuaternion) {
@@ -771,12 +766,18 @@
       } catch (_) {}
     }
 
+    let clusterQuaternion = [0, 0, 0, 1];
+
+    if (dataset.clusterQuaternion) {
+      try {
+        clusterQuaternion = quaternionNormalize(JSON.parse(dataset.clusterQuaternion));
+      } catch (_) {}
+    }
+
     const activeWing = normalizeWing(dataset.activeClusterWing);
 
     return Object.freeze({
-      state: dataset.archcoinState
-        ? String(dataset.archcoinState).trim().toUpperCase().replace(/-/g, "_")
-        : CONTROLLER_STATES.HELD,
+      state: dataset.archcoinMode || "CONSTELLATION",
       orbitFocus: dataset.orbitFocus || "north",
       orbitPreviewFocus: dataset.orbitPreviewFocus || dataset.orbitFocus || "north",
       orbitPhase: dataset.orbitPhase || "COMMITTED",
@@ -789,45 +790,34 @@
       cluster: activeWing
         ? Object.freeze({
             wing: activeWing,
-            roomIds: Object.freeze(
-              roomElementsForWing(activeWing).map(element => normalizeRoomId(element.dataset.roomId))
-            ),
+            roomIds: Object.freeze([]),
             primaryRoom: dataset.clusterPrimaryRoom || "",
             previewPrimaryRoom: dataset.clusterPreviewPrimaryRoom || "",
             phase: dataset.clusterPhase || "COMMITTED",
             gestureActive: dataset.clusterGestureActive === "true",
             revision: Number(dataset.clusterRevision || 0),
             orientation: Object.freeze({
-              quaternion: Object.freeze([0, 0, 0, 1]),
+              quaternion: Object.freeze(clusterQuaternion),
               primaryId: dataset.clusterPreviewPrimaryRoom || dataset.clusterPrimaryRoom || ""
             })
           })
         : null,
-      selectedCardinal: dataset.selectedCardinal || dataset.selectedWing || "",
+      selectedCardinal: dataset.selectedCardinal || "",
       selectedCoin: dataset.selectedCoin || "",
       selectedRoom: dataset.selectedRoom || "",
       selectedDestinationType: dataset.selectedDestinationType || "",
       selectedDestinationId: dataset.selectedDestinationId || "",
       selectedDestinationLabel: dataset.selectedDestinationLabel || "",
       selectedRoute: dataset.selectedRoute || "",
-      reducedMotion: dataset.reducedMotion === "true",
-      prominence: Object.freeze({
-        compass: Number(dataset.compassProminence || 1),
-        window: Number(dataset.windowProminence || 0)
-      })
+      selectedContentId: dataset.selectedContentId || "",
+      selectedLens: dataset.selectedLens || "overview",
+      reducedMotion: dataset.reducedMotion === "true"
     });
-  }
-
-  function constellationCanRotate() {
-    return Boolean(
-      state.frame &&
-      state.frame.state === CONTROLLER_STATES.ORBIT &&
-      state.frame.state !== CONTROLLER_STATES.HELD
-    );
   }
 
   function createCanvas() {
     const existing = qs("canvas[data-archcoin-crystals-canvas]", state.mount);
+
     if (existing) {
       return existing;
     }
@@ -842,31 +832,9 @@
     canvas.style.height = "100%";
     canvas.style.display = "block";
     canvas.style.pointerEvents = "none";
-    canvas.style.zIndex = "1";
 
     state.mount.prepend(canvas);
     return canvas;
-  }
-
-  function createAtmosphereCanvas() {
-    const existing = qs("canvas[data-archcoin-atmosphere-canvas]", state.mount);
-    const canvas = existing || document.createElement("canvas");
-
-    if (!existing) {
-      canvas.dataset.archcoinAtmosphereCanvas = "true";
-      canvas.setAttribute("aria-hidden", "true");
-      canvas.style.position = "absolute";
-      canvas.style.inset = "0";
-      canvas.style.width = "100%";
-      canvas.style.height = "100%";
-      canvas.style.display = "block";
-      canvas.style.pointerEvents = "none";
-      canvas.style.zIndex = "0";
-      state.mount.prepend(canvas);
-    }
-
-    state.atmosphereCanvas = canvas;
-    state.atmosphereContext = canvas.getContext("2d");
   }
 
   function getGL(canvas) {
@@ -881,6 +849,7 @@
 
   function compileShader(gl, type, source) {
     const shader = gl.createShader(type);
+
     gl.shaderSource(shader, source);
     gl.compileShader(shader);
 
@@ -915,12 +884,7 @@
   }
 
   function identity4() {
-    return [
-      1, 0, 0, 0,
-      0, 1, 0, 0,
-      0, 0, 1, 0,
-      0, 0, 0, 1
-    ];
+    return [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
   }
 
   function multiply4(a, b) {
@@ -929,7 +893,8 @@
     for (let row = 0; row < 4; row += 1) {
       for (let column = 0; column < 4; column += 1) {
         for (let index = 0; index < 4; index += 1) {
-          output[column * 4 + row] += a[index * 4 + row] * b[column * 4 + index];
+          output[column * 4 + row] +=
+            a[index * 4 + row] * b[column * 4 + index];
         }
       }
     }
@@ -1044,25 +1009,25 @@
     const inner = options.inner || radius * 0.46;
     const depth = options.depth || 0.42;
     const crown = options.crown || 0.22;
-    const color = options.color || STAR_PALETTE.north;
+    const color = options.color || PALETTE.north;
     const warmth = options.warmth || 0;
 
     const vertices = [];
     const faces = [];
 
-    function addVertex(point) {
+    function add(point) {
       vertices.push(point);
       return vertices.length - 1;
     }
 
-    function addFace(a, b, c) {
+    function face(a, b, c) {
       faces.push([a, b, c]);
     }
 
-    const frontApex = addVertex([0, 0, depth]);
-    const rearApex = addVertex([0, 0, -depth]);
-    const frontCrown = addVertex([0, 0, depth + crown]);
-    const rearCrown = addVertex([0, 0, -depth - crown * 0.72]);
+    const frontApex = add([0, 0, depth]);
+    const rearApex = add([0, 0, -depth]);
+    const frontCrown = add([0, 0, depth + crown]);
+    const rearCrown = add([0, 0, -depth - crown * 0.72]);
 
     const outer = [];
     const innerRing = [];
@@ -1076,25 +1041,25 @@
       const yScale = 0.78;
       const ridge = isPoint ? 0.05 : -0.02;
 
-      outer.push(addVertex([
+      outer.push(add([
         Math.cos(angle) * activeRadius,
         Math.sin(angle) * activeRadius * yScale,
         ridge
       ]));
 
-      innerRing.push(addVertex([
+      innerRing.push(add([
         Math.cos(angle) * activeRadius * 0.38,
         Math.sin(angle) * activeRadius * yScale * 0.38,
         depth * 0.14
       ]));
 
-      frontBevel.push(addVertex([
+      frontBevel.push(add([
         Math.cos(angle) * activeRadius * 0.72,
         Math.sin(angle) * activeRadius * yScale * 0.72,
         depth * 0.52
       ]));
 
-      rearBevel.push(addVertex([
+      rearBevel.push(add([
         Math.cos(angle) * activeRadius * 0.68,
         Math.sin(angle) * activeRadius * yScale * 0.68,
         -depth * 0.48
@@ -1106,17 +1071,17 @@
     for (let index = 0; index < count; index += 1) {
       const next = (index + 1) % count;
 
-      addFace(frontApex, innerRing[index], innerRing[next]);
-      addFace(frontCrown, frontBevel[next], frontBevel[index]);
-      addFace(frontBevel[index], outer[index], outer[next]);
-      addFace(frontBevel[index], outer[next], frontBevel[next]);
-      addFace(innerRing[index], frontBevel[index], frontBevel[next]);
-      addFace(innerRing[index], frontBevel[next], innerRing[next]);
+      face(frontApex, innerRing[index], innerRing[next]);
+      face(frontCrown, frontBevel[next], frontBevel[index]);
+      face(frontBevel[index], outer[index], outer[next]);
+      face(frontBevel[index], outer[next], frontBevel[next]);
+      face(innerRing[index], frontBevel[index], frontBevel[next]);
+      face(innerRing[index], frontBevel[next], innerRing[next]);
 
-      addFace(rearApex, rearBevel[next], rearBevel[index]);
-      addFace(rearCrown, rearBevel[index], rearBevel[next]);
-      addFace(rearBevel[index], outer[next], outer[index]);
-      addFace(rearBevel[index], rearBevel[next], outer[next]);
+      face(rearApex, rearBevel[next], rearBevel[index]);
+      face(rearCrown, rearBevel[index], rearBevel[next]);
+      face(rearBevel[index], outer[next], outer[index]);
+      face(rearBevel[index], rearBevel[next], outer[next]);
     }
 
     const positions = [];
@@ -1127,7 +1092,6 @@
       const a = vertices[triangle[0]];
       const b = vertices[triangle[1]];
       const c = vertices[triangle[2]];
-
       const normal = normalizeVector(cross(subtract(b, a), subtract(c, a)));
       const lift = 0.84 + (faceIndex % 7) * 0.034;
       const sparkleLift = faceIndex % 5 === 0 ? 0.13 : 0;
@@ -1161,52 +1125,61 @@
   }
 
   function roomColorForWing(wing) {
-    if (wing === "north") return STAR_PALETTE.roomNorth;
-    if (wing === "east") return STAR_PALETTE.roomEast;
-    if (wing === "south") return STAR_PALETTE.roomSouth;
-    return STAR_PALETTE.roomWest;
+    if (wing === "north") return PALETTE.roomNorth;
+    if (wing === "east") return PALETTE.roomEast;
+    if (wing === "south") return PALETTE.roomSouth;
+    return PALETTE.roomWest;
   }
 
   function buildMeshes(gl) {
     const meshes = new Map();
 
     WINGS.forEach(wing => {
-      const warm = wing === "north" || wing === "south" || wing === "west";
+      const warm = wing === "south" || wing === "west";
 
       meshes.set(
-        `coin-${wing}`,
-        buildGpuMesh(
-          gl,
-          createDiamondStarMesh({
-            points: QUALITY.coinSegments,
-            radius: 0.72,
-            inner: 0.30,
-            depth: 0.42,
-            crown: 0.20,
-            color: STAR_PALETTE[wing],
-            warmth: warm ? 0.10 : 0.02
-          })
-        )
+        `cardinal-${wing}`,
+        buildGpuMesh(gl, createDiamondStarMesh({
+          points: QUALITY.cardinalSegments,
+          radius: 0.72,
+          inner: 0.30,
+          depth: 0.42,
+          crown: 0.20,
+          color: PALETTE[wing],
+          warmth: warm ? 0.10 : 0.02
+        }))
       );
 
       meshes.set(
         `room-${wing}`,
-        buildGpuMesh(
-          gl,
-          createDiamondStarMesh({
-            points: QUALITY.roomSegments,
-            radius: 0.42,
-            inner: 0.20,
-            depth: 0.25,
-            crown: 0.10,
-            color: roomColorForWing(wing),
-            warmth: warm ? 0.08 : 0.02
-          })
-        )
+        buildGpuMesh(gl, createDiamondStarMesh({
+          points: QUALITY.roomSegments,
+          radius: 0.42,
+          inner: 0.20,
+          depth: 0.25,
+          crown: 0.10,
+          color: roomColorForWing(wing),
+          warmth: warm ? 0.08 : 0.02
+        }))
       );
     });
 
     return meshes;
+  }
+
+  function clusterBaseVector(index, count) {
+    const safeCount = Math.max(1, count);
+    const longitude = (Math.PI * 2 * index) / safeCount - Math.PI / 2;
+    const latitude =
+      Math.sin((index + 0.5) * SPHERE.cluster.latitudeFrequency) *
+      SPHERE.cluster.latitudeAmplitude;
+    const cosineLatitude = Math.cos(latitude);
+
+    return normalizeVector([
+      Math.cos(longitude) * cosineLatitude,
+      Math.sin(latitude),
+      Math.sin(longitude) * cosineLatitude
+    ]);
   }
 
   function makeNode({
@@ -1234,11 +1207,10 @@
       material,
       phase,
       visible: true,
-      semantic: null,
       sphereVector:
-        type === NODE_TYPES.COIN
+        type === NODE_TYPES.CARDINAL
           ? SPHERE.constellation.vectors[wing].slice()
-          : SPHERE.localStars.anchors[wing][roomIndex].slice(),
+          : clusterBaseVector(roomIndex, roomCount),
       depthScore: 0,
       primaryScore: 0,
       transform: {
@@ -1275,64 +1247,57 @@
     const registry = new Map();
 
     WINGS.forEach((wing, wingIndex) => {
-      const semantic = qs(`[data-archcoin-cardinal][data-wing="${wing}"]`, state.root);
+      const semantic = qs(`[data-archcoin-coin][data-wing="${wing}"]`, state.root);
 
       if (!semantic) {
-        throw new Error(`ARCHCOIN_COIN_NOT_FOUND:${wing}`);
+        throw new Error(`ARCHCOIN_COIN_SEMANTIC_NOT_FOUND:${wing}`);
       }
 
-      const coinNode = makeNode({
+      registry.set(wing, makeNode({
         id: wing,
-        type: NODE_TYPES.COIN,
+        type: NODE_TYPES.CARDINAL,
         wing,
-        label:
-          semantic.dataset.panelTitle ||
-          semantic.dataset.label ||
-          `${COIN_BY_WING[wing]} coin`,
-        short:
-          (semantic.querySelector(".gem-label span") || {}).textContent ||
-          semantic.dataset.coordinateLabel ||
-          "",
-        meshKey: `coin-${wing}`,
-        material: "COIN_IDLE",
+        label: semantic.dataset.coinLabel || semantic.dataset.label || ARCHCOIN_WING_TO_COIN[wing],
+        short: (semantic.querySelector("span:last-child") || {}).textContent || "",
+        meshKey: `cardinal-${wing}`,
+        material: "CARDINAL_IDLE",
         phase: wingIndex * 1.37 + 0.22
-      });
+      }));
 
-      coinNode.semantic = semantic;
-      registry.set(wing, coinNode);
-
-      const roomElements = roomElementsForWing(wing);
+      const roomElements = qsa(`[data-archcoin-room][data-wing="${wing}"]`, state.root);
 
       roomElements.forEach((element, roomIndex) => {
-        const roomId = normalizeRoomId(element.dataset.roomId);
+        const id = normalizeRoomId(element.dataset.roomId);
 
-        if (!roomId) {
+        if (!id) {
           throw new Error(`ARCHCOIN_ROOM_ID_MISSING:${wing}:${roomIndex}`);
         }
 
-        const roomNode = makeNode({
-          id: roomId,
+        registry.set(id, makeNode({
+          id,
           type: NODE_TYPES.ROOM,
           wing,
-          label: element.dataset.label || roomId,
-          short: element.dataset.localFunction || normalizeTab(element.dataset.tab),
+          label: element.dataset.label || element.textContent.trim(),
+          short: element.dataset.roomFunction || "",
           roomIndex,
           roomCount: roomElements.length,
           meshKey: `room-${wing}`,
           material: "ROOM_IDLE",
           phase: wingIndex * 1.13 + roomIndex * 0.47
-        });
-
-        roomNode.semantic = element;
-        registry.set(roomId, roomNode);
+        }));
       });
     });
 
-    const coinCount = Array.from(registry.values()).filter(node => node.type === NODE_TYPES.COIN).length;
-    const roomCount = Array.from(registry.values()).filter(node => node.type === NODE_TYPES.ROOM).length;
+    const cardinalCount = Array.from(registry.values()).filter(
+      node => node.type === NODE_TYPES.CARDINAL
+    ).length;
 
-    if (coinCount !== 4) {
-      throw new Error(`ARCHCOIN_COIN_COUNT_INVALID:${coinCount}`);
+    const roomCount = Array.from(registry.values()).filter(
+      node => node.type === NODE_TYPES.ROOM
+    ).length;
+
+    if (cardinalCount !== 4) {
+      throw new Error(`ARCHCOIN_CARDINAL_COUNT_INVALID:${cardinalCount}`);
     }
 
     if (roomCount !== 16) {
@@ -1340,20 +1305,130 @@
     }
 
     emitReceipt({
-      registryCoinCount: coinCount,
+      registryCardinalCount: cardinalCount,
       registryRoomCount: roomCount
     });
 
     return registry;
   }
 
+  function authoritativeRoomElement(roomId) {
+    return qs(
+      `[data-archcoin-room][data-room-id="${cssEscape(roomId)}"]`,
+      state.root
+    );
+  }
+
+  function applyNonvisualProxyPresentation(proxy) {
+    proxy.style.position = "absolute";
+    proxy.style.display = "block";
+    proxy.style.width = "44px";
+    proxy.style.height = "44px";
+    proxy.style.minWidth = "0";
+    proxy.style.maxWidth = "none";
+    proxy.style.padding = "0";
+    proxy.style.margin = "0";
+    proxy.style.border = "0";
+    proxy.style.borderRadius = "999px";
+    proxy.style.background = "transparent";
+    proxy.style.boxShadow = "none";
+    proxy.style.backdropFilter = "none";
+    proxy.style.color = "transparent";
+    proxy.style.fontSize = "0";
+    proxy.style.lineHeight = "0";
+    proxy.style.overflow = "visible";
+    proxy.style.pointerEvents = "none";
+    proxy.style.cursor = "default";
+    proxy.style.webkitTapHighlightColor = "transparent";
+  }
+
+  function createRoomProxy(node) {
+    const declaration = authoritativeRoomElement(node.id);
+
+    if (!declaration) {
+      throw new Error(`ARCHCOIN_ROOM_DECLARATION_NOT_FOUND:${node.id}`);
+    }
+
+    const existing = qs(
+      `[data-archcoin-room-proxy][data-room-id="${cssEscape(node.id)}"]`,
+      state.semanticLayer
+    );
+
+    if (existing) {
+      applyNonvisualProxyPresentation(existing);
+      existing.textContent = "";
+      return existing;
+    }
+
+    const proxy = document.createElement("button");
+    proxy.type = "button";
+    proxy.className = "archcoin-room-proxy-control";
+    proxy.dataset.archcoinRoomProxy = "true";
+    proxy.dataset.archcoinDestination = "true";
+    proxy.setAttribute("data-archcoin-room", "");
+    proxy.dataset.roomId = node.id;
+    proxy.dataset.wing = node.wing;
+    proxy.dataset.destinationType = declaration.dataset.destinationType || "room";
+    proxy.dataset.destinationId = declaration.dataset.destinationId || node.id;
+    proxy.dataset.label = declaration.dataset.label || node.label;
+    proxy.dataset.route = declaration.dataset.route || declaration.getAttribute("href") || "";
+    proxy.dataset.preview = declaration.dataset.preview || "";
+    proxy.dataset.roomFunction = declaration.dataset.roomFunction || node.short || "";
+    proxy.dataset.contentId = declaration.dataset.contentId || "";
+    proxy.dataset.lens = declaration.dataset.lens || declaration.dataset.tab || "overview";
+    proxy.dataset.selected = "false";
+    proxy.dataset.primary = "false";
+    proxy.dataset.presentation = "nonvisual";
+    proxy.setAttribute(
+      "aria-label",
+      `${node.label}. ${node.short || "Open this ARCHCOIN room."}`
+    );
+    proxy.textContent = "";
+
+    applyNonvisualProxyPresentation(proxy);
+    state.semanticLayer.appendChild(proxy);
+
+    return proxy;
+  }
+
+  function buildRoomProxies() {
+    const proxies = new Map();
+
+    state.registry.forEach(node => {
+      if (node.type !== NODE_TYPES.ROOM) {
+        return;
+      }
+
+      proxies.set(node.id, createRoomProxy(node));
+    });
+
+    if (proxies.size !== 16) {
+      throw new Error(`ARCHCOIN_ROOM_PROXY_COUNT_INVALID:${proxies.size}`);
+    }
+
+    emitReceipt({
+      roomProxyCount: proxies.size,
+      roomProxyPresentation: "NONVISUAL_ACCESSIBILITY_CONTROL"
+    });
+
+    return proxies;
+  }
+
   function constellationAnchorVector() {
     return normalizeVector(SPHERE.constellation.primaryAnchor);
   }
 
-  function rotatedCoinUnitVector(wing, quaternion = state.constellationQuaternion) {
+  function clusterAnchorVector() {
+    return normalizeVector(SPHERE.cluster.primaryAnchor);
+  }
+
+  function rotatedCardinalUnitVector(wing, quaternion = state.constellationQuaternion) {
     const base = SPHERE.constellation.vectors[wing] || SPHERE.constellation.vectors.north;
     return normalizeVector(quaternionRotateVector(quaternion, base));
+  }
+
+  function rotatedRoomUnitVector(node, quaternion) {
+    return normalizeVector(quaternionRotateVector(quaternion, node.sphereVector));
   }
 
   function nearestPrimaryWing(quaternion = state.constellationQuaternion) {
@@ -1362,7 +1437,7 @@
     let bestScore = -Infinity;
 
     WINGS.forEach(wing => {
-      const vector = rotatedCoinUnitVector(wing, quaternion);
+      const vector = rotatedCardinalUnitVector(wing, quaternion);
       const score = dot(vector, anchor);
 
       if (score > bestScore) {
@@ -1374,16 +1449,59 @@
     return bestWing;
   }
 
+  function activeRoomNodes(wing) {
+    return Array.from(state.registry.values()).filter(
+      node => node.type === NODE_TYPES.ROOM && node.wing === wing
+    );
+  }
+
+  function nearestPrimaryRoom(wing, quaternion) {
+    const anchor = clusterAnchorVector();
+    const rooms = activeRoomNodes(wing);
+    let bestRoom = rooms[0] ? rooms[0].id : "";
+    let bestScore = -Infinity;
+
+    rooms.forEach(node => {
+      const vector = rotatedRoomUnitVector(node, quaternion);
+      const score = dot(vector, anchor);
+
+      if (score > bestScore) {
+        bestScore = score;
+        bestRoom = node.id;
+      }
+    });
+
+    return bestRoom;
+  }
+
   function settledConstellationQuaternion(wing, currentQuaternion) {
-    const currentVector = rotatedCoinUnitVector(wing, currentQuaternion);
-    const alignment = quaternionFromUnitVectors(currentVector, constellationAnchorVector());
+    const currentVector = rotatedCardinalUnitVector(wing, currentQuaternion);
+    const alignment = quaternionFromUnitVectors(
+      currentVector,
+      constellationAnchorVector()
+    );
+
     return quaternionNormalize(quaternionMultiply(alignment, currentQuaternion));
   }
 
-  function sphericalCoinPosition(wing) {
-    const unit = rotatedCoinUnitVector(wing);
+  function settledClusterQuaternion(roomId, wing, currentQuaternion) {
+    const node = state.registry.get(roomId);
+
+    if (!node || node.type !== NODE_TYPES.ROOM || node.wing !== wing) {
+      return currentQuaternion.slice();
+    }
+
+    const currentVector = rotatedRoomUnitVector(node, currentQuaternion);
+    const alignment = quaternionFromUnitVectors(currentVector, clusterAnchorVector());
+
+    return quaternionNormalize(quaternionMultiply(alignment, currentQuaternion));
+  }
+
+  function sphericalCardinalPosition(wing) {
+    const unit = rotatedCardinalUnitVector(wing);
 
     return {
+      unit,
       x: unit[0] * SPHERE.constellation.horizontalRadius,
       y: unit[1] * SPHERE.constellation.verticalRadius,
       z: unit[2] * SPHERE.constellation.depthRadius,
@@ -1392,163 +1510,17 @@
     };
   }
 
-  function localRoomPosition(node, coinPosition) {
-    const local = node.sphereVector;
-    const depth = clamp((local[2] + 1) / 2, 0, 1);
-    const primary = node.id === (state.roomPrimaryByWing.get(node.wing) || "");
+  function sphericalRoomPosition(node, quaternion) {
+    const unit = rotatedRoomUnitVector(node, quaternion);
 
     return {
-      x: coinPosition.x + local[0] * SPHERE.localStars.radius,
-      y: coinPosition.y + local[1] * SPHERE.localStars.radius,
-      z: coinPosition.z + SPHERE.localStars.forwardLift + local[2] * SPHERE.localStars.depthLift,
-      depth,
-      primary: primary ? 1 : clamp(0.45 + depth * 0.35, 0, 1)
+      unit,
+      x: unit[0] * SPHERE.cluster.horizontalRadius,
+      y: unit[1] * SPHERE.cluster.verticalRadius,
+      z: unit[2] * SPHERE.cluster.depthRadius,
+      depth: (unit[2] + 1) / 2,
+      primary: clamp((dot(unit, clusterAnchorVector()) + 1) / 2, 0, 1)
     };
-  }
-
-  function constellationQuaternionFromFrame(frame) {
-    if (frame && frame.orbitOrientation && frame.orbitOrientation.quaternion) {
-      return quaternionNormalize(frame.orbitOrientation.quaternion, state.constellationTargetQuaternion);
-    }
-
-    const serialized = state.root && state.root.dataset ? state.root.dataset.orbitQuaternion : "";
-    if (serialized) {
-      try {
-        return quaternionNormalize(JSON.parse(serialized), state.constellationTargetQuaternion);
-      } catch (_) {}
-    }
-
-    return state.constellationTargetQuaternion.slice();
-  }
-
-  function readReducedMotion(frame) {
-    const mediaReduced =
-      globalThis.matchMedia &&
-      globalThis.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-    state.reducedMotion = Boolean(frame && frame.reducedMotion) || Boolean(mediaReduced);
-  }
-
-  function resize() {
-    const rect = state.canvas.getBoundingClientRect();
-    const lowPower =
-      rect.width <= QUALITY.atmosphereReductionWidthPx ||
-      (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4);
-
-    const cap = lowPower
-      ? QUALITY.lowPowerDevicePixelRatioCap
-      : QUALITY.normalDevicePixelRatioCap;
-
-    const pixelRatio = Math.min(globalThis.devicePixelRatio || 1, cap);
-    const width = Math.max(1, Math.floor(rect.width * pixelRatio));
-    const height = Math.max(1, Math.floor(rect.height * pixelRatio));
-
-    if (state.canvas.width !== width || state.canvas.height !== height) {
-      state.canvas.width = width;
-      state.canvas.height = height;
-    }
-
-    state.cssWidth = Math.max(1, rect.width);
-    state.cssHeight = Math.max(1, rect.height);
-    state.width = width;
-    state.height = height;
-    state.pixelRatio = pixelRatio;
-
-    state.gl.viewport(0, 0, width, height);
-  }
-
-  function resizeAtmosphere() {
-    if (!state.atmosphereCanvas || !state.atmosphereContext) {
-      return;
-    }
-
-    const ratio = Math.min(state.pixelRatio, 1.5);
-    const width = Math.max(1, Math.floor(state.cssWidth * ratio));
-    const height = Math.max(1, Math.floor(state.cssHeight * ratio));
-
-    if (state.atmosphereCanvas.width !== width || state.atmosphereCanvas.height !== height) {
-      state.atmosphereCanvas.width = width;
-      state.atmosphereCanvas.height = height;
-      state.atmosphereCanvas.style.width = `${state.cssWidth}px`;
-      state.atmosphereCanvas.style.height = `${state.cssHeight}px`;
-      state.atmosphereContext.setTransform(ratio, 0, 0, ratio, 0, 0);
-      state.atmosphere.initialized = false;
-    }
-  }
-
-  function buildAtmosphereStars() {
-    const reduced = state.cssWidth <= QUALITY.atmosphereReductionWidthPx;
-    const count = reduced ? 34 : 78;
-
-    if (!state.atmosphere.initialized || state.atmosphere.stars.length !== count) {
-      state.atmosphere.stars = Array.from({ length: count }, (_, index) => ({
-        x: (Math.sin(index * 47.17) * 0.5 + 0.5) * state.cssWidth,
-        y: (Math.sin(index * 19.31 + 1.8) * 0.5 + 0.5) * state.cssHeight,
-        radius: 0.45 + (index % 5) * 0.16,
-        alpha: 0.18 + (index % 7) * 0.055
-      }));
-
-      state.atmosphere.initialized = true;
-    }
-  }
-
-  function drawAtmosphere() {
-    if (!state.atmosphereContext) {
-      return;
-    }
-
-    const context = state.atmosphereContext;
-    const width = state.cssWidth;
-    const height = state.cssHeight;
-
-    buildAtmosphereStars();
-
-    context.clearRect(0, 0, width, height);
-    context.save();
-
-    state.atmosphere.stars.forEach((star, index) => {
-      const twinkle = state.reducedMotion
-        ? 1
-        : 0.78 + Math.sin(state.time * 0.32 + index * 0.73) * 0.22;
-
-      context.beginPath();
-      context.fillStyle = `rgba(210, 232, 255, ${Math.max(0, star.alpha * twinkle)})`;
-      context.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
-      context.fill();
-    });
-
-    context.strokeStyle = "rgba(143, 187, 224, 0.10)";
-    context.lineWidth = 1;
-
-    const orientationVector = quaternionRotateVector(state.constellationQuaternion, [0, 1, 0]);
-    const ellipseRotation = clamp(orientationVector[0] * 0.34, -0.34, 0.34);
-    const verticalCompression = 0.82 + Math.abs(orientationVector[2]) * 0.18;
-
-    context.beginPath();
-    context.ellipse(
-      width * 0.5,
-      height * 0.5,
-      width * 0.29,
-      height * 0.20 * verticalCompression,
-      ellipseRotation,
-      0,
-      Math.PI * 2
-    );
-    context.stroke();
-
-    context.beginPath();
-    context.ellipse(
-      width * 0.5,
-      height * 0.5,
-      width * 0.36,
-      height * 0.25 * verticalCompression,
-      -ellipseRotation * 0.72,
-      0,
-      Math.PI * 2
-    );
-    context.stroke();
-
-    context.restore();
   }
 
   function setTarget(node, values) {
@@ -1562,10 +1534,10 @@
     return values;
   }
 
-  function updateQuaternionTargets(deltaTime) {
+  function syncQuaternionTargets(deltaTime) {
     const frameConstellationQuaternion = constellationQuaternionFromFrame(state.frame);
 
-    if (state.pointer && state.pointer.dragging && state.pointer.gestureScope === "orbit") {
+    if (state.pointer && state.pointer.dragging && state.pointer.gestureScope === "constellation") {
       state.constellationTargetQuaternion = state.pointer.currentQuaternion.slice();
       state.constellationQuaternion = state.pointer.currentQuaternion.slice();
     } else {
@@ -1581,17 +1553,49 @@
         );
       }
     }
+
+    WINGS.forEach(wing => {
+      const frameQuaternion = clusterQuaternionFromFrame(state.frame, wing);
+
+      if (
+        state.pointer &&
+        state.pointer.dragging &&
+        state.pointer.gestureScope === "cluster" &&
+        state.pointer.wing === wing
+      ) {
+        state.clusterTargetQuaternions.set(wing, state.pointer.currentQuaternion.slice());
+        state.clusterQuaternions.set(wing, state.pointer.currentQuaternion.slice());
+        return;
+      }
+
+      state.clusterTargetQuaternions.set(wing, frameQuaternion.slice());
+
+      const current = state.clusterQuaternions.get(wing) || frameQuaternion.slice();
+
+      if (state.reducedMotion) {
+        state.clusterQuaternions.set(wing, frameQuaternion.slice());
+        return;
+      }
+
+      state.clusterQuaternions.set(
+        wing,
+        quaternionSlerp(
+          current,
+          frameQuaternion,
+          Math.min(1, deltaTime * GESTURE.settleSpeed)
+        )
+      );
+    });
   }
 
   function updateTargets() {
     const frame = state.frame;
-    const clusterOpen =
-      frame.state === CONTROLLER_STATES.CLUSTER_OPEN ||
-      frame.state === CONTROLLER_STATES.INFO_OPEN;
+    const activeWing =
+      normalizeWing(frame.selectedCardinal || frame.activeClusterWing || frame.orbitFocus) ||
+      "north";
 
-    const activeWing = normalizeWing(
-      frame.selectedCardinal || frame.activeClusterWing || frame.orbitFocus
-    ) || "north";
+    const clusterOpen =
+      frame.state === "CLUSTER_OPEN" || frame.state === "ROOM_SELECTED";
 
     state.visualPrimaryWing = nearestPrimaryWing(state.constellationQuaternion);
 
@@ -1615,60 +1619,136 @@
       });
     });
 
-    const coinPositions = new Map();
+    if (!clusterOpen) {
+      WINGS.forEach(wing => {
+        const node = state.registry.get(wing);
 
-    WINGS.forEach(wing => {
-      const node = state.registry.get(wing);
-      if (!node) {
-        return;
-      }
+        if (!node) {
+          return;
+        }
 
-      const sphere = sphericalCoinPosition(wing);
-      coinPositions.set(wing, sphere);
+        const sphere = sphericalCardinalPosition(wing);
+        const primary = wing === state.visualPrimaryWing;
+        const committedPrimary = wing === frame.orbitFocus;
 
-      const primary = wing === state.visualPrimaryWing;
-      const selected = wing === normalizeWing(frame.selectedCardinal);
-      const committedPrimary = wing === normalizeWing(frame.orbitFocus);
+        node.visible = true;
+        node.depthScore = sphere.depth;
+        node.primaryScore = sphere.primary;
+        node.material = primary
+          ? "CARDINAL_FOCUSED"
+          : committedPrimary
+            ? "CARDINAL_SELECTED"
+            : "CARDINAL_IDLE";
+
+        const depthScale = 0.72 + sphere.depth * 0.42;
+        const primaryLift = primary ? 1.14 : 1;
+        const ordinaryScale =
+          (primary
+            ? QUALITY.focusedCardinalScale
+            : committedPrimary
+              ? QUALITY.cardinalScale * 1.06
+              : QUALITY.cardinalScale) *
+          depthScale *
+          primaryLift;
+
+        const prominence = 0.34 + sphere.depth * 0.46 + sphere.primary * 0.30;
+        const halo = 0.24 + sphere.depth * 0.34 + sphere.primary * 0.54;
+        const rotationSpeed = primary ? 0.16 : 0.08 + sphere.depth * 0.05;
+        const float = primary ? 0.012 : 0.004 + sphere.depth * 0.005;
+
+        setTarget(
+          node,
+          withUniformScale(
+            {
+              x: sphere.x,
+              y: sphere.y,
+              z: sphere.z,
+              prominence: clamp(prominence, 0.10, 1.12),
+              halo: clamp(halo, 0, 1.24),
+              rotationSpeed,
+              float
+            },
+            ordinaryScale
+          )
+        );
+      });
+
+      state.camera.nextEye = [
+        0,
+        0.76,
+        state.cssWidth / Math.max(1, state.cssHeight) < QUALITY.mobileAspectThreshold
+          ? 7.10
+          : 6.05
+      ];
+
+      state.camera.nextTarget = [0, 0.03, 0.06];
+      return;
+    }
+
+    const clusterQuaternion =
+      state.clusterQuaternions.get(activeWing) || [0, 0, 0, 1];
+
+    const primaryRoom = nearestPrimaryRoom(activeWing, clusterQuaternion);
+
+    state.visualPrimaryRooms.set(activeWing, primaryRoom);
+
+    const activeRooms = activeRoomNodes(activeWing);
+
+    activeRooms.forEach(node => {
+      const sphere = sphericalRoomPosition(node, clusterQuaternion);
+      const selected = frame.selectedRoom === node.id;
+      const primary = primaryRoom === node.id;
 
       node.visible = true;
       node.depthScore = sphere.depth;
       node.primaryScore = sphere.primary;
       node.material = selected
-        ? "COIN_SELECTED"
+        ? "ROOM_SELECTED"
         : primary
-          ? "COIN_FOCUSED"
-          : committedPrimary
-            ? "COIN_FOCUSED"
-            : "COIN_IDLE";
+          ? "ROOM_PRIMARY"
+          : "ROOM_IDLE";
 
-      const depthScale = 0.72 + sphere.depth * 0.42;
-      const primaryLift = primary ? 1.12 : 1;
+      const depthScale = 0.70 + sphere.depth * 0.38;
+      const primaryLift = primary ? 1.14 : 1;
       const selectedLift = selected ? 1.08 : 1;
 
       const ordinaryScale =
         (selected
-          ? QUALITY.selectedCoinScale
-          : primary || committedPrimary
-            ? QUALITY.focusedCoinScale
-            : QUALITY.coinScale) *
+          ? QUALITY.selectedRoomScale
+          : primary
+            ? QUALITY.primaryRoomScale
+            : QUALITY.roomScale) *
         depthScale *
         primaryLift *
         selectedLift;
 
-      const prominence = 0.34 + sphere.depth * 0.46 + sphere.primary * 0.30 + (selected ? 0.10 : 0);
-      const halo = 0.24 + sphere.depth * 0.34 + sphere.primary * 0.54 + (selected ? 0.10 : 0);
-      const rotationSpeed = primary || selected ? 0.16 : 0.08 + sphere.depth * 0.05;
-      const float = primary || selected ? 0.012 : 0.004 + sphere.depth * 0.005;
+      const prominence =
+        0.30 +
+        sphere.depth * 0.48 +
+        sphere.primary * 0.28 +
+        (selected ? 0.08 : 0);
+
+      const halo =
+        0.20 +
+        sphere.depth * 0.30 +
+        sphere.primary * 0.44 +
+        (selected ? 0.18 : 0);
+
+      const rotationSpeed =
+        primary || selected ? 0.13 : 0.07 + sphere.depth * 0.04;
+
+      const float =
+        primary || selected ? 0.012 : 0.004 + sphere.depth * 0.004;
 
       setTarget(
         node,
         withUniformScale(
           {
             x: sphere.x,
-            y: sphere.y,
-            z: sphere.z,
-            prominence: clamp(prominence, 0.10, 1.16),
-            halo: clamp(halo, 0, 1.28),
+            y: sphere.y - 0.08,
+            z: sphere.z + 0.18,
+            prominence: clamp(prominence, 0.10, 1.14),
+            halo: clamp(halo, 0, 1.12),
             rotationSpeed,
             float
           },
@@ -1677,93 +1757,19 @@
       );
     });
 
-    if (clusterOpen && coinPositions.has(activeWing)) {
-      const selectedRoomId = normalizeRoomId(frame.selectedRoom);
-      const framePrimaryRoom = frame.cluster ? frame.cluster.primaryRoom : "";
-      const localPrimaryRoom = selectedRoomId || framePrimaryRoom || state.roomPrimaryByWing.get(activeWing) || "";
-      if (localPrimaryRoom) {
-        state.roomPrimaryByWing.set(activeWing, localPrimaryRoom);
-      }
-
-      const coinPosition = coinPositions.get(activeWing);
-      const roomElements = roomElementsForWing(activeWing);
-
-      roomElements.forEach((element, roomIndex) => {
-        const roomId = normalizeRoomId(element.dataset.roomId);
-        const node = state.registry.get(roomId);
-
-        if (!node) {
-          return;
-        }
-
-        node.sphereVector = SPHERE.localStars.anchors[activeWing][roomIndex].slice();
-
-        const local = localRoomPosition(node, coinPosition);
-        const selected = selectedRoomId === node.id;
-        const primary = node.id === (state.roomPrimaryByWing.get(activeWing) || "");
-
-        node.visible = true;
-        node.depthScore = local.depth;
-        node.primaryScore = local.primary;
-        node.material = selected
-          ? "ROOM_SELECTED"
-          : primary
-            ? "ROOM_PRIMARY"
-            : "ROOM_IDLE";
-
-        const depthScale = 0.86 + local.depth * 0.18;
-        const primaryLift = primary ? 1.10 : 1;
-        const selectedLift = selected ? 1.06 : 1;
-
-        const ordinaryScale =
-          (selected
-            ? QUALITY.selectedRoomScale
-            : primary
-              ? QUALITY.primaryRoomScale
-              : QUALITY.roomScale) *
-          depthScale *
-          primaryLift *
-          selectedLift;
-
-        const prominence =
-          0.48 +
-          local.depth * 0.18 +
-          (primary ? 0.14 : 0) +
-          (selected ? 0.12 : 0);
-
-        const halo =
-          0.28 +
-          local.depth * 0.16 +
-          (primary ? 0.12 : 0) +
-          (selected ? 0.14 : 0);
-
-        setTarget(
-          node,
-          withUniformScale(
-            {
-              x: local.x,
-              y: local.y,
-              z: local.z,
-              prominence: clamp(prominence, 0.22, 1.12),
-              halo: clamp(halo, 0, 1.08),
-              rotationSpeed: primary || selected ? 0.13 : 0.09,
-              float: primary || selected ? 0.010 : 0.006
-            },
-            ordinaryScale
-          )
-        );
-      });
-    }
-
     state.camera.nextEye = [
       0,
-      0.76,
-      state.cssWidth / Math.max(1, state.cssHeight) < QUALITY.mobileAspectThreshold ? 7.20 : 6.18
+      0.60,
+      state.cssWidth / Math.max(1, state.cssHeight) < QUALITY.mobileAspectThreshold
+        ? 7.42
+        : 5.92
     ];
 
-    state.camera.nextTarget = clusterOpen
-      ? [0, 0.04, 0.12]
-      : [0, 0.03, 0.06];
+    state.camera.nextTarget = [0, 0.02, 0.06];
+  }
+
+  function lerp(a, b, amount) {
+    return a + (b - a) * amount;
   }
 
   function updateTransforms(deltaTime) {
@@ -1773,7 +1779,18 @@
       const current = node.transform;
       const target = node.target;
 
-      ["x", "y", "z", "sx", "sy", "sz", "prominence", "halo", "rotationSpeed", "float"].forEach(key => {
+      [
+        "x",
+        "y",
+        "z",
+        "sx",
+        "sy",
+        "sz",
+        "prominence",
+        "halo",
+        "rotationSpeed",
+        "float"
+      ].forEach(key => {
         current[key] = lerp(current[key], target[key], speed);
       });
 
@@ -1789,6 +1806,7 @@
         Math.sin(state.time * 0.42 + node.phase) *
         QUALITY.maxYaw *
         Math.max(0.35, current.prominence);
+
       current.rx =
         Math.sin(state.time * 0.31 + node.phase * 0.73) *
         QUALITY.maxPitch *
@@ -1796,16 +1814,27 @@
     });
 
     for (let index = 0; index < 3; index += 1) {
-      state.camera.eye[index] = lerp(state.camera.eye[index], state.camera.nextEye[index], speed);
-      state.camera.target[index] = lerp(state.camera.target[index], state.camera.nextTarget[index], speed);
+      state.camera.eye[index] = lerp(
+        state.camera.eye[index],
+        state.camera.nextEye[index],
+        speed
+      );
+
+      state.camera.target[index] = lerp(
+        state.camera.target[index],
+        state.camera.nextTarget[index],
+        speed
+      );
     }
   }
 
   function modelMatrix(node, haloPass) {
     const transform = node.transform;
+
     const floatY = state.reducedMotion
       ? 0
-      : Math.sin(state.time * 0.95 + node.roomIndex * 0.72 + node.phase) * transform.float;
+      : Math.sin(state.time * 0.95 + node.roomIndex * 0.72 + node.phase) *
+        transform.float;
 
     const haloScale = haloPass ? 1 + transform.halo * 0.10 : 1;
 
@@ -1854,13 +1883,36 @@
     };
   }
 
-  function syncSemanticCoin(node, element, screen) {
+  function semanticElementForNode(node) {
+    if (node.type === NODE_TYPES.CARDINAL) {
+      return qs(`[data-archcoin-coin][data-wing="${node.wing}"]`, state.semanticLayer);
+    }
+
+    if (node.type === NODE_TYPES.ROOM) {
+      return state.roomProxies.get(node.id) || null;
+    }
+
+    return null;
+  }
+
+  function syncCardinalSemanticNode(node, element, screen) {
+    const primaryLabel = element.querySelector("span:first-child");
+    const secondaryLabel = element.querySelector("span:last-child");
+
+    if (primaryLabel) {
+      primaryLabel.textContent = node.label;
+    }
+
+    if (secondaryLabel) {
+      secondaryLabel.textContent = node.short;
+    }
+
     const primary = node.wing === state.visualPrimaryWing;
-    const selected = normalizeWing(state.frame.selectedCardinal) === node.wing;
+    const selected = state.frame.selectedCardinal === node.wing;
     const depth = clamp(node.depthScore, 0, 1);
 
-    const scale = 0.70 + depth * 0.24 + (primary ? 0.14 : 0) + (selected ? 0.08 : 0);
-    const opacity = clamp(0.36 + depth * 0.46 + (primary ? 0.10 : 0) + (selected ? 0.10 : 0), 0.18, 1);
+    const scale = 0.64 + depth * 0.22 + (primary ? 0.18 : 0);
+    const opacity = clamp(0.22 + depth * 0.54 + (primary ? 0.24 : 0), 0.10, 1);
 
     element.dataset.selected = selected ? "true" : "false";
     element.dataset.primary = primary ? "true" : "false";
@@ -1878,79 +1930,118 @@
     element.style.bottom = "auto";
     element.style.transform = `translate(-50%, -50%) scale(${scale})`;
     element.style.opacity = String(opacity);
-    element.style.pointerEvents = node.transform.prominence >= 0.12 ? "auto" : "none";
-    element.style.zIndex = String(14 + Math.round(depth * 80) + (primary ? 20 : 0) + (selected ? 20 : 0));
 
     const interactive = node.transform.prominence >= 0.12;
+
+    element.style.pointerEvents = interactive ? "auto" : "none";
     element.setAttribute("aria-hidden", interactive ? "false" : "true");
     element.tabIndex = interactive ? 0 : -1;
+
+    element.style.zIndex = String(
+      10 + Math.round(depth * 80) + (primary ? 20 : 0)
+    );
   }
 
-  function syncSemanticRoom(node, element, screen) {
+  function syncRoomProxyNode(node, element, screen) {
+    applyNonvisualProxyPresentation(element);
+    element.textContent = "";
+    element.style.left = `${screen.x}px`;
+    element.style.top = `${screen.y}px`;
+    element.style.right = "auto";
+    element.style.bottom = "auto";
+    element.style.transform = "translate(-50%, -50%)";
+    element.style.opacity = "1";
+    element.style.zIndex = String(
+      10 + Math.round(node.depthScore * 80) + (node.primaryScore > 0.92 ? 20 : 0)
+    );
+    element.style.pointerEvents = "none";
+
+    const keyboardAvailable = node.visible && node.transform.prominence >= 0.18;
+
+    element.setAttribute("aria-hidden", keyboardAvailable ? "false" : "true");
+    element.tabIndex = keyboardAvailable ? 0 : -1;
+
+    const selected = state.frame.selectedRoom === node.id;
     const activeWing = state.frame.cluster ? state.frame.cluster.wing : "";
-    const primaryRoom = activeWing ? state.roomPrimaryByWing.get(activeWing) || "" : "";
-    const selected = normalizeRoomId(state.frame.selectedRoom) === node.id;
+    const primaryRoom = activeWing ? state.visualPrimaryRooms.get(activeWing) : "";
     const primary = node.id === primaryRoom;
-    const depth = clamp(node.depthScore, 0, 1);
 
     element.dataset.selected = selected ? "true" : "false";
     element.dataset.primary = primary ? "true" : "false";
-    element.dataset.depth = depth.toFixed(4);
+    element.dataset.depth = clamp(node.depthScore, 0, 1).toFixed(4);
 
     if (selected || primary) {
       element.setAttribute("aria-current", "true");
     } else {
       element.removeAttribute("aria-current");
     }
-
-    element.style.left = `${screen.x}px`;
-    element.style.top = `${screen.y}px`;
-    element.style.right = "auto";
-    element.style.bottom = "auto";
-    element.style.transform = `translate(-50%, -50%) scale(${0.86 + depth * 0.10 + (primary ? 0.10 : 0) + (selected ? 0.08 : 0)})`;
-    element.style.opacity = String(clamp(0.44 + depth * 0.30 + (primary ? 0.10 : 0) + (selected ? 0.12 : 0), 0, 1));
-    element.style.zIndex = String(20 + Math.round(depth * 80) + (primary ? 24 : 0) + (selected ? 24 : 0));
-
-    const clusterVisible =
-      state.frame.state === CONTROLLER_STATES.CLUSTER_OPEN ||
-      state.frame.state === CONTROLLER_STATES.INFO_OPEN;
-
-    const interactive = clusterVisible && node.visible && node.transform.prominence >= 0.18;
-    element.style.pointerEvents = interactive ? "auto" : "none";
-    element.setAttribute("aria-hidden", interactive ? "false" : "true");
-    element.tabIndex = interactive ? 0 : -1;
   }
 
-  function hideSemanticNode(element) {
+  function hideSemanticNode(node, element) {
+    if (node.type === NODE_TYPES.ROOM) {
+      applyNonvisualProxyPresentation(element);
+    }
+
     element.style.opacity = "0";
     element.style.pointerEvents = "none";
     element.setAttribute("aria-hidden", "true");
     element.tabIndex = -1;
   }
 
+  function syncSemanticNode(node) {
+    const element = semanticElementForNode(node);
+
+    if (!element) {
+      return;
+    }
+
+    const screen =
+      node.visible && node.transform.prominence >= 0.08 ? projectNode(node) : null;
+
+    if (!screen) {
+      hideSemanticNode(node, element);
+      return;
+    }
+
+    if (node.type === NODE_TYPES.ROOM) {
+      syncRoomProxyNode(node, element, screen);
+      return;
+    }
+
+    syncCardinalSemanticNode(node, element, screen);
+  }
+
   function syncSemanticObjects() {
-    state.registry.forEach(node => {
-      const element = node.semantic;
-      if (!element) {
-        return;
-      }
+    state.registry.forEach(syncSemanticNode);
+  }
 
-      const screen =
-        node.visible && node.transform.prominence >= 0.08
-          ? projectNode(node)
-          : null;
+  function resize() {
+    const rect = state.canvas.getBoundingClientRect();
 
-      if (!screen) {
-        hideSemanticNode(element);
-        return;
-      }
+    const lowPower =
+      navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4;
 
-      if (node.type === NODE_TYPES.ROOM) {
-        syncSemanticRoom(node, element, screen);
-      } else {
-        syncSemanticCoin(node, element, screen);
-      }
-    });
+    const cap = lowPower
+      ? QUALITY.lowPowerDevicePixelRatioCap
+      : QUALITY.normalDevicePixelRatioCap;
+
+    const pixelRatio = Math.min(globalThis.devicePixelRatio || 1, cap);
+
+    const width = Math.max(1, Math.floor(rect.width * pixelRatio));
+    const height = Math.max(1, Math.floor(rect.height * pixelRatio));
+
+    if (state.canvas.width !== width || state.canvas.height !== height) {
+      state.canvas.width = width;
+      state.canvas.height = height;
+    }
+
+    state.cssWidth = Math.max(1, rect.width);
+    state.cssHeight = Math.max(1, rect.height);
+    state.width = width;
+    state.height = height;
+    state.pixelRatio = pixelRatio;
+
+    state.gl.viewport(0, 0, width, height);
   }
 
   function bindAttrib(gl, buffer, location, size) {
@@ -1961,7 +2052,7 @@
 
   function applyMaterial(materialName, prominence, haloStrength) {
     const gl = state.gl;
-    const material = MATERIALS[materialName] || MATERIALS.COIN_IDLE;
+    const material = MATERIALS[materialName] || MATERIALS.CARDINAL_IDLE;
     const bloomDisabled = state.cssWidth <= QUALITY.bloomDisableWidthPx;
 
     gl.uniform1f(state.uniforms.twinkle, state.reducedMotion ? 0 : 1);
@@ -1972,7 +2063,10 @@
     gl.uniform1f(state.uniforms.emissive, material.emissive);
     gl.uniform1f(state.uniforms.alpha, material.alpha);
     gl.uniform1f(state.uniforms.contrast, material.contrast);
-    gl.uniform1f(state.uniforms.haloStrength, bloomDisabled ? 0 : material.halo * haloStrength);
+    gl.uniform1f(
+      state.uniforms.haloStrength,
+      bloomDisabled ? 0 : material.halo * haloStrength
+    );
     gl.uniform1f(state.uniforms.saturation, 1);
   }
 
@@ -1982,6 +2076,7 @@
     }
 
     const mesh = state.meshes.get(node.meshKey);
+
     if (!mesh) {
       return 0;
     }
@@ -1996,9 +2091,16 @@
 
     gl.uniformMatrix4fv(state.uniforms.model, false, new Float32Array(model));
     gl.uniformMatrix4fv(state.uniforms.view, false, new Float32Array(state.view));
-    gl.uniformMatrix4fv(state.uniforms.projection, false, new Float32Array(state.projection));
-    gl.uniformMatrix3fv(state.uniforms.normalMatrix, false, new Float32Array(normalMatrix3(model)));
-
+    gl.uniformMatrix4fv(
+      state.uniforms.projection,
+      false,
+      new Float32Array(state.projection)
+    );
+    gl.uniformMatrix3fv(
+      state.uniforms.normalMatrix,
+      false,
+      new Float32Array(normalMatrix3(model))
+    );
     gl.uniform1f(state.uniforms.time, state.time);
     gl.uniform1f(state.uniforms.haloPass, haloPass ? 1 : 0);
     gl.uniform1f(state.uniforms.haloExpansion, 0.075);
@@ -2006,11 +2108,8 @@
     applyMaterial(node.material, node.transform.prominence, node.transform.halo);
 
     gl.drawArrays(gl.TRIANGLES, 0, mesh.vertexCount);
-    return 1;
-  }
 
-  function sortNodesForDraw(nodes) {
-    return nodes.sort((a, b) => a.transform.z - b.transform.z);
+    return 1;
   }
 
   function pointerDistance(pointer, clientX, clientY) {
@@ -2046,20 +2145,63 @@
     const releaseDuration = Math.max(1, endTime - releaseStart.time);
     const releaseVelocity = releaseDistance / releaseDuration;
 
+    let pathLength = 0;
+    let previous = { x: pointer.startX, y: pointer.startY };
+
+    pointer.samples.forEach(sample => {
+      pathLength += Math.hypot(sample.x - previous.x, sample.y - previous.y);
+      previous = sample;
+    });
+
+    pathLength += Math.hypot(endX - previous.x, endY - previous.y);
+
+    const pathEfficiency = pathLength > 0 ? distance / pathLength : 1;
+
+    const absX = Math.abs(dx);
+    const absY = Math.abs(dy);
+
+    const directionalRatio =
+      Math.max(absX, absY) / Math.max(1, Math.min(absX, absY));
+
+    const lastSample = pointer.samples.length
+      ? pointer.samples[pointer.samples.length - 1]
+      : null;
+
+    const pauseBeforeRelease = lastSample
+      ? Math.max(0, endTime - lastSample.time)
+      : durationMs;
+
     return {
       dx,
       dy,
       distance,
       durationMs,
       averageVelocity,
-      releaseVelocity
+      releaseVelocity,
+      pathLength,
+      pathEfficiency,
+      directionalRatio,
+      pauseBeforeRelease
     };
+  }
+
+  function isQuickClusterFlick(metrics) {
+    return (
+      metrics.durationMs <= GESTURE.flickMaximumDurationMs &&
+      metrics.distance >= GESTURE.flickMinimumDistancePx &&
+      metrics.averageVelocity >= GESTURE.flickMinimumAverageVelocityPxPerMs &&
+      metrics.releaseVelocity >= GESTURE.flickMinimumReleaseVelocityPxPerMs &&
+      metrics.directionalRatio >= GESTURE.flickMinimumDirectionalRatio &&
+      metrics.pauseBeforeRelease <= GESTURE.flickMaximumPauseBeforeReleaseMs &&
+      1 - metrics.pathEfficiency <= GESTURE.flickMaximumPathEfficiencyLoss
+    );
   }
 
   function findHitAtClientPoint(clientX, clientY, allowedTypes = null) {
     const rect = state.scene.getBoundingClientRect();
     const x = clientX - rect.left;
     const y = clientY - rect.top;
+    const baseRadius = Math.max(42, Math.min(82, rect.width * 0.092));
 
     let best = null;
     let bestScore = Infinity;
@@ -2074,15 +2216,12 @@
       }
 
       const screen = projectNode(node);
+
       if (!screen) {
         return;
       }
 
-      const baseRadius = node.type === NODE_TYPES.COIN
-        ? QUALITY.coinSemanticBaseRadiusPx
-        : QUALITY.roomSemanticBaseRadiusPx;
-
-      const depthBonus = node.depthScore * 12;
+      const depthBonus = node.depthScore * 16;
       const radius = baseRadius + depthBonus;
       const distance = Math.hypot(x - screen.x, y - screen.y);
 
@@ -2090,7 +2229,7 @@
         return;
       }
 
-      const depthPenalty = (1 - node.depthScore) * 8;
+      const depthPenalty = (1 - node.depthScore) * 12;
       const score = distance + depthPenalty;
 
       if (score < bestScore) {
@@ -2107,19 +2246,19 @@
       return null;
     }
 
-    return target.closest(
-      [
-        "[data-archcoin-return-to-orbit]",
-        "[data-archcoin-return-to-cluster]",
-        "[data-archcoin-lens-tab]",
-        "[data-archcoin-panel] a",
-        "[data-archcoin-panel] button:not([data-archcoin-cardinal]):not([data-archcoin-room])",
-        "summary",
-        "input",
-        "textarea",
-        "select"
-      ].join(", ")
-    );
+    return target.closest([
+      "[data-archcoin-enter]",
+      "[data-archcoin-return-to-orbit]",
+      "[data-archcoin-read-more]",
+      "[data-archcoin-lens-tab]",
+      "[data-archcoin-lens-panel] a",
+      "[data-archcoin-panel] a",
+      "[data-archcoin-panel] button",
+      "summary",
+      "input",
+      "textarea",
+      "select"
+    ].join(", "));
   }
 
   function classifyPointerTerritory(event) {
@@ -2145,43 +2284,51 @@
       };
     }
 
-    const semanticCoin =
+    const semanticCardinal =
       event.target && event.target.closest
-        ? event.target.closest("[data-archcoin-cardinal]")
+        ? event.target.closest("[data-archcoin-coin]")
         : null;
 
-    if (semanticCoin) {
+    if (semanticCardinal) {
       return {
-        territory: POINTER_TERRITORIES.RENDERED_COIN,
-        nodeId: normalizeWing(semanticCoin.dataset.wing)
+        territory: POINTER_TERRITORIES.RENDERED_CARDINAL,
+        nodeId: normalizeWing(
+          semanticCardinal.dataset.wing || semanticCardinal.dataset.coinId
+        )
       };
     }
 
-    const semanticRoom =
+    const roomProxy =
       event.target && event.target.closest
-        ? event.target.closest("[data-archcoin-room]")
+        ? event.target.closest("[data-archcoin-room-proxy]")
         : null;
 
-    if (semanticRoom) {
+    if (roomProxy) {
       return {
         territory: POINTER_TERRITORIES.RENDERED_ROOM,
-        nodeId: normalizeRoomId(semanticRoom.dataset.roomId)
+        nodeId: normalizeRoomId(roomProxy.dataset.roomId)
       };
     }
 
-    const roomHit = findHitAtClientPoint(event.clientX, event.clientY, [NODE_TYPES.ROOM]);
+    const cardinalHit = findHitAtClientPoint(event.clientX, event.clientY, [
+      NODE_TYPES.CARDINAL
+    ]);
+
+    if (cardinalHit) {
+      return {
+        territory: POINTER_TERRITORIES.RENDERED_CARDINAL,
+        nodeId: cardinalHit.id
+      };
+    }
+
+    const roomHit = findHitAtClientPoint(event.clientX, event.clientY, [
+      NODE_TYPES.ROOM
+    ]);
+
     if (roomHit) {
       return {
         territory: POINTER_TERRITORIES.RENDERED_ROOM,
         nodeId: roomHit.id
-      };
-    }
-
-    const coinHit = findHitAtClientPoint(event.clientX, event.clientY, [NODE_TYPES.COIN]);
-    if (coinHit) {
-      return {
-        territory: POINTER_TERRITORIES.RENDERED_COIN,
-        nodeId: coinHit.id
       };
     }
 
@@ -2192,66 +2339,140 @@
   }
 
   function requestControllerOrbitBegin(pointer) {
+    const api = globalThis.DGB_ARCHCOIN_CONTROLLER;
+
     return Boolean(
-      state.controller &&
-      typeof state.controller.beginOrbitGesture === "function" &&
-      state.controller.beginOrbitGesture({
+      api &&
+      typeof api.beginOrbitGesture === "function" &&
+      api.beginOrbitGesture({
         quaternion: pointer.startQuaternion,
         primaryWing: state.visualPrimaryWing,
-        source: "crystals-pointer"
+        source: "archcoin-crystals-pointer"
       }) !== false
     );
   }
 
   function requestControllerOrbitPreview(quaternion, primaryWing) {
+    const api = globalThis.DGB_ARCHCOIN_CONTROLLER;
+
     return Boolean(
-      state.controller &&
-      typeof state.controller.requestOrbitPreview === "function" &&
-      state.controller.requestOrbitPreview({
+      api &&
+      typeof api.requestOrbitPreview === "function" &&
+      api.requestOrbitPreview({
         quaternion,
         primaryWing,
-        source: "crystals-drag"
+        source: "archcoin-crystals-drag"
       }) !== false
     );
   }
 
   function requestControllerOrbitCommit(quaternion, primaryWing) {
+    const api = globalThis.DGB_ARCHCOIN_CONTROLLER;
+
     return Boolean(
-      state.controller &&
-      typeof state.controller.requestOrbitCommit === "function" &&
-      state.controller.requestOrbitCommit({
+      api &&
+      typeof api.requestOrbitCommit === "function" &&
+      api.requestOrbitCommit({
         quaternion,
         primaryWing,
-        source: "crystals-release-snap"
+        source: "archcoin-crystals-release-snap"
       }) !== false
     );
   }
 
   function requestControllerOrbitCancel(reason) {
+    const api = globalThis.DGB_ARCHCOIN_CONTROLLER;
+
     return Boolean(
-      state.controller &&
-      typeof state.controller.requestOrbitCancel === "function" &&
-      state.controller.requestOrbitCancel(reason) !== false
+      api &&
+      typeof api.requestOrbitCancel === "function" &&
+      api.requestOrbitCancel(reason) !== false
+    );
+  }
+
+  function requestControllerClusterBegin(pointer) {
+    const api = globalThis.DGB_ARCHCOIN_CONTROLLER;
+
+    return Boolean(
+      api &&
+      typeof api.beginClusterGesture === "function" &&
+      api.beginClusterGesture(pointer.wing, {
+        quaternion: pointer.startQuaternion,
+        primaryRoom: state.visualPrimaryRooms.get(pointer.wing) || "",
+        source: "archcoin-crystals-cluster-pointer"
+      }) !== false
+    );
+  }
+
+  function requestControllerClusterPreview(wing, quaternion, primaryRoom) {
+    const api = globalThis.DGB_ARCHCOIN_CONTROLLER;
+
+    return Boolean(
+      api &&
+      typeof api.requestClusterPreview === "function" &&
+      api.requestClusterPreview(wing, {
+        quaternion,
+        primaryRoom,
+        source: "archcoin-crystals-cluster-drag"
+      }) !== false
+    );
+  }
+
+  function requestControllerClusterCommit(wing, quaternion, primaryRoom) {
+    const api = globalThis.DGB_ARCHCOIN_CONTROLLER;
+
+    return Boolean(
+      api &&
+      typeof api.requestClusterCommit === "function" &&
+      api.requestClusterCommit(wing, {
+        quaternion,
+        primaryRoom,
+        source: "archcoin-crystals-cluster-release-snap"
+      }) !== false
+    );
+  }
+
+  function requestControllerClusterCancel(wing, reason) {
+    const api = globalThis.DGB_ARCHCOIN_CONTROLLER;
+
+    return Boolean(
+      api &&
+      typeof api.requestClusterCancel === "function" &&
+      api.requestClusterCancel(wing, reason) !== false
+    );
+  }
+
+  function requestControllerReturnToConstellation() {
+    const api = globalThis.DGB_ARCHCOIN_CONTROLLER;
+
+    return Boolean(
+      api &&
+      typeof api.requestReturnToConstellation === "function" &&
+      api.requestReturnToConstellation({
+        source: "cluster-flick",
+        scrollToScene: true
+      }) !== false
     );
   }
 
   function requestNodeSelection(node, territory) {
+    const api = globalThis.DGB_ARCHCOIN_CONTROLLER;
     let available = false;
 
     if (
-      node.type === NODE_TYPES.COIN &&
-      state.controller &&
-      typeof state.controller.requestCoinSelection === "function"
+      node.type === NODE_TYPES.CARDINAL &&
+      api &&
+      typeof api.requestCardinalSelection === "function"
     ) {
-      available = state.controller.requestCoinSelection(node.wing, "crystals-tap") !== false;
+      available = api.requestCardinalSelection(node.wing) !== false;
     }
 
     if (
       node.type === NODE_TYPES.ROOM &&
-      state.controller &&
-      typeof state.controller.requestRoomSelection === "function"
+      api &&
+      typeof api.requestRoomSelection === "function"
     ) {
-      available = state.controller.requestRoomSelection(node.id, "crystals-tap") !== false;
+      available = api.requestRoomSelection(node.id) !== false;
     }
 
     emitReceipt({
@@ -2267,8 +2488,10 @@
   function dragQuaternionFromPointer(pointer, clientX, clientY) {
     const width = Math.max(1, state.cssWidth);
     const height = Math.max(1, state.cssHeight);
+
     const dx = clientX - pointer.startX;
     const dy = clientY - pointer.startY;
+
     const yaw = (dx / width) * GESTURE.radiansPerViewport;
     const pitch = (dy / height) * GESTURE.radiansPerViewport;
 
@@ -2276,17 +2499,15 @@
     const pitchQuaternion = quaternionFromAxisAngle([1, 0, 0], pitch);
 
     return quaternionNormalize(
-      quaternionMultiply(pitchQuaternion, quaternionMultiply(yawQuaternion, pointer.startQuaternion))
+      quaternionMultiply(
+        pitchQuaternion,
+        quaternionMultiply(yawQuaternion, pointer.startQuaternion)
+      )
     );
   }
 
   function handlePointerDown(event) {
     if (state.pointer) {
-      return;
-    }
-
-    if (performance.now() < state.suppressClickUntil) {
-      event.preventDefault();
       return;
     }
 
@@ -2303,7 +2524,29 @@
       return;
     }
 
-    if (!constellationCanRotate()) {
+    const frameState = state.frame ? state.frame.state : "";
+
+    const gestureScope =
+      frameState === "CONSTELLATION"
+        ? "constellation"
+        : frameState === "CLUSTER_OPEN" || frameState === "ROOM_SELECTED"
+          ? "cluster"
+          : "";
+
+    if (!gestureScope) {
+      return;
+    }
+
+    const wing =
+      gestureScope === "cluster"
+        ? normalizeWing(
+            state.frame && state.frame.cluster
+              ? state.frame.cluster.wing
+              : state.frame.selectedCardinal
+          )
+        : "";
+
+    if (gestureScope === "cluster" && !wing) {
       return;
     }
 
@@ -2311,7 +2554,12 @@
       event.currentTarget.setPointerCapture(event.pointerId);
     } catch (_) {}
 
-    const time = performance.now();
+    const startQuaternion =
+      gestureScope === "constellation"
+        ? state.constellationQuaternion.slice()
+        : (state.clusterQuaternions.get(wing) || [0, 0, 0, 1]).slice();
+
+    const now = performance.now();
 
     state.pointer = {
       id: event.pointerId,
@@ -2320,15 +2568,20 @@
       startY: event.clientY,
       lastX: event.clientX,
       lastY: event.clientY,
-      startTime: time,
+      startTime: now,
       territory: classification.territory,
       nodeId: classification.nodeId,
-      gestureScope: "orbit",
+      gestureScope,
+      wing,
       dragging: false,
       controllerGestureBegan: false,
-      startQuaternion: state.constellationQuaternion.slice(),
-      currentQuaternion: state.constellationQuaternion.slice(),
-      samples: [{ x: event.clientX, y: event.clientY, time }]
+      startQuaternion,
+      currentQuaternion: startQuaternion.slice(),
+      samples: [{
+        x: event.clientX,
+        y: event.clientY,
+        time: now
+      }]
     };
 
     emitReceipt({
@@ -2344,16 +2597,12 @@
       return;
     }
 
-    const time = performance.now();
+    const now = performance.now();
 
     pointer.lastX = event.clientX;
     pointer.lastY = event.clientY;
 
-    addPointerSample(pointer, event.clientX, event.clientY, time);
-
-    if (!constellationCanRotate()) {
-      return;
-    }
+    addPointerSample(pointer, event.clientX, event.clientY, now);
 
     const distance = pointerDistance(pointer, event.clientX, event.clientY);
 
@@ -2363,30 +2612,66 @@
 
     if (!pointer.dragging) {
       pointer.dragging = true;
-      pointer.controllerGestureBegan = requestControllerOrbitBegin(pointer);
+
+      pointer.controllerGestureBegan =
+        pointer.gestureScope === "constellation"
+          ? requestControllerOrbitBegin(pointer)
+          : requestControllerClusterBegin(pointer);
 
       state.scene.dataset.archcoinDragging = "true";
       state.root.dataset.archcoinDragging = "true";
-      state.root.dataset.archcoinGestureScope = "orbit";
+      state.root.dataset.archcoinGestureScope = pointer.gestureScope;
     }
 
     event.preventDefault();
 
-    pointer.currentQuaternion = dragQuaternionFromPointer(pointer, event.clientX, event.clientY);
-    state.constellationQuaternion = pointer.currentQuaternion.slice();
-    state.constellationTargetQuaternion = pointer.currentQuaternion.slice();
+    pointer.currentQuaternion = dragQuaternionFromPointer(
+      pointer,
+      event.clientX,
+      event.clientY
+    );
 
-    const primaryWing = nearestPrimaryWing(pointer.currentQuaternion);
-    state.visualPrimaryWing = primaryWing;
+    if (pointer.gestureScope === "constellation") {
+      state.constellationQuaternion = pointer.currentQuaternion.slice();
+      state.constellationTargetQuaternion = pointer.currentQuaternion.slice();
 
-    requestControllerOrbitPreview(pointer.currentQuaternion, primaryWing);
+      const primaryWing = nearestPrimaryWing(pointer.currentQuaternion);
+      state.visualPrimaryWing = primaryWing;
+
+      requestControllerOrbitPreview(pointer.currentQuaternion, primaryWing);
+
+      emitReceipt({
+        status: "available",
+        lastPointerTerritory: pointer.territory,
+        lastGestureType: GESTURE_TYPES.CONSTELLATION_DRAG,
+        lastGestureDistance: distance,
+        primaryWing,
+        gestureActive: true,
+        glError: "NO_ERROR"
+      });
+
+      return;
+    }
+
+    state.clusterQuaternions.set(pointer.wing, pointer.currentQuaternion.slice());
+    state.clusterTargetQuaternions.set(pointer.wing, pointer.currentQuaternion.slice());
+
+    const primaryRoom = nearestPrimaryRoom(pointer.wing, pointer.currentQuaternion);
+    state.visualPrimaryRooms.set(pointer.wing, primaryRoom);
+
+    requestControllerClusterPreview(
+      pointer.wing,
+      pointer.currentQuaternion,
+      primaryRoom
+    );
 
     emitReceipt({
       status: "available",
       lastPointerTerritory: pointer.territory,
-      lastGestureType: GESTURE_TYPES.ORBIT_DRAG,
+      lastGestureType: GESTURE_TYPES.CLUSTER_DRAG,
       lastGestureDistance: distance,
-      primaryWing,
+      activeClusterWing: pointer.wing,
+      primaryRoom,
       gestureActive: true,
       glError: "NO_ERROR"
     });
@@ -2403,10 +2688,13 @@
     } catch (_) {}
   }
 
-  function finishOrbitDrag(pointer, event, metrics) {
+  function finishConstellationDrag(pointer, event, metrics) {
     const currentQuaternion = pointer.currentQuaternion.slice();
     const primaryWing = nearestPrimaryWing(currentQuaternion);
-    const settledQuaternion = settledConstellationQuaternion(primaryWing, currentQuaternion);
+    const settledQuaternion = settledConstellationQuaternion(
+      primaryWing,
+      currentQuaternion
+    );
 
     state.settledPrimaryWing = primaryWing;
     state.visualPrimaryWing = primaryWing;
@@ -2416,15 +2704,19 @@
       state.constellationQuaternion = settledQuaternion.slice();
     }
 
-    const committed = requestControllerOrbitCommit(settledQuaternion, primaryWing);
+    const committed = requestControllerOrbitCommit(
+      settledQuaternion,
+      primaryWing
+    );
 
     state.suppressClickUntil = performance.now() + GESTURE.suppressClickMs;
+
     event.preventDefault();
 
     emitReceipt({
       status: committed ? "available" : "held",
       lastPointerTerritory: pointer.territory,
-      lastGestureType: GESTURE_TYPES.ORBIT_SETTLE,
+      lastGestureType: GESTURE_TYPES.CONSTELLATION_SETTLE,
       lastGestureDistance: metrics.distance,
       lastGestureDurationMs: metrics.durationMs,
       lastAverageVelocityPxPerMs: metrics.averageVelocity,
@@ -2432,6 +2724,73 @@
       primaryWing,
       gestureActive: false,
       glError: committed ? "NO_ERROR" : "CONTROLLER_ORBIT_COMMIT_UNAVAILABLE"
+    });
+  }
+
+  function finishClusterDrag(pointer, event, metrics) {
+    if (isQuickClusterFlick(metrics)) {
+      requestControllerClusterCancel(pointer.wing, "cluster-flick-return");
+
+      const returned = requestControllerReturnToConstellation();
+
+      state.suppressClickUntil = performance.now() + GESTURE.suppressClickMs;
+
+      event.preventDefault();
+
+      emitReceipt({
+        status: returned ? "available" : "held",
+        lastPointerTerritory: pointer.territory,
+        lastGestureType: GESTURE_TYPES.CLUSTER_FLICK_RETURN,
+        lastGestureDistance: metrics.distance,
+        lastGestureDurationMs: metrics.durationMs,
+        lastAverageVelocityPxPerMs: metrics.averageVelocity,
+        lastReleaseVelocityPxPerMs: metrics.releaseVelocity,
+        activeClusterWing: pointer.wing,
+        gestureActive: false,
+        glError: returned ? "NO_ERROR" : "CONTROLLER_RETURN_TO_CONSTELLATION_UNAVAILABLE"
+      });
+
+      return;
+    }
+
+    const currentQuaternion = pointer.currentQuaternion.slice();
+    const primaryRoom = nearestPrimaryRoom(pointer.wing, currentQuaternion);
+    const settledQuaternion = settledClusterQuaternion(
+      primaryRoom,
+      pointer.wing,
+      currentQuaternion
+    );
+
+    state.clusterTargetQuaternions.set(pointer.wing, settledQuaternion.slice());
+
+    if (state.reducedMotion) {
+      state.clusterQuaternions.set(pointer.wing, settledQuaternion.slice());
+    }
+
+    state.visualPrimaryRooms.set(pointer.wing, primaryRoom);
+
+    const committed = requestControllerClusterCommit(
+      pointer.wing,
+      settledQuaternion,
+      primaryRoom
+    );
+
+    state.suppressClickUntil = performance.now() + GESTURE.suppressClickMs;
+
+    event.preventDefault();
+
+    emitReceipt({
+      status: committed ? "available" : "held",
+      lastPointerTerritory: pointer.territory,
+      lastGestureType: GESTURE_TYPES.CLUSTER_SETTLE,
+      lastGestureDistance: metrics.distance,
+      lastGestureDurationMs: metrics.durationMs,
+      lastAverageVelocityPxPerMs: metrics.averageVelocity,
+      lastReleaseVelocityPxPerMs: metrics.releaseVelocity,
+      activeClusterWing: pointer.wing,
+      primaryRoom,
+      gestureActive: false,
+      glError: committed ? "NO_ERROR" : "CONTROLLER_CLUSTER_COMMIT_UNAVAILABLE"
     });
   }
 
@@ -2454,19 +2813,20 @@
 
     const frameState = state.frame ? state.frame.state : "";
 
-    if (node.type === NODE_TYPES.COIN && frameState !== CONTROLLER_STATES.ORBIT) {
+    if (node.type === NODE_TYPES.CARDINAL && frameState !== "CONSTELLATION") {
       return;
     }
 
     if (
       node.type === NODE_TYPES.ROOM &&
-      frameState !== CONTROLLER_STATES.CLUSTER_OPEN &&
-      frameState !== CONTROLLER_STATES.INFO_OPEN
+      frameState !== "CLUSTER_OPEN" &&
+      frameState !== "ROOM_SELECTED"
     ) {
       return;
     }
 
     state.suppressClickUntil = performance.now() + GESTURE.suppressClickMs;
+
     event.preventDefault();
 
     requestNodeSelection(node, pointer.territory);
@@ -2485,18 +2845,24 @@
       return;
     }
 
-    const time = performance.now();
-    addPointerSample(pointer, event.clientX, event.clientY, time);
+    const now = performance.now();
 
-    const metrics = gestureMetrics(pointer, event.clientX, event.clientY, time);
+    addPointerSample(pointer, event.clientX, event.clientY, now);
+
+    const metrics = gestureMetrics(pointer, event.clientX, event.clientY, now);
 
     state.pointer = null;
 
     releasePointerCapture(event);
     clearGestureDatasets();
 
-    if (pointer.dragging) {
-      finishOrbitDrag(pointer, event, metrics);
+    if (pointer.dragging && pointer.gestureScope === "constellation") {
+      finishConstellationDrag(pointer, event, metrics);
+      return;
+    }
+
+    if (pointer.dragging && pointer.gestureScope === "cluster") {
+      finishClusterDrag(pointer, event, metrics);
       return;
     }
 
@@ -2506,7 +2872,11 @@
     }
 
     if (pointer.controllerGestureBegan) {
-      requestControllerOrbitCancel("ambiguous-release");
+      if (pointer.gestureScope === "constellation") {
+        requestControllerOrbitCancel("ambiguous-release");
+      } else {
+        requestControllerClusterCancel(pointer.wing, "ambiguous-release");
+      }
     }
 
     emitReceipt({
@@ -2528,13 +2898,23 @@
     }
 
     state.pointer = null;
+
     releasePointerCapture(event);
 
     if (pointer.controllerGestureBegan) {
-      requestControllerOrbitCancel("pointer-cancel");
+      if (pointer.gestureScope === "constellation") {
+        requestControllerOrbitCancel("pointer-cancel");
+      } else {
+        requestControllerClusterCancel(pointer.wing, "pointer-cancel");
+      }
     }
 
-    state.constellationTargetQuaternion = pointer.startQuaternion.slice();
+    if (pointer.gestureScope === "constellation") {
+      state.constellationTargetQuaternion = pointer.startQuaternion.slice();
+    } else {
+      state.clusterTargetQuaternions.set(pointer.wing, pointer.startQuaternion.slice());
+    }
+
     clearGestureDatasets();
 
     emitReceipt({
@@ -2553,10 +2933,11 @@
   }
 
   function bindPointerBridge() {
-    state.scene.style.touchAction = "pan-y";
+    state.scene.style.touchAction = "none";
     state.scene.style.overscrollBehavior = "contain";
     state.scene.style.webkitUserSelect = "none";
     state.scene.style.userSelect = "none";
+
     state.scene.dataset.archcoinDragging = "false";
     state.root.dataset.archcoinDragging = "false";
     state.root.dataset.archcoinGestureScope = "";
@@ -2568,7 +2949,96 @@
     state.scene.addEventListener("click", handleSceneClickCapture, true);
   }
 
-  function buildViewProjection() {
+  function sortNodesForDraw(nodes) {
+    return nodes.sort((a, b) => a.transform.z - b.transform.z);
+  }
+
+  function bindAttrib(gl, buffer, location, size) {
+    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+    gl.enableVertexAttribArray(location);
+    gl.vertexAttribPointer(location, size, gl.FLOAT, false, 0, 0);
+  }
+
+  function applyMaterial(materialName, prominence, haloStrength) {
+    const gl = state.gl;
+    const material = MATERIALS[materialName] || MATERIALS.CARDINAL_IDLE;
+    const bloomDisabled = state.cssWidth <= QUALITY.bloomDisableWidthPx;
+
+    gl.uniform1f(state.uniforms.twinkle, state.reducedMotion ? 0 : 1);
+    gl.uniform1f(state.uniforms.sparkle, state.reducedMotion ? 0 : material.sparkle);
+    gl.uniform1f(state.uniforms.prominence, prominence);
+    gl.uniform1f(state.uniforms.specular, material.specular);
+    gl.uniform1f(state.uniforms.rim, material.rim);
+    gl.uniform1f(state.uniforms.emissive, material.emissive);
+    gl.uniform1f(state.uniforms.alpha, material.alpha);
+    gl.uniform1f(state.uniforms.contrast, material.contrast);
+    gl.uniform1f(
+      state.uniforms.haloStrength,
+      bloomDisabled ? 0 : material.halo * haloStrength
+    );
+    gl.uniform1f(state.uniforms.saturation, 1);
+  }
+
+  function drawNode(node, haloPass) {
+    if (!node.visible || node.transform.prominence < 0.04) {
+      return 0;
+    }
+
+    const mesh = state.meshes.get(node.meshKey);
+
+    if (!mesh) {
+      return 0;
+    }
+
+    const gl = state.gl;
+
+    bindAttrib(gl, mesh.position, state.attribs.position, 3);
+    bindAttrib(gl, mesh.normal, state.attribs.normal, 3);
+    bindAttrib(gl, mesh.color, state.attribs.color, 3);
+
+    const model = modelMatrix(node, haloPass);
+
+    gl.uniformMatrix4fv(state.uniforms.model, false, new Float32Array(model));
+    gl.uniformMatrix4fv(state.uniforms.view, false, new Float32Array(state.view));
+    gl.uniformMatrix4fv(
+      state.uniforms.projection,
+      false,
+      new Float32Array(state.projection)
+    );
+    gl.uniformMatrix3fv(
+      state.uniforms.normalMatrix,
+      false,
+      new Float32Array(normalMatrix3(model))
+    );
+    gl.uniform1f(state.uniforms.time, state.time);
+    gl.uniform1f(state.uniforms.haloPass, haloPass ? 1 : 0);
+    gl.uniform1f(state.uniforms.haloExpansion, 0.075);
+
+    applyMaterial(node.material, node.transform.prominence, node.transform.halo);
+
+    gl.drawArrays(gl.TRIANGLES, 0, mesh.vertexCount);
+
+    return 1;
+  }
+
+  function render(now) {
+    if (!state.running) {
+      return;
+    }
+
+    const seconds = now * 0.001;
+    const deltaTime = state.lastTime ? Math.min(0.05, seconds - state.lastTime) : 0.016;
+
+    state.lastTime = seconds;
+    state.time = seconds;
+    state.frame = getControllerFrame();
+    state.reducedMotion = Boolean(state.frame.reducedMotion);
+
+    resize();
+    syncQuaternionTargets(deltaTime);
+    updateTargets();
+    updateTransforms(deltaTime);
+
     const aspect = state.width / Math.max(1, state.height);
 
     state.view = lookAt4(state.camera.eye, state.camera.target, [0, 1, 0]);
@@ -2578,9 +3048,7 @@
       0.1,
       60
     );
-  }
 
-  function drawFrame() {
     const gl = state.gl;
 
     gl.clearColor(0.015, 0.018, 0.034, 0);
@@ -2595,10 +3063,9 @@
     gl.uniform3f(state.uniforms.rimLight, 0.08, 0.46, 1);
     gl.uniform3f(state.uniforms.ambientColor, 0.10, 0.12, 0.18);
 
+    let drawCalls = 0;
     const bloomDisabled = state.cssWidth <= QUALITY.bloomDisableWidthPx;
     const drawNodes = sortNodesForDraw(Array.from(state.registry.values()));
-
-    let drawCalls = 0;
 
     if (!bloomDisabled) {
       gl.depthMask(false);
@@ -2621,44 +3088,70 @@
     emitReceipt({
       status: error === gl.NO_ERROR ? "available" : "held",
       rendererInitialized: true,
-      registryCoinCount: 4,
+      registryCardinalCount: 4,
       registryRoomCount: 16,
+      roomProxyCount: state.roomProxies.size,
+      roomProxyPresentation: "NONVISUAL_ACCESSIBILITY_CONTROL",
       primaryWing: state.visualPrimaryWing,
-      activeClusterWing: state.frame && state.frame.cluster ? state.frame.cluster.wing : "",
-      primaryRoom:
-        state.frame && state.frame.cluster
-          ? state.roomPrimaryByWing.get(state.frame.cluster.wing) || ""
-          : "",
+      activeClusterWing: state.frame.cluster ? state.frame.cluster.wing : "",
+      primaryRoom: state.frame.cluster
+        ? state.visualPrimaryRooms.get(state.frame.cluster.wing) || ""
+        : "",
+      gestureActive: Boolean(state.pointer && state.pointer.dragging),
       glError: error === gl.NO_ERROR ? "NO_ERROR" : String(error),
       drawCallsLastFrame: drawCalls
     });
-  }
-
-  function render(nowValue) {
-    if (!state.running) {
-      return;
-    }
-
-    const seconds = nowValue * 0.001;
-    const deltaTime = state.lastTime ? Math.min(0.05, seconds - state.lastTime) : 0.016;
-
-    state.lastTime = seconds;
-    state.time = seconds;
-
-    state.frame = getControllerFrame();
-    readReducedMotion(state.frame);
-
-    resize();
-    resizeAtmosphere();
-
-    updateQuaternionTargets(deltaTime);
-    updateTargets();
-    updateTransforms(deltaTime);
-    buildViewProjection();
-    drawAtmosphere();
-    drawFrame();
 
     state.raf = requestAnimationFrame(render);
+  }
+
+  function disposeResources() {
+    state.running = false;
+
+    if (state.raf) {
+      cancelAnimationFrame(state.raf);
+      state.raf = 0;
+    }
+
+    if (state.pointer && state.pointer.controllerGestureBegan) {
+      if (state.pointer.gestureScope === "constellation") {
+        requestControllerOrbitCancel("renderer-dispose");
+      } else {
+        requestControllerClusterCancel(state.pointer.wing, "renderer-dispose");
+      }
+    }
+
+    state.pointer = null;
+
+    if (state.gl) {
+      state.meshes.forEach(mesh => {
+        state.gl.deleteBuffer(mesh.position);
+        state.gl.deleteBuffer(mesh.normal);
+        state.gl.deleteBuffer(mesh.color);
+      });
+
+      if (state.program) {
+        state.gl.deleteProgram(state.program);
+      }
+    }
+
+    state.roomProxies.forEach(proxy => {
+      proxy.remove();
+    });
+
+    state.meshes.clear();
+    state.registry.clear();
+    state.roomProxies.clear();
+    state.clusterQuaternions.clear();
+    state.clusterTargetQuaternions.clear();
+    state.visualPrimaryRooms.clear();
+
+    emitReceipt({
+      status: "disposed",
+      rendererInitialized: false,
+      roomProxyCount: 0,
+      gestureActive: false
+    });
   }
 
   function bindContextLifecycle() {
@@ -2676,95 +3169,32 @@
     });
   }
 
-  function disposeResources() {
-    state.running = false;
-
-    if (state.raf) {
-      cancelAnimationFrame(state.raf);
-      state.raf = 0;
-    }
-
-    if (state.pointer && state.pointer.controllerGestureBegan) {
-      requestControllerOrbitCancel("renderer-dispose");
-    }
-
-    state.pointer = null;
-
-    if (state.gl) {
-      state.meshes.forEach(mesh => {
-        state.gl.deleteBuffer(mesh.position);
-        state.gl.deleteBuffer(mesh.normal);
-        state.gl.deleteBuffer(mesh.color);
-      });
-
-      if (state.program) {
-        state.gl.deleteProgram(state.program);
-      }
-    }
-
-    state.meshes.clear();
-    state.registry.clear();
-    state.roomPrimaryByWing.clear();
-
-    emitReceipt({
-      status: "disposed",
-      rendererInitialized: false,
-      gestureActive: false
-    });
-  }
-
   function resolveDom() {
     state.root = qs("[data-archcoin-root]");
+
     if (!state.root) {
       throw new Error("ARCHCOIN_ROOT_NOT_FOUND");
     }
 
     state.scene = qs("[data-archcoin-scene]", state.root);
+
     if (!state.scene) {
       throw new Error("ARCHCOIN_SCENE_NOT_FOUND");
     }
 
     state.mount = qs("[data-archcoin-crystals-mount]", state.root);
+
     if (!state.mount) {
       throw new Error("ARCHCOIN_CRYSTALS_MOUNT_NOT_FOUND");
     }
 
     state.semanticLayer = qs("[data-archcoin-objects]", state.root);
+
     if (!state.semanticLayer) {
-      throw new Error("ARCHCOIN_OBJECTS_LAYER_NOT_FOUND");
+      throw new Error("ARCHCOIN_SEMANTIC_LAYER_NOT_FOUND");
     }
 
     state.receiptOutput = qs("[data-archcoin-crystals-receipt]", state.root);
-    state.controller = globalThis.DGB_ARCHCOIN_CONTROLLER || null;
-
-    if (!state.controller) {
-      throw new Error("DGB_ARCHCOIN_CONTROLLER_NOT_AVAILABLE");
-    }
-  }
-
-  function initializeOrientations() {
-    state.frame = getControllerFrame();
-
-    const constellationQuaternion = constellationQuaternionFromFrame(state.frame);
-
-    state.constellationQuaternion = constellationQuaternion.slice();
-    state.constellationTargetQuaternion = constellationQuaternion.slice();
-    state.settledPrimaryWing =
-      normalizeWing(state.frame.orbitFocus) || nearestPrimaryWing(constellationQuaternion);
-    state.visualPrimaryWing = nearestPrimaryWing(constellationQuaternion);
-
-    WINGS.forEach(wing => {
-      const primaryRoom =
-        state.frame &&
-        state.frame.cluster &&
-        state.frame.cluster.wing === wing &&
-        state.frame.cluster.primaryRoom
-          ? state.frame.cluster.primaryRoom
-          : roomElementsForWing(wing)[0]
-            ? normalizeRoomId(roomElementsForWing(wing)[0].dataset.roomId)
-            : "";
-      state.roomPrimaryByWing.set(wing, primaryRoom);
-    });
   }
 
   function exposeApi() {
@@ -2773,14 +3203,23 @@
       sphere: SPHERE,
       gesture: GESTURE,
 
-      receipt: () => Object.freeze({ ...RECEIPT }),
+      receipt: () =>
+        Object.freeze({
+          ...RECEIPT
+        }),
 
       getOrientation: () => {
-        const rooms = {};
+        const clusters = {};
 
         WINGS.forEach(wing => {
-          rooms[wing] = Object.freeze({
-            primaryRoom: state.roomPrimaryByWing.get(wing) || ""
+          clusters[wing] = Object.freeze({
+            quaternion: Object.freeze(
+              (state.clusterQuaternions.get(wing) || [0, 0, 0, 1]).slice()
+            ),
+            targetQuaternion: Object.freeze(
+              (state.clusterTargetQuaternions.get(wing) || [0, 0, 0, 1]).slice()
+            ),
+            primaryRoom: state.visualPrimaryRooms.get(wing) || ""
           });
         });
 
@@ -2791,18 +3230,22 @@
             primaryWing: state.visualPrimaryWing,
             settledPrimaryWing: state.settledPrimaryWing
           }),
-          localStars: Object.freeze(rooms),
+          clusters: Object.freeze(clusters),
           gestureActive: Boolean(state.pointer && state.pointer.dragging)
         });
       },
 
       stop: () => {
         state.running = false;
+
         if (state.raf) {
           cancelAnimationFrame(state.raf);
           state.raf = 0;
         }
-        emitReceipt({ status: "stopped" });
+
+        emitReceipt({
+          status: "stopped"
+        });
       },
 
       start: () => {
@@ -2810,11 +3253,36 @@
           state.running = true;
           state.lastTime = 0;
           state.raf = requestAnimationFrame(render);
-          emitReceipt({ status: "available" });
+
+          emitReceipt({
+            status: "available"
+          });
         }
       },
 
       dispose: disposeResources
+    });
+  }
+
+  function initializeOrientations() {
+    state.frame = getControllerFrame();
+
+    const constellationQuaternion = constellationQuaternionFromFrame(state.frame);
+
+    state.constellationQuaternion = constellationQuaternion.slice();
+    state.constellationTargetQuaternion = constellationQuaternion.slice();
+
+    state.settledPrimaryWing =
+      normalizeWing(state.frame.orbitFocus) || nearestPrimaryWing(constellationQuaternion);
+
+    state.visualPrimaryWing = nearestPrimaryWing(constellationQuaternion);
+
+    WINGS.forEach(wing => {
+      const quaternion = clusterQuaternionFromFrame(state.frame, wing);
+
+      state.clusterQuaternions.set(wing, quaternion.slice());
+      state.clusterTargetQuaternions.set(wing, quaternion.slice());
+      state.visualPrimaryRooms.set(wing, nearestPrimaryRoom(wing, quaternion));
     });
   }
 
@@ -2823,18 +3291,18 @@
       resolveDom();
       exposeApi();
 
-      createAtmosphereCanvas();
-
       state.canvas = createCanvas();
-      state.gl = getGL(state.canvas);
 
-      if (!state.gl) {
+      const gl = getGL(state.canvas);
+
+      if (!gl) {
         throw new Error("WEBGL_CONTEXT_UNAVAILABLE");
       }
 
+      state.gl = gl;
+
       bindContextLifecycle();
 
-      const gl = state.gl;
       gl.enable(gl.DEPTH_TEST);
       gl.depthFunc(gl.LEQUAL);
       gl.enable(gl.BLEND);
@@ -2875,34 +3343,37 @@
 
       state.meshes = buildMeshes(gl);
       state.registry = buildRegistry();
-
+      state.roomProxies = buildRoomProxies();
       initializeOrientations();
       bindPointerBridge();
 
-      state.root.dataset.archcoinCrystalsEnabled = "true";
-      state.root.dataset.archcoinCoordinateSystem = SPHERE.coordinateSystem;
-      state.root.dataset.archcoinOrientationRepresentation = SPHERE.orientationRepresentation;
-
-      state.initialized = true;
       state.running = true;
+
+      state.root.dataset.sphericalOrbitEnabled = "true";
+      state.root.dataset.sphericalClustersEnabled = "true";
+      state.root.dataset.orbitCoordinateSystem = SPHERE.coordinateSystem;
+      state.root.dataset.orbitRepresentation = SPHERE.orientationRepresentation;
 
       emitReceipt({
         status: "available",
         rendererInitialized: true,
-        registryCoinCount: 4,
+        registryCardinalCount: 4,
         registryRoomCount: 16,
-        runtimeControllerPresent: true,
+        roomProxyCount: state.roomProxies.size,
+        roomProxyPresentation: "NONVISUAL_ACCESSIBILITY_CONTROL",
+        sphericalConstellationEnabled: true,
+        sphericalClustersEnabled: true,
         primaryWing: state.visualPrimaryWing,
         gestureActive: false,
-        sphericalConstellationEnabled: true,
-        sphericalClustersEnabled: false,
         glError: "NO_ERROR"
       });
 
       state.raf = requestAnimationFrame(render);
     } catch (error) {
       emitFailure(
-        `ARCHCOIN_CRYSTALS_INIT_FAILURE:${error && error.message ? error.message : String(error)}`
+        `ARCHCOIN_CRYSTALS_INIT_FAILURE:${
+          error && error.message ? error.message : String(error)
+        }`
       );
     }
   }

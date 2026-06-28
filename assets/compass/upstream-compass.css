@@ -1,0 +1,383 @@
+/* /assets/compass/upstream-compass.css
+   Universal upstream Compass shared presentation contract.
+
+   Purpose:
+   - provide the reusable visual and semantic presentation layer for the
+     shared upstream Compass component;
+   - keep the component intrinsically bounded, square, and page-agnostic;
+   - own shared mount sizing, canvas stacking, SVG fallback presentation,
+     semantic control behavior, focus presentation, reduced-motion surfaces,
+     and authorized held-state presentation;
+   - prevent consuming pages from recreating component-level styling.
+
+   Architectural rule:
+   THE PAGE KNOWS WHERE THE SHARED UNIVERSAL COMPASS SITS.
+   THE SHARED UNIVERSAL COMPASS KNOWS HOW IT PRESENTS ITSELF.
+
+   Ownership boundary:
+   - Shared CSS owns:
+     intrinsic component box,
+     canvas and SVG layering,
+     semantic control hit surface,
+     fallback visibility,
+     focus behavior,
+     reduced-motion presentation,
+     authorized held-state presentation.
+   - Consuming page CSS owns:
+     placement within the page,
+     z-index selection relative to page objects,
+     page-specific responsive offsets,
+     scene-specific integration.
+
+   Authorization boundary:
+
+   SHARED_PRESENTATION_CANDIDATE
+   !=
+   PRODUCTION_AUTHORIZATION
+
+   Not authorized:
+   - deployment;
+   - public release;
+   - final filename freeze;
+   - page-specific placement ownership;
+   - production integration by default;
+   - visual-pass claims.
+*/
+
+:root {
+  --upstream-compass-size: clamp(9rem, 18vw, 15rem);
+  --upstream-compass-min-size: 8rem;
+  --upstream-compass-max-size: 18rem;
+
+  --upstream-compass-focus-ring:
+    rgba(242, 207, 152, 0.96);
+  --upstream-compass-focus-shadow:
+    rgba(242, 207, 152, 0.28);
+
+  --upstream-compass-fallback-opacity:
+    1;
+  --upstream-compass-canvas-opacity:
+    1;
+
+  --upstream-compass-transition-duration:
+    180ms;
+  --upstream-compass-transition-ease:
+    cubic-bezier(0.2, 0.7, 0.2, 1);
+
+  --upstream-compass-hit-target:
+    44px;
+  --upstream-compass-governed-min-hit-target:
+    24px;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Root mount contract                                                         */
+/* -------------------------------------------------------------------------- */
+
+[data-upstream-compass-mount],
+[data-upstream-compass-root] {
+  position: relative;
+  display: block;
+  width: var(--upstream-compass-size);
+  min-width: min(100%, var(--upstream-compass-min-size));
+  max-width: min(100%, var(--upstream-compass-max-size));
+  aspect-ratio: 1 / 1;
+  isolation: isolate;
+  overflow: visible;
+  pointer-events: none;
+  contain: layout style paint;
+}
+
+[data-upstream-compass-mount][hidden],
+[data-upstream-compass-root][hidden] {
+  display: none !important;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Shared visual surfaces                                                      */
+/* -------------------------------------------------------------------------- */
+
+[data-upstream-compass-mount] > canvas,
+[data-upstream-compass-root] > canvas,
+[data-upstream-compass-mount] [data-upstream-compass-canvas],
+[data-upstream-compass-root] [data-upstream-compass-canvas] {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  border: 0;
+  pointer-events: none;
+  opacity: var(--upstream-compass-canvas-opacity);
+  transition:
+    opacity var(--upstream-compass-transition-duration)
+      var(--upstream-compass-transition-ease);
+}
+
+[data-upstream-compass-mount] > svg,
+[data-upstream-compass-root] > svg,
+[data-upstream-compass-mount] [data-upstream-compass-fallback],
+[data-upstream-compass-root] [data-upstream-compass-fallback] {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+[data-upstream-compass-fallback] {
+  pointer-events: none;
+  opacity: var(--upstream-compass-fallback-opacity);
+  transition:
+    opacity var(--upstream-compass-transition-duration)
+      var(--upstream-compass-transition-ease),
+    visibility var(--upstream-compass-transition-duration)
+      var(--upstream-compass-transition-ease);
+}
+
+[data-upstream-compass-fallback] > svg,
+[data-upstream-compass-fallback] svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  background: transparent;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Semantic control surface                                                    */
+/* -------------------------------------------------------------------------- */
+
+[data-upstream-compass-control] {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: block;
+  min-width: var(--upstream-compass-hit-target);
+  min-height: var(--upstream-compass-hit-target);
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+  pointer-events: auto;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+[data-upstream-compass-control][aria-disabled="true"] {
+  cursor: default;
+}
+
+[data-upstream-compass-control]::before {
+  content: "";
+  position: absolute;
+  inset: 50%;
+  width: max(100%, var(--upstream-compass-governed-min-hit-target));
+  height: max(100%, var(--upstream-compass-governed-min-hit-target));
+  transform: translate(-50%, -50%);
+  border-radius: 999px;
+}
+
+[data-upstream-compass-control]:focus {
+  outline: none;
+}
+
+[data-upstream-compass-control]:focus-visible {
+  outline: 3px solid var(--upstream-compass-focus-ring);
+  outline-offset: 5px;
+  box-shadow:
+    0 0 0 2px rgba(6, 16, 24, 0.88),
+    0 0 18px var(--upstream-compass-focus-shadow);
+}
+
+[data-upstream-compass-control][aria-hidden="true"] {
+  pointer-events: none;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Normal enhanced presentation                                                */
+/* -------------------------------------------------------------------------- */
+
+[data-upstream-compass-mount]
+  [data-upstream-compass-fallback][data-upstream-compass-fallback-visible="false"],
+[data-upstream-compass-root]
+  [data-upstream-compass-fallback][data-upstream-compass-fallback-visible="false"] {
+  opacity: 0;
+  visibility: hidden;
+}
+
+[data-upstream-compass-mount]
+  [data-upstream-compass-fallback][data-upstream-compass-fallback-visible="true"],
+[data-upstream-compass-root]
+  [data-upstream-compass-fallback][data-upstream-compass-fallback-visible="true"] {
+  opacity: 1;
+  visibility: visible;
+}
+
+[data-upstream-compass-mount]
+  [data-upstream-compass-canvas][data-upstream-compass-canvas-visible="false"],
+[data-upstream-compass-root]
+  [data-upstream-compass-canvas][data-upstream-compass-canvas-visible="false"] {
+  opacity: 0;
+}
+
+[data-upstream-compass-mount]
+  [data-upstream-compass-canvas][data-upstream-compass-canvas-visible="true"],
+[data-upstream-compass-root]
+  [data-upstream-compass-canvas][data-upstream-compass-canvas-visible="true"] {
+  opacity: 1;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Renderer failure / fallback-first compatibility                             */
+/* -------------------------------------------------------------------------- */
+
+[data-upstream-compass-mount][data-upstream-compass-renderer-status="failed"],
+[data-upstream-compass-root][data-upstream-compass-renderer-status="failed"],
+[data-upstream-compass-mount][data-upstream-compass-renderer-status="unavailable"],
+[data-upstream-compass-root][data-upstream-compass-renderer-status="unavailable"] {
+  --upstream-compass-fallback-opacity: 1;
+  --upstream-compass-canvas-opacity: 0;
+}
+
+[data-upstream-compass-mount][data-upstream-compass-renderer-status="failed"]
+  [data-upstream-compass-fallback],
+[data-upstream-compass-root][data-upstream-compass-renderer-status="failed"]
+  [data-upstream-compass-fallback],
+[data-upstream-compass-mount][data-upstream-compass-renderer-status="unavailable"]
+  [data-upstream-compass-fallback],
+[data-upstream-compass-root][data-upstream-compass-renderer-status="unavailable"]
+  [data-upstream-compass-fallback] {
+  opacity: 1;
+  visibility: visible;
+}
+
+[data-upstream-compass-mount][data-upstream-compass-renderer-status="failed"] > canvas,
+[data-upstream-compass-root][data-upstream-compass-renderer-status="failed"] > canvas,
+[data-upstream-compass-mount][data-upstream-compass-renderer-status="unavailable"] > canvas,
+[data-upstream-compass-root][data-upstream-compass-renderer-status="unavailable"] > canvas {
+  opacity: 0;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Authorized held-state presentation                                          */
+/* -------------------------------------------------------------------------- */
+
+[data-upstream-compass-mount][data-upstream-compass-held="true"],
+[data-upstream-compass-root][data-upstream-compass-held="true"] {
+  --upstream-compass-transition-duration: 140ms;
+}
+
+[data-upstream-compass-mount][data-upstream-compass-held="true"][data-upstream-compass-held-variant="ENHANCED"],
+[data-upstream-compass-root][data-upstream-compass-held="true"][data-upstream-compass-held-variant="ENHANCED"] {
+  --upstream-compass-canvas-opacity: 1;
+  --upstream-compass-fallback-opacity: 0;
+}
+
+[data-upstream-compass-mount][data-upstream-compass-held="true"][data-upstream-compass-held-variant="STATIC_FALLBACK"],
+[data-upstream-compass-root][data-upstream-compass-held="true"][data-upstream-compass-held-variant="STATIC_FALLBACK"] {
+  --upstream-compass-canvas-opacity: 0;
+  --upstream-compass-fallback-opacity: 1;
+}
+
+[data-upstream-compass-mount][data-upstream-compass-held="true"][data-upstream-compass-held-variant="STATIC_FALLBACK"]
+  [data-upstream-compass-fallback],
+[data-upstream-compass-root][data-upstream-compass-held="true"][data-upstream-compass-held-variant="STATIC_FALLBACK"]
+  [data-upstream-compass-fallback] {
+  opacity: 1;
+  visibility: visible;
+}
+
+[data-upstream-compass-mount][data-upstream-compass-held="true"][data-upstream-compass-held-variant="STATIC_FALLBACK"] > canvas,
+[data-upstream-compass-root][data-upstream-compass-held="true"][data-upstream-compass-held-variant="STATIC_FALLBACK"] > canvas {
+  opacity: 0;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Reduced motion presentation                                                 */
+/* -------------------------------------------------------------------------- */
+
+[data-upstream-compass-mount][data-upstream-compass-reduced-motion="true"],
+[data-upstream-compass-root][data-upstream-compass-reduced-motion="true"] {
+  --upstream-compass-transition-duration: 0.01ms;
+}
+
+[data-upstream-compass-mount][data-upstream-compass-reduced-motion="true"] > canvas,
+[data-upstream-compass-root][data-upstream-compass-reduced-motion="true"] > canvas,
+[data-upstream-compass-mount][data-upstream-compass-reduced-motion="true"] [data-upstream-compass-fallback],
+[data-upstream-compass-root][data-upstream-compass-reduced-motion="true"] [data-upstream-compass-fallback] {
+  transition-duration: 0.01ms !important;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Pointer and selection safety                                                */
+/* -------------------------------------------------------------------------- */
+
+[data-upstream-compass-mount],
+[data-upstream-compass-root],
+[data-upstream-compass-mount] *,
+[data-upstream-compass-root] * {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+[data-upstream-compass-control],
+[data-upstream-compass-control] * {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Responsive intrinsic sizing                                                 */
+/* -------------------------------------------------------------------------- */
+
+@media (max-width: 900px) {
+  :root {
+    --upstream-compass-size: clamp(8.5rem, 24vw, 13rem);
+    --upstream-compass-max-size: 15rem;
+  }
+}
+
+@media (max-width: 720px) {
+  :root {
+    --upstream-compass-size: clamp(8rem, 34vw, 11.5rem);
+    --upstream-compass-min-size: 7.25rem;
+    --upstream-compass-max-size: 13rem;
+  }
+
+  [data-upstream-compass-control]:focus-visible {
+    outline-offset: 4px;
+  }
+}
+
+@media (max-width: 540px) {
+  :root {
+    --upstream-compass-size: clamp(7.5rem, 40vw, 10.5rem);
+    --upstream-compass-min-size: 6.75rem;
+    --upstream-compass-max-size: 11.5rem;
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+/* Reduced motion media fallback                                               */
+/* -------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  [data-upstream-compass-mount],
+  [data-upstream-compass-root] {
+    --upstream-compass-transition-duration: 0.01ms;
+  }
+
+  [data-upstream-compass-mount] > canvas,
+  [data-upstream-compass-root] > canvas,
+  [data-upstream-compass-mount] [data-upstream-compass-fallback],
+  [data-upstream-compass-root] [data-upstream-compass-fallback],
+  [data-upstream-compass-control] {
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -20,8 +20,10 @@
    - Place rendered crystals above the shared Compass visual surface.
    - Keep semantic controls above both visual surfaces.
    - Reduce the shared Compass footprint, especially on mobile.
-   - Preserve the upstream return control interaction path.
+   - Preserve the Home Compass selection-control interaction path.
    - Leave data-upstream-compass-mount as the shared renderer entry node.
+   - Present the HTML-owned instructional pad beneath the scene field.
+   - Reveal Return to Orbit during ROOM_SELECTED and COMPASS_DECISION.
    - Preserve accepted controller, crystals, and HTML selector contracts.
 
    Excluded:
@@ -362,7 +364,7 @@ summary:focus-visible {
 
 .archcoin-scene {
   display: grid;
-  grid-template-rows: auto minmax(0, auto) auto;
+  grid-template-rows: auto minmax(0, auto) auto auto;
   align-items: stretch;
   gap: clamp(14px, 2vw, 22px);
   padding:
@@ -471,7 +473,7 @@ summary:focus-visible {
 }
 
 /* -------------------------------------------------------------------------- */
-/* Integrated upstream Compass center                                          */
+/* Integrated Home Compass center                                              */
 /* -------------------------------------------------------------------------- */
 
 /*
@@ -481,6 +483,9 @@ summary:focus-visible {
  * below the rendered crystal layer. This prevents the shared Compass from
  * reading as a large foreground emblem while retaining it as the semantic and
  * visual center of the operating field.
+ *
+ * The renderer canvas and static fallback composite normally. No page-level
+ * blend mode is imposed on renderer-authored color or alpha.
  */
 .archcoin-scene__upstream-compass {
   position: absolute;
@@ -498,13 +503,6 @@ summary:focus-visible {
   transform-origin: center;
   pointer-events: none;
   isolation: isolate;
-
-  /*
-   * Black pixels from an unlit shared canvas do not become a solid foreground
-   * plate against the ARCHCOIN field. Illuminated component detail remains
-   * available while the scene background continues through the center.
-   */
-  mix-blend-mode: screen;
 
   --upstream-compass-size: 100%;
   --upstream-compass-min-size: 0px;
@@ -552,7 +550,7 @@ summary:focus-visible {
 
 /*
  * Keep every shared visual child bounded by the page-owned center slot without
- * redefining its internal geometry.
+ * redefining internal Compass geometry.
  */
 .archcoin-scene__upstream-compass
   [data-upstream-compass-mount] > canvas,
@@ -768,7 +766,69 @@ summary:focus-visible {
   pointer-events: none;
 }
 
-[data-archcoin-mode="HELD"] .archcoin-guidance {
+[data-archcoin-mode="SYSTEM_HELD"] .archcoin-guidance {
+  border-color: var(--archcoin-line-hot);
+}
+
+/* -------------------------------------------------------------------------- */
+/* Instruction pad                                                            */
+/* -------------------------------------------------------------------------- */
+
+.archcoin-instruction-pad {
+  position: relative;
+  z-index: var(--archcoin-scene-chrome-layer-z);
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+  width: min(100%, 760px);
+  margin: -4px auto 0;
+  padding: 10px 16px;
+  border: 1px solid var(--archcoin-line-soft);
+  border-radius: var(--archcoin-radius-sm);
+  color: var(--archcoin-text-muted);
+  background:
+    linear-gradient(
+      135deg,
+      rgba(7, 16, 27, 0.76),
+      rgba(7, 15, 25, 0.60)
+    );
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.025);
+  pointer-events: none;
+}
+
+.archcoin-instruction-pad__title {
+  margin: 0;
+  color: var(--archcoin-gold);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  line-height: 1;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.archcoin-instruction-pad__body {
+  margin: 0;
+  color: var(--archcoin-text-muted);
+  font-size: 0.80rem;
+  line-height: 1.42;
+}
+
+[data-archcoin-mode="COMPASS_DECISION"]
+.archcoin-instruction-pad {
+  border-color: rgba(240, 201, 138, 0.22);
+  background:
+    linear-gradient(
+      135deg,
+      rgba(24, 22, 18, 0.62),
+      rgba(8, 16, 26, 0.72)
+    );
+}
+
+[data-archcoin-mode="SYSTEM_HELD"]
+.archcoin-instruction-pad {
   border-color: var(--archcoin-line-hot);
 }
 
@@ -901,8 +961,44 @@ summary:focus-visible {
     inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
-[data-archcoin-mode="HELD"] .archcoin-panel {
+[data-archcoin-mode="COMPASS_DECISION"] .archcoin-panel {
+  border-color: rgba(240, 201, 138, 0.42);
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.03),
+      rgba(255, 255, 255, 0.008)
+    ),
+    linear-gradient(
+      135deg,
+      rgba(20, 29, 40, 0.97),
+      rgba(10, 20, 32, 0.96)
+    );
+  box-shadow:
+    0 34px 96px rgba(0, 0, 0, 0.48),
+    0 0 0 1px rgba(240, 201, 138, 0.08),
+    0 0 34px rgba(240, 201, 138, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+[data-archcoin-mode="SYSTEM_HELD"] .archcoin-panel {
   border-color: rgba(240, 201, 138, 0.26);
+}
+
+[data-archcoin-mode="SYSTEM_HELD"]
+.archcoin-scene__field,
+[data-archcoin-mode="SYSTEM_HELD"]
+.archcoin-panel__actions {
+  pointer-events: none;
+}
+
+[data-archcoin-mode="SYSTEM_HELD"]
+.archcoin-scene__crystals,
+[data-archcoin-mode="SYSTEM_HELD"]
+.archcoin-scene__semantic,
+[data-archcoin-mode="SYSTEM_HELD"]
+.archcoin-scene__upstream-compass {
+  opacity: 0.44;
 }
 
 [data-archcoin-mode="CONSTELLATION"]
@@ -913,8 +1009,18 @@ summary:focus-visible {
 }
 
 [data-archcoin-mode="ROOM_SELECTED"]
+[data-archcoin-return-to-orbit],
+[data-archcoin-mode="COMPASS_DECISION"]
 [data-archcoin-return-to-orbit] {
   display: inline-flex;
+}
+
+/*
+ * The hidden attribute remains authoritative. State selectors only define
+ * presentation after the controller has removed hidden.
+ */
+[data-archcoin-return-to-orbit][hidden] {
+  display: none;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1047,6 +1153,23 @@ summary:focus-visible {
     line-height: 1.34;
   }
 
+  .archcoin-instruction-pad {
+    grid-template-columns: 1fr;
+    gap: 5px;
+    width: min(100%, 560px);
+    padding: 9px 12px;
+    text-align: center;
+  }
+
+  .archcoin-instruction-pad__title {
+    font-size: 0.64rem;
+  }
+
+  .archcoin-instruction-pad__body {
+    font-size: 0.74rem;
+    line-height: 1.38;
+  }
+
   .archcoin-panel__actions {
     display: grid;
     grid-template-columns: 1fr;
@@ -1098,6 +1221,14 @@ summary:focus-visible {
 
   .archcoin-coin--south {
     bottom: 4.5%;
+  }
+
+  .archcoin-instruction-pad {
+    border-radius: 12px;
+  }
+
+  .archcoin-instruction-pad__body {
+    font-size: 0.71rem;
   }
 }
 

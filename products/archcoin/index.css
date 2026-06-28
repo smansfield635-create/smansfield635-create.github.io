@@ -2,24 +2,26 @@
    ARCHCOIN
    Navigation-only presentation layer for the accepted ARCHCOIN controller,
    crystals renderer, shared upstream Compass implementation, and renewed HTML
-   page-slot integration baseline.
+   integrated-center contract.
 
-   Corrected integration scope:
+   Renewed integration scope:
    - Preserve the intentional empty bounded void.
    - Preserve the hero introduction and read-more surface.
    - Preserve the four-coin outer constellation shell.
    - Preserve active room-cluster semantic-layer support.
-   - Preserve the selected-path handoff box directly beneath the Compass.
+   - Preserve the selected-path handoff box beneath the scene.
    - Preserve receipt surfaces only.
    - Keep the ARCHCOIN scene field in normal grid flow.
    - Assign scene-height ownership to the in-flow scene field.
-   - Position crystals, shared upstream Compass slot, and semantic controls as
-     bounded absolute children of that field.
-   - Use .archcoin-scene__upstream-compass as the page-owned placement slot.
-   - Leave data-upstream-compass-mount as the shared renderer entry node.
+   - Position crystals, the shared upstream Compass slot, and semantic controls
+     as bounded absolute children of that field.
+   - Treat .archcoin-scene__upstream-compass as an integrated center object,
+     not as a dominant foreground logo.
+   - Place rendered crystals above the shared Compass visual surface.
+   - Keep semantic controls above both visual surfaces.
+   - Reduce the shared Compass footprint, especially on mobile.
    - Preserve the upstream return control interaction path.
-   - Avoid page-local assumptions about unverified shared renderer states.
-   - Keep responsive height ownership on the scene field.
+   - Leave data-upstream-compass-mount as the shared renderer entry node.
    - Preserve accepted controller, crystals, and HTML selector contracts.
 
    Excluded:
@@ -29,13 +31,14 @@
    - atmosphere canvas ownership;
    - decorative background stars;
    - decorative orbit-line scenery;
-   - page-local Compass geometry;
    - second Compass architecture;
-   - shared geometry, renderer, or shared CSS reopening.
+   - controller architecture reopening;
+   - crystals architecture reopening;
+   - shared geometry or renderer rewriting.
 
    Authorization boundary:
 
-   CORRECTED_LAYOUT_IMPLEMENTATION_CANDIDATE
+   INTEGRATED_CENTER_LAYOUT_IMPLEMENTATION_CANDIDATE
    !=
    VISUAL_PASS
    !=
@@ -84,18 +87,24 @@
 
   /*
    * The scene field owns real layout height.
-   * Its renderer, page slot, and semantic surfaces are layered inside it.
    */
   --archcoin-scene-field-height: clamp(540px, 68vh, 820px);
-  --archcoin-scene-center-size: clamp(220px, 28vw, 348px);
+
+  /*
+   * The Compass is a bounded center instrument, not a second full-size scene.
+   */
+  --archcoin-scene-center-size: clamp(138px, 17vw, 196px);
+  --archcoin-scene-center-opacity: 0.78;
   --archcoin-scene-center-safe-top: clamp(92px, 12vw, 148px);
   --archcoin-scene-center-safe-bottom: clamp(84px, 10vw, 124px);
 
   /*
-   * Page-owned scene stack.
+   * Integrated scene stack:
+   * center Compass below rendered crystals;
+   * semantic controls above both.
    */
-  --archcoin-crystals-layer-z: 1;
-  --archcoin-upstream-compass-layer-z: 2;
+  --archcoin-upstream-compass-layer-z: 1;
+  --archcoin-crystals-layer-z: 2;
   --archcoin-semantic-layer-z: 3;
   --archcoin-scene-chrome-layer-z: 4;
 }
@@ -371,13 +380,6 @@ summary:focus-visible {
   padding: clamp(20px, 3vw, 28px) 0 0;
 }
 
-/*
- * The scene field is the in-flow middle row.
- *
- * It establishes the actual scene height. The crystals renderer, ARCHCOIN
- * Compass placement slot, and semantic controls are bounded absolute children
- * inside this containing block.
- */
 .archcoin-scene__field {
   position: relative;
   z-index: 1;
@@ -395,18 +397,35 @@ summary:focus-visible {
   left: 50%;
   top: 50%;
   z-index: 0;
-  width: clamp(220px, 30vw, 390px);
-  height: clamp(220px, 30vw, 390px);
+  width: clamp(174px, 22vw, 250px);
+  height: clamp(174px, 22vw, 250px);
   transform: translate(-50%, -50%);
   border-radius: 999px;
   background:
     radial-gradient(
       circle,
-      rgba(144, 197, 234, 0.08) 0%,
-      rgba(144, 197, 234, 0.04) 38%,
-      rgba(144, 197, 234, 0.015) 56%,
-      transparent 74%
+      rgba(160, 208, 242, 0.10) 0%,
+      rgba(119, 177, 219, 0.055) 34%,
+      rgba(89, 145, 190, 0.022) 56%,
+      transparent 76%
     );
+  pointer-events: none;
+}
+
+.archcoin-scene__field::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 0;
+  width: clamp(108px, 13vw, 154px);
+  height: clamp(108px, 13vw, 154px);
+  transform: translate(-50%, -50%);
+  border: 1px solid rgba(151, 201, 235, 0.08);
+  border-radius: 999px;
+  box-shadow:
+    0 0 34px rgba(113, 173, 216, 0.07),
+    inset 0 0 30px rgba(113, 173, 216, 0.035);
   pointer-events: none;
 }
 
@@ -452,19 +471,16 @@ summary:focus-visible {
 }
 
 /* -------------------------------------------------------------------------- */
-/* Shared upstream Compass page slot                                           */
+/* Integrated upstream Compass center                                          */
 /* -------------------------------------------------------------------------- */
 
 /*
- * ARCHCOIN owns this wrapper.
+ * ARCHCOIN owns the placement slot only.
  *
- * It controls only page-relative placement, available width, responsive
- * dimensions, and scene-layer position.
- *
- * The inner data-upstream-compass-mount remains the shared component entry
- * node and continues to receive its intrinsic box, canvas, fallback, semantic
- * control, focus, held-state, and reduced-motion behavior from
- * /assets/compass/upstream-compass.css.
+ * The slot is deliberately smaller than the four-coin constellation and sits
+ * below the rendered crystal layer. This prevents the shared Compass from
+ * reading as a large foreground emblem while retaining it as the semantic and
+ * visual center of the operating field.
  */
 .archcoin-scene__upstream-compass {
   position: absolute;
@@ -473,51 +489,82 @@ summary:focus-visible {
   z-index: var(--archcoin-upstream-compass-layer-z);
   display: grid;
   place-items: center;
-  width: min(100%, var(--archcoin-scene-center-size));
+  width: var(--archcoin-scene-center-size);
+  max-width: calc(100% - 48px);
   aspect-ratio: 1 / 1;
   margin: 0;
+  opacity: var(--archcoin-scene-center-opacity);
   transform: translate(-50%, -50%);
+  transform-origin: center;
   pointer-events: none;
+  isolation: isolate;
 
   /*
-   * These shared custom properties are inherited by the inner shared mount.
-   * They allow the shared component to consume the width offered by the page
-   * slot without moving component-internal selectors into page CSS.
+   * Black pixels from an unlit shared canvas do not become a solid foreground
+   * plate against the ARCHCOIN field. Illuminated component detail remains
+   * available while the scene background continues through the center.
    */
+  mix-blend-mode: screen;
+
   --upstream-compass-size: 100%;
   --upstream-compass-min-size: 0px;
   --upstream-compass-max-size: 100%;
   --upstream-compass-focus-ring: var(--archcoin-focus);
 }
 
-/*
- * The shared mount is not a page-placement surface.
- *
- * No absolute centering, page z-index, or page-responsive width is assigned to
- * data-upstream-compass-mount here. Its intrinsic behavior remains owned by
- * upstream-compass.css.
- */
-.archcoin-scene__upstream-compass > [data-upstream-compass-mount] {
-  margin: 0;
+.archcoin-scene__upstream-compass::before {
+  content: "";
+  position: absolute;
+  inset: 14%;
+  z-index: -1;
+  border-radius: 999px;
+  background:
+    radial-gradient(
+      circle,
+      rgba(174, 218, 246, 0.08),
+      rgba(108, 170, 214, 0.025) 48%,
+      transparent 72%
+    );
+  box-shadow:
+    0 0 30px rgba(109, 176, 221, 0.09),
+    inset 0 0 24px rgba(151, 205, 239, 0.04);
+  pointer-events: none;
 }
 
-/*
- * Preserve the semantic return path.
- *
- * The page slot remains noninteractive outside the shared control, while the
- * shared control explicitly participates in pointer targeting. Events may
- * bubble to the ARCHCOIN scene, where index.crystals.js must continue treating
- * data-upstream-compass-control as a blocked semantic control territory.
- */
-.archcoin-scene__upstream-compass [data-upstream-compass-control] {
+.archcoin-scene__upstream-compass > [data-upstream-compass-mount] {
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  margin: 0;
+  transform-origin: center;
+}
+
+.archcoin-scene__upstream-compass
+  [data-upstream-compass-control] {
   pointer-events: auto;
 }
 
+.archcoin-scene__upstream-compass
+  [data-upstream-compass-control]:focus-visible {
+  outline-color: var(--archcoin-focus);
+}
+
 /*
- * The page does not infer or duplicate shared held, failure, fallback, or
- * renderer-status attributes. Shared visibility and state presentation remain
- * governed by upstream-compass.css and the accepted renderer output.
+ * Keep every shared visual child bounded by the page-owned center slot without
+ * redefining its internal geometry.
  */
+.archcoin-scene__upstream-compass
+  [data-upstream-compass-mount] > canvas,
+.archcoin-scene__upstream-compass
+  [data-upstream-compass-canvas],
+.archcoin-scene__upstream-compass
+  [data-upstream-compass-fallback],
+.archcoin-scene__upstream-compass
+  .ugc04-static-fallback {
+  max-width: 100%;
+  max-height: 100%;
+}
 
 /* -------------------------------------------------------------------------- */
 /* Compass semantic objects                                                    */
@@ -885,7 +932,7 @@ summary:focus-visible {
 
   .archcoin-scene {
     --archcoin-scene-field-height: clamp(540px, 70vh, 740px);
-    --archcoin-scene-center-size: clamp(214px, 34vw, 318px);
+    --archcoin-scene-center-size: clamp(132px, 19vw, 174px);
     --archcoin-scene-center-safe-top: clamp(90px, 14vw, 136px);
     --archcoin-scene-center-safe-bottom: clamp(82px, 11vw, 114px);
   }
@@ -912,7 +959,8 @@ summary:focus-visible {
     border-radius: 26px;
 
     --archcoin-scene-field-height: 560px;
-    --archcoin-scene-center-size: clamp(208px, 56vw, 300px);
+    --archcoin-scene-center-size: clamp(126px, 34vw, 158px);
+    --archcoin-scene-center-opacity: 0.72;
     --archcoin-scene-center-safe-top: 104px;
     --archcoin-scene-center-safe-bottom: 92px;
   }
@@ -950,6 +998,16 @@ summary:focus-visible {
     max-width: 14ch;
     font-size: clamp(1.28rem, 5.4vw, 1.82rem);
     line-height: 1.04;
+  }
+
+  .archcoin-scene__field::before {
+    width: clamp(158px, 42vw, 204px);
+    height: clamp(158px, 42vw, 204px);
+  }
+
+  .archcoin-scene__field::after {
+    width: clamp(96px, 25vw, 126px);
+    height: clamp(96px, 25vw, 126px);
   }
 
   .archcoin-coin {
@@ -1009,7 +1067,8 @@ summary:focus-visible {
 
   .archcoin-scene {
     --archcoin-scene-field-height: 520px;
-    --archcoin-scene-center-size: clamp(188px, 62vw, 264px);
+    --archcoin-scene-center-size: clamp(116px, 32vw, 142px);
+    --archcoin-scene-center-opacity: 0.68;
     --archcoin-scene-center-safe-top: 98px;
     --archcoin-scene-center-safe-bottom: 86px;
   }

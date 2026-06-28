@@ -4,15 +4,11 @@
    orientation, semantic selection, preview-panel projection, return behavior,
    failure-safe receipts, and Products datasets.
 
-   New-file construction scope:
+   Surgical correction scope:
+   - Bind final authority only to the single body-contained [data-page-id="products"] root.
    - Preserve Compass -> ARCHCOIN -> Products lineage.
    - Publish DGB_PRODUCTS_CONTROLLER and DGB_PRODUCTS_CONTROLLER_RECEIPT.
-   - Bind final authority only to [data-page-id="products"].
-   - Recognize legacy runtime selectors as compatibility aliases only.
-   - Preserve Compass-derived renderer-facing method grammar with Products-specific
-     domain substitution.
-   - Enforce atomic primary selection and atomic product selection with one
-     public commitment receipt per committed transaction.
+   - Keep fallback links outside enhanced semantic control handling.
    - Preserve preview-before-navigation, identity separation, return separation,
      and intentional empty bounded void.
 */
@@ -21,11 +17,12 @@
   "use strict";
 
   const CONTRACT = Object.freeze({
-    id: "PRODUCTS_CONTROLLER_COMPASS_NAVIGATION_ANCHOR_v1",
-    sourceContractId: "DGB_COMPASS_CONTROLLER_SPHERICAL_CONSTELLATION_AND_CLUSTER_REBUILD_v3",
+    id: "PRODUCTS_CONTROLLER_COMPASS_NAVIGATION_ANCHOR_v2",
+    sourceContractId:
+      "DGB_COMPASS_CONTROLLER_SPHERICAL_CONSTELLATION_AND_CLUSTER_REBUILD_v3",
     continuationAnchorId: "ARCHCOIN_CONTROLLER_COMPASS_NAVIGATION_ANCHOR_v3",
     file: "/products/index.controller.js",
-    releaseId: "products-compass-navigation-anchor-v1",
+    releaseId: "products-compass-navigation-anchor-v2",
     visualPassClaimed: false,
     productionAuthorized: false,
     deploymentAuthorized: false
@@ -73,9 +70,7 @@
       STATES.PRIMARY_ENTRY,
       STATES.HELD
     ]),
-    [STATES.HELD]: Object.freeze([
-      STATES.HELD
-    ])
+    [STATES.HELD]: Object.freeze([STATES.HELD])
   });
 
   const PRIMARY_ENTRY = Object.freeze({
@@ -174,6 +169,8 @@
     semanticLayer: "[data-products-semantic]",
     primaryEntry: "[data-products-primary-entry]",
     productRecord: "[data-products-product]",
+    fallbackRoot: "[data-products-fallback]",
+    fallbackLink: "[data-products-fallback-link]",
     previewPanel: "[data-products-preview-panel]",
     previewEyebrow: "[data-products-preview-eyebrow]",
     previewTitle: "[data-products-preview-title]",
@@ -183,7 +180,8 @@
     returnToOrbit: "[data-products-return-to-orbit]",
     returnToConstellation: "[data-products-return-to-constellation]",
     guidance: "[data-products-guidance]",
-    controllerReceipt: "[data-products-controller-receipt]"
+    controllerReceipt: "[data-products-controller-receipt]",
+    crystalsReceipt: "[data-products-crystals-receipt]"
   });
 
   const LEGACY_SELECTORS = Object.freeze({
@@ -216,10 +214,11 @@
     selectedDestinationLabel: "",
     selectedRoute: "",
     panelDescended: false,
-    lastAction: "",
-    lastFailure: null,
+    fallbackHiddenForEnhanced: false,
     legacyRuntimeRootPresent: false,
     legacyRuntimeMountPresent: false,
+    lastAction: "",
+    lastFailure: null,
     visualPassClaimed: false
   };
 
@@ -227,6 +226,8 @@
     root: null,
     scene: null,
     semanticLayer: null,
+    fallbackRoot: null,
+    fallbackLinks: [],
     previewPanel: null,
     previewEyebrow: null,
     previewTitle: null,
@@ -239,7 +240,10 @@
     returnToConstellationButton: null,
     guidance: null,
     controllerReceiptOutput: null,
+    crystalsReceiptOutput: null,
+
     current: STATES.PRIMARY_ENTRY,
+
     orbitFocus: PRIMARY_ENTRY.id,
     orbitPreviewFocus: PRIMARY_ENTRY.id,
     orbitPhase: ORIENTATION_PHASES.COMMITTED,
@@ -248,6 +252,7 @@
     orbitOrientation: null,
     committedOrbitOrientation: null,
     orbitGestureOrigin: null,
+
     activeClusterId: "",
     clusterPrimaryProduct: "",
     clusterPreviewPrimaryProduct: "",
@@ -257,12 +262,14 @@
     clusterOrientation: null,
     committedClusterOrientation: null,
     clusterGestureOrigin: null,
+
     selectedProductId: "",
     selectedDestinationType: "",
     selectedDestinationId: "",
     selectedDestinationLabel: "",
     selectedRoute: "",
     selectedPreviewRecord: null,
+
     panelDescended: false,
     reducedMotion: false,
     initialized: false
@@ -397,15 +404,6 @@
     };
   }
 
-  function panelFromProduct(product) {
-    return {
-      eyebrow: product.shortLabel,
-      title: product.previewTitle,
-      summary: product.previewSummary,
-      relationship: product.relationshipCopy
-    };
-  }
-
   function clusterPanel() {
     return {
       eyebrow: "Products cluster",
@@ -414,6 +412,15 @@
         "Rotate the cluster, bring a product forward, and select one to populate the preview panel.",
       relationship:
         "Selection opens a preview first. Navigation requires explicit Enter Product."
+    };
+  }
+
+  function panelFromProduct(product) {
+    return {
+      eyebrow: product.shortLabel,
+      title: product.previewTitle,
+      summary: product.previewSummary,
+      relationship: product.relationshipCopy
     };
   }
 
@@ -443,9 +450,12 @@
       return;
     }
 
-    state.enterButton.disabled = !enabled;
-    state.enterButton.setAttribute("aria-disabled", enabled ? "false" : "true");
     state.enterButton.hidden = false;
+    state.enterButton.setAttribute("aria-disabled", enabled ? "false" : "true");
+
+    if ("disabled" in state.enterButton) {
+      state.enterButton.disabled = !enabled;
+    }
 
     if (state.enterButton.tagName === "A") {
       if (enabled && state.selectedRoute) {
@@ -465,13 +475,26 @@
 
     control.hidden = hidden;
     control.setAttribute("aria-hidden", hidden ? "true" : "false");
+    control.setAttribute("aria-disabled", hidden ? "true" : "false");
 
     if ("disabled" in control) {
       control.disabled = hidden;
     }
 
-    control.setAttribute("aria-disabled", hidden ? "true" : "false");
     control.tabIndex = hidden ? -1 : 0;
+  }
+
+  function setFallbackEnhancedState(isEnhancedVisible) {
+    if (!state.fallbackRoot) {
+      return;
+    }
+
+    state.fallbackRoot.dataset.enhancedSuppressed = isEnhancedVisible ? "true" : "false";
+    state.fallbackRoot.setAttribute("aria-hidden", isEnhancedVisible ? "true" : "false");
+
+    state.fallbackLinks.forEach(link => {
+      link.tabIndex = isEnhancedVisible ? -1 : 0;
+    });
   }
 
   function syncDatasets() {
@@ -521,7 +544,11 @@
       const primaryVisible = state.current === STATES.PRIMARY_ENTRY;
       state.primaryEntry.dataset.primary = primaryVisible ? "true" : "false";
       state.primaryEntry.dataset.selected = "false";
-      state.primaryEntry.setAttribute("aria-current", primaryVisible ? "true" : "false");
+      if (primaryVisible) {
+        state.primaryEntry.setAttribute("aria-current", "true");
+      } else {
+        state.primaryEntry.removeAttribute("aria-current");
+      }
       state.primaryEntry.hidden = state.current === STATES.HELD;
     }
 
@@ -537,13 +564,18 @@
       const primary = productId && productId === state.clusterPrimaryProduct;
       const visible =
         state.current === STATES.CLUSTER_OPEN ||
-        state.current === STATES.PRODUCT_SELECTED ||
-        state.current === STATES.HELD;
+        state.current === STATES.PRODUCT_SELECTED;
 
       element.dataset.selected = selected ? "true" : "false";
       element.dataset.primary = primary ? "true" : "false";
-      element.setAttribute("aria-current", selected || primary ? "true" : "false");
-      element.hidden = !visible && !element.closest("[data-products-fallback]");
+
+      if (selected || primary) {
+        element.setAttribute("aria-current", "true");
+      } else {
+        element.removeAttribute("aria-current");
+      }
+
+      element.hidden = !visible;
     });
   }
 
@@ -561,6 +593,11 @@
         primaryId: state.clusterPrimaryProduct || defaultClusterPrimaryProduct()
       }
     );
+
+    const fallbackHiddenForEnhanced =
+      state.current === STATES.PRIMARY_ENTRY ||
+      state.current === STATES.CLUSTER_OPEN ||
+      state.current === STATES.PRODUCT_SELECTED;
 
     Object.assign(RECEIPT, {
       contractId: CONTRACT.id,
@@ -587,6 +624,7 @@
       selectedDestinationLabel: state.selectedDestinationLabel,
       selectedRoute: state.selectedRoute,
       panelDescended: state.panelDescended,
+      fallbackHiddenForEnhanced,
       legacyRuntimeRootPresent: Boolean(qs(LEGACY_SELECTORS.runtimeRoot)),
       legacyRuntimeMountPresent: Boolean(qs(LEGACY_SELECTORS.runtimeMount)),
       visualPassClaimed: false
@@ -616,14 +654,23 @@
   function syncPresentation() {
     syncDatasets();
 
+    const enhancedActive =
+      state.current === STATES.PRIMARY_ENTRY ||
+      state.current === STATES.CLUSTER_OPEN ||
+      state.current === STATES.PRODUCT_SELECTED;
+
+    setFallbackEnhancedState(enhancedActive && state.current !== STATES.HELD);
+
     if (state.current === STATES.PRIMARY_ENTRY) {
       setPanel(defaultPanel());
       setEnterEnabled(false);
       setHiddenControl(state.returnToOrbitButton, true);
       setHiddenControl(state.returnToConstellationButton, true);
-      setGuidance(
-        "Select the PRODUCTS star to open the six-product cluster."
-      );
+      setGuidance("Select the PRODUCTS star to open the six-product cluster.");
+      emitReceipt({
+        lastAction: RECEIPT.lastAction,
+        lastFailure: RECEIPT.lastFailure
+      });
       return;
     }
 
@@ -635,6 +682,10 @@
       setGuidance(
         "Rotate the cluster to bring the nearest product forward. Select a product to populate the preview panel."
       );
+      emitReceipt({
+        lastAction: RECEIPT.lastAction,
+        lastFailure: RECEIPT.lastFailure
+      });
       return;
     }
 
@@ -650,6 +701,10 @@
       setGuidance(
         "Review the selected product preview. Enter Product commits navigation. Return to Orbit restores the six-product cluster."
       );
+      emitReceipt({
+        lastAction: RECEIPT.lastAction,
+        lastFailure: RECEIPT.lastFailure
+      });
       return;
     }
 
@@ -667,6 +722,7 @@
     setGuidance(
       "The enhanced Products controller is held. Static content remains readable and navigable."
     );
+    setFallbackEnhancedState(false);
   }
 
   function canTransition(fromState, toState) {
@@ -684,6 +740,7 @@
     const transaction = {
       currentState,
       nextState,
+
       orbitFocus:
         next.orbitFocus !== undefined ? next.orbitFocus : state.orbitFocus,
       orbitPreviewFocus:
@@ -777,7 +834,6 @@
       const previewPrimaryProduct = normalizeProductId(
         transaction.clusterPreviewPrimaryProduct
       ) || primaryProduct;
-
       transaction.clusterPreviewPrimaryProduct = previewPrimaryProduct;
 
       if (normalizeProductId(transaction.selectedProductId)) {
@@ -901,24 +957,15 @@
   }
 
   function setHeld(reason) {
-    const heldTransaction = beginAtomicTransition({
-      state: STATES.HELD,
-      orbitFocus: PRIMARY_ENTRY.id,
-      orbitPreviewFocus: PRIMARY_ENTRY.id,
-      orbitPhase: ORIENTATION_PHASES.CANCELLED,
-      orbitGestureActive: false,
-      clusterPhase: ORIENTATION_PHASES.CANCELLED,
-      clusterGestureActive: false
-    });
-
-    state.current = heldTransaction.nextState;
-    state.orbitFocus = heldTransaction.orbitFocus;
-    state.orbitPreviewFocus = heldTransaction.orbitPreviewFocus;
-    state.orbitPhase = heldTransaction.orbitPhase;
-    state.orbitGestureActive = heldTransaction.orbitGestureActive;
+    state.current = STATES.HELD;
+    state.orbitFocus = PRIMARY_ENTRY.id;
+    state.orbitPreviewFocus = PRIMARY_ENTRY.id;
+    state.orbitPhase = ORIENTATION_PHASES.CANCELLED;
+    state.orbitGestureActive = false;
     state.orbitGestureOrigin = null;
 
     state.activeClusterId = "";
+    state.clusterPhase = ORIENTATION_PHASES.CANCELLED;
     state.clusterGestureActive = false;
     state.clusterGestureOrigin = null;
 
@@ -968,6 +1015,7 @@
 
     const transaction = beginAtomicTransition({
       state: STATES.CLUSTER_OPEN,
+
       orbitFocus: PRIMARY_ENTRY.id,
       orbitPreviewFocus: PRIMARY_ENTRY.id,
       orbitPhase: ORIENTATION_PHASES.COMMITTED,
@@ -975,6 +1023,7 @@
       orbitOrientation: committedOrbit,
       committedOrbitOrientation: committedOrbit,
       orbitGestureOrigin: null,
+
       activeClusterId: PRIMARY_ENTRY.id,
       clusterPrimaryProduct: primaryProduct,
       clusterPreviewPrimaryProduct: primaryProduct,
@@ -983,6 +1032,7 @@
       clusterOrientation: committedCluster,
       committedClusterOrientation: committedCluster,
       clusterGestureOrigin: null,
+
       selectedProductId: "",
       selectedDestinationType: "",
       selectedDestinationId: "",
@@ -1069,10 +1119,7 @@
       panelDescended: false
     });
 
-    const committed = commitAtomicTransition(
-      transaction,
-      "return-to-orbit"
-    );
+    const committed = commitAtomicTransition(transaction, "return-to-orbit");
 
     if (!committed) {
       return false;
@@ -1102,27 +1149,23 @@
       return false;
     }
 
+    const committedOrbit = cloneOrientation(
+      state.committedOrbitOrientation || {
+        quaternion: QUATERNION.identity,
+        primaryId: PRIMARY_ENTRY.id
+      }
+    );
+
     const transaction = beginAtomicTransition({
       state: STATES.PRIMARY_ENTRY,
       orbitFocus: PRIMARY_ENTRY.id,
       orbitPreviewFocus: PRIMARY_ENTRY.id,
       orbitPhase: ORIENTATION_PHASES.COMMITTED,
       orbitGestureActive: false,
-      orbitOrientation:
-        cloneOrientation(
-          state.committedOrbitOrientation || {
-            quaternion: QUATERNION.identity,
-            primaryId: PRIMARY_ENTRY.id
-          }
-        ),
-      committedOrbitOrientation:
-        cloneOrientation(
-          state.committedOrbitOrientation || {
-            quaternion: QUATERNION.identity,
-            primaryId: PRIMARY_ENTRY.id
-          }
-        ),
+      orbitOrientation: committedOrbit,
+      committedOrbitOrientation: committedOrbit,
       orbitGestureOrigin: null,
+
       activeClusterId: "",
       selectedProductId: "",
       selectedDestinationType: "",
@@ -1319,11 +1362,10 @@
     const primaryProduct =
       normalizeProductId(
         payload.primaryProductId ||
-        payload.primaryId ||
-        state.clusterPreviewPrimaryProduct ||
-        state.clusterPrimaryProduct
-      ) ||
-      defaultClusterPrimaryProduct();
+          payload.primaryId ||
+          state.clusterPreviewPrimaryProduct ||
+          state.clusterPrimaryProduct
+      ) || defaultClusterPrimaryProduct();
 
     const orientation = orientationFromPayload(
       payload,
@@ -1363,11 +1405,10 @@
     const primaryProduct =
       normalizeProductId(
         payload.primaryProductId ||
-        payload.primaryId ||
-        state.clusterPreviewPrimaryProduct ||
-        state.clusterPrimaryProduct
-      ) ||
-      defaultClusterPrimaryProduct();
+          payload.primaryId ||
+          state.clusterPreviewPrimaryProduct ||
+          state.clusterPrimaryProduct
+      ) || defaultClusterPrimaryProduct();
 
     const orientation = orientationFromPayload(
       payload,
@@ -1397,9 +1438,9 @@
     const primaryProduct =
       normalizeProductId(
         payload.primaryProductId ||
-        payload.primaryId ||
-        state.clusterPreviewPrimaryProduct ||
-        state.clusterPrimaryProduct
+          payload.primaryId ||
+          state.clusterPreviewPrimaryProduct ||
+          state.clusterPrimaryProduct
       );
 
     if (!primaryProduct) {
@@ -1468,12 +1509,32 @@
     return true;
   }
 
+  function shouldBlockEnhancedSemanticClick() {
+    const crystalsReceipt = globalThis[RECEIPT_SYMBOL.replace("CONTROLLER", "CRYSTALS")];
+    if (crystalsReceipt && crystalsReceipt.gestureActive) {
+      return true;
+    }
+
+    const rootBlockedUntil = finiteNumber(state.root?.dataset?.productsSemanticBlockedUntil, 0);
+    if (rootBlockedUntil && performance.now() < rootBlockedUntil) {
+      return true;
+    }
+
+    return false;
+  }
+
   function handleSemanticClick(event) {
+    if (shouldBlockEnhancedSemanticClick()) {
+      event.preventDefault();
+      event.stopPropagation();
+      return;
+    }
+
     const control = event.target.closest(
       `${SELECTORS.primaryEntry}, ${SELECTORS.productRecord}`
     );
 
-    if (!control || !state.root.contains(control)) {
+    if (!control || !state.semanticLayer.contains(control)) {
       return;
     }
 
@@ -1499,7 +1560,7 @@
   }
 
   function bindSemanticControls() {
-    state.root.addEventListener("click", handleSemanticClick);
+    state.semanticLayer.addEventListener("click", handleSemanticClick);
   }
 
   function bindPanelControls() {
@@ -1527,16 +1588,24 @@
 
   function readReducedMotion() {
     state.reducedMotion =
-      globalThis.matchMedia &&
-      typeof globalThis.matchMedia === "function" &&
-      globalThis.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      Boolean(
+        globalThis.matchMedia &&
+          typeof globalThis.matchMedia === "function" &&
+          globalThis.matchMedia("(prefers-reduced-motion: reduce)").matches
+      );
   }
 
   function resolveDom() {
-    state.root = qs(SELECTORS.pageRoot);
+    const roots = qsa(SELECTORS.pageRoot);
 
-    if (!state.root) {
-      throw new Error("PRODUCTS_ROOT_NOT_FOUND");
+    if (roots.length !== 1) {
+      throw new Error(`PRODUCTS_ROOT_COUNT_INVALID:${roots.length}`);
+    }
+
+    state.root = roots[0];
+
+    if (state.root.tagName.toLowerCase() === "html") {
+      throw new Error("PRODUCTS_ROOT_MAY_NOT_BE_HTML");
     }
 
     state.scene = qs(SELECTORS.sceneRoot, state.root);
@@ -1549,28 +1618,43 @@
       throw new Error("PRODUCTS_SEMANTIC_LAYER_NOT_FOUND");
     }
 
+    state.fallbackRoot = qs(SELECTORS.fallbackRoot, state.root);
+    if (!state.fallbackRoot) {
+      throw new Error("PRODUCTS_FALLBACK_NOT_FOUND");
+    }
+
+    state.fallbackLinks = qsa(SELECTORS.fallbackLink, state.fallbackRoot);
+    if (state.fallbackLinks.length !== PRODUCTS.length) {
+      throw new Error(`PRODUCTS_FALLBACK_COUNT_INVALID:${state.fallbackLinks.length}`);
+    }
+
     state.previewPanel = qs(SELECTORS.previewPanel, state.root);
     if (!state.previewPanel) {
       throw new Error("PRODUCTS_PREVIEW_PANEL_NOT_FOUND");
     }
 
-    state.primaryEntry = qs(SELECTORS.primaryEntry, state.root);
+    state.primaryEntry = qs(SELECTORS.primaryEntry, state.semanticLayer);
     if (!state.primaryEntry) {
       throw new Error("PRODUCTS_PRIMARY_ENTRY_NOT_FOUND");
     }
 
-    state.productRecords = qsa(SELECTORS.productRecord, state.root);
+    state.productRecords = qsa(SELECTORS.productRecord, state.semanticLayer);
+    if (state.productRecords.length !== PRODUCTS.length) {
+      throw new Error(`PRODUCTS_SEMANTIC_PRODUCT_COUNT_INVALID:${state.productRecords.length}`);
+    }
 
-    state.previewEyebrow = qs(SELECTORS.previewEyebrow, state.root);
-    state.previewTitle = qs(SELECTORS.previewTitle, state.root);
-    state.previewSummary = qs(SELECTORS.previewSummary, state.root);
-    state.previewRelationship = qs(SELECTORS.previewRelationship, state.root);
+    state.previewEyebrow = qs(SELECTORS.previewEyebrow, state.previewPanel);
+    state.previewTitle = qs(SELECTORS.previewTitle, state.previewPanel);
+    state.previewSummary = qs(SELECTORS.previewSummary, state.previewPanel);
+    state.previewRelationship = qs(SELECTORS.previewRelationship, state.previewPanel);
 
-    state.enterButton = qs(SELECTORS.enterProduct, state.root);
-    state.returnToOrbitButton = qs(SELECTORS.returnToOrbit, state.root);
-    state.returnToConstellationButton = qs(SELECTORS.returnToConstellation, state.root);
+    state.enterButton = qs(SELECTORS.enterProduct, state.previewPanel);
+    state.returnToOrbitButton = qs(SELECTORS.returnToOrbit, state.previewPanel);
+    state.returnToConstellationButton = qs(SELECTORS.returnToConstellation, state.previewPanel);
+
     state.guidance = qs(SELECTORS.guidance, state.root);
     state.controllerReceiptOutput = qs(SELECTORS.controllerReceipt, state.root);
+    state.crystalsReceiptOutput = qs(SELECTORS.crystalsReceipt, state.root);
   }
 
   function initializeState() {
@@ -1690,7 +1774,6 @@
       requestPrimaryProductsSelection,
       requestProductSelection,
 
-      /* DOM-facing extensions outside the frozen renderer-facing grammar. */
       requestReturnToOrbit,
       requestEnterProduct
     });

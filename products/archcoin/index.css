@@ -1,13 +1,15 @@
 /* /products/archcoin/index.css
    ARCHCOIN
-   Navigation-only presentation layer for the frozen ARCHCOIN controller and
-   crystals renderer.
+   Introduction-and-handoff presentation layer for the frozen ARCHCOIN
+   controller and crystals renderer.
 
    Scope:
    - Intentional empty bounded void.
-   - Four-coin outer constellation shell.
-   - Active room-cluster semantic layer support.
-   - Reading panel, content-record, lens, fallback, and receipt surfaces.
+   - Compact introduction shell.
+   - Four-coin compass field.
+   - Active-path briefing box beneath the compass.
+   - Hidden room-source declarations for runtime use.
+   - No archive-style reading-surface stack on the landing page.
    - No Mirrorland.
    - No cosmic backdrop.
    - No atmosphere canvas.
@@ -16,40 +18,51 @@
 */
 
 :root {
-  --archcoin-bg: #061018;
-  --archcoin-bg-elevated: #0b1621;
-  --archcoin-bg-panel: #0f1b27;
-  --archcoin-bg-soft: #132231;
+  --archcoin-bg-0: #061018;
+  --archcoin-bg-1: #0b1621;
+  --archcoin-bg-2: #0f1b27;
+  --archcoin-bg-3: #132231;
+  --archcoin-bg-4: #182a3c;
 
-  --archcoin-line: rgba(145, 184, 214, 0.18);
-  --archcoin-line-strong: rgba(145, 184, 214, 0.34);
-  --archcoin-shadow: rgba(0, 0, 0, 0.34);
+  --archcoin-line: rgba(145, 184, 214, 0.16);
+  --archcoin-line-strong: rgba(145, 184, 214, 0.30);
+  --archcoin-line-focus: rgba(240, 194, 122, 0.34);
 
-  --archcoin-text: rgba(233, 241, 247, 0.94);
-  --archcoin-text-soft: rgba(214, 226, 236, 0.78);
-  --archcoin-text-muted: rgba(187, 203, 216, 0.60);
+  --archcoin-shadow-lg: rgba(0, 0, 0, 0.34);
+  --archcoin-shadow-md: rgba(0, 0, 0, 0.24);
+  --archcoin-shadow-sm: rgba(0, 0, 0, 0.18);
 
-  --archcoin-contract: #9fd0ff;
-  --archcoin-receivable: #78e2d0;
-  --archcoin-payable: #f0c27a;
-  --archcoin-allocation: #d3a3ff;
+  --archcoin-text: rgba(236, 242, 247, 0.96);
+  --archcoin-text-soft: rgba(214, 226, 236, 0.82);
+  --archcoin-text-muted: rgba(186, 203, 216, 0.62);
+
+  --archcoin-contract: #a8d8ff;
+  --archcoin-receivable: #79e4d6;
+  --archcoin-payable: #efc07b;
+  --archcoin-allocation: #d4a4ff;
 
   --archcoin-focus: #f0c27a;
 
-  --archcoin-radius-lg: 28px;
+  --archcoin-radius-xl: 34px;
+  --archcoin-radius-lg: 26px;
   --archcoin-radius-md: 18px;
   --archcoin-radius-sm: 12px;
-  --archcoin-max: 1200px;
+
+  --archcoin-shell-max: 1120px;
+  --archcoin-copy-max: 760px;
+
   --archcoin-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 
-* {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
 html {
   min-height: 100%;
-  background: var(--archcoin-bg);
+  background: var(--archcoin-bg-0);
   scroll-behavior: smooth;
 }
 
@@ -58,6 +71,11 @@ body {
   margin: 0;
   color: var(--archcoin-text);
   background:
+    radial-gradient(
+      circle at top center,
+      rgba(40, 88, 132, 0.10),
+      transparent 34%
+    ),
     linear-gradient(
       180deg,
       rgba(255, 255, 255, 0.02),
@@ -68,7 +86,7 @@ body {
       rgba(0, 0, 0, 0.08),
       rgba(0, 0, 0, 0.18)
     ),
-    var(--archcoin-bg);
+    var(--archcoin-bg-0);
   font-family:
     Inter,
     ui-sans-serif,
@@ -95,70 +113,70 @@ button {
 }
 
 button:focus-visible,
-a:focus-visible {
+a:focus-visible,
+summary:focus-visible {
   outline: 3px solid var(--archcoin-focus);
   outline-offset: 4px;
 }
 
-/* -------------------------------------------------------------------------- */
-/* Page shell                                                                  */
-/* -------------------------------------------------------------------------- */
-
 .archcoin-page {
   min-height: 100vh;
-  padding: clamp(18px, 3vw, 36px);
+  padding: clamp(16px, 2.8vw, 34px);
 }
 
 .archcoin-shell {
-  width: min(100%, var(--archcoin-max));
+  width: min(100%, var(--archcoin-shell-max));
   margin: 0 auto;
   display: grid;
-  gap: 22px;
+  gap: 18px;
 }
 
-.archcoin-header,
-.archcoin-introduction,
-.archcoin-room-library,
+.archcoin-hero,
+.archcoin-coin-overview,
+.archcoin-scene,
 .archcoin-panel,
-.archcoin-reading-surface,
-.archcoin-guardrails {
+.archcoin-guardrails,
+.archcoin-noscript {
   position: relative;
-  padding: clamp(18px, 2.4vw, 26px);
   border: 1px solid var(--archcoin-line);
-  border-radius: var(--archcoin-radius-md);
+  border-radius: var(--archcoin-radius-lg);
   background:
     linear-gradient(
       135deg,
-      rgba(255, 255, 255, 0.03),
-      rgba(255, 255, 255, 0.01)
+      rgba(255, 255, 255, 0.028),
+      rgba(255, 255, 255, 0.008)
     ),
-    var(--archcoin-bg-elevated);
+    var(--archcoin-bg-1);
   box-shadow:
-    0 18px 42px var(--archcoin-shadow),
+    0 22px 54px var(--archcoin-shadow-lg),
     inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 
-.archcoin-header::before,
-.archcoin-introduction::before,
-.archcoin-room-library::before,
+.archcoin-hero::before,
+.archcoin-coin-overview::before,
+.archcoin-scene::before,
 .archcoin-panel::before,
-.archcoin-reading-surface::before,
-.archcoin-guardrails::before {
+.archcoin-guardrails::before,
+.archcoin-noscript::before {
   content: "";
   position: absolute;
   inset: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.04);
-  border-radius: calc(var(--archcoin-radius-md) - 8px);
+  border: 1px solid rgba(255, 255, 255, 0.035);
+  border-radius: calc(var(--archcoin-radius-lg) - 8px);
   pointer-events: none;
 }
 
-.archcoin-header__kicker,
-.archcoin-scene__kicker,
-.archcoin-room-library__kicker,
-.archcoin-reading-surface__kicker,
-.archcoin-guardrails__kicker,
-.archcoin-panel__eyebrow,
-.archcoin-content-record__eyebrow {
+.archcoin-hero,
+.archcoin-coin-overview,
+.archcoin-panel,
+.archcoin-guardrails,
+.archcoin-noscript {
+  padding: clamp(18px, 2.5vw, 28px);
+}
+
+.archcoin-section-kicker,
+.archcoin-hero__kicker,
+.archcoin-panel__eyebrow {
   margin: 0 0 8px;
   color: var(--archcoin-text-soft);
   font-size: 0.74rem;
@@ -167,54 +185,161 @@ a:focus-visible {
   text-transform: uppercase;
 }
 
-.archcoin-header h1,
+.archcoin-hero h1,
+.archcoin-coin-overview h2,
 .archcoin-scene h2,
-.archcoin-room-library h2,
-.archcoin-reading-surface h2,
-.archcoin-panel h2 {
+.archcoin-panel h2,
+.archcoin-guardrails h2,
+.archcoin-noscript h2 {
   margin: 0;
   font-family: Georgia, "Times New Roman", serif;
   font-weight: 700;
-  letter-spacing: -0.03em;
-  color: rgba(246, 250, 252, 0.98);
+  letter-spacing: -0.035em;
+  color: rgba(248, 250, 252, 0.98);
 }
 
-.archcoin-header h1 {
-  font-size: clamp(2.3rem, 6vw, 4.8rem);
-  line-height: 0.94;
+.archcoin-hero h1 {
+  max-width: 10.5ch;
+  font-size: clamp(2.5rem, 6.4vw, 5.4rem);
+  line-height: 0.92;
 }
 
+.archcoin-coin-overview h2,
 .archcoin-scene h2,
-.archcoin-room-library h2,
-.archcoin-reading-surface h2,
-.archcoin-panel h2 {
-  font-size: clamp(1.45rem, 3vw, 2.4rem);
+.archcoin-panel h2,
+.archcoin-guardrails h2,
+.archcoin-noscript h2 {
+  font-size: clamp(1.45rem, 3vw, 2.35rem);
   line-height: 1;
 }
 
-.archcoin-header__sentence,
+.archcoin-hero__lede,
+.archcoin-hero__extended p,
+.archcoin-coin-overview__card p,
 .archcoin-scene__sentence,
-.archcoin-introduction p,
-.archcoin-room-library__header p,
-.archcoin-reading-surface__header p,
 .archcoin-panel p,
-.archcoin-content-record p,
-.archcoin-guardrails li {
+.archcoin-guardrails li,
+.archcoin-noscript p,
+.archcoin-noscript li {
   margin: 0;
   color: var(--archcoin-text-soft);
   line-height: 1.62;
 }
 
-.archcoin-header__sentence {
-  max-width: 54rem;
-  margin-top: 14px;
-  font-size: clamp(1rem, 2vw, 1.24rem);
+.archcoin-hero__lede {
+  max-width: var(--archcoin-copy-max);
+  margin-top: 16px;
+  font-size: clamp(1rem, 2vw, 1.2rem);
 }
 
-.archcoin-introduction {
+.archcoin-hero__readmore {
+  margin-top: 18px;
+  max-width: var(--archcoin-copy-max);
+  border: 1px solid var(--archcoin-line);
+  border-radius: 20px;
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.02),
+      rgba(255, 255, 255, 0.006)
+    ),
+    rgba(6, 16, 24, 0.42);
+  overflow: clip;
+}
+
+.archcoin-hero__readmore summary {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  list-style: none;
+  cursor: pointer;
+  padding: 14px 18px;
+  color: var(--archcoin-text);
+  font-size: 0.92rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  transition:
+    background 180ms var(--archcoin-ease),
+    color 180ms var(--archcoin-ease);
+}
+
+.archcoin-hero__readmore summary::-webkit-details-marker {
+  display: none;
+}
+
+.archcoin-hero__readmore summary::before {
+  content: "▾";
+  font-size: 1rem;
+  line-height: 1;
+  color: var(--archcoin-text-soft);
+  transition: transform 180ms var(--archcoin-ease);
+}
+
+.archcoin-hero__readmore[open] summary::before {
+  transform: rotate(180deg);
+}
+
+.archcoin-hero__readmore[open] summary {
+  border-bottom: 1px solid var(--archcoin-line);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.archcoin-hero__extended {
   display: grid;
   gap: 12px;
-  max-width: 980px;
+  padding: 16px 18px 18px;
+}
+
+.archcoin-coin-overview__header {
+  display: grid;
+  gap: 8px;
+  max-width: 720px;
+  margin-bottom: 18px;
+}
+
+.archcoin-coin-overview__grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.archcoin-coin-overview__card {
+  padding: 16px;
+  border: 1px solid var(--archcoin-line);
+  border-radius: var(--archcoin-radius-md);
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.018),
+      rgba(255, 255, 255, 0.008)
+    ),
+    var(--archcoin-bg-2);
+  box-shadow:
+    0 10px 24px var(--archcoin-shadow-sm),
+    inset 0 1px 0 rgba(255, 255, 255, 0.035);
+}
+
+.archcoin-coin-overview__card h3 {
+  margin: 0 0 8px;
+  color: rgba(246, 250, 252, 0.98);
+  font-size: 1rem;
+  letter-spacing: 0.01em;
+}
+
+.archcoin-coin-overview__card--contract {
+  border-color: color-mix(in srgb, var(--archcoin-contract) 24%, var(--archcoin-line));
+}
+
+.archcoin-coin-overview__card--receivable {
+  border-color: color-mix(in srgb, var(--archcoin-receivable) 24%, var(--archcoin-line));
+}
+
+.archcoin-coin-overview__card--payable {
+  border-color: color-mix(in srgb, var(--archcoin-payable) 24%, var(--archcoin-line));
+}
+
+.archcoin-coin-overview__card--allocation {
+  border-color: color-mix(in srgb, var(--archcoin-allocation) 24%, var(--archcoin-line));
 }
 
 /* -------------------------------------------------------------------------- */
@@ -222,27 +347,26 @@ a:focus-visible {
 /* -------------------------------------------------------------------------- */
 
 .archcoin-scene {
-  position: relative;
   overflow: hidden;
-  border: 1px solid var(--archcoin-line-strong);
-  border-radius: var(--archcoin-radius-lg);
+  border-color: var(--archcoin-line-strong);
+  border-radius: var(--archcoin-radius-xl);
   background:
     linear-gradient(
       180deg,
       rgba(255, 255, 255, 0.02),
       rgba(255, 255, 255, 0.01)
     ),
-    var(--archcoin-bg-panel);
+    var(--archcoin-bg-2);
   box-shadow:
-    0 26px 64px var(--archcoin-shadow),
+    0 28px 68px var(--archcoin-shadow-lg),
     inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
 .archcoin-scene__header {
   position: relative;
   z-index: 3;
-  padding: clamp(18px, 2.2vw, 24px) clamp(18px, 2.6vw, 28px) 0;
-  max-width: 780px;
+  max-width: 760px;
+  padding: clamp(18px, 2.3vw, 26px) clamp(18px, 2.6vw, 28px) 0;
 }
 
 .archcoin-scene__field {
@@ -256,7 +380,7 @@ a:focus-visible {
 .archcoin-scene__semantic {
   position: relative;
   z-index: 2;
-  min-height: clamp(430px, 58vh, 680px);
+  min-height: clamp(360px, 52vh, 560px);
   isolation: isolate;
   pointer-events: none;
 }
@@ -274,8 +398,8 @@ a:focus-visible {
   position: absolute;
   display: inline-grid;
   gap: 3px;
-  min-width: 112px;
-  max-width: 160px;
+  min-width: 108px;
+  max-width: 156px;
   padding: 10px 12px;
   border: 1px solid var(--archcoin-line);
   border-radius: 999px;
@@ -315,25 +439,25 @@ a:focus-visible {
 
 .archcoin-coin--north {
   left: 50%;
-  top: 12%;
+  top: 14%;
   transform: translate(-50%, -50%);
 }
 
 .archcoin-coin--east {
   right: 9%;
-  top: 50%;
+  top: 52%;
   transform: translate(50%, -50%);
 }
 
 .archcoin-coin--south {
   left: 50%;
-  bottom: 10%;
+  bottom: 12%;
   transform: translate(-50%, 50%);
 }
 
 .archcoin-coin--west {
   left: 9%;
-  top: 50%;
+  top: 52%;
   transform: translate(-50%, -50%);
 }
 
@@ -356,25 +480,25 @@ a:focus-visible {
 .archcoin-coin--north[data-primary="true"],
 .archcoin-coin--north[data-selected="true"],
 .archcoin-coin--north:hover {
-  border-color: color-mix(in srgb, var(--archcoin-contract) 56%, transparent);
+  border-color: color-mix(in srgb, var(--archcoin-contract) 58%, transparent);
 }
 
 .archcoin-coin--east[data-primary="true"],
 .archcoin-coin--east[data-selected="true"],
 .archcoin-coin--east:hover {
-  border-color: color-mix(in srgb, var(--archcoin-receivable) 56%, transparent);
+  border-color: color-mix(in srgb, var(--archcoin-receivable) 58%, transparent);
 }
 
 .archcoin-coin--south[data-primary="true"],
 .archcoin-coin--south[data-selected="true"],
 .archcoin-coin--south:hover {
-  border-color: color-mix(in srgb, var(--archcoin-payable) 56%, transparent);
+  border-color: color-mix(in srgb, var(--archcoin-payable) 58%, transparent);
 }
 
 .archcoin-coin--west[data-primary="true"],
 .archcoin-coin--west[data-selected="true"],
 .archcoin-coin--west:hover {
-  border-color: color-mix(in srgb, var(--archcoin-allocation) 56%, transparent);
+  border-color: color-mix(in srgb, var(--archcoin-allocation) 58%, transparent);
 }
 
 [data-archcoin-room-proxy] {
@@ -413,9 +537,9 @@ a:focus-visible {
   left: 50%;
   bottom: 14px;
   z-index: 3;
-  width: min(calc(100% - 36px), 560px);
+  width: min(calc(100% - 34px), 620px);
   margin: 0;
-  padding: 9px 14px;
+  padding: 10px 15px;
   transform: translateX(-50%);
   border: 1px solid var(--archcoin-line);
   border-radius: 999px;
@@ -429,9 +553,9 @@ a:focus-visible {
     0 10px 24px rgba(0, 0, 0, 0.24),
     inset 0 1px 0 rgba(255, 255, 255, 0.05);
   color: var(--archcoin-text-soft);
-  font-size: 0.78rem;
+  font-size: 0.79rem;
+  line-height: 1.36;
   text-align: center;
-  line-height: 1.34;
   pointer-events: none;
   transition:
     opacity 180ms var(--archcoin-ease),
@@ -440,65 +564,6 @@ a:focus-visible {
 
 [data-archcoin-mode="HELD"] .archcoin-guidance {
   border-color: rgba(240, 194, 122, 0.24);
-}
-
-/* -------------------------------------------------------------------------- */
-/* Static room library                                                         */
-/* -------------------------------------------------------------------------- */
-
-.archcoin-room-library__header {
-  display: grid;
-  gap: 8px;
-  margin-bottom: 18px;
-}
-
-.archcoin-room-library__groups {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 16px;
-}
-
-.archcoin-room-group {
-  padding: 16px;
-  border: 1px solid var(--archcoin-line);
-  border-radius: var(--archcoin-radius-sm);
-  background: rgba(255, 255, 255, 0.015);
-}
-
-.archcoin-room-group h3 {
-  margin: 0 0 12px;
-  color: rgba(246, 250, 252, 0.96);
-  font-size: 1rem;
-  letter-spacing: 0.02em;
-}
-
-.archcoin-room-group__list {
-  display: grid;
-  gap: 10px;
-}
-
-.archcoin-room-group__list > a {
-  display: block;
-  padding: 12px 14px;
-  border: 1px solid var(--archcoin-line);
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.012);
-  color: var(--archcoin-text-soft);
-  font-size: 0.94rem;
-  line-height: 1.4;
-  transition:
-    border-color 160ms var(--archcoin-ease),
-    background 160ms var(--archcoin-ease),
-    color 160ms var(--archcoin-ease),
-    transform 160ms var(--archcoin-ease);
-}
-
-.archcoin-room-group__list > a:hover,
-.archcoin-room-group__list > a:focus-visible {
-  border-color: var(--archcoin-line-strong);
-  background: rgba(255, 255, 255, 0.03);
-  color: var(--archcoin-text);
-  transform: translateY(-1px);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -521,7 +586,7 @@ a:focus-visible {
 [data-archcoin-enter],
 [data-archcoin-return-to-orbit],
 [data-archcoin-read-more] {
-  min-width: 126px;
+  min-width: 132px;
   padding: 11px 16px;
   border-radius: 999px;
   border: 1px solid var(--archcoin-line);
@@ -579,103 +644,7 @@ a:focus-visible {
 }
 
 /* -------------------------------------------------------------------------- */
-/* Reading surface and content records                                         */
-/* -------------------------------------------------------------------------- */
-
-.archcoin-reading-surface__header {
-  display: grid;
-  gap: 8px;
-  margin-bottom: 18px;
-}
-
-.archcoin-content-records {
-  display: grid;
-  gap: 16px;
-}
-
-.archcoin-content-record {
-  padding: 18px;
-  border: 1px solid var(--archcoin-line);
-  border-radius: var(--archcoin-radius-sm);
-  background:
-    linear-gradient(
-      135deg,
-      rgba(255, 255, 255, 0.02),
-      rgba(255, 255, 255, 0.008)
-    ),
-    var(--archcoin-bg-soft);
-  box-shadow:
-    0 12px 26px rgba(0, 0, 0, 0.18),
-    inset 0 1px 0 rgba(255, 255, 255, 0.04);
-}
-
-.archcoin-content-record__header {
-  margin-bottom: 14px;
-}
-
-.archcoin-content-record__header h3 {
-  margin: 0;
-  color: rgba(246, 250, 252, 0.98);
-  font-size: 1.16rem;
-  letter-spacing: 0.01em;
-}
-
-.archcoin-lens-set {
-  display: grid;
-  gap: 10px;
-}
-
-.archcoin-lens-tabs {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
-  gap: 6px;
-  padding: 6px;
-  border: 1px solid var(--archcoin-line);
-  border-radius: 999px;
-  background: rgba(6, 16, 24, 0.72);
-}
-
-.archcoin-lens-tabs > button {
-  min-width: 0;
-  min-height: 40px;
-  padding: 9px 12px;
-  border: 1px solid transparent;
-  border-radius: 999px;
-  background: transparent;
-  color: var(--archcoin-text-muted);
-  cursor: pointer;
-  font-size: 0.72rem;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  transition:
-    color 160ms var(--archcoin-ease),
-    border-color 160ms var(--archcoin-ease),
-    background 160ms var(--archcoin-ease),
-    transform 160ms var(--archcoin-ease);
-}
-
-.archcoin-lens-tabs > button:hover,
-.archcoin-lens-tabs > button[aria-selected="true"] {
-  border-color: var(--archcoin-line-strong);
-  background: rgba(255, 255, 255, 0.05);
-  color: var(--archcoin-text);
-  transform: translateY(-1px);
-}
-
-[data-archcoin-lens-panel] {
-  padding: 14px 16px;
-  border: 1px solid var(--archcoin-line);
-  border-radius: 14px;
-  background: rgba(255, 255, 255, 0.018);
-}
-
-[data-archcoin-lens-panel][hidden] {
-  display: none;
-}
-
-/* -------------------------------------------------------------------------- */
-/* Guardrails and receipts                                                     */
+/* Guardrails                                                                  */
 /* -------------------------------------------------------------------------- */
 
 .archcoin-guardrails ul {
@@ -685,8 +654,59 @@ a:focus-visible {
   gap: 8px;
 }
 
+/* -------------------------------------------------------------------------- */
+/* Hidden runtime source and receipts                                          */
+/* -------------------------------------------------------------------------- */
+
+.archcoin-room-source[hidden],
 .archcoin-receipts[hidden] {
-  display: none;
+  display: none !important;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Noscript fallback                                                           */
+/* -------------------------------------------------------------------------- */
+
+.archcoin-noscript__groups {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 18px;
+}
+
+.archcoin-noscript__groups section {
+  padding: 16px;
+  border: 1px solid var(--archcoin-line);
+  border-radius: var(--archcoin-radius-md);
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.016),
+      rgba(255, 255, 255, 0.008)
+    ),
+    var(--archcoin-bg-2);
+}
+
+.archcoin-noscript__groups h3 {
+  margin: 0 0 10px;
+  color: rgba(246, 250, 252, 0.98);
+  font-size: 1rem;
+}
+
+.archcoin-noscript__groups ul {
+  margin: 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 8px;
+}
+
+.archcoin-noscript__groups a {
+  color: var(--archcoin-text-soft);
+}
+
+.archcoin-noscript__groups a:hover,
+.archcoin-noscript__groups a:focus-visible {
+  color: var(--archcoin-text);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -730,8 +750,9 @@ a:focus-visible {
 /* -------------------------------------------------------------------------- */
 
 @media (max-width: 980px) {
-  .archcoin-room-library__groups {
-    grid-template-columns: 1fr;
+  .archcoin-coin-overview__grid,
+  .archcoin-noscript__groups {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
@@ -741,7 +762,7 @@ a:focus-visible {
   }
 
   .archcoin-scene__semantic {
-    min-height: 520px;
+    min-height: 480px;
   }
 
   .archcoin-coin {
@@ -786,22 +807,32 @@ a:focus-visible {
   }
 }
 
+@media (max-width: 640px) {
+  .archcoin-coin-overview__grid,
+  .archcoin-noscript__groups {
+    grid-template-columns: 1fr;
+  }
+
+  .archcoin-hero h1 {
+    max-width: 100%;
+  }
+}
+
 @media (max-width: 540px) {
-  .archcoin-header,
-  .archcoin-introduction,
-  .archcoin-room-library,
+  .archcoin-hero,
+  .archcoin-coin-overview,
   .archcoin-panel,
-  .archcoin-reading-surface,
-  .archcoin-guardrails {
+  .archcoin-guardrails,
+  .archcoin-noscript {
     padding: 15px;
   }
 
-  .archcoin-header::before,
-  .archcoin-introduction::before,
-  .archcoin-room-library::before,
+  .archcoin-hero::before,
+  .archcoin-coin-overview::before,
+  .archcoin-scene::before,
   .archcoin-panel::before,
-  .archcoin-reading-surface::before,
-  .archcoin-guardrails::before {
+  .archcoin-guardrails::before,
+  .archcoin-noscript::before {
     inset: 8px;
   }
 
@@ -810,29 +841,15 @@ a:focus-visible {
   }
 
   .archcoin-scene__semantic {
-    min-height: 470px;
+    min-height: 440px;
   }
 
   .archcoin-coin--north {
-    top: 10%;
+    top: 12%;
   }
 
   .archcoin-coin--south {
-    bottom: 8%;
-  }
-
-  .archcoin-lens-tabs {
-    grid-template-columns: 1fr;
-    border-radius: 16px;
-  }
-
-  .archcoin-lens-tabs > button {
-    min-height: 38px;
-    font-size: 0.66rem;
-  }
-
-  .archcoin-content-record {
-    padding: 15px;
+    bottom: 10%;
   }
 }
 

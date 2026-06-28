@@ -1,7 +1,7 @@
+<!-- /products/index.html -->
 <!doctype html>
 <html
   lang="en"
-  data-page-id="products"
   data-route="/products/"
   data-role="product-wing"
   data-static-page-usable-without-js="true"
@@ -71,13 +71,41 @@
       data-page-id="products"
       data-route="/products/"
       data-products-root="true"
+      data-products-state="PRIMARY_ENTRY"
+      data-products-held="false"
+      data-orbit-focus="products"
+      data-orbit-preview-focus="products"
+      data-orbit-phase="COMMITTED"
+      data-orbit-gesture-active="false"
+      data-orbit-revision="0"
+      data-orbit-quaternion="[0,0,0,1]"
+      data-products-active-cluster=""
+      data-cluster-primary-product="archcoin"
+      data-cluster-preview-primary-product="archcoin"
+      data-cluster-phase="COMMITTED"
+      data-cluster-gesture-active="false"
+      data-cluster-revision="0"
+      data-cluster-quaternion="[0,0,0,1]"
+      data-products-selected-id=""
+      data-products-selected-route=""
+      data-products-panel-descended="false"
+      data-reduced-motion="false"
+      data-products-controller-status="pending"
+      data-products-crystals-status="pending"
+      data-visual-pass-claimed="false"
     >
-      <section class="products-header">
+      <section
+        class="products-header"
+        aria-labelledby="products-page-title"
+      >
         <p class="products-header__kicker">
           Products
         </p>
 
-        <h1 class="products-header__title">
+        <h1
+          id="products-page-title"
+          class="products-header__title"
+        >
           PRODUCTS
         </h1>
 
@@ -102,6 +130,7 @@
             data-products-primary-entry
             data-destination-type="cluster-entry"
             data-destination-id="products"
+            data-label="PRODUCTS"
             aria-label="Open the six-product constellation"
           >
             <span class="products-star__label">
@@ -291,6 +320,8 @@
             data-products-return-to-orbit
             hidden
             aria-hidden="true"
+            aria-disabled="true"
+            tabindex="-1"
           >
             Return to Orbit
           </button>
@@ -301,6 +332,8 @@
             data-products-return-to-constellation
             hidden
             aria-hidden="true"
+            aria-disabled="true"
+            tabindex="-1"
           >
             Return to Constellation
           </button>
@@ -329,6 +362,7 @@
             href="/products/archcoin/"
             data-products-fallback-link
             data-product-id="archcoin"
+            aria-label="Go directly to ARCHCOIN"
           >
             <span class="products-fallback__label">ARCHCOIN</span>
             <span class="products-fallback__short">TRACE</span>
@@ -339,6 +373,7 @@
             href="/products/five-flags/"
             data-products-fallback-link
             data-product-id="five-flags"
+            aria-label="Go directly to FIVE FLAGS"
           >
             <span class="products-fallback__label">FIVE FLAGS</span>
             <span class="products-fallback__short">SIGNALS</span>
@@ -349,6 +384,7 @@
             href="/products/on-your-side-ai/"
             data-products-fallback-link
             data-product-id="aai"
+            aria-label="Go directly to AAI"
           >
             <span class="products-fallback__label">AAI</span>
             <span class="products-fallback__short">SUPPORT</span>
@@ -359,6 +395,7 @@
             href="/products/education/"
             data-products-fallback-link
             data-product-id="education"
+            aria-label="Go directly to EDUCATION"
           >
             <span class="products-fallback__label">EDUCATION</span>
             <span class="products-fallback__short">LEARNING</span>
@@ -369,6 +406,7 @@
             href="/products/nutrition/"
             data-products-fallback-link
             data-product-id="nutrition"
+            aria-label="Go directly to NUTRITION"
           >
             <span class="products-fallback__label">NUTRITION</span>
             <span class="products-fallback__short">BASELINE</span>
@@ -379,6 +417,7 @@
             href="/nine-summits-of-love/"
             data-products-fallback-link
             data-product-id="book"
+            aria-label="Go directly to BOOK"
           >
             <span class="products-fallback__label">BOOK</span>
             <span class="products-fallback__short">LONG FORM</span>
@@ -386,7 +425,10 @@
         </div>
       </section>
 
-      <section class="products-guardrail">
+      <section
+        class="products-guardrail"
+        aria-label="Products guardrail"
+      >
         <p class="products-guardrail__copy">
           Enhanced navigation is compass-first. Fallback links remain available if scripting or WebGL is unavailable.
         </p>

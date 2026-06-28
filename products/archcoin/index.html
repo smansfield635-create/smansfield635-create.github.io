@@ -121,14 +121,19 @@
           ></div>
 
           <!--
-            ARCHCOIN page-owned placement slot.
+            ARCHCOIN integrated center placement slot.
 
-            This wrapper owns only page placement, centering, responsive width,
-            and page-relative layer position.
+            This wrapper identifies the shared upstream Compass as the
+            constellation's central navigation object. It owns only the
+            page-relative position and responsive bounds supplied to the
+            component.
 
             The inner data-upstream-compass-mount remains the shared component
             entry node governed by /assets/compass/upstream-compass.css and the
             shared renderer.
+
+            The semantic control remains the upstream return authority and
+            continues to route to /products/.
           -->
           <div class="archcoin-scene__upstream-compass">
             <div
@@ -136,9 +141,8 @@
               data-upstream-compass-page-node="archcoin"
               data-upstream-compass-parent-node="products"
               data-upstream-compass-parent-route="/products/"
-              data-upstream-compass-physical-projection="FIXED_CENTER_HUB"
+              data-upstream-compass-physical-projection="INTEGRATED_CONSTELLATION_CENTER"
               data-upstream-compass-semantic-model="UPSTREAM_RETURN_CONTROL"
-              data-upstream-compass-quality-profile="desktop"
             >
               <a
                 class="archcoin-scene__upstream-compass-control"
@@ -312,9 +316,8 @@
           data-archcoin-guidance
           aria-live="polite"
         >
-          Tap a coin to open its room cluster. Tap a room to project its
-          briefing below. Drag to rotate. Quick flick returns to the outer
-          constellation.
+          Tap a coin to open its room cluster. Drag the constellation to bring
+          the nearest coin forward.
         </p>
       </section>
 
@@ -342,7 +345,7 @@
         </p>
 
         <p data-archcoin-panel-relationship>
-          The compass does the sorting. The box below does the handoff.
+          Tap a coin to open its room cluster. Tap a room to inspect its record.
         </p>
 
         <div class="archcoin-panel__actions">

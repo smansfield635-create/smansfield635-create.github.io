@@ -4,27 +4,24 @@
    per-coin cluster orientation, semantic selection, panel projection,
    content selection, return behavior, failure-safe receipts, and datasets.
 
-   Surgical correction scope:
-   - Freeze DGB_ARCHCOIN controller namespace.
-   - Preserve Compass navigation architecture only.
-   - Exclude Mirrorland, cosmic, atmosphere, and environmental systems.
-   - Preserve exact renderer-facing API surfaces required by the Compass renderer port.
-   - Preserve primary-versus-selected and preview-versus-commit separation.
-   - Preserve Return to Orbit and Return to Constellation as distinct operations.
-   - Keep active cluster empty outside CLUSTER_OPEN and ROOM_SELECTED.
-   - Keep room selection separate from cluster reorientation.
-   - Enforce atomic state commitment before presentation sync and receipt emission.
+   Final surgical correction scope:
+   - Preserve accepted ARCHCOIN controller architecture.
+   - Preserve DGB_ARCHCOIN public namespace.
+   - Preserve Compass-derived navigation API surface.
+   - Enforce atomic cardinal selection with one public commitment receipt.
+   - Freeze wing-to-coin identity mapping.
+   - Preserve navigation-only scope and intentional empty bounded void.
 */
 
 (() => {
   "use strict";
 
   const CONTRACT = Object.freeze({
-    id: "ARCHCOIN_CONTROLLER_COMPASS_NAVIGATION_ANCHOR_v2",
+    id: "ARCHCOIN_CONTROLLER_COMPASS_NAVIGATION_ANCHOR_v3",
     sourceContractId:
       "DGB_COMPASS_CONTROLLER_SPHERICAL_CONSTELLATION_AND_CLUSTER_REBUILD_v3",
     file: "/products/archcoin/index.controller.js",
-    releaseId: "archcoin-compass-navigation-anchor-v2",
+    releaseId: "archcoin-compass-navigation-anchor-v3",
     visualPassClaimed: false,
     productionAuthorized: false,
     deploymentAuthorized: false
@@ -46,6 +43,13 @@
   });
 
   const WINGS = Object.freeze(["north", "east", "south", "west"]);
+
+  const ARCHCOIN_WING_TO_COIN = Object.freeze({
+    north: "contract",
+    east: "receivable",
+    south: "payable",
+    west: "allocation"
+  });
 
   const QUATERNION = Object.freeze({
     minimumLength: 1e-8,
@@ -182,6 +186,11 @@
     return WINGS.includes(wing) ? wing : "";
   }
 
+  function wingToCoin(wing) {
+    const normalizedWing = normalizeWing(wing);
+    return ARCHCOIN_WING_TO_COIN[normalizedWing] || "";
+  }
+
   function normalizeRoomId(value) {
     return String(value || "").trim();
   }
@@ -205,6 +214,7 @@
   function normalizeQuaternion(value, fallback = QUATERNION.identity) {
     const source =
       Array.isArray(value) || ArrayBuffer.isView(value) ? Array.from(value) : [];
+
     if (source.length !== 4) {
       return Array.from(fallback);
     }
@@ -217,6 +227,7 @@
     ];
 
     const length = quaternionLength(quaternion);
+
     if (!Number.isFinite(length) || length < QUATERNION.minimumLength) {
       return Array.from(fallback);
     }
@@ -278,6 +289,7 @@
   function orientationFromQuaternion(quaternion, primaryId = "") {
     const normalized = normalizeQuaternion(quaternion);
     const euler = eulerFromQuaternion(normalized);
+
     return {
       yaw: euler.yaw,
       pitch: euler.pitch,
@@ -288,8 +300,8 @@
   }
 
   function cloneOrientation(orientation) {
-    const source =
-      orientation || orientationFromQuaternion(QUATERNION.identity);
+    const source = orientation || orientationFromQuaternion(QUATERNION.identity);
+
     return {
       yaw: finiteNumber(source.yaw, 0),
       pitch: finiteNumber(source.pitch, 0),
@@ -303,6 +315,7 @@
 
   function freezeOrientation(orientation) {
     const clone = cloneOrientation(orientation);
+
     return Object.freeze({
       yaw: clone.yaw,
       pitch: clone.pitch,
@@ -354,6 +367,7 @@
   function canonicalConstellationOrientation(wing) {
     const normalizedWing = normalizeWing(wing) || "north";
     const canonical = CANONICAL_CONSTELLATION_EULER[normalizedWing];
+
     return orientationFromEuler(
       canonical.yaw,
       canonical.pitch,
@@ -379,7 +393,9 @@
 
   function getCluster(wing) {
     const normalizedWing = normalizeWing(wing);
-    if (!normalizedWing) return null;
+    if (!normalizedWing) {
+      return null;
+    }
     return state.clusters.get(normalizedWing) || null;
   }
 
@@ -404,27 +420,6 @@
   function canTransition(fromState, toState) {
     const allowed = TRANSITIONS[fromState] || [];
     return allowed.includes(toState);
-  }
-
-  function canManipulateConstellation() {
-    return state.current === STATES.CONSTELLATION;
-  }
-
-  function canCommitConstellation() {
-    return state.current === STATES.CONSTELLATION;
-  }
-
-  function canManipulateCluster(wing = activeClusterWing()) {
-    return Boolean(
-      normalizeWing(wing) &&
-        (state.current === STATES.CLUSTER_OPEN ||
-          state.current === STATES.ROOM_SELECTED) &&
-        normalizeWing(state.selectedCardinal) === normalizeWing(wing)
-    );
-  }
-
-  function canCommitCluster(wing = activeClusterWing()) {
-    return canManipulateCluster(wing);
   }
 
   function clearPanelDescentSchedule() {
@@ -462,12 +457,14 @@
     clearViewportSchedules();
 
     const roomId = normalizeRoomId(expectedRoomId);
+
     if (!roomId || !state.panel) {
       return;
     }
 
     state.panelDescentFrame = requestAnimationFrame(() => {
       state.panelDescentFrame = 0;
+
       state.panelDescentCommitFrame = requestAnimationFrame(() => {
         state.panelDescentCommitFrame = 0;
 
@@ -497,12 +494,14 @@
     clearViewportSchedules();
 
     const wing = normalizeWing(expectedWing);
+
     if (!wing || !state.scene) {
       return;
     }
 
     state.sceneAscentFrame = requestAnimationFrame(() => {
       state.sceneAscentFrame = 0;
+
       state.sceneAscentCommitFrame = requestAnimationFrame(() => {
         state.sceneAscentCommitFrame = 0;
 
@@ -529,7 +528,9 @@
   }
 
   function setHiddenControl(control, hidden) {
-    if (!control) return;
+    if (!control) {
+      return;
+    }
 
     control.hidden = hidden;
     control.disabled = hidden;
@@ -544,7 +545,9 @@
   }
 
   function setEnterEnabled(enabled, label = "Enter") {
-    if (!state.enterButton) return;
+    if (!state.enterButton) {
+      return;
+    }
 
     state.enterButton.disabled = !enabled;
     state.enterButton.setAttribute("aria-disabled", enabled ? "false" : "true");
@@ -557,9 +560,12 @@
   }
 
   function setReadMoreLink(route, enabled) {
-    if (!state.readMoreLink) return;
+    if (!state.readMoreLink) {
+      return;
+    }
 
     const safeRoute = normalizeRoute(route);
+
     if (enabled && safeRoute) {
       state.readMoreLink.href = safeRoute;
       state.readMoreLink.removeAttribute("aria-disabled");
@@ -607,7 +613,9 @@
   }
 
   function syncDatasets() {
-    if (!state.root) return;
+    if (!state.root) {
+      return;
+    }
 
     const orbit = cloneOrientation(
       state.orbitOrientation || canonicalConstellationOrientation(state.orbitFocus)
@@ -682,10 +690,8 @@
       }
     });
 
-    if (state.root) {
-      state.root.dataset.archcoinControllerStatus = RECEIPT.status;
-      state.root.dataset.archcoinControllerReceipt = JSON.stringify(RECEIPT);
-    }
+    state.root.dataset.archcoinControllerStatus = RECEIPT.status;
+    state.root.dataset.archcoinControllerReceipt = JSON.stringify(RECEIPT);
   }
 
   function emitReceipt(extra = {}) {
@@ -786,21 +792,24 @@
       setEnterEnabled(false, "Unavailable");
       setReadMoreLink("", false);
       setHiddenControl(state.returnToOrbitButton, true);
-      setGuidance(
-        "The ARCHCOIN controller is held. Static content remains visible."
-      );
+      setGuidance("The ARCHCOIN controller is held. Static content remains visible.");
     }
   }
 
   function findCoinElement(wing) {
     const normalized = normalizeWing(wing);
-    if (!normalized) return null;
+    if (!normalized) {
+      return null;
+    }
     return qs(`[data-archcoin-coin][data-wing="${normalized}"]`, state.root);
   }
 
   function findRoomElement(roomId) {
     const id = normalizeRoomId(roomId);
-    if (!id) return null;
+    if (!id) {
+      return null;
+    }
+
     const escaped =
       globalThis.CSS && typeof globalThis.CSS.escape === "function"
         ? globalThis.CSS.escape(id)
@@ -811,7 +820,10 @@
 
   function existingContentRecordById(contentId) {
     const id = normalizeRoomId(contentId);
-    if (!id) return null;
+    if (!id) {
+      return null;
+    }
+
     const escaped =
       globalThis.CSS && typeof globalThis.CSS.escape === "function"
         ? globalThis.CSS.escape(id)
@@ -854,7 +866,11 @@
   function panelFromCoin(element) {
     return {
       eyebrow: element.dataset.coinLabel || element.dataset.label || "Selected coin",
-      title: element.dataset.panelTitle || element.dataset.coinTitle || element.dataset.label || "Selected coin",
+      title:
+        element.dataset.panelTitle ||
+        element.dataset.coinTitle ||
+        element.dataset.label ||
+        "Selected coin",
       purpose:
         element.dataset.panelBody ||
         element.dataset.coinBody ||
@@ -927,6 +943,10 @@
         next.committedOrbitOrientation !== undefined
           ? next.committedOrbitOrientation
           : state.committedOrbitOrientation,
+      orbitGestureOrigin:
+        next.orbitGestureOrigin !== undefined
+          ? next.orbitGestureOrigin
+          : state.orbitGestureOrigin,
       selectedCardinal:
         next.selectedCardinal !== undefined ? next.selectedCardinal : state.selectedCardinal,
       selectedCoin:
@@ -958,15 +978,46 @@
     };
 
     if (transaction.nextState === STATES.CLUSTER_OPEN) {
-      if (!normalizeWing(transaction.selectedCardinal)) {
+      const wing = normalizeWing(transaction.selectedCardinal);
+      const coin = String(transaction.selectedCoin || "").trim();
+
+      if (!wing) {
         throw new Error("ATOMIC_COMMIT_REQUIRES_SELECTED_CARDINAL");
+      }
+
+      if (!coin || coin !== wingToCoin(wing)) {
+        throw new Error("ATOMIC_COMMIT_REQUIRES_MAPPED_SELECTED_COIN");
+      }
+
+      if (normalizeRoomId(transaction.selectedRoom)) {
+        throw new Error("CLUSTER_OPEN_REQUIRES_EMPTY_SELECTED_ROOM");
+      }
+
+      if (normalizeRoomId(transaction.selectedContentId)) {
+        throw new Error("CLUSTER_OPEN_REQUIRES_EMPTY_SELECTED_CONTENT_ID");
+      }
+
+      if (normalizeWing(transaction.orbitFocus) !== wing) {
+        throw new Error("CLUSTER_OPEN_REQUIRES_MATCHING_ORBIT_FOCUS");
+      }
+
+      if (normalizeWing(transaction.orbitPreviewFocus) !== wing) {
+        throw new Error("CLUSTER_OPEN_REQUIRES_MATCHING_ORBIT_PREVIEW_FOCUS");
       }
     }
 
     if (transaction.nextState === STATES.ROOM_SELECTED) {
-      if (!normalizeWing(transaction.selectedCardinal)) {
+      const wing = normalizeWing(transaction.selectedCardinal);
+      const coin = String(transaction.selectedCoin || "").trim();
+
+      if (!wing) {
         throw new Error("ROOM_SELECTED_REQUIRES_SELECTED_CARDINAL");
       }
+
+      if (!coin || coin !== wingToCoin(wing)) {
+        throw new Error("ROOM_SELECTED_REQUIRES_MAPPED_SELECTED_COIN");
+      }
+
       if (!normalizeRoomId(transaction.selectedRoom)) {
         throw new Error("ROOM_SELECTED_REQUIRES_SELECTED_ROOM");
       }
@@ -1000,6 +1051,7 @@
     state.orbitRevision = transaction.orbitRevision;
     state.orbitOrientation = transaction.orbitOrientation;
     state.committedOrbitOrientation = transaction.committedOrbitOrientation;
+    state.orbitGestureOrigin = transaction.orbitGestureOrigin;
     state.selectedCardinal = transaction.selectedCardinal;
     state.selectedCoin = transaction.selectedCoin;
     state.selectedRoom = transaction.selectedRoom;
@@ -1026,10 +1078,16 @@
 
   function setConstellationOrientation(
     orientation,
-    { committed = false, phase = ORIENTATION_PHASES.PREVIEW, gestureActive = false, incrementRevision = false } = {}
+    {
+      committed = false,
+      phase = ORIENTATION_PHASES.PREVIEW,
+      gestureActive = false,
+      incrementRevision = false
+    } = {}
   ) {
     const normalized = cloneOrientation(orientation);
     const primaryWing = normalizeWing(normalized.primaryId);
+
     normalized.primaryId = primaryWing || state.orbitPreviewFocus || state.orbitFocus || "north";
 
     state.orbitOrientation = normalized;
@@ -1051,16 +1109,24 @@
   function setClusterOrientation(
     cluster,
     orientation,
-    { committed = false, phase = ORIENTATION_PHASES.PREVIEW, gestureActive = false, incrementRevision = false } = {}
+    {
+      committed = false,
+      phase = ORIENTATION_PHASES.PREVIEW,
+      gestureActive = false,
+      incrementRevision = false
+    } = {}
   ) {
-    if (!cluster) return false;
+    if (!cluster) {
+      return false;
+    }
 
     const normalized = cloneOrientation(orientation);
     const primaryRoom = normalizeRoomId(normalized.primaryId);
 
-    normalized.primaryId = clusterContainsRoom(cluster, primaryRoom)
-      ? primaryRoom
-      : cluster.previewPrimaryRoom || cluster.primaryRoom || cluster.roomIds[0] || "";
+    normalized.primaryId =
+      clusterContainsRoom(cluster, primaryRoom)
+        ? primaryRoom
+        : cluster.previewPrimaryRoom || cluster.primaryRoom || cluster.roomIds[0] || "";
 
     cluster.orientation = normalized;
     cluster.previewPrimaryRoom = normalized.primaryId;
@@ -1081,7 +1147,7 @@
   }
 
   function beginOrbitGesture(payload = {}) {
-    if (!canManipulateConstellation()) {
+    if (state.current !== STATES.CONSTELLATION) {
       return false;
     }
 
@@ -1094,6 +1160,7 @@
     );
 
     const preview = resolveOrientation(payload, state.orbitOrientation);
+
     setConstellationOrientation(preview, {
       committed: false,
       phase: ORIENTATION_PHASES.PREVIEW,
@@ -1110,7 +1177,7 @@
   }
 
   function requestOrbitPreview(payload = {}) {
-    if (!canManipulateConstellation()) {
+    if (state.current !== STATES.CONSTELLATION) {
       return false;
     }
 
@@ -1119,6 +1186,7 @@
     }
 
     const orientation = resolveOrientation(payload, state.orbitOrientation);
+
     setConstellationOrientation(orientation, {
       committed: false,
       phase: ORIENTATION_PHASES.PREVIEW,
@@ -1130,7 +1198,7 @@
   }
 
   function requestOrbitCommit(payload = {}) {
-    if (!canCommitConstellation()) {
+    if (state.current !== STATES.CONSTELLATION) {
       return false;
     }
 
@@ -1206,11 +1274,13 @@
 
   function requestOrbitFocus(wing, options = {}) {
     const normalizedWing = normalizeWing(wing);
-    if (!normalizedWing || !canCommitConstellation()) {
+
+    if (!normalizedWing || state.current !== STATES.CONSTELLATION) {
       return false;
     }
 
     const canonical = canonicalConstellationOrientation(normalizedWing);
+
     return requestOrbitCommit({
       ...canonical,
       primaryWing: normalizedWing,
@@ -1228,7 +1298,14 @@
         : maybePayload;
 
     const cluster = getCluster(wing);
-    if (!cluster || !canManipulateCluster(wing)) {
+
+    if (
+      !cluster ||
+      !(
+        (state.current === STATES.CLUSTER_OPEN || state.current === STATES.ROOM_SELECTED) &&
+        normalizeWing(state.selectedCardinal) === normalizeWing(wing)
+      )
+    ) {
       return false;
     }
 
@@ -1267,7 +1344,14 @@
         : maybePayload;
 
     const cluster = getCluster(wing);
-    if (!cluster || !canManipulateCluster(wing)) {
+
+    if (
+      !cluster ||
+      !(
+        (state.current === STATES.CLUSTER_OPEN || state.current === STATES.ROOM_SELECTED) &&
+        normalizeWing(state.selectedCardinal) === normalizeWing(wing)
+      )
+    ) {
       return false;
     }
 
@@ -1276,7 +1360,6 @@
     }
 
     const orientation = resolveOrientation(payload, cluster.orientation);
-
     const primaryRoom = normalizeRoomId(
       payload.primaryRoom || payload.primaryId || orientation.primaryId
     );
@@ -1313,7 +1396,14 @@
         : maybePayload;
 
     const cluster = getCluster(wing);
-    if (!cluster || !canCommitCluster(wing)) {
+
+    if (
+      !cluster ||
+      !(
+        (state.current === STATES.CLUSTER_OPEN || state.current === STATES.ROOM_SELECTED) &&
+        normalizeWing(state.selectedCardinal) === normalizeWing(wing)
+      )
+    ) {
       return false;
     }
 
@@ -1365,6 +1455,7 @@
     const reason = possibleWing ? maybeReason : wingOrReason || maybeReason;
 
     const cluster = getCluster(wing);
+
     if (!cluster || (!cluster.gestureActive && cluster.phase !== ORIENTATION_PHASES.PREVIEW)) {
       return false;
     }
@@ -1405,7 +1496,9 @@
   }
 
   function destinationFromElement(element) {
-    if (!element) return null;
+    if (!element) {
+      return null;
+    }
 
     const destinationType = String(
       element.dataset.destinationType ||
@@ -1447,6 +1540,7 @@
   function restorePanelForCurrentState() {
     if (state.current === STATES.ROOM_SELECTED && state.selectedRoom) {
       const room = findRoomElement(state.selectedRoom);
+
       if (room) {
         setPanel(panelFromRoom(room));
         setReadMoreLink(state.selectedRoute, Boolean(state.selectedRoute));
@@ -1456,8 +1550,10 @@
 
     if (state.current === STATES.CLUSTER_OPEN && state.selectedCardinal) {
       const coin = findCoinElement(state.selectedCardinal);
+
       if (coin) {
         setPanel(panelFromCoin(coin));
+        setReadMoreLink("", false);
         return true;
       }
     }
@@ -1473,6 +1569,7 @@
 
   function requestCardinalSelection(cardinalId) {
     const wing = normalizeWing(cardinalId);
+
     if (!wing) {
       emitReceipt({
         lastAction: "cardinal-selection-rejected",
@@ -1486,6 +1583,7 @@
     }
 
     const element = findCoinElement(wing);
+
     if (!element) {
       emitReceipt({
         lastAction: "cardinal-selection-rejected",
@@ -1494,20 +1592,25 @@
       return false;
     }
 
-    if (state.orbitGestureActive) {
-      requestOrbitCancel("cardinal-selection");
-    }
-
-    requestOrbitFocus(wing, { source: "cardinal-tap" });
     clearViewportSchedules();
 
     const destination = destinationFromElement(element);
+    const committedOrientation = canonicalConstellationOrientation(wing);
+    const nextRevision = state.orbitRevision + 1;
+    const mappedCoin = wingToCoin(wing);
+
     const transaction = beginAtomicTransition({
       state: STATES.CLUSTER_OPEN,
       orbitFocus: wing,
       orbitPreviewFocus: wing,
+      orbitPhase: ORIENTATION_PHASES.COMMITTED,
+      orbitGestureActive: false,
+      orbitRevision: nextRevision,
+      orbitOrientation: cloneOrientation(committedOrientation),
+      committedOrbitOrientation: cloneOrientation(committedOrientation),
+      orbitGestureOrigin: null,
       selectedCardinal: wing,
-      selectedCoin: wing,
+      selectedCoin: mappedCoin,
       selectedRoom: "",
       selectedDestinationType: "coin",
       selectedDestinationId: wing,
@@ -1531,6 +1634,7 @@
 
   function requestRoomSelection(roomId) {
     const id = normalizeRoomId(roomId);
+
     if (
       !id ||
       (state.current !== STATES.CLUSTER_OPEN && state.current !== STATES.ROOM_SELECTED)
@@ -1539,6 +1643,7 @@
     }
 
     const element = findRoomElement(id);
+
     if (!element) {
       emitReceipt({
         lastAction: "room-selection-rejected",
@@ -1548,11 +1653,13 @@
     }
 
     const wing = normalizeWing(element.dataset.wing);
+
     if (!wing || wing !== state.selectedCardinal) {
       return false;
     }
 
     const cluster = getCluster(wing);
+
     if (!cluster || !clusterContainsRoom(cluster, id)) {
       emitReceipt({
         lastAction: "room-selection-rejected",
@@ -1570,11 +1677,12 @@
     const destination = destinationFromElement(element);
     const contentId = resolveRoomContentIdentity(element);
     const lens = resolveRoomLens(element);
+    const mappedCoin = wingToCoin(wing);
 
     const transaction = beginAtomicTransition({
       state: STATES.ROOM_SELECTED,
       selectedCardinal: wing,
-      selectedCoin: wing,
+      selectedCoin: mappedCoin,
       selectedRoom: id,
       selectedDestinationType: "room",
       selectedDestinationId: id,
@@ -1621,11 +1729,12 @@
     clearViewportSchedules();
 
     const destination = destinationFromElement(coin);
+    const mappedCoin = wingToCoin(wing);
 
     const transaction = beginAtomicTransition({
       state: STATES.CLUSTER_OPEN,
       selectedCardinal: wing,
-      selectedCoin: wing,
+      selectedCoin: mappedCoin,
       selectedRoom: "",
       selectedDestinationType: "coin",
       selectedDestinationId: wing,
@@ -1663,12 +1772,10 @@
     }
 
     const previousWing = normalizeWing(state.selectedCardinal || state.orbitFocus) || "north";
+    const cluster = activeCluster();
 
-    if (activeCluster()) {
-      const cluster = activeCluster();
-      if (cluster && cluster.gestureActive) {
-        requestClusterCancel(cluster.wing, "return-to-constellation");
-      }
+    if (cluster && cluster.gestureActive) {
+      requestClusterCancel(cluster.wing, "return-to-constellation");
     }
 
     clearViewportSchedules();
@@ -1711,14 +1818,12 @@
   }
 
   function requestEnterSelection() {
-    if (
-      state.current !== STATES.ROOM_SELECTED ||
-      !state.selectedRoute
-    ) {
+    if (state.current !== STATES.ROOM_SELECTED || !state.selectedRoute) {
       return false;
     }
 
     const route = normalizeRoute(state.selectedRoute);
+
     if (!route) {
       emitReceipt({
         lastAction: "enter-selection-rejected",
@@ -1733,6 +1838,7 @@
 
   function handleCrystalsFailureEvent(event) {
     const detail = event.detail || {};
+
     cancelAllGestures("crystals-render-failure");
 
     emitReceipt({
@@ -1762,6 +1868,7 @@
 
   function handleSemanticDestination(event) {
     const control = event.target.closest("[data-archcoin-destination]");
+
     if (!control || !state.root.contains(control)) {
       return;
     }
@@ -1804,6 +1911,7 @@
           }
 
           event.preventDefault();
+
           let nextIndex = index;
 
           if (event.key === "ArrowRight") {
@@ -1831,7 +1939,10 @@
 
   function activateLensTab(tab) {
     const set = tab.closest("[data-archcoin-lens-set]");
-    if (!set) return;
+
+    if (!set) {
+      return;
+    }
 
     const requested = String(tab.dataset.archcoinLensTab || "")
       .trim()
@@ -1872,6 +1983,7 @@
 
   function resolveDom() {
     state.root = qs("[data-archcoin-root]");
+
     if (!state.root) {
       throw new Error("ARCHCOIN_ROOT_NOT_FOUND");
     }
@@ -1905,6 +2017,7 @@
     let initialOrientation = canonicalConstellationOrientation(requestedFocus);
 
     const serialized = String(state.root.dataset.orbitQuaternion || "").trim();
+
     if (serialized) {
       try {
         initialOrientation = orientationFromQuaternion(JSON.parse(serialized), requestedFocus);
@@ -1970,6 +2083,7 @@
 
       getFrameState: () => {
         const cluster = activeCluster();
+
         return Object.freeze({
           state: state.current,
           orbitFocus: state.orbitFocus,
@@ -2009,7 +2123,11 @@
 
       getClusterState: wing => {
         const cluster = getCluster(wing);
-        if (!cluster) return null;
+
+        if (!cluster) {
+          return null;
+        }
+
         return Object.freeze({
           wing: cluster.wing,
           roomIds: Object.freeze(cluster.roomIds.slice()),

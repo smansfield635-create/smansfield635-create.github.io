@@ -1,0 +1,721 @@
+<!-- /products/archcoin/allocation/governance/index.html -->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1"
+  >
+  <title>ARCHCOIN — Allocation Governance</title>
+  <meta
+    name="description"
+    content="Allocation Governance defines authority, approval, audit, and control boundaries for the distribution layer inside ARCHCOIN."
+  >
+  <style>
+    :root {
+      --page-bg-0: #100917;
+      --page-bg-1: #1b1128;
+      --page-bg-2: #28193a;
+
+      --line-soft: rgba(211, 163, 255, 0.10);
+      --line: rgba(211, 163, 255, 0.18);
+      --line-strong: rgba(211, 163, 255, 0.32);
+      --line-gold: rgba(242, 202, 141, 0.34);
+
+      --text: rgba(245, 248, 252, 0.97);
+      --text-soft: rgba(223, 232, 241, 0.84);
+      --text-muted: rgba(201, 191, 214, 0.66);
+
+      --allocation: #d3a3ff;
+      --gold: #f2ca8d;
+      --focus: #e2baff;
+
+      --shadow-xl: 0 34px 90px rgba(0, 0, 0, 0.42);
+      --shadow-lg: 0 18px 46px rgba(0, 0, 0, 0.30);
+      --shadow-md: 0 10px 24px rgba(0, 0, 0, 0.22);
+
+      --radius-xl: 32px;
+      --radius-md: 18px;
+
+      --max-width: 1220px;
+      --copy-width: 72ch;
+
+      --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      background:
+        radial-gradient(
+          circle at 50% 0%,
+          rgba(146, 99, 191, 0.22),
+          transparent 36%
+        ),
+        linear-gradient(
+          180deg,
+          #09050d 0%,
+          #130b1b 36%,
+          #100917 100%
+        );
+      scroll-behavior: smooth;
+    }
+
+    body {
+      min-height: 100%;
+      margin: 0;
+      color: var(--text);
+      font-family:
+        Inter,
+        ui-sans-serif,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+      background:
+        radial-gradient(
+          circle at 16% 10%,
+          rgba(211, 163, 255, 0.12),
+          transparent 22%
+        ),
+        radial-gradient(
+          circle at 84% 16%,
+          rgba(242, 202, 141, 0.08),
+          transparent 24%
+        ),
+        radial-gradient(
+          circle at 50% 42%,
+          rgba(211, 163, 255, 0.06),
+          transparent 28%
+        );
+      overflow-x: hidden;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button,
+    a,
+    summary {
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    button,
+    input,
+    textarea,
+    select {
+      font: inherit;
+    }
+
+    button:focus-visible,
+    a:focus-visible,
+    summary:focus-visible {
+      outline: 3px solid var(--focus);
+      outline-offset: 4px;
+    }
+
+    .allocation-room-page {
+      min-height: 100vh;
+      padding: clamp(18px, 3vw, 40px) clamp(12px, 2vw, 26px) clamp(42px, 5vw, 72px);
+    }
+
+    .allocation-room-shell {
+      width: min(100%, var(--max-width));
+      margin: 0 auto;
+      display: grid;
+      gap: 24px;
+    }
+
+    .allocation-room-hero,
+    .allocation-room-summary,
+    .allocation-room-frames,
+    .allocation-room-navigation,
+    .allocation-room-close {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+      background:
+        linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.025),
+          rgba(255, 255, 255, 0.008)
+        ),
+        linear-gradient(
+          135deg,
+          rgba(33, 22, 48, 0.96),
+          rgba(21, 14, 31, 0.94)
+        );
+      box-shadow:
+        var(--shadow-xl),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    }
+
+    .allocation-room-hero::before,
+    .allocation-room-summary::before,
+    .allocation-room-frames::before,
+    .allocation-room-navigation::before,
+    .allocation-room-close::before {
+      content: "";
+      position: absolute;
+      inset: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.045);
+      border-radius: calc(var(--radius-xl) - 12px);
+      pointer-events: none;
+    }
+
+    .allocation-room-hero {
+      padding: clamp(26px, 4vw, 44px);
+      display: grid;
+      gap: 20px;
+    }
+
+    .allocation-room-hero__kicker,
+    .allocation-room-summary__kicker,
+    .allocation-room-frames__kicker,
+    .allocation-room-navigation__kicker,
+    .allocation-room-close__kicker {
+      margin: 0;
+      color: var(--text-soft);
+      font-size: 0.76rem;
+      font-weight: 800;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+    }
+
+    .allocation-room-hero__heading {
+      display: grid;
+      gap: 12px;
+      max-width: 900px;
+    }
+
+    .allocation-room-hero h1,
+    .allocation-room-summary h2,
+    .allocation-room-frames h2,
+    .allocation-room-navigation h2,
+    .allocation-room-close h2 {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-weight: 700;
+      line-height: 0.96;
+      letter-spacing: -0.04em;
+      color: rgba(249, 251, 253, 0.98);
+      text-wrap: balance;
+    }
+
+    .allocation-room-hero h1 {
+      max-width: 12ch;
+      font-size: clamp(3rem, 8vw, 6.1rem);
+    }
+
+    .allocation-room-summary h2,
+    .allocation-room-frames h2,
+    .allocation-room-navigation h2,
+    .allocation-room-close h2 {
+      font-size: clamp(1.8rem, 3.7vw, 3rem);
+    }
+
+    .allocation-room-hero__lead,
+    .allocation-room-summary p,
+    .allocation-room-frame p,
+    .allocation-room-navigation p,
+    .allocation-room-close p {
+      margin: 0;
+      color: var(--text-soft);
+      line-height: 1.6;
+    }
+
+    .allocation-room-hero__lead {
+      max-width: var(--copy-width);
+      font-size: clamp(1.08rem, 2.2vw, 1.42rem);
+    }
+
+    .allocation-room-hero__accent {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      width: fit-content;
+      padding: 10px 16px;
+      border: 1px solid var(--line-gold);
+      border-radius: 999px;
+      background:
+        linear-gradient(
+          135deg,
+          rgba(242, 202, 141, 0.10),
+          rgba(242, 202, 141, 0.04)
+        );
+      color: rgba(250, 243, 232, 0.94);
+      font-size: 0.94rem;
+      font-weight: 600;
+      box-shadow: var(--shadow-md);
+    }
+
+    .allocation-room-summary {
+      padding: clamp(22px, 3vw, 30px);
+      display: grid;
+      gap: 12px;
+    }
+
+    .allocation-room-frames {
+      padding: clamp(22px, 3vw, 30px);
+      display: grid;
+      gap: 18px;
+    }
+
+    .allocation-room-frames__grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .allocation-room-frame {
+      position: relative;
+      min-height: 100%;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      background:
+        linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.02),
+          rgba(255, 255, 255, 0.006)
+        ),
+        rgba(23, 14, 34, 0.68);
+      box-shadow:
+        var(--shadow-md),
+        inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    }
+
+    .allocation-room-frame__label {
+      margin: 0 0 10px 0;
+      color: rgba(247, 249, 252, 0.98);
+      font-size: 1.02rem;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+    }
+
+    .allocation-room-navigation {
+      padding: clamp(22px, 3vw, 30px);
+      display: grid;
+      gap: 18px;
+    }
+
+    .allocation-room-navigation__grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .allocation-room-link {
+      position: relative;
+      display: grid;
+      gap: 8px;
+      min-height: 100%;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      background:
+        linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.02),
+          rgba(255, 255, 255, 0.006)
+        ),
+        rgba(23, 14, 34, 0.70);
+      box-shadow:
+        var(--shadow-md),
+        inset 0 1px 0 rgba(255, 255, 255, 0.04);
+      transition:
+        transform 180ms var(--ease),
+        border-color 180ms var(--ease),
+        background 180ms var(--ease),
+        box-shadow 180ms var(--ease);
+    }
+
+    .allocation-room-link:hover,
+    .allocation-room-link:focus-visible {
+      transform: translateY(-2px);
+      border-color: var(--line-strong);
+      background:
+        linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.03),
+          rgba(255, 255, 255, 0.01)
+        ),
+        rgba(28, 18, 40, 0.84);
+      box-shadow:
+        0 18px 34px rgba(0, 0, 0, 0.28),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    }
+
+    .allocation-room-link--active {
+      border-color: color-mix(in srgb, var(--allocation) 48%, transparent);
+      background:
+        linear-gradient(
+          135deg,
+          rgba(211, 163, 255, 0.08),
+          rgba(211, 163, 255, 0.02)
+        ),
+        rgba(28, 18, 40, 0.86);
+    }
+
+    .allocation-room-link__eyebrow {
+      margin: 0;
+      color: var(--text-muted);
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    .allocation-room-link__title {
+      margin: 0;
+      color: rgba(248, 250, 253, 0.98);
+      font-size: 1.08rem;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    .allocation-room-link__body {
+      margin: 0;
+      color: var(--text-soft);
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+
+    .allocation-room-close {
+      padding: clamp(22px, 3vw, 28px);
+      display: grid;
+      gap: 16px;
+    }
+
+    .allocation-room-close__actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .allocation-room-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 180px;
+      min-height: 56px;
+      padding: 12px 20px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      transition:
+        transform 180ms var(--ease),
+        border-color 180ms var(--ease),
+        background 180ms var(--ease),
+        box-shadow 180ms var(--ease);
+    }
+
+    .allocation-room-button:hover,
+    .allocation-room-button:focus-visible {
+      transform: translateY(-1px);
+      border-color: var(--line-strong);
+    }
+
+    .allocation-room-button--primary {
+      border-color: rgba(242, 202, 141, 0.34);
+      background:
+        linear-gradient(
+          135deg,
+          rgba(242, 202, 141, 0.16),
+          rgba(242, 202, 141, 0.07)
+        ),
+        rgba(22, 21, 18, 0.14);
+      color: rgba(250, 243, 232, 0.97);
+      box-shadow:
+        var(--shadow-md),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    }
+
+    .allocation-room-button--secondary {
+      background:
+        linear-gradient(
+          135deg,
+          rgba(23, 14, 34, 0.94),
+          rgba(23, 14, 34, 0.88)
+        );
+      color: var(--text-soft);
+      box-shadow:
+        var(--shadow-md),
+        inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    }
+
+    @media (max-width: 900px) {
+      .allocation-room-frames__grid,
+      .allocation-room-navigation__grid {
+        grid-template-columns: 1fr;
+      }
+
+      .allocation-room-hero h1 {
+        max-width: 12ch;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .allocation-room-page {
+        padding: 14px 10px 30px;
+      }
+
+      .allocation-room-shell {
+        gap: 18px;
+      }
+
+      .allocation-room-hero,
+      .allocation-room-summary,
+      .allocation-room-frames,
+      .allocation-room-navigation,
+      .allocation-room-close {
+        border-radius: 24px;
+      }
+
+      .allocation-room-hero,
+      .allocation-room-summary,
+      .allocation-room-frames,
+      .allocation-room-navigation,
+      .allocation-room-close {
+        padding: 18px;
+      }
+
+      .allocation-room-hero::before,
+      .allocation-room-summary::before,
+      .allocation-room-frames::before,
+      .allocation-room-navigation::before,
+      .allocation-room-close::before {
+        inset: 10px;
+      }
+
+      .allocation-room-hero h1 {
+        font-size: clamp(2.4rem, 11vw, 4.5rem);
+      }
+
+      .allocation-room-hero__lead {
+        font-size: 1rem;
+      }
+
+      .allocation-room-close__actions {
+        display: grid;
+        grid-template-columns: 1fr;
+      }
+
+      .allocation-room-button {
+        width: 100%;
+        min-width: 0;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="allocation-room-page">
+    <section class="allocation-room-shell">
+      <header class="allocation-room-hero">
+        <p class="allocation-room-hero__kicker">
+          ARCHCOIN / Allocation / Governance
+        </p>
+
+        <div class="allocation-room-hero__heading">
+          <h1>
+            Allocation governance determines who may move distribution at all.
+          </h1>
+
+          <p class="allocation-room-hero__lead">
+            Allocation can be clearly defined, correctly engineered, and visibly surfaced, yet still become unstable if authority is vague. Allocation Governance is the room for approval boundaries, exception handling, audit expectation, destination rights, and the control logic that decides who may authorize, revise, constrain, reroute, or certify distribution behavior inside ARCHCOIN.
+          </p>
+        </div>
+
+        <div class="allocation-room-hero__accent">
+          Governance is the difference between valid distribution and uncontrolled routing.
+        </div>
+      </header>
+
+      <section class="allocation-room-summary" aria-labelledby="allocation-governance-summary-title">
+        <p class="allocation-room-summary__kicker">
+          Room Summary
+        </p>
+
+        <h2 id="allocation-governance-summary-title">
+          What this room is for
+        </h2>
+
+        <p>
+          This room exists to define authority over the allocation layer. It answers who may approve distribution, who may revise destination posture, who must verify correctness, and how exceptions are handled without corrupting value-routing integrity. If Allocation Platform asks how distribution appears on the surface, Allocation Governance asks who has the right to shape that surface and certify that value is landing where it truly belongs.
+        </p>
+      </section>
+
+      <section class="allocation-room-frames" aria-labelledby="allocation-governance-frames-title">
+        <p class="allocation-room-frames__kicker">
+          Three governance duties
+        </p>
+
+        <h2 id="allocation-governance-frames-title">
+          The distribution layer requires authority, audit, and bounded change
+        </h2>
+
+        <div class="allocation-room-frames__grid">
+          <article class="allocation-room-frame">
+            <h3 class="allocation-room-frame__label">
+              Define who may decide
+            </h3>
+
+            <p>
+              Governance identifies which actor or body may approve, reject, reclassify, or reroute allocation behavior so that destination authority is explicit rather than assumed.
+            </p>
+          </article>
+
+          <article class="allocation-room-frame">
+            <h3 class="allocation-room-frame__label">
+              Preserve verification and audit
+            </h3>
+
+            <p>
+              Every meaningful allocation change needs a traceable path: what changed, who authorized it, who verified it, and what downstream workflow or reporting surfaces were affected.
+            </p>
+          </article>
+
+          <article class="allocation-room-frame">
+            <h3 class="allocation-room-frame__label">
+              Bound exceptions without collapse
+            </h3>
+
+            <p>
+              Governance does not eliminate disputes or exceptions. It ensures they move through controlled pathways rather than informal overrides that weaken distribution integrity.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section class="allocation-room-navigation" aria-labelledby="allocation-governance-navigation-title">
+        <p class="allocation-room-navigation__kicker">
+          Allocation cluster
+        </p>
+
+        <h2 id="allocation-governance-navigation-title">
+          Continue through the allocation rooms
+        </h2>
+
+        <p>
+          Governance closes the allocation cluster by defining authority over distribution, implementation, and visible surface behavior. The adjacent rooms frame that same routing layer from strategic, technical, and platform perspectives.
+        </p>
+
+        <div class="allocation-room-navigation__grid">
+          <a
+            class="allocation-room-link"
+            href="/products/archcoin/allocation/overview/"
+          >
+            <p class="allocation-room-link__eyebrow">
+              Adjacent room
+            </p>
+            <h3 class="allocation-room-link__title">
+              Allocation Overview
+            </h3>
+            <p class="allocation-room-link__body">
+              Establish the distribution layer at the strategic level before examining who governs it.
+            </p>
+          </a>
+
+          <a
+            class="allocation-room-link"
+            href="/products/archcoin/allocation/engineering/"
+          >
+            <p class="allocation-room-link__eyebrow">
+              Adjacent room
+            </p>
+            <h3 class="allocation-room-link__title">
+              Allocation Engineering
+            </h3>
+            <p class="allocation-room-link__body">
+              Examine how routing logic becomes enforceable structure, validation, and exact system behavior.
+            </p>
+          </a>
+
+          <a
+            class="allocation-room-link"
+            href="/products/archcoin/allocation/platform/"
+          >
+            <p class="allocation-room-link__eyebrow">
+              Adjacent room
+            </p>
+            <h3 class="allocation-room-link__title">
+              Allocation Platform
+            </h3>
+            <p class="allocation-room-link__body">
+              See how distribution logic appears across the visible product surface and operational workflows.
+            </p>
+          </a>
+
+          <a
+            class="allocation-room-link allocation-room-link--active"
+            href="/products/archcoin/allocation/governance/"
+            aria-current="page"
+          >
+            <p class="allocation-room-link__eyebrow">
+              Current room
+            </p>
+            <h3 class="allocation-room-link__title">
+              Allocation Governance
+            </h3>
+            <p class="allocation-room-link__body">
+              Define who may authorize, review, constrain, or audit movement in the distribution layer.
+            </p>
+          </a>
+        </div>
+      </section>
+
+      <section class="allocation-room-close" aria-labelledby="allocation-governance-close-title">
+        <p class="allocation-room-close__kicker">
+          Handoff
+        </p>
+
+        <h2 id="allocation-governance-close-title">
+          Move across the cluster or return upward
+        </h2>
+
+        <p>
+          Use this room when the allocation question has become an authority question. Reopen the ARCHCOIN constellation, jump back to Compass Home, or move sideways through the allocation cluster to inspect the adjacent layers again.
+        </p>
+
+        <div class="allocation-room-close__actions">
+          <a
+            class="allocation-room-button allocation-room-button--primary"
+            href="/products/archcoin/"
+          >
+            Return to ARCHCOIN
+          </a>
+
+          <a
+            class="allocation-room-button allocation-room-button--secondary"
+            href="/"
+          >
+            Compass Home
+          </a>
+        </div>
+      </section>
+    </section>
+  </main>
+</body>
+</html>

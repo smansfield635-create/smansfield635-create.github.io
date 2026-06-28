@@ -27,13 +27,17 @@
    - requestCompassDecision is the primary semantic callback.
    - requestReturnToUpstream is compatibility-only.
    - The Compass receives no independent gesture-delta stream.
-   - The Compass inherits parent scene orientation.
-   - The renderer composes parent orientation with the selected local geometry
-     presentation transform.
+   - The Compass inherits constellation orientation only.
+   - Active room-cluster orientation never rotates the Compass body.
+   - The renderer composes constellation orientation with the selected local
+     geometry presentation transform.
    - Geometry hit metadata remains declarative and does not create pointer
      authority.
    - Static fallback remains visible until one enhanced frame completes without
      a WebGL error.
+
+   Final transform law:
+   CONSTELLATION_ORIENTATION * COMPASS_LOCAL_PRESENTATION_TRANSFORM
 */
 
 const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
@@ -41,7 +45,7 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
 
   const MODULE = Object.freeze({
     id: "DGB_UPSTREAM_COMPASS_RENDERER",
-    version: "2.0.0-generational-shared-runtime",
+    version: "2.0.1-constellation-parent-correction",
     file: "/assets/compass/upstream-compass.renderer.js"
   });
 
@@ -71,8 +75,6 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
   const PARENT_ORIENTATION_SOURCES = Object.freeze({
     EXPLICIT_CONTEXT: "EXPLICIT_CONTEXT",
     FRAME_DECLARED: "FRAME_DECLARED",
-    FRAME_ORBIT_CLUSTER_COMPOSITION:
-      "FRAME_ORBIT_CLUSTER_COMPOSITION",
     FRAME_ORBIT: "FRAME_ORBIT",
     IDENTITY: "IDENTITY"
   });
@@ -225,13 +227,17 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
     lastReducedMotion: false,
     firstEnhancedFrameCompleted: false,
     parentOrientationInherited: true,
+    constellationOrientationOnly: true,
+    clusterOrientationApplied: false,
     independentGestureAuthority: false,
     nativeNavigationFallthrough: false
   };
 
-  const INSTANCES = new Map();
+  const INSTANCES =
+    new Map();
 
-  let instanceCounter = 0;
+  let instanceCounter =
+    0;
 
   const vertexShaderSource = `
     attribute vec3 aPosition;
@@ -401,37 +407,66 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
     }
   `;
 
-  function invariant(condition, code, details = null) {
+  function invariant(
+    condition,
+    code,
+    details = null
+  ) {
     if (condition) {
       return;
     }
 
-    const error = new Error(code);
-    error.code = code;
-    error.details = details;
+    const error =
+      new Error(code);
+
+    error.code =
+      code;
+
+    error.details =
+      details;
+
     throw error;
   }
 
-  function qs(selector, root = document) {
-    return root.querySelector(selector);
+  function qs(
+    selector,
+    root = document
+  ) {
+    return root.querySelector(
+      selector
+    );
   }
 
-  function finiteNumber(value, fallback = 0) {
-    const number = Number(value);
+  function finiteNumber(
+    value,
+    fallback = 0
+  ) {
+    const number =
+      Number(value);
 
     return Number.isFinite(number)
       ? number
       : fallback;
   }
 
-  function clamp(value, minimum, maximum) {
+  function clamp(
+    value,
+    minimum,
+    maximum
+  ) {
     return Math.max(
       minimum,
-      Math.min(maximum, value)
+      Math.min(
+        maximum,
+        value
+      )
     );
   }
 
-  function normalizeArray3(value, fallback) {
+  function normalizeArray3(
+    value,
+    fallback
+  ) {
     const source =
       Array.isArray(value) ||
       ArrayBuffer.isView(value)
@@ -443,9 +478,20 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
     }
 
     return [
-      finiteNumber(source[0], fallback[0]),
-      finiteNumber(source[1], fallback[1]),
-      finiteNumber(source[2], fallback[2])
+      finiteNumber(
+        source[0],
+        fallback[0]
+      ),
+
+      finiteNumber(
+        source[1],
+        fallback[1]
+      ),
+
+      finiteNumber(
+        source[2],
+        fallback[2]
+      )
     ];
   }
 
@@ -464,22 +510,39 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
     }
 
     const quaternion = [
-      finiteNumber(source[0], fallback[0]),
-      finiteNumber(source[1], fallback[1]),
-      finiteNumber(source[2], fallback[2]),
-      finiteNumber(source[3], fallback[3])
+      finiteNumber(
+        source[0],
+        fallback[0]
+      ),
+
+      finiteNumber(
+        source[1],
+        fallback[1]
+      ),
+
+      finiteNumber(
+        source[2],
+        fallback[2]
+      ),
+
+      finiteNumber(
+        source[3],
+        fallback[3]
+      )
     ];
 
-    const length = Math.hypot(
-      quaternion[0],
-      quaternion[1],
-      quaternion[2],
-      quaternion[3]
-    );
+    const length =
+      Math.hypot(
+        quaternion[0],
+        quaternion[1],
+        quaternion[2],
+        quaternion[3]
+      );
 
     if (
       !Number.isFinite(length) ||
-      length <= QUALITY.quaternionEpsilon
+      length <=
+        QUALITY.quaternionEpsilon
     ) {
       return fallback.slice();
     }
@@ -499,40 +562,11 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
     );
   }
 
-  function quaternionMultiplyRaw(a, b) {
-    return [
-      a[3] * b[0] +
-        a[0] * b[3] +
-        a[1] * b[2] -
-        a[2] * b[1],
-
-      a[3] * b[1] -
-        a[0] * b[2] +
-        a[1] * b[3] +
-        a[2] * b[0],
-
-      a[3] * b[2] +
-        a[0] * b[1] -
-        a[1] * b[0] +
-        a[2] * b[3],
-
-      a[3] * b[3] -
-        a[0] * b[0] -
-        a[1] * b[1] -
-        a[2] * b[2]
-    ];
-  }
-
-  function quaternionMultiply(a, b) {
-    return normalizeQuaternion(
-      quaternionMultiplyRaw(
-        normalizeQuaternion(a),
-        normalizeQuaternion(b)
-      )
-    );
-  }
-
-  function quaternionSlerp(a, b, amount) {
+  function quaternionSlerp(
+    a,
+    b,
+    amount
+  ) {
     const start =
       normalizeQuaternion(a);
 
@@ -540,38 +574,68 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
       normalizeQuaternion(b);
 
     let cosine =
-      quaternionDot(start, end);
-
-    if (cosine < 0) {
-      end = end.map(
-        component => -component
+      quaternionDot(
+        start,
+        end
       );
 
-      cosine = -cosine;
+    if (cosine < 0) {
+      end =
+        end.map(
+          component =>
+            -component
+        );
+
+      cosine =
+        -cosine;
     }
 
     const t =
-      clamp(amount, 0, 1);
+      clamp(
+        amount,
+        0,
+        1
+      );
 
     if (cosine > 0.9995) {
       return normalizeQuaternion([
         start[0] +
-          (end[0] - start[0]) * t,
+          (
+            end[0] -
+            start[0]
+          ) *
+          t,
 
         start[1] +
-          (end[1] - start[1]) * t,
+          (
+            end[1] -
+            start[1]
+          ) *
+          t,
 
         start[2] +
-          (end[2] - start[2]) * t,
+          (
+            end[2] -
+            start[2]
+          ) *
+          t,
 
         start[3] +
-          (end[3] - start[3]) * t
+          (
+            end[3] -
+            start[3]
+          ) *
+          t
       ]);
     }
 
     const theta =
       Math.acos(
-        clamp(cosine, -1, 1)
+        clamp(
+          cosine,
+          -1,
+          1
+        )
       );
 
     const sine =
@@ -585,25 +649,39 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
     }
 
     const startWeight =
-      Math.sin((1 - t) * theta) /
+      Math.sin(
+        (1 - t) *
+        theta
+      ) /
       sine;
 
     const endWeight =
-      Math.sin(t * theta) /
+      Math.sin(
+        t *
+        theta
+      ) /
       sine;
 
     return normalizeQuaternion([
-      start[0] * startWeight +
-        end[0] * endWeight,
+      start[0] *
+        startWeight +
+      end[0] *
+        endWeight,
 
-      start[1] * startWeight +
-        end[1] * endWeight,
+      start[1] *
+        startWeight +
+      end[1] *
+        endWeight,
 
-      start[2] * startWeight +
-        end[2] * endWeight,
+      start[2] *
+        startWeight +
+      end[2] *
+        endWeight,
 
-      start[3] * startWeight +
-        end[3] * endWeight
+      start[3] *
+        startWeight +
+      end[3] *
+        endWeight
     ]);
   }
 
@@ -613,17 +691,33 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
     amount
   ) {
     const t =
-      clamp(amount, 0, 1);
+      clamp(
+        amount,
+        0,
+        1
+      );
 
     return [
       current[0] +
-        (target[0] - current[0]) * t,
+        (
+          target[0] -
+          current[0]
+        ) *
+        t,
 
       current[1] +
-        (target[1] - current[1]) * t,
+        (
+          target[1] -
+          current[1]
+        ) *
+        t,
 
       current[2] +
-        (target[2] - current[2]) * t
+        (
+          target[2] -
+          current[2]
+        ) *
+        t
     ];
   }
 
@@ -655,9 +749,18 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
           index < 4;
           index += 1
         ) {
-          output[column * 4 + row] +=
-            a[index * 4 + row] *
-            b[column * 4 + index];
+          output[
+            column * 4 +
+            row
+          ] +=
+            a[
+              index * 4 +
+              row
+            ] *
+            b[
+              column * 4 +
+              index
+            ];
         }
       }
     }
@@ -665,7 +768,11 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
     return output;
   }
 
-  function translate4(x, y, z) {
+  function translate4(
+    x,
+    y,
+    z
+  ) {
     const matrix =
       identity4();
 
@@ -676,7 +783,11 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
     return matrix;
   }
 
-  function scale4(x, y, z) {
+  function scale4(
+    x,
+    y,
+    z
+  ) {
     const matrix =
       identity4();
 
@@ -687,7 +798,9 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
     return matrix;
   }
 
-  function quaternionToMatrix4(value) {
+  function quaternionToMatrix4(
+    value
+  ) {
     const [
       x,
       y,
@@ -727,19 +840,34 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
   ) {
     const factor =
       1 /
-      Math.tan(fieldOfView / 2);
+      Math.tan(
+        fieldOfView / 2
+      );
 
     const range =
       1 /
       (near - far);
 
     return [
-      factor / aspect, 0, 0, 0,
-      0, factor, 0, 0,
-      0, 0,
-      (far + near) * range, -1,
-      0, 0,
-      2 * far * near * range, 0
+      factor / aspect,
+      0,
+      0,
+      0,
+
+      0,
+      factor,
+      0,
+      0,
+
+      0,
+      0,
+      (far + near) * range,
+      -1,
+
+      0,
+      0,
+      2 * far * near * range,
+      0
     ];
   }
 
@@ -776,15 +904,17 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
     vector,
     fallback = [0, 0, 1]
   ) {
-    const length = Math.hypot(
-      vector[0],
-      vector[1],
-      vector[2]
-    );
+    const length =
+      Math.hypot(
+        vector[0],
+        vector[1],
+        vector[2]
+      );
 
     if (
       !Number.isFinite(length) ||
-      length <= QUALITY.vectorEpsilon
+      length <=
+        QUALITY.vectorEpsilon
     ) {
       return fallback.slice();
     }
@@ -796,20 +926,33 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
     ];
   }
 
-  function lookAt4(eye, center, up) {
+  function lookAt4(
+    eye,
+    center,
+    up
+  ) {
     const z =
       normalize3(
-        subtract3(eye, center)
+        subtract3(
+          eye,
+          center
+        )
       );
 
     const x =
       normalize3(
-        cross3(up, z),
+        cross3(
+          up,
+          z
+        ),
         [1, 0, 0]
       );
 
     const y =
-      cross3(z, x);
+      cross3(
+        z,
+        x
+      );
 
     return [
       x[0], y[0], z[0], 0,
@@ -825,17 +968,32 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
   function inverseTransposeNormalMatrix3(
     modelView
   ) {
-    const a00 = modelView[0];
-    const a01 = modelView[4];
-    const a02 = modelView[8];
+    const a00 =
+      modelView[0];
 
-    const a10 = modelView[1];
-    const a11 = modelView[5];
-    const a12 = modelView[9];
+    const a01 =
+      modelView[4];
 
-    const a20 = modelView[2];
-    const a21 = modelView[6];
-    const a22 = modelView[10];
+    const a02 =
+      modelView[8];
+
+    const a10 =
+      modelView[1];
+
+    const a11 =
+      modelView[5];
+
+    const a12 =
+      modelView[9];
+
+    const a20 =
+      modelView[2];
+
+    const a21 =
+      modelView[6];
+
+    const a22 =
+      modelView[10];
 
     const b01 =
       a22 * a11 -
@@ -855,8 +1013,12 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
       a02 * b21;
 
     if (
-      !Number.isFinite(determinant) ||
-      Math.abs(determinant) <=
+      !Number.isFinite(
+        determinant
+      ) ||
+      Math.abs(
+        determinant
+      ) <=
         QUALITY.vectorEpsilon
     ) {
       return [
@@ -875,36 +1037,42 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
       (
         -a22 * a01 +
         a02 * a21
-      ) * determinant,
+      ) *
+      determinant,
 
       (
         a12 * a01 -
         a02 * a11
-      ) * determinant,
+      ) *
+      determinant,
 
       b11 * determinant,
 
       (
         a22 * a00 -
         a02 * a20
-      ) * determinant,
+      ) *
+      determinant,
 
       (
         -a12 * a00 +
         a02 * a10
-      ) * determinant,
+      ) *
+      determinant,
 
       b21 * determinant,
 
       (
         -a21 * a00 +
         a01 * a20
-      ) * determinant,
+      ) *
+      determinant,
 
       (
         a11 * a00 -
         a01 * a10
-      ) * determinant
+      ) *
+      determinant
     ];
 
     return [
@@ -922,7 +1090,11 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
     ];
   }
 
-  function compileShader(gl, type, source) {
+  function compileShader(
+    gl,
+    type,
+    source
+  ) {
     const shader =
       gl.createShader(type);
 
@@ -931,8 +1103,14 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
       "SHADER_CREATION_FAILURE"
     );
 
-    gl.shaderSource(shader, source);
-    gl.compileShader(shader);
+    gl.shaderSource(
+      shader,
+      source
+    );
+
+    gl.compileShader(
+      shader
+    );
 
     if (
       !gl.getShaderParameter(
@@ -941,10 +1119,14 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
       )
     ) {
       const info =
-        gl.getShaderInfoLog(shader) ||
+        gl.getShaderInfoLog(
+          shader
+        ) ||
         "SHADER_COMPILE_FAILURE";
 
-      gl.deleteShader(shader);
+      gl.deleteShader(
+        shader
+      );
 
       const error =
         new Error(info);
@@ -981,12 +1163,27 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
       "PROGRAM_CREATION_FAILURE"
     );
 
-    gl.attachShader(program, vertex);
-    gl.attachShader(program, fragment);
-    gl.linkProgram(program);
+    gl.attachShader(
+      program,
+      vertex
+    );
 
-    gl.deleteShader(vertex);
-    gl.deleteShader(fragment);
+    gl.attachShader(
+      program,
+      fragment
+    );
+
+    gl.linkProgram(
+      program
+    );
+
+    gl.deleteShader(
+      vertex
+    );
+
+    gl.deleteShader(
+      fragment
+    );
 
     if (
       !gl.getProgramParameter(
@@ -995,10 +1192,14 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
       )
     ) {
       const info =
-        gl.getProgramInfoLog(program) ||
+        gl.getProgramInfoLog(
+          program
+        ) ||
         "PROGRAM_LINK_FAILURE";
 
-      gl.deleteProgram(program);
+      gl.deleteProgram(
+        program
+      );
 
       const error =
         new Error(info);
@@ -1012,17 +1213,27 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
     return program;
   }
 
-  function createBuffer(gl, target, data) {
+  function createBuffer(
+    gl,
+    target,
+    data
+  ) {
     const buffer =
       gl.createBuffer();
 
     invariant(
       buffer,
       "WEBGL_BUFFER_CREATION_FAILED",
-      { target }
+      {
+        target
+      }
     );
 
-    gl.bindBuffer(target, buffer);
+    gl.bindBuffer(
+      target,
+      buffer
+    );
+
     gl.bufferData(
       target,
       data,
@@ -1041,7 +1252,9 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
     invariant(
       location >= 0,
       "WEBGL_ATTRIBUTE_LOCATION_INVALID",
-      { location }
+      {
+        location
+      }
     );
 
     gl.bindBuffer(
@@ -1063,7 +1276,9 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
     );
   }
 
-  function publishReceipt(extra = {}) {
+  function publishReceipt(
+    extra = {}
+  ) {
     Object.assign(
       RECEIPT,
       {
@@ -1079,6 +1294,12 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
         parentOrientationInherited:
           true,
 
+        constellationOrientationOnly:
+          true,
+
+        clusterOrientationApplied:
+          false,
+
         independentGestureAuthority:
           false,
 
@@ -1088,7 +1309,9 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
       extra
     );
 
-    globalThis[RECEIPT_SYMBOL] =
+    globalThis[
+      RECEIPT_SYMBOL
+    ] =
       Object.freeze({
         ...RECEIPT
       });
@@ -1099,7 +1322,9 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
     details = null
   ) {
     publishReceipt({
-      status: "failed",
+      status:
+        "failed",
+
       lastFailure:
         String(
           reason ||
@@ -1111,15 +1336,16 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
       new CustomEvent(
         FAILURE_EVENT,
         {
-          detail: Object.freeze({
-            reason:
-              String(
-                reason ||
-                "UNKNOWN_RENDERER_FAILURE"
-              ),
+          detail:
+            Object.freeze({
+              reason:
+                String(
+                  reason ||
+                  "UNKNOWN_RENDERER_FAILURE"
+                ),
 
-            details
-          })
+              details
+            })
         }
       )
     );
@@ -1132,7 +1358,8 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
 
     invariant(
       geometry &&
-      typeof geometry === "object",
+      typeof geometry ===
+        "object",
       "GEOMETRY_AUTHORITY_NOT_FOUND"
     );
 
@@ -1163,14 +1390,18 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
   ) {
     const requested =
       String(
-        pageContext.qualityProfileId ||
+        pageContext
+          .qualityProfileId ||
         "desktop"
       );
 
     if (
-      requested === "desktop" ||
-      requested === "mobile" ||
-      requested === "lowPower"
+      requested ===
+        "desktop" ||
+      requested ===
+        "mobile" ||
+      requested ===
+        "lowPower"
     ) {
       return requested;
     }
@@ -1183,36 +1414,45 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
   ) {
     const source =
       input &&
-      typeof input === "object"
+      typeof input ===
+        "object"
         ? input
         : {};
 
     const mode =
       Object.values(
         PRESENTATION_MODES
-      ).includes(source.mode)
+      ).includes(
+        source.mode
+      )
         ? source.mode
-        : PRESENTATION_MODES.EMBEDDED;
+        : PRESENTATION_MODES
+            .EMBEDDED;
 
     return Object.freeze({
       mode,
 
       selected:
-        source.selected === true ||
-        source.decisionOpen === true,
+        source.selected ===
+          true ||
+        source.decisionOpen ===
+          true,
 
       decisionOpen:
-        source.decisionOpen === true,
+        source.decisionOpen ===
+        true,
 
       cameraLowered:
-        source.cameraLowered === true,
+        source.cameraLowered ===
+        true,
 
       interactionEnabled:
         source.interactionEnabled !==
         false,
 
       reducedMotion:
-        source.reducedMotion === true,
+        source.reducedMotion ===
+        true,
 
       destinationType:
         String(
@@ -1246,10 +1486,13 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
     });
   }
 
-  function normalizeContext(pageContext) {
+  function normalizeContext(
+    pageContext
+  ) {
     invariant(
       pageContext &&
-      typeof pageContext === "object",
+      typeof pageContext ===
+        "object",
       "PAGE_CONTEXT_REQUIRED"
     );
 
@@ -1267,7 +1510,8 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
       );
 
     const semanticControl =
-      pageContext.semanticControl ||
+      pageContext
+        .semanticControl ||
       qs(
         "[data-upstream-compass-control]",
         mount
@@ -1296,7 +1540,8 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
     );
 
     invariant(
-      semanticControl instanceof Element,
+      semanticControl instanceof
+        Element,
       "UPSTREAM_COMPASS_SEMANTIC_CONTROL_REQUIRED"
     );
 
@@ -1343,23 +1588,28 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
     );
 
     invariant(
-      parentRoute.startsWith("/"),
+      parentRoute.startsWith(
+        "/"
+      ),
       "PARENT_ROUTE_REQUIRED"
     );
 
     const declaredHref =
-      semanticControl.tagName === "A"
+      semanticControl.tagName ===
+        "A"
         ? String(
-            semanticControl.getAttribute(
-              "href"
-            ) ||
+            semanticControl
+              .getAttribute(
+                "href"
+              ) ||
             ""
           ).trim()
         : "";
 
     const routeParity =
       !declaredHref ||
-      declaredHref === parentRoute;
+      declaredHref ===
+        parentRoute;
 
     mount.dataset
       .upstreamCompassRouteParity =
@@ -1424,7 +1674,8 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
         typeof pageContext
           .getFrameState ===
           "function"
-          ? pageContext.getFrameState
+          ? pageContext
+              .getFrameState
           : null,
 
       subscribeFrameState:
@@ -1541,7 +1792,9 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
     canvas.style.opacity =
       "0";
 
-    mount.prepend(canvas);
+    mount.prepend(
+      canvas
+    );
 
     return canvas;
   }
@@ -1554,8 +1807,10 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
           alpha: true,
           antialias: true,
           depth: true,
-          premultipliedAlpha: true,
-          preserveDrawingBuffer: false
+          premultipliedAlpha:
+            true,
+          preserveDrawingBuffer:
+            false
         }
       ) ||
       null
@@ -1569,10 +1824,12 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
     instance.rendererStatus =
       String(
         status ||
-        RENDERER_STATUS.INITIALIZING
+        RENDERER_STATUS
+          .INITIALIZING
       );
 
-    instance.context.mount.dataset
+    instance.context.mount
+      .dataset
       .upstreamCompassRendererStatus =
       instance.rendererStatus;
   }
@@ -1604,7 +1861,8 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
       visible === true;
 
     const fallback =
-      instance.context.fallback;
+      instance.context
+        .fallback;
 
     fallback.dataset
       .upstreamCompassFallbackVisible =
@@ -1631,30 +1889,38 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
         : "hidden";
   }
 
-  function publishMountState(instance) {
+  function publishMountState(
+    instance
+  ) {
     const mount =
       instance.context.mount;
 
     mount.dataset
       .upstreamCompassPresentationMode =
-      instance.presentationState.mode;
+      instance
+        .presentationState
+        .mode;
 
     mount.dataset
       .upstreamCompassSelected =
-      instance.presentationState.selected
+      instance
+        .presentationState
+        .selected
         ? "true"
         : "false";
 
     mount.dataset
       .upstreamCompassDecisionOpen =
-      instance.presentationState
+      instance
+        .presentationState
         .decisionOpen
         ? "true"
         : "false";
 
     mount.dataset
       .upstreamCompassInteractionEnabled =
-      instance.presentationState
+      instance
+        .presentationState
         .interactionEnabled
         ? "true"
         : "false";
@@ -1667,17 +1933,27 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
 
     mount.dataset
       .upstreamCompassFirstEnhancedFrame =
-      instance.firstEnhancedFrameCompleted
+      instance
+        .firstEnhancedFrameCompleted
         ? "true"
         : "false";
 
     mount.dataset
       .upstreamCompassParentOrientationSource =
-      instance.parentOrientationSource;
+      instance
+        .parentOrientationSource;
 
     mount.dataset
       .upstreamCompassInheritsParentOrientation =
       "true";
+
+    mount.dataset
+      .upstreamCompassConstellationOrientationOnly =
+      "true";
+
+    mount.dataset
+      .upstreamCompassClusterOrientationApplied =
+      "false";
 
     mount.dataset
       .upstreamCompassIndependentGestureAuthority =
@@ -1687,7 +1963,9 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
   function applyPresentationVisibility(
     instance
   ) {
-    publishMountState(instance);
+    publishMountState(
+      instance
+    );
 
     if (
       instance.destroyed ||
@@ -1708,10 +1986,13 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
     }
 
     if (
-      instance.renderFailureEmitted ||
+      instance
+        .renderFailureEmitted ||
       instance.rendererStatus ===
         RENDERER_STATUS.FAILED ||
-      instance.presentationState.mode ===
+      instance
+        .presentationState
+        .mode ===
         PRESENTATION_MODES
           .FAILURE_FALLBACK
     ) {
@@ -1729,7 +2010,8 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
     }
 
     if (
-      instance.firstEnhancedFrameCompleted &&
+      instance
+        .firstEnhancedFrameCompleted &&
       instance.gl
     ) {
       setCanvasVisible(
@@ -1762,24 +2044,38 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
     const fallbackSurface =
       instance.geometry
         .buildStaticSvgFallback({
-          title: "Home Compass",
+          title:
+            "Home Compass",
+
           className:
             "dgb-upstream-compass-static-fallback",
-          includeTitle: true,
+
+          includeTitle:
+            true,
+
           includeIntercardinalTicks:
             instance.model
               .includeIntercardinalTicks,
-          ariaHidden: true,
-          focusable: false
+
+          ariaHidden:
+            true,
+
+          focusable:
+            false
         });
 
     instance.fallbackSurface =
       fallbackSurface;
 
-    instance.context.fallback.innerHTML =
-      fallbackSurface.svgString;
+    instance.context
+      .fallback
+      .innerHTML =
+      fallbackSurface
+        .svgString;
 
-    instance.context.fallback.dataset
+    instance.context
+      .fallback
+      .dataset
       .upstreamCompassFallbackInjected =
       "true";
   }
@@ -1829,12 +2125,28 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
     });
   }
 
+  /*
+   * Compass parent orientation resolution.
+   *
+   * Permitted:
+   * - explicitly finalized parent orientation supplied by the page context;
+   * - explicitly declared parent orientation supplied by the controller frame;
+   * - controller frame orbit/constellation orientation;
+   * - identity fallback.
+   *
+   * Forbidden:
+   * - frame.cluster.orientation;
+   * - active room-cluster quaternion;
+   * - orbit * cluster composition;
+   * - any local Compass gesture delta.
+   */
   function resolveFrameParentOrientation(
     frame
   ) {
     if (
       !frame ||
-      typeof frame !== "object"
+      typeof frame !==
+        "object"
     ) {
       return Object.freeze({
         quaternion:
@@ -1848,10 +2160,12 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
 
     if (
       Array.isArray(
-        frame.parentOrientationQuaternion
+        frame
+          .parentOrientationQuaternion
       ) ||
       ArrayBuffer.isView(
-        frame.parentOrientationQuaternion
+        frame
+          .parentOrientationQuaternion
       )
     ) {
       return Object.freeze({
@@ -1871,11 +2185,13 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
       frame.parentOrientation &&
       (
         Array.isArray(
-          frame.parentOrientation
+          frame
+            .parentOrientation
             .quaternion
         ) ||
         ArrayBuffer.isView(
-          frame.parentOrientation
+          frame
+            .parentOrientation
             .quaternion
         )
       )
@@ -1883,7 +2199,8 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
       return Object.freeze({
         quaternion:
           normalizeQuaternion(
-            frame.parentOrientation
+            frame
+              .parentOrientation
               .quaternion
           ),
 
@@ -1893,52 +2210,28 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
       });
     }
 
-    const orbitQuaternion =
-      frame.orbitOrientation &&
-      frame.orbitOrientation
-        .quaternion
-        ? normalizeQuaternion(
-            frame.orbitOrientation
-              .quaternion
-          )
-        : [0, 0, 0, 1];
-
-    const clusterQuaternion =
-      frame.cluster &&
-      frame.cluster.orientation &&
-      frame.cluster.orientation
-        .quaternion
-        ? normalizeQuaternion(
-            frame.cluster.orientation
-              .quaternion
-          )
-        : null;
-
     if (
-      clusterQuaternion &&
-      frame.activeClusterWing
+      frame.orbitOrientation &&
+      (
+        Array.isArray(
+          frame
+            .orbitOrientation
+            .quaternion
+        ) ||
+        ArrayBuffer.isView(
+          frame
+            .orbitOrientation
+            .quaternion
+        )
+      )
     ) {
       return Object.freeze({
         quaternion:
-          quaternionMultiply(
-            orbitQuaternion,
-            clusterQuaternion
+          normalizeQuaternion(
+            frame
+              .orbitOrientation
+              .quaternion
           ),
-
-        source:
-          PARENT_ORIENTATION_SOURCES
-            .FRAME_ORBIT_CLUSTER_COMPOSITION
-      });
-    }
-
-    if (
-      frame.orbitOrientation &&
-      frame.orbitOrientation
-        .quaternion
-    ) {
-      return Object.freeze({
-        quaternion:
-          orbitQuaternion,
 
         source:
           PARENT_ORIENTATION_SOURCES
@@ -1965,7 +2258,9 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
     ) {
       return Object.freeze({
         quaternion:
-          normalizeQuaternion(input),
+          normalizeQuaternion(
+            input
+          ),
 
         source:
           PARENT_ORIENTATION_SOURCES
@@ -2011,7 +2306,8 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
 
     instance.frameState =
       frame &&
-      typeof frame === "object"
+      typeof frame ===
+        "object"
         ? frame
         : null;
 
@@ -2020,13 +2316,17 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
         instance.frameState
       );
 
-    instance.targetParentQuaternion =
+    instance
+      .targetParentQuaternion =
       resolved.quaternion;
 
-    instance.parentOrientationSource =
+    instance
+      .parentOrientationSource =
       resolved.source;
 
-    publishMountState(instance);
+    publishMountState(
+      instance
+    );
 
     return true;
   }
@@ -2050,13 +2350,17 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
       return false;
     }
 
-    instance.targetParentQuaternion =
+    instance
+      .targetParentQuaternion =
       resolved.quaternion;
 
-    instance.parentOrientationSource =
+    instance
+      .parentOrientationSource =
       resolved.source;
 
-    publishMountState(instance);
+    publishMountState(
+      instance
+    );
 
     return true;
   }
@@ -2080,22 +2384,27 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
       normalizeLocalTransform(
         presentationTransformForMode(
           instance.model,
-          instance.presentationState
+          instance
+            .presentationState
             .mode
         )
       );
 
-    instance.targetLocalPosition =
+    instance
+      .targetLocalPosition =
       target.position;
 
-    instance.targetLocalQuaternion =
+    instance
+      .targetLocalQuaternion =
       target.quaternion;
 
-    instance.targetLocalScale =
+    instance
+      .targetLocalScale =
       target.scale;
 
     if (
-      instance.presentationState
+      instance
+        .presentationState
         .reducedMotion
     ) {
       instance.reducedMotion =
@@ -2153,24 +2462,32 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
           .slice();
     }
 
-    publishMountState(instance);
+    publishMountState(
+      instance
+    );
   }
 
-  function createInstance(context) {
+  function createInstance(
+    context
+  ) {
     const geometry =
       resolveGeometryAuthority();
 
     const model =
       geometry.buildModel({
         quality:
-          context.qualityProfileId
+          context
+            .qualityProfileId
       });
 
     if (
-      typeof geometry.validateModel ===
+      typeof geometry
+        .validateModel ===
         "function"
     ) {
-      geometry.validateModel(model);
+      geometry.validateModel(
+        model
+      );
     }
 
     invariant(
@@ -2182,10 +2499,13 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
     );
 
     invariant(
-      model.presentationTransforms &&
-      model.presentationTransforms
+      model
+        .presentationTransforms &&
+      model
+        .presentationTransforms
         .embedded &&
-      model.presentationTransforms
+      model
+        .presentationTransforms
         .decisionApproach,
       "GEOMETRY_PRESENTATION_TRANSFORMS_REQUIRED"
     );
@@ -2204,7 +2524,8 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
       );
 
     if (
-      context.getCompassPresentationState
+      context
+        .getCompassPresentationState
     ) {
       try {
         initialPresentation =
@@ -2219,18 +2540,21 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
       normalizeLocalTransform(
         presentationTransformForMode(
           model,
-          initialPresentation.mode
+          initialPresentation
+            .mode
         )
       );
 
-    let initialFrame = null;
+    let initialFrame =
+      null;
 
     if (
       context.getFrameState
     ) {
       try {
         initialFrame =
-          context.getFrameState();
+          context
+            .getFrameState();
       } catch (_) {}
     }
 
@@ -2240,7 +2564,8 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
       );
 
     if (
-      context.getParentOrientationState
+      context
+        .getParentOrientationState
     ) {
       try {
         const explicit =
@@ -2265,33 +2590,59 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
     ) {
       try {
         reducedMotion =
-          context.getReducedMotion() ===
+          context
+            .getReducedMotion() ===
           true;
       } catch (_) {}
     }
 
     const instance = {
-      id: instanceId,
+      id:
+        instanceId,
+
       geometry,
       model,
       context,
       canvas,
 
-      gl: null,
-      program: null,
-      attribs: null,
-      uniforms: null,
-      gpuMeshes: [],
+      gl:
+        null,
 
-      running: false,
-      raf: 0,
-      lastTime: 0,
+      program:
+        null,
 
-      cssWidth: 1,
-      cssHeight: 1,
-      width: 1,
-      height: 1,
-      pixelRatio: 1,
+      attribs:
+        null,
+
+      uniforms:
+        null,
+
+      gpuMeshes:
+        [],
+
+      running:
+        false,
+
+      raf:
+        0,
+
+      lastTime:
+        0,
+
+      cssWidth:
+        1,
+
+      cssHeight:
+        1,
+
+      width:
+        1,
+
+      height:
+        1,
+
+      pixelRatio:
+        1,
 
       frameState:
         initialFrame,
@@ -2312,7 +2663,8 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
           .slice(),
 
       parentOrientationSource:
-        initialParent.source,
+        initialParent
+          .source,
 
       localPosition:
         initialLocal
@@ -2344,26 +2696,42 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
           .scale
           .slice(),
 
-      hoverActive: false,
+      hoverActive:
+        false,
 
-      view: identity4(),
-      projection: identity4(),
+      view:
+        identity4(),
 
-      fallbackSurface: null,
+      projection:
+        identity4(),
 
-      destroyed: false,
-      unsubscribers: [],
-      onSemanticControlClick: null,
+      fallbackSurface:
+        null,
 
-      renderFailureEmitted: false,
-      firstEnhancedFrameCompleted: false,
+      destroyed:
+        false,
+
+      unsubscribers:
+        [],
+
+      onSemanticControlClick:
+        null,
+
+      renderFailureEmitted:
+        false,
+
+      firstEnhancedFrameCompleted:
+        false,
+
       rendererStatus:
-        RENDERER_STATUS.INITIALIZING
+        RENDERER_STATUS
+          .INITIALIZING
     };
 
     setMountRendererStatus(
       instance,
-      RENDERER_STATUS.INITIALIZING
+      RENDERER_STATUS
+        .INITIALIZING
     );
 
     applyPresentationVisibility(
@@ -2379,12 +2747,14 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
     details = null
   ) {
     if (
-      instance.renderFailureEmitted
+      instance
+        .renderFailureEmitted
     ) {
       return;
     }
 
-    instance.renderFailureEmitted =
+    instance
+      .renderFailureEmitted =
       true;
 
     setMountRendererStatus(
@@ -2397,7 +2767,9 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
     );
 
     publishReceipt({
-      status: "failed",
+      status:
+        "failed",
+
       lastFailure:
         String(
           reason ||
@@ -2419,7 +2791,8 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
         RENDERER_STATUS.FAILED,
 
       lastPresentationMode:
-        instance.presentationState
+        instance
+          .presentationState
           .mode,
 
       lastParentOrientationSource:
@@ -2427,7 +2800,8 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
           .parentOrientationSource,
 
       lastReducedMotion:
-        instance.reducedMotion,
+        instance
+          .reducedMotion,
 
       firstEnhancedFrameCompleted:
         instance
@@ -2615,7 +2989,9 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
     });
   }
 
-  function buildGpuMeshes(instance) {
+  function buildGpuMeshes(
+    instance
+  ) {
     const gl =
       instance.gl;
 
@@ -2626,11 +3002,13 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
         WebGL2RenderingContext;
 
     const needsUint32 =
-      instance.model.meshes.some(
-        mesh =>
-          mesh.indices instanceof
-          Uint32Array
-      );
+      instance.model
+        .meshes
+        .some(
+          mesh =>
+            mesh.indices instanceof
+            Uint32Array
+        );
 
     if (
       needsUint32 &&
@@ -2647,16 +3025,20 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
       );
     }
 
-    return instance.model.meshes.map(
-      mesh =>
-        createGpuMeshRecord(
-          gl,
-          mesh
-        )
-    );
+    return instance.model
+      .meshes
+      .map(
+        mesh =>
+          createGpuMeshRecord(
+            gl,
+            mesh
+          )
+      );
   }
 
-  function initializeGL(instance) {
+  function initializeGL(
+    instance
+  ) {
     const gl =
       getGL(
         instance.canvas
@@ -2700,43 +3082,47 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
         instance
       );
 
-    instance.canvas.addEventListener(
-      "webglcontextlost",
-      event => {
-        event.preventDefault();
+    instance.canvas
+      .addEventListener(
+        "webglcontextlost",
+        event => {
+          event.preventDefault();
 
-        instance.running =
-          false;
+          instance.running =
+            false;
 
-        safeEmitInstanceFailure(
-          instance,
-          "WEBGL_CONTEXT_LOST"
-        );
-      }
-    );
+          safeEmitInstanceFailure(
+            instance,
+            "WEBGL_CONTEXT_LOST"
+          );
+        }
+      );
 
-    instance.canvas.addEventListener(
-      "webglcontextrestored",
-      () => {
-        safeEmitInstanceFailure(
-          instance,
-          "WEBGL_CONTEXT_RESTORED_RELOAD_REQUIRED"
-        );
-      }
-    );
+    instance.canvas
+      .addEventListener(
+        "webglcontextrestored",
+        () => {
+          safeEmitInstanceFailure(
+            instance,
+            "WEBGL_CONTEXT_RESTORED_RELOAD_REQUIRED"
+          );
+        }
+      );
   }
 
   function bindSemanticControl(
     instance
   ) {
-    instance.onSemanticControlClick =
+    instance
+      .onSemanticControlClick =
       event => {
         event.preventDefault();
         event.stopPropagation();
 
         if (
           instance.destroyed ||
-          !instance.presentationState
+          !instance
+            .presentationState
             .interactionEnabled
         ) {
           return;
@@ -2767,7 +3153,9 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
                 "home-compass"
             });
         } catch (error) {
-          instance.context.mount.dataset
+          instance.context
+            .mount
+            .dataset
             .upstreamCompassSemanticRequestFailure =
             error &&
             (
@@ -2801,22 +3189,25 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
       context.subscribeFrameState
     ) {
       const unsubscribe =
-        context.subscribeFrameState(
-          frame => {
-            syncFrameState(
-              instance,
-              frame
-            );
-          }
-        );
+        context
+          .subscribeFrameState(
+            frame => {
+              syncFrameState(
+                instance,
+                frame
+              );
+            }
+          );
 
       if (
         typeof unsubscribe ===
         "function"
       ) {
-        instance.unsubscribers.push(
-          unsubscribe
-        );
+        instance
+          .unsubscribers
+          .push(
+            unsubscribe
+          );
       }
     }
 
@@ -2839,9 +3230,11 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
         typeof unsubscribe ===
         "function"
       ) {
-        instance.unsubscribers.push(
-          unsubscribe
-        );
+        instance
+          .unsubscribers
+          .push(
+            unsubscribe
+          );
       }
     }
 
@@ -2864,36 +3257,42 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
         typeof unsubscribe ===
         "function"
       ) {
-        instance.unsubscribers.push(
-          unsubscribe
-        );
+        instance
+          .unsubscribers
+          .push(
+            unsubscribe
+          );
       }
     }
 
     if (
-      context.subscribeReducedMotion
+      context
+        .subscribeReducedMotion
     ) {
       const unsubscribe =
-        context.subscribeReducedMotion(
-          value => {
-            setReducedMotion(
-              instance,
-              value === true
-            );
+        context
+          .subscribeReducedMotion(
+            value => {
+              setReducedMotion(
+                instance,
+                value === true
+              );
 
-            applyPresentationVisibility(
-              instance
-            );
-          }
-        );
+              applyPresentationVisibility(
+                instance
+              );
+            }
+          );
 
       if (
         typeof unsubscribe ===
         "function"
       ) {
-        instance.unsubscribers.push(
-          unsubscribe
-        );
+        instance
+          .unsubscribers
+          .push(
+            unsubscribe
+          );
       }
     }
 
@@ -2906,11 +3305,15 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
     instance
   ) {
     while (
-      instance.unsubscribers.length >
+      instance
+        .unsubscribers
+        .length >
       0
     ) {
       const unsubscribe =
-        instance.unsubscribers.pop();
+        instance
+          .unsubscribers
+          .pop();
 
       try {
         unsubscribe();
@@ -2952,33 +3355,43 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
       const gpuMesh
       of instance.gpuMeshes
     ) {
-      if (gpuMesh.position) {
+      if (
+        gpuMesh.position
+      ) {
         gl.deleteBuffer(
           gpuMesh.position
         );
       }
 
-      if (gpuMesh.normal) {
+      if (
+        gpuMesh.normal
+      ) {
         gl.deleteBuffer(
           gpuMesh.normal
         );
       }
 
-      if (gpuMesh.index) {
+      if (
+        gpuMesh.index
+      ) {
         gl.deleteBuffer(
           gpuMesh.index
         );
       }
     }
 
-    instance.gpuMeshes = [];
+    instance.gpuMeshes =
+      [];
 
-    if (instance.program) {
+    if (
+      instance.program
+    ) {
       gl.deleteProgram(
         instance.program
       );
 
-      instance.program = null;
+      instance.program =
+        null;
     }
   }
 
@@ -2998,12 +3411,15 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
     instance.running =
       false;
 
-    if (instance.raf) {
+    if (
+      instance.raf
+    ) {
       cancelAnimationFrame(
         instance.raf
       );
 
-      instance.raf = 0;
+      instance.raf =
+        0;
     }
 
     unbindSubscriptions(
@@ -3016,9 +3432,11 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
 
     if (
       instance.canvas &&
-      instance.canvas.parentNode
+      instance.canvas
+        .parentNode
     ) {
-      instance.canvas.parentNode
+      instance.canvas
+        .parentNode
         .removeChild(
           instance.canvas
         );
@@ -3059,7 +3477,8 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
         RENDERER_STATUS.DISPOSED,
 
       lastPresentationMode:
-        instance.presentationState
+        instance
+          .presentationState
           .mode,
 
       lastParentOrientationSource:
@@ -3067,7 +3486,8 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
           .parentOrientationSource,
 
       lastReducedMotion:
-        instance.reducedMotion,
+        instance
+          .reducedMotion,
 
       firstEnhancedFrameCompleted:
         instance
@@ -3075,14 +3495,18 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
     });
   }
 
-  function resize(instance) {
+  function resize(
+    instance
+  ) {
     const rect =
       instance.canvas
         .getBoundingClientRect();
 
     const lowPower =
-      navigator.hardwareConcurrency &&
-      navigator.hardwareConcurrency <=
+      navigator
+        .hardwareConcurrency &&
+      navigator
+        .hardwareConcurrency <=
         QUALITY
           .lowPowerHardwareConcurrencyThreshold;
 
@@ -3095,7 +3519,8 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
 
     const pixelRatio =
       Math.min(
-        globalThis.devicePixelRatio ||
+        globalThis
+          .devicePixelRatio ||
         1,
         cap
       );
@@ -3133,18 +3558,24 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
 
     instance.cssWidth =
       Math.max(
-        QUALITY.minimumCssSceneSize,
+        QUALITY
+          .minimumCssSceneSize,
         rect.width
       );
 
     instance.cssHeight =
       Math.max(
-        QUALITY.minimumCssSceneSize,
+        QUALITY
+          .minimumCssSceneSize,
         rect.height
       );
 
-    instance.width = width;
-    instance.height = height;
+    instance.width =
+      width;
+
+    instance.height =
+      height;
+
     instance.pixelRatio =
       pixelRatio;
 
@@ -3306,40 +3737,64 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
     const hoverScale =
       instance.hoverActive &&
       !instance.reducedMotion
-        ? QUALITY.hoverScale
+        ? QUALITY
+            .hoverScale
         : 1;
 
-    const parentRotation =
+    const constellationRotation =
       quaternionToMatrix4(
-        instance.parentQuaternion
+        instance
+          .parentQuaternion
       );
 
     const localTranslation =
       translate4(
-        instance.localPosition[0],
-        instance.localPosition[1],
-        instance.localPosition[2]
+        instance
+          .localPosition[0],
+
+        instance
+          .localPosition[1],
+
+        instance
+          .localPosition[2]
       );
 
     const localRotation =
       quaternionToMatrix4(
-        instance.localQuaternion
+        instance
+          .localQuaternion
       );
 
     const localScale =
       scale4(
-        instance.localScale[0] *
+        instance
+          .localScale[0] *
           hoverScale,
 
-        instance.localScale[1] *
+        instance
+          .localScale[1] *
           hoverScale,
 
-        instance.localScale[2] *
+        instance
+          .localScale[2] *
           hoverScale
       );
 
+    /*
+     * Required chain:
+     *
+     * constellation orientation
+     *   *
+     * Compass local position
+     *   *
+     * Compass local presentation quaternion
+     *   *
+     * Compass local scale
+     *
+     * No cluster quaternion participates.
+     */
     return multiply4(
-      parentRotation,
+      constellationRotation,
       multiply4(
         localTranslation,
         multiply4(
@@ -3361,9 +3816,15 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
     gl.uniform3f(
       instance.uniforms
         .baseColor,
-      material.baseColor[0],
-      material.baseColor[1],
-      material.baseColor[2]
+
+      material
+        .baseColor[0],
+
+      material
+        .baseColor[1],
+
+      material
+        .baseColor[2]
     );
 
     gl.uniform3f(
@@ -3399,29 +3860,34 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
     );
 
     gl.uniform1f(
-      instance.uniforms.alpha,
+      instance.uniforms
+        .alpha,
       material.alpha
     );
 
     gl.uniform1f(
-      instance.uniforms.emissive,
+      instance.uniforms
+        .emissive,
       material.emissive
     );
 
     gl.uniform1f(
-      instance.uniforms.specular,
+      instance.uniforms
+        .specular,
       material.specular
     );
 
     gl.uniform1f(
-      instance.uniforms.rim,
+      instance.uniforms
+        .rim,
       material.rim
     );
 
     const haloStrength =
       haloPass &&
       instance.cssWidth >
-        QUALITY.bloomDisableWidthPx
+        QUALITY
+          .bloomDisableWidthPx
         ? material.halo
         : 0;
 
@@ -3444,14 +3910,16 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
     bindAttrib(
       gl,
       gpuMesh.position,
-      instance.attribs.position,
+      instance.attribs
+        .position,
       3
     );
 
     bindAttrib(
       gl,
       gpuMesh.normal,
-      instance.attribs.normal,
+      instance.attribs
+        .normal,
       3
     );
 
@@ -3472,7 +3940,8 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
       );
 
     gl.uniformMatrix4fv(
-      instance.uniforms.model,
+      instance.uniforms
+        .model,
       false,
       new Float32Array(
         modelMatrix
@@ -3480,7 +3949,8 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
     );
 
     gl.uniformMatrix4fv(
-      instance.uniforms.view,
+      instance.uniforms
+        .view,
       false,
       new Float32Array(
         instance.view
@@ -3569,7 +4039,8 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
     }
 
     const seconds =
-      timeMs * 0.001;
+      timeMs *
+      0.001;
 
     const deltaSeconds =
       instance.lastTime
@@ -3595,7 +4066,9 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
       instance
     );
 
-    resize(instance);
+    resize(
+      instance
+    );
 
     updateTransforms(
       instance,
@@ -3651,7 +4124,9 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
     );
 
     if (
-      instance.presentationState.mode ===
+      instance
+        .presentationState
+        .mode ===
         PRESENTATION_MODES
           .FAILURE_FALLBACK
     ) {
@@ -3678,9 +4153,12 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
 
     if (
       instance.cssWidth >
-      QUALITY.bloomDisableWidthPx
+      QUALITY
+        .bloomDisableWidthPx
     ) {
-      gl.depthMask(false);
+      gl.depthMask(
+        false
+      );
 
       gl.blendFunc(
         gl.SRC_ALPHA,
@@ -3699,7 +4177,9 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
         );
       }
 
-      gl.depthMask(true);
+      gl.depthMask(
+        true
+      );
 
       gl.blendFunc(
         gl.SRC_ALPHA,
@@ -3723,12 +4203,15 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
       gl.getError();
 
     if (
-      error !== gl.NO_ERROR
+      error !==
+      gl.NO_ERROR
     ) {
       safeEmitInstanceFailure(
         instance,
         "WEBGL_RENDER_FAILURE",
-        { error }
+        {
+          error
+        }
       );
 
       instance.running =
@@ -3742,26 +4225,40 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
     );
 
     publishReceipt({
-      status: "available",
-      lastFailure: "",
+      status:
+        "available",
+
+      lastFailure:
+        "",
+
       lastInstanceId:
         instance.id,
+
       lastMountPageNodeId:
         instance.context
           .pageNodeId,
+
       lastParentRoute:
         instance.context
           .parentRoute,
+
       lastRendererStatus:
-        instance.rendererStatus,
+        instance
+          .rendererStatus,
+
       lastPresentationMode:
-        instance.presentationState
+        instance
+          .presentationState
           .mode,
+
       lastParentOrientationSource:
         instance
           .parentOrientationSource,
+
       lastReducedMotion:
-        instance.reducedMotion,
+        instance
+          .reducedMotion,
+
       firstEnhancedFrameCompleted:
         instance
           .firstEnhancedFrameCompleted
@@ -3777,21 +4274,30 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
       );
   }
 
-  function start(instanceId) {
+  function start(
+    instanceId
+  ) {
     const instance =
-      INSTANCES.get(instanceId);
+      INSTANCES.get(
+        instanceId
+      );
 
     invariant(
       instance,
       "INSTANCE_NOT_FOUND"
     );
 
-    if (instance.running) {
+    if (
+      instance.running
+    ) {
       return true;
     }
 
-    instance.running = true;
-    instance.lastTime = 0;
+    instance.running =
+      true;
+
+    instance.lastTime =
+      0;
 
     instance.raf =
       requestAnimationFrame(
@@ -3805,9 +4311,13 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
     return true;
   }
 
-  function stop(instanceId) {
+  function stop(
+    instanceId
+  ) {
     const instance =
-      INSTANCES.get(instanceId);
+      INSTANCES.get(
+        instanceId
+      );
 
     invariant(
       instance,
@@ -3817,12 +4327,15 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
     instance.running =
       false;
 
-    if (instance.raf) {
+    if (
+      instance.raf
+    ) {
       cancelAnimationFrame(
         instance.raf
       );
 
-      instance.raf = 0;
+      instance.raf =
+        0;
     }
 
     return true;
@@ -3833,7 +4346,9 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
     active
   ) {
     const instance =
-      INSTANCES.get(instanceId);
+      INSTANCES.get(
+        instanceId
+      );
 
     invariant(
       instance,
@@ -3857,7 +4372,9 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
     presentationState
   ) {
     const instance =
-      INSTANCES.get(instanceId);
+      INSTANCES.get(
+        instanceId
+      );
 
     invariant(
       instance,
@@ -3875,7 +4392,9 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
     frameState
   ) {
     const instance =
-      INSTANCES.get(instanceId);
+      INSTANCES.get(
+        instanceId
+      );
 
     invariant(
       instance,
@@ -3893,7 +4412,9 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
     orientationState
   ) {
     const instance =
-      INSTANCES.get(instanceId);
+      INSTANCES.get(
+        instanceId
+      );
 
     invariant(
       instance,
@@ -3911,7 +4432,9 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
     active
   ) {
     const instance =
-      INSTANCES.get(instanceId);
+      INSTANCES.get(
+        instanceId
+      );
 
     invariant(
       instance,
@@ -3924,7 +4447,9 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
     return true;
   }
 
-  function mount(pageContext) {
+  function mount(
+    pageContext
+  ) {
     const context =
       normalizeContext(
         pageContext
@@ -3942,7 +4467,8 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
 
       setMountRendererStatus(
         instance,
-        RENDERER_STATUS.INITIALIZING
+        RENDERER_STATUS
+          .INITIALIZING
       );
 
       applyPresentationVisibility(
@@ -3967,26 +4493,38 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
       );
 
       publishReceipt({
-        status: "initializing",
-        lastFailure: "",
+        status:
+          "initializing",
+
+        lastFailure:
+          "",
+
         lastInstanceId:
           instance.id,
+
         lastMountPageNodeId:
           context.pageNodeId,
+
         lastParentRoute:
           context.parentRoute,
+
         lastRendererStatus:
           RENDERER_STATUS
             .INITIALIZING,
+
         lastPresentationMode:
           instance
             .presentationState
             .mode,
+
         lastParentOrientationSource:
           instance
             .parentOrientationSource,
+
         lastReducedMotion:
-          instance.reducedMotion,
+          instance
+            .reducedMotion,
+
         firstEnhancedFrameCompleted:
           false
       });
@@ -4059,9 +4597,11 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
 
       if (
         instance.canvas &&
-        instance.canvas.parentNode
+        instance.canvas
+          .parentNode
       ) {
-        instance.canvas.parentNode
+        instance.canvas
+          .parentNode
           .removeChild(
             instance.canvas
           );
@@ -4082,6 +4622,7 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
         {
           pageNodeId:
             context.pageNodeId,
+
           parentRoute:
             context.parentRoute
         }
@@ -4095,7 +4636,9 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
     instanceId
   ) {
     const instance =
-      INSTANCES.get(instanceId);
+      INSTANCES.get(
+        instanceId
+      );
 
     invariant(
       instance,
@@ -4136,7 +4679,8 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
           .presentationState,
 
       reducedMotion:
-        instance.reducedMotion,
+        instance
+          .reducedMotion,
 
       parentOrientationSource:
         instance
@@ -4184,7 +4728,8 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
         instance.destroyed,
 
       rendererStatus:
-        instance.rendererStatus,
+        instance
+          .rendererStatus,
 
       firstEnhancedFrameCompleted:
         instance
@@ -4193,6 +4738,15 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
       renderFailureEmitted:
         instance
           .renderFailureEmitted,
+
+      parentOrientationInherited:
+        true,
+
+      constellationOrientationOnly:
+        true,
+
+      clusterOrientationApplied:
+        false,
 
       independentGestureAuthority:
         false,
@@ -4209,8 +4763,12 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
   }
 
   publishReceipt({
-    status: "available",
-    lastRendererStatus: "",
+    status:
+      "available",
+
+    lastRendererStatus:
+      "",
+
     firstEnhancedFrameCompleted:
       false
   });
@@ -4261,7 +4819,8 @@ if (
   typeof globalThis !==
   "undefined"
 ) {
-  globalThis.DGB_UPSTREAM_COMPASS_RENDERER =
+  globalThis
+    .DGB_UPSTREAM_COMPASS_RENDERER =
     DGB_UPSTREAM_COMPASS_RENDERER;
 }
 

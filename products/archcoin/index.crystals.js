@@ -13,21 +13,24 @@
 
    Governing boundaries:
    - The controller owns state, selection meaning, route law, restoration law,
-     orbit settlement, cluster settlement, and shared lower-chamber projection.
-   - This file owns constellation and room-cluster scene execution only.
+     constellation settlement, cluster settlement, and lower-chamber state.
+   - This file owns ARCHCOIN constellation and room-cluster scene execution.
    - The shared Compass renderer owns Compass WebGL form and presentation.
    - HTML owns canonical room declarations and semantic controls.
    - CSS presents already-closed runtime state.
 
    Scene transform law:
-   - constellation:
-     CONSTELLATION_ORIENTATION
+   - outer ARCHCOIN coins:
+     CONSTELLATION_ORIENTATION * CARDINAL_LOCAL_POSITION
 
    - active room cluster:
-     CONSTELLATION_ORIENTATION * CLUSTER_LOCAL_ORIENTATION
+     CONSTELLATION_ORIENTATION
+     * CLUSTER_LOCAL_ORIENTATION
+     * ROOM_LOCAL_POSITION
 
    - Home Compass:
-     CONSTELLATION_ORIENTATION * COMPASS_LOCAL_PRESENTATION_TRANSFORM
+     CONSTELLATION_ORIENTATION
+     * COMPASS_LOCAL_PRESENTATION_TRANSFORM
 
    Forbidden:
    CONSTELLATION_ORIENTATION
@@ -42,15 +45,16 @@
    - restoration fields never override the active Home Compass destination.
 
    Scope:
-   - render the four outer ARCHCOIN coins;
-   - render the active four-room cluster;
-   - preserve constellation and per-wing cluster orientation;
+   - render all four outer ARCHCOIN coins in constellation and cluster states;
+   - render the active four-room cluster concurrently with the outer coins;
+   - preserve constellation and per-wing cluster-local orientation;
+   - compose constellation and cluster-local orientation only for room placement;
    - preserve tap, drag, settle, pointer capture, click suppression,
      reduced motion, context-loss handling, semantic synchronization,
      and nonvisual room proxies;
-   - preserve the exact sixteen HTML-owned canonical room declarations;
+   - preserve exactly sixteen HTML-owned canonical room declarations;
    - never add data-archcoin-room to generated room proxies;
-   - exclude the shared Home Compass semantic control from crystals pointer and
+   - exclude the shared Home Compass semantic control from ARCHCOIN pointer and
      gesture territory;
    - never navigate directly;
    - preserve intentional empty bounded void.
@@ -60,11 +64,12 @@
   "use strict";
 
   const CONTRACT = Object.freeze({
-    id: "ARCHCOIN_CRYSTALS_GENERATIONAL_SCENE_EXECUTION_v2",
+    id: "ARCHCOIN_CRYSTALS_GENERATIONAL_SCENE_EXECUTION_v3",
     sourceContractId:
       "DGB_COMPASS_CRYSTALS_SPHERICAL_CONSTELLATION_AND_CLUSTER_REBUILD_v3",
     file: "/products/archcoin/index.crystals.js",
-    releaseId: "archcoin-crystals-generational-scene-execution-v2",
+    releaseId:
+      "archcoin-crystals-constellation-parent-cluster-composition-v3",
     visualPassClaimed: false,
     productionAuthorized: false,
     deploymentAuthorized: false
@@ -97,7 +102,7 @@
 
   const SCENE_PROJECTIONS = Object.freeze({
     CONSTELLATION: "CONSTELLATION",
-    CLUSTER: "CLUSTER",
+    CONSTELLATION_WITH_CLUSTER: "CONSTELLATION_WITH_CLUSTER",
     HELD: "HELD"
   });
 
@@ -133,18 +138,23 @@
   });
 
   const SPHERE = Object.freeze({
-    coordinateSystem: "RIGHT_HANDED_EUCLIDEAN_XYZ",
-    orientationRepresentation: "UNIT_QUATERNION",
+    coordinateSystem:
+      "RIGHT_HANDED_EUCLIDEAN_XYZ",
+
+    orientationRepresentation:
+      "UNIT_QUATERNION",
 
     constellation: Object.freeze({
       horizontalRadius: 1.46,
       verticalRadius: 1.28,
       depthRadius: 1.14,
+
       primaryAnchor: Object.freeze([
         0,
         0.78,
         0.625
       ]),
+
       vectors: Object.freeze({
         north: Object.freeze([0, 1, 0]),
         east: Object.freeze([1, 0, 0]),
@@ -154,14 +164,18 @@
     }),
 
     cluster: Object.freeze({
-      horizontalRadius: 1.28,
-      verticalRadius: 1.10,
-      depthRadius: 1.00,
+      horizontalRadius: 1.04,
+      verticalRadius: 0.90,
+      depthRadius: 0.84,
+
+      centerRadius: 0.26,
+
       primaryAnchor: Object.freeze([
         0,
         0.70,
         0.714
       ]),
+
       latitudeAmplitude: 0.48,
       latitudeFrequency: 1.73
     })
@@ -245,14 +259,14 @@
       contrast: 1.22
     }),
 
-    CARDINAL_CONTEXT: Object.freeze({
-      specular: 1.30,
-      rim: 1.10,
-      emissive: 0.17,
-      alpha: 0.95,
-      sparkle: 0.21,
-      halo: 0.78,
-      contrast: 1.18
+    CARDINAL_CLUSTER_CONTEXT: Object.freeze({
+      specular: 1.34,
+      rim: 1.14,
+      emissive: 0.18,
+      alpha: 0.96,
+      sparkle: 0.22,
+      halo: 0.84,
+      contrast: 1.20
     }),
 
     ROOM_IDLE: Object.freeze({
@@ -292,55 +306,145 @@
     lowPowerHardwareConcurrencyThreshold: 4,
     mobileAspectThreshold: 0.82,
     bloomDisableWidthPx: 420,
+
     cardinalSegments: 8,
     roomSegments: 6,
+
     cardinalScale: 0.96,
     focusedCardinalScale: 1.28,
-    contextualCardinalScale: 1.02,
-    roomScale: 0.84,
-    primaryRoomScale: 1.08,
-    selectedRoomScale: 1.14,
+    clusterContextCardinalScale: 1.08,
+
+    roomScale: 0.80,
+    primaryRoomScale: 1.02,
+    selectedRoomScale: 1.08,
+
     maxYaw: 0.20,
     maxPitch: 0.13,
+
     maximumDeltaSeconds: 0.05,
     normalEpsilon: 1e-7
   });
 
   const RECEIPT = {
-    contractId: CONTRACT.id,
-    sourceContractId: CONTRACT.sourceContractId,
-    status: "pending",
-    rendererInitialized: false,
-    registryCardinalCount: 0,
-    registryRoomCount: 0,
-    canonicalRoomDeclarationCount: 0,
-    roomProxyCount: 0,
-    roomProxyPresentation: "NONVISUAL_ACCESSIBILITY_CONTROL",
-    generatedRoomProxiesDeclareCanonicalRoomAttribute: false,
-    sphericalConstellationEnabled: true,
-    sphericalClustersEnabled: true,
-    coordinateSystem: SPHERE.coordinateSystem,
-    orientationRepresentation: SPHERE.orientationRepresentation,
-    sceneProjection: SCENE_PROJECTIONS.CONSTELLATION,
-    primaryWing: "north",
-    activeClusterWing: "",
-    primaryRoom: "",
-    selectedDestinationType: "",
-    selectedDestinationId: "",
-    restorationFieldsMayRemainPopulated: true,
-    activeSelectionUsesDestinationAuthority: true,
-    compassDecisionScenePreserved: true,
-    clusterOrientationAppliedToCompass: false,
-    gestureActive: false,
-    lastPointerTerritory: "",
-    lastGestureType: "",
-    lastGestureDistance: 0,
-    lastGestureDurationMs: 0,
-    lastAverageVelocityPxPerMs: 0,
-    lastReleaseVelocityPxPerMs: 0,
-    glError: "not-checked",
-    drawCallsLastFrame: 0,
-    visualPassClaimed: false
+    contractId:
+      CONTRACT.id,
+
+    sourceContractId:
+      CONTRACT.sourceContractId,
+
+    status:
+      "pending",
+
+    rendererInitialized:
+      false,
+
+    registryCardinalCount:
+      0,
+
+    registryRoomCount:
+      0,
+
+    canonicalRoomDeclarationCount:
+      0,
+
+    roomProxyCount:
+      0,
+
+    roomProxyPresentation:
+      "NONVISUAL_ACCESSIBILITY_CONTROL",
+
+    generatedRoomProxiesDeclareCanonicalRoomAttribute:
+      false,
+
+    sphericalConstellationEnabled:
+      true,
+
+    sphericalClustersEnabled:
+      true,
+
+    coordinateSystem:
+      SPHERE.coordinateSystem,
+
+    orientationRepresentation:
+      SPHERE.orientationRepresentation,
+
+    sceneProjection:
+      SCENE_PROJECTIONS.CONSTELLATION,
+
+    outerCoinsRendered:
+      true,
+
+    outerCoinsRenderedDuringCluster:
+      true,
+
+    activeClusterRenderedWithOuterCoins:
+      true,
+
+    clusterOrientationStorage:
+      "CLUSTER_LOCAL",
+
+    roomVisualOrientationLaw:
+      "CONSTELLATION_ORIENTATION * CLUSTER_LOCAL_ORIENTATION",
+
+    clusterInheritsConstellationOrientation:
+      true,
+
+    clusterOrientationAppliedToCompass:
+      false,
+
+    primaryWing:
+      "north",
+
+    activeClusterWing:
+      "",
+
+    primaryRoom:
+      "",
+
+    selectedDestinationType:
+      "",
+
+    selectedDestinationId:
+      "",
+
+    restorationFieldsMayRemainPopulated:
+      true,
+
+    activeSelectionUsesDestinationAuthority:
+      true,
+
+    compassDecisionScenePreserved:
+      true,
+
+    gestureActive:
+      false,
+
+    lastPointerTerritory:
+      "",
+
+    lastGestureType:
+      "",
+
+    lastGestureDistance:
+      0,
+
+    lastGestureDurationMs:
+      0,
+
+    lastAverageVelocityPxPerMs:
+      0,
+
+    lastReleaseVelocityPxPerMs:
+      0,
+
+    glError:
+      "not-checked",
+
+    drawCallsLastFrame:
+      0,
+
+    visualPassClaimed:
+      false
   };
 
   const state = {
@@ -367,7 +471,9 @@
     pixelRatio: 1,
 
     frame: null,
-    sceneProjection: SCENE_PROJECTIONS.CONSTELLATION,
+
+    sceneProjection:
+      SCENE_PROJECTIONS.CONSTELLATION,
 
     constellationQuaternion: [
       0,
@@ -383,15 +489,26 @@
       1
     ],
 
-    visualPrimaryWing: "north",
-    settledPrimaryWing: "north",
+    visualPrimaryWing:
+      "north",
 
-    clusterQuaternions: new Map(),
-    clusterTargetQuaternions: new Map(),
-    visualPrimaryRooms: new Map(),
+    settledPrimaryWing:
+      "north",
 
-    view: null,
-    projection: null,
+    clusterQuaternions:
+      new Map(),
+
+    clusterTargetQuaternions:
+      new Map(),
+
+    visualPrimaryRooms:
+      new Map(),
+
+    view:
+      null,
+
+    projection:
+      null,
 
     camera: {
       eye: [
@@ -419,17 +536,32 @@
       ]
     },
 
-    time: 0,
-    lastTime: 0,
-    raf: 0,
-    running: false,
-    disposed: false,
-    reducedMotion: false,
+    time:
+      0,
 
-    pointer: null,
-    suppressClickUntil: 0,
+    lastTime:
+      0,
 
-    listenersBound: false
+    raf:
+      0,
+
+    running:
+      false,
+
+    disposed:
+      false,
+
+    reducedMotion:
+      false,
+
+    pointer:
+      null,
+
+    suppressClickUntil:
+      0,
+
+    listenersBound:
+      false
   };
 
   const vertexShaderSource = `
@@ -454,17 +586,24 @@
       vec3 position = aPosition;
 
       if (uHaloPass > 0.5) {
-        position += normalize(aNormal) * uHaloExpansion;
+        position +=
+          normalize(aNormal) *
+          uHaloExpansion;
       }
 
       vec4 worldPosition =
-        uModel * vec4(position, 1.0);
+        uModel *
+        vec4(position, 1.0);
 
       vec4 viewPosition =
-        uView * worldPosition;
+        uView *
+        worldPosition;
 
       vViewNormal =
-        normalize(uViewNormalMatrix * aNormal);
+        normalize(
+          uViewNormalMatrix *
+          aNormal
+        );
 
       vColor =
         aColor;
@@ -479,7 +618,8 @@
         uHaloPass;
 
       gl_Position =
-        uProjection * viewPosition;
+        uProjection *
+        viewPosition;
     }
   `;
 
@@ -984,11 +1124,10 @@
   }
 
   function emitReceipt(extra = {}) {
-    const frameCluster =
-      state.frame &&
-      state.frame.cluster
-        ? state.frame.cluster
-        : null;
+    const projectedClusterWing =
+      resolveProjectedClusterWing(
+        state.frame
+      );
 
     Object.assign(
       RECEIPT,
@@ -1012,22 +1151,42 @@
         sceneProjection:
           state.sceneProjection,
 
+        outerCoinsRendered:
+          true,
+
+        outerCoinsRenderedDuringCluster:
+          true,
+
+        activeClusterRenderedWithOuterCoins:
+          state.sceneProjection ===
+          SCENE_PROJECTIONS
+            .CONSTELLATION_WITH_CLUSTER,
+
+        clusterOrientationStorage:
+          "CLUSTER_LOCAL",
+
+        roomVisualOrientationLaw:
+          "CONSTELLATION_ORIENTATION * CLUSTER_LOCAL_ORIENTATION",
+
+        clusterInheritsConstellationOrientation:
+          true,
+
+        clusterOrientationAppliedToCompass:
+          false,
+
         primaryWing:
           state.visualPrimaryWing ||
           state.settledPrimaryWing ||
           "north",
 
         activeClusterWing:
-          frameCluster
-            ? frameCluster.wing
-            : "",
+          projectedClusterWing,
 
         primaryRoom:
-          frameCluster
+          projectedClusterWing
             ? state.visualPrimaryRooms.get(
-                frameCluster.wing
+                projectedClusterWing
               ) ||
-              frameCluster.primaryRoom ||
               ""
             : "",
 
@@ -1053,9 +1212,6 @@
 
         compassDecisionScenePreserved:
           true,
-
-        clusterOrientationAppliedToCompass:
-          false,
 
         gestureActive:
           Boolean(
@@ -1086,6 +1242,14 @@
       state.root.dataset
         .archcoinSceneProjection =
         state.sceneProjection;
+
+      state.root.dataset
+        .archcoinOuterCoinsRendered =
+        "true";
+
+      state.root.dataset
+        .archcoinClusterInheritsConstellation =
+        "true";
 
       state.root.dataset
         .visualPassClaimed =
@@ -1324,8 +1488,8 @@
   ) {
     return quaternionNormalize(
       quaternionMultiplyRaw(
-        a,
-        b
+        quaternionNormalize(a),
+        quaternionNormalize(b)
       )
     );
   }
@@ -1476,7 +1640,8 @@
       axis[0],
       axis[1],
       axis[2],
-      1 + cosine
+      1 +
+      cosine
     ]);
   }
 
@@ -1680,6 +1845,10 @@
       .slice();
   }
 
+  /*
+   * The controller-owned cluster quaternion remains cluster-local.
+   * It is not precomposed with constellation orientation here.
+   */
   function clusterQuaternionFromFrame(
     frame,
     wing
@@ -1959,17 +2128,6 @@
     );
   }
 
-  function activeDestinationIsHomeCompass(
-    frame
-  ) {
-    return Boolean(
-      frame &&
-      frame.selectedDestinationType ===
-        DESTINATION_TYPES
-          .HOME_COMPASS
-    );
-  }
-
   function resolveSceneProjection(
     frame
   ) {
@@ -2001,7 +2159,7 @@
           .ROOM_SELECTED
     ) {
       return SCENE_PROJECTIONS
-        .CLUSTER;
+        .CONSTELLATION_WITH_CLUSTER;
     }
 
     if (
@@ -2009,21 +2167,19 @@
         CONTROLLER_STATES
           .COMPASS_DECISION
     ) {
-      return (
-        normalizeWing(
-          frame.activeClusterWing ||
-          (
-            frame.cluster
-              ? frame.cluster.wing
-              : ""
-          ) ||
-          frame.selectedCardinal
-        )
-          ? SCENE_PROJECTIONS
-              .CLUSTER
-          : SCENE_PROJECTIONS
-              .CONSTELLATION
-      );
+      return normalizeWing(
+        frame.activeClusterWing ||
+        (
+          frame.cluster
+            ? frame.cluster.wing
+            : ""
+        ) ||
+        frame.selectedCardinal
+      )
+        ? SCENE_PROJECTIONS
+            .CONSTELLATION_WITH_CLUSTER
+        : SCENE_PROJECTIONS
+            .CONSTELLATION;
     }
 
     return normalizeWing(
@@ -2035,7 +2191,7 @@
       )
     )
       ? SCENE_PROJECTIONS
-          .CLUSTER
+          .CONSTELLATION_WITH_CLUSTER
       : SCENE_PROJECTIONS
           .CONSTELLATION;
   }
@@ -2046,7 +2202,8 @@
     if (
       !frame ||
       resolveSceneProjection(frame) !==
-        SCENE_PROJECTIONS.CLUSTER
+        SCENE_PROJECTIONS
+          .CONSTELLATION_WITH_CLUSTER
     ) {
       return "";
     }
@@ -2763,7 +2920,9 @@
       index += 1
     ) {
       const isPoint =
-        index % 2 === 0;
+        index %
+        2 ===
+        0;
 
       const angle =
         (
@@ -3980,13 +4139,50 @@
     );
   }
 
+  /*
+   * Room orientation composition law:
+   *
+   * effectiveRoomOrientation =
+   *   constellationQuaternion
+   *   clusterLocalQuaternion
+   *
+   * The stored cluster quaternion remains local.
+   */
+  function effectiveClusterQuaternion(
+    clusterLocalQuaternion
+  ) {
+    return quaternionMultiply(
+      state
+        .constellationQuaternion,
+      clusterLocalQuaternion
+    );
+  }
+
   function rotatedRoomUnitVector(
     node,
-    quaternion
+    clusterLocalQuaternion
   ) {
     return normalizeVector(
       quaternionRotateVector(
-        quaternion,
+        effectiveClusterQuaternion(
+          clusterLocalQuaternion
+        ),
+        node.sphereVector
+      )
+    );
+  }
+
+  /*
+   * Cluster settlement remains cluster-local.
+   * This function intentionally excludes constellation orientation.
+   */
+  function rotatedRoomLocalUnitVector(
+    node,
+    clusterLocalQuaternion
+  ) {
+    return normalizeVector(
+      quaternionRotateVector(
+        clusterLocalQuaternion,
         node.sphereVector
       )
     );
@@ -4053,7 +4249,7 @@
 
   function nearestPrimaryRoom(
     wing,
-    quaternion
+    clusterLocalQuaternion
   ) {
     const anchor =
       clusterAnchorVector();
@@ -4076,7 +4272,57 @@
         const vector =
           rotatedRoomUnitVector(
             node,
-            quaternion
+            clusterLocalQuaternion
+          );
+
+        const score =
+          dot(
+            vector,
+            anchor
+          );
+
+        if (
+          score >
+          bestScore
+        ) {
+          bestScore =
+            score;
+
+          bestRoom =
+            node.id;
+        }
+      }
+    );
+
+    return bestRoom;
+  }
+
+  function nearestPrimaryRoomLocal(
+    wing,
+    clusterLocalQuaternion
+  ) {
+    const anchor =
+      clusterAnchorVector();
+
+    const rooms =
+      activeRoomNodes(
+        wing
+      );
+
+    let bestRoom =
+      rooms[0]
+        ? rooms[0].id
+        : "";
+
+    let bestScore =
+      -Infinity;
+
+    rooms.forEach(
+      node => {
+        const vector =
+          rotatedRoomLocalUnitVector(
+            node,
+            clusterLocalQuaternion
           );
 
         const score =
@@ -4125,10 +4371,14 @@
     );
   }
 
+  /*
+   * The settled value remains cluster-local because the controller stores
+   * cluster orientation independently from constellation orientation.
+   */
   function settledClusterQuaternion(
     roomId,
     wing,
-    currentQuaternion
+    currentLocalQuaternion
   ) {
     const node =
       state.registry.get(
@@ -4142,26 +4392,26 @@
       node.wing !==
         wing
     ) {
-      return currentQuaternion
+      return currentLocalQuaternion
         .slice();
     }
 
-    const currentVector =
-      rotatedRoomUnitVector(
+    const currentLocalVector =
+      rotatedRoomLocalUnitVector(
         node,
-        currentQuaternion
+        currentLocalQuaternion
       );
 
     const alignment =
       quaternionFromUnitVectors(
-        currentVector,
+        currentLocalVector,
         clusterAnchorVector()
       );
 
     return quaternionNormalize(
       quaternionMultiply(
         alignment,
-        currentQuaternion
+        currentLocalQuaternion
       )
     );
   }
@@ -4215,30 +4465,61 @@
     };
   }
 
+  /*
+   * Room placement executes:
+   * constellation orientation * cluster-local orientation.
+   */
   function sphericalRoomPosition(
     node,
-    quaternion
+    clusterLocalQuaternion
   ) {
     const unit =
       rotatedRoomUnitVector(
         node,
-        quaternion
+        clusterLocalQuaternion
       );
+
+    const activeWingUnit =
+      rotatedCardinalUnitVector(
+        node.wing
+      );
+
+    const clusterCenter = [
+      activeWingUnit[0] *
+        SPHERE.cluster
+          .centerRadius,
+
+      activeWingUnit[1] *
+        SPHERE.cluster
+          .centerRadius,
+
+      activeWingUnit[2] *
+        SPHERE.cluster
+          .centerRadius
+    ];
 
     return {
       unit,
 
+      effectiveQuaternion:
+        effectiveClusterQuaternion(
+          clusterLocalQuaternion
+        ),
+
       x:
+        clusterCenter[0] +
         unit[0] *
         SPHERE.cluster
           .horizontalRadius,
 
       y:
+        clusterCenter[1] +
         unit[1] *
         SPHERE.cluster
           .verticalRadius,
 
       z:
+        clusterCenter[2] +
         unit[2] *
         SPHERE.cluster
           .depthRadius,
@@ -4352,7 +4633,7 @@
 
     WINGS.forEach(
       wing => {
-        const frameQuaternion =
+        const frameLocalQuaternion =
           clusterQuaternionFromFrame(
             state.frame,
             wing
@@ -4392,15 +4673,15 @@
           .clusterTargetQuaternions
           .set(
             wing,
-            frameQuaternion
+            frameLocalQuaternion
               .slice()
           );
 
-        const current =
+        const currentLocal =
           state
             .clusterQuaternions
             .get(wing) ||
-          frameQuaternion
+          frameLocalQuaternion
             .slice();
 
         if (
@@ -4410,7 +4691,7 @@
             .clusterQuaternions
             .set(
               wing,
-              frameQuaternion
+              frameLocalQuaternion
                 .slice()
             );
 
@@ -4422,8 +4703,8 @@
           .set(
             wing,
             quaternionSlerp(
-              current,
-              frameQuaternion,
+              currentLocal,
+              frameLocalQuaternion,
               Math.min(
                 1,
                 deltaTime *
@@ -4470,8 +4751,12 @@
     );
   }
 
-  function updateConstellationTargets(
-    frame
+  /*
+   * All four outer coins are rendered in every non-held scene projection.
+   */
+  function updateOuterCoinTargets(
+    frame,
+    clusterContextWing = ""
   ) {
     state.visualPrimaryWing =
       nearestPrimaryWing(
@@ -4500,11 +4785,9 @@
           state
             .visualPrimaryWing;
 
-        const contextual =
-          wing ===
-          normalizeWing(
-            frame.orbitFocus
-          );
+        const clusterContext =
+          clusterContextWing ===
+          wing;
 
         node.visible =
           true;
@@ -4516,10 +4799,10 @@
           sphere.primary;
 
         node.material =
-          primary
-            ? "CARDINAL_FOCUSED"
-            : contextual
-              ? "CARDINAL_CONTEXT"
+          clusterContext
+            ? "CARDINAL_CLUSTER_CONTEXT"
+            : primary
+              ? "CARDINAL_FOCUSED"
               : "CARDINAL_IDLE";
 
         const depthScale =
@@ -4527,48 +4810,60 @@
           sphere.depth *
           0.42;
 
-        const primaryLift =
-          primary
-            ? 1.14
-            : 1;
-
-        const ordinaryScale =
-          (
-            primary
+        const prominenceScale =
+          clusterContext
+            ? QUALITY
+                .clusterContextCardinalScale
+            : primary
               ? QUALITY
                   .focusedCardinalScale
-              : contextual
-                ? QUALITY
-                    .contextualCardinalScale
-                : QUALITY
-                    .cardinalScale
-          ) *
+              : QUALITY
+                  .cardinalScale;
+
+        const ordinaryScale =
+          prominenceScale *
           depthScale *
-          primaryLift;
+          (
+            primary
+              ? 1.10
+              : 1
+          );
 
         const prominence =
           0.34 +
           sphere.depth *
           0.46 +
           sphere.primary *
-          0.30;
+          0.30 +
+          (
+            clusterContext
+              ? 0.08
+              : 0
+          );
 
         const halo =
           0.24 +
           sphere.depth *
           0.34 +
           sphere.primary *
-          0.54;
+          0.54 +
+          (
+            clusterContext
+              ? 0.12
+              : 0
+          );
 
         const rotationSpeed =
-          primary
-            ? 0.16
+          primary ||
+          clusterContext
+            ? 0.15
             : 0.08 +
               sphere.depth *
               0.05;
 
         const float =
-          primary
+          primary ||
+          clusterContext
             ? 0.012
             : 0.004 +
               sphere.depth *
@@ -4591,14 +4886,14 @@
                 clamp(
                   prominence,
                   0.10,
-                  1.12
+                  1.16
                 ),
 
               halo:
                 clamp(
                   halo,
                   0,
-                  1.24
+                  1.28
                 ),
 
               rotationSpeed,
@@ -4610,33 +4905,13 @@
         );
       }
     );
-
-    state.camera.nextEye = [
-      0,
-      0.76,
-      state.cssWidth /
-        Math.max(
-          1,
-          state.cssHeight
-        ) <
-        QUALITY
-          .mobileAspectThreshold
-        ? 7.10
-        : 6.05
-    ];
-
-    state.camera.nextTarget = [
-      0,
-      0.03,
-      0.06
-    ];
   }
 
-  function updateClusterTargets(
+  function updateClusterRoomTargets(
     frame,
     activeWing
   ) {
-    const clusterQuaternion =
+    const clusterLocalQuaternion =
       state
         .clusterQuaternions
         .get(activeWing) ||
@@ -4645,7 +4920,7 @@
     const primaryRoom =
       nearestPrimaryRoom(
         activeWing,
-        clusterQuaternion
+        clusterLocalQuaternion
       );
 
     state
@@ -4665,7 +4940,7 @@
         const sphere =
           sphericalRoomPosition(
             node,
-            clusterQuaternion
+            clusterLocalQuaternion
           );
 
         const selected =
@@ -4695,18 +4970,18 @@
               : "ROOM_IDLE";
 
         const depthScale =
-          0.70 +
+          0.68 +
           sphere.depth *
-          0.38;
+          0.36;
 
         const primaryLift =
           primary
-            ? 1.14
+            ? 1.12
             : 1;
 
         const selectedLift =
           selected
-            ? 1.08
+            ? 1.07
             : 1;
 
         const ordinaryScale =
@@ -4773,11 +5048,11 @@
 
               y:
                 sphere.y -
-                0.08,
+                0.06,
 
               z:
                 sphere.z +
-                0.18,
+                0.14,
 
               prominence:
                 clamp(
@@ -4802,10 +5077,12 @@
         );
       }
     );
+  }
 
+  function updateConstellationCamera() {
     state.camera.nextEye = [
       0,
-      0.60,
+      0.76,
       state.cssWidth /
         Math.max(
           1,
@@ -4813,14 +5090,36 @@
         ) <
         QUALITY
           .mobileAspectThreshold
-        ? 7.42
-        : 5.92
+        ? 7.10
+        : 6.05
+    ];
+
+    state.camera.nextTarget = [
+      0,
+      0.03,
+      0.06
+    ];
+  }
+
+  function updateClusterCamera() {
+    state.camera.nextEye = [
+      0,
+      0.62,
+      state.cssWidth /
+        Math.max(
+          1,
+          state.cssHeight
+        ) <
+        QUALITY
+          .mobileAspectThreshold
+        ? 7.68
+        : 6.28
     ];
 
     state.camera.nextTarget = [
       0,
       0.02,
-      0.06
+      0.04
     ];
   }
 
@@ -4852,46 +5151,45 @@
     if (
       state.sceneProjection ===
       SCENE_PROJECTIONS
-        .CONSTELLATION
+        .HELD
     ) {
-      updateConstellationTargets(
+      updateHeldTargets();
+      return;
+    }
+
+    const activeWing =
+      resolveProjectedClusterWing(
         frame
       );
 
-      return;
-    }
+    /*
+     * Outer coins are always rendered first under constellation orientation.
+     */
+    updateOuterCoinTargets(
+      frame,
+      activeWing
+    );
 
     if (
       state.sceneProjection ===
-      SCENE_PROJECTIONS
-        .CLUSTER
-    ) {
-      const activeWing =
-        resolveProjectedClusterWing(
-          frame
-        );
-
-      if (activeWing) {
-        updateClusterTargets(
-          frame,
-          activeWing
-        );
-
-        return;
-      }
-
-      state.sceneProjection =
         SCENE_PROJECTIONS
-          .CONSTELLATION;
-
-      updateConstellationTargets(
-        frame
+          .CONSTELLATION_WITH_CLUSTER &&
+      activeWing
+    ) {
+      /*
+       * Active room cluster is then rendered concurrently under:
+       * constellation orientation * cluster-local orientation.
+       */
+      updateClusterRoomTargets(
+        frame,
+        activeWing
       );
 
+      updateClusterCamera();
       return;
     }
 
-    updateHeldTargets();
+    updateConstellationCamera();
   }
 
   function lerp(
@@ -5219,23 +5517,14 @@
       node.wing ===
       state.visualPrimaryWing;
 
-    const activeRoomContextWing =
+    const clusterContextWing =
       resolveProjectedClusterWing(
         state.frame
       );
 
-    const contextual =
-      activeRoomContextWing ===
+    const clusterContext =
+      clusterContextWing ===
       node.wing;
-
-    const activeDestination =
-      state.frame &&
-      state.frame
-        .selectedDestinationType ===
-        "cardinal" &&
-      state.frame
-        .selectedDestinationId ===
-        node.wing;
 
     const depth =
       clamp(
@@ -5252,6 +5541,11 @@
         primary
           ? 0.18
           : 0
+      ) +
+      (
+        clusterContext
+          ? 0.05
+          : 0
       );
 
     const opacity =
@@ -5263,15 +5557,22 @@
           primary
             ? 0.24
             : 0
+        ) +
+        (
+          clusterContext
+            ? 0.08
+            : 0
         ),
         0.10,
         1
       );
 
+    /*
+     * selectedCardinal is restoration/context data, not active destination
+     * authority. It is therefore not projected as selected here.
+     */
     element.dataset.selected =
-      activeDestination
-        ? "true"
-        : "false";
+      "false";
 
     element.dataset.primary =
       primary
@@ -5280,7 +5581,7 @@
 
     element.dataset
       .clusterContext =
-      contextual
+      clusterContext
         ? "true"
         : "false";
 
@@ -5288,8 +5589,8 @@
       depth.toFixed(4);
 
     if (
-      activeDestination ||
-      primary
+      primary ||
+      clusterContext
     ) {
       element.setAttribute(
         "aria-current",
@@ -5352,6 +5653,11 @@
           primary
             ? 20
             : 0
+        ) +
+        (
+          clusterContext
+            ? 12
+            : 0
         )
       );
   }
@@ -5408,7 +5714,16 @@
       node.visible &&
       node.transform
         .prominence >=
-        0.18;
+        0.18 &&
+      state.frame &&
+      (
+        state.frame.state ===
+          CONTROLLER_STATES
+            .CLUSTER_OPEN ||
+        state.frame.state ===
+          CONTROLLER_STATES
+            .ROOM_SELECTED
+      );
 
     element.setAttribute(
       "aria-hidden",
@@ -6042,6 +6357,7 @@
       averageVelocity,
       releaseVelocity,
       pathLength,
+
       pathEfficiency:
         pathLength > 0
           ? distance /
@@ -6278,6 +6594,26 @@
       };
     }
 
+    const roomHit =
+      findHitAtClientPoint(
+        event.clientX,
+        event.clientY,
+        [
+          NODE_TYPES.ROOM
+        ]
+      );
+
+    if (roomHit) {
+      return {
+        territory:
+          POINTER_TERRITORIES
+            .RENDERED_ROOM,
+
+        nodeId:
+          roomHit.id
+      };
+    }
+
     const cardinalHit =
       findHitAtClientPoint(
         event.clientX,
@@ -6296,26 +6632,6 @@
 
         nodeId:
           cardinalHit.id
-      };
-    }
-
-    const roomHit =
-      findHitAtClientPoint(
-        event.clientX,
-        event.clientY,
-        [
-          NODE_TYPES.ROOM
-        ]
-      );
-
-    if (roomHit) {
-      return {
-        territory:
-          POINTER_TERRITORIES
-            .RENDERED_ROOM,
-
-        nodeId:
-          roomHit.id
       };
     }
 
@@ -6686,9 +7002,7 @@
     }
 
     /*
-     * COMPASS_DECISION is intentionally non-draggable.
-     * Its scene projection remains visible only as preserved context beneath
-     * the shared lower selection chamber.
+     * COMPASS_DECISION preserves the prior scene but does not permit scene drag.
      */
     return "";
   }
@@ -7002,8 +7316,12 @@
           .slice()
       );
 
+    /*
+     * Preview/commit IDs remain based on the cluster-local settlement frame.
+     * Visual room placement separately composes the constellation parent.
+     */
     const primaryRoom =
-      nearestPrimaryRoom(
+      nearestPrimaryRoomLocal(
         pointer.wing,
         pointer
           .currentQuaternion
@@ -7013,7 +7331,11 @@
       .visualPrimaryRooms
       .set(
         pointer.wing,
-        primaryRoom
+        nearestPrimaryRoom(
+          pointer.wing,
+          pointer
+            .currentQuaternion
+        )
       );
 
     requestControllerClusterPreview(
@@ -7166,29 +7488,29 @@
     event,
     metrics
   ) {
-    const currentQuaternion =
+    const currentLocalQuaternion =
       pointer
         .currentQuaternion
         .slice();
 
     const primaryRoom =
-      nearestPrimaryRoom(
+      nearestPrimaryRoomLocal(
         pointer.wing,
-        currentQuaternion
+        currentLocalQuaternion
       );
 
-    const settledQuaternion =
+    const settledLocalQuaternion =
       settledClusterQuaternion(
         primaryRoom,
         pointer.wing,
-        currentQuaternion
+        currentLocalQuaternion
       );
 
     state
       .clusterTargetQuaternions
       .set(
         pointer.wing,
-        settledQuaternion
+        settledLocalQuaternion
           .slice()
       );
 
@@ -7199,7 +7521,7 @@
         .clusterQuaternions
         .set(
           pointer.wing,
-          settledQuaternion
+          settledLocalQuaternion
             .slice()
         );
     }
@@ -7208,13 +7530,16 @@
       .visualPrimaryRooms
       .set(
         pointer.wing,
-        primaryRoom
+        nearestPrimaryRoom(
+          pointer.wing,
+          settledLocalQuaternion
+        )
       );
 
     const committed =
       requestControllerClusterCommit(
         pointer.wing,
-        settledQuaternion,
+        settledLocalQuaternion,
         primaryRoom
       );
 
@@ -7908,6 +8233,11 @@
       return;
     }
 
+    const projectedClusterWing =
+      resolveProjectedClusterWing(
+        state.frame
+      );
+
     emitReceipt({
       status:
         "available",
@@ -7938,24 +8268,41 @@
       sceneProjection:
         state.sceneProjection,
 
+      outerCoinsRendered:
+        true,
+
+      outerCoinsRenderedDuringCluster:
+        true,
+
+      activeClusterRenderedWithOuterCoins:
+        state.sceneProjection ===
+        SCENE_PROJECTIONS
+          .CONSTELLATION_WITH_CLUSTER,
+
+      clusterOrientationStorage:
+        "CLUSTER_LOCAL",
+
+      roomVisualOrientationLaw:
+        "CONSTELLATION_ORIENTATION * CLUSTER_LOCAL_ORIENTATION",
+
+      clusterInheritsConstellationOrientation:
+        true,
+
+      clusterOrientationAppliedToCompass:
+        false,
+
       primaryWing:
         state.visualPrimaryWing,
 
       activeClusterWing:
-        resolveProjectedClusterWing(
-          state.frame
-        ),
+        projectedClusterWing,
 
       primaryRoom:
-        resolveProjectedClusterWing(
-          state.frame
-        )
+        projectedClusterWing
           ? state
               .visualPrimaryRooms
               .get(
-                resolveProjectedClusterWing(
-                  state.frame
-                )
+                projectedClusterWing
               ) ||
             ""
           : "",
@@ -8188,19 +8535,22 @@
 
           WINGS.forEach(
             wing => {
+              const localQuaternion =
+                (
+                  state
+                    .clusterQuaternions
+                    .get(wing) ||
+                  [0, 0, 0, 1]
+                ).slice();
+
               clusters[wing] =
                 Object.freeze({
-                  quaternion:
+                  localQuaternion:
                     Object.freeze(
-                      (
-                        state
-                          .clusterQuaternions
-                          .get(wing) ||
-                        [0, 0, 0, 1]
-                      ).slice()
+                      localQuaternion
                     ),
 
-                  targetQuaternion:
+                  targetLocalQuaternion:
                     Object.freeze(
                       (
                         state
@@ -8210,11 +8560,21 @@
                       ).slice()
                     ),
 
+                  effectiveVisualQuaternion:
+                    Object.freeze(
+                      effectiveClusterQuaternion(
+                        localQuaternion
+                      )
+                    ),
+
                   primaryRoom:
                     state
                       .visualPrimaryRooms
                       .get(wing) ||
-                    ""
+                    "",
+
+                  inheritsConstellationOrientation:
+                    true
                 });
             }
           );
@@ -8258,6 +8618,15 @@
               resolveProjectedClusterWing(
                 state.frame
               ),
+
+            outerCoinsRendered:
+              true,
+
+            outerCoinsRenderedDuringCluster:
+              true,
+
+            roomVisualOrientationLaw:
+              "CONSTELLATION_ORIENTATION * CLUSTER_LOCAL_ORIENTATION",
 
             selectedDestinationType:
               state.frame
@@ -8390,7 +8759,7 @@
 
     WINGS.forEach(
       wing => {
-        const quaternion =
+        const localQuaternion =
           clusterQuaternionFromFrame(
             state.frame,
             wing
@@ -8400,7 +8769,7 @@
           .clusterQuaternions
           .set(
             wing,
-            quaternion
+            localQuaternion
               .slice()
           );
 
@@ -8408,7 +8777,7 @@
           .clusterTargetQuaternions
           .set(
             wing,
-            quaternion
+            localQuaternion
               .slice()
           );
 
@@ -8418,7 +8787,7 @@
             wing,
             nearestPrimaryRoom(
               wing,
-              quaternion
+              localQuaternion
             )
           );
       }
@@ -8669,6 +9038,18 @@
         "true";
 
       state.root.dataset
+        .archcoinCrystalsOuterCoinsRenderedDuringCluster =
+        "true";
+
+      state.root.dataset
+        .archcoinCrystalsClusterOrientationStorage =
+        "CLUSTER_LOCAL";
+
+      state.root.dataset
+        .archcoinCrystalsRoomVisualOrientationLaw =
+        "CONSTELLATION_ORIENTATION * CLUSTER_LOCAL_ORIENTATION";
+
+      state.root.dataset
         .archcoinCrystalsClusterOrientationAppliedToCompass =
         "false";
 
@@ -8707,6 +9088,29 @@
 
         sceneProjection:
           state.sceneProjection,
+
+        outerCoinsRendered:
+          true,
+
+        outerCoinsRenderedDuringCluster:
+          true,
+
+        activeClusterRenderedWithOuterCoins:
+          state.sceneProjection ===
+          SCENE_PROJECTIONS
+            .CONSTELLATION_WITH_CLUSTER,
+
+        clusterOrientationStorage:
+          "CLUSTER_LOCAL",
+
+        roomVisualOrientationLaw:
+          "CONSTELLATION_ORIENTATION * CLUSTER_LOCAL_ORIENTATION",
+
+        clusterInheritsConstellationOrientation:
+          true,
+
+        clusterOrientationAppliedToCompass:
+          false,
 
         primaryWing:
           state.visualPrimaryWing,

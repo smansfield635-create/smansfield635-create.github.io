@@ -68,6 +68,8 @@
     data-archcoin-compositor-receipt=""
     data-archcoin-crystals-status="pending"
     data-archcoin-crystals-receipt=""
+    data-archcoin-interactions-status="pending"
+    data-archcoin-interactions-receipt=""
   >
     <div
       class="archcoin-atmosphere"
@@ -1165,6 +1167,11 @@
         data-archcoin-crystals-receipt
         data-visual-pass-claimed="false"
       ></output>
+
+      <output
+        data-archcoin-interactions-receipt
+        data-visual-pass-claimed="false"
+      ></output>
     </section>
   </main>
 
@@ -1190,6 +1197,11 @@
 
   <script
     src="/products/archcoin/index.crystals.js"
+    defer
+  ></script>
+
+  <script
+    src="/products/archcoin/index.interactions.js"
     defer
   ></script>
 </body>

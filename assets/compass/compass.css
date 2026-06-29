@@ -3025,3 +3025,421 @@ body:has(
 #dgb-compass-cosmos-canvas {
   opacity: 0.42;
 }
+/* -------------------------------------------------------------------------- */
+/* Compass final CSS hardening                                                 */
+/* -------------------------------------------------------------------------- */
+/*
+ * Corrections:
+ * - Equal-width two-lens and three-lens tab sets.
+ * - Data-driven reduced-motion parity with the Compass controller/renderers.
+ * - Edge-safe visible focus treatment for invisible room proxies.
+ *
+ * This block intentionally appears after all existing rules so it controls
+ * the final cascade without requiring changes to the existing design system.
+ */
+
+/* -------------------------------------------------------------------------- */
+/* Equal-width lens tabs                                                       */
+/* -------------------------------------------------------------------------- */
+
+.compass-lens-tabs {
+  display: grid;
+  grid-template-columns: none;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  gap: 7px;
+}
+
+/*
+ * Preserve a usable wrapped fallback if a future artifact contains more than
+ * three lenses or localized labels become too wide for the available space.
+ */
+@media (max-width: 420px) {
+  .compass-lens-tabs {
+    grid-auto-flow: row;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .compass-lens-tab:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+/* Edge-safe room-proxy focus                                                  */
+/* -------------------------------------------------------------------------- */
+
+[data-compass-room-proxy]:focus-visible {
+  outline: 0;
+  outline-offset: 0;
+  background: rgba(7, 10, 16, 0.18);
+  box-shadow:
+    inset 0 0 0 3px var(--compass-focus),
+    inset 0 0 0 5px rgba(7, 10, 16, 0.78),
+    0 0 18px rgba(243, 217, 139, 0.32);
+}
+
+/*
+ * A hidden or controller-withdrawn proxy must never retain a visible focus
+ * artifact.
+ */
+[data-compass-room-proxy][aria-hidden="true"],
+[data-compass-room-proxy][hidden] {
+  outline: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Shared Compass reduced-motion authority                                     */
+/* -------------------------------------------------------------------------- */
+/*
+ * The Compass controller and renderers can expose reduced motion through:
+ *
+ *   data-reduced-motion="true"
+ *   data-compass-renderer-reduced-motion="true"
+ *   data-compass-mirrorland-reduced-motion="true"
+ *   data-compass-cosmos-reduced-motion="true"
+ *
+ * The selectors below support the attribute being placed directly on the
+ * Compass root/estate or on an ancestor that contains the estate.
+ */
+
+:is(
+  [data-compass-root][data-reduced-motion="true"],
+  [data-compass-root][data-compass-renderer-reduced-motion="true"],
+  [data-compass-root][data-compass-mirrorland-reduced-motion="true"],
+  [data-compass-root][data-compass-cosmos-reduced-motion="true"],
+  .compass-estate[data-reduced-motion="true"],
+  .compass-estate[data-compass-renderer-reduced-motion="true"],
+  .compass-estate[data-compass-mirrorland-reduced-motion="true"],
+  .compass-estate[data-compass-cosmos-reduced-motion="true"]
+) {
+  scroll-behavior: auto;
+}
+
+:is(
+  [data-compass-root][data-reduced-motion="true"],
+  [data-compass-root][data-compass-renderer-reduced-motion="true"],
+  [data-compass-root][data-compass-mirrorland-reduced-motion="true"],
+  [data-compass-root][data-compass-cosmos-reduced-motion="true"],
+  .compass-estate[data-reduced-motion="true"],
+  .compass-estate[data-compass-renderer-reduced-motion="true"],
+  .compass-estate[data-compass-mirrorland-reduced-motion="true"],
+  .compass-estate[data-compass-cosmos-reduced-motion="true"]
+) *,
+:is(
+  [data-compass-root][data-reduced-motion="true"],
+  [data-compass-root][data-compass-renderer-reduced-motion="true"],
+  [data-compass-root][data-compass-mirrorland-reduced-motion="true"],
+  [data-compass-root][data-compass-cosmos-reduced-motion="true"],
+  .compass-estate[data-reduced-motion="true"],
+  .compass-estate[data-compass-renderer-reduced-motion="true"],
+  .compass-estate[data-compass-mirrorland-reduced-motion="true"],
+  .compass-estate[data-compass-cosmos-reduced-motion="true"]
+) *::before,
+:is(
+  [data-compass-root][data-reduced-motion="true"],
+  [data-compass-root][data-compass-renderer-reduced-motion="true"],
+  [data-compass-root][data-compass-mirrorland-reduced-motion="true"],
+  [data-compass-root][data-compass-cosmos-reduced-motion="true"],
+  .compass-estate[data-reduced-motion="true"],
+  .compass-estate[data-compass-renderer-reduced-motion="true"],
+  .compass-estate[data-compass-mirrorland-reduced-motion="true"],
+  .compass-estate[data-compass-cosmos-reduced-motion="true"]
+) *::after {
+  scroll-behavior: auto !important;
+  transition-duration: 0.01ms !important;
+  transition-delay: 0ms !important;
+  animation-duration: 0.01ms !important;
+  animation-delay: 0ms !important;
+  animation-iteration-count: 1 !important;
+}
+
+/* Stop all local CSS atmosphere motion. */
+
+:is(
+  [data-compass-root][data-reduced-motion="true"],
+  [data-compass-root][data-compass-renderer-reduced-motion="true"],
+  [data-compass-root][data-compass-mirrorland-reduced-motion="true"],
+  [data-compass-root][data-compass-cosmos-reduced-motion="true"],
+  .compass-estate[data-reduced-motion="true"],
+  .compass-estate[data-compass-renderer-reduced-motion="true"],
+  .compass-estate[data-compass-mirrorland-reduced-motion="true"],
+  .compass-estate[data-compass-cosmos-reduced-motion="true"]
+) .compass-estate::before,
+:is(
+  [data-compass-root][data-reduced-motion="true"],
+  [data-compass-root][data-compass-renderer-reduced-motion="true"],
+  [data-compass-root][data-compass-mirrorland-reduced-motion="true"],
+  [data-compass-root][data-compass-cosmos-reduced-motion="true"],
+  .compass-estate[data-reduced-motion="true"],
+  .compass-estate[data-compass-renderer-reduced-motion="true"],
+  .compass-estate[data-compass-mirrorland-reduced-motion="true"],
+  .compass-estate[data-compass-cosmos-reduced-motion="true"]
+) .compass-estate::after,
+:is(
+  [data-compass-root][data-reduced-motion="true"],
+  [data-compass-root][data-compass-renderer-reduced-motion="true"],
+  [data-compass-root][data-compass-mirrorland-reduced-motion="true"],
+  [data-compass-root][data-compass-cosmos-reduced-motion="true"],
+  .compass-estate[data-reduced-motion="true"],
+  .compass-estate[data-compass-renderer-reduced-motion="true"],
+  .compass-estate[data-compass-mirrorland-reduced-motion="true"],
+  .compass-estate[data-compass-cosmos-reduced-motion="true"]
+) .compass-scene::before,
+:is(
+  [data-compass-root][data-reduced-motion="true"],
+  [data-compass-root][data-compass-renderer-reduced-motion="true"],
+  [data-compass-root][data-compass-mirrorland-reduced-motion="true"],
+  [data-compass-root][data-compass-cosmos-reduced-motion="true"],
+  .compass-estate[data-reduced-motion="true"],
+  .compass-estate[data-compass-renderer-reduced-motion="true"],
+  .compass-estate[data-compass-mirrorland-reduced-motion="true"],
+  .compass-estate[data-compass-cosmos-reduced-motion="true"]
+) .compass-scene::after {
+  animation: none !important;
+}
+
+/* Preserve the estate glow in its stable origin position. */
+
+:is(
+  [data-compass-root][data-reduced-motion="true"],
+  [data-compass-root][data-compass-renderer-reduced-motion="true"],
+  [data-compass-root][data-compass-mirrorland-reduced-motion="true"],
+  [data-compass-root][data-compass-cosmos-reduced-motion="true"],
+  .compass-estate[data-reduced-motion="true"],
+  .compass-estate[data-compass-renderer-reduced-motion="true"],
+  .compass-estate[data-compass-mirrorland-reduced-motion="true"],
+  .compass-estate[data-compass-cosmos-reduced-motion="true"]
+) .compass-estate::after {
+  transform: translate3d(-50%, 0, 0);
+}
+
+/* Disable transition choreography on renderer mounts and semantic surfaces. */
+
+:is(
+  [data-compass-root][data-reduced-motion="true"],
+  [data-compass-root][data-compass-renderer-reduced-motion="true"],
+  [data-compass-root][data-compass-mirrorland-reduced-motion="true"],
+  [data-compass-root][data-compass-cosmos-reduced-motion="true"],
+  .compass-estate[data-reduced-motion="true"],
+  .compass-estate[data-compass-renderer-reduced-motion="true"],
+  .compass-estate[data-compass-mirrorland-reduced-motion="true"],
+  .compass-estate[data-compass-cosmos-reduced-motion="true"]
+) [data-compass-mirrorland-window-mount],
+:is(
+  [data-compass-root][data-reduced-motion="true"],
+  [data-compass-root][data-compass-renderer-reduced-motion="true"],
+  [data-compass-root][data-compass-mirrorland-reduced-motion="true"],
+  [data-compass-root][data-compass-cosmos-reduced-motion="true"],
+  .compass-estate[data-reduced-motion="true"],
+  .compass-estate[data-compass-renderer-reduced-motion="true"],
+  .compass-estate[data-compass-mirrorland-reduced-motion="true"],
+  .compass-estate[data-compass-cosmos-reduced-motion="true"]
+) [data-compass-crystals-mount],
+:is(
+  [data-compass-root][data-reduced-motion="true"],
+  [data-compass-root][data-compass-renderer-reduced-motion="true"],
+  [data-compass-root][data-compass-mirrorland-reduced-motion="true"],
+  [data-compass-root][data-compass-cosmos-reduced-motion="true"],
+  .compass-estate[data-reduced-motion="true"],
+  .compass-estate[data-compass-renderer-reduced-motion="true"],
+  .compass-estate[data-compass-mirrorland-reduced-motion="true"],
+  .compass-estate[data-compass-cosmos-reduced-motion="true"]
+) .compass-object,
+:is(
+  [data-compass-root][data-reduced-motion="true"],
+  [data-compass-root][data-compass-renderer-reduced-motion="true"],
+  [data-compass-root][data-compass-mirrorland-reduced-motion="true"],
+  [data-compass-root][data-compass-cosmos-reduced-motion="true"],
+  .compass-estate[data-reduced-motion="true"],
+  .compass-estate[data-compass-renderer-reduced-motion="true"],
+  .compass-estate[data-compass-mirrorland-reduced-motion="true"],
+  .compass-estate[data-compass-cosmos-reduced-motion="true"]
+) [data-compass-room-proxy],
+:is(
+  [data-compass-root][data-reduced-motion="true"],
+  [data-compass-root][data-compass-renderer-reduced-motion="true"],
+  [data-compass-root][data-compass-mirrorland-reduced-motion="true"],
+  [data-compass-root][data-compass-cosmos-reduced-motion="true"],
+  .compass-estate[data-reduced-motion="true"],
+  .compass-estate[data-compass-renderer-reduced-motion="true"],
+  .compass-estate[data-compass-mirrorland-reduced-motion="true"],
+  .compass-estate[data-compass-cosmos-reduced-motion="true"]
+) .compass-guidance,
+:is(
+  [data-compass-root][data-reduced-motion="true"],
+  [data-compass-root][data-compass-renderer-reduced-motion="true"],
+  [data-compass-root][data-compass-mirrorland-reduced-motion="true"],
+  [data-compass-root][data-compass-cosmos-reduced-motion="true"],
+  .compass-estate[data-reduced-motion="true"],
+  .compass-estate[data-compass-renderer-reduced-motion="true"],
+  .compass-estate[data-compass-mirrorland-reduced-motion="true"],
+  .compass-estate[data-compass-cosmos-reduced-motion="true"]
+) .compass-panel,
+:is(
+  [data-compass-root][data-reduced-motion="true"],
+  [data-compass-root][data-compass-renderer-reduced-motion="true"],
+  [data-compass-root][data-compass-mirrorland-reduced-motion="true"],
+  [data-compass-root][data-compass-cosmos-reduced-motion="true"],
+  .compass-estate[data-reduced-motion="true"],
+  .compass-estate[data-compass-renderer-reduced-motion="true"],
+  .compass-estate[data-compass-mirrorland-reduced-motion="true"],
+  .compass-estate[data-compass-cosmos-reduced-motion="true"]
+) button,
+:is(
+  [data-compass-root][data-reduced-motion="true"],
+  [data-compass-root][data-compass-renderer-reduced-motion="true"],
+  [data-compass-root][data-compass-mirrorland-reduced-motion="true"],
+  [data-compass-root][data-compass-cosmos-reduced-motion="true"],
+  .compass-estate[data-reduced-motion="true"],
+  .compass-estate[data-compass-renderer-reduced-motion="true"],
+  .compass-estate[data-compass-mirrorland-reduced-motion="true"],
+  .compass-estate[data-compass-cosmos-reduced-motion="true"]
+) a,
+:is(
+  [data-compass-root][data-reduced-motion="true"],
+  [data-compass-root][data-compass-renderer-reduced-motion="true"],
+  [data-compass-root][data-compass-mirrorland-reduced-motion="true"],
+  [data-compass-root][data-compass-cosmos-reduced-motion="true"],
+  .compass-estate[data-reduced-motion="true"],
+  .compass-estate[data-compass-renderer-reduced-motion="true"],
+  .compass-estate[data-compass-mirrorland-reduced-motion="true"],
+  .compass-estate[data-compass-cosmos-reduced-motion="true"]
+) summary {
+  transition: none !important;
+}
+
+/* Remove decorative card lift in controller-driven reduced-motion mode. */
+
+:is(
+  [data-compass-root][data-reduced-motion="true"],
+  [data-compass-root][data-compass-renderer-reduced-motion="true"],
+  [data-compass-root][data-compass-mirrorland-reduced-motion="true"],
+  [data-compass-root][data-compass-cosmos-reduced-motion="true"],
+  .compass-estate[data-reduced-motion="true"],
+  .compass-estate[data-compass-renderer-reduced-motion="true"],
+  .compass-estate[data-compass-mirrorland-reduced-motion="true"],
+  .compass-estate[data-compass-cosmos-reduced-motion="true"]
+) .compass-value-card:hover,
+:is(
+  [data-compass-root][data-reduced-motion="true"],
+  [data-compass-root][data-compass-renderer-reduced-motion="true"],
+  [data-compass-root][data-compass-mirrorland-reduced-motion="true"],
+  [data-compass-root][data-compass-cosmos-reduced-motion="true"],
+  .compass-estate[data-reduced-motion="true"],
+  .compass-estate[data-compass-renderer-reduced-motion="true"],
+  .compass-estate[data-compass-mirrorland-reduced-motion="true"],
+  .compass-estate[data-compass-cosmos-reduced-motion="true"]
+) .compass-lens-tab:hover,
+:is(
+  [data-compass-root][data-reduced-motion="true"],
+  [data-compass-root][data-compass-renderer-reduced-motion="true"],
+  [data-compass-root][data-compass-mirrorland-reduced-motion="true"],
+  [data-compass-root][data-compass-cosmos-reduced-motion="true"],
+  .compass-estate[data-reduced-motion="true"],
+  .compass-estate[data-compass-renderer-reduced-motion="true"],
+  .compass-estate[data-compass-mirrorland-reduced-motion="true"],
+  .compass-estate[data-compass-cosmos-reduced-motion="true"]
+) [data-compass-enter]:not(:disabled):hover,
+:is(
+  [data-compass-root][data-reduced-motion="true"],
+  [data-compass-root][data-compass-renderer-reduced-motion="true"],
+  [data-compass-root][data-compass-mirrorland-reduced-motion="true"],
+  [data-compass-root][data-compass-cosmos-reduced-motion="true"],
+  .compass-estate[data-reduced-motion="true"],
+  .compass-estate[data-compass-renderer-reduced-motion="true"],
+  .compass-estate[data-compass-mirrorland-reduced-motion="true"],
+  .compass-estate[data-compass-cosmos-reduced-motion="true"]
+) [data-compass-return-to-orbit]:not(:disabled):hover,
+:is(
+  [data-compass-root][data-reduced-motion="true"],
+  [data-compass-root][data-compass-renderer-reduced-motion="true"],
+  [data-compass-root][data-compass-mirrorland-reduced-motion="true"],
+  [data-compass-root][data-compass-cosmos-reduced-motion="true"],
+  .compass-estate[data-reduced-motion="true"],
+  .compass-estate[data-compass-renderer-reduced-motion="true"],
+  .compass-estate[data-compass-mirrorland-reduced-motion="true"],
+  .compass-estate[data-compass-cosmos-reduced-motion="true"]
+) [data-compass-mirrorland-back]:not(:disabled):hover {
+  transform: none;
+}
+
+/* Hide spacecraft for every shared reduced-motion state, not only OS media. */
+
+body:has(
+  [data-compass-root][data-reduced-motion="true"],
+  [data-compass-root][data-compass-renderer-reduced-motion="true"],
+  [data-compass-root][data-compass-mirrorland-reduced-motion="true"],
+  [data-compass-root][data-compass-cosmos-reduced-motion="true"],
+  .compass-estate[data-reduced-motion="true"],
+  .compass-estate[data-compass-renderer-reduced-motion="true"],
+  .compass-estate[data-compass-mirrorland-reduced-motion="true"],
+  .compass-estate[data-compass-cosmos-reduced-motion="true"]
+) > #dgb-compass-cosmos-layer > #dgb-compass-cosmos-spacecraft {
+  display: none !important;
+  animation: none !important;
+}
+
+body:has(
+  [data-compass-root][data-reduced-motion="true"],
+  [data-compass-root][data-compass-renderer-reduced-motion="true"],
+  [data-compass-root][data-compass-mirrorland-reduced-motion="true"],
+  [data-compass-root][data-compass-cosmos-reduced-motion="true"],
+  .compass-estate[data-reduced-motion="true"],
+  .compass-estate[data-compass-renderer-reduced-motion="true"],
+  .compass-estate[data-compass-mirrorland-reduced-motion="true"],
+  .compass-estate[data-compass-cosmos-reduced-motion="true"]
+) > #dgb-compass-cosmos-layer > #dgb-compass-cosmos-spacecraft * {
+  animation: none !important;
+}
+
+/*
+ * The Cosmos JavaScript freezes and redraws the canvas when shared reduced
+ * motion becomes active. This opacity keeps the static star field visible
+ * without allowing the runtime layer to dominate the page.
+ */
+body:has(
+  [data-compass-root][data-reduced-motion="true"],
+  [data-compass-root][data-compass-renderer-reduced-motion="true"],
+  [data-compass-root][data-compass-mirrorland-reduced-motion="true"],
+  [data-compass-root][data-compass-cosmos-reduced-motion="true"],
+  .compass-estate[data-reduced-motion="true"],
+  .compass-estate[data-compass-renderer-reduced-motion="true"],
+  .compass-estate[data-compass-mirrorland-reduced-motion="true"],
+  .compass-estate[data-compass-cosmos-reduced-motion="true"]
+) > #dgb-compass-cosmos-layer > #dgb-compass-cosmos-canvas {
+  opacity: 0.42;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Browser fallback when :has() is unavailable                                 */
+/* -------------------------------------------------------------------------- */
+/*
+ * JavaScript already stops the Cosmos renderer and spacecraft. The fallback
+ * below ensures that a reduced-motion flag written directly to the runtime
+ * layer also controls its visible surfaces.
+ */
+
+#dgb-compass-cosmos-layer[data-compass-cosmos-reduced-motion="true"]
+#dgb-compass-cosmos-spacecraft,
+#dgb-compass-cosmos-layer[data-reduced-motion="true"]
+#dgb-compass-cosmos-spacecraft {
+  display: none !important;
+  animation: none !important;
+}
+
+#dgb-compass-cosmos-layer[data-compass-cosmos-reduced-motion="true"]
+#dgb-compass-cosmos-spacecraft *,
+#dgb-compass-cosmos-layer[data-reduced-motion="true"]
+#dgb-compass-cosmos-spacecraft * {
+  animation: none !important;
+}
+
+#dgb-compass-cosmos-layer[data-compass-cosmos-reduced-motion="true"]
+#dgb-compass-cosmos-canvas,
+#dgb-compass-cosmos-layer[data-reduced-motion="true"]
+#dgb-compass-cosmos-canvas {
+  opacity: 0.42;
+}

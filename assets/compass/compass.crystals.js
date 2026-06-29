@@ -9,11 +9,12 @@
      routes, accessibility metadata, semantic controls, materials,
      Mirrorland recession behavior, WebGL rendering, and receipts.
    - Preserve the shared right-handed Euclidean X/Y/Z cardinal sphere.
-   - Add an independent right-handed Euclidean X/Y/Z sphere for each
+   - Preserve an independent right-handed Euclidean X/Y/Z sphere for each
      cardinal room cluster.
    - Allow controlled pulls to rotate the active room cluster continuously.
    - Distinguish systematic drags from quick swipe/flick gestures using
-     duration, travel, release velocity, and recent motion samples.
+     duration, travel, release velocity, recent motion samples, directional
+     efficiency, and a real pause-before-release measurement.
    - Treat controlled release as cluster settlement.
    - Treat a short, fast, clearly directional flick as a request to return
      to the cardinal constellation.
@@ -34,7 +35,10 @@
      recession and controller restoration.
    - Suppress accidental semantic clicks after drag, flick, or rendered
      star selection.
-   - Support pointer capture, cancellation, reduced motion, and context loss.
+   - Support pointer capture, pointer cancellation, lost-capture recovery,
+     browser blur, visibility interruption, page hiding, reduced motion,
+     keyboard focus correspondence, partial-initialization rollback, and
+     WebGL context loss.
 
    Ownership:
    - Celestial scene background.
@@ -44,7 +48,8 @@
    - Active room-cluster spherical orientation rendering.
    - Crystal shaders, materials, camera, projection, semantic positioning,
      accessibility proxies, hit testing, gesture sampling, drag/flick
-     classification, front-star detection, and release settlement.
+     classification, front-star detection, release settlement, pointer
+     interruption recovery, and renderer-resource lifecycle.
 
    Non-ownership:
    - Controller state commitment beyond published controller APIs.
@@ -57,16 +62,16 @@
 
   const CONTRACT = Object.freeze({
     id:
-      "DGB_COMPASS_CRYSTALS_SPHERICAL_CONSTELLATION_AND_CLUSTER_REBUILD_v3",
+      "DGB_COMPASS_CRYSTALS_SPHERICAL_CONSTELLATION_AND_CLUSTER_HARDENED_v4",
 
     previousId:
-      "DGB_COMPASS_CRYSTALS_SPHERICAL_ORBIT_REBUILD_v2",
+      "DGB_COMPASS_CRYSTALS_SPHERICAL_CONSTELLATION_AND_CLUSTER_REBUILD_v3",
 
     file:
       "/assets/compass/compass.crystals.js",
 
     releaseId:
-      "dgb-compass-spherical-clusters-v3",
+      "dgb-compass-spherical-clusters-hardened-v4",
 
     visualPassClaimed:
       false,
@@ -202,78 +207,80 @@
     orientationRepresentation:
       "UNIT_QUATERNION",
 
-    constellation: Object.freeze({
-      horizontalRadius:
-        1.50,
+    constellation:
+      Object.freeze({
+        horizontalRadius:
+          1.50,
 
-      verticalRadius:
-        1.34,
+        verticalRadius:
+          1.34,
 
-      depthRadius:
-        1.16,
+        depthRadius:
+          1.16,
 
-      primaryAnchor:
-        Object.freeze([
-          0,
-          0.78,
-          0.625
-        ]),
+        primaryAnchor:
+          Object.freeze([
+            0,
+            0.78,
+            0.625
+          ]),
 
-      vectors:
-        Object.freeze({
-          north:
-            Object.freeze([
-              0,
-              1,
-              0
-            ]),
+        vectors:
+          Object.freeze({
+            north:
+              Object.freeze([
+                0,
+                1,
+                0
+              ]),
 
-          east:
-            Object.freeze([
-              1,
-              0,
-              0
-            ]),
+            east:
+              Object.freeze([
+                1,
+                0,
+                0
+              ]),
 
-          south:
-            Object.freeze([
-              0,
-              -1,
-              0
-            ]),
+            south:
+              Object.freeze([
+                0,
+                -1,
+                0
+              ]),
 
-          west:
-            Object.freeze([
-              -1,
-              0,
-              0
-            ])
-        })
-    }),
+            west:
+              Object.freeze([
+                -1,
+                0,
+                0
+              ])
+          })
+      }),
 
-    cluster: Object.freeze({
-      horizontalRadius:
-        1.36,
+    cluster:
+      Object.freeze({
+        horizontalRadius:
+          1.36,
 
-      verticalRadius:
-        1.18,
+        verticalRadius:
+          1.18,
 
-      depthRadius:
-        1.04,
+        depthRadius:
+          1.04,
 
-      primaryAnchor:
-        Object.freeze([
-          0,
-          0.70,
-          0.714
-        ]),
+        primaryAnchor:
+          Object.freeze([
+            0,
+            0.70,
+            0.714
+          ]),
 
-      latitudeAmplitude:
-        0.48,
+        latitudeAmplitude:
+          0.48,
 
-      latitudeFrequency:
-        1.73
-    })
+        latitudeFrequency:
+          1.73
+      })
   });
 
   const STAR_PALETTE = Object.freeze({
@@ -519,6 +526,9 @@
 
     selectedRoomScale:
       1.18,
+
+    keyboardFocusedRoomScale:
+      1.22,
 
     maxYaw:
       0.22,
@@ -825,7 +835,7 @@
       0,
 
     roomProxyPresentation:
-      "NONVISUAL_ACCESSIBILITY_CONTROL",
+      "NONVISUAL_ACCESSIBILITY_CONTROL_WITH_RENDERED_FOCUS_CORRESPONDENCE",
 
     recessionProfile:
       "NORMAL",
@@ -851,6 +861,9 @@
     primaryRoom:
       "",
 
+    keyboardFocusedRoom:
+      "",
+
     gestureActive:
       false,
 
@@ -871,6 +884,18 @@
 
     lastReleaseVelocityPxPerMs:
       0,
+
+    lastPauseBeforeReleaseMs:
+      0,
+
+    interruptionReason:
+      "",
+
+    reducedMotion:
+      false,
+
+    reducedMotionSource:
+      "startup",
 
     glError:
       "not-checked",
@@ -964,6 +989,9 @@
     visualPrimaryRooms:
       new Map(),
 
+    keyboardFocusedRoom:
+      "",
+
     view:
       null,
 
@@ -996,14 +1024,35 @@
     running:
       false,
 
+    initialized:
+      false,
+
+    disposed:
+      false,
+
     reducedMotion:
       false,
+
+    reducedMotionMediaQuery:
+      null,
 
     pointer:
       null,
 
+    pointerBridgeBound:
+      false,
+
+    semanticFocusBridgeBound:
+      false,
+
     suppressClickUntil:
       0,
+
+    createdCanvas:
+      false,
+
+    createdAtmosphereCanvas:
+      false,
 
     atmosphere: {
       stars:
@@ -1577,11 +1626,17 @@
               )
             : "",
 
+        keyboardFocusedRoom:
+          state.keyboardFocusedRoom,
+
         gestureActive:
           Boolean(
             state.pointer &&
             state.pointer.dragging
           ),
+
+        reducedMotion:
+          state.reducedMotion,
 
         visualPassClaimed:
           false
@@ -1601,6 +1656,9 @@
 
       state.root.dataset.compassCrystalsStatus =
         RECEIPT.status;
+
+      state.root.dataset.compassKeyboardFocusedRoom =
+        state.keyboardFocusedRoom;
 
       state.root.dataset.visualPassClaimed =
         "false";
@@ -2389,6 +2447,39 @@
     });
   }
 
+  function assertControllerStartup() {
+    const receipt =
+      globalThis
+        .DGB_COMPASS_CONTROLLER_RECEIPT;
+
+    if (
+      receipt &&
+      receipt.status ===
+        "held"
+    ) {
+      throw new Error(
+        `CONTROLLER_HELD:${
+          receipt.lastFailure ||
+          "UNKNOWN_CONTROLLER_FAILURE"
+        }`
+      );
+    }
+
+    const api =
+      globalThis
+        .DGB_COMPASS_CONTROLLER;
+
+    if (
+      !api ||
+      typeof api.getFrameState !==
+        "function"
+    ) {
+      throw new Error(
+        "CONTROLLER_API_UNAVAILABLE"
+      );
+    }
+  }
+
   function recessionNameForFrame(
     frame
   ) {
@@ -2508,6 +2599,9 @@
       );
 
     if (existing) {
+      state.createdCanvas =
+        false;
+
       return existing;
     }
 
@@ -2515,6 +2609,9 @@
       document.createElement(
         "canvas"
       );
+
+    state.createdCanvas =
+      true;
 
     canvas.dataset.compassCrystalsCanvas =
       "true";
@@ -2863,10 +2960,8 @@
     return [
       factor / aspect, 0, 0, 0,
       0, factor, 0, 0,
-      0, 0,
-      (far + near) * range, -1,
-      0, 0,
-      2 * far * near * range, 0
+      0, 0, (far + near) * range, -1,
+      0, 0, 2 * far * near * range, 0
     ];
   }
 
@@ -3887,6 +3982,9 @@
     proxy.style.cursor =
       "default";
 
+    proxy.style.outline =
+      "none";
+
     proxy.style.webkitTapHighlightColor =
       "transparent";
   }
@@ -3996,6 +4094,9 @@
     proxy.dataset.primary =
       "false";
 
+    proxy.dataset.keyboardFocused =
+      "false";
+
     proxy.dataset.presentation =
       "nonvisual";
 
@@ -4054,7 +4155,7 @@
         proxies.size,
 
       roomProxyPresentation:
-        "NONVISUAL_ACCESSIBILITY_CONTROL"
+        "NONVISUAL_ACCESSIBILITY_CONTROL_WITH_RENDERED_FOCUS_CORRESPONDENCE"
     });
 
     return proxies;
@@ -4808,6 +4909,10 @@
           primaryRoom ===
           node.id;
 
+        const keyboardFocused =
+          state.keyboardFocusedRoom ===
+          node.id;
+
         node.visible =
           true;
 
@@ -4818,7 +4923,8 @@
           sphere.primary;
 
         node.material =
-          selected
+          selected ||
+          keyboardFocused
             ? "ROOM_SELECTED"
             : primary
               ? "ROOM_PRIMARY"
@@ -4839,31 +4945,45 @@
             ? 1.08
             : 1;
 
+        const keyboardFocusLift =
+          keyboardFocused
+            ? 1.12
+            : 1;
+
         const ordinaryScale =
           (
-            selected
+            keyboardFocused
               ? QUALITY
-                  .selectedRoomScale
-              : primary
+                  .keyboardFocusedRoomScale
+              : selected
                 ? QUALITY
-                    .primaryRoomScale
-                : QUALITY
-                    .roomScale
+                    .selectedRoomScale
+                : primary
+                  ? QUALITY
+                      .primaryRoomScale
+                  : QUALITY
+                      .roomScale
           ) *
           depthScale *
           primaryLift *
-          selectedLift;
+          selectedLift *
+          keyboardFocusLift;
 
         const prominence =
           (
             0.30 +
             sphere.depth *
-            0.48 +
+              0.48 +
             sphere.primary *
-            0.28 +
+              0.28 +
             (
               selected
                 ? 0.08
+                : 0
+            ) +
+            (
+              keyboardFocused
+                ? 0.16
                 : 0
             )
           ) *
@@ -4873,12 +4993,17 @@
           (
             0.20 +
             sphere.depth *
-            0.30 +
+              0.30 +
             sphere.primary *
-            0.44 +
+              0.44 +
             (
               selected
                 ? 0.18
+                : 0
+            ) +
+            (
+              keyboardFocused
+                ? 0.28
                 : 0
             )
           ) *
@@ -4887,22 +5012,24 @@
         const rotationSpeed =
           (
             primary ||
-            selected
+            selected ||
+            keyboardFocused
               ? 0.13
               : 0.07 +
                 sphere.depth *
-                0.04
+                  0.04
           ) *
           recession.rotation;
 
         const float =
           (
             primary ||
-            selected
+            selected ||
+            keyboardFocused
               ? 0.012
               : 0.004 +
                 sphere.depth *
-                0.004
+                  0.004
           ) *
           recession.float;
 
@@ -4930,14 +5057,14 @@
                 clamp(
                   prominence,
                   0.10,
-                  1.14
+                  1.20
                 ),
 
               halo:
                 clamp(
                   halo,
                   0,
-                  1.12
+                  1.24
                 ),
 
               rotationSpeed,
@@ -5490,6 +5617,10 @@
       node.id ===
       primaryRoom;
 
+    const keyboardFocused =
+      state.keyboardFocusedRoom ===
+      node.id;
+
     element.dataset.selected =
       selected
         ? "true"
@@ -5497,6 +5628,11 @@
 
     element.dataset.primary =
       primary
+        ? "true"
+        : "false";
+
+    element.dataset.keyboardFocused =
+      keyboardFocused
         ? "true"
         : "false";
 
@@ -5533,6 +5669,9 @@
       applyNonvisualProxyPresentation(
         element
       );
+
+      element.dataset.keyboardFocused =
+        "false";
     }
 
     element.style.opacity =
@@ -5984,7 +6123,7 @@
       time -
       Math.max(
         GESTURE.sampleWindowMs *
-        2,
+          2,
         260
       );
 
@@ -6031,8 +6170,20 @@
       distance /
       durationMs;
 
-    const recentSamples =
+    /*
+     * Samples intentionally exclude the pointerup point. This preserves a
+     * real pause-before-release measurement instead of forcing the value to
+     * zero by appending an endTime sample before classification.
+     */
+    const motionSamples =
       pointer.samples.filter(
+        sample =>
+          sample.time <
+          endTime
+      );
+
+    const recentSamples =
+      motionSamples.filter(
         sample =>
           sample.time >=
           endTime -
@@ -6084,7 +6235,7 @@
         pointer.startY
     };
 
-    pointer.samples.forEach(
+    motionSamples.forEach(
       sample => {
         pathLength +=
           Math.hypot(
@@ -6134,20 +6285,20 @@
         )
       );
 
-    const lastSample =
-      pointer.samples.length
-        ? pointer.samples[
-            pointer.samples.length -
+    const lastMotionSample =
+      motionSamples.length
+        ? motionSamples[
+            motionSamples.length -
             1
           ]
         : null;
 
     const pauseBeforeRelease =
-      lastSample
+      lastMotionSample
         ? Math.max(
             0,
             endTime -
-            lastSample.time
+            lastMotionSample.time
           )
         : durationMs;
 
@@ -6688,6 +6839,7 @@
       api.requestReturnToConstellation({
         source:
           "cluster-flick",
+
         scrollToScene:
           true
       }) !== false
@@ -6813,6 +6965,120 @@
         )
       )
     );
+  }
+
+  function clearGestureDatasets() {
+    if (state.scene) {
+      state.scene.dataset.compassDragging =
+        "false";
+    }
+
+    if (state.root) {
+      state.root.dataset.compassDragging =
+        "false";
+
+      state.root.dataset.compassGestureScope =
+        "";
+    }
+  }
+
+  function abortActivePointer(
+    reason = "external-interruption"
+  ) {
+    const pointer =
+      state.pointer;
+
+    if (!pointer) {
+      clearGestureDatasets();
+
+      return false;
+    }
+
+    state.pointer =
+      null;
+
+    if (
+      state.scene &&
+      typeof state.scene.hasPointerCapture ===
+        "function" &&
+      state.scene.hasPointerCapture(
+        pointer.id
+      )
+    ) {
+      try {
+        state.scene.releasePointerCapture(
+          pointer.id
+        );
+      } catch (_) {}
+    }
+
+    if (pointer.controllerGestureBegan) {
+      if (
+        pointer.gestureScope ===
+        "constellation"
+      ) {
+        requestControllerOrbitCancel(
+          reason
+        );
+      } else if (
+        pointer.gestureScope ===
+          "cluster"
+      ) {
+        requestControllerClusterCancel(
+          pointer.wing,
+          reason
+        );
+      }
+    }
+
+    if (
+      pointer.gestureScope ===
+        "constellation"
+    ) {
+      state.constellationQuaternion =
+        pointer.startQuaternion.slice();
+
+      state.constellationTargetQuaternion =
+        pointer.startQuaternion.slice();
+    } else if (
+      pointer.gestureScope ===
+        "cluster" &&
+      pointer.wing
+    ) {
+      state.clusterQuaternions.set(
+        pointer.wing,
+        pointer.startQuaternion.slice()
+      );
+
+      state.clusterTargetQuaternions.set(
+        pointer.wing,
+        pointer.startQuaternion.slice()
+      );
+    }
+
+    clearGestureDatasets();
+
+    emitReceipt({
+      status:
+        "available",
+
+      lastPointerTerritory:
+        pointer.territory,
+
+      lastGestureType:
+        GESTURE_TYPES.CANCELLED,
+
+      gestureActive:
+        false,
+
+      interruptionReason:
+        String(reason),
+
+      glError:
+        "NO_ERROR"
+    });
+
+    return true;
   }
 
   function handlePointerDown(
@@ -6972,7 +7238,10 @@
         classification.territory,
 
       lastGestureType:
-        GESTURE_TYPES.POINTER_DOWN
+        GESTURE_TYPES.POINTER_DOWN,
+
+      interruptionReason:
+        ""
     });
   }
 
@@ -7026,7 +7295,7 @@
     if (
       !pointer.dragging &&
       distance <
-        GESTURE.dragDeadZonePx
+        GESTURE.minimumDragDistancePx
     ) {
       return;
     }
@@ -7256,6 +7525,9 @@
       lastReleaseVelocityPxPerMs:
         metrics.releaseVelocity,
 
+      lastPauseBeforeReleaseMs:
+        metrics.pauseBeforeRelease,
+
       primaryWing,
 
       gestureActive:
@@ -7316,6 +7588,9 @@
 
         lastReleaseVelocityPxPerMs:
           metrics.releaseVelocity,
+
+        lastPauseBeforeReleaseMs:
+          metrics.pauseBeforeRelease,
 
         activeClusterWing:
           pointer.wing,
@@ -7402,6 +7677,9 @@
       lastReleaseVelocityPxPerMs:
         metrics.releaseVelocity,
 
+      lastPauseBeforeReleaseMs:
+        metrics.pauseBeforeRelease,
+
       activeClusterWing:
         pointer.wing,
 
@@ -7453,7 +7731,10 @@
           metrics.distance,
 
         lastGestureDurationMs:
-          metrics.durationMs
+          metrics.durationMs,
+
+        lastPauseBeforeReleaseMs:
+          metrics.pauseBeforeRelease
       });
 
       return;
@@ -7496,17 +7777,6 @@
     );
   }
 
-  function clearGestureDatasets() {
-    state.scene.dataset.compassDragging =
-      "false";
-
-    state.root.dataset.compassDragging =
-      "false";
-
-    state.root.dataset.compassGestureScope =
-      "";
-  }
-
   function handlePointerUp(
     event
   ) {
@@ -7524,13 +7794,11 @@
     const now =
       performance.now();
 
-    addPointerSample(
-      pointer,
-      event.clientX,
-      event.clientY,
-      now
-    );
-
+    /*
+     * Do not append the pointerup point before classification. The end point
+     * is supplied directly to gestureMetrics(), which preserves the time
+     * between the last real movement sample and release.
+     */
     const metrics =
       gestureMetrics(
         pointer,
@@ -7592,7 +7860,7 @@
     if (pointer.controllerGestureBegan) {
       if (
         pointer.gestureScope ===
-        "constellation"
+          "constellation"
       ) {
         requestControllerOrbitCancel(
           "ambiguous-release"
@@ -7624,6 +7892,9 @@
       lastReleaseVelocityPxPerMs:
         metrics.releaseVelocity,
 
+      lastPauseBeforeReleaseMs:
+        metrics.pauseBeforeRelease,
+
       gestureActive:
         false
     });
@@ -7643,54 +7914,55 @@
       return;
     }
 
-    state.pointer =
-      null;
-
     releasePointerCapture(
       event
     );
 
-    if (pointer.controllerGestureBegan) {
-      if (
-        pointer.gestureScope ===
-        "constellation"
-      ) {
-        requestControllerOrbitCancel(
-          "pointer-cancel"
-        );
-      } else {
-        requestControllerClusterCancel(
-          pointer.wing,
-          "pointer-cancel"
-        );
-      }
-    }
+    abortActivePointer(
+      "pointer-cancel"
+    );
+  }
+
+  function handleLostPointerCapture(
+    event
+  ) {
+    const pointer =
+      state.pointer;
 
     if (
-      pointer.gestureScope ===
-      "constellation"
+      !pointer ||
+      event.pointerId !==
+        pointer.id
     ) {
-      state.constellationTargetQuaternion =
-        pointer.startQuaternion.slice();
-    } else {
-      state.clusterTargetQuaternions.set(
-        pointer.wing,
-        pointer.startQuaternion.slice()
-      );
+      return;
     }
 
-    clearGestureDatasets();
+    abortActivePointer(
+      "lost-pointer-capture"
+    );
+  }
 
-    emitReceipt({
-      lastPointerTerritory:
-        pointer.territory,
+  function handleWindowBlur() {
+    abortActivePointer(
+      "window-blur"
+    );
+  }
 
-      lastGestureType:
-        GESTURE_TYPES.CANCELLED,
+  function handleVisibilityChange() {
+    if (
+      document.visibilityState ===
+      "hidden"
+    ) {
+      abortActivePointer(
+        "document-hidden"
+      );
+    }
+  }
 
-      gestureActive:
-        false
-    });
+  function handlePageHide() {
+    abortActivePointer(
+      "page-hide"
+    );
   }
 
   function handleSceneClickCapture(
@@ -7707,6 +7979,16 @@
   }
 
   function bindPointerBridge() {
+    if (
+      state.pointerBridgeBound ||
+      !state.scene
+    ) {
+      return;
+    }
+
+    state.pointerBridgeBound =
+      true;
+
     state.scene.style.touchAction =
       "none";
 
@@ -7719,14 +8001,7 @@
     state.scene.style.userSelect =
       "none";
 
-    state.scene.dataset.compassDragging =
-      "false";
-
-    state.root.dataset.compassDragging =
-      "false";
-
-    state.root.dataset.compassGestureScope =
-      "";
+    clearGestureDatasets();
 
     state.scene.addEventListener(
       "pointerdown",
@@ -7765,9 +8040,220 @@
     );
 
     state.scene.addEventListener(
+      "lostpointercapture",
+      handleLostPointerCapture
+    );
+
+    state.scene.addEventListener(
       "click",
       handleSceneClickCapture,
       true
+    );
+
+    globalThis.addEventListener(
+      "blur",
+      handleWindowBlur
+    );
+
+    document.addEventListener(
+      "visibilitychange",
+      handleVisibilityChange
+    );
+
+    globalThis.addEventListener(
+      "pagehide",
+      handlePageHide
+    );
+  }
+
+  function unbindPointerBridge() {
+    if (
+      !state.pointerBridgeBound ||
+      !state.scene
+    ) {
+      return;
+    }
+
+    state.pointerBridgeBound =
+      false;
+
+    state.scene.removeEventListener(
+      "pointerdown",
+      handlePointerDown
+    );
+
+    state.scene.removeEventListener(
+      "pointermove",
+      handlePointerMove
+    );
+
+    state.scene.removeEventListener(
+      "pointerup",
+      handlePointerUp
+    );
+
+    state.scene.removeEventListener(
+      "pointercancel",
+      handlePointerCancel
+    );
+
+    state.scene.removeEventListener(
+      "lostpointercapture",
+      handleLostPointerCapture
+    );
+
+    state.scene.removeEventListener(
+      "click",
+      handleSceneClickCapture,
+      true
+    );
+
+    globalThis.removeEventListener(
+      "blur",
+      handleWindowBlur
+    );
+
+    document.removeEventListener(
+      "visibilitychange",
+      handleVisibilityChange
+    );
+
+    globalThis.removeEventListener(
+      "pagehide",
+      handlePageHide
+    );
+  }
+
+  function setKeyboardFocusedRoom(
+    roomId
+  ) {
+    const normalized =
+      normalizeRoomId(
+        roomId
+      );
+
+    state.keyboardFocusedRoom =
+      normalized;
+
+    if (state.root) {
+      state.root.dataset.compassKeyboardFocusedRoom =
+        normalized;
+    }
+
+    emitReceipt({
+      keyboardFocusedRoom:
+        normalized,
+
+      lastAction:
+        normalized
+          ? `keyboard-room-focus:${normalized}`
+          : "keyboard-room-focus-cleared"
+    });
+  }
+
+  function handleSemanticFocusIn(
+    event
+  ) {
+    const proxy =
+      event.target &&
+      event.target.closest
+        ? event.target.closest(
+            "[data-compass-room-proxy]"
+          )
+        : null;
+
+    if (
+      !proxy ||
+      !state.semanticLayer.contains(
+        proxy
+      )
+    ) {
+      return;
+    }
+
+    setKeyboardFocusedRoom(
+      proxy.dataset.roomId
+    );
+  }
+
+  function handleSemanticFocusOut(
+    event
+  ) {
+    const proxy =
+      event.target &&
+      event.target.closest
+        ? event.target.closest(
+            "[data-compass-room-proxy]"
+          )
+        : null;
+
+    if (!proxy) {
+      return;
+    }
+
+    const next =
+      event.relatedTarget;
+
+    if (
+      next &&
+      next.closest &&
+      next.closest(
+        "[data-compass-room-proxy]"
+      )
+    ) {
+      return;
+    }
+
+    setKeyboardFocusedRoom(
+      ""
+    );
+  }
+
+  function bindSemanticFocusBridge() {
+    if (
+      state.semanticFocusBridgeBound ||
+      !state.semanticLayer
+    ) {
+      return;
+    }
+
+    state.semanticFocusBridgeBound =
+      true;
+
+    state.semanticLayer.addEventListener(
+      "focusin",
+      handleSemanticFocusIn
+    );
+
+    state.semanticLayer.addEventListener(
+      "focusout",
+      handleSemanticFocusOut
+    );
+  }
+
+  function unbindSemanticFocusBridge() {
+    if (
+      !state.semanticFocusBridgeBound ||
+      !state.semanticLayer
+    ) {
+      return;
+    }
+
+    state.semanticFocusBridgeBound =
+      false;
+
+    state.semanticLayer.removeEventListener(
+      "focusin",
+      handleSemanticFocusIn
+    );
+
+    state.semanticLayer.removeEventListener(
+      "focusout",
+      handleSemanticFocusOut
+    );
+
+    setKeyboardFocusedRoom(
+      ""
     );
   }
 
@@ -8008,6 +8494,9 @@
         "canvas"
       );
 
+    state.createdAtmosphereCanvas =
+      !existing;
+
     if (!existing) {
       canvas.dataset.compassAtmosphereCanvas =
         "true";
@@ -8127,6 +8616,177 @@
     );
   }
 
+  function resolveReducedMotion() {
+    const controllerReduced =
+      Boolean(
+        state.frame &&
+        state.frame.reducedMotion
+      );
+
+    const mediaReduced =
+      Boolean(
+        state.reducedMotionMediaQuery &&
+        state.reducedMotionMediaQuery
+          .matches
+      );
+
+    state.reducedMotion =
+      controllerReduced ||
+      mediaReduced;
+
+    if (state.root) {
+      state.root.dataset.compassRendererReducedMotion =
+        state.reducedMotion
+          ? "true"
+          : "false";
+    }
+  }
+
+  function handleReducedMotionChange(
+    event
+  ) {
+    const next =
+      Boolean(
+        event.matches
+      );
+
+    if (
+      next &&
+      state.pointer
+    ) {
+      abortActivePointer(
+        "reduced-motion-change"
+      );
+    }
+
+    resolveReducedMotion();
+
+    if (state.reducedMotion) {
+      state.registry.forEach(
+        node => {
+          node.transform.rx =
+            0;
+
+          node.transform.ry =
+            0;
+
+          node.transform.rz =
+            0;
+
+          node.transform.float =
+            0;
+        }
+      );
+    }
+
+    if (state.root) {
+      state.root.dataset.reducedMotion =
+        state.reducedMotion
+          ? "true"
+          : "false";
+    }
+
+    globalThis.dispatchEvent(
+      new CustomEvent(
+        "DGB_COMPASS_REDUCED_MOTION_CHANGE",
+        {
+          detail:
+            Object.freeze({
+              reducedMotion:
+                state.reducedMotion,
+
+              source:
+                "media-query-change"
+            })
+        }
+      )
+    );
+
+    emitReceipt({
+      reducedMotion:
+        state.reducedMotion,
+
+      reducedMotionSource:
+        "media-query-change",
+
+      lastAction:
+        state.reducedMotion
+          ? "reduced-motion-enabled"
+          : "reduced-motion-disabled"
+    });
+  }
+
+  function bindReducedMotion() {
+    if (
+      typeof globalThis.matchMedia !==
+      "function"
+    ) {
+      state.reducedMotionMediaQuery =
+        null;
+
+      resolveReducedMotion();
+
+      return;
+    }
+
+    state.reducedMotionMediaQuery =
+      globalThis.matchMedia(
+        "(prefers-reduced-motion: reduce)"
+      );
+
+    if (
+      typeof state.reducedMotionMediaQuery
+        .addEventListener ===
+      "function"
+    ) {
+      state.reducedMotionMediaQuery
+        .addEventListener(
+          "change",
+          handleReducedMotionChange
+        );
+    } else if (
+      typeof state.reducedMotionMediaQuery
+        .addListener ===
+      "function"
+    ) {
+      state.reducedMotionMediaQuery
+        .addListener(
+          handleReducedMotionChange
+        );
+    }
+
+    resolveReducedMotion();
+  }
+
+  function unbindReducedMotion() {
+    const query =
+      state.reducedMotionMediaQuery;
+
+    if (!query) {
+      return;
+    }
+
+    if (
+      typeof query.removeEventListener ===
+      "function"
+    ) {
+      query.removeEventListener(
+        "change",
+        handleReducedMotionChange
+      );
+    } else if (
+      typeof query.removeListener ===
+      "function"
+    ) {
+      query.removeListener(
+        handleReducedMotionChange
+      );
+    }
+
+    state.reducedMotionMediaQuery =
+      null;
+  }
+
   function render(
     now
   ) {
@@ -8155,10 +8815,7 @@
     state.frame =
       getControllerFrame();
 
-    state.reducedMotion =
-      Boolean(
-        state.frame.reducedMotion
-      );
+    resolveReducedMotion();
 
     updateRecessionProfile();
 
@@ -8335,7 +8992,7 @@
         state.roomProxies.size,
 
       roomProxyPresentation:
-        "NONVISUAL_ACCESSIBILITY_CONTROL",
+        "NONVISUAL_ACCESSIBILITY_CONTROL_WITH_RENDERED_FOCUS_CORRESPONDENCE",
 
       recessionProfile:
         state.recessionName,
@@ -8358,11 +9015,17 @@
             )
           : "",
 
+      keyboardFocusedRoom:
+        state.keyboardFocusedRoom,
+
       gestureActive:
         Boolean(
           state.pointer &&
           state.pointer.dragging
         ),
+
+      reducedMotion:
+        state.reducedMotion,
 
       glError:
         error ===
@@ -8380,7 +9043,86 @@
       );
   }
 
-  function disposeResources() {
+  function deleteGpuResources() {
+    if (!state.gl) {
+      return;
+    }
+
+    state.meshes.forEach(
+      mesh => {
+        if (mesh.position) {
+          state.gl.deleteBuffer(
+            mesh.position
+          );
+        }
+
+        if (mesh.normal) {
+          state.gl.deleteBuffer(
+            mesh.normal
+          );
+        }
+
+        if (mesh.color) {
+          state.gl.deleteBuffer(
+            mesh.color
+          );
+        }
+      }
+    );
+
+    if (state.program) {
+      state.gl.deleteProgram(
+        state.program
+      );
+
+      state.program =
+        null;
+    }
+  }
+
+  function removeGeneratedDom() {
+    state.roomProxies.forEach(
+      proxy => {
+        proxy.remove();
+      }
+    );
+
+    if (
+      state.createdCanvas &&
+      state.canvas
+    ) {
+      state.canvas.remove();
+    }
+
+    if (
+      state.createdAtmosphereCanvas &&
+      state.atmosphere.canvas
+    ) {
+      state.atmosphere.canvas.remove();
+    }
+
+    state.createdCanvas =
+      false;
+
+    state.createdAtmosphereCanvas =
+      false;
+  }
+
+  function clearRendererCollections() {
+    state.meshes.clear();
+    state.registry.clear();
+    state.roomProxies.clear();
+    state.clusterQuaternions.clear();
+    state.clusterTargetQuaternions.clear();
+    state.visualPrimaryRooms.clear();
+
+    state.keyboardFocusedRoom =
+      "";
+  }
+
+  function rollbackPartialInitialization(
+    reason
+  ) {
     state.running =
       false;
 
@@ -8393,65 +9135,102 @@
         0;
     }
 
-    if (
-      state.pointer &&
-      state.pointer
-        .controllerGestureBegan
-    ) {
-      if (
-        state.pointer.gestureScope ===
-        "constellation"
-      ) {
-        requestControllerOrbitCancel(
-          "renderer-dispose"
-        );
-      } else {
-        requestControllerClusterCancel(
-          state.pointer.wing,
-          "renderer-dispose"
-        );
-      }
-    }
-
-    state.pointer =
-      null;
-
-    if (state.gl) {
-      state.meshes.forEach(
-        mesh => {
-          state.gl.deleteBuffer(
-            mesh.position
-          );
-
-          state.gl.deleteBuffer(
-            mesh.normal
-          );
-
-          state.gl.deleteBuffer(
-            mesh.color
-          );
-        }
-      );
-
-      if (state.program) {
-        state.gl.deleteProgram(
-          state.program
-        );
-      }
-    }
-
-    state.roomProxies.forEach(
-      proxy => {
-        proxy.remove();
-      }
+    abortActivePointer(
+      "initialization-rollback"
     );
 
-    state.meshes.clear();
-    state.registry.clear();
-    state.roomProxies.clear();
-    state.clusterQuaternions.clear();
-    state.clusterTargetQuaternions.clear();
-    state.visualPrimaryRooms.clear();
+    unbindPointerBridge();
+    unbindSemanticFocusBridge();
+    unbindReducedMotion();
+
+    deleteGpuResources();
+    removeGeneratedDom();
+    clearRendererCollections();
+
+    state.canvas =
+      null;
+
+    state.gl =
+      null;
+
+    state.attribs =
+      null;
+
+    state.uniforms =
+      null;
+
+    state.atmosphere.canvas =
+      null;
+
+    state.atmosphere.context =
+      null;
+
+    state.atmosphere.initialized =
+      false;
+
+    state.initialized =
+      false;
+
+    emitFailure(
+      reason
+    );
+  }
+
+  function disposeResources() {
+    if (state.disposed) {
+      return;
+    }
+
+    state.disposed =
+      true;
+
+    state.running =
+      false;
+
+    if (state.raf) {
+      cancelAnimationFrame(
+        state.raf
+      );
+
+      state.raf =
+        0;
+    }
+
+    abortActivePointer(
+      "renderer-dispose"
+    );
+
+    unbindPointerBridge();
+    unbindSemanticFocusBridge();
+    unbindReducedMotion();
+
+    deleteGpuResources();
+    removeGeneratedDom();
+    clearRendererCollections();
+
+    state.canvas =
+      null;
+
+    state.gl =
+      null;
+
+    state.attribs =
+      null;
+
+    state.uniforms =
+      null;
+
+    state.atmosphere.canvas =
+      null;
+
+    state.atmosphere.context =
+      null;
+
+    state.atmosphere.initialized =
+      false;
+
+    state.initialized =
+      false;
 
     emitReceipt({
       status:
@@ -8463,6 +9242,9 @@
       roomProxyCount:
         0,
 
+      keyboardFocusedRoom:
+        "",
+
       gestureActive:
         false
     });
@@ -8473,6 +9255,10 @@
       "webglcontextlost",
       event => {
         event.preventDefault();
+
+        abortActivePointer(
+          "webgl-context-lost"
+        );
 
         emitFailure(
           "WEBGL_CONTEXT_LOST"
@@ -8639,12 +9425,24 @@
                 Boolean(
                   state.pointer &&
                   state.pointer.dragging
-                )
+                ),
+
+              keyboardFocusedRoom:
+                state.keyboardFocusedRoom,
+
+              reducedMotion:
+                state.reducedMotion
             });
           },
 
+        abortActivePointer,
+
         stop:
           () => {
+            abortActivePointer(
+              "renderer-stop"
+            );
+
             state.running =
               false;
 
@@ -8667,6 +9465,7 @@
           () => {
             if (
               !state.running &&
+              !state.disposed &&
               state.gl &&
               state.program
             ) {
@@ -8752,8 +9551,13 @@
 
   function init() {
     try {
+      state.disposed =
+        false;
+
       resolveDom();
+      assertControllerStartup();
       exposeApi();
+      bindReducedMotion();
 
       createAtmosphereCanvas();
 
@@ -8966,8 +9770,12 @@
       initializeOrientations();
 
       bindPointerBridge();
+      bindSemanticFocusBridge();
 
       state.running =
+        true;
+
+      state.initialized =
         true;
 
       state.root.dataset.sphericalOrbitEnabled =
@@ -8981,6 +9789,14 @@
 
       state.root.dataset.orbitRepresentation =
         SPHERE.orientationRepresentation;
+
+      state.root.dataset.compassRendererReducedMotion =
+        state.reducedMotion
+          ? "true"
+          : "false";
+
+      state.root.dataset.compassKeyboardFocusedRoom =
+        "";
 
       emitReceipt({
         status:
@@ -9002,7 +9818,7 @@
           state.roomProxies.size,
 
         roomProxyPresentation:
-          "NONVISUAL_ACCESSIBILITY_CONTROL",
+          "NONVISUAL_ACCESSIBILITY_CONTROL_WITH_RENDERED_FOCUS_CORRESPONDENCE",
 
         recessionProfile:
           "NORMAL",
@@ -9016,8 +9832,17 @@
         primaryWing:
           state.visualPrimaryWing,
 
+        keyboardFocusedRoom:
+          "",
+
         gestureActive:
           false,
+
+        reducedMotion:
+          state.reducedMotion,
+
+        reducedMotionSource:
+          "startup",
 
         glError:
           "NO_ERROR"
@@ -9028,13 +9853,16 @@
           render
         );
     } catch (error) {
-      emitFailure(
+      const reason =
         `CRYSTALS_INIT_FAILURE:${
           error &&
           error.message
             ? error.message
             : String(error)
-        }`
+        }`;
+
+      rollbackPartialInitialization(
+        reason
       );
     }
   }

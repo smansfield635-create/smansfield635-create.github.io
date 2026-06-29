@@ -1,10 +1,10 @@
 /* /products/archcoin/index.crystals.js
    ARCHCOIN
-   Depth-layered crystals renderer replacement.
+   Compass-plane depth-layered crystals renderer replacement.
 
    Module:
    DGB_ARCHCOIN_CRYSTALS
-   1.2.0-depth-layered-compass-occlusion
+   1.2.1-compass-plane-depth-corrections
 
    Controller anchor:
    DGB_ARCHCOIN_CONTROLLER
@@ -20,11 +20,15 @@
    - No Compass exclusion radius.
    - No forced center avoidance.
    - Cardinal and room crystals retain their unmodified spherical positions.
-   - Visible crystals are classified by camera-space depth every frame.
+   - Visible crystals are classified relative to the fixed Compass visual plane.
+   - Camera-space zero is not used as the Compass depth boundary.
    - Rear crystals render below the Compass.
    - Front crystals render above the Compass.
+   - A hysteresis band stabilizes front/rear transitions.
+   - Cluster settlement uses a constellation-compensated local anchor.
    - Existing canonical room controls remain attached to projected crystals.
-   - Compact semantic controls do not blanket the Compass interaction surface.
+   - Active room controls remain keyboard-accessible when pointer-protected.
+   - Relocated canonical controls are restored if initialization fails.
    - The Compass remains an independent fixed-center sibling.
    - Existing cluster-exit gesture behavior is preserved.
 
@@ -32,6 +36,7 @@
    - COMPASS_CENTER_EXCLUSION
    - forced avoidance rings
    - generated room proxies
+   - cloned room controls
    - projected semantic hit inference
    - direct route navigation
    - Compass orientation inheritance
@@ -43,10 +48,10 @@
 
   const CONTRACT = Object.freeze({
     id:
-      "ARCHCOIN_CRYSTALS_CONTROLLER_V6_DEPTH_LAYERED_RENDERER_v1",
+      "ARCHCOIN_CRYSTALS_CONTROLLER_V6_DEPTH_LAYERED_RENDERER_v2",
 
     version:
-      "1.2.0-depth-layered-compass-occlusion",
+      "1.2.1-compass-plane-depth-corrections",
 
     file:
       "/products/archcoin/index.crystals.js",
@@ -56,6 +61,9 @@
 
     controllerModuleVersion:
       "6.0.1-controller-presentation-and-native-home-corrections",
+
+    depthReference:
+      "FIXED_COMPASS_VISUAL_PLANE_IN_VIEW_SPACE",
 
     visualPassClaimed:
       false,
@@ -638,6 +646,9 @@
     generatedRoomProxyCount:
       0,
 
+    clonedRoomControlCount:
+      0,
+
     projectedSelectionEnabled:
       false,
 
@@ -646,6 +657,12 @@
 
     depthBasedCompassOcclusionEnabled:
       true,
+
+    depthReference:
+      CONTRACT.depthReference,
+
+    compassPlaneViewDepth:
+      0,
 
     semanticCompassPointerProtection:
       true,
@@ -706,6 +723,9 @@
     relocatedRoomElements:
       [],
 
+    roomControlSnapshots:
+      [],
+
     width:
       1,
 
@@ -763,6 +783,9 @@
 
     projection:
       null,
+
+    compassPlaneViewDepth:
+      0,
 
     camera:
       {
@@ -1445,6 +1468,9 @@
         generatedRoomProxyCount:
           0,
 
+        clonedRoomControlCount:
+          0,
+
         projectedSelectionEnabled:
           false,
 
@@ -1453,6 +1479,12 @@
 
         depthBasedCompassOcclusionEnabled:
           true,
+
+        depthReference:
+          CONTRACT.depthReference,
+
+        compassPlaneViewDepth:
+          state.compassPlaneViewDepth,
 
         canonicalRoomControlsRelocated:
           state
@@ -1537,6 +1569,16 @@
       state.root.dataset
         .archcoinDepthBasedCompassOcclusionEnabled =
         "true";
+
+      state.root.dataset
+        .archcoinDepthReference =
+        CONTRACT.depthReference;
+
+      state.root.dataset
+        .archcoinCompassPlaneViewDepth =
+        String(
+          state.compassPlaneViewDepth
+        );
 
       state.root.dataset
         .archcoinCanonicalRoomControlsRelocated =
@@ -3765,9 +3807,9 @@
         2 *
         index
       ) /
-      safeCount -
+        safeCount -
       Math.PI /
-      2;
+        2;
 
     const latitude =
       Math.sin(
@@ -3863,6 +3905,9 @@
       cameraDepth:
         -Infinity,
 
+      depthOffsetFromCompassPlane:
+        -Infinity,
+
       transform:
         {
           x:
@@ -3947,6 +3992,177 @@
     );
   }
 
+  function captureAttribute(
+    element,
+    name
+  ) {
+    return Object.freeze({
+      present:
+        element.hasAttribute(
+          name
+        ),
+
+      value:
+        element.getAttribute(
+          name
+        )
+    });
+  }
+
+  function restoreAttribute(
+    element,
+    name,
+    snapshot
+  ) {
+    if (
+      snapshot &&
+      snapshot.present
+    ) {
+      element.setAttribute(
+        name,
+        snapshot.value
+      );
+
+      return;
+    }
+
+    element.removeAttribute(
+      name
+    );
+  }
+
+  function captureRoomControlSnapshot(
+    element
+  ) {
+    return Object.freeze({
+      element,
+
+      parent:
+        element.parentNode,
+
+      nextSibling:
+        element.nextSibling,
+
+      style:
+        captureAttribute(
+          element,
+          "style"
+        ),
+
+      ariaHidden:
+        captureAttribute(
+          element,
+          "aria-hidden"
+        ),
+
+      tabIndex:
+        captureAttribute(
+          element,
+          "tabindex"
+        ),
+
+      canonicalMarker:
+        captureAttribute(
+          element,
+          "data-archcoin-canonical-room-control"
+        ),
+
+      relocationMarker:
+        captureAttribute(
+          element,
+          "data-archcoin-relocated-to-semantic-layer"
+        )
+    });
+  }
+
+  function restoreCanonicalRoomControls() {
+    for (
+      const snapshot
+      of state
+        .roomControlSnapshots
+        .slice()
+        .reverse()
+    ) {
+      const element =
+        snapshot.element;
+
+      const parent =
+        snapshot.parent;
+
+      if (
+        parent &&
+        element
+      ) {
+        if (
+          snapshot.nextSibling &&
+          snapshot.nextSibling
+            .parentNode ===
+            parent
+        ) {
+          parent.insertBefore(
+            element,
+            snapshot.nextSibling
+          );
+        } else {
+          parent.appendChild(
+            element
+          );
+        }
+      }
+
+      restoreAttribute(
+        element,
+        "style",
+        snapshot.style
+      );
+
+      restoreAttribute(
+        element,
+        "aria-hidden",
+        snapshot.ariaHidden
+      );
+
+      restoreAttribute(
+        element,
+        "tabindex",
+        snapshot.tabIndex
+      );
+
+      restoreAttribute(
+        element,
+        "data-archcoin-canonical-room-control",
+        snapshot.canonicalMarker
+      );
+
+      restoreAttribute(
+        element,
+        "data-archcoin-relocated-to-semantic-layer",
+        snapshot.relocationMarker
+      );
+    }
+
+    state.roomControlSnapshots =
+      [];
+
+    state.canonicalRoomElements =
+      [];
+
+    state.relocatedRoomElements =
+      [];
+
+    if (state.semanticLayer) {
+      delete state
+        .semanticLayer
+        .dataset
+        .archcoinCanonicalRoomControlsRelocated;
+
+      delete state
+        .semanticLayer
+        .dataset
+        .archcoinCanonicalRoomControlCount;
+    }
+  }
+
   function relocateCanonicalRoomControls() {
     const controls =
       canonicalRoomElements();
@@ -3966,6 +4182,11 @@
 
     const roomIds =
       new Set();
+
+    state.roomControlSnapshots =
+      controls.map(
+        captureRoomControlSnapshot
+      );
 
     controls.forEach(
       element => {
@@ -4453,6 +4674,23 @@
     );
   }
 
+  function clusterAnchorVectorInLocalSpace() {
+    const inverseConstellation =
+      quaternionConjugate(
+        quaternionNormalize(
+          state
+            .constellationQuaternion
+        )
+      );
+
+    return normalizeVector(
+      quaternionRotateVector(
+        inverseConstellation,
+        clusterAnchorVector()
+      )
+    );
+  }
+
   function rotatedCardinalUnitVector(
     wing,
     quaternion =
@@ -4613,8 +4851,8 @@
     wing,
     localQuaternion
   ) {
-    const anchor =
-      clusterAnchorVector();
+    const localAnchor =
+      clusterAnchorVectorInLocalSpace();
 
     const rooms =
       activeRoomNodes(
@@ -4637,7 +4875,7 @@
               node,
               localQuaternion
             ),
-            anchor
+            localAnchor
           );
 
         if (
@@ -4701,16 +4939,19 @@
         .slice();
     }
 
-    const currentVector =
+    const currentLocalVector =
       rotatedRoomLocalUnitVector(
         node,
         currentLocalQuaternion
       );
 
+    const localAnchor =
+      clusterAnchorVectorInLocalSpace();
+
     const alignment =
       quaternionFromUnitVectors(
-        currentVector,
-        clusterAnchorVector()
+        currentLocalVector,
+        localAnchor
       );
 
     return quaternionNormalize(
@@ -5640,7 +5881,52 @@
     );
   }
 
-  function classifyNodeDepth(node) {
+  function computeCompassPlaneViewDepth() {
+    invariant(
+      state.view,
+      "ARCHCOIN_VIEW_MATRIX_REQUIRED_FOR_COMPASS_DEPTH"
+    );
+
+    const compassReferencePoint =
+      transformPoint4(
+        state.view,
+        [
+          state.camera
+            .target[0],
+
+          state.camera
+            .target[1],
+
+          state.camera
+            .target[2],
+
+          1
+        ]
+      );
+
+    const depth =
+      compassReferencePoint[2];
+
+    invariant(
+      Number.isFinite(
+        depth
+      ),
+      "ARCHCOIN_COMPASS_PLANE_DEPTH_INVALID",
+      {
+        depth
+      }
+    );
+
+    state.compassPlaneViewDepth =
+      depth;
+
+    return depth;
+  }
+
+  function classifyNodeDepth(
+    node,
+    compassPlaneViewDepth
+  ) {
     const model =
       modelMatrix(
         node,
@@ -5667,6 +5953,10 @@
     node.cameraDepth =
       viewCenter[2];
 
+    node.depthOffsetFromCompassPlane =
+      node.cameraDepth -
+      compassPlaneViewDepth;
+
     const threshold =
       QUALITY.depthLayerEpsilon;
 
@@ -5674,13 +5964,13 @@
       node.previousDepthLayer;
 
     if (
-      node.cameraDepth >
+      node.depthOffsetFromCompassPlane >
       threshold
     ) {
       nextLayer =
         DEPTH_LAYERS.FRONT;
     } else if (
-      node.cameraDepth <
+      node.depthOffsetFromCompassPlane <
       -threshold
     ) {
       nextLayer =
@@ -5695,6 +5985,9 @@
   }
 
   function classifyVisibleNodeDepths() {
+    const compassPlaneViewDepth =
+      computeCompassPlaneViewDepth();
+
     state.registry.forEach(
       node => {
         if (
@@ -5707,7 +6000,8 @@
         }
 
         classifyNodeDepth(
-          node
+          node,
+          compassPlaneViewDepth
         );
       }
     );
@@ -5904,6 +6198,10 @@
       node.depthLayer
         .toLowerCase();
 
+    element.dataset
+      .compassPointerProtected =
+      "false";
+
     element.removeAttribute(
       "aria-current"
     );
@@ -6042,6 +6340,10 @@
       node.depthLayer
         .toLowerCase();
 
+    element.dataset
+      .compassPointerProtected =
+      "false";
+
     element.setAttribute(
       "aria-hidden",
       interactive
@@ -6145,14 +6447,15 @@
           .semanticRoomMaximumScale
       );
 
-    const compassProtected =
+    const compassPointerProtected =
+      active &&
       semanticPointIntersectsCompass(
         screen
       );
 
-    const interactive =
+    const pointerInteractive =
       active &&
-      !compassProtected;
+      !compassPointerProtected;
 
     element.style.position =
       "absolute";
@@ -6194,7 +6497,7 @@
       );
 
     element.style.pointerEvents =
-      interactive
+      pointerInteractive
         ? "auto"
         : "none";
 
@@ -6243,7 +6546,7 @@
 
     element.dataset
       .compassPointerProtected =
-      compassProtected
+      compassPointerProtected
         ? "true"
         : "false";
 
@@ -6254,8 +6557,12 @@
         : "true"
     );
 
+    /*
+     * Pointer protection must not remove an active canonical room anchor from
+     * keyboard access. Only pointer interception is suspended over the Compass.
+     */
     element.tabIndex =
-      interactive
+      active
         ? 0
         : -1;
 
@@ -6830,7 +7137,7 @@
       Math.max(
         1,
         endTime -
-        pointer.startTime
+          pointer.startTime
       );
 
     const recentSamples =
@@ -6868,7 +7175,7 @@
       Math.max(
         1,
         endTime -
-        releaseStart.time
+          releaseStart.time
       );
 
     return {
@@ -8083,8 +8390,8 @@
 
     if (
       pointer.gestureScope ===
-      GESTURE_SCOPES
-        .CONSTELLATION
+        GESTURE_SCOPES
+          .CONSTELLATION
     ) {
       state
         .constellationTargetQuaternion =
@@ -8445,6 +8752,9 @@
         frontVisibleObjectCount:
           frontNodes.length,
 
+        compassPlaneViewDepth:
+          state.compassPlaneViewDepth,
+
         rearGlError:
           "NO_ERROR",
 
@@ -8488,6 +8798,73 @@
     state.registry.forEach(
       hideSemanticNode
     );
+  }
+
+  function removeUntrackedCrystalCanvases() {
+    if (!state.field) {
+      return;
+    }
+
+    qsa(
+      "canvas[data-archcoin-crystals-layer]",
+      state.field
+    ).forEach(
+      canvas => {
+        if (
+          canvas.parentNode
+        ) {
+          canvas.parentNode
+            .removeChild(
+              canvas
+            );
+        }
+      }
+    );
+  }
+
+  function rollbackInitialization() {
+    state.running =
+      false;
+
+    if (state.raf) {
+      cancelAnimationFrame(
+        state.raf
+      );
+
+      state.raf =
+        0;
+    }
+
+    unbindPointerBridge();
+
+    for (
+      const layer
+      of state.renderLayers.values()
+    ) {
+      try {
+        destroyRenderLayer(
+          layer
+        );
+      } catch (_) {}
+    }
+
+    state.renderLayers.clear();
+
+    removeUntrackedCrystalCanvases();
+
+    state.registry.clear();
+
+    state.clusterQuaternions
+      .clear();
+
+    state
+      .clusterTargetQuaternions
+      .clear();
+
+    state.visualPrimaryRooms
+      .clear();
+
+    restoreCanonicalRoomControls();
   }
 
   function disposeResources() {
@@ -8565,6 +8942,8 @@
 
     state.visualPrimaryRooms
       .clear();
+
+    restoreCanonicalRoomControls();
 
     emitReceipt({
       status:
@@ -8688,6 +9067,9 @@
       state.field.style.position =
         "relative";
     }
+
+    state.field.style.isolation =
+      "isolate";
 
     state.crystalsMount.style.pointerEvents =
       "none";
@@ -8833,6 +9215,11 @@
                 )
               ),
 
+            localPrimaryAnchor:
+              Object.freeze(
+                clusterAnchorVectorInLocalSpace()
+              ),
+
             primaryRoom:
               state
                 .visualPrimaryRooms
@@ -8883,6 +9270,12 @@
 
       roomVisualOrientationLaw:
         "CONSTELLATION_ORIENTATION * CLUSTER_LOCAL_ORIENTATION",
+
+      depthReference:
+        CONTRACT.depthReference,
+
+      compassPlaneViewDepth:
+        state.compassPlaneViewDepth,
 
       depthBasedCompassOcclusion:
         true,
@@ -8948,7 +9341,21 @@
                   node
                 ) => {
                   result[node.id] =
-                    node.depthLayer;
+                    Object.freeze({
+                      layer:
+                        node.depthLayer,
+
+                      cameraDepth:
+                        node.cameraDepth,
+
+                      compassPlaneViewDepth:
+                        state
+                          .compassPlaneViewDepth,
+
+                      offsetFromCompassPlane:
+                        node
+                          .depthOffsetFromCompassPlane
+                    });
 
                   return result;
                 },
@@ -9051,6 +9458,10 @@
       `${CONTRACT.controllerModuleId}@${CONTRACT.controllerModuleVersion}`;
 
     state.root.dataset
+      .archcoinCrystalsVersion =
+      CONTRACT.version;
+
+    state.root.dataset
       .archcoinCrystalsProjectionContract =
       "CONSTELLATION_OR_CLUSTER_OR_HELD";
 
@@ -9060,6 +9471,10 @@
 
     state.root.dataset
       .archcoinCrystalsGeneratedRoomProxyCount =
+      "0";
+
+    state.root.dataset
+      .archcoinCrystalsClonedRoomControlCount =
       "0";
 
     state.root.dataset
@@ -9102,6 +9517,10 @@
     state.root.dataset
       .archcoinDepthBasedCompassOcclusionEnabled =
       "true";
+
+    state.root.dataset
+      .archcoinDepthReference =
+      CONTRACT.depthReference;
 
     state.root.dataset
       .archcoinRearCrystalLayer =
@@ -9206,10 +9625,16 @@
         depthBasedCompassOcclusionEnabled:
           true,
 
+        depthReference:
+          CONTRACT.depthReference,
+
         additiveCoRenderingAuthorized:
           false,
 
         generatedRoomProxyCount:
+          0,
+
+        clonedRoomControlCount:
           0,
 
         projectedSelectionEnabled:
@@ -9230,6 +9655,8 @@
           render
         );
     } catch (error) {
+      rollbackInitialization();
+
       emitFailure(
         "ARCHCOIN_CRYSTALS_INIT_FAILURE",
         {
@@ -9275,61 +9702,47 @@
 })();
 
 /*
-ARCHCOIN_CRYSTALS_DEPTH_LAYERED_OCCLUSION_RESULT_v1
+ARCHCOIN_CRYSTALS_COMPASS_PLANE_DEPTH_CORRECTION_RESULT_v1
 
 Artifact:
 /products/archcoin/index.crystals.js
 
 Module:
 DGB_ARCHCOIN_CRYSTALS
-1.2.0-depth-layered-compass-occlusion
+1.2.1-compass-plane-depth-corrections
 
 Controller anchor:
 DGB_ARCHCOIN_CONTROLLER
 6.0.1-controller-presentation-and-native-home-corrections
 
-Removed:
-- SPHERE.compassExclusion
-- deriveCompassExclusionRadiusWorld()
-- applyCompassCenterExclusion()
-- protected center radius
-- forced room displacement
-- empty Compass avoidance ring
-- Compass-exclusion receipts and positioning law
-
-Restored:
-- unmodified spherical cardinal positions
-- unmodified spherical room positions
-- full crystal travel through the center region
-- shared semantic projection from actual crystal centers
-
-Added:
-- rear crystal WebGL canvas
-- front crystal WebGL canvas
-- independent WebGL resources for both canvases
-- common CPU mesh source
-- common transforms
-- common quaternion state
-- common camera
-- common materials
-- common animation
-- camera-space depth classification
-- hysteresis around the front/rear split
-- rear rendering below the fixed-center Compass
-- front rendering above the fixed-center Compass
-- semantic controls above both crystal layers
-- compact room semantic controls
-- Compass pointer protection when a room control crosses its footprint
-
-Layer order:
-REAR CRYSTALS
--> FIXED-CENTER COMPASS
--> FRONT CRYSTALS
--> SEMANTIC CONTROLS
+Corrected:
+- depth classification no longer compares crystal depth with camera-space zero
+- the fixed Compass reference plane is derived from the current camera target
+  transformed into view space
+- crystal view-space depth is compared with the Compass-plane view depth
+- positive Compass-relative depth enters the front pass
+- negative Compass-relative depth enters the rear pass
+- the existing hysteresis band remains active around the Compass plane
+- cluster-local primary-room ranking uses a constellation-compensated anchor
+- cluster settlement aligns the local room vector with the compensated anchor
+- active room anchors remain keyboard-accessible during Compass pointer
+  protection
+- failed initialization restores relocated room anchors and removes partial
+  crystal canvases
+- disposal restores the canonical room controls to their original custody
 
 Preserved:
-- canonical room-control relocation
+- dual rear/front WebGL canvases
+- fixed-center Compass middle layer
+- no Compass exclusion radius
+- no forced center avoidance
+- unmodified spherical cardinal positions
+- unmodified spherical room positions
+- exact existing cardinal controls
+- exact existing sixteen room anchors
 - no generated room proxies
+- no cloned room controls
+- no projected semantic hit inference
 - controller-owned cardinal selection
 - controller-owned room selection
 - controller-owned route entry
@@ -9338,28 +9751,25 @@ Preserved:
 - cluster settlement
 - cluster-exit swipe
 - reduced-motion behavior
-- context-loss reporting
+- WebGL context-loss reporting
 - resource disposal
 - exclusive CONSTELLATION / CLUSTER / HELD presentation
-
-Compass law:
-- fixed center
-- independent sibling
-- no inherited orbit orientation
-- no inherited cluster orientation
-- no navigation settlement participation
-- independently clickable
-- not owned by crystals
-- visually crossed by foreground and background crystals
+- native Compass navigation independence
 
 Other files modified:
 NONE
+
+Source correction:
+COMPLETE
 
 Runtime execution:
 NOT PERFORMED
 
 Actual-page integration verification:
-PENDING RELOAD
+PENDING INSTALLATION AND CLEAN RELOAD
+
+Visual acceptance:
+NOT CLAIMED
 
 Production authorization:
 FALSE

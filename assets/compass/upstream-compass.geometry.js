@@ -1,5 +1,9 @@
 /* /assets/compass/upstream-compass.geometry.js
-   Shared Home Compass geometry authority.
+   Shared fixed-center Home Compass geometry authority.
+
+   Module:
+   DGB_UPSTREAM_COMPASS_GEOMETRY
+   3.0.0-fixed-center-independent-sibling
 
    Dependency position:
    1. /products/archcoin/index.controller.js
@@ -11,26 +15,44 @@
    7. /products/archcoin/index.css
 
    Governing boundaries:
-   - The controller owns selection, navigation, restoration, and route law.
-   - This file owns the physical form of the embedded Home Compass.
-   - The renderer owns camera interpolation, lighting, GPU resources, and
-     enhanced/fallback promotion.
-   - Crystals owns constellation and room-cluster scene execution.
-   - HTML and CSS declare and present already-closed contracts.
+   - The controller owns upstream-request meaning, navigation, route law,
+     held state, and the fixed-center behavioral contract.
+   - This file owns only the physical Home Compass form, CPU-side mesh data,
+     component dimensions, material keys, quality profiles, model bounds,
+     static fallback shape data, and local visual-control alignment dimensions.
+   - The renderer owns GPU resources, camera, lighting, visual interpolation,
+     mounting, and enhanced/fallback presentation.
+   - HTML owns the semantic control.
+   - CSS presents already-closed state.
 
-   Interaction relationship:
-   - The Compass has no independent drag authority.
-   - The Compass receives no independent gesture-delta stream.
-   - The Compass inherits the constellation's parent orientation.
-   - The Compass exposes only local presentation transforms.
-   - The Compass is a selectable Home Compass destination.
-   - Selection meaning remains controller-owned.
+   Fixed-center transform law:
+   FIXED_CENTER_PLACEMENT
+   * LOCAL_PRESENTATION_TRANSFORM
 
-   Renderer-facing surface:
-   DGB_UPSTREAM_COMPASS_GEOMETRY.buildModel(options)
+   The Home Compass:
+   - is a fixed-center independent sibling;
+   - does not inherit navigation, constellation, or cluster orientation;
+   - does not participate in navigation settlement;
+   - publishes no quaternion;
+   - receives no independent gesture-delta stream;
+   - owns no pointer listeners;
+   - owns no selection or navigation authority.
 
-   Compatibility surface:
-   DGB_UPSTREAM_COMPASS_GEOMETRY.buildBaselineMeshes(options)
+   Compatibility:
+   - buildModel(options) remains the canonical construction surface.
+   - buildBaselineMeshes(options) remains as a compatibility alias.
+   - presentationTransforms.fixedCenter is canonical.
+   - presentationTransforms.embedded is a deprecated alias to the exact same
+     fixed-center transform for bounded renderer compatibility.
+   - The obsolete decisionApproach transform is removed.
+
+   Physical geometry:
+   - component dimensions are unchanged;
+   - shape vertex literals are unchanged;
+   - material keys are unchanged;
+   - quality profiles are unchanged;
+   - mesh construction mathematics are unchanged;
+   - radial and depth envelopes are unchanged.
 */
 
 const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
@@ -38,24 +60,70 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
 
   const MODULE = Object.freeze({
     id: "DGB_UPSTREAM_COMPASS_GEOMETRY",
-    version: "2.0.0-generational-embedded-form",
+    version: "3.0.0-fixed-center-independent-sibling",
     file: "/assets/compass/upstream-compass.geometry.js"
   });
 
   const MODEL_ID =
-    "DGB_HOME_COMPASS_EMBEDDED_INSTRUMENT_v2";
+    "DGB_HOME_COMPASS_FIXED_CENTER_INSTRUMENT_v3";
+
+  const LEGACY_MODEL_IDS = Object.freeze([
+    "DGB_HOME_COMPASS_EMBEDDED_INSTRUMENT_v2"
+  ]);
 
   const OBJECT_IDENTITY = Object.freeze({
-    objectClass: "HOME_COMPASS_EMBEDDED_INSTRUMENT",
-    physicalProjection: "INTEGRATED_CONSTELLATION_CENTER",
-    destinationType: "home-compass",
-    destinationId: "home-compass",
-    inheritsParentOrientation: true,
-    receivesIndependentGestureDeltas: false,
-    ownsNavigation: false,
-    ownsSelectionState: false,
-    ownsCameraTiming: false,
-    ownsPointerListeners: false
+    objectClass:
+      "HOME_COMPASS_FIXED_CENTER_INSTRUMENT",
+
+    physicalProjection:
+      "FIXED_CENTER_INDEPENDENT_SIBLING",
+
+    semanticRole:
+      "UPSTREAM_HOME_COMPASS",
+
+    inheritsNavigationOrientation:
+      false,
+
+    inheritsConstellationOrientation:
+      false,
+
+    inheritsClusterOrientation:
+      false,
+
+    participatesInNavigationSettlement:
+      false,
+
+    receivesIndependentGestureDeltas:
+      false,
+
+    publishesQuaternion:
+      false,
+
+    ownsNavigation:
+      false,
+
+    ownsSelectionState:
+      false,
+
+    ownsCameraTiming:
+      false,
+
+    ownsPointerListeners:
+      false
+  });
+
+  const COMPATIBILITY = Object.freeze({
+    legacyModelIds:
+      LEGACY_MODEL_IDS,
+
+    embeddedTransformAlias:
+      true,
+
+    decisionApproachTransform:
+      false,
+
+    buildBaselineMeshesAlias:
+      true
   });
 
   const EPSILON = 1e-7;
@@ -82,11 +150,13 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
   const COORDINATE_SYSTEM = Object.freeze({
     dimensionality: 3,
     handedness: "RIGHT_HANDED",
+
     axes: Object.freeze({
       x: "EAST_WEST",
       y: "NORTH_SOUTH",
       z: "REAR_FRONT_DEPTH"
     }),
+
     origin: Object.freeze([0, 0, 0]),
     north: Object.freeze([0, 1, 0]),
     east: Object.freeze([1, 0, 0]),
@@ -111,6 +181,7 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
     absoluteFrontLimitZ: 0.33,
     absoluteMaximumTotalDepth: 0.54,
     minimumInstrumentDepth: 0.40,
+
     componentDepthsAre:
       "BOUNDED_WITHIN_ONE_SHARED_NONCUMULATIVE_OBJECT_ENVELOPE"
   });
@@ -298,69 +369,152 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
   });
 
   /*
-   * These transforms are local object postures only.
+   * Canonical fixed-center local posture.
    *
-   * The renderer must compose them beneath the parent constellation
-   * orientation supplied by the controller/crystals frame.
+   * The renderer may combine this local posture only with its own fixed-center
+   * placement matrix. No ARCHCOIN orbit or cluster quaternion is permitted.
+   */
+  const FIXED_CENTER_TRANSFORM = Object.freeze({
+    id: "fixedCenter",
+
+    position: Object.freeze([
+      0,
+      0,
+      0
+    ]),
+
+    quaternion: Object.freeze([
+      -0.067790,
+      0.105687,
+      -0.007225,
+      0.992061
+    ]),
+
+    scale: Object.freeze([
+      1,
+      1,
+      1
+    ])
+  });
+
+  /*
+   * `embedded` is retained only as a bounded compatibility alias.
+   * It is the exact same immutable transform object as `fixedCenter`.
+   * It does not authorize parent-orientation inheritance.
    */
   const PRESENTATION_TRANSFORMS = Object.freeze({
-    embedded: Object.freeze({
-      id: "embedded",
-      position: Object.freeze([0, 0, 0]),
-      quaternion: Object.freeze([
-        -0.067790,
-        0.105687,
-        -0.007225,
-        0.992061
-      ]),
-      scale: Object.freeze([1, 1, 1])
-    }),
+    fixedCenter:
+      FIXED_CENTER_TRANSFORM,
 
-    decisionApproach: Object.freeze({
-      id: "decisionApproach",
-      position: Object.freeze([0, -0.015, 0.035]),
-      quaternion: Object.freeze([
-        -0.112964,
-        0.071895,
-        -0.008176,
-        0.990957
-      ]),
-      scale: Object.freeze([1.035, 1.035, 1.035])
-    })
+    embedded:
+      FIXED_CENTER_TRANSFORM
   });
 
   const ROOT_TRANSFORM = Object.freeze({
-    parentOrientationMode: "INHERIT",
-    independentGestureAuthority: false,
-    independentSettlementAuthority: false,
+    placementMode:
+      "FIXED_CENTER",
+
+    parentOrientationMode:
+      "NONE",
+
+    inheritsNavigationOrientation:
+      false,
+
+    inheritsConstellationOrientation:
+      false,
+
+    inheritsClusterOrientation:
+      false,
+
+    participatesInNavigationSettlement:
+      false,
+
+    independentGestureAuthority:
+      false,
+
+    independentSettlementAuthority:
+      false,
+
+    publishesQuaternion:
+      false,
+
     localTransformOrder:
-      "PARENT_ORIENTATION * PRESENTATION_LOCAL_TRANSFORM",
+      "FIXED_CENTER_PLACEMENT * LOCAL_PRESENTATION_TRANSFORM",
+
     defaultPresentationTransform:
-      PRESENTATION_TRANSFORMS.embedded
+      PRESENTATION_TRANSFORMS.fixedCenter
   });
 
-  const SEMANTIC_HIT_ENVELOPE = Object.freeze({
-    shape: "CIRCULAR_DISC",
-    localCenter: Object.freeze([0, 0, 0.04]),
-    radius: 1.06,
-    zInterval: Object.freeze([
-      DEPTH_ENVELOPE.absoluteRearLimitZ,
-      DEPTH_ENVELOPE.absoluteFrontLimitZ
-    ]),
-    preferredCssTarget: Object.freeze([44, 44]),
-    governedMinimumCssTarget: Object.freeze([24, 24]),
-    geometryIsSemanticListener: false,
-    semanticControlOwnedByHtml: true
+  /*
+   * This envelope is renderer-facing alignment data only.
+   * It does not grant geometry semantic-listener or pointer authority.
+   */
+  const VISUAL_CONTROL_ALIGNMENT_ENVELOPE = Object.freeze({
+    shape:
+      "CIRCULAR_DISC",
+
+    localCenter:
+      Object.freeze([
+        0,
+        0,
+        0.04
+      ]),
+
+    radius:
+      1.06,
+
+    zInterval:
+      Object.freeze([
+        DEPTH_ENVELOPE.absoluteRearLimitZ,
+        DEPTH_ENVELOPE.absoluteFrontLimitZ
+      ]),
+
+    preferredCssTarget:
+      Object.freeze([
+        44,
+        44
+      ]),
+
+    governedMinimumCssTarget:
+      Object.freeze([
+        24,
+        24
+      ]),
+
+    geometryIsSemanticListener:
+      false,
+
+    semanticControlOwnedByHtml:
+      true,
+
+    rendererMayAlignVisualModelToSemanticControl:
+      true
   });
 
-  function invariant(condition, code, details = null) {
+  /*
+   * Deprecated public alias retained for bounded renderer compatibility.
+   */
+  const SEMANTIC_HIT_ENVELOPE =
+    VISUAL_CONTROL_ALIGNMENT_ENVELOPE;
+
+  function invariant(
+    condition,
+    code,
+    details = null
+  ) {
     if (condition) {
       return;
     }
 
-    const error = new Error(code);
-    error.code = code;
-    error.details = details;
+    const error =
+      new Error(code);
+
+    error.code =
+      code;
+
+    error.details =
+      details;
+
     throw error;
   }
 
@@ -383,7 +537,9 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
   }
 
   function freezeVector(value) {
-    return Object.freeze(cloneVector(value));
+    return Object.freeze(
+      cloneVector(value)
+    );
   }
 
   function deepFreeze(value) {
@@ -401,21 +557,34 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
 
     Object.freeze(value);
 
-    for (const key of Object.keys(value)) {
+    for (
+      const key
+      of Object.keys(value)
+    ) {
       deepFreeze(value[key]);
     }
 
     return value;
   }
 
-  function clamp(value, minimum, maximum) {
+  function clamp(
+    value,
+    minimum,
+    maximum
+  ) {
     return Math.max(
       minimum,
-      Math.min(maximum, value)
+      Math.min(
+        maximum,
+        value
+      )
     );
   }
 
-  function validateSegmentCount(value, code) {
+  function validateSegmentCount(
+    value,
+    code
+  ) {
     invariant(
       Number.isInteger(value) &&
       value >= 12 &&
@@ -425,7 +594,9 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
     );
   }
 
-  function resolveQualityProfile(profile) {
+  function resolveQualityProfile(
+    profile
+  ) {
     if (
       typeof profile === "string" &&
       QUALITY_PROFILES[profile]
@@ -438,19 +609,30 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
       typeof profile === "object"
     ) {
       const resolved = {
-        id: String(profile.id || "custom"),
+        id:
+          String(
+            profile.id ||
+            "custom"
+          ),
 
         annulusSegments:
-          Number(profile.annulusSegments),
+          Number(
+            profile.annulusSegments
+          ),
 
         dialSegments:
-          Number(profile.dialSegments),
+          Number(
+            profile.dialSegments
+          ),
 
         hubSegments:
-          Number(profile.hubSegments),
+          Number(
+            profile.hubSegments
+          ),
 
         includeIntercardinalTicks:
-          profile.includeIntercardinalTicks !== false
+          profile.includeIntercardinalTicks !==
+          false
       };
 
       validateSegmentCount(
@@ -468,15 +650,21 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
         "CUSTOM_HUB_SEGMENT_COUNT_INVALID"
       );
 
-      return Object.freeze(resolved);
+      return Object.freeze(
+        resolved
+      );
     }
 
     return QUALITY_PROFILES.desktop;
   }
 
-  function validateMaterialKey(materialKey) {
+  function validateMaterialKey(
+    materialKey
+  ) {
     invariant(
-      MATERIAL_KEY_SET.has(materialKey),
+      MATERIAL_KEY_SET.has(
+        materialKey
+      ),
       "MESH_MATERIAL_KEY_INVALID",
       { materialKey }
     );
@@ -491,7 +679,8 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
   }
 
   function normalize3(vector) {
-    const length = vectorLength3(vector);
+    const length =
+      vectorLength3(vector);
 
     invariant(
       length > EPSILON,
@@ -536,7 +725,9 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
     );
   }
 
-  function polygonSignedArea(vertices) {
+  function polygonSignedArea(
+    vertices
+  ) {
     let area = 0;
 
     for (
@@ -544,7 +735,9 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
       index < vertices.length;
       index += 1
     ) {
-      const current = vertices[index];
+      const current =
+        vertices[index];
+
       const next =
         vertices[
           (index + 1) %
@@ -559,7 +752,10 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
     return area * 0.5;
   }
 
-  function validatePolygon(vertices, code) {
+  function validatePolygon(
+    vertices,
+    code
+  ) {
     invariant(
       Array.isArray(vertices) &&
       vertices.length >= 3,
@@ -570,11 +766,16 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
       }
     );
 
-    for (const vertex of vertices) {
+    for (
+      const vertex
+      of vertices
+    ) {
       invariant(
         Array.isArray(vertex) &&
         vertex.length === 2 &&
-        vertex.every(isFiniteNumber),
+        vertex.every(
+          isFiniteNumber
+        ),
         code,
         {
           reason:
@@ -595,11 +796,16 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
     );
   }
 
-  function polygonCentroid(vertices) {
+  function polygonCentroid(
+    vertices
+  ) {
     let x = 0;
     let y = 0;
 
-    for (const vertex of vertices) {
+    for (
+      const vertex
+      of vertices
+    ) {
       x += vertex[0];
       y += vertex[1];
     }
@@ -625,13 +831,23 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
     const centroid =
       polygonCentroid(vertices);
 
-    return vertices.map(([x, y]) => [
-      centroid[0] +
-        (x - centroid[0]) * scale,
+    return vertices.map(
+      ([x, y]) => [
+        centroid[0] +
+          (
+            x -
+            centroid[0]
+          ) *
+          scale,
 
-      centroid[1] +
-        (y - centroid[1]) * scale
-    ]);
+        centroid[1] +
+          (
+            y -
+            centroid[1]
+          ) *
+          scale
+      ]
+    );
   }
 
   function createEmptyMesh(
@@ -639,7 +855,9 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
     primitive,
     materialKey
   ) {
-    validateMaterialKey(materialKey);
+    validateMaterialKey(
+      materialKey
+    );
 
     return {
       componentId,
@@ -653,11 +871,17 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
     };
   }
 
-  function pushVertex(mesh, position, normal) {
+  function pushVertex(
+    mesh,
+    position,
+    normal
+  ) {
     invariant(
       Array.isArray(position) &&
       position.length === 3 &&
-      position.every(isFiniteNumber),
+      position.every(
+        isFiniteNumber
+      ),
       "VERTEX_POSITION_INVALID",
       {
         componentId:
@@ -669,7 +893,9 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
     invariant(
       Array.isArray(normal) &&
       normal.length === 3 &&
-      normal.every(isFiniteNumber),
+      normal.every(
+        isFiniteNumber
+      ),
       "VERTEX_NORMAL_INVALID",
       {
         componentId:
@@ -699,7 +925,12 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
     );
   }
 
-  function pushTriangle(mesh, a, b, c) {
+  function pushTriangle(
+    mesh,
+    a,
+    b,
+    c
+  ) {
     invariant(
       [a, b, c].every(
         value =>
@@ -710,11 +941,16 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
       {
         componentId:
           mesh.componentId,
-        indices: [a, b, c]
+        indices:
+          [a, b, c]
       }
     );
 
-    mesh.indices.push(a, b, c);
+    mesh.indices.push(
+      a,
+      b,
+      c
+    );
   }
 
   function pushFlatTriangle(
@@ -730,18 +966,40 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
         : faceNormal(a, b, c);
 
     const ia =
-      pushVertex(mesh, a, normal);
+      pushVertex(
+        mesh,
+        a,
+        normal
+      );
 
     const ib =
-      pushVertex(mesh, b, normal);
+      pushVertex(
+        mesh,
+        b,
+        normal
+      );
 
     const ic =
-      pushVertex(mesh, c, normal);
+      pushVertex(
+        mesh,
+        c,
+        normal
+      );
 
     if (reverse) {
-      pushTriangle(mesh, ic, ib, ia);
+      pushTriangle(
+        mesh,
+        ic,
+        ib,
+        ia
+      );
     } else {
-      pushTriangle(mesh, ia, ib, ic);
+      pushTriangle(
+        mesh,
+        ia,
+        ib,
+        ic
+      );
     }
   }
 
@@ -759,27 +1017,67 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
         : faceNormal(a, b, c);
 
     const ia =
-      pushVertex(mesh, a, normal);
+      pushVertex(
+        mesh,
+        a,
+        normal
+      );
 
     const ib =
-      pushVertex(mesh, b, normal);
+      pushVertex(
+        mesh,
+        b,
+        normal
+      );
 
     const ic =
-      pushVertex(mesh, c, normal);
+      pushVertex(
+        mesh,
+        c,
+        normal
+      );
 
     const id =
-      pushVertex(mesh, d, normal);
+      pushVertex(
+        mesh,
+        d,
+        normal
+      );
 
     if (reverse) {
-      pushTriangle(mesh, id, ic, ib);
-      pushTriangle(mesh, id, ib, ia);
+      pushTriangle(
+        mesh,
+        id,
+        ic,
+        ib
+      );
+
+      pushTriangle(
+        mesh,
+        id,
+        ib,
+        ia
+      );
     } else {
-      pushTriangle(mesh, ia, ib, ic);
-      pushTriangle(mesh, ia, ic, id);
+      pushTriangle(
+        mesh,
+        ia,
+        ib,
+        ic
+      );
+
+      pushTriangle(
+        mesh,
+        ia,
+        ic,
+        id
+      );
     }
   }
 
-  function computeBoundsFromPositions(positions) {
+  function computeBoundsFromPositions(
+    positions
+  ) {
     invariant(
       positions &&
       positions.length >= 3 &&
@@ -799,53 +1097,94 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
       index < positions.length;
       index += 3
     ) {
-      const x = positions[index];
-      const y = positions[index + 1];
-      const z = positions[index + 2];
+      const x =
+        positions[index];
+
+      const y =
+        positions[index + 1];
+
+      const z =
+        positions[index + 2];
 
       minimumX =
-        Math.min(minimumX, x);
+        Math.min(
+          minimumX,
+          x
+        );
 
       minimumY =
-        Math.min(minimumY, y);
+        Math.min(
+          minimumY,
+          y
+        );
 
       minimumZ =
-        Math.min(minimumZ, z);
+        Math.min(
+          minimumZ,
+          z
+        );
 
       maximumX =
-        Math.max(maximumX, x);
+        Math.max(
+          maximumX,
+          x
+        );
 
       maximumY =
-        Math.max(maximumY, y);
+        Math.max(
+          maximumY,
+          y
+        );
 
       maximumZ =
-        Math.max(maximumZ, z);
+        Math.max(
+          maximumZ,
+          z
+        );
     }
 
     return Object.freeze({
-      minimum: freezeVector([
-        minimumX,
-        minimumY,
-        minimumZ
-      ]),
+      minimum:
+        freezeVector([
+          minimumX,
+          minimumY,
+          minimumZ
+        ]),
 
-      maximum: freezeVector([
-        maximumX,
-        maximumY,
-        maximumZ
-      ]),
+      maximum:
+        freezeVector([
+          maximumX,
+          maximumY,
+          maximumZ
+        ]),
 
-      size: freezeVector([
-        maximumX - minimumX,
-        maximumY - minimumY,
-        maximumZ - minimumZ
-      ]),
+      size:
+        freezeVector([
+          maximumX - minimumX,
+          maximumY - minimumY,
+          maximumZ - minimumZ
+        ]),
 
-      center: freezeVector([
-        (minimumX + maximumX) * 0.5,
-        (minimumY + maximumY) * 0.5,
-        (minimumZ + maximumZ) * 0.5
-      ])
+      center:
+        freezeVector([
+          (
+            minimumX +
+            maximumX
+          ) *
+          0.5,
+
+          (
+            minimumY +
+            maximumY
+          ) *
+          0.5,
+
+          (
+            minimumZ +
+            maximumZ
+          ) *
+          0.5
+        ])
     });
   }
 
@@ -887,7 +1226,10 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
     const vertexCount =
       mesh.positions.length / 3;
 
-    for (const index of mesh.indices) {
+    for (
+      const index
+      of mesh.indices
+    ) {
       invariant(
         index >= 0 &&
         index < vertexCount,
@@ -936,10 +1278,11 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
             ),
 
       groups:
-        mesh.groups.map(group =>
-          Object.freeze({
-            ...group
-          })
+        mesh.groups.map(
+          group =>
+            Object.freeze({
+              ...group
+            })
         ),
 
       metadata:
@@ -962,8 +1305,12 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
     z
   ) {
     return [
-      radius * Math.cos(theta),
-      radius * Math.sin(theta),
+      radius *
+        Math.cos(theta),
+
+      radius *
+        Math.sin(theta),
+
       z
     ];
   }
@@ -990,7 +1337,9 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
       index += 1
     ) {
       const theta =
-        TAU * index / segments;
+        TAU *
+        index /
+        segments;
 
       outer.push(
         pushVertex(
@@ -1023,7 +1372,10 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
       index += 1
     ) {
       const next =
-        (index + 1) % segments;
+        (
+          index + 1
+        ) %
+        segments;
 
       if (normal[2] > 0) {
         pushTriangle(
@@ -1057,9 +1409,12 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
     }
 
     return {
-      indexStart: start,
+      indexStart:
+        start,
+
       indexCount:
-        mesh.indices.length - start
+        mesh.indices.length -
+        start
     };
   }
 
@@ -1078,13 +1433,17 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
       mesh.indices.length;
 
     const deltaRadius =
-      radiusB - radiusA;
+      radiusB -
+      radiusA;
 
     const deltaZ =
-      zB - zA;
+      zB -
+      zA;
 
     const radialSign =
-      inward ? -1 : 1;
+      inward
+        ? -1
+        : 1;
 
     for (
       let index = 0;
@@ -1092,13 +1451,20 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
       index += 1
     ) {
       const next =
-        (index + 1) % segments;
+        (
+          index + 1
+        ) %
+        segments;
 
       const thetaA =
-        TAU * index / segments;
+        TAU *
+        index /
+        segments;
 
       const thetaB =
-        TAU * next / segments;
+        TAU *
+        next /
+        segments;
 
       const a =
         createCirclePoint(
@@ -1139,8 +1505,12 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
             Math.abs(deltaZ),
 
           inward
-            ? Math.abs(deltaRadius)
-            : -Math.abs(deltaRadius)
+            ? Math.abs(
+                deltaRadius
+              )
+            : -Math.abs(
+                deltaRadius
+              )
         ]);
 
       const slopeNormalB =
@@ -1154,8 +1524,12 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
             Math.abs(deltaZ),
 
           inward
-            ? Math.abs(deltaRadius)
-            : -Math.abs(deltaRadius)
+            ? Math.abs(
+                deltaRadius
+              )
+            : -Math.abs(
+                deltaRadius
+              )
         ]);
 
       const ia =
@@ -1218,9 +1592,12 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
     }
 
     return {
-      indexStart: start,
+      indexStart:
+        start,
+
       indexCount:
-        mesh.indices.length - start
+        mesh.indices.length -
+        start
     };
   }
 
@@ -1243,30 +1620,53 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
       index += 1
     ) {
       const next =
-        (index + 1) % segments;
+        (
+          index + 1
+        ) %
+        segments;
 
       const thetaA =
-        TAU * index / segments;
+        TAU *
+        index /
+        segments;
 
       const thetaB =
-        TAU * next / segments;
+        TAU *
+        next /
+        segments;
 
       const normalA = [
-        (inward ? -1 : 1) *
-          Math.cos(thetaA),
+        (
+          inward
+            ? -1
+            : 1
+        ) *
+        Math.cos(thetaA),
 
-        (inward ? -1 : 1) *
-          Math.sin(thetaA),
+        (
+          inward
+            ? -1
+            : 1
+        ) *
+        Math.sin(thetaA),
 
         0
       ];
 
       const normalB = [
-        (inward ? -1 : 1) *
-          Math.cos(thetaB),
+        (
+          inward
+            ? -1
+            : 1
+        ) *
+        Math.cos(thetaB),
 
-        (inward ? -1 : 1) *
-          Math.sin(thetaB),
+        (
+          inward
+            ? -1
+            : 1
+        ) *
+        Math.sin(thetaB),
 
         0
       ];
@@ -1347,9 +1747,12 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
     }
 
     return {
-      indexStart: start,
+      indexStart:
+        start,
+
       indexCount:
-        mesh.indices.length - start
+        mesh.indices.length -
+        start
     };
   }
 
@@ -1371,9 +1774,14 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
     );
 
     invariant(
-      isFiniteNumber(outerRadius) &&
-      isFiniteNumber(innerRadius) &&
-      outerRadius > innerRadius &&
+      isFiniteNumber(
+        outerRadius
+      ) &&
+      isFiniteNumber(
+        innerRadius
+      ) &&
+      outerRadius >
+        innerRadius &&
       innerRadius > 0,
       "ANNULUS_RADIUS_RELATION_INVALID",
       {
@@ -1407,8 +1815,10 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
     invariant(
       outerBevelWidth > 0 &&
       innerBevelWidth > 0 &&
-      outerRadius - outerBevelWidth >
-        innerRadius + innerBevelWidth,
+      outerRadius -
+        outerBevelWidth >
+      innerRadius +
+        innerBevelWidth,
       "ANNULUS_BEVEL_WIDTH_INVALID",
       {
         componentId,
@@ -1433,10 +1843,12 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
       innerBevelWidth;
 
     const zFrontShoulder =
-      zFront - bevelDepth;
+      zFront -
+      bevelDepth;
 
     const zRearShoulder =
-      zRear + bevelDepth;
+      zRear +
+      bevelDepth;
 
     const frontFace =
       pushAnnularSurfaceBand(
@@ -1444,11 +1856,17 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
         {
           outerRadius:
             outerFaceRadius,
+
           innerRadius:
             innerFaceRadius,
-          z: zFront,
+
+          z:
+            zFront,
+
           segments,
-          normal: [0, 0, 1]
+
+          normal:
+            [0, 0, 1]
         }
       );
 
@@ -1458,13 +1876,20 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
         {
           radiusA:
             outerFaceRadius,
-          zA: zFront,
+
+          zA:
+            zFront,
+
           radiusB:
             outerRadius,
+
           zB:
             zFrontShoulder,
+
           segments,
-          inward: false
+
+          inward:
+            false
         }
       );
 
@@ -1474,12 +1899,17 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
         {
           radius:
             outerRadius,
+
           zRear:
             zRearShoulder,
+
           zFront:
             zFrontShoulder,
+
           segments,
-          inward: false
+
+          inward:
+            false
         }
       );
 
@@ -1489,13 +1919,20 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
         {
           radiusA:
             outerRadius,
+
           zA:
             zRearShoulder,
+
           radiusB:
             outerFaceRadius,
-          zB: zRear,
+
+          zB:
+            zRear,
+
           segments,
-          inward: false
+
+          inward:
+            false
         }
       );
 
@@ -1505,11 +1942,17 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
         {
           outerRadius:
             outerFaceRadius,
+
           innerRadius:
             innerFaceRadius,
-          z: zRear,
+
+          z:
+            zRear,
+
           segments,
-          normal: [0, 0, -1]
+
+          normal:
+            [0, 0, -1]
         }
       );
 
@@ -1519,13 +1962,20 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
         {
           radiusA:
             innerFaceRadius,
-          zA: zRear,
+
+          zA:
+            zRear,
+
           radiusB:
             innerRadius,
+
           zB:
             zRearShoulder,
+
           segments,
-          inward: true
+
+          inward:
+            true
         }
       );
 
@@ -1535,12 +1985,17 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
         {
           radius:
             innerRadius,
+
           zRear:
             zRearShoulder,
+
           zFront:
             zFrontShoulder,
+
           segments,
-          inward: true
+
+          inward:
+            true
         }
       );
 
@@ -1550,47 +2005,62 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
         {
           radiusA:
             innerRadius,
+
           zA:
             zFrontShoulder,
+
           radiusB:
             innerFaceRadius,
-          zB: zFront,
+
+          zB:
+            zFront,
+
           segments,
-          inward: true
+
+          inward:
+            true
         }
       );
 
     mesh.groups.push(
       {
-        id: "FRONT_FACE",
+        id:
+          "FRONT_FACE",
         ...frontFace
       },
       {
-        id: "FRONT_OUTER_BEVEL",
+        id:
+          "FRONT_OUTER_BEVEL",
         ...frontOuterBevel
       },
       {
-        id: "OUTER_WALL",
+        id:
+          "OUTER_WALL",
         ...outerWall
       },
       {
-        id: "REAR_OUTER_BEVEL",
+        id:
+          "REAR_OUTER_BEVEL",
         ...rearOuterBevel
       },
       {
-        id: "REAR_FACE",
+        id:
+          "REAR_FACE",
         ...rearFace
       },
       {
-        id: "REAR_INNER_BEVEL",
+        id:
+          "REAR_INNER_BEVEL",
         ...rearInnerBevel
       },
       {
-        id: "INNER_WALL",
+        id:
+          "INNER_WALL",
         ...innerWall
       },
       {
-        id: "FRONT_INNER_BEVEL",
+        id:
+          "FRONT_INNER_BEVEL",
         ...frontInnerBevel
       }
     );
@@ -1658,13 +2128,16 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
       );
 
     const faceRadius =
-      radius - bevelWidth;
+      radius -
+      bevelWidth;
 
     const zFrontShoulder =
-      zFront - bevelDepth;
+      zFront -
+      bevelDepth;
 
     const zRearShoulder =
-      zRear + bevelDepth;
+      zRear +
+      bevelDepth;
 
     const frontStart =
       mesh.indices.length;
@@ -1684,7 +2157,9 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
       index += 1
     ) {
       const theta =
-        TAU * index / segments;
+        TAU *
+        index /
+        segments;
 
       frontRim.push(
         pushVertex(
@@ -1705,7 +2180,10 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
       index += 1
     ) {
       const next =
-        (index + 1) % segments;
+        (
+          index + 1
+        ) %
+        segments;
 
       pushTriangle(
         mesh,
@@ -1716,7 +2194,9 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
     }
 
     const frontFace = {
-      indexStart: frontStart,
+      indexStart:
+        frontStart,
+
       indexCount:
         mesh.indices.length -
         frontStart
@@ -1728,13 +2208,20 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
         {
           radiusA:
             faceRadius,
-          zA: zFront,
+
+          zA:
+            zFront,
+
           radiusB:
             radius,
+
           zB:
             zFrontShoulder,
+
           segments,
-          inward: false
+
+          inward:
+            false
         }
       );
 
@@ -1743,12 +2230,17 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
         mesh,
         {
           radius,
+
           zRear:
             zRearShoulder,
+
           zFront:
             zFrontShoulder,
+
           segments,
-          inward: false
+
+          inward:
+            false
         }
       );
 
@@ -1758,13 +2250,20 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
         {
           radiusA:
             radius,
+
           zA:
             zRearShoulder,
+
           radiusB:
             faceRadius,
-          zB: zRear,
+
+          zB:
+            zRear,
+
           segments,
-          inward: false
+
+          inward:
+            false
         }
       );
 
@@ -1786,7 +2285,9 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
       index += 1
     ) {
       const theta =
-        TAU * index / segments;
+        TAU *
+        index /
+        segments;
 
       rearRim.push(
         pushVertex(
@@ -1807,7 +2308,10 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
       index += 1
     ) {
       const next =
-        (index + 1) % segments;
+        (
+          index + 1
+        ) %
+        segments;
 
       pushTriangle(
         mesh,
@@ -1818,7 +2322,9 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
     }
 
     const rearFace = {
-      indexStart: rearStart,
+      indexStart:
+        rearStart,
+
       indexCount:
         mesh.indices.length -
         rearStart
@@ -1826,23 +2332,28 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
 
     mesh.groups.push(
       {
-        id: "FRONT_FACE",
+        id:
+          "FRONT_FACE",
         ...frontFace
       },
       {
-        id: "FRONT_BEVEL",
+        id:
+          "FRONT_BEVEL",
         ...frontBevel
       },
       {
-        id: "SIDE_WALL",
+        id:
+          "SIDE_WALL",
         ...wall
       },
       {
-        id: "REAR_BEVEL",
+        id:
+          "REAR_BEVEL",
         ...rearBevel
       },
       {
-        id: "REAR_FACE",
+        id:
+          "REAR_FACE",
         ...rearFace
       }
     );
@@ -1874,16 +2385,17 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
         : [0, 0, -1];
 
     const indices =
-      vertices.map(vertex =>
-        pushVertex(
-          mesh,
-          [
-            vertex[0],
-            vertex[1],
-            z
-          ],
-          normal
-        )
+      vertices.map(
+        vertex =>
+          pushVertex(
+            mesh,
+            [
+              vertex[0],
+              vertex[1],
+              z
+            ],
+            normal
+          )
       );
 
     for (
@@ -1909,9 +2421,12 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
     }
 
     return {
-      indexStart: start,
+      indexStart:
+        start,
+
       indexCount:
-        mesh.indices.length - start
+        mesh.indices.length -
+        start
     };
   }
 
@@ -1938,7 +2453,9 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
       index += 1
     ) {
       const next =
-        (index + 1) %
+        (
+          index + 1
+        ) %
         outerVertices.length;
 
       const a = [
@@ -1976,9 +2493,12 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
     }
 
     return {
-      indexStart: start,
+      indexStart:
+        start,
+
       indexCount:
-        mesh.indices.length - start
+        mesh.indices.length -
+        start
     };
   }
 
@@ -1997,11 +2517,16 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
       index += 1
     ) {
       const next =
-        (index + 1) %
+        (
+          index + 1
+        ) %
         vertices.length;
 
-      const a = vertices[index];
-      const b = vertices[next];
+      const a =
+        vertices[index];
+
+      const b =
+        vertices[next];
 
       const frontA = [
         a[0],
@@ -2038,9 +2563,12 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
     }
 
     return {
-      indexStart: start,
+      indexStart:
+        start,
+
       indexCount:
-        mesh.indices.length - start
+        mesh.indices.length -
+        start
     };
   }
 
@@ -2092,7 +2620,8 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
       );
 
     const faceScale =
-      1 - bevelInset;
+      1 -
+      bevelInset;
 
     const faceVertices =
       scalePolygonAroundCentroid(
@@ -2101,10 +2630,12 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
       );
 
     const zFrontShoulder =
-      zFront - bevelDepth;
+      zFront -
+      bevelDepth;
 
     const zRearShoulder =
-      zRear + bevelDepth;
+      zRear +
+      bevelDepth;
 
     const frontFace =
       pushPolygonFace(
@@ -2152,30 +2683,38 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
 
     mesh.groups.push(
       {
-        id: "FRONT_FACE",
+        id:
+          "FRONT_FACE",
         ...frontFace
       },
       {
-        id: "FRONT_BEVEL",
+        id:
+          "FRONT_BEVEL",
         ...frontBevel
       },
       {
-        id: "SIDE_WALL",
+        id:
+          "SIDE_WALL",
         ...wall
       },
       {
-        id: "REAR_BEVEL",
+        id:
+          "REAR_BEVEL",
         ...rearBevel
       },
       {
-        id: "REAR_FACE",
+        id:
+          "REAR_FACE",
         ...rearFace
       }
     );
 
     mesh.metadata = {
       xyVertices:
-        xyVertices.map(cloneVector),
+        xyVertices.map(
+          cloneVector
+        ),
+
       zRear,
       zFront,
       bevelDepth,
@@ -2185,9 +2724,12 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
     return finalizeMesh(mesh);
   }
 
-  function createIntercardinalTickPolygon(angle) {
+  function createIntercardinalTickPolygon(
+    angle
+  ) {
     const definition =
-      COMPONENT_DIMENSIONS.intercardinalTick;
+      COMPONENT_DIMENSIONS
+        .intercardinalTick;
 
     const direction = [
       Math.cos(angle),
@@ -2200,10 +2742,12 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
     ];
 
     const radialHalf =
-      definition.radialLength * 0.5;
+      definition.radialLength *
+      0.5;
 
     const tangentialHalf =
-      definition.tangentialWidth * 0.5;
+      definition.tangentialWidth *
+      0.5;
 
     const center = [
       direction[0] *
@@ -2288,7 +2832,10 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
 
     const aggregatePositions = [];
 
-    for (const mesh of meshes) {
+    for (
+      const mesh
+      of meshes
+    ) {
       vertexCount +=
         mesh.vertexCount;
 
@@ -2315,6 +2862,7 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
       vertexCount,
       triangleCount,
       bounds,
+
       actualTotalDepth:
         bounds.size[2]
     });
@@ -2344,15 +2892,18 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
     );
 
     invariant(
-      maximumZ - minimumZ <=
+      maximumZ -
+        minimumZ <=
         DEPTH_ENVELOPE.absoluteMaximumTotalDepth +
         EPSILON,
       "ABSOLUTE_TOTAL_DEPTH_EXCEEDED",
       {
         minimumZ,
         maximumZ,
+
         totalDepth:
-          maximumZ - minimumZ
+          maximumZ -
+          minimumZ
       }
     );
   }
@@ -2370,7 +2921,10 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
         mesh.positions[index + 1];
 
       const radius =
-        Math.hypot(x, y);
+        Math.hypot(
+          x,
+          y
+        );
 
       invariant(
         radius <=
@@ -2471,7 +3025,10 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
     const vertexCount =
       mesh.positions.length / 3;
 
-    for (const index of mesh.indices) {
+    for (
+      const index
+      of mesh.indices
+    ) {
       invariant(
         index >= 0 &&
         index < vertexCount,
@@ -2485,37 +3042,211 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
       );
     }
 
-    validateDepthBounds(mesh.bounds);
-    validateRadialBounds(mesh);
+    validateDepthBounds(
+      mesh.bounds
+    );
+
+    validateRadialBounds(
+      mesh
+    );
 
     return true;
+  }
+
+  function validateFixedCenterIdentity(
+    objectIdentity
+  ) {
+    invariant(
+      objectIdentity &&
+      objectIdentity.objectClass ===
+        "HOME_COMPASS_FIXED_CENTER_INSTRUMENT",
+      "MODEL_OBJECT_CLASS_INVALID"
+    );
+
+    invariant(
+      objectIdentity.physicalProjection ===
+        "FIXED_CENTER_INDEPENDENT_SIBLING",
+      "MODEL_PHYSICAL_PROJECTION_INVALID"
+    );
+
+    invariant(
+      objectIdentity.inheritsNavigationOrientation ===
+        false,
+      "MODEL_NAVIGATION_ORIENTATION_INHERITANCE_FORBIDDEN"
+    );
+
+    invariant(
+      objectIdentity.inheritsConstellationOrientation ===
+        false,
+      "MODEL_CONSTELLATION_ORIENTATION_INHERITANCE_FORBIDDEN"
+    );
+
+    invariant(
+      objectIdentity.inheritsClusterOrientation ===
+        false,
+      "MODEL_CLUSTER_ORIENTATION_INHERITANCE_FORBIDDEN"
+    );
+
+    invariant(
+      objectIdentity.participatesInNavigationSettlement ===
+        false,
+      "MODEL_NAVIGATION_SETTLEMENT_PARTICIPATION_FORBIDDEN"
+    );
+
+    invariant(
+      objectIdentity.receivesIndependentGestureDeltas ===
+        false,
+      "MODEL_INDEPENDENT_GESTURE_DELTAS_FORBIDDEN"
+    );
+
+    invariant(
+      objectIdentity.publishesQuaternion ===
+        false,
+      "MODEL_QUATERNION_PUBLICATION_FORBIDDEN"
+    );
+
+    invariant(
+      objectIdentity.ownsNavigation ===
+        false,
+      "MODEL_NAVIGATION_AUTHORITY_FORBIDDEN"
+    );
+
+    invariant(
+      objectIdentity.ownsSelectionState ===
+        false,
+      "MODEL_SELECTION_AUTHORITY_FORBIDDEN"
+    );
+
+    invariant(
+      objectIdentity.ownsPointerListeners ===
+        false,
+      "MODEL_POINTER_AUTHORITY_FORBIDDEN"
+    );
+  }
+
+  function validateRootTransform(
+    rootTransform
+  ) {
+    invariant(
+      rootTransform &&
+      rootTransform.placementMode ===
+        "FIXED_CENTER",
+      "MODEL_FIXED_CENTER_PLACEMENT_REQUIRED"
+    );
+
+    invariant(
+      rootTransform.parentOrientationMode ===
+        "NONE",
+      "MODEL_PARENT_ORIENTATION_MODE_INVALID"
+    );
+
+    invariant(
+      rootTransform.inheritsNavigationOrientation ===
+        false,
+      "ROOT_NAVIGATION_ORIENTATION_INHERITANCE_FORBIDDEN"
+    );
+
+    invariant(
+      rootTransform.inheritsConstellationOrientation ===
+        false,
+      "ROOT_CONSTELLATION_ORIENTATION_INHERITANCE_FORBIDDEN"
+    );
+
+    invariant(
+      rootTransform.inheritsClusterOrientation ===
+        false,
+      "ROOT_CLUSTER_ORIENTATION_INHERITANCE_FORBIDDEN"
+    );
+
+    invariant(
+      rootTransform.participatesInNavigationSettlement ===
+        false,
+      "ROOT_NAVIGATION_SETTLEMENT_PARTICIPATION_FORBIDDEN"
+    );
+
+    invariant(
+      rootTransform.independentGestureAuthority ===
+        false,
+      "ROOT_INDEPENDENT_GESTURE_AUTHORITY_FORBIDDEN"
+    );
+
+    invariant(
+      rootTransform.independentSettlementAuthority ===
+        false,
+      "ROOT_INDEPENDENT_SETTLEMENT_AUTHORITY_FORBIDDEN"
+    );
+
+    invariant(
+      rootTransform.publishesQuaternion ===
+        false,
+      "ROOT_QUATERNION_PUBLICATION_FORBIDDEN"
+    );
+
+    invariant(
+      rootTransform.localTransformOrder ===
+        "FIXED_CENTER_PLACEMENT * LOCAL_PRESENTATION_TRANSFORM",
+      "MODEL_LOCAL_TRANSFORM_ORDER_INVALID"
+    );
+
+    invariant(
+      rootTransform.defaultPresentationTransform ===
+        PRESENTATION_TRANSFORMS.fixedCenter,
+      "MODEL_DEFAULT_PRESENTATION_TRANSFORM_INVALID"
+    );
+  }
+
+  function validatePresentationTransforms(
+    presentationTransforms
+  ) {
+    invariant(
+      presentationTransforms &&
+      presentationTransforms.fixedCenter,
+      "MODEL_FIXED_CENTER_PRESENTATION_TRANSFORM_REQUIRED"
+    );
+
+    invariant(
+      presentationTransforms.fixedCenter.id ===
+        "fixedCenter",
+      "MODEL_FIXED_CENTER_TRANSFORM_ID_INVALID"
+    );
+
+    invariant(
+      presentationTransforms.embedded ===
+        presentationTransforms.fixedCenter,
+      "MODEL_EMBEDDED_COMPATIBILITY_ALIAS_INVALID"
+    );
+
+    invariant(
+      !Object.prototype.hasOwnProperty.call(
+        presentationTransforms,
+        "decisionApproach"
+      ),
+      "MODEL_DECISION_APPROACH_TRANSFORM_FORBIDDEN"
+    );
   }
 
   function validateModel(model) {
     invariant(
       model &&
-      model.moduleId === MODULE.id,
+      model.moduleId ===
+        MODULE.id,
       "MODEL_MODULE_ID_MISMATCH"
     );
 
     invariant(
-      model.modelId === MODEL_ID,
+      model.moduleVersion ===
+        MODULE.version,
+      "MODEL_MODULE_VERSION_MISMATCH"
+    );
+
+    invariant(
+      model.modelId ===
+        MODEL_ID,
       "MODEL_ID_MISMATCH"
     );
 
-    invariant(
-      model.objectIdentity &&
+    validateFixedCenterIdentity(
       model.objectIdentity
-        .inheritsParentOrientation ===
-        true,
-      "MODEL_PARENT_ORIENTATION_INHERITANCE_REQUIRED"
-    );
-
-    invariant(
-      model.objectIdentity
-        .receivesIndependentGestureDeltas ===
-        false,
-      "MODEL_INDEPENDENT_GESTURE_AUTHORITY_FORBIDDEN"
     );
 
     invariant(
@@ -2533,7 +3264,10 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
     const componentIds =
       new Set();
 
-    for (const mesh of model.meshes) {
+    for (
+      const mesh
+      of model.meshes
+    ) {
       validateMesh(mesh);
 
       invariant(
@@ -2564,6 +3298,7 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
       {
         actual:
           model.bounds.minimum[2],
+
         expected:
           DEPTH_ENVELOPE.rearLimitZ
       }
@@ -2577,6 +3312,7 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
       {
         actual:
           model.bounds.maximum[2],
+
         expected:
           DEPTH_ENVELOPE.frontLimitZ
       }
@@ -2590,6 +3326,7 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
       {
         actual:
           model.aggregate.actualTotalDepth,
+
         minimum:
           DEPTH_ENVELOPE.minimumInstrumentDepth
       }
@@ -2602,35 +3339,42 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
       "MODEL_TOTAL_DEPTH_EXCEEDS_ABSOLUTE_MAXIMUM"
     );
 
-    invariant(
+    validateRootTransform(
       model.rootTransform
-        .parentOrientationMode ===
-        "INHERIT",
-      "MODEL_PARENT_ORIENTATION_MODE_INVALID"
     );
 
-    invariant(
-      model.rootTransform
-        .independentGestureAuthority ===
-        false,
-      "MODEL_INDEPENDENT_GESTURE_AUTHORITY_INVALID"
-    );
-
-    invariant(
-      model.presentationTransforms &&
+    validatePresentationTransforms(
       model.presentationTransforms
-        .embedded &&
-      model.presentationTransforms
-        .decisionApproach,
-      "MODEL_PRESENTATION_TRANSFORMS_REQUIRED"
     );
 
     invariant(
-      model.semanticHitEnvelope &&
-      model.semanticHitEnvelope
+      model.visualControlAlignmentEnvelope &&
+      model.visualControlAlignmentEnvelope
         .geometryIsSemanticListener ===
         false,
       "GEOMETRY_SEMANTIC_LISTENER_AUTHORITY_FORBIDDEN"
+    );
+
+    invariant(
+      model.visualControlAlignmentEnvelope
+        .semanticControlOwnedByHtml ===
+        true,
+      "HTML_SEMANTIC_CONTROL_AUTHORITY_REQUIRED"
+    );
+
+    invariant(
+      model.visualControlAlignmentEnvelope
+        .rendererMayAlignVisualModelToSemanticControl ===
+        true,
+      "RENDERER_VISUAL_ALIGNMENT_CONTRACT_REQUIRED"
+    );
+
+    invariant(
+      model.compatibility &&
+      model.compatibility
+        .decisionApproachTransform ===
+        false,
+      "MODEL_DECISION_APPROACH_COMPATIBILITY_FORBIDDEN"
     );
 
     return true;
@@ -2649,7 +3393,8 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
       undefined
         ? options.includeIntercardinalTicks ===
           true
-        : quality.includeIntercardinalTicks;
+        : quality
+            .includeIntercardinalTicks;
 
     const meshes = [];
 
@@ -2966,12 +3711,23 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
 
     const model =
       deepFreeze({
-        moduleId: MODULE.id,
-        moduleVersion: MODULE.version,
-        modelId: MODEL_ID,
+        moduleId:
+          MODULE.id,
+
+        moduleVersion:
+          MODULE.version,
+
+        modelId:
+          MODEL_ID,
+
+        legacyModelIds:
+          LEGACY_MODEL_IDS,
 
         objectIdentity:
           OBJECT_IDENTITY,
+
+        compatibility:
+          COMPATIBILITY,
 
         coordinateSystem:
           COORDINATE_SYSTEM,
@@ -2995,6 +3751,12 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
         presentationTransforms:
           PRESENTATION_TRANSFORMS,
 
+        visualControlAlignmentEnvelope:
+          VISUAL_CONTROL_ALIGNMENT_ENVELOPE,
+
+        /*
+         * Deprecated alias retained for renderer compatibility.
+         */
         semanticHitEnvelope:
           SEMANTIC_HIT_ENVELOPE,
 
@@ -3019,13 +3781,17 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
 
   /*
    * Compatibility construction surface.
-   * It intentionally returns the same model contract as buildModel().
+   * It returns the exact same fixed-center model contract as buildModel().
    */
-  function buildBaselineMeshes(options = {}) {
+  function buildBaselineMeshes(
+    options = {}
+  ) {
     return buildModel(options);
   }
 
-  function createFrontProjectionSchema(options = {}) {
+  function createFrontProjectionSchema(
+    options = {}
+  ) {
     const includeIntercardinalTicks =
       options.includeIntercardinalTicks ===
       true;
@@ -3287,22 +4053,27 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
       ];
 
       const tickLayers =
-        angles.map((angle, index) => ({
-          id:
-            `INTERCARDINAL_TICK_${index + 1}`,
+        angles.map(
+          (
+            angle,
+            index
+          ) => ({
+            id:
+              `INTERCARDINAL_TICK_${index + 1}`,
 
-          materialKey:
-            MATERIAL_KEYS
-              .INTERCARDINAL_TICK,
+            materialKey:
+              MATERIAL_KEYS
+                .INTERCARDINAL_TICK,
 
-          type:
-            "POLYGON",
+            type:
+              "POLYGON",
 
-          vertices:
-            createIntercardinalTickPolygon(
-              angle
-            )
-        }));
+            vertices:
+              createIntercardinalTickPolygon(
+                angle
+              )
+          })
+        );
 
       layers.splice(
         4,
@@ -3320,6 +4091,9 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
 
       modelId:
         MODEL_ID,
+
+      legacyModelIds:
+        LEGACY_MODEL_IDS,
 
       objectIdentity:
         OBJECT_IDENTITY,
@@ -3355,15 +4129,32 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
 
   function escapeXmlText(value) {
     return String(value)
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;");
+      .replace(
+        /&/g,
+        "&amp;"
+      )
+      .replace(
+        /</g,
+        "&lt;"
+      )
+      .replace(
+        />/g,
+        "&gt;"
+      );
   }
 
-  function escapeXmlAttribute(value) {
+  function escapeXmlAttribute(
+    value
+  ) {
     return escapeXmlText(value)
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&apos;");
+      .replace(
+        /"/g,
+        "&quot;"
+      )
+      .replace(
+        /'/g,
+        "&apos;"
+      );
   }
 
   function createAnnulusEvenOddPath(
@@ -3385,7 +4176,9 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
     ].join(" ");
   }
 
-  function createPolygonPoints(vertices) {
+  function createPolygonPoints(
+    vertices
+  ) {
     return vertices
       .map(
         ([x, y]) =>
@@ -3394,15 +4187,27 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
       .join(" ");
   }
 
-  function buildStaticSvgFallback(options = {}) {
+  function buildStaticSvgFallback(
+    options = {}
+  ) {
     const {
-      title = "Home Compass",
+      title =
+        "Home Compass",
+
       className =
         "dgb-upstream-compass-static-fallback",
-      includeTitle = true,
-      includeIntercardinalTicks = true,
-      ariaHidden = true,
-      focusable = false
+
+      includeTitle =
+        true,
+
+      includeIntercardinalTicks =
+        true,
+
+      ariaHidden =
+        true,
+
+      focusable =
+        false
     } = options;
 
     invariant(
@@ -3417,7 +4222,7 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
       });
 
     const lines = [
-      `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${escapeXmlAttribute(schema.viewBox)}" class="${escapeXmlAttribute(className)}" aria-hidden="${ariaHidden ? "true" : "false"}" focusable="${focusable ? "true" : "false"}" data-upstream-compass-fallback="true" data-upstream-compass-model="${escapeXmlAttribute(MODEL_ID)}" data-upstream-compass-destination-type="${escapeXmlAttribute(OBJECT_IDENTITY.destinationType)}">`
+      `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${escapeXmlAttribute(schema.viewBox)}" class="${escapeXmlAttribute(className)}" aria-hidden="${ariaHidden ? "true" : "false"}" focusable="${focusable ? "true" : "false"}" data-upstream-compass-fallback="true" data-upstream-compass-model="${escapeXmlAttribute(MODEL_ID)}" data-upstream-compass-object-class="${escapeXmlAttribute(OBJECT_IDENTITY.objectClass)}" data-upstream-compass-placement="fixed-center">`
     ];
 
     if (includeTitle) {
@@ -3426,8 +4231,14 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
       );
     }
 
-    for (const layer of schema.layers) {
-      if (layer.type === "ANNULUS") {
+    for (
+      const layer
+      of schema.layers
+    ) {
+      if (
+        layer.type ===
+        "ANNULUS"
+      ) {
         lines.push(
           `<path data-compass-layer="${escapeXmlAttribute(layer.id)}" data-material-key="${escapeXmlAttribute(layer.materialKey)}" d="${escapeXmlAttribute(
             createAnnulusEvenOddPath(
@@ -3440,7 +4251,10 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
         continue;
       }
 
-      if (layer.type === "POLYGON") {
+      if (
+        layer.type ===
+        "POLYGON"
+      ) {
         lines.push(
           `<polygon data-compass-layer="${escapeXmlAttribute(layer.id)}" data-material-key="${escapeXmlAttribute(layer.materialKey)}" points="${escapeXmlAttribute(
             createPolygonPoints(
@@ -3452,10 +4266,15 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
         continue;
       }
 
-      if (layer.type === "CIRCLE") {
+      if (
+        layer.type ===
+        "CIRCLE"
+      ) {
         lines.push(
           `<circle data-compass-layer="${escapeXmlAttribute(layer.id)}" data-material-key="${escapeXmlAttribute(layer.materialKey)}" cx="100" cy="100" r="${escapeXmlAttribute(
-            String(layer.radius * 90)
+            String(
+              layer.radius * 90
+            )
           )}" fill="currentColor"/>`
         );
 
@@ -3474,7 +4293,9 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
       );
     }
 
-    lines.push("</svg>");
+    lines.push(
+      "</svg>"
+    );
 
     const svgString =
       lines.join("");
@@ -3497,9 +4318,17 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
       modelId:
         MODEL_ID,
 
-      destinationType:
-        OBJECT_IDENTITY
-          .destinationType,
+      legacyModelIds:
+        LEGACY_MODEL_IDS,
+
+      objectClass:
+        OBJECT_IDENTITY.objectClass,
+
+      physicalProjection:
+        OBJECT_IDENTITY.physicalProjection,
+
+      placementMode:
+        ROOT_TRANSFORM.placementMode,
 
       intentionallyTwoDimensional:
         true,
@@ -3508,7 +4337,119 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
         false,
 
       animationRequired:
+        false,
+
+      geometryOwnsFallbackPromotion:
         false
+    });
+  }
+
+  function runSelfTest(
+    options = {}
+  ) {
+    const qualityIds =
+      options.qualityIds ||
+      [
+        "desktop",
+        "mobile",
+        "lowPower"
+      ];
+
+    const models =
+      qualityIds.map(
+        qualityProfileId =>
+          buildModel({
+            qualityProfileId
+          })
+      );
+
+    return deepFreeze({
+      receiptSchema:
+        "DGB_UPSTREAM_COMPASS_GEOMETRY_FIXED_CENTER_VALIDATION_RECEIPT_v1",
+
+      moduleId:
+        MODULE.id,
+
+      moduleVersion:
+        MODULE.version,
+
+      modelId:
+        MODEL_ID,
+
+      pass:
+        models.every(
+          model =>
+            validateModel(model) ===
+            true
+        ),
+
+      fixedCenter:
+        true,
+
+      inheritsNavigationOrientation:
+        false,
+
+      inheritsConstellationOrientation:
+        false,
+
+      inheritsClusterOrientation:
+        false,
+
+      participatesInNavigationSettlement:
+        false,
+
+      publishesQuaternion:
+        false,
+
+      ownsNavigation:
+        false,
+
+      ownsSelectionState:
+        false,
+
+      ownsPointerListeners:
+        false,
+
+      decisionApproachPresent:
+        false,
+
+      embeddedAliasMatchesFixedCenter:
+        PRESENTATION_TRANSFORMS.embedded ===
+        PRESENTATION_TRANSFORMS.fixedCenter,
+
+      qualityProfilesValidated:
+        Object.freeze(
+          qualityIds.slice()
+        ),
+
+      models:
+        Object.freeze(
+          models.map(
+            model =>
+              Object.freeze({
+                qualityProfile:
+                  model.qualityProfile.id,
+
+                componentCount:
+                  model.componentCount,
+
+                vertexCount:
+                  model.aggregate.vertexCount,
+
+                triangleCount:
+                  model.aggregate.triangleCount,
+
+                minimumZ:
+                  model.bounds.minimum[2],
+
+                maximumZ:
+                  model.bounds.maximum[2],
+
+                totalDepth:
+                  model.aggregate.actualTotalDepth
+              })
+          )
+        )
     });
   }
 
@@ -3522,8 +4463,14 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
     modelId:
       MODEL_ID,
 
+    legacyModelIds:
+      LEGACY_MODEL_IDS,
+
     objectIdentity:
       OBJECT_IDENTITY,
+
+    compatibility:
+      COMPATIBILITY,
 
     coordinateSystem:
       COORDINATE_SYSTEM,
@@ -3546,6 +4493,12 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
     rootTransform:
       ROOT_TRANSFORM,
 
+    visualControlAlignmentEnvelope:
+      VISUAL_CONTROL_ALIGNMENT_ENVELOPE,
+
+    /*
+     * Deprecated alias retained pending renderer renewal.
+     */
     semanticHitEnvelope:
       SEMANTIC_HIT_ENVELOPE,
 
@@ -3557,21 +4510,113 @@ const DGB_UPSTREAM_COMPASS_GEOMETRY = (() => {
 
     buildStaticSvgFallback,
 
-    validateModel
+    validateModel,
+
+    runSelfTest
   });
 })();
 
 if (
-  typeof globalThis !== "undefined"
+  typeof globalThis !==
+  "undefined"
 ) {
-  globalThis.DGB_UPSTREAM_COMPASS_GEOMETRY =
+  globalThis
+    .DGB_UPSTREAM_COMPASS_GEOMETRY =
     DGB_UPSTREAM_COMPASS_GEOMETRY;
 }
 
 if (
-  typeof module !== "undefined" &&
+  typeof module !==
+    "undefined" &&
   module.exports
 ) {
   module.exports =
     DGB_UPSTREAM_COMPASS_GEOMETRY;
 }
+
+/*
+AUDRALIA_ARCHCOIN_SHARED_HOME_COMPASS_GEOMETRY_RENEWAL_RESULT_v1
+
+Disposition:
+FIXED_CENTER_GEOMETRY_CONTRACT_SHELL_SOURCE_CANDIDATE
+
+Module:
+DGB_UPSTREAM_COMPASS_GEOMETRY
+3.0.0-fixed-center-independent-sibling
+
+Physical core:
+PRESERVED
+
+Preserved without physical alteration:
+- all material keys
+- all component dimensions
+- all shape vertex literals
+- all quality profiles
+- all mesh construction algorithms
+- all depth-envelope literals
+- all radial-envelope literals
+- buildModel(options)
+- buildBaselineMeshes(options)
+- createFrontProjectionSchema(options)
+- buildStaticSvgFallback(options)
+- global export
+- CommonJS export
+
+Renewed identity:
+- HOME_COMPASS_FIXED_CENTER_INSTRUMENT
+- FIXED_CENTER_INDEPENDENT_SIBLING
+- UPSTREAM_HOME_COMPASS
+
+Renewed transform law:
+FIXED_CENTER_PLACEMENT
+*
+LOCAL_PRESENTATION_TRANSFORM
+
+Orientation and settlement law:
+- inheritsNavigationOrientation = false
+- inheritsConstellationOrientation = false
+- inheritsClusterOrientation = false
+- participatesInNavigationSettlement = false
+- receivesIndependentGestureDeltas = false
+- publishesQuaternion = false
+
+Authority boundary:
+- ownsNavigation = false
+- ownsSelectionState = false
+- ownsPointerListeners = false
+- ownsCameraTiming = false
+- geometryIsSemanticListener = false
+- semanticControlOwnedByHtml = true
+
+Removed:
+- parent-orientation inheritance
+- integrated-constellation-center projection
+- parentOrientationMode = INHERIT
+- PARENT_ORIENTATION * PRESENTATION_LOCAL_TRANSFORM
+- decisionApproach presentation transform
+- validation requiring parent inheritance
+- validation requiring decisionApproach
+- destinationType and destinationId from physical object identity
+- destination metadata from static fallback output
+
+Bounded compatibility retained:
+- buildBaselineMeshes remains an alias to buildModel
+- presentationTransforms.embedded remains an alias to fixedCenter
+- semanticHitEnvelope remains an alias to visualControlAlignmentEnvelope
+- legacy model ID is published as compatibility metadata
+
+Files modified:
+- /assets/compass/upstream-compass.geometry.js only
+
+Runtime execution:
+NOT PERFORMED
+
+Renderer compatibility:
+PENDING RENDERER INSPECTION
+
+Production authorization:
+FALSE
+
+Deployment authorization:
+FALSE
+*/

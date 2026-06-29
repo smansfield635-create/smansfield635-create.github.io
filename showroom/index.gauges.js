@@ -1,17 +1,28 @@
 /* TARGET FILE: /showroom/index.gauges.js */
 /* TNT FULL-FILE REPLACEMENT */
-/* SHOWROOM_MIRRORLAND_GAUGE_DASHBOARD_TNT_v1 */
+/* SHOWROOM_MIRRORLAND_COMPACT_GAUGE_DASHBOARD_TNT_v2 */
 /*
+  Controlling markup:
+  - /showroom/index.html
+  - SHOWROOM_MIRRORLAND_OFFICIAL_GATE_COMPACT_INSTRUCTIONS_AND_GAUGES_HTML_TNT_v5
+
   Scope:
-  - Discover and initialize Showroom gauge dashboards.
-  - Maintain one selected gauge inside each dashboard.
-  - Coordinate gauge buttons with their detail panels.
-  - Maintain composition-region selection.
+  - Discover and initialize compact Showroom gauge dashboards.
+  - Maintain exactly one selected gauge inside each dashboard.
+  - Coordinate compact metric, capability, and status selectors with one
+    shared detail panel per dashboard.
+  - Preserve aria-expanded correspondence without allowing a selected gauge
+    to collapse its shared detail panel.
+  - Maintain Diamond composition-region selection.
+  - Update the shared Diamond composition detail fields.
   - Maintain Platform / Engineering / Evidence tab selection.
-  - Trigger bounded entrance and exact-value roll-up presentation.
-  - Pause decorative gauge motion while a front is inactive.
+  - Preserve keyboard navigation with preventScroll focus behavior.
+  - Preserve bounded numeric roll-up for direct compact metric values.
+  - Pause decorative dashboard motion while a front is inactive.
   - Respect reduced-motion preferences.
-  - Publish readiness, state, failure, and disposal receipts.
+  - Preserve readiness, state, failure, disposal, and public API receipts.
+  - Avoid scrollIntoView, location-hash mutation, automatic document scrolling,
+    and focus behavior that moves the viewport.
 
   Does not own:
   - page-level front selection;
@@ -23,14 +34,15 @@
   - Mirrorland Window state;
   - Diamond motion, zoom, controls, camera, or lifecycle;
   - compositor camera, projection, or depth classification;
-  - crystal geometry, motion, or drawing.
+  - crystal geometry, motion, or drawing;
+  - disclosure opening or closing outside the gauge system.
 */
 
 (() => {
   "use strict";
 
   const CONTRACT =
-    "SHOWROOM_MIRRORLAND_GAUGE_DASHBOARD_TNT_v1";
+    "SHOWROOM_MIRRORLAND_COMPACT_GAUGE_DASHBOARD_TNT_v2";
 
   const SELECTORS = Object.freeze({
     root:
@@ -51,11 +63,26 @@
     detail:
       "[data-showroom-gauge-detail]",
 
+    sharedDetails:
+      "[data-showroom-gauge-details]",
+
     compositionGauge:
       "[data-showroom-composition-gauge]",
 
     compositionRegion:
       "[data-showroom-composition-region]",
+
+    compositionDetail:
+      "[data-showroom-composition-detail]",
+
+    compositionDetailIndex:
+      "[data-showroom-composition-detail-index]",
+
+    compositionDetailTitle:
+      "[data-showroom-composition-detail-title]",
+
+    compositionDetailDescription:
+      "[data-showroom-composition-detail-description]",
 
     informationTabs:
       "[data-showroom-information-tabs]",
@@ -92,9 +119,6 @@
     activeInformationTab:
       "data-active-information-tab",
 
-    controllerReady:
-      "data-showroom-controller-ready",
-
     frontState:
       "data-showroom-front-state"
   });
@@ -112,6 +136,7 @@
 
     listeners: [],
     observers: [],
+    animationFrames: new Set(),
 
     initialized: false,
     disposed: false,
@@ -130,37 +155,47 @@
     return String(value || "").trim();
   }
 
-  function setBooleanAttribute(element, name, value) {
+  function setBooleanAttribute(
+    element,
+    name,
+    value
+  ) {
     if (!element) {
       return;
     }
 
-    element.setAttribute(name, value ? "true" : "false");
+    element.setAttribute(
+      name,
+      value ? "true" : "false"
+    );
   }
 
   function isElementVisible(element) {
-    if (!element || !element.isConnected) {
-      return false;
-    }
-
-    if (element.hidden) {
-      return false;
-    }
-
-    const front = element.closest(SELECTORS.front);
-
-    if (front && front.hidden) {
-      return false;
-    }
-
     if (
-      front &&
-      front.getAttribute(ATTRIBUTES.frontState) === "inactive"
+      !element ||
+      !element.isConnected ||
+      element.hidden
     ) {
       return false;
     }
 
-    const style = window.getComputedStyle(element);
+    const front =
+      element.closest(SELECTORS.front);
+
+    if (
+      front &&
+      (
+        front.hidden ||
+        front.getAttribute(
+          ATTRIBUTES.frontState
+        ) === "inactive"
+      )
+    ) {
+      return false;
+    }
+
+    const style =
+      window.getComputedStyle(element);
 
     return (
       style.display !== "none" &&
@@ -168,62 +203,149 @@
     );
   }
 
-  function addListener(target, type, handler, options) {
-    target.addEventListener(type, handler, options);
+  function addListener(
+    target,
+    type,
+    handler,
+    options
+  ) {
+    if (
+      !target ||
+      typeof target.addEventListener !== "function"
+    ) {
+      return;
+    }
+
+    target.addEventListener(
+      type,
+      handler,
+      options
+    );
 
     STATE.listeners.push(() => {
-      target.removeEventListener(type, handler, options);
+      target.removeEventListener(
+        type,
+        handler,
+        options
+      );
     });
   }
 
   function addObserver(observer) {
-    STATE.observers.push(observer);
+    if (observer) {
+      STATE.observers.push(observer);
+    }
   }
 
-  function createReceiptPayload(eventName, extra = {}) {
+  function requestTrackedFrame(callback) {
+    const frameId =
+      window.requestAnimationFrame(
+        (timestamp) => {
+          STATE.animationFrames.delete(
+            frameId
+          );
+
+          callback(timestamp);
+        }
+      );
+
+    STATE.animationFrames.add(frameId);
+
+    return frameId;
+  }
+
+  function cancelTrackedFrames() {
+    for (
+      const frameId
+      of STATE.animationFrames
+    ) {
+      window.cancelAnimationFrame(
+        frameId
+      );
+    }
+
+    STATE.animationFrames.clear();
+  }
+
+  function createReceiptPayload(
+    eventName,
+    extra = {}
+  ) {
     return Object.freeze({
-      contract: CONTRACT,
-      event: eventName,
-      timestamp: nowIso(),
+      contract:
+        CONTRACT,
 
-      ready: STATE.initialized && !STATE.disposed,
-      disposed: STATE.disposed,
-      reducedMotion: STATE.reducedMotion,
+      event:
+        eventName,
 
-      dashboards: STATE.dashboards.size,
-      compositionGauges: STATE.compositionGauges.size,
-      informationGroups: STATE.informationGroups.size,
+      timestamp:
+        nowIso(),
 
-      fatalError: STATE.fatalError
-        ? {
-            name: STATE.fatalError.name,
-            message: STATE.fatalError.message
-          }
-        : null,
+      ready:
+        STATE.initialized &&
+        !STATE.disposed,
+
+      disposed:
+        STATE.disposed,
+
+      reducedMotion:
+        STATE.reducedMotion,
+
+      dashboards:
+        STATE.dashboards.size,
+
+      compositionGauges:
+        STATE.compositionGauges.size,
+
+      informationGroups:
+        STATE.informationGroups.size,
+
+      fatalError:
+        STATE.fatalError
+          ? {
+              name:
+                STATE.fatalError.name,
+
+              message:
+                STATE.fatalError.message
+            }
+          : null,
 
       ...extra
     });
   }
 
-  function publishReceipt(eventName, extra = {}) {
-    const payload = createReceiptPayload(
-      eventName,
-      extra
-    );
+  function publishReceipt(
+    eventName,
+    extra = {}
+  ) {
+    const payload =
+      createReceiptPayload(
+        eventName,
+        extra
+      );
 
     if (STATE.receipt) {
+      const serialized =
+        JSON.stringify(payload);
+
       STATE.receipt.value =
-        JSON.stringify(payload, null, 2);
+        JSON.stringify(
+          payload,
+          null,
+          2
+        );
 
       STATE.receipt.textContent =
-        JSON.stringify(payload);
+        serialized;
     }
 
     window.dispatchEvent(
       new CustomEvent(
         "showroom:gauges-receipt",
         {
-          detail: payload
+          detail:
+            payload
         }
       )
     );
@@ -240,6 +362,7 @@
       "recoverable-error",
       {
         scope,
+
         error: {
           name:
             error instanceof Error
@@ -261,7 +384,9 @@
     STATE.fatalError =
       error instanceof Error
         ? error
-        : new Error(String(error));
+        : new Error(
+            String(error)
+          );
 
     if (STATE.root) {
       STATE.root.setAttribute(
@@ -275,16 +400,25 @@
       );
     }
 
-    publishReceipt("fatal-error");
+    publishReceipt(
+      "fatal-error"
+    );
   }
 
   function resolveControlledElement(
     source,
     attributeName
   ) {
-    const id = normalizeText(
-      source.getAttribute(attributeName)
-    );
+    if (!source) {
+      return null;
+    }
+
+    const id =
+      normalizeText(
+        source.getAttribute(
+          attributeName
+        )
+      );
 
     if (!id) {
       return null;
@@ -293,26 +427,33 @@
     return document.getElementById(id);
   }
 
-  function validateGaugePair(gauge, detail) {
+  function validateGaugePair(
+    gauge,
+    detail
+  ) {
+    const gaugeId =
+      normalizeText(
+        gauge.getAttribute(
+          "data-gauge-id"
+        )
+      ) || "unknown";
+
     if (!detail) {
       throw new Error(
-        `Gauge "${normalizeText(
-          gauge.getAttribute("data-gauge-id")
-        ) || "unknown"}" has no matching detail panel.`
+        `Gauge "${gaugeId}" has no matching detail panel.`
       );
     }
 
-    const gaugeId = normalizeText(
-      gauge.getAttribute("data-gauge-id")
-    );
-
-    const detailId = normalizeText(
-      detail.getAttribute("data-gauge-detail-id")
-    );
+    const detailId =
+      normalizeText(
+        detail.getAttribute(
+          "data-gauge-detail-id"
+        )
+      );
 
     if (
-      gaugeId &&
       detailId &&
+      gaugeId !== "unknown" &&
       gaugeId !== detailId
     ) {
       throw new Error(
@@ -321,15 +462,49 @@
     }
   }
 
-  function getDashboardRecordFromGauge(gauge) {
+  function getDashboardRecordFromGauge(
+    gauge
+  ) {
     const dashboard =
-      gauge.closest(SELECTORS.dashboard);
+      gauge.closest(
+        SELECTORS.dashboard
+      );
 
     if (!dashboard) {
       return null;
     }
 
-    return STATE.dashboards.get(dashboard) || null;
+    return (
+      STATE.dashboards.get(
+        dashboard
+      ) || null
+    );
+  }
+
+  function focusWithoutScroll(element) {
+    if (
+      !element ||
+      typeof element.focus !== "function"
+    ) {
+      return;
+    }
+
+    try {
+      element.focus({
+        preventScroll: true
+      });
+    } catch {
+      element.focus();
+    }
+  }
+
+  function getGaugeId(gauge) {
+    return normalizeText(
+      gauge &&
+      gauge.getAttribute(
+        "data-gauge-id"
+      )
+    );
   }
 
   function selectGauge(
@@ -347,76 +522,73 @@
 
     const {
       focus = false,
-      allowCollapse = false,
       announce = true
     } = options;
 
-    const currentlySelected =
-      record.selectedGauge;
-
-    const selectedAgain =
-      currentlySelected === gauge;
-
-    if (
-      selectedAgain &&
-      allowCollapse
-    ) {
-      clearGaugeSelection(record, {
-        announce
-      });
-
-      return true;
-    }
-
     const detail =
-      record.detailByGauge.get(gauge);
+      record.detailByGauge.get(
+        gauge
+      );
 
     if (!detail) {
       return false;
     }
 
-    for (const candidate of record.gauges) {
-      const isSelected =
+    for (
+      const candidate
+      of record.gauges
+    ) {
+      const selected =
         candidate === gauge;
 
-      candidate.setAttribute(
+      setBooleanAttribute(
+        candidate,
         "aria-expanded",
-        isSelected ? "true" : "false"
+        selected
       );
 
       candidate.toggleAttribute(
         "data-gauge-selected",
-        isSelected
+        selected
       );
 
       const candidateDetail =
-        record.detailByGauge.get(candidate);
+        record.detailByGauge.get(
+          candidate
+        );
 
       if (candidateDetail) {
-        candidateDetail.hidden = !isSelected;
+        candidateDetail.hidden =
+          !selected;
 
-        candidateDetail.setAttribute(
+        setBooleanAttribute(
+          candidateDetail,
           "aria-hidden",
-          isSelected ? "false" : "true"
+          !selected
         );
       }
     }
 
-    record.selectedGauge = gauge;
+    record.selectedGauge =
+      gauge;
 
-    const gaugeId = normalizeText(
-      gauge.getAttribute("data-gauge-id")
-    );
+    const gaugeId =
+      getGaugeId(gauge);
 
     record.dashboard.setAttribute(
       ATTRIBUTES.selectedGauge,
       gaugeId
     );
 
+    if (record.sharedDetails) {
+      record.sharedDetails.setAttribute(
+        "data-active-gauge-detail",
+        gaugeId
+      );
+    }
+
     if (focus) {
-      gauge.focus({
-        preventScroll: true
-      });
+      focusWithoutScroll(gauge);
     }
 
     if (announce) {
@@ -434,63 +606,18 @@
     return true;
   }
 
-  function clearGaugeSelection(
-    record,
-    options = {}
-  ) {
-    if (!record || record.disposed) {
-      return;
-    }
-
-    for (const gauge of record.gauges) {
-      gauge.setAttribute(
-        "aria-expanded",
-        "false"
-      );
-
-      gauge.removeAttribute(
-        "data-gauge-selected"
-      );
-
-      const detail =
-        record.detailByGauge.get(gauge);
-
-      if (detail) {
-        detail.hidden = true;
-
-        detail.setAttribute(
-          "aria-hidden",
-          "true"
-        );
-      }
-    }
-
-    record.selectedGauge = null;
-
-    record.dashboard.removeAttribute(
-      ATTRIBUTES.selectedGauge
-    );
-
-    if (options.announce !== false) {
-      publishReceipt(
-        "gauge-selection-cleared",
-        {
-          dashboardId: record.id
-        }
-      );
-    }
-  }
-
   function selectAdjacentGauge(
     record,
     currentGauge,
     direction
   ) {
     const currentIndex =
-      record.gauges.indexOf(currentGauge);
+      record.gauges.indexOf(
+        currentGauge
+      );
 
     if (currentIndex < 0) {
-      return;
+      return false;
     }
 
     const nextIndex =
@@ -500,7 +627,7 @@
         record.gauges.length
       ) % record.gauges.length;
 
-    selectGauge(
+    return selectGauge(
       record,
       record.gauges[nextIndex],
       {
@@ -514,7 +641,9 @@
       event.currentTarget;
 
     const record =
-      getDashboardRecordFromGauge(gauge);
+      getDashboardRecordFromGauge(
+        gauge
+      );
 
     if (!record) {
       return;
@@ -569,27 +698,28 @@
         );
         break;
 
-      case "Escape":
-        if (
-          gauge.getAttribute(
-            "aria-expanded"
-          ) === "true"
-        ) {
-          event.preventDefault();
-
-          clearGaugeSelection(record);
-        }
-        break;
-
       default:
         break;
     }
   }
 
   function getNumericDisplayTarget(gauge) {
-    return gauge.querySelector(
-      ".showroom-gauge__value"
+    if (!gauge) {
+      return null;
+    }
+
+    return (
+      gauge.querySelector(
+        ".showroom-gauge__value"
+      ) ||
+      gauge.querySelector(
+        ":scope > strong"
+      )
     );
+  }
+
+  function isIntegerDisplayText(value) {
+    return /^[+-]?\d+$/.test(value);
   }
 
   function formatAnimatedValue(
@@ -597,7 +727,9 @@
     finalText
   ) {
     if (
-      /^[+-]?\d+$/.test(finalText)
+      isIntegerDisplayText(
+        finalText
+      )
     ) {
       return String(
         Math.round(value)
@@ -607,15 +739,13 @@
     return finalText;
   }
 
-  function animateNumericGauge(
-    record,
-    gauge
-  ) {
-    const rawValue = normalizeText(
-      gauge.getAttribute(
-        "data-gauge-value"
-      )
-    );
+  function setGaugeFinalValue(gauge) {
+    const rawValue =
+      normalizeText(
+        gauge.getAttribute(
+          "data-gauge-value"
+        )
+      );
 
     const finalText =
       normalizeText(
@@ -628,11 +758,65 @@
       Number(rawValue);
 
     const valueElement =
-      getNumericDisplayTarget(gauge);
+      getNumericDisplayTarget(
+        gauge
+      );
 
     if (
       !valueElement ||
-      !Number.isFinite(numericValue)
+      !Number.isFinite(
+        numericValue
+      )
+    ) {
+      return false;
+    }
+
+    valueElement.textContent =
+      finalText;
+
+    gauge.removeAttribute(
+      "data-gauge-counting"
+    );
+
+    gauge.setAttribute(
+      "data-gauge-counted",
+      "true"
+    );
+
+    return true;
+  }
+
+  function animateNumericGauge(
+    record,
+    gauge
+  ) {
+    const rawValue =
+      normalizeText(
+        gauge.getAttribute(
+          "data-gauge-value"
+        )
+      );
+
+    const finalText =
+      normalizeText(
+        gauge.getAttribute(
+          "data-gauge-display-value"
+        )
+      ) || rawValue;
+
+    const numericValue =
+      Number(rawValue);
+
+    const valueElement =
+      getNumericDisplayTarget(
+        gauge
+      );
+
+    if (
+      !valueElement ||
+      !Number.isFinite(
+        numericValue
+      )
     ) {
       return;
     }
@@ -643,18 +827,16 @@
         "data-gauge-counted"
       ) === "true"
     ) {
-      valueElement.textContent =
-        finalText;
-
-      gauge.setAttribute(
-        "data-gauge-counted",
-        "true"
+      setGaugeFinalValue(
+        gauge
       );
 
       return;
     }
 
-    const duration = 680;
+    const duration =
+      620;
+
     const startedAt =
       performance.now();
 
@@ -694,32 +876,28 @@
         );
 
       if (progress < 1) {
-        requestAnimationFrame(step);
+        requestTrackedFrame(step);
 
         return;
       }
 
-      valueElement.textContent =
-        finalText;
-
-      gauge.removeAttribute(
-        "data-gauge-counting"
-      );
-
-      gauge.setAttribute(
-        "data-gauge-counted",
-        "true"
+      setGaugeFinalValue(
+        gauge
       );
     };
 
-    requestAnimationFrame(step);
+    requestTrackedFrame(step);
   }
 
-  function triggerDashboardEntrance(record) {
+  function triggerDashboardEntrance(
+    record
+  ) {
     if (
       !record ||
       record.disposed ||
-      !isElementVisible(record.dashboard)
+      !isElementVisible(
+        record.dashboard
+      )
     ) {
       return;
     }
@@ -746,7 +924,7 @@
         "entering"
       );
 
-      window.requestAnimationFrame(() => {
+      requestTrackedFrame(() => {
         if (
           STATE.disposed ||
           record.disposed
@@ -766,7 +944,10 @@
       );
     }
 
-    for (const gauge of record.gauges) {
+    for (
+      const gauge
+      of record.gauges
+    ) {
       animateNumericGauge(
         record,
         gauge
@@ -775,7 +956,10 @@
   }
 
   function pauseDashboard(record) {
-    if (!record || record.disposed) {
+    if (
+      !record ||
+      record.disposed
+    ) {
       return;
     }
 
@@ -791,22 +975,37 @@
   }
 
   function refreshDashboardActivity() {
-    for (const record of STATE.dashboards.values()) {
-      if (isElementVisible(record.dashboard)) {
-        triggerDashboardEntrance(record);
+    for (
+      const record
+      of STATE.dashboards.values()
+    ) {
+      if (
+        isElementVisible(
+          record.dashboard
+        )
+      ) {
+        triggerDashboardEntrance(
+          record
+        );
       } else {
-        pauseDashboard(record);
+        pauseDashboard(
+          record
+        );
       }
     }
   }
 
-  function initializeDashboard(dashboard, index) {
+  function initializeDashboard(
+    dashboard,
+    index
+  ) {
     const id =
       normalizeText(
         dashboard.getAttribute(
           "data-gauge-dashboard-id"
         )
-      ) || `dashboard-${index + 1}`;
+      ) ||
+      `dashboard-${index + 1}`;
 
     const gauges =
       toArray(
@@ -815,15 +1014,23 @@
         )
       );
 
-    if (gauges.length === 0) {
+    if (
+      gauges.length === 0
+    ) {
       throw new Error(
         `Gauge dashboard "${id}" contains no gauges.`
       );
     }
 
+    const sharedDetails =
+      dashboard.querySelector(
+        SELECTORS.sharedDetails
+      );
+
     const record = {
       id,
       dashboard,
+      sharedDetails,
       gauges,
 
       detailByGauge:
@@ -836,7 +1043,10 @@
         false
     };
 
-    for (const gauge of gauges) {
+    for (
+      const gauge
+      of gauges
+    ) {
       const detail =
         resolveControlledElement(
           gauge,
@@ -857,15 +1067,13 @@
         gauge,
         "click",
         () => {
+          /*
+            Re-selecting the active gauge keeps its shared detail open.
+            Compact dashboards always retain exactly one active detail.
+          */
           selectGauge(
             record,
-            gauge,
-            {
-              allowCollapse:
-                gauge.getAttribute(
-                  "aria-expanded"
-                ) === "true"
-            }
+            gauge
           );
         }
       );
@@ -883,7 +1091,8 @@
           gauge.getAttribute(
             "aria-expanded"
           ) === "true"
-      ) || gauges[0];
+      ) ||
+      gauges[0];
 
     selectGauge(
       record,
@@ -901,6 +1110,106 @@
     return record;
   }
 
+  function readCompositionRegionData(
+    region
+  ) {
+    const children =
+      toArray(region.children);
+
+    const index =
+      normalizeText(
+        region.getAttribute(
+          "data-region-index"
+        )
+      ) ||
+      normalizeText(
+        children[0] &&
+        children[0].textContent
+      );
+
+    const title =
+      normalizeText(
+        region.getAttribute(
+          "data-region-title"
+        )
+      ) ||
+      normalizeText(
+        region.querySelector(
+          "strong"
+        )?.textContent
+      );
+
+    const description =
+      normalizeText(
+        region.getAttribute(
+          "data-region-description"
+        )
+      ) ||
+      normalizeText(
+        region.querySelector(
+          "small"
+        )?.textContent
+      );
+
+    return Object.freeze({
+      index,
+      title,
+      description
+    });
+  }
+
+  function updateCompositionDetail(
+    record,
+    region
+  ) {
+    if (
+      !record ||
+      !region
+    ) {
+      return;
+    }
+
+    const data =
+      readCompositionRegionData(
+        region
+      );
+
+    if (
+      record.detailIndex &&
+      data.index
+    ) {
+      record.detailIndex.textContent =
+        data.index;
+    }
+
+    if (
+      record.detailTitle &&
+      data.title
+    ) {
+      record.detailTitle.textContent =
+        data.title;
+    }
+
+    if (
+      record.detailDescription &&
+      data.description
+    ) {
+      record.detailDescription.textContent =
+        data.description;
+    }
+
+    if (record.detail) {
+      record.detail.setAttribute(
+        "data-active-composition-region",
+        normalizeText(
+          region.getAttribute(
+            "data-region-id"
+          )
+        )
+      );
+    }
+  }
+
   function selectCompositionRegion(
     record,
     region,
@@ -914,42 +1223,57 @@
       return false;
     }
 
-    for (const candidate of record.regions) {
+    for (
+      const candidate
+      of record.regions
+    ) {
       const selected =
         candidate === region;
 
-      candidate.setAttribute(
+      setBooleanAttribute(
+        candidate,
         "aria-pressed",
-        selected ? "true" : "false"
+        selected
       );
 
       candidate.toggleAttribute(
         "data-region-selected",
         selected
       );
+
+      candidate.tabIndex =
+        selected ? 0 : -1;
     }
 
     record.selectedRegion =
       region;
 
-    const regionId = normalizeText(
-      region.getAttribute(
-        "data-region-id"
-      )
-    );
+    const regionId =
+      normalizeText(
+        region.getAttribute(
+          "data-region-id"
+        )
+      );
 
     record.container.setAttribute(
       ATTRIBUTES.selectedRegion,
       regionId
     );
 
+    updateCompositionDetail(
+      record,
+      region
+    );
+
     if (options.focus) {
-      region.focus({
-        preventScroll: true
-      });
+      focusWithoutScroll(
+        region
+      );
     }
 
-    if (options.announce !== false) {
+    if (
+      options.announce !== false
+    ) {
       publishReceipt(
         "composition-region-selected",
         {
@@ -970,10 +1294,12 @@
     direction
   ) {
     const currentIndex =
-      record.regions.indexOf(current);
+      record.regions.indexOf(
+        current
+      );
 
     if (currentIndex < 0) {
-      return;
+      return false;
     }
 
     const nextIndex =
@@ -983,7 +1309,7 @@
         record.regions.length
       ) % record.regions.length;
 
-    selectCompositionRegion(
+    return selectCompositionRegion(
       record,
       record.regions[nextIndex],
       {
@@ -1001,7 +1327,8 @@
         container.getAttribute(
           "data-composition-id"
         )
-      ) || `composition-${index + 1}`;
+      ) ||
+      `composition-${index + 1}`;
 
     const regions =
       toArray(
@@ -1010,21 +1337,58 @@
         )
       );
 
-    if (regions.length === 0) {
+    if (
+      regions.length === 0
+    ) {
       throw new Error(
         `Composition gauge "${id}" contains no regions.`
       );
     }
 
+    const detail =
+      container.querySelector(
+        SELECTORS.compositionDetail
+      );
+
     const record = {
       id,
       container,
       regions,
-      selectedRegion: null,
-      disposed: false
+
+      detail,
+
+      detailIndex:
+        detail
+          ? detail.querySelector(
+              SELECTORS.compositionDetailIndex
+            )
+          : null,
+
+      detailTitle:
+        detail
+          ? detail.querySelector(
+              SELECTORS.compositionDetailTitle
+            )
+          : null,
+
+      detailDescription:
+        detail
+          ? detail.querySelector(
+              SELECTORS.compositionDetailDescription
+            )
+          : null,
+
+      selectedRegion:
+        null,
+
+      disposed:
+        false
     };
 
-    for (const region of regions) {
+    for (
+      const region
+      of regions
+    ) {
       addListener(
         region,
         "click",
@@ -1102,7 +1466,8 @@
           region.getAttribute(
             "aria-pressed"
           ) === "true"
-      ) || regions[0];
+      ) ||
+      regions[0];
 
     selectCompositionRegion(
       record,
@@ -1134,19 +1499,25 @@
     }
 
     const panel =
-      record.panelByTab.get(tab);
+      record.panelByTab.get(
+        tab
+      );
 
     if (!panel) {
       return false;
     }
 
-    for (const candidate of record.tabs) {
+    for (
+      const candidate
+      of record.tabs
+    ) {
       const selected =
         candidate === tab;
 
-      candidate.setAttribute(
+      setBooleanAttribute(
+        candidate,
         "aria-selected",
-        selected ? "true" : "false"
+        selected
       );
 
       candidate.tabIndex =
@@ -1158,26 +1529,31 @@
       );
 
       const candidatePanel =
-        record.panelByTab.get(candidate);
+        record.panelByTab.get(
+          candidate
+        );
 
       if (candidatePanel) {
         candidatePanel.hidden =
           !selected;
 
-        candidatePanel.setAttribute(
+        setBooleanAttribute(
+          candidatePanel,
           "aria-hidden",
-          selected ? "false" : "true"
+          !selected
         );
       }
     }
 
-    record.selectedTab = tab;
+    record.selectedTab =
+      tab;
 
-    const tabId = normalizeText(
-      tab.getAttribute(
-        "data-information-tab-id"
-      )
-    );
+    const tabId =
+      normalizeText(
+        tab.getAttribute(
+          "data-information-tab-id"
+        )
+      );
 
     record.container.setAttribute(
       ATTRIBUTES.activeInformationTab,
@@ -1192,12 +1568,14 @@
     }
 
     if (options.focus) {
-      tab.focus({
-        preventScroll: true
-      });
+      focusWithoutScroll(
+        tab
+      );
     }
 
-    if (options.announce !== false) {
+    if (
+      options.announce !== false
+    ) {
       publishReceipt(
         "information-tab-selected",
         {
@@ -1220,10 +1598,12 @@
     direction
   ) {
     const currentIndex =
-      record.tabs.indexOf(currentTab);
+      record.tabs.indexOf(
+        currentTab
+      );
 
     if (currentIndex < 0) {
-      return;
+      return false;
     }
 
     const nextIndex =
@@ -1233,7 +1613,7 @@
         record.tabs.length
       ) % record.tabs.length;
 
-    selectInformationTab(
+    return selectInformationTab(
       record,
       record.tabs[nextIndex],
       {
@@ -1251,7 +1631,8 @@
         container.getAttribute(
           "data-information-tabs-id"
         )
-      ) || `information-tabs-${index + 1}`;
+      ) ||
+      `information-tabs-${index + 1}`;
 
     const tabs =
       toArray(
@@ -1267,7 +1648,9 @@
         )
       );
 
-    if (tabs.length === 0) {
+    if (
+      tabs.length === 0
+    ) {
       throw new Error(
         `Information group "${id}" contains no tabs.`
       );
@@ -1289,7 +1672,10 @@
         false
     };
 
-    for (const tab of tabs) {
+    for (
+      const tab
+      of tabs
+    ) {
       const panel =
         resolveControlledElement(
           tab,
@@ -1388,7 +1774,8 @@
           tab.getAttribute(
             "aria-selected"
           ) === "true"
-      ) || tabs[0];
+      ) ||
+      tabs[0];
 
     selectInformationTab(
       record,
@@ -1422,7 +1809,10 @@
       );
     }
 
-    for (const record of STATE.dashboards.values()) {
+    for (
+      const record
+      of STATE.dashboards.values()
+    ) {
       record.dashboard.setAttribute(
         ATTRIBUTES.motion,
         STATE.reducedMotion
@@ -1435,38 +1825,13 @@
       );
 
       if (STATE.reducedMotion) {
-        for (const gauge of record.gauges) {
-          const rawValue =
-            normalizeText(
-              gauge.getAttribute(
-                "data-gauge-value"
-              )
-            );
-
-          const displayValue =
-            normalizeText(
-              gauge.getAttribute(
-                "data-gauge-display-value"
-              )
-            ) || rawValue;
-
-          const valueElement =
-            getNumericDisplayTarget(gauge);
-
-          if (
-            valueElement &&
-            Number.isFinite(
-              Number(rawValue)
-            )
-          ) {
-            valueElement.textContent =
-              displayValue;
-
-            gauge.setAttribute(
-              "data-gauge-counted",
-              "true"
-            );
-          }
+        for (
+          const gauge
+          of record.gauges
+        ) {
+          setGaugeFinalValue(
+            gauge
+          );
         }
       }
     }
@@ -1531,6 +1896,7 @@
           },
           {
             root: null,
+
             threshold: [
               0,
               0.05,
@@ -1539,8 +1905,13 @@
           }
         );
 
-      for (const front of fronts) {
-        intersectionObserver.observe(front);
+      for (
+        const front
+        of fronts
+      ) {
+        intersectionObserver.observe(
+          front
+        );
       }
 
       addObserver(
@@ -1561,7 +1932,10 @@
         }
       );
 
-    for (const target of mutationTargets) {
+    for (
+      const target
+      of mutationTargets
+    ) {
       if (!target) {
         continue;
       }
@@ -1569,7 +1943,9 @@
       mutationObserver.observe(
         target,
         {
-          attributes: true,
+          attributes:
+            true,
+
           attributeFilter: [
             "hidden",
             "inert",
@@ -1599,153 +1975,197 @@
   }
 
   function exposePublicApi() {
-    const api = Object.freeze({
-      contract:
-        CONTRACT,
+    const api =
+      Object.freeze({
+        contract:
+          CONTRACT,
 
-      getState() {
-        return createReceiptPayload(
-          "state-requested",
-          {
-            selectedGauges:
-              toArray(
-                STATE.dashboards.values()
-              ).map(
-                (record) => ({
-                  dashboardId:
-                    record.id,
+        getState() {
+          return createReceiptPayload(
+            "state-requested",
+            {
+              selectedGauges:
+                toArray(
+                  STATE.dashboards.values()
+                ).map(
+                  (record) => ({
+                    dashboardId:
+                      record.id,
 
-                  gaugeId:
-                    record.selectedGauge
-                      ? normalizeText(
-                          record.selectedGauge.getAttribute(
-                            "data-gauge-id"
+                    gaugeId:
+                      record.selectedGauge
+                        ? getGaugeId(
+                            record.selectedGauge
                           )
-                        )
-                      : null
-                })
-              ),
+                        : null
+                  })
+                ),
 
-            selectedRegions:
-              toArray(
-                STATE.compositionGauges.values()
-              ).map(
-                (record) => ({
-                  compositionId:
-                    record.id,
+              selectedRegions:
+                toArray(
+                  STATE.compositionGauges.values()
+                ).map(
+                  (record) => ({
+                    compositionId:
+                      record.id,
 
-                  regionId:
-                    record.selectedRegion
-                      ? normalizeText(
-                          record.selectedRegion.getAttribute(
-                            "data-region-id"
+                    regionId:
+                      record.selectedRegion
+                        ? normalizeText(
+                            record.selectedRegion.getAttribute(
+                              "data-region-id"
+                            )
                           )
-                        )
-                      : null
-                })
-              ),
+                        : null
+                  })
+                ),
 
-            selectedInformationTabs:
-              toArray(
-                STATE.informationGroups.values()
-              ).map(
-                (record) => ({
-                  informationGroupId:
-                    record.id,
+              selectedInformationTabs:
+                toArray(
+                  STATE.informationGroups.values()
+                ).map(
+                  (record) => ({
+                    informationGroupId:
+                      record.id,
 
-                  tabId:
-                    record.selectedTab
-                      ? normalizeText(
-                          record.selectedTab.getAttribute(
-                            "data-information-tab-id"
+                    tabId:
+                      record.selectedTab
+                        ? normalizeText(
+                            record.selectedTab.getAttribute(
+                              "data-information-tab-id"
+                            )
                           )
-                        )
-                      : null
-                })
-              )
-          }
-        );
-      },
-
-      refresh() {
-        refreshDashboardActivity();
-
-        return publishReceipt(
-          "manual-refresh"
-        );
-      },
-
-      selectGauge(
-        dashboardId,
-        gaugeId,
-        options = {}
-      ) {
-        const record =
-          toArray(
-            STATE.dashboards.values()
-          ).find(
-            (candidate) =>
-              candidate.id === dashboardId
+                        : null
+                  })
+                )
+            }
           );
+        },
 
-        if (!record) {
-          return false;
-        }
+        refresh() {
+          refreshDashboardActivity();
 
-        const gauge =
-          record.gauges.find(
-            (candidate) =>
-              candidate.getAttribute(
-                "data-gauge-id"
-              ) === gaugeId
+          return publishReceipt(
+            "manual-refresh"
           );
+        },
 
-        return selectGauge(
-          record,
-          gauge,
-          options
-        );
-      },
-
-      selectInformationTab(
-        tabId,
-        options = {}
-      ) {
-        for (
-          const record
-          of STATE.informationGroups.values()
+        selectGauge(
+          dashboardId,
+          gaugeId,
+          options = {}
         ) {
-          const tab =
-            record.tabs.find(
+          const record =
+            toArray(
+              STATE.dashboards.values()
+            ).find(
               (candidate) =>
-                candidate.getAttribute(
-                  "data-information-tab-id"
-                ) === tabId
+                candidate.id ===
+                dashboardId
             );
 
-          if (tab) {
-            return selectInformationTab(
-              record,
-              tab,
-              options
-            );
+          if (!record) {
+            return false;
           }
-        }
 
-        return false;
-      },
+          const gauge =
+            record.gauges.find(
+              (candidate) =>
+                getGaugeId(
+                  candidate
+                ) === gaugeId
+            );
 
-      dispose
-    });
+          return selectGauge(
+            record,
+            gauge,
+            options
+          );
+        },
+
+        selectCompositionRegion(
+          compositionId,
+          regionId,
+          options = {}
+        ) {
+          const record =
+            toArray(
+              STATE.compositionGauges.values()
+            ).find(
+              (candidate) =>
+                candidate.id ===
+                compositionId
+            );
+
+          if (!record) {
+            return false;
+          }
+
+          const region =
+            record.regions.find(
+              (candidate) =>
+                normalizeText(
+                  candidate.getAttribute(
+                    "data-region-id"
+                  )
+                ) === regionId
+            );
+
+          return selectCompositionRegion(
+            record,
+            region,
+            options
+          );
+        },
+
+        selectInformationTab(
+          tabId,
+          options = {}
+        ) {
+          for (
+            const record
+            of STATE.informationGroups.values()
+          ) {
+            const tab =
+              record.tabs.find(
+                (candidate) =>
+                  normalizeText(
+                    candidate.getAttribute(
+                      "data-information-tab-id"
+                    )
+                  ) === tabId
+              );
+
+            if (tab) {
+              return selectInformationTab(
+                record,
+                tab,
+                options
+              );
+            }
+          }
+
+          return false;
+        },
+
+        dispose
+      });
 
     Object.defineProperty(
       window,
       "SHOWROOM_GAUGES",
       {
-        configurable: true,
-        enumerable: false,
-        writable: false,
-        value: api
+        configurable:
+          true,
+
+        enumerable:
+          false,
+
+        writable:
+          false,
+
+        value:
+          api
       }
     );
   }
@@ -1832,7 +2252,15 @@
           } catch (error) {
             reportRecoverableError(
               "composition-initialization",
-              error
+              error,
+              {
+                compositionId:
+                  normalizeText(
+                    container.getAttribute(
+                      "data-composition-id"
+                    )
+                  ) || null
+              }
             );
           }
         }
@@ -1848,7 +2276,15 @@
           } catch (error) {
             reportRecoverableError(
               "information-tabs-initialization",
-              error
+              error,
+              {
+                informationGroupId:
+                  normalizeText(
+                    container.getAttribute(
+                      "data-information-tabs-id"
+                    )
+                  ) || null
+              }
             );
           }
         }
@@ -1857,7 +2293,8 @@
       initializeVisibilityObservers();
       exposePublicApi();
 
-      STATE.initialized = true;
+      STATE.initialized =
+        true;
 
       STATE.root.setAttribute(
         ATTRIBUTES.ready,
@@ -1884,6 +2321,14 @@
           dashboardIds:
             toArray(
               STATE.dashboards.values()
+            ).map(
+              (record) =>
+                record.id
+            ),
+
+          compositionIds:
+            toArray(
+              STATE.compositionGauges.values()
             ).map(
               (record) =>
                 record.id
@@ -1918,7 +2363,9 @@
         )
       );
     } catch (error) {
-      reportFatalError(error);
+      reportFatalError(
+        error
+      );
     }
   }
 
@@ -1927,7 +2374,10 @@
       return;
     }
 
-    STATE.disposed = true;
+    STATE.disposed =
+      true;
+
+    cancelTrackedFrames();
 
     for (
       const removeListener
@@ -1951,8 +2401,12 @@
       }
     }
 
-    for (const record of STATE.dashboards.values()) {
-      record.disposed = true;
+    for (
+      const record
+      of STATE.dashboards.values()
+    ) {
+      record.disposed =
+        true;
 
       record.dashboard.setAttribute(
         ATTRIBUTES.motion,
@@ -1964,14 +2418,16 @@
       const record
       of STATE.compositionGauges.values()
     ) {
-      record.disposed = true;
+      record.disposed =
+        true;
     }
 
     for (
       const record
       of STATE.informationGroups.values()
     ) {
-      record.disposed = true;
+      record.disposed =
+        true;
     }
 
     if (STATE.root) {
@@ -1986,7 +2442,9 @@
       );
     }
 
-    publishReceipt("disposed");
+    publishReceipt(
+      "disposed"
+    );
 
     try {
       delete window.SHOWROOM_GAUGES;
@@ -1996,7 +2454,8 @@
   }
 
   if (
-    document.readyState === "loading"
+    document.readyState ===
+    "loading"
   ) {
     document.addEventListener(
       "DOMContentLoaded",

@@ -370,22 +370,23 @@
             <div
               data-upstream-compass-mount
               data-upstream-compass-physical-projection="FIXED_CENTER_INDEPENDENT_SIBLING"
-              data-upstream-compass-semantic-model="LOCAL_RETURN_OPTIONS_ANCHOR"
+              data-upstream-compass-semantic-model="HOME_COMPASS_CONTROL"
               data-upstream-compass-presentation="fixed-center"
             >
-              <a
+              <button
                 class="archcoin-scene__upstream-compass-control"
+                type="button"
                 data-upstream-compass-control
-                href="#archcoin-compass-return-options"
-                aria-label="Open ARCHCOIN return options"
-                aria-controls="archcoin-compass-return-options"
+                aria-label="Select Main Compass return options"
+                aria-controls="archcoin-panel"
+                aria-expanded="false"
               >
                 <span
                   class="archcoin-scene__upstream-compass-fallback"
                   data-upstream-compass-fallback
                   aria-hidden="true"
                 ></span>
-              </a>
+              </button>
             </div>
           </div>
 
@@ -645,49 +646,18 @@
               Return to Orbit
             </span>
           </button>
+
+          <a
+            class="archcoin-action archcoin-action--secondary"
+            href="/index.html"
+            data-archcoin-return-home-compass
+            hidden
+          >
+            Return to Main Compass
+          </a>
         </div>
       </footer>
     </aside>
-
-    <section
-      id="archcoin-compass-return-options"
-      class="archcoin-compass-return"
-      aria-labelledby="archcoin-compass-return-title"
-      tabindex="-1"
-    >
-      <p class="archcoin-compass-return__eyebrow">
-        Compass return
-      </p>
-
-      <h2 id="archcoin-compass-return-title">
-        Choose where to return.
-      </h2>
-
-      <p>
-        Leave ARCHCOIN for the Main Compass, or return to the active ARCHCOIN
-        orbit without replacing the constellation.
-      </p>
-
-      <div class="archcoin-compass-return__actions">
-        <a
-          class="archcoin-action archcoin-action--primary"
-          href="/index.html"
-          data-archcoin-return-home-compass
-        >
-          Return to Main Compass
-        </a>
-
-        <a
-          class="archcoin-action archcoin-action--secondary"
-          href="#archcoin-compass"
-          data-archcoin-return-to-orbit
-        >
-          <span data-archcoin-return-to-orbit-label>
-            Return to Orbit
-          </span>
-        </a>
-      </div>
-    </section>
 
     <section
       class="archcoin-principles"

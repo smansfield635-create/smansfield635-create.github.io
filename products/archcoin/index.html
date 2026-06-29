@@ -30,7 +30,7 @@
 <body>
   <main
     id="archcoin"
-    class="archcoin-page"
+    class="archcoin-estate"
     data-archcoin-root
     data-archcoin-mode="CONSTELLATION"
     data-archcoin-controller-state="CONSTELLATION"
@@ -70,6 +70,7 @@
     data-archcoin-crystals-receipt=""
     data-archcoin-interactions-status="pending"
     data-archcoin-interactions-receipt=""
+    data-archcoin-presentation-status="pending"
   >
     <div
       class="archcoin-atmosphere"
@@ -81,227 +82,74 @@
     </div>
 
     <section
-      class="archcoin-threshold"
+      class="archcoin-estate__hall"
       aria-labelledby="archcoin-title"
     >
-      <div class="archcoin-threshold__identity">
-        <p class="archcoin-threshold__estate">
+      <header class="archcoin-estate__header">
+        <p class="archcoin-estate__kicker">
           Diamond Gate Bridge
         </p>
 
-        <p class="archcoin-threshold__classification">
-          Financial operating field
-        </p>
-      </div>
-
-      <div class="archcoin-threshold__statement">
-        <p class="archcoin-threshold__eyebrow">
-          ARCHCOIN
-        </p>
-
         <h1 id="archcoin-title">
-          The financial path begins by opening the right domain.
+          ARCHCOIN
         </h1>
 
-        <p class="archcoin-threshold__lead">
+        <p class="archcoin-estate__sentence">
           Agreement, incoming value, outgoing obligation, and distribution
           belong to one financial system. They do not belong to the same room.
         </p>
-      </div>
+      </header>
 
-      <div class="archcoin-threshold__invitation">
+      <section
+        class="archcoin-threshold"
+        aria-label="ARCHCOIN financial threshold"
+      >
         <p>
           ARCHCOIN separates the financial question before the system decides
           what should happen next.
         </p>
 
-        <a
-          class="archcoin-threshold__continue"
-          href="#archcoin-compass"
-        >
-          <span>
-            Continue to the operating field
-          </span>
+        <details class="archcoin-disclosure">
+          <summary>
+            Why the separation matters
+          </summary>
 
-          <span aria-hidden="true">
-            +
-          </span>
-        </a>
-      </div>
+          <div class="archcoin-disclosure__body">
+            <p>
+              Financial ambiguity increases when contract meaning, receivable
+              recognition, payable execution, and allocation logic are treated
+              as one undifferentiated process.
+            </p>
 
-      <details class="archcoin-threshold__context">
-        <summary>
-          Why the separation matters
-        </summary>
+            <p>
+              ARCHCOIN first identifies which domain owns the question. Each
+              domain then opens four navigable rooms: Overview, Engineering,
+              Platform, and Governance.
+            </p>
+          </div>
+        </details>
+      </section>
 
-        <div class="archcoin-threshold__context-body">
-          <p>
-            Financial problems become harder to resolve when contract meaning,
-            receivable recognition, payable execution, and allocation logic are
-            treated as one undifferentiated process.
-          </p>
-
-          <p>
-            ARCHCOIN identifies the domain that owns the question. Each domain
-            then opens four rooms: Overview, Engineering, Platform, and
-            Governance.
-          </p>
-        </div>
-      </details>
-    </section>
-
-    <section
-      class="archcoin-domain-introduction"
-      aria-labelledby="archcoin-domain-introduction-title"
-    >
-      <header class="archcoin-domain-introduction__heading">
-        <p class="archcoin-domain-introduction__eyebrow">
-          Four financial domains
+      <section
+        class="archcoin-operating-introduction"
+        aria-labelledby="archcoin-operating-title"
+      >
+        <p class="archcoin-estate__kicker">
+          Financial operating field
         </p>
 
-        <h2 id="archcoin-domain-introduction-title">
-          Begin where the question begins.
-        </h2>
-
-        <p>
-          Each domain answers a different financial question. Choose the one
-          that most closely matches the responsibility in front of you.
-        </p>
-      </header>
-
-      <div class="archcoin-domain-introduction__grid">
-        <a
-          class="archcoin-domain-card archcoin-domain-card--north"
-          href="#archcoin-compass"
-        >
-          <span class="archcoin-domain-card__coordinate">
-            North
-          </span>
-
-          <span class="archcoin-domain-card__name">
-            Contract
-          </span>
-
-          <strong>
-            What is agreed?
-          </strong>
-
-          <span>
-            Terms, obligations, interpretation, and authority.
-          </span>
-        </a>
-
-        <a
-          class="archcoin-domain-card archcoin-domain-card--east"
-          href="#archcoin-compass"
-        >
-          <span class="archcoin-domain-card__coordinate">
-            East
-          </span>
-
-          <span class="archcoin-domain-card__name">
-            Receivable
-          </span>
-
-          <strong>
-            What should arrive?
-          </strong>
-
-          <span>
-            Recognition, expected value, collection, and evidence.
-          </span>
-        </a>
-
-        <a
-          class="archcoin-domain-card archcoin-domain-card--south"
-          href="#archcoin-compass"
-        >
-          <span class="archcoin-domain-card__coordinate">
-            South
-          </span>
-
-          <span class="archcoin-domain-card__name">
-            Payable
-          </span>
-
-          <strong>
-            What must leave?
-          </strong>
-
-          <span>
-            Liability, approval, settlement, and outgoing value.
-          </span>
-        </a>
-
-        <a
-          class="archcoin-domain-card archcoin-domain-card--west"
-          href="#archcoin-compass"
-        >
-          <span class="archcoin-domain-card__coordinate">
-            West
-          </span>
-
-          <span class="archcoin-domain-card__name">
-            Allocation
-          </span>
-
-          <strong>
-            Where does it go next?
-          </strong>
-
-          <span>
-            Distribution, assignment, routing, and constraint.
-          </span>
-        </a>
-      </div>
-    </section>
-
-    <section
-      id="archcoin-compass"
-      class="archcoin-compass"
-      aria-labelledby="archcoin-compass-title"
-    >
-      <header class="archcoin-compass__header">
-        <p class="archcoin-compass__eyebrow">
-          ARCHCOIN Compass
-        </p>
-
-        <h2 id="archcoin-compass-title">
+        <h2 id="archcoin-operating-title">
           Follow the financial path.
         </h2>
 
         <p>
-          Open a cardinal domain, inspect its four rooms, and select the path
-          that most clearly matches the work in front of you.
+          Open a cardinal domain, inspect its four rooms, and choose the path
+          that most closely matches the responsibility in front of you.
         </p>
-      </header>
-
-      <div
-        class="archcoin-compass__legend"
-        aria-label="ARCHCOIN domain legend"
-      >
-        <span>
-          <b>N</b>
-          Contract
-        </span>
-
-        <span>
-          <b>E</b>
-          Receivable
-        </span>
-
-        <span>
-          <b>S</b>
-          Payable
-        </span>
-
-        <span>
-          <b>W</b>
-          Allocation
-        </span>
-      </div>
+      </section>
 
       <section
+        id="archcoin-compass"
         class="archcoin-scene"
         data-archcoin-scene
         aria-labelledby="archcoin-scene-title"
@@ -310,12 +158,12 @@
         <header class="archcoin-scene__header">
           <div>
             <p class="archcoin-scene__kicker">
-              Operating field
+              ARCHCOIN Compass
             </p>
 
-            <h3 id="archcoin-scene-title">
+            <h2 id="archcoin-scene-title">
               Choose a domain.
-            </h3>
+            </h2>
           </div>
 
           <p
@@ -411,7 +259,7 @@
               data-route="/products/archcoin/contract/"
               data-panel-title="Contract"
               data-panel-body="Contract is the path for agreement meaning, structure, obligation, and control."
-              data-panel-why="Choose Contract when the problem begins with terms, commitments, interpretation, or authority."
+              data-panel-why="Choose Contract when the question begins with terms, commitments, interpretation, or authority."
               aria-controls="archcoin-panel"
             >
               <span class="archcoin-coin__coordinate">
@@ -424,7 +272,7 @@
                 </strong>
 
                 <span class="archcoin-coin__function">
-                  Agreement
+                  What is agreed?
                 </span>
               </span>
             </button>
@@ -457,7 +305,7 @@
                 </strong>
 
                 <span class="archcoin-coin__function">
-                  Incoming value
+                  What should arrive?
                 </span>
               </span>
             </button>
@@ -490,7 +338,7 @@
                 </strong>
 
                 <span class="archcoin-coin__function">
-                  Outgoing obligation
+                  What must leave?
                 </span>
               </span>
             </button>
@@ -523,36 +371,32 @@
                 </strong>
 
                 <span class="archcoin-coin__function">
-                  Distribution
+                  Where does it go next?
                 </span>
               </span>
             </button>
           </div>
-        </div>
 
-        <div class="archcoin-scene__readout">
           <p
             id="archcoin-guidance"
             class="archcoin-guidance"
             data-archcoin-guidance
             aria-live="polite"
           >
-            Swipe across open space to rotate the constellation. Tap a cardinal
-            crystal or its label to open the domain.
+            Drag while holding to rotate. In an open domain, release a quick
+            horizontal swipe to return to the constellation.
           </p>
         </div>
       </section>
-    </section>
 
-    <aside
-      id="archcoin-panel"
-      class="archcoin-panel"
-      data-archcoin-panel
-      aria-labelledby="archcoin-panel-title"
-      aria-live="polite"
-      aria-atomic="true"
-    >
-      <header class="archcoin-panel__header">
+      <aside
+        id="archcoin-panel"
+        class="archcoin-panel"
+        data-archcoin-panel
+        aria-labelledby="archcoin-panel-title"
+        aria-live="polite"
+        aria-atomic="true"
+      >
         <p
           class="archcoin-panel__eyebrow"
           data-archcoin-panel-eyebrow
@@ -566,9 +410,7 @@
         >
           Choose a financial domain
         </h2>
-      </header>
 
-      <div class="archcoin-panel__body">
         <p
           class="archcoin-panel__purpose"
           data-archcoin-panel-purpose
@@ -620,9 +462,7 @@
             <dd data-archcoin-panel-lens>Overview</dd>
           </div>
         </dl>
-      </div>
 
-      <footer class="archcoin-panel__footer">
         <div class="archcoin-panel__actions">
           <button
             class="archcoin-action archcoin-action--primary"
@@ -658,520 +498,643 @@
             Return to Main Compass
           </a>
         </div>
-      </footer>
-    </aside>
+      </aside>
 
-    <section
-      class="archcoin-principles"
-      aria-labelledby="archcoin-principles-title"
-    >
-      <header class="archcoin-principles__header">
-        <p class="archcoin-principles__eyebrow">
-          Financial separation
+      <section
+        class="archcoin-discovery"
+        aria-labelledby="archcoin-discovery-title"
+      >
+        <header class="archcoin-discovery__header">
+          <p class="archcoin-estate__kicker">
+            Financial separation
+          </p>
+
+          <h2 id="archcoin-discovery-title">
+            Four questions. One connected system.
+          </h2>
+
+          <p>
+            The domains remain connected, but each owns a different stage of
+            financial responsibility.
+          </p>
+        </header>
+
+        <details class="archcoin-discovery__artifact">
+          <summary>
+            <span class="archcoin-discovery__artifact-title">
+              The ARCHCOIN separation model
+            </span>
+
+            <span class="archcoin-discovery__artifact-summary">
+              Agreement, recognition, settlement, and distribution remain
+              distinguishable before they become executable.
+            </span>
+          </summary>
+
+          <div
+            class="archcoin-lens-system"
+            data-archcoin-lens-set="separation-model"
+          >
+            <div
+              class="archcoin-lens-tabs"
+              role="tablist"
+              aria-label="ARCHCOIN separation model lenses"
+              data-archcoin-lens-count="5"
+            >
+              <button
+                id="archcoin-separation-practical-tab"
+                class="archcoin-lens-tab"
+                type="button"
+                role="tab"
+                aria-selected="true"
+                aria-controls="archcoin-separation-practical"
+                data-archcoin-lens-tab="practical"
+              >
+                Practical
+              </button>
+
+              <button
+                id="archcoin-separation-engineering-tab"
+                class="archcoin-lens-tab"
+                type="button"
+                role="tab"
+                aria-selected="false"
+                aria-controls="archcoin-separation-engineering"
+                data-archcoin-lens-tab="engineering"
+                tabindex="-1"
+              >
+                Engineering
+              </button>
+
+              <button
+                id="archcoin-separation-platform-tab"
+                class="archcoin-lens-tab"
+                type="button"
+                role="tab"
+                aria-selected="false"
+                aria-controls="archcoin-separation-platform"
+                data-archcoin-lens-tab="platform"
+                tabindex="-1"
+              >
+                Platform
+              </button>
+
+              <button
+                id="archcoin-separation-governance-tab"
+                class="archcoin-lens-tab"
+                type="button"
+                role="tab"
+                aria-selected="false"
+                aria-controls="archcoin-separation-governance"
+                data-archcoin-lens-tab="governance"
+                tabindex="-1"
+              >
+                Governance
+              </button>
+
+              <button
+                id="archcoin-separation-evidence-tab"
+                class="archcoin-lens-tab"
+                type="button"
+                role="tab"
+                aria-selected="false"
+                aria-controls="archcoin-separation-evidence"
+                data-archcoin-lens-tab="evidence"
+                tabindex="-1"
+              >
+                Evidence
+              </button>
+            </div>
+
+            <div
+              id="archcoin-separation-practical"
+              class="archcoin-lens-panel"
+              role="tabpanel"
+              aria-labelledby="archcoin-separation-practical-tab"
+              data-archcoin-lens-panel="practical"
+            >
+              <p>
+                A financial problem becomes easier to resolve when the first
+                question is not “What screen should we open?” but “What kind
+                of responsibility is this?”
+              </p>
+
+              <dl class="archcoin-domain-questions">
+                <div>
+                  <dt>Contract</dt>
+                  <dd>What is agreed?</dd>
+                </div>
+
+                <div>
+                  <dt>Receivable</dt>
+                  <dd>What should arrive?</dd>
+                </div>
+
+                <div>
+                  <dt>Payable</dt>
+                  <dd>What must leave?</dd>
+                </div>
+
+                <div>
+                  <dt>Allocation</dt>
+                  <dd>Where does it go next?</dd>
+                </div>
+              </dl>
+            </div>
+
+            <div
+              id="archcoin-separation-engineering"
+              class="archcoin-lens-panel"
+              role="tabpanel"
+              aria-labelledby="archcoin-separation-engineering-tab"
+              data-archcoin-lens-panel="engineering"
+              hidden
+            >
+              <p>
+                Engineering defines exact rules, state transitions,
+                validations, posting sequence, settlement logic, routing
+                behavior, and failure handling inside each domain.
+              </p>
+
+              <p>
+                Separating the domains prevents contract interpretation from
+                being hidden inside collection logic, payment execution, or
+                downstream allocation.
+              </p>
+            </div>
+
+            <div
+              id="archcoin-separation-platform"
+              class="archcoin-lens-panel"
+              role="tabpanel"
+              aria-labelledby="archcoin-separation-platform-tab"
+              data-archcoin-lens-panel="platform"
+              hidden
+            >
+              <p>
+                Platform expression determines how each financial domain
+                appears through dashboards, workflows, statuses, controls,
+                alerts, and user-facing operating surfaces.
+              </p>
+
+              <p>
+                The platform may connect the domains without flattening them
+                into one indistinguishable process.
+              </p>
+            </div>
+
+            <div
+              id="archcoin-separation-governance"
+              class="archcoin-lens-panel"
+              role="tabpanel"
+              aria-labelledby="archcoin-separation-governance-tab"
+              data-archcoin-lens-panel="governance"
+              hidden
+            >
+              <p>
+                Governance determines who may interpret agreement terms,
+                recognize incoming value, authorize outgoing settlement, and
+                redirect allocated value.
+              </p>
+
+              <p>
+                Approval, audit, exception handling, and change authority
+                remain explicit rather than being implied by system access.
+              </p>
+            </div>
+
+            <div
+              id="archcoin-separation-evidence"
+              class="archcoin-lens-panel"
+              role="tabpanel"
+              aria-labelledby="archcoin-separation-evidence-tab"
+              data-archcoin-lens-panel="evidence"
+              hidden
+            >
+              <p>
+                The current ARCHCOIN surface presents an architectural and
+                operating model. It does not claim that every financial
+                implementation, accounting jurisdiction, or organizational
+                process has already been empirically validated against it.
+              </p>
+
+              <p>
+                Evidence status, implementation verification, and production
+                authorization remain separate from visual presentation.
+              </p>
+            </div>
+          </div>
+        </details>
+      </section>
+
+      <section
+        class="archcoin-closing"
+        aria-label="ARCHCOIN closing invitation"
+      >
+        <p class="archcoin-estate__kicker">
+          Begin the journey
         </p>
-
-        <h2 id="archcoin-principles-title">
-          Four questions. Four domains.
-        </h2>
 
         <p>
-          The correct domain reduces ambiguity before implementation begins.
+          Choose the domain that owns the question. One correct room is enough
+          to begin.
         </p>
-      </header>
 
-      <div class="archcoin-principles__list">
-        <details class="archcoin-principle">
-          <summary>
-            <span>
-              <small>North</small>
-              Contract
-            </span>
+        <a href="#archcoin-compass">
+          Return to the ARCHCOIN Compass
+        </a>
+      </section>
 
-            <span aria-hidden="true">
-              +
-            </span>
-          </summary>
+      <section
+        class="archcoin-room-declarations"
+        data-archcoin-room-declarations
+        hidden
+        aria-hidden="true"
+      >
+        <div
+          data-archcoin-wing-group="north"
+          data-title="Contract"
+        >
+          <a
+            href="/products/archcoin/contract/overview/"
+            data-archcoin-room
+            data-archcoin-destination
+            data-wing="north"
+            data-room-id="contract-overview"
+            data-destination-type="room"
+            data-destination-id="contract-overview"
+            data-content-id="contract-overview"
+            data-lens="overview"
+            data-label="Contract Overview"
+            data-route="/products/archcoin/contract/overview/"
+            data-local-coordinate="Contract / Overview"
+            data-local-function="Overview"
+            data-preview="Contract Overview introduces the agreement layer at the highest level so a team can clarify what the contract domain is responsible for before going deeper."
+            data-why-enter="Enter this room when the first need is orientation: what the contract domain covers, why it matters, and which deeper room should follow."
+          >
+            Contract Overview
+          </a>
 
-          <div class="archcoin-principle__body">
-            <h3>
-              What is agreed?
-            </h3>
+          <a
+            href="/products/archcoin/contract/engineering/"
+            data-archcoin-room
+            data-archcoin-destination
+            data-wing="north"
+            data-room-id="contract-engineering"
+            data-destination-type="room"
+            data-destination-id="contract-engineering"
+            data-content-id="contract-engineering"
+            data-lens="engineering"
+            data-label="Contract Engineering"
+            data-route="/products/archcoin/contract/engineering/"
+            data-local-coordinate="Contract / Engineering"
+            data-local-function="Engineering"
+            data-preview="Contract Engineering focuses on how agreement logic is translated into exact rules, validations, and operational behavior inside the system."
+            data-why-enter="Enter this room when the contract must be understood as implementation rather than summary."
+          >
+            Contract Engineering
+          </a>
 
-            <p>
-              Contract defines meaning, obligation, interpretation, and
-              authority before the system executes financial movement.
-            </p>
+          <a
+            href="/products/archcoin/contract/platform/"
+            data-archcoin-room
+            data-archcoin-destination
+            data-wing="north"
+            data-room-id="contract-platform"
+            data-destination-type="room"
+            data-destination-id="contract-platform"
+            data-content-id="contract-platform"
+            data-lens="platform"
+            data-label="Contract Platform"
+            data-route="/products/archcoin/contract/platform/"
+            data-local-coordinate="Contract / Platform"
+            data-local-function="Platform"
+            data-preview="Contract Platform shows how the agreement layer appears on the product surface, inside workflows, and across the visible operational environment."
+            data-why-enter="Enter this room when the question is how contract logic becomes visible and actionable on the platform."
+          >
+            Contract Platform
+          </a>
 
-            <a href="#archcoin-compass">
-              Find Contract
-            </a>
-          </div>
-        </details>
+          <a
+            href="/products/archcoin/contract/governance/"
+            data-archcoin-room
+            data-archcoin-destination
+            data-wing="north"
+            data-room-id="contract-governance"
+            data-destination-type="room"
+            data-destination-id="contract-governance"
+            data-content-id="contract-governance"
+            data-lens="governance"
+            data-label="Contract Governance"
+            data-route="/products/archcoin/contract/governance/"
+            data-local-coordinate="Contract / Governance"
+            data-local-function="Governance"
+            data-preview="Contract Governance addresses authority, approval, audit, and control boundaries governing how the agreement layer may be changed or interpreted."
+            data-why-enter="Enter this room when the core issue is who may decide, verify, or constrain movement in the contract domain."
+          >
+            Contract Governance
+          </a>
+        </div>
 
-        <details class="archcoin-principle">
-          <summary>
-            <span>
-              <small>East</small>
-              Receivable
-            </span>
+        <div
+          data-archcoin-wing-group="east"
+          data-title="Receivable"
+        >
+          <a
+            href="/products/archcoin/receivable/overview/"
+            data-archcoin-room
+            data-archcoin-destination
+            data-wing="east"
+            data-room-id="receivable-overview"
+            data-destination-type="room"
+            data-destination-id="receivable-overview"
+            data-content-id="receivable-overview"
+            data-lens="overview"
+            data-label="Receivable Overview"
+            data-route="/products/archcoin/receivable/overview/"
+            data-local-coordinate="Receivable / Overview"
+            data-local-function="Overview"
+            data-preview="Receivable Overview introduces the incoming-value domain so the team can understand what should arrive, why it matters, and which deeper room should be opened next."
+            data-why-enter="Enter this room when the first need is domain orientation rather than implementation detail."
+          >
+            Receivable Overview
+          </a>
 
-            <span aria-hidden="true">
-              +
-            </span>
-          </summary>
+          <a
+            href="/products/archcoin/receivable/engineering/"
+            data-archcoin-room
+            data-archcoin-destination
+            data-wing="east"
+            data-room-id="receivable-engineering"
+            data-destination-type="room"
+            data-destination-id="receivable-engineering"
+            data-content-id="receivable-engineering"
+            data-lens="engineering"
+            data-label="Receivable Engineering"
+            data-route="/products/archcoin/receivable/engineering/"
+            data-local-coordinate="Receivable / Engineering"
+            data-local-function="Engineering"
+            data-preview="Receivable Engineering focuses on recognition rules, posting sequence, timing logic, and the system behavior that governs incoming value."
+            data-why-enter="Enter this room when the issue is how receivable logic is implemented and enforced."
+          >
+            Receivable Engineering
+          </a>
 
-          <div class="archcoin-principle__body">
-            <h3>
-              What should arrive?
-            </h3>
+          <a
+            href="/products/archcoin/receivable/platform/"
+            data-archcoin-room
+            data-archcoin-destination
+            data-wing="east"
+            data-room-id="receivable-platform"
+            data-destination-type="room"
+            data-destination-id="receivable-platform"
+            data-content-id="receivable-platform"
+            data-lens="platform"
+            data-label="Receivable Platform"
+            data-route="/products/archcoin/receivable/platform/"
+            data-local-coordinate="Receivable / Platform"
+            data-local-function="Platform"
+            data-preview="Receivable Platform shows where receivable behavior becomes visible inside dashboards, workflows, statuses, and user-facing financial operations."
+            data-why-enter="Enter this room when the concern is how incoming-value logic appears on the platform surface."
+          >
+            Receivable Platform
+          </a>
 
-            <p>
-              Receivable governs recognition, collection, expected value, and
-              the evidence that an incoming amount is valid.
-            </p>
+          <a
+            href="/products/archcoin/receivable/governance/"
+            data-archcoin-room
+            data-archcoin-destination
+            data-wing="east"
+            data-room-id="receivable-governance"
+            data-destination-type="room"
+            data-destination-id="receivable-governance"
+            data-content-id="receivable-governance"
+            data-lens="governance"
+            data-label="Receivable Governance"
+            data-route="/products/archcoin/receivable/governance/"
+            data-local-coordinate="Receivable / Governance"
+            data-local-function="Governance"
+            data-preview="Receivable Governance addresses approval, exception handling, control boundaries, and audit responsibility for incoming-value processes."
+            data-why-enter="Enter this room when the real issue is who may authorize, revise, or govern receivable recognition."
+          >
+            Receivable Governance
+          </a>
+        </div>
 
-            <a href="#archcoin-compass">
-              Find Receivable
-            </a>
-          </div>
-        </details>
+        <div
+          data-archcoin-wing-group="south"
+          data-title="Payable"
+        >
+          <a
+            href="/products/archcoin/payable/overview/"
+            data-archcoin-room
+            data-archcoin-destination
+            data-wing="south"
+            data-room-id="payable-overview"
+            data-destination-type="room"
+            data-destination-id="payable-overview"
+            data-content-id="payable-overview"
+            data-lens="overview"
+            data-label="Payable Overview"
+            data-route="/products/archcoin/payable/overview/"
+            data-local-coordinate="Payable / Overview"
+            data-local-function="Overview"
+            data-preview="Payable Overview introduces the outgoing-obligation domain so the team can orient to what must be paid, why it exists, and which deeper room should follow."
+            data-why-enter="Enter this room when the first need is to understand the payable domain before moving into execution detail."
+          >
+            Payable Overview
+          </a>
 
-        <details class="archcoin-principle">
-          <summary>
-            <span>
-              <small>South</small>
-              Payable
-            </span>
+          <a
+            href="/products/archcoin/payable/engineering/"
+            data-archcoin-room
+            data-archcoin-destination
+            data-wing="south"
+            data-room-id="payable-engineering"
+            data-destination-type="room"
+            data-destination-id="payable-engineering"
+            data-content-id="payable-engineering"
+            data-lens="engineering"
+            data-label="Payable Engineering"
+            data-route="/products/archcoin/payable/engineering/"
+            data-local-coordinate="Payable / Engineering"
+            data-local-function="Engineering"
+            data-preview="Payable Engineering focuses on settlement logic, timing, validation, and the exact system behavior that executes outgoing obligation."
+            data-why-enter="Enter this room when the question is how payable behavior gets implemented and controlled."
+          >
+            Payable Engineering
+          </a>
 
-            <span aria-hidden="true">
-              +
-            </span>
-          </summary>
+          <a
+            href="/products/archcoin/payable/platform/"
+            data-archcoin-room
+            data-archcoin-destination
+            data-wing="south"
+            data-room-id="payable-platform"
+            data-destination-type="room"
+            data-destination-id="payable-platform"
+            data-content-id="payable-platform"
+            data-lens="platform"
+            data-label="Payable Platform"
+            data-route="/products/archcoin/payable/platform/"
+            data-local-coordinate="Payable / Platform"
+            data-local-function="Platform"
+            data-preview="Payable Platform shows where payment logic becomes visible inside workflows, operational screens, status surfaces, and execution pathways."
+            data-why-enter="Enter this room when the question is how outgoing obligation appears on the platform."
+          >
+            Payable Platform
+          </a>
 
-          <div class="archcoin-principle__body">
-            <h3>
-              What must leave?
-            </h3>
+          <a
+            href="/products/archcoin/payable/governance/"
+            data-archcoin-room
+            data-archcoin-destination
+            data-wing="south"
+            data-room-id="payable-governance"
+            data-destination-type="room"
+            data-destination-id="payable-governance"
+            data-content-id="payable-governance"
+            data-lens="governance"
+            data-label="Payable Governance"
+            data-route="/products/archcoin/payable/governance/"
+            data-local-coordinate="Payable / Governance"
+            data-local-function="Governance"
+            data-preview="Payable Governance addresses authority, approval, audit, and control boundaries governing outgoing obligation and payment execution."
+            data-why-enter="Enter this room when the central question is who may authorize settlement and what constrains the process."
+          >
+            Payable Governance
+          </a>
+        </div>
 
-            <p>
-              Payable governs liability, approval, settlement, timing, and the
-              controlled release of outgoing value.
-            </p>
+        <div
+          data-archcoin-wing-group="west"
+          data-title="Allocation"
+        >
+          <a
+            href="/products/archcoin/allocation/overview/"
+            data-archcoin-room
+            data-archcoin-destination
+            data-wing="west"
+            data-room-id="allocation-overview"
+            data-destination-type="room"
+            data-destination-id="allocation-overview"
+            data-content-id="allocation-overview"
+            data-lens="overview"
+            data-label="Allocation Overview"
+            data-route="/products/archcoin/allocation/overview/"
+            data-local-coordinate="Allocation / Overview"
+            data-local-function="Overview"
+            data-preview="Allocation Overview introduces the distribution domain so the team can understand how value gets routed, partitioned, and constrained after recognition."
+            data-why-enter="Enter this room when the first need is to understand the allocation domain before moving into execution or authority."
+          >
+            Allocation Overview
+          </a>
 
-            <a href="#archcoin-compass">
-              Find Payable
-            </a>
-          </div>
-        </details>
+          <a
+            href="/products/archcoin/allocation/engineering/"
+            data-archcoin-room
+            data-archcoin-destination
+            data-wing="west"
+            data-room-id="allocation-engineering"
+            data-destination-type="room"
+            data-destination-id="allocation-engineering"
+            data-content-id="allocation-engineering"
+            data-lens="engineering"
+            data-label="Allocation Engineering"
+            data-route="/products/archcoin/allocation/engineering/"
+            data-local-coordinate="Allocation / Engineering"
+            data-local-function="Engineering"
+            data-preview="Allocation Engineering focuses on the rules, transformations, and technical mechanisms that determine where value goes next."
+            data-why-enter="Enter this room when the issue is how distribution logic is actually implemented."
+          >
+            Allocation Engineering
+          </a>
 
-        <details class="archcoin-principle">
-          <summary>
-            <span>
-              <small>West</small>
-              Allocation
-            </span>
+          <a
+            href="/products/archcoin/allocation/platform/"
+            data-archcoin-room
+            data-archcoin-destination
+            data-wing="west"
+            data-room-id="allocation-platform"
+            data-destination-type="room"
+            data-destination-id="allocation-platform"
+            data-content-id="allocation-platform"
+            data-lens="platform"
+            data-label="Allocation Platform"
+            data-route="/products/archcoin/allocation/platform/"
+            data-local-coordinate="Allocation / Platform"
+            data-local-function="Platform"
+            data-preview="Allocation Platform shows how value-routing and distribution logic appear inside workflows, screens, dashboards, and user-facing operational surfaces."
+            data-why-enter="Enter this room when the question is how allocation becomes visible and actionable on the platform."
+          >
+            Allocation Platform
+          </a>
 
-            <span aria-hidden="true">
-              +
-            </span>
-          </summary>
+          <a
+            href="/products/archcoin/allocation/governance/"
+            data-archcoin-room
+            data-archcoin-destination
+            data-wing="west"
+            data-room-id="allocation-governance"
+            data-destination-type="room"
+            data-destination-id="allocation-governance"
+            data-content-id="allocation-governance"
+            data-lens="governance"
+            data-label="Allocation Governance"
+            data-route="/products/archcoin/allocation/governance/"
+            data-local-coordinate="Allocation / Governance"
+            data-local-function="Governance"
+            data-preview="Allocation Governance addresses authority, exception handling, audit, and control boundaries shaping how value may be distributed or redirected."
+            data-why-enter="Enter this room when the real issue is who may govern distribution behavior and how change is constrained."
+          >
+            Allocation Governance
+          </a>
+        </div>
+      </section>
 
-          <div class="archcoin-principle__body">
-            <h3>
-              Where does it go next?
-            </h3>
+      <section
+        class="archcoin-receipts"
+        hidden
+        aria-hidden="true"
+      >
+        <output
+          data-archcoin-controller-receipt
+          data-visual-pass-claimed="false"
+        ></output>
 
-            <p>
-              Allocation governs distribution, downstream assignment,
-              constraints, and the routing of recognized value.
-            </p>
+        <output
+          data-archcoin-controller-validation
+          data-visual-pass-claimed="false"
+        ></output>
 
-            <a href="#archcoin-compass">
-              Find Allocation
-            </a>
-          </div>
-        </details>
-      </div>
-    </section>
+        <output
+          data-archcoin-compositor-receipt
+          data-visual-pass-claimed="false"
+        ></output>
 
-    <section
-      class="archcoin-journey"
-      aria-labelledby="archcoin-journey-title"
-    >
-      <p class="archcoin-journey__eyebrow">
-        Begin the journey
+        <output
+          data-archcoin-crystals-receipt
+          data-visual-pass-claimed="false"
+        ></output>
+
+        <output
+          data-archcoin-interactions-receipt
+          data-visual-pass-claimed="false"
+        ></output>
+
+        <output
+          data-archcoin-presentation-receipt
+          data-visual-pass-claimed="false"
+        ></output>
+      </section>
+
+      <p class="archcoin-accessibility-note">
+        Drag inside the operating field to rotate the active constellation or
+        room cluster. Tap a cardinal crystal or label to open its domain. Tap a
+        room crystal to inspect its path. In an open domain, a quick horizontal
+        swipe evaluated on release returns to the constellation. The centered
+        Compass opens the return path to the Main Compass.
       </p>
-
-      <h2 id="archcoin-journey-title">
-        The correct financial room is enough.
-      </h2>
-
-      <p>
-        Return to the operating field, choose the domain that owns the
-        question, and move one room deeper.
-      </p>
-
-      <a href="#archcoin-compass">
-        Return to the ARCHCOIN Compass
-      </a>
-    </section>
-
-    <section
-      class="archcoin-room-declarations"
-      data-archcoin-room-declarations
-      hidden
-      aria-hidden="true"
-    >
-      <a
-        href="/products/archcoin/contract/overview/"
-        data-archcoin-room
-        data-archcoin-destination
-        data-wing="north"
-        data-room-id="contract-overview"
-        data-destination-type="room"
-        data-destination-id="contract-overview"
-        data-content-id="contract-overview"
-        data-lens="overview"
-        data-label="Contract Overview"
-        data-route="/products/archcoin/contract/overview/"
-        data-local-coordinate="Contract / Overview"
-        data-local-function="Overview"
-        data-preview="Contract Overview introduces the agreement layer at the highest level so a team can clarify what the contract domain is responsible for before going deeper."
-        data-why-enter="Enter this room when the first need is orientation: what the contract domain covers, why it matters, and which deeper room should follow."
-      >
-        Contract Overview
-      </a>
-
-      <a
-        href="/products/archcoin/contract/engineering/"
-        data-archcoin-room
-        data-archcoin-destination
-        data-wing="north"
-        data-room-id="contract-engineering"
-        data-destination-type="room"
-        data-destination-id="contract-engineering"
-        data-content-id="contract-engineering"
-        data-lens="overview"
-        data-label="Contract Engineering"
-        data-route="/products/archcoin/contract/engineering/"
-        data-local-coordinate="Contract / Engineering"
-        data-local-function="Engineering"
-        data-preview="Contract Engineering focuses on how agreement logic is translated into exact rules, validations, and operational behavior inside the system."
-        data-why-enter="Enter this room when the contract must be understood as implementation rather than summary."
-      >
-        Contract Engineering
-      </a>
-
-      <a
-        href="/products/archcoin/contract/platform/"
-        data-archcoin-room
-        data-archcoin-destination
-        data-wing="north"
-        data-room-id="contract-platform"
-        data-destination-type="room"
-        data-destination-id="contract-platform"
-        data-content-id="contract-platform"
-        data-lens="overview"
-        data-label="Contract Platform"
-        data-route="/products/archcoin/contract/platform/"
-        data-local-coordinate="Contract / Platform"
-        data-local-function="Platform"
-        data-preview="Contract Platform shows how the agreement layer appears on the product surface, inside workflows, and across the visible operational environment."
-        data-why-enter="Enter this room when the question is how contract logic becomes visible and actionable on the platform."
-      >
-        Contract Platform
-      </a>
-
-      <a
-        href="/products/archcoin/contract/governance/"
-        data-archcoin-room
-        data-archcoin-destination
-        data-wing="north"
-        data-room-id="contract-governance"
-        data-destination-type="room"
-        data-destination-id="contract-governance"
-        data-content-id="contract-governance"
-        data-lens="overview"
-        data-label="Contract Governance"
-        data-route="/products/archcoin/contract/governance/"
-        data-local-coordinate="Contract / Governance"
-        data-local-function="Governance"
-        data-preview="Contract Governance addresses authority, approval, audit, and control boundaries governing how the agreement layer may be changed or interpreted."
-        data-why-enter="Enter this room when the core issue is who may decide, verify, or constrain movement in the contract domain."
-      >
-        Contract Governance
-      </a>
-
-      <a
-        href="/products/archcoin/receivable/overview/"
-        data-archcoin-room
-        data-archcoin-destination
-        data-wing="east"
-        data-room-id="receivable-overview"
-        data-destination-type="room"
-        data-destination-id="receivable-overview"
-        data-content-id="receivable-overview"
-        data-lens="overview"
-        data-label="Receivable Overview"
-        data-route="/products/archcoin/receivable/overview/"
-        data-local-coordinate="Receivable / Overview"
-        data-local-function="Overview"
-        data-preview="Receivable Overview introduces the incoming-value domain so the team can understand what should arrive, why it matters, and which deeper room should be opened next."
-        data-why-enter="Enter this room when the first need is domain orientation rather than implementation detail."
-      >
-        Receivable Overview
-      </a>
-
-      <a
-        href="/products/archcoin/receivable/engineering/"
-        data-archcoin-room
-        data-archcoin-destination
-        data-wing="east"
-        data-room-id="receivable-engineering"
-        data-destination-type="room"
-        data-destination-id="receivable-engineering"
-        data-content-id="receivable-engineering"
-        data-lens="overview"
-        data-label="Receivable Engineering"
-        data-route="/products/archcoin/receivable/engineering/"
-        data-local-coordinate="Receivable / Engineering"
-        data-local-function="Engineering"
-        data-preview="Receivable Engineering focuses on recognition rules, posting sequence, timing logic, and the system behavior that governs incoming value."
-        data-why-enter="Enter this room when the issue is how receivable logic is implemented and enforced."
-      >
-        Receivable Engineering
-      </a>
-
-      <a
-        href="/products/archcoin/receivable/platform/"
-        data-archcoin-room
-        data-archcoin-destination
-        data-wing="east"
-        data-room-id="receivable-platform"
-        data-destination-type="room"
-        data-destination-id="receivable-platform"
-        data-content-id="receivable-platform"
-        data-lens="overview"
-        data-label="Receivable Platform"
-        data-route="/products/archcoin/receivable/platform/"
-        data-local-coordinate="Receivable / Platform"
-        data-local-function="Platform"
-        data-preview="Receivable Platform shows where receivable behavior becomes visible inside dashboards, workflows, statuses, and user-facing financial operations."
-        data-why-enter="Enter this room when the concern is how incoming-value logic appears on the platform surface."
-      >
-        Receivable Platform
-      </a>
-
-      <a
-        href="/products/archcoin/receivable/governance/"
-        data-archcoin-room
-        data-archcoin-destination
-        data-wing="east"
-        data-room-id="receivable-governance"
-        data-destination-type="room"
-        data-destination-id="receivable-governance"
-        data-content-id="receivable-governance"
-        data-lens="overview"
-        data-label="Receivable Governance"
-        data-route="/products/archcoin/receivable/governance/"
-        data-local-coordinate="Receivable / Governance"
-        data-local-function="Governance"
-        data-preview="Receivable Governance addresses approval, exception handling, control boundaries, and audit responsibility for incoming-value processes."
-        data-why-enter="Enter this room when the real issue is who may authorize, revise, or govern receivable recognition."
-      >
-        Receivable Governance
-      </a>
-
-      <a
-        href="/products/archcoin/payable/overview/"
-        data-archcoin-room
-        data-archcoin-destination
-        data-wing="south"
-        data-room-id="payable-overview"
-        data-destination-type="room"
-        data-destination-id="payable-overview"
-        data-content-id="payable-overview"
-        data-lens="overview"
-        data-label="Payable Overview"
-        data-route="/products/archcoin/payable/overview/"
-        data-local-coordinate="Payable / Overview"
-        data-local-function="Overview"
-        data-preview="Payable Overview introduces the outgoing-obligation domain so the team can orient to what must be paid, why it exists, and which deeper room should follow."
-        data-why-enter="Enter this room when the first need is to understand the payable domain before moving into execution detail."
-      >
-        Payable Overview
-      </a>
-
-      <a
-        href="/products/archcoin/payable/engineering/"
-        data-archcoin-room
-        data-archcoin-destination
-        data-wing="south"
-        data-room-id="payable-engineering"
-        data-destination-type="room"
-        data-destination-id="payable-engineering"
-        data-content-id="payable-engineering"
-        data-lens="overview"
-        data-label="Payable Engineering"
-        data-route="/products/archcoin/payable/engineering/"
-        data-local-coordinate="Payable / Engineering"
-        data-local-function="Engineering"
-        data-preview="Payable Engineering focuses on settlement logic, timing, validation, and the exact system behavior that executes outgoing obligation."
-        data-why-enter="Enter this room when the question is how payable behavior gets implemented and controlled."
-      >
-        Payable Engineering
-      </a>
-
-      <a
-        href="/products/archcoin/payable/platform/"
-        data-archcoin-room
-        data-archcoin-destination
-        data-wing="south"
-        data-room-id="payable-platform"
-        data-destination-type="room"
-        data-destination-id="payable-platform"
-        data-content-id="payable-platform"
-        data-lens="overview"
-        data-label="Payable Platform"
-        data-route="/products/archcoin/payable/platform/"
-        data-local-coordinate="Payable / Platform"
-        data-local-function="Platform"
-        data-preview="Payable Platform shows where payment logic becomes visible inside workflows, operational screens, status surfaces, and execution pathways."
-        data-why-enter="Enter this room when the question is how outgoing obligation appears on the platform."
-      >
-        Payable Platform
-      </a>
-
-      <a
-        href="/products/archcoin/payable/governance/"
-        data-archcoin-room
-        data-archcoin-destination
-        data-wing="south"
-        data-room-id="payable-governance"
-        data-destination-type="room"
-        data-destination-id="payable-governance"
-        data-content-id="payable-governance"
-        data-lens="overview"
-        data-label="Payable Governance"
-        data-route="/products/archcoin/payable/governance/"
-        data-local-coordinate="Payable / Governance"
-        data-local-function="Governance"
-        data-preview="Payable Governance addresses authority, approval, audit, and control boundaries governing outgoing obligation and payment execution."
-        data-why-enter="Enter this room when the central question is who may authorize settlement and what constrains the process."
-      >
-        Payable Governance
-      </a>
-
-      <a
-        href="/products/archcoin/allocation/overview/"
-        data-archcoin-room
-        data-archcoin-destination
-        data-wing="west"
-        data-room-id="allocation-overview"
-        data-destination-type="room"
-        data-destination-id="allocation-overview"
-        data-content-id="allocation-overview"
-        data-lens="overview"
-        data-label="Allocation Overview"
-        data-route="/products/archcoin/allocation/overview/"
-        data-local-coordinate="Allocation / Overview"
-        data-local-function="Overview"
-        data-preview="Allocation Overview introduces the distribution domain so the team can understand how value gets routed, partitioned, and constrained after recognition."
-        data-why-enter="Enter this room when the first need is to understand the allocation domain before moving into execution or authority."
-      >
-        Allocation Overview
-      </a>
-
-      <a
-        href="/products/archcoin/allocation/engineering/"
-        data-archcoin-room
-        data-archcoin-destination
-        data-wing="west"
-        data-room-id="allocation-engineering"
-        data-destination-type="room"
-        data-destination-id="allocation-engineering"
-        data-content-id="allocation-engineering"
-        data-lens="overview"
-        data-label="Allocation Engineering"
-        data-route="/products/archcoin/allocation/engineering/"
-        data-local-coordinate="Allocation / Engineering"
-        data-local-function="Engineering"
-        data-preview="Allocation Engineering focuses on the rules, transformations, and technical mechanisms that determine where value goes next."
-        data-why-enter="Enter this room when the issue is how distribution logic is actually implemented."
-      >
-        Allocation Engineering
-      </a>
-
-      <a
-        href="/products/archcoin/allocation/platform/"
-        data-archcoin-room
-        data-archcoin-destination
-        data-wing="west"
-        data-room-id="allocation-platform"
-        data-destination-type="room"
-        data-destination-id="allocation-platform"
-        data-content-id="allocation-platform"
-        data-lens="overview"
-        data-label="Allocation Platform"
-        data-route="/products/archcoin/allocation/platform/"
-        data-local-coordinate="Allocation / Platform"
-        data-local-function="Platform"
-        data-preview="Allocation Platform shows how value-routing and distribution logic appear inside workflows, screens, dashboards, and user-facing operational surfaces."
-        data-why-enter="Enter this room when the question is how allocation becomes visible and actionable on the platform."
-      >
-        Allocation Platform
-      </a>
-
-      <a
-        href="/products/archcoin/allocation/governance/"
-        data-archcoin-room
-        data-archcoin-destination
-        data-wing="west"
-        data-room-id="allocation-governance"
-        data-destination-type="room"
-        data-destination-id="allocation-governance"
-        data-content-id="allocation-governance"
-        data-lens="overview"
-        data-label="Allocation Governance"
-        data-route="/products/archcoin/allocation/governance/"
-        data-local-coordinate="Allocation / Governance"
-        data-local-function="Governance"
-        data-preview="Allocation Governance addresses authority, exception handling, audit, and control boundaries shaping how value may be distributed or redirected."
-        data-why-enter="Enter this room when the real issue is who may govern distribution behavior and how change is constrained."
-      >
-        Allocation Governance
-      </a>
-    </section>
-
-    <section
-      class="archcoin-receipts"
-      hidden
-      aria-hidden="true"
-    >
-      <output
-        data-archcoin-controller-receipt
-        data-visual-pass-claimed="false"
-      ></output>
-
-      <output
-        data-archcoin-controller-validation
-        data-visual-pass-claimed="false"
-      ></output>
-
-      <output
-        data-archcoin-compositor-receipt
-        data-visual-pass-claimed="false"
-      ></output>
-
-      <output
-        data-archcoin-crystals-receipt
-        data-visual-pass-claimed="false"
-      ></output>
-
-      <output
-        data-archcoin-interactions-receipt
-        data-visual-pass-claimed="false"
-      ></output>
     </section>
   </main>
 
@@ -1204,5 +1167,578 @@
     src="/products/archcoin/index.interactions.js"
     defer
   ></script>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const MODULE = Object.freeze({
+        id:
+          "DGB_ARCHCOIN_PRESENTATION",
+
+        version:
+          "1.0.0-bounded-lens-tabs",
+
+        file:
+          "/products/archcoin/index.html",
+
+        ownsNavigation:
+          false,
+
+        ownsMotion:
+          false,
+
+        ownsProjection:
+          false,
+
+        ownsRendering:
+          false
+      });
+
+      const state = {
+        root:
+          null,
+
+        initialized:
+          false,
+
+        lastAction:
+          "pending",
+
+        lastFailure:
+          ""
+      };
+
+      function queryAll(
+        selector,
+        root = document
+      ) {
+        return Array.from(
+          root.querySelectorAll(selector)
+        );
+      }
+
+      function activateLensTab(
+        tab,
+        {
+          moveFocus = false
+        } = {}
+      ) {
+        const set =
+          tab.closest(
+            "[data-archcoin-lens-set]"
+          );
+
+        if (!set) {
+          return false;
+        }
+
+        const requested =
+          String(
+            tab.dataset.archcoinLensTab ||
+            ""
+          ).trim();
+
+        if (!requested) {
+          return false;
+        }
+
+        const tabs =
+          queryAll(
+            "[data-archcoin-lens-tab]",
+            set
+          );
+
+        const panels =
+          queryAll(
+            "[data-archcoin-lens-panel]",
+            set
+          );
+
+        tabs.forEach(
+          candidate => {
+            const selected =
+              candidate === tab;
+
+            candidate.setAttribute(
+              "aria-selected",
+              selected
+                ? "true"
+                : "false"
+            );
+
+            candidate.tabIndex =
+              selected
+                ? 0
+                : -1;
+          }
+        );
+
+        panels.forEach(
+          panel => {
+            panel.hidden =
+              panel.dataset
+                .archcoinLensPanel !==
+              requested;
+          }
+        );
+
+        if (moveFocus) {
+          tab.focus();
+        }
+
+        state.lastAction =
+          `lens-selected:${requested}`;
+
+        state.lastFailure =
+          "";
+
+        publishReceipt();
+
+        return true;
+      }
+
+      function bindLensSet(
+        set
+      ) {
+        const tabs =
+          queryAll(
+            "[data-archcoin-lens-tab]",
+            set
+          );
+
+        if (!tabs.length) {
+          return;
+        }
+
+        let selectedIndex =
+          tabs.findIndex(
+            tab =>
+              tab.getAttribute(
+                "aria-selected"
+              ) === "true"
+          );
+
+        if (selectedIndex < 0) {
+          selectedIndex =
+            0;
+        }
+
+        tabs.forEach(
+          (
+            tab,
+            index
+          ) => {
+            tab.tabIndex =
+              index === selectedIndex
+                ? 0
+                : -1;
+
+            tab.setAttribute(
+              "aria-selected",
+              index === selectedIndex
+                ? "true"
+                : "false"
+            );
+
+            tab.addEventListener(
+              "click",
+              () => {
+                activateLensTab(tab);
+              }
+            );
+
+            tab.addEventListener(
+              "keydown",
+              event => {
+                if (
+                  ![
+                    "ArrowRight",
+                    "ArrowLeft",
+                    "Home",
+                    "End"
+                  ].includes(event.key)
+                ) {
+                  return;
+                }
+
+                event.preventDefault();
+
+                const currentIndex =
+                  tabs.indexOf(tab);
+
+                let nextIndex =
+                  currentIndex;
+
+                if (
+                  event.key ===
+                  "ArrowRight"
+                ) {
+                  nextIndex =
+                    (
+                      currentIndex +
+                      1
+                    ) %
+                    tabs.length;
+                }
+
+                if (
+                  event.key ===
+                  "ArrowLeft"
+                ) {
+                  nextIndex =
+                    (
+                      currentIndex -
+                      1 +
+                      tabs.length
+                    ) %
+                    tabs.length;
+                }
+
+                if (
+                  event.key ===
+                  "Home"
+                ) {
+                  nextIndex =
+                    0;
+                }
+
+                if (
+                  event.key ===
+                  "End"
+                ) {
+                  nextIndex =
+                    tabs.length -
+                    1;
+                }
+
+                activateLensTab(
+                  tabs[nextIndex],
+                  {
+                    moveFocus:
+                      true
+                  }
+                );
+              }
+            );
+          }
+        );
+
+        activateLensTab(
+          tabs[selectedIndex]
+        );
+      }
+
+      function createReceipt() {
+        return Object.freeze({
+          moduleId:
+            MODULE.id,
+
+          moduleVersion:
+            MODULE.version,
+
+          status:
+            state.lastFailure
+              ? "failed"
+              : state.initialized
+                ? "available"
+                : "pending",
+
+          lensSetCount:
+            state.root
+              ? queryAll(
+                  "[data-archcoin-lens-set]",
+                  state.root
+                ).length
+              : 0,
+
+          navigationAuthorityOwned:
+            false,
+
+          motionAuthorityOwned:
+            false,
+
+          projectionAuthorityOwned:
+            false,
+
+          rendererAuthorityOwned:
+            false,
+
+          clickTabsEnabled:
+            true,
+
+          arrowKeyNavigationEnabled:
+            true,
+
+          homeEndNavigationEnabled:
+            true,
+
+          lastAction:
+            state.lastAction,
+
+          lastFailure:
+            state.lastFailure,
+
+          visualPassClaimed:
+            false
+        });
+      }
+
+      function publishReceipt() {
+        const receipt =
+          createReceipt();
+
+        globalThis
+          .DGB_ARCHCOIN_PRESENTATION_RECEIPT =
+          receipt;
+
+        if (state.root) {
+          state.root.dataset
+            .archcoinPresentationStatus =
+            receipt.status;
+
+          state.root.dataset
+            .archcoinPresentationReceipt =
+            JSON.stringify(receipt);
+        }
+
+        const output =
+          state.root
+            ? state.root.querySelector(
+                "[data-archcoin-presentation-receipt]"
+              )
+            : null;
+
+        if (output) {
+          const serialized =
+            JSON.stringify(receipt);
+
+          output.value =
+            serialized;
+
+          output.textContent =
+            serialized;
+        }
+
+        return receipt;
+      }
+
+      function initialize() {
+        try {
+          state.root =
+            document.querySelector(
+              "[data-archcoin-root]"
+            );
+
+          if (!state.root) {
+            throw new Error(
+              "ARCHCOIN_PRESENTATION_ROOT_NOT_FOUND"
+            );
+          }
+
+          queryAll(
+            "[data-archcoin-lens-set]",
+            state.root
+          ).forEach(bindLensSet);
+
+          state.initialized =
+            true;
+
+          state.lastAction =
+            "presentation-initialized";
+
+          state.lastFailure =
+            "";
+
+          publishReceipt();
+
+          globalThis.dispatchEvent(
+            new CustomEvent(
+              "ARCHCOIN_PRESENTATION_READY",
+              {
+                detail:
+                  Object.freeze({
+                    moduleId:
+                      MODULE.id,
+
+                    moduleVersion:
+                      MODULE.version,
+
+                    navigationAuthorityOwned:
+                      false,
+
+                    motionAuthorityOwned:
+                      false,
+
+                    projectionAuthorityOwned:
+                      false,
+
+                    rendererAuthorityOwned:
+                      false
+                  })
+              }
+            )
+          );
+        } catch (error) {
+          state.lastFailure =
+            error &&
+            error.message
+              ? String(error.message)
+              : String(error);
+
+          publishReceipt();
+
+          globalThis.dispatchEvent(
+            new CustomEvent(
+              "ARCHCOIN_PRESENTATION_FAILURE",
+              {
+                detail:
+                  Object.freeze({
+                    moduleId:
+                      MODULE.id,
+
+                    moduleVersion:
+                      MODULE.version,
+
+                    reason:
+                      state.lastFailure
+                  })
+              }
+            )
+          );
+        }
+      }
+
+      if (
+        document.readyState ===
+        "loading"
+      ) {
+        document.addEventListener(
+          "DOMContentLoaded",
+          initialize,
+          {
+            once:
+              true
+          }
+        );
+      } else {
+        initialize();
+      }
+    })();
+  </script>
 </body>
 </html>
+
+<!--
+AUDRALIA_ARCHCOIN_HOME_COMPASS_PRESENTATION_HTML_RESULT_v1
+
+Artifact:
+ /products/archcoin/index.html
+
+Reconstruction scope:
+ HTML hierarchy
+ semantic presentation
+ bounded lens behavior
+ runtime-hook preservation
+
+Preserved runtime modules:
+ /products/archcoin/index.controller.js
+ /assets/compass/upstream-compass.geometry.js
+ /assets/compass/upstream-compass.renderer.js
+ /products/archcoin/index.compositor.js
+ /products/archcoin/index.crystals.js
+ /products/archcoin/index.interactions.js
+
+Preserved runtime surfaces:
+ data-archcoin-root
+ data-archcoin-scene
+ data-archcoin-scene-field
+ data-archcoin-crystals-mount
+ data-upstream-compass-mount
+ data-upstream-compass-control
+ data-archcoin-objects
+ four data-archcoin-coin controls
+ sixteen data-archcoin-room declarations
+ data-archcoin-guidance
+ data-archcoin-panel
+ panel text surfaces
+ panel action controls
+ controller receipt
+ controller validation receipt
+ compositor receipt
+ crystals receipt
+ interactions receipt
+
+Room registry:
+ 16 canonical rooms preserved
+
+Room lens corrections:
+ Overview rooms = overview
+ Engineering rooms = engineering
+ Platform rooms = platform
+ Governance rooms = governance
+
+Removed from primary page flow:
+ permanent four-card domain grid
+ separate four-item legend
+ repeated four-domain principles block
+ oversized editorial journey chamber
+ full-height marketing threshold
+
+Added:
+ compact Compass-family estate hierarchy
+ short financial threshold
+ operating-field introduction
+ scene-contained guidance
+ compact selected-path panel
+ progressive-disclosure discovery artifact
+ Practical lens
+ Engineering lens
+ Platform lens
+ Governance lens
+ Evidence lens
+ accessible click tabs
+ ArrowLeft and ArrowRight tab navigation
+ Home and End tab navigation
+ bounded presentation receipt
+ accessibility guidance
+
+Presentation authority boundaries:
+ navigation authority = false
+ motion authority = false
+ projection authority = false
+ rendering authority = false
+
+Controller modified:
+ FALSE
+
+Interactions modified:
+ FALSE
+
+Compositor modified:
+ FALSE
+
+Crystals modified:
+ FALSE
+
+Compass geometry modified:
+ FALSE
+
+Compass renderer modified:
+ FALSE
+
+Runtime execution:
+ NOT PERFORMED
+
+CSS pairing:
+ REQUIRED
+
+Visual acceptance:
+ NOT CLAIMED
+
+Production authorization:
+ FALSE
+
+Deployment authorization:
+ FALSE
+-->

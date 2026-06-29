@@ -21,11 +21,26 @@
    Semantic projection contract:
    - controller publishes --archcoin-label-x;
    - controller publishes --archcoin-label-y;
-   - controller directly manages visibility;
+   - controller publishes data-archcoin-depth-layer;
+   - controller publishes data-archcoin-compass-overlap;
+   - controller publishes data-archcoin-projection-visible;
+   - controller publishes data-archcoin-interaction-priority;
    - controller directly manages pointer-events;
    - CSS does not invent alternate projection variables;
-   - CSS does not default semantic controls to opacity: 0;
-   - CSS does not suppress cardinal controls in CONSTELLATION mode.
+   - CSS does not override controller-authored pointer-events;
+   - CSS does not suppress cardinal controls in CONSTELLATION mode;
+   - room controls remain canonical semantic elements;
+   - room controls are transparent crystal-centered touch targets;
+   - room labels are not persistently rendered in the cluster.
+
+   Interaction contract:
+   - cardinal crystal labels remain visible and touch-accessible;
+   - room crystals remain touch-accessible without visible label pills;
+   - room touch targets remain centered on compositor-projected crystals;
+   - room touch targets are bounded and do not blanket the scene;
+   - controller arbitrates tap versus drag;
+   - dragging may begin over cardinal or room controls;
+   - outward cluster swipe remains controller-owned.
 
    Composite order:
    - rear crystal canvas = 1;
@@ -153,6 +168,15 @@
 
   --archcoin-compass-size:
     clamp(128px, 16vw, 190px);
+
+  --archcoin-room-hit-size:
+    64px;
+
+  --archcoin-room-hit-size-mobile:
+    58px;
+
+  --archcoin-room-hit-size-compact:
+    54px;
 
   --archcoin-rear-z:
     1;
@@ -1463,6 +1487,9 @@ p {
 
   user-select:
     none;
+
+  -webkit-user-select:
+    none;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1929,9 +1956,13 @@ p {
  * The controller writes:
  *   --archcoin-label-x
  *   --archcoin-label-y
+ *   data-archcoin-depth-layer
+ *   data-archcoin-compass-overlap
+ *   data-archcoin-projection-visible
+ *   data-archcoin-interaction-priority
+ *   pointerEvents
  *
- * The controller also writes element visibility and pointerEvents directly.
- * CSS must not replace those decisions with alternate variables.
+ * CSS consumes those values but does not replace controller authorization.
  */
 
 .archcoin-coin,
@@ -1948,9 +1979,6 @@ p {
   margin:
     0;
 
-  opacity:
-    1;
-
   transform:
     translate(-50%, -50%)
     translate(
@@ -1961,6 +1989,9 @@ p {
   transform-origin:
     center;
 
+  touch-action:
+    none;
+
   will-change:
     left,
     top,
@@ -1970,7 +2001,26 @@ p {
     border-color 160ms var(--archcoin-ease),
     background 160ms var(--archcoin-ease),
     box-shadow 160ms var(--archcoin-ease),
-    filter 160ms var(--archcoin-ease);
+    filter 160ms var(--archcoin-ease),
+    opacity 160ms var(--archcoin-ease);
+}
+
+.archcoin-coin[data-archcoin-projection-visible="false"],
+[data-archcoin-room][data-archcoin-projection-visible="false"] {
+  opacity:
+    0;
+
+  visibility:
+    hidden;
+}
+
+.archcoin-coin[data-archcoin-projection-visible="true"],
+[data-archcoin-room][data-archcoin-projection-visible="true"] {
+  opacity:
+    1;
+
+  visibility:
+    visible;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -2022,6 +2072,9 @@ p {
     left;
 
   backdrop-filter:
+    blur(10px);
+
+  -webkit-backdrop-filter:
     blur(10px);
 }
 
@@ -2161,8 +2214,8 @@ p {
 }
 
 /*
- * Labels remain near their corresponding crystal without replacing
- * controller-authored screen coordinates.
+ * Cardinal labels remain visibly adjacent to their corresponding crystals.
+ * The controller-authored projection remains the origin point.
  */
 
 .archcoin-coin[data-wing="north"] {
@@ -2189,92 +2242,204 @@ p {
 /* Room semantic controls                                                      */
 /* -------------------------------------------------------------------------- */
 
+/*
+ * Room controls are canonical semantic controls positioned directly over the
+ * corresponding projected crystal.
+ *
+ * Their text remains available to accessibility APIs and controller panel
+ * extraction, but no persistent room label, pill, background, border, or
+ * offset is rendered in the active cluster.
+ *
+ * The bounded circular target is large enough for touch interaction without
+ * covering broad sections of the scene. The controller may begin a drag from
+ * this same target and decides whether the contact resolves as tap or swipe.
+ */
+
 [data-archcoin-room] {
+  --archcoin-label-offset-x:
+    0px;
+
+  --archcoin-label-offset-y:
+    0px;
+
   display:
-    inline-flex;
+    block;
 
-  align-items:
-    center;
+  width:
+    var(--archcoin-room-hit-size);
 
-  justify-content:
-    center;
+  height:
+    var(--archcoin-room-hit-size);
 
-  max-width:
-    min(178px, 44vw);
+  min-width:
+    var(--archcoin-room-hit-size);
 
   min-height:
-    42px;
+    var(--archcoin-room-hit-size);
+
+  max-width:
+    var(--archcoin-room-hit-size);
+
+  max-height:
+    var(--archcoin-room-hit-size);
 
   padding:
-    8px 14px;
+    0;
+
+  overflow:
+    hidden;
 
   border:
-    1px solid rgba(211, 222, 218, 0.15);
+    0;
 
   border-radius:
-    var(--archcoin-radius-pill);
+    50%;
 
   color:
-    var(--archcoin-cream);
+    transparent;
 
   background:
-    linear-gradient(
-      180deg,
-      rgba(15, 24, 31, 0.9),
-      rgba(7, 13, 18, 0.86)
-    );
+    transparent;
 
   box-shadow:
-    0 10px 24px rgba(0, 0, 0, 0.26);
+    none;
+
+  cursor:
+    pointer;
 
   font-size:
-    0.66rem;
+    0;
 
   font-weight:
-    800;
+    400;
 
   letter-spacing:
-    0.065em;
+    0;
 
   line-height:
-    1.25;
+    0;
 
   text-align:
     center;
 
+  text-indent:
+    -9999px;
+
+  text-shadow:
+    none;
+
   text-transform:
-    uppercase;
+    none;
+
+  white-space:
+    nowrap;
 
   backdrop-filter:
-    blur(10px);
+    none;
 
-  --archcoin-label-offset-y:
-    50px;
+  -webkit-backdrop-filter:
+    none;
+
+  appearance:
+    none;
+
+  -webkit-appearance:
+    none;
 }
 
-[data-archcoin-room]:hover,
-[data-archcoin-room]:focus-visible,
-[data-archcoin-room][data-primary="true"],
-[data-archcoin-room][data-selected="true"],
-[data-archcoin-room][aria-current="true"] {
-  border-color:
-    var(--archcoin-gold-soft);
+[data-archcoin-room]::before {
+  content:
+    "";
+
+  position:
+    absolute;
+
+  inset:
+    7px;
+
+  border:
+    1px solid transparent;
+
+  border-radius:
+    50%;
 
   background:
-    linear-gradient(
-      180deg,
-      rgba(35, 33, 25, 0.94),
-      rgba(14, 17, 17, 0.92)
+    transparent;
+
+  box-shadow:
+    none;
+
+  pointer-events:
+    none;
+
+  transition:
+    border-color 140ms var(--archcoin-ease),
+    background 140ms var(--archcoin-ease),
+    box-shadow 140ms var(--archcoin-ease),
+    opacity 140ms var(--archcoin-ease);
+}
+
+[data-archcoin-room]:hover::before {
+  border-color:
+    rgba(236, 208, 128, 0.18);
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(236, 208, 128, 0.055),
+      transparent 70%
+    );
+}
+
+[data-archcoin-room]:focus-visible {
+  outline:
+    3px solid var(--archcoin-gold);
+
+  outline-offset:
+    3px;
+}
+
+[data-archcoin-room]:focus-visible::before {
+  border-color:
+    rgba(236, 208, 128, 0.46);
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(236, 208, 128, 0.10),
+      transparent 72%
     );
 
   box-shadow:
-    0 16px 34px rgba(0, 0, 0, 0.34);
+    0 0 22px rgba(236, 208, 128, 0.12);
 }
 
-[data-archcoin-room][data-primary="true"],
-[data-archcoin-room][data-selected="true"] {
-  --archcoin-label-offset-y:
-    56px;
+/*
+ * Selection state is intentionally restrained. It may provide a temporary
+ * bounded ring but never restores the removed room-label pill.
+ */
+
+[data-archcoin-room][data-selected="true"]::before,
+[data-archcoin-room][aria-current="true"]::before {
+  border-color:
+    rgba(236, 208, 128, 0.34);
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(236, 208, 128, 0.075),
+      transparent 72%
+    );
+
+  box-shadow:
+    0 0 18px rgba(236, 208, 128, 0.10);
+}
+
+[data-archcoin-room][data-primary="true"]:not(
+  [data-selected="true"]
+)::before {
+  border-color:
+    rgba(158, 219, 226, 0.12);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -2282,16 +2447,12 @@ p {
 /* -------------------------------------------------------------------------- */
 
 /*
- * These selectors only decorate controller-published classifications.
- * They do not decide visibility or interaction.
+ * These selectors consume the exact attributes published by the controller.
+ * They decorate depth; they do not decide pointer authorization.
  */
 
-.archcoin-coin[data-depth-layer="front"],
-.archcoin-coin[data-depth="front"],
-.archcoin-coin[data-archcoin-depth="front"],
-[data-archcoin-room][data-depth-layer="front"],
-[data-archcoin-room][data-depth="front"],
-[data-archcoin-room][data-archcoin-depth="front"] {
+.archcoin-coin[data-archcoin-depth-layer="front"],
+[data-archcoin-room][data-archcoin-depth-layer="front"] {
   z-index:
     3;
 
@@ -2299,12 +2460,8 @@ p {
     none;
 }
 
-.archcoin-coin[data-depth-layer="rear"],
-.archcoin-coin[data-depth="rear"],
-.archcoin-coin[data-archcoin-depth="rear"],
-[data-archcoin-room][data-depth-layer="rear"],
-[data-archcoin-room][data-depth="rear"],
-[data-archcoin-room][data-archcoin-depth="rear"] {
+.archcoin-coin[data-archcoin-depth-layer="rear"],
+[data-archcoin-room][data-archcoin-depth-layer="rear"] {
   z-index:
     1;
 
@@ -2313,24 +2470,34 @@ p {
     brightness(0.82);
 }
 
-.archcoin-coin[data-compass-overlap="true"][data-depth-layer="front"],
-.archcoin-coin[data-compass-overlap="true"][data-depth="front"],
-.archcoin-coin[data-compass-overlap="true"][data-archcoin-depth="front"],
-[data-archcoin-room][data-compass-overlap="true"][data-depth-layer="front"],
-[data-archcoin-room][data-compass-overlap="true"][data-depth="front"],
-[data-archcoin-room][data-compass-overlap="true"][data-archcoin-depth="front"] {
+.archcoin-coin[
+  data-archcoin-compass-overlap="true"
+][data-archcoin-depth-layer="front"],
+[data-archcoin-room[
+  data-archcoin-compass-overlap="true"
+][data-archcoin-depth-layer="front"] {
   z-index:
     5;
 }
 
-.archcoin-coin[data-compass-overlap="true"][data-depth-layer="rear"],
-.archcoin-coin[data-compass-overlap="true"][data-depth="rear"],
-.archcoin-coin[data-compass-overlap="true"][data-archcoin-depth="rear"],
-[data-archcoin-room][data-compass-overlap="true"][data-depth-layer="rear"],
-[data-archcoin-room][data-compass-overlap="true"][data-depth="rear"],
-[data-archcoin-room][data-compass-overlap="true"][data-archcoin-depth="rear"] {
+.archcoin-coin[
+  data-archcoin-compass-overlap="true"
+][data-archcoin-depth-layer="rear"],
+[data-archcoin-room[
+  data-archcoin-compass-overlap="true"
+][data-archcoin-depth-layer="rear"] {
   z-index:
     0;
+}
+
+.archcoin-coin[
+  data-archcoin-interaction-priority="inactive"
+],
+[data-archcoin-room][
+  data-archcoin-interaction-priority="inactive"
+] {
+  cursor:
+    default;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -3299,20 +3466,28 @@ p {
   }
 
   [data-archcoin-room] {
-    max-width:
-      146px;
+    width:
+      var(--archcoin-room-hit-size-mobile);
+
+    height:
+      var(--archcoin-room-hit-size-mobile);
+
+    min-width:
+      var(--archcoin-room-hit-size-mobile);
 
     min-height:
-      38px;
+      var(--archcoin-room-hit-size-mobile);
 
-    padding:
-      7px 11px;
+    max-width:
+      var(--archcoin-room-hit-size-mobile);
 
-    font-size:
-      0.58rem;
+    max-height:
+      var(--archcoin-room-hit-size-mobile);
+  }
 
-    --archcoin-label-offset-y:
-      42px;
+  [data-archcoin-room]::before {
+    inset:
+      6px;
   }
 
   .archcoin-panel {
@@ -3440,14 +3615,28 @@ p {
   }
 
   [data-archcoin-room] {
+    width:
+      var(--archcoin-room-hit-size-compact);
+
+    height:
+      var(--archcoin-room-hit-size-compact);
+
+    min-width:
+      var(--archcoin-room-hit-size-compact);
+
+    min-height:
+      var(--archcoin-room-hit-size-compact);
+
     max-width:
-      126px;
+      var(--archcoin-room-hit-size-compact);
 
-    padding:
-      6px 9px;
+    max-height:
+      var(--archcoin-room-hit-size-compact);
+  }
 
-    font-size:
-      0.53rem;
+  [data-archcoin-room]::before {
+    inset:
+      5px;
   }
 
   .archcoin-guidance {
@@ -3492,13 +3681,13 @@ p {
 }
 
 /*
-AUDRALIA_ARCHCOIN_CONTROLLER_CONTRACT_CSS_RENEWAL_RESULT_v3
+AUDRALIA_ARCHCOIN_CRYSTAL_TOUCH_TARGET_AND_ROOM_LABEL_REMOVAL_CSS_RESULT_v4
 
 Artifact:
  /products/archcoin/index.css
 
-Paired HTML:
- /products/archcoin/index.html
+Paired controller:
+ /products/archcoin/index.controller.js
 
 Controller anchor:
  DGB_ARCHCOIN_CONTROLLER
@@ -3512,34 +3701,63 @@ Compositor anchor:
  DGB_ARCHCOIN_COMPOSITOR
  1.0.0-camera-depth-layer-orchestration
 
-Corrected projection contract:
-- consumes --archcoin-label-x
-- consumes --archcoin-label-y
-- does not reference --archcoin-projection-x
-- does not reference --archcoin-projection-y
-- does not reference --archcoin-projection-opacity
-- does not reference --archcoin-projection-pointer-events
-- does not default semantic controls to opacity 0
-- does not override controller-authored visibility
-- does not override controller-authored pointerEvents
-- preserves all four cardinal semantic controls in CONSTELLATION mode
-
-Composite order:
-- rear crystal canvas = 1
-- fixed-center Compass = 2
-- front crystal canvas = 3
-- semantic controls = 4
-
-Presentation:
+Preserved:
 - atmospheric Compass-family page
 - editorial serif hierarchy
 - warm cream and gold palette
 - rounded dimensional chambers
 - fixed-center Compass
-- controller-positioned crystal labels
-- simplified selected-path chamber
-- rounded financial-domain disclosures
+- visible cardinal semantic labels
+- cardinal labels remain controller-projected
+- selected-path chamber
+- financial-domain disclosures
 - responsive mobile composition
+- exact compositor layer order
+- controller-authored pointer-event authority
+
+Corrected projection contract:
+- consumes --archcoin-label-x
+- consumes --archcoin-label-y
+- consumes data-archcoin-depth-layer
+- consumes data-archcoin-compass-overlap
+- consumes data-archcoin-projection-visible
+- consumes data-archcoin-interaction-priority
+- does not reference --archcoin-projection-x
+- does not reference --archcoin-projection-y
+- does not reference --archcoin-projection-opacity
+- does not reference --archcoin-projection-pointer-events
+- does not override controller-authored pointerEvents
+
+Cardinal presentation:
+- cardinal labels remain visible
+- cardinal labels remain adjacent to projected crystals
+- cardinal labels remain touch-accessible
+- cardinal labels remain keyboard-accessible
+- cardinal directional offsets remain intact
+
+Room presentation:
+- visible room-label pills removed
+- room text remains available to controller and accessibility APIs
+- room controls remain canonical semantic elements
+- room controls remain centered on projected crystals
+- room controls have no persistent text rendering
+- room controls have no persistent background
+- room controls have no persistent border
+- room controls have no persistent box shadow
+- room controls have no label offset
+- room touch target is bounded to 64px desktop
+- room touch target is bounded to 58px mobile
+- room touch target is bounded to 54px compact mobile
+- room targets do not blanket the scene
+- room targets permit tap-versus-drag arbitration
+- restrained focus and selected rings do not restore label pills
+
+Depth correction:
+- selectors now match data-archcoin-depth-layer
+- selectors now match data-archcoin-compass-overlap
+- front semantic controls remain above Compass
+- rear overlapping controls remain visually behind
+- pointer authorization remains controller-owned
 
 Controller modified:
 FALSE
@@ -3548,6 +3766,9 @@ Compositor modified:
 FALSE
 
 Crystals modified:
+FALSE
+
+HTML modified:
 FALSE
 
 Compass geometry modified:

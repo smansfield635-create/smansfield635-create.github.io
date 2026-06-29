@@ -59,7 +59,6 @@
     data-selected-paragraph=""
     data-selected-content-id=""
     data-selected-lens="overview"
-    data-compass-selected="false"
     data-panel-descended="false"
     data-reduced-motion="false"
     data-visual-pass-claimed="false"
@@ -118,8 +117,13 @@
           class="archcoin-threshold__continue"
           href="#archcoin-compass"
         >
-          <span>Continue to the operating field</span>
-          <span aria-hidden="true">+</span>
+          <span>
+            Continue to the operating field
+          </span>
+
+          <span aria-hidden="true">
+            +
+          </span>
         </a>
       </div>
 
@@ -158,8 +162,8 @@
         </h2>
 
         <p>
-          Each domain answers a different kind of financial question. Choose
-          the one that most closely matches the responsibility in front of you.
+          Each domain answers a different financial question. Choose the one
+          that most closely matches the responsibility in front of you.
         </p>
       </header>
 
@@ -366,23 +370,22 @@
             <div
               data-upstream-compass-mount
               data-upstream-compass-physical-projection="FIXED_CENTER_INDEPENDENT_SIBLING"
-              data-upstream-compass-semantic-model="PAGE_LOCAL_HOME_COMPASS_SELECTION"
+              data-upstream-compass-semantic-model="LOCAL_RETURN_OPTIONS_ANCHOR"
               data-upstream-compass-presentation="fixed-center"
             >
-              <button
+              <a
                 class="archcoin-scene__upstream-compass-control"
-                type="button"
                 data-upstream-compass-control
-                aria-label="Select the Main Compass return options"
-                aria-controls="archcoin-panel"
-                aria-expanded="false"
+                href="#archcoin-compass-return-options"
+                aria-label="Open ARCHCOIN return options"
+                aria-controls="archcoin-compass-return-options"
               >
                 <span
                   class="archcoin-scene__upstream-compass-fallback"
                   data-upstream-compass-fallback
                   aria-hidden="true"
                 ></span>
-              </button>
+              </a>
             </div>
           </div>
 
@@ -642,18 +645,49 @@
               Return to Orbit
             </span>
           </button>
-
-          <a
-            class="archcoin-action archcoin-action--secondary"
-            href="/index.html"
-            data-archcoin-return-home-compass
-            hidden
-          >
-            Return to Main Compass
-          </a>
         </div>
       </footer>
     </aside>
+
+    <section
+      id="archcoin-compass-return-options"
+      class="archcoin-compass-return"
+      aria-labelledby="archcoin-compass-return-title"
+      tabindex="-1"
+    >
+      <p class="archcoin-compass-return__eyebrow">
+        Compass return
+      </p>
+
+      <h2 id="archcoin-compass-return-title">
+        Choose where to return.
+      </h2>
+
+      <p>
+        Leave ARCHCOIN for the Main Compass, or return to the active ARCHCOIN
+        orbit without replacing the constellation.
+      </p>
+
+      <div class="archcoin-compass-return__actions">
+        <a
+          class="archcoin-action archcoin-action--primary"
+          href="/index.html"
+          data-archcoin-return-home-compass
+        >
+          Return to Main Compass
+        </a>
+
+        <a
+          class="archcoin-action archcoin-action--secondary"
+          href="#archcoin-compass"
+          data-archcoin-return-to-orbit
+        >
+          <span data-archcoin-return-to-orbit-label>
+            Return to Orbit
+          </span>
+        </a>
+      </div>
+    </section>
 
     <section
       class="archcoin-principles"
@@ -681,7 +715,9 @@
               Contract
             </span>
 
-            <span aria-hidden="true">+</span>
+            <span aria-hidden="true">
+              +
+            </span>
           </summary>
 
           <div class="archcoin-principle__body">
@@ -707,7 +743,9 @@
               Receivable
             </span>
 
-            <span aria-hidden="true">+</span>
+            <span aria-hidden="true">
+              +
+            </span>
           </summary>
 
           <div class="archcoin-principle__body">
@@ -733,7 +771,9 @@
               Payable
             </span>
 
-            <span aria-hidden="true">+</span>
+            <span aria-hidden="true">
+              +
+            </span>
           </summary>
 
           <div class="archcoin-principle__body">
@@ -759,7 +799,9 @@
               Allocation
             </span>
 
-            <span aria-hidden="true">+</span>
+            <span aria-hidden="true">
+              +
+            </span>
           </summary>
 
           <div class="archcoin-principle__body">

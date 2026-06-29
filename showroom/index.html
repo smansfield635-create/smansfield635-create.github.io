@@ -1,13 +1,13 @@
 <!-- TARGET FILE: /showroom/index.html -->
 <!-- TNT FULL-FILE REPLACEMENT -->
-<!-- SHOWROOM_MIRRORLAND_CONSTELLATION_GAUGE_INFORMATION_HTML_TNT_v3 -->
+<!-- SHOWROOM_MIRRORLAND_CONSTELLATION_GAUGE_INFORMATION_HTML_TNT_v4 -->
 <!doctype html>
 <html
   lang="en"
   data-route="/showroom/"
   data-page="showroom"
-  data-version="SHOWROOM-MIRRORLAND-CONSTELLATION-GAUGE-INFORMATION-3.0.0"
-  data-contract="SHOWROOM_MIRRORLAND_CONSTELLATION_GAUGE_INFORMATION_HTML_TNT_v3"
+  data-version="SHOWROOM-MIRRORLAND-CONSTELLATION-GAUGE-INFORMATION-4.0.0"
+  data-contract="SHOWROOM_MIRRORLAND_CONSTELLATION_GAUGE_INFORMATION_HTML_TNT_v4"
   data-house-room="showroom"
   data-house-room-title="The Showroom"
   data-room-welcome="Welcome to the Showroom"
@@ -18,6 +18,7 @@
   data-elara-homeroom="true"
   data-elara-route="/elara/index.html"
   data-talk-to-elara-prominent="true"
+
   data-showroom-root-contract="mirrorland-constellation-gauge-information"
   data-showroom-controller="/showroom/index.controller.js"
   data-showroom-gauges="/showroom/index.gauges.js"
@@ -26,9 +27,11 @@
   data-showroom-crystals="/showroom/index.crystals.js"
   data-showroom-window="/showroom/index.window.js"
   data-showroom-css="/showroom/index.css"
+
   data-showroom-navigation-model="compact-unlabeled-constellation"
   data-showroom-primary-mode="orbit"
   data-showroom-local-front-model="single-active-front"
+
   data-showroom-large-star-shape-count="1"
   data-showroom-small-star-shape-count="1"
   data-showroom-total-star-shape-count="2"
@@ -38,27 +41,39 @@
   data-showroom-information-color-family="violet"
   data-showroom-visible-star-labels="false"
   data-showroom-semantic-star-labels="true"
+
+  data-showroom-fallback-stars="semantic-controls"
+  data-showroom-fallback-stars-visible-until-crystals-ready="true"
+  data-showroom-crystals-ready="false"
+
   data-showroom-route-confirmation-required="true"
   data-showroom-return-to-orbit="true"
   data-showroom-return-to-compass="true"
   data-showroom-orbit-target="#showroom-orbit"
   data-showroom-compass-route="/index.html"
+
   data-showroom-stage-separation="true"
   data-showroom-orbit-stage-independent="true"
   data-showroom-diamond-stage-independent="true"
   data-showroom-window-stage-diamond-only="true"
+
   data-compass-fixed-center="true"
   data-compass-orbital-reference="true"
   data-compass-page-local-decision="true"
   data-compass-immediate-navigation="false"
   data-compass-explicit-return-required="true"
   data-compass-main-route="/index.html"
+  data-compass-control-purpose="open-main-compass-return-dialog"
+  data-compass-renderer-navigation-authority="false"
+  data-compass-controller-navigation-authority="true"
+
   data-mirrorland-window-independent="true"
   data-mirrorland-window-foreground="true"
   data-mirrorland-window-in-front-of-diamond="true"
   data-mirrorland-window-compass-owned="false"
   data-mirrorland-window-crystal-depth-participant="false"
   data-mirrorland-window-state="closed"
+
   data-diamond-generation="G3"
   data-diamond-render-mode="native-webgl"
   data-diamond-geometry="/showroom/index.diamond.geometry.js"
@@ -67,8 +82,10 @@
   data-diamond-protected-core="true"
   data-diamond-original-stage-restored="true"
   data-diamond-window-sibling-layer="true"
+
   data-native-webgl="true"
   data-webgl-fallback="true"
+
   data-radial-sectors="16"
   data-structural-bands="16"
   data-lattice-seats="256"
@@ -76,6 +93,7 @@
   data-lattice-connections="800"
   data-material-regions="14"
   data-public-views="2"
+
   data-generated-image="false"
   data-imported-3d-model="false"
   data-visual-pass-claimed="false"
@@ -97,7 +115,7 @@
 
   <meta
     name="description"
-    content="Enter Mirrorland through the Showroom constellation. Discover route stars, expandable local clusters, animated gauge dashboards, explanatory information fronts, and the independently rendered Diamond Lattice."
+    content="Enter Mirrorland through an exploratory constellation of characters, systems, gauges, evidence, and the independently rendered Diamond Lattice."
   >
 
   <link
@@ -115,9 +133,9 @@
 
   <link
     rel="stylesheet"
-    href="/showroom/index.css?v=SHOWROOM_MIRRORLAND_CONSTELLATION_GAUGE_INFORMATION_CSS_TNT_v3"
+    href="/showroom/index.css?v=SHOWROOM_MIRRORLAND_CONSTELLATION_GAUGE_INFORMATION_CSS_TNT_v4"
     data-showroom-page-css="true"
-    data-showroom-page-css-contract="SHOWROOM_MIRRORLAND_CONSTELLATION_GAUGE_INFORMATION_CSS_TNT_v3"
+    data-showroom-page-css-contract="SHOWROOM_MIRRORLAND_CONSTELLATION_GAUGE_INFORMATION_CSS_TNT_v4"
   >
 </head>
 
@@ -142,6 +160,7 @@
     data-showroom-compass-dialog-open="false"
     data-showroom-window-state="closed"
     data-showroom-diamond-interactive="false"
+    data-showroom-crystals-ready="false"
     data-showroom-held="false"
   >
     <header
@@ -273,16 +292,32 @@
           </p>
 
           <p class="showroom-threshold__lead">
-            Mirrorland is Audralia’s narrative playground for frontier
-            sciences, character interaction, experimental systems, and
-            simulations that may inform real-world change.
+            The systems changing our lives are often moving before we
+            fully understand them.
           </p>
 
           <p class="showroom-threshold__support">
-            The Showroom introduces that world through an exploratory
-            constellation. Some stars reveal paths to other places.
-            Others unfold into local clusters containing live-looking
-            gauge dashboards and compact informational fronts.
+            We build technologies, institutions, models, and decisions
+            in the real world, where mistakes carry real consequences.
+            By the time a weakness becomes visible, someone may already
+            be living inside it.
+          </p>
+
+          <p class="showroom-threshold__support">
+            Mirrorland creates another place to look first.
+          </p>
+
+          <p class="showroom-threshold__support">
+            Here, ideas can be entered instead of merely described.
+            Systems can be opened, questioned, stressed, and explored.
+            Characters can guide the journey. Simulations can expose
+            what ordinary explanation leaves hidden.
+          </p>
+
+          <p class="showroom-threshold__support">
+            The Showroom is the threshold: a constellation of objects,
+            paths, gauges, and evidence leading into a world designed
+            for curiosity before consequence.
           </p>
 
           <div
@@ -290,8 +325,8 @@
             aria-label="Mirrorland threshold statement"
           >
             <strong>
-              A mirror can shatter.<br>
-              A shadow remains bound to its source.
+              A mirror shows you what is there.<br>
+              Mirrorland asks what happens next.
             </strong>
           </div>
 
@@ -316,29 +351,28 @@
             class="architectural-drop mirrorland-introduction-drop"
           >
             <summary>
-              Open the Mirrorland introduction
+              Why Mirrorland exists
             </summary>
 
             <div class="drop-content">
               <p>
-                Mirrorland is not one exhibit or one category. It is the
-                containing environment in which Audralia can introduce
-                characters, scientific objects, simulation systems,
-                experimental questions, and user-directed exploration.
+                The hardest problems are rarely hidden because nobody
+                is looking. They are hidden because the system is too
+                large, too fast, or too costly to test honestly.
               </p>
 
               <p>
-                The Diamond remains the first protected evidence object.
-                Future Mirrorland systems may include additional
-                interactive models, characters, gauges, simulations,
-                scenarios, and recorded outcomes.
+                Mirrorland is a place where those systems can be made
+                visible. A user can follow a character, inspect an
+                object, enter a simulation, compare outcomes, and
+                discover relationships that would remain abstract on
+                an ordinary page.
               </p>
 
               <p>
-                The constellation is intentionally exploratory. Large
-                stars share one geometry even though some offer an
-                external route and others unfold into multiple local
-                paths.
+                It is not a museum of finished answers. It is an
+                environment for approaching questions before the real
+                world forces an answer.
               </p>
             </div>
           </details>
@@ -389,7 +423,7 @@
           class="showroom-orbit__field"
           data-showroom-orbit-field
           data-showroom-scene-field
-          aria-label="Mirrorland constellation surrounding a fixed Compass"
+          aria-label="Mirrorland constellation surrounding the fixed Main Compass"
         >
           <div
             class="showroom-cosmic-field"
@@ -407,7 +441,8 @@
               data-compass-root
               data-compass-scene
               data-compass-fixed-center="true"
-              data-compass-navigation-authority="explicit-return-action"
+              data-compass-visual-only="true"
+              data-compass-navigation-authority="false"
               aria-hidden="true"
             ></div>
 
@@ -416,9 +451,14 @@
               type="button"
               data-upstream-compass-control
               data-showroom-compass-control
+              data-showroom-controller-action="open-compass-return-dialog"
+              data-showroom-interaction-target="compass"
+              data-showroom-object-behavior="compass-return"
               data-fixed-center="true"
               data-interaction-enabled="true"
               data-immediate-navigation="false"
+              data-return-route="/index.html"
+              aria-label="Open the option to return to the Main Compass"
               aria-haspopup="dialog"
               aria-expanded="false"
               aria-controls="showroom-compass-dialog"
@@ -434,11 +474,11 @@
               </span>
 
               <span class="showroom-compass-control__label">
-                Compass
+                Main Compass
               </span>
 
               <span class="showroom-compass-control__instruction">
-                Stay or return
+                Tap to return
               </span>
             </button>
           </div>
@@ -446,12 +486,16 @@
           <div
             class="showroom-primary-stars"
             data-showroom-primary-stars
+            data-showroom-fallback-star-layer
+            data-showroom-fallback-star-visibility="visible"
             aria-label="Primary Mirrorland constellation paths"
           >
             <button
               class="showroom-star showroom-star--large"
               type="button"
               data-showroom-object
+              data-showroom-semantic-star
+              data-showroom-fallback-star
               data-showroom-object-id="characters-route"
               data-showroom-object-size="large"
               data-showroom-object-shape="cardinal-star"
@@ -473,6 +517,8 @@
               class="showroom-star showroom-star--large"
               type="button"
               data-showroom-object
+              data-showroom-semantic-star
+              data-showroom-fallback-star
               data-showroom-object-id="elara-route"
               data-showroom-object-size="large"
               data-showroom-object-shape="cardinal-star"
@@ -494,6 +540,8 @@
               class="showroom-star showroom-star--large"
               type="button"
               data-showroom-object
+              data-showroom-semantic-star
+              data-showroom-fallback-star
               data-showroom-object-id="gauge-cluster"
               data-showroom-object-size="large"
               data-showroom-object-shape="cardinal-star"
@@ -512,6 +560,8 @@
               class="showroom-star showroom-star--large"
               type="button"
               data-showroom-object
+              data-showroom-semantic-star
+              data-showroom-fallback-star
               data-showroom-object-id="information-cluster"
               data-showroom-object-size="large"
               data-showroom-object-shape="cardinal-star"
@@ -531,8 +581,10 @@
             id="showroom-cluster-gauges"
             class="showroom-star-cluster showroom-star-cluster--gauges"
             data-showroom-cluster
+            data-showroom-fallback-star-layer
             data-showroom-cluster-id="gauges"
             data-showroom-cluster-state="collapsed"
+            data-showroom-fallback-star-visibility="visible"
             aria-label="Gauge destinations"
             hidden
           >
@@ -540,6 +592,8 @@
               class="showroom-star showroom-star--small showroom-star--gauge"
               type="button"
               data-showroom-object
+              data-showroom-semantic-star
+              data-showroom-fallback-star
               data-showroom-object-id="object-gauge-star"
               data-showroom-object-size="small"
               data-showroom-object-shape="child-star"
@@ -557,6 +611,8 @@
               class="showroom-star showroom-star--small showroom-star--gauge"
               type="button"
               data-showroom-object
+              data-showroom-semantic-star
+              data-showroom-fallback-star
               data-showroom-object-id="structure-gauge-star"
               data-showroom-object-size="small"
               data-showroom-object-shape="child-star"
@@ -574,6 +630,8 @@
               class="showroom-star showroom-star--small showroom-star--gauge"
               type="button"
               data-showroom-object
+              data-showroom-semantic-star
+              data-showroom-fallback-star
               data-showroom-object-id="interaction-gauge-star"
               data-showroom-object-size="small"
               data-showroom-object-shape="child-star"
@@ -591,6 +649,8 @@
               class="showroom-star showroom-star--small showroom-star--gauge"
               type="button"
               data-showroom-object
+              data-showroom-semantic-star
+              data-showroom-fallback-star
               data-showroom-object-id="systems-gauge-star"
               data-showroom-object-size="small"
               data-showroom-object-shape="child-star"
@@ -609,8 +669,10 @@
             id="showroom-cluster-information"
             class="showroom-star-cluster showroom-star-cluster--information"
             data-showroom-cluster
+            data-showroom-fallback-star-layer
             data-showroom-cluster-id="information"
             data-showroom-cluster-state="collapsed"
+            data-showroom-fallback-star-visibility="visible"
             aria-label="Information destinations"
             hidden
           >
@@ -618,6 +680,8 @@
               class="showroom-star showroom-star--small showroom-star--information"
               type="button"
               data-showroom-object
+              data-showroom-semantic-star
+              data-showroom-fallback-star
               data-showroom-object-id="platform-information-star"
               data-showroom-object-size="small"
               data-showroom-object-shape="child-star"
@@ -636,6 +700,8 @@
               class="showroom-star showroom-star--small showroom-star--information"
               type="button"
               data-showroom-object
+              data-showroom-semantic-star
+              data-showroom-fallback-star
               data-showroom-object-id="engineering-information-star"
               data-showroom-object-size="small"
               data-showroom-object-shape="child-star"
@@ -654,6 +720,8 @@
               class="showroom-star showroom-star--small showroom-star--information"
               type="button"
               data-showroom-object
+              data-showroom-semantic-star
+              data-showroom-fallback-star
               data-showroom-object-id="evidence-information-star"
               data-showroom-object-size="small"
               data-showroom-object-shape="child-star"
@@ -2538,8 +2606,8 @@
                 </strong>
 
                 <p>
-                  The new constellation and gauges are additions around
-                  the protected Diamond rather than replacements for its
+                  The constellation and gauges are additions around the
+                  protected Diamond rather than replacements for its
                   renderer.
                 </p>
               </div>
@@ -2580,9 +2648,9 @@
 
                   <div class="drop-content">
                     <p>
-                      The future compositor owns the separate orbit
-                      camera, world-to-screen projection, Compass-plane
-                      depth classification, and rear/front canvases.
+                      The compositor owns the separate orbit camera,
+                      world-to-screen projection, Compass-plane depth
+                      classification, and rear/front canvases.
                     </p>
                   </div>
                 </details>
@@ -2933,6 +3001,8 @@
     id="showroom-compass-dialog"
     class="showroom-compass-dialog"
     data-showroom-compass-dialog
+    data-showroom-controller-surface="compass-return-dialog"
+    data-showroom-dialog-state="closed"
     aria-labelledby="showroom-compass-dialog-title"
     aria-describedby="showroom-compass-dialog-description"
   >
@@ -2944,7 +3014,7 @@
           </span>
 
           <h2 id="showroom-compass-dialog-title">
-            Choose where to remain.
+            Return to the Main Compass?
           </h2>
         </div>
 
@@ -2952,16 +3022,16 @@
           class="dialog-close"
           type="button"
           data-showroom-compass-close
-          aria-label="Close the Compass decision box and stay in the Showroom"
+          data-showroom-controller-action="close-compass-return-dialog"
+          aria-label="Close the return option and remain in the Showroom"
         >
           ×
         </button>
       </div>
 
       <p id="showroom-compass-dialog-description">
-        The Compass remains fixed at the center of the constellation.
-        Choose whether to remain in Mirrorland or return to the Diamond
-        Gate Bridge Main Compass.
+        Leave the Showroom and return to Audralia’s Main Compass, or
+        remain here and continue exploring Mirrorland.
       </p>
 
       <div class="showroom-compass-dialog__choices">
@@ -2969,6 +3039,7 @@
           class="button button-gold"
           type="button"
           data-showroom-compass-stay
+          data-showroom-controller-action="stay-in-showroom"
         >
           Stay in the Showroom
         </button>
@@ -2977,6 +3048,8 @@
           class="button"
           href="/index.html"
           data-showroom-compass-return
+          data-showroom-controller-action="return-to-main-compass"
+          data-showroom-hard-navigation="true"
         >
           Return to Main Compass
         </a>
@@ -3105,7 +3178,7 @@
           <div class="drop-content">
             <p>
               Gauge markup contains exact values, categorical states,
-              detail relationships, and accessible labels. The CSS owns
+              detail relationships, and accessible labels. CSS owns
               visual arcs, tracks, scanners, and reduced-motion states.
             </p>
 
@@ -3113,6 +3186,26 @@
               The dedicated gauge module owns only local gauge
               activation, detail correspondence, entrance triggering,
               and accessible visual-state coordination.
+            </p>
+          </div>
+        </details>
+
+        <details class="architectural-drop">
+          <summary>
+            Navigation ownership
+          </summary>
+
+          <div class="drop-content">
+            <p>
+              The visual Compass does not navigate. The semantic Compass
+              control requests a controller-owned return decision.
+            </p>
+
+            <p>
+              The controller opens and closes the decision surface,
+              updates dialog state and accessibility attributes, restores
+              focus, and preserves the explicit hard-navigation route to
+              the Main Compass.
             </p>
           </div>
         </details>
@@ -3145,7 +3238,7 @@
   </dialog>
 
   <script
-    src="/showroom/index.controller.js?v=SHOWROOM_MIRRORLAND_FOCAL_CONTROLLER_TNT_v1"
+    src="/showroom/index.controller.js?v=SHOWROOM_MIRRORLAND_FOCAL_CONTROLLER_TNT_v2"
     defer
     data-showroom-child="controller"
   ></script>

@@ -1,35 +1,39 @@
 /* TARGET FILE: /showroom/index.css */
 /* TNT FULL-FILE REPLACEMENT */
-/* SHOWROOM_MIRRORLAND_SEPARATE_ORBIT_AND_DIAMOND_STAGES_CSS_TNT_v2 */
+/* SHOWROOM_MIRRORLAND_CONSTELLATION_GAUGE_INFORMATION_CSS_TNT_v3 */
 /*
   Purpose:
-  - Preserve Mirrorland as the focal narrative.
-  - Preserve the existing G3 Diamond as an independent exhibit stage.
+  - Preserve Mirrorland as the governing Showroom narrative.
+  - Preserve the compact orbit as an independent navigation stage.
+  - Preserve the existing Diamond as an independent interactive stage.
   - Preserve Diamond rotation, zoom, inspection, reset, fallback,
-    responsive sizing, and renderer-owned interaction.
-  - Place the Mirrorland Window only over the Diamond viewport as an
-    independent foreground sibling layer.
-  - Establish a separate compact navigation stage at the top of the page.
-  - Reserve the navigation stage for the fixed Compass, rear and front
-    crystal canvases, and seven projected semantic controls.
-  - Prevent the orbital navigator from changing the Diamond stage size,
-    camera, matrices, WebGL context, or pointer calculations.
-  - Present compact, bounded supporting chambers rather than one long
-    primary-navigation document.
-  - Preserve Elara, dialogs, dropdowns, contrast, reduced motion, and
-    semantic fallback access.
+    responsive sizing, and renderer ownership.
+  - Place the Mirrorland Window over the Diamond viewport only.
+  - Support exactly two star geometries:
+      1. large cardinal star;
+      2. small child star.
+  - Allow large stars to represent route or cluster behavior without
+    changing their geometry.
+  - Distinguish small gauge and information destinations by color.
+  - Support radial, capability, state, and composition gauge families.
+  - Create restrained live-looking motion without representing fixed
+    facts as changing telemetry.
+  - Support the Platform / Engineering / Evidence information front.
+  - Provide local Return to Compass and Return to Orbit controls.
+  - Preserve semantic fallback, high contrast, reduced motion, dialogs,
+    Elara integration, and responsive behavior.
 
   Does not own:
-  - Showroom canonical state or legal transitions
-  - pointer or gesture interpretation
-  - crystal geometry, motion, or WebGL drawing
-  - orbital camera or depth classification
-  - Compass geometry, renderer lifecycle, or navigation decisions
-  - Mirrorland Window geometry or animation
-  - Diamond geometry, camera, matrices, rendering, motion, or zoom
-  - Diamond UI behavior
-  - Elara room-entry behavior
-  - Manor Blueprint behavior
+  - canonical page state;
+  - route or cluster decisions;
+  - pointer and gesture interpretation;
+  - orbital camera or depth classification;
+  - crystal geometry or drawing;
+  - Compass geometry or renderer lifecycle;
+  - gauge selection state or accessible state mutation;
+  - Mirrorland Window geometry or animation;
+  - Diamond geometry, camera, matrices, rendering, motion, or zoom;
+  - Diamond UI behavior.
 */
 
 :root{
@@ -76,6 +80,7 @@
 
   --green:#8dffd5;
   --red:#ff9aa5;
+  --gray:#9aa8b8;
 
   --shadow:
     0 34px 110px rgba(0,0,0,.60);
@@ -107,10 +112,6 @@
   --max:1440px;
   --text-max:980px;
 
-  /*
-    The orbit is deliberately compact and independent from the Diamond.
-    It must not inherit the previous combined-stage height.
-  */
   --orbit-height:
     clamp(20rem,42vw,31rem);
 
@@ -119,6 +120,35 @@
 
   --diamond-desktop-ratio:16 / 10;
   --diamond-mobile-ratio:4 / 3;
+
+  --gauge-size:
+    clamp(8.5rem,15vw,12rem);
+
+  --star-cardinal-path:polygon(
+    50% 0%,
+    60% 34%,
+    100% 50%,
+    60% 66%,
+    50% 100%,
+    40% 66%,
+    0% 50%,
+    40% 34%
+  );
+
+  --star-child-path:polygon(
+    50% 0%,
+    61% 32%,
+    95% 22%,
+    72% 50%,
+    100% 72%,
+    63% 67%,
+    50% 100%,
+    37% 67%,
+    0% 72%,
+    28% 50%,
+    5% 22%,
+    39% 32%
+  );
 
   --gem-path:polygon(
     50% 0%,
@@ -289,6 +319,24 @@ button:disabled{
 
 [hidden]{
   display:none!important;
+}
+
+.sr-only{
+  position:absolute!important;
+
+  width:1px!important;
+  height:1px!important;
+
+  padding:0!important;
+  margin:-1px!important;
+
+  overflow:hidden!important;
+
+  clip:rect(0,0,0,0)!important;
+  clip-path:inset(50%)!important;
+
+  white-space:nowrap!important;
+  border:0!important;
 }
 
 .skip{
@@ -637,7 +685,7 @@ elara-room-entry:defined > a{
   z-index:80;
 
   width:min(
-    20rem,
+    21rem,
     calc(100vw - 2rem)
   );
 
@@ -844,13 +892,13 @@ h3{
 
   color:var(--white);
 
-  font-size:clamp(1.18rem,2.7vw,1.65rem);
+  font-size:clamp(1.1rem,2.7vw,1.55rem);
   line-height:1.08;
-  letter-spacing:-.045em;
+  letter-spacing:-.04em;
 }
 
 /* =========================================================
-   MIRRORLAND THRESHOLD INTRODUCTION
+   MIRRORLAND THRESHOLD
    ========================================================= */
 
 .showroom-threshold{
@@ -954,18 +1002,18 @@ h3{
 }
 
 .showroom-threshold__lead{
-  max-width:52rem;
+  max-width:61rem;
 
   color:var(--white);
 
-  font-size:clamp(1.45rem,3.3vw,2.6rem);
+  font-size:clamp(1.35rem,3.1vw,2.45rem);
   font-weight:850;
   line-height:1.08;
   letter-spacing:-.045em;
 }
 
 .showroom-threshold__support{
-  max-width:58rem;
+  max-width:61rem;
 
   color:rgba(248,249,252,.90);
 
@@ -1075,7 +1123,7 @@ h3{
 }
 
 /* =========================================================
-   INDEPENDENT COMPACT ORBIT NAVIGATOR
+   CONSTELLATION STAGE
    ========================================================= */
 
 .showroom-orbit{
@@ -1128,7 +1176,7 @@ h3{
   justify-content:space-between;
   gap:1.2rem;
 
-  padding:.2rem .2rem .5rem;
+  padding:.2rem .2rem 0;
 }
 
 .showroom-orbit__heading > div{
@@ -1137,7 +1185,7 @@ h3{
 }
 
 .showroom-orbit__heading p{
-  max-width:36rem;
+  max-width:39rem;
 
   color:rgba(236,246,255,.82);
 
@@ -1146,17 +1194,59 @@ h3{
   text-align:right;
 }
 
-/*
-  This is the complete physical boundary of the new navigation renderer.
+.showroom-orbit__legend{
+  display:flex;
+  flex-wrap:wrap;
+  gap:.6rem;
 
-  It contains only:
-  - compositor-created rear canvas;
-  - fixed Compass;
-  - compositor-created front canvas;
-  - seven semantic category controls.
+  padding:0 .2rem;
+}
 
-  It does not contain the Diamond or the Mirrorland Window.
-*/
+.showroom-orbit__legend span{
+  display:inline-flex;
+  align-items:center;
+  gap:.48rem;
+
+  min-height:2rem;
+
+  padding:.38rem .65rem;
+
+  border:1px solid rgba(255,255,255,.13);
+  border-radius:999px;
+
+  color:rgba(239,246,255,.78);
+
+  background:rgba(255,255,255,.035);
+
+  font-size:.65rem;
+  font-weight:850;
+  letter-spacing:.045em;
+  text-transform:uppercase;
+}
+
+.showroom-orbit__legend i{
+  width:.55rem;
+  height:.55rem;
+
+  border-radius:50%;
+}
+
+.showroom-orbit__legend
+[data-showroom-legend-kind="gauge"] i{
+  background:var(--cyan);
+
+  box-shadow:
+    0 0 .6rem rgba(103,245,255,.62);
+}
+
+.showroom-orbit__legend
+[data-showroom-legend-kind="information"] i{
+  background:var(--violet);
+
+  box-shadow:
+    0 0 .6rem rgba(195,163,255,.56);
+}
+
 .showroom-orbit__field{
   position:relative;
 
@@ -1296,11 +1386,6 @@ h3{
     0 0 2.6rem rgba(255,216,106,.05);
 }
 
-/*
-  The compositor creates two canvases inside the orbit field.
-  Inline z-index values may refine the order, but both canvases are
-  physically restricted to this compact stage.
-*/
 .showroom-orbit__field
 canvas[data-showroom-compositor-layer],
 .showroom-orbit__field
@@ -1325,7 +1410,7 @@ canvas[data-showroom-layer="front"]{
 }
 
 /* =========================================================
-   FIXED COMPASS INSIDE ORBIT STAGE ONLY
+   COMPASS
    ========================================================= */
 
 .showroom-compass-layer{
@@ -1527,195 +1612,242 @@ canvas[data-showroom-layer="front"]{
 }
 
 /* =========================================================
-   PROJECTED ORBIT SEMANTIC CONTROLS
+   STAR GEOMETRY
    ========================================================= */
 
-.showroom-category-controls{
+.showroom-primary-stars,
+.showroom-star-cluster{
   position:absolute;
   inset:0;
-  z-index:12;
+  z-index:10;
 
   pointer-events:none;
 }
 
-.showroom-category-controls
-[data-showroom-category]{
+.showroom-star{
   position:absolute;
-  left:50%;
-  top:50%;
 
-  min-width:5.8rem;
-  min-height:2.65rem;
-  max-width:10rem;
+  display:block;
 
-  display:grid;
-  place-items:center;
+  padding:0;
 
-  padding:.55rem .78rem;
+  border:0;
 
-  border:1px solid rgba(255,255,255,.22);
-  border-radius:999px;
+  color:transparent;
+  background:transparent;
 
-  color:var(--white);
+  cursor:pointer;
+  pointer-events:auto;
 
-  background:
-    linear-gradient(
-      135deg,
-      rgba(9,15,30,.82),
-      rgba(4,8,18,.92)
-    );
-
-  box-shadow:
-    0 .7rem 1.7rem rgba(0,0,0,.36),
-    inset 0 1px 0 rgba(255,255,255,.10);
-
-  font-size:.66rem;
-  font-weight:950;
-  letter-spacing:.065em;
-  line-height:1.08;
-  text-align:center;
-  text-transform:uppercase;
-
-  transform:
-    translate(-50%,-50%)
-    scale(var(--showroom-category-scale,1));
-
-  opacity:0;
-  visibility:hidden;
-  pointer-events:none;
+  isolation:isolate;
 
   transition:
-    opacity .14s linear,
-    border-color .18s ease,
-    background .18s ease,
-    box-shadow .18s ease;
+    transform .22s ease,
+    filter .22s ease,
+    opacity .22s ease;
 }
 
-.showroom-category-controls
-[data-showroom-category][data-projection-visible="true"]{
-  opacity:var(--showroom-category-opacity,1);
-  visibility:visible;
-  pointer-events:auto;
-}
-
-.showroom-category-controls
-[data-showroom-category][data-depth-layer="rear"]{
-  z-index:1;
-
-  border-color:rgba(255,255,255,.17);
-
-  background:
-    linear-gradient(
-      135deg,
-      rgba(7,11,22,.72),
-      rgba(2,5,13,.84)
-    );
-}
-
-.showroom-category-controls
-[data-showroom-category][data-depth-layer="front"]{
-  z-index:3;
-
-  border-color:rgba(103,245,255,.40);
-
-  box-shadow:
-    0 .8rem 1.9rem rgba(0,0,0,.38),
-    0 0 1rem rgba(103,245,255,.08),
-    inset 0 1px 0 rgba(255,255,255,.12);
-}
-
-.showroom-category-controls
-[data-showroom-category]:hover,
-.showroom-category-controls
-[data-showroom-category]:focus-visible{
-  border-color:rgba(255,216,106,.86);
-
-  background:
-    linear-gradient(
-      135deg,
-      rgba(54,39,10,.94),
-      rgba(7,22,38,.96)
-    );
-
-  box-shadow:
-    0 .9rem 2.1rem rgba(0,0,0,.42),
-    0 0 1.2rem rgba(255,216,106,.14),
-    0 0 2rem rgba(103,245,255,.09),
-    inset 0 1px 0 rgba(255,255,255,.16);
-}
-
-.showroom-category-controls
-[data-showroom-category][data-selected="true"]{
-  color:#06100e;
-
-  border-color:rgba(255,216,106,.98);
-
-  background:
-    linear-gradient(
-      135deg,
-      var(--gold-soft),
-      var(--gold)
-    );
-
-  box-shadow:
-    0 0 1rem rgba(255,216,106,.24),
-    0 0 2.2rem rgba(255,181,31,.12);
-}
-
-.showroom-category-controls
-[data-showroom-category][data-category-id="diamond"]{
-  --category-accent:var(--cyan);
-}
-
-.showroom-category-controls
-[data-showroom-category][data-category-id="mathematics"]{
-  --category-accent:var(--gold);
-}
-
-.showroom-category-controls
-[data-showroom-category][data-category-id="science"]{
-  --category-accent:var(--violet);
-}
-
-.showroom-category-controls
-[data-showroom-category][data-category-id="engineering"]{
-  --category-accent:var(--steel);
-}
-
-.showroom-category-controls
-[data-showroom-category][data-category-id="platform"]{
-  --category-accent:var(--blue);
-}
-
-.showroom-category-controls
-[data-showroom-category][data-category-id="evidence"]{
-  --category-accent:var(--bronze);
-}
-
-.showroom-category-controls
-[data-showroom-category][data-category-id="anatomy"]{
-  --category-accent:var(--cyan-soft);
-}
-
-.showroom-category-controls
-[data-showroom-category]::before{
+.showroom-star::before,
+.showroom-star::after{
   content:"";
 
-  width:.45rem;
-  height:.45rem;
+  position:absolute;
+  inset:0;
 
-  display:inline-block;
+  clip-path:inherit;
 
-  margin-right:.35rem;
+  pointer-events:none;
+}
 
-  border-radius:50%;
+.showroom-star::before{
+  z-index:0;
 
   background:
-    var(--category-accent,var(--cyan));
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,.78),
+      rgba(255,216,106,.88) 18%,
+      rgba(65,91,167,.88) 48%,
+      rgba(8,18,54,.98) 78%,
+      rgba(255,255,255,.18)
+    );
 
   box-shadow:
-    0 0 .55rem
-    var(--category-accent,var(--cyan));
+    inset 0 1px 0 rgba(255,255,255,.65);
+}
+
+.showroom-star::after{
+  z-index:1;
+
+  inset:10%;
+
+  background:
+    conic-gradient(
+      from 20deg,
+      rgba(255,255,255,.68),
+      rgba(103,245,255,.18),
+      rgba(255,216,106,.34),
+      rgba(195,163,255,.24),
+      rgba(255,255,255,.68)
+    );
+
+  opacity:.72;
+
+  filter:blur(.5px);
+}
+
+.showroom-star--large{
+  width:clamp(4.9rem,8vw,7.2rem);
+  aspect-ratio:1;
+
+  clip-path:var(--star-cardinal-path);
+
+  filter:
+    drop-shadow(0 0 .65rem rgba(255,216,106,.22))
+    drop-shadow(0 .8rem 1.3rem rgba(0,0,0,.48));
+}
+
+.showroom-star--large:hover,
+.showroom-star--large:focus-visible{
+  transform:scale(1.08) rotate(2deg);
+
+  filter:
+    drop-shadow(0 0 1rem rgba(255,216,106,.48))
+    drop-shadow(0 0 1.6rem rgba(103,245,255,.18))
+    drop-shadow(0 .9rem 1.5rem rgba(0,0,0,.52));
+}
+
+.showroom-star--small{
+  width:clamp(2.4rem,4vw,3.6rem);
+  aspect-ratio:1;
+
+  clip-path:var(--star-child-path);
+
+  filter:
+    drop-shadow(0 0 .5rem rgba(255,255,255,.16))
+    drop-shadow(0 .45rem .8rem rgba(0,0,0,.42));
+}
+
+.showroom-star--small:hover,
+.showroom-star--small:focus-visible{
+  transform:scale(1.16) rotate(-3deg);
+}
+
+.showroom-star--gauge::before{
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,.92),
+      rgba(103,245,255,.96) 24%,
+      rgba(23,223,247,.88) 48%,
+      rgba(7,29,114,.98) 80%
+    );
+}
+
+.showroom-star--gauge{
+  filter:
+    drop-shadow(0 0 .7rem rgba(103,245,255,.56))
+    drop-shadow(0 .45rem .8rem rgba(0,0,0,.42));
+}
+
+.showroom-star--information::before{
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,.90),
+      rgba(195,163,255,.96) 24%,
+      rgba(168,108,255,.88) 48%,
+      rgba(23,9,68,.98) 80%
+    );
+}
+
+.showroom-star--information{
+  filter:
+    drop-shadow(0 0 .7rem rgba(195,163,255,.54))
+    drop-shadow(0 .45rem .8rem rgba(0,0,0,.42));
+}
+
+.showroom-star[data-showroom-object-id="characters-route"]{
+  left:14%;
+  top:19%;
+}
+
+.showroom-star[data-showroom-object-id="elara-route"]{
+  right:14%;
+  top:18%;
+}
+
+.showroom-star[data-showroom-object-id="gauge-cluster"]{
+  left:17%;
+  bottom:16%;
+}
+
+.showroom-star[data-showroom-object-id="information-cluster"]{
+  right:17%;
+  bottom:16%;
+}
+
+.showroom-star-cluster{
+  opacity:1;
+
+  transition:
+    opacity .24s ease,
+    transform .24s ease;
+}
+
+.showroom-star-cluster[hidden]{
+  display:none!important;
+}
+
+.showroom-star-cluster[data-showroom-cluster-state="collapsed"]{
+  opacity:0;
+  pointer-events:none;
+}
+
+.showroom-star-cluster[data-showroom-cluster-state="expanded"]{
+  opacity:1;
+}
+
+.showroom-star-cluster--gauges
+[data-showroom-object-id="object-gauge-star"]{
+  left:28%;
+  top:27%;
+}
+
+.showroom-star-cluster--gauges
+[data-showroom-object-id="structure-gauge-star"]{
+  left:23%;
+  top:47%;
+}
+
+.showroom-star-cluster--gauges
+[data-showroom-object-id="interaction-gauge-star"]{
+  left:29%;
+  bottom:18%;
+}
+
+.showroom-star-cluster--gauges
+[data-showroom-object-id="systems-gauge-star"]{
+  left:39%;
+  bottom:12%;
+}
+
+.showroom-star-cluster--information
+[data-showroom-object-id="platform-information-star"]{
+  right:29%;
+  top:29%;
+}
+
+.showroom-star-cluster--information
+[data-showroom-object-id="engineering-information-star"]{
+  right:23%;
+  top:50%;
+}
+
+.showroom-star-cluster--information
+[data-showroom-object-id="evidence-information-star"]{
+  right:31%;
+  bottom:17%;
 }
 
 .showroom-orbit__fallback{
@@ -1751,95 +1883,40 @@ canvas[data-showroom-layer="front"]{
 }
 
 /* =========================================================
-   CHAMBER HOST
+   FRONT HOST
    ========================================================= */
 
-.showroom-chamber-host{
+.showroom-front-host{
   display:grid;
-  gap:.9rem;
+  gap:clamp(2rem,5vw,4rem);
 
   margin-top:clamp(2.25rem,6vw,5rem);
 }
 
-.showroom-chamber-host__toolbar{
-  min-height:4rem;
-
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:1rem;
-
-  padding:.8rem 1rem;
-
-  border:1px solid rgba(255,255,255,.14);
-  border-radius:1.2rem;
-
-  background:
-    linear-gradient(
-      135deg,
-      rgba(255,255,255,.055),
-      rgba(2,7,18,.80)
-    );
-
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.08);
-}
-
-.showroom-chamber-host__toolbar > div{
-  display:grid;
-  gap:.1rem;
-}
-
-.showroom-chamber-host__eyebrow{
-  color:var(--cyan-soft);
-
-  font-size:.61rem;
-  font-weight:950;
-  letter-spacing:.13em;
-  text-transform:uppercase;
-}
-
-.showroom-chamber-host__toolbar strong{
-  color:var(--white);
-
-  font-size:.94rem;
-}
-
-.showroom-return-to-orbit{
-  flex:0 0 auto;
-}
-
-.showroom-chamber{
+.showroom-front{
   display:grid;
   gap:1rem;
-
-  margin:0;
 
   padding:clamp(1.05rem,3.4vw,1.8rem);
 
   scroll-margin-top:1rem;
 }
 
-.showroom-chamber[hidden]{
-  display:none;
-}
-
-/*
-  Before the controller initializes, every chamber remains available as
-  semantic fallback content. After initialization, the controller owns
-  hidden, inert, and aria-hidden. CSS only reflects its declared state.
-*/
-[data-showroom-root][data-showroom-controller-ready="true"]
-.showroom-chamber[data-showroom-chamber-state="inactive"]{
+.showroom-front[hidden]{
   display:none;
 }
 
 [data-showroom-root][data-showroom-controller-ready="true"]
-.showroom-chamber[data-showroom-chamber-state="active"]{
+.showroom-front[data-showroom-front-state="inactive"]{
+  display:none;
+}
+
+[data-showroom-root][data-showroom-controller-ready="true"]
+.showroom-front[data-showroom-front-state="active"]{
   display:grid;
 }
 
-.showroom-chamber__heading{
+.showroom-front__heading{
   max-width:var(--text-max);
 
   display:flex;
@@ -1848,13 +1925,13 @@ canvas[data-showroom-layer="front"]{
   gap:1rem;
 }
 
-.showroom-chamber__heading > div{
+.showroom-front__heading > div{
   display:grid;
   gap:.45rem;
 }
 
-.showroom-chamber__heading p{
-  max-width:46rem;
+.showroom-front__heading p{
+  max-width:50rem;
 
   color:
     var(--chamber-copy,var(--muted));
@@ -1863,50 +1940,8 @@ canvas[data-showroom-layer="front"]{
   line-height:1.55;
 }
 
-.showroom-chamber__proposition{
-  display:grid;
-  gap:.55rem;
-
-  padding:clamp(1rem,3vw,1.45rem);
-
-  border:1px solid var(--chamber-line);
-  border-radius:1.35rem;
-
-  background:
-    radial-gradient(
-      circle at 10% 0%,
-      var(--chamber-open),
-      transparent 22rem
-    ),
-    linear-gradient(
-      135deg,
-      rgba(0,0,0,.16),
-      var(--chamber-open)
-    );
-
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.09);
-}
-
-.showroom-chamber__proposition strong{
-  color:var(--white);
-
-  font-size:clamp(1.2rem,2.8vw,1.85rem);
-  line-height:1.12;
-  letter-spacing:-.035em;
-}
-
-.showroom-chamber__proposition p{
-  max-width:62rem;
-
-  color:
-    var(--chamber-copy,var(--muted));
-
-  line-height:1.62;
-}
-
 /* =========================================================
-   CHAMBER COLOR GOVERNANCE
+   FRONT COLOR GOVERNANCE
    ========================================================= */
 
 .chamber-exhibit{
@@ -1960,6 +1995,33 @@ canvas[data-showroom-layer="front"]{
       180deg,
       rgba(34,24,9,.99),
       rgba(10,9,8,.998)
+    );
+}
+
+.chamber-platform{
+  --chamber-accent:#8eb4ff;
+  --chamber-soft:#e8f0ff;
+  --chamber-line:rgba(92,143,255,.54);
+  --chamber-open:rgba(92,143,255,.075);
+  --chamber-copy:rgba(240,246,255,.95);
+
+  border:1px solid var(--chamber-line);
+
+  background:
+    radial-gradient(
+      circle at 12% 0%,
+      rgba(92,143,255,.15),
+      transparent 28rem
+    ),
+    radial-gradient(
+      circle at 88% 100%,
+      rgba(23,223,247,.07),
+      transparent 30rem
+    ),
+    linear-gradient(
+      180deg,
+      rgba(6,24,64,.99),
+      rgba(2,9,29,.998)
     );
 }
 
@@ -2017,95 +2079,842 @@ canvas[data-showroom-layer="front"]{
     );
 }
 
-.chamber-platform{
-  --chamber-accent:#8eb4ff;
-  --chamber-soft:#e8f0ff;
-  --chamber-line:rgba(92,143,255,.54);
-  --chamber-open:rgba(92,143,255,.075);
-  --chamber-copy:rgba(240,246,255,.95);
+/* =========================================================
+   GAUGE DASHBOARDS
+   ========================================================= */
+
+.showroom-gauge-dashboard{
+  display:grid;
+  gap:1rem;
+
+  padding:clamp(.9rem,2vw,1.25rem);
 
   border:1px solid var(--chamber-line);
-
-  background:
-    radial-gradient(
-      circle at 12% 0%,
-      rgba(92,143,255,.15),
-      transparent 28rem
-    ),
-    radial-gradient(
-      circle at 88% 100%,
-      rgba(23,223,247,.07),
-      transparent 30rem
-    ),
-    linear-gradient(
-      180deg,
-      rgba(6,24,64,.99),
-      rgba(2,9,29,.998)
-    );
-}
-
-.chamber-evidence{
-  --chamber-accent:var(--bronze-soft);
-  --chamber-soft:#ffe8c6;
-  --chamber-line:rgba(225,160,93,.54);
-  --chamber-open:rgba(225,160,93,.075);
-  --chamber-copy:rgba(250,245,237,.94);
-
-  border:1px solid var(--chamber-line);
-
-  background:
-    radial-gradient(
-      circle at 10% 0%,
-      rgba(225,160,93,.16),
-      transparent 28rem
-    ),
-    radial-gradient(
-      circle at 90% 100%,
-      rgba(19,42,80,.13),
-      transparent 30rem
-    ),
-    linear-gradient(
-      180deg,
-      rgba(37,25,14,.99),
-      rgba(4,13,28,.998)
-    );
-}
-
-.chamber-anatomy{
-  --chamber-accent:#9eefff;
-  --chamber-soft:#f0eaff;
-  --chamber-line:rgba(195,163,255,.54);
-  --chamber-open:rgba(103,245,255,.065);
-  --chamber-copy:rgba(244,247,255,.95);
-
-  border:1px solid var(--chamber-line);
+  border-radius:1.4rem;
 
   background:
     radial-gradient(
       circle at 50% 0%,
-      rgba(195,163,255,.15),
-      transparent 28rem
-    ),
-    radial-gradient(
-      circle at 50% 100%,
-      rgba(23,223,247,.12),
-      transparent 32rem
+      var(--chamber-open),
+      transparent 34rem
     ),
     linear-gradient(
-      180deg,
-      rgba(15,7,43,.99),
-      rgba(2,13,28,.998)
+      160deg,
+      rgba(0,0,0,.18),
+      rgba(255,255,255,.025)
     );
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.08),
+    0 1rem 2.8rem rgba(0,0,0,.18);
+
+  animation:
+    dashboardReveal .34s ease both;
+}
+
+.showroom-gauge-grid{
+  display:grid;
+  grid-template-columns:
+    repeat(4,minmax(0,1fr));
+
+  gap:.8rem;
+}
+
+.showroom-gauge-grid--structure{
+  grid-template-columns:
+    repeat(6,minmax(0,1fr));
+}
+
+.showroom-gauge-grid--systems{
+  grid-template-columns:
+    repeat(5,minmax(0,1fr));
+}
+
+.showroom-gauge{
+  position:relative;
+
+  min-width:0;
+
+  border:1px solid rgba(255,255,255,.14);
+  border-radius:1.2rem;
+
+  color:var(--white);
+
+  background:
+    radial-gradient(
+      circle at 50% 0%,
+      rgba(255,255,255,.06),
+      transparent 60%
+    ),
+    linear-gradient(
+      155deg,
+      rgba(255,255,255,.035),
+      rgba(0,0,0,.20)
+    );
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.08),
+    0 .8rem 2rem rgba(0,0,0,.18);
+
+  cursor:pointer;
+
+  transition:
+    transform .18s ease,
+    border-color .18s ease,
+    box-shadow .18s ease,
+    filter .18s ease,
+    opacity .18s ease;
+}
+
+.showroom-gauge:hover,
+.showroom-gauge:focus-visible{
+  transform:translateY(-2px) scale(1.015);
+
+  border-color:var(--chamber-accent);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.12),
+    0 1rem 2.2rem rgba(0,0,0,.24),
+    0 0 1.4rem var(--chamber-open);
+}
+
+.showroom-gauge[aria-expanded="true"]{
+  border-color:var(--chamber-soft);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.14),
+    0 0 1.3rem var(--chamber-open),
+    0 1rem 2.4rem rgba(0,0,0,.26);
+}
+
+.showroom-gauge-grid:has(
+  .showroom-gauge[aria-expanded="true"]
+)
+.showroom-gauge:not([aria-expanded="true"]){
+  opacity:.72;
+  filter:saturate(.78);
+}
+
+.showroom-gauge--radial,
+.showroom-gauge--state{
+  min-height:16.5rem;
+
+  display:grid;
+  grid-template-rows:auto auto auto;
+  justify-items:center;
+  align-content:center;
+  gap:.35rem;
+
+  padding:1rem;
+
+  text-align:center;
+}
+
+.showroom-gauge__visual{
+  position:relative;
+
+  width:var(--gauge-size);
+  aspect-ratio:1;
+
+  display:grid;
+  place-items:center;
+
+  margin-bottom:.2rem;
+
+  border-radius:50%;
+
+  background:
+    radial-gradient(
+      circle at center,
+      rgba(1,5,15,.96) 0 47%,
+      rgba(7,18,38,.88) 48% 56%,
+      transparent 57%
+    );
+
+  box-shadow:
+    inset 0 0 2rem rgba(0,0,0,.46),
+    0 0 1.2rem var(--chamber-open);
+}
+
+.showroom-gauge__arc{
+  position:absolute;
+  inset:4%;
+
+  border-radius:50%;
+
+  background:
+    conic-gradient(
+      from -110deg,
+      var(--chamber-accent)
+      calc(var(--gauge-ratio,var(--local-ratio,.65)) * 270deg),
+      rgba(255,255,255,.08) 0 270deg,
+      transparent 270deg 360deg
+    );
+
+  mask:
+    radial-gradient(
+      circle,
+      transparent 0 63%,
+      #000 64% 73%,
+      transparent 74%
+    );
+
+  -webkit-mask:
+    radial-gradient(
+      circle,
+      transparent 0 63%,
+      #000 64% 73%,
+      transparent 74%
+    );
+
+  filter:
+    drop-shadow(0 0 .55rem var(--chamber-accent));
+
+  transform:rotate(-135deg);
+
+  animation:
+    gaugeArcDraw .82s cubic-bezier(.2,.8,.2,1) both;
+}
+
+.showroom-gauge[data-gauge-visual-ratio=".46"]{
+  --local-ratio:.46;
+}
+
+.showroom-gauge[data-gauge-visual-ratio=".54"]{
+  --local-ratio:.54;
+}
+
+.showroom-gauge[data-gauge-visual-ratio=".58"]{
+  --local-ratio:.58;
+}
+
+.showroom-gauge[data-gauge-visual-ratio=".62"]{
+  --local-ratio:.62;
+}
+
+.showroom-gauge[data-gauge-visual-ratio=".76"]{
+  --local-ratio:.76;
+}
+
+.showroom-gauge[data-gauge-visual-ratio=".86"]{
+  --local-ratio:.86;
+}
+
+.showroom-gauge[data-gauge-visual-ratio=".94"]{
+  --local-ratio:.94;
+}
+
+.showroom-gauge__scanner{
+  position:absolute;
+  inset:12%;
+
+  border-radius:50%;
+
+  border-top:1px solid rgba(255,255,255,.52);
+  border-right:1px solid transparent;
+  border-bottom:1px solid transparent;
+  border-left:1px solid transparent;
+
+  filter:
+    drop-shadow(0 0 .45rem var(--chamber-accent));
+
+  animation:
+    gaugeScanner 6.8s linear infinite;
+}
+
+.showroom-gauge__value{
+  color:var(--chamber-soft);
+
+  font-size:clamp(1.4rem,3.2vw,2.15rem);
+  line-height:1;
+  letter-spacing:-.045em;
+
+  text-shadow:
+    0 0 .8rem var(--chamber-open);
+}
+
+.showroom-gauge__label{
+  color:var(--white);
+
+  font-size:.73rem;
+  font-weight:950;
+  letter-spacing:.075em;
+  line-height:1.25;
+  text-transform:uppercase;
+}
+
+.showroom-gauge__state{
+  color:var(--chamber-copy);
+
+  font-size:.64rem;
+  font-weight:800;
+  line-height:1.3;
+}
+
+.showroom-gauge__state-dial{
+  position:absolute;
+  inset:13%;
+
+  border:1px solid rgba(255,255,255,.13);
+  border-radius:50%;
+
+  background:
+    radial-gradient(
+      circle,
+      var(--state-color,var(--chamber-accent)) 0 8%,
+      transparent 9% 100%
+    ),
+    conic-gradient(
+      from 0deg,
+      var(--state-color,var(--chamber-accent)) 0 58deg,
+      transparent 58deg 88deg,
+      var(--state-color,var(--chamber-accent)) 88deg 146deg,
+      transparent 146deg 176deg,
+      var(--state-color,var(--chamber-accent)) 176deg 234deg,
+      transparent 234deg 264deg,
+      var(--state-color,var(--chamber-accent)) 264deg 322deg,
+      transparent 322deg 360deg
+    );
+
+  mask:
+    radial-gradient(
+      circle,
+      transparent 0 58%,
+      #000 59% 68%,
+      transparent 69%
+    );
+
+  -webkit-mask:
+    radial-gradient(
+      circle,
+      transparent 0 58%,
+      #000 59% 68%,
+      transparent 69%
+    );
+
+  opacity:.82;
+
+  animation:
+    stateDialDrift 8s ease-in-out infinite;
+}
+
+.showroom-gauge__pulse{
+  width:22%;
+  aspect-ratio:1;
+
+  border-radius:50%;
+
+  background:
+    radial-gradient(
+      circle at 35% 30%,
+      #fff,
+      var(--state-color,var(--chamber-accent)) 45%,
+      transparent 72%
+    );
+
+  box-shadow:
+    0 0 1rem var(--state-color,var(--chamber-accent));
+
+  animation:
+    gaugePulse 3.8s ease-in-out infinite;
+}
+
+.showroom-gauge[data-gauge-state="implemented"],
+.showroom-gauge[data-gauge-state="active"],
+.showroom-gauge[data-gauge-state="supported"],
+.showroom-gauge[data-gauge-state="available"]{
+  --state-color:var(--cyan);
+}
+
+.showroom-gauge[data-gauge-state="planned"],
+.showroom-gauge[data-gauge-state="research"]{
+  --state-color:var(--violet);
+}
+
+.showroom-gauge[data-gauge-state="closed"]{
+  --state-color:var(--gold);
+}
+
+.showroom-gauge[data-gauge-state="fallback"]{
+  --state-color:var(--steel);
+}
+
+.showroom-capability-grid{
+  display:grid;
+  grid-template-columns:
+    repeat(2,minmax(0,1fr));
+
+  gap:.75rem;
+}
+
+.showroom-gauge--capability{
+  min-height:6.1rem;
+
+  display:grid;
+  grid-template-columns:minmax(8rem,1fr) 1.15fr;
+  grid-template-rows:auto auto;
+  align-items:center;
+  gap:.25rem .9rem;
+
+  padding:.9rem 1rem;
+
+  text-align:left;
+}
+
+.showroom-gauge--capability
+.showroom-gauge__track{
+  grid-column:1;
+  grid-row:1 / span 2;
+
+  position:relative;
+
+  height:1.25rem;
+
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:.2rem;
+
+  overflow:hidden;
+
+  padding:.18rem;
+
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:999px;
+
+  background:rgba(0,0,0,.24);
+}
+
+.showroom-gauge__track i{
+  border-radius:999px;
+
+  background:
+    linear-gradient(
+      90deg,
+      rgba(103,245,255,.25),
+      rgba(103,245,255,.82)
+    );
+
+  box-shadow:
+    0 0 .45rem rgba(103,245,255,.28);
+
+  animation:
+    capabilitySegment .56s ease both;
+}
+
+.showroom-gauge__track i:nth-child(2){
+  animation-delay:.06s;
+}
+
+.showroom-gauge__track i:nth-child(3){
+  animation-delay:.12s;
+}
+
+.showroom-gauge__track i:nth-child(4){
+  animation-delay:.18s;
+}
+
+.showroom-gauge__track i:nth-child(5){
+  animation-delay:.24s;
+}
+
+.showroom-gauge__scan-line{
+  position:absolute;
+  inset:0 auto 0 -28%;
+
+  width:28%;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(255,255,255,.55),
+      transparent
+    );
+
+  animation:
+    capabilityScan 5.6s linear infinite;
+}
+
+.showroom-gauge--capability strong{
+  grid-column:2;
+  grid-row:1;
+
+  color:var(--white);
+
+  font-size:.9rem;
+  font-weight:950;
+  letter-spacing:.045em;
+  text-transform:uppercase;
+}
+
+.showroom-gauge--capability > span:last-child{
+  grid-column:2;
+  grid-row:2;
+
+  color:var(--chamber-copy);
+
+  font-size:.74rem;
+  line-height:1.3;
+}
+
+.showroom-gauge-details{
+  min-height:8rem;
+
+  display:grid;
+
+  border:1px solid var(--chamber-line);
+  border-radius:1.1rem;
+
+  background:
+    linear-gradient(
+      145deg,
+      var(--chamber-open),
+      rgba(0,0,0,.18)
+    );
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.08);
+}
+
+.showroom-gauge-detail{
+  display:grid;
+  align-content:center;
+  gap:.5rem;
+
+  padding:clamp(1rem,2.8vw,1.45rem);
+
+  animation:
+    gaugeDetailReveal .24s ease both;
+}
+
+.showroom-gauge-detail p{
+  max-width:62rem;
+
+  color:var(--chamber-copy);
+
+  font-size:.92rem;
+  line-height:1.58;
 }
 
 /* =========================================================
-   RESTORED INDEPENDENT DIAMOND STAGE
+   COMPOSITION GAUGE
    ========================================================= */
 
-/*
-  The Diamond returns to ordinary chamber document flow.
-  Its size is governed only by the original wide viewport contract.
-*/
+.showroom-composition-gauge{
+  display:grid;
+  gap:.8rem;
+
+  padding:1rem;
+
+  border:1px solid var(--chamber-line);
+  border-radius:1.2rem;
+
+  background:
+    radial-gradient(
+      circle at 50% 0%,
+      var(--chamber-open),
+      transparent 28rem
+    ),
+    rgba(0,0,0,.14);
+}
+
+.showroom-composition-gauge header{
+  display:grid;
+  gap:.2rem;
+}
+
+.showroom-composition-gauge header > span{
+  color:var(--chamber-soft);
+
+  font-size:.61rem;
+  font-weight:950;
+  letter-spacing:.13em;
+  text-transform:uppercase;
+}
+
+.showroom-composition-rail{
+  display:grid;
+  grid-template-columns:
+    repeat(5,minmax(0,1fr));
+
+  gap:.55rem;
+}
+
+.showroom-composition-rail button{
+  min-height:7rem;
+
+  display:grid;
+  align-content:center;
+  gap:.22rem;
+
+  padding:.75rem;
+
+  border:1px solid rgba(255,255,255,.14);
+  border-radius:1rem;
+
+  color:var(--white);
+
+  background:
+    linear-gradient(
+      155deg,
+      rgba(255,255,255,.045),
+      rgba(0,0,0,.18)
+    );
+
+  cursor:pointer;
+
+  transition:
+    transform .18s ease,
+    border-color .18s ease,
+    background .18s ease,
+    box-shadow .18s ease;
+}
+
+.showroom-composition-rail button:hover,
+.showroom-composition-rail button:focus-visible{
+  transform:translateY(-2px);
+
+  border-color:var(--chamber-accent);
+
+  box-shadow:
+    0 0 1rem var(--chamber-open);
+}
+
+.showroom-composition-rail
+button[aria-pressed="true"]{
+  border-color:var(--chamber-soft);
+
+  background:
+    radial-gradient(
+      circle at 50% 0%,
+      var(--chamber-open),
+      transparent 80%
+    ),
+    rgba(255,255,255,.045);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.12),
+    0 0 1.1rem var(--chamber-open);
+}
+
+.showroom-composition-rail button span{
+  color:var(--chamber-accent);
+
+  font-size:.58rem;
+  font-weight:950;
+  letter-spacing:.12em;
+}
+
+.showroom-composition-rail button strong{
+  font-size:.85rem;
+  line-height:1.15;
+}
+
+.showroom-composition-rail button small{
+  color:var(--chamber-copy);
+
+  font-size:.67rem;
+  line-height:1.3;
+}
+
+/* =========================================================
+   INFORMATION FRONT
+   ========================================================= */
+
+.showroom-information-tabs{
+  display:grid;
+  gap:1rem;
+}
+
+.showroom-information-tablist{
+  display:grid;
+  grid-template-columns:
+    repeat(3,minmax(0,1fr));
+
+  gap:.65rem;
+}
+
+.showroom-information-tablist button{
+  min-height:3.4rem;
+
+  border:1px solid rgba(185,204,225,.28);
+  border-radius:1rem;
+
+  color:rgba(246,250,255,.88);
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(185,204,225,.055),
+      rgba(0,0,0,.18)
+    );
+
+  font-size:.76rem;
+  font-weight:950;
+  letter-spacing:.09em;
+  text-transform:uppercase;
+
+  cursor:pointer;
+
+  transition:
+    transform .18s ease,
+    border-color .18s ease,
+    background .18s ease,
+    box-shadow .18s ease;
+}
+
+.showroom-information-tablist button:hover,
+.showroom-information-tablist button:focus-visible{
+  transform:translateY(-2px);
+
+  border-color:rgba(195,163,255,.68);
+
+  box-shadow:
+    0 0 1rem rgba(195,163,255,.10);
+}
+
+.showroom-information-tablist
+button[aria-selected="true"]{
+  color:#100923;
+
+  border-color:rgba(238,229,255,.94);
+
+  background:
+    linear-gradient(
+      135deg,
+      var(--violet-soft),
+      var(--violet)
+    );
+
+  box-shadow:
+    0 0 1.1rem rgba(195,163,255,.24);
+}
+
+.showroom-information-panel{
+  display:grid;
+  gap:1rem;
+
+  animation:
+    informationPanelReveal .26s ease both;
+}
+
+.showroom-information-summary{
+  display:grid;
+  gap:.45rem;
+
+  padding:1rem 1.1rem;
+
+  border:1px solid var(--chamber-line);
+  border-radius:1.15rem;
+
+  background:
+    linear-gradient(
+      145deg,
+      var(--chamber-open),
+      rgba(0,0,0,.16)
+    );
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.08);
+}
+
+.showroom-information-summary strong{
+  color:var(--white);
+
+  font-size:clamp(1.1rem,2.4vw,1.55rem);
+  line-height:1.15;
+  letter-spacing:-.03em;
+}
+
+.showroom-information-summary p{
+  color:var(--chamber-copy);
+
+  font-size:.92rem;
+  line-height:1.55;
+}
+
+.showroom-evidence-statuses{
+  display:grid;
+  grid-template-columns:
+    repeat(3,minmax(0,1fr));
+
+  gap:.65rem;
+}
+
+.showroom-evidence-statuses article{
+  min-height:6.4rem;
+
+  display:grid;
+  align-content:center;
+  gap:.24rem;
+
+  padding:.85rem;
+
+  border:1px solid rgba(255,255,255,.14);
+  border-radius:1rem;
+
+  background:
+    linear-gradient(
+      150deg,
+      rgba(255,255,255,.04),
+      rgba(0,0,0,.19)
+    );
+
+  text-align:center;
+}
+
+.showroom-evidence-statuses article span{
+  color:rgba(239,246,255,.76);
+
+  font-size:.61rem;
+  font-weight:950;
+  letter-spacing:.09em;
+  text-transform:uppercase;
+}
+
+.showroom-evidence-statuses article strong{
+  font-size:.86rem;
+  line-height:1.25;
+}
+
+.showroom-evidence-statuses
+[data-evidence-state="implemented"]{
+  border-color:rgba(103,245,255,.42);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.08),
+    0 0 .9rem rgba(103,245,255,.07);
+}
+
+.showroom-evidence-statuses
+[data-evidence-state="implemented"] strong{
+  color:var(--cyan-soft);
+}
+
+.showroom-evidence-statuses
+[data-evidence-state="not-claimed"]{
+  border-color:rgba(154,168,184,.34);
+}
+
+.showroom-evidence-statuses
+[data-evidence-state="not-claimed"] strong{
+  color:#d4dde7;
+}
+
+.showroom-evidence-statuses
+[data-evidence-state="not-authorized"]{
+  border-color:rgba(255,154,165,.34);
+}
+
+.showroom-evidence-statuses
+[data-evidence-state="not-authorized"] strong{
+  color:#ffc2c9;
+}
+
+/* =========================================================
+   RESTORED DIAMOND STAGE
+   ========================================================= */
+
 .diamond-layout,
 .diamond-view-column{
   display:grid;
@@ -2120,10 +2929,6 @@ canvas[data-showroom-layer="front"]{
   isolation:isolate;
 }
 
-/*
-  The Diamond layer is no longer absolutely positioned inside the orbit.
-  It occupies its own full-width exhibit stage.
-*/
 .showroom-diamond-layer{
   position:relative;
   z-index:1;
@@ -2212,13 +3017,6 @@ canvas[data-showroom-layer="front"]{
     0 0 2rem rgba(195,163,255,.05);
 }
 
-/*
-  Protected renderer stage.
-
-  Its full viewport, canvas geometry, touch-action, wheel reception,
-  pointer capture, pinch handling, and renderer-owned calculations remain
-  independent of the new orbit stage.
-*/
 .diamond-stage,
 [data-showroom-diamond-stage]{
   position:absolute;
@@ -2242,10 +3040,6 @@ canvas[data-showroom-layer="front"]{
   background:transparent;
 }
 
-/*
-  The Window controller may temporarily gate Diamond access.
-  Open or ungoverned fallback states restore the original interaction.
-*/
 [data-showroom-root][data-showroom-window-state="closed"]
 [data-showroom-diamond-stage],
 [data-showroom-root][data-showroom-window-state="opening"]
@@ -2264,11 +3058,6 @@ canvas[data-showroom-layer="front"]{
   pointer-events:auto;
 }
 
-/*
-  Until a functional Window controller explicitly announces readiness,
-  preserve the existing Diamond interaction rather than leaving it
-  permanently blocked by static HTML state.
-*/
 [data-showroom-root]:not(
   [data-showroom-window-controller-ready="true"]
 )
@@ -2399,13 +3188,9 @@ canvas[data-showroom-layer="front"]{
 }
 
 /* =========================================================
-   MIRRORLAND WINDOW OVER DIAMOND ONLY
+   MIRRORLAND WINDOW
    ========================================================= */
 
-/*
-  This layer covers only .showroom-reveal-scene.
-  It cannot overlap or change the compact orbit navigator.
-*/
 .showroom-window-layer{
   position:absolute;
   inset:0;
@@ -2542,28 +3327,11 @@ canvas[data-showroom-layer="front"]{
 [data-showroom-window-state="closing"]
 .showroom-window-mount{
   opacity:.98;
-
-  filter:
-    drop-shadow(0 1.4rem 2rem rgba(0,0,0,.50))
-    drop-shadow(0 0 1.8rem rgba(103,245,255,.18))
-    drop-shadow(0 0 2.1rem rgba(255,216,106,.10));
 }
 
 [data-showroom-window-state="open"]
 .showroom-window-mount{
   opacity:0;
-}
-
-[data-showroom-window-state="open"]
-.showroom-window-control{
-  border-color:rgba(255,216,106,.58);
-
-  background:
-    linear-gradient(
-      135deg,
-      rgba(51,34,10,.94),
-      rgba(11,18,35,.96)
-    );
 }
 
 [data-showroom-window-state="held"]
@@ -2579,18 +3347,6 @@ canvas[data-showroom-layer="front"]{
   pointer-events:none;
 }
 
-/*
-  Progressive fallback:
-  before the Window runtime is operational, do not visually place an
-  empty transparent interception layer over the restored Diamond.
-*/
-[data-showroom-root]:not(
-  [data-showroom-window-controller-ready="true"]
-)
-.showroom-window-layer{
-  pointer-events:none;
-}
-
 [data-showroom-root]:not(
   [data-showroom-window-controller-ready="true"]
 )
@@ -2602,212 +3358,8 @@ canvas[data-showroom-layer="front"]{
   [data-showroom-window-controller-ready="true"]
 )
 .showroom-window-control{
-  pointer-events:none;
   opacity:.58;
-}
-
-/* =========================================================
-   DIVERSE INFORMATION SURFACES
-   ========================================================= */
-
-.showroom-fact-grid{
-  display:grid;
-  grid-template-columns:repeat(4,minmax(0,1fr));
-  gap:.75rem;
-}
-
-.showroom-fact-grid--five{
-  grid-template-columns:repeat(5,minmax(0,1fr));
-}
-
-.showroom-fact-grid--six{
-  grid-template-columns:repeat(6,minmax(0,1fr));
-}
-
-.showroom-fact-grid article{
-  min-height:7.4rem;
-
-  display:grid;
-  align-content:center;
-  gap:.25rem;
-
-  padding:1rem;
-
-  border:1px solid var(--chamber-line);
-  border-radius:1.05rem;
-
-  background:
-    linear-gradient(
-      145deg,
-      var(--chamber-open),
-      rgba(0,0,0,.14)
-    );
-
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.08);
-
-  text-align:center;
-}
-
-.showroom-fact-grid strong{
-  color:var(--chamber-soft);
-
-  font-size:clamp(1.25rem,3vw,2rem);
-  line-height:1;
-}
-
-.showroom-fact-grid span{
-  color:var(--chamber-copy);
-
-  font-size:.67rem;
-  font-weight:950;
-  letter-spacing:.07em;
-  line-height:1.3;
-  text-transform:uppercase;
-}
-
-.showroom-concept-grid{
-  display:grid;
-  grid-template-columns:repeat(5,minmax(0,1fr));
-  gap:.75rem;
-}
-
-.showroom-concept-grid article{
-  min-height:8rem;
-
-  display:grid;
-  align-content:start;
-  gap:.5rem;
-
-  padding:1rem;
-
-  border:1px solid rgba(195,163,255,.34);
-  border-radius:1.1rem;
-
-  background:
-    radial-gradient(
-      circle at 20% 0%,
-      rgba(195,163,255,.10),
-      transparent 12rem
-    ),
-    rgba(5,8,22,.34);
-
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.07);
-}
-
-.showroom-concept-grid strong{
-  color:var(--violet-soft);
-
-  font-size:1.03rem;
-}
-
-.showroom-concept-grid p{
-  color:rgba(246,241,255,.88);
-
-  font-size:.85rem;
-  line-height:1.45;
-}
-
-.showroom-status-grid{
-  display:grid;
-  grid-template-columns:repeat(5,minmax(0,1fr));
-  gap:.75rem;
-}
-
-.showroom-status-grid article{
-  min-height:7.6rem;
-
-  display:grid;
-  align-content:center;
-  gap:.35rem;
-
-  padding:1rem;
-
-  border:1px solid rgba(225,160,93,.36);
-  border-radius:1rem;
-
-  background:
-    linear-gradient(
-      145deg,
-      rgba(225,160,93,.09),
-      rgba(4,13,28,.38)
-    );
-
-  text-align:center;
-}
-
-.showroom-status-grid strong{
-  color:var(--bronze-soft);
-
-  font-size:.86rem;
-  font-weight:950;
-  letter-spacing:.06em;
-  text-transform:uppercase;
-}
-
-.showroom-status-grid span{
-  color:rgba(250,245,237,.88);
-
-  font-size:.78rem;
-  line-height:1.35;
-}
-
-.showroom-anatomy-grid{
-  display:grid;
-  grid-template-columns:repeat(5,minmax(0,1fr));
-  gap:.75rem;
-}
-
-.showroom-anatomy-grid article{
-  min-height:10rem;
-
-  display:grid;
-  align-content:start;
-  gap:.4rem;
-
-  padding:1rem;
-
-  border:1px solid rgba(195,163,255,.36);
-  border-radius:1.1rem;
-
-  background:
-    radial-gradient(
-      circle at 50% 0%,
-      rgba(103,245,255,.09),
-      transparent 11rem
-    ),
-    linear-gradient(
-      150deg,
-      rgba(195,163,255,.08),
-      rgba(2,13,28,.40)
-    );
-
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.08);
-}
-
-.showroom-anatomy-grid span{
-  color:var(--cyan-soft);
-
-  font-size:.59rem;
-  font-weight:950;
-  letter-spacing:.12em;
-  text-transform:uppercase;
-}
-
-.showroom-anatomy-grid strong{
-  color:var(--white);
-
-  font-size:1.05rem;
-  line-height:1.15;
-}
-
-.showroom-anatomy-grid p{
-  color:rgba(244,247,255,.86);
-
-  font-size:.83rem;
-  line-height:1.45;
+  pointer-events:none;
 }
 
 /* =========================================================
@@ -2933,7 +3485,9 @@ canvas[data-showroom-layer="front"]{
 
 .drop-grid{
   display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
+  grid-template-columns:
+    repeat(2,minmax(0,1fr));
+
   gap:.8rem;
 }
 
@@ -2947,7 +3501,9 @@ canvas[data-showroom-layer="front"]{
 
 .two-view-buttons{
   display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
+  grid-template-columns:
+    repeat(2,minmax(0,1fr));
+
   gap:.72rem;
   align-items:stretch;
 }
@@ -3073,18 +3629,6 @@ canvas[data-showroom-layer="front"]{
   font-size:.88rem;
   font-weight:850;
   line-height:1.35;
-}
-
-.status-strip span[data-status-kind="error"]{
-  color:var(--red);
-}
-
-.status-strip span[data-status-kind="selection"]{
-  color:var(--gold-soft);
-}
-
-.status-strip span[data-status-kind="waiting"]{
-  color:var(--cyan);
 }
 
 .actions{
@@ -3232,6 +3776,27 @@ button.button{
 }
 
 /* =========================================================
+   LOCAL FRONT NAVIGATION
+   ========================================================= */
+
+.showroom-front-navigation{
+  display:grid;
+  grid-template-columns:
+    repeat(2,minmax(0,1fr));
+
+  gap:.75rem;
+
+  margin-top:.35rem;
+  padding-top:1rem;
+
+  border-top:1px solid var(--chamber-line);
+}
+
+.showroom-front-navigation .button{
+  width:100%;
+}
+
+/* =========================================================
    DIALOGS
    ========================================================= */
 
@@ -3328,24 +3893,11 @@ dialog::backdrop{
   font-weight:950;
 
   cursor:pointer;
-
-  transition:
-    transform .18s ease,
-    border-color .18s ease,
-    background .18s ease;
 }
 
-.dialog-close:hover,
-.dialog-close:focus-visible{
-  border-color:rgba(185,204,225,.72);
-
-  background:rgba(185,204,225,.14);
-
-  transform:rotate(4deg);
-}
-
+.showroom-route-dialog,
 .showroom-compass-dialog{
-  width:min(34rem,calc(100% - 28px));
+  width:min(35rem,calc(100% - 28px));
 
   border-color:rgba(255,216,106,.54);
 
@@ -3367,21 +3919,27 @@ dialog::backdrop{
     );
 }
 
+.showroom-route-dialog p,
 .showroom-compass-dialog p{
   color:rgba(244,248,255,.88);
 
   line-height:1.6;
 }
 
+.showroom-route-dialog__choices,
 .showroom-compass-dialog__choices{
   display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
+  grid-template-columns:
+    repeat(2,minmax(0,1fr));
+
   gap:.75rem;
 }
 
 .construction-grid{
   display:grid;
-  grid-template-columns:repeat(3,minmax(0,1fr));
+  grid-template-columns:
+    repeat(3,minmax(0,1fr));
+
   gap:.72rem;
 }
 
@@ -3466,11 +4024,6 @@ dialog::backdrop{
   font-weight:850;
 }
 
-.showroom-footer a:hover,
-.showroom-footer a:focus-visible{
-  color:var(--gold-soft);
-}
-
 /* =========================================================
    CONTROLLER STATE REFLECTION
    ========================================================= */
@@ -3481,18 +4034,136 @@ dialog::backdrop{
 }
 
 [data-showroom-root][data-showroom-held="true"]
-.showroom-category-controls,
+.showroom-star,
 [data-showroom-root][data-showroom-held="true"]
 .showroom-window-control,
 [data-showroom-root][data-showroom-held="true"]
-.showroom-compass-control{
+.showroom-compass-control,
+[data-showroom-root][data-showroom-held="true"]
+.showroom-gauge{
   opacity:.52;
   pointer-events:none;
 }
 
 [data-showroom-root][data-showroom-compass-dialog-open="true"]
+.showroom-orbit__field,
+[data-showroom-root][data-showroom-route-dialog-open="true"]
 .showroom-orbit__field{
   filter:saturate(.84) brightness(.86);
+}
+
+/* =========================================================
+   ANIMATIONS
+   ========================================================= */
+
+@keyframes dashboardReveal{
+  from{
+    opacity:0;
+    transform:translateY(.65rem);
+  }
+
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+
+@keyframes gaugeArcDraw{
+  from{
+    opacity:0;
+    transform:
+      rotate(-135deg)
+      scale(.86);
+  }
+
+  to{
+    opacity:1;
+    transform:
+      rotate(-135deg)
+      scale(1);
+  }
+}
+
+@keyframes gaugeScanner{
+  from{
+    transform:rotate(0deg);
+  }
+
+  to{
+    transform:rotate(360deg);
+  }
+}
+
+@keyframes stateDialDrift{
+  0%,
+  100%{
+    transform:rotate(-4deg);
+    opacity:.72;
+  }
+
+  50%{
+    transform:rotate(8deg);
+    opacity:.94;
+  }
+}
+
+@keyframes gaugePulse{
+  0%,
+  100%{
+    transform:scale(.88);
+    opacity:.66;
+  }
+
+  50%{
+    transform:scale(1.06);
+    opacity:1;
+  }
+}
+
+@keyframes capabilitySegment{
+  from{
+    transform:scaleX(.1);
+    opacity:.18;
+  }
+
+  to{
+    transform:scaleX(1);
+    opacity:1;
+  }
+}
+
+@keyframes capabilityScan{
+  from{
+    left:-28%;
+  }
+
+  to{
+    left:100%;
+  }
+}
+
+@keyframes gaugeDetailReveal{
+  from{
+    opacity:0;
+    transform:translateY(.3rem);
+  }
+
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+
+@keyframes informationPanelReveal{
+  from{
+    opacity:0;
+    transform:translateY(.35rem);
+  }
+
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
 }
 
 /* =========================================================
@@ -3500,14 +4171,14 @@ dialog::backdrop{
    ========================================================= */
 
 @media (max-width:1180px){
-  .showroom-fact-grid--six{
+  .showroom-gauge-grid,
+  .showroom-gauge-grid--structure,
+  .showroom-gauge-grid--systems{
     grid-template-columns:
       repeat(3,minmax(0,1fr));
   }
 
-  .showroom-concept-grid,
-  .showroom-status-grid,
-  .showroom-anatomy-grid{
+  .showroom-composition-rail{
     grid-template-columns:
       repeat(3,minmax(0,1fr));
   }
@@ -3522,8 +4193,13 @@ dialog::backdrop{
     text-align:left;
   }
 
-  .showroom-fact-grid,
-  .showroom-fact-grid--five{
+  .showroom-gauge-grid{
+    grid-template-columns:
+      repeat(2,minmax(0,1fr));
+  }
+
+  .showroom-gauge-grid--structure,
+  .showroom-gauge-grid--systems{
     grid-template-columns:
       repeat(3,minmax(0,1fr));
   }
@@ -3564,19 +4240,26 @@ dialog::backdrop{
     max-height:34rem;
   }
 
-  .showroom-chamber-host__toolbar{
-    align-items:stretch;
+  .showroom-star--large{
+    width:clamp(4.4rem,13vw,6rem);
+  }
+
+  .showroom-capability-grid{
+    grid-template-columns:1fr;
+  }
+
+  .showroom-composition-rail{
+    grid-template-columns:
+      repeat(2,minmax(0,1fr));
+  }
+
+  .showroom-evidence-statuses{
+    grid-template-columns:
+      repeat(2,minmax(0,1fr));
   }
 
   .drop-grid{
     grid-template-columns:1fr;
-  }
-
-  .showroom-concept-grid,
-  .showroom-status-grid,
-  .showroom-anatomy-grid{
-    grid-template-columns:
-      repeat(2,minmax(0,1fr));
   }
 
   .construction-grid{
@@ -3600,7 +4283,7 @@ dialog::backdrop{
 
   .showroom-threshold,
   .showroom-orbit,
-  .showroom-chamber{
+  .showroom-front{
     padding:1rem;
   }
 
@@ -3626,35 +4309,111 @@ dialog::backdrop{
     height:3.1rem;
   }
 
-  .showroom-category-controls
-  [data-showroom-category]{
-    min-width:5.4rem;
-    min-height:2.75rem;
-    max-width:8.2rem;
-
-    padding:.52rem .65rem;
-
-    font-size:.61rem;
+  .showroom-star[data-showroom-object-id="characters-route"]{
+    left:8%;
+    top:16%;
   }
 
-  .showroom-orbit__fallback{
-    bottom:.4rem;
+  .showroom-star[data-showroom-object-id="elara-route"]{
+    right:8%;
+    top:16%;
   }
 
-  .showroom-orbit__fallback p{
-    border-radius:1rem;
+  .showroom-star[data-showroom-object-id="gauge-cluster"]{
+    left:10%;
+    bottom:15%;
   }
 
-  .showroom-chamber-host__toolbar{
+  .showroom-star[data-showroom-object-id="information-cluster"]{
+    right:10%;
+    bottom:15%;
+  }
+
+  .showroom-star-cluster--gauges
+  [data-showroom-object-id="object-gauge-star"]{
+    left:23%;
+    top:33%;
+  }
+
+  .showroom-star-cluster--gauges
+  [data-showroom-object-id="structure-gauge-star"]{
+    left:20%;
+    top:50%;
+  }
+
+  .showroom-star-cluster--gauges
+  [data-showroom-object-id="interaction-gauge-star"]{
+    left:26%;
+    bottom:20%;
+  }
+
+  .showroom-star-cluster--gauges
+  [data-showroom-object-id="systems-gauge-star"]{
+    left:40%;
+    bottom:11%;
+  }
+
+  .showroom-star-cluster--information
+  [data-showroom-object-id="platform-information-star"]{
+    right:24%;
+    top:34%;
+  }
+
+  .showroom-star-cluster--information
+  [data-showroom-object-id="engineering-information-star"]{
+    right:20%;
+    top:52%;
+  }
+
+  .showroom-star-cluster--information
+  [data-showroom-object-id="evidence-information-star"]{
+    right:29%;
+    bottom:18%;
+  }
+
+  .showroom-front__heading{
     display:grid;
   }
 
-  .showroom-return-to-orbit{
-    width:100%;
+  .showroom-gauge-grid,
+  .showroom-gauge-grid--structure,
+  .showroom-gauge-grid--systems{
+    grid-template-columns:
+      repeat(2,minmax(0,1fr));
   }
 
-  .showroom-chamber__heading{
-    display:grid;
+  .showroom-gauge--radial,
+  .showroom-gauge--state{
+    min-height:14rem;
+  }
+
+  .showroom-gauge__visual{
+    --gauge-size:clamp(7rem,31vw,9rem);
+  }
+
+  .showroom-gauge--capability{
+    grid-template-columns:1fr;
+    grid-template-rows:auto auto auto;
+  }
+
+  .showroom-gauge--capability
+  .showroom-gauge__track{
+    grid-column:1;
+    grid-row:1;
+  }
+
+  .showroom-gauge--capability strong{
+    grid-column:1;
+    grid-row:2;
+  }
+
+  .showroom-gauge--capability > span:last-child{
+    grid-column:1;
+    grid-row:3;
+  }
+
+  .showroom-information-tablist{
+    grid-template-columns:1fr;
   }
 
   .diamond-viewport-card{
@@ -3666,13 +4425,6 @@ dialog::backdrop{
 
     min-width:10rem;
     min-height:3rem;
-  }
-
-  .showroom-fact-grid,
-  .showroom-fact-grid--five,
-  .showroom-fact-grid--six{
-    grid-template-columns:
-      repeat(2,minmax(0,1fr));
   }
 
   .status-strip{
@@ -3699,6 +4451,11 @@ dialog::backdrop{
     width:100%;
   }
 
+  .showroom-front-navigation{
+    grid-template-columns:1fr;
+  }
+
+  .showroom-route-dialog__choices,
   .showroom-compass-dialog__choices{
     grid-template-columns:1fr;
   }
@@ -3711,20 +4468,6 @@ dialog::backdrop{
 
   .showroom-footer nav{
     justify-content:center;
-  }
-
-  elara-room-entry{
-    --elara-entry-height:3.7rem;
-    --elara-entry-font-size:.76rem;
-    --elara-entry-letter-spacing:.095em;
-  }
-
-  elara-room-entry > a{
-    min-height:3.7rem;
-
-    padding:.76rem .92rem;
-
-    font-size:.76rem;
   }
 }
 
@@ -3762,9 +4505,38 @@ dialog::backdrop{
     width:7.3rem;
   }
 
-  .showroom-concept-grid,
-  .showroom-status-grid,
-  .showroom-anatomy-grid{
+  .showroom-star--large{
+    width:4.6rem;
+  }
+
+  .showroom-star--small{
+    width:2.65rem;
+  }
+
+  .showroom-gauge-grid,
+  .showroom-gauge-grid--structure,
+  .showroom-gauge-grid--systems{
+    display:flex;
+
+    overflow-x:auto;
+    scroll-snap-type:x mandatory;
+
+    padding-bottom:.3rem;
+  }
+
+  .showroom-gauge-grid .showroom-gauge,
+  .showroom-gauge-grid--structure .showroom-gauge,
+  .showroom-gauge-grid--systems .showroom-gauge{
+    flex:0 0 min(78vw,17rem);
+
+    scroll-snap-align:center;
+  }
+
+  .showroom-composition-rail{
+    grid-template-columns:1fr;
+  }
+
+  .showroom-evidence-statuses{
     grid-template-columns:1fr;
   }
 
@@ -3789,24 +4561,20 @@ dialog::backdrop{
   .construction-access,
   .diamond-viewport-card,
   .showroom-orbit__field,
-  .showroom-chamber__proposition,
-  .showroom-fact-grid article,
-  .showroom-concept-grid article,
-  .showroom-status-grid article,
-  .showroom-anatomy-grid article{
+  .showroom-gauge-dashboard,
+  .showroom-gauge,
+  .showroom-gauge-details,
+  .showroom-composition-gauge,
+  .showroom-information-summary{
     border-width:2px;
   }
 
   .drop-content p,
   .object-control-body p,
-  .showroom-chamber__heading p,
-  .showroom-chamber__proposition p{
+  .showroom-front__heading p,
+  .showroom-gauge-detail p,
+  .showroom-information-summary p{
     color:#ffffff;
-  }
-
-  .showroom-category-controls
-  [data-showroom-category]{
-    border-width:2px;
   }
 }
 
@@ -3825,11 +4593,20 @@ dialog::backdrop{
   }
 
   .thesis-field::before,
-  .mirrorland-thesis::before{
+  .mirrorland-thesis::before,
+  .showroom-gauge__scanner,
+  .showroom-gauge__scan-line,
+  .showroom-gauge__pulse{
     display:none;
   }
 
   .showroom-window-mount{
     transition:none;
+  }
+
+  .showroom-gauge__arc,
+  .showroom-gauge__state-dial,
+  .showroom-gauge__track i{
+    animation:none;
   }
 }

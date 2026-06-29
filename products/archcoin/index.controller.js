@@ -1,86 +1,59 @@
 /* /products/archcoin/index.controller.js
-   ARCHCOIN
-   Controller-owned interaction, navigation, selection, and semantic-priority
-   renewal.
+   ARCHCOIN locked navigation and state authority.
 
    Module:
    DGB_ARCHCOIN_CONTROLLER
    7.0.0-controller-interaction-semantic-priority
 
-   Dependency position:
+   File-split position:
    1. /products/archcoin/index.controller.js
    2. /assets/compass/upstream-compass.geometry.js
    3. /assets/compass/upstream-compass.renderer.js
    4. /products/archcoin/index.compositor.js
    5. /products/archcoin/index.crystals.js
-   6. /products/archcoin/index.html
-   7. /assets/compass/upstream-compass.css
-   8. /products/archcoin/index.css
+   6. /products/archcoin/index.interactions.js
+   7. /products/archcoin/index.html
+   8. /assets/compass/upstream-compass.css
+   9. /products/archcoin/index.css
 
-   Controller ownership:
-   - navigation state;
-   - selected wing and room;
-   - canonical routes;
-   - pointer and swipe interpretation;
-   - tap-versus-drag arbitration over crystal-associated controls;
-   - orbit and cluster gesture preview / commit / cancel;
-   - cluster-exit swipe;
-   - page-local Compass selection;
-   - explicit Return to Main Compass;
+   Locked controller ownership:
+   - canonical navigation states and legal transitions;
+   - selected wing, coin, room, route, content, and lens;
+   - canonical sixteen-room registry;
+   - orbit and cluster orientation state;
+   - gesture-command authorization;
+   - cardinal and room selection authorization;
    - Return to Orbit;
    - Return to Constellation;
-   - semantic interaction authorization;
+   - page-local Compass selection;
+   - explicit Return to Main Compass;
+   - semantic projection storage and authorization;
    - panel content and viewport choreography;
-   - reduced motion and held state;
+   - reduced motion and terminal held state;
    - controller receipts and validation.
 
-   Controller exclusions:
-   - camera mathematics;
-   - world-to-screen projection mathematics;
-   - Compass-plane depth calculation;
-   - front/rear depth classification;
-   - canvas construction;
-   - WebGL;
-   - crystal meshes, materials, shaders, animation, or drawing;
-   - Compass geometry or renderer lifecycle.
+   Extracted to DGB_ARCHCOIN_INTERACTIONS:
+   - pointerdown, pointermove, pointerup, and pointercancel;
+   - pointer capture and release;
+   - pointer state;
+   - tap-versus-drag arbitration;
+   - swipe distance and direction classification;
+   - whole-crystal circular hit testing;
+   - cluster-exit swipe classification;
+   - synthetic-click suppression;
+   - pointer-origin semantic capture;
+   - browser input normalization.
 
-   Navigation states:
-   - CONSTELLATION
-   - CLUSTER_OPEN
-   - ROOM_SELECTED
-   - SYSTEM_HELD
-
-   Presentation modes:
-   - CONSTELLATION
-   - CLUSTER
-   - HELD
-
-   Compass behavior:
-   - Compass remains a fixed-center independent sibling;
-   - tapping Compass does not navigate immediately;
-   - tapping Compass creates a page-local selection and descends to the panel;
-   - Return to Main Compass performs explicit /index.html navigation;
-   - Return to Orbit restores the valid ARCHCOIN orbit or constellation.
-
-   Semantic depth priority:
-   - compositor supplies projection and depth facts;
-   - controller authorizes canonical semantic controls;
-   - front crystal control precedes Compass;
-   - Compass precedes a rear crystal control when they overlap;
-   - no generated proxies or cloned controls.
-
-   Coordinated interaction correction:
-   - cardinal and room controls no longer block gesture initiation;
-   - a pointer contact may begin over a crystal-associated control;
-   - movement beyond the dead zone converts the contact into a drag;
-   - a stationary release activates the captured canonical destination;
-   - an outward cluster drag returns to the constellation;
-   - synthetic click duplication after pointer-owned activation is suppressed;
-   - keyboard-generated semantic clicks remain available;
-   - public module identity and version remain unchanged.
+   Authority boundary:
+   - interactions may classify physical input;
+   - interactions may request controller commands;
+   - interactions may not mutate controller state;
+   - controller alone accepts or rejects state transitions;
+   - cluster-exit classification belongs to interactions;
+   - Return-to-Constellation authorization belongs to controller.
 
    Source status:
-   COORDINATED_RENEWAL_SOURCE_CANDIDATE
+   FILE_SPLIT_CONTROLLER_SOURCE_CANDIDATE
    !=
    RUNTIME_PASS
    !=
@@ -100,7 +73,13 @@
       "7.0.0-controller-interaction-semantic-priority",
 
     file:
-      "/products/archcoin/index.controller.js"
+      "/products/archcoin/index.controller.js",
+
+    interactionModuleId:
+      "DGB_ARCHCOIN_INTERACTIONS",
+
+    interactionModuleVersion:
+      "1.0.0-pointer-gesture-interpreter"
   });
 
   const STATES = Object.freeze({
@@ -253,6 +232,70 @@
       "EXPLICIT_RETURN_ACTION"
   });
 
+  const ORIENTATION = Object.freeze({
+    maximumPitch:
+      Math.PI * 0.42
+  });
+
+  const QUATERNION = Object.freeze({
+    identity:
+      Object.freeze([
+        0,
+        0,
+        0,
+        1
+      ]),
+
+    minimumLength:
+      1e-8
+  });
+
+  const CANONICAL_CONSTELLATION_EULER = Object.freeze({
+    north: Object.freeze({
+      yaw:
+        0,
+
+      pitch:
+        0,
+
+      roll:
+        0
+    }),
+
+    east: Object.freeze({
+      yaw:
+        -Math.PI / 2,
+
+      pitch:
+        0,
+
+      roll:
+        0
+    }),
+
+    south: Object.freeze({
+      yaw:
+        Math.PI,
+
+      pitch:
+        0,
+
+      roll:
+        0
+    }),
+
+    west: Object.freeze({
+      yaw:
+        Math.PI / 2,
+
+      pitch:
+        0,
+
+      roll:
+        0
+    })
+  });
+
   const PRESENTATION_BY_STATE = Object.freeze({
     [STATES.CONSTELLATION]: Object.freeze({
       mode:
@@ -336,54 +379,6 @@
       STATES.SYSTEM_HELD
     ])
   });
-
-  const GESTURE = Object.freeze({
-    dragDeadZonePx:
-      8,
-
-    swipeMinimumPx:
-      76,
-
-    exitSwipeMinimumPx:
-      94,
-
-    exitSwipeMinimumStartRadiusPx:
-      42,
-
-    exitSwipeDirectionThreshold:
-      0.58,
-
-    syntheticClickSuppressionMs:
-      720,
-
-    maximumPitch:
-      Math.PI * 0.42,
-
-    yawRadiansPerViewport:
-      Math.PI * 1.35,
-
-    pitchRadiansPerViewport:
-      Math.PI * 0.92
-  });
-
-  /*
-   * Crystal-associated cardinal and room controls are intentionally absent
-   * from this exclusion selector.
-   *
-   * A contact that begins over either canonical control must be allowed to
-   * remain a tap or convert into an orbit / cluster gesture.
-   */
-  const INTERACTIVE_GESTURE_EXCLUSION_SELECTOR = [
-    "[data-upstream-compass-control]",
-    "[data-archcoin-enter]",
-    "[data-archcoin-return-to-orbit]",
-    "[data-archcoin-return-home-compass]",
-    "input",
-    "select",
-    "textarea",
-    "summary",
-    "[contenteditable='true']"
-  ].join(",");
 
   const CANONICAL_ROOM_RECORDS = Object.freeze([
     Object.freeze({
@@ -657,65 +652,6 @@
     )
   );
 
-  const QUATERNION = Object.freeze({
-    identity:
-      Object.freeze([
-        0,
-        0,
-        0,
-        1
-      ]),
-
-    minimumLength:
-      1e-8
-  });
-
-  const CANONICAL_CONSTELLATION_EULER = Object.freeze({
-    north: Object.freeze({
-      yaw:
-        0,
-
-      pitch:
-        0,
-
-      roll:
-        0
-    }),
-
-    east: Object.freeze({
-      yaw:
-        -Math.PI / 2,
-
-      pitch:
-        0,
-
-      roll:
-        0
-    }),
-
-    south: Object.freeze({
-      yaw:
-        Math.PI,
-
-      pitch:
-        0,
-
-      roll:
-        0
-    }),
-
-    west: Object.freeze({
-      yaw:
-        Math.PI / 2,
-
-      pitch:
-        0,
-
-      roll:
-        0
-    })
-  });
-
   const subscribers = Object.freeze({
     frame:
       new Set(),
@@ -890,12 +826,6 @@
     mediaQueryListener:
       null,
 
-    pointer:
-      null,
-
-    suppressedSemanticClick:
-      null,
-
     semanticProjection:
       new Map(),
 
@@ -979,18 +909,6 @@
         maximum,
         value
       )
-    );
-  }
-
-  function distance2d(
-    x1,
-    y1,
-    x2,
-    y2
-  ) {
-    return Math.hypot(
-      x2 - x1,
-      y2 - y1
     );
   }
 
@@ -1335,8 +1253,8 @@
           pitch,
           0
         ),
-        -GESTURE.maximumPitch,
-        GESTURE.maximumPitch
+        -ORIENTATION.maximumPitch,
+        ORIENTATION.maximumPitch
       );
 
     const safeRoll =
@@ -1567,17 +1485,6 @@
     );
   }
 
-  function wingToCoin(wing) {
-    return (
-      WING_TO_COIN[
-        normalizeWing(
-          wing
-        )
-      ] ||
-      ""
-    );
-  }
-
   function nearestCardinalFromYaw(
     yaw
   ) {
@@ -1622,6 +1529,17 @@
     }
 
     return bestWing;
+  }
+
+  function wingToCoin(wing) {
+    return (
+      WING_TO_COIN[
+        normalizeWing(
+          wing
+        )
+      ] ||
+      ""
+    );
   }
 
   function createClusterState(wing) {
@@ -2100,8 +2018,7 @@
     if (
       state.panelEyebrow
     ) {
-      state.panelEyebrow
-        .textContent =
+      state.panelEyebrow.textContent =
         eyebrow ||
         "Selected path";
     }
@@ -2109,8 +2026,7 @@
     if (
       state.panelTitle
     ) {
-      state.panelTitle
-        .textContent =
+      state.panelTitle.textContent =
         title ||
         "Choose a financial domain";
     }
@@ -2118,8 +2034,7 @@
     if (
       state.panelPurpose
     ) {
-      state.panelPurpose
-        .textContent =
+      state.panelPurpose.textContent =
         purpose ||
         "";
     }
@@ -2127,8 +2042,7 @@
     if (
       state.panelRelationship
     ) {
-      state.panelRelationship
-        .textContent =
+      state.panelRelationship.textContent =
         relationship ||
         "";
     }
@@ -2677,6 +2591,9 @@
             y:
               record.y,
 
+            radiusPx:
+              record.radiusPx,
+
             depthLayer:
               record.depthLayer,
 
@@ -2846,6 +2763,12 @@
       mainCompass:
         MAIN_COMPASS,
 
+      interactionModuleId:
+        MODULE.interactionModuleId,
+
+      interactionModuleVersion:
+        MODULE.interactionModuleVersion,
+
       lastAction:
         state.lastAction,
 
@@ -2997,9 +2920,30 @@
         frame.semanticProjectionRevision,
 
       pointerInterpreterOwner:
-        MODULE.id,
+        MODULE.interactionModuleId,
 
       pointerTapArbitrationOwner:
+        MODULE.interactionModuleId,
+
+      wholeCrystalHitTestOwner:
+        MODULE.interactionModuleId,
+
+      syntheticClickSuppressionOwner:
+        MODULE.interactionModuleId,
+
+      clusterExitSwipeClassificationOwner:
+        MODULE.interactionModuleId,
+
+      orbitStateAuthority:
+        MODULE.id,
+
+      clusterStateAuthority:
+        MODULE.id,
+
+      navigationTransitionAuthority:
+        MODULE.id,
+
+      clusterExitTransitionAuthority:
         MODULE.id,
 
       lastAction:
@@ -3183,6 +3127,15 @@
 
     state.root.dataset.archcoinControllerVersion =
       MODULE.version;
+
+    state.root.dataset.archcoinInteractionModule =
+      MODULE.interactionModuleId;
+
+    state.root.dataset.archcoinPointerInterpreterOwner =
+      MODULE.interactionModuleId;
+
+    state.root.dataset.archcoinNavigationAuthority =
+      MODULE.id;
 
     state.root.dataset.semanticProjectionRevision =
       String(
@@ -3508,7 +3461,7 @@
       );
 
       setGuidance(
-        "Tap a cardinal crystal or label to open its cluster. Swipe across the field, including across a crystal touch target, to rotate the constellation."
+        "Tap any visible part of a cardinal crystal or its label to open its cluster. Swipe across the field to rotate the constellation."
       );
 
       return;
@@ -3578,7 +3531,7 @@
       );
 
       setGuidance(
-        "Tap a room crystal to select it. Swipe anywhere across the active field to rotate the cluster, or swipe outward to return to the constellation."
+        "Tap any visible part of a room crystal to select it. Swipe across the field to rotate the cluster, or swipe outward to return to the constellation."
       );
 
       return;
@@ -4294,15 +4247,12 @@
       );
     }
 
-    const orientation =
+    setClusterOrientation(
+      cluster,
       resolveOrientation(
         payload,
         cluster.orientation
-      );
-
-    setClusterOrientation(
-      cluster,
-      orientation,
+      ),
       {
         committed:
           false,
@@ -5130,8 +5080,8 @@
                   wing
                 )
               : wingToCoin(
-                wing
-              ),
+                  wing
+                ),
 
           selectedRoute:
             "",
@@ -5223,681 +5173,6 @@
     return committed;
   }
 
-  function semanticDestinationFromTarget(
-    target
-  ) {
-    if (
-      !(target instanceof Element) ||
-      !state.root
-    ) {
-      return null;
-    }
-
-    const destination =
-      target.closest(
-        "[data-archcoin-destination]"
-      );
-
-    if (
-      !destination ||
-      !state.root.contains(
-        destination
-      )
-    ) {
-      return null;
-    }
-
-    return destination;
-  }
-
-  function pointerGestureAllowedFromTarget(
-    target
-  ) {
-    if (
-      !(target instanceof Element)
-    ) {
-      return false;
-    }
-
-    return !target.closest(
-      INTERACTIVE_GESTURE_EXCLUSION_SELECTOR
-    );
-  }
-
-  function createPointerState(event) {
-    const rect =
-      state.sceneField.getBoundingClientRect();
-
-    return {
-      pointerId:
-        event.pointerId,
-
-      pointerType:
-        event.pointerType,
-
-      startX:
-        event.clientX,
-
-      startY:
-        event.clientY,
-
-      currentX:
-        event.clientX,
-
-      currentY:
-        event.clientY,
-
-      centerX:
-        rect.left +
-        rect.width / 2,
-
-      centerY:
-        rect.top +
-        rect.height / 2,
-
-      width:
-        Math.max(
-          1,
-          rect.width
-        ),
-
-      height:
-        Math.max(
-          1,
-          rect.height
-        ),
-
-      startedAt:
-        performance.now(),
-
-      dragging:
-        false,
-
-      originDestination:
-        semanticDestinationFromTarget(
-          event.target
-        ),
-
-      mode:
-        state.current ===
-          STATES.CONSTELLATION
-          ? "orbit"
-          : "cluster",
-
-      originOrientation:
-        state.current ===
-          STATES.CONSTELLATION
-          ? cloneOrientation(
-              state.committedOrbitOrientation ||
-              state.orbitOrientation
-            )
-          : cloneOrientation(
-              activeCluster()
-                ? activeCluster()
-                    .committedOrientation ||
-                  activeCluster()
-                    .orientation
-                : orientationFromQuaternion(
-                    QUATERNION.identity
-                  )
-            )
-    };
-  }
-
-  function orientationFromPointerDelta(
-    pointer
-  ) {
-    const dx =
-      pointer.currentX -
-      pointer.startX;
-
-    const dy =
-      pointer.currentY -
-      pointer.startY;
-
-    const yawDelta =
-      (
-        dx /
-        pointer.width
-      ) *
-      GESTURE.yawRadiansPerViewport;
-
-    const pitchDelta =
-      (
-        dy /
-        pointer.height
-      ) *
-      GESTURE.pitchRadiansPerViewport;
-
-    return orientationFromEuler(
-      pointer.originOrientation.yaw +
-        yawDelta,
-
-      pointer.originOrientation.pitch +
-        pitchDelta,
-
-      pointer.originOrientation.roll,
-
-      pointer.originOrientation.primaryId
-    );
-  }
-
-  function isQualifiedClusterExitSwipe(
-    pointer
-  ) {
-    const dx =
-      pointer.currentX -
-      pointer.startX;
-
-    const dy =
-      pointer.currentY -
-      pointer.startY;
-
-    const distance =
-      Math.hypot(
-        dx,
-        dy
-      );
-
-    if (
-      distance <
-      GESTURE.exitSwipeMinimumPx
-    ) {
-      return false;
-    }
-
-    const startRadialX =
-      pointer.startX -
-      pointer.centerX;
-
-    const startRadialY =
-      pointer.startY -
-      pointer.centerY;
-
-    const startRadius =
-      Math.hypot(
-        startRadialX,
-        startRadialY
-      );
-
-    if (
-      startRadius <
-      GESTURE.exitSwipeMinimumStartRadiusPx
-    ) {
-      return false;
-    }
-
-    const directionLength =
-      Math.max(
-        1,
-        distance
-      );
-
-    const radialLength =
-      Math.max(
-        1,
-        startRadius
-      );
-
-    const directionDot =
-      (
-        (
-          dx /
-          directionLength
-        ) *
-        (
-          startRadialX /
-          radialLength
-        )
-      ) +
-      (
-        (
-          dy /
-          directionLength
-        ) *
-        (
-          startRadialY /
-          radialLength
-        )
-      );
-
-    return (
-      directionDot >=
-      GESTURE.exitSwipeDirectionThreshold
-    );
-  }
-
-  function clearPointerState() {
-    state.pointer =
-      null;
-
-    if (
-      state.sceneField
-    ) {
-      state.sceneField.dataset
-        .gestureActive =
-        "false";
-    }
-  }
-
-  function suppressNextSemanticClick(
-    destination
-  ) {
-    if (!destination) {
-      state.suppressedSemanticClick =
-        null;
-
-      return;
-    }
-
-    state.suppressedSemanticClick = {
-      destination,
-
-      expiresAt:
-        performance.now() +
-        GESTURE
-          .syntheticClickSuppressionMs
-    };
-  }
-
-  function shouldSuppressSemanticClick(
-    event,
-    destination
-  ) {
-    const suppression =
-      state.suppressedSemanticClick;
-
-    if (!suppression) {
-      return false;
-    }
-
-    if (
-      performance.now() >
-      suppression.expiresAt
-    ) {
-      state.suppressedSemanticClick =
-        null;
-
-      return false;
-    }
-
-    /*
-     * Keyboard activation normally has detail 0 and must not be suppressed.
-     */
-    if (
-      event &&
-      event.detail ===
-        0
-    ) {
-      return false;
-    }
-
-    if (
-      destination !==
-      suppression.destination
-    ) {
-      return false;
-    }
-
-    state.suppressedSemanticClick =
-      null;
-
-    return true;
-  }
-
-  function activateSemanticDestination(
-    destination
-  ) {
-    if (
-      !destination ||
-      !state.root ||
-      !state.root.contains(
-        destination
-      ) ||
-      isHeld()
-    ) {
-      return false;
-    }
-
-    if (
-      destination.dataset
-        .archcoinInteractionPriority ===
-        INTERACTION_PRIORITY.COMPASS
-    ) {
-      return requestCompassSelection();
-    }
-
-    if (
-      destination.matches(
-        "[data-archcoin-coin]"
-      )
-    ) {
-      return requestCardinalSelection(
-        destination.dataset.wing ||
-        destination.dataset.coinId
-      );
-    }
-
-    if (
-      destination.matches(
-        "[data-archcoin-room]"
-      )
-    ) {
-      return requestRoomSelection(
-        destination.dataset.roomId
-      );
-    }
-
-    return false;
-  }
-
-  function handlePointerDown(event) {
-    if (
-      isHeld() ||
-      !state.sceneField ||
-      state.pointer ||
-      !pointerGestureAllowedFromTarget(
-        event.target
-      )
-    ) {
-      return;
-    }
-
-    if (
-      state.current !==
-        STATES.CONSTELLATION &&
-      state.current !==
-        STATES.CLUSTER_OPEN &&
-      state.current !==
-        STATES.ROOM_SELECTED
-    ) {
-      return;
-    }
-
-    if (
-      event.pointerType ===
-        "mouse" &&
-      event.button !==
-        0
-    ) {
-      return;
-    }
-
-    state.suppressedSemanticClick =
-      null;
-
-    state.pointer =
-      createPointerState(
-        event
-      );
-
-    state.sceneField.dataset
-      .gestureActive =
-      "true";
-
-    try {
-      state.sceneField.setPointerCapture(
-        event.pointerId
-      );
-    } catch (_) {}
-  }
-
-  function handlePointerMove(event) {
-    const pointer =
-      state.pointer;
-
-    if (
-      !pointer ||
-      pointer.pointerId !==
-        event.pointerId
-    ) {
-      return;
-    }
-
-    pointer.currentX =
-      event.clientX;
-
-    pointer.currentY =
-      event.clientY;
-
-    const distance =
-      distance2d(
-        pointer.startX,
-        pointer.startY,
-        pointer.currentX,
-        pointer.currentY
-      );
-
-    if (
-      !pointer.dragging &&
-      distance <
-        GESTURE.dragDeadZonePx
-    ) {
-      return;
-    }
-
-    if (
-      !pointer.dragging
-    ) {
-      pointer.dragging =
-        true;
-
-      state.compassSelected =
-        false;
-
-      if (
-        pointer.originDestination
-      ) {
-        suppressNextSemanticClick(
-          pointer.originDestination
-        );
-      }
-
-      if (
-        pointer.mode ===
-        "orbit"
-      ) {
-        beginOrbitGesture({
-          orientation:
-            pointer.originOrientation
-        });
-      } else {
-        beginClusterGesture(
-          activeClusterWing(),
-          {
-            orientation:
-              pointer.originOrientation
-          }
-        );
-      }
-    }
-
-    event.preventDefault();
-
-    const orientation =
-      orientationFromPointerDelta(
-        pointer
-      );
-
-    if (
-      pointer.mode ===
-        "orbit"
-    ) {
-      orientation.primaryId =
-        nearestCardinalFromYaw(
-          orientation.yaw
-        );
-
-      requestOrbitPreview(
-        orientation
-      );
-    } else {
-      const cluster =
-        activeCluster();
-
-      orientation.primaryId =
-        cluster
-          ? cluster.previewPrimaryRoom ||
-            cluster.primaryRoom
-          : "";
-
-      requestClusterPreview(
-        activeClusterWing(),
-        orientation
-      );
-    }
-  }
-
-  function finishPointerGesture(
-    event,
-    cancelled
-  ) {
-    const pointer =
-      state.pointer;
-
-    if (
-      !pointer ||
-      pointer.pointerId !==
-        event.pointerId
-    ) {
-      return;
-    }
-
-    pointer.currentX =
-      event.clientX;
-
-    pointer.currentY =
-      event.clientY;
-
-    try {
-      state.sceneField.releasePointerCapture(
-        event.pointerId
-      );
-    } catch (_) {}
-
-    if (
-      !pointer.dragging
-    ) {
-      const destination =
-        pointer.originDestination;
-
-      clearPointerState();
-
-      if (
-        cancelled ||
-        !destination
-      ) {
-        return;
-      }
-
-      /*
-       * Pointer-owned activation lets the entire projected crystal touch area
-       * and its visible label resolve through the same canonical control.
-       */
-      event.preventDefault();
-
-      suppressNextSemanticClick(
-        destination
-      );
-
-      activateSemanticDestination(
-        destination
-      );
-
-      return;
-    }
-
-    event.preventDefault();
-
-    if (cancelled) {
-      if (
-        pointer.mode ===
-          "orbit"
-      ) {
-        requestOrbitCancel(
-          "pointer-cancel"
-        );
-      } else {
-        requestClusterCancel(
-          activeClusterWing(),
-          "pointer-cancel"
-        );
-      }
-
-      clearPointerState();
-
-      return;
-    }
-
-    const orientation =
-      orientationFromPointerDelta(
-        pointer
-      );
-
-    if (
-      pointer.mode ===
-        "cluster" &&
-      isQualifiedClusterExitSwipe(
-        pointer
-      )
-    ) {
-      requestClusterCancel(
-        activeClusterWing(),
-        "cluster-exit-swipe"
-      );
-
-      clearPointerState();
-
-      requestReturnToConstellation();
-
-      return;
-    }
-
-    if (
-      pointer.mode ===
-        "orbit"
-    ) {
-      orientation.primaryId =
-        nearestCardinalFromYaw(
-          orientation.yaw
-        );
-
-      requestOrbitCommit(
-        orientation
-      );
-    } else {
-      const cluster =
-        activeCluster();
-
-      orientation.primaryId =
-        cluster
-          ? cluster.previewPrimaryRoom ||
-            cluster.primaryRoom
-          : "";
-
-      requestClusterCommit(
-        activeClusterWing(),
-        orientation
-      );
-    }
-
-    clearPointerState();
-  }
-
-  function handlePointerUp(event) {
-    finishPointerGesture(
-      event,
-      false
-    );
-  }
-
-  function handlePointerCancel(event) {
-    finishPointerGesture(
-      event,
-      true
-    );
-  }
-
   function applyProjectionToControl(
     control,
     projection
@@ -5917,6 +5192,16 @@
       "--archcoin-label-y",
       `${projection.y}px`
     );
+
+    control.style.setProperty(
+      "--archcoin-projected-radius",
+      `${projection.radiusPx}px`
+    );
+
+    control.dataset.archcoinProjectedRadius =
+      String(
+        projection.radiusPx
+      );
 
     control.dataset.archcoinDepthLayer =
       projection.depthLayer;
@@ -5983,6 +5268,14 @@
 
         control.dataset.archcoinInteractionPriority =
           INTERACTION_PRIORITY.INACTIVE;
+
+        control.dataset.archcoinProjectedRadius =
+          "0";
+
+        control.style.setProperty(
+          "--archcoin-projected-radius",
+          "0px"
+        );
 
         control.style.pointerEvents =
           "none";
@@ -6056,6 +5349,16 @@
           input.compassOverlap
         );
 
+      const radiusPx =
+        Math.max(
+          0,
+          finiteNumber(
+            input.radiusPx ||
+            input.projectedRadius,
+            0
+          )
+        );
+
       let interactionPriority =
         INTERACTION_PRIORITY.INACTIVE;
 
@@ -6100,6 +5403,8 @@
               0
             ),
 
+          radiusPx,
+
           depthLayer,
 
           compassOverlap,
@@ -6143,64 +5448,6 @@
     );
 
     return true;
-  }
-
-  function handleSemanticClick(event) {
-    const compassControl =
-      event.target.closest(
-        "[data-upstream-compass-control]"
-      );
-
-    if (
-      compassControl &&
-      state.root.contains(
-        compassControl
-      )
-    ) {
-      event.preventDefault();
-
-      if (
-        !isHeld()
-      ) {
-        requestCompassSelection();
-      }
-
-      return;
-    }
-
-    if (
-      isHeld()
-    ) {
-      return;
-    }
-
-    const destination =
-      semanticDestinationFromTarget(
-        event.target
-      );
-
-    if (!destination) {
-      return;
-    }
-
-    if (
-      shouldSuppressSemanticClick(
-        event,
-        destination
-      )
-    ) {
-      event.preventDefault();
-
-      event.stopPropagation();
-
-      return;
-    }
-
-    event.preventDefault();
-
-    activateSemanticDestination(
-      destination
-    );
   }
 
   function handleKeydown(event) {
@@ -6968,6 +6215,60 @@
     });
   }
 
+  function validateFileSplitContract() {
+    invariant(
+      !Object.prototype
+        .hasOwnProperty
+        .call(
+          state,
+          "pointer"
+        ),
+      "ARCHCOIN_CONTROLLER_POINTER_STATE_NOT_EXTRACTED"
+    );
+
+    invariant(
+      !Object.prototype
+        .hasOwnProperty
+        .call(
+          state,
+          "suppressedSemanticClick"
+        ),
+      "ARCHCOIN_CONTROLLER_CLICK_SUPPRESSION_NOT_EXTRACTED"
+    );
+
+    return Object.freeze({
+      pass:
+        true,
+
+      pointerListenersOwned:
+        false,
+
+      pointerStateOwned:
+        false,
+
+      swipeClassificationOwned:
+        false,
+
+      tapDragArbitrationOwned:
+        false,
+
+      wholeCrystalHitTestingOwned:
+        false,
+
+      syntheticClickSuppressionOwned:
+        false,
+
+      clusterExitSwipeClassificationOwned:
+        false,
+
+      interactionModuleId:
+        MODULE.interactionModuleId,
+
+      navigationTransitionAuthority:
+        MODULE.id
+    });
+  }
+
   function validateDeclaredRooms() {
     if (
       !state.root
@@ -7111,6 +6412,9 @@
       compass:
         validateCompassContract(),
 
+      fileSplit:
+        validateFileSplitContract(),
+
       declaredRooms:
         includeDom
           ? validateDeclaredRooms()
@@ -7134,7 +6438,7 @@
 
     return Object.freeze({
       receiptSchema:
-        "ARCHCOIN_CONTROLLER_INTERACTION_VALIDATION_RECEIPT_v1",
+        "ARCHCOIN_CONTROLLER_FILE_SPLIT_VALIDATION_RECEIPT_v1",
 
       moduleId:
         MODULE.id,
@@ -7145,9 +6449,30 @@
       pass,
 
       pointerInterpreterOwner:
-        MODULE.id,
+        MODULE.interactionModuleId,
 
       pointerTapArbitrationOwner:
+        MODULE.interactionModuleId,
+
+      wholeCrystalHitTestOwner:
+        MODULE.interactionModuleId,
+
+      syntheticClickSuppressionOwner:
+        MODULE.interactionModuleId,
+
+      clusterExitSwipeClassificationOwner:
+        MODULE.interactionModuleId,
+
+      orbitStateAuthority:
+        MODULE.id,
+
+      clusterStateAuthority:
+        MODULE.id,
+
+      clusterExitTransitionAuthority:
+        MODULE.id,
+
+      navigationTransitionAuthority:
         MODULE.id,
 
       cameraOwnership:
@@ -7162,10 +6487,7 @@
       semanticProjectionMathOwnership:
         false,
 
-      clusterExitSwipeOwned:
-        true,
-
-      crystalControlGestureInitiationPermitted:
+      semanticProjectionAuthorizationOwnership:
         true,
 
       compassPageLocalSelection:
@@ -7221,6 +6543,12 @@
 
         moduleVersion:
           MODULE.version,
+
+        interactionModuleId:
+          MODULE.interactionModuleId,
+
+        interactionModuleVersion:
+          MODULE.interactionModuleVersion,
 
         states:
           STATES,
@@ -7354,45 +6682,8 @@
 
   function bindControls() {
     state.root.addEventListener(
-      "click",
-      handleSemanticClick
-    );
-
-    state.root.addEventListener(
       "keydown",
       handleKeydown
-    );
-
-    state.sceneField.addEventListener(
-      "pointerdown",
-      handlePointerDown
-    );
-
-    state.sceneField.addEventListener(
-      "pointermove",
-      handlePointerMove,
-      {
-        passive:
-          false
-      }
-    );
-
-    state.sceneField.addEventListener(
-      "pointerup",
-      handlePointerUp,
-      {
-        passive:
-          false
-      }
-    );
-
-    state.sceneField.addEventListener(
-      "pointercancel",
-      handlePointerCancel,
-      {
-        passive:
-          false
-      }
     );
 
     if (
@@ -7400,7 +6691,11 @@
     ) {
       state.enterButton.addEventListener(
         "click",
-        requestEnterSelection
+        event => {
+          event.preventDefault();
+
+          requestEnterSelection();
+        }
       );
     }
 
@@ -7409,7 +6704,11 @@
     ) {
       state.returnToOrbitButton.addEventListener(
         "click",
-        requestReturnToOrbit
+        event => {
+          event.preventDefault();
+
+          requestReturnToOrbit();
+        }
       );
     }
 
@@ -7435,16 +6734,14 @@
   function enterHeldState(error) {
     clearViewportSchedules();
 
-    clearPointerState();
-
-    state.suppressedSemanticClick =
-      null;
-
     state.current =
       STATES.SYSTEM_HELD;
 
     state.orbitGestureActive =
       false;
+
+    state.orbitGestureOrigin =
+      null;
 
     for (
       const cluster
@@ -7578,6 +6875,28 @@
         CHANNELS.COMPASS_STATE,
         frame.compass
       );
+
+      globalThis.dispatchEvent(
+        new CustomEvent(
+          "ARCHCOIN_CONTROLLER_READY",
+          {
+            detail:
+              Object.freeze({
+                moduleId:
+                  MODULE.id,
+
+                moduleVersion:
+                  MODULE.version,
+
+                interactionModuleRequired:
+                  true,
+
+                interactionModuleId:
+                  MODULE.interactionModuleId
+              })
+          }
+        )
+      );
     } catch (error) {
       enterHeldState(
         error
@@ -7603,7 +6922,7 @@
 })();
 
 /*
-AUDRALIA_ARCHCOIN_CONTROLLER_CRYSTAL_TAP_AND_SWIPE_RESTORATION_RESULT_v2
+AUDRALIA_ARCHCOIN_CONTROLLER_LOCKED_STATE_AUTHORITY_FILE_SPLIT_RESULT_v1
 
 Artifact:
  /products/archcoin/index.controller.js
@@ -7612,9 +6931,13 @@ Module:
  DGB_ARCHCOIN_CONTROLLER
  7.0.0-controller-interaction-semantic-priority
 
-Preserved:
-- exact public module ID
-- exact public module version
+New paired interaction module:
+ DGB_ARCHCOIN_INTERACTIONS
+ 1.0.0-pointer-gesture-interpreter
+
+Preserved controller authority:
+- exact public controller module ID
+- exact public controller module version
 - CONSTELLATION
 - CLUSTER_OPEN
 - ROOM_SELECTED
@@ -7622,77 +6945,88 @@ Preserved:
 - normalized CONSTELLATION / CLUSTER / HELD presentation
 - exact sixteen canonical room records
 - exact sixteen canonical routes
+- legal transition table
 - delayed room navigation
 - Enter Selected Path
 - Return to Orbit
 - Return to Constellation
+- page-local Compass selection
+- explicit Return to Main Compass
 - orbit quaternion state
 - cluster quaternion state
-- preview / commit / cancel APIs
+- orbit begin / preview / commit / cancel commands
+- cluster begin / preview / commit / cancel commands
+- cardinal selection authorization
+- room selection authorization
 - reduced motion
-- held-state terminal law
+- terminal held-state law
+- panel state and viewport choreography
+- semantic projection authorization
+- front / Compass / rear interaction priority facts
 - receipts and validation
 - fixed-center independent Compass
 - no generated room proxies
-- no projected hit inference
-- controller-owned cluster-exit swipe
-- front / Compass / rear interaction authorization
 
-Corrected:
-- cardinal controls no longer prohibit gesture initiation
-- room controls no longer prohibit gesture initiation
-- broad button and anchor exclusions removed from scene-field gesture gating
-- Compass and panel action controls remain excluded
-- pointer-down captures the canonical origin destination
-- pointer movement beyond the dead zone converts the same contact into a drag
-- stationary pointer release activates the captured canonical destination
-- crystal touch area and visible label resolve through one canonical control
-- orbit drag may begin over a cardinal crystal control
-- cluster drag may begin over a room crystal control
-- outward cluster swipe may begin over a room crystal control
-- synthetic click following pointer-owned activation is suppressed
-- synthetic click following a drag is suppressed
-- keyboard click activation remains available
-- controls absent from the current compositor projection are deactivated
-- stale inactive controls cannot cover the gesture field
+Extracted from controller:
+- GESTURE threshold object
+- pointer exclusion selector
+- pointer state
+- suppressed semantic click state
+- pointerdown handling
+- pointermove handling
+- pointerup handling
+- pointercancel handling
+- pointer capture
+- pointer release
+- drag dead-zone classification
+- swipe-distance classification
+- cluster-exit vector classification
+- pointer-origin destination capture
+- tap-versus-drag arbitration
+- whole-crystal hit testing
+- synthetic-click suppression
+- root semantic click delegation
+- browser pointer-event listeners
 
-Controller does not own:
-- camera
-- view matrix
-- projection matrix
-- Compass-plane depth
-- front/rear classification
-- canvas construction
-- WebGL
-- crystal rendering
-- Compass renderer lifecycle
-- room-label visual presentation
-- touch-target visual dimensions
+New authority declarations:
+- pointerInterpreterOwner:
+  DGB_ARCHCOIN_INTERACTIONS
 
-Required coordinated next file:
- /products/archcoin/index.css
+- pointerTapArbitrationOwner:
+  DGB_ARCHCOIN_INTERACTIONS
 
-CSS correction still required:
-- remove visible room-label pills
-- retain transparent projected room touch targets
-- keep cardinal labels visible
-- ensure touch targets remain centered on their crystals
-- avoid covering the field with oversized semantic rectangles
+- wholeCrystalHitTestOwner:
+  DGB_ARCHCOIN_INTERACTIONS
 
-Compositor modified:
-FALSE
+- syntheticClickSuppressionOwner:
+  DGB_ARCHCOIN_INTERACTIONS
 
-Crystals modified:
-FALSE
+- clusterExitSwipeClassificationOwner:
+  DGB_ARCHCOIN_INTERACTIONS
 
-HTML modified:
-FALSE
+- orbitStateAuthority:
+  DGB_ARCHCOIN_CONTROLLER
 
-Compass geometry modified:
-FALSE
+- clusterStateAuthority:
+  DGB_ARCHCOIN_CONTROLLER
 
-Compass renderer modified:
-FALSE
+- navigationTransitionAuthority:
+  DGB_ARCHCOIN_CONTROLLER
+
+- clusterExitTransitionAuthority:
+  DGB_ARCHCOIN_CONTROLLER
+
+Semantic projection extension:
+- accepts radiusPx
+- accepts projectedRadius as compatibility input
+- publishes radiusPx in frame snapshots
+- publishes --archcoin-projected-radius
+- publishes data-archcoin-projected-radius
+- does not calculate projected radius
+- does not perform crystal hit testing
+
+Required next file:
+ /products/archcoin/index.interactions.js
 
 Runtime execution:
 NOT PERFORMED

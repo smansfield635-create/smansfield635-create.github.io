@@ -2,7 +2,7 @@
    ARCHCOIN
    Compass-derived financial operating-field presentation.
 
-   Architecture anchors:
+   Runtime contract anchors:
    - DGB_ARCHCOIN_CONTROLLER
      7.0.0-controller-interaction-semantic-priority
 
@@ -18,24 +18,14 @@
    - DGB_ARCHCOIN_CRYSTALS
      2.0.0-controller-decoupled-crystal-renderer
 
-   Public presentation:
-   - atmospheric Compass-family page;
-   - editorial threshold;
-   - rounded domain chambers;
-   - integrated crystal field;
-   - fixed-center page-local Compass control;
-   - controller-positioned semantic labels;
-   - simplified selected-path chamber;
-   - rounded financial-domain disclosures;
-   - explicit Return to Orbit and Return to Main Compass actions.
-
-   Interaction ownership:
-   - controller owns pointer and swipe interpretation;
-   - controller owns semantic interaction authorization;
-   - controller owns front/rear semantic priority;
-   - compositor owns camera, projection, depth, and layer construction;
-   - crystals owns crystal geometry, animation, and WebGL drawing;
-   - CSS owns visual presentation only.
+   Semantic projection contract:
+   - controller publishes --archcoin-label-x;
+   - controller publishes --archcoin-label-y;
+   - controller directly manages visibility;
+   - controller directly manages pointer-events;
+   - CSS does not invent alternate projection variables;
+   - CSS does not default semantic controls to opacity: 0;
+   - CSS does not suppress cardinal controls in CONSTELLATION mode.
 
    Composite order:
    - rear crystal canvas = 1;
@@ -72,17 +62,14 @@
   --archcoin-surface-soft:
     rgba(13, 22, 29, 0.72);
 
-  --archcoin-surface-glass:
-    rgba(14, 23, 30, 0.62);
-
   --archcoin-field:
-    rgba(6, 14, 21, 0.94);
+    rgba(6, 14, 21, 0.96);
 
   --archcoin-cream:
     #f3edda;
 
   --archcoin-cream-soft:
-    rgba(243, 237, 218, 0.82);
+    rgba(243, 237, 218, 0.84);
 
   --archcoin-cream-muted:
     rgba(243, 237, 218, 0.62);
@@ -97,7 +84,7 @@
     rgba(236, 208, 128, 0.24);
 
   --archcoin-gold-faint:
-    rgba(236, 208, 128, 0.12);
+    rgba(236, 208, 128, 0.10);
 
   --archcoin-blue:
     #9edbe2;
@@ -145,9 +132,6 @@
 
   --archcoin-max:
     1240px;
-
-  --archcoin-reading:
-    740px;
 
   --archcoin-radius-large:
     34px;
@@ -503,9 +487,6 @@ p {
 .archcoin-journey__eyebrow {
   margin:
     0;
-
-  font-family:
-    var(--archcoin-sans);
 
   font-size:
     0.72rem;
@@ -1547,14 +1528,6 @@ p {
   inset:
     50% auto auto 50%;
 
-  background:
-    linear-gradient(
-      90deg,
-      transparent,
-      rgba(158, 219, 226, 0.08),
-      transparent
-    );
-
   transform:
     translate(-50%, -50%);
 }
@@ -1565,6 +1538,14 @@ p {
 
   height:
     1px;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(158, 219, 226, 0.08),
+      transparent
+    );
 }
 
 .archcoin-field-chrome__rings::after {
@@ -1912,13 +1893,17 @@ p {
 
 .archcoin-scene__upstream-compass-control:hover,
 .archcoin-scene__upstream-compass-control:focus-visible,
-.archcoin-scene__upstream-compass-control[data-selected="true"] {
+.archcoin-scene__upstream-compass-control[data-selected="true"],
+.archcoin-scene__upstream-compass-control[aria-expanded="true"] {
   filter:
-    brightness(1.08);
+    brightness(1.08)
+    drop-shadow(
+      0 0 14px rgba(236, 208, 128, 0.16)
+    );
 }
 
 /* -------------------------------------------------------------------------- */
-/* Semantic controls                                                           */
+/* Semantic layer                                                              */
 /* -------------------------------------------------------------------------- */
 
 .archcoin-scene__semantic {
@@ -1938,48 +1923,59 @@ p {
     isolate;
 }
 
+/*
+ * Exact controller projection contract.
+ *
+ * The controller writes:
+ *   --archcoin-label-x
+ *   --archcoin-label-y
+ *
+ * The controller also writes element visibility and pointerEvents directly.
+ * CSS must not replace those decisions with alternate variables.
+ */
+
 .archcoin-coin,
 [data-archcoin-room] {
   position:
     absolute;
 
   left:
-    var(--archcoin-projection-x, 50%);
+    var(--archcoin-label-x, 50%);
 
   top:
-    var(--archcoin-projection-y, 50%);
+    var(--archcoin-label-y, 50%);
+
+  margin:
+    0;
+
+  opacity:
+    1;
 
   transform:
     translate(-50%, -50%)
     translate(
-      var(--archcoin-label-offset-x, 0),
-      var(--archcoin-label-offset-y, 0)
-    )
-    scale(
-      var(--archcoin-projection-scale, 1)
+      var(--archcoin-label-offset-x, 0px),
+      var(--archcoin-label-offset-y, 0px)
     );
 
   transform-origin:
     center;
 
-  opacity:
-    var(--archcoin-projection-opacity, 0);
-
-  pointer-events:
-    var(--archcoin-projection-pointer-events, none);
-
-  transition:
-    opacity 120ms linear,
-    border-color 160ms var(--archcoin-ease),
-    background 160ms var(--archcoin-ease),
-    box-shadow 160ms var(--archcoin-ease);
-
   will-change:
     left,
     top,
-    transform,
-    opacity;
+    transform;
+
+  transition:
+    border-color 160ms var(--archcoin-ease),
+    background 160ms var(--archcoin-ease),
+    box-shadow 160ms var(--archcoin-ease),
+    filter 160ms var(--archcoin-ease);
 }
+
+/* -------------------------------------------------------------------------- */
+/* Cardinal semantic controls                                                  */
+/* -------------------------------------------------------------------------- */
 
 .archcoin-coin {
   display:
@@ -2012,8 +2008,8 @@ p {
   background:
     linear-gradient(
       180deg,
-      rgba(15, 24, 31, 0.86),
-      rgba(7, 13, 18, 0.82)
+      rgba(15, 24, 31, 0.88),
+      rgba(7, 13, 18, 0.84)
     );
 
   box-shadow:
@@ -2027,6 +2023,26 @@ p {
 
   backdrop-filter:
     blur(10px);
+}
+
+.archcoin-coin--north {
+  --archcoin-cardinal-accent:
+    #cbd5f7;
+}
+
+.archcoin-coin--east {
+  --archcoin-cardinal-accent:
+    #9edbe2;
+}
+
+.archcoin-coin--south {
+  --archcoin-cardinal-accent:
+    #ddb081;
+}
+
+.archcoin-coin--west {
+  --archcoin-cardinal-accent:
+    #d9c58f;
 }
 
 .archcoin-coin__coordinate {
@@ -2052,7 +2068,10 @@ p {
     50%;
 
   color:
-    var(--archcoin-gold);
+    var(
+      --archcoin-cardinal-accent,
+      var(--archcoin-gold)
+    );
 
   font-size:
     0.62rem;
@@ -2124,19 +2143,51 @@ p {
 .archcoin-coin[data-selected="true"],
 .archcoin-coin[aria-current="true"] {
   border-color:
-    var(--archcoin-gold-soft);
+    var(
+      --archcoin-cardinal-accent,
+      var(--archcoin-gold-soft)
+    );
 
   background:
     linear-gradient(
       180deg,
-      rgba(29, 34, 29, 0.92),
-      rgba(12, 18, 20, 0.9)
+      rgba(29, 34, 29, 0.94),
+      rgba(12, 18, 20, 0.92)
     );
 
   box-shadow:
     0 16px 36px rgba(0, 0, 0, 0.34),
     inset 0 0 0 1px rgba(236, 208, 128, 0.08);
 }
+
+/*
+ * Labels remain near their corresponding crystal without replacing
+ * controller-authored screen coordinates.
+ */
+
+.archcoin-coin[data-wing="north"] {
+  --archcoin-label-offset-y:
+    -58px;
+}
+
+.archcoin-coin[data-wing="east"] {
+  --archcoin-label-offset-x:
+    72px;
+}
+
+.archcoin-coin[data-wing="south"] {
+  --archcoin-label-offset-y:
+    58px;
+}
+
+.archcoin-coin[data-wing="west"] {
+  --archcoin-label-offset-x:
+    -72px;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Room semantic controls                                                      */
+/* -------------------------------------------------------------------------- */
 
 [data-archcoin-room] {
   display:
@@ -2169,8 +2220,8 @@ p {
   background:
     linear-gradient(
       180deg,
-      rgba(15, 24, 31, 0.88),
-      rgba(7, 13, 18, 0.84)
+      rgba(15, 24, 31, 0.9),
+      rgba(7, 13, 18, 0.86)
     );
 
   box-shadow:
@@ -2196,6 +2247,9 @@ p {
 
   backdrop-filter:
     blur(10px);
+
+  --archcoin-label-offset-y:
+    50px;
 }
 
 [data-archcoin-room]:hover,
@@ -2217,86 +2271,66 @@ p {
     0 16px 34px rgba(0, 0, 0, 0.34);
 }
 
+[data-archcoin-room][data-primary="true"],
+[data-archcoin-room][data-selected="true"] {
+  --archcoin-label-offset-y:
+    56px;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Controller-published depth presentation                                     */
+/* -------------------------------------------------------------------------- */
+
 /*
- * Controller-published depth priority.
- * Front semantic nodes remain above the Compass and receive interaction.
- * Rear semantic nodes remain visually present but subordinate.
+ * These selectors only decorate controller-published classifications.
+ * They do not decide visibility or interaction.
  */
 
 .archcoin-coin[data-depth-layer="front"],
-[data-archcoin-room][data-depth-layer="front"] {
+.archcoin-coin[data-depth="front"],
+.archcoin-coin[data-archcoin-depth="front"],
+[data-archcoin-room][data-depth-layer="front"],
+[data-archcoin-room][data-depth="front"],
+[data-archcoin-room][data-archcoin-depth="front"] {
   z-index:
-    2;
+    3;
 
-  opacity:
-    var(--archcoin-projection-opacity, 1);
+  filter:
+    none;
 }
 
 .archcoin-coin[data-depth-layer="rear"],
-[data-archcoin-room][data-depth-layer="rear"] {
+.archcoin-coin[data-depth="rear"],
+.archcoin-coin[data-archcoin-depth="rear"],
+[data-archcoin-room][data-depth-layer="rear"],
+[data-archcoin-room][data-depth="rear"],
+[data-archcoin-room][data-archcoin-depth="rear"] {
   z-index:
-    0;
-
-  opacity:
-    calc(
-      var(--archcoin-projection-opacity, 1) *
-      0.62
-    );
+    1;
 
   filter:
-    saturate(0.74)
+    saturate(0.72)
     brightness(0.82);
 }
 
 .archcoin-coin[data-compass-overlap="true"][data-depth-layer="front"],
-[data-archcoin-room][data-compass-overlap="true"][data-depth-layer="front"] {
+.archcoin-coin[data-compass-overlap="true"][data-depth="front"],
+.archcoin-coin[data-compass-overlap="true"][data-archcoin-depth="front"],
+[data-archcoin-room][data-compass-overlap="true"][data-depth-layer="front"],
+[data-archcoin-room][data-compass-overlap="true"][data-depth="front"],
+[data-archcoin-room][data-compass-overlap="true"][data-archcoin-depth="front"] {
   z-index:
     5;
-
-  pointer-events:
-    auto;
 }
 
 .archcoin-coin[data-compass-overlap="true"][data-depth-layer="rear"],
-[data-archcoin-room][data-compass-overlap="true"][data-depth-layer="rear"] {
+.archcoin-coin[data-compass-overlap="true"][data-depth="rear"],
+.archcoin-coin[data-compass-overlap="true"][data-archcoin-depth="rear"],
+[data-archcoin-room][data-compass-overlap="true"][data-depth-layer="rear"],
+[data-archcoin-room][data-compass-overlap="true"][data-depth="rear"],
+[data-archcoin-room][data-compass-overlap="true"][data-archcoin-depth="rear"] {
   z-index:
     0;
-
-  pointer-events:
-    none;
-}
-
-/* Label offsets keep text adjacent to crystals rather than on their faces. */
-
-.archcoin-coin[data-wing="north"] {
-  --archcoin-label-offset-y:
-    -62px;
-}
-
-.archcoin-coin[data-wing="east"] {
-  --archcoin-label-offset-x:
-    76px;
-}
-
-.archcoin-coin[data-wing="south"] {
-  --archcoin-label-offset-y:
-    62px;
-}
-
-.archcoin-coin[data-wing="west"] {
-  --archcoin-label-offset-x:
-    -76px;
-}
-
-[data-archcoin-room] {
-  --archcoin-label-offset-y:
-    52px;
-}
-
-[data-archcoin-room][data-primary="true"],
-[data-archcoin-room][data-selected="true"] {
-  --archcoin-label-offset-y:
-    58px;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -2981,7 +3015,17 @@ p {
 }
 
 /* -------------------------------------------------------------------------- */
-/* State                                                                       */
+/* Hidden custody                                                              */
+/* -------------------------------------------------------------------------- */
+
+.archcoin-room-declarations[hidden],
+.archcoin-receipts[hidden] {
+  display:
+    none;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Runtime state decoration                                                    */
 /* -------------------------------------------------------------------------- */
 
 [data-archcoin-mode="CONSTELLATION"]
@@ -3011,36 +3055,17 @@ p {
     " / HELD";
 }
 
+/*
+ * HELD may soften the field but must not permanently hide semantic controls.
+ */
+
 [data-archcoin-mode="HELD"]
   .archcoin-scene__semantic,
 [data-archcoin-presentation-mode="HELD"]
   .archcoin-scene__semantic {
-  opacity:
-    0.42;
-
-  pointer-events:
-    none;
-}
-
-[data-compass-selected="true"]
-  .archcoin-panel {
-  border-color:
-    var(--archcoin-gold-soft);
-}
-
-[data-compass-selected="true"]
-  [data-archcoin-return-home-compass] {
-  display:
-    inline-flex;
-}
-
-[data-compass-selected="true"]
-  .archcoin-scene__upstream-compass-control {
   filter:
-    brightness(1.12)
-    drop-shadow(
-      0 0 16px rgba(236, 208, 128, 0.2)
-    );
+    saturate(0.72)
+    brightness(0.82);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -3255,22 +3280,22 @@ p {
 
   .archcoin-coin[data-wing="north"] {
     --archcoin-label-offset-y:
-      -52px;
+      -50px;
   }
 
   .archcoin-coin[data-wing="east"] {
     --archcoin-label-offset-x:
-      58px;
+      56px;
   }
 
   .archcoin-coin[data-wing="south"] {
     --archcoin-label-offset-y:
-      52px;
+      50px;
   }
 
   .archcoin-coin[data-wing="west"] {
     --archcoin-label-offset-x:
-      -58px;
+      -56px;
   }
 
   [data-archcoin-room] {
@@ -3287,7 +3312,7 @@ p {
       0.58rem;
 
     --archcoin-label-offset-y:
-      44px;
+      42px;
   }
 
   .archcoin-panel {
@@ -3406,12 +3431,12 @@ p {
 
   .archcoin-coin[data-wing="east"] {
     --archcoin-label-offset-x:
-      46px;
+      44px;
   }
 
   .archcoin-coin[data-wing="west"] {
     --archcoin-label-offset-x:
-      -46px;
+      -44px;
   }
 
   [data-archcoin-room] {
@@ -3467,7 +3492,7 @@ p {
 }
 
 /*
-AUDRALIA_ARCHCOIN_COMPASS_DERIVED_CSS_RENEWAL_RESULT_v2
+AUDRALIA_ARCHCOIN_CONTROLLER_CONTRACT_CSS_RENEWAL_RESULT_v3
 
 Artifact:
  /products/archcoin/index.css
@@ -3487,45 +3512,49 @@ Compositor anchor:
  DGB_ARCHCOIN_COMPOSITOR
  1.0.0-camera-depth-layer-orchestration
 
-Visual reconstruction:
-- atmospheric Compass-family page background
-- editorial serif display hierarchy
-- warm cream and gold palette
-- rounded dimensional chambers
-- integrated crystal field
-- compact rounded instruction capsule
-- simplified selected-path chamber
-- rounded expandable financial principles
-- explicit Main Compass and Orbit actions
-- mobile-first responsive composition
-
-Semantic-control presentation:
-- controller-published projection custom properties
-- controller-published pointer authorization
-- front semantic nodes receive precedence
-- rear semantic nodes remain subordinate
-- front nodes overlapping Compass remain interactive
-- rear nodes overlapping Compass do not intercept input
-- labels are offset away from crystal faces
-- crystals own no label styling
-
-Removed:
-- square technical viewport framing
-- exposed metadata grid
-- terminal-style selected-path panel
-- visible fixed-center implementation label
-- oversized instructional blocks
-- hard rectangular domain grid
-- generic flat-black page background
-- direct inline label presentation dependency
-- crystals-owned Compass overlap policy
-- crystals-owned semantic pointer authority
+Corrected projection contract:
+- consumes --archcoin-label-x
+- consumes --archcoin-label-y
+- does not reference --archcoin-projection-x
+- does not reference --archcoin-projection-y
+- does not reference --archcoin-projection-opacity
+- does not reference --archcoin-projection-pointer-events
+- does not default semantic controls to opacity 0
+- does not override controller-authored visibility
+- does not override controller-authored pointerEvents
+- preserves all four cardinal semantic controls in CONSTELLATION mode
 
 Composite order:
-- rear crystals = 1
-- Compass = 2
-- front crystals = 3
+- rear crystal canvas = 1
+- fixed-center Compass = 2
+- front crystal canvas = 3
 - semantic controls = 4
+
+Presentation:
+- atmospheric Compass-family page
+- editorial serif hierarchy
+- warm cream and gold palette
+- rounded dimensional chambers
+- fixed-center Compass
+- controller-positioned crystal labels
+- simplified selected-path chamber
+- rounded financial-domain disclosures
+- responsive mobile composition
+
+Controller modified:
+FALSE
+
+Compositor modified:
+FALSE
+
+Crystals modified:
+FALSE
+
+Compass geometry modified:
+FALSE
+
+Compass renderer modified:
+FALSE
 
 Runtime execution:
 NOT PERFORMED

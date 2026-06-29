@@ -1,29 +1,32 @@
 /* TARGET FILE: /showroom/index.css */
 /* TNT FULL-FILE REPLACEMENT */
-/* SHOWROOM_MIRRORLAND_FOCAL_ORBITAL_CHAMBER_CSS_TNT_v1 */
+/* SHOWROOM_MIRRORLAND_SEPARATE_ORBIT_AND_DIAMOND_STAGES_CSS_TNT_v2 */
 /*
   Purpose:
-  - Make Mirrorland the focal narrative of the Showroom.
-  - Preserve the accepted dark cosmic and section-governed visual language.
-  - Preserve the protected G3 Diamond stage, fallback, and control surfaces.
-  - Provide a separate foreground stage for the Mirrorland Window.
-  - Provide a dedicated orbit field for seven new 3D navigation objects.
-  - Preserve the fixed Compass as the orbital centerpiece and return decision.
-  - Present one compact supporting chamber at a time after enhancement.
-  - Preserve accessible fallback content before or during runtime failure.
-  - Diversify mathematics, science, engineering, platform, evidence,
-    Diamond, and anatomy content surfaces.
-  - Preserve high contrast, responsive behavior, reduced motion, dialogs,
-    Elara integration, and semantic controls.
+  - Preserve Mirrorland as the focal narrative.
+  - Preserve the existing G3 Diamond as an independent exhibit stage.
+  - Preserve Diamond rotation, zoom, inspection, reset, fallback,
+    responsive sizing, and renderer-owned interaction.
+  - Place the Mirrorland Window only over the Diamond viewport as an
+    independent foreground sibling layer.
+  - Establish a separate compact navigation stage at the top of the page.
+  - Reserve the navigation stage for the fixed Compass, rear and front
+    crystal canvases, and seven projected semantic controls.
+  - Prevent the orbital navigator from changing the Diamond stage size,
+    camera, matrices, WebGL context, or pointer calculations.
+  - Present compact, bounded supporting chambers rather than one long
+    primary-navigation document.
+  - Preserve Elara, dialogs, dropdowns, contrast, reduced motion, and
+    semantic fallback access.
 
   Does not own:
-  - Showroom canonical state
+  - Showroom canonical state or legal transitions
   - pointer or gesture interpretation
-  - crystal geometry or WebGL drawing
-  - compositor camera or depth classification
-  - Compass geometry, navigation authority, or renderer lifecycle
+  - crystal geometry, motion, or WebGL drawing
+  - orbital camera or depth classification
+  - Compass geometry, renderer lifecycle, or navigation decisions
   - Mirrorland Window geometry or animation
-  - Diamond geometry, WebGL rendering, camera, or interaction lifecycle
+  - Diamond geometry, camera, matrices, rendering, motion, or zoom
   - Diamond UI behavior
   - Elara room-entry behavior
   - Manor Blueprint behavior
@@ -104,8 +107,18 @@
   --max:1440px;
   --text-max:980px;
 
-  --orbit-min-height:clamp(34rem,66vw,55rem);
-  --orbit-mobile-min-height:clamp(36rem,138vw,48rem);
+  /*
+    The orbit is deliberately compact and independent from the Diamond.
+    It must not inherit the previous combined-stage height.
+  */
+  --orbit-height:
+    clamp(20rem,42vw,31rem);
+
+  --orbit-mobile-height:
+    clamp(25rem,92vw,34rem);
+
+  --diamond-desktop-ratio:16 / 10;
+  --diamond-mobile-ratio:4 / 3;
 
   --gem-path:polygon(
     50% 0%,
@@ -127,14 +140,18 @@ html{
   min-width:320px;
   min-height:100%;
   overflow-x:hidden;
+
   scroll-behavior:smooth;
+
   background:var(--bg);
 }
 
 body{
   margin:0;
+
   min-width:320px;
   min-height:100vh;
+
   overflow-x:hidden;
 
   color:var(--ink);
@@ -149,6 +166,7 @@ body{
     sans-serif;
 
   line-height:1.5;
+
   -webkit-font-smoothing:antialiased;
   text-rendering:geometricPrecision;
 
@@ -431,7 +449,7 @@ button:disabled{
 }
 
 /* =========================================================
-   ELARA ASSET MOUNT
+   ELARA ENTRY
    ========================================================= */
 
 .elara-quick-path{
@@ -440,21 +458,18 @@ button:disabled{
 
 elara-room-entry{
   display:block;
+
   width:100%;
   min-width:0;
 
   --elara-entry-text:#f8fbff;
   --elara-entry-muted:rgba(226,238,249,.76);
-
   --elara-entry-cyan:#8edcf3;
   --elara-entry-violet:#9d83db;
-
   --elara-entry-line:rgba(139,190,224,.38);
   --elara-entry-line-hover:rgba(157,218,241,.62);
-
   --elara-entry-top:rgba(21,45,76,.96);
   --elara-entry-bottom:rgba(8,19,38,.99);
-
   --elara-entry-height:3.55rem;
   --elara-entry-font-size:.78rem;
   --elara-entry-letter-spacing:.105em;
@@ -550,13 +565,11 @@ elara-room-entry:defined > a{
 
 .route-menu{
   position:relative;
+
   width:min(15rem,100%);
 }
 
 .route-menu summary{
-  list-style:none;
-  cursor:pointer;
-
   min-height:2.65rem;
 
   display:flex;
@@ -564,10 +577,10 @@ elara-room-entry:defined > a{
   justify-content:space-between;
   gap:.75rem;
 
+  padding:.62rem .92rem;
+
   border:1px solid rgba(255,216,106,.42);
   border-radius:999px;
-
-  padding:.62rem .92rem;
 
   color:rgba(250,252,255,.97);
 
@@ -581,6 +594,9 @@ elara-room-entry:defined > a{
 
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,.10);
+
+  list-style:none;
+  cursor:pointer;
 
   font-size:.72rem;
   font-weight:950;
@@ -607,11 +623,11 @@ elara-room-entry:defined > a{
 }
 
 .route-menu[open] summary::after{
+  border-color:var(--gold);
+
   transform:
     rotate(225deg)
     translateY(-.08rem);
-
-  border-color:var(--gold);
 }
 
 .route-menu-panel{
@@ -670,10 +686,10 @@ elara-room-entry:defined > a{
   align-items:center;
   justify-content:center;
 
+  padding:.52rem .64rem;
+
   border:1px solid rgba(255,255,255,.18);
   border-radius:.86rem;
-
-  padding:.52rem .64rem;
 
   color:rgba(250,252,255,.97);
 
@@ -694,7 +710,9 @@ elara-room-entry:defined > a{
 .fallback-navigation a:hover,
 .fallback-navigation a:focus-visible{
   transform:translateY(-2px);
+
   border-color:rgba(255,216,106,.72);
+
   background:rgba(255,216,106,.10);
 }
 
@@ -705,9 +723,9 @@ elara-room-entry:defined > a{
 .panel{
   position:relative;
 
-  border-radius:clamp(1.35rem,5vw,2.5rem);
-
   overflow:hidden;
+
+  border-radius:clamp(1.35rem,5vw,2.5rem);
 
   box-shadow:
     var(--shadow),
@@ -748,10 +766,14 @@ elara-room-entry:defined > a{
 
   padding:.58rem .94rem;
 
-  border:1px solid var(--chamber-line,rgba(255,216,106,.48));
+  border:
+    1px solid
+    var(--chamber-line,rgba(255,216,106,.48));
+
   border-radius:999px;
 
-  color:var(--chamber-soft,var(--gold-soft));
+  color:
+    var(--chamber-soft,var(--gold-soft));
 
   background:
     linear-gradient(
@@ -806,7 +828,8 @@ h1{
 h2{
   margin:0;
 
-  color:var(--chamber-accent,var(--cyan));
+  color:
+    var(--chamber-accent,var(--cyan));
 
   font-size:clamp(1.75rem,4.8vw,3.25rem);
   line-height:.98;
@@ -827,7 +850,7 @@ h3{
 }
 
 /* =========================================================
-   MIRRORLAND THRESHOLD
+   MIRRORLAND THRESHOLD INTRODUCTION
    ========================================================= */
 
 .showroom-threshold{
@@ -837,14 +860,14 @@ h3{
   --chamber-open:rgba(255,216,106,.085);
   --chamber-copy:rgba(248,249,252,.92);
 
+  min-height:min(45rem,78vh);
+
   display:grid;
   gap:1rem;
 
-  min-height:min(49rem,82vh);
+  margin-top:.55rem;
 
   padding:clamp(1.25rem,4vw,3rem);
-
-  margin-top:.55rem;
 
   isolation:isolate;
 
@@ -953,8 +976,6 @@ h3{
 .thesis-field,
 .mirrorland-thesis{
   position:relative;
-  isolation:isolate;
-  overflow:hidden;
 
   max-width:60rem;
 
@@ -962,6 +983,9 @@ h3{
   gap:.6rem;
 
   padding:clamp(1.2rem,3.5vw,2rem);
+
+  overflow:hidden;
+  isolation:isolate;
 
   border:1px solid rgba(255,216,106,.58);
   border-radius:clamp(1.2rem,3vw,2rem);
@@ -1051,7 +1075,7 @@ h3{
 }
 
 /* =========================================================
-   ORBITAL SCENE
+   INDEPENDENT COMPACT ORBIT NAVIGATOR
    ========================================================= */
 
 .showroom-orbit{
@@ -1061,25 +1085,25 @@ h3{
   --chamber-open:rgba(23,223,247,.065);
   --chamber-copy:rgba(240,248,255,.94);
 
-  margin-top:1.25rem;
-
-  padding:clamp(1rem,3vw,1.75rem);
-
   display:grid;
   gap:1rem;
+
+  margin-top:1.25rem;
+
+  padding:clamp(1rem,3vw,1.65rem);
 
   border:1px solid rgba(103,245,255,.38);
 
   background:
     radial-gradient(
-      circle at 50% 44%,
-      rgba(255,216,106,.08),
-      transparent 22rem
+      circle at 50% 48%,
+      rgba(255,216,106,.07),
+      transparent 16rem
     ),
     radial-gradient(
-      circle at 50% 36%,
-      rgba(103,245,255,.09),
-      transparent 31rem
+      circle at 50% 42%,
+      rgba(103,245,255,.08),
+      transparent 25rem
     ),
     radial-gradient(
       circle at 8% 10%,
@@ -1104,7 +1128,7 @@ h3{
   justify-content:space-between;
   gap:1.2rem;
 
-  padding:.2rem .2rem .6rem;
+  padding:.2rem .2rem .5rem;
 }
 
 .showroom-orbit__heading > div{
@@ -1122,32 +1146,46 @@ h3{
   text-align:right;
 }
 
+/*
+  This is the complete physical boundary of the new navigation renderer.
+
+  It contains only:
+  - compositor-created rear canvas;
+  - fixed Compass;
+  - compositor-created front canvas;
+  - seven semantic category controls.
+
+  It does not contain the Diamond or the Mirrorland Window.
+*/
 .showroom-orbit__field{
   position:relative;
-  isolation:isolate;
-  overflow:hidden;
 
   width:100%;
-  min-height:var(--orbit-min-height);
+  height:var(--orbit-height);
+  min-height:20rem;
+  max-height:31rem;
+
+  overflow:hidden;
+  isolation:isolate;
 
   border:1px solid rgba(103,245,255,.30);
-  border-radius:clamp(1.2rem,4vw,2.2rem);
+  border-radius:clamp(1.2rem,4vw,2.1rem);
 
   background:
     radial-gradient(
-      circle at 50% 46%,
-      rgba(255,216,106,.10),
-      transparent 13rem
-    ),
-    radial-gradient(
-      circle at 50% 47%,
-      rgba(23,223,247,.07),
-      transparent 27rem
+      circle at 50% 50%,
+      rgba(255,216,106,.09),
+      transparent 8rem
     ),
     radial-gradient(
       circle at 50% 50%,
-      rgba(195,163,255,.055),
-      transparent 38rem
+      rgba(23,223,247,.065),
+      transparent 20rem
+    ),
+    radial-gradient(
+      circle at 50% 50%,
+      rgba(195,163,255,.05),
+      transparent 31rem
     ),
     linear-gradient(
       180deg,
@@ -1158,7 +1196,7 @@ h3{
 
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,.08),
-    inset 0 0 6rem rgba(0,0,0,.34),
+    inset 0 0 5rem rgba(0,0,0,.34),
     0 1.4rem 4rem rgba(0,0,0,.26);
 
   touch-action:none;
@@ -1175,6 +1213,8 @@ h3{
   z-index:0;
 
   pointer-events:none;
+
+  opacity:.32;
 
   background-image:
     radial-gradient(
@@ -1202,8 +1242,6 @@ h3{
     0 0,
     41px 73px,
     89px 22px;
-
-  opacity:.32;
 }
 
 .showroom-cosmic-field{
@@ -1239,7 +1277,7 @@ h3{
 
 .showroom-cosmic-field::before{
   width:min(76%,58rem);
-  aspect-ratio:1.5;
+  aspect-ratio:2.3 / 1;
 
   border:1px solid rgba(103,245,255,.09);
 
@@ -1249,8 +1287,8 @@ h3{
 }
 
 .showroom-cosmic-field::after{
-  width:min(52%,36rem);
-  aspect-ratio:1.2;
+  width:min(48%,32rem);
+  aspect-ratio:1.8 / 1;
 
   border:1px solid rgba(255,216,106,.10);
 
@@ -1259,14 +1297,18 @@ h3{
 }
 
 /*
-  The compositor creates the rear and front WebGL canvases inside the field.
-  Inline z-index values remain authoritative, while these declarations
-  provide the shared physical canvas behavior.
+  The compositor creates two canvases inside the orbit field.
+  Inline z-index values may refine the order, but both canvases are
+  physically restricted to this compact stage.
 */
 .showroom-orbit__field
 canvas[data-showroom-compositor-layer],
 .showroom-orbit__field
-canvas[data-showroom-crystals-canvas]{
+canvas[data-showroom-crystals-canvas],
+.showroom-orbit__field
+canvas[data-showroom-layer="rear"],
+.showroom-orbit__field
+canvas[data-showroom-layer="front"]{
   position:absolute;
   inset:0;
 
@@ -1283,465 +1325,7 @@ canvas[data-showroom-crystals-canvas]{
 }
 
 /* =========================================================
-   CENTRAL COMPOSITION
-   ========================================================= */
-
-.showroom-centerpiece{
-  position:absolute;
-  left:50%;
-  top:50%;
-  z-index:2;
-
-  width:min(58%,43rem);
-  min-width:22rem;
-  aspect-ratio:16 / 11;
-
-  transform:translate(-50%,-50%);
-
-  pointer-events:none;
-}
-
-.showroom-diamond-layer{
-  position:absolute;
-  inset:8% 4% 7%;
-  z-index:4;
-
-  pointer-events:none;
-}
-
-.showroom-reveal-scene{
-  position:relative;
-  width:100%;
-  height:100%;
-
-  isolation:isolate;
-
-  pointer-events:none;
-}
-
-.diamond-exhibit-frame{
-  width:100%;
-  height:100%;
-}
-
-.diamond-viewport-card{
-  position:relative;
-
-  width:100%;
-  height:100%;
-  min-height:0;
-
-  border:1px solid rgba(255,216,106,.34);
-  border-radius:clamp(1rem,3vw,1.9rem);
-
-  overflow:hidden;
-  isolation:isolate;
-
-  background:
-    radial-gradient(
-      circle at 50% 34%,
-      rgba(255,216,106,.12),
-      transparent 19rem
-    ),
-    radial-gradient(
-      circle at 50% 70%,
-      rgba(195,163,255,.055),
-      transparent 27rem
-    ),
-    linear-gradient(
-      180deg,
-      #17130e 0%,
-      #0f0c12 48%,
-      #06070c 100%
-    );
-
-  box-shadow:
-    0 0 1.4rem rgba(255,181,31,.07),
-    inset 0 1px 0 rgba(255,255,255,.09),
-    inset 0 0 5rem rgba(0,0,0,.30);
-}
-
-.diamond-viewport-card::before,
-.diamond-viewport-card::after{
-  content:"";
-
-  position:absolute;
-  left:50%;
-  top:50%;
-
-  border-radius:50%;
-
-  transform:translate(-50%,-50%);
-
-  pointer-events:none;
-  z-index:0;
-}
-
-.diamond-viewport-card::before{
-  width:min(88%,54rem);
-  height:min(64%,33rem);
-
-  border:1px solid rgba(255,216,106,.18);
-
-  box-shadow:
-    0 0 2rem rgba(255,181,31,.06),
-    inset 0 0 2rem rgba(255,255,255,.025);
-}
-
-.diamond-viewport-card::after{
-  width:min(68%,38rem);
-  height:min(46%,24rem);
-
-  border:1px solid rgba(255,255,255,.095);
-
-  box-shadow:
-    0 0 2rem rgba(195,163,255,.05);
-}
-
-/* =========================================================
-   PROTECTED DIAMOND STAGE
-   ========================================================= */
-
-.diamond-stage,
-[data-showroom-diamond-stage]{
-  position:absolute;
-  inset:0;
-  z-index:2;
-
-  touch-action:none;
-  pointer-events:none;
-}
-
-.diamond-stage canvas,
-[data-showroom-diamond-stage] canvas{
-  position:absolute;
-  inset:0;
-
-  width:100%;
-  height:100%;
-
-  display:block;
-
-  background:transparent;
-}
-
-[data-showroom-root]
-[data-showroom-diamond-interactive="true"],
-[data-showroom-root][data-showroom-diamond-interactive="true"]
-[data-showroom-diamond-stage],
-[data-showroom-root][data-showroom-window-state="open"]
-[data-showroom-diamond-stage]{
-  pointer-events:auto;
-}
-
-[data-showroom-root][data-showroom-window-state="closed"]
-[data-showroom-diamond-stage],
-[data-showroom-root][data-showroom-window-state="opening"]
-[data-showroom-diamond-stage],
-[data-showroom-root][data-showroom-window-state="closing"]
-[data-showroom-diamond-stage],
-[data-showroom-root][data-showroom-window-state="held"]
-[data-showroom-diamond-stage]{
-  pointer-events:none;
-}
-
-.diamond-stage[data-webgl-state="loading"]::after{
-  content:"Preparing G3 geometry";
-
-  position:absolute;
-  left:50%;
-  bottom:1rem;
-  z-index:4;
-
-  transform:translateX(-50%);
-
-  padding:.5rem .82rem;
-
-  border:1px solid rgba(255,216,106,.36);
-  border-radius:999px;
-
-  color:rgba(249,251,255,.90);
-
-  background:rgba(8,7,10,.88);
-
-  font-size:.66rem;
-  font-weight:900;
-  letter-spacing:.10em;
-  text-transform:uppercase;
-
-  pointer-events:none;
-
-  backdrop-filter:blur(10px);
-}
-
-/* =========================================================
-   DIAMOND FALLBACK
-   ========================================================= */
-
-.diamond-fallback{
-  position:absolute;
-  inset:0;
-  z-index:3;
-
-  display:grid;
-  place-items:center;
-
-  padding:1.25rem;
-
-  text-align:center;
-
-  background:
-    radial-gradient(
-      circle at 50% 30%,
-      rgba(255,216,106,.16),
-      transparent 20rem
-    ),
-    rgba(7,7,12,.96);
-}
-
-.diamond-fallback[hidden]{
-  display:none;
-}
-
-.diamond-fallback-card{
-  width:min(32rem,92%);
-
-  display:grid;
-  justify-items:center;
-  gap:.9rem;
-
-  padding:1.3rem;
-
-  border:1px solid rgba(255,216,106,.32);
-  border-radius:1.5rem;
-
-  background:rgba(15,13,17,.92);
-
-  box-shadow:
-    0 1.4rem 3rem rgba(0,0,0,.46),
-    inset 0 1px 0 rgba(255,255,255,.08);
-}
-
-.diamond-fallback-object{
-  position:relative;
-
-  width:8.8rem;
-  height:10.8rem;
-
-  clip-path:polygon(
-    50% 0%,
-    82% 19%,
-    100% 48%,
-    72% 78%,
-    50% 100%,
-    28% 78%,
-    0% 48%,
-    18% 19%
-  );
-
-  background:
-    linear-gradient(
-      180deg,
-      rgba(255,248,177,.98) 0 9%,
-      rgba(255,181,31,.98) 10% 39%,
-      rgba(103,245,255,.98) 40% 45%,
-      rgba(52,113,255,.98) 46% 73%,
-      rgba(5,18,96,.99) 74% 100%
-    );
-
-  box-shadow:
-    var(--gold-glow),
-    0 1.4rem 3rem rgba(0,0,0,.50);
-}
-
-.diamond-fallback strong{
-  color:var(--gold-soft);
-
-  font-size:1.05rem;
-}
-
-.diamond-fallback p{
-  color:rgba(242,247,255,.90);
-
-  font-size:.84rem;
-  line-height:1.48;
-}
-
-/* =========================================================
-   MIRRORLAND WINDOW FOREGROUND STAGE
-   ========================================================= */
-
-.showroom-window-layer{
-  position:absolute;
-  inset:0;
-  z-index:8;
-
-  display:grid;
-  place-items:center;
-
-  pointer-events:none;
-}
-
-.showroom-window-mount{
-  position:absolute;
-  inset:0;
-
-  display:grid;
-  place-items:center;
-
-  pointer-events:none;
-
-  filter:
-    drop-shadow(0 1.4rem 2rem rgba(0,0,0,.52))
-    drop-shadow(0 0 1.4rem rgba(103,245,255,.10))
-    drop-shadow(0 0 1.7rem rgba(195,163,255,.09));
-
-  transition:
-    opacity .28s ease,
-    filter .28s ease;
-}
-
-.showroom-window-mount canvas{
-  width:100%;
-  height:100%;
-
-  display:block;
-
-  pointer-events:none;
-}
-
-.showroom-window-control{
-  position:absolute;
-  left:50%;
-  bottom:4.5%;
-  z-index:3;
-
-  min-width:11rem;
-  min-height:3.35rem;
-
-  display:grid;
-  place-items:center;
-  gap:.1rem;
-
-  transform:translateX(-50%);
-
-  padding:.62rem 1rem;
-
-  border:1px solid rgba(103,245,255,.56);
-  border-radius:999px;
-
-  color:var(--white);
-
-  background:
-    radial-gradient(
-      circle at 50% 0%,
-      rgba(255,255,255,.13),
-      transparent 70%
-    ),
-    linear-gradient(
-      135deg,
-      rgba(8,46,72,.94),
-      rgba(29,14,68,.96)
-    );
-
-  box-shadow:
-    0 .8rem 2rem rgba(0,0,0,.42),
-    0 0 1rem rgba(103,245,255,.12),
-    0 0 2rem rgba(195,163,255,.08),
-    inset 0 1px 0 rgba(255,255,255,.14);
-
-  cursor:pointer;
-  pointer-events:auto;
-
-  transition:
-    transform .18s ease,
-    border-color .18s ease,
-    box-shadow .18s ease,
-    opacity .18s ease;
-}
-
-.showroom-window-control:hover,
-.showroom-window-control:focus-visible{
-  transform:
-    translateX(-50%)
-    translateY(-2px);
-
-  border-color:rgba(255,216,106,.84);
-
-  box-shadow:
-    0 1rem 2.3rem rgba(0,0,0,.46),
-    0 0 1.2rem rgba(103,245,255,.18),
-    0 0 2.4rem rgba(255,216,106,.10),
-    inset 0 1px 0 rgba(255,255,255,.18);
-}
-
-.showroom-window-control__eyebrow{
-  color:var(--cyan-soft);
-
-  font-size:.55rem;
-  font-weight:950;
-  letter-spacing:.13em;
-  text-transform:uppercase;
-}
-
-.showroom-window-control__label{
-  color:var(--white);
-
-  font-size:.77rem;
-  font-weight:950;
-  letter-spacing:.06em;
-  text-transform:uppercase;
-}
-
-[data-showroom-window-state="closed"]
-.showroom-window-mount{
-  opacity:1;
-}
-
-[data-showroom-window-state="opening"]
-.showroom-window-mount,
-[data-showroom-window-state="closing"]
-.showroom-window-mount{
-  opacity:.98;
-
-  filter:
-    drop-shadow(0 1.4rem 2rem rgba(0,0,0,.50))
-    drop-shadow(0 0 1.8rem rgba(103,245,255,.18))
-    drop-shadow(0 0 2.1rem rgba(255,216,106,.10));
-}
-
-[data-showroom-window-state="open"]
-.showroom-window-mount{
-  opacity:0;
-  pointer-events:none;
-}
-
-[data-showroom-window-state="open"]
-.showroom-window-control{
-  border-color:rgba(255,216,106,.58);
-
-  background:
-    linear-gradient(
-      135deg,
-      rgba(51,34,10,.94),
-      rgba(11,18,35,.96)
-    );
-}
-
-[data-showroom-window-state="held"]
-.showroom-window-mount{
-  opacity:.36;
-  filter:grayscale(.45);
-}
-
-[data-showroom-window-state="held"]
-.showroom-window-control{
-  pointer-events:none;
-  opacity:.48;
-}
-
-/* =========================================================
-   FIXED COMPASS CENTERPIECE
+   FIXED COMPASS INSIDE ORBIT STAGE ONLY
    ========================================================= */
 
 .showroom-compass-layer{
@@ -1750,14 +1334,13 @@ canvas[data-showroom-crystals-canvas]{
   top:50%;
   z-index:6;
 
-  width:min(29%,13rem);
-  min-width:7.5rem;
+  width:clamp(7rem,16vw,11.5rem);
   aspect-ratio:1;
-
-  transform:translate(-50%,-50%);
 
   display:grid;
   place-items:center;
+
+  transform:translate(-50%,-50%);
 
   pointer-events:none;
 }
@@ -1780,7 +1363,7 @@ canvas[data-showroom-crystals-canvas]{
 
 .showroom-compass-control{
   position:absolute;
-  inset:10%;
+  inset:9%;
 
   display:grid;
   place-items:center;
@@ -1900,24 +1483,28 @@ canvas[data-showroom-crystals-canvas]{
 .showroom-compass-control__mark span:nth-child(1){
   top:.18rem;
   left:50%;
+
   transform:translateX(-50%);
 }
 
 .showroom-compass-control__mark span:nth-child(2){
   right:.24rem;
   top:50%;
+
   transform:translateY(-50%);
 }
 
 .showroom-compass-control__mark span:nth-child(3){
   bottom:.18rem;
   left:50%;
+
   transform:translateX(-50%);
 }
 
 .showroom-compass-control__mark span:nth-child(4){
   left:.24rem;
   top:50%;
+
   transform:translateY(-50%);
 }
 
@@ -1940,7 +1527,7 @@ canvas[data-showroom-crystals-canvas]{
 }
 
 /* =========================================================
-   PROJECTED SEMANTIC CATEGORY CONTROLS
+   PROJECTED ORBIT SEMANTIC CONTROLS
    ========================================================= */
 
 .showroom-category-controls{
@@ -1963,10 +1550,6 @@ canvas[data-showroom-crystals-canvas]{
 
   display:grid;
   place-items:center;
-
-  transform:
-    translate(-50%,-50%)
-    scale(var(--showroom-category-scale,1));
 
   padding:.55rem .78rem;
 
@@ -1993,6 +1576,10 @@ canvas[data-showroom-crystals-canvas]{
   text-align:center;
   text-transform:uppercase;
 
+  transform:
+    translate(-50%,-50%)
+    scale(var(--showroom-category-scale,1));
+
   opacity:0;
   visibility:hidden;
   pointer-events:none;
@@ -2005,9 +1592,7 @@ canvas[data-showroom-crystals-canvas]{
 }
 
 .showroom-category-controls
-[data-showroom-category][data-projection-visible="true"],
-.showroom-category-controls
-[data-showroom-category][data-active="true"][style*="--showroom-category-x"]{
+[data-showroom-category][data-projection-visible="true"]{
   opacity:var(--showroom-category-opacity,1);
   visibility:visible;
   pointer-events:auto;
@@ -2025,8 +1610,6 @@ canvas[data-showroom-crystals-canvas]{
       rgba(7,11,22,.72),
       rgba(2,5,13,.84)
     );
-
-  opacity:var(--showroom-category-opacity,.78);
 }
 
 .showroom-category-controls
@@ -2121,28 +1704,25 @@ canvas[data-showroom-crystals-canvas]{
   width:.45rem;
   height:.45rem;
 
-  margin-right:.35rem;
-
   display:inline-block;
+
+  margin-right:.35rem;
 
   border-radius:50%;
 
-  background:var(--category-accent,var(--cyan));
+  background:
+    var(--category-accent,var(--cyan));
 
   box-shadow:
-    0 0 .55rem var(--category-accent,var(--cyan));
-}
-
-.showroom-category-controls
-[data-showroom-category] span{
-  display:inline;
+    0 0 .55rem
+    var(--category-accent,var(--cyan));
 }
 
 .showroom-orbit__fallback{
   position:absolute;
   left:1rem;
   right:1rem;
-  bottom:.8rem;
+  bottom:.65rem;
   z-index:2;
 
   display:flex;
@@ -2154,7 +1734,7 @@ canvas[data-showroom-crystals-canvas]{
 .showroom-orbit__fallback p{
   max-width:38rem;
 
-  padding:.48rem .78rem;
+  padding:.45rem .78rem;
 
   border:1px solid rgba(255,255,255,.11);
   border-radius:999px;
@@ -2171,23 +1751,23 @@ canvas[data-showroom-crystals-canvas]{
 }
 
 /* =========================================================
-   SINGLE ACTIVE CHAMBER HOST
+   CHAMBER HOST
    ========================================================= */
 
 .showroom-chamber-host{
-  margin-top:1.25rem;
-
   display:grid;
   gap:.9rem;
+
+  margin-top:clamp(2.25rem,6vw,5rem);
 }
 
 .showroom-chamber-host__toolbar{
+  min-height:4rem;
+
   display:flex;
   align-items:center;
   justify-content:space-between;
   gap:1rem;
-
-  min-height:4rem;
 
   padding:.8rem 1rem;
 
@@ -2230,12 +1810,12 @@ canvas[data-showroom-crystals-canvas]{
 }
 
 .showroom-chamber{
+  display:grid;
+  gap:1rem;
+
   margin:0;
 
   padding:clamp(1.05rem,3.4vw,1.8rem);
-
-  display:grid;
-  gap:1rem;
 
   scroll-margin-top:1rem;
 }
@@ -2244,34 +1824,10 @@ canvas[data-showroom-crystals-canvas]{
   display:none;
 }
 
-[data-showroom-root][data-showroom-state="orbit"]
-.showroom-chamber-host{
-  display:none;
-}
-
-[data-showroom-root][data-showroom-state="chamber"]
-.showroom-chamber-host,
-[data-showroom-root][data-showroom-state="threshold"]
-.showroom-chamber-host,
-[data-showroom-root][data-showroom-state="diamond"]
-.showroom-chamber-host{
-  display:grid;
-}
-
-[data-showroom-root][data-showroom-state="chamber"]
-.showroom-orbit,
-[data-showroom-root][data-showroom-state="threshold"]
-.showroom-orbit,
-[data-showroom-root][data-showroom-state="diamond"]
-.showroom-orbit{
-  display:none;
-}
-
 /*
-  Before controller enhancement, all chambers remain visible in document flow.
-  Once the root announces an initialized controller, inactive chambers are
-  visually removed. The controller remains responsible for hidden, inert,
-  and aria-hidden state.
+  Before the controller initializes, every chamber remains available as
+  semantic fallback content. After initialization, the controller owns
+  hidden, inert, and aria-hidden. CSS only reflects its declared state.
 */
 [data-showroom-root][data-showroom-controller-ready="true"]
 .showroom-chamber[data-showroom-chamber-state="inactive"]{
@@ -2284,12 +1840,12 @@ canvas[data-showroom-crystals-canvas]{
 }
 
 .showroom-chamber__heading{
+  max-width:var(--text-max);
+
   display:flex;
   align-items:start;
   justify-content:space-between;
   gap:1rem;
-
-  max-width:var(--text-max);
 }
 
 .showroom-chamber__heading > div{
@@ -2300,7 +1856,8 @@ canvas[data-showroom-crystals-canvas]{
 .showroom-chamber__heading p{
   max-width:46rem;
 
-  color:var(--chamber-copy,var(--muted));
+  color:
+    var(--chamber-copy,var(--muted));
 
   font-size:.95rem;
   line-height:1.55;
@@ -2342,7 +1899,8 @@ canvas[data-showroom-crystals-canvas]{
 .showroom-chamber__proposition p{
   max-width:62rem;
 
-  color:var(--chamber-copy,var(--muted));
+  color:
+    var(--chamber-copy,var(--muted));
 
   line-height:1.62;
 }
@@ -2538,6 +2096,514 @@ canvas[data-showroom-crystals-canvas]{
       rgba(15,7,43,.99),
       rgba(2,13,28,.998)
     );
+}
+
+/* =========================================================
+   RESTORED INDEPENDENT DIAMOND STAGE
+   ========================================================= */
+
+/*
+  The Diamond returns to ordinary chamber document flow.
+  Its size is governed only by the original wide viewport contract.
+*/
+.diamond-layout,
+.diamond-view-column{
+  display:grid;
+  gap:.8rem;
+}
+
+.showroom-reveal-scene{
+  position:relative;
+
+  width:100%;
+
+  isolation:isolate;
+}
+
+/*
+  The Diamond layer is no longer absolutely positioned inside the orbit.
+  It occupies its own full-width exhibit stage.
+*/
+.showroom-diamond-layer{
+  position:relative;
+  z-index:1;
+
+  width:100%;
+
+  pointer-events:auto;
+}
+
+.diamond-exhibit-frame{
+  width:100%;
+}
+
+.diamond-viewport-card{
+  position:relative;
+
+  width:100%;
+  min-height:0;
+
+  aspect-ratio:var(--diamond-desktop-ratio);
+
+  overflow:hidden;
+  isolation:isolate;
+
+  border:1px solid rgba(255,216,106,.34);
+  border-radius:clamp(1.2rem,4vw,2.2rem);
+
+  background:
+    radial-gradient(
+      circle at 50% 34%,
+      rgba(255,216,106,.12),
+      transparent 19rem
+    ),
+    radial-gradient(
+      circle at 50% 70%,
+      rgba(195,163,255,.055),
+      transparent 27rem
+    ),
+    linear-gradient(
+      180deg,
+      #17130e 0%,
+      #0f0c12 48%,
+      #06070c 100%
+    );
+
+  box-shadow:
+    0 0 1.4rem rgba(255,181,31,.07),
+    inset 0 1px 0 rgba(255,255,255,.09),
+    inset 0 0 5rem rgba(0,0,0,.30);
+}
+
+.diamond-viewport-card::before,
+.diamond-viewport-card::after{
+  content:"";
+
+  position:absolute;
+  left:50%;
+  top:50%;
+  z-index:0;
+
+  border-radius:50%;
+
+  transform:translate(-50%,-50%);
+
+  pointer-events:none;
+}
+
+.diamond-viewport-card::before{
+  width:min(88%,54rem);
+  height:min(64%,33rem);
+
+  border:1px solid rgba(255,216,106,.18);
+
+  box-shadow:
+    0 0 2rem rgba(255,181,31,.06),
+    inset 0 0 2rem rgba(255,255,255,.025);
+}
+
+.diamond-viewport-card::after{
+  width:min(68%,38rem);
+  height:min(46%,24rem);
+
+  border:1px solid rgba(255,255,255,.095);
+
+  box-shadow:
+    0 0 2rem rgba(195,163,255,.05);
+}
+
+/*
+  Protected renderer stage.
+
+  Its full viewport, canvas geometry, touch-action, wheel reception,
+  pointer capture, pinch handling, and renderer-owned calculations remain
+  independent of the new orbit stage.
+*/
+.diamond-stage,
+[data-showroom-diamond-stage]{
+  position:absolute;
+  inset:0;
+  z-index:2;
+
+  touch-action:none;
+  pointer-events:auto;
+}
+
+.diamond-stage canvas,
+[data-showroom-diamond-stage] canvas{
+  position:absolute;
+  inset:0;
+
+  width:100%;
+  height:100%;
+
+  display:block;
+
+  background:transparent;
+}
+
+/*
+  The Window controller may temporarily gate Diamond access.
+  Open or ungoverned fallback states restore the original interaction.
+*/
+[data-showroom-root][data-showroom-window-state="closed"]
+[data-showroom-diamond-stage],
+[data-showroom-root][data-showroom-window-state="opening"]
+[data-showroom-diamond-stage],
+[data-showroom-root][data-showroom-window-state="closing"]
+[data-showroom-diamond-stage],
+[data-showroom-root][data-showroom-window-state="held"]
+[data-showroom-diamond-stage]{
+  pointer-events:none;
+}
+
+[data-showroom-root][data-showroom-window-state="open"]
+[data-showroom-diamond-stage],
+[data-showroom-root][data-showroom-diamond-interactive="true"]
+[data-showroom-diamond-stage]{
+  pointer-events:auto;
+}
+
+/*
+  Until a functional Window controller explicitly announces readiness,
+  preserve the existing Diamond interaction rather than leaving it
+  permanently blocked by static HTML state.
+*/
+[data-showroom-root]:not(
+  [data-showroom-window-controller-ready="true"]
+)
+[data-showroom-diamond-stage]{
+  pointer-events:auto;
+}
+
+.diamond-stage[data-webgl-state="loading"]::after{
+  content:"Preparing G3 geometry";
+
+  position:absolute;
+  left:50%;
+  bottom:1rem;
+  z-index:4;
+
+  padding:.5rem .82rem;
+
+  border:1px solid rgba(255,216,106,.36);
+  border-radius:999px;
+
+  color:rgba(249,251,255,.90);
+
+  background:rgba(8,7,10,.88);
+
+  font-size:.66rem;
+  font-weight:900;
+  letter-spacing:.10em;
+  text-transform:uppercase;
+
+  transform:translateX(-50%);
+
+  pointer-events:none;
+
+  backdrop-filter:blur(10px);
+}
+
+/* =========================================================
+   DIAMOND FALLBACK
+   ========================================================= */
+
+.diamond-fallback{
+  position:absolute;
+  inset:0;
+  z-index:3;
+
+  display:grid;
+  place-items:center;
+
+  padding:1.25rem;
+
+  text-align:center;
+
+  background:
+    radial-gradient(
+      circle at 50% 30%,
+      rgba(255,216,106,.16),
+      transparent 20rem
+    ),
+    rgba(7,7,12,.96);
+}
+
+.diamond-fallback[hidden]{
+  display:none;
+}
+
+.diamond-fallback-card{
+  width:min(32rem,92%);
+
+  display:grid;
+  justify-items:center;
+  gap:.9rem;
+
+  padding:1.3rem;
+
+  border:1px solid rgba(255,216,106,.32);
+  border-radius:1.5rem;
+
+  background:rgba(15,13,17,.92);
+
+  box-shadow:
+    0 1.4rem 3rem rgba(0,0,0,.46),
+    inset 0 1px 0 rgba(255,255,255,.08);
+}
+
+.diamond-fallback-object{
+  position:relative;
+
+  width:8.8rem;
+  height:10.8rem;
+
+  clip-path:polygon(
+    50% 0%,
+    82% 19%,
+    100% 48%,
+    72% 78%,
+    50% 100%,
+    28% 78%,
+    0% 48%,
+    18% 19%
+  );
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255,248,177,.98) 0 9%,
+      rgba(255,181,31,.98) 10% 39%,
+      rgba(103,245,255,.98) 40% 45%,
+      rgba(52,113,255,.98) 46% 73%,
+      rgba(5,18,96,.99) 74% 100%
+    );
+
+  box-shadow:
+    var(--gold-glow),
+    0 1.4rem 3rem rgba(0,0,0,.50);
+}
+
+.diamond-fallback strong{
+  color:var(--gold-soft);
+
+  font-size:1.05rem;
+}
+
+.diamond-fallback p{
+  color:rgba(242,247,255,.90);
+
+  font-size:.84rem;
+  line-height:1.48;
+}
+
+/* =========================================================
+   MIRRORLAND WINDOW OVER DIAMOND ONLY
+   ========================================================= */
+
+/*
+  This layer covers only .showroom-reveal-scene.
+  It cannot overlap or change the compact orbit navigator.
+*/
+.showroom-window-layer{
+  position:absolute;
+  inset:0;
+  z-index:8;
+
+  display:grid;
+  place-items:center;
+
+  overflow:hidden;
+
+  border-radius:clamp(1.2rem,4vw,2.2rem);
+
+  pointer-events:none;
+}
+
+.showroom-window-mount{
+  position:absolute;
+  inset:0;
+
+  display:grid;
+  place-items:center;
+
+  pointer-events:none;
+
+  filter:
+    drop-shadow(0 1.4rem 2rem rgba(0,0,0,.52))
+    drop-shadow(0 0 1.4rem rgba(103,245,255,.10))
+    drop-shadow(0 0 1.7rem rgba(195,163,255,.09));
+
+  transition:
+    opacity .28s ease,
+    filter .28s ease;
+}
+
+.showroom-window-mount canvas{
+  width:100%;
+  height:100%;
+
+  display:block;
+
+  pointer-events:none;
+}
+
+.showroom-window-control{
+  position:absolute;
+  left:50%;
+  bottom:4.5%;
+  z-index:3;
+
+  min-width:11rem;
+  min-height:3.35rem;
+
+  display:grid;
+  place-items:center;
+  gap:.1rem;
+
+  padding:.62rem 1rem;
+
+  border:1px solid rgba(103,245,255,.56);
+  border-radius:999px;
+
+  color:var(--white);
+
+  background:
+    radial-gradient(
+      circle at 50% 0%,
+      rgba(255,255,255,.13),
+      transparent 70%
+    ),
+    linear-gradient(
+      135deg,
+      rgba(8,46,72,.94),
+      rgba(29,14,68,.96)
+    );
+
+  box-shadow:
+    0 .8rem 2rem rgba(0,0,0,.42),
+    0 0 1rem rgba(103,245,255,.12),
+    0 0 2rem rgba(195,163,255,.08),
+    inset 0 1px 0 rgba(255,255,255,.14);
+
+  transform:translateX(-50%);
+
+  cursor:pointer;
+  pointer-events:auto;
+
+  transition:
+    transform .18s ease,
+    border-color .18s ease,
+    box-shadow .18s ease,
+    opacity .18s ease;
+}
+
+.showroom-window-control:hover,
+.showroom-window-control:focus-visible{
+  border-color:rgba(255,216,106,.84);
+
+  box-shadow:
+    0 1rem 2.3rem rgba(0,0,0,.46),
+    0 0 1.2rem rgba(103,245,255,.18),
+    0 0 2.4rem rgba(255,216,106,.10),
+    inset 0 1px 0 rgba(255,255,255,.18);
+
+  transform:
+    translateX(-50%)
+    translateY(-2px);
+}
+
+.showroom-window-control__eyebrow{
+  color:var(--cyan-soft);
+
+  font-size:.55rem;
+  font-weight:950;
+  letter-spacing:.13em;
+  text-transform:uppercase;
+}
+
+.showroom-window-control__label{
+  color:var(--white);
+
+  font-size:.77rem;
+  font-weight:950;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+}
+
+[data-showroom-window-state="closed"]
+.showroom-window-mount{
+  opacity:1;
+}
+
+[data-showroom-window-state="opening"]
+.showroom-window-mount,
+[data-showroom-window-state="closing"]
+.showroom-window-mount{
+  opacity:.98;
+
+  filter:
+    drop-shadow(0 1.4rem 2rem rgba(0,0,0,.50))
+    drop-shadow(0 0 1.8rem rgba(103,245,255,.18))
+    drop-shadow(0 0 2.1rem rgba(255,216,106,.10));
+}
+
+[data-showroom-window-state="open"]
+.showroom-window-mount{
+  opacity:0;
+}
+
+[data-showroom-window-state="open"]
+.showroom-window-control{
+  border-color:rgba(255,216,106,.58);
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(51,34,10,.94),
+      rgba(11,18,35,.96)
+    );
+}
+
+[data-showroom-window-state="held"]
+.showroom-window-mount{
+  opacity:.36;
+
+  filter:grayscale(.45);
+}
+
+[data-showroom-window-state="held"]
+.showroom-window-control{
+  opacity:.48;
+  pointer-events:none;
+}
+
+/*
+  Progressive fallback:
+  before the Window runtime is operational, do not visually place an
+  empty transparent interception layer over the restored Diamond.
+*/
+[data-showroom-root]:not(
+  [data-showroom-window-controller-ready="true"]
+)
+.showroom-window-layer{
+  pointer-events:none;
+}
+
+[data-showroom-root]:not(
+  [data-showroom-window-controller-ready="true"]
+)
+.showroom-window-mount{
+  opacity:0;
+}
+
+[data-showroom-root]:not(
+  [data-showroom-window-controller-ready="true"]
+)
+.showroom-window-control{
+  pointer-events:none;
+  opacity:.58;
 }
 
 /* =========================================================
@@ -2752,10 +2818,10 @@ canvas[data-showroom-crystals-canvas]{
 .object-control-tray{
   position:relative;
 
+  overflow:hidden;
+
   border:1px solid var(--chamber-line);
   border-radius:1.12rem;
-
-  overflow:hidden;
 
   background:
     linear-gradient(
@@ -2776,8 +2842,6 @@ canvas[data-showroom-crystals-canvas]{
 
 .architectural-drop summary,
 .object-control-tray summary{
-  list-style:none;
-
   min-height:3.05rem;
 
   display:flex;
@@ -2789,6 +2853,7 @@ canvas[data-showroom-crystals-canvas]{
 
   color:var(--white);
 
+  list-style:none;
   cursor:pointer;
 
   font-size:.71rem;
@@ -2854,7 +2919,8 @@ canvas[data-showroom-crystals-canvas]{
 
 .drop-content p,
 .object-control-body p{
-  color:var(--chamber-copy,var(--muted));
+  color:
+    var(--chamber-copy,var(--muted));
 
   font-size:.94rem;
   line-height:1.62;
@@ -2889,10 +2955,10 @@ canvas[data-showroom-crystals-canvas]{
 .two-view-buttons button{
   min-height:3.2rem;
 
+  padding:.82rem .92rem;
+
   border:1px solid rgba(103,245,255,.30);
   border-radius:1rem;
-
-  padding:.82rem .92rem;
 
   color:rgba(250,252,255,.96);
 
@@ -2919,8 +2985,6 @@ canvas[data-showroom-crystals-canvas]{
 
 .two-view-buttons button:hover,
 .two-view-buttons button:focus-visible{
-  transform:translateY(-2px);
-
   border-color:rgba(103,245,255,.78);
 
   background:
@@ -2932,6 +2996,8 @@ canvas[data-showroom-crystals-canvas]{
 
   box-shadow:
     0 0 1.2rem rgba(23,223,247,.10);
+
+  transform:translateY(-2px);
 }
 
 .two-view-buttons button[data-active],
@@ -2976,21 +3042,22 @@ canvas[data-showroom-crystals-canvas]{
   padding:0!important;
   margin:0!important;
 
-  border:0!important;
   overflow:hidden!important;
+
+  border:0!important;
 }
 
 .status-strip{
   display:flex;
   flex-wrap:wrap;
-  gap:.68rem;
   align-items:center;
   justify-content:space-between;
+  gap:.68rem;
+
+  padding:.78rem;
 
   border:1px solid rgba(103,245,255,.20);
   border-radius:1rem;
-
-  padding:.78rem;
 
   background:
     linear-gradient(
@@ -3034,10 +3101,13 @@ button.button{
   align-items:center;
   justify-content:center;
 
-  border:1px solid var(--chamber-line,rgba(255,255,255,.22));
-  border-radius:999px;
-
   padding:.67rem 1.05rem;
+
+  border:
+    1px solid
+    var(--chamber-line,rgba(255,255,255,.22));
+
+  border-radius:999px;
 
   color:rgba(250,252,255,.97);
 
@@ -3064,9 +3134,8 @@ button.button{
 
 .button:hover,
 .button:focus-visible{
-  transform:translateY(-2px);
-
-  border-color:var(--chamber-accent,var(--cyan));
+  border-color:
+    var(--chamber-accent,var(--cyan));
 
   background:
     linear-gradient(
@@ -3077,6 +3146,8 @@ button.button{
 
   box-shadow:
     0 0 1.1rem rgba(0,0,0,.18);
+
+  transform:translateY(-2px);
 }
 
 .button-gold{
@@ -3174,6 +3245,8 @@ dialog{
 
   padding:0;
 
+  overflow:auto;
+
   border:1px solid rgba(185,204,225,.56);
   border-radius:1.6rem;
 
@@ -3193,8 +3266,6 @@ dialog{
 
   box-shadow:
     0 2rem 8rem rgba(0,0,0,.74);
-
-  overflow:auto;
 }
 
 dialog::backdrop{
@@ -3241,7 +3312,6 @@ dialog::backdrop{
 .dialog-close{
   width:2.7rem;
   height:2.7rem;
-
   flex:0 0 auto;
 
   display:grid;
@@ -3251,6 +3321,7 @@ dialog::backdrop{
   border-radius:50%;
 
   color:var(--white);
+
   background:rgba(255,255,255,.065);
 
   font-size:1.2rem;
@@ -3266,11 +3337,11 @@ dialog::backdrop{
 
 .dialog-close:hover,
 .dialog-close:focus-visible{
-  transform:rotate(4deg);
-
   border-color:rgba(185,204,225,.72);
 
   background:rgba(185,204,225,.14);
+
+  transform:rotate(4deg);
 }
 
 .showroom-compass-dialog{
@@ -3315,12 +3386,11 @@ dialog::backdrop{
 }
 
 .construction-record{
-  display:grid;
-  gap:.2rem;
-
   min-height:8rem;
 
+  display:grid;
   align-content:center;
+  gap:.2rem;
 
   padding:1rem;
 
@@ -3402,7 +3472,7 @@ dialog::backdrop{
 }
 
 /* =========================================================
-   CONTROLLER STATE
+   CONTROLLER STATE REFLECTION
    ========================================================= */
 
 [data-showroom-root][data-showroom-held="true"]
@@ -3416,22 +3486,13 @@ dialog::backdrop{
 .showroom-window-control,
 [data-showroom-root][data-showroom-held="true"]
 .showroom-compass-control{
-  pointer-events:none;
   opacity:.52;
+  pointer-events:none;
 }
 
 [data-showroom-root][data-showroom-compass-dialog-open="true"]
 .showroom-orbit__field{
   filter:saturate(.84) brightness(.86);
-}
-
-[data-showroom-root][data-showroom-state="chamber"]
-.showroom-threshold,
-[data-showroom-root][data-showroom-state="threshold"]
-.showroom-threshold,
-[data-showroom-root][data-showroom-state="diamond"]
-.showroom-threshold{
-  display:none;
 }
 
 /* =========================================================
@@ -3440,7 +3501,8 @@ dialog::backdrop{
 
 @media (max-width:1180px){
   .showroom-fact-grid--six{
-    grid-template-columns:repeat(3,minmax(0,1fr));
+    grid-template-columns:
+      repeat(3,minmax(0,1fr));
   }
 
   .showroom-concept-grid,
@@ -3448,10 +3510,6 @@ dialog::backdrop{
   .showroom-anatomy-grid{
     grid-template-columns:
       repeat(3,minmax(0,1fr));
-  }
-
-  .showroom-centerpiece{
-    width:min(64%,42rem);
   }
 }
 
@@ -3466,11 +3524,8 @@ dialog::backdrop{
 
   .showroom-fact-grid,
   .showroom-fact-grid--five{
-    grid-template-columns:repeat(3,minmax(0,1fr));
-  }
-
-  .showroom-centerpiece{
-    width:min(70%,40rem);
+    grid-template-columns:
+      repeat(3,minmax(0,1fr));
   }
 }
 
@@ -3504,21 +3559,9 @@ dialog::backdrop{
   }
 
   .showroom-orbit__field{
-    min-height:var(--orbit-mobile-min-height);
-  }
-
-  .showroom-centerpiece{
-    width:min(84%,38rem);
-    min-width:0;
-  }
-
-  .showroom-compass-layer{
-    width:min(31%,10.5rem);
-    min-width:6.8rem;
-  }
-
-  .showroom-window-control{
-    bottom:2.5%;
+    height:var(--orbit-mobile-height);
+    min-height:25rem;
+    max-height:34rem;
   }
 
   .showroom-chamber-host__toolbar{
@@ -3570,32 +3613,17 @@ dialog::backdrop{
   }
 
   .showroom-orbit__field{
-    min-height:clamp(38rem,165vw,48rem);
-  }
-
-  .showroom-centerpiece{
-    top:47%;
-
-    width:94%;
-    aspect-ratio:4 / 3;
-  }
-
-  .showroom-diamond-layer{
-    inset:13% 2% 14%;
+    height:clamp(26rem,108vw,32rem);
+    min-height:26rem;
   }
 
   .showroom-compass-layer{
-    width:min(30%,8.6rem);
+    width:clamp(6.8rem,26vw,8.5rem);
   }
 
   .showroom-compass-control__mark{
     width:3.1rem;
     height:3.1rem;
-  }
-
-  .showroom-window-control{
-    min-width:10rem;
-    min-height:3rem;
   }
 
   .showroom-category-controls
@@ -3610,7 +3638,7 @@ dialog::backdrop{
   }
 
   .showroom-orbit__fallback{
-    bottom:.45rem;
+    bottom:.4rem;
   }
 
   .showroom-orbit__fallback p{
@@ -3627,6 +3655,17 @@ dialog::backdrop{
 
   .showroom-chamber__heading{
     display:grid;
+  }
+
+  .diamond-viewport-card{
+    aspect-ratio:var(--diamond-mobile-ratio);
+  }
+
+  .showroom-window-control{
+    bottom:2.5%;
+
+    min-width:10rem;
+    min-height:3rem;
   }
 
   .showroom-fact-grid,
@@ -3701,6 +3740,7 @@ dialog::backdrop{
 
   .showroom-threshold::before{
     right:-4rem;
+
     opacity:.36;
   }
 
@@ -3714,21 +3754,12 @@ dialog::backdrop{
   }
 
   .showroom-orbit__field{
-    min-height:44rem;
-  }
-
-  .showroom-centerpiece{
-    top:45%;
-
-    width:100%;
+    height:29rem;
+    min-height:29rem;
   }
 
   .showroom-compass-layer{
-    width:7.4rem;
-  }
-
-  .showroom-window-control{
-    bottom:1.5%;
+    width:7.3rem;
   }
 
   .showroom-concept-grid,
@@ -3743,7 +3774,7 @@ dialog::backdrop{
 }
 
 /* =========================================================
-   CONTRAST
+   HIGH CONTRAST
    ========================================================= */
 
 @media (prefers-contrast:more){

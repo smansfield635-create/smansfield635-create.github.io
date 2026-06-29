@@ -1,14 +1,28 @@
 /* /assets/compass/compass.cosmos.js
    DGB Compass — Autonomous cosmic atmosphere and randomized spacecraft engine.
 
+   Full-file correction scope:
+   - Preserve the existing inert fixed cosmic layer.
+   - Preserve stars, sparkles, dust, rare meteors, and randomized spacecraft.
+   - Preserve adaptive density, adaptive quality, capped DPR, and 30 FPS pacing.
+   - Synchronize reduced motion with:
+       1. prefers-reduced-motion,
+       2. Compass root data-reduced-motion,
+       3. Compass controller frame state,
+       4. DGB_COMPASS_REDUCED_MOTION_CHANGE.
+   - Suspend animation, meteors, spacecraft, and timers when the document
+     or Compass estate is not visible.
+   - Prevent public start and spacecraft APIs from bypassing visibility or
+     reduced-motion conditions.
+   - Resume cleanly after environmental suspension.
+   - Add renderer receipts, failure reporting, removable listeners,
+     partial-initialization rollback, and complete destruction.
+   - Keep all generated surfaces behind the estate interface.
+
    Scope:
    - Compass page only.
    - Creates one inert fixed canvas for stars, sparkles, dust, and rare meteors.
    - Creates one detailed SVG spacecraft with randomized cubic Bézier flights.
-   - Keeps all generated surfaces behind the estate interface.
-   - Uses adaptive particle density and capped device-pixel ratio.
-   - Pauses when the page or browser tab is not visible.
-   - Respects prefers-reduced-motion.
    - Requires no additional HTML or CSS file.
 
    Protected:
@@ -22,169 +36,824 @@
 (() => {
   "use strict";
 
-  const GLOBAL_KEY = "DGB_COMPASS_COSMOS";
-  const STYLE_ID = "dgb-compass-cosmos-runtime-style";
-  const LAYER_ID = "dgb-compass-cosmos-layer";
-  const CANVAS_ID = "dgb-compass-cosmos-canvas";
-  const SPACECRAFT_ID = "dgb-compass-cosmos-spacecraft";
+  const GLOBAL_KEY =
+    "DGB_COMPASS_COSMOS";
 
-  if (window[GLOBAL_KEY]?.initialized) {
+  const RECEIPT_KEY =
+    "DGB_COMPASS_COSMOS_RECEIPT";
+
+  const STYLE_ID =
+    "dgb-compass-cosmos-runtime-style";
+
+  const LAYER_ID =
+    "dgb-compass-cosmos-layer";
+
+  const CANVAS_ID =
+    "dgb-compass-cosmos-canvas";
+
+  const SPACECRAFT_ID =
+    "dgb-compass-cosmos-spacecraft";
+
+  const REDUCED_MOTION_EVENT =
+    "DGB_COMPASS_REDUCED_MOTION_CHANGE";
+
+  const FAILURE_EVENT =
+    "DGB_COMPASS_COSMOS_FAILURE";
+
+  if (
+    window[GLOBAL_KEY] &&
+    window[GLOBAL_KEY].initialized
+  ) {
     return;
   }
 
+  const CONTRACT = Object.freeze({
+    id:
+      "DGB_COMPASS_COSMOS_HARDENED_v2",
+
+    previousId:
+      "DGB_COMPASS_COSMOS_AUTONOMOUS_v1",
+
+    file:
+      "/assets/compass/compass.cosmos.js",
+
+    releaseId:
+      "dgb-compass-cosmos-hardened-v2",
+
+    rendererClass:
+      "AUTONOMOUS_FIXED_2D_COSMOS_AND_SPACECRAFT",
+
+    visualPassClaimed:
+      false,
+
+    productionAuthorized:
+      false,
+
+    deploymentAuthorized:
+      false
+  });
+
   const CONFIG = Object.freeze({
-    selector: ".compass-estate",
+    selector:
+      ".compass-estate",
 
-    frameRate: 30,
-    maximumDeltaMs: 80,
+    frameRate:
+      30,
 
-    pixelRatioMaximum: 1.5,
-    pixelRatioMobileMaximum: 1.25,
+    maximumDeltaMs:
+      80,
 
-    minimumStars: 90,
-    maximumStars: 260,
-    starAreaDivisor: 7600,
+    pixelRatioMaximum:
+      1.5,
 
-    minimumDust: 18,
-    maximumDust: 58,
-    dustAreaDivisor: 32000,
+    pixelRatioMobileMaximum:
+      1.25,
 
-    minimumSparkles: 8,
-    maximumSparkles: 22,
+    minimumStars:
+      90,
 
-    maximumMeteors: 2,
-    meteorSpawnMinimumMs: 9000,
-    meteorSpawnMaximumMs: 24000,
+    maximumStars:
+      260,
 
-    spacecraftInitialDelayMinimumMs: 5000,
-    spacecraftInitialDelayMaximumMs: 12000,
-    spacecraftDelayMinimumMs: 18000,
-    spacecraftDelayMaximumMs: 52000,
-    spacecraftDurationMinimumMs: 9000,
-    spacecraftDurationMaximumMs: 17000,
-    spacecraftCandidateCount: 14,
+    starAreaDivisor:
+      7600,
 
-    adaptiveCheckIntervalMs: 5000,
-    adaptiveSlowRenderMs: 7.5,
-    adaptiveFastRenderMs: 3.0,
-    adaptiveMinimumQuality: 0.48,
-    adaptiveMaximumQuality: 1,
-    adaptiveStepDown: 0.12,
-    adaptiveStepUp: 0.05,
+    minimumDust:
+      18,
 
-    protectedSelectors: [
-      ".compass-estate__header",
-      ".compass-estate__sentence",
-      ".compass-value-card",
-      ".compass-introduction",
-      ".compass-orbit-intro",
-      ".compass-formula-artifact",
-      ".compass-discovery__item",
-      ".compass-scene",
-      ".compass-panel",
-      ".compass-closing"
-    ]
+    maximumDust:
+      58,
+
+    dustAreaDivisor:
+      32000,
+
+    minimumSparkles:
+      8,
+
+    maximumSparkles:
+      22,
+
+    maximumMeteors:
+      2,
+
+    meteorSpawnMinimumMs:
+      9000,
+
+    meteorSpawnMaximumMs:
+      24000,
+
+    spacecraftInitialDelayMinimumMs:
+      5000,
+
+    spacecraftInitialDelayMaximumMs:
+      12000,
+
+    spacecraftDelayMinimumMs:
+      18000,
+
+    spacecraftDelayMaximumMs:
+      52000,
+
+    spacecraftDurationMinimumMs:
+      9000,
+
+    spacecraftDurationMaximumMs:
+      17000,
+
+    spacecraftCandidateCount:
+      14,
+
+    adaptiveCheckIntervalMs:
+      5000,
+
+    adaptiveSlowRenderMs:
+      7.5,
+
+    adaptiveFastRenderMs:
+      3.0,
+
+    adaptiveMinimumQuality:
+      0.48,
+
+    adaptiveMaximumQuality:
+      1,
+
+    adaptiveStepDown:
+      0.12,
+
+    adaptiveStepUp:
+      0.05,
+
+    protectedSelectors:
+      Object.freeze([
+        ".compass-estate__header",
+        ".compass-estate__sentence",
+        ".compass-value-card",
+        ".compass-introduction",
+        ".compass-orbit-intro",
+        ".compass-formula-artifact",
+        ".compass-discovery__item",
+        ".compass-scene",
+        ".compass-panel",
+        ".compass-closing"
+      ])
   });
 
   const COLORS = Object.freeze({
-    stone: "255, 248, 224",
-    blue: "124, 220, 255",
-    gold: "243, 217, 139",
-    violet: "159, 137, 255",
-    dust: "188, 213, 226"
+    stone:
+      "255, 248, 224",
+
+    blue:
+      "124, 220, 255",
+
+    gold:
+      "243, 217, 139",
+
+    violet:
+      "159, 137, 255",
+
+    dust:
+      "188, 213, 226"
   });
 
+  const RECEIPT = {
+    contractId:
+      CONTRACT.id,
+
+    previousContractId:
+      CONTRACT.previousId,
+
+    status:
+      "pending",
+
+    initialized:
+      false,
+
+    running:
+      false,
+
+    suspended:
+      false,
+
+    destroyed:
+      false,
+
+    documentVisible:
+      !document.hidden,
+
+    estateVisible:
+      true,
+
+    reducedMotion:
+      false,
+
+    reducedMotionSource:
+      "startup",
+
+    layerPresent:
+      false,
+
+    canvasPresent:
+      false,
+
+    contextPresent:
+      false,
+
+    spacecraftPresent:
+      false,
+
+    starCount:
+      0,
+
+    dustCount:
+      0,
+
+    sparkleCount:
+      0,
+
+    meteorCount:
+      0,
+
+    spacecraftActive:
+      false,
+
+    spacecraftTimerActive:
+      false,
+
+    quality:
+      1,
+
+    pixelRatio:
+      1,
+
+    listenersBound:
+      false,
+
+    resizeObserverBound:
+      false,
+
+    intersectionObserverBound:
+      false,
+
+    lastAction:
+      "",
+
+    lastFailure:
+      null,
+
+    visualPassClaimed:
+      false
+  };
+
   const state = {
-    initialized: false,
-    destroyed: false,
-    running: false,
-    documentVisible: !document.hidden,
-    estateVisible: true,
-    reducedMotion: false,
+    initialized:
+      false,
 
-    estate: null,
-    layer: null,
-    canvas: null,
-    context: null,
-    spacecraft: null,
+    destroyed:
+      false,
 
-    width: 0,
-    height: 0,
-    pixelRatio: 1,
+    failed:
+      false,
 
-    stars: [],
-    dust: [],
-    sparkles: [],
-    meteors: [],
+    running:
+      false,
 
-    quality: 1,
-    renderCostSamples: [],
-    lastAdaptiveCheck: 0,
+    suspended:
+      false,
 
-    frameHandle: 0,
-    lastFrameTime: 0,
-    accumulatedFrameTime: 0,
+    documentVisible:
+      !document.hidden,
 
-    nextMeteorTime: 0,
+    estateVisible:
+      true,
 
-    spacecraftFlight: null,
-    spacecraftTimer: 0,
-    lastSpacecraftPath: null,
+    reducedMotion:
+      false,
 
-    resizeObserver: null,
-    intersectionObserver: null,
-    motionQuery: null,
+    estate:
+      null,
 
-    boundResize: null,
-    boundVisibility: null,
-    boundMotionChange: null
+    layer:
+      null,
+
+    canvas:
+      null,
+
+    context:
+      null,
+
+    spacecraft:
+      null,
+
+    createdStyle:
+      false,
+
+    createdLayer:
+      false,
+
+    width:
+      0,
+
+    height:
+      0,
+
+    pixelRatio:
+      1,
+
+    stars:
+      [],
+
+    dust:
+      [],
+
+    sparkles:
+      [],
+
+    meteors:
+      [],
+
+    quality:
+      1,
+
+    renderCostSamples:
+      [],
+
+    lastAdaptiveCheck:
+      0,
+
+    frameHandle:
+      0,
+
+    lastFrameTime:
+      0,
+
+    accumulatedFrameTime:
+      0,
+
+    nextMeteorTime:
+      0,
+
+    spacecraftFlight:
+      null,
+
+    spacecraftTimer:
+      0,
+
+    lastSpacecraftPath:
+      null,
+
+    resizeObserver:
+      null,
+
+    intersectionObserver:
+      null,
+
+    motionQuery:
+      null,
+
+    listenersBound:
+      false,
+
+    boundResize:
+      null,
+
+    boundVisibility:
+      null,
+
+    boundMotionChange:
+      null,
+
+    boundSharedMotionChange:
+      null
   };
 
   const api = {
-    initialized: false,
+    initialized:
+      false,
+
+    contract:
+      CONTRACT,
+
     start,
     stop,
     destroy,
     resize,
     launchSpacecraft,
-    setQuality
+    setQuality,
+
+    receipt:
+      () =>
+        Object.freeze({
+          ...RECEIPT
+        }),
+
+    getState:
+      () =>
+        Object.freeze({
+          initialized:
+            state.initialized,
+
+          running:
+            state.running,
+
+          suspended:
+            state.suspended,
+
+          destroyed:
+            state.destroyed,
+
+          failed:
+            state.failed,
+
+          documentVisible:
+            state.documentVisible,
+
+          estateVisible:
+            state.estateVisible,
+
+          reducedMotion:
+            state.reducedMotion,
+
+          quality:
+            state.quality,
+
+          spacecraftActive:
+            Boolean(
+              state.spacecraftFlight
+            ),
+
+          spacecraftTimerActive:
+            Boolean(
+              state.spacecraftTimer
+            ),
+
+          meteorCount:
+            state.meteors.length
+        })
   };
 
-  window[GLOBAL_KEY] = api;
+  window[GLOBAL_KEY] =
+    api;
 
-  function clamp(value, minimum, maximum) {
-    return Math.min(maximum, Math.max(minimum, value));
+  function clamp(
+    value,
+    minimum,
+    maximum
+  ) {
+    return Math.min(
+      maximum,
+      Math.max(
+        minimum,
+        value
+      )
+    );
   }
 
-  function random(minimum, maximum) {
-    return minimum + Math.random() * (maximum - minimum);
+  function random(
+    minimum,
+    maximum
+  ) {
+    return (
+      minimum +
+      Math.random() *
+      (
+        maximum -
+        minimum
+      )
+    );
   }
 
-  function randomInteger(minimum, maximum) {
-    return Math.floor(random(minimum, maximum + 1));
-  }
-
-  function randomChoice(values) {
-    return values[Math.floor(Math.random() * values.length)];
+  function randomChoice(
+    values
+  ) {
+    return values[
+      Math.floor(
+        Math.random() *
+        values.length
+      )
+    ];
   }
 
   function randomSign() {
-    return Math.random() < 0.5 ? -1 : 1;
+    return Math.random() <
+      0.5
+      ? -1
+      : 1;
   }
 
-  function easeInOutCubic(value) {
+  function easeInOutCubic(
+    value
+  ) {
     return value < 0.5
-      ? 4 * value * value * value
-      : 1 - Math.pow(-2 * value + 2, 3) / 2;
+      ? 4 *
+        value *
+        value *
+        value
+      : 1 -
+        Math.pow(
+          -2 *
+          value +
+          2,
+          3
+        ) /
+        2;
   }
 
-  function createRuntimeStyle() {
-    if (document.getElementById(STYLE_ID)) {
+  function emitReceipt(
+    extra = {}
+  ) {
+    Object.assign(
+      RECEIPT,
+      {
+        status:
+          state.destroyed
+            ? "destroyed"
+            : state.failed
+              ? "held"
+              : state.initialized
+                ? "available"
+                : "pending",
+
+        initialized:
+          state.initialized,
+
+        running:
+          state.running,
+
+        suspended:
+          state.suspended,
+
+        destroyed:
+          state.destroyed,
+
+        documentVisible:
+          state.documentVisible,
+
+        estateVisible:
+          state.estateVisible,
+
+        reducedMotion:
+          state.reducedMotion,
+
+        layerPresent:
+          Boolean(
+            state.layer
+          ),
+
+        canvasPresent:
+          Boolean(
+            state.canvas
+          ),
+
+        contextPresent:
+          Boolean(
+            state.context
+          ),
+
+        spacecraftPresent:
+          Boolean(
+            state.spacecraft
+          ),
+
+        starCount:
+          state.stars.length,
+
+        dustCount:
+          state.dust.length,
+
+        sparkleCount:
+          state.sparkles.length,
+
+        meteorCount:
+          state.meteors.length,
+
+        spacecraftActive:
+          Boolean(
+            state.spacecraftFlight
+          ),
+
+        spacecraftTimerActive:
+          Boolean(
+            state.spacecraftTimer
+          ),
+
+        quality:
+          state.quality,
+
+        pixelRatio:
+          state.pixelRatio,
+
+        listenersBound:
+          state.listenersBound,
+
+        resizeObserverBound:
+          Boolean(
+            state.resizeObserver
+          ),
+
+        intersectionObserverBound:
+          Boolean(
+            state.intersectionObserver
+          ),
+
+        visualPassClaimed:
+          false
+      },
+
+      extra
+    );
+
+    const serialized =
+      JSON.stringify(
+        RECEIPT
+      );
+
+    if (state.estate) {
+      state.estate.dataset
+        .compassCosmosReceipt =
+        serialized;
+
+      state.estate.dataset
+        .compassCosmosStatus =
+        RECEIPT.status;
+
+      state.estate.dataset
+        .compassCosmosReducedMotion =
+        state.reducedMotion
+          ? "true"
+          : "false";
+
+      state.estate.dataset
+        .visualPassClaimed =
+        "false";
+    }
+
+    if (state.layer) {
+      state.layer.dataset
+        .compassCosmosReceipt =
+        serialized;
+
+      state.layer.dataset
+        .compassCosmosStatus =
+        RECEIPT.status;
+
+      state.layer.dataset
+        .visualPassClaimed =
+        "false";
+    }
+
+    window[RECEIPT_KEY] =
+      Object.freeze({
+        ...RECEIPT
+      });
+  }
+
+  function dispatchFailure(
+    reason
+  ) {
+    window.dispatchEvent(
+      new CustomEvent(
+        FAILURE_EVENT,
+        {
+          detail:
+            Object.freeze({
+              reason:
+                String(
+                  reason ||
+                  "UNKNOWN_COSMOS_FAILURE"
+                )
+            })
+        }
+      )
+    );
+  }
+
+  function emitFailure(
+    reason
+  ) {
+    if (state.failed) {
       return;
     }
 
-    const style = document.createElement("style");
-    style.id = STYLE_ID;
+    state.failed =
+      true;
+
+    stopAnimationFrame();
+    clearSpacecraftTimer();
+    hideAndResetSpacecraft();
+    state.meteors.length =
+      0;
+
+    emitReceipt({
+      status:
+        "held",
+
+      lastAction:
+        "cosmos-render-failure",
+
+      lastFailure:
+        String(
+          reason ||
+          "UNKNOWN_COSMOS_FAILURE"
+        )
+    });
+
+    dispatchFailure(
+      reason
+    );
+  }
+
+  function mediaReducedMotion() {
+    return Boolean(
+      state.motionQuery &&
+      state.motionQuery.matches
+    );
+  }
+
+  function rootReducedMotion() {
+    return Boolean(
+      state.estate &&
+      state.estate.dataset &&
+      (
+        state.estate.dataset
+          .reducedMotion ===
+          "true" ||
+        state.estate.dataset
+          .compassRendererReducedMotion ===
+          "true"
+      )
+    );
+  }
+
+  function controllerReducedMotion() {
+    const controller =
+      window.DGB_COMPASS_CONTROLLER;
+
+    if (
+      !controller ||
+      typeof controller.getFrameState !==
+        "function"
+    ) {
+      return false;
+    }
+
+    try {
+      const frame =
+        controller.getFrameState();
+
+      return Boolean(
+        frame &&
+        frame.reducedMotion
+      );
+    } catch (_) {
+      return false;
+    }
+  }
+
+  function resolveReducedMotion(
+    requestedValue
+  ) {
+    state.reducedMotion =
+      requestedValue === true ||
+      mediaReducedMotion() ||
+      rootReducedMotion() ||
+      controllerReducedMotion();
+
+    if (state.estate) {
+      state.estate.dataset
+        .compassCosmosReducedMotion =
+        state.reducedMotion
+          ? "true"
+          : "false";
+    }
+
+    return state.reducedMotion;
+  }
+
+  function createRuntimeStyle() {
+    const existing =
+      document.getElementById(
+        STYLE_ID
+      );
+
+    if (existing) {
+      state.createdStyle =
+        false;
+
+      return;
+    }
+
+    const style =
+      document.createElement(
+        "style"
+      );
+
+    state.createdStyle =
+      true;
+
+    style.id =
+      STYLE_ID;
+
     style.textContent = `
       #${LAYER_ID} {
         position: fixed;
@@ -235,12 +904,22 @@
       }
 
       #${SPACECRAFT_ID} .dgb-spacecraft-engine-core {
-        animation: dgb-spacecraft-engine-pulse 1.35s ease-in-out infinite alternate;
+        animation:
+          dgb-spacecraft-engine-pulse
+          1.35s
+          ease-in-out
+          infinite
+          alternate;
         transform-origin: center;
       }
 
       #${SPACECRAFT_ID} .dgb-spacecraft-running-light {
-        animation: dgb-spacecraft-light-pulse 2.1s ease-in-out infinite alternate;
+        animation:
+          dgb-spacecraft-light-pulse
+          2.1s
+          ease-in-out
+          infinite
+          alternate;
       }
 
       #${SPACECRAFT_ID} .dgb-spacecraft-running-light--secondary {
@@ -306,56 +985,178 @@
       }
     `;
 
-    document.head.appendChild(style);
+    document.head.appendChild(
+      style
+    );
   }
 
   function createLayer() {
-    const existing = document.getElementById(LAYER_ID);
+    const existing =
+      document.getElementById(
+        LAYER_ID
+      );
 
     if (existing) {
-      state.layer = existing;
-      state.canvas = existing.querySelector(`#${CANVAS_ID}`);
-      state.spacecraft = existing.querySelector(`#${SPACECRAFT_ID}`);
-      state.context = state.canvas?.getContext("2d", {
-        alpha: true,
-        desynchronized: false
-      }) || null;
+      state.createdLayer =
+        false;
+
+      state.layer =
+        existing;
+
+      state.canvas =
+        existing.querySelector(
+          `#${CANVAS_ID}`
+        );
+
+      state.spacecraft =
+        existing.querySelector(
+          `#${SPACECRAFT_ID}`
+        );
+
+      if (!state.canvas) {
+        throw new Error(
+          "COSMOS_EXISTING_LAYER_CANVAS_MISSING"
+        );
+      }
+
+      if (!state.spacecraft) {
+        throw new Error(
+          "COSMOS_EXISTING_LAYER_SPACECRAFT_MISSING"
+        );
+      }
+
+      state.context =
+        state.canvas.getContext(
+          "2d",
+          {
+            alpha:
+              true,
+
+            desynchronized:
+              false
+          }
+        );
+
+      if (!state.context) {
+        throw new Error(
+          "COSMOS_2D_CONTEXT_UNAVAILABLE"
+        );
+      }
+
       return;
     }
 
-    const layer = document.createElement("div");
-    layer.id = LAYER_ID;
-    layer.setAttribute("aria-hidden", "true");
-    layer.setAttribute("data-compass-cosmos-runtime", "true");
+    const layer =
+      document.createElement(
+        "div"
+      );
 
-    const canvas = document.createElement("canvas");
-    canvas.id = CANVAS_ID;
-    canvas.setAttribute("aria-hidden", "true");
+    const canvas =
+      document.createElement(
+        "canvas"
+      );
 
-    const spacecraft = createSpacecraft();
+    const spacecraft =
+      createSpacecraft();
 
-    layer.append(canvas, spacecraft);
-    document.body.prepend(layer);
+    state.createdLayer =
+      true;
 
-    state.layer = layer;
-    state.canvas = canvas;
-    state.spacecraft = spacecraft;
-    state.context = canvas.getContext("2d", {
-      alpha: true,
-      desynchronized: false
-    });
+    layer.id =
+      LAYER_ID;
+
+    layer.setAttribute(
+      "aria-hidden",
+      "true"
+    );
+
+    layer.setAttribute(
+      "data-compass-cosmos-runtime",
+      "true"
+    );
+
+    canvas.id =
+      CANVAS_ID;
+
+    canvas.setAttribute(
+      "aria-hidden",
+      "true"
+    );
+
+    layer.append(
+      canvas,
+      spacecraft
+    );
+
+    document.body.prepend(
+      layer
+    );
+
+    state.layer =
+      layer;
+
+    state.canvas =
+      canvas;
+
+    state.spacecraft =
+      spacecraft;
+
+    state.context =
+      canvas.getContext(
+        "2d",
+        {
+          alpha:
+            true,
+
+          desynchronized:
+            false
+        }
+      );
+
+    if (!state.context) {
+      throw new Error(
+        "COSMOS_2D_CONTEXT_UNAVAILABLE"
+      );
+    }
   }
 
   function createSpacecraft() {
-    const namespace = "http://www.w3.org/2000/svg";
-    const svg = document.createElementNS(namespace, "svg");
+    const namespace =
+      "http://www.w3.org/2000/svg";
 
-    svg.id = SPACECRAFT_ID;
-    svg.setAttribute("viewBox", "0 0 240 96");
-    svg.setAttribute("role", "presentation");
-    svg.setAttribute("aria-hidden", "true");
-    svg.setAttribute("focusable", "false");
-    svg.setAttribute("data-flying", "false");
+    const svg =
+      document.createElementNS(
+        namespace,
+        "svg"
+      );
+
+    svg.id =
+      SPACECRAFT_ID;
+
+    svg.setAttribute(
+      "viewBox",
+      "0 0 240 96"
+    );
+
+    svg.setAttribute(
+      "role",
+      "presentation"
+    );
+
+    svg.setAttribute(
+      "aria-hidden",
+      "true"
+    );
+
+    svg.setAttribute(
+      "focusable",
+      "false"
+    );
+
+    svg.setAttribute(
+      "data-flying",
+      "false"
+    );
 
     svg.innerHTML = `
       <defs>
@@ -461,8 +1262,7 @@
         />
 
         <path
-          d="M116 60
-             C138 65, 167 61, 194 53"
+          d="M116 60 C138 65, 167 61, 194 53"
           fill="none"
           stroke="rgba(243,217,139,0.32)"
           stroke-width="1.1"
@@ -547,107 +1347,477 @@
   }
 
   function initialize() {
-    if (state.initialized || state.destroyed) {
+    if (
+      state.initialized ||
+      state.destroyed
+    ) {
       return;
     }
 
-    const estate = document.querySelector(CONFIG.selector);
+    try {
+      const estate =
+        document.querySelector(
+          CONFIG.selector
+        );
 
-    if (!estate) {
-      return;
-    }
+      if (!estate) {
+        throw new Error(
+          "COMPASS_ESTATE_NOT_FOUND"
+        );
+      }
 
-    state.estate = estate;
-    state.motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-    state.reducedMotion = state.motionQuery.matches;
+      state.estate =
+        estate;
 
-    createRuntimeStyle();
-    createLayer();
-    installObservers();
-    resize();
+      state.documentVisible =
+        !document.hidden;
 
-    state.initialized = true;
-    api.initialized = true;
+      state.motionQuery =
+        typeof window.matchMedia ===
+        "function"
+          ? window.matchMedia(
+              "(prefers-reduced-motion: reduce)"
+            )
+          : null;
 
-    state.nextMeteorTime =
-      performance.now() +
-      random(
-        CONFIG.meteorSpawnMinimumMs,
-        CONFIG.meteorSpawnMaximumMs
+      resolveReducedMotion(
+        false
       );
 
-    scheduleNextSpacecraftFlight(true);
-    evaluateRunningState();
+      createRuntimeStyle();
+      createLayer();
+      installObservers();
+      resize();
+
+      state.initialized =
+        true;
+
+      api.initialized =
+        true;
+
+      state.nextMeteorTime =
+        performance.now() +
+        random(
+          CONFIG
+            .meteorSpawnMinimumMs,
+          CONFIG
+            .meteorSpawnMaximumMs
+        );
+
+      if (
+        !state.reducedMotion &&
+        state.documentVisible &&
+        state.estateVisible
+      ) {
+        scheduleNextSpacecraftFlight(
+          true
+        );
+      }
+
+      emitReceipt({
+        status:
+          "available",
+
+        lastAction:
+          "cosmos-initialized",
+
+        lastFailure:
+          null,
+
+        reducedMotionSource:
+          "startup"
+      });
+
+      evaluateRunningState();
+    } catch (error) {
+      rollbackPartialInitialization(
+        `COSMOS_INIT_FAILURE:${
+          error &&
+          error.message
+            ? error.message
+            : String(error)
+        }`
+      );
+    }
   }
 
   function installObservers() {
-    state.boundResize = () => resize();
-    state.boundVisibility = () => {
-      state.documentVisible = !document.hidden;
-      evaluateRunningState();
-    };
+    if (state.listenersBound) {
+      return;
+    }
 
-    state.boundMotionChange = (event) => {
-      state.reducedMotion = event.matches;
+    state.boundResize =
+      handleWindowResize;
 
-      if (state.reducedMotion) {
-        cancelSpacecraftFlight();
-        state.meteors.length = 0;
-      } else {
-        scheduleNextSpacecraftFlight(true);
+    state.boundVisibility =
+      handleVisibilityChange;
+
+    state.boundMotionChange =
+      handleMotionQueryChange;
+
+    state.boundSharedMotionChange =
+      handleSharedMotionChange;
+
+    window.addEventListener(
+      "resize",
+      state.boundResize,
+      {
+        passive:
+          true
       }
+    );
 
-      evaluateRunningState();
-      drawStaticFrame();
-    };
+    document.addEventListener(
+      "visibilitychange",
+      state.boundVisibility
+    );
 
-    window.addEventListener("resize", state.boundResize, { passive: true });
-    document.addEventListener("visibilitychange", state.boundVisibility);
+    window.addEventListener(
+      REDUCED_MOTION_EVENT,
+      state.boundSharedMotionChange
+    );
 
-    if (typeof state.motionQuery.addEventListener === "function") {
-      state.motionQuery.addEventListener("change", state.boundMotionChange);
-    } else {
-      state.motionQuery.addListener(state.boundMotionChange);
+    if (state.motionQuery) {
+      if (
+        typeof state.motionQuery
+          .addEventListener ===
+        "function"
+      ) {
+        state.motionQuery.addEventListener(
+          "change",
+          state.boundMotionChange
+        );
+      } else if (
+        typeof state.motionQuery
+          .addListener ===
+        "function"
+      ) {
+        state.motionQuery.addListener(
+          state.boundMotionChange
+        );
+      }
     }
 
-    if ("ResizeObserver" in window) {
-      state.resizeObserver = new ResizeObserver(() => resize());
-      state.resizeObserver.observe(document.documentElement);
+    if (
+      "ResizeObserver" in
+      window
+    ) {
+      state.resizeObserver =
+        new ResizeObserver(
+          handleObservedResize
+        );
+
+      state.resizeObserver.observe(
+        document.documentElement
+      );
     }
 
-    if ("IntersectionObserver" in window) {
-      state.intersectionObserver = new IntersectionObserver(
-        (entries) => {
-          const entry = entries[0];
-          state.estateVisible =
-            Boolean(entry?.isIntersecting) ||
-            entry?.intersectionRatio > 0;
+    if (
+      "IntersectionObserver" in
+      window
+    ) {
+      state.intersectionObserver =
+        new IntersectionObserver(
+          handleEstateIntersection,
+          {
+            root:
+              null,
 
-          evaluateRunningState();
-        },
-        {
-          root: null,
-          rootMargin: "280px 0px 280px 0px",
-          threshold: 0
-        }
+            rootMargin:
+              "280px 0px 280px 0px",
+
+            threshold:
+              0
+          }
+        );
+
+      state.intersectionObserver.observe(
+        state.estate
+      );
+    }
+
+    state.listenersBound =
+      true;
+  }
+
+  function uninstallObservers() {
+    if (
+      state.boundResize
+    ) {
+      window.removeEventListener(
+        "resize",
+        state.boundResize
+      );
+    }
+
+    if (
+      state.boundVisibility
+    ) {
+      document.removeEventListener(
+        "visibilitychange",
+        state.boundVisibility
+      );
+    }
+
+    if (
+      state.boundSharedMotionChange
+    ) {
+      window.removeEventListener(
+        REDUCED_MOTION_EVENT,
+        state.boundSharedMotionChange
+      );
+    }
+
+    if (
+      state.motionQuery &&
+      state.boundMotionChange
+    ) {
+      if (
+        typeof state.motionQuery
+          .removeEventListener ===
+        "function"
+      ) {
+        state.motionQuery
+          .removeEventListener(
+            "change",
+            state.boundMotionChange
+          );
+      } else if (
+        typeof state.motionQuery
+          .removeListener ===
+        "function"
+      ) {
+        state.motionQuery
+          .removeListener(
+            state.boundMotionChange
+          );
+      }
+    }
+
+    if (state.resizeObserver) {
+      state.resizeObserver.disconnect();
+      state.resizeObserver =
+        null;
+    }
+
+    if (
+      state.intersectionObserver
+    ) {
+      state.intersectionObserver.disconnect();
+      state.intersectionObserver =
+        null;
+    }
+
+    state.boundResize =
+      null;
+
+    state.boundVisibility =
+      null;
+
+    state.boundMotionChange =
+      null;
+
+    state.boundSharedMotionChange =
+      null;
+
+    state.listenersBound =
+      false;
+  }
+
+  function handleWindowResize() {
+    resize();
+  }
+
+  function handleObservedResize() {
+    resize();
+  }
+
+  function handleVisibilityChange() {
+    state.documentVisible =
+      !document.hidden;
+
+    evaluateRunningState();
+  }
+
+  function handleEstateIntersection(
+    entries
+  ) {
+    const entry =
+      entries[0];
+
+    state.estateVisible =
+      Boolean(
+        entry &&
+        (
+          entry.isIntersecting ||
+          entry.intersectionRatio >
+            0
+        )
       );
 
-      state.intersectionObserver.observe(state.estate);
+    evaluateRunningState();
+  }
+
+  function handleMotionQueryChange(
+    event
+  ) {
+    applyReducedMotionChange(
+      Boolean(
+        event.matches
+      ),
+      "media-query-change"
+    );
+  }
+
+  function handleSharedMotionChange(
+    event
+  ) {
+    const detail =
+      event &&
+      event.detail
+        ? event.detail
+        : {};
+
+    applyReducedMotionChange(
+      detail.reducedMotion ===
+        true,
+      detail.source ||
+        "shared-controller-event"
+    );
+  }
+
+  function applyReducedMotionChange(
+    requestedValue,
+    source
+  ) {
+    const previous =
+      state.reducedMotion;
+
+    resolveReducedMotion(
+      requestedValue
+    );
+
+    if (state.reducedMotion) {
+      suspendEnvironment(
+        "reduced-motion"
+      );
+    } else {
+      evaluateRunningState();
     }
+
+    drawStaticFrame();
+
+    emitReceipt({
+      lastAction:
+        "cosmos-reduced-motion-updated",
+
+      reducedMotionSource:
+        source,
+
+      reducedMotionChanged:
+        previous !==
+        state.reducedMotion
+    });
+  }
+
+  function canEnvironmentRun() {
+    return Boolean(
+      state.initialized &&
+      !state.destroyed &&
+      !state.failed &&
+      state.documentVisible &&
+      state.estateVisible &&
+      !state.reducedMotion &&
+      state.context
+    );
   }
 
   function evaluateRunningState() {
-    const shouldRun =
-      state.initialized &&
-      !state.destroyed &&
-      state.documentVisible &&
-      state.estateVisible &&
-      !state.reducedMotion;
+    resolveReducedMotion(
+      false
+    );
 
-    if (shouldRun) {
-      start();
+    if (canEnvironmentRun()) {
+      resumeEnvironment();
     } else {
-      stop();
+      suspendEnvironment(
+        state.reducedMotion
+          ? "reduced-motion"
+          : !state.documentVisible
+            ? "document-hidden"
+            : !state.estateVisible
+              ? "estate-not-visible"
+              : "environment-unavailable"
+      );
+    }
+  }
+
+  function resumeEnvironment() {
+    if (!canEnvironmentRun()) {
+      return false;
+    }
+
+    state.suspended =
+      false;
+
+    start();
+
+    if (
+      !state.spacecraftFlight &&
+      !state.spacecraftTimer
+    ) {
+      scheduleNextSpacecraftFlight(
+        true
+      );
+    }
+
+    if (
+      state.nextMeteorTime <=
+      performance.now()
+    ) {
+      state.nextMeteorTime =
+        performance.now() +
+        random(
+          CONFIG
+            .meteorSpawnMinimumMs,
+          CONFIG
+            .meteorSpawnMaximumMs
+        );
+    }
+
+    emitReceipt({
+      lastAction:
+        "cosmos-environment-resumed"
+    });
+
+    return true;
+  }
+
+  function suspendEnvironment(
+    reason
+  ) {
+    const wasSuspended =
+      state.suspended;
+
+    state.suspended =
+      true;
+
+    stopAnimationFrame();
+    clearSpacecraftTimer();
+    cancelSpacecraftFlight(
+      false
+    );
+
+    state.meteors.length =
+      0;
+
+    drawStaticFrame();
+
+    if (!wasSuspended) {
+      emitReceipt({
+        lastAction:
+          `cosmos-environment-suspended:${reason}`
+      });
     }
   }
 
@@ -655,346 +1825,935 @@
     if (
       state.running ||
       state.destroyed ||
+      state.failed ||
       !state.context ||
+      !state.initialized ||
+      !state.documentVisible ||
+      !state.estateVisible ||
       state.reducedMotion
+    ) {
+      return false;
+    }
+
+    state.suspended =
+      false;
+
+    state.running =
+      true;
+
+    state.lastFrameTime =
+      performance.now();
+
+    state.accumulatedFrameTime =
+      0;
+
+    state.frameHandle =
+      requestAnimationFrame(
+        frame
+      );
+
+    emitReceipt({
+      lastAction:
+        "cosmos-render-loop-started"
+    });
+
+    return true;
+  }
+
+  function stop() {
+    stopAnimationFrame();
+
+    emitReceipt({
+      lastAction:
+        "cosmos-render-loop-stopped"
+    });
+  }
+
+  function stopAnimationFrame() {
+    state.running =
+      false;
+
+    if (state.frameHandle) {
+      cancelAnimationFrame(
+        state.frameHandle
+      );
+
+      state.frameHandle =
+        0;
+    }
+  }
+
+  function frame(
+    timestamp
+  ) {
+    if (
+      !state.running ||
+      state.destroyed ||
+      state.failed
     ) {
       return;
     }
 
-    state.running = true;
-    state.lastFrameTime = performance.now();
-    state.accumulatedFrameTime = 0;
-    state.frameHandle = requestAnimationFrame(frame);
+    const rawDelta =
+      timestamp -
+      state.lastFrameTime;
+
+    const delta =
+      clamp(
+        rawDelta,
+        0,
+        CONFIG.maximumDeltaMs
+      );
+
+    state.lastFrameTime =
+      timestamp;
+
+    state.accumulatedFrameTime +=
+      delta;
+
+    const targetFrameDuration =
+      1000 /
+      CONFIG.frameRate;
+
+    if (
+      state.accumulatedFrameTime >=
+      targetFrameDuration
+    ) {
+      const renderStart =
+        performance.now();
+
+      update(
+        state.accumulatedFrameTime,
+        timestamp
+      );
+
+      draw(
+        timestamp
+      );
+
+      const renderCost =
+        performance.now() -
+        renderStart;
+
+      registerRenderCost(
+        renderCost,
+        timestamp
+      );
+
+      state.accumulatedFrameTime %=
+        targetFrameDuration;
+    }
+
+    state.frameHandle =
+      requestAnimationFrame(
+        frame
+      );
   }
 
-  function stop() {
-    if (!state.running) {
-      return;
-    }
+  function registerRenderCost(
+    renderCost,
+    timestamp
+  ) {
+    state.renderCostSamples.push(
+      renderCost
+    );
 
-    state.running = false;
-
-    if (state.frameHandle) {
-      cancelAnimationFrame(state.frameHandle);
-      state.frameHandle = 0;
-    }
-  }
-
-  function frame(timestamp) {
-    if (!state.running || state.destroyed) {
-      return;
-    }
-
-    const rawDelta = timestamp - state.lastFrameTime;
-    const delta = clamp(rawDelta, 0, CONFIG.maximumDeltaMs);
-
-    state.lastFrameTime = timestamp;
-    state.accumulatedFrameTime += delta;
-
-    const targetFrameDuration = 1000 / CONFIG.frameRate;
-
-    if (state.accumulatedFrameTime >= targetFrameDuration) {
-      const renderStart = performance.now();
-
-      update(state.accumulatedFrameTime, timestamp);
-      draw(timestamp);
-
-      const renderCost = performance.now() - renderStart;
-      registerRenderCost(renderCost, timestamp);
-
-      state.accumulatedFrameTime %= targetFrameDuration;
-    }
-
-    state.frameHandle = requestAnimationFrame(frame);
-  }
-
-  function registerRenderCost(renderCost, timestamp) {
-    state.renderCostSamples.push(renderCost);
-
-    if (state.renderCostSamples.length > 90) {
+    if (
+      state.renderCostSamples.length >
+      90
+    ) {
       state.renderCostSamples.shift();
     }
 
     if (
-      timestamp - state.lastAdaptiveCheck <
+      timestamp -
+      state.lastAdaptiveCheck <
       CONFIG.adaptiveCheckIntervalMs
     ) {
       return;
     }
 
-    state.lastAdaptiveCheck = timestamp;
-
-    if (!state.renderCostSamples.length) {
-      return;
-    }
-
-    const average =
-      state.renderCostSamples.reduce((sum, value) => sum + value, 0) /
-      state.renderCostSamples.length;
-
-    state.renderCostSamples.length = 0;
-
-    if (average > CONFIG.adaptiveSlowRenderMs) {
-      setQuality(state.quality - CONFIG.adaptiveStepDown);
-    } else if (average < CONFIG.adaptiveFastRenderMs) {
-      setQuality(state.quality + CONFIG.adaptiveStepUp);
-    }
-  }
-
-  function setQuality(value) {
-    const next = clamp(
-      Number(value) || CONFIG.adaptiveMinimumQuality,
-      CONFIG.adaptiveMinimumQuality,
-      CONFIG.adaptiveMaximumQuality
-    );
-
-    if (Math.abs(next - state.quality) < 0.02) {
-      return;
-    }
-
-    state.quality = next;
-    rebuildParticleField();
-  }
-
-  function resize() {
-    if (!state.canvas || !state.context) {
-      return;
-    }
-
-    const width = Math.max(1, window.innerWidth);
-    const height = Math.max(1, window.innerHeight);
-    const mobileMaximum =
-      width <= 820
-        ? CONFIG.pixelRatioMobileMaximum
-        : CONFIG.pixelRatioMaximum;
-
-    const pixelRatio = clamp(
-      window.devicePixelRatio || 1,
-      1,
-      mobileMaximum
-    );
+    state.lastAdaptiveCheck =
+      timestamp;
 
     if (
-      width === state.width &&
-      height === state.height &&
-      pixelRatio === state.pixelRatio
+      !state.renderCostSamples.length
     ) {
       return;
     }
 
-    state.width = width;
-    state.height = height;
-    state.pixelRatio = pixelRatio;
+    const average =
+      state.renderCostSamples.reduce(
+        (
+          sum,
+          value
+        ) =>
+          sum +
+          value,
+        0
+      ) /
+      state.renderCostSamples.length;
 
-    state.canvas.width = Math.round(width * pixelRatio);
-    state.canvas.height = Math.round(height * pixelRatio);
-    state.canvas.style.width = `${width}px`;
-    state.canvas.style.height = `${height}px`;
+    state.renderCostSamples.length =
+      0;
 
-    state.context.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
-    state.context.imageSmoothingEnabled = true;
+    if (
+      average >
+      CONFIG.adaptiveSlowRenderMs
+    ) {
+      setQuality(
+        state.quality -
+        CONFIG.adaptiveStepDown
+      );
+    } else if (
+      average <
+      CONFIG.adaptiveFastRenderMs
+    ) {
+      setQuality(
+        state.quality +
+        CONFIG.adaptiveStepUp
+      );
+    }
+  }
+
+  function setQuality(
+    value
+  ) {
+    const numeric =
+      Number(value);
+
+    const next =
+      clamp(
+        Number.isFinite(
+          numeric
+        )
+          ? numeric
+          : CONFIG
+              .adaptiveMinimumQuality,
+
+        CONFIG
+          .adaptiveMinimumQuality,
+
+        CONFIG
+          .adaptiveMaximumQuality
+      );
+
+    if (
+      Math.abs(
+        next -
+        state.quality
+      ) <
+      0.02
+    ) {
+      return false;
+    }
+
+    state.quality =
+      next;
 
     rebuildParticleField();
     drawStaticFrame();
+
+    emitReceipt({
+      lastAction:
+        "cosmos-quality-updated"
+    });
+
+    return true;
+  }
+
+  function resize() {
+    if (
+      !state.canvas ||
+      !state.context
+    ) {
+      return;
+    }
+
+    const width =
+      Math.max(
+        1,
+        window.innerWidth
+      );
+
+    const height =
+      Math.max(
+        1,
+        window.innerHeight
+      );
+
+    const mobileMaximum =
+      width <=
+      820
+        ? CONFIG
+            .pixelRatioMobileMaximum
+        : CONFIG
+            .pixelRatioMaximum;
+
+    const pixelRatio =
+      clamp(
+        window.devicePixelRatio ||
+        1,
+        1,
+        mobileMaximum
+      );
+
+    if (
+      width ===
+        state.width &&
+      height ===
+        state.height &&
+      pixelRatio ===
+        state.pixelRatio
+    ) {
+      return;
+    }
+
+    state.width =
+      width;
+
+    state.height =
+      height;
+
+    state.pixelRatio =
+      pixelRatio;
+
+    state.canvas.width =
+      Math.round(
+        width *
+        pixelRatio
+      );
+
+    state.canvas.height =
+      Math.round(
+        height *
+        pixelRatio
+      );
+
+    state.canvas.style.width =
+      `${width}px`;
+
+    state.canvas.style.height =
+      `${height}px`;
+
+    state.context.setTransform(
+      pixelRatio,
+      0,
+      0,
+      pixelRatio,
+      0,
+      0
+    );
+
+    state.context.imageSmoothingEnabled =
+      true;
+
+    rebuildParticleField();
+    drawStaticFrame();
+
+    emitReceipt({
+      lastAction:
+        "cosmos-resized"
+    });
   }
 
   function rebuildParticleField() {
-    const area = state.width * state.height;
-    const mobileFactor = state.width <= 560 ? 0.62 : state.width <= 820 ? 0.78 : 1;
-    const quality = state.quality * mobileFactor;
+    const area =
+      state.width *
+      state.height;
 
-    const starCount = clamp(
-      Math.floor((area / CONFIG.starAreaDivisor) * quality),
-      CONFIG.minimumStars,
-      CONFIG.maximumStars
-    );
+    const mobileFactor =
+      state.width <=
+      560
+        ? 0.62
+        : state.width <=
+            820
+          ? 0.78
+          : 1;
 
-    const dustCount = clamp(
-      Math.floor((area / CONFIG.dustAreaDivisor) * quality),
-      CONFIG.minimumDust,
-      CONFIG.maximumDust
-    );
+    const quality =
+      state.quality *
+      mobileFactor;
 
-    const sparkleCount = clamp(
-      Math.floor(CONFIG.maximumSparkles * quality),
-      CONFIG.minimumSparkles,
-      CONFIG.maximumSparkles
-    );
+    const starCount =
+      clamp(
+        Math.floor(
+          (
+            area /
+            CONFIG.starAreaDivisor
+          ) *
+          quality
+        ),
+        CONFIG.minimumStars,
+        CONFIG.maximumStars
+      );
 
-    state.stars = Array.from({ length: starCount }, createStar);
-    state.dust = Array.from({ length: dustCount }, createDust);
-    state.sparkles = Array.from({ length: sparkleCount }, createSparkle);
-    state.meteors.length = 0;
+    const dustCount =
+      clamp(
+        Math.floor(
+          (
+            area /
+            CONFIG.dustAreaDivisor
+          ) *
+          quality
+        ),
+        CONFIG.minimumDust,
+        CONFIG.maximumDust
+      );
+
+    const sparkleCount =
+      clamp(
+        Math.floor(
+          CONFIG.maximumSparkles *
+          quality
+        ),
+        CONFIG.minimumSparkles,
+        CONFIG.maximumSparkles
+      );
+
+    state.stars =
+      Array.from(
+        {
+          length:
+            starCount
+        },
+        createStar
+      );
+
+    state.dust =
+      Array.from(
+        {
+          length:
+            dustCount
+        },
+        createDust
+      );
+
+    state.sparkles =
+      Array.from(
+        {
+          length:
+            sparkleCount
+        },
+        createSparkle
+      );
+
+    state.meteors.length =
+      0;
   }
 
   function createStar() {
-    const depth = Math.pow(Math.random(), 1.8);
-    const paletteRoll = Math.random();
+    const depth =
+      Math.pow(
+        Math.random(),
+        1.8
+      );
 
-    let color = COLORS.stone;
+    const paletteRoll =
+      Math.random();
 
-    if (paletteRoll > 0.82 && paletteRoll <= 0.94) {
-      color = COLORS.blue;
-    } else if (paletteRoll > 0.94 && paletteRoll <= 0.985) {
-      color = COLORS.gold;
-    } else if (paletteRoll > 0.985) {
-      color = COLORS.violet;
+    let color =
+      COLORS.stone;
+
+    if (
+      paletteRoll >
+        0.82 &&
+      paletteRoll <=
+        0.94
+    ) {
+      color =
+        COLORS.blue;
+    } else if (
+      paletteRoll >
+        0.94 &&
+      paletteRoll <=
+        0.985
+    ) {
+      color =
+        COLORS.gold;
+    } else if (
+      paletteRoll >
+      0.985
+    ) {
+      color =
+        COLORS.violet;
     }
 
     return {
-      x: Math.random() * state.width,
-      y: Math.random() * state.height,
-      radius: random(0.35, 1.55) * (0.55 + depth * 0.75),
-      alpha: random(0.14, 0.68) * (0.55 + depth * 0.55),
+      x:
+        Math.random() *
+        state.width,
+
+      y:
+        Math.random() *
+        state.height,
+
+      radius:
+        random(
+          0.35,
+          1.55
+        ) *
+        (
+          0.55 +
+          depth *
+          0.75
+        ),
+
+      alpha:
+        random(
+          0.14,
+          0.68
+        ) *
+        (
+          0.55 +
+          depth *
+          0.55
+        ),
+
       color,
       depth,
-      phase: random(0, Math.PI * 2),
-      twinkleRate: random(0.00055, 0.0018),
-      driftX: random(-0.0035, 0.0035) * (0.3 + depth),
-      driftY: random(-0.0024, 0.0024) * (0.3 + depth)
+
+      phase:
+        random(
+          0,
+          Math.PI *
+          2
+        ),
+
+      twinkleRate:
+        random(
+          0.00055,
+          0.0018
+        ),
+
+      driftX:
+        random(
+          -0.0035,
+          0.0035
+        ) *
+        (
+          0.3 +
+          depth
+        ),
+
+      driftY:
+        random(
+          -0.0024,
+          0.0024
+        ) *
+        (
+          0.3 +
+          depth
+        )
     };
   }
 
   function createDust() {
     return {
-      x: Math.random() * state.width,
-      y: Math.random() * state.height,
-      radius: random(0.4, 1.5),
-      alpha: random(0.025, 0.13),
-      speedX: random(-0.006, 0.006),
-      speedY: random(-0.005, 0.005),
-      phase: random(0, Math.PI * 2)
+      x:
+        Math.random() *
+        state.width,
+
+      y:
+        Math.random() *
+        state.height,
+
+      radius:
+        random(
+          0.4,
+          1.5
+        ),
+
+      alpha:
+        random(
+          0.025,
+          0.13
+        ),
+
+      speedX:
+        random(
+          -0.006,
+          0.006
+        ),
+
+      speedY:
+        random(
+          -0.005,
+          0.005
+        ),
+
+      phase:
+        random(
+          0,
+          Math.PI *
+          2
+        )
     };
   }
 
   function createSparkle() {
     return {
-      x: random(0.06, 0.94) * state.width,
-      y: random(0.04, 0.96) * state.height,
-      radius: random(1.1, 2.2),
-      alpha: random(0.36, 0.78),
-      phase: random(0, Math.PI * 2),
-      rate: random(0.001, 0.0024),
-      color: randomChoice([
-        COLORS.stone,
-        COLORS.blue,
-        COLORS.gold
-      ])
+      x:
+        random(
+          0.06,
+          0.94
+        ) *
+        state.width,
+
+      y:
+        random(
+          0.04,
+          0.96
+        ) *
+        state.height,
+
+      radius:
+        random(
+          1.1,
+          2.2
+        ),
+
+      alpha:
+        random(
+          0.36,
+          0.78
+        ),
+
+      phase:
+        random(
+          0,
+          Math.PI *
+          2
+        ),
+
+      rate:
+        random(
+          0.001,
+          0.0024
+        ),
+
+      color:
+        randomChoice([
+          COLORS.stone,
+          COLORS.blue,
+          COLORS.gold
+        ])
     };
   }
 
-  function update(delta, timestamp) {
-    updateStars(delta);
-    updateDust(delta);
-    updateMeteors(delta, timestamp);
-    updateSpacecraft(timestamp);
+  function update(
+    delta,
+    timestamp
+  ) {
+    updateStars(
+      delta
+    );
+
+    updateDust(
+      delta
+    );
+
+    updateMeteors(
+      delta,
+      timestamp
+    );
+
+    updateSpacecraft(
+      timestamp
+    );
   }
 
-  function updateStars(delta) {
-    for (const star of state.stars) {
-      star.x += star.driftX * delta;
-      star.y += star.driftY * delta;
-
-      if (star.x < -4) {
-        star.x = state.width + 4;
-      } else if (star.x > state.width + 4) {
-        star.x = -4;
-      }
-
-      if (star.y < -4) {
-        star.y = state.height + 4;
-      } else if (star.y > state.height + 4) {
-        star.y = -4;
-      }
-    }
-  }
-
-  function updateDust(delta) {
-    for (const particle of state.dust) {
-      particle.x += particle.speedX * delta;
-      particle.y += particle.speedY * delta;
-
-      if (particle.x < -8) {
-        particle.x = state.width + 8;
-      } else if (particle.x > state.width + 8) {
-        particle.x = -8;
-      }
-
-      if (particle.y < -8) {
-        particle.y = state.height + 8;
-      } else if (particle.y > state.height + 8) {
-        particle.y = -8;
-      }
-    }
-  }
-
-  function updateMeteors(delta, timestamp) {
-    if (
-      timestamp >= state.nextMeteorTime &&
-      state.meteors.length < CONFIG.maximumMeteors
+  function updateStars(
+    delta
+  ) {
+    for (
+      const star of
+      state.stars
     ) {
-      state.meteors.push(createMeteor());
+      star.x +=
+        star.driftX *
+        delta;
+
+      star.y +=
+        star.driftY *
+        delta;
+
+      if (
+        star.x <
+        -4
+      ) {
+        star.x =
+          state.width +
+          4;
+      } else if (
+        star.x >
+        state.width +
+        4
+      ) {
+        star.x =
+          -4;
+      }
+
+      if (
+        star.y <
+        -4
+      ) {
+        star.y =
+          state.height +
+          4;
+      } else if (
+        star.y >
+        state.height +
+        4
+      ) {
+        star.y =
+          -4;
+      }
+    }
+  }
+
+  function updateDust(
+    delta
+  ) {
+    for (
+      const particle of
+      state.dust
+    ) {
+      particle.x +=
+        particle.speedX *
+        delta;
+
+      particle.y +=
+        particle.speedY *
+        delta;
+
+      if (
+        particle.x <
+        -8
+      ) {
+        particle.x =
+          state.width +
+          8;
+      } else if (
+        particle.x >
+        state.width +
+        8
+      ) {
+        particle.x =
+          -8;
+      }
+
+      if (
+        particle.y <
+        -8
+      ) {
+        particle.y =
+          state.height +
+          8;
+      } else if (
+        particle.y >
+        state.height +
+        8
+      ) {
+        particle.y =
+          -8;
+      }
+    }
+  }
+
+  function updateMeteors(
+    delta,
+    timestamp
+  ) {
+    if (
+      timestamp >=
+        state.nextMeteorTime &&
+      state.meteors.length <
+        CONFIG.maximumMeteors
+    ) {
+      state.meteors.push(
+        createMeteor()
+      );
 
       state.nextMeteorTime =
         timestamp +
         random(
-          CONFIG.meteorSpawnMinimumMs,
-          CONFIG.meteorSpawnMaximumMs
+          CONFIG
+            .meteorSpawnMinimumMs,
+          CONFIG
+            .meteorSpawnMaximumMs
         );
     }
 
-    for (let index = state.meteors.length - 1; index >= 0; index -= 1) {
-      const meteor = state.meteors[index];
+    for (
+      let index =
+        state.meteors.length -
+        1;
+      index >=
+        0;
+      index -=
+        1
+    ) {
+      const meteor =
+        state.meteors[index];
 
-      meteor.elapsed += delta;
-      meteor.x += meteor.velocityX * delta;
-      meteor.y += meteor.velocityY * delta;
+      meteor.elapsed +=
+        delta;
+
+      meteor.x +=
+        meteor.velocityX *
+        delta;
+
+      meteor.y +=
+        meteor.velocityY *
+        delta;
 
       if (
-        meteor.elapsed >= meteor.duration ||
-        meteor.x < -meteor.length * 2 ||
-        meteor.x > state.width + meteor.length * 2 ||
-        meteor.y < -meteor.length * 2 ||
-        meteor.y > state.height + meteor.length * 2
+        meteor.elapsed >=
+          meteor.duration ||
+        meteor.x <
+          -meteor.length *
+          2 ||
+        meteor.x >
+          state.width +
+          meteor.length *
+          2 ||
+        meteor.y <
+          -meteor.length *
+          2 ||
+        meteor.y >
+          state.height +
+          meteor.length *
+          2
       ) {
-        state.meteors.splice(index, 1);
+        state.meteors.splice(
+          index,
+          1
+        );
       }
     }
   }
 
   function createMeteor() {
-    const fromRight = Math.random() < 0.72;
-    const downward = Math.random() < 0.82;
-    const length = random(70, state.width <= 560 ? 115 : 175);
-    const speed = random(0.42, 0.74);
+    const fromRight =
+      Math.random() <
+      0.72;
+
+    const downward =
+      Math.random() <
+      0.82;
+
+    const length =
+      random(
+        70,
+        state.width <=
+        560
+          ? 115
+          : 175
+      );
+
+    const speed =
+      random(
+        0.42,
+        0.74
+      );
 
     return {
-      x: fromRight
-        ? state.width + length
-        : -length,
-      y: random(-40, state.height * 0.44),
-      velocityX: fromRight ? -speed : speed,
-      velocityY: downward
-        ? random(0.14, 0.30)
-        : random(-0.22, -0.10),
+      x:
+        fromRight
+          ? state.width +
+            length
+          : -length,
+
+      y:
+        random(
+          -40,
+          state.height *
+          0.44
+        ),
+
+      velocityX:
+        fromRight
+          ? -speed
+          : speed,
+
+      velocityY:
+        downward
+          ? random(
+              0.14,
+              0.30
+            )
+          : random(
+              -0.22,
+              -0.10
+            ),
+
       length,
-      alpha: random(0.40, 0.82),
-      width: random(0.7, 1.4),
-      elapsed: 0,
-      duration: random(1300, 2300),
-      color: Math.random() < 0.72 ? COLORS.blue : COLORS.gold
+
+      alpha:
+        random(
+          0.40,
+          0.82
+        ),
+
+      width:
+        random(
+          0.7,
+          1.4
+        ),
+
+      elapsed:
+        0,
+
+      duration:
+        random(
+          1300,
+          2300
+        ),
+
+      color:
+        Math.random() <
+        0.72
+          ? COLORS.blue
+          : COLORS.gold
     };
   }
 
-  function draw(timestamp) {
-    const context = state.context;
+  function draw(
+    timestamp
+  ) {
+    const context =
+      state.context;
 
-    context.clearRect(0, 0, state.width, state.height);
+    if (!context) {
+      return;
+    }
 
-    drawDust(context, timestamp);
-    drawStars(context, timestamp);
-    drawSparkles(context, timestamp);
-    drawMeteors(context);
+    context.clearRect(
+      0,
+      0,
+      state.width,
+      state.height
+    );
+
+    drawDust(
+      context,
+      timestamp
+    );
+
+    drawStars(
+      context,
+      timestamp
+    );
+
+    drawSparkles(
+      context,
+      timestamp
+    );
+
+    drawMeteors(
+      context
+    );
   }
 
   function drawStaticFrame() {
@@ -1002,45 +2761,87 @@
       return;
     }
 
-    draw(performance.now());
+    draw(
+      performance.now()
+    );
   }
 
-  function drawDust(context, timestamp) {
+  function drawDust(
+    context,
+    timestamp
+  ) {
     context.save();
 
-    for (const particle of state.dust) {
+    for (
+      const particle of
+      state.dust
+    ) {
       const shimmer =
-        0.72 +
-        Math.sin(timestamp * 0.00028 + particle.phase) * 0.28;
+        state.reducedMotion
+          ? 1
+          : 0.72 +
+            Math.sin(
+              timestamp *
+              0.00028 +
+              particle.phase
+            ) *
+            0.28;
 
       context.fillStyle =
-        `rgba(${COLORS.dust}, ${particle.alpha * shimmer})`;
+        `rgba(${COLORS.dust}, ${
+          particle.alpha *
+          shimmer
+        })`;
 
       context.beginPath();
+
       context.arc(
         particle.x,
         particle.y,
         particle.radius,
         0,
-        Math.PI * 2
+        Math.PI *
+        2
       );
+
       context.fill();
     }
 
     context.restore();
   }
 
-  function drawStars(context, timestamp) {
+  function drawStars(
+    context,
+    timestamp
+  ) {
     context.save();
 
-    for (const star of state.stars) {
+    for (
+      const star of
+      state.stars
+    ) {
       const twinkle =
-        0.70 +
-        Math.sin(timestamp * star.twinkleRate + star.phase) * 0.30;
+        state.reducedMotion
+          ? 1
+          : 0.70 +
+            Math.sin(
+              timestamp *
+              star.twinkleRate +
+              star.phase
+            ) *
+            0.30;
 
-      const alpha = clamp(star.alpha * twinkle, 0.03, 0.92);
+      const alpha =
+        clamp(
+          star.alpha *
+          twinkle,
+          0.03,
+          0.92
+        );
 
-      context.fillStyle = `rgba(${star.color}, ${alpha})`;
+      context.fillStyle =
+        `rgba(${star.color}, ${alpha})`;
+
       context.fillRect(
         star.x,
         star.y,
@@ -1052,240 +2853,555 @@
     context.restore();
   }
 
-  function drawSparkles(context, timestamp) {
-    context.save();
-    context.lineCap = "round";
+  function drawSparkles(
+    context,
+    timestamp
+  ) {
+    if (state.reducedMotion) {
+      return;
+    }
 
-    for (const sparkle of state.sparkles) {
+    context.save();
+
+    context.lineCap =
+      "round";
+
+    for (
+      const sparkle of
+      state.sparkles
+    ) {
       const pulse =
         0.5 +
-        Math.sin(timestamp * sparkle.rate + sparkle.phase) * 0.5;
+        Math.sin(
+          timestamp *
+          sparkle.rate +
+          sparkle.phase
+        ) *
+        0.5;
 
-      if (pulse < 0.58) {
+      if (
+        pulse <
+        0.58
+      ) {
         continue;
       }
 
-      const alpha = sparkle.alpha * Math.pow(pulse, 2.2);
-      const reach = sparkle.radius * (2.2 + pulse * 2.8);
+      const alpha =
+        sparkle.alpha *
+        Math.pow(
+          pulse,
+          2.2
+        );
 
-      context.strokeStyle = `rgba(${sparkle.color}, ${alpha})`;
-      context.lineWidth = 0.7;
+      const reach =
+        sparkle.radius *
+        (
+          2.2 +
+          pulse *
+          2.8
+        );
+
+      context.strokeStyle =
+        `rgba(${sparkle.color}, ${alpha})`;
+
+      context.lineWidth =
+        0.7;
 
       context.beginPath();
-      context.moveTo(sparkle.x - reach, sparkle.y);
-      context.lineTo(sparkle.x + reach, sparkle.y);
-      context.moveTo(sparkle.x, sparkle.y - reach);
-      context.lineTo(sparkle.x, sparkle.y + reach);
+
+      context.moveTo(
+        sparkle.x -
+        reach,
+        sparkle.y
+      );
+
+      context.lineTo(
+        sparkle.x +
+        reach,
+        sparkle.y
+      );
+
+      context.moveTo(
+        sparkle.x,
+        sparkle.y -
+        reach
+      );
+
+      context.lineTo(
+        sparkle.x,
+        sparkle.y +
+        reach
+      );
+
       context.stroke();
 
       context.fillStyle =
-        `rgba(${sparkle.color}, ${clamp(alpha * 1.18, 0, 1)})`;
+        `rgba(${sparkle.color}, ${
+          clamp(
+            alpha *
+            1.18,
+            0,
+            1
+          )
+        })`;
 
       context.beginPath();
+
       context.arc(
         sparkle.x,
         sparkle.y,
         sparkle.radius,
         0,
-        Math.PI * 2
+        Math.PI *
+        2
       );
+
       context.fill();
     }
 
     context.restore();
   }
 
-  function drawMeteors(context) {
+  function drawMeteors(
+    context
+  ) {
     context.save();
-    context.lineCap = "round";
 
-    for (const meteor of state.meteors) {
-      const progress = meteor.elapsed / meteor.duration;
+    context.lineCap =
+      "round";
+
+    for (
+      const meteor of
+      state.meteors
+    ) {
+      const progress =
+        meteor.elapsed /
+        meteor.duration;
+
       const fade =
-        progress < 0.2
-          ? progress / 0.2
-          : progress > 0.72
-            ? (1 - progress) / 0.28
+        progress <
+        0.2
+          ? progress /
+            0.2
+          : progress >
+              0.72
+            ? (
+                1 -
+                progress
+              ) /
+              0.28
             : 1;
 
-      const magnitude = Math.hypot(
-        meteor.velocityX,
-        meteor.velocityY
-      );
+      const magnitude =
+        Math.hypot(
+          meteor.velocityX,
+          meteor.velocityY
+        );
 
-      const directionX = meteor.velocityX / magnitude;
-      const directionY = meteor.velocityY / magnitude;
+      if (
+        magnitude <=
+        0
+      ) {
+        continue;
+      }
 
-      const tailX = meteor.x - directionX * meteor.length;
-      const tailY = meteor.y - directionY * meteor.length;
+      const directionX =
+        meteor.velocityX /
+        magnitude;
 
-      const gradient = context.createLinearGradient(
-        tailX,
-        tailY,
-        meteor.x,
-        meteor.y
-      );
+      const directionY =
+        meteor.velocityY /
+        magnitude;
+
+      const tailX =
+        meteor.x -
+        directionX *
+        meteor.length;
+
+      const tailY =
+        meteor.y -
+        directionY *
+        meteor.length;
+
+      const gradient =
+        context.createLinearGradient(
+          tailX,
+          tailY,
+          meteor.x,
+          meteor.y
+        );
 
       gradient.addColorStop(
         0,
         `rgba(${meteor.color}, 0)`
       );
+
       gradient.addColorStop(
         0.68,
-        `rgba(${meteor.color}, ${meteor.alpha * fade * 0.42})`
+
+        `rgba(${meteor.color}, ${
+          meteor.alpha *
+          fade *
+          0.42
+        })`
       );
+
       gradient.addColorStop(
         1,
-        `rgba(${COLORS.stone}, ${meteor.alpha * fade})`
+
+        `rgba(${COLORS.stone}, ${
+          meteor.alpha *
+          fade
+        })`
       );
 
-      context.strokeStyle = gradient;
-      context.lineWidth = meteor.width;
+      context.strokeStyle =
+        gradient;
+
+      context.lineWidth =
+        meteor.width;
 
       context.beginPath();
-      context.moveTo(tailX, tailY);
-      context.lineTo(meteor.x, meteor.y);
+
+      context.moveTo(
+        tailX,
+        tailY
+      );
+
+      context.lineTo(
+        meteor.x,
+        meteor.y
+      );
+
       context.stroke();
 
       context.fillStyle =
-        `rgba(${COLORS.stone}, ${meteor.alpha * fade})`;
+        `rgba(${COLORS.stone}, ${
+          meteor.alpha *
+          fade
+        })`;
 
       context.beginPath();
+
       context.arc(
         meteor.x,
         meteor.y,
-        meteor.width * 1.45,
+        meteor.width *
+        1.45,
         0,
-        Math.PI * 2
+        Math.PI *
+        2
       );
+
       context.fill();
     }
 
     context.restore();
   }
 
-  function scheduleNextSpacecraftFlight(initial = false) {
+  function clearSpacecraftTimer() {
+    if (
+      state.spacecraftTimer
+    ) {
+      clearTimeout(
+        state.spacecraftTimer
+      );
+
+      state.spacecraftTimer =
+        0;
+    }
+  }
+
+  function scheduleNextSpacecraftFlight(
+    initial = false
+  ) {
     if (
       state.destroyed ||
+      state.failed ||
       state.reducedMotion ||
-      !state.spacecraft
+      !state.spacecraft ||
+      !state.documentVisible ||
+      !state.estateVisible ||
+      !state.initialized
+    ) {
+      return false;
+    }
+
+    clearSpacecraftTimer();
+
+    const delay =
+      initial
+        ? random(
+            CONFIG
+              .spacecraftInitialDelayMinimumMs,
+            CONFIG
+              .spacecraftInitialDelayMaximumMs
+          )
+        : random(
+            CONFIG
+              .spacecraftDelayMinimumMs,
+            CONFIG
+              .spacecraftDelayMaximumMs
+          );
+
+    state.spacecraftTimer =
+      window.setTimeout(
+        handleSpacecraftTimer,
+        delay
+      );
+
+    emitReceipt({
+      lastAction:
+        "spacecraft-flight-scheduled"
+    });
+
+    return true;
+  }
+
+  function handleSpacecraftTimer() {
+    state.spacecraftTimer =
+      0;
+
+    if (
+      !canEnvironmentRun()
     ) {
       return;
     }
 
-    clearTimeout(state.spacecraftTimer);
-
-    const delay = initial
-      ? random(
-          CONFIG.spacecraftInitialDelayMinimumMs,
-          CONFIG.spacecraftInitialDelayMaximumMs
-        )
-      : random(
-          CONFIG.spacecraftDelayMinimumMs,
-          CONFIG.spacecraftDelayMaximumMs
-        );
-
-    state.spacecraftTimer = window.setTimeout(() => {
-      if (
-        state.documentVisible &&
-        state.estateVisible &&
-        !state.reducedMotion
-      ) {
-        launchSpacecraft();
-      } else {
-        scheduleNextSpacecraftFlight(false);
-      }
-    }, delay);
+    launchSpacecraft();
   }
 
   function launchSpacecraft() {
     if (
       state.destroyed ||
+      state.failed ||
       state.reducedMotion ||
+      !state.documentVisible ||
+      !state.estateVisible ||
+      !state.initialized ||
       !state.spacecraft ||
       state.spacecraftFlight
     ) {
       return false;
     }
 
-    const path = generateSpacecraftPath();
-    const duration = random(
-      CONFIG.spacecraftDurationMinimumMs,
-      CONFIG.spacecraftDurationMaximumMs
-    );
+    const path =
+      generateSpacecraftPath();
 
-    const scale = random(
-      state.width <= 560 ? 0.46 : 0.58,
-      state.width <= 560 ? 0.76 : 1.08
-    );
+    const duration =
+      random(
+        CONFIG
+          .spacecraftDurationMinimumMs,
+        CONFIG
+          .spacecraftDurationMaximumMs
+      );
 
-    const opacity = random(0.66, 0.94);
+    const scale =
+      random(
+        state.width <=
+        560
+          ? 0.46
+          : 0.58,
+
+        state.width <=
+        560
+          ? 0.76
+          : 1.08
+      );
+
+    const opacity =
+      random(
+        0.66,
+        0.94
+      );
 
     state.spacecraftFlight = {
       path,
-      startTime: performance.now(),
+
+      startTime:
+        performance.now(),
+
       duration,
       scale,
       opacity,
-      completed: false
+
+      completed:
+        false
     };
 
-    state.lastSpacecraftPath = path;
-    state.spacecraft.setAttribute("data-flying", "true");
-    state.spacecraft.style.opacity = String(opacity);
+    state.lastSpacecraftPath =
+      path;
 
-    evaluateRunningState();
+    state.spacecraft.setAttribute(
+      "data-flying",
+      "true"
+    );
+
+    state.spacecraft.style.opacity =
+      String(
+        opacity
+      );
+
+    if (!state.running) {
+      start();
+    }
+
+    emitReceipt({
+      lastAction:
+        "spacecraft-flight-launched"
+    });
+
     return true;
   }
 
-  function cancelSpacecraftFlight() {
-    clearTimeout(state.spacecraftTimer);
-    state.spacecraftTimer = 0;
-    state.spacecraftFlight = null;
-
-    if (state.spacecraft) {
-      state.spacecraft.setAttribute("data-flying", "false");
-      state.spacecraft.style.opacity = "0";
-      state.spacecraft.style.transform =
-        "translate3d(-260px, -160px, 0) rotate(0deg) scale(0.8)";
+  function hideAndResetSpacecraft() {
+    if (!state.spacecraft) {
+      return;
     }
+
+    state.spacecraft.setAttribute(
+      "data-flying",
+      "false"
+    );
+
+    state.spacecraft.style.opacity =
+      "0";
+
+    state.spacecraft.style.transform =
+      "translate3d(-260px, -160px, 0) rotate(0deg) scale(0.8)";
   }
 
-  function updateSpacecraft(timestamp) {
-    const flight = state.spacecraftFlight;
+  function cancelSpacecraftFlight(
+    scheduleNext = false
+  ) {
+    clearSpacecraftTimer();
 
-    if (!flight || !state.spacecraft) {
+    state.spacecraftFlight =
+      null;
+
+    hideAndResetSpacecraft();
+
+    if (
+      scheduleNext &&
+      canEnvironmentRun()
+    ) {
+      scheduleNextSpacecraftFlight(
+        false
+      );
+    }
+
+    emitReceipt({
+      lastAction:
+        "spacecraft-flight-cancelled"
+    });
+  }
+
+  function updateSpacecraft(
+    timestamp
+  ) {
+    const flight =
+      state.spacecraftFlight;
+
+    if (
+      !flight ||
+      !state.spacecraft
+    ) {
       return;
     }
 
     const rawProgress =
-      (timestamp - flight.startTime) / flight.duration;
+      (
+        timestamp -
+        flight.startTime
+      ) /
+      flight.duration;
 
-    if (rawProgress >= 1) {
+    if (
+      rawProgress >=
+      1
+    ) {
       completeSpacecraftFlight();
+
       return;
     }
 
-    const progress = clamp(rawProgress, 0, 1);
-    const eased = easeInOutCubic(progress);
+    const progress =
+      clamp(
+        rawProgress,
+        0,
+        1
+      );
 
-    const point = cubicPoint(flight.path, eased);
-    const tangent = cubicTangent(flight.path, eased);
+    const eased =
+      easeInOutCubic(
+        progress
+      );
+
+    const point =
+      cubicPoint(
+        flight.path,
+        eased
+      );
+
+    const tangent =
+      cubicTangent(
+        flight.path,
+        eased
+      );
+
     const angle =
-      Math.atan2(tangent.y, tangent.x) * (180 / Math.PI);
+      Math.atan2(
+        tangent.y,
+        tangent.x
+      ) *
+      (
+        180 /
+        Math.PI
+      );
 
-    const fadeIn = clamp(progress / 0.08, 0, 1);
-    const fadeOut = clamp((1 - progress) / 0.10, 0, 1);
+    const fadeIn =
+      clamp(
+        progress /
+        0.08,
+        0,
+        1
+      );
+
+    const fadeOut =
+      clamp(
+        (
+          1 -
+          progress
+        ) /
+        0.10,
+        0,
+        1
+      );
+
     const opacity =
-      flight.opacity * Math.min(fadeIn, fadeOut);
+      flight.opacity *
+      Math.min(
+        fadeIn,
+        fadeOut
+      );
 
     const depthPulse =
       0.96 +
-      Math.sin(progress * Math.PI) * 0.10;
+      Math.sin(
+        progress *
+        Math.PI
+      ) *
+      0.10;
 
-    const scale = flight.scale * depthPulse;
+    const scale =
+      flight.scale *
+      depthPulse;
 
-    state.spacecraft.style.opacity = String(opacity);
+    state.spacecraft.style.opacity =
+      String(
+        opacity
+      );
+
     state.spacecraft.style.transform =
       `translate3d(${point.x}px, ${point.y}px, 0) ` +
       `rotate(${angle}deg) ` +
@@ -1293,110 +3409,277 @@
   }
 
   function completeSpacecraftFlight() {
-    if (!state.spacecraft) {
-      return;
+    state.spacecraftFlight =
+      null;
+
+    hideAndResetSpacecraft();
+
+    if (
+      canEnvironmentRun()
+    ) {
+      scheduleNextSpacecraftFlight(
+        false
+      );
     }
 
-    state.spacecraftFlight = null;
-    state.spacecraft.setAttribute("data-flying", "false");
-    state.spacecraft.style.opacity = "0";
-    state.spacecraft.style.transform =
-      "translate3d(-260px, -160px, 0) rotate(0deg) scale(0.8)";
-
-    scheduleNextSpacecraftFlight(false);
+    emitReceipt({
+      lastAction:
+        "spacecraft-flight-completed"
+    });
   }
 
   function generateSpacecraftPath() {
-    const protectedRects = collectProtectedRects();
-    let bestPath = null;
-    let bestScore = Number.POSITIVE_INFINITY;
+    const protectedRects =
+      collectProtectedRects();
+
+    let bestPath =
+      null;
+
+    let bestScore =
+      Number.POSITIVE_INFINITY;
 
     for (
-      let attempt = 0;
-      attempt < CONFIG.spacecraftCandidateCount;
-      attempt += 1
+      let attempt =
+        0;
+      attempt <
+        CONFIG
+          .spacecraftCandidateCount;
+      attempt +=
+        1
     ) {
-      const candidate = createRandomPath();
-      const score =
-        scorePath(candidate, protectedRects) +
-        scorePathSimilarity(candidate, state.lastSpacecraftPath);
+      const candidate =
+        createRandomPath();
 
-      if (score < bestScore) {
-        bestScore = score;
-        bestPath = candidate;
+      const score =
+        scorePath(
+          candidate,
+          protectedRects
+        ) +
+        scorePathSimilarity(
+          candidate,
+          state.lastSpacecraftPath
+        );
+
+      if (
+        score <
+        bestScore
+      ) {
+        bestScore =
+          score;
+
+        bestPath =
+          candidate;
       }
 
-      if (score <= 0.5) {
+      if (
+        score <=
+        0.5
+      ) {
         break;
       }
     }
 
-    return bestPath || createRandomPath();
+    return (
+      bestPath ||
+      createRandomPath()
+    );
   }
 
   function createRandomPath() {
-    const marginX = Math.max(180, state.width * 0.16);
-    const marginY = Math.max(120, state.height * 0.14);
-    const horizontal = Math.random() < 0.72;
-    const reverse = Math.random() < 0.5;
+    const marginX =
+      Math.max(
+        180,
+        state.width *
+        0.16
+      );
+
+    const marginY =
+      Math.max(
+        120,
+        state.height *
+        0.14
+      );
+
+    const horizontal =
+      Math.random() <
+      0.72;
+
+    const reverse =
+      Math.random() <
+      0.5;
 
     let start;
     let end;
 
     if (horizontal) {
       start = {
-        x: reverse ? state.width + marginX : -marginX,
-        y: random(-marginY * 0.2, state.height * 0.82)
+        x:
+          reverse
+            ? state.width +
+              marginX
+            : -marginX,
+
+        y:
+          random(
+            -marginY *
+            0.2,
+            state.height *
+            0.82
+          )
       };
 
       end = {
-        x: reverse ? -marginX : state.width + marginX,
-        y: clamp(
-          start.y + random(-state.height * 0.34, state.height * 0.34),
-          -marginY * 0.4,
-          state.height + marginY * 0.4
-        )
+        x:
+          reverse
+            ? -marginX
+            : state.width +
+              marginX,
+
+        y:
+          clamp(
+            start.y +
+            random(
+              -state.height *
+              0.34,
+              state.height *
+              0.34
+            ),
+            -marginY *
+            0.4,
+            state.height +
+            marginY *
+            0.4
+          )
       };
     } else {
       start = {
-        x: random(-marginX * 0.2, state.width + marginX * 0.2),
-        y: reverse ? state.height + marginY : -marginY
+        x:
+          random(
+            -marginX *
+            0.2,
+            state.width +
+            marginX *
+            0.2
+          ),
+
+        y:
+          reverse
+            ? state.height +
+              marginY
+            : -marginY
       };
 
       end = {
-        x: clamp(
-          start.x + random(-state.width * 0.42, state.width * 0.42),
-          -marginX * 0.4,
-          state.width + marginX * 0.4
-        ),
-        y: reverse ? -marginY : state.height + marginY
+        x:
+          clamp(
+            start.x +
+            random(
+              -state.width *
+              0.42,
+              state.width *
+              0.42
+            ),
+            -marginX *
+            0.4,
+            state.width +
+            marginX *
+            0.4
+          ),
+
+        y:
+          reverse
+            ? -marginY
+            : state.height +
+              marginY
       };
     }
 
-    const dx = end.x - start.x;
-    const dy = end.y - start.y;
-    const normalLength = Math.max(1, Math.hypot(dx, dy));
-    const normalX = -dy / normalLength;
-    const normalY = dx / normalLength;
+    const dx =
+      end.x -
+      start.x;
+
+    const dy =
+      end.y -
+      start.y;
+
+    const normalLength =
+      Math.max(
+        1,
+        Math.hypot(
+          dx,
+          dy
+        )
+      );
+
+    const normalX =
+      -dy /
+      normalLength;
+
+    const normalY =
+      dx /
+      normalLength;
+
     const curveStrength =
-      random(0.08, 0.28) *
-      Math.min(state.width, state.height) *
+      random(
+        0.08,
+        0.28
+      ) *
+      Math.min(
+        state.width,
+        state.height
+      ) *
       randomSign();
 
     const control1 = {
-      x: start.x + dx * random(0.20, 0.36) + normalX * curveStrength,
-      y: start.y + dy * random(0.20, 0.36) + normalY * curveStrength
+      x:
+        start.x +
+        dx *
+        random(
+          0.20,
+          0.36
+        ) +
+        normalX *
+        curveStrength,
+
+      y:
+        start.y +
+        dy *
+        random(
+          0.20,
+          0.36
+        ) +
+        normalY *
+        curveStrength
     };
 
     const control2 = {
       x:
         start.x +
-        dx * random(0.64, 0.82) -
-        normalX * curveStrength * random(0.45, 1),
+        dx *
+        random(
+          0.64,
+          0.82
+        ) -
+        normalX *
+        curveStrength *
+        random(
+          0.45,
+          1
+        ),
+
       y:
         start.y +
-        dy * random(0.64, 0.82) -
-        normalY * curveStrength * random(0.45, 1)
+        dy *
+        random(
+          0.64,
+          0.82
+        ) -
+        normalY *
+        curveStrength *
+        random(
+          0.45,
+          1
+        )
     };
 
     return {
@@ -1408,148 +3691,411 @@
   }
 
   function collectProtectedRects() {
-    const selectors = CONFIG.protectedSelectors.join(",");
-    const nodes = document.querySelectorAll(selectors);
-    const padding = state.width <= 560 ? 18 : 34;
+    const selectors =
+      CONFIG
+        .protectedSelectors
+        .join(",");
 
-    return Array.from(nodes)
-      .filter((node) => {
-        const style = window.getComputedStyle(node);
-        return (
-          style.display !== "none" &&
-          style.visibility !== "hidden" &&
-          Number.parseFloat(style.opacity || "1") > 0.05
-        );
-      })
-      .map((node) => {
-        const rect = node.getBoundingClientRect();
+    const nodes =
+      document.querySelectorAll(
+        selectors
+      );
 
-        return {
-          left: rect.left - padding,
-          right: rect.right + padding,
-          top: rect.top - padding,
-          bottom: rect.bottom + padding
-        };
-      })
-      .filter((rect) => {
-        return (
-          rect.right > 0 &&
-          rect.left < state.width &&
-          rect.bottom > 0 &&
-          rect.top < state.height
-        );
-      });
+    const padding =
+      state.width <=
+      560
+        ? 18
+        : 34;
+
+    return Array.from(
+      nodes
+    )
+      .filter(
+        node => {
+          const style =
+            window.getComputedStyle(
+              node
+            );
+
+          return (
+            style.display !==
+              "none" &&
+            style.visibility !==
+              "hidden" &&
+            Number.parseFloat(
+              style.opacity ||
+              "1"
+            ) >
+              0.05
+          );
+        }
+      )
+      .map(
+        node => {
+          const rect =
+            node.getBoundingClientRect();
+
+          return {
+            left:
+              rect.left -
+              padding,
+
+            right:
+              rect.right +
+              padding,
+
+            top:
+              rect.top -
+              padding,
+
+            bottom:
+              rect.bottom +
+              padding
+          };
+        }
+      )
+      .filter(
+        rect =>
+          (
+            rect.right >
+              0 &&
+            rect.left <
+              state.width &&
+            rect.bottom >
+              0 &&
+            rect.top <
+              state.height
+          )
+      );
   }
 
-  function scorePath(path, protectedRects) {
-    let score = 0;
-    const samples = 28;
+  function scorePath(
+    path,
+    protectedRects
+  ) {
+    let score =
+      0;
 
-    for (let index = 0; index <= samples; index += 1) {
-      const t = index / samples;
-      const point = cubicPoint(path, t);
+    const samples =
+      28;
 
-      for (const rect of protectedRects) {
+    for (
+      let index =
+        0;
+      index <=
+        samples;
+      index +=
+        1
+    ) {
+      const t =
+        index /
+        samples;
+
+      const point =
+        cubicPoint(
+          path,
+          t
+        );
+
+      for (
+        const rect of
+        protectedRects
+      ) {
         if (
-          point.x >= rect.left &&
-          point.x <= rect.right &&
-          point.y >= rect.top &&
-          point.y <= rect.bottom
+          point.x >=
+            rect.left &&
+          point.x <=
+            rect.right &&
+          point.y >=
+            rect.top &&
+          point.y <=
+            rect.bottom
         ) {
-          score += 1;
+          score +=
+            1;
         }
       }
 
-      const centerDistance = Math.abs(point.x - state.width * 0.5);
-      const centerPenalty =
-        centerDistance < state.width * 0.18 ? 0.08 : 0;
+      const centerDistance =
+        Math.abs(
+          point.x -
+          state.width *
+          0.5
+        );
 
-      score += centerPenalty;
+      const centerPenalty =
+        centerDistance <
+        state.width *
+        0.18
+          ? 0.08
+          : 0;
+
+      score +=
+        centerPenalty;
     }
 
     return score;
   }
 
-  function scorePathSimilarity(path, previousPath) {
+  function scorePathSimilarity(
+    path,
+    previousPath
+  ) {
     if (!previousPath) {
       return 0;
     }
 
-    const startDistance = Math.hypot(
-      path.start.x - previousPath.start.x,
-      path.start.y - previousPath.start.y
-    );
+    const startDistance =
+      Math.hypot(
+        path.start.x -
+        previousPath.start.x,
 
-    const endDistance = Math.hypot(
-      path.end.x - previousPath.end.x,
-      path.end.y - previousPath.end.y
-    );
+        path.start.y -
+        previousPath.start.y
+      );
 
-    const controlDistance = Math.hypot(
-      path.control1.x - previousPath.control1.x,
-      path.control1.y - previousPath.control1.y
-    );
+    const endDistance =
+      Math.hypot(
+        path.end.x -
+        previousPath.end.x,
+
+        path.end.y -
+        previousPath.end.y
+      );
+
+    const controlDistance =
+      Math.hypot(
+        path.control1.x -
+        previousPath.control1.x,
+
+        path.control1.y -
+        previousPath.control1.y
+      );
 
     const threshold =
-      Math.min(state.width, state.height) * 0.32;
+      Math.min(
+        state.width,
+        state.height
+      ) *
+      0.32;
 
-    let penalty = 0;
+    let penalty =
+      0;
 
-    if (startDistance < threshold) {
-      penalty += 3;
+    if (
+      startDistance <
+      threshold
+    ) {
+      penalty +=
+        3;
     }
 
-    if (endDistance < threshold) {
-      penalty += 3;
+    if (
+      endDistance <
+      threshold
+    ) {
+      penalty +=
+        3;
     }
 
-    if (controlDistance < threshold) {
-      penalty += 2;
+    if (
+      controlDistance <
+      threshold
+    ) {
+      penalty +=
+        2;
     }
 
     return penalty;
   }
 
-  function cubicPoint(path, t) {
-    const oneMinusT = 1 - t;
-    const oneMinusTSquared = oneMinusT * oneMinusT;
-    const tSquared = t * t;
+  function cubicPoint(
+    path,
+    t
+  ) {
+    const oneMinusT =
+      1 -
+      t;
+
+    const oneMinusTSquared =
+      oneMinusT *
+      oneMinusT;
+
+    const tSquared =
+      t *
+      t;
 
     return {
       x:
-        oneMinusTSquared * oneMinusT * path.start.x +
-        3 * oneMinusTSquared * t * path.control1.x +
-        3 * oneMinusT * tSquared * path.control2.x +
-        tSquared * t * path.end.x,
+        oneMinusTSquared *
+        oneMinusT *
+        path.start.x +
+        3 *
+        oneMinusTSquared *
+        t *
+        path.control1.x +
+        3 *
+        oneMinusT *
+        tSquared *
+        path.control2.x +
+        tSquared *
+        t *
+        path.end.x,
 
       y:
-        oneMinusTSquared * oneMinusT * path.start.y +
-        3 * oneMinusTSquared * t * path.control1.y +
-        3 * oneMinusT * tSquared * path.control2.y +
-        tSquared * t * path.end.y
+        oneMinusTSquared *
+        oneMinusT *
+        path.start.y +
+        3 *
+        oneMinusTSquared *
+        t *
+        path.control1.y +
+        3 *
+        oneMinusT *
+        tSquared *
+        path.control2.y +
+        tSquared *
+        t *
+        path.end.y
     };
   }
 
-  function cubicTangent(path, t) {
-    const oneMinusT = 1 - t;
+  function cubicTangent(
+    path,
+    t
+  ) {
+    const oneMinusT =
+      1 -
+      t;
 
     return {
       x:
-        3 * oneMinusT * oneMinusT *
-          (path.control1.x - path.start.x) +
-        6 * oneMinusT * t *
-          (path.control2.x - path.control1.x) +
-        3 * t * t *
-          (path.end.x - path.control2.x),
+        3 *
+        oneMinusT *
+        oneMinusT *
+        (
+          path.control1.x -
+          path.start.x
+        ) +
+        6 *
+        oneMinusT *
+        t *
+        (
+          path.control2.x -
+          path.control1.x
+        ) +
+        3 *
+        t *
+        t *
+        (
+          path.end.x -
+          path.control2.x
+        ),
 
       y:
-        3 * oneMinusT * oneMinusT *
-          (path.control1.y - path.start.y) +
-        6 * oneMinusT * t *
-          (path.control2.y - path.control1.y) +
-        3 * t * t *
-          (path.end.y - path.control2.y)
+        3 *
+        oneMinusT *
+        oneMinusT *
+        (
+          path.control1.y -
+          path.start.y
+        ) +
+        6 *
+        oneMinusT *
+        t *
+        (
+          path.control2.y -
+          path.control1.y
+        ) +
+        3 *
+        t *
+        t *
+        (
+          path.end.y -
+          path.control2.y
+        )
     };
+  }
+
+  function removeCreatedSurfaces() {
+    if (
+      state.createdLayer &&
+      state.layer
+    ) {
+      state.layer.remove();
+    }
+
+    if (
+      state.createdStyle
+    ) {
+      document
+        .getElementById(
+          STYLE_ID
+        )
+        ?.remove();
+    }
+
+    state.createdLayer =
+      false;
+
+    state.createdStyle =
+      false;
+
+    state.layer =
+      null;
+
+    state.canvas =
+      null;
+
+    state.context =
+      null;
+
+    state.spacecraft =
+      null;
+  }
+
+  function clearCollections() {
+    state.stars.length =
+      0;
+
+    state.dust.length =
+      0;
+
+    state.sparkles.length =
+      0;
+
+    state.meteors.length =
+      0;
+
+    state.renderCostSamples.length =
+      0;
+
+    state.spacecraftFlight =
+      null;
+
+    state.lastSpacecraftPath =
+      null;
+  }
+
+  function rollbackPartialInitialization(
+    reason
+  ) {
+    stopAnimationFrame();
+    clearSpacecraftTimer();
+    hideAndResetSpacecraft();
+    uninstallObservers();
+    removeCreatedSurfaces();
+    clearCollections();
+
+    state.initialized =
+      false;
+
+    api.initialized =
+      false;
+
+    emitFailure(
+      reason
+    );
   }
 
   function destroy() {
@@ -1557,52 +4103,54 @@
       return;
     }
 
-    state.destroyed = true;
-    stop();
-    cancelSpacecraftFlight();
+    state.destroyed =
+      true;
 
-    window.removeEventListener("resize", state.boundResize);
-    document.removeEventListener(
-      "visibilitychange",
-      state.boundVisibility
-    );
+    stopAnimationFrame();
+    clearSpacecraftTimer();
+    hideAndResetSpacecraft();
+    uninstallObservers();
+    removeCreatedSurfaces();
+    clearCollections();
 
-    if (state.motionQuery) {
-      if (typeof state.motionQuery.removeEventListener === "function") {
-        state.motionQuery.removeEventListener(
-          "change",
-          state.boundMotionChange
-        );
-      } else {
-        state.motionQuery.removeListener(state.boundMotionChange);
-      }
-    }
+    state.motionQuery =
+      null;
 
-    state.resizeObserver?.disconnect();
-    state.intersectionObserver?.disconnect();
+    state.estate =
+      null;
 
-    document.getElementById(LAYER_ID)?.remove();
-    document.getElementById(STYLE_ID)?.remove();
+    state.initialized =
+      false;
 
-    state.stars.length = 0;
-    state.dust.length = 0;
-    state.sparkles.length = 0;
-    state.meteors.length = 0;
+    state.suspended =
+      false;
 
-    state.layer = null;
-    state.canvas = null;
-    state.context = null;
-    state.spacecraft = null;
-    state.initialized = false;
+    api.initialized =
+      false;
 
-    api.initialized = false;
+    emitReceipt({
+      status:
+        "destroyed",
+
+      lastAction:
+        "cosmos-destroyed",
+
+      lastFailure:
+        null
+    });
   }
 
-  if (document.readyState === "loading") {
+  if (
+    document.readyState ===
+    "loading"
+  ) {
     document.addEventListener(
       "DOMContentLoaded",
       initialize,
-      { once: true }
+      {
+        once:
+          true
+      }
     );
   } else {
     initialize();

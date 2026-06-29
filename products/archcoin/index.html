@@ -13,7 +13,7 @@
 
   <meta
     name="description"
-    content="ARCHCOIN introduces four financial domains—Contract, Receivable, Payable, and Allocation—through a single compass-based operating surface."
+    content="ARCHCOIN organizes Contract, Receivable, Payable, and Allocation as a programmable financial operating field."
   >
 
   <link
@@ -69,34 +69,74 @@
       aria-labelledby="archcoin-title"
     >
       <header class="archcoin-header">
-        <p class="archcoin-header__kicker">
-          ARCHCOIN
-        </p>
+        <div class="archcoin-header__identity">
+          <p class="archcoin-header__kicker">
+            ARCHCOIN
+          </p>
 
-        <h1 id="archcoin-title">
-          Programmable financial architecture.
-        </h1>
+          <p class="archcoin-header__classification">
+            Financial operating field
+          </p>
+        </div>
 
-        <p class="archcoin-header__sentence">
-          ARCHCOIN turns four financial domains—Contract, Receivable, Payable,
-          and Allocation—into one navigable operating field. Open the right
-          coin, inspect the active path beneath the compass, and continue into
-          the room that matches the question in front of you.
-        </p>
+        <div class="archcoin-header__status-grid">
+          <div class="archcoin-header__status">
+            <span class="archcoin-header__status-label">
+              Architecture
+            </span>
+
+            <span class="archcoin-header__status-value">
+              Four-domain system
+            </span>
+          </div>
+
+          <div class="archcoin-header__status">
+            <span class="archcoin-header__status-label">
+              Projection
+            </span>
+
+            <span class="archcoin-header__status-value">
+              Constellation
+            </span>
+          </div>
+
+          <div class="archcoin-header__status">
+            <span class="archcoin-header__status-label">
+              Instrument
+            </span>
+
+            <span class="archcoin-header__status-value">
+              Fixed-center Compass
+            </span>
+          </div>
+        </div>
+
+        <div class="archcoin-header__statement">
+          <h1 id="archcoin-title">
+            Programmable financial architecture.
+          </h1>
+
+          <p class="archcoin-header__sentence">
+            Contract, Receivable, Payable, and Allocation operate as distinct
+            financial domains inside one navigable field. Select the domain
+            that matches the question, inspect its active path, and continue
+            into the correct room.
+          </p>
+        </div>
 
         <details
           class="archcoin-header__more"
           data-archcoin-read-more
         >
           <summary>
-            Read more
+            System context
           </summary>
 
           <p>
-            Most financial confusion starts with opening the wrong domain
-            first. This surface is designed to orient quickly, reduce
-            misclassification, and hand the visitor into the correct room
-            without turning the landing page into an archive.
+            Financial errors often begin when the wrong domain is opened first.
+            ARCHCOIN separates agreement, incoming value, outgoing obligation,
+            and downstream distribution so each question enters the correct
+            operating path before deeper analysis begins.
           </p>
         </details>
       </header>
@@ -107,20 +147,75 @@
         aria-labelledby="archcoin-scene-title"
         aria-describedby="archcoin-guidance archcoin-instruction-pad"
       >
-        <div class="archcoin-scene__header">
-          <p class="archcoin-scene__kicker">
-            Navigation Compass
-          </p>
+        <header class="archcoin-scene__header">
+          <div class="archcoin-scene__identity">
+            <p class="archcoin-scene__kicker">
+              Operating field
+            </p>
+
+            <p class="archcoin-scene__mode">
+              Domain projection / constellation
+            </p>
+          </div>
 
           <h2 id="archcoin-scene-title">
-            Select the domain. Then select the room.
+            Select a financial domain, then inspect its room cluster.
           </h2>
-        </div>
+        </header>
 
         <div
           class="archcoin-scene__field"
           data-archcoin-scene-field
         >
+          <div
+            class="archcoin-field-chrome"
+            aria-hidden="true"
+          >
+            <div class="archcoin-field-chrome__grid"></div>
+
+            <div class="archcoin-field-chrome__axis archcoin-field-chrome__axis--vertical"></div>
+
+            <div class="archcoin-field-chrome__axis archcoin-field-chrome__axis--horizontal"></div>
+
+            <div class="archcoin-field-chrome__reticle"></div>
+
+            <div class="archcoin-field-chrome__corner archcoin-field-chrome__corner--northwest">
+              <span>FIELD</span>
+              <span>01</span>
+            </div>
+
+            <div class="archcoin-field-chrome__corner archcoin-field-chrome__corner--northeast">
+              <span>PROJECTION</span>
+              <span>ACTIVE</span>
+            </div>
+
+            <div class="archcoin-field-chrome__corner archcoin-field-chrome__corner--southwest">
+              <span>DOMAINS</span>
+              <span>04</span>
+            </div>
+
+            <div class="archcoin-field-chrome__corner archcoin-field-chrome__corner--southeast">
+              <span>CONTROL</span>
+              <span>SEMANTIC</span>
+            </div>
+
+            <span class="archcoin-field-chrome__direction archcoin-field-chrome__direction--north">
+              N
+            </span>
+
+            <span class="archcoin-field-chrome__direction archcoin-field-chrome__direction--east">
+              E
+            </span>
+
+            <span class="archcoin-field-chrome__direction archcoin-field-chrome__direction--south">
+              S
+            </span>
+
+            <span class="archcoin-field-chrome__direction archcoin-field-chrome__direction--west">
+              W
+            </span>
+          </div>
+
           <div
             class="archcoin-scene__crystals"
             data-archcoin-crystals-mount
@@ -128,12 +223,19 @@
           ></div>
 
           <!--
-            ARCHCOIN integrated Home Compass placement slot.
+            ARCHCOIN fixed-center Home Compass placement slot.
 
-            This wrapper identifies the shared Compass as the central object
-            embedded in the ARCHCOIN constellation.
+            The page registers the shared Compass independently at the center
+            of the ARCHCOIN operating field.
 
-            The wrapper owns only page-relative placement and responsive bounds.
+            The Compass is a fixed-center sibling of the crystals projection.
+            It does not inherit orbit, constellation, cluster, navigation, or
+            parent orientation.
+
+            This wrapper owns only:
+            - page-relative center placement;
+            - responsive page-level bounds;
+            - page-relative layer position.
 
             The inner data-upstream-compass-mount remains the shared component
             entry node governed by:
@@ -141,107 +243,37 @@
             - /assets/compass/upstream-compass.renderer.js
             - /assets/compass/upstream-compass.css
 
-            The semantic anchor is the HTML-owned Home Compass control.
+            HTML owns the semantic Home Compass anchor.
 
-            Enhanced behavior:
-            - tapping the Compass requests controller-owned Home Compass
-              selection;
-            - the controller enters COMPASS_DECISION;
-            - no immediate navigation occurs;
-            - the shared lower chamber presents Enter Selected Path and
-              Return to Orbit.
+            The renderer owns:
+            - static fallback injection;
+            - WebGL promotion;
+            - visual feedback;
+            - failure fallback;
+            - held-state Compass presentation.
 
-            Progressive fallback:
-            - the native anchor route remains /index.html.
+            The controller or native anchor behavior owns activation meaning.
+            The renderer does not bind or intercept semantic activation.
           -->
           <div class="archcoin-scene__upstream-compass">
             <div
               data-upstream-compass-mount
-              data-upstream-compass-page-node="archcoin"
-              data-upstream-compass-parent-node="home"
-              data-upstream-compass-parent-route="/index.html"
-              data-upstream-compass-physical-projection="INTEGRATED_CONSTELLATION_CENTER"
-              data-upstream-compass-semantic-model="HOME_COMPASS_SELECTION_CONTROL"
-              data-upstream-compass-presentation="embedded"
+              data-upstream-compass-physical-projection="FIXED_CENTER_INDEPENDENT_SIBLING"
+              data-upstream-compass-semantic-model="HOME_COMPASS_CONTROL"
+              data-upstream-compass-presentation="fixed-center"
             >
               <a
                 class="archcoin-scene__upstream-compass-control"
                 data-upstream-compass-control
-                data-archcoin-destination
-                data-destination-type="home-compass"
-                data-destination-id="home-compass"
-                data-label="Home Compass"
-                data-route="/index.html"
-                data-selected-paragraph="Return to the Home Compass."
                 href="/index.html"
-                aria-label="Select Home Compass"
-                aria-controls="archcoin-panel"
+                aria-label="Open the Home Compass"
                 aria-describedby="archcoin-instruction-pad"
               >
                 <span
                   class="archcoin-scene__upstream-compass-fallback"
                   data-upstream-compass-fallback
                   aria-hidden="true"
-                >
-                  <svg
-                    class="ugc04-static-fallback"
-                    viewBox="0 0 200 200"
-                    xmlns="http://www.w3.org/2000/svg"
-                    focusable="false"
-                    aria-hidden="true"
-                  >
-                    <title>Select Home Compass</title>
-
-                    <path
-                      data-ugc04-layer="OUTER_RING"
-                      fill-rule="evenodd"
-                      d="M 190 100
-                         A 90 90 0 1 1 10 100
-                         A 90 90 0 1 1 190 100
-                         M 183.25 100
-                         A 83.25 83.25 0 1 0 16.75 100
-                         A 83.25 83.25 0 1 0 183.25 100 Z"
-                    ></path>
-
-                    <path
-                      data-ugc04-layer="INNER_RING"
-                      fill-rule="evenodd"
-                      d="M 166.15 100
-                         A 66.15 66.15 0 1 1 33.85 100
-                         A 66.15 66.15 0 1 1 166.15 100
-                         M 163.45 100
-                         A 63.45 63.45 0 1 0 36.55 100
-                         A 63.45 63.45 0 1 0 163.45 100 Z"
-                    ></path>
-
-                    <polygon
-                      data-ugc04-layer="SOUTH_DIRECTION"
-                      points="93.25,110.8 100,139.6 106.75,110.8"
-                    ></polygon>
-
-                    <polygon
-                      data-ugc04-layer="EAST_DIRECTION"
-                      points="110.8,106.3 136,100 110.8,93.7"
-                    ></polygon>
-
-                    <polygon
-                      data-ugc04-layer="WEST_DIRECTION"
-                      points="89.2,93.7 64,100 89.2,106.3"
-                    ></polygon>
-
-                    <polygon
-                      data-ugc04-layer="NORTH_NEEDLE"
-                      points="100,26.2 95.05,80.2 91.9,91 108.1,91 104.95,80.2"
-                    ></polygon>
-
-                    <circle
-                      data-ugc04-layer="CENTRAL_HUB"
-                      cx="100"
-                      cy="100"
-                      r="16.2"
-                    ></circle>
-                  </svg>
-                </span>
+                ></span>
               </a>
             </div>
           </div>
@@ -268,8 +300,22 @@
               data-panel-why="Choose Contract when the problem begins with terms, commitments, interpretation, or authority over the agreement layer."
               aria-controls="archcoin-panel"
             >
-              <span>Contract</span>
-              <span>North coin</span>
+              <span class="archcoin-coin__coordinate">
+                N / 01
+              </span>
+
+              <span class="archcoin-coin__label">
+                Contract
+              </span>
+
+              <span class="archcoin-coin__function">
+                Agreement domain
+              </span>
+
+              <span
+                class="archcoin-coin__status"
+                aria-hidden="true"
+              ></span>
             </button>
 
             <button
@@ -290,8 +336,22 @@
               data-panel-why="Choose Receivable when the problem concerns value owed to the organization, how it is recognized, or how it moves toward collection."
               aria-controls="archcoin-panel"
             >
-              <span>Receivable</span>
-              <span>East coin</span>
+              <span class="archcoin-coin__coordinate">
+                E / 02
+              </span>
+
+              <span class="archcoin-coin__label">
+                Receivable
+              </span>
+
+              <span class="archcoin-coin__function">
+                Incoming value
+              </span>
+
+              <span
+                class="archcoin-coin__status"
+                aria-hidden="true"
+              ></span>
             </button>
 
             <button
@@ -312,8 +372,22 @@
               data-panel-why="Choose Payable when the question concerns what leaves the organization, how it is executed, or which room governs the obligation."
               aria-controls="archcoin-panel"
             >
-              <span>Payable</span>
-              <span>South coin</span>
+              <span class="archcoin-coin__coordinate">
+                S / 03
+              </span>
+
+              <span class="archcoin-coin__label">
+                Payable
+              </span>
+
+              <span class="archcoin-coin__function">
+                Outgoing obligation
+              </span>
+
+              <span
+                class="archcoin-coin__status"
+                aria-hidden="true"
+              ></span>
             </button>
 
             <button
@@ -334,37 +408,54 @@
               data-panel-why="Choose Allocation when the question concerns distribution logic, downstream routing, or the governance of where recognized value is assigned."
               aria-controls="archcoin-panel"
             >
-              <span>Allocation</span>
-              <span>West coin</span>
+              <span class="archcoin-coin__coordinate">
+                W / 04
+              </span>
+
+              <span class="archcoin-coin__label">
+                Allocation
+              </span>
+
+              <span class="archcoin-coin__function">
+                Distribution logic
+              </span>
+
+              <span
+                class="archcoin-coin__status"
+                aria-hidden="true"
+              ></span>
             </button>
           </div>
         </div>
 
-        <p
-          id="archcoin-guidance"
-          class="archcoin-guidance"
-          data-archcoin-guidance
-          aria-live="polite"
-        >
-          Tap a coin to open its room cluster. Drag the constellation to bring
-          the nearest coin forward.
-        </p>
-
-        <aside
-          id="archcoin-instruction-pad"
-          class="archcoin-instruction-pad"
-          data-archcoin-instruction-pad
-          aria-label="ARCHCOIN navigation instructions"
-        >
-          <p class="archcoin-instruction-pad__title">
-            Navigation
+        <div class="archcoin-scene__readout">
+          <p
+            id="archcoin-guidance"
+            class="archcoin-guidance"
+            data-archcoin-guidance
+            aria-live="polite"
+          >
+            Select a domain control to open its room cluster. Drag the
+            constellation to change which cardinal crystal is forward.
           </p>
 
-          <p class="archcoin-instruction-pad__body">
-            Drag to rotate. Tap a coin to open its rooms. Tap a room to inspect
-            its path. Tap the center Compass to prepare a return to Home.
-          </p>
-        </aside>
+          <aside
+            id="archcoin-instruction-pad"
+            class="archcoin-instruction-pad"
+            data-archcoin-instruction-pad
+            aria-label="ARCHCOIN operating instructions"
+          >
+            <p class="archcoin-instruction-pad__title">
+              Control protocol
+            </p>
+
+            <p class="archcoin-instruction-pad__body">
+              Drag the field to rotate the crystal projection. Select a domain
+              to open its rooms. Select a room to inspect its path. Use the
+              fixed-center Compass to return to Home.
+            </p>
+          </aside>
+        </div>
       </section>
 
       <aside
@@ -374,48 +465,140 @@
         aria-live="polite"
         aria-atomic="true"
       >
-        <p
-          class="archcoin-panel__eyebrow"
-          data-archcoin-panel-eyebrow
-        >
-          Selected path
-        </p>
+        <header class="archcoin-panel__header">
+          <div>
+            <p
+              class="archcoin-panel__eyebrow"
+              data-archcoin-panel-eyebrow
+            >
+              Inspection chamber
+            </p>
 
-        <h2 data-archcoin-panel-title>
-          Choose a coin
-        </h2>
+            <h2 data-archcoin-panel-title>
+              Choose a coin
+            </h2>
+          </div>
 
-        <p data-archcoin-panel-purpose>
-          Start with the domain that best matches the financial problem in
-          front of you.
-        </p>
-
-        <p data-archcoin-panel-relationship>
-          Tap a coin to open its room cluster. Tap a room to inspect its record.
-        </p>
-
-        <div class="archcoin-panel__actions">
-          <button
-            type="button"
-            data-archcoin-enter
-            aria-disabled="true"
-            disabled
+          <div
+            class="archcoin-panel__state"
+            aria-hidden="true"
           >
-            <span data-archcoin-enter-label>
-              Enter Selected Path
+            <span class="archcoin-panel__state-label">
+              Selection
             </span>
-          </button>
 
-          <button
-            type="button"
-            data-archcoin-return-to-orbit
-            aria-disabled="true"
-            disabled
-            hidden
+            <span class="archcoin-panel__state-value">
+              Awaiting input
+            </span>
+          </div>
+        </header>
+
+        <div class="archcoin-panel__layout">
+          <section
+            class="archcoin-panel__metadata"
+            aria-label="Selected path metadata"
           >
-            Return to Orbit
-          </button>
+            <dl class="archcoin-panel__metadata-grid">
+              <div>
+                <dt>Domain</dt>
+                <dd data-archcoin-panel-domain>
+                  None
+                </dd>
+              </div>
+
+              <div>
+                <dt>Function</dt>
+                <dd data-archcoin-panel-function>
+                  Unassigned
+                </dd>
+              </div>
+
+              <div>
+                <dt>Coordinate</dt>
+                <dd data-archcoin-panel-coordinate>
+                  —
+                </dd>
+              </div>
+
+              <div>
+                <dt>Selection state</dt>
+                <dd data-archcoin-panel-selection-state>
+                  Idle
+                </dd>
+              </div>
+
+              <div>
+                <dt>Route status</dt>
+                <dd data-archcoin-panel-route-status>
+                  Not selected
+                </dd>
+              </div>
+
+              <div>
+                <dt>Lens</dt>
+                <dd data-archcoin-panel-lens>
+                  Overview
+                </dd>
+              </div>
+            </dl>
+          </section>
+
+          <section
+            class="archcoin-panel__narrative"
+            aria-label="Selected path description"
+          >
+            <div class="archcoin-panel__narrative-block">
+              <p class="archcoin-panel__narrative-label">
+                Purpose
+              </p>
+
+              <p data-archcoin-panel-purpose>
+                Start with the domain that best matches the financial problem
+                in front of you.
+              </p>
+            </div>
+
+            <div class="archcoin-panel__narrative-block">
+              <p class="archcoin-panel__narrative-label">
+                Why enter
+              </p>
+
+              <p data-archcoin-panel-relationship>
+                Select a domain to open its room cluster. Select a room to
+                inspect its record.
+              </p>
+            </div>
+          </section>
         </div>
+
+        <footer class="archcoin-panel__footer">
+          <p class="archcoin-panel__handoff-label">
+            Handoff terminal
+          </p>
+
+          <div class="archcoin-panel__actions">
+            <button
+              type="button"
+              data-archcoin-enter
+              aria-disabled="true"
+              disabled
+            >
+              <span data-archcoin-enter-label>
+                Enter Selected Path
+              </span>
+            </button>
+
+            <button
+              type="button"
+              data-archcoin-return-to-orbit
+              aria-disabled="true"
+              disabled
+              hidden
+            >
+              Return to Orbit
+            </button>
+          </div>
+        </footer>
       </aside>
 
       <section

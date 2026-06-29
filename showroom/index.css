@@ -1,39 +1,36 @@
 /* TARGET FILE: /showroom/index.css */
 /* TNT FULL-FILE REPLACEMENT */
-/* SHOWROOM_MIRRORLAND_CONSTELLATION_GAUGE_INFORMATION_CSS_TNT_v3 */
+/* SHOWROOM_MIRRORLAND_GATE_PREFACE_INSTRUCTIONS_COMPACT_GAUGES_CSS_TNT_v4 */
 /*
-  Purpose:
-  - Preserve Mirrorland as the governing Showroom narrative.
-  - Preserve the compact orbit as an independent navigation stage.
-  - Preserve the existing Diamond as an independent interactive stage.
-  - Preserve Diamond rotation, zoom, inspection, reset, fallback,
-    responsive sizing, and renderer ownership.
-  - Place the Mirrorland Window over the Diamond viewport only.
-  - Support exactly two star geometries:
-      1. large cardinal star;
-      2. small child star.
-  - Allow large stars to represent route or cluster behavior without
-    changing their geometry.
-  - Distinguish small gauge and information destinations by color.
-  - Support radial, capability, state, and composition gauge families.
-  - Create restrained live-looking motion without representing fixed
-    facts as changing telemetry.
-  - Support the Platform / Engineering / Evidence information front.
-  - Provide local Return to Compass and Return to Orbit controls.
-  - Preserve semantic fallback, high contrast, reduced motion, dialogs,
-    Elara integration, and responsive behavior.
+  Renewal scope:
+  - Preserve the Showroom as the official transition gate into Mirrorland.
+  - Preserve the narrative preface, mission, timeline, characters, Window,
+    Diamond, Compass, constellation, gauges, information fronts, dialogs,
+    semantic fallback, and responsive presentation.
+  - Keep the primary narrative compact until deliberately expanded.
+  - Give page instructions a visually distinct disclosure surface near the
+    Compass without introducing graphic-image assets.
+  - Support nested disclosures inside the page-instruction surface.
+  - Prevent expanded disclosures from creating artificial camera-like jumps.
+  - Remove the duplicate visual prominence of the lower Talk to Elara action.
+  - Keep the header Talk to Elara entry as the single prominent Elara control.
+  - Make gauges materially smaller and denser while preserving their values,
+    states, detail correspondence, accessibility, and visual usefulness.
+  - Keep semantic fallback stars visible before crystal readiness.
+  - Remove fallback-star artwork after the real crystals report readiness while
+    retaining the semantic controls as transparent interaction and focus proxies.
+  - Preserve independent orbit, Diamond, and Mirrorland Window stages.
+  - Preserve reduced motion, high contrast, mobile layouts, and graceful failure.
 
-  Does not own:
-  - canonical page state;
-  - route or cluster decisions;
-  - pointer and gesture interpretation;
-  - orbital camera or depth classification;
-  - crystal geometry or drawing;
-  - Compass geometry or renderer lifecycle;
-  - gauge selection state or accessible state mutation;
-  - Mirrorland Window geometry or animation;
-  - Diamond geometry, camera, matrices, rendering, motion, or zoom;
-  - Diamond UI behavior.
+  Ownership exclusions:
+  - No controller-state authority.
+  - No route or cluster decision authority.
+  - No pointer-motion interpretation.
+  - No orbital geometry, projection, or depth classification.
+  - No crystal mesh or material ownership.
+  - No Compass renderer lifecycle ownership.
+  - No Mirrorland Window geometry or lifecycle ownership.
+  - No Diamond geometry, camera, renderer, motion, zoom, or inspection ownership.
 */
 
 :root{
@@ -42,10 +39,10 @@
   --bg:#01030a;
   --bg-raised:#050914;
   --bg-panel:#080d19;
+  --bg-soft:#0c1220;
 
   --ink:#fffaf0;
   --white:#ffffff;
-
   --muted:rgba(242,247,255,.91);
   --faint:rgba(221,233,247,.72);
 
@@ -76,44 +73,23 @@
 
   --bronze:#e1a05d;
   --bronze-soft:#ffd39a;
-  --navy:#071329;
 
   --green:#8dffd5;
   --red:#ff9aa5;
   --gray:#9aa8b8;
 
   --shadow:
-    0 34px 110px rgba(0,0,0,.60);
+    0 2rem 6rem rgba(0,0,0,.54);
 
   --panel-shadow:
-    0 1.5rem 4.5rem rgba(0,0,0,.34),
-    inset 0 1px 0 rgba(255,255,255,.10);
-
-  --gold-glow:
-    0 0 .9rem rgba(255,181,31,.22),
-    0 0 2.2rem rgba(255,216,106,.12);
-
-  --cyan-glow:
-    0 0 .9rem rgba(23,223,247,.20),
-    0 0 2.2rem rgba(103,245,255,.10);
-
-  --violet-glow:
-    0 0 .9rem rgba(195,163,255,.18),
-    0 0 2.2rem rgba(168,108,255,.09);
-
-  --blue-glow:
-    0 0 .9rem rgba(92,143,255,.18),
-    0 0 2.2rem rgba(52,113,255,.09);
-
-  --bronze-glow:
-    0 0 .9rem rgba(225,160,93,.18),
-    0 0 2.2rem rgba(255,211,154,.08);
+    0 1.25rem 3.5rem rgba(0,0,0,.30),
+    inset 0 1px 0 rgba(255,255,255,.09);
 
   --max:1440px;
   --text-max:980px;
 
   --orbit-height:
-    clamp(20rem,42vw,31rem);
+    clamp(21rem,42vw,31rem);
 
   --orbit-mobile-height:
     clamp(25rem,92vw,34rem);
@@ -121,8 +97,8 @@
   --diamond-desktop-ratio:16 / 10;
   --diamond-mobile-ratio:4 / 3;
 
-  --gauge-size:
-    clamp(8.5rem,15vw,12rem);
+  --compact-gauge-visual:
+    clamp(3.15rem,5.4vw,4.7rem);
 
   --star-cardinal-path:polygon(
     50% 0%,
@@ -171,7 +147,11 @@ html{
   min-height:100%;
   overflow-x:hidden;
 
-  scroll-behavior:smooth;
+  /*
+    Deliberately avoid globally animated document scrolling. Disclosure
+    expansion must not look like the page camera is being pulled downward.
+  */
+  scroll-behavior:auto;
 
   background:var(--bg);
 }
@@ -239,21 +219,21 @@ body::before{
 
   pointer-events:none;
 
-  opacity:.18;
+  opacity:.17;
 
   background-image:
     radial-gradient(
       circle,
-      rgba(255,255,255,.26) 0 1px,
+      rgba(255,255,255,.25) 0 1px,
       transparent 1.7px
     ),
     linear-gradient(
-      rgba(103,245,255,.026) 1px,
+      rgba(103,245,255,.025) 1px,
       transparent 1px
     ),
     linear-gradient(
       90deg,
-      rgba(103,245,255,.026) 1px,
+      rgba(103,245,255,.025) 1px,
       transparent 1px
     );
 
@@ -302,6 +282,15 @@ h1,
 h2,
 h3{
   text-wrap:balance;
+}
+
+details,
+summary{
+  overflow-anchor:none;
+}
+
+summary{
+  scroll-margin-block:1rem;
 }
 
 a:focus-visible,
@@ -476,9 +465,6 @@ button:disabled{
   font-weight:950;
   letter-spacing:.15em;
   text-transform:uppercase;
-
-  text-shadow:
-    0 0 .7rem rgba(103,245,255,.16);
 }
 
 .brand-copy strong{
@@ -497,7 +483,7 @@ button:disabled{
 }
 
 /* =========================================================
-   ELARA ENTRY
+   SINGLE PROMINENT ELARA ENTRY
    ========================================================= */
 
 .elara-quick-path{
@@ -521,17 +507,6 @@ elara-room-entry{
   --elara-entry-height:3.55rem;
   --elara-entry-font-size:.78rem;
   --elara-entry-letter-spacing:.105em;
-
-  --elara-entry-shadow:
-    0 .8rem 2rem rgba(0,0,0,.30),
-    0 0 1.3rem rgba(82,139,184,.10),
-    inset 0 1px 0 rgba(255,255,255,.12);
-
-  --elara-entry-shadow-hover:
-    0 .95rem 2.2rem rgba(0,0,0,.34),
-    0 0 1.5rem rgba(142,220,243,.16),
-    0 0 2.2rem rgba(157,131,219,.10),
-    inset 0 1px 0 rgba(255,255,255,.16);
 }
 
 elara-room-entry > a,
@@ -604,6 +579,18 @@ elara-room-entry > a::before,
 }
 
 elara-room-entry:defined > a{
+  display:none;
+}
+
+/*
+  The header entry is the single prominent Talk to Elara action.
+  Any threshold duplicate remains semantically available only when its
+  surrounding markup explicitly identifies it as required.
+*/
+.showroom-threshold__actions
+[href="/elara/index.html"],
+.showroom-threshold__actions
+[href="/elara/"]{
   display:none;
 }
 
@@ -748,17 +735,10 @@ elara-room-entry:defined > a{
   letter-spacing:.07em;
   text-align:center;
   text-transform:uppercase;
-
-  transition:
-    transform .18s ease,
-    border-color .18s ease,
-    background .18s ease;
 }
 
 .fallback-navigation a:hover,
 .fallback-navigation a:focus-visible{
-  transform:translateY(-2px);
-
   border-color:rgba(255,216,106,.72);
 
   background:rgba(255,216,106,.10);
@@ -855,9 +835,6 @@ elara-room-entry:defined > a{
       var(--chamber-soft,var(--gold-soft)),
       var(--chamber-accent,var(--gold))
     );
-
-  box-shadow:
-    0 0 .75rem rgba(255,255,255,.16);
 }
 
 h1{
@@ -865,9 +842,9 @@ h1{
 
   color:var(--white);
 
-  font-size:clamp(3.15rem,9vw,7.2rem);
-  line-height:.84;
-  letter-spacing:-.108em;
+  font-size:clamp(3rem,8.3vw,6.8rem);
+  line-height:.86;
+  letter-spacing:-.102em;
 
   text-shadow:
     0 3px 24px rgba(0,0,0,.36);
@@ -879,9 +856,9 @@ h2{
   color:
     var(--chamber-accent,var(--cyan));
 
-  font-size:clamp(1.75rem,4.8vw,3.25rem);
-  line-height:.98;
-  letter-spacing:-.075em;
+  font-size:clamp(1.7rem,4.5vw,3.1rem);
+  line-height:.99;
+  letter-spacing:-.072em;
 
   text-shadow:
     0 2px 18px rgba(0,0,0,.34);
@@ -892,13 +869,13 @@ h3{
 
   color:var(--white);
 
-  font-size:clamp(1.1rem,2.7vw,1.55rem);
-  line-height:1.08;
-  letter-spacing:-.04em;
+  font-size:clamp(1.08rem,2.6vw,1.5rem);
+  line-height:1.1;
+  letter-spacing:-.038em;
 }
 
 /* =========================================================
-   MIRRORLAND THRESHOLD
+   OFFICIAL MIRRORLAND GATE
    ========================================================= */
 
 .showroom-threshold{
@@ -908,14 +885,14 @@ h3{
   --chamber-open:rgba(255,216,106,.085);
   --chamber-copy:rgba(248,249,252,.92);
 
-  min-height:min(45rem,78vh);
+  min-height:auto;
 
   display:grid;
   gap:1rem;
 
   margin-top:.55rem;
 
-  padding:clamp(1.25rem,4vw,3rem);
+  padding:clamp(1.15rem,3.5vw,2.6rem);
 
   isolation:isolate;
 
@@ -952,10 +929,10 @@ h3{
   top:50%;
   z-index:0;
 
-  width:clamp(11rem,29vw,23rem);
+  width:clamp(10rem,26vw,21rem);
   aspect-ratio:1;
 
-  border:1px solid rgba(255,216,106,.22);
+  border:1px solid rgba(255,216,106,.19);
   border-radius:4rem;
 
   transform:
@@ -965,26 +942,26 @@ h3{
   background:
     radial-gradient(
       circle at 50% 32%,
-      rgba(255,240,168,.13),
+      rgba(255,240,168,.12),
       transparent 42%
     ),
     radial-gradient(
       circle at 50% 72%,
-      rgba(215,138,56,.11),
+      rgba(215,138,56,.10),
       transparent 62%
     );
 
   pointer-events:none;
 
-  opacity:.62;
+  opacity:.54;
 }
 
 .showroom-threshold__copy{
-  width:min(72rem,100%);
+  width:min(66rem,100%);
 
   display:grid;
   align-content:center;
-  gap:1rem;
+  gap:.88rem;
 }
 
 .door-subtitle{
@@ -992,108 +969,92 @@ h3{
 
   color:var(--gold-soft);
 
-  font-size:clamp(1.45rem,4vw,3rem);
+  font-size:clamp(1.35rem,3.5vw,2.65rem);
   font-weight:850;
   line-height:1;
-  letter-spacing:-.06em;
-
-  text-shadow:
-    0 0 1rem rgba(255,216,106,.16);
+  letter-spacing:-.055em;
 }
 
 .showroom-threshold__lead{
-  max-width:61rem;
+  max-width:57rem;
 
   color:var(--white);
 
-  font-size:clamp(1.35rem,3.1vw,2.45rem);
+  font-size:clamp(1.25rem,2.8vw,2.15rem);
   font-weight:850;
-  line-height:1.08;
-  letter-spacing:-.045em;
+  line-height:1.1;
+  letter-spacing:-.04em;
 }
 
 .showroom-threshold__support{
-  max-width:61rem;
+  max-width:57rem;
 
-  color:rgba(248,249,252,.90);
+  color:rgba(248,249,252,.88);
 
-  font-size:clamp(1rem,1.8vw,1.22rem);
-  line-height:1.65;
+  font-size:clamp(.96rem,1.55vw,1.12rem);
+  line-height:1.6;
+}
+
+/*
+  The compact gate shows only the initial preface paragraphs by default.
+  Additional narrative belongs inside the explicit narrative disclosure.
+*/
+.showroom-threshold__copy >
+.showroom-threshold__support:nth-of-type(n+4){
+  display:none;
+}
+
+.showroom-threshold__copy >
+details .showroom-threshold__support,
+.showroom-threshold__copy >
+details p{
+  display:block;
 }
 
 .thesis-field,
 .mirrorland-thesis{
   position:relative;
 
-  max-width:60rem;
+  max-width:57rem;
 
   display:grid;
-  gap:.6rem;
+  gap:.5rem;
 
-  padding:clamp(1.2rem,3.5vw,2rem);
+  padding:clamp(1rem,2.7vw,1.55rem);
 
   overflow:hidden;
   isolation:isolate;
 
-  border:1px solid rgba(255,216,106,.58);
-  border-radius:clamp(1.2rem,3vw,2rem);
+  border:1px solid rgba(255,216,106,.56);
+  border-radius:clamp(1.1rem,3vw,1.7rem);
 
   background:
     radial-gradient(
       circle at 12% 0%,
-      rgba(255,240,168,.17),
+      rgba(255,240,168,.15),
       transparent 20rem
     ),
     linear-gradient(
       135deg,
-      rgba(255,181,31,.085),
-      rgba(82,44,6,.11)
+      rgba(255,181,31,.075),
+      rgba(82,44,6,.10)
     );
 
   box-shadow:
-    0 0 1rem rgba(255,216,106,.10),
-    inset 0 1px 0 rgba(255,255,255,.15);
-}
-
-.thesis-field::before,
-.mirrorland-thesis::before{
-  content:"";
-
-  position:absolute;
-  inset:-100% -35%;
-  z-index:-1;
-
-  transform:
-    translateX(-72%)
-    rotate(16deg);
-
-  background:
-    linear-gradient(
-      90deg,
-      transparent,
-      rgba(255,255,255,.18),
-      transparent
-    );
-
-  animation:
-    thesisShine 8s ease-in-out infinite;
+    0 0 1rem rgba(255,216,106,.08),
+    inset 0 1px 0 rgba(255,255,255,.13);
 }
 
 .thesis-field strong,
 .mirrorland-thesis strong{
   display:block;
 
-  max-width:990px;
-
   color:var(--white);
 
-  font-size:clamp(1.35rem,4vw,2.65rem);
+  font-size:clamp(1.22rem,3.3vw,2.2rem);
   font-weight:900;
-  line-height:1.10;
-  letter-spacing:-.045em;
-
-  text-shadow:
-    0 2px 18px rgba(0,0,0,.40);
+  line-height:1.12;
+  letter-spacing:-.04em;
 }
 
 .showroom-threshold__actions{
@@ -1102,24 +1063,253 @@ h3{
   gap:.7rem;
 }
 
-.mirrorland-introduction-drop{
-  max-width:60rem;
+.mirrorland-introduction-drop,
+[data-showroom-mirrorland-preface],
+[data-showroom-gate-preface]{
+  width:min(57rem,100%);
+  max-width:57rem;
 }
 
-@keyframes thesisShine{
-  0%,
-  26%{
-    transform:
-      translateX(-72%)
-      rotate(16deg);
-  }
+/* =========================================================
+   NARRATIVE DISCLOSURE
+   ========================================================= */
 
-  52%,
-  100%{
-    transform:
-      translateX(72%)
-      rotate(16deg);
-  }
+.mirrorland-introduction-drop{
+  border-color:rgba(255,216,106,.48);
+
+  background:
+    radial-gradient(
+      circle at 0 0,
+      rgba(255,216,106,.09),
+      transparent 18rem
+    ),
+    linear-gradient(
+      145deg,
+      rgba(20,13,6,.78),
+      rgba(8,8,11,.72)
+    );
+}
+
+.mirrorland-introduction-drop > summary{
+  min-height:3.25rem;
+
+  color:var(--gold-soft);
+}
+
+.mirrorland-introduction-drop[open]{
+  box-shadow:
+    0 1rem 2.5rem rgba(0,0,0,.24),
+    inset 0 1px 0 rgba(255,255,255,.10);
+}
+
+.mirrorland-introduction-drop .drop-content{
+  max-width:62rem;
+}
+
+.mirrorland-introduction-drop .drop-content > p:first-child{
+  color:var(--white);
+
+  font-size:1.02rem;
+  font-weight:760;
+  line-height:1.62;
+}
+
+.mirrorland-introduction-drop
+:is(
+  [data-mirrorland-timeline],
+  [data-mirrorland-characters],
+  [data-mirrorland-mission],
+  [data-mirrorland-preface-section]
+){
+  margin-top:.2rem;
+}
+
+/* =========================================================
+   PAGE INSTRUCTIONS — CONTRASTED DISCLOSURE
+   ========================================================= */
+
+.showroom-page-instructions,
+[data-showroom-page-instructions],
+[data-showroom-instructions],
+[data-showroom-instruction-surface]{
+  --chamber-accent:var(--cyan);
+  --chamber-soft:var(--cyan-soft);
+  --chamber-line:rgba(103,245,255,.43);
+  --chamber-open:rgba(23,223,247,.065);
+  --chamber-copy:rgba(237,247,255,.90);
+
+  position:relative;
+
+  width:100%;
+
+  margin-top:.15rem;
+
+  border:1px solid rgba(103,245,255,.44);
+  border-radius:1.35rem;
+
+  background:
+    radial-gradient(
+      circle at 8% 0%,
+      rgba(103,245,255,.11),
+      transparent 19rem
+    ),
+    radial-gradient(
+      circle at 92% 100%,
+      rgba(195,163,255,.08),
+      transparent 22rem
+    ),
+    linear-gradient(
+      150deg,
+      rgba(3,24,39,.96),
+      rgba(10,8,30,.96)
+    );
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.10),
+    0 1rem 2.6rem rgba(0,0,0,.22);
+}
+
+.showroom-page-instructions > summary,
+[data-showroom-page-instructions] > summary,
+[data-showroom-instructions] > summary,
+[data-showroom-instruction-surface] > summary{
+  min-height:3.8rem;
+
+  display:grid;
+  grid-template-columns:auto 1fr auto;
+  align-items:center;
+  gap:.75rem;
+
+  padding:.8rem 1rem;
+
+  list-style:none;
+  cursor:pointer;
+
+  color:var(--white);
+
+  font-size:.74rem;
+  font-weight:950;
+  letter-spacing:.105em;
+  text-transform:uppercase;
+}
+
+.showroom-page-instructions > summary::before,
+[data-showroom-page-instructions] > summary::before,
+[data-showroom-instructions] > summary::before,
+[data-showroom-instruction-surface] > summary::before{
+  content:"";
+
+  width:.82rem;
+  height:.82rem;
+
+  border:1px solid rgba(255,255,255,.38);
+  border-radius:.18rem;
+
+  transform:rotate(45deg);
+
+  background:
+    linear-gradient(
+      135deg,
+      var(--cyan-soft),
+      var(--cyan)
+    );
+
+  box-shadow:
+    0 0 .75rem rgba(103,245,255,.34);
+}
+
+.showroom-page-instructions > summary::after,
+[data-showroom-page-instructions] > summary::after,
+[data-showroom-instructions] > summary::after,
+[data-showroom-instruction-surface] > summary::after{
+  content:"+";
+
+  color:var(--cyan-soft);
+
+  font-size:1.25rem;
+}
+
+.showroom-page-instructions[open] > summary::after,
+[data-showroom-page-instructions][open] > summary::after,
+[data-showroom-instructions][open] > summary::after,
+[data-showroom-instruction-surface][open] > summary::after{
+  content:"–";
+}
+
+.showroom-page-instructions__body,
+.showroom-instructions__body,
+[data-showroom-instructions-body]{
+  display:grid;
+  gap:.75rem;
+
+  padding:0 1rem 1rem;
+
+  border-top:1px solid rgba(103,245,255,.20);
+}
+
+.showroom-page-instructions__summary,
+.showroom-instructions__summary,
+[data-showroom-instructions-summary]{
+  display:grid;
+  grid-template-columns:
+    repeat(4,minmax(0,1fr));
+
+  gap:.55rem;
+
+  padding-top:.9rem;
+}
+
+.showroom-page-instructions__summary > *,
+.showroom-instructions__summary > *,
+[data-showroom-instructions-summary] > *{
+  min-height:4.25rem;
+
+  display:grid;
+  align-content:center;
+  gap:.18rem;
+
+  padding:.62rem .7rem;
+
+  border:1px solid rgba(255,255,255,.13);
+  border-radius:.9rem;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,.045),
+      rgba(0,0,0,.16)
+    );
+}
+
+.showroom-page-instructions__summary strong,
+.showroom-instructions__summary strong,
+[data-showroom-instructions-summary] strong{
+  color:var(--cyan-soft);
+
+  font-size:.69rem;
+  font-weight:950;
+  letter-spacing:.075em;
+  text-transform:uppercase;
+}
+
+.showroom-page-instructions__summary span,
+.showroom-instructions__summary span,
+[data-showroom-instructions-summary] span{
+  color:rgba(236,246,255,.82);
+
+  font-size:.68rem;
+  line-height:1.3;
+}
+
+.showroom-page-instructions
+.architectural-drop,
+[data-showroom-page-instructions]
+.architectural-drop,
+[data-showroom-instructions]
+.architectural-drop{
+  border-color:rgba(103,245,255,.25);
+
+  background:rgba(1,8,18,.34);
 }
 
 /* =========================================================
@@ -1134,7 +1324,7 @@ h3{
   --chamber-copy:rgba(240,248,255,.94);
 
   display:grid;
-  gap:1rem;
+  gap:.9rem;
 
   margin-top:1.25rem;
 
@@ -1185,19 +1375,19 @@ h3{
 }
 
 .showroom-orbit__heading p{
-  max-width:39rem;
+  max-width:37rem;
 
   color:rgba(236,246,255,.82);
 
-  font-size:.88rem;
-  line-height:1.55;
+  font-size:.84rem;
+  line-height:1.5;
   text-align:right;
 }
 
 .showroom-orbit__legend{
   display:flex;
   flex-wrap:wrap;
-  gap:.6rem;
+  gap:.55rem;
 
   padding:0 .2rem;
 }
@@ -1205,11 +1395,11 @@ h3{
 .showroom-orbit__legend span{
   display:inline-flex;
   align-items:center;
-  gap:.48rem;
+  gap:.45rem;
 
-  min-height:2rem;
+  min-height:1.9rem;
 
-  padding:.38rem .65rem;
+  padding:.34rem .6rem;
 
   border:1px solid rgba(255,255,255,.13);
   border-radius:999px;
@@ -1218,15 +1408,15 @@ h3{
 
   background:rgba(255,255,255,.035);
 
-  font-size:.65rem;
+  font-size:.62rem;
   font-weight:850;
   letter-spacing:.045em;
   text-transform:uppercase;
 }
 
 .showroom-orbit__legend i{
-  width:.55rem;
-  height:.55rem;
+  width:.52rem;
+  height:.52rem;
 
   border-radius:50%;
 }
@@ -1304,22 +1494,22 @@ h3{
 
   pointer-events:none;
 
-  opacity:.32;
+  opacity:.30;
 
   background-image:
     radial-gradient(
       circle,
-      rgba(255,255,255,.78) 0 1px,
+      rgba(255,255,255,.76) 0 1px,
       transparent 1.6px
     ),
     radial-gradient(
       circle,
-      rgba(103,245,255,.55) 0 1px,
+      rgba(103,245,255,.53) 0 1px,
       transparent 1.7px
     ),
     radial-gradient(
       circle,
-      rgba(255,216,106,.46) 0 1px,
+      rgba(255,216,106,.44) 0 1px,
       transparent 1.7px
     );
 
@@ -1370,10 +1560,6 @@ h3{
   aspect-ratio:2.3 / 1;
 
   border:1px solid rgba(103,245,255,.09);
-
-  box-shadow:
-    0 0 4rem rgba(103,245,255,.04),
-    inset 0 0 4rem rgba(195,163,255,.03);
 }
 
 .showroom-cosmic-field::after{
@@ -1381,9 +1567,6 @@ h3{
   aspect-ratio:1.8 / 1;
 
   border:1px solid rgba(255,216,106,.10);
-
-  box-shadow:
-    0 0 2.6rem rgba(255,216,106,.05);
 }
 
 .showroom-orbit__field
@@ -1480,32 +1663,11 @@ canvas[data-showroom-layer="front"]{
 
   cursor:pointer;
   pointer-events:auto;
-
-  transition:
-    transform .18s ease,
-    border-color .18s ease,
-    box-shadow .18s ease,
-    background .18s ease;
 }
 
 .showroom-compass-control:hover,
 .showroom-compass-control:focus-visible{
-  transform:scale(1.035);
-
   border-color:rgba(103,245,255,.78);
-
-  background:
-    radial-gradient(
-      circle at 50% 38%,
-      rgba(255,255,255,.16),
-      transparent 44%
-    ),
-    radial-gradient(
-      circle at 50% 50%,
-      rgba(255,216,106,.13),
-      rgba(8,28,52,.58) 68%,
-      rgba(2,6,17,.84) 100%
-    );
 
   box-shadow:
     0 0 1.2rem rgba(255,216,106,.16),
@@ -1568,28 +1730,24 @@ canvas[data-showroom-layer="front"]{
 .showroom-compass-control__mark span:nth-child(1){
   top:.18rem;
   left:50%;
-
   transform:translateX(-50%);
 }
 
 .showroom-compass-control__mark span:nth-child(2){
   right:.24rem;
   top:50%;
-
   transform:translateY(-50%);
 }
 
 .showroom-compass-control__mark span:nth-child(3){
   bottom:.18rem;
   left:50%;
-
   transform:translateX(-50%);
 }
 
 .showroom-compass-control__mark span:nth-child(4){
   left:.24rem;
   top:50%;
-
   transform:translateY(-50%);
 }
 
@@ -1612,7 +1770,7 @@ canvas[data-showroom-layer="front"]{
 }
 
 /* =========================================================
-   STAR GEOMETRY
+   FALLBACK STAR GEOMETRY
    ========================================================= */
 
 .showroom-primary-stars,
@@ -1642,9 +1800,9 @@ canvas[data-showroom-layer="front"]{
   isolation:isolate;
 
   transition:
-    transform .22s ease,
-    filter .22s ease,
-    opacity .22s ease;
+    opacity .18s ease,
+    filter .18s ease,
+    transform .18s ease;
 }
 
 .showroom-star::before,
@@ -1707,16 +1865,6 @@ canvas[data-showroom-layer="front"]{
     drop-shadow(0 .8rem 1.3rem rgba(0,0,0,.48));
 }
 
-.showroom-star--large:hover,
-.showroom-star--large:focus-visible{
-  transform:scale(1.08) rotate(2deg);
-
-  filter:
-    drop-shadow(0 0 1rem rgba(255,216,106,.48))
-    drop-shadow(0 0 1.6rem rgba(103,245,255,.18))
-    drop-shadow(0 .9rem 1.5rem rgba(0,0,0,.52));
-}
-
 .showroom-star--small{
   width:clamp(2.4rem,4vw,3.6rem);
   aspect-ratio:1;
@@ -1726,11 +1874,6 @@ canvas[data-showroom-layer="front"]{
   filter:
     drop-shadow(0 0 .5rem rgba(255,255,255,.16))
     drop-shadow(0 .45rem .8rem rgba(0,0,0,.42));
-}
-
-.showroom-star--small:hover,
-.showroom-star--small:focus-visible{
-  transform:scale(1.16) rotate(-3deg);
 }
 
 .showroom-star--gauge::before{
@@ -1744,12 +1887,6 @@ canvas[data-showroom-layer="front"]{
     );
 }
 
-.showroom-star--gauge{
-  filter:
-    drop-shadow(0 0 .7rem rgba(103,245,255,.56))
-    drop-shadow(0 .45rem .8rem rgba(0,0,0,.42));
-}
-
 .showroom-star--information::before{
   background:
     linear-gradient(
@@ -1759,12 +1896,6 @@ canvas[data-showroom-layer="front"]{
       rgba(168,108,255,.88) 48%,
       rgba(23,9,68,.98) 80%
     );
-}
-
-.showroom-star--information{
-  filter:
-    drop-shadow(0 0 .7rem rgba(195,163,255,.54))
-    drop-shadow(0 .45rem .8rem rgba(0,0,0,.42));
 }
 
 .showroom-star[data-showroom-object-id="characters-route"]{
@@ -1785,14 +1916,6 @@ canvas[data-showroom-layer="front"]{
 .showroom-star[data-showroom-object-id="information-cluster"]{
   right:17%;
   bottom:16%;
-}
-
-.showroom-star-cluster{
-  opacity:1;
-
-  transition:
-    opacity .24s ease,
-    transform .24s ease;
 }
 
 .showroom-star-cluster[hidden]{
@@ -1850,6 +1973,56 @@ canvas[data-showroom-layer="front"]{
   bottom:17%;
 }
 
+/*
+  Before crystal readiness:
+  - fallback artwork is visible;
+  - semantic controls are directly usable.
+*/
+[data-showroom-root]:not(
+  [data-showroom-crystals-ready="true"]
+)
+[data-showroom-fallback-star]{
+  opacity:1;
+  visibility:visible;
+}
+
+/*
+  After crystal readiness:
+  - fallback artwork disappears completely;
+  - buttons remain present as transparent semantic and interaction proxies;
+  - no fallback star shape can visually block the rendered crystals.
+*/
+[data-showroom-root][data-showroom-crystals-ready="true"]
+[data-showroom-fallback-star]{
+  opacity:1;
+  visibility:visible;
+
+  background:transparent!important;
+  box-shadow:none!important;
+  filter:none!important;
+}
+
+[data-showroom-root][data-showroom-crystals-ready="true"]
+[data-showroom-fallback-star]::before,
+[data-showroom-root][data-showroom-crystals-ready="true"]
+[data-showroom-fallback-star]::after{
+  content:none!important;
+  display:none!important;
+}
+
+[data-showroom-root][data-showroom-crystals-ready="true"]
+[data-showroom-fallback-star]:focus-visible{
+  outline:2px solid var(--cyan);
+  outline-offset:5px;
+
+  border-radius:50%;
+}
+
+[data-showroom-root][data-showroom-crystals-ready="true"]
+[data-showroom-fallback-star-layer]{
+  background:transparent!important;
+}
+
 .showroom-orbit__fallback{
   position:absolute;
   left:1rem;
@@ -1866,20 +2039,18 @@ canvas[data-showroom-layer="front"]{
 .showroom-orbit__fallback p{
   max-width:38rem;
 
-  padding:.45rem .78rem;
+  padding:.42rem .74rem;
 
   border:1px solid rgba(255,255,255,.11);
   border-radius:999px;
 
-  color:rgba(221,233,247,.72);
+  color:rgba(221,233,247,.70);
 
   background:rgba(2,6,15,.72);
 
-  font-size:.68rem;
-  line-height:1.35;
+  font-size:.65rem;
+  line-height:1.32;
   text-align:center;
-
-  backdrop-filter:blur(8px);
 }
 
 /* =========================================================
@@ -1888,16 +2059,16 @@ canvas[data-showroom-layer="front"]{
 
 .showroom-front-host{
   display:grid;
-  gap:clamp(2rem,5vw,4rem);
+  gap:clamp(1.4rem,4vw,2.75rem);
 
-  margin-top:clamp(2.25rem,6vw,5rem);
+  margin-top:clamp(1.5rem,4vw,3rem);
 }
 
 .showroom-front{
   display:grid;
-  gap:1rem;
+  gap:.85rem;
 
-  padding:clamp(1.05rem,3.4vw,1.8rem);
+  padding:clamp(1rem,3vw,1.55rem);
 
   scroll-margin-top:1rem;
 }
@@ -1927,17 +2098,17 @@ canvas[data-showroom-layer="front"]{
 
 .showroom-front__heading > div{
   display:grid;
-  gap:.45rem;
+  gap:.42rem;
 }
 
 .showroom-front__heading p{
-  max-width:50rem;
+  max-width:48rem;
 
   color:
     var(--chamber-copy,var(--muted));
 
-  font-size:.95rem;
-  line-height:1.55;
+  font-size:.9rem;
+  line-height:1.5;
 }
 
 /* =========================================================
@@ -1986,11 +2157,6 @@ canvas[data-showroom-layer="front"]{
       rgba(255,216,106,.15),
       transparent 28rem
     ),
-    radial-gradient(
-      circle at 92% 100%,
-      rgba(103,245,255,.055),
-      transparent 28rem
-    ),
     linear-gradient(
       180deg,
       rgba(34,24,9,.99),
@@ -2013,11 +2179,6 @@ canvas[data-showroom-layer="front"]{
       rgba(92,143,255,.15),
       transparent 28rem
     ),
-    radial-gradient(
-      circle at 88% 100%,
-      rgba(23,223,247,.07),
-      transparent 30rem
-    ),
     linear-gradient(
       180deg,
       rgba(6,24,64,.99),
@@ -2038,11 +2199,6 @@ canvas[data-showroom-layer="front"]{
     radial-gradient(
       circle at 10% 0%,
       rgba(195,163,255,.14),
-      transparent 28rem
-    ),
-    radial-gradient(
-      circle at 90% 100%,
-      rgba(92,143,255,.08),
       transparent 28rem
     ),
     linear-gradient(
@@ -2067,11 +2223,6 @@ canvas[data-showroom-layer="front"]{
       rgba(185,204,225,.12),
       transparent 28rem
     ),
-    radial-gradient(
-      circle at 92% 100%,
-      rgba(23,223,247,.05),
-      transparent 28rem
-    ),
     linear-gradient(
       180deg,
       rgba(19,24,31,.99),
@@ -2080,36 +2231,33 @@ canvas[data-showroom-layer="front"]{
 }
 
 /* =========================================================
-   GAUGE DASHBOARDS
+   COMPACT GAUGE DASHBOARDS
    ========================================================= */
 
 .showroom-gauge-dashboard{
   display:grid;
-  gap:1rem;
+  gap:.7rem;
 
-  padding:clamp(.9rem,2vw,1.25rem);
+  padding:clamp(.72rem,1.6vw,1rem);
 
   border:1px solid var(--chamber-line);
-  border-radius:1.4rem;
+  border-radius:1.2rem;
 
   background:
     radial-gradient(
       circle at 50% 0%,
       var(--chamber-open),
-      transparent 34rem
+      transparent 30rem
     ),
     linear-gradient(
       160deg,
       rgba(0,0,0,.18),
-      rgba(255,255,255,.025)
+      rgba(255,255,255,.024)
     );
 
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,.08),
-    0 1rem 2.8rem rgba(0,0,0,.18);
-
-  animation:
-    dashboardReveal .34s ease both;
+    0 .8rem 2rem rgba(0,0,0,.16);
 }
 
 .showroom-gauge-grid{
@@ -2117,7 +2265,7 @@ canvas[data-showroom-layer="front"]{
   grid-template-columns:
     repeat(4,minmax(0,1fr));
 
-  gap:.8rem;
+  gap:.55rem;
 }
 
 .showroom-gauge-grid--structure{
@@ -2135,56 +2283,52 @@ canvas[data-showroom-layer="front"]{
 
   min-width:0;
 
-  border:1px solid rgba(255,255,255,.14);
-  border-radius:1.2rem;
+  border:1px solid rgba(255,255,255,.13);
+  border-radius:.95rem;
 
   color:var(--white);
 
   background:
     radial-gradient(
       circle at 50% 0%,
-      rgba(255,255,255,.06),
-      transparent 60%
+      rgba(255,255,255,.055),
+      transparent 58%
     ),
     linear-gradient(
       155deg,
-      rgba(255,255,255,.035),
-      rgba(0,0,0,.20)
+      rgba(255,255,255,.032),
+      rgba(0,0,0,.19)
     );
 
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.08),
-    0 .8rem 2rem rgba(0,0,0,.18);
+    inset 0 1px 0 rgba(255,255,255,.07),
+    0 .55rem 1.25rem rgba(0,0,0,.14);
 
   cursor:pointer;
 
   transition:
-    transform .18s ease,
-    border-color .18s ease,
-    box-shadow .18s ease,
-    filter .18s ease,
-    opacity .18s ease;
+    border-color .16s ease,
+    box-shadow .16s ease,
+    opacity .16s ease,
+    filter .16s ease;
 }
 
 .showroom-gauge:hover,
 .showroom-gauge:focus-visible{
-  transform:translateY(-2px) scale(1.015);
-
   border-color:var(--chamber-accent);
 
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.12),
-    0 1rem 2.2rem rgba(0,0,0,.24),
-    0 0 1.4rem var(--chamber-open);
+    inset 0 1px 0 rgba(255,255,255,.11),
+    0 .7rem 1.5rem rgba(0,0,0,.20),
+    0 0 1rem var(--chamber-open);
 }
 
 .showroom-gauge[aria-expanded="true"]{
   border-color:var(--chamber-soft);
 
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.14),
-    0 0 1.3rem var(--chamber-open),
-    0 1rem 2.4rem rgba(0,0,0,.26);
+    inset 0 1px 0 rgba(255,255,255,.12),
+    0 0 .9rem var(--chamber-open);
 }
 
 .showroom-gauge-grid:has(
@@ -2195,45 +2339,59 @@ canvas[data-showroom-layer="front"]{
   filter:saturate(.78);
 }
 
+/*
+  Radial and state gauges are now compact horizontal instruments rather
+  than oversized cards with large decorative circles.
+*/
 .showroom-gauge--radial,
 .showroom-gauge--state{
-  min-height:16.5rem;
+  min-height:6.4rem;
 
   display:grid;
-  grid-template-rows:auto auto auto;
-  justify-items:center;
-  align-content:center;
-  gap:.35rem;
+  grid-template-columns:
+    var(--compact-gauge-visual)
+    minmax(0,1fr);
 
-  padding:1rem;
+  grid-template-rows:
+    auto
+    auto
+    auto;
 
-  text-align:center;
+  align-items:center;
+  gap:.12rem .65rem;
+
+  padding:.58rem .68rem;
+
+  text-align:left;
 }
 
 .showroom-gauge__visual{
   position:relative;
 
-  width:var(--gauge-size);
+  grid-column:1;
+  grid-row:1 / span 3;
+
+  width:var(--compact-gauge-visual);
   aspect-ratio:1;
 
   display:grid;
   place-items:center;
 
-  margin-bottom:.2rem;
+  margin:0;
 
   border-radius:50%;
 
   background:
     radial-gradient(
       circle at center,
-      rgba(1,5,15,.96) 0 47%,
-      rgba(7,18,38,.88) 48% 56%,
+      rgba(1,5,15,.96) 0 45%,
+      rgba(7,18,38,.86) 46% 56%,
       transparent 57%
     );
 
   box-shadow:
-    inset 0 0 2rem rgba(0,0,0,.46),
-    0 0 1.2rem var(--chamber-open);
+    inset 0 0 1.2rem rgba(0,0,0,.42),
+    0 0 .8rem var(--chamber-open);
 }
 
 .showroom-gauge__arc{
@@ -2268,12 +2426,9 @@ canvas[data-showroom-layer="front"]{
     );
 
   filter:
-    drop-shadow(0 0 .55rem var(--chamber-accent));
+    drop-shadow(0 0 .4rem var(--chamber-accent));
 
   transform:rotate(-135deg);
-
-  animation:
-    gaugeArcDraw .82s cubic-bezier(.2,.8,.2,1) both;
 }
 
 .showroom-gauge[data-gauge-visual-ratio=".46"]{
@@ -2310,45 +2465,55 @@ canvas[data-showroom-layer="front"]{
 
   border-radius:50%;
 
-  border-top:1px solid rgba(255,255,255,.52);
+  border-top:1px solid rgba(255,255,255,.46);
   border-right:1px solid transparent;
   border-bottom:1px solid transparent;
   border-left:1px solid transparent;
 
   filter:
-    drop-shadow(0 0 .45rem var(--chamber-accent));
+    drop-shadow(0 0 .35rem var(--chamber-accent));
 
   animation:
-    gaugeScanner 6.8s linear infinite;
+    gaugeScanner 7.2s linear infinite;
 }
 
 .showroom-gauge__value{
+  grid-column:2;
+  grid-row:1;
+
+  align-self:end;
+
   color:var(--chamber-soft);
 
-  font-size:clamp(1.4rem,3.2vw,2.15rem);
+  font-size:clamp(1.05rem,2.2vw,1.45rem);
   line-height:1;
-  letter-spacing:-.045em;
-
-  text-shadow:
-    0 0 .8rem var(--chamber-open);
+  letter-spacing:-.035em;
 }
 
 .showroom-gauge__label{
+  grid-column:2;
+  grid-row:2;
+
   color:var(--white);
 
-  font-size:.73rem;
+  font-size:.64rem;
   font-weight:950;
-  letter-spacing:.075em;
-  line-height:1.25;
+  letter-spacing:.065em;
+  line-height:1.2;
   text-transform:uppercase;
 }
 
 .showroom-gauge__state{
+  grid-column:2;
+  grid-row:3;
+
+  align-self:start;
+
   color:var(--chamber-copy);
 
-  font-size:.64rem;
+  font-size:.58rem;
   font-weight:800;
-  line-height:1.3;
+  line-height:1.2;
 }
 
 .showroom-gauge__state-dial{
@@ -2393,9 +2558,6 @@ canvas[data-showroom-layer="front"]{
     );
 
   opacity:.82;
-
-  animation:
-    stateDialDrift 8s ease-in-out infinite;
 }
 
 .showroom-gauge__pulse{
@@ -2413,10 +2575,10 @@ canvas[data-showroom-layer="front"]{
     );
 
   box-shadow:
-    0 0 1rem var(--state-color,var(--chamber-accent));
+    0 0 .75rem var(--state-color,var(--chamber-accent));
 
   animation:
-    gaugePulse 3.8s ease-in-out infinite;
+    gaugePulse 4.2s ease-in-out infinite;
 }
 
 .showroom-gauge[data-gauge-state="implemented"],
@@ -2439,46 +2601,46 @@ canvas[data-showroom-layer="front"]{
   --state-color:var(--steel);
 }
 
+/* =========================================================
+   COMPACT CAPABILITY GAUGES
+   ========================================================= */
+
 .showroom-capability-grid{
   display:grid;
   grid-template-columns:
-    repeat(2,minmax(0,1fr));
+    repeat(5,minmax(0,1fr));
 
-  gap:.75rem;
+  gap:.5rem;
 }
 
 .showroom-gauge--capability{
-  min-height:6.1rem;
+  min-height:5rem;
 
   display:grid;
-  grid-template-columns:minmax(8rem,1fr) 1.15fr;
-  grid-template-rows:auto auto;
-  align-items:center;
-  gap:.25rem .9rem;
+  grid-template-rows:auto auto auto;
+  align-content:center;
+  gap:.18rem;
 
-  padding:.9rem 1rem;
+  padding:.55rem .62rem;
 
   text-align:left;
 }
 
 .showroom-gauge--capability
 .showroom-gauge__track{
-  grid-column:1;
-  grid-row:1 / span 2;
-
   position:relative;
 
-  height:1.25rem;
+  height:.8rem;
 
   display:grid;
   grid-template-columns:repeat(5,1fr);
-  gap:.2rem;
+  gap:.12rem;
 
   overflow:hidden;
 
-  padding:.18rem;
+  padding:.12rem;
 
-  border:1px solid rgba(255,255,255,.12);
+  border:1px solid rgba(255,255,255,.11);
   border-radius:999px;
 
   background:rgba(0,0,0,.24);
@@ -2490,31 +2652,12 @@ canvas[data-showroom-layer="front"]{
   background:
     linear-gradient(
       90deg,
-      rgba(103,245,255,.25),
-      rgba(103,245,255,.82)
+      rgba(103,245,255,.24),
+      rgba(103,245,255,.80)
     );
 
   box-shadow:
-    0 0 .45rem rgba(103,245,255,.28);
-
-  animation:
-    capabilitySegment .56s ease both;
-}
-
-.showroom-gauge__track i:nth-child(2){
-  animation-delay:.06s;
-}
-
-.showroom-gauge__track i:nth-child(3){
-  animation-delay:.12s;
-}
-
-.showroom-gauge__track i:nth-child(4){
-  animation-delay:.18s;
-}
-
-.showroom-gauge__track i:nth-child(5){
-  animation-delay:.24s;
+    0 0 .35rem rgba(103,245,255,.24);
 }
 
 .showroom-gauge__scan-line{
@@ -2527,43 +2670,42 @@ canvas[data-showroom-layer="front"]{
     linear-gradient(
       90deg,
       transparent,
-      rgba(255,255,255,.55),
+      rgba(255,255,255,.48),
       transparent
     );
 
   animation:
-    capabilityScan 5.6s linear infinite;
+    capabilityScan 6s linear infinite;
 }
 
 .showroom-gauge--capability strong{
-  grid-column:2;
-  grid-row:1;
-
   color:var(--white);
 
-  font-size:.9rem;
+  font-size:.68rem;
   font-weight:950;
-  letter-spacing:.045em;
+  letter-spacing:.052em;
+  line-height:1.2;
   text-transform:uppercase;
 }
 
 .showroom-gauge--capability > span:last-child{
-  grid-column:2;
-  grid-row:2;
-
   color:var(--chamber-copy);
 
-  font-size:.74rem;
-  line-height:1.3;
+  font-size:.6rem;
+  line-height:1.22;
 }
 
+/* =========================================================
+   GAUGE DETAILS
+   ========================================================= */
+
 .showroom-gauge-details{
-  min-height:8rem;
+  min-height:5.7rem;
 
   display:grid;
 
   border:1px solid var(--chamber-line);
-  border-radius:1.1rem;
+  border-radius:.95rem;
 
   background:
     linear-gradient(
@@ -2573,18 +2715,19 @@ canvas[data-showroom-layer="front"]{
     );
 
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.08);
+    inset 0 1px 0 rgba(255,255,255,.07);
 }
 
 .showroom-gauge-detail{
   display:grid;
   align-content:center;
-  gap:.5rem;
+  gap:.36rem;
 
-  padding:clamp(1rem,2.8vw,1.45rem);
+  padding:.78rem .9rem;
+}
 
-  animation:
-    gaugeDetailReveal .24s ease both;
+.showroom-gauge-detail h3{
+  font-size:clamp(1rem,2.2vw,1.3rem);
 }
 
 .showroom-gauge-detail p{
@@ -2592,22 +2735,22 @@ canvas[data-showroom-layer="front"]{
 
   color:var(--chamber-copy);
 
-  font-size:.92rem;
-  line-height:1.58;
+  font-size:.82rem;
+  line-height:1.48;
 }
 
 /* =========================================================
-   COMPOSITION GAUGE
+   COMPACT COMPOSITION GAUGE
    ========================================================= */
 
 .showroom-composition-gauge{
   display:grid;
-  gap:.8rem;
+  gap:.62rem;
 
-  padding:1rem;
+  padding:.75rem;
 
   border:1px solid var(--chamber-line);
-  border-radius:1.2rem;
+  border-radius:1rem;
 
   background:
     radial-gradient(
@@ -2620,15 +2763,15 @@ canvas[data-showroom-layer="front"]{
 
 .showroom-composition-gauge header{
   display:grid;
-  gap:.2rem;
+  gap:.12rem;
 }
 
 .showroom-composition-gauge header > span{
   color:var(--chamber-soft);
 
-  font-size:.61rem;
+  font-size:.57rem;
   font-weight:950;
-  letter-spacing:.13em;
+  letter-spacing:.12em;
   text-transform:uppercase;
 }
 
@@ -2637,47 +2780,39 @@ canvas[data-showroom-layer="front"]{
   grid-template-columns:
     repeat(5,minmax(0,1fr));
 
-  gap:.55rem;
+  gap:.45rem;
 }
 
 .showroom-composition-rail button{
-  min-height:7rem;
+  min-height:4.6rem;
 
   display:grid;
   align-content:center;
-  gap:.22rem;
+  gap:.12rem;
 
-  padding:.75rem;
+  padding:.48rem .52rem;
 
-  border:1px solid rgba(255,255,255,.14);
-  border-radius:1rem;
+  border:1px solid rgba(255,255,255,.13);
+  border-radius:.8rem;
 
   color:var(--white);
 
   background:
     linear-gradient(
       155deg,
-      rgba(255,255,255,.045),
+      rgba(255,255,255,.04),
       rgba(0,0,0,.18)
     );
 
   cursor:pointer;
-
-  transition:
-    transform .18s ease,
-    border-color .18s ease,
-    background .18s ease,
-    box-shadow .18s ease;
 }
 
 .showroom-composition-rail button:hover,
 .showroom-composition-rail button:focus-visible{
-  transform:translateY(-2px);
-
   border-color:var(--chamber-accent);
 
   box-shadow:
-    0 0 1rem var(--chamber-open);
+    0 0 .8rem var(--chamber-open);
 }
 
 .showroom-composition-rail
@@ -2691,30 +2826,26 @@ button[aria-pressed="true"]{
       transparent 80%
     ),
     rgba(255,255,255,.045);
-
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.12),
-    0 0 1.1rem var(--chamber-open);
 }
 
 .showroom-composition-rail button span{
   color:var(--chamber-accent);
 
-  font-size:.58rem;
+  font-size:.52rem;
   font-weight:950;
-  letter-spacing:.12em;
+  letter-spacing:.11em;
 }
 
 .showroom-composition-rail button strong{
-  font-size:.85rem;
-  line-height:1.15;
+  font-size:.71rem;
+  line-height:1.14;
 }
 
 .showroom-composition-rail button small{
   color:var(--chamber-copy);
 
-  font-size:.67rem;
-  line-height:1.3;
+  font-size:.57rem;
+  line-height:1.2;
 }
 
 /* =========================================================
@@ -2723,7 +2854,7 @@ button[aria-pressed="true"]{
 
 .showroom-information-tabs{
   display:grid;
-  gap:1rem;
+  gap:.75rem;
 }
 
 .showroom-information-tablist{
@@ -2731,14 +2862,14 @@ button[aria-pressed="true"]{
   grid-template-columns:
     repeat(3,minmax(0,1fr));
 
-  gap:.65rem;
+  gap:.55rem;
 }
 
 .showroom-information-tablist button{
-  min-height:3.4rem;
+  min-height:2.9rem;
 
   border:1px solid rgba(185,204,225,.28);
-  border-radius:1rem;
+  border-radius:.85rem;
 
   color:rgba(246,250,255,.88);
 
@@ -2749,28 +2880,17 @@ button[aria-pressed="true"]{
       rgba(0,0,0,.18)
     );
 
-  font-size:.76rem;
+  font-size:.7rem;
   font-weight:950;
-  letter-spacing:.09em;
+  letter-spacing:.085em;
   text-transform:uppercase;
 
   cursor:pointer;
-
-  transition:
-    transform .18s ease,
-    border-color .18s ease,
-    background .18s ease,
-    box-shadow .18s ease;
 }
 
 .showroom-information-tablist button:hover,
 .showroom-information-tablist button:focus-visible{
-  transform:translateY(-2px);
-
   border-color:rgba(195,163,255,.68);
-
-  box-shadow:
-    0 0 1rem rgba(195,163,255,.10);
 }
 
 .showroom-information-tablist
@@ -2785,27 +2905,21 @@ button[aria-selected="true"]{
       var(--violet-soft),
       var(--violet)
     );
-
-  box-shadow:
-    0 0 1.1rem rgba(195,163,255,.24);
 }
 
 .showroom-information-panel{
   display:grid;
-  gap:1rem;
-
-  animation:
-    informationPanelReveal .26s ease both;
+  gap:.75rem;
 }
 
 .showroom-information-summary{
   display:grid;
-  gap:.45rem;
+  gap:.34rem;
 
-  padding:1rem 1.1rem;
+  padding:.82rem .92rem;
 
   border:1px solid var(--chamber-line);
-  border-radius:1.15rem;
+  border-radius:1rem;
 
   background:
     linear-gradient(
@@ -2813,45 +2927,42 @@ button[aria-selected="true"]{
       var(--chamber-open),
       rgba(0,0,0,.16)
     );
-
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.08);
 }
 
 .showroom-information-summary strong{
   color:var(--white);
 
-  font-size:clamp(1.1rem,2.4vw,1.55rem);
-  line-height:1.15;
-  letter-spacing:-.03em;
+  font-size:clamp(1.02rem,2.2vw,1.4rem);
+  line-height:1.16;
+  letter-spacing:-.025em;
 }
 
 .showroom-information-summary p{
   color:var(--chamber-copy);
 
-  font-size:.92rem;
-  line-height:1.55;
+  font-size:.84rem;
+  line-height:1.48;
 }
 
 .showroom-evidence-statuses{
   display:grid;
   grid-template-columns:
-    repeat(3,minmax(0,1fr));
+    repeat(6,minmax(0,1fr));
 
-  gap:.65rem;
+  gap:.45rem;
 }
 
 .showroom-evidence-statuses article{
-  min-height:6.4rem;
+  min-height:4.5rem;
 
   display:grid;
   align-content:center;
-  gap:.24rem;
+  gap:.16rem;
 
-  padding:.85rem;
+  padding:.5rem;
 
-  border:1px solid rgba(255,255,255,.14);
-  border-radius:1rem;
+  border:1px solid rgba(255,255,255,.13);
+  border-radius:.8rem;
 
   background:
     linear-gradient(
@@ -2866,24 +2977,20 @@ button[aria-selected="true"]{
 .showroom-evidence-statuses article span{
   color:rgba(239,246,255,.76);
 
-  font-size:.61rem;
+  font-size:.52rem;
   font-weight:950;
-  letter-spacing:.09em;
+  letter-spacing:.08em;
   text-transform:uppercase;
 }
 
 .showroom-evidence-statuses article strong{
-  font-size:.86rem;
-  line-height:1.25;
+  font-size:.67rem;
+  line-height:1.2;
 }
 
 .showroom-evidence-statuses
 [data-evidence-state="implemented"]{
   border-color:rgba(103,245,255,.42);
-
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.08),
-    0 0 .9rem rgba(103,245,255,.07);
 }
 
 .showroom-evidence-statuses
@@ -2912,13 +3019,13 @@ button[aria-selected="true"]{
 }
 
 /* =========================================================
-   RESTORED DIAMOND STAGE
+   DIAMOND STAGE
    ========================================================= */
 
 .diamond-layout,
 .diamond-view-column{
   display:grid;
-  gap:.8rem;
+  gap:.7rem;
 }
 
 .showroom-reveal-scene{
@@ -3001,10 +3108,6 @@ button[aria-selected="true"]{
   height:min(64%,33rem);
 
   border:1px solid rgba(255,216,106,.18);
-
-  box-shadow:
-    0 0 2rem rgba(255,181,31,.06),
-    inset 0 0 2rem rgba(255,255,255,.025);
 }
 
 .diamond-viewport-card::after{
@@ -3012,9 +3115,6 @@ button[aria-selected="true"]{
   height:min(46%,24rem);
 
   border:1px solid rgba(255,255,255,.095);
-
-  box-shadow:
-    0 0 2rem rgba(195,163,255,.05);
 }
 
 .diamond-stage,
@@ -3073,7 +3173,7 @@ button[aria-selected="true"]{
   bottom:1rem;
   z-index:4;
 
-  padding:.5rem .82rem;
+  padding:.45rem .75rem;
 
   border:1px solid rgba(255,216,106,.36);
   border-radius:999px;
@@ -3082,7 +3182,7 @@ button[aria-selected="true"]{
 
   background:rgba(8,7,10,.88);
 
-  font-size:.66rem;
+  font-size:.61rem;
   font-weight:900;
   letter-spacing:.10em;
   text-transform:uppercase;
@@ -3090,8 +3190,6 @@ button[aria-selected="true"]{
   transform:translateX(-50%);
 
   pointer-events:none;
-
-  backdrop-filter:blur(10px);
 }
 
 /* =========================================================
@@ -3128,25 +3226,21 @@ button[aria-selected="true"]{
 
   display:grid;
   justify-items:center;
-  gap:.9rem;
+  gap:.75rem;
 
-  padding:1.3rem;
+  padding:1.1rem;
 
   border:1px solid rgba(255,216,106,.32);
-  border-radius:1.5rem;
+  border-radius:1.35rem;
 
   background:rgba(15,13,17,.92);
-
-  box-shadow:
-    0 1.4rem 3rem rgba(0,0,0,.46),
-    inset 0 1px 0 rgba(255,255,255,.08);
 }
 
 .diamond-fallback-object{
   position:relative;
 
-  width:8.8rem;
-  height:10.8rem;
+  width:7.2rem;
+  height:8.8rem;
 
   clip-path:polygon(
     50% 0%,
@@ -3168,23 +3262,19 @@ button[aria-selected="true"]{
       rgba(52,113,255,.98) 46% 73%,
       rgba(5,18,96,.99) 74% 100%
     );
-
-  box-shadow:
-    var(--gold-glow),
-    0 1.4rem 3rem rgba(0,0,0,.50);
 }
 
 .diamond-fallback strong{
   color:var(--gold-soft);
 
-  font-size:1.05rem;
+  font-size:1rem;
 }
 
 .diamond-fallback p{
   color:rgba(242,247,255,.90);
 
-  font-size:.84rem;
-  line-height:1.48;
+  font-size:.8rem;
+  line-height:1.45;
 }
 
 /* =========================================================
@@ -3241,13 +3331,13 @@ button[aria-selected="true"]{
   z-index:3;
 
   min-width:11rem;
-  min-height:3.35rem;
+  min-height:3.25rem;
 
   display:grid;
   place-items:center;
-  gap:.1rem;
+  gap:.08rem;
 
-  padding:.62rem 1rem;
+  padding:.58rem .95rem;
 
   border:1px solid rgba(103,245,255,.56);
   border-radius:999px;
@@ -3276,33 +3366,12 @@ button[aria-selected="true"]{
 
   cursor:pointer;
   pointer-events:auto;
-
-  transition:
-    transform .18s ease,
-    border-color .18s ease,
-    box-shadow .18s ease,
-    opacity .18s ease;
-}
-
-.showroom-window-control:hover,
-.showroom-window-control:focus-visible{
-  border-color:rgba(255,216,106,.84);
-
-  box-shadow:
-    0 1rem 2.3rem rgba(0,0,0,.46),
-    0 0 1.2rem rgba(103,245,255,.18),
-    0 0 2.4rem rgba(255,216,106,.10),
-    inset 0 1px 0 rgba(255,255,255,.18);
-
-  transform:
-    translateX(-50%)
-    translateY(-2px);
 }
 
 .showroom-window-control__eyebrow{
   color:var(--cyan-soft);
 
-  font-size:.55rem;
+  font-size:.52rem;
   font-weight:950;
   letter-spacing:.13em;
   text-transform:uppercase;
@@ -3311,7 +3380,7 @@ button[aria-selected="true"]{
 .showroom-window-control__label{
   color:var(--white);
 
-  font-size:.77rem;
+  font-size:.73rem;
   font-weight:950;
   letter-spacing:.06em;
   text-transform:uppercase;
@@ -3373,7 +3442,7 @@ button[aria-selected="true"]{
   overflow:hidden;
 
   border:1px solid var(--chamber-line);
-  border-radius:1.12rem;
+  border-radius:1rem;
 
   background:
     linear-gradient(
@@ -3384,37 +3453,29 @@ button[aria-selected="true"]{
 
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,.08),
-    0 .5rem 1.5rem rgba(0,0,0,.08);
-
-  transition:
-    border-color .18s ease,
-    background .18s ease,
-    box-shadow .18s ease;
+    0 .4rem 1.1rem rgba(0,0,0,.08);
 }
 
 .architectural-drop summary,
 .object-control-tray summary{
-  min-height:3.05rem;
+  min-height:2.8rem;
 
   display:flex;
   align-items:center;
   justify-content:space-between;
   gap:.8rem;
 
-  padding:.82rem 1rem;
+  padding:.7rem .85rem;
 
   color:var(--white);
 
   list-style:none;
   cursor:pointer;
 
-  font-size:.71rem;
+  font-size:.66rem;
   font-weight:950;
-  letter-spacing:.105em;
+  letter-spacing:.10em;
   text-transform:uppercase;
-
-  text-shadow:
-    0 1px 10px rgba(0,0,0,.40);
 }
 
 .architectural-drop summary::-webkit-details-marker,
@@ -3428,7 +3489,7 @@ button[aria-selected="true"]{
 
   color:var(--chamber-accent);
 
-  font-size:1.1rem;
+  font-size:1.05rem;
   font-weight:950;
 }
 
@@ -3443,10 +3504,6 @@ button[aria-selected="true"]{
       var(--chamber-open),
       rgba(255,255,255,.028)
     );
-
-  box-shadow:
-    0 0 1.4rem rgba(0,0,0,.16),
-    inset 0 1px 0 rgba(255,255,255,.11);
 }
 
 .architectural-drop[open] summary,
@@ -3464,9 +3521,9 @@ button[aria-selected="true"]{
 .drop-content,
 .object-control-body{
   display:grid;
-  gap:.7rem;
+  gap:.58rem;
 
-  padding:1rem;
+  padding:.8rem .9rem;
 }
 
 .drop-content p,
@@ -3474,13 +3531,8 @@ button[aria-selected="true"]{
   color:
     var(--chamber-copy,var(--muted));
 
-  font-size:.94rem;
-  line-height:1.62;
-}
-
-.drop-content p + p,
-.object-control-body p + p{
-  margin-top:.1rem;
+  font-size:.86rem;
+  line-height:1.52;
 }
 
 .drop-grid{
@@ -3488,7 +3540,7 @@ button[aria-selected="true"]{
   grid-template-columns:
     repeat(2,minmax(0,1fr));
 
-  gap:.8rem;
+  gap:.6rem;
 }
 
 /* =========================================================
@@ -3504,17 +3556,16 @@ button[aria-selected="true"]{
   grid-template-columns:
     repeat(2,minmax(0,1fr));
 
-  gap:.72rem;
-  align-items:stretch;
+  gap:.55rem;
 }
 
 .two-view-buttons button{
-  min-height:3.2rem;
+  min-height:2.8rem;
 
-  padding:.82rem .92rem;
+  padding:.68rem .8rem;
 
   border:1px solid rgba(103,245,255,.30);
-  border-radius:1rem;
+  border-radius:.85rem;
 
   color:rgba(250,252,255,.96);
 
@@ -3525,35 +3576,12 @@ button[aria-selected="true"]{
       rgba(52,113,255,.055)
     );
 
-  font-size:.78rem;
+  font-size:.7rem;
   font-weight:950;
-  letter-spacing:.09em;
+  letter-spacing:.085em;
   text-transform:uppercase;
 
   cursor:pointer;
-
-  transition:
-    transform .18s ease,
-    border-color .18s ease,
-    background .18s ease,
-    box-shadow .18s ease;
-}
-
-.two-view-buttons button:hover,
-.two-view-buttons button:focus-visible{
-  border-color:rgba(103,245,255,.78);
-
-  background:
-    linear-gradient(
-      135deg,
-      rgba(23,223,247,.12),
-      rgba(52,113,255,.08)
-    );
-
-  box-shadow:
-    0 0 1.2rem rgba(23,223,247,.10);
-
-  transform:translateY(-2px);
 }
 
 .two-view-buttons button[data-active],
@@ -3568,9 +3596,6 @@ button[aria-selected="true"]{
       #fff6c2,
       var(--gold)
     );
-
-  box-shadow:
-    0 0 1rem rgba(255,216,106,.18);
 }
 
 .technical-control-bridge{
@@ -3608,12 +3633,12 @@ button[aria-selected="true"]{
   flex-wrap:wrap;
   align-items:center;
   justify-content:space-between;
-  gap:.68rem;
+  gap:.55rem;
 
-  padding:.78rem;
+  padding:.65rem;
 
   border:1px solid rgba(103,245,255,.20);
-  border-radius:1rem;
+  border-radius:.85rem;
 
   background:
     linear-gradient(
@@ -3626,26 +3651,26 @@ button[aria-selected="true"]{
 .status-strip span{
   color:rgba(245,249,255,.93);
 
-  font-size:.88rem;
+  font-size:.8rem;
   font-weight:850;
-  line-height:1.35;
+  line-height:1.3;
 }
 
 .actions{
   display:flex;
   flex-wrap:wrap;
-  gap:.62rem;
+  gap:.52rem;
 }
 
 .button,
 button.button{
-  min-height:2.7rem;
+  min-height:2.55rem;
 
   display:inline-flex;
   align-items:center;
   justify-content:center;
 
-  padding:.67rem 1.05rem;
+  padding:.6rem .95rem;
 
   border:
     1px solid
@@ -3662,36 +3687,18 @@ button.button{
       var(--chamber-open,rgba(255,255,255,.06))
     );
 
-  font-size:.76rem;
+  font-size:.7rem;
   font-weight:950;
-  letter-spacing:.055em;
+  letter-spacing:.052em;
   text-transform:uppercase;
 
   cursor:pointer;
-
-  transition:
-    transform .18s ease,
-    border-color .18s ease,
-    background .18s ease,
-    box-shadow .18s ease;
 }
 
 .button:hover,
 .button:focus-visible{
   border-color:
     var(--chamber-accent,var(--cyan));
-
-  background:
-    linear-gradient(
-      135deg,
-      var(--chamber-open,rgba(255,255,255,.07)),
-      rgba(255,255,255,.055)
-    );
-
-  box-shadow:
-    0 0 1.1rem rgba(0,0,0,.18);
-
-  transform:translateY(-2px);
 }
 
 .button-gold{
@@ -3705,25 +3712,6 @@ button.button{
       var(--gold-soft),
       var(--gold)
     );
-
-  box-shadow:
-    0 0 .9rem rgba(255,216,106,.18);
-}
-
-.button-gold:hover,
-.button-gold:focus-visible{
-  border-color:#fff7d2;
-
-  background:
-    linear-gradient(
-      135deg,
-      #fffbd9,
-      var(--gold)
-    );
-
-  box-shadow:
-    0 0 1rem rgba(255,216,106,.36),
-    0 0 2.4rem rgba(255,181,31,.18);
 }
 
 /* =========================================================
@@ -3736,10 +3724,10 @@ button.button{
   justify-content:space-between;
   gap:1rem;
 
-  padding:clamp(1rem,3vw,1.5rem);
+  padding:.9rem 1rem;
 
   border:1px solid var(--chamber-line);
-  border-radius:1.4rem;
+  border-radius:1.1rem;
 
   background:
     linear-gradient(
@@ -3751,15 +3739,15 @@ button.button{
 
 .construction-access > div{
   display:grid;
-  gap:.35rem;
+  gap:.28rem;
 }
 
 .construction-access strong{
   color:var(--white);
 
-  font-size:clamp(1.2rem,3vw,1.8rem);
-  line-height:1.08;
-  letter-spacing:-.045em;
+  font-size:clamp(1.05rem,2.5vw,1.55rem);
+  line-height:1.1;
+  letter-spacing:-.035em;
 }
 
 .construction-access p{
@@ -3767,8 +3755,8 @@ button.button{
 
   color:var(--chamber-copy);
 
-  font-size:.88rem;
-  line-height:1.5;
+  font-size:.8rem;
+  line-height:1.44;
 }
 
 .construction-access .button{
@@ -3784,10 +3772,10 @@ button.button{
   grid-template-columns:
     repeat(2,minmax(0,1fr));
 
-  gap:.75rem;
+  gap:.6rem;
 
-  margin-top:.35rem;
-  padding-top:1rem;
+  margin-top:.2rem;
+  padding-top:.75rem;
 
   border-top:1px solid var(--chamber-line);
 }
@@ -3813,7 +3801,7 @@ dialog{
   overflow:auto;
 
   border:1px solid rgba(185,204,225,.56);
-  border-radius:1.6rem;
+  border-radius:1.5rem;
 
   color:var(--ink);
 
@@ -3848,9 +3836,9 @@ dialog::backdrop{
   --chamber-copy:rgba(243,248,253,.94);
 
   display:grid;
-  gap:1rem;
+  gap:.85rem;
 
-  padding:clamp(1.15rem,4vw,2rem);
+  padding:clamp(1rem,3.5vw,1.7rem);
 }
 
 .dialog-header{
@@ -3862,21 +3850,21 @@ dialog::backdrop{
 
 .dialog-title{
   display:grid;
-  gap:.35rem;
+  gap:.3rem;
 }
 
 .dialog-title span{
   color:#d7e5f4;
 
-  font-size:.67rem;
+  font-size:.62rem;
   font-weight:950;
-  letter-spacing:.14em;
+  letter-spacing:.13em;
   text-transform:uppercase;
 }
 
 .dialog-close{
-  width:2.7rem;
-  height:2.7rem;
+  width:2.55rem;
+  height:2.55rem;
   flex:0 0 auto;
 
   display:grid;
@@ -3889,7 +3877,7 @@ dialog::backdrop{
 
   background:rgba(255,255,255,.065);
 
-  font-size:1.2rem;
+  font-size:1.15rem;
   font-weight:950;
 
   cursor:pointer;
@@ -3923,7 +3911,7 @@ dialog::backdrop{
 .showroom-compass-dialog p{
   color:rgba(244,248,255,.88);
 
-  line-height:1.6;
+  line-height:1.55;
 }
 
 .showroom-route-dialog__choices,
@@ -3932,7 +3920,7 @@ dialog::backdrop{
   grid-template-columns:
     repeat(2,minmax(0,1fr));
 
-  gap:.75rem;
+  gap:.65rem;
 }
 
 .construction-grid{
@@ -3940,20 +3928,20 @@ dialog::backdrop{
   grid-template-columns:
     repeat(3,minmax(0,1fr));
 
-  gap:.72rem;
+  gap:.6rem;
 }
 
 .construction-record{
-  min-height:8rem;
+  min-height:6.5rem;
 
   display:grid;
   align-content:center;
-  gap:.2rem;
+  gap:.18rem;
 
-  padding:1rem;
+  padding:.8rem;
 
   border:1px solid rgba(185,204,225,.30);
-  border-radius:1.05rem;
+  border-radius:.9rem;
 
   background:
     linear-gradient(
@@ -3968,21 +3956,21 @@ dialog::backdrop{
 .construction-record strong{
   color:#edf6ff;
 
-  font-size:clamp(1.45rem,4vw,2.2rem);
+  font-size:clamp(1.25rem,3.4vw,1.85rem);
 }
 
 .construction-record span{
   color:rgba(239,246,255,.82);
 
-  font-size:.68rem;
+  font-size:.61rem;
   font-weight:950;
-  letter-spacing:.075em;
+  letter-spacing:.07em;
   text-transform:uppercase;
 }
 
 .construction-details{
   display:grid;
-  gap:.7rem;
+  gap:.6rem;
 }
 
 /* =========================================================
@@ -3995,16 +3983,16 @@ dialog::backdrop{
   justify-content:space-between;
   gap:1rem;
 
-  padding:1.6rem .2rem .5rem;
+  padding:1.4rem .2rem .5rem;
 
   color:var(--faint);
 
-  font-size:.76rem;
+  font-size:.72rem;
 }
 
 .showroom-footer > div{
   display:grid;
-  gap:.2rem;
+  gap:.16rem;
 }
 
 .showroom-footer strong{
@@ -4015,7 +4003,7 @@ dialog::backdrop{
   display:flex;
   flex-wrap:wrap;
   justify-content:flex-end;
-  gap:.8rem;
+  gap:.75rem;
 }
 
 .showroom-footer a{
@@ -4056,34 +4044,6 @@ dialog::backdrop{
    ANIMATIONS
    ========================================================= */
 
-@keyframes dashboardReveal{
-  from{
-    opacity:0;
-    transform:translateY(.65rem);
-  }
-
-  to{
-    opacity:1;
-    transform:translateY(0);
-  }
-}
-
-@keyframes gaugeArcDraw{
-  from{
-    opacity:0;
-    transform:
-      rotate(-135deg)
-      scale(.86);
-  }
-
-  to{
-    opacity:1;
-    transform:
-      rotate(-135deg)
-      scale(1);
-  }
-}
-
 @keyframes gaugeScanner{
   from{
     transform:rotate(0deg);
@@ -4091,19 +4051,6 @@ dialog::backdrop{
 
   to{
     transform:rotate(360deg);
-  }
-}
-
-@keyframes stateDialDrift{
-  0%,
-  100%{
-    transform:rotate(-4deg);
-    opacity:.72;
-  }
-
-  50%{
-    transform:rotate(8deg);
-    opacity:.94;
   }
 }
 
@@ -4115,19 +4062,7 @@ dialog::backdrop{
   }
 
   50%{
-    transform:scale(1.06);
-    opacity:1;
-  }
-}
-
-@keyframes capabilitySegment{
-  from{
-    transform:scaleX(.1);
-    opacity:.18;
-  }
-
-  to{
-    transform:scaleX(1);
+    transform:scale(1.05);
     opacity:1;
   }
 }
@@ -4142,30 +4077,6 @@ dialog::backdrop{
   }
 }
 
-@keyframes gaugeDetailReveal{
-  from{
-    opacity:0;
-    transform:translateY(.3rem);
-  }
-
-  to{
-    opacity:1;
-    transform:translateY(0);
-  }
-}
-
-@keyframes informationPanelReveal{
-  from{
-    opacity:0;
-    transform:translateY(.35rem);
-  }
-
-  to{
-    opacity:1;
-    transform:translateY(0);
-  }
-}
-
 /* =========================================================
    RESPONSIVE
    ========================================================= */
@@ -4174,6 +4085,16 @@ dialog::backdrop{
   .showroom-gauge-grid,
   .showroom-gauge-grid--structure,
   .showroom-gauge-grid--systems{
+    grid-template-columns:
+      repeat(3,minmax(0,1fr));
+  }
+
+  .showroom-capability-grid{
+    grid-template-columns:
+      repeat(3,minmax(0,1fr));
+  }
+
+  .showroom-evidence-statuses{
     grid-template-columns:
       repeat(3,minmax(0,1fr));
   }
@@ -4193,15 +4114,18 @@ dialog::backdrop{
     text-align:left;
   }
 
-  .showroom-gauge-grid{
+  .showroom-gauge-grid,
+  .showroom-gauge-grid--structure,
+  .showroom-gauge-grid--systems{
     grid-template-columns:
       repeat(2,minmax(0,1fr));
   }
 
-  .showroom-gauge-grid--structure,
-  .showroom-gauge-grid--systems{
+  .showroom-page-instructions__summary,
+  .showroom-instructions__summary,
+  [data-showroom-instructions-summary]{
     grid-template-columns:
-      repeat(3,minmax(0,1fr));
+      repeat(2,minmax(0,1fr));
   }
 }
 
@@ -4230,10 +4154,6 @@ dialog::backdrop{
     margin-top:.45rem;
   }
 
-  .showroom-threshold{
-    min-height:auto;
-  }
-
   .showroom-orbit__field{
     height:var(--orbit-mobile-height);
     min-height:25rem;
@@ -4245,15 +4165,11 @@ dialog::backdrop{
   }
 
   .showroom-capability-grid{
-    grid-template-columns:1fr;
-  }
-
-  .showroom-composition-rail{
     grid-template-columns:
       repeat(2,minmax(0,1fr));
   }
 
-  .showroom-evidence-statuses{
+  .showroom-composition-rail{
     grid-template-columns:
       repeat(2,minmax(0,1fr));
   }
@@ -4278,13 +4194,13 @@ dialog::backdrop{
   }
 
   h1{
-    font-size:clamp(3.2rem,15vw,5.8rem);
+    font-size:clamp(3rem,14vw,5.5rem);
   }
 
   .showroom-threshold,
   .showroom-orbit,
   .showroom-front{
-    padding:1rem;
+    padding:.9rem;
   }
 
   .showroom-threshold__actions{
@@ -4329,48 +4245,6 @@ dialog::backdrop{
     bottom:15%;
   }
 
-  .showroom-star-cluster--gauges
-  [data-showroom-object-id="object-gauge-star"]{
-    left:23%;
-    top:33%;
-  }
-
-  .showroom-star-cluster--gauges
-  [data-showroom-object-id="structure-gauge-star"]{
-    left:20%;
-    top:50%;
-  }
-
-  .showroom-star-cluster--gauges
-  [data-showroom-object-id="interaction-gauge-star"]{
-    left:26%;
-    bottom:20%;
-  }
-
-  .showroom-star-cluster--gauges
-  [data-showroom-object-id="systems-gauge-star"]{
-    left:40%;
-    bottom:11%;
-  }
-
-  .showroom-star-cluster--information
-  [data-showroom-object-id="platform-information-star"]{
-    right:24%;
-    top:34%;
-  }
-
-  .showroom-star-cluster--information
-  [data-showroom-object-id="engineering-information-star"]{
-    right:20%;
-    top:52%;
-  }
-
-  .showroom-star-cluster--information
-  [data-showroom-object-id="evidence-information-star"]{
-    right:29%;
-    bottom:18%;
-  }
-
   .showroom-front__heading{
     display:grid;
   }
@@ -4378,42 +4252,33 @@ dialog::backdrop{
   .showroom-gauge-grid,
   .showroom-gauge-grid--structure,
   .showroom-gauge-grid--systems{
-    grid-template-columns:
-      repeat(2,minmax(0,1fr));
+    grid-template-columns:1fr;
   }
 
   .showroom-gauge--radial,
   .showroom-gauge--state{
-    min-height:14rem;
+    min-height:5.8rem;
+
+    grid-template-columns:
+      3.85rem
+      minmax(0,1fr);
   }
 
   .showroom-gauge__visual{
-    --gauge-size:clamp(7rem,31vw,9rem);
+    width:3.85rem;
   }
 
-  .showroom-gauge--capability{
+  .showroom-capability-grid{
     grid-template-columns:1fr;
-    grid-template-rows:auto auto auto;
-  }
-
-  .showroom-gauge--capability
-  .showroom-gauge__track{
-    grid-column:1;
-    grid-row:1;
-  }
-
-  .showroom-gauge--capability strong{
-    grid-column:1;
-    grid-row:2;
-  }
-
-  .showroom-gauge--capability > span:last-child{
-    grid-column:1;
-    grid-row:3;
   }
 
   .showroom-information-tablist{
     grid-template-columns:1fr;
+  }
+
+  .showroom-evidence-statuses{
+    grid-template-columns:
+      repeat(2,minmax(0,1fr));
   }
 
   .diamond-viewport-card{
@@ -4484,16 +4349,22 @@ dialog::backdrop{
   .showroom-threshold::before{
     right:-4rem;
 
-    opacity:.36;
+    opacity:.30;
   }
 
   .showroom-threshold__lead{
-    font-size:clamp(1.35rem,8vw,2rem);
+    font-size:clamp(1.25rem,7.5vw,1.9rem);
   }
 
   .thesis-field strong,
   .mirrorland-thesis strong{
-    font-size:clamp(1.3rem,8vw,2.1rem);
+    font-size:clamp(1.2rem,7vw,1.9rem);
+  }
+
+  .showroom-page-instructions__summary,
+  .showroom-instructions__summary,
+  [data-showroom-instructions-summary]{
+    grid-template-columns:1fr;
   }
 
   .showroom-orbit__field{
@@ -4516,20 +4387,10 @@ dialog::backdrop{
   .showroom-gauge-grid,
   .showroom-gauge-grid--structure,
   .showroom-gauge-grid--systems{
-    display:flex;
+    display:grid;
+    grid-template-columns:1fr;
 
-    overflow-x:auto;
-    scroll-snap-type:x mandatory;
-
-    padding-bottom:.3rem;
-  }
-
-  .showroom-gauge-grid .showroom-gauge,
-  .showroom-gauge-grid--structure .showroom-gauge,
-  .showroom-gauge-grid--systems .showroom-gauge{
-    flex:0 0 min(78vw,17rem);
-
-    scroll-snap-align:center;
+    overflow:visible;
   }
 
   .showroom-composition-rail{
@@ -4565,7 +4426,9 @@ dialog::backdrop{
   .showroom-gauge,
   .showroom-gauge-details,
   .showroom-composition-gauge,
-  .showroom-information-summary{
+  .showroom-information-summary,
+  .showroom-page-instructions,
+  [data-showroom-page-instructions]{
     border-width:2px;
   }
 
@@ -4592,8 +4455,6 @@ dialog::backdrop{
     transition-duration:.01ms!important;
   }
 
-  .thesis-field::before,
-  .mirrorland-thesis::before,
   .showroom-gauge__scanner,
   .showroom-gauge__scan-line,
   .showroom-gauge__pulse{

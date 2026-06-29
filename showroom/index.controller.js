@@ -1,7 +1,39 @@
 /* TARGET FILE: /showroom/index.controller.js */
 /* TNT FULL-FILE REPLACEMENT */
-/* SHOWROOM_MIRRORLAND_FOCAL_CONTROLLER_TNT_v2 */
+/* SHOWROOM_MIRRORLAND_FOCAL_CONTROLLER_TNT_v3 */
 /*
+  Recovery invariant:
+
+  The complete HTML/CSS Showroom remains visible and usable when the
+  compositor, crystals, or interactions are absent, pending, failed,
+  stopped, or disposed.
+
+  Presentation progression:
+
+  BASELINE
+  - Canonical HTML/CSS fronts remain visible.
+  - Fronts are not inert.
+  - Painted fallback stars remain visible.
+  - Direct semantic controls remain usable.
+
+  ENHANCEMENT_PENDING
+  - Runtime files may initialize.
+  - Canonical page content remains untouched.
+
+  ENHANCED_AVAILABLE
+  - Crystals have reported readiness.
+  - The baseline remains visible until the user activates an enhanced
+    cluster or local front.
+
+  ENHANCED_ACTIVE
+  - Orbit-driven front switching may hide sibling fronts.
+  - Return to Orbit may hide active local fronts.
+
+  ENHANCEMENT_FAILED
+  - All canonical fronts are immediately restored.
+  - All inert and hidden states applied by this controller are removed.
+  - Painted fallback stars are restored.
+
   Page-level authority:
   - Own canonical Showroom presentation state.
   - Own active orbit cluster.
@@ -13,7 +45,8 @@
   - Own construction-record dialog behavior.
   - Own page-level focus restoration.
   - Reflect reduced-motion and held states.
-  - Coordinate semantic fallback-star visibility with crystal readiness.
+  - Coordinate fallback-star paint with crystal readiness.
+  - Restore the canonical baseline after enhancement failure or disposal.
 
   Does not own:
   - pointer deltas;
@@ -26,21 +59,33 @@
   - Diamond camera, rendering, rotation, zoom, or lifecycle;
   - Mirrorland Window geometry, rendering, or animation;
   - Compass renderer lifecycle.
-
-  Interaction boundary:
-  - index.interactions.js determines whether a gesture is a valid tap.
-  - This controller interprets the activated semantic object.
-  - Direct semantic button clicks remain available as fallback access.
 */
 
 (() => {
   "use strict";
 
   const CONTRACT =
-    "SHOWROOM_MIRRORLAND_FOCAL_CONTROLLER_TNT_v2";
+    "SHOWROOM_MIRRORLAND_FOCAL_CONTROLLER_TNT_v3";
 
   const MAIN_COMPASS_ROUTE =
     "/index.html";
+
+  const PRESENTATION = Object.freeze({
+    BASELINE:
+      "baseline",
+
+    PENDING:
+      "enhancement-pending",
+
+    AVAILABLE:
+      "enhanced-available",
+
+    ACTIVE:
+      "enhanced-active",
+
+    FAILED:
+      "enhancement-failed"
+  });
 
   const EVENTS = Object.freeze({
     ready:
@@ -78,6 +123,12 @@
 
     crystalsDisposed:
       "showroom:crystals-disposed",
+
+    compositorFailed:
+      "showroom:compositor-failed",
+
+    compositorDisposed:
+      "showroom:compositor-disposed",
 
     windowHeld:
       "showroom:window-held",
@@ -176,6 +227,9 @@
     presentationMode:
       "data-showroom-presentation-mode",
 
+    enhancementState:
+      "data-showroom-enhancement-state",
+
     activeCluster:
       "data-showroom-active-cluster",
 
@@ -216,7 +270,10 @@
       "data-showroom-fallback-star-rendering",
 
     dialogState:
-      "data-showroom-dialog-state"
+      "data-showroom-dialog-state",
+
+    controllerManagedHidden:
+      "data-showroom-controller-managed-hidden"
   });
 
   const state = {
@@ -242,6 +299,8 @@
     clusters: new Map(),
     fronts: new Map(),
 
+    originalFrontStates: new Map(),
+
     activeClusterId: "",
     activeFrontId: "",
     activeGaugeSet: "",
@@ -257,6 +316,9 @@
     reducedMotion: false,
 
     crystalsReady: false,
+    enhancementAvailable: false,
+    enhancedPresentationActive: false,
+
     held: false,
 
     initialized: false,
@@ -308,10 +370,6 @@
     });
   }
 
-  function addObserver(observer) {
-    state.observers.push(observer);
-  }
-
   function setRootAttribute(
     name,
     value
@@ -326,10 +384,32 @@
     );
   }
 
+  function currentEnhancementState() {
+    if (
+      state.enhancedPresentationActive &&
+      state.enhancementAvailable
+    ) {
+      return PRESENTATION.ACTIVE;
+    }
+
+    if (state.enhancementAvailable) {
+      return PRESENTATION.AVAILABLE;
+    }
+
+    if (state.initialized) {
+      return PRESENTATION.PENDING;
+    }
+
+    return PRESENTATION.BASELINE;
+  }
+
   function createStateSnapshot(extra = {}) {
     return Object.freeze({
-      contract: CONTRACT,
-      timestamp: nowIso(),
+      contract:
+        CONTRACT,
+
+      timestamp:
+        nowIso(),
 
       ready:
         state.initialized &&
@@ -351,6 +431,19 @@
               ATTRIBUTES.presentationMode
             )
           : null,
+
+      enhancementState:
+        state.root
+          ? state.root.getAttribute(
+              ATTRIBUTES.enhancementState
+            )
+          : null,
+
+      enhancementAvailable:
+        state.enhancementAvailable,
+
+      enhancedPresentationActive:
+        state.enhancedPresentationActive,
 
       activeClusterId:
         state.activeClusterId || null,
@@ -420,7 +513,8 @@
       new CustomEvent(
         EVENTS.receipt,
         {
-          detail: payload
+          detail:
+            payload
         }
       )
     );
@@ -432,12 +526,21 @@
     status,
     issues = []
   ) {
-    const payload = Object.freeze({
-      contract: CONTRACT,
-      timestamp: nowIso(),
-      status,
-      issues
-    });
+    const payload =
+      Object.freeze({
+        contract:
+          CONTRACT,
+
+        timestamp:
+          nowIso(),
+
+        status,
+
+        issues:
+          Object.freeze(
+            issues.slice()
+          )
+      });
 
     if (state.validation) {
       const serialized =
@@ -461,19 +564,15 @@
       new CustomEvent(
         eventName,
         {
-          detail: Object.freeze({
-            contract: CONTRACT,
-            ...detail
-          })
+          detail:
+            Object.freeze({
+              contract:
+                CONTRACT,
+
+              ...detail
+            })
         }
       )
-    );
-  }
-
-  function isDialogOpen(dialog) {
-    return Boolean(
-      dialog &&
-      dialog.open
     );
   }
 
@@ -491,6 +590,7 @@
       "function"
     ) {
       dialog.showModal();
+
       return true;
     }
 
@@ -515,11 +615,16 @@
         "function" &&
       dialog.open
     ) {
-      dialog.close(returnValue);
+      dialog.close(
+        returnValue
+      );
+
       return;
     }
 
-    dialog.removeAttribute("open");
+    dialog.removeAttribute(
+      "open"
+    );
   }
 
   function focusElement(
@@ -537,7 +642,8 @@
     try {
       element.focus({
         preventScroll:
-          options.preventScroll !== false
+          options.preventScroll !==
+          false
       });
     } catch {
       element.focus();
@@ -559,13 +665,17 @@
           : "smooth",
 
       block,
-      inline: "nearest"
+
+      inline:
+        "nearest"
     });
   }
 
   function setPageState(
     pageState,
-    presentationMode = pageState
+    presentationMode = pageState,
+    enhancementState =
+      currentEnhancementState()
   ) {
     setRootAttribute(
       ATTRIBUTES.pageState,
@@ -577,11 +687,17 @@
       presentationMode
     );
 
+    setRootAttribute(
+      ATTRIBUTES.enhancementState,
+      enhancementState
+    );
+
     dispatchStateEvent(
       EVENTS.stateChanged,
       {
         pageState,
-        presentationMode
+        presentationMode,
+        enhancementState
       }
     );
   }
@@ -594,9 +710,11 @@
       performance.now();
 
     const duplicate =
-      state.lastActivation.key === key &&
+      state.lastActivation.key ===
+        key &&
       timestamp -
-        state.lastActivation.timestamp <
+        state.lastActivation
+          .timestamp <
         threshold;
 
     state.lastActivation.key =
@@ -608,14 +726,17 @@
     return duplicate;
   }
 
-  function findObjectById(objectId) {
+  function findObjectById(
+    objectId
+  ) {
     return (
       state.objects.find(
-        (object) =>
+        object =>
           object.getAttribute(
             "data-showroom-object-id"
           ) === objectId
-      ) || null
+      ) ||
+      null
     );
   }
 
@@ -670,6 +791,207 @@
   }
 
   /* =======================================================
+     BASELINE PRESERVATION
+     ======================================================= */
+
+  function captureOriginalFrontStates() {
+    for (
+      const [
+        frontId,
+        front
+      ]
+      of state.fronts
+    ) {
+      state.originalFrontStates.set(
+        frontId,
+        Object.freeze({
+          hidden:
+            front.hidden,
+
+          ariaHidden:
+            front.getAttribute(
+              "aria-hidden"
+            ),
+
+          frontState:
+            front.getAttribute(
+              ATTRIBUTES.frontState
+            ),
+
+          hadInertAttribute:
+            front.hasAttribute(
+              "inert"
+            ),
+
+          inertProperty:
+            "inert" in front
+              ? Boolean(front.inert)
+              : false
+        })
+      );
+    }
+  }
+
+  function makeFrontBaselineVisible(
+    front
+  ) {
+    if (!front) {
+      return;
+    }
+
+    front.hidden = false;
+
+    front.removeAttribute(
+      "hidden"
+    );
+
+    front.setAttribute(
+      ATTRIBUTES.frontState,
+      "baseline"
+    );
+
+    front.setAttribute(
+      "aria-hidden",
+      "false"
+    );
+
+    front.removeAttribute(
+      ATTRIBUTES.controllerManagedHidden
+    );
+
+    front.removeAttribute(
+      "inert"
+    );
+
+    if ("inert" in front) {
+      front.inert = false;
+    }
+  }
+
+  function restoreBaselineFronts() {
+    for (
+      const front
+      of state.fronts.values()
+    ) {
+      makeFrontBaselineVisible(
+        front
+      );
+    }
+  }
+
+  function clearPresentationSelection() {
+    state.activeFrontId = "";
+    state.activeClusterId = "";
+    state.activeGaugeSet = "";
+    state.activeInformationTab = "";
+
+    setRootAttribute(
+      ATTRIBUTES.activeFront,
+      ""
+    );
+
+    setRootAttribute(
+      ATTRIBUTES.activeCluster,
+      ""
+    );
+
+    setRootAttribute(
+      ATTRIBUTES.activeGaugeSet,
+      ""
+    );
+
+    setRootAttribute(
+      ATTRIBUTES.activeInformationTab,
+      ""
+    );
+  }
+
+  function restoreBaselinePresentation(
+    reason = "baseline-restored",
+    options = {}
+  ) {
+    state.enhancedPresentationActive =
+      false;
+
+    restoreBaselineFronts();
+    closeAllClusters();
+
+    clearPresentationSelection();
+
+    setPageState(
+      PRESENTATION.BASELINE,
+      PRESENTATION.BASELINE,
+      options.failed
+        ? PRESENTATION.FAILED
+        : state.enhancementAvailable
+          ? PRESENTATION.AVAILABLE
+          : PRESENTATION.PENDING
+    );
+
+    publishReceipt(
+      "baseline-restored",
+      {
+        reason,
+        failed:
+          Boolean(
+            options.failed
+          )
+      }
+    );
+
+    dispatchStateEvent(
+      EVENTS.frontChanged,
+      {
+        frontId:
+          null,
+
+        active:
+          false,
+
+        baselineRestored:
+          true,
+
+        reason
+      }
+    );
+  }
+
+  function enterEnhancedPresentation(
+    reason = "user-activation"
+  ) {
+    if (
+      !state.enhancementAvailable ||
+      !state.crystalsReady
+    ) {
+      return false;
+    }
+
+    state.enhancedPresentationActive =
+      true;
+
+    setPageState(
+      state.activeFrontId
+        ? "front"
+        : "orbit",
+
+      state.activeFrontId
+        ? "front"
+        : "orbit",
+
+      PRESENTATION.ACTIVE
+    );
+
+    publishReceipt(
+      "enhanced-presentation-entered",
+      {
+        reason
+      }
+    );
+
+    return true;
+  }
+
+  /* =======================================================
      COMPASS RETURN DIALOG
      ======================================================= */
 
@@ -678,13 +1000,17 @@
   ) {
     setRootAttribute(
       ATTRIBUTES.compassDialogOpen,
-      open ? "true" : "false"
+      open
+        ? "true"
+        : "false"
     );
 
     if (state.compassControl) {
       state.compassControl.setAttribute(
         "aria-expanded",
-        open ? "true" : "false"
+        open
+          ? "true"
+          : "false"
       );
 
       state.compassControl.toggleAttribute(
@@ -696,21 +1022,26 @@
     if (state.compassDialog) {
       state.compassDialog.setAttribute(
         ATTRIBUTES.dialogState,
-        open ? "open" : "closed"
+        open
+          ? "open"
+          : "closed"
       );
     }
 
     dispatchStateEvent(
       EVENTS.dialogChanged,
       {
-        dialog: "compass",
+        dialog:
+          "compass",
+
         open
       }
     );
   }
 
   function openCompassDialog(
-    trigger = state.compassControl
+    trigger =
+      state.compassControl
   ) {
     if (
       state.disposed ||
@@ -733,24 +1064,31 @@
     );
 
     state.lastCompassTrigger =
-      trigger || state.compassControl;
+      trigger ||
+      state.compassControl;
 
-    setCompassDialogState(true);
+    setCompassDialogState(
+      true
+    );
 
     safelyShowModal(
       state.compassDialog
     );
 
     const firstChoice =
-      state.compassDialog.querySelector(
-        SELECTORS.compassStay
-      );
+      state.compassDialog
+        .querySelector(
+          SELECTORS.compassStay
+        );
 
-    window.requestAnimationFrame(() => {
-      focusElement(
-        firstChoice || state.compassDialog
-      );
-    });
+    window.requestAnimationFrame(
+      () => {
+        focusElement(
+          firstChoice ||
+          state.compassDialog
+        );
+      }
+    );
 
     publishReceipt(
       "compass-dialog-opened"
@@ -771,7 +1109,9 @@
       return;
     }
 
-    setCompassDialogState(false);
+    setCompassDialogState(
+      false
+    );
 
     if (state.compassDialog.open) {
       safelyCloseDialog(
@@ -781,12 +1121,14 @@
     }
 
     if (restoreFocus) {
-      window.requestAnimationFrame(() => {
-        focusElement(
-          state.lastCompassTrigger ||
-          state.compassControl
-        );
-      });
+      window.requestAnimationFrame(
+        () => {
+          focusElement(
+            state.lastCompassTrigger ||
+            state.compassControl
+          );
+        }
+      );
     }
 
     publishReceipt(
@@ -799,19 +1141,34 @@
 
   function stayInShowroom() {
     closeCompassDialog({
-      restoreFocus: true,
-      reason: "stay"
+      restoreFocus:
+        true,
+
+      reason:
+        "stay"
     });
 
-    setPageState(
-      state.activeFrontId
-        ? "front"
-        : "orbit",
+    if (
+      state.enhancedPresentationActive
+    ) {
+      setPageState(
+        state.activeFrontId
+          ? "front"
+          : "orbit",
 
-      state.activeFrontId
-        ? "front"
-        : "orbit"
-    );
+        state.activeFrontId
+          ? "front"
+          : "orbit",
+
+        PRESENTATION.ACTIVE
+      );
+    } else {
+      setPageState(
+        PRESENTATION.BASELINE,
+        PRESENTATION.BASELINE,
+        currentEnhancementState()
+      );
+    }
 
     publishReceipt(
       "stayed-in-showroom"
@@ -827,13 +1184,17 @@
   ) {
     setRootAttribute(
       ATTRIBUTES.routeDialogOpen,
-      open ? "true" : "false"
+      open
+        ? "true"
+        : "false"
     );
 
     dispatchStateEvent(
       EVENTS.dialogChanged,
       {
-        dialog: "route",
+        dialog:
+          "route",
+
         open,
 
         routeId:
@@ -892,11 +1253,14 @@
         "This path leaves the current Showroom page.",
 
       route,
+
       object
     });
   }
 
-  function openRouteDialog(object) {
+  function openRouteDialog(
+    object
+  ) {
     if (
       state.disposed ||
       !state.routeDialog
@@ -905,7 +1269,9 @@
     }
 
     const routeDefinition =
-      readRouteDefinition(object);
+      readRouteDefinition(
+        object
+      );
 
     if (!routeDefinition) {
       publishReceipt(
@@ -962,23 +1328,28 @@
         `Continue to ${routeDefinition.label}`;
     }
 
-    setRouteDialogState(true);
+    setRouteDialogState(
+      true
+    );
 
     safelyShowModal(
       state.routeDialog
     );
 
     const stayButton =
-      state.routeDialog.querySelector(
-        SELECTORS.routeStay
-      );
+      state.routeDialog
+        .querySelector(
+          SELECTORS.routeStay
+        );
 
-    window.requestAnimationFrame(() => {
-      focusElement(
-        stayButton ||
-        state.routeDialog
-      );
-    });
+    window.requestAnimationFrame(
+      () => {
+        focusElement(
+          stayButton ||
+          state.routeDialog
+        );
+      }
+    );
 
     publishReceipt(
       "route-dialog-opened",
@@ -1006,7 +1377,9 @@
       return;
     }
 
-    setRouteDialogState(false);
+    setRouteDialogState(
+      false
+    );
 
     if (state.routeDialog.open) {
       safelyCloseDialog(
@@ -1024,9 +1397,13 @@
     state.pendingRoute = null;
 
     if (restoreFocus) {
-      window.requestAnimationFrame(() => {
-        focusElement(trigger);
-      });
+      window.requestAnimationFrame(
+        () => {
+          focusElement(
+            trigger
+          );
+        }
+      );
     }
 
     publishReceipt(
@@ -1052,7 +1429,9 @@
     options = {}
   ) {
     const cluster =
-      state.clusters.get(clusterId);
+      state.clusters.get(
+        clusterId
+      );
 
     if (!cluster) {
       return false;
@@ -1060,11 +1439,12 @@
 
     const trigger =
       state.objects.find(
-        (object) =>
+        object =>
           object.getAttribute(
             "data-showroom-cluster-id"
           ) === clusterId
-      ) || null;
+      ) ||
+      null;
 
     cluster.setAttribute(
       ATTRIBUTES.clusterState,
@@ -1073,7 +1453,8 @@
         : "collapsed"
     );
 
-    cluster.hidden = !expanded;
+    cluster.hidden =
+      !expanded;
 
     cluster.setAttribute(
       "aria-hidden",
@@ -1105,21 +1486,28 @@
         clusterId
       );
 
-      if (options.focusFirstChild) {
+      if (
+        options.focusFirstChild
+      ) {
         const firstChild =
           cluster.querySelector(
             SELECTORS.object
           );
 
-        window.requestAnimationFrame(() => {
-          focusElement(firstChild);
-        });
+        window.requestAnimationFrame(
+          () => {
+            focusElement(
+              firstChild
+            );
+          }
+        );
       }
     } else if (
       state.activeClusterId ===
       clusterId
     ) {
-      state.activeClusterId = "";
+      state.activeClusterId =
+        "";
 
       setRootAttribute(
         ATTRIBUTES.activeCluster,
@@ -1155,7 +1543,8 @@
       of state.clusters.keys()
     ) {
       if (
-        clusterId !== exceptClusterId
+        clusterId !==
+        exceptClusterId
       ) {
         setClusterExpanded(
           clusterId,
@@ -1170,7 +1559,9 @@
     trigger = null
   ) {
     const cluster =
-      state.clusters.get(clusterId);
+      state.clusters.get(
+        clusterId
+      );
 
     if (!cluster) {
       return false;
@@ -1182,7 +1573,17 @@
       ) === "expanded";
 
     if (!expanded) {
-      closeAllClusters(clusterId);
+      closeAllClusters(
+        clusterId
+      );
+
+      if (
+        state.enhancementAvailable
+      ) {
+        enterEnhancedPresentation(
+          "cluster-activation"
+        );
+      }
     }
 
     const changed =
@@ -1196,7 +1597,9 @@
       expanded &&
       trigger
     ) {
-      focusElement(trigger);
+      focusElement(
+        trigger
+      );
     }
 
     return changed;
@@ -1211,13 +1614,21 @@
     active
   ) {
     const front =
-      state.fronts.get(frontId);
+      state.fronts.get(
+        frontId
+      );
 
     if (!front) {
       return false;
     }
 
-    front.hidden = !active;
+    front.hidden =
+      !active;
+
+    front.toggleAttribute(
+      ATTRIBUTES.controllerManagedHidden,
+      !active
+    );
 
     front.setAttribute(
       ATTRIBUTES.frontState,
@@ -1234,7 +1645,14 @@
     );
 
     if ("inert" in front) {
-      front.inert = !active;
+      front.inert =
+        !active;
+    }
+
+    if (active) {
+      front.removeAttribute(
+        "inert"
+      );
     }
 
     return true;
@@ -1243,12 +1661,20 @@
   function hideAllFronts(
     exceptFrontId = ""
   ) {
+    if (
+      !state.enhancementAvailable ||
+      !state.enhancedPresentationActive
+    ) {
+      return false;
+    }
+
     for (
       const frontId
       of state.fronts.keys()
     ) {
       if (
-        frontId !== exceptFrontId
+        frontId !==
+        exceptFrontId
       ) {
         setFrontVisibility(
           frontId,
@@ -1256,13 +1682,17 @@
         );
       }
     }
+
+    return true;
   }
 
   function requestInformationTab(
     tabId
   ) {
     const normalizedTabId =
-      normalize(tabId);
+      normalize(
+        tabId
+      );
 
     if (!normalizedTabId) {
       return false;
@@ -1281,29 +1711,43 @@
 
     if (
       gaugeApi &&
-      typeof gaugeApi.selectInformationTab ===
+      typeof gaugeApi
+        .selectInformationTab ===
         "function"
     ) {
       gaugeApi.selectInformationTab(
         normalizedTabId,
         {
-          focus: false,
-          announce: true
+          focus:
+            false,
+
+          announce:
+            true
         }
       );
 
       return true;
     }
 
-    const tab =
-      document.querySelector(
-        `[data-showroom-information-tab][data-information-tab-id="${CSS.escape(
-          normalizedTabId
-        )}"]`
+    const tabs =
+      toArray(
+        document.querySelectorAll(
+          "[data-showroom-information-tab]"
+        )
       );
+
+    const tab =
+      tabs.find(
+        candidate =>
+          candidate.getAttribute(
+            "data-information-tab-id"
+          ) === normalizedTabId
+      ) ||
+      null;
 
     if (tab) {
       tab.click();
+
       return true;
     }
 
@@ -1315,7 +1759,9 @@
     options = {}
   ) {
     const normalizedFrontId =
-      normalize(frontId);
+      normalize(
+        frontId
+      );
 
     const front =
       state.fronts.get(
@@ -1337,14 +1783,41 @@
     closeOtherDialogs();
     closeAllClusters();
 
-    hideAllFronts(
-      normalizedFrontId
-    );
+    /*
+      Baseline behavior:
+      - Never hide sibling fronts.
+      - Ensure the requested front is visible.
+      - Scroll to the existing canonical HTML section.
 
-    setFrontVisibility(
-      normalizedFrontId,
-      true
-    );
+      Enhanced behavior:
+      - Enter the enhanced presentation only after crystal readiness.
+      - Then sibling fronts may be hidden.
+    */
+
+    if (
+      state.enhancementAvailable &&
+      state.crystalsReady
+    ) {
+      enterEnhancedPresentation(
+        "front-activation"
+      );
+
+      hideAllFronts(
+        normalizedFrontId
+      );
+
+      setFrontVisibility(
+        normalizedFrontId,
+        true
+      );
+    } else {
+      makeFrontBaselineVisible(
+        front
+      );
+
+      state.enhancedPresentationActive =
+        false;
+    }
 
     state.activeFrontId =
       normalizedFrontId;
@@ -1375,20 +1848,35 @@
     }
 
     setPageState(
-      "front",
-      "front"
+      state.enhancedPresentationActive
+        ? "front"
+        : PRESENTATION.BASELINE,
+
+      state.enhancedPresentationActive
+        ? "front"
+        : PRESENTATION.BASELINE,
+
+      currentEnhancementState()
     );
 
-    if (options.scroll !== false) {
-      window.requestAnimationFrame(() => {
-        scrollToElement(
-          front,
-          "start"
-        );
-      });
+    if (
+      options.scroll !==
+      false
+    ) {
+      window.requestAnimationFrame(
+        () => {
+          scrollToElement(
+            front,
+            "start"
+          );
+        }
+      );
     }
 
-    if (options.focus !== false) {
+    if (
+      options.focus !==
+      false
+    ) {
       const heading =
         front.querySelector(
           "h1,h2,h3"
@@ -1407,23 +1895,28 @@
           );
         }
 
-        window.requestAnimationFrame(() => {
-          focusElement(heading);
-
-          if (!hadTabindex) {
-            heading.addEventListener(
-              "blur",
-              () => {
-                heading.removeAttribute(
-                  "tabindex"
-                );
-              },
-              {
-                once: true
-              }
+        window.requestAnimationFrame(
+          () => {
+            focusElement(
+              heading
             );
+
+            if (!hadTabindex) {
+              heading.addEventListener(
+                "blur",
+                () => {
+                  heading.removeAttribute(
+                    "tabindex"
+                  );
+                },
+                {
+                  once:
+                    true
+                }
+              );
+            }
           }
-        });
+        );
       }
     }
 
@@ -1436,6 +1929,9 @@
         active:
           true,
 
+        enhanced:
+          state.enhancedPresentationActive,
+
         informationTab:
           options.informationTab ||
           null
@@ -1447,6 +1943,9 @@
       {
         frontId:
           normalizedFrontId,
+
+        enhanced:
+          state.enhancedPresentationActive,
 
         informationTab:
           options.informationTab ||
@@ -1463,9 +1962,68 @@
     const previousFrontId =
       state.activeFrontId;
 
-    hideAllFronts();
     closeAllClusters();
     closeOtherDialogs();
+
+    if (
+      !state.enhancementAvailable ||
+      !state.enhancedPresentationActive
+    ) {
+      /*
+        In baseline mode, Return to Orbit is navigation only.
+        It must never hide the canonical page.
+      */
+
+      restoreBaselineFronts();
+      clearPresentationSelection();
+
+      setPageState(
+        PRESENTATION.BASELINE,
+        PRESENTATION.BASELINE,
+        currentEnhancementState()
+      );
+
+      if (
+        options.scroll !==
+        false
+      ) {
+        window.requestAnimationFrame(
+          () => {
+            scrollToElement(
+              state.orbit,
+              "start"
+            );
+          }
+        );
+      }
+
+      if (
+        options.focus !==
+        false
+      ) {
+        window.requestAnimationFrame(
+          () => {
+            focusElement(
+              state.compassControl ||
+              state.orbit
+            );
+          }
+        );
+      }
+
+      publishReceipt(
+        "returned-to-orbit-baseline",
+        {
+          previousFrontId:
+            previousFrontId ||
+            null
+        }
+      );
+
+      return true;
+    }
+
+    hideAllFronts();
 
     state.activeFrontId = "";
     state.activeGaugeSet = "";
@@ -1488,28 +2046,36 @@
 
     setPageState(
       "orbit",
-      "orbit"
+      "orbit",
+      PRESENTATION.ACTIVE
     );
 
-    if (options.scroll !== false) {
-      window.requestAnimationFrame(() => {
-        scrollToElement(
-          state.orbit,
-          "start"
-        );
-      });
+    if (
+      options.scroll !==
+      false
+    ) {
+      window.requestAnimationFrame(
+        () => {
+          scrollToElement(
+            state.orbit,
+            "start"
+          );
+        }
+      );
     }
 
-    if (options.focus !== false) {
-      window.requestAnimationFrame(() => {
-        const focusTarget =
-          state.compassControl ||
-          state.orbit;
-
-        focusElement(
-          focusTarget
-        );
-      });
+    if (
+      options.focus !==
+      false
+    ) {
+      window.requestAnimationFrame(
+        () => {
+          focusElement(
+            state.compassControl ||
+            state.orbit
+          );
+        }
+      );
     }
 
     dispatchStateEvent(
@@ -1520,7 +2086,10 @@
           null,
 
         active:
-          false
+          false,
+
+        enhanced:
+          true
       }
     );
 
@@ -1532,6 +2101,8 @@
           null
       }
     );
+
+    return true;
   }
 
   /* =======================================================
@@ -1550,23 +2121,27 @@
     );
 
     state.lastConstructionTrigger =
-      trigger || null;
+      trigger ||
+      null;
 
     safelyShowModal(
       state.constructionDialog
     );
 
     const closeButton =
-      state.constructionDialog.querySelector(
-        SELECTORS.constructionClose
-      );
+      state.constructionDialog
+        .querySelector(
+          SELECTORS.constructionClose
+        );
 
-    window.requestAnimationFrame(() => {
-      focusElement(
-        closeButton ||
-        state.constructionDialog
-      );
-    });
+    window.requestAnimationFrame(
+      () => {
+        focusElement(
+          closeButton ||
+          state.constructionDialog
+        );
+      }
+    );
 
     publishReceipt(
       "construction-dialog-opened"
@@ -1587,18 +2162,22 @@
     ) {
       safelyCloseDialog(
         state.constructionDialog,
-        options.reason || "closed"
+        options.reason ||
+        "closed"
       );
     }
 
     if (
-      options.restoreFocus !== false
+      options.restoreFocus !==
+      false
     ) {
-      window.requestAnimationFrame(() => {
-        focusElement(
-          state.lastConstructionTrigger
-        );
-      });
+      window.requestAnimationFrame(
+        () => {
+          focusElement(
+            state.lastConstructionTrigger
+          );
+        }
+      );
     }
 
     publishReceipt(
@@ -1617,7 +2196,8 @@
 
   function applyFallbackStarState() {
     const semanticOnly =
-      state.crystalsReady;
+      state.crystalsReady &&
+      state.enhancementAvailable;
 
     setRootAttribute(
       ATTRIBUTES.crystalsReady,
@@ -1672,7 +2252,45 @@
     state.crystalsReady =
       Boolean(ready);
 
+    state.enhancementAvailable =
+      state.crystalsReady;
+
+    if (!state.crystalsReady) {
+      state.enhancedPresentationActive =
+        false;
+    }
+
     applyFallbackStarState();
+
+    if (state.crystalsReady) {
+      /*
+        Readiness makes enhancement available, but does not hide any
+        canonical HTML/CSS front. Enhanced front switching starts only
+        after deliberate user activation.
+      */
+
+      restoreBaselineFronts();
+
+      setPageState(
+        PRESENTATION.BASELINE,
+        PRESENTATION.BASELINE,
+        PRESENTATION.AVAILABLE
+      );
+    } else {
+      restoreBaselinePresentation(
+        reason ||
+        "crystals-unavailable",
+        {
+          failed:
+            reason.includes(
+              "failure"
+            ) ||
+            reason.includes(
+              "disposed"
+            )
+        }
+      );
+    }
 
     publishReceipt(
       "crystals-readiness-changed",
@@ -1680,14 +2298,18 @@
         crystalsReady:
           state.crystalsReady,
 
+        enhancementAvailable:
+          state.enhancementAvailable,
+
         reason:
-          reason || null
+          reason ||
+          null
       }
     );
   }
 
   /* =======================================================
-     HELD AND REDUCED-MOTION STATE
+     HELD AND REDUCED MOTION
      ======================================================= */
 
   function setHeld(
@@ -1711,7 +2333,8 @@
           state.held,
 
         reason:
-          reason || null
+          reason ||
+          null
       }
     );
   }
@@ -1720,7 +2343,8 @@
     state.reducedMotion =
       Boolean(
         state.reducedMotionQuery &&
-        state.reducedMotionQuery.matches
+        state.reducedMotionQuery
+          .matches
       );
 
     setRootAttribute(
@@ -1742,11 +2366,13 @@
       );
 
     state.reducedMotion =
-      state.reducedMotionQuery.matches;
+      state.reducedMotionQuery
+        .matches;
 
     if (
       typeof state.reducedMotionQuery
-        .addEventListener === "function"
+        .addEventListener ===
+        "function"
     ) {
       addListener(
         state.reducedMotionQuery,
@@ -1755,17 +2381,22 @@
       );
     } else if (
       typeof state.reducedMotionQuery
-        .addListener === "function"
+        .addListener ===
+        "function"
     ) {
-      state.reducedMotionQuery.addListener(
-        applyReducedMotion
-      );
-
-      state.listeners.push(() => {
-        state.reducedMotionQuery.removeListener(
+      state.reducedMotionQuery
+        .addListener(
           applyReducedMotion
         );
-      });
+
+      state.listeners.push(
+        () => {
+          state.reducedMotionQuery
+            .removeListener(
+              applyReducedMotion
+            );
+        }
+      );
     }
 
     applyReducedMotion();
@@ -1802,9 +2433,13 @@
       );
 
     if (
-      options.dedupe !== false &&
+      options.dedupe !==
+        false &&
       isDuplicateActivation(
-        `object:${objectId || behavior}`
+        `object:${
+          objectId ||
+          behavior
+        }`
       )
     ) {
       return false;
@@ -1862,10 +2497,12 @@
           "unknown-object-behavior",
           {
             objectId:
-              objectId || null,
+              objectId ||
+              null,
 
             behavior:
-              behavior || null
+              behavior ||
+              null
           }
         );
 
@@ -1877,21 +2514,27 @@
     event
   ) {
     const detail =
-      event && event.detail
+      event &&
+      event.detail
         ? event.detail
         : {};
 
     if (
-      detail.validTap === false ||
-      detail.cancelled === true ||
-      detail.wasDrag === true
+      detail.validTap ===
+        false ||
+      detail.cancelled ===
+        true ||
+      detail.wasDrag ===
+        true
     ) {
       return;
     }
 
     if (
-      detail.target === "compass" ||
-      detail.kind === "compass"
+      detail.target ===
+        "compass" ||
+      detail.kind ===
+        "compass"
     ) {
       openCompassDialog(
         state.compassControl
@@ -1933,7 +2576,9 @@
     );
   }
 
-  function handleObjectClick(event) {
+  function handleObjectClick(
+    event
+  ) {
     const object =
       resolveSemanticObject(
         event.currentTarget
@@ -1943,17 +2588,13 @@
       return;
     }
 
-    /*
-      Direct clicks are retained for keyboard and non-enhanced fallback.
-      The interaction runtime may suppress synthetic clicks after drag.
-    */
     activateObject(
       object
     );
   }
 
   /* =======================================================
-     DIALOG NATIVE EVENTS
+     DIALOG EVENTS
      ======================================================= */
 
   function initializeDialogEvents() {
@@ -1961,12 +2602,15 @@
       addListener(
         state.compassDialog,
         "cancel",
-        (event) => {
+        event => {
           event.preventDefault();
 
           closeCompassDialog({
-            restoreFocus: true,
-            reason: "escape"
+            restoreFocus:
+              true,
+
+            reason:
+              "escape"
           });
         }
       );
@@ -1975,7 +2619,9 @@
         state.compassDialog,
         "close",
         () => {
-          setCompassDialogState(false);
+          setCompassDialogState(
+            false
+          );
         }
       );
     }
@@ -1984,12 +2630,15 @@
       addListener(
         state.routeDialog,
         "cancel",
-        (event) => {
+        event => {
           event.preventDefault();
 
           closeRouteDialog({
-            restoreFocus: true,
-            reason: "escape"
+            restoreFocus:
+              true,
+
+            reason:
+              "escape"
           });
         }
       );
@@ -1998,7 +2647,9 @@
         state.routeDialog,
         "close",
         () => {
-          setRouteDialogState(false);
+          setRouteDialogState(
+            false
+          );
         }
       );
     }
@@ -2007,12 +2658,15 @@
       addListener(
         state.constructionDialog,
         "cancel",
-        (event) => {
+        event => {
           event.preventDefault();
 
           closeConstructionDialog({
-            restoreFocus: true,
-            reason: "escape"
+            restoreFocus:
+              true,
+
+            reason:
+              "escape"
           });
         }
       );
@@ -2163,7 +2817,8 @@
       state.compassControl &&
       state.compassControl.getAttribute(
         "aria-controls"
-      ) !== "showroom-compass-dialog"
+      ) !==
+        "showroom-compass-dialog"
     ) {
       issues.push(
         "Compass control does not target showroom-compass-dialog."
@@ -2183,7 +2838,10 @@
       );
     }
 
-    for (const object of state.objects) {
+    for (
+      const object
+      of state.objects
+    ) {
       const behavior =
         normalize(
           object.getAttribute(
@@ -2196,7 +2854,8 @@
           `Object "${
             object.getAttribute(
               "data-showroom-object-id"
-            ) || "unknown"
+            ) ||
+            "unknown"
           }" has no behavior.`
         );
       }
@@ -2217,7 +2876,10 @@
      ======================================================= */
 
   function initializeObjectListeners() {
-    for (const object of state.objects) {
+    for (
+      const object
+      of state.objects
+    ) {
       addListener(
         object,
         "click",
@@ -2239,34 +2901,33 @@
   }
 
   function initializeCompassActions() {
-    const closeButtons =
-      toArray(
-        document.querySelectorAll(
-          SELECTORS.compassClose
-        )
-      );
-
-    const stayButtons =
-      toArray(
-        document.querySelectorAll(
-          SELECTORS.compassStay
-        )
-      );
-
-    for (const button of closeButtons) {
+    for (
+      const button
+      of document.querySelectorAll(
+        SELECTORS.compassClose
+      )
+    ) {
       addListener(
         button,
         "click",
         () => {
           closeCompassDialog({
-            restoreFocus: true,
-            reason: "close-button"
+            restoreFocus:
+              true,
+
+            reason:
+              "close-button"
           });
         }
       );
     }
 
-    for (const button of stayButtons) {
+    for (
+      const button
+      of document.querySelectorAll(
+        SELECTORS.compassStay
+      )
+    ) {
       addListener(
         button,
         "click",
@@ -2303,8 +2964,11 @@
         "click",
         () => {
           closeRouteDialog({
-            restoreFocus: true,
-            reason: "close-button"
+            restoreFocus:
+              true,
+
+            reason:
+              "close-button"
           });
         }
       );
@@ -2321,8 +2985,11 @@
         "click",
         () => {
           closeRouteDialog({
-            restoreFocus: true,
-            reason: "stay"
+            restoreFocus:
+              true,
+
+            reason:
+              "stay"
           });
         }
       );
@@ -2362,7 +3029,7 @@
       addListener(
         control,
         "click",
-        (event) => {
+        event => {
           event.preventDefault();
 
           returnToOrbit();
@@ -2400,12 +3067,45 @@
         "click",
         () => {
           closeConstructionDialog({
-            restoreFocus: true,
-            reason: "close-button"
+            restoreFocus:
+              true,
+
+            reason:
+              "close-button"
           });
         }
       );
     }
+  }
+
+  function handleEnhancementFailure(
+    reason
+  ) {
+    state.crystalsReady =
+      false;
+
+    state.enhancementAvailable =
+      false;
+
+    state.enhancedPresentationActive =
+      false;
+
+    applyFallbackStarState();
+
+    restoreBaselinePresentation(
+      reason,
+      {
+        failed:
+          true
+      }
+    );
+
+    publishReceipt(
+      "enhancement-failure-restored-baseline",
+      {
+        reason
+      }
+    );
   }
 
   function initializeRuntimeEvents() {
@@ -2446,9 +3146,8 @@
       window,
       EVENTS.crystalsFailed,
       () => {
-        setCrystalsReady(
-          false,
-          "failure-event"
+        handleEnhancementFailure(
+          "crystals-failure-event"
         );
       }
     );
@@ -2457,9 +3156,28 @@
       window,
       EVENTS.crystalsDisposed,
       () => {
-        setCrystalsReady(
-          false,
-          "disposed-event"
+        handleEnhancementFailure(
+          "crystals-disposed-event"
+        );
+      }
+    );
+
+    addListener(
+      window,
+      EVENTS.compositorFailed,
+      () => {
+        handleEnhancementFailure(
+          "compositor-failure-event"
+        );
+      }
+    );
+
+    addListener(
+      window,
+      EVENTS.compositorDisposed,
+      () => {
+        handleEnhancementFailure(
+          "compositor-disposed-event"
         );
       }
     );
@@ -2502,120 +3220,136 @@
   }
 
   function initializeInitialPresentation() {
-    hideAllFronts();
+    /*
+      Critical recovery change:
+      - Do not call hideAllFronts().
+      - Do not mark any canonical front inert.
+      - Do not enter orbit-only presentation.
+      - Preserve the complete HTML/CSS page.
+    */
+
+    captureOriginalFrontStates();
+    restoreBaselineFronts();
     closeAllClusters();
+    clearPresentationSelection();
 
-    state.activeFrontId = "";
-    state.activeClusterId = "";
-    state.activeGaugeSet = "";
-    state.activeInformationTab = "";
-
-    setRootAttribute(
-      ATTRIBUTES.activeFront,
-      ""
+    setCompassDialogState(
+      false
     );
 
-    setRootAttribute(
-      ATTRIBUTES.activeCluster,
-      ""
+    setRouteDialogState(
+      false
     );
-
-    setRootAttribute(
-      ATTRIBUTES.activeGaugeSet,
-      ""
-    );
-
-    setRootAttribute(
-      ATTRIBUTES.activeInformationTab,
-      ""
-    );
-
-    setCompassDialogState(false);
-    setRouteDialogState(false);
-
-    setPageState(
-      "orbit",
-      "orbit"
-    );
-
-    const declaredCrystalsReady =
-      state.root.getAttribute(
-        ATTRIBUTES.crystalsReady
-      ) === "true";
 
     state.crystalsReady =
-      declaredCrystalsReady;
+      false;
+
+    state.enhancementAvailable =
+      false;
+
+    state.enhancedPresentationActive =
+      false;
 
     applyFallbackStarState();
+
+    setPageState(
+      PRESENTATION.BASELINE,
+      PRESENTATION.BASELINE,
+      PRESENTATION.PENDING
+    );
   }
 
   function exposeApi() {
-    const api = Object.freeze({
-      contract: CONTRACT,
+    const api =
+      Object.freeze({
+        contract:
+          CONTRACT,
 
-      getState() {
-        return createStateSnapshot({
-          clusterIds:
-            toArray(
-              state.clusters.keys()
-            ),
+        getState() {
+          return createStateSnapshot({
+            clusterIds:
+              toArray(
+                state.clusters.keys()
+              ),
 
-          frontIds:
-            toArray(
-              state.fronts.keys()
+            frontIds:
+              toArray(
+                state.fronts.keys()
+              )
+          });
+        },
+
+        openCompassDialog,
+
+        closeCompassDialog,
+
+        openRouteDialogByObjectId(
+          objectId
+        ) {
+          return openRouteDialog(
+            findObjectById(
+              normalize(
+                objectId
+              )
             )
-        });
-      },
+          );
+        },
 
-      openCompassDialog,
+        closeRouteDialog,
 
-      closeCompassDialog,
+        toggleCluster,
 
-      openRouteDialogByObjectId(
-        objectId
-      ) {
-        return openRouteDialog(
-          findObjectById(
-            normalize(objectId)
-          )
-        );
-      },
+        openFront,
 
-      closeRouteDialog,
+        returnToOrbit,
 
-      toggleCluster,
+        restoreBaseline(
+          reason =
+            "api-request"
+        ) {
+          restoreBaselinePresentation(
+            reason
+          );
 
-      openFront,
+          return true;
+        },
 
-      returnToOrbit,
+        activateObjectById(
+          objectId,
+          options = {}
+        ) {
+          return activateObject(
+            findObjectById(
+              normalize(
+                objectId
+              )
+            ),
+            options
+          );
+        },
 
-      activateObjectById(
-        objectId,
-        options = {}
-      ) {
-        return activateObject(
-          findObjectById(
-            normalize(objectId)
-          ),
-          options
-        );
-      },
+        setCrystalsReady,
 
-      setCrystalsReady,
+        setHeld,
 
-      setHeld,
-
-      dispose
-    });
+        dispose
+      });
 
     Object.defineProperty(
       window,
       "SHOWROOM_CONTROLLER",
       {
-        configurable: true,
-        enumerable: false,
-        writable: false,
-        value: api
+        configurable:
+          true,
+
+        enumerable:
+          false,
+
+        writable:
+          false,
+
+        value:
+          api
       }
     );
   }
@@ -2657,7 +3391,8 @@
 
       exposeApi();
 
-      state.initialized = true;
+      state.initialized =
+        true;
 
       setRootAttribute(
         ATTRIBUTES.controllerReady,
@@ -2671,11 +3406,19 @@
           : "ready"
       );
 
+      setRootAttribute(
+        ATTRIBUTES.enhancementState,
+        PRESENTATION.PENDING
+      );
+
       publishReceipt(
         "ready",
         {
           validationIssues:
-            issues
+            issues,
+
+          baselinePreserved:
+            true
         }
       );
 
@@ -2683,11 +3426,21 @@
         EVENTS.ready,
         {
           validationIssues:
-            issues
+            issues,
+
+          baselinePreserved:
+            true
         }
       );
     } catch (error) {
       if (state.root) {
+        /*
+          Even controller initialization failure must not remove canonical
+          content. Restore any fronts that were discovered before failure.
+        */
+
+        restoreBaselineFronts();
+
         setRootAttribute(
           ATTRIBUTES.controllerReady,
           "false"
@@ -2697,22 +3450,31 @@
           ATTRIBUTES.controllerState,
           "failed"
         );
+
+        setRootAttribute(
+          ATTRIBUTES.enhancementState,
+          PRESENTATION.FAILED
+        );
       }
 
       publishReceipt(
         "fatal-error",
         {
-          error: {
-            name:
-              error instanceof Error
-                ? error.name
-                : "Error",
+          error:
+            {
+              name:
+                error instanceof Error
+                  ? error.name
+                  : "Error",
 
-            message:
-              error instanceof Error
-                ? error.message
-                : String(error)
-          }
+              message:
+                error instanceof Error
+                  ? error.message
+                  : String(error)
+            },
+
+          baselinePreserved:
+            true
         }
       );
     }
@@ -2727,7 +3489,33 @@
       return;
     }
 
-    state.disposed = true;
+    /*
+      Disposal restores the canonical HTML/CSS baseline before removing
+      controller listeners and public API.
+    */
+
+    state.enhancementAvailable =
+      false;
+
+    state.crystalsReady =
+      false;
+
+    state.enhancedPresentationActive =
+      false;
+
+    restoreBaselineFronts();
+    closeAllClusters();
+    clearPresentationSelection();
+    applyFallbackStarState();
+
+    setPageState(
+      PRESENTATION.BASELINE,
+      PRESENTATION.BASELINE,
+      PRESENTATION.FAILED
+    );
+
+    state.disposed =
+      true;
 
     for (
       const removeListener
@@ -2792,7 +3580,11 @@
     );
 
     publishReceipt(
-      "disposed"
+      "disposed",
+      {
+        baselineRestored:
+          true
+      }
     );
 
     try {
@@ -2810,7 +3602,8 @@
       "DOMContentLoaded",
       initialize,
       {
-        once: true
+        once:
+          true
       }
     );
   } else {
@@ -2819,9 +3612,14 @@
 
   window.addEventListener(
     "pagehide",
-    dispose,
+    event => {
+      if (!event.persisted) {
+        dispose();
+      }
+    },
     {
-      once: true
+      once:
+        true
     }
   );
 })();

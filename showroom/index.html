@@ -1,14 +1,14 @@
 <!-- TARGET FILE: /showroom/index.html -->
 <!-- TNT FULL-FILE REPLACEMENT -->
-<!-- SHOWROOM_MIRRORLAND_FOCAL_ORBITAL_CHAMBER_HTML_TNT_v1 -->
+<!-- SHOWROOM_MIRRORLAND_FOCAL_SEPARATE_ORBIT_AND_DIAMOND_STAGES_HTML_TNT_v2 -->
 <!doctype html>
 <html
   lang="en"
   data-route="/showroom/"
   data-page="showroom"
-  data-version="SHOWROOM-MIRRORLAND-FOCAL-ORBITAL-CHAMBERS-1.0.0"
-  data-contract="SHOWROOM_MIRRORLAND_FOCAL_ORBITAL_CHAMBER_HTML_TNT_v1"
-  data-previous-contract="SHOWROOM_ELARA_ASSET_MOUNT_EXTERNAL_CSS_HTML_TNT_v5"
+  data-version="SHOWROOM-MIRRORLAND-SEPARATE-ORBIT-AND-DIAMOND-STAGES-2.0.0"
+  data-contract="SHOWROOM_MIRRORLAND_FOCAL_SEPARATE_ORBIT_AND_DIAMOND_STAGES_HTML_TNT_v2"
+  data-previous-contract="SHOWROOM_MIRRORLAND_FOCAL_ORBITAL_CHAMBER_HTML_TNT_v1"
   data-house-room="showroom"
   data-house-room-title="The Showroom"
   data-room-welcome="Welcome to the Showroom"
@@ -19,14 +19,14 @@
   data-elara-homeroom="true"
   data-elara-route="/elara/index.html"
   data-talk-to-elara-prominent="true"
-  data-showroom-root-contract="mirrorland-threshold-orbit-chamber"
+  data-showroom-root-contract="mirrorland-threshold-separate-orbit-and-diamond-stages"
   data-showroom-controller="/showroom/index.controller.js"
   data-showroom-interactions="/showroom/index.interactions.js"
   data-showroom-compositor="/showroom/index.compositor.js"
   data-showroom-crystals="/showroom/index.crystals.js"
   data-showroom-window="/showroom/index.window.js"
   data-showroom-css="/showroom/index.css"
-  data-showroom-navigation-model="compass-centered-orbit"
+  data-showroom-navigation-model="compact-compass-centered-orbit"
   data-showroom-primary-mode="orbit"
   data-showroom-chamber-model="single-active-chamber"
   data-showroom-category-count="7"
@@ -34,6 +34,10 @@
   data-showroom-long-page-primary-navigation="false"
   data-showroom-semantic-fallback="true"
   data-showroom-return-to-orbit="true"
+  data-showroom-stage-separation="true"
+  data-showroom-orbit-stage-independent="true"
+  data-showroom-diamond-stage-independent="true"
+  data-showroom-window-stage-diamond-only="true"
   data-compass-fixed-center="true"
   data-compass-orbital-reference="true"
   data-compass-page-local-decision="true"
@@ -52,6 +56,7 @@
   data-diamond-renderer="/showroom/index.diamond.js"
   data-diamond-ui="/showroom/index.ui.js"
   data-diamond-protected-core="true"
+  data-diamond-original-stage-restored="true"
   data-diamond-window-sibling-layer="true"
   data-diamond-geometry-cache-key="SHOWROOM_DIAMOND_G3_16X16_256_SEAT_GEOMETRY_AUTHORITY_TNT_v1"
   data-diamond-js-cache-key="SHOWROOM_DIAMOND_G3_NATIVE_WEBGL_OBJECT_LATTICE_RENDERER_TNT_v1"
@@ -87,7 +92,7 @@
 
   <meta
     name="description"
-    content="Enter the Showroom at the Door to Mirrorland. Explore the Diamond Lattice as a scientific object, mathematical structure, and engineered demonstration of the order beneath visible form."
+    content="Enter the Showroom at the Door to Mirrorland. Explore a compact Compass-centered navigator and inspect the independently rendered Diamond Lattice as a scientific object, mathematical structure, and engineered demonstration of the order beneath visible form."
   >
 
   <link
@@ -105,9 +110,9 @@
 
   <link
     rel="stylesheet"
-    href="/showroom/index.css?v=SHOWROOM_MIRRORLAND_FOCAL_ORBITAL_CHAMBER_CSS_TNT_v1"
+    href="/showroom/index.css?v=SHOWROOM_MIRRORLAND_SEPARATE_ORBIT_AND_DIAMOND_STAGES_CSS_TNT_v2"
     data-showroom-page-css="true"
-    data-showroom-page-css-contract="SHOWROOM_MIRRORLAND_FOCAL_ORBITAL_CHAMBER_CSS_TNT_v1"
+    data-showroom-page-css-contract="SHOWROOM_MIRRORLAND_SEPARATE_ORBIT_AND_DIAMOND_STAGES_CSS_TNT_v2"
   >
 </head>
 
@@ -126,7 +131,6 @@
     data-showroom-presentation-mode="orbit"
     data-showroom-selected-category=""
     data-showroom-active-chamber=""
-    data-showroom-compass-selected="false"
     data-showroom-compass-dialog-open="false"
     data-showroom-window-state="closed"
     data-showroom-diamond-interactive="false"
@@ -366,160 +370,49 @@
           ></div>
 
           <div
-            class="showroom-centerpiece"
-            data-showroom-centerpiece
+            class="showroom-compass-layer"
+            data-showroom-compass-layer
           >
             <div
-              class="showroom-diamond-layer"
-              data-showroom-diamond-layer
+              class="showroom-compass-mount"
+              data-upstream-compass-mount
+              data-compass-root
+              data-compass-scene
+              data-compass-fixed-center="true"
+              data-compass-navigation-authority="explicit-return-action"
+              aria-hidden="true"
+            ></div>
+
+            <button
+              class="showroom-compass-control"
+              type="button"
+              data-upstream-compass-control
+              data-showroom-compass-control
+              data-fixed-center="true"
+              data-interaction-enabled="true"
+              data-immediate-navigation="false"
+              aria-haspopup="dialog"
+              aria-expanded="false"
+              aria-controls="showroom-compass-dialog"
             >
-              <div
-                class="showroom-reveal-scene"
-                data-showroom-reveal-scene
-                data-showroom-window-state="closed"
-              >
-                <div class="diamond-exhibit-frame">
-                  <div class="diamond-viewport-card">
-                    <div
-                      class="diamond-stage"
-                      data-showroom-diamond-stage
-                      data-diamond-object-stage="true"
-                      data-diamond-generation="G3"
-                      data-diamond-render-mode="native-webgl"
-                      data-object-thesis="computational-gem-at-the-mirrorland-door"
-                      data-globe-inspired="true"
-                      data-gem-governed="true"
-                      data-radial-sectors="16"
-                      data-structural-bands="16"
-                      data-lattice-seats="256"
-                      data-surface-triangles="512"
-                      data-lattice-connections="800"
-                      data-webgl-state="loading"
-                      data-showroom-diamond-pointer-enabled="false"
-                      role="group"
-                      tabindex="-1"
-                      aria-hidden="true"
-                      aria-label="Interactive G3 Diamond Gate Bridge computational gem. Open the Mirrorland Window before interacting with the Diamond."
-                    >
-                      <canvas
-                        data-showroom-diamond-canvas
-                        aria-hidden="true"
-                      ></canvas>
-
-                      <div
-                        class="diamond-fallback"
-                        data-showroom-diamond-fallback
-                        role="status"
-                        aria-live="polite"
-                        hidden
-                      >
-                        <div class="diamond-fallback-card">
-                          <span
-                            class="diamond-fallback-object"
-                            aria-hidden="true"
-                          ></span>
-
-                          <strong>
-                            G3 Diamond Lattice fallback
-                          </strong>
-
-                          <p>
-                            The live three-dimensional renderer is
-                            unavailable. The object remains represented
-                            as a gold crown, illuminated bridge girdle,
-                            sapphire pavilion, and 16 × 16 structural
-                            field.
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div
-                  class="showroom-window-layer"
-                  data-showroom-window-layer
-                >
-                  <div
-                    class="showroom-window-mount"
-                    data-showroom-window-mount
-                    data-showroom-mirrorland-window-mount
-                    data-showroom-window-receipt=""
-                    aria-hidden="true"
-                  ></div>
-
-                  <button
-                    class="showroom-window-control"
-                    type="button"
-                    data-showroom-window-control
-                    data-showroom-mirrorland-window-control
-                    aria-controls="showroom-diamond-controls"
-                    aria-expanded="false"
-                    aria-label="Open the Mirrorland Window and reveal the Diamond"
-                  >
-                    <span
-                      class="showroom-window-control__eyebrow"
-                      aria-hidden="true"
-                    >
-                      Mirrorland Threshold
-                    </span>
-
-                    <span
-                      class="showroom-window-control__label"
-                      data-showroom-window-label
-                    >
-                      Open the Window
-                    </span>
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <div
-              class="showroom-compass-layer"
-              data-showroom-compass-layer
-            >
-              <div
-                class="showroom-compass-mount"
-                data-upstream-compass-mount
-                data-compass-root
-                data-compass-scene
-                data-compass-fixed-center="true"
-                data-compass-navigation-authority="explicit-return-action"
+              <span
+                class="showroom-compass-control__mark"
                 aria-hidden="true"
-              ></div>
-
-              <button
-                class="showroom-compass-control"
-                type="button"
-                data-upstream-compass-control
-                data-showroom-compass-control
-                data-fixed-center="true"
-                data-interaction-enabled="true"
-                data-immediate-navigation="false"
-                aria-haspopup="dialog"
-                aria-expanded="false"
-                aria-controls="showroom-compass-dialog"
               >
-                <span
-                  class="showroom-compass-control__mark"
-                  aria-hidden="true"
-                >
-                  <span>N</span>
-                  <span>E</span>
-                  <span>S</span>
-                  <span>W</span>
-                </span>
+                <span>N</span>
+                <span>E</span>
+                <span>S</span>
+                <span>W</span>
+              </span>
 
-                <span class="showroom-compass-control__label">
-                  Compass
-                </span>
+              <span class="showroom-compass-control__label">
+                Compass
+              </span>
 
-                <span class="showroom-compass-control__instruction">
-                  Stay or return
-                </span>
-              </button>
-            </div>
+              <span class="showroom-compass-control__instruction">
+                Stay or return
+              </span>
+            </button>
           </div>
 
           <div
@@ -536,7 +429,6 @@
               data-category-label="The Diamond"
               data-category-family="cobalt-cyan"
               data-chamber-id="diamond-object"
-              data-active="true"
               aria-controls="diamond-object"
             >
               <span>The Diamond</span>
@@ -550,7 +442,6 @@
               data-category-label="Mathematics"
               data-category-family="gold-amber"
               data-chamber-id="mathematics"
-              data-active="true"
               aria-controls="mathematics"
             >
               <span>Mathematics</span>
@@ -564,7 +455,6 @@
               data-category-label="Science"
               data-category-family="indigo-violet"
               data-chamber-id="behind-the-surface"
-              data-active="true"
               aria-controls="behind-the-surface"
             >
               <span>Science</span>
@@ -578,7 +468,6 @@
               data-category-label="Engineering"
               data-category-family="graphite-steel-cyan"
               data-chamber-id="construction"
-              data-active="true"
               aria-controls="construction"
             >
               <span>Engineering</span>
@@ -592,7 +481,6 @@
               data-category-label="Platform"
               data-category-family="sapphire"
               data-chamber-id="platform"
-              data-active="true"
               aria-controls="platform"
             >
               <span>Platform</span>
@@ -606,7 +494,6 @@
               data-category-label="Evidence"
               data-category-family="bronze-navy"
               data-chamber-id="threshold-law"
-              data-active="true"
               aria-controls="threshold-law"
             >
               <span>Evidence</span>
@@ -620,7 +507,6 @@
               data-category-label="Anatomy"
               data-category-family="midnight-violet-cyan"
               data-chamber-id="anatomy"
-              data-active="true"
               aria-controls="anatomy"
             >
               <span>Anatomy</span>
@@ -707,112 +593,219 @@
             </p>
           </div>
 
-          <div
-            id="showroom-diamond-controls"
-            class="showroom-diamond-controls"
-            data-showroom-diamond-controls
-            data-showroom-diamond-controls-available="false"
-          >
-            <details
-              class="object-control-tray"
-              open
-            >
-              <summary>
-                Diamond controls
-              </summary>
-
-              <div class="object-control-body">
+          <div class="diamond-layout">
+            <div class="diamond-view-column">
+              <div
+                class="showroom-reveal-scene"
+                data-showroom-reveal-scene
+                data-showroom-window-state="closed"
+              >
                 <div
-                  class="two-view-buttons"
-                  aria-label="Diamond Lattice two-view controls"
+                  class="showroom-diamond-layer"
+                  data-showroom-diamond-layer
                 >
-                  <button
-                    type="button"
-                    data-diamond-lens="crystal"
-                    data-diamond-dimension="object"
-                    aria-pressed="true"
-                    data-active
-                  >
-                    Object View
-                  </button>
+                  <div class="diamond-exhibit-frame">
+                    <div class="diamond-viewport-card">
+                      <div
+                        class="diamond-stage"
+                        data-showroom-diamond-stage
+                        data-diamond-object-stage="true"
+                        data-diamond-generation="G3"
+                        data-diamond-render-mode="native-webgl"
+                        data-object-thesis="computational-gem-at-the-mirrorland-door"
+                        data-globe-inspired="true"
+                        data-gem-governed="true"
+                        data-radial-sectors="16"
+                        data-structural-bands="16"
+                        data-lattice-seats="256"
+                        data-surface-triangles="512"
+                        data-lattice-connections="800"
+                        data-webgl-state="loading"
+                        data-showroom-diamond-pointer-enabled="false"
+                        role="group"
+                        tabindex="0"
+                        aria-label="Interactive G3 Diamond Gate Bridge computational gem. Drag or swipe to rotate. Pinch or use the mouse wheel to zoom."
+                      >
+                        <canvas
+                          data-showroom-diamond-canvas
+                          aria-hidden="true"
+                        ></canvas>
 
-                  <button
-                    type="button"
-                    data-diamond-lens="lattice"
-                    aria-pressed="false"
-                  >
-                    Lattice View
-                  </button>
-                </div>
+                        <div
+                          class="diamond-fallback"
+                          data-showroom-diamond-fallback
+                          role="status"
+                          aria-live="polite"
+                          hidden
+                        >
+                          <div class="diamond-fallback-card">
+                            <span
+                              class="diamond-fallback-object"
+                              aria-hidden="true"
+                            ></span>
 
-                <div
-                  class="technical-control-bridge"
-                  aria-hidden="true"
-                  data-technical-control-options-hidden="true"
-                >
-                  <button
-                    type="button"
-                    data-diamond-dimension="memory"
-                    aria-pressed="false"
-                    tabindex="-1"
-                  >
-                    World Memory
-                  </button>
+                            <strong>
+                              G3 Diamond Lattice fallback
+                            </strong>
 
-                  <button
-                    type="button"
-                    data-diamond-dimension="behind"
-                    aria-pressed="false"
-                    tabindex="-1"
-                  >
-                    Lattice Behind
-                  </button>
-
-                  <button
-                    type="button"
-                    data-diamond-dimension="through"
-                    aria-pressed="false"
-                    tabindex="-1"
-                  >
-                    Lattice Through
-                  </button>
-
-                  <button
-                    type="button"
-                    data-diamond-dimension="full"
-                    aria-pressed="false"
-                    tabindex="-1"
-                  >
-                    Full Proof
-                  </button>
-                </div>
-
-                <div class="status-strip">
-                  <span data-showroom-diamond-status>
-                    Open the Mirrorland Window to approach the G3
-                    Diamond Lattice.
-                  </span>
-
-                  <div class="actions">
-                    <button
-                      class="button"
-                      type="button"
-                      data-showroom-diamond-inspect
-                    >
-                      Inspect
-                    </button>
-
-                    <button
-                      class="button"
-                      type="button"
-                      data-showroom-diamond-reset
-                    >
-                      Reset
-                    </button>
+                            <p>
+                              The live three-dimensional renderer is
+                              unavailable. The object remains represented
+                              as a gold crown, illuminated bridge girdle,
+                              sapphire pavilion, and 16 × 16 structural
+                              field.
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
+
+                <div
+                  class="showroom-window-layer"
+                  data-showroom-window-layer
+                >
+                  <div
+                    class="showroom-window-mount"
+                    data-showroom-window-mount
+                    data-showroom-mirrorland-window-mount
+                    aria-hidden="true"
+                  ></div>
+
+                  <button
+                    class="showroom-window-control"
+                    type="button"
+                    data-showroom-window-control
+                    data-showroom-mirrorland-window-control
+                    aria-controls="showroom-diamond-controls"
+                    aria-expanded="false"
+                    aria-label="Open the Mirrorland Window and reveal the Diamond"
+                  >
+                    <span
+                      class="showroom-window-control__eyebrow"
+                      aria-hidden="true"
+                    >
+                      Mirrorland Threshold
+                    </span>
+
+                    <span
+                      class="showroom-window-control__label"
+                      data-showroom-window-label
+                    >
+                      Open the Window
+                    </span>
+                  </button>
+                </div>
               </div>
-            </details>
+
+              <div
+                id="showroom-diamond-controls"
+                class="showroom-diamond-controls"
+                data-showroom-diamond-controls
+                data-showroom-diamond-controls-available="false"
+              >
+                <details
+                  class="object-control-tray"
+                  open
+                >
+                  <summary>
+                    Diamond controls
+                  </summary>
+
+                  <div class="object-control-body">
+                    <div
+                      class="two-view-buttons"
+                      aria-label="Diamond Lattice two-view controls"
+                    >
+                      <button
+                        type="button"
+                        data-diamond-lens="crystal"
+                        data-diamond-dimension="object"
+                        aria-pressed="true"
+                        data-active
+                      >
+                        Object View
+                      </button>
+
+                      <button
+                        type="button"
+                        data-diamond-lens="lattice"
+                        aria-pressed="false"
+                      >
+                        Lattice View
+                      </button>
+                    </div>
+
+                    <div
+                      class="technical-control-bridge"
+                      aria-hidden="true"
+                      data-technical-control-options-hidden="true"
+                    >
+                      <button
+                        type="button"
+                        data-diamond-dimension="memory"
+                        aria-pressed="false"
+                        tabindex="-1"
+                      >
+                        World Memory
+                      </button>
+
+                      <button
+                        type="button"
+                        data-diamond-dimension="behind"
+                        aria-pressed="false"
+                        tabindex="-1"
+                      >
+                        Lattice Behind
+                      </button>
+
+                      <button
+                        type="button"
+                        data-diamond-dimension="through"
+                        aria-pressed="false"
+                        tabindex="-1"
+                      >
+                        Lattice Through
+                      </button>
+
+                      <button
+                        type="button"
+                        data-diamond-dimension="full"
+                        aria-pressed="false"
+                        tabindex="-1"
+                      >
+                        Full Proof
+                      </button>
+                    </div>
+
+                    <div class="status-strip">
+                      <span data-showroom-diamond-status>
+                        Preparing the G3 Diamond Lattice…
+                      </span>
+
+                      <div class="actions">
+                        <button
+                          class="button"
+                          type="button"
+                          data-showroom-diamond-inspect
+                        >
+                          Inspect
+                        </button>
+
+                        <button
+                          class="button"
+                          type="button"
+                          data-showroom-diamond-reset
+                        >
+                          Reset
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </details>
+              </div>
+            </div>
           </div>
 
           <div class="showroom-fact-grid">
@@ -1874,9 +1867,9 @@
       </div>
 
       <p id="showroom-compass-dialog-description">
-        The Compass remains fixed at the center of the Showroom. Choose
-        whether to remain with the current threshold or return to the
-        Diamond Gate Bridge Main Compass.
+        The Compass remains fixed at the center of the Showroom
+        navigator. Choose whether to remain with the current threshold
+        or return to the Diamond Gate Bridge Main Compass.
       </p>
 
       <div class="showroom-compass-dialog__choices">
@@ -2090,8 +2083,33 @@
             <p>
               The Showroom controller owns accepted page and Window
               state. Interactions owns gesture interpretation. The
-              compositor owns the orbital camera and layer order.
-              Crystals owns the orbiting evidence objects.
+              compositor owns the separate orbital camera and layer
+              order. Crystals owns the orbiting evidence objects.
+            </p>
+          </div>
+        </details>
+
+        <details class="architectural-drop">
+          <summary>
+            Stage-separation record
+          </summary>
+
+          <div class="drop-content">
+            <p>
+              The compact orbit navigator and the Diamond exhibit are
+              independent stages.
+            </p>
+
+            <p>
+              The orbit stage owns only the fixed Compass, rear and front
+              crystal canvases, and seven projected category controls.
+            </p>
+
+            <p>
+              The Diamond stage retains its own canvas, camera,
+              interaction lifecycle, motion, zoom, inspection, and
+              fallback behavior. The Mirrorland Window overlays only the
+              Diamond viewport.
             </p>
           </div>
         </details>

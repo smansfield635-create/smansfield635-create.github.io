@@ -1,34 +1,47 @@
 /* /products/archcoin/index.css
    ARCHCOIN
-   Homepage-derived financial operating-field presentation.
+   Compass-derived financial operating-field presentation.
 
    Architecture anchors:
    - DGB_ARCHCOIN_CONTROLLER
-     6.0.1-controller-presentation-and-native-home-corrections
+     7.0.0-controller-interaction-semantic-priority
+
    - DGB_UPSTREAM_COMPASS_GEOMETRY
      3.0.0-fixed-center-independent-sibling
+
    - DGB_UPSTREAM_COMPASS_RENDERER
      3.0.1-fixed-center-runtime-corrections
+
    - DGB_ARCHCOIN_COMPOSITOR
      1.0.0-camera-depth-layer-orchestration
-   - DGB_ARCHCOIN_CRYSTALS
-     1.3.0-compositor-extracted-crystal-renderer
 
-   Visible progression:
-   ARCHCOIN threshold
-   → four financial domains
-   → fixed-center Compass and crystal field
-   → selected path
-   → four-domain explanation
-   → return path
+   - DGB_ARCHCOIN_CRYSTALS
+     2.0.0-controller-decoupled-crystal-renderer
+
+   Public presentation:
+   - atmospheric Compass-family page;
+   - editorial threshold;
+   - rounded domain chambers;
+   - integrated crystal field;
+   - fixed-center page-local Compass control;
+   - controller-positioned semantic labels;
+   - simplified selected-path chamber;
+   - rounded financial-domain disclosures;
+   - explicit Return to Orbit and Return to Main Compass actions.
+
+   Interaction ownership:
+   - controller owns pointer and swipe interpretation;
+   - controller owns semantic interaction authorization;
+   - controller owns front/rear semantic priority;
+   - compositor owns camera, projection, depth, and layer construction;
+   - crystals owns crystal geometry, animation, and WebGL drawing;
+   - CSS owns visual presentation only.
 
    Composite order:
-   rear crystal canvas = 1
-   fixed-center Compass = 2
-   front crystal canvas = 3
-   semantic controls = 4
-
-   Field atmosphere and instrumentation remain noninteractive and subordinate.
+   - rear crystal canvas = 1;
+   - fixed-center Compass = 2;
+   - front crystal canvas = 3;
+   - semantic controls = 4.
 
    Runtime execution:
    NOT PERFORMED
@@ -41,69 +54,78 @@
 */
 
 :root {
-  color-scheme: dark;
+  color-scheme:
+    dark;
 
-  --archcoin-bg:
-    #02070c;
+  --archcoin-page:
+    #091117;
 
-  --archcoin-bg-deep:
-    #010408;
+  --archcoin-page-deep:
+    #05090d;
 
-  --archcoin-bg-raised:
-    #07111a;
+  --archcoin-surface:
+    rgba(10, 17, 23, 0.93);
 
-  --archcoin-bg-panel:
-    rgba(5, 13, 21, 0.96);
+  --archcoin-surface-strong:
+    rgba(13, 20, 27, 0.97);
+
+  --archcoin-surface-soft:
+    rgba(13, 22, 29, 0.72);
+
+  --archcoin-surface-glass:
+    rgba(14, 23, 30, 0.62);
 
   --archcoin-field:
-    rgba(3, 10, 16, 0.98);
+    rgba(6, 14, 21, 0.94);
 
-  --archcoin-line-faint:
-    rgba(156, 198, 226, 0.07);
+  --archcoin-cream:
+    #f3edda;
 
-  --archcoin-line-soft:
-    rgba(156, 198, 226, 0.13);
+  --archcoin-cream-soft:
+    rgba(243, 237, 218, 0.82);
 
-  --archcoin-line:
-    rgba(163, 205, 233, 0.22);
+  --archcoin-cream-muted:
+    rgba(243, 237, 218, 0.62);
 
-  --archcoin-line-strong:
-    rgba(176, 218, 245, 0.42);
-
-  --archcoin-text:
-    rgba(247, 250, 252, 0.98);
-
-  --archcoin-text-soft:
-    rgba(220, 231, 239, 0.84);
-
-  --archcoin-text-muted:
-    rgba(171, 192, 208, 0.64);
-
-  --archcoin-text-faint:
-    rgba(152, 175, 193, 0.44);
+  --archcoin-cream-faint:
+    rgba(243, 237, 218, 0.38);
 
   --archcoin-gold:
-    #efcb8c;
+    #ecd080;
 
   --archcoin-gold-soft:
-    rgba(239, 203, 140, 0.18);
+    rgba(236, 208, 128, 0.24);
 
-  --archcoin-focus:
-    #f3d5a4;
+  --archcoin-gold-faint:
+    rgba(236, 208, 128, 0.12);
 
-  --archcoin-contract:
-    #c8d5ff;
+  --archcoin-blue:
+    #9edbe2;
 
-  --archcoin-receivable:
-    #86e9f6;
+  --archcoin-blue-soft:
+    rgba(158, 219, 226, 0.22);
 
-  --archcoin-payable:
-    #efb883;
+  --archcoin-line:
+    rgba(211, 222, 218, 0.18);
 
-  --archcoin-allocation:
-    #dbc48d;
+  --archcoin-line-soft:
+    rgba(211, 222, 218, 0.10);
 
-  --archcoin-system-font:
+  --archcoin-line-faint:
+    rgba(211, 222, 218, 0.055);
+
+  --archcoin-shadow:
+    0 28px 80px rgba(0, 0, 0, 0.36);
+
+  --archcoin-shadow-soft:
+    0 18px 48px rgba(0, 0, 0, 0.26);
+
+  --archcoin-serif:
+    Georgia,
+    "Times New Roman",
+    serif;
+
+  --archcoin-sans:
     Inter,
     ui-sans-serif,
     system-ui,
@@ -112,7 +134,7 @@
     "Segoe UI",
     sans-serif;
 
-  --archcoin-mono-font:
+  --archcoin-mono:
     "SFMono-Regular",
     "Cascadia Code",
     "Roboto Mono",
@@ -122,22 +144,31 @@
     monospace;
 
   --archcoin-max:
-    1280px;
+    1240px;
 
   --archcoin-reading:
-    760px;
+    740px;
+
+  --archcoin-radius-large:
+    34px;
+
+  --archcoin-radius-medium:
+    24px;
 
   --archcoin-radius-small:
-    3px;
+    16px;
+
+  --archcoin-radius-pill:
+    999px;
 
   --archcoin-ease:
-    cubic-bezier(0.2, 0.7, 0.2, 1);
+    cubic-bezier(0.2, 0.72, 0.22, 1);
 
   --archcoin-scene-height:
-    clamp(600px, 76vh, 880px);
+    clamp(560px, 70vh, 820px);
 
   --archcoin-compass-size:
-    clamp(138px, 16vw, 206px);
+    clamp(128px, 16vw, 190px);
 
   --archcoin-rear-z:
     1;
@@ -174,7 +205,7 @@ html {
     smooth;
 
   background:
-    var(--archcoin-bg-deep);
+    var(--archcoin-page-deep);
 }
 
 body {
@@ -188,18 +219,33 @@ body {
     hidden;
 
   color:
-    var(--archcoin-text);
+    var(--archcoin-cream);
 
   background:
+    radial-gradient(
+      circle at 52% 5%,
+      rgba(80, 133, 145, 0.18),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at 8% 44%,
+      rgba(68, 113, 124, 0.12),
+      transparent 34%
+    ),
+    radial-gradient(
+      circle at 94% 62%,
+      rgba(126, 93, 53, 0.12),
+      transparent 30%
+    ),
     linear-gradient(
       180deg,
-      #02070c 0%,
-      #040b12 40%,
-      #02060a 100%
+      #10191f 0%,
+      #091117 44%,
+      #05090d 100%
     );
 
   font-family:
-    var(--archcoin-system-font);
+    var(--archcoin-sans);
 
   text-rendering:
     optimizeLegibility;
@@ -216,24 +262,24 @@ body::before {
     0;
 
   z-index:
-    -2;
+    -3;
 
   background:
     linear-gradient(
       90deg,
       transparent 0,
-      rgba(122, 173, 207, 0.025) 1px,
+      rgba(173, 214, 221, 0.022) 1px,
       transparent 1px
     ),
     linear-gradient(
       180deg,
       transparent 0,
-      rgba(122, 173, 207, 0.02) 1px,
+      rgba(173, 214, 221, 0.018) 1px,
       transparent 1px
     );
 
   background-size:
-    72px 72px;
+    30px 30px;
 
   pointer-events:
     none;
@@ -250,24 +296,30 @@ body::after {
     0;
 
   z-index:
-    -1;
+    -2;
 
-  background:
+  opacity:
+    0.5;
+
+  background-image:
     radial-gradient(
-      circle at 50% 8%,
-      rgba(74, 143, 190, 0.14),
-      transparent 31%
+      circle,
+      rgba(243, 237, 218, 0.46) 0 1px,
+      transparent 1.5px
     ),
     radial-gradient(
-      circle at 9% 45%,
-      rgba(55, 119, 164, 0.06),
-      transparent 28%
-    ),
-    radial-gradient(
-      circle at 91% 62%,
-      rgba(220, 173, 103, 0.05),
-      transparent 26%
+      circle,
+      rgba(158, 219, 226, 0.34) 0 1px,
+      transparent 1.5px
     );
+
+  background-position:
+    4% 12%,
+    84% 30%;
+
+  background-size:
+    138px 138px,
+    186px 186px;
 
   pointer-events:
     none;
@@ -297,7 +349,7 @@ button:focus-visible,
 a:focus-visible,
 summary:focus-visible {
   outline:
-    3px solid var(--archcoin-focus);
+    3px solid var(--archcoin-gold);
 
   outline-offset:
     4px;
@@ -311,8 +363,13 @@ p {
     balance;
 }
 
+[hidden] {
+  display:
+    none !important;
+}
+
 /* -------------------------------------------------------------------------- */
-/* Page                                                                        */
+/* Page atmosphere                                                             */
 /* -------------------------------------------------------------------------- */
 
 .archcoin-page {
@@ -323,10 +380,13 @@ p {
     grid;
 
   gap:
-    clamp(56px, 8vw, 112px);
+    clamp(46px, 7vw, 92px);
 
   width:
-    min(100%, var(--archcoin-max));
+    min(
+      calc(100% - 24px),
+      var(--archcoin-max)
+    );
 
   min-height:
     100vh;
@@ -335,106 +395,102 @@ p {
     0 auto;
 
   padding:
-    clamp(18px, 3vw, 38px)
-    clamp(14px, 3vw, 34px)
-    clamp(64px, 9vw, 126px);
+    clamp(16px, 3vw, 34px)
+    0
+    clamp(64px, 9vw, 116px);
 }
 
-/* -------------------------------------------------------------------------- */
-/* Threshold                                                                   */
-/* -------------------------------------------------------------------------- */
-
-.archcoin-threshold {
+.archcoin-atmosphere {
   position:
-    relative;
+    fixed;
 
-  display:
-    grid;
-
-  grid-template-columns:
-    minmax(180px, 0.72fr)
-    minmax(0, 1.28fr);
-
-  gap:
-    clamp(28px, 6vw, 86px);
-
-  min-height:
-    min(82vh, 840px);
-
-  align-content:
-    center;
-
-  padding:
-    clamp(30px, 6vw, 78px)
+  inset:
     0;
 
-  border-top:
-    1px solid var(--archcoin-line-soft);
+  z-index:
+    -1;
 
-  border-bottom:
-    1px solid var(--archcoin-line-soft);
-}
-
-.archcoin-threshold::before {
-  content:
-    "";
-
-  position:
-    absolute;
-
-  left:
-    -10vw;
-
-  top:
-    50%;
-
-  width:
-    min(72vw, 780px);
-
-  aspect-ratio:
-    1 / 1;
-
-  transform:
-    translateY(-50%);
-
-  border:
-    1px solid rgba(126, 185, 224, 0.05);
-
-  border-radius:
-    50%;
-
-  background:
-    radial-gradient(
-      circle,
-      rgba(68, 137, 184, 0.08),
-      transparent 66%
-    );
+  overflow:
+    hidden;
 
   pointer-events:
     none;
 }
 
-.archcoin-threshold__identity,
-.archcoin-threshold__statement,
-.archcoin-threshold__continue,
-.archcoin-threshold__context {
+.archcoin-atmosphere__glow,
+.archcoin-atmosphere__stars,
+.archcoin-atmosphere__grid {
   position:
-    relative;
+    absolute;
 
-  z-index:
-    1;
+  inset:
+    0;
 }
 
-.archcoin-threshold__identity {
-  display:
-    grid;
-
-  gap:
-    8px;
-
-  align-content:
-    start;
+.archcoin-atmosphere__glow {
+  background:
+    radial-gradient(
+      circle at 50% 14%,
+      rgba(126, 189, 196, 0.12),
+      transparent 34%
+    ),
+    radial-gradient(
+      circle at 8% 72%,
+      rgba(81, 144, 155, 0.10),
+      transparent 27%
+    ),
+    radial-gradient(
+      circle at 92% 55%,
+      rgba(215, 177, 99, 0.08),
+      transparent 30%
+    );
 }
+
+.archcoin-atmosphere__stars {
+  opacity:
+    0.38;
+
+  background-image:
+    radial-gradient(
+      circle,
+      rgba(243, 237, 218, 0.6) 0 1px,
+      transparent 1.4px
+    );
+
+  background-size:
+    118px 118px;
+}
+
+.archcoin-atmosphere__grid {
+  opacity:
+    0.22;
+
+  background:
+    repeating-linear-gradient(
+      90deg,
+      transparent 0,
+      transparent 23px,
+      rgba(158, 219, 226, 0.035) 24px
+    ),
+    repeating-linear-gradient(
+      180deg,
+      transparent 0,
+      transparent 23px,
+      rgba(158, 219, 226, 0.03) 24px
+    );
+
+  mask-image:
+    linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0.8),
+      rgba(0, 0, 0, 0.28) 64%,
+      transparent
+    );
+}
+
+/* -------------------------------------------------------------------------- */
+/* Shared editorial text                                                       */
+/* -------------------------------------------------------------------------- */
 
 .archcoin-threshold__estate,
 .archcoin-threshold__classification,
@@ -449,16 +505,16 @@ p {
     0;
 
   font-family:
-    var(--archcoin-mono-font);
+    var(--archcoin-sans);
 
   font-size:
-    0.7rem;
+    0.72rem;
 
   font-weight:
-    700;
+    800;
 
   letter-spacing:
-    0.18em;
+    0.2em;
 
   line-height:
     1.4;
@@ -481,7 +537,158 @@ p {
 
 .archcoin-threshold__classification {
   color:
-    var(--archcoin-text-faint);
+    var(--archcoin-cream-faint);
+}
+
+.archcoin-domain-introduction h2,
+.archcoin-compass h2,
+.archcoin-panel h2,
+.archcoin-principles h2,
+.archcoin-journey h2 {
+  margin:
+    0;
+
+  color:
+    var(--archcoin-cream);
+
+  font-family:
+    var(--archcoin-serif);
+
+  font-weight:
+    600;
+
+  letter-spacing:
+    -0.045em;
+
+  line-height:
+    0.98;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Threshold                                                                   */
+/* -------------------------------------------------------------------------- */
+
+.archcoin-threshold {
+  position:
+    relative;
+
+  display:
+    grid;
+
+  gap:
+    clamp(24px, 4vw, 46px);
+
+  min-height:
+    min(88vh, 860px);
+
+  align-content:
+    center;
+
+  padding:
+    clamp(34px, 7vw, 84px);
+
+  overflow:
+    hidden;
+
+  border:
+    1px solid var(--archcoin-line);
+
+  border-radius:
+    var(--archcoin-radius-large);
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(23, 34, 41, 0.92),
+      rgba(10, 18, 24, 0.94)
+    );
+
+  box-shadow:
+    var(--archcoin-shadow);
+}
+
+.archcoin-threshold::before {
+  content:
+    "";
+
+  position:
+    absolute;
+
+  inset:
+    0;
+
+  background:
+    radial-gradient(
+      circle at 76% 16%,
+      rgba(158, 219, 226, 0.13),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at 14% 88%,
+      rgba(236, 208, 128, 0.08),
+      transparent 30%
+    );
+
+  pointer-events:
+    none;
+}
+
+.archcoin-threshold::after {
+  content:
+    "";
+
+  position:
+    absolute;
+
+  right:
+    -18%;
+
+  top:
+    -20%;
+
+  width:
+    min(70vw, 720px);
+
+  aspect-ratio:
+    1 / 1;
+
+  border:
+    1px solid rgba(158, 219, 226, 0.08);
+
+  border-radius:
+    50%;
+
+  box-shadow:
+    0 0 0 44px rgba(158, 219, 226, 0.018),
+    0 0 0 92px rgba(158, 219, 226, 0.012);
+
+  pointer-events:
+    none;
+}
+
+.archcoin-threshold > * {
+  position:
+    relative;
+
+  z-index:
+    1;
+}
+
+.archcoin-threshold__identity {
+  display:
+    flex;
+
+  flex-wrap:
+    wrap;
+
+  gap:
+    10px 22px;
+
+  align-items:
+    center;
+
+  justify-content:
+    space-between;
 }
 
 .archcoin-threshold__statement {
@@ -489,147 +696,214 @@ p {
     grid;
 
   gap:
-    clamp(18px, 2.5vw, 30px);
+    clamp(18px, 2.6vw, 30px);
+
+  max-width:
+    960px;
 }
 
 .archcoin-threshold h1 {
   max-width:
-    13ch;
+    11ch;
 
   margin:
     0;
 
   color:
-    var(--archcoin-text);
+    var(--archcoin-cream);
+
+  font-family:
+    var(--archcoin-serif);
 
   font-size:
-    clamp(3rem, 7.4vw, 7.4rem);
+    clamp(3.6rem, 8.6vw, 8.2rem);
 
   font-weight:
-    640;
+    600;
 
   letter-spacing:
-    -0.065em;
+    -0.068em;
 
   line-height:
-    0.92;
+    0.86;
 }
 
 .archcoin-threshold__lead {
   max-width:
-    66ch;
+    56ch;
 
   margin:
     0;
 
   color:
-    var(--archcoin-text-soft);
+    var(--archcoin-cream-soft);
 
   font-size:
-    clamp(1rem, 1.7vw, 1.28rem);
+    clamp(1.08rem, 2vw, 1.42rem);
+
+  line-height:
+    1.58;
+}
+
+.archcoin-threshold__invitation {
+  display:
+    grid;
+
+  gap:
+    22px;
+
+  max-width:
+    760px;
+
+  padding:
+    clamp(22px, 4vw, 36px);
+
+  border:
+    1px solid var(--archcoin-line);
+
+  border-radius:
+    var(--archcoin-radius-medium);
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(18, 27, 33, 0.82),
+      rgba(10, 17, 23, 0.78)
+    );
+
+  box-shadow:
+    inset 0 0 0 1px rgba(236, 208, 128, 0.04);
+}
+
+.archcoin-threshold__invitation > p {
+  max-width:
+    58ch;
+
+  margin:
+    0;
+
+  color:
+    var(--archcoin-cream-muted);
+
+  font-size:
+    clamp(1rem, 1.7vw, 1.2rem);
 
   line-height:
     1.7;
 }
 
 .archcoin-threshold__continue {
-  grid-column:
-    2;
-
-  justify-self:
-    start;
-
   display:
-    inline-flex;
+    flex;
 
   align-items:
     center;
 
+  justify-content:
+    space-between;
+
   gap:
-    12px;
+    18px;
 
-  padding:
-    12px 0;
+  padding-top:
+    20px;
 
-  border-bottom:
-    1px solid var(--archcoin-line);
-
-  color:
-    var(--archcoin-text-soft);
-
-  font-family:
-    var(--archcoin-mono-font);
-
-  font-size:
-    0.68rem;
-
-  font-weight:
-    700;
-
-  letter-spacing:
-    0.12em;
-
-  text-transform:
-    uppercase;
-}
-
-.archcoin-threshold__continue::after {
-  content:
-    "↓";
+  border-top:
+    1px solid var(--archcoin-line-soft);
 
   color:
     var(--archcoin-gold);
 
   font-size:
-    1rem;
+    0.76rem;
 
-  transition:
-    transform 150ms var(--archcoin-ease);
+  font-weight:
+    800;
+
+  letter-spacing:
+    0.16em;
+
+  text-transform:
+    uppercase;
 }
 
-.archcoin-threshold__continue:hover::after {
+.archcoin-threshold__continue span:last-child {
+  display:
+    grid;
+
+  place-items:
+    center;
+
+  width:
+    42px;
+
+  height:
+    42px;
+
+  border:
+    1px solid var(--archcoin-gold-soft);
+
+  border-radius:
+    50%;
+
+  font-size:
+    1.28rem;
+
+  transition:
+    transform 180ms var(--archcoin-ease),
+    background 180ms var(--archcoin-ease);
+}
+
+.archcoin-threshold__continue:hover span:last-child,
+.archcoin-threshold__continue:focus-visible span:last-child {
   transform:
-    translateY(3px);
+    rotate(90deg);
+
+  background:
+    var(--archcoin-gold-faint);
 }
 
 .archcoin-threshold__context {
-  grid-column:
-    2;
+  max-width:
+    760px;
 
-  width:
-    min(100%, 760px);
-
-  border-top:
+  border:
     1px solid var(--archcoin-line-soft);
+
+  border-radius:
+    var(--archcoin-radius-small);
+
+  background:
+    rgba(7, 13, 18, 0.48);
 }
 
 .archcoin-threshold__context summary {
   display:
-    inline-flex;
+    flex;
 
   align-items:
     center;
 
+  justify-content:
+    space-between;
+
   gap:
-    10px;
+    18px;
 
   padding:
-    14px 0 0;
+    18px 20px;
 
   color:
-    var(--archcoin-text-muted);
+    var(--archcoin-cream-soft);
 
   cursor:
     pointer;
 
-  font-family:
-    var(--archcoin-mono-font);
-
   font-size:
-    0.68rem;
+    0.74rem;
 
   font-weight:
-    700;
+    800;
 
   letter-spacing:
     0.12em;
@@ -646,33 +920,21 @@ p {
     none;
 }
 
-.archcoin-threshold__context summary::before {
+.archcoin-threshold__context summary::after {
   content:
     "+";
-
-  display:
-    grid;
-
-  place-items:
-    center;
-
-  width:
-    20px;
-
-  height:
-    20px;
-
-  border:
-    1px solid var(--archcoin-line);
 
   color:
     var(--archcoin-gold);
 
+  font-size:
+    1.35rem;
+
   transition:
-    transform 150ms var(--archcoin-ease);
+    transform 180ms var(--archcoin-ease);
 }
 
-.archcoin-threshold__context[open] summary::before {
+.archcoin-threshold__context[open] summary::after {
   transform:
     rotate(45deg);
 }
@@ -682,27 +944,24 @@ p {
     grid;
 
   gap:
-    12px;
-
-  max-width:
-    70ch;
+    14px;
 
   padding:
-    18px 0 0;
+    0 20px 20px;
 }
 
 .archcoin-threshold__context-body p {
+  max-width:
+    66ch;
+
   margin:
     0;
 
   color:
-    var(--archcoin-text-muted);
-
-  font-size:
-    0.94rem;
+    var(--archcoin-cream-muted);
 
   line-height:
-    1.68;
+    1.7;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -714,51 +973,29 @@ p {
     grid;
 
   gap:
-    clamp(28px, 5vw, 58px);
+    clamp(28px, 5vw, 48px);
 }
 
 .archcoin-domain-introduction__heading {
   display:
     grid;
 
-  grid-template-columns:
-    minmax(200px, 0.72fr)
-    minmax(0, 1.28fr);
-
   gap:
-    clamp(24px, 5vw, 72px);
+    18px;
 
-  align-items:
-    end;
-}
+  max-width:
+    850px;
 
-.archcoin-domain-introduction__heading h2,
-.archcoin-compass__heading h2,
-.archcoin-panel h2,
-.archcoin-principles h2,
-.archcoin-journey h2 {
-  margin:
-    0;
-
-  color:
-    var(--archcoin-text);
-
-  font-weight:
-    640;
-
-  letter-spacing:
-    -0.045em;
-
-  line-height:
-    0.98;
+  padding-inline:
+    clamp(8px, 3vw, 28px);
 }
 
 .archcoin-domain-introduction__heading h2 {
   max-width:
-    12ch;
+    11ch;
 
   font-size:
-    clamp(2.2rem, 5vw, 5.2rem);
+    clamp(2.8rem, 6vw, 6rem);
 }
 
 .archcoin-domain-introduction__heading > p:last-child {
@@ -769,13 +1006,13 @@ p {
     0;
 
   color:
-    var(--archcoin-text-muted);
+    var(--archcoin-cream-muted);
 
   font-size:
     1rem;
 
   line-height:
-    1.65;
+    1.7;
 }
 
 .archcoin-domain-introduction__grid {
@@ -785,11 +1022,8 @@ p {
   grid-template-columns:
     repeat(2, minmax(0, 1fr));
 
-  border-top:
-    1px solid var(--archcoin-line-soft);
-
-  border-left:
-    1px solid var(--archcoin-line-soft);
+  gap:
+    clamp(14px, 2.2vw, 24px);
 }
 
 .archcoin-domain-card {
@@ -800,29 +1034,40 @@ p {
     grid;
 
   gap:
-    16px;
+    12px;
 
   min-height:
-    270px;
+    258px;
+
+  align-content:
+    start;
 
   padding:
-    clamp(24px, 4vw, 48px);
-
-  border-right:
-    1px solid var(--archcoin-line-soft);
-
-  border-bottom:
-    1px solid var(--archcoin-line-soft);
-
-  background:
-    linear-gradient(
-      180deg,
-      rgba(8, 18, 28, 0.72),
-      rgba(4, 11, 18, 0.78)
-    );
+    clamp(24px, 4vw, 40px);
 
   overflow:
     hidden;
+
+  border:
+    1px solid var(--archcoin-line);
+
+  border-radius:
+    var(--archcoin-radius-medium);
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(18, 28, 35, 0.9),
+      rgba(8, 15, 21, 0.92)
+    );
+
+  box-shadow:
+    var(--archcoin-shadow-soft);
+
+  transition:
+    transform 180ms var(--archcoin-ease),
+    border-color 180ms var(--archcoin-ease),
+    box-shadow 180ms var(--archcoin-ease);
 }
 
 .archcoin-domain-card::before {
@@ -832,40 +1077,14 @@ p {
   position:
     absolute;
 
-  left:
-    0;
-
-  top:
-    0;
-
-  bottom:
-    0;
-
-  width:
-    2px;
-
-  background:
-    currentColor;
-
-  opacity:
-    0.58;
-}
-
-.archcoin-domain-card::after {
-  content:
-    "";
-
-  position:
-    absolute;
-
   right:
-    -12%;
+    -18%;
 
   bottom:
     -44%;
 
   width:
-    58%;
+    70%;
 
   aspect-ratio:
     1 / 1;
@@ -877,128 +1096,104 @@ p {
     50%;
 
   opacity:
-    0.05;
+    0.08;
+
+  pointer-events:
+    none;
+}
+
+.archcoin-domain-card:hover,
+.archcoin-domain-card:focus-visible {
+  transform:
+    translateY(-4px);
+
+  border-color:
+    var(--archcoin-gold-soft);
+
+  box-shadow:
+    0 30px 70px rgba(0, 0, 0, 0.34);
 }
 
 .archcoin-domain-card--north {
   color:
-    var(--archcoin-contract);
+    #cbd5f7;
 }
 
 .archcoin-domain-card--east {
   color:
-    var(--archcoin-receivable);
+    #9edbe2;
 }
 
 .archcoin-domain-card--south {
   color:
-    var(--archcoin-payable);
+    #ddb081;
 }
 
 .archcoin-domain-card--west {
   color:
-    var(--archcoin-allocation);
+    #d9c58f;
 }
 
 .archcoin-domain-card__coordinate {
-  margin:
-    0;
-
   color:
     currentColor;
 
-  font-family:
-    var(--archcoin-mono-font);
-
   font-size:
-    0.66rem;
+    0.68rem;
 
   font-weight:
-    700;
+    800;
 
   letter-spacing:
-    0.15em;
+    0.16em;
 
   text-transform:
     uppercase;
 }
 
-.archcoin-domain-card h3 {
-  max-width:
-    16ch;
-
-  margin:
-    0;
-
+.archcoin-domain-card__name {
   color:
-    var(--archcoin-text);
+    var(--archcoin-cream);
+
+  font-family:
+    var(--archcoin-serif);
 
   font-size:
-    clamp(1.45rem, 3vw, 2.6rem);
+    clamp(2rem, 4vw, 3.6rem);
 
   font-weight:
-    620;
+    600;
 
   letter-spacing:
     -0.04em;
 
   line-height:
-    1.02;
+    1;
 }
 
-.archcoin-domain-card > p:not(.archcoin-domain-card__coordinate) {
+.archcoin-domain-card strong {
   max-width:
-    52ch;
-
-  margin:
-    0;
+    18ch;
 
   color:
-    var(--archcoin-text-muted);
-
-  line-height:
-    1.65;
-}
-
-.archcoin-domain-card a {
-  align-self:
-    end;
-
-  justify-self:
-    start;
-
-  display:
-    inline-flex;
-
-  align-items:
-    center;
-
-  gap:
-    10px;
-
-  padding-bottom:
-    6px;
-
-  border-bottom:
-    1px solid currentColor;
-
-  color:
-    var(--archcoin-text-soft);
-
-  font-family:
-    var(--archcoin-mono-font);
+    var(--archcoin-cream);
 
   font-size:
-    0.64rem;
+    1.08rem;
 
-  font-weight:
-    700;
+  line-height:
+    1.35;
+}
 
-  letter-spacing:
-    0.1em;
+.archcoin-domain-card > span:last-child {
+  max-width:
+    40ch;
 
-  text-transform:
-    uppercase;
+  color:
+    var(--archcoin-cream-muted);
+
+  line-height:
+    1.62;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1010,55 +1205,49 @@ p {
     grid;
 
   gap:
-    clamp(28px, 4vw, 48px);
+    clamp(24px, 4vw, 40px);
 
   scroll-margin-top:
-    20px;
+    18px;
 }
 
 .archcoin-compass__header {
   display:
     grid;
 
-  grid-template-columns:
-    minmax(0, 1fr)
-    auto;
-
   gap:
-    clamp(24px, 5vw, 72px);
+    16px;
 
-  align-items:
-    end;
+  max-width:
+    840px;
+
+  padding-inline:
+    clamp(8px, 3vw, 28px);
 }
 
-.archcoin-compass__heading {
-  display:
-    grid;
-
-  gap:
-    13px;
-}
-
-.archcoin-compass__heading h2 {
+.archcoin-compass__header h2 {
   max-width:
     12ch;
 
   font-size:
-    clamp(2.4rem, 5.5vw, 5.8rem);
+    clamp(3rem, 6.8vw, 6.8rem);
 }
 
-.archcoin-compass__heading > p:last-child {
+.archcoin-compass__header > p:last-child {
   max-width:
-    60ch;
+    58ch;
 
   margin:
     0;
 
   color:
-    var(--archcoin-text-muted);
+    var(--archcoin-cream-muted);
+
+  font-size:
+    1rem;
 
   line-height:
-    1.65;
+    1.7;
 }
 
 .archcoin-compass__legend {
@@ -1066,19 +1255,10 @@ p {
     grid;
 
   grid-template-columns:
-    repeat(2, minmax(0, 1fr));
+    repeat(4, minmax(0, 1fr));
 
   gap:
-    1px;
-
-  min-width:
-    min(100%, 350px);
-
-  border:
-    1px solid var(--archcoin-line-soft);
-
-  background:
-    var(--archcoin-line-soft);
+    10px;
 }
 
 .archcoin-compass__legend span {
@@ -1088,23 +1268,35 @@ p {
   align-items:
     center;
 
+  justify-content:
+    center;
+
   gap:
-    9px;
+    8px;
+
+  min-height:
+    46px;
 
   padding:
     10px 12px;
 
+  border:
+    1px solid var(--archcoin-line-soft);
+
+  border-radius:
+    var(--archcoin-radius-pill);
+
   color:
-    var(--archcoin-text-muted);
+    var(--archcoin-cream-muted);
 
   background:
-    rgba(4, 11, 18, 0.96);
-
-  font-family:
-    var(--archcoin-mono-font);
+    rgba(8, 15, 21, 0.68);
 
   font-size:
-    0.62rem;
+    0.7rem;
+
+  font-weight:
+    700;
 
   letter-spacing:
     0.06em;
@@ -1116,9 +1308,6 @@ p {
 .archcoin-compass__legend b {
   color:
     var(--archcoin-gold);
-
-  font-size:
-    0.7rem;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1135,11 +1324,47 @@ p {
   border:
     1px solid var(--archcoin-line);
 
+  border-radius:
+    var(--archcoin-radius-large);
+
   background:
-    rgba(3, 9, 15, 0.94);
+    linear-gradient(
+      145deg,
+      rgba(14, 24, 31, 0.95),
+      rgba(6, 13, 19, 0.97)
+    );
 
   box-shadow:
-    0 28px 88px rgba(0, 0, 0, 0.34);
+    var(--archcoin-shadow);
+
+  isolation:
+    isolate;
+}
+
+.archcoin-scene::before {
+  content:
+    "";
+
+  position:
+    absolute;
+
+  inset:
+    0;
+
+  background:
+    radial-gradient(
+      circle at 50% 42%,
+      rgba(105, 181, 191, 0.09),
+      transparent 44%
+    ),
+    radial-gradient(
+      circle at 12% 24%,
+      rgba(236, 208, 128, 0.045),
+      transparent 24%
+    );
+
+  pointer-events:
+    none;
 }
 
 .archcoin-scene__header {
@@ -1147,7 +1372,7 @@ p {
     relative;
 
   z-index:
-    5;
+    6;
 
   display:
     flex;
@@ -1159,20 +1384,13 @@ p {
     space-between;
 
   gap:
-    24px;
+    28px;
 
   padding:
-    clamp(18px, 2.5vw, 30px);
+    clamp(22px, 4vw, 38px);
 
   border-bottom:
     1px solid var(--archcoin-line-soft);
-
-  background:
-    linear-gradient(
-      90deg,
-      rgba(8, 18, 28, 0.96),
-      rgba(4, 11, 18, 0.94)
-    );
 }
 
 .archcoin-scene__header > div {
@@ -1180,30 +1398,33 @@ p {
     grid;
 
   gap:
-    8px;
+    10px;
 }
 
 .archcoin-scene__header h3 {
   max-width:
-    28ch;
+    20ch;
 
   margin:
     0;
 
   color:
-    var(--archcoin-text);
+    var(--archcoin-cream);
+
+  font-family:
+    var(--archcoin-serif);
 
   font-size:
-    clamp(1.35rem, 2.8vw, 2.5rem);
+    clamp(2rem, 4vw, 3.8rem);
 
   font-weight:
-    620;
+    600;
 
   letter-spacing:
-    -0.035em;
+    -0.045em;
 
   line-height:
-    1.05;
+    1;
 }
 
 .archcoin-scene__mode {
@@ -1211,19 +1432,16 @@ p {
     0;
 
   color:
-    var(--archcoin-text-muted);
-
-  font-family:
-    var(--archcoin-mono-font);
+    var(--archcoin-cream-faint);
 
   font-size:
-    0.66rem;
+    0.68rem;
 
   font-weight:
-    700;
+    800;
 
   letter-spacing:
-    0.12em;
+    0.15em;
 
   text-transform:
     uppercase;
@@ -1243,101 +1461,31 @@ p {
     isolate;
 
   background:
+    radial-gradient(
+      circle at 50% 48%,
+      rgba(71, 134, 145, 0.11),
+      transparent 35%
+    ),
     linear-gradient(
       180deg,
-      rgba(6, 15, 24, 0.75),
-      rgba(2, 8, 13, 0.98)
+      rgba(9, 19, 26, 0.76),
+      rgba(5, 12, 18, 0.96)
     );
 }
 
-.archcoin-scene__field::before {
-  content:
-    "";
-
-  position:
-    absolute;
-
-  left:
-    50%;
-
-  top:
-    50%;
-
-  z-index:
-    var(--archcoin-chrome-z);
-
-  width:
-    min(82%, 920px);
-
-  aspect-ratio:
-    1 / 1;
-
-  transform:
-    translate(-50%, -50%);
-
-  border:
-    1px solid rgba(145, 198, 232, 0.05);
-
-  border-radius:
-    50%;
-
-  background:
-    radial-gradient(
-      circle,
-      rgba(83, 156, 204, 0.09),
-      rgba(38, 82, 113, 0.03) 44%,
-      transparent 70%
-    );
-
-  pointer-events:
-    none;
-}
-
-.archcoin-scene__field::after {
-  content:
-    "";
-
-  position:
-    absolute;
-
-  left:
-    50%;
-
-  top:
-    50%;
-
-  z-index:
-    var(--archcoin-chrome-z);
-
-  width:
-    min(58%, 650px);
-
-  aspect-ratio:
-    1 / 1;
-
-  transform:
-    translate(-50%, -50%);
-
-  border:
-    1px dashed rgba(151, 202, 234, 0.06);
-
-  border-radius:
-    50%;
-
-  pointer-events:
-    none;
-}
-
-[data-archcoin-scene] {
+[data-archcoin-scene-field] {
   touch-action:
     none;
 
   overscroll-behavior:
     contain;
+
+  user-select:
+    none;
 }
 
 /* -------------------------------------------------------------------------- */
-/* Field chrome                                                                */
+/* Scene chrome                                                                */
 /* -------------------------------------------------------------------------- */
 
 .archcoin-field-chrome {
@@ -1357,93 +1505,7 @@ p {
     none;
 }
 
-.archcoin-field-chrome__grid {
-  position:
-    absolute;
-
-  inset:
-    0;
-
-  background:
-    linear-gradient(
-      90deg,
-      transparent 0,
-      rgba(143, 189, 220, 0.035) 1px,
-      transparent 1px
-    ),
-    linear-gradient(
-      180deg,
-      transparent 0,
-      rgba(143, 189, 220, 0.032) 1px,
-      transparent 1px
-    );
-
-  background-size:
-    clamp(42px, 5vw, 72px)
-    clamp(42px, 5vw, 72px);
-
-  mask-image:
-    radial-gradient(
-      circle at center,
-      black 0%,
-      rgba(0, 0, 0, 0.72) 50%,
-      transparent 88%
-    );
-}
-
-.archcoin-field-chrome__axis {
-  position:
-    absolute;
-
-  left:
-    50%;
-
-  top:
-    50%;
-
-  opacity:
-    0.7;
-}
-
-.archcoin-field-chrome__axis--horizontal {
-  width:
-    calc(100% - 68px);
-
-  height:
-    1px;
-
-  transform:
-    translate(-50%, -50%);
-
-  background:
-    linear-gradient(
-      90deg,
-      transparent,
-      rgba(159, 207, 238, 0.13),
-      transparent
-    );
-}
-
-.archcoin-field-chrome__axis--vertical {
-  width:
-    1px;
-
-  height:
-    calc(100% - 68px);
-
-  transform:
-    translate(-50%, -50%);
-
-  background:
-    linear-gradient(
-      180deg,
-      transparent,
-      rgba(159, 207, 238, 0.13),
-      transparent
-    );
-}
-
-.archcoin-field-chrome__reticle {
+.archcoin-field-chrome__rings {
   position:
     absolute;
 
@@ -1454,7 +1516,7 @@ p {
     50%;
 
   width:
-    clamp(250px, 34vw, 440px);
+    min(86%, 850px);
 
   aspect-ratio:
     1 / 1;
@@ -1463,15 +1525,101 @@ p {
     translate(-50%, -50%);
 
   border:
-    1px solid rgba(159, 208, 239, 0.075);
+    1px solid rgba(158, 219, 226, 0.07);
 
   border-radius:
     50%;
+
+  box-shadow:
+    0 0 0 52px rgba(158, 219, 226, 0.025),
+    0 0 0 112px rgba(158, 219, 226, 0.016),
+    0 0 0 178px rgba(158, 219, 226, 0.010);
+}
+
+.archcoin-field-chrome__rings::before,
+.archcoin-field-chrome__rings::after {
+  content:
+    "";
+
+  position:
+    absolute;
+
+  inset:
+    50% auto auto 50%;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(158, 219, 226, 0.08),
+      transparent
+    );
+
+  transform:
+    translate(-50%, -50%);
+}
+
+.archcoin-field-chrome__rings::before {
+  width:
+    120%;
+
+  height:
+    1px;
+}
+
+.archcoin-field-chrome__rings::after {
+  width:
+    1px;
+
+  height:
+    120%;
+
+  background:
+    linear-gradient(
+      180deg,
+      transparent,
+      rgba(158, 219, 226, 0.08),
+      transparent
+    );
+}
+
+.archcoin-field-chrome__stars {
+  position:
+    absolute;
+
+  inset:
+    0;
+
+  opacity:
+    0.32;
+
+  background-image:
+    radial-gradient(
+      circle,
+      rgba(243, 237, 218, 0.72) 0 1px,
+      transparent 1.4px
+    ),
+    radial-gradient(
+      circle,
+      rgba(158, 219, 226, 0.52) 0 1px,
+      transparent 1.4px
+    );
+
+  background-position:
+    4% 14%,
+    72% 34%;
+
+  background-size:
+    112px 112px,
+    174px 174px;
 }
 
 .archcoin-field-chrome__direction {
   position:
     absolute;
+
+  z-index:
+    1;
 
   display:
     grid;
@@ -1480,28 +1628,31 @@ p {
     center;
 
   width:
-    24px;
+    36px;
 
   height:
-    24px;
+    36px;
 
   border:
     1px solid var(--archcoin-line-soft);
 
+  border-radius:
+    50%;
+
   color:
-    var(--archcoin-text-faint);
+    var(--archcoin-cream-faint);
 
   background:
-    rgba(2, 8, 13, 0.76);
-
-  font-family:
-    var(--archcoin-mono-font);
+    rgba(7, 14, 20, 0.62);
 
   font-size:
-    0.6rem;
+    0.64rem;
 
   font-weight:
-    700;
+    800;
+
+  letter-spacing:
+    0.08em;
 }
 
 .archcoin-field-chrome__direction--north {
@@ -1509,7 +1660,7 @@ p {
     50%;
 
   top:
-    14px;
+    18px;
 
   transform:
     translateX(-50%);
@@ -1517,7 +1668,7 @@ p {
 
 .archcoin-field-chrome__direction--east {
   right:
-    14px;
+    18px;
 
   top:
     50%;
@@ -1531,7 +1682,7 @@ p {
     50%;
 
   bottom:
-    14px;
+    18px;
 
   transform:
     translateX(-50%);
@@ -1539,7 +1690,7 @@ p {
 
 .archcoin-field-chrome__direction--west {
   left:
-    14px;
+    18px;
 
   top:
     50%;
@@ -1549,7 +1700,7 @@ p {
 }
 
 /* -------------------------------------------------------------------------- */
-/* Compositor-owned canvases                                                   */
+/* Compositor layers                                                           */
 /* -------------------------------------------------------------------------- */
 
 [data-archcoin-compositor-layer],
@@ -1582,12 +1733,18 @@ p {
     none;
 }
 
-[data-archcoin-compositor-layer="rear"] {
+[data-archcoin-compositor-layer="rear"],
+[data-archcoin-compositor-layer="REAR"],
+[data-archcoin-crystals-canvas="rear"],
+[data-archcoin-crystals-canvas="REAR"] {
   z-index:
     var(--archcoin-rear-z);
 }
 
-[data-archcoin-compositor-layer="front"] {
+[data-archcoin-compositor-layer="front"],
+[data-archcoin-compositor-layer="FRONT"],
+[data-archcoin-crystals-canvas="front"],
+[data-archcoin-crystals-canvas="FRONT"] {
   z-index:
     var(--archcoin-front-z);
 }
@@ -1643,7 +1800,7 @@ p {
     var(--archcoin-compass-size);
 
   max-width:
-    calc(100% - 52px);
+    calc(100% - 60px);
 
   aspect-ratio:
     1 / 1;
@@ -1667,7 +1824,7 @@ p {
     100%;
 
   --upstream-compass-focus-ring:
-    var(--archcoin-focus);
+    var(--archcoin-gold);
 }
 
 .archcoin-scene__upstream-compass::before {
@@ -1678,13 +1835,13 @@ p {
     absolute;
 
   inset:
-    -22%;
+    -28%;
 
   z-index:
     -1;
 
   border:
-    1px solid rgba(150, 201, 233, 0.05);
+    1px solid rgba(158, 219, 226, 0.045);
 
   border-radius:
     50%;
@@ -1692,7 +1849,7 @@ p {
   background:
     radial-gradient(
       circle,
-      rgba(75, 145, 193, 0.08),
+      rgba(74, 145, 155, 0.10),
       transparent 68%
     );
 
@@ -1718,10 +1875,46 @@ p {
     0;
 }
 
-.archcoin-scene__upstream-compass
-  [data-upstream-compass-control] {
+.archcoin-scene__upstream-compass-control {
+  display:
+    grid;
+
+  place-items:
+    center;
+
+  width:
+    100%;
+
+  height:
+    100%;
+
+  padding:
+    0;
+
+  border:
+    0;
+
+  border-radius:
+    50%;
+
+  color:
+    inherit;
+
+  background:
+    transparent;
+
+  cursor:
+    pointer;
+
   pointer-events:
     auto;
+}
+
+.archcoin-scene__upstream-compass-control:hover,
+.archcoin-scene__upstream-compass-control:focus-visible,
+.archcoin-scene__upstream-compass-control[data-selected="true"] {
+  filter:
+    brightness(1.08);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1745,149 +1938,155 @@ p {
     isolate;
 }
 
-.archcoin-coin {
+.archcoin-coin,
+[data-archcoin-room] {
   position:
     absolute;
 
+  left:
+    var(--archcoin-projection-x, 50%);
+
+  top:
+    var(--archcoin-projection-y, 50%);
+
+  transform:
+    translate(-50%, -50%)
+    translate(
+      var(--archcoin-label-offset-x, 0),
+      var(--archcoin-label-offset-y, 0)
+    )
+    scale(
+      var(--archcoin-projection-scale, 1)
+    );
+
+  transform-origin:
+    center;
+
+  opacity:
+    var(--archcoin-projection-opacity, 0);
+
+  pointer-events:
+    var(--archcoin-projection-pointer-events, none);
+
+  transition:
+    opacity 120ms linear,
+    border-color 160ms var(--archcoin-ease),
+    background 160ms var(--archcoin-ease),
+    box-shadow 160ms var(--archcoin-ease);
+
+  will-change:
+    left,
+    top,
+    transform,
+    opacity;
+}
+
+.archcoin-coin {
   display:
-    grid;
-
-  grid-template-columns:
-    auto minmax(0, 1fr);
-
-  grid-template-areas:
-    "coordinate label"
-    "coordinate function";
-
-  column-gap:
-    10px;
-
-  row-gap:
-    3px;
+    inline-flex;
 
   align-items:
     center;
 
-  min-width:
-    156px;
+  gap:
+    10px;
 
   max-width:
-    208px;
+    min(190px, 42vw);
 
   min-height:
-    54px;
+    46px;
 
   padding:
-    9px 12px;
+    8px 14px;
 
   border:
-    1px solid var(--archcoin-line);
+    1px solid rgba(211, 222, 218, 0.16);
 
   border-radius:
-    var(--archcoin-radius-small);
+    var(--archcoin-radius-pill);
 
   color:
-    var(--archcoin-text);
+    var(--archcoin-cream);
 
   background:
     linear-gradient(
-      90deg,
-      rgba(8, 19, 29, 0.94),
-      rgba(4, 11, 18, 0.9)
+      180deg,
+      rgba(15, 24, 31, 0.86),
+      rgba(7, 13, 18, 0.82)
     );
 
   box-shadow:
-    0 14px 36px rgba(0, 0, 0, 0.28),
-    inset 2px 0 0 currentColor;
+    0 12px 26px rgba(0, 0, 0, 0.28);
 
   cursor:
     pointer;
 
-  pointer-events:
-    auto;
-
   text-align:
     left;
 
-  transition:
-    border-color 140ms var(--archcoin-ease),
-    background 140ms var(--archcoin-ease),
-    box-shadow 140ms var(--archcoin-ease);
-}
-
-.archcoin-coin--north {
-  color:
-    var(--archcoin-contract);
-}
-
-.archcoin-coin--east {
-  color:
-    var(--archcoin-receivable);
-}
-
-.archcoin-coin--south {
-  color:
-    var(--archcoin-payable);
-}
-
-.archcoin-coin--west {
-  color:
-    var(--archcoin-allocation);
+  backdrop-filter:
+    blur(10px);
 }
 
 .archcoin-coin__coordinate {
-  grid-area:
-    coordinate;
-
   display:
     grid;
 
   place-items:
     center;
 
-  align-self:
-    stretch;
+  flex:
+    0 0 auto;
 
-  min-width:
-    34px;
+  width:
+    28px;
 
-  padding-right:
-    9px;
+  height:
+    28px;
 
-  border-right:
+  border:
     1px solid var(--archcoin-line-soft);
 
-  color:
-    currentColor;
+  border-radius:
+    50%;
 
-  font-family:
-    var(--archcoin-mono-font);
+  color:
+    var(--archcoin-gold);
 
   font-size:
-    0.66rem;
+    0.62rem;
 
   font-weight:
-    700;
+    800;
+}
+
+.archcoin-coin__copy {
+  display:
+    grid;
+
+  gap:
+    1px;
+
+  min-width:
+    0;
 }
 
 .archcoin-coin__label {
-  grid-area:
-    label;
-
   overflow:
     hidden;
 
   color:
-    var(--archcoin-text);
+    var(--archcoin-cream);
 
   font-size:
     0.72rem;
 
   font-weight:
-    760;
+    800;
 
   letter-spacing:
-    0.1em;
+    0.08em;
 
   text-overflow:
     ellipsis;
@@ -1900,23 +2099,17 @@ p {
 }
 
 .archcoin-coin__function {
-  grid-area:
-    function;
-
   overflow:
     hidden;
 
   color:
-    var(--archcoin-text-muted);
-
-  font-family:
-    var(--archcoin-mono-font);
+    var(--archcoin-cream-faint);
 
   font-size:
-    0.56rem;
+    0.58rem;
 
-  letter-spacing:
-    0.04em;
+  line-height:
+    1.3;
 
   text-overflow:
     ellipsis;
@@ -1925,33 +2118,189 @@ p {
     nowrap;
 }
 
-.archcoin-coin__status {
-  display:
-    none;
-}
-
 .archcoin-coin:hover,
 .archcoin-coin:focus-visible,
 .archcoin-coin[data-primary="true"],
 .archcoin-coin[data-selected="true"],
 .archcoin-coin[aria-current="true"] {
   border-color:
-    currentColor;
+    var(--archcoin-gold-soft);
 
   background:
     linear-gradient(
-      90deg,
-      rgba(13, 30, 44, 0.98),
-      rgba(6, 15, 24, 0.96)
+      180deg,
+      rgba(29, 34, 29, 0.92),
+      rgba(12, 18, 20, 0.9)
     );
 
   box-shadow:
-    0 18px 48px rgba(0, 0, 0, 0.34),
-    inset 3px 0 0 currentColor;
+    0 16px 36px rgba(0, 0, 0, 0.34),
+    inset 0 0 0 1px rgba(236, 208, 128, 0.08);
+}
+
+[data-archcoin-room] {
+  display:
+    inline-flex;
+
+  align-items:
+    center;
+
+  justify-content:
+    center;
+
+  max-width:
+    min(178px, 44vw);
+
+  min-height:
+    42px;
+
+  padding:
+    8px 14px;
+
+  border:
+    1px solid rgba(211, 222, 218, 0.15);
+
+  border-radius:
+    var(--archcoin-radius-pill);
+
+  color:
+    var(--archcoin-cream);
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(15, 24, 31, 0.88),
+      rgba(7, 13, 18, 0.84)
+    );
+
+  box-shadow:
+    0 10px 24px rgba(0, 0, 0, 0.26);
+
+  font-size:
+    0.66rem;
+
+  font-weight:
+    800;
+
+  letter-spacing:
+    0.065em;
+
+  line-height:
+    1.25;
+
+  text-align:
+    center;
+
+  text-transform:
+    uppercase;
+
+  backdrop-filter:
+    blur(10px);
+}
+
+[data-archcoin-room]:hover,
+[data-archcoin-room]:focus-visible,
+[data-archcoin-room][data-primary="true"],
+[data-archcoin-room][data-selected="true"],
+[data-archcoin-room][aria-current="true"] {
+  border-color:
+    var(--archcoin-gold-soft);
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(35, 33, 25, 0.94),
+      rgba(14, 17, 17, 0.92)
+    );
+
+  box-shadow:
+    0 16px 34px rgba(0, 0, 0, 0.34);
+}
+
+/*
+ * Controller-published depth priority.
+ * Front semantic nodes remain above the Compass and receive interaction.
+ * Rear semantic nodes remain visually present but subordinate.
+ */
+
+.archcoin-coin[data-depth-layer="front"],
+[data-archcoin-room][data-depth-layer="front"] {
+  z-index:
+    2;
+
+  opacity:
+    var(--archcoin-projection-opacity, 1);
+}
+
+.archcoin-coin[data-depth-layer="rear"],
+[data-archcoin-room][data-depth-layer="rear"] {
+  z-index:
+    0;
+
+  opacity:
+    calc(
+      var(--archcoin-projection-opacity, 1) *
+      0.62
+    );
+
+  filter:
+    saturate(0.74)
+    brightness(0.82);
+}
+
+.archcoin-coin[data-compass-overlap="true"][data-depth-layer="front"],
+[data-archcoin-room][data-compass-overlap="true"][data-depth-layer="front"] {
+  z-index:
+    5;
+
+  pointer-events:
+    auto;
+}
+
+.archcoin-coin[data-compass-overlap="true"][data-depth-layer="rear"],
+[data-archcoin-room][data-compass-overlap="true"][data-depth-layer="rear"] {
+  z-index:
+    0;
+
+  pointer-events:
+    none;
+}
+
+/* Label offsets keep text adjacent to crystals rather than on their faces. */
+
+.archcoin-coin[data-wing="north"] {
+  --archcoin-label-offset-y:
+    -62px;
+}
+
+.archcoin-coin[data-wing="east"] {
+  --archcoin-label-offset-x:
+    76px;
+}
+
+.archcoin-coin[data-wing="south"] {
+  --archcoin-label-offset-y:
+    62px;
+}
+
+.archcoin-coin[data-wing="west"] {
+  --archcoin-label-offset-x:
+    -76px;
+}
+
+[data-archcoin-room] {
+  --archcoin-label-offset-y:
+    52px;
+}
+
+[data-archcoin-room][data-primary="true"],
+[data-archcoin-room][data-selected="true"] {
+  --archcoin-label-offset-y:
+    58px;
 }
 
 /* -------------------------------------------------------------------------- */
-/* Readout                                                                     */
+/* Guidance                                                                    */
 /* -------------------------------------------------------------------------- */
 
 .archcoin-scene__readout {
@@ -1959,113 +2308,52 @@ p {
     relative;
 
   z-index:
-    5;
+    6;
 
-  display:
-    grid;
-
-  grid-template-columns:
-    minmax(0, 1.2fr)
-    minmax(260px, 0.8fr);
+  padding:
+    clamp(18px, 3vw, 26px);
 
   border-top:
     1px solid var(--archcoin-line-soft);
-
-  background:
-    rgba(3, 10, 16, 0.97);
-}
-
-.archcoin-guidance,
-.archcoin-instruction-pad {
-  margin:
-    0;
-
-  min-width:
-    0;
 }
 
 .archcoin-guidance {
-  display:
-    flex;
+  width:
+    min(100%, 760px);
 
-  align-items:
-    center;
-
-  padding:
-    15px 18px;
-
-  color:
-    var(--archcoin-text-soft);
-
-  font-size:
-    0.86rem;
-
-  line-height:
-    1.5;
-}
-
-.archcoin-guidance::before {
-  content:
-    "FIELD";
-
-  flex:
-    0 0 auto;
-
-  margin-right:
-    12px;
-
-  padding-right:
-    12px;
-
-  border-right:
-    1px solid var(--archcoin-line-soft);
-
-  color:
-    var(--archcoin-gold);
-
-  font-family:
-    var(--archcoin-mono-font);
-
-  font-size:
-    0.6rem;
-
-  font-weight:
-    700;
-
-  letter-spacing:
-    0.14em;
-}
-
-.archcoin-instruction-pad {
-  display:
-    flex;
-
-  align-items:
-    center;
-
-  padding:
-    14px 16px;
-
-  border-left:
-    1px solid var(--archcoin-line-soft);
-}
-
-.archcoin-instruction-pad p {
   margin:
-    0;
+    0 auto;
+
+  padding:
+    16px 24px;
+
+  border:
+    1px solid var(--archcoin-line);
+
+  border-radius:
+    var(--archcoin-radius-pill);
 
   color:
-    var(--archcoin-text-muted);
+    var(--archcoin-cream-soft);
+
+  background:
+    rgba(8, 15, 21, 0.82);
+
+  box-shadow:
+    0 12px 30px rgba(0, 0, 0, 0.24);
 
   font-size:
-    0.74rem;
+    0.9rem;
 
   line-height:
-    1.5;
+    1.52;
+
+  text-align:
+    center;
 }
 
 /* -------------------------------------------------------------------------- */
-/* Selected path panel                                                         */
+/* Selected path                                                               */
 /* -------------------------------------------------------------------------- */
 
 .archcoin-panel {
@@ -2075,17 +2363,33 @@ p {
   display:
     grid;
 
+  gap:
+    0;
+
+  width:
+    min(100%, 980px);
+
+  margin:
+    0 auto;
+
   overflow:
     hidden;
 
   border:
     1px solid var(--archcoin-line);
 
+  border-radius:
+    var(--archcoin-radius-large);
+
   background:
-    var(--archcoin-bg-panel);
+    linear-gradient(
+      145deg,
+      rgba(17, 25, 31, 0.96),
+      rgba(8, 14, 20, 0.96)
+    );
 
   box-shadow:
-    0 24px 76px rgba(0, 0, 0, 0.28);
+    var(--archcoin-shadow);
 }
 
 .archcoin-panel::before {
@@ -2095,304 +2399,99 @@ p {
   position:
     absolute;
 
-  left:
+  inset:
     0;
-
-  top:
-    0;
-
-  bottom:
-    0;
-
-  width:
-    3px;
 
   background:
-    linear-gradient(
-      180deg,
-      var(--archcoin-gold),
-      transparent
+    radial-gradient(
+      circle at 90% 5%,
+      rgba(236, 208, 128, 0.08),
+      transparent 24%
     );
+
+  pointer-events:
+    none;
+}
+
+.archcoin-panel__header,
+.archcoin-panel__body,
+.archcoin-panel__footer {
+  position:
+    relative;
+
+  z-index:
+    1;
 }
 
 .archcoin-panel__header {
   display:
-    flex;
-
-  align-items:
-    start;
-
-  justify-content:
-    space-between;
-
-  gap:
-    24px;
-
-  padding:
-    clamp(20px, 3vw, 34px);
-
-  border-bottom:
-    1px solid var(--archcoin-line-soft);
-
-  background:
-    linear-gradient(
-      90deg,
-      rgba(10, 22, 33, 0.94),
-      rgba(5, 13, 21, 0.94)
-    );
-}
-
-.archcoin-panel__header > div {
-  display:
     grid;
 
   gap:
-    8px;
+    10px;
+
+  padding:
+    clamp(28px, 5vw, 52px)
+    clamp(26px, 5vw, 56px)
+    20px;
 }
 
 .archcoin-panel h2 {
   max-width:
-    20ch;
+    18ch;
 
   font-size:
-    clamp(1.8rem, 4vw, 4rem);
-}
-
-.archcoin-panel__state {
-  display:
-    grid;
-
-  gap:
-    5px;
-
-  min-width:
-    170px;
-
-  margin:
-    0;
-
-  padding:
-    10px 12px;
-
-  border:
-    1px solid var(--archcoin-line-soft);
-
-  background:
-    rgba(3, 9, 15, 0.7);
-
-  text-align:
-    right;
-}
-
-.archcoin-panel__state-label,
-.archcoin-panel__state-value,
-.archcoin-panel__narrative-label,
-.archcoin-panel__handoff-label {
-  font-family:
-    var(--archcoin-mono-font);
-
-  text-transform:
-    uppercase;
-}
-
-.archcoin-panel__state-label,
-.archcoin-panel__narrative-label,
-.archcoin-panel__handoff-label {
-  color:
-    var(--archcoin-text-faint);
-
-  font-size:
-    0.58rem;
-
-  font-weight:
-    700;
-
-  letter-spacing:
-    0.12em;
-}
-
-.archcoin-panel__state-value {
-  color:
-    var(--archcoin-text-soft);
-
-  font-size:
-    0.7rem;
-
-  letter-spacing:
-    0.05em;
+    clamp(2.8rem, 5.8vw, 5.8rem);
 }
 
 .archcoin-panel__body {
   display:
     grid;
 
-  grid-template-columns:
-    minmax(0, 1.12fr)
-    minmax(280px, 0.88fr);
-}
-
-.archcoin-panel__narrative {
-  display:
-    grid;
-
-  border-right:
-    1px solid var(--archcoin-line-soft);
-}
-
-.archcoin-panel__narrative-block {
-  display:
-    grid;
-
-  grid-template-columns:
-    110px minmax(0, 1fr);
-
   gap:
     20px;
 
   padding:
-    24px;
+    0
+    clamp(26px, 5vw, 56px)
+    clamp(26px, 4vw, 42px);
 }
 
-.archcoin-panel__narrative-block + .archcoin-panel__narrative-block {
-  border-top:
-    1px solid var(--archcoin-line-faint);
-}
-
-.archcoin-panel__narrative-block p {
-  margin:
-    0;
-}
-
-.archcoin-panel__narrative-block
-  [data-archcoin-panel-purpose],
-.archcoin-panel__narrative-block
-  [data-archcoin-panel-relationship] {
+.archcoin-panel__purpose,
+.archcoin-panel__relationship {
   max-width:
-    66ch;
+    62ch;
 
-  color:
-    var(--archcoin-text-soft);
-
-  font-size:
-    0.94rem;
-
-  line-height:
-    1.65;
-}
-
-.archcoin-panel__metadata {
-  min-width:
+  margin:
     0;
 
-  background:
-    rgba(4, 11, 18, 0.62);
+  line-height:
+    1.68;
 }
 
-.archcoin-panel__metadata-grid {
+.archcoin-panel__purpose {
+  color:
+    var(--archcoin-cream-soft);
+
+  font-size:
+    clamp(1rem, 1.7vw, 1.18rem);
+}
+
+.archcoin-panel__relationship {
+  color:
+    var(--archcoin-cream-muted);
+}
+
+.archcoin-panel__semantic-metadata {
   display:
-    grid;
-
-  grid-template-columns:
-    repeat(2, minmax(0, 1fr));
-
-  margin:
-    0;
-}
-
-.archcoin-panel__metadata-grid > div {
-  min-width:
-    0;
-
-  padding:
-    16px;
-
-  border-right:
-    1px solid var(--archcoin-line-faint);
-
-  border-bottom:
-    1px solid var(--archcoin-line-faint);
-}
-
-.archcoin-panel__metadata-grid > div:nth-child(2n) {
-  border-right:
-    0;
-}
-
-.archcoin-panel__metadata-grid dt {
-  margin:
-    0 0 7px;
-
-  color:
-    var(--archcoin-text-faint);
-
-  font-family:
-    var(--archcoin-mono-font);
-
-  font-size:
-    0.56rem;
-
-  font-weight:
-    700;
-
-  letter-spacing:
-    0.12em;
-
-  text-transform:
-    uppercase;
-}
-
-.archcoin-panel__metadata-grid dd {
-  overflow:
-    hidden;
-
-  margin:
-    0;
-
-  color:
-    var(--archcoin-text-soft);
-
-  font-family:
-    var(--archcoin-mono-font);
-
-  font-size:
-    0.69rem;
-
-  line-height:
-    1.4;
-
-  text-overflow:
-    ellipsis;
-
-  white-space:
-    nowrap;
+    none !important;
 }
 
 .archcoin-panel__footer {
-  display:
-    flex;
-
-  align-items:
-    center;
-
-  justify-content:
-    space-between;
-
-  gap:
-    20px;
-
   padding:
-    15px 18px;
-
-  border-top:
-    1px solid var(--archcoin-line-soft);
-
-  background:
-    rgba(2, 8, 13, 0.9);
-}
-
-.archcoin-panel__handoff-label {
-  margin:
-    0;
+    0
+    clamp(26px, 5vw, 56px)
+    clamp(30px, 5vw, 52px);
 }
 
 .archcoin-panel__actions {
@@ -2403,61 +2502,107 @@ p {
     wrap;
 
   gap:
-    8px;
+    12px;
 }
 
+.archcoin-action,
 [data-archcoin-enter],
-[data-archcoin-return-to-orbit] {
-  min-width:
-    172px;
+[data-archcoin-return-to-orbit],
+[data-archcoin-return-home-compass] {
+  display:
+    inline-flex;
+
+  align-items:
+    center;
+
+  justify-content:
+    center;
 
   min-height:
-    42px;
+    52px;
 
   padding:
-    9px 14px;
+    12px 24px;
 
   border:
     1px solid var(--archcoin-line);
 
   border-radius:
-    var(--archcoin-radius-small);
+    var(--archcoin-radius-pill);
 
   color:
-    var(--archcoin-text-soft);
+    var(--archcoin-cream);
 
   background:
-    rgba(8, 18, 28, 0.9);
+    rgba(10, 17, 23, 0.86);
 
-  font-family:
-    var(--archcoin-mono-font);
+  cursor:
+    pointer;
 
   font-size:
-    0.66rem;
+    0.72rem;
 
   font-weight:
-    700;
+    800;
 
   letter-spacing:
-    0.08em;
+    0.1em;
+
+  text-align:
+    center;
 
   text-transform:
     uppercase;
+
+  transition:
+    transform 160ms var(--archcoin-ease),
+    border-color 160ms var(--archcoin-ease),
+    background 160ms var(--archcoin-ease),
+    opacity 160ms var(--archcoin-ease);
 }
 
-[data-archcoin-enter] {
-  border-color:
-    rgba(239, 203, 140, 0.4);
+.archcoin-action:hover,
+.archcoin-action:focus-visible,
+[data-archcoin-enter]:hover,
+[data-archcoin-enter]:focus-visible,
+[data-archcoin-return-to-orbit]:hover,
+[data-archcoin-return-to-orbit]:focus-visible,
+[data-archcoin-return-home-compass]:hover,
+[data-archcoin-return-home-compass]:focus-visible {
+  transform:
+    translateY(-2px);
 
+  border-color:
+    var(--archcoin-gold-soft);
+}
+
+.archcoin-action--primary,
+[data-archcoin-enter] {
   color:
-    #fff0d8;
+    #17120a;
+
+  border-color:
+    rgba(255, 233, 166, 0.76);
 
   background:
     linear-gradient(
-      90deg,
-      rgba(79, 61, 33, 0.48),
-      rgba(29, 23, 15, 0.78)
+      180deg,
+      #f5d878,
+      #d5ad50
     );
+
+  box-shadow:
+    0 12px 28px rgba(187, 139, 45, 0.18);
+}
+
+.archcoin-action--secondary,
+[data-archcoin-return-to-orbit],
+[data-archcoin-return-home-compass] {
+  color:
+    var(--archcoin-cream-soft);
+
+  background:
+    rgba(9, 16, 22, 0.78);
 }
 
 [data-archcoin-enter]:disabled,
@@ -2465,17 +2610,15 @@ p {
   cursor:
     not-allowed;
 
-  opacity:
-    0.42;
-}
-
-[data-archcoin-return-to-orbit][hidden] {
-  display:
+  transform:
     none;
+
+  opacity:
+    0.34;
 }
 
 /* -------------------------------------------------------------------------- */
-/* Principles                                                                  */
+/* Financial principles                                                        */
 /* -------------------------------------------------------------------------- */
 
 .archcoin-principles {
@@ -2483,22 +2626,21 @@ p {
     grid;
 
   gap:
-    clamp(28px, 4vw, 48px);
+    clamp(26px, 5vw, 44px);
 }
 
 .archcoin-principles__header {
   display:
     grid;
 
-  grid-template-columns:
-    minmax(180px, 0.7fr)
-    minmax(0, 1.3fr);
-
   gap:
-    clamp(22px, 5vw, 72px);
+    16px;
 
-  align-items:
-    end;
+  max-width:
+    820px;
+
+  padding-inline:
+    clamp(8px, 3vw, 28px);
 }
 
 .archcoin-principles h2 {
@@ -2506,96 +2648,237 @@ p {
     12ch;
 
   font-size:
-    clamp(2.2rem, 5vw, 5rem);
+    clamp(2.8rem, 6vw, 6rem);
 }
 
-.archcoin-principles__grid {
+.archcoin-principles__header > p:last-child {
+  max-width:
+    54ch;
+
+  margin:
+    0;
+
+  color:
+    var(--archcoin-cream-muted);
+
+  line-height:
+    1.68;
+}
+
+.archcoin-principles__list {
   display:
     grid;
 
-  grid-template-columns:
-    repeat(4, minmax(0, 1fr));
-
-  border-top:
-    1px solid var(--archcoin-line-soft);
-
-  border-left:
-    1px solid var(--archcoin-line-soft);
+  gap:
+    14px;
 }
 
-.archcoin-principles__grid article {
-  min-height:
-    250px;
+.archcoin-principle {
+  overflow:
+    hidden;
 
-  padding:
-    clamp(22px, 3vw, 34px);
+  border:
+    1px solid var(--archcoin-line);
 
-  border-right:
-    1px solid var(--archcoin-line-soft);
-
-  border-bottom:
-    1px solid var(--archcoin-line-soft);
+  border-radius:
+    var(--archcoin-radius-medium);
 
   background:
-    rgba(5, 13, 21, 0.7);
+    linear-gradient(
+      145deg,
+      rgba(15, 23, 30, 0.9),
+      rgba(7, 13, 19, 0.92)
+    );
+
+  box-shadow:
+    var(--archcoin-shadow-soft);
 }
 
-.archcoin-principles__coordinate {
-  margin:
-    0 0 20px;
+.archcoin-principle summary {
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  justify-content:
+    space-between;
+
+  gap:
+    18px;
+
+  min-height:
+    92px;
+
+  padding:
+    22px 28px;
 
   color:
-    var(--archcoin-gold);
+    var(--archcoin-cream);
 
-  font-family:
-    var(--archcoin-mono-font);
+  cursor:
+    pointer;
 
   font-size:
-    0.62rem;
+    clamp(1rem, 2vw, 1.22rem);
 
   font-weight:
-    700;
+    800;
 
   letter-spacing:
-    0.14em;
+    0.03em;
+
+  list-style:
+    none;
 
   text-transform:
     uppercase;
 }
 
-.archcoin-principles__grid h3 {
-  margin:
-    0 0 14px;
-
-  color:
-    var(--archcoin-text);
-
-  font-size:
-    clamp(1.2rem, 2.2vw, 1.9rem);
-
-  font-weight:
-    620;
-
-  letter-spacing:
-    -0.035em;
-
-  line-height:
-    1.05;
+.archcoin-principle summary::-webkit-details-marker {
+  display:
+    none;
 }
 
-.archcoin-principles__grid article > p:last-child {
+.archcoin-principle summary > span:first-child {
+  display:
+    grid;
+
+  gap:
+    4px;
+}
+
+.archcoin-principle summary small {
+  color:
+    var(--archcoin-gold);
+
+  font-size:
+    0.62rem;
+
+  letter-spacing:
+    0.16em;
+}
+
+.archcoin-principle summary > span:last-child {
+  display:
+    grid;
+
+  place-items:
+    center;
+
+  width:
+    44px;
+
+  height:
+    44px;
+
+  flex:
+    0 0 auto;
+
+  border:
+    1px solid var(--archcoin-gold-soft);
+
+  border-radius:
+    50%;
+
+  color:
+    var(--archcoin-gold);
+
+  font-size:
+    1.36rem;
+
+  transition:
+    transform 180ms var(--archcoin-ease),
+    background 180ms var(--archcoin-ease);
+}
+
+.archcoin-principle[open] summary > span:last-child {
+  transform:
+    rotate(45deg);
+
+  background:
+    var(--archcoin-gold-faint);
+}
+
+.archcoin-principle__body {
+  display:
+    grid;
+
+  gap:
+    16px;
+
+  padding:
+    0 28px 28px;
+
+  border-top:
+    1px solid var(--archcoin-line-soft);
+}
+
+.archcoin-principle__body h3 {
+  margin:
+    24px 0 0;
+
+  color:
+    var(--archcoin-cream);
+
+  font-family:
+    var(--archcoin-serif);
+
+  font-size:
+    clamp(1.8rem, 4vw, 3.4rem);
+
+  font-weight:
+    600;
+
+  letter-spacing:
+    -0.04em;
+
+  line-height:
+    1;
+}
+
+.archcoin-principle__body p {
+  max-width:
+    58ch;
+
   margin:
     0;
 
   color:
-    var(--archcoin-text-muted);
+    var(--archcoin-cream-muted);
 
   line-height:
-    1.62;
+    1.68;
+}
+
+.archcoin-principle__body a {
+  justify-self:
+    start;
+
+  padding-bottom:
+    5px;
+
+  border-bottom:
+    1px solid var(--archcoin-gold-soft);
+
+  color:
+    var(--archcoin-gold);
+
+  font-size:
+    0.7rem;
+
+  font-weight:
+    800;
+
+  letter-spacing:
+    0.1em;
+
+  text-transform:
+    uppercase;
 }
 
 /* -------------------------------------------------------------------------- */
-/* Closing journey                                                             */
+/* Journey                                                                     */
 /* -------------------------------------------------------------------------- */
 
 .archcoin-journey {
@@ -2609,45 +2892,48 @@ p {
     start;
 
   padding:
-    clamp(34px, 7vw, 90px);
+    clamp(34px, 7vw, 76px);
 
-  border-top:
-    1px solid var(--archcoin-line-soft);
+  overflow:
+    hidden;
 
-  border-bottom:
-    1px solid var(--archcoin-line-soft);
+  border:
+    1px solid var(--archcoin-line);
+
+  border-radius:
+    var(--archcoin-radius-large);
 
   background:
     linear-gradient(
-      90deg,
-      rgba(8, 19, 29, 0.8),
-      rgba(4, 11, 18, 0.6)
+      145deg,
+      rgba(18, 28, 34, 0.92),
+      rgba(8, 15, 21, 0.94)
     );
+
+  box-shadow:
+    var(--archcoin-shadow);
 }
 
 .archcoin-journey h2 {
   max-width:
-    14ch;
+    12ch;
 
   font-size:
-    clamp(2.2rem, 5.5vw, 5.8rem);
+    clamp(2.8rem, 6vw, 6rem);
 }
 
 .archcoin-journey > p:not(.archcoin-journey__eyebrow) {
   max-width:
-    58ch;
+    54ch;
 
   margin:
     0;
 
   color:
-    var(--archcoin-text-muted);
-
-  font-size:
-    1rem;
+    var(--archcoin-cream-muted);
 
   line-height:
-    1.65;
+    1.7;
 }
 
 .archcoin-journey a {
@@ -2657,29 +2943,35 @@ p {
   align-items:
     center;
 
-  gap:
-    10px;
+  justify-content:
+    center;
+
+  min-height:
+    50px;
 
   margin-top:
     6px;
 
-  padding-bottom:
-    7px;
+  padding:
+    11px 22px;
 
-  border-bottom:
-    1px solid var(--archcoin-line-strong);
+  border:
+    1px solid var(--archcoin-gold-soft);
+
+  border-radius:
+    var(--archcoin-radius-pill);
 
   color:
-    var(--archcoin-text-soft);
+    var(--archcoin-gold);
 
-  font-family:
-    var(--archcoin-mono-font);
+  background:
+    rgba(236, 208, 128, 0.04);
 
   font-size:
-    0.66rem;
+    0.7rem;
 
   font-weight:
-    700;
+    800;
 
   letter-spacing:
     0.1em;
@@ -2689,29 +2981,20 @@ p {
 }
 
 /* -------------------------------------------------------------------------- */
-/* Hidden custody                                                              */
-/* -------------------------------------------------------------------------- */
-
-.archcoin-room-declarations[hidden],
-.archcoin-receipts[hidden] {
-  display:
-    none;
-}
-
-/* -------------------------------------------------------------------------- */
 /* State                                                                       */
 /* -------------------------------------------------------------------------- */
 
 [data-archcoin-mode="CONSTELLATION"]
+  .archcoin-scene__mode::after,
+[data-archcoin-presentation-mode="CONSTELLATION"]
   .archcoin-scene__mode::after {
   content:
     " / 04 CARDINALS";
-
-  color:
-    var(--archcoin-text-faint);
 }
 
 [data-archcoin-mode="CLUSTER"]
+  .archcoin-scene__mode::after,
+[data-archcoin-presentation-mode="CLUSTER"]
   .archcoin-scene__mode::after {
   content:
     " / ACTIVE CLUSTER";
@@ -2721,184 +3004,315 @@ p {
 }
 
 [data-archcoin-mode="HELD"]
+  .archcoin-scene__mode::after,
+[data-archcoin-presentation-mode="HELD"]
   .archcoin-scene__mode::after {
   content:
     " / HELD";
-
-  color:
-    var(--archcoin-text-faint);
 }
 
 [data-archcoin-mode="HELD"]
   .archcoin-scene__semantic,
-[data-archcoin-mode="HELD"]
-  [data-archcoin-compositor-layer] {
+[data-archcoin-presentation-mode="HELD"]
+  .archcoin-scene__semantic {
   opacity:
-    0.46;
+    0.42;
+
+  pointer-events:
+    none;
+}
+
+[data-compass-selected="true"]
+  .archcoin-panel {
+  border-color:
+    var(--archcoin-gold-soft);
+}
+
+[data-compass-selected="true"]
+  [data-archcoin-return-home-compass] {
+  display:
+    inline-flex;
+}
+
+[data-compass-selected="true"]
+  .archcoin-scene__upstream-compass-control {
+  filter:
+    brightness(1.12)
+    drop-shadow(
+      0 0 16px rgba(236, 208, 128, 0.2)
+    );
 }
 
 /* -------------------------------------------------------------------------- */
 /* Responsive                                                                  */
 /* -------------------------------------------------------------------------- */
 
-@media (max-width: 1020px) {
-  .archcoin-threshold,
-  .archcoin-domain-introduction__heading,
-  .archcoin-principles__header {
-    grid-template-columns:
-      1fr;
-  }
-
-  .archcoin-threshold {
-    min-height:
-      auto;
-  }
-
-  .archcoin-threshold__continue,
-  .archcoin-threshold__context {
-    grid-column:
-      1;
-  }
-
-  .archcoin-compass__header {
-    grid-template-columns:
-      1fr;
-  }
-
-  .archcoin-compass__legend {
-    width:
-      min(100%, 520px);
-  }
-
-  .archcoin-panel__body {
-    grid-template-columns:
-      1fr;
-  }
-
-  .archcoin-panel__narrative {
-    border-right:
-      0;
-
-    border-bottom:
-      1px solid var(--archcoin-line-soft);
-  }
-
-  .archcoin-principles__grid {
-    grid-template-columns:
-      repeat(2, minmax(0, 1fr));
-  }
-}
-
-@media (max-width: 760px) {
-  .archcoin-page {
-    gap:
-      54px;
-
-    padding:
-      12px 9px 54px;
-  }
-
-  .archcoin-threshold {
-    gap:
-      26px;
-
-    padding:
-      30px 0 42px;
-  }
-
-  .archcoin-threshold h1 {
-    font-size:
-      clamp(2.55rem, 13vw, 4.8rem);
-  }
-
+@media (max-width: 960px) {
   .archcoin-domain-introduction__grid {
     grid-template-columns:
       1fr;
   }
 
+  .archcoin-compass__legend {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 720px) {
+  .archcoin-page {
+    width:
+      min(
+        calc(100% - 16px),
+        var(--archcoin-max)
+      );
+
+    gap:
+      46px;
+
+    padding-top:
+      8px;
+
+    padding-bottom:
+      54px;
+  }
+
+  .archcoin-threshold {
+    min-height:
+      auto;
+
+    padding:
+      28px 18px 34px;
+
+    border-radius:
+      28px;
+  }
+
+  .archcoin-threshold__identity {
+    display:
+      grid;
+
+    justify-content:
+      start;
+  }
+
+  .archcoin-threshold h1 {
+    max-width:
+      8ch;
+
+    font-size:
+      clamp(3.5rem, 17vw, 5.6rem);
+  }
+
+  .archcoin-threshold__lead {
+    font-size:
+      1.02rem;
+  }
+
+  .archcoin-threshold__invitation {
+    padding:
+      20px 18px;
+  }
+
+  .archcoin-domain-introduction__heading,
+  .archcoin-compass__header,
+  .archcoin-principles__header {
+    padding-inline:
+      8px;
+  }
+
+  .archcoin-domain-introduction h2,
+  .archcoin-compass h2,
+  .archcoin-principles h2,
+  .archcoin-journey h2 {
+    font-size:
+      clamp(2.7rem, 13vw, 4.8rem);
+  }
+
   .archcoin-domain-card {
     min-height:
-      230px;
+      224px;
+
+    padding:
+      24px 20px;
   }
 
   .archcoin-compass__legend {
     grid-template-columns:
-      1fr;
+      1fr 1fr;
+
+    gap:
+      8px;
+  }
+
+  .archcoin-compass__legend span {
+    min-height:
+      42px;
+
+    padding:
+      8px 10px;
+
+    font-size:
+      0.62rem;
+  }
+
+  .archcoin-scene {
+    border-radius:
+      28px;
   }
 
   .archcoin-scene__header {
     display:
       grid;
 
-    align-items:
-      start;
+    gap:
+      14px;
+
+    padding:
+      24px 18px;
+  }
+
+  .archcoin-scene__header h3 {
+    font-size:
+      2.25rem;
   }
 
   .archcoin-scene__field {
     --archcoin-scene-height:
-      580px;
+      540px;
 
     --archcoin-compass-size:
-      clamp(122px, 31vw, 154px);
+      clamp(112px, 30vw, 142px);
   }
 
-  .archcoin-field-chrome__axis--horizontal {
+  .archcoin-field-chrome__direction {
     width:
-      calc(100% - 42px);
-  }
+      30px;
 
-  .archcoin-field-chrome__axis--vertical {
     height:
-      calc(100% - 42px);
+      30px;
+
+    font-size:
+      0.56rem;
   }
 
-  .archcoin-scene__readout {
-    grid-template-columns:
-      1fr;
+  .archcoin-field-chrome__direction--north {
+    top:
+      12px;
   }
 
-  .archcoin-instruction-pad {
-    border-top:
-      1px solid var(--archcoin-line-soft);
+  .archcoin-field-chrome__direction--east {
+    right:
+      12px;
+  }
 
-    border-left:
-      0;
+  .archcoin-field-chrome__direction--south {
+    bottom:
+      12px;
+  }
+
+  .archcoin-field-chrome__direction--west {
+    left:
+      12px;
+  }
+
+  .archcoin-guidance {
+    padding:
+      14px 18px;
+
+    font-size:
+      0.82rem;
+  }
+
+  .archcoin-coin {
+    max-width:
+      148px;
+
+    min-height:
+      42px;
+
+    padding:
+      7px 10px;
+  }
+
+  .archcoin-coin__coordinate {
+    width:
+      24px;
+
+    height:
+      24px;
+  }
+
+  .archcoin-coin__label {
+    font-size:
+      0.64rem;
+  }
+
+  .archcoin-coin__function {
+    font-size:
+      0.52rem;
+  }
+
+  .archcoin-coin[data-wing="north"] {
+    --archcoin-label-offset-y:
+      -52px;
+  }
+
+  .archcoin-coin[data-wing="east"] {
+    --archcoin-label-offset-x:
+      58px;
+  }
+
+  .archcoin-coin[data-wing="south"] {
+    --archcoin-label-offset-y:
+      52px;
+  }
+
+  .archcoin-coin[data-wing="west"] {
+    --archcoin-label-offset-x:
+      -58px;
+  }
+
+  [data-archcoin-room] {
+    max-width:
+      146px;
+
+    min-height:
+      38px;
+
+    padding:
+      7px 11px;
+
+    font-size:
+      0.58rem;
+
+    --archcoin-label-offset-y:
+      44px;
+  }
+
+  .archcoin-panel {
+    border-radius:
+      28px;
   }
 
   .archcoin-panel__header {
-    display:
-      grid;
+    padding:
+      30px 22px 18px;
   }
 
-  .archcoin-panel__state {
-    min-width:
-      0;
-
-    text-align:
-      left;
-  }
-
-  .archcoin-panel__narrative-block {
-    grid-template-columns:
-      1fr;
-
-    gap:
-      8px;
-  }
-
-  .archcoin-panel__metadata-grid {
-    grid-template-columns:
-      1fr;
-  }
-
-  .archcoin-panel__metadata-grid > div {
-    border-right:
-      0;
+  .archcoin-panel__body {
+    padding:
+      0 22px 26px;
   }
 
   .archcoin-panel__footer {
-    display:
-      grid;
+    padding:
+      0 22px 30px;
+  }
+
+  .archcoin-panel h2 {
+    font-size:
+      clamp(2.6rem, 12vw, 4.4rem);
   }
 
   .archcoin-panel__actions {
@@ -2912,94 +3326,67 @@ p {
       100%;
   }
 
+  .archcoin-action,
   [data-archcoin-enter],
-  [data-archcoin-return-to-orbit] {
+  [data-archcoin-return-to-orbit],
+  [data-archcoin-return-home-compass] {
     width:
       100%;
-
-    min-width:
-      0;
   }
 
-  .archcoin-principles__grid {
-    grid-template-columns:
-      1fr;
+  .archcoin-principle summary {
+    min-height:
+      82px;
+
+    padding:
+      19px 20px;
+  }
+
+  .archcoin-principle__body {
+    padding:
+      0 20px 22px;
+  }
+
+  .archcoin-journey {
+    padding:
+      32px 22px;
+
+    border-radius:
+      28px;
   }
 }
 
-@media (max-width: 520px) {
-  .archcoin-domain-card {
-    padding:
-      22px;
+@media (max-width: 470px) {
+  .archcoin-threshold h1 {
+    font-size:
+      clamp(3.2rem, 18vw, 4.8rem);
+  }
+
+  .archcoin-compass__legend {
+    grid-template-columns:
+      1fr;
   }
 
   .archcoin-scene__field {
     --archcoin-scene-height:
-      520px;
+      500px;
 
     --archcoin-compass-size:
-      clamp(108px, 29vw, 132px);
-  }
-
-  .archcoin-field-chrome__reticle {
-    width:
-      72vw;
-  }
-
-  .archcoin-field-chrome__direction {
-    width:
-      21px;
-
-    height:
-      21px;
-
-    font-size:
-      0.54rem;
-  }
-
-  .archcoin-guidance {
-    align-items:
-      flex-start;
-
-    padding:
-      12px;
-
-    font-size:
-      0.78rem;
-  }
-
-  .archcoin-guidance::before {
-    margin-right:
-      9px;
-
-    padding-right:
-      9px;
-  }
-
-  .archcoin-instruction-pad {
-    padding:
-      11px 12px;
+      clamp(104px, 29vw, 126px);
   }
 
   .archcoin-coin {
-    min-width:
-      112px;
-
     max-width:
-      136px;
+      126px;
 
     min-height:
-      46px;
+      38px;
 
-    grid-template-columns:
-      minmax(0, 1fr);
-
-    grid-template-areas:
-      "label"
-      "function";
+    gap:
+      7px;
 
     padding:
-      7px 8px;
+      6px 8px;
   }
 
   .archcoin-coin__coordinate {
@@ -3009,24 +3396,46 @@ p {
 
   .archcoin-coin__label {
     font-size:
-      0.61rem;
+      0.58rem;
   }
 
   .archcoin-coin__function {
     font-size:
-      0.5rem;
+      0.48rem;
   }
 
-  .archcoin-panel__header,
-  .archcoin-panel__narrative-block,
-  .archcoin-panel__footer {
-    padding:
-      15px;
+  .archcoin-coin[data-wing="east"] {
+    --archcoin-label-offset-x:
+      46px;
   }
 
-  .archcoin-journey {
+  .archcoin-coin[data-wing="west"] {
+    --archcoin-label-offset-x:
+      -46px;
+  }
+
+  [data-archcoin-room] {
+    max-width:
+      126px;
+
     padding:
-      28px 20px;
+      6px 9px;
+
+    font-size:
+      0.53rem;
+  }
+
+  .archcoin-guidance {
+    border-radius:
+      22px;
+  }
+
+  .archcoin-principle summary > span:last-child {
+    width:
+      38px;
+
+    height:
+      38px;
   }
 }
 
@@ -3058,7 +3467,7 @@ p {
 }
 
 /*
-AUDRALIA_ARCHCOIN_HOMEPAGE_DERIVED_CSS_RENEWAL_RESULT_v1
+AUDRALIA_ARCHCOIN_COMPASS_DERIVED_CSS_RENEWAL_RESULT_v2
 
 Artifact:
  /products/archcoin/index.css
@@ -3066,60 +3475,57 @@ Artifact:
 Paired HTML:
  /products/archcoin/index.html
 
-Visible structure:
-- threshold introduction
-- four financial domains
-- dominant Compass and crystal operating field
-- selected-path panel
-- four-domain explanation
-- closing return path
+Controller anchor:
+ DGB_ARCHCOIN_CONTROLLER
+ 7.0.0-controller-interaction-semantic-priority
 
-Composite representation:
-- rear compositor canvas = 1
-- fixed-center Compass = 2
-- front compositor canvas = 3
-- semantic controls = 4
+Crystals anchor:
+ DGB_ARCHCOIN_CRYSTALS
+ 2.0.0-controller-decoupled-crystal-renderer
+
+Compositor anchor:
+ DGB_ARCHCOIN_COMPOSITOR
+ 1.0.0-camera-depth-layer-orchestration
+
+Visual reconstruction:
+- atmospheric Compass-family page background
+- editorial serif display hierarchy
+- warm cream and gold palette
+- rounded dimensional chambers
+- integrated crystal field
+- compact rounded instruction capsule
+- simplified selected-path chamber
+- rounded expandable financial principles
+- explicit Main Compass and Orbit actions
+- mobile-first responsive composition
+
+Semantic-control presentation:
+- controller-published projection custom properties
+- controller-published pointer authorization
+- front semantic nodes receive precedence
+- rear semantic nodes remain subordinate
+- front nodes overlapping Compass remain interactive
+- rear nodes overlapping Compass do not intercept input
+- labels are offset away from crystal faces
+- crystals own no label styling
 
 Removed:
-- former command-dashboard header
-- former status grid
-- former shell dependency
-- former panel layout dependency
-- stale instruction-pad title/body dependency
-- stale combined crystals/camera ownership language
-- stale one-canvas crystals hierarchy
-- field chrome above semantic controls
-- former oversized technical terminal density
-- obsolete visible implementation framing
+- square technical viewport framing
+- exposed metadata grid
+- terminal-style selected-path panel
+- visible fixed-center implementation label
+- oversized instructional blocks
+- hard rectangular domain grid
+- generic flat-black page background
+- direct inline label presentation dependency
+- crystals-owned Compass overlap policy
+- crystals-owned semantic pointer authority
 
-Preserved:
-- exact controller selectors
-- exact cardinal controls
-- exact sixteen canonical room anchors
-- fixed-center native Compass control
-- compositor-owned canvases
-- hidden receipt custody
-- hidden room declaration custody
-- selected-path action controls
-- responsive behavior
-- reduced-motion behavior
-- keyboard focus visibility
-- controller-authored hidden and disabled states
-
-Controller modified:
-FALSE
-
-Compositor modified:
-FALSE
-
-Crystals modified:
-FALSE
-
-Compass geometry modified:
-FALSE
-
-Compass renderer modified:
-FALSE
+Composite order:
+- rear crystals = 1
+- Compass = 2
+- front crystals = 3
+- semantic controls = 4
 
 Runtime execution:
 NOT PERFORMED

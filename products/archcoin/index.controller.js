@@ -24,17 +24,17 @@
    - legal transitions;
    - canonical room and route registry;
    - gesture transaction begin, preview acceptance, commit, and cancel;
-   - strict complete-quaternion validation and authoritative normalization;
+   - complete-quaternion validation and authoritative normalization;
    - preview, committed, and origin quaternion storage;
    - explicit primary-wing and primary-room validation;
    - navigation authorization and execution;
    - panel and viewport choreography;
    - reduced-motion and held-state authority;
    - semantic projection fact validation, storage, and publication;
-   - receipts and self-validation.
+   - receipts and validation.
 
    Controller does not own:
-   - pointer input;
+   - pointer lifecycle;
    - tap-versus-drag arbitration;
    - swipe or cluster-exit classification;
    - drag direction or sensitivity;
@@ -43,7 +43,25 @@
    - direct manipulation or grabbed-object tracking;
    - quaternion-to-primary inference;
    - Euler gesture interpretation;
+   - interaction-priority derivation;
    - projection-to-interaction DOM application.
+
+   Semantic projection boundary:
+
+   Controller stores:
+   - semantic identity;
+   - x;
+   - y;
+   - radiusPx;
+   - depthLayer;
+   - compassOverlap;
+   - visible.
+
+   Interactions derives:
+   - interaction priority;
+   - pointer eligibility;
+   - hit-target policy;
+   - projection-driven DOM state.
 
    Gesture contract:
 
@@ -62,9 +80,6 @@
    Preview payloads permit exactly:
    - quaternion
    - primaryId
-
-   Begin and commit commands accept no motion payload.
-   Controller never infers primary identity from quaternion geometry.
 
    Source status:
    ANCHORING_TWO_FILE_MOTION_AUTHORITY_STANDARD
@@ -133,13 +148,6 @@
     UNKNOWN: "unknown"
   });
 
-  const INTERACTION_PRIORITY = Object.freeze({
-    FRONT: "front",
-    COMPASS: "compass",
-    REAR: "rear",
-    INACTIVE: "inactive"
-  });
-
   const CHANNELS = Object.freeze({
     FRAME: "frame",
     REDUCED_MOTION: "reducedMotion",
@@ -186,10 +194,9 @@
   );
 
   /*
-   * Explicit navigation-settlement values only.
+   * Private canonical navigation-settlement values.
    *
-   * These private constants are not gesture-axis definitions and are not
-   * exported to the interactions module.
+   * These are not gesture-axis definitions and are not exported.
    */
   const HALF_SQRT_TWO = Math.SQRT1_2;
 
@@ -451,6 +458,7 @@
     scene: null,
     sceneField: null,
     panel: null,
+
     panelEyebrow: null,
     panelTitle: null,
     panelPurpose: null,
@@ -461,12 +469,14 @@
     panelSelectionState: null,
     panelRouteStatus: null,
     panelLens: null,
+
     enterButton: null,
     enterLabel: null,
     returnToOrbitButton: null,
     returnToOrbitLabel: null,
     returnHomeButton: null,
     guidance: null,
+
     controllerReceiptOutput: null,
     controllerValidationOutput: null,
     compassControl: null,
@@ -606,18 +616,6 @@
     }
 
     return DEPTH_LAYERS.UNKNOWN;
-  }
-
-  function normalizeInteractionPriority(value) {
-    const priority = String(value || "")
-      .trim()
-      .toLowerCase();
-
-    return Object.values(
-      INTERACTION_PRIORITY
-    ).includes(priority)
-      ? priority
-      : INTERACTION_PRIORITY.INACTIVE;
   }
 
   function unexpectedPreviewPayloadKeys(
@@ -777,6 +775,7 @@
     ) {
       return Object.freeze({
         pass: false,
+
         code:
           "ARCHCOIN_ORBIT_PREVIEW_PAYLOAD_REQUIRED"
       });
@@ -814,7 +813,9 @@
     }
 
     const primaryId =
-      normalizeWing(payload.primaryId);
+      normalizeWing(
+        payload.primaryId
+      );
 
     if (!primaryId) {
       return Object.freeze({
@@ -1732,10 +1733,7 @@
             record.compassOverlap,
 
           visible:
-            record.visible,
-
-          interactionPriority:
-            record.interactionPriority
+            record.visible
         })
       )
     );
@@ -2067,6 +2065,21 @@
       semanticProjectionRevision:
         frame.semanticProjectionRevision,
 
+      semanticProjectionFields:
+        Object.freeze([
+          "id",
+          "kind",
+          "x",
+          "y",
+          "radiusPx",
+          "depthLayer",
+          "compassOverlap",
+          "visible"
+        ]),
+
+      interactionPriorityPublished:
+        false,
+
       pointerInterpreterOwner:
         MODULE.interactionModuleId,
 
@@ -2080,6 +2093,9 @@
         MODULE.interactionModuleId,
 
       clusterExitSwipeClassificationOwner:
+        MODULE.interactionModuleId,
+
+      interactionPriorityDerivationOwner:
         MODULE.interactionModuleId,
 
       projectionDomApplicationOwner:
@@ -2314,6 +2330,9 @@
       MODULE.motionContractVersion;
 
     state.root.dataset.archcoinMotionOwner =
+      MODULE.interactionModuleId;
+
+    state.root.dataset.archcoinInteractionPriorityOwner =
       MODULE.interactionModuleId;
 
     state.root.dataset.archcoinAcceptedStateAuthority =
@@ -3110,10 +3129,6 @@
 
     state.orbitGestureOrigin = null;
 
-    /*
-     * Publish the cancellation phase before returning the stable
-     * transaction state to COMMITTED.
-     */
     recordAction(
       `orbit-cancelled:${String(
         reason || "cancelled"
@@ -3430,10 +3445,6 @@
 
     cluster.gestureOrigin = null;
 
-    /*
-     * Publish the cancellation phase before settling the transaction back
-     * to COMMITTED.
-     */
     recordAction(
       `cluster-cancelled:${normalizedWing}:${String(
         reason || "cancelled"
@@ -4076,6 +4087,12 @@
     return committed;
   }
 
+  /*
+   * Stores semantic projection facts only.
+   *
+   * Interaction priority is intentionally not accepted, calculated,
+   * stored, or published by the controller.
+   */
   function updateSemanticProjection(records) {
     if (!Array.isArray(records)) {
       return false;
@@ -4118,40 +4135,6 @@
         continue;
       }
 
-      const depthLayer =
-        normalizeDepthLayer(
-          input.depthLayer ||
-          input.layer
-        );
-
-      const visible =
-        input.visible !== false;
-
-      const compassOverlap =
-        Boolean(
-          input.compassOverlap
-        );
-
-      const radiusPx = Math.max(
-        0,
-        finiteNumber(
-          input.radiusPx ??
-          input.projectedRadius,
-          0
-        )
-      );
-
-      /*
-       * The controller stores the supplied interaction-priority fact.
-       * It does not derive interaction policy from depth or Compass overlap.
-       */
-      const interactionPriority =
-        visible
-          ? normalizeInteractionPriority(
-              input.interactionPriority
-            )
-          : INTERACTION_PRIORITY.INACTIVE;
-
       const projection =
         Object.freeze({
           id,
@@ -4167,11 +4150,28 @@
             0
           ),
 
-          radiusPx,
-          depthLayer,
-          compassOverlap,
-          visible,
-          interactionPriority
+          radiusPx: Math.max(
+            0,
+            finiteNumber(
+              input.radiusPx ??
+              input.projectedRadius,
+              0
+            )
+          ),
+
+          depthLayer:
+            normalizeDepthLayer(
+              input.depthLayer ||
+              input.layer
+            ),
+
+          compassOverlap:
+            Boolean(
+              input.compassOverlap
+            ),
+
+          visible:
+            input.visible !== false
         });
 
       next.set(
@@ -5078,17 +5078,56 @@
   }
 
   function validateProjectionStorageContract() {
+    const sample = Object.freeze({
+      id: "north",
+      kind: "cardinal",
+      x: 10,
+      y: 20,
+      radiusPx: 30,
+      depthLayer: DEPTH_LAYERS.FRONT,
+      compassOverlap: false,
+      visible: true
+    });
+
+    invariant(
+      !Object.prototype
+        .hasOwnProperty
+        .call(
+          sample,
+          "interactionPriority"
+        ),
+      "ARCHCOIN_CONTROLLER_MUST_NOT_STORE_INTERACTION_PRIORITY"
+    );
+
     return Object.freeze({
       pass: true,
 
+      storedFields:
+        Object.freeze([
+          "id",
+          "kind",
+          "x",
+          "y",
+          "radiusPx",
+          "depthLayer",
+          "compassOverlap",
+          "visible"
+        ]),
+
       projectionMathOwned:
+        false,
+
+      interactionPriorityAccepted:
         false,
 
       interactionPriorityDerived:
         false,
 
-      interactionPriorityValidatedAndStored:
-        true,
+      interactionPriorityStored:
+        false,
+
+      interactionPriorityOwner:
+        MODULE.interactionModuleId,
 
       projectionDomApplicationOwned:
         false,
@@ -5126,6 +5165,8 @@
       wholeCrystalHitTestingOwned: false,
       syntheticClickSuppressionOwned: false,
       projectionDomApplicationOwned: false,
+      interactionPriorityDerivationOwned:
+        false,
       clusterExitSwipeClassificationOwned:
         false,
       gestureAxisSelectionOwned: false,
@@ -5277,7 +5318,7 @@
 
     return Object.freeze({
       receiptSchema:
-        "ARCHCOIN_CONTROLLER_ANCHORING_TWO_FILE_MOTION_AUTHORITY_VALIDATION_RECEIPT_v2",
+        "ARCHCOIN_CONTROLLER_ANCHORING_TWO_FILE_MOTION_AUTHORITY_VALIDATION_RECEIPT_v3",
 
       moduleId:
         MODULE.id,
@@ -5306,6 +5347,9 @@
         MODULE.interactionModuleId,
 
       projectionDomApplicationOwner:
+        MODULE.interactionModuleId,
+
+      interactionPriorityDerivationOwner:
         MODULE.interactionModuleId,
 
       clusterExitSwipeClassificationOwner:
@@ -5346,7 +5390,7 @@
       compassRendererOwnership: false,
       semanticProjectionMathOwnership:
         false,
-      interactionPriorityDerivationOwnership:
+      interactionPriorityStorageOwnership:
         false,
       semanticProjectionFactStorageOwnership:
         true,
@@ -5419,9 +5463,6 @@
 
         depthLayers:
           DEPTH_LAYERS,
-
-        interactionPriority:
-          INTERACTION_PRIORITY,
 
         mainCompass:
           MAIN_COMPASS,
@@ -5727,6 +5768,15 @@
               explicitPrimaryIdentityRequired:
                 true,
 
+              semanticProjectionFactsOnly:
+                true,
+
+              interactionPriorityPublished:
+                false,
+
+              interactionPriorityOwner:
+                MODULE.interactionModuleId,
+
               gestureQuaternionConstructionOwner:
                 MODULE.interactionModuleId,
 
@@ -5770,7 +5820,7 @@
 })();
 
 /*
-AUDRALIA_ARCHCOIN_CONTROLLER_ANCHORING_TWO_FILE_MOTION_AUTHORITY_RESULT_v2
+AUDRALIA_ARCHCOIN_CONTROLLER_ANCHORING_TWO_FILE_MOTION_AUTHORITY_RESULT_v3
 
 Artifact:
  /products/archcoin/index.controller.js
@@ -5819,12 +5869,21 @@ Controller rejects:
 - invalid primary room
 - room outside active cluster
 - commit without accepted preview
-- quaternion payload at commit
-- primary identity payload at commit
+- motion payload at commit
 - raw pointer values
 - drag vectors
 - axis instructions
 - movement-direction instructions
+
+Controller semantic projection records contain only:
+- id
+- kind
+- x
+- y
+- radiusPx
+- depthLayer
+- compassOverlap
+- visible
 
 Controller does not:
 - infer wing from quaternion
@@ -5836,7 +5895,10 @@ Controller does not:
 - define drag direction
 - classify cluster exit
 - track grabbed crystals
-- derive interaction priority from depth
+- accept interaction priority
+- derive interaction priority
+- store interaction priority
+- publish interaction priority
 - apply projection facts to interaction DOM
 - expose canonical settlement quaternions publicly
 
@@ -5852,13 +5914,14 @@ Interactions remains sole owner of:
 - gesture-axis selection
 - gesture quaternion construction
 - visual primary identity calculation
-- interaction-priority interpretation
+- interaction-priority derivation
+- pointer eligibility
+- hit-target policy
 - projection-driven interaction DOM
 
 Cancellation phase behavior:
 - CANCELLED is published
 - stable COMMITTED transaction state is then published
-- cancellation is no longer silently overwritten before publication
 
 Crystals modified:
  FALSE

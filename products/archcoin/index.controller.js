@@ -4,7 +4,7 @@
 
    Module:
    DGB_ARCHCOIN_CONTROLLER
-   6.0.0-controller-foundation-renewal
+   6.0.1-controller-presentation-and-native-home-corrections
 
    Controlling dependency position:
    1. /products/archcoin/index.controller.js
@@ -29,6 +29,18 @@
    - Generated nonvisual room proxies are forbidden.
    - Projected room-hit inference is forbidden.
 
+   Internal navigation states:
+   - CONSTELLATION
+   - CLUSTER_OPEN
+   - ROOM_SELECTED
+   - SYSTEM_HELD
+
+   Normalized page-presentation modes:
+   - CONSTELLATION -> CONSTELLATION
+   - CLUSTER_OPEN  -> CLUSTER
+   - ROOM_SELECTED -> CLUSTER
+   - SYSTEM_HELD   -> HELD
+
    Controlling Compass law:
    - The Compass is a fixed-center independent sibling.
    - The Compass does not create an ARCHCOIN navigation state.
@@ -36,21 +48,23 @@
    - The Compass does not participate in orbit or cluster settlement.
    - The Compass publishes no quaternion.
    - The controller does not mount or supervise the renderer.
-   - A Compass activation publishes one nonnavigating upstream request.
-   - A later page adapter may consume that request.
+   - Compass activation publishes one upstream-request receipt.
+   - The canonical semantic anchor retains native /index.html navigation.
+   - The controller does not suppress the native link unless a future,
+     confirmed adapter explicitly assumes navigation responsibility.
    - The Home Compass route is exactly /index.html.
 
    Controller boundary:
    - This file owns behavior, canonical navigation records, state transitions,
      orientation state, semantic activation, route confirmation, restoration,
-     reduced-motion state, held state, upstream requests, public contracts,
-     and controller-only validation.
+     reduced-motion state, held state, upstream requests, normalized
+     presentation publication, public contracts, and controller validation.
    - This file does not own WebGL, shaders, GPU buffers, canvas construction,
      fallback visibility, crystal drawing, scene layout, CSS, projected
      picking, or renderer lifecycle.
 
    Renewal disposition:
-   CONTROLLER_FOUNDATION_RENEWAL_CANDIDATE
+   CONTROLLER_RUNTIME_CORRECTION_CANDIDATE
    !=
    DOWNSTREAM_INTEGRATION
    !=
@@ -62,7 +76,7 @@
 
   const MODULE = Object.freeze({
     id: "DGB_ARCHCOIN_CONTROLLER",
-    version: "6.0.0-controller-foundation-renewal",
+    version: "6.0.1-controller-presentation-and-native-home-corrections",
     file: "/products/archcoin/index.controller.js"
   });
 
@@ -71,6 +85,26 @@
     CLUSTER_OPEN: "CLUSTER_OPEN",
     ROOM_SELECTED: "ROOM_SELECTED",
     SYSTEM_HELD: "SYSTEM_HELD"
+  });
+
+  const PRESENTATION_MODES = Object.freeze({
+    CONSTELLATION: "CONSTELLATION",
+    CLUSTER: "CLUSTER",
+    HELD: "HELD"
+  });
+
+  const PRESENTATION_MODE_BY_STATE = Object.freeze({
+    [STATES.CONSTELLATION]:
+      PRESENTATION_MODES.CONSTELLATION,
+
+    [STATES.CLUSTER_OPEN]:
+      PRESENTATION_MODES.CLUSTER,
+
+    [STATES.ROOM_SELECTED]:
+      PRESENTATION_MODES.CLUSTER,
+
+    [STATES.SYSTEM_HELD]:
+      PRESENTATION_MODES.HELD
   });
 
   const DESTINATION_TYPES = Object.freeze({
@@ -110,36 +144,80 @@
   });
 
   const HOME_COMPASS = Object.freeze({
-    destinationType: DESTINATION_TYPES.HOME_COMPASS,
-    destinationId: "home-compass",
-    destinationLabel: "Home Compass",
-    route: "/index.html",
-    source: "archcoin-controller"
+    destinationType:
+      DESTINATION_TYPES.HOME_COMPASS,
+
+    destinationId:
+      "home-compass",
+
+    destinationLabel:
+      "Home Compass",
+
+    route:
+      "/index.html",
+
+    source:
+      "archcoin-controller",
+
+    navigationAuthority:
+      "NATIVE_ANCHOR"
   });
 
   const PRESENTATION_BY_STATE = Object.freeze({
     [STATES.CONSTELLATION]: Object.freeze({
-      outerCardinalsActive: true,
-      activeRoomCluster: false,
-      roomSelectionPermitted: false
+      mode:
+        PRESENTATION_MODES.CONSTELLATION,
+
+      outerCardinalsActive:
+        true,
+
+      activeRoomCluster:
+        false,
+
+      roomSelectionPermitted:
+        false
     }),
 
     [STATES.CLUSTER_OPEN]: Object.freeze({
-      outerCardinalsActive: false,
-      activeRoomCluster: true,
-      roomSelectionPermitted: true
+      mode:
+        PRESENTATION_MODES.CLUSTER,
+
+      outerCardinalsActive:
+        false,
+
+      activeRoomCluster:
+        true,
+
+      roomSelectionPermitted:
+        true
     }),
 
     [STATES.ROOM_SELECTED]: Object.freeze({
-      outerCardinalsActive: false,
-      activeRoomCluster: true,
-      roomSelectionPermitted: true
+      mode:
+        PRESENTATION_MODES.CLUSTER,
+
+      outerCardinalsActive:
+        false,
+
+      activeRoomCluster:
+        true,
+
+      roomSelectionPermitted:
+        true
     }),
 
     [STATES.SYSTEM_HELD]: Object.freeze({
-      outerCardinalsActive: false,
-      activeRoomCluster: false,
-      roomSelectionPermitted: false
+      mode:
+        PRESENTATION_MODES.HELD,
+
+      outerCardinalsActive:
+        false,
+
+      activeRoomCluster:
+        false,
+
+      roomSelectionPermitted:
+        false
     })
   });
 
@@ -176,18 +254,21 @@
       roomId: "contract-overview",
       route: "/products/archcoin/contract/overview/"
     }),
+
     Object.freeze({
       wing: "north",
       coin: "contract",
       roomId: "contract-engineering",
       route: "/products/archcoin/contract/engineering/"
     }),
+
     Object.freeze({
       wing: "north",
       coin: "contract",
       roomId: "contract-platform",
       route: "/products/archcoin/contract/platform/"
     }),
+
     Object.freeze({
       wing: "north",
       coin: "contract",
@@ -201,18 +282,21 @@
       roomId: "receivable-overview",
       route: "/products/archcoin/receivable/overview/"
     }),
+
     Object.freeze({
       wing: "east",
       coin: "receivable",
       roomId: "receivable-engineering",
       route: "/products/archcoin/receivable/engineering/"
     }),
+
     Object.freeze({
       wing: "east",
       coin: "receivable",
       roomId: "receivable-platform",
       route: "/products/archcoin/receivable/platform/"
     }),
+
     Object.freeze({
       wing: "east",
       coin: "receivable",
@@ -226,18 +310,21 @@
       roomId: "payable-overview",
       route: "/products/archcoin/payable/overview/"
     }),
+
     Object.freeze({
       wing: "south",
       coin: "payable",
       roomId: "payable-engineering",
       route: "/products/archcoin/payable/engineering/"
     }),
+
     Object.freeze({
       wing: "south",
       coin: "payable",
       roomId: "payable-platform",
       route: "/products/archcoin/payable/platform/"
     }),
+
     Object.freeze({
       wing: "south",
       coin: "payable",
@@ -251,18 +338,21 @@
       roomId: "allocation-overview",
       route: "/products/archcoin/allocation/overview/"
     }),
+
     Object.freeze({
       wing: "west",
       coin: "allocation",
       roomId: "allocation-engineering",
       route: "/products/archcoin/allocation/engineering/"
     }),
+
     Object.freeze({
       wing: "west",
       coin: "allocation",
       roomId: "allocation-platform",
       route: "/products/archcoin/allocation/platform/"
     }),
+
     Object.freeze({
       wing: "west",
       coin: "allocation",
@@ -271,177 +361,333 @@
     })
   ]);
 
-  const CANONICAL_ROOM_ROUTES = Object.freeze(
-    CANONICAL_ROOM_RECORDS.map(record => record.route)
-  );
-
-  const ROOM_BY_ID = new Map(
-    CANONICAL_ROOM_RECORDS.map(record => [
-      record.roomId,
-      record
-    ])
-  );
-
-  const ROOM_BY_ROUTE = new Map(
-    CANONICAL_ROOM_RECORDS.map(record => [
-      record.route,
-      record
-    ])
-  );
-
-  const ROOMS_BY_WING = new Map(
-    WINGS.map(wing => [
-      wing,
-      Object.freeze(
-        CANONICAL_ROOM_RECORDS
-          .filter(record => record.wing === wing)
-          .map(record => record.roomId)
+  const CANONICAL_ROOM_ROUTES =
+    Object.freeze(
+      CANONICAL_ROOM_RECORDS.map(
+        record => record.route
       )
-    ])
-  );
+    );
+
+  const ROOM_BY_ID =
+    new Map(
+      CANONICAL_ROOM_RECORDS.map(
+        record => [
+          record.roomId,
+          record
+        ]
+      )
+    );
+
+  const ROOM_BY_ROUTE =
+    new Map(
+      CANONICAL_ROOM_RECORDS.map(
+        record => [
+          record.route,
+          record
+        ]
+      )
+    );
+
+  const ROOMS_BY_WING =
+    new Map(
+      WINGS.map(
+        wing => [
+          wing,
+
+          Object.freeze(
+            CANONICAL_ROOM_RECORDS
+              .filter(
+                record =>
+                  record.wing ===
+                  wing
+              )
+              .map(
+                record =>
+                  record.roomId
+              )
+          )
+        ]
+      )
+    );
 
   const QUATERNION = Object.freeze({
-    identity: Object.freeze([0, 0, 0, 1]),
-    minimumLength: 1e-8
+    identity:
+      Object.freeze([
+        0,
+        0,
+        0,
+        1
+      ]),
+
+    minimumLength:
+      1e-8
   });
 
-  const CANONICAL_CONSTELLATION_EULER = Object.freeze({
-    north: Object.freeze({
-      yaw: 0,
-      pitch: 0,
-      roll: 0
-    }),
+  const CANONICAL_CONSTELLATION_EULER =
+    Object.freeze({
+      north: Object.freeze({
+        yaw: 0,
+        pitch: 0,
+        roll: 0
+      }),
 
-    east: Object.freeze({
-      yaw: -Math.PI / 2,
-      pitch: 0,
-      roll: 0
-    }),
+      east: Object.freeze({
+        yaw: -Math.PI / 2,
+        pitch: 0,
+        roll: 0
+      }),
 
-    south: Object.freeze({
-      yaw: Math.PI,
-      pitch: 0,
-      roll: 0
-    }),
+      south: Object.freeze({
+        yaw: Math.PI,
+        pitch: 0,
+        roll: 0
+      }),
 
-    west: Object.freeze({
-      yaw: Math.PI / 2,
-      pitch: 0,
-      roll: 0
-    })
-  });
+      west: Object.freeze({
+        yaw: Math.PI / 2,
+        pitch: 0,
+        roll: 0
+      })
+    });
 
   const subscribers = Object.freeze({
-    frame: new Set(),
-    reducedMotion: new Set(),
-    heldState: new Set(),
-    compassState: new Set(),
-    upstreamRequest: new Set()
+    frame:
+      new Set(),
+
+    reducedMotion:
+      new Set(),
+
+    heldState:
+      new Set(),
+
+    compassState:
+      new Set(),
+
+    upstreamRequest:
+      new Set()
   });
 
   const state = {
-    root: null,
-    scene: null,
+    root:
+      null,
 
-    panel: null,
-    panelEyebrow: null,
-    panelTitle: null,
-    panelPurpose: null,
-    panelRelationship: null,
+    scene:
+      null,
 
-    enterButton: null,
-    enterLabel: null,
-    returnToOrbitButton: null,
-    returnToOrbitLabel: null,
-    guidance: null,
+    panel:
+      null,
 
-    controllerReceiptOutput: null,
-    controllerValidationOutput: null,
+    panelEyebrow:
+      null,
 
-    compassControl: null,
+    panelTitle:
+      null,
 
-    current: STATES.CONSTELLATION,
+    panelPurpose:
+      null,
 
-    orbitFocus: "north",
-    orbitPreviewFocus: "north",
-    orbitPhase: ORIENTATION_PHASES.COMMITTED,
-    orbitGestureActive: false,
-    orbitRevision: 0,
-    orbitOrientation: null,
-    committedOrbitOrientation: null,
-    orbitGestureOrigin: null,
+    panelRelationship:
+      null,
 
-    clusters: new Map(),
+    enterButton:
+      null,
 
-    selectedCardinal: "",
-    selectedCoin: "",
-    selectedRoom: "",
-    selectedDestinationType: DESTINATION_TYPES.NONE,
-    selectedDestinationId: "",
-    selectedDestinationLabel: "",
-    selectedRoute: "",
-    selectedContentId: "",
-    selectedLens: "overview",
-    selectedParagraph: "",
+    enterLabel:
+      null,
 
-    panelDescended: false,
-    panelDescentFrame: 0,
-    panelDescentCommitFrame: 0,
-    sceneAscentFrame: 0,
-    sceneAscentCommitFrame: 0,
+    returnToOrbitButton:
+      null,
 
-    reducedMotion: false,
-    mediaQuery: null,
-    mediaQueryListener: null,
+    returnToOrbitLabel:
+      null,
 
-    lastUpstreamRequest: null,
-    upstreamRequestRevision: 0,
+    guidance:
+      null,
 
-    initialized: false,
-    lastAction: "pending",
-    lastFailure: "",
+    controllerReceiptOutput:
+      null,
 
-    validationReceipt: null
+    controllerValidationOutput:
+      null,
+
+    compassControl:
+      null,
+
+    current:
+      STATES.CONSTELLATION,
+
+    orbitFocus:
+      "north",
+
+    orbitPreviewFocus:
+      "north",
+
+    orbitPhase:
+      ORIENTATION_PHASES.COMMITTED,
+
+    orbitGestureActive:
+      false,
+
+    orbitRevision:
+      0,
+
+    orbitOrientation:
+      null,
+
+    committedOrbitOrientation:
+      null,
+
+    orbitGestureOrigin:
+      null,
+
+    clusters:
+      new Map(),
+
+    selectedCardinal:
+      "",
+
+    selectedCoin:
+      "",
+
+    selectedRoom:
+      "",
+
+    selectedDestinationType:
+      DESTINATION_TYPES.NONE,
+
+    selectedDestinationId:
+      "",
+
+    selectedDestinationLabel:
+      "",
+
+    selectedRoute:
+      "",
+
+    selectedContentId:
+      "",
+
+    selectedLens:
+      "overview",
+
+    selectedParagraph:
+      "",
+
+    panelDescended:
+      false,
+
+    panelDescentFrame:
+      0,
+
+    panelDescentCommitFrame:
+      0,
+
+    sceneAscentFrame:
+      0,
+
+    sceneAscentCommitFrame:
+      0,
+
+    reducedMotion:
+      false,
+
+    mediaQuery:
+      null,
+
+    mediaQueryListener:
+      null,
+
+    lastUpstreamRequest:
+      null,
+
+    upstreamRequestRevision:
+      0,
+
+    initialized:
+      false,
+
+    lastAction:
+      "pending",
+
+    lastFailure:
+      "",
+
+    validationReceipt:
+      null
   };
 
-  function invariant(condition, code, details = null) {
+  function invariant(
+    condition,
+    code,
+    details = null
+  ) {
     if (condition) {
       return;
     }
 
-    const error = new Error(code);
-    error.code = code;
-    error.details = details;
+    const error =
+      new Error(code);
+
+    error.code =
+      code;
+
+    error.details =
+      details;
+
     throw error;
   }
 
-  function qs(selector, root = document) {
-    return root.querySelector(selector);
+  function qs(
+    selector,
+    root = document
+  ) {
+    return root.querySelector(
+      selector
+    );
   }
 
-  function qsa(selector, root = document) {
-    return Array.from(root.querySelectorAll(selector));
+  function qsa(
+    selector,
+    root = document
+  ) {
+    return Array.from(
+      root.querySelectorAll(
+        selector
+      )
+    );
   }
 
-  function finiteNumber(value, fallback = 0) {
-    const number = Number(value);
+  function finiteNumber(
+    value,
+    fallback = 0
+  ) {
+    const number =
+      Number(value);
 
     return Number.isFinite(number)
       ? number
       : fallback;
   }
 
-  function clamp(value, minimum, maximum) {
+  function clamp(
+    value,
+    minimum,
+    maximum
+  ) {
     return Math.max(
       minimum,
-      Math.min(maximum, value)
+      Math.min(
+        maximum,
+        value
+      )
     );
   }
 
   function normalizeWing(value) {
-    const wing = String(value || "")
-      .trim()
-      .toLowerCase();
+    const wing =
+      String(value || "")
+        .trim()
+        .toLowerCase();
 
     return WINGS.includes(wing)
       ? wing
@@ -449,32 +695,66 @@
   }
 
   function normalizeRoomId(value) {
-    return String(value || "").trim();
+    return String(
+      value || ""
+    ).trim();
   }
 
   function normalizeRoute(value) {
-    const route = String(value || "").trim();
+    const route =
+      String(value || "")
+        .trim();
 
     return route.startsWith("/")
       ? route
       : "";
   }
 
-  function normalizeLabel(value, fallback = "") {
-    const label = String(value || "").trim();
+  function normalizeLabel(
+    value,
+    fallback = ""
+  ) {
+    const label =
+      String(value || "")
+        .trim();
 
-    return label || fallback;
+    return label ||
+      fallback;
+  }
+
+  function presentationModeForState(
+    navigationState =
+      state.current
+  ) {
+    return (
+      PRESENTATION_MODE_BY_STATE[
+        navigationState
+      ] ||
+      PRESENTATION_MODES.HELD
+    );
   }
 
   function wrapRadians(value) {
-    let angle = finiteNumber(value, 0);
+    let angle =
+      finiteNumber(
+        value,
+        0
+      );
 
-    while (angle > Math.PI) {
-      angle -= Math.PI * 2;
+    while (
+      angle >
+      Math.PI
+    ) {
+      angle -=
+        Math.PI * 2;
     }
 
-    while (angle < -Math.PI) {
-      angle += Math.PI * 2;
+    while (
+      angle <
+      -Math.PI
+    ) {
+      angle +=
+        Math.PI * 2;
     }
 
     return angle;
@@ -482,7 +762,8 @@
 
   function normalizeQuaternion(
     value,
-    fallback = QUATERNION.identity
+    fallback =
+      QUATERNION.identity
   ) {
     const source =
       Array.isArray(value) ||
@@ -490,95 +771,210 @@
         ? Array.from(value)
         : [];
 
-    if (source.length !== 4) {
-      return Array.from(fallback);
+    if (
+      source.length !==
+      4
+    ) {
+      return Array.from(
+        fallback
+      );
     }
 
     const quaternion = [
-      finiteNumber(source[0], 0),
-      finiteNumber(source[1], 0),
-      finiteNumber(source[2], 0),
-      finiteNumber(source[3], 1)
+      finiteNumber(
+        source[0],
+        0
+      ),
+
+      finiteNumber(
+        source[1],
+        0
+      ),
+
+      finiteNumber(
+        source[2],
+        0
+      ),
+
+      finiteNumber(
+        source[3],
+        1
+      )
     ];
 
-    const length = Math.hypot(
-      quaternion[0],
-      quaternion[1],
-      quaternion[2],
-      quaternion[3]
-    );
+    const length =
+      Math.hypot(
+        quaternion[0],
+        quaternion[1],
+        quaternion[2],
+        quaternion[3]
+      );
 
     if (
-      !Number.isFinite(length) ||
-      length < QUATERNION.minimumLength
+      !Number.isFinite(
+        length
+      ) ||
+      length <
+        QUATERNION.minimumLength
     ) {
-      return Array.from(fallback);
+      return Array.from(
+        fallback
+      );
     }
 
     return quaternion.map(
-      component => component / length
+      component =>
+        component /
+        length
     );
   }
 
-  function quaternionFromEuler(yaw, pitch, roll) {
-    const safeYaw = wrapRadians(yaw);
+  function quaternionFromEuler(
+    yaw,
+    pitch,
+    roll
+  ) {
+    const safeYaw =
+      wrapRadians(yaw);
 
-    const safePitch = clamp(
-      finiteNumber(pitch, 0),
-      -Math.PI / 2,
-      Math.PI / 2
-    );
+    const safePitch =
+      clamp(
+        finiteNumber(
+          pitch,
+          0
+        ),
+        -Math.PI / 2,
+        Math.PI / 2
+      );
 
-    const safeRoll = wrapRadians(roll);
+    const safeRoll =
+      wrapRadians(roll);
 
-    const cy = Math.cos(safeYaw * 0.5);
-    const sy = Math.sin(safeYaw * 0.5);
-    const cp = Math.cos(safePitch * 0.5);
-    const sp = Math.sin(safePitch * 0.5);
-    const cr = Math.cos(safeRoll * 0.5);
-    const sr = Math.sin(safeRoll * 0.5);
+    const cy =
+      Math.cos(
+        safeYaw *
+        0.5
+      );
+
+    const sy =
+      Math.sin(
+        safeYaw *
+        0.5
+      );
+
+    const cp =
+      Math.cos(
+        safePitch *
+        0.5
+      );
+
+    const sp =
+      Math.sin(
+        safePitch *
+        0.5
+      );
+
+    const cr =
+      Math.cos(
+        safeRoll *
+        0.5
+      );
+
+    const sr =
+      Math.sin(
+        safeRoll *
+        0.5
+      );
 
     return normalizeQuaternion([
-      sr * cp * cy - cr * sp * sy,
-      cr * sp * cy + sr * cp * sy,
-      cr * cp * sy - sr * sp * cy,
-      cr * cp * cy + sr * sp * sy
+      sr * cp * cy -
+        cr * sp * sy,
+
+      cr * sp * cy +
+        sr * cp * sy,
+
+      cr * cp * sy -
+        sr * sp * cy,
+
+      cr * cp * cy +
+        sr * sp * sy
     ]);
   }
 
   function eulerFromQuaternion(value) {
-    const [x, y, z, w] =
+    const [
+      x,
+      y,
+      z,
+      w
+    ] =
       normalizeQuaternion(value);
 
     const sinPitch =
-      2 * (w * y - z * x);
+      2 *
+      (
+        w * y -
+        z * x
+      );
 
     const pitch =
-      Math.abs(sinPitch) >= 1
-        ? Math.sign(sinPitch) *
-          Math.PI / 2
-        : Math.asin(sinPitch);
+      Math.abs(
+        sinPitch
+      ) >= 1
+        ? Math.sign(
+            sinPitch
+          ) *
+          Math.PI /
+          2
+        : Math.asin(
+            sinPitch
+          );
 
-    const yaw = Math.atan2(
-      2 * (w * z + x * y),
-      1 - 2 * (y * y + z * z)
-    );
+    const yaw =
+      Math.atan2(
+        2 *
+        (
+          w * z +
+          x * y
+        ),
 
-    const roll = Math.atan2(
-      2 * (w * x + y * z),
-      1 - 2 * (x * x + y * y)
-    );
+        1 -
+        2 *
+        (
+          y * y +
+          z * z
+        )
+      );
+
+    const roll =
+      Math.atan2(
+        2 *
+        (
+          w * x +
+          y * z
+        ),
+
+        1 -
+        2 *
+        (
+          x * x +
+          y * y
+        )
+      );
 
     return {
-      yaw: wrapRadians(yaw),
+      yaw:
+        wrapRadians(yaw),
 
-      pitch: clamp(
-        pitch,
-        -Math.PI / 2,
-        Math.PI / 2
-      ),
+      pitch:
+        clamp(
+          pitch,
+          -Math.PI / 2,
+          Math.PI / 2
+        ),
 
-      roll: wrapRadians(roll)
+      roll:
+        wrapRadians(roll)
     };
   }
 
@@ -589,25 +985,33 @@
     primaryId = ""
   ) {
     return {
-      yaw: wrapRadians(yaw),
+      yaw:
+        wrapRadians(yaw),
 
-      pitch: clamp(
-        finiteNumber(pitch, 0),
-        -Math.PI / 2,
-        Math.PI / 2
-      ),
+      pitch:
+        clamp(
+          finiteNumber(
+            pitch,
+            0
+          ),
+          -Math.PI / 2,
+          Math.PI / 2
+        ),
 
-      roll: wrapRadians(roll),
+      roll:
+        wrapRadians(roll),
 
-      quaternion: quaternionFromEuler(
-        yaw,
-        pitch,
-        roll
-      ),
+      quaternion:
+        quaternionFromEuler(
+          yaw,
+          pitch,
+          roll
+        ),
 
-      primaryId: String(
-        primaryId || ""
-      ).trim()
+      primaryId:
+        String(
+          primaryId || ""
+        ).trim()
     };
   }
 
@@ -616,24 +1020,38 @@
     primaryId = ""
   ) {
     const normalized =
-      normalizeQuaternion(quaternion);
+      normalizeQuaternion(
+        quaternion
+      );
 
     const euler =
-      eulerFromQuaternion(normalized);
+      eulerFromQuaternion(
+        normalized
+      );
 
     return {
-      yaw: euler.yaw,
-      pitch: euler.pitch,
-      roll: euler.roll,
-      quaternion: normalized,
+      yaw:
+        euler.yaw,
 
-      primaryId: String(
-        primaryId || ""
-      ).trim()
+      pitch:
+        euler.pitch,
+
+      roll:
+        euler.roll,
+
+      quaternion:
+        normalized,
+
+      primaryId:
+        String(
+          primaryId || ""
+        ).trim()
     };
   }
 
-  function cloneOrientation(orientation) {
+  function cloneOrientation(
+    orientation
+  ) {
     const source =
       orientation ||
       orientationFromQuaternion(
@@ -641,45 +1059,64 @@
       );
 
     return {
-      yaw: finiteNumber(source.yaw, 0),
+      yaw:
+        finiteNumber(
+          source.yaw,
+          0
+        ),
 
-      pitch: finiteNumber(
-        source.pitch,
-        0
-      ),
+      pitch:
+        finiteNumber(
+          source.pitch,
+          0
+        ),
 
-      roll: finiteNumber(
-        source.roll,
-        0
-      ),
+      roll:
+        finiteNumber(
+          source.roll,
+          0
+        ),
 
-      quaternion: normalizeQuaternion(
-        source.quaternion
-      ),
+      quaternion:
+        normalizeQuaternion(
+          source.quaternion
+        ),
 
-      primaryId: String(
-        source.primaryId ||
-        source.primaryWing ||
-        source.primaryRoom ||
-        ""
-      ).trim()
+      primaryId:
+        String(
+          source.primaryId ||
+          source.primaryWing ||
+          source.primaryRoom ||
+          ""
+        ).trim()
     };
   }
 
-  function freezeOrientation(orientation) {
+  function freezeOrientation(
+    orientation
+  ) {
     const value =
-      cloneOrientation(orientation);
+      cloneOrientation(
+        orientation
+      );
 
     return Object.freeze({
-      yaw: value.yaw,
-      pitch: value.pitch,
-      roll: value.roll,
+      yaw:
+        value.yaw,
 
-      quaternion: Object.freeze(
-        value.quaternion.slice()
-      ),
+      pitch:
+        value.pitch,
 
-      primaryId: value.primaryId
+      roll:
+        value.roll,
+
+      quaternion:
+        Object.freeze(
+          value.quaternion.slice()
+        ),
+
+      primaryId:
+        value.primaryId
     });
   }
 
@@ -694,22 +1131,26 @@
 
     if (
       !payload ||
-      typeof payload !== "object"
+      typeof payload !==
+        "object"
     ) {
       return fallback;
     }
 
-    const primaryId = String(
-      payload.primaryId ||
-      payload.primaryWing ||
-      payload.primaryRoom ||
-      payload.focus ||
-      fallback.primaryId ||
-      ""
-    ).trim();
+    const primaryId =
+      String(
+        payload.primaryId ||
+        payload.primaryWing ||
+        payload.primaryRoom ||
+        payload.focus ||
+        fallback.primaryId ||
+        ""
+      ).trim();
 
     if (
-      Array.isArray(payload.quaternion) ||
+      Array.isArray(
+        payload.quaternion
+      ) ||
       ArrayBuffer.isView(
         payload.quaternion
       )
@@ -724,30 +1165,38 @@
       payload.orientation &&
       (
         Array.isArray(
-          payload.orientation.quaternion
+          payload.orientation
+            .quaternion
         ) ||
         ArrayBuffer.isView(
-          payload.orientation.quaternion
+          payload.orientation
+            .quaternion
         )
       )
     ) {
       return orientationFromQuaternion(
-        payload.orientation.quaternion,
+        payload.orientation
+          .quaternion,
+
         primaryId ||
-        payload.orientation.primaryId
+        payload.orientation
+          .primaryId
       );
     }
 
     return orientationFromEuler(
-      payload.yaw !== undefined
+      payload.yaw !==
+        undefined
         ? payload.yaw
         : fallback.yaw,
 
-      payload.pitch !== undefined
+      payload.pitch !==
+        undefined
         ? payload.pitch
         : fallback.pitch,
 
-      payload.roll !== undefined
+      payload.roll !==
+        undefined
         ? payload.roll
         : fallback.roll,
 
@@ -755,9 +1204,13 @@
     );
   }
 
-  function canonicalConstellationOrientation(wing) {
+  function canonicalConstellationOrientation(
+    wing
+  ) {
     const normalizedWing =
-      normalizeWing(wing) ||
+      normalizeWing(
+        wing
+      ) ||
       "north";
 
     const euler =
@@ -777,17 +1230,21 @@
     return (
       WING_TO_COIN[
         normalizeWing(wing)
-      ] || ""
+      ] ||
+      ""
     );
   }
 
   function createClusterState(wing) {
     const roomIds =
-      ROOMS_BY_WING.get(wing) ||
+      ROOMS_BY_WING.get(
+        wing
+      ) ||
       Object.freeze([]);
 
     const primaryRoom =
-      roomIds[0] || "";
+      roomIds[0] ||
+      "";
 
     const orientation =
       orientationFromQuaternion(
@@ -797,16 +1254,38 @@
 
     return {
       wing,
-      roomIds: Array.from(roomIds),
+
+      roomIds:
+        Array.from(
+          roomIds
+        ),
+
       primaryRoom,
-      previewPrimaryRoom: primaryRoom,
-      phase: ORIENTATION_PHASES.COMMITTED,
-      gestureActive: false,
-      revision: 0,
-      orientation: cloneOrientation(orientation),
+
+      previewPrimaryRoom:
+        primaryRoom,
+
+      phase:
+        ORIENTATION_PHASES.COMMITTED,
+
+      gestureActive:
+        false,
+
+      revision:
+        0,
+
+      orientation:
+        cloneOrientation(
+          orientation
+        ),
+
       committedOrientation:
-        cloneOrientation(orientation),
-      gestureOrigin: null
+        cloneOrientation(
+          orientation
+        ),
+
+      gestureOrigin:
+        null
     };
   }
 
@@ -817,7 +1296,8 @@
     return normalizedWing
       ? state.clusters.get(
           normalizedWing
-        ) || null
+        ) ||
+        null
       : null;
   }
 
@@ -849,7 +1329,9 @@
     return Boolean(
       cluster &&
       cluster.roomIds.includes(
-        normalizeRoomId(roomId)
+        normalizeRoomId(
+          roomId
+        )
       )
     );
   }
@@ -859,8 +1341,12 @@
     toState
   ) {
     return Boolean(
-      TRANSITIONS[fromState] &&
-      TRANSITIONS[fromState].includes(
+      TRANSITIONS[
+        fromState
+      ] &&
+      TRANSITIONS[
+        fromState
+      ].includes(
         toState
       )
     );
@@ -877,34 +1363,54 @@
     return !isHeld();
   }
 
-  function subscribe(channel, callback) {
-    const set = subscribers[channel];
+  function subscribe(
+    channel,
+    callback
+  ) {
+    const set =
+      subscribers[channel];
 
     if (
       !set ||
-      typeof callback !== "function"
+      typeof callback !==
+        "function"
     ) {
-      return () => false;
+      return () =>
+        false;
     }
 
-    set.add(callback);
+    set.add(
+      callback
+    );
 
     return () => {
-      set.delete(callback);
+      set.delete(
+        callback
+      );
+
       return true;
     };
   }
 
-  function publish(channel, payload) {
-    const set = subscribers[channel];
+  function publish(
+    channel,
+    payload
+  ) {
+    const set =
+      subscribers[channel];
 
     if (!set) {
       return;
     }
 
-    for (const callback of set) {
+    for (
+      const callback
+      of set
+    ) {
       try {
-        callback(payload);
+        callback(
+          payload
+        );
       } catch (_) {}
     }
   }
@@ -926,9 +1432,32 @@
     );
   }
 
+  function escapeSelectorValue(value) {
+    const source =
+      String(value || "");
+
+    if (
+      globalThis.CSS &&
+      typeof globalThis.CSS
+        .escape ===
+        "function"
+    ) {
+      return globalThis.CSS.escape(
+        source
+      );
+    }
+
+    return source.replace(
+      /["\\]/g,
+      "\\$&"
+    );
+  }
+
   function findRoomElement(roomId) {
     const id =
-      normalizeRoomId(roomId);
+      normalizeRoomId(
+        roomId
+      );
 
     if (
       !id ||
@@ -937,66 +1466,81 @@
       return null;
     }
 
-    const escaped =
-      globalThis.CSS &&
-      typeof globalThis.CSS.escape ===
-        "function"
-        ? globalThis.CSS.escape(id)
-        : id.replace(
-            /["\\]/g,
-            "\\$&"
-          );
-
     return qs(
-      `[data-archcoin-room][data-room-id="${escaped}"]`,
+      `[data-archcoin-room][data-room-id="${escapeSelectorValue(id)}"]`,
       state.root
     );
   }
 
-  function destinationFromElement(element) {
+  function destinationFromElement(
+    element
+  ) {
     if (!element) {
       return null;
     }
 
     return Object.freeze({
-      destinationType: String(
-        element.dataset.destinationType ||
-        ""
-      )
-        .trim()
-        .toLowerCase(),
+      destinationType:
+        String(
+          element.dataset
+            .destinationType ||
+          ""
+        )
+          .trim()
+          .toLowerCase(),
 
-      destinationId: String(
-        element.dataset.destinationId ||
-        element.dataset.roomId ||
-        element.dataset.coinId ||
-        element.dataset.wing ||
-        ""
-      ).trim(),
+      destinationId:
+        String(
+          element.dataset
+            .destinationId ||
+          element.dataset
+            .roomId ||
+          element.dataset
+            .coinId ||
+          element.dataset
+            .wing ||
+          ""
+        ).trim(),
 
-      label: normalizeLabel(
-        element.dataset.label ||
-        element.dataset.roomLabel ||
-        element.dataset.coinLabel ||
-        element.textContent
-      ),
+      label:
+        normalizeLabel(
+          element.dataset
+            .label ||
+          element.dataset
+            .roomLabel ||
+          element.dataset
+            .coinLabel ||
+          element.textContent
+        ),
 
-      route: normalizeRoute(
-        element.dataset.route ||
-        element.getAttribute("href")
-      )
+      route:
+        normalizeRoute(
+          element.dataset
+            .route ||
+          element.getAttribute(
+            "href"
+          )
+        )
     });
   }
 
-  function roomParagraphFromElement(element) {
+  function roomParagraphFromElement(
+    element
+  ) {
     return normalizeLabel(
       element.dataset.preview ||
-      element.dataset.roomSummary ||
-      element.dataset.localFunction ||
-      element.dataset.roomFunction ||
-      element.dataset.panelBody ||
-      element.dataset.whyEnter ||
-      element.dataset.panelWhy,
+      element.dataset
+        .roomSummary ||
+      element.dataset
+        .localFunction ||
+      element.dataset
+        .roomFunction ||
+      element.dataset
+        .panelBody ||
+      element.dataset
+        .whyEnter ||
+      element.dataset
+        .panelWhy,
 
       "This room is part of the selected ARCHCOIN domain. Review its purpose, then enter the exact declared path when ready."
     );
@@ -1004,53 +1548,75 @@
 
   function panelFromCoin(element) {
     return Object.freeze({
-      eyebrow: normalizeLabel(
-        element.dataset.coinLabel ||
-        element.dataset.label,
-        "Selected coin"
-      ),
+      eyebrow:
+        normalizeLabel(
+          element.dataset
+            .coinLabel ||
+          element.dataset
+            .label,
+          "Selected coin"
+        ),
 
-      title: normalizeLabel(
-        element.dataset.panelTitle ||
-        element.dataset.coinTitle ||
-        element.dataset.label,
-        "Selected coin"
-      ),
+      title:
+        normalizeLabel(
+          element.dataset
+            .panelTitle ||
+          element.dataset
+            .coinTitle ||
+          element.dataset
+            .label,
+          "Selected coin"
+        ),
 
-      purpose: normalizeLabel(
-        element.dataset.panelBody ||
-        element.dataset.coinBody ||
-        element.dataset.coinFunction,
+      purpose:
+        normalizeLabel(
+          element.dataset
+            .panelBody ||
+          element.dataset
+            .coinBody ||
+          element.dataset
+            .coinFunction,
 
-        "This coin opens a four-room ARCHCOIN cluster."
-      ),
+          "This coin opens a four-room ARCHCOIN cluster."
+        ),
 
-      relationship: normalizeLabel(
-        element.dataset.panelWhy ||
-        element.dataset.coinWhy,
+      relationship:
+        normalizeLabel(
+          element.dataset
+            .panelWhy ||
+          element.dataset
+            .coinWhy,
 
-        "Rotate the cluster and choose the room that matches the task."
-      )
+          "Rotate the cluster and choose the room that matches the task."
+        )
     });
   }
 
   function panelFromRoom(element) {
     return Object.freeze({
-      eyebrow: normalizeLabel(
-        element.dataset.roomLensLabel ||
-        element.dataset.roomType,
-        "Selected path"
-      ),
+      eyebrow:
+        normalizeLabel(
+          element.dataset
+            .roomLensLabel ||
+          element.dataset
+            .roomType,
+          "Selected path"
+        ),
 
-      title: normalizeLabel(
-        element.dataset.panelTitle ||
-        element.dataset.label ||
-        element.textContent,
-        "Selected room"
-      ),
+      title:
+        normalizeLabel(
+          element.dataset
+            .panelTitle ||
+          element.dataset
+            .label ||
+          element.textContent,
+          "Selected room"
+        ),
 
       purpose:
-        roomParagraphFromElement(element),
+        roomParagraphFromElement(
+          element
+        ),
 
       relationship:
         "Choose Enter Selected Path to open this room, or Return to Orbit to restore its four-room cluster."
@@ -1059,8 +1625,11 @@
 
   function defaultPanel() {
     return Object.freeze({
-      eyebrow: "Selected path",
-      title: "Choose a coin",
+      eyebrow:
+        "Selected path",
+
+      title:
+        "Choose a coin",
 
       purpose:
         "Begin with the financial domain that most closely matches the question in front of you.",
@@ -1076,39 +1645,63 @@
     purpose,
     relationship
   }) {
-    if (state.panelEyebrow) {
-      state.panelEyebrow.textContent =
-        eyebrow || "Selected path";
+    if (
+      state.panelEyebrow
+    ) {
+      state.panelEyebrow
+        .textContent =
+        eyebrow ||
+        "Selected path";
     }
 
-    if (state.panelTitle) {
-      state.panelTitle.textContent =
-        title || "Choose a coin";
+    if (
+      state.panelTitle
+    ) {
+      state.panelTitle
+        .textContent =
+        title ||
+        "Choose a coin";
     }
 
-    if (state.panelPurpose) {
-      state.panelPurpose.textContent =
-        purpose || "";
+    if (
+      state.panelPurpose
+    ) {
+      state.panelPurpose
+        .textContent =
+        purpose ||
+        "";
     }
 
-    if (state.panelRelationship) {
-      state.panelRelationship.textContent =
-        relationship || "";
+    if (
+      state.panelRelationship
+    ) {
+      state.panelRelationship
+        .textContent =
+        relationship ||
+        "";
     }
   }
 
   function setGuidance(message) {
-    if (state.guidance) {
-      state.guidance.textContent =
-        String(message || "");
+    if (
+      state.guidance
+    ) {
+      state.guidance
+        .textContent =
+        String(
+          message || ""
+        );
     }
   }
 
   function setEnterEnabled(
     enabled,
-    label = "Enter Selected Path"
+    label =
+      "Enter Selected Path"
   ) {
-    if (!state.enterButton) {
+    if (
+      !state.enterButton
+    ) {
       return;
     }
 
@@ -1117,21 +1710,28 @@
 
     state.enterButton.setAttribute(
       "aria-disabled",
-      enabled ? "false" : "true"
+      enabled
+        ? "false"
+        : "true"
     );
 
-    if (state.enterLabel) {
-      state.enterLabel.textContent =
+    if (
+      state.enterLabel
+    ) {
+      state.enterLabel
+        .textContent =
         label;
     } else {
-      state.enterButton.textContent =
+      state.enterButton
+        .textContent =
         label;
     }
   }
 
   function setReturnToOrbitVisible(
     visible,
-    label = "Return to Orbit"
+    label =
+      "Return to Orbit"
   ) {
     const control =
       state.returnToOrbitButton;
@@ -1140,21 +1740,30 @@
       return;
     }
 
-    control.hidden = !visible;
-    control.disabled = !visible;
+    control.hidden =
+      !visible;
+
+    control.disabled =
+      !visible;
 
     control.setAttribute(
       "aria-hidden",
-      visible ? "false" : "true"
+      visible
+        ? "false"
+        : "true"
     );
 
     control.setAttribute(
       "aria-disabled",
-      visible ? "false" : "true"
+      visible
+        ? "false"
+        : "true"
     );
 
     if (visible) {
-      control.removeAttribute("tabindex");
+      control.removeAttribute(
+        "tabindex"
+      );
     } else {
       control.setAttribute(
         "tabindex",
@@ -1162,45 +1771,60 @@
       );
     }
 
-    if (state.returnToOrbitLabel) {
-      state.returnToOrbitLabel.textContent =
+    if (
+      state.returnToOrbitLabel
+    ) {
+      state.returnToOrbitLabel
+        .textContent =
         label;
     }
   }
 
   function clearPanelDescentSchedule() {
-    if (state.panelDescentFrame) {
+    if (
+      state.panelDescentFrame
+    ) {
       cancelAnimationFrame(
         state.panelDescentFrame
       );
 
-      state.panelDescentFrame = 0;
+      state.panelDescentFrame =
+        0;
     }
 
-    if (state.panelDescentCommitFrame) {
+    if (
+      state.panelDescentCommitFrame
+    ) {
       cancelAnimationFrame(
         state.panelDescentCommitFrame
       );
 
-      state.panelDescentCommitFrame = 0;
+      state.panelDescentCommitFrame =
+        0;
     }
   }
 
   function clearSceneAscentSchedule() {
-    if (state.sceneAscentFrame) {
+    if (
+      state.sceneAscentFrame
+    ) {
       cancelAnimationFrame(
         state.sceneAscentFrame
       );
 
-      state.sceneAscentFrame = 0;
+      state.sceneAscentFrame =
+        0;
     }
 
-    if (state.sceneAscentCommitFrame) {
+    if (
+      state.sceneAscentCommitFrame
+    ) {
       cancelAnimationFrame(
         state.sceneAscentCommitFrame
       );
 
-      state.sceneAscentCommitFrame = 0;
+      state.sceneAscentCommitFrame =
+        0;
     }
   }
 
@@ -1214,45 +1838,58 @@
   ) {
     clearViewportSchedules();
 
-    if (!state.panel) {
+    if (
+      !state.panel
+    ) {
       return;
     }
 
     state.panelDescentFrame =
-      requestAnimationFrame(() => {
-        state.panelDescentFrame = 0;
+      requestAnimationFrame(
+        () => {
+          state.panelDescentFrame =
+            0;
 
-        state.panelDescentCommitFrame =
-          requestAnimationFrame(() => {
-            state.panelDescentCommitFrame = 0;
+          state.panelDescentCommitFrame =
+            requestAnimationFrame(
+              () => {
+                state.panelDescentCommitFrame =
+                  0;
 
-            if (
-              state.current !==
-                STATES.ROOM_SELECTED ||
-              state.selectedRoom !==
-                expectedRoomId ||
-              !state.panel
-            ) {
-              return;
-            }
+                if (
+                  state.current !==
+                    STATES.ROOM_SELECTED ||
+                  state.selectedRoom !==
+                    expectedRoomId ||
+                  !state.panel
+                ) {
+                  return;
+                }
 
-            state.panel.scrollIntoView({
-              behavior:
-                state.reducedMotion
-                  ? "auto"
-                  : "smooth",
+                state.panel
+                  .scrollIntoView({
+                    behavior:
+                      state.reducedMotion
+                        ? "auto"
+                        : "smooth",
 
-              block: "start",
-              inline: "nearest"
-            });
+                    block:
+                      "start",
 
-            state.panelDescended = true;
+                    inline:
+                      "nearest"
+                  });
 
-            recordAction(
-              `room-panel-descended:${expectedRoomId}`
+                state.panelDescended =
+                  true;
+
+                recordAction(
+                  `room-panel-descended:${expectedRoomId}`
+                );
+              }
             );
-          });
-      });
+        }
+      );
   }
 
   function scheduleSceneAscent(
@@ -1261,65 +1898,95 @@
   ) {
     clearViewportSchedules();
 
-    if (!state.scene) {
+    if (
+      !state.scene
+    ) {
       return;
     }
 
     state.sceneAscentFrame =
-      requestAnimationFrame(() => {
-        state.sceneAscentFrame = 0;
+      requestAnimationFrame(
+        () => {
+          state.sceneAscentFrame =
+            0;
 
-        state.sceneAscentCommitFrame =
-          requestAnimationFrame(() => {
-            state.sceneAscentCommitFrame = 0;
+          state.sceneAscentCommitFrame =
+            requestAnimationFrame(
+              () => {
+                state.sceneAscentCommitFrame =
+                  0;
 
-            if (
-              state.current !==
-                expectedState
-            ) {
-              return;
-            }
+                if (
+                  state.current !==
+                    expectedState
+                ) {
+                  return;
+                }
 
-            if (
-              expectedWing &&
-              state.selectedCardinal !==
-                expectedWing
-            ) {
-              return;
-            }
+                if (
+                  expectedWing &&
+                  state.selectedCardinal !==
+                    expectedWing
+                ) {
+                  return;
+                }
 
-            state.scene.scrollIntoView({
-              behavior:
-                state.reducedMotion
-                  ? "auto"
-                  : "smooth",
+                state.scene
+                  .scrollIntoView({
+                    behavior:
+                      state.reducedMotion
+                        ? "auto"
+                        : "smooth",
 
-              block: "start",
-              inline: "nearest"
-            });
+                    block:
+                      "start",
 
-            recordAction(
-              `scene-restored:${expectedState}:${expectedWing || "constellation"}`
+                    inline:
+                      "nearest"
+                  });
+
+                recordAction(
+                  `scene-restored:${expectedState}:${expectedWing || "constellation"}`
+                );
+              }
             );
-          });
-      });
+        }
+      );
   }
 
   function resetSelection() {
-    state.selectedCardinal = "";
-    state.selectedCoin = "";
-    state.selectedRoom = "";
+    state.selectedCardinal =
+      "";
+
+    state.selectedCoin =
+      "";
+
+    state.selectedRoom =
+      "";
 
     state.selectedDestinationType =
       DESTINATION_TYPES.NONE;
 
-    state.selectedDestinationId = "";
-    state.selectedDestinationLabel = "";
-    state.selectedRoute = "";
-    state.selectedContentId = "";
-    state.selectedLens = "overview";
-    state.selectedParagraph = "";
-    state.panelDescended = false;
+    state.selectedDestinationId =
+      "";
+
+    state.selectedDestinationLabel =
+      "";
+
+    state.selectedRoute =
+      "";
+
+    state.selectedContentId =
+      "";
+
+    state.selectedLens =
+      "overview";
+
+    state.selectedParagraph =
+      "";
+
+    state.panelDescended =
+      false;
   }
 
   function createPresentationState() {
@@ -1332,16 +1999,23 @@
       ];
 
     return Object.freeze({
-      state: state.current,
+      mode:
+        presentation.mode,
+
+      navigationState:
+        state.current,
 
       outerCardinalsActive:
-        presentation.outerCardinalsActive,
+        presentation
+          .outerCardinalsActive,
 
       activeRoomCluster:
-        presentation.activeRoomCluster,
+        presentation
+          .activeRoomCluster,
 
       roomSelectionPermitted:
-        presentation.roomSelectionPermitted,
+        presentation
+          .roomSelectionPermitted,
 
       additiveCoRenderingAuthorized:
         false
@@ -1350,10 +2024,18 @@
 
   function createHeldState() {
     return Object.freeze({
-      held: isHeld(),
-      terminal: isHeld(),
+      held:
+        isHeld(),
+
+      terminal:
+        isHeld(),
+
       interactionEnabled:
         interactionAllowed(),
+
+      presentationMode:
+        presentationModeForState(),
+
       reason:
         isHeld()
           ? state.lastFailure ||
@@ -1364,7 +2046,8 @@
 
   function createCompassState() {
     return Object.freeze({
-      fixedCenter: true,
+      fixedCenter:
+        true,
 
       interactionEnabled:
         interactionAllowed(),
@@ -1374,6 +2057,14 @@
 
       upstreamRoute:
         HOME_COMPASS.route,
+
+      nativeNavigationPreserved:
+        true,
+
+      upstreamRequestPublished:
+        Boolean(
+          state.lastUpstreamRequest
+        ),
 
       inheritsNavigationOrientation:
         false,
@@ -1390,7 +2081,9 @@
   }
 
   function createUpstreamRequestSnapshot() {
-    if (!state.lastUpstreamRequest) {
+    if (
+      !state.lastUpstreamRequest
+    ) {
       return null;
     }
 
@@ -1408,10 +2101,16 @@
           .destinationLabel,
 
       route:
-        state.lastUpstreamRequest.route,
+        state.lastUpstreamRequest
+          .route,
 
       source:
-        state.lastUpstreamRequest.source,
+        state.lastUpstreamRequest
+          .source,
+
+      navigationAuthority:
+        state.lastUpstreamRequest
+          .navigationAuthority,
 
       revision:
         state.lastUpstreamRequest
@@ -1427,14 +2126,26 @@
     const cluster =
       activeCluster();
 
+    const presentation =
+      createPresentationState();
+
     return Object.freeze({
-      moduleId: MODULE.id,
-      moduleVersion: MODULE.version,
+      moduleId:
+        MODULE.id,
 
-      state: state.current,
+      moduleVersion:
+        MODULE.version,
 
-      presentation:
-        createPresentationState(),
+      state:
+        state.current,
+
+      navigationState:
+        state.current,
+
+      presentationMode:
+        presentation.mode,
+
+      presentation,
 
       orbitFocus:
         state.orbitFocus,
@@ -1474,20 +2185,23 @@
 
               roomIds:
                 Object.freeze(
-                  cluster.roomIds.slice()
+                  cluster.roomIds
+                    .slice()
                 ),
 
               primaryRoom:
                 cluster.primaryRoom,
 
               previewPrimaryRoom:
-                cluster.previewPrimaryRoom,
+                cluster
+                  .previewPrimaryRoom,
 
               phase:
                 cluster.phase,
 
               gestureActive:
-                cluster.gestureActive,
+                cluster
+                  .gestureActive,
 
               revision:
                 cluster.revision,
@@ -1515,13 +2229,16 @@
         state.selectedRoom,
 
       selectedDestinationType:
-        state.selectedDestinationType,
+        state
+          .selectedDestinationType,
 
       selectedDestinationId:
-        state.selectedDestinationId,
+        state
+          .selectedDestinationId,
 
       selectedDestinationLabel:
-        state.selectedDestinationLabel,
+        state
+          .selectedDestinationLabel,
 
       selectedRoute:
         state.selectedRoute,
@@ -1567,7 +2284,9 @@
     });
   }
 
-  function createCompatibilityReceipt(frame) {
+  function createCompatibilityReceipt(
+    frame
+  ) {
     return Object.freeze({
       contractId:
         "ARCHCOIN_CONTROLLER_FOUNDATION_v6",
@@ -1579,6 +2298,12 @@
 
       state:
         frame.state,
+
+      navigationState:
+        frame.navigationState,
+
+      presentationMode:
+        frame.presentationMode,
 
       outerCardinalsActive:
         frame.presentation
@@ -1619,7 +2344,8 @@
 
       clusterPrimaryRoom:
         frame.cluster
-          ? frame.cluster.primaryRoom
+          ? frame.cluster
+              .primaryRoom
           : "",
 
       clusterPreviewPrimaryRoom:
@@ -1635,17 +2361,20 @@
 
       clusterGestureActive:
         frame.cluster
-          ? frame.cluster.gestureActive
+          ? frame.cluster
+              .gestureActive
           : false,
 
       clusterRevision:
         frame.cluster
-          ? frame.cluster.revision
+          ? frame.cluster
+              .revision
           : 0,
 
       clusterQuaternion:
         frame.cluster
-          ? frame.cluster.orientation
+          ? frame.cluster
+              .orientation
               .quaternion
           : QUATERNION.identity,
 
@@ -1659,13 +2388,16 @@
         frame.selectedRoom,
 
       selectedDestinationType:
-        frame.selectedDestinationType,
+        frame
+          .selectedDestinationType,
 
       selectedDestinationId:
-        frame.selectedDestinationId,
+        frame
+          .selectedDestinationId,
 
       selectedDestinationLabel:
-        frame.selectedDestinationLabel,
+        frame
+          .selectedDestinationLabel,
 
       selectedRoute:
         frame.selectedRoute,
@@ -1680,10 +2412,16 @@
         frame.held,
 
       compassFixedCenter:
-        frame.compass.fixedCenter,
+        frame.compass
+          .fixedCenter,
 
       compassUpstreamRoute:
-        frame.compass.upstreamRoute,
+        frame.compass
+          .upstreamRoute,
+
+      compassNativeNavigationPreserved:
+        frame.compass
+          .nativeNavigationPreserved,
 
       compassInheritsNavigationOrientation:
         frame.compass
@@ -1705,91 +2443,127 @@
   }
 
   function syncDatasets(frame) {
-    if (!state.root) {
+    if (
+      !state.root
+    ) {
       return;
     }
 
     const cluster =
       frame.cluster;
 
-    state.root.dataset.archcoinMode =
-      frame.state;
+    state.root.dataset
+      .archcoinMode =
+      frame.presentationMode;
 
-    state.root.dataset.outerCardinalsActive =
+    state.root.dataset
+      .archcoinControllerState =
+      frame.navigationState;
+
+    state.root.dataset
+      .archcoinNavigationState =
+      frame.navigationState;
+
+    state.root.dataset
+      .archcoinPresentationMode =
+      frame.presentationMode;
+
+    state.root.dataset
+      .outerCardinalsActive =
       frame.presentation
         .outerCardinalsActive
         ? "true"
         : "false";
 
-    state.root.dataset.activeRoomCluster =
+    state.root.dataset
+      .activeRoomCluster =
       frame.presentation
         .activeRoomCluster
         ? "true"
         : "false";
 
-    state.root.dataset.roomSelectionPermitted =
+    state.root.dataset
+      .roomSelectionPermitted =
       frame.presentation
         .roomSelectionPermitted
         ? "true"
         : "false";
 
-    state.root.dataset.additiveCoRenderingAuthorized =
+    state.root.dataset
+      .additiveCoRenderingAuthorized =
       "false";
 
-    state.root.dataset.orbitFocus =
+    state.root.dataset
+      .orbitFocus =
       frame.orbitFocus;
 
-    state.root.dataset.orbitPreviewFocus =
+    state.root.dataset
+      .orbitPreviewFocus =
       frame.orbitPreviewFocus;
 
-    state.root.dataset.orbitPhase =
+    state.root.dataset
+      .orbitPhase =
       frame.orbitPhase;
 
-    state.root.dataset.orbitGestureActive =
+    state.root.dataset
+      .orbitGestureActive =
       frame.orbitGestureActive
         ? "true"
         : "false";
 
-    state.root.dataset.orbitRevision =
-      String(frame.orbitRevision);
-
-    state.root.dataset.orbitQuaternion =
-      JSON.stringify(
-        frame.orbitOrientation.quaternion
+    state.root.dataset
+      .orbitRevision =
+      String(
+        frame.orbitRevision
       );
 
-    state.root.dataset.activeClusterWing =
+    state.root.dataset
+      .orbitQuaternion =
+      JSON.stringify(
+        frame.orbitOrientation
+          .quaternion
+      );
+
+    state.root.dataset
+      .activeClusterWing =
       frame.activeClusterWing;
 
-    state.root.dataset.clusterPrimaryRoom =
+    state.root.dataset
+      .clusterPrimaryRoom =
       cluster
         ? cluster.primaryRoom
         : "";
 
-    state.root.dataset.clusterPreviewPrimaryRoom =
+    state.root.dataset
+      .clusterPreviewPrimaryRoom =
       cluster
-        ? cluster.previewPrimaryRoom
+        ? cluster
+            .previewPrimaryRoom
         : "";
 
-    state.root.dataset.clusterPhase =
+    state.root.dataset
+      .clusterPhase =
       cluster
         ? cluster.phase
         : ORIENTATION_PHASES.IDLE;
 
-    state.root.dataset.clusterGestureActive =
+    state.root.dataset
+      .clusterGestureActive =
       cluster &&
       cluster.gestureActive
         ? "true"
         : "false";
 
-    state.root.dataset.clusterRevision =
+    state.root.dataset
+      .clusterRevision =
       String(
         cluster
           ? cluster.revision
           : 0
       );
 
-    state.root.dataset.clusterQuaternion =
+    state.root.dataset
+      .clusterQuaternion =
       cluster
         ? JSON.stringify(
             cluster.orientation
@@ -1797,182 +2571,246 @@
           )
         : "";
 
-    state.root.dataset.selectedCardinal =
+    state.root.dataset
+      .selectedCardinal =
       frame.selectedCardinal;
 
-    state.root.dataset.selectedCoin =
+    state.root.dataset
+      .selectedCoin =
       frame.selectedCoin;
 
-    state.root.dataset.selectedRoom =
+    state.root.dataset
+      .selectedRoom =
       frame.selectedRoom;
 
-    state.root.dataset.selectedDestinationType =
-      frame.selectedDestinationType;
+    state.root.dataset
+      .selectedDestinationType =
+      frame
+        .selectedDestinationType;
 
-    state.root.dataset.selectedDestinationId =
-      frame.selectedDestinationId;
+    state.root.dataset
+      .selectedDestinationId =
+      frame
+        .selectedDestinationId;
 
-    state.root.dataset.selectedDestinationLabel =
-      frame.selectedDestinationLabel;
+    state.root.dataset
+      .selectedDestinationLabel =
+      frame
+        .selectedDestinationLabel;
 
-    state.root.dataset.selectedRoute =
+    state.root.dataset
+      .selectedRoute =
       frame.selectedRoute;
 
-    state.root.dataset.selectedContentId =
+    state.root.dataset
+      .selectedContentId =
       frame.selectedContentId;
 
-    state.root.dataset.selectedLens =
+    state.root.dataset
+      .selectedLens =
       frame.selectedLens;
 
-    state.root.dataset.selectedParagraph =
+    state.root.dataset
+      .selectedParagraph =
       frame.selectedParagraph;
 
-    state.root.dataset.panelDescended =
+    state.root.dataset
+      .panelDescended =
       frame.panelDescended
         ? "true"
         : "false";
 
-    state.root.dataset.reducedMotion =
+    state.root.dataset
+      .reducedMotion =
       frame.reducedMotion
         ? "true"
         : "false";
 
-    state.root.dataset.held =
+    state.root.dataset
+      .held =
       frame.held
         ? "true"
         : "false";
 
-    state.root.dataset.compassFixedCenter =
+    state.root.dataset
+      .compassFixedCenter =
       "true";
 
-    state.root.dataset.compassUpstreamRoute =
+    state.root.dataset
+      .compassUpstreamRoute =
       HOME_COMPASS.route;
 
-    state.root.dataset.compassInheritsNavigationOrientation =
+    state.root.dataset
+      .compassNativeNavigationPreserved =
+      "true";
+
+    state.root.dataset
+      .compassInheritsNavigationOrientation =
       "false";
 
-    state.root.dataset.compassParticipatesInNavigationSettlement =
+    state.root.dataset
+      .compassParticipatesInNavigationSettlement =
       "false";
 
-    state.root.dataset.archcoinControllerStatus =
+    state.root.dataset
+      .archcoinControllerStatus =
       frame.held
         ? "held"
         : "available";
 
-    state.root.dataset.archcoinControllerVersion =
+    state.root.dataset
+      .archcoinControllerVersion =
       MODULE.version;
 
-    state.root.dataset.upstreamRequestRevision =
+    state.root.dataset
+      .upstreamRequestRevision =
       String(
-        state.upstreamRequestRevision
+        state
+          .upstreamRequestRevision
       );
 
     qsa(
       "[data-archcoin-coin]",
       state.root
-    ).forEach(element => {
-      const wing =
-        normalizeWing(
-          element.dataset.wing
-        );
+    ).forEach(
+      element => {
+        const wing =
+          normalizeWing(
+            element.dataset
+              .wing
+          );
 
-      const primary =
-        frame.state ===
-          STATES.CONSTELLATION &&
-        frame.presentation
-          .outerCardinalsActive &&
-        wing ===
-          frame.orbitFocus;
+        const primary =
+          frame.navigationState ===
+            STATES.CONSTELLATION &&
+          frame.presentation
+            .outerCardinalsActive &&
+          wing ===
+            frame.orbitFocus;
 
-      element.dataset.selected =
-        "false";
+        element.dataset
+          .selected =
+          "false";
 
-      element.dataset.primary =
-        primary ? "true" : "false";
+        element.dataset
+          .primary =
+          primary
+            ? "true"
+            : "false";
 
-      element.dataset.active =
-        frame.presentation
-          .outerCardinalsActive
-          ? "true"
-          : "false";
+        element.dataset
+          .active =
+          frame.presentation
+            .outerCardinalsActive
+            ? "true"
+            : "false";
 
-      if (primary) {
-        element.setAttribute(
-          "aria-current",
-          "true"
-        );
-      } else {
-        element.removeAttribute(
-          "aria-current"
-        );
+        if (primary) {
+          element.setAttribute(
+            "aria-current",
+            "true"
+          );
+        } else {
+          element.removeAttribute(
+            "aria-current"
+          );
+        }
       }
-    });
+    );
 
     qsa(
       "[data-archcoin-room]",
       state.root
-    ).forEach(element => {
-      const roomId =
-        normalizeRoomId(
-          element.dataset.roomId
-        );
+    ).forEach(
+      element => {
+        const roomId =
+          normalizeRoomId(
+            element.dataset
+              .roomId
+          );
 
-      const roomRecord =
-        ROOM_BY_ID.get(roomId);
+        const roomRecord =
+          ROOM_BY_ID.get(
+            roomId
+          );
 
-      const inActiveCluster =
-        Boolean(
-          cluster &&
-          roomRecord &&
-          roomRecord.wing ===
-            cluster.wing
-        );
+        const inActiveCluster =
+          Boolean(
+            cluster &&
+            roomRecord &&
+            roomRecord.wing ===
+              cluster.wing
+          );
 
-      const selected =
-        inActiveCluster &&
-        roomId ===
-          frame.selectedRoom;
+        const selected =
+          inActiveCluster &&
+          roomId ===
+            frame.selectedRoom;
 
-      const primary =
-        inActiveCluster &&
-        roomId ===
-          cluster.primaryRoom;
+        const primary =
+          inActiveCluster &&
+          roomId ===
+            cluster.primaryRoom;
 
-      element.dataset.active =
-        inActiveCluster
-          ? "true"
-          : "false";
+        element.dataset
+          .active =
+          inActiveCluster
+            ? "true"
+            : "false";
 
-      element.dataset.selected =
-        selected ? "true" : "false";
+        element.dataset
+          .selected =
+          selected
+            ? "true"
+            : "false";
 
-      element.dataset.primary =
-        primary ? "true" : "false";
+        element.dataset
+          .primary =
+          primary
+            ? "true"
+            : "false";
 
-      if (selected || primary) {
-        element.setAttribute(
-          "aria-current",
-          "true"
-        );
-      } else {
-        element.removeAttribute(
-          "aria-current"
-        );
+        if (
+          selected ||
+          primary
+        ) {
+          element.setAttribute(
+            "aria-current",
+            "true"
+          );
+        } else {
+          element.removeAttribute(
+            "aria-current"
+          );
+        }
       }
-    });
+    );
 
-    if (state.compassControl) {
-      state.compassControl.dataset.selected =
+    if (
+      state.compassControl
+    ) {
+      state.compassControl
+        .dataset
+        .selected =
         "false";
 
-      state.compassControl.dataset.fixedCenter =
+      state.compassControl
+        .dataset
+        .fixedCenter =
         "true";
 
-      state.compassControl.dataset.interactionEnabled =
+      state.compassControl
+        .dataset
+        .interactionEnabled =
         frame.compass
           .interactionEnabled
           ? "true"
           : "false";
+
+      state.compassControl
+        .dataset
+        .nativeNavigationPreserved =
+        "true";
 
       state.compassControl.setAttribute(
         "aria-expanded",
@@ -1985,27 +2823,41 @@
     }
   }
 
-  function writeCompatibilityReceipt(frame) {
+  function writeCompatibilityReceipt(
+    frame
+  ) {
     const receipt =
-      createCompatibilityReceipt(frame);
+      createCompatibilityReceipt(
+        frame
+      );
 
     const serialized =
-      JSON.stringify(receipt);
+      JSON.stringify(
+        receipt
+      );
 
-    if (state.root) {
-      state.root.dataset.archcoinControllerReceipt =
+    if (
+      state.root
+    ) {
+      state.root.dataset
+        .archcoinControllerReceipt =
         serialized;
     }
 
-    if (state.controllerReceiptOutput) {
-      state.controllerReceiptOutput.value =
+    if (
+      state.controllerReceiptOutput
+    ) {
+      state.controllerReceiptOutput
+        .value =
         serialized;
 
-      state.controllerReceiptOutput.textContent =
+      state.controllerReceiptOutput
+        .textContent =
         serialized;
     }
 
-    globalThis.DGB_ARCHCOIN_CONTROLLER_RECEIPT =
+    globalThis
+      .DGB_ARCHCOIN_CONTROLLER_RECEIPT =
       receipt;
   }
 
@@ -2013,8 +2865,13 @@
     const frame =
       createFrameState();
 
-    syncDatasets(frame);
-    writeCompatibilityReceipt(frame);
+    syncDatasets(
+      frame
+    );
+
+    writeCompatibilityReceipt(
+      frame
+    );
 
     publish(
       CHANNELS.FRAME,
@@ -2029,10 +2886,14 @@
     failure = ""
   ) {
     state.lastAction =
-      String(action || "");
+      String(
+        action || ""
+      );
 
     state.lastFailure =
-      String(failure || "");
+      String(
+        failure || ""
+      );
 
     return publishFrame();
   }
@@ -2042,14 +2903,18 @@
       state.current ===
       STATES.CONSTELLATION
     ) {
-      setPanel(defaultPanel());
+      setPanel(
+        defaultPanel()
+      );
 
       setEnterEnabled(
         false,
         "Enter Selected Path"
       );
 
-      setReturnToOrbitVisible(false);
+      setReturnToOrbitVisible(
+        false
+      );
 
       setGuidance(
         "Tap a coin to open its four-room cluster. Drag the constellation to change its orientation."
@@ -2069,7 +2934,9 @@
 
       if (coin) {
         setPanel(
-          panelFromCoin(coin)
+          panelFromCoin(
+            coin
+          )
         );
       }
 
@@ -2078,10 +2945,12 @@
         "Enter Selected Path"
       );
 
-      setReturnToOrbitVisible(false);
+      setReturnToOrbitVisible(
+        false
+      );
 
       setGuidance(
-        "Rotate the active four-room cluster, then choose one visible room."
+        "Rotate the active four-room cluster, choose one visible room, or make an intentional exit swipe to return to the constellation."
       );
 
       return;
@@ -2098,7 +2967,9 @@
 
       if (room) {
         setPanel(
-          panelFromRoom(room)
+          panelFromRoom(
+            room
+          )
         );
       }
 
@@ -2122,14 +2993,17 @@
     }
 
     setPanel({
-      eyebrow: "System held",
-      title: "ARCHCOIN is unavailable",
+      eyebrow:
+        "System held",
+
+      title:
+        "ARCHCOIN is unavailable",
 
       purpose:
         "The controller could not establish or preserve a safe navigation state.",
 
       relationship:
-        "Static content may remain available, but interactive requests are rejected."
+        "Static content may remain available, but interactive ARCHCOIN requests are rejected."
     });
 
     setEnterEnabled(
@@ -2137,7 +3011,9 @@
       "Unavailable"
     );
 
-    setReturnToOrbitVisible(false);
+    setReturnToOrbitVisible(
+      false
+    );
 
     setGuidance(
       "ARCHCOIN is held because its controller foundation could not be validated."
@@ -2154,38 +3030,50 @@
         state.current,
         nextState
       ),
-
       "ARCHCOIN_ILLEGAL_STATE_TRANSITION",
-
       {
-        from: state.current,
-        to: nextState
+        from:
+          state.current,
+
+        to:
+          nextState
       }
     );
 
     const previousHeld =
       isHeld();
 
-    state.current = nextState;
+    state.current =
+      nextState;
 
     for (
-      const [key, value]
-      of Object.entries(patch)
+      const [
+        key,
+        value
+      ]
+      of Object.entries(
+        patch
+      )
     ) {
       if (
-        Object.prototype.hasOwnProperty.call(
-          state,
-          key
-        )
+        Object.prototype
+          .hasOwnProperty
+          .call(
+            state,
+            key
+          )
       ) {
-        state[key] = value;
+        state[key] =
+          value;
       }
     }
 
     syncPresentation();
 
     const frame =
-      recordAction(action);
+      recordAction(
+        action
+      );
 
     if (
       previousHeld !==
@@ -2208,15 +3096,23 @@
   function setConstellationOrientation(
     orientation,
     {
-      committed = false,
+      committed =
+        false,
+
       phase =
         ORIENTATION_PHASES.PREVIEW,
-      gestureActive = false,
-      incrementRevision = false
+
+      gestureActive =
+        false,
+
+      incrementRevision =
+        false
     } = {}
   ) {
     const normalized =
-      cloneOrientation(orientation);
+      cloneOrientation(
+        orientation
+      );
 
     const primaryWing =
       normalizeWing(
@@ -2239,15 +3135,22 @@
       phase;
 
     state.orbitGestureActive =
-      Boolean(gestureActive);
+      Boolean(
+        gestureActive
+      );
 
-    if (incrementRevision) {
-      state.orbitRevision += 1;
+    if (
+      incrementRevision
+    ) {
+      state.orbitRevision +=
+        1;
     }
 
     if (committed) {
       state.committedOrbitOrientation =
-        cloneOrientation(normalized);
+        cloneOrientation(
+          normalized
+        );
 
       state.orbitFocus =
         primaryWing;
@@ -2261,11 +3164,17 @@
     cluster,
     orientation,
     {
-      committed = false,
+      committed =
+        false,
+
       phase =
         ORIENTATION_PHASES.PREVIEW,
-      gestureActive = false,
-      incrementRevision = false
+
+      gestureActive =
+        false,
+
+      incrementRevision =
+        false
     } = {}
   ) {
     if (!cluster) {
@@ -2273,7 +3182,9 @@
     }
 
     const normalized =
-      cloneOrientation(orientation);
+      cloneOrientation(
+        orientation
+      );
 
     const primaryRoom =
       normalizeRoomId(
@@ -2303,15 +3214,22 @@
       phase;
 
     cluster.gestureActive =
-      Boolean(gestureActive);
+      Boolean(
+        gestureActive
+      );
 
-    if (incrementRevision) {
-      cluster.revision += 1;
+    if (
+      incrementRevision
+    ) {
+      cluster.revision +=
+        1;
     }
 
     if (committed) {
       cluster.committedOrientation =
-        cloneOrientation(normalized);
+        cloneOrientation(
+          normalized
+        );
 
       cluster.primaryRoom =
         normalized.primaryId;
@@ -2323,7 +3241,9 @@
     return true;
   }
 
-  function beginOrbitGesture(payload = {}) {
+  function beginOrbitGesture(
+    payload = {}
+  ) {
     if (
       isHeld() ||
       state.current !==
@@ -2332,7 +3252,9 @@
       return false;
     }
 
-    if (state.orbitGestureActive) {
+    if (
+      state.orbitGestureActive
+    ) {
       return true;
     }
 
@@ -2347,12 +3269,15 @@
         payload,
         state.orbitOrientation
       ),
-
       {
-        committed: false,
+        committed:
+          false,
+
         phase:
           ORIENTATION_PHASES.PREVIEW,
-        gestureActive: true
+
+        gestureActive:
+          true
       }
     );
 
@@ -2363,7 +3288,9 @@
     return true;
   }
 
-  function requestOrbitPreview(payload = {}) {
+  function requestOrbitPreview(
+    payload = {}
+  ) {
     if (
       isHeld() ||
       state.current !==
@@ -2372,7 +3299,9 @@
       return false;
     }
 
-    if (!state.orbitGestureActive) {
+    if (
+      !state.orbitGestureActive
+    ) {
       beginOrbitGesture();
     }
 
@@ -2381,12 +3310,15 @@
         payload,
         state.orbitOrientation
       ),
-
       {
-        committed: false,
+        committed:
+          false,
+
         phase:
           ORIENTATION_PHASES.PREVIEW,
-        gestureActive: true
+
+        gestureActive:
+          true
       }
     );
 
@@ -2397,7 +3329,9 @@
     return true;
   }
 
-  function requestOrbitCommit(payload = {}) {
+  function requestOrbitCommit(
+    payload = {}
+  ) {
     if (
       isHeld() ||
       state.current !==
@@ -2436,17 +3370,23 @@
 
     setConstellationOrientation(
       orientation,
-
       {
-        committed: true,
+        committed:
+          true,
+
         phase:
           ORIENTATION_PHASES.COMMITTED,
-        gestureActive: false,
-        incrementRevision: true
+
+        gestureActive:
+          false,
+
+        incrementRevision:
+          true
       }
     );
 
-    state.orbitGestureOrigin = null;
+    state.orbitGestureOrigin =
+      null;
 
     recordAction(
       `orbit-committed:${primaryWing}`
@@ -2456,9 +3396,12 @@
   }
 
   function requestOrbitCancel(
-    reason = "cancelled"
+    reason =
+      "cancelled"
   ) {
-    if (isHeld()) {
+    if (
+      isHeld()
+    ) {
       return false;
     }
 
@@ -2478,23 +3421,28 @@
           state.orbitFocus
         )
       ),
-
       {
-        committed: false,
+        committed:
+          false,
+
         phase:
           ORIENTATION_PHASES.CANCELLED,
-        gestureActive: false
+
+        gestureActive:
+          false
       }
     );
 
-    state.orbitGestureOrigin = null;
+    state.orbitGestureOrigin =
+      null;
 
     state.orbitPhase =
       ORIENTATION_PHASES.COMMITTED;
 
     recordAction(
       `orbit-cancelled:${String(
-        reason || "cancelled"
+        reason ||
+        "cancelled"
       )}`
     );
 
@@ -2506,7 +3454,9 @@
     options = {}
   ) {
     const normalizedWing =
-      normalizeWing(wing);
+      normalizeWing(
+        wing
+      );
 
     if (
       isHeld() ||
@@ -2535,7 +3485,9 @@
     wingOrPayload,
     maybePayload = {}
   ) {
-    if (isHeld()) {
+    if (
+      isHeld()
+    ) {
       return false;
     }
 
@@ -2550,12 +3502,15 @@
     const payload =
       typeof wingOrPayload ===
         "object" &&
-      wingOrPayload !== null
+      wingOrPayload !==
+        null
         ? wingOrPayload
         : maybePayload;
 
     const cluster =
-      getCluster(wing);
+      getCluster(
+        wing
+      );
 
     if (
       !cluster ||
@@ -2573,7 +3528,9 @@
       return false;
     }
 
-    if (cluster.gestureActive) {
+    if (
+      cluster.gestureActive
+    ) {
       return true;
     }
 
@@ -2585,17 +3542,19 @@
 
     setClusterOrientation(
       cluster,
-
       resolveOrientation(
         payload,
         cluster.orientation
       ),
-
       {
-        committed: false,
+        committed:
+          false,
+
         phase:
           ORIENTATION_PHASES.PREVIEW,
-        gestureActive: true
+
+        gestureActive:
+          true
       }
     );
 
@@ -2610,7 +3569,9 @@
     wingOrPayload,
     maybePayload = {}
   ) {
-    if (isHeld()) {
+    if (
+      isHeld()
+    ) {
       return false;
     }
 
@@ -2625,12 +3586,15 @@
     const payload =
       typeof wingOrPayload ===
         "object" &&
-      wingOrPayload !== null
+      wingOrPayload !==
+        null
         ? wingOrPayload
         : maybePayload;
 
     const cluster =
-      getCluster(wing);
+      getCluster(
+        wing
+      );
 
     if (
       !cluster ||
@@ -2648,8 +3612,12 @@
       return false;
     }
 
-    if (!cluster.gestureActive) {
-      beginClusterGesture(wing);
+    if (
+      !cluster.gestureActive
+    ) {
+      beginClusterGesture(
+        wing
+      );
     }
 
     const orientation =
@@ -2686,12 +3654,15 @@
     setClusterOrientation(
       cluster,
       orientation,
-
       {
-        committed: false,
+        committed:
+          false,
+
         phase:
           ORIENTATION_PHASES.PREVIEW,
-        gestureActive: true
+
+        gestureActive:
+          true
       }
     );
 
@@ -2706,7 +3677,9 @@
     wingOrPayload,
     maybePayload = {}
   ) {
-    if (isHeld()) {
+    if (
+      isHeld()
+    ) {
       return false;
     }
 
@@ -2721,12 +3694,15 @@
     const payload =
       typeof wingOrPayload ===
         "object" &&
-      wingOrPayload !== null
+      wingOrPayload !==
+        null
         ? wingOrPayload
         : maybePayload;
 
     const cluster =
-      getCluster(wing);
+      getCluster(
+        wing
+      );
 
     if (
       !cluster ||
@@ -2781,17 +3757,23 @@
     setClusterOrientation(
       cluster,
       orientation,
-
       {
-        committed: true,
+        committed:
+          true,
+
         phase:
           ORIENTATION_PHASES.COMMITTED,
-        gestureActive: false,
-        incrementRevision: true
+
+        gestureActive:
+          false,
+
+        incrementRevision:
+          true
       }
     );
 
-    cluster.gestureOrigin = null;
+    cluster.gestureOrigin =
+      null;
 
     recordAction(
       `cluster-committed:${wing}:${primaryRoom}`
@@ -2802,14 +3784,19 @@
 
   function requestClusterCancel(
     wingOrReason,
-    maybeReason = "cancelled"
+    maybeReason =
+      "cancelled"
   ) {
-    if (isHeld()) {
+    if (
+      isHeld()
+    ) {
       return false;
     }
 
     const explicitWing =
-      normalizeWing(wingOrReason);
+      normalizeWing(
+        wingOrReason
+      );
 
     const wing =
       explicitWing ||
@@ -2822,7 +3809,9 @@
           maybeReason;
 
     const cluster =
-      getCluster(wing);
+      getCluster(
+        wing
+      );
 
     if (
       !cluster ||
@@ -2837,7 +3826,6 @@
 
     setClusterOrientation(
       cluster,
-
       cloneOrientation(
         cluster.gestureOrigin ||
         cluster.committedOrientation ||
@@ -2846,38 +3834,53 @@
           cluster.primaryRoom
         )
       ),
-
       {
-        committed: false,
+        committed:
+          false,
+
         phase:
           ORIENTATION_PHASES.CANCELLED,
-        gestureActive: false
+
+        gestureActive:
+          false
       }
     );
 
-    cluster.gestureOrigin = null;
+    cluster.gestureOrigin =
+      null;
+
     cluster.phase =
       ORIENTATION_PHASES.COMMITTED;
 
     recordAction(
       `cluster-cancelled:${wing}:${String(
-        reason || "cancelled"
+        reason ||
+        "cancelled"
       )}`
     );
 
     return true;
   }
 
-  function cancelActiveGestures(reason) {
-    if (state.orbitGestureActive) {
-      requestOrbitCancel(reason);
+  function cancelActiveGestures(
+    reason
+  ) {
+    if (
+      state.orbitGestureActive
+    ) {
+      requestOrbitCancel(
+        reason
+      );
     }
 
     for (
       const cluster
-      of state.clusters.values()
+      of state.clusters
+        .values()
     ) {
-      if (cluster.gestureActive) {
+      if (
+        cluster.gestureActive
+      ) {
         requestClusterCancel(
           cluster.wing,
           reason
@@ -2890,7 +3893,9 @@
     cardinalId
   ) {
     const wing =
-      normalizeWing(cardinalId);
+      normalizeWing(
+        cardinalId
+      );
 
     if (
       isHeld() ||
@@ -2902,7 +3907,9 @@
     }
 
     const element =
-      findCoinElement(wing);
+      findCoinElement(
+        wing
+      );
 
     if (!element) {
       recordAction(
@@ -2914,7 +3921,9 @@
     }
 
     const destination =
-      destinationFromElement(element);
+      destinationFromElement(
+        element
+      );
 
     const orientation =
       canonicalConstellationOrientation(
@@ -2923,13 +3932,18 @@
 
     setConstellationOrientation(
       orientation,
-
       {
-        committed: true,
+        committed:
+          true,
+
         phase:
           ORIENTATION_PHASES.COMMITTED,
-        gestureActive: false,
-        incrementRevision: true
+
+        gestureActive:
+          false,
+
+        incrementRevision:
+          true
       }
     );
 
@@ -2937,13 +3951,14 @@
 
     return applyState(
       STATES.CLUSTER_OPEN,
-
       {
         selectedCardinal:
           wing,
 
         selectedCoin:
-          wingToCoin(wing),
+          wingToCoin(
+            wing
+          ),
 
         selectedDestinationType:
           DESTINATION_TYPES.COIN,
@@ -2954,8 +3969,12 @@
         selectedDestinationLabel:
           destination
             ? destination.label ||
-              wingToCoin(wing)
-            : wingToCoin(wing),
+              wingToCoin(
+                wing
+              )
+            : wingToCoin(
+                wing
+              ),
 
         selectedRoute:
           "",
@@ -2966,14 +3985,17 @@
         panelDescended:
           false
       },
-
       `cardinal-selected:${wing}`
     );
   }
 
-  function requestRoomSelection(roomId) {
+  function requestRoomSelection(
+    roomId
+  ) {
     const id =
-      normalizeRoomId(roomId);
+      normalizeRoomId(
+        roomId
+      );
 
     if (
       isHeld() ||
@@ -2989,10 +4011,14 @@
     }
 
     const canonical =
-      ROOM_BY_ID.get(id);
+      ROOM_BY_ID.get(
+        id
+      );
 
     const element =
-      findRoomElement(id);
+      findRoomElement(
+        id
+      );
 
     if (
       !canonical ||
@@ -3040,8 +4066,11 @@
 
     const declaredRoute =
       normalizeRoute(
-        element.dataset.route ||
-        element.getAttribute("href")
+        element.dataset
+          .route ||
+        element.getAttribute(
+          "href"
+        )
       );
 
     if (
@@ -3056,7 +4085,9 @@
       return false;
     }
 
-    if (cluster.gestureActive) {
+    if (
+      cluster.gestureActive
+    ) {
       requestClusterCancel(
         canonical.wing,
         "room-selection"
@@ -3066,15 +4097,18 @@
     clearViewportSchedules();
 
     const destination =
-      destinationFromElement(element);
+      destinationFromElement(
+        element
+      );
 
     const paragraph =
-      roomParagraphFromElement(element);
+      roomParagraphFromElement(
+        element
+      );
 
     const committed =
       applyState(
         STATES.ROOM_SELECTED,
-
         {
           selectedCardinal:
             canonical.wing,
@@ -3102,12 +4136,14 @@
 
           selectedContentId:
             normalizeRoomId(
-              element.dataset.contentId
+              element.dataset
+                .contentId
             ),
 
           selectedLens:
             String(
-              element.dataset.lens ||
+              element.dataset
+                .lens ||
               "overview"
             )
               .trim()
@@ -3120,7 +4156,6 @@
           panelDescended:
             true
         },
-
         `room-selected:${canonical.roomId}`
       );
 
@@ -3206,21 +4241,26 @@
     clearViewportSchedules();
 
     const coin =
-      findCoinElement(wing);
+      findCoinElement(
+        wing
+      );
 
     const destination =
-      destinationFromElement(coin);
+      destinationFromElement(
+        coin
+      );
 
     const committed =
       applyState(
         STATES.CLUSTER_OPEN,
-
         {
           selectedCardinal:
             wing,
 
           selectedCoin:
-            wingToCoin(wing),
+            wingToCoin(
+              wing
+            ),
 
           selectedRoom:
             "",
@@ -3234,8 +4274,12 @@
           selectedDestinationLabel:
             destination
               ? destination.label ||
-                wingToCoin(wing)
-              : wingToCoin(wing),
+                wingToCoin(
+                  wing
+                )
+              : wingToCoin(
+                  wing
+                ),
 
           selectedRoute:
             "",
@@ -3252,7 +4296,6 @@
           panelDescended:
             false
         },
-
         `returned-to-orbit:${wing}`
       );
 
@@ -3301,7 +4344,6 @@
     const committed =
       applyState(
         STATES.CONSTELLATION,
-
         {
           orbitFocus:
             previousWing,
@@ -3309,7 +4351,6 @@
           orbitPreviewFocus:
             previousWing
         },
-
         `returned-to-constellation:${previousWing}`
       );
 
@@ -3326,27 +4367,42 @@
     return committed;
   }
 
-  function requestReturnToUpstream() {
-    if (isHeld()) {
+  function requestReturnToUpstream(
+    options = {}
+  ) {
+    if (
+      isHeld()
+    ) {
       return false;
     }
 
     const request =
       Object.freeze({
         destinationType:
-          HOME_COMPASS.destinationType,
+          HOME_COMPASS
+            .destinationType,
 
         destinationId:
-          HOME_COMPASS.destinationId,
+          HOME_COMPASS
+            .destinationId,
 
         destinationLabel:
-          HOME_COMPASS.destinationLabel,
+          HOME_COMPASS
+            .destinationLabel,
 
         route:
           HOME_COMPASS.route,
 
         source:
           HOME_COMPASS.source,
+
+        navigationAuthority:
+          "NATIVE_ANCHOR",
+
+        nativeNavigationPreserved:
+          options
+            .nativeNavigationPreserved !==
+          false,
 
         revision:
           state.upstreamRequestRevision +
@@ -3380,46 +4436,67 @@
 
   function validateCanonicalRegistry() {
     invariant(
-      WINGS.length === 4,
+      WINGS.length ===
+        4,
       "ARCHCOIN_WING_COUNT_INVALID",
       {
-        expected: 4,
-        actual: WINGS.length
+        expected:
+          4,
+
+        actual:
+          WINGS.length
       }
     );
 
     invariant(
-      new Set(WINGS).size === 4,
+      new Set(
+        WINGS
+      ).size ===
+        4,
       "ARCHCOIN_DUPLICATE_WING"
     );
 
     invariant(
-      CANONICAL_ROOM_RECORDS.length === 16,
+      CANONICAL_ROOM_RECORDS
+        .length ===
+        16,
       "ARCHCOIN_CANONICAL_ROOM_COUNT_INVALID",
       {
-        expected: 16,
+        expected:
+          16,
+
         actual:
-          CANONICAL_ROOM_RECORDS.length
+          CANONICAL_ROOM_RECORDS
+            .length
       }
     );
 
-    const ids = new Set();
-    const routes = new Set();
+    const ids =
+      new Set();
+
+    const routes =
+      new Set();
 
     for (
       const wing
       of WINGS
     ) {
       const rooms =
-        ROOMS_BY_WING.get(wing);
+        ROOMS_BY_WING.get(
+          wing
+        );
 
       invariant(
         rooms &&
-        rooms.length === 4,
+        rooms.length ===
+          4,
         "ARCHCOIN_ROOMS_PER_WING_INVALID",
         {
           wing,
-          expected: 4,
+
+          expected:
+            4,
+
           actual:
             rooms
               ? rooms.length
@@ -3429,10 +4506,14 @@
 
       invariant(
         Boolean(
-          WING_TO_COIN[wing]
+          WING_TO_COIN[
+            wing
+          ]
         ),
         "ARCHCOIN_WING_COIN_MAPPING_MISSING",
-        { wing }
+        {
+          wing
+        }
       );
     }
 
@@ -3441,78 +4522,123 @@
       of CANONICAL_ROOM_RECORDS
     ) {
       invariant(
-        WINGS.includes(record.wing),
+        WINGS.includes(
+          record.wing
+        ),
         "ARCHCOIN_ROOM_WING_INVALID",
-        { record }
+        {
+          record
+        }
       );
 
       invariant(
-        WING_TO_COIN[record.wing] ===
+        WING_TO_COIN[
+          record.wing
+        ] ===
           record.coin,
         "ARCHCOIN_ROOM_COIN_MAPPING_INVALID",
-        { record }
+        {
+          record
+        }
       );
 
       invariant(
-        !ids.has(record.roomId),
+        !ids.has(
+          record.roomId
+        ),
         "ARCHCOIN_DUPLICATE_ROOM_ID",
         {
-          roomId: record.roomId
+          roomId:
+            record.roomId
         }
       );
 
       invariant(
-        !routes.has(record.route),
+        !routes.has(
+          record.route
+        ),
         "ARCHCOIN_DUPLICATE_ROOM_ROUTE",
         {
-          route: record.route
+          route:
+            record.route
         }
       );
 
       invariant(
-        normalizeRoute(record.route) ===
+        normalizeRoute(
+          record.route
+        ) ===
           record.route,
         "ARCHCOIN_CANONICAL_ROUTE_INVALID",
-        { record }
+        {
+          record
+        }
       );
 
-      ids.add(record.roomId);
-      routes.add(record.route);
+      ids.add(
+        record.roomId
+      );
+
+      routes.add(
+        record.route
+      );
     }
 
     invariant(
-      ROOM_BY_ID.size === 16,
+      ROOM_BY_ID.size ===
+        16,
       "ARCHCOIN_ROOM_ID_REGISTRY_INVALID"
     );
 
     invariant(
-      ROOM_BY_ROUTE.size === 16,
+      ROOM_BY_ROUTE.size ===
+        16,
       "ARCHCOIN_ROUTE_REGISTRY_INVALID"
     );
 
     return Object.freeze({
-      pass: true,
-      wingCount: WINGS.length,
+      pass:
+        true,
+
+      wingCount:
+        WINGS.length,
+
       roomCount:
-        CANONICAL_ROOM_RECORDS.length,
+        CANONICAL_ROOM_RECORDS
+          .length,
+
       routeCount:
-        CANONICAL_ROOM_ROUTES.length,
-      roomsPerWing: 4,
-      duplicateRoomIds: false,
-      duplicateRoutes: false,
-      mappingValid: true
+        CANONICAL_ROOM_ROUTES
+          .length,
+
+      roomsPerWing:
+        4,
+
+      duplicateRoomIds:
+        false,
+
+      duplicateRoutes:
+        false,
+
+      mappingValid:
+        true
     });
   }
 
   function validateTransitionTable() {
     const declaredStates =
-      Object.values(STATES);
+      Object.values(
+        STATES
+      );
 
     invariant(
-      declaredStates.length === 4,
+      declaredStates.length ===
+        4,
       "ARCHCOIN_STATE_COUNT_INVALID",
       {
-        expected: 4,
+        expected:
+          4,
+
         actual:
           declaredStates.length
       }
@@ -3533,15 +4659,22 @@
     );
 
     for (
-      const [fromState, targets]
-      of Object.entries(TRANSITIONS)
+      const [
+        fromState,
+        targets
+      ]
+      of Object.entries(
+        TRANSITIONS
+      )
     ) {
       invariant(
         declaredStates.includes(
           fromState
         ),
         "ARCHCOIN_UNKNOWN_TRANSITION_SOURCE",
-        { fromState }
+        {
+          fromState
+        }
       );
 
       for (
@@ -3604,7 +4737,8 @@
     invariant(
       TRANSITIONS[
         STATES.SYSTEM_HELD
-      ].length === 1 &&
+      ].length ===
+        1 &&
       TRANSITIONS[
         STATES.SYSTEM_HELD
       ][0] ===
@@ -3613,31 +4747,73 @@
     );
 
     return Object.freeze({
-      pass: true,
+      pass:
+        true,
+
       states:
         Object.freeze(
           declaredStates.slice()
         ),
+
       constellationToClusterOpen:
         true,
+
       clusterOpenToRoomSelected:
         true,
+
       roomSelectedToClusterOpen:
         true,
+
       clusterOpenToConstellation:
         true,
+
       roomSelectedToConstellation:
         true,
+
       heldTerminal:
         true,
+
       compassDecisionPresent:
         false,
+
       additiveStatePresent:
         false
     });
   }
 
   function validatePresentationContract() {
+    invariant(
+      PRESENTATION_BY_STATE[
+        STATES.CONSTELLATION
+      ].mode ===
+        PRESENTATION_MODES.CONSTELLATION,
+      "ARCHCOIN_CONSTELLATION_PRESENTATION_MODE_INVALID"
+    );
+
+    invariant(
+      PRESENTATION_BY_STATE[
+        STATES.CLUSTER_OPEN
+      ].mode ===
+        PRESENTATION_MODES.CLUSTER,
+      "ARCHCOIN_CLUSTER_OPEN_PRESENTATION_MODE_INVALID"
+    );
+
+    invariant(
+      PRESENTATION_BY_STATE[
+        STATES.ROOM_SELECTED
+      ].mode ===
+        PRESENTATION_MODES.CLUSTER,
+      "ARCHCOIN_ROOM_SELECTED_PRESENTATION_MODE_INVALID"
+    );
+
+    invariant(
+      PRESENTATION_BY_STATE[
+        STATES.SYSTEM_HELD
+      ].mode ===
+        PRESENTATION_MODES.HELD,
+      "ARCHCOIN_HELD_PRESENTATION_MODE_INVALID"
+    );
+
     invariant(
       PRESENTATION_BY_STATE[
         STATES.CONSTELLATION
@@ -3704,14 +4880,38 @@
     }
 
     return Object.freeze({
-      pass: true,
-      progressiveReplacement: true,
+      pass:
+        true,
+
+      progressiveReplacement:
+        true,
+
       additiveCoRenderingAuthorized:
         false,
-      constellationExclusive: true,
-      clusterExclusive: true,
+
+      constellationExclusive:
+        true,
+
+      clusterExclusive:
+        true,
+
       roomSelectedPreservesCluster:
-        true
+        true,
+
+      normalizedPresentationModes:
+        Object.freeze({
+          CONSTELLATION:
+            PRESENTATION_MODES.CONSTELLATION,
+
+          CLUSTER_OPEN:
+            PRESENTATION_MODES.CLUSTER,
+
+          ROOM_SELECTED:
+            PRESENTATION_MODES.CLUSTER,
+
+          SYSTEM_HELD:
+            PRESENTATION_MODES.HELD
+        })
     });
   }
 
@@ -3720,7 +4920,8 @@
       createCompassState();
 
     invariant(
-      compass.fixedCenter === true,
+      compass.fixedCenter ===
+        true,
       "ARCHCOIN_COMPASS_FIXED_CENTER_INVALID"
     );
 
@@ -3728,6 +4929,12 @@
       compass.upstreamRoute ===
         "/index.html",
       "ARCHCOIN_COMPASS_ROUTE_INVALID"
+    );
+
+    invariant(
+      compass.nativeNavigationPreserved ===
+        true,
+      "ARCHCOIN_COMPASS_NATIVE_NAVIGATION_NOT_PRESERVED"
     );
 
     invariant(
@@ -3755,16 +4962,33 @@
     );
 
     return Object.freeze({
-      pass: true,
-      fixedCenter: true,
-      upstreamRoute: "/index.html",
+      pass:
+        true,
+
+      fixedCenter:
+        true,
+
+      upstreamRoute:
+        "/index.html",
+
+      nativeNavigationPreserved:
+        true,
+
+      upstreamRequestPublishedWithoutPreventingDefault:
+        true,
+
       inheritsNavigationOrientation:
         false,
+
       participatesInNavigationSettlement:
         false,
-      quaternionPublished: false,
+
+      quaternionPublished:
+        false,
+
       rendererNavigationAuthority:
         false,
+
       rendererMountedByController:
         false
     });
@@ -3793,7 +5017,8 @@
     invariant(
       TRANSITIONS[
         STATES.SYSTEM_HELD
-      ].length === 1 &&
+      ].length ===
+        1 &&
       TRANSITIONS[
         STATES.SYSTEM_HELD
       ][0] ===
@@ -3802,21 +5027,33 @@
     );
 
     return Object.freeze({
-      pass: true,
-      heldTerminal: true,
+      pass:
+        true,
+
+      heldTerminal:
+        true,
+
       rejectsAllInteractiveRequests:
         true,
+
       guardedRequestCount:
         guardedRequests.length,
+
       guardedRequests
     });
   }
 
   function validateDeclaredRooms() {
-    if (!state.root) {
+    if (
+      !state.root
+    ) {
       return Object.freeze({
-        pass: false,
-        skipped: true,
+        pass:
+          false,
+
+        skipped:
+          true,
+
         reason:
           "ARCHCOIN_ROOT_NOT_RESOLVED"
       });
@@ -3830,11 +5067,14 @@
 
     invariant(
       declared.length ===
-        CANONICAL_ROOM_RECORDS.length,
+        CANONICAL_ROOM_RECORDS
+          .length,
       "ARCHCOIN_DECLARED_ROOM_COUNT_INVALID",
       {
         expected:
-          CANONICAL_ROOM_RECORDS.length,
+          CANONICAL_ROOM_RECORDS
+            .length,
+
         actual:
           declared.length
       }
@@ -3852,94 +5092,141 @@
     ) {
       const roomId =
         normalizeRoomId(
-          element.dataset.roomId
+          element.dataset
+            .roomId
         );
 
       const wing =
         normalizeWing(
-          element.dataset.wing
+          element.dataset
+            .wing
         );
 
       const route =
         normalizeRoute(
-          element.dataset.route ||
-          element.getAttribute("href")
+          element.dataset
+            .route ||
+          element.getAttribute(
+            "href"
+          )
         );
 
       const canonical =
-        ROOM_BY_ID.get(roomId);
+        ROOM_BY_ID.get(
+          roomId
+        );
 
       invariant(
         canonical,
         "ARCHCOIN_UNKNOWN_ROOM_ID",
-        { roomId }
+        {
+          roomId
+        }
       );
 
       invariant(
-        !seenIds.has(roomId),
+        !seenIds.has(
+          roomId
+        ),
         "ARCHCOIN_DUPLICATE_DECLARED_ROOM_ID",
-        { roomId }
+        {
+          roomId
+        }
       );
 
       invariant(
-        !seenRoutes.has(route),
+        !seenRoutes.has(
+          route
+        ),
         "ARCHCOIN_DUPLICATE_DECLARED_ROOM_ROUTE",
-        { route }
+        {
+          route
+        }
       );
 
       invariant(
-        route === canonical.route,
+        route ===
+          canonical.route,
         "ARCHCOIN_ROOM_ROUTE_MISMATCH",
         {
           roomId,
-          expected: canonical.route,
-          actual: route
+
+          expected:
+            canonical.route,
+
+          actual:
+            route
         }
       );
 
       invariant(
-        wing === canonical.wing,
+        wing ===
+          canonical.wing,
         "ARCHCOIN_ROOM_WING_MISMATCH",
         {
           roomId,
-          expected: canonical.wing,
-          actual: wing
+
+          expected:
+            canonical.wing,
+
+          actual:
+            wing
         }
       );
 
       invariant(
-        wingToCoin(wing) ===
+        wingToCoin(
+          wing
+        ) ===
           canonical.coin,
         "ARCHCOIN_ROOM_COIN_MAPPING_MISMATCH",
         {
           roomId,
           wing,
+
           expectedCoin:
             canonical.coin,
+
           actualCoin:
-            wingToCoin(wing)
+            wingToCoin(
+              wing
+            )
         }
       );
 
-      seenIds.add(roomId);
-      seenRoutes.add(route);
+      seenIds.add(
+        roomId
+      );
+
+      seenRoutes.add(
+        route
+      );
     }
 
     return Object.freeze({
-      pass: true,
+      pass:
+        true,
+
       declaredRoomCount:
         declared.length,
+
       declaredRouteCount:
         seenRoutes.size,
+
       directSemanticRoomElements:
         true,
+
+      roomRelocationByCrystalsAuthorized:
+        true,
+
       generatedRoomProxiesRequired:
         false
     });
   }
 
   function runControllerSelfTest({
-    includeDom = false
+    includeDom =
+      false
   } = {}) {
     const results = {
       registry:
@@ -3961,25 +5248,35 @@
         includeDom
           ? validateDeclaredRooms()
           : Object.freeze({
-              pass: true,
-              skipped: true,
+              pass:
+                true,
+
+              skipped:
+                true,
+
               reason:
                 "DOM_VALIDATION_NOT_REQUESTED"
             })
     };
 
     const pass =
-      Object.values(results)
-        .every(result =>
-          result.pass === true
-        );
+      Object.values(
+        results
+      ).every(
+        result =>
+          result.pass ===
+          true
+      );
 
     return Object.freeze({
       receiptSchema:
-        "ARCHCOIN_CONTROLLER_FOUNDATION_VALIDATION_RECEIPT_v1",
+        "ARCHCOIN_CONTROLLER_FOUNDATION_VALIDATION_RECEIPT_v2",
 
-      moduleId: MODULE.id,
-      moduleVersion: MODULE.version,
+      moduleId:
+        MODULE.id,
+
+      moduleVersion:
+        MODULE.version,
 
       pass,
 
@@ -3989,6 +5286,13 @@
           STATES.CLUSTER_OPEN,
           STATES.ROOM_SELECTED,
           STATES.SYSTEM_HELD
+        ]),
+
+      presentationModes:
+        Object.freeze([
+          PRESENTATION_MODES.CONSTELLATION,
+          PRESENTATION_MODES.CLUSTER,
+          PRESENTATION_MODES.HELD
         ]),
 
       progression:
@@ -4013,6 +5317,9 @@
       projectedRoomHitInferenceAuthorized:
         false,
 
+      canonicalRoomRelocationAuthorized:
+        true,
+
       compassDecisionStatePresent:
         false,
 
@@ -4025,40 +5332,53 @@
       rendererMayNavigate:
         false,
 
+      nativeCompassAnchorNavigationPreserved:
+        true,
+
       results:
-        Object.freeze(results)
+        Object.freeze(
+          results
+        )
     });
   }
 
-  function writeValidationReceipt(receipt) {
+  function writeValidationReceipt(
+    receipt
+  ) {
     state.validationReceipt =
       receipt;
 
     const serialized =
-      JSON.stringify(receipt);
+      JSON.stringify(
+        receipt
+      );
 
-    if (state.root) {
-      state.root.dataset.archcoinControllerValidation =
+    if (
+      state.root
+    ) {
+      state.root.dataset
+        .archcoinControllerValidation =
         serialized;
     }
 
-    if (state.controllerValidationOutput) {
-      state.controllerValidationOutput.value =
+    if (
+      state.controllerValidationOutput
+    ) {
+      state.controllerValidationOutput
+        .value =
         serialized;
 
-      state.controllerValidationOutput.textContent =
+      state.controllerValidationOutput
+        .textContent =
         serialized;
     }
 
-    globalThis.DGB_ARCHCOIN_CONTROLLER_VALIDATION_RECEIPT =
+    globalThis
+      .DGB_ARCHCOIN_CONTROLLER_VALIDATION_RECEIPT =
       receipt;
   }
 
   function handleSemanticClick(event) {
-    if (isHeld()) {
-      return;
-    }
-
     const compassControl =
       event.target.closest(
         "[data-upstream-compass-control]"
@@ -4070,10 +5390,28 @@
         compassControl
       )
     ) {
-      event.preventDefault();
-      event.stopPropagation();
+      /*
+       * Preserve the canonical anchor's native /index.html navigation.
+       *
+       * The request is published for observability and any future adapter,
+       * but this controller does not preventDefault(), stopPropagation(), or
+       * replace the browser's working link behavior.
+       */
+      if (
+        !isHeld()
+      ) {
+        requestReturnToUpstream({
+          nativeNavigationPreserved:
+            true
+        });
+      }
 
-      requestReturnToUpstream();
+      return;
+    }
+
+    if (
+      isHeld()
+    ) {
       return;
     }
 
@@ -4099,8 +5437,10 @@
       event.preventDefault();
 
       requestCardinalSelection(
-        destination.dataset.wing ||
-        destination.dataset.coinId
+        destination.dataset
+          .wing ||
+        destination.dataset
+          .coinId
       );
 
       return;
@@ -4114,7 +5454,8 @@
       event.preventDefault();
 
       requestRoomSelection(
-        destination.dataset.roomId
+        destination.dataset
+          .roomId
       );
     }
   }
@@ -4122,37 +5463,42 @@
   function handleKeydown(event) {
     if (
       isHeld() ||
-      event.key !== "Escape"
+      event.key !==
+        "Escape"
     ) {
       return;
     }
 
     if (
       state.current ===
-      STATES.ROOM_SELECTED
+        STATES.ROOM_SELECTED
     ) {
       event.preventDefault();
+
       requestReturnToOrbit();
+
       return;
     }
 
     if (
       state.current ===
-      STATES.CLUSTER_OPEN
+        STATES.CLUSTER_OPEN
     ) {
       event.preventDefault();
+
       requestReturnToConstellation();
     }
   }
 
   function handleCrystalsFailure(event) {
-    const reason = String(
-      event &&
-      event.detail &&
-      event.detail.reason
-        ? event.detail.reason
-        : "ARCHCOIN_CRYSTALS_RENDER_FAILURE"
-    );
+    const reason =
+      String(
+        event &&
+        event.detail &&
+        event.detail.reason
+          ? event.detail.reason
+          : "ARCHCOIN_CRYSTALS_RENDER_FAILURE"
+      );
 
     cancelActiveGestures(
       "crystals-failure"
@@ -4178,10 +5524,13 @@
       media;
 
     state.reducedMotion =
-      Boolean(media.matches) ||
+      Boolean(
+        media.matches
+      ) ||
       (
         state.root &&
-        state.root.dataset.reducedMotion ===
+        state.root.dataset
+          .reducedMotion ===
           "true"
       );
   }
@@ -4194,41 +5543,45 @@
       return;
     }
 
-    const update = event => {
-      const previous =
-        state.reducedMotion;
+    const update =
+      event => {
+        const previous =
+          state.reducedMotion;
 
-      state.reducedMotion =
-        Boolean(event.matches);
+        state.reducedMotion =
+          Boolean(
+            event.matches
+          );
 
-      if (
-        previous ===
-        state.reducedMotion
-      ) {
-        return;
-      }
+        if (
+          previous ===
+          state.reducedMotion
+        ) {
+          return;
+        }
 
-      publish(
-        CHANNELS.REDUCED_MOTION,
-        state.reducedMotion
-      );
+        publish(
+          CHANNELS.REDUCED_MOTION,
+          state.reducedMotion
+        );
 
-      publish(
-        CHANNELS.COMPASS_STATE,
-        createCompassState()
-      );
+        publish(
+          CHANNELS.COMPASS_STATE,
+          createCompassState()
+        );
 
-      recordAction(
-        "reduced-motion-updated"
-      );
-    };
+        recordAction(
+          "reduced-motion-updated"
+        );
+      };
 
     state.mediaQueryListener =
       update;
 
     if (
-      typeof media.addEventListener ===
-      "function"
+      typeof media
+        .addEventListener ===
+        "function"
     ) {
       media.addEventListener(
         "change",
@@ -4240,15 +5593,19 @@
 
     if (
       typeof media.addListener ===
-      "function"
+        "function"
     ) {
-      media.addListener(update);
+      media.addListener(
+        update
+      );
     }
   }
 
   function resolveDom() {
     state.root =
-      qs("[data-archcoin-root]");
+      qs(
+        "[data-archcoin-root]"
+      );
 
     invariant(
       state.root,
@@ -4353,7 +5710,8 @@
   function initializeOrientationState() {
     const requestedFocus =
       normalizeWing(
-        state.root.dataset.orbitFocus
+        state.root.dataset
+          .orbitFocus
       ) ||
       "north";
 
@@ -4364,7 +5722,8 @@
 
     const serialized =
       String(
-        state.root.dataset.orbitQuaternion ||
+        state.root.dataset
+          .orbitQuaternion ||
         ""
       ).trim();
 
@@ -4372,7 +5731,9 @@
       try {
         initial =
           orientationFromQuaternion(
-            JSON.parse(serialized),
+            JSON.parse(
+              serialized
+            ),
             requestedFocus
           );
       } catch (_) {}
@@ -4392,17 +5753,23 @@
 
     state.orbitRevision =
       finiteNumber(
-        state.root.dataset.orbitRevision,
+        state.root.dataset
+          .orbitRevision,
         0
       );
 
     state.orbitOrientation =
-      cloneOrientation(initial);
+      cloneOrientation(
+        initial
+      );
 
     state.committedOrbitOrientation =
-      cloneOrientation(initial);
+      cloneOrientation(
+        initial
+      );
 
-    state.orbitGestureOrigin = null;
+    state.orbitGestureOrigin =
+      null;
   }
 
   function initializeClusters() {
@@ -4413,15 +5780,20 @@
       of WINGS
     ) {
       const cluster =
-        createClusterState(wing);
+        createClusterState(
+          wing
+        );
 
       invariant(
-        cluster.roomIds.length === 4,
+        cluster.roomIds.length ===
+          4,
         "ARCHCOIN_CLUSTER_ROOM_COUNT_INVALID",
         {
           wing,
+
           count:
-            cluster.roomIds.length
+            cluster.roomIds
+              .length
         }
       );
 
@@ -4434,7 +5806,9 @@
 
   function getClusterState(wing) {
     const cluster =
-      getCluster(wing);
+      getCluster(
+        wing
+      );
 
     if (!cluster) {
       return null;
@@ -4446,14 +5820,16 @@
 
       roomIds:
         Object.freeze(
-          cluster.roomIds.slice()
+          cluster.roomIds
+            .slice()
         ),
 
       primaryRoom:
         cluster.primaryRoom,
 
       previewPrimaryRoom:
-        cluster.previewPrimaryRoom,
+        cluster
+          .previewPrimaryRoom,
 
       phase:
         cluster.phase,
@@ -4478,12 +5854,23 @@
   }
 
   function exposeApi() {
-    globalThis.DGB_ARCHCOIN_CONTROLLER =
+    globalThis
+      .DGB_ARCHCOIN_CONTROLLER =
       Object.freeze({
-        moduleId: MODULE.id,
-        moduleVersion: MODULE.version,
+        moduleId:
+          MODULE.id,
 
-        states: STATES,
+        moduleVersion:
+          MODULE.version,
+
+        states:
+          STATES,
+
+        presentationModes:
+          PRESENTATION_MODES,
+
+        presentationModeByState:
+          PRESENTATION_MODE_BY_STATE,
 
         destinationTypes:
           DESTINATION_TYPES,
@@ -4512,8 +5899,13 @@
         getFrameState:
           createFrameState,
 
+        getPresentationMode:
+          () =>
+            presentationModeForState(),
+
         getReducedMotion:
-          () => state.reducedMotion,
+          () =>
+            state.reducedMotion,
 
         getHeldState:
           createHeldState,
@@ -4526,7 +5918,8 @@
         getClusterState,
 
         getValidationReceipt:
-          () => state.validationReceipt,
+          () =>
+            state.validationReceipt,
 
         subscribeFrameState:
           callback =>
@@ -4609,18 +6002,24 @@
       handleKeydown
     );
 
-    if (state.enterButton) {
-      state.enterButton.addEventListener(
-        "click",
-        requestEnterSelection
-      );
+    if (
+      state.enterButton
+    ) {
+      state.enterButton
+        .addEventListener(
+          "click",
+          requestEnterSelection
+        );
     }
 
-    if (state.returnToOrbitButton) {
-      state.returnToOrbitButton.addEventListener(
-        "click",
-        requestReturnToOrbit
-      );
+    if (
+      state.returnToOrbitButton
+    ) {
+      state.returnToOrbitButton
+        .addEventListener(
+          "click",
+          requestReturnToOrbit
+        );
     }
 
     globalThis.addEventListener(
@@ -4640,7 +6039,8 @@
 
     for (
       const cluster
-      of state.clusters.values()
+      of state.clusters
+        .values()
     ) {
       cluster.gestureActive =
         false;
@@ -4687,12 +6087,12 @@
     globalThis.dispatchEvent(
       new CustomEvent(
         "ARCHCOIN_CONTROLLER_FAILURE",
-
         {
-          detail: Object.freeze({
-            reason:
-              state.lastFailure
-          })
+          detail:
+            Object.freeze({
+              reason:
+                state.lastFailure
+            })
         }
       )
     );
@@ -4700,16 +6100,15 @@
 
   function initialize() {
     try {
-      /*
-       * Source validation does not depend on downstream files.
-       */
       const sourceReceipt =
         runControllerSelfTest({
-          includeDom: false
+          includeDom:
+            false
         });
 
       invariant(
-        sourceReceipt.pass === true,
+        sourceReceipt.pass ===
+          true,
         "ARCHCOIN_CONTROLLER_SOURCE_VALIDATION_FAILED",
         sourceReceipt
       );
@@ -4722,16 +6121,15 @@
 
       initializeClusters();
 
-      /*
-       * DOM validation confirms the page declares the exact canonical records.
-       */
       const runtimeReceipt =
         runControllerSelfTest({
-          includeDom: true
+          includeDom:
+            true
         });
 
       invariant(
-        runtimeReceipt.pass === true,
+        runtimeReceipt.pass ===
+          true,
         "ARCHCOIN_CONTROLLER_RUNTIME_VALIDATION_FAILED",
         runtimeReceipt
       );
@@ -4750,7 +6148,8 @@
 
       syncPresentation();
 
-      state.initialized = true;
+      state.initialized =
+        true;
 
       const frame =
         recordAction(
@@ -4772,19 +6171,22 @@
         frame.compass
       );
     } catch (error) {
-      enterHeldState(error);
+      enterHeldState(
+        error
+      );
     }
   }
 
   if (
-    document.readyState === "loading"
+    document.readyState ===
+      "loading"
   ) {
     document.addEventListener(
       "DOMContentLoaded",
       initialize,
-
       {
-        once: true
+        once:
+          true
       }
     );
   } else {
@@ -4793,155 +6195,104 @@
 })();
 
 /*
-ARCHCOIN_CONTROLLER_FOUNDATION_RENEWAL_AND_VALIDATION_RESULT_v1
+ARCHCOIN_CONTROLLER_RUNTIME_CORRECTION_RESULT_v2
+
+Artifact:
+/products/archcoin/index.controller.js
+
+Module:
+DGB_ARCHCOIN_CONTROLLER
+6.0.1-controller-presentation-and-native-home-corrections
 
 Disposition:
-CONTROLLER_FOUNDATION_PASS_SOURCE_CANDIDATE
+CONTROLLER_RUNTIME_CORRECTION_SOURCE_CANDIDATE
 
-Final state machine:
+Internal state machine preserved:
 - CONSTELLATION
 - CLUSTER_OPEN
 - ROOM_SELECTED
 - SYSTEM_HELD
 
-Final progression:
-CONSTELLATION
--> CLUSTER_OPEN
--> ROOM_SELECTED
--> CONFIRMED_ROUTE_ENTRY
+Normalized page-presentation modes:
+- CONSTELLATION -> CONSTELLATION
+- CLUSTER_OPEN  -> CLUSTER
+- ROOM_SELECTED -> CLUSTER
+- SYSTEM_HELD   -> HELD
 
-Final return paths:
-- ROOM_SELECTED -> CLUSTER_OPEN
-- CLUSTER_OPEN -> CONSTELLATION
-- ROOM_SELECTED -> CONSTELLATION
+Published root datasets:
+- data-archcoin-mode
+  receives normalized presentation mode
 
-Final presentation contract:
-- CONSTELLATION:
-  outerCardinalsActive = true
-  activeRoomCluster = false
-  roomSelectionPermitted = false
+- data-archcoin-presentation-mode
+  receives normalized presentation mode
 
-- CLUSTER_OPEN:
-  outerCardinalsActive = false
-  activeRoomCluster = true
-  roomSelectionPermitted = true
+- data-archcoin-controller-state
+  receives internal navigation state
 
-- ROOM_SELECTED:
-  outerCardinalsActive = false
-  activeRoomCluster = true
-  roomSelectionPermitted = true
+- data-archcoin-navigation-state
+  receives internal navigation state
 
-- SYSTEM_HELD:
-  outerCardinalsActive = false
-  activeRoomCluster = false
-  roomSelectionPermitted = false
+Compass correction:
+- canonical semantic href remains /index.html
+- Compass click publishes requestReturnToUpstream()
+- Compass click is not preventDefault() blocked
+- Compass click is not stopPropagation() blocked
+- native browser navigation remains authoritative
+- renderer remains nonnavigating
+- controller remains renderer-independent
 
-Final Compass state:
-- fixedCenter = true
-- upstreamRoute = /index.html
-- inheritsNavigationOrientation = false
-- participatesInNavigationSettlement = false
-- quaternionPublished = false
-- independentMotionSignalsPublished = false
-- renderer status is not controller-owned
-- fallback status is not controller-owned
+Cluster-return contract:
+- requestReturnToConstellation remains public
+- CLUSTER_OPEN -> CONSTELLATION remains validated
+- ROOM_SELECTED -> CONSTELLATION remains validated
+- crystals may invoke requestReturnToConstellation after classifying an
+  intentional cluster-exit swipe
 
-Final upstream request contract:
-- requestReturnToUpstream()
-- getLastUpstreamRequest()
-- subscribeUpstreamRequest()
-- no navigation state is created
-- no panel is opened
-- no navigation occurs
-- the later page adapter retains consumption responsibility
+Room-selection contract retained:
+- exact sixteen-room canonical registry
+- exact canonical routes
+- room selection does not navigate immediately
+- room selection populates the panel
+- room selection enables Enter Selected Path
+- confirmed entry uses location.assign(canonical.route)
+- Return to Orbit restores ROOM_SELECTED to CLUSTER_OPEN
 
-Final held-state contract:
-- getHeldState()
-- subscribeHeldState()
-- SYSTEM_HELD is terminal
-- all interactive controller requests reject while held
+Canonical semantic relocation:
+- existing room anchors remain controller-recognized after relocation
+- relocation by crystals into the semantic layer is authorized
+- generated room proxies remain forbidden
+- projected room-hit inference remains forbidden
 
-Final public state surfaces:
-- getFrameState
-- getReducedMotion
-- getHeldState
-- getCompassState
-- getLastUpstreamRequest
-- getClusterState
-- getValidationReceipt
+Unchanged:
+- quaternion mathematics
+- orbit state
+- cluster state
+- orbit gesture surfaces
+- cluster gesture surfaces
+- panel content rules
+- viewport choreography
+- reduced-motion subscription
+- held-state terminal law
+- canonical room routes
+- controller renderer boundary
+- Compass fixed-center law
 
-Final public subscription surfaces:
-- subscribeFrameState
-- subscribeReducedMotion
-- subscribeHeldState
-- subscribeCompassState
-- subscribeUpstreamRequest
-
-Final cardinal and room surfaces:
-- requestCardinalSelection
-- requestRoomSelection
-- requestEnterSelection
-- requestReturnToOrbit
-- requestReturnToConstellation
-
-Final orbit gesture surfaces:
-- beginOrbitGesture
-- requestOrbitPreview
-- requestOrbitCommit
-- requestOrbitCancel
-- requestOrbitFocus
-
-Final cluster gesture surfaces:
-- beginClusterGesture
-- requestClusterPreview
-- requestClusterCommit
-- requestClusterCancel
-
-Registry validation:
-- exactly 4 wings
-- exactly 16 canonical rooms
-- exactly 4 rooms per wing
-- no duplicate room IDs
-- no duplicate routes
-- exact wing-to-coin mappings preserved
-- exact canonical routes preserved
-
-Removed confirmed drift:
-- COMPASS_DECISION
-- COMPASS_PRESENTATION_MODES
-- stateBeforeCompassDecision
-- Compass snapshot restoration
-- Compass lower-selection-chamber behavior
-- panelFromHomeCompass
-- Compass camera lowering
-- controller-owned renderer mounting
-- controller-owned renderer handle
-- controller-owned renderer status
-- controller-owned renderer failure state
-- controller-owned fallback status
-- renderer failure listener
-- inheritsConstellationOrientation = true
-- Compass-specific viewport choreography
-- shared room-and-Compass panel law
-
-Preserved provisionally:
-- room-selection panel
-- room-triggered panel descent
-- room-to-cluster Return to Orbit
-- cluster/room-to-constellation restoration
-
-Forbidden mechanisms absent:
-- CONSTELLATION_WITH_CLUSTER
-- additive cardinal-plus-cluster presentation
-- generated nonvisual room proxies
-- projected room hit inference
-- mixed cardinal-and-room hit field
-- Compass quaternion
-- Compass settlement
-- renderer navigation authority
+Required paired crystals version:
+- must require controller version
+  6.0.1-controller-presentation-and-native-home-corrections
 
 Other files modified:
 NONE
 
-Downstream files remain frozen pending instructor review.
+Runtime execution:
+NOT PERFORMED
+
+Actual-page integration:
+PENDING PAIRED CRYSTALS REPLACEMENT
+
+Production authorization:
+FALSE
+
+Deployment authorization:
+FALSE
 */

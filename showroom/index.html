@@ -1,16 +1,16 @@
 <!-- TARGET FILE: /showroom/index.html -->
 <!-- TNT FULL-FILE REPLACEMENT -->
-<!-- SHOWROOM_MIRRORLAND_CONSTELLATION_GAUGE_INFORMATION_HTML_TNT_v5 -->
+<!-- SHOWROOM_MIRRORLAND_OFFICIAL_GATE_AND_INTERACTIVE_PREFACE_HTML_TNT_v6 -->
 <!doctype html>
 <html
   lang="en"
   data-route="/showroom/"
   data-page="showroom"
-  data-version="SHOWROOM-MIRRORLAND-CONSTELLATION-GAUGE-INFORMATION-5.0.0"
-  data-contract="SHOWROOM_MIRRORLAND_CONSTELLATION_GAUGE_INFORMATION_HTML_TNT_v5"
+  data-version="SHOWROOM-MIRRORLAND-OFFICIAL-GATE-6.0.0"
+  data-contract="SHOWROOM_MIRRORLAND_OFFICIAL_GATE_AND_INTERACTIVE_PREFACE_HTML_TNT_v6"
   data-house-room="showroom"
   data-house-room-title="The Showroom"
-  data-room-welcome="Welcome to the Showroom"
+  data-room-welcome="Welcome to Mirrorland"
   data-room-narrative-title="The Door to Mirrorland"
   data-primary-subject="mirrorland"
   data-primary-narrative="mirrorland"
@@ -19,7 +19,7 @@
   data-elara-route="/elara/index.html"
   data-talk-to-elara-prominent="true"
 
-  data-showroom-root-contract="mirrorland-constellation-gauge-information"
+  data-showroom-root-contract="mirrorland-official-gate-constellation-gauge-information"
   data-showroom-controller="/showroom/index.controller.js"
   data-showroom-gauges="/showroom/index.gauges.js"
   data-showroom-interactions="/showroom/index.interactions.js"
@@ -28,6 +28,9 @@
   data-showroom-window="/showroom/index.window.js"
   data-showroom-css="/showroom/index.css"
 
+  data-showroom-page-role="official-mirrorland-gate"
+  data-showroom-preface-model="visible-transition-plus-complete-disclosure"
+  data-showroom-instructions-model="contrasting-operational-guide"
   data-showroom-navigation-model="compact-unlabeled-constellation"
   data-showroom-primary-mode="orbit"
   data-showroom-local-front-model="single-active-front"
@@ -110,12 +113,12 @@
   >
 
   <title>
-    The Door to Mirrorland · The Showroom
+    Welcome to Mirrorland · The Showroom
   </title>
 
   <meta
     name="description"
-    content="Enter Mirrorland through an exploratory constellation of characters, systems, gauges, evidence, and the independently rendered Diamond Lattice."
+    content="Enter Mirrorland through its official gate. Meet its characters, discover its mission and timeline, follow the constellation, open the Window, and inspect the Diamond."
   >
 
   <link
@@ -133,9 +136,9 @@
 
   <link
     rel="stylesheet"
-    href="/showroom/index.css?v=SHOWROOM_MIRRORLAND_CONSTELLATION_GAUGE_INFORMATION_CSS_TNT_v4"
+    href="/showroom/index.css?v=SHOWROOM_MIRRORLAND_OFFICIAL_GATE_AND_INTERACTIVE_PREFACE_CSS_TNT_v5"
     data-showroom-page-css="true"
-    data-showroom-page-css-contract="SHOWROOM_MIRRORLAND_CONSTELLATION_GAUGE_INFORMATION_CSS_TNT_v4"
+    data-showroom-page-css-contract="SHOWROOM_MIRRORLAND_OFFICIAL_GATE_AND_INTERACTIVE_PREFACE_CSS_TNT_v5"
   >
 </head>
 
@@ -150,8 +153,8 @@
   <div
     class="shell showroom-shell"
     data-showroom-root
-    data-showroom-state="baseline"
-    data-showroom-presentation-mode="baseline"
+    data-showroom-state="orbit"
+    data-showroom-presentation-mode="orbit"
     data-showroom-enhancement-state="enhancement-pending"
     data-showroom-active-cluster=""
     data-showroom-active-front=""
@@ -274,109 +277,282 @@
 
     <main id="main">
       <section
-        id="arrival"
+        id="mirrorland-gate"
         class="showroom-threshold panel chamber-arrival"
         aria-labelledby="page-title"
         data-showroom-threshold-introduction
+        data-showroom-official-gate
       >
         <div class="showroom-threshold__copy">
           <div class="kicker">
-            Elara’s Homeroom · Mirrorland Threshold
+            Official Gate · Mirrorland
           </div>
 
           <h1 id="page-title">
-            Welcome to the Showroom.
+            Welcome to Mirrorland.
           </h1>
 
           <p class="door-subtitle">
-            The Door to Mirrorland
+            Your journey begins in the Showroom.
           </p>
 
           <p class="showroom-threshold__lead">
-            The systems changing our lives are often moving before we
-            fully understand them.
+            Beyond this threshold is a living world of characters,
+            discoveries, unfinished questions, and systems waiting to
+            be explored.
           </p>
 
           <p class="showroom-threshold__support">
-            We build technologies, institutions, models, and decisions
-            in the real world, where mistakes carry real consequences.
-            By the time a weakness becomes visible, someone may already
-            be living inside it.
-          </p>
-
-          <p class="showroom-threshold__support">
-            Mirrorland creates another place to look first.
-          </p>
-
-          <p class="showroom-threshold__support">
-            Here, ideas can be entered instead of merely described.
-            Systems can be opened, questioned, stressed, and explored.
-            Characters can guide the journey. Simulations can expose
-            what ordinary explanation leaves hidden.
-          </p>
-
-          <p class="showroom-threshold__support">
-            The Showroom is the threshold: a constellation of objects,
-            paths, gauges, and evidence leading into a world designed
-            for curiosity before consequence.
+            The Showroom is where Mirrorland first opens: its mission,
+            its timeline, its inhabitants, and the paths that connect
+            them.
           </p>
 
           <div
             class="thesis-field mirrorland-thesis"
-            aria-label="Mirrorland threshold statement"
+            aria-label="Mirrorland preface"
           >
             <strong>
-              A mirror shows you what is there.<br>
-              Mirrorland asks what happens next.
+              Every path reveals part of the world.<br>
+              Every character reveals why it matters.
             </strong>
           </div>
 
-          <div class="showroom-threshold__actions">
-            <a
-              class="button button-gold"
-              href="/elara/index.html"
-            >
-              Talk to Elara
-            </a>
-
-            <a
-              class="button"
-              href="#showroom-orbit"
-            >
-              Enter the Constellation
-            </a>
-          </div>
-
           <details
-            id="passage"
+            id="mirrorland-preface"
             class="architectural-drop mirrorland-introduction-drop"
+            data-showroom-mirrorland-preface
           >
             <summary>
-              Why Mirrorland exists
+              Read the complete Mirrorland preface
             </summary>
 
             <div class="drop-content">
-              <p>
-                The hardest problems are rarely hidden because nobody
-                is looking. They are hidden because the system is too
-                large, too fast, or too costly to test honestly.
-              </p>
+              <section aria-labelledby="mirrorland-preface-world">
+                <h2 id="mirrorland-preface-world">
+                  The world
+                </h2>
 
-              <p>
-                Mirrorland is a place where those systems can be made
-                visible. A user can follow a character, inspect an
-                object, enter a simulation, compare outcomes, and
-                discover relationships that would remain abstract on
-                an ordinary page.
-              </p>
+                <p>
+                  Mirrorland is a place where complex ideas can become
+                  visible, explorable, and human. Its rooms hold
+                  systems, stories, experiments, questions, and
+                  possible futures that ordinary explanation cannot
+                  fully contain.
+                </p>
 
-              <p>
-                It is not a museum of finished answers. It is an
-                environment for approaching questions before the real
-                world forces an answer.
-              </p>
+                <p>
+                  It is not a museum of finished answers. It is a world
+                  built around discovery: a place where uncertainty can
+                  be entered, where systems can be examined from more
+                  than one direction, and where the consequences of an
+                  idea can be considered before they become permanent.
+                </p>
+              </section>
+
+              <section aria-labelledby="mirrorland-preface-mission">
+                <h2 id="mirrorland-preface-mission">
+                  The mission
+                </h2>
+
+                <p>
+                  Mirrorland exists so people can look before
+                  consequence, question before commitment, and explore
+                  what may happen before the real world forces an
+                  answer.
+                </p>
+
+                <p>
+                  Its mission is to make difficult systems easier to
+                  approach without making them smaller than they are.
+                  Stories, characters, objects, simulations, gauges,
+                  evidence, and interactive environments work together
+                  so a visitor can experience relationships that would
+                  remain hidden in an ordinary explanation.
+                </p>
+              </section>
+
+              <section aria-labelledby="mirrorland-preface-timeline">
+                <h2 id="mirrorland-preface-timeline">
+                  The timeline
+                </h2>
+
+                <p>
+                  Mirrorland unfolds through connected moments,
+                  discoveries, turning points, and unfinished paths.
+                  Each destination reveals another part of where the
+                  world came from, what it is becoming, and what remains
+                  unresolved.
+                </p>
+
+                <p>
+                  The timeline is not merely a record of dates. It is
+                  the sequence through which ideas become places,
+                  characters acquire responsibilities, systems begin to
+                  interact, and the larger world gradually comes into
+                  view.
+                </p>
+              </section>
+
+              <section aria-labelledby="mirrorland-preface-characters">
+                <h2 id="mirrorland-preface-characters">
+                  The characters
+                </h2>
+
+                <p>
+                  Mirrorland’s inhabitants are not decorative guides.
+                  Each character carries a perspective, a history, a
+                  responsibility, and a distinct path through the larger
+                  world.
+                </p>
+
+                <p>
+                  Some characters introduce the world. Some interpret
+                  what the visitor encounters. Some preserve memory,
+                  challenge assumptions, reveal hidden structure, or
+                  open paths that could not be reached through a
+                  conventional menu.
+                </p>
+
+                <p>
+                  Their stories give the systems of Mirrorland a human
+                  center. Through them, the visitor does not merely read
+                  about the world. The visitor meets it.
+                </p>
+              </section>
+
+              <section aria-labelledby="mirrorland-preface-threshold">
+                <h2 id="mirrorland-preface-threshold">
+                  The threshold
+                </h2>
+
+                <p>
+                  The Showroom is the official gate where these paths
+                  first meet. It is both a preface and a working
+                  environment: a place where the visitor can understand
+                  the world before moving deeper into it.
+                </p>
+
+                <p>
+                  From here, the constellation leads toward characters,
+                  gauges, evidence, stories, and information. The
+                  Mirrorland Window reveals the Diamond beneath the
+                  threshold. The Diamond can be rotated, examined, and
+                  viewed from more than one structural perspective.
+                  The fixed Compass preserves the route back to the
+                  larger Audralia navigation system.
+                </p>
+
+                <p>
+                  This is where the narrative begins, but it is also
+                  where the world becomes interactive.
+                </p>
+              </section>
             </div>
           </details>
+        </div>
+      </section>
+
+      <section
+        id="showroom-instructions"
+        class="showroom-instructions panel chamber-platform"
+        aria-labelledby="showroom-instructions-title"
+        data-showroom-page-instructions
+      >
+        <header class="showroom-instructions__heading">
+          <div class="kicker">
+            Page Instructions
+          </div>
+
+          <h2 id="showroom-instructions-title">
+            How to enter the Showroom
+          </h2>
+
+          <p>
+            The Showroom contains several independent interactive
+            stages. Each one reveals a different part of Mirrorland.
+          </p>
+        </header>
+
+        <div
+          class="showroom-instructions__grid"
+          role="list"
+          aria-label="Showroom interaction instructions"
+        >
+          <article role="listitem">
+            <span aria-hidden="true">01</span>
+
+            <h3>
+              Follow the constellation
+            </h3>
+
+            <p>
+              Drag the star field to move among routes, character paths,
+              gauge clusters, and information destinations.
+            </p>
+          </article>
+
+          <article role="listitem">
+            <span aria-hidden="true">02</span>
+
+            <h3>
+              Open the Window
+            </h3>
+
+            <p>
+              Use the Mirrorland Window control to open the stained-glass
+              threshold and reveal the Diamond beneath it.
+            </p>
+          </article>
+
+          <article role="listitem">
+            <span aria-hidden="true">03</span>
+
+            <h3>
+              Inspect the Diamond
+            </h3>
+
+            <p>
+              Rotate and zoom the gem, switch between Object View and
+              Lattice View, inspect its structure, and reset its
+              presentation.
+            </p>
+          </article>
+
+          <article role="listitem">
+            <span aria-hidden="true">04</span>
+
+            <h3>
+              Open gauges and information
+            </h3>
+
+            <p>
+              Cyan paths open gauge dashboards. Violet paths open the
+              Platform, Engineering, and Evidence information fronts.
+            </p>
+          </article>
+
+          <article role="listitem">
+            <span aria-hidden="true">05</span>
+
+            <h3>
+              Use the Compass
+            </h3>
+
+            <p>
+              The fixed Main Compass provides an explicit route back to
+              the larger Diamond Gate Bridge navigation system.
+            </p>
+          </article>
+        </div>
+
+        <div class="showroom-instructions__action">
+          <a
+            class="button button-gold"
+            href="#showroom-orbit"
+          >
+            Enter the Constellation
+          </a>
         </div>
       </section>
 
@@ -2884,11 +3060,11 @@
     <footer class="showroom-footer">
       <div>
         <strong>
-          The Showroom · The Door to Mirrorland
+          Mirrorland · The Official Gate
         </strong>
 
         <span>
-          Follow the stars. Open the gauges. Enter the information.
+          Follow the stars. Open the Window. Enter the world.
         </span>
       </div>
 

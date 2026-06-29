@@ -4,16 +4,21 @@
 
    Module:
    DGB_ARCHCOIN_INTERACTIONS
-   1.0.0-pointer-gesture-interpreter
+   1.0.1-scene-capture-pointer-gesture-interpreter
 
    Required controller:
    DGB_ARCHCOIN_CONTROLLER
    7.0.0-controller-interaction-semantic-priority
 
-   Runtime position:
-   - load after /products/archcoin/index.crystals.js;
-   - load before closing body completion;
-   - controller must already expose its public command surface.
+   Corrected interaction model:
+   - pointer events are observed from the ARCHCOIN root in capture phase;
+   - projected semantic controls may sit above the scene field;
+   - cardinal and room controls are recognized directly;
+   - data-archcoin-destination is not required;
+   - pointer capture belongs to the root-level interaction surface;
+   - scene-field geometry remains the coordinate reference;
+   - touch-action suppression applies only inside the ARCHCOIN interaction region;
+   - normal page scrolling remains available outside that region.
 
    Owned:
    - pointerdown, pointermove, pointerup, pointercancel;
@@ -52,7 +57,7 @@
    -> canonical state transition
 
    Source status:
-   FILE_SPLIT_INTERACTION_SOURCE_CANDIDATE
+   CORRECTED_FILE_SPLIT_INTERACTION_SOURCE_CANDIDATE
    !=
    RUNTIME_PASS
    !=
@@ -69,7 +74,7 @@
       "DGB_ARCHCOIN_INTERACTIONS",
 
     version:
-      "1.0.0-pointer-gesture-interpreter",
+      "1.0.1-scene-capture-pointer-gesture-interpreter",
 
     file:
       "/products/archcoin/index.interactions.js",
@@ -172,6 +177,12 @@
       10
   });
 
+  const INTERACTIVE_CONTROL_SELECTOR = [
+    "[data-archcoin-coin]",
+    "[data-archcoin-room]",
+    "[data-upstream-compass-control]"
+  ].join(",");
+
   const EXCLUDED_GESTURE_SELECTOR = [
     "[data-archcoin-enter]",
     "[data-archcoin-return-to-orbit]",
@@ -244,14 +255,8 @@
     unsubscribeSemanticProjection:
       null,
 
-    fieldTouchActionSnapshot:
-      "",
-
-    fieldUserSelectSnapshot:
-      "",
-
-    fieldWebkitUserSelectSnapshot:
-      "",
+    interactionStyleSnapshots:
+      new Map(),
 
     lastAction:
       "pending",
@@ -265,7 +270,7 @@
 
   const RECEIPT = {
     receiptSchema:
-      "ARCHCOIN_INTERACTIONS_RECEIPT_v1",
+      "ARCHCOIN_INTERACTIONS_RECEIPT_v2",
 
     moduleId:
       MODULE.id,
@@ -284,6 +289,21 @@
 
     status:
       "uninitialized",
+
+    eventSurface:
+      "ARCHCOIN_ROOT_CAPTURE_PHASE",
+
+    coordinateSurface:
+      "ARCHCOIN_SCENE_FIELD",
+
+    directCardinalSelectorSupported:
+      true,
+
+    directRoomSelectorSupported:
+      true,
+
+    destinationMarkerRequired:
+      false,
 
     pointerInterpreterOwned:
       true,
@@ -415,7 +435,9 @@
     const number =
       Number(value);
 
-    return Number.isFinite(number)
+    return Number.isFinite(
+      number
+    )
       ? number
       : fallback;
   }
@@ -471,14 +493,17 @@
         .toLowerCase();
 
     if (
-      kind === "coin" ||
-      kind === "cardinal"
+      kind ===
+        "coin" ||
+      kind ===
+        "cardinal"
     ) {
       return TARGET_TYPES.CARDINAL;
     }
 
     if (
-      kind === "room"
+      kind ===
+      "room"
     ) {
       return TARGET_TYPES.ROOM;
     }
@@ -520,9 +545,13 @@
     id
   ) {
     return `${
-      normalizeKind(kind)
+      normalizeKind(
+        kind
+      )
     }:${
-      normalizeId(id)
+      normalizeId(
+        id
+      )
     }`;
   }
 
@@ -571,7 +600,10 @@
       )
         ? Array.from(
             source.quaternion
-          ).slice(0, 4)
+          ).slice(
+            0,
+            4
+          )
         : [
             0,
             0,
@@ -673,7 +705,7 @@
 
     if (
       mode ===
-      MODES.CLUSTER &&
+        MODES.CLUSTER &&
       frame.cluster
     ) {
       return cloneOrientation(
@@ -699,7 +731,9 @@
     kind
   ) {
     if (
-      normalizeKind(kind) ===
+      normalizeKind(
+        kind
+      ) ===
       TARGET_TYPES.CARDINAL
     ) {
       return GESTURE
@@ -707,7 +741,9 @@
     }
 
     if (
-      normalizeKind(kind) ===
+      normalizeKind(
+        kind
+      ) ===
       TARGET_TYPES.ROOM
     ) {
       return GESTURE
@@ -751,7 +787,7 @@
 
     if (
       projection.depthLayer ===
-        DEPTH_LAYERS.FRONT
+      DEPTH_LAYERS.FRONT
     ) {
       return PRIORITIES.FRONT;
     }
@@ -766,7 +802,7 @@
 
     if (
       projection.depthLayer ===
-        DEPTH_LAYERS.REAR
+      DEPTH_LAYERS.REAR
     ) {
       return PRIORITIES.REAR;
     }
@@ -865,6 +901,72 @@
     });
   }
 
+  function pointInsideRect(
+    clientX,
+    clientY,
+    rect
+  ) {
+    return (
+      clientX >=
+        rect.left &&
+      clientX <=
+        rect.right &&
+      clientY >=
+        rect.top &&
+      clientY <=
+        rect.bottom
+    );
+  }
+
+  function pointInsideField(
+    clientX,
+    clientY
+  ) {
+    if (
+      !state.field
+    ) {
+      return false;
+    }
+
+    return pointInsideRect(
+      clientX,
+      clientY,
+      state.field
+        .getBoundingClientRect()
+    );
+  }
+
+  function eventOriginInsideInteractionRegion(
+    event
+  ) {
+    const element =
+      normalizeElement(
+        event.target
+      );
+
+    if (
+      element &&
+      (
+        state.scene.contains(
+          element
+        ) ||
+        state.semanticLayer.contains(
+          element
+        ) ||
+        state.compassControl.contains(
+          element
+        )
+      )
+    ) {
+      return true;
+    }
+
+    return pointInsideField(
+      event.clientX,
+      event.clientY
+    );
+  }
+
   function hitTestCrystals(
     clientX,
     clientY,
@@ -950,7 +1052,8 @@
         distance,
 
         normalizedDistance:
-          radius > 0
+          radius >
+          0
             ? distance /
               radius
             : Infinity,
@@ -1014,19 +1117,11 @@
       return false;
     }
 
-    const rect =
+    return pointInsideRect(
+      clientX,
+      clientY,
       state.compassControl
-        .getBoundingClientRect();
-
-    return (
-      clientX >=
-        rect.left &&
-      clientX <=
-        rect.right &&
-      clientY >=
-        rect.top &&
-      clientY <=
-        rect.bottom
+        .getBoundingClientRect()
     );
   }
 
@@ -1045,30 +1140,30 @@
       return null;
     }
 
-    const destination =
+    const control =
       element.closest(
-        "[data-archcoin-destination]"
+        "[data-archcoin-coin], [data-archcoin-room]"
       );
 
     if (
-      !destination ||
+      !control ||
       !state.root.contains(
-        destination
+        control
       )
     ) {
       return null;
     }
 
     if (
-      destination.matches(
+      control.matches(
         "[data-archcoin-coin]"
       )
     ) {
       const id =
         normalizeId(
-          destination.dataset.wing ||
-          destination.dataset.coinId ||
-          destination.dataset
+          control.dataset.wing ||
+          control.dataset.coinId ||
+          control.dataset
             .destinationId
         );
 
@@ -1082,8 +1177,7 @@
 
             id,
 
-            control:
-              destination,
+            control,
 
             source:
               "semantic-control"
@@ -1092,14 +1186,14 @@
     }
 
     if (
-      destination.matches(
+      control.matches(
         "[data-archcoin-room]"
       )
     ) {
       const id =
         normalizeId(
-          destination.dataset.roomId ||
-          destination.dataset
+          control.dataset.roomId ||
+          control.dataset
             .destinationId
         );
 
@@ -1113,8 +1207,7 @@
 
             id,
 
-            control:
-              destination,
+            control,
 
             source:
               "semantic-control"
@@ -1163,9 +1256,7 @@
         target
       );
 
-    if (
-      projection
-    ) {
+    if (projection) {
       return (
         recordPermittedByFrame(
           projection,
@@ -1180,7 +1271,7 @@
 
     if (
       target.type ===
-        TARGET_TYPES.CARDINAL
+      TARGET_TYPES.CARDINAL
     ) {
       return (
         frame.navigationState ===
@@ -1191,7 +1282,7 @@
 
     if (
       target.type ===
-        TARGET_TYPES.ROOM
+      TARGET_TYPES.ROOM
     ) {
       if (
         frame.navigationState !==
@@ -1241,6 +1332,7 @@
     ) {
       return Object.freeze({
         ...crystalHit,
+
         source:
           "whole-crystal-hit"
       });
@@ -1346,6 +1438,7 @@
     if (crystalHit) {
       return Object.freeze({
         ...crystalHit,
+
         source:
           "whole-crystal-hit"
       });
@@ -1611,6 +1704,26 @@
     state.pointer =
       null;
 
+    if (state.root) {
+      state.root.dataset
+        .gestureActive =
+        "false";
+
+      state.root.dataset
+        .gestureMode =
+        MODES.NONE;
+    }
+
+    if (state.scene) {
+      state.scene.dataset
+        .gestureActive =
+        "false";
+
+      state.scene.dataset
+        .gestureMode =
+        MODES.NONE;
+    }
+
     if (state.field) {
       state.field.dataset
         .gestureActive =
@@ -1624,9 +1737,7 @@
     publishReceipt();
   }
 
-  function suppressionKey(
-    target
-  ) {
+  function suppressionKey(target) {
     if (!target) {
       return "";
     }
@@ -1640,9 +1751,7 @@
     }`;
   }
 
-  function suppressNextClick(
-    target
-  ) {
+  function suppressNextClick(target) {
     const key =
       suppressionKey(
         target
@@ -1945,23 +2054,37 @@
     return false;
   }
 
+  function capturePointer(pointerId) {
+    if (!state.root) {
+      return false;
+    }
+
+    try {
+      state.root.setPointerCapture(
+        pointerId
+      );
+
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
+
   function releasePointerCapture(
     pointerId
   ) {
-    if (
-      !state.field
-    ) {
+    if (!state.root) {
       return;
     }
 
     try {
       if (
-        state.field
+        state.root
           .hasPointerCapture(
             pointerId
           )
       ) {
-        state.field
+        state.root
           .releasePointerCapture(
             pointerId
           );
@@ -1987,6 +2110,22 @@
       return;
     }
 
+    if (
+      !eventOriginInsideInteractionRegion(
+        event
+      )
+    ) {
+      return;
+    }
+
+    if (
+      !gestureAllowedFromTarget(
+        event.target
+      )
+    ) {
+      return;
+    }
+
     const frame =
       frameState();
 
@@ -2002,26 +2141,6 @@
         event,
         frame
       );
-
-    if (
-      !target &&
-      !gestureAllowedFromTarget(
-        event.target
-      )
-    ) {
-      return;
-    }
-
-    if (
-      target &&
-      target.type !==
-        TARGET_TYPES.COMPASS &&
-      !gestureAllowedFromTarget(
-        event.target
-      )
-    ) {
-      return;
-    }
 
     const mode =
       target &&
@@ -2049,6 +2168,22 @@
         target
       );
 
+    state.root.dataset
+      .gestureActive =
+      "true";
+
+    state.root.dataset
+      .gestureMode =
+      state.pointer.mode;
+
+    state.scene.dataset
+      .gestureActive =
+      "true";
+
+    state.scene.dataset
+      .gestureMode =
+      state.pointer.mode;
+
     state.field.dataset
       .gestureActive =
       "true";
@@ -2057,12 +2192,11 @@
       .gestureMode =
       state.pointer.mode;
 
-    try {
-      state.field
-        .setPointerCapture(
-          event.pointerId
-        );
-    } catch (_) {}
+    capturePointer(
+      event.pointerId
+    );
+
+    event.preventDefault();
 
     recordAction(
       `pointer-began:${state.pointer.mode}`
@@ -2097,6 +2231,7 @@
       pointer.mode ===
       MODES.COMPASS
     ) {
+      event.preventDefault();
       return;
     }
 
@@ -2113,6 +2248,7 @@
       distance <
         GESTURE.dragDeadZonePx
     ) {
+      event.preventDefault();
       return;
     }
 
@@ -2122,9 +2258,7 @@
       pointer.dragging =
         true;
 
-      if (
-        pointer.target
-      ) {
+      if (pointer.target) {
         suppressNextClick(
           pointer.target
         );
@@ -2263,9 +2397,7 @@
       return;
     }
 
-    if (
-      !pointer.dragging
-    ) {
+    if (!pointer.dragging) {
       const target =
         pointer.target;
 
@@ -2386,9 +2518,7 @@
       return;
     }
 
-    if (
-      pointer.dragging
-    ) {
+    if (pointer.dragging) {
       cancelControllerGesture(
         pointer,
         "lost-pointer-capture"
@@ -2461,6 +2591,7 @@
     )
       ? Object.freeze({
           ...direct,
+
           source:
             "semantic-click"
         })
@@ -2509,6 +2640,27 @@
     );
   }
 
+  function escapeSelectorValue(value) {
+    const source =
+      String(value || "");
+
+    if (
+      globalThis.CSS &&
+      typeof globalThis.CSS
+        .escape ===
+        "function"
+    ) {
+      return globalThis.CSS.escape(
+        source
+      );
+    }
+
+    return source.replace(
+      /["\\]/g,
+      "\\$&"
+    );
+  }
+
   function findControlForProjection(
     projection
   ) {
@@ -2554,27 +2706,6 @@
     }
 
     return null;
-  }
-
-  function escapeSelectorValue(value) {
-    const source =
-      String(value || "");
-
-    if (
-      globalThis.CSS &&
-      typeof globalThis.CSS
-        .escape ===
-        "function"
-    ) {
-      return globalThis.CSS.escape(
-        source
-      );
-    }
-
-    return source.replace(
-      /["\\]/g,
-      "\\$&"
-    );
   }
 
   function applyProjectionToControl(
@@ -2655,6 +2786,11 @@
         ? "auto"
         : "none";
 
+    control.style.touchAction =
+      interactive
+        ? "none"
+        : "";
+
     control.setAttribute(
       "aria-hidden",
       projection.visible
@@ -2692,6 +2828,9 @@
     control.style.pointerEvents =
       "none";
 
+    control.style.touchAction =
+      "";
+
     control.setAttribute(
       "aria-hidden",
       "true"
@@ -2703,9 +2842,7 @@
     );
   }
 
-  function applyProjectionSnapshot(
-    records
-  ) {
+  function applyProjectionSnapshot(records) {
     const next =
       new Map();
 
@@ -2713,7 +2850,9 @@
       new Set();
 
     if (
-      Array.isArray(records)
+      Array.isArray(
+        records
+      )
     ) {
       for (
         const input
@@ -2748,6 +2887,7 @@
         const projection =
           Object.freeze({
             id,
+
             kind,
 
             x:
@@ -2988,27 +3128,105 @@
     );
   }
 
-  function establishFieldInteractionPolicy() {
-    state.fieldTouchActionSnapshot =
-      state.field.style
-        .touchAction;
+  function captureStyleSnapshot(element) {
+    if (
+      !element ||
+      state.interactionStyleSnapshots
+        .has(
+          element
+        )
+    ) {
+      return;
+    }
 
-    state.fieldUserSelectSnapshot =
-      state.field.style
-        .userSelect;
+    state.interactionStyleSnapshots.set(
+      element,
+      Object.freeze({
+        touchAction:
+          element.style
+            .touchAction,
 
-    state.fieldWebkitUserSelectSnapshot =
-      state.field.style
-        .webkitUserSelect;
+        userSelect:
+          element.style
+            .userSelect,
 
-    state.field.style.touchAction =
+        webkitUserSelect:
+          element.style
+            .webkitUserSelect
+      })
+    );
+  }
+
+  function applyInteractionStyle(element) {
+    if (!element) {
+      return;
+    }
+
+    captureStyleSnapshot(
+      element
+    );
+
+    element.style.touchAction =
       "none";
 
-    state.field.style.userSelect =
+    element.style.userSelect =
       "none";
 
-    state.field.style.webkitUserSelect =
+    element.style.webkitUserSelect =
       "none";
+  }
+
+  function establishInteractionPolicy() {
+    applyInteractionStyle(
+      state.scene
+    );
+
+    applyInteractionStyle(
+      state.field
+    );
+
+    applyInteractionStyle(
+      state.semanticLayer
+    );
+
+    applyInteractionStyle(
+      state.compassControl
+    );
+
+    qsa(
+      INTERACTIVE_CONTROL_SELECTOR,
+      state.root
+    ).forEach(
+      applyInteractionStyle
+    );
+
+    state.root.dataset
+      .archcoinInteractionOwner =
+      MODULE.id;
+
+    state.root.dataset
+      .archcoinInteractionEventSurface =
+      "root-capture";
+
+    state.root.dataset
+      .gestureActive =
+      "false";
+
+    state.root.dataset
+      .gestureMode =
+      MODES.NONE;
+
+    state.scene.dataset
+      .archcoinInteractionOwner =
+      MODULE.id;
+
+    state.scene.dataset
+      .gestureActive =
+      "false";
+
+    state.scene.dataset
+      .gestureMode =
+      MODES.NONE;
 
     state.field.dataset
       .archcoinInteractionOwner =
@@ -3023,111 +3241,167 @@
       MODES.NONE;
   }
 
-  function restoreFieldInteractionPolicy() {
-    if (!state.field) {
-      return;
+  function restoreInteractionPolicy() {
+    for (
+      const [
+        element,
+        snapshot
+      ]
+      of state
+        .interactionStyleSnapshots
+        .entries()
+    ) {
+      element.style.touchAction =
+        snapshot.touchAction;
+
+      element.style.userSelect =
+        snapshot.userSelect;
+
+      element.style.webkitUserSelect =
+        snapshot.webkitUserSelect;
     }
 
-    state.field.style.touchAction =
-      state.fieldTouchActionSnapshot;
+    state.interactionStyleSnapshots
+      .clear();
 
-    state.field.style.userSelect =
-      state.fieldUserSelectSnapshot;
+    if (state.root) {
+      delete state.root.dataset
+        .archcoinInteractionOwner;
 
-    state.field.style.webkitUserSelect =
-      state
-        .fieldWebkitUserSelectSnapshot;
+      delete state.root.dataset
+        .archcoinInteractionEventSurface;
 
-    delete state.field.dataset
-      .archcoinInteractionOwner;
+      delete state.root.dataset
+        .gestureActive;
 
-    delete state.field.dataset
-      .gestureActive;
+      delete state.root.dataset
+        .gestureMode;
+    }
 
-    delete state.field.dataset
-      .gestureMode;
+    if (state.scene) {
+      delete state.scene.dataset
+        .archcoinInteractionOwner;
+
+      delete state.scene.dataset
+        .gestureActive;
+
+      delete state.scene.dataset
+        .gestureMode;
+    }
+
+    if (state.field) {
+      delete state.field.dataset
+        .archcoinInteractionOwner;
+
+      delete state.field.dataset
+        .gestureActive;
+
+      delete state.field.dataset
+        .gestureMode;
+    }
   }
 
   function bindEvents() {
-    state.field.addEventListener(
+    state.root.addEventListener(
       "pointerdown",
-      handlePointerDown
+      handlePointerDown,
+      {
+        capture:
+          true,
+
+        passive:
+          false
+      }
     );
 
-    state.field.addEventListener(
+    state.root.addEventListener(
       "pointermove",
       handlePointerMove,
       {
+        capture:
+          true,
+
         passive:
           false
       }
     );
 
-    state.field.addEventListener(
+    state.root.addEventListener(
       "pointerup",
       handlePointerUp,
       {
+        capture:
+          true,
+
         passive:
           false
       }
     );
 
-    state.field.addEventListener(
+    state.root.addEventListener(
       "pointercancel",
       handlePointerCancel,
       {
+        capture:
+          true,
+
         passive:
           false
       }
     );
 
-    state.field.addEventListener(
+    state.root.addEventListener(
       "lostpointercapture",
-      handleLostPointerCapture
+      handleLostPointerCapture,
+      true
     );
 
     state.root.addEventListener(
       "click",
-      handleClick
+      handleClick,
+      true
     );
   }
 
   function unbindEvents() {
-    if (
-      !state.field ||
-      !state.root
-    ) {
+    if (!state.root) {
       return;
     }
 
-    state.field.removeEventListener(
+    state.root.removeEventListener(
       "pointerdown",
-      handlePointerDown
+      handlePointerDown,
+      true
     );
 
-    state.field.removeEventListener(
+    state.root.removeEventListener(
       "pointermove",
-      handlePointerMove
+      handlePointerMove,
+      true
     );
 
-    state.field.removeEventListener(
+    state.root.removeEventListener(
       "pointerup",
-      handlePointerUp
+      handlePointerUp,
+      true
     );
 
-    state.field.removeEventListener(
+    state.root.removeEventListener(
       "pointercancel",
-      handlePointerCancel
+      handlePointerCancel,
+      true
     );
 
-    state.field.removeEventListener(
+    state.root.removeEventListener(
       "lostpointercapture",
-      handleLostPointerCapture
+      handleLostPointerCapture,
+      true
     );
 
     state.root.removeEventListener(
       "click",
-      handleClick
+      handleClick,
+      true
     );
   }
 
@@ -3140,7 +3414,7 @@
 
     invariant(
       MODULE.version ===
-        "1.0.0-pointer-gesture-interpreter",
+        "1.0.1-scene-capture-pointer-gesture-interpreter",
       "ARCHCOIN_INTERACTIONS_MODULE_VERSION_INVALID"
     );
 
@@ -3174,9 +3448,29 @@
       "ARCHCOIN_INTERACTIONS_PRIORITY_ORDER_INVALID"
     );
 
+    invariant(
+      Boolean(
+        qs(
+          "[data-archcoin-coin]",
+          state.root
+        )
+      ),
+      "ARCHCOIN_INTERACTIONS_CARDINAL_CONTROL_REQUIRED"
+    );
+
+    invariant(
+      Boolean(
+        qs(
+          "[data-archcoin-room]",
+          state.root
+        )
+      ),
+      "ARCHCOIN_INTERACTIONS_ROOM_CONTROL_REQUIRED"
+    );
+
     return Object.freeze({
       receiptSchema:
-        "ARCHCOIN_INTERACTIONS_VALIDATION_RECEIPT_v1",
+        "ARCHCOIN_INTERACTIONS_VALIDATION_RECEIPT_v2",
 
       moduleId:
         MODULE.id,
@@ -3185,6 +3479,27 @@
         MODULE.version,
 
       pass:
+        true,
+
+      eventSurface:
+        "ARCHCOIN_ROOT_CAPTURE_PHASE",
+
+      coordinateSurface:
+        "ARCHCOIN_SCENE_FIELD",
+
+      destinationMarkerRequired:
+        false,
+
+      directCardinalSelectorSupported:
+        true,
+
+      directRoomSelectorSupported:
+        true,
+
+      semanticOverlayPointerStartsSupported:
+        true,
+
+      compassPointerStartsSupported:
         true,
 
       pointerInterpreterOwned:
@@ -3338,6 +3653,10 @@
       state.root.dataset
         .archcoinProjectionDomApplicationOwner =
         MODULE.id;
+
+      state.root.dataset
+        .archcoinInteractionEventSurface =
+        "root-capture";
     }
 
     return frozen;
@@ -3381,9 +3700,7 @@
 
         getPointerState:
           () => {
-            if (
-              !state.pointer
-            ) {
+            if (!state.pointer) {
               return null;
             }
 
@@ -3505,9 +3822,7 @@
   }
 
   function dispose() {
-    if (
-      state.disposed
-    ) {
+    if (state.disposed) {
       return true;
     }
 
@@ -3545,7 +3860,7 @@
     state.unsubscribeSemanticProjection =
       null;
 
-    restoreFieldInteractionPolicy();
+    restoreInteractionPolicy();
 
     state.semanticProjection.clear();
 
@@ -3589,7 +3904,7 @@
 
     try {
       unbindEvents();
-      restoreFieldInteractionPolicy();
+      restoreInteractionPolicy();
     } catch (_) {}
 
     publishReceipt();
@@ -3637,7 +3952,7 @@
 
       resolveDom();
 
-      establishFieldInteractionPolicy();
+      establishInteractionPolicy();
 
       state.validationReceipt =
         runSelfTest();
@@ -3685,7 +4000,16 @@
 
                 controllerModuleVersion:
                   state.controller
-                    .moduleVersion
+                    .moduleVersion,
+
+                eventSurface:
+                  "ARCHCOIN_ROOT_CAPTURE_PHASE",
+
+                coordinateSurface:
+                  "ARCHCOIN_SCENE_FIELD",
+
+                destinationMarkerRequired:
+                  false
               })
           }
         )
@@ -3715,72 +4039,64 @@
 })();
 
 /*
-AUDRALIA_ARCHCOIN_INTERACTIONS_FILE_SPLIT_RESULT_v1
+AUDRALIA_ARCHCOIN_INTERACTIONS_SCENE_CAPTURE_CORRECTION_RESULT_v1
 
 Artifact:
  /products/archcoin/index.interactions.js
 
 Module:
  DGB_ARCHCOIN_INTERACTIONS
- 1.0.0-pointer-gesture-interpreter
+ 1.0.1-scene-capture-pointer-gesture-interpreter
 
 Required controller:
  DGB_ARCHCOIN_CONTROLLER
  7.0.0-controller-interaction-semantic-priority
 
-Restored:
-- pointerdown
-- pointermove
-- pointerup
-- pointercancel
-- pointer capture
-- pointer release
-- mouse input
-- touch input
-- pen input
-- orbit drag
-- cluster drag
+Corrected:
+- pointer listeners no longer bind only to the buried scene field
+- pointer listeners bind to the ARCHCOIN root in capture phase
+- overlaid semantic controls are observed before they intercept the gesture
+- data-archcoin-destination is no longer required
+- data-archcoin-coin is recognized directly
+- data-archcoin-room is recognized directly
+- data-upstream-compass-control is recognized directly
+- pointer capture is assigned to the root interaction surface
+- field remains the projection and drag coordinate reference
+- touch-action none applies to scene, field, semantic layer, Compass, and semantic controls
+- normal page scrolling remains available outside the ARCHCOIN root interaction region
+- taps on visible labels route through controller authorization
+- swipes may begin over labels
+- swipes may begin over crystal regions
+- Compass remains above overlapping rear crystals
+- front crystals remain above Compass for hit priority
+
+Preserved:
+- orbit drag interpretation
+- cluster drag interpretation
 - outward cluster-exit swipe
 - tap-versus-drag arbitration
-- drag initiation over cardinal controls
-- drag initiation over room controls
 - whole-cardinal-star activation
 - whole-room-star activation
-- semantic-label activation
-- Compass activation
+- front / Compass / rear priority
 - synthetic-click suppression
-- keyboard-generated semantic activation
-- front-crystal priority over Compass
-- Compass priority over overlapping rear crystals
-- rear-crystal activation outside Compass overlap
+- semantic projection subscription
 - projected-control positioning
-- projected touch-radius publication
-- stale projected-control deactivation
+- controller-only navigation authority
 
-Whole-star hit contract:
-- x is field-local projected center
-- y is field-local projected center
-- radiusPx is projected visible radius
-- cardinal fallback radius is available until exact radius publication
-- room fallback radius is available until exact radius publication
-- hit testing is circular and independent of label bounds
+Controller modified:
+ FALSE
 
-Controller boundary:
-- interactions classifies input
-- interactions does not mutate controller state
-- controller authorizes orbit preview
-- controller authorizes orbit commit
-- controller authorizes cluster preview
-- controller authorizes cluster commit
-- controller authorizes cardinal selection
-- controller authorizes room selection
-- controller authorizes Return to Constellation
+Compositor modified:
+ FALSE
 
-Still required:
-- compositor must return radiusPx from projectWorldPoint()
-- crystals must forward radiusPx in semantic projection records
-- HTML must load index.interactions.js after index.crystals.js
-- CSS must preserve projected semantic controls without oversized field-covering rectangles
+Crystals modified:
+ FALSE
+
+HTML modified:
+ FALSE
+
+CSS modified:
+ FALSE
 
 Runtime execution:
  NOT PERFORMED

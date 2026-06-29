@@ -1,36 +1,37 @@
 /* TARGET FILE: /showroom/index.css */
 /* TNT FULL-FILE REPLACEMENT */
-/* SHOWROOM_MIRRORLAND_GATE_PREFACE_INSTRUCTIONS_COMPACT_GAUGES_CSS_TNT_v4 */
+/* SHOWROOM_MIRRORLAND_OFFICIAL_GATE_COMPACT_INSTRUCTIONS_AND_GAUGES_CSS_TNT_v5 */
 /*
-  Renewal scope:
-  - Preserve the Showroom as the official transition gate into Mirrorland.
-  - Preserve the narrative preface, mission, timeline, characters, Window,
-    Diamond, Compass, constellation, gauges, information fronts, dialogs,
-    semantic fallback, and responsive presentation.
-  - Keep the primary narrative compact until deliberately expanded.
-  - Give page instructions a visually distinct disclosure surface near the
-    Compass without introducing graphic-image assets.
-  - Support nested disclosures inside the page-instruction surface.
-  - Prevent expanded disclosures from creating artificial camera-like jumps.
-  - Remove the duplicate visual prominence of the lower Talk to Elara action.
-  - Keep the header Talk to Elara entry as the single prominent Elara control.
-  - Make gauges materially smaller and denser while preserving their values,
-    states, detail correspondence, accessibility, and visual usefulness.
-  - Keep semantic fallback stars visible before crystal readiness.
-  - Remove fallback-star artwork after the real crystals report readiness while
-    retaining the semantic controls as transparent interaction and focus proxies.
-  - Preserve independent orbit, Diamond, and Mirrorland Window stages.
-  - Preserve reduced motion, high contrast, mobile layouts, and graceful failure.
+  Controlling markup:
+  - /showroom/index.html
+  - SHOWROOM_MIRRORLAND_OFFICIAL_GATE_COMPACT_INSTRUCTIONS_AND_GAUGES_HTML_TNT_v5
 
-  Ownership exclusions:
-  - No controller-state authority.
-  - No route or cluster decision authority.
-  - No pointer-motion interpretation.
-  - No orbital geometry, projection, or depth classification.
-  - No crystal mesh or material ownership.
-  - No Compass renderer lifecycle ownership.
-  - No Mirrorland Window geometry or lifecycle ownership.
-  - No Diamond geometry, camera, renderer, motion, zoom, or inspection ownership.
+  Scope:
+  - Style the official Mirrorland gate.
+  - Keep the visible preface concise.
+  - Support the complete nested Mirrorland preface disclosure.
+  - Prevent disclosure expansion from producing artificial camera-like scrolling.
+  - Style Page Instructions as one expressive disclosure with five internal disclosures.
+  - Present a compact five-stage guide near the fixed Compass.
+  - Preserve the constellation, semantic fallback stars, real-crystal readiness states,
+    Compass control, route clusters, independent Diamond stage, Mirrorland Window,
+    information fronts, dialogs, and local navigation.
+  - Replace oversized gauge cards with compact metric selectors, capability selectors,
+    status rows, one shared detail panel, and one shared composition detail panel.
+  - Keep Talk to Elara visually prominent only in the top navigation.
+  - Preserve responsive behavior, high contrast, reduced motion, and graceful fallback.
+
+  Does not own:
+  - page state;
+  - route decisions;
+  - cluster state;
+  - gesture interpretation;
+  - orbital camera or projection;
+  - crystal geometry or drawing;
+  - Compass renderer lifecycle;
+  - gauge selection mutation;
+  - Window geometry or animation;
+  - Diamond geometry, rendering, motion, zoom, inspection, or reset.
 */
 
 :root{
@@ -68,11 +69,6 @@
 
   --steel:#b9cce1;
   --steel-soft:#edf6ff;
-  --graphite:#10131a;
-  --graphite-deep:#07090e;
-
-  --bronze:#e1a05d;
-  --bronze-soft:#ffd39a;
 
   --green:#8dffd5;
   --red:#ff9aa5;
@@ -81,10 +77,6 @@
   --shadow:
     0 2rem 6rem rgba(0,0,0,.54);
 
-  --panel-shadow:
-    0 1.25rem 3.5rem rgba(0,0,0,.30),
-    inset 0 1px 0 rgba(255,255,255,.09);
-
   --max:1440px;
   --text-max:980px;
 
@@ -92,13 +84,10 @@
     clamp(21rem,42vw,31rem);
 
   --orbit-mobile-height:
-    clamp(25rem,92vw,34rem);
+    clamp(26rem,104vw,34rem);
 
   --diamond-desktop-ratio:16 / 10;
   --diamond-mobile-ratio:4 / 3;
-
-  --compact-gauge-visual:
-    clamp(3.15rem,5.4vw,4.7rem);
 
   --star-cardinal-path:polygon(
     50% 0%,
@@ -146,13 +135,7 @@ html{
   min-width:320px;
   min-height:100%;
   overflow-x:hidden;
-
-  /*
-    Deliberately avoid globally animated document scrolling. Disclosure
-    expansion must not look like the page camera is being pulled downward.
-  */
   scroll-behavior:auto;
-
   background:var(--bg);
 }
 
@@ -483,7 +466,7 @@ button:disabled{
 }
 
 /* =========================================================
-   SINGLE PROMINENT ELARA ENTRY
+   ELARA
    ========================================================= */
 
 .elara-quick-path{
@@ -582,15 +565,8 @@ elara-room-entry:defined > a{
   display:none;
 }
 
-/*
-  The header entry is the single prominent Talk to Elara action.
-  Any threshold duplicate remains semantically available only when its
-  surrounding markup explicitly identifies it as required.
-*/
-.showroom-threshold__actions
-[href="/elara/index.html"],
-.showroom-threshold__actions
-[href="/elara/"]{
+.showroom-footer
+a[href="/elara/index.html"]{
   display:none;
 }
 
@@ -740,7 +716,6 @@ elara-room-entry:defined > a{
 .fallback-navigation a:hover,
 .fallback-navigation a:focus-visible{
   border-color:rgba(255,216,106,.72);
-
   background:rgba(255,216,106,.10);
 }
 
@@ -782,7 +757,7 @@ elara-room-entry:defined > a{
 }
 
 /* =========================================================
-   SHARED TYPOGRAPHY
+   TYPOGRAPHY
    ========================================================= */
 
 .kicker{
@@ -895,6 +870,7 @@ h3{
   padding:clamp(1.15rem,3.5vw,2.6rem);
 
   isolation:isolate;
+  overflow-anchor:none;
 
   border:1px solid var(--chamber-line);
 
@@ -952,7 +928,6 @@ h3{
     );
 
   pointer-events:none;
-
   opacity:.54;
 }
 
@@ -962,6 +937,54 @@ h3{
   display:grid;
   align-content:center;
   gap:.88rem;
+}
+
+.showroom-gate-badge{
+  width:fit-content;
+
+  display:inline-flex;
+  align-items:center;
+  gap:.48rem;
+
+  padding:.45rem .72rem;
+
+  border:1px solid rgba(255,216,106,.52);
+  border-radius:999px;
+
+  color:var(--gold-soft);
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255,216,106,.10),
+      rgba(255,255,255,.025)
+    );
+
+  font-size:.65rem;
+  font-weight:950;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+}
+
+.showroom-gate-badge::before{
+  content:"";
+
+  width:.54rem;
+  height:.54rem;
+
+  transform:rotate(45deg);
+
+  border-radius:.12rem;
+
+  background:
+    linear-gradient(
+      135deg,
+      var(--gold-soft),
+      var(--gold)
+    );
+
+  box-shadow:
+    0 0 .7rem rgba(255,216,106,.35);
 }
 
 .door-subtitle{
@@ -993,22 +1016,6 @@ h3{
 
   font-size:clamp(.96rem,1.55vw,1.12rem);
   line-height:1.6;
-}
-
-/*
-  The compact gate shows only the initial preface paragraphs by default.
-  Additional narrative belongs inside the explicit narrative disclosure.
-*/
-.showroom-threshold__copy >
-.showroom-threshold__support:nth-of-type(n+4){
-  display:none;
-}
-
-.showroom-threshold__copy >
-details .showroom-threshold__support,
-.showroom-threshold__copy >
-details p{
-  display:block;
 }
 
 .thesis-field,
@@ -1057,25 +1064,18 @@ details p{
   letter-spacing:-.04em;
 }
 
-.showroom-threshold__actions{
-  display:flex;
-  flex-wrap:wrap;
-  gap:.7rem;
-}
-
-.mirrorland-introduction-drop,
-[data-showroom-mirrorland-preface],
-[data-showroom-gate-preface]{
-  width:min(57rem,100%);
-  max-width:57rem;
-}
-
 /* =========================================================
-   NARRATIVE DISCLOSURE
+   MIRRORLAND PREFACE
    ========================================================= */
 
-.mirrorland-introduction-drop{
-  border-color:rgba(255,216,106,.48);
+.mirrorland-preface{
+  width:min(57rem,100%);
+  max-width:57rem;
+
+  overflow-anchor:none;
+
+  border:1px solid rgba(255,216,106,.48);
+  border-radius:1.05rem;
 
   background:
     radial-gradient(
@@ -1088,64 +1088,129 @@ details p{
       rgba(20,13,6,.78),
       rgba(8,8,11,.72)
     );
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.08);
 }
 
-.mirrorland-introduction-drop > summary{
-  min-height:3.25rem;
+.mirrorland-preface > summary{
+  min-height:3.2rem;
+
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:.8rem;
+
+  padding:.75rem .9rem;
+
+  list-style:none;
+  cursor:pointer;
 
   color:var(--gold-soft);
+
+  font-size:.68rem;
+  font-weight:950;
+  letter-spacing:.105em;
+  text-transform:uppercase;
 }
 
-.mirrorland-introduction-drop[open]{
-  box-shadow:
-    0 1rem 2.5rem rgba(0,0,0,.24),
-    inset 0 1px 0 rgba(255,255,255,.10);
+.mirrorland-preface > summary::-webkit-details-marker{
+  display:none;
 }
 
-.mirrorland-introduction-drop .drop-content{
-  max-width:62rem;
+.mirrorland-preface > summary::after{
+  content:"+";
+
+  color:var(--gold);
+  font-size:1.1rem;
 }
 
-.mirrorland-introduction-drop .drop-content > p:first-child{
-  color:var(--white);
-
-  font-size:1.02rem;
-  font-weight:760;
-  line-height:1.62;
+.mirrorland-preface[open] > summary{
+  border-bottom:1px solid rgba(255,216,106,.28);
 }
 
-.mirrorland-introduction-drop
-:is(
-  [data-mirrorland-timeline],
-  [data-mirrorland-characters],
-  [data-mirrorland-mission],
-  [data-mirrorland-preface-section]
-){
-  margin-top:.2rem;
+.mirrorland-preface[open] > summary::after{
+  content:"–";
+}
+
+.mirrorland-preface__content{
+  display:grid;
+  grid-template-columns:
+    repeat(2,minmax(0,1fr));
+
+  gap:.65rem;
+
+  padding:.8rem;
+}
+
+.mirrorland-preface__content section{
+  position:relative;
+
+  display:grid;
+  align-content:start;
+  gap:.42rem;
+
+  min-height:10rem;
+
+  padding:.85rem .9rem;
+
+  border:1px solid rgba(255,255,255,.11);
+  border-radius:.9rem;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,.038),
+      rgba(0,0,0,.16)
+    );
+}
+
+.mirrorland-preface__content section:last-child{
+  grid-column:1 / -1;
+  min-height:auto;
+}
+
+.mirrorland-preface__index{
+  color:var(--gold);
+
+  font-size:.58rem;
+  font-weight:950;
+  letter-spacing:.12em;
+}
+
+.mirrorland-preface__content h2{
+  color:var(--gold-soft);
+
+  font-size:clamp(1rem,2.3vw,1.35rem);
+  line-height:1.08;
+  letter-spacing:-.035em;
+}
+
+.mirrorland-preface__content p{
+  color:rgba(247,247,245,.87);
+
+  font-size:.83rem;
+  line-height:1.5;
 }
 
 /* =========================================================
-   PAGE INSTRUCTIONS — CONTRASTED DISCLOSURE
+   PAGE INSTRUCTIONS
    ========================================================= */
 
-.showroom-page-instructions,
-[data-showroom-page-instructions],
-[data-showroom-instructions],
-[data-showroom-instruction-surface]{
+.showroom-instructions{
   --chamber-accent:var(--cyan);
   --chamber-soft:var(--cyan-soft);
-  --chamber-line:rgba(103,245,255,.43);
+  --chamber-line:rgba(103,245,255,.44);
   --chamber-open:rgba(23,223,247,.065);
   --chamber-copy:rgba(237,247,255,.90);
 
-  position:relative;
+  margin-top:1rem;
+  padding:0;
 
-  width:100%;
+  overflow:visible;
+  overflow-anchor:none;
 
-  margin-top:.15rem;
-
-  border:1px solid rgba(103,245,255,.44);
-  border-radius:1.35rem;
+  border:1px solid rgba(103,245,255,.42);
 
   background:
     radial-gradient(
@@ -1163,157 +1228,233 @@ details p{
       rgba(3,24,39,.96),
       rgba(10,8,30,.96)
     );
-
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.10),
-    0 1rem 2.6rem rgba(0,0,0,.22);
 }
 
-.showroom-page-instructions > summary,
-[data-showroom-page-instructions] > summary,
-[data-showroom-instructions] > summary,
-[data-showroom-instruction-surface] > summary{
-  min-height:3.8rem;
+.showroom-instructions__disclosure{
+  overflow-anchor:none;
+}
+
+.showroom-instructions__summary{
+  min-height:4.25rem;
 
   display:grid;
   grid-template-columns:auto 1fr auto;
   align-items:center;
-  gap:.75rem;
+  gap:.8rem;
 
-  padding:.8rem 1rem;
+  padding:.85rem 1rem;
 
   list-style:none;
   cursor:pointer;
-
-  color:var(--white);
-
-  font-size:.74rem;
-  font-weight:950;
-  letter-spacing:.105em;
-  text-transform:uppercase;
 }
 
-.showroom-page-instructions > summary::before,
-[data-showroom-page-instructions] > summary::before,
-[data-showroom-instructions] > summary::before,
-[data-showroom-instruction-surface] > summary::before{
-  content:"";
-
-  width:.82rem;
-  height:.82rem;
-
-  border:1px solid rgba(255,255,255,.38);
-  border-radius:.18rem;
-
-  transform:rotate(45deg);
-
-  background:
-    linear-gradient(
-      135deg,
-      var(--cyan-soft),
-      var(--cyan)
-    );
-
-  box-shadow:
-    0 0 .75rem rgba(103,245,255,.34);
+.showroom-instructions__summary::-webkit-details-marker{
+  display:none;
 }
 
-.showroom-page-instructions > summary::after,
-[data-showroom-page-instructions] > summary::after,
-[data-showroom-instructions] > summary::after,
-[data-showroom-instruction-surface] > summary::after{
+.showroom-instructions__summary::after{
   content:"+";
 
   color:var(--cyan-soft);
 
-  font-size:1.25rem;
+  font-size:1.3rem;
+  font-weight:950;
 }
 
-.showroom-page-instructions[open] > summary::after,
-[data-showroom-page-instructions][open] > summary::after,
-[data-showroom-instructions][open] > summary::after,
-[data-showroom-instruction-surface][open] > summary::after{
+.showroom-instructions__disclosure[open]
+.showroom-instructions__summary::after{
   content:"–";
 }
 
-.showroom-page-instructions__body,
-.showroom-instructions__body,
-[data-showroom-instructions-body]{
+.showroom-instructions__badge{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+
+  min-height:2rem;
+
+  padding:.4rem .62rem;
+
+  border:1px solid rgba(103,245,255,.52);
+  border-radius:999px;
+
+  color:var(--cyan-soft);
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(103,245,255,.09),
+      rgba(255,255,255,.025)
+    );
+
+  font-size:.58rem;
+  font-weight:950;
+  letter-spacing:.11em;
+  text-transform:uppercase;
+}
+
+.showroom-instructions__summary-copy{
+  display:grid;
+  gap:.14rem;
+}
+
+.showroom-instructions__summary-copy strong{
+  color:var(--white);
+
+  font-size:clamp(1rem,2.4vw,1.35rem);
+  line-height:1.1;
+  letter-spacing:-.03em;
+}
+
+.showroom-instructions__summary-copy small{
+  color:rgba(224,241,250,.74);
+
+  font-size:.7rem;
+  line-height:1.3;
+}
+
+.showroom-instructions__body{
   display:grid;
   gap:.75rem;
 
-  padding:0 1rem 1rem;
+  padding:1rem;
 
-  border-top:1px solid rgba(103,245,255,.20);
+  border-top:1px solid rgba(103,245,255,.22);
 }
 
-.showroom-page-instructions__summary,
-.showroom-instructions__summary,
-[data-showroom-instructions-summary]{
+.showroom-instructions__introduction{
+  max-width:52rem;
+
+  color:rgba(236,246,255,.86);
+
+  font-size:.86rem;
+  line-height:1.5;
+}
+
+.showroom-instructions__steps{
   display:grid;
   grid-template-columns:
-    repeat(4,minmax(0,1fr));
+    repeat(5,minmax(0,1fr));
 
   gap:.55rem;
-
-  padding-top:.9rem;
 }
 
-.showroom-page-instructions__summary > *,
-.showroom-instructions__summary > *,
-[data-showroom-instructions-summary] > *{
-  min-height:4.25rem;
+.showroom-instruction{
+  overflow:hidden;
 
-  display:grid;
-  align-content:center;
-  gap:.18rem;
-
-  padding:.62rem .7rem;
-
-  border:1px solid rgba(255,255,255,.13);
+  border:1px solid rgba(103,245,255,.22);
   border-radius:.9rem;
 
   background:
     linear-gradient(
       145deg,
-      rgba(255,255,255,.045),
-      rgba(0,0,0,.16)
+      rgba(255,255,255,.04),
+      rgba(0,0,0,.17)
     );
 }
 
-.showroom-page-instructions__summary strong,
-.showroom-instructions__summary strong,
-[data-showroom-instructions-summary] strong{
-  color:var(--cyan-soft);
+.showroom-instruction > summary{
+  min-height:7rem;
 
-  font-size:.69rem;
-  font-weight:950;
-  letter-spacing:.075em;
-  text-transform:uppercase;
+  display:grid;
+  grid-template-columns:auto 1fr;
+  grid-template-rows:auto auto;
+  align-content:center;
+  gap:.18rem .48rem;
+
+  padding:.7rem;
+
+  list-style:none;
+  cursor:pointer;
 }
 
-.showroom-page-instructions__summary span,
-.showroom-instructions__summary span,
-[data-showroom-instructions-summary] span{
-  color:rgba(236,246,255,.82);
+.showroom-instruction > summary::-webkit-details-marker{
+  display:none;
+}
 
-  font-size:.68rem;
+.showroom-instruction > summary > span{
+  grid-column:1;
+  grid-row:1 / span 2;
+
+  width:1.75rem;
+  height:1.75rem;
+
+  display:grid;
+  place-items:center;
+
+  border:1px solid rgba(103,245,255,.48);
+  border-radius:50%;
+
+  color:var(--cyan-soft);
+
+  background:rgba(103,245,255,.06);
+
+  font-size:.55rem;
+  font-weight:950;
+}
+
+.showroom-instruction > summary strong{
+  grid-column:2;
+  grid-row:1;
+
+  color:var(--white);
+
+  font-size:.72rem;
+  line-height:1.2;
+}
+
+.showroom-instruction > summary small{
+  grid-column:2;
+  grid-row:2;
+
+  color:rgba(222,239,248,.70);
+
+  font-size:.6rem;
   line-height:1.3;
 }
 
-.showroom-page-instructions
-.architectural-drop,
-[data-showroom-page-instructions]
-.architectural-drop,
-[data-showroom-instructions]
-.architectural-drop{
-  border-color:rgba(103,245,255,.25);
+.showroom-instruction[open]{
+  border-color:rgba(103,245,255,.56);
 
-  background:rgba(1,8,18,.34);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.10),
+    0 0 1rem rgba(103,245,255,.06);
+}
+
+.showroom-instruction > div{
+  display:grid;
+  gap:.55rem;
+
+  padding:.72rem;
+
+  border-top:1px solid rgba(103,245,255,.18);
+}
+
+.showroom-instruction > div p{
+  color:rgba(235,246,252,.84);
+
+  font-size:.74rem;
+  line-height:1.45;
+}
+
+.showroom-instruction > div a{
+  width:fit-content;
+
+  color:var(--cyan-soft);
+
+  font-size:.62rem;
+  font-weight:950;
+  letter-spacing:.065em;
+  text-transform:uppercase;
+}
+
+.showroom-instructions__enter{
+  width:fit-content;
+  justify-self:start;
 }
 
 /* =========================================================
-   CONSTELLATION STAGE
+   CONSTELLATION
    ========================================================= */
 
 .showroom-orbit{
@@ -1770,7 +1911,87 @@ canvas[data-showroom-layer="front"]{
 }
 
 /* =========================================================
-   FALLBACK STAR GEOMETRY
+   NEAR-COMPASS QUICK GUIDE
+   ========================================================= */
+
+.showroom-orbit-guide{
+  position:absolute;
+  left:1rem;
+  top:50%;
+  z-index:7;
+
+  width:min(13rem,26%);
+
+  display:grid;
+  gap:.42rem;
+
+  padding:.72rem .78rem;
+
+  transform:translateY(-50%);
+
+  border:1px solid rgba(103,245,255,.24);
+  border-radius:1rem;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(4,17,33,.88),
+      rgba(8,5,25,.84)
+    );
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.08),
+    0 .8rem 2rem rgba(0,0,0,.22);
+
+  pointer-events:auto;
+
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+}
+
+.showroom-orbit-guide__eyebrow{
+  color:var(--cyan-soft);
+
+  font-size:.52rem;
+  font-weight:950;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+}
+
+.showroom-orbit-guide h3{
+  color:var(--white);
+
+  font-size:.88rem;
+  line-height:1.15;
+  letter-spacing:-.02em;
+}
+
+.showroom-orbit-guide ol{
+  display:grid;
+  gap:.18rem;
+
+  margin:0;
+  padding-left:1.1rem;
+
+  color:rgba(229,243,251,.80);
+
+  font-size:.62rem;
+  line-height:1.35;
+}
+
+.showroom-orbit-guide a{
+  width:fit-content;
+
+  color:var(--cyan-soft);
+
+  font-size:.56rem;
+  font-weight:950;
+  letter-spacing:.07em;
+  text-transform:uppercase;
+}
+
+/* =========================================================
+   FALLBACK STARS
    ========================================================= */
 
 .showroom-primary-stars,
@@ -1850,7 +2071,6 @@ canvas[data-showroom-layer="front"]{
     );
 
   opacity:.72;
-
   filter:blur(.5px);
 }
 
@@ -1973,11 +2193,6 @@ canvas[data-showroom-layer="front"]{
   bottom:17%;
 }
 
-/*
-  Before crystal readiness:
-  - fallback artwork is visible;
-  - semantic controls are directly usable.
-*/
 [data-showroom-root]:not(
   [data-showroom-crystals-ready="true"]
 )
@@ -1986,12 +2201,6 @@ canvas[data-showroom-layer="front"]{
   visibility:visible;
 }
 
-/*
-  After crystal readiness:
-  - fallback artwork disappears completely;
-  - buttons remain present as transparent semantic and interaction proxies;
-  - no fallback star shape can visually block the rendered crystals.
-*/
 [data-showroom-root][data-showroom-crystals-ready="true"]
 [data-showroom-fallback-star]{
   opacity:1;
@@ -2016,11 +2225,6 @@ canvas[data-showroom-layer="front"]{
   outline-offset:5px;
 
   border-radius:50%;
-}
-
-[data-showroom-root][data-showroom-crystals-ready="true"]
-[data-showroom-fallback-star-layer]{
-  background:transparent!important;
 }
 
 .showroom-orbit__fallback{
@@ -2112,7 +2316,7 @@ canvas[data-showroom-layer="front"]{
 }
 
 /* =========================================================
-   FRONT COLOR GOVERNANCE
+   FRONT COLORS
    ========================================================= */
 
 .chamber-exhibit{
@@ -2260,31 +2464,36 @@ canvas[data-showroom-layer="front"]{
     0 .8rem 2rem rgba(0,0,0,.16);
 }
 
-.showroom-gauge-grid{
+.showroom-gauge-selector{
   display:grid;
-  grid-template-columns:
-    repeat(4,minmax(0,1fr));
-
-  gap:.55rem;
+  gap:.5rem;
 }
 
-.showroom-gauge-grid--structure{
+.showroom-gauge-selector--metrics{
   grid-template-columns:
     repeat(6,minmax(0,1fr));
 }
 
-.showroom-gauge-grid--systems{
+#object-gauges
+.showroom-gauge-selector--metrics{
+  grid-template-columns:
+    repeat(4,minmax(0,1fr));
+}
+
+.showroom-gauge-selector--capabilities{
   grid-template-columns:
     repeat(5,minmax(0,1fr));
 }
 
-.showroom-gauge{
-  position:relative;
+.showroom-gauge-selector--status{
+  grid-template-columns:1fr;
+}
 
+.showroom-gauge{
   min-width:0;
 
   border:1px solid rgba(255,255,255,.13);
-  border-radius:.95rem;
+  border-radius:.9rem;
 
   color:var(--white);
 
@@ -2326,12 +2535,24 @@ canvas[data-showroom-layer="front"]{
 .showroom-gauge[aria-expanded="true"]{
   border-color:var(--chamber-soft);
 
+  background:
+    radial-gradient(
+      circle at 50% 0%,
+      var(--chamber-open),
+      transparent 80%
+    ),
+    linear-gradient(
+      155deg,
+      rgba(255,255,255,.045),
+      rgba(0,0,0,.18)
+    );
+
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,.12),
     0 0 .9rem var(--chamber-open);
 }
 
-.showroom-gauge-grid:has(
+.showroom-gauge-selector:has(
   .showroom-gauge[aria-expanded="true"]
 )
 .showroom-gauge:not([aria-expanded="true"]){
@@ -2339,246 +2560,156 @@ canvas[data-showroom-layer="front"]{
   filter:saturate(.78);
 }
 
-/*
-  Radial and state gauges are now compact horizontal instruments rather
-  than oversized cards with large decorative circles.
-*/
-.showroom-gauge--radial,
-.showroom-gauge--state{
-  min-height:6.4rem;
+/* Metric selectors */
+
+.showroom-gauge--compact{
+  min-height:6rem;
 
   display:grid;
-  grid-template-columns:
-    var(--compact-gauge-visual)
-    minmax(0,1fr);
+  align-content:center;
+  gap:.18rem;
 
-  grid-template-rows:
-    auto
-    auto
-    auto;
-
-  align-items:center;
-  gap:.12rem .65rem;
-
-  padding:.58rem .68rem;
+  padding:.58rem .64rem;
 
   text-align:left;
 }
 
-.showroom-gauge__visual{
-  position:relative;
-
-  grid-column:1;
-  grid-row:1 / span 3;
-
-  width:var(--compact-gauge-visual);
-  aspect-ratio:1;
-
-  display:grid;
-  place-items:center;
-
-  margin:0;
-
-  border-radius:50%;
-
-  background:
-    radial-gradient(
-      circle at center,
-      rgba(1,5,15,.96) 0 45%,
-      rgba(7,18,38,.86) 46% 56%,
-      transparent 57%
-    );
-
-  box-shadow:
-    inset 0 0 1.2rem rgba(0,0,0,.42),
-    0 0 .8rem var(--chamber-open);
-}
-
-.showroom-gauge__arc{
-  position:absolute;
-  inset:4%;
-
-  border-radius:50%;
-
-  background:
-    conic-gradient(
-      from -110deg,
-      var(--chamber-accent)
-      calc(var(--gauge-ratio,var(--local-ratio,.65)) * 270deg),
-      rgba(255,255,255,.08) 0 270deg,
-      transparent 270deg 360deg
-    );
-
-  mask:
-    radial-gradient(
-      circle,
-      transparent 0 63%,
-      #000 64% 73%,
-      transparent 74%
-    );
-
-  -webkit-mask:
-    radial-gradient(
-      circle,
-      transparent 0 63%,
-      #000 64% 73%,
-      transparent 74%
-    );
-
-  filter:
-    drop-shadow(0 0 .4rem var(--chamber-accent));
-
-  transform:rotate(-135deg);
-}
-
-.showroom-gauge[data-gauge-visual-ratio=".46"]{
-  --local-ratio:.46;
-}
-
-.showroom-gauge[data-gauge-visual-ratio=".54"]{
-  --local-ratio:.54;
-}
-
-.showroom-gauge[data-gauge-visual-ratio=".58"]{
-  --local-ratio:.58;
-}
-
-.showroom-gauge[data-gauge-visual-ratio=".62"]{
-  --local-ratio:.62;
-}
-
-.showroom-gauge[data-gauge-visual-ratio=".76"]{
-  --local-ratio:.76;
-}
-
-.showroom-gauge[data-gauge-visual-ratio=".86"]{
-  --local-ratio:.86;
-}
-
-.showroom-gauge[data-gauge-visual-ratio=".94"]{
-  --local-ratio:.94;
-}
-
-.showroom-gauge__scanner{
-  position:absolute;
-  inset:12%;
-
-  border-radius:50%;
-
-  border-top:1px solid rgba(255,255,255,.46);
-  border-right:1px solid transparent;
-  border-bottom:1px solid transparent;
-  border-left:1px solid transparent;
-
-  filter:
-    drop-shadow(0 0 .35rem var(--chamber-accent));
-
-  animation:
-    gaugeScanner 7.2s linear infinite;
-}
-
-.showroom-gauge__value{
-  grid-column:2;
-  grid-row:1;
-
-  align-self:end;
-
+.showroom-gauge--compact strong{
   color:var(--chamber-soft);
 
-  font-size:clamp(1.05rem,2.2vw,1.45rem);
+  font-size:clamp(1rem,2.1vw,1.35rem);
   line-height:1;
   letter-spacing:-.035em;
 }
 
-.showroom-gauge__label{
-  grid-column:2;
-  grid-row:2;
-
+.showroom-gauge--compact > span{
   color:var(--white);
 
-  font-size:.64rem;
+  font-size:.62rem;
   font-weight:950;
-  letter-spacing:.065em;
+  letter-spacing:.055em;
   line-height:1.2;
   text-transform:uppercase;
 }
 
-.showroom-gauge__state{
-  grid-column:2;
-  grid-row:3;
-
-  align-self:start;
-
+.showroom-gauge--compact small{
   color:var(--chamber-copy);
 
-  font-size:.58rem;
-  font-weight:800;
-  line-height:1.2;
+  font-size:.56rem;
+  line-height:1.22;
 }
 
-.showroom-gauge__state-dial{
+/* Capability selectors */
+
+.showroom-gauge--capability-compact{
+  position:relative;
+
+  min-height:4.45rem;
+
+  display:grid;
+  align-content:center;
+  gap:.15rem;
+
+  padding:.55rem .62rem .55rem 1.7rem;
+
+  text-align:left;
+}
+
+.showroom-gauge--capability-compact::before{
+  content:"";
+
   position:absolute;
-  inset:13%;
+  left:.62rem;
+  top:50%;
 
-  border:1px solid rgba(255,255,255,.13);
+  width:.65rem;
+  height:.65rem;
+
+  transform:translateY(-50%);
+
+  border:1px solid rgba(255,255,255,.34);
   border-radius:50%;
 
   background:
     radial-gradient(
       circle,
-      var(--state-color,var(--chamber-accent)) 0 8%,
-      transparent 9% 100%
-    ),
-    conic-gradient(
-      from 0deg,
-      var(--state-color,var(--chamber-accent)) 0 58deg,
-      transparent 58deg 88deg,
-      var(--state-color,var(--chamber-accent)) 88deg 146deg,
-      transparent 146deg 176deg,
-      var(--state-color,var(--chamber-accent)) 176deg 234deg,
-      transparent 234deg 264deg,
-      var(--state-color,var(--chamber-accent)) 264deg 322deg,
-      transparent 322deg 360deg
-    );
-
-  mask:
-    radial-gradient(
-      circle,
-      transparent 0 58%,
-      #000 59% 68%,
-      transparent 69%
-    );
-
-  -webkit-mask:
-    radial-gradient(
-      circle,
-      transparent 0 58%,
-      #000 59% 68%,
-      transparent 69%
-    );
-
-  opacity:.82;
-}
-
-.showroom-gauge__pulse{
-  width:22%;
-  aspect-ratio:1;
-
-  border-radius:50%;
-
-  background:
-    radial-gradient(
-      circle at 35% 30%,
-      #fff,
-      var(--state-color,var(--chamber-accent)) 45%,
-      transparent 72%
+      var(--state-color,var(--cyan)) 0 40%,
+      transparent 44%
     );
 
   box-shadow:
-    0 0 .75rem var(--state-color,var(--chamber-accent));
+    0 0 .6rem var(--state-color,var(--cyan));
+}
 
-  animation:
-    gaugePulse 4.2s ease-in-out infinite;
+.showroom-gauge--capability-compact strong{
+  color:var(--white);
+
+  font-size:.65rem;
+  font-weight:950;
+  letter-spacing:.055em;
+  line-height:1.2;
+  text-transform:uppercase;
+}
+
+.showroom-gauge--capability-compact span{
+  color:var(--chamber-copy);
+
+  font-size:.57rem;
+  line-height:1.2;
+}
+
+/* Status rows */
+
+.showroom-gauge--status-row{
+  min-height:3.15rem;
+
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  align-items:center;
+  gap:.8rem;
+
+  padding:.58rem .72rem;
+
+  text-align:left;
+}
+
+.showroom-gauge--status-row > span{
+  color:var(--white);
+
+  font-size:.68rem;
+  font-weight:900;
+  line-height:1.2;
+}
+
+.showroom-gauge--status-row strong{
+  min-width:5.8rem;
+
+  display:inline-flex;
+  justify-content:center;
+
+  padding:.3rem .5rem;
+
+  border:1px solid color-mix(
+    in srgb,
+    var(--state-color,var(--cyan)) 48%,
+    transparent
+  );
+
+  border-radius:999px;
+
+  color:var(--state-color,var(--cyan));
+
+  background:
+    color-mix(
+      in srgb,
+      var(--state-color,var(--cyan)) 8%,
+      transparent
+    );
+
+  font-size:.55rem;
+  font-weight:950;
+  letter-spacing:.07em;
+  text-transform:uppercase;
 }
 
 .showroom-gauge[data-gauge-state="implemented"],
@@ -2601,106 +2732,10 @@ canvas[data-showroom-layer="front"]{
   --state-color:var(--steel);
 }
 
-/* =========================================================
-   COMPACT CAPABILITY GAUGES
-   ========================================================= */
-
-.showroom-capability-grid{
-  display:grid;
-  grid-template-columns:
-    repeat(5,minmax(0,1fr));
-
-  gap:.5rem;
-}
-
-.showroom-gauge--capability{
-  min-height:5rem;
-
-  display:grid;
-  grid-template-rows:auto auto auto;
-  align-content:center;
-  gap:.18rem;
-
-  padding:.55rem .62rem;
-
-  text-align:left;
-}
-
-.showroom-gauge--capability
-.showroom-gauge__track{
-  position:relative;
-
-  height:.8rem;
-
-  display:grid;
-  grid-template-columns:repeat(5,1fr);
-  gap:.12rem;
-
-  overflow:hidden;
-
-  padding:.12rem;
-
-  border:1px solid rgba(255,255,255,.11);
-  border-radius:999px;
-
-  background:rgba(0,0,0,.24);
-}
-
-.showroom-gauge__track i{
-  border-radius:999px;
-
-  background:
-    linear-gradient(
-      90deg,
-      rgba(103,245,255,.24),
-      rgba(103,245,255,.80)
-    );
-
-  box-shadow:
-    0 0 .35rem rgba(103,245,255,.24);
-}
-
-.showroom-gauge__scan-line{
-  position:absolute;
-  inset:0 auto 0 -28%;
-
-  width:28%;
-
-  background:
-    linear-gradient(
-      90deg,
-      transparent,
-      rgba(255,255,255,.48),
-      transparent
-    );
-
-  animation:
-    capabilityScan 6s linear infinite;
-}
-
-.showroom-gauge--capability strong{
-  color:var(--white);
-
-  font-size:.68rem;
-  font-weight:950;
-  letter-spacing:.052em;
-  line-height:1.2;
-  text-transform:uppercase;
-}
-
-.showroom-gauge--capability > span:last-child{
-  color:var(--chamber-copy);
-
-  font-size:.6rem;
-  line-height:1.22;
-}
-
-/* =========================================================
-   GAUGE DETAILS
-   ========================================================= */
+/* Shared details */
 
 .showroom-gauge-details{
-  min-height:5.7rem;
+  min-height:5.6rem;
 
   display:grid;
 
@@ -2718,16 +2753,20 @@ canvas[data-showroom-layer="front"]{
     inset 0 1px 0 rgba(255,255,255,.07);
 }
 
+.showroom-gauge-details--shared{
+  width:100%;
+}
+
 .showroom-gauge-detail{
   display:grid;
   align-content:center;
-  gap:.36rem;
+  gap:.34rem;
 
   padding:.78rem .9rem;
 }
 
 .showroom-gauge-detail h3{
-  font-size:clamp(1rem,2.2vw,1.3rem);
+  font-size:clamp(1rem,2.2vw,1.28rem);
 }
 
 .showroom-gauge-detail p{
@@ -2735,12 +2774,12 @@ canvas[data-showroom-layer="front"]{
 
   color:var(--chamber-copy);
 
-  font-size:.82rem;
-  line-height:1.48;
+  font-size:.81rem;
+  line-height:1.46;
 }
 
 /* =========================================================
-   COMPACT COMPOSITION GAUGE
+   COMPOSITION GAUGE
    ========================================================= */
 
 .showroom-composition-gauge{
@@ -2846,6 +2885,67 @@ button[aria-pressed="true"]{
 
   font-size:.57rem;
   line-height:1.2;
+}
+
+.showroom-composition-detail{
+  display:grid;
+  grid-template-columns:auto 1fr;
+  grid-template-rows:auto auto;
+  align-items:center;
+  gap:.1rem .55rem;
+
+  min-height:4.1rem;
+
+  padding:.62rem .72rem;
+
+  border:1px solid var(--chamber-line);
+  border-radius:.85rem;
+
+  background:
+    linear-gradient(
+      145deg,
+      var(--chamber-open),
+      rgba(0,0,0,.16)
+    );
+}
+
+.showroom-composition-detail > span{
+  grid-column:1;
+  grid-row:1 / span 2;
+
+  width:2rem;
+  height:2rem;
+
+  display:grid;
+  place-items:center;
+
+  border:1px solid var(--chamber-line);
+  border-radius:50%;
+
+  color:var(--chamber-accent);
+
+  font-size:.55rem;
+  font-weight:950;
+}
+
+.showroom-composition-detail strong{
+  grid-column:2;
+  grid-row:1;
+
+  color:var(--white);
+
+  font-size:.78rem;
+  line-height:1.2;
+}
+
+.showroom-composition-detail p{
+  grid-column:2;
+  grid-row:2;
+
+  color:var(--chamber-copy);
+
+  font-size:.65rem;
+  line-height:1.3;
 }
 
 /* =========================================================
@@ -3237,8 +3337,6 @@ button[aria-selected="true"]{
 }
 
 .diamond-fallback-object{
-  position:relative;
-
   width:7.2rem;
   height:8.8rem;
 
@@ -3266,7 +3364,6 @@ button[aria-selected="true"]{
 
 .diamond-fallback strong{
   color:var(--gold-soft);
-
   font-size:1rem;
 }
 
@@ -3278,7 +3375,7 @@ button[aria-selected="true"]{
 }
 
 /* =========================================================
-   MIRRORLAND WINDOW
+   WINDOW
    ========================================================= */
 
 .showroom-window-layer{
@@ -3406,7 +3503,6 @@ button[aria-selected="true"]{
 [data-showroom-window-state="held"]
 .showroom-window-mount{
   opacity:.36;
-
   filter:grayscale(.45);
 }
 
@@ -3432,7 +3528,7 @@ button[aria-selected="true"]{
 }
 
 /* =========================================================
-   DROPDOWNS
+   GENERAL DISCLOSURES
    ========================================================= */
 
 .architectural-drop,
@@ -3514,7 +3610,6 @@ button[aria-selected="true"]{
 .architectural-drop[open] summary::after,
 .object-control-tray[open] summary::after{
   content:"–";
-
   color:var(--chamber-soft);
 }
 
@@ -3544,7 +3639,7 @@ button[aria-selected="true"]{
 }
 
 /* =========================================================
-   DIAMOND CONTROLS
+   CONTROLS
    ========================================================= */
 
 .showroom-diamond-controls{
@@ -3764,7 +3859,7 @@ button.button{
 }
 
 /* =========================================================
-   LOCAL FRONT NAVIGATION
+   FRONT NAVIGATION
    ========================================================= */
 
 .showroom-front-navigation{
@@ -4008,12 +4103,11 @@ dialog::backdrop{
 
 .showroom-footer a{
   color:var(--cyan-soft);
-
   font-weight:850;
 }
 
 /* =========================================================
-   CONTROLLER STATE REFLECTION
+   STATE REFLECTION
    ========================================================= */
 
 [data-showroom-root][data-showroom-held="true"]
@@ -4041,65 +4135,37 @@ dialog::backdrop{
 }
 
 /* =========================================================
-   ANIMATIONS
-   ========================================================= */
-
-@keyframes gaugeScanner{
-  from{
-    transform:rotate(0deg);
-  }
-
-  to{
-    transform:rotate(360deg);
-  }
-}
-
-@keyframes gaugePulse{
-  0%,
-  100%{
-    transform:scale(.88);
-    opacity:.66;
-  }
-
-  50%{
-    transform:scale(1.05);
-    opacity:1;
-  }
-}
-
-@keyframes capabilityScan{
-  from{
-    left:-28%;
-  }
-
-  to{
-    left:100%;
-  }
-}
-
-/* =========================================================
    RESPONSIVE
    ========================================================= */
 
 @media (max-width:1180px){
-  .showroom-gauge-grid,
-  .showroom-gauge-grid--structure,
-  .showroom-gauge-grid--systems{
+  .showroom-instructions__steps{
     grid-template-columns:
       repeat(3,minmax(0,1fr));
   }
 
-  .showroom-capability-grid{
+  .showroom-gauge-selector--metrics{
     grid-template-columns:
       repeat(3,minmax(0,1fr));
   }
 
-  .showroom-evidence-statuses{
+  #object-gauges
+  .showroom-gauge-selector--metrics{
+    grid-template-columns:
+      repeat(2,minmax(0,1fr));
+  }
+
+  .showroom-gauge-selector--capabilities{
     grid-template-columns:
       repeat(3,minmax(0,1fr));
   }
 
   .showroom-composition-rail{
+    grid-template-columns:
+      repeat(3,minmax(0,1fr));
+  }
+
+  .showroom-evidence-statuses{
     grid-template-columns:
       repeat(3,minmax(0,1fr));
   }
@@ -4114,18 +4180,16 @@ dialog::backdrop{
     text-align:left;
   }
 
-  .showroom-gauge-grid,
-  .showroom-gauge-grid--structure,
-  .showroom-gauge-grid--systems{
-    grid-template-columns:
-      repeat(2,minmax(0,1fr));
+  .showroom-orbit-guide{
+    width:11rem;
   }
 
-  .showroom-page-instructions__summary,
-  .showroom-instructions__summary,
-  [data-showroom-instructions-summary]{
-    grid-template-columns:
-      repeat(2,minmax(0,1fr));
+  .mirrorland-preface__content{
+    grid-template-columns:1fr;
+  }
+
+  .mirrorland-preface__content section:last-child{
+    grid-column:auto;
   }
 }
 
@@ -4154,17 +4218,36 @@ dialog::backdrop{
     margin-top:.45rem;
   }
 
+  .showroom-instructions__steps{
+    grid-template-columns:
+      repeat(2,minmax(0,1fr));
+  }
+
   .showroom-orbit__field{
     height:var(--orbit-mobile-height);
-    min-height:25rem;
+    min-height:26rem;
     max-height:34rem;
+  }
+
+  .showroom-orbit-guide{
+    left:.65rem;
+    top:auto;
+    bottom:2.8rem;
+
+    width:11.25rem;
+
+    transform:none;
+  }
+
+  .showroom-orbit-guide ol{
+    display:none;
   }
 
   .showroom-star--large{
     width:clamp(4.4rem,13vw,6rem);
   }
 
-  .showroom-capability-grid{
+  .showroom-gauge-selector--capabilities{
     grid-template-columns:
       repeat(2,minmax(0,1fr));
   }
@@ -4203,17 +4286,34 @@ dialog::backdrop{
     padding:.9rem;
   }
 
-  .showroom-threshold__actions{
-    display:grid;
+  .showroom-instructions{
+    padding:0;
   }
 
-  .showroom-threshold__actions .button{
+  .showroom-instructions__summary{
+    grid-template-columns:1fr auto;
+  }
+
+  .showroom-instructions__badge{
+    grid-column:1 / -1;
+    justify-self:start;
+  }
+
+  .showroom-instructions__steps{
+    grid-template-columns:1fr;
+  }
+
+  .showroom-instruction > summary{
+    min-height:5rem;
+  }
+
+  .showroom-instructions__enter{
     width:100%;
   }
 
   .showroom-orbit__field{
-    height:clamp(26rem,108vw,32rem);
-    min-height:26rem;
+    height:clamp(27rem,112vw,33rem);
+    min-height:27rem;
   }
 
   .showroom-compass-layer{
@@ -4223,6 +4323,23 @@ dialog::backdrop{
   .showroom-compass-control__mark{
     width:3.1rem;
     height:3.1rem;
+  }
+
+  .showroom-orbit-guide{
+    left:.55rem;
+    bottom:2.55rem;
+
+    width:9.6rem;
+
+    padding:.55rem .6rem;
+  }
+
+  .showroom-orbit-guide h3{
+    font-size:.72rem;
+  }
+
+  .showroom-orbit-guide a{
+    font-size:.5rem;
   }
 
   .showroom-star[data-showroom-object-id="characters-route"]{
@@ -4249,27 +4366,28 @@ dialog::backdrop{
     display:grid;
   }
 
-  .showroom-gauge-grid,
-  .showroom-gauge-grid--structure,
-  .showroom-gauge-grid--systems{
-    grid-template-columns:1fr;
-  }
-
-  .showroom-gauge--radial,
-  .showroom-gauge--state{
-    min-height:5.8rem;
-
+  .showroom-gauge-selector--metrics,
+  #object-gauges
+  .showroom-gauge-selector--metrics{
     grid-template-columns:
-      3.85rem
-      minmax(0,1fr);
+      repeat(2,minmax(0,1fr));
   }
 
-  .showroom-gauge__visual{
-    width:3.85rem;
+  .showroom-gauge-selector--capabilities{
+    grid-template-columns:
+      repeat(2,minmax(0,1fr));
   }
 
-  .showroom-capability-grid{
-    grid-template-columns:1fr;
+  .showroom-gauge--compact{
+    min-height:5.35rem;
+  }
+
+  .showroom-gauge--status-row{
+    grid-template-columns:minmax(0,1fr) auto;
+  }
+
+  .showroom-gauge--status-row strong{
+    min-width:4.8rem;
   }
 
   .showroom-information-tablist{
@@ -4327,7 +4445,6 @@ dialog::backdrop{
 
   .showroom-footer{
     display:grid;
-
     text-align:center;
   }
 
@@ -4348,7 +4465,6 @@ dialog::backdrop{
 
   .showroom-threshold::before{
     right:-4rem;
-
     opacity:.30;
   }
 
@@ -4361,12 +4477,6 @@ dialog::backdrop{
     font-size:clamp(1.2rem,7vw,1.9rem);
   }
 
-  .showroom-page-instructions__summary,
-  .showroom-instructions__summary,
-  [data-showroom-instructions-summary]{
-    grid-template-columns:1fr;
-  }
-
   .showroom-orbit__field{
     height:29rem;
     min-height:29rem;
@@ -4374,6 +4484,31 @@ dialog::backdrop{
 
   .showroom-compass-layer{
     width:7.3rem;
+  }
+
+  .showroom-orbit-guide{
+    top:.65rem;
+    left:50%;
+    bottom:auto;
+
+    width:calc(100% - 1.3rem);
+
+    grid-template-columns:auto 1fr auto;
+    align-items:center;
+
+    transform:translateX(-50%);
+  }
+
+  .showroom-orbit-guide__eyebrow{
+    display:none;
+  }
+
+  .showroom-orbit-guide h3{
+    font-size:.68rem;
+  }
+
+  .showroom-orbit-guide a{
+    white-space:nowrap;
   }
 
   .showroom-star--large{
@@ -4384,13 +4519,36 @@ dialog::backdrop{
     width:2.65rem;
   }
 
-  .showroom-gauge-grid,
-  .showroom-gauge-grid--structure,
-  .showroom-gauge-grid--systems{
-    display:grid;
-    grid-template-columns:1fr;
+  .showroom-gauge-selector--metrics,
+  #object-gauges
+  .showroom-gauge-selector--metrics,
+  .showroom-gauge-selector--capabilities{
+    grid-template-columns:
+      repeat(2,minmax(0,1fr));
+  }
 
-    overflow:visible;
+  .showroom-gauge--compact{
+    min-height:5rem;
+  }
+
+  .showroom-gauge--compact strong{
+    font-size:1rem;
+  }
+
+  .showroom-gauge--status-row{
+    gap:.5rem;
+  }
+
+  .showroom-gauge--status-row > span{
+    font-size:.62rem;
+  }
+
+  .showroom-gauge--status-row strong{
+    min-width:4.3rem;
+
+    padding:.27rem .4rem;
+
+    font-size:.5rem;
   }
 
   .showroom-composition-rail{
@@ -4417,6 +4575,8 @@ dialog::backdrop{
   }
 
   .panel,
+  .mirrorland-preface,
+  .showroom-instruction,
   .architectural-drop,
   .object-control-tray,
   .construction-access,
@@ -4426,9 +4586,8 @@ dialog::backdrop{
   .showroom-gauge,
   .showroom-gauge-details,
   .showroom-composition-gauge,
-  .showroom-information-summary,
-  .showroom-page-instructions,
-  [data-showroom-page-instructions]{
+  .showroom-composition-detail,
+  .showroom-information-summary{
     border-width:2px;
   }
 
@@ -4436,7 +4595,8 @@ dialog::backdrop{
   .object-control-body p,
   .showroom-front__heading p,
   .showroom-gauge-detail p,
-  .showroom-information-summary p{
+  .showroom-information-summary p,
+  .mirrorland-preface__content p{
     color:#ffffff;
   }
 }
@@ -4455,19 +4615,7 @@ dialog::backdrop{
     transition-duration:.01ms!important;
   }
 
-  .showroom-gauge__scanner,
-  .showroom-gauge__scan-line,
-  .showroom-gauge__pulse{
-    display:none;
-  }
-
   .showroom-window-mount{
     transition:none;
-  }
-
-  .showroom-gauge__arc,
-  .showroom-gauge__state-dial,
-  .showroom-gauge__track i{
-    animation:none;
   }
 }

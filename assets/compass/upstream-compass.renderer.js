@@ -22,7 +22,8 @@
      quality profiles, and static fallback shape data.
    - This renderer owns WebGL resources, lighting, camera, local visual
      interpolation, fallback-first promotion, visual feedback, reduced-motion
-     response, instance lifecycle, and renderer receipts.
+     response, instance lifecycle, automatic mount discovery, and renderer
+     receipts.
    - Crystals owns ARCHCOIN constellation and room-cluster scene execution.
    - HTML owns the canonical semantic Compass control.
    - CSS presents already-closed runtime state.
@@ -31,6 +32,15 @@
    FIXED_CENTER_PLACEMENT
    * LOCAL_PRESENTATION_TRANSFORM
    * RENDERER_OWNED_VISUAL_FEEDBACK
+
+   Automatic startup law:
+   - After the renderer publishes its global API, it discovers every
+     [data-upstream-compass-mount] present in the parsed document.
+   - Each unowned mount is initialized exactly once.
+   - Deferred-script execution normally schedules discovery at
+     DOMContentLoaded.
+   - Dynamically or late-loaded execution discovers mounts immediately.
+   - INSTANCE_BY_MOUNT prevents duplicate active ownership.
 
    Prohibited:
    - constellation orientation;
@@ -574,6 +584,9 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
       true,
 
     oneInstancePerMount:
+      true,
+
+    automaticMountDiscovery:
       true,
 
     enhancedOpacityAuthority:
@@ -1815,6 +1828,9 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
         oneInstancePerMount:
           true,
 
+        automaticMountDiscovery:
+          true,
+
         enhancedOpacityAuthority:
           "SHADER",
 
@@ -2389,13 +2405,6 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
         ? "true"
         : "false";
 
-    /*
-     * Binary promotion only.
-     *
-     * Enhanced visual opacity is applied once in the fragment shader through
-     * uVisualOpacity. Applying currentOpacity here would multiply enhanced
-     * opacity a second time.
-     */
     instance.canvas.style.opacity =
       active
         ? "1"
@@ -2433,10 +2442,6 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
         ? ""
         : "none";
 
-    /*
-     * The static fallback has no fragment shader. CSS opacity is therefore
-     * its single visual-opacity authority.
-     */
     fallback.style.opacity =
       active
         ? String(
@@ -2564,12 +2569,6 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
     mount.dataset
       .visualPassClaimed =
       "false";
-
-    /*
-     * The renderer intentionally does not write aria-disabled, disabled,
-     * tabindex, href, role, or activation behavior on the canonical semantic
-     * control. Controller/HTML synchronization owns semantic state.
-     */
   }
 
   function applyPresentationVisibility(
@@ -2896,11 +2895,6 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
       normalized.pressed ||
       instance.semanticPressed;
 
-    /*
-     * A dedicated reduced-motion getter or subscription is authoritative when
-     * supplied. Otherwise the presentation state owns reduced motion in both
-     * directions, so true can return to false.
-     */
     if (
       presentationOwnsReducedMotion(
         instance
@@ -4440,18 +4434,6 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
           instance.feedbackScale
       );
 
-    /*
-     * Fixed-center law:
-     *
-     * FIXED_CENTER_PLACEMENT
-     *   *
-     * LOCAL_PRESENTATION_TRANSFORM
-     *   *
-     * RENDERER_OWNED_VISUAL_FEEDBACK
-     *
-     * No controller, orbit, constellation, cluster, crystals, parent,
-     * navigation, or settlement quaternion participates.
-     */
     return multiply4(
       localTranslation,
       multiply4(
@@ -5500,6 +5482,9 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
       semanticControlOwnedByHtml:
         true,
 
+      automaticMountDiscovery:
+        true,
+
       enhancedOpacityAuthority:
         "SHADER",
 
@@ -5613,6 +5598,9 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
       oneInstancePerMount:
         true,
 
+      automaticMountDiscovery:
+        true,
+
       enhancedOpacityAuthority:
         "SHADER",
 
@@ -5630,6 +5618,88 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
     });
   }
 
+  function mountDiscoveredCompasses() {
+    if (
+      typeof document ===
+      "undefined"
+    ) {
+      return;
+    }
+
+    const mounts =
+      document.querySelectorAll(
+        "[data-upstream-compass-mount]"
+      );
+
+    for (
+      const mountElement
+      of mounts
+    ) {
+      if (
+        INSTANCE_BY_MOUNT.has(
+          mountElement
+        )
+      ) {
+        continue;
+      }
+
+      try {
+        mount({
+          root:
+            document,
+
+          mount:
+            mountElement
+        });
+      } catch (error) {
+        emitFailure(
+          error &&
+          (
+            error.code ||
+            error.message
+          )
+            ? String(
+                error.code ||
+                error.message
+              )
+            : "AUTOMATIC_MOUNT_FAILURE",
+
+          {
+            mount:
+              mountElement
+          }
+        );
+      }
+    }
+  }
+
+  function scheduleAutomaticMountDiscovery() {
+    if (
+      typeof document ===
+      "undefined"
+    ) {
+      return;
+    }
+
+    if (
+      document.readyState ===
+        "loading"
+    ) {
+      document.addEventListener(
+        "DOMContentLoaded",
+        mountDiscoveredCompasses,
+        {
+          once:
+            true
+        }
+      );
+
+      return;
+    }
+
+    mountDiscoveredCompasses();
+  }
+
   publishReceipt({
     status:
       "available",
@@ -5640,6 +5710,8 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
     firstEnhancedFrameCompleted:
       false
   });
+
+  scheduleAutomaticMountDiscovery();
 
   return Object.freeze({
     moduleId:
@@ -5701,7 +5773,7 @@ if (
 }
 
 /*
-AUDRALIA_ARCHCOIN_SHARED_HOME_COMPASS_RENDERER_RENEWAL_RESULT_v2
+AUDRALIA_ARCHCOIN_SHARED_HOME_COMPASS_RENDERER_RENEWAL_RESULT_v3
 
 Artifact:
 /assets/compass/upstream-compass.renderer.js
@@ -5719,109 +5791,78 @@ DGB_UPSTREAM_COMPASS_GEOMETRY
 3.0.0-fixed-center-independent-sibling
 
 Disposition:
-FIXED_CENTER_RENDERER_ARCHITECTURE_PASS_WITH_BOUNDED_RUNTIME_CORRECTIONS_APPLIED
+FIXED_CENTER_RENDERER_AUTOMATIC_STARTUP_BOOTSTRAP_APPLIED
 
-Applied correction 1:
-- Canvas CSS opacity is binary.
-- Active enhanced canvas opacity is exactly 1.
-- Inactive enhanced canvas opacity is exactly 0.
-- uVisualOpacity is the single enhanced visual-opacity authority.
-- Static fallback continues using currentOpacity through CSS.
-- Enhanced and fallback held opacity no longer diverge through compounded opacity.
+Proven defect:
+- The renderer exported mount() but never invoked it.
+- The actual ARCHCOIN mount remained unowned.
+- No fallback SVG was injected.
+- No WebGL canvas was created.
+- No renderer status progression occurred.
+- No first enhanced frame could be promoted.
 
-Applied correction 2:
-- Presentation-owned reduced motion is bidirectional.
-- Presentation reducedMotion true may return to false.
-- Dedicated getReducedMotion or subscribeReducedMotion surfaces remain
-  authoritative when supplied.
-- Presentation state controls reduced motion only when neither dedicated
-  reduced-motion surface exists.
+Applied correction:
+- mountDiscoveredCompasses() discovers every
+  [data-upstream-compass-mount].
+- Unowned mounts are passed to mount().
+- INSTANCE_BY_MOUNT prevents duplicate ownership.
+- scheduleAutomaticMountDiscovery() waits for DOMContentLoaded while the
+  document is still loading.
+- Late or dynamically loaded execution discovers mounts immediately.
+- Automatic startup failure is emitted through the existing renderer failure
+  surface.
+- Automatic discovery remains inside the renderer closure and has direct
+  access to INSTANCE_BY_MOUNT, mount(), and emitFailure().
 
-Applied correction 3:
-- INSTANCE_BY_MOUNT WeakMap added.
-- A second active instance on the same mount is rejected with:
-  UPSTREAM_COMPASS_MOUNT_ALREADY_ACTIVE
-- Mount ownership is registered only after successful initialization and
-  instance registration.
-- Disposal releases mount ownership only when the mapping still points to the
-  disposing instance.
-- Canvas reuse is bounded by exclusive mount ownership.
-
-Applied correction 4:
-- Renderer-authored aria-disabled mutation removed.
-- Renderer does not write native disabled state.
-- Renderer publishes interactionEnabled and held visual facts only on the
-  mount datasets.
-- Controller and HTML synchronization retain semantic-state authority.
-
-Metadata correction:
-- minimumModuleVersion renamed to requiredModuleVersion.
-- Exact geometry version equality remains intentional for this dependency-
-  locked implementation pass.
-
-Retained:
-- WebGL context creation
-- shader compilation
-- program linking
-- GPU buffer construction
-- indexed drawing
-- Uint32 index extension support
-- material segmentation
+Unchanged:
+- geometry authority
+- geometry version lock
+- model validation
+- mesh data
+- GPU buffers
+- shaders
 - lighting
-- halo pass
-- resize and device-pixel-ratio control
-- local matrix mathematics
-- local quaternion normalization and interpolation
-- geometry.buildModel consumption
-- geometry.validateModel enforcement
-- static fallback injection
-- fallback-first enhanced promotion
-- reduced-motion handling
-- instance registry
-- start and stop control
-- disposal
-- context-loss reporting
-- observational semantic hover, focus, and press feedback
-- semantic-control separation from canvas
+- camera
+- projection
+- fixed-center mathematics
+- local interpolation
+- semantic-control law
+- canvas promotion law
+- fallback promotion law
+- reduced-motion behavior
+- controller ownership
+- crystals ownership
+- HTML
+- shared Compass CSS
+- ARCHCOIN page CSS
 
-Absent:
-- parent orientation
-- navigation orientation
-- constellation orientation
-- cluster orientation
-- frame orientation consumption
-- Compass decision state
-- route construction
-- destination construction
-- semantic click activation
-- preventDefault or stopPropagation on activation
-- renderer-owned semantic disabled state
-- public orientation mutation
-
-Fixed-center receipt facts:
-- fixedCenter = true
-- parentOrientationInherited = false
-- navigationOrientationApplied = false
-- constellationOrientationApplied = false
-- clusterOrientationApplied = false
-- participatesInNavigationSettlement = false
-- publishesQuaternion = false
-- rendererOwnsActivation = false
-- rendererOwnsNavigation = false
-- rendererOwnsSelection = false
-- rendererOwnsSemanticDisabledState = false
-- fallbackPromotionOwnedByRenderer = true
-- semanticControlOwnedByHtml = true
-- oneInstancePerMount = true
-- enhancedOpacityAuthority = SHADER
-- fallbackOpacityAuthority = CSS
-- canvasPromotionOpacity = BINARY
+Expected actual-page sequence:
+1. Renderer module loads.
+2. Global renderer API is published.
+3. Automatic discovery is scheduled.
+4. DOMContentLoaded occurs.
+5. ARCHCOIN Compass mount is discovered.
+6. Renderer instance is created.
+7. Static fallback SVG is injected.
+8. WebGL canvas is created.
+9. GPU resources initialize.
+10. Render loop starts.
+11. First error-free enhanced frame completes.
+12. Canvas is promoted.
+13. Static fallback is hidden.
+14. Three-dimensional fixed-center Compass becomes visible.
 
 Runtime execution:
 NOT PERFORMED
 
-Visual acceptance:
-PENDING PAGE INTEGRATION
+Actual-page visual verification:
+PENDING RELOAD
+
+Star-selection work:
+NOT STARTED
+
+Swipe-return work:
+NOT STARTED
 
 Production authorization:
 FALSE

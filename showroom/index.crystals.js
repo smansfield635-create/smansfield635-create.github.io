@@ -1,51 +1,29 @@
 /* TARGET FILE: /showroom/index.crystals.js */
 /* TNT FULL-FILE REPLACEMENT */
-/* SHOWROOM_MIRRORLAND_CONSTELLATION_CRYSTALS_TNT_v2 */
+/* SHOWROOM_MIRRORLAND_CONSTELLATION_CRYSTALS_TNT_v3 */
 /*
-  Crystal authority:
-  - Own exactly two reusable crystal geometries:
-      1. large eight-point cardinal star;
-      2. small six-point child star.
-  - Own crystal materials, faceting, local rotation, scale, halo, and sparkle.
-  - Own large-star spherical positions.
-  - Own gauge and information child-cluster positions.
-  - Own interpolation between orbital and expanded-cluster targets.
-  - Own semantic-control association and projected positioning.
-  - Supply visible nodes and bounded draw callbacks to the compositor.
-  - Consume controller state without committing controller state.
-  - Consume interaction motion without owning gesture interpretation.
-  - Publish readiness, failure, disposal, and bounded receipts.
-  - Restore painted HTML fallback stars when initialization fails or disposal occurs.
-
-  Does not own:
-  - page navigation;
-  - route, cluster, gauge, or information meaning;
-  - dialog behavior;
-  - active-front commitment;
-  - pointer deltas;
-  - drag sensitivity;
-  - tap-versus-drag arbitration;
-  - swipe classification;
-  - orbit camera;
-  - view or projection matrices;
-  - Compass rendering or lifecycle;
-  - front/rear classification;
-  - Diamond rendering;
-  - Mirrorland Window rendering.
-
-  Compositor contract:
-  - Register one compositor node per semantic star.
-  - Supply getWorldPosition(), isVisible(), getSortBias(),
-    getMetadata(), and draw().
-  - Let the compositor classify each node as rear or front.
-  - Let the compositor place the fixed Compass between both passes.
+  Renewal objectives:
+  - Preserve crystal geometry, materials, orbital targets, animation,
+    compositor registration, semantic association, and fallback recovery.
+  - Scope crystal discovery exclusively to [data-showroom-orbit-field].
+  - Use the compositor projection as the single positioning authority for
+    both crystal drawing and semantic hit targets.
+  - Keep every semantic hit target strictly inside the orbit field.
+  - Clear fallback right/bottom constraints before projected positioning.
+  - Avoid duplicate semantic DOM writes during compositor drawing.
+  - Suspend animation and compositor frame requests while the orbit field
+    is offscreen, the document is hidden, or page scrolling is active.
+  - Resume safely when the scene becomes visible or interaction/state changes.
+  - Avoid continuous reduced-motion animation when the scene is settled.
+  - Preserve compositor, controller, interactions, Compass, Diamond,
+    Window, gauge, information, navigation, and dialog authority boundaries.
 */
 
 (() => {
   "use strict";
 
   const CONTRACT =
-    "SHOWROOM_MIRRORLAND_CONSTELLATION_CRYSTALS_TNT_v2";
+    "SHOWROOM_MIRRORLAND_CONSTELLATION_CRYSTALS_TNT_v3";
 
   const OWNER =
     "/showroom/index.crystals.js";
@@ -77,6 +55,9 @@
 
     orbitMotion:
       "showroom:orbit-motion",
+
+    orbitMotionStart:
+      "showroom:orbit-motion-start",
 
     orbitMotionEnd:
       "showroom:orbit-motion-end",
@@ -143,7 +124,13 @@
       "data-showroom-fallback-star-rendering",
 
     fallbackVisibility:
-      "data-showroom-fallback-star-visibility"
+      "data-showroom-fallback-star-visibility",
+
+    sceneVisible:
+      "data-showroom-crystals-scene-visible",
+
+    suspended:
+      "data-showroom-crystals-suspended"
   });
 
   const NODE_TYPES = Object.freeze({
@@ -267,9 +254,6 @@
     childRotationSpeed:
       0.24,
 
-    maximumRotationDelta:
-      0.24,
-
     haloExpansion:
       1.18,
 
@@ -282,11 +266,29 @@
     semanticChildSize:
       74,
 
-    maximumDeviceScale:
-      1.35,
+    semanticViewportPadding:
+      4,
+
+    semanticWriteTolerance:
+      0.35,
 
     readinessTimeoutMs:
       5000,
+
+    pageScrollPauseMs:
+      150,
+
+    settlementPositionEpsilon:
+      0.002,
+
+    settlementScalarEpsilon:
+      0.002,
+
+    settlementQuaternionEpsilon:
+      0.0008,
+
+    intersectionThreshold:
+      0.04,
 
     visualPassClaimed:
       false,
@@ -398,23 +400,6 @@
       Object.freeze([-1, 0, 0])
   });
 
-  const CHILD_ORDER = Object.freeze({
-    gauges:
-      Object.freeze([
-        "object-gauge-star",
-        "structure-gauge-star",
-        "interaction-gauge-star",
-        "systems-gauge-star"
-      ]),
-
-    information:
-      Object.freeze([
-        "platform-information-star",
-        "engineering-information-star",
-        "evidence-information-star"
-      ])
-  });
-
   const state = {
     root: null,
     receipt: null,
@@ -459,6 +444,21 @@
     held:
       false,
 
+    sceneVisible:
+      true,
+
+    documentVisible:
+      !document.hidden,
+
+    pageScrolling:
+      false,
+
+    interactionActive:
+      false,
+
+    dirty:
+      true,
+
     running:
       false,
 
@@ -481,6 +481,9 @@
       0,
 
     readinessTimer:
+      0,
+
+    scrollResumeTimer:
       0,
 
     listeners:
@@ -508,7 +511,19 @@
       semanticUpdates:
         0,
 
+      semanticWritesSkipped:
+        0,
+
+      semanticRejectedOutsideField:
+        0,
+
       motionEvents:
+        0,
+
+      suspendedFrames:
+        0,
+
+      resumedAnimations:
         0,
 
       failures:
@@ -549,6 +564,18 @@
     );
   }
 
+  function nearlyEqual(
+    left,
+    right,
+    epsilon
+  ) {
+    return (
+      Math.abs(
+        left - right
+      ) <= epsilon
+    );
+  }
+
   function nowIso() {
     return new Date().toISOString();
   }
@@ -579,7 +606,11 @@
   }
 
   function addObserver(observer) {
-    state.observers.push(observer);
+    if (observer) {
+      state.observers.push(
+        observer
+      );
+    }
   }
 
   function setRootAttribute(
@@ -654,6 +685,21 @@
 
       running:
         state.running,
+
+      sceneVisible:
+        state.sceneVisible,
+
+      documentVisible:
+        state.documentVisible,
+
+      pageScrolling:
+        state.pageScrolling,
+
+      interactionActive:
+        state.interactionActive,
+
+      suspended:
+        isRenderingSuspended(),
 
       coordinateSystem:
         CONFIG.coordinateSystem,
@@ -1023,6 +1069,38 @@
       quaternionObject.z,
       quaternionObject.w
     ]);
+  }
+
+  function quaternionDistance(
+    left,
+    right
+  ) {
+    const a =
+      quaternionNormalize(left);
+
+    const b =
+      quaternionNormalize(right);
+
+    const direct =
+      Math.hypot(
+        a[0] - b[0],
+        a[1] - b[1],
+        a[2] - b[2],
+        a[3] - b[3]
+      );
+
+    const inverse =
+      Math.hypot(
+        a[0] + b[0],
+        a[1] + b[1],
+        a[2] + b[2],
+        a[3] + b[3]
+      );
+
+    return Math.min(
+      direct,
+      inverse
+    );
   }
 
   function createDiamondStarGeometry(
@@ -1481,21 +1559,13 @@
     const baseVector =
       large
         ? (
-            LARGE_BASE_VECTORS[
-              id
-            ] ||
+            LARGE_BASE_VECTORS[id] ||
             [0, 1, 0]
           ).slice()
         : childBaseVector(
             index,
             clusterCount
           );
-
-    const warm =
-      id ===
-        "gauge-cluster" ||
-      id ===
-        "information-cluster";
 
     return {
       id,
@@ -1510,7 +1580,10 @@
           : GEOMETRY_TYPES.CHILD,
 
       materialFamily,
-      warm,
+
+      warm:
+        id === "gauge-cluster" ||
+        id === "information-cluster",
 
       baseVector,
 
@@ -1583,16 +1656,35 @@
         large,
 
       registration:
-        null
+        null,
+
+      lastSemantic:
+        {
+          visible:
+            false,
+
+          x:
+            NaN,
+
+          y:
+            NaN,
+
+          size:
+            NaN,
+
+          interactive:
+            false
+        }
     };
   }
 
   function discoverSemanticObjects() {
     const elements =
       Array.from(
-        document.querySelectorAll(
-          SELECTORS.semanticObject
-        )
+        state.orbitField
+          .querySelectorAll(
+            SELECTORS.semanticObject
+          )
       );
 
     const clusterCounts =
@@ -1640,6 +1732,14 @@
       new Map();
 
     for (const element of elements) {
+      if (
+        !state.orbitField.contains(
+          element
+        )
+      ) {
+        continue;
+      }
+
       const id =
         normalize(
           element.getAttribute(
@@ -1917,7 +2017,7 @@
         (
           vector[2] + 1
         ) /
-        2;
+          2;
 
       node.targetScale =
         clusterActive
@@ -1978,7 +2078,8 @@
   }
 
   function updateInterpolatedState(
-    deltaSeconds
+    deltaSeconds,
+    now
   ) {
     const speed =
       state.reducedMotion
@@ -2081,7 +2182,10 @@
           amount
         );
 
-      if (!state.reducedMotion) {
+      if (
+        !state.reducedMotion &&
+        !state.pageScrolling
+      ) {
         const speedMultiplier =
           node.size ===
           NODE_TYPES.LARGE
@@ -2094,7 +2198,7 @@
 
         node.localRotationY =
           Math.sin(
-            performance.now() *
+            now *
             0.00042 +
             node.phase
           ) *
@@ -2102,16 +2206,107 @@
 
         node.localRotationX =
           Math.sin(
-            performance.now() *
+            now *
             0.00031 +
             node.phase * 0.73
           ) *
           0.10;
-      } else {
+      } else if (
+        state.reducedMotion
+      ) {
         node.localRotationX = 0;
         node.localRotationY = 0;
       }
     }
+  }
+
+  function isNodeSettled(node) {
+    return (
+      nearlyEqual(
+        node.worldPosition.x,
+        node.targetPosition.x,
+        CONFIG.settlementPositionEpsilon
+      ) &&
+      nearlyEqual(
+        node.worldPosition.y,
+        node.targetPosition.y,
+        CONFIG.settlementPositionEpsilon
+      ) &&
+      nearlyEqual(
+        node.worldPosition.z,
+        node.targetPosition.z,
+        CONFIG.settlementPositionEpsilon
+      ) &&
+      nearlyEqual(
+        node.scale,
+        node.targetScale,
+        CONFIG.settlementScalarEpsilon
+      ) &&
+      nearlyEqual(
+        node.opacity,
+        node.targetOpacity,
+        CONFIG.settlementScalarEpsilon
+      ) &&
+      nearlyEqual(
+        node.prominence,
+        node.targetProminence,
+        CONFIG.settlementScalarEpsilon
+      ) &&
+      nearlyEqual(
+        node.halo,
+        node.targetHalo,
+        CONFIG.settlementScalarEpsilon
+      )
+    );
+  }
+
+  function isSceneSettled() {
+    if (
+      quaternionDistance(
+        state.orientation,
+        state.targetOrientation
+      ) >
+      CONFIG.settlementQuaternionEpsilon
+    ) {
+      return false;
+    }
+
+    for (
+      const [
+        clusterId,
+        target
+      ]
+      of state
+        .clusterTargetOrientations
+        .entries()
+    ) {
+      const current =
+        state.clusterOrientations.get(
+          clusterId
+        ) ||
+        [0, 0, 0, 1];
+
+      if (
+        quaternionDistance(
+          current,
+          target
+        ) >
+        CONFIG.settlementQuaternionEpsilon
+      ) {
+        return false;
+      }
+    }
+
+    for (
+      const node
+      of state.nodes.values()
+    ) {
+      if (!isNodeSettled(node)) {
+        return false;
+      }
+    }
+
+    return true;
   }
 
   function rotateLocalVertex(
@@ -2424,13 +2619,6 @@
 
     context.save();
 
-    context.globalAlpha =
-      clamp(
-        node.opacity,
-        0,
-        1
-      );
-
     context.lineJoin =
       "round";
 
@@ -2608,6 +2796,103 @@
     context.restore();
   }
 
+  function isProjectionStrictlyInsideField(
+    projection,
+    size
+  ) {
+    if (
+      !projection ||
+      !projection.visible ||
+      !projection.screen
+    ) {
+      return false;
+    }
+
+    const width =
+      projection.viewport &&
+      Number.isFinite(
+        projection.viewport.width
+      )
+        ? projection.viewport.width
+        : state.orbitField.clientWidth;
+
+    const height =
+      projection.viewport &&
+      Number.isFinite(
+        projection.viewport.height
+      )
+        ? projection.viewport.height
+        : state.orbitField.clientHeight;
+
+    const radius =
+      size * 0.5;
+
+    const padding =
+      CONFIG.semanticViewportPadding;
+
+    return (
+      projection.screen.x -
+        radius >=
+        padding &&
+      projection.screen.y -
+        radius >=
+        padding &&
+      projection.screen.x +
+        radius <=
+        width -
+        padding &&
+      projection.screen.y +
+        radius <=
+        height -
+        padding
+    );
+  }
+
+  function disableSemanticControl(node) {
+    const element =
+      node.semanticElement;
+
+    if (!element) {
+      return;
+    }
+
+    const cache =
+      node.lastSemantic;
+
+    if (
+      cache.visible === false &&
+      cache.interactive === false
+    ) {
+      state.counters.semanticWritesSkipped +=
+        1;
+
+      return;
+    }
+
+    element.style.opacity =
+      "0";
+
+    element.style.pointerEvents =
+      "none";
+
+    element.setAttribute(
+      "aria-hidden",
+      "true"
+    );
+
+    element.tabIndex =
+      -1;
+
+    cache.visible =
+      false;
+
+    cache.interactive =
+      false;
+
+    state.counters.semanticUpdates +=
+      1;
+  }
+
   function syncSemanticControl(
     node,
     projection
@@ -2615,7 +2900,12 @@
     const element =
       node.semanticElement;
 
-    if (!element) {
+    if (
+      !element ||
+      !state.orbitField.contains(
+        element
+      )
+    ) {
       return;
     }
 
@@ -2625,19 +2915,7 @@
       !projection ||
       !projection.visible
     ) {
-      element.style.opacity =
-        "0";
-
-      element.style.pointerEvents =
-        "none";
-
-      element.setAttribute(
-        "aria-hidden",
-        "true"
-      );
-
-      element.tabIndex =
-        -1;
+      disableSemanticControl(node);
 
       return;
     }
@@ -2655,18 +2933,88 @@
         clamp(
           node.scale,
           0.64,
-          CONFIG.maximumDeviceScale
+          1.35
         )
       );
+
+    if (
+      !isProjectionStrictlyInsideField(
+        projection,
+        size
+      )
+    ) {
+      state.counters
+        .semanticRejectedOutsideField +=
+        1;
+
+      disableSemanticControl(node);
+
+      return;
+    }
+
+    const x =
+      projection.screen.x;
+
+    const y =
+      projection.screen.y;
+
+    const interactive =
+      !state.held &&
+      state.sceneVisible &&
+      state.documentVisible &&
+      !state.pageScrolling;
+
+    const cache =
+      node.lastSemantic;
+
+    const positionChanged =
+      !nearlyEqual(
+        cache.x,
+        x,
+        CONFIG.semanticWriteTolerance
+      ) ||
+      !nearlyEqual(
+        cache.y,
+        y,
+        CONFIG.semanticWriteTolerance
+      );
+
+    const sizeChanged =
+      !nearlyEqual(
+        cache.size,
+        size,
+        CONFIG.semanticWriteTolerance
+      );
+
+    const stateChanged =
+      cache.visible !== true ||
+      cache.interactive !== interactive;
+
+    if (
+      !positionChanged &&
+      !sizeChanged &&
+      !stateChanged
+    ) {
+      state.counters.semanticWritesSkipped +=
+        1;
+
+      return;
+    }
 
     element.style.position =
       "absolute";
 
     element.style.left =
-      `${projection.screen.x}px`;
+      `${x}px`;
 
     element.style.top =
-      `${projection.screen.y}px`;
+      `${y}px`;
+
+    element.style.right =
+      "auto";
+
+    element.style.bottom =
+      "auto";
 
     element.style.width =
       `${size}px`;
@@ -2684,9 +3032,9 @@
       "1";
 
     element.style.pointerEvents =
-      state.held
-        ? "none"
-        : "auto";
+      interactive
+        ? "auto"
+        : "none";
 
     element.style.background =
       "transparent";
@@ -2705,20 +3053,38 @@
 
     element.setAttribute(
       "aria-hidden",
-      "false"
+      interactive
+        ? "false"
+        : "true"
     );
 
     element.tabIndex =
-      state.held
-        ? -1
-        : 0;
+      interactive
+        ? 0
+        : -1;
 
     element.setAttribute(
       ATTRIBUTES.fallbackRendering,
       "hidden"
     );
 
-    state.counters.semanticUpdates += 1;
+    cache.visible =
+      true;
+
+    cache.interactive =
+      interactive;
+
+    cache.x =
+      x;
+
+    cache.y =
+      y;
+
+    cache.size =
+      size;
+
+    state.counters.semanticUpdates +=
+      1;
   }
 
   function drawNode({
@@ -2740,12 +3106,58 @@
       projection
     );
 
-    syncSemanticControl(
-      node,
-      projection
-    );
+    state.counters.drawCalls +=
+      1;
+  }
 
-    state.counters.drawCalls += 1;
+  function positionSemanticControls() {
+    if (
+      !state.compositor ||
+      typeof state.compositor
+        .projectWorldToScreen !==
+        "function"
+    ) {
+      return;
+    }
+
+    let visibleCount = 0;
+
+    for (
+      const node
+      of state.nodes.values()
+    ) {
+      if (
+        !node.visible ||
+        node.opacity <= 0.025
+      ) {
+        disableSemanticControl(
+          node
+        );
+
+        continue;
+      }
+
+      const projection =
+        state.compositor
+          .projectWorldToScreen(
+            node.worldPosition
+          );
+
+      syncSemanticControl(
+        node,
+        projection
+      );
+
+      if (
+        projection &&
+        projection.visible
+      ) {
+        visibleCount += 1;
+      }
+    }
+
+    state.counters.visibleNodes =
+      visibleCount;
   }
 
   function nodeMetadata(node) {
@@ -2858,7 +3270,8 @@
       registration
     );
 
-    state.counters.registeredNodes += 1;
+    state.counters.registeredNodes +=
+      1;
   }
 
   function unregisterAllNodes() {
@@ -2896,60 +3309,17 @@
     state.counters.registeredNodes = 0;
   }
 
-  function positionSemanticControls() {
-    if (
-      !state.compositor ||
-      typeof state.compositor
-        .projectWorldToScreen !==
-        "function"
-    ) {
-      return;
-    }
-
-    let visibleCount = 0;
-
-    for (
-      const node
-      of state.nodes.values()
-    ) {
-      if (
-        !node.visible ||
-        node.opacity <= 0.025
-      ) {
-        syncSemanticControl(
-          node,
-          null
-        );
-
-        continue;
-      }
-
-      const projection =
-        state.compositor
-          .projectWorldToScreen(
-            node.worldPosition
-          );
-
-      syncSemanticControl(
-        node,
-        projection
-      );
-
-      if (
-        projection &&
-        projection.visible
-      ) {
-        visibleCount += 1;
-      }
-    }
-
-    state.counters.visibleNodes =
-      visibleCount;
-  }
-
   function requestCompositorFrame(
     reason
   ) {
+    if (
+      state.disposed ||
+      state.failed ||
+      isRenderingSuspended()
+    ) {
+      return false;
+    }
+
     if (
       state.compositor &&
       typeof state.compositor
@@ -2960,7 +3330,7 @@
         reason
       );
 
-      return;
+      return true;
     }
 
     window.dispatchEvent(
@@ -2970,12 +3340,197 @@
           detail:
             Object.freeze({
               reason,
+
               source:
                 CONTRACT
             })
         }
       )
     );
+
+    return true;
+  }
+
+  function isRenderingSuspended() {
+    return (
+      !state.sceneVisible ||
+      !state.documentVisible ||
+      state.pageScrolling
+    );
+  }
+
+  function reflectSuspensionState() {
+    const suspended =
+      isRenderingSuspended();
+
+    setRootAttribute(
+      ATTRIBUTES.sceneVisible,
+      state.sceneVisible
+        ? "true"
+        : "false"
+    );
+
+    setRootAttribute(
+      ATTRIBUTES.suspended,
+      suspended
+        ? "true"
+        : "false"
+    );
+
+    for (
+      const node
+      of state.nodes.values()
+    ) {
+      if (suspended) {
+        disableSemanticControl(
+          node
+        );
+      }
+    }
+  }
+
+  function stopAnimationLoop() {
+    state.running = false;
+
+    if (state.raf) {
+      cancelAnimationFrame(
+        state.raf
+      );
+
+      state.raf = 0;
+    }
+
+    state.lastTime = 0;
+  }
+
+  function ensureAnimation(
+    reason = "state-change"
+  ) {
+    if (
+      state.failed ||
+      state.disposed ||
+      !state.ready
+    ) {
+      return false;
+    }
+
+    state.dirty = true;
+
+    reflectSuspensionState();
+
+    if (isRenderingSuspended()) {
+      stopAnimationLoop();
+
+      return false;
+    }
+
+    if (!state.running) {
+      state.running = true;
+      state.lastTime = 0;
+      state.counters.resumedAnimations +=
+        1;
+
+      state.raf =
+        requestAnimationFrame(
+          animate
+        );
+    }
+
+    requestCompositorFrame(
+      reason
+    );
+
+    return true;
+  }
+
+  function shouldContinueAnimating() {
+    if (
+      isRenderingSuspended() ||
+      state.held
+    ) {
+      return false;
+    }
+
+    if (state.interactionActive) {
+      return true;
+    }
+
+    if (!isSceneSettled()) {
+      return true;
+    }
+
+    if (
+      !state.reducedMotion &&
+      state.sceneVisible &&
+      state.documentVisible &&
+      !state.pageScrolling
+    ) {
+      return true;
+    }
+
+    return false;
+  }
+
+  function animate(now) {
+    state.raf = 0;
+
+    if (
+      !state.running ||
+      state.disposed ||
+      state.failed ||
+      isRenderingSuspended()
+    ) {
+      state.counters.suspendedFrames +=
+        1;
+
+      stopAnimationLoop();
+
+      return;
+    }
+
+    const seconds =
+      now * 0.001;
+
+    const delta =
+      state.lastTime
+        ? clamp(
+            seconds -
+            state.lastTime,
+            0,
+            0.05
+          )
+        : 0.016;
+
+    state.lastTime =
+      seconds;
+
+    updateRootState();
+
+    updateInterpolatedState(
+      delta,
+      now
+    );
+
+    positionSemanticControls();
+
+    requestCompositorFrame(
+      "crystal-animation"
+    );
+
+    state.dirty = false;
+
+    if (
+      shouldContinueAnimating()
+    ) {
+      state.raf =
+        requestAnimationFrame(
+          animate
+        );
+
+      return;
+    }
+
+    stopAnimationLoop();
   }
 
   function handleOrbitMotion(event) {
@@ -3039,13 +3594,25 @@
 
     state.counters.motionEvents += 1;
 
-    requestCompositorFrame(
+    ensureAnimation(
       "interaction-motion"
     );
   }
 
+  function handleMotionStart() {
+    state.interactionActive =
+      true;
+
+    ensureAnimation(
+      "interaction-motion-start"
+    );
+  }
+
   function handleMotionEnd() {
-    requestCompositorFrame(
+    state.interactionActive =
+      false;
+
+    ensureAnimation(
       "interaction-motion-end"
     );
   }
@@ -3075,9 +3642,133 @@
 
     updateNodeTargets();
 
-    requestCompositorFrame(
+    ensureAnimation(
       "cluster-state-changed"
     );
+  }
+
+  function handleDocumentVisibility() {
+    state.documentVisible =
+      !document.hidden;
+
+    reflectSuspensionState();
+
+    if (state.documentVisible) {
+      ensureAnimation(
+        "document-visible"
+      );
+    } else {
+      stopAnimationLoop();
+    }
+  }
+
+  function handlePageScroll() {
+    if (
+      state.disposed ||
+      state.failed
+    ) {
+      return;
+    }
+
+    state.pageScrolling =
+      true;
+
+    reflectSuspensionState();
+    stopAnimationLoop();
+
+    if (state.scrollResumeTimer) {
+      clearTimeout(
+        state.scrollResumeTimer
+      );
+    }
+
+    state.scrollResumeTimer =
+      window.setTimeout(
+        () => {
+          state.scrollResumeTimer = 0;
+          state.pageScrolling = false;
+
+          reflectSuspensionState();
+
+          ensureAnimation(
+            "page-scroll-ended"
+          );
+        },
+        CONFIG.pageScrollPauseMs
+      );
+  }
+
+  function initializeVisibilityObserver() {
+    if (
+      "IntersectionObserver" in
+      window
+    ) {
+      const observer =
+        new IntersectionObserver(
+          entries => {
+            const entry =
+              entries[0];
+
+            if (!entry) {
+              return;
+            }
+
+            const visible =
+              entry.isIntersecting &&
+              entry.intersectionRatio >=
+                CONFIG.intersectionThreshold;
+
+            if (
+              state.sceneVisible ===
+              visible
+            ) {
+              return;
+            }
+
+            state.sceneVisible =
+              visible;
+
+            reflectSuspensionState();
+
+            if (visible) {
+              ensureAnimation(
+                "scene-visible"
+              );
+            } else {
+              stopAnimationLoop();
+            }
+
+            publishReceipt(
+              visible
+                ? "scene-visible"
+                : "scene-hidden"
+            );
+          },
+          {
+            root:
+              null,
+
+            threshold:
+              [
+                0,
+                CONFIG.intersectionThreshold,
+                0.25,
+                0.75
+              ]
+          }
+        );
+
+      observer.observe(
+        state.orbitField
+      );
+
+      addObserver(observer);
+
+      return;
+    }
+
+    state.sceneVisible =
+      true;
   }
 
   function initializeRootObserver() {
@@ -3091,7 +3782,7 @@
           updateRootState();
           updateNodeTargets();
 
-          requestCompositorFrame(
+          ensureAnimation(
             "root-state-mutated"
           );
         }
@@ -3120,19 +3811,21 @@
   ) {
     const fallbackStars =
       Array.from(
-        document.querySelectorAll(
-          SELECTORS.fallbackStar
-        )
+        state.orbitField
+          .querySelectorAll(
+            SELECTORS.fallbackStar
+          )
       );
 
     const fallbackLayers =
       Array.from(
-        document.querySelectorAll(
-          [
-            SELECTORS.primaryLayer,
-            SELECTORS.cluster
-          ].join(",")
-        )
+        state.orbitField
+          .querySelectorAll(
+            [
+              SELECTORS.primaryLayer,
+              SELECTORS.cluster
+            ].join(",")
+          )
       );
 
     for (
@@ -3193,49 +3886,6 @@
     );
   }
 
-  function animate(now) {
-    if (
-      !state.running ||
-      state.disposed ||
-      state.failed
-    ) {
-      return;
-    }
-
-    const seconds =
-      now * 0.001;
-
-    const delta =
-      state.lastTime
-        ? clamp(
-            seconds -
-            state.lastTime,
-            0,
-            0.05
-          )
-        : 0.016;
-
-    state.lastTime =
-      seconds;
-
-    updateRootState();
-
-    updateInterpolatedState(
-      delta
-    );
-
-    positionSemanticControls();
-
-    requestCompositorFrame(
-      "crystal-animation"
-    );
-
-    state.raf =
-      requestAnimationFrame(
-        animate
-      );
-  }
-
   function resolveCompositor() {
     const compositor =
       window.SHOWROOM_COMPOSITOR;
@@ -3247,6 +3897,9 @@
         "function" ||
       typeof compositor
         .projectWorldToScreen !==
+        "function" ||
+      typeof compositor
+        .requestFrame !==
         "function"
     ) {
       return false;
@@ -3277,7 +3930,6 @@
     }
 
     state.ready = true;
-    state.running = true;
 
     setRootAttribute(
       ATTRIBUTES.ready,
@@ -3292,6 +3944,8 @@
     setFallbackPaintVisible(
       false
     );
+
+    reflectSuspensionState();
 
     publishReceipt(
       "ready"
@@ -3317,12 +3971,9 @@
       }
     );
 
-    state.lastTime = 0;
-
-    state.raf =
-      requestAnimationFrame(
-        animate
-      );
+    ensureAnimation(
+      "initial-animation"
+    );
   }
 
   function registerAllNodes() {
@@ -3468,6 +4119,12 @@
 
     addListener(
       window,
+      EVENTS.orbitMotionStart,
+      handleMotionStart
+    );
+
+    addListener(
+      window,
       EVENTS.orbitMotionEnd,
       handleMotionEnd
     );
@@ -3485,8 +4142,34 @@
         updateRootState();
         updateNodeTargets();
 
-        requestCompositorFrame(
+        ensureAnimation(
           "controller-state-changed"
+        );
+      }
+    );
+
+    addListener(
+      document,
+      "visibilitychange",
+      handleDocumentVisibility
+    );
+
+    addListener(
+      window,
+      "scroll",
+      handlePageScroll,
+      {
+        passive:
+          true
+      }
+    );
+
+    addListener(
+      window,
+      "orientationchange",
+      () => {
+        ensureAnimation(
+          "orientation-change"
         );
       }
     );
@@ -3580,7 +4263,7 @@
           updateNodeTargets();
           positionSemanticControls();
 
-          requestCompositorFrame(
+          ensureAnimation(
             "crystals-api-refresh"
           );
 
@@ -3590,36 +4273,13 @@
         },
 
         start() {
-          if (
-            state.failed ||
-            state.disposed
-          ) {
-            return false;
-          }
-
-          if (!state.running) {
-            state.running = true;
-            state.lastTime = 0;
-
-            state.raf =
-              requestAnimationFrame(
-                animate
-              );
-          }
-
-          return true;
+          return ensureAnimation(
+            "api-start"
+          );
         },
 
         stop() {
-          state.running = false;
-
-          if (state.raf) {
-            cancelAnimationFrame(
-              state.raf
-            );
-
-            state.raf = 0;
-          }
+          stopAnimationLoop();
 
           return true;
         },
@@ -3646,72 +4306,79 @@
     );
   }
 
-  function rollbackAfterFailure() {
-    state.running = false;
+  function resetSemanticElement(
+    node
+  ) {
+    const element =
+      node.semanticElement;
 
-    if (state.raf) {
-      cancelAnimationFrame(
-        state.raf
-      );
-
-      state.raf = 0;
+    if (!element) {
+      return;
     }
 
-    unregisterAllNodes();
+    const properties = [
+      "left",
+      "top",
+      "right",
+      "bottom",
+      "width",
+      "height",
+      "margin",
+      "transform",
+      "position",
+      "opacity",
+      "pointer-events",
+      "background",
+      "border-color",
+      "box-shadow",
+      "color",
+      "-webkit-tap-highlight-color"
+    ];
 
-    setFallbackPaintVisible(
-      true
+    for (
+      const property
+      of properties
+    ) {
+      element.style.removeProperty(
+        property
+      );
+    }
+
+    element.removeAttribute(
+      "aria-hidden"
     );
+
+    element.removeAttribute(
+      ATTRIBUTES.fallbackRendering
+    );
+
+    node.lastSemantic.visible =
+      false;
+
+    node.lastSemantic.interactive =
+      false;
+
+    node.lastSemantic.x =
+      NaN;
+
+    node.lastSemantic.y =
+      NaN;
+
+    node.lastSemantic.size =
+      NaN;
+  }
+
+  function rollbackAfterFailure() {
+    stopAnimationLoop();
+    unregisterAllNodes();
+    setFallbackPaintVisible(true);
 
     for (
       const node
       of state.nodes.values()
     ) {
-      const element =
-        node.semanticElement;
-
-      if (!element) {
-        continue;
-      }
-
-      element.style.removeProperty(
-        "left"
-      );
-
-      element.style.removeProperty(
-        "top"
-      );
-
-      element.style.removeProperty(
-        "width"
-      );
-
-      element.style.removeProperty(
-        "height"
-      );
-
-      element.style.removeProperty(
-        "transform"
-      );
-
-      element.style.removeProperty(
-        "position"
-      );
-
-      element.style.removeProperty(
-        "opacity"
-      );
-
-      element.style.removeProperty(
-        "pointer-events"
-      );
-
-      element.removeAttribute(
-        "aria-hidden"
-      );
-
-      element.removeAttribute(
-        ATTRIBUTES.fallbackRendering
+      resetSemanticElement(
+        node
       );
     }
 
@@ -3748,6 +4415,14 @@
       );
 
       state.readinessTimer = 0;
+    }
+
+    if (state.scrollResumeTimer) {
+      clearTimeout(
+        state.scrollResumeTimer
+      );
+
+      state.scrollResumeTimer = 0;
     }
 
     rollbackAfterFailure();
@@ -3802,6 +4477,7 @@
       updateNodeTargets();
 
       initializeRootObserver();
+      initializeVisibilityObserver();
       initializeEvents();
       exposeApi();
 
@@ -3820,6 +4496,8 @@
       setFallbackPaintVisible(
         true
       );
+
+      reflectSuspensionState();
 
       publishReceipt(
         "initialized-awaiting-compositor"
@@ -3858,15 +4536,8 @@
 
     state.disposed = true;
     state.ready = false;
-    state.running = false;
 
-    if (state.raf) {
-      cancelAnimationFrame(
-        state.raf
-      );
-
-      state.raf = 0;
-    }
+    stopAnimationLoop();
 
     if (state.readinessTimer) {
       clearTimeout(
@@ -3874,6 +4545,14 @@
       );
 
       state.readinessTimer = 0;
+    }
+
+    if (state.scrollResumeTimer) {
+      clearTimeout(
+        state.scrollResumeTimer
+      );
+
+      state.scrollResumeTimer = 0;
     }
 
     unregisterAllNodes();
@@ -3908,67 +4587,8 @@
       const node
       of state.nodes.values()
     ) {
-      const element =
-        node.semanticElement;
-
-      if (!element) {
-        continue;
-      }
-
-      element.style.removeProperty(
-        "left"
-      );
-
-      element.style.removeProperty(
-        "top"
-      );
-
-      element.style.removeProperty(
-        "width"
-      );
-
-      element.style.removeProperty(
-        "height"
-      );
-
-      element.style.removeProperty(
-        "transform"
-      );
-
-      element.style.removeProperty(
-        "position"
-      );
-
-      element.style.removeProperty(
-        "opacity"
-      );
-
-      element.style.removeProperty(
-        "pointer-events"
-      );
-
-      element.style.removeProperty(
-        "background"
-      );
-
-      element.style.removeProperty(
-        "border-color"
-      );
-
-      element.style.removeProperty(
-        "box-shadow"
-      );
-
-      element.style.removeProperty(
-        "color"
-      );
-
-      element.removeAttribute(
-        "aria-hidden"
-      );
-
-      element.removeAttribute(
-        ATTRIBUTES.fallbackRendering
+      resetSemanticElement(
+        node
       );
     }
 
@@ -3980,6 +4600,11 @@
     setRootAttribute(
       ATTRIBUTES.state,
       "disposed"
+    );
+
+    setRootAttribute(
+      ATTRIBUTES.suspended,
+      "true"
     );
 
     publishReceipt(

@@ -1,6 +1,10 @@
 /* /products/archcoin/index.controller.js
    ARCHCOIN
-   Generational interaction-authority baseline.
+   Controller foundation renewal.
+
+   Module:
+   DGB_ARCHCOIN_CONTROLLER
+   6.0.0-controller-foundation-renewal
 
    Controlling dependency position:
    1. /products/archcoin/index.controller.js
@@ -11,18 +15,46 @@
    6. /assets/compass/upstream-compass.css
    7. /products/archcoin/index.css
 
-   Controlling law:
-   - The constellation remains the primary navigational object.
-   - Four coins open four corresponding room clusters.
-   - Each cluster owns four exact canonical room destinations.
-   - Room and Home Compass selections use one shared lower selection chamber.
-   - Initial selection never navigates immediately.
-   - Enter Selected Path performs the selected destination navigation.
-   - Return to Orbit restores the correct prior ARCHCOIN state.
-   - The Compass is tap-only at controller authority.
-   - The Compass receives no independent drag-delta stream.
+   Controlling navigation law:
+   - CONSTELLATION presents the four outer cardinals.
+   - Selecting one cardinal opens only that cardinal's four-room cluster.
+   - CLUSTER_OPEN retires the outer cardinal field from active presentation.
+   - ROOM_SELECTED preserves the active four-room cluster.
+   - Initial room selection never navigates immediately.
+   - Enter Selected Path performs canonical route entry.
+   - Return to Orbit restores ROOM_SELECTED to CLUSTER_OPEN.
+   - Return to Constellation restores CLUSTER_OPEN or ROOM_SELECTED to
+     CONSTELLATION.
+   - Additive cardinal-plus-cluster presentation is forbidden.
+   - Generated nonvisual room proxies are forbidden.
+   - Projected room-hit inference is forbidden.
+
+   Controlling Compass law:
+   - The Compass is a fixed-center independent sibling.
+   - The Compass does not create an ARCHCOIN navigation state.
+   - The Compass does not inherit orbit or cluster orientation.
+   - The Compass does not participate in orbit or cluster settlement.
+   - The Compass publishes no quaternion.
+   - The controller does not mount or supervise the renderer.
+   - A Compass activation publishes one nonnavigating upstream request.
+   - A later page adapter may consume that request.
    - The Home Compass route is exactly /index.html.
-   - Geometry, renderer, crystals, HTML, and CSS must depend on this law.
+
+   Controller boundary:
+   - This file owns behavior, canonical navigation records, state transitions,
+     orientation state, semantic activation, route confirmation, restoration,
+     reduced-motion state, held state, upstream requests, public contracts,
+     and controller-only validation.
+   - This file does not own WebGL, shaders, GPU buffers, canvas construction,
+     fallback visibility, crystal drawing, scene layout, CSS, projected
+     picking, or renderer lifecycle.
+
+   Renewal disposition:
+   CONTROLLER_FOUNDATION_RENEWAL_CANDIDATE
+   !=
+   DOWNSTREAM_INTEGRATION
+   !=
+   PRODUCTION_AUTHORIZATION
 */
 
 (() => {
@@ -30,7 +62,7 @@
 
   const MODULE = Object.freeze({
     id: "DGB_ARCHCOIN_CONTROLLER",
-    version: "5.0.0-generational-selection-chamber-baseline",
+    version: "6.0.0-controller-foundation-renewal",
     file: "/products/archcoin/index.controller.js"
   });
 
@@ -38,7 +70,6 @@
     CONSTELLATION: "CONSTELLATION",
     CLUSTER_OPEN: "CLUSTER_OPEN",
     ROOM_SELECTED: "ROOM_SELECTED",
-    COMPASS_DECISION: "COMPASS_DECISION",
     SYSTEM_HELD: "SYSTEM_HELD"
   });
 
@@ -52,15 +83,16 @@
   const ORIENTATION_PHASES = Object.freeze({
     IDLE: "IDLE",
     PREVIEW: "PREVIEW",
-    SETTLING: "SETTLING",
     COMMITTED: "COMMITTED",
     CANCELLED: "CANCELLED"
   });
 
-  const COMPASS_PRESENTATION_MODES = Object.freeze({
-    EMBEDDED: "EMBEDDED",
-    DECISION_APPROACH: "DECISION_APPROACH",
-    FAILURE_FALLBACK: "FAILURE_FALLBACK"
+  const CHANNELS = Object.freeze({
+    FRAME: "frame",
+    REDUCED_MOTION: "reducedMotion",
+    HELD_STATE: "heldState",
+    COMPASS_STATE: "compassState",
+    UPSTREAM_REQUEST: "upstreamRequest"
   });
 
   const WINGS = Object.freeze([
@@ -82,8 +114,59 @@
     destinationId: "home-compass",
     destinationLabel: "Home Compass",
     route: "/index.html",
-    paragraph:
-      "The Home Compass is the primary navigation Compass for the website. Entering this path leaves ARCHCOIN and returns to index.html."
+    source: "archcoin-controller"
+  });
+
+  const PRESENTATION_BY_STATE = Object.freeze({
+    [STATES.CONSTELLATION]: Object.freeze({
+      outerCardinalsActive: true,
+      activeRoomCluster: false,
+      roomSelectionPermitted: false
+    }),
+
+    [STATES.CLUSTER_OPEN]: Object.freeze({
+      outerCardinalsActive: false,
+      activeRoomCluster: true,
+      roomSelectionPermitted: true
+    }),
+
+    [STATES.ROOM_SELECTED]: Object.freeze({
+      outerCardinalsActive: false,
+      activeRoomCluster: true,
+      roomSelectionPermitted: true
+    }),
+
+    [STATES.SYSTEM_HELD]: Object.freeze({
+      outerCardinalsActive: false,
+      activeRoomCluster: false,
+      roomSelectionPermitted: false
+    })
+  });
+
+  const TRANSITIONS = Object.freeze({
+    [STATES.CONSTELLATION]: Object.freeze([
+      STATES.CONSTELLATION,
+      STATES.CLUSTER_OPEN,
+      STATES.SYSTEM_HELD
+    ]),
+
+    [STATES.CLUSTER_OPEN]: Object.freeze([
+      STATES.CLUSTER_OPEN,
+      STATES.ROOM_SELECTED,
+      STATES.CONSTELLATION,
+      STATES.SYSTEM_HELD
+    ]),
+
+    [STATES.ROOM_SELECTED]: Object.freeze([
+      STATES.ROOM_SELECTED,
+      STATES.CLUSTER_OPEN,
+      STATES.CONSTELLATION,
+      STATES.SYSTEM_HELD
+    ]),
+
+    [STATES.SYSTEM_HELD]: Object.freeze([
+      STATES.SYSTEM_HELD
+    ])
   });
 
   const CANONICAL_ROOM_RECORDS = Object.freeze([
@@ -188,7 +271,7 @@
     })
   ]);
 
-  const ARCHCOIN_16_ROOM_DESTINATION_PATHS = Object.freeze(
+  const CANONICAL_ROOM_ROUTES = Object.freeze(
     CANONICAL_ROOM_RECORDS.map(record => record.route)
   );
 
@@ -228,16 +311,19 @@
       pitch: 0,
       roll: 0
     }),
+
     east: Object.freeze({
       yaw: -Math.PI / 2,
       pitch: 0,
       roll: 0
     }),
+
     south: Object.freeze({
       yaw: Math.PI,
       pitch: 0,
       roll: 0
     }),
+
     west: Object.freeze({
       yaw: Math.PI / 2,
       pitch: 0,
@@ -245,53 +331,12 @@
     })
   });
 
-  const TRANSITIONS = Object.freeze({
-    [STATES.CONSTELLATION]: Object.freeze([
-      STATES.CONSTELLATION,
-      STATES.CLUSTER_OPEN,
-      STATES.COMPASS_DECISION,
-      STATES.SYSTEM_HELD
-    ]),
-
-    [STATES.CLUSTER_OPEN]: Object.freeze([
-      STATES.CLUSTER_OPEN,
-      STATES.ROOM_SELECTED,
-      STATES.CONSTELLATION,
-      STATES.COMPASS_DECISION,
-      STATES.SYSTEM_HELD
-    ]),
-
-    [STATES.ROOM_SELECTED]: Object.freeze([
-      STATES.ROOM_SELECTED,
-      STATES.CLUSTER_OPEN,
-      STATES.CONSTELLATION,
-      STATES.COMPASS_DECISION,
-      STATES.SYSTEM_HELD
-    ]),
-
-    [STATES.COMPASS_DECISION]: Object.freeze([
-      STATES.COMPASS_DECISION,
-      STATES.CONSTELLATION,
-      STATES.CLUSTER_OPEN,
-      STATES.ROOM_SELECTED,
-      STATES.SYSTEM_HELD
-    ]),
-
-    [STATES.SYSTEM_HELD]: Object.freeze([
-      STATES.SYSTEM_HELD
-    ])
-  });
-
-  const CHANNELS = Object.freeze({
-    FRAME: "frame",
-    COMPASS_PRESENTATION: "compassPresentation",
-    REDUCED_MOTION: "reducedMotion"
-  });
-
   const subscribers = Object.freeze({
     frame: new Set(),
-    compassPresentation: new Set(),
-    reducedMotion: new Set()
+    reducedMotion: new Set(),
+    heldState: new Set(),
+    compassState: new Set(),
+    upstreamRequest: new Set()
   });
 
   const state = {
@@ -311,14 +356,11 @@
     guidance: null,
 
     controllerReceiptOutput: null,
+    controllerValidationOutput: null,
 
-    compassMount: null,
     compassControl: null,
-    compassFallback: null,
-    compassRendererHandle: null,
 
     current: STATES.CONSTELLATION,
-    stateBeforeCompassDecision: null,
 
     orbitFocus: "north",
     orbitPreviewFocus: "north",
@@ -348,16 +390,18 @@
     sceneAscentFrame: 0,
     sceneAscentCommitFrame: 0,
 
-    compassPresentationMode:
-      COMPASS_PRESENTATION_MODES.EMBEDDED,
-    compassRendererStatus: "pending",
-    compassRendererFailure: "",
-
     reducedMotion: false,
-    initialized: false,
+    mediaQuery: null,
+    mediaQueryListener: null,
 
+    lastUpstreamRequest: null,
+    upstreamRequestRevision: 0,
+
+    initialized: false,
     lastAction: "pending",
-    lastFailure: ""
+    lastFailure: "",
+
+    validationReceipt: null
   };
 
   function invariant(condition, code, details = null) {
@@ -381,6 +425,7 @@
 
   function finiteNumber(value, fallback = 0) {
     const number = Number(value);
+
     return Number.isFinite(number)
       ? number
       : fallback;
@@ -417,6 +462,7 @@
 
   function normalizeLabel(value, fallback = "") {
     const label = String(value || "").trim();
+
     return label || fallback;
   }
 
@@ -525,11 +571,13 @@
 
     return {
       yaw: wrapRadians(yaw),
+
       pitch: clamp(
         pitch,
         -Math.PI / 2,
         Math.PI / 2
       ),
+
       roll: wrapRadians(roll)
     };
   }
@@ -578,6 +626,7 @@
       pitch: euler.pitch,
       roll: euler.roll,
       quaternion: normalized,
+
       primaryId: String(
         primaryId || ""
       ).trim()
@@ -593,11 +642,16 @@
 
     return {
       yaw: finiteNumber(source.yaw, 0),
+
       pitch: finiteNumber(
         source.pitch,
         0
       ),
-      roll: finiteNumber(source.roll, 0),
+
+      roll: finiteNumber(
+        source.roll,
+        0
+      ),
 
       quaternion: normalizeQuaternion(
         source.quaternion
@@ -701,9 +755,7 @@
     );
   }
 
-  function canonicalConstellationOrientation(
-    wing
-  ) {
+  function canonicalConstellationOrientation(wing) {
     const normalizedWing =
       normalizeWing(wing) ||
       "north";
@@ -745,27 +797,15 @@
 
     return {
       wing,
-
       roomIds: Array.from(roomIds),
-
       primaryRoom,
-
-      previewPrimaryRoom:
-        primaryRoom,
-
-      phase:
-        ORIENTATION_PHASES.COMMITTED,
-
+      previewPrimaryRoom: primaryRoom,
+      phase: ORIENTATION_PHASES.COMMITTED,
       gestureActive: false,
-
       revision: 0,
-
-      orientation:
-        cloneOrientation(orientation),
-
+      orientation: cloneOrientation(orientation),
       committedOrientation:
         cloneOrientation(orientation),
-
       gestureOrigin: null
     };
   }
@@ -790,17 +830,6 @@
     ) {
       return normalizeWing(
         state.selectedCardinal
-      );
-    }
-
-    if (
-      state.current ===
-        STATES.COMPASS_DECISION &&
-      state.stateBeforeCompassDecision
-    ) {
-      return normalizeWing(
-        state.stateBeforeCompassDecision
-          .selectedCardinal
       );
     }
 
@@ -835,6 +864,17 @@
         toState
       )
     );
+  }
+
+  function isHeld() {
+    return (
+      state.current ===
+      STATES.SYSTEM_HELD
+    );
+  }
+
+  function interactionAllowed() {
+    return !isHeld();
   }
 
   function subscribe(channel, callback) {
@@ -873,7 +913,10 @@
     const normalizedWing =
       normalizeWing(wing);
 
-    if (!normalizedWing) {
+    if (
+      !normalizedWing ||
+      !state.root
+    ) {
       return null;
     }
 
@@ -887,7 +930,10 @@
     const id =
       normalizeRoomId(roomId);
 
-    if (!id) {
+    if (
+      !id ||
+      !state.root
+    ) {
       return null;
     }
 
@@ -942,16 +988,16 @@
     });
   }
 
-  function roomParagraphFromElement(
-    element
-  ) {
+  function roomParagraphFromElement(element) {
     return normalizeLabel(
       element.dataset.preview ||
       element.dataset.roomSummary ||
+      element.dataset.localFunction ||
       element.dataset.roomFunction ||
       element.dataset.panelBody ||
       element.dataset.whyEnter ||
       element.dataset.panelWhy,
+
       "This room is part of the selected ARCHCOIN domain. Review its purpose, then enter the exact declared path when ready."
     );
   }
@@ -975,12 +1021,14 @@
         element.dataset.panelBody ||
         element.dataset.coinBody ||
         element.dataset.coinFunction,
+
         "This coin opens a four-room ARCHCOIN cluster."
       ),
 
       relationship: normalizeLabel(
         element.dataset.panelWhy ||
         element.dataset.coinWhy,
+
         "Rotate the cluster and choose the room that matches the task."
       )
     });
@@ -1009,24 +1057,16 @@
     });
   }
 
-  function panelFromHomeCompass() {
-    return Object.freeze({
-      eyebrow: "Selected path",
-      title: HOME_COMPASS.destinationLabel,
-      purpose: HOME_COMPASS.paragraph,
-      relationship:
-        "Choose Enter Selected Path to open the Home Compass, or Return to Orbit to restore the exact ARCHCOIN state that existed before selecting it."
-    });
-  }
-
   function defaultPanel() {
     return Object.freeze({
       eyebrow: "Selected path",
       title: "Choose a coin",
+
       purpose:
         "Begin with the financial domain that most closely matches the question in front of you.",
+
       relationship:
-        "Tap a coin to open its four-room cluster. Tap a room or the center Compass to inspect a destination before entering it."
+        "Tap a coin to open its four-room cluster."
     });
   }
 
@@ -1169,10 +1209,8 @@
     clearSceneAscentSchedule();
   }
 
-  function scheduleSelectionChamberDescent(
-    expectedState,
-    expectedDestinationType,
-    expectedDestinationId
+  function scheduleRoomPanelDescent(
+    expectedRoomId
   ) {
     clearViewportSchedules();
 
@@ -1190,11 +1228,9 @@
 
             if (
               state.current !==
-                expectedState ||
-              state.selectedDestinationType !==
-                expectedDestinationType ||
-              state.selectedDestinationId !==
-                expectedDestinationId ||
+                STATES.ROOM_SELECTED ||
+              state.selectedRoom !==
+                expectedRoomId ||
               !state.panel
             ) {
               return;
@@ -1205,6 +1241,7 @@
                 state.reducedMotion
                   ? "auto"
                   : "smooth",
+
               block: "start",
               inline: "nearest"
             });
@@ -1212,7 +1249,7 @@
             state.panelDescended = true;
 
             recordAction(
-              `selection-chamber-descended:${expectedDestinationType}:${expectedDestinationId}`
+              `room-panel-descended:${expectedRoomId}`
             );
           });
       });
@@ -1256,6 +1293,7 @@
                 state.reducedMotion
                   ? "auto"
                   : "smooth",
+
               block: "start",
               inline: "nearest"
             });
@@ -1284,152 +1322,104 @@
     state.panelDescended = false;
   }
 
-  function snapshotRestorableState() {
+  function createPresentationState() {
+    const presentation =
+      PRESENTATION_BY_STATE[
+        state.current
+      ] ||
+      PRESENTATION_BY_STATE[
+        STATES.SYSTEM_HELD
+      ];
+
     return Object.freeze({
       state: state.current,
 
-      selectedCardinal:
-        state.selectedCardinal,
+      outerCardinalsActive:
+        presentation.outerCardinalsActive,
 
-      selectedCoin:
-        state.selectedCoin,
+      activeRoomCluster:
+        presentation.activeRoomCluster,
 
-      selectedRoom:
-        state.selectedRoom,
+      roomSelectionPermitted:
+        presentation.roomSelectionPermitted,
 
-      selectedDestinationType:
-        state.selectedDestinationType,
-
-      selectedDestinationId:
-        state.selectedDestinationId,
-
-      selectedDestinationLabel:
-        state.selectedDestinationLabel,
-
-      selectedRoute:
-        state.selectedRoute,
-
-      selectedContentId:
-        state.selectedContentId,
-
-      selectedLens:
-        state.selectedLens,
-
-      selectedParagraph:
-        state.selectedParagraph,
-
-      panelDescended:
-        state.panelDescended,
-
-      orbitFocus:
-        state.orbitFocus,
-
-      orbitPreviewFocus:
-        state.orbitPreviewFocus
+      additiveCoRenderingAuthorized:
+        false
     });
   }
 
-  function restoreSnapshot(snapshot) {
-    invariant(
-      snapshot &&
-      typeof snapshot === "object",
-      "ARCHCOIN_RESTORE_SNAPSHOT_REQUIRED"
-    );
-
-    state.selectedCardinal =
-      snapshot.selectedCardinal || "";
-
-    state.selectedCoin =
-      snapshot.selectedCoin || "";
-
-    state.selectedRoom =
-      snapshot.selectedRoom || "";
-
-    state.selectedDestinationType =
-      snapshot.selectedDestinationType ||
-      DESTINATION_TYPES.NONE;
-
-    state.selectedDestinationId =
-      snapshot.selectedDestinationId || "";
-
-    state.selectedDestinationLabel =
-      snapshot.selectedDestinationLabel || "";
-
-    state.selectedRoute =
-      snapshot.selectedRoute || "";
-
-    state.selectedContentId =
-      snapshot.selectedContentId || "";
-
-    state.selectedLens =
-      snapshot.selectedLens || "overview";
-
-    state.selectedParagraph =
-      snapshot.selectedParagraph || "";
-
-    state.panelDescended =
-      Boolean(snapshot.panelDescended);
-
-    state.orbitFocus =
-      normalizeWing(
-        snapshot.orbitFocus
-      ) ||
-      state.orbitFocus;
-
-    state.orbitPreviewFocus =
-      normalizeWing(
-        snapshot.orbitPreviewFocus
-      ) ||
-      state.orbitPreviewFocus;
+  function createHeldState() {
+    return Object.freeze({
+      held: isHeld(),
+      terminal: isHeld(),
+      interactionEnabled:
+        interactionAllowed(),
+      reason:
+        isHeld()
+          ? state.lastFailure ||
+            "ARCHCOIN_SYSTEM_HELD"
+          : ""
+    });
   }
 
-  function createCompassPresentationState() {
+  function createCompassState() {
     return Object.freeze({
-      mode:
-        state.compassPresentationMode,
-
-      selected:
-        state.current ===
-        STATES.COMPASS_DECISION,
-
-      decisionOpen:
-        state.current ===
-        STATES.COMPASS_DECISION,
-
-      cameraLowered:
-        state.current ===
-        STATES.COMPASS_DECISION,
+      fixedCenter: true,
 
       interactionEnabled:
-        state.current !==
-        STATES.SYSTEM_HELD,
-
-      receivesIndependentGestureDeltas:
-        false,
-
-      inheritsConstellationOrientation:
-        true,
+        interactionAllowed(),
 
       reducedMotion:
         state.reducedMotion,
 
-      destinationType:
-        HOME_COMPASS.destinationType,
-
-      destinationId:
-        HOME_COMPASS.destinationId,
-
-      destinationLabel:
-        HOME_COMPASS.destinationLabel,
-
-      route:
+      upstreamRoute:
         HOME_COMPASS.route,
 
-      rendererStatus:
-        state.compassRendererStatus,
+      inheritsNavigationOrientation:
+        false,
 
-      rendererFailure:
-        state.compassRendererFailure
+      participatesInNavigationSettlement:
+        false,
+
+      quaternionPublished:
+        false,
+
+      independentMotionSignalsPublished:
+        false
+    });
+  }
+
+  function createUpstreamRequestSnapshot() {
+    if (!state.lastUpstreamRequest) {
+      return null;
+    }
+
+    return Object.freeze({
+      destinationType:
+        state.lastUpstreamRequest
+          .destinationType,
+
+      destinationId:
+        state.lastUpstreamRequest
+          .destinationId,
+
+      destinationLabel:
+        state.lastUpstreamRequest
+          .destinationLabel,
+
+      route:
+        state.lastUpstreamRequest.route,
+
+      source:
+        state.lastUpstreamRequest.source,
+
+      revision:
+        state.lastUpstreamRequest
+          .revision,
+
+      requestedAt:
+        state.lastUpstreamRequest
+          .requestedAt
     });
   }
 
@@ -1442,6 +1432,9 @@
       moduleVersion: MODULE.version,
 
       state: state.current,
+
+      presentation:
+        createPresentationState(),
 
       orbitFocus:
         state.orbitFocus,
@@ -1548,14 +1541,20 @@
       reducedMotion:
         state.reducedMotion,
 
-      compassPresentation:
-        createCompassPresentationState(),
+      held:
+        isHeld(),
+
+      compass:
+        createCompassState(),
+
+      lastUpstreamRequest:
+        createUpstreamRequestSnapshot(),
 
       canonicalRoomRecords:
         CANONICAL_ROOM_RECORDS,
 
       canonicalRoomRoutes:
-        ARCHCOIN_16_ROOM_DESTINATION_PATHS,
+        CANONICAL_ROOM_ROUTES,
 
       homeCompass:
         HOME_COMPASS,
@@ -1571,16 +1570,30 @@
   function createCompatibilityReceipt(frame) {
     return Object.freeze({
       contractId:
-        "ARCHCOIN_CONTROLLER_GENERATIONAL_SELECTION_CHAMBER_v5",
+        "ARCHCOIN_CONTROLLER_FOUNDATION_v6",
 
       status:
-        frame.state ===
-        STATES.SYSTEM_HELD
+        frame.held
           ? "held"
           : "available",
 
       state:
         frame.state,
+
+      outerCardinalsActive:
+        frame.presentation
+          .outerCardinalsActive,
+
+      activeRoomCluster:
+        frame.presentation
+          .activeRoomCluster,
+
+      roomSelectionPermitted:
+        frame.presentation
+          .roomSelectionPermitted,
+
+      additiveCoRenderingAuthorized:
+        false,
 
       orbitFocus:
         frame.orbitFocus,
@@ -1657,35 +1670,31 @@
       selectedRoute:
         frame.selectedRoute,
 
-      selectedContentId:
-        frame.selectedContentId,
-
-      selectedLens:
-        frame.selectedLens,
-
-      selectedParagraph:
-        frame.selectedParagraph,
-
       panelDescended:
         frame.panelDescended,
 
-      compassPresentationMode:
-        frame.compassPresentation.mode,
+      reducedMotion:
+        frame.reducedMotion,
 
-      compassDecisionOpen:
-        frame.compassPresentation
-          .decisionOpen,
+      held:
+        frame.held,
 
-      compassRendererStatus:
-        frame.compassPresentation
-          .rendererStatus,
+      compassFixedCenter:
+        frame.compass.fixedCenter,
 
-      compassRendererFailure:
-        frame.compassPresentation
-          .rendererFailure,
+      compassUpstreamRoute:
+        frame.compass.upstreamRoute,
 
-      homeCompassRoute:
-        HOME_COMPASS.route,
+      compassInheritsNavigationOrientation:
+        frame.compass
+          .inheritsNavigationOrientation,
+
+      compassParticipatesInNavigationSettlement:
+        frame.compass
+          .participatesInNavigationSettlement,
+
+      lastUpstreamRequest:
+        frame.lastUpstreamRequest,
 
       lastAction:
         frame.lastAction,
@@ -1706,6 +1715,27 @@
     state.root.dataset.archcoinMode =
       frame.state;
 
+    state.root.dataset.outerCardinalsActive =
+      frame.presentation
+        .outerCardinalsActive
+        ? "true"
+        : "false";
+
+    state.root.dataset.activeRoomCluster =
+      frame.presentation
+        .activeRoomCluster
+        ? "true"
+        : "false";
+
+    state.root.dataset.roomSelectionPermitted =
+      frame.presentation
+        .roomSelectionPermitted
+        ? "true"
+        : "false";
+
+    state.root.dataset.additiveCoRenderingAuthorized =
+      "false";
+
     state.root.dataset.orbitFocus =
       frame.orbitFocus;
 
@@ -1725,8 +1755,7 @@
 
     state.root.dataset.orbitQuaternion =
       JSON.stringify(
-        frame.orbitOrientation
-          .quaternion
+        frame.orbitOrientation.quaternion
       );
 
     state.root.dataset.activeClusterWing =
@@ -1808,40 +1837,35 @@
         ? "true"
         : "false";
 
-    state.root.dataset.compassDecisionOpen =
-      frame.compassPresentation
-        .decisionOpen
+    state.root.dataset.held =
+      frame.held
         ? "true"
         : "false";
 
-    state.root.dataset.compassPresentationMode =
-      frame.compassPresentation.mode;
+    state.root.dataset.compassFixedCenter =
+      "true";
 
-    state.root.dataset.compassCameraLowered =
-      frame.compassPresentation
-        .cameraLowered
-        ? "true"
-        : "false";
-
-    state.root.dataset.compassRendererStatus =
-      frame.compassPresentation
-        .rendererStatus;
-
-    state.root.dataset.compassRendererFailure =
-      frame.compassPresentation
-        .rendererFailure;
-
-    state.root.dataset.homeCompassRoute =
+    state.root.dataset.compassUpstreamRoute =
       HOME_COMPASS.route;
 
+    state.root.dataset.compassInheritsNavigationOrientation =
+      "false";
+
+    state.root.dataset.compassParticipatesInNavigationSettlement =
+      "false";
+
     state.root.dataset.archcoinControllerStatus =
-      frame.state ===
-      STATES.SYSTEM_HELD
+      frame.held
         ? "held"
         : "available";
 
     state.root.dataset.archcoinControllerVersion =
       MODULE.version;
+
+    state.root.dataset.upstreamRequestRevision =
+      String(
+        state.upstreamRequestRevision
+      );
 
     qsa(
       "[data-archcoin-coin]",
@@ -1852,29 +1876,27 @@
           element.dataset.wing
         );
 
-      const selected =
-        wing ===
-          state.selectedCardinal &&
-        (
-          state.current ===
-            STATES.CLUSTER_OPEN ||
-          state.current ===
-            STATES.ROOM_SELECTED
-        );
-
       const primary =
+        frame.state ===
+          STATES.CONSTELLATION &&
+        frame.presentation
+          .outerCardinalsActive &&
         wing ===
-          state.orbitFocus &&
-        state.current ===
-          STATES.CONSTELLATION;
+          frame.orbitFocus;
 
       element.dataset.selected =
-        selected ? "true" : "false";
+        "false";
 
       element.dataset.primary =
         primary ? "true" : "false";
 
-      if (selected || primary) {
+      element.dataset.active =
+        frame.presentation
+          .outerCardinalsActive
+          ? "true"
+          : "false";
+
+      if (primary) {
         element.setAttribute(
           "aria-current",
           "true"
@@ -1895,15 +1917,31 @@
           element.dataset.roomId
         );
 
-      const selected =
-        roomId ===
-        state.selectedRoom;
+      const roomRecord =
+        ROOM_BY_ID.get(roomId);
 
-      const primary = Boolean(
-        cluster &&
+      const inActiveCluster =
+        Boolean(
+          cluster &&
+          roomRecord &&
+          roomRecord.wing ===
+            cluster.wing
+        );
+
+      const selected =
+        inActiveCluster &&
         roomId ===
-          cluster.primaryRoom
-      );
+          frame.selectedRoom;
+
+      const primary =
+        inActiveCluster &&
+        roomId ===
+          cluster.primaryRoom;
+
+      element.dataset.active =
+        inActiveCluster
+          ? "true"
+          : "false";
 
       element.dataset.selected =
         selected ? "true" : "false";
@@ -1924,28 +1962,26 @@
     });
 
     if (state.compassControl) {
-      const selected =
-        state.current ===
-        STATES.COMPASS_DECISION;
-
       state.compassControl.dataset.selected =
-        selected ? "true" : "false";
+        "false";
+
+      state.compassControl.dataset.fixedCenter =
+        "true";
+
+      state.compassControl.dataset.interactionEnabled =
+        frame.compass
+          .interactionEnabled
+          ? "true"
+          : "false";
 
       state.compassControl.setAttribute(
         "aria-expanded",
-        selected ? "true" : "false"
+        "false"
       );
 
-      if (selected) {
-        state.compassControl.setAttribute(
-          "aria-current",
-          "true"
-        );
-      } else {
-        state.compassControl.removeAttribute(
-          "aria-current"
-        );
-      }
+      state.compassControl.removeAttribute(
+        "aria-current"
+      );
     }
   }
 
@@ -1988,13 +2024,6 @@
     return frame;
   }
 
-  function publishCompassPresentation() {
-    publish(
-      CHANNELS.COMPASS_PRESENTATION,
-      createCompassPresentationState()
-    );
-  }
-
   function recordAction(
     action,
     failure = ""
@@ -2023,7 +2052,7 @@
       setReturnToOrbitVisible(false);
 
       setGuidance(
-        "Tap a coin to open its cluster. Drag the constellation to change its orientation. Tap the center Compass to inspect the Home Compass path."
+        "Tap a coin to open its four-room cluster. Drag the constellation to change its orientation."
       );
 
       return;
@@ -2052,7 +2081,7 @@
       setReturnToOrbitVisible(false);
 
       setGuidance(
-        "Rotate the four-room cluster, then tap a room star to inspect its exact destination."
+        "Rotate the active four-room cluster, then choose one visible room."
       );
 
       return;
@@ -2086,33 +2115,7 @@
       );
 
       setGuidance(
-        "Review the selected room. Enter Selected Path opens its exact route. Return to Orbit restores the active four-room cluster."
-      );
-
-      return;
-    }
-
-    if (
-      state.current ===
-      STATES.COMPASS_DECISION
-    ) {
-      setPanel(
-        panelFromHomeCompass()
-      );
-
-      setEnterEnabled(
-        state.selectedRoute ===
-          HOME_COMPASS.route,
-        "Enter Selected Path"
-      );
-
-      setReturnToOrbitVisible(
-        true,
-        "Return to Orbit"
-      );
-
-      setGuidance(
-        "Review the Home Compass path. Enter Selected Path opens index.html. Return to Orbit restores the exact ARCHCOIN state that existed before the Compass was selected."
+        "Review the selected room. Enter Selected Path opens its canonical route. Return to Orbit restores the active four-room cluster."
       );
 
       return;
@@ -2121,10 +2124,12 @@
     setPanel({
       eyebrow: "System held",
       title: "ARCHCOIN is unavailable",
+
       purpose:
-        "The controller could not establish a safe navigational state.",
+        "The controller could not establish or preserve a safe navigation state.",
+
       relationship:
-        "Static content remains visible."
+        "Static content may remain available, but interactive requests are rejected."
     });
 
     setEnterEnabled(
@@ -2135,7 +2140,7 @@
     setReturnToOrbitVisible(false);
 
     setGuidance(
-      "ARCHCOIN is held because its navigation contract could not be validated."
+      "ARCHCOIN is held because its controller foundation could not be validated."
     );
   }
 
@@ -2149,12 +2154,17 @@
         state.current,
         nextState
       ),
+
       "ARCHCOIN_ILLEGAL_STATE_TRANSITION",
+
       {
         from: state.current,
         to: nextState
       }
     );
+
+    const previousHeld =
+      isHeld();
 
     state.current = nextState;
 
@@ -2173,8 +2183,24 @@
     }
 
     syncPresentation();
-    publishCompassPresentation();
-    recordAction(action);
+
+    const frame =
+      recordAction(action);
+
+    if (
+      previousHeld !==
+      frame.held
+    ) {
+      publish(
+        CHANNELS.HELD_STATE,
+        createHeldState()
+      );
+
+      publish(
+        CHANNELS.COMPASS_STATE,
+        createCompassState()
+      );
+    }
 
     return true;
   }
@@ -2299,8 +2325,9 @@
 
   function beginOrbitGesture(payload = {}) {
     if (
+      isHeld() ||
       state.current !==
-      STATES.CONSTELLATION
+        STATES.CONSTELLATION
     ) {
       return false;
     }
@@ -2320,6 +2347,7 @@
         payload,
         state.orbitOrientation
       ),
+
       {
         committed: false,
         phase:
@@ -2337,8 +2365,9 @@
 
   function requestOrbitPreview(payload = {}) {
     if (
+      isHeld() ||
       state.current !==
-      STATES.CONSTELLATION
+        STATES.CONSTELLATION
     ) {
       return false;
     }
@@ -2352,6 +2381,7 @@
         payload,
         state.orbitOrientation
       ),
+
       {
         committed: false,
         phase:
@@ -2360,10 +2390,6 @@
       }
     );
 
-    /*
-     * No independent Compass delta is published.
-     * Downstream scene execution consumes the unified frame quaternion.
-     */
     recordAction(
       "orbit-preview-updated"
     );
@@ -2373,8 +2399,9 @@
 
   function requestOrbitCommit(payload = {}) {
     if (
+      isHeld() ||
       state.current !==
-      STATES.CONSTELLATION
+        STATES.CONSTELLATION
     ) {
       return false;
     }
@@ -2409,6 +2436,7 @@
 
     setConstellationOrientation(
       orientation,
+
       {
         committed: true,
         phase:
@@ -2430,6 +2458,10 @@
   function requestOrbitCancel(
     reason = "cancelled"
   ) {
+    if (isHeld()) {
+      return false;
+    }
+
     if (
       !state.orbitGestureActive &&
       state.orbitPhase !==
@@ -2446,15 +2478,19 @@
           state.orbitFocus
         )
       ),
+
       {
         committed: false,
         phase:
-          ORIENTATION_PHASES.COMMITTED,
+          ORIENTATION_PHASES.CANCELLED,
         gestureActive: false
       }
     );
 
     state.orbitGestureOrigin = null;
+
+    state.orbitPhase =
+      ORIENTATION_PHASES.COMMITTED;
 
     recordAction(
       `orbit-cancelled:${String(
@@ -2473,6 +2509,7 @@
       normalizeWing(wing);
 
     if (
+      isHeld() ||
       !normalizedWing ||
       state.current !==
         STATES.CONSTELLATION
@@ -2498,6 +2535,10 @@
     wingOrPayload,
     maybePayload = {}
   ) {
+    if (isHeld()) {
+      return false;
+    }
+
     const wing =
       typeof wingOrPayload ===
         "string"
@@ -2544,10 +2585,12 @@
 
     setClusterOrientation(
       cluster,
+
       resolveOrientation(
         payload,
         cluster.orientation
       ),
+
       {
         committed: false,
         phase:
@@ -2567,6 +2610,10 @@
     wingOrPayload,
     maybePayload = {}
   ) {
+    if (isHeld()) {
+      return false;
+    }
+
     const wing =
       typeof wingOrPayload ===
         "string"
@@ -2592,7 +2639,11 @@
           STATES.CLUSTER_OPEN ||
         state.current ===
           STATES.ROOM_SELECTED
-      )
+      ) ||
+      wing !==
+        normalizeWing(
+          state.selectedCardinal
+        )
     ) {
       return false;
     }
@@ -2635,6 +2686,7 @@
     setClusterOrientation(
       cluster,
       orientation,
+
       {
         committed: false,
         phase:
@@ -2654,6 +2706,10 @@
     wingOrPayload,
     maybePayload = {}
   ) {
+    if (isHeld()) {
+      return false;
+    }
+
     const wing =
       typeof wingOrPayload ===
         "string"
@@ -2679,7 +2735,11 @@
           STATES.CLUSTER_OPEN ||
         state.current ===
           STATES.ROOM_SELECTED
-      )
+      ) ||
+      wing !==
+        normalizeWing(
+          state.selectedCardinal
+        )
     ) {
       return false;
     }
@@ -2721,6 +2781,7 @@
     setClusterOrientation(
       cluster,
       orientation,
+
       {
         committed: true,
         phase:
@@ -2743,6 +2804,10 @@
     wingOrReason,
     maybeReason = "cancelled"
   ) {
+    if (isHeld()) {
+      return false;
+    }
+
     const explicitWing =
       normalizeWing(wingOrReason);
 
@@ -2772,6 +2837,7 @@
 
     setClusterOrientation(
       cluster,
+
       cloneOrientation(
         cluster.gestureOrigin ||
         cluster.committedOrientation ||
@@ -2780,15 +2846,18 @@
           cluster.primaryRoom
         )
       ),
+
       {
         committed: false,
         phase:
-          ORIENTATION_PHASES.COMMITTED,
+          ORIENTATION_PHASES.CANCELLED,
         gestureActive: false
       }
     );
 
     cluster.gestureOrigin = null;
+    cluster.phase =
+      ORIENTATION_PHASES.COMMITTED;
 
     recordAction(
       `cluster-cancelled:${wing}:${String(
@@ -2824,6 +2893,7 @@
       normalizeWing(cardinalId);
 
     if (
+      isHeld() ||
       !wing ||
       state.current !==
         STATES.CONSTELLATION
@@ -2853,6 +2923,7 @@
 
     setConstellationOrientation(
       orientation,
+
       {
         committed: true,
         phase:
@@ -2866,6 +2937,7 @@
 
     return applyState(
       STATES.CLUSTER_OPEN,
+
       {
         selectedCardinal:
           wing,
@@ -2880,8 +2952,10 @@
           wing,
 
         selectedDestinationLabel:
-          destination.label ||
-          wingToCoin(wing),
+          destination
+            ? destination.label ||
+              wingToCoin(wing)
+            : wingToCoin(wing),
 
         selectedRoute:
           "",
@@ -2892,6 +2966,7 @@
         panelDescended:
           false
       },
+
       `cardinal-selected:${wing}`
     );
   }
@@ -2901,6 +2976,7 @@
       normalizeRoomId(roomId);
 
     if (
+      isHeld() ||
       !id ||
       !(
         state.current ===
@@ -2998,6 +3074,7 @@
     const committed =
       applyState(
         STATES.ROOM_SELECTED,
+
         {
           selectedCardinal:
             canonical.wing,
@@ -3015,8 +3092,10 @@
             canonical.roomId,
 
           selectedDestinationLabel:
-            destination.label ||
-            canonical.roomId,
+            destination
+              ? destination.label ||
+                canonical.roomId
+              : canonical.roomId,
 
           selectedRoute:
             canonical.route,
@@ -3041,6 +3120,7 @@
           panelDescended:
             true
         },
+
         `room-selected:${canonical.roomId}`
       );
 
@@ -3048,76 +3128,8 @@
       return false;
     }
 
-    scheduleSelectionChamberDescent(
-      STATES.ROOM_SELECTED,
-      DESTINATION_TYPES.ROOM,
+    scheduleRoomPanelDescent(
       canonical.roomId
-    );
-
-    return true;
-  }
-
-  function requestCompassDecision() {
-    if (
-      state.current ===
-      STATES.SYSTEM_HELD
-    ) {
-      return false;
-    }
-
-    if (
-      state.current ===
-      STATES.COMPASS_DECISION
-    ) {
-      return true;
-    }
-
-    cancelActiveGestures(
-      "compass-selection"
-    );
-
-    clearViewportSchedules();
-
-    state.stateBeforeCompassDecision =
-      snapshotRestorableState();
-
-    const committed =
-      applyState(
-        STATES.COMPASS_DECISION,
-        {
-          selectedDestinationType:
-            HOME_COMPASS.destinationType,
-
-          selectedDestinationId:
-            HOME_COMPASS.destinationId,
-
-          selectedDestinationLabel:
-            HOME_COMPASS.destinationLabel,
-
-          selectedRoute:
-            HOME_COMPASS.route,
-
-          selectedParagraph:
-            HOME_COMPASS.paragraph,
-
-          panelDescended:
-            true,
-
-          compassPresentationMode:
-            COMPASS_PRESENTATION_MODES
-              .DECISION_APPROACH
-        },
-        "home-compass-selected"
-      );
-
-    if (!committed) {
-      return false;
-    }
-
-    scheduleSelectionChamberDescent(
-      STATES.COMPASS_DECISION,
-      DESTINATION_TYPES.HOME_COMPASS,
-      HOME_COMPASS.destinationId
     );
 
     return true;
@@ -3125,135 +3137,44 @@
 
   function requestEnterSelection() {
     if (
-      state.current ===
-      STATES.ROOM_SELECTED
-    ) {
-      const canonical =
-        ROOM_BY_ID.get(
-          state.selectedRoom
-        );
-
-      if (
-        !canonical ||
-        state.selectedDestinationType !==
-          DESTINATION_TYPES.ROOM ||
-        state.selectedDestinationId !==
-          canonical.roomId ||
-        state.selectedRoute !==
-          canonical.route ||
-        !ROOM_BY_ROUTE.has(
-          state.selectedRoute
-        )
-      ) {
-        recordAction(
-          "selected-path-entry-rejected",
-          "SELECTED_ROOM_ROUTE_NOT_CANONICAL"
-        );
-
-        return false;
-      }
-
-      recordAction(
-        `selected-path-entry-confirmed:${canonical.roomId}`
-      );
-
-      globalThis.location.assign(
-        canonical.route
-      );
-
-      return true;
-    }
-
-    if (
-      state.current ===
-      STATES.COMPASS_DECISION
-    ) {
-      if (
-        state.selectedDestinationType !==
-          DESTINATION_TYPES.HOME_COMPASS ||
-        state.selectedDestinationId !==
-          HOME_COMPASS.destinationId ||
-        state.selectedRoute !==
-          HOME_COMPASS.route
-      ) {
-        recordAction(
-          "selected-path-entry-rejected",
-          "HOME_COMPASS_DESTINATION_INVALID"
-        );
-
-        return false;
-      }
-
-      recordAction(
-        "selected-path-entry-confirmed:home-compass"
-      );
-
-      globalThis.location.assign(
-        HOME_COMPASS.route
-      );
-
-      return true;
-    }
-
-    return false;
-  }
-
-  function restorePreCompassState() {
-    if (
+      isHeld() ||
       state.current !==
-        STATES.COMPASS_DECISION ||
-      !state.stateBeforeCompassDecision
-    ) {
-      return false;
-    }
-
-    const snapshot =
-      state.stateBeforeCompassDecision;
-
-    state.stateBeforeCompassDecision =
-      null;
-
-    clearViewportSchedules();
-
-    restoreSnapshot(snapshot);
-
-    const restoredState =
-      snapshot.state;
-
-    const committed =
-      applyState(
-        restoredState,
-        {
-          compassPresentationMode:
-            COMPASS_PRESENTATION_MODES
-              .EMBEDDED
-        },
-        `returned-to-orbit:home-compass:${restoredState}`
-      );
-
-    if (!committed) {
-      return false;
-    }
-
-    if (
-      restoredState ===
         STATES.ROOM_SELECTED
     ) {
-      scheduleSelectionChamberDescent(
-        STATES.ROOM_SELECTED,
-        DESTINATION_TYPES.ROOM,
-        state.selectedDestinationId
-      );
-
-      return true;
+      return false;
     }
 
-    scheduleSceneAscent(
-      restoredState,
-      restoredState ===
-      STATES.CLUSTER_OPEN
-        ? state.selectedCardinal
-        : ""
+    const canonical =
+      ROOM_BY_ID.get(
+        state.selectedRoom
+      );
+
+    if (
+      !canonical ||
+      state.selectedDestinationType !==
+        DESTINATION_TYPES.ROOM ||
+      state.selectedDestinationId !==
+        canonical.roomId ||
+      state.selectedRoute !==
+        canonical.route ||
+      !ROOM_BY_ROUTE.has(
+        state.selectedRoute
+      )
+    ) {
+      recordAction(
+        "selected-path-entry-rejected",
+        "SELECTED_ROOM_ROUTE_NOT_CANONICAL"
+      );
+
+      return false;
+    }
+
+    recordAction(
+      `selected-path-entry-confirmed:${canonical.roomId}`
+    );
+
+    globalThis.location.assign(
+      canonical.route
     );
 
     return true;
@@ -3261,15 +3182,9 @@
 
   function requestReturnToOrbit() {
     if (
-      state.current ===
-      STATES.COMPASS_DECISION
-    ) {
-      return restorePreCompassState();
-    }
-
-    if (
+      isHeld() ||
       state.current !==
-      STATES.ROOM_SELECTED
+        STATES.ROOM_SELECTED
     ) {
       return false;
     }
@@ -3299,6 +3214,7 @@
     const committed =
       applyState(
         STATES.CLUSTER_OPEN,
+
         {
           selectedCardinal:
             wing,
@@ -3317,7 +3233,8 @@
 
           selectedDestinationLabel:
             destination
-              ? destination.label
+              ? destination.label ||
+                wingToCoin(wing)
               : wingToCoin(wing),
 
           selectedRoute:
@@ -3335,7 +3252,8 @@
           panelDescended:
             false
         },
-        `returned-to-orbit:room:${wing}`
+
+        `returned-to-orbit:${wing}`
       );
 
     if (!committed) {
@@ -3350,33 +3268,17 @@
     return true;
   }
 
-  function requestCompassDecisionCancel() {
-    return requestReturnToOrbit();
-  }
-
-  function requestHomeCompassEntry() {
-    if (
-      state.current !==
-      STATES.COMPASS_DECISION
-    ) {
-      return false;
-    }
-
-    return requestEnterSelection();
-  }
-
-  function requestReturnToUpstream() {
-    return requestCompassDecision();
-  }
-
   function requestReturnToConstellation(
     options = {}
   ) {
     if (
-      state.current !==
-        STATES.CLUSTER_OPEN &&
-      state.current !==
-        STATES.ROOM_SELECTED
+      isHeld() ||
+      (
+        state.current !==
+          STATES.CLUSTER_OPEN &&
+        state.current !==
+          STATES.ROOM_SELECTED
+      )
     ) {
       return false;
     }
@@ -3399,17 +3301,15 @@
     const committed =
       applyState(
         STATES.CONSTELLATION,
+
         {
           orbitFocus:
             previousWing,
 
           orbitPreviewFocus:
-            previousWing,
-
-          compassPresentationMode:
-            COMPASS_PRESENTATION_MODES
-              .EMBEDDED
+            previousWing
         },
+
         `returned-to-constellation:${previousWing}`
       );
 
@@ -3426,7 +3326,502 @@
     return committed;
   }
 
+  function requestReturnToUpstream() {
+    if (isHeld()) {
+      return false;
+    }
+
+    const request =
+      Object.freeze({
+        destinationType:
+          HOME_COMPASS.destinationType,
+
+        destinationId:
+          HOME_COMPASS.destinationId,
+
+        destinationLabel:
+          HOME_COMPASS.destinationLabel,
+
+        route:
+          HOME_COMPASS.route,
+
+        source:
+          HOME_COMPASS.source,
+
+        revision:
+          state.upstreamRequestRevision +
+          1,
+
+        requestedAt:
+          Date.now()
+      });
+
+    state.upstreamRequestRevision =
+      request.revision;
+
+    state.lastUpstreamRequest =
+      request;
+
+    publish(
+      CHANNELS.UPSTREAM_REQUEST,
+      request
+    );
+
+    recordAction(
+      `upstream-requested:${request.destinationId}:${request.revision}`
+    );
+
+    return true;
+  }
+
+  function getLastUpstreamRequest() {
+    return createUpstreamRequestSnapshot();
+  }
+
+  function validateCanonicalRegistry() {
+    invariant(
+      WINGS.length === 4,
+      "ARCHCOIN_WING_COUNT_INVALID",
+      {
+        expected: 4,
+        actual: WINGS.length
+      }
+    );
+
+    invariant(
+      new Set(WINGS).size === 4,
+      "ARCHCOIN_DUPLICATE_WING"
+    );
+
+    invariant(
+      CANONICAL_ROOM_RECORDS.length === 16,
+      "ARCHCOIN_CANONICAL_ROOM_COUNT_INVALID",
+      {
+        expected: 16,
+        actual:
+          CANONICAL_ROOM_RECORDS.length
+      }
+    );
+
+    const ids = new Set();
+    const routes = new Set();
+
+    for (
+      const wing
+      of WINGS
+    ) {
+      const rooms =
+        ROOMS_BY_WING.get(wing);
+
+      invariant(
+        rooms &&
+        rooms.length === 4,
+        "ARCHCOIN_ROOMS_PER_WING_INVALID",
+        {
+          wing,
+          expected: 4,
+          actual:
+            rooms
+              ? rooms.length
+              : 0
+        }
+      );
+
+      invariant(
+        Boolean(
+          WING_TO_COIN[wing]
+        ),
+        "ARCHCOIN_WING_COIN_MAPPING_MISSING",
+        { wing }
+      );
+    }
+
+    for (
+      const record
+      of CANONICAL_ROOM_RECORDS
+    ) {
+      invariant(
+        WINGS.includes(record.wing),
+        "ARCHCOIN_ROOM_WING_INVALID",
+        { record }
+      );
+
+      invariant(
+        WING_TO_COIN[record.wing] ===
+          record.coin,
+        "ARCHCOIN_ROOM_COIN_MAPPING_INVALID",
+        { record }
+      );
+
+      invariant(
+        !ids.has(record.roomId),
+        "ARCHCOIN_DUPLICATE_ROOM_ID",
+        {
+          roomId: record.roomId
+        }
+      );
+
+      invariant(
+        !routes.has(record.route),
+        "ARCHCOIN_DUPLICATE_ROOM_ROUTE",
+        {
+          route: record.route
+        }
+      );
+
+      invariant(
+        normalizeRoute(record.route) ===
+          record.route,
+        "ARCHCOIN_CANONICAL_ROUTE_INVALID",
+        { record }
+      );
+
+      ids.add(record.roomId);
+      routes.add(record.route);
+    }
+
+    invariant(
+      ROOM_BY_ID.size === 16,
+      "ARCHCOIN_ROOM_ID_REGISTRY_INVALID"
+    );
+
+    invariant(
+      ROOM_BY_ROUTE.size === 16,
+      "ARCHCOIN_ROUTE_REGISTRY_INVALID"
+    );
+
+    return Object.freeze({
+      pass: true,
+      wingCount: WINGS.length,
+      roomCount:
+        CANONICAL_ROOM_RECORDS.length,
+      routeCount:
+        CANONICAL_ROOM_ROUTES.length,
+      roomsPerWing: 4,
+      duplicateRoomIds: false,
+      duplicateRoutes: false,
+      mappingValid: true
+    });
+  }
+
+  function validateTransitionTable() {
+    const declaredStates =
+      Object.values(STATES);
+
+    invariant(
+      declaredStates.length === 4,
+      "ARCHCOIN_STATE_COUNT_INVALID",
+      {
+        expected: 4,
+        actual:
+          declaredStates.length
+      }
+    );
+
+    invariant(
+      !declaredStates.includes(
+        "COMPASS_DECISION"
+      ),
+      "ARCHCOIN_FORBIDDEN_COMPASS_DECISION_STATE"
+    );
+
+    invariant(
+      !declaredStates.includes(
+        "CONSTELLATION_WITH_CLUSTER"
+      ),
+      "ARCHCOIN_FORBIDDEN_ADDITIVE_STATE"
+    );
+
+    for (
+      const [fromState, targets]
+      of Object.entries(TRANSITIONS)
+    ) {
+      invariant(
+        declaredStates.includes(
+          fromState
+        ),
+        "ARCHCOIN_UNKNOWN_TRANSITION_SOURCE",
+        { fromState }
+      );
+
+      for (
+        const target
+        of targets
+      ) {
+        invariant(
+          declaredStates.includes(
+            target
+          ),
+          "ARCHCOIN_UNKNOWN_TRANSITION_TARGET",
+          {
+            fromState,
+            target
+          }
+        );
+      }
+    }
+
+    invariant(
+      canTransition(
+        STATES.CONSTELLATION,
+        STATES.CLUSTER_OPEN
+      ),
+      "ARCHCOIN_REQUIRED_TRANSITION_MISSING"
+    );
+
+    invariant(
+      canTransition(
+        STATES.CLUSTER_OPEN,
+        STATES.ROOM_SELECTED
+      ),
+      "ARCHCOIN_REQUIRED_TRANSITION_MISSING"
+    );
+
+    invariant(
+      canTransition(
+        STATES.ROOM_SELECTED,
+        STATES.CLUSTER_OPEN
+      ),
+      "ARCHCOIN_REQUIRED_TRANSITION_MISSING"
+    );
+
+    invariant(
+      canTransition(
+        STATES.CLUSTER_OPEN,
+        STATES.CONSTELLATION
+      ),
+      "ARCHCOIN_REQUIRED_TRANSITION_MISSING"
+    );
+
+    invariant(
+      canTransition(
+        STATES.ROOM_SELECTED,
+        STATES.CONSTELLATION
+      ),
+      "ARCHCOIN_REQUIRED_TRANSITION_MISSING"
+    );
+
+    invariant(
+      TRANSITIONS[
+        STATES.SYSTEM_HELD
+      ].length === 1 &&
+      TRANSITIONS[
+        STATES.SYSTEM_HELD
+      ][0] ===
+        STATES.SYSTEM_HELD,
+      "ARCHCOIN_HELD_STATE_NOT_TERMINAL"
+    );
+
+    return Object.freeze({
+      pass: true,
+      states:
+        Object.freeze(
+          declaredStates.slice()
+        ),
+      constellationToClusterOpen:
+        true,
+      clusterOpenToRoomSelected:
+        true,
+      roomSelectedToClusterOpen:
+        true,
+      clusterOpenToConstellation:
+        true,
+      roomSelectedToConstellation:
+        true,
+      heldTerminal:
+        true,
+      compassDecisionPresent:
+        false,
+      additiveStatePresent:
+        false
+    });
+  }
+
+  function validatePresentationContract() {
+    invariant(
+      PRESENTATION_BY_STATE[
+        STATES.CONSTELLATION
+      ].outerCardinalsActive ===
+        true,
+      "ARCHCOIN_CONSTELLATION_CARDINAL_PRESENTATION_INVALID"
+    );
+
+    invariant(
+      PRESENTATION_BY_STATE[
+        STATES.CONSTELLATION
+      ].activeRoomCluster ===
+        false,
+      "ARCHCOIN_CONSTELLATION_CLUSTER_PRESENTATION_INVALID"
+    );
+
+    invariant(
+      PRESENTATION_BY_STATE[
+        STATES.CLUSTER_OPEN
+      ].outerCardinalsActive ===
+        false,
+      "ARCHCOIN_CLUSTER_CARDINAL_REPLACEMENT_INVALID"
+    );
+
+    invariant(
+      PRESENTATION_BY_STATE[
+        STATES.CLUSTER_OPEN
+      ].activeRoomCluster ===
+        true,
+      "ARCHCOIN_CLUSTER_PRESENTATION_INVALID"
+    );
+
+    invariant(
+      PRESENTATION_BY_STATE[
+        STATES.ROOM_SELECTED
+      ].outerCardinalsActive ===
+        false,
+      "ARCHCOIN_ROOM_SELECTED_CARDINAL_REPLACEMENT_INVALID"
+    );
+
+    invariant(
+      PRESENTATION_BY_STATE[
+        STATES.ROOM_SELECTED
+      ].activeRoomCluster ===
+        true,
+      "ARCHCOIN_ROOM_SELECTED_CLUSTER_PRESENTATION_INVALID"
+    );
+
+    for (
+      const presentation
+      of Object.values(
+        PRESENTATION_BY_STATE
+      )
+    ) {
+      invariant(
+        !(
+          presentation
+            .outerCardinalsActive &&
+          presentation
+            .activeRoomCluster
+        ),
+        "ARCHCOIN_ADDITIVE_PRESENTATION_FORBIDDEN"
+      );
+    }
+
+    return Object.freeze({
+      pass: true,
+      progressiveReplacement: true,
+      additiveCoRenderingAuthorized:
+        false,
+      constellationExclusive: true,
+      clusterExclusive: true,
+      roomSelectedPreservesCluster:
+        true
+    });
+  }
+
+  function validateCompassContract() {
+    const compass =
+      createCompassState();
+
+    invariant(
+      compass.fixedCenter === true,
+      "ARCHCOIN_COMPASS_FIXED_CENTER_INVALID"
+    );
+
+    invariant(
+      compass.upstreamRoute ===
+        "/index.html",
+      "ARCHCOIN_COMPASS_ROUTE_INVALID"
+    );
+
+    invariant(
+      compass.inheritsNavigationOrientation ===
+        false,
+      "ARCHCOIN_COMPASS_ORIENTATION_INHERITANCE_INVALID"
+    );
+
+    invariant(
+      compass.participatesInNavigationSettlement ===
+        false,
+      "ARCHCOIN_COMPASS_SETTLEMENT_PARTICIPATION_INVALID"
+    );
+
+    invariant(
+      compass.quaternionPublished ===
+        false,
+      "ARCHCOIN_COMPASS_QUATERNION_PUBLICATION_INVALID"
+    );
+
+    invariant(
+      compass.independentMotionSignalsPublished ===
+        false,
+      "ARCHCOIN_COMPASS_MOTION_SIGNAL_INVALID"
+    );
+
+    return Object.freeze({
+      pass: true,
+      fixedCenter: true,
+      upstreamRoute: "/index.html",
+      inheritsNavigationOrientation:
+        false,
+      participatesInNavigationSettlement:
+        false,
+      quaternionPublished: false,
+      rendererNavigationAuthority:
+        false,
+      rendererMountedByController:
+        false
+    });
+  }
+
+  function validateHeldRejectionContract() {
+    const guardedRequests =
+      Object.freeze([
+        "requestCardinalSelection",
+        "requestRoomSelection",
+        "requestEnterSelection",
+        "requestReturnToOrbit",
+        "requestReturnToConstellation",
+        "beginOrbitGesture",
+        "requestOrbitPreview",
+        "requestOrbitCommit",
+        "requestOrbitCancel",
+        "requestOrbitFocus",
+        "beginClusterGesture",
+        "requestClusterPreview",
+        "requestClusterCommit",
+        "requestClusterCancel",
+        "requestReturnToUpstream"
+      ]);
+
+    invariant(
+      TRANSITIONS[
+        STATES.SYSTEM_HELD
+      ].length === 1 &&
+      TRANSITIONS[
+        STATES.SYSTEM_HELD
+      ][0] ===
+        STATES.SYSTEM_HELD,
+      "ARCHCOIN_HELD_TRANSITION_CONTRACT_INVALID"
+    );
+
+    return Object.freeze({
+      pass: true,
+      heldTerminal: true,
+      rejectsAllInteractiveRequests:
+        true,
+      guardedRequestCount:
+        guardedRequests.length,
+      guardedRequests
+    });
+  }
+
   function validateDeclaredRooms() {
+    if (!state.root) {
+      return Object.freeze({
+        pass: false,
+        skipped: true,
+        reason:
+          "ARCHCOIN_ROOT_NOT_RESOLVED"
+      });
+    }
+
     const declared =
       qsa(
         "[data-archcoin-room]",
@@ -3451,7 +3846,10 @@
     const seenRoutes =
       new Set();
 
-    for (const element of declared) {
+    for (
+      const element
+      of declared
+    ) {
       const roomId =
         normalizeRoomId(
           element.dataset.roomId
@@ -3479,13 +3877,13 @@
 
       invariant(
         !seenIds.has(roomId),
-        "ARCHCOIN_DUPLICATE_ROOM_ID",
+        "ARCHCOIN_DUPLICATE_DECLARED_ROOM_ID",
         { roomId }
       );
 
       invariant(
         !seenRoutes.has(route),
-        "ARCHCOIN_DUPLICATE_ROOM_ROUTE",
+        "ARCHCOIN_DUPLICATE_DECLARED_ROOM_ROUTE",
         { route }
       );
 
@@ -3527,37 +3925,140 @@
       seenRoutes.add(route);
     }
 
-    for (
-      const canonical
-      of CANONICAL_ROOM_RECORDS
-    ) {
-      invariant(
-        seenIds.has(
-          canonical.roomId
-        ),
-        "ARCHCOIN_CANONICAL_ROOM_MISSING",
-        {
-          roomId:
-            canonical.roomId
-        }
-      );
+    return Object.freeze({
+      pass: true,
+      declaredRoomCount:
+        declared.length,
+      declaredRouteCount:
+        seenRoutes.size,
+      directSemanticRoomElements:
+        true,
+      generatedRoomProxiesRequired:
+        false
+    });
+  }
 
-      invariant(
-        seenRoutes.has(
-          canonical.route
-        ),
-        "ARCHCOIN_CANONICAL_ROUTE_MISSING",
-        {
-          route:
-            canonical.route
-        }
-      );
+  function runControllerSelfTest({
+    includeDom = false
+  } = {}) {
+    const results = {
+      registry:
+        validateCanonicalRegistry(),
+
+      transitions:
+        validateTransitionTable(),
+
+      presentation:
+        validatePresentationContract(),
+
+      compass:
+        validateCompassContract(),
+
+      heldRejection:
+        validateHeldRejectionContract(),
+
+      declaredRooms:
+        includeDom
+          ? validateDeclaredRooms()
+          : Object.freeze({
+              pass: true,
+              skipped: true,
+              reason:
+                "DOM_VALIDATION_NOT_REQUESTED"
+            })
+    };
+
+    const pass =
+      Object.values(results)
+        .every(result =>
+          result.pass === true
+        );
+
+    return Object.freeze({
+      receiptSchema:
+        "ARCHCOIN_CONTROLLER_FOUNDATION_VALIDATION_RECEIPT_v1",
+
+      moduleId: MODULE.id,
+      moduleVersion: MODULE.version,
+
+      pass,
+
+      stateMachine:
+        Object.freeze([
+          STATES.CONSTELLATION,
+          STATES.CLUSTER_OPEN,
+          STATES.ROOM_SELECTED,
+          STATES.SYSTEM_HELD
+        ]),
+
+      progression:
+        "CONSTELLATION -> CLUSTER_OPEN -> ROOM_SELECTED -> CONFIRMED_ROUTE_ENTRY",
+
+      returnPaths:
+        Object.freeze([
+          "ROOM_SELECTED -> CLUSTER_OPEN",
+          "CLUSTER_OPEN -> CONSTELLATION",
+          "ROOM_SELECTED -> CONSTELLATION"
+        ]),
+
+      progressiveReplacement:
+        true,
+
+      additiveCoRenderingAuthorized:
+        false,
+
+      generatedRoomProxiesAuthorized:
+        false,
+
+      projectedRoomHitInferenceAuthorized:
+        false,
+
+      compassDecisionStatePresent:
+        false,
+
+      controllerMountsRenderer:
+        false,
+
+      controllerOwnsFallback:
+        false,
+
+      rendererMayNavigate:
+        false,
+
+      results:
+        Object.freeze(results)
+    });
+  }
+
+  function writeValidationReceipt(receipt) {
+    state.validationReceipt =
+      receipt;
+
+    const serialized =
+      JSON.stringify(receipt);
+
+    if (state.root) {
+      state.root.dataset.archcoinControllerValidation =
+        serialized;
     }
 
-    return true;
+    if (state.controllerValidationOutput) {
+      state.controllerValidationOutput.value =
+        serialized;
+
+      state.controllerValidationOutput.textContent =
+        serialized;
+    }
+
+    globalThis.DGB_ARCHCOIN_CONTROLLER_VALIDATION_RECEIPT =
+      receipt;
   }
 
   function handleSemanticClick(event) {
+    if (isHeld()) {
+      return;
+    }
+
     const compassControl =
       event.target.closest(
         "[data-upstream-compass-control]"
@@ -3572,7 +4073,7 @@
       event.preventDefault();
       event.stopPropagation();
 
-      requestCompassDecision();
+      requestReturnToUpstream();
       return;
     }
 
@@ -3620,46 +4121,28 @@
 
   function handleKeydown(event) {
     if (
-      event.key === "Escape" &&
-      (
-        state.current ===
-          STATES.ROOM_SELECTED ||
-        state.current ===
-          STATES.COMPASS_DECISION
-      )
+      isHeld() ||
+      event.key !== "Escape"
+    ) {
+      return;
+    }
+
+    if (
+      state.current ===
+      STATES.ROOM_SELECTED
     ) {
       event.preventDefault();
       requestReturnToOrbit();
+      return;
     }
-  }
 
-  function handleCompassRendererFailure(
-    event
-  ) {
-    const reason = String(
-      event &&
-      event.detail &&
-      event.detail.reason
-        ? event.detail.reason
-        : "UPSTREAM_COMPASS_RENDERER_FAILURE"
-    );
-
-    state.compassRendererStatus =
-      "failed";
-
-    state.compassRendererFailure =
-      reason;
-
-    state.compassPresentationMode =
-      COMPASS_PRESENTATION_MODES
-        .FAILURE_FALLBACK;
-
-    publishCompassPresentation();
-
-    recordAction(
-      "compass-renderer-failed",
-      reason
-    );
+    if (
+      state.current ===
+      STATES.CLUSTER_OPEN
+    ) {
+      event.preventDefault();
+      requestReturnToConstellation();
+    }
   }
 
   function handleCrystalsFailure(event) {
@@ -3676,7 +4159,7 @@
     );
 
     setGuidance(
-      "The visual constellation is temporarily unavailable. Canonical room destinations remain preserved."
+      "The visual navigation field is temporarily unavailable. Canonical room records remain preserved."
     );
 
     recordAction(
@@ -3686,35 +4169,62 @@
   }
 
   function readReducedMotion() {
-    state.reducedMotion =
-      globalThis.matchMedia(
-        "(prefers-reduced-motion: reduce)"
-      ).matches ||
-      state.root.dataset.reducedMotion ===
-        "true";
-  }
-
-  function bindReducedMotion() {
     const media =
       globalThis.matchMedia(
         "(prefers-reduced-motion: reduce)"
       );
 
+    state.mediaQuery =
+      media;
+
+    state.reducedMotion =
+      Boolean(media.matches) ||
+      (
+        state.root &&
+        state.root.dataset.reducedMotion ===
+          "true"
+      );
+  }
+
+  function bindReducedMotion() {
+    const media =
+      state.mediaQuery;
+
+    if (!media) {
+      return;
+    }
+
     const update = event => {
+      const previous =
+        state.reducedMotion;
+
       state.reducedMotion =
         Boolean(event.matches);
+
+      if (
+        previous ===
+        state.reducedMotion
+      ) {
+        return;
+      }
 
       publish(
         CHANNELS.REDUCED_MOTION,
         state.reducedMotion
       );
 
-      publishCompassPresentation();
+      publish(
+        CHANNELS.COMPASS_STATE,
+        createCompassState()
+      );
 
       recordAction(
         "reduced-motion-updated"
       );
     };
+
+    state.mediaQueryListener =
+      update;
 
     if (
       typeof media.addEventListener ===
@@ -3827,21 +4337,15 @@
         state.root
       );
 
-    state.compassMount =
+    state.controllerValidationOutput =
       qs(
-        "[data-upstream-compass-mount]",
+        "[data-archcoin-controller-validation]",
         state.root
       );
 
     state.compassControl =
       qs(
         "[data-upstream-compass-control]",
-        state.root
-      );
-
-    state.compassFallback =
-      qs(
-        "[data-upstream-compass-fallback]",
         state.root
       );
   }
@@ -3904,7 +4408,10 @@
   function initializeClusters() {
     state.clusters.clear();
 
-    for (const wing of WINGS) {
+    for (
+      const wing
+      of WINGS
+    ) {
       const cluster =
         createClusterState(wing);
 
@@ -3925,203 +4432,49 @@
     }
   }
 
-  function createRendererContext() {
+  function getClusterState(wing) {
+    const cluster =
+      getCluster(wing);
+
+    if (!cluster) {
+      return null;
+    }
+
     return Object.freeze({
-      pageNodeId: String(
-        state.compassMount &&
-        state.compassMount.getAttribute(
-          "data-upstream-compass-page-node"
-        ) ||
-        "archcoin"
-      ).trim() || "archcoin",
+      wing:
+        cluster.wing,
 
-      parentNodeId:
-        "home-compass",
+      roomIds:
+        Object.freeze(
+          cluster.roomIds.slice()
+        ),
 
-      parentRoute:
-        HOME_COMPASS.route,
+      primaryRoom:
+        cluster.primaryRoom,
 
-      root:
-        state.root,
+      previewPrimaryRoom:
+        cluster.previewPrimaryRoom,
 
-      scene:
-        state.scene,
+      phase:
+        cluster.phase,
 
-      mount:
-        state.compassMount,
+      gestureActive:
+        cluster.gestureActive,
 
-      semanticControl:
-        state.compassControl,
+      revision:
+        cluster.revision,
 
-      fallback:
-        state.compassFallback,
+      orientation:
+        freezeOrientation(
+          cluster.orientation
+        ),
 
-      controller:
-        globalThis
-          .DGB_ARCHCOIN_CONTROLLER ||
-        null,
-
-      requestCompassDecision,
-
-      requestCompassDecisionCancel,
-
-      requestHomeCompassEntry,
-
-      requestEnterSelection,
-
-      requestReturnToOrbit,
-
-      getCompassPresentationState:
-        createCompassPresentationState,
-
-      subscribeCompassPresentationState:
-        callback =>
-          subscribe(
-            CHANNELS.COMPASS_PRESENTATION,
-            callback
-          ),
-
-      getFrameState:
-        createFrameState,
-
-      subscribeFrameState:
-        callback =>
-          subscribe(
-            CHANNELS.FRAME,
-            callback
-          ),
-
-      getReducedMotion:
-        () => state.reducedMotion,
-
-      subscribeReducedMotion:
-        callback =>
-          subscribe(
-            CHANNELS.REDUCED_MOTION,
-            callback
-          ),
-
-      /*
-       * Compatibility only.
-       * This opens the shared selection chamber and never navigates directly.
-       */
-      requestReturnToUpstream,
-
-      receivesIndependentGestureDeltas:
-        false,
-
-      inheritsConstellationOrientation:
-        true,
-
-      qualityProfileId:
-        globalThis.innerWidth <= 767
-          ? "mobile"
-          : "desktop"
-    });
-  }
-
-  function initializeCompassRenderer() {
-    if (!state.compassMount) {
-      state.compassRendererStatus =
-        "absent";
-
-      state.compassRendererFailure =
-        "";
-
-      publishCompassPresentation();
-
-      return false;
-    }
-
-    if (
-      !state.compassControl ||
-      !state.compassFallback
-    ) {
-      state.compassRendererStatus =
-        "failed";
-
-      state.compassRendererFailure =
-        "ARCHCOIN_COMPASS_HTML_CONTRACT_INCOMPLETE";
-
-      state.compassPresentationMode =
-        COMPASS_PRESENTATION_MODES
-          .FAILURE_FALLBACK;
-
-      publishCompassPresentation();
-
-      return false;
-    }
-
-    const renderer =
-      globalThis
-        .DGB_UPSTREAM_COMPASS_RENDERER;
-
-    if (
-      !renderer ||
-      typeof renderer.mount !==
-        "function"
-    ) {
-      state.compassRendererStatus =
-        "unavailable";
-
-      state.compassRendererFailure =
-        "UPSTREAM_COMPASS_RENDERER_NOT_AVAILABLE";
-
-      state.compassPresentationMode =
-        COMPASS_PRESENTATION_MODES
-          .FAILURE_FALLBACK;
-
-      publishCompassPresentation();
-
-      return false;
-    }
-
-    try {
-      state.compassRendererHandle =
-        renderer.mount(
-          createRendererContext()
-        );
-
-      state.compassRendererStatus =
-        "available";
-
-      state.compassRendererFailure =
-        "";
-
-      state.compassPresentationMode =
-        COMPASS_PRESENTATION_MODES
-          .EMBEDDED;
-
-      publishCompassPresentation();
-
-      return true;
-    } catch (error) {
-      state.compassRendererHandle =
-        null;
-
-      state.compassRendererStatus =
-        "failed";
-
-      state.compassRendererFailure =
-        error &&
-        (
-          error.code ||
-          error.message
+      committedOrientation:
+        freezeOrientation(
+          cluster
+            .committedOrientation
         )
-          ? String(
-              error.code ||
-              error.message
-            )
-          : "UPSTREAM_COMPASS_MOUNT_FAILURE";
-
-      state.compassPresentationMode =
-        COMPASS_PRESENTATION_MODES
-          .FAILURE_FALLBACK;
-
-      publishCompassPresentation();
-
-      return false;
-    }
+    });
   }
 
   function exposeApi() {
@@ -4138,8 +4491,11 @@
         orientationPhases:
           ORIENTATION_PHASES,
 
-        compassPresentationModes:
-          COMPASS_PRESENTATION_MODES,
+        presentationByState:
+          PRESENTATION_BY_STATE,
+
+        transitions:
+          TRANSITIONS,
 
         homeCompass:
           HOME_COMPASS,
@@ -4148,7 +4504,7 @@
           CANONICAL_ROOM_RECORDS,
 
         canonicalRoomRoutes:
-          ARCHCOIN_16_ROOM_DESTINATION_PATHS,
+          CANONICAL_ROOM_ROUTES,
 
         wingToCoin:
           WING_TO_COIN,
@@ -4156,53 +4512,21 @@
         getFrameState:
           createFrameState,
 
-        getCompassPresentationState:
-          createCompassPresentationState,
+        getReducedMotion:
+          () => state.reducedMotion,
 
-        getClusterState: wing => {
-          const cluster =
-            getCluster(wing);
+        getHeldState:
+          createHeldState,
 
-          if (!cluster) {
-            return null;
-          }
+        getCompassState:
+          createCompassState,
 
-          return Object.freeze({
-            wing:
-              cluster.wing,
+        getLastUpstreamRequest,
 
-            roomIds:
-              Object.freeze(
-                cluster.roomIds.slice()
-              ),
+        getClusterState,
 
-            primaryRoom:
-              cluster.primaryRoom,
-
-            previewPrimaryRoom:
-              cluster.previewPrimaryRoom,
-
-            phase:
-              cluster.phase,
-
-            gestureActive:
-              cluster.gestureActive,
-
-            revision:
-              cluster.revision,
-
-            orientation:
-              freezeOrientation(
-                cluster.orientation
-              ),
-
-            committedOrientation:
-              freezeOrientation(
-                cluster
-                  .committedOrientation
-              )
-          });
-        },
+        getValidationReceipt:
+          () => state.validationReceipt,
 
         subscribeFrameState:
           callback =>
@@ -4211,17 +4535,31 @@
               callback
             ),
 
-        subscribeCompassPresentationState:
-          callback =>
-            subscribe(
-              CHANNELS.COMPASS_PRESENTATION,
-              callback
-            ),
-
         subscribeReducedMotion:
           callback =>
             subscribe(
               CHANNELS.REDUCED_MOTION,
+              callback
+            ),
+
+        subscribeHeldState:
+          callback =>
+            subscribe(
+              CHANNELS.HELD_STATE,
+              callback
+            ),
+
+        subscribeCompassState:
+          callback =>
+            subscribe(
+              CHANNELS.COMPASS_STATE,
+              callback
+            ),
+
+        subscribeUpstreamRequest:
+          callback =>
+            subscribe(
+              CHANNELS.UPSTREAM_REQUEST,
               callback
             ),
 
@@ -4247,19 +4585,16 @@
 
         requestRoomSelection,
 
-        requestCompassDecision,
-
         requestEnterSelection,
 
         requestReturnToOrbit,
 
         requestReturnToConstellation,
 
-        requestCompassDecisionCancel,
+        requestReturnToUpstream,
 
-        requestHomeCompassEntry,
-
-        requestReturnToUpstream
+        runSelfTest:
+          runControllerSelfTest
       });
   }
 
@@ -4289,27 +4624,121 @@
     }
 
     globalThis.addEventListener(
-      "DGB_UPSTREAM_COMPASS_RENDERER_FAILURE",
-      handleCompassRendererFailure
-    );
-
-    globalThis.addEventListener(
       "ARCHCOIN_CRYSTALS_RENDER_FAILURE",
       handleCrystalsFailure
     );
   }
 
+  function enterHeldState(error) {
+    clearViewportSchedules();
+
+    state.current =
+      STATES.SYSTEM_HELD;
+
+    state.orbitGestureActive =
+      false;
+
+    for (
+      const cluster
+      of state.clusters.values()
+    ) {
+      cluster.gestureActive =
+        false;
+
+      cluster.gestureOrigin =
+        null;
+
+      cluster.phase =
+        ORIENTATION_PHASES.COMMITTED;
+    }
+
+    state.lastAction =
+      "controller-initialization-failed";
+
+    state.lastFailure =
+      error &&
+      (
+        error.code ||
+        error.message
+      )
+        ? String(
+            error.code ||
+            error.message
+          )
+        : "UNKNOWN_CONTROLLER_INITIALIZATION_FAILURE";
+
+    try {
+      syncPresentation();
+
+      const frame =
+        publishFrame();
+
+      publish(
+        CHANNELS.HELD_STATE,
+        createHeldState()
+      );
+
+      publish(
+        CHANNELS.COMPASS_STATE,
+        frame.compass
+      );
+    } catch (_) {}
+
+    globalThis.dispatchEvent(
+      new CustomEvent(
+        "ARCHCOIN_CONTROLLER_FAILURE",
+
+        {
+          detail: Object.freeze({
+            reason:
+              state.lastFailure
+          })
+        }
+      )
+    );
+  }
+
   function initialize() {
     try {
-      resolveDom();
+      /*
+       * Source validation does not depend on downstream files.
+       */
+      const sourceReceipt =
+        runControllerSelfTest({
+          includeDom: false
+        });
 
-      validateDeclaredRooms();
+      invariant(
+        sourceReceipt.pass === true,
+        "ARCHCOIN_CONTROLLER_SOURCE_VALIDATION_FAILED",
+        sourceReceipt
+      );
+
+      resolveDom();
 
       readReducedMotion();
 
       initializeOrientationState();
 
       initializeClusters();
+
+      /*
+       * DOM validation confirms the page declares the exact canonical records.
+       */
+      const runtimeReceipt =
+        runControllerSelfTest({
+          includeDom: true
+        });
+
+      invariant(
+        runtimeReceipt.pass === true,
+        "ARCHCOIN_CONTROLLER_RUNTIME_VALIDATION_FAILED",
+        runtimeReceipt
+      );
+
+      writeValidationReceipt(
+        runtimeReceipt
+      );
 
       exposeApi();
 
@@ -4321,48 +4750,29 @@
 
       syncPresentation();
 
-      initializeCompassRenderer();
-
       state.initialized = true;
 
-      recordAction(
-        "controller-initialized"
+      const frame =
+        recordAction(
+          "controller-initialized"
+        );
+
+      publish(
+        CHANNELS.REDUCED_MOTION,
+        state.reducedMotion
+      );
+
+      publish(
+        CHANNELS.HELD_STATE,
+        createHeldState()
+      );
+
+      publish(
+        CHANNELS.COMPASS_STATE,
+        frame.compass
       );
     } catch (error) {
-      state.current =
-        STATES.SYSTEM_HELD;
-
-      state.lastAction =
-        "controller-initialization-failed";
-
-      state.lastFailure =
-        error &&
-        (
-          error.code ||
-          error.message
-        )
-          ? String(
-              error.code ||
-              error.message
-            )
-          : "UNKNOWN_CONTROLLER_INITIALIZATION_FAILURE";
-
-      try {
-        syncPresentation();
-        publishFrame();
-      } catch (_) {}
-
-      globalThis.dispatchEvent(
-        new CustomEvent(
-          "ARCHCOIN_CONTROLLER_FAILURE",
-          {
-            detail: Object.freeze({
-              reason:
-                state.lastFailure
-            })
-          }
-        )
-      );
+      enterHeldState(error);
     }
   }
 
@@ -4372,6 +4782,7 @@
     document.addEventListener(
       "DOMContentLoaded",
       initialize,
+
       {
         once: true
       }
@@ -4380,3 +4791,157 @@
     initialize();
   }
 })();
+
+/*
+ARCHCOIN_CONTROLLER_FOUNDATION_RENEWAL_AND_VALIDATION_RESULT_v1
+
+Disposition:
+CONTROLLER_FOUNDATION_PASS_SOURCE_CANDIDATE
+
+Final state machine:
+- CONSTELLATION
+- CLUSTER_OPEN
+- ROOM_SELECTED
+- SYSTEM_HELD
+
+Final progression:
+CONSTELLATION
+-> CLUSTER_OPEN
+-> ROOM_SELECTED
+-> CONFIRMED_ROUTE_ENTRY
+
+Final return paths:
+- ROOM_SELECTED -> CLUSTER_OPEN
+- CLUSTER_OPEN -> CONSTELLATION
+- ROOM_SELECTED -> CONSTELLATION
+
+Final presentation contract:
+- CONSTELLATION:
+  outerCardinalsActive = true
+  activeRoomCluster = false
+  roomSelectionPermitted = false
+
+- CLUSTER_OPEN:
+  outerCardinalsActive = false
+  activeRoomCluster = true
+  roomSelectionPermitted = true
+
+- ROOM_SELECTED:
+  outerCardinalsActive = false
+  activeRoomCluster = true
+  roomSelectionPermitted = true
+
+- SYSTEM_HELD:
+  outerCardinalsActive = false
+  activeRoomCluster = false
+  roomSelectionPermitted = false
+
+Final Compass state:
+- fixedCenter = true
+- upstreamRoute = /index.html
+- inheritsNavigationOrientation = false
+- participatesInNavigationSettlement = false
+- quaternionPublished = false
+- independentMotionSignalsPublished = false
+- renderer status is not controller-owned
+- fallback status is not controller-owned
+
+Final upstream request contract:
+- requestReturnToUpstream()
+- getLastUpstreamRequest()
+- subscribeUpstreamRequest()
+- no navigation state is created
+- no panel is opened
+- no navigation occurs
+- the later page adapter retains consumption responsibility
+
+Final held-state contract:
+- getHeldState()
+- subscribeHeldState()
+- SYSTEM_HELD is terminal
+- all interactive controller requests reject while held
+
+Final public state surfaces:
+- getFrameState
+- getReducedMotion
+- getHeldState
+- getCompassState
+- getLastUpstreamRequest
+- getClusterState
+- getValidationReceipt
+
+Final public subscription surfaces:
+- subscribeFrameState
+- subscribeReducedMotion
+- subscribeHeldState
+- subscribeCompassState
+- subscribeUpstreamRequest
+
+Final cardinal and room surfaces:
+- requestCardinalSelection
+- requestRoomSelection
+- requestEnterSelection
+- requestReturnToOrbit
+- requestReturnToConstellation
+
+Final orbit gesture surfaces:
+- beginOrbitGesture
+- requestOrbitPreview
+- requestOrbitCommit
+- requestOrbitCancel
+- requestOrbitFocus
+
+Final cluster gesture surfaces:
+- beginClusterGesture
+- requestClusterPreview
+- requestClusterCommit
+- requestClusterCancel
+
+Registry validation:
+- exactly 4 wings
+- exactly 16 canonical rooms
+- exactly 4 rooms per wing
+- no duplicate room IDs
+- no duplicate routes
+- exact wing-to-coin mappings preserved
+- exact canonical routes preserved
+
+Removed confirmed drift:
+- COMPASS_DECISION
+- COMPASS_PRESENTATION_MODES
+- stateBeforeCompassDecision
+- Compass snapshot restoration
+- Compass lower-selection-chamber behavior
+- panelFromHomeCompass
+- Compass camera lowering
+- controller-owned renderer mounting
+- controller-owned renderer handle
+- controller-owned renderer status
+- controller-owned renderer failure state
+- controller-owned fallback status
+- renderer failure listener
+- inheritsConstellationOrientation = true
+- Compass-specific viewport choreography
+- shared room-and-Compass panel law
+
+Preserved provisionally:
+- room-selection panel
+- room-triggered panel descent
+- room-to-cluster Return to Orbit
+- cluster/room-to-constellation restoration
+
+Forbidden mechanisms absent:
+- CONSTELLATION_WITH_CLUSTER
+- additive cardinal-plus-cluster presentation
+- generated nonvisual room proxies
+- projected room hit inference
+- mixed cardinal-and-room hit field
+- Compass quaternion
+- Compass settlement
+- renderer navigation authority
+
+Other files modified:
+NONE
+
+Downstream files remain frozen pending instructor review.
+*/

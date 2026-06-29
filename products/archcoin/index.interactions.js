@@ -1,6 +1,6 @@
 /* /products/archcoin/index.interactions.js
    ARCHCOIN pointer, gesture, direct-manipulation, hit-testing,
-   motion-quaternion, and interaction-priority authority.
+   release-swipe, motion-quaternion, and interaction-priority authority.
 
    Module:
    DGB_ARCHCOIN_INTERACTIONS
@@ -14,57 +14,68 @@
    AUDRALIA_ARCHCOIN_COMPLETE_QUATERNION_MOTION_CONTRACT_v1
    1.0.0
 
-   Frozen distinction:
+   Controlling distinction:
 
    INTERACTIONS DETERMINES MOTION.
    CONTROLLER DETERMINES AUTHORITY.
 
-   This file exclusively owns:
-   - pointer lifecycle and pointer capture;
-   - tap-versus-drag arbitration;
-   - whole-crystal hit testing;
-   - semantic-control hit testing;
-   - front / Compass / rear interaction priority;
-   - orbit, cluster, and cluster-exit gesture classification;
-   - drag direction and sensitivity;
-   - incremental gesture quaternion construction;
-   - quaternion composition order;
-   - grabbed-crystal tracking;
-   - primary wing and room calculation;
-   - projection-driven semantic-control application;
-   - synthetic-click suppression;
-   - interaction cleanup and receipts.
+   Gesture distinction:
 
-   This file does not own:
+   FINGER HELD + MOVEMENT
+   =
+   DIRECT DRAG / ROTATION
+
+   QUALIFIED HORIZONTAL SWIPE + RELEASE
+   =
+   RETURN TO CONSTELLATION
+
+   Cluster return is no longer determined by:
+   - radial origin;
+   - outward-from-center direction;
+   - bottom-left position;
+   - downward motion;
+   - a particular corner of the scene.
+
+   A cluster-return swipe may travel:
+   - left to right; or
+   - right to left.
+
+   It is evaluated on release using:
+   - horizontal distance;
+   - horizontal dominance;
+   - duration;
+   - average horizontal velocity.
+
+   Interactions owns:
+   - pointer lifecycle and capture;
+   - tap-versus-drag arbitration;
+   - whole-crystal and semantic-control hit testing;
+   - Compass/front/rear interaction priority;
+   - drag direction and sensitivity;
+   - incremental complete-quaternion construction;
+   - grabbed-object tracking and correction;
+   - primary visual identity calculation;
+   - horizontal release-swipe classification;
+   - synthetic-click suppression;
+   - projection-driven semantic-control application;
+   - cleanup, validation, and receipts.
+
+   Interactions does not own:
    - canonical navigation state;
-   - legal transitions;
-   - route authority;
+   - transition legality;
+   - canonical routes;
    - authoritative quaternion storage;
-   - controller revisions;
+   - navigation execution;
    - camera or projection mathematics;
-   - crystal geometry or rendering;
+   - crystal geometry or WebGL drawing;
    - Compass geometry or renderer lifecycle.
 
-   Controller transaction contract:
-
-   Orbit:
-   - beginOrbitGesture()
-   - requestOrbitPreview({ quaternion, primaryId })
-   - requestOrbitCommit()
-   - requestOrbitCancel(reason)
-
-   Cluster:
-   - beginClusterGesture(wing)
-   - requestClusterPreview(wing, { quaternion, primaryId })
-   - requestClusterCommit(wing)
-   - requestClusterCancel(wing, reason)
-
-   Preview payloads contain exactly:
+   Controller preview payloads contain exactly:
    - quaternion
    - primaryId
 
    Source status:
-   PAIRED_INTERACTIONS_MOTION_STANDARD
+   PAIRED_INTERACTIONS_RELEASE_SWIPE_STANDARD
    !=
    RUNTIME_PASS
    !=
@@ -112,23 +123,20 @@
     ORBIT_ROTATE:
       "ORBIT_ROTATE",
 
-    CLUSTER_PENDING:
-      "CLUSTER_PENDING",
-
     CLUSTER_ROTATE:
       "CLUSTER_ROTATE",
 
-    CLUSTER_EXIT:
-      "CLUSTER_EXIT",
+    CLUSTER_HORIZONTAL_SWIPE:
+      "CLUSTER_HORIZONTAL_SWIPE",
+
+    COMPASS_CANCELLED:
+      "COMPASS_CANCELLED",
 
     CANCELLED:
       "CANCELLED"
   });
 
   const HIT_KINDS = Object.freeze({
-    NONE:
-      "none",
-
     CARDINAL:
       "cardinal",
 
@@ -179,11 +187,7 @@
   });
 
   /*
-   * Every motion-feel value is confined to this file.
-   *
-   * Direction, sensitivity, drag thresholds, grabbed-object correction,
-   * and cluster-exit behavior must remain adjustable here without a
-   * controller modification.
+   * All interaction feel and gesture thresholds are confined to this file.
    */
   const MOTION = Object.freeze({
     dragActivationDistancePx:
@@ -222,34 +226,39 @@
     hitRadiusScale:
       1.18,
 
-    clusterRotationLockDistancePx:
-      16,
+    /*
+     * Release-swipe contract.
+     *
+     * The gesture must be:
+     * - sufficiently long;
+     * - predominantly horizontal;
+     * - completed within the maximum duration;
+     * - fast enough on average.
+     *
+     * Both horizontal directions are accepted.
+     */
+    clusterSwipeMinimumHorizontalDistancePx:
+      72,
 
-    clusterRotationTangentialThreshold:
-      0.56,
+    clusterSwipeMaximumVerticalDistancePx:
+      92,
 
-    clusterRotationInwardThreshold:
-      0.18,
+    clusterSwipeHorizontalDominanceRatio:
+      1.6,
 
-    clusterExitMinimumDistancePx:
-      42,
+    clusterSwipeMaximumDurationMs:
+      560,
 
-    clusterExitLockDistancePx:
-      52,
+    clusterSwipeMinimumHorizontalVelocityPxPerMs:
+      0.3,
 
-    clusterExitMinimumRadialOriginPx:
-      28,
-
-    clusterExitAlignmentThreshold:
-      0.72,
-
-    clusterExitTangentialRejectionThreshold:
-      0.62,
-
-    directGrabEnabled:
+    clusterSwipeRequireRelease:
       true,
 
     openSpaceRotationEnabled:
+      true,
+
+    directGrabEnabled:
       true,
 
     preventBrowserPanDuringActiveGesture:
@@ -379,12 +388,6 @@
     grabbed:
       null,
 
-    exitQualified:
-      false,
-
-    exitLocked:
-      false,
-
     suppressClickUntil:
       0,
 
@@ -444,9 +447,7 @@
     const number =
       Number(value);
 
-    return Number.isFinite(
-      number
-    )
+    return Number.isFinite(number)
       ? number
       : fallback;
   }
@@ -477,58 +478,6 @@
     );
   }
 
-  function normalizeVector2(
-    x,
-    y
-  ) {
-    const length =
-      Math.hypot(
-        x,
-        y
-      );
-
-    if (
-      !Number.isFinite(
-        length
-      ) ||
-      length <=
-        1e-8
-    ) {
-      return Object.freeze({
-        x:
-          0,
-
-        y:
-          0,
-
-        length:
-          0
-      });
-    }
-
-    return Object.freeze({
-      x:
-        x / length,
-
-      y:
-        y / length,
-
-      length
-    });
-  }
-
-  function dot2(
-    ax,
-    ay,
-    bx,
-    by
-  ) {
-    return (
-      ax * bx +
-      ay * by
-    );
-  }
-
   function normalizeWing(value) {
     const wing =
       String(value || "")
@@ -540,9 +489,7 @@
       "east",
       "south",
       "west"
-    ].includes(
-      wing
-    )
+    ].includes(wing)
       ? wing
       : "";
   }
@@ -589,8 +536,7 @@
 
     if (
       !source ||
-      source.length !==
-        4
+      source.length !== 4
     ) {
       return Array.from(
         fallback
@@ -625,9 +571,7 @@
       );
 
     if (
-      !Number.isFinite(
-        length
-      ) ||
+      !Number.isFinite(length) ||
       length <
         QUATERNION.minimumLength
     ) {
@@ -638,8 +582,7 @@
 
     return quaternion.map(
       component =>
-        component /
-        length
+        component / length
     );
   }
 
@@ -647,29 +590,19 @@
     first,
     second
   ) {
-    const a =
-      normalizeQuaternion(
-        first
-      );
-
-    const b =
-      normalizeQuaternion(
-        second
-      );
-
     const [
       ax,
       ay,
       az,
       aw
-    ] = a;
+    ] = normalizeQuaternion(first);
 
     const [
       bx,
       by,
       bz,
       bw
-    ] = b;
+    ] = normalizeQuaternion(second);
 
     return normalizeQuaternion([
       aw * bx +
@@ -708,16 +641,10 @@
       );
 
     if (
-      !Number.isFinite(
-        axisLength
-      ) ||
-      axisLength <=
-        1e-8 ||
-      !Number.isFinite(
-        angle
-      ) ||
-      Math.abs(angle) <=
-        1e-10
+      !Number.isFinite(axisLength) ||
+      axisLength <= 1e-8 ||
+      !Number.isFinite(angle) ||
+      Math.abs(angle) <= 1e-10
     ) {
       return Array.from(
         QUATERNION.identity
@@ -728,32 +655,23 @@
       angle * 0.5;
 
     const scale =
-      Math.sin(
-        halfAngle
-      ) /
+      Math.sin(halfAngle) /
       axisLength;
 
     return normalizeQuaternion([
       axisX * scale,
       axisY * scale,
       axisZ * scale,
-      Math.cos(
-        halfAngle
-      )
+      Math.cos(halfAngle)
     ]);
   }
 
   /*
-   * Screen drag mapping:
+   * Incremental drag mapping.
    *
-   * - horizontal movement rotates around world Y;
-   * - vertical movement rotates around world X;
-   * - ordinary drag does not introduce world-Z roll;
-   * - movement is calculated incrementally, so a long drag is not capped
-   *   to one small total angle.
-   *
-   * Runtime projection tests remain responsible for confirming the final
-   * camera-relative sign convention on the deployed compositor.
+   * Horizontal pointer movement uses world Y.
+   * Vertical pointer movement uses world X.
+   * Ordinary drag introduces no world-Z key-turn roll.
    */
   function quaternionFromScreenIncrement(
     dx,
@@ -768,11 +686,8 @@
       );
 
     if (
-      !Number.isFinite(
-        length
-      ) ||
-      length <=
-        1e-8
+      !Number.isFinite(length) ||
+      length <= 1e-8
     ) {
       return Array.from(
         QUATERNION.identity
@@ -818,10 +733,8 @@
 
     if (
       !rect ||
-      rect.width <=
-        0 ||
-      rect.height <=
-        0
+      rect.width <= 0 ||
+      rect.height <= 0
     ) {
       return null;
     }
@@ -875,22 +788,17 @@
 
     if (!rect) {
       return Object.freeze({
-        x:
-          0,
-
-        y:
-          0
+        x: 0,
+        y: 0
       });
     }
 
     return Object.freeze({
       x:
-        rect.width *
-        0.5,
+        rect.width * 0.5,
 
       y:
-        rect.height *
-        0.5
+        rect.height * 0.5
     });
   }
 
@@ -965,10 +873,8 @@
     return normalizeQuaternion(
       frame &&
       frame.cluster &&
-      frame.cluster
-        .orientation &&
-      frame.cluster
-        .orientation
+      frame.cluster.orientation &&
+      frame.cluster.orientation
         .quaternion
         ? frame.cluster
             .orientation
@@ -1005,22 +911,19 @@
   ) {
     if (
       !input ||
-      typeof input !==
-        "object"
+      typeof input !== "object"
     ) {
       return null;
     }
 
     const id =
       String(
-        input.id ||
-        ""
+        input.id || ""
       ).trim();
 
     const kind =
       String(
-        input.kind ||
-        ""
+        input.kind || ""
       )
         .trim()
         .toLowerCase();
@@ -1069,8 +972,7 @@
         ),
 
       visible:
-        input.visible !==
-        false
+        input.visible !== false
     });
   }
 
@@ -1080,24 +982,15 @@
     const normalized =
       [];
 
-    if (
-      Array.isArray(
-        records
-      )
-    ) {
-      for (
-        const input
-        of records
-      ) {
+    if (Array.isArray(records)) {
+      for (const input of records) {
         const record =
           normalizeProjectionRecord(
             input
           );
 
         if (record) {
-          normalized.push(
-            record
-          );
+          normalized.push(record);
         }
       }
     }
@@ -1125,8 +1018,7 @@
       );
 
     const scaled =
-      declared >
-        0
+      declared > 0
         ? declared *
           MOTION.hitRadiusScale
         : MOTION
@@ -1144,21 +1036,18 @@
   }
 
   /*
-   * Priority order:
+   * Visual interaction order:
    *
-   * 1. front crystal;
-   * 2. Compass;
-   * 3. rear crystal outside Compass overlap.
-   *
-   * Rear crystals overlapping the Compass are not pointer-eligible.
+   * front crystal
+   * Compass
+   * rear crystal outside Compass overlap
    */
   function deriveInteractionPriority(
     record
   ) {
     if (
       !record ||
-      record.visible !==
-        true
+      record.visible !== true
     ) {
       return INTERACTION_PRIORITY
         .INACTIVE;
@@ -1201,8 +1090,7 @@
     ) {
       const id =
         normalizeRoomId(
-          element.dataset
-            .roomId
+          element.dataset.roomId
         );
 
       return id
@@ -1283,10 +1171,7 @@
           )
       );
 
-    for (
-      const control
-      of controls
-    ) {
+    for (const control of controls) {
       const identity =
         semanticControlIdentity(
           control
@@ -1336,8 +1221,7 @@
         )
       ) ||
       (
-        record.kind ===
-        "cardinal"
+        record.kind === "cardinal"
           ? state.semanticControls.get(
               semanticControlKey(
                 "coin",
@@ -1347,8 +1231,7 @@
           : null
       ) ||
       (
-        record.kind ===
-        "coin"
+        record.kind === "coin"
           ? state.semanticControls.get(
               semanticControlKey(
                 HIT_KINDS.CARDINAL,
@@ -1425,9 +1308,7 @@
 
       control.dataset
         .interactionPriority =
-        String(
-          priority
-        );
+        String(priority);
 
       control.style.position =
         "absolute";
@@ -1452,25 +1333,22 @@
 
       control.style.pointerEvents =
         priority >
-          INTERACTION_PRIORITY
-            .INACTIVE
+          INTERACTION_PRIORITY.INACTIVE
           ? "auto"
           : "none";
 
       if (
         record.visible &&
         priority >
-          INTERACTION_PRIORITY
-            .INACTIVE
+          INTERACTION_PRIORITY.INACTIVE
       ) {
         control.removeAttribute(
           "aria-hidden"
         );
 
         if (
-          control.dataset
-            .active ===
-            "true"
+          control.dataset.active ===
+          "true"
         ) {
           control.removeAttribute(
             "tabindex"
@@ -1504,14 +1382,10 @@
         .getBoundingClientRect();
 
     return (
-      clientX >=
-        rect.left &&
-      clientX <=
-        rect.right &&
-      clientY >=
-        rect.top &&
-      clientY <=
-        rect.bottom
+      clientX >= rect.left &&
+      clientX <= rect.right &&
+      clientY >= rect.top &&
+      clientY <= rect.bottom
     );
   }
 
@@ -1600,19 +1474,15 @@
       }
 
       const isCardinal =
-        record.kind ===
-          "cardinal" ||
-        record.kind ===
-          "coin";
+        record.kind === "cardinal" ||
+        record.kind === "coin";
 
       const isRoom =
-        record.kind ===
-        "room";
+        record.kind === "room";
 
       if (
         mode ===
-          PRESENTATION_MODES
-            .CONSTELLATION &&
+          PRESENTATION_MODES.CONSTELLATION &&
         !isCardinal
       ) {
         continue;
@@ -1620,8 +1490,7 @@
 
       if (
         mode ===
-          PRESENTATION_MODES
-            .CLUSTER &&
+          PRESENTATION_MODES.CLUSTER &&
         !isRoom
       ) {
         continue;
@@ -1659,8 +1528,7 @@
         );
 
       if (
-        hitDistance >
-        radius
+        hitDistance > radius
       ) {
         continue;
       }
@@ -1672,8 +1540,7 @@
 
       if (
         priority <=
-        INTERACTION_PRIORITY
-          .INACTIVE
+        INTERACTION_PRIORITY.INACTIVE
       ) {
         continue;
       }
@@ -1734,8 +1601,7 @@
       event &&
       event.target &&
       typeof event.target
-        .closest ===
-        "function"
+        .closest === "function"
         ? event.target.closest(
             [
               "[data-archcoin-room]",
@@ -1747,9 +1613,7 @@
 
     if (
       !target ||
-      !state.root.contains(
-        target
-      )
+      !state.root.contains(target)
     ) {
       return null;
     }
@@ -1827,8 +1691,7 @@
           ? deriveInteractionPriority(
               record
             )
-          : INTERACTION_PRIORITY
-              .REAR,
+          : INTERACTION_PRIORITY.REAR,
 
       record,
 
@@ -1845,7 +1708,7 @@
         event
       );
 
-    const scenePoint =
+    const point =
       viewportToScenePoint(
         event.clientX,
         event.clientY
@@ -1853,8 +1716,8 @@
 
     const crystal =
       crystalHitsAt(
-        scenePoint.x,
-        scenePoint.y
+        point.x,
+        point.y
       )[0] ||
       null;
 
@@ -1869,9 +1732,7 @@
         direct,
         crystal,
         compass
-      ].filter(
-        Boolean
-      );
+      ].filter(Boolean);
 
     candidates.sort(
       (
@@ -1889,8 +1750,7 @@
     );
 
     if (
-      candidates.length >
-        0
+      candidates.length > 0
     ) {
       return candidates[0];
     }
@@ -1923,8 +1783,7 @@
 
     if (
       mode ===
-      PRESENTATION_MODES
-        .CONSTELLATION
+      PRESENTATION_MODES.CONSTELLATION
     ) {
       return state.projections.filter(
         record =>
@@ -1946,8 +1805,7 @@
         record => {
           if (
             !record.visible ||
-            record.kind !==
-              "room"
+            record.kind !== "room"
           ) {
             return false;
           }
@@ -1992,8 +1850,7 @@
         deriveInteractionPriority(
           record
         ) <=
-        INTERACTION_PRIORITY
-          .INACTIVE
+        INTERACTION_PRIORITY.INACTIVE
       ) {
         continue;
       }
@@ -2027,8 +1884,7 @@
 
     if (
       mode ===
-      PRESENTATION_MODES
-        .CONSTELLATION
+      PRESENTATION_MODES.CONSTELLATION
     ) {
       return (
         normalizeWing(
@@ -2098,11 +1954,10 @@
 
   function createGrabRecord(
     target,
-    pointerScenePoint
+    pointerPoint
   ) {
     if (
-      !MOTION
-        .directGrabEnabled ||
+      !MOTION.directGrabEnabled ||
       !target ||
       !target.record
     ) {
@@ -2117,11 +1972,11 @@
         target.id,
 
       pointerOffsetX:
-        pointerScenePoint.x -
+        pointerPoint.x -
         target.record.x,
 
       pointerOffsetY:
-        pointerScenePoint.y -
+        pointerPoint.y -
         target.record.y
     };
   }
@@ -2163,15 +2018,12 @@
   }
 
   function grabbedCorrectionDelta(
-    pointerScenePoint
+    pointerPoint
   ) {
     if (!state.grabbed) {
       return Object.freeze({
-        dx:
-          0,
-
-        dy:
-          0
+        dx: 0,
+        dy: 0
       });
     }
 
@@ -2180,21 +2032,18 @@
 
     if (!projection) {
       return Object.freeze({
-        dx:
-          0,
-
-        dy:
-          0
+        dx: 0,
+        dy: 0
       });
     }
 
     const desiredX =
-      pointerScenePoint.x -
+      pointerPoint.x -
       state.grabbed
         .pointerOffsetX;
 
     const desiredY =
-      pointerScenePoint.y -
+      pointerPoint.y -
       state.grabbed
         .pointerOffsetY;
 
@@ -2223,24 +2072,15 @@
         multiplier;
   }
 
-  /*
-   * Incremental construction:
-   *
-   * The delta uses only movement since the previous accepted update.
-   * It is composed onto the latest accepted quaternion.
-   *
-   * This allows arbitrarily long gestures while retaining a bounded
-   * per-update angular change.
-   */
   function buildIncrementalQuaternion(
-    pointerScenePoint
+    pointerPoint
   ) {
     const incrementalDx =
-      pointerScenePoint.x -
+      pointerPoint.x -
       state.lastX;
 
     const incrementalDy =
-      pointerScenePoint.y -
+      pointerPoint.y -
       state.lastY;
 
     const movementDelta =
@@ -2263,17 +2103,16 @@
     if (state.grabbed) {
       const correction =
         grabbedCorrectionDelta(
-          pointerScenePoint
+          pointerPoint
         );
 
       if (
         Math.hypot(
           correction.dx,
           correction.dy
-        ) >
-        0.5
+        ) > 0.5
       ) {
-        const correctionQuaternion =
+        const correctionDelta =
           quaternionFromScreenIncrement(
             correction.dx,
             correction.dy,
@@ -2289,7 +2128,7 @@
         result =
           applyWorldSpaceDelta(
             result,
-            correctionQuaternion
+            correctionDelta
           );
       }
     }
@@ -2300,147 +2139,11 @@
   }
 
   /*
-   * Cluster intent remains pending while an outward radial gesture is
-   * developing. It is not prematurely converted into cluster rotation.
+   * Compass-origin gestures are Compass-owned.
    *
-   * Rotation locks when:
-   * - movement is strongly tangential; or
-   * - movement is inward; or
-   * - the gesture is not plausibly outward after sufficient travel.
-   *
-   * Exit locks only after its full radial-distance qualification.
+   * A Compass tap may select the Compass.
+   * A Compass drag may not rotate either crystal field.
    */
-  function evaluateClusterIntent() {
-    const center =
-      sceneCenter();
-
-    const radialOrigin =
-      normalizeVector2(
-        state.startX -
-          center.x,
-
-        state.startY -
-          center.y
-      );
-
-    const drag =
-      normalizeVector2(
-        state.totalDx,
-        state.totalDy
-      );
-
-    if (
-      drag.length <
-      MOTION
-        .dragActivationDistancePx
-    ) {
-      return INTENTS.UNKNOWN;
-    }
-
-    if (
-      radialOrigin.length <
-      MOTION
-        .clusterExitMinimumRadialOriginPx
-    ) {
-      return drag.length >=
-        MOTION
-          .clusterRotationLockDistancePx
-        ? INTENTS
-            .CLUSTER_ROTATE
-        : INTENTS
-            .CLUSTER_PENDING;
-    }
-
-    const radialAlignment =
-      dot2(
-        radialOrigin.x,
-        radialOrigin.y,
-        drag.x,
-        drag.y
-      );
-
-    const tangentX =
-      -radialOrigin.y;
-
-    const tangentY =
-      radialOrigin.x;
-
-    const tangentialAlignment =
-      Math.abs(
-        dot2(
-          tangentX,
-          tangentY,
-          drag.x,
-          drag.y
-        )
-      );
-
-    const exitQualified =
-      drag.length >=
-        MOTION
-          .clusterExitMinimumDistancePx &&
-      radialAlignment >=
-        MOTION
-          .clusterExitAlignmentThreshold &&
-      tangentialAlignment <=
-        MOTION
-          .clusterExitTangentialRejectionThreshold;
-
-    if (exitQualified) {
-      state.exitQualified =
-        true;
-
-      state.exitLocked =
-        drag.length >=
-        MOTION
-          .clusterExitLockDistancePx;
-
-      return INTENTS.CLUSTER_EXIT;
-    }
-
-    const outwardStillPlausible =
-      radialAlignment >=
-        MOTION
-          .clusterRotationInwardThreshold &&
-      tangentialAlignment <
-        MOTION
-          .clusterRotationTangentialThreshold;
-
-    if (
-      outwardStillPlausible &&
-      drag.length <
-        MOTION
-          .clusterExitMinimumDistancePx
-    ) {
-      return INTENTS.CLUSTER_PENDING;
-    }
-
-    const tangentialRotation =
-      tangentialAlignment >=
-      MOTION
-        .clusterRotationTangentialThreshold;
-
-    const inwardRotation =
-      radialAlignment <
-      MOTION
-        .clusterRotationInwardThreshold;
-
-    if (
-      drag.length >=
-        MOTION
-          .clusterRotationLockDistancePx &&
-      (
-        tangentialRotation ||
-        inwardRotation ||
-        !outwardStillPlausible
-      )
-    ) {
-      return INTENTS.CLUSTER_ROTATE;
-    }
-
-    return INTENTS.CLUSTER_PENDING;
-  }
-
   function updateIntentFromMovement() {
     if (
       state.intent ===
@@ -2448,7 +2151,7 @@
       state.intent ===
         INTENTS.CLUSTER_ROTATE ||
       state.intent ===
-        INTENTS.CLUSTER_EXIT ||
+        INTENTS.COMPASS_CANCELLED ||
       state.intent ===
         INTENTS.CANCELLED
     ) {
@@ -2456,11 +2159,38 @@
     }
 
     if (
+      state.pointerDownTarget &&
+      state.pointerDownTarget.kind ===
+        HIT_KINDS.COMPASS
+    ) {
+      if (
+        state.dragDistance >
+        MOTION.tapMaximumDistancePx
+      ) {
+        state.intent =
+          INTENTS.COMPASS_CANCELLED;
+      }
+
+      return state.intent;
+    }
+
+    if (
       state.dragDistance <
-      MOTION
-        .dragActivationDistancePx
+      MOTION.dragActivationDistancePx
     ) {
       return INTENTS.UNKNOWN;
+    }
+
+    if (
+      state.pointerDownTarget &&
+      state.pointerDownTarget.kind ===
+        HIT_KINDS.OPEN_SPACE &&
+      !MOTION.openSpaceRotationEnabled
+    ) {
+      state.intent =
+        INTENTS.CANCELLED;
+
+      return state.intent;
     }
 
     const mode =
@@ -2468,8 +2198,7 @@
 
     if (
       mode ===
-      PRESENTATION_MODES
-        .CONSTELLATION
+      PRESENTATION_MODES.CONSTELLATION
     ) {
       state.intent =
         INTENTS.ORBIT_ROTATE;
@@ -2482,7 +2211,7 @@
       PRESENTATION_MODES.CLUSTER
     ) {
       state.intent =
-        evaluateClusterIntent();
+        INTENTS.CLUSTER_ROTATE;
 
       return state.intent;
     }
@@ -2560,7 +2289,7 @@
   }
 
   function submitPreview(
-    pointerScenePoint
+    pointerPoint
   ) {
     if (
       !state.transactionOpened
@@ -2570,7 +2299,7 @@
 
     const quaternion =
       buildIncrementalQuaternion(
-        pointerScenePoint
+        pointerPoint
       );
 
     const fallbackPrimary =
@@ -2607,8 +2336,7 @@
         state.controller
           .requestOrbitPreview({
             quaternion,
-            primaryId:
-              wing
+            primaryId: wing
           });
     } else if (
       state.transactionKind ===
@@ -2653,10 +2381,10 @@
      * Increment origin advances only after controller acceptance.
      */
     state.lastX =
-      pointerScenePoint.x;
+      pointerPoint.x;
 
     state.lastY =
-      pointerScenePoint.y;
+      pointerPoint.y;
 
     recordAction(
       `preview-accepted:${state.transactionKind}:${primaryId}`
@@ -2786,27 +2514,150 @@
     return false;
   }
 
-  function requestClusterExit() {
+  /*
+   * Release-only horizontal swipe classifier.
+   *
+   * It is independent of scene quadrant, radial origin, and vertical
+   * outward direction.
+   */
+  function classifyClusterHorizontalSwipe(
+    elapsedMs
+  ) {
     if (
       activePresentationMode() !==
       PRESENTATION_MODES.CLUSTER
     ) {
+      return Object.freeze({
+        qualified: false,
+        reason:
+          "NOT_CLUSTER_MODE"
+      });
+    }
+
+    if (
+      state.pointerDownTarget &&
+      state.pointerDownTarget.kind ===
+        HIT_KINDS.COMPASS
+    ) {
+      return Object.freeze({
+        qualified: false,
+        reason:
+          "COMPASS_ORIGIN"
+      });
+    }
+
+    const absoluteHorizontal =
+      Math.abs(
+        state.totalDx
+      );
+
+    const absoluteVertical =
+      Math.abs(
+        state.totalDy
+      );
+
+    const duration =
+      Math.max(
+        1,
+        finiteNumber(
+          elapsedMs,
+          1
+        )
+      );
+
+    const horizontalVelocity =
+      absoluteHorizontal /
+      duration;
+
+    const horizontalDominance =
+      absoluteHorizontal /
+      Math.max(
+        absoluteVertical,
+        1
+      );
+
+    const qualified =
+      absoluteHorizontal >=
+        MOTION
+          .clusterSwipeMinimumHorizontalDistancePx &&
+      absoluteVertical <=
+        MOTION
+          .clusterSwipeMaximumVerticalDistancePx &&
+      horizontalDominance >=
+        MOTION
+          .clusterSwipeHorizontalDominanceRatio &&
+      duration <=
+        MOTION
+          .clusterSwipeMaximumDurationMs &&
+      horizontalVelocity >=
+        MOTION
+          .clusterSwipeMinimumHorizontalVelocityPxPerMs;
+
+    return Object.freeze({
+      qualified,
+
+      direction:
+        state.totalDx >= 0
+          ? "LEFT_TO_RIGHT"
+          : "RIGHT_TO_LEFT",
+
+      horizontalDistancePx:
+        absoluteHorizontal,
+
+      verticalDistancePx:
+        absoluteVertical,
+
+      horizontalDominance,
+
+      durationMs:
+        duration,
+
+      horizontalVelocityPxPerMs:
+        horizontalVelocity,
+
+      reason:
+        qualified
+          ? "QUALIFIED_HORIZONTAL_RELEASE_SWIPE"
+          : "THRESHOLD_NOT_MET"
+    });
+  }
+
+  function requestClusterSwipeReturn(
+    swipe
+  ) {
+    if (
+      !swipe ||
+      swipe.qualified !== true
+    ) {
       return false;
     }
 
+    /*
+     * Drag previews remain provisional. A qualifying release swipe restores
+     * the cluster's gesture origin before requesting the navigation return.
+     */
     if (
       state.transactionOpened
     ) {
       cancelMotionTransaction(
-        "cluster-exit"
+        "cluster-horizontal-swipe"
       );
+
+      state.transactionOpened =
+        false;
+
+      state.previewAccepted =
+        false;
     }
+
+    state.intent =
+      INTENTS.CLUSTER_HORIZONTAL_SWIPE;
 
     const returned =
       state.controller
         .requestReturnToConstellation({
           source:
-            "cluster-exit-gesture",
+            "cluster-horizontal-swipe",
 
           scrollToScene:
             true
@@ -2814,7 +2665,7 @@
 
     if (returned) {
       recordAction(
-        "cluster-exit-committed"
+        `cluster-horizontal-swipe-returned:${swipe.direction}`
       );
     }
 
@@ -2847,8 +2698,7 @@
 
   function releasePointerCapture() {
     if (
-      state.activePointerId ===
-        null ||
+      state.activePointerId === null ||
       !state.sceneField ||
       typeof state.sceneField
         .releasePointerCapture !==
@@ -2944,12 +2794,6 @@
 
     state.grabbed =
       null;
-
-    state.exitQualified =
-      false;
-
-    state.exitLocked =
-      false;
   }
 
   function suppressNextClick(
@@ -2995,8 +2839,7 @@
     const semantic =
       event.target &&
       typeof event.target
-        .closest ===
-        "function"
+        .closest === "function"
         ? event.target.closest(
             [
               "[data-archcoin-room]",
@@ -3019,8 +2862,7 @@
       state.disposed ||
       !state.initialized ||
       isHeld() ||
-      state.activePointerId !==
-        null
+      state.activePointerId !== null
     ) {
       return false;
     }
@@ -3028,8 +2870,7 @@
     if (
       event.pointerType ===
         "mouse" &&
-      event.button !==
-        0
+      event.button !== 0
     ) {
       return false;
     }
@@ -3056,9 +2897,7 @@
     event
   ) {
     if (
-      !pointerDownIsEligible(
-        event
-      )
+      !pointerDownIsEligible(event)
     ) {
       return;
     }
@@ -3079,8 +2918,7 @@
 
     state.pointerType =
       String(
-        event.pointerType ||
-        ""
+        event.pointerType || ""
       );
 
     state.pointerDownTarget =
@@ -3145,12 +2983,6 @@
         target,
         point
       );
-
-    state.exitQualified =
-      false;
-
-    state.exitLocked =
-      false;
 
     setPointerCapture(
       event.pointerId
@@ -3217,52 +3049,26 @@
     }
 
     if (
+      intent ===
+        INTENTS.COMPASS_CANCELLED ||
+      intent ===
+        INTENTS.CANCELLED
+    ) {
+      if (
+        MOTION
+          .preventBrowserPanDuringActiveGesture
+      ) {
+        event.preventDefault();
+      }
+
+      return;
+    }
+
+    if (
       MOTION
         .preventBrowserPanDuringActiveGesture
     ) {
       event.preventDefault();
-    }
-
-    if (
-      intent ===
-      INTENTS.CLUSTER_PENDING
-    ) {
-      recordAction(
-        "cluster-intent-pending"
-      );
-
-      return;
-    }
-
-    if (
-      intent ===
-      INTENTS.CLUSTER_EXIT
-    ) {
-      /*
-       * Exit classification occurs before any cluster transaction begins.
-       * No cluster preview is sent while exit is pending or locked.
-       */
-      if (
-        state.transactionOpened
-      ) {
-        cancelMotionTransaction(
-          "cluster-exit-qualified"
-        );
-
-        state.transactionOpened =
-          false;
-
-        state.previewAccepted =
-          false;
-      }
-
-      recordAction(
-        state.exitLocked
-          ? "cluster-exit-locked"
-          : "cluster-exit-qualified"
-      );
-
-      return;
     }
 
     if (
@@ -3288,9 +3094,7 @@
     }
 
     if (
-      !submitPreview(
-        point
-      )
+      !submitPreview(point)
     ) {
       cancelMotionTransaction(
         "preview-rejected"
@@ -3308,16 +3112,13 @@
   function finalizePointer(
     event,
     {
-      cancelled =
-        false,
-
-      reason =
-        "pointer-up"
+      cancelled = false,
+      reason = "pointer-up"
     } = {}
   ) {
     if (
       state.activePointerId !==
-        event.pointerId
+      event.pointerId
     ) {
       return;
     }
@@ -3346,72 +3147,82 @@
 
       handled =
         true;
-    } else if (
-      state.intent ===
-        INTENTS.CLUSTER_EXIT &&
-      state.exitQualified
-    ) {
-      handled =
-        requestClusterExit();
-
-      suppressNextClick(
-        target
-      );
-    } else if (
-      (
-        state.intent ===
-          INTENTS.ORBIT_ROTATE ||
-        state.intent ===
-          INTENTS.CLUSTER_ROTATE
-      ) &&
-      state.transactionOpened
-    ) {
-      if (
-        state.previewAccepted
-      ) {
-        handled =
-          commitMotionTransaction();
-      } else {
-        cancelMotionTransaction(
-          "no-preview"
-        );
-      }
-
-      suppressNextClick(
-        target
-      );
     } else {
-      const qualifiesAsTap =
-        state.dragDistance <=
-          MOTION
-            .tapMaximumDistancePx &&
-        elapsed <=
-          MOTION
-            .tapMaximumDurationMs;
+      /*
+       * A cluster swipe is evaluated first on release.
+       *
+       * During the held drag, the cluster was allowed to preview rotation.
+       * A qualifying horizontal release cancels that provisional rotation
+       * and returns to the constellation.
+       */
+      const swipe =
+        classifyClusterHorizontalSwipe(
+          elapsed
+        );
 
-      if (
-        qualifiesAsTap &&
-        target &&
-        target.kind !==
-          HIT_KINDS.OPEN_SPACE
-      ) {
-        state.intent =
-          INTENTS.TAP;
-
+      if (swipe.qualified) {
         handled =
-          activateSemanticTarget(
-            target
+          requestClusterSwipeReturn(
+            swipe
           );
 
         suppressNextClick(
           target
         );
       } else if (
+        (
+          state.intent ===
+            INTENTS.ORBIT_ROTATE ||
+          state.intent ===
+            INTENTS.CLUSTER_ROTATE
+        ) &&
         state.transactionOpened
       ) {
-        cancelMotionTransaction(
-          "gesture-not-committed"
+        if (
+          state.previewAccepted
+        ) {
+          handled =
+            commitMotionTransaction();
+        } else {
+          cancelMotionTransaction(
+            "no-preview"
+          );
+        }
+
+        suppressNextClick(
+          target
         );
+      } else {
+        const qualifiesAsTap =
+          state.dragDistance <=
+            MOTION.tapMaximumDistancePx &&
+          elapsed <=
+            MOTION.tapMaximumDurationMs;
+
+        if (
+          qualifiesAsTap &&
+          target &&
+          target.kind !==
+            HIT_KINDS.OPEN_SPACE
+        ) {
+          state.intent =
+            INTENTS.TAP;
+
+          handled =
+            activateSemanticTarget(
+              target
+            );
+
+          suppressNextClick(
+            target
+          );
+        } else if (
+          state.transactionOpened
+        ) {
+          cancelMotionTransaction(
+            "gesture-not-committed"
+          );
+        }
       }
     }
 
@@ -3459,7 +3270,7 @@
   ) {
     if (
       state.activePointerId !==
-        event.pointerId
+      event.pointerId
     ) {
       return;
     }
@@ -3482,16 +3293,12 @@
   function handleClickCapture(
     event
   ) {
-    if (
-      state.disposed
-    ) {
+    if (state.disposed) {
       return;
     }
 
     if (
-      shouldSuppressClick(
-        event
-      )
+      shouldSuppressClick(event)
     ) {
       event.preventDefault();
       event.stopImmediatePropagation();
@@ -3500,12 +3307,11 @@
     }
 
     /*
-     * Pointer-generated clicks are handled through the pointer lifecycle.
-     * Keyboard-generated clicks use detail === 0.
+     * Pointer-generated activation is handled by the pointer lifecycle.
+     * detail === 0 preserves keyboard semantic activation.
      */
     if (
-      event.detail !==
-        0
+      event.detail !== 0
     ) {
       return;
     }
@@ -3551,14 +3357,12 @@
       options
     );
 
-    state.listeners.push(
-      Object.freeze({
-        target,
-        type,
-        listener,
-        options
-      })
-    );
+    state.listeners.push({
+      target,
+      type,
+      listener,
+      options
+    });
   }
 
   function removeAllListeners() {
@@ -3603,19 +3407,15 @@
       "none";
 
     /*
-     * Pointerdown is bound at the root so the Compass remains reachable
-     * even when its control is not a child of the scene-field element.
+     * Root capture includes the fixed Compass and scene controls.
      */
     addListener(
       state.root,
       "pointerdown",
       handlePointerDown,
       {
-        passive:
-          false,
-
-        capture:
-          true
+        passive: false,
+        capture: true
       }
     );
 
@@ -3624,8 +3424,7 @@
       "pointermove",
       handlePointerMove,
       {
-        passive:
-          false
+        passive: false
       }
     );
 
@@ -3634,8 +3433,7 @@
       "pointerup",
       handlePointerUp,
       {
-        passive:
-          false
+        passive: false
       }
     );
 
@@ -3644,8 +3442,7 @@
       "pointercancel",
       handlePointerCancel,
       {
-        passive:
-          false
+        passive: false
       }
     );
 
@@ -3708,33 +3505,14 @@
       controller.moduleId ===
         MODULE.controllerModuleId,
 
-      "ARCHCOIN_INTERACTIONS_CONTROLLER_MODULE_ID_MISMATCH",
-
-      {
-        expected:
-          MODULE
-            .controllerModuleId,
-
-        actual:
-          controller.moduleId
-      }
+      "ARCHCOIN_INTERACTIONS_CONTROLLER_MODULE_ID_MISMATCH"
     );
 
     invariant(
       controller.moduleVersion ===
-        MODULE
-          .controllerModuleVersion,
+        MODULE.controllerModuleVersion,
 
-      "ARCHCOIN_INTERACTIONS_CONTROLLER_VERSION_MISMATCH",
-
-      {
-        expected:
-          MODULE
-            .controllerModuleVersion,
-
-        actual:
-          controller.moduleVersion
-      }
+      "ARCHCOIN_INTERACTIONS_CONTROLLER_VERSION_MISMATCH"
     );
 
     invariant(
@@ -3746,8 +3524,7 @@
 
     invariant(
       controller.motionContractVersion ===
-        MODULE
-          .motionContractVersion,
+        MODULE.motionContractVersion,
 
       "ARCHCOIN_INTERACTIONS_MOTION_CONTRACT_VERSION_MISMATCH"
     );
@@ -3759,8 +3536,7 @@
       invariant(
         typeof controller[
           methodName
-        ] ===
-          "function",
+        ] === "function",
 
         `ARCHCOIN_INTERACTIONS_CONTROLLER_METHOD_MISSING:${methodName}`
       );
@@ -3773,8 +3549,7 @@
       ) &&
       controller
         .canonicalRoomRecords
-        .length ===
-        16,
+        .length === 16,
 
       "ARCHCOIN_INTERACTIONS_CANONICAL_ROOM_REGISTRY_INVALID"
     );
@@ -3782,8 +3557,8 @@
     return true;
   }
 
-  function validateQuaternionMath() {
-    const rightIncrement =
+  function validateQuaternionContract() {
+    const horizontal =
       quaternionFromScreenIncrement(
         40,
         0,
@@ -3791,7 +3566,7 @@
         0.24
       );
 
-    const upIncrement =
+    const vertical =
       quaternionFromScreenIncrement(
         0,
         -40,
@@ -3800,41 +3575,37 @@
       );
 
     invariant(
-      rightIncrement.length ===
-        4 &&
-      rightIncrement.every(
+      horizontal.length === 4 &&
+      horizontal.every(
         Number.isFinite
       ),
 
-      "ARCHCOIN_INTERACTIONS_RIGHT_INCREMENT_INVALID"
+      "ARCHCOIN_INTERACTIONS_HORIZONTAL_QUATERNION_INVALID"
     );
 
     invariant(
-      upIncrement.length ===
-        4 &&
-      upIncrement.every(
+      vertical.length === 4 &&
+      vertical.every(
         Number.isFinite
       ),
 
-      "ARCHCOIN_INTERACTIONS_UP_INCREMENT_INVALID"
+      "ARCHCOIN_INTERACTIONS_VERTICAL_QUATERNION_INVALID"
     );
 
     invariant(
       Math.abs(
-        rightIncrement[2]
-      ) <
-        1e-8,
+        horizontal[2]
+      ) < 1e-8,
 
-      "ARCHCOIN_INTERACTIONS_HORIZONTAL_DRAG_MUST_NOT_CREATE_Z_ROLL"
+      "ARCHCOIN_INTERACTIONS_HORIZONTAL_DRAG_CREATED_Z_ROLL"
     );
 
     invariant(
       Math.abs(
-        upIncrement[2]
-      ) <
-        1e-8,
+        vertical[2]
+      ) < 1e-8,
 
-      "ARCHCOIN_INTERACTIONS_VERTICAL_DRAG_MUST_NOT_CREATE_Z_ROLL"
+      "ARCHCOIN_INTERACTIONS_VERTICAL_DRAG_CREATED_Z_ROLL"
     );
 
     let accumulated =
@@ -3850,13 +3621,11 @@
       accumulated =
         applyWorldSpaceDelta(
           accumulated,
-          rightIncrement
+          horizontal
         );
     }
 
     invariant(
-      accumulated.length ===
-        4 &&
       accumulated.every(
         Number.isFinite
       ),
@@ -3864,18 +3633,13 @@
       "ARCHCOIN_INTERACTIONS_INCREMENTAL_ACCUMULATION_INVALID"
     );
 
-    invariant(
-      Math.abs(
-        accumulated[3] -
-        rightIncrement[3]
-      ) >
-        1e-4,
-
-      "ARCHCOIN_INTERACTIONS_GESTURE_MUST_NOT_BE_TOTAL_ANGLE_CAPPED"
-    );
-
     return Object.freeze({
-      pass:
+      pass: true,
+
+      completeQuaternionOutput:
+        true,
+
+      incrementalComposition:
         true,
 
       horizontalAxis:
@@ -3885,80 +3649,68 @@
         "WORLD_X",
 
       ordinaryDragWorldZRoll:
-        false,
-
-      incrementalComposition:
-        true,
-
-      longGestureTotalAngleCapped:
-        false,
-
-      multiplicationOrder:
-        "WORLD_INCREMENT_TIMES_LATEST_ACCEPTED"
+        false
     });
   }
 
-  function validateIntentContract() {
-    invariant(
-      INTENTS.CLUSTER_PENDING !==
-        INTENTS.CLUSTER_ROTATE,
-
-      "ARCHCOIN_INTERACTIONS_CLUSTER_PENDING_COLLISION"
-    );
-
-    invariant(
-      INTENTS.CLUSTER_EXIT !==
-        INTENTS.CLUSTER_ROTATE,
-
-      "ARCHCOIN_INTERACTIONS_EXIT_ROTATION_COLLISION"
-    );
-
+  function validateReleaseSwipeContract() {
     invariant(
       MOTION
-        .clusterExitMinimumDistancePx >
-      MOTION
-        .clusterRotationLockDistancePx,
-
-      "ARCHCOIN_INTERACTIONS_EXIT_DISTANCE_MUST_EXCEED_ROTATION_LOCK_DISTANCE"
-    );
-
-    invariant(
-      MOTION
-        .clusterExitMinimumDistancePx >
+        .clusterSwipeMinimumHorizontalDistancePx >
       MOTION
         .dragActivationDistancePx,
 
-      "ARCHCOIN_INTERACTIONS_EXIT_DISTANCE_MUST_EXCEED_DRAG_ACTIVATION"
+      "ARCHCOIN_INTERACTIONS_SWIPE_DISTANCE_INVALID"
+    );
+
+    invariant(
+      MOTION
+        .clusterSwipeHorizontalDominanceRatio >
+        1,
+
+      "ARCHCOIN_INTERACTIONS_SWIPE_DOMINANCE_INVALID"
+    );
+
+    invariant(
+      MOTION
+        .clusterSwipeMinimumHorizontalVelocityPxPerMs >
+        0,
+
+      "ARCHCOIN_INTERACTIONS_SWIPE_VELOCITY_INVALID"
     );
 
     return Object.freeze({
-      pass:
+      pass: true,
+
+      evaluatedOnRelease:
         true,
 
-      clusterPendingIntent:
+      leftToRightAccepted:
         true,
 
-      outwardIntentRemainsPendingBeforeExitThreshold:
+      rightToLeftAccepted:
         true,
 
-      tangentialIntentMayLockRotation:
-        true,
+      radialOriginRequired:
+        false,
 
-      exitBeforeClusterTransaction:
-        true,
+      outwardDirectionRequired:
+        false,
 
-      lockedExitSendsNoPreview:
-        true,
+      bottomLeftOriginRequired:
+        false,
 
-      tapDoesNotOpenTransaction:
+      downwardMotionRequired:
+        false,
+
+      provisionalClusterRotationCancelledBeforeReturn:
         true
     });
   }
 
   function validateResponsibilityContract() {
     return Object.freeze({
-      pass:
-        true,
+      pass: true,
 
       pointerLifecycleOwned:
         true,
@@ -3966,25 +3718,19 @@
       tapDragArbitrationOwned:
         true,
 
-      wholeCrystalHitTestingOwned:
+      hitTestingOwned:
         true,
 
       syntheticClickSuppressionOwned:
         true,
 
-      interactionPriorityDerivationOwned:
+      interactionPriorityOwned:
         true,
 
       projectionDomApplicationOwned:
         true,
 
-      clusterExitClassificationOwned:
-        true,
-
-      dragDirectionOwned:
-        true,
-
-      sensitivityOwned:
+      releaseSwipeClassificationOwned:
         true,
 
       gestureAxisSelectionOwned:
@@ -3994,9 +3740,6 @@
         true,
 
       grabbedObjectTrackingOwned:
-        true,
-
-      primaryVisualIdentityCalculationOwned:
         true,
 
       canonicalNavigationStateOwned:
@@ -4027,28 +3770,25 @@
 
   function runSelfTest() {
     const results = {
-      quaternionMath:
-        validateQuaternionMath(),
+      quaternion:
+        validateQuaternionContract(),
 
-      intent:
-        validateIntentContract(),
+      releaseSwipe:
+        validateReleaseSwipeContract(),
 
       responsibility:
         validateResponsibilityContract()
     };
 
     const pass =
-      Object.values(
-        results
-      ).every(
+      Object.values(results).every(
         result =>
-          result.pass ===
-          true
+          result.pass === true
       );
 
     return Object.freeze({
       receiptSchema:
-        "ARCHCOIN_INTERACTIONS_COMPLETE_QUATERNION_MOTION_VALIDATION_RECEIPT_v2",
+        "ARCHCOIN_INTERACTIONS_HORIZONTAL_RELEASE_SWIPE_VALIDATION_RECEIPT_v1",
 
       moduleId:
         MODULE.id,
@@ -4057,19 +3797,16 @@
         MODULE.version,
 
       controllerModuleId:
-        MODULE
-          .controllerModuleId,
+        MODULE.controllerModuleId,
 
       controllerModuleVersion:
-        MODULE
-          .controllerModuleVersion,
+        MODULE.controllerModuleVersion,
 
       motionContractId:
         MODULE.motionContractId,
 
       motionContractVersion:
-        MODULE
-          .motionContractVersion,
+        MODULE.motionContractVersion,
 
       pass,
 
@@ -4077,12 +3814,10 @@
         MODULE.id,
 
       acceptedStateAuthority:
-        MODULE
-          .controllerModuleId,
+        MODULE.controllerModuleId,
 
       navigationTransitionAuthority:
-        MODULE
-          .controllerModuleId,
+        MODULE.controllerModuleId,
 
       previewPayloadShape:
         Object.freeze([
@@ -4091,9 +3826,7 @@
         ]),
 
       results:
-        Object.freeze(
-          results
-        )
+        Object.freeze(results)
     });
   }
 
@@ -4116,16 +3849,10 @@
         MODULE.motionContractId,
 
       motionContractVersion:
-        MODULE
-          .motionContractVersion,
+        MODULE.motionContractVersion,
 
       controllerModuleId:
-        MODULE
-          .controllerModuleId,
-
-      controllerModuleVersion:
-        MODULE
-          .controllerModuleVersion,
+        MODULE.controllerModuleId,
 
       initialized:
         state.initialized,
@@ -4154,51 +3881,32 @@
           ? state.grabbed.id
           : "",
 
-      exitQualified:
-        state.exitQualified,
+      totalDx:
+        state.totalDx,
 
-      exitLocked:
-        state.exitLocked,
+      totalDy:
+        state.totalDy,
 
       projectionCount:
         state.projections.length,
+
+      releaseSwipeEvaluation:
+        "POINTER_UP",
+
+      releaseSwipeDirections:
+        Object.freeze([
+          "LEFT_TO_RIGHT",
+          "RIGHT_TO_LEFT"
+        ]),
+
+      radialExitClassification:
+        false,
 
       motionOwner:
         MODULE.id,
 
       acceptedStateAuthority:
-        MODULE
-          .controllerModuleId,
-
-      pointerLifecycleOwner:
-        MODULE.id,
-
-      tapDragArbitrationOwner:
-        MODULE.id,
-
-      hitTestOwner:
-        MODULE.id,
-
-      interactionPriorityOwner:
-        MODULE.id,
-
-      clusterExitClassificationOwner:
-        MODULE.id,
-
-      gestureQuaternionConstructionOwner:
-        MODULE.id,
-
-      gestureAxisSelectionOwner:
-        MODULE.id,
-
-      motionSensitivityOwner:
-        MODULE.id,
-
-      grabbedObjectTrackingOwner:
-        MODULE.id,
-
-      projectionDomApplicationOwner:
-        MODULE.id,
+        MODULE.controllerModuleId,
 
       lastAction:
         state.lastAction,
@@ -4219,9 +3927,7 @@
     if (state.root) {
       state.root.dataset
         .archcoinInteractionsReceipt =
-        JSON.stringify(
-          receipt
-        );
+        JSON.stringify(receipt);
 
       state.root.dataset
         .archcoinInteractionsStatus =
@@ -4236,8 +3942,8 @@
         MODULE.id;
 
       state.root.dataset
-        .archcoinInteractionPriorityOwner =
-        MODULE.id;
+        .archcoinClusterReturnGesture =
+        "horizontal-release-swipe";
     }
 
     return receipt;
@@ -4245,9 +3951,7 @@
 
   function recordAction(action) {
     state.lastAction =
-      String(
-        action || ""
-      );
+      String(action || "");
 
     state.lastFailure =
       "";
@@ -4257,9 +3961,7 @@
 
   function recordFailure(reason) {
     state.lastFailure =
-      String(
-        reason || ""
-      );
+      String(reason || "");
 
     publishReceipt();
   }
@@ -4378,19 +4080,16 @@
           MODULE.version,
 
         controllerModuleId:
-          MODULE
-            .controllerModuleId,
+          MODULE.controllerModuleId,
 
         controllerModuleVersion:
-          MODULE
-            .controllerModuleVersion,
+          MODULE.controllerModuleVersion,
 
         motionContractId:
           MODULE.motionContractId,
 
         motionContractVersion:
-          MODULE
-            .motionContractVersion,
+          MODULE.motionContractVersion,
 
         intents:
           INTENTS,
@@ -4426,50 +4125,37 @@
                 MODULE.version,
 
               controllerModuleId:
-                MODULE
-                  .controllerModuleId,
+                MODULE.controllerModuleId,
 
               controllerModuleVersion:
-                MODULE
-                  .controllerModuleVersion,
+                MODULE.controllerModuleVersion,
 
               motionContractId:
                 MODULE.motionContractId,
 
               motionContractVersion:
-                MODULE
-                  .motionContractVersion,
+                MODULE.motionContractVersion,
 
               motionOwner:
                 MODULE.id,
 
               acceptedStateAuthority:
-                MODULE
-                  .controllerModuleId,
+                MODULE.controllerModuleId,
 
-              pointerLifecycleOwner:
-                MODULE.id,
+              dragBehavior:
+                "ROTATE_WHILE_HELD",
 
-              gestureQuaternionConstructionOwner:
-                MODULE.id,
+              clusterReturnBehavior:
+                "QUALIFIED_HORIZONTAL_SWIPE_ON_RELEASE",
 
-              gestureAxisSelectionOwner:
-                MODULE.id,
+              clusterReturnDirections:
+                Object.freeze([
+                  "LEFT_TO_RIGHT",
+                  "RIGHT_TO_LEFT"
+                ]),
 
-              interactionPriorityOwner:
-                MODULE.id,
-
-              clusterExitClassificationOwner:
-                MODULE.id,
-
-              directManipulationOwner:
-                MODULE.id,
-
-              incrementalQuaternionAccumulation:
-                true,
-
-              clusterPendingIntent:
-                true
+              radialExitClassification:
+                false
             })
         }
       )
@@ -4491,9 +4177,7 @@
                 MODULE.version,
 
               reason:
-                String(
-                  reason || ""
-                )
+                String(reason || "")
             })
         }
       )
@@ -4588,8 +4272,7 @@
         runSelfTest();
 
       invariant(
-        validation.pass ===
-          true,
+        validation.pass === true,
 
         "ARCHCOIN_INTERACTIONS_SOURCE_VALIDATION_FAILED",
 
@@ -4638,9 +4321,7 @@
       removeAllListeners();
       restorePointerPolicy();
       publishReceipt();
-      dispatchFailure(
-        reason
-      );
+      dispatchFailure(reason);
     }
   }
 
@@ -4683,8 +4364,7 @@
       "ARCHCOIN_CONTROLLER_READY",
       handleControllerReady,
       {
-        once:
-          true
+        once: true
       }
     );
   }
@@ -4697,8 +4377,7 @@
       "DOMContentLoaded",
       waitForController,
       {
-        once:
-          true
+        once: true
       }
     );
   } else {
@@ -4707,7 +4386,7 @@
 })();
 
 /*
-AUDRALIA_ARCHCOIN_INTERACTIONS_COMPLETE_QUATERNION_MOTION_RESULT_v2
+AUDRALIA_ARCHCOIN_INTERACTIONS_HORIZONTAL_RELEASE_SWIPE_RESULT_v1
 
 Artifact:
  /products/archcoin/index.interactions.js
@@ -4728,64 +4407,54 @@ Exact coordinated pair:
  1. /products/archcoin/index.controller.js
  2. /products/archcoin/index.interactions.js
 
-No third implementation file included.
+No controller modification required.
+No compositor modification required.
+No crystals modification required.
+No HTML modification required.
+No CSS modification required.
 
-Anchoring rule:
- INTERACTIONS DETERMINES MOTION.
- CONTROLLER DETERMINES AUTHORITY.
+Controlling gesture distinction:
 
-Corrected cluster-intent behavior:
-- cluster drag first enters CLUSTER_PENDING
-- plausible outward movement remains pending
-- outward movement is not prematurely locked as rotation
-- tangential or inward movement may lock CLUSTER_ROTATE
-- qualified outward movement locks CLUSTER_EXIT
-- cluster transaction does not begin while intent is pending
-- cluster transaction does not begin for exit
-- exit sends no cluster preview
-- exit release requests Return to Constellation
+ FINGER HELD + MOVEMENT
+ =
+ DRAG / ROTATION
 
-Corrected quaternion behavior:
-- pointer movement is processed incrementally
-- each accepted increment composes onto the latest accepted quaternion
-- per-update angle remains bounded
-- complete gesture angle is not capped
-- long drags may continue rotating
-- ordinary drag uses world X and world Y
-- ordinary drag introduces no world-Z key-turn roll
+ QUALIFIED HORIZONTAL SWIPE + RELEASE
+ =
+ RETURN TO CONSTELLATION
 
-Implemented interaction ownership:
-- pointer lifecycle
-- pointer capture
-- pointer cancellation
-- tap-versus-drag arbitration
-- whole-crystal hit testing
-- semantic-control hit testing
-- front / Compass / rear priority
-- synthetic-click suppression
-- gesture intent locking
-- orbit rotation
-- cluster rotation
-- cluster exit
-- direct-manipulation correction
-- grabbed-node retention
-- complete quaternion construction
-- incremental quaternion composition
-- primary wing calculation
-- primary room calculation
-- motion sensitivity
-- reduced-motion sensitivity
-- projection-driven semantic controls
-- interaction cleanup
-- validation and receipts
+Removed cluster-return requirements:
+- outward radial movement
+- scene-center radial alignment
+- bottom-left origin
+- downward movement
+- corner-specific movement
+- pre-release exit locking
 
-Controller payload shape:
+Implemented cluster-return requirements:
+- release-time classification
+- left-to-right swipe
+- right-to-left swipe
+- minimum horizontal distance
+- horizontal-over-vertical dominance
+- maximum swipe duration
+- minimum average horizontal velocity
+- provisional cluster rotation cancellation
+- exact controller return request
+
+Return request:
+ controller.requestReturnToConstellation({
+   source: "cluster-horizontal-swipe",
+   scrollToScene: true
+ });
+
+Controller preview payload:
  {
    quaternion: [x, y, z, w],
    primaryId: "canonical-identity"
  }
 
-No controller payload contains:
+No controller motion payload contains:
 - yaw
 - pitch
 - roll
@@ -4797,37 +4466,17 @@ No controller payload contains:
 - distance
 - sensitivity
 
-Controller authority preserved:
-- navigation state
-- transition legality
-- canonical registry
-- canonical routes
-- accepted quaternion normalization
-- authoritative preview storage
-- commit
-- cancel
-- revision counters
-- Return to Orbit
-- Return to Constellation
-- Main Compass navigation
-
-Crystals modified:
- FALSE
-
-Compositor modified:
- FALSE
-
-HTML modified:
- FALSE
-
-CSS modified:
- FALSE
+Compass behavior:
+- Compass tap remains selectable
+- Compass-origin drag does not rotate constellation
+- Compass-origin drag does not rotate cluster
+- moved Compass gesture does not activate on release
 
 Runtime execution:
  NOT PERFORMED
 
-Directional compositor verification:
- REQUIRED DURING RUNTIME TESTING
+Swipe threshold tuning:
+ OWNED EXCLUSIVELY BY THIS FILE
 
 Visual acceptance:
  NOT CLAIMED

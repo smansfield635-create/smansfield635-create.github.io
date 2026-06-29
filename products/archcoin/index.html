@@ -13,7 +13,7 @@
 
   <meta
     name="description"
-    content="ARCHCOIN organizes Contract, Receivable, Payable, and Allocation as four navigable financial domains within one operating field."
+    content="ARCHCOIN separates Contract, Receivable, Payable, and Allocation into four navigable financial domains."
   >
 
   <link
@@ -33,6 +33,9 @@
     class="archcoin-page"
     data-archcoin-root
     data-archcoin-mode="CONSTELLATION"
+    data-archcoin-controller-state="CONSTELLATION"
+    data-archcoin-navigation-state="CONSTELLATION"
+    data-archcoin-presentation-mode="CONSTELLATION"
     data-orbit-focus="north"
     data-orbit-preview-focus="north"
     data-orbit-phase="COMMITTED"
@@ -56,6 +59,7 @@
     data-selected-paragraph=""
     data-selected-content-id=""
     data-selected-lens="overview"
+    data-compass-selected="false"
     data-panel-descended="false"
     data-reduced-motion="false"
     data-visual-pass-claimed="false"
@@ -66,6 +70,15 @@
     data-archcoin-crystals-status="pending"
     data-archcoin-crystals-receipt=""
   >
+    <div
+      class="archcoin-atmosphere"
+      aria-hidden="true"
+    >
+      <span class="archcoin-atmosphere__glow"></span>
+      <span class="archcoin-atmosphere__stars"></span>
+      <span class="archcoin-atmosphere__grid"></span>
+    </div>
+
     <section
       class="archcoin-threshold"
       aria-labelledby="archcoin-title"
@@ -86,22 +99,29 @@
         </p>
 
         <h1 id="archcoin-title">
-          What if the first financial mistake is opening the wrong domain?
+          The financial path begins by opening the right domain.
         </h1>
 
         <p class="archcoin-threshold__lead">
-          Agreement, incoming value, outgoing obligation, and distribution are
-          connected, but they are not interchangeable. ARCHCOIN separates them
-          before the system decides what should happen next.
+          Agreement, incoming value, outgoing obligation, and distribution
+          belong to one financial system. They do not belong to the same room.
         </p>
       </div>
 
-      <a
-        class="archcoin-threshold__continue"
-        href="#archcoin-compass"
-      >
-        Continue to the operating field
-      </a>
+      <div class="archcoin-threshold__invitation">
+        <p>
+          ARCHCOIN separates the financial question before the system decides
+          what should happen next.
+        </p>
+
+        <a
+          class="archcoin-threshold__continue"
+          href="#archcoin-compass"
+        >
+          <span>Continue to the operating field</span>
+          <span aria-hidden="true">+</span>
+        </a>
+      </div>
 
       <details class="archcoin-threshold__context">
         <summary>
@@ -116,9 +136,9 @@
           </p>
 
           <p>
-            ARCHCOIN begins by identifying which domain owns the question. From
-            there, the selected domain opens its own four-room cluster:
-            Overview, Engineering, Platform, and Governance.
+            ARCHCOIN identifies the domain that owns the question. Each domain
+            then opens four rooms: Overview, Engineering, Platform, and
+            Governance.
           </p>
         </div>
       </details>
@@ -128,7 +148,7 @@
       class="archcoin-domain-introduction"
       aria-labelledby="archcoin-domain-introduction-title"
     >
-      <div class="archcoin-domain-introduction__heading">
+      <header class="archcoin-domain-introduction__heading">
         <p class="archcoin-domain-introduction__eyebrow">
           Four financial domains
         </p>
@@ -138,87 +158,95 @@
         </h2>
 
         <p>
-          Choose the domain that most closely describes the financial movement
-          or responsibility you are trying to understand.
+          Each domain answers a different kind of financial question. Choose
+          the one that most closely matches the responsibility in front of you.
         </p>
-      </div>
+      </header>
 
       <div class="archcoin-domain-introduction__grid">
-        <article class="archcoin-domain-card archcoin-domain-card--north">
-          <p class="archcoin-domain-card__coordinate">
-            North / Contract
-          </p>
+        <a
+          class="archcoin-domain-card archcoin-domain-card--north"
+          href="#archcoin-compass"
+        >
+          <span class="archcoin-domain-card__coordinate">
+            North
+          </span>
 
-          <h3>
-            What does the agreement require?
-          </h3>
+          <span class="archcoin-domain-card__name">
+            Contract
+          </span>
 
-          <p>
-            Open Contract when the question begins with terms, obligations,
-            interpretation, authority, or the structure of the agreement.
-          </p>
+          <strong>
+            What is agreed?
+          </strong>
 
-          <a href="#archcoin-compass">
-            Find Contract
-          </a>
-        </article>
+          <span>
+            Terms, obligations, interpretation, and authority.
+          </span>
+        </a>
 
-        <article class="archcoin-domain-card archcoin-domain-card--east">
-          <p class="archcoin-domain-card__coordinate">
-            East / Receivable
-          </p>
+        <a
+          class="archcoin-domain-card archcoin-domain-card--east"
+          href="#archcoin-compass"
+        >
+          <span class="archcoin-domain-card__coordinate">
+            East
+          </span>
 
-          <h3>
-            What value should arrive?
-          </h3>
+          <span class="archcoin-domain-card__name">
+            Receivable
+          </span>
 
-          <p>
-            Open Receivable when the question concerns recognition, expected
-            payment, incoming value, collection, or what the system is owed.
-          </p>
+          <strong>
+            What should arrive?
+          </strong>
 
-          <a href="#archcoin-compass">
-            Find Receivable
-          </a>
-        </article>
+          <span>
+            Recognition, expected value, collection, and evidence.
+          </span>
+        </a>
 
-        <article class="archcoin-domain-card archcoin-domain-card--south">
-          <p class="archcoin-domain-card__coordinate">
-            South / Payable
-          </p>
+        <a
+          class="archcoin-domain-card archcoin-domain-card--south"
+          href="#archcoin-compass"
+        >
+          <span class="archcoin-domain-card__coordinate">
+            South
+          </span>
 
-          <h3>
-            What obligation must leave?
-          </h3>
+          <span class="archcoin-domain-card__name">
+            Payable
+          </span>
 
-          <p>
-            Open Payable when the issue concerns liability, disbursement,
-            settlement, approval, or the execution of outgoing value.
-          </p>
+          <strong>
+            What must leave?
+          </strong>
 
-          <a href="#archcoin-compass">
-            Find Payable
-          </a>
-        </article>
+          <span>
+            Liability, approval, settlement, and outgoing value.
+          </span>
+        </a>
 
-        <article class="archcoin-domain-card archcoin-domain-card--west">
-          <p class="archcoin-domain-card__coordinate">
-            West / Allocation
-          </p>
+        <a
+          class="archcoin-domain-card archcoin-domain-card--west"
+          href="#archcoin-compass"
+        >
+          <span class="archcoin-domain-card__coordinate">
+            West
+          </span>
 
-          <h3>
-            Where should recognized value go?
-          </h3>
+          <span class="archcoin-domain-card__name">
+            Allocation
+          </span>
 
-          <p>
-            Open Allocation when the question concerns distribution,
-            assignment, routing, constraint, or downstream use of value.
-          </p>
+          <strong>
+            Where does it go next?
+          </strong>
 
-          <a href="#archcoin-compass">
-            Find Allocation
-          </a>
-        </article>
+          <span>
+            Distribution, assignment, routing, and constraint.
+          </span>
+        </a>
       </div>
     </section>
 
@@ -228,52 +256,50 @@
       aria-labelledby="archcoin-compass-title"
     >
       <header class="archcoin-compass__header">
-        <div class="archcoin-compass__heading">
-          <p class="archcoin-compass__eyebrow">
-            ARCHCOIN Compass
-          </p>
+        <p class="archcoin-compass__eyebrow">
+          ARCHCOIN Compass
+        </p>
 
-          <h2 id="archcoin-compass-title">
-            Follow the financial path.
-          </h2>
+        <h2 id="archcoin-compass-title">
+          Follow the financial path.
+        </h2>
 
-          <p>
-            Open a cardinal domain, inspect its four rooms, and select the path
-            that most clearly matches the work in front of you.
-          </p>
-        </div>
-
-        <div
-          class="archcoin-compass__legend"
-          aria-label="ARCHCOIN domain legend"
-        >
-          <span>
-            <b>N</b>
-            Contract
-          </span>
-
-          <span>
-            <b>E</b>
-            Receivable
-          </span>
-
-          <span>
-            <b>S</b>
-            Payable
-          </span>
-
-          <span>
-            <b>W</b>
-            Allocation
-          </span>
-        </div>
+        <p>
+          Open a cardinal domain, inspect its four rooms, and select the path
+          that most clearly matches the work in front of you.
+        </p>
       </header>
+
+      <div
+        class="archcoin-compass__legend"
+        aria-label="ARCHCOIN domain legend"
+      >
+        <span>
+          <b>N</b>
+          Contract
+        </span>
+
+        <span>
+          <b>E</b>
+          Receivable
+        </span>
+
+        <span>
+          <b>S</b>
+          Payable
+        </span>
+
+        <span>
+          <b>W</b>
+          Allocation
+        </span>
+      </div>
 
       <section
         class="archcoin-scene"
         data-archcoin-scene
         aria-labelledby="archcoin-scene-title"
-        aria-describedby="archcoin-guidance archcoin-instruction-pad"
+        aria-describedby="archcoin-guidance"
       >
         <header class="archcoin-scene__header">
           <div>
@@ -282,11 +308,14 @@
             </p>
 
             <h3 id="archcoin-scene-title">
-              Select a domain, then inspect its room cluster.
+              Choose a domain.
             </h3>
           </div>
 
-          <p class="archcoin-scene__mode">
+          <p
+            class="archcoin-scene__mode"
+            aria-hidden="true"
+          >
             Constellation
           </p>
         </header>
@@ -299,17 +328,8 @@
             class="archcoin-field-chrome"
             aria-hidden="true"
           >
-            <div class="archcoin-field-chrome__grid"></div>
-
-            <div
-              class="archcoin-field-chrome__axis archcoin-field-chrome__axis--vertical"
-            ></div>
-
-            <div
-              class="archcoin-field-chrome__axis archcoin-field-chrome__axis--horizontal"
-            ></div>
-
-            <div class="archcoin-field-chrome__reticle"></div>
+            <div class="archcoin-field-chrome__rings"></div>
+            <div class="archcoin-field-chrome__stars"></div>
 
             <span
               class="archcoin-field-chrome__direction archcoin-field-chrome__direction--north"
@@ -346,22 +366,23 @@
             <div
               data-upstream-compass-mount
               data-upstream-compass-physical-projection="FIXED_CENTER_INDEPENDENT_SIBLING"
-              data-upstream-compass-semantic-model="HOME_COMPASS_CONTROL"
+              data-upstream-compass-semantic-model="PAGE_LOCAL_HOME_COMPASS_SELECTION"
               data-upstream-compass-presentation="fixed-center"
             >
-              <a
+              <button
                 class="archcoin-scene__upstream-compass-control"
+                type="button"
                 data-upstream-compass-control
-                href="/index.html"
-                aria-label="Return to the Diamond Gate Bridge Compass"
-                aria-describedby="archcoin-instruction-pad"
+                aria-label="Select the Main Compass return options"
+                aria-controls="archcoin-panel"
+                aria-expanded="false"
               >
                 <span
                   class="archcoin-scene__upstream-compass-fallback"
                   data-upstream-compass-fallback
                   aria-hidden="true"
                 ></span>
-              </a>
+              </button>
             </div>
           </div>
 
@@ -383,26 +404,23 @@
               data-label="Contract"
               data-route="/products/archcoin/contract/"
               data-panel-title="Contract"
-              data-panel-body="Contract is the path for agreement meaning, structure, obligation, and control. Open this domain when the core question is what the financial relationship says, what it binds, and which room governs the next move."
-              data-panel-why="Choose Contract when the problem begins with terms, commitments, interpretation, or authority over the agreement layer."
+              data-panel-body="Contract is the path for agreement meaning, structure, obligation, and control."
+              data-panel-why="Choose Contract when the problem begins with terms, commitments, interpretation, or authority."
               aria-controls="archcoin-panel"
             >
               <span class="archcoin-coin__coordinate">
                 N
               </span>
 
-              <span class="archcoin-coin__label">
-                Contract
-              </span>
+              <span class="archcoin-coin__copy">
+                <strong class="archcoin-coin__label">
+                  Contract
+                </strong>
 
-              <span class="archcoin-coin__function">
-                Agreement
+                <span class="archcoin-coin__function">
+                  Agreement
+                </span>
               </span>
-
-              <span
-                class="archcoin-coin__status"
-                aria-hidden="true"
-              ></span>
             </button>
 
             <button
@@ -419,26 +437,23 @@
               data-label="Receivable"
               data-route="/products/archcoin/receivable/"
               data-panel-title="Receivable"
-              data-panel-body="Receivable is the path for incoming value, recognition, collection, and the systems that determine what should arrive. Open this domain when the central issue is expected payment and how it is tracked or governed."
-              data-panel-why="Choose Receivable when the problem concerns value owed to the organization, how it is recognized, or how it moves toward collection."
+              data-panel-body="Receivable is the path for incoming value, recognition, collection, and evidence."
+              data-panel-why="Choose Receivable when the question concerns value owed to the organization or how it moves toward collection."
               aria-controls="archcoin-panel"
             >
               <span class="archcoin-coin__coordinate">
                 E
               </span>
 
-              <span class="archcoin-coin__label">
-                Receivable
-              </span>
+              <span class="archcoin-coin__copy">
+                <strong class="archcoin-coin__label">
+                  Receivable
+                </strong>
 
-              <span class="archcoin-coin__function">
-                Incoming value
+                <span class="archcoin-coin__function">
+                  Incoming value
+                </span>
               </span>
-
-              <span
-                class="archcoin-coin__status"
-                aria-hidden="true"
-              ></span>
             </button>
 
             <button
@@ -455,26 +470,23 @@
               data-label="Payable"
               data-route="/products/archcoin/payable/"
               data-panel-title="Payable"
-              data-panel-body="Payable is the path for outgoing obligation, execution, settlement, and the controls that determine what must be paid. Open this domain when the issue is disbursement, liability, or payment discipline."
-              data-panel-why="Choose Payable when the question concerns what leaves the organization, how it is executed, or which room governs the obligation."
+              data-panel-body="Payable is the path for outgoing obligation, execution, settlement, and control."
+              data-panel-why="Choose Payable when the question concerns what must leave and how the obligation is executed."
               aria-controls="archcoin-panel"
             >
               <span class="archcoin-coin__coordinate">
                 S
               </span>
 
-              <span class="archcoin-coin__label">
-                Payable
-              </span>
+              <span class="archcoin-coin__copy">
+                <strong class="archcoin-coin__label">
+                  Payable
+                </strong>
 
-              <span class="archcoin-coin__function">
-                Outgoing obligation
+                <span class="archcoin-coin__function">
+                  Outgoing obligation
+                </span>
               </span>
-
-              <span
-                class="archcoin-coin__status"
-                aria-hidden="true"
-              ></span>
             </button>
 
             <button
@@ -491,26 +503,23 @@
               data-label="Allocation"
               data-route="/products/archcoin/allocation/"
               data-panel-title="Allocation"
-              data-panel-body="Allocation is the path for distribution, downstream assignment, constraint, and routing after value has entered the system. Open this domain when the issue is where value goes next and under what rules."
-              data-panel-why="Choose Allocation when the question concerns distribution logic, downstream routing, or governance of where recognized value is assigned."
+              data-panel-body="Allocation is the path for distribution, downstream assignment, routing, and constraint."
+              data-panel-why="Choose Allocation when the question concerns where recognized value should go next."
               aria-controls="archcoin-panel"
             >
               <span class="archcoin-coin__coordinate">
                 W
               </span>
 
-              <span class="archcoin-coin__label">
-                Allocation
-              </span>
+              <span class="archcoin-coin__copy">
+                <strong class="archcoin-coin__label">
+                  Allocation
+                </strong>
 
-              <span class="archcoin-coin__function">
-                Distribution
+                <span class="archcoin-coin__function">
+                  Distribution
+                </span>
               </span>
-
-              <span
-                class="archcoin-coin__status"
-                aria-hidden="true"
-              ></span>
             </button>
           </div>
         </div>
@@ -522,22 +531,9 @@
             data-archcoin-guidance
             aria-live="polite"
           >
-            Tap a domain to open its room cluster. Swipe across empty space to
-            rotate the constellation.
+            Swipe across open space to rotate the constellation. Tap a cardinal
+            crystal or its label to open the domain.
           </p>
-
-          <aside
-            id="archcoin-instruction-pad"
-            class="archcoin-instruction-pad"
-            data-archcoin-instruction-pad
-            aria-label="ARCHCOIN controls"
-          >
-            <p>
-              Tap a cardinal crystal or label to open its cluster. Tap a room
-              crystal to inspect its path. Use the center Compass to return
-              Home.
-            </p>
-          </aside>
         </div>
       </section>
     </section>
@@ -551,124 +547,79 @@
       aria-atomic="true"
     >
       <header class="archcoin-panel__header">
-        <div>
-          <p
-            class="archcoin-panel__eyebrow"
-            data-archcoin-panel-eyebrow
-          >
-            Selected path
-          </p>
-
-          <h2
-            id="archcoin-panel-title"
-            data-archcoin-panel-title
-          >
-            Choose a financial domain
-          </h2>
-        </div>
-
-        <p class="archcoin-panel__state">
-          <span class="archcoin-panel__state-label">
-            Selection
-          </span>
-
-          <span class="archcoin-panel__state-value">
-            Awaiting input
-          </span>
+        <p
+          class="archcoin-panel__eyebrow"
+          data-archcoin-panel-eyebrow
+        >
+          Selected path
         </p>
+
+        <h2
+          id="archcoin-panel-title"
+          data-archcoin-panel-title
+        >
+          Choose a financial domain
+        </h2>
       </header>
 
       <div class="archcoin-panel__body">
-        <section
-          class="archcoin-panel__narrative"
-          aria-label="Selected path description"
+        <p
+          class="archcoin-panel__purpose"
+          data-archcoin-panel-purpose
         >
-          <div class="archcoin-panel__narrative-block">
-            <p class="archcoin-panel__narrative-label">
-              Purpose
-            </p>
+          Begin with the financial domain that most closely matches the
+          question in front of you.
+        </p>
 
-            <p data-archcoin-panel-purpose>
-              Begin with the domain that most closely matches the financial
-              question you are carrying.
-            </p>
+        <p
+          class="archcoin-panel__relationship"
+          data-archcoin-panel-relationship
+        >
+          Open a cardinal cluster, inspect one room, and continue when the path
+          is clear.
+        </p>
+
+        <dl
+          class="archcoin-panel__semantic-metadata"
+          hidden
+          aria-hidden="true"
+        >
+          <div>
+            <dt>Domain</dt>
+            <dd data-archcoin-panel-domain>None</dd>
           </div>
 
-          <div class="archcoin-panel__narrative-block">
-            <p class="archcoin-panel__narrative-label">
-              Why enter
-            </p>
-
-            <p data-archcoin-panel-relationship>
-              Open a cardinal cluster, inspect a room, and enter when the path
-              is clear.
-            </p>
+          <div>
+            <dt>Function</dt>
+            <dd data-archcoin-panel-function>Unassigned</dd>
           </div>
-        </section>
 
-        <section
-          class="archcoin-panel__metadata"
-          aria-label="Selected path details"
-        >
-          <dl class="archcoin-panel__metadata-grid">
-            <div>
-              <dt>Domain</dt>
+          <div>
+            <dt>Coordinate</dt>
+            <dd data-archcoin-panel-coordinate>—</dd>
+          </div>
 
-              <dd data-archcoin-panel-domain>
-                None
-              </dd>
-            </div>
+          <div>
+            <dt>Selection</dt>
+            <dd data-archcoin-panel-selection-state>Idle</dd>
+          </div>
 
-            <div>
-              <dt>Function</dt>
+          <div>
+            <dt>Route</dt>
+            <dd data-archcoin-panel-route-status>Not selected</dd>
+          </div>
 
-              <dd data-archcoin-panel-function>
-                Unassigned
-              </dd>
-            </div>
-
-            <div>
-              <dt>Coordinate</dt>
-
-              <dd data-archcoin-panel-coordinate>
-                —
-              </dd>
-            </div>
-
-            <div>
-              <dt>Selection</dt>
-
-              <dd data-archcoin-panel-selection-state>
-                Idle
-              </dd>
-            </div>
-
-            <div>
-              <dt>Route</dt>
-
-              <dd data-archcoin-panel-route-status>
-                Not selected
-              </dd>
-            </div>
-
-            <div>
-              <dt>Lens</dt>
-
-              <dd data-archcoin-panel-lens>
-                Overview
-              </dd>
-            </div>
-          </dl>
-        </section>
+          <div>
+            <dt>Lens</dt>
+            <dd data-archcoin-panel-lens>Overview</dd>
+          </div>
+        </dl>
       </div>
 
       <footer class="archcoin-panel__footer">
-        <p class="archcoin-panel__handoff-label">
-          Continue when the selected path is correct.
-        </p>
-
         <div class="archcoin-panel__actions">
           <button
+            class="archcoin-action archcoin-action--primary"
             type="button"
             data-archcoin-enter
             aria-disabled="true"
@@ -680,14 +631,26 @@
           </button>
 
           <button
+            class="archcoin-action archcoin-action--secondary"
             type="button"
             data-archcoin-return-to-orbit
             aria-disabled="true"
             disabled
             hidden
           >
-            Return to Orbit
+            <span data-archcoin-return-to-orbit-label>
+              Return to Orbit
+            </span>
           </button>
+
+          <a
+            class="archcoin-action archcoin-action--secondary"
+            href="/index.html"
+            data-archcoin-return-home-compass
+            hidden
+          >
+            Return to Main Compass
+          </a>
         </div>
       </footer>
     </aside>
@@ -704,68 +667,116 @@
         <h2 id="archcoin-principles-title">
           Four questions. Four domains.
         </h2>
+
+        <p>
+          The correct domain reduces ambiguity before implementation begins.
+        </p>
       </header>
 
-      <div class="archcoin-principles__grid">
-        <article>
-          <p class="archcoin-principles__coordinate">
-            Contract
-          </p>
+      <div class="archcoin-principles__list">
+        <details class="archcoin-principle">
+          <summary>
+            <span>
+              <small>North</small>
+              Contract
+            </span>
 
-          <h3>
-            What is agreed?
-          </h3>
+            <span aria-hidden="true">+</span>
+          </summary>
 
-          <p>
-            Contract defines meaning, obligation, interpretation, and authority
-            before the system executes financial movement.
-          </p>
-        </article>
+          <div class="archcoin-principle__body">
+            <h3>
+              What is agreed?
+            </h3>
 
-        <article>
-          <p class="archcoin-principles__coordinate">
-            Receivable
-          </p>
+            <p>
+              Contract defines meaning, obligation, interpretation, and
+              authority before the system executes financial movement.
+            </p>
 
-          <h3>
-            What should arrive?
-          </h3>
+            <a href="#archcoin-compass">
+              Find Contract
+            </a>
+          </div>
+        </details>
 
-          <p>
-            Receivable governs recognition, collection, expected value, and the
-            evidence that an incoming amount is valid.
-          </p>
-        </article>
+        <details class="archcoin-principle">
+          <summary>
+            <span>
+              <small>East</small>
+              Receivable
+            </span>
 
-        <article>
-          <p class="archcoin-principles__coordinate">
-            Payable
-          </p>
+            <span aria-hidden="true">+</span>
+          </summary>
 
-          <h3>
-            What must leave?
-          </h3>
+          <div class="archcoin-principle__body">
+            <h3>
+              What should arrive?
+            </h3>
 
-          <p>
-            Payable governs liability, approval, settlement, timing, and the
-            controlled release of outgoing value.
-          </p>
-        </article>
+            <p>
+              Receivable governs recognition, collection, expected value, and
+              the evidence that an incoming amount is valid.
+            </p>
 
-        <article>
-          <p class="archcoin-principles__coordinate">
-            Allocation
-          </p>
+            <a href="#archcoin-compass">
+              Find Receivable
+            </a>
+          </div>
+        </details>
 
-          <h3>
-            Where does it go next?
-          </h3>
+        <details class="archcoin-principle">
+          <summary>
+            <span>
+              <small>South</small>
+              Payable
+            </span>
 
-          <p>
-            Allocation governs distribution, downstream assignment,
-            constraints, and the routing of recognized value.
-          </p>
-        </article>
+            <span aria-hidden="true">+</span>
+          </summary>
+
+          <div class="archcoin-principle__body">
+            <h3>
+              What must leave?
+            </h3>
+
+            <p>
+              Payable governs liability, approval, settlement, timing, and the
+              controlled release of outgoing value.
+            </p>
+
+            <a href="#archcoin-compass">
+              Find Payable
+            </a>
+          </div>
+        </details>
+
+        <details class="archcoin-principle">
+          <summary>
+            <span>
+              <small>West</small>
+              Allocation
+            </span>
+
+            <span aria-hidden="true">+</span>
+          </summary>
+
+          <div class="archcoin-principle__body">
+            <h3>
+              Where does it go next?
+            </h3>
+
+            <p>
+              Allocation governs distribution, downstream assignment,
+              constraints, and the routing of recognized value.
+            </p>
+
+            <a href="#archcoin-compass">
+              Find Allocation
+            </a>
+          </div>
+        </details>
       </div>
     </section>
 
@@ -774,7 +785,7 @@
       aria-labelledby="archcoin-journey-title"
     >
       <p class="archcoin-journey__eyebrow">
-        Begin the path
+        Begin the journey
       </p>
 
       <h2 id="archcoin-journey-title">
@@ -782,8 +793,8 @@
       </h2>
 
       <p>
-        Return to the Compass, choose the domain that owns the question, and
-        move one room deeper.
+        Return to the operating field, choose the domain that owns the
+        question, and move one room deeper.
       </p>
 
       <a href="#archcoin-compass">
@@ -1125,6 +1136,11 @@
     >
       <output
         data-archcoin-controller-receipt
+        data-visual-pass-claimed="false"
+      ></output>
+
+      <output
+        data-archcoin-controller-validation
         data-visual-pass-claimed="false"
       ></output>
 

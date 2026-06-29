@@ -2,13 +2,19 @@
    Diamond Gate Bridge Compass
    Self-contained Mirrorland Window renderer.
 
-   Surgical correction scope:
+   Full-file correction scope:
    - Preserve the existing 21-pane stained-glass design.
    - Preserve reveal and withdrawal lifecycle contracts.
    - Keep the full-scene canvas.
    - Render dormant Mirrorland as a smaller, quieter threshold.
    - Strengthen frame, ribs, panes, and light progressively during reveal.
    - Draw a true frame ring without erasing stained-glass content.
+   - Resolve reduced motion from current controller, root, and media state
+     without retaining stale true values.
+   - Validate transition identifiers before every completion path.
+   - Bind all lifecycle listeners through removable named handlers.
+   - Support complete disposal and partial-initialization rollback.
+   - Prevent duplicate event, resize, and media-query bindings.
 
    Ownership:
    - Mirrorland Window canvas creation.
@@ -17,6 +23,7 @@
    - Reveal and withdrawal lifecycle.
    - Mirrorland renderer receipts.
    - Reveal, withdrawal, and failure completion events.
+   - Renderer listener and resource lifecycle.
 
    Non-ownership:
    - Compass state authority.
@@ -32,22 +39,52 @@
   "use strict";
 
   const CONTRACT = Object.freeze({
-    id: "DGB_COMPASS_MIRRORLAND_WINDOW_FIVE_FILE_REBUILD_v1",
-    file: "/assets/compass/compass.mirrorland-window.js",
-    releaseId: "dgb-compass-mirrorland-rebuild-v1",
-    rendererClass: "SELF_CONTAINED_2D_CRYSTALLINE_STAINED_GLASS",
-    externalObjectDependencyRequired: false,
-    visualPassClaimed: false,
-    productionAuthorized: false,
-    deploymentAuthorized: false
+    id:
+      "DGB_COMPASS_MIRRORLAND_WINDOW_HARDENED_v2",
+
+    previousId:
+      "DGB_COMPASS_MIRRORLAND_WINDOW_FIVE_FILE_REBUILD_v1",
+
+    file:
+      "/assets/compass/compass.mirrorland-window.js",
+
+    releaseId:
+      "dgb-compass-mirrorland-hardened-v2",
+
+    rendererClass:
+      "SELF_CONTAINED_2D_CRYSTALLINE_STAINED_GLASS",
+
+    externalObjectDependencyRequired:
+      false,
+
+    visualPassClaimed:
+      false,
+
+    productionAuthorized:
+      false,
+
+    deploymentAuthorized:
+      false
   });
 
   const STATES = Object.freeze({
-    DORMANT: "DORMANT",
-    REVEALING: "MIRRORLAND_REVEALING",
-    FOCUSED: "MIRRORLAND_FOCUSED",
-    WITHDRAWING: "MIRRORLAND_WITHDRAWING",
-    HELD: "HELD"
+    DORMANT:
+      "DORMANT",
+
+    REVEALING:
+      "MIRRORLAND_REVEALING",
+
+    FOCUSED:
+      "MIRRORLAND_FOCUSED",
+
+    WITHDRAWING:
+      "MIRRORLAND_WITHDRAWING",
+
+    HELD:
+      "HELD",
+
+    DISPOSED:
+      "DISPOSED"
   });
 
   const EVENTS = Object.freeze({
@@ -64,158 +101,429 @@
       "MIRRORLAND_WINDOW_WITHDRAWAL_COMPLETE",
 
     RENDER_FAILURE:
-      "MIRRORLAND_WINDOW_RENDER_FAILURE"
+      "MIRRORLAND_WINDOW_RENDER_FAILURE",
+
+    REDUCED_MOTION_CHANGE:
+      "DGB_COMPASS_REDUCED_MOTION_CHANGE"
   });
 
   const TIMING = Object.freeze({
-    revealMs: 1450,
-    withdrawalMs: 980,
+    revealMs:
+      1450,
 
-    reducedRevealMs: 120,
-    reducedWithdrawalMs: 100,
+    withdrawalMs:
+      980,
 
-    dormantPulseSeconds: 7.8,
-    focusedPulseSeconds: 4.2,
+    reducedRevealMs:
+      120,
 
-    sparklePeriodSeconds: 2.9
+    reducedWithdrawalMs:
+      100,
+
+    dormantPulseSeconds:
+      7.8,
+
+    focusedPulseSeconds:
+      4.2,
+
+    sparklePeriodSeconds:
+      2.9
   });
 
   const DIMENSIONS = Object.freeze({
-    designWidth: 480,
-    designHeight: 720,
+    designWidth:
+      480,
 
-    leadWidthDormant: 4.5,
-    leadWidthFocused: 8,
+    designHeight:
+      720,
 
-    innerLeadWidthDormant: 1.4,
-    innerLeadWidthFocused: 4,
+    leadWidthDormant:
+      4.5,
 
-    ribWidthDormant: 7,
-    ribWidthFocused: 14,
+    leadWidthFocused:
+      8,
 
-    ribHighlightWidthDormant: 1.2,
-    ribHighlightWidthFocused: 3,
+    innerLeadWidthDormant:
+      1.4,
 
-    dormantScale: 0.30,
-    focusedScale: 1,
+    innerLeadWidthFocused:
+      4,
 
-    dormantOpacity: 0.38,
-    focusedOpacity: 1,
+    ribWidthDormant:
+      7,
 
-    maximumDevicePixelRatio: 2
+    ribWidthFocused:
+      14,
+
+    ribHighlightWidthDormant:
+      1.2,
+
+    ribHighlightWidthFocused:
+      3,
+
+    dormantScale:
+      0.30,
+
+    focusedScale:
+      1,
+
+    dormantOpacity:
+      0.38,
+
+    focusedOpacity:
+      1,
+
+    maximumDevicePixelRatio:
+      2
   });
 
   const COLORS = Object.freeze({
-    frameNearBlack: Object.freeze([5, 8, 15]),
-    frameMid: Object.freeze([16, 22, 34]),
-    frameEdge: Object.freeze([37, 48, 68]),
+    frameNearBlack:
+      Object.freeze([
+        5,
+        8,
+        15
+      ]),
 
-    leadDark: Object.freeze([17, 21, 29]),
-    leadLight: Object.freeze([69, 80, 101]),
+    frameMid:
+      Object.freeze([
+        16,
+        22,
+        34
+      ]),
 
-    cyan: Object.freeze([87, 210, 231]),
-    blue: Object.freeze([67, 112, 204]),
-    violet: Object.freeze([133, 83, 201]),
-    amber: Object.freeze([226, 164, 79]),
-    rose: Object.freeze([198, 85, 132]),
+    frameEdge:
+      Object.freeze([
+        37,
+        48,
+        68
+      ]),
 
-    paleCyan: Object.freeze([161, 235, 244]),
-    paleBlue: Object.freeze([143, 181, 234]),
-    paleViolet: Object.freeze([184, 149, 232]),
-    paleAmber: Object.freeze([239, 202, 132]),
-    paleRose: Object.freeze([229, 151, 185])
+    leadDark:
+      Object.freeze([
+        17,
+        21,
+        29
+      ]),
+
+    leadLight:
+      Object.freeze([
+        69,
+        80,
+        101
+      ]),
+
+    cyan:
+      Object.freeze([
+        87,
+        210,
+        231
+      ]),
+
+    blue:
+      Object.freeze([
+        67,
+        112,
+        204
+      ]),
+
+    violet:
+      Object.freeze([
+        133,
+        83,
+        201
+      ]),
+
+    amber:
+      Object.freeze([
+        226,
+        164,
+        79
+      ]),
+
+    rose:
+      Object.freeze([
+        198,
+        85,
+        132
+      ]),
+
+    paleCyan:
+      Object.freeze([
+        161,
+        235,
+        244
+      ]),
+
+    paleBlue:
+      Object.freeze([
+        143,
+        181,
+        234
+      ]),
+
+    paleViolet:
+      Object.freeze([
+        184,
+        149,
+        232
+      ]),
+
+    paleAmber:
+      Object.freeze([
+        239,
+        202,
+        132
+      ]),
+
+    paleRose:
+      Object.freeze([
+        229,
+        151,
+        185
+      ])
   });
 
   const RECEIPT = {
-    contractId: CONTRACT.id,
-    status: "pending",
-    rendererInitialized: false,
-    rendererState: STATES.DORMANT,
-    activeTransitionId: "",
-    externalDependencyPresent: false,
-    externalDependencyRequired: false,
-    canvasPresent: false,
-    paneCount: 0,
-    frameCount: 0,
-    reducedMotion: false,
-    lastAction: "",
-    lastFailure: null,
-    visualPassClaimed: false
+    contractId:
+      CONTRACT.id,
+
+    previousContractId:
+      CONTRACT.previousId,
+
+    status:
+      "pending",
+
+    rendererInitialized:
+      false,
+
+    rendererState:
+      STATES.DORMANT,
+
+    activeTransitionId:
+      "",
+
+    externalDependencyPresent:
+      false,
+
+    externalDependencyRequired:
+      false,
+
+    canvasPresent:
+      false,
+
+    paneCount:
+      0,
+
+    frameCount:
+      0,
+
+    reducedMotion:
+      false,
+
+    reducedMotionSource:
+      "startup",
+
+    listenersBound:
+      false,
+
+    resizeBinding:
+      "none",
+
+    lastAction:
+      "",
+
+    lastFailure:
+      null,
+
+    visualPassClaimed:
+      false
   };
 
   const state = {
-    root: null,
-    scene: null,
-    mount: null,
-    receiptOutput: null,
+    root:
+      null,
 
-    canvas: null,
-    context: null,
+    scene:
+      null,
 
-    width: 1,
-    height: 1,
-    pixelRatio: 1,
+    mount:
+      null,
 
-    rendererState: STATES.DORMANT,
-    activeTransitionId: "",
+    receiptOutput:
+      null,
+
+    canvas:
+      null,
+
+    context:
+      null,
+
+    createdCanvas:
+      false,
+
+    width:
+      1,
+
+    height:
+      1,
+
+    pixelRatio:
+      1,
+
+    rendererState:
+      STATES.DORMANT,
+
+    activeTransitionId:
+      "",
 
     transition: {
-      from: 0,
-      to: 0,
-      progress: 0,
-      startTime: 0,
-      duration: 0
+      from:
+        0,
+
+      to:
+        0,
+
+      progress:
+        0,
+
+      startTime:
+        0,
+
+      duration:
+        0
     },
 
-    revealAmount: 0,
-    targetRevealAmount: 0,
+    revealAmount:
+      0,
 
-    reducedMotion: false,
+    targetRevealAmount:
+      0,
 
-    raf: 0,
-    running: false,
-    lastTime: 0,
-    time: 0,
+    reducedMotion:
+      false,
 
-    resizeObserver: null,
+    reducedMotionMediaQuery:
+      null,
 
-    panes: [],
-    frameSegments: [],
+    raf:
+      0,
 
-    geometryReady: false,
-    initialized: false,
-    failed: false
+    running:
+      false,
+
+    lastTime:
+      0,
+
+    time:
+      0,
+
+    resizeObserver:
+      null,
+
+    resizeFallbackBound:
+      false,
+
+    eventsBound:
+      false,
+
+    reducedMotionBound:
+      false,
+
+    panes:
+      [],
+
+    frameSegments:
+      [],
+
+    geometryReady:
+      false,
+
+    initialized:
+      false,
+
+    failed:
+      false,
+
+    disposed:
+      false
   };
 
-  function qs(selector, root = document) {
-    return root.querySelector(selector);
-  }
-
-  function clamp(value, minimum, maximum) {
-    return Math.max(
-      minimum,
-      Math.min(maximum, value)
+  function qs(
+    selector,
+    root = document
+  ) {
+    return root.querySelector(
+      selector
     );
   }
 
-  function lerp(a, b, amount) {
-    return a + (b - a) * amount;
+  function clamp(
+    value,
+    minimum,
+    maximum
+  ) {
+    return Math.max(
+      minimum,
+      Math.min(
+        maximum,
+        value
+      )
+    );
   }
 
-  function easeOutCubic(value) {
-    const inverse = 1 - value;
-    return 1 - inverse * inverse * inverse;
+  function lerp(
+    a,
+    b,
+    amount
+  ) {
+    return (
+      a +
+      (
+        b -
+        a
+      ) *
+      amount
+    );
   }
 
-  function easeInOutCubic(value) {
+  function easeOutCubic(
+    value
+  ) {
+    const inverse =
+      1 -
+      value;
+
+    return (
+      1 -
+      inverse *
+      inverse *
+      inverse
+    );
+  }
+
+  function easeInOutCubic(
+    value
+  ) {
     return value < 0.5
-      ? 4 * value * value * value
+      ? 4 *
+        value *
+        value *
+        value
       : 1 -
-          Math.pow(-2 * value + 2, 3) /
-            2;
+        Math.pow(
+          -2 *
+          value +
+          2,
+          3
+        ) /
+        2;
   }
 
-  function rgba(color, alpha) {
+  function rgba(
+    color,
+    alpha
+  ) {
     return `rgba(${color[0]}, ${color[1]}, ${color[2]}, ${alpha})`;
   }
 
@@ -227,18 +535,28 @@
     return lerp(
       dormantValue,
       focusedValue,
-      clamp(revealAmount, 0, 1)
+      clamp(
+        revealAmount,
+        0,
+        1
+      )
     );
   }
 
-  function emitReceipt(extra = {}) {
+  function emitReceipt(
+    extra = {}
+  ) {
     Object.assign(
       RECEIPT,
       {
         status:
-          state.failed
-            ? "held"
-            : "available",
+          state.disposed
+            ? "disposed"
+            : state.failed
+              ? "held"
+              : state.initialized
+                ? "available"
+                : "pending",
 
         rendererInitialized:
           state.initialized,
@@ -259,7 +577,9 @@
           false,
 
         canvasPresent:
-          Boolean(state.canvas),
+          Boolean(
+            state.canvas
+          ),
 
         paneCount:
           state.panes.length,
@@ -270,14 +590,27 @@
         reducedMotion:
           state.reducedMotion,
 
+        listenersBound:
+          state.eventsBound,
+
+        resizeBinding:
+          state.resizeObserver
+            ? "ResizeObserver"
+            : state.resizeFallbackBound
+              ? "window-resize"
+              : "none",
+
         visualPassClaimed:
           false
       },
+
       extra
     );
 
     const serialized =
-      JSON.stringify(RECEIPT);
+      JSON.stringify(
+        RECEIPT
+      );
 
     if (state.root) {
       state.root.dataset
@@ -287,6 +620,12 @@
       state.root.dataset
         .compassMirrorlandWindowStatus =
         RECEIPT.status;
+
+      state.root.dataset
+        .compassMirrorlandReducedMotion =
+        state.reducedMotion
+          ? "true"
+          : "false";
 
       state.root.dataset
         .visualPassClaimed =
@@ -322,40 +661,58 @@
       });
   }
 
-  function dispatch(type, detail = {}) {
+  function dispatch(
+    type,
+    detail = {}
+  ) {
     globalThis.dispatchEvent(
-      new CustomEvent(type, {
-        detail: Object.freeze({
-          ...detail
-        })
-      })
+      new CustomEvent(
+        type,
+        {
+          detail:
+            Object.freeze({
+              ...detail
+            })
+        }
+      )
     );
   }
 
-  function emitFailure(reason) {
+  function emitFailure(
+    reason
+  ) {
     if (state.failed) {
       return;
     }
 
-    state.failed = true;
+    state.failed =
+      true;
+
     state.rendererState =
       STATES.HELD;
 
-    state.running = false;
+    state.running =
+      false;
 
     if (state.raf) {
       cancelAnimationFrame(
         state.raf
       );
 
-      state.raf = 0;
+      state.raf =
+        0;
     }
 
     emitReceipt({
-      status: "held",
-      rendererInitialized: false,
+      status:
+        "held",
+
+      rendererInitialized:
+        false,
+
       lastAction:
         "mirrorland-render-failure",
+
       lastFailure:
         String(
           reason ||
@@ -386,6 +743,9 @@
       );
 
     if (existing) {
+      state.createdCanvas =
+        false;
+
       return existing;
     }
 
@@ -393,6 +753,9 @@
       document.createElement(
         "canvas"
       );
+
+    state.createdCanvas =
+      true;
 
     canvas.dataset
       .compassMirrorlandWindowCanvas =
@@ -411,8 +774,11 @@
     canvas.style.position =
       "absolute";
 
-    canvas.style.top = "50%";
-    canvas.style.left = "50%";
+    canvas.style.top =
+      "50%";
+
+    canvas.style.left =
+      "50%";
 
     canvas.style.width =
       "100%";
@@ -451,31 +817,38 @@
 
       points:
         Object.freeze(
-          points.map((point) =>
-            Object.freeze([
-              point[0],
-              point[1]
-            ])
+          points.map(
+            point =>
+              Object.freeze([
+                point[0],
+                point[1]
+              ])
           )
         ),
 
       alpha:
-        options.alpha ?? 0.70,
+        options.alpha ??
+        0.70,
 
       glow:
-        options.glow ?? 0.30,
+        options.glow ??
+        0.30,
 
       depth:
-        options.depth ?? 0.5,
+        options.depth ??
+        0.5,
 
       phase:
-        options.phase ?? 0,
+        options.phase ??
+        0,
 
       grain:
-        options.grain ?? 0.12,
+        options.grain ??
+        0.12,
 
       highlight:
-        options.highlight ?? 0.16
+        options.highlight ??
+        0.16
     });
   }
 
@@ -491,10 +864,17 @@
           [240, 134]
         ],
         {
-          alpha: 0.74,
-          glow: 0.45,
-          depth: 0.86,
-          phase: 0.20
+          alpha:
+            0.74,
+
+          glow:
+            0.45,
+
+          depth:
+            0.86,
+
+          phase:
+            0.20
         }
       ),
 
@@ -508,10 +888,17 @@
           [318, 106]
         ],
         {
-          alpha: 0.72,
-          glow: 0.42,
-          depth: 0.82,
-          phase: 0.62
+          alpha:
+            0.72,
+
+          glow:
+            0.42,
+
+          depth:
+            0.82,
+
+          phase:
+            0.62
         }
       ),
 
@@ -525,10 +912,17 @@
           [204, 168]
         ],
         {
-          alpha: 0.72,
-          glow: 0.28,
-          depth: 0.62,
-          phase: 0.92
+          alpha:
+            0.72,
+
+          glow:
+            0.28,
+
+          depth:
+            0.62,
+
+          phase:
+            0.92
         }
       ),
 
@@ -542,10 +936,17 @@
           [382, 210]
         ],
         {
-          alpha: 0.74,
-          glow: 0.30,
-          depth: 0.66,
-          phase: 1.22
+          alpha:
+            0.74,
+
+          glow:
+            0.30,
+
+          depth:
+            0.66,
+
+          phase:
+            1.22
         }
       ),
 
@@ -560,10 +961,17 @@
           [240, 134]
         ],
         {
-          alpha: 0.66,
-          glow: 0.38,
-          depth: 0.78,
-          phase: 1.50
+          alpha:
+            0.66,
+
+          glow:
+            0.38,
+
+          depth:
+            0.78,
+
+          phase:
+            1.50
         }
       ),
 
@@ -578,10 +986,17 @@
           [278, 168]
         ],
         {
-          alpha: 0.68,
-          glow: 0.36,
-          depth: 0.76,
-          phase: 1.84
+          alpha:
+            0.68,
+
+          glow:
+            0.36,
+
+          depth:
+            0.76,
+
+          phase:
+            1.84
         }
       ),
 
@@ -595,10 +1010,17 @@
           [154, 246]
         ],
         {
-          alpha: 0.68,
-          glow: 0.25,
-          depth: 0.56,
-          phase: 2.20
+          alpha:
+            0.68,
+
+          glow:
+            0.25,
+
+          depth:
+            0.56,
+
+          phase:
+            2.20
         }
       ),
 
@@ -612,10 +1034,17 @@
           [216, 268]
         ],
         {
-          alpha: 0.74,
-          glow: 0.30,
-          depth: 0.72,
-          phase: 2.52
+          alpha:
+            0.74,
+
+          glow:
+            0.30,
+
+          depth:
+            0.72,
+
+          phase:
+            2.52
         }
       ),
 
@@ -631,10 +1060,17 @@
           [240, 208]
         ],
         {
-          alpha: 0.70,
-          glow: 0.48,
-          depth: 0.90,
-          phase: 2.92
+          alpha:
+            0.70,
+
+          glow:
+            0.48,
+
+          depth:
+            0.90,
+
+          phase:
+            2.92
         }
       ),
 
@@ -648,10 +1084,17 @@
           [326, 246]
         ],
         {
-          alpha: 0.72,
-          glow: 0.31,
-          depth: 0.73,
-          phase: 3.20
+          alpha:
+            0.72,
+
+          glow:
+            0.31,
+
+          depth:
+            0.73,
+
+          phase:
+            3.20
         }
       ),
 
@@ -665,10 +1108,17 @@
           [382, 210]
         ],
         {
-          alpha: 0.68,
-          glow: 0.26,
-          depth: 0.57,
-          phase: 3.58
+          alpha:
+            0.68,
+
+          glow:
+            0.26,
+
+          depth:
+            0.57,
+
+          phase:
+            3.58
         }
       ),
 
@@ -682,10 +1132,17 @@
           [148, 338]
         ],
         {
-          alpha: 0.72,
-          glow: 0.25,
-          depth: 0.58,
-          phase: 3.90
+          alpha:
+            0.72,
+
+          glow:
+            0.25,
+
+          depth:
+            0.58,
+
+          phase:
+            3.90
         }
       ),
 
@@ -700,10 +1157,17 @@
           [212, 334]
         ],
         {
-          alpha: 0.70,
-          glow: 0.34,
-          depth: 0.75,
-          phase: 4.20
+          alpha:
+            0.70,
+
+          glow:
+            0.34,
+
+          depth:
+            0.75,
+
+          phase:
+            4.20
         }
       ),
 
@@ -718,10 +1182,17 @@
           [332, 338]
         ],
         {
-          alpha: 0.72,
-          glow: 0.34,
-          depth: 0.75,
-          phase: 4.56
+          alpha:
+            0.72,
+
+          glow:
+            0.34,
+
+          depth:
+            0.75,
+
+          phase:
+            4.56
         }
       ),
 
@@ -735,10 +1206,17 @@
           [414, 332]
         ],
         {
-          alpha: 0.70,
-          glow: 0.28,
-          depth: 0.59,
-          phase: 4.92
+          alpha:
+            0.70,
+
+          glow:
+            0.28,
+
+          depth:
+            0.59,
+
+          phase:
+            4.92
         }
       ),
 
@@ -752,10 +1230,17 @@
           [156, 446]
         ],
         {
-          alpha: 0.72,
-          glow: 0.24,
-          depth: 0.56,
-          phase: 5.22
+          alpha:
+            0.72,
+
+          glow:
+            0.24,
+
+          depth:
+            0.56,
+
+          phase:
+            5.22
         }
       ),
 
@@ -770,10 +1255,17 @@
           [216, 430]
         ],
         {
-          alpha: 0.72,
-          glow: 0.40,
-          depth: 0.82,
-          phase: 5.54
+          alpha:
+            0.72,
+
+          glow:
+            0.40,
+
+          depth:
+            0.82,
+
+          phase:
+            5.54
         }
       ),
 
@@ -788,10 +1280,17 @@
           [324, 446]
         ],
         {
-          alpha: 0.72,
-          glow: 0.40,
-          depth: 0.82,
-          phase: 5.88
+          alpha:
+            0.72,
+
+          glow:
+            0.40,
+
+          depth:
+            0.82,
+
+          phase:
+            5.88
         }
       ),
 
@@ -805,10 +1304,17 @@
           [398, 470]
         ],
         {
-          alpha: 0.70,
-          glow: 0.25,
-          depth: 0.57,
-          phase: 6.20
+          alpha:
+            0.70,
+
+          glow:
+            0.25,
+
+          depth:
+            0.57,
+
+          phase:
+            6.20
         }
       ),
 
@@ -823,10 +1329,17 @@
           [192, 530]
         ],
         {
-          alpha: 0.68,
-          glow: 0.35,
-          depth: 0.72,
-          phase: 6.54
+          alpha:
+            0.68,
+
+          glow:
+            0.35,
+
+          depth:
+            0.72,
+
+          phase:
+            6.54
         }
       ),
 
@@ -841,10 +1354,17 @@
           [364, 594]
         ],
         {
-          alpha: 0.70,
-          glow: 0.34,
-          depth: 0.72,
-          phase: 6.86
+          alpha:
+            0.70,
+
+          glow:
+            0.34,
+
+          depth:
+            0.72,
+
+          phase:
+            6.86
         }
       )
     ];
@@ -1041,14 +1561,20 @@
     context
   ) {
     context.beginPath();
-    appendOuterWindow(context);
+
+    appendOuterWindow(
+      context
+    );
   }
 
   function traceInnerWindow(
     context
   ) {
     context.beginPath();
-    appendInnerWindow(context);
+
+    appendInnerWindow(
+      context
+    );
   }
 
   function createPaneGradient(
@@ -1059,7 +1585,10 @@
   ) {
     const bounds =
       pane.points.reduce(
-        (result, point) => ({
+        (
+          result,
+          point
+        ) => ({
           minimumX:
             Math.min(
               result.minimumX,
@@ -1084,11 +1613,19 @@
               point[1]
             )
         }),
+
         {
-          minimumX: Infinity,
-          maximumX: -Infinity,
-          minimumY: Infinity,
-          maximumY: -Infinity
+          minimumX:
+            Infinity,
+
+          maximumX:
+            -Infinity,
+
+          minimumY:
+            Infinity,
+
+          maximumY:
+            -Infinity
         }
       );
 
@@ -1113,14 +1650,17 @@
 
     gradient.addColorStop(
       0,
+
       rgba(
         pane.color,
+
         clamp(
           alpha *
-            (
-              0.62 +
-              shimmer * 0.07
-            ),
+          (
+            0.62 +
+            shimmer *
+            0.07
+          ),
           0,
           1
         )
@@ -1129,14 +1669,17 @@
 
     gradient.addColorStop(
       0.48,
+
       rgba(
         pane.color,
+
         clamp(
           alpha *
-            (
-              0.86 +
-              shimmer * 0.10
-            ),
+          (
+            0.86 +
+            shimmer *
+            0.10
+          ),
           0,
           1
         )
@@ -1145,10 +1688,13 @@
 
     gradient.addColorStop(
       1,
+
       rgba(
         pane.color,
+
         clamp(
-          alpha * 0.50,
+          alpha *
+          0.50,
           0,
           1
         )
@@ -1168,7 +1714,8 @@
       state.reducedMotion
         ? 0
         : Math.sin(
-            time * 0.72 +
+            time *
+            0.72 +
             pane.phase
           );
 
@@ -1188,10 +1735,11 @@
 
     context.translate(
       shimmer *
-        pane.depth *
-        0.6,
+      pane.depth *
+      0.6,
 
-      -depthShift * 0.18
+      -depthShift *
+      0.18
     );
 
     tracePolygon(
@@ -1212,20 +1760,23 @@
         revealAmount,
         2,
         10 +
-          pane.glow * 26
+        pane.glow *
+        26
       );
 
     context.shadowColor =
       rgba(
         pane.color,
+
         pane.glow *
-          paneGlowWeight *
-          0.56
+        paneGlowWeight *
+        0.56
       );
 
     context.fill();
 
-    context.shadowBlur = 0;
+    context.shadowBlur =
+      0;
 
     const highlight =
       context.createLinearGradient(
@@ -1244,6 +1795,7 @@
 
     highlight.addColorStop(
       0,
+
       `rgba(255, 255, 255, ${
         pane.highlight *
         0.68 *
@@ -1258,6 +1810,7 @@
 
     highlight.addColorStop(
       1,
+
       `rgba(255, 255, 255, ${
         pane.highlight *
         0.15 *
@@ -1276,7 +1829,8 @@
           revealAmount,
           0.015,
           0.035 +
-            pane.highlight * 0.26
+          pane.highlight *
+          0.26
         )
       })`;
 
@@ -1292,7 +1846,8 @@
     if (
       !state.reducedMotion &&
       pane.grain > 0 &&
-      revealAmount >= 0.30
+      revealAmount >=
+        0.30
     ) {
       context.globalCompositeOperation =
         "screen";
@@ -1305,15 +1860,17 @@
         const seed =
           pane.phase *
           10.7 +
-          index * 5.3;
+          index *
+          5.3;
 
         const x =
           pane.points[0][0] +
           (
             Math.sin(
-              seed * 4.9
+              seed *
+              4.9
             ) *
-              0.5 +
+            0.5 +
             0.5
           ) *
           90;
@@ -1322,10 +1879,11 @@
           pane.points[0][1] +
           (
             Math.sin(
-              seed * 2.7 +
+              seed *
+              2.7 +
               1.2
             ) *
-              0.5 +
+            0.5 +
             0.5
           ) *
           120;
@@ -1370,15 +1928,19 @@
     const outerWidth =
       revealWeight(
         revealAmount,
-        DIMENSIONS.leadWidthDormant,
-        DIMENSIONS.leadWidthFocused
+        DIMENSIONS
+          .leadWidthDormant,
+        DIMENSIONS
+          .leadWidthFocused
       );
 
     const innerWidth =
       revealWeight(
         revealAmount,
-        DIMENSIONS.innerLeadWidthDormant,
-        DIMENSIONS.innerLeadWidthFocused
+        DIMENSIONS
+          .innerLeadWidthDormant,
+        DIMENSIONS
+          .innerLeadWidthFocused
       );
 
     context.save();
@@ -1399,7 +1961,7 @@
       outerWidth;
 
     state.panes.forEach(
-      (pane) => {
+      pane => {
         tracePolygon(
           context,
           pane.points
@@ -1419,7 +1981,7 @@
       innerWidth;
 
     state.panes.forEach(
-      (pane) => {
+      pane => {
         tracePolygon(
           context,
           pane.points
@@ -1521,14 +2083,15 @@
       )
     );
 
-    /*
-     * Build one compound path and fill it with the even-odd rule.
-     * This produces a frame ring without erasing panes, lead lines,
-     * internal light, or ribs already drawn inside the Window.
-     */
     context.beginPath();
-    appendOuterWindow(context);
-    appendInnerWindow(context);
+
+    appendOuterWindow(
+      context
+    );
+
+    appendInnerWindow(
+      context
+    );
 
     context.fillStyle =
       frameGradient;
@@ -1539,11 +2102,16 @@
     context.shadowColor =
       `rgba(65, 132, 183, ${shadowOpacity})`;
 
-    context.fill("evenodd");
+    context.fill(
+      "evenodd"
+    );
 
-    context.shadowBlur = 0;
+    context.shadowBlur =
+      0;
 
-    traceOuterWindow(context);
+    traceOuterWindow(
+      context
+    );
 
     context.strokeStyle =
       rgba(
@@ -1560,7 +2128,9 @@
 
     context.stroke();
 
-    traceInnerWindow(context);
+    traceInnerWindow(
+      context
+    );
 
     context.strokeStyle =
       rgba(
@@ -1601,15 +2171,19 @@
     const darkWidth =
       revealWeight(
         revealAmount,
-        DIMENSIONS.ribWidthDormant,
-        DIMENSIONS.ribWidthFocused
+        DIMENSIONS
+          .ribWidthDormant,
+        DIMENSIONS
+          .ribWidthFocused
       );
 
     const lightWidth =
       revealWeight(
         revealAmount,
-        DIMENSIONS.ribHighlightWidthDormant,
-        DIMENSIONS.ribHighlightWidthFocused
+        DIMENSIONS
+          .ribHighlightWidthDormant,
+        DIMENSIONS
+          .ribHighlightWidthFocused
       );
 
     context.save();
@@ -1621,7 +2195,7 @@
       "round";
 
     state.frameSegments.forEach(
-      (segment) => {
+      segment => {
         context.beginPath();
 
         context.moveTo(
@@ -1680,14 +2254,14 @@
         : (
             Math.sin(
               time *
-                (
-                  state.rendererState ===
+              (
+                state.rendererState ===
                   STATES.FOCUSED
-                    ? 1.45
-                    : 0.72
-                )
+                  ? 1.45
+                  : 0.72
+              )
             ) *
-              0.5 +
+            0.5 +
             0.5
           );
 
@@ -1710,14 +2284,16 @@
 
     centerGlow.addColorStop(
       0,
+
       `rgba(202, 240, 255, ${
         (
           0.08 +
           revealAmount *
-            (
-              0.18 +
-              pulse * 0.08
-            )
+          (
+            0.18 +
+            pulse *
+            0.08
+          )
         ) *
         dormantLight
       })`
@@ -1725,10 +2301,12 @@
 
     centerGlow.addColorStop(
       0.30,
+
       `rgba(95, 151, 221, ${
         (
           0.035 +
-          revealAmount * 0.12
+          revealAmount *
+          0.12
         ) *
         dormantLight
       })`
@@ -1736,10 +2314,12 @@
 
     centerGlow.addColorStop(
       0.62,
+
       `rgba(118, 74, 169, ${
         (
           0.02 +
-          revealAmount * 0.09
+          revealAmount *
+          0.09
         ) *
         dormantLight
       })`
@@ -1762,7 +2342,8 @@
 
     if (
       !state.reducedMotion &&
-      revealAmount > 0.18
+      revealAmount >
+        0.18
     ) {
       const beam =
         context.createLinearGradient(
@@ -1779,11 +2360,13 @@
 
       beam.addColorStop(
         0.48,
+
         `rgba(255, 255, 255, ${
           revealAmount *
           (
             0.024 +
-            pulse * 0.018
+            pulse *
+            0.018
           )
         })`
       );
@@ -1812,9 +2395,13 @@
     revealAmount
   ) {
     const dormantWeight =
-      1 - revealAmount;
+      1 -
+      revealAmount;
 
-    if (dormantWeight <= 0) {
+    if (
+      dormantWeight <=
+      0
+    ) {
       return;
     }
 
@@ -1826,7 +2413,8 @@
 
     context.strokeStyle =
       `rgba(193, 171, 118, ${
-        dormantWeight * 0.045
+        dormantWeight *
+        0.045
       })`;
 
     context.lineWidth =
@@ -1837,7 +2425,8 @@
 
     context.shadowColor =
       `rgba(94, 158, 202, ${
-        dormantWeight * 0.035
+        dormantWeight *
+        0.035
       })`;
 
     context.stroke();
@@ -1852,7 +2441,8 @@
   ) {
     if (
       state.reducedMotion ||
-      revealAmount < 0.42
+      revealAmount <
+        0.42
     ) {
       return;
     }
@@ -1875,22 +2465,24 @@
     ];
 
     points.forEach(
-      (point) => {
+      point => {
         const pulse =
           Math.sin(
             time *
-              (
-                Math.PI * 2 /
-                TIMING
-                  .sparklePeriodSeconds
-              ) +
+            (
+              Math.PI *
+              2 /
+              TIMING
+                .sparklePeriodSeconds
+            ) +
             point[2]
           );
 
         const alpha =
           clamp(
             (
-              pulse - 0.52
+              pulse -
+              0.52
             ) *
             1.9,
             0,
@@ -1899,13 +2491,17 @@
           revealAmount *
           0.52;
 
-        if (alpha <= 0.01) {
+        if (
+          alpha <=
+          0.01
+        ) {
           return;
         }
 
         const radius =
           1.2 +
-          alpha * 2.4;
+          alpha *
+          2.4;
 
         const gradient =
           context.createRadialGradient(
@@ -1914,7 +2510,8 @@
             0,
             point[0],
             point[1],
-            radius * 5
+            radius *
+            5
           );
 
         gradient.addColorStop(
@@ -1924,8 +2521,10 @@
 
         gradient.addColorStop(
           0.28,
+
           `rgba(187, 229, 255, ${
-            alpha * 0.48
+            alpha *
+            0.48
           })`
         );
 
@@ -1942,9 +2541,11 @@
         context.arc(
           point[0],
           point[1],
-          radius * 5,
+          radius *
+          5,
           0,
-          Math.PI * 2
+          Math.PI *
+          2
         );
 
         context.fill();
@@ -1987,10 +2588,10 @@
     const designScale =
       Math.min(
         cssWidth /
-          DIMENSIONS.designWidth,
+        DIMENSIONS.designWidth,
 
         cssHeight /
-          DIMENSIONS.designHeight
+        DIMENSIONS.designHeight
       );
 
     const reveal =
@@ -2018,43 +2619,55 @@
       state.reducedMotion
         ? 0
         : Math.sin(
-            state.time * 0.24
+            state.time *
+            0.24
           ) *
           0.75 *
           (
             1 -
-            reveal * 0.72
+            reveal *
+            0.72
           );
 
     const verticalDrift =
       state.reducedMotion
         ? 0
         : Math.sin(
-            state.time * 0.31 +
+            state.time *
+            0.31 +
             1.2
           ) *
           0.92 *
           (
             1 -
-            reveal * 0.62
+            reveal *
+            0.62
           );
 
     context.translate(
-      cssWidth / 2 +
-        horizontalDrift,
+      cssWidth /
+      2 +
+      horizontalDrift,
 
-      cssHeight / 2 +
-        verticalDrift
+      cssHeight /
+      2 +
+      verticalDrift
     );
 
     context.scale(
-      designScale * scale,
-      designScale * scale
+      designScale *
+      scale,
+
+      designScale *
+      scale
     );
 
     context.translate(
-      -DIMENSIONS.designWidth / 2,
-      -DIMENSIONS.designHeight / 2
+      -DIMENSIONS.designWidth /
+      2,
+
+      -DIMENSIONS.designHeight /
+      2
     );
 
     context.globalAlpha =
@@ -2080,7 +2693,7 @@
     );
 
     state.panes.forEach(
-      (pane) => {
+      pane => {
         drawPane(
           context,
           pane,
@@ -2130,7 +2743,10 @@
 
     const ratio =
       Math.min(
-        globalThis.devicePixelRatio || 1,
+        globalThis
+          .devicePixelRatio ||
+        1,
+
         DIMENSIONS
           .maximumDevicePixelRatio
       );
@@ -2138,22 +2754,28 @@
     const width =
       Math.max(
         1,
+
         Math.floor(
-          rect.width * ratio
+          rect.width *
+          ratio
         )
       );
 
     const height =
       Math.max(
         1,
+
         Math.floor(
-          rect.height * ratio
+          rect.height *
+          ratio
         )
       );
 
     if (
-      state.canvas.width !== width ||
-      state.canvas.height !== height
+      state.canvas.width !==
+        width ||
+      state.canvas.height !==
+        height
     ) {
       state.canvas.width =
         width;
@@ -2163,32 +2785,57 @@
     }
 
     state.canvas.style.width =
-      `${Math.max(1, rect.width)}px`;
+      `${Math.max(
+        1,
+        rect.width
+      )}px`;
 
     state.canvas.style.height =
-      `${Math.max(1, rect.height)}px`;
+      `${Math.max(
+        1,
+        rect.height
+      )}px`;
 
-    state.width = width;
-    state.height = height;
-    state.pixelRatio = ratio;
+    state.width =
+      width;
+
+    state.height =
+      height;
+
+    state.pixelRatio =
+      ratio;
   }
 
   function completeReveal() {
     const transitionId =
       state.activeTransitionId;
 
+    if (!transitionId) {
+      emitFailure(
+        "MIRRORLAND_TRANSITION_ID_MISSING_AT_REVEAL_COMPLETION"
+      );
+
+      return;
+    }
+
     state.rendererState =
       STATES.FOCUSED;
 
-    state.revealAmount = 1;
-    state.targetRevealAmount = 1;
+    state.revealAmount =
+      1;
 
-    state.transition.progress = 1;
+    state.targetRevealAmount =
+      1;
+
+    state.transition.progress =
+      1;
 
     emitReceipt({
       lastAction:
         "mirrorland-reveal-complete",
-      lastFailure: null
+
+      lastFailure:
+        null
     });
 
     dispatch(
@@ -2203,20 +2850,35 @@
     const transitionId =
       state.activeTransitionId;
 
+    if (!transitionId) {
+      emitFailure(
+        "MIRRORLAND_TRANSITION_ID_MISSING_AT_WITHDRAWAL_COMPLETION"
+      );
+
+      return;
+    }
+
     state.rendererState =
       STATES.DORMANT;
 
-    state.revealAmount = 0;
-    state.targetRevealAmount = 0;
+    state.revealAmount =
+      0;
 
-    state.transition.progress = 1;
+    state.targetRevealAmount =
+      0;
 
-    state.activeTransitionId = "";
+    state.transition.progress =
+      1;
+
+    state.activeTransitionId =
+      "";
 
     emitReceipt({
       lastAction:
         "mirrorland-withdrawal-complete",
-      lastFailure: null
+
+      lastFailure:
+        null
     });
 
     dispatch(
@@ -2227,7 +2889,9 @@
     );
   }
 
-  function updateTransition(now) {
+  function updateTransition(
+    now
+  ) {
     if (
       state.rendererState !==
         STATES.REVEALING &&
@@ -2249,14 +2913,15 @@
 
     const rawProgress =
       clamp(
-        elapsed / duration,
+        elapsed /
+        duration,
         0,
         1
       );
 
     const eased =
       state.rendererState ===
-      STATES.REVEALING
+        STATES.REVEALING
         ? easeOutCubic(
             rawProgress
           )
@@ -2274,13 +2939,16 @@
         eased
       );
 
-    if (rawProgress < 1) {
+    if (
+      rawProgress <
+      1
+    ) {
       return;
     }
 
     if (
       state.rendererState ===
-      STATES.REVEALING
+        STATES.REVEALING
     ) {
       completeReveal();
     } else {
@@ -2288,27 +2956,127 @@
     }
   }
 
-  function render(now) {
+  function render(
+    now
+  ) {
     if (
       !state.running ||
-      state.failed
+      state.failed ||
+      state.disposed
     ) {
       return;
     }
 
     state.time =
-      now * 0.001;
+      now *
+      0.001;
 
-    state.lastTime = now;
+    state.lastTime =
+      now;
 
     resize();
-    updateTransition(now);
+
+    updateTransition(
+      now
+    );
+
     drawWindow();
 
     state.raf =
       requestAnimationFrame(
         render
       );
+  }
+
+  function transitionIdFromEvent(
+    event
+  ) {
+    return String(
+      event &&
+      event.detail &&
+      event.detail.transitionId
+        ? event.detail.transitionId
+        : ""
+    ).trim();
+  }
+
+  function controllerReducedMotion() {
+    const controller =
+      globalThis
+        .DGB_COMPASS_CONTROLLER;
+
+    if (
+      controller &&
+      typeof controller.getFrameState ===
+        "function"
+    ) {
+      try {
+        const frame =
+          controller.getFrameState();
+
+        return Boolean(
+          frame &&
+          frame.reducedMotion
+        );
+      } catch (_) {}
+    }
+
+    return false;
+  }
+
+  function rootReducedMotion() {
+    return Boolean(
+      state.root &&
+      state.root.dataset
+        .reducedMotion ===
+        "true"
+    );
+  }
+
+  function mediaReducedMotion() {
+    return Boolean(
+      state.reducedMotionMediaQuery &&
+      state.reducedMotionMediaQuery
+        .matches
+    );
+  }
+
+  function resolveReducedMotion(
+    requestedValue
+  ) {
+    const requestedReduced =
+      requestedValue ===
+      true;
+
+    state.reducedMotion =
+      requestedReduced ||
+      controllerReducedMotion() ||
+      rootReducedMotion() ||
+      mediaReducedMotion();
+
+    if (state.root) {
+      state.root.dataset
+        .compassMirrorlandReducedMotion =
+        state.reducedMotion
+          ? "true"
+          : "false";
+    }
+
+    return state.reducedMotion;
+  }
+
+  function validateTransitionId(
+    transitionId
+  ) {
+    if (transitionId) {
+      return true;
+    }
+
+    emitFailure(
+      "MIRRORLAND_TRANSITION_ID_MISSING"
+    );
+
+    return false;
   }
 
   function startTransition({
@@ -2318,11 +3086,11 @@
     rendererState,
     action
   }) {
-    if (!transitionId) {
-      emitFailure(
-        "MIRRORLAND_TRANSITION_ID_MISSING"
-      );
-
+    if (
+      !validateTransitionId(
+        transitionId
+      )
+    ) {
       return false;
     }
 
@@ -2366,24 +3134,38 @@
     return true;
   }
 
-  function requestReveal(event) {
-    if (state.failed) {
+  function requestReveal(
+    event
+  ) {
+    if (
+      state.failed ||
+      state.disposed
+    ) {
       return;
     }
 
     const detail =
-      event.detail || {};
+      event &&
+      event.detail
+        ? event.detail
+        : {};
 
     const transitionId =
-      String(
-        detail.transitionId || ""
-      ).trim();
+      transitionIdFromEvent(
+        event
+      );
 
-    state.reducedMotion =
-      Boolean(
-        detail.reducedMotion
-      ) ||
-      state.reducedMotion;
+    if (
+      !validateTransitionId(
+        transitionId
+      )
+    ) {
+      return;
+    }
+
+    resolveReducedMotion(
+      detail.reducedMotion
+    );
 
     if (
       state.rendererState ===
@@ -2403,7 +3185,10 @@
 
       emitReceipt({
         lastAction:
-          "mirrorland-already-focused"
+          "mirrorland-already-focused",
+
+        lastFailure:
+          null
       });
 
       dispatch(
@@ -2424,8 +3209,10 @@
 
       duration:
         state.reducedMotion
-          ? TIMING.reducedRevealMs
-          : TIMING.revealMs,
+          ? TIMING
+              .reducedRevealMs
+          : TIMING
+              .revealMs,
 
       rendererState:
         STATES.REVEALING,
@@ -2435,24 +3222,38 @@
     });
   }
 
-  function requestWithdrawal(event) {
-    if (state.failed) {
+  function requestWithdrawal(
+    event
+  ) {
+    if (
+      state.failed ||
+      state.disposed
+    ) {
       return;
     }
 
     const detail =
-      event.detail || {};
+      event &&
+      event.detail
+        ? event.detail
+        : {};
 
     const transitionId =
-      String(
-        detail.transitionId || ""
-      ).trim();
+      transitionIdFromEvent(
+        event
+      );
 
-    state.reducedMotion =
-      Boolean(
-        detail.reducedMotion
-      ) ||
-      state.reducedMotion;
+    if (
+      !validateTransitionId(
+        transitionId
+      )
+    ) {
+      return;
+    }
+
+    resolveReducedMotion(
+      detail.reducedMotion
+    );
 
     if (
       state.rendererState ===
@@ -2472,7 +3273,10 @@
 
       emitReceipt({
         lastAction:
-          "mirrorland-already-dormant"
+          "mirrorland-already-dormant",
+
+        lastFailure:
+          null
       });
 
       dispatch(
@@ -2509,7 +3313,71 @@
     });
   }
 
+  function handleReducedMotionMediaChange(
+    event
+  ) {
+    const previous =
+      state.reducedMotion;
+
+    resolveReducedMotion(
+      false
+    );
+
+    emitReceipt({
+      lastAction:
+        "reduced-motion-media-updated",
+
+      reducedMotionSource:
+        "media-query-change",
+
+      reducedMotionChanged:
+        previous !==
+        state.reducedMotion
+    });
+  }
+
+  function handleExternalReducedMotionChange(
+    event
+  ) {
+    const detail =
+      event &&
+      event.detail
+        ? event.detail
+        : {};
+
+    const previous =
+      state.reducedMotion;
+
+    resolveReducedMotion(
+      detail.reducedMotion
+    );
+
+    emitReceipt({
+      lastAction:
+        "reduced-motion-controller-updated",
+
+      reducedMotionSource:
+        detail.source ||
+        "controller-event",
+
+      reducedMotionChanged:
+        previous !==
+        state.reducedMotion
+    });
+  }
+
+  function handleWindowResize() {
+    resize();
+  }
+
   function bindEvents() {
+    if (state.eventsBound) {
+      return;
+    }
+
+    state.eventsBound =
+      true;
+
     globalThis.addEventListener(
       EVENTS.REVEAL_REQUEST,
       requestReveal
@@ -2519,72 +3387,317 @@
       EVENTS.WITHDRAW_REQUEST,
       requestWithdrawal
     );
+
+    globalThis.addEventListener(
+      EVENTS.REDUCED_MOTION_CHANGE,
+      handleExternalReducedMotionChange
+    );
   }
 
-  function readReducedMotion() {
-    const media =
-      globalThis.matchMedia(
-        "(prefers-reduced-motion: reduce)"
-      );
+  function unbindEvents() {
+    if (!state.eventsBound) {
+      return;
+    }
 
-    state.reducedMotion =
-      media.matches ||
-      (
-        state.root &&
-        state.root.dataset
-          .reducedMotion === "true"
-      );
+    state.eventsBound =
+      false;
+
+    globalThis.removeEventListener(
+      EVENTS.REVEAL_REQUEST,
+      requestReveal
+    );
+
+    globalThis.removeEventListener(
+      EVENTS.WITHDRAW_REQUEST,
+      requestWithdrawal
+    );
+
+    globalThis.removeEventListener(
+      EVENTS.REDUCED_MOTION_CHANGE,
+      handleExternalReducedMotionChange
+    );
+  }
+
+  function bindReducedMotion() {
+    if (state.reducedMotionBound) {
+      return;
+    }
+
+    state.reducedMotionBound =
+      true;
 
     if (
-      typeof media
-        .addEventListener ===
+      typeof globalThis.matchMedia ===
       "function"
     ) {
-      media.addEventListener(
-        "change",
-        (event) => {
-          state.reducedMotion =
-            event.matches ||
-            (
-              state.root &&
-              state.root.dataset
-                .reducedMotion ===
-                "true"
-            );
+      state.reducedMotionMediaQuery =
+        globalThis.matchMedia(
+          "(prefers-reduced-motion: reduce)"
+        );
 
-          emitReceipt({
-            lastAction:
-              "reduced-motion-updated"
-          });
-        }
-      );
+      if (
+        typeof state
+          .reducedMotionMediaQuery
+          .addEventListener ===
+        "function"
+      ) {
+        state
+          .reducedMotionMediaQuery
+          .addEventListener(
+            "change",
+            handleReducedMotionMediaChange
+          );
+      } else if (
+        typeof state
+          .reducedMotionMediaQuery
+          .addListener ===
+        "function"
+      ) {
+        state
+          .reducedMotionMediaQuery
+          .addListener(
+            handleReducedMotionMediaChange
+          );
+      }
     }
+
+    resolveReducedMotion(
+      false
+    );
+  }
+
+  function unbindReducedMotion() {
+    if (!state.reducedMotionBound) {
+      return;
+    }
+
+    state.reducedMotionBound =
+      false;
+
+    const media =
+      state.reducedMotionMediaQuery;
+
+    if (media) {
+      if (
+        typeof media
+          .removeEventListener ===
+        "function"
+      ) {
+        media.removeEventListener(
+          "change",
+          handleReducedMotionMediaChange
+        );
+      } else if (
+        typeof media
+          .removeListener ===
+        "function"
+      ) {
+        media.removeListener(
+          handleReducedMotionMediaChange
+        );
+      }
+    }
+
+    state.reducedMotionMediaQuery =
+      null;
   }
 
   function bindResizeObserver() {
     if (
-      typeof ResizeObserver !==
+      state.resizeObserver ||
+      state.resizeFallbackBound
+    ) {
+      return;
+    }
+
+    if (
+      typeof ResizeObserver ===
       "function"
     ) {
-      globalThis.addEventListener(
-        "resize",
-        resize,
-        {
-          passive: true
-        }
+      state.resizeObserver =
+        new ResizeObserver(
+          resize
+        );
+
+      state.resizeObserver.observe(
+        state.mount
       );
 
       return;
     }
 
-    state.resizeObserver =
-      new ResizeObserver(
-        resize
+    state.resizeFallbackBound =
+      true;
+
+    globalThis.addEventListener(
+      "resize",
+      handleWindowResize,
+      {
+        passive:
+          true
+      }
+    );
+  }
+
+  function unbindResizeObserver() {
+    if (state.resizeObserver) {
+      state.resizeObserver.disconnect();
+
+      state.resizeObserver =
+        null;
+    }
+
+    if (state.resizeFallbackBound) {
+      state.resizeFallbackBound =
+        false;
+
+      globalThis.removeEventListener(
+        "resize",
+        handleWindowResize
+      );
+    }
+  }
+
+  function removeGeneratedCanvas() {
+    if (
+      state.createdCanvas &&
+      state.canvas
+    ) {
+      state.canvas.remove();
+    }
+
+    state.canvas =
+      null;
+
+    state.context =
+      null;
+
+    state.createdCanvas =
+      false;
+  }
+
+  function clearGeometry() {
+    state.panes =
+      [];
+
+    state.frameSegments =
+      [];
+
+    state.geometryReady =
+      false;
+  }
+
+  function rollbackPartialInitialization(
+    reason
+  ) {
+    state.running =
+      false;
+
+    if (state.raf) {
+      cancelAnimationFrame(
+        state.raf
       );
 
-    state.resizeObserver.observe(
-      state.mount
+      state.raf =
+        0;
+    }
+
+    unbindEvents();
+    unbindReducedMotion();
+    unbindResizeObserver();
+
+    removeGeneratedCanvas();
+    clearGeometry();
+
+    state.initialized =
+      false;
+
+    emitFailure(
+      reason
     );
+  }
+
+  function dispose() {
+    if (state.disposed) {
+      return;
+    }
+
+    state.disposed =
+      true;
+
+    state.running =
+      false;
+
+    if (state.raf) {
+      cancelAnimationFrame(
+        state.raf
+      );
+
+      state.raf =
+        0;
+    }
+
+    unbindEvents();
+    unbindReducedMotion();
+    unbindResizeObserver();
+
+    removeGeneratedCanvas();
+    clearGeometry();
+
+    state.initialized =
+      false;
+
+    state.failed =
+      false;
+
+    state.rendererState =
+      STATES.DISPOSED;
+
+    state.activeTransitionId =
+      "";
+
+    state.transition = {
+      from:
+        state.revealAmount,
+
+      to:
+        state.revealAmount,
+
+      progress:
+        1,
+
+      startTime:
+        0,
+
+      duration:
+        0
+    };
+
+    emitReceipt({
+      status:
+        "disposed",
+
+      rendererInitialized:
+        false,
+
+      rendererState:
+        STATES.DISPOSED,
+
+      canvasPresent:
+        false,
+
+      paneCount:
+        0,
+
+      frameCount:
+        0,
+
+      lastAction:
+        "mirrorland-renderer-disposed",
+
+      lastFailure:
+        null
+    });
   }
 
   function exposeApi() {
@@ -2594,25 +3707,39 @@
         contract:
           CONTRACT,
 
-        receipt: () =>
-          Object.freeze({
-            ...RECEIPT
-          }),
+        receipt:
+          () =>
+            Object.freeze({
+              ...RECEIPT
+            }),
 
-        getState: () =>
-          Object.freeze({
-            rendererState:
-              state.rendererState,
+        getState:
+          () =>
+            Object.freeze({
+              rendererState:
+                state.rendererState,
 
-            activeTransitionId:
-              state.activeTransitionId,
+              activeTransitionId:
+                state.activeTransitionId,
 
-            revealAmount:
-              state.revealAmount,
+              revealAmount:
+                state.revealAmount,
 
-            reducedMotion:
-              state.reducedMotion
-          }),
+              targetRevealAmount:
+                state.targetRevealAmount,
+
+              reducedMotion:
+                state.reducedMotion,
+
+              running:
+                state.running,
+
+              initialized:
+                state.initialized,
+
+              disposed:
+                state.disposed
+            }),
 
         reveal:
           (
@@ -2622,6 +3749,7 @@
             requestReveal({
               detail: {
                 transitionId,
+
                 reducedMotion:
                   state.reducedMotion
               }
@@ -2636,51 +3764,76 @@
             requestWithdrawal({
               detail: {
                 transitionId,
+
                 reducedMotion:
                   state.reducedMotion
               }
             });
           },
 
-        stop: () => {
-          state.running = false;
+        stop:
+          () => {
+            if (
+              state.disposed ||
+              !state.running
+            ) {
+              return;
+            }
 
-          if (state.raf) {
-            cancelAnimationFrame(
-              state.raf
-            );
+            state.running =
+              false;
 
-            state.raf = 0;
-          }
+            if (state.raf) {
+              cancelAnimationFrame(
+                state.raf
+              );
 
-          emitReceipt({
-            status: "stopped",
-            lastAction:
-              "mirrorland-renderer-stopped"
-          });
-        },
+              state.raf =
+                0;
+            }
 
-        start: () => {
-          if (
-            state.failed ||
-            state.running
-          ) {
-            return;
-          }
+            emitReceipt({
+              status:
+                "stopped",
 
-          state.running = true;
+              lastAction:
+                "mirrorland-renderer-stopped"
+            });
+          },
 
-          state.raf =
-            requestAnimationFrame(
-              render
-            );
+        start:
+          () => {
+            if (
+              state.failed ||
+              state.disposed ||
+              state.running ||
+              !state.initialized ||
+              !state.context
+            ) {
+              return;
+            }
 
-          emitReceipt({
-            status: "available",
-            lastAction:
-              "mirrorland-renderer-started"
-          });
-        }
+            state.running =
+              true;
+
+            state.lastTime =
+              0;
+
+            state.raf =
+              requestAnimationFrame(
+                render
+              );
+
+            emitReceipt({
+              status:
+                "available",
+
+              lastAction:
+                "mirrorland-renderer-started"
+            });
+          },
+
+        dispose
       });
   }
 
@@ -2737,10 +3890,20 @@
       );
 
     if (
-      state.panes.length < 12
+      state.panes.length !==
+      21
     ) {
       throw new Error(
-        "MIRRORLAND_PANE_GEOMETRY_INCOMPLETE"
+        `MIRRORLAND_PANE_COUNT_INVALID:${state.panes.length}`
+      );
+    }
+
+    if (
+      state.frameSegments.length !==
+      2
+    ) {
+      throw new Error(
+        `MIRRORLAND_FRAME_SEGMENT_COUNT_INVALID:${state.frameSegments.length}`
       );
     }
 
@@ -2750,8 +3913,15 @@
 
   function init() {
     try {
+      state.failed =
+        false;
+
+      state.disposed =
+        false;
+
       resolveDom();
-      readReducedMotion();
+      exposeApi();
+      bindReducedMotion();
       initGeometry();
 
       state.canvas =
@@ -2761,8 +3931,11 @@
         state.canvas.getContext(
           "2d",
           {
-            alpha: true,
-            desynchronized: true
+            alpha:
+              true,
+
+            desynchronized:
+              true
           }
         );
 
@@ -2774,7 +3947,6 @@
 
       bindEvents();
       bindResizeObserver();
-      exposeApi();
 
       resize();
 
@@ -2787,6 +3959,26 @@
       state.targetRevealAmount =
         0;
 
+      state.activeTransitionId =
+        "";
+
+      state.transition = {
+        from:
+          0,
+
+        to:
+          0,
+
+        progress:
+          1,
+
+        startTime:
+          0,
+
+        duration:
+          0
+      };
+
       state.initialized =
         true;
 
@@ -2794,7 +3986,8 @@
         true;
 
       emitReceipt({
-        status: "available",
+        status:
+          "available",
 
         rendererInitialized:
           true,
@@ -2806,7 +3999,10 @@
           "mirrorland-renderer-initialized",
 
         lastFailure:
-          null
+          null,
+
+        reducedMotionSource:
+          "startup"
       });
 
       state.raf =
@@ -2814,7 +4010,7 @@
           render
         );
     } catch (error) {
-      emitFailure(
+      rollbackPartialInitialization(
         `MIRRORLAND_INIT_FAILURE:${
           error &&
           error.message
@@ -2833,7 +4029,8 @@
       "DOMContentLoaded",
       init,
       {
-        once: true
+        once:
+          true
       }
     );
   } else {

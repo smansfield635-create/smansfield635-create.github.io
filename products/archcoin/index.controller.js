@@ -22,6 +22,7 @@
    - selected wing and room;
    - canonical routes;
    - pointer and swipe interpretation;
+   - tap-versus-drag arbitration over crystal-associated controls;
    - orbit and cluster gesture preview / commit / cancel;
    - cluster-exit swipe;
    - page-local Compass selection;
@@ -67,6 +68,16 @@
    - front crystal control precedes Compass;
    - Compass precedes a rear crystal control when they overlap;
    - no generated proxies or cloned controls.
+
+   Coordinated interaction correction:
+   - cardinal and room controls no longer block gesture initiation;
+   - a pointer contact may begin over a crystal-associated control;
+   - movement beyond the dead zone converts the contact into a drag;
+   - a stationary release activates the captured canonical destination;
+   - an outward cluster drag returns to the constellation;
+   - synthetic click duplication after pointer-owned activation is suppressed;
+   - keyboard-generated semantic clicks remain available;
+   - public module identity and version remain unchanged.
 
    Source status:
    COORDINATED_RENEWAL_SOURCE_CANDIDATE
@@ -342,6 +353,9 @@
     exitSwipeDirectionThreshold:
       0.58,
 
+    syntheticClickSuppressionMs:
+      720,
+
     maximumPitch:
       Math.PI * 0.42,
 
@@ -352,15 +366,18 @@
       Math.PI * 0.92
   });
 
+  /*
+   * Crystal-associated cardinal and room controls are intentionally absent
+   * from this exclusion selector.
+   *
+   * A contact that begins over either canonical control must be allowed to
+   * remain a tap or convert into an orbit / cluster gesture.
+   */
   const INTERACTIVE_GESTURE_EXCLUSION_SELECTOR = [
-    "[data-archcoin-coin]",
-    "[data-archcoin-room]",
     "[data-upstream-compass-control]",
     "[data-archcoin-enter]",
     "[data-archcoin-return-to-orbit]",
     "[data-archcoin-return-home-compass]",
-    "button",
-    "a",
     "input",
     "select",
     "textarea",
@@ -874,6 +891,9 @@
       null,
 
     pointer:
+      null,
+
+    suppressedSemanticClick:
       null,
 
     semanticProjection:
@@ -2979,6 +2999,9 @@
       pointerInterpreterOwner:
         MODULE.id,
 
+      pointerTapArbitrationOwner:
+        MODULE.id,
+
       lastAction:
         frame.lastAction,
 
@@ -3485,7 +3508,7 @@
       );
 
       setGuidance(
-        "Tap a cardinal crystal or label to open its cluster. Swipe across empty field space to rotate the constellation."
+        "Tap a cardinal crystal or label to open its cluster. Swipe across the field, including across a crystal touch target, to rotate the constellation."
       );
 
       return;
@@ -3555,7 +3578,7 @@
       );
 
       setGuidance(
-        "Swipe across empty field space to rotate the active four-room cluster. Select a room, or swipe outward to return to the constellation."
+        "Tap a room crystal to select it. Swipe anywhere across the active field to rotate the cluster, or swipe outward to return to the constellation."
       );
 
       return;
@@ -3626,7 +3649,7 @@
       );
 
       setGuidance(
-        "Review the selected room. Enter Selected Path opens its canonical route. Return to Orbit restores the active four-room cluster."
+        "Review the selected room. Enter Selected Path opens its canonical route. Swipe outward from the cluster to return to the constellation."
       );
 
       return;
@@ -5107,8 +5130,8 @@
                   wing
                 )
               : wingToCoin(
-                  wing
-                ),
+                wing
+              ),
 
           selectedRoute:
             "",
@@ -5200,14 +5223,44 @@
     return committed;
   }
 
+  function semanticDestinationFromTarget(
+    target
+  ) {
+    if (
+      !(target instanceof Element) ||
+      !state.root
+    ) {
+      return null;
+    }
+
+    const destination =
+      target.closest(
+        "[data-archcoin-destination]"
+      );
+
+    if (
+      !destination ||
+      !state.root.contains(
+        destination
+      )
+    ) {
+      return null;
+    }
+
+    return destination;
+  }
+
   function pointerGestureAllowedFromTarget(
     target
   ) {
-    return Boolean(
-      target instanceof Element &&
-      !target.closest(
-        INTERACTIVE_GESTURE_EXCLUSION_SELECTOR
-      )
+    if (
+      !(target instanceof Element)
+    ) {
+      return false;
+    }
+
+    return !target.closest(
+      INTERACTIVE_GESTURE_EXCLUSION_SELECTOR
     );
   }
 
@@ -5259,6 +5312,11 @@
 
       dragging:
         false,
+
+      originDestination:
+        semanticDestinationFromTarget(
+          event.target
+        ),
 
       mode:
         state.current ===
@@ -5381,7 +5439,7 @@
         startRadius
       );
 
-    const dot =
+    const directionDot =
       (
         (
           dx /
@@ -5404,7 +5462,7 @@
       );
 
     return (
-      dot >=
+      directionDot >=
       GESTURE.exitSwipeDirectionThreshold
     );
   }
@@ -5420,6 +5478,117 @@
         .gestureActive =
         "false";
     }
+  }
+
+  function suppressNextSemanticClick(
+    destination
+  ) {
+    if (!destination) {
+      state.suppressedSemanticClick =
+        null;
+
+      return;
+    }
+
+    state.suppressedSemanticClick = {
+      destination,
+
+      expiresAt:
+        performance.now() +
+        GESTURE
+          .syntheticClickSuppressionMs
+    };
+  }
+
+  function shouldSuppressSemanticClick(
+    event,
+    destination
+  ) {
+    const suppression =
+      state.suppressedSemanticClick;
+
+    if (!suppression) {
+      return false;
+    }
+
+    if (
+      performance.now() >
+      suppression.expiresAt
+    ) {
+      state.suppressedSemanticClick =
+        null;
+
+      return false;
+    }
+
+    /*
+     * Keyboard activation normally has detail 0 and must not be suppressed.
+     */
+    if (
+      event &&
+      event.detail ===
+        0
+    ) {
+      return false;
+    }
+
+    if (
+      destination !==
+      suppression.destination
+    ) {
+      return false;
+    }
+
+    state.suppressedSemanticClick =
+      null;
+
+    return true;
+  }
+
+  function activateSemanticDestination(
+    destination
+  ) {
+    if (
+      !destination ||
+      !state.root ||
+      !state.root.contains(
+        destination
+      ) ||
+      isHeld()
+    ) {
+      return false;
+    }
+
+    if (
+      destination.dataset
+        .archcoinInteractionPriority ===
+        INTERACTION_PRIORITY.COMPASS
+    ) {
+      return requestCompassSelection();
+    }
+
+    if (
+      destination.matches(
+        "[data-archcoin-coin]"
+      )
+    ) {
+      return requestCardinalSelection(
+        destination.dataset.wing ||
+        destination.dataset.coinId
+      );
+    }
+
+    if (
+      destination.matches(
+        "[data-archcoin-room]"
+      )
+    ) {
+      return requestRoomSelection(
+        destination.dataset.roomId
+      );
+    }
+
+    return false;
   }
 
   function handlePointerDown(event) {
@@ -5453,6 +5622,9 @@
     ) {
       return;
     }
+
+    state.suppressedSemanticClick =
+      null;
 
     state.pointer =
       createPointerState(
@@ -5512,6 +5684,14 @@
 
       state.compassSelected =
         false;
+
+      if (
+        pointer.originDestination
+      ) {
+        suppressNextSemanticClick(
+          pointer.originDestination
+        );
+      }
 
       if (
         pointer.mode ===
@@ -5598,7 +5778,31 @@
     if (
       !pointer.dragging
     ) {
+      const destination =
+        pointer.originDestination;
+
       clearPointerState();
+
+      if (
+        cancelled ||
+        !destination
+      ) {
+        return;
+      }
+
+      /*
+       * Pointer-owned activation lets the entire projected crystal touch area
+       * and its visible label resolve through the same canonical control.
+       */
+      event.preventDefault();
+
+      suppressNextSemanticClick(
+        destination
+      );
+
+      activateSemanticDestination(
+        destination
+      );
 
       return;
     }
@@ -5754,6 +5958,38 @@
       "auto";
   }
 
+  function deactivateUnprojectedControls(
+    projectedControls
+  ) {
+    if (!state.root) {
+      return;
+    }
+
+    qsa(
+      "[data-archcoin-coin], [data-archcoin-room]",
+      state.root
+    ).forEach(
+      control => {
+        if (
+          projectedControls.has(
+            control
+          )
+        ) {
+          return;
+        }
+
+        control.dataset.archcoinProjectionVisible =
+          "false";
+
+        control.dataset.archcoinInteractionPriority =
+          INTERACTION_PRIORITY.INACTIVE;
+
+        control.style.pointerEvents =
+          "none";
+      }
+    );
+  }
+
   function updateSemanticProjection(records) {
     if (
       !Array.isArray(records)
@@ -5763,6 +5999,9 @@
 
     const next =
       new Map();
+
+    const projectedControls =
+      new Set();
 
     for (
       const input
@@ -5797,6 +6036,10 @@
       if (!control) {
         continue;
       }
+
+      projectedControls.add(
+        control
+      );
 
       const depthLayer =
         normalizeDepthLayer(
@@ -5877,6 +6120,10 @@
       );
     }
 
+    deactivateUnprojectedControls(
+      projectedControls
+    );
+
     state.semanticProjection =
       next;
 
@@ -5928,57 +6175,32 @@
     }
 
     const destination =
-      event.target.closest(
-        "[data-archcoin-destination]"
+      semanticDestinationFromTarget(
+        event.target
       );
 
+    if (!destination) {
+      return;
+    }
+
     if (
-      !destination ||
-      !state.root.contains(
+      shouldSuppressSemanticClick(
+        event,
         destination
       )
     ) {
-      return;
-    }
-
-    if (
-      destination.dataset
-        .archcoinInteractionPriority ===
-        INTERACTION_PRIORITY.COMPASS
-    ) {
       event.preventDefault();
 
-      requestCompassSelection();
+      event.stopPropagation();
 
       return;
     }
 
-    if (
-      destination.matches(
-        "[data-archcoin-coin]"
-      )
-    ) {
-      event.preventDefault();
+    event.preventDefault();
 
-      requestCardinalSelection(
-        destination.dataset.wing ||
-        destination.dataset.coinId
-      );
-
-      return;
-    }
-
-    if (
-      destination.matches(
-        "[data-archcoin-room]"
-      )
-    ) {
-      event.preventDefault();
-
-      requestRoomSelection(
-        destination.dataset.roomId
-      );
-    }
+    activateSemanticDestination(
+      destination
+    );
   }
 
   function handleKeydown(event) {
@@ -6925,6 +7147,9 @@
       pointerInterpreterOwner:
         MODULE.id,
 
+      pointerTapArbitrationOwner:
+        MODULE.id,
+
       cameraOwnership:
         false,
 
@@ -6938,6 +7163,9 @@
         false,
 
       clusterExitSwipeOwned:
+        true,
+
+      crystalControlGestureInitiationPermitted:
         true,
 
       compassPageLocalSelection:
@@ -7209,6 +7437,9 @@
 
     clearPointerState();
 
+    state.suppressedSemanticClick =
+      null;
+
     state.current =
       STATES.SYSTEM_HELD;
 
@@ -7372,7 +7603,7 @@
 })();
 
 /*
-AUDRALIA_ARCHCOIN_CONTROLLER_INTERACTION_AND_SEMANTIC_PRIORITY_RESULT_v1
+AUDRALIA_ARCHCOIN_CONTROLLER_CRYSTAL_TAP_AND_SWIPE_RESTORATION_RESULT_v2
 
 Artifact:
  /products/archcoin/index.controller.js
@@ -7382,6 +7613,8 @@ Module:
  7.0.0-controller-interaction-semantic-priority
 
 Preserved:
+- exact public module ID
+- exact public module version
 - CONSTELLATION
 - CLUSTER_OPEN
 - ROOM_SELECTED
@@ -7402,65 +7635,74 @@ Preserved:
 - fixed-center independent Compass
 - no generated room proxies
 - no projected hit inference
-
-Added:
-- controller-owned pointerdown interpretation
-- controller-owned pointermove interpretation
-- controller-owned pointerup interpretation
-- controller-owned pointercancel interpretation
-- pointer capture
-- drag dead zone
-- touch and mouse gesture unification
-- consistent orbit drag quaternion updates
-- consistent cluster drag quaternion updates
-- outward cluster-exit swipe
-- page-local Compass selection
-- panel descent after Compass selection
-- explicit Return to Main Compass
-- expanded Return to Orbit behavior
-- semantic projection intake
+- controller-owned cluster-exit swipe
 - front / Compass / rear interaction authorization
-- compositor-provided CSS coordinate publication
-- rear overlapping control pointer suppression
-- front control priority over Compass
 
-Removed:
-- immediate Compass navigation
-- native-anchor Compass authority assumption
-- requestReturnToUpstream Compass behavior
-- crystals-owned pointer interpretation dependency
-- crystals-owned cluster-exit decision dependency
+Corrected:
+- cardinal controls no longer prohibit gesture initiation
+- room controls no longer prohibit gesture initiation
+- broad button and anchor exclusions removed from scene-field gesture gating
+- Compass and panel action controls remain excluded
+- pointer-down captures the canonical origin destination
+- pointer movement beyond the dead zone converts the same contact into a drag
+- stationary pointer release activates the captured canonical destination
+- crystal touch area and visible label resolve through one canonical control
+- orbit drag may begin over a cardinal crystal control
+- cluster drag may begin over a room crystal control
+- outward cluster swipe may begin over a room crystal control
+- synthetic click following pointer-owned activation is suppressed
+- synthetic click following a drag is suppressed
+- keyboard click activation remains available
+- controls absent from the current compositor projection are deactivated
+- stale inactive controls cannot cover the gesture field
 
 Controller does not own:
 - camera
 - view matrix
 - projection matrix
-- world-to-screen mathematics
 - Compass-plane depth
 - front/rear classification
 - canvas construction
 - WebGL
 - crystal rendering
 - Compass renderer lifecycle
+- room-label visual presentation
+- touch-target visual dimensions
 
-Required companion renewals:
-1. /products/archcoin/index.crystals.js
-2. /products/archcoin/index.html
-3. /products/archcoin/index.css
+Required coordinated next file:
+ /products/archcoin/index.css
 
-Conditional companion:
- /products/archcoin/index.compositor.js
- only if projected-node output requires a bounded API extension
+CSS correction still required:
+- remove visible room-label pills
+- retain transparent projected room touch targets
+- keep cardinal labels visible
+- ensure touch targets remain centered on their crystals
+- avoid covering the field with oversized semantic rectangles
+
+Compositor modified:
+FALSE
+
+Crystals modified:
+FALSE
+
+HTML modified:
+FALSE
+
+Compass geometry modified:
+FALSE
+
+Compass renderer modified:
+FALSE
 
 Runtime execution:
- NOT PERFORMED
+NOT PERFORMED
 
 Visual acceptance:
- NOT CLAIMED
+NOT CLAIMED
 
 Production authorization:
- FALSE
+FALSE
 
 Deployment authorization:
- FALSE
+FALSE
 */

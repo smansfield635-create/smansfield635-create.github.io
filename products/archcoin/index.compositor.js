@@ -5,12 +5,21 @@
    DGB_ARCHCOIN_COMPOSITOR
    1.0.0-camera-depth-layer-orchestration
 
+   Controller anchor:
+   DGB_ARCHCOIN_CONTROLLER
+   7.0.0-controller-interaction-semantic-priority
+
+   Crystals compatibility anchor:
+   DGB_ARCHCOIN_CRYSTALS
+   2.0.0-controller-decoupled-crystal-renderer
+
    Responsibilities:
    - camera state and camera presets;
    - view and projection matrices;
    - viewport and pixel-ratio management;
    - fixed Compass visual-plane depth;
    - world-to-screen projection;
+   - projected Compass-overlap measurement;
    - stable rear/front classification with hysteresis;
    - rear/front crystal-canvas construction;
    - page-level rear / Compass / front / semantic ordering;
@@ -22,10 +31,18 @@
    - wing or room selection;
    - route entry;
    - controller writes;
+   - semantic interaction authorization;
    - Compass navigation;
    - Compass geometry;
    - Compass renderer lifecycle;
    - crystal meshes, materials, shaders, animation, or semantic relocation.
+
+   Bounded integration renewal:
+   - public compositor module version remains unchanged;
+   - Controller 7.0.0 is accepted;
+   - projectWorldPoint() retains all existing fields;
+   - projectWorldPoint() adds visible and compassOverlap;
+   - camera mathematics and depth mathematics remain unchanged.
 */
 
 (() => {
@@ -48,7 +65,13 @@
       "DGB_ARCHCOIN_CONTROLLER",
 
     requiredControllerModuleVersion:
-      "6.0.1-controller-presentation-and-native-home-corrections",
+      "7.0.0-controller-interaction-semantic-priority",
+
+    compatibleCrystalsModuleId:
+      "DGB_ARCHCOIN_CRYSTALS",
+
+    compatibleCrystalsModuleVersion:
+      "2.0.0-controller-decoupled-crystal-renderer",
 
     visualPassClaimed:
       false,
@@ -159,6 +182,12 @@
 
     lowPowerHardwareConcurrencyThreshold:
       4,
+
+    compassOverlapPadding:
+      4,
+
+    defaultProjectedRadius:
+      0,
 
     constellation:
       Object.freeze({
@@ -309,6 +338,9 @@
     projectionMatrix:
       null,
 
+    viewProjectionMatrix:
+      null,
+
     compassPlaneViewDepth:
       0,
 
@@ -343,6 +375,21 @@
 
     moduleVersion:
       CONTRACT.moduleVersion,
+
+    requiredControllerModuleId:
+      CONTRACT.requiredControllerModuleId,
+
+    requiredControllerModuleVersion:
+      CONTRACT.requiredControllerModuleVersion,
+
+    compatibleCrystalsModuleId:
+      CONTRACT.compatibleCrystalsModuleId,
+
+    compatibleCrystalsModuleVersion:
+      CONTRACT.compatibleCrystalsModuleVersion,
+
+    initialized:
+      false,
 
     status:
       "uninitialized",
@@ -467,17 +514,20 @@
   function cloneVector(vector) {
     return [
       finiteNumber(
-        vector && vector[0],
+        vector &&
+        vector[0],
         0
       ),
 
       finiteNumber(
-        vector && vector[1],
+        vector &&
+        vector[1],
         0
       ),
 
       finiteNumber(
-        vector && vector[2],
+        vector &&
+        vector[2],
         0
       )
     ];
@@ -568,15 +618,6 @@
       ) *
       amount
     );
-  }
-
-  function identity4() {
-    return [
-      1, 0, 0, 0,
-      0, 1, 0, 0,
-      0, 0, 1, 0,
-      0, 0, 0, 1
-    ];
   }
 
   function multiply4(
@@ -816,7 +857,7 @@
 
     canvas.dataset
       .archcoinCrystalsCanvas =
-      "true";
+      definition.datasetValue;
 
     canvas.setAttribute(
       "aria-hidden",
@@ -890,7 +931,15 @@
       controller.moduleId ===
         CONTRACT
           .requiredControllerModuleId,
-      "ARCHCOIN_COMPOSITOR_CONTROLLER_MODULE_INVALID"
+      "ARCHCOIN_COMPOSITOR_CONTROLLER_MODULE_INVALID",
+      {
+        expected:
+          CONTRACT
+            .requiredControllerModuleId,
+
+        actual:
+          controller.moduleId
+      }
     );
 
     invariant(
@@ -941,6 +990,10 @@
     );
 
     state.field =
+      qs(
+        "[data-archcoin-scene-field]",
+        state.scene
+      ) ||
       qs(
         ".archcoin-scene__field",
         state.scene
@@ -1461,6 +1514,12 @@
         CAMERA.far
       );
 
+    state.viewProjectionMatrix =
+      multiply4(
+        state.projectionMatrix,
+        state.viewMatrix
+      );
+
     const compassReference =
       transformPoint4(
         state.viewMatrix,
@@ -1639,13 +1698,137 @@
     return state.compassPlaneViewDepth;
   }
 
+  /*
+   * Returns the Compass bounds in field-local CSS pixels.
+   *
+   * The compositor may inspect the Compass mount as a visual depth and overlap
+   * reference. It does not inherit Compass state or own Compass navigation.
+   */
+  function getCompassFieldBounds() {
+    invariant(
+      state.field &&
+      state.compassMount,
+      "ARCHCOIN_COMPOSITOR_COMPASS_BOUNDS_NOT_AVAILABLE"
+    );
+
+    const fieldRect =
+      state.field
+        .getBoundingClientRect();
+
+    const compassRect =
+      state.compassMount
+        .getBoundingClientRect();
+
+    return Object.freeze({
+      left:
+        compassRect.left -
+        fieldRect.left,
+
+      top:
+        compassRect.top -
+        fieldRect.top,
+
+      right:
+        compassRect.right -
+        fieldRect.left,
+
+      bottom:
+        compassRect.bottom -
+        fieldRect.top,
+
+      width:
+        compassRect.width,
+
+      height:
+        compassRect.height,
+
+      centerX:
+        compassRect.left -
+        fieldRect.left +
+        compassRect.width /
+        2,
+
+      centerY:
+        compassRect.top -
+        fieldRect.top +
+        compassRect.height /
+        2
+    });
+  }
+
+  function projectedCircleOverlapsCompass(
+    x,
+    y,
+    projectedRadius,
+    padding
+  ) {
+    const bounds =
+      getCompassFieldBounds();
+
+    const radius =
+      Math.max(
+        0,
+        finiteNumber(
+          projectedRadius,
+          CAMERA
+            .defaultProjectedRadius
+        )
+      );
+
+    const safePadding =
+      Math.max(
+        0,
+        finiteNumber(
+          padding,
+          CAMERA
+            .compassOverlapPadding
+        )
+      );
+
+    const expandedRadius =
+      radius +
+      safePadding;
+
+    const closestX =
+      clamp(
+        x,
+        bounds.left,
+        bounds.right
+      );
+
+    const closestY =
+      clamp(
+        y,
+        bounds.top,
+        bounds.bottom
+      );
+
+    const deltaX =
+      x -
+      closestX;
+
+    const deltaY =
+      y -
+      closestY;
+
+    return (
+      deltaX *
+        deltaX +
+      deltaY *
+        deltaY
+    ) <=
+      expandedRadius *
+        expandedRadius;
+  }
+
   function projectWorldPoint(
     worldPoint,
     options = {}
   ) {
     invariant(
       state.viewMatrix &&
-      state.projectionMatrix,
+      state.projectionMatrix &&
+      state.viewProjectionMatrix,
       "ARCHCOIN_COMPOSITOR_FRAME_NOT_BEGUN"
     );
 
@@ -1656,10 +1839,7 @@
 
     const clip =
       transformPoint4(
-        multiply4(
-          state.projectionMatrix,
-          state.viewMatrix
-        ),
+        state.viewProjectionMatrix,
         [
           point[0],
           point[1],
@@ -1688,6 +1868,10 @@
       clip[1] /
       clip[3];
 
+    const normalizedZ =
+      clip[2] /
+      clip[3];
+
     const rejectionMargin =
       Number.isFinite(
         options.rejectionMargin
@@ -1698,50 +1882,88 @@
           )
         : 0.30;
 
+    const insideRejectionBounds =
+      normalizedX >=
+        -1 -
+        rejectionMargin &&
+      normalizedX <=
+        1 +
+        rejectionMargin &&
+      normalizedY >=
+        -1 -
+        rejectionMargin &&
+      normalizedY <=
+        1 +
+        rejectionMargin;
+
     if (
-      normalizedX <
-        -1 -
-        rejectionMargin ||
-      normalizedX >
-        1 +
-        rejectionMargin ||
-      normalizedY <
-        -1 -
-        rejectionMargin ||
-      normalizedY >
-        1 +
-        rejectionMargin
+      !insideRejectionBounds
     ) {
       return null;
     }
 
+    const x =
+      (
+        (
+          normalizedX +
+          1
+        ) /
+        2
+      ) *
+      state.cssWidth;
+
+    const y =
+      (
+        (
+          1 -
+          normalizedY
+        ) /
+        2
+      ) *
+      state.cssHeight;
+
+    const inFrontOfCamera =
+      clip[3] >
+      0;
+
+    const insideClipVolume =
+      normalizedX >=
+        -1 &&
+      normalizedX <=
+        1 &&
+      normalizedY >=
+        -1 &&
+      normalizedY <=
+        1 &&
+      normalizedZ >=
+        -1 &&
+      normalizedZ <=
+        1;
+
+    const visible =
+      inFrontOfCamera &&
+      insideClipVolume;
+
+    const compassOverlap =
+      projectedCircleOverlapsCompass(
+        x,
+        y,
+        options.projectedRadius,
+        options.compassOverlapPadding
+      );
+
     return Object.freeze({
-      x:
-        (
-          (
-            normalizedX +
-            1
-          ) /
-          2
-        ) *
-        state.cssWidth,
-
-      y:
-        (
-          (
-            1 -
-            normalizedY
-          ) /
-          2
-        ) *
-        state.cssHeight,
-
+      x,
+      y,
       normalizedX,
-
       normalizedY,
+      normalizedZ,
 
       clipW:
-        clip[3]
+        clip[3],
+
+      visible,
+      compassOverlap
     });
   }
 
@@ -1820,6 +2042,7 @@
     return Object.freeze({
       layer,
       viewDepth,
+
       compassPlaneViewDepth:
         state.compassPlaneViewDepth,
 
@@ -2127,6 +2350,10 @@
     Object.assign(
       RECEIPT,
       {
+        initialized:
+          state.initialized &&
+          !state.disposed,
+
         status:
           state.status,
 
@@ -2235,6 +2462,11 @@
         CONTRACT.moduleVersion;
 
       state.root.dataset
+        .archcoinCompositorControllerVersion =
+        CONTRACT
+          .requiredControllerModuleVersion;
+
+      state.root.dataset
         .archcoinCompassPlaneViewDepth =
         String(
           state.compassPlaneViewDepth
@@ -2288,6 +2520,15 @@
 
     state.stackingValidated =
       false;
+
+    state.viewMatrix =
+      null;
+
+    state.projectionMatrix =
+      null;
+
+    state.viewProjectionMatrix =
+      null;
 
     if (state.root) {
       delete state.root.dataset
@@ -2344,6 +2585,10 @@
         "false";
 
       state.root.dataset
+        .archcoinCompositorCompassOverlapMeasurementOwned =
+        "true";
+
+      state.root.dataset
         .archcoinCompositorCrystalGeometryOwned =
         "false";
 
@@ -2367,6 +2612,9 @@
       rollbackInitialization();
 
       publishReceipt({
+        initialized:
+          false,
+
         status:
           "failed",
 
@@ -2447,6 +2695,15 @@
     state.frontVisibleNodeCount =
       0;
 
+    state.viewMatrix =
+      null;
+
+    state.projectionMatrix =
+      null;
+
+    state.viewProjectionMatrix =
+      null;
+
     if (state.root) {
       delete state.root.dataset
         .archcoinCompositeStackingValidated;
@@ -2460,6 +2717,9 @@
     }
 
     publishReceipt({
+      initialized:
+        false,
+
       status:
         "disposed",
 
@@ -2507,6 +2767,7 @@
       getViewMatrix,
       getProjectionMatrix,
       getCompassPlaneViewDepth,
+      getCompassFieldBounds,
       projectWorldPoint,
       classifyDepth,
       partitionNodes,
@@ -2519,7 +2780,7 @@
 })();
 
 /*
-AUDRALIA_ARCHCOIN_COMPOSITOR_SOURCE_RESULT_v1
+AUDRALIA_ARCHCOIN_COMPOSITOR_BOUNDED_CONTROLLER_7_INTEGRATION_RESULT_v2
 
 Artifact:
  /products/archcoin/index.compositor.js
@@ -2528,38 +2789,56 @@ Module:
  DGB_ARCHCOIN_COMPOSITOR
  1.0.0-camera-depth-layer-orchestration
 
-Owned:
-- camera presets
-- camera interpolation
-- viewport response
-- view matrix
-- projection matrix
-- Compass-plane view depth
-- world-to-screen projection
-- front/rear depth classification
-- hysteresis
-- rear/front canvas construction
-- page-level layer order
-- composite-pass orchestration
-- style rollback
-- layer disposal
+Required controller:
+ DGB_ARCHCOIN_CONTROLLER
+ 7.0.0-controller-interaction-semantic-priority
 
-Not owned:
-- controller writes
-- gesture commits
-- route entry
-- Compass navigation
+Compatible crystals:
+ DGB_ARCHCOIN_CRYSTALS
+ 2.0.0-controller-decoupled-crystal-renderer
+
+Bounded corrections:
+- replaced obsolete Controller 6.0.1 requirement
+- accepts exact Controller 7.0.0 module version
+- preserved compositor public module version
+- preserved all existing compositor public surfaces
+- preserved camera presets
+- preserved camera interpolation
+- preserved view and projection mathematics
+- preserved Compass-plane depth calculation
+- preserved depth hysteresis
+- preserved rear/front classification
+- preserved rear/front canvas construction
+- preserved layer ordering
+- preserved composite-pass orchestration
+- added cached view-projection matrix
+- added receipt initialized field required by crystals lifecycle inspection
+- added field-local Compass bounds
+- added projected Compass-overlap measurement
+- extended projectWorldPoint() with normalizedZ
+- extended projectWorldPoint() with visible
+- extended projectWorldPoint() with compassOverlap
+- changed data-archcoin-crystals-canvas value to rear/front layer identity
+- retained x, y, normalizedX, normalizedY, and clipW
+
+Not changed:
+- controller
+- crystals
+- HTML
+- CSS
 - Compass geometry
-- Compass renderer lifecycle
-- crystal meshes
+- Compass renderer
+- crystal geometry
 - crystal materials
-- crystal animation
-- semantic-control relocation
+- crystal shaders
+- navigation authority
+- semantic interaction authority
+- route authority
 
 Runtime execution:
 NOT PERFORMED
 
-Visual pass:
+Visual acceptance:
 NOT CLAIMED
 
 Production authorization:

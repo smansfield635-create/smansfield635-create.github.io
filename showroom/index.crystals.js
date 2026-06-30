@@ -1,112 +1,104 @@
 /* TARGET FILE: /showroom/index.crystals.js */
 /* TNT FULL-FILE REPLACEMENT */
-/* SHOWROOM_FOUR_BY_FOUR_NARRATIVE_CONSTELLATION_CRYSTALS_TNT_v4 */
+/* SHOWROOM_FOUR_BY_FOUR_NARRATIVE_CONSTELLATION_CRYSTALS_TNT_v7 */
 /*
-  Static final-review candidate.
+  Accepted dependencies:
+  - window.SHOWROOM_MIRRORLAND_CONSTELLATION_CONTROLLER
+  - controller module:
+    SHOWROOM_MIRRORLAND_CONSTELLATION_CONTROLLER
+    7.0.0-controller-interaction-semantic-priority
+  - window.SHOWROOM_COMPOSITOR
+  - compositor contract:
+    SHOWROOM_CONSTELLATION_SINGLE_FRAME_COMPOSITOR_TNT_v5
 
-  Controller dependency:
-  - SHOWROOM_MIRRORLAND_CONSTELLATION_CONTROLLER_TNT_v5
+  Crystals authority:
+  - cardinal and room crystal geometry;
+  - crystal mesh, material, shader, buffer, and WebGL-context lifecycle;
+  - canonical four-cardinal and four-room-cluster positions;
+  - controller-quaternion-driven visual targets;
+  - bounded visual interpolation and ambient crystal animation;
+  - semantic-control association;
+  - compositor node registration;
+  - one compositor renderer registration;
+  - exclusive rear/front clear callbacks;
+  - projection-aware rear/front drawing;
+  - crystal readiness, degradation, recovery, failure, and disposal.
 
-  Compositor dependency:
-  - SHOWROOM_CONSTELLATION_SINGLE_FRAME_COMPOSITOR_TNT_v2
+  Frozen non-additive presentation rule:
+  - CONSTELLATION exposes only four cardinal crystals;
+  - CLUSTER exposes only the four rooms in the active cluster;
+  - outgoing populations become compositor-invisible immediately;
+  - inactive nodes publish visible:false immediately;
+  - outgoing populations do not visually fade after replacement;
+  - only the newly accepted population may interpolate into view.
 
-  Owned:
-  - cardinal and child crystal CPU geometry;
-  - crystal materials, palettes, shaders, GPU programs, and GPU buffers;
-  - crystal world targets and interpolated visual state;
-  - bounded crystal animation-state scheduling;
-  - WebGL drawing through registered compositor callbacks;
-  - canonical semantic-control association;
-  - crystal renderer and node registration lifecycle;
-  - crystal context-loss recovery and bounded receipts.
-
-  Not owned:
-  - navigation or semantic authorization;
-  - controller state commitment;
-  - pointer, tap, drag, swipe, or gesture interpretation;
-  - camera eye, camera target, view matrices, or projection matrices;
-  - world-to-screen projection;
-  - front/rear classification;
-  - compositor canvas construction, dimensions, or disposal;
-  - Compass state, geometry, renderer, navigation, or lifecycle;
-  - semantic-control creation, relocation, styling, or visibility;
-  - front-host visibility;
-  - fallback visibility;
-  - controller-reflected root readiness attributes.
-
-  Lifecycle policy:
-  - core construction may complete before compositor readiness;
-  - compositor runtime surfaces activate exactly once after controller-certified
-    compositor readiness;
-  - temporary WebGL context loss retains controller-level crystal readiness,
-    marks crystals internally degraded, suspends drawing/animation requests,
-    retains registrations, and attempts recovery;
-  - successful context restoration resumes drawing without emitting a second
-    crystals-ready event solely for recovery;
-  - failed restoration is terminal and tears down all crystal-owned runtime
-    surfaces.
+  Explicit exclusions:
+  - no navigation-state mutation;
+  - no selected-wing or selected-room mutation;
+  - no canonical-route ownership;
+  - no controller-transition ownership;
+  - no Compass navigation, geometry, rendering, or lifecycle ownership;
+  - no compositor camera or matrix ownership;
+  - no world-to-screen projection;
+  - no front/rear classification;
+  - no interaction-priority ownership;
+  - no pointer or gesture interpretation;
+  - no return behavior;
+  - no controller-panel ownership;
+  - no front-host visibility ownership;
+  - no Diamond or Window ownership;
+  - no page-level layer ordering;
+  - no semantic-control creation, replacement, removal, hiding, or relocation.
 */
 
 (() => {
   "use strict";
 
   const CONTRACT =
-    "SHOWROOM_FOUR_BY_FOUR_NARRATIVE_CONSTELLATION_CRYSTALS_TNT_v4";
+    "SHOWROOM_FOUR_BY_FOUR_NARRATIVE_CONSTELLATION_CRYSTALS_TNT_v7";
 
   const OWNER =
     "/showroom/index.crystals.js";
 
-  const CONTROLLER_CONTRACT =
-    "SHOWROOM_MIRRORLAND_CONSTELLATION_CONTROLLER_TNT_v5";
+  const CONTROLLER_GLOBAL =
+    "SHOWROOM_MIRRORLAND_CONSTELLATION_CONTROLLER";
+
+  const CONTROLLER_MODULE_ID =
+    "SHOWROOM_MIRRORLAND_CONSTELLATION_CONTROLLER";
+
+  const CONTROLLER_MODULE_VERSION =
+    "7.0.0-controller-interaction-semantic-priority";
+
+  const COMPOSITOR_GLOBAL =
+    "SHOWROOM_COMPOSITOR";
 
   const COMPOSITOR_CONTRACT =
-    "SHOWROOM_CONSTELLATION_SINGLE_FRAME_COMPOSITOR_TNT_v2";
+    "SHOWROOM_CONSTELLATION_SINGLE_FRAME_COMPOSITOR_TNT_v5";
 
   const RENDERER_ID =
-    "showroom-crystal-renderer";
+    "showroom-crystals-renderer";
 
   const EVENTS = Object.freeze({
-    controllerReady:
-      "showroom:controller-ready",
+    controllerFailure:
+      "SHOWROOM_CONTROLLER_FAILURE",
 
-    frameChanged:
-      "showroom:frame-state-changed",
-
-    stateChanged:
-      "showroom:state-changed",
-
-    previewChanged:
-      "showroom:preview-changed",
-
-    clusterChanged:
-      "showroom:cluster-changed",
-
-    frontChanged:
-      "showroom:front-changed",
-
-    enhancementReadinessChanged:
-      "showroom:enhancement-readiness-changed",
-
-    compositorReady:
-      "showroom:compositor-ready",
-
-    compositorFailed:
-      "showroom:compositor-failed",
+    compositorFailure:
+      "SHOWROOM_COMPOSITOR_FAILURE",
 
     compositorDisposed:
-      "showroom:compositor-disposed",
+      "SHOWROOM_COMPOSITOR_DISPOSED",
 
     crystalsReady:
-      "showroom:crystals-ready",
+      "SHOWROOM_CRYSTALS_READY",
 
-    crystalsFailed:
-      "showroom:crystals-failed",
+    crystalsFailure:
+      "ARCHCOIN_CRYSTALS_RENDER_FAILURE",
 
     crystalsDisposed:
-      "showroom:crystals-disposed",
+      "SHOWROOM_CRYSTALS_DISPOSED",
 
     crystalsReceipt:
-      "showroom:crystals-receipt"
+      "SHOWROOM_CRYSTALS_RECEIPT"
   });
 
   const SELECTORS = Object.freeze({
@@ -114,19 +106,36 @@
       "[data-showroom-root]",
 
     field:
-      "[data-showroom-orbit-field]",
+      "[data-showroom-orbit-field][data-showroom-scene-field], " +
+      "[data-showroom-orbit-field], " +
+      "[data-showroom-scene-field]",
 
     semanticLayer:
       "[data-showroom-semantic-star-layer]",
 
     cardinalControls:
-      "[data-showroom-cardinal-control]",
+      "[data-showroom-cardinal-control][data-showroom-cardinal-id]",
 
-    childControls:
-      "[data-showroom-child-control]",
+    roomControls:
+      "[data-showroom-child-control][data-showroom-child-id]" +
+      "[data-showroom-cardinal-id]",
 
     receipt:
       "[data-showroom-crystals-receipt]"
+  });
+
+  const ATTRIBUTES = Object.freeze({
+    ready:
+      "data-showroom-crystals-ready",
+
+    state:
+      "data-showroom-crystals-state",
+
+    contract:
+      "data-showroom-crystals-contract",
+
+    renderer:
+      "data-showroom-crystals-renderer"
   });
 
   const WINGS = Object.freeze([
@@ -136,23 +145,25 @@
     "west"
   ]);
 
-  const NODE_TYPES = Object.freeze({
+  const NODE_KINDS = Object.freeze({
     CARDINAL:
       "cardinal",
 
-    CHILD:
-      "child"
+    ROOM:
+      "room"
   });
 
-  const PRESENTATION_MODES = Object.freeze({
-    BASELINE:
-      "baseline",
-
+  const DISPLAY_MODES = Object.freeze({
     CONSTELLATION:
-      "constellation",
+      "CONSTELLATION",
 
     CLUSTER:
-      "cluster",
+      "CLUSTER"
+  });
+
+  const CONTEXT_IDS = Object.freeze({
+    REAR:
+      "rear",
 
     FRONT:
       "front"
@@ -172,134 +183,90 @@
       "PRIMARY_PORTAL"
   });
 
-  const CONTEXT_IDS = Object.freeze({
-    REAR:
-      "rear",
-
-    FRONT:
-      "front"
-  });
-
-  const CARDINAL_TARGETS = Object.freeze({
-    north:
-      Object.freeze({
-        x: 0,
-        y: 1.32,
-        z: -0.54
-      }),
-
-    east:
-      Object.freeze({
-        x: 1.50,
-        y: 0,
-        z: 0.62
-      }),
-
-    south:
-      Object.freeze({
-        x: 0,
-        y: -1.32,
-        z: 0.48
-      }),
-
-    west:
-      Object.freeze({
-        x: -1.50,
-        y: 0,
-        z: -0.66
-      })
-  });
-
-  const CHILD_LAYOUT = Object.freeze({
-    collapsed:
-      Object.freeze({
-        horizontalRadius:
-          1.08,
-
-        verticalRadius:
-          0.94,
-
-        depthRadius:
-          0.88,
-
-        centerOffset:
-          0.24
-      }),
-
-    expanded:
-      Object.freeze({
-        horizontalRadius:
-          1.26,
-
-        verticalRadius:
-          1.08,
-
-        depthRadius:
-          0.98,
-
-        centerOffset:
-          0.34
-      }),
-
-    positions:
-      Object.freeze({
-        1:
-          Object.freeze({
-            x: -0.72,
-            y: 0.70,
-            z: -0.54
-          }),
-
-        2:
-          Object.freeze({
-            x: 0.72,
-            y: 0.70,
-            z: 0.56
-          }),
-
-        3:
-          Object.freeze({
-            x: 0.72,
-            y: -0.70,
-            z: -0.48
-          }),
-
-        4:
-          Object.freeze({
-            x: -0.72,
-            y: -0.70,
-            z: 0.52
-          })
-      })
-  });
-
   const QUALITY = Object.freeze({
-    bloomDisableWidthPx:
-      420,
-
-    normalMatrixEpsilon:
-      1e-7,
-
     maximumDeltaSeconds:
       0.05,
 
-    transformSettleSpeed:
-      7.1,
+    interpolationSpeed:
+      8.2,
 
-    reducedMotionSettleSpeed:
-      24,
+    reducedMotionInterpolationSpeed:
+      26,
 
     ambientFrameIntervalMs:
       1000 / 30,
 
     cardinalHitRadius:
-      78,
+      76,
 
-    childHitRadius:
+    roomHitRadius:
       48,
 
-    visibilityThreshold:
-      0.035
+    visibleOpacityThreshold:
+      0.025,
+
+    haloDisableWidth:
+      420
+  });
+
+  const CARDINAL_BASE_POSITIONS = Object.freeze({
+    north:
+      Object.freeze([
+        0,
+        1.42,
+        -0.48
+      ]),
+
+    east:
+      Object.freeze([
+        1.58,
+        0,
+        0.54
+      ]),
+
+    south:
+      Object.freeze([
+        0,
+        -1.42,
+        0.44
+      ]),
+
+    west:
+      Object.freeze([
+        -1.58,
+        0,
+        -0.58
+      ])
+  });
+
+  const ROOM_BASE_POSITIONS = Object.freeze({
+    1:
+      Object.freeze([
+        -0.92,
+        0.82,
+        -0.46
+      ]),
+
+    2:
+      Object.freeze([
+        0.92,
+        0.82,
+        0.50
+      ]),
+
+    3:
+      Object.freeze([
+        0.92,
+        -0.82,
+        -0.42
+      ]),
+
+    4:
+      Object.freeze([
+        -0.92,
+        -0.82,
+        0.46
+      ])
   });
 
   const PALETTES = Object.freeze({
@@ -307,30 +274,30 @@
       Object.freeze({
         primary:
           Object.freeze([
-            0.76,
-            0.86,
-            1
+            0.70,
+            0.84,
+            1.00
           ]),
 
         secondary:
           Object.freeze([
-            0.94,
+            0.93,
             0.98,
-            1
+            1.00
           ]),
 
-        warmSpecular:
+        rim:
           Object.freeze([
-            1,
+            0.54,
+            0.76,
+            1.00
+          ]),
+
+        highlight:
+          Object.freeze([
+            1.00,
             0.97,
             0.86
-          ]),
-
-        coolRim:
-          Object.freeze([
-            0.62,
-            0.82,
-            1
           ])
       }),
 
@@ -338,30 +305,30 @@
       Object.freeze({
         primary:
           Object.freeze([
-            1,
-            0.76,
-            0.30
+            1.00,
+            0.67,
+            0.18
           ]),
 
         secondary:
           Object.freeze([
-            1,
-            0.92,
-            0.68
-          ]),
-
-        warmSpecular:
-          Object.freeze([
-            1,
+            1.00,
             0.91,
-            0.62
+            0.59
           ]),
 
-        coolRim:
+        rim:
           Object.freeze([
-            0.78,
-            0.86,
-            1
+            0.92,
+            0.70,
+            0.24
+          ]),
+
+        highlight:
+          Object.freeze([
+            1.00,
+            0.96,
+            0.80
           ])
       }),
 
@@ -369,30 +336,30 @@
       Object.freeze({
         primary:
           Object.freeze([
-            1,
-            0.54,
-            0.62
+            1.00,
+            0.48,
+            0.58
           ]),
 
         secondary:
           Object.freeze([
-            0.76,
-            0.56,
-            0.96
+            0.72,
+            0.49,
+            0.94
           ]),
 
-        warmSpecular:
+        rim:
           Object.freeze([
-            1,
+            0.75,
+            0.57,
+            1.00
+          ]),
+
+        highlight:
+          Object.freeze([
+            1.00,
             0.88,
             0.80
-          ]),
-
-        coolRim:
-          Object.freeze([
-            0.72,
-            0.64,
-            1
           ])
       }),
 
@@ -400,30 +367,30 @@
       Object.freeze({
         primary:
           Object.freeze([
-            0.28,
-            0.44,
-            0.96
+            0.23,
+            0.39,
+            0.95
           ]),
 
         secondary:
           Object.freeze([
-            0.48,
-            0.36,
-            0.86
+            0.47,
+            0.34,
+            0.84
           ]),
 
-        warmSpecular:
+        rim:
+          Object.freeze([
+            0.48,
+            0.67,
+            1.00
+          ]),
+
+        highlight:
           Object.freeze([
             0.91,
-            0.92,
-            1
-          ]),
-
-        coolRim:
-          Object.freeze([
-            0.54,
-            0.72,
-            1
+            0.94,
+            1.00
           ])
       })
   });
@@ -432,100 +399,16 @@
     CARDINAL:
       Object.freeze({
         baseScale:
-          0.76,
-
-        activeScale:
-          1.02,
-
-        selectedScale:
-          1.10,
-
-        previewScale:
-          1.08,
-
-        opacity:
-          0.95,
-
-        emissive:
-          0.19,
-
-        rim:
-          1.18,
-
-        sparkle:
-          0.22,
-
-        halo:
-          0.78,
-
-        float:
-          0.012,
-
-        spin:
-          0.15,
-
-        saturation:
-          1
-      }),
-
-    LOCAL:
-      Object.freeze({
-        baseScale:
-          0.66,
-
-        activeScale:
           0.82,
 
-        selectedScale:
-          0.91,
-
-        previewScale:
-          0.88,
-
-        opacity:
-          0.90,
-
-        emissive:
-          0.11,
-
-        rim:
-          0.84,
-
-        sparkle:
-          0.10,
-
-        halo:
-          0.38,
-
-        float:
-          0.007,
-
-        spin:
-          0.08,
-
-        saturation:
-          0.88
-      }),
-
-    PORTAL:
-      Object.freeze({
-        baseScale:
-          0.69,
-
         activeScale:
-          0.87,
-
-        selectedScale:
-          0.96,
-
-        previewScale:
-          0.94,
+          1.00,
 
         opacity:
-          0.93,
+          0.97,
 
         emissive:
-          0.17,
+          0.18,
 
         rim:
           1.12,
@@ -534,82 +417,133 @@
           0.18,
 
         halo:
-          0.62,
+          0.70,
 
-        float:
-          0.009,
+        idleSpin:
+          0.16,
 
-        spin:
+        idleFloat:
+          0.018
+      }),
+
+    LOCAL:
+      Object.freeze({
+        baseScale:
+          0.75,
+
+        activeScale:
+          0.88,
+
+        opacity:
+          0.93,
+
+        emissive:
           0.10,
 
-        saturation:
-          1
+        rim:
+          0.84,
+
+        sparkle:
+          0.08,
+
+        halo:
+          0.30,
+
+        idleSpin:
+          0.08,
+
+        idleFloat:
+          0.010
+      }),
+
+    PORTAL:
+      Object.freeze({
+        baseScale:
+          0.78,
+
+        activeScale:
+          0.92,
+
+        opacity:
+          0.95,
+
+        emissive:
+          0.16,
+
+        rim:
+          1.08,
+
+        sparkle:
+          0.16,
+
+        halo:
+          0.54,
+
+        idleSpin:
+          0.10,
+
+        idleFloat:
+          0.012
       }),
 
     PRIMARY_PORTAL:
       Object.freeze({
         baseScale:
-          0.74,
+          0.82,
 
         activeScale:
-          0.94,
-
-        selectedScale:
-          1.03,
-
-        previewScale:
-          1,
+          0.98,
 
         opacity:
-          0.96,
+          0.98,
 
         emissive:
-          0.22,
+          0.21,
 
         rim:
-          1.24,
+          1.22,
 
         sparkle:
-          0.22,
+          0.21,
 
         halo:
-          0.78,
+          0.72,
 
-        float:
-          0.009,
+        idleSpin:
+          0.11,
 
-        spin:
-          0.10,
-
-        saturation:
-          1
+        idleFloat:
+          0.013
       })
   });
 
   const state = {
-    root:
+    root: null,
+    field: null,
+    semanticLayer: null,
+    receipt: null,
+
+    controller: null,
+    compositor: null,
+    controllerFrame: null,
+
+    controllerBinding:
+      false,
+
+    controllerBound:
+      false,
+
+    pendingControllerFrame:
       null,
 
-    field:
+    frameUnsubscribe:
       null,
 
-    semanticLayer:
+    reducedMotionUnsubscribe:
       null,
 
-    receiptOutput:
-      null,
-
-    controller:
-      null,
-
-    compositor:
-      null,
-
-    controllerFrame:
-      null,
-
-    compositorFrame:
-      null,
+    listeners:
+      [],
 
     registry:
       new Map(),
@@ -626,28 +560,22 @@
     contexts:
       new Map(),
 
-    listeners:
-      [],
-
-    animationRaf:
-      0,
-
-    lastAnimationTime:
-      0,
-
-    lastAmbientRequestTime:
+    animationFrame:
       0,
 
     animationRunning:
       false,
 
+    lastAnimationTime:
+      0,
+
+    lastCompositorRequestTime:
+      0,
+
+    reducedMotion:
+      false,
+
     contextDegraded:
-      false,
-
-    runtimeSurfacesActivated:
-      false,
-
-    waitingForCompositor:
       false,
 
     initialized:
@@ -662,81 +590,96 @@
     readyPublished:
       false,
 
-    disposed:
+    held:
       false,
 
     failed:
       false,
 
+    disposed:
+      false,
+
     failureReason:
       "",
 
-    counters:
-      {
-        nodeRegistrations:
-          0,
+    counters: {
+      nodeRegistrations:
+        0,
 
-        nodeUnregistrations:
-          0,
+      nodeUnregistrations:
+        0,
 
-        rendererRegistrations:
-          0,
+      rendererRegistrations:
+        0,
 
-        rendererUnregistrations:
-          0,
+      rendererUnregistrations:
+        0,
 
-        rearDrawCalls:
-          0,
+      rearClears:
+        0,
 
-        frontDrawCalls:
-          0,
+      frontClears:
+        0,
 
-        rearFrames:
-          0,
+      rearFrames:
+        0,
 
-        frontFrames:
-          0,
+      frontFrames:
+        0,
 
-        contextLosses:
-          0,
+      lastRearDrawCalls:
+        0,
 
-        contextRestores:
-          0,
+      lastFrontDrawCalls:
+        0,
 
-        animationRequests:
-          0,
+      totalRearDrawCalls:
+        0,
 
-        failures:
-          0
-      }
+      totalFrontDrawCalls:
+        0,
+
+      contextLosses:
+        0,
+
+      contextRestores:
+        0,
+
+      animationRequests:
+        0,
+
+      holds:
+        0,
+
+      holdReleases:
+        0,
+
+      failures:
+        0
+    }
   };
 
-  const vertexShaderSource = `
+  const VERTEX_SHADER = `
     attribute vec3 aPosition;
     attribute vec3 aNormal;
-    attribute vec3 aColor;
-    attribute float aSparkleIndex;
+    attribute float aFacet;
 
     uniform mat4 uModel;
     uniform mat4 uView;
     uniform mat4 uProjection;
     uniform mat3 uNormalMatrix;
-
     uniform float uScale;
     uniform float uHaloPass;
     uniform float uHaloExpansion;
 
     varying vec3 vNormal;
-    varying vec3 vColor;
     varying vec3 vViewPosition;
-    varying vec3 vWorldPosition;
-    varying float vSparkleIndex;
+    varying float vFacet;
     varying float vHaloPass;
 
     void main() {
       vec3 position =
-        aPosition *
-        uScale;
+        aPosition * uScale;
 
       if (uHaloPass > 0.5) {
         position +=
@@ -746,10 +689,7 @@
 
       vec4 world =
         uModel *
-        vec4(
-          position,
-          1.0
-        );
+        vec4(position, 1.0);
 
       vec4 view =
         uView *
@@ -761,17 +701,11 @@
           aNormal
         );
 
-      vColor =
-        aColor;
-
       vViewPosition =
         view.xyz;
 
-      vWorldPosition =
-        world.xyz;
-
-      vSparkleIndex =
-        aSparkleIndex;
+      vFacet =
+        aFacet;
 
       vHaloPass =
         uHaloPass;
@@ -782,14 +716,12 @@
     }
   `;
 
-  const fragmentShaderSource = `
+  const FRAGMENT_SHADER = `
     precision mediump float;
 
     varying vec3 vNormal;
-    varying vec3 vColor;
     varying vec3 vViewPosition;
-    varying vec3 vWorldPosition;
-    varying float vSparkleIndex;
+    varying float vFacet;
     varying float vHaloPass;
 
     uniform float uTime;
@@ -799,128 +731,56 @@
     uniform float uSparkleStrength;
     uniform float uHaloStrength;
     uniform float uReducedMotion;
-    uniform float uSaturation;
 
     uniform vec3 uPrimaryColor;
     uniform vec3 uSecondaryColor;
-    uniform vec3 uWarmSpecular;
-    uniform vec3 uCoolRim;
-
-    float hash31(vec3 point) {
-      return fract(
-        sin(
-          dot(
-            point,
-            vec3(
-              12.9898,
-              78.233,
-              37.719
-            )
-          )
-        ) *
-        43758.5453
-      );
-    }
+    uniform vec3 uRimColor;
+    uniform vec3 uHighlightColor;
 
     void main() {
       vec3 normal =
         normalize(vNormal);
 
       vec3 viewDirection =
-        normalize(
-          -vViewPosition
-        );
+        normalize(-vViewPosition);
 
-      float facingToCamera =
-        dot(
-          normal,
-          viewDirection
-        );
-
-      float rearSuppression =
-        smoothstep(
-          -0.22,
-          0.34,
-          facingToCamera
-        );
-
-      float sideRim =
-        pow(
-          1.0 -
-          abs(
-            facingToCamera
+      float facing =
+        max(
+          dot(
+            normal,
+            viewDirection
           ),
-          2.35
+          0.0
         );
 
       float fresnel =
         pow(
-          1.0 -
-          max(
-            facingToCamera,
-            0.0
-          ),
-          2.10
+          1.0 - facing,
+          2.25
         );
 
-      vec3 keyDirection =
+      vec3 lightDirection =
         normalize(
           vec3(
-            0.46,
-            0.78,
-            0.64
-          )
-        );
-
-      vec3 fillDirection =
-        normalize(
-          vec3(
-            -0.72,
-            0.20,
+            0.42,
+            0.76,
             0.58
           )
         );
 
-      vec3 rimDirection =
-        normalize(
-          vec3(
-            0.10,
-            -0.48,
-            0.88
-          )
-        );
-
-      float key =
-        max(
-          dot(
-            normal,
-            keyDirection
-          ),
-          0.0
-        );
-
-      float fill =
-        max(
-          dot(
-            normal,
-            fillDirection
-          ),
-          0.0
-        );
-
-      float rear =
-        max(
-          dot(
-            normal,
-            rimDirection
-          ),
-          0.0
-        );
-
       vec3 halfDirection =
         normalize(
-          keyDirection +
+          lightDirection +
           viewDirection
+        );
+
+      float diffuse =
+        max(
+          dot(
+            normal,
+            lightDirection
+          ),
+          0.0
         );
 
       float specular =
@@ -935,88 +795,35 @@
           30.0
         );
 
-      float facetBand =
-        pow(
-          abs(
-            dot(
-              normal,
-              normalize(
-                vec3(
-                  0.45,
-                  0.72,
-                  0.53
-                )
-              )
-            )
-          ),
-          5.0
-        );
-
-      float sparkleSeed =
-        hash31(
-          floor(
-            (
-              normal +
-              vWorldPosition
-            ) *
-            18.0 +
-            vSparkleIndex
-          )
-        );
-
       float sparklePhase =
         uReducedMotion > 0.5
           ? 1.0
           : (
-              0.76 +
+              0.70 +
+              0.30 *
               sin(
-                uTime *
-                1.55 +
-                sparkleSeed *
-                6.28318
-              ) *
-              0.24
+                uTime * 1.7 +
+                vFacet * 8.2
+              )
             );
 
       float sparkle =
         smoothstep(
-          0.76,
+          0.72,
           1.0,
           specular +
-          facetBand *
-          0.34
+          vFacet * 0.28
         ) *
         sparklePhase *
-        uSparkleStrength *
-        rearSuppression;
+        uSparkleStrength;
 
-      vec3 mixedBase =
+      vec3 base =
         mix(
           uSecondaryColor,
           uPrimaryColor,
           clamp(
-            vColor.r,
-            0.0,
-            1.0
-          )
-        );
-
-      float luminance =
-        dot(
-          mixedBase,
-          vec3(
-            0.2126,
-            0.7152,
-            0.0722
-          )
-        );
-
-      vec3 base =
-        mix(
-          vec3(luminance),
-          mixedBase,
-          clamp(
-            uSaturation,
+            0.34 +
+            diffuse * 0.66,
             0.0,
             1.0
           )
@@ -1024,37 +831,21 @@
 
       if (vHaloPass > 0.5) {
         vec3 haloColor =
-          (
-            base *
-            0.72 +
-            uCoolRim *
-            fresnel *
-            0.56
-          ) *
-          (
-            0.64 +
-            fresnel *
-            1.16 +
-            sideRim *
-            0.42 +
-            rear *
-            0.20
-          ) *
-          uHaloStrength;
+          base * 0.45 +
+          uRimColor *
+          fresnel *
+          0.92;
 
         float haloAlpha =
           clamp(
             (
-              0.035 +
-              fresnel *
-              0.17 +
-              sideRim *
-              0.08
+              0.025 +
+              fresnel * 0.18
             ) *
             uHaloStrength *
             uOpacity,
             0.0,
-            0.32
+            0.28
           );
 
         gl_FragColor =
@@ -1066,91 +857,39 @@
         return;
       }
 
-      float diffuse =
-        0.24 +
-        key *
-        0.80 +
-        fill *
-        0.28 +
-        rear *
-        0.13;
-
-      vec3 lit =
+      vec3 color =
         base *
-        diffuse;
+        (
+          0.22 +
+          diffuse * 0.82
+        );
 
-      vec3 warmHighlight =
-        uWarmSpecular *
+      color +=
+        uHighlightColor *
         specular *
-        (
-          0.86 +
-          uRimStrength *
-          0.20
-        ) *
-        rearSuppression;
+        0.92;
 
-      vec3 primaryRim =
-        base *
-        (
-          fresnel *
-          0.66 +
-          sideRim *
-          0.34
-        ) *
+      color +=
+        uRimColor *
+        fresnel *
         uRimStrength;
 
-      vec3 secondaryRim =
-        uCoolRim *
-        (
-          fresnel *
-          0.24 +
-          sideRim *
-          0.15
-        ) *
-        uRimStrength;
-
-      vec3 emissive =
+      color +=
         base *
         uEmissive;
 
-      vec3 sparkleColor =
-        uWarmSpecular *
+      color +=
+        uHighlightColor *
         sparkle;
-
-      float rearDim =
-        mix(
-          0.60,
-          1.0,
-          rearSuppression
-        );
-
-      vec3 color =
-        (
-          lit +
-          warmHighlight +
-          primaryRim +
-          secondaryRim +
-          emissive +
-          sparkleColor
-        ) *
-        rearDim;
-
-      float alpha =
-        clamp(
-          uOpacity *
-          (
-            0.72 +
-            fresnel *
-            0.08
-          ),
-          0.08,
-          1.0
-        );
 
       gl_FragColor =
         vec4(
           color,
-          alpha
+          clamp(
+            uOpacity,
+            0.0,
+            1.0
+          )
         );
     }
   `;
@@ -1178,14 +917,20 @@
 
   function normalize(value) {
     return String(
-      value ||
-      ""
+      value == null
+        ? ""
+        : value
     ).trim();
   }
 
   function normalizeLower(value) {
     return normalize(value)
       .toLowerCase();
+  }
+
+  function normalizeUpper(value) {
+    return normalize(value)
+      .toUpperCase();
   }
 
   function normalizeWing(value) {
@@ -1238,6 +983,10 @@
     );
   }
 
+  function nowIso() {
+    return new Date().toISOString();
+  }
+
   function isCanvas(value) {
     return (
       typeof HTMLCanvasElement !==
@@ -1245,11 +994,6 @@
       value instanceof
         HTMLCanvasElement
     );
-  }
-
-  function nowIso() {
-    return new Date()
-      .toISOString();
   }
 
   function freezePlain(value) {
@@ -1263,9 +1007,7 @@
 
     if (Array.isArray(value)) {
       return Object.freeze(
-        value.map(
-          freezePlain
-        )
+        value.map(freezePlain)
       );
     }
 
@@ -1282,9 +1024,7 @@
         freezePlain(entry);
     }
 
-    return Object.freeze(
-      output
-    );
+    return Object.freeze(output);
   }
 
   function dispatch(
@@ -1299,8 +1039,11 @@
         owner:
           OWNER,
 
-        controllerContract:
-          CONTROLLER_CONTRACT,
+        controllerModuleId:
+          CONTROLLER_MODULE_ID,
+
+        controllerModuleVersion:
+          CONTROLLER_MODULE_VERSION,
 
         compositorContract:
           COMPOSITOR_CONTRACT,
@@ -1324,38 +1067,6 @@
     return payload;
   }
 
-  function countNodesByType(type) {
-    let count = 0;
-
-    for (
-      const node
-      of state.registry.values()
-    ) {
-      if (
-        node.type ===
-        type
-      ) {
-        count += 1;
-      }
-    }
-
-    return count;
-  }
-
-  function isContextReady(id) {
-    const renderer =
-      state.contexts.get(id);
-
-    return Boolean(
-      renderer &&
-      renderer.available &&
-      renderer.contextLost !==
-        true &&
-      renderer.gl &&
-      renderer.program
-    );
-  }
-
   function publishReceipt(
     event,
     detail = {}
@@ -1368,12 +1079,6 @@
         owner:
           OWNER,
 
-        controllerContract:
-          CONTROLLER_CONTRACT,
-
-        compositorContract:
-          COMPOSITOR_CONTRACT,
-
         event,
 
         timestamp:
@@ -1385,45 +1090,34 @@
         ready:
           state.ready,
 
-        disposed:
-          state.disposed,
-
-        failed:
-          state.failed,
+        held:
+          state.held,
 
         contextDegraded:
           state.contextDegraded,
 
-        runtimeSurfacesActivated:
-          state
-            .runtimeSurfacesActivated,
+        failed:
+          state.failed,
 
-        waitingForCompositor:
-          state
-            .waitingForCompositor,
+        disposed:
+          state.disposed,
 
         cardinalCount:
-          countNodesByType(
-            NODE_TYPES.CARDINAL
+          countNodesByKind(
+            NODE_KINDS.CARDINAL
           ),
 
-        childCount:
-          countNodesByType(
-            NODE_TYPES.CHILD
+        roomCount:
+          countNodesByKind(
+            NODE_KINDS.ROOM
           ),
-
-        nodeCount:
-          state.registry.size,
 
         registeredNodeCount:
-          state
-            .nodeRegistrations
-            .size,
+          state.nodeRegistrations.size,
 
         rendererRegistered:
           Boolean(
-            state
-              .rendererRegistration
+            state.rendererRegistration
           ),
 
         rearContextReady:
@@ -1436,53 +1130,26 @@
             CONTEXT_IDS.FRONT
           ),
 
-        renderRafOwned:
-          false,
-
-        animationStateSchedulerOwned:
-          true,
-
-        navigationOwned:
-          false,
-
-        classificationOwned:
-          false,
-
-        canvasLifecycleOwned:
-          false,
-
-        registeredRendererLifecycleOwned:
-          true,
-
-        semanticControlCreationOwned:
-          false,
-
-        semanticControlPositioningOwned:
-          false,
-
-        counters:
-          {
-            ...state.counters
-          },
+        counters: {
+          ...state.counters
+        },
 
         ...detail
       });
 
-    const serialized =
-      JSON.stringify(
-        payload
-      );
+    if (state.receipt) {
+      const serialized =
+        JSON.stringify(payload);
 
-    if (state.receiptOutput) {
       if (
         "value" in
-        state.receiptOutput
+        state.receipt
       ) {
-        state.receiptOutput.value =
+        state.receipt.value =
           serialized;
       }
 
-      state.receiptOutput.textContent =
+      state.receipt.textContent =
         serialized;
     }
 
@@ -1494,6 +1161,37 @@
     return payload;
   }
 
+  function setRootState(
+    ready,
+    value
+  ) {
+    if (!state.root) {
+      return;
+    }
+
+    state.root.setAttribute(
+      ATTRIBUTES.ready,
+      ready
+        ? "true"
+        : "false"
+    );
+
+    state.root.setAttribute(
+      ATTRIBUTES.state,
+      value
+    );
+
+    state.root.setAttribute(
+      ATTRIBUTES.contract,
+      CONTRACT
+    );
+
+    state.root.setAttribute(
+      ATTRIBUTES.renderer,
+      RENDERER_ID
+    );
+  }
+
   function addListener(
     target,
     type,
@@ -1502,8 +1200,7 @@
   ) {
     if (
       !target ||
-      typeof target
-        .addEventListener !==
+      typeof target.addEventListener !==
         "function"
     ) {
       return;
@@ -1515,15 +1212,13 @@
       options
     );
 
-    state.listeners.push(
-      () => {
-        target.removeEventListener(
-          type,
-          handler,
-          options
-        );
-      }
-    );
+    state.listeners.push(() => {
+      target.removeEventListener(
+        type,
+        handler,
+        options
+      );
+    });
   }
 
   function removeListeners() {
@@ -1534,9 +1229,24 @@
       try {
         remove();
       } catch {
-        /* Best-effort listener disposal. */
+        /* Best-effort disposal. */
       }
     }
+  }
+
+  function countNodesByKind(kind) {
+    let count = 0;
+
+    for (
+      const node
+      of state.registry.values()
+    ) {
+      if (node.kind === kind) {
+        count += 1;
+      }
+    }
+
+    return count;
   }
 
   function vectorLength(vector) {
@@ -1560,8 +1270,7 @@
 
     if (
       !Number.isFinite(length) ||
-      length <=
-        1e-12
+      length <= 1e-12
     ) {
       return fallback.slice();
     }
@@ -1570,6 +1279,17 @@
       vector[0] / length,
       vector[1] / length,
       vector[2] / length
+    ];
+  }
+
+  function subtract(
+    first,
+    second
+  ) {
+    return [
+      first[0] - second[0],
+      first[1] - second[1],
+      first[2] - second[2]
     ];
   }
 
@@ -1589,14 +1309,153 @@
     ];
   }
 
-  function subtract(
-    first,
-    second
-  ) {
+  function normalizeQuaternion(value) {
+    const source =
+      Array.isArray(value)
+        ? value
+        : (
+            value &&
+            Array.isArray(
+              value.quaternion
+            )
+              ? value.quaternion
+              : null
+          );
+
+    if (
+      !source ||
+      source.length !== 4
+    ) {
+      return [
+        0,
+        0,
+        0,
+        1
+      ];
+    }
+
+    const quaternion = [
+      finiteNumber(
+        source[0],
+        0
+      ),
+
+      finiteNumber(
+        source[1],
+        0
+      ),
+
+      finiteNumber(
+        source[2],
+        0
+      ),
+
+      finiteNumber(
+        source[3],
+        1
+      )
+    ];
+
+    const length =
+      Math.hypot(
+        quaternion[0],
+        quaternion[1],
+        quaternion[2],
+        quaternion[3]
+      );
+
+    if (
+      !Number.isFinite(length) ||
+      length <= 1e-9
+    ) {
+      return [
+        0,
+        0,
+        0,
+        1
+      ];
+    }
+
     return [
-      first[0] - second[0],
-      first[1] - second[1],
-      first[2] - second[2]
+      quaternion[0] / length,
+      quaternion[1] / length,
+      quaternion[2] / length,
+      quaternion[3] / length
+    ];
+  }
+
+  function rotateVectorByQuaternion(
+    vector,
+    quaternionValue
+  ) {
+    const quaternion =
+      normalizeQuaternion(
+        quaternionValue
+      );
+
+    const x =
+      quaternion[0];
+
+    const y =
+      quaternion[1];
+
+    const z =
+      quaternion[2];
+
+    const w =
+      quaternion[3];
+
+    const vx =
+      vector[0];
+
+    const vy =
+      vector[1];
+
+    const vz =
+      vector[2];
+
+    const tx =
+      2 *
+      (
+        y * vz -
+        z * vy
+      );
+
+    const ty =
+      2 *
+      (
+        z * vx -
+        x * vz
+      );
+
+    const tz =
+      2 *
+      (
+        x * vy -
+        y * vx
+      );
+
+    return [
+      vx +
+        w * tx +
+        (
+          y * tz -
+          z * ty
+        ),
+
+      vy +
+        w * ty +
+        (
+          z * tx -
+          x * tz
+        ),
+
+      vz +
+        w * tz +
+        (
+          x * ty -
+          y * tx
+        )
     ];
   }
 
@@ -1614,37 +1473,36 @@
     right
   ) {
     const output =
-      new Array(16)
-        .fill(0);
+      new Array(16).fill(0);
 
     for (
-      let row = 0;
-      row < 4;
-      row += 1
+      let column = 0;
+      column < 4;
+      column += 1
     ) {
       for (
-        let column = 0;
-        column < 4;
-        column += 1
+        let row = 0;
+        row < 4;
+        row += 1
       ) {
-        for (
-          let index = 0;
-          index < 4;
-          index += 1
-        ) {
-          output[
-            column * 4 +
-            row
-          ] +=
-            left[
-              index * 4 +
-              row
-            ] *
+        output[
+          column * 4 +
+          row
+        ] =
+          left[row] *
+            right[column * 4] +
+          left[4 + row] *
             right[
-              column * 4 +
-              index
+              column * 4 + 1
+            ] +
+          left[8 + row] *
+            right[
+              column * 4 + 2
+            ] +
+          left[12 + row] *
+            right[
+              column * 4 + 3
             ];
-        }
       }
     }
 
@@ -1659,9 +1517,14 @@
     const matrix =
       identity4();
 
-    matrix[12] = x;
-    matrix[13] = y;
-    matrix[14] = z;
+    matrix[12] =
+      x;
+
+    matrix[13] =
+      y;
+
+    matrix[14] =
+      z;
 
     return matrix;
   }
@@ -1712,34 +1575,34 @@
   }
 
   function inverseTransposeNormalMatrix3(
-    modelView
+    matrix
   ) {
     const a00 =
-      modelView[0];
+      matrix[0];
 
     const a01 =
-      modelView[4];
+      matrix[4];
 
     const a02 =
-      modelView[8];
+      matrix[8];
 
     const a10 =
-      modelView[1];
+      matrix[1];
 
     const a11 =
-      modelView[5];
+      matrix[5];
 
     const a12 =
-      modelView[9];
+      matrix[9];
 
     const a20 =
-      modelView[2];
+      matrix[2];
 
     const a21 =
-      modelView[6];
+      matrix[6];
 
     const a22 =
-      modelView[10];
+      matrix[10];
 
     const b01 =
       a22 * a11 -
@@ -1759,19 +1622,13 @@
       a02 * b21;
 
     if (
-      !Number.isFinite(
-        determinant
-      ) ||
-      Math.abs(
-        determinant
-      ) <=
-        QUALITY
-          .normalMatrixEpsilon
+      !Number.isFinite(determinant) ||
+      Math.abs(determinant) <= 1e-8
     ) {
       return [
-        a00, a10, a20,
-        a01, a11, a21,
-        a02, a12, a22
+        1, 0, 0,
+        0, 1, 0,
+        0, 0, 1
       ];
     }
 
@@ -1831,15 +1688,15 @@
     ];
   }
 
-  function createDiamondMesh(options) {
+  function createCrystalMesh(options) {
     const points =
       options.points;
 
     const radius =
       options.radius;
 
-    const inner =
-      options.inner;
+    const innerRadius =
+      options.innerRadius;
 
     const depth =
       options.depth;
@@ -1847,20 +1704,22 @@
     const crown =
       options.crown;
 
-    const verticalCompression =
-      options.verticalCompression;
-
-    const outerRidge =
-      options.outerRidge;
-
-    const innerRidge =
-      options.innerRidge;
+    const compression =
+      options.compression;
 
     const vertices = [];
-    const faces = [];
+    const triangles = [];
 
-    function add(point) {
-      vertices.push(point);
+    function addVertex(
+      x,
+      y,
+      z
+    ) {
+      vertices.push([
+        x,
+        y,
+        z
+      ]);
 
       return (
         vertices.length -
@@ -1868,12 +1727,12 @@
       );
     }
 
-    function face(
+    function addTriangle(
       first,
       second,
       third
     ) {
-      faces.push([
+      triangles.push([
         first,
         second,
         third
@@ -1881,45 +1740,28 @@
     }
 
     const frontApex =
-      add([
-        0,
-        0,
-        depth
-      ]);
-
-    const rearApex =
-      add([
-        0,
-        0,
-        -depth
-      ]);
-
-    const frontCrown =
-      add([
+      addVertex(
         0,
         0,
         depth + crown
-      ]);
+      );
 
-    const rearCrown =
-      add([
+    const rearApex =
+      addVertex(
         0,
         0,
-        -depth -
-          crown * 0.72
-      ]);
+        -depth
+      );
 
-    const perimeter = [];
-    const innerRing = [];
-    const frontBevel = [];
-    const rearBevel = [];
+    const outer = [];
+    const inner = [];
 
     for (
       let index = 0;
       index < points * 2;
       index += 1
     ) {
-      const isOuterPoint =
+      const outerPoint =
         index % 2 === 0;
 
       const angle =
@@ -1935,159 +1777,85 @@
         Math.PI / 2;
 
       const activeRadius =
-        isOuterPoint
+        outerPoint
           ? radius
-          : inner;
+          : innerRadius;
 
-      const ridge =
-        isOuterPoint
-          ? outerRidge
-          : innerRidge;
-
-      perimeter.push(
-        add([
+      outer.push(
+        addVertex(
           Math.cos(angle) *
             activeRadius,
 
           Math.sin(angle) *
             activeRadius *
-            verticalCompression,
+            compression,
 
-          ridge
-        ])
+          outerPoint
+            ? 0.04
+            : -0.02
+        )
       );
 
-      innerRing.push(
-        add([
+      inner.push(
+        addVertex(
           Math.cos(angle) *
             activeRadius *
-            0.38,
+            0.42,
 
           Math.sin(angle) *
             activeRadius *
-            verticalCompression *
-            0.38,
+            compression *
+            0.42,
 
-          depth * 0.14
-        ])
-      );
-
-      frontBevel.push(
-        add([
-          Math.cos(angle) *
-            activeRadius *
-            0.72,
-
-          Math.sin(angle) *
-            activeRadius *
-            verticalCompression *
-            0.72,
-
-          depth * 0.52
-        ])
-      );
-
-      rearBevel.push(
-        add([
-          Math.cos(angle) *
-            activeRadius *
-            0.68,
-
-          Math.sin(angle) *
-            activeRadius *
-            verticalCompression *
-            0.68,
-
-          -depth * 0.48
-        ])
+          depth * 0.30
+        )
       );
     }
 
-    const count =
-      perimeter.length;
-
     for (
       let index = 0;
-      index < count;
+      index < outer.length;
       index += 1
     ) {
       const next =
         (
-          index +
-          1
+          index + 1
         ) %
-        count;
+        outer.length;
 
-      face(
+      addTriangle(
         frontApex,
-        innerRing[index],
-        innerRing[next]
+        inner[index],
+        inner[next]
       );
 
-      face(
-        frontCrown,
-        frontBevel[next],
-        frontBevel[index]
+      addTriangle(
+        inner[index],
+        outer[index],
+        outer[next]
       );
 
-      face(
-        frontBevel[index],
-        perimeter[index],
-        perimeter[next]
+      addTriangle(
+        inner[index],
+        outer[next],
+        inner[next]
       );
 
-      face(
-        frontBevel[index],
-        perimeter[next],
-        frontBevel[next]
-      );
-
-      face(
-        innerRing[index],
-        frontBevel[index],
-        frontBevel[next]
-      );
-
-      face(
-        innerRing[index],
-        frontBevel[next],
-        innerRing[next]
-      );
-
-      face(
+      addTriangle(
         rearApex,
-        rearBevel[next],
-        rearBevel[index]
-      );
-
-      face(
-        rearCrown,
-        rearBevel[index],
-        rearBevel[next]
-      );
-
-      face(
-        rearBevel[index],
-        perimeter[next],
-        perimeter[index]
-      );
-
-      face(
-        rearBevel[index],
-        rearBevel[next],
-        perimeter[next]
+        outer[next],
+        outer[index]
       );
     }
 
     const positions = [];
     const normals = [];
-    const colors = [];
-    const sparkleIndices = [];
+    const facets = [];
 
-    faces.forEach(
+    triangles.forEach(
       (
         triangle,
-        faceIndex
+        triangleIndex
       ) => {
         const first =
           vertices[
@@ -2118,52 +1886,35 @@
             )
           );
 
-        const colorLift =
-          clamp(
-            0.70 +
-            (
-              faceIndex %
-              9
-            ) *
-            0.035,
-            0.70,
-            1
+        const facet =
+          (
+            triangleIndex %
+            11
+          ) /
+          10;
+
+        for (
+          const point
+          of [
+            first,
+            second,
+            third
+          ]
+        ) {
+          positions.push(
+            point[0],
+            point[1],
+            point[2]
           );
 
-        const sparkleIndex =
-          faceIndex % 5 === 0
-            ? 1
-            : 0;
+          normals.push(
+            normal[0],
+            normal[1],
+            normal[2]
+          );
 
-        [
-          first,
-          second,
-          third
-        ].forEach(
-          point => {
-            positions.push(
-              point[0],
-              point[1],
-              point[2]
-            );
-
-            normals.push(
-              normal[0],
-              normal[1],
-              normal[2]
-            );
-
-            colors.push(
-              colorLift,
-              colorLift,
-              colorLift
-            );
-
-            sparkleIndices.push(
-              sparkleIndex
-            );
-          }
-        );
+          facets.push(facet);
+        }
       }
     );
 
@@ -2178,14 +1929,9 @@
           normals
         ),
 
-      colors:
+      facets:
         new Float32Array(
-          colors
-        ),
-
-      sparkleIndices:
-        new Float32Array(
-          sparkleIndices
+          facets
         ),
 
       vertexCount:
@@ -2193,79 +1939,53 @@
 
       summary:
         Object.freeze({
-          majorPoints:
-            points,
+          points,
+          radius,
+          innerRadius,
+          depth,
+          crown,
+          compression,
 
-          perimeterPositions:
-            points * 2,
-
-          outerRadius:
-            radius,
-
-          innerRadius:
-            inner,
-
-          frontDepth:
-            depth,
-
-          rearDepth:
-            -depth,
-
-          frontCrownExtension:
-            crown,
-
-          rearCrownExtension:
-            crown * 0.72,
-
-          verticalCompression,
-
-          outerRidge,
-
-          innerRidge
+          vertexCount:
+            positions.length / 3
         })
     });
   }
 
   function buildCpuMeshes() {
     state.cpuMeshes.set(
-      NODE_TYPES.CARDINAL,
-      createDiamondMesh({
+      NODE_KINDS.CARDINAL,
+      createCrystalMesh({
         points:
           8,
 
         radius:
-          0.72,
+          0.68,
 
-        inner:
+        innerRadius:
           0.30,
 
         depth:
           0.42,
 
         crown:
-          0.20,
+          0.18,
 
-        verticalCompression:
-          0.78,
-
-        outerRidge:
-          0.05,
-
-        innerRidge:
-          -0.02
+        compression:
+          0.80
       })
     );
 
     state.cpuMeshes.set(
-      NODE_TYPES.CHILD,
-      createDiamondMesh({
+      NODE_KINDS.ROOM,
+      createCrystalMesh({
         points:
           6,
 
         radius:
           0.42,
 
-        inner:
+        innerRadius:
           0.20,
 
         depth:
@@ -2274,15 +1994,1441 @@
         crown:
           0.10,
 
-        verticalCompression:
-          0.82,
-
-        outerRidge:
-          0.04,
-
-        innerRidge:
-          -0.015
+        compression:
+          0.84
       })
+    );
+  }
+
+  function discoverDom() {
+    state.root =
+      document.querySelector(
+        SELECTORS.root
+      );
+
+    invariant(
+      state.root,
+      "SHOWROOM_CRYSTALS_ROOT_REQUIRED"
+    );
+
+    state.field =
+      state.root.querySelector(
+        SELECTORS.field
+      );
+
+    state.semanticLayer =
+      state.root.querySelector(
+        SELECTORS.semanticLayer
+      );
+
+    state.receipt =
+      state.root.querySelector(
+        SELECTORS.receipt
+      );
+  }
+
+  function validateDom() {
+    invariant(
+      state.field,
+      "SHOWROOM_CRYSTALS_FIELD_REQUIRED"
+    );
+
+    invariant(
+      state.semanticLayer,
+      "SHOWROOM_CRYSTALS_SEMANTIC_LAYER_REQUIRED"
+    );
+
+    invariant(
+      state.field.contains(
+        state.semanticLayer
+      ),
+      "SHOWROOM_CRYSTALS_SEMANTIC_LAYER_OUTSIDE_FIELD"
+    );
+
+    const cardinalControls =
+      Array.from(
+        state.root.querySelectorAll(
+          SELECTORS.cardinalControls
+        )
+      );
+
+    const roomControls =
+      Array.from(
+        state.root.querySelectorAll(
+          SELECTORS.roomControls
+        )
+      );
+
+    invariant(
+      cardinalControls.length === 4,
+      "SHOWROOM_CRYSTALS_CARDINAL_COUNT_INVALID",
+      {
+        expected:
+          4,
+
+        actual:
+          cardinalControls.length
+      }
+    );
+
+    invariant(
+      roomControls.length === 16,
+      "SHOWROOM_CRYSTALS_ROOM_COUNT_INVALID",
+      {
+        expected:
+          16,
+
+        actual:
+          roomControls.length
+      }
+    );
+
+    for (
+      const element
+      of [
+        ...cardinalControls,
+        ...roomControls
+      ]
+    ) {
+      invariant(
+        state.field.contains(element),
+        "SHOWROOM_CRYSTALS_CONTROL_OUTSIDE_FIELD"
+      );
+    }
+
+    return {
+      cardinalControls,
+      roomControls
+    };
+  }
+
+  function requireController() {
+    const controller =
+      window[
+        CONTROLLER_GLOBAL
+      ];
+
+    invariant(
+      controller,
+      "SHOWROOM_CRYSTALS_CONTROLLER_REQUIRED"
+    );
+
+    invariant(
+      controller.moduleId ===
+        CONTROLLER_MODULE_ID,
+      "SHOWROOM_CRYSTALS_CONTROLLER_MODULE_ID_INVALID"
+    );
+
+    invariant(
+      controller.moduleVersion ===
+        CONTROLLER_MODULE_VERSION,
+      "SHOWROOM_CRYSTALS_CONTROLLER_MODULE_VERSION_INVALID"
+    );
+
+    invariant(
+      typeof controller.getFrameState ===
+        "function",
+      "SHOWROOM_CRYSTALS_CONTROLLER_FRAME_API_REQUIRED"
+    );
+
+    invariant(
+      typeof controller.subscribeFrameState ===
+        "function",
+      "SHOWROOM_CRYSTALS_CONTROLLER_FRAME_SUBSCRIPTION_REQUIRED"
+    );
+
+    return controller;
+  }
+
+  function requireCompositor() {
+    const compositor =
+      window[
+        COMPOSITOR_GLOBAL
+      ];
+
+    invariant(
+      compositor,
+      "SHOWROOM_CRYSTALS_COMPOSITOR_REQUIRED"
+    );
+
+    invariant(
+      compositor.contract ===
+        COMPOSITOR_CONTRACT,
+      "SHOWROOM_CRYSTALS_COMPOSITOR_CONTRACT_INVALID"
+    );
+
+    for (
+      const method
+      of [
+        "getState",
+        "getFrameState",
+        "getCanvases",
+        "registerNode",
+        "registerRenderer",
+        "requestRender"
+      ]
+    ) {
+      invariant(
+        typeof compositor[method] ===
+          "function",
+        `SHOWROOM_CRYSTALS_COMPOSITOR_METHOD_REQUIRED:${method}`
+      );
+    }
+
+    return compositor;
+  }
+
+  function validControllerFrame(frame) {
+    return Boolean(
+      frame &&
+      typeof frame ===
+        "object" &&
+      frame.moduleId ===
+        CONTROLLER_MODULE_ID &&
+      frame.moduleVersion ===
+        CONTROLLER_MODULE_VERSION &&
+      typeof frame.navigationState ===
+        "string" &&
+      typeof frame.presentationMode ===
+        "string" &&
+      frame.presentation &&
+      typeof frame.presentation ===
+        "object" &&
+      frame.orbitOrientation &&
+      typeof frame.orbitOrientation ===
+        "object" &&
+      Array.isArray(
+        frame.orbitOrientation
+          .quaternion
+      ) &&
+      frame.orbitOrientation
+        .quaternion.length ===
+        4 &&
+      (
+        frame.cluster === null ||
+        (
+          frame.cluster &&
+          typeof frame.cluster ===
+            "object"
+        )
+      ) &&
+      typeof frame.held ===
+        "boolean"
+    );
+  }
+
+  function readControllerFrame() {
+    const frame =
+      state.controller
+        .getFrameState();
+
+    invariant(
+      validControllerFrame(frame),
+      "SHOWROOM_CRYSTALS_CONTROLLER_FRAME_INVALID"
+    );
+
+    return frame;
+  }
+
+  function compositorReady() {
+    const compositorState =
+      state.compositor.getState();
+
+    return Boolean(
+      compositorState &&
+      compositorState.initialized ===
+        true &&
+      compositorState.readyPublished ===
+        true &&
+      compositorState.failed !==
+        true &&
+      compositorState.disposed !==
+        true
+    );
+  }
+
+  function cardinalIdFromElement(
+    element
+  ) {
+    return normalizeWing(
+      element.dataset
+        .showroomCardinalId
+    );
+  }
+
+  function childIdFromElement(
+    element
+  ) {
+    return normalize(
+      element.dataset
+        .showroomChildId
+    );
+  }
+
+  function roomOrdinal(childId) {
+    const match =
+      normalize(childId).match(
+        /-(\d+)$/
+      );
+
+    invariant(
+      match,
+      `SHOWROOM_CRYSTALS_ROOM_ID_INVALID:${childId}`
+    );
+
+    const ordinal =
+      Number(match[1]);
+
+    invariant(
+      ordinal >= 1 &&
+      ordinal <= 4,
+      `SHOWROOM_CRYSTALS_ROOM_ORDINAL_INVALID:${childId}`
+    );
+
+    return ordinal;
+  }
+
+  function semanticLabel(element) {
+    return (
+      normalize(
+        element.getAttribute(
+          "aria-label"
+        )
+      ) ||
+      normalize(
+        element.dataset
+          .showroomCardinalLabel
+      ) ||
+      normalize(
+        element.dataset
+          .showroomChildLabel
+      ) ||
+      normalize(
+        element.textContent
+      )
+    );
+  }
+
+  function materialFamilyForElement(
+    element,
+    kind
+  ) {
+    if (
+      kind ===
+      NODE_KINDS.CARDINAL
+    ) {
+      return MATERIAL_FAMILIES.CARDINAL;
+    }
+
+    const visualClass =
+      normalizeUpper(
+        element.dataset
+          .showroomVisualClass
+      );
+
+    const emphasis =
+      normalizeLower(
+        element.dataset
+          .showroomEmphasis
+      );
+
+    const behavior =
+      normalizeLower(
+        element.dataset
+          .showroomObjectBehavior
+      );
+
+    if (
+      visualClass ===
+        "PRIMARY_PORTAL" ||
+      emphasis ===
+        "primary-external"
+    ) {
+      return MATERIAL_FAMILIES
+        .PRIMARY_PORTAL;
+    }
+
+    if (
+      visualClass ===
+        "PORTAL" ||
+      emphasis ===
+        "external" ||
+      behavior ===
+        "portal"
+    ) {
+      return MATERIAL_FAMILIES.PORTAL;
+    }
+
+    return MATERIAL_FAMILIES.LOCAL;
+  }
+
+  function createNodeRecord(
+    element,
+    kind
+  ) {
+    const cardinalId =
+      cardinalIdFromElement(
+        element
+      );
+
+    invariant(
+      cardinalId,
+      "SHOWROOM_CRYSTALS_CARDINAL_ID_REQUIRED"
+    );
+
+    const childId =
+      kind === NODE_KINDS.ROOM
+        ? childIdFromElement(
+            element
+          )
+        : "";
+
+    if (
+      kind === NODE_KINDS.ROOM
+    ) {
+      invariant(
+        childId ===
+          `${cardinalId}-${roomOrdinal(childId)}`,
+        `SHOWROOM_CRYSTALS_ROOM_PARENT_MISMATCH:${childId}`
+      );
+    }
+
+    const id =
+      kind === NODE_KINDS.CARDINAL
+        ? `crystal-cardinal-${cardinalId}`
+        : `crystal-room-${childId}`;
+
+    const projectionId =
+      kind === NODE_KINDS.CARDINAL
+        ? cardinalId
+        : childId;
+
+    const initialPosition =
+      kind === NODE_KINDS.CARDINAL
+        ? CARDINAL_BASE_POSITIONS[
+            cardinalId
+          ].slice()
+        : ROOM_BASE_POSITIONS[
+            roomOrdinal(
+              childId
+            )
+          ].slice();
+
+    return {
+      id,
+      projectionId,
+      kind,
+
+      semanticObjectId:
+        projectionId,
+
+      cardinalId,
+
+      childId,
+
+      clusterId:
+        cardinalId,
+
+      semanticElement:
+        element,
+
+      label:
+        semanticLabel(element),
+
+      materialFamily:
+        materialFamilyForElement(
+          element,
+          kind
+        ),
+
+      phase:
+        state.registry.size *
+        0.71 +
+        (
+          kind ===
+          NODE_KINDS.CARDINAL
+            ? 0.19
+            : 0.43
+        ),
+
+      targetVisible:
+        false,
+
+      visible:
+        false,
+
+      settled:
+        true,
+
+      current: {
+        x:
+          initialPosition[0],
+
+        y:
+          initialPosition[1],
+
+        z:
+          initialPosition[2],
+
+        scale:
+          0.01,
+
+        opacity:
+          0,
+
+        emissive:
+          0,
+
+        rim:
+          0,
+
+        sparkle:
+          0,
+
+        halo:
+          0,
+
+        rx:
+          0,
+
+        ry:
+          0,
+
+        rz:
+          0,
+
+        spin:
+          0,
+
+        float:
+          0
+      },
+
+      target: {
+        x:
+          initialPosition[0],
+
+        y:
+          initialPosition[1],
+
+        z:
+          initialPosition[2],
+
+        scale:
+          0.01,
+
+        opacity:
+          0,
+
+        emissive:
+          0,
+
+        rim:
+          0,
+
+        sparkle:
+          0,
+
+        halo:
+          0,
+
+        spin:
+          0,
+
+        float:
+          0
+      }
+    };
+  }
+
+  function buildRegistry(
+    cardinalControls,
+    roomControls
+  ) {
+    const projectionIds =
+      new Set();
+
+    const cardinalCounts =
+      new Map(
+        WINGS.map(
+          wing => [
+            wing,
+            0
+          ]
+        )
+      );
+
+    const roomCounts =
+      new Map(
+        WINGS.map(
+          wing => [
+            wing,
+            0
+          ]
+        )
+      );
+
+    for (
+      const element
+      of cardinalControls
+    ) {
+      const node =
+        createNodeRecord(
+          element,
+          NODE_KINDS.CARDINAL
+        );
+
+      invariant(
+        !state.registry.has(
+          node.id
+        ),
+        `SHOWROOM_CRYSTALS_DUPLICATE_NODE_ID:${node.id}`
+      );
+
+      invariant(
+        !projectionIds.has(
+          node.projectionId
+        ),
+        `SHOWROOM_CRYSTALS_DUPLICATE_PROJECTION_ID:${node.projectionId}`
+      );
+
+      projectionIds.add(
+        node.projectionId
+      );
+
+      cardinalCounts.set(
+        node.cardinalId,
+        (
+          cardinalCounts.get(
+            node.cardinalId
+          ) ||
+          0
+        ) +
+        1
+      );
+
+      state.registry.set(
+        node.id,
+        node
+      );
+    }
+
+    for (
+      const element
+      of roomControls
+    ) {
+      const node =
+        createNodeRecord(
+          element,
+          NODE_KINDS.ROOM
+        );
+
+      invariant(
+        !state.registry.has(
+          node.id
+        ),
+        `SHOWROOM_CRYSTALS_DUPLICATE_NODE_ID:${node.id}`
+      );
+
+      invariant(
+        !projectionIds.has(
+          node.projectionId
+        ),
+        `SHOWROOM_CRYSTALS_DUPLICATE_PROJECTION_ID:${node.projectionId}`
+      );
+
+      projectionIds.add(
+        node.projectionId
+      );
+
+      roomCounts.set(
+        node.cardinalId,
+        (
+          roomCounts.get(
+            node.cardinalId
+          ) ||
+          0
+        ) +
+        1
+      );
+
+      state.registry.set(
+        node.id,
+        node
+      );
+    }
+
+    invariant(
+      state.registry.size === 20,
+      "SHOWROOM_CRYSTALS_NODE_COUNT_INVALID"
+    );
+
+    for (
+      const wing
+      of WINGS
+    ) {
+      invariant(
+        cardinalCounts.get(wing) ===
+          1,
+        `SHOWROOM_CRYSTALS_CARDINAL_DUPLICATION:${wing}`
+      );
+
+      invariant(
+        roomCounts.get(wing) === 4,
+        `SHOWROOM_CRYSTALS_ROOM_CLUSTER_COUNT_INVALID:${wing}`
+      );
+    }
+  }
+
+  function activeClusterId(frame) {
+    const candidates = [
+      frame.activeClusterWing,
+
+      frame.cluster
+        ? frame.cluster.wing
+        : "",
+
+      frame.selectedCardinal
+    ];
+
+    for (
+      const candidate
+      of candidates
+    ) {
+      const wing =
+        normalizeWing(candidate);
+
+      if (wing) {
+        return wing;
+      }
+    }
+
+    return "";
+  }
+
+  function activeRoomId(frame) {
+    const candidates = [
+      frame.cluster
+        ? frame.cluster.activeChildId
+        : "",
+
+      frame.cluster
+        ? frame.cluster.selectedChildId
+        : "",
+
+      frame.activeChildId,
+
+      frame.selectedRoom
+    ];
+
+    for (
+      const candidate
+      of candidates
+    ) {
+      const value =
+        normalize(candidate);
+
+      if (value) {
+        return value;
+      }
+    }
+
+    return "";
+  }
+
+  function orbitQuaternion(frame) {
+    return normalizeQuaternion(
+      frame.orbitOrientation
+    );
+  }
+
+  function clusterQuaternion(frame) {
+    const candidates = [
+      frame.cluster &&
+      frame.cluster.orientation
+        ? frame.cluster.orientation
+        : null,
+
+      frame.cluster &&
+      frame.cluster.clusterOrientation
+        ? frame.cluster
+            .clusterOrientation
+        : null,
+
+      frame.clusterOrientation ||
+        null
+    ];
+
+    for (
+      const candidate
+      of candidates
+    ) {
+      if (
+        candidate &&
+        Array.isArray(
+          candidate.quaternion
+        )
+      ) {
+        return normalizeQuaternion(
+          candidate
+        );
+      }
+
+      if (Array.isArray(candidate)) {
+        return normalizeQuaternion(
+          candidate
+        );
+      }
+    }
+
+    return orbitQuaternion(frame);
+  }
+
+  function displayMode(frame) {
+    const navigationState =
+      normalizeUpper(
+        frame.navigationState
+      );
+
+    const presentationMode =
+      normalizeUpper(
+        frame.presentationMode
+      );
+
+    if (
+      navigationState ===
+        "CLUSTER_OPEN" ||
+      navigationState ===
+        "ROOM_SELECTED" ||
+      presentationMode ===
+        "CLUSTER"
+    ) {
+      return DISPLAY_MODES.CLUSTER;
+    }
+
+    return DISPLAY_MODES.CONSTELLATION;
+  }
+
+  function selectedCardinalId(frame) {
+    const candidates = [
+      frame.selectedCardinal,
+
+      frame.activeClusterWing,
+
+      frame.cluster
+        ? frame.cluster.wing
+        : ""
+    ];
+
+    for (
+      const candidate
+      of candidates
+    ) {
+      const wing =
+        normalizeWing(candidate);
+
+      if (wing) {
+        return wing;
+      }
+    }
+
+    return "";
+  }
+
+  function materialForNode(node) {
+    return (
+      MATERIALS[
+        node.materialFamily
+      ] ||
+      MATERIALS.LOCAL
+    );
+  }
+
+  function snapNodeInactive(node) {
+    node.target.scale =
+      0.01;
+
+    node.target.opacity =
+      0;
+
+    node.target.emissive =
+      0;
+
+    node.target.rim =
+      0;
+
+    node.target.sparkle =
+      0;
+
+    node.target.halo =
+      0;
+
+    node.target.spin =
+      0;
+
+    node.target.float =
+      0;
+
+    node.current.scale =
+      0.01;
+
+    node.current.opacity =
+      0;
+
+    node.current.emissive =
+      0;
+
+    node.current.rim =
+      0;
+
+    node.current.sparkle =
+      0;
+
+    node.current.halo =
+      0;
+
+    node.current.spin =
+      0;
+
+    node.current.float =
+      0;
+
+    node.visible =
+      false;
+
+    node.settled =
+      true;
+  }
+
+  function computeTargets(frame) {
+    if (
+      state.held ||
+      frame.held === true
+    ) {
+      return;
+    }
+
+    const mode =
+      displayMode(frame);
+
+    const activeCluster =
+      activeClusterId(frame);
+
+    const activeRoom =
+      activeRoomId(frame);
+
+    const selectedCardinal =
+      selectedCardinalId(frame);
+
+    const orbit =
+      orbitQuaternion(frame);
+
+    const cluster =
+      clusterQuaternion(frame);
+
+    for (
+      const node
+      of state.registry.values()
+    ) {
+      const material =
+        materialForNode(node);
+
+      let position;
+
+      let visible =
+        false;
+
+      let selected =
+        false;
+
+      if (
+        node.kind ===
+        NODE_KINDS.CARDINAL
+      ) {
+        position =
+          rotateVectorByQuaternion(
+            CARDINAL_BASE_POSITIONS[
+              node.cardinalId
+            ],
+            orbit
+          );
+
+        visible =
+          mode ===
+          DISPLAY_MODES.CONSTELLATION;
+
+        selected =
+          node.cardinalId ===
+          selectedCardinal;
+      } else {
+        position =
+          rotateVectorByQuaternion(
+            ROOM_BASE_POSITIONS[
+              roomOrdinal(
+                node.childId
+              )
+            ],
+            cluster
+          );
+
+        visible =
+          mode ===
+            DISPLAY_MODES.CLUSTER &&
+          node.clusterId ===
+            activeCluster;
+
+        selected =
+          node.childId ===
+          activeRoom;
+      }
+
+      node.targetVisible =
+        visible;
+
+      node.target.x =
+        position[0];
+
+      node.target.y =
+        position[1];
+
+      node.target.z =
+        position[2];
+
+      if (!visible) {
+        snapNodeInactive(node);
+        continue;
+      }
+
+      /*
+        Newly accepted presentation nodes become semantically visible
+        immediately. Their material values may still interpolate into place.
+      */
+      node.visible =
+        true;
+
+      node.target.scale =
+        selected
+          ? material.activeScale
+          : material.baseScale;
+
+      node.target.opacity =
+        material.opacity;
+
+      node.target.emissive =
+        selected
+          ? clamp(
+              material.emissive *
+              1.28,
+              0,
+              0.55
+            )
+          : material.emissive;
+
+      node.target.rim =
+        selected
+          ? clamp(
+              material.rim *
+              1.18,
+              0,
+              1.7
+            )
+          : material.rim;
+
+      node.target.sparkle =
+        state.reducedMotion
+          ? 0
+          : (
+              selected
+                ? clamp(
+                    material.sparkle *
+                    1.24,
+                    0,
+                    0.52
+                  )
+                : material.sparkle
+            );
+
+      node.target.halo =
+        selected
+          ? clamp(
+              material.halo *
+              1.18,
+              0,
+              1.4
+            )
+          : material.halo;
+
+      node.target.spin =
+        state.reducedMotion
+          ? 0
+          : material.idleSpin;
+
+      node.target.float =
+        state.reducedMotion
+          ? 0
+          : material.idleFloat;
+
+      node.settled =
+        !nodeHasInterpolation(node);
+    }
+  }
+
+  function nodeHasInterpolation(node) {
+    for (
+      const key
+      of [
+        "x",
+        "y",
+        "z",
+        "scale",
+        "opacity",
+        "emissive",
+        "rim",
+        "sparkle",
+        "halo",
+        "spin",
+        "float"
+      ]
+    ) {
+      if (
+        Math.abs(
+          node.current[key] -
+          node.target[key]
+        ) > 0.0015
+      ) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  function updateNode(
+    node,
+    deltaSeconds,
+    now
+  ) {
+    if (state.held) {
+      return false;
+    }
+
+    if (!node.targetVisible) {
+      node.visible =
+        false;
+
+      node.settled =
+        true;
+
+      return false;
+    }
+
+    const interpolation =
+      Math.min(
+        1,
+        deltaSeconds *
+        (
+          state.reducedMotion
+            ? QUALITY
+                .reducedMotionInterpolationSpeed
+            : QUALITY
+                .interpolationSpeed
+        )
+      );
+
+    for (
+      const key
+      of [
+        "x",
+        "y",
+        "z",
+        "scale",
+        "opacity",
+        "emissive",
+        "rim",
+        "sparkle",
+        "halo",
+        "spin",
+        "float"
+      ]
+    ) {
+      node.current[key] =
+        lerp(
+          node.current[key],
+          node.target[key],
+          interpolation
+        );
+    }
+
+    if (state.reducedMotion) {
+      node.current.rx =
+        0;
+
+      node.current.ry =
+        0;
+
+      node.current.rz =
+        0;
+    } else {
+      node.current.rz +=
+        deltaSeconds *
+        node.current.spin;
+
+      node.current.ry =
+        Math.sin(
+          now * 0.00042 +
+          node.phase
+        ) *
+        0.18;
+
+      node.current.rx =
+        Math.sin(
+          now * 0.00031 +
+          node.phase * 0.73
+        ) *
+        0.11;
+    }
+
+    node.visible =
+      node.targetVisible;
+
+    node.settled =
+      !nodeHasInterpolation(node);
+
+    return !node.settled;
+  }
+
+  function ambientMotionRequired() {
+    return Boolean(
+      state.ready &&
+      !state.held &&
+      !state.reducedMotion &&
+      !state.contextDegraded &&
+      document.visibilityState !==
+        "hidden" &&
+      Array.from(
+        state.registry.values()
+      ).some(
+        node =>
+          node.targetVisible &&
+          node.visible &&
+          (
+            node.current.spin > 0 ||
+            node.current.float > 0 ||
+            node.current.sparkle > 0
+          )
+      )
+    );
+  }
+
+  function animationRequired() {
+    if (
+      !state.ready ||
+      state.failed ||
+      state.disposed ||
+      state.held ||
+      state.contextDegraded ||
+      document.visibilityState ===
+        "hidden"
+    ) {
+      return false;
+    }
+
+    for (
+      const node
+      of state.registry.values()
+    ) {
+      if (
+        node.targetVisible &&
+        nodeHasInterpolation(node)
+      ) {
+        return true;
+      }
+    }
+
+    return ambientMotionRequired();
+  }
+
+  function animationStep(now) {
+    state.animationFrame =
+      0;
+
+    if (!animationRequired()) {
+      state.animationRunning =
+        false;
+
+      state.lastAnimationTime =
+        0;
+
+      return;
+    }
+
+    const deltaSeconds =
+      state.lastAnimationTime
+        ? Math.min(
+            QUALITY
+              .maximumDeltaSeconds,
+
+            Math.max(
+              0,
+              (
+                now -
+                state.lastAnimationTime
+              ) /
+              1000
+            )
+          )
+        : 0.016;
+
+    state.lastAnimationTime =
+      now;
+
+    let changed =
+      false;
+
+    for (
+      const node
+      of state.registry.values()
+    ) {
+      changed =
+        updateNode(
+          node,
+          deltaSeconds,
+          now
+        ) ||
+        changed;
+    }
+
+    const ambient =
+      ambientMotionRequired();
+
+    if (
+      changed ||
+      (
+        ambient &&
+        now -
+          state.lastCompositorRequestTime >=
+          QUALITY
+            .ambientFrameIntervalMs
+      )
+    ) {
+      state.lastCompositorRequestTime =
+        now;
+
+      state.counters
+        .animationRequests +=
+        1;
+
+      state.compositor.requestRender(
+        "crystals-animation"
+      );
+    }
+
+    if (animationRequired()) {
+      state.animationFrame =
+        requestAnimationFrame(
+          animationStep
+        );
+    } else {
+      state.animationRunning =
+        false;
+
+      state.lastAnimationTime =
+        0;
+    }
+  }
+
+  function startAnimation() {
+    if (
+      state.animationRunning ||
+      !animationRequired()
+    ) {
+      return;
+    }
+
+    state.animationRunning =
+      true;
+
+    state.lastAnimationTime =
+      0;
+
+    state.animationFrame =
+      requestAnimationFrame(
+        animationStep
+      );
+  }
+
+  function stopAnimation() {
+    if (state.animationFrame) {
+      cancelAnimationFrame(
+        state.animationFrame
+      );
+    }
+
+    state.animationFrame =
+      0;
+
+    state.animationRunning =
+      false;
+
+    state.lastAnimationTime =
+      0;
+  }
+
+  function evaluateAnimation() {
+    if (animationRequired()) {
+      startAnimation();
+    } else {
+      stopAnimation();
+    }
+  }
+
+  function nodeWorldPosition(node) {
+    const floatOffset =
+      (
+        node.targetVisible &&
+        node.visible &&
+        !state.held &&
+        !state.reducedMotion
+      )
+        ? Math.sin(
+            state.lastAnimationTime *
+            0.00092 +
+            node.phase
+          ) *
+          node.current.float
+        : 0;
+
+    return [
+      node.current.x,
+      node.current.y +
+        floatOffset,
+      node.current.z
+    ];
+  }
+
+  function nodeHitRadius(node) {
+    if (
+      !node.targetVisible ||
+      !node.visible
+    ) {
+      return 0;
+    }
+
+    const base =
+      node.kind ===
+      NODE_KINDS.CARDINAL
+        ? QUALITY.cardinalHitRadius
+        : QUALITY.roomHitRadius;
+
+    return Math.max(
+      0,
+      base *
+      node.current.scale *
+      clamp(
+        node.current.opacity,
+        0,
+        1
+      )
     );
   }
 
@@ -2312,7 +3458,7 @@
         gl.COMPILE_STATUS
       )
     ) {
-      const information =
+      const message =
         gl.getShaderInfoLog(
           shader
         ) ||
@@ -2320,27 +3466,25 @@
 
       gl.deleteShader(shader);
 
-      throw new Error(
-        information
-      );
+      throw new Error(message);
     }
 
     return shader;
   }
 
   function createProgram(gl) {
-    const vertex =
+    const vertexShader =
       createShader(
         gl,
         gl.VERTEX_SHADER,
-        vertexShaderSource
+        VERTEX_SHADER
       );
 
-    const fragment =
+    const fragmentShader =
       createShader(
         gl,
         gl.FRAGMENT_SHADER,
-        fragmentShaderSource
+        FRAGMENT_SHADER
       );
 
     const program =
@@ -2353,18 +3497,23 @@
 
     gl.attachShader(
       program,
-      vertex
+      vertexShader
     );
 
     gl.attachShader(
       program,
-      fragment
+      fragmentShader
     );
 
     gl.linkProgram(program);
 
-    gl.deleteShader(vertex);
-    gl.deleteShader(fragment);
+    gl.deleteShader(
+      vertexShader
+    );
+
+    gl.deleteShader(
+      fragmentShader
+    );
 
     if (
       !gl.getProgramParameter(
@@ -2372,7 +3521,7 @@
         gl.LINK_STATUS
       )
     ) {
-      const information =
+      const message =
         gl.getProgramInfoLog(
           program
         ) ||
@@ -2380,9 +3529,7 @@
 
       gl.deleteProgram(program);
 
-      throw new Error(
-        information
-      );
+      throw new Error(message);
     }
 
     return program;
@@ -2414,40 +3561,6 @@
     return buffer;
   }
 
-  function bindAttribute(
-    renderer,
-    buffer,
-    location,
-    size
-  ) {
-    invariant(
-      location >=
-        0,
-      "SHOWROOM_CRYSTALS_ATTRIBUTE_LOCATION_INVALID"
-    );
-
-    const gl =
-      renderer.gl;
-
-    gl.bindBuffer(
-      gl.ARRAY_BUFFER,
-      buffer
-    );
-
-    gl.enableVertexAttribArray(
-      location
-    );
-
-    gl.vertexAttribPointer(
-      location,
-      size,
-      gl.FLOAT,
-      false,
-      0,
-      0
-    );
-  }
-
   function buildGpuMesh(
     gl,
     cpuMesh
@@ -2468,114 +3581,123 @@
           cpuMesh.normals
         ),
 
-      color:
+      facet:
         createBuffer(
           gl,
-          cpuMesh.colors
-        ),
-
-      sparkleIndex:
-        createBuffer(
-          gl,
-          cpuMesh.sparkleIndices
+          cpuMesh.facets
         )
     };
   }
 
-  function destroyContextRenderer(
-    renderer,
-    options = {}
+  function bindAttribute(
+    context,
+    buffer,
+    location,
+    size
   ) {
-    if (!renderer) {
+    invariant(
+      location >= 0,
+      "SHOWROOM_CRYSTALS_ATTRIBUTE_LOCATION_INVALID"
+    );
+
+    const gl =
+      context.gl;
+
+    gl.bindBuffer(
+      gl.ARRAY_BUFFER,
+      buffer
+    );
+
+    gl.enableVertexAttribArray(
+      location
+    );
+
+    gl.vertexAttribPointer(
+      location,
+      size,
+      gl.FLOAT,
+      false,
+      0,
+      0
+    );
+  }
+
+  function isContextReady(id) {
+    const context =
+      state.contexts.get(id);
+
+    return Boolean(
+      context &&
+      context.available &&
+      context.contextLost !==
+        true &&
+      context.gl &&
+      context.program
+    );
+  }
+
+  function destroyContext(
+    context,
+    removeListeners = true
+  ) {
+    if (!context) {
       return;
     }
 
     if (
-      options.removeListeners !==
-      false
+      removeListeners &&
+      context.canvas
     ) {
-      renderer.canvas.removeEventListener(
+      context.canvas.removeEventListener(
         "webglcontextlost",
-        renderer.onContextLost
+        context.onContextLost
       );
 
-      renderer.canvas.removeEventListener(
+      context.canvas.removeEventListener(
         "webglcontextrestored",
-        renderer.onContextRestored
+        context.onContextRestored
       );
     }
 
     if (
-      renderer.gl &&
-      !renderer.contextLost
+      context.gl &&
+      context.contextLost !==
+        true
     ) {
       for (
         const mesh
-        of renderer.meshes.values()
+        of context.meshes.values()
       ) {
-        renderer.gl.deleteBuffer(
+        context.gl.deleteBuffer(
           mesh.position
         );
 
-        renderer.gl.deleteBuffer(
+        context.gl.deleteBuffer(
           mesh.normal
         );
 
-        renderer.gl.deleteBuffer(
-          mesh.color
-        );
-
-        renderer.gl.deleteBuffer(
-          mesh.sparkleIndex
+        context.gl.deleteBuffer(
+          mesh.facet
         );
       }
 
-      if (renderer.program) {
-        renderer.gl.deleteProgram(
-          renderer.program
+      if (context.program) {
+        context.gl.deleteProgram(
+          context.program
         );
       }
     }
 
-    renderer.meshes.clear();
+    context.meshes.clear();
 
-    renderer.available =
+    context.available =
       false;
+
+    context.program =
+      null;
   }
 
-  function rebuildContextRenderer(id) {
-    const current =
-      state.contexts.get(id);
-
-    invariant(
-      current,
-      `SHOWROOM_CRYSTALS_CONTEXT_NOT_FOUND:${id}`
-    );
-
-    const canvas =
-      current.canvas;
-
-    destroyContextRenderer(
-      current,
-      {
-        removeListeners:
-          true
-      }
-    );
-
-    const replacement =
-      createContextRenderer(
-        id,
-        canvas
-      );
-
-    state.contexts.set(
-      id,
-      replacement
-    );
-  }
-
-  function createContextRenderer(
+  function createContext(
     id,
     canvas
   ) {
@@ -2588,17 +3710,17 @@
       canvas.getContext(
         "webgl",
         {
-          antialias:
+          alpha:
             true,
 
-          alpha:
+          antialias:
             true,
 
           depth:
             true,
 
           premultipliedAlpha:
-            true,
+            false,
 
           preserveDrawingBuffer:
             false
@@ -2634,7 +3756,7 @@
     const program =
       createProgram(gl);
 
-    const renderer = {
+    const context = {
       id,
       canvas,
       gl,
@@ -2646,13 +3768,10 @@
       contextLost:
         false,
 
-      width:
-        0,
+      meshes:
+        new Map(),
 
-      height:
-        0,
-
-      attribs:
+      attributes:
         Object.freeze({
           position:
             gl.getAttribLocation(
@@ -2666,16 +3785,10 @@
               "aNormal"
             ),
 
-          color:
+          facet:
             gl.getAttribLocation(
               program,
-              "aColor"
-            ),
-
-          sparkleIndex:
-            gl.getAttribLocation(
-              program,
-              "aSparkleIndex"
+              "aFacet"
             )
         }),
 
@@ -2705,6 +3818,12 @@
               "uNormalMatrix"
             ),
 
+          scale:
+            gl.getUniformLocation(
+              program,
+              "uScale"
+            ),
+
           time:
             gl.getUniformLocation(
               program,
@@ -2715,12 +3834,6 @@
             gl.getUniformLocation(
               program,
               "uOpacity"
-            ),
-
-          scale:
-            gl.getUniformLocation(
-              program,
-              "uScale"
             ),
 
           emissive:
@@ -2747,6 +3860,12 @@
               "uHaloStrength"
             ),
 
+          reducedMotion:
+            gl.getUniformLocation(
+              program,
+              "uReducedMotion"
+            ),
+
           primaryColor:
             gl.getUniformLocation(
               program,
@@ -2759,28 +3878,16 @@
               "uSecondaryColor"
             ),
 
-          warmSpecular:
+          rimColor:
             gl.getUniformLocation(
               program,
-              "uWarmSpecular"
+              "uRimColor"
             ),
 
-          coolRim:
+          highlightColor:
             gl.getUniformLocation(
               program,
-              "uCoolRim"
-            ),
-
-          reducedMotion:
-            gl.getUniformLocation(
-              program,
-              "uReducedMotion"
-            ),
-
-          saturation:
-            gl.getUniformLocation(
-              program,
-              "uSaturation"
+              "uHighlightColor"
             ),
 
           haloPass:
@@ -2796,9 +3903,6 @@
             )
         }),
 
-      meshes:
-        new Map(),
-
       onContextLost:
         null,
 
@@ -2808,13 +3912,13 @@
 
     for (
       const [
-        type,
+        kind,
         cpuMesh
       ]
       of state.cpuMeshes
     ) {
-      renderer.meshes.set(
-        type,
+      context.meshes.set(
+        kind,
         buildGpuMesh(
           gl,
           cpuMesh
@@ -2822,15 +3926,15 @@
       );
     }
 
-    renderer.onContextLost =
+    context.onContextLost =
       event => {
         event.preventDefault();
 
-        renderer.available =
-          false;
-
-        renderer.contextLost =
+        context.contextLost =
           true;
+
+        context.available =
+          false;
 
         state.contextDegraded =
           true;
@@ -2839,7 +3943,12 @@
           .contextLosses +=
           1;
 
-        stopAnimationDriver();
+        stopAnimation();
+
+        setRootState(
+          false,
+          "degraded"
+        );
 
         publishReceipt(
           "context-lost",
@@ -2850,111 +3959,101 @@
             recoverable:
               true,
 
-            recoveryRequested:
-              true,
-
-            controllerReadinessRevoked:
-              false,
-
-            fallbackRestorationRequested:
-              false,
-
-            rendererRegistrationRetained:
-              true,
-
-            nodeRegistrationsRetained:
-              true,
-
-            compositorCanvasRemoved:
-              false
+            registrationsRetained:
+              true
           }
         );
       };
 
-    renderer.onContextRestored =
+    context.onContextRestored =
       () => {
         state.counters
           .contextRestores +=
           1;
 
         try {
-          rebuildContextRenderer(id);
-
-          const rearReady =
-            isContextReady(
-              CONTEXT_IDS.REAR
-            );
-
-          const frontReady =
-            isContextReady(
-              CONTEXT_IDS.FRONT
-            );
-
-          publishReceipt(
-            "context-restored",
-            {
-              context:
-                id,
-
-              resourcesRecreated:
-                true,
-
-              rearContextReady:
-                rearReady,
-
-              frontContextReady:
-                frontReady
-            }
-          );
-
-          readControllerFrame();
+          rebuildContext(id);
 
           if (
-            rearReady &&
-            frontReady
+            isContextReady(
+              CONTEXT_IDS.REAR
+            ) &&
+            isContextReady(
+              CONTEXT_IDS.FRONT
+            )
           ) {
             state.contextDegraded =
               false;
 
-            state.compositor.requestRender(
-              `crystal-context-restored:${id}`
+            setRootState(
+              true,
+              state.held
+                ? "held"
+                : "ready"
             );
 
-            evaluateAnimationDriver();
+            state.compositor.requestRender(
+              `crystals-context-restored:${id}`
+            );
+
+            evaluateAnimation();
 
             publishReceipt(
-              "context-recovery-complete",
+              "context-restored",
               {
                 context:
                   id,
 
-                controllerReadinessRetained:
-                  true,
-
-                fallbackRestorationOccurred:
-                  false
+                recoveryComplete:
+                  true
               }
             );
           }
         } catch (error) {
           failRuntime(
             error,
-            `context-restore:${id}`
+            `context-restoration:${id}`
           );
         }
       };
 
     canvas.addEventListener(
       "webglcontextlost",
-      renderer.onContextLost
+      context.onContextLost
     );
 
     canvas.addEventListener(
       "webglcontextrestored",
-      renderer.onContextRestored
+      context.onContextRestored
     );
 
-    return renderer;
+    return context;
+  }
+
+  function rebuildContext(id) {
+    const previous =
+      state.contexts.get(id);
+
+    invariant(
+      previous,
+      `SHOWROOM_CRYSTALS_CONTEXT_REQUIRED:${id}`
+    );
+
+    const canvas =
+      previous.canvas;
+
+    destroyContext(
+      previous,
+      true
+    );
+
+    state.contexts.set(
+      id,
+      createContext(
+        id,
+        canvas
+      )
+    );
   }
 
   function createGpuResources() {
@@ -2969,2314 +4068,70 @@
       "SHOWROOM_CRYSTALS_COMPOSITOR_CANVASES_REQUIRED"
     );
 
-    state.contexts.set(
-      CONTEXT_IDS.REAR,
-      createContextRenderer(
+    const rear =
+      createContext(
         CONTEXT_IDS.REAR,
         canvases.rear
-      )
-    );
+      );
 
-    state.contexts.set(
-      CONTEXT_IDS.FRONT,
-      createContextRenderer(
+    try {
+      const front =
+        createContext(
+          CONTEXT_IDS.FRONT,
+          canvases.front
+        );
+
+      state.contexts.set(
+        CONTEXT_IDS.REAR,
+        rear
+      );
+
+      state.contexts.set(
         CONTEXT_IDS.FRONT,
-        canvases.front
-      )
-    );
+        front
+      );
+    } catch (error) {
+      destroyContext(
+        rear,
+        true
+      );
+
+      throw error;
+    }
   }
 
   function destroyGpuResources() {
     for (
-      const renderer
+      const context
       of state.contexts.values()
     ) {
       try {
-        destroyContextRenderer(
-          renderer
+        destroyContext(
+          context,
+          true
         );
       } catch {
-        /* Continue bounded resource disposal. */
+        /* Bounded resource disposal. */
       }
     }
 
     state.contexts.clear();
   }
 
-  function discoverDom() {
-    state.root =
-      document.querySelector(
-        SELECTORS.root
-      );
-
-    invariant(
-      state.root,
-      "SHOWROOM_CRYSTALS_ROOT_REQUIRED"
-    );
-
-    state.field =
-      state.root.querySelector(
-        SELECTORS.field
-      );
-
-    state.semanticLayer =
-      state.root.querySelector(
-        SELECTORS.semanticLayer
-      );
-
-    state.receiptOutput =
-      state.root.querySelector(
-        SELECTORS.receipt
-      );
-  }
-
-  function validateDom() {
-    invariant(
-      state.root,
-      "SHOWROOM_CRYSTALS_ROOT_REQUIRED"
-    );
-
-    invariant(
-      state.field,
-      "SHOWROOM_CRYSTALS_ORBIT_FIELD_REQUIRED"
-    );
-
-    invariant(
-      state.semanticLayer,
-      "SHOWROOM_CRYSTALS_SEMANTIC_LAYER_REQUIRED"
-    );
-
-    invariant(
-      state.field.contains(
-        state.semanticLayer
-      ),
-      "SHOWROOM_CRYSTALS_SEMANTIC_LAYER_OUTSIDE_FIELD"
-    );
-
-    const cardinals =
-      Array.from(
-        state.root.querySelectorAll(
-          SELECTORS.cardinalControls
-        )
-      );
-
-    const children =
-      Array.from(
-        state.root.querySelectorAll(
-          SELECTORS.childControls
-        )
-      );
-
-    invariant(
-      cardinals.length ===
-        4,
-      "SHOWROOM_CRYSTALS_CARDINAL_COUNT_INVALID",
-      {
-        expected:
-          4,
-
-        actual:
-          cardinals.length
-      }
-    );
-
-    invariant(
-      children.length ===
-        16,
-      "SHOWROOM_CRYSTALS_CHILD_COUNT_INVALID",
-      {
-        expected:
-          16,
-
-        actual:
-          children.length
-      }
-    );
-
-    for (
-      const element
-      of [
-        ...cardinals,
-        ...children
-      ]
-    ) {
-      invariant(
-        state.field.contains(
-          element
-        ),
-        "SHOWROOM_CRYSTALS_CONTROL_OUTSIDE_FIELD",
-        {
-          objectId:
-            element.dataset
-              .showroomObjectId ||
-            ""
-        }
-      );
-    }
-
-    return {
-      cardinals,
-      children
-    };
-  }
-
-  function readDescriptor(
-    element,
-    type
-  ) {
-    const objectId =
-      normalize(
-        element.dataset
-          .showroomObjectId
-      );
-
-    const cardinalId =
-      normalizeWing(
-        element.dataset
-          .showroomCardinalId
-      );
-
-    const clusterId =
-      normalizeWing(
-        element.dataset
-          .showroomClusterId
-      );
-
-    const childId =
-      normalize(
-        element.dataset
-          .showroomChildId
-      );
-
-    const behavior =
-      normalizeLower(
-        element.dataset
-          .showroomObjectBehavior
-      );
-
-    const visualClass =
-      normalize(
-        element.dataset
-          .showroomVisualClass
-      ).toUpperCase();
-
-    const emphasis =
-      normalizeLower(
-        element.dataset
-          .showroomEmphasis
-      );
-
-    const label =
-      normalize(
-        type ===
-          NODE_TYPES.CARDINAL
-          ? element.dataset
-              .showroomCardinalLabel
-          : element.dataset
-              .showroomChildLabel
-      ) ||
-      normalize(
-        element.getAttribute(
-          "aria-label"
-        )
-      ) ||
-      normalize(
-        element.textContent
-      );
-
-    invariant(
-      objectId,
-      "SHOWROOM_CRYSTALS_OBJECT_ID_REQUIRED"
-    );
-
-    invariant(
-      cardinalId,
-      `SHOWROOM_CRYSTALS_CARDINAL_ID_REQUIRED:${objectId}`
-    );
-
-    if (
-      type ===
-      NODE_TYPES.CHILD
-    ) {
-      invariant(
-        clusterId,
-        `SHOWROOM_CRYSTALS_CLUSTER_ID_REQUIRED:${objectId}`
-      );
-
-      invariant(
-        childId,
-        `SHOWROOM_CRYSTALS_CHILD_ID_REQUIRED:${objectId}`
-      );
-
-      invariant(
-        clusterId ===
-          cardinalId,
-        `SHOWROOM_CRYSTALS_CHILD_PARENT_MISMATCH:${objectId}`,
-        {
-          cardinalId,
-          clusterId
-        }
-      );
-    }
-
-    return {
-      type,
-      objectId,
-      cardinalId,
-
-      clusterId:
-        type ===
-        NODE_TYPES.CARDINAL
-          ? cardinalId
-          : clusterId,
-
-      childId:
-        type ===
-        NODE_TYPES.CHILD
-          ? childId
-          : "",
-
-      behavior,
-      visualClass,
-      emphasis,
-      label,
-
-      semanticElement:
-        element
-    };
-  }
-
-  function materialFamilyForDescriptor(
-    descriptor
-  ) {
-    if (
-      descriptor.type ===
-      NODE_TYPES.CARDINAL
-    ) {
-      return MATERIAL_FAMILIES.CARDINAL;
-    }
-
-    if (
-      descriptor.visualClass ===
-        "PRIMARY_PORTAL" ||
-      descriptor.emphasis ===
-        "primary-external"
-    ) {
-      return MATERIAL_FAMILIES
-        .PRIMARY_PORTAL;
-    }
-
-    if (
-      descriptor.visualClass ===
-        "PORTAL" ||
-      descriptor.emphasis ===
-        "external" ||
-      descriptor.behavior ===
-        "portal"
-    ) {
-      return MATERIAL_FAMILIES.PORTAL;
-    }
-
-    return MATERIAL_FAMILIES.LOCAL;
-  }
-
-  function childOrdinal(childId) {
-    const match =
-      normalize(childId)
-        .match(
-          /-(\d+)$/
-        );
-
-    invariant(
-      match,
-      `SHOWROOM_CRYSTALS_CHILD_SUFFIX_INVALID:${childId}`
-    );
-
-    const ordinal =
-      Number(match[1]);
-
-    invariant(
-      ordinal >=
-        1 &&
-      ordinal <=
-        4,
-      `SHOWROOM_CRYSTALS_CHILD_ORDINAL_INVALID:${childId}`
-    );
-
-    return ordinal;
-  }
-
-  function cardinalUnitDirection(wing) {
-    const target =
-      CARDINAL_TARGETS[wing];
-
-    return normalizeVector([
-      target.x,
-      target.y,
-      target.z
-    ]);
-  }
-
-  function cardinalCenterOffset(
-    wing,
-    distance
-  ) {
-    const direction =
-      cardinalUnitDirection(
-        wing
-      );
-
-    return {
-      x:
-        direction[0] *
-        distance,
-
-      y:
-        direction[1] *
-        distance,
-
-      z:
-        direction[2] *
-        distance
-    };
-  }
-
-  function childLocalPosition(
-    ordinal,
-    layout
-  ) {
-    const source =
-      CHILD_LAYOUT.positions[
-        ordinal
-      ];
-
-    return {
-      x:
-        source.x *
-        layout.horizontalRadius,
-
-      y:
-        source.y *
-        layout.verticalRadius,
-
-      z:
-        source.z *
-        layout.depthRadius
-    };
-  }
-
-  function rotateChildLocalForWing(
-    wing,
-    local
-  ) {
-    switch (wing) {
-      case "north":
-        return {
-          x:
-            local.x,
-
-          y:
-            local.y,
-
-          z:
-            local.z
-        };
-
-      case "east":
-        return {
-          x:
-            local.y,
-
-          y:
-            -local.x,
-
-          z:
-            -local.z
-        };
-
-      case "south":
-        return {
-          x:
-            -local.x,
-
-          y:
-            -local.y,
-
-          z:
-            local.z
-        };
-
-      case "west":
-        return {
-          x:
-            -local.y,
-
-          y:
-            local.x,
-
-          z:
-            -local.z
-        };
-
-      default:
-        return {
-          x:
-            local.x,
-
-          y:
-            local.y,
-
-          z:
-            local.z
-        };
-    }
-  }
-
-  function childTarget(
-    wing,
-    ordinal,
-    expanded
-  ) {
-    const layout =
-      expanded
-        ? CHILD_LAYOUT.expanded
-        : CHILD_LAYOUT.collapsed;
-
-    const cardinal =
-      CARDINAL_TARGETS[wing];
-
-    const centerOffset =
-      cardinalCenterOffset(
-        wing,
-        layout.centerOffset
-      );
-
-    const local =
-      rotateChildLocalForWing(
-        wing,
-        childLocalPosition(
-          ordinal,
-          layout
-        )
-      );
-
-    return {
-      x:
-        cardinal.x +
-        centerOffset.x +
-        local.x,
-
-      y:
-        cardinal.y +
-        centerOffset.y +
-        local.y,
-
-      z:
-        cardinal.z +
-        centerOffset.z +
-        local.z
-    };
-  }
-
-  function collapsedChildTarget(
-    wing,
-    ordinal
-  ) {
-    return childTarget(
-      wing,
-      ordinal,
-      false
-    );
-  }
-
-  function expandedChildTarget(
-    wing,
-    ordinal
-  ) {
-    return childTarget(
-      wing,
-      ordinal,
-      true
-    );
-  }
-
-  function makeNode(descriptor) {
-    const materialFamily =
-      materialFamilyForDescriptor(
-        descriptor
-      );
-
-    const nodeId =
-      `crystal:${descriptor.objectId}`;
-
-    const cardinalTarget =
-      CARDINAL_TARGETS[
-        descriptor.cardinalId
-      ];
-
-    const initialPosition =
-      descriptor.type ===
-      NODE_TYPES.CARDINAL
-        ? {
-            ...cardinalTarget
-          }
-        : collapsedChildTarget(
-            descriptor.cardinalId,
-            childOrdinal(
-              descriptor.childId
-            )
-          );
-
-    return {
-      id:
-        nodeId,
-
-      objectId:
-        descriptor.objectId,
-
-      semanticObjectId:
-        descriptor.objectId,
-
-      type:
-        descriptor.type,
-
-      cardinalId:
-        descriptor.cardinalId,
-
-      clusterId:
-        descriptor.clusterId,
-
-      childId:
-        descriptor.childId,
-
-      behavior:
-        descriptor.behavior,
-
-      visualClass:
-        descriptor.visualClass,
-
-      emphasis:
-        descriptor.emphasis,
-
-      label:
-        descriptor.label,
-
-      semanticElement:
-        descriptor.semanticElement,
-
-      materialFamily,
-
-      visible:
-        false,
-
-      targetVisible:
-        false,
-
-      settled:
-        false,
-
-      phase:
-        state.registry.size *
-        0.61 +
-        (
-          descriptor.type ===
-          NODE_TYPES.CARDINAL
-            ? 0.23
-            : 0.47
-        ),
-
-      current:
-        {
-          x:
-            initialPosition.x,
-
-          y:
-            initialPosition.y,
-
-          z:
-            initialPosition.z,
-
-          scale:
-            0.01,
-
-          opacity:
-            0,
-
-          emissive:
-            0,
-
-          rim:
-            0,
-
-          sparkle:
-            0,
-
-          halo:
-            0,
-
-          saturation:
-            1,
-
-          rx:
-            0,
-
-          ry:
-            0,
-
-          rz:
-            0,
-
-          float:
-            0,
-
-          spin:
-            0
-        },
-
-      target:
-        {
-          x:
-            initialPosition.x,
-
-          y:
-            initialPosition.y,
-
-          z:
-            initialPosition.z,
-
-          scale:
-            0.01,
-
-          opacity:
-            0,
-
-          emissive:
-            0,
-
-          rim:
-            0,
-
-          sparkle:
-            0,
-
-          halo:
-            0,
-
-          saturation:
-            1,
-
-          float:
-            0,
-
-          spin:
-            0
-        }
-    };
-  }
-
-  function buildRegistry(
-    cardinalElements,
-    childElements
-  ) {
-    const objectIds =
-      new Set();
-
-    const clusterCounts =
-      new Map(
-        WINGS.map(
-          wing => [
-            wing,
-            0
-          ]
-        )
-      );
-
-    for (
-      const element
-      of cardinalElements
-    ) {
-      const descriptor =
-        readDescriptor(
-          element,
-          NODE_TYPES.CARDINAL
-        );
-
-      invariant(
-        !objectIds.has(
-          descriptor.objectId
-        ),
-        `SHOWROOM_CRYSTALS_DUPLICATE_OBJECT_ID:${descriptor.objectId}`
-      );
-
-      objectIds.add(
-        descriptor.objectId
-      );
-
-      const node =
-        makeNode(descriptor);
-
-      state.registry.set(
-        node.id,
-        node
-      );
-    }
-
-    for (
-      const element
-      of childElements
-    ) {
-      const descriptor =
-        readDescriptor(
-          element,
-          NODE_TYPES.CHILD
-        );
-
-      invariant(
-        !objectIds.has(
-          descriptor.objectId
-        ),
-        `SHOWROOM_CRYSTALS_DUPLICATE_OBJECT_ID:${descriptor.objectId}`
-      );
-
-      objectIds.add(
-        descriptor.objectId
-      );
-
-      clusterCounts.set(
-        descriptor.clusterId,
-        (
-          clusterCounts.get(
-            descriptor.clusterId
-          ) ||
-          0
-        ) +
-        1
-      );
-
-      const node =
-        makeNode(descriptor);
-
-      state.registry.set(
-        node.id,
-        node
-      );
-    }
-
-    invariant(
-      objectIds.size ===
-        20,
-      "SHOWROOM_CRYSTALS_UNIQUE_OBJECT_COUNT_INVALID",
-      {
-        expected:
-          20,
-
-        actual:
-          objectIds.size
-      }
-    );
-
-    for (
-      const wing
-      of WINGS
-    ) {
-      invariant(
-        clusterCounts.get(
-          wing
-        ) ===
-          4,
-        `SHOWROOM_CRYSTALS_CLUSTER_COUNT_INVALID:${wing}`,
-        {
-          expected:
-            4,
-
-          actual:
-            clusterCounts.get(
-              wing
-            )
-        }
-      );
-
-      const cardinalNode =
-        Array.from(
-          state.registry.values()
-        ).find(
-          node =>
-            node.type ===
-              NODE_TYPES.CARDINAL &&
-            node.cardinalId ===
-              wing
-        );
-
-      invariant(
-        cardinalNode,
-        `SHOWROOM_CRYSTALS_CARDINAL_NODE_REQUIRED:${wing}`
-      );
-    }
-  }
-
-  function requireController() {
-    const controller =
-      window.SHOWROOM_CONTROLLER;
-
-    invariant(
-      controller,
-      "SHOWROOM_CRYSTALS_CONTROLLER_REQUIRED"
-    );
-
-    invariant(
-      controller.contract ===
-        CONTROLLER_CONTRACT,
-      "SHOWROOM_CRYSTALS_CONTROLLER_CONTRACT_INVALID"
-    );
-
-    invariant(
-      typeof controller
-        .getFrameState ===
-        "function",
-      "SHOWROOM_CRYSTALS_CONTROLLER_FRAME_SURFACE_REQUIRED"
-    );
-
-    return controller;
-  }
-
-  function validateControllerFrame(frame) {
-    return Boolean(
-      frame &&
-      typeof frame ===
-        "object" &&
-      frame.contract ===
-        CONTROLLER_CONTRACT &&
-      frame.controllerReady ===
-        true &&
-      frame.disposed ===
-        false &&
-      typeof frame
-        .presentationMode ===
-        "string" &&
-      typeof frame.held ===
-        "boolean" &&
-      typeof frame
-        .reducedMotion ===
-        "boolean" &&
-      frame.preview &&
-      typeof frame.preview ===
-        "object" &&
-      frame.readiness &&
-      typeof frame.readiness ===
-        "object"
-    );
-  }
-
-  function readControllerFrame() {
-    const frame =
-      state.controller
-        .getFrameState();
-
-    invariant(
-      validateControllerFrame(
-        frame
-      ),
-      "SHOWROOM_CRYSTALS_CONTROLLER_FRAME_INVALID"
-    );
-
-    state.controllerFrame =
-      frame;
-
-    return frame;
-  }
-
-  function requireCompositor() {
-    const compositor =
-      window.SHOWROOM_COMPOSITOR;
-
-    invariant(
-      compositor,
-      "SHOWROOM_CRYSTALS_COMPOSITOR_REQUIRED"
-    );
-
-    invariant(
-      compositor.contract ===
-        COMPOSITOR_CONTRACT,
-      "SHOWROOM_CRYSTALS_COMPOSITOR_CONTRACT_INVALID"
-    );
-
-    [
-      "getFrameState",
-      "getProjectionSnapshot",
-      "getCanvases",
-      "registerNode",
-      "registerRenderer",
-      "requestRender"
-    ].forEach(
-      surface => {
-        invariant(
-          typeof compositor[
-            surface
-          ] ===
-            "function",
-          `SHOWROOM_CRYSTALS_COMPOSITOR_SURFACE_REQUIRED:${surface}`
-        );
-      }
-    );
-
-    return compositor;
-  }
-
-  function compositorIsAuthoritativelyReady() {
-    return Boolean(
-      state.controllerFrame &&
-      state.controllerFrame
-        .readiness &&
-      state.controllerFrame
-        .readiness
-        .compositor ===
-        true &&
-      state.controllerFrame
-        .readiness
-        .compositorFailed !==
-        true
-    );
-  }
-
-  function frameValue(
-    frame,
-    key,
-    fallback = ""
-  ) {
-    return (
-      frame &&
-      Object.prototype
-        .hasOwnProperty.call(
-          frame,
-          key
-        )
-        ? frame[key]
-        : fallback
-    );
-  }
-
-  function previewObjectId(frame) {
-    return normalize(
-      frame &&
-      frame.preview
-        ? frame.preview.objectId
-        : ""
-    );
-  }
-
-  function activeCardinalId(frame) {
-    return normalizeWing(
-      frameValue(
-        frame,
-        "activeCardinalId",
-        ""
-      )
-    );
-  }
-
-  function activeClusterId(frame) {
-    return normalizeWing(
-      frameValue(
-        frame,
-        "activeClusterId",
-        ""
-      )
-    );
-  }
-
-  function activeChildId(frame) {
-    return normalize(
-      frameValue(
-        frame,
-        "activeChildId",
-        ""
-      )
-    );
-  }
-
-  function pendingRouteId(frame) {
-    return normalize(
-      frameValue(
-        frame,
-        "pendingRouteId",
-        ""
-      )
-    );
-  }
-
-  function presentationMode(frame) {
-    const mode =
-      normalizeLower(
-        frame.presentationMode
-      );
-
-    if (
-      Object.values(
-        PRESENTATION_MODES
-      ).includes(mode)
-    ) {
-      return mode;
-    }
-
-    return PRESENTATION_MODES.BASELINE;
-  }
-
-  function nodeMatchesObject(
-    node,
-    objectId
-  ) {
-    return Boolean(
-      objectId &&
-      (
-        node.objectId ===
-          objectId ||
-        node.childId ===
-          objectId ||
-        node.cardinalId ===
-          objectId
-      )
-    );
-  }
-
-  function routeMatchesNode(
-    node,
-    routeId
-  ) {
-    if (!routeId) {
-      return false;
-    }
-
-    const semanticRoute =
-      normalize(
-        node.semanticElement.dataset
-          .showroomRouteId ||
-        node.semanticElement.dataset
-          .showroomRoute ||
-        node.semanticElement
-          .getAttribute(
-            "href"
-          )
-      );
-
-    return (
-      node.objectId ===
-        routeId ||
-      node.childId ===
-        routeId ||
-      semanticRoute ===
-        routeId
-    );
-  }
-
-  function materialForNode(node) {
-    return (
-      MATERIALS[
-        node.materialFamily
-      ] ||
-      MATERIALS.LOCAL
-    );
-  }
-
-  function setTargetVisual(
-    node,
-    values
-  ) {
-    Object.assign(
-      node.target,
-      values
-    );
-  }
-
-  function computeTargets() {
-    const frame =
-      state.controllerFrame;
-
-    const mode =
-      presentationMode(frame);
-
-    if (
-      frame.held ===
-      true
-    ) {
-      for (
-        const node
-        of state.registry.values()
-      ) {
-        node.target.float =
-          0;
-
-        node.target.spin =
-          0;
-
-        node.target.sparkle =
-          0;
-      }
-
-      return;
-    }
-
-    const previewId =
-      previewObjectId(frame);
-
-    const activeCardinal =
-      activeCardinalId(frame);
-
-    const activeCluster =
-      activeClusterId(frame) ||
-      activeCardinal;
-
-    const activeChild =
-      activeChildId(frame);
-
-    const pendingRoute =
-      pendingRouteId(frame);
-
-    for (
-      const node
-      of state.registry.values()
-    ) {
-      const material =
-        materialForNode(node);
-
-      const isPreviewed =
-        nodeMatchesObject(
-          node,
-          previewId
-        );
-
-      const previewSupportsNode =
-        Boolean(
-          previewId &&
-          node.type ===
-            NODE_TYPES.CARDINAL &&
-          Array.from(
-            state.registry.values()
-          ).some(
-            candidate =>
-              candidate.type ===
-                NODE_TYPES.CHILD &&
-              candidate.cardinalId ===
-                node.cardinalId &&
-              nodeMatchesObject(
-                candidate,
-                previewId
-              )
-          )
-        );
-
-      const isActiveCardinal =
-        node.type ===
-          NODE_TYPES.CARDINAL &&
-        node.cardinalId ===
-          activeCardinal;
-
-      const isActiveChild =
-        node.type ===
-          NODE_TYPES.CHILD &&
-        nodeMatchesObject(
-          node,
-          activeChild
-        );
-
-      const isPendingRoute =
-        routeMatchesNode(
-          node,
-          pendingRoute
-        );
-
-      const inActiveCluster =
-        node.type ===
-          NODE_TYPES.CHILD &&
-        node.clusterId ===
-          activeCluster;
-
-      let position;
-
-      if (
-        node.type ===
-        NODE_TYPES.CARDINAL
-      ) {
-        position = {
-          ...CARDINAL_TARGETS[
-            node.cardinalId
-          ]
-        };
-      } else {
-        position =
-          inActiveCluster &&
-          mode ===
-            PRESENTATION_MODES.CLUSTER
-            ? expandedChildTarget(
-                node.cardinalId,
-                childOrdinal(
-                  node.childId
-                )
-              )
-            : collapsedChildTarget(
-                node.cardinalId,
-                childOrdinal(
-                  node.childId
-                )
-              );
-      }
-
-      let scale =
-        material.baseScale;
-
-      let opacity =
-        material.opacity;
-
-      let emissive =
-        material.emissive;
-
-      let rim =
-        material.rim;
-
-      let sparkle =
-        material.sparkle;
-
-      let halo =
-        material.halo;
-
-      let saturation =
-        material.saturation;
-
-      let visible =
-        mode !==
-        PRESENTATION_MODES.BASELINE;
-
-      if (
-        mode ===
-        PRESENTATION_MODES.BASELINE
-      ) {
-        opacity =
-          0;
-
-        scale =
-          0.01;
-
-        halo =
-          0;
-
-        sparkle =
-          0;
-
-        visible =
-          false;
-      }
-
-      if (
-        mode ===
-        PRESENTATION_MODES.CONSTELLATION
-      ) {
-        if (
-          node.type ===
-          NODE_TYPES.CARDINAL
-        ) {
-          scale =
-            isActiveCardinal
-              ? material.activeScale
-              : material.baseScale;
-
-          opacity =
-            isActiveCardinal
-              ? 1
-              : 0.94;
-        } else {
-          scale *=
-            0.82;
-
-          opacity *=
-            0.64;
-
-          halo *=
-            0.62;
-
-          sparkle *=
-            0.58;
-        }
-      }
-
-      if (
-        mode ===
-        PRESENTATION_MODES.CLUSTER
-      ) {
-        if (
-          node.type ===
-          NODE_TYPES.CARDINAL
-        ) {
-          if (
-            node.cardinalId ===
-            activeCluster
-          ) {
-            scale =
-              material.activeScale;
-
-            opacity =
-              1;
-
-            emissive *=
-              1.16;
-
-            rim *=
-              1.12;
-
-            halo *=
-              1.10;
-          } else {
-            scale *=
-              0.74;
-
-            opacity *=
-              0.46;
-
-            emissive *=
-              0.64;
-
-            rim *=
-              0.68;
-
-            halo *=
-              0.42;
-
-            sparkle *=
-              0.34;
-
-            position.x *=
-              1.06;
-
-            position.y *=
-              1.06;
-
-            position.z -=
-              0.18;
-          }
-        } else if (
-          inActiveCluster
-        ) {
-          scale =
-            material.activeScale;
-
-          opacity =
-            0.96;
-        } else {
-          scale *=
-            0.68;
-
-          opacity *=
-            0.28;
-
-          emissive *=
-            0.54;
-
-          rim *=
-            0.58;
-
-          halo *=
-            0.30;
-
-          sparkle *=
-            0.20;
-
-          position.x *=
-            1.05;
-
-          position.y *=
-            1.05;
-
-          position.z -=
-            0.28;
-        }
-      }
-
-      if (
-        mode ===
-        PRESENTATION_MODES.FRONT
-      ) {
-        const ancestryVisible =
-          (
-            node.type ===
-              NODE_TYPES.CARDINAL &&
-            node.cardinalId ===
-              activeCardinal
-          ) ||
-          (
-            node.type ===
-              NODE_TYPES.CHILD &&
-            (
-              nodeMatchesObject(
-                node,
-                activeChild
-              ) ||
-              node.clusterId ===
-                activeCluster
-            )
-          );
-
-        if (ancestryVisible) {
-          scale *=
-            nodeMatchesObject(
-              node,
-              activeChild
-            )
-              ? 0.94
-              : 0.82;
-
-          opacity *=
-            nodeMatchesObject(
-              node,
-              activeChild
-            )
-              ? 0.90
-              : 0.72;
-
-          emissive *=
-            0.82;
-
-          halo *=
-            0.58;
-
-          sparkle *=
-            0.36;
-        } else {
-          scale *=
-            0.58;
-
-          opacity *=
-            0.16;
-
-          emissive *=
-            0.42;
-
-          rim *=
-            0.46;
-
-          halo *=
-            0.18;
-
-          sparkle =
-            0;
-
-          position.x *=
-            1.08;
-
-          position.y *=
-            1.08;
-
-          position.z -=
-            0.58;
-        }
-      }
-
-      if (
-        isActiveCardinal ||
-        isActiveChild
-      ) {
-        scale =
-          Math.max(
-            scale,
-            material.selectedScale
-          );
-
-        opacity =
-          Math.max(
-            opacity,
-            0.98
-          );
-
-        emissive *=
-          1.24;
-
-        rim *=
-          1.18;
-
-        halo *=
-          1.18;
-      }
-
-      if (isPreviewed) {
-        scale =
-          Math.max(
-            scale,
-            material.previewScale
-          );
-
-        emissive *=
-          1.20;
-
-        rim *=
-          1.18;
-
-        halo *=
-          1.12;
-
-        opacity =
-          Math.max(
-            opacity,
-            0.96
-          );
-      } else if (
-        previewSupportsNode
-      ) {
-        scale *=
-          1.04;
-
-        emissive *=
-          1.08;
-
-        rim *=
-          1.06;
-
-        halo *=
-          1.05;
-      }
-
-      if (isPendingRoute) {
-        scale *=
-          1.06;
-
-        emissive *=
-          1.24;
-
-        rim *=
-          1.22;
-
-        halo *=
-          1.26;
-
-        sparkle *=
-          1.12;
-
-        opacity =
-          Math.max(
-            opacity,
-            0.98
-          );
-      }
-
-      if (
-        frame.reducedMotion ===
-        true
-      ) {
-        sparkle =
-          0;
-      }
-
-      node.targetVisible =
-        visible;
-
-      setTargetVisual(
-        node,
-        {
-          x:
-            position.x,
-
-          y:
-            position.y,
-
-          z:
-            position.z,
-
-          scale:
-            clamp(
-              scale,
-              0.01,
-              1.34
-            ),
-
-          opacity:
-            clamp(
-              opacity,
-              0,
-              1
-            ),
-
-          emissive:
-            clamp(
-              emissive,
-              0,
-              0.52
-            ),
-
-          rim:
-            clamp(
-              rim,
-              0,
-              1.72
-            ),
-
-          sparkle:
-            clamp(
-              sparkle,
-              0,
-              0.52
-            ),
-
-          halo:
-            clamp(
-              halo,
-              0,
-              1.42
-            ),
-
-          saturation:
-            clamp(
-              saturation,
-              0,
-              1
-            ),
-
-          float:
-            frame.reducedMotion
-              ? 0
-              : material.float,
-
-          spin:
-            frame.reducedMotion
-              ? 0
-              : material.spin
-        }
-      );
-    }
-  }
-
-  function nodeHasActiveInterpolation(
-    node
-  ) {
-    const keys = [
-      "x",
-      "y",
-      "z",
-      "scale",
-      "opacity",
-      "emissive",
-      "rim",
-      "sparkle",
-      "halo",
-      "saturation",
-      "float",
-      "spin"
-    ];
-
-    return keys.some(
-      key =>
-        Math.abs(
-          node.current[key] -
-          node.target[key]
-        ) >
-        (
-          key ===
-            "opacity" ||
-          key ===
-            "scale"
-            ? 0.001
-            : 0.002
-        )
-    );
-  }
-
-  function updateNodeState(
-    node,
-    deltaSeconds
-  ) {
-    const frame =
-      state.controllerFrame;
-
-    if (
-      frame.held ===
-      true
-    ) {
-      node.current.float =
-        0;
-
-      node.current.spin =
-        0;
-
-      node.current.sparkle =
-        0;
-
-      node.visible =
-        node.current.opacity >
-        QUALITY
-          .visibilityThreshold;
-
-      return false;
-    }
-
-    const reducedMotion =
-      frame.reducedMotion ===
-      true;
-
-    const interpolation =
-      Math.min(
-        1,
-        deltaSeconds *
-        (
-          reducedMotion
-            ? QUALITY
-                .reducedMotionSettleSpeed
-            : QUALITY
-                .transformSettleSpeed
-        )
-      );
-
-    const keys = [
-      "x",
-      "y",
-      "z",
-      "scale",
-      "opacity",
-      "emissive",
-      "rim",
-      "sparkle",
-      "halo",
-      "saturation",
-      "float",
-      "spin"
-    ];
-
-    for (
-      const key
-      of keys
-    ) {
-      node.current[key] =
-        lerp(
-          node.current[key],
-          node.target[key],
-          interpolation
-        );
-    }
-
-    if (reducedMotion) {
-      node.current.rx =
-        0;
-
-      node.current.ry =
-        0;
-
-      node.current.rz =
-        0;
-    } else {
-      node.current.rz +=
-        deltaSeconds *
-        node.current.spin;
-
-      node.current.ry =
-        Math.sin(
-          state.lastAnimationTime *
-          0.00042 +
-          node.phase
-        ) *
-        0.19 *
-        Math.max(
-          0.34,
-          node.current.opacity
-        );
-
-      node.current.rx =
-        Math.sin(
-          state.lastAnimationTime *
-          0.00031 +
-          node.phase *
-          0.73
-        ) *
-        0.12 *
-        Math.max(
-          0.34,
-          node.current.opacity
-        );
-    }
-
-    node.visible =
-      node.targetVisible ||
-      node.current.opacity >
-        QUALITY
-          .visibilityThreshold;
-
-    node.settled =
-      !nodeHasActiveInterpolation(
-        node
-      );
-
-    return !node.settled;
-  }
-
-  function ambientMotionPermitted() {
-    const frame =
-      state.controllerFrame;
-
-    return Boolean(
-      frame &&
-      frame.held !==
-        true &&
-      frame.reducedMotion !==
-        true &&
-      presentationMode(frame) !==
-        PRESENTATION_MODES.BASELINE &&
-      document.visibilityState !==
-        "hidden"
-    );
-  }
-
-  function shouldAnimationContinue() {
-    if (
-      state.disposed ||
-      state.failed ||
-      state.contextDegraded ||
-      !state.ready ||
-      !state.controllerFrame ||
-      document.visibilityState ===
-        "hidden"
-    ) {
-      return false;
-    }
-
-    if (
-      state.controllerFrame.held ===
-      true
-    ) {
-      return false;
-    }
-
-    for (
-      const node
-      of state.registry.values()
-    ) {
-      if (
-        nodeHasActiveInterpolation(
-          node
-        )
-      ) {
-        return true;
-      }
-    }
-
-    return ambientMotionPermitted();
-  }
-
-  function animationStep(now) {
-    state.animationRaf =
-      0;
-
-    if (
-      state.disposed ||
-      state.failed ||
-      state.contextDegraded ||
-      !state.ready
-    ) {
-      state.animationRunning =
-        false;
-
-      return;
-    }
-
-    const deltaSeconds =
-      state.lastAnimationTime
-        ? Math.min(
-            QUALITY
-              .maximumDeltaSeconds,
-            Math.max(
-              0,
-              (
-                now -
-                state.lastAnimationTime
-              ) /
-              1000
-            )
-          )
-        : 0.016;
-
-    state.lastAnimationTime =
-      now;
-
-    let changed =
-      false;
-
-    for (
-      const node
-      of state.registry.values()
-    ) {
-      changed =
-        updateNodeState(
-          node,
-          deltaSeconds
-        ) ||
-        changed;
-    }
-
-    const ambient =
-      ambientMotionPermitted();
-
-    if (
-      changed ||
-      ambient
-    ) {
-      if (
-        !ambient ||
-        now -
-          state.lastAmbientRequestTime >=
-          QUALITY
-            .ambientFrameIntervalMs
-      ) {
-        state.lastAmbientRequestTime =
-          now;
-
-        state.counters
-          .animationRequests +=
-          1;
-
-        state.compositor.requestRender(
-          "crystal-animation"
-        );
-      }
-    }
-
-    if (
-      shouldAnimationContinue()
-    ) {
-      state.animationRaf =
-        requestAnimationFrame(
-          animationStep
-        );
-
-      return;
-    }
-
-    state.animationRunning =
-      false;
-
-    state.lastAnimationTime =
-      0;
-  }
-
-  function startAnimationDriver() {
-    if (
-      state.animationRunning ||
-      state.disposed ||
-      state.failed ||
-      state.contextDegraded ||
-      !state.ready ||
-      document.visibilityState ===
-        "hidden"
-    ) {
-      return;
-    }
-
-    state.animationRunning =
-      true;
-
-    state.lastAnimationTime =
-      0;
-
-    state.animationRaf =
-      requestAnimationFrame(
-        animationStep
-      );
-  }
-
-  function stopAnimationDriver() {
-    if (state.animationRaf) {
-      cancelAnimationFrame(
-        state.animationRaf
-      );
-    }
-
-    state.animationRaf =
-      0;
-
-    state.animationRunning =
-      false;
-
-    state.lastAnimationTime =
-      0;
-  }
-
-  function evaluateAnimationDriver() {
-    if (
-      shouldAnimationContinue()
-    ) {
-      startAnimationDriver();
-    } else {
-      stopAnimationDriver();
-
-      if (
-        state.ready &&
-        !state.contextDegraded &&
-        !state.disposed &&
-        !state.failed
-      ) {
-        state.compositor.requestRender(
-          "crystal-settled"
-        );
-      }
-    }
-  }
-
-  function nodeWorldPosition(node) {
-    const floatY =
-      (
-        state.controllerFrame &&
-        state.controllerFrame.held !==
-          true &&
-        state.controllerFrame
-          .reducedMotion !==
-          true
-      )
-        ? Math.sin(
-            state.lastAnimationTime *
-            0.00095 +
-            node.phase
-          ) *
-          node.current.float
-        : 0;
-
-    return [
-      node.current.x,
-      node.current.y +
-        floatY,
-      node.current.z
-    ];
-  }
-
-  function nodeHitRadius(node) {
-    const base =
-      node.type ===
-      NODE_TYPES.CARDINAL
-        ? QUALITY.cardinalHitRadius
-        : QUALITY.childHitRadius;
-
-    return Math.max(
-      18,
-      base *
-      node.current.scale *
-      clamp(
-        node.current.opacity,
-        0.30,
-        1
-      )
-    );
-  }
-
-  function registerNodes() {
-    for (
-      const node
-      of state.registry.values()
-    ) {
-      const registration =
-        state.compositor
-          .registerNode({
-            id:
-              node.id,
-
-            semanticObjectId:
-              node.semanticObjectId,
-
-            cardinalId:
-              node.cardinalId,
-
-            childId:
-              node.childId,
-
-            clusterId:
-              node.clusterId,
-
-            semanticElement:
-              node.semanticElement,
-
-            getWorldPosition:
-              () =>
-                nodeWorldPosition(
-                  node
-                ),
-
-            getHitRadius:
-              () =>
-                nodeHitRadius(
-                  node
-                ),
-
-            isVisible:
-              () =>
-                node.visible &&
-                node.current.opacity >
-                  QUALITY
-                    .visibilityThreshold,
-
-            metadata:
-              {
-                contract:
-                  CONTRACT,
-
-                type:
-                  node.type,
-
-                objectId:
-                  node.objectId,
-
-                cardinalId:
-                  node.cardinalId,
-
-                clusterId:
-                  node.clusterId,
-
-                childId:
-                  node.childId,
-
-                behavior:
-                  node.behavior,
-
-                visualClass:
-                  node.visualClass,
-
-                emphasis:
-                  node.emphasis,
-
-                materialFamily:
-                  node.materialFamily,
-
-                label:
-                  node.label
-              }
-          });
-
-      invariant(
-        registration &&
-        typeof registration
-          .unregister ===
-          "function",
-        `SHOWROOM_CRYSTALS_NODE_REGISTRATION_FAILED:${node.id}`
-      );
-
-      state.nodeRegistrations.set(
-        node.id,
-        registration
-      );
-
-      state.counters
-        .nodeRegistrations +=
-        1;
-    }
-
-    invariant(
-      state.nodeRegistrations.size ===
-        20,
-      "SHOWROOM_CRYSTALS_REGISTERED_NODE_COUNT_INVALID"
-    );
-  }
-
-  function unregisterNodes() {
-    for (
-      const registration
-      of state.nodeRegistrations.values()
-    ) {
-      try {
-        if (
-          registration &&
-          typeof registration
-            .unregister ===
-            "function"
-        ) {
-          registration.unregister();
-
-          state.counters
-            .nodeUnregistrations +=
-            1;
-        }
-      } catch {
-        /* Continue bounded disposal. */
-      }
-    }
-
-    state.nodeRegistrations.clear();
-  }
-
-  function resizeRenderer(
-    renderer,
-    payload
-  ) {
-    const frame =
-      payload.frame;
-
-    const viewport =
-      frame &&
-      frame.viewport
-        ? frame.viewport
-        : null;
-
-    invariant(
-      viewport,
-      "SHOWROOM_CRYSTALS_RENDER_VIEWPORT_REQUIRED"
-    );
-
-    const expectedWidth =
-      Math.max(
-        1,
-        Math.round(
-          finiteNumber(
-            viewport.pixelWidth,
-            renderer.canvas.width
-          )
-        )
-      );
-
-    const expectedHeight =
-      Math.max(
-        1,
-        Math.round(
-          finiteNumber(
-            viewport.pixelHeight,
-            renderer.canvas.height
-          )
-        )
-      );
-
-    invariant(
-      renderer.canvas.width ===
-        expectedWidth &&
-      renderer.canvas.height ===
-        expectedHeight,
-      `SHOWROOM_CRYSTALS_${renderer.id.toUpperCase()}_CANVAS_DIMENSION_MISMATCH`,
-      {
-        expectedWidth,
-        expectedHeight,
-
-        actualWidth:
-          renderer.canvas.width,
-
-        actualHeight:
-          renderer.canvas.height
-      }
-    );
-
-    renderer.width =
-      renderer.canvas.width;
-
-    renderer.height =
-      renderer.canvas.height;
-
-    renderer.gl.viewport(
-      0,
-      0,
-      renderer.width,
-      renderer.height
-    );
-  }
-
   function matrixFromFrame(
     frame,
-    key
+    name
   ) {
     const matrix =
       frame &&
       frame.matrices
-        ? frame.matrices[key]
+        ? frame.matrices[name]
         : null;
 
     invariant(
       Array.isArray(matrix) &&
-      matrix.length ===
-        16,
-      `SHOWROOM_CRYSTALS_${key.toUpperCase()}_MATRIX_REQUIRED`
+      matrix.length === 16,
+      `SHOWROOM_CRYSTALS_${name.toUpperCase()}_MATRIX_REQUIRED`
     );
 
     return matrix;
@@ -5308,23 +4163,14 @@
     );
   }
 
-  function paletteForNode(node) {
-    return (
-      PALETTES[
-        node.cardinalId
-      ] ||
-      PALETTES.north
-    );
-  }
-
-  function applyNodeUniforms(
-    renderer,
+  function applyUniforms(
+    context,
     node,
     frame,
     haloPass
   ) {
     const gl =
-      renderer.gl;
+      context.gl;
 
     const view =
       matrixFromFrame(
@@ -5353,30 +4199,22 @@
       );
 
     const palette =
-      paletteForNode(node);
+      PALETTES[
+        node.cardinalId
+      ] ||
+      PALETTES.north;
 
-    const reducedMotion =
-      Boolean(
-        state.controllerFrame &&
-        state.controllerFrame
-          .reducedMotion
-      );
-
-    const cssWidth =
+    const haloStrength =
       finiteNumber(
         frame.viewport.cssWidth,
         0
-      );
-
-    const haloStrength =
-      cssWidth <=
-      QUALITY
-        .bloomDisableWidthPx
+      ) <=
+      QUALITY.haloDisableWidth
         ? 0
         : node.current.halo;
 
     gl.uniformMatrix4fv(
-      renderer.uniforms.model,
+      context.uniforms.model,
       false,
       new Float32Array(
         model
@@ -5384,7 +4222,7 @@
     );
 
     gl.uniformMatrix4fv(
-      renderer.uniforms.view,
+      context.uniforms.view,
       false,
       new Float32Array(
         view
@@ -5392,7 +4230,7 @@
     );
 
     gl.uniformMatrix4fv(
-      renderer.uniforms
+      context.uniforms
         .projection,
       false,
       new Float32Array(
@@ -5401,7 +4239,7 @@
     );
 
     gl.uniformMatrix3fv(
-      renderer.uniforms
+      context.uniforms
         .normalMatrix,
       false,
       new Float32Array(
@@ -5410,49 +4248,56 @@
     );
 
     gl.uniform1f(
-      renderer.uniforms.time,
+      context.uniforms.scale,
+      node.current.scale
+    );
+
+    gl.uniform1f(
+      context.uniforms.time,
       state.lastAnimationTime *
         0.001
     );
 
     gl.uniform1f(
-      renderer.uniforms.opacity,
+      context.uniforms.opacity,
       node.current.opacity
     );
 
     gl.uniform1f(
-      renderer.uniforms.scale,
-      node.current.scale
-    );
-
-    gl.uniform1f(
-      renderer.uniforms
-        .emissive,
+      context.uniforms.emissive,
       node.current.emissive
     );
 
     gl.uniform1f(
-      renderer.uniforms
+      context.uniforms
         .rimStrength,
       node.current.rim
     );
 
     gl.uniform1f(
-      renderer.uniforms
+      context.uniforms
         .sparkleStrength,
-      reducedMotion
+      state.reducedMotion
         ? 0
         : node.current.sparkle
     );
 
     gl.uniform1f(
-      renderer.uniforms
+      context.uniforms
         .haloStrength,
       haloStrength
     );
 
+    gl.uniform1f(
+      context.uniforms
+        .reducedMotion,
+      state.reducedMotion
+        ? 1
+        : 0
+    );
+
     gl.uniform3fv(
-      renderer.uniforms
+      context.uniforms
         .primaryColor,
       new Float32Array(
         palette.primary
@@ -5460,7 +4305,7 @@
     );
 
     gl.uniform3fv(
-      renderer.uniforms
+      context.uniforms
         .secondaryColor,
       new Float32Array(
         palette.secondary
@@ -5468,62 +4313,46 @@
     );
 
     gl.uniform3fv(
-      renderer.uniforms
-        .warmSpecular,
+      context.uniforms.rimColor,
       new Float32Array(
-        palette.warmSpecular
+        palette.rim
       )
     );
 
     gl.uniform3fv(
-      renderer.uniforms
-        .coolRim,
+      context.uniforms
+        .highlightColor,
       new Float32Array(
-        palette.coolRim
+        palette.highlight
       )
     );
 
     gl.uniform1f(
-      renderer.uniforms
-        .reducedMotion,
-      reducedMotion
-        ? 1
-        : 0
-    );
-
-    gl.uniform1f(
-      renderer.uniforms
-        .saturation,
-      node.current.saturation
-    );
-
-    gl.uniform1f(
-      renderer.uniforms
-        .haloPass,
+      context.uniforms.haloPass,
       haloPass
         ? 1
         : 0
     );
 
     gl.uniform1f(
-      renderer.uniforms
+      context.uniforms
         .haloExpansion,
-      node.type ===
-        NODE_TYPES.CARDINAL
+      node.kind ===
+        NODE_KINDS.CARDINAL
         ? 0.075
-        : 0.055
+        : 0.052
     );
   }
 
   function drawNode(
-    renderer,
+    context,
     node,
     frame,
     haloPass
   ) {
     const mesh =
-      renderer.meshes.get(
-        node.type
+      context.meshes.get(
+        node.kind
       );
 
     if (!mesh) {
@@ -5531,43 +4360,35 @@
     }
 
     bindAttribute(
-      renderer,
+      context,
       mesh.position,
-      renderer.attribs.position,
+      context.attributes.position,
       3
     );
 
     bindAttribute(
-      renderer,
+      context,
       mesh.normal,
-      renderer.attribs.normal,
+      context.attributes.normal,
       3
     );
 
     bindAttribute(
-      renderer,
-      mesh.color,
-      renderer.attribs.color,
-      3
-    );
-
-    bindAttribute(
-      renderer,
-      mesh.sparkleIndex,
-      renderer.attribs
-        .sparkleIndex,
+      context,
+      mesh.facet,
+      context.attributes.facet,
       1
     );
 
-    applyNodeUniforms(
-      renderer,
+    applyUniforms(
+      context,
       node,
       frame,
       haloPass
     );
 
-    renderer.gl.drawArrays(
-      renderer.gl.TRIANGLES,
+    context.gl.drawArrays(
+      context.gl.TRIANGLES,
       0,
       mesh.vertexCount
     );
@@ -5575,19 +4396,142 @@
     return 1;
   }
 
-  function drawLayer(
-    rendererId,
+  function resizeContext(
+    context,
+    frame
+  ) {
+    const viewport =
+      frame.viewport;
+
+    invariant(
+      viewport,
+      "SHOWROOM_CRYSTALS_VIEWPORT_REQUIRED"
+    );
+
+    const expectedWidth =
+      Math.max(
+        1,
+        Math.round(
+          finiteNumber(
+            viewport.pixelWidth,
+            context.canvas.width
+          )
+        )
+      );
+
+    const expectedHeight =
+      Math.max(
+        1,
+        Math.round(
+          finiteNumber(
+            viewport.pixelHeight,
+            context.canvas.height
+          )
+        )
+      );
+
+    invariant(
+      context.canvas.width ===
+        expectedWidth &&
+      context.canvas.height ===
+        expectedHeight,
+      `SHOWROOM_CRYSTALS_${context.id.toUpperCase()}_CANVAS_SIZE_INVALID`
+    );
+
+    context.gl.viewport(
+      0,
+      0,
+      context.canvas.width,
+      context.canvas.height
+    );
+  }
+
+  function clearLayer(
+    contextId,
     payload
   ) {
-    const renderer =
+    const context =
       state.contexts.get(
-        rendererId
+        contextId
       );
 
     if (
-      !renderer ||
-      !renderer.available ||
-      renderer.contextLost
+      !context ||
+      !context.available ||
+      context.contextLost
+    ) {
+      return false;
+    }
+
+    resizeContext(
+      context,
+      payload.frame
+    );
+
+    const gl =
+      context.gl;
+
+    gl.colorMask(
+      true,
+      true,
+      true,
+      true
+    );
+
+    gl.depthMask(true);
+
+    gl.clearColor(
+      0,
+      0,
+      0,
+      0
+    );
+
+    gl.clearDepth(1);
+
+    gl.clear(
+      gl.COLOR_BUFFER_BIT |
+      gl.DEPTH_BUFFER_BIT
+    );
+
+    const error =
+      gl.getError();
+
+    invariant(
+      error === gl.NO_ERROR,
+      `SHOWROOM_CRYSTALS_${contextId.toUpperCase()}_CLEAR_FAILED`,
+      {
+        error
+      }
+    );
+
+    if (
+      contextId ===
+      CONTEXT_IDS.REAR
+    ) {
+      state.counters.rearClears +=
+        1;
+    } else {
+      state.counters.frontClears +=
+        1;
+    }
+
+    return true;
+  }
+
+  function drawLayer(
+    contextId,
+    payload
+  ) {
+    const context =
+      state.contexts.get(
+        contextId
+      );
+
+    if (
+      !context ||
+      !context.available ||
+      context.contextLost
     ) {
       return {
         drawCalls:
@@ -5601,42 +4545,28 @@
       };
     }
 
-    resizeRenderer(
-      renderer,
-      payload
+    resizeContext(
+      context,
+      payload.frame
     );
 
     const gl =
-      renderer.gl;
-
-    gl.clearColor(
-      0,
-      0,
-      0,
-      0
-    );
-
-    gl.clear(
-      gl.COLOR_BUFFER_BIT |
-      gl.DEPTH_BUFFER_BIT
-    );
+      context.gl;
 
     gl.useProgram(
-      renderer.program
+      context.program
     );
 
-    const nodes =
-      Array.isArray(
-        payload.nodes
-      )
+    const projectedNodes =
+      Array.isArray(payload.nodes)
         ? payload.nodes
         : [];
 
-    const resolvedNodes = [];
+    const nodes = [];
 
     for (
       const projectedNode
-      of nodes
+      of projectedNodes
     ) {
       const node =
         state.registry.get(
@@ -5645,19 +4575,17 @@
 
       if (
         node &&
+        node.targetVisible &&
         node.visible &&
         node.current.opacity >
           QUALITY
-            .visibilityThreshold
+            .visibleOpacityThreshold
       ) {
-        resolvedNodes.push(
-          node
-        );
+        nodes.push(node);
       }
     }
 
-    let drawCalls =
-      0;
+    let drawCalls = 0;
 
     const haloEnabled =
       finiteNumber(
@@ -5665,8 +4593,7 @@
           .cssWidth,
         0
       ) >
-      QUALITY
-        .bloomDisableWidthPx;
+      QUALITY.haloDisableWidth;
 
     if (haloEnabled) {
       gl.depthMask(false);
@@ -5678,11 +4605,11 @@
 
       for (
         const node
-        of resolvedNodes
+        of nodes
       ) {
         drawCalls +=
           drawNode(
-            renderer,
+            context,
             node,
             payload.frame,
             true
@@ -5699,11 +4626,11 @@
 
     for (
       const node
-      of resolvedNodes
+      of nodes
     ) {
       drawCalls +=
         drawNode(
-          renderer,
+          context,
           node,
           payload.frame,
           false
@@ -5714,9 +4641,8 @@
       gl.getError();
 
     invariant(
-      error ===
-        gl.NO_ERROR,
-      `SHOWROOM_CRYSTALS_${rendererId.toUpperCase()}_DRAW_FAILED`,
+      error === gl.NO_ERROR,
+      `SHOWROOM_CRYSTALS_${contextId.toUpperCase()}_DRAW_FAILED`,
       {
         error
       }
@@ -5726,133 +4652,302 @@
       drawCalls,
 
       nodeCount:
-        resolvedNodes.length,
+        nodes.length,
 
       skipped:
         false
     };
   }
 
-  function registerRenderer() {
+  function registerNodesTransactional() {
+    const acquired = [];
+
+    try {
+      for (
+        const node
+        of state.registry.values()
+      ) {
+        const registration =
+          state.compositor
+            .registerNode({
+              id:
+                node.id,
+
+              kind:
+                node.kind,
+
+              semanticObjectId:
+                node.semanticObjectId,
+
+              cardinalId:
+                node.cardinalId,
+
+              childId:
+                node.childId,
+
+              clusterId:
+                node.clusterId,
+
+              semanticElement:
+                node.semanticElement,
+
+              getWorldPosition:
+                () =>
+                  nodeWorldPosition(
+                    node
+                  ),
+
+              getHitRadius:
+                () =>
+                  nodeHitRadius(
+                    node
+                  ),
+
+              isVisible:
+                () =>
+                  node.targetVisible &&
+                  node.visible,
+
+              metadata: {
+                contract:
+                  CONTRACT,
+
+                projectionId:
+                  node.projectionId,
+
+                kind:
+                  node.kind,
+
+                cardinalId:
+                  node.cardinalId,
+
+                childId:
+                  node.childId,
+
+                clusterId:
+                  node.clusterId,
+
+                materialFamily:
+                  node.materialFamily,
+
+                label:
+                  node.label
+              }
+            });
+
+        invariant(
+          registration &&
+          typeof registration.unregister ===
+            "function",
+          `SHOWROOM_CRYSTALS_NODE_REGISTRATION_FAILED:${node.id}`
+        );
+
+        acquired.push({
+          id:
+            node.id,
+
+          registration
+        });
+      }
+
+      for (
+        const entry
+        of acquired
+      ) {
+        state.nodeRegistrations.set(
+          entry.id,
+          entry.registration
+        );
+
+        state.counters
+          .nodeRegistrations +=
+          1;
+      }
+    } catch (error) {
+      for (
+        const entry
+        of acquired.reverse()
+      ) {
+        try {
+          entry.registration
+            .unregister();
+        } catch {
+          /* Transaction rollback continues. */
+        }
+      }
+
+      throw error;
+    }
+
+    invariant(
+      state.nodeRegistrations.size ===
+        20,
+      "SHOWROOM_CRYSTALS_REGISTERED_NODE_COUNT_INVALID"
+    );
+  }
+
+  function unregisterNodes() {
+    for (
+      const registration
+      of state.nodeRegistrations.values()
+    ) {
+      try {
+        registration.unregister();
+
+        state.counters
+          .nodeUnregistrations +=
+          1;
+      } catch {
+        /* Bounded disposal. */
+      }
+    }
+
+    state.nodeRegistrations.clear();
+  }
+
+  function registerRendererTransactional() {
     const registration =
       state.compositor
         .registerRenderer({
           id:
             RENDERER_ID,
 
-          beginFrame:
-            payload => {
-              state.compositorFrame =
-                payload.frame;
+          clearRearOwned:
+            true,
 
-              return true;
-            },
+          clearFrontOwned:
+            true,
 
-          renderRear:
-            payload => {
-              try {
-                const result =
-                  drawLayer(
-                    CONTEXT_IDS.REAR,
-                    payload
-                  );
+          clearRear(payload) {
+            return clearLayer(
+              CONTEXT_IDS.REAR,
+              payload
+            );
+          },
 
-                state.counters
-                  .rearDrawCalls =
-                  result.drawCalls;
+          clearFront(payload) {
+            return clearLayer(
+              CONTEXT_IDS.FRONT,
+              payload
+            );
+          },
 
-                state.counters
-                  .rearFrames +=
-                  1;
-
-                return result;
-              } catch (error) {
-                queueMicrotask(
-                  () => {
-                    failRuntime(
-                      error,
-                      "rear-render"
-                    );
-                  }
-                );
-
-                return {
-                  drawCalls:
-                    0,
-
-                  nodeCount:
-                    0,
-
-                  skipped:
-                    true,
-
-                  failed:
-                    true
-                };
-              }
-            },
-
-          renderFront:
-            payload => {
-              try {
-                const result =
-                  drawLayer(
-                    CONTEXT_IDS.FRONT,
-                    payload
-                  );
-
-                state.counters
-                  .frontDrawCalls =
-                  result.drawCalls;
-
-                state.counters
-                  .frontFrames +=
-                  1;
-
-                return result;
-              } catch (error) {
-                queueMicrotask(
-                  () => {
-                    failRuntime(
-                      error,
-                      "front-render"
-                    );
-                  }
-                );
-
-                return {
-                  drawCalls:
-                    0,
-
-                  nodeCount:
-                    0,
-
-                  skipped:
-                    true,
-
-                  failed:
-                    true
-                };
-              }
-            },
-
-          endFrame:
-            () =>
-              true,
-
-          dispose:
-            () => {
-              destroyGpuResources();
-
-              state.ready =
-                false;
+          beginFrame(payload) {
+            if (
+              state.failed ||
+              state.disposed
+            ) {
+              return false;
             }
+
+            return Boolean(
+              payload &&
+              payload.frame
+            );
+          },
+
+          renderRear(payload) {
+            try {
+              const result =
+                drawLayer(
+                  CONTEXT_IDS.REAR,
+                  payload
+                );
+
+              state.counters
+                .lastRearDrawCalls =
+                result.drawCalls;
+
+              state.counters
+                .totalRearDrawCalls +=
+                result.drawCalls;
+
+              state.counters
+                .rearFrames +=
+                1;
+
+              return result;
+            } catch (error) {
+              queueMicrotask(() => {
+                failRuntime(
+                  error,
+                  "rear-render"
+                );
+              });
+
+              return {
+                drawCalls:
+                  0,
+
+                nodeCount:
+                  0,
+
+                skipped:
+                  true,
+
+                failed:
+                  true
+              };
+            }
+          },
+
+          renderFront(payload) {
+            try {
+              const result =
+                drawLayer(
+                  CONTEXT_IDS.FRONT,
+                  payload
+                );
+
+              state.counters
+                .lastFrontDrawCalls =
+                result.drawCalls;
+
+              state.counters
+                .totalFrontDrawCalls +=
+                result.drawCalls;
+
+              state.counters
+                .frontFrames +=
+                1;
+
+              return result;
+            } catch (error) {
+              queueMicrotask(() => {
+                failRuntime(
+                  error,
+                  "front-render"
+                );
+              });
+
+              return {
+                drawCalls:
+                  0,
+
+                nodeCount:
+                  0,
+
+                skipped:
+                  true,
+
+                failed:
+                  true
+              };
+            }
+          },
+
+          endFrame() {
+            return true;
+          },
+
+          dispose() {
+            destroyGpuResources();
+          }
         });
 
     invariant(
       registration &&
-      typeof registration
-        .unregister ===
+      typeof registration.unregister ===
         "function",
       "SHOWROOM_CRYSTALS_RENDERER_REGISTRATION_FAILED"
     );
@@ -5873,108 +4968,338 @@
       null;
 
     if (
-      registration &&
-      typeof registration
-        .unregister ===
+      !registration ||
+      typeof registration.unregister !==
         "function"
     ) {
-      try {
-        registration.unregister();
+      return;
+    }
 
-        state.counters
-          .rendererUnregistrations +=
-          1;
-      } catch {
-        /* Continue bounded disposal. */
-      }
+    try {
+      registration.unregister();
+
+      state.counters
+        .rendererUnregistrations +=
+        1;
+    } catch {
+      /* Bounded disposal. */
     }
   }
 
-  function tryCompleteReadiness(reason) {
+  function processFrame(
+    frame,
+    reason
+  ) {
     if (
-      state.ready ||
       state.failed ||
       state.disposed
     ) {
-      return false;
+      return;
     }
 
-    if (
-      !compositorIsAuthoritativelyReady()
-    ) {
-      if (
-        !state.waitingForCompositor
-      ) {
-        state.waitingForCompositor =
+    invariant(
+      validControllerFrame(frame),
+      "SHOWROOM_CRYSTALS_CONTROLLER_FRAME_INVALID"
+    );
+
+    state.controllerFrame =
+      frame;
+
+    state.reducedMotion =
+      frame.reducedMotion ===
+      true;
+
+    if (frame.held === true) {
+      if (!state.held) {
+        state.held =
           true;
 
+        state.counters.holds +=
+          1;
+
+        stopAnimation();
+
+        setRootState(
+          state.ready,
+          "held"
+        );
+
         publishReceipt(
-          "waiting-for-compositor",
+          "held",
           {
-            reason,
-
-            compositorReady:
-              false,
-
-            runtimeSurfacesActivated:
-              state
-                .runtimeSurfacesActivated
+            reason
           }
         );
       }
 
-      return false;
+      return;
     }
 
-    invariant(
-      state.contextDegraded !==
+    if (state.held) {
+      state.held =
+        false;
+
+      state.counters
+        .holdReleases +=
+        1;
+
+      publishReceipt(
+        "hold-released",
+        {
+          reason
+        }
+      );
+    }
+
+    computeTargets(frame);
+
+    if (state.ready) {
+      setRootState(
         true,
-      "SHOWROOM_CRYSTALS_CONTEXT_DEGRADED"
-    );
+        "ready"
+      );
 
+      state.compositor.requestRender(
+        `crystals-state:${reason}`
+      );
+
+      evaluateAnimation();
+    }
+  }
+
+  function handleFrameSubscription(
+    frame
+  ) {
+    if (state.controllerBinding) {
+      state.pendingControllerFrame =
+        frame;
+
+      return;
+    }
+
+    try {
+      processFrame(
+        frame,
+        "controller-frame"
+      );
+    } catch (error) {
+      failRuntime(
+        error,
+        "controller-frame"
+      );
+    }
+  }
+
+  function bindControllerTransactional() {
+    if (
+      state.controllerBinding ||
+      state.controllerBound
+    ) {
+      return;
+    }
+
+    state.controllerBinding =
+      true;
+
+    state.pendingControllerFrame =
+      null;
+
+    const acquired = [];
+
+    try {
+      const frameUnsubscribe =
+        state.controller
+          .subscribeFrameState(
+            handleFrameSubscription
+          );
+
+      invariant(
+        frameUnsubscribe == null ||
+        typeof frameUnsubscribe ===
+          "function",
+        "SHOWROOM_CRYSTALS_FRAME_UNSUBSCRIBE_INVALID"
+      );
+
+      if (
+        typeof frameUnsubscribe ===
+          "function"
+      ) {
+        acquired.push(
+          frameUnsubscribe
+        );
+      }
+
+      state.frameUnsubscribe =
+        frameUnsubscribe ||
+        null;
+
+      if (
+        typeof state.controller
+          .subscribeReducedMotion ===
+          "function"
+      ) {
+        const reducedMotionUnsubscribe =
+          state.controller
+            .subscribeReducedMotion(
+              value => {
+                const reduced =
+                  typeof value ===
+                    "boolean"
+                    ? value
+                    : Boolean(
+                        value &&
+                        value.reducedMotion ===
+                          true
+                      );
+
+                state.reducedMotion =
+                  reduced;
+
+                if (
+                  !state.controllerBinding &&
+                  state.controllerFrame
+                ) {
+                  computeTargets(
+                    state.controllerFrame
+                  );
+
+                  if (state.ready) {
+                    state.compositor
+                      .requestRender(
+                        "crystals-reduced-motion"
+                      );
+
+                    evaluateAnimation();
+                  }
+                }
+              }
+            );
+
+        invariant(
+          reducedMotionUnsubscribe ==
+            null ||
+          typeof reducedMotionUnsubscribe ===
+            "function",
+          "SHOWROOM_CRYSTALS_REDUCED_MOTION_UNSUBSCRIBE_INVALID"
+        );
+
+        if (
+          typeof reducedMotionUnsubscribe ===
+            "function"
+        ) {
+          acquired.push(
+            reducedMotionUnsubscribe
+          );
+        }
+
+        state.reducedMotionUnsubscribe =
+          reducedMotionUnsubscribe ||
+          null;
+      }
+
+      state.controllerBound =
+        true;
+    } catch (error) {
+      for (
+        const unsubscribe
+        of acquired.reverse()
+      ) {
+        try {
+          unsubscribe();
+        } catch {
+          /* Transaction rollback continues. */
+        }
+      }
+
+      state.frameUnsubscribe =
+        null;
+
+      state.reducedMotionUnsubscribe =
+        null;
+
+      state.controllerBound =
+        false;
+
+      throw error;
+    } finally {
+      state.controllerBinding =
+        false;
+    }
+
+    const retainedFrame =
+      state.pendingControllerFrame;
+
+    state.pendingControllerFrame =
+      null;
+
+    if (retainedFrame) {
+      processFrame(
+        retainedFrame,
+        "controller-binding-retained-frame"
+      );
+    }
+  }
+
+  function unbindController() {
+    for (
+      const key
+      of [
+        "frameUnsubscribe",
+        "reducedMotionUnsubscribe"
+      ]
+    ) {
+      const unsubscribe =
+        state[key];
+
+      state[key] =
+        null;
+
+      if (
+        typeof unsubscribe ===
+          "function"
+      ) {
+        try {
+          unsubscribe();
+        } catch {
+          /* Best-effort unsubscription. */
+        }
+      }
+    }
+
+    state.controllerBound =
+      false;
+
+    state.controllerBinding =
+      false;
+
+    state.pendingControllerFrame =
+      null;
+  }
+
+  function activateRuntime() {
     invariant(
-      state.controller &&
-      state.controller.contract ===
-        CONTROLLER_CONTRACT,
-      "SHOWROOM_CRYSTALS_CONTROLLER_NOT_ACCEPTED"
+      compositorReady(),
+      "SHOWROOM_CRYSTALS_COMPOSITOR_NOT_READY"
     );
 
-    invariant(
-      validateControllerFrame(
-        state.controllerFrame
-      ),
-      "SHOWROOM_CRYSTALS_CONTROLLER_FRAME_NOT_ACCEPTED"
-    );
+    createGpuResources();
 
-    invariant(
-      state.compositor &&
-      state.compositor.contract ===
-        COMPOSITOR_CONTRACT,
-      "SHOWROOM_CRYSTALS_COMPOSITOR_NOT_ACCEPTED"
-    );
+    try {
+      registerNodesTransactional();
 
-    invariant(
-      state.runtimeSurfacesActivated ===
-        true,
-      "SHOWROOM_CRYSTALS_RUNTIME_SURFACES_NOT_ACTIVATED"
-    );
+      try {
+        registerRendererTransactional();
+      } catch (error) {
+        unregisterNodes();
+        throw error;
+      }
+    } catch (error) {
+      destroyGpuResources();
+      throw error;
+    }
+  }
 
-    invariant(
-      countNodesByType(
-        NODE_TYPES.CARDINAL
-      ) ===
-        4,
-      "SHOWROOM_CRYSTALS_READY_CARDINAL_COUNT_INVALID"
-    );
-
-    invariant(
-      countNodesByType(
-        NODE_TYPES.CHILD
-      ) ===
-        16,
-      "SHOWROOM_CRYSTALS_READY_CHILD_COUNT_INVALID"
-    );
-
+  function publishReady() {
     invariant(
       state.nodeRegistrations.size ===
         20,
@@ -6000,109 +5325,88 @@
       "SHOWROOM_CRYSTALS_READY_FRONT_CONTEXT_REQUIRED"
     );
 
-    state.waitingForCompositor =
-      false;
-
     state.ready =
       true;
 
     state.readyPublished =
       true;
 
+    setRootState(
+      true,
+      state.held
+        ? "held"
+        : "ready"
+    );
+
     publishReceipt(
       "ready",
       {
-        reason,
-
         cardinalCount:
           4,
 
-        childCount:
+        roomCount:
           16,
 
-        nodeCount:
-          20,
-
-        rendererRegistered:
+        semanticControlsPreserved:
           true,
 
-        rearContextReady:
+        nonAdditivePresentation:
           true,
 
-        frontContextReady:
+        inactiveNodesPublishVisibleFalse:
           true,
 
-        gpuResourcesCreated:
+        outgoingPopulationSnappedInactive:
           true,
 
-        initialTargetsComputed:
+        clearRearOwned:
           true,
 
-        runtimeSurfacesActivated:
+        clearFrontOwned:
           true,
 
-        renderRafOwned:
+        compositorTimedClearing:
+          true,
+
+        rendererCreatedContexts:
+          true,
+
+        compositorCreatedContexts:
           false,
 
-        animationStateSchedulerOwned:
-          true,
-
-        navigationOwned:
+        depthClassificationOwned:
           false,
 
-        classificationOwned:
+        interactionPriorityOwned:
           false,
 
-        canvasLifecycleOwned:
-          false,
-
-        registeredRendererLifecycleOwned:
-          true
+        compassLifecycleMutated:
+          false
       }
     );
 
     dispatch(
       EVENTS.crystalsReady,
       {
-        reason,
-
         cardinalCount:
           4,
 
-        childCount:
+        roomCount:
           16,
 
-        nodeCount:
-          20,
-
-        rendererRegistered:
+        semanticControlsPreserved:
           true,
 
-        rearContextReady:
+        nonAdditivePresentation:
           true,
 
-        frontContextReady:
+        clearRearOwned:
           true,
 
-        runtimeSurfacesActivated:
+        clearFrontOwned:
           true,
 
-        renderRafOwned:
-          false,
-
-        animationStateSchedulerOwned:
-          true,
-
-        navigationOwned:
-          false,
-
-        classificationOwned:
-          false,
-
-        canvasLifecycleOwned:
-          false,
-
-        registeredRendererLifecycleOwned:
+        rendererCreatedContexts:
           true
       }
     );
@@ -6111,185 +5415,40 @@
       "crystals-ready"
     );
 
-    evaluateAnimationDriver();
-
-    return true;
-  }
-
-  function activateCompositorRuntime(reason) {
-    if (
-      state.disposed ||
-      state.failed
-    ) {
-      return false;
-    }
-
-    if (
-      state.runtimeSurfacesActivated
-    ) {
-      return tryCompleteReadiness(
-        reason
-      );
-    }
-
-    if (
-      !compositorIsAuthoritativelyReady()
-    ) {
-      if (
-        !state.waitingForCompositor
-      ) {
-        state.waitingForCompositor =
-          true;
-
-        publishReceipt(
-          "waiting-for-compositor",
-          {
-            reason,
-
-            compositorReady:
-              false,
-
-            runtimeSurfacesActivated:
-              false
-          }
-        );
-      }
-
-      return false;
-    }
-
-    state.waitingForCompositor =
-      false;
-
-    try {
-      createGpuResources();
-
-      registerNodes();
-
-      registerRenderer();
-
-      state.runtimeSurfacesActivated =
-        true;
-
-      return tryCompleteReadiness(
-        reason
-      );
-    } catch (error) {
-      failRuntime(
-        error,
-        `runtime-activation:${reason}`
-      );
-
-      return false;
-    }
-  }
-
-  function updateFromController(reason) {
-    if (
-      state.disposed ||
-      state.failed ||
-      !state.controller
-    ) {
-      return false;
-    }
-
-    try {
-      readControllerFrame();
-
-      computeTargets();
-
-      if (
-        !state.runtimeSurfacesActivated ||
-        !state.ready
-      ) {
-        activateCompositorRuntime(
-          `controller-update:${reason}`
-        );
-
-        return true;
-      }
-
-      if (
-        !state.contextDegraded
-      ) {
-        state.compositor.requestRender(
-          `crystal-state:${reason}`
-        );
-
-        evaluateAnimationDriver();
-      }
-
-      return true;
-    } catch (error) {
-      failRuntime(
-        error,
-        `controller-update:${reason}`
-      );
-
-      return false;
-    }
+    evaluateAnimation();
   }
 
   function initializeBindings() {
-    const controllerEvents = [
-      EVENTS.controllerReady,
-      EVENTS.frameChanged,
-      EVENTS.stateChanged,
-      EVENTS.previewChanged,
-      EVENTS.clusterChanged,
-      EVENTS.frontChanged,
-      EVENTS.enhancementReadinessChanged
-    ];
-
-    for (
-      const eventName
-      of controllerEvents
-    ) {
-      addListener(
-        window,
-        eventName,
-        () => {
-          updateFromController(
-            eventName
-          );
-        }
-      );
-    }
-
     addListener(
       window,
-      EVENTS.compositorReady,
-      () => {
-        if (
-          state.initialized &&
-          !state.failed &&
-          !state.disposed
-        ) {
-          try {
-            readControllerFrame();
-
-            activateCompositorRuntime(
-              "compositor-ready-event"
-            );
-          } catch (error) {
-            failRuntime(
-              error,
-              "compositor-ready-event"
-            );
-          }
-        }
+      EVENTS.controllerFailure,
+      event => {
+        failRuntime(
+          new Error(
+            event &&
+            event.detail &&
+            event.detail.reason
+              ? event.detail.reason
+              : "SHOWROOM_CONTROLLER_FAILURE"
+          ),
+          "controller-failure"
+        );
       }
     );
 
     addListener(
       window,
-      EVENTS.compositorFailed,
-      () => {
+      EVENTS.compositorFailure,
+      event => {
         failRuntime(
           new Error(
-            "The accepted compositor reported runtime failure."
+            event &&
+            event.detail &&
+            event.detail.reason
+              ? event.detail.reason
+              : "SHOWROOM_COMPOSITOR_FAILURE"
           ),
-          "compositor-failed"
+          "compositor-failure"
         );
       }
     );
@@ -6310,16 +5469,18 @@
       () => {
         if (
           document.visibilityState ===
-          "hidden"
+            "hidden"
         ) {
-          stopAnimationDriver();
+          stopAnimation();
+        } else {
+          evaluateAnimation();
 
-          return;
+          if (state.ready) {
+            state.compositor.requestRender(
+              "crystals-document-visible"
+            );
+          }
         }
-
-        updateFromController(
-          "document-visible"
-        );
       }
     );
 
@@ -6329,7 +5490,7 @@
       event => {
         if (!event.persisted) {
           dispose(
-            "page-hide"
+            "pagehide"
           );
         }
       },
@@ -6341,21 +5502,19 @@
   }
 
   function getNodeState(id) {
-    const normalized =
+    const normalizedId =
       normalize(id);
 
     const node =
       state.registry.get(
-        normalized
+        normalizedId
       ) ||
       Array.from(
         state.registry.values()
       ).find(
         candidate =>
-          candidate.objectId ===
-            normalized ||
-          candidate.childId ===
-            normalized
+          candidate.projectionId ===
+            normalizedId
       );
 
     if (!node) {
@@ -6366,32 +5525,20 @@
       id:
         node.id,
 
-      objectId:
-        node.objectId,
+      projectionId:
+        node.projectionId,
 
-      type:
-        node.type,
+      kind:
+        node.kind,
 
       cardinalId:
         node.cardinalId,
 
-      clusterId:
-        node.clusterId,
-
       childId:
         node.childId,
 
-      behavior:
-        node.behavior,
-
-      visualClass:
-        node.visualClass,
-
-      emphasis:
-        node.emphasis,
-
-      materialFamily:
-        node.materialFamily,
+      clusterId:
+        node.clusterId,
 
       visible:
         node.visible,
@@ -6402,75 +5549,19 @@
       settled:
         node.settled,
 
-      current:
-        {
-          ...node.current
-        },
+      current: {
+        ...node.current
+      },
 
-      target:
-        {
-          ...node.target
-        },
+      target: {
+        ...node.target
+      },
 
       worldPosition:
-        nodeWorldPosition(
-          node
-        ),
+        nodeWorldPosition(node),
 
       hitRadius:
-        nodeHitRadius(
-          node
-        )
-    });
-  }
-
-  function getGeometrySummary() {
-    const cardinal =
-      state.cpuMeshes.get(
-        NODE_TYPES.CARDINAL
-      );
-
-    const child =
-      state.cpuMeshes.get(
-        NODE_TYPES.CHILD
-      );
-
-    return freezePlain({
-      cardinal:
-        cardinal
-          ? {
-              ...cardinal.summary,
-
-              vertexCount:
-                cardinal.vertexCount
-            }
-          : null,
-
-      child:
-        child
-          ? {
-              ...child.summary,
-
-              vertexCount:
-                child.vertexCount
-            }
-          : null,
-
-      cardinalTargets:
-        CARDINAL_TARGETS,
-
-      childLayout:
-        CHILD_LAYOUT
-    });
-  }
-
-  function getMaterialSummary() {
-    return freezePlain({
-      palettes:
-        PALETTES,
-
-      materials:
-        MATERIALS
+        nodeHitRadius(node)
     });
   }
 
@@ -6482,8 +5573,11 @@
       owner:
         OWNER,
 
-      controllerContract:
-        CONTROLLER_CONTRACT,
+      controllerModuleId:
+        CONTROLLER_MODULE_ID,
+
+      controllerModuleVersion:
+        CONTROLLER_MODULE_VERSION,
 
       compositorContract:
         COMPOSITOR_CONTRACT,
@@ -6500,68 +5594,86 @@
       readyPublished:
         state.readyPublished,
 
-      disposed:
-        state.disposed,
+      held:
+        state.held,
 
-      failed:
-        state.failed,
-
-      failureReason:
-        state.failureReason,
+      reducedMotion:
+        state.reducedMotion,
 
       contextDegraded:
         state.contextDegraded,
 
-      runtimeSurfacesActivated:
-        state
-          .runtimeSurfacesActivated,
+      failed:
+        state.failed,
 
-      waitingForCompositor:
-        state
-          .waitingForCompositor,
+      disposed:
+        state.disposed,
+
+      failureReason:
+        state.failureReason,
+
+      controllerBound:
+        state.controllerBound,
 
       presentationMode:
         state.controllerFrame
-          ? presentationMode(
+          ? displayMode(
               state.controllerFrame
             )
-          : PRESENTATION_MODES.BASELINE,
+          : DISPLAY_MODES.CONSTELLATION,
 
-      held:
-        Boolean(
-          state.controllerFrame &&
-          state.controllerFrame.held
-        ),
+      activeCluster:
+        state.controllerFrame
+          ? activeClusterId(
+              state.controllerFrame
+            )
+          : "",
 
-      reducedMotion:
-        Boolean(
-          state.controllerFrame &&
-          state.controllerFrame
-            .reducedMotion
-        ),
+      activeRoom:
+        state.controllerFrame
+          ? activeRoomId(
+              state.controllerFrame
+            )
+          : "",
 
       cardinalCount:
-        countNodesByType(
-          NODE_TYPES.CARDINAL
+        countNodesByKind(
+          NODE_KINDS.CARDINAL
         ),
 
-      childCount:
-        countNodesByType(
-          NODE_TYPES.CHILD
+      roomCount:
+        countNodesByKind(
+          NODE_KINDS.ROOM
         ),
 
-      nodeCount:
-        state.registry.size,
+      visibleCardinalCount:
+        Array.from(
+          state.registry.values()
+        ).filter(
+          node =>
+            node.kind ===
+              NODE_KINDS.CARDINAL &&
+            node.targetVisible &&
+            node.visible
+        ).length,
+
+      visibleRoomCount:
+        Array.from(
+          state.registry.values()
+        ).filter(
+          node =>
+            node.kind ===
+              NODE_KINDS.ROOM &&
+            node.targetVisible &&
+            node.visible
+        ).length,
 
       registeredNodeCount:
-        state
-          .nodeRegistrations
-          .size,
+        state.nodeRegistrations.size,
 
       rendererRegistered:
         Boolean(
-          state
-            .rendererRegistration
+          state.rendererRegistration
         ),
 
       rearContextReady:
@@ -6577,61 +5689,118 @@
       animationRunning:
         state.animationRunning,
 
-      renderRafOwned:
-        false,
+      ownership: {
+        cardinalGeometryOwned:
+          true,
 
-      animationStateSchedulerOwned:
-        true,
+        roomGeometryOwned:
+          true,
 
-      navigationOwned:
-        false,
+        WebGLContextsOwned:
+          true,
 
-      pointerInterpretationOwned:
-        false,
+        clearCallbacksOwned:
+          true,
 
-      classificationOwned:
-        false,
+        clearTimingOwned:
+          false,
 
-      cameraOwned:
-        false,
+        cameraOwned:
+          false,
 
-      canvasLifecycleOwned:
-        false,
+        projectionOwned:
+          false,
 
-      semanticControlCreationOwned:
-        false,
+        depthClassificationOwned:
+          false,
 
-      semanticControlPositioningOwned:
-        false,
+        interactionPriorityOwned:
+          false,
 
-      registeredRendererLifecycleOwned:
-        true,
+        semanticNavigationOwned:
+          false,
 
-      counters:
-        {
-          ...state.counters
-        }
+        compassOwned:
+          false
+      },
+
+      presentationContract: {
+        nonAdditive:
+          true,
+
+        outgoingPopulationFadeAuthorized:
+          false,
+
+        inactiveSemanticVisibility:
+          false,
+
+        constellationVisiblePopulation:
+          "four-cardinals-only",
+
+        clusterVisiblePopulation:
+          "four-active-cluster-rooms-only"
+      },
+
+      counters: {
+        ...state.counters
+      }
+    });
+  }
+
+  function getGeometrySummary() {
+    const cardinal =
+      state.cpuMeshes.get(
+        NODE_KINDS.CARDINAL
+      );
+
+    const room =
+      state.cpuMeshes.get(
+        NODE_KINDS.ROOM
+      );
+
+    return freezePlain({
+      cardinal:
+        cardinal
+          ? cardinal.summary
+          : null,
+
+      room:
+        room
+          ? room.summary
+          : null,
+
+      cardinalBasePositions:
+        CARDINAL_BASE_POSITIONS,
+
+      roomBasePositions:
+        ROOM_BASE_POSITIONS
+    });
+  }
+
+  function getMaterialSummary() {
+    return freezePlain({
+      palettes:
+        PALETTES,
+
+      materials:
+        MATERIALS
     });
   }
 
   function requestRender(
-    reason = "crystal-api"
+    reason = "crystals-api"
   ) {
     if (
-      state.disposed ||
-      state.failed ||
-      state.contextDegraded ||
       !state.ready ||
-      !state
-        .runtimeSurfacesActivated
+      state.failed ||
+      state.disposed ||
+      state.contextDegraded
     ) {
       return false;
     }
 
     return state.compositor
-      .requestRender(
-        reason
-      );
+      .requestRender(reason);
   }
 
   function exposeApi() {
@@ -6640,8 +5809,11 @@
         contract:
           CONTRACT,
 
-        controllerContract:
-          CONTROLLER_CONTRACT,
+        controllerModuleId:
+          CONTROLLER_MODULE_ID,
+
+        controllerModuleVersion:
+          CONTROLLER_MODULE_VERSION,
 
         compositorContract:
           COMPOSITOR_CONTRACT,
@@ -6658,7 +5830,7 @@
 
         dispose() {
           return dispose(
-            "public-api-dispose"
+            "public-api"
           );
         }
       });
@@ -6684,28 +5856,31 @@
 
   function removeApi() {
     try {
-      delete window
-        .SHOWROOM_CRYSTALS;
+      delete window.SHOWROOM_CRYSTALS;
     } catch {
-      /* Best-effort API removal. */
+      /* Best-effort removal. */
     }
   }
 
-  function teardownOwnedRuntime() {
-    stopAnimationDriver();
+  function teardownRuntime() {
+    stopAnimation();
+
+    unbindController();
 
     removeListeners();
 
-    unregisterNodes();
-
+    /*
+      Renderer unregistration occurs before explicit node and GPU cleanup.
+      The compositor therefore retains authority to invoke final rear/front
+      clear callbacks before calling the renderer dispose callback.
+    */
     unregisterRenderer();
+
+    unregisterNodes();
 
     destroyGpuResources();
 
     removeApi();
-
-    state.runtimeSurfacesActivated =
-      false;
   }
 
   function failRuntime(
@@ -6713,8 +5888,8 @@
     reason
   ) {
     if (
-      state.disposed ||
-      state.failed
+      state.failed ||
+      state.disposed
     ) {
       return;
     }
@@ -6728,33 +5903,27 @@
     state.readyPublished =
       false;
 
-    state.initialized =
-      false;
-
-    state.initializing =
-      false;
-
-    state.waitingForCompositor =
-      false;
-
     state.failureReason =
       reason;
 
     state.counters.failures +=
       1;
 
-    teardownOwnedRuntime();
+    setRootState(
+      false,
+      "failed"
+    );
+
+    teardownRuntime();
 
     const errorPayload = {
       name:
-        error instanceof
-        Error
+        error instanceof Error
           ? error.name
           : "Error",
 
       message:
-        error instanceof
-        Error
+        error instanceof Error
           ? error.message
           : String(error),
 
@@ -6776,58 +5945,38 @@
       {
         reason,
 
+        terminalForCurrentInstance:
+          true,
+
         error:
           errorPayload,
 
-        nodesUnregistered:
-          true,
-
-        rendererUnregistered:
-          true,
-
-        gpuResourcesDisposed:
-          true,
-
-        compositorCanvasesRemoved:
+        semanticControlsChanged:
           false,
 
-        semanticControlsChanged:
+        compositorDisposed:
+          false,
+
+        controllerMutated:
+          false,
+
+        compassMutated:
           false
       }
     );
 
     dispatch(
-      EVENTS.crystalsFailed,
+      EVENTS.crystalsFailure,
       {
         reason,
+
+        terminalForCurrentInstance:
+          true,
 
         error:
           errorPayload
       }
     );
-  }
-
-  function rollbackInitialization(error) {
-    state.initialized =
-      false;
-
-    state.initializing =
-      false;
-
-    state.ready =
-      false;
-
-    state.readyPublished =
-      false;
-
-    failRuntime(
-      error,
-      "initialization"
-    );
-
-    state.registry.clear();
-
-    state.cpuMeshes.clear();
   }
 
   function dispose(
@@ -6846,16 +5995,14 @@
     state.readyPublished =
       false;
 
-    state.runtimeSurfacesActivated =
-      false;
+    setRootState(
+      false,
+      "disposed"
+    );
 
-    state.waitingForCompositor =
-      false;
-
-    teardownOwnedRuntime();
+    teardownRuntime();
 
     state.registry.clear();
-
     state.cpuMeshes.clear();
 
     state.controller =
@@ -6867,13 +6014,13 @@
     state.controllerFrame =
       null;
 
-    state.compositorFrame =
-      null;
-
     state.initialized =
       false;
 
     state.initializing =
+      false;
+
+    state.held =
       false;
 
     state.contextDegraded =
@@ -6884,19 +6031,7 @@
       {
         reason,
 
-        nodeCount:
-          0,
-
-        registeredNodeCount:
-          0,
-
-        rendererRegistered:
-          false,
-
-        rearContextReady:
-          false,
-
-        frontContextReady:
+        semanticControlsChanged:
           false,
 
         compositorCanvasesRemoved:
@@ -6908,16 +6043,13 @@
         controllerDisposed:
           false,
 
-        semanticControlsChanged:
+        compassMutated:
           false,
 
-        fallbackVisibilityChanged:
+        DiamondMutated:
           false,
 
-        compassLifecycleMutated:
-          false,
-
-        frontHostVisibilityMutated:
+        WindowMutated:
           false
       }
     );
@@ -6928,28 +6060,7 @@
         reason,
 
         disposed:
-          true,
-
-        compositorCanvasesRemoved:
-          false,
-
-        compositorDisposed:
-          false,
-
-        controllerDisposed:
-          false,
-
-        semanticControlsChanged:
-          false,
-
-        fallbackVisibilityChanged:
-          false,
-
-        compassLifecycleMutated:
-          false,
-
-        frontHostVisibilityMutated:
-          false
+          true
       }
     );
 
@@ -6960,6 +6071,7 @@
     if (
       state.initialized ||
       state.initializing ||
+      state.failed ||
       state.disposed
     ) {
       return;
@@ -6971,6 +6083,11 @@
     try {
       discoverDom();
 
+      setRootState(
+        false,
+        "initializing"
+      );
+
       const dom =
         validateDom();
 
@@ -6980,34 +6097,66 @@
       state.compositor =
         requireCompositor();
 
-      readControllerFrame();
+      invariant(
+        compositorReady(),
+        "SHOWROOM_CRYSTALS_COMPOSITOR_NOT_READY"
+      );
+
+      state.controllerFrame =
+        readControllerFrame();
+
+      state.reducedMotion =
+        state.controllerFrame
+          .reducedMotion ===
+        true;
+
+      state.held =
+        state.controllerFrame.held ===
+        true;
 
       buildCpuMeshes();
 
       buildRegistry(
-        dom.cardinals,
-        dom.children
+        dom.cardinalControls,
+        dom.roomControls
       );
 
-      computeTargets();
-
-      for (
-        const node
-        of state.registry.values()
-      ) {
-        Object.assign(
-          node.current,
-          node.target
+      /*
+        Initial target computation occurs while not held. If the controller is
+        initially held, preserve the neutral hidden node state until the first
+        accepted non-held frame arrives.
+      */
+      if (!state.held) {
+        computeTargets(
+          state.controllerFrame
         );
 
-        node.visible =
-          node.targetVisible;
+        for (
+          const node
+          of state.registry.values()
+        ) {
+          Object.assign(
+            node.current,
+            node.target
+          );
 
-        node.settled =
-          true;
+          node.visible =
+            node.targetVisible;
+
+          node.settled =
+            true;
+        }
       }
 
+      /*
+        Enhanced readiness remains false until WebGL contexts, all 20 nodes,
+        and the exclusive-clear renderer registration succeed.
+      */
+      activateRuntime();
+
       initializeBindings();
+
+      bindControllerTransactional();
 
       exposeApi();
 
@@ -7017,19 +6166,21 @@
       state.initializing =
         false;
 
-      activateCompositorRuntime(
-        "startup"
-      );
+      publishReady();
     } catch (error) {
-      rollbackInitialization(
-        error
+      state.initializing =
+        false;
+
+      failRuntime(
+        error,
+        "initialization"
       );
     }
   }
 
   if (
     document.readyState ===
-    "loading"
+      "loading"
   ) {
     document.addEventListener(
       "DOMContentLoaded",

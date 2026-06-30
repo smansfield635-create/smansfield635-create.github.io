@@ -16,7 +16,6 @@
   data-room-narrative-title="The Door to Mirrorland"
   data-primary-subject="mirrorland"
   data-primary-narrative="mirrorland"
-
   data-homeroom-guide="elara"
   data-elara-homeroom="true"
   data-elara-route="/elara/index.html"
@@ -369,6 +368,10 @@
               <div class="fallback-navigation__group">
                 <strong>Technical Fronts</strong>
 
+                <a href="#object-gauges">
+                  Object
+                </a>
+
                 <a href="#structure-gauges">
                   Structure
                 </a>
@@ -467,6 +470,14 @@
                     examined before the real world is forced to absorb
                     their consequences.
                   </p>
+
+                  <p>
+                    It is a place where systems can be entered instead of
+                    merely described, where assumptions can be exposed,
+                    where outcomes can be compared, and where difficult
+                    questions can remain visible long enough to be
+                    understood.
+                  </p>
                 </section>
 
                 <section
@@ -487,6 +498,12 @@
                     instruments, characters, simulations, and scientific
                     objects become available as they are built.
                   </p>
+
+                  <p>
+                    The Showroom introduces what already exists,
+                    identifies what is still emerging, and separates
+                    implemented systems from planned ones.
+                  </p>
                 </section>
 
                 <section
@@ -504,6 +521,11 @@
                   <p>
                     Mirrorland is inhabited by characters who guide,
                     interpret, question, remember, and challenge.
+                  </p>
+
+                  <p>
+                    Each character represents a different way of entering
+                    the world and understanding what its systems mean.
                   </p>
                 </section>
 
@@ -526,6 +548,11 @@
                     inspectable object. The fronts explain how the world
                     is built and where its claims stop.
                   </p>
+
+                  <p>
+                    No single path contains all of Mirrorland. The world
+                    is discovered by moving among its parts.
+                  </p>
                 </section>
 
                 <section
@@ -545,6 +572,11 @@
                     Enter with curiosity. Follow the characters. Open the
                     systems. Inspect what can be inspected. Question what
                     remains unfinished.
+                  </p>
+
+                  <p>
+                    A mirror shows what is already there. Mirrorland asks
+                    what may happen next.
                   </p>
                 </section>
               </div>
@@ -1393,63 +1425,61 @@
               </h3>
             </header>
 
-            <div class="showroom-controller-panel__summary">
-              <p data-showroom-controller-panel-purpose>
-                Select one cardinal, then choose one of its four
-                destinations.
-              </p>
+            <p data-showroom-controller-panel-purpose>
+              Select one cardinal, then choose one of its four
+              destinations.
+            </p>
 
-              <dl class="showroom-controller-panel__facts">
-                <div>
-                  <dt>Relationship</dt>
-                  <dd data-showroom-controller-panel-relationship>
-                    No destination selected
-                  </dd>
-                </div>
+            <dl class="showroom-controller-panel__facts">
+              <div>
+                <dt>Relationship</dt>
+                <dd data-showroom-controller-panel-relationship>
+                  No destination selected
+                </dd>
+              </div>
 
-                <div>
-                  <dt>Domain</dt>
-                  <dd data-showroom-controller-panel-domain>
-                    Mirrorland
-                  </dd>
-                </div>
+              <div>
+                <dt>Domain</dt>
+                <dd data-showroom-controller-panel-domain>
+                  Mirrorland
+                </dd>
+              </div>
 
-                <div>
-                  <dt>Function</dt>
-                  <dd data-showroom-controller-panel-function>
-                    Navigation
-                  </dd>
-                </div>
+              <div>
+                <dt>Function</dt>
+                <dd data-showroom-controller-panel-function>
+                  Navigation
+                </dd>
+              </div>
 
-                <div>
-                  <dt>Coordinate</dt>
-                  <dd data-showroom-controller-panel-coordinate>
-                    Unassigned
-                  </dd>
-                </div>
+              <div>
+                <dt>Coordinate</dt>
+                <dd data-showroom-controller-panel-coordinate>
+                  Unassigned
+                </dd>
+              </div>
 
-                <div>
-                  <dt>Selection</dt>
-                  <dd data-showroom-controller-panel-selection-state>
-                    Idle
-                  </dd>
-                </div>
+              <div>
+                <dt>Selection</dt>
+                <dd data-showroom-controller-panel-selection-state>
+                  Idle
+                </dd>
+              </div>
 
-                <div>
-                  <dt>Route</dt>
-                  <dd data-showroom-controller-panel-route-status>
-                    No route prepared
-                  </dd>
-                </div>
+              <div>
+                <dt>Route</dt>
+                <dd data-showroom-controller-panel-route-status>
+                  No route prepared
+                </dd>
+              </div>
 
-                <div>
-                  <dt>Lens</dt>
-                  <dd data-showroom-controller-panel-lens>
-                    None
-                  </dd>
-                </div>
-              </dl>
-            </div>
+              <div>
+                <dt>Lens</dt>
+                <dd data-showroom-controller-panel-lens>
+                  None
+                </dd>
+              </div>
+            </dl>
 
             <div class="showroom-controller-panel__actions">
               <button
@@ -1556,12 +1586,8 @@
       </section>
 
       <section
-        id="object-gauges"
+        id="showroom-diamond-reveal"
         class="panel showroom-diamond-reveal chamber-exhibit"
-        data-showroom-front
-        data-showroom-front-kind="gauge"
-        data-showroom-gauge-set="object"
-        data-showroom-front-state="fallback"
         aria-labelledby="showroom-diamond-reveal-title"
       >
         <header class="showroom-diamond-reveal__heading">
@@ -1791,53 +1817,181 @@
             </div>
           </details>
         </div>
+      </section>
 
-        <section
-          class="showroom-diamond-facts"
-          aria-labelledby="showroom-diamond-facts-title"
-        >
+      <section
+        id="object-gauges"
+        class="panel showroom-front showroom-gauge-front chamber-exhibit"
+        data-showroom-front
+        data-showroom-front-kind="gauge"
+        data-showroom-gauge-set="object"
+        data-showroom-front-state="fallback"
+        aria-labelledby="object-gauges-title"
+      >
+        <header class="showroom-front__heading">
           <div>
             <div class="kicker">
               Diamond Supporting Facts
             </div>
 
-            <h3 id="showroom-diamond-facts-title">
+            <h2 id="object-gauges-title">
               One deterministic object.
-            </h3>
+            </h2>
+
+            <p>
+              The permanent Diamond stage remains visible independently
+              of this supporting front.
+            </p>
+          </div>
+        </header>
+
+        <div
+          class="showroom-gauge-dashboard showroom-gauge-dashboard--compact"
+          data-showroom-gauge-dashboard
+          data-gauge-dashboard-id="object"
+          data-gauge-dashboard-state="static"
+        >
+          <div
+            class="showroom-gauge-selector showroom-gauge-selector--metrics"
+            role="group"
+            aria-label="Object gauge selectors"
+          >
+            <button
+              class="showroom-gauge showroom-gauge--compact"
+              type="button"
+              data-showroom-gauge
+              data-gauge-id="public-views"
+              data-gauge-family="metric"
+              data-gauge-value="2"
+              data-gauge-display-value="2"
+              data-gauge-state="fixed"
+              aria-expanded="true"
+              aria-controls="gauge-detail-public-views"
+            >
+              <strong>2</strong>
+              <span>Public Views</span>
+              <small>Object · Lattice</small>
+            </button>
+
+            <button
+              class="showroom-gauge showroom-gauge--compact"
+              type="button"
+              data-showroom-gauge
+              data-gauge-id="geometry-authority"
+              data-gauge-family="metric"
+              data-gauge-value="1"
+              data-gauge-display-value="1"
+              data-gauge-state="fixed"
+              aria-expanded="false"
+              aria-controls="gauge-detail-geometry-authority"
+            >
+              <strong>1</strong>
+              <span>Geometry Authority</span>
+              <small>Deterministic source</small>
+            </button>
+
+            <button
+              class="showroom-gauge showroom-gauge--compact"
+              type="button"
+              data-showroom-gauge
+              data-gauge-id="renderer-state"
+              data-gauge-family="state"
+              data-gauge-state="implemented"
+              aria-expanded="false"
+              aria-controls="gauge-detail-renderer-state"
+            >
+              <strong>Native</strong>
+              <span>Diamond Renderer</span>
+              <small>WebGL implemented</small>
+            </button>
+
+            <button
+              class="showroom-gauge showroom-gauge--compact"
+              type="button"
+              data-showroom-gauge
+              data-gauge-id="window-state"
+              data-gauge-family="state"
+              data-gauge-state="closed"
+              aria-expanded="false"
+              aria-controls="gauge-detail-window-state"
+            >
+              <strong>Closed</strong>
+              <span>Mirrorland Window</span>
+              <small>Threshold foreground</small>
+            </button>
           </div>
 
-          <dl>
-            <div>
-              <dt>Radial sectors</dt>
-              <dd>16</dd>
-            </div>
+          <div
+            class="showroom-gauge-details showroom-gauge-details--shared"
+            data-showroom-gauge-details
+            aria-live="polite"
+          >
+            <article
+              id="gauge-detail-public-views"
+              class="showroom-gauge-detail"
+              data-showroom-gauge-detail
+              data-gauge-detail-id="public-views"
+            >
+              <h3>
+                Two accepted public views
+              </h3>
 
-            <div>
-              <dt>Structural bands</dt>
-              <dd>16</dd>
-            </div>
+              <p>
+                Object View presents the visible gem. Lattice View
+                reveals its internal structural field.
+              </p>
+            </article>
 
-            <div>
-              <dt>Canonical seats</dt>
-              <dd>256</dd>
-            </div>
+            <article
+              id="gauge-detail-geometry-authority"
+              class="showroom-gauge-detail"
+              data-showroom-gauge-detail
+              data-gauge-detail-id="geometry-authority"
+            >
+              <h3>
+                One deterministic geometry authority
+              </h3>
 
-            <div>
-              <dt>Exterior facets</dt>
-              <dd>512</dd>
-            </div>
+              <p>
+                Exterior facets, internal seats, connections, regions,
+                and both public views originate from one retained source.
+              </p>
+            </article>
 
-            <div>
-              <dt>Lattice edges</dt>
-              <dd>800</dd>
-            </div>
+            <article
+              id="gauge-detail-renderer-state"
+              class="showroom-gauge-detail"
+              data-showroom-gauge-detail
+              data-gauge-detail-id="renderer-state"
+            >
+              <h3>
+                Native renderer
+              </h3>
 
-            <div>
-              <dt>Renderer</dt>
-              <dd>Native WebGL</dd>
-            </div>
-          </dl>
-        </section>
+              <p>
+                The Diamond retains its own WebGL context, shaders,
+                camera, projection, rotation, zoom, inspection, reset,
+                and fallback.
+              </p>
+            </article>
+
+            <article
+              id="gauge-detail-window-state"
+              class="showroom-gauge-detail"
+              data-showroom-gauge-detail
+              data-gauge-detail-id="window-state"
+            >
+              <h3>
+                Independent threshold Window
+              </h3>
+
+              <p>
+                The stained-glass Window occupies a separate foreground
+                layer over the Diamond viewport.
+              </p>
+            </article>
+          </div>
+        </div>
       </section>
 
       <section

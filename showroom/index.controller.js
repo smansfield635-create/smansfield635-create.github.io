@@ -1,6 +1,6 @@
 /* TARGET FILE: /showroom/index.controller.js */
 /* TNT FULL-FILE REPLACEMENT */
-/* SHOWROOM_MIRRORLAND_FOCAL_CONTROLLER_TNT_v3 */
+/* SHOWROOM_MIRRORLAND_FOCAL_CONTROLLER_TNT_v4 */
 /*
   Recovery invariant:
 
@@ -8,31 +8,19 @@
   compositor, crystals, or interactions are absent, pending, failed,
   stopped, or disposed.
 
-  Presentation progression:
-
-  BASELINE
-  - Canonical HTML/CSS fronts remain visible.
-  - Fronts are not inert.
-  - Painted fallback stars remain visible.
-  - Direct semantic controls remain usable.
-
-  ENHANCEMENT_PENDING
-  - Runtime files may initialize.
-  - Canonical page content remains untouched.
-
-  ENHANCED_AVAILABLE
-  - Crystals have reported readiness.
-  - The baseline remains visible until the user activates an enhanced
-    cluster or local front.
-
-  ENHANCED_ACTIVE
-  - Orbit-driven front switching may hide sibling fronts.
-  - Return to Orbit may hide active local fronts.
-
-  ENHANCEMENT_FAILED
-  - All canonical fronts are immediately restored.
-  - All inert and hidden states applied by this controller are removed.
-  - Painted fallback stars are restored.
+  Renewal objectives:
+  - Preserve the canonical baseline and all existing controller authority.
+  - Accept constellation activation only from controls physically owned by
+    [data-showroom-orbit-field].
+  - Reject malformed, displaced, stale, or out-of-field semantic events.
+  - Reject malformed Compass activation events.
+  - Prevent disclosure taps outside the orbit field from activating stars,
+    hiding fronts, or returning focus to the Compass.
+  - Preserve direct keyboard activation of semantic star controls.
+  - Add optional support for an external instructions-opening control.
+  - Preserve native <details>/<summary> behavior for the Mirrorland preface.
+  - Preserve route, cluster, front, dialog, fallback, recovery, and disposal
+    behavior from v3.
 
   Page-level authority:
   - Own canonical Showroom presentation state.
@@ -43,6 +31,7 @@
   - Own route-offer dialogs.
   - Own Return to Orbit behavior.
   - Own construction-record dialog behavior.
+  - Own optional external instructions-opening behavior.
   - Own page-level focus restoration.
   - Reflect reduced-motion and held states.
   - Coordinate fallback-star paint with crystal readiness.
@@ -54,7 +43,7 @@
   - tap-versus-drag arbitration;
   - gesture quaternion construction;
   - orbital camera or projection;
-  - crystal geometry, animation, or drawing;
+  - crystal geometry, animation, drawing, or semantic positioning;
   - gauge-local selection;
   - Diamond camera, rendering, rotation, zoom, or lifecycle;
   - Mirrorland Window geometry, rendering, or animation;
@@ -65,7 +54,7 @@
   "use strict";
 
   const CONTRACT =
-    "SHOWROOM_MIRRORLAND_FOCAL_CONTROLLER_TNT_v3";
+    "SHOWROOM_MIRRORLAND_FOCAL_CONTROLLER_TNT_v4";
 
   const MAIN_COMPASS_ROUTE =
     "/index.html";
@@ -211,7 +200,13 @@
       "[data-showroom-fallback-star-layer]",
 
     fallbackStar:
-      "[data-showroom-fallback-star]"
+      "[data-showroom-fallback-star]",
+
+    instructionsDisclosure:
+      "[data-showroom-instructions-disclosure]",
+
+    instructionsOpen:
+      "[data-showroom-open-instructions]"
   });
 
   const ATTRIBUTES = Object.freeze({
@@ -295,6 +290,9 @@
 
     constructionDialog: null,
 
+    instructionsDisclosure: null,
+    instructionsOpenControls: [],
+
     objects: [],
     clusters: new Map(),
     fronts: new Map(),
@@ -311,6 +309,7 @@
     lastCompassTrigger: null,
     lastRouteTrigger: null,
     lastConstructionTrigger: null,
+    lastInstructionsTrigger: null,
 
     reducedMotionQuery: null,
     reducedMotion: false,
@@ -330,6 +329,15 @@
     lastActivation: {
       key: "",
       timestamp: 0
+    },
+
+    counters: {
+      acceptedSemanticActivations: 0,
+      rejectedSemanticActivations: 0,
+      acceptedCompassActivations: 0,
+      rejectedCompassActivations: 0,
+      directObjectClicks: 0,
+      instructionsOpened: 0
     }
   };
 
@@ -343,6 +351,13 @@
 
   function nowIso() {
     return new Date().toISOString();
+  }
+
+  function isFiniteNumber(value) {
+    return (
+      typeof value === "number" &&
+      Number.isFinite(value)
+    );
   }
 
   function addListener(
@@ -475,6 +490,12 @@
           state.constructionDialog.open
         ),
 
+      instructionsOpen:
+        Boolean(
+          state.instructionsDisclosure &&
+          state.instructionsDisclosure.open
+        ),
+
       crystalsReady:
         state.crystalsReady,
 
@@ -483,6 +504,11 @@
 
       held:
         state.held,
+
+      counters:
+        Object.freeze({
+          ...state.counters
+        }),
 
       ...extra
     });
@@ -713,8 +739,7 @@
       state.lastActivation.key ===
         key &&
       timestamp -
-        state.lastActivation
-          .timestamp <
+        state.lastActivation.timestamp <
         threshold;
 
     state.lastActivation.key =
@@ -743,12 +768,11 @@
   function resolveSemanticObject(
     source
   ) {
-    if (!source) {
+    if (!(source instanceof Element)) {
       return null;
     }
 
     if (
-      source instanceof Element &&
       source.matches(
         SELECTORS.object
       )
@@ -756,15 +780,352 @@
       return source;
     }
 
-    if (
-      source instanceof Element
-    ) {
-      return source.closest(
+    return source.closest(
+      SELECTORS.object
+    );
+  }
+
+  function isOrbitOwnedElement(
+    element
+  ) {
+    return Boolean(
+      element &&
+      state.orbitField &&
+      state.orbitField.contains(
+        element
+      )
+    );
+  }
+
+  function isOrbitOwnedObject(
+    object
+  ) {
+    return Boolean(
+      object &&
+      object.matches(
         SELECTORS.object
-      );
+      ) &&
+      isOrbitOwnedElement(
+        object
+      )
+    );
+  }
+
+  function pointInsideElement(
+    element,
+    x,
+    y
+  ) {
+    if (
+      !element ||
+      !isFiniteNumber(x) ||
+      !isFiniteNumber(y)
+    ) {
+      return false;
+    }
+
+    const rect =
+      element.getBoundingClientRect();
+
+    return (
+      x >= rect.left &&
+      x <= rect.right &&
+      y >= rect.top &&
+      y <= rect.bottom
+    );
+  }
+
+  function readActivationCoordinates(
+    detail
+  ) {
+    const candidates = [
+      [
+        detail.endX,
+        detail.endY
+      ],
+      [
+        detail.clientX,
+        detail.clientY
+      ],
+      [
+        detail.x,
+        detail.y
+      ],
+      [
+        detail.startX,
+        detail.startY
+      ]
+    ];
+
+    for (
+      const candidate
+      of candidates
+    ) {
+      if (
+        isFiniteNumber(
+          candidate[0]
+        ) &&
+        isFiniteNumber(
+          candidate[1]
+        )
+      ) {
+        return Object.freeze({
+          x:
+            candidate[0],
+
+          y:
+            candidate[1]
+        });
+      }
     }
 
     return null;
+  }
+
+  function resolveElementAtPoint(
+    coordinates
+  ) {
+    if (!coordinates) {
+      return null;
+    }
+
+    try {
+      return document.elementFromPoint(
+        coordinates.x,
+        coordinates.y
+      );
+    } catch {
+      return null;
+    }
+  }
+
+  function validateSemanticEvent(
+    detail,
+    object
+  ) {
+    if (
+      detail.validTap === false ||
+      detail.cancelled === true ||
+      detail.wasDrag === true
+    ) {
+      return Object.freeze({
+        valid:
+          false,
+
+        reason:
+          "event-reported-invalid-tap"
+      });
+    }
+
+    if (!isOrbitOwnedObject(object)) {
+      return Object.freeze({
+        valid:
+          false,
+
+        reason:
+          "object-outside-orbit-field"
+      });
+    }
+
+    if (
+      detail.element instanceof
+        Element &&
+      !isOrbitOwnedElement(
+        detail.element
+      )
+    ) {
+      return Object.freeze({
+        valid:
+          false,
+
+        reason:
+          "event-element-outside-orbit-field"
+      });
+    }
+
+    const coordinates =
+      readActivationCoordinates(
+        detail
+      );
+
+    if (
+      coordinates &&
+      !pointInsideElement(
+        state.orbitField,
+        coordinates.x,
+        coordinates.y
+      )
+    ) {
+      return Object.freeze({
+        valid:
+          false,
+
+        reason:
+          "activation-point-outside-orbit-field"
+      });
+    }
+
+    if (
+      !coordinates &&
+      !(detail.element instanceof Element)
+    ) {
+      return Object.freeze({
+        valid:
+          false,
+
+        reason:
+          "event-has-no-grounded-element-or-coordinates"
+      });
+    }
+
+    if (coordinates) {
+      const releaseElement =
+        resolveElementAtPoint(
+          coordinates
+        );
+
+      const releaseObject =
+        resolveSemanticObject(
+          releaseElement
+        );
+
+      if (
+        releaseObject &&
+        releaseObject !== object
+      ) {
+        return Object.freeze({
+          valid:
+            false,
+
+          reason:
+            "release-point-resolves-to-different-object"
+        });
+      }
+
+      if (
+        releaseElement &&
+        !state.orbitField.contains(
+          releaseElement
+        )
+      ) {
+        return Object.freeze({
+          valid:
+            false,
+
+          reason:
+            "release-point-resolves-outside-orbit-field"
+        });
+      }
+    }
+
+    return Object.freeze({
+      valid:
+        true,
+
+      reason:
+        "validated"
+    });
+  }
+
+  function validateCompassEvent(
+    detail
+  ) {
+    if (
+      detail.validTap === false ||
+      detail.cancelled === true ||
+      detail.wasDrag === true
+    ) {
+      return Object.freeze({
+        valid:
+          false,
+
+        reason:
+          "event-reported-invalid-tap"
+      });
+    }
+
+    if (
+      !state.compassControl ||
+      !isOrbitOwnedElement(
+        state.compassControl
+      )
+    ) {
+      return Object.freeze({
+        valid:
+          false,
+
+        reason:
+          "compass-control-outside-orbit-field"
+      });
+    }
+
+    if (
+      detail.element instanceof
+        Element &&
+      detail.element !==
+        state.compassControl &&
+      !state.compassControl.contains(
+        detail.element
+      )
+    ) {
+      return Object.freeze({
+        valid:
+          false,
+
+        reason:
+          "event-element-is-not-compass-control"
+      });
+    }
+
+    const coordinates =
+      readActivationCoordinates(
+        detail
+      );
+
+    if (
+      coordinates &&
+      (
+        !pointInsideElement(
+          state.orbitField,
+          coordinates.x,
+          coordinates.y
+        ) ||
+        !pointInsideElement(
+          state.compassControl,
+          coordinates.x,
+          coordinates.y
+        )
+      )
+    ) {
+      return Object.freeze({
+        valid:
+          false,
+
+        reason:
+          "compass-activation-point-invalid"
+      });
+    }
+
+    if (
+      !coordinates &&
+      !(detail.element instanceof Element)
+    ) {
+      return Object.freeze({
+        valid:
+          false,
+
+        reason:
+          "compass-event-has-no-grounded-element-or-coordinates"
+      });
+    }
+
+    return Object.freeze({
+      valid:
+        true,
+
+      reason:
+        "validated"
+    });
   }
 
   function closeOtherDialogs(
@@ -776,7 +1137,10 @@
       state.constructionDialog
     ];
 
-    for (const dialog of dialogs) {
+    for (
+      const dialog
+      of dialogs
+    ) {
       if (
         dialog &&
         dialog !== exceptDialog &&
@@ -915,7 +1279,6 @@
 
     restoreBaselineFronts();
     closeAllClusters();
-
     clearPresentationSelection();
 
     setPageState(
@@ -932,6 +1295,7 @@
       "baseline-restored",
       {
         reason,
+
         failed:
           Boolean(
             options.failed
@@ -1045,8 +1409,12 @@
   ) {
     if (
       state.disposed ||
+      state.held ||
       !state.compassDialog ||
-      !state.compassControl
+      !state.compassControl ||
+      !isOrbitOwnedElement(
+        state.compassControl
+      )
     ) {
       return false;
     }
@@ -1208,7 +1576,7 @@
   function readRouteDefinition(
     object
   ) {
-    if (!object) {
+    if (!isOrbitOwnedObject(object)) {
       return null;
     }
 
@@ -1263,7 +1631,9 @@
   ) {
     if (
       state.disposed ||
-      !state.routeDialog
+      state.held ||
+      !state.routeDialog ||
+      !isOrbitOwnedObject(object)
     ) {
       return false;
     }
@@ -1442,7 +1812,10 @@
         object =>
           object.getAttribute(
             "data-showroom-cluster-id"
-          ) === clusterId
+          ) === clusterId &&
+          isOrbitOwnedObject(
+            object
+          )
       ) ||
       null;
 
@@ -1558,6 +1931,15 @@
     clusterId,
     trigger = null
   ) {
+    if (
+      trigger &&
+      !isOrbitOwnedObject(
+        trigger
+      )
+    ) {
+      return false;
+    }
+
     const cluster =
       state.clusters.get(
         clusterId
@@ -1729,15 +2111,12 @@
       return true;
     }
 
-    const tabs =
+    const tab =
       toArray(
         document.querySelectorAll(
           "[data-showroom-information-tab]"
         )
-      );
-
-    const tab =
-      tabs.find(
+      ).find(
         candidate =>
           candidate.getAttribute(
             "data-information-tab-id"
@@ -1782,17 +2161,6 @@
 
     closeOtherDialogs();
     closeAllClusters();
-
-    /*
-      Baseline behavior:
-      - Never hide sibling fronts.
-      - Ensure the requested front is visible.
-      - Scroll to the existing canonical HTML section.
-
-      Enhanced behavior:
-      - Enter the enhanced presentation only after crystal readiness.
-      - Then sibling fronts may be hidden.
-    */
 
     if (
       state.enhancementAvailable &&
@@ -1860,8 +2228,7 @@
     );
 
     if (
-      options.scroll !==
-      false
+      options.scroll !== false
     ) {
       window.requestAnimationFrame(
         () => {
@@ -1874,8 +2241,7 @@
     }
 
     if (
-      options.focus !==
-      false
+      options.focus !== false
     ) {
       const heading =
         front.querySelector(
@@ -1969,11 +2335,6 @@
       !state.enhancementAvailable ||
       !state.enhancedPresentationActive
     ) {
-      /*
-        In baseline mode, Return to Orbit is navigation only.
-        It must never hide the canonical page.
-      */
-
       restoreBaselineFronts();
       clearPresentationSelection();
 
@@ -1984,8 +2345,7 @@
       );
 
       if (
-        options.scroll !==
-        false
+        options.scroll !== false
       ) {
         window.requestAnimationFrame(
           () => {
@@ -1998,8 +2358,7 @@
       }
 
       if (
-        options.focus !==
-        false
+        options.focus !== false
       ) {
         window.requestAnimationFrame(
           () => {
@@ -2051,8 +2410,7 @@
     );
 
     if (
-      options.scroll !==
-      false
+      options.scroll !== false
     ) {
       window.requestAnimationFrame(
         () => {
@@ -2065,8 +2423,7 @@
     }
 
     if (
-      options.focus !==
-      false
+      options.focus !== false
     ) {
       window.requestAnimationFrame(
         () => {
@@ -2100,6 +2457,92 @@
           previousFrontId ||
           null
       }
+    );
+
+    return true;
+  }
+
+  /* =======================================================
+     INSTRUCTIONS DISCLOSURE
+     ======================================================= */
+
+  function syncInstructionsDisclosureState() {
+    const open =
+      Boolean(
+        state.instructionsDisclosure &&
+        state.instructionsDisclosure.open
+      );
+
+    for (
+      const control
+      of state.instructionsOpenControls
+    ) {
+      control.setAttribute(
+        "aria-expanded",
+        open
+          ? "true"
+          : "false"
+      );
+    }
+  }
+
+  function openInstructionsDisclosure(
+    trigger = null,
+    options = {}
+  ) {
+    if (
+      !state.instructionsDisclosure ||
+      state.disposed
+    ) {
+      return false;
+    }
+
+    state.lastInstructionsTrigger =
+      trigger ||
+      state.lastInstructionsTrigger;
+
+    state.instructionsDisclosure.open =
+      true;
+
+    syncInstructionsDisclosureState();
+
+    const summary =
+      state.instructionsDisclosure
+        .querySelector(
+          ":scope > summary"
+        );
+
+    if (
+      options.scroll !== false
+    ) {
+      window.requestAnimationFrame(
+        () => {
+          scrollToElement(
+            summary ||
+            state.instructionsDisclosure,
+            "start"
+          );
+        }
+      );
+    }
+
+    if (
+      options.focus === true
+    ) {
+      window.requestAnimationFrame(
+        () => {
+          focusElement(
+            summary
+          );
+        }
+      );
+    }
+
+    state.counters.instructionsOpened +=
+      1;
+
+    publishReceipt(
+      "instructions-disclosure-opened"
     );
 
     return true;
@@ -2168,8 +2611,7 @@
     }
 
     if (
-      options.restoreFocus !==
-      false
+      options.restoreFocus !== false
     ) {
       window.requestAnimationFrame(
         () => {
@@ -2220,7 +2662,10 @@
         )
       );
 
-    for (const layer of layers) {
+    for (
+      const layer
+      of layers
+    ) {
       layer.setAttribute(
         ATTRIBUTES.fallbackVisibility,
         semanticOnly
@@ -2229,7 +2674,10 @@
       );
     }
 
-    for (const star of stars) {
+    for (
+      const star
+      of stars
+    ) {
       star.setAttribute(
         ATTRIBUTES.fallbackRendering,
         semanticOnly
@@ -2263,12 +2711,6 @@
     applyFallbackStarState();
 
     if (state.crystalsReady) {
-      /*
-        Readiness makes enhancement available, but does not hide any
-        canonical HTML/CSS front. Enhanced front switching starts only
-        after deliberate user activation.
-      */
-
       restoreBaselineFronts();
 
       setPageState(
@@ -2343,8 +2785,7 @@
     state.reducedMotion =
       Boolean(
         state.reducedMotionQuery &&
-        state.reducedMotionQuery
-          .matches
+        state.reducedMotionQuery.matches
       );
 
     setRootAttribute(
@@ -2366,8 +2807,7 @@
       );
 
     state.reducedMotion =
-      state.reducedMotionQuery
-        .matches;
+      state.reducedMotionQuery.matches;
 
     if (
       typeof state.reducedMotionQuery
@@ -2411,10 +2851,22 @@
     options = {}
   ) {
     if (
-      !object ||
+      !isOrbitOwnedObject(object) ||
       state.disposed ||
       state.held
     ) {
+      publishReceipt(
+        "object-activation-rejected",
+        {
+          reason:
+            !isOrbitOwnedObject(object)
+              ? "object-outside-orbit-field"
+              : state.held
+                ? "showroom-held"
+                : "controller-disposed"
+        }
+      );
+
       return false;
     }
 
@@ -2433,8 +2885,7 @@
       );
 
     if (
-      options.dedupe !==
-        false &&
+      options.dedupe !== false &&
       isDuplicateActivation(
         `object:${
           objectId ||
@@ -2510,6 +2961,33 @@
     }
   }
 
+  function rejectSemanticActivation(
+    reason,
+    detail = {},
+    object = null
+  ) {
+    state.counters
+      .rejectedSemanticActivations +=
+      1;
+
+    publishReceipt(
+      "semantic-activation-rejected",
+      {
+        reason,
+
+        objectId:
+          object
+            ? object.getAttribute(
+                "data-showroom-object-id"
+              )
+            : normalize(
+                detail.objectId
+              ) ||
+              null
+      }
+    );
+  }
+
   function handleSemanticActivationEvent(
     event
   ) {
@@ -2520,22 +2998,36 @@
         : {};
 
     if (
-      detail.validTap ===
-        false ||
-      detail.cancelled ===
-        true ||
-      detail.wasDrag ===
-        true
-    ) {
-      return;
-    }
-
-    if (
       detail.target ===
         "compass" ||
       detail.kind ===
         "compass"
     ) {
+      const validation =
+        validateCompassEvent(
+          detail
+        );
+
+      if (!validation.valid) {
+        state.counters
+          .rejectedCompassActivations +=
+          1;
+
+        publishReceipt(
+          "compass-activation-rejected",
+          {
+            reason:
+              validation.reason
+          }
+        );
+
+        return;
+      }
+
+      state.counters
+        .acceptedCompassActivations +=
+        1;
+
       openCompassDialog(
         state.compassControl
       );
@@ -2568,11 +3060,75 @@
     }
 
     if (!object) {
+      rejectSemanticActivation(
+        "semantic-object-not-found",
+        detail
+      );
+
       return;
     }
 
+    const validation =
+      validateSemanticEvent(
+        detail,
+        object
+      );
+
+    if (!validation.valid) {
+      rejectSemanticActivation(
+        validation.reason,
+        detail,
+        object
+      );
+
+      return;
+    }
+
+    state.counters
+      .acceptedSemanticActivations +=
+      1;
+
     activateObject(
       object
+    );
+  }
+
+  function handleCompassActivationEvent(
+    event
+  ) {
+    const detail =
+      event &&
+      event.detail
+        ? event.detail
+        : {};
+
+    const validation =
+      validateCompassEvent(
+        detail
+      );
+
+    if (!validation.valid) {
+      state.counters
+        .rejectedCompassActivations +=
+        1;
+
+      publishReceipt(
+        "compass-activation-rejected",
+        {
+          reason:
+            validation.reason
+        }
+      );
+
+      return;
+    }
+
+    state.counters
+      .acceptedCompassActivations +=
+      1;
+
+    openCompassDialog(
+      state.compassControl
     );
   }
 
@@ -2584,9 +3140,61 @@
         event.currentTarget
       );
 
-    if (!object) {
+    if (!isOrbitOwnedObject(object)) {
+      publishReceipt(
+        "direct-object-click-rejected",
+        {
+          reason:
+            "object-outside-orbit-field"
+        }
+      );
+
       return;
     }
+
+    /*
+      Keyboard-generated clicks commonly report detail === 0 and
+      coordinates of 0,0. They remain valid because the focused semantic
+      object itself is physically owned by the orbit field.
+
+      Pointer clicks must either occur inside the orbit field or be the
+      synthetic click following the validated pointer event, which the
+      interactions module normally suppresses before this listener.
+    */
+
+    if (
+      event.detail !== 0 &&
+      (
+        !pointInsideElement(
+          state.orbitField,
+          event.clientX,
+          event.clientY
+        ) ||
+        !pointInsideElement(
+          object,
+          event.clientX,
+          event.clientY
+        )
+      )
+    ) {
+      publishReceipt(
+        "direct-object-click-rejected",
+        {
+          reason:
+            "pointer-click-outside-object-or-orbit",
+
+          objectId:
+            object.getAttribute(
+              "data-showroom-object-id"
+            )
+        }
+      );
+
+      return;
+    }
+
+    state.counters.directObjectClicks +=
+      1;
 
     activateObject(
       object
@@ -2743,31 +3351,52 @@
         SELECTORS.constructionDialog
       );
 
-    state.objects =
+    state.instructionsDisclosure =
+      document.querySelector(
+        SELECTORS.instructionsDisclosure
+      );
+
+    state.instructionsOpenControls =
       toArray(
         document.querySelectorAll(
-          SELECTORS.object
+          SELECTORS.instructionsOpen
         )
       );
 
-    for (
-      const cluster
-      of document.querySelectorAll(
-        SELECTORS.cluster
-      )
-    ) {
-      const clusterId =
-        normalize(
-          cluster.getAttribute(
-            "data-showroom-cluster-id"
+    state.objects =
+      state.orbitField
+        ? toArray(
+            state.orbitField
+              .querySelectorAll(
+                SELECTORS.object
+              )
           )
-        );
+        : [];
 
-      if (clusterId) {
-        state.clusters.set(
-          clusterId,
-          cluster
-        );
+    state.clusters.clear();
+    state.fronts.clear();
+
+    if (state.orbitField) {
+      for (
+        const cluster
+        of state.orbitField
+          .querySelectorAll(
+            SELECTORS.cluster
+          )
+      ) {
+        const clusterId =
+          normalize(
+            cluster.getAttribute(
+              "data-showroom-cluster-id"
+            )
+          );
+
+        if (clusterId) {
+          state.clusters.set(
+            clusterId,
+            cluster
+          );
+        }
       }
     }
 
@@ -2801,6 +3430,12 @@
       );
     }
 
+    if (!state.orbitField) {
+      issues.push(
+        "Missing [data-showroom-orbit-field]."
+      );
+    }
+
     if (!state.compassControl) {
       issues.push(
         "Missing [data-showroom-compass-control]."
@@ -2810,6 +3445,17 @@
     if (!state.compassDialog) {
       issues.push(
         "Missing [data-showroom-compass-dialog]."
+      );
+    }
+
+    if (
+      state.compassControl &&
+      !isOrbitOwnedElement(
+        state.compassControl
+      )
+    ) {
+      issues.push(
+        "Compass control is not contained by the orbit field."
       );
     }
 
@@ -2842,6 +3488,14 @@
       const object
       of state.objects
     ) {
+      const objectId =
+        normalize(
+          object.getAttribute(
+            "data-showroom-object-id"
+          )
+        ) ||
+        "unknown";
+
       const behavior =
         normalize(
           object.getAttribute(
@@ -2851,14 +3505,24 @@
 
       if (!behavior) {
         issues.push(
-          `Object "${
-            object.getAttribute(
-              "data-showroom-object-id"
-            ) ||
-            "unknown"
-          }" has no behavior.`
+          `Object "${objectId}" has no behavior.`
         );
       }
+
+      if (!isOrbitOwnedObject(object)) {
+        issues.push(
+          `Object "${objectId}" is outside the orbit field.`
+        );
+      }
+    }
+
+    if (
+      state.instructionsOpenControls.length &&
+      !state.instructionsDisclosure
+    ) {
+      issues.push(
+        "Instructions-opening controls exist without an instructions disclosure."
+      );
     }
 
     publishValidation(
@@ -2891,7 +3555,33 @@
       addListener(
         state.compassControl,
         "click",
-        () => {
+        event => {
+          if (
+            event.detail !== 0 &&
+            (
+              !pointInsideElement(
+                state.orbitField,
+                event.clientX,
+                event.clientY
+              ) ||
+              !pointInsideElement(
+                state.compassControl,
+                event.clientX,
+                event.clientY
+              )
+            )
+          ) {
+            publishReceipt(
+              "direct-compass-click-rejected",
+              {
+                reason:
+                  "pointer-click-outside-compass-or-orbit"
+              }
+            );
+
+            return;
+          }
+
           openCompassDialog(
             state.compassControl
           );
@@ -3038,6 +3728,42 @@
     }
   }
 
+  function initializeInstructionsActions() {
+    for (
+      const control
+      of state.instructionsOpenControls
+    ) {
+      addListener(
+        control,
+        "click",
+        event => {
+          event.preventDefault();
+
+          openInstructionsDisclosure(
+            control,
+            {
+              scroll:
+                true,
+
+              focus:
+                false
+            }
+          );
+        }
+      );
+    }
+
+    if (state.instructionsDisclosure) {
+      addListener(
+        state.instructionsDisclosure,
+        "toggle",
+        syncInstructionsDisclosureState
+      );
+    }
+
+    syncInstructionsDisclosureState();
+  }
+
   function initializeConstructionActions() {
     for (
       const button
@@ -3124,11 +3850,7 @@
     addListener(
       window,
       EVENTS.compassActivate,
-      () => {
-        openCompassDialog(
-          state.compassControl
-        );
-      }
+      handleCompassActivationEvent
     );
 
     addListener(
@@ -3220,14 +3942,6 @@
   }
 
   function initializeInitialPresentation() {
-    /*
-      Critical recovery change:
-      - Do not call hideAllFronts().
-      - Do not mark any canonical front inert.
-      - Do not enter orbit-only presentation.
-      - Preserve the complete HTML/CSS page.
-    */
-
     captureOriginalFrontStates();
     restoreBaselineFronts();
     closeAllClusters();
@@ -3302,6 +4016,15 @@
         openFront,
 
         returnToOrbit,
+
+        openInstructions(
+          options = {}
+        ) {
+          return openInstructionsDisclosure(
+            null,
+            options
+          );
+        },
 
         restoreBaseline(
           reason =
@@ -3385,6 +4108,7 @@
       initializeCompassActions();
       initializeRouteActions();
       initializeReturnToOrbitActions();
+      initializeInstructionsActions();
       initializeConstructionActions();
       initializeDialogEvents();
       initializeRuntimeEvents();
@@ -3418,6 +4142,15 @@
             issues,
 
           baselinePreserved:
+            true,
+
+          orbitScopedObjectCount:
+            state.objects.length,
+
+          semanticActivationGuard:
+            true,
+
+          compassActivationGuard:
             true
         }
       );
@@ -3434,11 +4167,6 @@
       );
     } catch (error) {
       if (state.root) {
-        /*
-          Even controller initialization failure must not remove canonical
-          content. Restore any fronts that were discovered before failure.
-        */
-
         restoreBaselineFronts();
 
         setRootAttribute(
@@ -3488,11 +4216,6 @@
     if (state.disposed) {
       return;
     }
-
-    /*
-      Disposal restores the canonical HTML/CSS baseline before removing
-      controller listeners and public API.
-    */
 
     state.enhancementAvailable =
       false;

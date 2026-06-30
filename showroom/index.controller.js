@@ -55,16 +55,28 @@
   });
 
   const STATES = Object.freeze({
-    CONSTELLATION: "CONSTELLATION",
-    CLUSTER_OPEN: "CLUSTER_OPEN",
-    ROOM_SELECTED: "ROOM_SELECTED",
-    SYSTEM_HELD: "SYSTEM_HELD"
+    CONSTELLATION:
+      "CONSTELLATION",
+
+    CLUSTER_OPEN:
+      "CLUSTER_OPEN",
+
+    ROOM_SELECTED:
+      "ROOM_SELECTED",
+
+    SYSTEM_HELD:
+      "SYSTEM_HELD"
   });
 
   const PRESENTATION_MODES = Object.freeze({
-    CONSTELLATION: "CONSTELLATION",
-    CLUSTER: "CLUSTER",
-    HELD: "HELD"
+    CONSTELLATION:
+      "CONSTELLATION",
+
+    CLUSTER:
+      "CLUSTER",
+
+    HELD:
+      "HELD"
   });
 
   const PRESENTATION_MODE_BY_STATE = Object.freeze({
@@ -82,10 +94,17 @@
   });
 
   const DESTINATION_TYPES = Object.freeze({
-    NONE: "",
-    COIN: "coin",
-    ROOM: "room",
-    HOME_COMPASS: "home-compass"
+    NONE:
+      "",
+
+    COIN:
+      "coin",
+
+    ROOM:
+      "room",
+
+    HOME_COMPASS:
+      "home-compass"
   });
 
   const SHOWROOM_DESTINATION_TYPES =
@@ -110,23 +129,43 @@
     });
 
   const ORIENTATION_PHASES = Object.freeze({
-    IDLE: "IDLE",
-    PREVIEW: "PREVIEW",
-    COMMITTED: "COMMITTED",
-    CANCELLED: "CANCELLED"
+    IDLE:
+      "IDLE",
+
+    PREVIEW:
+      "PREVIEW",
+
+    COMMITTED:
+      "COMMITTED",
+
+    CANCELLED:
+      "CANCELLED"
   });
 
   const DEPTH_LAYERS = Object.freeze({
-    FRONT: "front",
-    REAR: "rear",
-    UNKNOWN: "unknown"
+    FRONT:
+      "front",
+
+    REAR:
+      "rear",
+
+    UNKNOWN:
+      "unknown"
   });
 
   const CHANNELS = Object.freeze({
-    FRAME: "frame",
-    REDUCED_MOTION: "reducedMotion",
-    HELD_STATE: "heldState",
-    COMPASS_STATE: "compassState",
+    FRAME:
+      "frame",
+
+    REDUCED_MOTION:
+      "reducedMotion",
+
+    HELD_STATE:
+      "heldState",
+
+    COMPASS_STATE:
+      "compassState",
+
     SEMANTIC_PROJECTION:
       "semanticProjection"
   });
@@ -182,10 +221,17 @@
   ]);
 
   const WING_TO_COIN = Object.freeze({
-    north: "story",
-    east: "characters",
-    south: "wonders",
-    west: "mysteries"
+    north:
+      "story",
+
+    east:
+      "characters",
+
+    south:
+      "wonders",
+
+    west:
+      "mysteries"
   });
 
   const WING_LABELS = Object.freeze({
@@ -224,7 +270,12 @@
 
   const QUATERNION = Object.freeze({
     identity:
-      Object.freeze([0, 0, 0, 1]),
+      Object.freeze([
+        0,
+        0,
+        0,
+        1
+      ]),
 
     minimumLength:
       1e-8
@@ -453,10 +504,17 @@
   const CANONICAL_ROOM_RECORDS =
     Object.freeze([
       createCanonicalRoomRecord({
-        wing: "north",
-        coin: "story",
-        roomId: "north-1",
-        route: "/showroom/#arrival",
+        wing:
+          "north",
+
+        coin:
+          "story",
+
+        roomId:
+          "north-1",
+
+        route:
+          "/showroom/#arrival",
 
         wingLabel:
           WING_LABELS.north,
@@ -520,9 +578,15 @@
       }),
 
       createCanonicalRoomRecord({
-        wing: "north",
-        coin: "story",
-        roomId: "north-2",
+        wing:
+          "north",
+
+        coin:
+          "story",
+
+        roomId:
+          "north-2",
+
         route:
           "/showroom/#mirrorland-preface-mission",
 
@@ -588,9 +652,15 @@
       }),
 
       createCanonicalRoomRecord({
-        wing: "north",
-        coin: "story",
-        roomId: "north-3",
+        wing:
+          "north",
+
+        coin:
+          "story",
+
+        roomId:
+          "north-3",
+
         route:
           "/showroom/#mirrorland-preface-timeline",
 
@@ -656,9 +726,15 @@
       }),
 
       createCanonicalRoomRecord({
-        wing: "north",
-        coin: "story",
-        roomId: "north-4",
+        wing:
+          "north",
+
+        coin:
+          "story",
+
+        roomId:
+          "north-4",
+
         route:
           "/showroom/#mirrorland-preface-invitation",
 
@@ -724,9 +800,15 @@
       }),
 
       createCanonicalRoomRecord({
-        wing: "east",
-        coin: "characters",
-        roomId: "east-1",
+        wing:
+          "east",
+
+        coin:
+          "characters",
+
+        roomId:
+          "east-1",
+
         route:
           "/showroom/globe/hearth/jeeves/",
 
@@ -792,9 +874,15 @@
       }),
 
       createCanonicalRoomRecord({
-        wing: "east",
-        coin: "characters",
-        roomId: "east-2",
+        wing:
+          "east",
+
+        coin:
+          "characters",
+
+        roomId:
+          "east-2",
+
         route:
           "/elara/index.html",
 
@@ -860,9 +948,15 @@
       }),
 
       createCanonicalRoomRecord({
-        wing: "east",
-        coin: "characters",
-        roomId: "east-3",
+        wing:
+          "east",
+
+        coin:
+          "characters",
+
+        roomId:
+          "east-3",
+
         route:
           "/products/auren/",
 
@@ -928,9 +1022,15 @@
       }),
 
       createCanonicalRoomRecord({
-        wing: "east",
-        coin: "characters",
-        roomId: "east-4",
+        wing:
+          "east",
+
+        coin:
+          "characters",
+
+        roomId:
+          "east-4",
+
         route:
           "/characters/",
 
@@ -996,9 +1096,15 @@
       }),
 
       createCanonicalRoomRecord({
-        wing: "south",
-        coin: "wonders",
-        roomId: "south-1",
+        wing:
+          "south",
+
+        coin:
+          "wonders",
+
+        roomId:
+          "south-1",
+
         route:
           "/showroom/#showroom-window-threshold",
 
@@ -1064,9 +1170,15 @@
       }),
 
       createCanonicalRoomRecord({
-        wing: "south",
-        coin: "wonders",
-        roomId: "south-2",
+        wing:
+          "south",
+
+        coin:
+          "wonders",
+
+        roomId:
+          "south-2",
+
         route:
           "/showroom/#showroom-diamond-stage",
 
@@ -1132,9 +1244,15 @@
       }),
 
       createCanonicalRoomRecord({
-        wing: "south",
-        coin: "wonders",
-        roomId: "south-3",
+        wing:
+          "south",
+
+        coin:
+          "wonders",
+
+        roomId:
+          "south-3",
+
         route:
           "/showroom/#showroom-star-reading",
 
@@ -1200,9 +1318,15 @@
       }),
 
       createCanonicalRoomRecord({
-        wing: "south",
-        coin: "wonders",
-        roomId: "south-4",
+        wing:
+          "south",
+
+        coin:
+          "wonders",
+
+        roomId:
+          "south-4",
+
         route:
           "/showroom/globe/hearth/",
 
@@ -1268,9 +1392,15 @@
       }),
 
       createCanonicalRoomRecord({
-        wing: "west",
-        coin: "mysteries",
-        roomId: "west-1",
+        wing:
+          "west",
+
+        coin:
+          "mysteries",
+
+        roomId:
+          "west-1",
+
         route:
           "/showroom/#showroom-unfinished-world",
 
@@ -1336,9 +1466,15 @@
       }),
 
       createCanonicalRoomRecord({
-        wing: "west",
-        coin: "mysteries",
-        roomId: "west-2",
+        wing:
+          "west",
+
+        coin:
+          "mysteries",
+
+        roomId:
+          "west-2",
+
         route:
           "/showroom/#mirrorland-preface-exploration",
 
@@ -1404,9 +1540,15 @@
       }),
 
       createCanonicalRoomRecord({
-        wing: "west",
-        coin: "mysteries",
-        roomId: "west-3",
+        wing:
+          "west",
+
+        coin:
+          "mysteries",
+
+        roomId:
+          "west-3",
+
         route:
           "/showroom/#showroom-paths-not-yet-open",
 
@@ -1472,9 +1614,15 @@
       }),
 
       createCanonicalRoomRecord({
-        wing: "west",
-        coin: "mysteries",
-        roomId: "west-4",
+        wing:
+          "west",
+
+        coin:
+          "mysteries",
+
+        roomId:
+          "west-4",
+
         route:
           "/showroom/globe/audralia/",
 
@@ -1608,34 +1756,74 @@
     });
 
   const state = {
-    root: null,
-    scene: null,
-    sceneField: null,
-    panel: null,
+    root:
+      null,
 
-    panelEyebrow: null,
-    panelTitle: null,
-    panelPurpose: null,
-    panelRelationship: null,
-    panelDomain: null,
-    panelFunction: null,
-    panelCoordinate: null,
-    panelSelectionState: null,
-    panelRouteStatus: null,
-    panelLens: null,
+    scene:
+      null,
 
-    enterButton: null,
-    enterLabel: null,
+    sceneField:
+      null,
 
-    returnToOrbitButton: null,
-    returnToOrbitLabel: null,
+    panel:
+      null,
 
-    returnHomeButton: null,
-    guidance: null,
+    panelEyebrow:
+      null,
 
-    controllerReceiptOutput: null,
-    controllerValidationOutput: null,
-    compassControl: null,
+    panelTitle:
+      null,
+
+    panelPurpose:
+      null,
+
+    panelRelationship:
+      null,
+
+    panelDomain:
+      null,
+
+    panelFunction:
+      null,
+
+    panelCoordinate:
+      null,
+
+    panelSelectionState:
+      null,
+
+    panelRouteStatus:
+      null,
+
+    panelLens:
+      null,
+
+    enterButton:
+      null,
+
+    enterLabel:
+      null,
+
+    returnToOrbitButton:
+      null,
+
+    returnToOrbitLabel:
+      null,
+
+    returnHomeButton:
+      null,
+
+    guidance:
+      null,
+
+    controllerReceiptOutput:
+      null,
+
+    controllerValidationOutput:
+      null,
+
+    compassControl:
+      null,
 
     current:
       STATES.CONSTELLATION,
@@ -1802,7 +1990,9 @@
       : fallback;
   }
 
-  function normalizeWing(value) {
+  function normalizeWing(
+    value
+  ) {
     const wing =
       String(value || "")
         .trim()
@@ -1813,12 +2003,16 @@
       : "";
   }
 
-  function normalizeRoomId(value) {
+  function normalizeRoomId(
+    value
+  ) {
     return String(value || "")
       .trim();
   }
 
-  function normalizeRoute(value) {
+  function normalizeRoute(
+    value
+  ) {
     const route =
       String(value || "")
         .trim();
@@ -1836,7 +2030,8 @@
       String(value || "")
         .trim();
 
-    return label || fallback;
+    return label ||
+      fallback;
   }
 
   function normalizeNullableString(
@@ -1846,10 +2041,13 @@
       String(value || "")
         .trim();
 
-    return normalized || null;
+    return normalized ||
+      null;
   }
 
-  function normalizeDepthLayer(value) {
+  function normalizeDepthLayer(
+    value
+  ) {
     const layer =
       String(value || "")
         .trim()
@@ -1877,7 +2075,8 @@
   ) {
     if (
       !payload ||
-      typeof payload !== "object" ||
+      typeof payload !==
+        "object" ||
       Array.isArray(payload)
     ) {
       return [];
@@ -1948,13 +2147,16 @@
 
   function normalizeStoredQuaternion(
     value,
-    fallback = QUATERNION.identity
+    fallback =
+      QUATERNION.identity
   ) {
     return (
       normalizeQuaternionStrict(
         value
       ) ||
-      Array.from(fallback)
+      Array.from(
+        fallback
+      )
     );
   }
 
@@ -2006,7 +2208,8 @@
 
       primaryId:
         String(
-          source.primaryId || ""
+          source.primaryId ||
+          ""
         ).trim()
     };
   }
@@ -2051,7 +2254,8 @@
   ) {
     if (
       !payload ||
-      typeof payload !== "object" ||
+      typeof payload !==
+        "object" ||
       Array.isArray(payload)
     ) {
       return Object.freeze({
@@ -2138,7 +2342,8 @@
     if (
       !cluster ||
       !payload ||
-      typeof payload !== "object" ||
+      typeof payload !==
+        "object" ||
       Array.isArray(payload)
     ) {
       return Object.freeze({
@@ -2235,7 +2440,9 @@
     );
   }
 
-  function wingToCoin(wing) {
+  function wingToCoin(
+    wing
+  ) {
     return (
       WING_TO_COIN[
         normalizeWing(wing)
@@ -2248,7 +2455,9 @@
     wing
   ) {
     const roomIds =
-      ROOMS_BY_WING.get(wing) ||
+      ROOMS_BY_WING.get(
+        wing
+      ) ||
       Object.freeze([]);
 
     const primaryRoom =
@@ -2265,7 +2474,9 @@
       wing,
 
       roomIds:
-        Array.from(roomIds),
+        Array.from(
+          roomIds
+        ),
 
       primaryRoom,
 
@@ -2299,14 +2510,19 @@
     };
   }
 
-  function getCluster(wing) {
+  function getCluster(
+    wing
+  ) {
     const normalizedWing =
-      normalizeWing(wing);
+      normalizeWing(
+        wing
+      );
 
     return normalizedWing
       ? state.clusters.get(
           normalizedWing
-        ) || null
+        ) ||
+        null
       : null;
   }
 
@@ -2366,13 +2582,19 @@
       typeof callback !==
         "function"
     ) {
-      return () => false;
+      return () =>
+        false;
     }
 
-    set.add(callback);
+    set.add(
+      callback
+    );
 
     return () => {
-      set.delete(callback);
+      set.delete(
+        callback
+      );
+
       return true;
     };
   }
@@ -2393,7 +2615,9 @@
       of set
     ) {
       try {
-        callback(payload);
+        callback(
+          payload
+        );
       } catch (_) {}
     }
   }
@@ -2420,9 +2644,13 @@
     );
   }
 
-  function findCoinElement(wing) {
+  function findCoinElement(
+    wing
+  ) {
     const normalizedWing =
-      normalizeWing(wing);
+      normalizeWing(
+        wing
+      );
 
     if (
       !normalizedWing ||
@@ -2441,7 +2669,9 @@
     roomId
   ) {
     const id =
-      normalizeRoomId(roomId);
+      normalizeRoomId(
+        roomId
+      );
 
     if (
       !id ||
@@ -2460,7 +2690,10 @@
     record
   ) {
     const kind =
-      String(record.kind || "")
+      String(
+        record.kind ||
+        ""
+      )
         .trim()
         .toLowerCase();
 
@@ -2478,25 +2711,36 @@
     }
 
     if (
-      kind === "room"
+      kind ===
+      "room"
     ) {
       return Boolean(
-        findRoomElement(id)
+        findRoomElement(
+          id
+        )
       );
     }
 
     if (
-      kind === "cardinal" ||
-      kind === "coin"
+      kind ===
+        "cardinal" ||
+      kind ===
+        "coin"
     ) {
       return Boolean(
-        findCoinElement(id)
+        findCoinElement(
+          id
+        )
       );
     }
 
     return Boolean(
-      findRoomElement(id) ||
-      findCoinElement(id)
+      findRoomElement(
+        id
+      ) ||
+      findCoinElement(
+        id
+      )
     );
   }
 
@@ -2704,99 +2948,69 @@
     purpose,
     relationship
   }) {
-    if (
-      state.panelEyebrow
-    ) {
-      state.panelEyebrow.textContent =
-        eyebrow ||
-        "Selected path";
-    }
+    state.panelEyebrow.textContent =
+      eyebrow ||
+      "Selected path";
 
-    if (
-      state.panelTitle
-    ) {
-      state.panelTitle.textContent =
-        title ||
-        "Choose a direction";
-    }
+    state.panelTitle.textContent =
+      title ||
+      "Choose a direction";
 
-    if (
-      state.panelPurpose
-    ) {
-      state.panelPurpose.textContent =
-        purpose ||
-        "";
-    }
+    state.panelPurpose.textContent =
+      purpose ||
+      "";
 
-    if (
-      state.panelRelationship
-    ) {
-      state.panelRelationship.textContent =
-        relationship ||
-        "";
-    }
+    state.panelRelationship.textContent =
+      relationship ||
+      "";
   }
 
   function setPanelMetadata({
-    domain = "None",
-    functionLabel = "Unassigned",
-    coordinate = "—",
-    selection = "Idle",
-    route = "Not selected",
-    lens = "Overview"
+    domain =
+      "None",
+
+    functionLabel =
+      "Unassigned",
+
+    coordinate =
+      "—",
+
+    selection =
+      "Idle",
+
+    route =
+      "Not selected",
+
+    lens =
+      "Overview"
   } = {}) {
-    if (
-      state.panelDomain
-    ) {
-      state.panelDomain.textContent =
-        domain;
-    }
+    state.panelDomain.textContent =
+      domain;
 
-    if (
-      state.panelFunction
-    ) {
-      state.panelFunction.textContent =
-        functionLabel;
-    }
+    state.panelFunction.textContent =
+      functionLabel;
 
-    if (
-      state.panelCoordinate
-    ) {
-      state.panelCoordinate.textContent =
-        coordinate;
-    }
+    state.panelCoordinate.textContent =
+      coordinate;
 
-    if (
-      state.panelSelectionState
-    ) {
-      state.panelSelectionState.textContent =
-        selection;
-    }
+    state.panelSelectionState.textContent =
+      selection;
 
-    if (
-      state.panelRouteStatus
-    ) {
-      state.panelRouteStatus.textContent =
-        route;
-    }
+    state.panelRouteStatus.textContent =
+      route;
 
-    if (
-      state.panelLens
-    ) {
-      state.panelLens.textContent =
-        lens;
-    }
+    state.panelLens.textContent =
+      lens;
   }
 
   function setGuidance(
     message
   ) {
-    if (
-      state.guidance
-    ) {
-      state.guidance.textContent =
-        String(message || "");
-    }
+    state.guidance.textContent =
+      String(
+        message ||
+        ""
+      );
   }
 
   function setEnterEnabled(
@@ -2804,12 +3018,6 @@
     label =
       "Enter Selected Path"
   ) {
-    if (
-      !state.enterButton
-    ) {
-      return;
-    }
-
     state.enterButton.disabled =
       !enabled;
 
@@ -2820,15 +3028,8 @@
         : "true"
     );
 
-    if (
-      state.enterLabel
-    ) {
-      state.enterLabel.textContent =
-        label;
-    } else {
-      state.enterButton.textContent =
-        label;
-    }
+    state.enterLabel.textContent =
+      label;
   }
 
   function setReturnToOrbitVisible(
@@ -2838,10 +3039,6 @@
   ) {
     const control =
       state.returnToOrbitButton;
-
-    if (!control) {
-      return;
-    }
 
     control.hidden =
       !visible;
@@ -2874,26 +3071,13 @@
       );
     }
 
-    if (
-      state.returnToOrbitLabel
-    ) {
-      state.returnToOrbitLabel.textContent =
-        label;
-    } else {
-      control.textContent =
-        label;
-    }
+    state.returnToOrbitLabel.textContent =
+      label;
   }
 
   function setReturnHomeVisible(
     visible
   ) {
-    if (
-      !state.returnHomeButton
-    ) {
-      return;
-    }
-
     state.returnHomeButton.hidden =
       !visible;
 
@@ -2975,10 +3159,6 @@
   ) {
     clearViewportSchedules();
 
-    if (!state.panel) {
-      return;
-    }
-
     state.panelDescentFrame =
       requestAnimationFrame(
         () => {
@@ -3051,13 +3231,10 @@
 
   function scheduleSceneAscent(
     expectedState,
-    expectedWing = ""
+    expectedWing =
+      ""
   ) {
     clearViewportSchedules();
-
-    if (!state.scene) {
-      return;
-    }
 
     state.sceneAscentFrame =
       requestAnimationFrame(
@@ -3116,7 +3293,8 @@
   }
 
   function resetSelection({
-    preserveCompass = false
+    preserveCompass =
+      false
   } = {}) {
     state.selectedCardinal =
       "";
@@ -3709,17 +3887,16 @@
     });
   }
 
-  function syncDatasets(frame) {
-    if (!state.root) {
-      return;
-    }
-
+  function syncDatasets(
+    frame
+  ) {
     const cluster =
       frame.cluster;
 
     const reflectedPresentationMode =
       String(
-        frame.presentationMode || ""
+        frame.presentationMode ||
+        ""
       )
         .trim()
         .toLowerCase();
@@ -4009,45 +4186,41 @@
       }
     );
 
+    state.compassControl.dataset.showroomSelected =
+      frame.compassSelected
+        ? "true"
+        : "false";
+
+    state.compassControl.dataset.fixedCenter =
+      "true";
+
+    state.compassControl.dataset.interactionEnabled =
+      frame.compass
+        .interactionEnabled
+        ? "true"
+        : "false";
+
+    state.compassControl.dataset.immediateNavigation =
+      "false";
+
+    state.compassControl.setAttribute(
+      "aria-expanded",
+      frame.compassSelected
+        ? "true"
+        : "false"
+    );
+
     if (
-      state.compassControl
+      frame.compassSelected
     ) {
-      state.compassControl.dataset.showroomSelected =
-        frame.compassSelected
-          ? "true"
-          : "false";
-
-      state.compassControl.dataset.fixedCenter =
-        "true";
-
-      state.compassControl.dataset.interactionEnabled =
-        frame.compass
-          .interactionEnabled
-          ? "true"
-          : "false";
-
-      state.compassControl.dataset.immediateNavigation =
-        "false";
-
       state.compassControl.setAttribute(
-        "aria-expanded",
-        frame.compassSelected
-          ? "true"
-          : "false"
+        "aria-current",
+        "true"
       );
-
-      if (
-        frame.compassSelected
-      ) {
-        state.compassControl.setAttribute(
-          "aria-current",
-          "true"
-        );
-      } else {
-        state.compassControl.removeAttribute(
-          "aria-current"
-        );
-      }
+    } else {
+      state.compassControl.removeAttribute(
+        "aria-current"
+      );
     }
   }
 
@@ -4060,27 +4233,23 @@
       );
 
     const serialized =
-      JSON.stringify(receipt);
+      JSON.stringify(
+        receipt
+      );
 
-    if (state.root) {
-      state.root.dataset.showroomControllerReceipt =
-        serialized;
-    }
+    state.root.dataset.showroomControllerReceipt =
+      serialized;
 
     if (
+      "value" in
       state.controllerReceiptOutput
     ) {
-      if (
-        "value" in
-        state.controllerReceiptOutput
-      ) {
-        state.controllerReceiptOutput.value =
-          serialized;
-      }
-
-      state.controllerReceiptOutput.textContent =
+      state.controllerReceiptOutput.value =
         serialized;
     }
+
+    state.controllerReceiptOutput.textContent =
+      serialized;
 
     globalThis.SHOWROOM_CONTROLLER_RECEIPT =
       receipt;
@@ -4090,7 +4259,10 @@
     const frame =
       createFrameState();
 
-    syncDatasets(frame);
+    syncDatasets(
+      frame
+    );
+
     writeCompatibilityReceipt(
       frame
     );
@@ -4105,13 +4277,20 @@
 
   function recordAction(
     action,
-    failure = ""
+    failure =
+      ""
   ) {
     state.lastAction =
-      String(action || "");
+      String(
+        action ||
+        ""
+      );
 
     state.lastFailure =
-      String(failure || "");
+      String(
+        failure ||
+        ""
+      );
 
     return publishFrame();
   }
@@ -4220,57 +4399,55 @@
           state.selectedCardinal
         );
 
-      if (coin) {
-        setPanel(
-          panelFromCoin(
-            coin
-          )
-        );
+      setPanel(
+        panelFromCoin(
+          coin
+        )
+      );
 
-        setPanelMetadata({
-          domain:
-            normalizeLabel(
-              coin.dataset
-                .showroomCardinalLabel,
+      setPanelMetadata({
+        domain:
+          normalizeLabel(
+            coin.dataset
+              .showroomCardinalLabel,
 
-              WING_LABELS[
-                state.selectedCardinal
-              ] ||
-              wingToCoin(
-                state.selectedCardinal
-              )
-            ),
-
-          functionLabel:
-            normalizeLabel(
-              coin.dataset
-                .showroomPanelTitle ||
-              coin.dataset
-                .showroomCardinalFunction ||
-              coin.dataset
-                .showroomCardinalLabel,
-
-              "Mirrorland direction"
-            ),
-
-          coordinate:
-            normalizeLabel(
-              coin.dataset
-                .showroomCoordinateLabel,
-
+            WING_LABELS[
               state.selectedCardinal
-            ),
+            ] ||
+            wingToCoin(
+              state.selectedCardinal
+            )
+          ),
 
-          selection:
-            "Cluster open",
+        functionLabel:
+          normalizeLabel(
+            coin.dataset
+              .showroomPanelTitle ||
+            coin.dataset
+              .showroomCardinalFunction ||
+            coin.dataset
+              .showroomCardinalLabel,
 
-          route:
-            "Room required",
+            "Mirrorland direction"
+          ),
 
-          lens:
-            "Overview"
-        });
-      }
+        coordinate:
+          normalizeLabel(
+            coin.dataset
+              .showroomCoordinateLabel,
+
+            state.selectedCardinal
+          ),
+
+        selection:
+          "Cluster open",
+
+        route:
+          "Room required",
+
+        lens:
+          "Overview"
+      });
 
       setEnterEnabled(
         false,
@@ -4297,54 +4474,52 @@
           state.selectedRoom
         );
 
-      if (room) {
-        setPanel(
-          panelFromRoom(
-            room
+      setPanel(
+        panelFromRoom(
+          room
+        )
+      );
+
+      setPanelMetadata({
+        domain:
+          normalizeLabel(
+            WING_LABELS[
+              state.selectedCardinal
+            ] ||
+            state.selectedCoin,
+
+            "Selected direction"
+          ),
+
+        functionLabel:
+          normalizeLabel(
+            room.dataset
+              .showroomLocalFunction,
+
+            "Room"
+          ),
+
+        coordinate:
+          normalizeLabel(
+            room.dataset
+              .showroomLocalCoordinate,
+
+            state.selectedRoom
+          ),
+
+        selection:
+          "Room selected",
+
+        route:
+          state.selectedRoute ||
+          "Not selected",
+
+        lens:
+          normalizeLabel(
+            state.selectedLens,
+            "Overview"
           )
-        );
-
-        setPanelMetadata({
-          domain:
-            normalizeLabel(
-              WING_LABELS[
-                state.selectedCardinal
-              ] ||
-              state.selectedCoin,
-
-              "Selected direction"
-            ),
-
-          functionLabel:
-            normalizeLabel(
-              room.dataset
-                .showroomLocalFunction,
-
-              "Room"
-            ),
-
-          coordinate:
-            normalizeLabel(
-              room.dataset
-                .showroomLocalCoordinate,
-
-              state.selectedRoom
-            ),
-
-          selection:
-            "Room selected",
-
-          route:
-            state.selectedRoute ||
-            "Not selected",
-
-          lens:
-            normalizeLabel(
-              state.selectedLens,
-              "Overview"
-            )
-        });
-      }
+      });
 
       setEnterEnabled(
         Boolean(
@@ -4421,7 +4596,8 @@
   function applyState(
     nextState,
     patch = {},
-    action = ""
+    action =
+      ""
   ) {
     invariant(
       canTransition(
@@ -4448,7 +4624,9 @@
 
     for (
       const [key, value]
-      of Object.entries(patch)
+      of Object.entries(
+        patch
+      )
     ) {
       if (
         Object.prototype
@@ -4491,12 +4669,20 @@
   function setConstellationOrientation(
     orientation,
     {
-      committed = false,
+      committed =
+        false,
+
       phase =
         ORIENTATION_PHASES.PREVIEW,
-      gestureActive = false,
-      previewAccepted = false,
-      incrementRevision = false
+
+      gestureActive =
+        false,
+
+      previewAccepted =
+        false,
+
+      incrementRevision =
+        false
     } = {}
   ) {
     const normalized =
@@ -4556,12 +4742,20 @@
     cluster,
     orientation,
     {
-      committed = false,
+      committed =
+        false,
+
       phase =
         ORIENTATION_PHASES.PREVIEW,
-      gestureActive = false,
-      previewAccepted = false,
-      incrementRevision = false
+
+      gestureActive =
+        false,
+
+      previewAccepted =
+        false,
+
+      incrementRevision =
+        false
     } = {}
   ) {
     invariant(
@@ -4812,7 +5006,8 @@
   }
 
   function requestOrbitCancel(
-    reason = "cancelled"
+    reason =
+      "cancelled"
   ) {
     if (
       arguments.length > 1
@@ -4863,7 +5058,8 @@
 
     recordAction(
       `orbit-cancelled:${String(
-        reason || "cancelled"
+        reason ||
+        "cancelled"
       )}`
     );
 
@@ -4887,7 +5083,9 @@
     }
 
     const normalizedWing =
-      normalizeWing(wing);
+      normalizeWing(
+        wing
+      );
 
     if (
       isHeld() ||
@@ -4956,7 +5154,9 @@
     }
 
     const normalizedWing =
-      normalizeWing(wing);
+      normalizeWing(
+        wing
+      );
 
     const cluster =
       getCluster(
@@ -5033,7 +5233,9 @@
     }
 
     const normalizedWing =
-      normalizeWing(wing);
+      normalizeWing(
+        wing
+      );
 
     const cluster =
       getCluster(
@@ -5121,7 +5323,9 @@
     }
 
     const normalizedWing =
-      normalizeWing(wing);
+      normalizeWing(
+        wing
+      );
 
     const cluster =
       getCluster(
@@ -5191,7 +5395,8 @@
 
   function requestClusterCancel(
     wing,
-    reason = "cancelled"
+    reason =
+      "cancelled"
   ) {
     if (
       arguments.length < 1 ||
@@ -5208,7 +5413,9 @@
     }
 
     const normalizedWing =
-      normalizeWing(wing);
+      normalizeWing(
+        wing
+      );
 
     const cluster =
       getCluster(
@@ -5253,7 +5460,8 @@
 
     recordAction(
       `cluster-cancelled:${normalizedWing}:${String(
-        reason || "cancelled"
+        reason ||
+        "cancelled"
       )}`
     );
 
@@ -5370,7 +5578,9 @@
           wing,
 
         selectedCoin:
-          wingToCoin(wing),
+          wingToCoin(
+            wing
+          ),
 
         selectedDestinationType:
           DESTINATION_TYPES.COIN,
@@ -5382,9 +5592,13 @@
           destination
             ? destination.label ||
               WING_LABELS[wing] ||
-              wingToCoin(wing)
+              wingToCoin(
+                wing
+              )
             : WING_LABELS[wing] ||
-              wingToCoin(wing),
+              wingToCoin(
+                wing
+              ),
 
         selectedRoute:
           "",
@@ -5425,10 +5639,14 @@
     }
 
     const canonical =
-      ROOM_BY_ID.get(id);
+      ROOM_BY_ID.get(
+        id
+      );
 
     const element =
-      findRoomElement(id);
+      findRoomElement(
+        id
+      );
 
     if (
       !canonical ||
@@ -5775,7 +5993,8 @@
     value
   ) {
     return (
-      value === null ||
+      value ===
+        null ||
       typeof value ===
         "string" ||
       typeof value ===
@@ -5783,7 +6002,9 @@
       (
         typeof value ===
           "number" &&
-        Number.isFinite(value)
+        Number.isFinite(
+          value
+        )
       )
     );
   }
@@ -5795,20 +6016,26 @@
       payload &&
       typeof payload ===
         "object" &&
-      !Array.isArray(payload),
+      !Array.isArray(
+        payload
+      ),
 
       "SHOWROOM_DESTINATION_ENTRY_PAYLOAD_OBJECT_REQUIRED"
     );
 
     invariant(
-      Object.isFrozen(payload) ===
+      Object.isFrozen(
+        payload
+      ) ===
         true,
 
       "SHOWROOM_DESTINATION_ENTRY_PAYLOAD_NOT_FROZEN"
     );
 
     const keys =
-      Object.keys(payload);
+      Object.keys(
+        payload
+      );
 
     invariant(
       keys.length ===
@@ -5921,7 +6148,8 @@
           .authorizationGeneration
       ) &&
       payload
-        .authorizationGeneration >= 0,
+        .authorizationGeneration >=
+        0,
 
       "SHOWROOM_DESTINATION_ENTRY_PAYLOAD_GENERATION_INVALID"
     );
@@ -6144,7 +6372,9 @@
                 wing,
 
               selectedCoin:
-                wingToCoin(wing),
+                wingToCoin(
+                  wing
+                ),
 
               selectedRoom:
                 "",
@@ -6159,9 +6389,13 @@
                 destination
                   ? destination.label ||
                     WING_LABELS[wing] ||
-                    wingToCoin(wing)
+                    wingToCoin(
+                      wing
+                    )
                   : WING_LABELS[wing] ||
-                    wingToCoin(wing),
+                    wingToCoin(
+                      wing
+                    ),
 
               selectedRoute:
                 "",
@@ -6295,7 +6529,9 @@
             wing,
 
           selectedCoin:
-            wingToCoin(wing),
+            wingToCoin(
+              wing
+            ),
 
           selectedRoom:
             "",
@@ -6310,9 +6546,13 @@
             destination
               ? destination.label ||
                 WING_LABELS[wing] ||
-                wingToCoin(wing)
+                wingToCoin(
+                  wing
+                )
               : WING_LABELS[wing] ||
-                wingToCoin(wing),
+                wingToCoin(
+                  wing
+                ),
 
           selectedRoute:
             "",
@@ -6417,7 +6657,9 @@
     records
   ) {
     if (
-      !Array.isArray(records)
+      !Array.isArray(
+        records
+      )
     ) {
       return false;
     }
@@ -6452,7 +6694,8 @@
 
       const kind =
         String(
-          input.kind || ""
+          input.kind ||
+          ""
         )
           .trim()
           .toLowerCase();
@@ -6544,7 +6787,8 @@
   ) {
     if (
       isHeld() ||
-      event.key !== "Escape"
+      event.key !==
+        "Escape"
     ) {
       return;
     }
@@ -6555,6 +6799,7 @@
       event.preventDefault();
 
       requestReturnToOrbit();
+
       return;
     }
 
@@ -6565,6 +6810,7 @@
       event.preventDefault();
 
       requestReturnToOrbit();
+
       return;
     }
 
@@ -6614,9 +6860,10 @@
       media;
 
     state.reducedMotion =
-      Boolean(media.matches) ||
+      Boolean(
+        media.matches
+      ) ||
       (
-        state.root &&
         state.root.dataset
           .showroomReducedMotion ===
             "true"
@@ -6840,6 +7087,109 @@
         state.root
       );
 
+    const requiredPanelNodes =
+      Object.freeze([
+        [
+          "SHOWROOM_PANEL_EYEBROW_NOT_FOUND",
+          state.panelEyebrow
+        ],
+
+        [
+          "SHOWROOM_PANEL_TITLE_NOT_FOUND",
+          state.panelTitle
+        ],
+
+        [
+          "SHOWROOM_PANEL_PURPOSE_NOT_FOUND",
+          state.panelPurpose
+        ],
+
+        [
+          "SHOWROOM_PANEL_RELATIONSHIP_NOT_FOUND",
+          state.panelRelationship
+        ],
+
+        [
+          "SHOWROOM_PANEL_DOMAIN_NOT_FOUND",
+          state.panelDomain
+        ],
+
+        [
+          "SHOWROOM_PANEL_FUNCTION_NOT_FOUND",
+          state.panelFunction
+        ],
+
+        [
+          "SHOWROOM_PANEL_COORDINATE_NOT_FOUND",
+          state.panelCoordinate
+        ],
+
+        [
+          "SHOWROOM_PANEL_SELECTION_STATE_NOT_FOUND",
+          state.panelSelectionState
+        ],
+
+        [
+          "SHOWROOM_PANEL_ROUTE_STATUS_NOT_FOUND",
+          state.panelRouteStatus
+        ],
+
+        [
+          "SHOWROOM_PANEL_LENS_NOT_FOUND",
+          state.panelLens
+        ],
+
+        [
+          "SHOWROOM_ENTER_CONTROL_NOT_FOUND",
+          state.enterButton
+        ],
+
+        [
+          "SHOWROOM_ENTER_LABEL_NOT_FOUND",
+          state.enterLabel
+        ],
+
+        [
+          "SHOWROOM_RETURN_TO_ORBIT_CONTROL_NOT_FOUND",
+          state.returnToOrbitButton
+        ],
+
+        [
+          "SHOWROOM_RETURN_TO_ORBIT_LABEL_NOT_FOUND",
+          state.returnToOrbitLabel
+        ],
+
+        [
+          "SHOWROOM_RETURN_HOME_CONTROL_NOT_FOUND",
+          state.returnHomeButton
+        ],
+
+        [
+          "SHOWROOM_GUIDANCE_NOT_FOUND",
+          state.guidance
+        ],
+
+        [
+          "SHOWROOM_CONTROLLER_RECEIPT_OUTPUT_NOT_FOUND",
+          state.controllerReceiptOutput
+        ],
+
+        [
+          "SHOWROOM_CONTROLLER_VALIDATION_OUTPUT_NOT_FOUND",
+          state.controllerValidationOutput
+        ]
+      ]);
+
+    for (
+      const [code, node]
+      of requiredPanelNodes
+    ) {
+      invariant(
+        node,
+        code
+      );
+    }
+
     state.compassControl =
       qs(
         "[data-showroom-compass-control]",
@@ -6968,7 +7318,9 @@
     wing
   ) {
     const cluster =
-      getCluster(wing);
+      getCluster(
+        wing
+      );
 
     if (!cluster) {
       return null;
@@ -7016,12 +7368,16 @@
 
   function validateCanonicalRegistry() {
     invariant(
-      WINGS.length === 4,
+      WINGS.length ===
+        4,
+
       "ARCHCOIN_WING_COUNT_INVALID"
     );
 
     invariant(
-      new Set(WINGS).size ===
+      new Set(
+        WINGS
+      ).size ===
         4,
 
       "ARCHCOIN_DUPLICATE_WING"
@@ -7051,7 +7407,8 @@
 
       invariant(
         rooms &&
-        rooms.length === 4,
+        rooms.length ===
+          4,
 
         "ARCHCOIN_ROOMS_PER_WING_INVALID",
 
@@ -7175,7 +7532,9 @@
       of CANONICAL_ROOM_RECORDS
     ) {
       invariant(
-        Object.isFrozen(record),
+        Object.isFrozen(
+          record
+        ),
 
         "SHOWROOM_DESTINATION_RECORD_NOT_IMMUTABLE",
 
@@ -8104,6 +8463,128 @@
     });
   }
 
+  function validateDeclaredCardinals() {
+    if (!state.root) {
+      return Object.freeze({
+        pass:
+          false,
+
+        skipped:
+          true,
+
+        reason:
+          "SHOWROOM_ROOT_NOT_RESOLVED"
+      });
+    }
+
+    const declared =
+      qsa(
+        "[data-showroom-cardinal-control]",
+        state.root
+      );
+
+    invariant(
+      declared.length ===
+        4,
+
+      "SHOWROOM_DECLARED_CARDINAL_COUNT_INVALID",
+
+      {
+        expected:
+          4,
+
+        actual:
+          declared.length
+      }
+    );
+
+    const seenWings =
+      new Set();
+
+    for (
+      const element
+      of declared
+    ) {
+      const wing =
+        normalizeWing(
+          element.dataset
+            .showroomCardinalId
+        );
+
+      invariant(
+        wing,
+        "SHOWROOM_CARDINAL_ID_INVALID"
+      );
+
+      invariant(
+        !seenWings.has(
+          wing
+        ),
+
+        "SHOWROOM_DUPLICATE_CARDINAL_ID",
+
+        {
+          wing
+        }
+      );
+
+      invariant(
+        element.dataset
+          .showroomCardinalLabel ===
+          WING_LABELS[
+            wing
+          ],
+
+        "SHOWROOM_CARDINAL_LABEL_MISMATCH",
+
+        {
+          wing,
+
+          expected:
+            WING_LABELS[
+              wing
+            ],
+
+          actual:
+            element.dataset
+              .showroomCardinalLabel ||
+            ""
+        }
+      );
+
+      invariant(
+        normalizeWing(
+          element.dataset
+            .showroomClusterId
+        ) ===
+          wing,
+
+        "SHOWROOM_CARDINAL_CLUSTER_MISMATCH",
+
+        {
+          wing,
+
+          cluster:
+            element.dataset
+              .showroomClusterId ||
+            ""
+        }
+      );
+
+      seenWings.add(
+        wing
+      );
+    }
+
+    return Object.freeze({
+      pass:
+        true,
+
+      declaredCardinalCount:
+        4
+    });
+  }
+
   function validateDeclaredRooms() {
     if (!state.root) {
       return Object.freeze({
@@ -8317,7 +8798,8 @@
   }
 
   function runControllerSelfTest({
-    includeDom = false
+    includeDom =
+      false
   } = {}) {
     const results = {
       registry:
@@ -8343,6 +8825,17 @@
 
       showroomDestinationSeam:
         validateShowroomDestinationSeam(),
+
+      declaredCardinals:
+        includeDom
+          ? validateDeclaredCardinals()
+          : Object.freeze({
+              pass:
+                true,
+
+              skipped:
+                true
+            }),
 
       declaredRooms:
         includeDom
@@ -8476,25 +8969,19 @@
         receipt
       );
 
-    if (state.root) {
-      state.root.dataset.showroomControllerValidation =
-        serialized;
-    }
+    state.root.dataset.showroomControllerValidation =
+      serialized;
 
     if (
+      "value" in
       state.controllerValidationOutput
     ) {
-      if (
-        "value" in
-        state.controllerValidationOutput
-      ) {
-        state.controllerValidationOutput.value =
-          serialized;
-      }
-
-      state.controllerValidationOutput.textContent =
+      state.controllerValidationOutput.value =
         serialized;
     }
+
+    state.controllerValidationOutput.textContent =
+      serialized;
 
     globalThis.SHOWROOM_CONTROLLER_VALIDATION_RECEIPT =
       receipt;
@@ -8640,47 +9127,35 @@
       handleKeydown
     );
 
-    if (
-      state.enterButton
-    ) {
-      state.enterButton.addEventListener(
-        "click",
+    state.enterButton.addEventListener(
+      "click",
 
-        event => {
-          event.preventDefault();
+      event => {
+        event.preventDefault();
 
-          requestEnterSelection();
-        }
-      );
-    }
+        requestEnterSelection();
+      }
+    );
 
-    if (
-      state.returnToOrbitButton
-    ) {
-      state.returnToOrbitButton.addEventListener(
-        "click",
+    state.returnToOrbitButton.addEventListener(
+      "click",
 
-        event => {
-          event.preventDefault();
+      event => {
+        event.preventDefault();
 
-          requestReturnToOrbit();
-        }
-      );
-    }
+        requestReturnToOrbit();
+      }
+    );
 
-    if (
-      state.returnHomeButton
-    ) {
-      state.returnHomeButton.addEventListener(
-        "click",
+    state.returnHomeButton.addEventListener(
+      "click",
 
-        event => {
-          event.preventDefault();
+      event => {
+        event.preventDefault();
 
-          requestReturnToMainCompass();
-        }
-      );
-    }
+        requestReturnToMainCompass();
+      }
+    );
 
     globalThis.addEventListener(
       "ARCHCOIN_CRYSTALS_RENDER_FAILURE",
@@ -8740,20 +9215,46 @@
         : "UNKNOWN_CONTROLLER_INITIALIZATION_FAILURE";
 
     try {
-      syncPresentation();
+      if (
+        state.panel &&
+        state.panelEyebrow &&
+        state.panelTitle &&
+        state.panelPurpose &&
+        state.panelRelationship &&
+        state.panelDomain &&
+        state.panelFunction &&
+        state.panelCoordinate &&
+        state.panelSelectionState &&
+        state.panelRouteStatus &&
+        state.panelLens &&
+        state.enterButton &&
+        state.enterLabel &&
+        state.returnToOrbitButton &&
+        state.returnToOrbitLabel &&
+        state.returnHomeButton &&
+        state.guidance
+      ) {
+        syncPresentation();
+      }
 
-      const frame =
-        publishFrame();
+      if (
+        state.root &&
+        state.compassControl &&
+        state.controllerReceiptOutput
+      ) {
+        const frame =
+          publishFrame();
 
-      publish(
-        CHANNELS.HELD_STATE,
-        createHeldState()
-      );
+        publish(
+          CHANNELS.HELD_STATE,
+          createHeldState()
+        );
 
-      publish(
-        CHANNELS.COMPASS_STATE,
-        frame.compass
-      );
+        publish(
+          CHANNELS.COMPASS_STATE,
+          frame.compass
+        );
+      }
     } catch (_) {}
 
     globalThis.dispatchEvent(
@@ -8948,10 +9449,36 @@ SHOWROOM-NATIVE
 SHOWROOM CARDINAL CONTRACT:
 [data-showroom-cardinal-control]
 [data-showroom-cardinal-id]
+[data-showroom-cardinal-label]
+[data-showroom-cluster-id]
+
+DECLARED CARDINAL VALIDATION:
+EXACTLY FOUR
+UNIQUE NORTH EAST SOUTH WEST
+EXACT LABEL MATCH
+EXACT CLUSTER MATCH
 
 SHOWROOM ROOM CONTRACT:
 [data-showroom-child-control]
 [data-showroom-child-id]
+[data-showroom-controller-route]
+[data-showroom-content-id]
+[data-showroom-lens]
+
+DECLARED ROOM VALIDATION:
+EXACTLY SIXTEEN
+EXACT ROUTE MATCH
+EXACT CONTENT-ID MATCH
+EXACT LENS MATCH
+
+SHOWROOM CONTROLLER PANEL:
+REQUIRED IN FULL
+
+SHOWROOM PANEL DESCENDANTS:
+REQUIRED IN FULL
+
+SHOWROOM RECEIPT OUTPUTS:
+REQUIRED IN FULL
 
 SHOWROOM LIFECYCLE EVENTS:
 SHOWROOM_CONTROLLER_READY

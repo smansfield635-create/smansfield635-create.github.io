@@ -1,84 +1,122 @@
 /* TARGET FILE: /showroom/index.interactions.js */
 /* TNT FULL-FILE REPLACEMENT */
-/* SHOWROOM_CONSTELLATION_POINTER_GESTURE_INTERPRETER_TNT_v2 */
+/* SHOWROOM_SCENE_BOUNDED_CONSTELLATION_INTERACTIONS_TNT_v3 */
 /*
-  Exclusive motion authority:
-  - Own pointer deltas.
-  - Own direct-manipulation direction.
-  - Own drag sensitivity.
-  - Own grabbed-object tracking.
-  - Own orbit and cluster axis selection.
-  - Own gesture quaternion construction.
-  - Own swipe classification.
-  - Own outward cluster-exit intent.
-  - Own tap-versus-drag arbitration.
-  - Own Compass tap validation.
-  - Own semantic-star hit testing.
-  - Own synthetic-click suppression.
-  - Own semantic activation dispatch.
-  - Own reduced-motion-aware motion feel.
+  Form A interaction contract.
 
-  Does not own:
-  - page-level state;
-  - route interpretation;
-  - cluster expansion or collapse;
-  - active-front selection;
-  - dialog opening or closing;
-  - navigation;
-  - gauge selection;
-  - Compass rendering;
-  - orbit camera or projection;
-  - crystal geometry or drawing;
-  - Diamond motion, zoom, camera, renderer, or lifecycle;
-  - Mirrorland Window rendering or lifecycle.
+  Interaction authority:
+  - one active pointer;
+  - pointer capture and release;
+  - pointer coordinates, elapsed time, travel, and bounded recent samples;
+  - tap, drag, ambiguous-release, and flick classification;
+  - authoritative compositor hit-result consumption;
+  - stable projected-tap correspondence;
+  - optional controller semantic-preview transactions;
+  - native semantic-control activation;
+  - controller-owned cluster return requests;
+  - 520 ms duplicate-click suppression;
+  - interruption cancellation;
+  - deferred runtime readiness;
+  - listener rollback, disposal, and bounded receipts.
 
-  Event boundary:
-  - Valid Compass tap:
-      dispatch "showroom:compass-activate".
-  - Valid semantic-star tap:
-      dispatch "showroom:semantic-activate".
-  - Orbit or cluster motion:
-      dispatch "showroom:orbit-motion".
-  - Outward cluster-exit intent:
-      dispatch "showroom:cluster-exit-intent".
+  Explicit exclusions:
+  - no projection;
+  - no rendered hit geometry;
+  - no rendered-node ordering;
+  - no quaternion construction;
+  - no axis selection;
+  - no camera mutation;
+  - no pointer-delta-to-orientation conversion;
+  - no orbit or cluster orientation preview;
+  - no nearest-node settlement;
+  - no semantic-state interpretation;
+  - no route or destination interpretation;
+  - no navigation;
+  - no rendering;
+  - no root readiness ownership;
+  - no fallback visibility ownership;
+  - no crystal readiness ownership.
 
-  The controller interprets semantic meaning.
-  The compositor and crystals consume motion without inheriting gesture policy.
+  Form A limitation:
+  - ordinary drag is deliberately consumed and noncommitting;
+  - continuous direct manipulation is intentionally absent because no accepted
+    upstream pointer-delta/orientation transaction surface exists.
+
+  Runtime lifecycle:
+  - core initialization may complete while compositor projection is pending;
+  - projected-pointer runtime surfaces activate only after authoritative
+    compositor readiness;
+  - the fixed Compass retains its native semantic-control path independently
+    of compositor projection;
+  - native semantic fallback remains operational during crystal degradation;
+  - compositor terminal failure fails only this interaction enhancement;
+  - compositor disposal disposes this module;
+  - crystal failure cancels projected gestures without disabling native
+    fallback.
+
+  Direct semantic-origin constraint:
+  - directSemanticControl is evidence only;
+  - it may support suppression, fallback recognition, diagnostics, and receipts;
+  - it must never supply semanticObjectId;
+  - it must never replace compositor.hitTest();
+  - it must never authorize activation;
+  - it must never determine route, cluster, child, or destination meaning.
 */
 
 (() => {
   "use strict";
 
   const CONTRACT =
-    "SHOWROOM_CONSTELLATION_POINTER_GESTURE_INTERPRETER_TNT_v2";
+    "SHOWROOM_SCENE_BOUNDED_CONSTELLATION_INTERACTIONS_TNT_v3";
+
+  const OWNER =
+    "/showroom/index.interactions.js";
+
+  const CONTROLLER_CONTRACT =
+    "SHOWROOM_MIRRORLAND_CONSTELLATION_CONTROLLER_TNT_v5";
+
+  const COMPOSITOR_CONTRACT =
+    "SHOWROOM_CONSTELLATION_SINGLE_FRAME_COMPOSITOR_TNT_v2";
 
   const EVENTS = Object.freeze({
-    ready:
+    controllerReady:
+      "showroom:controller-ready",
+
+    controllerFrameChanged:
+      "showroom:frame-state-changed",
+
+    controllerStateChanged:
+      "showroom:state-changed",
+
+    compositorReady:
+      "showroom:compositor-ready",
+
+    compositorFailed:
+      "showroom:compositor-failed",
+
+    compositorDisposed:
+      "showroom:compositor-disposed",
+
+    crystalsReady:
+      "showroom:crystals-ready",
+
+    crystalsFailed:
+      "showroom:crystals-failed",
+
+    crystalsDisposed:
+      "showroom:crystals-disposed",
+
+    interactionsReady:
       "showroom:interactions-ready",
 
-    receipt:
-      "showroom:interactions-receipt",
+    interactionsFailed:
+      "showroom:interactions-failed",
 
-    semanticActivate:
-      "showroom:semantic-activate",
+    interactionsDisposed:
+      "showroom:interactions-disposed",
 
-    compassActivate:
-      "showroom:compass-activate",
-
-    orbitMotion:
-      "showroom:orbit-motion",
-
-    orbitMotionStart:
-      "showroom:orbit-motion-start",
-
-    orbitMotionEnd:
-      "showroom:orbit-motion-end",
-
-    clusterExitIntent:
-      "showroom:cluster-exit-intent",
-
-    interactionState:
-      "showroom:interaction-state"
+    interactionsReceipt:
+      "showroom:interactions-receipt"
   });
 
   const SELECTORS = Object.freeze({
@@ -87,9 +125,6 @@
 
     receipt:
       "[data-showroom-interactions-receipt]",
-
-    orbit:
-      "#showroom-orbit",
 
     orbitField:
       "[data-showroom-orbit-field]",
@@ -100,201 +135,208 @@
     compassControl:
       "[data-showroom-compass-control]",
 
-    cluster:
-      "[data-showroom-cluster]",
-
-    diamondStage:
-      "[data-showroom-diamond-stage]",
-
-    windowControl:
-      "[data-showroom-window-control]",
-
-    dialog:
-      "dialog"
-  });
-
-  const ATTRIBUTES = Object.freeze({
-    ready:
-      "data-showroom-interactions-ready",
-
-    state:
-      "data-showroom-interactions-state",
-
-    held:
-      "data-showroom-held",
-
-    reducedMotion:
-      "data-showroom-reduced-motion",
-
-    activeCluster:
-      "data-showroom-active-cluster",
-
-    objectId:
-      "data-showroom-object-id",
-
-    objectBehavior:
-      "data-showroom-object-behavior",
-
-    objectSize:
-      "data-showroom-object-size",
-
-    clusterId:
-      "data-showroom-cluster-id",
-
-    clusterState:
-      "data-showroom-cluster-state",
-
-    interactionTarget:
-      "data-showroom-interaction-target",
-
-    pointerState:
-      "data-showroom-pointer-state",
-
-    grabbedObject:
-      "data-showroom-grabbed-object",
-
-    gestureMode:
-      "data-showroom-gesture-mode",
-
-    swipeClass:
-      "data-showroom-swipe-class"
+    protectedTarget:
+      [
+        "[data-showroom-diamond-stage]",
+        "[data-showroom-window-control]",
+        "[data-showroom-diamond-controls]",
+        "[data-showroom-gauge-dashboard]",
+        "[data-showroom-information-tabs]",
+        "dialog"
+      ].join(",")
   });
 
   const CONFIG = Object.freeze({
-    tapDistanceMouse:
-      7,
-
-    tapDistanceTouch:
-      12,
-
-    tapDistancePen:
-      9,
-
-    tapDurationMouse:
-      520,
-
-    tapDurationTouch:
-      680,
-
-    tapDurationPen:
-      580,
-
-    dragStartDistanceMouse:
-      6,
-
-    dragStartDistanceTouch:
-      10,
-
-    dragStartDistancePen:
+    minimumDragDistancePx:
       8,
 
-    orbitSensitivityMouse:
-      0.0062,
+    maximumTapDistancePx:
+      12,
 
-    orbitSensitivityTouch:
-      0.0052,
+    suppressClickMs:
+      520,
 
-    orbitSensitivityPen:
-      0.0058,
+    sampleWindowMs:
+      140,
 
-    clusterSensitivityMultiplier:
-      0.82,
-
-    grabbedObjectSensitivityMultiplier:
-      0.72,
-
-    reducedMotionSensitivityMultiplier:
-      0.66,
-
-    velocitySmoothing:
-      0.72,
-
-    minimumMotionDelta:
-      0.08,
-
-    swipeVelocityThreshold:
-      0.34,
-
-    swipeDistanceThreshold:
-      34,
-
-    outwardExitDistance:
-      52,
-
-    outwardExitVelocity:
-      0.42,
-
-    outwardDirectionTolerance:
-      0.42,
-
-    clickSuppressionWindow:
-      780,
-
-    clickSuppressionDistance:
+    maximumSamples:
       18,
 
-    pointerCaptureReleaseDelay:
-      0,
+    flickMaximumDurationMs:
+      260,
 
-    frameCoalescing:
-      true
+    flickMinimumDistancePx:
+      52,
+
+    flickMinimumAverageVelocityPxPerMs:
+      0.55,
+
+    flickMinimumReleaseVelocityPxPerMs:
+      0.72,
+
+    flickMinimumDirectionalRatio:
+      1.28,
+
+    flickMaximumPauseBeforeReleaseMs:
+      90,
+
+    flickMaximumPathEfficiencyLoss:
+      0.22
   });
 
   const state = {
-    root: null,
-    receipt: null,
-    orbit: null,
-    orbitField: null,
-    compassControl: null,
+    root:
+      null,
 
-    initialized: false,
-    disposed: false,
-    reducedMotion: false,
-    held: false,
+    receipt:
+      null,
 
-    activePointers: new Map(),
-    primaryGesture: null,
+    orbitField:
+      null,
 
-    pendingMotionFrame: 0,
-    pendingMotion: null,
+    controller:
+      null,
 
-    suppressedClicks: [],
+    compositor:
+      null,
 
-    listeners: [],
-    observers: [],
+    pointer:
+      null,
+
+    suppressedClick:
+      null,
+
+    reducedMotion:
+      false,
+
+    reducedMotionQuery:
+      null,
+
+    crystalsAvailable:
+      false,
+
+    initialized:
+      false,
+
+    initializing:
+      false,
+
+    disposed:
+      false,
+
+    failed:
+      false,
+
+    ready:
+      false,
+
+    readyPublished:
+      false,
+
+    waitingForRuntime:
+      false,
+
+    runtimeSurfacesActivated:
+      false,
+
+    apiExposed:
+      false,
+
+    coreListeners:
+      [],
+
+    runtimeListeners:
+      [],
+
+    nativeOrbitFieldStyle:
+      null,
+
+    orbitFieldStyleCaptured:
+      false,
 
     counters: {
-      pointerDown: 0,
-      pointerMove: 0,
-      pointerUp: 0,
-      pointerCancel: 0,
-      validTap: 0,
-      drag: 0,
-      semanticActivation: 0,
-      compassActivation: 0,
-      motionDispatch: 0,
-      clusterExitIntent: 0,
-      suppressedClick: 0
+      pointerDown:
+        0,
+
+      pointerMove:
+        0,
+
+      pointerUp:
+        0,
+
+      pointerCancel:
+        0,
+
+      pointerCaptureFailures:
+        0,
+
+      projectedHits:
+        0,
+
+      projectedMisses:
+        0,
+
+      previewsBegun:
+        0,
+
+      previewsCancelled:
+        0,
+
+      projectedTapsCommitted:
+        0,
+
+      compassTapsCommitted:
+        0,
+
+      projectedHitMissesRejected:
+        0,
+
+      dragsConsumed:
+        0,
+
+      ambiguousReleases:
+        0,
+
+      flicksQualified:
+        0,
+
+      clusterReturnsCommitted:
+        0,
+
+      syntheticClicksSuppressed:
+        0,
+
+      interruptions:
+        0,
+
+      readinessChecks:
+        0,
+
+      runtimeActivations:
+        0,
+
+      runtimeDeactivations:
+        0
     }
   };
-
-  function toArray(value) {
-    return Array.from(value || []);
-  }
 
   function normalize(value) {
     return String(value || "").trim();
   }
 
-  function clamp(value, minimum, maximum) {
-    return Math.min(
-      maximum,
-      Math.max(minimum, value)
-    );
-  }
-
   function nowIso() {
     return new Date().toISOString();
+  }
+
+  function isElement(value) {
+    return value instanceof Element;
+  }
+
+  function isFiniteNumber(value) {
+    return (
+      typeof value === "number" &&
+      Number.isFinite(value)
+    );
   }
 
   function distance2d(
@@ -309,13 +351,113 @@
     );
   }
 
-  function addListener(
+  function freezePlain(value) {
+    if (
+      value === null ||
+      typeof value !== "object"
+    ) {
+      return value;
+    }
+
+    if (Array.isArray(value)) {
+      return Object.freeze(
+        value.map(freezePlain)
+      );
+    }
+
+    const output = {};
+
+    for (
+      const [
+        key,
+        entry
+      ]
+      of Object.entries(value)
+    ) {
+      output[key] =
+        freezePlain(entry);
+    }
+
+    return Object.freeze(output);
+  }
+
+  function cssEscape(value) {
+    const normalized =
+      normalize(value);
+
+    if (
+      globalThis.CSS &&
+      typeof globalThis.CSS.escape ===
+        "function"
+    ) {
+      return globalThis.CSS.escape(
+        normalized
+      );
+    }
+
+    return normalized.replace(
+      /["\\]/g,
+      "\\$&"
+    );
+  }
+
+  function directSemanticEvidence(
+    control
+  ) {
+    if (!control) {
+      return null;
+    }
+
+    return freezePlain({
+      objectId:
+        normalize(
+          control.dataset
+            .showroomObjectId
+        ) ||
+        null,
+
+      cardinalId:
+        normalize(
+          control.dataset
+            .showroomCardinalId
+        ) ||
+        null,
+
+      clusterId:
+        normalize(
+          control.dataset
+            .showroomClusterId
+        ) ||
+        null,
+
+      childId:
+        normalize(
+          control.dataset
+            .showroomChildId
+        ) ||
+        null,
+
+      behavior:
+        normalize(
+          control.dataset
+            .showroomObjectBehavior
+        ) ||
+        null
+    });
+  }
+
+  function addManagedListener(
+    registry,
     target,
     type,
     handler,
     options
   ) {
-    if (!target) {
+    if (
+      !target ||
+      typeof target.addEventListener !==
+        "function"
+    ) {
       return;
     }
 
@@ -325,7 +467,7 @@
       options
     );
 
-    state.listeners.push(() => {
+    registry.push(() => {
       target.removeEventListener(
         type,
         handler,
@@ -334,55 +476,184 @@
     });
   }
 
-  function addObserver(observer) {
-    state.observers.push(observer);
+  function addCoreListener(
+    target,
+    type,
+    handler,
+    options
+  ) {
+    addManagedListener(
+      state.coreListeners,
+      target,
+      type,
+      handler,
+      options
+    );
   }
 
-  function setRootAttribute(
-    name,
-    value
+  function addRuntimeListener(
+    target,
+    type,
+    handler,
+    options
   ) {
-    if (!state.root) {
-      return;
-    }
-
-    state.root.setAttribute(
-      name,
-      String(value)
+    addManagedListener(
+      state.runtimeListeners,
+      target,
+      type,
+      handler,
+      options
     );
+  }
+
+  function removeListenerRegistry(
+    registry
+  ) {
+    for (
+      const remove
+      of registry.splice(0)
+    ) {
+      try {
+        remove();
+      } catch {
+        /* Best-effort cleanup. */
+      }
+    }
+  }
+
+  function dispatch(
+    eventName,
+    detail = {}
+  ) {
+    const payload =
+      freezePlain({
+        contract:
+          CONTRACT,
+
+        owner:
+          OWNER,
+
+        controllerContract:
+          CONTROLLER_CONTRACT,
+
+        compositorContract:
+          COMPOSITOR_CONTRACT,
+
+        timestamp:
+          nowIso(),
+
+        ...detail
+      });
+
+    window.dispatchEvent(
+      new CustomEvent(
+        eventName,
+        {
+          detail:
+            payload
+        }
+      )
+    );
+
+    return payload;
   }
 
   function createReceipt(
     event,
     extra = {}
   ) {
-    return Object.freeze({
-      contract: CONTRACT,
-      event,
-      timestamp: nowIso(),
+    const pointer =
+      state.pointer;
 
-      ready:
-        state.initialized &&
-        !state.disposed,
+    return freezePlain({
+      contract:
+        CONTRACT,
+
+      owner:
+        OWNER,
+
+      controllerContract:
+        CONTROLLER_CONTRACT,
+
+      compositorContract:
+        COMPOSITOR_CONTRACT,
+
+      event,
+
+      timestamp:
+        nowIso(),
+
+      initialized:
+        state.initialized,
+
+      initializing:
+        state.initializing,
 
       disposed:
         state.disposed,
 
+      failed:
+        state.failed,
+
+      ready:
+        state.ready,
+
+      readyPublished:
+        state.readyPublished,
+
+      waitingForRuntime:
+        state.waitingForRuntime,
+
+      runtimeSurfacesActivated:
+        state.runtimeSurfacesActivated,
+
       reducedMotion:
         state.reducedMotion,
 
-      held:
-        state.held,
+      crystalsAvailable:
+        state.crystalsAvailable,
 
-      activePointers:
-        state.activePointers.size,
+      pointerActive:
+        Boolean(pointer),
 
-      gestureActive:
-        Boolean(state.primaryGesture),
+      pointer:
+        pointer
+          ? {
+              pointerId:
+                pointer.pointerId,
 
-      counters: Object.freeze({
+              pointerType:
+                pointer.pointerType,
+
+              territory:
+                pointer.territory,
+
+              dragging:
+                pointer.dragging,
+
+              downSemanticObjectId:
+                pointer.downSemanticObjectId ||
+                null,
+
+              directSemanticOrigin:
+                pointer.directSemanticEvidence,
+
+              activeClusterId:
+                pointer.activeClusterId ||
+                null,
+
+              previewToken:
+                pointer.previewToken ||
+                null,
+
+              previewActive:
+                pointer.previewActive
+            }
+          : null,
+
+      counters: {
         ...state.counters
-      }),
+      },
 
       ...extra
     });
@@ -409,90 +680,221 @@
         serialized;
     }
 
-    window.dispatchEvent(
-      new CustomEvent(
-        EVENTS.receipt,
-        {
-          detail: payload
-        }
-      )
+    dispatch(
+      EVENTS.interactionsReceipt,
+      payload
     );
 
     return payload;
   }
 
-  function dispatch(
-    eventName,
-    detail = {}
-  ) {
-    const payload =
-      Object.freeze({
-        contract: CONTRACT,
-        timestamp: nowIso(),
-        ...detail
-      });
+  function readController() {
+    const controller =
+      window.SHOWROOM_CONTROLLER;
 
-    window.dispatchEvent(
-      new CustomEvent(
-        eventName,
-        {
-          detail: payload
-        }
-      )
-    );
+    if (
+      !controller ||
+      controller.contract !==
+        CONTROLLER_CONTRACT ||
+      typeof controller.getFrameState !==
+        "function" ||
+      typeof controller.beginPreview !==
+        "function" ||
+      typeof controller.cancelPreview !==
+        "function" ||
+      typeof controller.closeCluster !==
+        "function" ||
+      typeof controller.returnToOrbit !==
+        "function"
+    ) {
+      state.controller =
+        null;
 
-    return payload;
-  }
-
-  function getPointerPolicy(
-    pointerType
-  ) {
-    switch (pointerType) {
-      case "touch":
-        return Object.freeze({
-          tapDistance:
-            CONFIG.tapDistanceTouch,
-
-          tapDuration:
-            CONFIG.tapDurationTouch,
-
-          dragStartDistance:
-            CONFIG.dragStartDistanceTouch,
-
-          sensitivity:
-            CONFIG.orbitSensitivityTouch
-        });
-
-      case "pen":
-        return Object.freeze({
-          tapDistance:
-            CONFIG.tapDistancePen,
-
-          tapDuration:
-            CONFIG.tapDurationPen,
-
-          dragStartDistance:
-            CONFIG.dragStartDistancePen,
-
-          sensitivity:
-            CONFIG.orbitSensitivityPen
-        });
-
-      default:
-        return Object.freeze({
-          tapDistance:
-            CONFIG.tapDistanceMouse,
-
-          tapDuration:
-            CONFIG.tapDurationMouse,
-
-          dragStartDistance:
-            CONFIG.dragStartDistanceMouse,
-
-          sensitivity:
-            CONFIG.orbitSensitivityMouse
-        });
+      return null;
     }
+
+    state.controller =
+      controller;
+
+    return controller;
+  }
+
+  function readControllerFrame() {
+    const controller =
+      readController();
+
+    if (!controller) {
+      return null;
+    }
+
+    try {
+      const frame =
+        controller.getFrameState();
+
+      if (
+        !frame ||
+        frame.contract !==
+          CONTROLLER_CONTRACT
+      ) {
+        return null;
+      }
+
+      return frame;
+    } catch {
+      return null;
+    }
+  }
+
+  function controllerInteractionAllowed() {
+    const frame =
+      readControllerFrame();
+
+    return Boolean(
+      frame &&
+      frame.controllerReady ===
+        true &&
+      frame.disposed ===
+        false &&
+      frame.held ===
+        false
+    );
+  }
+
+  function readCompositor() {
+    const compositor =
+      window.SHOWROOM_COMPOSITOR;
+
+    if (
+      !compositor ||
+      compositor.contract !==
+        COMPOSITOR_CONTRACT ||
+      typeof compositor.getState !==
+        "function" ||
+      typeof compositor.hitTest !==
+        "function"
+    ) {
+      state.compositor =
+        null;
+
+      return null;
+    }
+
+    state.compositor =
+      compositor;
+
+    return compositor;
+  }
+
+  function readCompositorState() {
+    const compositor =
+      readCompositor();
+
+    if (!compositor) {
+      return null;
+    }
+
+    try {
+      const compositorState =
+        compositor.getState();
+
+      if (
+        !compositorState ||
+        compositorState.contract !==
+          COMPOSITOR_CONTRACT
+      ) {
+        return null;
+      }
+
+      return compositorState;
+    } catch {
+      return null;
+    }
+  }
+
+  function compositorProjectionReady() {
+    const compositorState =
+      readCompositorState();
+
+    return Boolean(
+      compositorState &&
+      compositorState.initialized ===
+        true &&
+      compositorState.disposed ===
+        false &&
+      compositorState.readyPublished ===
+        true &&
+      compositorState.controllerReady ===
+        true
+    );
+  }
+
+  function projectedSelectionAllowed() {
+    const frame =
+      readControllerFrame();
+
+    const readiness =
+      frame &&
+      frame.readiness &&
+      typeof frame.readiness ===
+        "object"
+        ? frame.readiness
+        : null;
+
+    return Boolean(
+      frame &&
+      frame.controllerReady ===
+        true &&
+      frame.disposed ===
+        false &&
+      frame.held ===
+        false &&
+      readiness &&
+      readiness.compositorFailed !==
+        true &&
+      readiness.crystalsFailed !==
+        true &&
+      state.crystalsAvailable &&
+      compositorProjectionReady()
+    );
+  }
+
+  function refreshControllerDerivedState() {
+    const frame =
+      readControllerFrame();
+
+    if (!frame) {
+      state.crystalsAvailable =
+        false;
+
+      return null;
+    }
+
+    const readiness =
+      frame.readiness &&
+      typeof frame.readiness ===
+        "object"
+        ? frame.readiness
+        : null;
+
+    state.reducedMotion =
+      Boolean(
+        frame.reducedMotion
+      ) ||
+      Boolean(
+        state.reducedMotionQuery &&
+        state.reducedMotionQuery.matches
+      );
+
+    state.crystalsAvailable =
+      Boolean(
+        readiness &&
+        readiness.crystals ===
+          true &&
+        readiness.crystalsFailed !==
+          true
+      );
+
+    return frame;
   }
 
   function isPrimaryPointerEvent(event) {
@@ -506,964 +908,371 @@
     return event.isPrimary !== false;
   }
 
-  function isDialogBlockingInteraction() {
+  function isInsideOrbitField(target) {
     return Boolean(
-      document.querySelector(
-        `${SELECTORS.dialog}[open]`
+      isElement(target) &&
+      state.orbitField &&
+      state.orbitField.contains(target)
+    );
+  }
+
+  function isProtectedTarget(target) {
+    return Boolean(
+      isElement(target) &&
+      target.closest(
+        SELECTORS.protectedTarget
       )
     );
   }
 
-  function isInsideProtectedStage(target) {
-    if (!(target instanceof Element)) {
-      return false;
-    }
-
-    return Boolean(
-      target.closest(
-        SELECTORS.diamondStage
-      ) ||
-      target.closest(
-        SELECTORS.windowControl
-      )
-    );
-  }
-
-  function isOrbitTarget(target) {
-    if (!(target instanceof Element)) {
-      return false;
-    }
-
-    return Boolean(
-      target.closest(
-        SELECTORS.orbitField
-      )
-    );
-  }
-
-  function resolveSemanticTarget(target) {
-    if (!(target instanceof Element)) {
+  function resolveCompassControl(target) {
+    if (!isElement(target)) {
       return null;
     }
 
-    const compass =
+    const control =
       target.closest(
         SELECTORS.compassControl
       );
 
-    if (compass) {
-      return Object.freeze({
-        kind:
-          "compass",
+    return (
+      control &&
+      state.orbitField &&
+      state.orbitField.contains(control)
+        ? control
+        : null
+    );
+  }
 
-        element:
-          compass,
-
-        objectId:
-          "main-compass",
-
-        behavior:
-          "compass-return",
-
-        clusterId:
-          "",
-
-        size:
-          "fixed"
-      });
+  function resolveDirectSemanticControl(
+    target
+  ) {
+    if (!isElement(target)) {
+      return null;
     }
 
-    const object =
+    const control =
       target.closest(
         SELECTORS.semanticObject
       );
 
-    if (!object) {
-      return null;
-    }
-
-    return Object.freeze({
-      kind:
-        "object",
-
-      element:
-        object,
-
-      objectId:
-        normalize(
-          object.getAttribute(
-            ATTRIBUTES.objectId
-          )
-        ),
-
-      behavior:
-        normalize(
-          object.getAttribute(
-            ATTRIBUTES.objectBehavior
-          )
-        ),
-
-      clusterId:
-        normalize(
-          object.getAttribute(
-            ATTRIBUTES.clusterId
-          )
-        ),
-
-      size:
-        normalize(
-          object.getAttribute(
-            ATTRIBUTES.objectSize
-          )
-        )
-    });
+    return (
+      control &&
+      state.orbitField &&
+      state.orbitField.contains(control)
+        ? control
+        : null
+    );
   }
 
-  function resolveActiveCluster() {
-    if (!state.root) {
-      return null;
-    }
-
-    const activeClusterId =
+  function resolveSemanticControl(
+    semanticObjectId
+  ) {
+    const objectId =
       normalize(
-        state.root.getAttribute(
-          ATTRIBUTES.activeCluster
+        semanticObjectId
+      );
+
+    if (
+      !objectId ||
+      !state.root
+    ) {
+      return null;
+    }
+
+    const selector =
+      `[data-showroom-object-id="${cssEscape(
+        objectId
+      )}"]`;
+
+    const control =
+      state.root.querySelector(
+        selector
+      );
+
+    if (
+      !control ||
+      !control.matches(
+        SELECTORS.semanticObject
+      ) ||
+      !state.orbitField ||
+      !state.orbitField.contains(
+        control
+      )
+    ) {
+      return null;
+    }
+
+    return control;
+  }
+
+  function authoritativeHitTest(
+    clientX,
+    clientY
+  ) {
+    if (!projectedSelectionAllowed()) {
+      return null;
+    }
+
+    const compositor =
+      state.compositor ||
+      readCompositor();
+
+    if (!compositor) {
+      return null;
+    }
+
+    try {
+      const hit =
+        compositor.hitTest(
+          clientX,
+          clientY
+        );
+
+      if (
+        !hit ||
+        !normalize(
+          hit.semanticObjectId
         )
-      );
+      ) {
+        state.counters.projectedMisses +=
+          1;
 
-    if (!activeClusterId) {
+        return null;
+      }
+
+      state.counters.projectedHits +=
+        1;
+
+      return hit;
+    } catch {
+      state.counters.projectedMisses +=
+        1;
+
       return null;
     }
-
-    const cluster =
-      document.querySelector(
-        `${SELECTORS.cluster}[data-showroom-cluster-id="${CSS.escape(
-          activeClusterId
-        )}"]`
-      );
-
-    if (
-      !cluster ||
-      cluster.hidden ||
-      cluster.getAttribute(
-        ATTRIBUTES.clusterState
-      ) !== "expanded"
-    ) {
-      return null;
-    }
-
-    return Object.freeze({
-      id:
-        activeClusterId,
-
-      element:
-        cluster
-    });
   }
 
-  function classifyGestureMode(
-    semanticTarget,
-    activeCluster
-  ) {
-    if (
-      semanticTarget &&
-      semanticTarget.kind === "compass"
-    ) {
-      return "compass";
-    }
-
-    if (
-      semanticTarget &&
-      semanticTarget.kind === "object"
-    ) {
-      if (
-        semanticTarget.behavior ===
-        "cluster"
-      ) {
-        return "cluster-parent";
-      }
-
-      if (
-        semanticTarget.size ===
-        "small"
-      ) {
-        return "cluster-child";
-      }
-
-      return "grabbed-object";
-    }
-
-    if (activeCluster) {
-      return "cluster";
-    }
-
-    return "orbit";
-  }
-
-  function selectGestureAxis(
-    deltaX,
-    deltaY,
-    mode
-  ) {
-    const absoluteX =
-      Math.abs(deltaX);
-
-    const absoluteY =
-      Math.abs(deltaY);
-
-    if (
-      mode === "cluster" ||
-      mode === "cluster-child" ||
-      mode === "cluster-parent"
-    ) {
-      if (
-        absoluteX >
-        absoluteY * 1.25
-      ) {
-        return "cluster-yaw";
-      }
-
-      if (
-        absoluteY >
-        absoluteX * 1.25
-      ) {
-        return "cluster-pitch";
-      }
-
-      return "cluster-free";
-    }
-
-    if (
-      absoluteX >
-      absoluteY * 1.3
-    ) {
-      return "orbit-yaw";
-    }
-
-    if (
-      absoluteY >
-      absoluteX * 1.3
-    ) {
-      return "orbit-pitch";
-    }
-
-    return "orbit-free";
-  }
-
-  function normalizeVector3(
+  function appendSample(
+    pointer,
     x,
     y,
-    z
-  ) {
-    const length =
-      Math.hypot(x, y, z);
-
-    if (length <= 1e-8) {
-      return Object.freeze({
-        x: 0,
-        y: 1,
-        z: 0
-      });
-    }
-
-    return Object.freeze({
-      x:
-        x / length,
-
-      y:
-        y / length,
-
-      z:
-        z / length
-    });
-  }
-
-  function axisForGesture(
-    axisClass,
-    deltaX,
-    deltaY
-  ) {
-    switch (axisClass) {
-      case "orbit-yaw":
-      case "cluster-yaw":
-        return normalizeVector3(
-          0,
-          deltaX >= 0 ? 1 : -1,
-          0
-        );
-
-      case "orbit-pitch":
-      case "cluster-pitch":
-        return normalizeVector3(
-          deltaY >= 0 ? 1 : -1,
-          0,
-          0
-        );
-
-      default:
-        return normalizeVector3(
-          deltaY,
-          deltaX,
-          0
-        );
-    }
-  }
-
-  function quaternionFromAxisAngle(
-    axis,
-    angle
-  ) {
-    const half =
-      angle * 0.5;
-
-    const sine =
-      Math.sin(half);
-
-    return Object.freeze({
-      x:
-        axis.x * sine,
-
-      y:
-        axis.y * sine,
-
-      z:
-        axis.z * sine,
-
-      w:
-        Math.cos(half)
-    });
-  }
-
-  function classifySwipe(
-    totalDeltaX,
-    totalDeltaY,
-    duration,
-    velocityX,
-    velocityY
-  ) {
-    const distance =
-      Math.hypot(
-        totalDeltaX,
-        totalDeltaY
-      );
-
-    const velocity =
-      Math.hypot(
-        velocityX,
-        velocityY
-      );
-
-    if (
-      distance <
-        CONFIG.swipeDistanceThreshold ||
-      velocity <
-        CONFIG.swipeVelocityThreshold
-    ) {
-      return Object.freeze({
-        type:
-          "none",
-
-        direction:
-          "none",
-
-        distance,
-        velocity,
-        duration
-      });
-    }
-
-    const horizontal =
-      Math.abs(totalDeltaX) >=
-      Math.abs(totalDeltaY);
-
-    let direction;
-
-    if (horizontal) {
-      direction =
-        totalDeltaX >= 0
-          ? "right"
-          : "left";
-    } else {
-      direction =
-        totalDeltaY >= 0
-          ? "down"
-          : "up";
-    }
-
-    return Object.freeze({
-      type:
-        horizontal
-          ? "horizontal"
-          : "vertical",
-
-      direction,
-      distance,
-      velocity,
-      duration
-    });
-  }
-
-  function getElementCenter(element) {
-    if (!element) {
-      return null;
-    }
-
-    const rect =
-      element.getBoundingClientRect();
-
-    return Object.freeze({
-      x:
-        rect.left +
-        rect.width * 0.5,
-
-      y:
-        rect.top +
-        rect.height * 0.5
-    });
-  }
-
-  function calculateOutwardIntent(
-    gesture,
-    swipe
-  ) {
-    if (
-      !gesture.activeCluster ||
-      !swipe ||
-      swipe.type === "none"
-    ) {
-      return null;
-    }
-
-    const clusterCenter =
-      getElementCenter(
-        gesture.activeCluster.element
-      );
-
-    if (!clusterCenter) {
-      return null;
-    }
-
-    const startVector = {
-      x:
-        gesture.startX -
-        clusterCenter.x,
-
-      y:
-        gesture.startY -
-        clusterCenter.y
-    };
-
-    const movementVector = {
-      x:
-        gesture.lastX -
-        gesture.startX,
-
-      y:
-        gesture.lastY -
-        gesture.startY
-    };
-
-    const startLength =
-      Math.hypot(
-        startVector.x,
-        startVector.y
-      );
-
-    const movementLength =
-      Math.hypot(
-        movementVector.x,
-        movementVector.y
-      );
-
-    if (
-      startLength <= 1 ||
-      movementLength <
-        CONFIG.outwardExitDistance
-    ) {
-      return null;
-    }
-
-    const outwardUnit = {
-      x:
-        startVector.x /
-        startLength,
-
-      y:
-        startVector.y /
-        startLength
-    };
-
-    const movementUnit = {
-      x:
-        movementVector.x /
-        movementLength,
-
-      y:
-        movementVector.y /
-        movementLength
-    };
-
-    const alignment =
-      outwardUnit.x *
-        movementUnit.x +
-      outwardUnit.y *
-        movementUnit.y;
-
-    const velocity =
-      Math.hypot(
-        gesture.velocityX,
-        gesture.velocityY
-      );
-
-    if (
-      alignment <
-        CONFIG.outwardDirectionTolerance ||
-      velocity <
-        CONFIG.outwardExitVelocity
-    ) {
-      return null;
-    }
-
-    return Object.freeze({
-      clusterId:
-        gesture.activeCluster.id,
-
-      alignment,
-      velocity,
-      distance:
-        movementLength,
-
-      direction:
-        swipe.direction
-    });
-  }
-
-  function createPointerRecord(event) {
-    return {
-      pointerId:
-        event.pointerId,
-
-      pointerType:
-        event.pointerType || "mouse",
-
-      startX:
-        event.clientX,
-
-      startY:
-        event.clientY,
-
-      lastX:
-        event.clientX,
-
-      lastY:
-        event.clientY,
-
-      previousX:
-        event.clientX,
-
-      previousY:
-        event.clientY,
-
-      startTime:
-        performance.now(),
-
-      lastTime:
-        performance.now(),
-
-      previousTime:
-        performance.now(),
-
-      pressure:
-        Number.isFinite(event.pressure)
-          ? event.pressure
-          : 0,
-
-      buttons:
-        event.buttons,
-
-      target:
-        event.target
-    };
-  }
-
-  function createGesture(event) {
-    const semanticTarget =
-      resolveSemanticTarget(
-        event.target
-      );
-
-    const activeCluster =
-      resolveActiveCluster();
-
-    const mode =
-      classifyGestureMode(
-        semanticTarget,
-        activeCluster
-      );
-
-    const policy =
-      getPointerPolicy(
-        event.pointerType
-      );
-
-    return {
-      pointerId:
-        event.pointerId,
-
-      pointerType:
-        event.pointerType || "mouse",
-
-      semanticTarget,
-      grabbedObject:
-        semanticTarget &&
-        semanticTarget.kind === "object"
-          ? semanticTarget
-          : null,
-
-      activeCluster,
-      mode,
-      policy,
-
-      startX:
-        event.clientX,
-
-      startY:
-        event.clientY,
-
-      lastX:
-        event.clientX,
-
-      lastY:
-        event.clientY,
-
-      previousX:
-        event.clientX,
-
-      previousY:
-        event.clientY,
-
-      startTime:
-        performance.now(),
-
-      previousTime:
-        performance.now(),
-
-      lastTime:
-        performance.now(),
-
-      totalDistance:
-        0,
-
-      maximumDistance:
-        0,
-
-      velocityX:
-        0,
-
-      velocityY:
-        0,
-
-      dragging:
-        false,
-
-      cancelled:
-        false,
-
-      motionDispatched:
-        false,
-
-      axisClass:
-        mode.includes("cluster")
-          ? "cluster-free"
-          : "orbit-free"
-    };
-  }
-
-  function setInteractionState(
-    pointerState,
-    gesture = null
-  ) {
-    setRootAttribute(
-      ATTRIBUTES.pointerState,
-      pointerState
-    );
-
-    setRootAttribute(
-      ATTRIBUTES.gestureMode,
-      gesture
-        ? gesture.mode
-        : ""
-    );
-
-    setRootAttribute(
-      ATTRIBUTES.grabbedObject,
-      gesture &&
-      gesture.grabbedObject
-        ? gesture.grabbedObject.objectId
-        : ""
-    );
-
-    dispatch(
-      EVENTS.interactionState,
-      {
-        pointerState,
-
-        gestureMode:
-          gesture
-            ? gesture.mode
-            : null,
-
-        grabbedObjectId:
-          gesture &&
-          gesture.grabbedObject
-            ? gesture.grabbedObject.objectId
-            : null,
-
-        activeClusterId:
-          gesture &&
-          gesture.activeCluster
-            ? gesture.activeCluster.id
-            : null
-      }
-    );
-  }
-
-  function calculateSensitivity(gesture) {
-    let sensitivity =
-      gesture.policy.sensitivity;
-
-    if (
-      gesture.mode === "cluster" ||
-      gesture.mode === "cluster-child" ||
-      gesture.mode === "cluster-parent"
-    ) {
-      sensitivity *=
-        CONFIG.clusterSensitivityMultiplier;
-    }
-
-    if (
-      gesture.grabbedObject
-    ) {
-      sensitivity *=
-        CONFIG.grabbedObjectSensitivityMultiplier;
-    }
-
-    if (state.reducedMotion) {
-      sensitivity *=
-        CONFIG.reducedMotionSensitivityMultiplier;
-    }
-
-    return sensitivity;
-  }
-
-  function createMotionPayload(
-    gesture,
-    deltaX,
-    deltaY,
     timestamp
   ) {
-    const axisClass =
-      selectGestureAxis(
-        deltaX,
-        deltaY,
-        gesture.mode
-      );
-
-    gesture.axisClass =
-      axisClass;
-
-    const axis =
-      axisForGesture(
-        axisClass,
-        deltaX,
-        deltaY
-      );
-
-    const sensitivity =
-      calculateSensitivity(
-        gesture
-      );
-
-    const signedMagnitude =
-      Math.hypot(
-        deltaX,
-        deltaY
-      ) * sensitivity;
-
-    const dominantDirection =
-      Math.abs(deltaX) >=
-      Math.abs(deltaY)
-        ? Math.sign(deltaX || 1)
-        : Math.sign(deltaY || 1);
-
-    const angle =
-      clamp(
-        signedMagnitude *
-          dominantDirection,
-        -0.24,
-        0.24
-      );
-
-    const quaternion =
-      quaternionFromAxisAngle(
-        axis,
-        angle
-      );
-
-    return Object.freeze({
-      pointerId:
-        gesture.pointerId,
-
-      pointerType:
-        gesture.pointerType,
-
-      mode:
-        gesture.mode,
-
-      axisClass,
-
-      axis,
-
-      quaternion,
-
-      angle,
-
-      deltaX,
-
-      deltaY,
-
-      totalDeltaX:
-        gesture.lastX -
-        gesture.startX,
-
-      totalDeltaY:
-        gesture.lastY -
-        gesture.startY,
-
-      velocityX:
-        gesture.velocityX,
-
-      velocityY:
-        gesture.velocityY,
-
-      grabbedObjectId:
-        gesture.grabbedObject
-          ? gesture.grabbedObject.objectId
-          : null,
-
-      grabbedObjectBehavior:
-        gesture.grabbedObject
-          ? gesture.grabbedObject.behavior
-          : null,
-
-      activeClusterId:
-        gesture.activeCluster
-          ? gesture.activeCluster.id
-          : null,
-
-      reducedMotion:
-        state.reducedMotion,
-
+    pointer.samples.push({
+      x,
+      y,
       timestamp
     });
-  }
 
-  function flushPendingMotion() {
-    state.pendingMotionFrame = 0;
+    const cutoff =
+      timestamp -
+      CONFIG.sampleWindowMs;
 
-    const payload =
-      state.pendingMotion;
-
-    state.pendingMotion = null;
-
-    if (
-      !payload ||
-      state.disposed
+    while (
+      pointer.samples.length > 1 &&
+      pointer.samples[0].timestamp <
+        cutoff
     ) {
-      return;
+      pointer.samples.shift();
     }
-
-    state.counters.motionDispatch += 1;
-
-    dispatch(
-      EVENTS.orbitMotion,
-      payload
-    );
-  }
-
-  function queueMotion(payload) {
-    if (!CONFIG.frameCoalescing) {
-      state.counters.motionDispatch += 1;
-
-      dispatch(
-        EVENTS.orbitMotion,
-        payload
-      );
-
-      return;
-    }
-
-    state.pendingMotion =
-      payload;
-
-    if (state.pendingMotionFrame) {
-      return;
-    }
-
-    state.pendingMotionFrame =
-      window.requestAnimationFrame(
-        flushPendingMotion
-      );
-  }
-
-  function suppressNextClick(
-    element,
-    pointerX,
-    pointerY,
-    reason
-  ) {
-    if (!element) {
-      return;
-    }
-
-    state.suppressedClicks.push({
-      element,
-      expires:
-        performance.now() +
-        CONFIG.clickSuppressionWindow,
-
-      x:
-        pointerX,
-
-      y:
-        pointerY,
-
-      reason
-    });
-  }
-
-  function pruneSuppressedClicks() {
-    const timestamp =
-      performance.now();
-
-    state.suppressedClicks =
-      state.suppressedClicks.filter(
-        (entry) =>
-          entry.expires >= timestamp
-      );
-  }
-
-  function shouldSuppressClick(event) {
-    pruneSuppressedClicks();
 
     if (
-      event.detail === 0
+      pointer.samples.length >
+      CONFIG.maximumSamples
+    ) {
+      pointer.samples.splice(
+        0,
+        pointer.samples.length -
+          CONFIG.maximumSamples
+      );
+    }
+  }
+
+  function beginSemanticPreview(
+    pointer
+  ) {
+    if (
+      !pointer.downSemanticObjectId ||
+      pointer.previewActive
     ) {
       return false;
     }
 
+    const controller =
+      state.controller ||
+      readController();
+
+    if (!controller) {
+      return false;
+    }
+
+    let token;
+
+    try {
+      token =
+        controller.beginPreview(
+          pointer.downSemanticObjectId,
+          {
+            source:
+              "pointer"
+          }
+        );
+    } catch {
+      return false;
+    }
+
+    if (
+      token === false ||
+      token === null ||
+      token === undefined
+    ) {
+      return false;
+    }
+
+    pointer.previewToken =
+      token;
+
+    pointer.previewActive =
+      true;
+
+    state.counters.previewsBegun +=
+      1;
+
+    return true;
+  }
+
+  function cancelSemanticPreview(
+    pointer,
+    reason
+  ) {
+    if (
+      !pointer ||
+      !pointer.previewActive
+    ) {
+      return false;
+    }
+
+    const controller =
+      state.controller ||
+      readController();
+
+    pointer.previewActive =
+      false;
+
+    pointer.previewToken =
+      null;
+
+    if (!controller) {
+      return false;
+    }
+
+    let cancelled =
+      false;
+
+    try {
+      cancelled =
+        controller.cancelPreview(
+          reason,
+          {
+            source:
+              "pointer"
+          }
+        ) !== false;
+    } catch {
+      cancelled =
+        false;
+    }
+
+    if (cancelled) {
+      state.counters.previewsCancelled +=
+        1;
+    }
+
+    return cancelled;
+  }
+
+  function projectedSuppressionTarget() {
+    return state.orbitField;
+  }
+
+  function suppressionTargetForPointer(
+    pointer
+  ) {
+    if (
+      pointer &&
+      pointer.territory ===
+        "compass" &&
+      pointer.compassControl
+    ) {
+      return pointer.compassControl;
+    }
+
+    return projectedSuppressionTarget();
+  }
+
+  function armClickSuppression(
+    element,
+    clientX,
+    clientY,
+    reason
+  ) {
+    state.suppressedClick = {
+      element:
+        element ||
+        state.orbitField,
+
+      clientX:
+        isFiniteNumber(clientX)
+          ? clientX
+          : null,
+
+      clientY:
+        isFiniteNumber(clientY)
+          ? clientY
+          : null,
+
+      reason:
+        normalize(reason) ||
+        "pointer-gesture",
+
+      expires:
+        performance.now() +
+        CONFIG.suppressClickMs
+    };
+  }
+
+  function clearExpiredSuppression() {
+    if (
+      state.suppressedClick &&
+      performance.now() >
+        state.suppressedClick.expires
+    ) {
+      state.suppressedClick =
+        null;
+    }
+  }
+
+  function shouldSuppressClick(event) {
+    clearExpiredSuppression();
+
+    const suppression =
+      state.suppressedClick;
+
+    if (!suppression) {
+      return false;
+    }
+
+    /*
+      Keyboard-generated and HTMLElement.click()-generated activation remains
+      available. Those events have detail === 0.
+    */
+    if (event.detail === 0) {
+      return false;
+    }
+
     const target =
-      event.target instanceof Element
+      isElement(event.target)
         ? event.target
         : null;
 
@@ -1471,42 +1280,21 @@
       return false;
     }
 
-    const index =
-      state.suppressedClicks.findIndex(
-        (entry) => {
-          if (
-            !(
-              entry.element === target ||
-              entry.element.contains(target) ||
-              target.contains(entry.element)
-            )
-          ) {
-            return false;
-          }
+    const element =
+      suppression.element;
 
-          const distance =
-            distance2d(
-              entry.x,
-              entry.y,
-              event.clientX,
-              event.clientY
-            );
+    const related =
+      !element ||
+      element === target ||
+      element.contains(target) ||
+      target.contains(element);
 
-          return (
-            distance <=
-            CONFIG.clickSuppressionDistance
-          );
-        }
-      );
-
-    if (index < 0) {
+    if (!related) {
       return false;
     }
 
-    state.suppressedClicks.splice(
-      index,
-      1
-    );
+    state.suppressedClick =
+      null;
 
     return true;
   }
@@ -1516,629 +1304,54 @@
       return;
     }
 
-    state.counters.suppressedClick += 1;
+    state.counters.syntheticClicksSuppressed +=
+      1;
 
     event.preventDefault();
     event.stopPropagation();
     event.stopImmediatePropagation();
 
     publishReceipt(
-      "synthetic-click-suppressed"
+      "duplicate-click-suppressed"
     );
   }
 
-  function dispatchSemanticActivation(
-    gesture,
-    event
-  ) {
-    const semanticTarget =
-      gesture.semanticTarget;
-
-    if (!semanticTarget) {
+  function capturePointer(pointerId) {
+    if (!state.orbitField) {
       return false;
     }
 
-    suppressNextClick(
-      semanticTarget.element,
-      event.clientX,
-      event.clientY,
-      "pointer-semantic-activation"
-    );
-
-    if (
-      semanticTarget.kind ===
-      "compass"
-    ) {
-      state.counters.compassActivation += 1;
-      state.counters.validTap += 1;
-
-      dispatch(
-        EVENTS.compassActivate,
-        {
-          target:
-            "compass",
-
-          kind:
-            "compass",
-
-          element:
-            semanticTarget.element,
-
-          objectId:
-            semanticTarget.objectId,
-
-          validTap:
-            true,
-
-          cancelled:
-            false,
-
-          wasDrag:
-            false,
-
-          pointerType:
-            gesture.pointerType,
-
-          duration:
-            performance.now() -
-            gesture.startTime,
-
-          startX:
-            gesture.startX,
-
-          startY:
-            gesture.startY,
-
-          endX:
-            event.clientX,
-
-          endY:
-            event.clientY
-        }
+    try {
+      state.orbitField.setPointerCapture(
+        pointerId
       );
 
-      publishReceipt(
-        "compass-tap-dispatched"
-      );
-
-      return true;
-    }
-
-    state.counters.semanticActivation += 1;
-    state.counters.validTap += 1;
-
-    dispatch(
-      EVENTS.semanticActivate,
-      {
-        target:
-          "object",
-
-        kind:
-          "object",
-
-        element:
-          semanticTarget.element,
-
-        objectId:
-          semanticTarget.objectId,
-
-        behavior:
-          semanticTarget.behavior,
-
-        clusterId:
-          semanticTarget.clusterId ||
-          null,
-
-        validTap:
-          true,
-
-        cancelled:
-          false,
-
-        wasDrag:
-          false,
-
-        pointerType:
-          gesture.pointerType,
-
-        duration:
-          performance.now() -
-          gesture.startTime,
-
-        startX:
-          gesture.startX,
-
-        startY:
-          gesture.startY,
-
-        endX:
-          event.clientX,
-
-        endY:
-          event.clientY
-      }
-    );
-
-    publishReceipt(
-      "semantic-tap-dispatched",
-      {
-        objectId:
-          semanticTarget.objectId,
-
-        behavior:
-          semanticTarget.behavior
-      }
-    );
-
-    return true;
-  }
-
-  function isValidTap(
-    gesture,
-    event
-  ) {
-    const duration =
-      performance.now() -
-      gesture.startTime;
-
-    const distance =
-      distance2d(
-        gesture.startX,
-        gesture.startY,
-        event.clientX,
-        event.clientY
-      );
-
-    if (gesture.cancelled) {
-      return false;
-    }
-
-    if (gesture.dragging) {
-      return false;
-    }
-
-    if (
-      duration >
-      gesture.policy.tapDuration
-    ) {
-      return false;
-    }
-
-    if (
-      distance >
-      gesture.policy.tapDistance
-    ) {
-      return false;
-    }
-
-    if (!gesture.semanticTarget) {
-      return false;
-    }
-
-    const releaseTarget =
-      resolveSemanticTarget(
-        document.elementFromPoint(
-          event.clientX,
-          event.clientY
+      return (
+        typeof state.orbitField
+          .hasPointerCapture !==
+          "function" ||
+        state.orbitField.hasPointerCapture(
+          pointerId
         )
       );
+    } catch {
+      state.counters.pointerCaptureFailures +=
+        1;
 
-    if (!releaseTarget) {
       return false;
     }
-
-    return (
-      releaseTarget.element ===
-      gesture.semanticTarget.element
-    );
   }
 
-  function beginDrag(
-    gesture,
-    event
-  ) {
-    if (gesture.dragging) {
-      return;
-    }
-
-    gesture.dragging = true;
-
-    state.counters.drag += 1;
-
-    setInteractionState(
-      "dragging",
-      gesture
-    );
-
-    dispatch(
-      EVENTS.orbitMotionStart,
-      {
-        pointerId:
-          gesture.pointerId,
-
-        pointerType:
-          gesture.pointerType,
-
-        mode:
-          gesture.mode,
-
-        grabbedObjectId:
-          gesture.grabbedObject
-            ? gesture.grabbedObject.objectId
-            : null,
-
-        activeClusterId:
-          gesture.activeCluster
-            ? gesture.activeCluster.id
-            : null,
-
-        startX:
-          gesture.startX,
-
-        startY:
-          gesture.startY,
-
-        currentX:
-          event.clientX,
-
-        currentY:
-          event.clientY
-      }
-    );
-  }
-
-  function updateGestureVelocity(
-    gesture,
-    event,
-    timestamp
-  ) {
-    const elapsed =
-      Math.max(
-        1,
-        timestamp -
-        gesture.previousTime
-      );
-
-    const instantaneousX =
-      (
-        event.clientX -
-        gesture.previousX
-      ) / elapsed;
-
-    const instantaneousY =
-      (
-        event.clientY -
-        gesture.previousY
-      ) / elapsed;
-
-    gesture.velocityX =
-      gesture.velocityX *
-        CONFIG.velocitySmoothing +
-      instantaneousX *
-        (
-          1 -
-          CONFIG.velocitySmoothing
-        );
-
-    gesture.velocityY =
-      gesture.velocityY *
-        CONFIG.velocitySmoothing +
-      instantaneousY *
-        (
-          1 -
-          CONFIG.velocitySmoothing
-        );
-  }
-
-  function updatePrimaryGesture(event) {
-    const gesture =
-      state.primaryGesture;
-
-    if (
-      !gesture ||
-      gesture.pointerId !==
-        event.pointerId
-    ) {
-      return;
-    }
-
-    const timestamp =
-      performance.now();
-
-    const deltaX =
-      event.clientX -
-      gesture.lastX;
-
-    const deltaY =
-      event.clientY -
-      gesture.lastY;
-
-    gesture.previousX =
-      gesture.lastX;
-
-    gesture.previousY =
-      gesture.lastY;
-
-    gesture.previousTime =
-      gesture.lastTime;
-
-    gesture.lastX =
-      event.clientX;
-
-    gesture.lastY =
-      event.clientY;
-
-    gesture.lastTime =
-      timestamp;
-
-    const segmentDistance =
-      Math.hypot(
-        deltaX,
-        deltaY
-      );
-
-    gesture.totalDistance +=
-      segmentDistance;
-
-    gesture.maximumDistance =
-      Math.max(
-        gesture.maximumDistance,
-        distance2d(
-          gesture.startX,
-          gesture.startY,
-          gesture.lastX,
-          gesture.lastY
-        )
-      );
-
-    updateGestureVelocity(
-      gesture,
-      event,
-      timestamp
-    );
-
-    if (
-      !gesture.dragging &&
-      gesture.maximumDistance >=
-        gesture.policy.dragStartDistance
-    ) {
-      beginDrag(
-        gesture,
-        event
-      );
-    }
-
-    if (!gesture.dragging) {
-      return;
-    }
-
-    if (
-      Math.abs(deltaX) <
-        CONFIG.minimumMotionDelta &&
-      Math.abs(deltaY) <
-        CONFIG.minimumMotionDelta
-    ) {
-      return;
-    }
-
-    event.preventDefault();
-
-    const payload =
-      createMotionPayload(
-        gesture,
-        deltaX,
-        deltaY,
-        timestamp
-      );
-
-    gesture.motionDispatched =
-      true;
-
-    queueMotion(payload);
-  }
-
-  function finishPrimaryGesture(
-    event,
-    cancelled = false
-  ) {
-    const gesture =
-      state.primaryGesture;
-
-    if (
-      !gesture ||
-      gesture.pointerId !==
-        event.pointerId
-    ) {
-      return;
-    }
-
-    gesture.cancelled =
-      Boolean(cancelled);
-
-    gesture.lastX =
-      event.clientX;
-
-    gesture.lastY =
-      event.clientY;
-
-    gesture.lastTime =
-      performance.now();
-
-    const duration =
-      gesture.lastTime -
-      gesture.startTime;
-
-    if (
-      isValidTap(
-        gesture,
-        event
-      )
-    ) {
-      event.preventDefault();
-
-      dispatchSemanticActivation(
-        gesture,
-        event
-      );
-    } else if (
-      gesture.dragging
-    ) {
-      const semanticElement =
-        gesture.semanticTarget
-          ? gesture.semanticTarget.element
-          : null;
-
-      if (semanticElement) {
-        suppressNextClick(
-          semanticElement,
-          event.clientX,
-          event.clientY,
-          "drag-completion"
-        );
-      }
-
-      const totalDeltaX =
-        gesture.lastX -
-        gesture.startX;
-
-      const totalDeltaY =
-        gesture.lastY -
-        gesture.startY;
-
-      const swipe =
-        classifySwipe(
-          totalDeltaX,
-          totalDeltaY,
-          duration,
-          gesture.velocityX,
-          gesture.velocityY
-        );
-
-      setRootAttribute(
-        ATTRIBUTES.swipeClass,
-        swipe.direction
-      );
-
-      const outwardIntent =
-        calculateOutwardIntent(
-          gesture,
-          swipe
-        );
-
-      if (outwardIntent) {
-        state.counters.clusterExitIntent += 1;
-
-        dispatch(
-          EVENTS.clusterExitIntent,
-          {
-            ...outwardIntent,
-
-            pointerType:
-              gesture.pointerType,
-
-            grabbedObjectId:
-              gesture.grabbedObject
-                ? gesture.grabbedObject.objectId
-                : null
-          }
-        );
-      }
-
-      dispatch(
-        EVENTS.orbitMotionEnd,
-        {
-          pointerId:
-            gesture.pointerId,
-
-          pointerType:
-            gesture.pointerType,
-
-          mode:
-            gesture.mode,
-
-          axisClass:
-            gesture.axisClass,
-
-          totalDeltaX,
-
-          totalDeltaY,
-
-          distance:
-            Math.hypot(
-              totalDeltaX,
-              totalDeltaY
-            ),
-
-          duration,
-
-          velocityX:
-            gesture.velocityX,
-
-          velocityY:
-            gesture.velocityY,
-
-          swipe,
-
-          outwardClusterExitIntent:
-            outwardIntent,
-
-          grabbedObjectId:
-            gesture.grabbedObject
-              ? gesture.grabbedObject.objectId
-              : null,
-
-          activeClusterId:
-            gesture.activeCluster
-              ? gesture.activeCluster.id
-              : null,
-
-          cancelled:
-            gesture.cancelled
-        }
-      );
-    }
-
-    releasePointerCapture(
-      event.pointerId
-    );
-
-    state.activePointers.delete(
-      event.pointerId
-    );
-
-    state.primaryGesture = null;
-
-    setInteractionState(
-      "idle"
-    );
-
-    publishReceipt(
-      cancelled
-        ? "gesture-cancelled"
-        : "gesture-completed",
-      {
-        duration,
-
-        dragged:
-          gesture.dragging,
-
-        validTap:
-          !gesture.dragging &&
-          !gesture.cancelled,
-
-        mode:
-          gesture.mode
-      }
-    );
-  }
-
-  function releasePointerCapture(pointerId) {
+  function releasePointer(pointerId) {
     if (!state.orbitField) {
       return;
     }
 
     try {
       if (
+        typeof state.orbitField
+          .hasPointerCapture !==
+          "function" ||
         state.orbitField.hasPointerCapture(
           pointerId
         )
@@ -2148,154 +1361,1357 @@
         );
       }
     } catch {
-      /* Pointer capture release is best-effort. */
+      /* Release remains best-effort. */
     }
+  }
+
+  function createPointerState(
+    event,
+    frame,
+    compassControl,
+    directSemanticControl
+  ) {
+    const timestamp =
+      performance.now();
+
+    const hit =
+      compassControl
+        ? null
+        : authoritativeHitTest(
+            event.clientX,
+            event.clientY
+          );
+
+    /*
+      semanticObjectId is derived only from the compositor hit result.
+      directSemanticControl is retained only as evidence and never supplies
+      selection identity or activation authority.
+    */
+    const semanticObjectId =
+      hit
+        ? normalize(
+            hit.semanticObjectId
+          )
+        : "";
+
+    const semanticControl =
+      semanticObjectId
+        ? resolveSemanticControl(
+            semanticObjectId
+          )
+        : null;
+
+    return {
+      pointerId:
+        event.pointerId,
+
+      pointerType:
+        normalize(
+          event.pointerType
+        ) ||
+        "mouse",
+
+      territory:
+        compassControl
+          ? "compass"
+          : semanticObjectId
+            ? "projected-object"
+            : "orbit-field",
+
+      startX:
+        event.clientX,
+
+      startY:
+        event.clientY,
+
+      currentX:
+        event.clientX,
+
+      currentY:
+        event.clientY,
+
+      startTime:
+        timestamp,
+
+      currentTime:
+        timestamp,
+
+      maximumDistance:
+        0,
+
+      pathLength:
+        0,
+
+      dragging:
+        false,
+
+      cancelled:
+        false,
+
+      finishing:
+        false,
+
+      captureAcquired:
+        false,
+
+      downHit:
+        hit,
+
+      downSemanticObjectId:
+        semanticObjectId,
+
+      semanticControl,
+
+      compassControl,
+
+      directSemanticControl:
+        directSemanticControl ||
+        null,
+
+      directSemanticEvidence:
+        directSemanticEvidence(
+          directSemanticControl
+        ),
+
+      activeClusterId:
+        normalize(
+          frame.activeClusterId
+        ),
+
+      previewToken:
+        null,
+
+      previewActive:
+        false,
+
+      samples: [
+        {
+          x:
+            event.clientX,
+
+          y:
+            event.clientY,
+
+          timestamp
+        }
+      ]
+    };
+  }
+
+  function updatePointer(
+    pointer,
+    event
+  ) {
+    const timestamp =
+      performance.now();
+
+    const previousX =
+      pointer.currentX;
+
+    const previousY =
+      pointer.currentY;
+
+    pointer.currentX =
+      event.clientX;
+
+    pointer.currentY =
+      event.clientY;
+
+    pointer.currentTime =
+      timestamp;
+
+    pointer.pathLength +=
+      distance2d(
+        previousX,
+        previousY,
+        pointer.currentX,
+        pointer.currentY
+      );
+
+    pointer.maximumDistance =
+      Math.max(
+        pointer.maximumDistance,
+        distance2d(
+          pointer.startX,
+          pointer.startY,
+          pointer.currentX,
+          pointer.currentY
+        )
+      );
+
+    appendSample(
+      pointer,
+      pointer.currentX,
+      pointer.currentY,
+      timestamp
+    );
+  }
+
+  function classifyFlick(
+    pointer,
+    releaseX,
+    releaseY,
+    releaseTime,
+    previousX,
+    previousY
+  ) {
+    const totalDeltaX =
+      releaseX -
+      pointer.startX;
+
+    const totalDeltaY =
+      releaseY -
+      pointer.startY;
+
+    const distance =
+      Math.hypot(
+        totalDeltaX,
+        totalDeltaY
+      );
+
+    const duration =
+      Math.max(
+        1,
+        releaseTime -
+          pointer.startTime
+      );
+
+    const averageVelocity =
+      distance /
+      duration;
+
+    const recentSamples =
+      pointer.samples.filter(
+        sample =>
+          sample.timestamp >=
+            releaseTime -
+              CONFIG.sampleWindowMs &&
+          sample.timestamp <
+            releaseTime
+      );
+
+    const releaseStart =
+      recentSamples.length
+        ? recentSamples[0]
+        : {
+            x:
+              pointer.startX,
+
+            y:
+              pointer.startY,
+
+            timestamp:
+              pointer.startTime
+          };
+
+    const releaseDistance =
+      distance2d(
+        releaseStart.x,
+        releaseStart.y,
+        releaseX,
+        releaseY
+      );
+
+    const releaseDuration =
+      Math.max(
+        1,
+        releaseTime -
+          releaseStart.timestamp
+      );
+
+    const releaseVelocity =
+      releaseDistance /
+      releaseDuration;
+
+    const lastRecentSample =
+      recentSamples.length
+        ? recentSamples[
+            recentSamples.length - 1
+          ]
+        : null;
+
+    const dominant =
+      Math.max(
+        Math.abs(totalDeltaX),
+        Math.abs(totalDeltaY)
+      );
+
+    const secondary =
+      Math.min(
+        Math.abs(totalDeltaX),
+        Math.abs(totalDeltaY)
+      );
+
+    const directionalRatio =
+      secondary <= 1e-6
+        ? Infinity
+        : dominant /
+          secondary;
+
+    const finalSegment =
+      distance2d(
+        previousX,
+        previousY,
+        releaseX,
+        releaseY
+      );
+
+    const pathLength =
+      Math.max(
+        distance,
+        pointer.pathLength +
+          finalSegment
+      );
+
+    const pathEfficiency =
+      pathLength <= 1e-6
+        ? 0
+        : distance /
+          pathLength;
+
+    const pathEfficiencyLoss =
+      1 -
+      pathEfficiency;
+
+    /*
+      Pointer-up is deliberately not inserted into the movement sample array.
+      The physical release point remains the endpoint for release velocity and
+      the final path segment.
+    */
+    const pauseBeforeRelease =
+      lastRecentSample
+        ? Math.max(
+            0,
+            releaseTime -
+              lastRecentSample.timestamp
+          )
+        : duration;
+
+    const direction =
+      Math.abs(totalDeltaX) >=
+      Math.abs(totalDeltaY)
+        ? (
+            totalDeltaX >= 0
+              ? "right"
+              : "left"
+          )
+        : (
+            totalDeltaY >= 0
+              ? "down"
+              : "up"
+          );
+
+    const qualifies =
+      duration <=
+        CONFIG.flickMaximumDurationMs &&
+      distance >=
+        CONFIG.flickMinimumDistancePx &&
+      averageVelocity >=
+        CONFIG
+          .flickMinimumAverageVelocityPxPerMs &&
+      releaseVelocity >=
+        CONFIG
+          .flickMinimumReleaseVelocityPxPerMs &&
+      directionalRatio >=
+        CONFIG.flickMinimumDirectionalRatio &&
+      pauseBeforeRelease <=
+        CONFIG
+          .flickMaximumPauseBeforeReleaseMs &&
+      pathEfficiencyLoss <=
+        CONFIG
+          .flickMaximumPathEfficiencyLoss;
+
+    return freezePlain({
+      qualifies,
+
+      direction,
+
+      duration,
+
+      distance,
+
+      totalDeltaX,
+
+      totalDeltaY,
+
+      averageVelocity,
+
+      releaseVelocity,
+
+      directionalRatio,
+
+      pathLength,
+
+      finalSegment,
+
+      pathEfficiency,
+
+      pathEfficiencyLoss,
+
+      pauseBeforeRelease,
+
+      recentSampleCount:
+        recentSamples.length
+    });
+  }
+
+  function activateSemanticControl(
+    control
+  ) {
+    if (
+      !control ||
+      typeof control.click !==
+        "function"
+    ) {
+      return false;
+    }
+
+    try {
+      control.click();
+
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  function commitProjectedTap(
+    pointer,
+    event
+  ) {
+    if (
+      !pointer.downSemanticObjectId ||
+      !pointer.semanticControl ||
+      !projectedSelectionAllowed()
+    ) {
+      cancelSemanticPreview(
+        pointer,
+        "tap-projection-unavailable"
+      );
+
+      armClickSuppression(
+        projectedSuppressionTarget(),
+        event.clientX,
+        event.clientY,
+        "projected-tap-rejected"
+      );
+
+      return false;
+    }
+
+    const releaseHit =
+      authoritativeHitTest(
+        event.clientX,
+        event.clientY
+      );
+
+    if (
+      !releaseHit ||
+      normalize(
+        releaseHit.semanticObjectId
+      ) !==
+        pointer.downSemanticObjectId
+    ) {
+      cancelSemanticPreview(
+        pointer,
+        "tap-correspondence-mismatch"
+      );
+
+      armClickSuppression(
+        projectedSuppressionTarget(),
+        event.clientX,
+        event.clientY,
+        "projected-tap-rejected"
+      );
+
+      return false;
+    }
+
+    cancelSemanticPreview(
+      pointer,
+      "native-semantic-activation"
+    );
+
+    armClickSuppression(
+      projectedSuppressionTarget(),
+      event.clientX,
+      event.clientY,
+      "projected-semantic-activation"
+    );
+
+    const activated =
+      activateSemanticControl(
+        pointer.semanticControl
+      );
+
+    if (activated) {
+      state.counters.projectedTapsCommitted +=
+        1;
+    }
+
+    return activated;
+  }
+
+  function commitCompassTap(
+    pointer,
+    event
+  ) {
+    const control =
+      pointer.compassControl;
+
+    if (
+      !control ||
+      !controllerInteractionAllowed()
+    ) {
+      if (control) {
+        armClickSuppression(
+          control,
+          event.clientX,
+          event.clientY,
+          "compass-tap-rejected"
+        );
+      }
+
+      return false;
+    }
+
+    const releaseElement =
+      typeof document.elementFromPoint ===
+        "function"
+        ? document.elementFromPoint(
+            event.clientX,
+            event.clientY
+          )
+        : null;
+
+    const correspondence =
+      releaseElement === control ||
+      (
+        releaseElement &&
+        control.contains(
+          releaseElement
+        )
+      );
+
+    if (!correspondence) {
+      armClickSuppression(
+        control,
+        event.clientX,
+        event.clientY,
+        "compass-tap-rejected"
+      );
+
+      return false;
+    }
+
+    armClickSuppression(
+      control,
+      event.clientX,
+      event.clientY,
+      "compass-semantic-activation"
+    );
+
+    const activated =
+      activateSemanticControl(
+        control
+      );
+
+    if (activated) {
+      state.counters.compassTapsCommitted +=
+        1;
+    }
+
+    return activated;
+  }
+
+  function requestClusterFlickReturn(
+    pointer,
+    flick
+  ) {
+    const controller =
+      state.controller ||
+      readController();
+
+    const frame =
+      readControllerFrame();
+
+    if (
+      !controller ||
+      !frame ||
+      frame.controllerReady !==
+        true ||
+      frame.held ===
+        true ||
+      frame.disposed ===
+        true
+    ) {
+      return false;
+    }
+
+    cancelSemanticPreview(
+      pointer,
+      "cluster-flick-return"
+    );
+
+    const activeClusterId =
+      normalize(
+        frame.activeClusterId
+      );
+
+    let committed =
+      false;
+
+    try {
+      if (
+        activeClusterId &&
+        typeof controller.closeCluster ===
+          "function"
+      ) {
+        committed =
+          controller.closeCluster(
+            activeClusterId
+          ) !== false;
+      } else {
+        committed =
+          controller.returnToOrbit({
+            source:
+              "pointer-flick"
+          }) !== false;
+      }
+    } catch {
+      committed =
+        false;
+    }
+
+    if (committed) {
+      state.counters.clusterReturnsCommitted +=
+        1;
+    }
+
+    publishReceipt(
+      committed
+        ? "cluster-flick-return-committed"
+        : "cluster-flick-return-rejected",
+      {
+        activeClusterId:
+          activeClusterId ||
+          null,
+
+        directSemanticOrigin:
+          pointer.directSemanticEvidence,
+
+        flick
+      }
+    );
+
+    return committed;
+  }
+
+  function clearPointer(
+    pointer,
+    options = {}
+  ) {
+    if (!pointer) {
+      return;
+    }
+
+    pointer.finishing =
+      true;
+
+    if (
+      state.pointer === pointer
+    ) {
+      state.pointer =
+        null;
+    }
+
+    if (
+      options.releaseCapture !== false
+    ) {
+      releasePointer(
+        pointer.pointerId
+      );
+    }
+  }
+
+  function interruptActivePointer(
+    reason,
+    options = {}
+  ) {
+    const pointer =
+      state.pointer;
+
+    if (!pointer) {
+      return false;
+    }
+
+    pointer.cancelled =
+      true;
+
+    state.counters.interruptions +=
+      1;
+
+    cancelSemanticPreview(
+      pointer,
+      reason
+    );
+
+    if (
+      pointer.dragging ||
+      pointer.maximumDistance >
+        CONFIG.maximumTapDistancePx ||
+      pointer.directSemanticControl
+    ) {
+      armClickSuppression(
+        suppressionTargetForPointer(
+          pointer
+        ),
+        pointer.currentX,
+        pointer.currentY,
+        reason
+      );
+    }
+
+    clearPointer(
+      pointer,
+      {
+        releaseCapture:
+          options.releaseCapture !==
+          false
+      }
+    );
+
+    publishReceipt(
+      "gesture-interrupted",
+      {
+        reason,
+
+        pointerId:
+          pointer.pointerId,
+
+        dragging:
+          pointer.dragging,
+
+        directSemanticOrigin:
+          pointer.directSemanticEvidence
+      }
+    );
+
+    return true;
+  }
+
+  function beginPointerTransaction(
+    event,
+    frame,
+    compassControl,
+    directSemanticControl
+  ) {
+    const pointer =
+      createPointerState(
+        event,
+        frame,
+        compassControl,
+        directSemanticControl
+      );
+
+    state.pointer =
+      pointer;
+
+    pointer.captureAcquired =
+      capturePointer(
+        pointer.pointerId
+      );
+
+    if (!pointer.captureAcquired) {
+      state.pointer =
+        null;
+
+      publishReceipt(
+        "pointer-capture-rejected",
+        {
+          pointerId:
+            pointer.pointerId,
+
+          territory:
+            pointer.territory,
+
+          directSemanticOrigin:
+            pointer.directSemanticEvidence
+        }
+      );
+
+      return null;
+    }
+
+    state.counters.pointerDown +=
+      1;
+
+    if (
+      pointer.territory ===
+        "projected-object"
+    ) {
+      beginSemanticPreview(
+        pointer
+      );
+    }
+
+    publishReceipt(
+      "pointer-started",
+      {
+        pointerId:
+          pointer.pointerId,
+
+        pointerType:
+          pointer.pointerType,
+
+        territory:
+          pointer.territory,
+
+        semanticObjectId:
+          pointer.downSemanticObjectId ||
+          null,
+
+        directSemanticOrigin:
+          pointer.directSemanticEvidence,
+
+        activeClusterId:
+          pointer.activeClusterId ||
+          null
+      }
+    );
+
+    return pointer;
   }
 
   function handlePointerDown(event) {
     if (
+      state.pointer ||
       state.disposed ||
-      state.held ||
-      isDialogBlockingInteraction() ||
+      state.failed ||
+      !state.runtimeSurfacesActivated ||
       !isPrimaryPointerEvent(event) ||
-      !isOrbitTarget(event.target) ||
-      isInsideProtectedStage(event.target)
+      !isInsideOrbitField(
+        event.target
+      ) ||
+      isProtectedTarget(
+        event.target
+      )
     ) {
       return;
     }
 
-    state.counters.pointerDown += 1;
+    const compassControl =
+      resolveCompassControl(
+        event.target
+      );
 
-    const pointerRecord =
-      createPointerRecord(event);
+    if (compassControl) {
+      if (!controllerInteractionAllowed()) {
+        return;
+      }
 
-    state.activePointers.set(
-      event.pointerId,
-      pointerRecord
-    );
+      const frame =
+        readControllerFrame();
 
-    if (state.primaryGesture) {
+      if (!frame) {
+        return;
+      }
+
+      beginPointerTransaction(
+        event,
+        frame,
+        compassControl,
+        null
+      );
+
       return;
     }
 
-    state.primaryGesture =
-      createGesture(event);
-
-    setInteractionState(
-      "pressed",
-      state.primaryGesture
-    );
-
-    try {
-      state.orbitField.setPointerCapture(
-        event.pointerId
+    const directSemanticControl =
+      resolveDirectSemanticControl(
+        event.target
       );
-    } catch {
-      /* Capture may be unavailable on some synthetic events. */
+
+    if (
+      !projectedSelectionAllowed() &&
+      directSemanticControl
+    ) {
+      return;
     }
 
-    publishReceipt(
-      "gesture-started",
-      {
-        pointerType:
-          state.primaryGesture.pointerType,
+    if (!projectedSelectionAllowed()) {
+      return;
+    }
 
-        mode:
-          state.primaryGesture.mode,
+    const frame =
+      readControllerFrame();
 
-        grabbedObjectId:
-          state.primaryGesture.grabbedObject
-            ? state.primaryGesture.grabbedObject.objectId
-            : null,
+    if (!frame) {
+      return;
+    }
 
-        activeClusterId:
-          state.primaryGesture.activeCluster
-            ? state.primaryGesture.activeCluster.id
-            : null
-      }
+    beginPointerTransaction(
+      event,
+      frame,
+      null,
+      directSemanticControl
     );
   }
 
   function handlePointerMove(event) {
+    const pointer =
+      state.pointer;
+
     if (
-      state.disposed ||
-      !state.primaryGesture
+      !pointer ||
+      pointer.pointerId !==
+        event.pointerId ||
+      pointer.finishing
     ) {
       return;
     }
 
-    state.counters.pointerMove += 1;
+    if (
+      pointer.territory ===
+        "compass"
+    ) {
+      if (!controllerInteractionAllowed()) {
+        interruptActivePointer(
+          "controller-state-invalid"
+        );
 
-    const pointer =
-      state.activePointers.get(
-        event.pointerId
+        return;
+      }
+    } else if (!projectedSelectionAllowed()) {
+      interruptActivePointer(
+        "projected-runtime-invalid"
       );
 
-    if (pointer) {
-      pointer.previousX =
-        pointer.lastX;
-
-      pointer.previousY =
-        pointer.lastY;
-
-      pointer.previousTime =
-        pointer.lastTime;
-
-      pointer.lastX =
-        event.clientX;
-
-      pointer.lastY =
-        event.clientY;
-
-      pointer.lastTime =
-        performance.now();
-
-      pointer.pressure =
-        Number.isFinite(
-          event.pressure
-        )
-          ? event.pressure
-          : pointer.pressure;
+      return;
     }
 
-    updatePrimaryGesture(event);
+    state.counters.pointerMove +=
+      1;
+
+    updatePointer(
+      pointer,
+      event
+    );
+
+    if (
+      !pointer.dragging &&
+      pointer.maximumDistance >=
+        CONFIG.minimumDragDistancePx
+    ) {
+      pointer.dragging =
+        true;
+
+      cancelSemanticPreview(
+        pointer,
+        "drag-recognized"
+      );
+    }
+
+    if (pointer.dragging) {
+      event.preventDefault();
+    }
+  }
+
+  function finishPointer(
+    event,
+    cancelled
+  ) {
+    const pointer =
+      state.pointer;
+
+    if (
+      !pointer ||
+      pointer.pointerId !==
+        event.pointerId ||
+      pointer.finishing
+    ) {
+      return;
+    }
+
+    const releaseTime =
+      performance.now();
+
+    const releaseX =
+      isFiniteNumber(
+        event.clientX
+      )
+        ? event.clientX
+        : pointer.currentX;
+
+    const releaseY =
+      isFiniteNumber(
+        event.clientY
+      )
+        ? event.clientY
+        : pointer.currentY;
+
+    const previousX =
+      pointer.currentX;
+
+    const previousY =
+      pointer.currentY;
+
+    pointer.cancelled =
+      Boolean(cancelled);
+
+    pointer.maximumDistance =
+      Math.max(
+        pointer.maximumDistance,
+        distance2d(
+          pointer.startX,
+          pointer.startY,
+          releaseX,
+          releaseY
+        )
+      );
+
+    const duration =
+      Math.max(
+        0,
+        releaseTime -
+          pointer.startTime
+      );
+
+    let outcome =
+      "cancelled";
+
+    let activationCommitted =
+      false;
+
+    let flick =
+      null;
+
+    if (cancelled) {
+      cancelSemanticPreview(
+        pointer,
+        "pointer-cancelled"
+      );
+
+      if (
+        pointer.dragging ||
+        pointer.maximumDistance >
+          CONFIG.maximumTapDistancePx ||
+        pointer.directSemanticControl
+      ) {
+        armClickSuppression(
+          suppressionTargetForPointer(
+            pointer
+          ),
+          releaseX,
+          releaseY,
+          "pointer-cancelled"
+        );
+      }
+    } else if (
+      pointer.territory ===
+        "compass" &&
+      !controllerInteractionAllowed()
+    ) {
+      cancelSemanticPreview(
+        pointer,
+        "compass-release-controller-invalid"
+      );
+
+      armClickSuppression(
+        pointer.compassControl ||
+        state.orbitField,
+        releaseX,
+        releaseY,
+        "compass-release-controller-invalid"
+      );
+
+      outcome =
+        "runtime-invalid";
+    } else if (
+      pointer.territory !==
+        "compass" &&
+      !projectedSelectionAllowed()
+    ) {
+      cancelSemanticPreview(
+        pointer,
+        "release-projection-invalid"
+      );
+
+      armClickSuppression(
+        projectedSuppressionTarget(),
+        releaseX,
+        releaseY,
+        "release-projection-invalid"
+      );
+
+      outcome =
+        "runtime-invalid";
+    } else if (
+      !pointer.dragging &&
+      pointer.maximumDistance <=
+        CONFIG.maximumTapDistancePx
+    ) {
+      if (
+        pointer.territory ===
+          "compass"
+      ) {
+        activationCommitted =
+          commitCompassTap(
+            pointer,
+            event
+          );
+
+        outcome =
+          activationCommitted
+            ? "compass-tap"
+            : "tap-rejected";
+      } else if (
+        pointer.territory ===
+          "projected-object"
+      ) {
+        activationCommitted =
+          commitProjectedTap(
+            pointer,
+            event
+          );
+
+        outcome =
+          activationCommitted
+            ? "projected-tap"
+            : "tap-rejected";
+      } else if (
+        pointer.territory ===
+          "orbit-field" &&
+        pointer.directSemanticControl
+      ) {
+        cancelSemanticPreview(
+          pointer,
+          "projected-hit-miss"
+        );
+
+        armClickSuppression(
+          projectedSuppressionTarget(),
+          releaseX,
+          releaseY,
+          "projected-hit-miss"
+        );
+
+        state.counters.projectedHitMissesRejected +=
+          1;
+
+        outcome =
+          "projected-hit-miss";
+      } else {
+        cancelSemanticPreview(
+          pointer,
+          "empty-field-tap"
+        );
+
+        outcome =
+          "empty-field-tap";
+      }
+    } else if (pointer.dragging) {
+      flick =
+        classifyFlick(
+          pointer,
+          releaseX,
+          releaseY,
+          releaseTime,
+          previousX,
+          previousY
+        );
+
+      armClickSuppression(
+        suppressionTargetForPointer(
+          pointer
+        ),
+        releaseX,
+        releaseY,
+        flick.qualifies
+          ? "flick-completion"
+          : "drag-completion"
+      );
+
+      cancelSemanticPreview(
+        pointer,
+        flick.qualifies
+          ? "flick-completion"
+          : "drag-completion"
+      );
+
+      if (
+        flick.qualifies &&
+        pointer.activeClusterId &&
+        pointer.territory !==
+          "compass"
+      ) {
+        state.counters.flicksQualified +=
+          1;
+
+        const returned =
+          requestClusterFlickReturn(
+            pointer,
+            flick
+          );
+
+        outcome =
+          returned
+            ? "cluster-flick"
+            : "cluster-flick-rejected";
+      } else {
+        state.counters.dragsConsumed +=
+          1;
+
+        outcome =
+          "drag-consumed";
+      }
+    } else {
+      cancelSemanticPreview(
+        pointer,
+        "ambiguous-release"
+      );
+
+      armClickSuppression(
+        suppressionTargetForPointer(
+          pointer
+        ),
+        releaseX,
+        releaseY,
+        "ambiguous-release"
+      );
+
+      state.counters.ambiguousReleases +=
+        1;
+
+      outcome =
+        "ambiguous-release";
+    }
+
+    pointer.currentX =
+      releaseX;
+
+    pointer.currentY =
+      releaseY;
+
+    pointer.currentTime =
+      releaseTime;
+
+    clearPointer(
+      pointer
+    );
+
+    publishReceipt(
+      "pointer-finished",
+      {
+        outcome,
+
+        pointerId:
+          pointer.pointerId,
+
+        pointerType:
+          pointer.pointerType,
+
+        duration,
+
+        maximumDistance:
+          pointer.maximumDistance,
+
+        pathLength:
+          flick
+            ? flick.pathLength
+            : pointer.pathLength,
+
+        dragging:
+          pointer.dragging,
+
+        cancelled:
+          pointer.cancelled,
+
+        activationCommitted,
+
+        semanticObjectId:
+          pointer.downSemanticObjectId ||
+          null,
+
+        directSemanticOrigin:
+          pointer.directSemanticEvidence,
+
+        activeClusterId:
+          pointer.activeClusterId ||
+          null,
+
+        flick
+      }
+    );
   }
 
   function handlePointerUp(event) {
-    state.counters.pointerUp += 1;
+    if (
+      !state.pointer ||
+      state.pointer.pointerId !==
+        event.pointerId
+    ) {
+      return;
+    }
 
-    finishPrimaryGesture(
+    state.counters.pointerUp +=
+      1;
+
+    finishPointer(
       event,
       false
     );
   }
 
   function handlePointerCancel(event) {
-    state.counters.pointerCancel += 1;
+    if (
+      !state.pointer ||
+      state.pointer.pointerId !==
+        event.pointerId
+    ) {
+      return;
+    }
 
-    finishPrimaryGesture(
+    state.counters.pointerCancel +=
+      1;
+
+    finishPointer(
       event,
       true
     );
   }
 
-  function handleLostPointerCapture(event) {
+  function handleLostPointerCapture(
+    event
+  ) {
+    const pointer =
+      state.pointer;
+
     if (
-      state.primaryGesture &&
-      state.primaryGesture.pointerId ===
-        event.pointerId
+      !pointer ||
+      pointer.pointerId !==
+        event.pointerId ||
+      pointer.finishing
     ) {
-      finishPrimaryGesture(
-        event,
-        true
-      );
+      return;
     }
+
+    interruptActivePointer(
+      "lost-pointer-capture",
+      {
+        releaseCapture:
+          false
+      }
+    );
   }
 
   function handleContextMenu(event) {
     if (
-      state.primaryGesture &&
-      state.primaryGesture.dragging
+      state.pointer &&
+      state.pointer.dragging &&
+      isInsideOrbitField(
+        event.target
+      )
     ) {
       event.preventDefault();
     }
@@ -2303,126 +2719,721 @@
 
   function handleDragStart(event) {
     if (
-      isOrbitTarget(event.target)
+      isInsideOrbitField(
+        event.target
+      )
     ) {
       event.preventDefault();
     }
   }
 
-  function handleRootStateMutation() {
-    if (!state.root) {
-      return;
-    }
+  function handleWindowBlur() {
+    interruptActivePointer(
+      "window-blur"
+    );
+  }
 
-    state.held =
-      state.root.getAttribute(
-        ATTRIBUTES.held
-      ) === "true";
-
-    state.reducedMotion =
-      state.root.getAttribute(
-        ATTRIBUTES.reducedMotion
-      ) === "true" ||
-      window.matchMedia(
-        "(prefers-reduced-motion: reduce)"
-      ).matches;
-
-    if (
-      state.held &&
-      state.primaryGesture
-    ) {
-      const gesture =
-        state.primaryGesture;
-
-      releasePointerCapture(
-        gesture.pointerId
-      );
-
-      state.activePointers.delete(
-        gesture.pointerId
-      );
-
-      state.primaryGesture = null;
-
-      setInteractionState(
-        "idle"
+  function handleVisibilityChange() {
+    if (document.hidden) {
+      interruptActivePointer(
+        "document-hidden"
       );
     }
   }
 
-  function initializeRootObserver() {
-    if (!state.root) {
+  function handleControllerFrameChange() {
+    const previousReducedMotion =
+      state.reducedMotion;
+
+    const frame =
+      refreshControllerDerivedState();
+
+    if (
+      state.pointer &&
+      previousReducedMotion !==
+        state.reducedMotion
+    ) {
+      interruptActivePointer(
+        "reduced-motion-transition"
+      );
+    }
+
+    if (
+      state.pointer &&
+      (
+        !frame ||
+        frame.controllerReady !==
+          true ||
+        frame.disposed ===
+          true ||
+        frame.held ===
+          true
+      )
+    ) {
+      interruptActivePointer(
+        "controller-frame-invalid"
+      );
+    }
+
+    attemptRuntimeActivation(
+      "controller-frame"
+    );
+  }
+
+  function handleReducedMotionMediaChange() {
+    const previousReducedMotion =
+      state.reducedMotion;
+
+    refreshControllerDerivedState();
+
+    if (
+      state.pointer &&
+      previousReducedMotion !==
+        state.reducedMotion
+    ) {
+      interruptActivePointer(
+        "reduced-motion-transition"
+      );
+    }
+
+    publishReceipt(
+      "reduced-motion-observed"
+    );
+  }
+
+  function handleCrystalsReady() {
+    refreshControllerDerivedState();
+
+    attemptRuntimeActivation(
+      "crystals-ready"
+    );
+  }
+
+  function handleCrystalsUnavailable(
+    reason
+  ) {
+    state.crystalsAvailable =
+      false;
+
+    interruptActivePointer(
+      reason
+    );
+
+    publishReceipt(
+      "projected-crystal-interaction-unavailable",
+      {
+        reason,
+
+        nativeSemanticFallbackPreserved:
+          true,
+
+        fixedCompassPreserved:
+          true
+      }
+    );
+  }
+
+  function prepareOrbitField() {
+    if (
+      !state.orbitField ||
+      state.orbitFieldStyleCaptured
+    ) {
       return;
     }
 
-    const observer =
-      new MutationObserver(
-        handleRootStateMutation
+    state.nativeOrbitFieldStyle =
+      state.orbitField.getAttribute(
+        "style"
       );
 
-    observer.observe(
-      state.root,
+    state.orbitFieldStyleCaptured =
+      true;
+
+    state.orbitField.style.touchAction =
+      "none";
+
+    state.orbitField.style.overscrollBehavior =
+      "contain";
+
+    state.orbitField.style.webkitUserSelect =
+      "none";
+
+    state.orbitField.style.userSelect =
+      "none";
+  }
+
+  function restoreOrbitField() {
+    if (
+      !state.orbitField ||
+      !state.orbitFieldStyleCaptured
+    ) {
+      return;
+    }
+
+    if (
+      state.nativeOrbitFieldStyle ===
+        null
+    ) {
+      state.orbitField.removeAttribute(
+        "style"
+      );
+    } else {
+      state.orbitField.setAttribute(
+        "style",
+        state.nativeOrbitFieldStyle
+      );
+    }
+
+    state.nativeOrbitFieldStyle =
+      null;
+
+    state.orbitFieldStyleCaptured =
+      false;
+  }
+
+  function initializeRuntimeListeners() {
+    addRuntimeListener(
+      state.orbitField,
+      "pointerdown",
+      handlePointerDown,
       {
-        attributes: true,
-        attributeFilter: [
-          ATTRIBUTES.held,
-          ATTRIBUTES.reducedMotion,
-          ATTRIBUTES.activeCluster
-        ]
+        passive:
+          false
       }
     );
 
-    addObserver(observer);
+    addRuntimeListener(
+      state.orbitField,
+      "pointermove",
+      handlePointerMove,
+      {
+        passive:
+          false
+      }
+    );
+
+    addRuntimeListener(
+      state.orbitField,
+      "pointerup",
+      handlePointerUp,
+      {
+        passive:
+          false
+      }
+    );
+
+    addRuntimeListener(
+      state.orbitField,
+      "pointercancel",
+      handlePointerCancel,
+      {
+        passive:
+          false
+      }
+    );
+
+    addRuntimeListener(
+      state.orbitField,
+      "lostpointercapture",
+      handleLostPointerCapture
+    );
+
+    addRuntimeListener(
+      state.orbitField,
+      "contextmenu",
+      handleContextMenu
+    );
+
+    addRuntimeListener(
+      state.orbitField,
+      "dragstart",
+      handleDragStart
+    );
+
+    addRuntimeListener(
+      window,
+      "blur",
+      handleWindowBlur
+    );
+
+    addRuntimeListener(
+      document,
+      "visibilitychange",
+      handleVisibilityChange
+    );
+  }
+
+  function activateRuntimeSurfaces(
+    reason
+  ) {
+    if (
+      state.runtimeSurfacesActivated ||
+      state.disposed ||
+      state.failed
+    ) {
+      return false;
+    }
+
+    prepareOrbitField();
+    initializeRuntimeListeners();
+
+    state.runtimeSurfacesActivated =
+      true;
+
+    state.waitingForRuntime =
+      false;
+
+    state.ready =
+      true;
+
+    state.counters.runtimeActivations +=
+      1;
+
+    if (!state.readyPublished) {
+      state.readyPublished =
+        true;
+
+      publishReceipt(
+        "ready",
+        {
+          reason,
+
+          form:
+            "A",
+
+          projectedTapSelection:
+            true,
+
+          semanticPreview:
+            true,
+
+          dragClassification:
+            true,
+
+          flickClassification:
+            true,
+
+          clusterFlickReturn:
+            true,
+
+          fixedCompassIndependent:
+            true,
+
+          nativeSemanticFallbackPreserved:
+            true,
+
+          directSemanticOriginEvidenceOnly:
+            true,
+
+          continuousDirectManipulation:
+            false,
+
+          minimumDragDistancePx:
+            CONFIG.minimumDragDistancePx,
+
+          maximumTapDistancePx:
+            CONFIG.maximumTapDistancePx,
+
+          suppressClickMs:
+            CONFIG.suppressClickMs,
+
+          sampleWindowMs:
+            CONFIG.sampleWindowMs,
+
+          maximumSamples:
+            CONFIG.maximumSamples
+        }
+      );
+
+      dispatch(
+        EVENTS.interactionsReady,
+        {
+          reason,
+
+          form:
+            "A",
+
+          projectedTapSelection:
+            true,
+
+          semanticPreview:
+            true,
+
+          dragClassification:
+            true,
+
+          flickClassification:
+            true,
+
+          clusterFlickReturn:
+            true,
+
+          fixedCompassIndependent:
+            true,
+
+          nativeSemanticFallbackPreserved:
+            true,
+
+          directSemanticOriginEvidenceOnly:
+            true,
+
+          continuousDirectManipulation:
+            false,
+
+          api: [
+            "getState",
+            "cancelGesture",
+            "dispose"
+          ]
+        }
+      );
+    }
+
+    return true;
+  }
+
+  function deactivateRuntimeSurfaces(
+    reason
+  ) {
+    if (!state.runtimeSurfacesActivated) {
+      return false;
+    }
+
+    interruptActivePointer(
+      reason
+    );
+
+    removeListenerRegistry(
+      state.runtimeListeners
+    );
+
+    restoreOrbitField();
+
+    state.runtimeSurfacesActivated =
+      false;
+
+    state.ready =
+      false;
+
+    state.counters.runtimeDeactivations +=
+      1;
+
+    return true;
+  }
+
+  function attemptRuntimeActivation(
+    reason = "runtime-check"
+  ) {
+    if (
+      state.disposed ||
+      state.failed ||
+      !state.initialized
+    ) {
+      return false;
+    }
+
+    state.counters.readinessChecks +=
+      1;
+
+    refreshControllerDerivedState();
+
+    const controllerReady =
+      controllerInteractionAllowed();
+
+    const projectionReady =
+      compositorProjectionReady();
+
+    if (
+      !controllerReady ||
+      !projectionReady
+    ) {
+      state.waitingForRuntime =
+        true;
+
+      publishReceipt(
+        "waiting-for-runtime",
+        {
+          reason,
+
+          controllerReady,
+
+          compositorProjectionReady:
+            projectionReady
+        }
+      );
+
+      return false;
+    }
+
+    return activateRuntimeSurfaces(
+      reason
+    );
+  }
+
+  function enterTerminalFailure(
+    reason,
+    error = null
+  ) {
+    if (
+      state.failed ||
+      state.disposed
+    ) {
+      return false;
+    }
+
+    deactivateRuntimeSurfaces(
+      reason
+    );
+
+    state.failed =
+      true;
+
+    state.ready =
+      false;
+
+    state.waitingForRuntime =
+      false;
+
+    const errorPayload =
+      error
+        ? {
+            name:
+              error instanceof Error
+                ? error.name
+                : "Error",
+
+            message:
+              error instanceof Error
+                ? error.message
+                : String(error)
+          }
+        : null;
+
+    publishReceipt(
+      "runtime-failed",
+      {
+        reason,
+
+        error:
+          errorPayload,
+
+        nativeSemanticFallbackPreserved:
+          true,
+
+        fixedCompassNativeControlPreserved:
+          true,
+
+        rootReadinessMutated:
+          false,
+
+        crystalReadinessMutated:
+          false
+      }
+    );
+
+    dispatch(
+      EVENTS.interactionsFailed,
+      {
+        reason,
+
+        error:
+          errorPayload,
+
+        nativeSemanticFallbackPreserved:
+          true
+      }
+    );
+
+    return true;
+  }
+
+  function initializeCoreListeners() {
+    /*
+      Click suppression is core-managed because an interruption may arm
+      suppression immediately before projected runtime listeners are removed.
+      The capture listener must remain alive until final disposal or rollback.
+    */
+    addCoreListener(
+      document,
+      "click",
+      handleClickCapture,
+      true
+    );
+
+    addCoreListener(
+      window,
+      EVENTS.controllerReady,
+      () => {
+        attemptRuntimeActivation(
+          "controller-ready"
+        );
+      }
+    );
+
+    addCoreListener(
+      window,
+      EVENTS.controllerFrameChanged,
+      handleControllerFrameChange
+    );
+
+    addCoreListener(
+      window,
+      EVENTS.controllerStateChanged,
+      handleControllerFrameChange
+    );
+
+    addCoreListener(
+      window,
+      EVENTS.compositorReady,
+      () => {
+        attemptRuntimeActivation(
+          "compositor-ready"
+        );
+      }
+    );
+
+    addCoreListener(
+      window,
+      EVENTS.compositorFailed,
+      event => {
+        enterTerminalFailure(
+          "compositor-failed",
+          event &&
+          event.detail &&
+          event.detail.error
+            ? event.detail.error
+            : null
+        );
+      }
+    );
+
+    addCoreListener(
+      window,
+      EVENTS.compositorDisposed,
+      () => {
+        dispose(
+          "compositor-disposed"
+        );
+      }
+    );
+
+    addCoreListener(
+      window,
+      EVENTS.crystalsReady,
+      handleCrystalsReady
+    );
+
+    addCoreListener(
+      window,
+      EVENTS.crystalsFailed,
+      () => {
+        handleCrystalsUnavailable(
+          "crystals-failed"
+        );
+      }
+    );
+
+    addCoreListener(
+      window,
+      EVENTS.crystalsDisposed,
+      () => {
+        handleCrystalsUnavailable(
+          "crystals-disposed"
+        );
+      }
+    );
+
+    addCoreListener(
+      window,
+      "pagehide",
+      event => {
+        if (event.persisted) {
+          interruptActivePointer(
+            "pagehide-persisted"
+          );
+
+          return;
+        }
+
+        dispose(
+          "pagehide"
+        );
+      }
+    );
   }
 
   function initializeReducedMotion() {
-    const mediaQuery =
+    if (
+      typeof window.matchMedia !==
+        "function"
+    ) {
+      state.reducedMotionQuery =
+        null;
+
+      refreshControllerDerivedState();
+
+      return;
+    }
+
+    state.reducedMotionQuery =
       window.matchMedia(
         "(prefers-reduced-motion: reduce)"
       );
 
-    const update = () => {
-      state.reducedMotion =
-        mediaQuery.matches ||
-        (
-          state.root &&
-          state.root.getAttribute(
-            ATTRIBUTES.reducedMotion
-          ) === "true"
-        );
-
-      publishReceipt(
-        "reduced-motion-changed"
-      );
-    };
-
-    state.reducedMotion =
-      mediaQuery.matches;
+    refreshControllerDerivedState();
 
     if (
-      typeof mediaQuery.addEventListener ===
-      "function"
+      typeof state.reducedMotionQuery
+        .addEventListener ===
+        "function"
     ) {
-      addListener(
-        mediaQuery,
+      addCoreListener(
+        state.reducedMotionQuery,
         "change",
-        update
+        handleReducedMotionMediaChange
       );
     } else if (
-      typeof mediaQuery.addListener ===
-      "function"
+      typeof state.reducedMotionQuery
+        .addListener ===
+        "function"
     ) {
-      mediaQuery.addListener(update);
+      state.reducedMotionQuery.addListener(
+        handleReducedMotionMediaChange
+      );
 
-      state.listeners.push(() => {
-        mediaQuery.removeListener(
-          update
-        );
+      state.coreListeners.push(() => {
+        if (
+          state.reducedMotionQuery &&
+          typeof state.reducedMotionQuery
+            .removeListener ===
+            "function"
+        ) {
+          state.reducedMotionQuery.removeListener(
+            handleReducedMotionMediaChange
+          );
+        }
       });
     }
   }
 
-  function validateDom() {
+  function discoverDom() {
+    state.root =
+      document.querySelector(
+        SELECTORS.root
+      );
+
+    state.receipt =
+      document.querySelector(
+        SELECTORS.receipt
+      );
+
+    state.orbitField =
+      document.querySelector(
+        SELECTORS.orbitField
+      );
+  }
+
+  function validateCoreDependencies() {
     const issues = [];
 
     if (!state.root) {
@@ -2437,118 +3448,183 @@
       );
     }
 
-    if (!state.compassControl) {
+    const controller =
+      readController();
+
+    if (!controller) {
       issues.push(
-        "Missing [data-showroom-compass-control]."
+        `Missing compatible controller ${CONTROLLER_CONTRACT}.`
       );
     }
 
-    if (issues.length) {
-      throw new Error(
-        issues.join(" ")
+    const compositor =
+      readCompositor();
+
+    if (!compositor) {
+      issues.push(
+        `Missing compatible compositor ${COMPOSITOR_CONTRACT}.`
       );
     }
+
+    return issues;
+  }
+
+  function getState() {
+    return createReceipt(
+      "state-requested"
+    );
   }
 
   function exposeApi() {
-    const api = Object.freeze({
-      contract: CONTRACT,
+    const api =
+      Object.freeze({
+        contract:
+          CONTRACT,
 
-      getState() {
-        return createReceipt(
-          "state-requested",
-          {
-            gesture:
-              state.primaryGesture
-                ? {
-                    pointerId:
-                      state.primaryGesture.pointerId,
+        controllerContract:
+          CONTROLLER_CONTRACT,
 
-                    pointerType:
-                      state.primaryGesture.pointerType,
+        compositorContract:
+          COMPOSITOR_CONTRACT,
 
-                    mode:
-                      state.primaryGesture.mode,
+        getState,
 
-                    dragging:
-                      state.primaryGesture.dragging,
+        cancelGesture(
+          reason = "api"
+        ) {
+          return interruptActivePointer(
+            `api:${normalize(reason) || "cancel"}`
+          );
+        },
 
-                    grabbedObjectId:
-                      state.primaryGesture.grabbedObject
-                        ? state.primaryGesture.grabbedObject.objectId
-                        : null,
-
-                    activeClusterId:
-                      state.primaryGesture.activeCluster
-                        ? state.primaryGesture.activeCluster.id
-                        : null
-                  }
-                : null
-          }
-        );
-      },
-
-      cancelGesture(reason = "api") {
-        const gesture =
-          state.primaryGesture;
-
-        if (!gesture) {
-          return false;
-        }
-
-        gesture.cancelled = true;
-
-        releasePointerCapture(
-          gesture.pointerId
-        );
-
-        state.activePointers.delete(
-          gesture.pointerId
-        );
-
-        state.primaryGesture = null;
-
-        setInteractionState(
-          "idle"
-        );
-
-        publishReceipt(
-          "gesture-cancelled-by-api",
-          {
-            reason
-          }
-        );
-
-        return true;
-      },
-
-      setHeld(value) {
-        state.held =
-          Boolean(value);
-
-        setRootAttribute(
-          ATTRIBUTES.held,
-          state.held
-            ? "true"
-            : "false"
-        );
-
-        handleRootStateMutation();
-
-        return state.held;
-      },
-
-      dispose
-    });
+        dispose
+      });
 
     Object.defineProperty(
       window,
       "SHOWROOM_INTERACTIONS",
       {
-        configurable: true,
-        enumerable: false,
-        writable: false,
-        value: api
+        configurable:
+          true,
+
+        enumerable:
+          false,
+
+        writable:
+          false,
+
+        value:
+          api
+      }
+    );
+
+    state.apiExposed =
+      true;
+  }
+
+  function removeApi() {
+    if (!state.apiExposed) {
+      return;
+    }
+
+    try {
+      delete window.SHOWROOM_INTERACTIONS;
+    } catch {
+      /* Best-effort API cleanup. */
+    }
+
+    state.apiExposed =
+      false;
+  }
+
+  function rollbackInitialization(
+    error
+  ) {
+    interruptActivePointer(
+      "initialization-rollback"
+    );
+
+    deactivateRuntimeSurfaces(
+      "initialization-rollback"
+    );
+
+    removeListenerRegistry(
+      state.coreListeners
+    );
+
+    removeApi();
+    restoreOrbitField();
+
+    state.initialized =
+      false;
+
+    state.initializing =
+      false;
+
+    state.failed =
+      true;
+
+    state.ready =
+      false;
+
+    state.readyPublished =
+      false;
+
+    state.waitingForRuntime =
+      false;
+
+    state.controller =
+      null;
+
+    state.compositor =
+      null;
+
+    state.reducedMotionQuery =
+      null;
+
+    const errorPayload = {
+      name:
+        error instanceof Error
+          ? error.name
+          : "Error",
+
+      message:
+        error instanceof Error
+          ? error.message
+          : String(error)
+    };
+
+    publishReceipt(
+      "fatal-error",
+      {
+        error:
+          errorPayload,
+
+        listenersRemoved:
+          true,
+
+        pointerReleased:
+          true,
+
+        semanticPreviewCancelled:
+          true,
+
+        orbitFieldRestored:
+          true,
+
+        rootReadinessMutated:
+          false
+      }
+    );
+
+    dispatch(
+      EVENTS.interactionsFailed,
+      {
+        reason:
+          "initialization-failed",
+
+        error:
+          errorPayload
       }
     );
   }
@@ -2556,266 +3632,175 @@
   function initialize() {
     if (
       state.initialized ||
+      state.initializing ||
       state.disposed
     ) {
       return;
     }
 
+    state.initializing =
+      true;
+
     try {
-      state.root =
-        document.querySelector(
-          SELECTORS.root
-        );
+      discoverDom();
 
-      state.receipt =
-        document.querySelector(
-          SELECTORS.receipt
-        );
+      const issues =
+        validateCoreDependencies();
 
-      state.orbit =
-        document.querySelector(
-          SELECTORS.orbit
-        );
-
-      state.orbitField =
-        document.querySelector(
-          SELECTORS.orbitField
-        );
-
-      state.compassControl =
-        document.querySelector(
-          SELECTORS.compassControl
-        );
-
-      validateDom();
-      initializeReducedMotion();
-      initializeRootObserver();
-      handleRootStateMutation();
-
-      addListener(
-        state.orbitField,
-        "pointerdown",
-        handlePointerDown,
-        {
-          passive: false
-        }
-      );
-
-      addListener(
-        state.orbitField,
-        "pointermove",
-        handlePointerMove,
-        {
-          passive: false
-        }
-      );
-
-      addListener(
-        state.orbitField,
-        "pointerup",
-        handlePointerUp,
-        {
-          passive: false
-        }
-      );
-
-      addListener(
-        state.orbitField,
-        "pointercancel",
-        handlePointerCancel,
-        {
-          passive: false
-        }
-      );
-
-      addListener(
-        state.orbitField,
-        "lostpointercapture",
-        handleLostPointerCapture
-      );
-
-      addListener(
-        state.orbitField,
-        "contextmenu",
-        handleContextMenu
-      );
-
-      addListener(
-        state.orbitField,
-        "dragstart",
-        handleDragStart
-      );
-
-      /*
-        Capture-phase suppression runs before the controller's direct
-        semantic click listeners. Keyboard-generated clicks remain intact.
-      */
-      addListener(
-        document,
-        "click",
-        handleClickCapture,
-        true
-      );
-
-      exposeApi();
-
-      state.initialized = true;
-
-      setRootAttribute(
-        ATTRIBUTES.ready,
-        "true"
-      );
-
-      setRootAttribute(
-        ATTRIBUTES.state,
-        "ready"
-      );
-
-      setInteractionState(
-        "idle"
-      );
-
-      publishReceipt("ready");
-
-      dispatch(
-        EVENTS.ready,
-        {
-          orbitField:
-            true,
-
-          compassTapDispatch:
-            EVENTS.compassActivate,
-
-          semanticTapDispatch:
-            EVENTS.semanticActivate,
-
-          motionDispatch:
-            EVENTS.orbitMotion
-        }
-      );
-    } catch (error) {
-      if (state.root) {
-        setRootAttribute(
-          ATTRIBUTES.ready,
-          "false"
-        );
-
-        setRootAttribute(
-          ATTRIBUTES.state,
-          "failed"
+      if (issues.length) {
+        throw new Error(
+          issues.join(" ")
         );
       }
 
-      publishReceipt(
-        "fatal-error",
-        {
-          error: {
-            name:
-              error instanceof Error
-                ? error.name
-                : "Error",
+      initializeReducedMotion();
+      initializeCoreListeners();
+      exposeApi();
 
-            message:
-              error instanceof Error
-                ? error.message
-                : String(error)
-          }
+      state.initialized =
+        true;
+
+      state.initializing =
+        false;
+
+      state.failed =
+        false;
+
+      state.ready =
+        false;
+
+      state.waitingForRuntime =
+        true;
+
+      publishReceipt(
+        "core-initialized",
+        {
+          runtimeReadiness:
+            "pending-or-ready",
+
+          pointerRuntimeDeferred:
+            true,
+
+          directSemanticOriginEvidenceOnly:
+            true,
+
+          rootReadinessMutated:
+            false
         }
+      );
+
+      attemptRuntimeActivation(
+        "startup"
+      );
+    } catch (error) {
+      rollbackInitialization(
+        error
       );
     }
   }
 
-  function dispose() {
+  function dispose(
+    reason = "api"
+  ) {
     if (state.disposed) {
       return;
     }
 
-    state.disposed = true;
+    interruptActivePointer(
+      `dispose:${normalize(reason) || "api"}`
+    );
 
-    if (state.pendingMotionFrame) {
-      cancelAnimationFrame(
-        state.pendingMotionFrame
-      );
+    state.disposed =
+      true;
 
-      state.pendingMotionFrame = 0;
-      state.pendingMotion = null;
-    }
+    state.ready =
+      false;
 
-    if (state.primaryGesture) {
-      releasePointerCapture(
-        state.primaryGesture.pointerId
-      );
-    }
+    state.waitingForRuntime =
+      false;
 
-    state.primaryGesture = null;
-    state.activePointers.clear();
-    state.suppressedClicks.length = 0;
+    deactivateRuntimeSurfaces(
+      `dispose:${normalize(reason) || "api"}`
+    );
 
-    for (
-      const removeListener
-      of state.listeners.splice(0)
-    ) {
-      try {
-        removeListener();
-      } catch {
-        /* Disposal remains best-effort. */
+    removeListenerRegistry(
+      state.coreListeners
+    );
+
+    removeApi();
+    restoreOrbitField();
+
+    state.suppressedClick =
+      null;
+
+    state.controller =
+      null;
+
+    state.compositor =
+      null;
+
+    state.reducedMotionQuery =
+      null;
+
+    state.initialized =
+      false;
+
+    state.initializing =
+      false;
+
+    publishReceipt(
+      "disposed",
+      {
+        reason,
+
+        pointerReleased:
+          true,
+
+        semanticPreviewCancelled:
+          true,
+
+        listenersRemoved:
+          true,
+
+        orbitFieldRestored:
+          true,
+
+        nativeSemanticFallbackPreserved:
+          true,
+
+        rootReadinessMutated:
+          false
       }
-    }
+    );
 
-    for (
-      const observer
-      of state.observers.splice(0)
-    ) {
-      try {
-        observer.disconnect();
-      } catch {
-        /* Disposal remains best-effort. */
+    dispatch(
+      EVENTS.interactionsDisposed,
+      {
+        reason,
+
+        disposed:
+          true
       }
-    }
-
-    setRootAttribute(
-      ATTRIBUTES.ready,
-      "false"
     );
-
-    setRootAttribute(
-      ATTRIBUTES.state,
-      "disposed"
-    );
-
-    setInteractionState(
-      "idle"
-    );
-
-    publishReceipt("disposed");
-
-    try {
-      delete window.SHOWROOM_INTERACTIONS;
-    } catch {
-      /* Noncritical cleanup. */
-    }
   }
 
+  /*
+    Bootstrap listener only. Stateful runtime listeners are installed and
+    removed through the managed core/runtime registries above.
+  */
   if (
     document.readyState ===
-    "loading"
+      "loading"
   ) {
     document.addEventListener(
       "DOMContentLoaded",
       initialize,
       {
-        once: true
+        once:
+          true
       }
     );
   } else {
     initialize();
   }
-
-  window.addEventListener(
-    "pagehide",
-    dispose,
-    {
-      once: true
-    }
-  );
 })();

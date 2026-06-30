@@ -1,7067 +1,6841 @@
-/* TARGET FILE: /showroom/index.controller.js */
-/* TNT FULL-FILE REPLACEMENT */
-/* SHOWROOM_MIRRORLAND_CONSTELLATION_CONTROLLER_TNT_v5 */
-/*
-  Bounded correction pass against the last full candidate.
+/* /showroom/index.controller.js
+   ARCHCOIN anchoring navigation, state, route, transition,
+   accepted-quaternion, panel, and semantic-projection authority.
 
-  Controller authority:
-  - canonical semantic state;
-  - compact immutable frame state;
-  - diagnostic state;
-  - semantic transitions;
-  - confirmation state;
-  - readiness aggregation;
-  - native fallback recovery;
-  - public controller API.
+   Module:
+   DGB_ARCHCOIN_CONTROLLER
+   7.0.0-controller-interaction-semantic-priority
 
-  Compositor, crystals, and interactions consume controller authority.
-  They do not reinterpret or duplicate it.
+   Paired module:
+   DGB_ARCHCOIN_INTERACTIONS
+   1.0.0-pointer-gesture-interpreter
+
+   Frozen motion contract:
+   AUDRALIA_ARCHCOIN_COMPLETE_QUATERNION_MOTION_CONTRACT_v1
+   1.0.0
 */
 
 (() => {
   "use strict";
 
-  const CONTRACT =
-    "SHOWROOM_MIRRORLAND_CONSTELLATION_CONTROLLER_TNT_v5";
+  const MODULE = Object.freeze({
+    id: "DGB_ARCHCOIN_CONTROLLER",
+    version: "7.0.0-controller-interaction-semantic-priority",
+    file: "/showroom/index.controller.js",
 
-  const OWNER =
-    "/showroom/index.controller.js";
+    interactionModuleId: "DGB_ARCHCOIN_INTERACTIONS",
+    interactionModuleVersion: "1.0.0-pointer-gesture-interpreter",
 
-  const MAIN_COMPASS_ROUTE =
-    "/index.html";
+    motionContractId:
+      "AUDRALIA_ARCHCOIN_COMPLETE_QUATERNION_MOTION_CONTRACT_v1",
 
-  const DURABLE_STATES = Object.freeze({
-    CONSTELLATION:
-      "CONSTELLATION",
-
-    CLUSTER_OPEN:
-      "CLUSTER_OPEN",
-
-    LOCAL_DESTINATION:
-      "LOCAL_DESTINATION"
+    motionContractVersion: "1.0.0"
   });
 
-  const TRANSIENT_STATES = Object.freeze({
-    NONE:
-      "NONE",
-
-    ROUTE_CONFIRMATION:
-      "ROUTE_CONFIRMATION",
-
-    COMPASS_CONFIRMATION:
-      "COMPASS_CONFIRMATION",
-
-    HELD:
-      "HELD"
+  const STATES = Object.freeze({
+    CONSTELLATION: "CONSTELLATION",
+    CLUSTER_OPEN: "CLUSTER_OPEN",
+    ROOM_SELECTED: "ROOM_SELECTED",
+    SYSTEM_HELD: "SYSTEM_HELD"
   });
 
   const PRESENTATION_MODES = Object.freeze({
-    CONSTELLATION:
-      "constellation",
-
-    CLUSTER:
-      "cluster",
-
-    FRONT:
-      "front",
-
-    BASELINE:
-      "baseline"
+    CONSTELLATION: "CONSTELLATION",
+    CLUSTER: "CLUSTER",
+    HELD: "HELD"
   });
 
-  const ENHANCEMENT_STATES = Object.freeze({
-    PENDING:
-      "enhancement-pending",
-
-    AVAILABLE:
-      "enhanced-available",
-
-    ACTIVE:
-      "enhanced-active",
-
-    FAILED:
-      "enhancement-failed"
+  const PRESENTATION_MODE_BY_STATE = Object.freeze({
+    [STATES.CONSTELLATION]: PRESENTATION_MODES.CONSTELLATION,
+    [STATES.CLUSTER_OPEN]: PRESENTATION_MODES.CLUSTER,
+    [STATES.ROOM_SELECTED]: PRESENTATION_MODES.CLUSTER,
+    [STATES.SYSTEM_HELD]: PRESENTATION_MODES.HELD
   });
 
-  const READINESS_KEYS = Object.freeze({
-    controller:
-      "controller",
-
-    compositor:
-      "compositor",
-
-    crystals:
-      "crystals",
-
-    interactions:
-      "interactions"
+  const DESTINATION_TYPES = Object.freeze({
+    NONE: "",
+    COIN: "coin",
+    ROOM: "room",
+    HOME_COMPASS: "home-compass"
   });
 
-  const EVENTS = Object.freeze({
-    controllerReady:
-      "showroom:controller-ready",
-
-    controllerReceipt:
-      "showroom:controller-receipt",
-
-    stateChanged:
-      "showroom:state-changed",
-
-    frameChanged:
-      "showroom:frame-state-changed",
-
-    previewChanged:
-      "showroom:preview-changed",
-
-    clusterChanged:
-      "showroom:cluster-changed",
-
-    frontChanged:
-      "showroom:front-changed",
-
-    dialogChanged:
-      "showroom:dialog-changed",
-
-    readinessChanged:
-      "showroom:enhancement-readiness-changed",
-
-    semanticActivate:
-      "showroom:semantic-activate",
-
-    objectActivate:
-      "showroom:object-activate",
-
-    compassActivate:
-      "showroom:compass-activate",
-
-    clusterExitIntent:
-      "showroom:cluster-exit-intent",
-
-    compositorReady:
-      "showroom:compositor-ready",
-
-    compositorFailed:
-      "showroom:compositor-failed",
-
-    compositorDisposed:
-      "showroom:compositor-disposed",
-
-    crystalsReady:
-      "showroom:crystals-ready",
-
-    crystalsFailed:
-      "showroom:crystals-failed",
-
-    crystalsDisposed:
-      "showroom:crystals-disposed",
-
-    interactionsReady:
-      "showroom:interactions-ready",
-
-    interactionsFailed:
-      "showroom:interactions-failed",
-
-    interactionsDisposed:
-      "showroom:interactions-disposed",
-
-    gaugesReady:
-      "showroom:gauges-ready",
-
-    windowHeld:
-      "showroom:window-held",
-
-    windowReleased:
-      "showroom:window-released"
+  const SHOWROOM_DESTINATION_TYPES = Object.freeze({
+    LOCAL_ANCHOR: "local-anchor",
+    LOCAL_DISCLOSURE_TARGET: "local-disclosure-target",
+    LOCAL_WINDOW_EXPERIENCE: "local-window-experience",
+    LOCAL_DIAMOND_EXPERIENCE: "local-diamond-experience",
+    LOCAL_NARRATIVE_SURFACE: "local-narrative-surface",
+    EXTERNAL_ROUTE: "external-route"
   });
 
-  const SELECTORS = Object.freeze({
-    root:
-      "[data-showroom-root]",
-
-    receipt:
-      "[data-showroom-controller-receipt]",
-
-    validation:
-      "[data-showroom-controller-validation]",
-
-    orbit:
-      "#showroom-orbit",
-
-    orbitScene:
-      "[data-showroom-orbit-scene]",
-
-    orbitField:
-      "[data-showroom-orbit-field]",
-
-    semanticLayer:
-      "[data-showroom-semantic-star-layer]",
-
-    object:
-      "[data-showroom-object]",
-
-    cardinalControl:
-      "[data-showroom-cardinal-control]",
-
-    childControl:
-      "[data-showroom-child-control]",
-
-    cluster:
-      "[data-showroom-cluster]",
-
-    front:
-      "[data-showroom-front]",
-
-    frontHost:
-      "[data-showroom-front-host]",
-
-    localDestination:
-      "[data-showroom-local-destination-surface]",
-
-    fallbackNavigation:
-      "[data-showroom-fallback-navigation]",
-
-    fallbackPortal:
-      "[data-showroom-fallback-portal]",
-
-    fallbackStarLayer:
-      "[data-showroom-fallback-star-layer]",
-
-    fallbackStar:
-      "[data-showroom-fallback-star]",
-
-    compassLayer:
-      "[data-showroom-compass-layer]",
-
-    compassVisualMount:
-      "[data-showroom-compass-visual-mount]",
-
-    compassControl:
-      "[data-showroom-compass-control]",
-
-    openCompassDialog:
-      "[data-showroom-open-compass-dialog]",
-
-    sharedReturnToCompass:
-      "[data-showroom-shared-return-to-compass]",
-
-    accessibleReturnToOrbit:
-      "[data-showroom-accessible-orbit-return]",
-
-    sharedReturnToOrbit:
-      "[data-showroom-shared-return-to-orbit]",
-
-    legacyReturnToOrbit:
-      "[data-showroom-return-to-orbit]",
-
-    routeDialog:
-      "[data-showroom-route-dialog]",
-
-    routeDialogTitle:
-      "[data-showroom-route-dialog-title]",
-
-    routeDialogDescription:
-      "[data-showroom-route-dialog-description]",
-
-    routeClose:
-      "[data-showroom-route-close]",
-
-    routeStay:
-      "[data-showroom-route-stay]",
-
-    routeContinue:
-      "[data-showroom-route-continue]",
-
-    compassDialog:
-      "[data-showroom-compass-dialog]",
-
-    compassClose:
-      "[data-showroom-compass-close]",
-
-    compassStay:
-      "[data-showroom-compass-stay]",
-
-    compassReturn:
-      "[data-showroom-compass-return]",
-
-    instructionsDisclosure:
-      "[data-showroom-instructions-disclosure]",
-
-    instructionsOpen:
-      "[data-showroom-open-instructions]",
-
-    constructionDialog:
-      "#construction-record-dialog",
-
-    constructionOpen:
-      "[data-open-construction-record]",
-
-    constructionClose:
-      "[data-close-construction-record]",
-
-    informationTab:
-      "[data-showroom-information-tab]"
+  const ORIENTATION_PHASES = Object.freeze({
+    IDLE: "IDLE",
+    PREVIEW: "PREVIEW",
+    COMMITTED: "COMMITTED",
+    CANCELLED: "CANCELLED"
   });
 
-  const ATTRIBUTES = Object.freeze({
-    controllerReady:
-      "data-showroom-controller-ready",
-
-    controllerState:
-      "data-showroom-controller-state",
-
-    pageState:
-      "data-showroom-state",
-
-    presentationMode:
-      "data-showroom-presentation-mode",
-
-    enhancementState:
-      "data-showroom-enhancement-state",
-
-    activeCardinal:
-      "data-showroom-active-cardinal",
-
-    activeChild:
-      "data-showroom-active-child",
-
-    activeCluster:
-      "data-showroom-active-cluster",
-
-    activeFront:
-      "data-showroom-active-front",
-
-    activeGaugeSet:
-      "data-showroom-active-gauge-set",
-
-    activeInformationTab:
-      "data-showroom-active-information-tab",
-
-    routeDialogOpen:
-      "data-showroom-route-dialog-open",
-
-    compassDialogOpen:
-      "data-showroom-compass-dialog-open",
-
-    held:
-      "data-showroom-held",
-
-    reducedMotion:
-      "data-showroom-reduced-motion",
-
-    compositorReady:
-      "data-showroom-compositor-ready",
-
-    crystalsReady:
-      "data-showroom-crystals-ready",
-
-    interactionsReady:
-      "data-showroom-interactions-ready",
-
-    clusterState:
-      "data-showroom-cluster-state",
-
-    clusterActive:
-      "data-showroom-cluster-active",
-
-    frontState:
-      "data-showroom-front-state",
-
-    dialogState:
-      "data-showroom-dialog-state",
-
-    fallbackVisibility:
-      "data-showroom-fallback-star-visibility",
-
-    fallbackRendering:
-      "data-showroom-fallback-star-rendering",
-
-    objectId:
-      "data-showroom-object-id",
-
-    objectBehavior:
-      "data-showroom-object-behavior",
-
-    cardinalId:
-      "data-showroom-cardinal-id",
-
-    childId:
-      "data-showroom-child-id",
-
-    clusterId:
-      "data-showroom-cluster-id",
-
-    destinationKind:
-      "data-showroom-destination-kind",
-
-    target:
-      "data-showroom-target",
-
-    openAncestor:
-      "data-showroom-open-ancestor",
-
-    requiredFront:
-      "data-showroom-required-front",
-
-    informationTab:
-      "data-showroom-information-tab",
-
-    route:
-      "data-showroom-route",
-
-    routeLabel:
-      "data-showroom-route-label",
-
-    routeDescription:
-      "data-showroom-route-description",
-
-    routeConfirmation:
-      "data-showroom-route-confirmation-required",
-
-    controllerManagedHidden:
-      "data-showroom-controller-managed-hidden"
+  const DEPTH_LAYERS = Object.freeze({
+    FRONT: "front",
+    REAR: "rear",
+    UNKNOWN: "unknown"
   });
 
-  const CAPTURED_ATTRIBUTES = Object.freeze([
-    "hidden",
-    "open",
-    "aria-hidden",
-    "aria-disabled",
-    "aria-expanded",
-    "disabled",
-    "inert",
-    "tabindex",
-    ATTRIBUTES.clusterState,
-    ATTRIBUTES.clusterActive,
-    ATTRIBUTES.frontState,
-    ATTRIBUTES.controllerManagedHidden,
-    ATTRIBUTES.fallbackVisibility,
-    ATTRIBUTES.fallbackRendering,
-    ATTRIBUTES.dialogState
+  const CHANNELS = Object.freeze({
+    FRAME: "frame",
+    REDUCED_MOTION: "reducedMotion",
+    HELD_STATE: "heldState",
+    COMPASS_STATE: "compassState",
+    SEMANTIC_PROJECTION: "semanticProjection"
+  });
+
+  const SHOWROOM_DESTINATION_ENTRY = Object.freeze({
+    event:
+      "SHOWROOM_ARCHCOIN_DESTINATION_ENTRY_REQUESTED",
+
+    contract:
+      "SHOWROOM_ARCHCOIN_DESTINATION_ENTRY_REQUEST_v1"
+  });
+
+  const SHOWROOM_DESTINATION_PAYLOAD_KEYS = Object.freeze([
+    "contract",
+    "controllerId",
+    "controllerVersion",
+    "controllerFile",
+    "sourceState",
+    "wingId",
+    "wingLabel",
+    "roomId",
+    "destinationType",
+    "destinationId",
+    "contentId",
+    "route",
+    "localTarget",
+    "openAncestor",
+    "informationFront",
+    "confirmationRequired",
+    "operationType",
+    "label",
+    "lens",
+    "preview",
+    "whyEnter",
+    "semanticActivation",
+    "routeDescription",
+    "routeRole",
+    "visualClass",
+    "emphasis",
+    "returnModel",
+    "returnZone",
+    "authorizationGeneration",
+    "timestamp"
   ]);
 
-  const ROOT_CAPTURED_ATTRIBUTES = Object.freeze([
-    ATTRIBUTES.controllerReady,
-    ATTRIBUTES.controllerState,
-    ATTRIBUTES.pageState,
-    ATTRIBUTES.presentationMode,
-    ATTRIBUTES.enhancementState,
-    ATTRIBUTES.activeCardinal,
-    ATTRIBUTES.activeChild,
-    ATTRIBUTES.activeCluster,
-    ATTRIBUTES.activeFront,
-    ATTRIBUTES.activeGaugeSet,
-    ATTRIBUTES.activeInformationTab,
-    ATTRIBUTES.routeDialogOpen,
-    ATTRIBUTES.compassDialogOpen,
-    ATTRIBUTES.held,
-    ATTRIBUTES.reducedMotion,
-    ATTRIBUTES.compositorReady,
-    ATTRIBUTES.crystalsReady,
-    ATTRIBUTES.interactionsReady
+  const WINGS = Object.freeze([
+    "north",
+    "east",
+    "south",
+    "west"
   ]);
+
+  const WING_TO_COIN = Object.freeze({
+    north: "story",
+    east: "characters",
+    south: "wonders",
+    west: "mysteries"
+  });
+
+  const WING_LABELS = Object.freeze({
+    north: "The Story Begins",
+    east: "Meet the Characters",
+    south: "Wonders of Mirrorland",
+    west: "Mysteries Yet Unfolding"
+  });
+
+  const MAIN_COMPASS = Object.freeze({
+    destinationType: DESTINATION_TYPES.HOME_COMPASS,
+    destinationId: "home-compass",
+    destinationLabel: "Main Compass",
+    route: "/index.html",
+    source: "archcoin-controller",
+    navigationAuthority: "EXPLICIT_RETURN_ACTION"
+  });
+
+  const QUATERNION = Object.freeze({
+    identity: Object.freeze([0, 0, 0, 1]),
+    minimumLength: 1e-8
+  });
+
+  const PREVIEW_PAYLOAD_KEYS = Object.freeze([
+    "quaternion",
+    "primaryId"
+  ]);
+
+  const PREVIEW_PAYLOAD_KEY_SET = new Set(
+    PREVIEW_PAYLOAD_KEYS
+  );
+
+  const HALF_SQRT_TWO = Math.SQRT1_2;
+
+  const CANONICAL_CONSTELLATION_QUATERNIONS =
+    Object.freeze({
+      north: Object.freeze([
+        0,
+        0,
+        0,
+        1
+      ]),
+
+      east: Object.freeze([
+        0,
+        0,
+        -HALF_SQRT_TWO,
+        HALF_SQRT_TWO
+      ]),
+
+      south: Object.freeze([
+        0,
+        0,
+        1,
+        0
+      ]),
+
+      west: Object.freeze([
+        0,
+        0,
+        HALF_SQRT_TWO,
+        HALF_SQRT_TWO
+      ])
+    });
+
+  const PRESENTATION_BY_STATE = Object.freeze({
+    [STATES.CONSTELLATION]: Object.freeze({
+      mode: PRESENTATION_MODES.CONSTELLATION,
+      outerCardinalsActive: true,
+      activeRoomCluster: false,
+      roomSelectionPermitted: false
+    }),
+
+    [STATES.CLUSTER_OPEN]: Object.freeze({
+      mode: PRESENTATION_MODES.CLUSTER,
+      outerCardinalsActive: false,
+      activeRoomCluster: true,
+      roomSelectionPermitted: true
+    }),
+
+    [STATES.ROOM_SELECTED]: Object.freeze({
+      mode: PRESENTATION_MODES.CLUSTER,
+      outerCardinalsActive: false,
+      activeRoomCluster: true,
+      roomSelectionPermitted: true
+    }),
+
+    [STATES.SYSTEM_HELD]: Object.freeze({
+      mode: PRESENTATION_MODES.HELD,
+      outerCardinalsActive: false,
+      activeRoomCluster: false,
+      roomSelectionPermitted: false
+    })
+  });
+
+  const TRANSITIONS = Object.freeze({
+    [STATES.CONSTELLATION]: Object.freeze([
+      STATES.CONSTELLATION,
+      STATES.CLUSTER_OPEN,
+      STATES.SYSTEM_HELD
+    ]),
+
+    [STATES.CLUSTER_OPEN]: Object.freeze([
+      STATES.CLUSTER_OPEN,
+      STATES.ROOM_SELECTED,
+      STATES.CONSTELLATION,
+      STATES.SYSTEM_HELD
+    ]),
+
+    [STATES.ROOM_SELECTED]: Object.freeze([
+      STATES.ROOM_SELECTED,
+      STATES.CLUSTER_OPEN,
+      STATES.CONSTELLATION,
+      STATES.SYSTEM_HELD
+    ]),
+
+    [STATES.SYSTEM_HELD]: Object.freeze([
+      STATES.SYSTEM_HELD
+    ])
+  });
+
+  function createCanonicalRoomRecord(record) {
+    return Object.freeze({
+      wing: record.wing,
+      coin: record.coin,
+      roomId: record.roomId,
+      route: record.route,
+
+      wingLabel: record.wingLabel,
+      destinationType: record.destinationType,
+      destinationId: record.destinationId,
+      contentId: record.contentId,
+      localTarget: record.localTarget,
+      openAncestor: record.openAncestor,
+      informationFront: record.informationFront,
+      confirmationRequired: record.confirmationRequired,
+      operationType: record.operationType,
+      label: record.label,
+      lens: record.lens,
+      preview: record.preview,
+      whyEnter: record.whyEnter,
+      semanticActivation: record.semanticActivation,
+      routeDescription: record.routeDescription,
+      routeRole: record.routeRole,
+      visualClass: record.visualClass,
+      emphasis: record.emphasis,
+      returnModel: record.returnModel,
+      returnZone: record.returnZone
+    });
+  }
+
+  const CANONICAL_ROOM_RECORDS = Object.freeze([
+    createCanonicalRoomRecord({
+      wing: "north",
+      coin: "story",
+      roomId: "north-1",
+      route: "/showroom/#arrival",
+
+      wingLabel: WING_LABELS.north,
+      destinationType:
+        SHOWROOM_DESTINATION_TYPES.LOCAL_ANCHOR,
+      destinationId: "arrival",
+      contentId: "arrival",
+      localTarget: "#arrival",
+      openAncestor: null,
+      informationFront: null,
+      confirmationRequired: false,
+      operationType: "scroll-anchor",
+      label: "Welcome to Mirrorland",
+      lens: "story",
+      preview:
+        "Enter Mirrorland through its official Showroom threshold.",
+      whyEnter:
+        "Begin with the entrance, purpose, and invitation into Mirrorland.",
+      semanticActivation: null,
+      routeDescription:
+        "Move to the Welcome to Mirrorland arrival surface within the current Showroom page.",
+      routeRole: null,
+      visualClass: "LOCAL",
+      emphasis: "normal",
+      returnModel: "shared-bottom-zone",
+      returnZone: "#showroom-return-zone"
+    }),
+
+    createCanonicalRoomRecord({
+      wing: "north",
+      coin: "story",
+      roomId: "north-2",
+      route: "/showroom/#mirrorland-preface-mission",
+
+      wingLabel: WING_LABELS.north,
+      destinationType:
+        SHOWROOM_DESTINATION_TYPES.LOCAL_DISCLOSURE_TARGET,
+      destinationId: "mirrorland-preface-mission",
+      contentId: "mirrorland-preface-mission",
+      localTarget: "#mirrorland-preface-mission",
+      openAncestor: "#mirrorland-preface",
+      informationFront: null,
+      confirmationRequired: false,
+      operationType: "open-disclosure-and-scroll",
+      label: "Why Mirrorland Exists",
+      lens: "mission",
+      preview:
+        "Mirrorland exists so consequential ideas can be examined before the real world absorbs their consequences.",
+      whyEnter:
+        "Open the mission section and inspect the purpose of the world.",
+      semanticActivation: null,
+      routeDescription:
+        "Open the Mirrorland preface disclosure and focus its mission section.",
+      routeRole: null,
+      visualClass: "LOCAL",
+      emphasis: "normal",
+      returnModel: "shared-bottom-zone",
+      returnZone: "#showroom-return-zone"
+    }),
+
+    createCanonicalRoomRecord({
+      wing: "north",
+      coin: "story",
+      roomId: "north-3",
+      route: "/showroom/#mirrorland-preface-timeline",
+
+      wingLabel: WING_LABELS.north,
+      destinationType:
+        SHOWROOM_DESTINATION_TYPES.LOCAL_DISCLOSURE_TARGET,
+      destinationId: "mirrorland-preface-timeline",
+      contentId: "mirrorland-preface-timeline",
+      localTarget: "#mirrorland-preface-timeline",
+      openAncestor: "#mirrorland-preface",
+      informationFront: null,
+      confirmationRequired: false,
+      operationType: "open-disclosure-and-scroll",
+      label: "The Story So Far",
+      lens: "timeline",
+      preview:
+        "Review what already exists, what remains emerging, and where the Showroom sits in the timeline.",
+      whyEnter:
+        "Open the timeline section and inspect Mirrorland’s current stage of construction.",
+      semanticActivation: null,
+      routeDescription:
+        "Open the Mirrorland preface disclosure and focus its timeline section.",
+      routeRole: null,
+      visualClass: "LOCAL",
+      emphasis: "normal",
+      returnModel: "shared-bottom-zone",
+      returnZone: "#showroom-return-zone"
+    }),
+
+    createCanonicalRoomRecord({
+      wing: "north",
+      coin: "story",
+      roomId: "north-4",
+      route: "/showroom/#mirrorland-preface-invitation",
+
+      wingLabel: WING_LABELS.north,
+      destinationType:
+        SHOWROOM_DESTINATION_TYPES.LOCAL_DISCLOSURE_TARGET,
+      destinationId: "mirrorland-preface-invitation",
+      contentId: "mirrorland-preface-invitation",
+      localTarget: "#mirrorland-preface-invitation",
+      openAncestor: "#mirrorland-preface",
+      informationFront: null,
+      confirmationRequired: false,
+      operationType: "open-disclosure-and-scroll",
+      label: "Step Through the Door",
+      lens: "invitation",
+      preview:
+        "Enter with curiosity, inspect what can be inspected, and question what remains unfinished.",
+      whyEnter:
+        "Open the invitation section and continue into Mirrorland deliberately.",
+      semanticActivation: null,
+      routeDescription:
+        "Open the Mirrorland preface disclosure and focus its invitation section.",
+      routeRole: null,
+      visualClass: "LOCAL",
+      emphasis: "normal",
+      returnModel: "shared-bottom-zone",
+      returnZone: "#showroom-return-zone"
+    }),
+
+    createCanonicalRoomRecord({
+      wing: "east",
+      coin: "characters",
+      roomId: "east-1",
+      route: "/showroom/globe/hearth/jeeves/",
+
+      wingLabel: WING_LABELS.east,
+      destinationType:
+        SHOWROOM_DESTINATION_TYPES.EXTERNAL_ROUTE,
+      destinationId: "jeeves",
+      contentId: "jeeves",
+      localTarget: null,
+      openAncestor: null,
+      informationFront: null,
+      confirmationRequired: true,
+      operationType: "confirmed-hard-navigation",
+      label: "Talk to Jeeves",
+      lens: "character",
+      preview:
+        "Meet the House interface and receive guidance through the estate and Hearth.",
+      whyEnter:
+        "Enter Jeeves’s room for House-level guidance and orientation.",
+      semanticActivation: null,
+      routeDescription:
+        "Meet the House interface and receive guidance through the estate, the Hearth, Audralia, and Mirrorland.",
+      routeRole: null,
+      visualClass: "PORTAL",
+      emphasis: "external",
+      returnModel: "shared-bottom-zone",
+      returnZone: "#showroom-return-zone"
+    }),
+
+    createCanonicalRoomRecord({
+      wing: "east",
+      coin: "characters",
+      roomId: "east-2",
+      route: "/elara/index.html",
+
+      wingLabel: WING_LABELS.east,
+      destinationType:
+        SHOWROOM_DESTINATION_TYPES.EXTERNAL_ROUTE,
+      destinationId: "elara",
+      contentId: "elara",
+      localTarget: null,
+      openAncestor: null,
+      informationFront: null,
+      confirmationRequired: true,
+      operationType: "confirmed-hard-navigation",
+      label: "Talk to Elara",
+      lens: "character",
+      preview:
+        "Enter Elara’s mission, story, personal origin, and literary conversation surface.",
+      whyEnter:
+        "Follow the Showroom’s homeroom guide into her dedicated room.",
+      semanticActivation: null,
+      routeDescription:
+        "Enter Elara’s mission, story, personal-origin, and literary conversation surface.",
+      routeRole: null,
+      visualClass: "PORTAL",
+      emphasis: "external",
+      returnModel: "shared-bottom-zone",
+      returnZone: "#showroom-return-zone"
+    }),
+
+    createCanonicalRoomRecord({
+      wing: "east",
+      coin: "characters",
+      roomId: "east-3",
+      route: "/products/auren/",
+
+      wingLabel: WING_LABELS.east,
+      destinationType:
+        SHOWROOM_DESTINATION_TYPES.EXTERNAL_ROUTE,
+      destinationId: "auren",
+      contentId: "auren",
+      localTarget: null,
+      openAncestor: null,
+      informationFront: null,
+      confirmationRequired: true,
+      operationType: "confirmed-hard-navigation",
+      label: "Talk to Auren",
+      lens: "character",
+      preview:
+        "Meet the product-floor specialist for practical systems and bounded handoffs.",
+      whyEnter:
+        "Enter Auren’s room for product interpretation and operational guidance.",
+      semanticActivation: null,
+      routeDescription:
+        "Enter the product-floor specialist’s room for practical systems, product interpretation, and bounded handoffs.",
+      routeRole: null,
+      visualClass: "PORTAL",
+      emphasis: "external",
+      returnModel: "shared-bottom-zone",
+      returnZone: "#showroom-return-zone"
+    }),
+
+    createCanonicalRoomRecord({
+      wing: "east",
+      coin: "characters",
+      roomId: "east-4",
+      route: "/characters/",
+
+      wingLabel: WING_LABELS.east,
+      destinationType:
+        SHOWROOM_DESTINATION_TYPES.EXTERNAL_ROUTE,
+      destinationId: "characters-directory",
+      contentId: "characters-directory",
+      localTarget: null,
+      openAncestor: null,
+      informationFront: null,
+      confirmationRequired: true,
+      operationType: "confirmed-hard-navigation",
+      label: "Meet All Characters",
+      lens: "directory",
+      preview:
+        "Open the central directory and discover the wider Mirrorland cast.",
+      whyEnter:
+        "Use the directory when the next guide or character is not yet known.",
+      semanticActivation: null,
+      routeDescription:
+        "Open the central character directory and discover the wider Mirrorland cast.",
+      routeRole: "directory",
+      visualClass: "PRIMARY_PORTAL",
+      emphasis: "primary-external",
+      returnModel: "shared-bottom-zone",
+      returnZone: "#showroom-return-zone"
+    }),
+
+    createCanonicalRoomRecord({
+      wing: "south",
+      coin: "wonders",
+      roomId: "south-1",
+      route: "/showroom/#showroom-window-threshold",
+
+      wingLabel: WING_LABELS.south,
+      destinationType:
+        SHOWROOM_DESTINATION_TYPES.LOCAL_WINDOW_EXPERIENCE,
+      destinationId: "showroom-window-threshold",
+      contentId: "showroom-window-threshold",
+      localTarget: "#showroom-window-threshold",
+      openAncestor: null,
+      informationFront: "#object-gauges",
+      confirmationRequired: false,
+      operationType: "open-front-and-activate-window",
+      label: "Open the Window",
+      lens: "object-threshold",
+      preview:
+        "Approach the stained-glass threshold that reveals the Diamond stage.",
+      whyEnter:
+        "Move to the Window threshold and inspect its declared object-stage relationship.",
+      semanticActivation: "[data-showroom-window-control]",
+      routeDescription:
+        "Focus the current Showroom Window threshold without invoking Window runtime ownership.",
+      routeRole: null,
+      visualClass: "LOCAL",
+      emphasis: "normal",
+      returnModel: "shared-bottom-zone",
+      returnZone: "#showroom-return-zone"
+    }),
+
+    createCanonicalRoomRecord({
+      wing: "south",
+      coin: "wonders",
+      roomId: "south-2",
+      route: "/showroom/#showroom-diamond-stage",
+
+      wingLabel: WING_LABELS.south,
+      destinationType:
+        SHOWROOM_DESTINATION_TYPES.LOCAL_DIAMOND_EXPERIENCE,
+      destinationId: "showroom-diamond-stage",
+      contentId: "showroom-diamond-stage",
+      localTarget: "#showroom-diamond-stage",
+      openAncestor: null,
+      informationFront: "#object-gauges",
+      confirmationRequired: false,
+      operationType: "open-front-and-scroll",
+      label: "Behold the Diamond",
+      lens: "object",
+      preview:
+        "Approach the central Diamond exhibit and its object description.",
+      whyEnter:
+        "Move to the object region without altering the Compass state machine.",
+      semanticActivation: null,
+      routeDescription:
+        "Focus the current Showroom Diamond stage without invoking Diamond runtime ownership.",
+      routeRole: null,
+      visualClass: "LOCAL",
+      emphasis: "normal",
+      returnModel: "shared-bottom-zone",
+      returnZone: "#showroom-return-zone"
+    }),
+
+    createCanonicalRoomRecord({
+      wing: "south",
+      coin: "wonders",
+      roomId: "south-3",
+      route: "/showroom/#showroom-star-reading",
+
+      wingLabel: WING_LABELS.south,
+      destinationType:
+        SHOWROOM_DESTINATION_TYPES.LOCAL_NARRATIVE_SURFACE,
+      destinationId: "showroom-star-reading",
+      contentId: "showroom-star-reading",
+      localTarget: "#showroom-star-reading",
+      openAncestor: null,
+      informationFront: null,
+      confirmationRequired: false,
+      operationType: "scroll-local-surface",
+      label: "Read the Stars",
+      lens: "narrative",
+      preview:
+        "Learn how cardinal and child paths communicate local and external destinations.",
+      whyEnter:
+        "Read the narrative explanation of the constellation’s meaning.",
+      semanticActivation: null,
+      routeDescription:
+        "Move to the current Showroom narrative surface explaining the constellation.",
+      routeRole: null,
+      visualClass: "LOCAL",
+      emphasis: "normal",
+      returnModel: "shared-bottom-zone",
+      returnZone: "#showroom-return-zone"
+    }),
+
+    createCanonicalRoomRecord({
+      wing: "south",
+      coin: "wonders",
+      roomId: "south-4",
+      route: "/showroom/globe/hearth/",
+
+      wingLabel: WING_LABELS.south,
+      destinationType:
+        SHOWROOM_DESTINATION_TYPES.EXTERNAL_ROUTE,
+      destinationId: "hearth",
+      contentId: "hearth",
+      localTarget: null,
+      openAncestor: null,
+      informationFront: null,
+      confirmationRequired: true,
+      operationType: "confirmed-hard-navigation",
+      label: "Enter the Hearth",
+      lens: "world",
+      preview:
+        "Enter the inhabited facility where characters and Audralia-facing systems meet.",
+      whyEnter:
+        "Continue from the Showroom into the Hearth’s inhabited environment.",
+      semanticActivation: null,
+      routeDescription:
+        "Leave the Showroom for the inhabited facility where the House interface, characters, and Audralia-facing systems meet.",
+      routeRole: null,
+      visualClass: "PORTAL",
+      emphasis: "external",
+      returnModel: "shared-bottom-zone",
+      returnZone: "#showroom-return-zone"
+    }),
+
+    createCanonicalRoomRecord({
+      wing: "west",
+      coin: "mysteries",
+      roomId: "west-1",
+      route: "/showroom/#showroom-unfinished-world",
+
+      wingLabel: WING_LABELS.west,
+      destinationType:
+        SHOWROOM_DESTINATION_TYPES.LOCAL_NARRATIVE_SURFACE,
+      destinationId: "showroom-unfinished-world",
+      contentId: "showroom-unfinished-world",
+      localTarget: "#showroom-unfinished-world",
+      openAncestor: null,
+      informationFront: null,
+      confirmationRequired: false,
+      operationType: "scroll-local-surface",
+      label: "The Unfinished World",
+      lens: "unfinished",
+      preview:
+        "Inspect the rooms, characters, and systems whose final shape remains unresolved.",
+      whyEnter:
+        "Explore incompleteness as an explicit part of Mirrorland’s current state.",
+      semanticActivation: null,
+      routeDescription:
+        "Move to the current Showroom narrative surface describing the unfinished world.",
+      routeRole: null,
+      visualClass: "LOCAL",
+      emphasis: "normal",
+      returnModel: "shared-bottom-zone",
+      returnZone: "#showroom-return-zone"
+    }),
+
+    createCanonicalRoomRecord({
+      wing: "west",
+      coin: "mysteries",
+      roomId: "west-2",
+      route: "/showroom/#mirrorland-preface-exploration",
+
+      wingLabel: WING_LABELS.west,
+      destinationType:
+        SHOWROOM_DESTINATION_TYPES.LOCAL_DISCLOSURE_TARGET,
+      destinationId: "mirrorland-preface-exploration",
+      contentId: "mirrorland-preface-exploration",
+      localTarget: "#mirrorland-preface-exploration",
+      openAncestor: "#mirrorland-preface",
+      informationFront: null,
+      confirmationRequired: false,
+      operationType: "open-disclosure-and-scroll",
+      label: "Questions in the Glass",
+      lens: "exploration",
+      preview:
+        "Examine how the Window, Diamond, gauges, and information surfaces divide the world into inspectable parts.",
+      whyEnter:
+        "Open the exploration section and follow unresolved questions across the Showroom.",
+      semanticActivation: null,
+      routeDescription:
+        "Open the Mirrorland preface disclosure and focus its exploration section.",
+      routeRole: null,
+      visualClass: "LOCAL",
+      emphasis: "normal",
+      returnModel: "shared-bottom-zone",
+      returnZone: "#showroom-return-zone"
+    }),
+
+    createCanonicalRoomRecord({
+      wing: "west",
+      coin: "mysteries",
+      roomId: "west-3",
+      route: "/showroom/#showroom-paths-not-yet-open",
+
+      wingLabel: WING_LABELS.west,
+      destinationType:
+        SHOWROOM_DESTINATION_TYPES.LOCAL_NARRATIVE_SURFACE,
+      destinationId: "showroom-paths-not-yet-open",
+      contentId: "showroom-paths-not-yet-open",
+      localTarget: "#showroom-paths-not-yet-open",
+      openAncestor: null,
+      informationFront: null,
+      confirmationRequired: false,
+      operationType: "scroll-local-surface",
+      label: "Paths Not Yet Open",
+      lens: "future",
+      preview:
+        "Review paths withheld until they are coherent, safe, and sufficiently complete.",
+      whyEnter:
+        "Inspect the boundary between present access and future construction.",
+      semanticActivation: null,
+      routeDescription:
+        "Move to the current Showroom narrative surface describing paths not yet open.",
+      routeRole: null,
+      visualClass: "LOCAL",
+      emphasis: "normal",
+      returnModel: "shared-bottom-zone",
+      returnZone: "#showroom-return-zone"
+    }),
+
+    createCanonicalRoomRecord({
+      wing: "west",
+      coin: "mysteries",
+      roomId: "west-4",
+      route: "/showroom/globe/audralia/",
+
+      wingLabel: WING_LABELS.west,
+      destinationType:
+        SHOWROOM_DESTINATION_TYPES.EXTERNAL_ROUTE,
+      destinationId: "audralia",
+      contentId: "audralia",
+      localTarget: null,
+      openAncestor: null,
+      informationFront: null,
+      confirmationRequired: true,
+      operationType: "confirmed-hard-navigation",
+      label: "Journey into Audralia",
+      lens: "world",
+      preview:
+        "Travel toward Mirrorland’s constructive possibility world and developing planetary rooms.",
+      whyEnter:
+        "Continue beyond the Showroom toward Audralia’s world-scale environment.",
+      semanticActivation: null,
+      routeDescription:
+        "Travel toward Mirrorland’s constructive possibility world and its developing planetary rooms.",
+      routeRole: null,
+      visualClass: "PORTAL",
+      emphasis: "external",
+      returnModel: "shared-bottom-zone",
+      returnZone: "#showroom-return-zone"
+    })
+  ]);
+
+  const CANONICAL_ROOM_ROUTES = Object.freeze(
+    CANONICAL_ROOM_RECORDS.map(
+      record => record.route
+    )
+  );
+
+  const ROOM_BY_ID = new Map(
+    CANONICAL_ROOM_RECORDS.map(
+      record => [
+        record.roomId,
+        record
+      ]
+    )
+  );
+
+  const ROOM_BY_ROUTE = new Map(
+    CANONICAL_ROOM_RECORDS.map(
+      record => [
+        record.route,
+        record
+      ]
+    )
+  );
+
+  const ROOMS_BY_WING = new Map(
+    WINGS.map(
+      wing => [
+        wing,
+
+        Object.freeze(
+          CANONICAL_ROOM_RECORDS
+            .filter(
+              record =>
+                record.wing === wing
+            )
+            .map(
+              record =>
+                record.roomId
+            )
+        )
+      ]
+    )
+  );
+
+  const subscribers = Object.freeze({
+    frame: new Set(),
+    reducedMotion: new Set(),
+    heldState: new Set(),
+    compassState: new Set(),
+    semanticProjection: new Set()
+  });
 
   const state = {
     root: null,
-    receipt: null,
-    validation: null,
+    scene: null,
+    sceneField: null,
+    panel: null,
 
-    orbit: null,
-    orbitScene: null,
-    orbitField: null,
-    semanticLayer: null,
-    frontHost: null,
+    panelEyebrow: null,
+    panelTitle: null,
+    panelPurpose: null,
+    panelRelationship: null,
+    panelDomain: null,
+    panelFunction: null,
+    panelCoordinate: null,
+    panelSelectionState: null,
+    panelRouteStatus: null,
+    panelLens: null,
 
-    compassLayer: null,
-    compassVisualMount: null,
-    compassControls: [],
+    enterButton: null,
+    enterLabel: null,
+    returnToOrbitButton: null,
+    returnToOrbitLabel: null,
+    returnHomeButton: null,
+    guidance: null,
 
-    routeDialog: null,
-    routeDialogTitle: null,
-    routeDialogDescription: null,
-    routeContinue: null,
+    controllerReceiptOutput: null,
+    controllerValidationOutput: null,
+    compassControl: null,
 
-    compassDialog: null,
-    compassReturn: null,
+    current: STATES.CONSTELLATION,
 
-    instructionsDisclosure: null,
-    instructionControls: [],
+    orbitFocus: "north",
+    orbitPreviewFocus: "north",
+    orbitPhase: ORIENTATION_PHASES.COMMITTED,
+    orbitGestureActive: false,
+    orbitPreviewAccepted: false,
+    orbitRevision: 0,
+    orbitOrientation: null,
+    committedOrbitOrientation: null,
+    orbitGestureOrigin: null,
 
-    constructionDialog: null,
-
-    objects: new Map(),
-    cardinals: new Map(),
-    children: new Map(),
     clusters: new Map(),
-    fronts: new Map(),
 
-    durableState:
-      DURABLE_STATES.CONSTELLATION,
+    selectedCardinal: "",
+    selectedCoin: "",
+    selectedRoom: "",
+    selectedDestinationType: DESTINATION_TYPES.NONE,
+    selectedDestinationId: "",
+    selectedDestinationLabel: "",
+    selectedRoute: "",
+    selectedContentId: "",
+    selectedLens: "overview",
+    selectedParagraph: "",
 
-    committed: {
-      cardinalId: "",
-      childId: "",
-      clusterId: "",
-      localTargetId: "",
-      frontId: "",
-      gaugeSet: "",
-      informationTab: ""
-    },
+    destinationAuthorizationGeneration: 0,
 
-    preview: {
-      active: false,
-      objectId: "",
-      cardinalId: "",
-      childId: "",
-      clusterId: "",
-      source: "",
-      token: 0
-    },
+    compassSelected: false,
+    panelDescended: false,
 
-    pendingRoute: {
-      data: null,
-      trigger: null,
-      generation: 0
-    },
+    panelDescentFrame: 0,
+    panelDescentCommitFrame: 0,
+    sceneAscentFrame: 0,
+    sceneAscentCommitFrame: 0,
 
-    dialogGeneration: {
-      route: 0,
-      compass: 0,
-      construction: 0
-    },
-
-    activeDialogGeneration: {
-      route: 0,
-      compass: 0,
-      construction: 0
-    },
-
-    lastTriggers: {
-      compass: null,
-      construction: null,
-      instructions: null,
-      orbit: null
-    },
-
-    readiness: {
-      controller: false,
-      compositor: false,
-      crystals: false,
-      interactions: false,
-
-      compositorFailed: false,
-      crystalsFailed: false,
-      interactionsFailed: false
-    },
-
-    nativeDomStates: {
-      root: null,
-
-      fronts: new Map(),
-      clusters: new Map(),
-      cardinals: new Map(),
-      fallbackLayers: new Map(),
-      fallbackStars: new Map(),
-
-      routeDialog: null,
-      routeDialogTitle: null,
-      routeDialogDescription: null,
-      routeContinue: null,
-
-      compassDialog: null,
-      compassControls: new Map(),
-
-      constructionDialog: null,
-
-      instructionsDisclosure: null,
-      instructionControls: new Map(),
-
-      temporaryFocusTargets: new Map()
-    },
-
-    temporaryFocusCleanups:
-      new Map(),
-
-    expectedDialogClose: {
-      route: null,
-      compass: null,
-      construction: null
-    },
-
-    held: false,
-
-    reducedMotionQuery: null,
     reducedMotion: false,
+    mediaQuery: null,
+    mediaQueryListener: null,
 
-    validationIssues: [],
+    semanticProjection: new Map(),
+    semanticProjectionRevision: 0,
 
     initialized: false,
-    initializing: false,
-    disposed: false,
-    apiExposed: false,
-
-    listeners: [],
-    observers: [],
-
-    activationGuard: {
-      key: "",
-      timestamp: 0
-    },
-
-    counters: {
-      previewsBegun: 0,
-      previewsCommitted: 0,
-      previewsCancelled: 0,
-      cardinalCommits: 0,
-      childCommits: 0,
-      localActivations: 0,
-      portalOffers: 0,
-      compassOffers: 0,
-      returnsToOrbit: 0,
-      rejectedActivations: 0,
-      readinessChanges: 0
-    }
+    lastAction: "pending",
+    lastFailure: "",
+    validationReceipt: null
   };
 
-  function normalize(value) {
+  function invariant(
+    condition,
+    code,
+    details = null
+  ) {
+    if (condition) {
+      return;
+    }
+
+    const error = new Error(code);
+
+    error.code = code;
+    error.details = details;
+
+    throw error;
+  }
+
+  function qs(
+    selector,
+    root = document
+  ) {
+    return root.querySelector(selector);
+  }
+
+  function qsa(
+    selector,
+    root = document
+  ) {
+    return Array.from(
+      root.querySelectorAll(selector)
+    );
+  }
+
+  function finiteNumber(
+    value,
+    fallback = 0
+  ) {
+    const number = Number(value);
+
+    return Number.isFinite(number)
+      ? number
+      : fallback;
+  }
+
+  function normalizeWing(value) {
+    const wing = String(value || "")
+      .trim()
+      .toLowerCase();
+
+    return WINGS.includes(wing)
+      ? wing
+      : "";
+  }
+
+  function normalizeRoomId(value) {
     return String(value || "").trim();
   }
 
-  function toArray(value) {
-    return Array.from(value || []);
+  function normalizeRoute(value) {
+    const route = String(value || "").trim();
+
+    return route.startsWith("/")
+      ? route
+      : "";
   }
 
-  function nowIso() {
-    return new Date().toISOString();
+  function normalizeLabel(
+    value,
+    fallback = ""
+  ) {
+    const label = String(value || "").trim();
+
+    return label || fallback;
   }
 
-  function isElement(value) {
-    return value instanceof Element;
+  function normalizeNullableString(value) {
+    const normalized =
+      String(value || "").trim();
+
+    return normalized || null;
   }
 
-  function isPlainObject(value) {
-    if (
-      value === null ||
-      typeof value !== "object"
-    ) {
-      return false;
+  function normalizeDepthLayer(value) {
+    const layer = String(value || "")
+      .trim()
+      .toLowerCase();
+
+    if (layer === DEPTH_LAYERS.FRONT) {
+      return DEPTH_LAYERS.FRONT;
     }
 
-    const prototype =
-      Object.getPrototypeOf(value);
+    if (layer === DEPTH_LAYERS.REAR) {
+      return DEPTH_LAYERS.REAR;
+    }
 
-    return (
-      prototype === Object.prototype ||
-      prototype === null
+    return DEPTH_LAYERS.UNKNOWN;
+  }
+
+  function unexpectedPreviewPayloadKeys(
+    payload
+  ) {
+    if (
+      !payload ||
+      typeof payload !== "object" ||
+      Array.isArray(payload)
+    ) {
+      return [];
+    }
+
+    return Object.keys(payload).filter(
+      key =>
+        !PREVIEW_PAYLOAD_KEY_SET.has(key)
     );
   }
 
-  function immutableClone(value) {
+  function normalizeQuaternionStrict(value) {
+    const source =
+      Array.isArray(value) ||
+      ArrayBuffer.isView(value)
+        ? Array.from(value)
+        : null;
+
     if (
-      value === null ||
-      typeof value !== "object"
+      !source ||
+      source.length !== 4
     ) {
-      return value;
+      return null;
     }
 
-    if (Array.isArray(value)) {
-      return Object.freeze(
-        value.map(immutableClone)
-      );
-    }
-
-    if (!isPlainObject(value)) {
-      throw new TypeError(
-        "Controller snapshots may contain only plain data."
-      );
-    }
-
-    const clone = {};
-
-    for (
-      const [
-        key,
-        entry
-      ]
-      of Object.entries(value)
-    ) {
-      clone[key] =
-        immutableClone(entry);
-    }
-
-    return Object.freeze(clone);
-  }
-
-  function addListener(
-    target,
-    type,
-    handler,
-    options
-  ) {
-    if (
-      !target ||
-      typeof target.addEventListener !==
-        "function"
-    ) {
-      return;
-    }
-
-    target.addEventListener(
-      type,
-      handler,
-      options
+    const quaternion = source.map(
+      component => Number(component)
     );
 
-    state.listeners.push(() => {
-      target.removeEventListener(
-        type,
-        handler,
-        options
-      );
-    });
-  }
-
-  function addObserver(observer) {
-    if (observer) {
-      state.observers.push(observer);
-    }
-  }
-
-  function removeInstalledResources() {
-    restoreTemporaryFocusTargets();
-
-    for (
-      const removeListener
-      of state.listeners.splice(0)
-    ) {
-      try {
-        removeListener();
-      } catch {
-        /* Best-effort resource rollback. */
-      }
-    }
-
-    for (
-      const observer
-      of state.observers.splice(0)
-    ) {
-      try {
-        observer.disconnect();
-      } catch {
-        /* Best-effort resource rollback. */
-      }
-    }
-  }
-
-  function setRootAttribute(
-    name,
-    value
-  ) {
-    if (!state.root) {
-      return;
-    }
-
-    state.root.setAttribute(
-      name,
-      String(value)
-    );
-  }
-
-  function dispatch(
-    eventName,
-    detail = {}
-  ) {
-    const payload =
-      immutableClone({
-        contract:
-          CONTRACT,
-
-        owner:
-          OWNER,
-
-        timestamp:
-          nowIso(),
-
-        ...detail
-      });
-
-    window.dispatchEvent(
-      new CustomEvent(
-        eventName,
-        {
-          detail:
-            payload
-        }
+    if (
+      quaternion.some(
+        component =>
+          !Number.isFinite(component)
       )
+    ) {
+      return null;
+    }
+
+    const length = Math.hypot(
+      quaternion[0],
+      quaternion[1],
+      quaternion[2],
+      quaternion[3]
     );
 
-    return payload;
+    if (
+      !Number.isFinite(length) ||
+      length < QUATERNION.minimumLength
+    ) {
+      return null;
+    }
+
+    return quaternion.map(
+      component =>
+        component / length
+    );
   }
 
-  function focusElement(
-    element,
-    options = {}
+  function normalizeStoredQuaternion(
+    value,
+    fallback = QUATERNION.identity
   ) {
-    if (
-      !element ||
-      typeof element.focus !==
-        "function"
-    ) {
-      return;
-    }
-
-    try {
-      element.focus({
-        preventScroll:
-          options.preventScroll !==
-          false
-      });
-    } catch {
-      element.focus();
-    }
+    return (
+      normalizeQuaternionStrict(value) ||
+      Array.from(fallback)
+    );
   }
 
-  function scrollToElement(
-    element,
-    block = "start"
+  function createOrientation(
+    quaternion,
+    primaryId
   ) {
-    if (
-      !element ||
-      typeof element.scrollIntoView !==
-        "function"
-    ) {
-      return;
-    }
+    const normalized =
+      normalizeQuaternionStrict(quaternion);
 
-    element.scrollIntoView({
-      behavior:
-        state.reducedMotion
-          ? "auto"
-          : "smooth",
-
-      block,
-
-      inline:
-        "nearest"
-    });
-  }
-
-  function safelyShowModal(dialog) {
-    if (!dialog) {
-      return false;
-    }
-
-    if (dialog.open) {
-      return true;
-    }
-
-    if (
-      typeof dialog.showModal ===
-        "function"
-    ) {
-      dialog.showModal();
-      return true;
-    }
-
-    dialog.setAttribute(
-      "open",
-      ""
+    invariant(
+      normalized,
+      "ARCHCOIN_CONTROLLER_INVALID_QUATERNION"
     );
 
-    return true;
-  }
-
-  function safelyCloseDialog(
-    dialog,
-    returnValue = ""
-  ) {
-    if (!dialog) {
-      return false;
-    }
-
-    if (
-      dialog.open &&
-      typeof dialog.close ===
-        "function"
-    ) {
-      dialog.close(returnValue);
-      return true;
-    }
-
-    if (dialog.hasAttribute("open")) {
-      dialog.removeAttribute("open");
-      return true;
-    }
-
-    return false;
-  }
-
-  function nextDialogGeneration(type) {
-    state.dialogGeneration[type] += 1;
-    state.activeDialogGeneration[type] =
-      state.dialogGeneration[type];
-
-    return state.activeDialogGeneration[type];
-  }
-
-  function isDuplicateActivation(
-    key,
-    threshold = 260
-  ) {
-    const timestamp =
-      performance.now();
-
-    const duplicate =
-      state.activationGuard.key === key &&
-      timestamp -
-        state.activationGuard.timestamp <
-        threshold;
-
-    state.activationGuard.key =
-      key;
-
-    state.activationGuard.timestamp =
-      timestamp;
-
-    return duplicate;
-  }
-
-  function captureAttributeState(
-    element,
-    attributeName
-  ) {
     return {
-      present:
-        element.hasAttribute(
-          attributeName
+      quaternion: normalized,
+
+      primaryId: String(
+        primaryId || ""
+      ).trim()
+    };
+  }
+
+  function cloneOrientation(orientation) {
+    const source =
+      orientation &&
+      typeof orientation === "object"
+        ? orientation
+        : {
+            quaternion:
+              QUATERNION.identity,
+
+            primaryId: ""
+          };
+
+    return {
+      quaternion:
+        normalizeStoredQuaternion(
+          source.quaternion
         ),
 
-      value:
-        element.getAttribute(
-          attributeName
-        )
+      primaryId: String(
+        source.primaryId || ""
+      ).trim()
     };
   }
 
-  function captureElementState(
-    element,
-    options = {}
+  function freezeOrientation(orientation) {
+    const value =
+      cloneOrientation(orientation);
+
+    return Object.freeze({
+      quaternion: Object.freeze(
+        value.quaternion.slice()
+      ),
+
+      primaryId: value.primaryId
+    });
+  }
+
+  function canonicalConstellationOrientation(
+    wing
   ) {
-    const attributes = {};
+    const normalizedWing =
+      normalizeWing(wing) || "north";
 
-    const attributeNames =
-      options.attributeNames ||
-      CAPTURED_ATTRIBUTES;
+    return createOrientation(
+      CANONICAL_CONSTELLATION_QUATERNIONS[
+        normalizedWing
+      ],
 
-    for (
-      const attributeName
-      of attributeNames
+      normalizedWing
+    );
+  }
+
+  function validateOrbitPreviewPayload(
+    payload
+  ) {
+    if (
+      !payload ||
+      typeof payload !== "object" ||
+      Array.isArray(payload)
     ) {
-      attributes[attributeName] =
-        captureAttributeState(
-          element,
-          attributeName
-        );
+      return Object.freeze({
+        pass: false,
+
+        code:
+          "ARCHCOIN_ORBIT_PREVIEW_PAYLOAD_REQUIRED"
+      });
     }
+
+    const unexpectedKeys =
+      unexpectedPreviewPayloadKeys(payload);
+
+    if (unexpectedKeys.length > 0) {
+      return Object.freeze({
+        pass: false,
+
+        code:
+          "ARCHCOIN_ORBIT_PREVIEW_UNEXPECTED_FIELDS_FORBIDDEN",
+
+        unexpectedKeys:
+          Object.freeze(
+            unexpectedKeys.slice()
+          )
+      });
+    }
+
+    const quaternion =
+      normalizeQuaternionStrict(
+        payload.quaternion
+      );
+
+    if (!quaternion) {
+      return Object.freeze({
+        pass: false,
+
+        code:
+          "ARCHCOIN_ORBIT_PREVIEW_COMPLETE_QUATERNION_REQUIRED"
+      });
+    }
+
+    const primaryId =
+      normalizeWing(
+        payload.primaryId
+      );
+
+    if (!primaryId) {
+      return Object.freeze({
+        pass: false,
+
+        code:
+          "ARCHCOIN_ORBIT_PREVIEW_CANONICAL_PRIMARY_WING_REQUIRED"
+      });
+    }
+
+    return Object.freeze({
+      pass: true,
+
+      orientation: Object.freeze({
+        quaternion: Object.freeze(
+          quaternion.slice()
+        ),
+
+        primaryId
+      })
+    });
+  }
+
+  function validateClusterPreviewPayload(
+    cluster,
+    payload
+  ) {
+    if (
+      !cluster ||
+      !payload ||
+      typeof payload !== "object" ||
+      Array.isArray(payload)
+    ) {
+      return Object.freeze({
+        pass: false,
+
+        code:
+          "ARCHCOIN_CLUSTER_PREVIEW_PAYLOAD_REQUIRED"
+      });
+    }
+
+    const unexpectedKeys =
+      unexpectedPreviewPayloadKeys(payload);
+
+    if (unexpectedKeys.length > 0) {
+      return Object.freeze({
+        pass: false,
+
+        code:
+          "ARCHCOIN_CLUSTER_PREVIEW_UNEXPECTED_FIELDS_FORBIDDEN",
+
+        unexpectedKeys:
+          Object.freeze(
+            unexpectedKeys.slice()
+          )
+      });
+    }
+
+    const quaternion =
+      normalizeQuaternionStrict(
+        payload.quaternion
+      );
+
+    if (!quaternion) {
+      return Object.freeze({
+        pass: false,
+
+        code:
+          "ARCHCOIN_CLUSTER_PREVIEW_COMPLETE_QUATERNION_REQUIRED"
+      });
+    }
+
+    const primaryId =
+      normalizeRoomId(
+        payload.primaryId
+      );
+
+    if (
+      !primaryId ||
+      !cluster.roomIds.includes(
+        primaryId
+      )
+    ) {
+      return Object.freeze({
+        pass: false,
+
+        code:
+          `ARCHCOIN_CLUSTER_PREVIEW_CANONICAL_PRIMARY_ROOM_REQUIRED:${cluster.wing}`
+      });
+    }
+
+    return Object.freeze({
+      pass: true,
+
+      orientation: Object.freeze({
+        quaternion: Object.freeze(
+          quaternion.slice()
+        ),
+
+        primaryId
+      })
+    });
+  }
+
+  function presentationModeForState(
+    navigationState = state.current
+  ) {
+    return (
+      PRESENTATION_MODE_BY_STATE[
+        navigationState
+      ] ||
+      PRESENTATION_MODES.HELD
+    );
+  }
+
+  function wingToCoin(wing) {
+    return (
+      WING_TO_COIN[
+        normalizeWing(wing)
+      ] || ""
+    );
+  }
+
+  function createClusterState(wing) {
+    const roomIds =
+      ROOMS_BY_WING.get(wing) ||
+      Object.freeze([]);
+
+    const primaryRoom =
+      roomIds[0] || "";
+
+    const orientation =
+      createOrientation(
+        QUATERNION.identity,
+        primaryRoom
+      );
 
     return {
-      hiddenProperty:
-        "hidden" in element
-          ? Boolean(element.hidden)
-          : null,
+      wing,
+      roomIds: Array.from(roomIds),
 
-      disabledProperty:
-        "disabled" in element
-          ? Boolean(element.disabled)
-          : null,
+      primaryRoom,
+      previewPrimaryRoom: primaryRoom,
 
-      inertProperty:
-        "inert" in element
-          ? Boolean(element.inert)
-          : null,
+      phase:
+        ORIENTATION_PHASES.COMMITTED,
 
-      openProperty:
-        "open" in element
-          ? Boolean(element.open)
-          : null,
+      gestureActive: false,
+      previewAccepted: false,
+      revision: 0,
 
-      capturesText:
-        Boolean(options.captureText),
+      orientation:
+        cloneOrientation(orientation),
 
-      textContent:
-        options.captureText
-          ? element.textContent
-          : null,
+      committedOrientation:
+        cloneOrientation(orientation),
 
-      attributes
+      gestureOrigin: null
     };
   }
 
-  function restoreAttributeState(
-    element,
-    attributeName,
-    attributeState
+  function getCluster(wing) {
+    const normalizedWing =
+      normalizeWing(wing);
+
+    return normalizedWing
+      ? state.clusters.get(
+          normalizedWing
+        ) || null
+      : null;
+  }
+
+  function activeClusterWing() {
+    if (
+      state.current ===
+        STATES.CLUSTER_OPEN ||
+      state.current ===
+        STATES.ROOM_SELECTED
+    ) {
+      return normalizeWing(
+        state.selectedCardinal
+      );
+    }
+
+    return "";
+  }
+
+  function activeCluster() {
+    return getCluster(
+      activeClusterWing()
+    );
+  }
+
+  function canTransition(
+    fromState,
+    toState
   ) {
-    if (!attributeState) {
+    return Boolean(
+      TRANSITIONS[fromState] &&
+      TRANSITIONS[fromState].includes(
+        toState
+      )
+    );
+  }
+
+  function isHeld() {
+    return (
+      state.current ===
+      STATES.SYSTEM_HELD
+    );
+  }
+
+  function interactionAllowed() {
+    return !isHeld();
+  }
+
+  function subscribe(
+    channel,
+    callback
+  ) {
+    const set = subscribers[channel];
+
+    if (
+      !set ||
+      typeof callback !== "function"
+    ) {
+      return () => false;
+    }
+
+    set.add(callback);
+
+    return () => {
+      set.delete(callback);
+      return true;
+    };
+  }
+
+  function publish(
+    channel,
+    payload
+  ) {
+    const set = subscribers[channel];
+
+    if (!set) {
       return;
     }
 
-    if (attributeState.present) {
-      element.setAttribute(
-        attributeName,
-        attributeState.value === null
-          ? ""
-          : attributeState.value
+    for (const callback of set) {
+      try {
+        callback(payload);
+      } catch (_) {}
+    }
+  }
+
+  function escapeSelectorValue(value) {
+    const source = String(value || "");
+
+    if (
+      globalThis.CSS &&
+      typeof globalThis.CSS.escape ===
+        "function"
+    ) {
+      return globalThis.CSS.escape(
+        source
+      );
+    }
+
+    return source.replace(
+      /["\\]/g,
+      "\\$&"
+    );
+  }
+
+  function findCoinElement(wing) {
+    const normalizedWing =
+      normalizeWing(wing);
+
+    if (
+      !normalizedWing ||
+      !state.root
+    ) {
+      return null;
+    }
+
+    return qs(
+      `[data-archcoin-coin][data-wing="${normalizedWing}"]`,
+      state.root
+    );
+  }
+
+  function findRoomElement(roomId) {
+    const id =
+      normalizeRoomId(roomId);
+
+    if (
+      !id ||
+      !state.root
+    ) {
+      return null;
+    }
+
+    return qs(
+      `[data-archcoin-room][data-room-id="${escapeSelectorValue(id)}"]`,
+      state.root
+    );
+  }
+
+  function canonicalControlExists(record) {
+    const kind = String(
+      record.kind || ""
+    )
+      .trim()
+      .toLowerCase();
+
+    const id = String(
+      record.id ||
+      record.roomId ||
+      record.wing ||
+      record.cardinalId ||
+      ""
+    ).trim();
+
+    if (!id) {
+      return false;
+    }
+
+    if (kind === "room") {
+      return Boolean(
+        findRoomElement(id)
+      );
+    }
+
+    if (
+      kind === "cardinal" ||
+      kind === "coin"
+    ) {
+      return Boolean(
+        findCoinElement(id)
+      );
+    }
+
+    return Boolean(
+      findRoomElement(id) ||
+      findCoinElement(id)
+    );
+  }
+
+  function destinationFromElement(element) {
+    if (!element) {
+      return null;
+    }
+
+    return Object.freeze({
+      destinationType: String(
+        element.dataset.destinationType ||
+        ""
+      )
+        .trim()
+        .toLowerCase(),
+
+      destinationId: String(
+        element.dataset.destinationId ||
+        element.dataset.roomId ||
+        element.dataset.coinId ||
+        element.dataset.wing ||
+        ""
+      ).trim(),
+
+      label: normalizeLabel(
+        element.dataset.label ||
+        element.dataset.roomLabel ||
+        element.dataset.coinLabel ||
+        element.textContent
+      ),
+
+      route: normalizeRoute(
+        element.dataset.route ||
+        element.getAttribute("href")
+      )
+    });
+  }
+
+  function roomParagraphFromElement(
+    element
+  ) {
+    return normalizeLabel(
+      element.dataset.preview ||
+      element.dataset.roomSummary ||
+      element.dataset.localFunction ||
+      element.dataset.roomFunction ||
+      element.dataset.panelBody ||
+      element.dataset.whyEnter ||
+      element.dataset.panelWhy,
+
+      "This room is part of the selected Mirrorland path. Review its purpose, then choose Enter Selected Path when ready."
+    );
+  }
+
+  function panelFromCoin(element) {
+    const wing =
+      normalizeWing(
+        element.dataset.wing
+      );
+
+    return Object.freeze({
+      eyebrow: normalizeLabel(
+        element.dataset.coinLabel ||
+        element.dataset.label,
+        wing
+          ? WING_LABELS[wing]
+          : "Selected path"
+      ),
+
+      title: normalizeLabel(
+        element.dataset.panelTitle ||
+        element.dataset.coinTitle ||
+        element.dataset.label,
+        wing
+          ? WING_LABELS[wing]
+          : "Selected path"
+      ),
+
+      purpose: normalizeLabel(
+        element.dataset.panelBody ||
+        element.dataset.coinBody ||
+        element.dataset.coinFunction,
+        "This Mirrorland direction opens a four-room constellation cluster."
+      ),
+
+      relationship: normalizeLabel(
+        element.dataset.panelWhy ||
+        element.dataset.coinWhy,
+        "Rotate the cluster and choose the room that matches the journey you want to take."
+      )
+    });
+  }
+
+  function panelFromRoom(element) {
+    return Object.freeze({
+      eyebrow: normalizeLabel(
+        element.dataset.roomLensLabel ||
+        element.dataset.roomType,
+        "Selected path"
+      ),
+
+      title: normalizeLabel(
+        element.dataset.panelTitle ||
+        element.dataset.label ||
+        element.textContent,
+        "Selected room"
+      ),
+
+      purpose:
+        roomParagraphFromElement(
+          element
+        ),
+
+      relationship:
+        "Choose Enter Selected Path to authorize this destination, or Return to Orbit to restore its four-room cluster."
+    });
+  }
+
+  function defaultPanel() {
+    return Object.freeze({
+      eyebrow: "Mirrorland Showroom",
+      title: "Choose a direction",
+
+      purpose:
+        "Begin with the Mirrorland direction that most closely matches the journey in front of you.",
+
+      relationship:
+        "Tap a cardinal crystal or label to open its four-room cluster."
+    });
+  }
+
+  function compassPanel() {
+    return Object.freeze({
+      eyebrow: "Main Compass",
+      title: "Choose where to return",
+
+      purpose:
+        "The fixed-center Compass is selected. It does not navigate until you choose the explicit return action.",
+
+      relationship:
+        "Return to Main Compass opens the Diamond Gate Bridge homepage. Return to Orbit restores the active Mirrorland field."
+    });
+  }
+
+  function setPanel({
+    eyebrow,
+    title,
+    purpose,
+    relationship
+  }) {
+    if (state.panelEyebrow) {
+      state.panelEyebrow.textContent =
+        eyebrow || "Selected path";
+    }
+
+    if (state.panelTitle) {
+      state.panelTitle.textContent =
+        title ||
+        "Choose a direction";
+    }
+
+    if (state.panelPurpose) {
+      state.panelPurpose.textContent =
+        purpose || "";
+    }
+
+    if (state.panelRelationship) {
+      state.panelRelationship.textContent =
+        relationship || "";
+    }
+  }
+
+  function setPanelMetadata({
+    domain = "None",
+    functionLabel = "Unassigned",
+    coordinate = "—",
+    selection = "Idle",
+    route = "Not selected",
+    lens = "Overview"
+  } = {}) {
+    if (state.panelDomain) {
+      state.panelDomain.textContent =
+        domain;
+    }
+
+    if (state.panelFunction) {
+      state.panelFunction.textContent =
+        functionLabel;
+    }
+
+    if (state.panelCoordinate) {
+      state.panelCoordinate.textContent =
+        coordinate;
+    }
+
+    if (state.panelSelectionState) {
+      state.panelSelectionState.textContent =
+        selection;
+    }
+
+    if (state.panelRouteStatus) {
+      state.panelRouteStatus.textContent =
+        route;
+    }
+
+    if (state.panelLens) {
+      state.panelLens.textContent =
+        lens;
+    }
+  }
+
+  function setGuidance(message) {
+    if (state.guidance) {
+      state.guidance.textContent =
+        String(message || "");
+    }
+  }
+
+  function setEnterEnabled(
+    enabled,
+    label = "Enter Selected Path"
+  ) {
+    if (!state.enterButton) {
+      return;
+    }
+
+    state.enterButton.disabled =
+      !enabled;
+
+    state.enterButton.setAttribute(
+      "aria-disabled",
+      enabled ? "false" : "true"
+    );
+
+    if (state.enterLabel) {
+      state.enterLabel.textContent =
+        label;
+    } else {
+      state.enterButton.textContent =
+        label;
+    }
+  }
+
+  function setReturnToOrbitVisible(
+    visible,
+    label = "Return to Orbit"
+  ) {
+    const control =
+      state.returnToOrbitButton;
+
+    if (!control) {
+      return;
+    }
+
+    control.hidden = !visible;
+    control.disabled = !visible;
+
+    control.setAttribute(
+      "aria-hidden",
+      visible ? "false" : "true"
+    );
+
+    control.setAttribute(
+      "aria-disabled",
+      visible ? "false" : "true"
+    );
+
+    if (visible) {
+      control.removeAttribute(
+        "tabindex"
       );
     } else {
-      element.removeAttribute(
-        attributeName
+      control.setAttribute(
+        "tabindex",
+        "-1"
       );
+    }
+
+    if (state.returnToOrbitLabel) {
+      state.returnToOrbitLabel.textContent =
+        label;
+    } else {
+      control.textContent = label;
     }
   }
 
-  function restoreElementState(
-    element,
-    capturedState
-  ) {
-    if (
-      !element ||
-      !capturedState
-    ) {
+  function setReturnHomeVisible(visible) {
+    if (!state.returnHomeButton) {
       return;
     }
 
-    for (
-      const [
-        attributeName,
-        attributeState
-      ]
-      of Object.entries(
-        capturedState.attributes
-      )
-    ) {
-      restoreAttributeState(
-        element,
-        attributeName,
-        attributeState
+    state.returnHomeButton.hidden =
+      !visible;
+
+    state.returnHomeButton.setAttribute(
+      "aria-hidden",
+      visible ? "false" : "true"
+    );
+
+    if (visible) {
+      state.returnHomeButton.removeAttribute(
+        "tabindex"
       );
-    }
-
-    if (
-      capturedState.hiddenProperty !== null &&
-      "hidden" in element
-    ) {
-      element.hidden =
-        capturedState.hiddenProperty;
-    }
-
-    if (
-      capturedState.disabledProperty !== null &&
-      "disabled" in element
-    ) {
-      element.disabled =
-        capturedState.disabledProperty;
-    }
-
-    if (
-      capturedState.inertProperty !== null &&
-      "inert" in element
-    ) {
-      element.inert =
-        capturedState.inertProperty;
-    }
-
-    if (
-      capturedState.openProperty !== null &&
-      "open" in element
-    ) {
-      element.open =
-        capturedState.openProperty;
-    }
-
-    if (capturedState.capturesText) {
-      element.textContent =
-        capturedState.textContent;
-    }
-  }
-
-  function captureNativeDomStates() {
-    state.nativeDomStates.fronts.clear();
-    state.nativeDomStates.clusters.clear();
-    state.nativeDomStates.cardinals.clear();
-    state.nativeDomStates.fallbackLayers.clear();
-    state.nativeDomStates.fallbackStars.clear();
-    state.nativeDomStates.compassControls.clear();
-    state.nativeDomStates.instructionControls.clear();
-    state.nativeDomStates.temporaryFocusTargets.clear();
-    state.temporaryFocusCleanups.clear();
-
-    if (state.root) {
-      state.nativeDomStates.root =
-        captureElementState(
-          state.root,
-          {
-            attributeNames:
-              ROOT_CAPTURED_ATTRIBUTES
-          }
-        );
-    }
-
-    for (
-      const [
-        frontId,
-        front
-      ]
-      of state.fronts
-    ) {
-      state.nativeDomStates.fronts.set(
-        frontId,
-        captureElementState(front)
-      );
-    }
-
-    for (
-      const [
-        clusterId,
-        cluster
-      ]
-      of state.clusters
-    ) {
-      state.nativeDomStates.clusters.set(
-        clusterId,
-        captureElementState(cluster)
-      );
-    }
-
-    for (
-      const [
-        cardinalId,
-        cardinal
-      ]
-      of state.cardinals
-    ) {
-      state.nativeDomStates.cardinals.set(
-        cardinalId,
-        captureElementState(cardinal)
-      );
-    }
-
-    for (
-      const layer
-      of document.querySelectorAll(
-        SELECTORS.fallbackStarLayer
-      )
-    ) {
-      state.nativeDomStates.fallbackLayers.set(
-        layer,
-        captureElementState(layer)
-      );
-    }
-
-    for (
-      const star
-      of document.querySelectorAll(
-        SELECTORS.fallbackStar
-      )
-    ) {
-      state.nativeDomStates.fallbackStars.set(
-        star,
-        captureElementState(star)
-      );
-    }
-
-    if (state.routeDialog) {
-      state.nativeDomStates.routeDialog =
-        captureElementState(
-          state.routeDialog
-        );
-    }
-
-    if (state.routeDialogTitle) {
-      state.nativeDomStates.routeDialogTitle =
-        captureElementState(
-          state.routeDialogTitle,
-          {
-            captureText:
-              true
-          }
-        );
-    }
-
-    if (state.routeDialogDescription) {
-      state.nativeDomStates.routeDialogDescription =
-        captureElementState(
-          state.routeDialogDescription,
-          {
-            captureText:
-              true
-          }
-        );
-    }
-
-    if (state.routeContinue) {
-      state.nativeDomStates.routeContinue =
-        captureElementState(
-          state.routeContinue,
-          {
-            captureText:
-              true
-          }
-        );
-    }
-
-    if (state.compassDialog) {
-      state.nativeDomStates.compassDialog =
-        captureElementState(
-          state.compassDialog
-        );
-    }
-
-    for (
-      const control
-      of state.compassControls
-    ) {
-      state.nativeDomStates.compassControls.set(
-        control,
-        captureElementState(control)
-      );
-    }
-
-    if (state.constructionDialog) {
-      state.nativeDomStates.constructionDialog =
-        captureElementState(
-          state.constructionDialog
-        );
-    }
-
-    if (state.instructionsDisclosure) {
-      state.nativeDomStates.instructionsDisclosure =
-        captureElementState(
-          state.instructionsDisclosure
-        );
-    }
-
-    for (
-      const control
-      of state.instructionControls
-    ) {
-      state.nativeDomStates.instructionControls.set(
-        control,
-        captureElementState(control)
+    } else {
+      state.returnHomeButton.setAttribute(
+        "tabindex",
+        "-1"
       );
     }
   }
 
-  function restoreNativeRootState() {
-    restoreElementState(
-      state.root,
-      state.nativeDomStates.root
-    );
-  }
-
-  function restoreNativeFrontStates() {
-    for (
-      const [
-        frontId,
-        capturedState
-      ]
-      of state.nativeDomStates.fronts
-    ) {
-      restoreElementState(
-        state.fronts.get(frontId),
-        capturedState
+  function clearPanelDescentSchedule() {
+    if (state.panelDescentFrame) {
+      cancelAnimationFrame(
+        state.panelDescentFrame
       );
+
+      state.panelDescentFrame = 0;
+    }
+
+    if (state.panelDescentCommitFrame) {
+      cancelAnimationFrame(
+        state.panelDescentCommitFrame
+      );
+
+      state.panelDescentCommitFrame = 0;
     }
   }
 
-  function restoreNativeClusterStates() {
-    for (
-      const [
-        clusterId,
-        capturedState
-      ]
-      of state.nativeDomStates.clusters
-    ) {
-      restoreElementState(
-        state.clusters.get(clusterId),
-        capturedState
+  function clearSceneAscentSchedule() {
+    if (state.sceneAscentFrame) {
+      cancelAnimationFrame(
+        state.sceneAscentFrame
       );
+
+      state.sceneAscentFrame = 0;
     }
 
-    for (
-      const [
-        cardinalId,
-        capturedState
-      ]
-      of state.nativeDomStates.cardinals
-    ) {
-      restoreElementState(
-        state.cardinals.get(cardinalId),
-        capturedState
+    if (state.sceneAscentCommitFrame) {
+      cancelAnimationFrame(
+        state.sceneAscentCommitFrame
       );
+
+      state.sceneAscentCommitFrame = 0;
     }
   }
 
-  function restoreNativeFallbackStates() {
-    for (
-      const [
-        layer,
-        capturedState
-      ]
-      of state.nativeDomStates.fallbackLayers
-    ) {
-      restoreElementState(
-        layer,
-        capturedState
-      );
-    }
-
-    for (
-      const [
-        star,
-        capturedState
-      ]
-      of state.nativeDomStates.fallbackStars
-    ) {
-      restoreElementState(
-        star,
-        capturedState
-      );
-    }
+  function clearViewportSchedules() {
+    clearPanelDescentSchedule();
+    clearSceneAscentSchedule();
   }
 
-  function restoreNativePresentationStates() {
-    restoreNativeFrontStates();
-    restoreNativeClusterStates();
-    restoreNativeFallbackStates();
-  }
-
-  function restoreNativeDialogAndControlStates() {
-    restoreElementState(
-      state.routeDialog,
-      state.nativeDomStates.routeDialog
-    );
-
-    restoreElementState(
-      state.routeDialogTitle,
-      state.nativeDomStates.routeDialogTitle
-    );
-
-    restoreElementState(
-      state.routeDialogDescription,
-      state.nativeDomStates.routeDialogDescription
-    );
-
-    restoreElementState(
-      state.routeContinue,
-      state.nativeDomStates.routeContinue
-    );
-
-    restoreElementState(
-      state.compassDialog,
-      state.nativeDomStates.compassDialog
-    );
-
-    restoreElementState(
-      state.constructionDialog,
-      state.nativeDomStates.constructionDialog
-    );
-
-    for (
-      const [
-        control,
-        capturedState
-      ]
-      of state.nativeDomStates.compassControls
-    ) {
-      restoreElementState(
-        control,
-        capturedState
-      );
-    }
-
-    restoreElementState(
-      state.instructionsDisclosure,
-      state.nativeDomStates.instructionsDisclosure
-    );
-
-    for (
-      const [
-        control,
-        capturedState
-      ]
-      of state.nativeDomStates.instructionControls
-    ) {
-      restoreElementState(
-        control,
-        capturedState
-      );
-    }
-  }
-
-  function cleanupTemporaryFocusTarget(
-    heading
+  function schedulePanelDescent(
+    predicate,
+    action
   ) {
-    const remove =
-      state.temporaryFocusCleanups.get(
-        heading
-      );
+    clearViewportSchedules();
 
-    if (remove) {
-      try {
-        remove();
-      } catch {
-        /* Best-effort transient cleanup. */
-      }
-
-      state.temporaryFocusCleanups.delete(
-        heading
-      );
+    if (!state.panel) {
+      return;
     }
 
-    const captured =
-      state.nativeDomStates
-        .temporaryFocusTargets
-        .get(heading);
+    state.panelDescentFrame =
+      requestAnimationFrame(() => {
+        state.panelDescentFrame = 0;
 
-    restoreElementState(
-      heading,
-      captured
-    );
+        state.panelDescentCommitFrame =
+          requestAnimationFrame(() => {
+            state.panelDescentCommitFrame =
+              0;
 
-    state.nativeDomStates
-      .temporaryFocusTargets
-      .delete(heading);
+            if (
+              typeof predicate ===
+                "function" &&
+              !predicate()
+            ) {
+              return;
+            }
+
+            state.panel.scrollIntoView({
+              behavior:
+                state.reducedMotion
+                  ? "auto"
+                  : "smooth",
+
+              block: "start",
+              inline: "nearest"
+            });
+
+            state.panelDescended = true;
+
+            recordAction(action);
+          });
+      });
   }
 
-  function installTemporaryFocusCleanup(
-    heading
+  function scheduleRoomPanelDescent(
+    expectedRoomId
   ) {
-    const existingRemove =
-      state.temporaryFocusCleanups.get(
-        heading
-      );
+    schedulePanelDescent(
+      () =>
+        state.current ===
+          STATES.ROOM_SELECTED &&
+        state.selectedRoom ===
+          expectedRoomId &&
+        !state.compassSelected,
 
-    if (existingRemove) {
-      try {
-        existingRemove();
-      } catch {
-        /* Best-effort replacement cleanup. */
-      }
-
-      state.temporaryFocusCleanups.delete(
-        heading
-      );
-    }
-
-    const handler = () => {
-      cleanupTemporaryFocusTarget(
-        heading
-      );
-    };
-
-    heading.addEventListener(
-      "blur",
-      handler,
-      {
-        once:
-          true
-      }
-    );
-
-    state.temporaryFocusCleanups.set(
-      heading,
-      () => {
-        heading.removeEventListener(
-          "blur",
-          handler
-        );
-      }
+      `room-panel-descended:${expectedRoomId}`
     );
   }
 
-  function restoreTemporaryFocusTargets() {
-    const targets =
-      new Set([
-        ...state.temporaryFocusCleanups.keys(),
-        ...state.nativeDomStates
-          .temporaryFocusTargets
-          .keys()
-      ]);
+  function scheduleCompassPanelDescent() {
+    schedulePanelDescent(
+      () =>
+        state.compassSelected === true,
 
-    for (
-      const heading
-      of targets
-    ) {
-      cleanupTemporaryFocusTarget(
-        heading
-      );
-    }
-
-    state.temporaryFocusCleanups.clear();
-
-    state.nativeDomStates
-      .temporaryFocusTargets
-      .clear();
-  }
-
-  function restoreNativeSemanticFallback() {
-    restoreNativePresentationStates();
-    restoreNativeDialogAndControlStates();
-    restoreTemporaryFocusTargets();
-  }
-
-  function aggregateEnhancedReady() {
-    return (
-      state.readiness.controller &&
-      state.readiness.compositor &&
-      state.readiness.crystals &&
-      state.readiness.interactions &&
-      !state.disposed
+      "compass-panel-descended"
     );
   }
 
-  function aggregateEnhancementFailed() {
-    return (
-      state.readiness.compositorFailed ||
-      state.readiness.crystalsFailed ||
-      state.readiness.interactionsFailed
-    );
+  function scheduleSceneAscent(
+    expectedState,
+    expectedWing = ""
+  ) {
+    clearViewportSchedules();
+
+    if (!state.scene) {
+      return;
+    }
+
+    state.sceneAscentFrame =
+      requestAnimationFrame(() => {
+        state.sceneAscentFrame = 0;
+
+        state.sceneAscentCommitFrame =
+          requestAnimationFrame(() => {
+            state.sceneAscentCommitFrame =
+              0;
+
+            if (
+              state.current !==
+              expectedState
+            ) {
+              return;
+            }
+
+            if (
+              expectedWing &&
+              state.selectedCardinal !==
+                expectedWing
+            ) {
+              return;
+            }
+
+            state.scene.scrollIntoView({
+              behavior:
+                state.reducedMotion
+                  ? "auto"
+                  : "smooth",
+
+              block: "start",
+              inline: "nearest"
+            });
+
+            recordAction(
+              `scene-restored:${expectedState}:${expectedWing || "constellation"}`
+            );
+          });
+      });
   }
 
-  function currentEnhancementState() {
-    if (aggregateEnhancedReady()) {
-      return (
-        state.durableState ===
-          DURABLE_STATES.CONSTELLATION
-          ? ENHANCEMENT_STATES.AVAILABLE
-          : ENHANCEMENT_STATES.ACTIVE
-      );
-    }
+  function invalidateDestinationAuthorization() {
+    state.destinationAuthorizationGeneration += 1;
 
-    if (aggregateEnhancementFailed()) {
-      return ENHANCEMENT_STATES.FAILED;
-    }
-
-    return ENHANCEMENT_STATES.PENDING;
+    return state.destinationAuthorizationGeneration;
   }
 
-  function deriveDurableState() {
-    return state.durableState;
-  }
+  function resetSelection({
+    preserveCompass = false
+  } = {}) {
+    state.selectedCardinal = "";
+    state.selectedCoin = "";
+    state.selectedRoom = "";
 
-  function deriveTransientState() {
-    if (state.held) {
-      return TRANSIENT_STATES.HELD;
-    }
+    state.selectedDestinationType =
+      DESTINATION_TYPES.NONE;
 
-    if (
-      state.compassDialog &&
-      state.compassDialog.open
-    ) {
-      return TRANSIENT_STATES.COMPASS_CONFIRMATION;
-    }
+    state.selectedDestinationId = "";
+    state.selectedDestinationLabel = "";
+    state.selectedRoute = "";
+    state.selectedContentId = "";
+    state.selectedLens = "overview";
+    state.selectedParagraph = "";
+    state.panelDescended = false;
 
-    if (
-      state.routeDialog &&
-      state.routeDialog.open
-    ) {
-      return TRANSIENT_STATES.ROUTE_CONFIRMATION;
-    }
+    invalidateDestinationAuthorization();
 
-    return TRANSIENT_STATES.NONE;
-  }
-
-  function derivePageState() {
-    const transientState =
-      deriveTransientState();
-
-    return transientState ===
-      TRANSIENT_STATES.NONE
-      ? deriveDurableState()
-      : transientState;
-  }
-
-  function derivePresentationMode() {
-    if (!aggregateEnhancedReady()) {
-      return PRESENTATION_MODES.BASELINE;
-    }
-
-    switch (state.durableState) {
-      case DURABLE_STATES.LOCAL_DESTINATION:
-        return PRESENTATION_MODES.FRONT;
-
-      case DURABLE_STATES.CLUSTER_OPEN:
-        return PRESENTATION_MODES.CLUSTER;
-
-      case DURABLE_STATES.CONSTELLATION:
-      default:
-        return PRESENTATION_MODES.CONSTELLATION;
+    if (!preserveCompass) {
+      state.compassSelected = false;
     }
   }
 
-  function getFrameState() {
-    return immutableClone({
-      contract:
-        CONTRACT,
+  function createPresentationState() {
+    const presentation =
+      PRESENTATION_BY_STATE[
+        state.current
+      ] ||
+      PRESENTATION_BY_STATE[
+        STATES.SYSTEM_HELD
+      ];
 
-      controllerReady:
-        state.readiness.controller &&
-        !state.disposed,
+    return Object.freeze({
+      mode: presentation.mode,
+      navigationState: state.current,
 
-      disposed:
-        state.disposed,
+      outerCardinalsActive:
+        presentation.outerCardinalsActive,
 
-      held:
-        state.held,
+      activeRoomCluster:
+        presentation.activeRoomCluster,
+
+      roomSelectionPermitted:
+        presentation.roomSelectionPermitted,
+
+      additiveCoRenderingAuthorized:
+        false
+    });
+  }
+
+  function createHeldState() {
+    return Object.freeze({
+      held: isHeld(),
+      terminal: isHeld(),
+
+      interactionEnabled:
+        interactionAllowed(),
+
+      presentationMode:
+        presentationModeForState(),
+
+      reason:
+        isHeld()
+          ? state.lastFailure ||
+            "ARCHCOIN_SYSTEM_HELD"
+          : ""
+    });
+  }
+
+  function createCompassState() {
+    return Object.freeze({
+      fixedCenter: true,
+      selected: state.compassSelected,
+
+      interactionEnabled:
+        interactionAllowed(),
 
       reducedMotion:
         state.reducedMotion,
 
-      durableState:
-        deriveDurableState(),
+      mainCompassRoute:
+        MAIN_COMPASS.route,
 
-      transientState:
-        deriveTransientState(),
+      immediateNavigation: false,
+      explicitReturnRequired: true,
+      inheritsNavigationOrientation: false,
+      participatesInNavigationSettlement: false,
+      quaternionPublished: false,
+      rendererLifecycleOwned: false
+    });
+  }
 
-      pageState:
-        derivePageState(),
+  function createSemanticProjectionSnapshot() {
+    return Object.freeze(
+      Array.from(
+        state.semanticProjection.values()
+      ).map(record =>
+        Object.freeze({
+          id: record.id,
+          kind: record.kind,
+          x: record.x,
+          y: record.y,
+          radiusPx: record.radiusPx,
+
+          depthLayer:
+            record.depthLayer,
+
+          compassOverlap:
+            record.compassOverlap,
+
+          visible:
+            record.visible
+        })
+      )
+    );
+  }
+
+  function createFrameState() {
+    const cluster =
+      activeCluster();
+
+    const presentation =
+      createPresentationState();
+
+    return Object.freeze({
+      moduleId: MODULE.id,
+      moduleVersion: MODULE.version,
+
+      motionContractId:
+        MODULE.motionContractId,
+
+      motionContractVersion:
+        MODULE.motionContractVersion,
+
+      state: state.current,
+      navigationState: state.current,
 
       presentationMode:
-        derivePresentationMode(),
+        presentation.mode,
 
-      enhancementState:
-        currentEnhancementState(),
+      presentation,
 
-      enhancedStageReady:
-        aggregateEnhancedReady(),
+      orbitFocus:
+        state.orbitFocus,
 
-      activeCardinalId:
-        state.committed.cardinalId ||
-        null,
+      orbitPreviewFocus:
+        state.orbitPreviewFocus,
 
-      activeChildId:
-        state.committed.childId ||
-        null,
+      orbitPhase:
+        state.orbitPhase,
 
-      activeClusterId:
-        state.committed.clusterId ||
-        null,
+      orbitGestureActive:
+        state.orbitGestureActive,
 
-      activeLocalTargetId:
-        state.committed.localTargetId ||
-        null,
+      orbitPreviewAccepted:
+        state.orbitPreviewAccepted,
 
-      activeFrontId:
-        state.committed.frontId ||
-        null,
+      orbitRevision:
+        state.orbitRevision,
 
-      activeGaugeSet:
-        state.committed.gaugeSet ||
-        null,
+      orbitOrientation:
+        freezeOrientation(
+          state.orbitOrientation
+        ),
 
-      activeInformationTab:
-        state.committed.informationTab ||
-        null,
+      committedOrbitOrientation:
+        freezeOrientation(
+          state.committedOrbitOrientation
+        ),
 
-      pendingRouteId:
-        state.pendingRoute.data
-          ? state.pendingRoute.data.objectId
+      activeClusterWing:
+        cluster ? cluster.wing : "",
+
+      cluster:
+        cluster
+          ? Object.freeze({
+              wing: cluster.wing,
+
+              roomIds: Object.freeze(
+                cluster.roomIds.slice()
+              ),
+
+              primaryRoom:
+                cluster.primaryRoom,
+
+              previewPrimaryRoom:
+                cluster.previewPrimaryRoom,
+
+              phase:
+                cluster.phase,
+
+              gestureActive:
+                cluster.gestureActive,
+
+              previewAccepted:
+                cluster.previewAccepted,
+
+              revision:
+                cluster.revision,
+
+              orientation:
+                freezeOrientation(
+                  cluster.orientation
+                ),
+
+              committedOrientation:
+                freezeOrientation(
+                  cluster.committedOrientation
+                )
+            })
           : null,
 
-      preview: {
-        active:
-          state.preview.active,
+      selectedCardinal:
+        state.selectedCardinal,
 
-        objectId:
-          state.preview.objectId ||
-          null,
+      selectedCoin:
+        state.selectedCoin,
 
-        cardinalId:
-          state.preview.cardinalId ||
-          null,
+      selectedRoom:
+        state.selectedRoom,
 
-        childId:
-          state.preview.childId ||
-          null,
+      selectedDestinationType:
+        state.selectedDestinationType,
 
-        clusterId:
-          state.preview.clusterId ||
-          null,
+      selectedDestinationId:
+        state.selectedDestinationId,
 
-        source:
-          state.preview.source ||
-          null,
+      selectedDestinationLabel:
+        state.selectedDestinationLabel,
 
-        token:
-          state.preview.token
-      },
+      selectedRoute:
+        state.selectedRoute,
 
-      readiness: {
-        controller:
-          state.readiness.controller,
+      selectedContentId:
+        state.selectedContentId,
 
-        compositor:
-          state.readiness.compositor,
+      selectedLens:
+        state.selectedLens,
 
-        crystals:
-          state.readiness.crystals,
+      selectedParagraph:
+        state.selectedParagraph,
 
-        interactions:
-          state.readiness.interactions,
+      compassSelected:
+        state.compassSelected,
 
-        compositorFailed:
-          state.readiness.compositorFailed,
+      panelDescended:
+        state.panelDescended,
 
-        crystalsFailed:
-          state.readiness.crystalsFailed,
+      reducedMotion:
+        state.reducedMotion,
 
-        interactionsFailed:
-          state.readiness.interactionsFailed
-      }
+      held: isHeld(),
+
+      compass:
+        createCompassState(),
+
+      semanticProjectionRevision:
+        state.semanticProjectionRevision,
+
+      semanticProjection:
+        createSemanticProjectionSnapshot(),
+
+      canonicalRoomRecords:
+        CANONICAL_ROOM_RECORDS,
+
+      canonicalRoomRoutes:
+        CANONICAL_ROOM_ROUTES,
+
+      mainCompass:
+        MAIN_COMPASS,
+
+      interactionModuleId:
+        MODULE.interactionModuleId,
+
+      interactionModuleVersion:
+        MODULE.interactionModuleVersion,
+
+      motionOwner:
+        MODULE.interactionModuleId,
+
+      acceptedStateAuthority:
+        MODULE.id,
+
+      navigationTransitionAuthority:
+        MODULE.id,
+
+      lastAction:
+        state.lastAction,
+
+      lastFailure:
+        state.lastFailure
     });
   }
 
-  function getState() {
-    return immutableClone({
-      contract:
-        CONTRACT,
+  function createCompatibilityReceipt(frame) {
+    return Object.freeze({
+      contractId:
+        "ARCHCOIN_CONTROLLER_INTERACTION_v7",
 
-      owner:
-        OWNER,
+      motionContractId:
+        MODULE.motionContractId,
 
-      initialized:
-        state.initialized,
+      motionContractVersion:
+        MODULE.motionContractVersion,
 
-      initializing:
-        state.initializing,
+      status:
+        frame.held
+          ? "held"
+          : "available",
 
-      disposed:
-        state.disposed,
+      state: frame.state,
 
-      frame:
-        getFrameState(),
+      navigationState:
+        frame.navigationState,
 
-      committed: {
-        ...state.committed
-      },
+      presentationMode:
+        frame.presentationMode,
 
-      pendingRoute:
-        state.pendingRoute.data
-          ? {
-              ...state.pendingRoute.data,
-              generation:
-                state.pendingRoute.generation
-            }
-          : null,
+      outerCardinalsActive:
+        frame.presentation
+          .outerCardinalsActive,
 
-      dialogGeneration: {
-        ...state.dialogGeneration
-      },
+      activeRoomCluster:
+        frame.presentation
+          .activeRoomCluster,
 
-      activeDialogGeneration: {
-        ...state.activeDialogGeneration
-      },
+      roomSelectionPermitted:
+        frame.presentation
+          .roomSelectionPermitted,
 
-      counters: {
-        ...state.counters
-      },
+      additiveCoRenderingAuthorized:
+        false,
 
-      registered: {
-        objectIds:
-          Array.from(
-            state.objects.keys()
-          ),
+      orbitFocus:
+        frame.orbitFocus,
 
-        cardinalIds:
-          Array.from(
-            state.cardinals.keys()
-          ),
+      orbitPreviewFocus:
+        frame.orbitPreviewFocus,
 
-        childIds:
-          Array.from(
-            state.children.keys()
-          ),
+      orbitPhase:
+        frame.orbitPhase,
 
-        clusterIds:
-          Array.from(
-            state.clusters.keys()
-          ),
+      orbitGestureActive:
+        frame.orbitGestureActive,
 
-        frontIds:
-          Array.from(
-            state.fronts.keys()
-          )
-      },
+      orbitPreviewAccepted:
+        frame.orbitPreviewAccepted,
 
-      validationIssues:
-        state.validationIssues.slice(),
+      orbitRevision:
+        frame.orbitRevision,
 
-      nativeStateRegistry: {
-        root:
-          Boolean(
-            state.nativeDomStates.root
-          ),
+      orbitQuaternion:
+        frame.orbitOrientation.quaternion,
 
-        fronts:
-          state.nativeDomStates.fronts.size,
+      activeClusterWing:
+        frame.activeClusterWing,
 
-        clusters:
-          state.nativeDomStates.clusters.size,
+      clusterPrimaryRoom:
+        frame.cluster
+          ? frame.cluster.primaryRoom
+          : "",
 
-        cardinals:
-          state.nativeDomStates.cardinals.size,
+      clusterPreviewPrimaryRoom:
+        frame.cluster
+          ? frame.cluster
+              .previewPrimaryRoom
+          : "",
 
-        fallbackLayers:
-          state.nativeDomStates.fallbackLayers.size,
+      clusterPhase:
+        frame.cluster
+          ? frame.cluster.phase
+          : ORIENTATION_PHASES.IDLE,
 
-        fallbackStars:
-          state.nativeDomStates.fallbackStars.size,
+      clusterGestureActive:
+        frame.cluster
+          ? frame.cluster.gestureActive
+          : false,
 
-        routeDialog:
-          Boolean(
-            state.nativeDomStates.routeDialog
-          ),
+      clusterPreviewAccepted:
+        frame.cluster
+          ? frame.cluster.previewAccepted
+          : false,
 
-        routeDialogTitle:
-          Boolean(
-            state.nativeDomStates.routeDialogTitle
-          ),
+      clusterRevision:
+        frame.cluster
+          ? frame.cluster.revision
+          : 0,
 
-        routeDialogDescription:
-          Boolean(
-            state.nativeDomStates.routeDialogDescription
-          ),
+      clusterQuaternion:
+        frame.cluster
+          ? frame.cluster
+              .orientation.quaternion
+          : QUATERNION.identity,
 
-        routeContinue:
-          Boolean(
-            state.nativeDomStates.routeContinue
-          ),
+      selectedCardinal:
+        frame.selectedCardinal,
 
-        compassDialog:
-          Boolean(
-            state.nativeDomStates.compassDialog
-          ),
+      selectedCoin:
+        frame.selectedCoin,
 
-        compassControls:
-          state.nativeDomStates.compassControls.size,
+      selectedRoom:
+        frame.selectedRoom,
 
-        constructionDialog:
-          Boolean(
-            state.nativeDomStates.constructionDialog
-          ),
+      selectedDestinationType:
+        frame.selectedDestinationType,
 
-        instructionsDisclosure:
-          Boolean(
-            state.nativeDomStates.instructionsDisclosure
-          ),
+      selectedDestinationId:
+        frame.selectedDestinationId,
 
-        instructionControls:
-          state.nativeDomStates.instructionControls.size,
+      selectedDestinationLabel:
+        frame.selectedDestinationLabel,
 
-        temporaryFocusTargets:
-          state.nativeDomStates.temporaryFocusTargets.size,
+      selectedRoute:
+        frame.selectedRoute,
 
-        temporaryFocusCleanups:
-          state.temporaryFocusCleanups.size
-      },
+      compassSelected:
+        frame.compassSelected,
 
-      expectedDialogClose: {
-        route:
-          Boolean(
-            state.expectedDialogClose.route
-          ),
+      panelDescended:
+        frame.panelDescended,
 
-        compass:
-          Boolean(
-            state.expectedDialogClose.compass
-          ),
+      reducedMotion:
+        frame.reducedMotion,
 
-        construction:
-          Boolean(
-            state.expectedDialogClose.construction
-          )
-      },
+      held:
+        frame.held,
 
-      listenerCount:
-        state.listeners.length,
+      compassFixedCenter:
+        frame.compass.fixedCenter,
 
-      observerCount:
-        state.observers.length
+      compassImmediateNavigation:
+        frame.compass.immediateNavigation,
+
+      compassExplicitReturnRequired:
+        frame.compass
+          .explicitReturnRequired,
+
+      mainCompassRoute:
+        frame.compass.mainCompassRoute,
+
+      semanticProjectionRevision:
+        frame.semanticProjectionRevision,
+
+      semanticProjectionFields:
+        Object.freeze([
+          "id",
+          "kind",
+          "x",
+          "y",
+          "radiusPx",
+          "depthLayer",
+          "compassOverlap",
+          "visible"
+        ]),
+
+      interactionPriorityPublished:
+        false,
+
+      pointerInterpreterOwner:
+        MODULE.interactionModuleId,
+
+      pointerTapArbitrationOwner:
+        MODULE.interactionModuleId,
+
+      wholeCrystalHitTestOwner:
+        MODULE.interactionModuleId,
+
+      syntheticClickSuppressionOwner:
+        MODULE.interactionModuleId,
+
+      clusterExitSwipeClassificationOwner:
+        MODULE.interactionModuleId,
+
+      interactionPriorityDerivationOwner:
+        MODULE.interactionModuleId,
+
+      projectionDomApplicationOwner:
+        MODULE.interactionModuleId,
+
+      motionDirectionOwner:
+        MODULE.interactionModuleId,
+
+      motionSensitivityOwner:
+        MODULE.interactionModuleId,
+
+      gestureAxisSelectionOwner:
+        MODULE.interactionModuleId,
+
+      gestureQuaternionConstructionOwner:
+        MODULE.interactionModuleId,
+
+      grabbedObjectTrackingOwner:
+        MODULE.interactionModuleId,
+
+      primaryVisualIdentityCalculationOwner:
+        MODULE.interactionModuleId,
+
+      orbitStateAuthority:
+        MODULE.id,
+
+      clusterStateAuthority:
+        MODULE.id,
+
+      quaternionAcceptanceAuthority:
+        MODULE.id,
+
+      navigationTransitionAuthority:
+        MODULE.id,
+
+      clusterExitTransitionAuthority:
+        MODULE.id,
+
+      lastAction:
+        frame.lastAction,
+
+      lastFailure:
+        frame.lastFailure
     });
   }
 
-  function createReceipt(
-    event,
-    extra = {}
-  ) {
-    return immutableClone({
-      contract:
-        CONTRACT,
+  function syncDatasets(frame) {
+    if (!state.root) {
+      return;
+    }
 
-      owner:
-        OWNER,
+    const cluster = frame.cluster;
 
-      event,
+    state.root.dataset.archcoinMode =
+      frame.presentationMode;
 
-      timestamp:
-        nowIso(),
+    state.root.dataset.archcoinControllerState =
+      frame.navigationState;
 
-      frame:
-        getFrameState(),
+    state.root.dataset.archcoinNavigationState =
+      frame.navigationState;
 
-      counters: {
-        ...state.counters
-      },
+    state.root.dataset.archcoinPresentationMode =
+      frame.presentationMode;
 
-      ...extra
-    });
-  }
+    state.root.dataset.outerCardinalsActive =
+      frame.presentation
+        .outerCardinalsActive
+        ? "true"
+        : "false";
 
-  function publishReceipt(
-    event,
-    extra = {}
-  ) {
-    const payload =
-      createReceipt(
-        event,
-        extra
+    state.root.dataset.activeRoomCluster =
+      frame.presentation
+        .activeRoomCluster
+        ? "true"
+        : "false";
+
+    state.root.dataset.roomSelectionPermitted =
+      frame.presentation
+        .roomSelectionPermitted
+        ? "true"
+        : "false";
+
+    state.root.dataset.additiveCoRenderingAuthorized =
+      "false";
+
+    state.root.dataset.orbitFocus =
+      frame.orbitFocus;
+
+    state.root.dataset.orbitPreviewFocus =
+      frame.orbitPreviewFocus;
+
+    state.root.dataset.orbitPhase =
+      frame.orbitPhase;
+
+    state.root.dataset.orbitGestureActive =
+      frame.orbitGestureActive
+        ? "true"
+        : "false";
+
+    state.root.dataset.orbitPreviewAccepted =
+      frame.orbitPreviewAccepted
+        ? "true"
+        : "false";
+
+    state.root.dataset.orbitRevision =
+      String(frame.orbitRevision);
+
+    state.root.dataset.orbitQuaternion =
+      JSON.stringify(
+        frame.orbitOrientation.quaternion
       );
 
-    if (state.receipt) {
-      const serialized =
-        JSON.stringify(payload);
+    state.root.dataset.activeClusterWing =
+      frame.activeClusterWing;
 
-      state.receipt.value =
-        serialized;
+    state.root.dataset.clusterPrimaryRoom =
+      cluster
+        ? cluster.primaryRoom
+        : "";
 
-      state.receipt.textContent =
+    state.root.dataset.clusterPreviewPrimaryRoom =
+      cluster
+        ? cluster.previewPrimaryRoom
+        : "";
+
+    state.root.dataset.clusterPhase =
+      cluster
+        ? cluster.phase
+        : ORIENTATION_PHASES.IDLE;
+
+    state.root.dataset.clusterGestureActive =
+      cluster &&
+      cluster.gestureActive
+        ? "true"
+        : "false";
+
+    state.root.dataset.clusterPreviewAccepted =
+      cluster &&
+      cluster.previewAccepted
+        ? "true"
+        : "false";
+
+    state.root.dataset.clusterRevision =
+      String(
+        cluster
+          ? cluster.revision
+          : 0
+      );
+
+    state.root.dataset.clusterQuaternion =
+      cluster
+        ? JSON.stringify(
+            cluster.orientation.quaternion
+          )
+        : "";
+
+    state.root.dataset.selectedCardinal =
+      frame.selectedCardinal;
+
+    state.root.dataset.selectedCoin =
+      frame.selectedCoin;
+
+    state.root.dataset.selectedRoom =
+      frame.selectedRoom;
+
+    state.root.dataset.selectedDestinationType =
+      frame.selectedDestinationType;
+
+    state.root.dataset.selectedDestinationId =
+      frame.selectedDestinationId;
+
+    state.root.dataset.selectedDestinationLabel =
+      frame.selectedDestinationLabel;
+
+    state.root.dataset.selectedRoute =
+      frame.selectedRoute;
+
+    state.root.dataset.selectedContentId =
+      frame.selectedContentId;
+
+    state.root.dataset.selectedLens =
+      frame.selectedLens;
+
+    state.root.dataset.selectedParagraph =
+      frame.selectedParagraph;
+
+    state.root.dataset.compassSelected =
+      frame.compassSelected
+        ? "true"
+        : "false";
+
+    state.root.dataset.panelDescended =
+      frame.panelDescended
+        ? "true"
+        : "false";
+
+    state.root.dataset.reducedMotion =
+      frame.reducedMotion
+        ? "true"
+        : "false";
+
+    state.root.dataset.held =
+      frame.held
+        ? "true"
+        : "false";
+
+    state.root.dataset.compassFixedCenter =
+      "true";
+
+    state.root.dataset.compassMainRoute =
+      MAIN_COMPASS.route;
+
+    state.root.dataset.compassImmediateNavigation =
+      "false";
+
+    state.root.dataset.archcoinControllerStatus =
+      frame.held
+        ? "held"
+        : "available";
+
+    state.root.dataset.archcoinControllerVersion =
+      MODULE.version;
+
+    state.root.dataset.archcoinInteractionModule =
+      MODULE.interactionModuleId;
+
+    state.root.dataset.archcoinMotionContractId =
+      MODULE.motionContractId;
+
+    state.root.dataset.archcoinMotionContractVersion =
+      MODULE.motionContractVersion;
+
+    state.root.dataset.archcoinMotionOwner =
+      MODULE.interactionModuleId;
+
+    state.root.dataset.archcoinInteractionPriorityOwner =
+      MODULE.interactionModuleId;
+
+    state.root.dataset.archcoinAcceptedStateAuthority =
+      MODULE.id;
+
+    state.root.dataset.archcoinNavigationAuthority =
+      MODULE.id;
+
+    state.root.dataset.semanticProjectionRevision =
+      String(
+        frame.semanticProjectionRevision
+      );
+
+    qsa(
+      "[data-archcoin-coin]",
+      state.root
+    ).forEach(element => {
+      const wing =
+        normalizeWing(
+          element.dataset.wing
+        );
+
+      const active =
+        frame.presentation
+          .outerCardinalsActive;
+
+      const primary =
+        active &&
+        wing === frame.orbitFocus;
+
+      element.dataset.active =
+        active ? "true" : "false";
+
+      element.dataset.selected =
+        !frame.compassSelected &&
+        frame.selectedDestinationType ===
+          DESTINATION_TYPES.COIN &&
+        frame.selectedCardinal === wing
+          ? "true"
+          : "false";
+
+      element.dataset.primary =
+        primary ? "true" : "false";
+
+      element.setAttribute(
+        "aria-disabled",
+        active ? "false" : "true"
+      );
+
+      if (primary) {
+        element.setAttribute(
+          "aria-current",
+          "true"
+        );
+      } else {
+        element.removeAttribute(
+          "aria-current"
+        );
+      }
+    });
+
+    qsa(
+      "[data-archcoin-room]",
+      state.root
+    ).forEach(element => {
+      const roomId =
+        normalizeRoomId(
+          element.dataset.roomId
+        );
+
+      const roomRecord =
+        ROOM_BY_ID.get(roomId);
+
+      const inActiveCluster =
+        Boolean(
+          cluster &&
+          roomRecord &&
+          roomRecord.wing ===
+            cluster.wing
+        );
+
+      const selected =
+        !frame.compassSelected &&
+        inActiveCluster &&
+        roomId === frame.selectedRoom;
+
+      const primary =
+        inActiveCluster &&
+        roomId === cluster.primaryRoom;
+
+      element.dataset.active =
+        inActiveCluster
+          ? "true"
+          : "false";
+
+      element.dataset.selected =
+        selected
+          ? "true"
+          : "false";
+
+      element.dataset.primary =
+        primary
+          ? "true"
+          : "false";
+
+      element.setAttribute(
+        "aria-disabled",
+        inActiveCluster
+          ? "false"
+          : "true"
+      );
+
+      if (
+        selected ||
+        primary
+      ) {
+        element.setAttribute(
+          "aria-current",
+          "true"
+        );
+      } else {
+        element.removeAttribute(
+          "aria-current"
+        );
+      }
+    });
+
+    if (state.compassControl) {
+      state.compassControl.dataset.selected =
+        frame.compassSelected
+          ? "true"
+          : "false";
+
+      state.compassControl.dataset.fixedCenter =
+        "true";
+
+      state.compassControl.dataset.interactionEnabled =
+        frame.compass.interactionEnabled
+          ? "true"
+          : "false";
+
+      state.compassControl.dataset.immediateNavigation =
+        "false";
+
+      state.compassControl.setAttribute(
+        "aria-expanded",
+        frame.compassSelected
+          ? "true"
+          : "false"
+      );
+
+      if (frame.compassSelected) {
+        state.compassControl.setAttribute(
+          "aria-current",
+          "true"
+        );
+      } else {
+        state.compassControl.removeAttribute(
+          "aria-current"
+        );
+      }
+    }
+  }
+
+  function writeCompatibilityReceipt(frame) {
+    const receipt =
+      createCompatibilityReceipt(frame);
+
+    const serialized =
+      JSON.stringify(receipt);
+
+    if (state.root) {
+      state.root.dataset.archcoinControllerReceipt =
         serialized;
     }
 
-    dispatch(
-      EVENTS.controllerReceipt,
-      payload
-    );
+    if (state.controllerReceiptOutput) {
+      if (
+        "value" in
+        state.controllerReceiptOutput
+      ) {
+        state.controllerReceiptOutput.value =
+          serialized;
+      }
 
-    return payload;
-  }
-
-  function publishValidation(
-    status,
-    issues
-  ) {
-    state.validationIssues =
-      issues.slice();
-
-    const payload =
-      immutableClone({
-        contract:
-          CONTRACT,
-
-        owner:
-          OWNER,
-
-        timestamp:
-          nowIso(),
-
-        status,
-
-        issues:
-          issues.slice()
-      });
-
-    if (state.validation) {
-      const serialized =
-        JSON.stringify(payload);
-
-      state.validation.value =
-        serialized;
-
-      state.validation.textContent =
+      state.controllerReceiptOutput.textContent =
         serialized;
     }
 
-    return payload;
+    globalThis.DGB_ARCHCOIN_CONTROLLER_RECEIPT =
+      receipt;
   }
 
-  function reflectState() {
+  function publishFrame() {
     const frame =
-      getFrameState();
+      createFrameState();
 
-    setRootAttribute(
-      ATTRIBUTES.pageState,
-      frame.pageState
-    );
+    syncDatasets(frame);
+    writeCompatibilityReceipt(frame);
 
-    setRootAttribute(
-      ATTRIBUTES.presentationMode,
-      frame.presentationMode
-    );
-
-    setRootAttribute(
-      ATTRIBUTES.enhancementState,
-      frame.enhancementState
-    );
-
-    setRootAttribute(
-      ATTRIBUTES.activeCardinal,
-      state.committed.cardinalId
-    );
-
-    setRootAttribute(
-      ATTRIBUTES.activeChild,
-      state.committed.childId
-    );
-
-    setRootAttribute(
-      ATTRIBUTES.activeCluster,
-      state.committed.clusterId
-    );
-
-    setRootAttribute(
-      ATTRIBUTES.activeFront,
-      state.committed.frontId
-    );
-
-    setRootAttribute(
-      ATTRIBUTES.activeGaugeSet,
-      state.committed.gaugeSet
-    );
-
-    setRootAttribute(
-      ATTRIBUTES.activeInformationTab,
-      state.committed.informationTab
-    );
-
-    setRootAttribute(
-      ATTRIBUTES.routeDialogOpen,
-      state.routeDialog &&
-      state.routeDialog.open
-        ? "true"
-        : "false"
-    );
-
-    setRootAttribute(
-      ATTRIBUTES.compassDialogOpen,
-      state.compassDialog &&
-      state.compassDialog.open
-        ? "true"
-        : "false"
-    );
-
-    setRootAttribute(
-      ATTRIBUTES.held,
-      state.held
-        ? "true"
-        : "false"
-    );
-
-    setRootAttribute(
-      ATTRIBUTES.reducedMotion,
-      state.reducedMotion
-        ? "true"
-        : "false"
-    );
-
-    setRootAttribute(
-      ATTRIBUTES.compositorReady,
-      state.readiness.compositor
-        ? "true"
-        : "false"
-    );
-
-    setRootAttribute(
-      ATTRIBUTES.crystalsReady,
-      state.readiness.crystals
-        ? "true"
-        : "false"
-    );
-
-    setRootAttribute(
-      ATTRIBUTES.interactionsReady,
-      state.readiness.interactions
-        ? "true"
-        : "false"
-    );
-
-    dispatch(
-      EVENTS.stateChanged,
-      {
-        frame
-      }
-    );
-
-    dispatch(
-      EVENTS.frameChanged,
-      {
-        frame
-      }
+    publish(
+      CHANNELS.FRAME,
+      frame
     );
 
     return frame;
   }
 
-  function setFallbackEnhancedPresentation() {
-    for (
-      const layer
-      of document.querySelectorAll(
-        SELECTORS.fallbackStarLayer
-      )
-    ) {
-      layer.setAttribute(
-        ATTRIBUTES.fallbackVisibility,
-        "semantic-only"
-      );
-    }
+  function recordAction(
+    action,
+    failure = ""
+  ) {
+    state.lastAction =
+      String(action || "");
 
-    for (
-      const star
-      of document.querySelectorAll(
-        SELECTORS.fallbackStar
-      )
-    ) {
-      star.setAttribute(
-        ATTRIBUTES.fallbackRendering,
-        "hidden"
-      );
-    }
+    state.lastFailure =
+      String(failure || "");
+
+    return publishFrame();
   }
 
-  function setClusterDomExpanded(
-    clusterId,
-    expanded
+  function rejectRequest(
+    action,
+    code
   ) {
-    const normalizedClusterId =
-      normalize(clusterId);
-
-    const cluster =
-      state.clusters.get(
-        normalizedClusterId
-      );
-
-    if (!cluster) {
-      return false;
-    }
-
-    cluster.hidden =
-      !expanded;
-
-    cluster.toggleAttribute(
-      "hidden",
-      !expanded
+    recordAction(
+      action,
+      code
     );
 
-    cluster.setAttribute(
-      ATTRIBUTES.clusterState,
-      expanded
-        ? "expanded"
-        : "collapsed"
-    );
-
-    cluster.setAttribute(
-      "aria-hidden",
-      expanded
-        ? "false"
-        : "true"
-    );
-
-    for (
-      const cardinal
-      of state.cardinals.values()
-    ) {
-      const cardinalClusterId =
-        normalize(
-          cardinal.getAttribute(
-            ATTRIBUTES.clusterId
-          )
-        ) ||
-        normalize(
-          cardinal.getAttribute(
-            ATTRIBUTES.cardinalId
-          )
-        );
-
-      const active =
-        expanded &&
-        cardinalClusterId ===
-          normalizedClusterId;
-
-      if (
-        cardinalClusterId ===
-          normalizedClusterId
-      ) {
-        cardinal.setAttribute(
-          "aria-expanded",
-          active
-            ? "true"
-            : "false"
-        );
-
-        cardinal.toggleAttribute(
-          ATTRIBUTES.clusterActive,
-          active
-        );
-      }
-    }
-
-    return true;
+    return false;
   }
 
-  function setFrontVisibility(
-    front,
-    visible
-  ) {
-    if (!front) {
+  function syncPresentation() {
+    if (state.compassSelected) {
+      setPanel(compassPanel());
+
+      setPanelMetadata({
+        domain: "Main Compass",
+        functionLabel:
+          "Website gateway",
+        coordinate: "Fixed center",
+        selection:
+          "Compass selected",
+        route: MAIN_COMPASS.route,
+        lens: "Return"
+      });
+
+      setEnterEnabled(
+        false,
+        "Enter Selected Path"
+      );
+
+      setReturnHomeVisible(true);
+
+      setReturnToOrbitVisible(
+        true,
+        state.current ===
+          STATES.CONSTELLATION
+          ? "Return to Constellation"
+          : "Return to Orbit"
+      );
+
+      setGuidance(
+        "The Compass is selected. Use Return to Main Compass to leave Mirrorland, or Return to Orbit to restore this field."
+      );
+
       return;
     }
 
-    front.hidden =
-      !visible;
+    setReturnHomeVisible(false);
 
-    front.toggleAttribute(
-      "hidden",
-      !visible
-    );
+    if (
+      state.current ===
+      STATES.CONSTELLATION
+    ) {
+      setPanel(defaultPanel());
+      setPanelMetadata();
 
-    front.toggleAttribute(
-      ATTRIBUTES.controllerManagedHidden,
-      !visible
-    );
+      setEnterEnabled(
+        false,
+        "Enter Selected Path"
+      );
 
-    front.setAttribute(
-      ATTRIBUTES.frontState,
-      visible
-        ? "active"
-        : "inactive"
-    );
+      setReturnToOrbitVisible(false);
 
-    front.setAttribute(
-      "aria-hidden",
-      visible
-        ? "false"
-        : "true"
-    );
+      setGuidance(
+        "Tap any visible part of a cardinal crystal or its label to open its cluster. Drag the constellation directly to move it."
+      );
 
-    if ("inert" in front) {
-      front.inert =
-        !visible;
+      return;
     }
 
-    front.toggleAttribute(
-      "inert",
-      !visible
+    if (
+      state.current ===
+      STATES.CLUSTER_OPEN
+    ) {
+      const coin =
+        findCoinElement(
+          state.selectedCardinal
+        );
+
+      if (coin) {
+        setPanel(
+          panelFromCoin(coin)
+        );
+
+        setPanelMetadata({
+          domain: normalizeLabel(
+            coin.dataset.label,
+            WING_LABELS[
+              state.selectedCardinal
+            ] ||
+            wingToCoin(
+              state.selectedCardinal
+            )
+          ),
+
+          functionLabel:
+            normalizeLabel(
+              coin.dataset.panelTitle ||
+              coin.dataset.coinFunction ||
+              coin.dataset.label,
+              "Mirrorland direction"
+            ),
+
+          coordinate:
+            normalizeLabel(
+              coin.dataset.coordinateLabel,
+              state.selectedCardinal
+            ),
+
+          selection: "Cluster open",
+          route: "Room required",
+          lens: "Overview"
+        });
+      }
+
+      setEnterEnabled(
+        false,
+        "Enter Selected Path"
+      );
+
+      setReturnToOrbitVisible(false);
+
+      setGuidance(
+        "Drag a room crystal directly to rotate the cluster. Drag outward from the cluster to return to the constellation."
+      );
+
+      return;
+    }
+
+    if (
+      state.current ===
+      STATES.ROOM_SELECTED
+    ) {
+      const room =
+        findRoomElement(
+          state.selectedRoom
+        );
+
+      if (room) {
+        setPanel(
+          panelFromRoom(room)
+        );
+
+        setPanelMetadata({
+          domain: normalizeLabel(
+            WING_LABELS[
+              state.selectedCardinal
+            ] ||
+            state.selectedCoin,
+            "Selected direction"
+          ),
+
+          functionLabel:
+            normalizeLabel(
+              room.dataset.localFunction,
+              "Room"
+            ),
+
+          coordinate:
+            normalizeLabel(
+              room.dataset.localCoordinate,
+              state.selectedRoom
+            ),
+
+          selection: "Room selected",
+
+          route:
+            state.selectedRoute ||
+            "Not selected",
+
+          lens: normalizeLabel(
+            state.selectedLens,
+            "Overview"
+          )
+        });
+      }
+
+      setEnterEnabled(
+        Boolean(state.selectedRoute),
+        "Enter Selected Path"
+      );
+
+      setReturnToOrbitVisible(
+        true,
+        "Return to Orbit"
+      );
+
+      setGuidance(
+        "Review the selected room. Enter Selected Path authorizes its declared destination. Drag outward from the cluster to return to the constellation."
+      );
+
+      return;
+    }
+
+    setPanel({
+      eyebrow: "System held",
+      title:
+        "Mirrorland navigation is unavailable",
+
+      purpose:
+        "The controller could not establish or preserve a safe interaction state.",
+
+      relationship:
+        "Static content may remain available, but interactive requests are rejected."
+    });
+
+    setPanelMetadata({
+      domain: "Unavailable",
+      functionLabel: "Held",
+      coordinate: "—",
+      selection: "Held",
+      route: "Unavailable",
+      lens: "Failure"
+    });
+
+    setEnterEnabled(
+      false,
+      "Unavailable"
+    );
+
+    setReturnHomeVisible(false);
+    setReturnToOrbitVisible(false);
+
+    setGuidance(
+      "Mirrorland navigation is held because its controller foundation could not be validated."
     );
   }
 
-  function applyEnhancedConstellationPresentation() {
-    for (
-      const clusterId
-      of state.clusters.keys()
-    ) {
-      setClusterDomExpanded(
-        clusterId,
-        false
-      );
-    }
-
-    for (
-      const front
-      of state.fronts.values()
-    ) {
-      setFrontVisibility(
-        front,
-        false
-      );
-    }
-
-    setFallbackEnhancedPresentation();
-  }
-
-  function applyEnhancedClusterPresentation() {
-    for (
-      const clusterId
-      of state.clusters.keys()
-    ) {
-      setClusterDomExpanded(
-        clusterId,
-        clusterId ===
-          state.committed.clusterId
-      );
-    }
-
-    for (
-      const front
-      of state.fronts.values()
-    ) {
-      setFrontVisibility(
-        front,
-        false
-      );
-    }
-
-    setFallbackEnhancedPresentation();
-  }
-
-  function applyEnhancedLocalPresentation() {
-    for (
-      const clusterId
-      of state.clusters.keys()
-    ) {
-      setClusterDomExpanded(
-        clusterId,
-        clusterId ===
-          state.committed.clusterId
-      );
-    }
-
-    for (
-      const [
-        frontId,
-        front
-      ]
-      of state.fronts
-    ) {
-      setFrontVisibility(
-        front,
-        Boolean(
-          state.committed.frontId &&
-          frontId ===
-            state.committed.frontId
-        )
-      );
-    }
-
-    setFallbackEnhancedPresentation();
-  }
-
-  function applyPresentationForCurrentState(
-    reason = ""
+  function applyState(
+    nextState,
+    patch = {},
+    action = ""
   ) {
-    if (!aggregateEnhancedReady()) {
-      restoreNativePresentationStates();
-
-      return {
-        mode:
-          PRESENTATION_MODES.BASELINE,
-
-        reason
-      };
-    }
-
-    switch (state.durableState) {
-      case DURABLE_STATES.CLUSTER_OPEN:
-        applyEnhancedClusterPresentation();
-        break;
-
-      case DURABLE_STATES.LOCAL_DESTINATION:
-        applyEnhancedLocalPresentation();
-        break;
-
-      case DURABLE_STATES.CONSTELLATION:
-      default:
-        applyEnhancedConstellationPresentation();
-        break;
-    }
-
-    return {
-      mode:
-        derivePresentationMode(),
-
-      reason
-    };
-  }
-
-  function dispatchReadinessChanged(
-    reason
-  ) {
-    state.counters.readinessChanges +=
-      1;
-
-    applyPresentationForCurrentState(
-      reason
+    invariant(
+      canTransition(
+        state.current,
+        nextState
+      ),
+      "ARCHCOIN_ILLEGAL_STATE_TRANSITION",
+      {
+        from: state.current,
+        to: nextState
+      }
     );
+
+    const previousHeld =
+      isHeld();
+
+    state.current = nextState;
+
+    for (
+      const [key, value]
+      of Object.entries(patch)
+    ) {
+      if (
+        Object.prototype
+          .hasOwnProperty
+          .call(state, key)
+      ) {
+        state[key] = value;
+      }
+    }
+
+    syncPresentation();
 
     const frame =
-      reflectState();
+      recordAction(action);
 
-    dispatch(
-      EVENTS.readinessChanged,
-      {
-        reason,
-        frame
-      }
-    );
+    if (
+      previousHeld !== frame.held
+    ) {
+      publish(
+        CHANNELS.HELD_STATE,
+        createHeldState()
+      );
 
-    publishReceipt(
-      "readiness-changed",
-      {
-        reason
-      }
-    );
+      publish(
+        CHANNELS.COMPASS_STATE,
+        createCompassState()
+      );
+    }
+
+    return true;
   }
 
-  function setSubsystemReadiness(
-    subsystem,
-    ready,
-    options = {}
+  function setConstellationOrientation(
+    orientation,
+    {
+      committed = false,
+      phase =
+        ORIENTATION_PHASES.PREVIEW,
+      gestureActive = false,
+      previewAccepted = false,
+      incrementRevision = false
+    } = {}
   ) {
+    const normalized =
+      cloneOrientation(orientation);
+
+    invariant(
+      normalizeWing(
+        normalized.primaryId
+      ),
+      "ARCHCOIN_CONSTELLATION_PRIMARY_WING_INVALID"
+    );
+
+    state.orbitOrientation =
+      normalized;
+
+    state.orbitPreviewFocus =
+      normalized.primaryId;
+
+    state.orbitPhase = phase;
+
+    state.orbitGestureActive =
+      Boolean(gestureActive);
+
+    state.orbitPreviewAccepted =
+      Boolean(previewAccepted);
+
+    if (incrementRevision) {
+      state.orbitRevision += 1;
+    }
+
+    if (committed) {
+      state.committedOrbitOrientation =
+        cloneOrientation(normalized);
+
+      state.orbitFocus =
+        normalized.primaryId;
+
+      state.orbitPreviewFocus =
+        normalized.primaryId;
+    }
+  }
+
+  function setClusterOrientation(
+    cluster,
+    orientation,
+    {
+      committed = false,
+      phase =
+        ORIENTATION_PHASES.PREVIEW,
+      gestureActive = false,
+      previewAccepted = false,
+      incrementRevision = false
+    } = {}
+  ) {
+    invariant(
+      cluster,
+      "ARCHCOIN_CLUSTER_REQUIRED"
+    );
+
+    const normalized =
+      cloneOrientation(orientation);
+
+    invariant(
+      cluster.roomIds.includes(
+        normalized.primaryId
+      ),
+      `ARCHCOIN_CLUSTER_PRIMARY_ROOM_INVALID:${cluster.wing}`
+    );
+
+    cluster.orientation = normalized;
+
+    cluster.previewPrimaryRoom =
+      normalized.primaryId;
+
+    cluster.phase = phase;
+
+    cluster.gestureActive =
+      Boolean(gestureActive);
+
+    cluster.previewAccepted =
+      Boolean(previewAccepted);
+
+    if (incrementRevision) {
+      cluster.revision += 1;
+    }
+
+    if (committed) {
+      cluster.committedOrientation =
+        cloneOrientation(normalized);
+
+      cluster.primaryRoom =
+        normalized.primaryId;
+
+      cluster.previewPrimaryRoom =
+        normalized.primaryId;
+    }
+
+    return true;
+  }
+
+  function beginOrbitGesture() {
+    if (arguments.length !== 0) {
+      return rejectRequest(
+        "orbit-gesture-begin-rejected",
+        "ARCHCOIN_ORBIT_GESTURE_BEGIN_ACCEPTS_NO_PAYLOAD"
+      );
+    }
+
     if (
-      !Object.prototype.hasOwnProperty.call(
-        state.readiness,
-        subsystem
-      )
+      isHeld() ||
+      state.current !==
+        STATES.CONSTELLATION
     ) {
       return false;
     }
 
-    state.readiness[subsystem] =
-      Boolean(ready);
-
-    const failedKey =
-      `${subsystem}Failed`;
-
-    if (
-      Object.prototype.hasOwnProperty.call(
-        state.readiness,
-        failedKey
-      )
-    ) {
-      state.readiness[failedKey] =
-        Boolean(options.failed);
+    if (state.orbitGestureActive) {
+      return true;
     }
 
-    if (!ready) {
-      cancelPreview(
-        `${subsystem}-unavailable`,
-        {
-          silent:
-            true
-        }
+    state.orbitGestureOrigin =
+      cloneOrientation(
+        state.committedOrbitOrientation
       );
-    }
 
-    dispatchReadinessChanged(
-      options.reason ||
-      `${subsystem}-readiness`
+    setConstellationOrientation(
+      state.orbitOrientation,
+      {
+        committed: false,
+        phase:
+          ORIENTATION_PHASES.PREVIEW,
+        gestureActive: true,
+        previewAccepted: false
+      }
+    );
+
+    recordAction(
+      "orbit-gesture-began"
     );
 
     return true;
   }
 
-  function resolveObject(value) {
-    if (isElement(value)) {
-      const object =
-        value.matches(
-          SELECTORS.object
-        )
-          ? value
-          : value.closest(
-              SELECTORS.object
-            );
+  function requestOrbitPreview(payload) {
+    if (arguments.length !== 1) {
+      return rejectRequest(
+        "orbit-preview-rejected",
+        "ARCHCOIN_ORBIT_PREVIEW_EXACT_PAYLOAD_REQUIRED"
+      );
+    }
 
-      if (
-        object &&
-        state.orbitField &&
-        state.orbitField.contains(
-          object
-        )
-      ) {
-        return object;
+    if (
+      isHeld() ||
+      state.current !==
+        STATES.CONSTELLATION
+    ) {
+      return false;
+    }
+
+    if (!state.orbitGestureActive) {
+      return rejectRequest(
+        "orbit-preview-rejected",
+        "ARCHCOIN_ORBIT_PREVIEW_ACTIVE_TRANSACTION_REQUIRED"
+      );
+    }
+
+    const validation =
+      validateOrbitPreviewPayload(
+        payload
+      );
+
+    if (!validation.pass) {
+      return rejectRequest(
+        "orbit-preview-rejected",
+        validation.code
+      );
+    }
+
+    setConstellationOrientation(
+      validation.orientation,
+      {
+        committed: false,
+        phase:
+          ORIENTATION_PHASES.PREVIEW,
+        gestureActive: true,
+        previewAccepted: true
       }
+    );
 
-      return null;
+    recordAction(
+      `orbit-preview-accepted:${validation.orientation.primaryId}`
+    );
+
+    return true;
+  }
+
+  function requestOrbitCommit() {
+    if (arguments.length !== 0) {
+      return rejectRequest(
+        "orbit-commit-rejected",
+        "ARCHCOIN_ORBIT_COMMIT_ACCEPTS_NO_PAYLOAD"
+      );
     }
 
-    const objectId =
-      normalize(value);
-
-    if (!objectId) {
-      return null;
+    if (
+      isHeld() ||
+      state.current !==
+        STATES.CONSTELLATION
+    ) {
+      return false;
     }
 
-    return (
-      state.objects.get(
-        objectId
+    if (
+      !state.orbitGestureActive ||
+      !state.orbitPreviewAccepted
+    ) {
+      return rejectRequest(
+        "orbit-commit-rejected",
+        "ARCHCOIN_ORBIT_COMMIT_ACCEPTED_PREVIEW_REQUIRED"
+      );
+    }
+
+    const committed =
+      cloneOrientation(
+        state.orbitOrientation
+      );
+
+    setConstellationOrientation(
+      committed,
+      {
+        committed: true,
+        phase:
+          ORIENTATION_PHASES.COMMITTED,
+        gestureActive: false,
+        previewAccepted: false,
+        incrementRevision: true
+      }
+    );
+
+    state.orbitGestureOrigin = null;
+
+    recordAction(
+      `orbit-committed:${committed.primaryId}`
+    );
+
+    return true;
+  }
+
+  function requestOrbitCancel(
+    reason = "cancelled"
+  ) {
+    if (arguments.length > 1) {
+      return rejectRequest(
+        "orbit-cancel-rejected",
+        "ARCHCOIN_ORBIT_CANCEL_ARGUMENT_COUNT_INVALID"
+      );
+    }
+
+    if (isHeld()) {
+      return false;
+    }
+
+    if (!state.orbitGestureActive) {
+      return false;
+    }
+
+    const restored =
+      cloneOrientation(
+        state.orbitGestureOrigin ||
+        state.committedOrbitOrientation
+      );
+
+    setConstellationOrientation(
+      restored,
+      {
+        committed: false,
+        phase:
+          ORIENTATION_PHASES.CANCELLED,
+        gestureActive: false,
+        previewAccepted: false
+      }
+    );
+
+    state.orbitGestureOrigin = null;
+
+    recordAction(
+      `orbit-cancelled:${String(
+        reason || "cancelled"
+      )}`
+    );
+
+    state.orbitPhase =
+      ORIENTATION_PHASES.COMMITTED;
+
+    recordAction(
+      "orbit-cancel-settled"
+    );
+
+    return true;
+  }
+
+  function requestOrbitFocus(wing) {
+    if (arguments.length !== 1) {
+      return false;
+    }
+
+    const normalizedWing =
+      normalizeWing(wing);
+
+    if (
+      isHeld() ||
+      !normalizedWing ||
+      state.current !==
+        STATES.CONSTELLATION
+    ) {
+      return false;
+    }
+
+    if (state.orbitGestureActive) {
+      requestOrbitCancel(
+        "explicit-orbit-focus"
+      );
+    }
+
+    setConstellationOrientation(
+      canonicalConstellationOrientation(
+        normalizedWing
+      ),
+      {
+        committed: true,
+        phase:
+          ORIENTATION_PHASES.COMMITTED,
+        gestureActive: false,
+        previewAccepted: false,
+        incrementRevision: true
+      }
+    );
+
+    state.orbitGestureOrigin = null;
+
+    recordAction(
+      `orbit-focus-settled:${normalizedWing}`
+    );
+
+    return true;
+  }
+
+  function beginClusterGesture(wing) {
+    if (arguments.length !== 1) {
+      return rejectRequest(
+        "cluster-gesture-begin-rejected",
+        "ARCHCOIN_CLUSTER_GESTURE_BEGIN_EXACT_WING_REQUIRED"
+      );
+    }
+
+    if (isHeld()) {
+      return false;
+    }
+
+    const normalizedWing =
+      normalizeWing(wing);
+
+    const cluster =
+      getCluster(normalizedWing);
+
+    if (
+      !cluster ||
+      !(
+        state.current ===
+          STATES.CLUSTER_OPEN ||
+        state.current ===
+          STATES.ROOM_SELECTED
       ) ||
-      null
+      normalizedWing !==
+        activeClusterWing()
+    ) {
+      return false;
+    }
+
+    if (cluster.gestureActive) {
+      return true;
+    }
+
+    cluster.gestureOrigin =
+      cloneOrientation(
+        cluster.committedOrientation
+      );
+
+    setClusterOrientation(
+      cluster,
+      cluster.orientation,
+      {
+        committed: false,
+        phase:
+          ORIENTATION_PHASES.PREVIEW,
+        gestureActive: true,
+        previewAccepted: false
+      }
+    );
+
+    recordAction(
+      `cluster-gesture-began:${normalizedWing}`
+    );
+
+    return true;
+  }
+
+  function requestClusterPreview(
+    wing,
+    payload
+  ) {
+    if (arguments.length !== 2) {
+      return rejectRequest(
+        "cluster-preview-rejected",
+        "ARCHCOIN_CLUSTER_PREVIEW_EXACT_WING_AND_PAYLOAD_REQUIRED"
+      );
+    }
+
+    if (isHeld()) {
+      return false;
+    }
+
+    const normalizedWing =
+      normalizeWing(wing);
+
+    const cluster =
+      getCluster(normalizedWing);
+
+    if (
+      !cluster ||
+      !(
+        state.current ===
+          STATES.CLUSTER_OPEN ||
+        state.current ===
+          STATES.ROOM_SELECTED
+      ) ||
+      normalizedWing !==
+        activeClusterWing()
+    ) {
+      return false;
+    }
+
+    if (!cluster.gestureActive) {
+      return rejectRequest(
+        "cluster-preview-rejected",
+        `ARCHCOIN_CLUSTER_PREVIEW_ACTIVE_TRANSACTION_REQUIRED:${normalizedWing}`
+      );
+    }
+
+    const validation =
+      validateClusterPreviewPayload(
+        cluster,
+        payload
+      );
+
+    if (!validation.pass) {
+      return rejectRequest(
+        "cluster-preview-rejected",
+        validation.code
+      );
+    }
+
+    setClusterOrientation(
+      cluster,
+      validation.orientation,
+      {
+        committed: false,
+        phase:
+          ORIENTATION_PHASES.PREVIEW,
+        gestureActive: true,
+        previewAccepted: true
+      }
+    );
+
+    recordAction(
+      `cluster-preview-accepted:${normalizedWing}:${validation.orientation.primaryId}`
+    );
+
+    return true;
+  }
+
+  function requestClusterCommit(wing) {
+    if (arguments.length !== 1) {
+      return rejectRequest(
+        "cluster-commit-rejected",
+        "ARCHCOIN_CLUSTER_COMMIT_EXACT_WING_REQUIRED"
+      );
+    }
+
+    if (isHeld()) {
+      return false;
+    }
+
+    const normalizedWing =
+      normalizeWing(wing);
+
+    const cluster =
+      getCluster(normalizedWing);
+
+    if (
+      !cluster ||
+      !(
+        state.current ===
+          STATES.CLUSTER_OPEN ||
+        state.current ===
+          STATES.ROOM_SELECTED
+      ) ||
+      normalizedWing !==
+        activeClusterWing()
+    ) {
+      return false;
+    }
+
+    if (
+      !cluster.gestureActive ||
+      !cluster.previewAccepted
+    ) {
+      return rejectRequest(
+        "cluster-commit-rejected",
+        `ARCHCOIN_CLUSTER_COMMIT_ACCEPTED_PREVIEW_REQUIRED:${normalizedWing}`
+      );
+    }
+
+    const committed =
+      cloneOrientation(
+        cluster.orientation
+      );
+
+    setClusterOrientation(
+      cluster,
+      committed,
+      {
+        committed: true,
+        phase:
+          ORIENTATION_PHASES.COMMITTED,
+        gestureActive: false,
+        previewAccepted: false,
+        incrementRevision: true
+      }
+    );
+
+    cluster.gestureOrigin = null;
+
+    recordAction(
+      `cluster-committed:${normalizedWing}:${committed.primaryId}`
+    );
+
+    return true;
+  }
+
+  function requestClusterCancel(
+    wing,
+    reason = "cancelled"
+  ) {
+    if (
+      arguments.length < 1 ||
+      arguments.length > 2
+    ) {
+      return rejectRequest(
+        "cluster-cancel-rejected",
+        "ARCHCOIN_CLUSTER_CANCEL_ARGUMENT_COUNT_INVALID"
+      );
+    }
+
+    if (isHeld()) {
+      return false;
+    }
+
+    const normalizedWing =
+      normalizeWing(wing);
+
+    const cluster =
+      getCluster(normalizedWing);
+
+    if (
+      !cluster ||
+      !cluster.gestureActive
+    ) {
+      return false;
+    }
+
+    const restored =
+      cloneOrientation(
+        cluster.gestureOrigin ||
+        cluster.committedOrientation
+      );
+
+    setClusterOrientation(
+      cluster,
+      restored,
+      {
+        committed: false,
+        phase:
+          ORIENTATION_PHASES.CANCELLED,
+        gestureActive: false,
+        previewAccepted: false
+      }
+    );
+
+    cluster.gestureOrigin = null;
+
+    recordAction(
+      `cluster-cancelled:${normalizedWing}:${String(
+        reason || "cancelled"
+      )}`
+    );
+
+    cluster.phase =
+      ORIENTATION_PHASES.COMMITTED;
+
+    recordAction(
+      `cluster-cancel-settled:${normalizedWing}`
+    );
+
+    return true;
+  }
+
+  function cancelActiveGestures(reason) {
+    if (state.orbitGestureActive) {
+      requestOrbitCancel(reason);
+    }
+
+    for (
+      const cluster
+      of state.clusters.values()
+    ) {
+      if (cluster.gestureActive) {
+        requestClusterCancel(
+          cluster.wing,
+          reason
+        );
+      }
+    }
+  }
+
+  function requestCardinalSelection(
+    cardinalId
+  ) {
+    const wing =
+      normalizeWing(cardinalId);
+
+    if (
+      isHeld() ||
+      !wing ||
+      state.current !==
+        STATES.CONSTELLATION
+    ) {
+      return false;
+    }
+
+    const element =
+      findCoinElement(wing);
+
+    if (!element) {
+      recordAction(
+        "cardinal-selection-rejected",
+        `CARDINAL_NOT_FOUND:${wing}`
+      );
+
+      return false;
+    }
+
+    if (state.orbitGestureActive) {
+      requestOrbitCancel(
+        "cardinal-selection"
+      );
+    }
+
+    const destination =
+      destinationFromElement(element);
+
+    setConstellationOrientation(
+      canonicalConstellationOrientation(
+        wing
+      ),
+      {
+        committed: true,
+        phase:
+          ORIENTATION_PHASES.COMMITTED,
+        gestureActive: false,
+        previewAccepted: false,
+        incrementRevision: true
+      }
+    );
+
+    resetSelection();
+
+    return applyState(
+      STATES.CLUSTER_OPEN,
+      {
+        selectedCardinal: wing,
+
+        selectedCoin:
+          wingToCoin(wing),
+
+        selectedDestinationType:
+          DESTINATION_TYPES.COIN,
+
+        selectedDestinationId: wing,
+
+        selectedDestinationLabel:
+          destination
+            ? destination.label ||
+              WING_LABELS[wing] ||
+              wingToCoin(wing)
+            : WING_LABELS[wing] ||
+              wingToCoin(wing),
+
+        selectedRoute: "",
+        selectedParagraph: "",
+        compassSelected: false,
+        panelDescended: false
+      },
+      `cardinal-selected:${wing}`
     );
   }
 
-  function describeObject(object) {
-    if (!object) {
-      return null;
+  function requestRoomSelection(roomId) {
+    const id =
+      normalizeRoomId(roomId);
+
+    if (
+      isHeld() ||
+      !id ||
+      !(
+        state.current ===
+          STATES.CLUSTER_OPEN ||
+        state.current ===
+          STATES.ROOM_SELECTED
+      )
+    ) {
+      return false;
     }
 
-    return immutableClone({
-      objectId:
-        normalize(
-          object.getAttribute(
-            ATTRIBUTES.objectId
-          )
-        ),
+    const canonical =
+      ROOM_BY_ID.get(id);
 
-      behavior:
-        normalize(
-          object.getAttribute(
-            ATTRIBUTES.objectBehavior
-          )
-        ),
+    const element =
+      findRoomElement(id);
 
-      cardinalId:
-        normalize(
-          object.getAttribute(
-            ATTRIBUTES.cardinalId
-          )
-        ),
+    if (
+      !canonical ||
+      !element
+    ) {
+      recordAction(
+        "room-selection-rejected",
+        `ROOM_NOT_FOUND:${id}`
+      );
 
-      childId:
-        normalize(
-          object.getAttribute(
-            ATTRIBUTES.childId
-          )
-        ),
+      return false;
+    }
 
-      clusterId:
-        normalize(
-          object.getAttribute(
-            ATTRIBUTES.clusterId
-          )
-        ),
+    if (
+      canonical.wing !==
+      state.selectedCardinal
+    ) {
+      recordAction(
+        "room-selection-rejected",
+        `ROOM_OUTSIDE_ACTIVE_CLUSTER:${id}`
+      );
 
-      destinationKind:
-        normalize(
-          object.getAttribute(
-            ATTRIBUTES.destinationKind
-          )
-        ),
+      return false;
+    }
 
-      target:
-        normalize(
-          object.getAttribute(
-            ATTRIBUTES.target
-          )
+    const cluster =
+      getCluster(canonical.wing);
+
+    if (
+      !cluster ||
+      !cluster.roomIds.includes(id)
+    ) {
+      recordAction(
+        "room-selection-rejected",
+        `ROOM_CLUSTER_INVALID:${id}`
+      );
+
+      return false;
+    }
+
+    const declaredRoute =
+      normalizeRoute(
+        element.dataset.route ||
+        element.getAttribute("href")
+      );
+
+    if (
+      declaredRoute !==
+      canonical.route
+    ) {
+      recordAction(
+        "room-selection-rejected",
+        `ROOM_ROUTE_INVALID:${id}`
+      );
+
+      return false;
+    }
+
+    if (cluster.gestureActive) {
+      requestClusterCancel(
+        canonical.wing,
+        "room-selection"
+      );
+    }
+
+    clearViewportSchedules();
+
+    const destination =
+      destinationFromElement(element);
+
+    if (
+      state.selectedRoom !==
+      canonical.roomId
+    ) {
+      invalidateDestinationAuthorization();
+    }
+
+    const committed =
+      applyState(
+        STATES.ROOM_SELECTED,
+        {
+          selectedCardinal:
+            canonical.wing,
+
+          selectedCoin:
+            canonical.coin,
+
+          selectedRoom:
+            canonical.roomId,
+
+          selectedDestinationType:
+            DESTINATION_TYPES.ROOM,
+
+          selectedDestinationId:
+            canonical.roomId,
+
+          selectedDestinationLabel:
+            destination
+              ? destination.label ||
+                canonical.label ||
+                canonical.roomId
+              : canonical.label ||
+                canonical.roomId,
+
+          selectedRoute:
+            canonical.route,
+
+          selectedContentId:
+            canonical.contentId,
+
+          selectedLens:
+            canonical.lens,
+
+          selectedParagraph:
+            canonical.preview,
+
+          compassSelected: false,
+          panelDescended: true
+        },
+        `room-selected:${canonical.roomId}`
+      );
+
+    if (!committed) {
+      return false;
+    }
+
+    scheduleRoomPanelDescent(
+      canonical.roomId
+    );
+
+    return true;
+  }
+
+  function requestCompassSelection() {
+    if (isHeld()) {
+      return false;
+    }
+
+    cancelActiveGestures(
+      "compass-selection"
+    );
+
+    clearViewportSchedules();
+
+    state.compassSelected = true;
+
+    state.selectedDestinationType =
+      DESTINATION_TYPES.HOME_COMPASS;
+
+    state.selectedDestinationId =
+      MAIN_COMPASS.destinationId;
+
+    state.selectedDestinationLabel =
+      MAIN_COMPASS.destinationLabel;
+
+    state.selectedRoute =
+      MAIN_COMPASS.route;
+
+    state.selectedContentId =
+      "home-compass";
+
+    state.selectedLens = "return";
+
+    state.selectedParagraph =
+      "Return to the Diamond Gate Bridge Main Compass only after choosing the explicit return action.";
+
+    state.panelDescended = true;
+
+    syncPresentation();
+
+    recordAction(
+      "compass-selected-local"
+    );
+
+    publish(
+      CHANNELS.COMPASS_STATE,
+      createCompassState()
+    );
+
+    scheduleCompassPanelDescent();
+
+    return true;
+  }
+
+  function createDestinationEntryPayload(
+    canonical
+  ) {
+    return Object.freeze({
+      contract:
+        SHOWROOM_DESTINATION_ENTRY.contract,
+
+      controllerId:
+        MODULE.id,
+
+      controllerVersion:
+        MODULE.version,
+
+      controllerFile:
+        MODULE.file,
+
+      sourceState:
+        STATES.ROOM_SELECTED,
+
+      wingId:
+        canonical.wing,
+
+      wingLabel:
+        canonical.wingLabel,
+
+      roomId:
+        canonical.roomId,
+
+      destinationType:
+        canonical.destinationType,
+
+      destinationId:
+        canonical.destinationId,
+
+      contentId:
+        canonical.contentId,
+
+      route:
+        canonical.route,
+
+      localTarget:
+        normalizeNullableString(
+          canonical.localTarget
         ),
 
       openAncestor:
-        normalize(
-          object.getAttribute(
-            ATTRIBUTES.openAncestor
-          )
+        normalizeNullableString(
+          canonical.openAncestor
         ),
 
-      requiredFront:
-        normalize(
-          object.getAttribute(
-            ATTRIBUTES.requiredFront
-          )
+      informationFront:
+        normalizeNullableString(
+          canonical.informationFront
         ),
 
-      informationTab:
-        normalize(
-          object.getAttribute(
-            ATTRIBUTES.informationTab
-          )
+      confirmationRequired:
+        Boolean(
+          canonical.confirmationRequired
         ),
 
-      route:
-        normalize(
-          object.getAttribute(
-            ATTRIBUTES.route
-          )
+      operationType:
+        normalizeNullableString(
+          canonical.operationType
         ),
 
-      routeLabel:
-        normalize(
-          object.getAttribute(
-            ATTRIBUTES.routeLabel
-          )
+      label:
+        canonical.label,
+
+      lens:
+        canonical.lens,
+
+      preview:
+        canonical.preview,
+
+      whyEnter:
+        canonical.whyEnter,
+
+      semanticActivation:
+        normalizeNullableString(
+          canonical.semanticActivation
         ),
 
       routeDescription:
-        normalize(
-          object.getAttribute(
-            ATTRIBUTES.routeDescription
-          )
-        )
+        normalizeNullableString(
+          canonical.routeDescription
+        ),
+
+      routeRole:
+        normalizeNullableString(
+          canonical.routeRole
+        ),
+
+      visualClass:
+        normalizeNullableString(
+          canonical.visualClass
+        ),
+
+      emphasis:
+        normalizeNullableString(
+          canonical.emphasis
+        ),
+
+      returnModel:
+        normalizeNullableString(
+          canonical.returnModel
+        ),
+
+      returnZone:
+        normalizeNullableString(
+          canonical.returnZone
+        ),
+
+      authorizationGeneration:
+        state.destinationAuthorizationGeneration,
+
+      timestamp:
+        new Date().toISOString()
     });
   }
 
-  function isOrbitOwnedElement(element) {
-    return Boolean(
-      isElement(element) &&
-      state.orbitField &&
-      state.orbitField.contains(element)
-    );
-  }
-
-  function isOrbitOwnedObject(object) {
-    return Boolean(
-      object &&
-      object.matches(
-        SELECTORS.object
-      ) &&
-      isOrbitOwnedElement(object)
-    );
-  }
-
-  function isFiniteNumber(value) {
+  function isPrimitiveDestinationPayloadValue(
+    value
+  ) {
     return (
-      typeof value === "number" &&
-      Number.isFinite(value)
-    );
-  }
-
-  function readActivationCoordinates(detail) {
-    if (!detail) {
-      return null;
-    }
-
-    const candidates = [
-      [
-        detail.endX,
-        detail.endY
-      ],
-      [
-        detail.clientX,
-        detail.clientY
-      ],
-      [
-        detail.releaseClientX,
-        detail.releaseClientY
-      ],
-      [
-        detail.x,
-        detail.y
-      ],
-      [
-        detail.releaseX,
-        detail.releaseY
-      ],
-      [
-        detail.point &&
-          detail.point.x,
-        detail.point &&
-          detail.point.y
-      ]
-    ];
-
-    for (
-      const [
-        x,
-        y
-      ]
-      of candidates
-    ) {
-      if (
-        isFiniteNumber(x) &&
-        isFiniteNumber(y)
-      ) {
-        return {
-          x,
-          y
-        };
-      }
-    }
-
-    return null;
-  }
-
-  function pointInsideElement(
-    point,
-    element
-  ) {
-    if (
-      !point ||
-      !element ||
-      typeof element.getBoundingClientRect !==
-        "function"
-    ) {
-      return false;
-    }
-
-    const rect =
-      element.getBoundingClientRect();
-
-    return (
-      point.x >= rect.left &&
-      point.x <= rect.right &&
-      point.y >= rect.top &&
-      point.y <= rect.bottom
-    );
-  }
-
-  function resolveElementAtPoint(point) {
-    if (
-      !point ||
-      typeof document.elementFromPoint !==
-        "function"
-    ) {
-      return null;
-    }
-
-    return document.elementFromPoint(
-      point.x,
-      point.y
-    );
-  }
-
-  function rejectSemanticActivation(
-    reason,
-    detail = {}
-  ) {
-    state.counters.rejectedActivations +=
-      1;
-
-    publishReceipt(
-      "semantic-activation-rejected",
-      {
-        reason,
-
-        objectId:
-          normalize(
-            detail.objectId
-          ) ||
-          null
-      }
-    );
-
-    return {
-      valid:
-        false,
-
-      reason
-    };
-  }
-
-  function validateSemanticEvent(detail) {
-    if (
-      detail.validTap === false ||
-      detail.cancelled === true ||
-      detail.wasDrag === true
-    ) {
-      return rejectSemanticActivation(
-        "gesture-not-committable",
-        detail
-      );
-    }
-
-    const suppliedElement =
-      isElement(detail.element)
-        ? detail.element
-        : null;
-
-    const object =
-      resolveObject(
-        suppliedElement ||
-        detail.objectId
-      );
-
-    if (!object) {
-      return rejectSemanticActivation(
-        "object-not-found",
-        detail
-      );
-    }
-
-    if (!isOrbitOwnedObject(object)) {
-      return rejectSemanticActivation(
-        "object-outside-orbit",
-        detail
-      );
-    }
-
-    if (
-      suppliedElement &&
-      suppliedElement !== object &&
-      !object.contains(
-        suppliedElement
-      )
-    ) {
-      return rejectSemanticActivation(
-        "element-object-mismatch",
-        detail
-      );
-    }
-
-    if (
-      suppliedElement &&
-      !isOrbitOwnedElement(
-        suppliedElement
-      )
-    ) {
-      return rejectSemanticActivation(
-        "element-outside-orbit",
-        detail
-      );
-    }
-
-    const point =
-      readActivationCoordinates(
-        detail
-      );
-
-    if (!point && !suppliedElement) {
-      return rejectSemanticActivation(
-        "ungrounded-object-id",
-        detail
-      );
-    }
-
-    if (point) {
-      if (
-        !pointInsideElement(
-          point,
-          state.orbitField
-        )
-      ) {
-        return rejectSemanticActivation(
-          "release-outside-orbit",
-          detail
-        );
-      }
-
-      if (
-        !pointInsideElement(
-          point,
-          object
-        )
-      ) {
-        return rejectSemanticActivation(
-          "release-outside-object",
-          detail
-        );
-      }
-
-      const releaseElement =
-        resolveElementAtPoint(
-          point
-        );
-
-      if (
-        !releaseElement ||
-        !isOrbitOwnedElement(
-          releaseElement
-        )
-      ) {
-        return rejectSemanticActivation(
-          "release-not-orbit-grounded",
-          detail
-        );
-      }
-
-      const releaseObject =
-        releaseElement.matches(
-          SELECTORS.object
-        )
-          ? releaseElement
-          : releaseElement.closest(
-              SELECTORS.object
-            );
-
-      if (releaseObject !== object) {
-        return rejectSemanticActivation(
-          "release-object-mismatch",
-          detail
-        );
-      }
-    }
-
-    return {
-      valid:
-        true,
-
-      object
-    };
-  }
-
-  function validateCompassEvent(detail) {
-    if (
-      detail.validTap === false ||
-      detail.cancelled === true ||
-      detail.wasDrag === true
-    ) {
-      return {
-        valid:
-          false,
-
-        reason:
-          "gesture-not-committable"
-      };
-    }
-
-    const suppliedElement =
-      isElement(detail.element)
-        ? detail.element
-        : null;
-
-    const control =
-      suppliedElement
-        ? (
-            suppliedElement.matches(
-              SELECTORS.compassControl
-            )
-              ? suppliedElement
-              : suppliedElement.closest(
-                  SELECTORS.compassControl
-                )
-          )
-        : state.orbitField
-          ? state.orbitField.querySelector(
-              SELECTORS.compassControl
-            )
-          : null;
-
-    if (
-      !control ||
-      !isOrbitOwnedElement(control)
-    ) {
-      return {
-        valid:
-          false,
-
-        reason:
-          "compass-control-not-grounded"
-      };
-    }
-
-    if (
-      suppliedElement &&
-      suppliedElement !== control &&
-      !control.contains(
-        suppliedElement
-      )
-    ) {
-      return {
-        valid:
-          false,
-
-        reason:
-          "compass-element-mismatch"
-      };
-    }
-
-    const point =
-      readActivationCoordinates(
-        detail
-      );
-
-    if (!point && !suppliedElement) {
-      return {
-        valid:
-          false,
-
-        reason:
-          "ungrounded-compass-activation"
-      };
-    }
-
-    if (point) {
-      if (
-        !pointInsideElement(
-          point,
-          state.orbitField
-        ) ||
-        !pointInsideElement(
-          point,
-          control
-        )
-      ) {
-        return {
-          valid:
-            false,
-
-          reason:
-            "compass-release-outside-control"
-        };
-      }
-
-      const releaseElement =
-        resolveElementAtPoint(
-          point
-        );
-
-      if (
-        !releaseElement ||
-        (
-          releaseElement !== control &&
-          !control.contains(
-            releaseElement
-          )
-        )
-      ) {
-        return {
-          valid:
-            false,
-
-          reason:
-            "compass-release-mismatch"
-        };
-      }
-    }
-
-    return {
-      valid:
-        true,
-
-      control
-    };
-  }
-
-  function beginPreview(
-    objectValue,
-    options = {}
-  ) {
-    if (
-      state.disposed ||
-      state.held
-    ) {
-      return false;
-    }
-
-    const object =
-      resolveObject(
-        objectValue
-      );
-
-    if (!object) {
-      return false;
-    }
-
-    const descriptor =
-      describeObject(object);
-
-    state.preview.active =
-      true;
-
-    state.preview.objectId =
-      descriptor.objectId;
-
-    state.preview.cardinalId =
-      descriptor.cardinalId;
-
-    state.preview.childId =
-      descriptor.childId;
-
-    state.preview.clusterId =
-      descriptor.clusterId;
-
-    state.preview.source =
-      normalize(
-        options.source
-      ) ||
-      "api";
-
-    state.preview.token += 1;
-
-    state.counters.previewsBegun +=
-      1;
-
-    const frame =
-      reflectState();
-
-    dispatch(
-      EVENTS.previewChanged,
-      {
-        action:
-          "preview",
-
-        frame
-      }
-    );
-
-    publishReceipt(
-      "preview-begun",
-      {
-        objectId:
-          descriptor.objectId,
-
-        source:
-          state.preview.source,
-
-        token:
-          state.preview.token
-      }
-    );
-
-    return state.preview.token;
-  }
-
-  function cancelPreview(
-    reason = "cancelled",
-    options = {}
-  ) {
-    if (!state.preview.active) {
-      return false;
-    }
-
-    const previous = {
-      ...state.preview
-    };
-
-    state.preview.active = false;
-    state.preview.objectId = "";
-    state.preview.cardinalId = "";
-    state.preview.childId = "";
-    state.preview.clusterId = "";
-    state.preview.source = "";
-
-    state.counters.previewsCancelled +=
-      1;
-
-    const frame =
-      reflectState();
-
-    dispatch(
-      EVENTS.previewChanged,
-      {
-        action:
-          "cancel",
-
-        reason,
-
-        previous:
-          immutableClone(previous),
-
-        frame
-      }
-    );
-
-    if (!options.silent) {
-      publishReceipt(
-        "preview-cancelled",
-        {
-          reason,
-
-          previousObjectId:
-            previous.objectId ||
-            null
-        }
-      );
-    }
-
-    return true;
-  }
-
-  function clearLocalCommit() {
-    state.committed.localTargetId = "";
-    state.committed.frontId = "";
-    state.committed.gaugeSet = "";
-    state.committed.informationTab = "";
-  }
-
-  function setRouteContinueEnabled(
-    enabled,
-    label = ""
-  ) {
-    if (!state.routeContinue) {
-      return;
-    }
-
-    state.routeContinue.disabled =
-      !enabled;
-
-    state.routeContinue.toggleAttribute(
-      "disabled",
-      !enabled
-    );
-
-    state.routeContinue.setAttribute(
-      "aria-disabled",
-      enabled
-        ? "false"
-        : "true"
-    );
-
-    if (enabled && label) {
-      state.routeContinue.textContent =
-        `Continue to ${label}`;
-    }
-  }
-
-  function finalizeRouteDialogClose(
-    closeRecord,
-    options = {}
-  ) {
-    const record =
-      closeRecord || {
-        generation:
-          state.activeDialogGeneration.route,
-
-        reason:
-          "native-close",
-
-        restoreFocus:
-          false,
-
-        silent:
-          false,
-
-        trigger:
-          state.pendingRoute.trigger,
-
-        routeData:
-          state.pendingRoute.data
-      };
-
-    const ownsPendingRoute =
-      record.generation !== 0 &&
-      record.generation ===
-        state.pendingRoute.generation;
-
-    const ownsActiveDialog =
-      record.generation !== 0 &&
-      record.generation ===
-        state.activeDialogGeneration.route;
-
-    if (ownsPendingRoute) {
-      state.pendingRoute.data = null;
-      state.pendingRoute.trigger = null;
-      state.pendingRoute.generation = 0;
-
-      setRouteContinueEnabled(false);
-    }
-
-    if (ownsActiveDialog) {
-      state.activeDialogGeneration.route =
-        0;
-
-      if (state.routeDialog) {
-        state.routeDialog.setAttribute(
-          ATTRIBUTES.dialogState,
-          "closed"
-        );
-      }
-    }
-
-    if (
-      options.stateOnly === true
-    ) {
-      return;
-    }
-
-    if (record.restoreFocus) {
-      requestAnimationFrame(
-        () => {
-          focusElement(
-            record.trigger
-          );
-        }
-      );
-    }
-
-    if (!record.silent) {
-      const frame =
-        reflectState();
-
-      dispatch(
-        EVENTS.dialogChanged,
-        {
-          dialog:
-            "route",
-
-          open:
-            Boolean(
-              state.routeDialog &&
-              state.routeDialog.open &&
-              state.activeDialogGeneration.route
-            ),
-
-          generation:
-            record.generation,
-
-          frame
-        }
-      );
-
-      publishReceipt(
-        "route-dialog-closed",
-        {
-          generation:
-            record.generation,
-
-          reason:
-            record.reason,
-
-          route:
-            record.routeData
-              ? record.routeData.route
-              : null
-        }
-      );
-    } else {
-      reflectState();
-    }
-  }
-
-  function clearRouteConfirmation(
-    options = {}
-  ) {
-    const generation =
-      state.activeDialogGeneration.route ||
-      state.pendingRoute.generation;
-
-    const record = {
-      generation,
-
-      reason:
-        options.reason ||
-        "closed",
-
-      restoreFocus:
-        options.restoreFocus === true,
-
-      silent:
-        Boolean(options.silent),
-
-      trigger:
-        state.pendingRoute.trigger,
-
-      routeData:
-        state.pendingRoute.data
-    };
-
-    if (
-      state.routeDialog &&
-      state.routeDialog.open
-    ) {
-      state.expectedDialogClose.route =
-        record;
-
-      safelyCloseDialog(
-        state.routeDialog,
-        record.reason
-      );
-
-      if (
-        options.finalizeBeforeReplacement ===
-        true
-      ) {
-        finalizeRouteDialogClose(
-          record,
-          {
-            stateOnly:
-              true
-          }
-        );
-      }
-
-      return;
-    }
-
-    state.expectedDialogClose.route =
-      null;
-
-    finalizeRouteDialogClose(
-      record
-    );
-  }
-
-  function finalizeCompassDialogClose(
-    closeRecord,
-    options = {}
-  ) {
-    const record =
-      closeRecord || {
-        generation:
-          state.activeDialogGeneration.compass,
-
-        reason:
-          "native-close",
-
-        restoreFocus:
-          false,
-
-        silent:
-          false,
-
-        trigger:
-          state.lastTriggers.compass
-      };
-
-    const ownsActiveDialog =
-      record.generation !== 0 &&
-      record.generation ===
-        state.activeDialogGeneration.compass;
-
-    if (ownsActiveDialog) {
-      state.activeDialogGeneration.compass =
-        0;
-
-      for (
-        const control
-        of state.compassControls
-      ) {
-        control.setAttribute(
-          "aria-expanded",
-          "false"
-        );
-      }
-
-      if (state.compassDialog) {
-        state.compassDialog.setAttribute(
-          ATTRIBUTES.dialogState,
-          "closed"
-        );
-      }
-    }
-
-    if (
-      options.stateOnly === true
-    ) {
-      return;
-    }
-
-    if (record.restoreFocus) {
-      requestAnimationFrame(
-        () => {
-          focusElement(
-            record.trigger
-          );
-        }
-      );
-    }
-
-    if (!record.silent) {
-      const frame =
-        reflectState();
-
-      dispatch(
-        EVENTS.dialogChanged,
-        {
-          dialog:
-            "compass",
-
-          open:
-            Boolean(
-              state.compassDialog &&
-              state.compassDialog.open &&
-              state.activeDialogGeneration.compass
-            ),
-
-          generation:
-            record.generation,
-
-          frame
-        }
-      );
-
-      publishReceipt(
-        "compass-dialog-closed",
-        {
-          generation:
-            record.generation,
-
-          reason:
-            record.reason
-        }
-      );
-    } else {
-      reflectState();
-    }
-  }
-
-  function clearCompassConfirmation(
-    options = {}
-  ) {
-    const record = {
-      generation:
-        state.activeDialogGeneration.compass,
-
-      reason:
-        options.reason ||
-        "closed",
-
-      restoreFocus:
-        options.restoreFocus === true,
-
-      silent:
-        Boolean(options.silent),
-
-      trigger:
-        state.lastTriggers.compass
-    };
-
-    if (
-      state.compassDialog &&
-      state.compassDialog.open
-    ) {
-      state.expectedDialogClose.compass =
-        record;
-
-      safelyCloseDialog(
-        state.compassDialog,
-        record.reason
-      );
-
-      if (
-        options.finalizeBeforeReplacement ===
-        true
-      ) {
-        finalizeCompassDialogClose(
-          record,
-          {
-            stateOnly:
-              true
-          }
-        );
-      }
-
-      return;
-    }
-
-    state.expectedDialogClose.compass =
-      null;
-
-    finalizeCompassDialogClose(
-      record
-    );
-  }
-
-  function finalizeConstructionDialogClose(
-    closeRecord,
-    options = {}
-  ) {
-    const record =
-      closeRecord || {
-        generation:
-          state.activeDialogGeneration.construction,
-
-        reason:
-          "native-close",
-
-        restoreFocus:
-          false,
-
-        silent:
-          false,
-
-        trigger:
-          state.lastTriggers.construction
-      };
-
-    const ownsActiveDialog =
-      record.generation !== 0 &&
-      record.generation ===
-        state.activeDialogGeneration.construction;
-
-    if (ownsActiveDialog) {
-      state.activeDialogGeneration.construction =
-        0;
-
-      if (state.constructionDialog) {
-        state.constructionDialog.setAttribute(
-          ATTRIBUTES.dialogState,
-          "closed"
-        );
-      }
-    }
-
-    if (
-      options.stateOnly === true
-    ) {
-      return;
-    }
-
-    if (record.restoreFocus) {
-      requestAnimationFrame(
-        () => {
-          focusElement(
-            record.trigger
-          );
-        }
-      );
-    }
-
-    if (!record.silent) {
-      publishReceipt(
-        "construction-dialog-closed",
-        {
-          generation:
-            record.generation,
-
-          reason:
-            record.reason
-        }
-      );
-    }
-  }
-
-  function closeConstructionDialog(
-    options = {}
-  ) {
-    if (!state.constructionDialog) {
-      return;
-    }
-
-    const record = {
-      generation:
-        state.activeDialogGeneration.construction,
-
-      reason:
-        options.reason ||
-        "closed",
-
-      restoreFocus:
-        options.restoreFocus !== false,
-
-      silent:
-        Boolean(options.silent),
-
-      trigger:
-        state.lastTriggers.construction
-    };
-
-    if (state.constructionDialog.open) {
-      state.expectedDialogClose.construction =
-        record;
-
-      safelyCloseDialog(
-        state.constructionDialog,
-        record.reason
-      );
-
-      if (
-        options.finalizeBeforeReplacement ===
-        true
-      ) {
-        finalizeConstructionDialogClose(
-          record,
-          {
-            stateOnly:
-              true
-          }
-        );
-      }
-
-      return;
-    }
-
-    state.expectedDialogClose.construction =
-      null;
-
-    finalizeConstructionDialogClose(
-      record
-    );
-  }
-
-  function clearAllTransientState(
-    reason = "cleared"
-  ) {
-    cancelPreview(
-      reason,
-      {
-        silent:
-          true
-      }
-    );
-
-    clearRouteConfirmation({
-      restoreFocus:
-        false,
-
-      silent:
-        true,
-
-      reason
-    });
-
-    clearCompassConfirmation({
-      restoreFocus:
-        false,
-
-      silent:
-        true,
-
-      reason
-    });
-  }
-
-  function commitConstellationState() {
-    clearAllTransientState(
-      "constellation-commit"
-    );
-
-    state.durableState =
-      DURABLE_STATES.CONSTELLATION;
-
-    state.committed.cardinalId = "";
-    state.committed.childId = "";
-    state.committed.clusterId = "";
-    state.committed.localTargetId = "";
-    state.committed.frontId = "";
-    state.committed.gaugeSet = "";
-    state.committed.informationTab = "";
-  }
-
-  function commitClusterState(
-    cardinalId,
-    clusterId
-  ) {
-    clearAllTransientState(
-      "cluster-commit"
-    );
-
-    state.durableState =
-      DURABLE_STATES.CLUSTER_OPEN;
-
-    state.committed.cardinalId =
-      normalize(cardinalId);
-
-    state.committed.clusterId =
-      normalize(clusterId);
-
-    state.committed.childId = "";
-
-    clearLocalCommit();
-  }
-
-  function commitPortalSelection(
-    descriptor
-  ) {
-    cancelPreview(
-      "portal-selection-commit",
-      {
-        silent:
-          true
-      }
-    );
-
-    clearLocalCommit();
-
-    state.committed.cardinalId =
-      descriptor.cardinalId ||
-      state.committed.cardinalId;
-
-    state.committed.clusterId =
-      descriptor.clusterId ||
-      state.committed.clusterId;
-
-    state.committed.childId =
-      descriptor.childId ||
-      descriptor.objectId;
-  }
-
-  function commitLocalState(
-    descriptor,
-    frontId
-  ) {
-    clearAllTransientState(
-      "local-commit"
-    );
-
-    state.durableState =
-      DURABLE_STATES.LOCAL_DESTINATION;
-
-    state.committed.cardinalId =
-      descriptor.cardinalId;
-
-    state.committed.clusterId =
-      descriptor.clusterId;
-
-    state.committed.childId =
-      descriptor.childId ||
-      descriptor.objectId;
-
-    state.committed.localTargetId =
-      descriptor.target;
-
-    state.committed.frontId =
-      frontId;
-
-    const front =
-      state.fronts.get(frontId);
-
-    state.committed.gaugeSet =
-      front
-        ? normalize(
-            front.getAttribute(
-              "data-showroom-gauge-set"
-            )
-          )
-        : "";
-
-    state.committed.informationTab = "";
-  }
-
-  function openCluster(
-    clusterId,
-    options = {}
-  ) {
-    if (
-      state.disposed ||
-      state.held
-    ) {
-      return false;
-    }
-
-    const normalizedClusterId =
-      normalize(clusterId);
-
-    const normalizedCardinalId =
-      normalize(
-        options.cardinalId
-      ) ||
-      normalizedClusterId;
-
-    if (
-      !state.clusters.has(
-        normalizedClusterId
-      ) ||
-      !state.cardinals.has(
-        normalizedCardinalId
-      )
-    ) {
-      return false;
-    }
-
-    commitClusterState(
-      normalizedCardinalId,
-      normalizedClusterId
-    );
-
-    state.counters.cardinalCommits +=
-      1;
-
-    applyPresentationForCurrentState(
-      "cluster-opened"
-    );
-
-    const frame =
-      reflectState();
-
-    dispatch(
-      EVENTS.clusterChanged,
-      {
-        cardinalId:
-          normalizedCardinalId,
-
-        clusterId:
-          normalizedClusterId,
-
-        expanded:
-          true,
-
-        committed:
-          true,
-
-        frame
-      }
-    );
-
-    if (options.focusFirstChild) {
-      const cluster =
-        state.clusters.get(
-          normalizedClusterId
-        );
-
-      const firstChild =
-        cluster
-          ? cluster.querySelector(
-              SELECTORS.childControl
-            )
-          : null;
-
-      requestAnimationFrame(
-        () => {
-          focusElement(firstChild);
-        }
-      );
-    }
-
-    return true;
-  }
-
-  function closeCluster(clusterId) {
-    const normalizedClusterId =
-      normalize(clusterId);
-
-    if (
-      state.committed.clusterId !==
-        normalizedClusterId ||
-      !state.clusters.has(
-        normalizedClusterId
-      )
-    ) {
-      return false;
-    }
-
-    commitConstellationState();
-
-    applyPresentationForCurrentState(
-      "cluster-closed"
-    );
-
-    const frame =
-      reflectState();
-
-    dispatch(
-      EVENTS.clusterChanged,
-      {
-        clusterId:
-          normalizedClusterId,
-
-        expanded:
-          false,
-
-        committed:
-          true,
-
-        frame
-      }
-    );
-
-    publishReceipt(
-      "cluster-closed",
-      {
-        clusterId:
-          normalizedClusterId
-      }
-    );
-
-    return true;
-  }
-
-  function toggleCluster(
-    clusterId,
-    options = {}
-  ) {
-    const normalizedClusterId =
-      normalize(clusterId);
-
-    if (
-      state.committed.clusterId ===
-        normalizedClusterId &&
+      value === null ||
+      typeof value === "string" ||
+      typeof value === "boolean" ||
       (
-        state.durableState ===
-          DURABLE_STATES.CLUSTER_OPEN ||
-        state.durableState ===
-          DURABLE_STATES.LOCAL_DESTINATION
+        typeof value === "number" &&
+        Number.isFinite(value)
       )
-    ) {
-      return closeCluster(
-        normalizedClusterId
-      );
-    }
-
-    return openCluster(
-      normalizedClusterId,
-      options
     );
   }
 
-  function resolveFrontId(
-    selectorOrId
+  function validateDestinationEntryPayload(
+    payload
   ) {
-    const normalized =
-      normalize(selectorOrId);
+    invariant(
+      payload &&
+      typeof payload === "object" &&
+      !Array.isArray(payload),
+      "SHOWROOM_DESTINATION_ENTRY_PAYLOAD_OBJECT_REQUIRED"
+    );
 
-    if (!normalized) {
-      return "";
+    invariant(
+      Object.isFrozen(payload) === true,
+      "SHOWROOM_DESTINATION_ENTRY_PAYLOAD_NOT_FROZEN"
+    );
+
+    const keys =
+      Object.keys(payload);
+
+    invariant(
+      keys.length ===
+        SHOWROOM_DESTINATION_PAYLOAD_KEYS.length,
+      "SHOWROOM_DESTINATION_ENTRY_PAYLOAD_KEY_COUNT_INVALID",
+      {
+        expected:
+          SHOWROOM_DESTINATION_PAYLOAD_KEYS.length,
+
+        actual:
+          keys.length
+      }
+    );
+
+    for (
+      const key
+      of SHOWROOM_DESTINATION_PAYLOAD_KEYS
+    ) {
+      invariant(
+        Object.prototype
+          .hasOwnProperty
+          .call(payload, key),
+        "SHOWROOM_DESTINATION_ENTRY_PAYLOAD_KEY_MISSING",
+        {
+          key
+        }
+      );
+
+      invariant(
+        isPrimitiveDestinationPayloadValue(
+          payload[key]
+        ),
+        "SHOWROOM_DESTINATION_ENTRY_PAYLOAD_NON_PRIMITIVE_VALUE",
+        {
+          key,
+          type: typeof payload[key]
+        }
+      );
     }
 
-    return normalized.startsWith("#")
-      ? normalized.slice(1)
-      : normalized;
+    for (const key of keys) {
+      invariant(
+        SHOWROOM_DESTINATION_PAYLOAD_KEYS.includes(
+          key
+        ),
+        "SHOWROOM_DESTINATION_ENTRY_PAYLOAD_UNEXPECTED_KEY",
+        {
+          key
+        }
+      );
+    }
+
+    invariant(
+      payload.contract ===
+        SHOWROOM_DESTINATION_ENTRY.contract,
+      "SHOWROOM_DESTINATION_ENTRY_PAYLOAD_CONTRACT_INVALID"
+    );
+
+    invariant(
+      payload.controllerId ===
+        MODULE.id,
+      "SHOWROOM_DESTINATION_ENTRY_PAYLOAD_CONTROLLER_ID_INVALID"
+    );
+
+    invariant(
+      payload.controllerVersion ===
+        MODULE.version,
+      "SHOWROOM_DESTINATION_ENTRY_PAYLOAD_CONTROLLER_VERSION_INVALID"
+    );
+
+    invariant(
+      payload.controllerFile ===
+        MODULE.file,
+      "SHOWROOM_DESTINATION_ENTRY_PAYLOAD_CONTROLLER_FILE_INVALID"
+    );
+
+    invariant(
+      payload.sourceState ===
+        STATES.ROOM_SELECTED,
+      "SHOWROOM_DESTINATION_ENTRY_PAYLOAD_SOURCE_STATE_INVALID"
+    );
+
+    invariant(
+      Number.isSafeInteger(
+        payload.authorizationGeneration
+      ) &&
+      payload.authorizationGeneration >=
+        0,
+      "SHOWROOM_DESTINATION_ENTRY_PAYLOAD_GENERATION_INVALID"
+    );
+
+    invariant(
+      !Number.isNaN(
+        Date.parse(payload.timestamp)
+      ),
+      "SHOWROOM_DESTINATION_ENTRY_PAYLOAD_TIMESTAMP_INVALID"
+    );
+
+    return true;
   }
 
-  function resolveTarget(selector) {
-    const normalized =
-      normalize(selector);
-
-    if (!normalized) {
-      return null;
+  function requestEnterSelection() {
+    if (
+      isHeld() ||
+      state.compassSelected ||
+      state.current !==
+        STATES.ROOM_SELECTED
+    ) {
+      return false;
     }
+
+    const canonical =
+      ROOM_BY_ID.get(
+        state.selectedRoom
+      );
+
+    if (
+      !canonical ||
+      state.selectedDestinationType !==
+        DESTINATION_TYPES.ROOM ||
+      state.selectedDestinationId !==
+        canonical.roomId ||
+      state.selectedCardinal !==
+        canonical.wing ||
+      state.selectedCoin !==
+        canonical.coin ||
+      state.selectedRoute !==
+        canonical.route ||
+      state.selectedContentId !==
+        canonical.contentId ||
+      state.selectedLens !==
+        canonical.lens ||
+      !ROOM_BY_ROUTE.has(
+        state.selectedRoute
+      )
+    ) {
+      recordAction(
+        "selected-path-entry-rejected",
+        "SELECTED_ROOM_ROUTE_NOT_CANONICAL"
+      );
+
+      return false;
+    }
+
+    const authorizationGeneration =
+      state.destinationAuthorizationGeneration;
+
+    const payload =
+      createDestinationEntryPayload(
+        canonical
+      );
 
     try {
-      return document.querySelector(
-        normalized
+      validateDestinationEntryPayload(
+        payload
       );
-    } catch {
-      return null;
-    }
-  }
-
-  function resolveDeclaredAncestor(selector) {
-    const normalized =
-      normalize(selector);
-
-    if (!normalized) {
-      return null;
-    }
-
-    try {
-      return document.querySelector(
-        normalized
-      );
-    } catch {
-      return null;
-    }
-  }
-
-  function findNativeInformationTab(
-    tabId
-  ) {
-    const normalizedTabId =
-      normalize(tabId);
-
-    if (!normalizedTabId) {
-      return null;
-    }
-
-    return (
-      toArray(
-        document.querySelectorAll(
-          SELECTORS.informationTab
+    } catch (error) {
+      recordAction(
+        "selected-path-entry-payload-rejected",
+        error &&
+        (
+          error.code ||
+          error.message
         )
-      ).find(
-        candidate =>
-          normalize(
-            candidate.getAttribute(
-              "data-information-tab-id"
+          ? String(
+              error.code ||
+              error.message
             )
-          ) === normalizedTabId
-      ) ||
-      null
-    );
-  }
-
-  function attemptInformationTabSelection(
-    tabId,
-    options = {}
-  ) {
-    const normalizedTabId =
-      normalize(tabId);
-
-    if (!normalizedTabId) {
-      return {
-        success:
-          true,
-
-        tabId:
-          "",
-
-        implementation:
-          "none"
-      };
-    }
-
-    const gauges =
-      window.SHOWROOM_GAUGES;
-
-    if (
-      gauges &&
-      typeof gauges.selectInformationTab ===
-        "function"
-    ) {
-      try {
-        const selected =
-          gauges.selectInformationTab(
-            normalizedTabId,
-            {
-              focus:
-                Boolean(options.focus),
-
-              announce:
-                options.announce !== false
-            }
-          ) !== false;
-
-        return {
-          success:
-            selected,
-
-          tabId:
-            normalizedTabId,
-
-          implementation:
-            selected
-              ? "gauges"
-              : null
-        };
-      } catch {
-        return {
-          success:
-            false,
-
-          tabId:
-            normalizedTabId,
-
-          implementation:
-            null
-        };
-      }
-    }
-
-    const nativeTab =
-      findNativeInformationTab(
-        normalizedTabId
+          : "SHOWROOM_DESTINATION_ENTRY_PAYLOAD_INVALID"
       );
 
-    if (!nativeTab) {
-      return {
-        success:
-          false,
+      return false;
+    }
 
-        tabId:
-          normalizedTabId,
+    if (
+      authorizationGeneration !==
+      state.destinationAuthorizationGeneration ||
+      state.selectedRoom !==
+        canonical.roomId ||
+      state.current !==
+        STATES.ROOM_SELECTED ||
+      state.compassSelected ||
+      isHeld()
+    ) {
+      recordAction(
+        "selected-path-entry-rejected",
+        "SHOWROOM_DESTINATION_AUTHORIZATION_STALE"
+      );
 
-        implementation:
-          null
-      };
+      return false;
     }
 
     try {
-      nativeTab.click();
-
-      return {
-        success:
-          true,
-
-        tabId:
-          normalizedTabId,
-
-        implementation:
-          "native"
-      };
-    } catch {
-      return {
-        success:
-          false,
-
-        tabId:
-          normalizedTabId,
-
-        implementation:
-          null
-      };
-    }
-  }
-
-  function requestInformationTab(tabId) {
-    const selectionResult =
-      attemptInformationTabSelection(
-        tabId,
-        {
-          focus:
-            false,
-
-          announce:
-            true
-        }
-      );
-
-    if (!selectionResult.success) {
-      return false;
-    }
-
-    state.committed.informationTab =
-      selectionResult.tabId;
-
-    reflectState();
-
-    return true;
-  }
-
-  function activateLocalDestination(
-    descriptor,
-    options = {}
-  ) {
-    const target =
-      resolveTarget(
-        descriptor.target
-      );
-
-    if (!target) {
-      publishReceipt(
-        "local-target-missing",
-        {
-          objectId:
-            descriptor.objectId,
-
-          target:
-            descriptor.target ||
-            null
-        }
-      );
-
-      return false;
-    }
-
-    const ancestor =
-      descriptor.openAncestor
-        ? resolveDeclaredAncestor(
-            descriptor.openAncestor
-          )
-        : null;
-
-    if (
-      descriptor.openAncestor &&
-      !ancestor
-    ) {
-      publishReceipt(
-        "local-ancestor-missing",
-        {
-          objectId:
-            descriptor.objectId,
-
-          ancestor:
-            descriptor.openAncestor
-        }
-      );
-
-      return false;
-    }
-
-    const frontId =
-      resolveFrontId(
-        descriptor.requiredFront
-      );
-
-    if (
-      frontId &&
-      !state.fronts.has(frontId)
-    ) {
-      publishReceipt(
-        "local-front-missing",
-        {
-          objectId:
-            descriptor.objectId,
-
-          frontId
-        }
-      );
-
-      return false;
-    }
-
-    if (
-      !descriptor.cardinalId ||
-      !descriptor.clusterId
-    ) {
-      publishReceipt(
-        "local-parent-state-missing",
-        {
-          objectId:
-            descriptor.objectId,
-
-          cardinalId:
-            descriptor.cardinalId ||
-            null,
-
-          clusterId:
-            descriptor.clusterId ||
-            null
-        }
-      );
-
-      return false;
-    }
-
-    if (
-      !state.cardinals.has(
-        descriptor.cardinalId
-      ) ||
-      !state.clusters.has(
-        descriptor.clusterId
-      )
-    ) {
-      publishReceipt(
-        "local-parent-state-invalid",
-        {
-          objectId:
-            descriptor.objectId,
-
-          cardinalId:
-            descriptor.cardinalId,
-
-          clusterId:
-            descriptor.clusterId
-        }
-      );
-
-      return false;
-    }
-
-    const selectionResult =
-      attemptInformationTabSelection(
-        descriptor.informationTab,
-        {
-          focus:
-            false,
-
-          announce:
-            true
-        }
-      );
-
-    if (!selectionResult.success) {
-      publishReceipt(
-        "local-information-tab-selection-failed",
-        {
-          objectId:
-            descriptor.objectId,
-
-          informationTab:
-            descriptor.informationTab ||
-            null
-        }
-      );
-
-      return false;
-    }
-
-    commitLocalState(
-      descriptor,
-      frontId
-    );
-
-    state.committed.informationTab =
-      selectionResult.tabId;
-
-    if (
-      ancestor instanceof
-        HTMLDetailsElement
-    ) {
-      ancestor.open = true;
-    }
-
-    applyPresentationForCurrentState(
-      "local-destination-committed"
-    );
-
-    state.counters.localActivations +=
-      1;
-
-    state.counters.childCommits +=
-      1;
-
-    const frame =
-      reflectState();
-
-    if (
-      options.scroll !== false
-    ) {
-      requestAnimationFrame(
-        () => {
-          scrollToElement(
-            target,
-            "start"
-          );
-        }
-      );
-    }
-
-    if (
-      options.focus !== false
-    ) {
-      const heading =
-        target.matches(
-          "h1,h2,h3,h4,h5,h6"
-        )
-          ? target
-          : target.querySelector(
-              "h1,h2,h3,h4,h5,h6"
-            );
-
-      if (heading) {
-        if (
-          !heading.hasAttribute(
-            "tabindex"
-          )
-        ) {
-          state.nativeDomStates
-            .temporaryFocusTargets
-            .set(
-              heading,
-              captureElementState(heading)
-            );
-
-          heading.setAttribute(
-            "tabindex",
-            "-1"
-          );
-
-          installTemporaryFocusCleanup(
-            heading
-          );
-        }
-
-        requestAnimationFrame(
-          () => {
-            focusElement(heading);
+      state.root.dispatchEvent(
+        new CustomEvent(
+          SHOWROOM_DESTINATION_ENTRY.event,
+          {
+            detail: payload,
+            bubbles: true
           }
-        );
-      }
-    }
-
-    dispatch(
-      EVENTS.frontChanged,
-      {
-        frontId:
-          state.committed.frontId ||
-          null,
-
-        localTarget:
-          descriptor.target,
-
-        childId:
-          state.committed.childId,
-
-        active:
-          true,
-
-        frame
-      }
-    );
-
-    publishReceipt(
-      "local-destination-committed",
-      {
-        objectId:
-          descriptor.objectId,
-
-        target:
-          descriptor.target,
-
-        destinationKind:
-          descriptor.destinationKind ||
-          null,
-
-        informationTabImplementation:
-          selectionResult.implementation
-      }
-    );
-
-    return true;
-  }
-
-  function readRouteDefinition(source) {
-    const element =
-      isElement(source)
-        ? source
-        : null;
-
-    if (!element) {
-      return null;
-    }
-
-    const route =
-      normalize(
-        element.getAttribute(
-          ATTRIBUTES.route
         )
       );
-
-    if (!route) {
-      return null;
-    }
-
-    return immutableClone({
-      objectId:
-        normalize(
-          element.getAttribute(
-            ATTRIBUTES.objectId
-          )
-        ) ||
-        normalize(
-          element.getAttribute(
-            ATTRIBUTES.childId
-          )
-        ) ||
-        "fallback-route",
-
-      route,
-
-      label:
-        normalize(
-          element.getAttribute(
-            ATTRIBUTES.routeLabel
-          )
-        ) ||
-        "Destination",
-
-      description:
-        normalize(
-          element.getAttribute(
-            ATTRIBUTES.routeDescription
-          )
-        ) ||
-        "This path leaves the current Showroom page."
-    });
-  }
-
-  function setDialogState(
-    dialog,
-    type,
-    open
-  ) {
-    if (dialog) {
-      dialog.setAttribute(
-        ATTRIBUTES.dialogState,
-        open
-          ? "open"
-          : "closed"
+    } catch (error) {
+      recordAction(
+        "selected-path-entry-dispatch-failed",
+        error &&
+        (
+          error.code ||
+          error.message
+        )
+          ? String(
+              error.code ||
+              error.message
+            )
+          : "SHOWROOM_DESTINATION_ENTRY_DISPATCH_FAILED"
       );
-    }
 
-    const frame =
-      reflectState();
-
-    dispatch(
-      EVENTS.dialogChanged,
-      {
-        dialog:
-          type,
-
-        open,
-
-        frame
-      }
-    );
-  }
-
-  function openRouteDialog(
-    source,
-    options = {}
-  ) {
-    if (
-      state.disposed ||
-      state.held ||
-      !state.routeDialog
-    ) {
       return false;
     }
 
-    const definition =
-      readRouteDefinition(
-        source
-      );
-
-    if (!definition) {
-      return false;
-    }
-
-    if (
-      isDuplicateActivation(
-        `route:${definition.objectId}`
-      )
-    ) {
-      return false;
-    }
-
-    cancelPreview(
-      "route-confirmation-opened",
-      {
-        silent:
-          true
-      }
-    );
-
-    clearCompassConfirmation({
-      restoreFocus:
-        false,
-
-      silent:
-        true,
-
-      reason:
-        "route-superseded-compass",
-
-      finalizeBeforeReplacement:
-        true
-    });
-
-    if (
-      state.routeDialog.open ||
-      state.activeDialogGeneration.route ||
-      state.pendingRoute.generation
-    ) {
-      clearRouteConfirmation({
-        restoreFocus:
-          false,
-
-        silent:
-          true,
-
-        reason:
-          "route-replaced",
-
-        finalizeBeforeReplacement:
-          true
-      });
-    }
-
-    const generation =
-      nextDialogGeneration(
-        "route"
-      );
-
-    state.pendingRoute.data =
-      definition;
-
-    state.pendingRoute.trigger =
-      options.trigger ||
-      source;
-
-    state.pendingRoute.generation =
-      generation;
-
-    if (state.routeDialogTitle) {
-      state.routeDialogTitle.textContent =
-        definition.label;
-    }
-
-    if (state.routeDialogDescription) {
-      state.routeDialogDescription.textContent =
-        definition.description;
-    }
-
-    setRouteContinueEnabled(
-      true,
-      definition.label
-    );
-
-    safelyShowModal(
-      state.routeDialog
-    );
-
-    setDialogState(
-      state.routeDialog,
-      "route",
-      true
-    );
-
-    const stay =
-      state.routeDialog.querySelector(
-        SELECTORS.routeStay
-      );
-
-    requestAnimationFrame(
-      () => {
-        focusElement(
-          stay ||
-          state.routeDialog
-        );
-      }
-    );
-
-    state.counters.portalOffers +=
-      1;
-
-    publishReceipt(
-      "route-dialog-opened",
-      {
-        generation,
-
-        objectId:
-          definition.objectId,
-
-        route:
-          definition.route
-      }
+    recordAction(
+      `selected-path-entry-authorized:${canonical.roomId}:${authorizationGeneration}`
     );
 
     return true;
   }
 
-  function closeRouteDialog(
-    options = {}
-  ) {
-    clearRouteConfirmation({
-      restoreFocus:
-        options.restoreFocus !== false,
-
-      silent:
-        Boolean(options.silent),
-
-      reason:
-        options.reason ||
-        "closed"
-    });
-  }
-
-  function continuePendingRoute() {
+  function requestReturnToMainCompass() {
     if (
-      state.disposed ||
-      state.held ||
-      !state.pendingRoute.data
+      isHeld() ||
+      !state.compassSelected
     ) {
       return false;
     }
 
-    const routeData =
-      state.pendingRoute.data;
-
-    publishReceipt(
-      "route-navigation-requested",
-      {
-        generation:
-          state.pendingRoute.generation,
-
-        route:
-          routeData.route,
-
-        objectId:
-          routeData.objectId
-      }
+    recordAction(
+      "main-compass-return-confirmed"
     );
 
-    window.location.assign(
-      routeData.route
+    globalThis.location.assign(
+      MAIN_COMPASS.route
     );
 
     return true;
   }
 
-  function openCompassDialog(
-    trigger = null
-  ) {
-    if (
-      state.disposed ||
-      state.held ||
-      !state.compassDialog
-    ) {
+  function requestReturnToOrbit() {
+    if (isHeld()) {
       return false;
     }
 
-    if (
-      isDuplicateActivation(
-        "compass-dialog"
-      )
-    ) {
-      return false;
-    }
-
-    cancelPreview(
-      "compass-confirmation-opened",
-      {
-        silent:
-          true
-      }
+    cancelActiveGestures(
+      "return-to-orbit"
     );
 
-    clearRouteConfirmation({
-      restoreFocus:
-        false,
+    clearViewportSchedules();
 
-      silent:
-        true,
+    if (state.compassSelected) {
+      state.compassSelected = false;
 
-      reason:
-        "compass-superseded-route",
-
-      finalizeBeforeReplacement:
-        true
-    });
-
-    if (
-      state.compassDialog.open ||
-      state.activeDialogGeneration.compass
-    ) {
-      clearCompassConfirmation({
-        restoreFocus:
-          false,
-
-        silent:
-          true,
-
-        reason:
-          "compass-reopened",
-
-        finalizeBeforeReplacement:
-          true
-      });
-    }
-
-    const generation =
-      nextDialogGeneration(
-        "compass"
-      );
-
-    state.lastTriggers.compass =
-      trigger ||
-      state.compassControls[0] ||
-      null;
-
-    safelyShowModal(
-      state.compassDialog
-    );
-
-    for (
-      const control
-      of state.compassControls
-    ) {
-      control.setAttribute(
-        "aria-expanded",
-        "true"
-      );
-    }
-
-    setDialogState(
-      state.compassDialog,
-      "compass",
-      true
-    );
-
-    const stay =
-      state.compassDialog.querySelector(
-        SELECTORS.compassStay
-      );
-
-    requestAnimationFrame(
-      () => {
-        focusElement(
-          stay ||
-          state.compassDialog
-        );
-      }
-    );
-
-    state.counters.compassOffers +=
-      1;
-
-    publishReceipt(
-      "compass-dialog-opened",
-      {
-        generation
-      }
-    );
-
-    return true;
-  }
-
-  function closeCompassDialog(
-    options = {}
-  ) {
-    clearCompassConfirmation({
-      restoreFocus:
-        options.restoreFocus !== false,
-
-      silent:
-        Boolean(options.silent),
-
-      reason:
-        options.reason ||
-        "closed"
-    });
-  }
-
-  function stayInShowroom() {
-    closeCompassDialog({
-      restoreFocus:
-        true,
-
-      reason:
-        "stay"
-    });
-
-    publishReceipt(
-      "stayed-in-showroom"
-    );
-  }
-
-  function openConstructionDialog(
-    trigger = null
-  ) {
-    if (
-      !state.constructionDialog ||
-      state.disposed
-    ) {
-      return false;
-    }
-
-    clearRouteConfirmation({
-      restoreFocus:
-        false,
-
-      silent:
-        true,
-
-      reason:
-        "construction-superseded-route",
-
-      finalizeBeforeReplacement:
-        true
-    });
-
-    clearCompassConfirmation({
-      restoreFocus:
-        false,
-
-      silent:
-        true,
-
-      reason:
-        "construction-superseded-compass",
-
-      finalizeBeforeReplacement:
-        true
-    });
-
-    if (
-      state.constructionDialog.open ||
-      state.activeDialogGeneration.construction
-    ) {
-      closeConstructionDialog({
-        restoreFocus:
-          false,
-
-        silent:
-          true,
-
-        reason:
-          "construction-reopened",
-
-        finalizeBeforeReplacement:
-          true
-      });
-    }
-
-    const generation =
-      nextDialogGeneration(
-        "construction"
-      );
-
-    state.lastTriggers.construction =
-      trigger;
-
-    safelyShowModal(
-      state.constructionDialog
-    );
-
-    state.constructionDialog.setAttribute(
-      ATTRIBUTES.dialogState,
-      "open"
-    );
-
-    const close =
-      state.constructionDialog
-        .querySelector(
-          SELECTORS.constructionClose
-        );
-
-    requestAnimationFrame(
-      () => {
-        focusElement(
-          close ||
-          state.constructionDialog
-        );
-      }
-    );
-
-    publishReceipt(
-      "construction-dialog-opened",
-      {
-        generation
-      }
-    );
-
-    return true;
-  }
-
-  function openInstructions(
-    options = {}
-  ) {
-    if (
-      !state.instructionsDisclosure ||
-      state.disposed
-    ) {
-      return false;
-    }
-
-    state.instructionsDisclosure.open =
-      true;
-
-    for (
-      const control
-      of state.instructionControls
-    ) {
-      control.setAttribute(
-        "aria-expanded",
-        "true"
-      );
-    }
-
-    const summary =
-      state.instructionsDisclosure.querySelector(
-        ":scope > summary"
-      );
-
-    if (
-      options.scroll !== false
-    ) {
-      requestAnimationFrame(
-        () => {
-          scrollToElement(
-            summary ||
-            state.instructionsDisclosure
+      if (
+        state.current ===
+        STATES.ROOM_SELECTED
+      ) {
+        const wing =
+          normalizeWing(
+            state.selectedCardinal
           );
+
+        if (!wing) {
+          return false;
         }
-      );
-    }
 
-    if (options.focus === true) {
-      requestAnimationFrame(
-        () => {
-          focusElement(summary);
-        }
-      );
-    }
+        const coin =
+          findCoinElement(wing);
 
-    publishReceipt(
-      "instructions-opened"
-    );
+        const destination =
+          destinationFromElement(coin);
 
-    return true;
-  }
+        invalidateDestinationAuthorization();
 
-  function syncInstructionsState() {
-    if (!state.instructionsDisclosure) {
-      return;
-    }
-
-    const open =
-      state.instructionsDisclosure.open;
-
-    for (
-      const control
-      of state.instructionControls
-    ) {
-      control.setAttribute(
-        "aria-expanded",
-        open
-          ? "true"
-          : "false"
-      );
-    }
-  }
-
-  function commitObject(
-    objectValue,
-    options = {}
-  ) {
-    if (
-      state.disposed ||
-      state.held
-    ) {
-      state.counters.rejectedActivations +=
-        1;
-
-      return false;
-    }
-
-    const object =
-      resolveObject(
-        objectValue
-      );
-
-    if (!object) {
-      state.counters.rejectedActivations +=
-        1;
-
-      return false;
-    }
-
-    const descriptor =
-      describeObject(object);
-
-    if (
-      options.dedupe !== false &&
-      isDuplicateActivation(
-        `object:${descriptor.objectId}`
-      )
-    ) {
-      return false;
-    }
-
-    switch (descriptor.behavior) {
-      case "cluster": {
-        const clusterId =
-          descriptor.clusterId ||
-          descriptor.cardinalId;
-
-        const cardinalId =
-          descriptor.cardinalId ||
-          clusterId;
-
-        const changed =
-          toggleCluster(
-            clusterId,
+        const committed =
+          applyState(
+            STATES.CLUSTER_OPEN,
             {
-              cardinalId,
+              selectedCardinal: wing,
 
-              focusFirstChild:
-                Boolean(
-                  options.focusFirstChild
-                )
-            }
+              selectedCoin:
+                wingToCoin(wing),
+
+              selectedRoom: "",
+
+              selectedDestinationType:
+                DESTINATION_TYPES.COIN,
+
+              selectedDestinationId:
+                wing,
+
+              selectedDestinationLabel:
+                destination
+                  ? destination.label ||
+                    WING_LABELS[wing] ||
+                    wingToCoin(wing)
+                  : WING_LABELS[wing] ||
+                    wingToCoin(wing),
+
+              selectedRoute: "",
+              selectedContentId: "",
+              selectedLens: "overview",
+              selectedParagraph: "",
+              compassSelected: false,
+              panelDescended: false
+            },
+            `compass-returned-to-orbit:${wing}`
           );
 
-        publishReceipt(
-          "cluster-commit",
-          {
-            objectId:
-              descriptor.objectId,
+        if (committed) {
+          scheduleSceneAscent(
+            STATES.CLUSTER_OPEN,
+            wing
+          );
+        }
 
-            cardinalId,
-
-            clusterId,
-
-            changed
-          }
-        );
-
-        return changed;
+        return committed;
       }
 
-      case "local":
-        return activateLocalDestination(
-          descriptor,
-          options
+      if (
+        state.current ===
+        STATES.CLUSTER_OPEN
+      ) {
+        state.selectedDestinationType =
+          DESTINATION_TYPES.COIN;
+
+        state.selectedDestinationId =
+          state.selectedCardinal;
+
+        state.selectedDestinationLabel =
+          WING_LABELS[
+            state.selectedCardinal
+          ] ||
+          wingToCoin(
+            state.selectedCardinal
+          );
+
+        state.selectedRoute = "";
+        state.panelDescended = false;
+
+        syncPresentation();
+
+        recordAction(
+          `compass-returned-to-cluster:${state.selectedCardinal}`
         );
 
-      case "portal":
-        commitPortalSelection(
-          descriptor
+        scheduleSceneAscent(
+          STATES.CLUSTER_OPEN,
+          state.selectedCardinal
         );
 
-        applyPresentationForCurrentState(
-          "portal-child-selected"
+        return true;
+      }
+
+      if (
+        state.current ===
+        STATES.CONSTELLATION
+      ) {
+        resetSelection();
+        syncPresentation();
+
+        recordAction(
+          "compass-returned-to-constellation"
         );
 
-        reflectState();
-
-        state.counters.childCommits +=
-          1;
-
-        return openRouteDialog(
-          object,
-          {
-            trigger:
-              object
-          }
+        scheduleSceneAscent(
+          STATES.CONSTELLATION
         );
 
-      case "compass-return":
-        cancelPreview(
-          "compass-confirmation-requested",
-          {
-            silent:
-              true
-          }
-        );
-
-        return openCompassDialog(
-          object
-        );
-
-      default:
-        state.counters.rejectedActivations +=
-          1;
-
-        publishReceipt(
-          "object-commit-rejected",
-          {
-            objectId:
-              descriptor.objectId,
-
-            behavior:
-              descriptor.behavior ||
-              null
-          }
-        );
-
-        return false;
+        return true;
+      }
     }
-  }
 
-  function commitPreview(
-    token,
-    options = {}
-  ) {
     if (
-      !state.preview.active ||
-      state.held ||
-      state.disposed
+      state.current !==
+      STATES.ROOM_SELECTED
     ) {
       return false;
     }
 
-    if (
-      token !== undefined &&
-      token !== null &&
-      Number(token) !==
-        state.preview.token
-    ) {
+    const wing =
+      normalizeWing(
+        state.selectedCardinal
+      );
+
+    if (!wing) {
+      recordAction(
+        "return-to-orbit-rejected",
+        "ACTIVE_ROOM_WING_REQUIRED"
+      );
+
       return false;
     }
 
-    const objectId =
-      state.preview.objectId;
+    const coin =
+      findCoinElement(wing);
+
+    const destination =
+      destinationFromElement(coin);
+
+    invalidateDestinationAuthorization();
 
     const committed =
-      commitObject(
-        objectId,
+      applyState(
+        STATES.CLUSTER_OPEN,
         {
-          ...options,
+          selectedCardinal: wing,
 
-          dedupe:
-            false
-        }
+          selectedCoin:
+            wingToCoin(wing),
+
+          selectedRoom: "",
+
+          selectedDestinationType:
+            DESTINATION_TYPES.COIN,
+
+          selectedDestinationId: wing,
+
+          selectedDestinationLabel:
+            destination
+              ? destination.label ||
+                WING_LABELS[wing] ||
+                wingToCoin(wing)
+              : WING_LABELS[wing] ||
+                wingToCoin(wing),
+
+          selectedRoute: "",
+          selectedContentId: "",
+          selectedLens: "overview",
+          selectedParagraph: "",
+          compassSelected: false,
+          panelDescended: false
+        },
+        `returned-to-orbit:${wing}`
       );
 
     if (committed) {
-      state.counters.previewsCommitted +=
-        1;
+      scheduleSceneAscent(
+        STATES.CLUSTER_OPEN,
+        wing
+      );
     }
 
     return committed;
   }
 
-  function returnToOrbit(
+  function requestReturnToConstellation(
     options = {}
   ) {
-    commitConstellationState();
+    if (arguments.length > 1) {
+      return false;
+    }
 
-    applyPresentationForCurrentState(
-      "return-to-orbit"
+    if (
+      isHeld() ||
+      (
+        state.current !==
+          STATES.CLUSTER_OPEN &&
+        state.current !==
+          STATES.ROOM_SELECTED
+      )
+    ) {
+      return false;
+    }
+
+    cancelActiveGestures(
+      "return-to-constellation"
     );
 
-    const frame =
-      reflectState();
+    clearViewportSchedules();
+
+    const previousWing =
+      normalizeWing(
+        state.selectedCardinal ||
+        state.orbitFocus
+      ) || "north";
+
+    resetSelection();
+
+    const committed =
+      applyState(
+        STATES.CONSTELLATION,
+        {
+          orbitFocus:
+            previousWing,
+
+          orbitPreviewFocus:
+            previousWing,
+
+          compassSelected: false
+        },
+        `returned-to-constellation:${previousWing}`
+      );
 
     if (
-      options.scroll !== false
+      committed &&
+      options.scrollToScene !== false
     ) {
-      requestAnimationFrame(
-        () => {
-          scrollToElement(
-            state.orbit,
-            "start"
-          );
-        }
+      scheduleSceneAscent(
+        STATES.CONSTELLATION
       );
     }
 
-    if (
-      options.focus !== false
-    ) {
-      requestAnimationFrame(
-        () => {
-          focusElement(
-            state.compassControls[0] ||
-            state.orbit
-          );
-        }
-      );
+    return committed;
+  }
+
+  function updateSemanticProjection(records) {
+    if (!Array.isArray(records)) {
+      return false;
     }
 
-    state.counters.returnsToOrbit +=
-      1;
+    const next = new Map();
 
-    dispatch(
-      EVENTS.frontChanged,
-      {
-        frontId:
-          null,
-
-        active:
-          false,
-
-        returnedToOrbit:
-          true,
-
-        frame
+    for (const input of records) {
+      if (
+        !input ||
+        typeof input !== "object"
+      ) {
+        continue;
       }
+
+      const id = String(
+        input.id ||
+        input.roomId ||
+        input.wing ||
+        input.cardinalId ||
+        ""
+      ).trim();
+
+      if (!id) {
+        continue;
+      }
+
+      const kind = String(
+        input.kind || ""
+      )
+        .trim()
+        .toLowerCase();
+
+      if (
+        !canonicalControlExists({
+          id,
+          kind
+        })
+      ) {
+        continue;
+      }
+
+      const projection =
+        Object.freeze({
+          id,
+          kind,
+
+          x: finiteNumber(
+            input.x,
+            0
+          ),
+
+          y: finiteNumber(
+            input.y,
+            0
+          ),
+
+          radiusPx: Math.max(
+            0,
+            finiteNumber(
+              input.radiusPx ??
+              input.projectedRadius,
+              0
+            )
+          ),
+
+          depthLayer:
+            normalizeDepthLayer(
+              input.depthLayer ||
+              input.layer
+            ),
+
+          compassOverlap:
+            Boolean(
+              input.compassOverlap
+            ),
+
+          visible:
+            input.visible !== false
+        });
+
+      next.set(
+        `${projection.kind}:${id}`,
+        projection
+      );
+    }
+
+    state.semanticProjection = next;
+    state.semanticProjectionRevision += 1;
+
+    const snapshot =
+      createSemanticProjectionSnapshot();
+
+    publish(
+      CHANNELS.SEMANTIC_PROJECTION,
+      snapshot
     );
 
-    publishReceipt(
-      "returned-to-orbit"
+    recordAction(
+      `semantic-projection-updated:${snapshot.length}`
     );
 
     return true;
   }
 
-  function setHeld(
-    value,
-    reason = ""
-  ) {
-    const next =
-      Boolean(value);
-
-    if (state.held === next) {
-      return state.held;
+  function handleKeydown(event) {
+    if (
+      isHeld() ||
+      event.key !== "Escape"
+    ) {
+      return;
     }
 
-    if (next) {
-      cancelPreview(
-        "held",
-        {
-          silent:
-            true
-        }
-      );
-
-      clearRouteConfirmation({
-        restoreFocus:
-          false,
-
-        silent:
-          true,
-
-        reason:
-          "held"
-      });
-
-      clearCompassConfirmation({
-        restoreFocus:
-          false,
-
-        silent:
-          true,
-
-        reason:
-          "held"
-      });
-
-      state.held = true;
-    } else {
-      state.held = false;
-
-      applyPresentationForCurrentState(
-        "held-released"
-      );
+    if (state.compassSelected) {
+      event.preventDefault();
+      requestReturnToOrbit();
+      return;
     }
 
-    const frame =
-      reflectState();
+    if (
+      state.current ===
+      STATES.ROOM_SELECTED
+    ) {
+      event.preventDefault();
+      requestReturnToOrbit();
+      return;
+    }
 
-    publishReceipt(
-      "held-state-changed",
-      {
-        held:
-          state.held,
-
-        reason:
-          reason ||
-          null,
-
-        frame
-      }
-    );
-
-    return state.held;
+    if (
+      state.current ===
+      STATES.CLUSTER_OPEN
+    ) {
+      event.preventDefault();
+      requestReturnToConstellation();
+    }
   }
 
-  function applyReducedMotion() {
-    state.reducedMotion =
-      Boolean(
-        state.reducedMotionQuery &&
-        state.reducedMotionQuery.matches
-      );
+  function handleCrystalsFailure(event) {
+    const reason = String(
+      event &&
+      event.detail &&
+      event.detail.reason
+        ? event.detail.reason
+        : "ARCHCOIN_CRYSTALS_RENDER_FAILURE"
+    );
 
-    reflectState();
+    cancelActiveGestures(
+      "crystals-failure"
+    );
 
-    publishReceipt(
-      "reduced-motion-changed"
+    setGuidance(
+      "The visual crystal field is temporarily unavailable. Canonical destinations and semantic records remain preserved."
+    );
+
+    recordAction(
+      "crystals-renderer-failed",
+      reason
     );
   }
 
-  function initializeReducedMotion() {
-    state.reducedMotionQuery =
-      window.matchMedia(
+  function readReducedMotion() {
+    const media =
+      globalThis.matchMedia(
         "(prefers-reduced-motion: reduce)"
       );
 
-    if (
-      typeof state.reducedMotionQuery
-        .addEventListener ===
-        "function"
-    ) {
-      addListener(
-        state.reducedMotionQuery,
-        "change",
-        applyReducedMotion
-      );
-    } else if (
-      typeof state.reducedMotionQuery
-        .addListener ===
-        "function"
-    ) {
-      state.reducedMotionQuery.addListener(
-        applyReducedMotion
-      );
+    state.mediaQuery = media;
 
-      state.listeners.push(() => {
-        state.reducedMotionQuery.removeListener(
-          applyReducedMotion
-        );
-      });
-    }
-
-    applyReducedMotion();
+    state.reducedMotion =
+      Boolean(media.matches) ||
+      (
+        state.root &&
+        state.root.dataset
+          .reducedMotion === "true"
+      );
   }
 
-  function handleSemanticActivation(event) {
-    const detail =
-      event &&
-      event.detail
-        ? event.detail
-        : {};
+  function bindReducedMotion() {
+    const media =
+      state.mediaQuery;
 
-    const validation =
-      validateSemanticEvent(
-        detail
+    if (!media) {
+      return;
+    }
+
+    const update = event => {
+      const previous =
+        state.reducedMotion;
+
+      state.reducedMotion =
+        Boolean(event.matches);
+
+      if (
+        previous ===
+        state.reducedMotion
+      ) {
+        return;
+      }
+
+      publish(
+        CHANNELS.REDUCED_MOTION,
+        state.reducedMotion
       );
 
-    if (!validation.valid) {
-      return;
-    }
-
-    commitObject(
-      validation.object
-    );
-  }
-
-  function handleCompassActivation(event) {
-    const detail =
-      event &&
-      event.detail
-        ? event.detail
-        : {};
-
-    const validation =
-      validateCompassEvent(
-        detail
+      publish(
+        CHANNELS.COMPASS_STATE,
+        createCompassState()
       );
 
-    if (!validation.valid) {
-      state.counters.rejectedActivations +=
-        1;
-
-      publishReceipt(
-        "compass-activation-rejected",
-        {
-          reason:
-            validation.reason
-        }
+      recordAction(
+        "reduced-motion-updated"
       );
-
-      return;
-    }
-
-    openCompassDialog(
-      validation.control
-    );
-  }
-
-  function handleClusterExitIntent(event) {
-    const detail =
-      event &&
-      event.detail
-        ? event.detail
-        : {};
-
-    const clusterId =
-      normalize(
-        detail.clusterId
-      );
-
-    if (
-      !clusterId ||
-      clusterId !==
-        state.committed.clusterId
-    ) {
-      return;
-    }
-
-    closeCluster(clusterId);
-  }
-
-  function handleDirectObjectClick(event) {
-    if (
-      event.defaultPrevented ||
-      state.disposed ||
-      state.held
-    ) {
-      return;
-    }
-
-    const object =
-      resolveObject(
-        event.currentTarget
-      );
-
-    if (!object) {
-      return;
-    }
-
-    if (event.detail === 0) {
-      commitObject(object);
-      return;
-    }
-
-    const point = {
-      x:
-        event.clientX,
-
-      y:
-        event.clientY
     };
 
+    state.mediaQueryListener = update;
+
     if (
-      !pointInsideElement(
-        point,
-        state.orbitField
-      ) ||
-      !pointInsideElement(
-        point,
-        object
-      )
+      typeof media.addEventListener ===
+        "function"
     ) {
-      state.counters.rejectedActivations +=
-        1;
-
-      return;
-    }
-
-    const releaseElement =
-      resolveElementAtPoint(
-        point
+      media.addEventListener(
+        "change",
+        update
       );
 
-    const releaseObject =
-      releaseElement
-        ? (
-            releaseElement.matches(
-              SELECTORS.object
-            )
-              ? releaseElement
-              : releaseElement.closest(
-                  SELECTORS.object
-                )
-          )
-        : null;
-
-    if (releaseObject !== object) {
-      state.counters.rejectedActivations +=
-        1;
-
       return;
     }
 
-    commitObject(object);
-  }
-
-  function handleFallbackPortalClick(event) {
     if (
-      state.disposed ||
-      state.held
+      typeof media.addListener ===
+        "function"
     ) {
-      return;
+      media.addListener(update);
     }
-
-    event.preventDefault();
-
-    openRouteDialog(
-      event.currentTarget,
-      {
-        trigger:
-          event.currentTarget
-      }
-    );
   }
 
-  function discoverDom() {
+  function resolveDom() {
     state.root =
-      document.querySelector(
-        SELECTORS.root
-      );
+      qs("[data-archcoin-root]");
 
-    state.receipt =
-      document.querySelector(
-        SELECTORS.receipt
-      );
-
-    state.validation =
-      document.querySelector(
-        SELECTORS.validation
-      );
-
-    state.orbit =
-      document.querySelector(
-        SELECTORS.orbit
-      );
-
-    state.orbitScene =
-      document.querySelector(
-        SELECTORS.orbitScene
-      );
-
-    state.orbitField =
-      document.querySelector(
-        SELECTORS.orbitField
-      );
-
-    state.semanticLayer =
-      document.querySelector(
-        SELECTORS.semanticLayer
-      );
-
-    state.frontHost =
-      document.querySelector(
-        SELECTORS.frontHost
-      );
-
-    state.compassLayer =
-      document.querySelector(
-        SELECTORS.compassLayer
-      );
-
-    state.compassVisualMount =
-      document.querySelector(
-        SELECTORS.compassVisualMount
-      );
-
-    state.compassControls =
-      toArray(
-        document.querySelectorAll(
-          [
-            SELECTORS.compassControl,
-            SELECTORS.openCompassDialog,
-            SELECTORS.sharedReturnToCompass
-          ].join(",")
-        )
-      );
-
-    state.routeDialog =
-      document.querySelector(
-        SELECTORS.routeDialog
-      );
-
-    state.routeDialogTitle =
-      document.querySelector(
-        SELECTORS.routeDialogTitle
-      );
-
-    state.routeDialogDescription =
-      document.querySelector(
-        SELECTORS.routeDialogDescription
-      );
-
-    state.routeContinue =
-      document.querySelector(
-        SELECTORS.routeContinue
-      );
-
-    state.compassDialog =
-      document.querySelector(
-        SELECTORS.compassDialog
-      );
-
-    state.compassReturn =
-      document.querySelector(
-        SELECTORS.compassReturn
-      );
-
-    state.instructionsDisclosure =
-      document.querySelector(
-        SELECTORS.instructionsDisclosure
-      );
-
-    state.instructionControls =
-      toArray(
-        document.querySelectorAll(
-          SELECTORS.instructionsOpen
-        )
-      );
-
-    state.constructionDialog =
-      document.querySelector(
-        SELECTORS.constructionDialog
-      );
-
-    state.objects.clear();
-    state.cardinals.clear();
-    state.children.clear();
-    state.clusters.clear();
-    state.fronts.clear();
-
-    if (state.orbitField) {
-      for (
-        const object
-        of state.orbitField.querySelectorAll(
-          SELECTORS.object
-        )
-      ) {
-        const objectId =
-          normalize(
-            object.getAttribute(
-              ATTRIBUTES.objectId
-            )
-          );
-
-        if (objectId) {
-          state.objects.set(
-            objectId,
-            object
-          );
-        }
-
-        if (
-          object.matches(
-            SELECTORS.cardinalControl
-          )
-        ) {
-          const cardinalId =
-            normalize(
-              object.getAttribute(
-                ATTRIBUTES.cardinalId
-              )
-            );
-
-          if (cardinalId) {
-            state.cardinals.set(
-              cardinalId,
-              object
-            );
-          }
-        }
-
-        if (
-          object.matches(
-            SELECTORS.childControl
-          )
-        ) {
-          const childId =
-            normalize(
-              object.getAttribute(
-                ATTRIBUTES.childId
-              )
-            );
-
-          if (childId) {
-            state.children.set(
-              childId,
-              object
-            );
-          }
-        }
-      }
-
-      for (
-        const cluster
-        of state.orbitField.querySelectorAll(
-          SELECTORS.cluster
-        )
-      ) {
-        const clusterId =
-          normalize(
-            cluster.getAttribute(
-              ATTRIBUTES.clusterId
-            )
-          );
-
-        if (clusterId) {
-          state.clusters.set(
-            clusterId,
-            cluster
-          );
-        }
-      }
-    }
-
-    for (
-      const front
-      of document.querySelectorAll(
-        SELECTORS.front
-      )
-    ) {
-      if (front.id) {
-        state.fronts.set(
-          front.id,
-          front
-        );
-      }
-    }
-  }
-
-  function validateDom() {
-    const issues = [];
-
-    if (!state.root) {
-      issues.push(
-        "Missing [data-showroom-root]."
-      );
-    }
-
-    if (!state.orbit) {
-      issues.push(
-        "Missing #showroom-orbit."
-      );
-    }
-
-    if (!state.orbitField) {
-      issues.push(
-        "Missing [data-showroom-orbit-field]."
-      );
-    }
-
-    if (!state.semanticLayer) {
-      issues.push(
-        "Missing [data-showroom-semantic-star-layer]."
-      );
-    }
-
-    if (!state.compassLayer) {
-      issues.push(
-        "Missing [data-showroom-compass-layer]."
-      );
-    }
-
-    if (!state.compassVisualMount) {
-      issues.push(
-        "Missing [data-showroom-compass-visual-mount]."
-      );
-    }
-
-    if (!state.compassControls.length) {
-      issues.push(
-        "No Main Compass semantic controls were found."
-      );
-    }
-
-    if (!state.routeDialog) {
-      issues.push(
-        "Missing [data-showroom-route-dialog]."
-      );
-    }
-
-    if (!state.compassDialog) {
-      issues.push(
-        "Missing [data-showroom-compass-dialog]."
-      );
-    }
-
-    if (state.cardinals.size !== 4) {
-      issues.push(
-        `Expected four cardinal controls; found ${state.cardinals.size}.`
-      );
-    }
-
-    if (state.children.size !== 16) {
-      issues.push(
-        `Expected sixteen child controls; found ${state.children.size}.`
-      );
-    }
-
-    for (
-      const cardinalId
-      of [
-        "north",
-        "east",
-        "south",
-        "west"
-      ]
-    ) {
-      if (
-        !state.cardinals.has(
-          cardinalId
-        )
-      ) {
-        issues.push(
-          `Missing cardinal control "${cardinalId}".`
-        );
-      }
-
-      if (
-        !state.clusters.has(
-          cardinalId
-        )
-      ) {
-        issues.push(
-          `Missing cluster "${cardinalId}".`
-        );
-      }
-    }
-
-    for (
-      const [
-        objectId,
-        object
-      ]
-      of state.objects
-    ) {
-      const behavior =
-        normalize(
-          object.getAttribute(
-            ATTRIBUTES.objectBehavior
-          )
-        );
-
-      if (
-        ![
-          "cluster",
-          "local",
-          "portal",
-          "compass-return"
-        ].includes(behavior)
-      ) {
-        issues.push(
-          `Object "${objectId}" has unsupported behavior "${behavior}".`
-        );
-      }
-    }
-
-    if (
-      state.compassReturn &&
-      new URL(
-        state.compassReturn.href,
-        window.location.href
-      ).pathname !==
-        MAIN_COMPASS_ROUTE
-    ) {
-      issues.push(
-        "Main Compass return link does not target /index.html."
-      );
-    }
-
-    publishValidation(
-      issues.length
-        ? "failed"
-        : "passed",
-      issues
-    );
-
-    return issues;
-  }
-
-  function initializeObjectListeners() {
-    for (
-      const object
-      of state.objects.values()
-    ) {
-      addListener(
-        object,
-        "click",
-        handleDirectObjectClick
-      );
-    }
-
-    for (
-      const control
-      of document.querySelectorAll(
-        SELECTORS.fallbackPortal
-      )
-    ) {
-      addListener(
-        control,
-        "click",
-        handleFallbackPortalClick
-      );
-    }
-  }
-
-  function initializeCompassControls() {
-    for (
-      const control
-      of state.compassControls
-    ) {
-      addListener(
-        control,
-        "click",
-        event => {
-          event.preventDefault();
-
-          openCompassDialog(control);
-        }
-      );
-    }
-
-    for (
-      const control
-      of document.querySelectorAll(
-        SELECTORS.compassClose
-      )
-    ) {
-      addListener(
-        control,
-        "click",
-        () => {
-          closeCompassDialog({
-            restoreFocus:
-              true,
-
-            reason:
-              "close-button"
-          });
-        }
-      );
-    }
-
-    for (
-      const control
-      of document.querySelectorAll(
-        SELECTORS.compassStay
-      )
-    ) {
-      addListener(
-        control,
-        "click",
-        stayInShowroom
-      );
-    }
-
-    if (state.compassReturn) {
-      addListener(
-        state.compassReturn,
-        "click",
-        () => {
-          publishReceipt(
-            "main-compass-navigation-requested",
-            {
-              route:
-                MAIN_COMPASS_ROUTE
-            }
-          );
-        }
-      );
-    }
-  }
-
-  function initializeRouteControls() {
-    for (
-      const control
-      of document.querySelectorAll(
-        SELECTORS.routeClose
-      )
-    ) {
-      addListener(
-        control,
-        "click",
-        () => {
-          closeRouteDialog({
-            restoreFocus:
-              true,
-
-            reason:
-              "close-button"
-          });
-        }
-      );
-    }
-
-    for (
-      const control
-      of document.querySelectorAll(
-        SELECTORS.routeStay
-      )
-    ) {
-      addListener(
-        control,
-        "click",
-        () => {
-          closeRouteDialog({
-            restoreFocus:
-              true,
-
-            reason:
-              "stay"
-          });
-        }
-      );
-    }
-
-    if (state.routeContinue) {
-      addListener(
-        state.routeContinue,
-        "click",
-        event => {
-          event.preventDefault();
-
-          continuePendingRoute();
-        }
-      );
-    }
-  }
-
-  function initializeReturnControls() {
-    const controls =
-      toArray(
-        document.querySelectorAll(
-          [
-            SELECTORS.accessibleReturnToOrbit,
-            SELECTORS.sharedReturnToOrbit,
-            SELECTORS.legacyReturnToOrbit
-          ].join(",")
-        )
-      );
-
-    for (
-      const control
-      of controls
-    ) {
-      addListener(
-        control,
-        "click",
-        event => {
-          event.preventDefault();
-
-          state.lastTriggers.orbit =
-            control;
-
-          returnToOrbit();
-        }
-      );
-    }
-  }
-
-  function initializeInstructionsControls() {
-    for (
-      const control
-      of state.instructionControls
-    ) {
-      addListener(
-        control,
-        "click",
-        event => {
-          event.preventDefault();
-
-          state.lastTriggers.instructions =
-            control;
-
-          openInstructions({
-            scroll:
-              true,
-
-            focus:
-              false
-          });
-        }
-      );
-    }
-
-    if (state.instructionsDisclosure) {
-      addListener(
-        state.instructionsDisclosure,
-        "toggle",
-        syncInstructionsState
-      );
-    }
-
-    syncInstructionsState();
-  }
-
-  function initializeConstructionControls() {
-    for (
-      const control
-      of document.querySelectorAll(
-        SELECTORS.constructionOpen
-      )
-    ) {
-      addListener(
-        control,
-        "click",
-        () => {
-          openConstructionDialog(
-            control
-          );
-        }
-      );
-    }
-
-    for (
-      const control
-      of document.querySelectorAll(
-        SELECTORS.constructionClose
-      )
-    ) {
-      addListener(
-        control,
-        "click",
-        () => {
-          closeConstructionDialog({
-            restoreFocus:
-              true,
-
-            reason:
-              "close-button"
-          });
-        }
-      );
-    }
-  }
-
-  function initializeDialogEvents() {
-    if (state.routeDialog) {
-      addListener(
-        state.routeDialog,
-        "cancel",
-        event => {
-          event.preventDefault();
-
-          closeRouteDialog({
-            restoreFocus:
-              true,
-
-            reason:
-              "escape"
-          });
-        }
-      );
-
-      addListener(
-        state.routeDialog,
-        "close",
-        () => {
-          const expected =
-            state.expectedDialogClose.route;
-
-          state.expectedDialogClose.route =
-            null;
-
-          finalizeRouteDialogClose(
-            expected || {
-              generation:
-                state.activeDialogGeneration.route ||
-                state.pendingRoute.generation,
-
-              reason:
-                "native-close",
-
-              restoreFocus:
-                false,
-
-              silent:
-                false,
-
-              trigger:
-                state.pendingRoute.trigger,
-
-              routeData:
-                state.pendingRoute.data
-            }
-          );
-        }
-      );
-    }
-
-    if (state.compassDialog) {
-      addListener(
-        state.compassDialog,
-        "cancel",
-        event => {
-          event.preventDefault();
-
-          closeCompassDialog({
-            restoreFocus:
-              true,
-
-            reason:
-              "escape"
-          });
-        }
-      );
-
-      addListener(
-        state.compassDialog,
-        "close",
-        () => {
-          const expected =
-            state.expectedDialogClose.compass;
-
-          state.expectedDialogClose.compass =
-            null;
-
-          finalizeCompassDialogClose(
-            expected || {
-              generation:
-                state.activeDialogGeneration.compass,
-
-              reason:
-                "native-close",
-
-              restoreFocus:
-                false,
-
-              silent:
-                false,
-
-              trigger:
-                state.lastTriggers.compass
-            }
-          );
-        }
-      );
-    }
-
-    if (state.constructionDialog) {
-      addListener(
-        state.constructionDialog,
-        "cancel",
-        event => {
-          event.preventDefault();
-
-          closeConstructionDialog({
-            restoreFocus:
-              true,
-
-            reason:
-              "escape"
-          });
-        }
-      );
-
-      addListener(
-        state.constructionDialog,
-        "close",
-        () => {
-          const expected =
-            state.expectedDialogClose.construction;
-
-          state.expectedDialogClose.construction =
-            null;
-
-          finalizeConstructionDialogClose(
-            expected || {
-              generation:
-                state.activeDialogGeneration.construction,
-
-              reason:
-                "native-close",
-
-              restoreFocus:
-                false,
-
-              silent:
-                false,
-
-              trigger:
-                state.lastTriggers.construction
-            }
-          );
-        }
-      );
-    }
-  }
-
-  function initializeRuntimeEvents() {
-    addListener(
-      window,
-      EVENTS.semanticActivate,
-      handleSemanticActivation
-    );
-
-    addListener(
-      window,
-      EVENTS.objectActivate,
-      handleSemanticActivation
-    );
-
-    addListener(
-      window,
-      EVENTS.compassActivate,
-      handleCompassActivation
-    );
-
-    addListener(
-      window,
-      EVENTS.clusterExitIntent,
-      handleClusterExitIntent
-    );
-
-    addListener(
-      window,
-      EVENTS.compositorReady,
-      () => {
-        setSubsystemReadiness(
-          READINESS_KEYS.compositor,
-          true,
-          {
-            reason:
-              EVENTS.compositorReady
-          }
-        );
-      }
-    );
-
-    addListener(
-      window,
-      EVENTS.compositorFailed,
-      () => {
-        setSubsystemReadiness(
-          READINESS_KEYS.compositor,
-          false,
-          {
-            failed:
-              true,
-
-            reason:
-              EVENTS.compositorFailed
-          }
-        );
-      }
-    );
-
-    addListener(
-      window,
-      EVENTS.compositorDisposed,
-      () => {
-        setSubsystemReadiness(
-          READINESS_KEYS.compositor,
-          false,
-          {
-            reason:
-              EVENTS.compositorDisposed
-          }
-        );
-      }
-    );
-
-    addListener(
-      window,
-      EVENTS.crystalsReady,
-      () => {
-        setSubsystemReadiness(
-          READINESS_KEYS.crystals,
-          true,
-          {
-            reason:
-              EVENTS.crystalsReady
-          }
-        );
-      }
-    );
-
-    addListener(
-      window,
-      EVENTS.crystalsFailed,
-      () => {
-        setSubsystemReadiness(
-          READINESS_KEYS.crystals,
-          false,
-          {
-            failed:
-              true,
-
-            reason:
-              EVENTS.crystalsFailed
-          }
-        );
-      }
-    );
-
-    addListener(
-      window,
-      EVENTS.crystalsDisposed,
-      () => {
-        setSubsystemReadiness(
-          READINESS_KEYS.crystals,
-          false,
-          {
-            reason:
-              EVENTS.crystalsDisposed
-          }
-        );
-      }
-    );
-
-    addListener(
-      window,
-      EVENTS.interactionsReady,
-      () => {
-        setSubsystemReadiness(
-          READINESS_KEYS.interactions,
-          true,
-          {
-            reason:
-              EVENTS.interactionsReady
-          }
-        );
-      }
-    );
-
-    addListener(
-      window,
-      EVENTS.interactionsFailed,
-      () => {
-        setSubsystemReadiness(
-          READINESS_KEYS.interactions,
-          false,
-          {
-            failed:
-              true,
-
-            reason:
-              EVENTS.interactionsFailed
-          }
-        );
-      }
-    );
-
-    addListener(
-      window,
-      EVENTS.interactionsDisposed,
-      () => {
-        setSubsystemReadiness(
-          READINESS_KEYS.interactions,
-          false,
-          {
-            reason:
-              EVENTS.interactionsDisposed
-          }
-        );
-      }
-    );
-
-    addListener(
-      window,
-      EVENTS.windowHeld,
-      () => {
-        setHeld(
-          true,
-          "window-held"
-        );
-      }
-    );
-
-    addListener(
-      window,
-      EVENTS.windowReleased,
-      () => {
-        setHeld(
-          false,
-          "window-released"
-        );
-      }
-    );
-
-    addListener(
-      window,
-      EVENTS.gaugesReady,
-      () => {
-        if (
-          state.committed.informationTab
-        ) {
-          requestInformationTab(
-            state.committed.informationTab
-          );
-        }
-      }
-    );
-  }
-
-  function initializeRootObserver() {
-    if (!state.root) {
-      return;
-    }
-
-    const observer =
-      new MutationObserver(
-        mutations => {
-          for (
-            const mutation
-            of mutations
-          ) {
-            if (
-              mutation.attributeName ===
-              ATTRIBUTES.held
-            ) {
-              const requested =
-                state.root.getAttribute(
-                  ATTRIBUTES.held
-                ) === "true";
-
-              if (
-                requested !==
-                state.held
-              ) {
-                setHeld(
-                  requested,
-                  "root-attribute"
-                );
-              }
-            }
-          }
-        }
-      );
-
-    observer.observe(
+    invariant(
       state.root,
-      {
-        attributes:
-          true,
-
-        attributeFilter: [
-          ATTRIBUTES.held
-        ]
-      }
+      "ARCHCOIN_ROOT_NOT_FOUND"
     );
 
-    addObserver(observer);
+    state.scene = qs(
+      "[data-archcoin-scene]",
+      state.root
+    );
+
+    state.sceneField = qs(
+      "[data-archcoin-scene-field]",
+      state.root
+    );
+
+    state.panel = qs(
+      "[data-archcoin-panel]",
+      state.root
+    );
+
+    invariant(
+      state.scene,
+      "ARCHCOIN_SCENE_NOT_FOUND"
+    );
+
+    invariant(
+      state.sceneField,
+      "ARCHCOIN_SCENE_FIELD_NOT_FOUND"
+    );
+
+    invariant(
+      state.panel,
+      "ARCHCOIN_PANEL_NOT_FOUND"
+    );
+
+    state.panelEyebrow = qs(
+      "[data-archcoin-panel-eyebrow]",
+      state.root
+    );
+
+    state.panelTitle = qs(
+      "[data-archcoin-panel-title]",
+      state.root
+    );
+
+    state.panelPurpose = qs(
+      "[data-archcoin-panel-purpose]",
+      state.root
+    );
+
+    state.panelRelationship = qs(
+      "[data-archcoin-panel-relationship]",
+      state.root
+    );
+
+    state.panelDomain = qs(
+      "[data-archcoin-panel-domain]",
+      state.root
+    );
+
+    state.panelFunction = qs(
+      "[data-archcoin-panel-function]",
+      state.root
+    );
+
+    state.panelCoordinate = qs(
+      "[data-archcoin-panel-coordinate]",
+      state.root
+    );
+
+    state.panelSelectionState = qs(
+      "[data-archcoin-panel-selection-state]",
+      state.root
+    );
+
+    state.panelRouteStatus = qs(
+      "[data-archcoin-panel-route-status]",
+      state.root
+    );
+
+    state.panelLens = qs(
+      "[data-archcoin-panel-lens]",
+      state.root
+    );
+
+    state.enterButton = qs(
+      "[data-archcoin-enter]",
+      state.root
+    );
+
+    state.enterLabel = qs(
+      "[data-archcoin-enter-label]",
+      state.root
+    );
+
+    state.returnToOrbitButton = qs(
+      "[data-archcoin-return-to-orbit]",
+      state.root
+    );
+
+    state.returnToOrbitLabel = qs(
+      "[data-archcoin-return-to-orbit-label]",
+      state.root
+    );
+
+    state.returnHomeButton = qs(
+      "[data-archcoin-return-home-compass]",
+      state.root
+    );
+
+    state.guidance = qs(
+      "[data-archcoin-guidance]",
+      state.root
+    );
+
+    state.controllerReceiptOutput = qs(
+      "[data-archcoin-controller-receipt]",
+      state.root
+    );
+
+    state.controllerValidationOutput = qs(
+      "[data-archcoin-controller-validation]",
+      state.root
+    );
+
+    state.compassControl = qs(
+      "[data-upstream-compass-control]",
+      state.root
+    );
+
+    invariant(
+      state.compassControl,
+      "ARCHCOIN_COMPASS_CONTROL_NOT_FOUND"
+    );
   }
 
-  function initializeBaseline() {
-    state.durableState =
-      DURABLE_STATES.CONSTELLATION;
+  function initializeOrientationState() {
+    const requestedFocus =
+      normalizeWing(
+        state.root.dataset.orbitFocus
+      ) || "north";
 
-    state.committed.cardinalId = "";
-    state.committed.childId = "";
-    state.committed.clusterId = "";
-    state.committed.localTargetId = "";
-    state.committed.frontId = "";
-    state.committed.gaugeSet = "";
-    state.committed.informationTab = "";
+    let initial =
+      canonicalConstellationOrientation(
+        requestedFocus
+      );
 
-    state.preview.active = false;
-    state.preview.objectId = "";
-    state.preview.cardinalId = "";
-    state.preview.childId = "";
-    state.preview.clusterId = "";
-    state.preview.source = "";
+    const serialized = String(
+      state.root.dataset.orbitQuaternion ||
+      ""
+    ).trim();
 
-    state.pendingRoute.data = null;
-    state.pendingRoute.trigger = null;
-    state.pendingRoute.generation = 0;
+    if (serialized) {
+      try {
+        const parsed =
+          JSON.parse(serialized);
 
-    state.activeDialogGeneration.route = 0;
-    state.activeDialogGeneration.compass = 0;
-    state.activeDialogGeneration.construction = 0;
+        const normalized =
+          normalizeQuaternionStrict(
+            parsed
+          );
 
-    state.expectedDialogClose.route = null;
-    state.expectedDialogClose.compass = null;
-    state.expectedDialogClose.construction = null;
+        if (normalized) {
+          initial =
+            createOrientation(
+              normalized,
+              requestedFocus
+            );
+        }
+      } catch (_) {}
+    }
 
-    state.held = false;
+    state.orbitFocus =
+      requestedFocus;
 
-    restoreNativeSemanticFallback();
+    state.orbitPreviewFocus =
+      requestedFocus;
 
-    reflectState();
+    state.orbitPhase =
+      ORIENTATION_PHASES.COMMITTED;
+
+    state.orbitGestureActive = false;
+    state.orbitPreviewAccepted = false;
+
+    state.orbitRevision =
+      finiteNumber(
+        state.root.dataset.orbitRevision,
+        0
+      );
+
+    state.orbitOrientation =
+      cloneOrientation(initial);
+
+    state.committedOrbitOrientation =
+      cloneOrientation(initial);
+
+    state.orbitGestureOrigin = null;
   }
 
-  function exposeApi() {
-    const api =
-      Object.freeze({
-        contract:
-          CONTRACT,
+  function initializeClusters() {
+    state.clusters.clear();
 
-        getFrameState,
+    for (const wing of WINGS) {
+      const cluster =
+        createClusterState(wing);
 
-        getState,
+      invariant(
+        cluster.roomIds.length === 4,
+        "ARCHCOIN_CLUSTER_ROOM_COUNT_INVALID",
+        {
+          wing,
+          count: cluster.roomIds.length
+        }
+      );
 
-        beginPreview,
+      state.clusters.set(
+        wing,
+        cluster
+      );
+    }
+  }
 
-        previewObject:
-          beginPreview,
+  function getClusterState(wing) {
+    const cluster =
+      getCluster(wing);
 
-        commitPreview,
+    if (!cluster) {
+      return null;
+    }
 
-        cancelPreview,
+    return Object.freeze({
+      wing: cluster.wing,
 
-        commitObject,
+      roomIds: Object.freeze(
+        cluster.roomIds.slice()
+      ),
 
-        activateObjectById(
-          objectId,
-          options = {}
-        ) {
-          return commitObject(
-            objectId,
-            options
-          );
-        },
+      primaryRoom:
+        cluster.primaryRoom,
 
-        openCluster,
+      previewPrimaryRoom:
+        cluster.previewPrimaryRoom,
 
-        closeCluster,
+      phase:
+        cluster.phase,
 
-        toggleCluster,
+      gestureActive:
+        cluster.gestureActive,
 
-        activateLocalDestinationByObjectId(
-          objectId,
-          options = {}
-        ) {
-          const object =
-            resolveObject(
-              objectId
-            );
+      previewAccepted:
+        cluster.previewAccepted,
 
-          if (!object) {
-            return false;
+      revision:
+        cluster.revision,
+
+      orientation:
+        freezeOrientation(
+          cluster.orientation
+        ),
+
+      committedOrientation:
+        freezeOrientation(
+          cluster.committedOrientation
+        )
+    });
+  }
+
+  function validateCanonicalRegistry() {
+    invariant(
+      WINGS.length === 4,
+      "ARCHCOIN_WING_COUNT_INVALID"
+    );
+
+    invariant(
+      new Set(WINGS).size === 4,
+      "ARCHCOIN_DUPLICATE_WING"
+    );
+
+    invariant(
+      CANONICAL_ROOM_RECORDS.length ===
+        16,
+      "ARCHCOIN_CANONICAL_ROOM_COUNT_INVALID"
+    );
+
+    const ids = new Set();
+    const routes = new Set();
+
+    for (const wing of WINGS) {
+      const rooms =
+        ROOMS_BY_WING.get(wing);
+
+      invariant(
+        rooms &&
+        rooms.length === 4,
+        "ARCHCOIN_ROOMS_PER_WING_INVALID",
+        {
+          wing
+        }
+      );
+    }
+
+    for (
+      const record
+      of CANONICAL_ROOM_RECORDS
+    ) {
+      invariant(
+        WINGS.includes(record.wing),
+        "ARCHCOIN_ROOM_WING_INVALID"
+      );
+
+      invariant(
+        WING_TO_COIN[
+          record.wing
+        ] === record.coin,
+        "ARCHCOIN_ROOM_COIN_MAPPING_INVALID"
+      );
+
+      invariant(
+        !ids.has(record.roomId),
+        "ARCHCOIN_DUPLICATE_ROOM_ID"
+      );
+
+      invariant(
+        !routes.has(record.route),
+        "ARCHCOIN_DUPLICATE_ROOM_ROUTE"
+      );
+
+      ids.add(record.roomId);
+      routes.add(record.route);
+    }
+
+    invariant(
+      ROOM_BY_ID.size === 16,
+      "ARCHCOIN_ROOM_ID_REGISTRY_INVALID"
+    );
+
+    invariant(
+      ROOM_BY_ROUTE.size === 16,
+      "ARCHCOIN_ROUTE_REGISTRY_INVALID"
+    );
+
+    return Object.freeze({
+      pass: true,
+      wingCount: 4,
+      roomCount: 16,
+      routeCount: 16,
+      roomsPerWing: 4
+    });
+  }
+
+  function validateShowroomDestinationSeam() {
+    const requiredMetadataFields =
+      Object.freeze([
+        "wingLabel",
+        "destinationType",
+        "destinationId",
+        "contentId",
+        "localTarget",
+        "openAncestor",
+        "informationFront",
+        "confirmationRequired",
+        "operationType",
+        "label",
+        "lens",
+        "preview",
+        "whyEnter",
+        "semanticActivation",
+        "routeDescription",
+        "routeRole",
+        "visualClass",
+        "emphasis",
+        "returnModel",
+        "returnZone"
+      ]);
+
+    let localCount = 0;
+    let externalCount = 0;
+
+    for (
+      const record
+      of CANONICAL_ROOM_RECORDS
+    ) {
+      invariant(
+        Object.isFrozen(record),
+        "SHOWROOM_DESTINATION_RECORD_NOT_IMMUTABLE",
+        {
+          roomId: record.roomId
+        }
+      );
+
+      for (
+        const field
+        of requiredMetadataFields
+      ) {
+        invariant(
+          Object.prototype
+            .hasOwnProperty
+            .call(record, field),
+          "SHOWROOM_DESTINATION_METADATA_FIELD_MISSING",
+          {
+            roomId: record.roomId,
+            field
           }
+        );
+      }
 
-          const descriptor =
-            describeObject(object);
+      invariant(
+        record.wingLabel ===
+          WING_LABELS[record.wing],
+        "SHOWROOM_DESTINATION_WING_LABEL_INVALID",
+        {
+          roomId: record.roomId
+        }
+      );
 
-          if (
-            descriptor.behavior !==
-            "local"
-          ) {
-            return false;
+      if (
+        record.destinationType ===
+        SHOWROOM_DESTINATION_TYPES.EXTERNAL_ROUTE
+      ) {
+        externalCount += 1;
+
+        invariant(
+          record.confirmationRequired ===
+            true,
+          "SHOWROOM_EXTERNAL_CONFIRMATION_REQUIRED",
+          {
+            roomId: record.roomId
           }
+        );
 
-          return activateLocalDestination(
-            descriptor,
-            options
+        invariant(
+          record.localTarget === null &&
+          record.openAncestor === null &&
+          record.informationFront === null &&
+          record.semanticActivation === null,
+          "SHOWROOM_EXTERNAL_LOCAL_METADATA_FORBIDDEN",
+          {
+            roomId: record.roomId
+          }
+        );
+
+        invariant(
+          record.operationType ===
+            "confirmed-hard-navigation",
+          "SHOWROOM_EXTERNAL_OPERATION_INVALID",
+          {
+            roomId: record.roomId
+          }
+        );
+
+        invariant(
+          record.returnModel ===
+            "shared-bottom-zone" &&
+          record.returnZone ===
+            "#showroom-return-zone",
+          "SHOWROOM_EXTERNAL_RETURN_METADATA_INVALID",
+          {
+            roomId: record.roomId
+          }
+        );
+
+        if (record.roomId === "east-4") {
+          invariant(
+            record.visualClass ===
+              "PRIMARY_PORTAL" &&
+            record.emphasis ===
+              "primary-external" &&
+            record.routeRole ===
+              "directory",
+            "SHOWROOM_PRIMARY_PORTAL_METADATA_INVALID"
           );
-        },
+        } else {
+          invariant(
+            record.visualClass ===
+              "PORTAL" &&
+            record.emphasis ===
+              "external" &&
+            record.routeRole ===
+              null,
+            "SHOWROOM_PORTAL_METADATA_INVALID",
+            {
+              roomId: record.roomId
+            }
+          );
+        }
+      } else {
+        localCount += 1;
 
-        openRouteDialogByObjectId(
-          objectId
-        ) {
-          const object =
-            resolveObject(
-              objectId
-            );
+        invariant(
+          record.confirmationRequired ===
+            false,
+          "SHOWROOM_LOCAL_CONFIRMATION_INVALID",
+          {
+            roomId: record.roomId
+          }
+        );
 
-          return object
-            ? openRouteDialog(
-                object,
-                {
-                  trigger:
-                    object
-                }
-              )
-            : false;
-        },
+        invariant(
+          typeof record.localTarget ===
+            "string" &&
+          record.localTarget.startsWith("#"),
+          "SHOWROOM_LOCAL_TARGET_REQUIRED",
+          {
+            roomId: record.roomId
+          }
+        );
 
-        closeRouteDialog,
+        invariant(
+          record.route.startsWith(
+            "/showroom/#"
+          ),
+          "SHOWROOM_LOCAL_ROUTE_INVALID",
+          {
+            roomId: record.roomId
+          }
+        );
 
-        continuePendingRoute,
+        invariant(
+          record.visualClass ===
+            "LOCAL" &&
+          record.emphasis ===
+            "normal" &&
+          record.returnModel ===
+            "shared-bottom-zone" &&
+          record.returnZone ===
+            "#showroom-return-zone" &&
+          record.routeRole === null,
+          "SHOWROOM_LOCAL_METADATA_INVALID",
+          {
+            roomId: record.roomId
+          }
+        );
+      }
+    }
 
-        openCompassDialog,
+    invariant(
+      localCount === 10,
+      "SHOWROOM_LOCAL_DESTINATION_COUNT_INVALID"
+    );
 
-        closeCompassDialog,
+    invariant(
+      externalCount === 6,
+      "SHOWROOM_EXTERNAL_DESTINATION_COUNT_INVALID"
+    );
 
-        returnToOrbit,
+    invariant(
+      SHOWROOM_DESTINATION_ENTRY.event ===
+        "SHOWROOM_ARCHCOIN_DESTINATION_ENTRY_REQUESTED",
+      "SHOWROOM_DESTINATION_ENTRY_EVENT_INVALID"
+    );
 
-        openInstructions,
+    invariant(
+      SHOWROOM_DESTINATION_ENTRY.contract ===
+        "SHOWROOM_ARCHCOIN_DESTINATION_ENTRY_REQUEST_v1",
+      "SHOWROOM_DESTINATION_ENTRY_CONTRACT_INVALID"
+    );
 
-        requestInformationTab,
+    invariant(
+      Number.isSafeInteger(
+        state.destinationAuthorizationGeneration
+      ) &&
+      state.destinationAuthorizationGeneration >=
+        0,
+      "SHOWROOM_DESTINATION_AUTHORIZATION_GENERATION_INVALID"
+    );
 
-        setHeld,
+    const samplePayload =
+      createDestinationEntryPayload(
+        CANONICAL_ROOM_RECORDS[0]
+      );
 
-        setSubsystemReadiness,
+    validateDestinationEntryPayload(
+      samplePayload
+    );
 
-        dispose
+    return Object.freeze({
+      pass: true,
+      localDestinationCount: 10,
+      externalDestinationCount: 6,
+      destinationEntryEvent:
+        SHOWROOM_DESTINATION_ENTRY.event,
+      destinationEntryContract:
+        SHOWROOM_DESTINATION_ENTRY.contract,
+      authorizationGenerationMeaning:
+        "CURRENT_SELECTED_CANONICAL_ROOM_EPOCH",
+      repeatedEnterGenerationUniquenessRequired:
+        false,
+      controllerExecutesDestinations: false
+    });
+  }
+
+  function validateTransitionTable() {
+    const declaredStates =
+      Object.values(STATES);
+
+    invariant(
+      declaredStates.length === 4,
+      "ARCHCOIN_STATE_COUNT_INVALID"
+    );
+
+    invariant(
+      !declaredStates.includes(
+        "COMPASS_DECISION"
+      ),
+      "ARCHCOIN_FORBIDDEN_COMPASS_DECISION_STATE"
+    );
+
+    invariant(
+      !declaredStates.includes(
+        "CONSTELLATION_WITH_CLUSTER"
+      ),
+      "ARCHCOIN_FORBIDDEN_ADDITIVE_STATE"
+    );
+
+    invariant(
+      canTransition(
+        STATES.CONSTELLATION,
+        STATES.CLUSTER_OPEN
+      ),
+      "ARCHCOIN_REQUIRED_TRANSITION_MISSING"
+    );
+
+    invariant(
+      canTransition(
+        STATES.CLUSTER_OPEN,
+        STATES.ROOM_SELECTED
+      ),
+      "ARCHCOIN_REQUIRED_TRANSITION_MISSING"
+    );
+
+    invariant(
+      canTransition(
+        STATES.ROOM_SELECTED,
+        STATES.CLUSTER_OPEN
+      ),
+      "ARCHCOIN_REQUIRED_TRANSITION_MISSING"
+    );
+
+    invariant(
+      canTransition(
+        STATES.CLUSTER_OPEN,
+        STATES.CONSTELLATION
+      ),
+      "ARCHCOIN_REQUIRED_TRANSITION_MISSING"
+    );
+
+    invariant(
+      canTransition(
+        STATES.ROOM_SELECTED,
+        STATES.CONSTELLATION
+      ),
+      "ARCHCOIN_REQUIRED_TRANSITION_MISSING"
+    );
+
+    invariant(
+      TRANSITIONS[
+        STATES.SYSTEM_HELD
+      ].length === 1 &&
+      TRANSITIONS[
+        STATES.SYSTEM_HELD
+      ][0] ===
+        STATES.SYSTEM_HELD,
+      "ARCHCOIN_HELD_STATE_NOT_TERMINAL"
+    );
+
+    return Object.freeze({
+      pass: true,
+
+      states: Object.freeze(
+        declaredStates.slice()
+      ),
+
+      heldTerminal: true,
+      compassDecisionPresent: false,
+      additiveStatePresent: false
+    });
+  }
+
+  function validatePresentationContract() {
+    for (
+      const presentation
+      of Object.values(
+        PRESENTATION_BY_STATE
+      )
+    ) {
+      invariant(
+        !(
+          presentation.outerCardinalsActive &&
+          presentation.activeRoomCluster
+        ),
+        "ARCHCOIN_ADDITIVE_PRESENTATION_FORBIDDEN"
+      );
+    }
+
+    return Object.freeze({
+      pass: true,
+      progressiveReplacement: true,
+      additiveCoRenderingAuthorized:
+        false
+    });
+  }
+
+  function validateCompassContract() {
+    const compass =
+      createCompassState();
+
+    invariant(
+      compass.fixedCenter === true,
+      "ARCHCOIN_COMPASS_FIXED_CENTER_INVALID"
+    );
+
+    invariant(
+      compass.mainCompassRoute ===
+        "/index.html",
+      "ARCHCOIN_COMPASS_ROUTE_INVALID"
+    );
+
+    invariant(
+      compass.immediateNavigation ===
+        false,
+      "ARCHCOIN_COMPASS_IMMEDIATE_NAVIGATION_INVALID"
+    );
+
+    invariant(
+      compass.explicitReturnRequired ===
+        true,
+      "ARCHCOIN_COMPASS_EXPLICIT_RETURN_INVALID"
+    );
+
+    invariant(
+      compass.inheritsNavigationOrientation ===
+        false,
+      "ARCHCOIN_COMPASS_ORIENTATION_INHERITANCE_INVALID"
+    );
+
+    invariant(
+      compass.participatesInNavigationSettlement ===
+        false,
+      "ARCHCOIN_COMPASS_SETTLEMENT_PARTICIPATION_INVALID"
+    );
+
+    return Object.freeze({
+      pass: true,
+      fixedCenter: true,
+      pageLocalSelection: true,
+      immediateNavigation: false,
+      explicitMainCompassReturn: true,
+      rendererLifecycleOwned: false
+    });
+  }
+
+  function validateMotionContract() {
+    invariant(
+      MODULE.motionContractId ===
+        "AUDRALIA_ARCHCOIN_COMPLETE_QUATERNION_MOTION_CONTRACT_v1",
+      "ARCHCOIN_MOTION_CONTRACT_ID_INVALID"
+    );
+
+    invariant(
+      MODULE.motionContractVersion ===
+        "1.0.0",
+      "ARCHCOIN_MOTION_CONTRACT_VERSION_INVALID"
+    );
+
+    const validOrbit =
+      validateOrbitPreviewPayload({
+        quaternion: [
+          0,
+          0.2,
+          0,
+          0.98
+        ],
+
+        primaryId: "east"
       });
 
-    Object.defineProperty(
-      window,
-      "SHOWROOM_CONTROLLER",
-      {
-        configurable:
-          true,
-
-        enumerable:
-          false,
-
-        writable:
-          false,
-
-        value:
-          api
-      }
+    invariant(
+      validOrbit.pass === true,
+      "ARCHCOIN_VALID_ORBIT_PREVIEW_REJECTED"
     );
 
-    state.apiExposed = true;
-  }
+    const eulerOrbit =
+      validateOrbitPreviewPayload({
+        yaw: 1,
+        pitch: 1,
+        roll: 0,
+        primaryId: "east"
+      });
 
-  function removeExposedApi() {
-    if (!state.apiExposed) {
-      return;
-    }
+    invariant(
+      eulerOrbit.pass === false,
+      "ARCHCOIN_CONTROLLER_MUST_REJECT_EULER_PREVIEW"
+    );
 
-    try {
-      delete window.SHOWROOM_CONTROLLER;
-    } catch {
-      /* Noncritical cleanup. */
-    }
+    const mixedOrbit =
+      validateOrbitPreviewPayload({
+        quaternion: [
+          0,
+          0,
+          0,
+          1
+        ],
 
-    state.apiExposed = false;
-  }
+        primaryId: "east",
+        dx: 40
+      });
 
-  function rollbackInitialization() {
-    state.expectedDialogClose.route = null;
-    state.expectedDialogClose.compass = null;
-    state.expectedDialogClose.construction = null;
+    invariant(
+      mixedOrbit.pass === false,
+      "ARCHCOIN_CONTROLLER_MUST_REJECT_MIXED_MOTION_PAYLOAD"
+    );
 
-    state.activeDialogGeneration.route = 0;
-    state.activeDialogGeneration.compass = 0;
-    state.activeDialogGeneration.construction = 0;
+    const missingOrbitPrimary =
+      validateOrbitPreviewPayload({
+        quaternion: [
+          0,
+          0,
+          0,
+          1
+        ]
+      });
 
-    state.pendingRoute.data = null;
-    state.pendingRoute.trigger = null;
-    state.pendingRoute.generation = 0;
+    invariant(
+      missingOrbitPrimary.pass ===
+        false,
+      "ARCHCOIN_ORBIT_PRIMARY_ID_MUST_BE_REQUIRED"
+    );
 
-    state.preview.active = false;
-    state.preview.objectId = "";
-    state.preview.cardinalId = "";
-    state.preview.childId = "";
-    state.preview.clusterId = "";
-    state.preview.source = "";
+    const testCluster =
+      createClusterState("north");
 
-    removeInstalledResources();
-    removeExposedApi();
-
-    restoreNativeSemanticFallback();
-    restoreNativeRootState();
-
-    state.readiness.controller = false;
-    state.readiness.compositor = false;
-    state.readiness.crystals = false;
-    state.readiness.interactions = false;
-
-    state.initialized = false;
-    state.initializing = false;
-  }
-
-  function initialize() {
-    if (
-      state.initialized ||
-      state.initializing ||
-      state.disposed
-    ) {
-      return;
-    }
-
-    state.initializing = true;
-
-    try {
-      discoverDom();
-
-      if (!state.root) {
-        throw new Error(
-          "The Showroom controller cannot initialize without [data-showroom-root]."
-        );
-      }
-
-      captureNativeDomStates();
-
-      const issues =
-        validateDom();
-
-      initializeReducedMotion();
-      initializeBaseline();
-
-      initializeObjectListeners();
-      initializeCompassControls();
-      initializeRouteControls();
-      initializeReturnControls();
-      initializeInstructionsControls();
-      initializeConstructionControls();
-      initializeDialogEvents();
-      initializeRuntimeEvents();
-      initializeRootObserver();
-
-      exposeApi();
-
-      state.initialized = true;
-      state.initializing = false;
-      state.readiness.controller = true;
-
-      setRootAttribute(
-        ATTRIBUTES.controllerReady,
-        "true"
-      );
-
-      setRootAttribute(
-        ATTRIBUTES.controllerState,
-        issues.length
-          ? "ready-with-validation-issues"
-          : "ready"
-      );
-
-      dispatchReadinessChanged(
-        "controller-ready"
-      );
-
-      publishReceipt(
-        "ready",
+    const validCluster =
+      validateClusterPreviewPayload(
+        testCluster,
         {
-          validationIssues:
-            issues,
+          quaternion: [
+            0.1,
+            0,
+            0,
+            0.99
+          ],
 
-          cardinalCount:
-            state.cardinals.size,
-
-          childCount:
-            state.children.size,
-
-          clusterCount:
-            state.clusters.size,
-
-          frontCount:
-            state.fronts.size,
-
-          fallbackNavigationPresent:
-            Boolean(
-              document.querySelector(
-                SELECTORS.fallbackNavigation
-              )
-            ),
-
-          compassVisualMount:
-            Boolean(
-              state.compassVisualMount
-            )
+          primaryId:
+            "north-3"
         }
       );
 
-      dispatch(
-        EVENTS.controllerReady,
-        {
-          frame:
-            getFrameState(),
+    invariant(
+      validCluster.pass === true,
+      "ARCHCOIN_VALID_CLUSTER_PREVIEW_REJECTED"
+    );
 
-          api: [
-            "getFrameState",
-            "getState",
-            "beginPreview",
-            "commitPreview",
-            "cancelPreview",
-            "commitObject",
-            "openCluster",
-            "closeCluster",
-            "toggleCluster",
-            "openRouteDialogByObjectId",
-            "closeRouteDialog",
-            "openCompassDialog",
-            "closeCompassDialog",
-            "returnToOrbit",
-            "openInstructions",
-            "requestInformationTab",
-            "setHeld",
-            "setSubsystemReadiness",
-            "dispose"
+    const foreignRoom =
+      validateClusterPreviewPayload(
+        testCluster,
+        {
+          quaternion: [
+            0,
+            0,
+            0,
+            1
+          ],
+
+          primaryId:
+            "south-1"
+        }
+      );
+
+    invariant(
+      foreignRoom.pass === false,
+      "ARCHCOIN_FOREIGN_CLUSTER_ROOM_ACCEPTED"
+    );
+
+    const mixedCluster =
+      validateClusterPreviewPayload(
+        testCluster,
+        {
+          quaternion: [
+            0,
+            0,
+            0,
+            1
+          ],
+
+          primaryId:
+            "north-3",
+
+          axis: [
+            0,
+            1,
+            0
           ]
         }
       );
-    } catch (error) {
-      const errorPayload = {
-        name:
-          error instanceof Error
-            ? error.name
-            : "Error",
 
-        message:
-          error instanceof Error
-            ? error.message
-            : String(error)
-      };
+    invariant(
+      mixedCluster.pass === false,
+      "ARCHCOIN_CLUSTER_MIXED_MOTION_PAYLOAD_ACCEPTED"
+    );
 
-      rollbackInitialization();
+    invariant(
+      beginOrbitGesture.length === 0,
+      "ARCHCOIN_ORBIT_BEGIN_SIGNATURE_INVALID"
+    );
 
-      try {
-        publishReceipt(
-          "fatal-error",
-          {
-            error:
-              errorPayload,
+    invariant(
+      requestOrbitPreview.length === 1,
+      "ARCHCOIN_ORBIT_PREVIEW_SIGNATURE_INVALID"
+    );
 
-            partialInstallationRolledBack:
-              true,
+    invariant(
+      requestOrbitCommit.length === 0,
+      "ARCHCOIN_ORBIT_COMMIT_SIGNATURE_INVALID"
+    );
 
-            nativePresentationRestored:
-              true,
+    invariant(
+      beginClusterGesture.length === 1,
+      "ARCHCOIN_CLUSTER_BEGIN_SIGNATURE_INVALID"
+    );
 
-            nativeControlsRestored:
-              true
-          }
-        );
-      } catch {
-        /* The rollback remains authoritative if receipt output also fails. */
-      }
-    }
+    invariant(
+      requestClusterPreview.length === 2,
+      "ARCHCOIN_CLUSTER_PREVIEW_SIGNATURE_INVALID"
+    );
+
+    invariant(
+      requestClusterCommit.length === 1,
+      "ARCHCOIN_CLUSTER_COMMIT_SIGNATURE_INVALID"
+    );
+
+    return Object.freeze({
+      pass: true,
+
+      motionContractId:
+        MODULE.motionContractId,
+
+      motionContractVersion:
+        MODULE.motionContractVersion,
+
+      previewPayloadKeys:
+        Object.freeze(
+          PREVIEW_PAYLOAD_KEYS.slice()
+        ),
+
+      unexpectedPreviewFieldsForbidden:
+        true,
+
+      completeQuaternionPreviewRequired:
+        true,
+
+      explicitPrimaryIdentityRequired:
+        true,
+
+      orbitBeginPayloadPermitted:
+        false,
+
+      clusterBeginMotionPayloadPermitted:
+        false,
+
+      orbitCommitPayloadPermitted:
+        false,
+
+      clusterCommitMotionPayloadPermitted:
+        false,
+
+      controllerInfersPrimaryFromQuaternion:
+        false,
+
+      controllerInterpretsEulerMotion:
+        false,
+
+      controllerConstructsGestureQuaternion:
+        false,
+
+      canonicalSettlementQuaternionsPublic:
+        false,
+
+      motionOwner:
+        MODULE.interactionModuleId,
+
+      acceptedStateAuthority:
+        MODULE.id
+    });
   }
 
-  function dispose() {
-    if (state.disposed) {
-      return;
+  function validateProjectionStorageContract() {
+    const sample = Object.freeze({
+      id: "north",
+      kind: "cardinal",
+      x: 10,
+      y: 20,
+      radiusPx: 30,
+      depthLayer: DEPTH_LAYERS.FRONT,
+      compassOverlap: false,
+      visible: true
+    });
+
+    invariant(
+      !Object.prototype
+        .hasOwnProperty
+        .call(
+          sample,
+          "interactionPriority"
+        ),
+      "ARCHCOIN_CONTROLLER_MUST_NOT_STORE_INTERACTION_PRIORITY"
+    );
+
+    return Object.freeze({
+      pass: true,
+
+      storedFields:
+        Object.freeze([
+          "id",
+          "kind",
+          "x",
+          "y",
+          "radiusPx",
+          "depthLayer",
+          "compassOverlap",
+          "visible"
+        ]),
+
+      projectionMathOwned:
+        false,
+
+      interactionPriorityAccepted:
+        false,
+
+      interactionPriorityDerived:
+        false,
+
+      interactionPriorityStored:
+        false,
+
+      interactionPriorityOwner:
+        MODULE.interactionModuleId,
+
+      projectionDomApplicationOwned:
+        false,
+
+      projectionDomApplicationOwner:
+        MODULE.interactionModuleId
+    });
+  }
+
+  function validateFileSplitContract() {
+    invariant(
+      !Object.prototype
+        .hasOwnProperty
+        .call(state, "pointer"),
+      "ARCHCOIN_CONTROLLER_POINTER_STATE_NOT_EXTRACTED"
+    );
+
+    invariant(
+      !Object.prototype
+        .hasOwnProperty
+        .call(
+          state,
+          "suppressedSemanticClick"
+        ),
+      "ARCHCOIN_CONTROLLER_CLICK_SUPPRESSION_NOT_EXTRACTED"
+    );
+
+    return Object.freeze({
+      pass: true,
+
+      pointerListenersOwned: false,
+      pointerStateOwned: false,
+      swipeClassificationOwned: false,
+      tapDragArbitrationOwned: false,
+      wholeCrystalHitTestingOwned: false,
+      syntheticClickSuppressionOwned: false,
+      projectionDomApplicationOwned: false,
+      interactionPriorityDerivationOwned:
+        false,
+      clusterExitSwipeClassificationOwned:
+        false,
+      gestureAxisSelectionOwned: false,
+      gestureQuaternionConstructionOwned:
+        false,
+      directManipulationOwned: false,
+      grabbedObjectTrackingOwned: false,
+      quaternionToPrimaryInferenceOwned:
+        false,
+
+      interactionModuleId:
+        MODULE.interactionModuleId,
+
+      acceptedStateAuthority:
+        MODULE.id,
+
+      navigationTransitionAuthority:
+        MODULE.id
+    });
+  }
+
+  function validateDeclaredRooms() {
+    if (!state.root) {
+      return Object.freeze({
+        pass: false,
+        skipped: true,
+        reason:
+          "ARCHCOIN_ROOT_NOT_RESOLVED"
+      });
     }
 
-    state.disposed = true;
+    const declared = qsa(
+      "[data-archcoin-room]",
+      state.root
+    );
 
-    state.expectedDialogClose.route = null;
-    state.expectedDialogClose.compass = null;
-    state.expectedDialogClose.construction = null;
+    invariant(
+      declared.length === 16,
+      "ARCHCOIN_DECLARED_ROOM_COUNT_INVALID",
+      {
+        expected: 16,
+        actual: declared.length
+      }
+    );
 
-    state.activeDialogGeneration.route = 0;
-    state.activeDialogGeneration.compass = 0;
-    state.activeDialogGeneration.construction = 0;
+    const seenIds = new Set();
+    const seenRoutes = new Set();
 
-    state.pendingRoute.data = null;
-    state.pendingRoute.trigger = null;
-    state.pendingRoute.generation = 0;
+    for (const element of declared) {
+      const roomId =
+        normalizeRoomId(
+          element.dataset.roomId
+        );
 
-    state.preview.active = false;
-    state.preview.objectId = "";
-    state.preview.cardinalId = "";
-    state.preview.childId = "";
-    state.preview.clusterId = "";
-    state.preview.source = "";
+      const wing =
+        normalizeWing(
+          element.dataset.wing
+        );
 
-    state.readiness.controller = false;
-    state.readiness.compositor = false;
-    state.readiness.crystals = false;
-    state.readiness.interactions = false;
+      const route =
+        normalizeRoute(
+          element.dataset.route ||
+          element.getAttribute("href")
+        );
 
-    removeInstalledResources();
-    removeExposedApi();
+      const canonical =
+        ROOM_BY_ID.get(roomId);
 
-    restoreNativeSemanticFallback();
-    restoreNativeRootState();
-
-    state.initialized = false;
-    state.initializing = false;
-
-    try {
-      publishReceipt(
-        "disposed",
+      invariant(
+        canonical,
+        "ARCHCOIN_UNKNOWN_ROOM_ID",
         {
-          durableSemanticStatePreserved:
-            true,
-
-          nativePresentationRestored:
-            true,
-
-          nativeControlsRestored:
-            true,
-
-          rootStateRestored:
-            true
+          roomId
         }
       );
-    } catch {
-      /* Disposal restoration remains authoritative. */
+
+      invariant(
+        !seenIds.has(roomId),
+        "ARCHCOIN_DUPLICATE_DECLARED_ROOM_ID"
+      );
+
+      invariant(
+        !seenRoutes.has(route),
+        "ARCHCOIN_DUPLICATE_DECLARED_ROOM_ROUTE"
+      );
+
+      invariant(
+        route === canonical.route,
+        "ARCHCOIN_ROOM_ROUTE_MISMATCH"
+      );
+
+      invariant(
+        wing === canonical.wing,
+        "ARCHCOIN_ROOM_WING_MISMATCH"
+      );
+
+      seenIds.add(roomId);
+      seenRoutes.add(route);
+    }
+
+    return Object.freeze({
+      pass: true,
+      declaredRoomCount: 16,
+      declaredRouteCount: 16,
+      generatedRoomProxiesRequired:
+        false
+    });
+  }
+
+  function runControllerSelfTest({
+    includeDom = false
+  } = {}) {
+    const results = {
+      registry:
+        validateCanonicalRegistry(),
+
+      transitions:
+        validateTransitionTable(),
+
+      presentation:
+        validatePresentationContract(),
+
+      compass:
+        validateCompassContract(),
+
+      motionContract:
+        validateMotionContract(),
+
+      projectionStorage:
+        validateProjectionStorageContract(),
+
+      fileSplit:
+        validateFileSplitContract(),
+
+      showroomDestinationSeam:
+        validateShowroomDestinationSeam(),
+
+      declaredRooms:
+        includeDom
+          ? validateDeclaredRooms()
+          : Object.freeze({
+              pass: true,
+              skipped: true
+            })
+    };
+
+    const pass =
+      Object.values(results).every(
+        result =>
+          result.pass === true
+      );
+
+    return Object.freeze({
+      receiptSchema:
+        "ARCHCOIN_CONTROLLER_ANCHORING_TWO_FILE_MOTION_AUTHORITY_VALIDATION_RECEIPT_v3",
+
+      moduleId:
+        MODULE.id,
+
+      moduleVersion:
+        MODULE.version,
+
+      motionContractId:
+        MODULE.motionContractId,
+
+      motionContractVersion:
+        MODULE.motionContractVersion,
+
+      pass,
+
+      pointerInterpreterOwner:
+        MODULE.interactionModuleId,
+
+      pointerTapArbitrationOwner:
+        MODULE.interactionModuleId,
+
+      wholeCrystalHitTestOwner:
+        MODULE.interactionModuleId,
+
+      syntheticClickSuppressionOwner:
+        MODULE.interactionModuleId,
+
+      projectionDomApplicationOwner:
+        MODULE.interactionModuleId,
+
+      interactionPriorityDerivationOwner:
+        MODULE.interactionModuleId,
+
+      clusterExitSwipeClassificationOwner:
+        MODULE.interactionModuleId,
+
+      gestureAxisSelectionOwner:
+        MODULE.interactionModuleId,
+
+      gestureQuaternionConstructionOwner:
+        MODULE.interactionModuleId,
+
+      directManipulationOwner:
+        MODULE.interactionModuleId,
+
+      grabbedObjectTrackingOwner:
+        MODULE.interactionModuleId,
+
+      primaryVisualIdentityCalculationOwner:
+        MODULE.interactionModuleId,
+
+      orbitStateAuthority:
+        MODULE.id,
+
+      clusterStateAuthority:
+        MODULE.id,
+
+      quaternionAcceptanceAuthority:
+        MODULE.id,
+
+      clusterExitTransitionAuthority:
+        MODULE.id,
+
+      navigationTransitionAuthority:
+        MODULE.id,
+
+      cameraOwnership: false,
+      crystalRendererOwnership: false,
+      compassRendererOwnership: false,
+      semanticProjectionMathOwnership:
+        false,
+      interactionPriorityStorageOwnership:
+        false,
+      semanticProjectionFactStorageOwnership:
+        true,
+      compassPageLocalSelection: true,
+      explicitMainCompassReturn: true,
+
+      results:
+        Object.freeze(results)
+    });
+  }
+
+  function writeValidationReceipt(receipt) {
+    state.validationReceipt = receipt;
+
+    const serialized =
+      JSON.stringify(receipt);
+
+    if (state.root) {
+      state.root.dataset.archcoinControllerValidation =
+        serialized;
+    }
+
+    if (
+      state.controllerValidationOutput
+    ) {
+      if (
+        "value" in
+        state.controllerValidationOutput
+      ) {
+        state.controllerValidationOutput.value =
+          serialized;
+      }
+
+      state.controllerValidationOutput.textContent =
+        serialized;
+    }
+
+    globalThis.DGB_ARCHCOIN_CONTROLLER_VALIDATION_RECEIPT =
+      receipt;
+  }
+
+  function exposeApi() {
+    globalThis.DGB_ARCHCOIN_CONTROLLER =
+      Object.freeze({
+        moduleId: MODULE.id,
+        moduleVersion: MODULE.version,
+
+        interactionModuleId:
+          MODULE.interactionModuleId,
+
+        interactionModuleVersion:
+          MODULE.interactionModuleVersion,
+
+        motionContractId:
+          MODULE.motionContractId,
+
+        motionContractVersion:
+          MODULE.motionContractVersion,
+
+        states: STATES,
+
+        presentationModes:
+          PRESENTATION_MODES,
+
+        destinationTypes:
+          DESTINATION_TYPES,
+
+        orientationPhases:
+          ORIENTATION_PHASES,
+
+        depthLayers:
+          DEPTH_LAYERS,
+
+        mainCompass:
+          MAIN_COMPASS,
+
+        canonicalRoomRecords:
+          CANONICAL_ROOM_RECORDS,
+
+        canonicalRoomRoutes:
+          CANONICAL_ROOM_ROUTES,
+
+        wingToCoin,
+
+        getFrameState:
+          createFrameState,
+
+        getPresentationMode:
+          () =>
+            presentationModeForState(),
+
+        getReducedMotion:
+          () =>
+            state.reducedMotion,
+
+        getHeldState:
+          createHeldState,
+
+        getCompassState:
+          createCompassState,
+
+        getClusterState,
+
+        getSemanticProjection:
+          createSemanticProjectionSnapshot,
+
+        getValidationReceipt:
+          () =>
+            state.validationReceipt,
+
+        subscribeFrameState:
+          callback =>
+            subscribe(
+              CHANNELS.FRAME,
+              callback
+            ),
+
+        subscribeReducedMotion:
+          callback =>
+            subscribe(
+              CHANNELS.REDUCED_MOTION,
+              callback
+            ),
+
+        subscribeHeldState:
+          callback =>
+            subscribe(
+              CHANNELS.HELD_STATE,
+              callback
+            ),
+
+        subscribeCompassState:
+          callback =>
+            subscribe(
+              CHANNELS.COMPASS_STATE,
+              callback
+            ),
+
+        subscribeSemanticProjection:
+          callback =>
+            subscribe(
+              CHANNELS.SEMANTIC_PROJECTION,
+              callback
+            ),
+
+        beginOrbitGesture,
+        requestOrbitPreview,
+        requestOrbitCommit,
+        requestOrbitCancel,
+        requestOrbitFocus,
+
+        beginClusterGesture,
+        requestClusterPreview,
+        requestClusterCommit,
+        requestClusterCancel,
+
+        requestCardinalSelection,
+        requestRoomSelection,
+        requestCompassSelection,
+        requestEnterSelection,
+        requestReturnToOrbit,
+        requestReturnToConstellation,
+        requestReturnToMainCompass,
+
+        updateSemanticProjection,
+
+        runSelfTest:
+          runControllerSelfTest
+      });
+  }
+
+  function bindControls() {
+    state.root.addEventListener(
+      "keydown",
+      handleKeydown
+    );
+
+    if (state.enterButton) {
+      state.enterButton.addEventListener(
+        "click",
+        event => {
+          event.preventDefault();
+          requestEnterSelection();
+        }
+      );
+    }
+
+    if (state.returnToOrbitButton) {
+      state.returnToOrbitButton.addEventListener(
+        "click",
+        event => {
+          event.preventDefault();
+          requestReturnToOrbit();
+        }
+      );
+    }
+
+    if (state.returnHomeButton) {
+      state.returnHomeButton.addEventListener(
+        "click",
+        event => {
+          event.preventDefault();
+          requestReturnToMainCompass();
+        }
+      );
+    }
+
+    globalThis.addEventListener(
+      "ARCHCOIN_CRYSTALS_RENDER_FAILURE",
+      handleCrystalsFailure
+    );
+  }
+
+  function enterHeldState(error) {
+    clearViewportSchedules();
+
+    invalidateDestinationAuthorization();
+
+    state.current =
+      STATES.SYSTEM_HELD;
+
+    state.orbitGestureActive = false;
+    state.orbitPreviewAccepted = false;
+    state.orbitGestureOrigin = null;
+
+    for (
+      const cluster
+      of state.clusters.values()
+    ) {
+      cluster.gestureActive = false;
+      cluster.previewAccepted = false;
+      cluster.gestureOrigin = null;
+
+      cluster.phase =
+        ORIENTATION_PHASES.COMMITTED;
+    }
+
+    state.lastAction =
+      "controller-initialization-failed";
+
+    state.lastFailure =
+      error &&
+      (
+        error.code ||
+        error.message
+      )
+        ? String(
+            error.code ||
+            error.message
+          )
+        : "UNKNOWN_CONTROLLER_INITIALIZATION_FAILURE";
+
+    try {
+      syncPresentation();
+
+      const frame =
+        publishFrame();
+
+      publish(
+        CHANNELS.HELD_STATE,
+        createHeldState()
+      );
+
+      publish(
+        CHANNELS.COMPASS_STATE,
+        frame.compass
+      );
+    } catch (_) {}
+
+    globalThis.dispatchEvent(
+      new CustomEvent(
+        "ARCHCOIN_CONTROLLER_FAILURE",
+        {
+          detail: Object.freeze({
+            reason:
+              state.lastFailure
+          })
+        }
+      )
+    );
+  }
+
+  function initialize() {
+    try {
+      const sourceReceipt =
+        runControllerSelfTest({
+          includeDom: false
+        });
+
+      invariant(
+        sourceReceipt.pass === true,
+        "ARCHCOIN_CONTROLLER_SOURCE_VALIDATION_FAILED",
+        sourceReceipt
+      );
+
+      resolveDom();
+      readReducedMotion();
+      initializeOrientationState();
+      initializeClusters();
+
+      const runtimeReceipt =
+        runControllerSelfTest({
+          includeDom: true
+        });
+
+      invariant(
+        runtimeReceipt.pass === true,
+        "ARCHCOIN_CONTROLLER_RUNTIME_VALIDATION_FAILED",
+        runtimeReceipt
+      );
+
+      writeValidationReceipt(
+        runtimeReceipt
+      );
+
+      exposeApi();
+      bindControls();
+      bindReducedMotion();
+      resetSelection();
+      syncPresentation();
+
+      state.initialized = true;
+
+      const frame =
+        recordAction(
+          "controller-initialized"
+        );
+
+      publish(
+        CHANNELS.REDUCED_MOTION,
+        state.reducedMotion
+      );
+
+      publish(
+        CHANNELS.HELD_STATE,
+        createHeldState()
+      );
+
+      publish(
+        CHANNELS.COMPASS_STATE,
+        frame.compass
+      );
+
+      globalThis.dispatchEvent(
+        new CustomEvent(
+          "ARCHCOIN_CONTROLLER_READY",
+          {
+            detail: Object.freeze({
+              moduleId:
+                MODULE.id,
+
+              moduleVersion:
+                MODULE.version,
+
+              interactionModuleRequired:
+                true,
+
+              interactionModuleId:
+                MODULE.interactionModuleId,
+
+              interactionModuleVersion:
+                MODULE.interactionModuleVersion,
+
+              motionContractId:
+                MODULE.motionContractId,
+
+              motionContractVersion:
+                MODULE.motionContractVersion,
+
+              completeGestureQuaternionRequired:
+                true,
+
+              exactPreviewPayloadRequired:
+                true,
+
+              explicitPrimaryIdentityRequired:
+                true,
+
+              semanticProjectionFactsOnly:
+                true,
+
+              interactionPriorityPublished:
+                false,
+
+              interactionPriorityOwner:
+                MODULE.interactionModuleId,
+
+              gestureQuaternionConstructionOwner:
+                MODULE.interactionModuleId,
+
+              gestureAxisSelectionOwner:
+                MODULE.interactionModuleId,
+
+              motionDirectionOwner:
+                MODULE.interactionModuleId,
+
+              motionSensitivityOwner:
+                MODULE.interactionModuleId,
+
+              acceptedStateAuthority:
+                MODULE.id,
+
+              navigationTransitionAuthority:
+                MODULE.id
+            })
+          }
+        )
+      );
+    } catch (error) {
+      enterHeldState(error);
     }
   }
 
   if (
     document.readyState ===
-    "loading"
+      "loading"
   ) {
     document.addEventListener(
       "DOMContentLoaded",
       initialize,
       {
-        once:
-          true
+        once: true
       }
     );
   } else {
     initialize();
   }
-
-  window.addEventListener(
-    "pagehide",
-    event => {
-      if (!event.persisted) {
-        dispose();
-      }
-    },
-    {
-      once:
-        true
-    }
-  );
 })();

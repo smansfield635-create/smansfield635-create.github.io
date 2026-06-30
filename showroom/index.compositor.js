@@ -1,186 +1,145 @@
 /* TARGET FILE: /showroom/index.compositor.js */
 /* TNT FULL-FILE REPLACEMENT */
-/* SHOWROOM_COMPASS_CENTERED_DEPTH_COMPOSITOR_TNT_v1 */
+/* SHOWROOM_CONSTELLATION_SINGLE_FRAME_COMPOSITOR_TNT_v2 */
 /*
-  Controlling contracts:
-  - /showroom/index.html
-  - SHOWROOM_MIRRORLAND_OFFICIAL_GATE_COMPACT_INSTRUCTIONS_AND_GAUGES_HTML_TNT_v5
-
+  Upstream semantic authority:
   - /showroom/index.controller.js
-  - SHOWROOM_MIRRORLAND_FOCAL_CONTROLLER_TNT_v3
+  - SHOWROOM_MIRRORLAND_CONSTELLATION_CONTROLLER_TNT_v5
 
-  - /showroom/index.interactions.js
-  - SHOWROOM_CONSTELLATION_POINTER_GESTURE_INTERPRETER_TNT_v2
-
-  - /showroom/index.crystals.js
-  - SHOWROOM_MIRRORLAND_CONSTELLATION_CRYSTALS_TNT_v2
+  Frozen DOM attachment contract:
+  - [data-showroom-root]
+  - #showroom-orbit
+  - [data-showroom-orbit-scene]
+  - [data-showroom-orbit-field]
+  - [data-showroom-compass-layer]
+  - [data-showroom-compass-visual-mount]
+  - [data-showroom-semantic-star-layer]
+  - [data-showroom-front-host]
 
   Compositor authority:
-  - Resolve the existing [data-showroom-orbit-field] as the only
-    constellation viewport and coordinate origin.
-  - Create or adopt one rear crystal canvas and one front crystal canvas.
-  - Place the fixed Compass visually between the rear and front passes.
-  - Own the orbit camera, view matrix, projection matrix, viewport sizing,
-    world-to-screen projection, Compass-plane depth classification,
-    per-node hysteresis, render-pass ordering, frame coalescing, and canvas
-    lifecycle.
-  - Register bounded visual nodes supplied by the crystals module.
-  - Invoke registered draw callbacks without inheriting crystal geometry,
-    material, orbital-target, or animation authority.
-  - Align projected semantic controls with the same orbit-field origin.
-  - Observe orbit-field resizing and capped device-pixel ratio.
-  - Publish readiness, state, recoverable-error, failure, disposal, and
-    public-API receipts.
+  - camera eye and target;
+  - view and projection matrices;
+  - Compass visual-plane depth;
+  - world-to-screen projection;
+  - front/rear classification;
+  - classification hysteresis;
+  - rear/front canvas construction;
+  - page-level render-layer ordering;
+  - rear / Compass / front orchestration;
+  - authoritative projected hit coordinates;
+  - bounded renderer and node registration.
 
-  Layer order:
-  - cosmic field;
-  - rear crystal canvas;
-  - fixed Compass layer;
-  - front crystal canvas;
-  - quick guide and semantic controls.
-
-  Controller contract:
-  - The controller owns canonical page state, active cluster, active front,
-    held state, reduced-motion reflection, dialogs, navigation, fallback
-    restoration, and crystal-readiness interpretation.
-  - The compositor may observe controller-owned state only as a redraw or
-    presentation input.
-  - The compositor must not mutate controller state or report crystals ready.
-
-  Interactions contract:
-  - The interactions module owns raw pointer input, pointer capture,
-    drag sensitivity, tap arbitration, swipe classification, gesture axes,
-    gesture quaternions, motion feel, and semantic activation.
-  - The compositor installs no pointer, click, touch, wheel, keyboard, or
-    gesture listeners.
-  - The compositor does not interpret motion events.
-
-  Crystals contract:
-  - Crystals register one node per semantic star.
-  - Each node may supply getWorldPosition(), isVisible(), getSortBias(),
-    getMetadata(), draw(), and hysteresis.
-  - The compositor exposes registerNode(), unregisterNode(),
-    projectWorldToScreen(), requestFrame(), and dispose().
-  - Crystals remain responsible for meshes, materials, orbital positions,
-    animation, semantic-control association, and drawing.
-
-  Does not own:
-  - page navigation;
-  - active-front or cluster commitment;
-  - fallback-star visibility;
-  - pointer or gesture interpretation;
-  - semantic activation;
-  - crystal geometry, materials, motion, or meaning;
-  - Compass geometry, rendering, navigation, or lifecycle;
-  - Diamond rendering, camera, controls, or lifecycle;
-  - Mirrorland Window rendering or lifecycle;
-  - gauge or information-tab behavior;
-  - Mirrorland preface or Page Instructions disclosures.
+  Explicit exclusions:
+  - no semantic navigation ownership;
+  - no cardinal, cluster, child, route, or local-destination decisions;
+  - no Compass navigation ownership;
+  - no Compass renderer lifecycle ownership;
+  - no crystal mesh, material, geometry, or animation ownership;
+  - no pointer or gesture interpretation;
+  - no Diamond or Window ownership;
+  - no front-host visibility ownership.
 */
 
 (() => {
   "use strict";
 
   const CONTRACT =
-    "SHOWROOM_COMPASS_CENTERED_DEPTH_COMPOSITOR_TNT_v1";
+    "SHOWROOM_CONSTELLATION_SINGLE_FRAME_COMPOSITOR_TNT_v2";
 
   const OWNER =
     "/showroom/index.compositor.js";
 
-  const EVENTS = Object.freeze({
-    ready:
-      "showroom:compositor-ready",
-
-    receipt:
-      "showroom:compositor-receipt",
-
-    failed:
-      "showroom:compositor-failed",
-
-    disposed:
-      "showroom:compositor-disposed",
-
-    requestFrame:
-      "showroom:compositor-request-frame",
-
-    stateChanged:
-      "showroom:state-changed",
-
-    clusterChanged:
-      "showroom:cluster-changed",
-
-    frontChanged:
-      "showroom:front-changed",
-
-    interactionState:
-      "showroom:interaction-state"
-  });
+  const CONTROLLER_CONTRACT =
+    "SHOWROOM_MIRRORLAND_CONSTELLATION_CONTROLLER_TNT_v5";
 
   const SELECTORS = Object.freeze({
     root:
       "[data-showroom-root]",
 
-    receipt:
-      "[data-showroom-compositor-receipt]",
+    orbit:
+      "#showroom-orbit",
 
-    orbitField:
+    scene:
+      "[data-showroom-orbit-scene]",
+
+    field:
       "[data-showroom-orbit-field]",
 
     compassLayer:
       "[data-showroom-compass-layer]",
 
-    compassMount:
-      "[data-upstream-compass-mount]",
+    compassVisualMount:
+      "[data-showroom-compass-visual-mount]",
+
+    semanticLayer:
+      "[data-showroom-semantic-star-layer]",
+
+    frontHost:
+      "[data-showroom-front-host]",
 
     rearCanvas:
       'canvas[data-showroom-compositor-layer="rear"]',
 
     frontCanvas:
-      'canvas[data-showroom-compositor-layer="front"]'
+      'canvas[data-showroom-compositor-layer="front"]',
+
+    receipt:
+      "[data-showroom-compositor-receipt]"
   });
 
   const ATTRIBUTES = Object.freeze({
-    ready:
-      "data-showroom-compositor-ready",
-
-    state:
-      "data-showroom-compositor-state",
-
-    held:
-      "data-showroom-held",
-
-    reducedMotion:
-      "data-showroom-reduced-motion",
-
-    activeCluster:
-      "data-showroom-active-cluster",
-
-    pageState:
-      "data-showroom-state",
-
-    presentationMode:
-      "data-showroom-presentation-mode",
-
-    enhancementState:
-      "data-showroom-enhancement-state",
-
     layer:
       "data-showroom-compositor-layer",
 
-    genericLayer:
-      "data-showroom-layer",
+    compositorReady:
+      "data-showroom-compositor-ready",
 
-    canvasOwner:
-      "data-showroom-compositor-canvas-owner",
+    compositorState:
+      "data-showroom-compositor-state",
 
-    viewportWidth:
+    compositorFrame:
+      "data-showroom-compositor-frame",
+
+    compositorOwned:
+      "data-showroom-compositor-owned",
+
+    compositorWidth:
       "data-showroom-compositor-width",
 
-    viewportHeight:
+    compositorHeight:
       "data-showroom-compositor-height",
 
-    deviceScale:
-      "data-showroom-compositor-device-scale"
+    compositorDpr:
+      "data-showroom-compositor-dpr"
+  });
+
+  const EVENTS = Object.freeze({
+    controllerReady:
+      "showroom:controller-ready",
+
+    controllerFrameChanged:
+      "showroom:frame-state-changed",
+
+    controllerStateChanged:
+      "showroom:state-changed",
+
+    compositorReady:
+      "showroom:compositor-ready",
+
+    compositorFailed:
+      "showroom:compositor-failed",
+
+    compositorDisposed:
+      "showroom:compositor-disposed",
+
+    compositorFrame:
+      "showroom:compositor-frame",
+
+    compositorProjectionChanged:
+      "showroom:compositor-projection-changed",
+
+    compositorReceipt:
+      "showroom:compositor-receipt"
   });
 
   const LAYERS = Object.freeze({
@@ -191,188 +150,217 @@
       "front"
   });
 
-  const CONFIG = Object.freeze({
-    coordinateSystem:
-      "RIGHT_HANDED_EUCLIDEAN_XYZ",
+  const CLASSIFICATIONS = Object.freeze({
+    REAR:
+      "rear",
 
-    matrixConvention:
-      "COLUMN_MAJOR_OPENGL_STYLE",
+    FRONT:
+      "front"
+  });
 
-    cameraTarget:
+  const READINESS_RESULTS = Object.freeze({
+    READY:
+      "ready",
+
+    PENDING:
+      "pending",
+
+    FAILED:
+      "failed",
+
+    SKIPPED:
+      "skipped"
+  });
+
+  const DEFAULT_CAMERA = Object.freeze({
+    eye:
+      Object.freeze([
+        0,
+        0,
+        8
+      ]),
+
+    target:
       Object.freeze([
         0,
         0,
         0
       ]),
 
-    cameraUp:
+    up:
       Object.freeze([
         0,
         1,
         0
       ]),
 
-    fieldRadiusX:
-      2.18,
+    fieldOfViewDegrees:
+      42,
 
-    fieldRadiusY:
-      1.68,
-
-    maximumFieldDepth:
-      1.72,
-
-    verticalFieldOfViewDegrees:
-      52,
-
-    horizontalViewportOccupancy:
-      0.78,
-
-    verticalViewportOccupancy:
-      0.72,
-
-    cameraNear:
+    near:
       0.1,
 
-    cameraFar:
-      40,
+    far:
+      100,
 
-    compassPlaneWorldZ:
-      0,
-
-    defaultHysteresis:
-      0.08,
-
-    visibilityMargin:
-      1.32,
-
-    maximumDeviceScale:
-      2,
-
-    minimumViewportDimension:
-      2,
-
-    rearCanvasZIndex:
-      4,
-
-    compassLayerZIndex:
-      6,
-
-    frontCanvasZIndex:
-      7,
-
-    frameFailureLimit:
-      8,
-
-    visualPassClaimed:
-      false,
-
-    productionAuthorized:
-      false,
-
-    deploymentAuthorized:
-      false
+    classificationHysteresis:
+      0.075
   });
 
   const state = {
     root: null,
-    receipt: null,
-    orbitField: null,
+    orbit: null,
+    scene: null,
+    field: null,
     compassLayer: null,
-    compassMount: null,
+    compassVisualMount: null,
+    semanticLayer: null,
+    frontHost: null,
+    receipt: null,
+
+    controller: null,
+    controllerFrame: null,
+    controllerReady: false,
 
     rearCanvas: null,
     frontCanvas: null,
 
-    rearContext: null,
-    frontContext: null,
+    rearCanvasCreated: false,
+    frontCanvasCreated: false,
 
-    ownsRearCanvas: false,
-    ownsFrontCanvas: false,
+    nativeRearCanvasState: null,
+    nativeFrontCanvasState: null,
 
-    nodes: new Map(),
-    classifications: new Map(),
+    nativeDomState: {
+      fieldStyle: null,
+      compassLayerStyle: null,
+      semanticLayerStyle: null,
+      rearCanvasPlacement: null,
+      frontCanvasPlacement: null
+    },
+
+    domRestored: true,
+
+    camera: {
+      eye:
+        DEFAULT_CAMERA.eye.slice(),
+
+      target:
+        DEFAULT_CAMERA.target.slice(),
+
+      up:
+        DEFAULT_CAMERA.up.slice(),
+
+      fieldOfViewDegrees:
+        DEFAULT_CAMERA.fieldOfViewDegrees,
+
+      near:
+        DEFAULT_CAMERA.near,
+
+      far:
+        DEFAULT_CAMERA.far,
+
+      classificationHysteresis:
+        DEFAULT_CAMERA.classificationHysteresis
+    },
+
+    matrices: {
+      view:
+        identityMatrix4(),
+
+      projection:
+        identityMatrix4(),
+
+      viewProjection:
+        identityMatrix4()
+    },
 
     viewport: {
       cssWidth: 0,
       cssHeight: 0,
       pixelWidth: 0,
       pixelHeight: 0,
-      deviceScale: 1,
-      centerX: 0,
-      centerY: 0,
-      compassRadius: 0,
-      aspect: 1
+      devicePixelRatio: 1,
+      left: 0,
+      top: 0
     },
 
-    camera: {
-      eye:
-        [0, 0, 6],
+    compassPlane: {
+      worldPoint: [
+        0,
+        0,
+        0
+      ],
 
-      target:
-        CONFIG.cameraTarget.slice(),
+      viewDepth: -8,
 
-      up:
-        CONFIG.cameraUp.slice(),
+      screenX: 0,
+      screenY: 0,
 
-      distance:
-        6,
-
-      verticalFieldOfView:
-        degreesToRadians(
-          CONFIG.verticalFieldOfViewDegrees
-        ),
-
-      viewMatrix:
-        identityMatrix4(),
-
-      projectionMatrix:
-        identityMatrix4(),
-
-      viewProjectionMatrix:
-        identityMatrix4()
+      radius: 0
     },
 
-    held: false,
-    reducedMotion: false,
-    activeClusterId: "",
-    pageState: "",
-    presentationMode: "",
-    enhancementState: "",
+    nodes:
+      new Map(),
 
-    initialized: false,
-    ready: false,
-    failed: false,
-    disposed: false,
+    renderers:
+      new Map(),
 
-    frameRequested: false,
+    classifications:
+      new Map(),
+
+    projectionSnapshot:
+      Object.freeze({
+        frameId: 0,
+        timestamp: 0,
+        nodes: Object.freeze([]),
+        rear: Object.freeze([]),
+        front: Object.freeze([]),
+        hitRegions: Object.freeze([])
+      }),
+
     frameId: 0,
-    frameReasons: new Set(),
-    frameFailureCount: 0,
-    lastFrameTime: 0,
+    renderRequested: false,
+    pendingRenderReason: "",
+    rafId: 0,
+
+    resizeObserver: null,
+    mutationObserver: null,
 
     listeners: [],
-    observers: [],
+
+    initialized: false,
+    initializing: false,
+    disposed: false,
+    readyPublished: false,
+    readinessPending: true,
 
     counters: {
-      createdCanvases: 0,
-      adoptedCanvases: 0,
-      registeredNodes: 0,
-      unregisteredNodes: 0,
-      renderedFrames: 0,
-      rearDraws: 0,
-      frontDraws: 0,
-      classifications: 0,
-      hysteresisRetentions: 0,
-      resizeEvents: 0,
-      projectionCalls: 0,
-      drawErrors: 0,
-      recoverableErrors: 0,
+      renders: 0,
+      resizePasses: 0,
+      projectionPasses: 0,
+      nodeRegistrations: 0,
+      nodeRemovals: 0,
+      rendererRegistrations: 0,
+      rendererRemovals: 0,
       failures: 0
     }
   };
 
   function normalize(value) {
     return String(value || "").trim();
+  }
+
+  function nowIso() {
+    return new Date().toISOString();
+  }
+
+  function isElement(value) {
+    return value instanceof Element;
+  }
+
+  function isCanvas(value) {
+    return value instanceof HTMLCanvasElement;
   }
 
   function clamp(
@@ -389,28 +377,208 @@
     );
   }
 
-  function degreesToRadians(degrees) {
-    return (
-      Number(degrees) *
-      Math.PI /
-      180
-    );
+  function toFiniteNumber(
+    value,
+    fallback
+  ) {
+    const numeric =
+      Number(value);
+
+    return Number.isFinite(numeric)
+      ? numeric
+      : fallback;
   }
 
-  function nowIso() {
-    return new Date().toISOString();
+  function freezePlain(value) {
+    if (
+      value === null ||
+      typeof value !== "object"
+    ) {
+      return value;
+    }
+
+    if (Array.isArray(value)) {
+      return Object.freeze(
+        value.map(freezePlain)
+      );
+    }
+
+    const output = {};
+
+    for (
+      const [
+        key,
+        entry
+      ]
+      of Object.entries(value)
+    ) {
+      output[key] =
+        freezePlain(entry);
+    }
+
+    return Object.freeze(output);
+  }
+
+  function dispatch(
+    eventName,
+    detail = {}
+  ) {
+    const payload =
+      freezePlain({
+        contract:
+          CONTRACT,
+
+        owner:
+          OWNER,
+
+        timestamp:
+          nowIso(),
+
+        ...detail
+      });
+
+    window.dispatchEvent(
+      new CustomEvent(
+        eventName,
+        {
+          detail:
+            payload
+        }
+      )
+    );
+
+    return payload;
+  }
+
+  function publishReceipt(
+    event,
+    detail = {}
+  ) {
+    const payload =
+      freezePlain({
+        contract:
+          CONTRACT,
+
+        owner:
+          OWNER,
+
+        controllerContract:
+          CONTROLLER_CONTRACT,
+
+        event,
+
+        timestamp:
+          nowIso(),
+
+        frameId:
+          state.frameId,
+
+        initialized:
+          state.initialized,
+
+        disposed:
+          state.disposed,
+
+        controllerReady:
+          state.controllerReady,
+
+        readinessPending:
+          state.readinessPending,
+
+        readyPublished:
+          state.readyPublished,
+
+        viewport: {
+          ...state.viewport
+        },
+
+        registeredNodes:
+          state.nodes.size,
+
+        registeredRenderers:
+          state.renderers.size,
+
+        counters: {
+          ...state.counters
+        },
+
+        ...detail
+      });
+
+    if (state.receipt) {
+      const serialized =
+        JSON.stringify(payload);
+
+      state.receipt.value =
+        serialized;
+
+      state.receipt.textContent =
+        serialized;
+    }
+
+    dispatch(
+      EVENTS.compositorReceipt,
+      payload
+    );
+
+    return payload;
+  }
+
+  function addListener(
+    target,
+    type,
+    handler,
+    options
+  ) {
+    if (
+      !target ||
+      typeof target.addEventListener !==
+        "function"
+    ) {
+      return;
+    }
+
+    target.addEventListener(
+      type,
+      handler,
+      options
+    );
+
+    state.listeners.push(() => {
+      target.removeEventListener(
+        type,
+        handler,
+        options
+      );
+    });
+  }
+
+  function removeListeners() {
+    for (
+      const remove
+      of state.listeners.splice(0)
+    ) {
+      try {
+        remove();
+      } catch {
+        /* Best-effort disposal. */
+      }
+    }
   }
 
   function identityMatrix4() {
-    return [
+    return new Float64Array([
       1, 0, 0, 0,
       0, 1, 0, 0,
       0, 0, 1, 0,
       0, 0, 0, 1
-    ];
+    ]);
   }
 
-  function vectorSubtract(a, b) {
+  function subtractVector3(
+    a,
+    b
+  ) {
     return [
       a[0] - b[0],
       a[1] - b[1],
@@ -418,7 +586,10 @@
     ];
   }
 
-  function vectorDot(a, b) {
+  function dotVector3(
+    a,
+    b
+  ) {
     return (
       a[0] * b[0] +
       a[1] * b[1] +
@@ -426,7 +597,10 @@
     );
   }
 
-  function vectorCross(a, b) {
+  function crossVector3(
+    a,
+    b
+  ) {
     return [
       a[1] * b[2] -
         a[2] * b[1],
@@ -439,20 +613,28 @@
     ];
   }
 
-  function vectorNormalize(
+  function lengthVector3(vector) {
+    return Math.hypot(
+      vector[0],
+      vector[1],
+      vector[2]
+    );
+  }
+
+  function normalizeVector3(
     vector,
-    fallback = [0, 0, 1]
+    fallback = [
+      0,
+      0,
+      1
+    ]
   ) {
     const length =
-      Math.hypot(
-        vector[0],
-        vector[1],
-        vector[2]
-      );
+      lengthVector3(vector);
 
     if (
       !Number.isFinite(length) ||
-      length <= 1e-8
+      length <= 1e-9
     ) {
       return fallback.slice();
     }
@@ -468,8 +650,8 @@
     left,
     right
   ) {
-    const result =
-      new Array(16).fill(0);
+    const output =
+      new Float64Array(16);
 
     for (
       let column = 0;
@@ -481,9 +663,8 @@
         row < 4;
         row += 1
       ) {
-        result[
-          column * 4 +
-          row
+        output[
+          column * 4 + row
         ] =
           left[row] *
             right[column * 4] +
@@ -496,7 +677,7 @@
       }
     }
 
-    return result;
+    return output;
   }
 
   function transformVector4(
@@ -532,30 +713,56 @@
     up
   ) {
     const forward =
-      vectorNormalize(
-        vectorSubtract(
+      normalizeVector3(
+        subtractVector3(
           eye,
           target
         ),
-        [0, 0, 1]
+        [
+          0,
+          0,
+          1
+        ]
       );
 
-    const right =
-      vectorNormalize(
-        vectorCross(
+    let right =
+      normalizeVector3(
+        crossVector3(
           up,
           forward
         ),
-        [1, 0, 0]
+        [
+          1,
+          0,
+          0
+        ]
       );
+
+    if (
+      lengthVector3(right) <=
+      1e-9
+    ) {
+      right = [
+        1,
+        0,
+        0
+      ];
+    }
 
     const correctedUp =
-      vectorCross(
-        forward,
-        right
+      normalizeVector3(
+        crossVector3(
+          forward,
+          right
+        ),
+        [
+          0,
+          1,
+          0
+        ]
       );
 
-    return [
+    return new Float64Array([
       right[0],
       correctedUp[0],
       forward[0],
@@ -571,401 +778,425 @@
       forward[2],
       0,
 
-      -vectorDot(
+      -dotVector3(
         right,
         eye
       ),
 
-      -vectorDot(
+      -dotVector3(
         correctedUp,
         eye
       ),
 
-      -vectorDot(
+      -dotVector3(
         forward,
         eye
       ),
 
       1
-    ];
+    ]);
   }
 
   function createPerspectiveMatrix(
-    verticalFieldOfView,
+    fieldOfViewRadians,
     aspect,
     near,
     far
   ) {
     const safeAspect =
       Math.max(
-        0.01,
+        1e-6,
         aspect
       );
 
-    const focal =
+    const f =
       1 /
       Math.tan(
-        verticalFieldOfView /
-        2
+        fieldOfViewRadians / 2
       );
 
-    const rangeInverse =
+    const inverseRange =
       1 /
-      (
-        near -
-        far
-      );
+      (near - far);
 
-    return [
-      focal / safeAspect,
+    return new Float64Array([
+      f / safeAspect,
       0,
       0,
       0,
 
       0,
-      focal,
+      f,
       0,
       0,
 
       0,
       0,
-      (
-        far +
-        near
-      ) *
-      rangeInverse,
+      (far + near) *
+        inverseRange,
       -1,
 
       0,
       0,
-      (
-        2 *
+      2 *
         far *
-        near
-      ) *
-      rangeInverse,
+        near *
+        inverseRange,
       0
-    ];
+    ]);
   }
 
-  function addListener(
-    target,
-    type,
-    handler,
-    options
+  function matrixToArray(matrix) {
+    return Array.from(matrix);
+  }
+
+  function captureStyleAttribute(element) {
+    return element
+      ? element.getAttribute(
+          "style"
+        )
+      : null;
+  }
+
+  function restoreStyleAttribute(
+    element,
+    capturedStyle
+  ) {
+    if (!element) {
+      return;
+    }
+
+    if (capturedStyle === null) {
+      element.removeAttribute(
+        "style"
+      );
+    } else {
+      element.setAttribute(
+        "style",
+        capturedStyle
+      );
+    }
+  }
+
+  function capturePlacement(element) {
+    if (!element) {
+      return null;
+    }
+
+    return {
+      parent:
+        element.parentNode,
+
+      nextSibling:
+        element.nextSibling
+    };
+  }
+
+  function restorePlacement(
+    element,
+    placement
   ) {
     if (
-      !target ||
-      typeof target.addEventListener !==
-        "function"
+      !element ||
+      !placement ||
+      !placement.parent
     ) {
       return;
     }
 
-    target.addEventListener(
-      type,
-      handler,
-      options
-    );
+    const reference =
+      placement.nextSibling &&
+      placement.nextSibling.parentNode ===
+        placement.parent
+        ? placement.nextSibling
+        : null;
 
-    state.listeners.push(() => {
-      target.removeEventListener(
-        type,
-        handler,
-        options
-      );
-    });
-  }
-
-  function addObserver(observer) {
-    if (observer) {
-      state.observers.push(
-        observer
-      );
-    }
-  }
-
-  function setRootAttribute(
-    name,
-    value
-  ) {
-    if (!state.root) {
-      return;
-    }
-
-    state.root.setAttribute(
-      name,
-      String(value)
+    placement.parent.insertBefore(
+      element,
+      reference
     );
   }
 
-  function dispatch(
-    eventName,
-    detail = {}
-  ) {
-    const payload =
-      Object.freeze({
-        contract:
-          CONTRACT,
-
-        owner:
-          OWNER,
-
-        timestamp:
-          nowIso(),
-
-        ...detail
-      });
-
-    window.dispatchEvent(
-      new CustomEvent(
-        eventName,
-        {
-          detail:
-            payload
-        }
-      )
-    );
-
-    return payload;
-  }
-
-  function serializeError(error) {
-    return Object.freeze({
-      name:
-        error instanceof Error
-          ? error.name
-          : "Error",
-
-      message:
-        error instanceof Error
-          ? error.message
-          : String(error)
-    });
-  }
-
-  function createReceipt(
-    event,
-    extra = {}
-  ) {
-    return Object.freeze({
-      contract:
-        CONTRACT,
-
-      owner:
-        OWNER,
-
-      event,
-
-      timestamp:
-        nowIso(),
-
-      initialized:
-        state.initialized,
-
-      ready:
-        state.ready,
-
-      failed:
-        state.failed,
-
-      disposed:
-        state.disposed,
-
-      nodeCount:
-        state.nodes.size,
-
-      coordinateSystem:
-        CONFIG.coordinateSystem,
-
-      matrixConvention:
-        CONFIG.matrixConvention,
-
-      viewport:
-        Object.freeze({
-          cssWidth:
-            state.viewport.cssWidth,
-
-          cssHeight:
-            state.viewport.cssHeight,
-
-          pixelWidth:
-            state.viewport.pixelWidth,
-
-          pixelHeight:
-            state.viewport.pixelHeight,
-
-          deviceScale:
-            state.viewport.deviceScale,
-
-          centerX:
-            state.viewport.centerX,
-
-          centerY:
-            state.viewport.centerY,
-
-          compassRadius:
-            state.viewport.compassRadius,
-
-          aspect:
-            state.viewport.aspect
-        }),
-
-      camera:
-        Object.freeze({
-          eye:
-            Object.freeze(
-              state.camera.eye.slice()
-            ),
-
-          target:
-            Object.freeze(
-              state.camera.target.slice()
-            ),
-
-          distance:
-            state.camera.distance,
-
-          verticalFieldOfView:
-            state.camera.verticalFieldOfView
-        }),
-
-      controllerState:
-        Object.freeze({
-          held:
-            state.held,
-
-          reducedMotion:
-            state.reducedMotion,
-
-          activeClusterId:
-            state.activeClusterId ||
-            null,
-
-          pageState:
-            state.pageState ||
-            null,
-
-          presentationMode:
-            state.presentationMode ||
-            null,
-
-          enhancementState:
-            state.enhancementState ||
-            null
-        }),
-
-      visualPassClaimed:
-        CONFIG.visualPassClaimed,
-
-      productionAuthorized:
-        CONFIG.productionAuthorized,
-
-      deploymentAuthorized:
-        CONFIG.deploymentAuthorized,
-
-      counters:
-        Object.freeze({
-          ...state.counters
-        }),
-
-      ...extra
-    });
-  }
-
-  function publishReceipt(
-    event,
-    extra = {}
-  ) {
-    const payload =
-      createReceipt(
-        event,
-        extra
-      );
-
-    if (state.receipt) {
-      const serialized =
-        JSON.stringify(
-          payload
-        );
-
-      state.receipt.value =
-        serialized;
-
-      state.receipt.textContent =
-        serialized;
-    }
-
-    dispatch(
-      EVENTS.receipt,
-      payload
-    );
-
-    return payload;
-  }
-
-  function reportRecoverableError(
-    scope,
-    error,
-    extra = {}
-  ) {
-    state.counters.recoverableErrors +=
-      1;
-
-    publishReceipt(
-      "recoverable-error",
-      {
-        scope,
-
-        error:
-          serializeError(
-            error
-          ),
-
-        ...extra
-      }
-    );
-  }
-
-  function resolveCanvasContext(canvas) {
+  function captureCanvasState(canvas) {
     if (!canvas) {
       return null;
     }
 
-    return canvas.getContext(
-      "2d",
-      {
-        alpha: true,
-        desynchronized: true
-      }
+    return {
+      width:
+        canvas.width,
+
+      height:
+        canvas.height,
+
+      className:
+        canvas.className,
+
+      style:
+        canvas.getAttribute(
+          "style"
+        ),
+
+      ariaHidden:
+        canvas.getAttribute(
+          "aria-hidden"
+        ),
+
+      layer:
+        canvas.getAttribute(
+          ATTRIBUTES.layer
+        ),
+
+      compositorOwned:
+        canvas.getAttribute(
+          ATTRIBUTES.compositorOwned
+        ),
+
+      compositorWidth:
+        canvas.getAttribute(
+          ATTRIBUTES.compositorWidth
+        ),
+
+      compositorHeight:
+        canvas.getAttribute(
+          ATTRIBUTES.compositorHeight
+        ),
+
+      compositorDpr:
+        canvas.getAttribute(
+          ATTRIBUTES.compositorDpr
+        )
+    };
+  }
+
+  function restoreNullableAttribute(
+    element,
+    name,
+    value
+  ) {
+    if (!element) {
+      return;
+    }
+
+    if (value === null) {
+      element.removeAttribute(name);
+    } else {
+      element.setAttribute(
+        name,
+        value
+      );
+    }
+  }
+
+  function restoreCanvasState(
+    canvas,
+    captured
+  ) {
+    if (
+      !canvas ||
+      !captured
+    ) {
+      return;
+    }
+
+    canvas.width =
+      captured.width;
+
+    canvas.height =
+      captured.height;
+
+    canvas.className =
+      captured.className;
+
+    restoreNullableAttribute(
+      canvas,
+      "style",
+      captured.style
+    );
+
+    restoreNullableAttribute(
+      canvas,
+      "aria-hidden",
+      captured.ariaHidden
+    );
+
+    restoreNullableAttribute(
+      canvas,
+      ATTRIBUTES.layer,
+      captured.layer
+    );
+
+    restoreNullableAttribute(
+      canvas,
+      ATTRIBUTES.compositorOwned,
+      captured.compositorOwned
+    );
+
+    restoreNullableAttribute(
+      canvas,
+      ATTRIBUTES.compositorWidth,
+      captured.compositorWidth
+    );
+
+    restoreNullableAttribute(
+      canvas,
+      ATTRIBUTES.compositorHeight,
+      captured.compositorHeight
+    );
+
+    restoreNullableAttribute(
+      canvas,
+      ATTRIBUTES.compositorDpr,
+      captured.compositorDpr
     );
   }
 
-  function prepareCanvasElement(
-    canvas,
-    layer,
-    owned
-  ) {
+  function discoverDom() {
+    state.root =
+      document.querySelector(
+        SELECTORS.root
+      );
+
+    state.orbit =
+      document.querySelector(
+        SELECTORS.orbit
+      );
+
+    state.scene =
+      document.querySelector(
+        SELECTORS.scene
+      );
+
+    state.field =
+      document.querySelector(
+        SELECTORS.field
+      );
+
+    state.compassLayer =
+      document.querySelector(
+        SELECTORS.compassLayer
+      );
+
+    state.compassVisualMount =
+      document.querySelector(
+        SELECTORS.compassVisualMount
+      );
+
+    state.semanticLayer =
+      document.querySelector(
+        SELECTORS.semanticLayer
+      );
+
+    state.frontHost =
+      document.querySelector(
+        SELECTORS.frontHost
+      );
+
+    state.receipt =
+      document.querySelector(
+        SELECTORS.receipt
+      );
+  }
+
+  function validateDom() {
+    const issues = [];
+
+    if (!state.root) {
+      issues.push(
+        "Missing [data-showroom-root]."
+      );
+    }
+
+    if (!state.orbit) {
+      issues.push(
+        "Missing #showroom-orbit."
+      );
+    }
+
+    if (!state.scene) {
+      issues.push(
+        "Missing [data-showroom-orbit-scene]."
+      );
+    }
+
+    if (!state.field) {
+      issues.push(
+        "Missing [data-showroom-orbit-field]."
+      );
+    }
+
+    if (!state.compassLayer) {
+      issues.push(
+        "Missing [data-showroom-compass-layer]."
+      );
+    }
+
+    if (!state.compassVisualMount) {
+      issues.push(
+        "Missing [data-showroom-compass-visual-mount]."
+      );
+    }
+
+    if (!state.semanticLayer) {
+      issues.push(
+        "Missing [data-showroom-semantic-star-layer]."
+      );
+    }
+
+    if (!state.frontHost) {
+      issues.push(
+        "Missing [data-showroom-front-host]."
+      );
+    }
+
+    if (
+      state.field &&
+      state.compassLayer &&
+      !state.field.contains(
+        state.compassLayer
+      )
+    ) {
+      issues.push(
+        "Compass layer is not inside the orbit field."
+      );
+    }
+
+    if (
+      state.compassLayer &&
+      state.compassVisualMount &&
+      !state.compassLayer.contains(
+        state.compassVisualMount
+      )
+    ) {
+      issues.push(
+        "Compass visual mount is not inside the Compass layer."
+      );
+    }
+
+    if (
+      state.field &&
+      state.semanticLayer &&
+      !state.field.contains(
+        state.semanticLayer
+      )
+    ) {
+      issues.push(
+        "Semantic layer is not inside the orbit field."
+      );
+    }
+
+    return issues;
+  }
+
+  function createCanvas(layer) {
+    const canvas =
+      document.createElement(
+        "canvas"
+      );
+
     canvas.setAttribute(
       ATTRIBUTES.layer,
       layer
-    );
-
-    canvas.setAttribute(
-      ATTRIBUTES.genericLayer,
-      layer
-    );
-
-    canvas.setAttribute(
-      ATTRIBUTES.canvasOwner,
-      owned
-        ? CONTRACT
-        : (
-            canvas.getAttribute(
-              ATTRIBUTES.canvasOwner
-            ) ||
-            "adopted"
-          )
     );
 
     canvas.setAttribute(
@@ -974,12 +1205,15 @@
     );
 
     canvas.setAttribute(
-      "role",
-      "presentation"
+      ATTRIBUTES.compositorOwned,
+      "true"
     );
 
-    canvas.tabIndex =
-      -1;
+    canvas.className =
+      [
+        "showroom-compositor-canvas",
+        `showroom-compositor-canvas--${layer}`
+      ].join(" ");
 
     canvas.style.position =
       "absolute";
@@ -993,380 +1227,479 @@
     canvas.style.height =
       "100%";
 
-    canvas.style.display =
-      "block";
-
     canvas.style.pointerEvents =
       "none";
 
-    canvas.style.background =
-      "transparent";
-
-    canvas.style.contain =
-      "strict";
-
-    canvas.style.userSelect =
-      "none";
-
-    canvas.style.webkitUserSelect =
-      "none";
-
-    canvas.style.touchAction =
-      "none";
+    canvas.style.display =
+      "block";
 
     canvas.style.zIndex =
-      String(
-        layer === LAYERS.REAR
-          ? CONFIG.rearCanvasZIndex
-          : CONFIG.frontCanvasZIndex
-      );
-  }
-
-  function createCanvas(layer) {
-    const canvas =
-      document.createElement(
-        "canvas"
-      );
-
-    prepareCanvasElement(
-      canvas,
-      layer,
-      true
-    );
-
-    state.counters.createdCanvases +=
-      1;
+      layer === LAYERS.REAR
+        ? "1"
+        : "3";
 
     return canvas;
   }
 
-  function adoptOrCreateCanvas(layer) {
-    const selector =
+  function prepareExistingCanvas(
+    canvas,
+    layer
+  ) {
+    canvas.setAttribute(
+      ATTRIBUTES.layer,
+      layer
+    );
+
+    canvas.setAttribute(
+      "aria-hidden",
+      "true"
+    );
+
+    canvas.style.position =
+      "absolute";
+
+    canvas.style.inset =
+      "0";
+
+    canvas.style.width =
+      "100%";
+
+    canvas.style.height =
+      "100%";
+
+    canvas.style.pointerEvents =
+      "none";
+
+    canvas.style.display =
+      "block";
+
+    canvas.style.zIndex =
       layer === LAYERS.REAR
-        ? SELECTORS.rearCanvas
-        : SELECTORS.frontCanvas;
-
-    let canvas =
-      state.orbitField.querySelector(
-        selector
-      );
-
-    let owned = false;
-
-    if (!canvas) {
-      canvas =
-        createCanvas(layer);
-
-      owned = true;
-    } else {
-      prepareCanvasElement(
-        canvas,
-        layer,
-        false
-      );
-
-      state.counters.adoptedCanvases +=
-        1;
-    }
-
-    return Object.freeze({
-      canvas,
-      owned
-    });
+        ? "1"
+        : "3";
   }
 
-  function placeCanvasLayers() {
-    const rearResult =
-      adoptOrCreateCanvas(
-        LAYERS.REAR
+  function ensureFieldPositioningContext() {
+    if (!state.field) {
+      return;
+    }
+
+    const computed =
+      window.getComputedStyle(
+        state.field
       );
-
-    const frontResult =
-      adoptOrCreateCanvas(
-        LAYERS.FRONT
-      );
-
-    state.rearCanvas =
-      rearResult.canvas;
-
-    state.frontCanvas =
-      frontResult.canvas;
-
-    state.ownsRearCanvas =
-      rearResult.owned;
-
-    state.ownsFrontCanvas =
-      frontResult.owned;
 
     if (
-      state.compassLayer &&
-      state.compassLayer.parentElement ===
-        state.orbitField
+      computed.position ===
+      "static"
     ) {
-      state.orbitField.insertBefore(
-        state.rearCanvas,
+      state.field.style.position =
+        "relative";
+    }
+  }
+
+  function ensureCanvases() {
+    if (
+      !state.field ||
+      !state.compassLayer
+    ) {
+      throw new Error(
+        "Compositor canvases cannot be established without the orbit field and Compass layer."
+      );
+    }
+
+    state.nativeDomState.fieldStyle =
+      captureStyleAttribute(
+        state.field
+      );
+
+    state.nativeDomState.compassLayerStyle =
+      captureStyleAttribute(
         state.compassLayer
       );
 
-      state.orbitField.insertBefore(
-        state.frontCanvas,
-        state.compassLayer.nextSibling
-      );
-    } else {
-      state.orbitField.prepend(
-        state.rearCanvas
+    state.nativeDomState.semanticLayerStyle =
+      captureStyleAttribute(
+        state.semanticLayer
       );
 
-      state.orbitField.append(
-        state.frontCanvas
+    state.nativeDomState.rearCanvasPlacement =
+      null;
+
+    state.nativeDomState.frontCanvasPlacement =
+      null;
+
+    state.domRestored =
+      false;
+
+    ensureFieldPositioningContext();
+
+    const existingRear =
+      state.field.querySelector(
+        SELECTORS.rearCanvas
       );
-    }
 
-    if (state.compassLayer) {
-      state.compassLayer.style.zIndex =
-        String(
-          CONFIG.compassLayerZIndex
-        );
-    }
-
-    state.rearContext =
-      resolveCanvasContext(
-        state.rearCanvas
-      );
-
-    state.frontContext =
-      resolveCanvasContext(
-        state.frontCanvas
+    const existingFront =
+      state.field.querySelector(
+        SELECTORS.frontCanvas
       );
 
     if (
-      !state.rearContext ||
-      !state.frontContext
+      existingRear &&
+      !isCanvas(existingRear)
     ) {
       throw new Error(
-        "The Showroom compositor could not obtain both 2D canvas contexts."
+        "The declared rear compositor layer is not a canvas."
       );
     }
-  }
-
-  function calculateResponsiveCameraDistance(
-    aspect
-  ) {
-    const verticalHalfAngle =
-      state.camera.verticalFieldOfView /
-      2;
-
-    const tangent =
-      Math.max(
-        0.01,
-        Math.tan(
-          verticalHalfAngle
-        )
-      );
-
-    const horizontalDistance =
-      CONFIG.fieldRadiusX /
-      (
-        tangent *
-        Math.max(
-          0.01,
-          aspect
-        ) *
-        CONFIG.horizontalViewportOccupancy
-      );
-
-    const verticalDistance =
-      CONFIG.fieldRadiusY /
-      (
-        tangent *
-        CONFIG.verticalViewportOccupancy
-      );
-
-    return (
-      Math.max(
-        horizontalDistance,
-        verticalDistance
-      ) +
-      CONFIG.maximumFieldDepth +
-      0.36
-    );
-  }
-
-  function measureCompassCenter(
-    fieldRect
-  ) {
-    const reference =
-      state.compassLayer ||
-      state.compassMount;
 
     if (
-      !reference ||
-      !reference.isConnected
+      existingFront &&
+      !isCanvas(existingFront)
     ) {
-      return Object.freeze({
-        x:
-          fieldRect.width *
-          0.5,
-
-        y:
-          fieldRect.height *
-          0.5,
-
-        radius:
-          0
-      });
+      throw new Error(
+        "The declared front compositor layer is not a canvas."
+      );
     }
 
-    const compassRect =
-      reference.getBoundingClientRect();
+    if (existingRear) {
+      state.rearCanvas =
+        existingRear;
+
+      state.rearCanvasCreated =
+        false;
+
+      state.nativeRearCanvasState =
+        captureCanvasState(
+          existingRear
+        );
+
+      state.nativeDomState.rearCanvasPlacement =
+        capturePlacement(
+          existingRear
+        );
+
+      prepareExistingCanvas(
+        existingRear,
+        LAYERS.REAR
+      );
+    } else {
+      state.rearCanvas =
+        createCanvas(
+          LAYERS.REAR
+        );
+
+      state.rearCanvasCreated =
+        true;
+
+      state.nativeRearCanvasState =
+        null;
+    }
+
+    if (existingFront) {
+      state.frontCanvas =
+        existingFront;
+
+      state.frontCanvasCreated =
+        false;
+
+      state.nativeFrontCanvasState =
+        captureCanvasState(
+          existingFront
+        );
+
+      state.nativeDomState.frontCanvasPlacement =
+        capturePlacement(
+          existingFront
+        );
+
+      prepareExistingCanvas(
+        existingFront,
+        LAYERS.FRONT
+      );
+    } else {
+      state.frontCanvas =
+        createCanvas(
+          LAYERS.FRONT
+        );
+
+      state.frontCanvasCreated =
+        true;
+
+      state.nativeFrontCanvasState =
+        null;
+    }
 
     if (
-      compassRect.width <= 0 ||
-      compassRect.height <= 0
+      state.rearCanvas.parentNode !==
+        state.field ||
+      state.rearCanvas.nextSibling !==
+        state.compassLayer
     ) {
-      return Object.freeze({
-        x:
-          fieldRect.width *
-          0.5,
-
-        y:
-          fieldRect.height *
-          0.5,
-
-        radius:
-          0
-      });
+      state.field.insertBefore(
+        state.rearCanvas,
+        state.compassLayer
+      );
     }
 
-    return Object.freeze({
-      x:
-        compassRect.left -
-        fieldRect.left +
-        compassRect.width *
-        0.5,
+    const desiredFrontReference =
+      state.compassLayer.nextSibling;
 
-      y:
-        compassRect.top -
-        fieldRect.top +
-        compassRect.height *
-        0.5,
+    if (
+      state.frontCanvas.parentNode !==
+        state.field ||
+      state.frontCanvas.previousSibling !==
+        state.compassLayer
+    ) {
+      state.field.insertBefore(
+        state.frontCanvas,
+        desiredFrontReference
+      );
+    }
 
-      radius:
-        Math.min(
-          compassRect.width,
-          compassRect.height
-        ) *
-        0.5
-    });
+    state.compassLayer.style.zIndex =
+      "2";
+
+    state.semanticLayer.style.zIndex =
+      "4";
   }
 
-  function configureContext(
-    context,
-    deviceScale
-  ) {
-    context.setTransform(
-      deviceScale,
-      0,
-      0,
-      deviceScale,
-      0,
-      0
-    );
+  function restoreOwnedDom() {
+    if (state.domRestored) {
+      return;
+    }
 
-    context.imageSmoothingEnabled =
+    state.domRestored =
       true;
 
-    if (
-      "imageSmoothingQuality" in
-      context
-    ) {
-      context.imageSmoothingQuality =
-        "high";
+    if (state.rearCanvas) {
+      if (state.rearCanvasCreated) {
+        state.rearCanvas.remove();
+      } else {
+        restorePlacement(
+          state.rearCanvas,
+          state.nativeDomState
+            .rearCanvasPlacement
+        );
+
+        restoreCanvasState(
+          state.rearCanvas,
+          state.nativeRearCanvasState
+        );
+      }
     }
+
+    if (state.frontCanvas) {
+      if (state.frontCanvasCreated) {
+        state.frontCanvas.remove();
+      } else {
+        restorePlacement(
+          state.frontCanvas,
+          state.nativeDomState
+            .frontCanvasPlacement
+        );
+
+        restoreCanvasState(
+          state.frontCanvas,
+          state.nativeFrontCanvasState
+        );
+      }
+    }
+
+    restoreStyleAttribute(
+      state.field,
+      state.nativeDomState.fieldStyle
+    );
+
+    restoreStyleAttribute(
+      state.compassLayer,
+      state.nativeDomState
+        .compassLayerStyle
+    );
+
+    restoreStyleAttribute(
+      state.semanticLayer,
+      state.nativeDomState
+        .semanticLayerStyle
+    );
+
+    state.rearCanvas = null;
+    state.frontCanvas = null;
+
+    state.rearCanvasCreated = false;
+    state.frontCanvasCreated = false;
+
+    state.nativeRearCanvasState = null;
+    state.nativeFrontCanvasState = null;
+
+    state.nativeDomState.fieldStyle = null;
+    state.nativeDomState.compassLayerStyle = null;
+    state.nativeDomState.semanticLayerStyle = null;
+    state.nativeDomState.rearCanvasPlacement = null;
+    state.nativeDomState.frontCanvasPlacement = null;
   }
 
-  function updateMatrices() {
-    const distance =
-      calculateResponsiveCameraDistance(
-        state.viewport.aspect
-      );
-
-    state.camera.distance =
-      distance;
-
-    state.camera.eye = [
-      0,
-      0,
-      distance
-    ];
-
-    state.camera.viewMatrix =
-      createLookAtMatrix(
-        state.camera.eye,
-        state.camera.target,
-        state.camera.up
-      );
-
-    state.camera.projectionMatrix =
-      createPerspectiveMatrix(
-        state.camera.verticalFieldOfView,
-        state.viewport.aspect,
-        CONFIG.cameraNear,
-        CONFIG.cameraFar
-      );
-
-    state.camera.viewProjectionMatrix =
-      multiplyMatrix4(
-        state.camera.projectionMatrix,
-        state.camera.viewMatrix
-      );
+  function isValidControllerFrame(frame) {
+    return Boolean(
+      frame &&
+      typeof frame === "object" &&
+      frame.contract ===
+        CONTROLLER_CONTRACT &&
+      typeof frame.controllerReady ===
+        "boolean" &&
+      typeof frame.disposed ===
+        "boolean" &&
+      typeof frame.durableState ===
+        "string" &&
+      typeof frame.transientState ===
+        "string" &&
+      typeof frame.pageState ===
+        "string" &&
+      typeof frame.presentationMode ===
+        "string" &&
+      typeof frame.enhancementState ===
+        "string"
+    );
   }
 
-  function resizeCanvases(
-    reason = "resize"
-  ) {
+  function readControllerFrame() {
+    const controller =
+      window.SHOWROOM_CONTROLLER;
+
+    if (!controller) {
+      state.controller = null;
+      state.controllerFrame = null;
+      state.controllerReady = false;
+
+      return {
+        status:
+          "unavailable",
+
+        frame:
+          null
+      };
+    }
+
     if (
-      state.disposed ||
-      state.failed ||
-      !state.orbitField ||
+      controller.contract !==
+        CONTROLLER_CONTRACT ||
+      typeof controller.getFrameState !==
+        "function"
+    ) {
+      state.controller = null;
+      state.controllerFrame = null;
+      state.controllerReady = false;
+
+      return {
+        status:
+          "invalid-controller",
+
+        frame:
+          null
+      };
+    }
+
+    let frame;
+
+    try {
+      frame =
+        controller.getFrameState();
+    } catch (error) {
+      state.controller = null;
+      state.controllerFrame = null;
+      state.controllerReady = false;
+
+      return {
+        status:
+          "frame-error",
+
+        frame:
+          null,
+
+        error
+      };
+    }
+
+    if (!isValidControllerFrame(frame)) {
+      state.controller = null;
+      state.controllerFrame = null;
+      state.controllerReady = false;
+
+      return {
+        status:
+          "invalid-frame",
+
+        frame:
+          null
+      };
+    }
+
+    if (
+      frame.controllerReady !== true ||
+      frame.disposed === true
+    ) {
+      state.controller = null;
+      state.controllerFrame = null;
+      state.controllerReady = false;
+
+      return {
+        status:
+          "controller-not-ready",
+
+        frame:
+          null
+      };
+    }
+
+    state.controller =
+      controller;
+
+    state.controllerFrame =
+      frame;
+
+    state.controllerReady =
+      true;
+
+    return {
+      status:
+        "ready",
+
+      frame
+    };
+  }
+
+  function measureViewport() {
+    if (
+      !state.field ||
       !state.rearCanvas ||
       !state.frontCanvas
     ) {
       return false;
     }
 
-    const fieldRect =
-      state.orbitField
-        .getBoundingClientRect();
+    const rect =
+      state.field.getBoundingClientRect();
 
     const cssWidth =
       Math.max(
-        0,
-        fieldRect.width
+        1,
+        rect.width
       );
 
     const cssHeight =
       Math.max(
-        0,
-        fieldRect.height
+        1,
+        rect.height
       );
 
-    if (
-      cssWidth <
-        CONFIG.minimumViewportDimension ||
-      cssHeight <
-        CONFIG.minimumViewportDimension
-    ) {
-      return false;
-    }
-
-    const deviceScale =
+    const devicePixelRatio =
       clamp(
-        Number(
-          window.devicePixelRatio
-        ) || 1,
+        toFiniteNumber(
+          window.devicePixelRatio,
+          1
+        ),
         1,
-        CONFIG.maximumDeviceScale
+        3
       );
 
     const pixelWidth =
@@ -1374,7 +1707,7 @@
         1,
         Math.round(
           cssWidth *
-          deviceScale
+          devicePixelRatio
         )
       );
 
@@ -1383,30 +1716,25 @@
         1,
         Math.round(
           cssHeight *
-          deviceScale
+          devicePixelRatio
         )
       );
 
-    const compass =
-      measureCompassCenter(
-        fieldRect
-      );
-
     const changed =
-      state.viewport.cssWidth !==
-        cssWidth ||
-      state.viewport.cssHeight !==
-        cssHeight ||
-      state.viewport.pixelWidth !==
-        pixelWidth ||
-      state.viewport.pixelHeight !==
-        pixelHeight ||
-      state.viewport.deviceScale !==
-        deviceScale ||
-      state.viewport.centerX !==
-        compass.x ||
-      state.viewport.centerY !==
-        compass.y;
+      cssWidth !==
+        state.viewport.cssWidth ||
+      cssHeight !==
+        state.viewport.cssHeight ||
+      pixelWidth !==
+        state.viewport.pixelWidth ||
+      pixelHeight !==
+        state.viewport.pixelHeight ||
+      devicePixelRatio !==
+        state.viewport.devicePixelRatio ||
+      rect.left !==
+        state.viewport.left ||
+      rect.top !==
+        state.viewport.top;
 
     state.viewport.cssWidth =
       cssWidth;
@@ -1420,435 +1748,1137 @@
     state.viewport.pixelHeight =
       pixelHeight;
 
-    state.viewport.deviceScale =
-      deviceScale;
+    state.viewport.devicePixelRatio =
+      devicePixelRatio;
 
-    state.viewport.centerX =
-      compass.x;
+    state.viewport.left =
+      rect.left;
 
-    state.viewport.centerY =
-      compass.y;
+    state.viewport.top =
+      rect.top;
 
-    state.viewport.compassRadius =
-      compass.radius;
+    for (
+      const canvas
+      of [
+        state.rearCanvas,
+        state.frontCanvas
+      ]
+    ) {
+      if (
+        canvas.width !==
+        pixelWidth
+      ) {
+        canvas.width =
+          pixelWidth;
+      }
 
-    state.viewport.aspect =
-      cssWidth /
-      Math.max(
-        1,
-        cssHeight
+      if (
+        canvas.height !==
+        pixelHeight
+      ) {
+        canvas.height =
+          pixelHeight;
+      }
+
+      canvas.setAttribute(
+        ATTRIBUTES.compositorWidth,
+        String(pixelWidth)
       );
 
-    if (
-      state.rearCanvas.width !==
-      pixelWidth
-    ) {
-      state.rearCanvas.width =
-        pixelWidth;
+      canvas.setAttribute(
+        ATTRIBUTES.compositorHeight,
+        String(pixelHeight)
+      );
+
+      canvas.setAttribute(
+        ATTRIBUTES.compositorDpr,
+        String(devicePixelRatio)
+      );
     }
-
-    if (
-      state.rearCanvas.height !==
-      pixelHeight
-    ) {
-      state.rearCanvas.height =
-        pixelHeight;
-    }
-
-    if (
-      state.frontCanvas.width !==
-      pixelWidth
-    ) {
-      state.frontCanvas.width =
-        pixelWidth;
-    }
-
-    if (
-      state.frontCanvas.height !==
-      pixelHeight
-    ) {
-      state.frontCanvas.height =
-        pixelHeight;
-    }
-
-    configureContext(
-      state.rearContext,
-      deviceScale
-    );
-
-    configureContext(
-      state.frontContext,
-      deviceScale
-    );
-
-    updateMatrices();
-
-    setRootAttribute(
-      ATTRIBUTES.viewportWidth,
-      Math.round(
-        cssWidth
-      )
-    );
-
-    setRootAttribute(
-      ATTRIBUTES.viewportHeight,
-      Math.round(
-        cssHeight
-      )
-    );
-
-    setRootAttribute(
-      ATTRIBUTES.deviceScale,
-      deviceScale
-    );
 
     if (changed) {
-      state.counters.resizeEvents +=
+      state.counters.resizePasses +=
         1;
+    }
 
-      requestFrame(
-        reason
+    return changed;
+  }
+
+  function measureCompassPlane() {
+    if (
+      !state.compassVisualMount ||
+      !state.field
+    ) {
+      return;
+    }
+
+    const fieldRect =
+      state.field.getBoundingClientRect();
+
+    const compassRect =
+      state.compassVisualMount
+        .getBoundingClientRect();
+
+    state.compassPlane.screenX =
+      compassRect.left -
+      fieldRect.left +
+      compassRect.width / 2;
+
+    state.compassPlane.screenY =
+      compassRect.top -
+      fieldRect.top +
+      compassRect.height / 2;
+
+    state.compassPlane.radius =
+      Math.max(
+        compassRect.width,
+        compassRect.height
+      ) / 2;
+  }
+
+  function rebuildMatrices() {
+    const aspect =
+      state.viewport.cssWidth /
+      Math.max(
+        1,
+        state.viewport.cssHeight
+      );
+
+    const view =
+      createLookAtMatrix(
+        state.camera.eye,
+        state.camera.target,
+        state.camera.up
+      );
+
+    const projection =
+      createPerspectiveMatrix(
+        state.camera
+          .fieldOfViewDegrees *
+          Math.PI /
+          180,
+
+        aspect,
+
+        state.camera.near,
+        state.camera.far
+      );
+
+    state.matrices.view =
+      view;
+
+    state.matrices.projection =
+      projection;
+
+    state.matrices.viewProjection =
+      multiplyMatrix4(
+        projection,
+        view
+      );
+
+    const planeView =
+      transformVector4(
+        view,
+        [
+          state.compassPlane
+            .worldPoint[0],
+
+          state.compassPlane
+            .worldPoint[1],
+
+          state.compassPlane
+            .worldPoint[2],
+
+          1
+        ]
+      );
+
+    state.compassPlane.viewDepth =
+      planeView[2];
+  }
+
+  function normalizeWorldPosition(value) {
+    if (
+      Array.isArray(value) &&
+      value.length >= 3
+    ) {
+      const x =
+        Number(value[0]);
+
+      const y =
+        Number(value[1]);
+
+      const z =
+        Number(value[2]);
+
+      if (
+        Number.isFinite(x) &&
+        Number.isFinite(y) &&
+        Number.isFinite(z)
+      ) {
+        return [
+          x,
+          y,
+          z
+        ];
+      }
+    }
+
+    if (
+      value &&
+      typeof value ===
+        "object"
+    ) {
+      const x =
+        Number(value.x);
+
+      const y =
+        Number(value.y);
+
+      const z =
+        Number(value.z);
+
+      if (
+        Number.isFinite(x) &&
+        Number.isFinite(y) &&
+        Number.isFinite(z)
+      ) {
+        return [
+          x,
+          y,
+          z
+        ];
+      }
+    }
+
+    return null;
+  }
+
+  function worldToScreen(
+    worldPosition
+  ) {
+    const world =
+      normalizeWorldPosition(
+        worldPosition
+      );
+
+    if (!world) {
+      return null;
+    }
+
+    const view =
+      transformVector4(
+        state.matrices.view,
+        [
+          world[0],
+          world[1],
+          world[2],
+          1
+        ]
+      );
+
+    const clip =
+      transformVector4(
+        state.matrices.projection,
+        view
+      );
+
+    if (
+      !Number.isFinite(
+        clip[3]
+      ) ||
+      Math.abs(
+        clip[3]
+      ) <= 1e-9
+    ) {
+      return null;
+    }
+
+    const inverseW =
+      1 /
+      clip[3];
+
+    const ndcX =
+      clip[0] *
+      inverseW;
+
+    const ndcY =
+      clip[1] *
+      inverseW;
+
+    const ndcZ =
+      clip[2] *
+      inverseW;
+
+    const viewportCenterX =
+      state.viewport.cssWidth /
+      2;
+
+    const viewportCenterY =
+      state.viewport.cssHeight /
+      2;
+
+    const anchorOffsetX =
+      state.compassPlane.screenX -
+      viewportCenterX;
+
+    const anchorOffsetY =
+      state.compassPlane.screenY -
+      viewportCenterY;
+
+    const screenX =
+      (
+        ndcX * 0.5 +
+        0.5
+      ) *
+      state.viewport.cssWidth +
+      anchorOffsetX;
+
+    const screenY =
+      (
+        -ndcY * 0.5 +
+        0.5
+      ) *
+      state.viewport.cssHeight +
+      anchorOffsetY;
+
+    const visible =
+      clip[3] > 0 &&
+      ndcX >= -1.25 &&
+      ndcX <= 1.25 &&
+      ndcY >= -1.25 &&
+      ndcY <= 1.25 &&
+      ndcZ >= -1.25 &&
+      ndcZ <= 1.25;
+
+    return freezePlain({
+      world: {
+        x:
+          world[0],
+
+        y:
+          world[1],
+
+        z:
+          world[2]
+      },
+
+      view: {
+        x:
+          view[0],
+
+        y:
+          view[1],
+
+        z:
+          view[2]
+      },
+
+      clip: {
+        x:
+          clip[0],
+
+        y:
+          clip[1],
+
+        z:
+          clip[2],
+
+        w:
+          clip[3]
+      },
+
+      ndc: {
+        x:
+          ndcX,
+
+        y:
+          ndcY,
+
+        z:
+          ndcZ
+      },
+
+      screen: {
+        x:
+          screenX,
+
+        y:
+          screenY
+      },
+
+      visible
+    });
+  }
+
+  function classifyDepth(
+    id,
+    viewDepth
+  ) {
+    const delta =
+      viewDepth -
+      state.compassPlane.viewDepth;
+
+    const previous =
+      state.classifications.get(id);
+
+    const hysteresis =
+      state.camera
+        .classificationHysteresis;
+
+    let classification;
+
+    if (
+      previous ===
+      CLASSIFICATIONS.FRONT
+    ) {
+      classification =
+        delta < -hysteresis
+          ? CLASSIFICATIONS.REAR
+          : CLASSIFICATIONS.FRONT;
+    } else if (
+      previous ===
+      CLASSIFICATIONS.REAR
+    ) {
+      classification =
+        delta > hysteresis
+          ? CLASSIFICATIONS.FRONT
+          : CLASSIFICATIONS.REAR;
+    } else {
+      classification =
+        delta >= 0
+          ? CLASSIFICATIONS.FRONT
+          : CLASSIFICATIONS.REAR;
+    }
+
+    state.classifications.set(
+      id,
+      classification
+    );
+
+    return {
+      classification,
+      delta
+    };
+  }
+
+  function classifyWorldPoint(
+    worldPosition,
+    previousClassification = null
+  ) {
+    const projection =
+      worldToScreen(
+        worldPosition
+      );
+
+    if (!projection) {
+      return null;
+    }
+
+    const delta =
+      projection.view.z -
+      state.compassPlane.viewDepth;
+
+    const hysteresis =
+      state.camera
+        .classificationHysteresis;
+
+    let classification;
+
+    if (
+      previousClassification ===
+      CLASSIFICATIONS.FRONT
+    ) {
+      classification =
+        delta < -hysteresis
+          ? CLASSIFICATIONS.REAR
+          : CLASSIFICATIONS.FRONT;
+    } else if (
+      previousClassification ===
+      CLASSIFICATIONS.REAR
+    ) {
+      classification =
+        delta > hysteresis
+          ? CLASSIFICATIONS.FRONT
+          : CLASSIFICATIONS.REAR;
+    } else {
+      classification =
+        delta >= 0
+          ? CLASSIFICATIONS.FRONT
+          : CLASSIFICATIONS.REAR;
+    }
+
+    return freezePlain({
+      classification,
+      delta,
+      projection
+    });
+  }
+
+  function resolveNodePosition(record) {
+    try {
+      if (
+        typeof record.getWorldPosition ===
+          "function"
+      ) {
+        return normalizeWorldPosition(
+          record.getWorldPosition()
+        );
+      }
+
+      return normalizeWorldPosition(
+        record.worldPosition
+      );
+    } catch {
+      return null;
+    }
+  }
+
+  function resolveNodeRadius(record) {
+    try {
+      if (
+        typeof record.getHitRadius ===
+          "function"
+      ) {
+        return Math.max(
+          0,
+          toFiniteNumber(
+            record.getHitRadius(),
+            0
+          )
+        );
+      }
+
+      return Math.max(
+        0,
+        toFiniteNumber(
+          record.hitRadius,
+          0
+        )
+      );
+    } catch {
+      return 0;
+    }
+  }
+
+  function resolveNodeVisible(record) {
+    try {
+      if (
+        typeof record.isVisible ===
+          "function"
+      ) {
+        return (
+          record.isVisible() !==
+          false
+        );
+      }
+
+      return record.visible !== false;
+    } catch {
+      return false;
+    }
+  }
+
+  function buildProjectionSnapshot() {
+    const nodes = [];
+    const rear = [];
+    const front = [];
+    const hitRegions = [];
+
+    for (
+      const [
+        id,
+        record
+      ]
+      of state.nodes
+    ) {
+      if (!resolveNodeVisible(record)) {
+        continue;
+      }
+
+      const worldPosition =
+        resolveNodePosition(record);
+
+      if (!worldPosition) {
+        continue;
+      }
+
+      const projection =
+        worldToScreen(
+          worldPosition
+        );
+
+      if (!projection) {
+        continue;
+      }
+
+      const depth =
+        classifyDepth(
+          id,
+          projection.view.z
+        );
+
+      const hitRadius =
+        resolveNodeRadius(record);
+
+      const snapshot =
+        freezePlain({
+          id,
+
+          semanticObjectId:
+            record.semanticObjectId ||
+            null,
+
+          cardinalId:
+            record.cardinalId ||
+            null,
+
+          childId:
+            record.childId ||
+            null,
+
+          clusterId:
+            record.clusterId ||
+            null,
+
+          classification:
+            depth.classification,
+
+          depthDelta:
+            depth.delta,
+
+          world:
+            projection.world,
+
+          view:
+            projection.view,
+
+          ndc:
+            projection.ndc,
+
+          screen:
+            projection.screen,
+
+          visible:
+            projection.visible,
+
+          hitRadius,
+
+          metadata:
+            record.metadata
+              ? {
+                  ...record.metadata
+                }
+              : null
+        });
+
+      nodes.push(snapshot);
+
+      if (
+        depth.classification ===
+        CLASSIFICATIONS.FRONT
+      ) {
+        front.push(snapshot);
+      } else {
+        rear.push(snapshot);
+      }
+
+      if (
+        projection.visible &&
+        hitRadius > 0
+      ) {
+        hitRegions.push(
+          freezePlain({
+            id,
+
+            semanticObjectId:
+              record.semanticObjectId ||
+              null,
+
+            classification:
+              depth.classification,
+
+            x:
+              projection.screen.x,
+
+            y:
+              projection.screen.y,
+
+            radius:
+              hitRadius,
+
+            viewDepth:
+              projection.view.z
+          })
+        );
+      }
+    }
+
+    rear.sort(
+      (
+        first,
+        second
+      ) =>
+        first.view.z -
+        second.view.z
+    );
+
+    front.sort(
+      (
+        first,
+        second
+      ) =>
+        first.view.z -
+        second.view.z
+    );
+
+    hitRegions.sort(
+      (
+        first,
+        second
+      ) =>
+        second.viewDepth -
+        first.viewDepth
+    );
+
+    state.counters.projectionPasses +=
+      1;
+
+    return freezePlain({
+      frameId:
+        state.frameId,
+
+      timestamp:
+        performance.now(),
+
+      nodes,
+
+      rear,
+
+      front,
+
+      hitRegions
+    });
+  }
+
+  function getRenderFrame() {
+    return freezePlain({
+      contract:
+        CONTRACT,
+
+      controllerContract:
+        CONTROLLER_CONTRACT,
+
+      frameId:
+        state.frameId,
+
+      controllerFrame:
+        state.controllerFrame,
+
+      viewport: {
+        ...state.viewport
+      },
+
+      camera: {
+        eye:
+          state.camera.eye.slice(),
+
+        target:
+          state.camera.target.slice(),
+
+        up:
+          state.camera.up.slice(),
+
+        fieldOfViewDegrees:
+          state.camera
+            .fieldOfViewDegrees,
+
+        near:
+          state.camera.near,
+
+        far:
+          state.camera.far,
+
+        classificationHysteresis:
+          state.camera
+            .classificationHysteresis
+      },
+
+      matrices: {
+        view:
+          matrixToArray(
+            state.matrices.view
+          ),
+
+        projection:
+          matrixToArray(
+            state.matrices.projection
+          ),
+
+        viewProjection:
+          matrixToArray(
+            state.matrices
+              .viewProjection
+          )
+      },
+
+      compassPlane: {
+        worldPoint:
+          state.compassPlane
+            .worldPoint
+            .slice(),
+
+        viewDepth:
+          state.compassPlane
+            .viewDepth,
+
+        screenX:
+          state.compassPlane
+            .screenX,
+
+        screenY:
+          state.compassPlane
+            .screenY,
+
+        radius:
+          state.compassPlane
+            .radius
+      },
+
+      projection:
+        state.projectionSnapshot
+    });
+  }
+
+  function invokeRenderer(
+    renderer,
+    methodName,
+    payload
+  ) {
+    const method =
+      renderer[methodName];
+
+    if (
+      typeof method !==
+      "function"
+    ) {
+      return;
+    }
+
+    method(payload);
+  }
+
+  function renderRegisteredLayers(
+    renderFrame
+  ) {
+    const basePayload = {
+      contract:
+        CONTRACT,
+
+      frame:
+        renderFrame,
+
+      rearCanvas:
+        state.rearCanvas,
+
+      frontCanvas:
+        state.frontCanvas,
+
+      rearNodes:
+        state.projectionSnapshot.rear,
+
+      frontNodes:
+        state.projectionSnapshot.front,
+
+      allNodes:
+        state.projectionSnapshot.nodes,
+
+      hitRegions:
+        state.projectionSnapshot
+          .hitRegions
+    };
+
+    for (
+      const renderer
+      of state.renderers.values()
+    ) {
+      try {
+        invokeRenderer(
+          renderer,
+          "beginFrame",
+          basePayload
+        );
+
+        invokeRenderer(
+          renderer,
+          "renderRear",
+          {
+            ...basePayload,
+
+            canvas:
+              state.rearCanvas,
+
+            nodes:
+              state.projectionSnapshot
+                .rear,
+
+            layer:
+              LAYERS.REAR
+          }
+        );
+
+        invokeRenderer(
+          renderer,
+          "renderFront",
+          {
+            ...basePayload,
+
+            canvas:
+              state.frontCanvas,
+
+            nodes:
+              state.projectionSnapshot
+                .front,
+
+            layer:
+              LAYERS.FRONT
+          }
+        );
+
+        invokeRenderer(
+          renderer,
+          "endFrame",
+          basePayload
+        );
+      } catch (error) {
+        state.counters.failures +=
+          1;
+
+        publishReceipt(
+          "renderer-frame-failed",
+          {
+            rendererId:
+              renderer.id,
+
+            error: {
+              name:
+                error instanceof Error
+                  ? error.name
+                  : "Error",
+
+              message:
+                error instanceof Error
+                  ? error.message
+                  : String(error)
+            }
+          }
+        );
+      }
+    }
+  }
+
+  function failRuntime(
+    error,
+    reason
+  ) {
+    if (state.disposed) {
+      return;
+    }
+
+    state.counters.failures +=
+      1;
+
+    cancelScheduledRender();
+
+    state.controllerReady =
+      false;
+
+    state.readinessPending =
+      false;
+
+    state.readyPublished =
+      false;
+
+    setRootState(
+      false,
+      "failed"
+    );
+
+    const errorPayload = {
+      name:
+        error instanceof Error
+          ? error.name
+          : "Error",
+
+      message:
+        error instanceof Error
+          ? error.message
+          : String(error)
+    };
+
+    publishReceipt(
+      "runtime-failed",
+      {
+        reason,
+
+        error:
+          errorPayload
+      }
+    );
+
+    dispatch(
+      EVENTS.compositorFailed,
+      {
+        reason,
+
+        error:
+          errorPayload
+      }
+    );
+  }
+
+  function performRender() {
+    state.renderRequested =
+      false;
+
+    state.rafId =
+      0;
+
+    if (
+      state.disposed ||
+      !state.initialized ||
+      !state.readyPublished ||
+      !state.controllerReady ||
+      !state.controllerFrame
+    ) {
+      return false;
+    }
+
+    const controllerResult =
+      readControllerFrame();
+
+    if (
+      controllerResult.status !==
+        "ready"
+    ) {
+      failRuntime(
+        new Error(
+          `Authoritative render blocked: ${controllerResult.status}.`
+        ),
+        "render-controller-validation"
+      );
+
+      return false;
+    }
+
+    measureViewport();
+    measureCompassPlane();
+    rebuildMatrices();
+
+    state.frameId += 1;
+
+    state.projectionSnapshot =
+      buildProjectionSnapshot();
+
+    const renderFrame =
+      getRenderFrame();
+
+    renderRegisteredLayers(
+      renderFrame
+    );
+
+    state.counters.renders +=
+      1;
+
+    if (state.root) {
+      state.root.setAttribute(
+        ATTRIBUTES.compositorFrame,
+        String(
+          state.frameId
+        )
       );
     }
+
+    dispatch(
+      EVENTS.compositorFrame,
+      {
+        frame:
+          renderFrame
+      }
+    );
+
+    dispatch(
+      EVENTS.compositorProjectionChanged,
+      {
+        frameId:
+          state.frameId,
+
+        projection:
+          state.projectionSnapshot
+      }
+    );
 
     return true;
   }
 
-  function normalizeWorldPosition(
-    position
+  function requestRender(
+    reason = "requested"
   ) {
-    if (
-      !position ||
-      typeof position !==
-        "object"
-    ) {
-      return null;
-    }
-
-    const x =
-      Number(
-        position.x
-      );
-
-    const y =
-      Number(
-        position.y
-      );
-
-    const z =
-      Number(
-        position.z
-      );
-
-    if (
-      !Number.isFinite(x) ||
-      !Number.isFinite(y) ||
-      !Number.isFinite(z)
-    ) {
-      return null;
-    }
-
-    return Object.freeze({
-      x,
-      y,
-      z
-    });
-  }
-
-  function projectWorldToScreen(
-    position
-  ) {
-    state.counters.projectionCalls +=
-      1;
-
     if (
       state.disposed ||
-      state.failed ||
-      state.viewport.cssWidth <
-        CONFIG.minimumViewportDimension ||
-      state.viewport.cssHeight <
-        CONFIG.minimumViewportDimension
+      !state.initialized
     ) {
-      return Object.freeze({
-        visible:
-          false,
-
-        screen:
-          Object.freeze({
-            x: 0,
-            y: 0
-          }),
-
-        world:
-          null,
-
-        ndc:
-          null,
-
-        clip:
-          null,
-
-        cameraDepth:
-          Infinity,
-
-        compassPlaneDistance:
-          0,
-
-        layer:
-          null
-      });
+      return false;
     }
 
-    const world =
-      normalizeWorldPosition(
-        position
-      );
+    if (!state.readyPublished) {
+      state.pendingRenderReason =
+        reason;
 
-    if (!world) {
-      return Object.freeze({
-        visible:
-          false,
-
-        screen:
-          Object.freeze({
-            x: 0,
-            y: 0
-          }),
-
-        world:
-          null,
-
-        ndc:
-          null,
-
-        clip:
-          null,
-
-        cameraDepth:
-          Infinity,
-
-        compassPlaneDistance:
-          0,
-
-        layer:
-          null
-      });
+      return false;
     }
 
-    const worldVector = [
-      world.x,
-      world.y,
-      world.z,
-      1
-    ];
-
-    const viewPosition =
-      transformVector4(
-        state.camera.viewMatrix,
-        worldVector
-      );
-
-    const clipPosition =
-      transformVector4(
-        state.camera.projectionMatrix,
-        viewPosition
-      );
-
-    const clipW =
-      clipPosition[3];
-
-    if (
-      !Number.isFinite(clipW) ||
-      Math.abs(clipW) <= 1e-8
-    ) {
-      return Object.freeze({
-        visible:
-          false,
-
-        screen:
-          Object.freeze({
-            x:
-              state.viewport.centerX,
-
-            y:
-              state.viewport.centerY
-          }),
-
-        world,
-
-        ndc:
-          null,
-
-        clip:
-          Object.freeze({
-            x:
-              clipPosition[0],
-
-            y:
-              clipPosition[1],
-
-            z:
-              clipPosition[2],
-
-            w:
-              clipW
-          }),
-
-        cameraDepth:
-          Infinity,
-
-        compassPlaneDistance:
-          world.z -
-          CONFIG.compassPlaneWorldZ,
-
-        layer:
-          null
-      });
+    if (state.renderRequested) {
+      return true;
     }
 
-    const ndcX =
-      clipPosition[0] /
-      clipW;
+    state.renderRequested =
+      true;
 
-    const ndcY =
-      clipPosition[1] /
-      clipW;
-
-    const ndcZ =
-      clipPosition[2] /
-      clipW;
-
-    const screenX =
-      state.viewport.centerX +
-      ndcX *
-      state.viewport.cssWidth *
-      0.5;
-
-    const screenY =
-      state.viewport.centerY -
-      ndcY *
-      state.viewport.cssHeight *
-      0.5;
-
-    const cameraDepth =
-      Math.max(
-        0,
-        -viewPosition[2]
+    state.rafId =
+      requestAnimationFrame(
+        performRender
       );
 
-    const visible =
-      clipW > 0 &&
-      Number.isFinite(screenX) &&
-      Number.isFinite(screenY) &&
-      Math.abs(ndcX) <=
-        CONFIG.visibilityMargin &&
-      Math.abs(ndcY) <=
-        CONFIG.visibilityMargin &&
-      ndcZ >= -1.2 &&
-      ndcZ <= 1.2;
+    publishReceipt(
+      "render-requested",
+      {
+        reason
+      }
+    );
 
-    return Object.freeze({
-      visible,
-
-      screen:
-        Object.freeze({
-          x:
-            screenX,
-
-          y:
-            screenY
-        }),
-
-      world,
-
-      view:
-        Object.freeze({
-          x:
-            viewPosition[0],
-
-          y:
-            viewPosition[1],
-
-          z:
-            viewPosition[2],
-
-          w:
-            viewPosition[3]
-        }),
-
-      ndc:
-        Object.freeze({
-          x:
-            ndcX,
-
-          y:
-            ndcY,
-
-          z:
-            ndcZ
-        }),
-
-      clip:
-        Object.freeze({
-          x:
-            clipPosition[0],
-
-          y:
-            clipPosition[1],
-
-          z:
-            clipPosition[2],
-
-          w:
-            clipW
-        }),
-
-      cameraDepth,
-
-      compassPlaneDistance:
-        world.z -
-        CONFIG.compassPlaneWorldZ,
-
-      compassCenter:
-        Object.freeze({
-          x:
-            state.viewport.centerX,
-
-          y:
-            state.viewport.centerY,
-
-          radius:
-            state.viewport.compassRadius
-        }),
-
-      viewport:
-        Object.freeze({
-          width:
-            state.viewport.cssWidth,
-
-          height:
-            state.viewport.cssHeight,
-
-          deviceScale:
-            state.viewport.deviceScale
-        }),
-
-      layer:
-        null
-    });
+    return true;
   }
 
-  function validateRegistrationDefinition(
-    definition
-  ) {
+  function cancelScheduledRender() {
+    if (state.rafId) {
+      cancelAnimationFrame(
+        state.rafId
+      );
+    }
+
+    state.rafId = 0;
+    state.renderRequested = false;
+  }
+
+  function registerNode(definition) {
     if (
+      state.disposed ||
       !definition ||
       typeof definition !==
         "object"
     ) {
-      throw new TypeError(
-        "A compositor node definition must be an object."
-      );
+      return false;
     }
 
     const id =
@@ -1857,951 +2887,1270 @@
       );
 
     if (!id) {
-      throw new Error(
-        "A compositor node definition is missing an id."
+      throw new TypeError(
+        "A compositor node requires a stable id."
       );
     }
 
     if (
       typeof definition.getWorldPosition !==
-        "function"
+        "function" &&
+      !normalizeWorldPosition(
+        definition.worldPosition
+      )
     ) {
-      throw new Error(
-        `Compositor node "${id}" is missing getWorldPosition().`
+      throw new TypeError(
+        `Compositor node "${id}" requires getWorldPosition() or a valid worldPosition.`
       );
     }
 
-    if (
-      typeof definition.draw !==
-        "function"
-    ) {
-      throw new Error(
-        `Compositor node "${id}" is missing draw().`
-      );
-    }
-
-    return id;
-  }
-
-  function createNodeRecord(
-    definition
-  ) {
-    const id =
-      validateRegistrationDefinition(
-        definition
-      );
-
-    const hysteresis =
-      clamp(
-        Number(
-          definition.hysteresis
-        ) ||
-        CONFIG.defaultHysteresis,
-        0,
-        0.5
-      );
-
-    return {
+    const record = {
       id,
 
-      owner:
+      semanticObjectId:
         normalize(
-          definition.owner
-        ) ||
-        "unknown",
+          definition.semanticObjectId
+        ),
+
+      cardinalId:
+        normalize(
+          definition.cardinalId
+        ),
+
+      childId:
+        normalize(
+          definition.childId
+        ),
+
+      clusterId:
+        normalize(
+          definition.clusterId
+        ),
+
+      semanticElement:
+        isElement(
+          definition.semanticElement
+        )
+          ? definition.semanticElement
+          : null,
 
       getWorldPosition:
-        definition.getWorldPosition,
+        typeof definition.getWorldPosition ===
+          "function"
+          ? definition.getWorldPosition
+          : null,
+
+      worldPosition:
+        normalizeWorldPosition(
+          definition.worldPosition
+        ),
+
+      getHitRadius:
+        typeof definition.getHitRadius ===
+          "function"
+          ? definition.getHitRadius
+          : null,
+
+      hitRadius:
+        Math.max(
+          0,
+          toFiniteNumber(
+            definition.hitRadius,
+            0
+          )
+        ),
 
       isVisible:
         typeof definition.isVisible ===
           "function"
           ? definition.isVisible
-          : () => true,
+          : null,
 
-      getSortBias:
-        typeof definition.getSortBias ===
-          "function"
-          ? definition.getSortBias
-          : () => 0,
+      visible:
+        definition.visible !== false,
 
-      getMetadata:
-        typeof definition.getMetadata ===
-          "function"
-          ? definition.getMetadata
-          : () => null,
-
-      draw:
-        definition.draw,
-
-      hysteresis,
-
-      disposed:
-        false
+      metadata:
+        definition.metadata &&
+        typeof definition.metadata ===
+          "object"
+          ? {
+              ...definition.metadata
+            }
+          : null
     };
-  }
 
-  function unregisterNode(nodeId) {
-    const id =
-      normalize(
-        typeof nodeId ===
-          "object" &&
-        nodeId
-          ? nodeId.id
-          : nodeId
-      );
-
-    if (!id) {
-      return false;
-    }
-
-    const record =
-      state.nodes.get(id);
-
-    if (!record) {
-      return false;
-    }
-
-    record.disposed =
-      true;
-
-    state.nodes.delete(id);
-    state.classifications.delete(id);
-
-    state.counters.unregisteredNodes +=
-      1;
-
-    requestFrame(
-      "node-unregistered"
-    );
-
-    publishReceipt(
-      "node-unregistered",
-      {
-        nodeId:
-          id
-      }
-    );
-
-    return true;
-  }
-
-  function registerNode(definition) {
-    if (
-      state.disposed ||
-      state.failed ||
-      !state.ready
-    ) {
-      throw new Error(
-        "The Showroom compositor is not available for node registration."
-      );
-    }
-
-    const record =
-      createNodeRecord(
-        definition
-      );
-
-    if (
-      state.nodes.has(
-        record.id
-      )
-    ) {
-      unregisterNode(
-        record.id
-      );
-    }
+    const replacing =
+      state.nodes.has(id);
 
     state.nodes.set(
-      record.id,
+      id,
       record
     );
 
-    state.counters.registeredNodes +=
-      1;
+    if (!replacing) {
+      state.counters.nodeRegistrations +=
+        1;
+    }
 
-    requestFrame(
-      "node-registered"
+    requestRender(
+      replacing
+        ? "node-replaced"
+        : "node-registered"
     );
-
-    publishReceipt(
-      "node-registered",
-      {
-        nodeId:
-          record.id,
-
-        nodeOwner:
-          record.owner,
-
-        hysteresis:
-          record.hysteresis
-      }
-    );
-
-    let unregistered = false;
 
     return Object.freeze({
-      id:
-        record.id,
-
-      owner:
-        record.owner,
+      id,
 
       unregister() {
-        if (unregistered) {
-          return false;
-        }
+        return unregisterNode(id);
+      },
 
-        unregistered = true;
-
-        return unregisterNode(
-          record.id
-        );
-      }
+      requestRender
     });
   }
 
-  function classifyNode(
-    record,
-    projection
-  ) {
-    const previous =
-      state.classifications.get(
-        record.id
-      );
-
-    const distance =
-      projection.compassPlaneDistance;
-
-    let layer;
+  function unregisterNode(id) {
+    const normalizedId =
+      normalize(id);
 
     if (
-      distance >
-      record.hysteresis
+      !normalizedId ||
+      !state.nodes.has(
+        normalizedId
+      )
     ) {
-      layer =
-        LAYERS.FRONT;
-    } else if (
-      distance <
-      -record.hysteresis
-    ) {
-      layer =
-        LAYERS.REAR;
-    } else if (previous) {
-      layer =
-        previous;
-
-      state.counters.hysteresisRetentions +=
-        1;
-    } else {
-      layer =
-        distance >= 0
-          ? LAYERS.FRONT
-          : LAYERS.REAR;
+      return false;
     }
 
-    state.classifications.set(
-      record.id,
-      layer
+    state.nodes.delete(
+      normalizedId
     );
 
-    state.counters.classifications +=
+    state.classifications.delete(
+      normalizedId
+    );
+
+    state.counters.nodeRemovals +=
       1;
 
-    return layer;
-  }
-
-  function clearContext(context) {
-    context.save();
-
-    context.setTransform(
-      1,
-      0,
-      0,
-      1,
-      0,
-      0
+    requestRender(
+      "node-unregistered"
     );
-
-    context.clearRect(
-      0,
-      0,
-      state.viewport.pixelWidth,
-      state.viewport.pixelHeight
-    );
-
-    context.restore();
-
-    configureContext(
-      context,
-      state.viewport.deviceScale
-    );
-  }
-
-  function safelyReadNodeVisibility(
-    record
-  ) {
-    try {
-      return Boolean(
-        record.isVisible()
-      );
-    } catch (error) {
-      reportRecoverableError(
-        "node-visibility",
-        error,
-        {
-          nodeId:
-            record.id
-        }
-      );
-
-      return false;
-    }
-  }
-
-  function safelyReadNodePosition(
-    record
-  ) {
-    try {
-      return normalizeWorldPosition(
-        record.getWorldPosition()
-      );
-    } catch (error) {
-      reportRecoverableError(
-        "node-world-position",
-        error,
-        {
-          nodeId:
-            record.id
-        }
-      );
-
-      return null;
-    }
-  }
-
-  function safelyReadSortBias(
-    record
-  ) {
-    try {
-      const value =
-        Number(
-          record.getSortBias()
-        );
-
-      return Number.isFinite(value)
-        ? value
-        : 0;
-    } catch (error) {
-      reportRecoverableError(
-        "node-sort-bias",
-        error,
-        {
-          nodeId:
-            record.id
-        }
-      );
-
-      return 0;
-    }
-  }
-
-  function safelyReadMetadata(
-    record
-  ) {
-    try {
-      return record.getMetadata();
-    } catch (error) {
-      reportRecoverableError(
-        "node-metadata",
-        error,
-        {
-          nodeId:
-            record.id
-        }
-      );
-
-      return null;
-    }
-  }
-
-  function collectRenderableEntries() {
-    const rear = [];
-    const front = [];
-
-    for (
-      const record
-      of state.nodes.values()
-    ) {
-      if (
-        record.disposed ||
-        !safelyReadNodeVisibility(
-          record
-        )
-      ) {
-        continue;
-      }
-
-      const worldPosition =
-        safelyReadNodePosition(
-          record
-        );
-
-      if (!worldPosition) {
-        continue;
-      }
-
-      const baseProjection =
-        projectWorldToScreen(
-          worldPosition
-        );
-
-      if (
-        !baseProjection.visible
-      ) {
-        continue;
-      }
-
-      const layer =
-        classifyNode(
-          record,
-          baseProjection
-        );
-
-      const projection =
-        Object.freeze({
-          ...baseProjection,
-
-          layer
-        });
-
-      const entry = {
-        record,
-        projection,
-
-        sortBias:
-          safelyReadSortBias(
-            record
-          ),
-
-        metadata:
-          safelyReadMetadata(
-            record
-          )
-      };
-
-      if (
-        layer ===
-        LAYERS.FRONT
-      ) {
-        front.push(entry);
-      } else {
-        rear.push(entry);
-      }
-    }
-
-    const painterSort = (
-      left,
-      right
-    ) => {
-      const leftDepth =
-        left.projection.cameraDepth +
-        left.sortBias;
-
-      const rightDepth =
-        right.projection.cameraDepth +
-        right.sortBias;
-
-      return (
-        rightDepth -
-        leftDepth
-      );
-    };
-
-    rear.sort(
-      painterSort
-    );
-
-    front.sort(
-      painterSort
-    );
-
-    return Object.freeze({
-      rear,
-      front
-    });
-  }
-
-  function drawEntry(
-    context,
-    entry,
-    layer,
-    timestamp
-  ) {
-    context.save();
-
-    try {
-      entry.record.draw(
-        Object.freeze({
-          context,
-
-          projection:
-            entry.projection,
-
-          layer,
-
-          metadata:
-            entry.metadata,
-
-          timestamp,
-
-          viewport:
-            Object.freeze({
-              width:
-                state.viewport.cssWidth,
-
-              height:
-                state.viewport.cssHeight,
-
-              deviceScale:
-                state.viewport.deviceScale,
-
-              centerX:
-                state.viewport.centerX,
-
-              centerY:
-                state.viewport.centerY,
-
-              compassRadius:
-                state.viewport.compassRadius
-            }),
-
-          camera:
-            Object.freeze({
-              eye:
-                Object.freeze(
-                  state.camera.eye.slice()
-                ),
-
-              target:
-                Object.freeze(
-                  state.camera.target.slice()
-                ),
-
-              distance:
-                state.camera.distance,
-
-              viewMatrix:
-                Object.freeze(
-                  state.camera.viewMatrix
-                    .slice()
-                ),
-
-              projectionMatrix:
-                Object.freeze(
-                  state.camera
-                    .projectionMatrix
-                    .slice()
-                ),
-
-              viewProjectionMatrix:
-                Object.freeze(
-                  state.camera
-                    .viewProjectionMatrix
-                    .slice()
-                )
-            }),
-
-          requestFrame,
-
-          compositorContract:
-            CONTRACT
-        })
-      );
-
-      if (
-        layer ===
-        LAYERS.FRONT
-      ) {
-        state.counters.frontDraws +=
-          1;
-      } else {
-        state.counters.rearDraws +=
-          1;
-      }
-    } catch (error) {
-      state.counters.drawErrors +=
-        1;
-
-      reportRecoverableError(
-        "node-draw",
-        error,
-        {
-          nodeId:
-            entry.record.id,
-
-          layer
-        }
-      );
-    } finally {
-      context.restore();
-    }
-  }
-
-  function renderFrame(timestamp) {
-    state.frameRequested =
-      false;
-
-    state.frameId =
-      0;
-
-    const reasons =
-      Array.from(
-        state.frameReasons
-      );
-
-    state.frameReasons.clear();
-
-    if (
-      state.disposed ||
-      state.failed ||
-      !state.ready
-    ) {
-      return;
-    }
-
-    try {
-      resizeCanvases(
-        "frame-measurement"
-      );
-
-      if (
-        state.viewport.cssWidth <
-          CONFIG.minimumViewportDimension ||
-        state.viewport.cssHeight <
-          CONFIG.minimumViewportDimension
-      ) {
-        return;
-      }
-
-      clearContext(
-        state.rearContext
-      );
-
-      clearContext(
-        state.frontContext
-      );
-
-      const entries =
-        collectRenderableEntries();
-
-      for (
-        const entry
-        of entries.rear
-      ) {
-        drawEntry(
-          state.rearContext,
-          entry,
-          LAYERS.REAR,
-          timestamp
-        );
-      }
-
-      for (
-        const entry
-        of entries.front
-      ) {
-        drawEntry(
-          state.frontContext,
-          entry,
-          LAYERS.FRONT,
-          timestamp
-        );
-      }
-
-      state.lastFrameTime =
-        timestamp;
-
-      state.frameFailureCount =
-        0;
-
-      state.counters.renderedFrames +=
-        1;
-
-      if (
-        reasons.includes(
-          "manual-refresh"
-        )
-      ) {
-        publishReceipt(
-          "frame-rendered",
-          {
-            reasons,
-
-            rearNodeCount:
-              entries.rear.length,
-
-            frontNodeCount:
-              entries.front.length
-          }
-        );
-      }
-    } catch (error) {
-      state.frameFailureCount +=
-        1;
-
-      reportRecoverableError(
-        "render-frame",
-        error,
-        {
-          reasons,
-
-          consecutiveFrameFailures:
-            state.frameFailureCount
-        }
-      );
-
-      if (
-        state.frameFailureCount >=
-        CONFIG.frameFailureLimit
-      ) {
-        fail(
-          new Error(
-            `The Showroom compositor exceeded ${CONFIG.frameFailureLimit} consecutive frame failures.`
-          )
-        );
-      }
-    }
-  }
-
-  function requestFrame(
-    reason = "unspecified"
-  ) {
-    if (
-      state.disposed ||
-      state.failed
-    ) {
-      return false;
-    }
-
-    state.frameReasons.add(
-      normalize(reason) ||
-      "unspecified"
-    );
-
-    if (
-      state.frameRequested
-    ) {
-      return true;
-    }
-
-    state.frameRequested =
-      true;
-
-    state.frameId =
-      window.requestAnimationFrame(
-        renderFrame
-      );
 
     return true;
   }
 
-  function readControllerState() {
-    if (!state.root) {
-      return;
+  function registerRenderer(definition) {
+    if (
+      state.disposed ||
+      !definition ||
+      typeof definition !==
+        "object"
+    ) {
+      return false;
     }
 
-    state.held =
-      state.root.getAttribute(
-        ATTRIBUTES.held
-      ) === "true";
-
-    state.reducedMotion =
-      state.root.getAttribute(
-        ATTRIBUTES.reducedMotion
-      ) === "true" ||
-      window.matchMedia(
-        "(prefers-reduced-motion: reduce)"
-      ).matches;
-
-    state.activeClusterId =
+    const id =
       normalize(
-        state.root.getAttribute(
-          ATTRIBUTES.activeCluster
-        )
+        definition.id
       );
 
-    state.pageState =
-      normalize(
-        state.root.getAttribute(
-          ATTRIBUTES.pageState
-        )
+    if (!id) {
+      throw new TypeError(
+        "A compositor renderer requires a stable id."
       );
+    }
 
-    state.presentationMode =
-      normalize(
-        state.root.getAttribute(
-          ATTRIBUTES.presentationMode
-        )
-      );
-
-    state.enhancementState =
-      normalize(
-        state.root.getAttribute(
-          ATTRIBUTES.enhancementState
-        )
-      );
-  }
-
-  function handleControllerSignal(
-    event
-  ) {
-    readControllerState();
-
-    requestFrame(
-      event &&
-      event.type
-        ? event.type
-        : "controller-signal"
-    );
-  }
-
-  function initializeObservers() {
     if (
-      "ResizeObserver" in
-      window
+      typeof definition.renderRear !==
+        "function" &&
+      typeof definition.renderFront !==
+        "function"
     ) {
-      const resizeObserver =
+      throw new TypeError(
+        `Compositor renderer "${id}" must implement renderRear() or renderFront().`
+      );
+    }
+
+    const renderer = {
+      id,
+
+      beginFrame:
+        typeof definition.beginFrame ===
+          "function"
+          ? definition.beginFrame
+          : null,
+
+      renderRear:
+        typeof definition.renderRear ===
+          "function"
+          ? definition.renderRear
+          : null,
+
+      renderFront:
+        typeof definition.renderFront ===
+          "function"
+          ? definition.renderFront
+          : null,
+
+      endFrame:
+        typeof definition.endFrame ===
+          "function"
+          ? definition.endFrame
+          : null,
+
+      dispose:
+        typeof definition.dispose ===
+          "function"
+          ? definition.dispose
+          : null
+    };
+
+    const replacing =
+      state.renderers.get(id);
+
+    if (
+      replacing &&
+      typeof replacing.dispose ===
+        "function"
+    ) {
+      try {
+        replacing.dispose({
+          reason:
+            "renderer-replaced",
+
+          rearCanvas:
+            state.rearCanvas,
+
+          frontCanvas:
+            state.frontCanvas
+        });
+      } catch {
+        /* Replacement remains authoritative. */
+      }
+    }
+
+    state.renderers.set(
+      id,
+      renderer
+    );
+
+    if (!replacing) {
+      state.counters.rendererRegistrations +=
+        1;
+    }
+
+    requestRender(
+      replacing
+        ? "renderer-replaced"
+        : "renderer-registered"
+    );
+
+    return Object.freeze({
+      id,
+
+      rearCanvas:
+        state.rearCanvas,
+
+      frontCanvas:
+        state.frontCanvas,
+
+      unregister() {
+        return unregisterRenderer(id);
+      },
+
+      requestRender
+    });
+  }
+
+  function unregisterRenderer(id) {
+    const normalizedId =
+      normalize(id);
+
+    const renderer =
+      state.renderers.get(
+        normalizedId
+      );
+
+    if (!renderer) {
+      return false;
+    }
+
+    state.renderers.delete(
+      normalizedId
+    );
+
+    if (
+      typeof renderer.dispose ===
+        "function"
+    ) {
+      try {
+        renderer.dispose({
+          reason:
+            "renderer-unregistered",
+
+          rearCanvas:
+            state.rearCanvas,
+
+          frontCanvas:
+            state.frontCanvas
+        });
+      } catch {
+        /* Removal remains authoritative. */
+      }
+    }
+
+    state.counters.rendererRemovals +=
+      1;
+
+    requestRender(
+      "renderer-unregistered"
+    );
+
+    return true;
+  }
+
+  function setCamera(update = {}) {
+    if (
+      state.disposed ||
+      !update ||
+      typeof update !==
+        "object"
+    ) {
+      return false;
+    }
+
+    if (
+      Object.prototype.hasOwnProperty.call(
+        update,
+        "eye"
+      )
+    ) {
+      const eye =
+        normalizeWorldPosition(
+          update.eye
+        );
+
+      if (!eye) {
+        throw new TypeError(
+          "Camera eye must contain three finite coordinates."
+        );
+      }
+
+      state.camera.eye =
+        eye;
+    }
+
+    if (
+      Object.prototype.hasOwnProperty.call(
+        update,
+        "target"
+      )
+    ) {
+      const target =
+        normalizeWorldPosition(
+          update.target
+        );
+
+      if (!target) {
+        throw new TypeError(
+          "Camera target must contain three finite coordinates."
+        );
+      }
+
+      state.camera.target =
+        target;
+    }
+
+    if (
+      Object.prototype.hasOwnProperty.call(
+        update,
+        "up"
+      )
+    ) {
+      const up =
+        normalizeWorldPosition(
+          update.up
+        );
+
+      if (!up) {
+        throw new TypeError(
+          "Camera up must contain three finite coordinates."
+        );
+      }
+
+      state.camera.up =
+        normalizeVector3(
+          up,
+          [
+            0,
+            1,
+            0
+          ]
+        );
+    }
+
+    if (
+      Object.prototype.hasOwnProperty.call(
+        update,
+        "fieldOfViewDegrees"
+      )
+    ) {
+      state.camera.fieldOfViewDegrees =
+        clamp(
+          toFiniteNumber(
+            update.fieldOfViewDegrees,
+            state.camera
+              .fieldOfViewDegrees
+          ),
+          10,
+          100
+        );
+    }
+
+    if (
+      Object.prototype.hasOwnProperty.call(
+        update,
+        "near"
+      )
+    ) {
+      state.camera.near =
+        clamp(
+          toFiniteNumber(
+            update.near,
+            state.camera.near
+          ),
+          0.001,
+          10
+        );
+    }
+
+    if (
+      Object.prototype.hasOwnProperty.call(
+        update,
+        "far"
+      )
+    ) {
+      state.camera.far =
+        clamp(
+          toFiniteNumber(
+            update.far,
+            state.camera.far
+          ),
+          state.camera.near +
+            0.001,
+          10000
+        );
+    }
+
+    if (
+      Object.prototype.hasOwnProperty.call(
+        update,
+        "classificationHysteresis"
+      )
+    ) {
+      state.camera.classificationHysteresis =
+        clamp(
+          toFiniteNumber(
+            update.classificationHysteresis,
+            state.camera
+              .classificationHysteresis
+          ),
+          0,
+          2
+        );
+    }
+
+    rebuildMatrices();
+
+    requestRender(
+      "camera-updated"
+    );
+
+    return getCamera();
+  }
+
+  function setOrbitCamera(update = {}) {
+    const target =
+      normalizeWorldPosition(
+        update.target
+      ) ||
+      state.camera.target.slice();
+
+    const offset =
+      subtractVector3(
+        state.camera.eye,
+        state.camera.target
+      );
+
+    const currentDistance =
+      Math.max(
+        0.001,
+        lengthVector3(offset)
+      );
+
+    const currentYaw =
+      Math.atan2(
+        offset[0],
+        offset[2]
+      );
+
+    const currentPitch =
+      Math.asin(
+        clamp(
+          offset[1] /
+          currentDistance,
+          -1,
+          1
+        )
+      );
+
+    const distance =
+      clamp(
+        toFiniteNumber(
+          update.distance,
+          currentDistance
+        ),
+        1,
+        40
+      );
+
+    const yaw =
+      toFiniteNumber(
+        update.yaw,
+        currentYaw
+      );
+
+    const pitch =
+      clamp(
+        toFiniteNumber(
+          update.pitch,
+          currentPitch
+        ),
+        -Math.PI * 0.48,
+        Math.PI * 0.48
+      );
+
+    const horizontal =
+      Math.cos(pitch) *
+      distance;
+
+    const eye = [
+      target[0] +
+        Math.sin(yaw) *
+        horizontal,
+
+      target[1] +
+        Math.sin(pitch) *
+        distance,
+
+      target[2] +
+        Math.cos(yaw) *
+        horizontal
+    ];
+
+    return setCamera({
+      eye,
+      target
+    });
+  }
+
+  function getCamera() {
+    return freezePlain({
+      eye:
+        state.camera.eye.slice(),
+
+      target:
+        state.camera.target.slice(),
+
+      up:
+        state.camera.up.slice(),
+
+      fieldOfViewDegrees:
+        state.camera
+          .fieldOfViewDegrees,
+
+      near:
+        state.camera.near,
+
+      far:
+        state.camera.far,
+
+      classificationHysteresis:
+        state.camera
+          .classificationHysteresis
+    });
+  }
+
+  function setCompassPlaneWorldPoint(
+    worldPoint
+  ) {
+    const normalized =
+      normalizeWorldPosition(
+        worldPoint
+      );
+
+    if (!normalized) {
+      throw new TypeError(
+        "Compass plane world point must contain three finite coordinates."
+      );
+    }
+
+    state.compassPlane.worldPoint =
+      normalized;
+
+    rebuildMatrices();
+
+    requestRender(
+      "compass-plane-updated"
+    );
+
+    return freezePlain({
+      worldPoint:
+        normalized.slice()
+    });
+  }
+
+  function hitTest(
+    clientX,
+    clientY,
+    options = {}
+  ) {
+    const x =
+      Number(clientX);
+
+    const y =
+      Number(clientY);
+
+    if (
+      !Number.isFinite(x) ||
+      !Number.isFinite(y)
+    ) {
+      return null;
+    }
+
+    const fieldX =
+      x -
+      state.viewport.left;
+
+    const fieldY =
+      y -
+      state.viewport.top;
+
+    const requestedClassification =
+      normalize(
+        options.classification
+      );
+
+    const candidates =
+      state.projectionSnapshot
+        .hitRegions;
+
+    let best = null;
+    let bestDistance =
+      Infinity;
+
+    for (
+      const region
+      of candidates
+    ) {
+      if (
+        requestedClassification &&
+        region.classification !==
+          requestedClassification
+      ) {
+        continue;
+      }
+
+      const distance =
+        Math.hypot(
+          fieldX -
+            region.x,
+
+          fieldY -
+            region.y
+        );
+
+      if (
+        distance <=
+          region.radius &&
+        distance <
+          bestDistance
+      ) {
+        best =
+          region;
+
+        bestDistance =
+          distance;
+      }
+    }
+
+    if (!best) {
+      return null;
+    }
+
+    return freezePlain({
+      ...best,
+
+      distance:
+        bestDistance,
+
+      fieldX,
+      fieldY,
+
+      clientX:
+        x,
+
+      clientY:
+        y
+    });
+  }
+
+  function getCanvases() {
+    return Object.freeze({
+      rear:
+        state.rearCanvas,
+
+      front:
+        state.frontCanvas
+    });
+  }
+
+  function getProjectionSnapshot() {
+    return state.projectionSnapshot;
+  }
+
+  function getFrameState() {
+    return getRenderFrame();
+  }
+
+  function getState() {
+    return freezePlain({
+      contract:
+        CONTRACT,
+
+      owner:
+        OWNER,
+
+      controllerContract:
+        CONTROLLER_CONTRACT,
+
+      initialized:
+        state.initialized,
+
+      initializing:
+        state.initializing,
+
+      disposed:
+        state.disposed,
+
+      readyPublished:
+        state.readyPublished,
+
+      readinessPending:
+        state.readinessPending,
+
+      controllerReady:
+        state.controllerReady,
+
+      pendingRenderReason:
+        state.pendingRenderReason ||
+        null,
+
+      controllerAvailable:
+        Boolean(
+          state.controller
+        ),
+
+      controllerFrame:
+        state.controllerFrame,
+
+      ownership: {
+        registeredRendererLifecycleOwned:
+          true,
+
+        compassRendererLifecycleOwned:
+          false,
+
+        compassNavigationOwned:
+          false,
+
+        semanticNavigationOwned:
+          false
+      },
+
+      dom: {
+        root:
+          Boolean(state.root),
+
+        orbit:
+          Boolean(state.orbit),
+
+        scene:
+          Boolean(state.scene),
+
+        field:
+          Boolean(state.field),
+
+        compassLayer:
+          Boolean(
+            state.compassLayer
+          ),
+
+        compassVisualMount:
+          Boolean(
+            state.compassVisualMount
+          ),
+
+        semanticLayer:
+          Boolean(
+            state.semanticLayer
+          ),
+
+        frontHost:
+          Boolean(
+            state.frontHost
+          ),
+
+        rearCanvas:
+          Boolean(
+            state.rearCanvas
+          ),
+
+        frontCanvas:
+          Boolean(
+            state.frontCanvas
+          ),
+
+        rearCanvasCreated:
+          state.rearCanvasCreated,
+
+        frontCanvasCreated:
+          state.frontCanvasCreated,
+
+        domRestored:
+          state.domRestored
+      },
+
+      camera:
+        getCamera(),
+
+      viewport: {
+        ...state.viewport
+      },
+
+      compassPlane: {
+        worldPoint:
+          state.compassPlane
+            .worldPoint
+            .slice(),
+
+        viewDepth:
+          state.compassPlane
+            .viewDepth,
+
+        screenX:
+          state.compassPlane
+            .screenX,
+
+        screenY:
+          state.compassPlane
+            .screenY,
+
+        radius:
+          state.compassPlane
+            .radius
+      },
+
+      registeredNodeIds:
+        Array.from(
+          state.nodes.keys()
+        ),
+
+      registeredRendererIds:
+        Array.from(
+          state.renderers.keys()
+        ),
+
+      projection:
+        state.projectionSnapshot,
+
+      counters: {
+        ...state.counters
+      }
+    });
+  }
+
+  function initializeResizeObservation() {
+    if (
+      typeof ResizeObserver ===
+        "function"
+    ) {
+      state.resizeObserver =
         new ResizeObserver(
           () => {
-            resizeCanvases(
+            requestRender(
               "resize-observer"
             );
           }
         );
 
-      resizeObserver.observe(
-        state.orbitField
+      state.resizeObserver.observe(
+        state.field
       );
 
-      if (
-        state.compassLayer &&
-        state.compassLayer !==
-          state.orbitField
-      ) {
-        resizeObserver.observe(
-          state.compassLayer
-        );
-      }
-
-      addObserver(
-        resizeObserver
+      state.resizeObserver.observe(
+        state.compassVisualMount
       );
     } else {
       addListener(
         window,
         "resize",
         () => {
-          resizeCanvases(
+          requestRender(
             "window-resize"
           );
         },
         {
-          passive: true
+          passive:
+            true
         }
       );
     }
+  }
 
-    const rootObserver =
+  function initializeMutationObservation() {
+    if (
+      typeof MutationObserver !==
+        "function" ||
+      !state.compassLayer ||
+      !state.compassVisualMount
+    ) {
+      return;
+    }
+
+    state.mutationObserver =
       new MutationObserver(
         () => {
-          readControllerState();
-
-          requestFrame(
-            "root-state-mutated"
+          requestRender(
+            "compass-layout-mutation"
           );
         }
       );
 
-    rootObserver.observe(
-      state.root,
+    state.mutationObserver.observe(
+      state.compassLayer,
+      {
+        childList:
+          true,
+
+        subtree:
+          true
+      }
+    );
+
+    state.mutationObserver.observe(
+      state.compassVisualMount,
       {
         attributes:
           true,
 
         attributeFilter: [
-          ATTRIBUTES.held,
-          ATTRIBUTES.reducedMotion,
-          ATTRIBUTES.activeCluster,
-          ATTRIBUTES.pageState,
-          ATTRIBUTES.presentationMode,
-          ATTRIBUTES.enhancementState
+          "class",
+          "style",
+          "hidden"
+        ]
+      }
+    );
+  }
+
+  function disconnectObservers() {
+    if (state.resizeObserver) {
+      try {
+        state.resizeObserver.disconnect();
+      } catch {
+        /* Best-effort disposal. */
+      }
+    }
+
+    if (state.mutationObserver) {
+      try {
+        state.mutationObserver.disconnect();
+      } catch {
+        /* Best-effort disposal. */
+      }
+    }
+
+    state.resizeObserver = null;
+    state.mutationObserver = null;
+  }
+
+  function completeReadiness(
+    reason = "controller-ready"
+  ) {
+    if (
+      state.disposed ||
+      !state.initialized ||
+      state.readyPublished
+    ) {
+      return READINESS_RESULTS.SKIPPED;
+    }
+
+    const controllerResult =
+      readControllerFrame();
+
+    if (
+      controllerResult.status ===
+        "unavailable"
+    ) {
+      state.readinessPending =
+        true;
+
+      setRootState(
+        false,
+        "pending-controller"
+      );
+
+      return READINESS_RESULTS.PENDING;
+    }
+
+    if (
+      controllerResult.status !==
+        "ready"
+    ) {
+      failRuntime(
+        new Error(
+          `Controller readiness failed: ${controllerResult.status}.`
+        ),
+        "controller-readiness"
+      );
+
+      return READINESS_RESULTS.FAILED;
+    }
+
+    const readinessReason =
+      state.pendingRenderReason ||
+      reason;
+
+    state.readinessPending =
+      false;
+
+    state.readyPublished =
+      true;
+
+    state.pendingRenderReason =
+      "";
+
+    measureViewport();
+    measureCompassPlane();
+    rebuildMatrices();
+
+    setRootState(
+      true,
+      "ready"
+    );
+
+    const initialRenderSucceeded =
+      performRender();
+
+    if (
+      !initialRenderSucceeded ||
+      !state.readyPublished ||
+      !state.controllerReady ||
+      !state.controllerFrame
+    ) {
+      return READINESS_RESULTS.FAILED;
+    }
+
+    publishReceipt(
+      "ready",
+      {
+        reason:
+          readinessReason,
+
+        domContract:
+          "satisfied",
+
+        canvasModel:
+          "compositor-created-or-reused",
+
+        rearCanvasCreated:
+          state.rearCanvasCreated,
+
+        frontCanvasCreated:
+          state.frontCanvasCreated,
+
+        compassPlaneOwned:
+          false,
+
+        compassPlaneInspected:
+          true,
+
+        semanticNavigationOwned:
+          false,
+
+        registeredRendererLifecycleOwned:
+          true,
+
+        compassRendererLifecycleOwned:
+          false
+      }
+    );
+
+    dispatch(
+      EVENTS.compositorReady,
+      {
+        reason:
+          readinessReason,
+
+        frame:
+          getRenderFrame(),
+
+        canvases: {
+          rear:
+            LAYERS.REAR,
+
+          front:
+            LAYERS.FRONT
+        },
+
+        registeredRendererLifecycleOwned:
+          true,
+
+        compassRendererLifecycleOwned:
+          false,
+
+        api: [
+          "getState",
+          "getFrameState",
+          "getProjectionSnapshot",
+          "getCanvases",
+          "getCamera",
+          "setCamera",
+          "setOrbitCamera",
+          "setCompassPlaneWorldPoint",
+          "worldToScreen",
+          "classifyWorldPoint",
+          "hitTest",
+          "registerNode",
+          "unregisterNode",
+          "registerRenderer",
+          "unregisterRenderer",
+          "requestRender",
+          "dispose"
         ]
       }
     );
 
-    addObserver(
-      rootObserver
+    return READINESS_RESULTS.READY;
+  }
+
+  function handleControllerFrame(event) {
+    if (
+      state.disposed ||
+      !state.initialized
+    ) {
+      return;
+    }
+
+    const frame =
+      event &&
+      event.detail
+        ? event.detail.frame
+        : null;
+
+    if (
+      frame &&
+      isValidControllerFrame(frame) &&
+      frame.controllerReady === true &&
+      frame.disposed === false
+    ) {
+      state.controllerFrame =
+        frame;
+
+      state.controllerReady =
+        true;
+    } else {
+      const controllerResult =
+        readControllerFrame();
+
+      if (
+        controllerResult.status !==
+          "ready"
+      ) {
+        failRuntime(
+          new Error(
+            `Invalid controller frame: ${controllerResult.status}.`
+          ),
+          "controller-frame"
+        );
+
+        return;
+      }
+    }
+
+    if (!state.readyPublished) {
+      completeReadiness(
+        "controller-frame"
+      );
+
+      return;
+    }
+
+    requestRender(
+      "controller-frame"
     );
   }
 
-  function initializeEvents() {
+  function initializeControllerBinding() {
     addListener(
       window,
-      EVENTS.requestFrame,
-      event => {
-        const detail =
-          event &&
-          event.detail
-            ? event.detail
-            : {};
-
-        requestFrame(
-          normalize(
-            detail.reason
-          ) ||
-          "external-request"
-        );
-      }
-    );
-
-    addListener(
-      window,
-      EVENTS.stateChanged,
-      handleControllerSignal
-    );
-
-    addListener(
-      window,
-      EVENTS.clusterChanged,
-      handleControllerSignal
-    );
-
-    addListener(
-      window,
-      EVENTS.frontChanged,
-      handleControllerSignal
-    );
-
-    addListener(
-      window,
-      EVENTS.interactionState,
-      handleControllerSignal
-    );
-
-    addListener(
-      window,
-      "pageshow",
+      EVENTS.controllerReady,
       () => {
-        resizeCanvases(
-          "pageshow"
-        );
-
-        requestFrame(
-          "pageshow"
+        completeReadiness(
+          "controller-ready-event"
         );
       }
     );
+
+    addListener(
+      window,
+      EVENTS.controllerFrameChanged,
+      handleControllerFrame
+    );
+
+    addListener(
+      window,
+      EVENTS.controllerStateChanged,
+      handleControllerFrame
+    );
+
+    const controllerResult =
+      readControllerFrame();
+
+    if (
+      controllerResult.status ===
+        "unavailable"
+    ) {
+      state.readinessPending =
+        true;
+
+      setRootState(
+        false,
+        "pending-controller"
+      );
+
+      return;
+    }
+
+    if (
+      controllerResult.status !==
+        "ready"
+    ) {
+      throw new Error(
+        `Controller binding failed: ${controllerResult.status}.`
+      );
+    }
   }
 
   function exposeApi() {
@@ -2810,82 +4159,40 @@
         contract:
           CONTRACT,
 
+        controllerContract:
+          CONTROLLER_CONTRACT,
+
+        getState,
+
+        getFrameState,
+
+        getProjectionSnapshot,
+
+        getCanvases,
+
+        getCamera,
+
+        setCamera,
+
+        setOrbitCamera,
+
+        setCompassPlaneWorldPoint,
+
+        worldToScreen,
+
+        classifyWorldPoint,
+
+        hitTest,
+
         registerNode,
 
         unregisterNode,
 
-        projectWorldToScreen,
+        registerRenderer,
 
-        requestFrame,
+        unregisterRenderer,
 
-        refresh() {
-          readControllerState();
-
-          resizeCanvases(
-            "manual-refresh"
-          );
-
-          requestFrame(
-            "manual-refresh"
-          );
-
-          return createReceipt(
-            "manual-refresh"
-          );
-        },
-
-        getState() {
-          return createReceipt(
-            "state-requested",
-            {
-              nodeIds:
-                Object.freeze(
-                  Array.from(
-                    state.nodes.keys()
-                  )
-                ),
-
-              classifications:
-                Object.freeze(
-                  Array.from(
-                    state.classifications
-                      .entries()
-                  ).map(
-                    (
-                      [
-                        nodeId,
-                        layer
-                      ]
-                    ) =>
-                      Object.freeze({
-                        nodeId,
-                        layer
-                      })
-                  )
-                ),
-
-              viewMatrix:
-                Object.freeze(
-                  state.camera.viewMatrix
-                    .slice()
-                ),
-
-              projectionMatrix:
-                Object.freeze(
-                  state.camera
-                    .projectionMatrix
-                    .slice()
-                ),
-
-              viewProjectionMatrix:
-                Object.freeze(
-                  state.camera
-                    .viewProjectionMatrix
-                    .slice()
-                )
-            }
-          );
-        },
+        requestRender,
 
         dispose
       });
@@ -2909,295 +4216,172 @@
     );
   }
 
-  function discoverDom() {
-    state.root =
-      document.querySelector(
-        SELECTORS.root
-      );
-
-    state.receipt =
-      document.querySelector(
-        SELECTORS.receipt
-      );
-
-    state.orbitField =
-      document.querySelector(
-        SELECTORS.orbitField
-      );
-
-    state.compassLayer =
-      state.orbitField
-        ? state.orbitField
-            .querySelector(
-              SELECTORS.compassLayer
-            )
-        : null;
-
-    state.compassMount =
-      state.orbitField
-        ? state.orbitField
-            .querySelector(
-              SELECTORS.compassMount
-            )
-        : null;
-  }
-
-  function validateDom() {
-    const issues = [];
-
-    if (!state.root) {
-      issues.push(
-        "Missing [data-showroom-root]."
-      );
-    }
-
-    if (!state.receipt) {
-      issues.push(
-        "Missing [data-showroom-compositor-receipt]."
-      );
-    }
-
-    if (!state.orbitField) {
-      issues.push(
-        "Missing [data-showroom-orbit-field]."
-      );
-    }
-
-    if (!state.compassLayer) {
-      issues.push(
-        "Missing [data-showroom-compass-layer] inside the orbit field."
-      );
-    }
-
-    if (
-      state.orbitField &&
-      state.compassLayer &&
-      state.compassLayer.parentElement !==
-        state.orbitField
-    ) {
-      issues.push(
-        "The Compass layer is not a direct child of the orbit field."
-      );
-    }
-
-    if (issues.length) {
-      throw new Error(
-        issues.join(" ")
-      );
-    }
-  }
-
-  function clearCanvas(
-    canvas,
-    context
-  ) {
-    if (
-      !canvas ||
-      !context
-    ) {
-      return;
-    }
-
+  function removeApi() {
     try {
-      context.save();
-
-      context.setTransform(
-        1,
-        0,
-        0,
-        1,
-        0,
-        0
-      );
-
-      context.clearRect(
-        0,
-        0,
-        canvas.width,
-        canvas.height
-      );
-
-      context.restore();
+      delete window.SHOWROOM_COMPOSITOR;
     } catch {
-      /* Canvas cleanup remains best-effort. */
+      /* Best-effort disposal. */
     }
   }
 
-  function removeOrRestoreCanvas(
-    canvas,
-    owned
+  function setRootState(
+    ready,
+    value
   ) {
-    if (!canvas) {
+    if (!state.root) {
       return;
     }
 
-    if (
-      owned &&
-      canvas.parentNode
-    ) {
-      canvas.parentNode.removeChild(
-        canvas
-      );
-
-      return;
-    }
-
-    canvas.removeAttribute(
-      ATTRIBUTES.layer
+    state.root.setAttribute(
+      ATTRIBUTES.compositorReady,
+      ready
+        ? "true"
+        : "false"
     );
 
-    canvas.removeAttribute(
-      ATTRIBUTES.genericLayer
-    );
-
-    canvas.removeAttribute(
-      ATTRIBUTES.canvasOwner
-    );
-
-    canvas.removeAttribute(
-      "role"
-    );
-
-    canvas.removeAttribute(
-      "tabindex"
-    );
-
-    canvas.style.removeProperty(
-      "position"
-    );
-
-    canvas.style.removeProperty(
-      "inset"
-    );
-
-    canvas.style.removeProperty(
-      "width"
-    );
-
-    canvas.style.removeProperty(
-      "height"
-    );
-
-    canvas.style.removeProperty(
-      "display"
-    );
-
-    canvas.style.removeProperty(
-      "pointer-events"
-    );
-
-    canvas.style.removeProperty(
-      "background"
-    );
-
-    canvas.style.removeProperty(
-      "contain"
-    );
-
-    canvas.style.removeProperty(
-      "user-select"
-    );
-
-    canvas.style.removeProperty(
-      "-webkit-user-select"
-    );
-
-    canvas.style.removeProperty(
-      "touch-action"
-    );
-
-    canvas.style.removeProperty(
-      "z-index"
+    state.root.setAttribute(
+      ATTRIBUTES.compositorState,
+      value
     );
   }
 
-  function rollbackDom() {
-    clearCanvas(
-      state.rearCanvas,
-      state.rearContext
-    );
+  function disposeRenderers(reason) {
+    for (
+      const renderer
+      of state.renderers.values()
+    ) {
+      if (
+        typeof renderer.dispose ===
+          "function"
+      ) {
+        try {
+          renderer.dispose({
+            reason,
 
-    clearCanvas(
-      state.frontCanvas,
-      state.frontContext
-    );
+            rearCanvas:
+              state.rearCanvas,
 
-    removeOrRestoreCanvas(
-      state.rearCanvas,
-      state.ownsRearCanvas
-    );
-
-    removeOrRestoreCanvas(
-      state.frontCanvas,
-      state.ownsFrontCanvas
-    );
-
-    if (state.compassLayer) {
-      state.compassLayer.style.removeProperty(
-        "z-index"
-      );
+            frontCanvas:
+              state.frontCanvas
+          });
+        } catch {
+          /* Disposal continues. */
+        }
+      }
     }
+
+    state.renderers.clear();
   }
 
-  function fail(error) {
-    if (
-      state.failed ||
-      state.disposed
-    ) {
-      return;
-    }
+  function rollbackInitialization(error) {
+    const rearCanvasCreated =
+      state.rearCanvasCreated;
 
-    state.failed =
-      true;
+    const frontCanvasCreated =
+      state.frontCanvasCreated;
 
-    state.ready =
-      false;
+    const rearCanvasReused =
+      Boolean(
+        state.rearCanvas &&
+        !state.rearCanvasCreated
+      );
+
+    const frontCanvasReused =
+      Boolean(
+        state.frontCanvas &&
+        !state.frontCanvasCreated
+      );
+
+    cancelScheduledRender();
+    disconnectObservers();
+    removeListeners();
+
+    disposeRenderers(
+      "initialization-rollback"
+    );
+
+    state.nodes.clear();
+    state.classifications.clear();
+
+    removeApi();
+    restoreOwnedDom();
+
+    setRootState(
+      false,
+      "failed"
+    );
+
+    state.controller = null;
+    state.controllerFrame = null;
+    state.controllerReady = false;
+
+    state.initialized = false;
+    state.initializing = false;
+    state.readyPublished = false;
+    state.readinessPending = false;
+    state.pendingRenderReason = "";
 
     state.counters.failures +=
       1;
 
-    if (state.frameId) {
-      window.cancelAnimationFrame(
-        state.frameId
-      );
+    const errorPayload = {
+      name:
+        error instanceof Error
+          ? error.name
+          : "Error",
 
-      state.frameId =
-        0;
-    }
-
-    state.frameRequested =
-      false;
-
-    state.frameReasons.clear();
-
-    rollbackDom();
-
-    setRootAttribute(
-      ATTRIBUTES.ready,
-      "false"
-    );
-
-    setRootAttribute(
-      ATTRIBUTES.state,
-      "failed"
-    );
-
-    const serialized =
-      serializeError(error);
+      message:
+        error instanceof Error
+          ? error.message
+          : String(error)
+    };
 
     publishReceipt(
-      "failed",
+      "fatal-error",
       {
         error:
-          serialized
+          errorPayload,
+
+        rearCompositorCanvasRemoved:
+          rearCanvasCreated,
+
+        frontCompositorCanvasRemoved:
+          frontCanvasCreated,
+
+        reusedRearCanvasRestored:
+          rearCanvasReused,
+
+        reusedFrontCanvasRestored:
+          frontCanvasReused,
+
+        compositorCanvasDomRestored:
+          true,
+
+        exactDomRestored:
+          true,
+
+        fieldStyleRestored:
+          true,
+
+        compassLayerStyleRestored:
+          true,
+
+        semanticLayerStyleRestored:
+          true,
+
+        listenersRemoved:
+          true,
+
+        observersDisconnected:
+          true
       }
     );
 
     dispatch(
-      EVENTS.failed,
+      EVENTS.compositorFailed,
       {
         error:
-          serialized
+          errorPayload
       }
     );
   }
@@ -3205,94 +4389,71 @@
   function initialize() {
     if (
       state.initialized ||
+      state.initializing ||
       state.disposed
     ) {
       return;
     }
 
+    state.initializing =
+      true;
+
     try {
       discoverDom();
-      validateDom();
 
-      readControllerState();
-      placeCanvasLayers();
+      const issues =
+        validateDom();
 
-      resizeCanvases(
-        "initial-layout"
-      );
+      if (issues.length) {
+        throw new Error(
+          issues.join(" ")
+        );
+      }
 
-      initializeObservers();
-      initializeEvents();
+      ensureCanvases();
+      initializeControllerBinding();
+      initializeResizeObservation();
+      initializeMutationObservation();
       exposeApi();
 
       state.initialized =
         true;
 
-      state.ready =
-        true;
+      state.initializing =
+        false;
 
-      setRootAttribute(
-        ATTRIBUTES.ready,
-        "true"
+      setRootState(
+        false,
+        "pending-controller"
       );
 
-      setRootAttribute(
-        ATTRIBUTES.state,
-        "ready"
-      );
+      const readinessResult =
+        completeReadiness(
+          "startup"
+        );
 
-      requestFrame(
-        "initial-frame"
-      );
+      if (
+        readinessResult ===
+          READINESS_RESULTS.PENDING
+      ) {
+        publishReceipt(
+          "pending",
+          {
+            reason:
+              "controller-unavailable",
 
-      publishReceipt(
-        "ready",
-        {
-          rearCanvasOwned:
-            state.ownsRearCanvas,
+            domContract:
+              "satisfied",
 
-          frontCanvasOwned:
-            state.ownsFrontCanvas,
-
-          compassLayerResolved:
-            Boolean(
-              state.compassLayer
-            ),
-
-          pointerTransparent:
-            true
-        }
-      );
-
-      dispatch(
-        EVENTS.ready,
-        {
-          rearCanvas:
-            true,
-
-          frontCanvas:
-            true,
-
-          orbitField:
-            true,
-
-          compassLayer:
-            true,
-
-          api:
-            Object.freeze([
-              "registerNode",
-              "unregisterNode",
-              "projectWorldToScreen",
-              "requestFrame",
-              "refresh",
-              "getState",
-              "dispose"
-            ])
-        }
-      );
+            canvasModel:
+              "compositor-created-or-reused"
+          }
+        );
+      }
     } catch (error) {
-      fail(error);
+      rollbackInitialization(
+        error
+      );
     }
   }
 
@@ -3301,89 +4462,121 @@
       return;
     }
 
+    const rearCanvasCreated =
+      state.rearCanvasCreated;
+
+    const frontCanvasCreated =
+      state.frontCanvasCreated;
+
+    const rearCanvasReused =
+      Boolean(
+        state.rearCanvas &&
+        !state.rearCanvasCreated
+      );
+
+    const frontCanvasReused =
+      Boolean(
+        state.frontCanvas &&
+        !state.frontCanvasCreated
+      );
+
     state.disposed =
       true;
 
-    state.ready =
-      false;
+    cancelScheduledRender();
+    disconnectObservers();
+    removeListeners();
 
-    if (state.frameId) {
-      window.cancelAnimationFrame(
-        state.frameId
-      );
-
-      state.frameId =
-        0;
-    }
-
-    state.frameRequested =
-      false;
-
-    state.frameReasons.clear();
-
-    for (
-      const removeListener
-      of state.listeners.splice(0)
-    ) {
-      try {
-        removeListener();
-      } catch {
-        /* Disposal remains best-effort. */
-      }
-    }
-
-    for (
-      const observer
-      of state.observers.splice(0)
-    ) {
-      try {
-        observer.disconnect();
-      } catch {
-        /* Disposal remains best-effort. */
-      }
-    }
-
-    for (
-      const record
-      of state.nodes.values()
-    ) {
-      record.disposed =
-        true;
-    }
+    disposeRenderers(
+      "compositor-disposed"
+    );
 
     state.nodes.clear();
     state.classifications.clear();
 
-    rollbackDom();
+    removeApi();
+    restoreOwnedDom();
 
-    setRootAttribute(
-      ATTRIBUTES.ready,
-      "false"
-    );
-
-    setRootAttribute(
-      ATTRIBUTES.state,
+    setRootState(
+      false,
       "disposed"
     );
+
+    state.controller = null;
+    state.controllerFrame = null;
+    state.controllerReady = false;
+
+    state.initialized =
+      false;
+
+    state.initializing =
+      false;
+
+    state.readyPublished =
+      false;
+
+    state.readinessPending =
+      false;
+
+    state.pendingRenderReason =
+      "";
 
     publishReceipt(
-      "disposed"
+      "disposed",
+      {
+        rearCompositorCanvasRemoved:
+          rearCanvasCreated,
+
+        frontCompositorCanvasRemoved:
+          frontCanvasCreated,
+
+        reusedRearCanvasRestored:
+          rearCanvasReused,
+
+        reusedFrontCanvasRestored:
+          frontCanvasReused,
+
+        exactDomRestored:
+          true,
+
+        fieldStyleRestored:
+          true,
+
+        compassLayerStyleRestored:
+          true,
+
+        semanticLayerStyleRestored:
+          true,
+
+        registeredRendererLifecycleDisposed:
+          true,
+
+        compassRendererLifecycleMutated:
+          false,
+
+        controllerStateMutated:
+          false,
+
+        compassLifecycleMutated:
+          false,
+
+        frontHostMutated:
+          false
+      }
     );
 
     dispatch(
-      EVENTS.disposed
+      EVENTS.compositorDisposed,
+      {
+        disposed:
+          true
+      }
     );
-
-    try {
-      delete window.SHOWROOM_COMPOSITOR;
-    } catch {
-      /* Noncritical cleanup. */
-    }
   }
 
   if (
     document.readyState ===
-    "loading"
+      "loading"
   ) {
     document.addEventListener(
       "DOMContentLoaded",

@@ -1,13 +1,13 @@
 <!-- TARGET FILE: /showroom/index.html -->
 <!-- TNT FULL-FILE REPLACEMENT -->
-<!-- SHOWROOM_MIRRORLAND_OFFICIAL_GATE_COMPACT_INSTRUCTIONS_AND_GAUGES_HTML_TNT_v5 -->
+<!-- SHOWROOM_MIRRORLAND_OFFICIAL_GATE_COMPACT_INSTRUCTIONS_AND_GAUGES_HTML_TNT_v6 -->
 <!doctype html>
 <html
   lang="en"
   data-route="/showroom/"
   data-page="showroom"
-  data-version="SHOWROOM-MIRRORLAND-OFFICIAL-GATE-5.0.0"
-  data-contract="SHOWROOM_MIRRORLAND_OFFICIAL_GATE_COMPACT_INSTRUCTIONS_AND_GAUGES_HTML_TNT_v5"
+  data-version="SHOWROOM-MIRRORLAND-OFFICIAL-GATE-6.0.0"
+  data-contract="SHOWROOM_MIRRORLAND_OFFICIAL_GATE_COMPACT_INSTRUCTIONS_AND_GAUGES_HTML_TNT_v6"
   data-house-room="showroom"
   data-house-room-title="The Showroom"
   data-room-welcome="Welcome to Mirrorland"
@@ -449,6 +449,7 @@
         data-showroom-instructions
       >
         <details
+          id="showroom-instructions-disclosure"
           class="showroom-instructions__disclosure"
           data-showroom-instructions-disclosure
         >
@@ -742,7 +743,12 @@
               </li>
             </ol>
 
-            <a href="#showroom-instructions">
+            <a
+              href="#showroom-instructions"
+              data-showroom-open-instructions
+              aria-controls="showroom-instructions-disclosure"
+              aria-expanded="false"
+            >
               Open complete instructions
             </a>
           </aside>
@@ -3181,7 +3187,7 @@
   </dialog>
 
   <script
-    src="/showroom/index.controller.js?v=SHOWROOM_MIRRORLAND_FOCAL_CONTROLLER_TNT_v3"
+    src="/showroom/index.controller.js?v=SHOWROOM_MIRRORLAND_FOCAL_CONTROLLER_TNT_v4"
     defer
     data-showroom-child="controller"
   ></script>
@@ -3223,7 +3229,7 @@
   ></script>
 
   <script
-    src="/showroom/index.crystals.js?v=SHOWROOM_MIRRORLAND_CONSTELLATION_CRYSTALS_TNT_v1"
+    src="/showroom/index.crystals.js?v=SHOWROOM_MIRRORLAND_CONSTELLATION_CRYSTALS_TNT_v3"
     defer
     data-showroom-child="crystals"
   ></script>
@@ -3235,7 +3241,7 @@
   ></script>
 
   <script
-    src="/showroom/index.interactions.js?v=SHOWROOM_CONSTELLATION_POINTER_GESTURE_INTERPRETER_TNT_v1"
+    src="/showroom/index.interactions.js?v=SHOWROOM_CONSTELLATION_POINTER_GESTURE_INTERPRETER_TNT_v2"
     defer
     data-showroom-child="interactions"
   ></script>

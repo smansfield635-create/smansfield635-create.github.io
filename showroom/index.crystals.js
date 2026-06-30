@@ -1,45 +1,91 @@
 /* TARGET FILE: /showroom/index.crystals.js */
 /* TNT FULL-FILE REPLACEMENT */
-/* SHOWROOM_MIRRORLAND_CONSTELLATION_CRYSTALS_TNT_v3 */
+/* SHOWROOM_FOUR_BY_FOUR_NARRATIVE_CONSTELLATION_CRYSTALS_TNT_v4 */
 /*
-  Renewal objectives:
-  - Preserve crystal geometry, materials, orbital targets, animation,
-    compositor registration, semantic association, and fallback recovery.
-  - Scope crystal discovery exclusively to [data-showroom-orbit-field].
-  - Use the compositor projection as the single positioning authority for
-    both crystal drawing and semantic hit targets.
-  - Keep every semantic hit target strictly inside the orbit field.
-  - Clear fallback right/bottom constraints before projected positioning.
-  - Avoid duplicate semantic DOM writes during compositor drawing.
-  - Suspend animation and compositor frame requests while the orbit field
-    is offscreen, the document is hidden, or page scrolling is active.
-  - Resume safely when the scene becomes visible or interaction/state changes.
-  - Avoid continuous reduced-motion animation when the scene is settled.
-  - Preserve compositor, controller, interactions, Compass, Diamond,
-    Window, gauge, information, navigation, and dialog authority boundaries.
+  Static final-review candidate.
+
+  Controller dependency:
+  - SHOWROOM_MIRRORLAND_CONSTELLATION_CONTROLLER_TNT_v5
+
+  Compositor dependency:
+  - SHOWROOM_CONSTELLATION_SINGLE_FRAME_COMPOSITOR_TNT_v2
+
+  Owned:
+  - cardinal and child crystal CPU geometry;
+  - crystal materials, palettes, shaders, GPU programs, and GPU buffers;
+  - crystal world targets and interpolated visual state;
+  - bounded crystal animation-state scheduling;
+  - WebGL drawing through registered compositor callbacks;
+  - canonical semantic-control association;
+  - crystal renderer and node registration lifecycle;
+  - crystal context-loss recovery and bounded receipts.
+
+  Not owned:
+  - navigation or semantic authorization;
+  - controller state commitment;
+  - pointer, tap, drag, swipe, or gesture interpretation;
+  - camera eye, camera target, view matrices, or projection matrices;
+  - world-to-screen projection;
+  - front/rear classification;
+  - compositor canvas construction, dimensions, or disposal;
+  - Compass state, geometry, renderer, navigation, or lifecycle;
+  - semantic-control creation, relocation, styling, or visibility;
+  - front-host visibility;
+  - fallback visibility;
+  - controller-reflected root readiness attributes.
+
+  Lifecycle policy:
+  - core construction may complete before compositor readiness;
+  - compositor runtime surfaces activate exactly once after controller-certified
+    compositor readiness;
+  - temporary WebGL context loss retains controller-level crystal readiness,
+    marks crystals internally degraded, suspends drawing/animation requests,
+    retains registrations, and attempts recovery;
+  - successful context restoration resumes drawing without emitting a second
+    crystals-ready event solely for recovery;
+  - failed restoration is terminal and tears down all crystal-owned runtime
+    surfaces.
 */
 
 (() => {
   "use strict";
 
   const CONTRACT =
-    "SHOWROOM_MIRRORLAND_CONSTELLATION_CRYSTALS_TNT_v3";
+    "SHOWROOM_FOUR_BY_FOUR_NARRATIVE_CONSTELLATION_CRYSTALS_TNT_v4";
 
   const OWNER =
     "/showroom/index.crystals.js";
 
+  const CONTROLLER_CONTRACT =
+    "SHOWROOM_MIRRORLAND_CONSTELLATION_CONTROLLER_TNT_v5";
+
+  const COMPOSITOR_CONTRACT =
+    "SHOWROOM_CONSTELLATION_SINGLE_FRAME_COMPOSITOR_TNT_v2";
+
+  const RENDERER_ID =
+    "showroom-crystal-renderer";
+
   const EVENTS = Object.freeze({
-    ready:
-      "showroom:crystals-ready",
+    controllerReady:
+      "showroom:controller-ready",
 
-    receipt:
-      "showroom:crystals-receipt",
+    frameChanged:
+      "showroom:frame-state-changed",
 
-    failed:
-      "showroom:crystals-failed",
+    stateChanged:
+      "showroom:state-changed",
 
-    disposed:
-      "showroom:crystals-disposed",
+    previewChanged:
+      "showroom:preview-changed",
+
+    clusterChanged:
+      "showroom:cluster-changed",
+
+    frontChanged:
+      "showroom:front-changed",
+
+    enhancementReadinessChanged:
+      "showroom:enhancement-readiness-changed",
 
     compositorReady:
       "showroom:compositor-ready",
@@ -50,489 +96,1117 @@
     compositorDisposed:
       "showroom:compositor-disposed",
 
-    compositorRequestFrame:
-      "showroom:compositor-request-frame",
+    crystalsReady:
+      "showroom:crystals-ready",
 
-    orbitMotion:
-      "showroom:orbit-motion",
+    crystalsFailed:
+      "showroom:crystals-failed",
 
-    orbitMotionStart:
-      "showroom:orbit-motion-start",
+    crystalsDisposed:
+      "showroom:crystals-disposed",
 
-    orbitMotionEnd:
-      "showroom:orbit-motion-end",
-
-    clusterChanged:
-      "showroom:cluster-changed",
-
-    stateChanged:
-      "showroom:state-changed"
+    crystalsReceipt:
+      "showroom:crystals-receipt"
   });
 
   const SELECTORS = Object.freeze({
     root:
       "[data-showroom-root]",
 
-    receipt:
-      "[data-showroom-crystals-receipt]",
-
-    orbitField:
+    field:
       "[data-showroom-orbit-field]",
 
-    semanticObject:
-      "[data-showroom-object]",
+    semanticLayer:
+      "[data-showroom-semantic-star-layer]",
 
-    fallbackStar:
-      "[data-showroom-fallback-star]",
+    cardinalControls:
+      "[data-showroom-cardinal-control]",
 
-    primaryLayer:
-      "[data-showroom-primary-stars]",
+    childControls:
+      "[data-showroom-child-control]",
 
-    cluster:
-      "[data-showroom-cluster]"
+    receipt:
+      "[data-showroom-crystals-receipt]"
   });
 
-  const ATTRIBUTES = Object.freeze({
-    ready:
-      "data-showroom-crystals-ready",
-
-    state:
-      "data-showroom-crystals-state",
-
-    activeCluster:
-      "data-showroom-active-cluster",
-
-    held:
-      "data-showroom-held",
-
-    reducedMotion:
-      "data-showroom-reduced-motion",
-
-    objectId:
-      "data-showroom-object-id",
-
-    objectSize:
-      "data-showroom-object-size",
-
-    objectBehavior:
-      "data-showroom-object-behavior",
-
-    clusterId:
-      "data-showroom-cluster-id",
-
-    fallbackRendering:
-      "data-showroom-fallback-star-rendering",
-
-    fallbackVisibility:
-      "data-showroom-fallback-star-visibility",
-
-    sceneVisible:
-      "data-showroom-crystals-scene-visible",
-
-    suspended:
-      "data-showroom-crystals-suspended"
-  });
+  const WINGS = Object.freeze([
+    "north",
+    "east",
+    "south",
+    "west"
+  ]);
 
   const NODE_TYPES = Object.freeze({
-    LARGE:
-      "large",
-
-    SMALL:
-      "small"
-  });
-
-  const GEOMETRY_TYPES = Object.freeze({
     CARDINAL:
-      "cardinal-star",
+      "cardinal",
 
     CHILD:
-      "child-star"
+      "child"
+  });
+
+  const PRESENTATION_MODES = Object.freeze({
+    BASELINE:
+      "baseline",
+
+    CONSTELLATION:
+      "constellation",
+
+    CLUSTER:
+      "cluster",
+
+    FRONT:
+      "front"
   });
 
   const MATERIAL_FAMILIES = Object.freeze({
     CARDINAL:
-      "cardinal",
+      "CARDINAL",
 
-    GAUGE:
-      "gauge",
+    LOCAL:
+      "LOCAL",
 
-    INFORMATION:
-      "information"
+    PORTAL:
+      "PORTAL",
+
+    PRIMARY_PORTAL:
+      "PRIMARY_PORTAL"
   });
 
-  const CONFIG = Object.freeze({
-    coordinateSystem:
-      "RIGHT_HANDED_EUCLIDEAN_XYZ",
+  const CONTEXT_IDS = Object.freeze({
+    REAR:
+      "rear",
 
-    orientationRepresentation:
-      "UNIT_QUATERNION",
-
-    largePoints:
-      8,
-
-    childPoints:
-      6,
-
-    largeRadius:
-      58,
-
-    largeInnerRatio:
-      0.42,
-
-    childRadius:
-      34,
-
-    childInnerRatio:
-      0.46,
-
-    largeDepth:
-      0.42,
-
-    childDepth:
-      0.28,
-
-    largeCrown:
-      0.22,
-
-    childCrown:
-      0.13,
-
-    constellationRadiusX:
-      2.05,
-
-    constellationRadiusY:
-      1.54,
-
-    constellationRadiusZ:
-      1.58,
-
-    gaugeClusterRadiusX:
-      1.58,
-
-    gaugeClusterRadiusY:
-      1.16,
-
-    gaugeClusterRadiusZ:
-      1.18,
-
-    informationClusterRadiusX:
-      1.46,
-
-    informationClusterRadiusY:
-      1.08,
-
-    informationClusterRadiusZ:
-      1.12,
-
-    largeBaseScale:
-      0.88,
-
-    childBaseScale:
-      0.82,
-
-    rearScaleMultiplier:
-      0.78,
-
-    frontScaleMultiplier:
-      1.16,
-
-    activeClusterScaleMultiplier:
-      1.08,
-
-    inactiveChildScale:
-      0.35,
-
-    interpolationSpeed:
-      7.2,
-
-    reducedMotionInterpolationSpeed:
-      22,
-
-    idleRotationSpeed:
-      0.18,
-
-    childRotationSpeed:
-      0.24,
-
-    haloExpansion:
-      1.18,
-
-    semanticMinimumSize:
-      44,
-
-    semanticLargeSize:
-      108,
-
-    semanticChildSize:
-      74,
-
-    semanticViewportPadding:
-      4,
-
-    semanticWriteTolerance:
-      0.35,
-
-    readinessTimeoutMs:
-      5000,
-
-    pageScrollPauseMs:
-      150,
-
-    settlementPositionEpsilon:
-      0.002,
-
-    settlementScalarEpsilon:
-      0.002,
-
-    settlementQuaternionEpsilon:
-      0.0008,
-
-    intersectionThreshold:
-      0.04,
-
-    visualPassClaimed:
-      false,
-
-    productionAuthorized:
-      false,
-
-    deploymentAuthorized:
-      false
+    FRONT:
+      "front"
   });
 
-  const PALETTE = Object.freeze({
-    cardinalCool:
+  const CARDINAL_TARGETS = Object.freeze({
+    north:
       Object.freeze({
-        core:
-          "rgba(160, 220, 255, 0.96)",
-
-        middle:
-          "rgba(90, 177, 242, 0.94)",
-
-        edge:
-          "rgba(31, 88, 165, 0.96)",
-
-        highlight:
-          "rgba(238, 250, 255, 0.98)",
-
-        shadow:
-          "rgba(10, 31, 76, 0.86)",
-
-        halo:
-          "rgba(90, 183, 255, 0.26)"
+        x: 0,
+        y: 1.32,
+        z: -0.54
       }),
 
-    cardinalWarm:
+    east:
       Object.freeze({
-        core:
-          "rgba(255, 222, 150, 0.97)",
-
-        middle:
-          "rgba(239, 168, 73, 0.95)",
-
-        edge:
-          "rgba(149, 71, 21, 0.96)",
-
-        highlight:
-          "rgba(255, 250, 224, 0.99)",
-
-        shadow:
-          "rgba(70, 24, 9, 0.86)",
-
-        halo:
-          "rgba(255, 177, 73, 0.27)"
+        x: 1.50,
+        y: 0,
+        z: 0.62
       }),
 
-    gauge:
+    south:
       Object.freeze({
-        core:
-          "rgba(174, 255, 255, 0.98)",
-
-        middle:
-          "rgba(61, 224, 240, 0.96)",
-
-        edge:
-          "rgba(9, 104, 147, 0.97)",
-
-        highlight:
-          "rgba(239, 255, 255, 1)",
-
-        shadow:
-          "rgba(3, 37, 65, 0.88)",
-
-        halo:
-          "rgba(49, 232, 255, 0.31)"
+        x: 0,
+        y: -1.32,
+        z: 0.48
       }),
 
-    information:
+    west:
       Object.freeze({
-        core:
-          "rgba(231, 194, 255, 0.98)",
-
-        middle:
-          "rgba(169, 91, 232, 0.96)",
-
-        edge:
-          "rgba(78, 28, 145, 0.97)",
-
-        highlight:
-          "rgba(251, 239, 255, 1)",
-
-        shadow:
-          "rgba(34, 10, 68, 0.88)",
-
-        halo:
-          "rgba(180, 103, 255, 0.31)"
+        x: -1.50,
+        y: 0,
+        z: -0.66
       })
   });
 
-  const LARGE_BASE_VECTORS = Object.freeze({
-    "characters-route":
-      Object.freeze([0, 1, 0]),
+  const CHILD_LAYOUT = Object.freeze({
+    collapsed:
+      Object.freeze({
+        horizontalRadius:
+          1.08,
 
-    "elara-route":
-      Object.freeze([1, 0, 0]),
+        verticalRadius:
+          0.94,
 
-    "gauge-cluster":
-      Object.freeze([0, -1, 0]),
+        depthRadius:
+          0.88,
 
-    "information-cluster":
-      Object.freeze([-1, 0, 0])
+        centerOffset:
+          0.24
+      }),
+
+    expanded:
+      Object.freeze({
+        horizontalRadius:
+          1.26,
+
+        verticalRadius:
+          1.08,
+
+        depthRadius:
+          0.98,
+
+        centerOffset:
+          0.34
+      }),
+
+    positions:
+      Object.freeze({
+        1:
+          Object.freeze({
+            x: -0.72,
+            y: 0.70,
+            z: -0.54
+          }),
+
+        2:
+          Object.freeze({
+            x: 0.72,
+            y: 0.70,
+            z: 0.56
+          }),
+
+        3:
+          Object.freeze({
+            x: 0.72,
+            y: -0.70,
+            z: -0.48
+          }),
+
+        4:
+          Object.freeze({
+            x: -0.72,
+            y: -0.70,
+            z: 0.52
+          })
+      })
+  });
+
+  const QUALITY = Object.freeze({
+    bloomDisableWidthPx:
+      420,
+
+    normalMatrixEpsilon:
+      1e-7,
+
+    maximumDeltaSeconds:
+      0.05,
+
+    transformSettleSpeed:
+      7.1,
+
+    reducedMotionSettleSpeed:
+      24,
+
+    ambientFrameIntervalMs:
+      1000 / 30,
+
+    cardinalHitRadius:
+      78,
+
+    childHitRadius:
+      48,
+
+    visibilityThreshold:
+      0.035
+  });
+
+  const PALETTES = Object.freeze({
+    north:
+      Object.freeze({
+        primary:
+          Object.freeze([
+            0.76,
+            0.86,
+            1
+          ]),
+
+        secondary:
+          Object.freeze([
+            0.94,
+            0.98,
+            1
+          ]),
+
+        warmSpecular:
+          Object.freeze([
+            1,
+            0.97,
+            0.86
+          ]),
+
+        coolRim:
+          Object.freeze([
+            0.62,
+            0.82,
+            1
+          ])
+      }),
+
+    east:
+      Object.freeze({
+        primary:
+          Object.freeze([
+            1,
+            0.76,
+            0.30
+          ]),
+
+        secondary:
+          Object.freeze([
+            1,
+            0.92,
+            0.68
+          ]),
+
+        warmSpecular:
+          Object.freeze([
+            1,
+            0.91,
+            0.62
+          ]),
+
+        coolRim:
+          Object.freeze([
+            0.78,
+            0.86,
+            1
+          ])
+      }),
+
+    south:
+      Object.freeze({
+        primary:
+          Object.freeze([
+            1,
+            0.54,
+            0.62
+          ]),
+
+        secondary:
+          Object.freeze([
+            0.76,
+            0.56,
+            0.96
+          ]),
+
+        warmSpecular:
+          Object.freeze([
+            1,
+            0.88,
+            0.80
+          ]),
+
+        coolRim:
+          Object.freeze([
+            0.72,
+            0.64,
+            1
+          ])
+      }),
+
+    west:
+      Object.freeze({
+        primary:
+          Object.freeze([
+            0.28,
+            0.44,
+            0.96
+          ]),
+
+        secondary:
+          Object.freeze([
+            0.48,
+            0.36,
+            0.86
+          ]),
+
+        warmSpecular:
+          Object.freeze([
+            0.91,
+            0.92,
+            1
+          ]),
+
+        coolRim:
+          Object.freeze([
+            0.54,
+            0.72,
+            1
+          ])
+      })
+  });
+
+  const MATERIALS = Object.freeze({
+    CARDINAL:
+      Object.freeze({
+        baseScale:
+          0.76,
+
+        activeScale:
+          1.02,
+
+        selectedScale:
+          1.10,
+
+        previewScale:
+          1.08,
+
+        opacity:
+          0.95,
+
+        emissive:
+          0.19,
+
+        rim:
+          1.18,
+
+        sparkle:
+          0.22,
+
+        halo:
+          0.78,
+
+        float:
+          0.012,
+
+        spin:
+          0.15,
+
+        saturation:
+          1
+      }),
+
+    LOCAL:
+      Object.freeze({
+        baseScale:
+          0.66,
+
+        activeScale:
+          0.82,
+
+        selectedScale:
+          0.91,
+
+        previewScale:
+          0.88,
+
+        opacity:
+          0.90,
+
+        emissive:
+          0.11,
+
+        rim:
+          0.84,
+
+        sparkle:
+          0.10,
+
+        halo:
+          0.38,
+
+        float:
+          0.007,
+
+        spin:
+          0.08,
+
+        saturation:
+          0.88
+      }),
+
+    PORTAL:
+      Object.freeze({
+        baseScale:
+          0.69,
+
+        activeScale:
+          0.87,
+
+        selectedScale:
+          0.96,
+
+        previewScale:
+          0.94,
+
+        opacity:
+          0.93,
+
+        emissive:
+          0.17,
+
+        rim:
+          1.12,
+
+        sparkle:
+          0.18,
+
+        halo:
+          0.62,
+
+        float:
+          0.009,
+
+        spin:
+          0.10,
+
+        saturation:
+          1
+      }),
+
+    PRIMARY_PORTAL:
+      Object.freeze({
+        baseScale:
+          0.74,
+
+        activeScale:
+          0.94,
+
+        selectedScale:
+          1.03,
+
+        previewScale:
+          1,
+
+        opacity:
+          0.96,
+
+        emissive:
+          0.22,
+
+        rim:
+          1.24,
+
+        sparkle:
+          0.22,
+
+        halo:
+          0.78,
+
+        float:
+          0.009,
+
+        spin:
+          0.10,
+
+        saturation:
+          1
+      })
   });
 
   const state = {
-    root: null,
-    receipt: null,
-    orbitField: null,
+    root:
+      null,
 
-    semanticObjects:
-      new Map(),
+    field:
+      null,
 
-    nodes:
-      new Map(),
+    semanticLayer:
+      null,
 
-    registrations:
-      new Map(),
+    receiptOutput:
+      null,
 
-    geometries:
-      new Map(),
+    controller:
+      null,
 
     compositor:
       null,
 
-    compositorOwnedByCrystals:
-      false,
+    controllerFrame:
+      null,
 
-    orientation:
-      [0, 0, 0, 1],
+    compositorFrame:
+      null,
 
-    targetOrientation:
-      [0, 0, 0, 1],
-
-    clusterOrientations:
+    registry:
       new Map(),
 
-    clusterTargetOrientations:
+    nodeRegistrations:
       new Map(),
 
-    activeClusterId:
-      "",
+    rendererRegistration:
+      null,
 
-    reducedMotion:
+    cpuMeshes:
+      new Map(),
+
+    contexts:
+      new Map(),
+
+    listeners:
+      [],
+
+    animationRaf:
+      0,
+
+    lastAnimationTime:
+      0,
+
+    lastAmbientRequestTime:
+      0,
+
+    animationRunning:
       false,
 
-    held:
+    contextDegraded:
       false,
 
-    sceneVisible:
-      true,
-
-    documentVisible:
-      !document.hidden,
-
-    pageScrolling:
+    runtimeSurfacesActivated:
       false,
 
-    interactionActive:
-      false,
-
-    dirty:
-      true,
-
-    running:
+    waitingForCompositor:
       false,
 
     initialized:
       false,
 
+    initializing:
+      false,
+
     ready:
       false,
 
-    failed:
+    readyPublished:
       false,
 
     disposed:
       false,
 
-    raf:
-      0,
+    failed:
+      false,
 
-    lastTime:
-      0,
+    failureReason:
+      "",
 
-    readinessTimer:
-      0,
+    counters:
+      {
+        nodeRegistrations:
+          0,
 
-    scrollResumeTimer:
-      0,
+        nodeUnregistrations:
+          0,
 
-    listeners:
-      [],
+        rendererRegistrations:
+          0,
 
-    observers:
-      [],
+        rendererUnregistrations:
+          0,
 
-    counters: {
-      largeNodes:
-        0,
+        rearDrawCalls:
+          0,
 
-      smallNodes:
-        0,
+        frontDrawCalls:
+          0,
 
-      registeredNodes:
-        0,
+        rearFrames:
+          0,
 
-      visibleNodes:
-        0,
+        frontFrames:
+          0,
 
-      drawCalls:
-        0,
+        contextLosses:
+          0,
 
-      semanticUpdates:
-        0,
+        contextRestores:
+          0,
 
-      semanticWritesSkipped:
-        0,
+        animationRequests:
+          0,
 
-      semanticRejectedOutsideField:
-        0,
-
-      motionEvents:
-        0,
-
-      suspendedFrames:
-        0,
-
-      resumedAnimations:
-        0,
-
-      failures:
-        0
-    }
+        failures:
+          0
+      }
   };
 
+  const vertexShaderSource = `
+    attribute vec3 aPosition;
+    attribute vec3 aNormal;
+    attribute vec3 aColor;
+    attribute float aSparkleIndex;
+
+    uniform mat4 uModel;
+    uniform mat4 uView;
+    uniform mat4 uProjection;
+    uniform mat3 uNormalMatrix;
+
+    uniform float uScale;
+    uniform float uHaloPass;
+    uniform float uHaloExpansion;
+
+    varying vec3 vNormal;
+    varying vec3 vColor;
+    varying vec3 vViewPosition;
+    varying vec3 vWorldPosition;
+    varying float vSparkleIndex;
+    varying float vHaloPass;
+
+    void main() {
+      vec3 position =
+        aPosition *
+        uScale;
+
+      if (uHaloPass > 0.5) {
+        position +=
+          normalize(aNormal) *
+          uHaloExpansion;
+      }
+
+      vec4 world =
+        uModel *
+        vec4(
+          position,
+          1.0
+        );
+
+      vec4 view =
+        uView *
+        world;
+
+      vNormal =
+        normalize(
+          uNormalMatrix *
+          aNormal
+        );
+
+      vColor =
+        aColor;
+
+      vViewPosition =
+        view.xyz;
+
+      vWorldPosition =
+        world.xyz;
+
+      vSparkleIndex =
+        aSparkleIndex;
+
+      vHaloPass =
+        uHaloPass;
+
+      gl_Position =
+        uProjection *
+        view;
+    }
+  `;
+
+  const fragmentShaderSource = `
+    precision mediump float;
+
+    varying vec3 vNormal;
+    varying vec3 vColor;
+    varying vec3 vViewPosition;
+    varying vec3 vWorldPosition;
+    varying float vSparkleIndex;
+    varying float vHaloPass;
+
+    uniform float uTime;
+    uniform float uOpacity;
+    uniform float uEmissive;
+    uniform float uRimStrength;
+    uniform float uSparkleStrength;
+    uniform float uHaloStrength;
+    uniform float uReducedMotion;
+    uniform float uSaturation;
+
+    uniform vec3 uPrimaryColor;
+    uniform vec3 uSecondaryColor;
+    uniform vec3 uWarmSpecular;
+    uniform vec3 uCoolRim;
+
+    float hash31(vec3 point) {
+      return fract(
+        sin(
+          dot(
+            point,
+            vec3(
+              12.9898,
+              78.233,
+              37.719
+            )
+          )
+        ) *
+        43758.5453
+      );
+    }
+
+    void main() {
+      vec3 normal =
+        normalize(vNormal);
+
+      vec3 viewDirection =
+        normalize(
+          -vViewPosition
+        );
+
+      float facingToCamera =
+        dot(
+          normal,
+          viewDirection
+        );
+
+      float rearSuppression =
+        smoothstep(
+          -0.22,
+          0.34,
+          facingToCamera
+        );
+
+      float sideRim =
+        pow(
+          1.0 -
+          abs(
+            facingToCamera
+          ),
+          2.35
+        );
+
+      float fresnel =
+        pow(
+          1.0 -
+          max(
+            facingToCamera,
+            0.0
+          ),
+          2.10
+        );
+
+      vec3 keyDirection =
+        normalize(
+          vec3(
+            0.46,
+            0.78,
+            0.64
+          )
+        );
+
+      vec3 fillDirection =
+        normalize(
+          vec3(
+            -0.72,
+            0.20,
+            0.58
+          )
+        );
+
+      vec3 rimDirection =
+        normalize(
+          vec3(
+            0.10,
+            -0.48,
+            0.88
+          )
+        );
+
+      float key =
+        max(
+          dot(
+            normal,
+            keyDirection
+          ),
+          0.0
+        );
+
+      float fill =
+        max(
+          dot(
+            normal,
+            fillDirection
+          ),
+          0.0
+        );
+
+      float rear =
+        max(
+          dot(
+            normal,
+            rimDirection
+          ),
+          0.0
+        );
+
+      vec3 halfDirection =
+        normalize(
+          keyDirection +
+          viewDirection
+        );
+
+      float specular =
+        pow(
+          max(
+            dot(
+              normal,
+              halfDirection
+            ),
+            0.0
+          ),
+          30.0
+        );
+
+      float facetBand =
+        pow(
+          abs(
+            dot(
+              normal,
+              normalize(
+                vec3(
+                  0.45,
+                  0.72,
+                  0.53
+                )
+              )
+            )
+          ),
+          5.0
+        );
+
+      float sparkleSeed =
+        hash31(
+          floor(
+            (
+              normal +
+              vWorldPosition
+            ) *
+            18.0 +
+            vSparkleIndex
+          )
+        );
+
+      float sparklePhase =
+        uReducedMotion > 0.5
+          ? 1.0
+          : (
+              0.76 +
+              sin(
+                uTime *
+                1.55 +
+                sparkleSeed *
+                6.28318
+              ) *
+              0.24
+            );
+
+      float sparkle =
+        smoothstep(
+          0.76,
+          1.0,
+          specular +
+          facetBand *
+          0.34
+        ) *
+        sparklePhase *
+        uSparkleStrength *
+        rearSuppression;
+
+      vec3 mixedBase =
+        mix(
+          uSecondaryColor,
+          uPrimaryColor,
+          clamp(
+            vColor.r,
+            0.0,
+            1.0
+          )
+        );
+
+      float luminance =
+        dot(
+          mixedBase,
+          vec3(
+            0.2126,
+            0.7152,
+            0.0722
+          )
+        );
+
+      vec3 base =
+        mix(
+          vec3(luminance),
+          mixedBase,
+          clamp(
+            uSaturation,
+            0.0,
+            1.0
+          )
+        );
+
+      if (vHaloPass > 0.5) {
+        vec3 haloColor =
+          (
+            base *
+            0.72 +
+            uCoolRim *
+            fresnel *
+            0.56
+          ) *
+          (
+            0.64 +
+            fresnel *
+            1.16 +
+            sideRim *
+            0.42 +
+            rear *
+            0.20
+          ) *
+          uHaloStrength;
+
+        float haloAlpha =
+          clamp(
+            (
+              0.035 +
+              fresnel *
+              0.17 +
+              sideRim *
+              0.08
+            ) *
+            uHaloStrength *
+            uOpacity,
+            0.0,
+            0.32
+          );
+
+        gl_FragColor =
+          vec4(
+            haloColor,
+            haloAlpha
+          );
+
+        return;
+      }
+
+      float diffuse =
+        0.24 +
+        key *
+        0.80 +
+        fill *
+        0.28 +
+        rear *
+        0.13;
+
+      vec3 lit =
+        base *
+        diffuse;
+
+      vec3 warmHighlight =
+        uWarmSpecular *
+        specular *
+        (
+          0.86 +
+          uRimStrength *
+          0.20
+        ) *
+        rearSuppression;
+
+      vec3 primaryRim =
+        base *
+        (
+          fresnel *
+          0.66 +
+          sideRim *
+          0.34
+        ) *
+        uRimStrength;
+
+      vec3 secondaryRim =
+        uCoolRim *
+        (
+          fresnel *
+          0.24 +
+          sideRim *
+          0.15
+        ) *
+        uRimStrength;
+
+      vec3 emissive =
+        base *
+        uEmissive;
+
+      vec3 sparkleColor =
+        uWarmSpecular *
+        sparkle;
+
+      float rearDim =
+        mix(
+          0.60,
+          1.0,
+          rearSuppression
+        );
+
+      vec3 color =
+        (
+          lit +
+          warmHighlight +
+          primaryRim +
+          secondaryRim +
+          emissive +
+          sparkleColor
+        ) *
+        rearDim;
+
+      float alpha =
+        clamp(
+          uOpacity *
+          (
+            0.72 +
+            fresnel *
+            0.08
+          ),
+          0.08,
+          1.0
+        );
+
+      gl_FragColor =
+        vec4(
+          color,
+          alpha
+        );
+    }
+  `;
+
+  function invariant(
+    condition,
+    code,
+    details = null
+  ) {
+    if (condition) {
+      return;
+    }
+
+    const error =
+      new Error(code);
+
+    error.code =
+      code;
+
+    error.details =
+      details;
+
+    throw error;
+  }
+
   function normalize(value) {
-    return String(value || "").trim();
+    return String(
+      value ||
+      ""
+    ).trim();
+  }
+
+  function normalizeLower(value) {
+    return normalize(value)
+      .toLowerCase();
+  }
+
+  function normalizeWing(value) {
+    const wing =
+      normalizeLower(value);
+
+    return WINGS.includes(wing)
+      ? wing
+      : "";
+  }
+
+  function finiteNumber(
+    value,
+    fallback = 0
+  ) {
+    const numeric =
+      Number(value);
+
+    return Number.isFinite(numeric)
+      ? numeric
+      : fallback;
   }
 
   function clamp(
@@ -564,66 +1238,52 @@
     );
   }
 
-  function nearlyEqual(
-    left,
-    right,
-    epsilon
-  ) {
+  function isCanvas(value) {
     return (
-      Math.abs(
-        left - right
-      ) <= epsilon
+      typeof HTMLCanvasElement !==
+        "undefined" &&
+      value instanceof
+        HTMLCanvasElement
     );
   }
 
   function nowIso() {
-    return new Date().toISOString();
+    return new Date()
+      .toISOString();
   }
 
-  function addListener(
-    target,
-    type,
-    handler,
-    options
-  ) {
-    if (!target) {
-      return;
+  function freezePlain(value) {
+    if (
+      value === null ||
+      typeof value !==
+        "object"
+    ) {
+      return value;
     }
 
-    target.addEventListener(
-      type,
-      handler,
-      options
-    );
-
-    state.listeners.push(() => {
-      target.removeEventListener(
-        type,
-        handler,
-        options
-      );
-    });
-  }
-
-  function addObserver(observer) {
-    if (observer) {
-      state.observers.push(
-        observer
+    if (Array.isArray(value)) {
+      return Object.freeze(
+        value.map(
+          freezePlain
+        )
       );
     }
-  }
 
-  function setRootAttribute(
-    name,
-    value
-  ) {
-    if (!state.root) {
-      return;
+    const output = {};
+
+    for (
+      const [
+        key,
+        entry
+      ]
+      of Object.entries(value)
+    ) {
+      output[key] =
+        freezePlain(entry);
     }
 
-    state.root.setAttribute(
-      name,
-      String(value)
+    return Object.freeze(
+      output
     );
   }
 
@@ -632,9 +1292,18 @@
     detail = {}
   ) {
     const payload =
-      Object.freeze({
+      freezePlain({
         contract:
           CONTRACT,
+
+        owner:
+          OWNER,
+
+        controllerContract:
+          CONTROLLER_CONTRACT,
+
+        compositorContract:
+          COMPOSITOR_CONTRACT,
 
         timestamp:
           nowIso(),
@@ -655,134 +1324,219 @@
     return payload;
   }
 
-  function createReceipt(
-    event,
-    extra = {}
-  ) {
-    return Object.freeze({
-      contract:
-        CONTRACT,
+  function countNodesByType(type) {
+    let count = 0;
 
-      owner:
-        OWNER,
+    for (
+      const node
+      of state.registry.values()
+    ) {
+      if (
+        node.type ===
+        type
+      ) {
+        count += 1;
+      }
+    }
 
-      event,
+    return count;
+  }
 
-      timestamp:
-        nowIso(),
+  function isContextReady(id) {
+    const renderer =
+      state.contexts.get(id);
 
-      initialized:
-        state.initialized,
-
-      ready:
-        state.ready,
-
-      failed:
-        state.failed,
-
-      disposed:
-        state.disposed,
-
-      running:
-        state.running,
-
-      sceneVisible:
-        state.sceneVisible,
-
-      documentVisible:
-        state.documentVisible,
-
-      pageScrolling:
-        state.pageScrolling,
-
-      interactionActive:
-        state.interactionActive,
-
-      suspended:
-        isRenderingSuspended(),
-
-      coordinateSystem:
-        CONFIG.coordinateSystem,
-
-      orientationRepresentation:
-        CONFIG.orientationRepresentation,
-
-      geometryCount:
-        state.geometries.size,
-
-      nodeCount:
-        state.nodes.size,
-
-      activeClusterId:
-        state.activeClusterId || null,
-
-      reducedMotion:
-        state.reducedMotion,
-
-      held:
-        state.held,
-
-      visualPassClaimed:
-        CONFIG.visualPassClaimed,
-
-      productionAuthorized:
-        CONFIG.productionAuthorized,
-
-      deploymentAuthorized:
-        CONFIG.deploymentAuthorized,
-
-      counters:
-        Object.freeze({
-          ...state.counters
-        }),
-
-      ...extra
-    });
+    return Boolean(
+      renderer &&
+      renderer.available &&
+      renderer.contextLost !==
+        true &&
+      renderer.gl &&
+      renderer.program
+    );
   }
 
   function publishReceipt(
     event,
-    extra = {}
+    detail = {}
   ) {
     const payload =
-      createReceipt(
+      freezePlain({
+        contract:
+          CONTRACT,
+
+        owner:
+          OWNER,
+
+        controllerContract:
+          CONTROLLER_CONTRACT,
+
+        compositorContract:
+          COMPOSITOR_CONTRACT,
+
         event,
-        extra
+
+        timestamp:
+          nowIso(),
+
+        initialized:
+          state.initialized,
+
+        ready:
+          state.ready,
+
+        disposed:
+          state.disposed,
+
+        failed:
+          state.failed,
+
+        contextDegraded:
+          state.contextDegraded,
+
+        runtimeSurfacesActivated:
+          state
+            .runtimeSurfacesActivated,
+
+        waitingForCompositor:
+          state
+            .waitingForCompositor,
+
+        cardinalCount:
+          countNodesByType(
+            NODE_TYPES.CARDINAL
+          ),
+
+        childCount:
+          countNodesByType(
+            NODE_TYPES.CHILD
+          ),
+
+        nodeCount:
+          state.registry.size,
+
+        registeredNodeCount:
+          state
+            .nodeRegistrations
+            .size,
+
+        rendererRegistered:
+          Boolean(
+            state
+              .rendererRegistration
+          ),
+
+        rearContextReady:
+          isContextReady(
+            CONTEXT_IDS.REAR
+          ),
+
+        frontContextReady:
+          isContextReady(
+            CONTEXT_IDS.FRONT
+          ),
+
+        renderRafOwned:
+          false,
+
+        animationStateSchedulerOwned:
+          true,
+
+        navigationOwned:
+          false,
+
+        classificationOwned:
+          false,
+
+        canvasLifecycleOwned:
+          false,
+
+        registeredRendererLifecycleOwned:
+          true,
+
+        semanticControlCreationOwned:
+          false,
+
+        semanticControlPositioningOwned:
+          false,
+
+        counters:
+          {
+            ...state.counters
+          },
+
+        ...detail
+      });
+
+    const serialized =
+      JSON.stringify(
+        payload
       );
 
-    if (state.receipt) {
-      const serialized =
-        JSON.stringify(
-          payload
-        );
+    if (state.receiptOutput) {
+      if (
+        "value" in
+        state.receiptOutput
+      ) {
+        state.receiptOutput.value =
+          serialized;
+      }
 
-      state.receipt.value =
-        serialized;
-
-      state.receipt.textContent =
+      state.receiptOutput.textContent =
         serialized;
     }
 
     dispatch(
-      EVENTS.receipt,
+      EVENTS.crystalsReceipt,
       payload
     );
 
     return payload;
   }
 
-  function serializeError(error) {
-    return Object.freeze({
-      name:
-        error instanceof Error
-          ? error.name
-          : "Error",
+  function addListener(
+    target,
+    type,
+    handler,
+    options
+  ) {
+    if (
+      !target ||
+      typeof target
+        .addEventListener !==
+        "function"
+    ) {
+      return;
+    }
 
-      message:
-        error instanceof Error
-          ? error.message
-          : String(error)
-    });
+    target.addEventListener(
+      type,
+      handler,
+      options
+    );
+
+    state.listeners.push(
+      () => {
+        target.removeEventListener(
+          type,
+          handler,
+          options
+        );
+      }
+    );
+  }
+
+  function removeListeners() {
+    for (
+      const remove
+      of state.listeners.splice(0)
+    ) {
+      try {
+        remove();
+      } catch {
+        /* Best-effort listener disposal. */
+      }
+    }
   }
 
   function vectorLength(vector) {
@@ -795,14 +1549,19 @@
 
   function normalizeVector(
     vector,
-    fallback = [0, 0, 1]
+    fallback = [
+      0,
+      0,
+      1
+    ]
   ) {
     const length =
       vectorLength(vector);
 
     if (
       !Number.isFinite(length) ||
-      length <= 1e-8
+      length <=
+        1e-12
     ) {
       return fallback.slice();
     }
@@ -814,353 +1573,311 @@
     ];
   }
 
-  function quaternionNormalize(
-    quaternion,
-    fallback = [0, 0, 0, 1]
-  ) {
-    const source =
-      Array.isArray(quaternion) ||
-      ArrayBuffer.isView(
-        quaternion
-      )
-        ? Array.from(
-            quaternion
-          )
-        : [];
-
-    if (source.length !== 4) {
-      return fallback.slice();
-    }
-
-    const normalized = [
-      Number(source[0]) || 0,
-      Number(source[1]) || 0,
-      Number(source[2]) || 0,
-      Number(source[3]) || 1
-    ];
-
-    const length =
-      Math.hypot(
-        normalized[0],
-        normalized[1],
-        normalized[2],
-        normalized[3]
-      );
-
-    if (
-      !Number.isFinite(length) ||
-      length <= 1e-8
-    ) {
-      return fallback.slice();
-    }
-
-    return normalized.map(
-      component =>
-        component / length
-    );
-  }
-
-  function quaternionMultiplyRaw(
-    a,
-    b
+  function cross(
+    first,
+    second
   ) {
     return [
-      a[3] * b[0] +
-        a[0] * b[3] +
-        a[1] * b[2] -
-        a[2] * b[1],
+      first[1] * second[2] -
+        first[2] * second[1],
 
-      a[3] * b[1] -
-        a[0] * b[2] +
-        a[1] * b[3] +
-        a[2] * b[0],
+      first[2] * second[0] -
+        first[0] * second[2],
 
-      a[3] * b[2] +
-        a[0] * b[1] -
-        a[1] * b[0] +
-        a[2] * b[3],
-
-      a[3] * b[3] -
-        a[0] * b[0] -
-        a[1] * b[1] -
-        a[2] * b[2]
+      first[0] * second[1] -
+        first[1] * second[0]
     ];
   }
 
-  function quaternionMultiply(
-    a,
-    b
-  ) {
-    return quaternionNormalize(
-      quaternionMultiplyRaw(
-        a,
-        b
-      )
-    );
-  }
-
-  function quaternionConjugate(
-    quaternion
+  function subtract(
+    first,
+    second
   ) {
     return [
-      -quaternion[0],
-      -quaternion[1],
-      -quaternion[2],
-      quaternion[3]
+      first[0] - second[0],
+      first[1] - second[1],
+      first[2] - second[2]
     ];
   }
 
-  function quaternionRotateVector(
-    quaternion,
-    vector
-  ) {
-    const normalized =
-      quaternionNormalize(
-        quaternion
-      );
-
-    const pure = [
-      vector[0],
-      vector[1],
-      vector[2],
-      0
-    ];
-
-    const rotated =
-      quaternionMultiplyRaw(
-        quaternionMultiplyRaw(
-          normalized,
-          pure
-        ),
-        quaternionConjugate(
-          normalized
-        )
-      );
-
+  function identity4() {
     return [
-      rotated[0],
-      rotated[1],
-      rotated[2]
+      1, 0, 0, 0,
+      0, 1, 0, 0,
+      0, 0, 1, 0,
+      0, 0, 0, 1
     ];
   }
 
-  function quaternionSlerp(
-    fromValue,
-    toValue,
-    amount
-  ) {
-    const from =
-      quaternionNormalize(
-        fromValue
-      );
-
-    let to =
-      quaternionNormalize(
-        toValue
-      );
-
-    let cosine =
-      from[0] * to[0] +
-      from[1] * to[1] +
-      from[2] * to[2] +
-      from[3] * to[3];
-
-    if (cosine < 0) {
-      cosine =
-        -cosine;
-
-      to = [
-        -to[0],
-        -to[1],
-        -to[2],
-        -to[3]
-      ];
-    }
-
-    if (cosine > 0.9995) {
-      return quaternionNormalize([
-        from[0] +
-          (
-            to[0] -
-            from[0]
-          ) *
-          amount,
-
-        from[1] +
-          (
-            to[1] -
-            from[1]
-          ) *
-          amount,
-
-        from[2] +
-          (
-            to[2] -
-            from[2]
-          ) *
-          amount,
-
-        from[3] +
-          (
-            to[3] -
-            from[3]
-          ) *
-          amount
-      ]);
-    }
-
-    const theta =
-      Math.acos(
-        clamp(
-          cosine,
-          -1,
-          1
-        )
-      );
-
-    const sineTheta =
-      Math.sin(theta);
-
-    const weightFrom =
-      Math.sin(
-        (
-          1 - amount
-        ) *
-        theta
-      ) /
-      sineTheta;
-
-    const weightTo =
-      Math.sin(
-        amount *
-        theta
-      ) /
-      sineTheta;
-
-    return quaternionNormalize([
-      from[0] * weightFrom +
-        to[0] * weightTo,
-
-      from[1] * weightFrom +
-        to[1] * weightTo,
-
-      from[2] * weightFrom +
-        to[2] * weightTo,
-
-      from[3] * weightFrom +
-        to[3] * weightTo
-    ]);
-  }
-
-  function quaternionFromObject(
-    quaternionObject
-  ) {
-    if (
-      !quaternionObject ||
-      typeof quaternionObject !==
-        "object"
-    ) {
-      return [0, 0, 0, 1];
-    }
-
-    return quaternionNormalize([
-      quaternionObject.x,
-      quaternionObject.y,
-      quaternionObject.z,
-      quaternionObject.w
-    ]);
-  }
-
-  function quaternionDistance(
+  function multiply4(
     left,
     right
   ) {
-    const a =
-      quaternionNormalize(left);
+    const output =
+      new Array(16)
+        .fill(0);
 
-    const b =
-      quaternionNormalize(right);
+    for (
+      let row = 0;
+      row < 4;
+      row += 1
+    ) {
+      for (
+        let column = 0;
+        column < 4;
+        column += 1
+      ) {
+        for (
+          let index = 0;
+          index < 4;
+          index += 1
+        ) {
+          output[
+            column * 4 +
+            row
+          ] +=
+            left[
+              index * 4 +
+              row
+            ] *
+            right[
+              column * 4 +
+              index
+            ];
+        }
+      }
+    }
 
-    const direct =
-      Math.hypot(
-        a[0] - b[0],
-        a[1] - b[1],
-        a[2] - b[2],
-        a[3] - b[3]
-      );
-
-    const inverse =
-      Math.hypot(
-        a[0] + b[0],
-        a[1] + b[1],
-        a[2] + b[2],
-        a[3] + b[3]
-      );
-
-    return Math.min(
-      direct,
-      inverse
-    );
+    return output;
   }
 
-  function createDiamondStarGeometry(
-    options = {}
+  function translate4(
+    x,
+    y,
+    z
   ) {
+    const matrix =
+      identity4();
+
+    matrix[12] = x;
+    matrix[13] = y;
+    matrix[14] = z;
+
+    return matrix;
+  }
+
+  function rotateX4(angle) {
+    const cosine =
+      Math.cos(angle);
+
+    const sine =
+      Math.sin(angle);
+
+    return [
+      1, 0, 0, 0,
+      0, cosine, sine, 0,
+      0, -sine, cosine, 0,
+      0, 0, 0, 1
+    ];
+  }
+
+  function rotateY4(angle) {
+    const cosine =
+      Math.cos(angle);
+
+    const sine =
+      Math.sin(angle);
+
+    return [
+      cosine, 0, -sine, 0,
+      0, 1, 0, 0,
+      sine, 0, cosine, 0,
+      0, 0, 0, 1
+    ];
+  }
+
+  function rotateZ4(angle) {
+    const cosine =
+      Math.cos(angle);
+
+    const sine =
+      Math.sin(angle);
+
+    return [
+      cosine, sine, 0, 0,
+      -sine, cosine, 0, 0,
+      0, 0, 1, 0,
+      0, 0, 0, 1
+    ];
+  }
+
+  function inverseTransposeNormalMatrix3(
+    modelView
+  ) {
+    const a00 =
+      modelView[0];
+
+    const a01 =
+      modelView[4];
+
+    const a02 =
+      modelView[8];
+
+    const a10 =
+      modelView[1];
+
+    const a11 =
+      modelView[5];
+
+    const a12 =
+      modelView[9];
+
+    const a20 =
+      modelView[2];
+
+    const a21 =
+      modelView[6];
+
+    const a22 =
+      modelView[10];
+
+    const b01 =
+      a22 * a11 -
+      a12 * a21;
+
+    const b11 =
+      -a22 * a10 +
+      a12 * a20;
+
+    const b21 =
+      a21 * a10 -
+      a11 * a20;
+
+    let determinant =
+      a00 * b01 +
+      a01 * b11 +
+      a02 * b21;
+
+    if (
+      !Number.isFinite(
+        determinant
+      ) ||
+      Math.abs(
+        determinant
+      ) <=
+        QUALITY
+          .normalMatrixEpsilon
+    ) {
+      return [
+        a00, a10, a20,
+        a01, a11, a21,
+        a02, a12, a22
+      ];
+    }
+
+    determinant =
+      1 / determinant;
+
+    const inverse = [
+      b01 * determinant,
+
+      (
+        -a22 * a01 +
+        a02 * a21
+      ) * determinant,
+
+      (
+        a12 * a01 -
+        a02 * a11
+      ) * determinant,
+
+      b11 * determinant,
+
+      (
+        a22 * a00 -
+        a02 * a20
+      ) * determinant,
+
+      (
+        -a12 * a00 +
+        a02 * a10
+      ) * determinant,
+
+      b21 * determinant,
+
+      (
+        -a21 * a00 +
+        a01 * a20
+      ) * determinant,
+
+      (
+        a11 * a00 -
+        a01 * a10
+      ) * determinant
+    ];
+
+    return [
+      inverse[0],
+      inverse[3],
+      inverse[6],
+
+      inverse[1],
+      inverse[4],
+      inverse[7],
+
+      inverse[2],
+      inverse[5],
+      inverse[8]
+    ];
+  }
+
+  function createDiamondMesh(options) {
     const points =
-      Math.max(
-        3,
-        Math.floor(
-          Number(options.points) ||
-          CONFIG.largePoints
-        )
-      );
+      options.points;
 
     const radius =
-      Number(options.radius) ||
-      CONFIG.largeRadius;
+      options.radius;
 
     const inner =
-      Number(options.inner) ||
-      radius *
-      CONFIG.largeInnerRatio;
+      options.inner;
 
     const depth =
-      Number(options.depth) ||
-      CONFIG.largeDepth;
+      options.depth;
 
     const crown =
-      Number(options.crown) ||
-      CONFIG.largeCrown;
+      options.crown;
+
+    const verticalCompression =
+      options.verticalCompression;
+
+    const outerRidge =
+      options.outerRidge;
+
+    const innerRidge =
+      options.innerRidge;
 
     const vertices = [];
     const faces = [];
 
-    function add(vertex) {
-      vertices.push(vertex);
+    function add(point) {
+      vertices.push(point);
 
       return (
-        vertices.length - 1
+        vertices.length -
+        1
       );
     }
 
     function face(
-      a,
-      b,
-      c,
-      band
+      first,
+      second,
+      third
     ) {
-      faces.push(
-        Object.freeze({
-          indices:
-            Object.freeze([
-              a,
-              b,
-              c
-            ]),
-
-          band
-        })
-      );
+      faces.push([
+        first,
+        second,
+        third
+      ]);
     }
 
     const frontApex =
@@ -1189,10 +1906,10 @@
         0,
         0,
         -depth -
-        crown * 0.72
+          crown * 0.72
       ]);
 
-    const outer = [];
+    const perimeter = [];
     const innerRing = [];
     const frontBevel = [];
     const rearBevel = [];
@@ -1202,7 +1919,7 @@
       index < points * 2;
       index += 1
     ) {
-      const isPoint =
+      const isOuterPoint =
         index % 2 === 0;
 
       const angle =
@@ -1218,26 +1935,23 @@
         Math.PI / 2;
 
       const activeRadius =
-        isPoint
+        isOuterPoint
           ? radius
           : inner;
 
-      const yScale =
-        0.78;
-
       const ridge =
-        isPoint
-          ? 0.05
-          : -0.02;
+        isOuterPoint
+          ? outerRidge
+          : innerRidge;
 
-      outer.push(
+      perimeter.push(
         add([
           Math.cos(angle) *
-          activeRadius,
+            activeRadius,
 
           Math.sin(angle) *
-          activeRadius *
-          yScale,
+            activeRadius *
+            verticalCompression,
 
           ridge
         ])
@@ -1246,13 +1960,13 @@
       innerRing.push(
         add([
           Math.cos(angle) *
-          activeRadius *
-          0.38,
+            activeRadius *
+            0.38,
 
           Math.sin(angle) *
-          activeRadius *
-          yScale *
-          0.38,
+            activeRadius *
+            verticalCompression *
+            0.38,
 
           depth * 0.14
         ])
@@ -1261,13 +1975,13 @@
       frontBevel.push(
         add([
           Math.cos(angle) *
-          activeRadius *
-          0.72,
+            activeRadius *
+            0.72,
 
           Math.sin(angle) *
-          activeRadius *
-          yScale *
-          0.72,
+            activeRadius *
+            verticalCompression *
+            0.72,
 
           depth * 0.52
         ])
@@ -1276,13 +1990,13 @@
       rearBevel.push(
         add([
           Math.cos(angle) *
-          activeRadius *
-          0.68,
+            activeRadius *
+            0.68,
 
           Math.sin(angle) *
-          activeRadius *
-          yScale *
-          0.68,
+            activeRadius *
+            verticalCompression *
+            0.68,
 
           -depth * 0.48
         ])
@@ -1290,7 +2004,7 @@
     }
 
     const count =
-      outer.length;
+      perimeter.length;
 
     for (
       let index = 0;
@@ -1299,2742 +2013,994 @@
     ) {
       const next =
         (
-          index + 1
+          index +
+          1
         ) %
         count;
 
       face(
         frontApex,
         innerRing[index],
-        innerRing[next],
-        "front-core"
+        innerRing[next]
       );
 
       face(
         frontCrown,
         frontBevel[next],
-        frontBevel[index],
-        "front-highlight"
+        frontBevel[index]
       );
 
       face(
         frontBevel[index],
-        outer[index],
-        outer[next],
-        "front-edge"
+        perimeter[index],
+        perimeter[next]
       );
 
       face(
         frontBevel[index],
-        outer[next],
-        frontBevel[next],
-        "front-middle"
+        perimeter[next],
+        frontBevel[next]
       );
 
       face(
         innerRing[index],
         frontBevel[index],
-        frontBevel[next],
-        "front-middle"
+        frontBevel[next]
       );
 
       face(
         innerRing[index],
         frontBevel[next],
-        innerRing[next],
-        "front-core"
+        innerRing[next]
       );
 
       face(
         rearApex,
         rearBevel[next],
-        rearBevel[index],
-        "rear-shadow"
+        rearBevel[index]
       );
 
       face(
         rearCrown,
         rearBevel[index],
-        rearBevel[next],
-        "rear-shadow"
+        rearBevel[next]
       );
 
       face(
         rearBevel[index],
-        outer[next],
-        outer[index],
-        "rear-edge"
+        perimeter[next],
+        perimeter[index]
       );
 
       face(
         rearBevel[index],
         rearBevel[next],
-        outer[next],
-        "rear-middle"
+        perimeter[next]
       );
     }
 
-    return Object.freeze({
-      points,
-      radius,
-      inner,
-      depth,
-      crown,
+    const positions = [];
+    const normals = [];
+    const colors = [];
+    const sparkleIndices = [];
 
-      vertices:
-        Object.freeze(
-          vertices.map(
-            vertex =>
-              Object.freeze(
-                vertex.slice()
+    faces.forEach(
+      (
+        triangle,
+        faceIndex
+      ) => {
+        const first =
+          vertices[
+            triangle[0]
+          ];
+
+        const second =
+          vertices[
+            triangle[1]
+          ];
+
+        const third =
+          vertices[
+            triangle[2]
+          ];
+
+        const normal =
+          normalizeVector(
+            cross(
+              subtract(
+                second,
+                first
+              ),
+              subtract(
+                third,
+                first
               )
-          )
+            )
+          );
+
+        const colorLift =
+          clamp(
+            0.70 +
+            (
+              faceIndex %
+              9
+            ) *
+            0.035,
+            0.70,
+            1
+          );
+
+        const sparkleIndex =
+          faceIndex % 5 === 0
+            ? 1
+            : 0;
+
+        [
+          first,
+          second,
+          third
+        ].forEach(
+          point => {
+            positions.push(
+              point[0],
+              point[1],
+              point[2]
+            );
+
+            normals.push(
+              normal[0],
+              normal[1],
+              normal[2]
+            );
+
+            colors.push(
+              colorLift,
+              colorLift,
+              colorLift
+            );
+
+            sparkleIndices.push(
+              sparkleIndex
+            );
+          }
+        );
+      }
+    );
+
+    return Object.freeze({
+      positions:
+        new Float32Array(
+          positions
         ),
 
-      faces:
-        Object.freeze(
-          faces.slice()
-        )
+      normals:
+        new Float32Array(
+          normals
+        ),
+
+      colors:
+        new Float32Array(
+          colors
+        ),
+
+      sparkleIndices:
+        new Float32Array(
+          sparkleIndices
+        ),
+
+      vertexCount:
+        positions.length / 3,
+
+      summary:
+        Object.freeze({
+          majorPoints:
+            points,
+
+          perimeterPositions:
+            points * 2,
+
+          outerRadius:
+            radius,
+
+          innerRadius:
+            inner,
+
+          frontDepth:
+            depth,
+
+          rearDepth:
+            -depth,
+
+          frontCrownExtension:
+            crown,
+
+          rearCrownExtension:
+            crown * 0.72,
+
+          verticalCompression,
+
+          outerRidge,
+
+          innerRidge
+        })
     });
   }
 
-  function buildGeometries() {
-    state.geometries.set(
-      GEOMETRY_TYPES.CARDINAL,
-      createDiamondStarGeometry({
+  function buildCpuMeshes() {
+    state.cpuMeshes.set(
+      NODE_TYPES.CARDINAL,
+      createDiamondMesh({
         points:
-          CONFIG.largePoints,
+          8,
 
         radius:
-          CONFIG.largeRadius,
+          0.72,
 
         inner:
-          CONFIG.largeRadius *
-          CONFIG.largeInnerRatio,
+          0.30,
 
         depth:
-          CONFIG.largeDepth,
+          0.42,
 
         crown:
-          CONFIG.largeCrown
+          0.20,
+
+        verticalCompression:
+          0.78,
+
+        outerRidge:
+          0.05,
+
+        innerRidge:
+          -0.02
       })
     );
 
-    state.geometries.set(
-      GEOMETRY_TYPES.CHILD,
-      createDiamondStarGeometry({
+    state.cpuMeshes.set(
+      NODE_TYPES.CHILD,
+      createDiamondMesh({
         points:
-          CONFIG.childPoints,
+          6,
 
         radius:
-          CONFIG.childRadius,
+          0.42,
 
         inner:
-          CONFIG.childRadius *
-          CONFIG.childInnerRatio,
+          0.20,
 
         depth:
-          CONFIG.childDepth,
+          0.25,
 
         crown:
-          CONFIG.childCrown
+          0.10,
+
+        verticalCompression:
+          0.82,
+
+        outerRidge:
+          0.04,
+
+        innerRidge:
+          -0.015
       })
     );
   }
 
-  function paletteForNode(node) {
-    if (
-      node.materialFamily ===
-      MATERIAL_FAMILIES.GAUGE
-    ) {
-      return PALETTE.gauge;
-    }
+  function createShader(
+    gl,
+    type,
+    source
+  ) {
+    const shader =
+      gl.createShader(type);
+
+    invariant(
+      shader,
+      "SHOWROOM_CRYSTALS_SHADER_CREATION_FAILED"
+    );
+
+    gl.shaderSource(
+      shader,
+      source
+    );
+
+    gl.compileShader(shader);
 
     if (
-      node.materialFamily ===
-      MATERIAL_FAMILIES.INFORMATION
+      !gl.getShaderParameter(
+        shader,
+        gl.COMPILE_STATUS
+      )
     ) {
-      return PALETTE.information;
+      const information =
+        gl.getShaderInfoLog(
+          shader
+        ) ||
+        "UNKNOWN_SHADER_ERROR";
+
+      gl.deleteShader(shader);
+
+      throw new Error(
+        information
+      );
     }
 
-    return node.warm
-      ? PALETTE.cardinalWarm
-      : PALETTE.cardinalCool;
+    return shader;
   }
 
-  function childBaseVector(
-    index,
-    count
-  ) {
-    const safeCount =
-      Math.max(
-        1,
-        count
+  function createProgram(gl) {
+    const vertex =
+      createShader(
+        gl,
+        gl.VERTEX_SHADER,
+        vertexShaderSource
       );
 
-    const angle =
-      (
-        Math.PI *
-        2 *
-        index
-      ) /
-      safeCount -
-      Math.PI / 2;
-
-    const latitude =
-      Math.sin(
-        (
-          index + 0.5
-        ) *
-        1.73
-      ) *
-      0.30;
-
-    const cosineLatitude =
-      Math.cos(latitude);
-
-    return normalizeVector([
-      Math.cos(angle) *
-        cosineLatitude,
-
-      Math.sin(latitude),
-
-      Math.sin(angle) *
-        cosineLatitude
-    ]);
-  }
-
-  function createNode(
-    semanticElement,
-    index,
-    clusterCount
-  ) {
-    const id =
-      normalize(
-        semanticElement.getAttribute(
-          ATTRIBUTES.objectId
-        )
+    const fragment =
+      createShader(
+        gl,
+        gl.FRAGMENT_SHADER,
+        fragmentShaderSource
       );
 
-    const size =
-      normalize(
-        semanticElement.getAttribute(
-          ATTRIBUTES.objectSize
-        )
-      );
+    const program =
+      gl.createProgram();
 
-    const behavior =
-      normalize(
-        semanticElement.getAttribute(
-          ATTRIBUTES.objectBehavior
-        )
-      );
+    invariant(
+      program,
+      "SHOWROOM_CRYSTALS_PROGRAM_CREATION_FAILED"
+    );
 
-    const clusterId =
-      normalize(
-        semanticElement.getAttribute(
-          ATTRIBUTES.clusterId
-        )
-      );
+    gl.attachShader(
+      program,
+      vertex
+    );
 
-    const large =
-      size === NODE_TYPES.LARGE;
+    gl.attachShader(
+      program,
+      fragment
+    );
 
-    let materialFamily =
-      MATERIAL_FAMILIES.CARDINAL;
+    gl.linkProgram(program);
+
+    gl.deleteShader(vertex);
+    gl.deleteShader(fragment);
 
     if (
-      behavior === "gauge"
+      !gl.getProgramParameter(
+        program,
+        gl.LINK_STATUS
+      )
     ) {
-      materialFamily =
-        MATERIAL_FAMILIES.GAUGE;
-    } else if (
-      behavior ===
-      "information"
-    ) {
-      materialFamily =
-        MATERIAL_FAMILIES.INFORMATION;
+      const information =
+        gl.getProgramInfoLog(
+          program
+        ) ||
+        "UNKNOWN_PROGRAM_LINK_ERROR";
+
+      gl.deleteProgram(program);
+
+      throw new Error(
+        information
+      );
     }
 
-    const baseVector =
-      large
-        ? (
-            LARGE_BASE_VECTORS[id] ||
-            [0, 1, 0]
-          ).slice()
-        : childBaseVector(
-            index,
-            clusterCount
-          );
+    return program;
+  }
 
-    return {
-      id,
+  function createBuffer(
+    gl,
+    data
+  ) {
+    const buffer =
+      gl.createBuffer();
+
+    invariant(
+      buffer,
+      "SHOWROOM_CRYSTALS_BUFFER_CREATION_FAILED"
+    );
+
+    gl.bindBuffer(
+      gl.ARRAY_BUFFER,
+      buffer
+    );
+
+    gl.bufferData(
+      gl.ARRAY_BUFFER,
+      data,
+      gl.STATIC_DRAW
+    );
+
+    return buffer;
+  }
+
+  function bindAttribute(
+    renderer,
+    buffer,
+    location,
+    size
+  ) {
+    invariant(
+      location >=
+        0,
+      "SHOWROOM_CRYSTALS_ATTRIBUTE_LOCATION_INVALID"
+    );
+
+    const gl =
+      renderer.gl;
+
+    gl.bindBuffer(
+      gl.ARRAY_BUFFER,
+      buffer
+    );
+
+    gl.enableVertexAttribArray(
+      location
+    );
+
+    gl.vertexAttribPointer(
+      location,
       size,
-      behavior,
-      clusterId,
-      semanticElement,
+      gl.FLOAT,
+      false,
+      0,
+      0
+    );
+  }
 
-      geometryType:
-        large
-          ? GEOMETRY_TYPES.CARDINAL
-          : GEOMETRY_TYPES.CHILD,
+  function buildGpuMesh(
+    gl,
+    cpuMesh
+  ) {
+    return {
+      vertexCount:
+        cpuMesh.vertexCount,
 
-      materialFamily,
-
-      warm:
-        id === "gauge-cluster" ||
-        id === "information-cluster",
-
-      baseVector,
-
-      worldPosition: {
-        x: 0,
-        y: 0,
-        z: 0
-      },
-
-      targetPosition: {
-        x: 0,
-        y: 0,
-        z: 0
-      },
-
-      scale:
-        large
-          ? CONFIG.largeBaseScale
-          : CONFIG.inactiveChildScale,
-
-      targetScale:
-        large
-          ? CONFIG.largeBaseScale
-          : CONFIG.inactiveChildScale,
-
-      opacity:
-        large
-          ? 1
-          : 0,
-
-      targetOpacity:
-        large
-          ? 1
-          : 0,
-
-      prominence:
-        1,
-
-      targetProminence:
-        1,
-
-      halo:
-        large
-          ? 0.78
-          : 0.62,
-
-      targetHalo:
-        large
-          ? 0.78
-          : 0.62,
-
-      localRotationX:
-        0,
-
-      localRotationY:
-        0,
-
-      localRotationZ:
-        index * 0.42,
-
-      phase:
-        index * 0.71 +
-        (
-          large
-            ? 0.24
-            : 1.08
+      position:
+        createBuffer(
+          gl,
+          cpuMesh.positions
         ),
 
-      visible:
-        large,
+      normal:
+        createBuffer(
+          gl,
+          cpuMesh.normals
+        ),
 
-      registration:
-        null,
+      color:
+        createBuffer(
+          gl,
+          cpuMesh.colors
+        ),
 
-      lastSemantic:
-        {
-          visible:
-            false,
-
-          x:
-            NaN,
-
-          y:
-            NaN,
-
-          size:
-            NaN,
-
-          interactive:
-            false
-        }
+      sparkleIndex:
+        createBuffer(
+          gl,
+          cpuMesh.sparkleIndices
+        )
     };
   }
 
-  function discoverSemanticObjects() {
-    const elements =
-      Array.from(
-        state.orbitField
-          .querySelectorAll(
-            SELECTORS.semanticObject
-          )
-      );
-
-    const clusterCounts =
-      new Map();
-
-    for (const element of elements) {
-      const size =
-        normalize(
-          element.getAttribute(
-            ATTRIBUTES.objectSize
-          )
-        );
-
-      if (size !== NODE_TYPES.SMALL) {
-        continue;
-      }
-
-      const clusterElement =
-        element.closest(
-          SELECTORS.cluster
-        );
-
-      const clusterId =
-        clusterElement
-          ? normalize(
-              clusterElement.getAttribute(
-                ATTRIBUTES.clusterId
-              )
-            )
-          : "";
-
-      clusterCounts.set(
-        clusterId,
-        (
-          clusterCounts.get(
-            clusterId
-          ) ||
-          0
-        ) +
-        1
-      );
-    }
-
-    const clusterIndices =
-      new Map();
-
-    for (const element of elements) {
-      if (
-        !state.orbitField.contains(
-          element
-        )
-      ) {
-        continue;
-      }
-
-      const id =
-        normalize(
-          element.getAttribute(
-            ATTRIBUTES.objectId
-          )
-        );
-
-      if (!id) {
-        throw new Error(
-          "A semantic constellation object is missing data-showroom-object-id."
-        );
-      }
-
-      const size =
-        normalize(
-          element.getAttribute(
-            ATTRIBUTES.objectSize
-          )
-        );
-
-      const clusterElement =
-        element.closest(
-          SELECTORS.cluster
-        );
-
-      const clusterId =
-        clusterElement
-          ? normalize(
-              clusterElement.getAttribute(
-                ATTRIBUTES.clusterId
-              )
-            )
-          : "";
-
-      const index =
-        clusterIndices.get(
-          clusterId
-        ) ||
-        0;
-
-      const count =
-        clusterCounts.get(
-          clusterId
-        ) ||
-        1;
-
-      const node =
-        createNode(
-          element,
-          index,
-          count
-        );
-
-      state.semanticObjects.set(
-        id,
-        element
-      );
-
-      state.nodes.set(
-        id,
-        node
-      );
-
-      if (
-        size === NODE_TYPES.SMALL
-      ) {
-        clusterIndices.set(
-          clusterId,
-          index + 1
-        );
-
-        state.counters.smallNodes += 1;
-      } else {
-        state.counters.largeNodes += 1;
-      }
-    }
-
-    if (
-      state.counters.largeNodes !== 4
-    ) {
-      throw new Error(
-        `Expected four large constellation stars; found ${state.counters.largeNodes}.`
-      );
-    }
-
-    if (
-      state.counters.smallNodes !== 7
-    ) {
-      throw new Error(
-        `Expected seven child stars; found ${state.counters.smallNodes}.`
-      );
-    }
-  }
-
-  function resolveActiveCluster() {
-    if (!state.root) {
-      return "";
-    }
-
-    return normalize(
-      state.root.getAttribute(
-        ATTRIBUTES.activeCluster
-      )
-    );
-  }
-
-  function updateRootState() {
-    if (!state.root) {
+  function destroyContextRenderer(
+    renderer,
+    options = {}
+  ) {
+    if (!renderer) {
       return;
     }
 
-    state.activeClusterId =
-      resolveActiveCluster();
-
-    state.reducedMotion =
-      state.root.getAttribute(
-        ATTRIBUTES.reducedMotion
-      ) === "true" ||
-      window.matchMedia(
-        "(prefers-reduced-motion: reduce)"
-      ).matches;
-
-    state.held =
-      state.root.getAttribute(
-        ATTRIBUTES.held
-      ) === "true";
-  }
-
-  function radiusForCluster(
-    clusterId
-  ) {
     if (
-      clusterId === "gauges"
+      options.removeListeners !==
+      false
     ) {
-      return Object.freeze({
-        x:
-          CONFIG.gaugeClusterRadiusX,
+      renderer.canvas.removeEventListener(
+        "webglcontextlost",
+        renderer.onContextLost
+      );
 
-        y:
-          CONFIG.gaugeClusterRadiusY,
-
-        z:
-          CONFIG.gaugeClusterRadiusZ
-      });
+      renderer.canvas.removeEventListener(
+        "webglcontextrestored",
+        renderer.onContextRestored
+      );
     }
 
-    return Object.freeze({
-      x:
-        CONFIG.informationClusterRadiusX,
-
-      y:
-        CONFIG.informationClusterRadiusY,
-
-      z:
-        CONFIG.informationClusterRadiusZ
-    });
-  }
-
-  function updateNodeTargets() {
-    const orientation =
-      state.orientation;
-
-    for (
-      const node
-      of state.nodes.values()
+    if (
+      renderer.gl &&
+      !renderer.contextLost
     ) {
-      if (
-        node.size ===
-        NODE_TYPES.LARGE
+      for (
+        const mesh
+        of renderer.meshes.values()
       ) {
-        const vector =
-          normalizeVector(
-            quaternionRotateVector(
-              orientation,
-              node.baseVector
-            )
-          );
+        renderer.gl.deleteBuffer(
+          mesh.position
+        );
 
-        node.targetPosition.x =
-          vector[0] *
-          CONFIG.constellationRadiusX;
+        renderer.gl.deleteBuffer(
+          mesh.normal
+        );
 
-        node.targetPosition.y =
-          vector[1] *
-          CONFIG.constellationRadiusY;
+        renderer.gl.deleteBuffer(
+          mesh.color
+        );
 
-        node.targetPosition.z =
-          vector[2] *
-          CONFIG.constellationRadiusZ;
-
-        const depth =
-          (
-            vector[2] + 1
-          ) /
-          2;
-
-        node.targetScale =
-          CONFIG.largeBaseScale *
-          lerp(
-            CONFIG.rearScaleMultiplier,
-            CONFIG.frontScaleMultiplier,
-            depth
-          );
-
-        node.targetOpacity =
-          state.held
-            ? 0.56
-            : lerp(
-                0.72,
-                1,
-                depth
-              );
-
-        node.targetProminence =
-          state.held
-            ? 0.58
-            : lerp(
-                0.72,
-                1.16,
-                depth
-              );
-
-        node.targetHalo =
-          state.held
-            ? 0.22
-            : lerp(
-                0.42,
-                1.02,
-                depth
-              );
-
-        node.visible =
-          true;
-
-        continue;
+        renderer.gl.deleteBuffer(
+          mesh.sparkleIndex
+        );
       }
 
-      const clusterActive =
-        node.clusterId ===
-        state.activeClusterId;
-
-      const clusterQuaternion =
-        state.clusterOrientations.get(
-          node.clusterId
-        ) ||
-        [0, 0, 0, 1];
-
-      const vector =
-        normalizeVector(
-          quaternionRotateVector(
-            clusterQuaternion,
-            node.baseVector
-          )
+      if (renderer.program) {
+        renderer.gl.deleteProgram(
+          renderer.program
         );
-
-      const radius =
-        radiusForCluster(
-          node.clusterId
-        );
-
-      node.targetPosition.x =
-        vector[0] *
-        radius.x;
-
-      node.targetPosition.y =
-        vector[1] *
-        radius.y;
-
-      node.targetPosition.z =
-        vector[2] *
-        radius.z +
-        0.10;
-
-      const depth =
-        (
-          vector[2] + 1
-        ) /
-          2;
-
-      node.targetScale =
-        clusterActive
-          ? (
-              CONFIG.childBaseScale *
-              CONFIG.activeClusterScaleMultiplier *
-              lerp(
-                CONFIG.rearScaleMultiplier,
-                CONFIG.frontScaleMultiplier,
-                depth
-              )
-            )
-          : CONFIG.inactiveChildScale;
-
-      node.targetOpacity =
-        clusterActive
-          ? (
-              state.held
-                ? 0.48
-                : lerp(
-                    0.68,
-                    1,
-                    depth
-                  )
-            )
-          : 0;
-
-      node.targetProminence =
-        clusterActive
-          ? (
-              state.held
-                ? 0.50
-                : lerp(
-                    0.68,
-                    1.12,
-                    depth
-                  )
-            )
-          : 0;
-
-      node.targetHalo =
-        clusterActive
-          ? (
-              state.held
-                ? 0.18
-                : lerp(
-                    0.38,
-                    0.92,
-                    depth
-                  )
-            )
-          : 0;
-
-      node.visible =
-        clusterActive ||
-        node.opacity > 0.03;
-    }
-  }
-
-  function updateInterpolatedState(
-    deltaSeconds,
-    now
-  ) {
-    const speed =
-      state.reducedMotion
-        ? CONFIG
-            .reducedMotionInterpolationSpeed
-        : CONFIG.interpolationSpeed;
-
-    const amount =
-      clamp(
-        deltaSeconds *
-        speed,
-        0,
-        1
-      );
-
-    state.orientation =
-      quaternionSlerp(
-        state.orientation,
-        state.targetOrientation,
-        amount
-      );
-
-    for (
-      const [
-        clusterId,
-        target
-      ]
-      of state
-        .clusterTargetOrientations
-        .entries()
-    ) {
-      const current =
-        state.clusterOrientations.get(
-          clusterId
-        ) ||
-        [0, 0, 0, 1];
-
-      state.clusterOrientations.set(
-        clusterId,
-        quaternionSlerp(
-          current,
-          target,
-          amount
-        )
-      );
-    }
-
-    updateNodeTargets();
-
-    for (
-      const node
-      of state.nodes.values()
-    ) {
-      node.worldPosition.x =
-        lerp(
-          node.worldPosition.x,
-          node.targetPosition.x,
-          amount
-        );
-
-      node.worldPosition.y =
-        lerp(
-          node.worldPosition.y,
-          node.targetPosition.y,
-          amount
-        );
-
-      node.worldPosition.z =
-        lerp(
-          node.worldPosition.z,
-          node.targetPosition.z,
-          amount
-        );
-
-      node.scale =
-        lerp(
-          node.scale,
-          node.targetScale,
-          amount
-        );
-
-      node.opacity =
-        lerp(
-          node.opacity,
-          node.targetOpacity,
-          amount
-        );
-
-      node.prominence =
-        lerp(
-          node.prominence,
-          node.targetProminence,
-          amount
-        );
-
-      node.halo =
-        lerp(
-          node.halo,
-          node.targetHalo,
-          amount
-        );
-
-      if (
-        !state.reducedMotion &&
-        !state.pageScrolling
-      ) {
-        const speedMultiplier =
-          node.size ===
-          NODE_TYPES.LARGE
-            ? CONFIG.idleRotationSpeed
-            : CONFIG.childRotationSpeed;
-
-        node.localRotationZ +=
-          deltaSeconds *
-          speedMultiplier;
-
-        node.localRotationY =
-          Math.sin(
-            now *
-            0.00042 +
-            node.phase
-          ) *
-          0.16;
-
-        node.localRotationX =
-          Math.sin(
-            now *
-            0.00031 +
-            node.phase * 0.73
-          ) *
-          0.10;
-      } else if (
-        state.reducedMotion
-      ) {
-        node.localRotationX = 0;
-        node.localRotationY = 0;
-      }
-    }
-  }
-
-  function isNodeSettled(node) {
-    return (
-      nearlyEqual(
-        node.worldPosition.x,
-        node.targetPosition.x,
-        CONFIG.settlementPositionEpsilon
-      ) &&
-      nearlyEqual(
-        node.worldPosition.y,
-        node.targetPosition.y,
-        CONFIG.settlementPositionEpsilon
-      ) &&
-      nearlyEqual(
-        node.worldPosition.z,
-        node.targetPosition.z,
-        CONFIG.settlementPositionEpsilon
-      ) &&
-      nearlyEqual(
-        node.scale,
-        node.targetScale,
-        CONFIG.settlementScalarEpsilon
-      ) &&
-      nearlyEqual(
-        node.opacity,
-        node.targetOpacity,
-        CONFIG.settlementScalarEpsilon
-      ) &&
-      nearlyEqual(
-        node.prominence,
-        node.targetProminence,
-        CONFIG.settlementScalarEpsilon
-      ) &&
-      nearlyEqual(
-        node.halo,
-        node.targetHalo,
-        CONFIG.settlementScalarEpsilon
-      )
-    );
-  }
-
-  function isSceneSettled() {
-    if (
-      quaternionDistance(
-        state.orientation,
-        state.targetOrientation
-      ) >
-      CONFIG.settlementQuaternionEpsilon
-    ) {
-      return false;
-    }
-
-    for (
-      const [
-        clusterId,
-        target
-      ]
-      of state
-        .clusterTargetOrientations
-        .entries()
-    ) {
-      const current =
-        state.clusterOrientations.get(
-          clusterId
-        ) ||
-        [0, 0, 0, 1];
-
-      if (
-        quaternionDistance(
-          current,
-          target
-        ) >
-        CONFIG.settlementQuaternionEpsilon
-      ) {
-        return false;
       }
     }
 
-    for (
-      const node
-      of state.nodes.values()
-    ) {
-      if (!isNodeSettled(node)) {
-        return false;
-      }
-    }
+    renderer.meshes.clear();
 
-    return true;
-  }
-
-  function rotateLocalVertex(
-    vertex,
-    node
-  ) {
-    const x0 =
-      vertex[0] *
-      node.scale;
-
-    const y0 =
-      vertex[1] *
-      node.scale;
-
-    const z0 =
-      vertex[2] *
-      node.scale *
-      42;
-
-    const cosX =
-      Math.cos(
-        node.localRotationX
-      );
-
-    const sinX =
-      Math.sin(
-        node.localRotationX
-      );
-
-    const y1 =
-      y0 * cosX -
-      z0 * sinX;
-
-    const z1 =
-      y0 * sinX +
-      z0 * cosX;
-
-    const cosY =
-      Math.cos(
-        node.localRotationY
-      );
-
-    const sinY =
-      Math.sin(
-        node.localRotationY
-      );
-
-    const x2 =
-      x0 * cosY +
-      z1 * sinY;
-
-    const z2 =
-      -x0 * sinY +
-      z1 * cosY;
-
-    const cosZ =
-      Math.cos(
-        node.localRotationZ
-      );
-
-    const sinZ =
-      Math.sin(
-        node.localRotationZ
-      );
-
-    return Object.freeze({
-      x:
-        x2 * cosZ -
-        y1 * sinZ,
-
-      y:
-        x2 * sinZ +
-        y1 * cosZ,
-
-      z:
-        z2
-    });
-  }
-
-  function projectLocalVertex(
-    vertex,
-    node,
-    center
-  ) {
-    const rotated =
-      rotateLocalVertex(
-        vertex,
-        node
-      );
-
-    const perspective =
-      clamp(
-        1 +
-        rotated.z *
-        0.004,
-        0.72,
-        1.34
-      );
-
-    return Object.freeze({
-      x:
-        center.x +
-        rotated.x *
-        perspective,
-
-      y:
-        center.y +
-        rotated.y *
-        perspective,
-
-      depth:
-        rotated.z
-    });
-  }
-
-  function faceFill(
-    face,
-    palette,
-    faceIndex
-  ) {
-    switch (face.band) {
-      case "front-highlight":
-        return palette.highlight;
-
-      case "front-core":
-        return faceIndex % 2
-          ? palette.core
-          : palette.middle;
-
-      case "front-edge":
-        return palette.edge;
-
-      case "front-middle":
-        return faceIndex % 3
-          ? palette.middle
-          : palette.core;
-
-      case "rear-edge":
-        return palette.edge;
-
-      case "rear-middle":
-        return palette.shadow;
-
-      case "rear-shadow":
-      default:
-        return palette.shadow;
-    }
-  }
-
-  function drawHalo(
-    context,
-    node,
-    center,
-    radius,
-    palette
-  ) {
-    if (
-      node.halo <= 0.01 ||
-      node.opacity <= 0.01
-    ) {
-      return;
-    }
-
-    const haloRadius =
-      radius *
-      CONFIG.haloExpansion *
-      (
-        1 +
-        node.halo * 0.20
-      );
-
-    const gradient =
-      context.createRadialGradient(
-        center.x,
-        center.y,
-        radius * 0.24,
-        center.x,
-        center.y,
-        haloRadius
-      );
-
-    gradient.addColorStop(
-      0,
-      palette.halo
-    );
-
-    gradient.addColorStop(
-      0.45,
-      palette.halo
-    );
-
-    gradient.addColorStop(
-      1,
-      "rgba(0, 0, 0, 0)"
-    );
-
-    context.save();
-
-    context.globalAlpha =
-      clamp(
-        node.opacity *
-        node.halo,
-        0,
-        1
-      );
-
-    context.fillStyle =
-      gradient;
-
-    context.beginPath();
-
-    context.arc(
-      center.x,
-      center.y,
-      haloRadius,
-      0,
-      Math.PI * 2
-    );
-
-    context.fill();
-
-    context.restore();
-  }
-
-  function drawFacetedCrystal(
-    context,
-    node,
-    projection
-  ) {
-    const geometry =
-      state.geometries.get(
-        node.geometryType
-      );
-
-    if (!geometry) {
-      return;
-    }
-
-    const palette =
-      paletteForNode(node);
-
-    const center =
-      projection.screen;
-
-    const projectedVertices =
-      geometry.vertices.map(
-        vertex =>
-          projectLocalVertex(
-            vertex,
-            node,
-            center
-          )
-      );
-
-    const sortedFaces =
-      geometry.faces
-        .map(
-          (
-            face,
-            index
-          ) => {
-            const a =
-              projectedVertices[
-                face.indices[0]
-              ];
-
-            const b =
-              projectedVertices[
-                face.indices[1]
-              ];
-
-            const c =
-              projectedVertices[
-                face.indices[2]
-              ];
-
-            return {
-              face,
-              index,
-              depth:
-                (
-                  a.depth +
-                  b.depth +
-                  c.depth
-                ) /
-                3
-            };
-          }
-        )
-        .sort(
-          (
-            a,
-            b
-          ) =>
-            a.depth -
-            b.depth
-        );
-
-    const radius =
-      geometry.radius *
-      node.scale;
-
-    drawHalo(
-      context,
-      node,
-      center,
-      radius,
-      palette
-    );
-
-    context.save();
-
-    context.lineJoin =
-      "round";
-
-    context.lineCap =
-      "round";
-
-    context.shadowColor =
-      palette.halo;
-
-    context.shadowBlur =
-      node.halo *
-      8;
-
-    for (
-      const entry
-      of sortedFaces
-    ) {
-      const face =
-        entry.face;
-
-      const a =
-        projectedVertices[
-          face.indices[0]
-        ];
-
-      const b =
-        projectedVertices[
-          face.indices[1]
-        ];
-
-      const c =
-        projectedVertices[
-          face.indices[2]
-        ];
-
-      const highlight =
-        clamp(
-          (
-            entry.depth +
-            radius
-          ) /
-          (
-            radius * 2
-          ),
-          0,
-          1
-        );
-
-      context.beginPath();
-
-      context.moveTo(
-        a.x,
-        a.y
-      );
-
-      context.lineTo(
-        b.x,
-        b.y
-      );
-
-      context.lineTo(
-        c.x,
-        c.y
-      );
-
-      context.closePath();
-
-      context.fillStyle =
-        faceFill(
-          face,
-          palette,
-          entry.index
-        );
-
-      context.globalAlpha =
-        clamp(
-          node.opacity *
-          (
-            0.72 +
-            highlight * 0.28
-          ),
-          0,
-          1
-        );
-
-      context.fill();
-
-      context.strokeStyle =
-        entry.depth > 0
-          ? "rgba(255, 255, 255, 0.22)"
-          : "rgba(6, 18, 42, 0.30)";
-
-      context.lineWidth =
-        node.size ===
-        NODE_TYPES.LARGE
-          ? 0.72
-          : 0.56;
-
-      context.stroke();
-    }
-
-    const shine =
-      context.createLinearGradient(
-        center.x -
-        radius * 0.72,
-        center.y -
-        radius * 0.72,
-        center.x +
-        radius * 0.72,
-        center.y +
-        radius * 0.72
-      );
-
-    shine.addColorStop(
-      0,
-      "rgba(255,255,255,0)"
-    );
-
-    shine.addColorStop(
-      0.42,
-      "rgba(255,255,255,0.04)"
-    );
-
-    shine.addColorStop(
-      0.50,
-      "rgba(255,255,255,0.52)"
-    );
-
-    shine.addColorStop(
-      0.58,
-      "rgba(255,255,255,0.04)"
-    );
-
-    shine.addColorStop(
-      1,
-      "rgba(255,255,255,0)"
-    );
-
-    context.globalAlpha =
-      clamp(
-        node.opacity *
-        node.prominence *
-        0.76,
-        0,
-        0.92
-      );
-
-    context.strokeStyle =
-      shine;
-
-    context.lineWidth =
-      node.size ===
-      NODE_TYPES.LARGE
-        ? 2.1
-        : 1.5;
-
-    context.beginPath();
-
-    context.moveTo(
-      center.x -
-      radius * 0.52,
-      center.y +
-      radius * 0.42
-    );
-
-    context.lineTo(
-      center.x +
-      radius * 0.48,
-      center.y -
-      radius * 0.48
-    );
-
-    context.stroke();
-
-    context.restore();
-  }
-
-  function isProjectionStrictlyInsideField(
-    projection,
-    size
-  ) {
-    if (
-      !projection ||
-      !projection.visible ||
-      !projection.screen
-    ) {
-      return false;
-    }
-
-    const width =
-      projection.viewport &&
-      Number.isFinite(
-        projection.viewport.width
-      )
-        ? projection.viewport.width
-        : state.orbitField.clientWidth;
-
-    const height =
-      projection.viewport &&
-      Number.isFinite(
-        projection.viewport.height
-      )
-        ? projection.viewport.height
-        : state.orbitField.clientHeight;
-
-    const radius =
-      size * 0.5;
-
-    const padding =
-      CONFIG.semanticViewportPadding;
-
-    return (
-      projection.screen.x -
-        radius >=
-        padding &&
-      projection.screen.y -
-        radius >=
-        padding &&
-      projection.screen.x +
-        radius <=
-        width -
-        padding &&
-      projection.screen.y +
-        radius <=
-        height -
-        padding
-    );
-  }
-
-  function disableSemanticControl(node) {
-    const element =
-      node.semanticElement;
-
-    if (!element) {
-      return;
-    }
-
-    const cache =
-      node.lastSemantic;
-
-    if (
-      cache.visible === false &&
-      cache.interactive === false
-    ) {
-      state.counters.semanticWritesSkipped +=
-        1;
-
-      return;
-    }
-
-    element.style.opacity =
-      "0";
-
-    element.style.pointerEvents =
-      "none";
-
-    element.setAttribute(
-      "aria-hidden",
-      "true"
-    );
-
-    element.tabIndex =
-      -1;
-
-    cache.visible =
+    renderer.available =
       false;
-
-    cache.interactive =
-      false;
-
-    state.counters.semanticUpdates +=
-      1;
   }
 
-  function syncSemanticControl(
-    node,
-    projection
+  function rebuildContextRenderer(id) {
+    const current =
+      state.contexts.get(id);
+
+    invariant(
+      current,
+      `SHOWROOM_CRYSTALS_CONTEXT_NOT_FOUND:${id}`
+    );
+
+    const canvas =
+      current.canvas;
+
+    destroyContextRenderer(
+      current,
+      {
+        removeListeners:
+          true
+      }
+    );
+
+    const replacement =
+      createContextRenderer(
+        id,
+        canvas
+      );
+
+    state.contexts.set(
+      id,
+      replacement
+    );
+  }
+
+  function createContextRenderer(
+    id,
+    canvas
   ) {
-    const element =
-      node.semanticElement;
-
-    if (
-      !element ||
-      !state.orbitField.contains(
-        element
-      )
-    ) {
-      return;
-    }
-
-    if (
-      !node.visible ||
-      node.opacity <= 0.025 ||
-      !projection ||
-      !projection.visible
-    ) {
-      disableSemanticControl(node);
-
-      return;
-    }
-
-    const baseSize =
-      node.size ===
-      NODE_TYPES.LARGE
-        ? CONFIG.semanticLargeSize
-        : CONFIG.semanticChildSize;
-
-    const size =
-      Math.max(
-        CONFIG.semanticMinimumSize,
-        baseSize *
-        clamp(
-          node.scale,
-          0.64,
-          1.35
-        )
-      );
-
-    if (
-      !isProjectionStrictlyInsideField(
-        projection,
-        size
-      )
-    ) {
-      state.counters
-        .semanticRejectedOutsideField +=
-        1;
-
-      disableSemanticControl(node);
-
-      return;
-    }
-
-    const x =
-      projection.screen.x;
-
-    const y =
-      projection.screen.y;
-
-    const interactive =
-      !state.held &&
-      state.sceneVisible &&
-      state.documentVisible &&
-      !state.pageScrolling;
-
-    const cache =
-      node.lastSemantic;
-
-    const positionChanged =
-      !nearlyEqual(
-        cache.x,
-        x,
-        CONFIG.semanticWriteTolerance
-      ) ||
-      !nearlyEqual(
-        cache.y,
-        y,
-        CONFIG.semanticWriteTolerance
-      );
-
-    const sizeChanged =
-      !nearlyEqual(
-        cache.size,
-        size,
-        CONFIG.semanticWriteTolerance
-      );
-
-    const stateChanged =
-      cache.visible !== true ||
-      cache.interactive !== interactive;
-
-    if (
-      !positionChanged &&
-      !sizeChanged &&
-      !stateChanged
-    ) {
-      state.counters.semanticWritesSkipped +=
-        1;
-
-      return;
-    }
-
-    element.style.position =
-      "absolute";
-
-    element.style.left =
-      `${x}px`;
-
-    element.style.top =
-      `${y}px`;
-
-    element.style.right =
-      "auto";
-
-    element.style.bottom =
-      "auto";
-
-    element.style.width =
-      `${size}px`;
-
-    element.style.height =
-      `${size}px`;
-
-    element.style.margin =
-      "0";
-
-    element.style.transform =
-      "translate(-50%, -50%)";
-
-    element.style.opacity =
-      "1";
-
-    element.style.pointerEvents =
-      interactive
-        ? "auto"
-        : "none";
-
-    element.style.background =
-      "transparent";
-
-    element.style.borderColor =
-      "transparent";
-
-    element.style.boxShadow =
-      "none";
-
-    element.style.color =
-      "transparent";
-
-    element.style.webkitTapHighlightColor =
-      "transparent";
-
-    element.setAttribute(
-      "aria-hidden",
-      interactive
-        ? "false"
-        : "true"
+    invariant(
+      isCanvas(canvas),
+      `SHOWROOM_CRYSTALS_${id.toUpperCase()}_CANVAS_REQUIRED`
     );
 
-    element.tabIndex =
-      interactive
-        ? 0
-        : -1;
+    const gl =
+      canvas.getContext(
+        "webgl",
+        {
+          antialias:
+            true,
 
-    element.setAttribute(
-      ATTRIBUTES.fallbackRendering,
-      "hidden"
-    );
+          alpha:
+            true,
 
-    cache.visible =
-      true;
+          depth:
+            true,
 
-    cache.interactive =
-      interactive;
+          premultipliedAlpha:
+            true,
 
-    cache.x =
-      x;
-
-    cache.y =
-      y;
-
-    cache.size =
-      size;
-
-    state.counters.semanticUpdates +=
-      1;
-  }
-
-  function drawNode({
-    context,
-    projection
-  }, node) {
-    if (
-      state.disposed ||
-      state.failed ||
-      !node.visible ||
-      node.opacity <= 0.015
-    ) {
-      return;
-    }
-
-    drawFacetedCrystal(
-      context,
-      node,
-      projection
-    );
-
-    state.counters.drawCalls +=
-      1;
-  }
-
-  function positionSemanticControls() {
-    if (
-      !state.compositor ||
-      typeof state.compositor
-        .projectWorldToScreen !==
-        "function"
-    ) {
-      return;
-    }
-
-    let visibleCount = 0;
-
-    for (
-      const node
-      of state.nodes.values()
-    ) {
-      if (
-        !node.visible ||
-        node.opacity <= 0.025
-      ) {
-        disableSemanticControl(
-          node
-        );
-
-        continue;
-      }
-
-      const projection =
-        state.compositor
-          .projectWorldToScreen(
-            node.worldPosition
-          );
-
-      syncSemanticControl(
-        node,
-        projection
+          preserveDrawingBuffer:
+            false
+        }
       );
 
-      if (
-        projection &&
-        projection.visible
-      ) {
-        visibleCount += 1;
-      }
-    }
+    invariant(
+      gl,
+      `SHOWROOM_CRYSTALS_${id.toUpperCase()}_WEBGL_UNAVAILABLE`
+    );
 
-    state.counters.visibleNodes =
-      visibleCount;
-  }
+    gl.enable(
+      gl.DEPTH_TEST
+    );
 
-  function nodeMetadata(node) {
-    return Object.freeze({
-      objectId:
-        node.id,
+    gl.depthFunc(
+      gl.LEQUAL
+    );
 
-      size:
-        node.size,
+    gl.enable(
+      gl.BLEND
+    );
 
-      behavior:
-        node.behavior,
+    gl.blendFunc(
+      gl.SRC_ALPHA,
+      gl.ONE_MINUS_SRC_ALPHA
+    );
 
-      clusterId:
-        node.clusterId ||
+    gl.disable(
+      gl.CULL_FACE
+    );
+
+    const program =
+      createProgram(gl);
+
+    const renderer = {
+      id,
+      canvas,
+      gl,
+      program,
+
+      available:
+        true,
+
+      contextLost:
+        false,
+
+      width:
+        0,
+
+      height:
+        0,
+
+      attribs:
+        Object.freeze({
+          position:
+            gl.getAttribLocation(
+              program,
+              "aPosition"
+            ),
+
+          normal:
+            gl.getAttribLocation(
+              program,
+              "aNormal"
+            ),
+
+          color:
+            gl.getAttribLocation(
+              program,
+              "aColor"
+            ),
+
+          sparkleIndex:
+            gl.getAttribLocation(
+              program,
+              "aSparkleIndex"
+            )
+        }),
+
+      uniforms:
+        Object.freeze({
+          model:
+            gl.getUniformLocation(
+              program,
+              "uModel"
+            ),
+
+          view:
+            gl.getUniformLocation(
+              program,
+              "uView"
+            ),
+
+          projection:
+            gl.getUniformLocation(
+              program,
+              "uProjection"
+            ),
+
+          normalMatrix:
+            gl.getUniformLocation(
+              program,
+              "uNormalMatrix"
+            ),
+
+          time:
+            gl.getUniformLocation(
+              program,
+              "uTime"
+            ),
+
+          opacity:
+            gl.getUniformLocation(
+              program,
+              "uOpacity"
+            ),
+
+          scale:
+            gl.getUniformLocation(
+              program,
+              "uScale"
+            ),
+
+          emissive:
+            gl.getUniformLocation(
+              program,
+              "uEmissive"
+            ),
+
+          rimStrength:
+            gl.getUniformLocation(
+              program,
+              "uRimStrength"
+            ),
+
+          sparkleStrength:
+            gl.getUniformLocation(
+              program,
+              "uSparkleStrength"
+            ),
+
+          haloStrength:
+            gl.getUniformLocation(
+              program,
+              "uHaloStrength"
+            ),
+
+          primaryColor:
+            gl.getUniformLocation(
+              program,
+              "uPrimaryColor"
+            ),
+
+          secondaryColor:
+            gl.getUniformLocation(
+              program,
+              "uSecondaryColor"
+            ),
+
+          warmSpecular:
+            gl.getUniformLocation(
+              program,
+              "uWarmSpecular"
+            ),
+
+          coolRim:
+            gl.getUniformLocation(
+              program,
+              "uCoolRim"
+            ),
+
+          reducedMotion:
+            gl.getUniformLocation(
+              program,
+              "uReducedMotion"
+            ),
+
+          saturation:
+            gl.getUniformLocation(
+              program,
+              "uSaturation"
+            ),
+
+          haloPass:
+            gl.getUniformLocation(
+              program,
+              "uHaloPass"
+            ),
+
+          haloExpansion:
+            gl.getUniformLocation(
+              program,
+              "uHaloExpansion"
+            )
+        }),
+
+      meshes:
+        new Map(),
+
+      onContextLost:
         null,
 
-      geometry:
-        node.geometryType,
+      onContextRestored:
+        null
+    };
 
-      materialFamily:
-        node.materialFamily,
-
-      opacity:
-        node.opacity,
-
-      scale:
-        node.scale,
-
-      prominence:
-        node.prominence,
-
-      halo:
-        node.halo
-    });
-  }
-
-  function registerNode(node) {
-    if (
-      !state.compositor ||
-      typeof state.compositor
-        .registerNode !==
-        "function"
-    ) {
-      throw new Error(
-        "SHOWROOM_COMPOSITOR.registerNode() is unavailable."
-      );
-    }
-
-    const registration =
-      state.compositor.registerNode({
-        id:
-          node.id,
-
-        owner:
-          OWNER,
-
-        getWorldPosition() {
-          return {
-            x:
-              node.worldPosition.x,
-
-            y:
-              node.worldPosition.y,
-
-            z:
-              node.worldPosition.z
-          };
-        },
-
-        isVisible() {
-          return (
-            node.visible &&
-            node.opacity > 0.015
-          );
-        },
-
-        getSortBias() {
-          return node.size ===
-            NODE_TYPES.LARGE
-            ? 0.005
-            : 0.012;
-        },
-
-        getMetadata() {
-          return nodeMetadata(
-            node
-          );
-        },
-
-        draw(drawContext) {
-          drawNode(
-            drawContext,
-            node
-          );
-        },
-
-        hysteresis:
-          node.size ===
-          NODE_TYPES.LARGE
-            ? 0.09
-            : 0.07
-      });
-
-    node.registration =
-      registration;
-
-    state.registrations.set(
-      node.id,
-      registration
-    );
-
-    state.counters.registeredNodes +=
-      1;
-  }
-
-  function unregisterAllNodes() {
     for (
       const [
-        nodeId,
-        registration
+        type,
+        cpuMesh
       ]
-      of state.registrations
-        .entries()
+      of state.cpuMeshes
     ) {
-      try {
-        if (
-          registration &&
-          typeof registration.unregister ===
-            "function"
-        ) {
-          registration.unregister();
-        } else if (
-          state.compositor &&
-          typeof state.compositor
-            .unregisterNode ===
-            "function"
-        ) {
-          state.compositor.unregisterNode(
-            nodeId
+      renderer.meshes.set(
+        type,
+        buildGpuMesh(
+          gl,
+          cpuMesh
+        )
+      );
+    }
+
+    renderer.onContextLost =
+      event => {
+        event.preventDefault();
+
+        renderer.available =
+          false;
+
+        renderer.contextLost =
+          true;
+
+        state.contextDegraded =
+          true;
+
+        state.counters
+          .contextLosses +=
+          1;
+
+        stopAnimationDriver();
+
+        publishReceipt(
+          "context-lost",
+          {
+            context:
+              id,
+
+            recoverable:
+              true,
+
+            recoveryRequested:
+              true,
+
+            controllerReadinessRevoked:
+              false,
+
+            fallbackRestorationRequested:
+              false,
+
+            rendererRegistrationRetained:
+              true,
+
+            nodeRegistrationsRetained:
+              true,
+
+            compositorCanvasRemoved:
+              false
+          }
+        );
+      };
+
+    renderer.onContextRestored =
+      () => {
+        state.counters
+          .contextRestores +=
+          1;
+
+        try {
+          rebuildContextRenderer(id);
+
+          const rearReady =
+            isContextReady(
+              CONTEXT_IDS.REAR
+            );
+
+          const frontReady =
+            isContextReady(
+              CONTEXT_IDS.FRONT
+            );
+
+          publishReceipt(
+            "context-restored",
+            {
+              context:
+                id,
+
+              resourcesRecreated:
+                true,
+
+              rearContextReady:
+                rearReady,
+
+              frontContextReady:
+                frontReady
+            }
+          );
+
+          readControllerFrame();
+
+          if (
+            rearReady &&
+            frontReady
+          ) {
+            state.contextDegraded =
+              false;
+
+            state.compositor.requestRender(
+              `crystal-context-restored:${id}`
+            );
+
+            evaluateAnimationDriver();
+
+            publishReceipt(
+              "context-recovery-complete",
+              {
+                context:
+                  id,
+
+                controllerReadinessRetained:
+                  true,
+
+                fallbackRestorationOccurred:
+                  false
+              }
+            );
+          }
+        } catch (error) {
+          failRuntime(
+            error,
+            `context-restore:${id}`
           );
         }
-      } catch {
-        /* Best-effort rollback. */
-      }
-    }
+      };
 
-    state.registrations.clear();
-    state.counters.registeredNodes = 0;
+    canvas.addEventListener(
+      "webglcontextlost",
+      renderer.onContextLost
+    );
+
+    canvas.addEventListener(
+      "webglcontextrestored",
+      renderer.onContextRestored
+    );
+
+    return renderer;
   }
 
-  function requestCompositorFrame(
-    reason
-  ) {
-    if (
-      state.disposed ||
-      state.failed ||
-      isRenderingSuspended()
-    ) {
-      return false;
-    }
+  function createGpuResources() {
+    const canvases =
+      state.compositor
+        .getCanvases();
 
-    if (
-      state.compositor &&
-      typeof state.compositor
-        .requestFrame ===
-        "function"
-    ) {
-      state.compositor.requestFrame(
-        reason
-      );
+    invariant(
+      canvases &&
+      isCanvas(canvases.rear) &&
+      isCanvas(canvases.front),
+      "SHOWROOM_CRYSTALS_COMPOSITOR_CANVASES_REQUIRED"
+    );
 
-      return true;
-    }
-
-    window.dispatchEvent(
-      new CustomEvent(
-        EVENTS.compositorRequestFrame,
-        {
-          detail:
-            Object.freeze({
-              reason,
-
-              source:
-                CONTRACT
-            })
-        }
+    state.contexts.set(
+      CONTEXT_IDS.REAR,
+      createContextRenderer(
+        CONTEXT_IDS.REAR,
+        canvases.rear
       )
     );
 
-    return true;
-  }
-
-  function isRenderingSuspended() {
-    return (
-      !state.sceneVisible ||
-      !state.documentVisible ||
-      state.pageScrolling
+    state.contexts.set(
+      CONTEXT_IDS.FRONT,
+      createContextRenderer(
+        CONTEXT_IDS.FRONT,
+        canvases.front
+      )
     );
   }
 
-  function reflectSuspensionState() {
-    const suspended =
-      isRenderingSuspended();
-
-    setRootAttribute(
-      ATTRIBUTES.sceneVisible,
-      state.sceneVisible
-        ? "true"
-        : "false"
-    );
-
-    setRootAttribute(
-      ATTRIBUTES.suspended,
-      suspended
-        ? "true"
-        : "false"
-    );
-
+  function destroyGpuResources() {
     for (
-      const node
-      of state.nodes.values()
+      const renderer
+      of state.contexts.values()
     ) {
-      if (suspended) {
-        disableSemanticControl(
-          node
+      try {
+        destroyContextRenderer(
+          renderer
         );
-      }
-    }
-  }
-
-  function stopAnimationLoop() {
-    state.running = false;
-
-    if (state.raf) {
-      cancelAnimationFrame(
-        state.raf
-      );
-
-      state.raf = 0;
-    }
-
-    state.lastTime = 0;
-  }
-
-  function ensureAnimation(
-    reason = "state-change"
-  ) {
-    if (
-      state.failed ||
-      state.disposed ||
-      !state.ready
-    ) {
-      return false;
-    }
-
-    state.dirty = true;
-
-    reflectSuspensionState();
-
-    if (isRenderingSuspended()) {
-      stopAnimationLoop();
-
-      return false;
-    }
-
-    if (!state.running) {
-      state.running = true;
-      state.lastTime = 0;
-      state.counters.resumedAnimations +=
-        1;
-
-      state.raf =
-        requestAnimationFrame(
-          animate
-        );
-    }
-
-    requestCompositorFrame(
-      reason
-    );
-
-    return true;
-  }
-
-  function shouldContinueAnimating() {
-    if (
-      isRenderingSuspended() ||
-      state.held
-    ) {
-      return false;
-    }
-
-    if (state.interactionActive) {
-      return true;
-    }
-
-    if (!isSceneSettled()) {
-      return true;
-    }
-
-    if (
-      !state.reducedMotion &&
-      state.sceneVisible &&
-      state.documentVisible &&
-      !state.pageScrolling
-    ) {
-      return true;
-    }
-
-    return false;
-  }
-
-  function animate(now) {
-    state.raf = 0;
-
-    if (
-      !state.running ||
-      state.disposed ||
-      state.failed ||
-      isRenderingSuspended()
-    ) {
-      state.counters.suspendedFrames +=
-        1;
-
-      stopAnimationLoop();
-
-      return;
-    }
-
-    const seconds =
-      now * 0.001;
-
-    const delta =
-      state.lastTime
-        ? clamp(
-            seconds -
-            state.lastTime,
-            0,
-            0.05
-          )
-        : 0.016;
-
-    state.lastTime =
-      seconds;
-
-    updateRootState();
-
-    updateInterpolatedState(
-      delta,
-      now
-    );
-
-    positionSemanticControls();
-
-    requestCompositorFrame(
-      "crystal-animation"
-    );
-
-    state.dirty = false;
-
-    if (
-      shouldContinueAnimating()
-    ) {
-      state.raf =
-        requestAnimationFrame(
-          animate
-        );
-
-      return;
-    }
-
-    stopAnimationLoop();
-  }
-
-  function handleOrbitMotion(event) {
-    if (
-      state.disposed ||
-      state.failed ||
-      state.held
-    ) {
-      return;
-    }
-
-    const detail =
-      event &&
-      event.detail
-        ? event.detail
-        : {};
-
-    const quaternion =
-      quaternionFromObject(
-        detail.quaternion
-      );
-
-    const activeClusterId =
-      normalize(
-        detail.activeClusterId
-      );
-
-    if (
-      detail.mode === "cluster" ||
-      detail.mode ===
-        "cluster-child" ||
-      detail.mode ===
-        "cluster-parent"
-    ) {
-      const clusterId =
-        activeClusterId ||
-        state.activeClusterId;
-
-      if (clusterId) {
-        const current =
-          state.clusterTargetOrientations
-            .get(clusterId) ||
-          [0, 0, 0, 1];
-
-        state.clusterTargetOrientations
-          .set(
-            clusterId,
-            quaternionMultiply(
-              quaternion,
-              current
-            )
-          );
-      }
-    } else {
-      state.targetOrientation =
-        quaternionMultiply(
-          quaternion,
-          state.targetOrientation
-        );
-    }
-
-    state.counters.motionEvents += 1;
-
-    ensureAnimation(
-      "interaction-motion"
-    );
-  }
-
-  function handleMotionStart() {
-    state.interactionActive =
-      true;
-
-    ensureAnimation(
-      "interaction-motion-start"
-    );
-  }
-
-  function handleMotionEnd() {
-    state.interactionActive =
-      false;
-
-    ensureAnimation(
-      "interaction-motion-end"
-    );
-  }
-
-  function handleClusterChanged(
-    event
-  ) {
-    const detail =
-      event &&
-      event.detail
-        ? event.detail
-        : {};
-
-    state.activeClusterId =
-      detail.expanded
-        ? normalize(
-            detail.clusterId
-          )
-        : (
-            state.activeClusterId ===
-            normalize(
-              detail.clusterId
-            )
-              ? ""
-              : state.activeClusterId
-          );
-
-    updateNodeTargets();
-
-    ensureAnimation(
-      "cluster-state-changed"
-    );
-  }
-
-  function handleDocumentVisibility() {
-    state.documentVisible =
-      !document.hidden;
-
-    reflectSuspensionState();
-
-    if (state.documentVisible) {
-      ensureAnimation(
-        "document-visible"
-      );
-    } else {
-      stopAnimationLoop();
-    }
-  }
-
-  function handlePageScroll() {
-    if (
-      state.disposed ||
-      state.failed
-    ) {
-      return;
-    }
-
-    state.pageScrolling =
-      true;
-
-    reflectSuspensionState();
-    stopAnimationLoop();
-
-    if (state.scrollResumeTimer) {
-      clearTimeout(
-        state.scrollResumeTimer
-      );
-    }
-
-    state.scrollResumeTimer =
-      window.setTimeout(
-        () => {
-          state.scrollResumeTimer = 0;
-          state.pageScrolling = false;
-
-          reflectSuspensionState();
-
-          ensureAnimation(
-            "page-scroll-ended"
-          );
-        },
-        CONFIG.pageScrollPauseMs
-      );
-  }
-
-  function initializeVisibilityObserver() {
-    if (
-      "IntersectionObserver" in
-      window
-    ) {
-      const observer =
-        new IntersectionObserver(
-          entries => {
-            const entry =
-              entries[0];
-
-            if (!entry) {
-              return;
-            }
-
-            const visible =
-              entry.isIntersecting &&
-              entry.intersectionRatio >=
-                CONFIG.intersectionThreshold;
-
-            if (
-              state.sceneVisible ===
-              visible
-            ) {
-              return;
-            }
-
-            state.sceneVisible =
-              visible;
-
-            reflectSuspensionState();
-
-            if (visible) {
-              ensureAnimation(
-                "scene-visible"
-              );
-            } else {
-              stopAnimationLoop();
-            }
-
-            publishReceipt(
-              visible
-                ? "scene-visible"
-                : "scene-hidden"
-            );
-          },
-          {
-            root:
-              null,
-
-            threshold:
-              [
-                0,
-                CONFIG.intersectionThreshold,
-                0.25,
-                0.75
-              ]
-          }
-        );
-
-      observer.observe(
-        state.orbitField
-      );
-
-      addObserver(observer);
-
-      return;
-    }
-
-    state.sceneVisible =
-      true;
-  }
-
-  function initializeRootObserver() {
-    if (!state.root) {
-      return;
-    }
-
-    const observer =
-      new MutationObserver(
-        () => {
-          updateRootState();
-          updateNodeTargets();
-
-          ensureAnimation(
-            "root-state-mutated"
-          );
-        }
-      );
-
-    observer.observe(
-      state.root,
-      {
-        attributes:
-          true,
-
-        attributeFilter:
-          [
-            ATTRIBUTES.activeCluster,
-            ATTRIBUTES.reducedMotion,
-            ATTRIBUTES.held
-          ]
-      }
-    );
-
-    addObserver(observer);
-  }
-
-  function setFallbackPaintVisible(
-    visible
-  ) {
-    const fallbackStars =
-      Array.from(
-        state.orbitField
-          .querySelectorAll(
-            SELECTORS.fallbackStar
-          )
-      );
-
-    const fallbackLayers =
-      Array.from(
-        state.orbitField
-          .querySelectorAll(
-            [
-              SELECTORS.primaryLayer,
-              SELECTORS.cluster
-            ].join(",")
-          )
-      );
-
-    for (
-      const star
-      of fallbackStars
-    ) {
-      star.setAttribute(
-        ATTRIBUTES.fallbackRendering,
-        visible
-          ? "visible"
-          : "hidden"
-      );
-
-      if (visible) {
-        star.style.removeProperty(
-          "opacity"
-        );
-
-        star.style.removeProperty(
-          "pointer-events"
-        );
-
-        star.style.removeProperty(
-          "background"
-        );
-
-        star.style.removeProperty(
-          "border-color"
-        );
-
-        star.style.removeProperty(
-          "box-shadow"
-        );
-
-        star.style.removeProperty(
-          "color"
-        );
+      } catch {
+        /* Continue bounded resource disposal. */
       }
     }
 
-    for (
-      const layer
-      of fallbackLayers
-    ) {
-      layer.setAttribute(
-        ATTRIBUTES.fallbackVisibility,
-        visible
-          ? "visible"
-          : "semantic-only"
-      );
-    }
-
-    setRootAttribute(
-      ATTRIBUTES.ready,
-      visible
-        ? "false"
-        : "true"
-    );
-  }
-
-  function resolveCompositor() {
-    const compositor =
-      window.SHOWROOM_COMPOSITOR;
-
-    if (
-      !compositor ||
-      typeof compositor
-        .registerNode !==
-        "function" ||
-      typeof compositor
-        .projectWorldToScreen !==
-        "function" ||
-      typeof compositor
-        .requestFrame !==
-        "function"
-    ) {
-      return false;
-    }
-
-    state.compositor =
-      compositor;
-
-    return true;
-  }
-
-  function completeReadiness() {
-    if (
-      state.ready ||
-      state.failed ||
-      state.disposed
-    ) {
-      return;
-    }
-
-    if (
-      state.registrations.size !==
-      state.nodes.size
-    ) {
-      throw new Error(
-        "Not every crystal node was registered with the compositor."
-      );
-    }
-
-    state.ready = true;
-
-    setRootAttribute(
-      ATTRIBUTES.ready,
-      "true"
-    );
-
-    setRootAttribute(
-      ATTRIBUTES.state,
-      "ready"
-    );
-
-    setFallbackPaintVisible(
-      false
-    );
-
-    reflectSuspensionState();
-
-    publishReceipt(
-      "ready"
-    );
-
-    dispatch(
-      EVENTS.ready,
-      {
-        nodeCount:
-          state.nodes.size,
-
-        largeNodeCount:
-          state.counters.largeNodes,
-
-        smallNodeCount:
-          state.counters.smallNodes,
-
-        geometryCount:
-          state.geometries.size,
-
-        semanticControlsAssociated:
-          state.semanticObjects.size
-      }
-    );
-
-    ensureAnimation(
-      "initial-animation"
-    );
-  }
-
-  function registerAllNodes() {
-    unregisterAllNodes();
-
-    for (
-      const node
-      of state.nodes.values()
-    ) {
-      registerNode(node);
-    }
-
-    completeReadiness();
-  }
-
-  function attemptCompositorConnection() {
-    if (
-      state.disposed ||
-      state.failed ||
-      state.ready
-    ) {
-      return;
-    }
-
-    if (!resolveCompositor()) {
-      return;
-    }
-
-    try {
-      registerAllNodes();
-    } catch (error) {
-      fail(error);
-    }
-  }
-
-  function validateDom() {
-    const issues = [];
-
-    if (!state.root) {
-      issues.push(
-        "Missing [data-showroom-root]."
-      );
-    }
-
-    if (!state.orbitField) {
-      issues.push(
-        "Missing [data-showroom-orbit-field]."
-      );
-    }
-
-    if (!state.receipt) {
-      issues.push(
-        "Missing [data-showroom-crystals-receipt]."
-      );
-    }
-
-    if (issues.length) {
-      throw new Error(
-        issues.join(" ")
-      );
-    }
+    state.contexts.clear();
   }
 
   function discoverDom() {
@@ -4043,54 +3009,3287 @@
         SELECTORS.root
       );
 
-    state.receipt =
-      document.querySelector(
+    invariant(
+      state.root,
+      "SHOWROOM_CRYSTALS_ROOT_REQUIRED"
+    );
+
+    state.field =
+      state.root.querySelector(
+        SELECTORS.field
+      );
+
+    state.semanticLayer =
+      state.root.querySelector(
+        SELECTORS.semanticLayer
+      );
+
+    state.receiptOutput =
+      state.root.querySelector(
         SELECTORS.receipt
       );
+  }
 
-    state.orbitField =
-      document.querySelector(
-        SELECTORS.orbitField
+  function validateDom() {
+    invariant(
+      state.root,
+      "SHOWROOM_CRYSTALS_ROOT_REQUIRED"
+    );
+
+    invariant(
+      state.field,
+      "SHOWROOM_CRYSTALS_ORBIT_FIELD_REQUIRED"
+    );
+
+    invariant(
+      state.semanticLayer,
+      "SHOWROOM_CRYSTALS_SEMANTIC_LAYER_REQUIRED"
+    );
+
+    invariant(
+      state.field.contains(
+        state.semanticLayer
+      ),
+      "SHOWROOM_CRYSTALS_SEMANTIC_LAYER_OUTSIDE_FIELD"
+    );
+
+    const cardinals =
+      Array.from(
+        state.root.querySelectorAll(
+          SELECTORS.cardinalControls
+        )
+      );
+
+    const children =
+      Array.from(
+        state.root.querySelectorAll(
+          SELECTORS.childControls
+        )
+      );
+
+    invariant(
+      cardinals.length ===
+        4,
+      "SHOWROOM_CRYSTALS_CARDINAL_COUNT_INVALID",
+      {
+        expected:
+          4,
+
+        actual:
+          cardinals.length
+      }
+    );
+
+    invariant(
+      children.length ===
+        16,
+      "SHOWROOM_CRYSTALS_CHILD_COUNT_INVALID",
+      {
+        expected:
+          16,
+
+        actual:
+          children.length
+      }
+    );
+
+    for (
+      const element
+      of [
+        ...cardinals,
+        ...children
+      ]
+    ) {
+      invariant(
+        state.field.contains(
+          element
+        ),
+        "SHOWROOM_CRYSTALS_CONTROL_OUTSIDE_FIELD",
+        {
+          objectId:
+            element.dataset
+              .showroomObjectId ||
+            ""
+        }
+      );
+    }
+
+    return {
+      cardinals,
+      children
+    };
+  }
+
+  function readDescriptor(
+    element,
+    type
+  ) {
+    const objectId =
+      normalize(
+        element.dataset
+          .showroomObjectId
+      );
+
+    const cardinalId =
+      normalizeWing(
+        element.dataset
+          .showroomCardinalId
+      );
+
+    const clusterId =
+      normalizeWing(
+        element.dataset
+          .showroomClusterId
+      );
+
+    const childId =
+      normalize(
+        element.dataset
+          .showroomChildId
+      );
+
+    const behavior =
+      normalizeLower(
+        element.dataset
+          .showroomObjectBehavior
+      );
+
+    const visualClass =
+      normalize(
+        element.dataset
+          .showroomVisualClass
+      ).toUpperCase();
+
+    const emphasis =
+      normalizeLower(
+        element.dataset
+          .showroomEmphasis
+      );
+
+    const label =
+      normalize(
+        type ===
+          NODE_TYPES.CARDINAL
+          ? element.dataset
+              .showroomCardinalLabel
+          : element.dataset
+              .showroomChildLabel
+      ) ||
+      normalize(
+        element.getAttribute(
+          "aria-label"
+        )
+      ) ||
+      normalize(
+        element.textContent
+      );
+
+    invariant(
+      objectId,
+      "SHOWROOM_CRYSTALS_OBJECT_ID_REQUIRED"
+    );
+
+    invariant(
+      cardinalId,
+      `SHOWROOM_CRYSTALS_CARDINAL_ID_REQUIRED:${objectId}`
+    );
+
+    if (
+      type ===
+      NODE_TYPES.CHILD
+    ) {
+      invariant(
+        clusterId,
+        `SHOWROOM_CRYSTALS_CLUSTER_ID_REQUIRED:${objectId}`
+      );
+
+      invariant(
+        childId,
+        `SHOWROOM_CRYSTALS_CHILD_ID_REQUIRED:${objectId}`
+      );
+
+      invariant(
+        clusterId ===
+          cardinalId,
+        `SHOWROOM_CRYSTALS_CHILD_PARENT_MISMATCH:${objectId}`,
+        {
+          cardinalId,
+          clusterId
+        }
+      );
+    }
+
+    return {
+      type,
+      objectId,
+      cardinalId,
+
+      clusterId:
+        type ===
+        NODE_TYPES.CARDINAL
+          ? cardinalId
+          : clusterId,
+
+      childId:
+        type ===
+        NODE_TYPES.CHILD
+          ? childId
+          : "",
+
+      behavior,
+      visualClass,
+      emphasis,
+      label,
+
+      semanticElement:
+        element
+    };
+  }
+
+  function materialFamilyForDescriptor(
+    descriptor
+  ) {
+    if (
+      descriptor.type ===
+      NODE_TYPES.CARDINAL
+    ) {
+      return MATERIAL_FAMILIES.CARDINAL;
+    }
+
+    if (
+      descriptor.visualClass ===
+        "PRIMARY_PORTAL" ||
+      descriptor.emphasis ===
+        "primary-external"
+    ) {
+      return MATERIAL_FAMILIES
+        .PRIMARY_PORTAL;
+    }
+
+    if (
+      descriptor.visualClass ===
+        "PORTAL" ||
+      descriptor.emphasis ===
+        "external" ||
+      descriptor.behavior ===
+        "portal"
+    ) {
+      return MATERIAL_FAMILIES.PORTAL;
+    }
+
+    return MATERIAL_FAMILIES.LOCAL;
+  }
+
+  function childOrdinal(childId) {
+    const match =
+      normalize(childId)
+        .match(
+          /-(\d+)$/
+        );
+
+    invariant(
+      match,
+      `SHOWROOM_CRYSTALS_CHILD_SUFFIX_INVALID:${childId}`
+    );
+
+    const ordinal =
+      Number(match[1]);
+
+    invariant(
+      ordinal >=
+        1 &&
+      ordinal <=
+        4,
+      `SHOWROOM_CRYSTALS_CHILD_ORDINAL_INVALID:${childId}`
+    );
+
+    return ordinal;
+  }
+
+  function cardinalUnitDirection(wing) {
+    const target =
+      CARDINAL_TARGETS[wing];
+
+    return normalizeVector([
+      target.x,
+      target.y,
+      target.z
+    ]);
+  }
+
+  function cardinalCenterOffset(
+    wing,
+    distance
+  ) {
+    const direction =
+      cardinalUnitDirection(
+        wing
+      );
+
+    return {
+      x:
+        direction[0] *
+        distance,
+
+      y:
+        direction[1] *
+        distance,
+
+      z:
+        direction[2] *
+        distance
+    };
+  }
+
+  function childLocalPosition(
+    ordinal,
+    layout
+  ) {
+    const source =
+      CHILD_LAYOUT.positions[
+        ordinal
+      ];
+
+    return {
+      x:
+        source.x *
+        layout.horizontalRadius,
+
+      y:
+        source.y *
+        layout.verticalRadius,
+
+      z:
+        source.z *
+        layout.depthRadius
+    };
+  }
+
+  function rotateChildLocalForWing(
+    wing,
+    local
+  ) {
+    switch (wing) {
+      case "north":
+        return {
+          x:
+            local.x,
+
+          y:
+            local.y,
+
+          z:
+            local.z
+        };
+
+      case "east":
+        return {
+          x:
+            local.y,
+
+          y:
+            -local.x,
+
+          z:
+            -local.z
+        };
+
+      case "south":
+        return {
+          x:
+            -local.x,
+
+          y:
+            -local.y,
+
+          z:
+            local.z
+        };
+
+      case "west":
+        return {
+          x:
+            -local.y,
+
+          y:
+            local.x,
+
+          z:
+            -local.z
+        };
+
+      default:
+        return {
+          x:
+            local.x,
+
+          y:
+            local.y,
+
+          z:
+            local.z
+        };
+    }
+  }
+
+  function childTarget(
+    wing,
+    ordinal,
+    expanded
+  ) {
+    const layout =
+      expanded
+        ? CHILD_LAYOUT.expanded
+        : CHILD_LAYOUT.collapsed;
+
+    const cardinal =
+      CARDINAL_TARGETS[wing];
+
+    const centerOffset =
+      cardinalCenterOffset(
+        wing,
+        layout.centerOffset
+      );
+
+    const local =
+      rotateChildLocalForWing(
+        wing,
+        childLocalPosition(
+          ordinal,
+          layout
+        )
+      );
+
+    return {
+      x:
+        cardinal.x +
+        centerOffset.x +
+        local.x,
+
+      y:
+        cardinal.y +
+        centerOffset.y +
+        local.y,
+
+      z:
+        cardinal.z +
+        centerOffset.z +
+        local.z
+    };
+  }
+
+  function collapsedChildTarget(
+    wing,
+    ordinal
+  ) {
+    return childTarget(
+      wing,
+      ordinal,
+      false
+    );
+  }
+
+  function expandedChildTarget(
+    wing,
+    ordinal
+  ) {
+    return childTarget(
+      wing,
+      ordinal,
+      true
+    );
+  }
+
+  function makeNode(descriptor) {
+    const materialFamily =
+      materialFamilyForDescriptor(
+        descriptor
+      );
+
+    const nodeId =
+      `crystal:${descriptor.objectId}`;
+
+    const cardinalTarget =
+      CARDINAL_TARGETS[
+        descriptor.cardinalId
+      ];
+
+    const initialPosition =
+      descriptor.type ===
+      NODE_TYPES.CARDINAL
+        ? {
+            ...cardinalTarget
+          }
+        : collapsedChildTarget(
+            descriptor.cardinalId,
+            childOrdinal(
+              descriptor.childId
+            )
+          );
+
+    return {
+      id:
+        nodeId,
+
+      objectId:
+        descriptor.objectId,
+
+      semanticObjectId:
+        descriptor.objectId,
+
+      type:
+        descriptor.type,
+
+      cardinalId:
+        descriptor.cardinalId,
+
+      clusterId:
+        descriptor.clusterId,
+
+      childId:
+        descriptor.childId,
+
+      behavior:
+        descriptor.behavior,
+
+      visualClass:
+        descriptor.visualClass,
+
+      emphasis:
+        descriptor.emphasis,
+
+      label:
+        descriptor.label,
+
+      semanticElement:
+        descriptor.semanticElement,
+
+      materialFamily,
+
+      visible:
+        false,
+
+      targetVisible:
+        false,
+
+      settled:
+        false,
+
+      phase:
+        state.registry.size *
+        0.61 +
+        (
+          descriptor.type ===
+          NODE_TYPES.CARDINAL
+            ? 0.23
+            : 0.47
+        ),
+
+      current:
+        {
+          x:
+            initialPosition.x,
+
+          y:
+            initialPosition.y,
+
+          z:
+            initialPosition.z,
+
+          scale:
+            0.01,
+
+          opacity:
+            0,
+
+          emissive:
+            0,
+
+          rim:
+            0,
+
+          sparkle:
+            0,
+
+          halo:
+            0,
+
+          saturation:
+            1,
+
+          rx:
+            0,
+
+          ry:
+            0,
+
+          rz:
+            0,
+
+          float:
+            0,
+
+          spin:
+            0
+        },
+
+      target:
+        {
+          x:
+            initialPosition.x,
+
+          y:
+            initialPosition.y,
+
+          z:
+            initialPosition.z,
+
+          scale:
+            0.01,
+
+          opacity:
+            0,
+
+          emissive:
+            0,
+
+          rim:
+            0,
+
+          sparkle:
+            0,
+
+          halo:
+            0,
+
+          saturation:
+            1,
+
+          float:
+            0,
+
+          spin:
+            0
+        }
+    };
+  }
+
+  function buildRegistry(
+    cardinalElements,
+    childElements
+  ) {
+    const objectIds =
+      new Set();
+
+    const clusterCounts =
+      new Map(
+        WINGS.map(
+          wing => [
+            wing,
+            0
+          ]
+        )
+      );
+
+    for (
+      const element
+      of cardinalElements
+    ) {
+      const descriptor =
+        readDescriptor(
+          element,
+          NODE_TYPES.CARDINAL
+        );
+
+      invariant(
+        !objectIds.has(
+          descriptor.objectId
+        ),
+        `SHOWROOM_CRYSTALS_DUPLICATE_OBJECT_ID:${descriptor.objectId}`
+      );
+
+      objectIds.add(
+        descriptor.objectId
+      );
+
+      const node =
+        makeNode(descriptor);
+
+      state.registry.set(
+        node.id,
+        node
+      );
+    }
+
+    for (
+      const element
+      of childElements
+    ) {
+      const descriptor =
+        readDescriptor(
+          element,
+          NODE_TYPES.CHILD
+        );
+
+      invariant(
+        !objectIds.has(
+          descriptor.objectId
+        ),
+        `SHOWROOM_CRYSTALS_DUPLICATE_OBJECT_ID:${descriptor.objectId}`
+      );
+
+      objectIds.add(
+        descriptor.objectId
+      );
+
+      clusterCounts.set(
+        descriptor.clusterId,
+        (
+          clusterCounts.get(
+            descriptor.clusterId
+          ) ||
+          0
+        ) +
+        1
+      );
+
+      const node =
+        makeNode(descriptor);
+
+      state.registry.set(
+        node.id,
+        node
+      );
+    }
+
+    invariant(
+      objectIds.size ===
+        20,
+      "SHOWROOM_CRYSTALS_UNIQUE_OBJECT_COUNT_INVALID",
+      {
+        expected:
+          20,
+
+        actual:
+          objectIds.size
+      }
+    );
+
+    for (
+      const wing
+      of WINGS
+    ) {
+      invariant(
+        clusterCounts.get(
+          wing
+        ) ===
+          4,
+        `SHOWROOM_CRYSTALS_CLUSTER_COUNT_INVALID:${wing}`,
+        {
+          expected:
+            4,
+
+          actual:
+            clusterCounts.get(
+              wing
+            )
+        }
+      );
+
+      const cardinalNode =
+        Array.from(
+          state.registry.values()
+        ).find(
+          node =>
+            node.type ===
+              NODE_TYPES.CARDINAL &&
+            node.cardinalId ===
+              wing
+        );
+
+      invariant(
+        cardinalNode,
+        `SHOWROOM_CRYSTALS_CARDINAL_NODE_REQUIRED:${wing}`
+      );
+    }
+  }
+
+  function requireController() {
+    const controller =
+      window.SHOWROOM_CONTROLLER;
+
+    invariant(
+      controller,
+      "SHOWROOM_CRYSTALS_CONTROLLER_REQUIRED"
+    );
+
+    invariant(
+      controller.contract ===
+        CONTROLLER_CONTRACT,
+      "SHOWROOM_CRYSTALS_CONTROLLER_CONTRACT_INVALID"
+    );
+
+    invariant(
+      typeof controller
+        .getFrameState ===
+        "function",
+      "SHOWROOM_CRYSTALS_CONTROLLER_FRAME_SURFACE_REQUIRED"
+    );
+
+    return controller;
+  }
+
+  function validateControllerFrame(frame) {
+    return Boolean(
+      frame &&
+      typeof frame ===
+        "object" &&
+      frame.contract ===
+        CONTROLLER_CONTRACT &&
+      frame.controllerReady ===
+        true &&
+      frame.disposed ===
+        false &&
+      typeof frame
+        .presentationMode ===
+        "string" &&
+      typeof frame.held ===
+        "boolean" &&
+      typeof frame
+        .reducedMotion ===
+        "boolean" &&
+      frame.preview &&
+      typeof frame.preview ===
+        "object" &&
+      frame.readiness &&
+      typeof frame.readiness ===
+        "object"
+    );
+  }
+
+  function readControllerFrame() {
+    const frame =
+      state.controller
+        .getFrameState();
+
+    invariant(
+      validateControllerFrame(
+        frame
+      ),
+      "SHOWROOM_CRYSTALS_CONTROLLER_FRAME_INVALID"
+    );
+
+    state.controllerFrame =
+      frame;
+
+    return frame;
+  }
+
+  function requireCompositor() {
+    const compositor =
+      window.SHOWROOM_COMPOSITOR;
+
+    invariant(
+      compositor,
+      "SHOWROOM_CRYSTALS_COMPOSITOR_REQUIRED"
+    );
+
+    invariant(
+      compositor.contract ===
+        COMPOSITOR_CONTRACT,
+      "SHOWROOM_CRYSTALS_COMPOSITOR_CONTRACT_INVALID"
+    );
+
+    [
+      "getFrameState",
+      "getProjectionSnapshot",
+      "getCanvases",
+      "registerNode",
+      "registerRenderer",
+      "requestRender"
+    ].forEach(
+      surface => {
+        invariant(
+          typeof compositor[
+            surface
+          ] ===
+            "function",
+          `SHOWROOM_CRYSTALS_COMPOSITOR_SURFACE_REQUIRED:${surface}`
+        );
+      }
+    );
+
+    return compositor;
+  }
+
+  function compositorIsAuthoritativelyReady() {
+    return Boolean(
+      state.controllerFrame &&
+      state.controllerFrame
+        .readiness &&
+      state.controllerFrame
+        .readiness
+        .compositor ===
+        true &&
+      state.controllerFrame
+        .readiness
+        .compositorFailed !==
+        true
+    );
+  }
+
+  function frameValue(
+    frame,
+    key,
+    fallback = ""
+  ) {
+    return (
+      frame &&
+      Object.prototype
+        .hasOwnProperty.call(
+          frame,
+          key
+        )
+        ? frame[key]
+        : fallback
+    );
+  }
+
+  function previewObjectId(frame) {
+    return normalize(
+      frame &&
+      frame.preview
+        ? frame.preview.objectId
+        : ""
+    );
+  }
+
+  function activeCardinalId(frame) {
+    return normalizeWing(
+      frameValue(
+        frame,
+        "activeCardinalId",
+        ""
+      )
+    );
+  }
+
+  function activeClusterId(frame) {
+    return normalizeWing(
+      frameValue(
+        frame,
+        "activeClusterId",
+        ""
+      )
+    );
+  }
+
+  function activeChildId(frame) {
+    return normalize(
+      frameValue(
+        frame,
+        "activeChildId",
+        ""
+      )
+    );
+  }
+
+  function pendingRouteId(frame) {
+    return normalize(
+      frameValue(
+        frame,
+        "pendingRouteId",
+        ""
+      )
+    );
+  }
+
+  function presentationMode(frame) {
+    const mode =
+      normalizeLower(
+        frame.presentationMode
+      );
+
+    if (
+      Object.values(
+        PRESENTATION_MODES
+      ).includes(mode)
+    ) {
+      return mode;
+    }
+
+    return PRESENTATION_MODES.BASELINE;
+  }
+
+  function nodeMatchesObject(
+    node,
+    objectId
+  ) {
+    return Boolean(
+      objectId &&
+      (
+        node.objectId ===
+          objectId ||
+        node.childId ===
+          objectId ||
+        node.cardinalId ===
+          objectId
+      )
+    );
+  }
+
+  function routeMatchesNode(
+    node,
+    routeId
+  ) {
+    if (!routeId) {
+      return false;
+    }
+
+    const semanticRoute =
+      normalize(
+        node.semanticElement.dataset
+          .showroomRouteId ||
+        node.semanticElement.dataset
+          .showroomRoute ||
+        node.semanticElement
+          .getAttribute(
+            "href"
+          )
+      );
+
+    return (
+      node.objectId ===
+        routeId ||
+      node.childId ===
+        routeId ||
+      semanticRoute ===
+        routeId
+    );
+  }
+
+  function materialForNode(node) {
+    return (
+      MATERIALS[
+        node.materialFamily
+      ] ||
+      MATERIALS.LOCAL
+    );
+  }
+
+  function setTargetVisual(
+    node,
+    values
+  ) {
+    Object.assign(
+      node.target,
+      values
+    );
+  }
+
+  function computeTargets() {
+    const frame =
+      state.controllerFrame;
+
+    const mode =
+      presentationMode(frame);
+
+    if (
+      frame.held ===
+      true
+    ) {
+      for (
+        const node
+        of state.registry.values()
+      ) {
+        node.target.float =
+          0;
+
+        node.target.spin =
+          0;
+
+        node.target.sparkle =
+          0;
+      }
+
+      return;
+    }
+
+    const previewId =
+      previewObjectId(frame);
+
+    const activeCardinal =
+      activeCardinalId(frame);
+
+    const activeCluster =
+      activeClusterId(frame) ||
+      activeCardinal;
+
+    const activeChild =
+      activeChildId(frame);
+
+    const pendingRoute =
+      pendingRouteId(frame);
+
+    for (
+      const node
+      of state.registry.values()
+    ) {
+      const material =
+        materialForNode(node);
+
+      const isPreviewed =
+        nodeMatchesObject(
+          node,
+          previewId
+        );
+
+      const previewSupportsNode =
+        Boolean(
+          previewId &&
+          node.type ===
+            NODE_TYPES.CARDINAL &&
+          Array.from(
+            state.registry.values()
+          ).some(
+            candidate =>
+              candidate.type ===
+                NODE_TYPES.CHILD &&
+              candidate.cardinalId ===
+                node.cardinalId &&
+              nodeMatchesObject(
+                candidate,
+                previewId
+              )
+          )
+        );
+
+      const isActiveCardinal =
+        node.type ===
+          NODE_TYPES.CARDINAL &&
+        node.cardinalId ===
+          activeCardinal;
+
+      const isActiveChild =
+        node.type ===
+          NODE_TYPES.CHILD &&
+        nodeMatchesObject(
+          node,
+          activeChild
+        );
+
+      const isPendingRoute =
+        routeMatchesNode(
+          node,
+          pendingRoute
+        );
+
+      const inActiveCluster =
+        node.type ===
+          NODE_TYPES.CHILD &&
+        node.clusterId ===
+          activeCluster;
+
+      let position;
+
+      if (
+        node.type ===
+        NODE_TYPES.CARDINAL
+      ) {
+        position = {
+          ...CARDINAL_TARGETS[
+            node.cardinalId
+          ]
+        };
+      } else {
+        position =
+          inActiveCluster &&
+          mode ===
+            PRESENTATION_MODES.CLUSTER
+            ? expandedChildTarget(
+                node.cardinalId,
+                childOrdinal(
+                  node.childId
+                )
+              )
+            : collapsedChildTarget(
+                node.cardinalId,
+                childOrdinal(
+                  node.childId
+                )
+              );
+      }
+
+      let scale =
+        material.baseScale;
+
+      let opacity =
+        material.opacity;
+
+      let emissive =
+        material.emissive;
+
+      let rim =
+        material.rim;
+
+      let sparkle =
+        material.sparkle;
+
+      let halo =
+        material.halo;
+
+      let saturation =
+        material.saturation;
+
+      let visible =
+        mode !==
+        PRESENTATION_MODES.BASELINE;
+
+      if (
+        mode ===
+        PRESENTATION_MODES.BASELINE
+      ) {
+        opacity =
+          0;
+
+        scale =
+          0.01;
+
+        halo =
+          0;
+
+        sparkle =
+          0;
+
+        visible =
+          false;
+      }
+
+      if (
+        mode ===
+        PRESENTATION_MODES.CONSTELLATION
+      ) {
+        if (
+          node.type ===
+          NODE_TYPES.CARDINAL
+        ) {
+          scale =
+            isActiveCardinal
+              ? material.activeScale
+              : material.baseScale;
+
+          opacity =
+            isActiveCardinal
+              ? 1
+              : 0.94;
+        } else {
+          scale *=
+            0.82;
+
+          opacity *=
+            0.64;
+
+          halo *=
+            0.62;
+
+          sparkle *=
+            0.58;
+        }
+      }
+
+      if (
+        mode ===
+        PRESENTATION_MODES.CLUSTER
+      ) {
+        if (
+          node.type ===
+          NODE_TYPES.CARDINAL
+        ) {
+          if (
+            node.cardinalId ===
+            activeCluster
+          ) {
+            scale =
+              material.activeScale;
+
+            opacity =
+              1;
+
+            emissive *=
+              1.16;
+
+            rim *=
+              1.12;
+
+            halo *=
+              1.10;
+          } else {
+            scale *=
+              0.74;
+
+            opacity *=
+              0.46;
+
+            emissive *=
+              0.64;
+
+            rim *=
+              0.68;
+
+            halo *=
+              0.42;
+
+            sparkle *=
+              0.34;
+
+            position.x *=
+              1.06;
+
+            position.y *=
+              1.06;
+
+            position.z -=
+              0.18;
+          }
+        } else if (
+          inActiveCluster
+        ) {
+          scale =
+            material.activeScale;
+
+          opacity =
+            0.96;
+        } else {
+          scale *=
+            0.68;
+
+          opacity *=
+            0.28;
+
+          emissive *=
+            0.54;
+
+          rim *=
+            0.58;
+
+          halo *=
+            0.30;
+
+          sparkle *=
+            0.20;
+
+          position.x *=
+            1.05;
+
+          position.y *=
+            1.05;
+
+          position.z -=
+            0.28;
+        }
+      }
+
+      if (
+        mode ===
+        PRESENTATION_MODES.FRONT
+      ) {
+        const ancestryVisible =
+          (
+            node.type ===
+              NODE_TYPES.CARDINAL &&
+            node.cardinalId ===
+              activeCardinal
+          ) ||
+          (
+            node.type ===
+              NODE_TYPES.CHILD &&
+            (
+              nodeMatchesObject(
+                node,
+                activeChild
+              ) ||
+              node.clusterId ===
+                activeCluster
+            )
+          );
+
+        if (ancestryVisible) {
+          scale *=
+            nodeMatchesObject(
+              node,
+              activeChild
+            )
+              ? 0.94
+              : 0.82;
+
+          opacity *=
+            nodeMatchesObject(
+              node,
+              activeChild
+            )
+              ? 0.90
+              : 0.72;
+
+          emissive *=
+            0.82;
+
+          halo *=
+            0.58;
+
+          sparkle *=
+            0.36;
+        } else {
+          scale *=
+            0.58;
+
+          opacity *=
+            0.16;
+
+          emissive *=
+            0.42;
+
+          rim *=
+            0.46;
+
+          halo *=
+            0.18;
+
+          sparkle =
+            0;
+
+          position.x *=
+            1.08;
+
+          position.y *=
+            1.08;
+
+          position.z -=
+            0.58;
+        }
+      }
+
+      if (
+        isActiveCardinal ||
+        isActiveChild
+      ) {
+        scale =
+          Math.max(
+            scale,
+            material.selectedScale
+          );
+
+        opacity =
+          Math.max(
+            opacity,
+            0.98
+          );
+
+        emissive *=
+          1.24;
+
+        rim *=
+          1.18;
+
+        halo *=
+          1.18;
+      }
+
+      if (isPreviewed) {
+        scale =
+          Math.max(
+            scale,
+            material.previewScale
+          );
+
+        emissive *=
+          1.20;
+
+        rim *=
+          1.18;
+
+        halo *=
+          1.12;
+
+        opacity =
+          Math.max(
+            opacity,
+            0.96
+          );
+      } else if (
+        previewSupportsNode
+      ) {
+        scale *=
+          1.04;
+
+        emissive *=
+          1.08;
+
+        rim *=
+          1.06;
+
+        halo *=
+          1.05;
+      }
+
+      if (isPendingRoute) {
+        scale *=
+          1.06;
+
+        emissive *=
+          1.24;
+
+        rim *=
+          1.22;
+
+        halo *=
+          1.26;
+
+        sparkle *=
+          1.12;
+
+        opacity =
+          Math.max(
+            opacity,
+            0.98
+          );
+      }
+
+      if (
+        frame.reducedMotion ===
+        true
+      ) {
+        sparkle =
+          0;
+      }
+
+      node.targetVisible =
+        visible;
+
+      setTargetVisual(
+        node,
+        {
+          x:
+            position.x,
+
+          y:
+            position.y,
+
+          z:
+            position.z,
+
+          scale:
+            clamp(
+              scale,
+              0.01,
+              1.34
+            ),
+
+          opacity:
+            clamp(
+              opacity,
+              0,
+              1
+            ),
+
+          emissive:
+            clamp(
+              emissive,
+              0,
+              0.52
+            ),
+
+          rim:
+            clamp(
+              rim,
+              0,
+              1.72
+            ),
+
+          sparkle:
+            clamp(
+              sparkle,
+              0,
+              0.52
+            ),
+
+          halo:
+            clamp(
+              halo,
+              0,
+              1.42
+            ),
+
+          saturation:
+            clamp(
+              saturation,
+              0,
+              1
+            ),
+
+          float:
+            frame.reducedMotion
+              ? 0
+              : material.float,
+
+          spin:
+            frame.reducedMotion
+              ? 0
+              : material.spin
+        }
+      );
+    }
+  }
+
+  function nodeHasActiveInterpolation(
+    node
+  ) {
+    const keys = [
+      "x",
+      "y",
+      "z",
+      "scale",
+      "opacity",
+      "emissive",
+      "rim",
+      "sparkle",
+      "halo",
+      "saturation",
+      "float",
+      "spin"
+    ];
+
+    return keys.some(
+      key =>
+        Math.abs(
+          node.current[key] -
+          node.target[key]
+        ) >
+        (
+          key ===
+            "opacity" ||
+          key ===
+            "scale"
+            ? 0.001
+            : 0.002
+        )
+    );
+  }
+
+  function updateNodeState(
+    node,
+    deltaSeconds
+  ) {
+    const frame =
+      state.controllerFrame;
+
+    if (
+      frame.held ===
+      true
+    ) {
+      node.current.float =
+        0;
+
+      node.current.spin =
+        0;
+
+      node.current.sparkle =
+        0;
+
+      node.visible =
+        node.current.opacity >
+        QUALITY
+          .visibilityThreshold;
+
+      return false;
+    }
+
+    const reducedMotion =
+      frame.reducedMotion ===
+      true;
+
+    const interpolation =
+      Math.min(
+        1,
+        deltaSeconds *
+        (
+          reducedMotion
+            ? QUALITY
+                .reducedMotionSettleSpeed
+            : QUALITY
+                .transformSettleSpeed
+        )
+      );
+
+    const keys = [
+      "x",
+      "y",
+      "z",
+      "scale",
+      "opacity",
+      "emissive",
+      "rim",
+      "sparkle",
+      "halo",
+      "saturation",
+      "float",
+      "spin"
+    ];
+
+    for (
+      const key
+      of keys
+    ) {
+      node.current[key] =
+        lerp(
+          node.current[key],
+          node.target[key],
+          interpolation
+        );
+    }
+
+    if (reducedMotion) {
+      node.current.rx =
+        0;
+
+      node.current.ry =
+        0;
+
+      node.current.rz =
+        0;
+    } else {
+      node.current.rz +=
+        deltaSeconds *
+        node.current.spin;
+
+      node.current.ry =
+        Math.sin(
+          state.lastAnimationTime *
+          0.00042 +
+          node.phase
+        ) *
+        0.19 *
+        Math.max(
+          0.34,
+          node.current.opacity
+        );
+
+      node.current.rx =
+        Math.sin(
+          state.lastAnimationTime *
+          0.00031 +
+          node.phase *
+          0.73
+        ) *
+        0.12 *
+        Math.max(
+          0.34,
+          node.current.opacity
+        );
+    }
+
+    node.visible =
+      node.targetVisible ||
+      node.current.opacity >
+        QUALITY
+          .visibilityThreshold;
+
+    node.settled =
+      !nodeHasActiveInterpolation(
+        node
+      );
+
+    return !node.settled;
+  }
+
+  function ambientMotionPermitted() {
+    const frame =
+      state.controllerFrame;
+
+    return Boolean(
+      frame &&
+      frame.held !==
+        true &&
+      frame.reducedMotion !==
+        true &&
+      presentationMode(frame) !==
+        PRESENTATION_MODES.BASELINE &&
+      document.visibilityState !==
+        "hidden"
+    );
+  }
+
+  function shouldAnimationContinue() {
+    if (
+      state.disposed ||
+      state.failed ||
+      state.contextDegraded ||
+      !state.ready ||
+      !state.controllerFrame ||
+      document.visibilityState ===
+        "hidden"
+    ) {
+      return false;
+    }
+
+    if (
+      state.controllerFrame.held ===
+      true
+    ) {
+      return false;
+    }
+
+    for (
+      const node
+      of state.registry.values()
+    ) {
+      if (
+        nodeHasActiveInterpolation(
+          node
+        )
+      ) {
+        return true;
+      }
+    }
+
+    return ambientMotionPermitted();
+  }
+
+  function animationStep(now) {
+    state.animationRaf =
+      0;
+
+    if (
+      state.disposed ||
+      state.failed ||
+      state.contextDegraded ||
+      !state.ready
+    ) {
+      state.animationRunning =
+        false;
+
+      return;
+    }
+
+    const deltaSeconds =
+      state.lastAnimationTime
+        ? Math.min(
+            QUALITY
+              .maximumDeltaSeconds,
+            Math.max(
+              0,
+              (
+                now -
+                state.lastAnimationTime
+              ) /
+              1000
+            )
+          )
+        : 0.016;
+
+    state.lastAnimationTime =
+      now;
+
+    let changed =
+      false;
+
+    for (
+      const node
+      of state.registry.values()
+    ) {
+      changed =
+        updateNodeState(
+          node,
+          deltaSeconds
+        ) ||
+        changed;
+    }
+
+    const ambient =
+      ambientMotionPermitted();
+
+    if (
+      changed ||
+      ambient
+    ) {
+      if (
+        !ambient ||
+        now -
+          state.lastAmbientRequestTime >=
+          QUALITY
+            .ambientFrameIntervalMs
+      ) {
+        state.lastAmbientRequestTime =
+          now;
+
+        state.counters
+          .animationRequests +=
+          1;
+
+        state.compositor.requestRender(
+          "crystal-animation"
+        );
+      }
+    }
+
+    if (
+      shouldAnimationContinue()
+    ) {
+      state.animationRaf =
+        requestAnimationFrame(
+          animationStep
+        );
+
+      return;
+    }
+
+    state.animationRunning =
+      false;
+
+    state.lastAnimationTime =
+      0;
+  }
+
+  function startAnimationDriver() {
+    if (
+      state.animationRunning ||
+      state.disposed ||
+      state.failed ||
+      state.contextDegraded ||
+      !state.ready ||
+      document.visibilityState ===
+        "hidden"
+    ) {
+      return;
+    }
+
+    state.animationRunning =
+      true;
+
+    state.lastAnimationTime =
+      0;
+
+    state.animationRaf =
+      requestAnimationFrame(
+        animationStep
       );
   }
 
-  function initializeClusterOrientations() {
-    state.clusterOrientations.set(
-      "gauges",
-      [0, 0, 0, 1]
-    );
+  function stopAnimationDriver() {
+    if (state.animationRaf) {
+      cancelAnimationFrame(
+        state.animationRaf
+      );
+    }
 
-    state.clusterTargetOrientations.set(
-      "gauges",
-      [0, 0, 0, 1]
-    );
+    state.animationRaf =
+      0;
 
-    state.clusterOrientations.set(
-      "information",
-      [0, 0, 0, 1]
-    );
+    state.animationRunning =
+      false;
 
-    state.clusterTargetOrientations.set(
-      "information",
-      [0, 0, 0, 1]
+    state.lastAnimationTime =
+      0;
+  }
+
+  function evaluateAnimationDriver() {
+    if (
+      shouldAnimationContinue()
+    ) {
+      startAnimationDriver();
+    } else {
+      stopAnimationDriver();
+
+      if (
+        state.ready &&
+        !state.contextDegraded &&
+        !state.disposed &&
+        !state.failed
+      ) {
+        state.compositor.requestRender(
+          "crystal-settled"
+        );
+      }
+    }
+  }
+
+  function nodeWorldPosition(node) {
+    const floatY =
+      (
+        state.controllerFrame &&
+        state.controllerFrame.held !==
+          true &&
+        state.controllerFrame
+          .reducedMotion !==
+          true
+      )
+        ? Math.sin(
+            state.lastAnimationTime *
+            0.00095 +
+            node.phase
+          ) *
+          node.current.float
+        : 0;
+
+    return [
+      node.current.x,
+      node.current.y +
+        floatY,
+      node.current.z
+    ];
+  }
+
+  function nodeHitRadius(node) {
+    const base =
+      node.type ===
+      NODE_TYPES.CARDINAL
+        ? QUALITY.cardinalHitRadius
+        : QUALITY.childHitRadius;
+
+    return Math.max(
+      18,
+      base *
+      node.current.scale *
+      clamp(
+        node.current.opacity,
+        0.30,
+        1
+      )
     );
   }
 
-  function initializeEvents() {
+  function registerNodes() {
+    for (
+      const node
+      of state.registry.values()
+    ) {
+      const registration =
+        state.compositor
+          .registerNode({
+            id:
+              node.id,
+
+            semanticObjectId:
+              node.semanticObjectId,
+
+            cardinalId:
+              node.cardinalId,
+
+            childId:
+              node.childId,
+
+            clusterId:
+              node.clusterId,
+
+            semanticElement:
+              node.semanticElement,
+
+            getWorldPosition:
+              () =>
+                nodeWorldPosition(
+                  node
+                ),
+
+            getHitRadius:
+              () =>
+                nodeHitRadius(
+                  node
+                ),
+
+            isVisible:
+              () =>
+                node.visible &&
+                node.current.opacity >
+                  QUALITY
+                    .visibilityThreshold,
+
+            metadata:
+              {
+                contract:
+                  CONTRACT,
+
+                type:
+                  node.type,
+
+                objectId:
+                  node.objectId,
+
+                cardinalId:
+                  node.cardinalId,
+
+                clusterId:
+                  node.clusterId,
+
+                childId:
+                  node.childId,
+
+                behavior:
+                  node.behavior,
+
+                visualClass:
+                  node.visualClass,
+
+                emphasis:
+                  node.emphasis,
+
+                materialFamily:
+                  node.materialFamily,
+
+                label:
+                  node.label
+              }
+          });
+
+      invariant(
+        registration &&
+        typeof registration
+          .unregister ===
+          "function",
+        `SHOWROOM_CRYSTALS_NODE_REGISTRATION_FAILED:${node.id}`
+      );
+
+      state.nodeRegistrations.set(
+        node.id,
+        registration
+      );
+
+      state.counters
+        .nodeRegistrations +=
+        1;
+    }
+
+    invariant(
+      state.nodeRegistrations.size ===
+        20,
+      "SHOWROOM_CRYSTALS_REGISTERED_NODE_COUNT_INVALID"
+    );
+  }
+
+  function unregisterNodes() {
+    for (
+      const registration
+      of state.nodeRegistrations.values()
+    ) {
+      try {
+        if (
+          registration &&
+          typeof registration
+            .unregister ===
+            "function"
+        ) {
+          registration.unregister();
+
+          state.counters
+            .nodeUnregistrations +=
+            1;
+        }
+      } catch {
+        /* Continue bounded disposal. */
+      }
+    }
+
+    state.nodeRegistrations.clear();
+  }
+
+  function resizeRenderer(
+    renderer,
+    payload
+  ) {
+    const frame =
+      payload.frame;
+
+    const viewport =
+      frame &&
+      frame.viewport
+        ? frame.viewport
+        : null;
+
+    invariant(
+      viewport,
+      "SHOWROOM_CRYSTALS_RENDER_VIEWPORT_REQUIRED"
+    );
+
+    const expectedWidth =
+      Math.max(
+        1,
+        Math.round(
+          finiteNumber(
+            viewport.pixelWidth,
+            renderer.canvas.width
+          )
+        )
+      );
+
+    const expectedHeight =
+      Math.max(
+        1,
+        Math.round(
+          finiteNumber(
+            viewport.pixelHeight,
+            renderer.canvas.height
+          )
+        )
+      );
+
+    invariant(
+      renderer.canvas.width ===
+        expectedWidth &&
+      renderer.canvas.height ===
+        expectedHeight,
+      `SHOWROOM_CRYSTALS_${renderer.id.toUpperCase()}_CANVAS_DIMENSION_MISMATCH`,
+      {
+        expectedWidth,
+        expectedHeight,
+
+        actualWidth:
+          renderer.canvas.width,
+
+        actualHeight:
+          renderer.canvas.height
+      }
+    );
+
+    renderer.width =
+      renderer.canvas.width;
+
+    renderer.height =
+      renderer.canvas.height;
+
+    renderer.gl.viewport(
+      0,
+      0,
+      renderer.width,
+      renderer.height
+    );
+  }
+
+  function matrixFromFrame(
+    frame,
+    key
+  ) {
+    const matrix =
+      frame &&
+      frame.matrices
+        ? frame.matrices[key]
+        : null;
+
+    invariant(
+      Array.isArray(matrix) &&
+      matrix.length ===
+        16,
+      `SHOWROOM_CRYSTALS_${key.toUpperCase()}_MATRIX_REQUIRED`
+    );
+
+    return matrix;
+  }
+
+  function modelMatrix(node) {
+    const position =
+      nodeWorldPosition(node);
+
+    return multiply4(
+      translate4(
+        position[0],
+        position[1],
+        position[2]
+      ),
+      multiply4(
+        rotateZ4(
+          node.current.rz
+        ),
+        multiply4(
+          rotateY4(
+            node.current.ry
+          ),
+          rotateX4(
+            node.current.rx
+          )
+        )
+      )
+    );
+  }
+
+  function paletteForNode(node) {
+    return (
+      PALETTES[
+        node.cardinalId
+      ] ||
+      PALETTES.north
+    );
+  }
+
+  function applyNodeUniforms(
+    renderer,
+    node,
+    frame,
+    haloPass
+  ) {
+    const gl =
+      renderer.gl;
+
+    const view =
+      matrixFromFrame(
+        frame,
+        "view"
+      );
+
+    const projection =
+      matrixFromFrame(
+        frame,
+        "projection"
+      );
+
+    const model =
+      modelMatrix(node);
+
+    const modelView =
+      multiply4(
+        view,
+        model
+      );
+
+    const normalMatrix =
+      inverseTransposeNormalMatrix3(
+        modelView
+      );
+
+    const palette =
+      paletteForNode(node);
+
+    const reducedMotion =
+      Boolean(
+        state.controllerFrame &&
+        state.controllerFrame
+          .reducedMotion
+      );
+
+    const cssWidth =
+      finiteNumber(
+        frame.viewport.cssWidth,
+        0
+      );
+
+    const haloStrength =
+      cssWidth <=
+      QUALITY
+        .bloomDisableWidthPx
+        ? 0
+        : node.current.halo;
+
+    gl.uniformMatrix4fv(
+      renderer.uniforms.model,
+      false,
+      new Float32Array(
+        model
+      )
+    );
+
+    gl.uniformMatrix4fv(
+      renderer.uniforms.view,
+      false,
+      new Float32Array(
+        view
+      )
+    );
+
+    gl.uniformMatrix4fv(
+      renderer.uniforms
+        .projection,
+      false,
+      new Float32Array(
+        projection
+      )
+    );
+
+    gl.uniformMatrix3fv(
+      renderer.uniforms
+        .normalMatrix,
+      false,
+      new Float32Array(
+        normalMatrix
+      )
+    );
+
+    gl.uniform1f(
+      renderer.uniforms.time,
+      state.lastAnimationTime *
+        0.001
+    );
+
+    gl.uniform1f(
+      renderer.uniforms.opacity,
+      node.current.opacity
+    );
+
+    gl.uniform1f(
+      renderer.uniforms.scale,
+      node.current.scale
+    );
+
+    gl.uniform1f(
+      renderer.uniforms
+        .emissive,
+      node.current.emissive
+    );
+
+    gl.uniform1f(
+      renderer.uniforms
+        .rimStrength,
+      node.current.rim
+    );
+
+    gl.uniform1f(
+      renderer.uniforms
+        .sparkleStrength,
+      reducedMotion
+        ? 0
+        : node.current.sparkle
+    );
+
+    gl.uniform1f(
+      renderer.uniforms
+        .haloStrength,
+      haloStrength
+    );
+
+    gl.uniform3fv(
+      renderer.uniforms
+        .primaryColor,
+      new Float32Array(
+        palette.primary
+      )
+    );
+
+    gl.uniform3fv(
+      renderer.uniforms
+        .secondaryColor,
+      new Float32Array(
+        palette.secondary
+      )
+    );
+
+    gl.uniform3fv(
+      renderer.uniforms
+        .warmSpecular,
+      new Float32Array(
+        palette.warmSpecular
+      )
+    );
+
+    gl.uniform3fv(
+      renderer.uniforms
+        .coolRim,
+      new Float32Array(
+        palette.coolRim
+      )
+    );
+
+    gl.uniform1f(
+      renderer.uniforms
+        .reducedMotion,
+      reducedMotion
+        ? 1
+        : 0
+    );
+
+    gl.uniform1f(
+      renderer.uniforms
+        .saturation,
+      node.current.saturation
+    );
+
+    gl.uniform1f(
+      renderer.uniforms
+        .haloPass,
+      haloPass
+        ? 1
+        : 0
+    );
+
+    gl.uniform1f(
+      renderer.uniforms
+        .haloExpansion,
+      node.type ===
+        NODE_TYPES.CARDINAL
+        ? 0.075
+        : 0.055
+    );
+  }
+
+  function drawNode(
+    renderer,
+    node,
+    frame,
+    haloPass
+  ) {
+    const mesh =
+      renderer.meshes.get(
+        node.type
+      );
+
+    if (!mesh) {
+      return 0;
+    }
+
+    bindAttribute(
+      renderer,
+      mesh.position,
+      renderer.attribs.position,
+      3
+    );
+
+    bindAttribute(
+      renderer,
+      mesh.normal,
+      renderer.attribs.normal,
+      3
+    );
+
+    bindAttribute(
+      renderer,
+      mesh.color,
+      renderer.attribs.color,
+      3
+    );
+
+    bindAttribute(
+      renderer,
+      mesh.sparkleIndex,
+      renderer.attribs
+        .sparkleIndex,
+      1
+    );
+
+    applyNodeUniforms(
+      renderer,
+      node,
+      frame,
+      haloPass
+    );
+
+    renderer.gl.drawArrays(
+      renderer.gl.TRIANGLES,
+      0,
+      mesh.vertexCount
+    );
+
+    return 1;
+  }
+
+  function drawLayer(
+    rendererId,
+    payload
+  ) {
+    const renderer =
+      state.contexts.get(
+        rendererId
+      );
+
+    if (
+      !renderer ||
+      !renderer.available ||
+      renderer.contextLost
+    ) {
+      return {
+        drawCalls:
+          0,
+
+        nodeCount:
+          0,
+
+        skipped:
+          true
+      };
+    }
+
+    resizeRenderer(
+      renderer,
+      payload
+    );
+
+    const gl =
+      renderer.gl;
+
+    gl.clearColor(
+      0,
+      0,
+      0,
+      0
+    );
+
+    gl.clear(
+      gl.COLOR_BUFFER_BIT |
+      gl.DEPTH_BUFFER_BIT
+    );
+
+    gl.useProgram(
+      renderer.program
+    );
+
+    const nodes =
+      Array.isArray(
+        payload.nodes
+      )
+        ? payload.nodes
+        : [];
+
+    const resolvedNodes = [];
+
+    for (
+      const projectedNode
+      of nodes
+    ) {
+      const node =
+        state.registry.get(
+          projectedNode.id
+        );
+
+      if (
+        node &&
+        node.visible &&
+        node.current.opacity >
+          QUALITY
+            .visibilityThreshold
+      ) {
+        resolvedNodes.push(
+          node
+        );
+      }
+    }
+
+    let drawCalls =
+      0;
+
+    const haloEnabled =
+      finiteNumber(
+        payload.frame.viewport
+          .cssWidth,
+        0
+      ) >
+      QUALITY
+        .bloomDisableWidthPx;
+
+    if (haloEnabled) {
+      gl.depthMask(false);
+
+      gl.blendFunc(
+        gl.SRC_ALPHA,
+        gl.ONE
+      );
+
+      for (
+        const node
+        of resolvedNodes
+      ) {
+        drawCalls +=
+          drawNode(
+            renderer,
+            node,
+            payload.frame,
+            true
+          );
+      }
+    }
+
+    gl.depthMask(true);
+
+    gl.blendFunc(
+      gl.SRC_ALPHA,
+      gl.ONE_MINUS_SRC_ALPHA
+    );
+
+    for (
+      const node
+      of resolvedNodes
+    ) {
+      drawCalls +=
+        drawNode(
+          renderer,
+          node,
+          payload.frame,
+          false
+        );
+    }
+
+    const error =
+      gl.getError();
+
+    invariant(
+      error ===
+        gl.NO_ERROR,
+      `SHOWROOM_CRYSTALS_${rendererId.toUpperCase()}_DRAW_FAILED`,
+      {
+        error
+      }
+    );
+
+    return {
+      drawCalls,
+
+      nodeCount:
+        resolvedNodes.length,
+
+      skipped:
+        false
+    };
+  }
+
+  function registerRenderer() {
+    const registration =
+      state.compositor
+        .registerRenderer({
+          id:
+            RENDERER_ID,
+
+          beginFrame:
+            payload => {
+              state.compositorFrame =
+                payload.frame;
+
+              return true;
+            },
+
+          renderRear:
+            payload => {
+              try {
+                const result =
+                  drawLayer(
+                    CONTEXT_IDS.REAR,
+                    payload
+                  );
+
+                state.counters
+                  .rearDrawCalls =
+                  result.drawCalls;
+
+                state.counters
+                  .rearFrames +=
+                  1;
+
+                return result;
+              } catch (error) {
+                queueMicrotask(
+                  () => {
+                    failRuntime(
+                      error,
+                      "rear-render"
+                    );
+                  }
+                );
+
+                return {
+                  drawCalls:
+                    0,
+
+                  nodeCount:
+                    0,
+
+                  skipped:
+                    true,
+
+                  failed:
+                    true
+                };
+              }
+            },
+
+          renderFront:
+            payload => {
+              try {
+                const result =
+                  drawLayer(
+                    CONTEXT_IDS.FRONT,
+                    payload
+                  );
+
+                state.counters
+                  .frontDrawCalls =
+                  result.drawCalls;
+
+                state.counters
+                  .frontFrames +=
+                  1;
+
+                return result;
+              } catch (error) {
+                queueMicrotask(
+                  () => {
+                    failRuntime(
+                      error,
+                      "front-render"
+                    );
+                  }
+                );
+
+                return {
+                  drawCalls:
+                    0,
+
+                  nodeCount:
+                    0,
+
+                  skipped:
+                    true,
+
+                  failed:
+                    true
+                };
+              }
+            },
+
+          endFrame:
+            () =>
+              true,
+
+          dispose:
+            () => {
+              destroyGpuResources();
+
+              state.ready =
+                false;
+            }
+        });
+
+    invariant(
+      registration &&
+      typeof registration
+        .unregister ===
+        "function",
+      "SHOWROOM_CRYSTALS_RENDERER_REGISTRATION_FAILED"
+    );
+
+    state.rendererRegistration =
+      registration;
+
+    state.counters
+      .rendererRegistrations +=
+      1;
+  }
+
+  function unregisterRenderer() {
+    const registration =
+      state.rendererRegistration;
+
+    state.rendererRegistration =
+      null;
+
+    if (
+      registration &&
+      typeof registration
+        .unregister ===
+        "function"
+    ) {
+      try {
+        registration.unregister();
+
+        state.counters
+          .rendererUnregistrations +=
+          1;
+      } catch {
+        /* Continue bounded disposal. */
+      }
+    }
+  }
+
+  function tryCompleteReadiness(reason) {
+    if (
+      state.ready ||
+      state.failed ||
+      state.disposed
+    ) {
+      return false;
+    }
+
+    if (
+      !compositorIsAuthoritativelyReady()
+    ) {
+      if (
+        !state.waitingForCompositor
+      ) {
+        state.waitingForCompositor =
+          true;
+
+        publishReceipt(
+          "waiting-for-compositor",
+          {
+            reason,
+
+            compositorReady:
+              false,
+
+            runtimeSurfacesActivated:
+              state
+                .runtimeSurfacesActivated
+          }
+        );
+      }
+
+      return false;
+    }
+
+    invariant(
+      state.contextDegraded !==
+        true,
+      "SHOWROOM_CRYSTALS_CONTEXT_DEGRADED"
+    );
+
+    invariant(
+      state.controller &&
+      state.controller.contract ===
+        CONTROLLER_CONTRACT,
+      "SHOWROOM_CRYSTALS_CONTROLLER_NOT_ACCEPTED"
+    );
+
+    invariant(
+      validateControllerFrame(
+        state.controllerFrame
+      ),
+      "SHOWROOM_CRYSTALS_CONTROLLER_FRAME_NOT_ACCEPTED"
+    );
+
+    invariant(
+      state.compositor &&
+      state.compositor.contract ===
+        COMPOSITOR_CONTRACT,
+      "SHOWROOM_CRYSTALS_COMPOSITOR_NOT_ACCEPTED"
+    );
+
+    invariant(
+      state.runtimeSurfacesActivated ===
+        true,
+      "SHOWROOM_CRYSTALS_RUNTIME_SURFACES_NOT_ACTIVATED"
+    );
+
+    invariant(
+      countNodesByType(
+        NODE_TYPES.CARDINAL
+      ) ===
+        4,
+      "SHOWROOM_CRYSTALS_READY_CARDINAL_COUNT_INVALID"
+    );
+
+    invariant(
+      countNodesByType(
+        NODE_TYPES.CHILD
+      ) ===
+        16,
+      "SHOWROOM_CRYSTALS_READY_CHILD_COUNT_INVALID"
+    );
+
+    invariant(
+      state.nodeRegistrations.size ===
+        20,
+      "SHOWROOM_CRYSTALS_READY_NODE_COUNT_INVALID"
+    );
+
+    invariant(
+      state.rendererRegistration,
+      "SHOWROOM_CRYSTALS_READY_RENDERER_REQUIRED"
+    );
+
+    invariant(
+      isContextReady(
+        CONTEXT_IDS.REAR
+      ),
+      "SHOWROOM_CRYSTALS_READY_REAR_CONTEXT_REQUIRED"
+    );
+
+    invariant(
+      isContextReady(
+        CONTEXT_IDS.FRONT
+      ),
+      "SHOWROOM_CRYSTALS_READY_FRONT_CONTEXT_REQUIRED"
+    );
+
+    state.waitingForCompositor =
+      false;
+
+    state.ready =
+      true;
+
+    state.readyPublished =
+      true;
+
+    publishReceipt(
+      "ready",
+      {
+        reason,
+
+        cardinalCount:
+          4,
+
+        childCount:
+          16,
+
+        nodeCount:
+          20,
+
+        rendererRegistered:
+          true,
+
+        rearContextReady:
+          true,
+
+        frontContextReady:
+          true,
+
+        gpuResourcesCreated:
+          true,
+
+        initialTargetsComputed:
+          true,
+
+        runtimeSurfacesActivated:
+          true,
+
+        renderRafOwned:
+          false,
+
+        animationStateSchedulerOwned:
+          true,
+
+        navigationOwned:
+          false,
+
+        classificationOwned:
+          false,
+
+        canvasLifecycleOwned:
+          false,
+
+        registeredRendererLifecycleOwned:
+          true
+      }
+    );
+
+    dispatch(
+      EVENTS.crystalsReady,
+      {
+        reason,
+
+        cardinalCount:
+          4,
+
+        childCount:
+          16,
+
+        nodeCount:
+          20,
+
+        rendererRegistered:
+          true,
+
+        rearContextReady:
+          true,
+
+        frontContextReady:
+          true,
+
+        runtimeSurfacesActivated:
+          true,
+
+        renderRafOwned:
+          false,
+
+        animationStateSchedulerOwned:
+          true,
+
+        navigationOwned:
+          false,
+
+        classificationOwned:
+          false,
+
+        canvasLifecycleOwned:
+          false,
+
+        registeredRendererLifecycleOwned:
+          true
+      }
+    );
+
+    state.compositor.requestRender(
+      "crystals-ready"
+    );
+
+    evaluateAnimationDriver();
+
+    return true;
+  }
+
+  function activateCompositorRuntime(reason) {
+    if (
+      state.disposed ||
+      state.failed
+    ) {
+      return false;
+    }
+
+    if (
+      state.runtimeSurfacesActivated
+    ) {
+      return tryCompleteReadiness(
+        reason
+      );
+    }
+
+    if (
+      !compositorIsAuthoritativelyReady()
+    ) {
+      if (
+        !state.waitingForCompositor
+      ) {
+        state.waitingForCompositor =
+          true;
+
+        publishReceipt(
+          "waiting-for-compositor",
+          {
+            reason,
+
+            compositorReady:
+              false,
+
+            runtimeSurfacesActivated:
+              false
+          }
+        );
+      }
+
+      return false;
+    }
+
+    state.waitingForCompositor =
+      false;
+
+    try {
+      createGpuResources();
+
+      registerNodes();
+
+      registerRenderer();
+
+      state.runtimeSurfacesActivated =
+        true;
+
+      return tryCompleteReadiness(
+        reason
+      );
+    } catch (error) {
+      failRuntime(
+        error,
+        `runtime-activation:${reason}`
+      );
+
+      return false;
+    }
+  }
+
+  function updateFromController(reason) {
+    if (
+      state.disposed ||
+      state.failed ||
+      !state.controller
+    ) {
+      return false;
+    }
+
+    try {
+      readControllerFrame();
+
+      computeTargets();
+
+      if (
+        !state.runtimeSurfacesActivated ||
+        !state.ready
+      ) {
+        activateCompositorRuntime(
+          `controller-update:${reason}`
+        );
+
+        return true;
+      }
+
+      if (
+        !state.contextDegraded
+      ) {
+        state.compositor.requestRender(
+          `crystal-state:${reason}`
+        );
+
+        evaluateAnimationDriver();
+      }
+
+      return true;
+    } catch (error) {
+      failRuntime(
+        error,
+        `controller-update:${reason}`
+      );
+
+      return false;
+    }
+  }
+
+  function initializeBindings() {
+    const controllerEvents = [
+      EVENTS.controllerReady,
+      EVENTS.frameChanged,
+      EVENTS.stateChanged,
+      EVENTS.previewChanged,
+      EVENTS.clusterChanged,
+      EVENTS.frontChanged,
+      EVENTS.enhancementReadinessChanged
+    ];
+
+    for (
+      const eventName
+      of controllerEvents
+    ) {
+      addListener(
+        window,
+        eventName,
+        () => {
+          updateFromController(
+            eventName
+          );
+        }
+      );
+    }
+
     addListener(
       window,
       EVENTS.compositorReady,
-      attemptCompositorConnection
+      () => {
+        if (
+          state.initialized &&
+          !state.failed &&
+          !state.disposed
+        ) {
+          try {
+            readControllerFrame();
+
+            activateCompositorRuntime(
+              "compositor-ready-event"
+            );
+          } catch (error) {
+            failRuntime(
+              error,
+              "compositor-ready-event"
+            );
+          }
+        }
+      }
     );
 
     addListener(
       window,
       EVENTS.compositorFailed,
       () => {
-        fail(
+        failRuntime(
           new Error(
-            "The Showroom compositor reported a failure."
-          )
+            "The accepted compositor reported runtime failure."
+          ),
+          "compositor-failed"
         );
       }
     );
@@ -4099,51 +6298,8 @@
       window,
       EVENTS.compositorDisposed,
       () => {
-        if (
-          !state.disposed
-        ) {
-          fail(
-            new Error(
-              "The Showroom compositor was disposed while crystals were active."
-            )
-          );
-        }
-      }
-    );
-
-    addListener(
-      window,
-      EVENTS.orbitMotion,
-      handleOrbitMotion
-    );
-
-    addListener(
-      window,
-      EVENTS.orbitMotionStart,
-      handleMotionStart
-    );
-
-    addListener(
-      window,
-      EVENTS.orbitMotionEnd,
-      handleMotionEnd
-    );
-
-    addListener(
-      window,
-      EVENTS.clusterChanged,
-      handleClusterChanged
-    );
-
-    addListener(
-      window,
-      EVENTS.stateChanged,
-      () => {
-        updateRootState();
-        updateNodeTargets();
-
-        ensureAnimation(
-          "controller-state-changed"
+        dispose(
+          "compositor-disposed"
         );
       }
     );
@@ -4151,28 +6307,331 @@
     addListener(
       document,
       "visibilitychange",
-      handleDocumentVisibility
-    );
-
-    addListener(
-      window,
-      "scroll",
-      handlePageScroll,
-      {
-        passive:
-          true
-      }
-    );
-
-    addListener(
-      window,
-      "orientationchange",
       () => {
-        ensureAnimation(
-          "orientation-change"
+        if (
+          document.visibilityState ===
+          "hidden"
+        ) {
+          stopAnimationDriver();
+
+          return;
+        }
+
+        updateFromController(
+          "document-visible"
         );
       }
     );
+
+    addListener(
+      window,
+      "pagehide",
+      event => {
+        if (!event.persisted) {
+          dispose(
+            "page-hide"
+          );
+        }
+      },
+      {
+        once:
+          true
+      }
+    );
+  }
+
+  function getNodeState(id) {
+    const normalized =
+      normalize(id);
+
+    const node =
+      state.registry.get(
+        normalized
+      ) ||
+      Array.from(
+        state.registry.values()
+      ).find(
+        candidate =>
+          candidate.objectId ===
+            normalized ||
+          candidate.childId ===
+            normalized
+      );
+
+    if (!node) {
+      return null;
+    }
+
+    return freezePlain({
+      id:
+        node.id,
+
+      objectId:
+        node.objectId,
+
+      type:
+        node.type,
+
+      cardinalId:
+        node.cardinalId,
+
+      clusterId:
+        node.clusterId,
+
+      childId:
+        node.childId,
+
+      behavior:
+        node.behavior,
+
+      visualClass:
+        node.visualClass,
+
+      emphasis:
+        node.emphasis,
+
+      materialFamily:
+        node.materialFamily,
+
+      visible:
+        node.visible,
+
+      targetVisible:
+        node.targetVisible,
+
+      settled:
+        node.settled,
+
+      current:
+        {
+          ...node.current
+        },
+
+      target:
+        {
+          ...node.target
+        },
+
+      worldPosition:
+        nodeWorldPosition(
+          node
+        ),
+
+      hitRadius:
+        nodeHitRadius(
+          node
+        )
+    });
+  }
+
+  function getGeometrySummary() {
+    const cardinal =
+      state.cpuMeshes.get(
+        NODE_TYPES.CARDINAL
+      );
+
+    const child =
+      state.cpuMeshes.get(
+        NODE_TYPES.CHILD
+      );
+
+    return freezePlain({
+      cardinal:
+        cardinal
+          ? {
+              ...cardinal.summary,
+
+              vertexCount:
+                cardinal.vertexCount
+            }
+          : null,
+
+      child:
+        child
+          ? {
+              ...child.summary,
+
+              vertexCount:
+                child.vertexCount
+            }
+          : null,
+
+      cardinalTargets:
+        CARDINAL_TARGETS,
+
+      childLayout:
+        CHILD_LAYOUT
+    });
+  }
+
+  function getMaterialSummary() {
+    return freezePlain({
+      palettes:
+        PALETTES,
+
+      materials:
+        MATERIALS
+    });
+  }
+
+  function getState() {
+    return freezePlain({
+      contract:
+        CONTRACT,
+
+      owner:
+        OWNER,
+
+      controllerContract:
+        CONTROLLER_CONTRACT,
+
+      compositorContract:
+        COMPOSITOR_CONTRACT,
+
+      initialized:
+        state.initialized,
+
+      initializing:
+        state.initializing,
+
+      ready:
+        state.ready,
+
+      readyPublished:
+        state.readyPublished,
+
+      disposed:
+        state.disposed,
+
+      failed:
+        state.failed,
+
+      failureReason:
+        state.failureReason,
+
+      contextDegraded:
+        state.contextDegraded,
+
+      runtimeSurfacesActivated:
+        state
+          .runtimeSurfacesActivated,
+
+      waitingForCompositor:
+        state
+          .waitingForCompositor,
+
+      presentationMode:
+        state.controllerFrame
+          ? presentationMode(
+              state.controllerFrame
+            )
+          : PRESENTATION_MODES.BASELINE,
+
+      held:
+        Boolean(
+          state.controllerFrame &&
+          state.controllerFrame.held
+        ),
+
+      reducedMotion:
+        Boolean(
+          state.controllerFrame &&
+          state.controllerFrame
+            .reducedMotion
+        ),
+
+      cardinalCount:
+        countNodesByType(
+          NODE_TYPES.CARDINAL
+        ),
+
+      childCount:
+        countNodesByType(
+          NODE_TYPES.CHILD
+        ),
+
+      nodeCount:
+        state.registry.size,
+
+      registeredNodeCount:
+        state
+          .nodeRegistrations
+          .size,
+
+      rendererRegistered:
+        Boolean(
+          state
+            .rendererRegistration
+        ),
+
+      rearContextReady:
+        isContextReady(
+          CONTEXT_IDS.REAR
+        ),
+
+      frontContextReady:
+        isContextReady(
+          CONTEXT_IDS.FRONT
+        ),
+
+      animationRunning:
+        state.animationRunning,
+
+      renderRafOwned:
+        false,
+
+      animationStateSchedulerOwned:
+        true,
+
+      navigationOwned:
+        false,
+
+      pointerInterpretationOwned:
+        false,
+
+      classificationOwned:
+        false,
+
+      cameraOwned:
+        false,
+
+      canvasLifecycleOwned:
+        false,
+
+      semanticControlCreationOwned:
+        false,
+
+      semanticControlPositioningOwned:
+        false,
+
+      registeredRendererLifecycleOwned:
+        true,
+
+      counters:
+        {
+          ...state.counters
+        }
+    });
+  }
+
+  function requestRender(
+    reason = "crystal-api"
+  ) {
+    if (
+      state.disposed ||
+      state.failed ||
+      state.contextDegraded ||
+      !state.ready ||
+      !state
+        .runtimeSurfacesActivated
+    ) {
+      return false;
+    }
+
+    return state.compositor
+      .requestRender(
+        reason
+      );
   }
 
   function exposeApi() {
@@ -4181,110 +6640,27 @@
         contract:
           CONTRACT,
 
-        getState() {
-          return createReceipt(
-            "state-requested",
-            {
-              nodeIds:
-                Object.freeze(
-                  Array.from(
-                    state.nodes.keys()
-                  )
-                ),
+        controllerContract:
+          CONTROLLER_CONTRACT,
 
-              geometryTypes:
-                Object.freeze(
-                  Array.from(
-                    state.geometries.keys()
-                  )
-                ),
+        compositorContract:
+          COMPOSITOR_CONTRACT,
 
-              orientation:
-                Object.freeze(
-                  state.orientation.slice()
-                ),
+        getState,
 
-              targetOrientation:
-                Object.freeze(
-                  state.targetOrientation
-                    .slice()
-                )
-            }
+        getNodeState,
+
+        getGeometrySummary,
+
+        getMaterialSummary,
+
+        requestRender,
+
+        dispose() {
+          return dispose(
+            "public-api-dispose"
           );
-        },
-
-        getNode(nodeId) {
-          const node =
-            state.nodes.get(
-              normalize(nodeId)
-            );
-
-          if (!node) {
-            return null;
-          }
-
-          return Object.freeze({
-            id:
-              node.id,
-
-            size:
-              node.size,
-
-            behavior:
-              node.behavior,
-
-            clusterId:
-              node.clusterId,
-
-            geometryType:
-              node.geometryType,
-
-            materialFamily:
-              node.materialFamily,
-
-            worldPosition:
-              Object.freeze({
-                ...node.worldPosition
-              }),
-
-            visible:
-              node.visible,
-
-            opacity:
-              node.opacity,
-
-            scale:
-              node.scale
-          });
-        },
-
-        refresh() {
-          updateRootState();
-          updateNodeTargets();
-          positionSemanticControls();
-
-          ensureAnimation(
-            "crystals-api-refresh"
-          );
-
-          return createReceipt(
-            "api-refresh"
-          );
-        },
-
-        start() {
-          return ensureAnimation(
-            "api-start"
-          );
-        },
-
-        stop() {
-          stopAnimationLoop();
-
-          return true;
-        },
-
-        dispose
+        }
       });
 
     Object.defineProperty(
@@ -4306,325 +6682,348 @@
     );
   }
 
-  function resetSemanticElement(
-    node
+  function removeApi() {
+    try {
+      delete window
+        .SHOWROOM_CRYSTALS;
+    } catch {
+      /* Best-effort API removal. */
+    }
+  }
+
+  function teardownOwnedRuntime() {
+    stopAnimationDriver();
+
+    removeListeners();
+
+    unregisterNodes();
+
+    unregisterRenderer();
+
+    destroyGpuResources();
+
+    removeApi();
+
+    state.runtimeSurfacesActivated =
+      false;
+  }
+
+  function failRuntime(
+    error,
+    reason
   ) {
-    const element =
-      node.semanticElement;
-
-    if (!element) {
-      return;
-    }
-
-    const properties = [
-      "left",
-      "top",
-      "right",
-      "bottom",
-      "width",
-      "height",
-      "margin",
-      "transform",
-      "position",
-      "opacity",
-      "pointer-events",
-      "background",
-      "border-color",
-      "box-shadow",
-      "color",
-      "-webkit-tap-highlight-color"
-    ];
-
-    for (
-      const property
-      of properties
-    ) {
-      element.style.removeProperty(
-        property
-      );
-    }
-
-    element.removeAttribute(
-      "aria-hidden"
-    );
-
-    element.removeAttribute(
-      ATTRIBUTES.fallbackRendering
-    );
-
-    node.lastSemantic.visible =
-      false;
-
-    node.lastSemantic.interactive =
-      false;
-
-    node.lastSemantic.x =
-      NaN;
-
-    node.lastSemantic.y =
-      NaN;
-
-    node.lastSemantic.size =
-      NaN;
-  }
-
-  function rollbackAfterFailure() {
-    stopAnimationLoop();
-    unregisterAllNodes();
-    setFallbackPaintVisible(true);
-
-    for (
-      const node
-      of state.nodes.values()
-    ) {
-      resetSemanticElement(
-        node
-      );
-    }
-
     if (
-      state.compositorOwnedByCrystals &&
-      state.compositor &&
-      typeof state.compositor.dispose ===
-        "function"
-    ) {
-      try {
-        state.compositor.dispose();
-      } catch {
-        /* Best-effort ownership rollback. */
-      }
-    }
-  }
-
-  function fail(error) {
-    if (
-      state.failed ||
-      state.disposed
+      state.disposed ||
+      state.failed
     ) {
       return;
     }
 
-    state.failed = true;
-    state.ready = false;
+    state.failed =
+      true;
 
-    state.counters.failures += 1;
+    state.ready =
+      false;
 
-    if (state.readinessTimer) {
-      clearTimeout(
-        state.readinessTimer
-      );
+    state.readyPublished =
+      false;
 
-      state.readinessTimer = 0;
-    }
+    state.initialized =
+      false;
 
-    if (state.scrollResumeTimer) {
-      clearTimeout(
-        state.scrollResumeTimer
-      );
+    state.initializing =
+      false;
 
-      state.scrollResumeTimer = 0;
-    }
+    state.waitingForCompositor =
+      false;
 
-    rollbackAfterFailure();
+    state.failureReason =
+      reason;
 
-    setRootAttribute(
-      ATTRIBUTES.ready,
-      "false"
-    );
+    state.counters.failures +=
+      1;
 
-    setRootAttribute(
-      ATTRIBUTES.state,
-      "failed"
-    );
+    teardownOwnedRuntime();
 
-    const serialized =
-      serializeError(error);
+    const errorPayload = {
+      name:
+        error instanceof
+        Error
+          ? error.name
+          : "Error",
+
+      message:
+        error instanceof
+        Error
+          ? error.message
+          : String(error),
+
+      code:
+        error &&
+        error.code
+          ? error.code
+          : "",
+
+      details:
+        error &&
+        error.details
+          ? error.details
+          : null
+    };
 
     publishReceipt(
       "failed",
       {
+        reason,
+
         error:
-          serialized
+          errorPayload,
+
+        nodesUnregistered:
+          true,
+
+        rendererUnregistered:
+          true,
+
+        gpuResourcesDisposed:
+          true,
+
+        compositorCanvasesRemoved:
+          false,
+
+        semanticControlsChanged:
+          false
       }
     );
 
     dispatch(
-      EVENTS.failed,
+      EVENTS.crystalsFailed,
       {
+        reason,
+
         error:
-          serialized
+          errorPayload
       }
     );
+  }
+
+  function rollbackInitialization(error) {
+    state.initialized =
+      false;
+
+    state.initializing =
+      false;
+
+    state.ready =
+      false;
+
+    state.readyPublished =
+      false;
+
+    failRuntime(
+      error,
+      "initialization"
+    );
+
+    state.registry.clear();
+
+    state.cpuMeshes.clear();
+  }
+
+  function dispose(
+    reason = "crystals-disposed"
+  ) {
+    if (state.disposed) {
+      return true;
+    }
+
+    state.disposed =
+      true;
+
+    state.ready =
+      false;
+
+    state.readyPublished =
+      false;
+
+    state.runtimeSurfacesActivated =
+      false;
+
+    state.waitingForCompositor =
+      false;
+
+    teardownOwnedRuntime();
+
+    state.registry.clear();
+
+    state.cpuMeshes.clear();
+
+    state.controller =
+      null;
+
+    state.compositor =
+      null;
+
+    state.controllerFrame =
+      null;
+
+    state.compositorFrame =
+      null;
+
+    state.initialized =
+      false;
+
+    state.initializing =
+      false;
+
+    state.contextDegraded =
+      false;
+
+    publishReceipt(
+      "disposed",
+      {
+        reason,
+
+        nodeCount:
+          0,
+
+        registeredNodeCount:
+          0,
+
+        rendererRegistered:
+          false,
+
+        rearContextReady:
+          false,
+
+        frontContextReady:
+          false,
+
+        compositorCanvasesRemoved:
+          false,
+
+        compositorDisposed:
+          false,
+
+        controllerDisposed:
+          false,
+
+        semanticControlsChanged:
+          false,
+
+        fallbackVisibilityChanged:
+          false,
+
+        compassLifecycleMutated:
+          false,
+
+        frontHostVisibilityMutated:
+          false
+      }
+    );
+
+    dispatch(
+      EVENTS.crystalsDisposed,
+      {
+        reason,
+
+        disposed:
+          true,
+
+        compositorCanvasesRemoved:
+          false,
+
+        compositorDisposed:
+          false,
+
+        controllerDisposed:
+          false,
+
+        semanticControlsChanged:
+          false,
+
+        fallbackVisibilityChanged:
+          false,
+
+        compassLifecycleMutated:
+          false,
+
+        frontHostVisibilityMutated:
+          false
+      }
+    );
+
+    return true;
   }
 
   function initialize() {
     if (
       state.initialized ||
+      state.initializing ||
       state.disposed
     ) {
       return;
     }
 
+    state.initializing =
+      true;
+
     try {
       discoverDom();
-      validateDom();
 
-      buildGeometries();
-      discoverSemanticObjects();
-      initializeClusterOrientations();
+      const dom =
+        validateDom();
 
-      updateRootState();
-      updateNodeTargets();
+      state.controller =
+        requireController();
 
-      initializeRootObserver();
-      initializeVisibilityObserver();
-      initializeEvents();
+      state.compositor =
+        requireCompositor();
+
+      readControllerFrame();
+
+      buildCpuMeshes();
+
+      buildRegistry(
+        dom.cardinals,
+        dom.children
+      );
+
+      computeTargets();
+
+      for (
+        const node
+        of state.registry.values()
+      ) {
+        Object.assign(
+          node.current,
+          node.target
+        );
+
+        node.visible =
+          node.targetVisible;
+
+        node.settled =
+          true;
+      }
+
+      initializeBindings();
+
       exposeApi();
 
-      state.initialized = true;
+      state.initialized =
+        true;
 
-      setRootAttribute(
-        ATTRIBUTES.ready,
-        "false"
+      state.initializing =
+        false;
+
+      activateCompositorRuntime(
+        "startup"
       );
-
-      setRootAttribute(
-        ATTRIBUTES.state,
-        "connecting"
-      );
-
-      setFallbackPaintVisible(
-        true
-      );
-
-      reflectSuspensionState();
-
-      publishReceipt(
-        "initialized-awaiting-compositor"
-      );
-
-      attemptCompositorConnection();
-
-      if (!state.ready) {
-        state.readinessTimer =
-          window.setTimeout(
-            () => {
-              if (
-                !state.ready &&
-                !state.failed &&
-                !state.disposed
-              ) {
-                fail(
-                  new Error(
-                    "Timed out while waiting for the Showroom compositor."
-                  )
-                );
-              }
-            },
-            CONFIG.readinessTimeoutMs
-          );
-      }
     } catch (error) {
-      fail(error);
-    }
-  }
-
-  function dispose() {
-    if (state.disposed) {
-      return;
-    }
-
-    state.disposed = true;
-    state.ready = false;
-
-    stopAnimationLoop();
-
-    if (state.readinessTimer) {
-      clearTimeout(
-        state.readinessTimer
+      rollbackInitialization(
+        error
       );
-
-      state.readinessTimer = 0;
-    }
-
-    if (state.scrollResumeTimer) {
-      clearTimeout(
-        state.scrollResumeTimer
-      );
-
-      state.scrollResumeTimer = 0;
-    }
-
-    unregisterAllNodes();
-
-    for (
-      const removeListener
-      of state.listeners.splice(0)
-    ) {
-      try {
-        removeListener();
-      } catch {
-        /* Best-effort disposal. */
-      }
-    }
-
-    for (
-      const observer
-      of state.observers.splice(0)
-    ) {
-      try {
-        observer.disconnect();
-      } catch {
-        /* Best-effort disposal. */
-      }
-    }
-
-    setFallbackPaintVisible(
-      true
-    );
-
-    for (
-      const node
-      of state.nodes.values()
-    ) {
-      resetSemanticElement(
-        node
-      );
-    }
-
-    setRootAttribute(
-      ATTRIBUTES.ready,
-      "false"
-    );
-
-    setRootAttribute(
-      ATTRIBUTES.state,
-      "disposed"
-    );
-
-    setRootAttribute(
-      ATTRIBUTES.suspended,
-      "true"
-    );
-
-    publishReceipt(
-      "disposed"
-    );
-
-    dispatch(
-      EVENTS.disposed
-    );
-
-    state.semanticObjects.clear();
-    state.nodes.clear();
-    state.geometries.clear();
-    state.clusterOrientations.clear();
-    state.clusterTargetOrientations.clear();
-
-    try {
-      delete window.SHOWROOM_CRYSTALS;
-    } catch {
-      /* Noncritical cleanup. */
     }
   }
 
@@ -4643,17 +7042,4 @@
   } else {
     initialize();
   }
-
-  window.addEventListener(
-    "pagehide",
-    event => {
-      if (!event.persisted) {
-        dispose();
-      }
-    },
-    {
-      once:
-        true
-    }
-  );
 })();

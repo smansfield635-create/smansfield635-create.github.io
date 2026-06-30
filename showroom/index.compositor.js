@@ -1,16 +1,19 @@
 /* TARGET FILE: /showroom/index.compositor.js */
 /* TNT FULL-FILE REPLACEMENT */
-/* SHOWROOM_CONSTELLATION_SINGLE_FRAME_COMPOSITOR_TNT_v2 */
+/* SHOWROOM_CONSTELLATION_SINGLE_FRAME_COMPOSITOR_TNT_v5 */
 /*
   Upstream semantic authority:
   - /showroom/index.controller.js
-  - SHOWROOM_MIRRORLAND_CONSTELLATION_CONTROLLER_TNT_v5
+  - SHOWROOM_MIRRORLAND_CONSTELLATION_CONTROLLER
+  - 7.0.0-controller-interaction-semantic-priority
 
   Frozen DOM attachment contract:
   - [data-showroom-root]
   - #showroom-orbit
   - [data-showroom-orbit-scene]
+  - [data-showroom-scene]
   - [data-showroom-orbit-field]
+  - [data-showroom-scene-field]
   - [data-showroom-compass-layer]
   - [data-showroom-compass-visual-mount]
   - [data-showroom-semantic-star-layer]
@@ -25,32 +28,44 @@
   - classification hysteresis;
   - rear/front canvas construction;
   - page-level render-layer ordering;
-  - rear / Compass / front orchestration;
+  - compositor-timed clear invocation;
   - authoritative projected hit coordinates;
-  - bounded renderer and node registration.
+  - bounded node and renderer registration;
+  - semantic-projection fact publication;
+  - semantic-projection feedback suppression;
+  - recoverable held-state suspension;
+  - terminal module-instance failure.
 
   Explicit exclusions:
   - no semantic navigation ownership;
-  - no cardinal, cluster, child, route, or local-destination decisions;
+  - no route or destination decisions;
   - no Compass navigation ownership;
   - no Compass renderer lifecycle ownership;
   - no crystal mesh, material, geometry, or animation ownership;
   - no pointer or gesture interpretation;
+  - no interaction-priority calculation or publication;
   - no Diamond or Window ownership;
-  - no front-host visibility ownership.
+  - no front-host visibility ownership;
+  - no rendering-context creation or context-family selection.
 */
 
 (() => {
   "use strict";
 
   const CONTRACT =
-    "SHOWROOM_CONSTELLATION_SINGLE_FRAME_COMPOSITOR_TNT_v2";
+    "SHOWROOM_CONSTELLATION_SINGLE_FRAME_COMPOSITOR_TNT_v5";
 
   const OWNER =
     "/showroom/index.compositor.js";
 
-  const CONTROLLER_CONTRACT =
-    "SHOWROOM_MIRRORLAND_CONSTELLATION_CONTROLLER_TNT_v5";
+  const CONTROLLER_GLOBAL =
+    "SHOWROOM_MIRRORLAND_CONSTELLATION_CONTROLLER";
+
+  const CONTROLLER_MODULE_ID =
+    "SHOWROOM_MIRRORLAND_CONSTELLATION_CONTROLLER";
+
+  const CONTROLLER_MODULE_VERSION =
+    "7.0.0-controller-interaction-semantic-priority";
 
   const SELECTORS = Object.freeze({
     root:
@@ -60,10 +75,14 @@
       "#showroom-orbit",
 
     scene:
-      "[data-showroom-orbit-scene]",
+      "[data-showroom-orbit-scene][data-showroom-scene], " +
+      "[data-showroom-orbit-scene], " +
+      "[data-showroom-scene]",
 
     field:
-      "[data-showroom-orbit-field]",
+      "[data-showroom-orbit-field][data-showroom-scene-field], " +
+      "[data-showroom-orbit-field], " +
+      "[data-showroom-scene-field]",
 
     compassLayer:
       "[data-showroom-compass-layer]",
@@ -110,36 +129,36 @@
       "data-showroom-compositor-height",
 
     compositorDpr:
-      "data-showroom-compositor-dpr"
+      "data-showroom-compositor-dpr",
+
+    compositorClearMode:
+      "data-showroom-compositor-clear-mode"
   });
 
   const EVENTS = Object.freeze({
     controllerReady:
-      "showroom:controller-ready",
+      "SHOWROOM_CONTROLLER_READY",
 
-    controllerFrameChanged:
-      "showroom:frame-state-changed",
-
-    controllerStateChanged:
-      "showroom:state-changed",
+    controllerFailure:
+      "SHOWROOM_CONTROLLER_FAILURE",
 
     compositorReady:
-      "showroom:compositor-ready",
+      "SHOWROOM_COMPOSITOR_READY",
 
     compositorFailed:
-      "showroom:compositor-failed",
+      "SHOWROOM_COMPOSITOR_FAILURE",
 
     compositorDisposed:
-      "showroom:compositor-disposed",
+      "SHOWROOM_COMPOSITOR_DISPOSED",
 
     compositorFrame:
-      "showroom:compositor-frame",
+      "SHOWROOM_COMPOSITOR_FRAME",
 
     compositorProjectionChanged:
-      "showroom:compositor-projection-changed",
+      "SHOWROOM_COMPOSITOR_PROJECTION_CHANGED",
 
     compositorReceipt:
-      "showroom:compositor-receipt"
+      "SHOWROOM_COMPOSITOR_RECEIPT"
   });
 
   const LAYERS = Object.freeze({
@@ -221,6 +240,14 @@
     controller: null,
     controllerFrame: null,
     controllerReady: false,
+    controllerBound: false,
+    controllerBinding: false,
+    pendingControllerFrame: null,
+    pendingCompassRender: false,
+
+    controllerFrameUnsubscribe: null,
+    controllerHeldUnsubscribe: null,
+    controllerCompassUnsubscribe: null,
 
     rearCanvas: null,
     frontCanvas: null,
@@ -303,8 +330,22 @@
     nodes:
       new Map(),
 
+    projectionIds:
+      new Map(),
+
+    lastNodeProjections:
+      new Map(),
+
+    pendingProjectionTombstones:
+      new Map(),
+
     renderers:
       new Map(),
+
+    clearOwners: {
+      rear: null,
+      front: null
+    },
 
     classifications:
       new Map(),
@@ -316,13 +357,17 @@
         nodes: Object.freeze([]),
         rear: Object.freeze([]),
         front: Object.freeze([]),
-        hitRegions: Object.freeze([])
+        hitRegions: Object.freeze([]),
+        semanticRecords: Object.freeze([])
       }),
 
     frameId: 0,
     renderRequested: false,
     pendingRenderReason: "",
     rafId: 0,
+
+    semanticProjectionPublishing: false,
+    lastSemanticProjectionSignature: "",
 
     resizeObserver: null,
     mutationObserver: null,
@@ -332,23 +377,39 @@
     initialized: false,
     initializing: false,
     disposed: false,
+    failed: false,
+    held: false,
+
     readyPublished: false,
     readinessPending: true,
+    readinessCompleting: false,
 
     counters: {
       renders: 0,
       resizePasses: 0,
       projectionPasses: 0,
+      semanticProjectionPublications: 0,
+      semanticProjectionSkips: 0,
+      tombstonesPublished: 0,
+      rearClears: 0,
+      frontClears: 0,
       nodeRegistrations: 0,
       nodeRemovals: 0,
       rendererRegistrations: 0,
       rendererRemovals: 0,
+      rendererReplacements: 0,
+      holds: 0,
+      holdReleases: 0,
       failures: 0
     }
   };
 
   function normalize(value) {
-    return String(value || "").trim();
+    return String(
+      value == null
+        ? ""
+        : value
+    ).trim();
   }
 
   function nowIso() {
@@ -462,8 +523,11 @@
         owner:
           OWNER,
 
-        controllerContract:
-          CONTROLLER_CONTRACT,
+        controllerModuleId:
+          CONTROLLER_MODULE_ID,
+
+        controllerModuleVersion:
+          CONTROLLER_MODULE_VERSION,
 
         event,
 
@@ -479,8 +543,17 @@
         disposed:
           state.disposed,
 
+        failed:
+          state.failed,
+
+        held:
+          state.held,
+
         controllerReady:
           state.controllerReady,
+
+        controllerBound:
+          state.controllerBound,
 
         readinessPending:
           state.readinessPending,
@@ -498,6 +571,10 @@
         registeredRenderers:
           state.renderers.size,
 
+        clearOwners: {
+          ...state.clearOwners
+        },
+
         counters: {
           ...state.counters
         },
@@ -509,8 +586,13 @@
       const serialized =
         JSON.stringify(payload);
 
-      state.receipt.value =
-        serialized;
+      if (
+        "value" in
+        state.receipt
+      ) {
+        state.receipt.value =
+          serialized;
+      }
 
       state.receipt.textContent =
         serialized;
@@ -850,6 +932,63 @@
     return Array.from(matrix);
   }
 
+  function normalizeWorldPosition(value) {
+    if (
+      Array.isArray(value) &&
+      value.length >= 3
+    ) {
+      const x =
+        Number(value[0]);
+
+      const y =
+        Number(value[1]);
+
+      const z =
+        Number(value[2]);
+
+      if (
+        Number.isFinite(x) &&
+        Number.isFinite(y) &&
+        Number.isFinite(z)
+      ) {
+        return [
+          x,
+          y,
+          z
+        ];
+      }
+    }
+
+    if (
+      value &&
+      typeof value ===
+        "object"
+    ) {
+      const x =
+        Number(value.x);
+
+      const y =
+        Number(value.y);
+
+      const z =
+        Number(value.z);
+
+      if (
+        Number.isFinite(x) &&
+        Number.isFinite(y) &&
+        Number.isFinite(z)
+      ) {
+        return [
+          x,
+          y,
+          z
+        ];
+      }
+    }
+
+    return null;
+  }
+
   function captureStyleAttribute(element) {
     return element
       ? element.getAttribute(
@@ -917,6 +1056,25 @@
     );
   }
 
+  function restoreNullableAttribute(
+    element,
+    name,
+    value
+  ) {
+    if (!element) {
+      return;
+    }
+
+    if (value === null) {
+      element.removeAttribute(name);
+    } else {
+      element.setAttribute(
+        name,
+        value
+      );
+    }
+  }
+
   function captureCanvasState(canvas) {
     if (!canvas) {
       return null;
@@ -965,27 +1123,13 @@
       compositorDpr:
         canvas.getAttribute(
           ATTRIBUTES.compositorDpr
+        ),
+
+      compositorClearMode:
+        canvas.getAttribute(
+          ATTRIBUTES.compositorClearMode
         )
     };
-  }
-
-  function restoreNullableAttribute(
-    element,
-    name,
-    value
-  ) {
-    if (!element) {
-      return;
-    }
-
-    if (value === null) {
-      element.removeAttribute(name);
-    } else {
-      element.setAttribute(
-        name,
-        value
-      );
-    }
   }
 
   function restoreCanvasState(
@@ -1048,6 +1192,12 @@
       canvas,
       ATTRIBUTES.compositorDpr,
       captured.compositorDpr
+    );
+
+    restoreNullableAttribute(
+      canvas,
+      ATTRIBUTES.compositorClearMode,
+      captured.compositorClearMode
     );
   }
 
@@ -1115,13 +1265,13 @@
 
     if (!state.scene) {
       issues.push(
-        "Missing [data-showroom-orbit-scene]."
+        "Missing Showroom orbit scene."
       );
     }
 
     if (!state.field) {
       issues.push(
-        "Missing [data-showroom-orbit-field]."
+        "Missing Showroom orbit field."
       );
     }
 
@@ -1209,6 +1359,11 @@
       "true"
     );
 
+    canvas.setAttribute(
+      ATTRIBUTES.compositorClearMode,
+      "renderer-callback-exclusive-owner"
+    );
+
     canvas.className =
       [
         "showroom-compositor-canvas",
@@ -1253,6 +1408,11 @@
     canvas.setAttribute(
       "aria-hidden",
       "true"
+    );
+
+    canvas.setAttribute(
+      ATTRIBUTES.compositorClearMode,
+      "renderer-callback-exclusive-owner"
     );
 
     canvas.style.position =
@@ -1304,7 +1464,7 @@
       !state.compassLayer
     ) {
       throw new Error(
-        "Compositor canvases cannot be established without the orbit field and Compass layer."
+        "Compositor canvases require the orbit field and Compass layer."
       );
     }
 
@@ -1391,9 +1551,6 @@
 
       state.rearCanvasCreated =
         true;
-
-      state.nativeRearCanvasState =
-        null;
     }
 
     if (existingFront) {
@@ -1425,9 +1582,6 @@
 
       state.frontCanvasCreated =
         true;
-
-      state.nativeFrontCanvasState =
-        null;
     }
 
     if (
@@ -1539,60 +1693,89 @@
     state.nativeDomState.frontCanvasPlacement = null;
   }
 
+  function isValidControllerApi(controller) {
+    return Boolean(
+      controller &&
+      typeof controller ===
+        "object" &&
+      controller.moduleId ===
+        CONTROLLER_MODULE_ID &&
+      controller.moduleVersion ===
+        CONTROLLER_MODULE_VERSION &&
+      typeof controller.getFrameState ===
+        "function" &&
+      typeof controller.subscribeFrameState ===
+        "function" &&
+      typeof controller.updateSemanticProjection ===
+        "function"
+    );
+  }
+
   function isValidControllerFrame(frame) {
     return Boolean(
       frame &&
-      typeof frame === "object" &&
-      frame.contract ===
-        CONTROLLER_CONTRACT &&
-      typeof frame.controllerReady ===
-        "boolean" &&
-      typeof frame.disposed ===
-        "boolean" &&
-      typeof frame.durableState ===
+      typeof frame ===
+        "object" &&
+      frame.moduleId ===
+        CONTROLLER_MODULE_ID &&
+      frame.moduleVersion ===
+        CONTROLLER_MODULE_VERSION &&
+      typeof frame.state ===
         "string" &&
-      typeof frame.transientState ===
-        "string" &&
-      typeof frame.pageState ===
+      typeof frame.navigationState ===
         "string" &&
       typeof frame.presentationMode ===
         "string" &&
-      typeof frame.enhancementState ===
-        "string"
+      frame.presentation &&
+      typeof frame.presentation ===
+        "object" &&
+      frame.compass &&
+      typeof frame.compass ===
+        "object" &&
+      typeof frame.held ===
+        "boolean" &&
+      frame.orbitOrientation &&
+      typeof frame.orbitOrientation ===
+        "object" &&
+      Array.isArray(
+        frame.orbitOrientation
+          .quaternion
+      ) &&
+      frame.orbitOrientation
+        .quaternion.length ===
+        4
     );
+  }
+
+  function resolveControllerGlobal() {
+    return window[
+      CONTROLLER_GLOBAL
+    ] || null;
   }
 
   function readControllerFrame() {
     const controller =
-      window.SHOWROOM_CONTROLLER;
+      resolveControllerGlobal();
 
     if (!controller) {
-      state.controller = null;
-      state.controllerFrame = null;
-      state.controllerReady = false;
-
       return {
         status:
           "unavailable",
+
+        controller:
+          null,
 
         frame:
           null
       };
     }
 
-    if (
-      controller.contract !==
-        CONTROLLER_CONTRACT ||
-      typeof controller.getFrameState !==
-        "function"
-    ) {
-      state.controller = null;
-      state.controllerFrame = null;
-      state.controllerReady = false;
-
+    if (!isValidControllerApi(controller)) {
       return {
         status:
           "invalid-controller",
+
+        controller,
 
         frame:
           null
@@ -1605,13 +1788,11 @@
       frame =
         controller.getFrameState();
     } catch (error) {
-      state.controller = null;
-      state.controllerFrame = null;
-      state.controllerReady = false;
-
       return {
         status:
           "frame-error",
+
+        controller,
 
         frame:
           null,
@@ -1621,51 +1802,69 @@
     }
 
     if (!isValidControllerFrame(frame)) {
-      state.controller = null;
-      state.controllerFrame = null;
-      state.controllerReady = false;
-
       return {
         status:
           "invalid-frame",
 
-        frame:
-          null
-      };
-    }
-
-    if (
-      frame.controllerReady !== true ||
-      frame.disposed === true
-    ) {
-      state.controller = null;
-      state.controllerFrame = null;
-      state.controllerReady = false;
-
-      return {
-        status:
-          "controller-not-ready",
+        controller,
 
         frame:
           null
       };
     }
-
-    state.controller =
-      controller;
-
-    state.controllerFrame =
-      frame;
-
-    state.controllerReady =
-      true;
 
     return {
       status:
-        "ready",
+        frame.held === true
+          ? "controller-held"
+          : "ready",
+
+      controller,
 
       frame
     };
+  }
+
+  function unsubscribeController() {
+    const keys = [
+      "controllerFrameUnsubscribe",
+      "controllerHeldUnsubscribe",
+      "controllerCompassUnsubscribe"
+    ];
+
+    for (
+      const key
+      of keys
+    ) {
+      const unsubscribe =
+        state[key];
+
+      state[key] =
+        null;
+
+      if (
+        typeof unsubscribe ===
+        "function"
+      ) {
+        try {
+          unsubscribe();
+        } catch {
+          /* Best-effort unsubscription. */
+        }
+      }
+    }
+
+    state.controllerBound =
+      false;
+
+    state.controllerBinding =
+      false;
+
+    state.pendingControllerFrame =
+      null;
+
+    state.pendingCompassRender =
+      false;
   }
 
   function measureViewport() {
@@ -1895,63 +2094,6 @@
 
     state.compassPlane.viewDepth =
       planeView[2];
-  }
-
-  function normalizeWorldPosition(value) {
-    if (
-      Array.isArray(value) &&
-      value.length >= 3
-    ) {
-      const x =
-        Number(value[0]);
-
-      const y =
-        Number(value[1]);
-
-      const z =
-        Number(value[2]);
-
-      if (
-        Number.isFinite(x) &&
-        Number.isFinite(y) &&
-        Number.isFinite(z)
-      ) {
-        return [
-          x,
-          y,
-          z
-        ];
-      }
-    }
-
-    if (
-      value &&
-      typeof value ===
-        "object"
-    ) {
-      const x =
-        Number(value.x);
-
-      const y =
-        Number(value.y);
-
-      const z =
-        Number(value.z);
-
-      if (
-        Number.isFinite(x) &&
-        Number.isFinite(y) &&
-        Number.isFinite(z)
-      ) {
-        return [
-          x,
-          y,
-          z
-        ];
-      }
-    }
-
-    return null;
   }
 
   function worldToScreen(
@@ -2279,11 +2421,127 @@
     }
   }
 
+  function normalizeProjectionKind(record) {
+    const explicit =
+      normalize(
+        record.kind ||
+        (
+          record.metadata &&
+          record.metadata.kind
+        )
+      ).toLowerCase();
+
+    if (
+      explicit === "cardinal" ||
+      explicit === "coin"
+    ) {
+      return "cardinal";
+    }
+
+    if (
+      explicit === "room" ||
+      explicit === "child"
+    ) {
+      return "room";
+    }
+
+    if (record.childId) {
+      return "room";
+    }
+
+    if (record.cardinalId) {
+      return "cardinal";
+    }
+
+    return explicit ||
+      "object";
+  }
+
+  function calculateCompassOverlap(
+    screenX,
+    screenY,
+    radius
+  ) {
+    const distance =
+      Math.hypot(
+        screenX -
+          state.compassPlane.screenX,
+
+        screenY -
+          state.compassPlane.screenY
+      );
+
+    return (
+      distance <
+      (
+        Math.max(
+          0,
+          radius
+        ) +
+        Math.max(
+          0,
+          state.compassPlane.radius
+        )
+      )
+    );
+  }
+
+  function createHiddenProjectionRecord(
+    record
+  ) {
+    const previous =
+      state.lastNodeProjections.get(
+        record.id
+      );
+
+    const depthLayer =
+      previous
+        ? previous.depthLayer
+        : (
+            state.classifications.get(
+              record.id
+            ) ||
+            CLASSIFICATIONS.REAR
+          );
+
+    return freezePlain({
+      id:
+        record.projectionId,
+
+      kind:
+        normalizeProjectionKind(
+          record
+        ),
+
+      x:
+        previous
+          ? previous.x
+          : 0,
+
+      y:
+        previous
+          ? previous.y
+          : 0,
+
+      radiusPx:
+        0,
+
+      depthLayer,
+
+      compassOverlap:
+        false,
+
+      visible:
+        false
+    });
+  }
+
   function buildProjectionSnapshot() {
     const nodes = [];
     const rear = [];
     const front = [];
     const hitRegions = [];
+    const semanticRecords = [];
 
     for (
       const [
@@ -2292,23 +2550,31 @@
       ]
       of state.nodes
     ) {
-      if (!resolveNodeVisible(record)) {
-        continue;
-      }
+      const semanticallyVisible =
+        resolveNodeVisible(record);
 
       const worldPosition =
-        resolveNodePosition(record);
-
-      if (!worldPosition) {
-        continue;
-      }
+        semanticallyVisible
+          ? resolveNodePosition(record)
+          : null;
 
       const projection =
-        worldToScreen(
-          worldPosition
+        worldPosition
+          ? worldToScreen(
+              worldPosition
+            )
+          : null;
+
+      if (
+        !semanticallyVisible ||
+        !projection
+      ) {
+        semanticRecords.push(
+          createHiddenProjectionRecord(
+            record
+          )
         );
 
-      if (!projection) {
         continue;
       }
 
@@ -2321,9 +2587,24 @@
       const hitRadius =
         resolveNodeRadius(record);
 
+      const compassOverlap =
+        calculateCompassOverlap(
+          projection.screen.x,
+          projection.screen.y,
+          hitRadius
+        );
+
       const snapshot =
         freezePlain({
           id,
+
+          projectionId:
+            record.projectionId,
+
+          kind:
+            normalizeProjectionKind(
+              record
+            ),
 
           semanticObjectId:
             record.semanticObjectId ||
@@ -2364,6 +2645,8 @@
 
           hitRadius,
 
+          compassOverlap,
+
           metadata:
             record.metadata
               ? {
@@ -2373,6 +2656,46 @@
         });
 
       nodes.push(snapshot);
+
+      const semanticRecord =
+        freezePlain({
+          id:
+            record.projectionId,
+
+          kind:
+            snapshot.kind,
+
+          x:
+            projection.screen.x,
+
+          y:
+            projection.screen.y,
+
+          radiusPx:
+            projection.visible
+              ? hitRadius
+              : 0,
+
+          depthLayer:
+            depth.classification,
+
+          compassOverlap:
+            projection.visible
+              ? compassOverlap
+              : false,
+
+          visible:
+            projection.visible
+        });
+
+      semanticRecords.push(
+        semanticRecord
+      );
+
+      state.lastNodeProjections.set(
+        id,
+        semanticRecord
+      );
 
       if (
         depth.classification ===
@@ -2391,9 +2714,27 @@
           freezePlain({
             id,
 
+            projectionId:
+              record.projectionId,
+
             semanticObjectId:
               record.semanticObjectId ||
               null,
+
+            cardinalId:
+              record.cardinalId ||
+              null,
+
+            childId:
+              record.childId ||
+              null,
+
+            clusterId:
+              record.clusterId ||
+              null,
+
+            kind:
+              snapshot.kind,
 
             classification:
               depth.classification,
@@ -2412,6 +2753,15 @@
           })
         );
       }
+    }
+
+    for (
+      const tombstone
+      of state.pendingProjectionTombstones.values()
+    ) {
+      semanticRecords.push(
+        tombstone
+      );
     }
 
     rear.sort(
@@ -2436,9 +2786,39 @@
       (
         first,
         second
+      ) => {
+        const firstFront =
+          first.classification ===
+          CLASSIFICATIONS.FRONT;
+
+        const secondFront =
+          second.classification ===
+          CLASSIFICATIONS.FRONT;
+
+        if (
+          firstFront !==
+          secondFront
+        ) {
+          return firstFront
+            ? -1
+            : 1;
+        }
+
+        return (
+          second.viewDepth -
+          first.viewDepth
+        );
+      }
+    );
+
+    semanticRecords.sort(
+      (
+        first,
+        second
       ) =>
-        second.viewDepth -
-        first.viewDepth
+        first.id.localeCompare(
+          second.id
+        )
     );
 
     state.counters.projectionPasses +=
@@ -2457,8 +2837,120 @@
 
       front,
 
-      hitRegions
+      hitRegions,
+
+      semanticRecords
     });
+  }
+
+  function roundProjectionNumber(value) {
+    return (
+      Math.round(
+        toFiniteNumber(
+          value,
+          0
+        ) *
+        1000
+      ) /
+      1000
+    );
+  }
+
+  function createSemanticProjectionSignature(
+    records
+  ) {
+    return JSON.stringify(
+      records.map(
+        record => [
+          record.id,
+          record.kind,
+          roundProjectionNumber(
+            record.x
+          ),
+          roundProjectionNumber(
+            record.y
+          ),
+          roundProjectionNumber(
+            record.radiusPx
+          ),
+          record.depthLayer,
+          record.compassOverlap,
+          record.visible
+        ]
+      )
+    );
+  }
+
+  function publishSemanticProjectionToController() {
+    if (
+      !state.controller ||
+      typeof state.controller
+        .updateSemanticProjection !==
+        "function"
+    ) {
+      return false;
+    }
+
+    const records =
+      state.projectionSnapshot
+        .semanticRecords;
+
+    const signature =
+      createSemanticProjectionSignature(
+        records
+      );
+
+    if (
+      signature ===
+      state.lastSemanticProjectionSignature
+    ) {
+      state.counters
+        .semanticProjectionSkips +=
+        1;
+
+      return false;
+    }
+
+    state.semanticProjectionPublishing =
+      true;
+
+    try {
+      const accepted =
+        state.controller
+          .updateSemanticProjection(
+            records
+          );
+
+      if (accepted === false) {
+        throw new Error(
+          "The controller rejected the compositor semantic projection."
+        );
+      }
+
+      state.lastSemanticProjectionSignature =
+        signature;
+
+      state.counters
+        .semanticProjectionPublications +=
+        1;
+
+      if (
+        state.pendingProjectionTombstones
+          .size > 0
+      ) {
+        state.counters.tombstonesPublished +=
+          state.pendingProjectionTombstones
+            .size;
+
+        state.pendingProjectionTombstones
+          .clear();
+      }
+
+      return true;
+    } finally {
+      state.semanticProjectionPublishing =
+        false;
+    }
   }
 
   function getRenderFrame() {
@@ -2466,8 +2958,11 @@
       contract:
         CONTRACT,
 
-      controllerContract:
-        CONTROLLER_CONTRACT,
+      controllerModuleId:
+        CONTROLLER_MODULE_ID,
+
+      controllerModuleVersion:
+        CONTROLLER_MODULE_VERSION,
 
       frameId:
         state.frameId,
@@ -2568,8 +3063,358 @@
     method(payload);
   }
 
-  function renderRegisteredLayers(
+  function layerIsUsed(
+    layer,
+    renderers = state.renderers
+  ) {
+    const methodName =
+      layer === LAYERS.REAR
+        ? "renderRear"
+        : "renderFront";
+
+    for (
+      const renderer
+      of renderers.values()
+    ) {
+      if (
+        typeof renderer[methodName] ===
+        "function"
+      ) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  function validateClearOwnershipForRenderers(
+    renderers,
+    clearOwners
+  ) {
+    const rearUsed =
+      layerIsUsed(
+        LAYERS.REAR,
+        renderers
+      );
+
+    const frontUsed =
+      layerIsUsed(
+        LAYERS.FRONT,
+        renderers
+      );
+
+    if (
+      rearUsed &&
+      !clearOwners.rear
+    ) {
+      throw new Error(
+        "The active rear layer has no declared clear owner."
+      );
+    }
+
+    if (
+      frontUsed &&
+      !clearOwners.front
+    ) {
+      throw new Error(
+        "The active front layer has no declared clear owner."
+      );
+    }
+
+    if (
+      clearOwners.rear &&
+      !renderers.has(
+        clearOwners.rear
+      )
+    ) {
+      throw new Error(
+        "The declared rear clear owner is not registered."
+      );
+    }
+
+    if (
+      clearOwners.front &&
+      !renderers.has(
+        clearOwners.front
+      )
+    ) {
+      throw new Error(
+        "The declared front clear owner is not registered."
+      );
+    }
+
+    const rearOwner =
+      clearOwners.rear
+        ? renderers.get(
+            clearOwners.rear
+          )
+        : null;
+
+    const frontOwner =
+      clearOwners.front
+        ? renderers.get(
+            clearOwners.front
+          )
+        : null;
+
+    if (
+      rearOwner &&
+      typeof rearOwner.clearRear !==
+        "function"
+    ) {
+      throw new Error(
+        "The rear clear owner does not implement clearRear()."
+      );
+    }
+
+    if (
+      frontOwner &&
+      typeof frontOwner.clearFront !==
+        "function"
+    ) {
+      throw new Error(
+        "The front clear owner does not implement clearFront()."
+      );
+    }
+
+    return true;
+  }
+
+  function clearLayerWithOwner(
+    layer,
+    renderFrame,
+    ownerId = null
+  ) {
+    const resolvedOwnerId =
+      ownerId ||
+      (
+        layer === LAYERS.REAR
+          ? state.clearOwners.rear
+          : state.clearOwners.front
+      );
+
+    if (!resolvedOwnerId) {
+      throw new Error(
+        `No clear owner exists for the ${layer} layer.`
+      );
+    }
+
+    const renderer =
+      state.renderers.get(
+        resolvedOwnerId
+      );
+
+    if (!renderer) {
+      throw new Error(
+        `Clear owner "${resolvedOwnerId}" is not registered.`
+      );
+    }
+
+    const methodName =
+      layer === LAYERS.REAR
+        ? "clearRear"
+        : "clearFront";
+
+    const clearMethod =
+      renderer[methodName];
+
+    if (
+      typeof clearMethod !==
+      "function"
+    ) {
+      throw new Error(
+        `Clear owner "${resolvedOwnerId}" does not implement ${methodName}().`
+      );
+    }
+
+    const canvas =
+      layer === LAYERS.REAR
+        ? state.rearCanvas
+        : state.frontCanvas;
+
+    clearMethod({
+      contract:
+        CONTRACT,
+
+      frame:
+        renderFrame,
+
+      canvas,
+
+      layer,
+
+      reason:
+        "frame-clear",
+
+      rearCanvas:
+        state.rearCanvas,
+
+      frontCanvas:
+        state.frontCanvas
+    });
+
+    if (
+      layer ===
+      LAYERS.REAR
+    ) {
+      state.counters.rearClears +=
+        1;
+    } else {
+      state.counters.frontClears +=
+        1;
+    }
+
+    return resolvedOwnerId;
+  }
+
+  function clearRegisteredLayers(
     renderFrame
+  ) {
+    validateClearOwnershipForRenderers(
+      state.renderers,
+      state.clearOwners
+    );
+
+    const rearUsed =
+      layerIsUsed(
+        LAYERS.REAR
+      );
+
+    const frontUsed =
+      layerIsUsed(
+        LAYERS.FRONT
+      );
+
+    const rearClearOwner =
+      rearUsed
+        ? clearLayerWithOwner(
+            LAYERS.REAR,
+            renderFrame
+          )
+        : null;
+
+    const frontClearOwner =
+      frontUsed
+        ? clearLayerWithOwner(
+            LAYERS.FRONT,
+            renderFrame
+          )
+        : null;
+
+    return freezePlain({
+      rearRequired:
+        rearUsed,
+
+      frontRequired:
+        frontUsed,
+
+      rearCleared:
+        rearUsed,
+
+      frontCleared:
+        frontUsed,
+
+      rearClearOwner,
+
+      frontClearOwner
+    });
+  }
+
+  function finalClearOwnedLayers(
+    renderer,
+    reason
+  ) {
+    const renderFrame =
+      getRenderFrame();
+
+    if (
+      renderer.clearRearOwned ===
+        true
+    ) {
+      if (
+        state.clearOwners.rear !==
+        renderer.id
+      ) {
+        throw new Error(
+          `Renderer "${renderer.id}" does not own the rear clear boundary.`
+        );
+      }
+
+      renderer.clearRear({
+        contract:
+          CONTRACT,
+
+        frame:
+          renderFrame,
+
+        canvas:
+          state.rearCanvas,
+
+        layer:
+          LAYERS.REAR,
+
+        reason,
+
+        finalClear:
+          true,
+
+        rearCanvas:
+          state.rearCanvas,
+
+        frontCanvas:
+          state.frontCanvas
+      });
+
+      state.counters.rearClears +=
+        1;
+    }
+
+    if (
+      renderer.clearFrontOwned ===
+        true
+    ) {
+      if (
+        state.clearOwners.front !==
+        renderer.id
+      ) {
+        throw new Error(
+          `Renderer "${renderer.id}" does not own the front clear boundary.`
+        );
+      }
+
+      renderer.clearFront({
+        contract:
+          CONTRACT,
+
+        frame:
+          renderFrame,
+
+        canvas:
+          state.frontCanvas,
+
+        layer:
+          LAYERS.FRONT,
+
+        reason,
+
+        finalClear:
+          true,
+
+        rearCanvas:
+          state.rearCanvas,
+
+        frontCanvas:
+          state.frontCanvas
+      });
+
+      state.counters.frontClears +=
+        1;
+    }
+  }
+
+  function renderRegisteredLayers(
+    renderFrame,
+    clearState
   ) {
     const basePayload = {
       contract:
@@ -2595,7 +3440,12 @@
 
       hitRegions:
         state.projectionSnapshot
-          .hitRegions
+          .hitRegions,
+
+      clearState,
+
+      rendererMustNotClearSharedCanvas:
+        true
     };
 
     for (
@@ -2681,9 +3531,15 @@
     error,
     reason
   ) {
-    if (state.disposed) {
+    if (
+      state.disposed ||
+      state.failed
+    ) {
       return;
     }
+
+    state.failed =
+      true;
 
     state.counters.failures +=
       1;
@@ -2697,6 +3553,9 @@
       false;
 
     state.readyPublished =
+      false;
+
+    state.held =
       false;
 
     setRootState(
@@ -2721,6 +3580,9 @@
       {
         reason,
 
+        terminalForCurrentInstance:
+          true,
+
         error:
           errorPayload
       }
@@ -2731,10 +3593,562 @@
       {
         reason,
 
+        terminalForCurrentInstance:
+          true,
+
         error:
           errorPayload
       }
     );
+  }
+
+  function enterHeldState(
+    frame = null,
+    reason = "controller-held"
+  ) {
+    if (
+      state.disposed ||
+      state.failed
+    ) {
+      return false;
+    }
+
+    if (
+      frame &&
+      isValidControllerFrame(frame)
+    ) {
+      state.controllerFrame =
+        frame;
+    }
+
+    state.controllerReady =
+      false;
+
+    if (state.held) {
+      return false;
+    }
+
+    cancelScheduledRender();
+
+    state.held =
+      true;
+
+    state.readinessPending =
+      true;
+
+    state.counters.holds +=
+      1;
+
+    setRootState(
+      false,
+      "held"
+    );
+
+    publishReceipt(
+      "held",
+      {
+        reason
+      }
+    );
+
+    return true;
+  }
+
+  function leaveHeldState(
+    frame,
+    reason = "controller-hold-released"
+  ) {
+    if (
+      state.disposed ||
+      state.failed
+    ) {
+      return false;
+    }
+
+    if (!isValidControllerFrame(frame)) {
+      failRuntime(
+        new Error(
+          "The controller returned an invalid frame after hold release."
+        ),
+        "controller-hold-release"
+      );
+
+      return false;
+    }
+
+    state.controllerFrame =
+      frame;
+
+    if (frame.held === true) {
+      return enterHeldState(
+        frame,
+        reason
+      );
+    }
+
+    state.controllerReady =
+      true;
+
+    if (!state.held) {
+      return false;
+    }
+
+    state.held =
+      false;
+
+    state.readinessPending =
+      false;
+
+    state.counters.holdReleases +=
+      1;
+
+    if (!state.readyPublished) {
+      completeReadiness(reason);
+    } else {
+      setRootState(
+        true,
+        "ready"
+      );
+
+      requestRender(reason);
+    }
+
+    publishReceipt(
+      "hold-released",
+      {
+        reason
+      }
+    );
+
+    return true;
+  }
+
+  function processControllerFrame(
+    frame,
+    reason
+  ) {
+    if (
+      state.disposed ||
+      state.failed
+    ) {
+      return;
+    }
+
+    if (!isValidControllerFrame(frame)) {
+      failRuntime(
+        new Error(
+          "The controller published an incompatible frame."
+        ),
+        "controller-frame"
+      );
+
+      return;
+    }
+
+    state.controllerFrame =
+      frame;
+
+    if (frame.held === true) {
+      enterHeldState(
+        frame,
+        reason
+      );
+
+      return;
+    }
+
+    if (state.held) {
+      leaveHeldState(
+        frame,
+        reason
+      );
+
+      return;
+    }
+
+    state.controllerReady =
+      true;
+
+    if (!state.readyPublished) {
+      completeReadiness(reason);
+
+      return;
+    }
+
+    if (
+      state.semanticProjectionPublishing
+    ) {
+      return;
+    }
+
+    requestRender(reason);
+  }
+
+  function handleControllerFrame(frame) {
+    if (
+      state.disposed ||
+      state.failed ||
+      !state.initialized
+    ) {
+      return;
+    }
+
+    if (!isValidControllerFrame(frame)) {
+      failRuntime(
+        new Error(
+          "The controller published an incompatible frame."
+        ),
+        "controller-frame"
+      );
+
+      return;
+    }
+
+    if (state.controllerBinding) {
+      state.pendingControllerFrame =
+        frame;
+
+      return;
+    }
+
+    processControllerFrame(
+      frame,
+      "controller-frame-subscription"
+    );
+  }
+
+  function handleHeldSubscription(
+    heldState
+  ) {
+    if (
+      state.disposed ||
+      state.failed ||
+      !state.initialized
+    ) {
+      return;
+    }
+
+    if (state.controllerBinding) {
+      if (
+        heldState &&
+        heldState.held === true &&
+        state.pendingControllerFrame &&
+        isValidControllerFrame(
+          state.pendingControllerFrame
+        )
+      ) {
+        state.pendingControllerFrame =
+          freezePlain({
+            ...state.pendingControllerFrame,
+
+            held:
+              true
+          });
+      }
+
+      return;
+    }
+
+    const held =
+      Boolean(
+        heldState &&
+        heldState.held === true
+      );
+
+    if (held) {
+      enterHeldState(
+        state.controllerFrame,
+        normalize(
+          heldState.reason
+        ) ||
+        "controller-held-subscription"
+      );
+
+      return;
+    }
+
+    if (!state.held) {
+      return;
+    }
+
+    const controller =
+      state.controller ||
+      resolveControllerGlobal();
+
+    if (
+      !controller ||
+      typeof controller.getFrameState !==
+        "function"
+    ) {
+      state.readinessPending =
+        true;
+
+      setRootState(
+        false,
+        "pending-controller"
+      );
+
+      return;
+    }
+
+    let frame;
+
+    try {
+      frame =
+        controller.getFrameState();
+    } catch (error) {
+      failRuntime(
+        error,
+        "controller-hold-release-frame"
+      );
+
+      return;
+    }
+
+    leaveHeldState(
+      frame,
+      "controller-held-subscription-released"
+    );
+  }
+
+  function handleCompassSubscription() {
+    if (
+      state.disposed ||
+      state.failed ||
+      !state.initialized
+    ) {
+      return;
+    }
+
+    if (
+      state.controllerBinding ||
+      state.semanticProjectionPublishing
+    ) {
+      state.pendingCompassRender =
+        true;
+
+      return;
+    }
+
+    requestRender(
+      "controller-compass-state"
+    );
+  }
+
+  function bindControllerSubscriptions(
+    controller
+  ) {
+    if (
+      state.controllerBinding ||
+      state.controllerBound
+    ) {
+      return;
+    }
+
+    state.controllerBinding =
+      true;
+
+    state.pendingControllerFrame =
+      null;
+
+    state.pendingCompassRender =
+      false;
+
+    const acquired = [];
+
+    try {
+      const frameUnsubscribe =
+        controller.subscribeFrameState(
+          handleControllerFrame
+        );
+
+      if (
+        frameUnsubscribe != null &&
+        typeof frameUnsubscribe !==
+          "function"
+      ) {
+        throw new Error(
+          "subscribeFrameState() did not return an unsubscribe function."
+        );
+      }
+
+      if (
+        typeof frameUnsubscribe ===
+          "function"
+      ) {
+        acquired.push(
+          frameUnsubscribe
+        );
+      }
+
+      state.controllerFrameUnsubscribe =
+        frameUnsubscribe ||
+        null;
+
+      if (
+        typeof controller.subscribeHeldState ===
+          "function"
+      ) {
+        const heldUnsubscribe =
+          controller.subscribeHeldState(
+            handleHeldSubscription
+          );
+
+        if (
+          heldUnsubscribe != null &&
+          typeof heldUnsubscribe !==
+            "function"
+        ) {
+          throw new Error(
+            "subscribeHeldState() did not return an unsubscribe function."
+          );
+        }
+
+        if (
+          typeof heldUnsubscribe ===
+            "function"
+        ) {
+          acquired.push(
+            heldUnsubscribe
+          );
+        }
+
+        state.controllerHeldUnsubscribe =
+          heldUnsubscribe ||
+          null;
+      }
+
+      if (
+        typeof controller.subscribeCompassState ===
+          "function"
+      ) {
+        const compassUnsubscribe =
+          controller.subscribeCompassState(
+            handleCompassSubscription
+          );
+
+        if (
+          compassUnsubscribe != null &&
+          typeof compassUnsubscribe !==
+            "function"
+        ) {
+          throw new Error(
+            "subscribeCompassState() did not return an unsubscribe function."
+          );
+        }
+
+        if (
+          typeof compassUnsubscribe ===
+            "function"
+        ) {
+          acquired.push(
+            compassUnsubscribe
+          );
+        }
+
+        state.controllerCompassUnsubscribe =
+          compassUnsubscribe ||
+          null;
+      }
+
+      state.controllerBound =
+        true;
+    } catch (error) {
+      for (
+        const unsubscribe
+        of acquired.reverse()
+      ) {
+        try {
+          unsubscribe();
+        } catch {
+          /* Transaction rollback continues. */
+        }
+      }
+
+      state.controllerFrameUnsubscribe =
+        null;
+
+      state.controllerHeldUnsubscribe =
+        null;
+
+      state.controllerCompassUnsubscribe =
+        null;
+
+      state.controllerBound =
+        false;
+
+      throw error;
+    } finally {
+      state.controllerBinding =
+        false;
+    }
+
+    const retainedFrame =
+      state.pendingControllerFrame;
+
+    state.pendingControllerFrame =
+      null;
+
+    if (retainedFrame) {
+      processControllerFrame(
+        retainedFrame,
+        "controller-binding-retained-frame"
+      );
+    }
+
+    if (state.pendingCompassRender) {
+      state.pendingCompassRender =
+        false;
+
+      requestRender(
+        "controller-binding-retained-compass"
+      );
+    }
+  }
+
+  function bindResolvedController(
+    controller,
+    frame = null
+  ) {
+    if (!isValidControllerApi(controller)) {
+      throw new Error(
+        "The Showroom controller API is incompatible."
+      );
+    }
+
+    const authoritativeFrame =
+      frame ||
+      controller.getFrameState();
+
+    if (
+      !isValidControllerFrame(
+        authoritativeFrame
+      )
+    ) {
+      throw new Error(
+        "The Showroom controller frame is incompatible."
+      );
+    }
+
+    state.controller =
+      controller;
+
+    state.controllerFrame =
+      authoritativeFrame;
+
+    state.controllerReady =
+      authoritativeFrame.held !==
+      true;
+
+    state.held =
+      authoritativeFrame.held ===
+      true;
+
+    bindControllerSubscriptions(
+      controller
+    );
+
+    return authoritativeFrame;
   }
 
   function performRender() {
@@ -2746,7 +4160,9 @@
 
     if (
       state.disposed ||
+      state.failed ||
       !state.initialized ||
+      state.held ||
       !state.readyPublished ||
       !state.controllerReady ||
       !state.controllerFrame
@@ -2756,6 +4172,36 @@
 
     const controllerResult =
       readControllerFrame();
+
+    if (
+      controllerResult.status ===
+        "unavailable"
+    ) {
+      state.controllerReady =
+        false;
+
+      state.readinessPending =
+        true;
+
+      setRootState(
+        false,
+        "pending-controller"
+      );
+
+      return false;
+    }
+
+    if (
+      controllerResult.status ===
+        "controller-held"
+    ) {
+      enterHeldState(
+        controllerResult.frame,
+        "controller-held-during-render"
+      );
+
+      return false;
+    }
 
     if (
       controllerResult.status !==
@@ -2771,20 +4217,58 @@
       return false;
     }
 
+    state.controller =
+      controllerResult.controller;
+
+    state.controllerFrame =
+      controllerResult.frame;
+
+    state.controllerReady =
+      true;
+
     measureViewport();
     measureCompassPlane();
     rebuildMatrices();
 
-    state.frameId += 1;
+    state.frameId +=
+      1;
 
     state.projectionSnapshot =
       buildProjectionSnapshot();
 
+    try {
+      publishSemanticProjectionToController();
+    } catch (error) {
+      failRuntime(
+        error,
+        "semantic-projection-publication"
+      );
+
+      return false;
+    }
+
     const renderFrame =
       getRenderFrame();
 
+    let clearState;
+
+    try {
+      clearState =
+        clearRegisteredLayers(
+          renderFrame
+        );
+    } catch (error) {
+      failRuntime(
+        error,
+        "shared-layer-clear"
+      );
+
+      return false;
+    }
+
     renderRegisteredLayers(
-      renderFrame
+      renderFrame,
+      clearState
     );
 
     state.counters.renders +=
@@ -2803,7 +4287,9 @@
       EVENTS.compositorFrame,
       {
         frame:
-          renderFrame
+          renderFrame,
+
+        clearState
       }
     );
 
@@ -2826,7 +4312,9 @@
   ) {
     if (
       state.disposed ||
-      !state.initialized
+      state.failed ||
+      !state.initialized ||
+      state.held
     ) {
       return false;
     }
@@ -2850,13 +4338,6 @@
         performRender
       );
 
-    publishReceipt(
-      "render-requested",
-      {
-        reason
-      }
-    );
-
     return true;
   }
 
@@ -2871,9 +4352,22 @@
     state.renderRequested = false;
   }
 
+  function deriveProjectionId(
+    definition,
+    id
+  ) {
+    return normalize(
+      definition.childId ||
+      definition.cardinalId ||
+      definition.semanticObjectId ||
+      id
+    );
+  }
+
   function registerNode(definition) {
     if (
       state.disposed ||
+      state.failed ||
       !definition ||
       typeof definition !==
         "object"
@@ -2904,8 +4398,65 @@
       );
     }
 
+    const projectionId =
+      deriveProjectionId(
+        definition,
+        id
+      );
+
+    if (!projectionId) {
+      throw new TypeError(
+        `Compositor node "${id}" requires a stable controller projection id.`
+      );
+    }
+
+    const currentProjectionOwner =
+      state.projectionIds.get(
+        projectionId
+      );
+
+    if (
+      currentProjectionOwner &&
+      currentProjectionOwner !==
+        id
+    ) {
+      throw new Error(
+        `Controller projection id "${projectionId}" is already owned by node "${currentProjectionOwner}".`
+      );
+    }
+
+    const previousRecord =
+      state.nodes.get(id);
+
+    if (
+      previousRecord &&
+      previousRecord.projectionId !==
+        projectionId
+    ) {
+      const collision =
+        state.projectionIds.get(
+          projectionId
+        );
+
+      if (
+        collision &&
+        collision !== id
+      ) {
+        throw new Error(
+          `Controller projection id "${projectionId}" is already owned by node "${collision}".`
+        );
+      }
+    }
+
     const record = {
       id,
+
+      projectionId,
+
+      kind:
+        normalize(
+          definition.kind
+        ),
 
       semanticObjectId:
         normalize(
@@ -2980,17 +4531,46 @@
     };
 
     const replacing =
-      state.nodes.has(id);
+      Boolean(previousRecord);
+
+    if (
+      previousRecord &&
+      previousRecord.projectionId !==
+        projectionId
+    ) {
+      state.projectionIds.delete(
+        previousRecord.projectionId
+      );
+
+      state.pendingProjectionTombstones.set(
+        previousRecord.projectionId,
+        createNodeTombstone(
+          previousRecord
+        )
+      );
+    }
 
     state.nodes.set(
       id,
       record
     );
 
+    state.projectionIds.set(
+      projectionId,
+      id
+    );
+
+    state.pendingProjectionTombstones.delete(
+      projectionId
+    );
+
     if (!replacing) {
       state.counters.nodeRegistrations +=
         1;
     }
+
+    state.lastSemanticProjectionSignature =
+      "";
 
     requestRender(
       replacing
@@ -3001,6 +4581,8 @@
     return Object.freeze({
       id,
 
+      projectionId,
+
       unregister() {
         return unregisterNode(id);
       },
@@ -3009,26 +4591,90 @@
     });
   }
 
+  function createNodeTombstone(record) {
+    const previous =
+      state.lastNodeProjections.get(
+        record.id
+      );
+
+    return freezePlain({
+      id:
+        record.projectionId,
+
+      kind:
+        normalizeProjectionKind(
+          record
+        ),
+
+      x:
+        previous
+          ? previous.x
+          : 0,
+
+      y:
+        previous
+          ? previous.y
+          : 0,
+
+      radiusPx:
+        0,
+
+      depthLayer:
+        previous
+          ? previous.depthLayer
+          : (
+              state.classifications.get(
+                record.id
+              ) ||
+              CLASSIFICATIONS.REAR
+            ),
+
+      compassOverlap:
+        false,
+
+      visible:
+        false
+    });
+  }
+
   function unregisterNode(id) {
     const normalizedId =
       normalize(id);
 
-    if (
-      !normalizedId ||
-      !state.nodes.has(
+    const record =
+      state.nodes.get(
         normalizedId
-      )
-    ) {
+      );
+
+    if (!record) {
       return false;
     }
+
+    state.pendingProjectionTombstones.set(
+      record.projectionId,
+      createNodeTombstone(
+        record
+      )
+    );
 
     state.nodes.delete(
       normalizedId
     );
 
+    state.projectionIds.delete(
+      record.projectionId
+    );
+
     state.classifications.delete(
       normalizedId
     );
+
+    state.lastNodeProjections.delete(
+      normalizedId
+    );
+
+    state.lastSemanticProjectionSignature =
+      "";
 
     state.counters.nodeRemovals +=
       1;
@@ -3040,14 +4686,17 @@
     return true;
   }
 
-  function registerRenderer(definition) {
+  function normalizeRendererDefinition(
+    definition
+  ) {
     if (
-      state.disposed ||
       !definition ||
       typeof definition !==
         "object"
     ) {
-      return false;
+      throw new TypeError(
+        "A compositor renderer definition is required."
+      );
     }
 
     const id =
@@ -3061,19 +4710,93 @@
       );
     }
 
-    if (
-      typeof definition.renderRear !==
-        "function" &&
-      typeof definition.renderFront !==
+    const renderRear =
+      typeof definition.renderRear ===
         "function"
+        ? definition.renderRear
+        : null;
+
+    const renderFront =
+      typeof definition.renderFront ===
+        "function"
+        ? definition.renderFront
+        : null;
+
+    if (
+      !renderRear &&
+      !renderFront
     ) {
       throw new TypeError(
         `Compositor renderer "${id}" must implement renderRear() or renderFront().`
       );
     }
 
-    const renderer = {
+    const clearRearOwned =
+      definition.clearRearOwned ===
+      true;
+
+    const clearFrontOwned =
+      definition.clearFrontOwned ===
+      true;
+
+    const clearRear =
+      typeof definition.clearRear ===
+        "function"
+        ? definition.clearRear
+        : null;
+
+    const clearFront =
+      typeof definition.clearFront ===
+        "function"
+        ? definition.clearFront
+        : null;
+
+    if (
+      clearRearOwned &&
+      !clearRear
+    ) {
+      throw new TypeError(
+        `Renderer "${id}" declares rear clear ownership without clearRear().`
+      );
+    }
+
+    if (
+      clearFrontOwned &&
+      !clearFront
+    ) {
+      throw new TypeError(
+        `Renderer "${id}" declares front clear ownership without clearFront().`
+      );
+    }
+
+    if (
+      clearRear &&
+      !clearRearOwned
+    ) {
+      throw new TypeError(
+        `Renderer "${id}" provides clearRear() without declaring clearRearOwned: true.`
+      );
+    }
+
+    if (
+      clearFront &&
+      !clearFrontOwned
+    ) {
+      throw new TypeError(
+        `Renderer "${id}" provides clearFront() without declaring clearFrontOwned: true.`
+      );
+    }
+
+    return {
       id,
+
+      clearRearOwned,
+
+      clearFrontOwned,
+
+      clearRear,
+
+      clearFront,
 
       beginFrame:
         typeof definition.beginFrame ===
@@ -3081,17 +4804,9 @@
           ? definition.beginFrame
           : null,
 
-      renderRear:
-        typeof definition.renderRear ===
-          "function"
-          ? definition.renderRear
-          : null,
+      renderRear,
 
-      renderFront:
-        typeof definition.renderFront ===
-          "function"
-          ? definition.renderFront
-          : null,
+      renderFront,
 
       endFrame:
         typeof definition.endFrame ===
@@ -3105,49 +4820,184 @@
           ? definition.dispose
           : null
     };
+  }
 
-    const replacing =
-      state.renderers.get(id);
+  function createProposedRendererState(
+    incoming
+  ) {
+    const proposedRenderers =
+      new Map(
+        state.renderers
+      );
+
+    const proposedClearOwners = {
+      ...state.clearOwners
+    };
+
+    const existing =
+      proposedRenderers.get(
+        incoming.id
+      );
 
     if (
-      replacing &&
-      typeof replacing.dispose ===
-        "function"
+      existing &&
+      existing.clearRearOwned &&
+      proposedClearOwners.rear ===
+        incoming.id
     ) {
+      proposedClearOwners.rear =
+        null;
+    }
+
+    if (
+      existing &&
+      existing.clearFrontOwned &&
+      proposedClearOwners.front ===
+        incoming.id
+    ) {
+      proposedClearOwners.front =
+        null;
+    }
+
+    if (
+      incoming.clearRearOwned
+    ) {
+      if (
+        proposedClearOwners.rear &&
+        proposedClearOwners.rear !==
+          incoming.id
+      ) {
+        throw new Error(
+          `Rear clear ownership already belongs to renderer "${proposedClearOwners.rear}".`
+        );
+      }
+
+      proposedClearOwners.rear =
+        incoming.id;
+    }
+
+    if (
+      incoming.clearFrontOwned
+    ) {
+      if (
+        proposedClearOwners.front &&
+        proposedClearOwners.front !==
+          incoming.id
+      ) {
+        throw new Error(
+          `Front clear ownership already belongs to renderer "${proposedClearOwners.front}".`
+        );
+      }
+
+      proposedClearOwners.front =
+        incoming.id;
+    }
+
+    proposedRenderers.set(
+      incoming.id,
+      incoming
+    );
+
+    validateClearOwnershipForRenderers(
+      proposedRenderers,
+      proposedClearOwners
+    );
+
+    return {
+      existing:
+        existing || null,
+
+      proposedRenderers,
+
+      proposedClearOwners
+    };
+  }
+
+  function registerRenderer(definition) {
+    if (
+      state.disposed ||
+      state.failed
+    ) {
+      return false;
+    }
+
+    const incoming =
+      normalizeRendererDefinition(
+        definition
+      );
+
+    const proposal =
+      createProposedRendererState(
+        incoming
+      );
+
+    const existing =
+      proposal.existing;
+
+    if (existing) {
       try {
-        replacing.dispose({
-          reason:
-            "renderer-replaced",
+        finalClearOwnedLayers(
+          existing,
+          "renderer-replacement-final-clear"
+        );
+      } catch (error) {
+        failRuntime(
+          error,
+          "renderer-replacement-final-clear"
+        );
 
-          rearCanvas:
-            state.rearCanvas,
+        throw error;
+      }
 
-          frontCanvas:
-            state.frontCanvas
-        });
-      } catch {
-        /* Replacement remains authoritative. */
+      if (
+        typeof existing.dispose ===
+          "function"
+      ) {
+        try {
+          existing.dispose({
+            reason:
+              "renderer-replaced",
+
+            rearCanvas:
+              state.rearCanvas,
+
+            frontCanvas:
+              state.frontCanvas
+          });
+        } catch (error) {
+          failRuntime(
+            error,
+            "renderer-replacement-dispose"
+          );
+
+          throw error;
+        }
       }
     }
 
-    state.renderers.set(
-      id,
-      renderer
-    );
+    state.renderers =
+      proposal.proposedRenderers;
 
-    if (!replacing) {
+    state.clearOwners =
+      proposal.proposedClearOwners;
+
+    if (existing) {
+      state.counters.rendererReplacements +=
+        1;
+    } else {
       state.counters.rendererRegistrations +=
         1;
     }
 
     requestRender(
-      replacing
+      existing
         ? "renderer-replaced"
         : "renderer-registered"
     );
 
     return Object.freeze({
-      id,
+      id:
+        incoming.id,
 
       rearCanvas:
         state.rearCanvas,
@@ -3155,8 +5005,25 @@
       frontCanvas:
         state.frontCanvas,
 
+      clearRearOwned:
+        incoming.clearRearOwned,
+
+      clearFrontOwned:
+        incoming.clearFrontOwned,
+
+      sharedCanvasClearTimingAuthority:
+        CONTRACT,
+
+      compositorCreatesRenderingContext:
+        false,
+
+      rendererMustNotClearDuringRender:
+        true,
+
       unregister() {
-        return unregisterRenderer(id);
+        return unregisterRenderer(
+          incoming.id
+        );
       },
 
       requestRender
@@ -3176,9 +5043,62 @@
       return false;
     }
 
-    state.renderers.delete(
+    try {
+      finalClearOwnedLayers(
+        renderer,
+        "renderer-unregister-final-clear"
+      );
+    } catch (error) {
+      failRuntime(
+        error,
+        "renderer-unregister-final-clear"
+      );
+
+      return false;
+    }
+
+    const proposedRenderers =
+      new Map(
+        state.renderers
+      );
+
+    proposedRenderers.delete(
       normalizedId
     );
+
+    const proposedClearOwners = {
+      ...state.clearOwners
+    };
+
+    if (
+      proposedClearOwners.rear ===
+      normalizedId
+    ) {
+      proposedClearOwners.rear =
+        null;
+    }
+
+    if (
+      proposedClearOwners.front ===
+      normalizedId
+    ) {
+      proposedClearOwners.front =
+        null;
+    }
+
+    try {
+      validateClearOwnershipForRenderers(
+        proposedRenderers,
+        proposedClearOwners
+      );
+    } catch (error) {
+      failRuntime(
+        error,
+        "renderer-unregister-clear-ownership"
+      );
+
+      return false;
+    }
 
     if (
       typeof renderer.dispose ===
@@ -3195,10 +5115,21 @@
           frontCanvas:
             state.frontCanvas
         });
-      } catch {
-        /* Removal remains authoritative. */
+      } catch (error) {
+        failRuntime(
+          error,
+          "renderer-unregister-dispose"
+        );
+
+        return false;
       }
     }
+
+    state.renderers =
+      proposedRenderers;
+
+    state.clearOwners =
+      proposedClearOwners;
 
     state.counters.rendererRemovals +=
       1;
@@ -3213,6 +5144,7 @@
   function setCamera(update = {}) {
     if (
       state.disposed ||
+      state.failed ||
       !update ||
       typeof update !==
         "object"
@@ -3363,6 +5295,9 @@
 
     rebuildMatrices();
 
+    state.lastSemanticProjectionSignature =
+      "";
+
     requestRender(
       "camera-updated"
     );
@@ -3501,6 +5436,9 @@
 
     rebuildMatrices();
 
+    state.lastSemanticProjectionSignature =
+      "";
+
     requestRender(
       "compass-plane-updated"
     );
@@ -3572,8 +5510,65 @@
         );
 
       if (
-        distance <=
-          region.radius &&
+        distance >
+          region.radius
+      ) {
+        continue;
+      }
+
+      if (!best) {
+        best =
+          region;
+
+        bestDistance =
+          distance;
+
+        continue;
+      }
+
+      const regionIsFront =
+        region.classification ===
+        CLASSIFICATIONS.FRONT;
+
+      const bestIsFront =
+        best.classification ===
+        CLASSIFICATIONS.FRONT;
+
+      if (
+        regionIsFront &&
+        !bestIsFront
+      ) {
+        best =
+          region;
+
+        bestDistance =
+          distance;
+
+        continue;
+      }
+
+      if (
+        regionIsFront ===
+          bestIsFront &&
+        region.viewDepth >
+          best.viewDepth
+      ) {
+        best =
+          region;
+
+        bestDistance =
+          distance;
+
+        continue;
+      }
+
+      if (
+        regionIsFront ===
+          bestIsFront &&
+        Math.abs(
+          region.viewDepth -
+          best.viewDepth
+        ) <= 1e-9 &&
         distance <
           bestDistance
       ) {
@@ -3632,8 +5627,14 @@
       owner:
         OWNER,
 
-      controllerContract:
-        CONTROLLER_CONTRACT,
+      controllerGlobal:
+        CONTROLLER_GLOBAL,
+
+      controllerModuleId:
+        CONTROLLER_MODULE_ID,
+
+      controllerModuleVersion:
+        CONTROLLER_MODULE_VERSION,
 
       initialized:
         state.initialized,
@@ -3644,14 +5645,41 @@
       disposed:
         state.disposed,
 
+      failed:
+        state.failed,
+
+      held:
+        state.held,
+
       readyPublished:
         state.readyPublished,
 
       readinessPending:
         state.readinessPending,
 
+      readinessCompleting:
+        state.readinessCompleting,
+
       controllerReady:
         state.controllerReady,
+
+      controllerBound:
+        state.controllerBound,
+
+      controllerBinding:
+        state.controllerBinding,
+
+      semanticProjectionPublishing:
+        state.semanticProjectionPublishing,
+
+      lastSemanticProjectionSignature:
+        state.lastSemanticProjectionSignature,
+
+      pendingProjectionTombstones:
+        Array.from(
+          state.pendingProjectionTombstones
+            .keys()
+        ),
 
       pendingRenderReason:
         state.pendingRenderReason ||
@@ -3665,9 +5693,25 @@
       controllerFrame:
         state.controllerFrame,
 
+      clearOwners: {
+        ...state.clearOwners
+      },
+
       ownership: {
         registeredRendererLifecycleOwned:
           true,
+
+        sharedCanvasClearTimingOwned:
+          true,
+
+        rendererContextFamilyOwned:
+          false,
+
+        semanticProjectionFactPublicationOwned:
+          true,
+
+        interactionPriorityOwned:
+          false,
 
         compassRendererLifecycleOwned:
           false,
@@ -3767,6 +5811,11 @@
           state.nodes.keys()
         ),
 
+      registeredProjectionIds:
+        Array.from(
+          state.projectionIds.keys()
+        ),
+
       registeredRendererIds:
         Array.from(
           state.renderers.keys()
@@ -3789,6 +5838,9 @@
       state.resizeObserver =
         new ResizeObserver(
           () => {
+            state.lastSemanticProjectionSignature =
+              "";
+
             requestRender(
               "resize-observer"
             );
@@ -3807,6 +5859,9 @@
         window,
         "resize",
         () => {
+          state.lastSemanticProjectionSignature =
+            "";
+
           requestRender(
             "window-resize"
           );
@@ -3832,6 +5887,9 @@
     state.mutationObserver =
       new MutationObserver(
         () => {
+          state.lastSemanticProjectionSignature =
+            "";
+
           requestRender(
             "compass-layout-mutation"
           );
@@ -3890,11 +5948,311 @@
   ) {
     if (
       state.disposed ||
+      state.failed ||
       !state.initialized ||
-      state.readyPublished
+      state.readyPublished ||
+      state.readinessCompleting
     ) {
       return READINESS_RESULTS.SKIPPED;
     }
+
+    state.readinessCompleting =
+      true;
+
+    try {
+      const controllerResult =
+        readControllerFrame();
+
+      if (
+        controllerResult.status ===
+          "unavailable"
+      ) {
+        state.readinessPending =
+          true;
+
+        setRootState(
+          false,
+          "pending-controller"
+        );
+
+        return READINESS_RESULTS.PENDING;
+      }
+
+      if (
+        controllerResult.status ===
+          "controller-held"
+      ) {
+        if (
+          !state.controllerBound ||
+          state.controller !==
+            controllerResult.controller
+        ) {
+          bindResolvedController(
+            controllerResult.controller,
+            controllerResult.frame
+          );
+        }
+
+        enterHeldState(
+          controllerResult.frame,
+          "controller-readiness-held"
+        );
+
+        return READINESS_RESULTS.PENDING;
+      }
+
+      if (
+        controllerResult.status !==
+          "ready"
+      ) {
+        failRuntime(
+          new Error(
+            `Controller readiness failed: ${controllerResult.status}.`
+          ),
+          "controller-readiness"
+        );
+
+        return READINESS_RESULTS.FAILED;
+      }
+
+      if (
+        !state.controllerBound ||
+        state.controller !==
+          controllerResult.controller
+      ) {
+        bindResolvedController(
+          controllerResult.controller,
+          controllerResult.frame
+        );
+      } else {
+        state.controller =
+          controllerResult.controller;
+
+        state.controllerFrame =
+          controllerResult.frame;
+
+        state.controllerReady =
+          true;
+
+        state.held =
+          false;
+      }
+
+      const readinessReason =
+        state.pendingRenderReason ||
+        reason;
+
+      state.readinessPending =
+        false;
+
+      state.readyPublished =
+        true;
+
+      state.pendingRenderReason =
+        "";
+
+      measureViewport();
+      measureCompassPlane();
+      rebuildMatrices();
+
+      setRootState(
+        true,
+        "ready"
+      );
+
+      const initialRenderSucceeded =
+        performRender();
+
+      if (
+        !initialRenderSucceeded ||
+        state.failed ||
+        !state.readyPublished ||
+        !state.controllerReady ||
+        !state.controllerFrame
+      ) {
+        return READINESS_RESULTS.FAILED;
+      }
+
+      publishReceipt(
+        "ready",
+        {
+          reason:
+            readinessReason,
+
+          domContract:
+            "satisfied",
+
+          canvasModel:
+            "compositor-created-or-reused",
+
+          compositorCreatesRenderingContext:
+            false,
+
+          rearCanvasCreated:
+            state.rearCanvasCreated,
+
+          frontCanvasCreated:
+            state.frontCanvasCreated,
+
+          compassPlaneOwned:
+            false,
+
+          compassPlaneInspected:
+            true,
+
+          semanticNavigationOwned:
+            false,
+
+          interactionPriorityOwned:
+            false,
+
+          semanticProjectionReturnedToController:
+            true,
+
+          semanticProjectionFeedbackSuppressed:
+            true,
+
+          hiddenNodeFalseRecordsPublished:
+            true,
+
+          removedNodeTombstonesPublished:
+            true,
+
+          projectionIdsCollisionChecked:
+            true,
+
+          sharedCanvasClearTimingAuthority:
+            CONTRACT,
+
+          rendererContextFamilySelectedByCompositor:
+            false,
+
+          sharedCanvasClearFrequency:
+            "exactly-once-per-active-layer-per-frame",
+
+          registeredRendererLifecycleOwned:
+            true,
+
+          heldStateRecoverable:
+            true,
+
+          terminalFailureForCurrentInstance:
+            true
+        }
+      );
+
+      dispatch(
+        EVENTS.compositorReady,
+        {
+          reason:
+            readinessReason,
+
+          frame:
+            getRenderFrame(),
+
+          canvases: {
+            rear:
+              LAYERS.REAR,
+
+            front:
+              LAYERS.FRONT
+          },
+
+          semanticProjectionReturnedToController:
+            true,
+
+          interactionPriorityPublished:
+            false,
+
+          sharedCanvasClearTimingAuthority:
+            CONTRACT,
+
+          rendererContextFamilySelectedByCompositor:
+            false,
+
+          registeredRendererLifecycleOwned:
+            true,
+
+          heldStateRecoverable:
+            true,
+
+          terminalFailureForCurrentInstance:
+            true,
+
+          api: [
+            "getState",
+            "getFrameState",
+            "getProjectionSnapshot",
+            "getCanvases",
+            "getCamera",
+            "setCamera",
+            "setOrbitCamera",
+            "setCompassPlaneWorldPoint",
+            "worldToScreen",
+            "classifyWorldPoint",
+            "hitTest",
+            "registerNode",
+            "unregisterNode",
+            "registerRenderer",
+            "unregisterRenderer",
+            "requestRender",
+            "dispose"
+          ]
+        }
+      );
+
+      return READINESS_RESULTS.READY;
+    } catch (error) {
+      failRuntime(
+        error,
+        "readiness-completion"
+      );
+
+      return READINESS_RESULTS.FAILED;
+    } finally {
+      state.readinessCompleting =
+        false;
+    }
+  }
+
+  function initializeControllerBinding() {
+    addListener(
+      window,
+      EVENTS.controllerReady,
+      () => {
+        if (
+          state.disposed ||
+          state.failed ||
+          !state.initialized
+        ) {
+          return;
+        }
+
+        completeReadiness(
+          "controller-ready-event"
+        );
+      }
+    );
+
+    addListener(
+      window,
+      EVENTS.controllerFailure,
+      event => {
+        const reason =
+          event &&
+          event.detail &&
+          event.detail.reason
+            ? String(
+                event.detail.reason
+              )
+            : "SHOWROOM_CONTROLLER_FAILURE";
+
+        failRuntime(
+          new Error(reason),
+          "controller-failure-event"
+        );
+      }
+    );
 
     const controllerResult =
       readControllerFrame();
@@ -3916,241 +6274,33 @@
 
     if (
       controllerResult.status !==
-        "ready"
-    ) {
-      failRuntime(
-        new Error(
-          `Controller readiness failed: ${controllerResult.status}.`
-        ),
-        "controller-readiness"
-      );
-
-      return READINESS_RESULTS.FAILED;
-    }
-
-    const readinessReason =
-      state.pendingRenderReason ||
-      reason;
-
-    state.readinessPending =
-      false;
-
-    state.readyPublished =
-      true;
-
-    state.pendingRenderReason =
-      "";
-
-    measureViewport();
-    measureCompassPlane();
-    rebuildMatrices();
-
-    setRootState(
-      true,
-      "ready"
-    );
-
-    const initialRenderSucceeded =
-      performRender();
-
-    if (
-      !initialRenderSucceeded ||
-      !state.readyPublished ||
-      !state.controllerReady ||
-      !state.controllerFrame
-    ) {
-      return READINESS_RESULTS.FAILED;
-    }
-
-    publishReceipt(
-      "ready",
-      {
-        reason:
-          readinessReason,
-
-        domContract:
-          "satisfied",
-
-        canvasModel:
-          "compositor-created-or-reused",
-
-        rearCanvasCreated:
-          state.rearCanvasCreated,
-
-        frontCanvasCreated:
-          state.frontCanvasCreated,
-
-        compassPlaneOwned:
-          false,
-
-        compassPlaneInspected:
-          true,
-
-        semanticNavigationOwned:
-          false,
-
-        registeredRendererLifecycleOwned:
-          true,
-
-        compassRendererLifecycleOwned:
-          false
-      }
-    );
-
-    dispatch(
-      EVENTS.compositorReady,
-      {
-        reason:
-          readinessReason,
-
-        frame:
-          getRenderFrame(),
-
-        canvases: {
-          rear:
-            LAYERS.REAR,
-
-          front:
-            LAYERS.FRONT
-        },
-
-        registeredRendererLifecycleOwned:
-          true,
-
-        compassRendererLifecycleOwned:
-          false,
-
-        api: [
-          "getState",
-          "getFrameState",
-          "getProjectionSnapshot",
-          "getCanvases",
-          "getCamera",
-          "setCamera",
-          "setOrbitCamera",
-          "setCompassPlaneWorldPoint",
-          "worldToScreen",
-          "classifyWorldPoint",
-          "hitTest",
-          "registerNode",
-          "unregisterNode",
-          "registerRenderer",
-          "unregisterRenderer",
-          "requestRender",
-          "dispose"
-        ]
-      }
-    );
-
-    return READINESS_RESULTS.READY;
-  }
-
-  function handleControllerFrame(event) {
-    if (
-      state.disposed ||
-      !state.initialized
-    ) {
-      return;
-    }
-
-    const frame =
-      event &&
-      event.detail
-        ? event.detail.frame
-        : null;
-
-    if (
-      frame &&
-      isValidControllerFrame(frame) &&
-      frame.controllerReady === true &&
-      frame.disposed === false
-    ) {
-      state.controllerFrame =
-        frame;
-
-      state.controllerReady =
-        true;
-    } else {
-      const controllerResult =
-        readControllerFrame();
-
-      if (
-        controllerResult.status !==
-          "ready"
-      ) {
-        failRuntime(
-          new Error(
-            `Invalid controller frame: ${controllerResult.status}.`
-          ),
-          "controller-frame"
-        );
-
-        return;
-      }
-    }
-
-    if (!state.readyPublished) {
-      completeReadiness(
-        "controller-frame"
-      );
-
-      return;
-    }
-
-    requestRender(
-      "controller-frame"
-    );
-  }
-
-  function initializeControllerBinding() {
-    addListener(
-      window,
-      EVENTS.controllerReady,
-      () => {
-        completeReadiness(
-          "controller-ready-event"
-        );
-      }
-    );
-
-    addListener(
-      window,
-      EVENTS.controllerFrameChanged,
-      handleControllerFrame
-    );
-
-    addListener(
-      window,
-      EVENTS.controllerStateChanged,
-      handleControllerFrame
-    );
-
-    const controllerResult =
-      readControllerFrame();
-
-    if (
-      controllerResult.status ===
-        "unavailable"
-    ) {
-      state.readinessPending =
-        true;
-
-      setRootState(
-        false,
-        "pending-controller"
-      );
-
-      return;
-    }
-
-    if (
+        "ready" &&
       controllerResult.status !==
-        "ready"
+        "controller-held"
     ) {
       throw new Error(
         `Controller binding failed: ${controllerResult.status}.`
       );
     }
+
+    bindResolvedController(
+      controllerResult.controller,
+      controllerResult.frame
+    );
+
+    if (
+      controllerResult.status ===
+        "controller-held"
+    ) {
+      enterHeldState(
+        controllerResult.frame,
+        "controller-initially-held"
+      );
+
+      return READINESS_RESULTS.PENDING;
+    }
+
+    return READINESS_RESULTS.READY;
   }
 
   function exposeApi() {
@@ -4159,8 +6309,14 @@
         contract:
           CONTRACT,
 
-        controllerContract:
-          CONTROLLER_CONTRACT,
+        controllerGlobal:
+          CONTROLLER_GLOBAL,
+
+        controllerModuleId:
+          CONTROLLER_MODULE_ID,
+
+        controllerModuleVersion:
+          CONTROLLER_MODULE_VERSION,
 
         getState,
 
@@ -4250,6 +6406,15 @@
       const renderer
       of state.renderers.values()
     ) {
+      try {
+        finalClearOwnedLayers(
+          renderer,
+          `${reason}-final-clear`
+        );
+      } catch {
+        /* Disposal continues. */
+      }
+
       if (
         typeof renderer.dispose ===
           "function"
@@ -4271,6 +6436,12 @@
     }
 
     state.renderers.clear();
+
+    state.clearOwners.rear =
+      null;
+
+    state.clearOwners.front =
+      null;
   }
 
   function rollbackInitialization(error) {
@@ -4294,6 +6465,7 @@
 
     cancelScheduledRender();
     disconnectObservers();
+    unsubscribeController();
     removeListeners();
 
     disposeRenderers(
@@ -4301,6 +6473,9 @@
     );
 
     state.nodes.clear();
+    state.projectionIds.clear();
+    state.lastNodeProjections.clear();
+    state.pendingProjectionTombstones.clear();
     state.classifications.clear();
 
     removeApi();
@@ -4314,12 +6489,19 @@
     state.controller = null;
     state.controllerFrame = null;
     state.controllerReady = false;
+    state.controllerBound = false;
+    state.controllerBinding = false;
 
     state.initialized = false;
     state.initializing = false;
+    state.failed = true;
+    state.held = false;
     state.readyPublished = false;
     state.readinessPending = false;
+    state.readinessCompleting = false;
     state.pendingRenderReason = "";
+    state.semanticProjectionPublishing = false;
+    state.lastSemanticProjectionSignature = "";
 
     state.counters.failures +=
       1;
@@ -4341,6 +6523,9 @@
       {
         error:
           errorPayload,
+
+        terminalForCurrentInstance:
+          true,
 
         rearCompositorCanvasRemoved:
           rearCanvasCreated,
@@ -4369,6 +6554,9 @@
         semanticLayerStyleRestored:
           true,
 
+        controllerSubscriptionsRemoved:
+          true,
+
         listenersRemoved:
           true,
 
@@ -4381,7 +6569,10 @@
       EVENTS.compositorFailed,
       {
         error:
-          errorPayload
+          errorPayload,
+
+        terminalForCurrentInstance:
+          true
       }
     );
   }
@@ -4390,7 +6581,8 @@
     if (
       state.initialized ||
       state.initializing ||
-      state.disposed
+      state.disposed ||
+      state.failed
     ) {
       return;
     }
@@ -4411,7 +6603,6 @@
       }
 
       ensureCanvases();
-      initializeControllerBinding();
       initializeResizeObservation();
       initializeMutationObservation();
       exposeApi();
@@ -4427,6 +6618,35 @@
         "pending-controller"
       );
 
+      const bindingResult =
+        initializeControllerBinding();
+
+      if (
+        bindingResult ===
+          READINESS_RESULTS.PENDING
+      ) {
+        publishReceipt(
+          "pending",
+          {
+            reason:
+              state.held
+                ? "controller-held"
+                : "controller-unavailable",
+
+            domContract:
+              "satisfied",
+
+            canvasModel:
+              "compositor-created-or-reused",
+
+            compositorCreatesRenderingContext:
+              false
+          }
+        );
+
+        return;
+      }
+
       const readinessResult =
         completeReadiness(
           "startup"
@@ -4440,13 +6660,18 @@
           "pending",
           {
             reason:
-              "controller-unavailable",
+              state.held
+                ? "controller-held"
+                : "controller-unavailable",
 
             domContract:
               "satisfied",
 
             canvasModel:
-              "compositor-created-or-reused"
+              "compositor-created-or-reused",
+
+            compositorCreatesRenderingContext:
+              false
           }
         );
       }
@@ -4485,6 +6710,7 @@
 
     cancelScheduledRender();
     disconnectObservers();
+    unsubscribeController();
     removeListeners();
 
     disposeRenderers(
@@ -4492,6 +6718,9 @@
     );
 
     state.nodes.clear();
+    state.projectionIds.clear();
+    state.lastNodeProjections.clear();
+    state.pendingProjectionTombstones.clear();
     state.classifications.clear();
 
     removeApi();
@@ -4505,11 +6734,16 @@
     state.controller = null;
     state.controllerFrame = null;
     state.controllerReady = false;
+    state.controllerBound = false;
+    state.controllerBinding = false;
 
     state.initialized =
       false;
 
     state.initializing =
+      false;
+
+    state.held =
       false;
 
     state.readyPublished =
@@ -4518,7 +6752,16 @@
     state.readinessPending =
       false;
 
+    state.readinessCompleting =
+      false;
+
     state.pendingRenderReason =
+      "";
+
+    state.semanticProjectionPublishing =
+      false;
+
+    state.lastSemanticProjectionSignature =
       "";
 
     publishReceipt(
@@ -4548,6 +6791,9 @@
         semanticLayerStyleRestored:
           true,
 
+        controllerSubscriptionsRemoved:
+          true,
+
         registeredRendererLifecycleDisposed:
           true,
 
@@ -4561,6 +6807,9 @@
           false,
 
         frontHostMutated:
+          false,
+
+        compositorCreatedRenderingContext:
           false
       }
     );

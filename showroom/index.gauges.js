@@ -4,38 +4,64 @@
 /*
   Controlling markup:
   - /showroom/index.html
-  - SHOWROOM_MIRRORLAND_OFFICIAL_GATE_COMPACT_INSTRUCTIONS_AND_GAUGES_HTML_TNT_v5
+  - SHOWROOM_MIRRORLAND_NARRATIVE_CONSTELLATION_STATIC_HTML_TNT_v8
 
-  Scope:
-  - Discover and initialize compact Showroom gauge dashboards.
-  - Maintain exactly one selected gauge inside each dashboard.
-  - Coordinate compact metric, capability, and status selectors with one
-    shared detail panel per dashboard.
-  - Preserve aria-expanded correspondence without allowing a selected gauge
-    to collapse its shared detail panel.
-  - Maintain Diamond composition-region selection.
-  - Update the shared Diamond composition detail fields.
-  - Maintain Platform / Engineering / Evidence tab selection.
-  - Preserve keyboard navigation with preventScroll focus behavior.
-  - Preserve bounded numeric roll-up for direct compact metric values.
-  - Pause decorative dashboard motion while a front is inactive.
-  - Respect reduced-motion preferences.
-  - Preserve readiness, state, failure, disposal, and public API receipts.
-  - Avoid scrollIntoView, location-hash mutation, automatic document scrolling,
-    and focus behavior that moves the viewport.
+  Historical filename:
+  - /showroom/index.gauges.js
+
+  Internal runtime role:
+  - compact_selector_surface_coordinator
+
+  Owned selector families:
+  1. Gauge dashboard selectors.
+  2. Diamond composition-region selectors.
+  3. Information Front tabs.
+
+  Shared selector behavior:
+  - preserve exactly one active choice per valid selector group;
+  - synchronize ARIA state and existing hidden panels;
+  - maintain roving keyboard focus;
+  - reflect bounded active identifiers;
+  - normalize malformed initial selection state;
+  - preserve focus without moving the document viewport;
+  - isolate failures to the affected selector surface;
+  - publish bounded readiness, issue, state, restoration, and disposal receipts.
+
+  Transactional initialization order:
+  1. Validate the surface.
+  2. Construct the local record.
+  3. Normalize the initial selection.
+  4. Apply the initial selection state.
+  5. Commit the record to its STATE map.
+  6. Bind listeners.
+  7. Increment the initialized count.
+
+  Composition compatibility contract:
+  - HTML authors all five composition records;
+  - each record is read only from direct authored control children;
+  - one existing shared composition-detail surface is preserved;
+  - only its designated index, title, and description text nodes may change;
+  - assignments use textContent only;
+  - no markup is interpreted, created, replaced, relocated, or removed;
+  - the entire composition surface is held when any required record,
+    identifier, target, count, or uniqueness condition fails.
 
   Does not own:
   - page-level front selection;
-  - star activation;
-  - route decisions or hard navigation;
-  - cluster expansion;
-  - Return to Orbit;
+  - page navigation or hard navigation;
+  - constellation stars, clusters, crystals, compositor, or gestures;
   - Compass state or navigation;
   - Mirrorland Window state;
-  - Diamond motion, zoom, controls, camera, or lifecycle;
-  - compositor camera, projection, or depth classification;
-  - crystal geometry, motion, or drawing;
-  - disclosure opening or closing outside the gauge system.
+  - Diamond rendering, camera, controls, or lifecycle;
+  - gauge values, gauge labels, or gauge descriptions;
+  - Information Front content;
+  - general page text mutation;
+  - numeric roll-up;
+  - decorative animation lifecycle;
+  - front visibility observation;
+  - runtime reduced-motion handling;
+  - disclosure state outside these selector surfaces;
+  - markup construction or missing-surface repair.
 */
 
 (() => {
@@ -44,6 +70,38 @@
   const CONTRACT =
     "SHOWROOM_MIRRORLAND_COMPACT_GAUGE_DASHBOARD_TNT_v2";
 
+  const PAGE_CONTRACT =
+    "SHOWROOM_MIRRORLAND_NARRATIVE_CONSTELLATION_STATIC_HTML_TNT_v8";
+
+  const ROLE =
+    "compact_selector_surface_coordinator";
+
+  const PUBLIC_API_NAME =
+    "SHOWROOM_GAUGES";
+
+  const PRIVATE_CONTROLLER_NAME =
+    "__SHOWROOM_GAUGES_CONTROLLER__";
+
+  const ISSUE_LIMIT =
+    24;
+
+  const EXPECTED_COMPOSITION_REGION_COUNT =
+    5;
+
+  const EVENTS = Object.freeze({
+    receipt:
+      "showroom:gauges-receipt",
+
+    ready:
+      "showroom:gauges-ready",
+
+    restored:
+      "showroom:gauges-restored",
+
+    disposed:
+      "showroom:gauges-disposed"
+  });
+
   const SELECTORS = Object.freeze({
     root:
       "[data-showroom-root]",
@@ -51,20 +109,17 @@
     receipt:
       "[data-showroom-gauges-receipt]",
 
-    front:
-      "[data-showroom-front]",
-
     dashboard:
       "[data-showroom-gauge-dashboard]",
 
     gauge:
       "[data-showroom-gauge]",
 
-    detail:
-      "[data-showroom-gauge-detail]",
-
-    sharedDetails:
+    sharedGaugeDetails:
       "[data-showroom-gauge-details]",
+
+    gaugeDetail:
+      "[data-showroom-gauge-detail]",
 
     compositionGauge:
       "[data-showroom-composition-gauge]",
@@ -101,46 +156,93 @@
     state:
       "data-showroom-gauges-state",
 
-    motion:
-      "data-showroom-gauge-motion",
-
-    dashboardState:
-      "data-gauge-dashboard-state",
-
-    entered:
-      "data-gauge-dashboard-entered",
-
     selectedGauge:
       "data-selected-gauge",
+
+    activeGaugeDetail:
+      "data-active-gauge-detail",
 
     selectedRegion:
       "data-selected-region",
 
+    activeCompositionRegion:
+      "data-active-composition-region",
+
+    compositionState:
+      "data-showroom-composition-state",
+
     activeInformationTab:
       "data-active-information-tab",
 
-    frontState:
-      "data-showroom-front-state"
+    rootActiveInformationTab:
+      "data-showroom-active-information-tab",
+
+    gaugeSelected:
+      "data-gauge-selected",
+
+    regionSelected:
+      "data-region-selected",
+
+    informationTabSelected:
+      "data-information-tab-selected"
+  });
+
+  const ISSUE_CODES = Object.freeze({
+    initializationFailure:
+      "INITIALIZATION_FAILURE",
+
+    surfaceInitializationFailure:
+      "SURFACE_INITIALIZATION_FAILURE",
+
+    initialStateNormalized:
+      "INITIAL_STATE_NORMALIZED",
+
+    focusRestorationFailure:
+      "FOCUS_RESTORATION_FAILURE",
+
+    duplicateInstallation:
+      "DUPLICATE_INSTALLATION"
   });
 
   const STATE = {
     root: null,
     receipt: null,
 
-    reducedMotionQuery: null,
-    reducedMotion: false,
-
     dashboards: new Map(),
-    compositionGauges: new Map(),
+    compositionGroups: new Map(),
     informationGroups: new Map(),
 
     listeners: [],
-    observers: [],
-    animationFrames: new Set(),
+
+    issues: [],
+    issueCount: 0,
+    droppedIssueCount: 0,
+
+    discovered: {
+      dashboards: 0,
+      compositionGroups: 0,
+      informationGroups: 0
+    },
+
+    initializedCounts: {
+      dashboards: 0,
+      compositionGroups: 0,
+      informationGroups: 0
+    },
+
+    heldCounts: {
+      dashboards: 0,
+      compositionGroups: 0,
+      informationGroups: 0
+    },
+
+    publicApi: null,
+    privateController: null,
 
     initialized: false,
     disposed: false,
-    fatalError: null
+    fatalError: null,
+    lastReceipt: null
   };
 
   function toArray(value) {
@@ -170,36 +272,47 @@
     );
   }
 
-  function isElementVisible(element) {
-    if (
-      !element ||
-      !element.isConnected ||
-      element.hidden
-    ) {
-      return false;
-    }
+  function isControlAvailable(control) {
+    return Boolean(
+      control &&
+      control.isConnected &&
+      !control.hidden &&
+      !control.disabled &&
+      control.getAttribute("aria-disabled") !== "true"
+    );
+  }
 
-    const front =
-      element.closest(SELECTORS.front);
-
-    if (
-      front &&
-      (
-        front.hidden ||
-        front.getAttribute(
-          ATTRIBUTES.frontState
-        ) === "inactive"
+  function getLocallyOwnedControls(
+    container,
+    controlSelector,
+    ownerSelector
+  ) {
+    return toArray(
+      container.querySelectorAll(
+        controlSelector
       )
-    ) {
-      return false;
-    }
+    ).filter(
+      (control) =>
+        control.closest(
+          ownerSelector
+        ) === container
+    );
+  }
 
-    const style =
-      window.getComputedStyle(element);
-
-    return (
-      style.display !== "none" &&
-      style.visibility !== "hidden"
+  function getLocallyOwnedElements(
+    container,
+    elementSelector,
+    ownerSelector
+  ) {
+    return toArray(
+      container.querySelectorAll(
+        elementSelector
+      )
+    ).filter(
+      (element) =>
+        element.closest(
+          ownerSelector
+        ) === container
     );
   }
 
@@ -231,271 +344,132 @@
     });
   }
 
-  function addObserver(observer) {
-    if (observer) {
-      STATE.observers.push(observer);
-    }
-  }
-
-  function requestTrackedFrame(callback) {
-    const frameId =
-      window.requestAnimationFrame(
-        (timestamp) => {
-          STATE.animationFrames.delete(
-            frameId
-          );
-
-          callback(timestamp);
-        }
-      );
-
-    STATE.animationFrames.add(frameId);
-
-    return frameId;
-  }
-
-  function cancelTrackedFrames() {
-    for (
-      const frameId
-      of STATE.animationFrames
-    ) {
-      window.cancelAnimationFrame(
-        frameId
-      );
-    }
-
-    STATE.animationFrames.clear();
-  }
-
-  function createReceiptPayload(
-    eventName,
-    extra = {}
-  ) {
+  function serializeError(error) {
     return Object.freeze({
-      contract:
-        CONTRACT,
+      name:
+        error instanceof Error
+          ? error.name
+          : "Error",
 
-      event:
-        eventName,
-
-      timestamp:
-        nowIso(),
-
-      ready:
-        STATE.initialized &&
-        !STATE.disposed,
-
-      disposed:
-        STATE.disposed,
-
-      reducedMotion:
-        STATE.reducedMotion,
-
-      dashboards:
-        STATE.dashboards.size,
-
-      compositionGauges:
-        STATE.compositionGauges.size,
-
-      informationGroups:
-        STATE.informationGroups.size,
-
-      fatalError:
-        STATE.fatalError
-          ? {
-              name:
-                STATE.fatalError.name,
-
-              message:
-                STATE.fatalError.message
-            }
-          : null,
-
-      ...extra
+      message:
+        error instanceof Error
+          ? error.message
+          : String(error)
     });
   }
 
-  function publishReceipt(
-    eventName,
-    extra = {}
-  ) {
-    const payload =
-      createReceiptPayload(
-        eventName,
-        extra
-      );
-
-    if (STATE.receipt) {
-      const serialized =
-        JSON.stringify(payload);
-
-      STATE.receipt.value =
-        JSON.stringify(
-          payload,
-          null,
-          2
-        );
-
-      STATE.receipt.textContent =
-        serialized;
-    }
-
-    window.dispatchEvent(
-      new CustomEvent(
-        "showroom:gauges-receipt",
-        {
-          detail:
-            payload
-        }
-      )
-    );
-
-    return payload;
-  }
-
-  function reportRecoverableError(
+  function addIssue(
+    code,
     scope,
-    error,
-    extra = {}
+    surfaceId,
+    message
   ) {
-    publishReceipt(
-      "recoverable-error",
-      {
-        scope,
+    const issue = Object.freeze({
+      code:
+        normalizeText(code) ||
+        ISSUE_CODES.surfaceInitializationFailure,
 
-        error: {
-          name:
-            error instanceof Error
-              ? error.name
-              : "Error",
+      scope:
+        normalizeText(scope) ||
+        "unknown",
 
-          message:
-            error instanceof Error
-              ? error.message
-              : String(error)
-        },
+      surfaceId:
+        normalizeText(surfaceId) ||
+        null,
 
-        ...extra
-      }
-    );
-  }
+      message:
+        normalizeText(message) ||
+        "Unspecified issue."
+    });
 
-  function reportFatalError(error) {
-    STATE.fatalError =
-      error instanceof Error
-        ? error
-        : new Error(
-            String(error)
-          );
-
-    if (STATE.root) {
-      STATE.root.setAttribute(
-        ATTRIBUTES.state,
-        "failed"
-      );
-
-      STATE.root.setAttribute(
-        ATTRIBUTES.ready,
-        "false"
-      );
-    }
-
-    publishReceipt(
-      "fatal-error"
-    );
-  }
-
-  function resolveControlledElement(
-    source,
-    attributeName
-  ) {
-    if (!source) {
-      return null;
-    }
-
-    const id =
-      normalizeText(
-        source.getAttribute(
-          attributeName
-        )
-      );
-
-    if (!id) {
-      return null;
-    }
-
-    return document.getElementById(id);
-  }
-
-  function validateGaugePair(
-    gauge,
-    detail
-  ) {
-    const gaugeId =
-      normalizeText(
-        gauge.getAttribute(
-          "data-gauge-id"
-        )
-      ) || "unknown";
-
-    if (!detail) {
-      throw new Error(
-        `Gauge "${gaugeId}" has no matching detail panel.`
-      );
-    }
-
-    const detailId =
-      normalizeText(
-        detail.getAttribute(
-          "data-gauge-detail-id"
-        )
-      );
+    STATE.issueCount += 1;
 
     if (
-      detailId &&
-      gaugeId !== "unknown" &&
-      gaugeId !== detailId
+      STATE.issues.length <
+      ISSUE_LIMIT
     ) {
-      throw new Error(
-        `Gauge/detail mismatch: "${gaugeId}" does not match "${detailId}".`
-      );
+      STATE.issues.push(issue);
+    } else {
+      STATE.droppedIssueCount += 1;
     }
+
+    return issue;
   }
 
-  function getDashboardRecordFromGauge(
-    gauge
+  function recordErrorIssue(
+    code,
+    scope,
+    surfaceId,
+    error
   ) {
-    const dashboard =
-      gauge.closest(
-        SELECTORS.dashboard
-      );
+    const serialized =
+      serializeError(error);
 
-    if (!dashboard) {
-      return null;
-    }
-
-    return (
-      STATE.dashboards.get(
-        dashboard
-      ) || null
+    return addIssue(
+      code,
+      scope,
+      surfaceId,
+      serialized.message
     );
   }
 
-  function focusWithoutScroll(element) {
+  function getRuntimeState() {
+    if (STATE.disposed) {
+      return "disposed";
+    }
+
+    if (STATE.fatalError) {
+      return "failed";
+    }
+
+    const initializedTotal =
+      STATE.initializedCounts.dashboards +
+      STATE.initializedCounts.compositionGroups +
+      STATE.initializedCounts.informationGroups;
+
+    const heldTotal =
+      STATE.heldCounts.dashboards +
+      STATE.heldCounts.compositionGroups +
+      STATE.heldCounts.informationGroups;
+
     if (
-      !element ||
-      typeof element.focus !== "function"
+      initializedTotal === 0 &&
+      heldTotal > 0
     ) {
+      return "held";
+    }
+
+    if (
+      STATE.issueCount > 0
+    ) {
+      return "ready-with-issues";
+    }
+
+    return "ready";
+  }
+
+  function setRootRuntimeState() {
+    if (!STATE.root) {
       return;
     }
 
-    try {
-      element.focus({
-        preventScroll: true
-      });
-    } catch {
-      element.focus();
-    }
+    const runtimeState =
+      getRuntimeState();
+
+    STATE.root.setAttribute(
+      ATTRIBUTES.state,
+      runtimeState
+    );
+
+    STATE.root.setAttribute(
+      ATTRIBUTES.ready,
+      (
+        runtimeState === "ready" ||
+        runtimeState === "ready-with-issues"
+      )
+        ? "true"
+        : "false"
+    );
   }
 
   function getGaugeId(gauge) {
@@ -507,6 +481,503 @@
     );
   }
 
+  function getRegionId(region) {
+    return normalizeText(
+      region &&
+      region.getAttribute(
+        "data-region-id"
+      )
+    );
+  }
+
+  function getInformationTabId(tab) {
+    return normalizeText(
+      tab &&
+      tab.getAttribute(
+        "data-information-tab-id"
+      )
+    );
+  }
+
+  function getActiveGaugeIds() {
+    return toArray(
+      STATE.dashboards.values()
+    ).map((record) => Object.freeze({
+      dashboardId:
+        record.id,
+
+      gaugeId:
+        record.selectedGauge
+          ? getGaugeId(
+              record.selectedGauge
+            )
+          : null
+    }));
+  }
+
+  function getActiveCompositionRegionIds() {
+    return toArray(
+      STATE.compositionGroups.values()
+    ).map((record) => Object.freeze({
+      compositionId:
+        record.id,
+
+      regionId:
+        record.selectedRegion
+          ? getRegionId(
+              record.selectedRegion
+            )
+          : null
+    }));
+  }
+
+  function getActiveInformationTabIds() {
+    return toArray(
+      STATE.informationGroups.values()
+    ).map((record) => Object.freeze({
+      informationGroupId:
+        record.id,
+
+      tabId:
+        record.selectedTab
+          ? getInformationTabId(
+              record.selectedTab
+            )
+          : null
+    }));
+  }
+
+  function createReceipt(
+    event,
+    context = {}
+  ) {
+    return Object.freeze({
+      contract:
+        CONTRACT,
+
+      pageContract:
+        PAGE_CONTRACT,
+
+      role:
+        ROLE,
+
+      event:
+        normalizeText(event) ||
+        "unspecified",
+
+      timestamp:
+        nowIso(),
+
+      runtimeState:
+        getRuntimeState(),
+
+      initialized:
+        STATE.initialized,
+
+      disposed:
+        STATE.disposed,
+
+      discovered:
+        Object.freeze({
+          ...STATE.discovered
+        }),
+
+      initializedSurfaces:
+        Object.freeze({
+          ...STATE.initializedCounts
+        }),
+
+      heldSurfaces:
+        Object.freeze({
+          ...STATE.heldCounts
+        }),
+
+      activeGaugeIds:
+        Object.freeze(
+          getActiveGaugeIds()
+        ),
+
+      activeCompositionRegionIds:
+        Object.freeze(
+          getActiveCompositionRegionIds()
+        ),
+
+      activeInformationTabIds:
+        Object.freeze(
+          getActiveInformationTabIds()
+        ),
+
+      issueCount:
+        STATE.issueCount,
+
+      retainedIssueCount:
+        STATE.issues.length,
+
+      droppedIssueCount:
+        STATE.droppedIssueCount,
+
+      issueLimit:
+        ISSUE_LIMIT,
+
+      issues:
+        Object.freeze(
+          STATE.issues.slice()
+        ),
+
+      fatalError:
+        STATE.fatalError
+          ? serializeError(
+              STATE.fatalError
+            )
+          : null,
+
+      context:
+        Object.freeze({
+          ...context
+        })
+    });
+  }
+
+  function dispatch(
+    eventName,
+    detail
+  ) {
+    window.dispatchEvent(
+      new CustomEvent(
+        eventName,
+        {
+          detail
+        }
+      )
+    );
+  }
+
+  function publishReceipt(
+    event,
+    context = {}
+  ) {
+    setRootRuntimeState();
+
+    const payload =
+      createReceipt(
+        event,
+        context
+      );
+
+    STATE.lastReceipt =
+      payload;
+
+    if (STATE.receipt) {
+      const serialized =
+        JSON.stringify(payload);
+
+      STATE.receipt.value =
+        serialized;
+
+      STATE.receipt.textContent =
+        serialized;
+    }
+
+    dispatch(
+      EVENTS.receipt,
+      payload
+    );
+
+    return payload;
+  }
+
+  function getScrollableAncestors(element) {
+    const records = [];
+
+    let current =
+      element
+        ? element.parentElement
+        : null;
+
+    while (current) {
+      const style =
+        window.getComputedStyle(current);
+
+      const overflowX =
+        style.overflowX;
+
+      const overflowY =
+        style.overflowY;
+
+      const scrollableX =
+        (
+          overflowX === "auto" ||
+          overflowX === "scroll"
+        ) &&
+        current.scrollWidth >
+        current.clientWidth;
+
+      const scrollableY =
+        (
+          overflowY === "auto" ||
+          overflowY === "scroll"
+        ) &&
+        current.scrollHeight >
+        current.clientHeight;
+
+      if (
+        scrollableX ||
+        scrollableY
+      ) {
+        records.push({
+          element:
+            current,
+
+          left:
+            current.scrollLeft,
+
+          top:
+            current.scrollTop
+        });
+      }
+
+      current =
+        current.parentElement;
+    }
+
+    return records;
+  }
+
+  function restoreScrollPositions(
+    windowX,
+    windowY,
+    ancestorRecords
+  ) {
+    for (
+      const record
+      of ancestorRecords
+    ) {
+      record.element.scrollLeft =
+        record.left;
+
+      record.element.scrollTop =
+        record.top;
+    }
+
+    window.scrollTo(
+      windowX,
+      windowY
+    );
+  }
+
+  function focusWithoutScroll(element) {
+    if (
+      !element ||
+      typeof element.focus !== "function"
+    ) {
+      return false;
+    }
+
+    const windowX =
+      window.scrollX;
+
+    const windowY =
+      window.scrollY;
+
+    const ancestorRecords =
+      getScrollableAncestors(
+        element
+      );
+
+    try {
+      element.focus({
+        preventScroll: true
+      });
+    } catch {
+      try {
+        element.focus();
+      } catch (error) {
+        recordErrorIssue(
+          ISSUE_CODES.focusRestorationFailure,
+          "focus",
+          element.id || null,
+          error
+        );
+
+        return false;
+      }
+    }
+
+    restoreScrollPositions(
+      windowX,
+      windowY,
+      ancestorRecords
+    );
+
+    window.requestAnimationFrame(() => {
+      restoreScrollPositions(
+        windowX,
+        windowY,
+        ancestorRecords
+      );
+    });
+
+    return true;
+  }
+
+  function resolveControlledElement(
+    control,
+    attributeName = "aria-controls"
+  ) {
+    if (!control) {
+      return null;
+    }
+
+    const id =
+      normalizeText(
+        control.getAttribute(
+          attributeName
+        )
+      );
+
+    if (!id) {
+      return null;
+    }
+
+    return document.getElementById(
+      id
+    );
+  }
+
+  function findAvailableIndex(
+    controls,
+    startIndex,
+    direction
+  ) {
+    if (
+      controls.length === 0
+    ) {
+      return -1;
+    }
+
+    for (
+      let step = 1;
+      step <= controls.length;
+      step += 1
+    ) {
+      const index =
+        (
+          startIndex +
+          direction * step +
+          controls.length
+        ) %
+        controls.length;
+
+      if (
+        isControlAvailable(
+          controls[index]
+        )
+      ) {
+        return index;
+      }
+    }
+
+    return -1;
+  }
+
+  function firstAvailableControl(controls) {
+    return (
+      controls.find(
+        isControlAvailable
+      ) || null
+    );
+  }
+
+  function normalizeInitialSelection(
+    controls,
+    isSelected,
+    scope,
+    surfaceId
+  ) {
+    const available =
+      controls.filter(
+        isControlAvailable
+      );
+
+    if (
+      available.length === 0
+    ) {
+      throw new Error(
+        `Selector surface "${surfaceId}" contains no available controls.`
+      );
+    }
+
+    const selected =
+      available.filter(
+        isSelected
+      );
+
+    if (
+      selected.length === 1
+    ) {
+      return selected[0];
+    }
+
+    const normalized =
+      selected[0] ||
+      available[0];
+
+    addIssue(
+      ISSUE_CODES.initialStateNormalized,
+      scope,
+      surfaceId,
+      selected.length === 0
+        ? "No valid initial selection was present; the first available control was selected."
+        : "Multiple initial selections were present; the first valid selected control was retained."
+    );
+
+    return normalized;
+  }
+
+  function ensureUniqueIdentifier(
+    identifier,
+    usedIdentifiers,
+    typeLabel,
+    surfaceId
+  ) {
+    if (!identifier) {
+      throw new Error(
+        `${typeLabel} in "${surfaceId}" is missing its required identifier.`
+      );
+    }
+
+    if (
+      usedIdentifiers.has(
+        identifier
+      )
+    ) {
+      throw new Error(
+        `${typeLabel} identifier "${identifier}" is duplicated in "${surfaceId}".`
+      );
+    }
+
+    usedIdentifiers.add(
+      identifier
+    );
+  }
+
+  function getDashboardRecordFromGauge(
+    gauge
+  ) {
+    const dashboard =
+      gauge
+        ? gauge.closest(
+            SELECTORS.dashboard
+          )
+        : null;
+
+    return dashboard
+      ? STATE.dashboards.get(
+          dashboard
+        ) || null
+      : null;
+  }
+
   function selectGauge(
     record,
     gauge,
@@ -514,16 +985,12 @@
   ) {
     if (
       !record ||
-      !gauge ||
-      record.disposed
+      record.disposed ||
+      record.held ||
+      !isControlAvailable(gauge)
     ) {
       return false;
     }
-
-    const {
-      focus = false,
-      announce = true
-    } = options;
 
     const detail =
       record.detailByGauge.get(
@@ -547,8 +1014,11 @@
         selected
       );
 
+      candidate.tabIndex =
+        selected ? 0 : -1;
+
       candidate.toggleAttribute(
-        "data-gauge-selected",
+        ATTRIBUTES.gaugeSelected,
         selected
       );
 
@@ -573,25 +1043,29 @@
       gauge;
 
     const gaugeId =
-      getGaugeId(gauge);
+      getGaugeId(
+        gauge
+      );
 
     record.dashboard.setAttribute(
       ATTRIBUTES.selectedGauge,
       gaugeId
     );
 
-    if (record.sharedDetails) {
-      record.sharedDetails.setAttribute(
-        "data-active-gauge-detail",
-        gaugeId
+    record.sharedDetails.setAttribute(
+      ATTRIBUTES.activeGaugeDetail,
+      gaugeId
+    );
+
+    if (options.focus) {
+      focusWithoutScroll(
+        gauge
       );
     }
 
-    if (focus) {
-      focusWithoutScroll(gauge);
-    }
-
-    if (announce) {
+    if (
+      options.announce !== false
+    ) {
       publishReceipt(
         "gauge-selected",
         {
@@ -616,16 +1090,24 @@
         currentGauge
       );
 
-    if (currentIndex < 0) {
+    if (
+      currentIndex < 0
+    ) {
       return false;
     }
 
     const nextIndex =
-      (
-        currentIndex +
-        direction +
-        record.gauges.length
-      ) % record.gauges.length;
+      findAvailableIndex(
+        record.gauges,
+        currentIndex,
+        direction
+      );
+
+    if (
+      nextIndex < 0
+    ) {
+      return false;
+    }
 
     return selectGauge(
       record,
@@ -645,7 +1127,10 @@
         gauge
       );
 
-    if (!record) {
+    if (
+      !record ||
+      record.held
+    ) {
       return;
     }
 
@@ -672,327 +1157,199 @@
         );
         break;
 
-      case "Home":
-        event.preventDefault();
+      case "Home": {
+        const first =
+          firstAvailableControl(
+            record.gauges
+          );
 
-        selectGauge(
-          record,
-          record.gauges[0],
-          {
-            focus: true
-          }
-        );
+        if (first) {
+          event.preventDefault();
+
+          selectGauge(
+            record,
+            first,
+            {
+              focus: true
+            }
+          );
+        }
+
         break;
+      }
 
-      case "End":
-        event.preventDefault();
+      case "End": {
+        const last =
+          firstAvailableControl(
+            record.gauges
+              .slice()
+              .reverse()
+          );
 
-        selectGauge(
-          record,
-          record.gauges[
-            record.gauges.length - 1
-          ],
-          {
-            focus: true
-          }
-        );
+        if (last) {
+          event.preventDefault();
+
+          selectGauge(
+            record,
+            last,
+            {
+              focus: true
+            }
+          );
+        }
+
         break;
+      }
 
       default:
         break;
     }
   }
 
-  function getNumericDisplayTarget(gauge) {
-    if (!gauge) {
-      return null;
-    }
-
-    return (
-      gauge.querySelector(
-        ".showroom-gauge__value"
-      ) ||
-      gauge.querySelector(
-        ":scope > strong"
-      )
-    );
-  }
-
-  function isIntegerDisplayText(value) {
-    return /^[+-]?\d+$/.test(value);
-  }
-
-  function formatAnimatedValue(
-    value,
-    finalText
+  function validateGaugeDashboard(
+    dashboard,
+    id
   ) {
-    if (
-      isIntegerDisplayText(
-        finalText
-      )
-    ) {
-      return String(
-        Math.round(value)
-      );
-    }
-
-    return finalText;
-  }
-
-  function setGaugeFinalValue(gauge) {
-    const rawValue =
-      normalizeText(
-        gauge.getAttribute(
-          "data-gauge-value"
-        )
-      );
-
-    const finalText =
-      normalizeText(
-        gauge.getAttribute(
-          "data-gauge-display-value"
-        )
-      ) || rawValue;
-
-    const numericValue =
-      Number(rawValue);
-
-    const valueElement =
-      getNumericDisplayTarget(
-        gauge
+    const gauges =
+      getLocallyOwnedControls(
+        dashboard,
+        SELECTORS.gauge,
+        SELECTORS.dashboard
       );
 
     if (
-      !valueElement ||
-      !Number.isFinite(
-        numericValue
-      )
+      gauges.length === 0
     ) {
-      return false;
+      throw new Error(
+        `Gauge dashboard "${id}" contains no locally owned gauges.`
+      );
     }
 
-    valueElement.textContent =
-      finalText;
-
-    gauge.removeAttribute(
-      "data-gauge-counting"
-    );
-
-    gauge.setAttribute(
-      "data-gauge-counted",
-      "true"
-    );
-
-    return true;
-  }
-
-  function animateNumericGauge(
-    record,
-    gauge
-  ) {
-    const rawValue =
-      normalizeText(
-        gauge.getAttribute(
-          "data-gauge-value"
-        )
-      );
-
-    const finalText =
-      normalizeText(
-        gauge.getAttribute(
-          "data-gauge-display-value"
-        )
-      ) || rawValue;
-
-    const numericValue =
-      Number(rawValue);
-
-    const valueElement =
-      getNumericDisplayTarget(
-        gauge
+    const sharedDetailSurfaces =
+      getLocallyOwnedElements(
+        dashboard,
+        SELECTORS.sharedGaugeDetails,
+        SELECTORS.dashboard
       );
 
     if (
-      !valueElement ||
-      !Number.isFinite(
-        numericValue
-      )
+      sharedDetailSurfaces.length !== 1
     ) {
-      return;
+      throw new Error(
+        `Gauge dashboard "${id}" requires exactly one local shared-detail surface; ${sharedDetailSurfaces.length} were found.`
+      );
     }
 
-    if (
-      STATE.reducedMotion ||
-      gauge.getAttribute(
-        "data-gauge-counted"
-      ) === "true"
-    ) {
-      setGaugeFinalValue(
-        gauge
-      );
+    const sharedDetails =
+      sharedDetailSurfaces[0];
 
-      return;
-    }
+    const detailByGauge =
+      new Map();
 
-    const duration =
-      620;
+    const usedGaugeIds =
+      new Set();
 
-    const startedAt =
-      performance.now();
-
-    gauge.setAttribute(
-      "data-gauge-counting",
-      "true"
-    );
-
-    const step = (timestamp) => {
-      if (
-        STATE.disposed ||
-        record.disposed
-      ) {
-        return;
-      }
-
-      const elapsed =
-        timestamp - startedAt;
-
-      const progress =
-        Math.min(
-          elapsed / duration,
-          1
-        );
-
-      const eased =
-        1 -
-        Math.pow(
-          1 - progress,
-          3
-        );
-
-      valueElement.textContent =
-        formatAnimatedValue(
-          numericValue * eased,
-          finalText
-        );
-
-      if (progress < 1) {
-        requestTrackedFrame(step);
-
-        return;
-      }
-
-      setGaugeFinalValue(
-        gauge
-      );
-    };
-
-    requestTrackedFrame(step);
-  }
-
-  function triggerDashboardEntrance(
-    record
-  ) {
-    if (
-      !record ||
-      record.disposed ||
-      !isElementVisible(
-        record.dashboard
-      )
-    ) {
-      return;
-    }
-
-    record.dashboard.setAttribute(
-      ATTRIBUTES.motion,
-      STATE.reducedMotion
-        ? "reduced"
-        : "active"
-    );
-
-    if (
-      record.dashboard.getAttribute(
-        ATTRIBUTES.entered
-      ) !== "true"
-    ) {
-      record.dashboard.setAttribute(
-        ATTRIBUTES.entered,
-        "true"
-      );
-
-      record.dashboard.setAttribute(
-        ATTRIBUTES.dashboardState,
-        "entering"
-      );
-
-      requestTrackedFrame(() => {
-        if (
-          STATE.disposed ||
-          record.disposed
-        ) {
-          return;
-        }
-
-        record.dashboard.setAttribute(
-          ATTRIBUTES.dashboardState,
-          "active"
-        );
-      });
-    } else {
-      record.dashboard.setAttribute(
-        ATTRIBUTES.dashboardState,
-        "active"
-      );
-    }
+    const usedDetails =
+      new Set();
 
     for (
       const gauge
-      of record.gauges
+      of gauges
     ) {
-      animateNumericGauge(
-        record,
-        gauge
-      );
-    }
-  }
-
-  function pauseDashboard(record) {
-    if (
-      !record ||
-      record.disposed
-    ) {
-      return;
-    }
-
-    record.dashboard.setAttribute(
-      ATTRIBUTES.motion,
-      "paused"
-    );
-
-    record.dashboard.setAttribute(
-      ATTRIBUTES.dashboardState,
-      "inactive"
-    );
-  }
-
-  function refreshDashboardActivity() {
-    for (
-      const record
-      of STATE.dashboards.values()
-    ) {
-      if (
-        isElementVisible(
-          record.dashboard
-        )
-      ) {
-        triggerDashboardEntrance(
-          record
+      const gaugeId =
+        getGaugeId(
+          gauge
         );
-      } else {
-        pauseDashboard(
-          record
+
+      ensureUniqueIdentifier(
+        gaugeId,
+        usedGaugeIds,
+        "Gauge",
+        id
+      );
+
+      const detail =
+        resolveControlledElement(
+          gauge
+        );
+
+      if (!detail) {
+        throw new Error(
+          `Gauge "${gaugeId}" in "${id}" has no valid aria-controls target.`
         );
       }
+
+      if (
+        !detail.matches(
+          SELECTORS.gaugeDetail
+        )
+      ) {
+        throw new Error(
+          `Gauge "${gaugeId}" in "${id}" controls an element that is not a gauge detail.`
+        );
+      }
+
+      if (
+        detail.closest(
+          SELECTORS.dashboard
+        ) !== dashboard
+      ) {
+        throw new Error(
+          `Gauge "${gaugeId}" in "${id}" controls a detail owned by another dashboard.`
+        );
+      }
+
+      if (
+        !sharedDetails.contains(
+          detail
+        )
+      ) {
+        throw new Error(
+          `Gauge "${gaugeId}" in "${id}" controls a detail outside its local shared-detail surface.`
+        );
+      }
+
+      if (
+        usedDetails.has(
+          detail
+        )
+      ) {
+        throw new Error(
+          `Gauge dashboard "${id}" assigns the same detail panel to more than one gauge.`
+        );
+      }
+
+      const detailId =
+        normalizeText(
+          detail.getAttribute(
+            "data-gauge-detail-id"
+          )
+        );
+
+      if (
+        detailId &&
+        detailId !== gaugeId
+      ) {
+        throw new Error(
+          `Gauge "${gaugeId}" does not match detail identifier "${detailId}" in "${id}".`
+        );
+      }
+
+      usedDetails.add(
+        detail
+      );
+
+      detailByGauge.set(
+        gauge,
+        detail
+      );
     }
+
+    return Object.freeze({
+      gauges,
+      sharedDetails,
+      detailByGauge
+    });
   }
 
   function initializeDashboard(
@@ -1007,70 +1364,67 @@
       ) ||
       `dashboard-${index + 1}`;
 
-    const gauges =
-      toArray(
-        dashboard.querySelectorAll(
-          SELECTORS.gauge
-        )
-      );
-
-    if (
-      gauges.length === 0
-    ) {
-      throw new Error(
-        `Gauge dashboard "${id}" contains no gauges.`
-      );
-    }
-
-    const sharedDetails =
-      dashboard.querySelector(
-        SELECTORS.sharedDetails
+    const validated =
+      validateGaugeDashboard(
+        dashboard,
+        id
       );
 
     const record = {
       id,
       dashboard,
-      sharedDetails,
-      gauges,
+
+      gauges:
+        validated.gauges,
+
+      sharedDetails:
+        validated.sharedDetails,
 
       detailByGauge:
-        new Map(),
+        validated.detailByGauge,
 
       selectedGauge:
         null,
+
+      held:
+        false,
 
       disposed:
         false
     };
 
+    const initialGauge =
+      normalizeInitialSelection(
+        record.gauges,
+        (gauge) =>
+          gauge.getAttribute(
+            "aria-expanded"
+          ) === "true",
+        "gauge-dashboard",
+        id
+      );
+
+    selectGauge(
+      record,
+      initialGauge,
+      {
+        announce: false
+      }
+    );
+
+    STATE.dashboards.set(
+      dashboard,
+      record
+    );
+
     for (
       const gauge
-      of gauges
+      of record.gauges
     ) {
-      const detail =
-        resolveControlledElement(
-          gauge,
-          "aria-controls"
-        );
-
-      validateGaugePair(
-        gauge,
-        detail
-      );
-
-      record.detailByGauge.set(
-        gauge,
-        detail
-      );
-
       addListener(
         gauge,
         "click",
         () => {
-          /*
-            Re-selecting the active gauge keeps its shared detail open.
-            Compact dashboards always retain exactly one active detail.
-          */
           selectGauge(
             record,
             gauge
@@ -1085,129 +1439,88 @@
       );
     }
 
-    const initiallyExpanded =
-      gauges.find(
-        (gauge) =>
-          gauge.getAttribute(
-            "aria-expanded"
-          ) === "true"
-      ) ||
-      gauges[0];
-
-    selectGauge(
-      record,
-      initiallyExpanded,
-      {
-        announce: false
-      }
-    );
-
-    STATE.dashboards.set(
-      dashboard,
-      record
-    );
+    STATE.initializedCounts.dashboards +=
+      1;
 
     return record;
   }
 
-  function readCompositionRegionData(
-    region
+  function readDirectCompositionChild(
+    region,
+    selector
   ) {
-    const children =
-      toArray(region.children);
+    const child =
+      region.querySelector(
+        selector
+      );
+
+    if (
+      !child ||
+      child.parentElement !== region
+    ) {
+      return "";
+    }
+
+    return normalizeText(
+      child.textContent
+    );
+  }
+
+  function readCompositionRecord(region) {
+    const regionId =
+      getRegionId(
+        region
+      );
 
     const index =
-      normalizeText(
-        region.getAttribute(
-          "data-region-index"
-        )
-      ) ||
-      normalizeText(
-        children[0] &&
-        children[0].textContent
+      readDirectCompositionChild(
+        region,
+        ":scope > span"
       );
 
     const title =
-      normalizeText(
-        region.getAttribute(
-          "data-region-title"
-        )
-      ) ||
-      normalizeText(
-        region.querySelector(
-          "strong"
-        )?.textContent
+      readDirectCompositionChild(
+        region,
+        ":scope > strong"
       );
 
     const description =
-      normalizeText(
-        region.getAttribute(
-          "data-region-description"
-        )
-      ) ||
-      normalizeText(
-        region.querySelector(
-          "small"
-        )?.textContent
+      readDirectCompositionChild(
+        region,
+        ":scope > small"
       );
 
+    if (
+      !regionId ||
+      !index ||
+      !title ||
+      !description
+    ) {
+      throw new Error(
+        `Composition region "${regionId || "unknown"}" is missing a required authored identifier, index, title, or description.`
+      );
+    }
+
     return Object.freeze({
+      regionId,
       index,
       title,
       description
     });
   }
 
-  function updateCompositionDetail(
-    record,
-    region
+  function synchronizeCompositionDetail(
+    surface,
+    record
   ) {
-    if (
-      !record ||
-      !region
-    ) {
-      return;
-    }
+    surface.index.textContent =
+      record.index;
 
-    const data =
-      readCompositionRegionData(
-        region
-      );
+    surface.title.textContent =
+      record.title;
 
-    if (
-      record.detailIndex &&
-      data.index
-    ) {
-      record.detailIndex.textContent =
-        data.index;
-    }
-
-    if (
-      record.detailTitle &&
-      data.title
-    ) {
-      record.detailTitle.textContent =
-        data.title;
-    }
-
-    if (
-      record.detailDescription &&
-      data.description
-    ) {
-      record.detailDescription.textContent =
-        data.description;
-    }
-
-    if (record.detail) {
-      record.detail.setAttribute(
-        "data-active-composition-region",
-        normalizeText(
-          region.getAttribute(
-            "data-region-id"
-          )
-        )
-      );
-    }
+    surface.description.textContent =
+      record.description;
   }
 
   function selectCompositionRegion(
@@ -1217,9 +1530,19 @@
   ) {
     if (
       !record ||
-      !region ||
-      record.disposed
+      record.disposed ||
+      record.held ||
+      !isControlAvailable(region)
     ) {
+      return false;
+    }
+
+    const compositionRecord =
+      record.recordByRegion.get(
+        region
+      );
+
+    if (!compositionRecord) {
       return false;
     }
 
@@ -1236,33 +1559,31 @@
         selected
       );
 
-      candidate.toggleAttribute(
-        "data-region-selected",
-        selected
-      );
-
       candidate.tabIndex =
         selected ? 0 : -1;
+
+      candidate.toggleAttribute(
+        ATTRIBUTES.regionSelected,
+        selected
+      );
     }
 
     record.selectedRegion =
       region;
 
-    const regionId =
-      normalizeText(
-        region.getAttribute(
-          "data-region-id"
-        )
-      );
-
     record.container.setAttribute(
       ATTRIBUTES.selectedRegion,
-      regionId
+      compositionRecord.regionId
     );
 
-    updateCompositionDetail(
-      record,
-      region
+    record.detail.element.setAttribute(
+      ATTRIBUTES.activeCompositionRegion,
+      compositionRecord.regionId
+    );
+
+    synchronizeCompositionDetail(
+      record.detail,
+      compositionRecord
     );
 
     if (options.focus) {
@@ -1280,7 +1601,8 @@
           compositionId:
             record.id,
 
-          regionId
+          regionId:
+            compositionRecord.regionId
         }
       );
     }
@@ -1288,26 +1610,34 @@
     return true;
   }
 
-  function selectAdjacentRegion(
+  function selectAdjacentCompositionRegion(
     record,
-    current,
+    currentRegion,
     direction
   ) {
     const currentIndex =
       record.regions.indexOf(
-        current
+        currentRegion
       );
 
-    if (currentIndex < 0) {
+    if (
+      currentIndex < 0
+    ) {
       return false;
     }
 
     const nextIndex =
-      (
-        currentIndex +
-        direction +
-        record.regions.length
-      ) % record.regions.length;
+      findAvailableIndex(
+        record.regions,
+        currentIndex,
+        direction
+      );
+
+    if (
+      nextIndex < 0
+    ) {
+      return false;
+    }
 
     return selectCompositionRegion(
       record,
@@ -1318,7 +1648,210 @@
     );
   }
 
-  function initializeCompositionGauge(
+  function handleCompositionKeydown(
+    event,
+    record,
+    region
+  ) {
+    if (
+      !record ||
+      record.held
+    ) {
+      return;
+    }
+
+    switch (event.key) {
+      case "ArrowRight":
+      case "ArrowDown":
+        event.preventDefault();
+
+        selectAdjacentCompositionRegion(
+          record,
+          region,
+          1
+        );
+        break;
+
+      case "ArrowLeft":
+      case "ArrowUp":
+        event.preventDefault();
+
+        selectAdjacentCompositionRegion(
+          record,
+          region,
+          -1
+        );
+        break;
+
+      case "Home": {
+        const first =
+          firstAvailableControl(
+            record.regions
+          );
+
+        if (first) {
+          event.preventDefault();
+
+          selectCompositionRegion(
+            record,
+            first,
+            {
+              focus: true
+            }
+          );
+        }
+
+        break;
+      }
+
+      case "End": {
+        const last =
+          firstAvailableControl(
+            record.regions
+              .slice()
+              .reverse()
+          );
+
+        if (last) {
+          event.preventDefault();
+
+          selectCompositionRegion(
+            record,
+            last,
+            {
+              focus: true
+            }
+          );
+        }
+
+        break;
+      }
+
+      default:
+        break;
+    }
+  }
+
+  function validateCompositionGroup(
+    container,
+    id
+  ) {
+    const regions =
+      getLocallyOwnedControls(
+        container,
+        SELECTORS.compositionRegion,
+        SELECTORS.compositionGauge
+      );
+
+    if (
+      regions.length !==
+      EXPECTED_COMPOSITION_REGION_COUNT
+    ) {
+      throw new Error(
+        `Composition surface "${id}" requires exactly ${EXPECTED_COMPOSITION_REGION_COUNT} locally owned controls; ${regions.length} were found.`
+      );
+    }
+
+    const detailElements =
+      getLocallyOwnedElements(
+        container,
+        SELECTORS.compositionDetail,
+        SELECTORS.compositionGauge
+      );
+
+    if (
+      detailElements.length !== 1
+    ) {
+      throw new Error(
+        `Composition surface "${id}" requires exactly one local shared detail surface; ${detailElements.length} were found.`
+      );
+    }
+
+    const detailElement =
+      detailElements[0];
+
+    const indexTargets =
+      toArray(
+        detailElement.querySelectorAll(
+          SELECTORS.compositionDetailIndex
+        )
+      );
+
+    const titleTargets =
+      toArray(
+        detailElement.querySelectorAll(
+          SELECTORS.compositionDetailTitle
+        )
+      );
+
+    const descriptionTargets =
+      toArray(
+        detailElement.querySelectorAll(
+          SELECTORS.compositionDetailDescription
+        )
+      );
+
+    if (
+      indexTargets.length !== 1 ||
+      titleTargets.length !== 1 ||
+      descriptionTargets.length !== 1
+    ) {
+      throw new Error(
+        `Composition surface "${id}" requires exactly one index, title, and description projection target.`
+      );
+    }
+
+    const usedRegionIds =
+      new Set();
+
+    const recordByRegion =
+      new Map();
+
+    for (
+      const region
+      of regions
+    ) {
+      const compositionRecord =
+        readCompositionRecord(
+          region
+        );
+
+      ensureUniqueIdentifier(
+        compositionRecord.regionId,
+        usedRegionIds,
+        "Composition region",
+        id
+      );
+
+      recordByRegion.set(
+        region,
+        compositionRecord
+      );
+    }
+
+    return Object.freeze({
+      regions,
+
+      recordByRegion,
+
+      detail:
+        Object.freeze({
+          element:
+            detailElement,
+
+          index:
+            indexTargets[0],
+
+          title:
+            titleTargets[0],
+
+          description:
+            descriptionTargets[0]
+        })
+    });
+  }
+
+  function initializeCompositionGroup(
     container,
     index
   ) {
@@ -1330,64 +1863,62 @@
       ) ||
       `composition-${index + 1}`;
 
-    const regions =
-      toArray(
-        container.querySelectorAll(
-          SELECTORS.compositionRegion
-        )
-      );
-
-    if (
-      regions.length === 0
-    ) {
-      throw new Error(
-        `Composition gauge "${id}" contains no regions.`
-      );
-    }
-
-    const detail =
-      container.querySelector(
-        SELECTORS.compositionDetail
+    const validated =
+      validateCompositionGroup(
+        container,
+        id
       );
 
     const record = {
       id,
       container,
-      regions,
 
-      detail,
+      regions:
+        validated.regions,
 
-      detailIndex:
-        detail
-          ? detail.querySelector(
-              SELECTORS.compositionDetailIndex
-            )
-          : null,
+      recordByRegion:
+        validated.recordByRegion,
 
-      detailTitle:
-        detail
-          ? detail.querySelector(
-              SELECTORS.compositionDetailTitle
-            )
-          : null,
-
-      detailDescription:
-        detail
-          ? detail.querySelector(
-              SELECTORS.compositionDetailDescription
-            )
-          : null,
+      detail:
+        validated.detail,
 
       selectedRegion:
         null,
+
+      held:
+        false,
 
       disposed:
         false
     };
 
+    const initialRegion =
+      normalizeInitialSelection(
+        record.regions,
+        (region) =>
+          region.getAttribute(
+            "aria-pressed"
+          ) === "true",
+        "composition-group",
+        id
+      );
+
+    selectCompositionRegion(
+      record,
+      initialRegion,
+      {
+        announce: false
+      }
+    );
+
+    STATE.compositionGroups.set(
+      container,
+      record
+    );
+
     for (
       const region
-      of regions
+      of record.regions
     ) {
       addListener(
         region,
@@ -1404,83 +1935,22 @@
         region,
         "keydown",
         (event) => {
-          switch (event.key) {
-            case "ArrowRight":
-            case "ArrowDown":
-              event.preventDefault();
-
-              selectAdjacentRegion(
-                record,
-                region,
-                1
-              );
-              break;
-
-            case "ArrowLeft":
-            case "ArrowUp":
-              event.preventDefault();
-
-              selectAdjacentRegion(
-                record,
-                region,
-                -1
-              );
-              break;
-
-            case "Home":
-              event.preventDefault();
-
-              selectCompositionRegion(
-                record,
-                regions[0],
-                {
-                  focus: true
-                }
-              );
-              break;
-
-            case "End":
-              event.preventDefault();
-
-              selectCompositionRegion(
-                record,
-                regions[
-                  regions.length - 1
-                ],
-                {
-                  focus: true
-                }
-              );
-              break;
-
-            default:
-              break;
-          }
+          handleCompositionKeydown(
+            event,
+            record,
+            region
+          );
         }
       );
     }
 
-    const initialRegion =
-      regions.find(
-        (region) =>
-          region.getAttribute(
-            "aria-pressed"
-          ) === "true"
-      ) ||
-      regions[0];
-
-    selectCompositionRegion(
-      record,
-      initialRegion,
-      {
-        announce: false
-      }
+    container.setAttribute(
+      ATTRIBUTES.compositionState,
+      "ready"
     );
 
-    STATE.compositionGauges.set(
-      container,
-      record
-    );
+    STATE.initializedCounts.compositionGroups +=
+      1;
 
     return record;
   }
@@ -1492,8 +1962,9 @@
   ) {
     if (
       !record ||
-      !tab ||
-      record.disposed
+      record.disposed ||
+      record.held ||
+      !isControlAvailable(tab)
     ) {
       return false;
     }
@@ -1524,7 +1995,7 @@
         selected ? 0 : -1;
 
       candidate.toggleAttribute(
-        "data-information-tab-selected",
+        ATTRIBUTES.informationTabSelected,
         selected
       );
 
@@ -1549,10 +2020,8 @@
       tab;
 
     const tabId =
-      normalizeText(
-        tab.getAttribute(
-          "data-information-tab-id"
-        )
+      getInformationTabId(
+        tab
       );
 
     record.container.setAttribute(
@@ -1562,7 +2031,7 @@
 
     if (STATE.root) {
       STATE.root.setAttribute(
-        "data-showroom-active-information-tab",
+        ATTRIBUTES.rootActiveInformationTab,
         tabId
       );
     }
@@ -1587,8 +2056,6 @@
       );
     }
 
-    refreshDashboardActivity();
-
     return true;
   }
 
@@ -1602,16 +2069,24 @@
         currentTab
       );
 
-    if (currentIndex < 0) {
+    if (
+      currentIndex < 0
+    ) {
       return false;
     }
 
     const nextIndex =
-      (
-        currentIndex +
-        direction +
-        record.tabs.length
-      ) % record.tabs.length;
+      findAvailableIndex(
+        record.tabs,
+        currentIndex,
+        direction
+      );
+
+    if (
+      nextIndex < 0
+    ) {
+      return false;
+    }
 
     return selectInformationTab(
       record,
@@ -1622,7 +2097,208 @@
     );
   }
 
-  function initializeInformationTabs(
+  function handleInformationKeydown(
+    event,
+    record,
+    tab
+  ) {
+    if (
+      !record ||
+      record.held
+    ) {
+      return;
+    }
+
+    switch (event.key) {
+      case "ArrowRight":
+      case "ArrowDown":
+        event.preventDefault();
+
+        selectAdjacentInformationTab(
+          record,
+          tab,
+          1
+        );
+        break;
+
+      case "ArrowLeft":
+      case "ArrowUp":
+        event.preventDefault();
+
+        selectAdjacentInformationTab(
+          record,
+          tab,
+          -1
+        );
+        break;
+
+      case "Home": {
+        const first =
+          firstAvailableControl(
+            record.tabs
+          );
+
+        if (first) {
+          event.preventDefault();
+
+          selectInformationTab(
+            record,
+            first,
+            {
+              focus: true
+            }
+          );
+        }
+
+        break;
+      }
+
+      case "End": {
+        const last =
+          firstAvailableControl(
+            record.tabs
+              .slice()
+              .reverse()
+          );
+
+        if (last) {
+          event.preventDefault();
+
+          selectInformationTab(
+            record,
+            last,
+            {
+              focus: true
+            }
+          );
+        }
+
+        break;
+      }
+
+      default:
+        break;
+    }
+  }
+
+  function validateInformationGroup(
+    container,
+    id
+  ) {
+    const tabs =
+      getLocallyOwnedControls(
+        container,
+        SELECTORS.informationTab,
+        SELECTORS.informationTabs
+      );
+
+    if (
+      tabs.length === 0
+    ) {
+      throw new Error(
+        `Information group "${id}" contains no locally owned tabs.`
+      );
+    }
+
+    const panelByTab =
+      new Map();
+
+    const usedTabIds =
+      new Set();
+
+    const usedPanels =
+      new Set();
+
+    for (
+      const tab
+      of tabs
+    ) {
+      const tabId =
+        getInformationTabId(
+          tab
+        );
+
+      ensureUniqueIdentifier(
+        tabId,
+        usedTabIds,
+        "Information tab",
+        id
+      );
+
+      const panel =
+        resolveControlledElement(
+          tab
+        );
+
+      if (!panel) {
+        throw new Error(
+          `Information tab "${tabId}" in "${id}" has no valid aria-controls target.`
+        );
+      }
+
+      if (
+        !panel.matches(
+          SELECTORS.informationPanel
+        )
+      ) {
+        throw new Error(
+          `Information tab "${tabId}" in "${id}" controls an element that is not an information panel.`
+        );
+      }
+
+      if (
+        panel.closest(
+          SELECTORS.informationTabs
+        ) !== container
+      ) {
+        throw new Error(
+          `Information tab "${tabId}" in "${id}" controls a panel owned by another information group.`
+        );
+      }
+
+      if (
+        usedPanels.has(
+          panel
+        )
+      ) {
+        throw new Error(
+          `Information group "${id}" assigns one panel to more than one tab.`
+        );
+      }
+
+      const panelId =
+        normalizeText(
+          panel.getAttribute(
+            "data-information-panel-id"
+          )
+        );
+
+      if (
+        panelId &&
+        panelId !== tabId
+      ) {
+        throw new Error(
+          `Information tab "${tabId}" does not match panel identifier "${panelId}" in "${id}".`
+        );
+      }
+
+      usedPanels.add(
+        panel
+      );
+
+      panelByTab.set(
+        tab,
+        panel
+      );
+    }
+
+    return Object.freeze({
+      tabs,
+      panelByTab
+    });
+  }
+
+  function initializeInformationGroup(
     container,
     index
   ) {
@@ -1634,69 +2310,60 @@
       ) ||
       `information-tabs-${index + 1}`;
 
-    const tabs =
-      toArray(
-        container.querySelectorAll(
-          SELECTORS.informationTab
-        )
+    const validated =
+      validateInformationGroup(
+        container,
+        id
       );
-
-    const panels =
-      toArray(
-        container.querySelectorAll(
-          SELECTORS.informationPanel
-        )
-      );
-
-    if (
-      tabs.length === 0
-    ) {
-      throw new Error(
-        `Information group "${id}" contains no tabs.`
-      );
-    }
 
     const record = {
       id,
       container,
-      tabs,
-      panels,
+
+      tabs:
+        validated.tabs,
 
       panelByTab:
-        new Map(),
+        validated.panelByTab,
 
       selectedTab:
         null,
+
+      held:
+        false,
 
       disposed:
         false
     };
 
-    for (
-      const tab
-      of tabs
-    ) {
-      const panel =
-        resolveControlledElement(
-          tab,
-          "aria-controls"
-        );
-
-      if (!panel) {
-        throw new Error(
-          `Information tab "${normalizeText(
-            tab.getAttribute(
-              "data-information-tab-id"
-            )
-          ) || "unknown"}" has no matching panel.`
-        );
-      }
-
-      record.panelByTab.set(
-        tab,
-        panel
+    const initialTab =
+      normalizeInitialSelection(
+        record.tabs,
+        (tab) =>
+          tab.getAttribute(
+            "aria-selected"
+          ) === "true",
+        "information-group",
+        id
       );
 
+    selectInformationTab(
+      record,
+      initialTab,
+      {
+        announce: false
+      }
+    );
+
+    STATE.informationGroups.set(
+      container,
+      record
+    );
+
+    for (
+      const tab
+      of record.tabs
+    ) {
       addListener(
         tab,
         "click",
@@ -1712,266 +2379,205 @@
         tab,
         "keydown",
         (event) => {
-          switch (event.key) {
-            case "ArrowRight":
-            case "ArrowDown":
-              event.preventDefault();
-
-              selectAdjacentInformationTab(
-                record,
-                tab,
-                1
-              );
-              break;
-
-            case "ArrowLeft":
-            case "ArrowUp":
-              event.preventDefault();
-
-              selectAdjacentInformationTab(
-                record,
-                tab,
-                -1
-              );
-              break;
-
-            case "Home":
-              event.preventDefault();
-
-              selectInformationTab(
-                record,
-                tabs[0],
-                {
-                  focus: true
-                }
-              );
-              break;
-
-            case "End":
-              event.preventDefault();
-
-              selectInformationTab(
-                record,
-                tabs[
-                  tabs.length - 1
-                ],
-                {
-                  focus: true
-                }
-              );
-              break;
-
-            default:
-              break;
-          }
+          handleInformationKeydown(
+            event,
+            record,
+            tab
+          );
         }
       );
     }
 
-    const initialTab =
-      tabs.find(
-        (tab) =>
-          tab.getAttribute(
-            "aria-selected"
-          ) === "true"
-      ) ||
-      tabs[0];
-
-    selectInformationTab(
-      record,
-      initialTab,
-      {
-        announce: false
-      }
-    );
-
-    STATE.informationGroups.set(
-      container,
-      record
-    );
+    STATE.initializedCounts.informationGroups +=
+      1;
 
     return record;
   }
 
-  function applyReducedMotionState() {
-    STATE.reducedMotion =
-      Boolean(
-        STATE.reducedMotionQuery &&
-        STATE.reducedMotionQuery.matches
-      );
+  function synchronizeDashboardRecord(record) {
+    if (
+      !record ||
+      record.disposed ||
+      record.held
+    ) {
+      return false;
+    }
 
-    if (STATE.root) {
-      STATE.root.setAttribute(
-        "data-showroom-gauges-reduced-motion",
-        STATE.reducedMotion
-          ? "true"
-          : "false"
+    const selected =
+      record.selectedGauge &&
+      isControlAvailable(
+        record.selectedGauge
+      )
+        ? record.selectedGauge
+        : firstAvailableControl(
+            record.gauges
+          );
+
+    return selected
+      ? selectGauge(
+          record,
+          selected,
+          {
+            announce: false
+          }
+        )
+      : false;
+  }
+
+  function synchronizeCompositionRecord(record) {
+    if (
+      !record ||
+      record.disposed ||
+      record.held
+    ) {
+      return false;
+    }
+
+    const selected =
+      record.selectedRegion &&
+      isControlAvailable(
+        record.selectedRegion
+      )
+        ? record.selectedRegion
+        : firstAvailableControl(
+            record.regions
+          );
+
+    return selected
+      ? selectCompositionRegion(
+          record,
+          selected,
+          {
+            announce: false
+          }
+        )
+      : false;
+  }
+
+  function synchronizeInformationRecord(record) {
+    if (
+      !record ||
+      record.disposed ||
+      record.held
+    ) {
+      return false;
+    }
+
+    const selected =
+      record.selectedTab &&
+      isControlAvailable(
+        record.selectedTab
+      )
+        ? record.selectedTab
+        : firstAvailableControl(
+            record.tabs
+          );
+
+    return selected
+      ? selectInformationTab(
+          record,
+          selected,
+          {
+            announce: false
+          }
+        )
+      : false;
+  }
+
+  function refreshAll() {
+    for (
+      const record
+      of STATE.dashboards.values()
+    ) {
+      synchronizeDashboardRecord(
+        record
       );
     }
 
     for (
       const record
-      of STATE.dashboards.values()
+      of STATE.compositionGroups.values()
     ) {
-      record.dashboard.setAttribute(
-        ATTRIBUTES.motion,
-        STATE.reducedMotion
-          ? "reduced"
-          : isElementVisible(
-              record.dashboard
-            )
-            ? "active"
-            : "paused"
-      );
-
-      if (STATE.reducedMotion) {
-        for (
-          const gauge
-          of record.gauges
-        ) {
-          setGaugeFinalValue(
-            gauge
-          );
-        }
-      }
-    }
-
-    publishReceipt(
-      "reduced-motion-changed"
-    );
-  }
-
-  function initializeReducedMotion() {
-    STATE.reducedMotionQuery =
-      window.matchMedia(
-        "(prefers-reduced-motion: reduce)"
-      );
-
-    STATE.reducedMotion =
-      STATE.reducedMotionQuery.matches;
-
-    const handler =
-      applyReducedMotionState;
-
-    if (
-      typeof STATE.reducedMotionQuery
-        .addEventListener === "function"
-    ) {
-      addListener(
-        STATE.reducedMotionQuery,
-        "change",
-        handler
-      );
-    } else if (
-      typeof STATE.reducedMotionQuery
-        .addListener === "function"
-    ) {
-      STATE.reducedMotionQuery.addListener(
-        handler
-      );
-
-      STATE.listeners.push(() => {
-        STATE.reducedMotionQuery.removeListener(
-          handler
-        );
-      });
-    }
-  }
-
-  function initializeVisibilityObservers() {
-    const fronts =
-      toArray(
-        document.querySelectorAll(
-          SELECTORS.front
-        )
-      );
-
-    if (
-      "IntersectionObserver" in window
-    ) {
-      const intersectionObserver =
-        new IntersectionObserver(
-          () => {
-            refreshDashboardActivity();
-          },
-          {
-            root: null,
-
-            threshold: [
-              0,
-              0.05,
-              0.25
-            ]
-          }
-        );
-
-      for (
-        const front
-        of fronts
-      ) {
-        intersectionObserver.observe(
-          front
-        );
-      }
-
-      addObserver(
-        intersectionObserver
+      synchronizeCompositionRecord(
+        record
       );
     }
-
-    const mutationTargets =
-      new Set([
-        STATE.root,
-        ...fronts
-      ]);
-
-    const mutationObserver =
-      new MutationObserver(
-        () => {
-          refreshDashboardActivity();
-        }
-      );
 
     for (
-      const target
-      of mutationTargets
+      const record
+      of STATE.informationGroups.values()
     ) {
-      if (!target) {
-        continue;
-      }
-
-      mutationObserver.observe(
-        target,
-        {
-          attributes:
-            true,
-
-          attributeFilter: [
-            "hidden",
-            "inert",
-            ATTRIBUTES.frontState,
-            "data-showroom-state",
-            "data-showroom-active-front"
-          ]
-        }
+      synchronizeInformationRecord(
+        record
       );
     }
 
-    addObserver(
-      mutationObserver
+    return publishReceipt(
+      "manual-refresh"
     );
+  }
 
-    addListener(
-      window,
-      "showroom:front-changed",
-      refreshDashboardActivity
-    );
+  function findDashboardById(
+    dashboardId
+  ) {
+    return toArray(
+      STATE.dashboards.values()
+    ).find(
+      (record) =>
+        record.id === dashboardId
+    ) || null;
+  }
 
-    addListener(
-      window,
-      "pageshow",
-      refreshDashboardActivity
-    );
+  function findCompositionGroupById(
+    compositionId
+  ) {
+    return toArray(
+      STATE.compositionGroups.values()
+    ).find(
+      (record) =>
+        record.id === compositionId
+    ) || null;
+  }
+
+  function findInformationGroupById(
+    informationGroupId
+  ) {
+    return toArray(
+      STATE.informationGroups.values()
+    ).find(
+      (record) =>
+        record.id === informationGroupId
+    ) || null;
+  }
+
+  function findUniqueInformationTabMatch(
+    tabId
+  ) {
+    const matches = [];
+
+    for (
+      const record
+      of STATE.informationGroups.values()
+    ) {
+      const tab =
+        record.tabs.find(
+          (candidate) =>
+            getInformationTabId(
+              candidate
+            ) === tabId
+        );
+
+      if (tab) {
+        matches.push({
+          record,
+          tab
+        });
+      }
+    }
+
+    return matches.length === 1
+      ? matches[0]
+      : null;
   }
 
   function exposePublicApi() {
@@ -1980,75 +2586,27 @@
         contract:
           CONTRACT,
 
-        getState() {
-          return createReceiptPayload(
-            "state-requested",
-            {
-              selectedGauges:
-                toArray(
-                  STATE.dashboards.values()
-                ).map(
-                  (record) => ({
-                    dashboardId:
-                      record.id,
+        pageContract:
+          PAGE_CONTRACT,
 
-                    gaugeId:
-                      record.selectedGauge
-                        ? getGaugeId(
-                            record.selectedGauge
-                          )
-                        : null
-                  })
-                ),
+        role:
+          ROLE,
 
-              selectedRegions:
-                toArray(
-                  STATE.compositionGauges.values()
-                ).map(
-                  (record) => ({
-                    compositionId:
-                      record.id,
+        status() {
+          return getRuntimeState();
+        },
 
-                    regionId:
-                      record.selectedRegion
-                        ? normalizeText(
-                            record.selectedRegion.getAttribute(
-                              "data-region-id"
-                            )
-                          )
-                        : null
-                  })
-                ),
-
-              selectedInformationTabs:
-                toArray(
-                  STATE.informationGroups.values()
-                ).map(
-                  (record) => ({
-                    informationGroupId:
-                      record.id,
-
-                    tabId:
-                      record.selectedTab
-                        ? normalizeText(
-                            record.selectedTab.getAttribute(
-                              "data-information-tab-id"
-                            )
-                          )
-                        : null
-                  })
-                )
-            }
+        getReceipt() {
+          return (
+            STATE.lastReceipt ||
+            createReceipt(
+              "receipt-requested"
+            )
           );
         },
 
-        refresh() {
-          refreshDashboardActivity();
-
-          return publishReceipt(
-            "manual-refresh"
-          );
-        },
+        refresh:
+          refreshAll,
 
         selectGauge(
           dashboardId,
@@ -2056,12 +2614,10 @@
           options = {}
         ) {
           const record =
-            toArray(
-              STATE.dashboards.values()
-            ).find(
-              (candidate) =>
-                candidate.id ===
+            findDashboardById(
+              normalizeText(
                 dashboardId
+              )
             );
 
           if (!record) {
@@ -2073,7 +2629,10 @@
               (candidate) =>
                 getGaugeId(
                   candidate
-                ) === gaugeId
+                ) ===
+                normalizeText(
+                  gaugeId
+                )
             );
 
           return selectGauge(
@@ -2089,12 +2648,10 @@
           options = {}
         ) {
           const record =
-            toArray(
-              STATE.compositionGauges.values()
-            ).find(
-              (candidate) =>
-                candidate.id ===
+            findCompositionGroupById(
+              normalizeText(
                 compositionId
+              )
             );
 
           if (!record) {
@@ -2104,11 +2661,12 @@
           const region =
             record.regions.find(
               (candidate) =>
+                getRegionId(
+                  candidate
+                ) ===
                 normalizeText(
-                  candidate.getAttribute(
-                    "data-region-id"
-                  )
-                ) === regionId
+                  regionId
+                )
             );
 
           return selectCompositionRegion(
@@ -2119,41 +2677,121 @@
         },
 
         selectInformationTab(
+          informationGroupId,
           tabId,
           options = {}
         ) {
-          for (
-            const record
-            of STATE.informationGroups.values()
+          /*
+            Preferred signature:
+            selectInformationTab(groupId, tabId, options)
+
+            Compatibility overload:
+            selectInformationTab(tabId, options)
+
+            The compatibility overload succeeds only when exactly one
+            initialized information group contains the requested tab ID.
+          */
+
+          if (
+            typeof tabId === "object" &&
+            tabId !== null
           ) {
-            const tab =
-              record.tabs.find(
-                (candidate) =>
-                  normalizeText(
-                    candidate.getAttribute(
-                      "data-information-tab-id"
-                    )
-                  ) === tabId
+            const compatibilityTabId =
+              normalizeText(
+                informationGroupId
               );
 
-            if (tab) {
-              return selectInformationTab(
-                record,
-                tab,
-                options
+            const match =
+              findUniqueInformationTabMatch(
+                compatibilityTabId
               );
-            }
+
+            return match
+              ? selectInformationTab(
+                  match.record,
+                  match.tab,
+                  tabId
+                )
+              : false;
           }
 
-          return false;
+          if (
+            typeof tabId === "undefined"
+          ) {
+            const compatibilityTabId =
+              normalizeText(
+                informationGroupId
+              );
+
+            const match =
+              findUniqueInformationTabMatch(
+                compatibilityTabId
+              );
+
+            return match
+              ? selectInformationTab(
+                  match.record,
+                  match.tab,
+                  {}
+                )
+              : false;
+          }
+
+          const record =
+            findInformationGroupById(
+              normalizeText(
+                informationGroupId
+              )
+            );
+
+          if (!record) {
+            return false;
+          }
+
+          const normalizedTabId =
+            normalizeText(
+              tabId
+            );
+
+          const tab =
+            record.tabs.find(
+              (candidate) =>
+                getInformationTabId(
+                  candidate
+                ) ===
+                normalizedTabId
+            );
+
+          return selectInformationTab(
+            record,
+            tab,
+            options
+          );
         },
 
         dispose
       });
 
+    const privateController =
+      Object.freeze({
+        contract:
+          CONTRACT,
+
+        role:
+          ROLE,
+
+        dispose
+      });
+
+    STATE.publicApi =
+      api;
+
+    STATE.privateController =
+      privateController;
+
     Object.defineProperty(
       window,
-      "SHOWROOM_GAUGES",
+      PUBLIC_API_NAME,
       {
         configurable:
           true,
@@ -2168,6 +2806,145 @@
           api
       }
     );
+
+    Object.defineProperty(
+      window,
+      PRIVATE_CONTROLLER_NAME,
+      {
+        configurable:
+          true,
+
+        enumerable:
+          false,
+
+        writable:
+          false,
+
+        value:
+          privateController
+      }
+    );
+  }
+
+  function disposePreviousInstallation() {
+    const previous =
+      window[
+        PRIVATE_CONTROLLER_NAME
+      ];
+
+    if (
+      previous &&
+      typeof previous.dispose === "function"
+    ) {
+      try {
+        previous.dispose();
+      } catch (error) {
+        recordErrorIssue(
+          ISSUE_CODES.duplicateInstallation,
+          "installation",
+          null,
+          error
+        );
+      }
+    }
+  }
+
+  function initializeSurfaceCollection(
+    elements,
+    initializer,
+    scope,
+    idAttribute,
+    heldCounterName
+  ) {
+    elements.forEach(
+      (element, index) => {
+        try {
+          initializer(
+            element,
+            index
+          );
+        } catch (error) {
+          STATE.heldCounts[
+            heldCounterName
+          ] += 1;
+
+          const surfaceId =
+            normalizeText(
+              element.getAttribute(
+                idAttribute
+              )
+            ) || null;
+
+          if (
+            scope === "composition-group"
+          ) {
+            element.setAttribute(
+              ATTRIBUTES.compositionState,
+              "held"
+            );
+          }
+
+          recordErrorIssue(
+            ISSUE_CODES.surfaceInitializationFailure,
+            scope,
+            surfaceId,
+            error
+          );
+        }
+      }
+    );
+  }
+
+  function handlePageShow(event) {
+    if (
+      !event.persisted ||
+      STATE.disposed
+    ) {
+      return;
+    }
+
+    for (
+      const record
+      of STATE.dashboards.values()
+    ) {
+      synchronizeDashboardRecord(
+        record
+      );
+    }
+
+    for (
+      const record
+      of STATE.compositionGroups.values()
+    ) {
+      synchronizeCompositionRecord(
+        record
+      );
+    }
+
+    for (
+      const record
+      of STATE.informationGroups.values()
+    ) {
+      synchronizeInformationRecord(
+        record
+      );
+    }
+
+    const payload =
+      publishReceipt(
+        "restored"
+      );
+
+    dispatch(
+      EVENTS.restored,
+      payload
+    );
+  }
+
+  function handlePageHide(event) {
+    if (!event.persisted) {
+      dispose();
+    }
   }
 
   function initialize() {
@@ -2179,6 +2956,8 @@
     }
 
     try {
+      disposePreviousInstallation();
+
       STATE.root =
         document.querySelector(
           SELECTORS.root
@@ -2195,8 +2974,6 @@
         );
       }
 
-      initializeReducedMotion();
-
       const dashboards =
         toArray(
           document.querySelectorAll(
@@ -2204,7 +2981,7 @@
           )
         );
 
-      const compositionGauges =
+      const compositionGroups =
         toArray(
           document.querySelectorAll(
             SELECTORS.compositionGauge
@@ -2218,153 +2995,101 @@
           )
         );
 
-      dashboards.forEach(
-        (dashboard, index) => {
-          try {
-            initializeDashboard(
-              dashboard,
-              index
-            );
-          } catch (error) {
-            reportRecoverableError(
-              "dashboard-initialization",
-              error,
-              {
-                dashboardId:
-                  normalizeText(
-                    dashboard.getAttribute(
-                      "data-gauge-dashboard-id"
-                    )
-                  ) || null
-              }
-            );
-          }
-        }
+      STATE.discovered.dashboards =
+        dashboards.length;
+
+      STATE.discovered.compositionGroups =
+        compositionGroups.length;
+
+      STATE.discovered.informationGroups =
+        informationGroups.length;
+
+      initializeSurfaceCollection(
+        dashboards,
+        initializeDashboard,
+        "gauge-dashboard",
+        "data-gauge-dashboard-id",
+        "dashboards"
       );
 
-      compositionGauges.forEach(
-        (container, index) => {
-          try {
-            initializeCompositionGauge(
-              container,
-              index
-            );
-          } catch (error) {
-            reportRecoverableError(
-              "composition-initialization",
-              error,
-              {
-                compositionId:
-                  normalizeText(
-                    container.getAttribute(
-                      "data-composition-id"
-                    )
-                  ) || null
-              }
-            );
-          }
-        }
+      initializeSurfaceCollection(
+        compositionGroups,
+        initializeCompositionGroup,
+        "composition-group",
+        "data-composition-id",
+        "compositionGroups"
       );
 
-      informationGroups.forEach(
-        (container, index) => {
-          try {
-            initializeInformationTabs(
-              container,
-              index
-            );
-          } catch (error) {
-            reportRecoverableError(
-              "information-tabs-initialization",
-              error,
-              {
-                informationGroupId:
-                  normalizeText(
-                    container.getAttribute(
-                      "data-information-tabs-id"
-                    )
-                  ) || null
-              }
-            );
-          }
-        }
+      initializeSurfaceCollection(
+        informationGroups,
+        initializeInformationGroup,
+        "information-group",
+        "data-information-tabs-id",
+        "informationGroups"
       );
 
-      initializeVisibilityObservers();
       exposePublicApi();
+
+      addListener(
+        window,
+        "pageshow",
+        handlePageShow
+      );
+
+      addListener(
+        window,
+        "pagehide",
+        handlePageHide
+      );
 
       STATE.initialized =
         true;
 
-      STATE.root.setAttribute(
-        ATTRIBUTES.ready,
-        "true"
+      setRootRuntimeState();
+
+      const runtimeState =
+        getRuntimeState();
+
+      const initializationEvent =
+        runtimeState === "ready"
+          ? "ready"
+          : runtimeState === "ready-with-issues"
+            ? "ready-with-issues"
+            : runtimeState;
+
+      const payload =
+        publishReceipt(
+          initializationEvent
+        );
+
+      if (
+        runtimeState === "ready" ||
+        runtimeState === "ready-with-issues"
+      ) {
+        dispatch(
+          EVENTS.ready,
+          payload
+        );
+      }
+    } catch (error) {
+      STATE.fatalError =
+        error instanceof Error
+          ? error
+          : new Error(
+              String(error)
+            );
+
+      addIssue(
+        ISSUE_CODES.initializationFailure,
+        "initialization",
+        null,
+        STATE.fatalError.message
       );
 
-      STATE.root.setAttribute(
-        ATTRIBUTES.state,
-        "ready"
-      );
-
-      STATE.root.setAttribute(
-        "data-showroom-gauges-reduced-motion",
-        STATE.reducedMotion
-          ? "true"
-          : "false"
-      );
-
-      refreshDashboardActivity();
+      setRootRuntimeState();
 
       publishReceipt(
-        "ready",
-        {
-          dashboardIds:
-            toArray(
-              STATE.dashboards.values()
-            ).map(
-              (record) =>
-                record.id
-            ),
-
-          compositionIds:
-            toArray(
-              STATE.compositionGauges.values()
-            ).map(
-              (record) =>
-                record.id
-            ),
-
-          informationTabIds:
-            toArray(
-              STATE.informationGroups.values()
-            ).flatMap(
-              (record) =>
-                record.tabs.map(
-                  (tab) =>
-                    normalizeText(
-                      tab.getAttribute(
-                        "data-information-tab-id"
-                      )
-                    )
-                )
-            )
-        }
-      );
-
-      window.dispatchEvent(
-        new CustomEvent(
-          "showroom:gauges-ready",
-          {
-            detail: {
-              contract:
-                CONTRACT
-            }
-          }
-        )
-      );
-    } catch (error) {
-      reportFatalError(
-        error
+        "failed"
       );
     }
   }
@@ -2376,8 +3101,6 @@
 
     STATE.disposed =
       true;
-
-    cancelTrackedFrames();
 
     for (
       const removeListener
@@ -2391,32 +3114,16 @@
     }
 
     for (
-      const observer
-      of STATE.observers.splice(0)
-    ) {
-      try {
-        observer.disconnect();
-      } catch {
-        /* Disposal remains best-effort. */
-      }
-    }
-
-    for (
       const record
       of STATE.dashboards.values()
     ) {
       record.disposed =
         true;
-
-      record.dashboard.setAttribute(
-        ATTRIBUTES.motion,
-        "paused"
-      );
     }
 
     for (
       const record
-      of STATE.compositionGauges.values()
+      of STATE.compositionGroups.values()
     ) {
       record.disposed =
         true;
@@ -2430,32 +3137,49 @@
         true;
     }
 
-    if (STATE.root) {
-      STATE.root.setAttribute(
-        ATTRIBUTES.ready,
-        "false"
-      );
+    setRootRuntimeState();
 
-      STATE.root.setAttribute(
-        ATTRIBUTES.state,
+    const payload =
+      publishReceipt(
         "disposed"
       );
-    }
 
-    publishReceipt(
-      "disposed"
+    dispatch(
+      EVENTS.disposed,
+      payload
     );
 
-    try {
-      delete window.SHOWROOM_GAUGES;
-    } catch {
-      /* Noncritical cleanup. */
+    if (
+      window[
+        PUBLIC_API_NAME
+      ] === STATE.publicApi
+    ) {
+      try {
+        delete window[
+          PUBLIC_API_NAME
+        ];
+      } catch {
+        /* Noncritical compatibility cleanup. */
+      }
+    }
+
+    if (
+      window[
+        PRIVATE_CONTROLLER_NAME
+      ] === STATE.privateController
+    ) {
+      try {
+        delete window[
+          PRIVATE_CONTROLLER_NAME
+        ];
+      } catch {
+        /* Noncritical private-surface cleanup. */
+      }
     }
   }
 
   if (
-    document.readyState ===
-    "loading"
+    document.readyState === "loading"
   ) {
     document.addEventListener(
       "DOMContentLoaded",
@@ -2467,12 +3191,4 @@
   } else {
     initialize();
   }
-
-  window.addEventListener(
-    "pagehide",
-    dispose,
-    {
-      once: true
-    }
-  );
 })();

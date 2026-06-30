@@ -1,68 +1,75 @@
 /* TARGET FILE: /showroom/index.controller.js */
 /* TNT FULL-FILE REPLACEMENT */
-/* SHOWROOM_MIRRORLAND_FOCAL_CONTROLLER_TNT_v4 */
+/* SHOWROOM_MIRRORLAND_CONSTELLATION_CONTROLLER_TNT_v5 */
 /*
-  Recovery invariant:
+  Bounded correction pass against the last full candidate.
 
-  The complete HTML/CSS Showroom remains visible and usable when the
-  compositor, crystals, or interactions are absent, pending, failed,
-  stopped, or disposed.
+  Controller authority:
+  - canonical semantic state;
+  - compact immutable frame state;
+  - diagnostic state;
+  - semantic transitions;
+  - confirmation state;
+  - readiness aggregation;
+  - native fallback recovery;
+  - public controller API.
 
-  Renewal objectives:
-  - Preserve the canonical baseline and all existing controller authority.
-  - Accept constellation activation only from controls physically owned by
-    [data-showroom-orbit-field].
-  - Reject malformed, displaced, stale, or out-of-field semantic events.
-  - Reject malformed Compass activation events.
-  - Prevent disclosure taps outside the orbit field from activating stars,
-    hiding fronts, or returning focus to the Compass.
-  - Preserve direct keyboard activation of semantic star controls.
-  - Add optional support for an external instructions-opening control.
-  - Preserve native <details>/<summary> behavior for the Mirrorland preface.
-  - Preserve route, cluster, front, dialog, fallback, recovery, and disposal
-    behavior from v3.
-
-  Page-level authority:
-  - Own canonical Showroom presentation state.
-  - Own active orbit cluster.
-  - Own active local front.
-  - Own requested informational tab.
-  - Own Main Compass return-dialog behavior.
-  - Own route-offer dialogs.
-  - Own Return to Orbit behavior.
-  - Own construction-record dialog behavior.
-  - Own optional external instructions-opening behavior.
-  - Own page-level focus restoration.
-  - Reflect reduced-motion and held states.
-  - Coordinate fallback-star paint with crystal readiness.
-  - Restore the canonical baseline after enhancement failure or disposal.
-
-  Does not own:
-  - pointer deltas;
-  - drag sensitivity;
-  - tap-versus-drag arbitration;
-  - gesture quaternion construction;
-  - orbital camera or projection;
-  - crystal geometry, animation, drawing, or semantic positioning;
-  - gauge-local selection;
-  - Diamond camera, rendering, rotation, zoom, or lifecycle;
-  - Mirrorland Window geometry, rendering, or animation;
-  - Compass renderer lifecycle.
+  Compositor, crystals, and interactions consume controller authority.
+  They do not reinterpret or duplicate it.
 */
 
 (() => {
   "use strict";
 
   const CONTRACT =
-    "SHOWROOM_MIRRORLAND_FOCAL_CONTROLLER_TNT_v4";
+    "SHOWROOM_MIRRORLAND_CONSTELLATION_CONTROLLER_TNT_v5";
+
+  const OWNER =
+    "/showroom/index.controller.js";
 
   const MAIN_COMPASS_ROUTE =
     "/index.html";
 
-  const PRESENTATION = Object.freeze({
-    BASELINE:
-      "baseline",
+  const DURABLE_STATES = Object.freeze({
+    CONSTELLATION:
+      "CONSTELLATION",
 
+    CLUSTER_OPEN:
+      "CLUSTER_OPEN",
+
+    LOCAL_DESTINATION:
+      "LOCAL_DESTINATION"
+  });
+
+  const TRANSIENT_STATES = Object.freeze({
+    NONE:
+      "NONE",
+
+    ROUTE_CONFIRMATION:
+      "ROUTE_CONFIRMATION",
+
+    COMPASS_CONFIRMATION:
+      "COMPASS_CONFIRMATION",
+
+    HELD:
+      "HELD"
+  });
+
+  const PRESENTATION_MODES = Object.freeze({
+    CONSTELLATION:
+      "constellation",
+
+    CLUSTER:
+      "cluster",
+
+    FRONT:
+      "front",
+
+    BASELINE:
+      "baseline"
+  });
+
+  const ENHANCEMENT_STATES = Object.freeze({
     PENDING:
       "enhancement-pending",
 
@@ -76,24 +83,47 @@
       "enhancement-failed"
   });
 
+  const READINESS_KEYS = Object.freeze({
+    controller:
+      "controller",
+
+    compositor:
+      "compositor",
+
+    crystals:
+      "crystals",
+
+    interactions:
+      "interactions"
+  });
+
   const EVENTS = Object.freeze({
-    ready:
+    controllerReady:
       "showroom:controller-ready",
 
-    receipt:
+    controllerReceipt:
       "showroom:controller-receipt",
 
     stateChanged:
       "showroom:state-changed",
 
-    frontChanged:
-      "showroom:front-changed",
+    frameChanged:
+      "showroom:frame-state-changed",
+
+    previewChanged:
+      "showroom:preview-changed",
 
     clusterChanged:
       "showroom:cluster-changed",
 
+    frontChanged:
+      "showroom:front-changed",
+
     dialogChanged:
       "showroom:dialog-changed",
+
+    readinessChanged:
+      "showroom:enhancement-readiness-changed",
 
     semanticActivate:
       "showroom:semantic-activate",
@@ -104,6 +134,18 @@
     compassActivate:
       "showroom:compass-activate",
 
+    clusterExitIntent:
+      "showroom:cluster-exit-intent",
+
+    compositorReady:
+      "showroom:compositor-ready",
+
+    compositorFailed:
+      "showroom:compositor-failed",
+
+    compositorDisposed:
+      "showroom:compositor-disposed",
+
     crystalsReady:
       "showroom:crystals-ready",
 
@@ -113,11 +155,17 @@
     crystalsDisposed:
       "showroom:crystals-disposed",
 
-    compositorFailed:
-      "showroom:compositor-failed",
+    interactionsReady:
+      "showroom:interactions-ready",
 
-    compositorDisposed:
-      "showroom:compositor-disposed",
+    interactionsFailed:
+      "showroom:interactions-failed",
+
+    interactionsDisposed:
+      "showroom:interactions-disposed",
+
+    gaugesReady:
+      "showroom:gauges-ready",
 
     windowHeld:
       "showroom:window-held",
@@ -139,26 +187,71 @@
     orbit:
       "#showroom-orbit",
 
+    orbitScene:
+      "[data-showroom-orbit-scene]",
+
     orbitField:
       "[data-showroom-orbit-field]",
+
+    semanticLayer:
+      "[data-showroom-semantic-star-layer]",
 
     object:
       "[data-showroom-object]",
 
+    cardinalControl:
+      "[data-showroom-cardinal-control]",
+
+    childControl:
+      "[data-showroom-child-control]",
+
+    cluster:
+      "[data-showroom-cluster]",
+
+    front:
+      "[data-showroom-front]",
+
+    frontHost:
+      "[data-showroom-front-host]",
+
+    localDestination:
+      "[data-showroom-local-destination-surface]",
+
+    fallbackNavigation:
+      "[data-showroom-fallback-navigation]",
+
+    fallbackPortal:
+      "[data-showroom-fallback-portal]",
+
+    fallbackStarLayer:
+      "[data-showroom-fallback-star-layer]",
+
+    fallbackStar:
+      "[data-showroom-fallback-star]",
+
+    compassLayer:
+      "[data-showroom-compass-layer]",
+
+    compassVisualMount:
+      "[data-showroom-compass-visual-mount]",
+
     compassControl:
       "[data-showroom-compass-control]",
 
-    compassDialog:
-      "[data-showroom-compass-dialog]",
+    openCompassDialog:
+      "[data-showroom-open-compass-dialog]",
 
-    compassClose:
-      "[data-showroom-compass-close]",
+    sharedReturnToCompass:
+      "[data-showroom-shared-return-to-compass]",
 
-    compassStay:
-      "[data-showroom-compass-stay]",
+    accessibleReturnToOrbit:
+      "[data-showroom-accessible-orbit-return]",
 
-    compassReturn:
-      "[data-showroom-compass-return]",
+    sharedReturnToOrbit:
+      "[data-showroom-shared-return-to-orbit]",
+
+    legacyReturnToOrbit:
+      "[data-showroom-return-to-orbit]",
 
     routeDialog:
       "[data-showroom-route-dialog]",
@@ -178,14 +271,23 @@
     routeContinue:
       "[data-showroom-route-continue]",
 
-    cluster:
-      "[data-showroom-cluster]",
+    compassDialog:
+      "[data-showroom-compass-dialog]",
 
-    front:
-      "[data-showroom-front]",
+    compassClose:
+      "[data-showroom-compass-close]",
 
-    returnToOrbit:
-      "[data-showroom-return-to-orbit]",
+    compassStay:
+      "[data-showroom-compass-stay]",
+
+    compassReturn:
+      "[data-showroom-compass-return]",
+
+    instructionsDisclosure:
+      "[data-showroom-instructions-disclosure]",
+
+    instructionsOpen:
+      "[data-showroom-open-instructions]",
 
     constructionDialog:
       "#construction-record-dialog",
@@ -196,17 +298,8 @@
     constructionClose:
       "[data-close-construction-record]",
 
-    fallbackStarLayer:
-      "[data-showroom-fallback-star-layer]",
-
-    fallbackStar:
-      "[data-showroom-fallback-star]",
-
-    instructionsDisclosure:
-      "[data-showroom-instructions-disclosure]",
-
-    instructionsOpen:
-      "[data-showroom-open-instructions]"
+    informationTab:
+      "[data-showroom-information-tab]"
   });
 
   const ATTRIBUTES = Object.freeze({
@@ -224,6 +317,12 @@
 
     enhancementState:
       "data-showroom-enhancement-state",
+
+    activeCardinal:
+      "data-showroom-active-cardinal",
+
+    activeChild:
+      "data-showroom-active-child",
 
     activeCluster:
       "data-showroom-active-cluster",
@@ -249,14 +348,26 @@
     reducedMotion:
       "data-showroom-reduced-motion",
 
+    compositorReady:
+      "data-showroom-compositor-ready",
+
     crystalsReady:
       "data-showroom-crystals-ready",
+
+    interactionsReady:
+      "data-showroom-interactions-ready",
 
     clusterState:
       "data-showroom-cluster-state",
 
+    clusterActive:
+      "data-showroom-cluster-active",
+
     frontState:
       "data-showroom-front-state",
+
+    dialogState:
+      "data-showroom-dialog-state",
 
     fallbackVisibility:
       "data-showroom-fallback-star-visibility",
@@ -264,12 +375,90 @@
     fallbackRendering:
       "data-showroom-fallback-star-rendering",
 
-    dialogState:
-      "data-showroom-dialog-state",
+    objectId:
+      "data-showroom-object-id",
+
+    objectBehavior:
+      "data-showroom-object-behavior",
+
+    cardinalId:
+      "data-showroom-cardinal-id",
+
+    childId:
+      "data-showroom-child-id",
+
+    clusterId:
+      "data-showroom-cluster-id",
+
+    destinationKind:
+      "data-showroom-destination-kind",
+
+    target:
+      "data-showroom-target",
+
+    openAncestor:
+      "data-showroom-open-ancestor",
+
+    requiredFront:
+      "data-showroom-required-front",
+
+    informationTab:
+      "data-showroom-information-tab",
+
+    route:
+      "data-showroom-route",
+
+    routeLabel:
+      "data-showroom-route-label",
+
+    routeDescription:
+      "data-showroom-route-description",
+
+    routeConfirmation:
+      "data-showroom-route-confirmation-required",
 
     controllerManagedHidden:
       "data-showroom-controller-managed-hidden"
   });
+
+  const CAPTURED_ATTRIBUTES = Object.freeze([
+    "hidden",
+    "open",
+    "aria-hidden",
+    "aria-disabled",
+    "aria-expanded",
+    "disabled",
+    "inert",
+    "tabindex",
+    ATTRIBUTES.clusterState,
+    ATTRIBUTES.clusterActive,
+    ATTRIBUTES.frontState,
+    ATTRIBUTES.controllerManagedHidden,
+    ATTRIBUTES.fallbackVisibility,
+    ATTRIBUTES.fallbackRendering,
+    ATTRIBUTES.dialogState
+  ]);
+
+  const ROOT_CAPTURED_ATTRIBUTES = Object.freeze([
+    ATTRIBUTES.controllerReady,
+    ATTRIBUTES.controllerState,
+    ATTRIBUTES.pageState,
+    ATTRIBUTES.presentationMode,
+    ATTRIBUTES.enhancementState,
+    ATTRIBUTES.activeCardinal,
+    ATTRIBUTES.activeChild,
+    ATTRIBUTES.activeCluster,
+    ATTRIBUTES.activeFront,
+    ATTRIBUTES.activeGaugeSet,
+    ATTRIBUTES.activeInformationTab,
+    ATTRIBUTES.routeDialogOpen,
+    ATTRIBUTES.compassDialogOpen,
+    ATTRIBUTES.held,
+    ATTRIBUTES.reducedMotion,
+    ATTRIBUTES.compositorReady,
+    ATTRIBUTES.crystalsReady,
+    ATTRIBUTES.interactionsReady
+  ]);
 
   const state = {
     root: null,
@@ -277,87 +466,229 @@
     validation: null,
 
     orbit: null,
+    orbitScene: null,
     orbitField: null,
+    semanticLayer: null,
+    frontHost: null,
 
-    compassControl: null,
+    compassLayer: null,
+    compassVisualMount: null,
+    compassControls: [],
+
+    routeDialog: null,
+    routeDialogTitle: null,
+    routeDialogDescription: null,
+    routeContinue: null,
+
     compassDialog: null,
     compassReturn: null,
 
-    routeDialog: null,
-    routeTitle: null,
-    routeDescription: null,
-    routeContinue: null,
+    instructionsDisclosure: null,
+    instructionControls: [],
 
     constructionDialog: null,
 
-    instructionsDisclosure: null,
-    instructionsOpenControls: [],
-
-    objects: [],
+    objects: new Map(),
+    cardinals: new Map(),
+    children: new Map(),
     clusters: new Map(),
     fronts: new Map(),
 
-    originalFrontStates: new Map(),
+    durableState:
+      DURABLE_STATES.CONSTELLATION,
 
-    activeClusterId: "",
-    activeFrontId: "",
-    activeGaugeSet: "",
-    activeInformationTab: "",
+    committed: {
+      cardinalId: "",
+      childId: "",
+      clusterId: "",
+      localTargetId: "",
+      frontId: "",
+      gaugeSet: "",
+      informationTab: ""
+    },
 
-    pendingRoute: null,
+    preview: {
+      active: false,
+      objectId: "",
+      cardinalId: "",
+      childId: "",
+      clusterId: "",
+      source: "",
+      token: 0
+    },
 
-    lastCompassTrigger: null,
-    lastRouteTrigger: null,
-    lastConstructionTrigger: null,
-    lastInstructionsTrigger: null,
+    pendingRoute: {
+      data: null,
+      trigger: null,
+      generation: 0
+    },
+
+    dialogGeneration: {
+      route: 0,
+      compass: 0,
+      construction: 0
+    },
+
+    activeDialogGeneration: {
+      route: 0,
+      compass: 0,
+      construction: 0
+    },
+
+    lastTriggers: {
+      compass: null,
+      construction: null,
+      instructions: null,
+      orbit: null
+    },
+
+    readiness: {
+      controller: false,
+      compositor: false,
+      crystals: false,
+      interactions: false,
+
+      compositorFailed: false,
+      crystalsFailed: false,
+      interactionsFailed: false
+    },
+
+    nativeDomStates: {
+      root: null,
+
+      fronts: new Map(),
+      clusters: new Map(),
+      cardinals: new Map(),
+      fallbackLayers: new Map(),
+      fallbackStars: new Map(),
+
+      routeDialog: null,
+      routeDialogTitle: null,
+      routeDialogDescription: null,
+      routeContinue: null,
+
+      compassDialog: null,
+      compassControls: new Map(),
+
+      constructionDialog: null,
+
+      instructionsDisclosure: null,
+      instructionControls: new Map(),
+
+      temporaryFocusTargets: new Map()
+    },
+
+    temporaryFocusCleanups:
+      new Map(),
+
+    expectedDialogClose: {
+      route: null,
+      compass: null,
+      construction: null
+    },
+
+    held: false,
 
     reducedMotionQuery: null,
     reducedMotion: false,
 
-    crystalsReady: false,
-    enhancementAvailable: false,
-    enhancedPresentationActive: false,
-
-    held: false,
+    validationIssues: [],
 
     initialized: false,
+    initializing: false,
     disposed: false,
+    apiExposed: false,
 
     listeners: [],
     observers: [],
 
-    lastActivation: {
+    activationGuard: {
       key: "",
       timestamp: 0
     },
 
     counters: {
-      acceptedSemanticActivations: 0,
-      rejectedSemanticActivations: 0,
-      acceptedCompassActivations: 0,
-      rejectedCompassActivations: 0,
-      directObjectClicks: 0,
-      instructionsOpened: 0
+      previewsBegun: 0,
+      previewsCommitted: 0,
+      previewsCancelled: 0,
+      cardinalCommits: 0,
+      childCommits: 0,
+      localActivations: 0,
+      portalOffers: 0,
+      compassOffers: 0,
+      returnsToOrbit: 0,
+      rejectedActivations: 0,
+      readinessChanges: 0
     }
   };
 
-  function toArray(value) {
-    return Array.from(value || []);
-  }
-
   function normalize(value) {
     return String(value || "").trim();
+  }
+
+  function toArray(value) {
+    return Array.from(value || []);
   }
 
   function nowIso() {
     return new Date().toISOString();
   }
 
-  function isFiniteNumber(value) {
+  function isElement(value) {
+    return value instanceof Element;
+  }
+
+  function isPlainObject(value) {
+    if (
+      value === null ||
+      typeof value !== "object"
+    ) {
+      return false;
+    }
+
+    const prototype =
+      Object.getPrototypeOf(value);
+
     return (
-      typeof value === "number" &&
-      Number.isFinite(value)
+      prototype === Object.prototype ||
+      prototype === null
     );
+  }
+
+  function immutableClone(value) {
+    if (
+      value === null ||
+      typeof value !== "object"
+    ) {
+      return value;
+    }
+
+    if (Array.isArray(value)) {
+      return Object.freeze(
+        value.map(immutableClone)
+      );
+    }
+
+    if (!isPlainObject(value)) {
+      throw new TypeError(
+        "Controller snapshots may contain only plain data."
+      );
+    }
+
+    const clone = {};
+
+    for (
+      const [
+        key,
+        entry
+      ]
+      of Object.entries(value)
+    ) {
+      clone[key] =
+        immutableClone(entry);
+    }
+
+    return Object.freeze(clone);
   }
 
   function addListener(
@@ -366,7 +697,11 @@
     handler,
     options
   ) {
-    if (!target) {
+    if (
+      !target ||
+      typeof target.addEventListener !==
+        "function"
+    ) {
       return;
     }
 
@@ -385,6 +720,38 @@
     });
   }
 
+  function addObserver(observer) {
+    if (observer) {
+      state.observers.push(observer);
+    }
+  }
+
+  function removeInstalledResources() {
+    restoreTemporaryFocusTargets();
+
+    for (
+      const removeListener
+      of state.listeners.splice(0)
+    ) {
+      try {
+        removeListener();
+      } catch {
+        /* Best-effort resource rollback. */
+      }
+    }
+
+    for (
+      const observer
+      of state.observers.splice(0)
+    ) {
+      try {
+        observer.disconnect();
+      } catch {
+        /* Best-effort resource rollback. */
+      }
+    }
+  }
+
   function setRootAttribute(
     name,
     value
@@ -399,145 +766,27 @@
     );
   }
 
-  function currentEnhancementState() {
-    if (
-      state.enhancedPresentationActive &&
-      state.enhancementAvailable
-    ) {
-      return PRESENTATION.ACTIVE;
-    }
-
-    if (state.enhancementAvailable) {
-      return PRESENTATION.AVAILABLE;
-    }
-
-    if (state.initialized) {
-      return PRESENTATION.PENDING;
-    }
-
-    return PRESENTATION.BASELINE;
-  }
-
-  function createStateSnapshot(extra = {}) {
-    return Object.freeze({
-      contract:
-        CONTRACT,
-
-      timestamp:
-        nowIso(),
-
-      ready:
-        state.initialized &&
-        !state.disposed,
-
-      disposed:
-        state.disposed,
-
-      pageState:
-        state.root
-          ? state.root.getAttribute(
-              ATTRIBUTES.pageState
-            )
-          : null,
-
-      presentationMode:
-        state.root
-          ? state.root.getAttribute(
-              ATTRIBUTES.presentationMode
-            )
-          : null,
-
-      enhancementState:
-        state.root
-          ? state.root.getAttribute(
-              ATTRIBUTES.enhancementState
-            )
-          : null,
-
-      enhancementAvailable:
-        state.enhancementAvailable,
-
-      enhancedPresentationActive:
-        state.enhancedPresentationActive,
-
-      activeClusterId:
-        state.activeClusterId || null,
-
-      activeFrontId:
-        state.activeFrontId || null,
-
-      activeGaugeSet:
-        state.activeGaugeSet || null,
-
-      activeInformationTab:
-        state.activeInformationTab || null,
-
-      compassDialogOpen:
-        Boolean(
-          state.compassDialog &&
-          state.compassDialog.open
-        ),
-
-      routeDialogOpen:
-        Boolean(
-          state.routeDialog &&
-          state.routeDialog.open
-        ),
-
-      constructionDialogOpen:
-        Boolean(
-          state.constructionDialog &&
-          state.constructionDialog.open
-        ),
-
-      instructionsOpen:
-        Boolean(
-          state.instructionsDisclosure &&
-          state.instructionsDisclosure.open
-        ),
-
-      crystalsReady:
-        state.crystalsReady,
-
-      reducedMotion:
-        state.reducedMotion,
-
-      held:
-        state.held,
-
-      counters:
-        Object.freeze({
-          ...state.counters
-        }),
-
-      ...extra
-    });
-  }
-
-  function publishReceipt(
-    event,
-    extra = {}
+  function dispatch(
+    eventName,
+    detail = {}
   ) {
     const payload =
-      createStateSnapshot({
-        event,
-        ...extra
+      immutableClone({
+        contract:
+          CONTRACT,
+
+        owner:
+          OWNER,
+
+        timestamp:
+          nowIso(),
+
+        ...detail
       });
-
-    if (state.receipt) {
-      const serialized =
-        JSON.stringify(payload);
-
-      state.receipt.value =
-        serialized;
-
-      state.receipt.textContent =
-        serialized;
-    }
 
     window.dispatchEvent(
       new CustomEvent(
-        EVENTS.receipt,
+        eventName,
         {
           detail:
             payload
@@ -546,111 +795,6 @@
     );
 
     return payload;
-  }
-
-  function publishValidation(
-    status,
-    issues = []
-  ) {
-    const payload =
-      Object.freeze({
-        contract:
-          CONTRACT,
-
-        timestamp:
-          nowIso(),
-
-        status,
-
-        issues:
-          Object.freeze(
-            issues.slice()
-          )
-      });
-
-    if (state.validation) {
-      const serialized =
-        JSON.stringify(payload);
-
-      state.validation.value =
-        serialized;
-
-      state.validation.textContent =
-        serialized;
-    }
-
-    return payload;
-  }
-
-  function dispatchStateEvent(
-    eventName,
-    detail = {}
-  ) {
-    window.dispatchEvent(
-      new CustomEvent(
-        eventName,
-        {
-          detail:
-            Object.freeze({
-              contract:
-                CONTRACT,
-
-              ...detail
-            })
-        }
-      )
-    );
-  }
-
-  function safelyShowModal(dialog) {
-    if (!dialog) {
-      return false;
-    }
-
-    if (dialog.open) {
-      return true;
-    }
-
-    if (
-      typeof dialog.showModal ===
-      "function"
-    ) {
-      dialog.showModal();
-
-      return true;
-    }
-
-    dialog.setAttribute(
-      "open",
-      ""
-    );
-
-    return true;
-  }
-
-  function safelyCloseDialog(
-    dialog,
-    returnValue = ""
-  ) {
-    if (!dialog) {
-      return;
-    }
-
-    if (
-      typeof dialog.close ===
-        "function" &&
-      dialog.open
-    ) {
-      dialog.close(
-        returnValue
-      );
-
-      return;
-    }
-
-    dialog.removeAttribute(
-      "open"
-    );
   }
 
   function focusElement(
@@ -680,7 +824,11 @@
     element,
     block = "start"
   ) {
-    if (!element) {
+    if (
+      !element ||
+      typeof element.scrollIntoView !==
+        "function"
+    ) {
       return;
     }
 
@@ -697,35 +845,62 @@
     });
   }
 
-  function setPageState(
-    pageState,
-    presentationMode = pageState,
-    enhancementState =
-      currentEnhancementState()
+  function safelyShowModal(dialog) {
+    if (!dialog) {
+      return false;
+    }
+
+    if (dialog.open) {
+      return true;
+    }
+
+    if (
+      typeof dialog.showModal ===
+        "function"
+    ) {
+      dialog.showModal();
+      return true;
+    }
+
+    dialog.setAttribute(
+      "open",
+      ""
+    );
+
+    return true;
+  }
+
+  function safelyCloseDialog(
+    dialog,
+    returnValue = ""
   ) {
-    setRootAttribute(
-      ATTRIBUTES.pageState,
-      pageState
-    );
+    if (!dialog) {
+      return false;
+    }
 
-    setRootAttribute(
-      ATTRIBUTES.presentationMode,
-      presentationMode
-    );
+    if (
+      dialog.open &&
+      typeof dialog.close ===
+        "function"
+    ) {
+      dialog.close(returnValue);
+      return true;
+    }
 
-    setRootAttribute(
-      ATTRIBUTES.enhancementState,
-      enhancementState
-    );
+    if (dialog.hasAttribute("open")) {
+      dialog.removeAttribute("open");
+      return true;
+    }
 
-    dispatchStateEvent(
-      EVENTS.stateChanged,
-      {
-        pageState,
-        presentationMode,
-        enhancementState
-      }
-    );
+    return false;
+  }
+
+  function nextDialogGeneration(type) {
+    state.dialogGeneration[type] += 1;
+    state.activeDialogGeneration[type] =
+      state.dialogGeneration[type];
+
+    return state.activeDialogGeneration[type];
   }
 
   function isDuplicateActivation(
@@ -736,108 +911,1711 @@
       performance.now();
 
     const duplicate =
-      state.lastActivation.key ===
-        key &&
+      state.activationGuard.key === key &&
       timestamp -
-        state.lastActivation.timestamp <
+        state.activationGuard.timestamp <
         threshold;
 
-    state.lastActivation.key =
+    state.activationGuard.key =
       key;
 
-    state.lastActivation.timestamp =
+    state.activationGuard.timestamp =
       timestamp;
 
     return duplicate;
   }
 
-  function findObjectById(
-    objectId
+  function captureAttributeState(
+    element,
+    attributeName
   ) {
+    return {
+      present:
+        element.hasAttribute(
+          attributeName
+        ),
+
+      value:
+        element.getAttribute(
+          attributeName
+        )
+    };
+  }
+
+  function captureElementState(
+    element,
+    options = {}
+  ) {
+    const attributes = {};
+
+    const attributeNames =
+      options.attributeNames ||
+      CAPTURED_ATTRIBUTES;
+
+    for (
+      const attributeName
+      of attributeNames
+    ) {
+      attributes[attributeName] =
+        captureAttributeState(
+          element,
+          attributeName
+        );
+    }
+
+    return {
+      hiddenProperty:
+        "hidden" in element
+          ? Boolean(element.hidden)
+          : null,
+
+      disabledProperty:
+        "disabled" in element
+          ? Boolean(element.disabled)
+          : null,
+
+      inertProperty:
+        "inert" in element
+          ? Boolean(element.inert)
+          : null,
+
+      openProperty:
+        "open" in element
+          ? Boolean(element.open)
+          : null,
+
+      capturesText:
+        Boolean(options.captureText),
+
+      textContent:
+        options.captureText
+          ? element.textContent
+          : null,
+
+      attributes
+    };
+  }
+
+  function restoreAttributeState(
+    element,
+    attributeName,
+    attributeState
+  ) {
+    if (!attributeState) {
+      return;
+    }
+
+    if (attributeState.present) {
+      element.setAttribute(
+        attributeName,
+        attributeState.value === null
+          ? ""
+          : attributeState.value
+      );
+    } else {
+      element.removeAttribute(
+        attributeName
+      );
+    }
+  }
+
+  function restoreElementState(
+    element,
+    capturedState
+  ) {
+    if (
+      !element ||
+      !capturedState
+    ) {
+      return;
+    }
+
+    for (
+      const [
+        attributeName,
+        attributeState
+      ]
+      of Object.entries(
+        capturedState.attributes
+      )
+    ) {
+      restoreAttributeState(
+        element,
+        attributeName,
+        attributeState
+      );
+    }
+
+    if (
+      capturedState.hiddenProperty !== null &&
+      "hidden" in element
+    ) {
+      element.hidden =
+        capturedState.hiddenProperty;
+    }
+
+    if (
+      capturedState.disabledProperty !== null &&
+      "disabled" in element
+    ) {
+      element.disabled =
+        capturedState.disabledProperty;
+    }
+
+    if (
+      capturedState.inertProperty !== null &&
+      "inert" in element
+    ) {
+      element.inert =
+        capturedState.inertProperty;
+    }
+
+    if (
+      capturedState.openProperty !== null &&
+      "open" in element
+    ) {
+      element.open =
+        capturedState.openProperty;
+    }
+
+    if (capturedState.capturesText) {
+      element.textContent =
+        capturedState.textContent;
+    }
+  }
+
+  function captureNativeDomStates() {
+    state.nativeDomStates.fronts.clear();
+    state.nativeDomStates.clusters.clear();
+    state.nativeDomStates.cardinals.clear();
+    state.nativeDomStates.fallbackLayers.clear();
+    state.nativeDomStates.fallbackStars.clear();
+    state.nativeDomStates.compassControls.clear();
+    state.nativeDomStates.instructionControls.clear();
+    state.nativeDomStates.temporaryFocusTargets.clear();
+    state.temporaryFocusCleanups.clear();
+
+    if (state.root) {
+      state.nativeDomStates.root =
+        captureElementState(
+          state.root,
+          {
+            attributeNames:
+              ROOT_CAPTURED_ATTRIBUTES
+          }
+        );
+    }
+
+    for (
+      const [
+        frontId,
+        front
+      ]
+      of state.fronts
+    ) {
+      state.nativeDomStates.fronts.set(
+        frontId,
+        captureElementState(front)
+      );
+    }
+
+    for (
+      const [
+        clusterId,
+        cluster
+      ]
+      of state.clusters
+    ) {
+      state.nativeDomStates.clusters.set(
+        clusterId,
+        captureElementState(cluster)
+      );
+    }
+
+    for (
+      const [
+        cardinalId,
+        cardinal
+      ]
+      of state.cardinals
+    ) {
+      state.nativeDomStates.cardinals.set(
+        cardinalId,
+        captureElementState(cardinal)
+      );
+    }
+
+    for (
+      const layer
+      of document.querySelectorAll(
+        SELECTORS.fallbackStarLayer
+      )
+    ) {
+      state.nativeDomStates.fallbackLayers.set(
+        layer,
+        captureElementState(layer)
+      );
+    }
+
+    for (
+      const star
+      of document.querySelectorAll(
+        SELECTORS.fallbackStar
+      )
+    ) {
+      state.nativeDomStates.fallbackStars.set(
+        star,
+        captureElementState(star)
+      );
+    }
+
+    if (state.routeDialog) {
+      state.nativeDomStates.routeDialog =
+        captureElementState(
+          state.routeDialog
+        );
+    }
+
+    if (state.routeDialogTitle) {
+      state.nativeDomStates.routeDialogTitle =
+        captureElementState(
+          state.routeDialogTitle,
+          {
+            captureText:
+              true
+          }
+        );
+    }
+
+    if (state.routeDialogDescription) {
+      state.nativeDomStates.routeDialogDescription =
+        captureElementState(
+          state.routeDialogDescription,
+          {
+            captureText:
+              true
+          }
+        );
+    }
+
+    if (state.routeContinue) {
+      state.nativeDomStates.routeContinue =
+        captureElementState(
+          state.routeContinue,
+          {
+            captureText:
+              true
+          }
+        );
+    }
+
+    if (state.compassDialog) {
+      state.nativeDomStates.compassDialog =
+        captureElementState(
+          state.compassDialog
+        );
+    }
+
+    for (
+      const control
+      of state.compassControls
+    ) {
+      state.nativeDomStates.compassControls.set(
+        control,
+        captureElementState(control)
+      );
+    }
+
+    if (state.constructionDialog) {
+      state.nativeDomStates.constructionDialog =
+        captureElementState(
+          state.constructionDialog
+        );
+    }
+
+    if (state.instructionsDisclosure) {
+      state.nativeDomStates.instructionsDisclosure =
+        captureElementState(
+          state.instructionsDisclosure
+        );
+    }
+
+    for (
+      const control
+      of state.instructionControls
+    ) {
+      state.nativeDomStates.instructionControls.set(
+        control,
+        captureElementState(control)
+      );
+    }
+  }
+
+  function restoreNativeRootState() {
+    restoreElementState(
+      state.root,
+      state.nativeDomStates.root
+    );
+  }
+
+  function restoreNativeFrontStates() {
+    for (
+      const [
+        frontId,
+        capturedState
+      ]
+      of state.nativeDomStates.fronts
+    ) {
+      restoreElementState(
+        state.fronts.get(frontId),
+        capturedState
+      );
+    }
+  }
+
+  function restoreNativeClusterStates() {
+    for (
+      const [
+        clusterId,
+        capturedState
+      ]
+      of state.nativeDomStates.clusters
+    ) {
+      restoreElementState(
+        state.clusters.get(clusterId),
+        capturedState
+      );
+    }
+
+    for (
+      const [
+        cardinalId,
+        capturedState
+      ]
+      of state.nativeDomStates.cardinals
+    ) {
+      restoreElementState(
+        state.cardinals.get(cardinalId),
+        capturedState
+      );
+    }
+  }
+
+  function restoreNativeFallbackStates() {
+    for (
+      const [
+        layer,
+        capturedState
+      ]
+      of state.nativeDomStates.fallbackLayers
+    ) {
+      restoreElementState(
+        layer,
+        capturedState
+      );
+    }
+
+    for (
+      const [
+        star,
+        capturedState
+      ]
+      of state.nativeDomStates.fallbackStars
+    ) {
+      restoreElementState(
+        star,
+        capturedState
+      );
+    }
+  }
+
+  function restoreNativePresentationStates() {
+    restoreNativeFrontStates();
+    restoreNativeClusterStates();
+    restoreNativeFallbackStates();
+  }
+
+  function restoreNativeDialogAndControlStates() {
+    restoreElementState(
+      state.routeDialog,
+      state.nativeDomStates.routeDialog
+    );
+
+    restoreElementState(
+      state.routeDialogTitle,
+      state.nativeDomStates.routeDialogTitle
+    );
+
+    restoreElementState(
+      state.routeDialogDescription,
+      state.nativeDomStates.routeDialogDescription
+    );
+
+    restoreElementState(
+      state.routeContinue,
+      state.nativeDomStates.routeContinue
+    );
+
+    restoreElementState(
+      state.compassDialog,
+      state.nativeDomStates.compassDialog
+    );
+
+    restoreElementState(
+      state.constructionDialog,
+      state.nativeDomStates.constructionDialog
+    );
+
+    for (
+      const [
+        control,
+        capturedState
+      ]
+      of state.nativeDomStates.compassControls
+    ) {
+      restoreElementState(
+        control,
+        capturedState
+      );
+    }
+
+    restoreElementState(
+      state.instructionsDisclosure,
+      state.nativeDomStates.instructionsDisclosure
+    );
+
+    for (
+      const [
+        control,
+        capturedState
+      ]
+      of state.nativeDomStates.instructionControls
+    ) {
+      restoreElementState(
+        control,
+        capturedState
+      );
+    }
+  }
+
+  function cleanupTemporaryFocusTarget(
+    heading
+  ) {
+    const remove =
+      state.temporaryFocusCleanups.get(
+        heading
+      );
+
+    if (remove) {
+      try {
+        remove();
+      } catch {
+        /* Best-effort transient cleanup. */
+      }
+
+      state.temporaryFocusCleanups.delete(
+        heading
+      );
+    }
+
+    const captured =
+      state.nativeDomStates
+        .temporaryFocusTargets
+        .get(heading);
+
+    restoreElementState(
+      heading,
+      captured
+    );
+
+    state.nativeDomStates
+      .temporaryFocusTargets
+      .delete(heading);
+  }
+
+  function installTemporaryFocusCleanup(
+    heading
+  ) {
+    const existingRemove =
+      state.temporaryFocusCleanups.get(
+        heading
+      );
+
+    if (existingRemove) {
+      try {
+        existingRemove();
+      } catch {
+        /* Best-effort replacement cleanup. */
+      }
+
+      state.temporaryFocusCleanups.delete(
+        heading
+      );
+    }
+
+    const handler = () => {
+      cleanupTemporaryFocusTarget(
+        heading
+      );
+    };
+
+    heading.addEventListener(
+      "blur",
+      handler,
+      {
+        once:
+          true
+      }
+    );
+
+    state.temporaryFocusCleanups.set(
+      heading,
+      () => {
+        heading.removeEventListener(
+          "blur",
+          handler
+        );
+      }
+    );
+  }
+
+  function restoreTemporaryFocusTargets() {
+    const targets =
+      new Set([
+        ...state.temporaryFocusCleanups.keys(),
+        ...state.nativeDomStates
+          .temporaryFocusTargets
+          .keys()
+      ]);
+
+    for (
+      const heading
+      of targets
+    ) {
+      cleanupTemporaryFocusTarget(
+        heading
+      );
+    }
+
+    state.temporaryFocusCleanups.clear();
+
+    state.nativeDomStates
+      .temporaryFocusTargets
+      .clear();
+  }
+
+  function restoreNativeSemanticFallback() {
+    restoreNativePresentationStates();
+    restoreNativeDialogAndControlStates();
+    restoreTemporaryFocusTargets();
+  }
+
+  function aggregateEnhancedReady() {
     return (
-      state.objects.find(
-        object =>
-          object.getAttribute(
-            "data-showroom-object-id"
-          ) === objectId
+      state.readiness.controller &&
+      state.readiness.compositor &&
+      state.readiness.crystals &&
+      state.readiness.interactions &&
+      !state.disposed
+    );
+  }
+
+  function aggregateEnhancementFailed() {
+    return (
+      state.readiness.compositorFailed ||
+      state.readiness.crystalsFailed ||
+      state.readiness.interactionsFailed
+    );
+  }
+
+  function currentEnhancementState() {
+    if (aggregateEnhancedReady()) {
+      return (
+        state.durableState ===
+          DURABLE_STATES.CONSTELLATION
+          ? ENHANCEMENT_STATES.AVAILABLE
+          : ENHANCEMENT_STATES.ACTIVE
+      );
+    }
+
+    if (aggregateEnhancementFailed()) {
+      return ENHANCEMENT_STATES.FAILED;
+    }
+
+    return ENHANCEMENT_STATES.PENDING;
+  }
+
+  function deriveDurableState() {
+    return state.durableState;
+  }
+
+  function deriveTransientState() {
+    if (state.held) {
+      return TRANSIENT_STATES.HELD;
+    }
+
+    if (
+      state.compassDialog &&
+      state.compassDialog.open
+    ) {
+      return TRANSIENT_STATES.COMPASS_CONFIRMATION;
+    }
+
+    if (
+      state.routeDialog &&
+      state.routeDialog.open
+    ) {
+      return TRANSIENT_STATES.ROUTE_CONFIRMATION;
+    }
+
+    return TRANSIENT_STATES.NONE;
+  }
+
+  function derivePageState() {
+    const transientState =
+      deriveTransientState();
+
+    return transientState ===
+      TRANSIENT_STATES.NONE
+      ? deriveDurableState()
+      : transientState;
+  }
+
+  function derivePresentationMode() {
+    if (!aggregateEnhancedReady()) {
+      return PRESENTATION_MODES.BASELINE;
+    }
+
+    switch (state.durableState) {
+      case DURABLE_STATES.LOCAL_DESTINATION:
+        return PRESENTATION_MODES.FRONT;
+
+      case DURABLE_STATES.CLUSTER_OPEN:
+        return PRESENTATION_MODES.CLUSTER;
+
+      case DURABLE_STATES.CONSTELLATION:
+      default:
+        return PRESENTATION_MODES.CONSTELLATION;
+    }
+  }
+
+  function getFrameState() {
+    return immutableClone({
+      contract:
+        CONTRACT,
+
+      controllerReady:
+        state.readiness.controller &&
+        !state.disposed,
+
+      disposed:
+        state.disposed,
+
+      held:
+        state.held,
+
+      reducedMotion:
+        state.reducedMotion,
+
+      durableState:
+        deriveDurableState(),
+
+      transientState:
+        deriveTransientState(),
+
+      pageState:
+        derivePageState(),
+
+      presentationMode:
+        derivePresentationMode(),
+
+      enhancementState:
+        currentEnhancementState(),
+
+      enhancedStageReady:
+        aggregateEnhancedReady(),
+
+      activeCardinalId:
+        state.committed.cardinalId ||
+        null,
+
+      activeChildId:
+        state.committed.childId ||
+        null,
+
+      activeClusterId:
+        state.committed.clusterId ||
+        null,
+
+      activeLocalTargetId:
+        state.committed.localTargetId ||
+        null,
+
+      activeFrontId:
+        state.committed.frontId ||
+        null,
+
+      activeGaugeSet:
+        state.committed.gaugeSet ||
+        null,
+
+      activeInformationTab:
+        state.committed.informationTab ||
+        null,
+
+      pendingRouteId:
+        state.pendingRoute.data
+          ? state.pendingRoute.data.objectId
+          : null,
+
+      preview: {
+        active:
+          state.preview.active,
+
+        objectId:
+          state.preview.objectId ||
+          null,
+
+        cardinalId:
+          state.preview.cardinalId ||
+          null,
+
+        childId:
+          state.preview.childId ||
+          null,
+
+        clusterId:
+          state.preview.clusterId ||
+          null,
+
+        source:
+          state.preview.source ||
+          null,
+
+        token:
+          state.preview.token
+      },
+
+      readiness: {
+        controller:
+          state.readiness.controller,
+
+        compositor:
+          state.readiness.compositor,
+
+        crystals:
+          state.readiness.crystals,
+
+        interactions:
+          state.readiness.interactions,
+
+        compositorFailed:
+          state.readiness.compositorFailed,
+
+        crystalsFailed:
+          state.readiness.crystalsFailed,
+
+        interactionsFailed:
+          state.readiness.interactionsFailed
+      }
+    });
+  }
+
+  function getState() {
+    return immutableClone({
+      contract:
+        CONTRACT,
+
+      owner:
+        OWNER,
+
+      initialized:
+        state.initialized,
+
+      initializing:
+        state.initializing,
+
+      disposed:
+        state.disposed,
+
+      frame:
+        getFrameState(),
+
+      committed: {
+        ...state.committed
+      },
+
+      pendingRoute:
+        state.pendingRoute.data
+          ? {
+              ...state.pendingRoute.data,
+              generation:
+                state.pendingRoute.generation
+            }
+          : null,
+
+      dialogGeneration: {
+        ...state.dialogGeneration
+      },
+
+      activeDialogGeneration: {
+        ...state.activeDialogGeneration
+      },
+
+      counters: {
+        ...state.counters
+      },
+
+      registered: {
+        objectIds:
+          Array.from(
+            state.objects.keys()
+          ),
+
+        cardinalIds:
+          Array.from(
+            state.cardinals.keys()
+          ),
+
+        childIds:
+          Array.from(
+            state.children.keys()
+          ),
+
+        clusterIds:
+          Array.from(
+            state.clusters.keys()
+          ),
+
+        frontIds:
+          Array.from(
+            state.fronts.keys()
+          )
+      },
+
+      validationIssues:
+        state.validationIssues.slice(),
+
+      nativeStateRegistry: {
+        root:
+          Boolean(
+            state.nativeDomStates.root
+          ),
+
+        fronts:
+          state.nativeDomStates.fronts.size,
+
+        clusters:
+          state.nativeDomStates.clusters.size,
+
+        cardinals:
+          state.nativeDomStates.cardinals.size,
+
+        fallbackLayers:
+          state.nativeDomStates.fallbackLayers.size,
+
+        fallbackStars:
+          state.nativeDomStates.fallbackStars.size,
+
+        routeDialog:
+          Boolean(
+            state.nativeDomStates.routeDialog
+          ),
+
+        routeDialogTitle:
+          Boolean(
+            state.nativeDomStates.routeDialogTitle
+          ),
+
+        routeDialogDescription:
+          Boolean(
+            state.nativeDomStates.routeDialogDescription
+          ),
+
+        routeContinue:
+          Boolean(
+            state.nativeDomStates.routeContinue
+          ),
+
+        compassDialog:
+          Boolean(
+            state.nativeDomStates.compassDialog
+          ),
+
+        compassControls:
+          state.nativeDomStates.compassControls.size,
+
+        constructionDialog:
+          Boolean(
+            state.nativeDomStates.constructionDialog
+          ),
+
+        instructionsDisclosure:
+          Boolean(
+            state.nativeDomStates.instructionsDisclosure
+          ),
+
+        instructionControls:
+          state.nativeDomStates.instructionControls.size,
+
+        temporaryFocusTargets:
+          state.nativeDomStates.temporaryFocusTargets.size,
+
+        temporaryFocusCleanups:
+          state.temporaryFocusCleanups.size
+      },
+
+      expectedDialogClose: {
+        route:
+          Boolean(
+            state.expectedDialogClose.route
+          ),
+
+        compass:
+          Boolean(
+            state.expectedDialogClose.compass
+          ),
+
+        construction:
+          Boolean(
+            state.expectedDialogClose.construction
+          )
+      },
+
+      listenerCount:
+        state.listeners.length,
+
+      observerCount:
+        state.observers.length
+    });
+  }
+
+  function createReceipt(
+    event,
+    extra = {}
+  ) {
+    return immutableClone({
+      contract:
+        CONTRACT,
+
+      owner:
+        OWNER,
+
+      event,
+
+      timestamp:
+        nowIso(),
+
+      frame:
+        getFrameState(),
+
+      counters: {
+        ...state.counters
+      },
+
+      ...extra
+    });
+  }
+
+  function publishReceipt(
+    event,
+    extra = {}
+  ) {
+    const payload =
+      createReceipt(
+        event,
+        extra
+      );
+
+    if (state.receipt) {
+      const serialized =
+        JSON.stringify(payload);
+
+      state.receipt.value =
+        serialized;
+
+      state.receipt.textContent =
+        serialized;
+    }
+
+    dispatch(
+      EVENTS.controllerReceipt,
+      payload
+    );
+
+    return payload;
+  }
+
+  function publishValidation(
+    status,
+    issues
+  ) {
+    state.validationIssues =
+      issues.slice();
+
+    const payload =
+      immutableClone({
+        contract:
+          CONTRACT,
+
+        owner:
+          OWNER,
+
+        timestamp:
+          nowIso(),
+
+        status,
+
+        issues:
+          issues.slice()
+      });
+
+    if (state.validation) {
+      const serialized =
+        JSON.stringify(payload);
+
+      state.validation.value =
+        serialized;
+
+      state.validation.textContent =
+        serialized;
+    }
+
+    return payload;
+  }
+
+  function reflectState() {
+    const frame =
+      getFrameState();
+
+    setRootAttribute(
+      ATTRIBUTES.pageState,
+      frame.pageState
+    );
+
+    setRootAttribute(
+      ATTRIBUTES.presentationMode,
+      frame.presentationMode
+    );
+
+    setRootAttribute(
+      ATTRIBUTES.enhancementState,
+      frame.enhancementState
+    );
+
+    setRootAttribute(
+      ATTRIBUTES.activeCardinal,
+      state.committed.cardinalId
+    );
+
+    setRootAttribute(
+      ATTRIBUTES.activeChild,
+      state.committed.childId
+    );
+
+    setRootAttribute(
+      ATTRIBUTES.activeCluster,
+      state.committed.clusterId
+    );
+
+    setRootAttribute(
+      ATTRIBUTES.activeFront,
+      state.committed.frontId
+    );
+
+    setRootAttribute(
+      ATTRIBUTES.activeGaugeSet,
+      state.committed.gaugeSet
+    );
+
+    setRootAttribute(
+      ATTRIBUTES.activeInformationTab,
+      state.committed.informationTab
+    );
+
+    setRootAttribute(
+      ATTRIBUTES.routeDialogOpen,
+      state.routeDialog &&
+      state.routeDialog.open
+        ? "true"
+        : "false"
+    );
+
+    setRootAttribute(
+      ATTRIBUTES.compassDialogOpen,
+      state.compassDialog &&
+      state.compassDialog.open
+        ? "true"
+        : "false"
+    );
+
+    setRootAttribute(
+      ATTRIBUTES.held,
+      state.held
+        ? "true"
+        : "false"
+    );
+
+    setRootAttribute(
+      ATTRIBUTES.reducedMotion,
+      state.reducedMotion
+        ? "true"
+        : "false"
+    );
+
+    setRootAttribute(
+      ATTRIBUTES.compositorReady,
+      state.readiness.compositor
+        ? "true"
+        : "false"
+    );
+
+    setRootAttribute(
+      ATTRIBUTES.crystalsReady,
+      state.readiness.crystals
+        ? "true"
+        : "false"
+    );
+
+    setRootAttribute(
+      ATTRIBUTES.interactionsReady,
+      state.readiness.interactions
+        ? "true"
+        : "false"
+    );
+
+    dispatch(
+      EVENTS.stateChanged,
+      {
+        frame
+      }
+    );
+
+    dispatch(
+      EVENTS.frameChanged,
+      {
+        frame
+      }
+    );
+
+    return frame;
+  }
+
+  function setFallbackEnhancedPresentation() {
+    for (
+      const layer
+      of document.querySelectorAll(
+        SELECTORS.fallbackStarLayer
+      )
+    ) {
+      layer.setAttribute(
+        ATTRIBUTES.fallbackVisibility,
+        "semantic-only"
+      );
+    }
+
+    for (
+      const star
+      of document.querySelectorAll(
+        SELECTORS.fallbackStar
+      )
+    ) {
+      star.setAttribute(
+        ATTRIBUTES.fallbackRendering,
+        "hidden"
+      );
+    }
+  }
+
+  function setClusterDomExpanded(
+    clusterId,
+    expanded
+  ) {
+    const normalizedClusterId =
+      normalize(clusterId);
+
+    const cluster =
+      state.clusters.get(
+        normalizedClusterId
+      );
+
+    if (!cluster) {
+      return false;
+    }
+
+    cluster.hidden =
+      !expanded;
+
+    cluster.toggleAttribute(
+      "hidden",
+      !expanded
+    );
+
+    cluster.setAttribute(
+      ATTRIBUTES.clusterState,
+      expanded
+        ? "expanded"
+        : "collapsed"
+    );
+
+    cluster.setAttribute(
+      "aria-hidden",
+      expanded
+        ? "false"
+        : "true"
+    );
+
+    for (
+      const cardinal
+      of state.cardinals.values()
+    ) {
+      const cardinalClusterId =
+        normalize(
+          cardinal.getAttribute(
+            ATTRIBUTES.clusterId
+          )
+        ) ||
+        normalize(
+          cardinal.getAttribute(
+            ATTRIBUTES.cardinalId
+          )
+        );
+
+      const active =
+        expanded &&
+        cardinalClusterId ===
+          normalizedClusterId;
+
+      if (
+        cardinalClusterId ===
+          normalizedClusterId
+      ) {
+        cardinal.setAttribute(
+          "aria-expanded",
+          active
+            ? "true"
+            : "false"
+        );
+
+        cardinal.toggleAttribute(
+          ATTRIBUTES.clusterActive,
+          active
+        );
+      }
+    }
+
+    return true;
+  }
+
+  function setFrontVisibility(
+    front,
+    visible
+  ) {
+    if (!front) {
+      return;
+    }
+
+    front.hidden =
+      !visible;
+
+    front.toggleAttribute(
+      "hidden",
+      !visible
+    );
+
+    front.toggleAttribute(
+      ATTRIBUTES.controllerManagedHidden,
+      !visible
+    );
+
+    front.setAttribute(
+      ATTRIBUTES.frontState,
+      visible
+        ? "active"
+        : "inactive"
+    );
+
+    front.setAttribute(
+      "aria-hidden",
+      visible
+        ? "false"
+        : "true"
+    );
+
+    if ("inert" in front) {
+      front.inert =
+        !visible;
+    }
+
+    front.toggleAttribute(
+      "inert",
+      !visible
+    );
+  }
+
+  function applyEnhancedConstellationPresentation() {
+    for (
+      const clusterId
+      of state.clusters.keys()
+    ) {
+      setClusterDomExpanded(
+        clusterId,
+        false
+      );
+    }
+
+    for (
+      const front
+      of state.fronts.values()
+    ) {
+      setFrontVisibility(
+        front,
+        false
+      );
+    }
+
+    setFallbackEnhancedPresentation();
+  }
+
+  function applyEnhancedClusterPresentation() {
+    for (
+      const clusterId
+      of state.clusters.keys()
+    ) {
+      setClusterDomExpanded(
+        clusterId,
+        clusterId ===
+          state.committed.clusterId
+      );
+    }
+
+    for (
+      const front
+      of state.fronts.values()
+    ) {
+      setFrontVisibility(
+        front,
+        false
+      );
+    }
+
+    setFallbackEnhancedPresentation();
+  }
+
+  function applyEnhancedLocalPresentation() {
+    for (
+      const clusterId
+      of state.clusters.keys()
+    ) {
+      setClusterDomExpanded(
+        clusterId,
+        clusterId ===
+          state.committed.clusterId
+      );
+    }
+
+    for (
+      const [
+        frontId,
+        front
+      ]
+      of state.fronts
+    ) {
+      setFrontVisibility(
+        front,
+        Boolean(
+          state.committed.frontId &&
+          frontId ===
+            state.committed.frontId
+        )
+      );
+    }
+
+    setFallbackEnhancedPresentation();
+  }
+
+  function applyPresentationForCurrentState(
+    reason = ""
+  ) {
+    if (!aggregateEnhancedReady()) {
+      restoreNativePresentationStates();
+
+      return {
+        mode:
+          PRESENTATION_MODES.BASELINE,
+
+        reason
+      };
+    }
+
+    switch (state.durableState) {
+      case DURABLE_STATES.CLUSTER_OPEN:
+        applyEnhancedClusterPresentation();
+        break;
+
+      case DURABLE_STATES.LOCAL_DESTINATION:
+        applyEnhancedLocalPresentation();
+        break;
+
+      case DURABLE_STATES.CONSTELLATION:
+      default:
+        applyEnhancedConstellationPresentation();
+        break;
+    }
+
+    return {
+      mode:
+        derivePresentationMode(),
+
+      reason
+    };
+  }
+
+  function dispatchReadinessChanged(
+    reason
+  ) {
+    state.counters.readinessChanges +=
+      1;
+
+    applyPresentationForCurrentState(
+      reason
+    );
+
+    const frame =
+      reflectState();
+
+    dispatch(
+      EVENTS.readinessChanged,
+      {
+        reason,
+        frame
+      }
+    );
+
+    publishReceipt(
+      "readiness-changed",
+      {
+        reason
+      }
+    );
+  }
+
+  function setSubsystemReadiness(
+    subsystem,
+    ready,
+    options = {}
+  ) {
+    if (
+      !Object.prototype.hasOwnProperty.call(
+        state.readiness,
+        subsystem
+      )
+    ) {
+      return false;
+    }
+
+    state.readiness[subsystem] =
+      Boolean(ready);
+
+    const failedKey =
+      `${subsystem}Failed`;
+
+    if (
+      Object.prototype.hasOwnProperty.call(
+        state.readiness,
+        failedKey
+      )
+    ) {
+      state.readiness[failedKey] =
+        Boolean(options.failed);
+    }
+
+    if (!ready) {
+      cancelPreview(
+        `${subsystem}-unavailable`,
+        {
+          silent:
+            true
+        }
+      );
+    }
+
+    dispatchReadinessChanged(
+      options.reason ||
+      `${subsystem}-readiness`
+    );
+
+    return true;
+  }
+
+  function resolveObject(value) {
+    if (isElement(value)) {
+      const object =
+        value.matches(
+          SELECTORS.object
+        )
+          ? value
+          : value.closest(
+              SELECTORS.object
+            );
+
+      if (
+        object &&
+        state.orbitField &&
+        state.orbitField.contains(
+          object
+        )
+      ) {
+        return object;
+      }
+
+      return null;
+    }
+
+    const objectId =
+      normalize(value);
+
+    if (!objectId) {
+      return null;
+    }
+
+    return (
+      state.objects.get(
+        objectId
       ) ||
       null
     );
   }
 
-  function resolveSemanticObject(
-    source
-  ) {
-    if (!(source instanceof Element)) {
+  function describeObject(object) {
+    if (!object) {
       return null;
     }
 
-    if (
-      source.matches(
-        SELECTORS.object
-      )
-    ) {
-      return source;
-    }
+    return immutableClone({
+      objectId:
+        normalize(
+          object.getAttribute(
+            ATTRIBUTES.objectId
+          )
+        ),
 
-    return source.closest(
-      SELECTORS.object
-    );
+      behavior:
+        normalize(
+          object.getAttribute(
+            ATTRIBUTES.objectBehavior
+          )
+        ),
+
+      cardinalId:
+        normalize(
+          object.getAttribute(
+            ATTRIBUTES.cardinalId
+          )
+        ),
+
+      childId:
+        normalize(
+          object.getAttribute(
+            ATTRIBUTES.childId
+          )
+        ),
+
+      clusterId:
+        normalize(
+          object.getAttribute(
+            ATTRIBUTES.clusterId
+          )
+        ),
+
+      destinationKind:
+        normalize(
+          object.getAttribute(
+            ATTRIBUTES.destinationKind
+          )
+        ),
+
+      target:
+        normalize(
+          object.getAttribute(
+            ATTRIBUTES.target
+          )
+        ),
+
+      openAncestor:
+        normalize(
+          object.getAttribute(
+            ATTRIBUTES.openAncestor
+          )
+        ),
+
+      requiredFront:
+        normalize(
+          object.getAttribute(
+            ATTRIBUTES.requiredFront
+          )
+        ),
+
+      informationTab:
+        normalize(
+          object.getAttribute(
+            ATTRIBUTES.informationTab
+          )
+        ),
+
+      route:
+        normalize(
+          object.getAttribute(
+            ATTRIBUTES.route
+          )
+        ),
+
+      routeLabel:
+        normalize(
+          object.getAttribute(
+            ATTRIBUTES.routeLabel
+          )
+        ),
+
+      routeDescription:
+        normalize(
+          object.getAttribute(
+            ATTRIBUTES.routeDescription
+          )
+        )
+    });
   }
 
-  function isOrbitOwnedElement(
-    element
-  ) {
+  function isOrbitOwnedElement(element) {
     return Boolean(
-      element &&
+      isElement(element) &&
       state.orbitField &&
-      state.orbitField.contains(
-        element
-      )
+      state.orbitField.contains(element)
     );
   }
 
-  function isOrbitOwnedObject(
-    object
-  ) {
+  function isOrbitOwnedObject(object) {
     return Boolean(
       object &&
       object.matches(
         SELECTORS.object
       ) &&
-      isOrbitOwnedElement(
-        object
-      )
+      isOrbitOwnedElement(object)
     );
   }
 
-  function pointInsideElement(
-    element,
-    x,
-    y
-  ) {
-    if (
-      !element ||
-      !isFiniteNumber(x) ||
-      !isFiniteNumber(y)
-    ) {
-      return false;
+  function isFiniteNumber(value) {
+    return (
+      typeof value === "number" &&
+      Number.isFinite(value)
+    );
+  }
+
+  function readActivationCoordinates(detail) {
+    if (!detail) {
+      return null;
     }
 
-    const rect =
-      element.getBoundingClientRect();
-
-    return (
-      x >= rect.left &&
-      x <= rect.right &&
-      y >= rect.top &&
-      y <= rect.bottom
-    );
-  }
-
-  function readActivationCoordinates(
-    detail
-  ) {
     const candidates = [
       [
         detail.endX,
@@ -848,543 +2626,1877 @@
         detail.clientY
       ],
       [
+        detail.releaseClientX,
+        detail.releaseClientY
+      ],
+      [
         detail.x,
         detail.y
       ],
       [
-        detail.startX,
-        detail.startY
+        detail.releaseX,
+        detail.releaseY
+      ],
+      [
+        detail.point &&
+          detail.point.x,
+        detail.point &&
+          detail.point.y
       ]
     ];
 
     for (
-      const candidate
+      const [
+        x,
+        y
+      ]
       of candidates
     ) {
       if (
-        isFiniteNumber(
-          candidate[0]
-        ) &&
-        isFiniteNumber(
-          candidate[1]
-        )
+        isFiniteNumber(x) &&
+        isFiniteNumber(y)
       ) {
-        return Object.freeze({
-          x:
-            candidate[0],
-
-          y:
-            candidate[1]
-        });
+        return {
+          x,
+          y
+        };
       }
     }
 
     return null;
   }
 
-  function resolveElementAtPoint(
-    coordinates
-  ) {
-    if (!coordinates) {
-      return null;
-    }
-
-    try {
-      return document.elementFromPoint(
-        coordinates.x,
-        coordinates.y
-      );
-    } catch {
-      return null;
-    }
-  }
-
-  function validateSemanticEvent(
-    detail,
-    object
+  function pointInsideElement(
+    point,
+    element
   ) {
     if (
-      detail.validTap === false ||
-      detail.cancelled === true ||
-      detail.wasDrag === true
-    ) {
-      return Object.freeze({
-        valid:
-          false,
-
-        reason:
-          "event-reported-invalid-tap"
-      });
-    }
-
-    if (!isOrbitOwnedObject(object)) {
-      return Object.freeze({
-        valid:
-          false,
-
-        reason:
-          "object-outside-orbit-field"
-      });
-    }
-
-    if (
-      detail.element instanceof
-        Element &&
-      !isOrbitOwnedElement(
-        detail.element
-      )
-    ) {
-      return Object.freeze({
-        valid:
-          false,
-
-        reason:
-          "event-element-outside-orbit-field"
-      });
-    }
-
-    const coordinates =
-      readActivationCoordinates(
-        detail
-      );
-
-    if (
-      coordinates &&
-      !pointInsideElement(
-        state.orbitField,
-        coordinates.x,
-        coordinates.y
-      )
-    ) {
-      return Object.freeze({
-        valid:
-          false,
-
-        reason:
-          "activation-point-outside-orbit-field"
-      });
-    }
-
-    if (
-      !coordinates &&
-      !(detail.element instanceof Element)
-    ) {
-      return Object.freeze({
-        valid:
-          false,
-
-        reason:
-          "event-has-no-grounded-element-or-coordinates"
-      });
-    }
-
-    if (coordinates) {
-      const releaseElement =
-        resolveElementAtPoint(
-          coordinates
-        );
-
-      const releaseObject =
-        resolveSemanticObject(
-          releaseElement
-        );
-
-      if (
-        releaseObject &&
-        releaseObject !== object
-      ) {
-        return Object.freeze({
-          valid:
-            false,
-
-          reason:
-            "release-point-resolves-to-different-object"
-        });
-      }
-
-      if (
-        releaseElement &&
-        !state.orbitField.contains(
-          releaseElement
-        )
-      ) {
-        return Object.freeze({
-          valid:
-            false,
-
-          reason:
-            "release-point-resolves-outside-orbit-field"
-        });
-      }
-    }
-
-    return Object.freeze({
-      valid:
-        true,
-
-      reason:
-        "validated"
-    });
-  }
-
-  function validateCompassEvent(
-    detail
-  ) {
-    if (
-      detail.validTap === false ||
-      detail.cancelled === true ||
-      detail.wasDrag === true
-    ) {
-      return Object.freeze({
-        valid:
-          false,
-
-        reason:
-          "event-reported-invalid-tap"
-      });
-    }
-
-    if (
-      !state.compassControl ||
-      !isOrbitOwnedElement(
-        state.compassControl
-      )
-    ) {
-      return Object.freeze({
-        valid:
-          false,
-
-        reason:
-          "compass-control-outside-orbit-field"
-      });
-    }
-
-    if (
-      detail.element instanceof
-        Element &&
-      detail.element !==
-        state.compassControl &&
-      !state.compassControl.contains(
-        detail.element
-      )
-    ) {
-      return Object.freeze({
-        valid:
-          false,
-
-        reason:
-          "event-element-is-not-compass-control"
-      });
-    }
-
-    const coordinates =
-      readActivationCoordinates(
-        detail
-      );
-
-    if (
-      coordinates &&
-      (
-        !pointInsideElement(
-          state.orbitField,
-          coordinates.x,
-          coordinates.y
-        ) ||
-        !pointInsideElement(
-          state.compassControl,
-          coordinates.x,
-          coordinates.y
-        )
-      )
-    ) {
-      return Object.freeze({
-        valid:
-          false,
-
-        reason:
-          "compass-activation-point-invalid"
-      });
-    }
-
-    if (
-      !coordinates &&
-      !(detail.element instanceof Element)
-    ) {
-      return Object.freeze({
-        valid:
-          false,
-
-        reason:
-          "compass-event-has-no-grounded-element-or-coordinates"
-      });
-    }
-
-    return Object.freeze({
-      valid:
-        true,
-
-      reason:
-        "validated"
-    });
-  }
-
-  function closeOtherDialogs(
-    exceptDialog = null
-  ) {
-    const dialogs = [
-      state.compassDialog,
-      state.routeDialog,
-      state.constructionDialog
-    ];
-
-    for (
-      const dialog
-      of dialogs
-    ) {
-      if (
-        dialog &&
-        dialog !== exceptDialog &&
-        dialog.open
-      ) {
-        safelyCloseDialog(
-          dialog,
-          "superseded"
-        );
-      }
-    }
-  }
-
-  /* =======================================================
-     BASELINE PRESERVATION
-     ======================================================= */
-
-  function captureOriginalFrontStates() {
-    for (
-      const [
-        frontId,
-        front
-      ]
-      of state.fronts
-    ) {
-      state.originalFrontStates.set(
-        frontId,
-        Object.freeze({
-          hidden:
-            front.hidden,
-
-          ariaHidden:
-            front.getAttribute(
-              "aria-hidden"
-            ),
-
-          frontState:
-            front.getAttribute(
-              ATTRIBUTES.frontState
-            ),
-
-          hadInertAttribute:
-            front.hasAttribute(
-              "inert"
-            ),
-
-          inertProperty:
-            "inert" in front
-              ? Boolean(front.inert)
-              : false
-        })
-      );
-    }
-  }
-
-  function makeFrontBaselineVisible(
-    front
-  ) {
-    if (!front) {
-      return;
-    }
-
-    front.hidden = false;
-
-    front.removeAttribute(
-      "hidden"
-    );
-
-    front.setAttribute(
-      ATTRIBUTES.frontState,
-      "baseline"
-    );
-
-    front.setAttribute(
-      "aria-hidden",
-      "false"
-    );
-
-    front.removeAttribute(
-      ATTRIBUTES.controllerManagedHidden
-    );
-
-    front.removeAttribute(
-      "inert"
-    );
-
-    if ("inert" in front) {
-      front.inert = false;
-    }
-  }
-
-  function restoreBaselineFronts() {
-    for (
-      const front
-      of state.fronts.values()
-    ) {
-      makeFrontBaselineVisible(
-        front
-      );
-    }
-  }
-
-  function clearPresentationSelection() {
-    state.activeFrontId = "";
-    state.activeClusterId = "";
-    state.activeGaugeSet = "";
-    state.activeInformationTab = "";
-
-    setRootAttribute(
-      ATTRIBUTES.activeFront,
-      ""
-    );
-
-    setRootAttribute(
-      ATTRIBUTES.activeCluster,
-      ""
-    );
-
-    setRootAttribute(
-      ATTRIBUTES.activeGaugeSet,
-      ""
-    );
-
-    setRootAttribute(
-      ATTRIBUTES.activeInformationTab,
-      ""
-    );
-  }
-
-  function restoreBaselinePresentation(
-    reason = "baseline-restored",
-    options = {}
-  ) {
-    state.enhancedPresentationActive =
-      false;
-
-    restoreBaselineFronts();
-    closeAllClusters();
-    clearPresentationSelection();
-
-    setPageState(
-      PRESENTATION.BASELINE,
-      PRESENTATION.BASELINE,
-      options.failed
-        ? PRESENTATION.FAILED
-        : state.enhancementAvailable
-          ? PRESENTATION.AVAILABLE
-          : PRESENTATION.PENDING
-    );
-
-    publishReceipt(
-      "baseline-restored",
-      {
-        reason,
-
-        failed:
-          Boolean(
-            options.failed
-          )
-      }
-    );
-
-    dispatchStateEvent(
-      EVENTS.frontChanged,
-      {
-        frontId:
-          null,
-
-        active:
-          false,
-
-        baselineRestored:
-          true,
-
-        reason
-      }
-    );
-  }
-
-  function enterEnhancedPresentation(
-    reason = "user-activation"
-  ) {
-    if (
-      !state.enhancementAvailable ||
-      !state.crystalsReady
+      !point ||
+      !element ||
+      typeof element.getBoundingClientRect !==
+        "function"
     ) {
       return false;
     }
 
-    state.enhancedPresentationActive =
+    const rect =
+      element.getBoundingClientRect();
+
+    return (
+      point.x >= rect.left &&
+      point.x <= rect.right &&
+      point.y >= rect.top &&
+      point.y <= rect.bottom
+    );
+  }
+
+  function resolveElementAtPoint(point) {
+    if (
+      !point ||
+      typeof document.elementFromPoint !==
+        "function"
+    ) {
+      return null;
+    }
+
+    return document.elementFromPoint(
+      point.x,
+      point.y
+    );
+  }
+
+  function rejectSemanticActivation(
+    reason,
+    detail = {}
+  ) {
+    state.counters.rejectedActivations +=
+      1;
+
+    publishReceipt(
+      "semantic-activation-rejected",
+      {
+        reason,
+
+        objectId:
+          normalize(
+            detail.objectId
+          ) ||
+          null
+      }
+    );
+
+    return {
+      valid:
+        false,
+
+      reason
+    };
+  }
+
+  function validateSemanticEvent(detail) {
+    if (
+      detail.validTap === false ||
+      detail.cancelled === true ||
+      detail.wasDrag === true
+    ) {
+      return rejectSemanticActivation(
+        "gesture-not-committable",
+        detail
+      );
+    }
+
+    const suppliedElement =
+      isElement(detail.element)
+        ? detail.element
+        : null;
+
+    const object =
+      resolveObject(
+        suppliedElement ||
+        detail.objectId
+      );
+
+    if (!object) {
+      return rejectSemanticActivation(
+        "object-not-found",
+        detail
+      );
+    }
+
+    if (!isOrbitOwnedObject(object)) {
+      return rejectSemanticActivation(
+        "object-outside-orbit",
+        detail
+      );
+    }
+
+    if (
+      suppliedElement &&
+      suppliedElement !== object &&
+      !object.contains(
+        suppliedElement
+      )
+    ) {
+      return rejectSemanticActivation(
+        "element-object-mismatch",
+        detail
+      );
+    }
+
+    if (
+      suppliedElement &&
+      !isOrbitOwnedElement(
+        suppliedElement
+      )
+    ) {
+      return rejectSemanticActivation(
+        "element-outside-orbit",
+        detail
+      );
+    }
+
+    const point =
+      readActivationCoordinates(
+        detail
+      );
+
+    if (!point && !suppliedElement) {
+      return rejectSemanticActivation(
+        "ungrounded-object-id",
+        detail
+      );
+    }
+
+    if (point) {
+      if (
+        !pointInsideElement(
+          point,
+          state.orbitField
+        )
+      ) {
+        return rejectSemanticActivation(
+          "release-outside-orbit",
+          detail
+        );
+      }
+
+      if (
+        !pointInsideElement(
+          point,
+          object
+        )
+      ) {
+        return rejectSemanticActivation(
+          "release-outside-object",
+          detail
+        );
+      }
+
+      const releaseElement =
+        resolveElementAtPoint(
+          point
+        );
+
+      if (
+        !releaseElement ||
+        !isOrbitOwnedElement(
+          releaseElement
+        )
+      ) {
+        return rejectSemanticActivation(
+          "release-not-orbit-grounded",
+          detail
+        );
+      }
+
+      const releaseObject =
+        releaseElement.matches(
+          SELECTORS.object
+        )
+          ? releaseElement
+          : releaseElement.closest(
+              SELECTORS.object
+            );
+
+      if (releaseObject !== object) {
+        return rejectSemanticActivation(
+          "release-object-mismatch",
+          detail
+        );
+      }
+    }
+
+    return {
+      valid:
+        true,
+
+      object
+    };
+  }
+
+  function validateCompassEvent(detail) {
+    if (
+      detail.validTap === false ||
+      detail.cancelled === true ||
+      detail.wasDrag === true
+    ) {
+      return {
+        valid:
+          false,
+
+        reason:
+          "gesture-not-committable"
+      };
+    }
+
+    const suppliedElement =
+      isElement(detail.element)
+        ? detail.element
+        : null;
+
+    const control =
+      suppliedElement
+        ? (
+            suppliedElement.matches(
+              SELECTORS.compassControl
+            )
+              ? suppliedElement
+              : suppliedElement.closest(
+                  SELECTORS.compassControl
+                )
+          )
+        : state.orbitField
+          ? state.orbitField.querySelector(
+              SELECTORS.compassControl
+            )
+          : null;
+
+    if (
+      !control ||
+      !isOrbitOwnedElement(control)
+    ) {
+      return {
+        valid:
+          false,
+
+        reason:
+          "compass-control-not-grounded"
+      };
+    }
+
+    if (
+      suppliedElement &&
+      suppliedElement !== control &&
+      !control.contains(
+        suppliedElement
+      )
+    ) {
+      return {
+        valid:
+          false,
+
+        reason:
+          "compass-element-mismatch"
+      };
+    }
+
+    const point =
+      readActivationCoordinates(
+        detail
+      );
+
+    if (!point && !suppliedElement) {
+      return {
+        valid:
+          false,
+
+        reason:
+          "ungrounded-compass-activation"
+      };
+    }
+
+    if (point) {
+      if (
+        !pointInsideElement(
+          point,
+          state.orbitField
+        ) ||
+        !pointInsideElement(
+          point,
+          control
+        )
+      ) {
+        return {
+          valid:
+            false,
+
+          reason:
+            "compass-release-outside-control"
+        };
+      }
+
+      const releaseElement =
+        resolveElementAtPoint(
+          point
+        );
+
+      if (
+        !releaseElement ||
+        (
+          releaseElement !== control &&
+          !control.contains(
+            releaseElement
+          )
+        )
+      ) {
+        return {
+          valid:
+            false,
+
+          reason:
+            "compass-release-mismatch"
+        };
+      }
+    }
+
+    return {
+      valid:
+        true,
+
+      control
+    };
+  }
+
+  function beginPreview(
+    objectValue,
+    options = {}
+  ) {
+    if (
+      state.disposed ||
+      state.held
+    ) {
+      return false;
+    }
+
+    const object =
+      resolveObject(
+        objectValue
+      );
+
+    if (!object) {
+      return false;
+    }
+
+    const descriptor =
+      describeObject(object);
+
+    state.preview.active =
       true;
 
-    setPageState(
-      state.activeFrontId
-        ? "front"
-        : "orbit",
+    state.preview.objectId =
+      descriptor.objectId;
 
-      state.activeFrontId
-        ? "front"
-        : "orbit",
+    state.preview.cardinalId =
+      descriptor.cardinalId;
 
-      PRESENTATION.ACTIVE
+    state.preview.childId =
+      descriptor.childId;
+
+    state.preview.clusterId =
+      descriptor.clusterId;
+
+    state.preview.source =
+      normalize(
+        options.source
+      ) ||
+      "api";
+
+    state.preview.token += 1;
+
+    state.counters.previewsBegun +=
+      1;
+
+    const frame =
+      reflectState();
+
+    dispatch(
+      EVENTS.previewChanged,
+      {
+        action:
+          "preview",
+
+        frame
+      }
     );
 
     publishReceipt(
-      "enhanced-presentation-entered",
+      "preview-begun",
       {
-        reason
+        objectId:
+          descriptor.objectId,
+
+        source:
+          state.preview.source,
+
+        token:
+          state.preview.token
+      }
+    );
+
+    return state.preview.token;
+  }
+
+  function cancelPreview(
+    reason = "cancelled",
+    options = {}
+  ) {
+    if (!state.preview.active) {
+      return false;
+    }
+
+    const previous = {
+      ...state.preview
+    };
+
+    state.preview.active = false;
+    state.preview.objectId = "";
+    state.preview.cardinalId = "";
+    state.preview.childId = "";
+    state.preview.clusterId = "";
+    state.preview.source = "";
+
+    state.counters.previewsCancelled +=
+      1;
+
+    const frame =
+      reflectState();
+
+    dispatch(
+      EVENTS.previewChanged,
+      {
+        action:
+          "cancel",
+
+        reason,
+
+        previous:
+          immutableClone(previous),
+
+        frame
+      }
+    );
+
+    if (!options.silent) {
+      publishReceipt(
+        "preview-cancelled",
+        {
+          reason,
+
+          previousObjectId:
+            previous.objectId ||
+            null
+        }
+      );
+    }
+
+    return true;
+  }
+
+  function clearLocalCommit() {
+    state.committed.localTargetId = "";
+    state.committed.frontId = "";
+    state.committed.gaugeSet = "";
+    state.committed.informationTab = "";
+  }
+
+  function setRouteContinueEnabled(
+    enabled,
+    label = ""
+  ) {
+    if (!state.routeContinue) {
+      return;
+    }
+
+    state.routeContinue.disabled =
+      !enabled;
+
+    state.routeContinue.toggleAttribute(
+      "disabled",
+      !enabled
+    );
+
+    state.routeContinue.setAttribute(
+      "aria-disabled",
+      enabled
+        ? "false"
+        : "true"
+    );
+
+    if (enabled && label) {
+      state.routeContinue.textContent =
+        `Continue to ${label}`;
+    }
+  }
+
+  function finalizeRouteDialogClose(
+    closeRecord,
+    options = {}
+  ) {
+    const record =
+      closeRecord || {
+        generation:
+          state.activeDialogGeneration.route,
+
+        reason:
+          "native-close",
+
+        restoreFocus:
+          false,
+
+        silent:
+          false,
+
+        trigger:
+          state.pendingRoute.trigger,
+
+        routeData:
+          state.pendingRoute.data
+      };
+
+    const ownsPendingRoute =
+      record.generation !== 0 &&
+      record.generation ===
+        state.pendingRoute.generation;
+
+    const ownsActiveDialog =
+      record.generation !== 0 &&
+      record.generation ===
+        state.activeDialogGeneration.route;
+
+    if (ownsPendingRoute) {
+      state.pendingRoute.data = null;
+      state.pendingRoute.trigger = null;
+      state.pendingRoute.generation = 0;
+
+      setRouteContinueEnabled(false);
+    }
+
+    if (ownsActiveDialog) {
+      state.activeDialogGeneration.route =
+        0;
+
+      if (state.routeDialog) {
+        state.routeDialog.setAttribute(
+          ATTRIBUTES.dialogState,
+          "closed"
+        );
+      }
+    }
+
+    if (
+      options.stateOnly === true
+    ) {
+      return;
+    }
+
+    if (record.restoreFocus) {
+      requestAnimationFrame(
+        () => {
+          focusElement(
+            record.trigger
+          );
+        }
+      );
+    }
+
+    if (!record.silent) {
+      const frame =
+        reflectState();
+
+      dispatch(
+        EVENTS.dialogChanged,
+        {
+          dialog:
+            "route",
+
+          open:
+            Boolean(
+              state.routeDialog &&
+              state.routeDialog.open &&
+              state.activeDialogGeneration.route
+            ),
+
+          generation:
+            record.generation,
+
+          frame
+        }
+      );
+
+      publishReceipt(
+        "route-dialog-closed",
+        {
+          generation:
+            record.generation,
+
+          reason:
+            record.reason,
+
+          route:
+            record.routeData
+              ? record.routeData.route
+              : null
+        }
+      );
+    } else {
+      reflectState();
+    }
+  }
+
+  function clearRouteConfirmation(
+    options = {}
+  ) {
+    const generation =
+      state.activeDialogGeneration.route ||
+      state.pendingRoute.generation;
+
+    const record = {
+      generation,
+
+      reason:
+        options.reason ||
+        "closed",
+
+      restoreFocus:
+        options.restoreFocus === true,
+
+      silent:
+        Boolean(options.silent),
+
+      trigger:
+        state.pendingRoute.trigger,
+
+      routeData:
+        state.pendingRoute.data
+    };
+
+    if (
+      state.routeDialog &&
+      state.routeDialog.open
+    ) {
+      state.expectedDialogClose.route =
+        record;
+
+      safelyCloseDialog(
+        state.routeDialog,
+        record.reason
+      );
+
+      if (
+        options.finalizeBeforeReplacement ===
+        true
+      ) {
+        finalizeRouteDialogClose(
+          record,
+          {
+            stateOnly:
+              true
+          }
+        );
+      }
+
+      return;
+    }
+
+    state.expectedDialogClose.route =
+      null;
+
+    finalizeRouteDialogClose(
+      record
+    );
+  }
+
+  function finalizeCompassDialogClose(
+    closeRecord,
+    options = {}
+  ) {
+    const record =
+      closeRecord || {
+        generation:
+          state.activeDialogGeneration.compass,
+
+        reason:
+          "native-close",
+
+        restoreFocus:
+          false,
+
+        silent:
+          false,
+
+        trigger:
+          state.lastTriggers.compass
+      };
+
+    const ownsActiveDialog =
+      record.generation !== 0 &&
+      record.generation ===
+        state.activeDialogGeneration.compass;
+
+    if (ownsActiveDialog) {
+      state.activeDialogGeneration.compass =
+        0;
+
+      for (
+        const control
+        of state.compassControls
+      ) {
+        control.setAttribute(
+          "aria-expanded",
+          "false"
+        );
+      }
+
+      if (state.compassDialog) {
+        state.compassDialog.setAttribute(
+          ATTRIBUTES.dialogState,
+          "closed"
+        );
+      }
+    }
+
+    if (
+      options.stateOnly === true
+    ) {
+      return;
+    }
+
+    if (record.restoreFocus) {
+      requestAnimationFrame(
+        () => {
+          focusElement(
+            record.trigger
+          );
+        }
+      );
+    }
+
+    if (!record.silent) {
+      const frame =
+        reflectState();
+
+      dispatch(
+        EVENTS.dialogChanged,
+        {
+          dialog:
+            "compass",
+
+          open:
+            Boolean(
+              state.compassDialog &&
+              state.compassDialog.open &&
+              state.activeDialogGeneration.compass
+            ),
+
+          generation:
+            record.generation,
+
+          frame
+        }
+      );
+
+      publishReceipt(
+        "compass-dialog-closed",
+        {
+          generation:
+            record.generation,
+
+          reason:
+            record.reason
+        }
+      );
+    } else {
+      reflectState();
+    }
+  }
+
+  function clearCompassConfirmation(
+    options = {}
+  ) {
+    const record = {
+      generation:
+        state.activeDialogGeneration.compass,
+
+      reason:
+        options.reason ||
+        "closed",
+
+      restoreFocus:
+        options.restoreFocus === true,
+
+      silent:
+        Boolean(options.silent),
+
+      trigger:
+        state.lastTriggers.compass
+    };
+
+    if (
+      state.compassDialog &&
+      state.compassDialog.open
+    ) {
+      state.expectedDialogClose.compass =
+        record;
+
+      safelyCloseDialog(
+        state.compassDialog,
+        record.reason
+      );
+
+      if (
+        options.finalizeBeforeReplacement ===
+        true
+      ) {
+        finalizeCompassDialogClose(
+          record,
+          {
+            stateOnly:
+              true
+          }
+        );
+      }
+
+      return;
+    }
+
+    state.expectedDialogClose.compass =
+      null;
+
+    finalizeCompassDialogClose(
+      record
+    );
+  }
+
+  function finalizeConstructionDialogClose(
+    closeRecord,
+    options = {}
+  ) {
+    const record =
+      closeRecord || {
+        generation:
+          state.activeDialogGeneration.construction,
+
+        reason:
+          "native-close",
+
+        restoreFocus:
+          false,
+
+        silent:
+          false,
+
+        trigger:
+          state.lastTriggers.construction
+      };
+
+    const ownsActiveDialog =
+      record.generation !== 0 &&
+      record.generation ===
+        state.activeDialogGeneration.construction;
+
+    if (ownsActiveDialog) {
+      state.activeDialogGeneration.construction =
+        0;
+
+      if (state.constructionDialog) {
+        state.constructionDialog.setAttribute(
+          ATTRIBUTES.dialogState,
+          "closed"
+        );
+      }
+    }
+
+    if (
+      options.stateOnly === true
+    ) {
+      return;
+    }
+
+    if (record.restoreFocus) {
+      requestAnimationFrame(
+        () => {
+          focusElement(
+            record.trigger
+          );
+        }
+      );
+    }
+
+    if (!record.silent) {
+      publishReceipt(
+        "construction-dialog-closed",
+        {
+          generation:
+            record.generation,
+
+          reason:
+            record.reason
+        }
+      );
+    }
+  }
+
+  function closeConstructionDialog(
+    options = {}
+  ) {
+    if (!state.constructionDialog) {
+      return;
+    }
+
+    const record = {
+      generation:
+        state.activeDialogGeneration.construction,
+
+      reason:
+        options.reason ||
+        "closed",
+
+      restoreFocus:
+        options.restoreFocus !== false,
+
+      silent:
+        Boolean(options.silent),
+
+      trigger:
+        state.lastTriggers.construction
+    };
+
+    if (state.constructionDialog.open) {
+      state.expectedDialogClose.construction =
+        record;
+
+      safelyCloseDialog(
+        state.constructionDialog,
+        record.reason
+      );
+
+      if (
+        options.finalizeBeforeReplacement ===
+        true
+      ) {
+        finalizeConstructionDialogClose(
+          record,
+          {
+            stateOnly:
+              true
+          }
+        );
+      }
+
+      return;
+    }
+
+    state.expectedDialogClose.construction =
+      null;
+
+    finalizeConstructionDialogClose(
+      record
+    );
+  }
+
+  function clearAllTransientState(
+    reason = "cleared"
+  ) {
+    cancelPreview(
+      reason,
+      {
+        silent:
+          true
+      }
+    );
+
+    clearRouteConfirmation({
+      restoreFocus:
+        false,
+
+      silent:
+        true,
+
+      reason
+    });
+
+    clearCompassConfirmation({
+      restoreFocus:
+        false,
+
+      silent:
+        true,
+
+      reason
+    });
+  }
+
+  function commitConstellationState() {
+    clearAllTransientState(
+      "constellation-commit"
+    );
+
+    state.durableState =
+      DURABLE_STATES.CONSTELLATION;
+
+    state.committed.cardinalId = "";
+    state.committed.childId = "";
+    state.committed.clusterId = "";
+    state.committed.localTargetId = "";
+    state.committed.frontId = "";
+    state.committed.gaugeSet = "";
+    state.committed.informationTab = "";
+  }
+
+  function commitClusterState(
+    cardinalId,
+    clusterId
+  ) {
+    clearAllTransientState(
+      "cluster-commit"
+    );
+
+    state.durableState =
+      DURABLE_STATES.CLUSTER_OPEN;
+
+    state.committed.cardinalId =
+      normalize(cardinalId);
+
+    state.committed.clusterId =
+      normalize(clusterId);
+
+    state.committed.childId = "";
+
+    clearLocalCommit();
+  }
+
+  function commitPortalSelection(
+    descriptor
+  ) {
+    cancelPreview(
+      "portal-selection-commit",
+      {
+        silent:
+          true
+      }
+    );
+
+    clearLocalCommit();
+
+    state.committed.cardinalId =
+      descriptor.cardinalId ||
+      state.committed.cardinalId;
+
+    state.committed.clusterId =
+      descriptor.clusterId ||
+      state.committed.clusterId;
+
+    state.committed.childId =
+      descriptor.childId ||
+      descriptor.objectId;
+  }
+
+  function commitLocalState(
+    descriptor,
+    frontId
+  ) {
+    clearAllTransientState(
+      "local-commit"
+    );
+
+    state.durableState =
+      DURABLE_STATES.LOCAL_DESTINATION;
+
+    state.committed.cardinalId =
+      descriptor.cardinalId;
+
+    state.committed.clusterId =
+      descriptor.clusterId;
+
+    state.committed.childId =
+      descriptor.childId ||
+      descriptor.objectId;
+
+    state.committed.localTargetId =
+      descriptor.target;
+
+    state.committed.frontId =
+      frontId;
+
+    const front =
+      state.fronts.get(frontId);
+
+    state.committed.gaugeSet =
+      front
+        ? normalize(
+            front.getAttribute(
+              "data-showroom-gauge-set"
+            )
+          )
+        : "";
+
+    state.committed.informationTab = "";
+  }
+
+  function openCluster(
+    clusterId,
+    options = {}
+  ) {
+    if (
+      state.disposed ||
+      state.held
+    ) {
+      return false;
+    }
+
+    const normalizedClusterId =
+      normalize(clusterId);
+
+    const normalizedCardinalId =
+      normalize(
+        options.cardinalId
+      ) ||
+      normalizedClusterId;
+
+    if (
+      !state.clusters.has(
+        normalizedClusterId
+      ) ||
+      !state.cardinals.has(
+        normalizedCardinalId
+      )
+    ) {
+      return false;
+    }
+
+    commitClusterState(
+      normalizedCardinalId,
+      normalizedClusterId
+    );
+
+    state.counters.cardinalCommits +=
+      1;
+
+    applyPresentationForCurrentState(
+      "cluster-opened"
+    );
+
+    const frame =
+      reflectState();
+
+    dispatch(
+      EVENTS.clusterChanged,
+      {
+        cardinalId:
+          normalizedCardinalId,
+
+        clusterId:
+          normalizedClusterId,
+
+        expanded:
+          true,
+
+        committed:
+          true,
+
+        frame
+      }
+    );
+
+    if (options.focusFirstChild) {
+      const cluster =
+        state.clusters.get(
+          normalizedClusterId
+        );
+
+      const firstChild =
+        cluster
+          ? cluster.querySelector(
+              SELECTORS.childControl
+            )
+          : null;
+
+      requestAnimationFrame(
+        () => {
+          focusElement(firstChild);
+        }
+      );
+    }
+
+    return true;
+  }
+
+  function closeCluster(clusterId) {
+    const normalizedClusterId =
+      normalize(clusterId);
+
+    if (
+      state.committed.clusterId !==
+        normalizedClusterId ||
+      !state.clusters.has(
+        normalizedClusterId
+      )
+    ) {
+      return false;
+    }
+
+    commitConstellationState();
+
+    applyPresentationForCurrentState(
+      "cluster-closed"
+    );
+
+    const frame =
+      reflectState();
+
+    dispatch(
+      EVENTS.clusterChanged,
+      {
+        clusterId:
+          normalizedClusterId,
+
+        expanded:
+          false,
+
+        committed:
+          true,
+
+        frame
+      }
+    );
+
+    publishReceipt(
+      "cluster-closed",
+      {
+        clusterId:
+          normalizedClusterId
       }
     );
 
     return true;
   }
 
-  /* =======================================================
-     COMPASS RETURN DIALOG
-     ======================================================= */
-
-  function setCompassDialogState(
-    open
+  function toggleCluster(
+    clusterId,
+    options = {}
   ) {
-    setRootAttribute(
-      ATTRIBUTES.compassDialogOpen,
-      open
-        ? "true"
-        : "false"
-    );
+    const normalizedClusterId =
+      normalize(clusterId);
 
-    if (state.compassControl) {
-      state.compassControl.setAttribute(
-        "aria-expanded",
-        open
-          ? "true"
-          : "false"
-      );
-
-      state.compassControl.toggleAttribute(
-        "data-showroom-compass-active",
-        open
+    if (
+      state.committed.clusterId ===
+        normalizedClusterId &&
+      (
+        state.durableState ===
+          DURABLE_STATES.CLUSTER_OPEN ||
+        state.durableState ===
+          DURABLE_STATES.LOCAL_DESTINATION
+      )
+    ) {
+      return closeCluster(
+        normalizedClusterId
       );
     }
 
-    if (state.compassDialog) {
-      state.compassDialog.setAttribute(
+    return openCluster(
+      normalizedClusterId,
+      options
+    );
+  }
+
+  function resolveFrontId(
+    selectorOrId
+  ) {
+    const normalized =
+      normalize(selectorOrId);
+
+    if (!normalized) {
+      return "";
+    }
+
+    return normalized.startsWith("#")
+      ? normalized.slice(1)
+      : normalized;
+  }
+
+  function resolveTarget(selector) {
+    const normalized =
+      normalize(selector);
+
+    if (!normalized) {
+      return null;
+    }
+
+    try {
+      return document.querySelector(
+        normalized
+      );
+    } catch {
+      return null;
+    }
+  }
+
+  function resolveDeclaredAncestor(selector) {
+    const normalized =
+      normalize(selector);
+
+    if (!normalized) {
+      return null;
+    }
+
+    try {
+      return document.querySelector(
+        normalized
+      );
+    } catch {
+      return null;
+    }
+  }
+
+  function findNativeInformationTab(
+    tabId
+  ) {
+    const normalizedTabId =
+      normalize(tabId);
+
+    if (!normalizedTabId) {
+      return null;
+    }
+
+    return (
+      toArray(
+        document.querySelectorAll(
+          SELECTORS.informationTab
+        )
+      ).find(
+        candidate =>
+          normalize(
+            candidate.getAttribute(
+              "data-information-tab-id"
+            )
+          ) === normalizedTabId
+      ) ||
+      null
+    );
+  }
+
+  function attemptInformationTabSelection(
+    tabId,
+    options = {}
+  ) {
+    const normalizedTabId =
+      normalize(tabId);
+
+    if (!normalizedTabId) {
+      return {
+        success:
+          true,
+
+        tabId:
+          "",
+
+        implementation:
+          "none"
+      };
+    }
+
+    const gauges =
+      window.SHOWROOM_GAUGES;
+
+    if (
+      gauges &&
+      typeof gauges.selectInformationTab ===
+        "function"
+    ) {
+      try {
+        const selected =
+          gauges.selectInformationTab(
+            normalizedTabId,
+            {
+              focus:
+                Boolean(options.focus),
+
+              announce:
+                options.announce !== false
+            }
+          ) !== false;
+
+        return {
+          success:
+            selected,
+
+          tabId:
+            normalizedTabId,
+
+          implementation:
+            selected
+              ? "gauges"
+              : null
+        };
+      } catch {
+        return {
+          success:
+            false,
+
+          tabId:
+            normalizedTabId,
+
+          implementation:
+            null
+        };
+      }
+    }
+
+    const nativeTab =
+      findNativeInformationTab(
+        normalizedTabId
+      );
+
+    if (!nativeTab) {
+      return {
+        success:
+          false,
+
+        tabId:
+          normalizedTabId,
+
+        implementation:
+          null
+      };
+    }
+
+    try {
+      nativeTab.click();
+
+      return {
+        success:
+          true,
+
+        tabId:
+          normalizedTabId,
+
+        implementation:
+          "native"
+      };
+    } catch {
+      return {
+        success:
+          false,
+
+        tabId:
+          normalizedTabId,
+
+        implementation:
+          null
+      };
+    }
+  }
+
+  function requestInformationTab(tabId) {
+    const selectionResult =
+      attemptInformationTabSelection(
+        tabId,
+        {
+          focus:
+            false,
+
+          announce:
+            true
+        }
+      );
+
+    if (!selectionResult.success) {
+      return false;
+    }
+
+    state.committed.informationTab =
+      selectionResult.tabId;
+
+    reflectState();
+
+    return true;
+  }
+
+  function activateLocalDestination(
+    descriptor,
+    options = {}
+  ) {
+    const target =
+      resolveTarget(
+        descriptor.target
+      );
+
+    if (!target) {
+      publishReceipt(
+        "local-target-missing",
+        {
+          objectId:
+            descriptor.objectId,
+
+          target:
+            descriptor.target ||
+            null
+        }
+      );
+
+      return false;
+    }
+
+    const ancestor =
+      descriptor.openAncestor
+        ? resolveDeclaredAncestor(
+            descriptor.openAncestor
+          )
+        : null;
+
+    if (
+      descriptor.openAncestor &&
+      !ancestor
+    ) {
+      publishReceipt(
+        "local-ancestor-missing",
+        {
+          objectId:
+            descriptor.objectId,
+
+          ancestor:
+            descriptor.openAncestor
+        }
+      );
+
+      return false;
+    }
+
+    const frontId =
+      resolveFrontId(
+        descriptor.requiredFront
+      );
+
+    if (
+      frontId &&
+      !state.fronts.has(frontId)
+    ) {
+      publishReceipt(
+        "local-front-missing",
+        {
+          objectId:
+            descriptor.objectId,
+
+          frontId
+        }
+      );
+
+      return false;
+    }
+
+    if (
+      !descriptor.cardinalId ||
+      !descriptor.clusterId
+    ) {
+      publishReceipt(
+        "local-parent-state-missing",
+        {
+          objectId:
+            descriptor.objectId,
+
+          cardinalId:
+            descriptor.cardinalId ||
+            null,
+
+          clusterId:
+            descriptor.clusterId ||
+            null
+        }
+      );
+
+      return false;
+    }
+
+    if (
+      !state.cardinals.has(
+        descriptor.cardinalId
+      ) ||
+      !state.clusters.has(
+        descriptor.clusterId
+      )
+    ) {
+      publishReceipt(
+        "local-parent-state-invalid",
+        {
+          objectId:
+            descriptor.objectId,
+
+          cardinalId:
+            descriptor.cardinalId,
+
+          clusterId:
+            descriptor.clusterId
+        }
+      );
+
+      return false;
+    }
+
+    const selectionResult =
+      attemptInformationTabSelection(
+        descriptor.informationTab,
+        {
+          focus:
+            false,
+
+          announce:
+            true
+        }
+      );
+
+    if (!selectionResult.success) {
+      publishReceipt(
+        "local-information-tab-selection-failed",
+        {
+          objectId:
+            descriptor.objectId,
+
+          informationTab:
+            descriptor.informationTab ||
+            null
+        }
+      );
+
+      return false;
+    }
+
+    commitLocalState(
+      descriptor,
+      frontId
+    );
+
+    state.committed.informationTab =
+      selectionResult.tabId;
+
+    if (
+      ancestor instanceof
+        HTMLDetailsElement
+    ) {
+      ancestor.open = true;
+    }
+
+    applyPresentationForCurrentState(
+      "local-destination-committed"
+    );
+
+    state.counters.localActivations +=
+      1;
+
+    state.counters.childCommits +=
+      1;
+
+    const frame =
+      reflectState();
+
+    if (
+      options.scroll !== false
+    ) {
+      requestAnimationFrame(
+        () => {
+          scrollToElement(
+            target,
+            "start"
+          );
+        }
+      );
+    }
+
+    if (
+      options.focus !== false
+    ) {
+      const heading =
+        target.matches(
+          "h1,h2,h3,h4,h5,h6"
+        )
+          ? target
+          : target.querySelector(
+              "h1,h2,h3,h4,h5,h6"
+            );
+
+      if (heading) {
+        if (
+          !heading.hasAttribute(
+            "tabindex"
+          )
+        ) {
+          state.nativeDomStates
+            .temporaryFocusTargets
+            .set(
+              heading,
+              captureElementState(heading)
+            );
+
+          heading.setAttribute(
+            "tabindex",
+            "-1"
+          );
+
+          installTemporaryFocusCleanup(
+            heading
+          );
+        }
+
+        requestAnimationFrame(
+          () => {
+            focusElement(heading);
+          }
+        );
+      }
+    }
+
+    dispatch(
+      EVENTS.frontChanged,
+      {
+        frontId:
+          state.committed.frontId ||
+          null,
+
+        localTarget:
+          descriptor.target,
+
+        childId:
+          state.committed.childId,
+
+        active:
+          true,
+
+        frame
+      }
+    );
+
+    publishReceipt(
+      "local-destination-committed",
+      {
+        objectId:
+          descriptor.objectId,
+
+        target:
+          descriptor.target,
+
+        destinationKind:
+          descriptor.destinationKind ||
+          null,
+
+        informationTabImplementation:
+          selectionResult.implementation
+      }
+    );
+
+    return true;
+  }
+
+  function readRouteDefinition(source) {
+    const element =
+      isElement(source)
+        ? source
+        : null;
+
+    if (!element) {
+      return null;
+    }
+
+    const route =
+      normalize(
+        element.getAttribute(
+          ATTRIBUTES.route
+        )
+      );
+
+    if (!route) {
+      return null;
+    }
+
+    return immutableClone({
+      objectId:
+        normalize(
+          element.getAttribute(
+            ATTRIBUTES.objectId
+          )
+        ) ||
+        normalize(
+          element.getAttribute(
+            ATTRIBUTES.childId
+          )
+        ) ||
+        "fallback-route",
+
+      route,
+
+      label:
+        normalize(
+          element.getAttribute(
+            ATTRIBUTES.routeLabel
+          )
+        ) ||
+        "Destination",
+
+      description:
+        normalize(
+          element.getAttribute(
+            ATTRIBUTES.routeDescription
+          )
+        ) ||
+        "This path leaves the current Showroom page."
+    });
+  }
+
+  function setDialogState(
+    dialog,
+    type,
+    open
+  ) {
+    if (dialog) {
+      dialog.setAttribute(
         ATTRIBUTES.dialogState,
         open
           ? "open"
@@ -1392,29 +4504,222 @@
       );
     }
 
-    dispatchStateEvent(
+    const frame =
+      reflectState();
+
+    dispatch(
       EVENTS.dialogChanged,
       {
         dialog:
-          "compass",
+          type,
 
-        open
+        open,
+
+        frame
       }
     );
   }
 
-  function openCompassDialog(
-    trigger =
-      state.compassControl
+  function openRouteDialog(
+    source,
+    options = {}
   ) {
     if (
       state.disposed ||
       state.held ||
-      !state.compassDialog ||
-      !state.compassControl ||
-      !isOrbitOwnedElement(
-        state.compassControl
+      !state.routeDialog
+    ) {
+      return false;
+    }
+
+    const definition =
+      readRouteDefinition(
+        source
+      );
+
+    if (!definition) {
+      return false;
+    }
+
+    if (
+      isDuplicateActivation(
+        `route:${definition.objectId}`
       )
+    ) {
+      return false;
+    }
+
+    cancelPreview(
+      "route-confirmation-opened",
+      {
+        silent:
+          true
+      }
+    );
+
+    clearCompassConfirmation({
+      restoreFocus:
+        false,
+
+      silent:
+        true,
+
+      reason:
+        "route-superseded-compass",
+
+      finalizeBeforeReplacement:
+        true
+    });
+
+    if (
+      state.routeDialog.open ||
+      state.activeDialogGeneration.route ||
+      state.pendingRoute.generation
+    ) {
+      clearRouteConfirmation({
+        restoreFocus:
+          false,
+
+        silent:
+          true,
+
+        reason:
+          "route-replaced",
+
+        finalizeBeforeReplacement:
+          true
+      });
+    }
+
+    const generation =
+      nextDialogGeneration(
+        "route"
+      );
+
+    state.pendingRoute.data =
+      definition;
+
+    state.pendingRoute.trigger =
+      options.trigger ||
+      source;
+
+    state.pendingRoute.generation =
+      generation;
+
+    if (state.routeDialogTitle) {
+      state.routeDialogTitle.textContent =
+        definition.label;
+    }
+
+    if (state.routeDialogDescription) {
+      state.routeDialogDescription.textContent =
+        definition.description;
+    }
+
+    setRouteContinueEnabled(
+      true,
+      definition.label
+    );
+
+    safelyShowModal(
+      state.routeDialog
+    );
+
+    setDialogState(
+      state.routeDialog,
+      "route",
+      true
+    );
+
+    const stay =
+      state.routeDialog.querySelector(
+        SELECTORS.routeStay
+      );
+
+    requestAnimationFrame(
+      () => {
+        focusElement(
+          stay ||
+          state.routeDialog
+        );
+      }
+    );
+
+    state.counters.portalOffers +=
+      1;
+
+    publishReceipt(
+      "route-dialog-opened",
+      {
+        generation,
+
+        objectId:
+          definition.objectId,
+
+        route:
+          definition.route
+      }
+    );
+
+    return true;
+  }
+
+  function closeRouteDialog(
+    options = {}
+  ) {
+    clearRouteConfirmation({
+      restoreFocus:
+        options.restoreFocus !== false,
+
+      silent:
+        Boolean(options.silent),
+
+      reason:
+        options.reason ||
+        "closed"
+    });
+  }
+
+  function continuePendingRoute() {
+    if (
+      state.disposed ||
+      state.held ||
+      !state.pendingRoute.data
+    ) {
+      return false;
+    }
+
+    const routeData =
+      state.pendingRoute.data;
+
+    publishReceipt(
+      "route-navigation-requested",
+      {
+        generation:
+          state.pendingRoute.generation,
+
+        route:
+          routeData.route,
+
+        objectId:
+          routeData.objectId
+      }
+    );
+
+    window.location.assign(
+      routeData.route
+    );
+
+    return true;
+  }
+
+  function openCompassDialog(
+    trigger = null
+  ) {
+    if (
+      state.disposed ||
+      state.held ||
+      !state.compassDialog
     ) {
       return false;
     }
@@ -1427,39 +4732,99 @@
       return false;
     }
 
-    closeOtherDialogs(
-      state.compassDialog
+    cancelPreview(
+      "compass-confirmation-opened",
+      {
+        silent:
+          true
+      }
     );
 
-    state.lastCompassTrigger =
+    clearRouteConfirmation({
+      restoreFocus:
+        false,
+
+      silent:
+        true,
+
+      reason:
+        "compass-superseded-route",
+
+      finalizeBeforeReplacement:
+        true
+    });
+
+    if (
+      state.compassDialog.open ||
+      state.activeDialogGeneration.compass
+    ) {
+      clearCompassConfirmation({
+        restoreFocus:
+          false,
+
+        silent:
+          true,
+
+        reason:
+          "compass-reopened",
+
+        finalizeBeforeReplacement:
+          true
+      });
+    }
+
+    const generation =
+      nextDialogGeneration(
+        "compass"
+      );
+
+    state.lastTriggers.compass =
       trigger ||
-      state.compassControl;
-
-    setCompassDialogState(
-      true
-    );
+      state.compassControls[0] ||
+      null;
 
     safelyShowModal(
       state.compassDialog
     );
 
-    const firstChoice =
-      state.compassDialog
-        .querySelector(
-          SELECTORS.compassStay
-        );
+    for (
+      const control
+      of state.compassControls
+    ) {
+      control.setAttribute(
+        "aria-expanded",
+        "true"
+      );
+    }
 
-    window.requestAnimationFrame(
+    setDialogState(
+      state.compassDialog,
+      "compass",
+      true
+    );
+
+    const stay =
+      state.compassDialog.querySelector(
+        SELECTORS.compassStay
+      );
+
+    requestAnimationFrame(
       () => {
         focusElement(
-          firstChoice ||
+          stay ||
           state.compassDialog
         );
       }
     );
 
+    state.counters.compassOffers +=
+      1;
+
     publishReceipt(
-      "compass-dialog-opened"
+      "compass-dialog-opened",
+      {
+        generation
+      }
     );
 
     return true;
@@ -1468,43 +4833,17 @@
   function closeCompassDialog(
     options = {}
   ) {
-    const {
-      restoreFocus = true,
-      reason = "closed"
-    } = options;
+    clearCompassConfirmation({
+      restoreFocus:
+        options.restoreFocus !== false,
 
-    if (!state.compassDialog) {
-      return;
-    }
+      silent:
+        Boolean(options.silent),
 
-    setCompassDialogState(
-      false
-    );
-
-    if (state.compassDialog.open) {
-      safelyCloseDialog(
-        state.compassDialog,
-        reason
-      );
-    }
-
-    if (restoreFocus) {
-      window.requestAnimationFrame(
-        () => {
-          focusElement(
-            state.lastCompassTrigger ||
-            state.compassControl
-          );
-        }
-      );
-    }
-
-    publishReceipt(
-      "compass-dialog-closed",
-      {
-        reason
-      }
-    );
+      reason:
+        options.reason ||
+        "closed"
+    });
   }
 
   function stayInShowroom() {
@@ -1516,903 +4855,385 @@
         "stay"
     });
 
-    if (
-      state.enhancedPresentationActive
-    ) {
-      setPageState(
-        state.activeFrontId
-          ? "front"
-          : "orbit",
-
-        state.activeFrontId
-          ? "front"
-          : "orbit",
-
-        PRESENTATION.ACTIVE
-      );
-    } else {
-      setPageState(
-        PRESENTATION.BASELINE,
-        PRESENTATION.BASELINE,
-        currentEnhancementState()
-      );
-    }
-
     publishReceipt(
       "stayed-in-showroom"
     );
   }
 
-  /* =======================================================
-     ROUTE DIALOG
-     ======================================================= */
-
-  function setRouteDialogState(
-    open
-  ) {
-    setRootAttribute(
-      ATTRIBUTES.routeDialogOpen,
-      open
-        ? "true"
-        : "false"
-    );
-
-    dispatchStateEvent(
-      EVENTS.dialogChanged,
-      {
-        dialog:
-          "route",
-
-        open,
-
-        routeId:
-          state.pendingRoute
-            ? state.pendingRoute.id
-            : null
-      }
-    );
-  }
-
-  function readRouteDefinition(
-    object
-  ) {
-    if (!isOrbitOwnedObject(object)) {
-      return null;
-    }
-
-    const route =
-      normalize(
-        object.getAttribute(
-          "data-showroom-route"
-        )
-      );
-
-    if (!route) {
-      return null;
-    }
-
-    return Object.freeze({
-      id:
-        normalize(
-          object.getAttribute(
-            "data-showroom-route-id"
-          )
-        ) ||
-        normalize(
-          object.getAttribute(
-            "data-showroom-object-id"
-          )
-        ),
-
-      label:
-        normalize(
-          object.getAttribute(
-            "data-showroom-route-label"
-          )
-        ) ||
-        "Continue to destination",
-
-      description:
-        normalize(
-          object.getAttribute(
-            "data-showroom-route-description"
-          )
-        ) ||
-        "This path leaves the current Showroom page.",
-
-      route,
-
-      object
-    });
-  }
-
-  function openRouteDialog(
-    object
-  ) {
-    if (
-      state.disposed ||
-      state.held ||
-      !state.routeDialog ||
-      !isOrbitOwnedObject(object)
-    ) {
-      return false;
-    }
-
-    const routeDefinition =
-      readRouteDefinition(
-        object
-      );
-
-    if (!routeDefinition) {
-      publishReceipt(
-        "route-definition-missing",
-        {
-          objectId:
-            object
-              ? object.getAttribute(
-                  "data-showroom-object-id"
-                )
-              : null
-        }
-      );
-
-      return false;
-    }
-
-    const activationKey =
-      `route:${routeDefinition.id}`;
-
-    if (
-      isDuplicateActivation(
-        activationKey
-      )
-    ) {
-      return false;
-    }
-
-    closeOtherDialogs(
-      state.routeDialog
-    );
-
-    state.pendingRoute =
-      routeDefinition;
-
-    state.lastRouteTrigger =
-      object;
-
-    if (state.routeTitle) {
-      state.routeTitle.textContent =
-        routeDefinition.label;
-    }
-
-    if (state.routeDescription) {
-      state.routeDescription.textContent =
-        routeDefinition.description;
-    }
-
-    if (state.routeContinue) {
-      state.routeContinue.href =
-        routeDefinition.route;
-
-      state.routeContinue.textContent =
-        `Continue to ${routeDefinition.label}`;
-    }
-
-    setRouteDialogState(
-      true
-    );
-
-    safelyShowModal(
-      state.routeDialog
-    );
-
-    const stayButton =
-      state.routeDialog
-        .querySelector(
-          SELECTORS.routeStay
-        );
-
-    window.requestAnimationFrame(
-      () => {
-        focusElement(
-          stayButton ||
-          state.routeDialog
-        );
-      }
-    );
-
-    publishReceipt(
-      "route-dialog-opened",
-      {
-        routeId:
-          routeDefinition.id,
-
-        route:
-          routeDefinition.route
-      }
-    );
-
-    return true;
-  }
-
-  function closeRouteDialog(
-    options = {}
-  ) {
-    const {
-      restoreFocus = true,
-      reason = "closed"
-    } = options;
-
-    if (!state.routeDialog) {
-      return;
-    }
-
-    setRouteDialogState(
-      false
-    );
-
-    if (state.routeDialog.open) {
-      safelyCloseDialog(
-        state.routeDialog,
-        reason
-      );
-    }
-
-    const trigger =
-      state.lastRouteTrigger;
-
-    const closedRoute =
-      state.pendingRoute;
-
-    state.pendingRoute = null;
-
-    if (restoreFocus) {
-      window.requestAnimationFrame(
-        () => {
-          focusElement(
-            trigger
-          );
-        }
-      );
-    }
-
-    publishReceipt(
-      "route-dialog-closed",
-      {
-        reason,
-
-        routeId:
-          closedRoute
-            ? closedRoute.id
-            : null
-      }
-    );
-  }
-
-  /* =======================================================
-     CLUSTERS
-     ======================================================= */
-
-  function setClusterExpanded(
-    clusterId,
-    expanded,
-    options = {}
-  ) {
-    const cluster =
-      state.clusters.get(
-        clusterId
-      );
-
-    if (!cluster) {
-      return false;
-    }
-
-    const trigger =
-      state.objects.find(
-        object =>
-          object.getAttribute(
-            "data-showroom-cluster-id"
-          ) === clusterId &&
-          isOrbitOwnedObject(
-            object
-          )
-      ) ||
-      null;
-
-    cluster.setAttribute(
-      ATTRIBUTES.clusterState,
-      expanded
-        ? "expanded"
-        : "collapsed"
-    );
-
-    cluster.hidden =
-      !expanded;
-
-    cluster.setAttribute(
-      "aria-hidden",
-      expanded
-        ? "false"
-        : "true"
-    );
-
-    if (trigger) {
-      trigger.setAttribute(
-        "aria-expanded",
-        expanded
-          ? "true"
-          : "false"
-      );
-
-      trigger.toggleAttribute(
-        "data-showroom-cluster-active",
-        expanded
-      );
-    }
-
-    if (expanded) {
-      state.activeClusterId =
-        clusterId;
-
-      setRootAttribute(
-        ATTRIBUTES.activeCluster,
-        clusterId
-      );
-
-      if (
-        options.focusFirstChild
-      ) {
-        const firstChild =
-          cluster.querySelector(
-            SELECTORS.object
-          );
-
-        window.requestAnimationFrame(
-          () => {
-            focusElement(
-              firstChild
-            );
-          }
-        );
-      }
-    } else if (
-      state.activeClusterId ===
-      clusterId
-    ) {
-      state.activeClusterId =
-        "";
-
-      setRootAttribute(
-        ATTRIBUTES.activeCluster,
-        ""
-      );
-    }
-
-    dispatchStateEvent(
-      EVENTS.clusterChanged,
-      {
-        clusterId,
-        expanded
-      }
-    );
-
-    publishReceipt(
-      expanded
-        ? "cluster-expanded"
-        : "cluster-collapsed",
-      {
-        clusterId
-      }
-    );
-
-    return true;
-  }
-
-  function closeAllClusters(
-    exceptClusterId = ""
-  ) {
-    for (
-      const clusterId
-      of state.clusters.keys()
-    ) {
-      if (
-        clusterId !==
-        exceptClusterId
-      ) {
-        setClusterExpanded(
-          clusterId,
-          false
-        );
-      }
-    }
-  }
-
-  function toggleCluster(
-    clusterId,
+  function openConstructionDialog(
     trigger = null
   ) {
     if (
-      trigger &&
-      !isOrbitOwnedObject(
-        trigger
-      )
+      !state.constructionDialog ||
+      state.disposed
     ) {
       return false;
     }
 
-    const cluster =
-      state.clusters.get(
-        clusterId
-      );
+    clearRouteConfirmation({
+      restoreFocus:
+        false,
 
-    if (!cluster) {
-      return false;
-    }
+      silent:
+        true,
 
-    const expanded =
-      cluster.getAttribute(
-        ATTRIBUTES.clusterState
-      ) === "expanded";
+      reason:
+        "construction-superseded-route",
 
-    if (!expanded) {
-      closeAllClusters(
-        clusterId
-      );
+      finalizeBeforeReplacement:
+        true
+    });
 
-      if (
-        state.enhancementAvailable
-      ) {
-        enterEnhancedPresentation(
-          "cluster-activation"
-        );
-      }
-    }
+    clearCompassConfirmation({
+      restoreFocus:
+        false,
 
-    const changed =
-      setClusterExpanded(
-        clusterId,
-        !expanded
-      );
+      silent:
+        true,
+
+      reason:
+        "construction-superseded-compass",
+
+      finalizeBeforeReplacement:
+        true
+    });
 
     if (
-      changed &&
-      expanded &&
-      trigger
+      state.constructionDialog.open ||
+      state.activeDialogGeneration.construction
     ) {
-      focusElement(
-        trigger
-      );
+      closeConstructionDialog({
+        restoreFocus:
+          false,
+
+        silent:
+          true,
+
+        reason:
+          "construction-reopened",
+
+        finalizeBeforeReplacement:
+          true
+      });
     }
 
-    return changed;
-  }
-
-  /* =======================================================
-     LOCAL FRONTS
-     ======================================================= */
-
-  function setFrontVisibility(
-    frontId,
-    active
-  ) {
-    const front =
-      state.fronts.get(
-        frontId
+    const generation =
+      nextDialogGeneration(
+        "construction"
       );
 
-    if (!front) {
-      return false;
-    }
+    state.lastTriggers.construction =
+      trigger;
 
-    front.hidden =
-      !active;
-
-    front.toggleAttribute(
-      ATTRIBUTES.controllerManagedHidden,
-      !active
+    safelyShowModal(
+      state.constructionDialog
     );
 
-    front.setAttribute(
-      ATTRIBUTES.frontState,
-      active
-        ? "active"
-        : "inactive"
+    state.constructionDialog.setAttribute(
+      ATTRIBUTES.dialogState,
+      "open"
     );
 
-    front.setAttribute(
-      "aria-hidden",
-      active
-        ? "false"
-        : "true"
+    const close =
+      state.constructionDialog
+        .querySelector(
+          SELECTORS.constructionClose
+        );
+
+    requestAnimationFrame(
+      () => {
+        focusElement(
+          close ||
+          state.constructionDialog
+        );
+      }
     );
 
-    if ("inert" in front) {
-      front.inert =
-        !active;
-    }
-
-    if (active) {
-      front.removeAttribute(
-        "inert"
-      );
-    }
+    publishReceipt(
+      "construction-dialog-opened",
+      {
+        generation
+      }
+    );
 
     return true;
   }
 
-  function hideAllFronts(
-    exceptFrontId = ""
-  ) {
-    if (
-      !state.enhancementAvailable ||
-      !state.enhancedPresentationActive
-    ) {
-      return false;
-    }
-
-    for (
-      const frontId
-      of state.fronts.keys()
-    ) {
-      if (
-        frontId !==
-        exceptFrontId
-      ) {
-        setFrontVisibility(
-          frontId,
-          false
-        );
-      }
-    }
-
-    return true;
-  }
-
-  function requestInformationTab(
-    tabId
-  ) {
-    const normalizedTabId =
-      normalize(
-        tabId
-      );
-
-    if (!normalizedTabId) {
-      return false;
-    }
-
-    state.activeInformationTab =
-      normalizedTabId;
-
-    setRootAttribute(
-      ATTRIBUTES.activeInformationTab,
-      normalizedTabId
-    );
-
-    const gaugeApi =
-      window.SHOWROOM_GAUGES;
-
-    if (
-      gaugeApi &&
-      typeof gaugeApi
-        .selectInformationTab ===
-        "function"
-    ) {
-      gaugeApi.selectInformationTab(
-        normalizedTabId,
-        {
-          focus:
-            false,
-
-          announce:
-            true
-        }
-      );
-
-      return true;
-    }
-
-    const tab =
-      toArray(
-        document.querySelectorAll(
-          "[data-showroom-information-tab]"
-        )
-      ).find(
-        candidate =>
-          candidate.getAttribute(
-            "data-information-tab-id"
-          ) === normalizedTabId
-      ) ||
-      null;
-
-    if (tab) {
-      tab.click();
-
-      return true;
-    }
-
-    return false;
-  }
-
-  function openFront(
-    frontId,
+  function openInstructions(
     options = {}
   ) {
-    const normalizedFrontId =
-      normalize(
-        frontId
-      );
-
-    const front =
-      state.fronts.get(
-        normalizedFrontId
-      );
-
-    if (!front) {
-      publishReceipt(
-        "front-not-found",
-        {
-          frontId:
-            normalizedFrontId
-        }
-      );
-
+    if (
+      !state.instructionsDisclosure ||
+      state.disposed
+    ) {
       return false;
     }
 
-    closeOtherDialogs();
-    closeAllClusters();
+    state.instructionsDisclosure.open =
+      true;
 
-    if (
-      state.enhancementAvailable &&
-      state.crystalsReady
+    for (
+      const control
+      of state.instructionControls
     ) {
-      enterEnhancedPresentation(
-        "front-activation"
-      );
-
-      hideAllFronts(
-        normalizedFrontId
-      );
-
-      setFrontVisibility(
-        normalizedFrontId,
-        true
-      );
-    } else {
-      makeFrontBaselineVisible(
-        front
-      );
-
-      state.enhancedPresentationActive =
-        false;
-    }
-
-    state.activeFrontId =
-      normalizedFrontId;
-
-    state.activeGaugeSet =
-      normalize(
-        front.getAttribute(
-          "data-showroom-gauge-set"
-        )
-      );
-
-    setRootAttribute(
-      ATTRIBUTES.activeFront,
-      normalizedFrontId
-    );
-
-    setRootAttribute(
-      ATTRIBUTES.activeGaugeSet,
-      state.activeGaugeSet
-    );
-
-    if (
-      options.informationTab
-    ) {
-      requestInformationTab(
-        options.informationTab
+      control.setAttribute(
+        "aria-expanded",
+        "true"
       );
     }
 
-    setPageState(
-      state.enhancedPresentationActive
-        ? "front"
-        : PRESENTATION.BASELINE,
-
-      state.enhancedPresentationActive
-        ? "front"
-        : PRESENTATION.BASELINE,
-
-      currentEnhancementState()
-    );
+    const summary =
+      state.instructionsDisclosure.querySelector(
+        ":scope > summary"
+      );
 
     if (
       options.scroll !== false
     ) {
-      window.requestAnimationFrame(
+      requestAnimationFrame(
         () => {
           scrollToElement(
-            front,
-            "start"
+            summary ||
+            state.instructionsDisclosure
           );
         }
       );
     }
 
-    if (
-      options.focus !== false
-    ) {
-      const heading =
-        front.querySelector(
-          "h1,h2,h3"
-        );
-
-      if (heading) {
-        const hadTabindex =
-          heading.hasAttribute(
-            "tabindex"
-          );
-
-        if (!hadTabindex) {
-          heading.setAttribute(
-            "tabindex",
-            "-1"
-          );
+    if (options.focus === true) {
+      requestAnimationFrame(
+        () => {
+          focusElement(summary);
         }
-
-        window.requestAnimationFrame(
-          () => {
-            focusElement(
-              heading
-            );
-
-            if (!hadTabindex) {
-              heading.addEventListener(
-                "blur",
-                () => {
-                  heading.removeAttribute(
-                    "tabindex"
-                  );
-                },
-                {
-                  once:
-                    true
-                }
-              );
-            }
-          }
-        );
-      }
+      );
     }
 
-    dispatchStateEvent(
-      EVENTS.frontChanged,
-      {
-        frontId:
-          normalizedFrontId,
-
-        active:
-          true,
-
-        enhanced:
-          state.enhancedPresentationActive,
-
-        informationTab:
-          options.informationTab ||
-          null
-      }
-    );
-
     publishReceipt(
-      "front-opened",
-      {
-        frontId:
-          normalizedFrontId,
-
-        enhanced:
-          state.enhancedPresentationActive,
-
-        informationTab:
-          options.informationTab ||
-          null
-      }
+      "instructions-opened"
     );
 
     return true;
+  }
+
+  function syncInstructionsState() {
+    if (!state.instructionsDisclosure) {
+      return;
+    }
+
+    const open =
+      state.instructionsDisclosure.open;
+
+    for (
+      const control
+      of state.instructionControls
+    ) {
+      control.setAttribute(
+        "aria-expanded",
+        open
+          ? "true"
+          : "false"
+      );
+    }
+  }
+
+  function commitObject(
+    objectValue,
+    options = {}
+  ) {
+    if (
+      state.disposed ||
+      state.held
+    ) {
+      state.counters.rejectedActivations +=
+        1;
+
+      return false;
+    }
+
+    const object =
+      resolveObject(
+        objectValue
+      );
+
+    if (!object) {
+      state.counters.rejectedActivations +=
+        1;
+
+      return false;
+    }
+
+    const descriptor =
+      describeObject(object);
+
+    if (
+      options.dedupe !== false &&
+      isDuplicateActivation(
+        `object:${descriptor.objectId}`
+      )
+    ) {
+      return false;
+    }
+
+    switch (descriptor.behavior) {
+      case "cluster": {
+        const clusterId =
+          descriptor.clusterId ||
+          descriptor.cardinalId;
+
+        const cardinalId =
+          descriptor.cardinalId ||
+          clusterId;
+
+        const changed =
+          toggleCluster(
+            clusterId,
+            {
+              cardinalId,
+
+              focusFirstChild:
+                Boolean(
+                  options.focusFirstChild
+                )
+            }
+          );
+
+        publishReceipt(
+          "cluster-commit",
+          {
+            objectId:
+              descriptor.objectId,
+
+            cardinalId,
+
+            clusterId,
+
+            changed
+          }
+        );
+
+        return changed;
+      }
+
+      case "local":
+        return activateLocalDestination(
+          descriptor,
+          options
+        );
+
+      case "portal":
+        commitPortalSelection(
+          descriptor
+        );
+
+        applyPresentationForCurrentState(
+          "portal-child-selected"
+        );
+
+        reflectState();
+
+        state.counters.childCommits +=
+          1;
+
+        return openRouteDialog(
+          object,
+          {
+            trigger:
+              object
+          }
+        );
+
+      case "compass-return":
+        cancelPreview(
+          "compass-confirmation-requested",
+          {
+            silent:
+              true
+          }
+        );
+
+        return openCompassDialog(
+          object
+        );
+
+      default:
+        state.counters.rejectedActivations +=
+          1;
+
+        publishReceipt(
+          "object-commit-rejected",
+          {
+            objectId:
+              descriptor.objectId,
+
+            behavior:
+              descriptor.behavior ||
+              null
+          }
+        );
+
+        return false;
+    }
+  }
+
+  function commitPreview(
+    token,
+    options = {}
+  ) {
+    if (
+      !state.preview.active ||
+      state.held ||
+      state.disposed
+    ) {
+      return false;
+    }
+
+    if (
+      token !== undefined &&
+      token !== null &&
+      Number(token) !==
+        state.preview.token
+    ) {
+      return false;
+    }
+
+    const objectId =
+      state.preview.objectId;
+
+    const committed =
+      commitObject(
+        objectId,
+        {
+          ...options,
+
+          dedupe:
+            false
+        }
+      );
+
+    if (committed) {
+      state.counters.previewsCommitted +=
+        1;
+    }
+
+    return committed;
   }
 
   function returnToOrbit(
     options = {}
   ) {
-    const previousFrontId =
-      state.activeFrontId;
+    commitConstellationState();
 
-    closeAllClusters();
-    closeOtherDialogs();
-
-    if (
-      !state.enhancementAvailable ||
-      !state.enhancedPresentationActive
-    ) {
-      restoreBaselineFronts();
-      clearPresentationSelection();
-
-      setPageState(
-        PRESENTATION.BASELINE,
-        PRESENTATION.BASELINE,
-        currentEnhancementState()
-      );
-
-      if (
-        options.scroll !== false
-      ) {
-        window.requestAnimationFrame(
-          () => {
-            scrollToElement(
-              state.orbit,
-              "start"
-            );
-          }
-        );
-      }
-
-      if (
-        options.focus !== false
-      ) {
-        window.requestAnimationFrame(
-          () => {
-            focusElement(
-              state.compassControl ||
-              state.orbit
-            );
-          }
-        );
-      }
-
-      publishReceipt(
-        "returned-to-orbit-baseline",
-        {
-          previousFrontId:
-            previousFrontId ||
-            null
-        }
-      );
-
-      return true;
-    }
-
-    hideAllFronts();
-
-    state.activeFrontId = "";
-    state.activeGaugeSet = "";
-    state.activeInformationTab = "";
-
-    setRootAttribute(
-      ATTRIBUTES.activeFront,
-      ""
+    applyPresentationForCurrentState(
+      "return-to-orbit"
     );
 
-    setRootAttribute(
-      ATTRIBUTES.activeGaugeSet,
-      ""
-    );
-
-    setRootAttribute(
-      ATTRIBUTES.activeInformationTab,
-      ""
-    );
-
-    setPageState(
-      "orbit",
-      "orbit",
-      PRESENTATION.ACTIVE
-    );
+    const frame =
+      reflectState();
 
     if (
       options.scroll !== false
     ) {
-      window.requestAnimationFrame(
+      requestAnimationFrame(
         () => {
           scrollToElement(
             state.orbit,
@@ -2425,348 +5246,95 @@
     if (
       options.focus !== false
     ) {
-      window.requestAnimationFrame(
+      requestAnimationFrame(
         () => {
           focusElement(
-            state.compassControl ||
+            state.compassControls[0] ||
             state.orbit
           );
         }
       );
     }
 
-    dispatchStateEvent(
+    state.counters.returnsToOrbit +=
+      1;
+
+    dispatch(
       EVENTS.frontChanged,
       {
         frontId:
-          previousFrontId ||
           null,
 
         active:
           false,
 
-        enhanced:
-          true
+        returnedToOrbit:
+          true,
+
+        frame
       }
     );
 
     publishReceipt(
-      "returned-to-orbit",
-      {
-        previousFrontId:
-          previousFrontId ||
-          null
-      }
+      "returned-to-orbit"
     );
 
     return true;
   }
-
-  /* =======================================================
-     INSTRUCTIONS DISCLOSURE
-     ======================================================= */
-
-  function syncInstructionsDisclosureState() {
-    const open =
-      Boolean(
-        state.instructionsDisclosure &&
-        state.instructionsDisclosure.open
-      );
-
-    for (
-      const control
-      of state.instructionsOpenControls
-    ) {
-      control.setAttribute(
-        "aria-expanded",
-        open
-          ? "true"
-          : "false"
-      );
-    }
-  }
-
-  function openInstructionsDisclosure(
-    trigger = null,
-    options = {}
-  ) {
-    if (
-      !state.instructionsDisclosure ||
-      state.disposed
-    ) {
-      return false;
-    }
-
-    state.lastInstructionsTrigger =
-      trigger ||
-      state.lastInstructionsTrigger;
-
-    state.instructionsDisclosure.open =
-      true;
-
-    syncInstructionsDisclosureState();
-
-    const summary =
-      state.instructionsDisclosure
-        .querySelector(
-          ":scope > summary"
-        );
-
-    if (
-      options.scroll !== false
-    ) {
-      window.requestAnimationFrame(
-        () => {
-          scrollToElement(
-            summary ||
-            state.instructionsDisclosure,
-            "start"
-          );
-        }
-      );
-    }
-
-    if (
-      options.focus === true
-    ) {
-      window.requestAnimationFrame(
-        () => {
-          focusElement(
-            summary
-          );
-        }
-      );
-    }
-
-    state.counters.instructionsOpened +=
-      1;
-
-    publishReceipt(
-      "instructions-disclosure-opened"
-    );
-
-    return true;
-  }
-
-  /* =======================================================
-     CONSTRUCTION DIALOG
-     ======================================================= */
-
-  function openConstructionDialog(
-    trigger
-  ) {
-    if (!state.constructionDialog) {
-      return false;
-    }
-
-    closeOtherDialogs(
-      state.constructionDialog
-    );
-
-    state.lastConstructionTrigger =
-      trigger ||
-      null;
-
-    safelyShowModal(
-      state.constructionDialog
-    );
-
-    const closeButton =
-      state.constructionDialog
-        .querySelector(
-          SELECTORS.constructionClose
-        );
-
-    window.requestAnimationFrame(
-      () => {
-        focusElement(
-          closeButton ||
-          state.constructionDialog
-        );
-      }
-    );
-
-    publishReceipt(
-      "construction-dialog-opened"
-    );
-
-    return true;
-  }
-
-  function closeConstructionDialog(
-    options = {}
-  ) {
-    if (!state.constructionDialog) {
-      return;
-    }
-
-    if (
-      state.constructionDialog.open
-    ) {
-      safelyCloseDialog(
-        state.constructionDialog,
-        options.reason ||
-        "closed"
-      );
-    }
-
-    if (
-      options.restoreFocus !== false
-    ) {
-      window.requestAnimationFrame(
-        () => {
-          focusElement(
-            state.lastConstructionTrigger
-          );
-        }
-      );
-    }
-
-    publishReceipt(
-      "construction-dialog-closed",
-      {
-        reason:
-          options.reason ||
-          "closed"
-      }
-    );
-  }
-
-  /* =======================================================
-     FALLBACK STAR VISIBILITY
-     ======================================================= */
-
-  function applyFallbackStarState() {
-    const semanticOnly =
-      state.crystalsReady &&
-      state.enhancementAvailable;
-
-    setRootAttribute(
-      ATTRIBUTES.crystalsReady,
-      semanticOnly
-        ? "true"
-        : "false"
-    );
-
-    const layers =
-      toArray(
-        document.querySelectorAll(
-          SELECTORS.fallbackStarLayer
-        )
-      );
-
-    const stars =
-      toArray(
-        document.querySelectorAll(
-          SELECTORS.fallbackStar
-        )
-      );
-
-    for (
-      const layer
-      of layers
-    ) {
-      layer.setAttribute(
-        ATTRIBUTES.fallbackVisibility,
-        semanticOnly
-          ? "semantic-only"
-          : "visible"
-      );
-    }
-
-    for (
-      const star
-      of stars
-    ) {
-      star.setAttribute(
-        ATTRIBUTES.fallbackRendering,
-        semanticOnly
-          ? "hidden"
-          : "visible"
-      );
-    }
-
-    publishReceipt(
-      semanticOnly
-        ? "fallback-stars-semantic-only"
-        : "fallback-stars-visible"
-    );
-  }
-
-  function setCrystalsReady(
-    ready,
-    reason = ""
-  ) {
-    state.crystalsReady =
-      Boolean(ready);
-
-    state.enhancementAvailable =
-      state.crystalsReady;
-
-    if (!state.crystalsReady) {
-      state.enhancedPresentationActive =
-        false;
-    }
-
-    applyFallbackStarState();
-
-    if (state.crystalsReady) {
-      restoreBaselineFronts();
-
-      setPageState(
-        PRESENTATION.BASELINE,
-        PRESENTATION.BASELINE,
-        PRESENTATION.AVAILABLE
-      );
-    } else {
-      restoreBaselinePresentation(
-        reason ||
-        "crystals-unavailable",
-        {
-          failed:
-            reason.includes(
-              "failure"
-            ) ||
-            reason.includes(
-              "disposed"
-            )
-        }
-      );
-    }
-
-    publishReceipt(
-      "crystals-readiness-changed",
-      {
-        crystalsReady:
-          state.crystalsReady,
-
-        enhancementAvailable:
-          state.enhancementAvailable,
-
-        reason:
-          reason ||
-          null
-      }
-    );
-  }
-
-  /* =======================================================
-     HELD AND REDUCED MOTION
-     ======================================================= */
 
   function setHeld(
-    held,
+    value,
     reason = ""
   ) {
-    state.held =
-      Boolean(held);
+    const next =
+      Boolean(value);
 
-    setRootAttribute(
-      ATTRIBUTES.held,
-      state.held
-        ? "true"
-        : "false"
-    );
+    if (state.held === next) {
+      return state.held;
+    }
+
+    if (next) {
+      cancelPreview(
+        "held",
+        {
+          silent:
+            true
+        }
+      );
+
+      clearRouteConfirmation({
+        restoreFocus:
+          false,
+
+        silent:
+          true,
+
+        reason:
+          "held"
+      });
+
+      clearCompassConfirmation({
+        restoreFocus:
+          false,
+
+        silent:
+          true,
+
+        reason:
+          "held"
+      });
+
+      state.held = true;
+    } else {
+      state.held = false;
+
+      applyPresentationForCurrentState(
+        "held-released"
+      );
+    }
+
+    const frame =
+      reflectState();
 
     publishReceipt(
       "held-state-changed",
@@ -2776,9 +5344,13 @@
 
         reason:
           reason ||
-          null
+          null,
+
+        frame
       }
     );
+
+    return state.held;
   }
 
   function applyReducedMotion() {
@@ -2788,12 +5360,7 @@
         state.reducedMotionQuery.matches
       );
 
-    setRootAttribute(
-      ATTRIBUTES.reducedMotion,
-      state.reducedMotion
-        ? "true"
-        : "false"
-    );
+    reflectState();
 
     publishReceipt(
       "reduced-motion-changed"
@@ -2805,9 +5372,6 @@
       window.matchMedia(
         "(prefers-reduced-motion: reduce)"
       );
-
-    state.reducedMotion =
-      state.reducedMotionQuery.matches;
 
     if (
       typeof state.reducedMotionQuery
@@ -2824,278 +5388,42 @@
         .addListener ===
         "function"
     ) {
-      state.reducedMotionQuery
-        .addListener(
+      state.reducedMotionQuery.addListener(
+        applyReducedMotion
+      );
+
+      state.listeners.push(() => {
+        state.reducedMotionQuery.removeListener(
           applyReducedMotion
         );
-
-      state.listeners.push(
-        () => {
-          state.reducedMotionQuery
-            .removeListener(
-              applyReducedMotion
-            );
-        }
-      );
+      });
     }
 
     applyReducedMotion();
   }
 
-  /* =======================================================
-     OBJECT ACTIVATION
-     ======================================================= */
-
-  function activateObject(
-    object,
-    options = {}
-  ) {
-    if (
-      !isOrbitOwnedObject(object) ||
-      state.disposed ||
-      state.held
-    ) {
-      publishReceipt(
-        "object-activation-rejected",
-        {
-          reason:
-            !isOrbitOwnedObject(object)
-              ? "object-outside-orbit-field"
-              : state.held
-                ? "showroom-held"
-                : "controller-disposed"
-        }
-      );
-
-      return false;
-    }
-
-    const objectId =
-      normalize(
-        object.getAttribute(
-          "data-showroom-object-id"
-        )
-      );
-
-    const behavior =
-      normalize(
-        object.getAttribute(
-          "data-showroom-object-behavior"
-        )
-      );
-
-    if (
-      options.dedupe !== false &&
-      isDuplicateActivation(
-        `object:${
-          objectId ||
-          behavior
-        }`
-      )
-    ) {
-      return false;
-    }
-
-    switch (behavior) {
-      case "route":
-        return openRouteDialog(
-          object
-        );
-
-      case "cluster":
-        return toggleCluster(
-          normalize(
-            object.getAttribute(
-              "data-showroom-cluster-id"
-            )
-          ),
-          object
-        );
-
-      case "gauge":
-        return openFront(
-          normalize(
-            object.getAttribute(
-              "data-showroom-front-id"
-            )
-          )
-        );
-
-      case "information":
-        return openFront(
-          normalize(
-            object.getAttribute(
-              "data-showroom-front-id"
-            )
-          ),
-          {
-            informationTab:
-              normalize(
-                object.getAttribute(
-                  "data-showroom-information-tab"
-                )
-              )
-          }
-        );
-
-      case "compass-return":
-        return openCompassDialog(
-          object
-        );
-
-      default:
-        publishReceipt(
-          "unknown-object-behavior",
-          {
-            objectId:
-              objectId ||
-              null,
-
-            behavior:
-              behavior ||
-              null
-          }
-        );
-
-        return false;
-    }
-  }
-
-  function rejectSemanticActivation(
-    reason,
-    detail = {},
-    object = null
-  ) {
-    state.counters
-      .rejectedSemanticActivations +=
-      1;
-
-    publishReceipt(
-      "semantic-activation-rejected",
-      {
-        reason,
-
-        objectId:
-          object
-            ? object.getAttribute(
-                "data-showroom-object-id"
-              )
-            : normalize(
-                detail.objectId
-              ) ||
-              null
-      }
-    );
-  }
-
-  function handleSemanticActivationEvent(
-    event
-  ) {
+  function handleSemanticActivation(event) {
     const detail =
       event &&
       event.detail
         ? event.detail
         : {};
 
-    if (
-      detail.target ===
-        "compass" ||
-      detail.kind ===
-        "compass"
-    ) {
-      const validation =
-        validateCompassEvent(
-          detail
-        );
-
-      if (!validation.valid) {
-        state.counters
-          .rejectedCompassActivations +=
-          1;
-
-        publishReceipt(
-          "compass-activation-rejected",
-          {
-            reason:
-              validation.reason
-          }
-        );
-
-        return;
-      }
-
-      state.counters
-        .acceptedCompassActivations +=
-        1;
-
-      openCompassDialog(
-        state.compassControl
-      );
-
-      return;
-    }
-
-    let object = null;
-
-    if (
-      detail.element instanceof
-      Element
-    ) {
-      object =
-        resolveSemanticObject(
-          detail.element
-        );
-    }
-
-    if (
-      !object &&
-      detail.objectId
-    ) {
-      object =
-        findObjectById(
-          normalize(
-            detail.objectId
-          )
-        );
-    }
-
-    if (!object) {
-      rejectSemanticActivation(
-        "semantic-object-not-found",
+    const validation =
+      validateSemanticEvent(
         detail
       );
 
-      return;
-    }
-
-    const validation =
-      validateSemanticEvent(
-        detail,
-        object
-      );
-
     if (!validation.valid) {
-      rejectSemanticActivation(
-        validation.reason,
-        detail,
-        object
-      );
-
       return;
     }
 
-    state.counters
-      .acceptedSemanticActivations +=
-      1;
-
-    activateObject(
-      object
+    commitObject(
+      validation.object
     );
   }
 
-  function handleCompassActivationEvent(
-    event
-  ) {
+  function handleCompassActivation(event) {
     const detail =
       event &&
       event.detail
@@ -3108,8 +5436,7 @@
       );
 
     if (!validation.valid) {
-      state.counters
-        .rejectedCompassActivations +=
+      state.counters.rejectedActivations +=
         1;
 
       publishReceipt(
@@ -3123,167 +5450,127 @@
       return;
     }
 
-    state.counters
-      .acceptedCompassActivations +=
-      1;
-
     openCompassDialog(
-      state.compassControl
+      validation.control
     );
   }
 
-  function handleObjectClick(
-    event
-  ) {
+  function handleClusterExitIntent(event) {
+    const detail =
+      event &&
+      event.detail
+        ? event.detail
+        : {};
+
+    const clusterId =
+      normalize(
+        detail.clusterId
+      );
+
+    if (
+      !clusterId ||
+      clusterId !==
+        state.committed.clusterId
+    ) {
+      return;
+    }
+
+    closeCluster(clusterId);
+  }
+
+  function handleDirectObjectClick(event) {
+    if (
+      event.defaultPrevented ||
+      state.disposed ||
+      state.held
+    ) {
+      return;
+    }
+
     const object =
-      resolveSemanticObject(
+      resolveObject(
         event.currentTarget
       );
 
-    if (!isOrbitOwnedObject(object)) {
-      publishReceipt(
-        "direct-object-click-rejected",
-        {
-          reason:
-            "object-outside-orbit-field"
-        }
-      );
-
+    if (!object) {
       return;
     }
 
-    /*
-      Keyboard-generated clicks commonly report detail === 0 and
-      coordinates of 0,0. They remain valid because the focused semantic
-      object itself is physically owned by the orbit field.
+    if (event.detail === 0) {
+      commitObject(object);
+      return;
+    }
 
-      Pointer clicks must either occur inside the orbit field or be the
-      synthetic click following the validated pointer event, which the
-      interactions module normally suppresses before this listener.
-    */
+    const point = {
+      x:
+        event.clientX,
+
+      y:
+        event.clientY
+    };
 
     if (
-      event.detail !== 0 &&
-      (
-        !pointInsideElement(
-          state.orbitField,
-          event.clientX,
-          event.clientY
-        ) ||
-        !pointInsideElement(
-          object,
-          event.clientX,
-          event.clientY
-        )
+      !pointInsideElement(
+        point,
+        state.orbitField
+      ) ||
+      !pointInsideElement(
+        point,
+        object
       )
     ) {
-      publishReceipt(
-        "direct-object-click-rejected",
-        {
-          reason:
-            "pointer-click-outside-object-or-orbit",
-
-          objectId:
-            object.getAttribute(
-              "data-showroom-object-id"
-            )
-        }
-      );
+      state.counters.rejectedActivations +=
+        1;
 
       return;
     }
 
-    state.counters.directObjectClicks +=
-      1;
+    const releaseElement =
+      resolveElementAtPoint(
+        point
+      );
 
-    activateObject(
-      object
+    const releaseObject =
+      releaseElement
+        ? (
+            releaseElement.matches(
+              SELECTORS.object
+            )
+              ? releaseElement
+              : releaseElement.closest(
+                  SELECTORS.object
+                )
+          )
+        : null;
+
+    if (releaseObject !== object) {
+      state.counters.rejectedActivations +=
+        1;
+
+      return;
+    }
+
+    commitObject(object);
+  }
+
+  function handleFallbackPortalClick(event) {
+    if (
+      state.disposed ||
+      state.held
+    ) {
+      return;
+    }
+
+    event.preventDefault();
+
+    openRouteDialog(
+      event.currentTarget,
+      {
+        trigger:
+          event.currentTarget
+      }
     );
   }
-
-  /* =======================================================
-     DIALOG EVENTS
-     ======================================================= */
-
-  function initializeDialogEvents() {
-    if (state.compassDialog) {
-      addListener(
-        state.compassDialog,
-        "cancel",
-        event => {
-          event.preventDefault();
-
-          closeCompassDialog({
-            restoreFocus:
-              true,
-
-            reason:
-              "escape"
-          });
-        }
-      );
-
-      addListener(
-        state.compassDialog,
-        "close",
-        () => {
-          setCompassDialogState(
-            false
-          );
-        }
-      );
-    }
-
-    if (state.routeDialog) {
-      addListener(
-        state.routeDialog,
-        "cancel",
-        event => {
-          event.preventDefault();
-
-          closeRouteDialog({
-            restoreFocus:
-              true,
-
-            reason:
-              "escape"
-          });
-        }
-      );
-
-      addListener(
-        state.routeDialog,
-        "close",
-        () => {
-          setRouteDialogState(
-            false
-          );
-        }
-      );
-    }
-
-    if (state.constructionDialog) {
-      addListener(
-        state.constructionDialog,
-        "cancel",
-        event => {
-          event.preventDefault();
-
-          closeConstructionDialog({
-            restoreFocus:
-              true,
-
-            reason:
-              "escape"
-          });
-        }
-      );
-    }
-  }
-
-  /* =======================================================
-     DOM DISCOVERY AND VALIDATION
-     ======================================================= */
 
   function discoverDom() {
     state.root =
@@ -3306,14 +5593,65 @@
         SELECTORS.orbit
       );
 
+    state.orbitScene =
+      document.querySelector(
+        SELECTORS.orbitScene
+      );
+
     state.orbitField =
       document.querySelector(
         SELECTORS.orbitField
       );
 
-    state.compassControl =
+    state.semanticLayer =
       document.querySelector(
-        SELECTORS.compassControl
+        SELECTORS.semanticLayer
+      );
+
+    state.frontHost =
+      document.querySelector(
+        SELECTORS.frontHost
+      );
+
+    state.compassLayer =
+      document.querySelector(
+        SELECTORS.compassLayer
+      );
+
+    state.compassVisualMount =
+      document.querySelector(
+        SELECTORS.compassVisualMount
+      );
+
+    state.compassControls =
+      toArray(
+        document.querySelectorAll(
+          [
+            SELECTORS.compassControl,
+            SELECTORS.openCompassDialog,
+            SELECTORS.sharedReturnToCompass
+          ].join(",")
+        )
+      );
+
+    state.routeDialog =
+      document.querySelector(
+        SELECTORS.routeDialog
+      );
+
+    state.routeDialogTitle =
+      document.querySelector(
+        SELECTORS.routeDialogTitle
+      );
+
+    state.routeDialogDescription =
+      document.querySelector(
+        SELECTORS.routeDialogDescription
+      );
+
+    state.routeContinue =
+      document.querySelector(
+        SELECTORS.routeContinue
       );
 
     state.compassDialog =
@@ -3326,24 +5664,16 @@
         SELECTORS.compassReturn
       );
 
-    state.routeDialog =
+    state.instructionsDisclosure =
       document.querySelector(
-        SELECTORS.routeDialog
+        SELECTORS.instructionsDisclosure
       );
 
-    state.routeTitle =
-      document.querySelector(
-        SELECTORS.routeDialogTitle
-      );
-
-    state.routeDescription =
-      document.querySelector(
-        SELECTORS.routeDialogDescription
-      );
-
-    state.routeContinue =
-      document.querySelector(
-        SELECTORS.routeContinue
+    state.instructionControls =
+      toArray(
+        document.querySelectorAll(
+          SELECTORS.instructionsOpen
+        )
       );
 
     state.constructionDialog =
@@ -3351,43 +5681,84 @@
         SELECTORS.constructionDialog
       );
 
-    state.instructionsDisclosure =
-      document.querySelector(
-        SELECTORS.instructionsDisclosure
-      );
-
-    state.instructionsOpenControls =
-      toArray(
-        document.querySelectorAll(
-          SELECTORS.instructionsOpen
-        )
-      );
-
-    state.objects =
-      state.orbitField
-        ? toArray(
-            state.orbitField
-              .querySelectorAll(
-                SELECTORS.object
-              )
-          )
-        : [];
-
+    state.objects.clear();
+    state.cardinals.clear();
+    state.children.clear();
     state.clusters.clear();
     state.fronts.clear();
 
     if (state.orbitField) {
       for (
-        const cluster
-        of state.orbitField
-          .querySelectorAll(
-            SELECTORS.cluster
+        const object
+        of state.orbitField.querySelectorAll(
+          SELECTORS.object
+        )
+      ) {
+        const objectId =
+          normalize(
+            object.getAttribute(
+              ATTRIBUTES.objectId
+            )
+          );
+
+        if (objectId) {
+          state.objects.set(
+            objectId,
+            object
+          );
+        }
+
+        if (
+          object.matches(
+            SELECTORS.cardinalControl
           )
+        ) {
+          const cardinalId =
+            normalize(
+              object.getAttribute(
+                ATTRIBUTES.cardinalId
+              )
+            );
+
+          if (cardinalId) {
+            state.cardinals.set(
+              cardinalId,
+              object
+            );
+          }
+        }
+
+        if (
+          object.matches(
+            SELECTORS.childControl
+          )
+        ) {
+          const childId =
+            normalize(
+              object.getAttribute(
+                ATTRIBUTES.childId
+              )
+            );
+
+          if (childId) {
+            state.children.set(
+              childId,
+              object
+            );
+          }
+        }
+      }
+
+      for (
+        const cluster
+        of state.orbitField.querySelectorAll(
+          SELECTORS.cluster
+        )
       ) {
         const clusterId =
           normalize(
             cluster.getAttribute(
-              "data-showroom-cluster-id"
+              ATTRIBUTES.clusterId
             )
           );
 
@@ -3436,9 +5807,33 @@
       );
     }
 
-    if (!state.compassControl) {
+    if (!state.semanticLayer) {
       issues.push(
-        "Missing [data-showroom-compass-control]."
+        "Missing [data-showroom-semantic-star-layer]."
+      );
+    }
+
+    if (!state.compassLayer) {
+      issues.push(
+        "Missing [data-showroom-compass-layer]."
+      );
+    }
+
+    if (!state.compassVisualMount) {
+      issues.push(
+        "Missing [data-showroom-compass-visual-mount]."
+      );
+    }
+
+    if (!state.compassControls.length) {
+      issues.push(
+        "No Main Compass semantic controls were found."
+      );
+    }
+
+    if (!state.routeDialog) {
+      issues.push(
+        "Missing [data-showroom-route-dialog]."
       );
     }
 
@@ -3448,27 +5843,74 @@
       );
     }
 
-    if (
-      state.compassControl &&
-      !isOrbitOwnedElement(
-        state.compassControl
-      )
-    ) {
+    if (state.cardinals.size !== 4) {
       issues.push(
-        "Compass control is not contained by the orbit field."
+        `Expected four cardinal controls; found ${state.cardinals.size}.`
       );
     }
 
-    if (
-      state.compassControl &&
-      state.compassControl.getAttribute(
-        "aria-controls"
-      ) !==
-        "showroom-compass-dialog"
-    ) {
+    if (state.children.size !== 16) {
       issues.push(
-        "Compass control does not target showroom-compass-dialog."
+        `Expected sixteen child controls; found ${state.children.size}.`
       );
+    }
+
+    for (
+      const cardinalId
+      of [
+        "north",
+        "east",
+        "south",
+        "west"
+      ]
+    ) {
+      if (
+        !state.cardinals.has(
+          cardinalId
+        )
+      ) {
+        issues.push(
+          `Missing cardinal control "${cardinalId}".`
+        );
+      }
+
+      if (
+        !state.clusters.has(
+          cardinalId
+        )
+      ) {
+        issues.push(
+          `Missing cluster "${cardinalId}".`
+        );
+      }
+    }
+
+    for (
+      const [
+        objectId,
+        object
+      ]
+      of state.objects
+    ) {
+      const behavior =
+        normalize(
+          object.getAttribute(
+            ATTRIBUTES.objectBehavior
+          )
+        );
+
+      if (
+        ![
+          "cluster",
+          "local",
+          "portal",
+          "compass-return"
+        ].includes(behavior)
+      ) {
+        issues.push(
+          `Object "${objectId}" has unsupported behavior "${behavior}".`
+        );
+      }
     }
 
     if (
@@ -3480,48 +5922,7 @@
         MAIN_COMPASS_ROUTE
     ) {
       issues.push(
-        "Compass return link does not target /index.html."
-      );
-    }
-
-    for (
-      const object
-      of state.objects
-    ) {
-      const objectId =
-        normalize(
-          object.getAttribute(
-            "data-showroom-object-id"
-          )
-        ) ||
-        "unknown";
-
-      const behavior =
-        normalize(
-          object.getAttribute(
-            "data-showroom-object-behavior"
-          )
-        );
-
-      if (!behavior) {
-        issues.push(
-          `Object "${objectId}" has no behavior.`
-        );
-      }
-
-      if (!isOrbitOwnedObject(object)) {
-        issues.push(
-          `Object "${objectId}" is outside the orbit field.`
-        );
-      }
-    }
-
-    if (
-      state.instructionsOpenControls.length &&
-      !state.instructionsDisclosure
-    ) {
-      issues.push(
-        "Instructions-opening controls exist without an instructions disclosure."
+        "Main Compass return link does not target /index.html."
       );
     }
 
@@ -3535,70 +5936,56 @@
     return issues;
   }
 
-  /* =======================================================
-     LISTENER INSTALLATION
-     ======================================================= */
-
   function initializeObjectListeners() {
     for (
       const object
-      of state.objects
+      of state.objects.values()
     ) {
       addListener(
         object,
         "click",
-        handleObjectClick
+        handleDirectObjectClick
       );
     }
 
-    if (state.compassControl) {
+    for (
+      const control
+      of document.querySelectorAll(
+        SELECTORS.fallbackPortal
+      )
+    ) {
       addListener(
-        state.compassControl,
+        control,
         "click",
-        event => {
-          if (
-            event.detail !== 0 &&
-            (
-              !pointInsideElement(
-                state.orbitField,
-                event.clientX,
-                event.clientY
-              ) ||
-              !pointInsideElement(
-                state.compassControl,
-                event.clientX,
-                event.clientY
-              )
-            )
-          ) {
-            publishReceipt(
-              "direct-compass-click-rejected",
-              {
-                reason:
-                  "pointer-click-outside-compass-or-orbit"
-              }
-            );
-
-            return;
-          }
-
-          openCompassDialog(
-            state.compassControl
-          );
-        }
+        handleFallbackPortalClick
       );
     }
   }
 
-  function initializeCompassActions() {
+  function initializeCompassControls() {
     for (
-      const button
+      const control
+      of state.compassControls
+    ) {
+      addListener(
+        control,
+        "click",
+        event => {
+          event.preventDefault();
+
+          openCompassDialog(control);
+        }
+      );
+    }
+
+    for (
+      const control
       of document.querySelectorAll(
         SELECTORS.compassClose
       )
     ) {
       addListener(
-        button,
+        control,
         "click",
         () => {
           closeCompassDialog({
@@ -3613,13 +6000,13 @@
     }
 
     for (
-      const button
+      const control
       of document.querySelectorAll(
         SELECTORS.compassStay
       )
     ) {
       addListener(
-        button,
+        control,
         "click",
         stayInShowroom
       );
@@ -3642,15 +6029,15 @@
     }
   }
 
-  function initializeRouteActions() {
+  function initializeRouteControls() {
     for (
-      const button
+      const control
       of document.querySelectorAll(
         SELECTORS.routeClose
       )
     ) {
       addListener(
-        button,
+        control,
         "click",
         () => {
           closeRouteDialog({
@@ -3665,13 +6052,13 @@
     }
 
     for (
-      const button
+      const control
       of document.querySelectorAll(
         SELECTORS.routeStay
       )
     ) {
       addListener(
-        button,
+        control,
         "click",
         () => {
           closeRouteDialog({
@@ -3689,38 +6076,39 @@
       addListener(
         state.routeContinue,
         "click",
-        () => {
-          publishReceipt(
-            "route-navigation-requested",
-            {
-              routeId:
-                state.pendingRoute
-                  ? state.pendingRoute.id
-                  : null,
+        event => {
+          event.preventDefault();
 
-              route:
-                state.pendingRoute
-                  ? state.pendingRoute.route
-                  : state.routeContinue.href
-            }
-          );
+          continuePendingRoute();
         }
       );
     }
   }
 
-  function initializeReturnToOrbitActions() {
+  function initializeReturnControls() {
+    const controls =
+      toArray(
+        document.querySelectorAll(
+          [
+            SELECTORS.accessibleReturnToOrbit,
+            SELECTORS.sharedReturnToOrbit,
+            SELECTORS.legacyReturnToOrbit
+          ].join(",")
+        )
+      );
+
     for (
       const control
-      of document.querySelectorAll(
-        SELECTORS.returnToOrbit
-      )
+      of controls
     ) {
       addListener(
         control,
         "click",
         event => {
           event.preventDefault();
+
+          state.lastTriggers.orbit =
+            control;
 
           returnToOrbit();
         }
@@ -3728,10 +6116,10 @@
     }
   }
 
-  function initializeInstructionsActions() {
+  function initializeInstructionsControls() {
     for (
       const control
-      of state.instructionsOpenControls
+      of state.instructionControls
     ) {
       addListener(
         control,
@@ -3739,16 +6127,16 @@
         event => {
           event.preventDefault();
 
-          openInstructionsDisclosure(
-            control,
-            {
-              scroll:
-                true,
+          state.lastTriggers.instructions =
+            control;
 
-              focus:
-                false
-            }
-          );
+          openInstructions({
+            scroll:
+              true,
+
+            focus:
+              false
+          });
         }
       );
     }
@@ -3757,39 +6145,39 @@
       addListener(
         state.instructionsDisclosure,
         "toggle",
-        syncInstructionsDisclosureState
+        syncInstructionsState
       );
     }
 
-    syncInstructionsDisclosureState();
+    syncInstructionsState();
   }
 
-  function initializeConstructionActions() {
+  function initializeConstructionControls() {
     for (
-      const button
+      const control
       of document.querySelectorAll(
         SELECTORS.constructionOpen
       )
     ) {
       addListener(
-        button,
+        control,
         "click",
         () => {
           openConstructionDialog(
-            button
+            control
           );
         }
       );
     }
 
     for (
-      const button
+      const control
       of document.querySelectorAll(
         SELECTORS.constructionClose
       )
     ) {
       addListener(
-        button,
+        control,
         "click",
         () => {
           closeConstructionDialog({
@@ -3804,82 +6192,195 @@
     }
   }
 
-  function handleEnhancementFailure(
-    reason
-  ) {
-    state.crystalsReady =
-      false;
+  function initializeDialogEvents() {
+    if (state.routeDialog) {
+      addListener(
+        state.routeDialog,
+        "cancel",
+        event => {
+          event.preventDefault();
 
-    state.enhancementAvailable =
-      false;
+          closeRouteDialog({
+            restoreFocus:
+              true,
 
-    state.enhancedPresentationActive =
-      false;
+            reason:
+              "escape"
+          });
+        }
+      );
 
-    applyFallbackStarState();
+      addListener(
+        state.routeDialog,
+        "close",
+        () => {
+          const expected =
+            state.expectedDialogClose.route;
 
-    restoreBaselinePresentation(
-      reason,
-      {
-        failed:
-          true
-      }
-    );
+          state.expectedDialogClose.route =
+            null;
 
-    publishReceipt(
-      "enhancement-failure-restored-baseline",
-      {
-        reason
-      }
-    );
+          finalizeRouteDialogClose(
+            expected || {
+              generation:
+                state.activeDialogGeneration.route ||
+                state.pendingRoute.generation,
+
+              reason:
+                "native-close",
+
+              restoreFocus:
+                false,
+
+              silent:
+                false,
+
+              trigger:
+                state.pendingRoute.trigger,
+
+              routeData:
+                state.pendingRoute.data
+            }
+          );
+        }
+      );
+    }
+
+    if (state.compassDialog) {
+      addListener(
+        state.compassDialog,
+        "cancel",
+        event => {
+          event.preventDefault();
+
+          closeCompassDialog({
+            restoreFocus:
+              true,
+
+            reason:
+              "escape"
+          });
+        }
+      );
+
+      addListener(
+        state.compassDialog,
+        "close",
+        () => {
+          const expected =
+            state.expectedDialogClose.compass;
+
+          state.expectedDialogClose.compass =
+            null;
+
+          finalizeCompassDialogClose(
+            expected || {
+              generation:
+                state.activeDialogGeneration.compass,
+
+              reason:
+                "native-close",
+
+              restoreFocus:
+                false,
+
+              silent:
+                false,
+
+              trigger:
+                state.lastTriggers.compass
+            }
+          );
+        }
+      );
+    }
+
+    if (state.constructionDialog) {
+      addListener(
+        state.constructionDialog,
+        "cancel",
+        event => {
+          event.preventDefault();
+
+          closeConstructionDialog({
+            restoreFocus:
+              true,
+
+            reason:
+              "escape"
+          });
+        }
+      );
+
+      addListener(
+        state.constructionDialog,
+        "close",
+        () => {
+          const expected =
+            state.expectedDialogClose.construction;
+
+          state.expectedDialogClose.construction =
+            null;
+
+          finalizeConstructionDialogClose(
+            expected || {
+              generation:
+                state.activeDialogGeneration.construction,
+
+              reason:
+                "native-close",
+
+              restoreFocus:
+                false,
+
+              silent:
+                false,
+
+              trigger:
+                state.lastTriggers.construction
+            }
+          );
+        }
+      );
+    }
   }
 
   function initializeRuntimeEvents() {
     addListener(
       window,
       EVENTS.semanticActivate,
-      handleSemanticActivationEvent
+      handleSemanticActivation
     );
 
     addListener(
       window,
       EVENTS.objectActivate,
-      handleSemanticActivationEvent
+      handleSemanticActivation
     );
 
     addListener(
       window,
       EVENTS.compassActivate,
-      handleCompassActivationEvent
+      handleCompassActivation
     );
 
     addListener(
       window,
-      EVENTS.crystalsReady,
+      EVENTS.clusterExitIntent,
+      handleClusterExitIntent
+    );
+
+    addListener(
+      window,
+      EVENTS.compositorReady,
       () => {
-        setCrystalsReady(
+        setSubsystemReadiness(
+          READINESS_KEYS.compositor,
           true,
-          "ready-event"
-        );
-      }
-    );
-
-    addListener(
-      window,
-      EVENTS.crystalsFailed,
-      () => {
-        handleEnhancementFailure(
-          "crystals-failure-event"
-        );
-      }
-    );
-
-    addListener(
-      window,
-      EVENTS.crystalsDisposed,
-      () => {
-        handleEnhancementFailure(
-          "crystals-disposed-event"
+          {
+            reason:
+              EVENTS.compositorReady
+          }
         );
       }
     );
@@ -3888,8 +6389,16 @@
       window,
       EVENTS.compositorFailed,
       () => {
-        handleEnhancementFailure(
-          "compositor-failure-event"
+        setSubsystemReadiness(
+          READINESS_KEYS.compositor,
+          false,
+          {
+            failed:
+              true,
+
+            reason:
+              EVENTS.compositorFailed
+          }
         );
       }
     );
@@ -3898,8 +6407,109 @@
       window,
       EVENTS.compositorDisposed,
       () => {
-        handleEnhancementFailure(
-          "compositor-disposed-event"
+        setSubsystemReadiness(
+          READINESS_KEYS.compositor,
+          false,
+          {
+            reason:
+              EVENTS.compositorDisposed
+          }
+        );
+      }
+    );
+
+    addListener(
+      window,
+      EVENTS.crystalsReady,
+      () => {
+        setSubsystemReadiness(
+          READINESS_KEYS.crystals,
+          true,
+          {
+            reason:
+              EVENTS.crystalsReady
+          }
+        );
+      }
+    );
+
+    addListener(
+      window,
+      EVENTS.crystalsFailed,
+      () => {
+        setSubsystemReadiness(
+          READINESS_KEYS.crystals,
+          false,
+          {
+            failed:
+              true,
+
+            reason:
+              EVENTS.crystalsFailed
+          }
+        );
+      }
+    );
+
+    addListener(
+      window,
+      EVENTS.crystalsDisposed,
+      () => {
+        setSubsystemReadiness(
+          READINESS_KEYS.crystals,
+          false,
+          {
+            reason:
+              EVENTS.crystalsDisposed
+          }
+        );
+      }
+    );
+
+    addListener(
+      window,
+      EVENTS.interactionsReady,
+      () => {
+        setSubsystemReadiness(
+          READINESS_KEYS.interactions,
+          true,
+          {
+            reason:
+              EVENTS.interactionsReady
+          }
+        );
+      }
+    );
+
+    addListener(
+      window,
+      EVENTS.interactionsFailed,
+      () => {
+        setSubsystemReadiness(
+          READINESS_KEYS.interactions,
+          false,
+          {
+            failed:
+              true,
+
+            reason:
+              EVENTS.interactionsFailed
+          }
+        );
+      }
+    );
+
+    addListener(
+      window,
+      EVENTS.interactionsDisposed,
+      () => {
+        setSubsystemReadiness(
+          READINESS_KEYS.interactions,
+          false,
+          {
+            reason:
+              EVENTS.interactionsDisposed
+          }
         );
       }
     );
@@ -3928,49 +6538,105 @@
 
     addListener(
       window,
-      "showroom:gauges-ready",
+      EVENTS.gaugesReady,
       () => {
         if (
-          state.activeInformationTab
+          state.committed.informationTab
         ) {
           requestInformationTab(
-            state.activeInformationTab
+            state.committed.informationTab
           );
         }
       }
     );
   }
 
-  function initializeInitialPresentation() {
-    captureOriginalFrontStates();
-    restoreBaselineFronts();
-    closeAllClusters();
-    clearPresentationSelection();
+  function initializeRootObserver() {
+    if (!state.root) {
+      return;
+    }
 
-    setCompassDialogState(
-      false
+    const observer =
+      new MutationObserver(
+        mutations => {
+          for (
+            const mutation
+            of mutations
+          ) {
+            if (
+              mutation.attributeName ===
+              ATTRIBUTES.held
+            ) {
+              const requested =
+                state.root.getAttribute(
+                  ATTRIBUTES.held
+                ) === "true";
+
+              if (
+                requested !==
+                state.held
+              ) {
+                setHeld(
+                  requested,
+                  "root-attribute"
+                );
+              }
+            }
+          }
+        }
+      );
+
+    observer.observe(
+      state.root,
+      {
+        attributes:
+          true,
+
+        attributeFilter: [
+          ATTRIBUTES.held
+        ]
+      }
     );
 
-    setRouteDialogState(
-      false
-    );
+    addObserver(observer);
+  }
 
-    state.crystalsReady =
-      false;
+  function initializeBaseline() {
+    state.durableState =
+      DURABLE_STATES.CONSTELLATION;
 
-    state.enhancementAvailable =
-      false;
+    state.committed.cardinalId = "";
+    state.committed.childId = "";
+    state.committed.clusterId = "";
+    state.committed.localTargetId = "";
+    state.committed.frontId = "";
+    state.committed.gaugeSet = "";
+    state.committed.informationTab = "";
 
-    state.enhancedPresentationActive =
-      false;
+    state.preview.active = false;
+    state.preview.objectId = "";
+    state.preview.cardinalId = "";
+    state.preview.childId = "";
+    state.preview.clusterId = "";
+    state.preview.source = "";
 
-    applyFallbackStarState();
+    state.pendingRoute.data = null;
+    state.pendingRoute.trigger = null;
+    state.pendingRoute.generation = 0;
 
-    setPageState(
-      PRESENTATION.BASELINE,
-      PRESENTATION.BASELINE,
-      PRESENTATION.PENDING
-    );
+    state.activeDialogGeneration.route = 0;
+    state.activeDialogGeneration.compass = 0;
+    state.activeDialogGeneration.construction = 0;
+
+    state.expectedDialogClose.route = null;
+    state.expectedDialogClose.compass = null;
+    state.expectedDialogClose.construction = null;
+
+    state.held = false;
+
+    restoreNativeSemanticFallback();
+
+    reflectState();
   }
 
   function exposeApi() {
@@ -3979,81 +6645,102 @@
         contract:
           CONTRACT,
 
-        getState() {
-          return createStateSnapshot({
-            clusterIds:
-              toArray(
-                state.clusters.keys()
-              ),
+        getFrameState,
 
-            frontIds:
-              toArray(
-                state.fronts.keys()
-              )
-          });
-        },
+        getState,
 
-        openCompassDialog,
+        beginPreview,
 
-        closeCompassDialog,
+        previewObject:
+          beginPreview,
 
-        openRouteDialogByObjectId(
-          objectId
-        ) {
-          return openRouteDialog(
-            findObjectById(
-              normalize(
-                objectId
-              )
-            )
-          );
-        },
+        commitPreview,
 
-        closeRouteDialog,
+        cancelPreview,
 
-        toggleCluster,
-
-        openFront,
-
-        returnToOrbit,
-
-        openInstructions(
-          options = {}
-        ) {
-          return openInstructionsDisclosure(
-            null,
-            options
-          );
-        },
-
-        restoreBaseline(
-          reason =
-            "api-request"
-        ) {
-          restoreBaselinePresentation(
-            reason
-          );
-
-          return true;
-        },
+        commitObject,
 
         activateObjectById(
           objectId,
           options = {}
         ) {
-          return activateObject(
-            findObjectById(
-              normalize(
-                objectId
-              )
-            ),
+          return commitObject(
+            objectId,
             options
           );
         },
 
-        setCrystalsReady,
+        openCluster,
+
+        closeCluster,
+
+        toggleCluster,
+
+        activateLocalDestinationByObjectId(
+          objectId,
+          options = {}
+        ) {
+          const object =
+            resolveObject(
+              objectId
+            );
+
+          if (!object) {
+            return false;
+          }
+
+          const descriptor =
+            describeObject(object);
+
+          if (
+            descriptor.behavior !==
+            "local"
+          ) {
+            return false;
+          }
+
+          return activateLocalDestination(
+            descriptor,
+            options
+          );
+        },
+
+        openRouteDialogByObjectId(
+          objectId
+        ) {
+          const object =
+            resolveObject(
+              objectId
+            );
+
+          return object
+            ? openRouteDialog(
+                object,
+                {
+                  trigger:
+                    object
+                }
+              )
+            : false;
+        },
+
+        closeRouteDialog,
+
+        continuePendingRoute,
+
+        openCompassDialog,
+
+        closeCompassDialog,
+
+        returnToOrbit,
+
+        openInstructions,
+
+        requestInformationTab,
 
         setHeld,
+
+        setSubsystemReadiness,
 
         dispose
       });
@@ -4075,48 +6762,102 @@
           api
       }
     );
+
+    state.apiExposed = true;
   }
 
-  /* =======================================================
-     INITIALIZATION
-     ======================================================= */
+  function removeExposedApi() {
+    if (!state.apiExposed) {
+      return;
+    }
+
+    try {
+      delete window.SHOWROOM_CONTROLLER;
+    } catch {
+      /* Noncritical cleanup. */
+    }
+
+    state.apiExposed = false;
+  }
+
+  function rollbackInitialization() {
+    state.expectedDialogClose.route = null;
+    state.expectedDialogClose.compass = null;
+    state.expectedDialogClose.construction = null;
+
+    state.activeDialogGeneration.route = 0;
+    state.activeDialogGeneration.compass = 0;
+    state.activeDialogGeneration.construction = 0;
+
+    state.pendingRoute.data = null;
+    state.pendingRoute.trigger = null;
+    state.pendingRoute.generation = 0;
+
+    state.preview.active = false;
+    state.preview.objectId = "";
+    state.preview.cardinalId = "";
+    state.preview.childId = "";
+    state.preview.clusterId = "";
+    state.preview.source = "";
+
+    removeInstalledResources();
+    removeExposedApi();
+
+    restoreNativeSemanticFallback();
+    restoreNativeRootState();
+
+    state.readiness.controller = false;
+    state.readiness.compositor = false;
+    state.readiness.crystals = false;
+    state.readiness.interactions = false;
+
+    state.initialized = false;
+    state.initializing = false;
+  }
 
   function initialize() {
     if (
       state.initialized ||
+      state.initializing ||
       state.disposed
     ) {
       return;
     }
 
+    state.initializing = true;
+
     try {
       discoverDom();
+
+      if (!state.root) {
+        throw new Error(
+          "The Showroom controller cannot initialize without [data-showroom-root]."
+        );
+      }
+
+      captureNativeDomStates();
 
       const issues =
         validateDom();
 
-      if (!state.root) {
-        throw new Error(
-          "Showroom controller cannot initialize without a root element."
-        );
-      }
-
       initializeReducedMotion();
-      initializeInitialPresentation();
+      initializeBaseline();
 
       initializeObjectListeners();
-      initializeCompassActions();
-      initializeRouteActions();
-      initializeReturnToOrbitActions();
-      initializeInstructionsActions();
-      initializeConstructionActions();
+      initializeCompassControls();
+      initializeRouteControls();
+      initializeReturnControls();
+      initializeInstructionsControls();
+      initializeConstructionControls();
       initializeDialogEvents();
       initializeRuntimeEvents();
+      initializeRootObserver();
 
       exposeApi();
 
-      state.initialized =
-        true;
+      state.initialized = true;
+      state.initializing = false;
+      state.readiness.controller = true;
 
       setRootAttribute(
         ATTRIBUTES.controllerReady,
@@ -4130,9 +6871,8 @@
           : "ready"
       );
 
-      setRootAttribute(
-        ATTRIBUTES.enhancementState,
-        PRESENTATION.PENDING
+      dispatchReadinessChanged(
+        "controller-ready"
       );
 
       publishReceipt(
@@ -4141,179 +6881,158 @@
           validationIssues:
             issues,
 
-          baselinePreserved:
-            true,
+          cardinalCount:
+            state.cardinals.size,
 
-          orbitScopedObjectCount:
-            state.objects.length,
+          childCount:
+            state.children.size,
 
-          semanticActivationGuard:
-            true,
+          clusterCount:
+            state.clusters.size,
 
-          compassActivationGuard:
-            true
+          frontCount:
+            state.fronts.size,
+
+          fallbackNavigationPresent:
+            Boolean(
+              document.querySelector(
+                SELECTORS.fallbackNavigation
+              )
+            ),
+
+          compassVisualMount:
+            Boolean(
+              state.compassVisualMount
+            )
         }
       );
 
-      dispatchStateEvent(
-        EVENTS.ready,
+      dispatch(
+        EVENTS.controllerReady,
         {
-          validationIssues:
-            issues,
+          frame:
+            getFrameState(),
 
-          baselinePreserved:
-            true
+          api: [
+            "getFrameState",
+            "getState",
+            "beginPreview",
+            "commitPreview",
+            "cancelPreview",
+            "commitObject",
+            "openCluster",
+            "closeCluster",
+            "toggleCluster",
+            "openRouteDialogByObjectId",
+            "closeRouteDialog",
+            "openCompassDialog",
+            "closeCompassDialog",
+            "returnToOrbit",
+            "openInstructions",
+            "requestInformationTab",
+            "setHeld",
+            "setSubsystemReadiness",
+            "dispose"
+          ]
         }
       );
     } catch (error) {
-      if (state.root) {
-        restoreBaselineFronts();
+      const errorPayload = {
+        name:
+          error instanceof Error
+            ? error.name
+            : "Error",
 
-        setRootAttribute(
-          ATTRIBUTES.controllerReady,
-          "false"
-        );
+        message:
+          error instanceof Error
+            ? error.message
+            : String(error)
+      };
 
-        setRootAttribute(
-          ATTRIBUTES.controllerState,
-          "failed"
-        );
+      rollbackInitialization();
 
-        setRootAttribute(
-          ATTRIBUTES.enhancementState,
-          PRESENTATION.FAILED
+      try {
+        publishReceipt(
+          "fatal-error",
+          {
+            error:
+              errorPayload,
+
+            partialInstallationRolledBack:
+              true,
+
+            nativePresentationRestored:
+              true,
+
+            nativeControlsRestored:
+              true
+          }
         );
+      } catch {
+        /* The rollback remains authoritative if receipt output also fails. */
       }
-
-      publishReceipt(
-        "fatal-error",
-        {
-          error:
-            {
-              name:
-                error instanceof Error
-                  ? error.name
-                  : "Error",
-
-              message:
-                error instanceof Error
-                  ? error.message
-                  : String(error)
-            },
-
-          baselinePreserved:
-            true
-        }
-      );
     }
   }
-
-  /* =======================================================
-     DISPOSAL
-     ======================================================= */
 
   function dispose() {
     if (state.disposed) {
       return;
     }
 
-    state.enhancementAvailable =
-      false;
+    state.disposed = true;
 
-    state.crystalsReady =
-      false;
+    state.expectedDialogClose.route = null;
+    state.expectedDialogClose.compass = null;
+    state.expectedDialogClose.construction = null;
 
-    state.enhancedPresentationActive =
-      false;
+    state.activeDialogGeneration.route = 0;
+    state.activeDialogGeneration.compass = 0;
+    state.activeDialogGeneration.construction = 0;
 
-    restoreBaselineFronts();
-    closeAllClusters();
-    clearPresentationSelection();
-    applyFallbackStarState();
+    state.pendingRoute.data = null;
+    state.pendingRoute.trigger = null;
+    state.pendingRoute.generation = 0;
 
-    setPageState(
-      PRESENTATION.BASELINE,
-      PRESENTATION.BASELINE,
-      PRESENTATION.FAILED
-    );
+    state.preview.active = false;
+    state.preview.objectId = "";
+    state.preview.cardinalId = "";
+    state.preview.childId = "";
+    state.preview.clusterId = "";
+    state.preview.source = "";
 
-    state.disposed =
-      true;
+    state.readiness.controller = false;
+    state.readiness.compositor = false;
+    state.readiness.crystals = false;
+    state.readiness.interactions = false;
 
-    for (
-      const removeListener
-      of state.listeners.splice(0)
-    ) {
-      try {
-        removeListener();
-      } catch {
-        /* Best-effort disposal. */
-      }
-    }
+    removeInstalledResources();
+    removeExposedApi();
 
-    for (
-      const observer
-      of state.observers.splice(0)
-    ) {
-      try {
-        observer.disconnect();
-      } catch {
-        /* Best-effort disposal. */
-      }
-    }
+    restoreNativeSemanticFallback();
+    restoreNativeRootState();
 
-    if (
-      state.compassDialog &&
-      state.compassDialog.open
-    ) {
-      safelyCloseDialog(
-        state.compassDialog,
-        "disposed"
-      );
-    }
-
-    if (
-      state.routeDialog &&
-      state.routeDialog.open
-    ) {
-      safelyCloseDialog(
-        state.routeDialog,
-        "disposed"
-      );
-    }
-
-    if (
-      state.constructionDialog &&
-      state.constructionDialog.open
-    ) {
-      safelyCloseDialog(
-        state.constructionDialog,
-        "disposed"
-      );
-    }
-
-    setRootAttribute(
-      ATTRIBUTES.controllerReady,
-      "false"
-    );
-
-    setRootAttribute(
-      ATTRIBUTES.controllerState,
-      "disposed"
-    );
-
-    publishReceipt(
-      "disposed",
-      {
-        baselineRestored:
-          true
-      }
-    );
+    state.initialized = false;
+    state.initializing = false;
 
     try {
-      delete window.SHOWROOM_CONTROLLER;
+      publishReceipt(
+        "disposed",
+        {
+          durableSemanticStatePreserved:
+            true,
+
+          nativePresentationRestored:
+            true,
+
+          nativeControlsRestored:
+            true,
+
+          rootStateRestored:
+            true
+        }
+      );
     } catch {
-      /* Noncritical cleanup. */
+      /* Disposal restoration remains authoritative. */
     }
   }
 

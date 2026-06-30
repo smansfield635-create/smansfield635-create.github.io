@@ -9,7 +9,8 @@
   - Complete static page authority.
   - Owns all visible context, semantic structure, native disclosures,
     controls, mounts, dialogs, fallbacks, accessibility relationships,
-    receipt elements, stylesheets, and runtime script order.
+    receipt elements, stylesheets, runtime script order, the shared
+    bottom return zone, and the accessible orbit escape.
   - Must exist as a complete usable DOM before runtime JavaScript initializes.
 
   /showroom/index.manifest.js
@@ -23,7 +24,7 @@
   This file must never:
   - create, replace, move, or remove DOM nodes;
   - write text, HTML, values, attributes, classes, styles, or datasets;
-  - inject narrative, gauge, route, dialog, fallback, or receipt content;
+  - inject narrative, gauge, route, dialog, fallback, return, or receipt content;
   - alter disclosure state;
   - register click, pointer, touch, wheel, keyboard, or navigation behavior;
   - call preventDefault(), stopPropagation(), or stopImmediatePropagation();
@@ -86,6 +87,8 @@
         "constellation controls",
         "local destination surfaces",
         "portal controls",
+        "shared bottom return zone",
+        "accessible orbit escape",
         "mounts",
         "dialogs",
         "fallback navigation",
@@ -109,7 +112,9 @@
         nativeDisclosureStructureStatic: true,
         constellationLedgerStatic: true,
         portalConfirmationMarkupStatic: true,
-        localReturnMarkupStatic: true
+        sharedReturnMarkupStatic: true,
+        accessibleOrbitEscapeStatic: true,
+        repeatedDestinationReturnMarkupAbsent: true
       }
     },
 
@@ -124,6 +129,7 @@
         "local-target ledger",
         "portal-route ledger",
         "fallback-portal ledger",
+        "shared-return contract",
         "structural counts",
         "geometry expectations",
         "ownership boundaries",
@@ -223,6 +229,23 @@
       CompassRendererDependencyAllowed: false,
       visualNavigationAuthority: false,
       controllerNavigationAuthority: true
+    },
+
+    returnSystem: {
+      model: "SHARED_BOTTOM_ZONE",
+      zone: "#showroom-return-zone",
+      orbitTarget: "#showroom-orbit",
+      compassRoute: "/index.html",
+
+      visibleReturnZones: 1,
+      accessibleOrbitEscapes: 1,
+
+      destinationLocalReturnControlsAllowed: false,
+      frontLocalReturnControlsAllowed: false,
+      footerCompassControlAllowed: false,
+
+      controllerOwnsCompassConfirmation: true,
+      manifestOwnsNavigation: false
     },
 
     elara: {
@@ -338,7 +361,8 @@
       openAncestor: null,
       requiredFront: null,
       semanticActivation: null,
-      returnHost: "#arrival"
+      returnModel: "shared-bottom-zone",
+      returnZone: "#showroom-return-zone"
     },
 
     {
@@ -350,7 +374,8 @@
       openAncestor: "#mirrorland-preface",
       requiredFront: null,
       semanticActivation: null,
-      returnHost: "#mirrorland-preface-mission"
+      returnModel: "shared-bottom-zone",
+      returnZone: "#showroom-return-zone"
     },
 
     {
@@ -362,7 +387,8 @@
       openAncestor: "#mirrorland-preface",
       requiredFront: null,
       semanticActivation: null,
-      returnHost: "#mirrorland-preface-timeline"
+      returnModel: "shared-bottom-zone",
+      returnZone: "#showroom-return-zone"
     },
 
     {
@@ -374,7 +400,8 @@
       openAncestor: "#mirrorland-preface",
       requiredFront: null,
       semanticActivation: null,
-      returnHost: "#mirrorland-preface-invitation"
+      returnModel: "shared-bottom-zone",
+      returnZone: "#showroom-return-zone"
     },
 
     {
@@ -386,7 +413,8 @@
       openAncestor: null,
       requiredFront: "#object-gauges",
       semanticActivation: "[data-showroom-window-control]",
-      returnHost: "#object-gauges"
+      returnModel: "shared-bottom-zone",
+      returnZone: "#showroom-return-zone"
     },
 
     {
@@ -398,7 +426,8 @@
       openAncestor: null,
       requiredFront: "#object-gauges",
       semanticActivation: null,
-      returnHost: "#object-gauges"
+      returnModel: "shared-bottom-zone",
+      returnZone: "#showroom-return-zone"
     },
 
     {
@@ -410,7 +439,8 @@
       openAncestor: null,
       requiredFront: null,
       semanticActivation: null,
-      returnHost: "#showroom-star-reading"
+      returnModel: "shared-bottom-zone",
+      returnZone: "#showroom-return-zone"
     },
 
     {
@@ -422,7 +452,8 @@
       openAncestor: null,
       requiredFront: null,
       semanticActivation: null,
-      returnHost: "#showroom-unfinished-world"
+      returnModel: "shared-bottom-zone",
+      returnZone: "#showroom-return-zone"
     },
 
     {
@@ -434,7 +465,8 @@
       openAncestor: "#mirrorland-preface",
       requiredFront: null,
       semanticActivation: null,
-      returnHost: "#mirrorland-preface-exploration"
+      returnModel: "shared-bottom-zone",
+      returnZone: "#showroom-return-zone"
     },
 
     {
@@ -446,7 +478,8 @@
       openAncestor: null,
       requiredFront: null,
       semanticActivation: null,
-      returnHost: "#showroom-paths-not-yet-open"
+      returnModel: "shared-bottom-zone",
+      returnZone: "#showroom-return-zone"
     }
   ]);
 
@@ -681,7 +714,17 @@
     elaraFallbackMenuRepresentations: 1,
     totalElaraRouteRepresentations: 4,
 
-    compassDialogTriggers: 15,
+    sharedReturnZones: 1,
+    sharedReturnToOrbitControls: 1,
+    sharedReturnToCompassControls: 1,
+    accessibleOrbitEscapeControls: 1,
+
+    repeatedLocalReturnBlocks: 0,
+    repeatedFrontNavigationBlocks: 0,
+    footerCompassControls: 0,
+    obsoleteDestinationOrbitControls: 0,
+
+    compassDialogTriggers: 2,
 
     objectGaugeSelectors: 4,
     structureGaugeSelectors: 6,
@@ -737,6 +780,18 @@
     deploymentAuthorized: false,
     publicReleaseAuthorized: false,
     empiricalValidityClaimed: false
+  });
+
+  const RETURN_MODEL = deepFreeze({
+    model: "shared-bottom-zone",
+    zone: "#showroom-return-zone",
+    sharedOrbitControls: 1,
+    sharedCompassControls: 1,
+    accessibleOrbitEscapes: 1,
+    repeatedLocalReturnBlocks: 0,
+    repeatedFrontNavigationBlocks: 0,
+    footerCompassControls: 0,
+    obsoleteDestinationOrbitControls: 0
   });
 
   const REQUIRED_PAGE_ATTRIBUTES = deepFreeze({
@@ -822,6 +877,12 @@
 
     "data-showroom-return-to-compass":
       "true",
+
+    "data-showroom-return-model":
+      "shared-bottom-zone",
+
+    "data-showroom-return-zone":
+      "#showroom-return-zone",
 
     "data-showroom-orbit-target":
       "#showroom-orbit",
@@ -1100,6 +1161,31 @@
     },
 
     {
+      label: "shared return zone",
+      selector: "#showroom-return-zone[data-showroom-return-zone]"
+    },
+
+    {
+      label: "shared return-zone heading",
+      selector: "#showroom-return-zone-title"
+    },
+
+    {
+      label: "shared Return to Orbit control",
+      selector: "[data-showroom-shared-return-to-orbit]"
+    },
+
+    {
+      label: "shared Return to Main Compass control",
+      selector: "[data-showroom-shared-return-to-compass]"
+    },
+
+    {
+      label: "accessible orbit escape",
+      selector: "[data-showroom-accessible-orbit-return]"
+    },
+
+    {
       label: "route dialog",
       selector: "#showroom-route-dialog"
     },
@@ -1180,6 +1266,22 @@
     },
 
     {
+      label: "local children using shared return model",
+      selector:
+        '[data-showroom-child-control]' +
+        '[data-showroom-return-model="shared-bottom-zone"]' +
+        '[data-showroom-return-zone="#showroom-return-zone"]',
+      expected: STRUCTURAL_COUNTS.localChildDestinations
+    },
+
+    {
+      label: "obsolete local return-options declarations",
+      selector:
+        "[data-showroom-child-control][data-showroom-return-options]",
+      expected: 0
+    },
+
+    {
       label: "portal child destinations",
       selector:
         '[data-showroom-child-control][data-showroom-destination-kind="external-route"]',
@@ -1205,6 +1307,56 @@
         '[data-showroom-destination-kind="external-route"]',
       expected:
         STRUCTURAL_COUNTS.totalControllerMediatedPortalTriggers
+    },
+
+    {
+      label: "shared return zones",
+      selector:
+        "#showroom-return-zone[data-showroom-return-zone]",
+      expected: STRUCTURAL_COUNTS.sharedReturnZones
+    },
+
+    {
+      label: "shared Return to Orbit controls",
+      selector: "[data-showroom-shared-return-to-orbit]",
+      expected: STRUCTURAL_COUNTS.sharedReturnToOrbitControls
+    },
+
+    {
+      label: "shared Return to Compass controls",
+      selector: "[data-showroom-shared-return-to-compass]",
+      expected: STRUCTURAL_COUNTS.sharedReturnToCompassControls
+    },
+
+    {
+      label: "accessible orbit escape controls",
+      selector: "[data-showroom-accessible-orbit-return]",
+      expected: STRUCTURAL_COUNTS.accessibleOrbitEscapeControls
+    },
+
+    {
+      label: "repeated local return blocks",
+      selector: ".showroom-local-return",
+      expected: STRUCTURAL_COUNTS.repeatedLocalReturnBlocks
+    },
+
+    {
+      label: "repeated front navigation blocks",
+      selector: ".showroom-front-navigation",
+      expected: STRUCTURAL_COUNTS.repeatedFrontNavigationBlocks
+    },
+
+    {
+      label: "footer Compass controls",
+      selector:
+        '.showroom-footer [data-showroom-open-compass-dialog]',
+      expected: STRUCTURAL_COUNTS.footerCompassControls
+    },
+
+    {
+      label: "obsolete destination-level Orbit controls",
+      selector: 'main [data-showroom-return-to-orbit]',
+      expected: STRUCTURAL_COUNTS.obsoleteDestinationOrbitControls
     },
 
     {
@@ -1400,6 +1552,13 @@
       source: "[data-showroom-compass-control]",
       attribute: "aria-controls",
       target: "#showroom-compass-dialog"
+    },
+
+    {
+      label: "shared return-zone heading",
+      source: "#showroom-return-zone",
+      attribute: "aria-labelledby",
+      target: "#showroom-return-zone-title"
     },
 
     {
@@ -1675,6 +1834,8 @@
       navigationAuthorized: false,
       initializationAuthorized: false,
       eventRegistrationAuthorized: false,
+
+      returnModel: RETURN_MODEL,
 
       requiredPageAttributes: REQUIRED_PAGE_ATTRIBUTES,
       requiredShowroomRootState: REQUIRED_SHOWROOM_ROOT_STATE,
@@ -2089,25 +2250,6 @@
           "data-showroom-local-destination-surface"
         ) ?? null;
 
-      const returnHost =
-        document.querySelector(entry.returnHost);
-
-      const orbitReturns =
-        returnHost
-          ? returnHost.querySelectorAll(
-              '[data-showroom-return-to-orbit][href="#showroom-orbit"]'
-            )
-          : [];
-
-      const compassReturns =
-        returnHost
-          ? returnHost.querySelectorAll(
-              '[data-showroom-open-compass-dialog]' +
-              '[aria-haspopup="dialog"]' +
-              '[aria-controls="showroom-compass-dialog"]'
-            )
-          : [];
-
       const expectedAttributes = {
         "data-showroom-cardinal-id":
           entry.cardinalId,
@@ -2121,8 +2263,11 @@
         "data-showroom-target":
           entry.target,
 
-        "data-showroom-return-options":
-          "orbit compass",
+        "data-showroom-return-model":
+          entry.returnModel,
+
+        "data-showroom-return-zone":
+          entry.returnZone,
 
         "data-showroom-visual-class":
           "LOCAL",
@@ -2200,9 +2345,13 @@
             requiredFront: requiredFrontActual,
             semanticActivation:
               semanticActivationActual,
-            returnOptions:
+            returnModel:
               node?.getAttribute(
-                "data-showroom-return-options"
+                "data-showroom-return-model"
+              ) ?? null,
+            returnZone:
+              node?.getAttribute(
+                "data-showroom-return-zone"
               ) ?? null
           }
         }),
@@ -2226,30 +2375,245 @@
             exists: Boolean(targetNode),
             destinationSurfaceId: targetSurfaceId
           }
-        }),
-
-        makeCheck({
-          category: "LOCAL_RETURN_CONTROLS",
-          label: `${entry.childId} return coverage`,
-          status:
-            Boolean(returnHost) &&
-            orbitReturns.length >= 1 &&
-            compassReturns.length >= 1
-              ? STATUS.PASS
-              : STATUS.FAIL,
-          expected: {
-            returnHost: entry.returnHost,
-            orbitReturnMinimum: 1,
-            compassReturnMinimum: 1
-          },
-          actual: {
-            returnHostExists: Boolean(returnHost),
-            orbitReturns: orbitReturns.length,
-            compassReturns: compassReturns.length
-          }
         })
       ];
     });
+  }
+
+  function validateSharedReturnZone() {
+    const zones =
+      document.querySelectorAll(
+        "#showroom-return-zone[data-showroom-return-zone]"
+      );
+
+    const zone =
+      zones.length === 1
+        ? zones[0]
+        : null;
+
+    const orbitControls =
+      document.querySelectorAll(
+        "[data-showroom-shared-return-to-orbit]"
+      );
+
+    const orbitControl =
+      orbitControls.length === 1
+        ? orbitControls[0]
+        : null;
+
+    const compassControls =
+      document.querySelectorAll(
+        "[data-showroom-shared-return-to-compass]"
+      );
+
+    const compassControl =
+      compassControls.length === 1
+        ? compassControls[0]
+        : null;
+
+    const accessibleEscapes =
+      document.querySelectorAll(
+        "[data-showroom-accessible-orbit-return]"
+      );
+
+    const accessibleEscape =
+      accessibleEscapes.length === 1
+        ? accessibleEscapes[0]
+        : null;
+
+    const repeatedLocalReturns =
+      document.querySelectorAll(
+        ".showroom-local-return"
+      );
+
+    const repeatedFrontReturns =
+      document.querySelectorAll(
+        ".showroom-front-navigation"
+      );
+
+    const footerCompassControls =
+      document.querySelectorAll(
+        '.showroom-footer [data-showroom-open-compass-dialog]'
+      );
+
+    const obsoleteDestinationOrbitControls =
+      document.querySelectorAll(
+        'main [data-showroom-return-to-orbit]'
+      );
+
+    const immediatelyAfterMain =
+      zone?.previousElementSibling?.tagName === "MAIN";
+
+    const immediatelyBeforeFooter =
+      zone?.nextElementSibling?.tagName === "FOOTER";
+
+    return [
+      makeCheck({
+        category: "SHARED_RETURN_ZONE",
+        label: "shared return-zone placement",
+        status:
+          zones.length === 1 &&
+          immediatelyAfterMain &&
+          immediatelyBeforeFooter &&
+          zone?.getAttribute(
+            "aria-labelledby"
+          ) === "showroom-return-zone-title"
+            ? STATUS.PASS
+            : STATUS.FAIL,
+        expected: {
+          count: 1,
+          immediatelyAfterMain: true,
+          immediatelyBeforeFooter: true,
+          ariaLabelledby:
+            "showroom-return-zone-title"
+        },
+        actual: {
+          count: zones.length,
+          immediatelyAfterMain,
+          immediatelyBeforeFooter,
+          ariaLabelledby:
+            zone?.getAttribute(
+              "aria-labelledby"
+            ) ?? null
+        }
+      }),
+
+      makeCheck({
+        category: "SHARED_RETURN_ZONE",
+        label: "shared Return to Orbit control",
+        status:
+          orbitControls.length === 1 &&
+          orbitControl instanceof HTMLAnchorElement &&
+          orbitControl.getAttribute("href") ===
+            "#showroom-orbit" &&
+          zone?.contains(orbitControl) === true
+            ? STATUS.PASS
+            : STATUS.FAIL,
+        expected: {
+          count: 1,
+          element: "A",
+          href: "#showroom-orbit",
+          insideSharedZone: true
+        },
+        actual: {
+          count: orbitControls.length,
+          element:
+            orbitControl?.tagName ?? null,
+          href:
+            orbitControl?.getAttribute("href") ?? null,
+          insideSharedZone:
+            zone?.contains(orbitControl) ?? false
+        }
+      }),
+
+      makeCheck({
+        category: "SHARED_RETURN_ZONE",
+        label: "shared Return to Main Compass control",
+        status:
+          compassControls.length === 1 &&
+          compassControl instanceof HTMLButtonElement &&
+          compassControl.type === "button" &&
+          compassControl.hasAttribute(
+            "data-showroom-open-compass-dialog"
+          ) &&
+          compassControl.getAttribute(
+            "aria-haspopup"
+          ) === "dialog" &&
+          compassControl.getAttribute(
+            "aria-controls"
+          ) === "showroom-compass-dialog" &&
+          zone?.contains(compassControl) === true
+            ? STATUS.PASS
+            : STATUS.FAIL,
+        expected: {
+          count: 1,
+          element: "BUTTON",
+          type: "button",
+          openCompassDialogMarker: true,
+          ariaHaspopup: "dialog",
+          ariaControls:
+            "showroom-compass-dialog",
+          insideSharedZone: true
+        },
+        actual: {
+          count: compassControls.length,
+          element:
+            compassControl?.tagName ?? null,
+          type:
+            compassControl instanceof HTMLButtonElement
+              ? compassControl.type
+              : null,
+          openCompassDialogMarker:
+            compassControl?.hasAttribute(
+              "data-showroom-open-compass-dialog"
+            ) ?? false,
+          ariaHaspopup:
+            compassControl?.getAttribute(
+              "aria-haspopup"
+            ) ?? null,
+          ariaControls:
+            compassControl?.getAttribute(
+              "aria-controls"
+            ) ?? null,
+          insideSharedZone:
+            zone?.contains(compassControl) ?? false
+        }
+      }),
+
+      makeCheck({
+        category: "ACCESSIBLE_ORBIT_ESCAPE",
+        label: "accessible orbit escape",
+        status:
+          accessibleEscapes.length === 1 &&
+          accessibleEscape instanceof HTMLAnchorElement &&
+          accessibleEscape.getAttribute("href") ===
+            "#showroom-orbit"
+            ? STATUS.PASS
+            : STATUS.FAIL,
+        expected: {
+          count: 1,
+          element: "A",
+          href: "#showroom-orbit"
+        },
+        actual: {
+          count: accessibleEscapes.length,
+          element:
+            accessibleEscape?.tagName ?? null,
+          href:
+            accessibleEscape?.getAttribute(
+              "href"
+            ) ?? null
+        }
+      }),
+
+      makeCheck({
+        category: "OBSOLETE_RETURN_SURFACE",
+        label: "obsolete repeated return surfaces absent",
+        status:
+          repeatedLocalReturns.length === 0 &&
+          repeatedFrontReturns.length === 0 &&
+          footerCompassControls.length === 0 &&
+          obsoleteDestinationOrbitControls.length === 0
+            ? STATUS.PASS
+            : STATUS.FAIL,
+        expected: {
+          localReturnBlocks: 0,
+          frontNavigationBlocks: 0,
+          footerCompassControls: 0,
+          destinationOrbitControls: 0
+        },
+        actual: {
+          localReturnBlocks:
+            repeatedLocalReturns.length,
+          frontNavigationBlocks:
+            repeatedFrontReturns.length,
+          footerCompassControls:
+            footerCompassControls.length,
+          destinationOrbitControls:
+            obsoleteDestinationOrbitControls.length
+        }
+      })
+    ];
   }
 
   function validatePortalChildLedger() {
@@ -2904,6 +3268,26 @@
         )
       );
 
+    const brand =
+      document.querySelector(
+        ".brand[data-showroom-open-compass-dialog]"
+      );
+
+    const shared =
+      document.querySelector(
+        "[data-showroom-shared-return-to-compass]" +
+        "[data-showroom-open-compass-dialog]"
+      );
+
+    const exactTriggerSet =
+      triggers.length ===
+        STRUCTURAL_COUNTS.compassDialogTriggers &&
+      Boolean(brand) &&
+      Boolean(shared) &&
+      brand !== shared &&
+      triggers.includes(brand) &&
+      triggers.includes(shared);
+
     const checks =
       triggers.map((trigger, index) => {
         const passes =
@@ -2963,6 +3347,32 @@
         expected:
           STRUCTURAL_COUNTS.compassDialogTriggers,
         actual: triggers.length
+      })
+    );
+
+    checks.push(
+      makeCheck({
+        category: "COMPASS_TRIGGER",
+        label: "exact Compass trigger set",
+        status:
+          exactTriggerSet
+            ? STATUS.PASS
+            : STATUS.FAIL,
+        expected: {
+          count:
+            STRUCTURAL_COUNTS.compassDialogTriggers,
+          headerBrand: true,
+          sharedReturnCompassControl: true,
+          additionalMarkedTriggers: 0
+        },
+        actual: {
+          count: triggers.length,
+          headerBrand:
+            Boolean(brand),
+          sharedReturnCompassControl:
+            Boolean(shared),
+          exactTriggerSet
+        }
       })
     );
 
@@ -4058,6 +4468,86 @@
     ];
   }
 
+  function buildConstellationLedger() {
+    return {
+      cardinalControls:
+        STRUCTURAL_COUNTS.cardinalControls,
+      cardinalClusters:
+        STRUCTURAL_COUNTS.cardinalClusters,
+      childControls:
+        STRUCTURAL_COUNTS.childControls,
+      localChildren:
+        STRUCTURAL_COUNTS.localChildDestinations,
+      portalChildren:
+        STRUCTURAL_COUNTS.portalChildDestinations,
+      primaryPortalChildren:
+        STRUCTURAL_COUNTS.primaryPortalChildren,
+      fallbackPortalControls:
+        STRUCTURAL_COUNTS.fallbackPortalControls,
+      totalPortalTriggers:
+        STRUCTURAL_COUNTS
+          .totalControllerMediatedPortalTriggers
+    };
+  }
+
+  function buildAccessLedger() {
+    return {
+      primaryElaraAccessControls:
+        STRUCTURAL_COUNTS
+          .primaryElaraAccessControls,
+      elaraFallbackMenuRepresentations:
+        STRUCTURAL_COUNTS
+          .elaraFallbackMenuRepresentations,
+      totalElaraRouteRepresentations:
+        STRUCTURAL_COUNTS
+          .totalElaraRouteRepresentations,
+      compassDialogTriggers:
+        STRUCTURAL_COUNTS.compassDialogTriggers
+    };
+  }
+
+  function buildReturnLedger() {
+    return {
+      model: RETURN_MODEL.model,
+
+      sharedReturnZones:
+        STRUCTURAL_COUNTS.sharedReturnZones,
+
+      sharedReturnToOrbitControls:
+        STRUCTURAL_COUNTS.sharedReturnToOrbitControls,
+
+      sharedReturnToCompassControls:
+        STRUCTURAL_COUNTS.sharedReturnToCompassControls,
+
+      accessibleOrbitEscapeControls:
+        STRUCTURAL_COUNTS.accessibleOrbitEscapeControls,
+
+      repeatedLocalReturnBlocks:
+        STRUCTURAL_COUNTS.repeatedLocalReturnBlocks,
+
+      repeatedFrontNavigationBlocks:
+        STRUCTURAL_COUNTS.repeatedFrontNavigationBlocks,
+
+      footerCompassControls:
+        STRUCTURAL_COUNTS.footerCompassControls,
+
+      obsoleteDestinationOrbitControls:
+        STRUCTURAL_COUNTS.obsoleteDestinationOrbitControls
+    };
+  }
+
+  function buildResourceSurface() {
+    return {
+      stylesheets:
+        STRUCTURAL_COUNTS.stylesheets,
+      runtimeScripts:
+        STRUCTURAL_COUNTS.runtimeScripts,
+      fullCompassStylesheetAllowed: false,
+      CompassGeometryDependencyAllowed: false,
+      CompassRendererDependencyAllowed: false
+    };
+  }
+
   function buildReceipt(checks) {
     const failures =
       checks.filter(
@@ -4106,49 +4596,17 @@
         unevaluable: unevaluable.length
       },
 
-      constellationLedger: {
-        cardinalControls:
-          STRUCTURAL_COUNTS.cardinalControls,
-        cardinalClusters:
-          STRUCTURAL_COUNTS.cardinalClusters,
-        childControls:
-          STRUCTURAL_COUNTS.childControls,
-        localChildren:
-          STRUCTURAL_COUNTS.localChildDestinations,
-        portalChildren:
-          STRUCTURAL_COUNTS.portalChildDestinations,
-        primaryPortalChildren:
-          STRUCTURAL_COUNTS.primaryPortalChildren,
-        fallbackPortalControls:
-          STRUCTURAL_COUNTS.fallbackPortalControls,
-        totalPortalTriggers:
-          STRUCTURAL_COUNTS
-            .totalControllerMediatedPortalTriggers
-      },
+      constellationLedger:
+        buildConstellationLedger(),
 
-      accessLedger: {
-        primaryElaraAccessControls:
-          STRUCTURAL_COUNTS
-            .primaryElaraAccessControls,
-        elaraFallbackMenuRepresentations:
-          STRUCTURAL_COUNTS
-            .elaraFallbackMenuRepresentations,
-        totalElaraRouteRepresentations:
-          STRUCTURAL_COUNTS
-            .totalElaraRouteRepresentations,
-        compassDialogTriggers:
-          STRUCTURAL_COUNTS.compassDialogTriggers
-      },
+      accessLedger:
+        buildAccessLedger(),
 
-      resourceSurface: {
-        stylesheets:
-          STRUCTURAL_COUNTS.stylesheets,
-        runtimeScripts:
-          STRUCTURAL_COUNTS.runtimeScripts,
-        fullCompassStylesheetAllowed: false,
-        CompassGeometryDependencyAllowed: false,
-        CompassRendererDependencyAllowed: false
-      },
+      returnLedger:
+        buildReturnLedger(),
+
+      resourceSurface:
+        buildResourceSurface(),
 
       boundaries: {
         domMutated: false,
@@ -4218,6 +4676,18 @@
         unevaluable: 1
       },
 
+      constellationLedger:
+        buildConstellationLedger(),
+
+      accessLedger:
+        buildAccessLedger(),
+
+      returnLedger:
+        buildReturnLedger(),
+
+      resourceSurface:
+        buildResourceSurface(),
+
       boundaries: {
         domMutated: false,
         repairAttempted: false,
@@ -4269,6 +4739,7 @@
 
       ...validateCardinalLedger(),
       ...validateLocalChildLedger(),
+      ...validateSharedReturnZone(),
       ...validatePortalChildLedger(),
       ...validateFallbackPortalLedger(),
       ...validateGlobalPortalSurface(),

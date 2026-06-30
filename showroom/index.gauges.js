@@ -1,2316 +1,1174 @@
 /* TARGET FILE: /showroom/index.gauges.js */
 /* TNT FULL-FILE REPLACEMENT */
-/* SHOWROOM_MIRRORLAND_COMPACT_GAUGE_DASHBOARD_TNT_v2 */
+/* SHOWROOM_MIRRORLAND_COMPACT_GAUGE_DASHBOARD_TNT_v3 */
 
 (() => {
   "use strict";
 
-  const CONTRACT =
-    "SHOWROOM_MIRRORLAND_COMPACT_GAUGE_DASHBOARD_TNT_v2";
-
-  const VERSION =
-    "2.0.0";
-
-  const EXPECTED = Object.freeze({
-    dashboards: 4,
-    compositions: 1,
-    informationGroups: 1
-  });
-
-  const ROOT_STATES = Object.freeze({
-    STATIC: "static",
-    READY: "ready",
-    READY_WITH_ISSUES: "ready-with-issues",
-    HELD: "held",
-    FAILED: "failed",
-    DISPOSED: "disposed"
-  });
-
-  const LOCAL_STATES = Object.freeze({
-    STATIC: "static",
-    READY: "ready",
-    HELD: "held",
-    DISPOSED: "disposed"
+  const CONTRACT = Object.freeze({
+    id: "SHOWROOM_MIRRORLAND_COMPACT_GAUGE_DASHBOARD_TNT_v3",
+    version: "3.0.0",
+    scope: "/showroom/",
+    ownership: Object.freeze({
+      owns: Object.freeze([
+        "gauge selection",
+        "gauge detail visibility",
+        "information tab selection",
+        "information panel visibility",
+        "supporting-front presentation",
+        "gauge accessibility state",
+        "gauge receipts"
+      ]),
+      excludes: Object.freeze([
+        "constellation rendering",
+        "constellation navigation decisions",
+        "Compass navigation",
+        "Diamond rendering",
+        "Diamond camera",
+        "Diamond interaction",
+        "Window rendering",
+        "secondary-object rendering",
+        "stage visibility"
+      ])
+    })
   });
 
   const SELECTORS = Object.freeze({
-    root:
-      "[data-showroom-root]",
-
-    receipt:
-      "[data-showroom-gauges-receipt]",
-
-    dashboard:
-      "[data-showroom-gauge-dashboard]",
-
-    gauge:
-      "[data-showroom-gauge]",
-
-    gaugeDetail:
-      "[data-showroom-gauge-detail]",
-
-    composition:
-      "[data-showroom-composition-gauge]",
-
-    compositionRegion:
-      "[data-showroom-composition-region]",
-
-    compositionDetail:
-      "[data-showroom-composition-detail]",
-
-    compositionDetailIndex:
-      "[data-showroom-composition-detail-index]",
-
-    compositionDetailTitle:
-      "[data-showroom-composition-detail-title]",
-
-    compositionDetailDescription:
-      "[data-showroom-composition-detail-description]",
-
-    information:
-      "[data-showroom-information-tabs]",
-
-    informationTab:
-      "[data-showroom-information-tab]",
-
-    informationPanel:
-      "[data-showroom-information-panel]"
+    root: "[data-showroom-root]",
+    dashboard: "[data-showroom-gauge-dashboard]",
+    gauge: "[data-showroom-gauge]",
+    detail: "[data-showroom-gauge-detail]",
+    detailHost: "[data-showroom-gauge-details]",
+    informationTabs: "[data-showroom-information-tabs]",
+    informationTablist: "[data-showroom-information-tablist]",
+    informationTab: "[data-showroom-information-tab]",
+    informationPanel: "[data-showroom-information-panel]",
+    frontHost: "[data-showroom-front-host]",
+    front: "[data-showroom-front]",
+    receipt: "[data-showroom-gauges-receipt]",
+    validation: "[data-showroom-controller-validation]",
+    windowThreshold: "[data-showroom-window-state]",
+    windowGauge: '[data-gauge-id="window-state"]'
   });
 
-  const ATTRIBUTES = Object.freeze({
-    rootState:
-      "data-showroom-gauges-state",
+  const STAGE_IDS = Object.freeze([
+    "showroom-orbit",
+    "showroom-diamond-reveal",
+    "showroom-secondary-object"
+  ]);
 
-    rootReady:
-      "data-showroom-gauges-ready",
-
-    rootActiveInformationTab:
-      "data-showroom-active-information-tab",
-
-    dashboardId:
-      "data-gauge-dashboard-id",
-
-    dashboardState:
-      "data-gauge-dashboard-state",
-
-    gaugeId:
-      "data-gauge-id",
-
-    gaugeDetailId:
-      "data-gauge-detail-id",
-
-    compositionId:
-      "data-composition-id",
-
-    compositionState:
-      "data-showroom-composition-state",
-
-    regionId:
-      "data-region-id",
-
-    informationId:
-      "data-information-tabs-id",
-
-    informationState:
-      "data-showroom-information-state",
-
-    informationTabId:
-      "data-information-tab-id",
-
-    informationPanelId:
-      "data-information-panel-id"
-  });
-
-  const runtime = {
+  const state = {
     initialized: false,
-    disposed: false,
-    held: false,
-    root: null,
-    receipt: null,
-    rootSnapshot: null,
-    dashboards: [],
-    compositions: [],
-    informationGroups: [],
-    lifecycleListeners: [],
-    issues: [],
-    receiptSequence: 0,
-    api: null
+    dashboards: new Map(),
+    informationGroups: new Map(),
+    activeFrontId: "",
+    mutationObserver: null,
+    rootObserver: null,
+    receiptSequence: 0
   };
 
-  function toArray(value) {
-    return Array.prototype.slice.call(value || []);
+  function query(selector, context = document) {
+    return context.querySelector(selector);
   }
 
-  function isElement(value) {
-    return value instanceof Element;
+  function queryAll(selector, context = document) {
+    return Array.from(context.querySelectorAll(selector));
   }
 
-  function normalizeText(value) {
-    return String(value == null ? "" : value)
-      .replace(/\s+/g, " ")
-      .trim();
+  function normalize(value) {
+    return typeof value === "string" ? value.trim() : "";
   }
 
-  function readRequiredAttribute(element, attributeName, label) {
-    if (!isElement(element)) {
-      throw new TypeError(`${label} is not an Element.`);
+  function escapeIdentifier(value) {
+    if (window.CSS && typeof window.CSS.escape === "function") {
+      return window.CSS.escape(value);
     }
 
-    const value = normalizeText(element.getAttribute(attributeName));
-
-    if (!value) {
-      throw new Error(
-        `${label} is missing required attribute ${attributeName}.`
-      );
-    }
-
-    return value;
+    return String(value).replace(/[^a-zA-Z0-9_-]/g, "\\$&");
   }
 
-  function captureAttribute(element, attributeName) {
-    return Object.freeze({
-      element,
-      attributeName,
-      present: element.hasAttribute(attributeName),
-      value: element.getAttribute(attributeName)
-    });
-  }
-
-  function restoreAttribute(snapshot) {
-    if (!snapshot || !isElement(snapshot.element)) {
+  function setHidden(element, hidden) {
+    if (!(element instanceof HTMLElement)) {
       return;
     }
 
-    if (snapshot.present) {
-      snapshot.element.setAttribute(
-        snapshot.attributeName,
-        snapshot.value == null ? "" : snapshot.value
-      );
+    element.hidden = Boolean(hidden);
+    element.setAttribute("aria-hidden", hidden ? "true" : "false");
+  }
+
+  function setPressed(element, active) {
+    if (!(element instanceof HTMLElement)) {
+      return;
+    }
+
+    element.setAttribute("aria-expanded", active ? "true" : "false");
+
+    if (active) {
+      element.setAttribute("data-active", "");
     } else {
-      snapshot.element.removeAttribute(snapshot.attributeName);
+      element.removeAttribute("data-active");
     }
   }
 
-  function captureHidden(element) {
-    return Object.freeze({
-      element,
-      hidden: Boolean(element.hidden)
-    });
+  function getRoot() {
+    return query(SELECTORS.root);
   }
 
-  function restoreHidden(snapshot) {
-    if (!snapshot || !isElement(snapshot.element)) {
-      return;
-    }
-
-    snapshot.element.hidden = snapshot.hidden;
+  function getReceiptOutput() {
+    return query(SELECTORS.receipt);
   }
 
-  function captureText(element) {
-    return Object.freeze({
-      element,
-      textContent: element.textContent
-    });
-  }
-
-  function restoreText(snapshot) {
-    if (!snapshot || !isElement(snapshot.element)) {
-      return;
-    }
-
-    snapshot.element.textContent = snapshot.textContent;
-  }
-
-  function addListener(record, target, type, listener, options) {
-    target.addEventListener(type, listener, options);
-
-    record.listeners.push({
-      target,
-      type,
-      listener,
-      options
-    });
-  }
-
-  function removeListeners(record) {
-    if (!record || !Array.isArray(record.listeners)) {
-      return;
-    }
-
-    for (const entry of record.listeners.splice(0)) {
-      try {
-        entry.target.removeEventListener(
-          entry.type,
-          entry.listener,
-          entry.options
-        );
-      } catch {
-        /* Listener removal must remain best-effort. */
-      }
-    }
-  }
-
-  function addLifecycleListener(target, type, listener, options) {
-    target.addEventListener(type, listener, options);
-
-    runtime.lifecycleListeners.push({
-      target,
-      type,
-      listener,
-      options
-    });
-  }
-
-  function removeLifecycleListeners() {
-    for (const entry of runtime.lifecycleListeners.splice(0)) {
-      try {
-        entry.target.removeEventListener(
-          entry.type,
-          entry.listener,
-          entry.options
-        );
-      } catch {
-        /* Lifecycle cleanup must remain best-effort. */
-      }
-    }
-  }
-
-  function createIssue(scope, identity, message) {
-    const issue = Object.freeze({
-      scope,
-      identity: identity || "",
-      message: normalizeText(message)
-    });
-
-    runtime.issues.push(issue);
-
-    return issue;
-  }
-
-  function publishReceipt(event, detail = {}) {
-    if (!runtime.receipt) {
-      return;
-    }
-
-    runtime.receiptSequence += 1;
-
-    const payload = {
-      contract: CONTRACT,
-      version: VERSION,
-      sequence: runtime.receiptSequence,
-      event,
-      rootState:
-        runtime.root?.getAttribute(ATTRIBUTES.rootState) || "",
-      ready:
-        runtime.root?.getAttribute(ATTRIBUTES.rootReady) === "true",
-      dashboards: {
-        discovered: runtime.dashboards.length,
-        committed: runtime.dashboards.filter(
-          (record) => record.committed
-        ).length,
-        held: runtime.dashboards.filter(
-          (record) => record.held
-        ).length
-      },
-      compositions: {
-        discovered: runtime.compositions.length,
-        committed: runtime.compositions.filter(
-          (record) => record.committed
-        ).length,
-        held: runtime.compositions.filter(
-          (record) => record.held
-        ).length
-      },
-      informationGroups: {
-        discovered: runtime.informationGroups.length,
-        committed: runtime.informationGroups.filter(
-          (record) => record.committed
-        ).length,
-        held: runtime.informationGroups.filter(
-          (record) => record.held
-        ).length
-      },
-      issueCount: runtime.issues.length,
-      detail
-    };
-
-    runtime.receipt.textContent = JSON.stringify(payload);
-  }
-
-  function captureRootSnapshot(root) {
-    return Object.freeze({
-      rootState:
-        captureAttribute(root, ATTRIBUTES.rootState),
-
-      rootReady:
-        captureAttribute(root, ATTRIBUTES.rootReady),
-
-      activeInformationTab:
-        captureAttribute(
-          root,
-          ATTRIBUTES.rootActiveInformationTab
-        )
-    });
-  }
-
-  function restoreRootSnapshot() {
-    if (!runtime.rootSnapshot) {
-      return;
-    }
-
-    restoreAttribute(runtime.rootSnapshot.rootState);
-    restoreAttribute(runtime.rootSnapshot.rootReady);
-    restoreAttribute(runtime.rootSnapshot.activeInformationTab);
-  }
-
-  function setRootState(state) {
-    if (!runtime.root) {
-      return;
-    }
-
-    runtime.root.setAttribute(
-      ATTRIBUTES.rootState,
-      state
-    );
-
-    runtime.root.setAttribute(
-      ATTRIBUTES.rootReady,
-      state === ROOT_STATES.READY ||
-      state === ROOT_STATES.READY_WITH_ISSUES
-        ? "true"
-        : "false"
-    );
-  }
-
-  function getAllRecords() {
-    return [
-      ...runtime.dashboards,
-      ...runtime.compositions,
-      ...runtime.informationGroups
-    ];
-  }
-
-  function reflectRootState() {
-    if (!runtime.root || runtime.disposed) {
-      return;
-    }
-
-    if (runtime.held) {
-      setRootState(ROOT_STATES.HELD);
-      return;
-    }
-
-    const allRecords = getAllRecords();
-    const committed = allRecords.filter(
-      (record) => record.committed
-    );
-    const held = allRecords.filter(
-      (record) => record.held
-    );
-
-    const discoveredCounts = {
-      dashboards: runtime.dashboards.length,
-      compositions: runtime.compositions.length,
-      informationGroups: runtime.informationGroups.length
-    };
-
-    const exactCounts =
-      discoveredCounts.dashboards === EXPECTED.dashboards &&
-      discoveredCounts.compositions === EXPECTED.compositions &&
-      discoveredCounts.informationGroups ===
-        EXPECTED.informationGroups;
-
-    const zeroDiscovery =
-      discoveredCounts.dashboards === 0 &&
-      discoveredCounts.compositions === 0 &&
-      discoveredCounts.informationGroups === 0;
-
-    if (zeroDiscovery || committed.length === 0) {
-      setRootState(ROOT_STATES.HELD);
-      return;
-    }
-
-    if (
-      held.length > 0 ||
-      runtime.issues.length > 0 ||
-      !exactCounts ||
-      committed.length !== allRecords.length
-    ) {
-      setRootState(ROOT_STATES.READY_WITH_ISSUES);
-      return;
-    }
-
-    setRootState(ROOT_STATES.READY);
-  }
-
-  function assertUniqueValues(values, label) {
-    const seen = new Set();
-
-    for (const value of values) {
-      if (seen.has(value)) {
-        throw new Error(
-          `${label} contains duplicate value "${value}".`
-        );
-      }
-
-      seen.add(value);
-    }
-  }
-
-  function findInitialIndex(
-    elements,
-    predicate,
-    fallbackIndex = 0
-  ) {
-    const index = elements.findIndex(predicate);
-
-    return index >= 0
-      ? index
-      : fallbackIndex;
-  }
-
-  function focusElement(element) {
-    try {
-      element.focus({
-        preventScroll: true
-      });
-    } catch {
-      element.focus();
-    }
-  }
-
-  function nextIndexForKey(key, currentIndex, length) {
-    if (length <= 0) {
-      return currentIndex;
-    }
-
-    switch (key) {
-      case "ArrowRight":
-      case "ArrowDown":
-        return (currentIndex + 1) % length;
-
-      case "ArrowLeft":
-      case "ArrowUp":
-        return (currentIndex - 1 + length) % length;
-
-      case "Home":
-        return 0;
-
-      case "End":
-        return length - 1;
-
-      default:
-        return currentIndex;
-    }
-  }
-
-  function isNavigationKey(key) {
+  function isProtectedStage(element) {
     return (
-      key === "ArrowRight" ||
-      key === "ArrowDown" ||
-      key === "ArrowLeft" ||
-      key === "ArrowUp" ||
-      key === "Home" ||
-      key === "End"
+      element instanceof HTMLElement &&
+      STAGE_IDS.includes(element.id)
     );
   }
 
-  function createDashboardRecord(container) {
-    const id = readRequiredAttribute(
-      container,
-      ATTRIBUTES.dashboardId,
-      "Gauge dashboard"
-    );
-
-    const controls = toArray(
-      container.querySelectorAll(SELECTORS.gauge)
-    );
-
-    const details = toArray(
-      container.querySelectorAll(SELECTORS.gaugeDetail)
-    );
-
-    if (controls.length === 0) {
-      throw new Error(
-        `Gauge dashboard "${id}" has no controls.`
-      );
-    }
-
-    if (details.length === 0) {
-      throw new Error(
-        `Gauge dashboard "${id}" has no detail articles.`
-      );
-    }
-
-    const controlIds = controls.map((control) =>
-      readRequiredAttribute(
-        control,
-        ATTRIBUTES.gaugeId,
-        `Gauge control in dashboard "${id}"`
-      )
-    );
-
-    const detailIds = details.map((detail) =>
-      readRequiredAttribute(
-        detail,
-        ATTRIBUTES.gaugeDetailId,
-        `Gauge detail in dashboard "${id}"`
-      )
-    );
-
-    assertUniqueValues(
-      controlIds,
-      `Gauge dashboard "${id}" control IDs`
-    );
-
-    assertUniqueValues(
-      detailIds,
-      `Gauge dashboard "${id}" detail IDs`
-    );
-
-    const detailById = new Map(
-      details.map((detail, index) => [
-        detailIds[index],
-        detail
-      ])
-    );
-
-    for (let index = 0; index < controls.length; index += 1) {
-      const control = controls[index];
-      const controlId = controlIds[index];
-      const controlledId = normalizeText(
-        control.getAttribute("aria-controls")
-      );
-
-      if (!controlledId) {
-        throw new Error(
-          `Gauge "${controlId}" in dashboard "${id}" ` +
-          "has no aria-controls target."
-        );
-      }
-
-      const detail = detailById.get(controlId);
-
-      if (!detail) {
-        throw new Error(
-          `Gauge "${controlId}" in dashboard "${id}" ` +
-          "has no matching detail article."
-        );
-      }
-
-      if (detail.id !== controlledId) {
-        throw new Error(
-          `Gauge "${controlId}" in dashboard "${id}" ` +
-          `controls "${controlledId}" but its matching detail ID is ` +
-          `"${detail.id}".`
-        );
-      }
-    }
-
-    if (controls.length !== details.length) {
-      throw new Error(
-        `Gauge dashboard "${id}" has ${controls.length} controls ` +
-        `and ${details.length} details.`
-      );
-    }
-
-    const selectedIndex = findInitialIndex(
-      controls,
-      (control) =>
-        control.getAttribute("aria-expanded") === "true"
-    );
-
-    return {
-      kind: "dashboard",
-      id,
-      container,
-      controls,
-      details,
-      controlIds,
-      detailIds,
-      detailById,
-      selectedIndex,
-      listeners: [],
-      committed: false,
-      held: false,
-      disposed: false,
-      snapshot: {
-        containerState:
-          captureAttribute(
-            container,
-            ATTRIBUTES.dashboardState
-          ),
-
-        controls: controls.map((control) => ({
-          ariaExpanded:
-            captureAttribute(control, "aria-expanded"),
-
-          tabindex:
-            captureAttribute(control, "tabindex")
-        })),
-
-        details: details.map((detail) => ({
-          hidden:
-            captureHidden(detail),
-
-          ariaHidden:
-            captureAttribute(detail, "aria-hidden")
-        }))
-      }
-    };
-  }
-
-  function restoreDashboard(record) {
-    removeListeners(record);
-
-    restoreAttribute(
-      record.snapshot.containerState
-    );
-
-    record.snapshot.controls.forEach((snapshot) => {
-      restoreAttribute(snapshot.ariaExpanded);
-      restoreAttribute(snapshot.tabindex);
+  function publishReceipt(type, payload = {}) {
+    const output = getReceiptOutput();
+    const receipt = Object.freeze({
+      contract: CONTRACT.id,
+      version: CONTRACT.version,
+      sequence: ++state.receiptSequence,
+      type,
+      timestamp: new Date().toISOString(),
+      payload
     });
 
-    record.snapshot.details.forEach((snapshot) => {
-      restoreHidden(snapshot.hidden);
-      restoreAttribute(snapshot.ariaHidden);
-    });
+    if (output) {
+      output.value = JSON.stringify(receipt);
+      output.textContent = JSON.stringify(receipt);
+      output.dataset.showroomGaugesReceiptState = type;
+    }
 
-    record.committed = false;
+    document.dispatchEvent(
+      new CustomEvent("showroom:gauges-receipt", {
+        detail: receipt
+      })
+    );
+
+    return receipt;
   }
 
-  function applyDashboardSelection(
-    record,
-    nextIndex,
-    options = {}
-  ) {
-    if (
-      record.disposed ||
-      record.held ||
-      nextIndex < 0 ||
-      nextIndex >= record.controls.length
-    ) {
+  function validateStageBoundaries() {
+    const violations = [];
+
+    for (const stageId of STAGE_IDS) {
+      const stage = document.getElementById(stageId);
+
+      if (!stage) {
+        violations.push({
+          code: "MISSING_STAGE",
+          stageId
+        });
+        continue;
+      }
+
+      if (stage.hasAttribute("data-showroom-gauge-dashboard")) {
+        violations.push({
+          code: "STAGE_OWNS_GAUGE_DASHBOARD",
+          stageId
+        });
+      }
+
+      if (stage.closest(SELECTORS.frontHost)) {
+        violations.push({
+          code: "STAGE_INSIDE_FRONT_HOST",
+          stageId
+        });
+      }
+    }
+
+    return violations;
+  }
+
+  function validateDashboard(dashboard) {
+    const dashboardId =
+      normalize(dashboard.dataset.gaugeDashboardId) ||
+      normalize(dashboard.id) ||
+      "anonymous-dashboard";
+
+    const gauges = queryAll(SELECTORS.gauge, dashboard);
+    const details = queryAll(SELECTORS.detail, dashboard);
+    const detailIds = new Set(
+      details
+        .map((detail) => normalize(detail.dataset.gaugeDetailId))
+        .filter(Boolean)
+    );
+
+    const violations = [];
+
+    if (!gauges.length) {
+      violations.push({
+        code: "NO_GAUGES",
+        dashboardId
+      });
+    }
+
+    if (!details.length) {
+      violations.push({
+        code: "NO_DETAILS",
+        dashboardId
+      });
+    }
+
+    for (const gauge of gauges) {
+      const gaugeId = normalize(gauge.dataset.gaugeId);
+
+      if (!gaugeId) {
+        violations.push({
+          code: "GAUGE_ID_MISSING",
+          dashboardId
+        });
+        continue;
+      }
+
+      if (!detailIds.has(gaugeId)) {
+        violations.push({
+          code: "DETAIL_MISSING",
+          dashboardId,
+          gaugeId
+        });
+      }
+
+      const controls = normalize(gauge.getAttribute("aria-controls"));
+
+      if (!controls) {
+        violations.push({
+          code: "ARIA_CONTROLS_MISSING",
+          dashboardId,
+          gaugeId
+        });
+      } else if (!document.getElementById(controls)) {
+        violations.push({
+          code: "ARIA_CONTROLS_TARGET_MISSING",
+          dashboardId,
+          gaugeId,
+          controls
+        });
+      }
+    }
+
+    return violations;
+  }
+
+  function validateInformationGroup(group) {
+    const groupId =
+      normalize(group.dataset.informationTabsId) ||
+      normalize(group.id) ||
+      "anonymous-information-group";
+
+    const tabs = queryAll(SELECTORS.informationTab, group);
+    const panels = queryAll(SELECTORS.informationPanel, group);
+    const panelIds = new Set(
+      panels
+        .map((panel) => normalize(panel.dataset.informationPanelId))
+        .filter(Boolean)
+    );
+
+    const violations = [];
+
+    if (!tabs.length) {
+      violations.push({
+        code: "NO_INFORMATION_TABS",
+        groupId
+      });
+    }
+
+    if (!panels.length) {
+      violations.push({
+        code: "NO_INFORMATION_PANELS",
+        groupId
+      });
+    }
+
+    for (const tab of tabs) {
+      const tabId = normalize(tab.dataset.informationTabId);
+
+      if (!tabId) {
+        violations.push({
+          code: "INFORMATION_TAB_ID_MISSING",
+          groupId
+        });
+        continue;
+      }
+
+      if (!panelIds.has(tabId)) {
+        violations.push({
+          code: "INFORMATION_PANEL_MISSING",
+          groupId,
+          tabId
+        });
+      }
+
+      const controls = normalize(tab.getAttribute("aria-controls"));
+
+      if (!controls || !document.getElementById(controls)) {
+        violations.push({
+          code: "INFORMATION_ARIA_CONTROLS_INVALID",
+          groupId,
+          tabId,
+          controls
+        });
+      }
+    }
+
+    return violations;
+  }
+
+  function publishValidation() {
+    const dashboardViolations = queryAll(SELECTORS.dashboard)
+      .flatMap(validateDashboard);
+
+    const informationViolations = queryAll(SELECTORS.informationTabs)
+      .flatMap(validateInformationGroup);
+
+    const violations = [
+      ...validateStageBoundaries(),
+      ...dashboardViolations,
+      ...informationViolations
+    ];
+
+    const result = Object.freeze({
+      contract: CONTRACT.id,
+      valid: violations.length === 0,
+      dashboardCount: queryAll(SELECTORS.dashboard).length,
+      informationGroupCount: queryAll(SELECTORS.informationTabs).length,
+      protectedStages: STAGE_IDS.slice(),
+      violations
+    });
+
+    const output = query(SELECTORS.validation);
+
+    if (output) {
+      output.dataset.showroomGaugesValidation = result.valid
+        ? "PASS"
+        : "FAIL";
+
+      output.value = JSON.stringify(result);
+      output.textContent = JSON.stringify(result);
+    }
+
+    publishReceipt("validation", result);
+
+    return result;
+  }
+
+  function getDashboardId(dashboard) {
+    return (
+      normalize(dashboard.dataset.gaugeDashboardId) ||
+      normalize(dashboard.id)
+    );
+  }
+
+  function findGaugeDetail(dashboard, gaugeId) {
+    return query(
+      `${SELECTORS.detail}[data-gauge-detail-id="${escapeIdentifier(gaugeId)}"]`,
+      dashboard
+    );
+  }
+
+  function updateDashboardState(dashboard, gaugeId, options = {}) {
+    const {
+      focus = false,
+      publish = true,
+      source = "programmatic"
+    } = options;
+
+    if (!(dashboard instanceof HTMLElement)) {
       return false;
     }
 
-    record.selectedIndex = nextIndex;
+    const gauges = queryAll(SELECTORS.gauge, dashboard);
+    const details = queryAll(SELECTORS.detail, dashboard);
 
-    record.controls.forEach((control, index) => {
-      const selected =
-        index === nextIndex;
+    if (!gauges.length || !details.length) {
+      return false;
+    }
 
-      control.setAttribute(
-        "aria-expanded",
-        selected ? "true" : "false"
-      );
+    const requestedGauge = gauges.find(
+      (gauge) => normalize(gauge.dataset.gaugeId) === gaugeId
+    );
 
-      control.setAttribute(
-        "tabindex",
-        selected ? "0" : "-1"
-      );
+    if (!requestedGauge) {
+      return false;
+    }
 
-      const detail =
-        record.detailById.get(record.controlIds[index]);
+    const requestedDetail = findGaugeDetail(dashboard, gaugeId);
 
-      if (detail) {
-        detail.hidden = !selected;
+    if (!requestedDetail) {
+      return false;
+    }
 
-        detail.setAttribute(
-          "aria-hidden",
-          selected ? "false" : "true"
-        );
+    for (const gauge of gauges) {
+      const active = gauge === requestedGauge;
+      setPressed(gauge, active);
+
+      if (active) {
+        gauge.tabIndex = 0;
+      } else {
+        gauge.tabIndex = -1;
       }
+    }
+
+    for (const detail of details) {
+      const active = detail === requestedDetail;
+      setHidden(detail, !active);
+
+      if (active) {
+        detail.setAttribute("data-active", "");
+      } else {
+        detail.removeAttribute("data-active");
+      }
+    }
+
+    dashboard.dataset.gaugeDashboardState = "interactive";
+    dashboard.dataset.activeGaugeId = gaugeId;
+
+    const dashboardId = getDashboardId(dashboard);
+
+    state.dashboards.set(dashboardId, {
+      dashboard,
+      activeGaugeId: gaugeId
     });
 
-    if (options.focus) {
-      focusElement(
-        record.controls[nextIndex]
-      );
+    if (focus) {
+      requestedGauge.focus({ preventScroll: true });
     }
 
-    if (options.receipt !== false) {
-      publishReceipt("dashboard-selection", {
-        dashboardId: record.id,
-        gaugeId: record.controlIds[nextIndex]
+    if (publish) {
+      publishReceipt("gauge-selection", {
+        dashboardId,
+        gaugeId,
+        source
       });
     }
+
+    document.dispatchEvent(
+      new CustomEvent("showroom:gauge-selection", {
+        detail: {
+          dashboardId,
+          gaugeId,
+          source
+        }
+      })
+    );
 
     return true;
   }
 
-  function bindDashboard(record) {
-    record.controls.forEach((control, index) => {
-      addListener(
-        record,
-        control,
-        "click",
-        () => {
-          applyDashboardSelection(
-            record,
-            index,
-            {
-              focus: false
-            }
-          );
-        }
-      );
+  function initializeDashboard(dashboard) {
+    const gauges = queryAll(SELECTORS.gauge, dashboard);
 
-      addListener(
-        record,
-        control,
-        "keydown",
-        (event) => {
-          if (!isNavigationKey(event.key)) {
-            return;
+    if (!gauges.length) {
+      return;
+    }
+
+    const initialGauge =
+      gauges.find(
+        (gauge) => gauge.getAttribute("aria-expanded") === "true"
+      ) ||
+      gauges.find((gauge) => gauge.hasAttribute("data-active")) ||
+      gauges[0];
+
+    const initialGaugeId = normalize(initialGauge.dataset.gaugeId);
+
+    if (!initialGaugeId) {
+      return;
+    }
+
+    for (const gauge of gauges) {
+      if (gauge.dataset.showroomGaugeBound === "true") {
+        continue;
+      }
+
+      gauge.dataset.showroomGaugeBound = "true";
+
+      gauge.addEventListener("click", () => {
+        updateDashboardState(
+          dashboard,
+          normalize(gauge.dataset.gaugeId),
+          {
+            source: "pointer"
           }
-
-          event.preventDefault();
-
-          const nextIndex =
-            nextIndexForKey(
-              event.key,
-              record.selectedIndex,
-              record.controls.length
-            );
-
-          applyDashboardSelection(
-            record,
-            nextIndex,
-            {
-              focus: true
-            }
-          );
-        }
-      );
-    });
-  }
-
-  function commitDashboard(record) {
-    applyDashboardSelection(
-      record,
-      record.selectedIndex,
-      {
-        focus: false,
-        receipt: false
-      }
-    );
-
-    bindDashboard(record);
-
-    record.container.setAttribute(
-      ATTRIBUTES.dashboardState,
-      LOCAL_STATES.READY
-    );
-
-    record.committed = true;
-    record.held = false;
-  }
-
-  function holdDashboard(record) {
-    if (record.disposed) {
-      return;
-    }
-
-    record.held = true;
-
-    record.container.setAttribute(
-      ATTRIBUTES.dashboardState,
-      LOCAL_STATES.HELD
-    );
-  }
-
-  function resumeDashboard(record) {
-    if (
-      record.disposed ||
-      !record.committed
-    ) {
-      return;
-    }
-
-    record.held = false;
-
-    record.container.setAttribute(
-      ATTRIBUTES.dashboardState,
-      LOCAL_STATES.READY
-    );
-
-    applyDashboardSelection(
-      record,
-      record.selectedIndex,
-      {
-        focus: false,
-        receipt: false
-      }
-    );
-  }
-
-  function createCompositionRecord(container) {
-    const id = readRequiredAttribute(
-      container,
-      ATTRIBUTES.compositionId,
-      "Composition group"
-    );
-
-    const regions = toArray(
-      container.querySelectorAll(
-        SELECTORS.compositionRegion
-      )
-    );
-
-    if (regions.length === 0) {
-      throw new Error(
-        `Composition group "${id}" has no regions.`
-      );
-    }
-
-    const regionIds = regions.map((region) =>
-      readRequiredAttribute(
-        region,
-        ATTRIBUTES.regionId,
-        `Composition region in "${id}"`
-      )
-    );
-
-    assertUniqueValues(
-      regionIds,
-      `Composition group "${id}" region IDs`
-    );
-
-    const sources = regions.map((region, index) => {
-      const directChildren =
-        toArray(region.children);
-
-      const indexNode =
-        directChildren.find(
-          (child) =>
-            child.tagName.toLowerCase() === "span"
         );
-
-      const titleNode =
-        directChildren.find(
-          (child) =>
-            child.tagName.toLowerCase() === "strong"
-        );
-
-      const descriptionNode =
-        directChildren.find(
-          (child) =>
-            child.tagName.toLowerCase() === "small"
-        );
-
-      if (
-        !indexNode ||
-        !titleNode ||
-        !descriptionNode
-      ) {
-        throw new Error(
-          `Composition region "${regionIds[index]}" in "${id}" ` +
-          "must contain direct span, strong, and small children."
-        );
-      }
-
-      const source = Object.freeze({
-        index:
-          normalizeText(indexNode.textContent),
-
-        title:
-          normalizeText(titleNode.textContent),
-
-        description:
-          normalizeText(descriptionNode.textContent)
       });
 
-      if (
-        !source.index ||
-        !source.title ||
-        !source.description
-      ) {
-        throw new Error(
-          `Composition region "${regionIds[index]}" in "${id}" ` +
-          "contains incomplete authored content."
-        );
-      }
-
-      return source;
-    });
-
-    const detail =
-      container.querySelector(
-        SELECTORS.compositionDetail
-      );
-
-    const detailIndex =
-      container.querySelector(
-        SELECTORS.compositionDetailIndex
-      );
-
-    const detailTitle =
-      container.querySelector(
-        SELECTORS.compositionDetailTitle
-      );
-
-    const detailDescription =
-      container.querySelector(
-        SELECTORS.compositionDetailDescription
-      );
-
-    if (
-      !detail ||
-      !detailIndex ||
-      !detailTitle ||
-      !detailDescription
-    ) {
-      throw new Error(
-        `Composition group "${id}" is missing its shared detail surface.`
-      );
-    }
-
-    const selectedIndex = findInitialIndex(
-      regions,
-      (region) =>
-        region.getAttribute("aria-pressed") === "true"
-    );
-
-    return {
-      kind: "composition",
-      id,
-      container,
-      regions,
-      regionIds,
-      sources,
-      detail,
-      detailIndex,
-      detailTitle,
-      detailDescription,
-      selectedIndex,
-      listeners: [],
-      committed: false,
-      held: false,
-      disposed: false,
-      snapshot: {
-        containerState:
-          captureAttribute(
-            container,
-            ATTRIBUTES.compositionState
-          ),
-
-        regions: regions.map((region) => ({
-          ariaPressed:
-            captureAttribute(region, "aria-pressed"),
-
-          tabindex:
-            captureAttribute(region, "tabindex")
-        })),
-
-        detailIndex:
-          captureText(detailIndex),
-
-        detailTitle:
-          captureText(detailTitle),
-
-        detailDescription:
-          captureText(detailDescription)
-      }
-    };
-  }
-
-  function restoreComposition(record) {
-    removeListeners(record);
-
-    restoreAttribute(
-      record.snapshot.containerState
-    );
-
-    record.snapshot.regions.forEach((snapshot) => {
-      restoreAttribute(snapshot.ariaPressed);
-      restoreAttribute(snapshot.tabindex);
-    });
-
-    restoreText(record.snapshot.detailIndex);
-    restoreText(record.snapshot.detailTitle);
-    restoreText(record.snapshot.detailDescription);
-
-    record.committed = false;
-  }
-
-  function applyCompositionSelection(
-    record,
-    nextIndex,
-    options = {}
-  ) {
-    if (
-      record.disposed ||
-      record.held ||
-      nextIndex < 0 ||
-      nextIndex >= record.regions.length
-    ) {
-      return false;
-    }
-
-    record.selectedIndex = nextIndex;
-
-    record.regions.forEach((region, index) => {
-      const selected =
-        index === nextIndex;
-
-      region.setAttribute(
-        "aria-pressed",
-        selected ? "true" : "false"
-      );
-
-      region.setAttribute(
-        "tabindex",
-        selected ? "0" : "-1"
-      );
-    });
-
-    const source =
-      record.sources[nextIndex];
-
-    record.detailIndex.textContent =
-      source.index;
-
-    record.detailTitle.textContent =
-      source.title;
-
-    record.detailDescription.textContent =
-      source.description;
-
-    if (options.focus) {
-      focusElement(
-        record.regions[nextIndex]
-      );
-    }
-
-    if (options.receipt !== false) {
-      publishReceipt("composition-selection", {
-        compositionId: record.id,
-        regionId: record.regionIds[nextIndex]
-      });
-    }
-
-    return true;
-  }
-
-  function bindComposition(record) {
-    record.regions.forEach((region, index) => {
-      addListener(
-        record,
-        region,
-        "click",
-        () => {
-          applyCompositionSelection(
-            record,
-            index,
-            {
-              focus: false
-            }
-          );
-        }
-      );
-
-      addListener(
-        record,
-        region,
-        "keydown",
-        (event) => {
-          if (!isNavigationKey(event.key)) {
-            return;
-          }
-
-          event.preventDefault();
-
-          const nextIndex =
-            nextIndexForKey(
-              event.key,
-              record.selectedIndex,
-              record.regions.length
-            );
-
-          applyCompositionSelection(
-            record,
-            nextIndex,
-            {
-              focus: true
-            }
-          );
-        }
-      );
-    });
-  }
-
-  function commitComposition(record) {
-    applyCompositionSelection(
-      record,
-      record.selectedIndex,
-      {
-        focus: false,
-        receipt: false
-      }
-    );
-
-    bindComposition(record);
-
-    record.container.setAttribute(
-      ATTRIBUTES.compositionState,
-      LOCAL_STATES.READY
-    );
-
-    record.committed = true;
-    record.held = false;
-  }
-
-  function holdComposition(record) {
-    if (record.disposed) {
-      return;
-    }
-
-    record.held = true;
-
-    record.container.setAttribute(
-      ATTRIBUTES.compositionState,
-      LOCAL_STATES.HELD
-    );
-  }
-
-  function resumeComposition(record) {
-    if (
-      record.disposed ||
-      !record.committed
-    ) {
-      return;
-    }
-
-    record.held = false;
-
-    record.container.setAttribute(
-      ATTRIBUTES.compositionState,
-      LOCAL_STATES.READY
-    );
-
-    applyCompositionSelection(
-      record,
-      record.selectedIndex,
-      {
-        focus: false,
-        receipt: false
-      }
-    );
-  }
-
-  function createInformationRecord(container) {
-    const id = readRequiredAttribute(
-      container,
-      ATTRIBUTES.informationId,
-      "Information group"
-    );
-
-    const tabs = toArray(
-      container.querySelectorAll(
-        SELECTORS.informationTab
-      )
-    );
-
-    const panels = toArray(
-      container.querySelectorAll(
-        SELECTORS.informationPanel
-      )
-    );
-
-    if (tabs.length === 0) {
-      throw new Error(
-        `Information group "${id}" has no tabs.`
-      );
-    }
-
-    if (panels.length === 0) {
-      throw new Error(
-        `Information group "${id}" has no panels.`
-      );
-    }
-
-    if (tabs.length !== panels.length) {
-      throw new Error(
-        `Information group "${id}" has ${tabs.length} tabs ` +
-        `and ${panels.length} panels.`
-      );
-    }
-
-    const tabIds = tabs.map((tab) =>
-      readRequiredAttribute(
-        tab,
-        ATTRIBUTES.informationTabId,
-        `Information tab in "${id}"`
-      )
-    );
-
-    const panelIds = panels.map((panel) =>
-      readRequiredAttribute(
-        panel,
-        ATTRIBUTES.informationPanelId,
-        `Information panel in "${id}"`
-      )
-    );
-
-    assertUniqueValues(
-      tabIds,
-      `Information group "${id}" tab IDs`
-    );
-
-    assertUniqueValues(
-      panelIds,
-      `Information group "${id}" panel IDs`
-    );
-
-    const panelById = new Map(
-      panels.map((panel, index) => [
-        panelIds[index],
-        panel
-      ])
-    );
-
-    tabs.forEach((tab, index) => {
-      const tabId =
-        tabIds[index];
-
-      const controlledId =
-        normalizeText(
-          tab.getAttribute("aria-controls")
-        );
-
-      if (!controlledId) {
-        throw new Error(
-          `Information tab "${tabId}" in "${id}" ` +
-          "has no aria-controls target."
-        );
-      }
-
-      const panel =
-        panelById.get(tabId);
-
-      if (!panel) {
-        throw new Error(
-          `Information tab "${tabId}" in "${id}" ` +
-          "has no matching panel."
-        );
-      }
-
-      if (panel.id !== controlledId) {
-        throw new Error(
-          `Information tab "${tabId}" in "${id}" ` +
-          `controls "${controlledId}" but its matching panel ID is ` +
-          `"${panel.id}".`
-        );
-      }
-
-      if (
-        normalizeText(
-          panel.getAttribute("aria-labelledby")
-        ) !== tab.id
-      ) {
-        throw new Error(
-          `Information panel "${panel.id}" in "${id}" ` +
-          `is not labelled by tab "${tab.id}".`
-        );
-      }
-    });
-
-    const selectedIndex = findInitialIndex(
-      tabs,
-      (tab) =>
-        tab.getAttribute("aria-selected") === "true"
-    );
-
-    return {
-      kind: "information",
-      id,
-      container,
-      tabs,
-      panels,
-      tabIds,
-      panelIds,
-      panelById,
-      selectedIndex,
-      listeners: [],
-      committed: false,
-      held: false,
-      disposed: false,
-      snapshot: {
-        containerState:
-          captureAttribute(
-            container,
-            ATTRIBUTES.informationState
-          ),
-
-        activeInformationTab:
-          captureAttribute(
-            runtime.root,
-            ATTRIBUTES.rootActiveInformationTab
-          ),
-
-        tabs: tabs.map((tab) => ({
-          ariaSelected:
-            captureAttribute(tab, "aria-selected"),
-
-          tabindex:
-            captureAttribute(tab, "tabindex")
-        })),
-
-        panels: panels.map((panel) => ({
-          hidden:
-            captureHidden(panel),
-
-          ariaHidden:
-            captureAttribute(panel, "aria-hidden")
-        }))
-      }
-    };
-  }
-
-  function restoreInformation(record) {
-    removeListeners(record);
-
-    restoreAttribute(
-      record.snapshot.containerState
-    );
-
-    restoreAttribute(
-      record.snapshot.activeInformationTab
-    );
-
-    record.snapshot.tabs.forEach((snapshot) => {
-      restoreAttribute(snapshot.ariaSelected);
-      restoreAttribute(snapshot.tabindex);
-    });
-
-    record.snapshot.panels.forEach((snapshot) => {
-      restoreHidden(snapshot.hidden);
-      restoreAttribute(snapshot.ariaHidden);
-    });
-
-    record.committed = false;
-  }
-
-  function applyInformationSelection(
-    record,
-    nextIndex,
-    options = {}
-  ) {
-    if (
-      record.disposed ||
-      record.held ||
-      nextIndex < 0 ||
-      nextIndex >= record.tabs.length
-    ) {
-      return false;
-    }
-
-    record.selectedIndex = nextIndex;
-
-    record.tabs.forEach((tab, index) => {
-      const selected =
-        index === nextIndex;
-
-      tab.setAttribute(
-        "aria-selected",
-        selected ? "true" : "false"
-      );
-
-      tab.setAttribute(
-        "tabindex",
-        selected ? "0" : "-1"
-      );
-
-      const panel =
-        record.panelById.get(record.tabIds[index]);
-
-      if (panel) {
-        panel.hidden = !selected;
-
-        panel.setAttribute(
-          "aria-hidden",
-          selected ? "false" : "true"
-        );
-      }
-    });
-
-    runtime.root.setAttribute(
-      ATTRIBUTES.rootActiveInformationTab,
-      record.tabIds[nextIndex]
-    );
-
-    if (options.focus) {
-      focusElement(
-        record.tabs[nextIndex]
-      );
-    }
-
-    if (options.receipt !== false) {
-      publishReceipt("information-selection", {
-        informationGroupId: record.id,
-        tabId: record.tabIds[nextIndex]
-      });
-    }
-
-    return true;
-  }
-
-  function bindInformation(record) {
-    record.tabs.forEach((tab, index) => {
-      addListener(
-        record,
-        tab,
-        "click",
-        () => {
-          applyInformationSelection(
-            record,
-            index,
-            {
-              focus: false
-            }
-          );
-        }
-      );
-
-      addListener(
-        record,
-        tab,
-        "keydown",
-        (event) => {
-          if (!isNavigationKey(event.key)) {
-            return;
-          }
-
-          event.preventDefault();
-
-          const nextIndex =
-            nextIndexForKey(
-              event.key,
-              record.selectedIndex,
-              record.tabs.length
-            );
-
-          applyInformationSelection(
-            record,
-            nextIndex,
-            {
-              focus: true
-            }
-          );
-        }
-      );
-    });
-  }
-
-  function commitInformation(record) {
-    applyInformationSelection(
-      record,
-      record.selectedIndex,
-      {
-        focus: false,
-        receipt: false
-      }
-    );
-
-    bindInformation(record);
-
-    record.container.setAttribute(
-      ATTRIBUTES.informationState,
-      LOCAL_STATES.READY
-    );
-
-    record.committed = true;
-    record.held = false;
-  }
-
-  function holdInformation(record) {
-    if (record.disposed) {
-      return;
-    }
-
-    record.held = true;
-
-    record.container.setAttribute(
-      ATTRIBUTES.informationState,
-      LOCAL_STATES.HELD
-    );
-  }
-
-  function resumeInformation(record) {
-    if (
-      record.disposed ||
-      !record.committed
-    ) {
-      return;
-    }
-
-    record.held = false;
-
-    record.container.setAttribute(
-      ATTRIBUTES.informationState,
-      LOCAL_STATES.READY
-    );
-
-    applyInformationSelection(
-      record,
-      record.selectedIndex,
-      {
-        focus: false,
-        receipt: false
-      }
-    );
-  }
-
-  function initializeDashboard(container) {
-    let record = null;
-
-    try {
-      record =
-        createDashboardRecord(container);
-
-      runtime.dashboards.push(record);
-
-      commitDashboard(record);
-
-      publishReceipt("dashboard-ready", {
-        dashboardId: record.id,
-        controlCount: record.controls.length
-      });
-    } catch (error) {
-      const identity =
-        normalizeText(
-          container.getAttribute(
-            ATTRIBUTES.dashboardId
-          )
-        ) || "unknown";
-
-      if (record) {
-        restoreDashboard(record);
-        record.held = true;
-
-        record.container.setAttribute(
-          ATTRIBUTES.dashboardState,
-          LOCAL_STATES.HELD
-        );
-      } else {
-        container.setAttribute(
-          ATTRIBUTES.dashboardState,
-          LOCAL_STATES.HELD
-        );
-      }
-
-      createIssue(
-        "dashboard",
-        identity,
-        error instanceof Error
-          ? error.message
-          : String(error)
-      );
-
-      publishReceipt("dashboard-held", {
-        dashboardId: identity,
-        reason:
-          error instanceof Error
-            ? error.message
-            : String(error)
-      });
-    }
-  }
-
-  function initializeComposition(container) {
-    let record = null;
-
-    try {
-      record =
-        createCompositionRecord(container);
-
-      runtime.compositions.push(record);
-
-      commitComposition(record);
-
-      publishReceipt("composition-ready", {
-        compositionId: record.id,
-        regionCount: record.regions.length
-      });
-    } catch (error) {
-      const identity =
-        normalizeText(
-          container.getAttribute(
-            ATTRIBUTES.compositionId
-          )
-        ) || "unknown";
-
-      if (record) {
-        restoreComposition(record);
-        record.held = true;
-
-        record.container.setAttribute(
-          ATTRIBUTES.compositionState,
-          LOCAL_STATES.HELD
-        );
-      } else {
-        container.setAttribute(
-          ATTRIBUTES.compositionState,
-          LOCAL_STATES.HELD
-        );
-      }
-
-      createIssue(
-        "composition",
-        identity,
-        error instanceof Error
-          ? error.message
-          : String(error)
-      );
-
-      publishReceipt("composition-held", {
-        compositionId: identity,
-        reason:
-          error instanceof Error
-            ? error.message
-            : String(error)
-      });
-    }
-  }
-
-  function initializeInformation(container) {
-    let record = null;
-
-    try {
-      record =
-        createInformationRecord(container);
-
-      runtime.informationGroups.push(record);
-
-      commitInformation(record);
-
-      publishReceipt("information-ready", {
-        informationGroupId: record.id,
-        tabCount: record.tabs.length
-      });
-    } catch (error) {
-      const identity =
-        normalizeText(
-          container.getAttribute(
-            ATTRIBUTES.informationId
-          )
-        ) || "unknown";
-
-      if (record) {
-        restoreInformation(record);
-        record.held = true;
-
-        record.container.setAttribute(
-          ATTRIBUTES.informationState,
-          LOCAL_STATES.HELD
-        );
-      } else {
-        container.setAttribute(
-          ATTRIBUTES.informationState,
-          LOCAL_STATES.HELD
-        );
-      }
-
-      createIssue(
-        "information",
-        identity,
-        error instanceof Error
-          ? error.message
-          : String(error)
-      );
-
-      publishReceipt("information-held", {
-        informationGroupId: identity,
-        reason:
-          error instanceof Error
-            ? error.message
-            : String(error)
-      });
-    }
-  }
-
-  function validateExpectedCounts() {
-    const counts = {
-      dashboards: runtime.dashboards.length,
-      compositions: runtime.compositions.length,
-      informationGroups: runtime.informationGroups.length
-    };
-
-    if (counts.dashboards !== EXPECTED.dashboards) {
-      createIssue(
-        "cardinality",
-        "dashboards",
-        `Expected ${EXPECTED.dashboards} dashboards; ` +
-        `discovered ${counts.dashboards}.`
-      );
-    }
-
-    if (counts.compositions !== EXPECTED.compositions) {
-      createIssue(
-        "cardinality",
-        "compositions",
-        `Expected ${EXPECTED.compositions} composition group; ` +
-        `discovered ${counts.compositions}.`
-      );
-    }
-
-    if (
-      counts.informationGroups !==
-      EXPECTED.informationGroups
-    ) {
-      createIssue(
-        "cardinality",
-        "information-groups",
-        `Expected ${EXPECTED.informationGroups} information group; ` +
-        `discovered ${counts.informationGroups}.`
-      );
-    }
-  }
-
-  function holdRuntime(reason) {
-    if (
-      runtime.disposed ||
-      runtime.held
-    ) {
-      return;
-    }
-
-    runtime.held = true;
-
-    runtime.dashboards.forEach(
-      holdDashboard
-    );
-
-    runtime.compositions.forEach(
-      holdComposition
-    );
-
-    runtime.informationGroups.forEach(
-      holdInformation
-    );
-
-    reflectRootState();
-
-    publishReceipt("runtime-held", {
-      reason:
-        normalizeText(reason) || "unspecified"
-    });
-  }
-
-  function resumeRuntime(reason) {
-    if (
-      runtime.disposed ||
-      !runtime.held
-    ) {
-      return;
-    }
-
-    runtime.held = false;
-
-    runtime.dashboards.forEach(
-      resumeDashboard
-    );
-
-    runtime.compositions.forEach(
-      resumeComposition
-    );
-
-    runtime.informationGroups.forEach(
-      resumeInformation
-    );
-
-    reflectRootState();
-
-    publishReceipt("runtime-resumed", {
-      reason:
-        normalizeText(reason) || "unspecified"
-    });
-  }
-
-  function disposeRecord(record) {
-    if (
-      !record ||
-      record.disposed
-    ) {
-      return;
-    }
-
-    try {
-      switch (record.kind) {
-        case "dashboard":
-          restoreDashboard(record);
-
-          record.container.setAttribute(
-            ATTRIBUTES.dashboardState,
-            LOCAL_STATES.DISPOSED
-          );
-          break;
-
-        case "composition":
-          restoreComposition(record);
-
-          record.container.setAttribute(
-            ATTRIBUTES.compositionState,
-            LOCAL_STATES.DISPOSED
-          );
-          break;
-
-        case "information":
-          restoreInformation(record);
-
-          record.container.setAttribute(
-            ATTRIBUTES.informationState,
-            LOCAL_STATES.DISPOSED
-          );
-          break;
-
-        default:
-          removeListeners(record);
-      }
-    } finally {
-      record.held = false;
-      record.committed = false;
-      record.disposed = true;
-    }
-  }
-
-  function disposeRuntime(reason = "manual") {
-    if (runtime.disposed) {
-      return;
-    }
-
-    const receiptTarget =
-      runtime.receipt;
-
-    for (const record of getAllRecords()) {
-      disposeRecord(record);
-    }
-
-    removeLifecycleListeners();
-
-    restoreRootSnapshot();
-
-    if (runtime.root) {
-      runtime.root.setAttribute(
-        ATTRIBUTES.rootState,
-        ROOT_STATES.DISPOSED
-      );
-
-      runtime.root.setAttribute(
-        ATTRIBUTES.rootReady,
-        "false"
-      );
-    }
-
-    runtime.disposed = true;
-    runtime.held = false;
-
-    if (
-      runtime.api &&
-      window.ShowroomGauges === runtime.api
-    ) {
-      try {
-        delete window.ShowroomGauges;
-      } catch {
-        window.ShowroomGauges = undefined;
-      }
-    }
-
-    if (receiptTarget) {
-      runtime.receipt = receiptTarget;
-
-      publishReceipt("runtime-disposed", {
-        reason:
-          normalizeText(reason) || "manual"
-      });
-    }
-  }
-
-  function fatalRollback(error) {
-    for (const record of getAllRecords()) {
-      try {
-        switch (record.kind) {
-          case "dashboard":
-            restoreDashboard(record);
+      gauge.addEventListener("keydown", (event) => {
+        const currentIndex = gauges.indexOf(gauge);
+        let nextIndex = currentIndex;
+
+        switch (event.key) {
+          case "ArrowRight":
+          case "ArrowDown":
+            nextIndex = (currentIndex + 1) % gauges.length;
             break;
 
-          case "composition":
-            restoreComposition(record);
+          case "ArrowLeft":
+          case "ArrowUp":
+            nextIndex =
+              (currentIndex - 1 + gauges.length) % gauges.length;
             break;
 
-          case "information":
-            restoreInformation(record);
+          case "Home":
+            nextIndex = 0;
+            break;
+
+          case "End":
+            nextIndex = gauges.length - 1;
             break;
 
           default:
-            removeListeners(record);
+            return;
         }
-      } catch {
-        /* Continue restoring neighboring surfaces. */
-      }
+
+        event.preventDefault();
+
+        const nextGauge = gauges[nextIndex];
+        const nextGaugeId = normalize(nextGauge.dataset.gaugeId);
+
+        updateDashboardState(dashboard, nextGaugeId, {
+          focus: true,
+          source: "keyboard"
+        });
+      });
     }
 
-    removeLifecycleListeners();
-    restoreRootSnapshot();
+    updateDashboardState(dashboard, initialGaugeId, {
+      publish: false,
+      source: "initialization"
+    });
+  }
 
-    if (runtime.root) {
-      setRootState(ROOT_STATES.FAILED);
+  function getInformationGroupId(group) {
+    return (
+      normalize(group.dataset.informationTabsId) ||
+      normalize(group.id)
+    );
+  }
+
+  function findInformationPanel(group, panelId) {
+    return query(
+      `${SELECTORS.informationPanel}[data-information-panel-id="${escapeIdentifier(panelId)}"]`,
+      group
+    );
+  }
+
+  function updateInformationState(group, panelId, options = {}) {
+    const {
+      focus = false,
+      publish = true,
+      source = "programmatic"
+    } = options;
+
+    if (!(group instanceof HTMLElement)) {
+      return false;
     }
 
-    createIssue(
-      "runtime",
-      CONTRACT,
-      error instanceof Error
-        ? error.message
-        : String(error)
+    const tabs = queryAll(SELECTORS.informationTab, group);
+    const panels = queryAll(SELECTORS.informationPanel, group);
+
+    const requestedTab = tabs.find(
+      (tab) => normalize(tab.dataset.informationTabId) === panelId
     );
 
-    publishReceipt("runtime-failed", {
-      reason:
-        error instanceof Error
-          ? error.message
-          : String(error)
-    });
-  }
+    const requestedPanel = findInformationPanel(group, panelId);
 
-  function findDashboardRecord(dashboardId) {
-    return runtime.dashboards.find(
-      (record) =>
-        record.id === dashboardId
-    ) || null;
-  }
+    if (!requestedTab || !requestedPanel) {
+      return false;
+    }
 
-  function findCompositionRecord(compositionId) {
-    return runtime.compositions.find(
-      (record) =>
-        record.id === compositionId
-    ) || null;
-  }
+    for (const tab of tabs) {
+      const active = tab === requestedTab;
 
-  function findInformationRecord(informationId) {
-    return runtime.informationGroups.find(
-      (record) =>
-        record.id === informationId
-    ) || null;
-  }
+      tab.setAttribute("aria-selected", active ? "true" : "false");
+      tab.tabIndex = active ? 0 : -1;
 
-  function createPublicApi() {
-    const api = Object.freeze({
-      contract: CONTRACT,
-      version: VERSION,
-
-      getState() {
-        return Object.freeze({
-          rootState:
-            runtime.root?.getAttribute(
-              ATTRIBUTES.rootState
-            ) || "",
-
-          ready:
-            runtime.root?.getAttribute(
-              ATTRIBUTES.rootReady
-            ) === "true",
-
-          held:
-            runtime.held,
-
-          disposed:
-            runtime.disposed,
-
-          dashboards:
-            runtime.dashboards.map(
-              (record) =>
-                Object.freeze({
-                  id: record.id,
-                  state:
-                    record.container.getAttribute(
-                      ATTRIBUTES.dashboardState
-                    ) || "",
-                  selectedGaugeId:
-                    record.controlIds[
-                      record.selectedIndex
-                    ] || ""
-                })
-            ),
-
-          compositions:
-            runtime.compositions.map(
-              (record) =>
-                Object.freeze({
-                  id: record.id,
-                  state:
-                    record.container.getAttribute(
-                      ATTRIBUTES.compositionState
-                    ) || "",
-                  selectedRegionId:
-                    record.regionIds[
-                      record.selectedIndex
-                    ] || ""
-                })
-            ),
-
-          informationGroups:
-            runtime.informationGroups.map(
-              (record) =>
-                Object.freeze({
-                  id: record.id,
-                  state:
-                    record.container.getAttribute(
-                      ATTRIBUTES.informationState
-                    ) || "",
-                  selectedTabId:
-                    record.tabIds[
-                      record.selectedIndex
-                    ] || ""
-                })
-            ),
-
-          issues:
-            runtime.issues.slice()
-        });
-      },
-
-      selectGauge(dashboardId, gaugeId, options = {}) {
-        const record =
-          findDashboardRecord(
-            normalizeText(dashboardId)
-          );
-
-        if (!record) {
-          return false;
-        }
-
-        const index =
-          record.controlIds.indexOf(
-            normalizeText(gaugeId)
-          );
-
-        if (index < 0) {
-          return false;
-        }
-
-        return applyDashboardSelection(
-          record,
-          index,
-          {
-            focus:
-              Boolean(options.focus)
-          }
-        );
-      },
-
-      selectComposition(
-        compositionId,
-        regionId,
-        options = {}
-      ) {
-        const record =
-          findCompositionRecord(
-            normalizeText(compositionId)
-          );
-
-        if (!record) {
-          return false;
-        }
-
-        const index =
-          record.regionIds.indexOf(
-            normalizeText(regionId)
-          );
-
-        if (index < 0) {
-          return false;
-        }
-
-        return applyCompositionSelection(
-          record,
-          index,
-          {
-            focus:
-              Boolean(options.focus)
-          }
-        );
-      },
-
-      selectInformation(
-        informationId,
-        tabId,
-        options = {}
-      ) {
-        const record =
-          findInformationRecord(
-            normalizeText(informationId)
-          );
-
-        if (!record) {
-          return false;
-        }
-
-        const index =
-          record.tabIds.indexOf(
-            normalizeText(tabId)
-          );
-
-        if (index < 0) {
-          return false;
-        }
-
-        return applyInformationSelection(
-          record,
-          index,
-          {
-            focus:
-              Boolean(options.focus)
-          }
-        );
-      },
-
-      hold(reason = "api") {
-        holdRuntime(reason);
-      },
-
-      resume(reason = "api") {
-        resumeRuntime(reason);
-      },
-
-      dispose(reason = "api") {
-        disposeRuntime(reason);
+      if (active) {
+        tab.setAttribute("data-active", "");
+      } else {
+        tab.removeAttribute("data-active");
       }
+    }
+
+    for (const panel of panels) {
+      const active = panel === requestedPanel;
+      setHidden(panel, !active);
+
+      if (active) {
+        panel.setAttribute("data-active", "");
+      } else {
+        panel.removeAttribute("data-active");
+      }
+    }
+
+    group.dataset.showroomInformationState = "interactive";
+    group.dataset.activeInformationPanel = panelId;
+
+    const root = getRoot();
+
+    if (root) {
+      root.dataset.showroomActiveInformationTab = panelId;
+    }
+
+    const groupId = getInformationGroupId(group);
+
+    state.informationGroups.set(groupId, {
+      group,
+      activePanelId: panelId
     });
 
-    runtime.api = api;
+    if (focus) {
+      requestedTab.focus({ preventScroll: true });
+    }
 
-    return api;
+    if (publish) {
+      publishReceipt("information-selection", {
+        groupId,
+        panelId,
+        source
+      });
+    }
+
+    document.dispatchEvent(
+      new CustomEvent("showroom:information-selection", {
+        detail: {
+          groupId,
+          panelId,
+          source
+        }
+      })
+    );
+
+    return true;
   }
 
-  function bindLifecycle() {
-    addLifecycleListener(
-      window,
-      "pagehide",
+  function initializeInformationGroup(group) {
+    const tabs = queryAll(SELECTORS.informationTab, group);
+
+    if (!tabs.length) {
+      return;
+    }
+
+    const initialTab =
+      tabs.find(
+        (tab) => tab.getAttribute("aria-selected") === "true"
+      ) ||
+      tabs.find(
+        (tab) =>
+          normalize(tab.dataset.informationTabId) === "platform"
+      ) ||
+      tabs[0];
+
+    const initialPanelId = normalize(
+      initialTab.dataset.informationTabId
+    );
+
+    if (!initialPanelId) {
+      return;
+    }
+
+    for (const tab of tabs) {
+      if (tab.dataset.showroomInformationTabBound === "true") {
+        continue;
+      }
+
+      tab.dataset.showroomInformationTabBound = "true";
+
+      tab.addEventListener("click", () => {
+        updateInformationState(
+          group,
+          normalize(tab.dataset.informationTabId),
+          {
+            source: "pointer"
+          }
+        );
+      });
+
+      tab.addEventListener("keydown", (event) => {
+        const currentIndex = tabs.indexOf(tab);
+        let nextIndex = currentIndex;
+
+        switch (event.key) {
+          case "ArrowRight":
+          case "ArrowDown":
+            nextIndex = (currentIndex + 1) % tabs.length;
+            break;
+
+          case "ArrowLeft":
+          case "ArrowUp":
+            nextIndex =
+              (currentIndex - 1 + tabs.length) % tabs.length;
+            break;
+
+          case "Home":
+            nextIndex = 0;
+            break;
+
+          case "End":
+            nextIndex = tabs.length - 1;
+            break;
+
+          default:
+            return;
+        }
+
+        event.preventDefault();
+
+        const nextTab = tabs[nextIndex];
+        const nextPanelId = normalize(
+          nextTab.dataset.informationTabId
+        );
+
+        updateInformationState(group, nextPanelId, {
+          focus: true,
+          source: "keyboard"
+        });
+      });
+    }
+
+    updateInformationState(group, initialPanelId, {
+      publish: false,
+      source: "initialization"
+    });
+  }
+
+  function getFrontId(front) {
+    return (
+      normalize(front.dataset.showroomGaugeSet) ||
+      normalize(front.id)
+    );
+  }
+
+  function findFront(frontId) {
+    if (!frontId) {
+      return null;
+    }
+
+    return (
+      document.getElementById(frontId) ||
+      query(
+        `${SELECTORS.front}[data-showroom-gauge-set="${escapeIdentifier(frontId)}"]`
+      )
+    );
+  }
+
+  function setSupportingFront(frontId, options = {}) {
+    const {
+      scroll = false,
+      focus = false,
+      publish = true,
+      source = "programmatic"
+    } = options;
+
+    const root = getRoot();
+    const frontHost = query(SELECTORS.frontHost);
+    const target = findFront(frontId);
+
+    if (!target || isProtectedStage(target)) {
+      return false;
+    }
+
+    if (frontHost && frontHost.contains(target)) {
+      const fronts = queryAll(SELECTORS.front, frontHost);
+
+      for (const front of fronts) {
+        const active = front === target;
+
+        front.dataset.showroomFrontState = active
+          ? "active"
+          : "inactive";
+
+        setHidden(front, !active);
+      }
+    } else {
+      target.dataset.showroomFrontState = "active";
+      target.hidden = false;
+      target.setAttribute("aria-hidden", "false");
+    }
+
+    const normalizedFrontId = getFrontId(target) || frontId;
+
+    state.activeFrontId = normalizedFrontId;
+
+    if (root) {
+      root.dataset.showroomActiveFront = normalizedFrontId;
+      root.dataset.showroomActiveGaugeSet = normalizedFrontId;
+    }
+
+    if (scroll) {
+      target.scrollIntoView({
+        behavior: prefersReducedMotion() ? "auto" : "smooth",
+        block: "start"
+      });
+    }
+
+    if (focus) {
+      const heading = query("h2, h3", target);
+
+      if (heading) {
+        const previousTabIndex = heading.getAttribute("tabindex");
+        heading.tabIndex = -1;
+        heading.focus({ preventScroll: true });
+
+        if (previousTabIndex === null) {
+          heading.addEventListener(
+            "blur",
+            () => heading.removeAttribute("tabindex"),
+            { once: true }
+          );
+        }
+      }
+    }
+
+    if (publish) {
+      publishReceipt("front-selection", {
+        frontId: normalizedFrontId,
+        source
+      });
+    }
+
+    document.dispatchEvent(
+      new CustomEvent("showroom:front-selection", {
+        detail: {
+          frontId: normalizedFrontId,
+          source
+        }
+      })
+    );
+
+    return true;
+  }
+
+  function revealAllSupportingFronts(options = {}) {
+    const {
+      publish = true,
+      source = "programmatic"
+    } = options;
+
+    const frontHost = query(SELECTORS.frontHost);
+
+    if (frontHost) {
+      for (const front of queryAll(SELECTORS.front, frontHost)) {
+        front.hidden = false;
+        front.setAttribute("aria-hidden", "false");
+        front.dataset.showroomFrontState = "fallback";
+      }
+    }
+
+    const root = getRoot();
+
+    if (root) {
+      root.dataset.showroomActiveFront = "";
+      root.dataset.showroomActiveGaugeSet = "";
+    }
+
+    state.activeFrontId = "";
+
+    if (publish) {
+      publishReceipt("front-reset", {
+        source
+      });
+    }
+  }
+
+  function prefersReducedMotion() {
+    return Boolean(
+      window.matchMedia &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    );
+  }
+
+  function synchronizeFrontFromRoot() {
+    const root = getRoot();
+
+    if (!root) {
+      return;
+    }
+
+    const requested =
+      normalize(root.dataset.showroomActiveFront) ||
+      normalize(root.dataset.showroomActiveGaugeSet);
+
+    if (!requested) {
+      return;
+    }
+
+    if (requested === state.activeFrontId) {
+      return;
+    }
+
+    setSupportingFront(requested, {
+      source: "root-attribute",
+      publish: false
+    });
+  }
+
+  function updateWindowGaugeState() {
+    const gauge = query(SELECTORS.windowGauge);
+
+    if (!gauge) {
+      return;
+    }
+
+    const root = getRoot();
+    const threshold = document.getElementById(
+      "showroom-window-threshold"
+    );
+
+    const windowState =
+      normalize(root?.dataset.showroomWindowState) ||
+      normalize(threshold?.dataset.showroomWindowState) ||
+      "closed";
+
+    const normalizedState =
+      windowState.toLowerCase() === "open" ? "open" : "closed";
+
+    gauge.dataset.gaugeState = normalizedState;
+
+    const value = query("strong", gauge);
+
+    if (value) {
+      value.textContent =
+        normalizedState === "open" ? "Open" : "Closed";
+    }
+
+    const detail = document.getElementById(
+      normalize(gauge.getAttribute("aria-controls"))
+    );
+
+    if (detail) {
+      detail.dataset.windowState = normalizedState;
+    }
+  }
+
+  function initializeObservers() {
+    const root = getRoot();
+
+    if (root && !state.rootObserver) {
+      state.rootObserver = new MutationObserver((records) => {
+        for (const record of records) {
+          if (record.type !== "attributes") {
+            continue;
+          }
+
+          if (
+            record.attributeName === "data-showroom-active-front" ||
+            record.attributeName ===
+              "data-showroom-active-gauge-set"
+          ) {
+            synchronizeFrontFromRoot();
+          }
+
+          if (
+            record.attributeName === "data-showroom-window-state"
+          ) {
+            updateWindowGaugeState();
+          }
+        }
+      });
+
+      state.rootObserver.observe(root, {
+        attributes: true,
+        attributeFilter: [
+          "data-showroom-active-front",
+          "data-showroom-active-gauge-set",
+          "data-showroom-window-state"
+        ]
+      });
+    }
+
+    const threshold = document.getElementById(
+      "showroom-window-threshold"
+    );
+
+    if (threshold && !state.mutationObserver) {
+      state.mutationObserver = new MutationObserver(
+        updateWindowGaugeState
+      );
+
+      state.mutationObserver.observe(threshold, {
+        attributes: true,
+        attributeFilter: ["data-showroom-window-state"]
+      });
+    }
+  }
+
+  function bindIntegrationEvents() {
+    document.addEventListener("showroom:front-request", (event) => {
+      const frontId = normalize(event.detail?.frontId);
+
+      if (!frontId) {
+        return;
+      }
+
+      setSupportingFront(frontId, {
+        scroll: Boolean(event.detail?.scroll),
+        focus: Boolean(event.detail?.focus),
+        source: "front-request-event"
+      });
+    });
+
+    document.addEventListener(
+      "showroom:gauge-set-request",
       (event) => {
-        if (event.persisted) {
-          holdRuntime("pagehide-bfcache");
+        const gaugeSet = normalize(
+          event.detail?.gaugeSet ||
+          event.detail?.frontId
+        );
+
+        if (!gaugeSet) {
           return;
         }
 
-        disposeRuntime("pagehide");
+        setSupportingFront(gaugeSet, {
+          scroll: Boolean(event.detail?.scroll),
+          focus: Boolean(event.detail?.focus),
+          source: "gauge-set-request-event"
+        });
       }
     );
 
-    addLifecycleListener(
-      window,
-      "pageshow",
-      (event) => {
-        if (
-          event.persisted &&
-          !runtime.disposed
-        ) {
-          resumeRuntime("pageshow-bfcache");
-        }
-      }
+    document.addEventListener("showroom:front-reset-request", () => {
+      revealAllSupportingFronts({
+        source: "front-reset-request-event"
+      });
+    });
+
+    document.addEventListener(
+      "showroom:window-state-change",
+      updateWindowGaugeState
     );
   }
 
   function initialize() {
-    if (
-      runtime.initialized ||
-      runtime.disposed
-    ) {
+    if (state.initialized) {
       return;
     }
 
-    runtime.initialized = true;
+    const root = getRoot();
 
-    try {
-      runtime.root =
-        document.querySelector(
-          SELECTORS.root
-        );
-
-      if (!runtime.root) {
-        throw new Error(
-          "Showroom gauge root was not found."
-        );
-      }
-
-      runtime.receipt =
-        document.querySelector(
-          SELECTORS.receipt
-        );
-
-      runtime.rootSnapshot =
-        captureRootSnapshot(
-          runtime.root
-        );
-
-      setRootState(ROOT_STATES.STATIC);
-
-      const dashboardContainers =
-        toArray(
-          document.querySelectorAll(
-            SELECTORS.dashboard
-          )
-        );
-
-      const compositionContainers =
-        toArray(
-          document.querySelectorAll(
-            SELECTORS.composition
-          )
-        );
-
-      const informationContainers =
-        toArray(
-          document.querySelectorAll(
-            SELECTORS.information
-          )
-        );
-
-      dashboardContainers.forEach(
-        initializeDashboard
-      );
-
-      compositionContainers.forEach(
-        initializeComposition
-      );
-
-      informationContainers.forEach(
-        initializeInformation
-      );
-
-      validateExpectedCounts();
-      reflectRootState();
-      bindLifecycle();
-
-      window.ShowroomGauges =
-        createPublicApi();
-
-      publishReceipt("runtime-ready", {
-        expected: EXPECTED,
-        discovered: {
-          dashboards:
-            runtime.dashboards.length,
-
-          compositions:
-            runtime.compositions.length,
-
-          informationGroups:
-            runtime.informationGroups.length
-        }
-      });
-    } catch (error) {
-      fatalRollback(error);
+    if (!root) {
+      return;
     }
+
+    state.initialized = true;
+
+    for (const dashboard of queryAll(SELECTORS.dashboard)) {
+      initializeDashboard(dashboard);
+    }
+
+    for (const group of queryAll(SELECTORS.informationTabs)) {
+      initializeInformationGroup(group);
+    }
+
+    initializeObservers();
+    bindIntegrationEvents();
+    updateWindowGaugeState();
+    synchronizeFrontFromRoot();
+
+    root.dataset.showroomGaugesState = "interactive";
+    root.dataset.showroomGaugesReady = "true";
+
+    const validation = publishValidation();
+
+    publishReceipt("initialized", {
+      valid: validation.valid,
+      dashboardCount: queryAll(SELECTORS.dashboard).length,
+      gaugeCount: queryAll(SELECTORS.gauge).length,
+      informationTabCount: queryAll(
+        SELECTORS.informationTab
+      ).length,
+      protectedStages: STAGE_IDS.slice()
+    });
+
+    document.dispatchEvent(
+      new CustomEvent("showroom:gauges-ready", {
+        detail: {
+          contract: CONTRACT.id,
+          version: CONTRACT.version,
+          valid: validation.valid
+        }
+      })
+    );
   }
+
+  const API = Object.freeze({
+    contract: CONTRACT,
+    initialize,
+    validate: publishValidation,
+    selectGauge(dashboardId, gaugeId, options = {}) {
+      const dashboard =
+        query(
+          `${SELECTORS.dashboard}[data-gauge-dashboard-id="${escapeIdentifier(dashboardId)}"]`
+        ) ||
+        document.getElementById(dashboardId);
+
+      return updateDashboardState(
+        dashboard,
+        normalize(gaugeId),
+        options
+      );
+    },
+    selectInformation(groupId, panelId, options = {}) {
+      const group =
+        query(
+          `${SELECTORS.informationTabs}[data-information-tabs-id="${escapeIdentifier(groupId)}"]`
+        ) ||
+        document.getElementById(groupId);
+
+      return updateInformationState(
+        group,
+        normalize(panelId),
+        options
+      );
+    },
+    selectFront(frontId, options = {}) {
+      return setSupportingFront(
+        normalize(frontId),
+        options
+      );
+    },
+    revealAllFronts(options = {}) {
+      revealAllSupportingFronts(options);
+    },
+    getState() {
+      return Object.freeze({
+        initialized: state.initialized,
+        activeFrontId: state.activeFrontId,
+        dashboards: Array.from(
+          state.dashboards.entries()
+        ).map(([dashboardId, value]) => ({
+          dashboardId,
+          activeGaugeId: value.activeGaugeId
+        })),
+        informationGroups: Array.from(
+          state.informationGroups.entries()
+        ).map(([groupId, value]) => ({
+          groupId,
+          activePanelId: value.activePanelId
+        }))
+      });
+    }
+  });
+
+  Object.defineProperty(
+    window,
+    "DGBShowroomGauges",
+    {
+      value: API,
+      configurable: false,
+      enumerable: false,
+      writable: false
+    }
+  );
 
   if (document.readyState === "loading") {
     document.addEventListener(
       "DOMContentLoaded",
       initialize,
-      {
-        once: true
-      }
+      { once: true }
     );
   } else {
     initialize();

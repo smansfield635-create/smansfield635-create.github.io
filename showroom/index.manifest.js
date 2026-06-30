@@ -1,6 +1,6 @@
 /* TARGET FILE: /showroom/index.manifest.js */
 /* TNT FULL-FILE REPLACEMENT */
-/* SHOWROOM_MIRRORLAND_STATIC_PAGE_MANIFEST_VALIDATOR_TNT_v1 */
+/* SHOWROOM_MIRRORLAND_STATIC_PAGE_MANIFEST_VALIDATOR_TNT_v2 */
 
 /*
   CONTROLLING TWO-FILE CONTRACT
@@ -11,13 +11,13 @@
   - Owns native <details> disclosures.
   - Owns controls, mounts, dialogs, fallbacks, accessibility
     relationships, receipt elements, stylesheets, and runtime script order.
-  - Must exist as a complete usable DOM before runtime modules initialize.
+  - Must exist as a complete usable DOM before runtime JavaScript initializes.
 
   /showroom/index.manifest.js
   - Non-mutating technical manifest and validator only.
   - Owns technical declarations, route expectations, structural counts,
     ownership boundaries, selector expectations, dependency expectations,
-    contract validation, and a bounded validation receipt.
+    contract validation, and a bounded immutable validation receipt.
 
   ABSOLUTE PROHIBITIONS
 
@@ -25,7 +25,7 @@
   - create, replace, move, or remove DOM nodes;
   - write text, HTML, values, attributes, classes, styles, or datasets;
   - inject narrative, gauge, route, dialog, or fallback content;
-  - open, close, or otherwise alter any <details> element;
+  - alter disclosure state;
   - intercept click, pointer, touch, wheel, or keyboard behavior;
   - call preventDefault(), stopPropagation(), or stopImmediatePropagation();
   - control navigation;
@@ -38,26 +38,31 @@
 
   - Read-only inspection only.
   - Validation failure is reported, never repaired.
-  - The bounded receipt is published only as an immutable JavaScript value.
+  - The validation receipt is published only as an immutable JavaScript value.
   - Existing HTML receipt elements are inspected but never populated or changed.
+  - Technical counts and authorization boundaries live here and are not required
+    as duplicate root-level HTML attributes.
 */
 
 (() => {
   "use strict";
 
   const MANIFEST_ID =
-    "SHOWROOM_MIRRORLAND_STATIC_PAGE_MANIFEST_VALIDATOR_TNT_v1";
+    "SHOWROOM_MIRRORLAND_STATIC_PAGE_MANIFEST_VALIDATOR_TNT_v2";
 
-  const MANIFEST_VERSION = "1.0.0";
+  const MANIFEST_VERSION = "2.0.0";
 
   const PAGE_CONTRACT =
-    "SHOWROOM_MIRRORLAND_OFFICIAL_GATE_STATIC_HTML_TNT_v6";
+    "SHOWROOM_MIRRORLAND_OFFICIAL_GATE_STATIC_HTML_TNT_v7";
 
   const GLOBAL_MANIFEST_SYMBOL =
-    "SHOWROOM_MIRRORLAND_STATIC_PAGE_MANIFEST_TNT_v1";
+    "SHOWROOM_MIRRORLAND_STATIC_PAGE_MANIFEST_TNT_v2";
 
   const GLOBAL_RECEIPT_SYMBOL =
-    "SHOWROOM_MIRRORLAND_STATIC_PAGE_VALIDATION_RECEIPT_TNT_v1";
+    "SHOWROOM_MIRRORLAND_STATIC_PAGE_VALIDATION_RECEIPT_TNT_v2";
+
+  const RECEIPT_ID =
+    "SHOWROOM_MIRRORLAND_STATIC_PAGE_VALIDATION_RECEIPT_TNT_v2";
 
   const STATUS = Object.freeze({
     PASS: "PASS",
@@ -81,13 +86,17 @@
         "accessibility relationships",
         "receipt elements",
         "stylesheets",
-        "runtime script order"
+        "runtime script order",
+        "runtime selector hooks",
+        "visible gauge and capability descriptions"
       ],
 
       requirements: {
         completeBeforeRuntimeInitialization: true,
         usableWithoutManifestMutation: true,
-        runtimeCriticalNodesStatic: true
+        runtimeCriticalNodesStatic: true,
+        visibleContextStatic: true,
+        nativeDisclosureStructureStatic: true
       }
     },
 
@@ -99,9 +108,11 @@
         "technical declarations",
         "route expectations",
         "structural counts",
+        "geometry expectations",
         "ownership boundaries",
         "selector expectations",
         "dependency expectations",
+        "claim boundaries",
         "read-only contract validation",
         "bounded immutable validation receipt"
       ],
@@ -131,7 +142,6 @@
       ],
 
       status: "REJECTED_RUNTIME_ASSEMBLY_ARCHITECTURE",
-
       mayLoadInFinalPage: false
     }
   });
@@ -208,9 +218,28 @@
     publicViews: 2
   });
 
+  const CLAIM_BOUNDARIES = deepFreeze({
+    generatedImage: false,
+    imported3dModel: false,
+    runtimePassClaimed: false,
+    visualPassClaimed: false,
+    productionAuthorized: false,
+    deploymentAuthorized: false,
+    publicReleaseAuthorized: false,
+    empiricalValidityClaimed: false
+  });
+
+  /*
+    Only page identity and runtime-level architectural signals are required
+    on the HTML root. Geometry totals, evidence status, and authorization
+    boundaries remain manifest-owned and are not duplicated here.
+  */
+
   const REQUIRED_PAGE_ATTRIBUTES = deepFreeze({
     "data-route": "/showroom/",
     "data-page": "showroom",
+
+    "data-contract": PAGE_CONTRACT,
 
     "data-showroom-root-contract":
       "mirrorland-official-gate-constellation-gauge-information",
@@ -227,7 +256,6 @@
     "data-showroom-window-stage-diamond-only": "true",
 
     "data-compass-fixed-center": "true",
-    "data-compass-orbital-reference": "true",
     "data-compass-immediate-navigation": "false",
     "data-compass-renderer-navigation-authority": "false",
     "data-compass-controller-navigation-authority": "true",
@@ -240,25 +268,7 @@
 
     "data-diamond-generation": "G3",
     "data-diamond-render-mode": "native-webgl",
-    "data-diamond-protected-core": "true",
-
-    "data-native-webgl": "true",
-    "data-webgl-fallback": "true",
-
-    "data-radial-sectors": "16",
-    "data-structural-bands": "16",
-    "data-lattice-seats": "256",
-    "data-surface-triangles": "512",
-    "data-lattice-connections": "800",
-    "data-material-regions": "14",
-    "data-public-views": "2",
-
-    "data-generated-image": "false",
-    "data-imported-3d-model": "false",
-    "data-visual-pass-claimed": "false",
-    "data-runtime-pass-claimed": "false",
-    "data-production-authorized": "false",
-    "data-deployment-authorized": "false"
+    "data-diamond-protected-core": "true"
   });
 
   const REQUIRED_UNIQUE_SELECTORS = deepFreeze([
@@ -295,6 +305,11 @@
     {
       label: "instructions disclosure",
       selector: "#showroom-instructions-disclosure"
+    },
+
+    {
+      label: "open-instructions control",
+      selector: "[data-showroom-open-instructions]"
     },
 
     {
@@ -451,28 +466,28 @@
     {
       label: "Object gauge details",
       selector:
-        '#object-gauges [data-showroom-gauge-detail]',
+        "#object-gauges [data-showroom-gauge-detail]",
       expected: STRUCTURAL_COUNTS.objectGaugeDetails
     },
 
     {
       label: "Structure gauge details",
       selector:
-        '#structure-gauges [data-showroom-gauge-detail]',
+        "#structure-gauges [data-showroom-gauge-detail]",
       expected: STRUCTURAL_COUNTS.structureGaugeDetails
     },
 
     {
       label: "Interaction gauge details",
       selector:
-        '#interaction-gauges [data-showroom-gauge-detail]',
+        "#interaction-gauges [data-showroom-gauge-detail]",
       expected: STRUCTURAL_COUNTS.interactionGaugeDetails
     },
 
     {
       label: "Systems gauge details",
       selector:
-        '#systems-gauges [data-showroom-gauge-detail]',
+        "#systems-gauges [data-showroom-gauge-detail]",
       expected: STRUCTURAL_COUNTS.systemsGaugeDetails
     },
 
@@ -496,7 +511,8 @@
 
     {
       label: "preface sections",
-      selector: "#mirrorland-preface .mirrorland-preface__content > section",
+      selector:
+        "#mirrorland-preface .mirrorland-preface__content > section",
       expected: STRUCTURAL_COUNTS.prefaceSections
     },
 
@@ -569,6 +585,13 @@
       source: "#showroom-instructions",
       attribute: "aria-labelledby",
       target: "#showroom-instructions-title"
+    },
+
+    {
+      label: "open-instructions disclosure relationship",
+      source: "[data-showroom-open-instructions]",
+      attribute: "aria-controls",
+      target: "#showroom-instructions-disclosure"
     },
 
     {
@@ -686,7 +709,7 @@
       key: "manifest",
       src: "/showroom/index.manifest.js",
       requiredVersion:
-        "SHOWROOM_MIRRORLAND_STATIC_PAGE_MANIFEST_VALIDATOR_TNT_v1"
+        "SHOWROOM_MIRRORLAND_STATIC_PAGE_MANIFEST_VALIDATOR_TNT_v2"
     },
 
     {
@@ -791,20 +814,30 @@
     "/showroom/index.build.js"
   ]);
 
+  const FORBIDDEN_ASSEMBLY_MARKERS = deepFreeze([
+    "[data-showroom-build-mount]",
+    "[data-showroom-content]",
+    "[data-showroom-content-attr]",
+    "[data-showroom-build-state]",
+    "[data-showroom-build-receipt]"
+  ]);
+
+  const RECEIPT_ELEMENT_SELECTORS = deepFreeze([
+    "[data-showroom-controller-receipt]",
+    "[data-showroom-controller-validation]",
+    "[data-showroom-gauges-receipt]",
+    "[data-showroom-interactions-receipt]",
+    "[data-showroom-compositor-receipt]",
+    "[data-showroom-crystals-receipt]",
+    "[data-showroom-window-receipt]"
+  ]);
+
   const MANIFEST = deepFreeze({
     manifestId: MANIFEST_ID,
     manifestVersion: MANIFEST_VERSION,
     pageContract: PAGE_CONTRACT,
 
-    status: {
-      official: false,
-      canonical: false,
-      runtimePassClaimed: false,
-      visualPassClaimed: false,
-      productionAuthorized: false,
-      deploymentAuthorized: false,
-      publicReleaseAuthorized: false
-    },
+    status: CLAIM_BOUNDARIES,
 
     ownership: OWNERSHIP,
     routes: ROUTES,
@@ -825,7 +858,8 @@
       requiredRelationships: REQUIRED_RELATIONSHIPS,
       requiredGaugeIds: REQUIRED_GAUGE_IDS,
       expectedDependencies: EXPECTED_DEPENDENCIES,
-      forbiddenDependencies: FORBIDDEN_DEPENDENCIES
+      forbiddenDependencies: FORBIDDEN_DEPENDENCIES,
+      forbiddenAssemblyMarkers: FORBIDDEN_ASSEMBLY_MARKERS
     }
   });
 
@@ -1087,6 +1121,7 @@
       .forEach((gauge) => {
         const gaugeId = gauge.getAttribute("data-gauge-id");
         const controlledId = gauge.getAttribute("aria-controls");
+
         const detail = controlledId
           ? document.getElementById(controlledId)
           : null;
@@ -1094,9 +1129,14 @@
         const detailGaugeId =
           detail?.getAttribute("data-gauge-detail-id") ?? null;
 
+        const expectedControlledId =
+          gaugeId
+            ? `gauge-detail-${gaugeId}`
+            : null;
+
         const passes =
           Boolean(gaugeId) &&
-          Boolean(controlledId) &&
+          controlledId === expectedControlledId &&
           Boolean(detail) &&
           detailGaugeId === gaugeId;
 
@@ -1106,9 +1146,7 @@
             label: gaugeId || "unnamed gauge",
             status: passes ? STATUS.PASS : STATUS.FAIL,
             expected: {
-              controlledId: gaugeId
-                ? `gauge-detail-${gaugeId}`
-                : null,
+              controlledId: expectedControlledId,
               detailGaugeId: gaugeId
             },
             actual: {
@@ -1123,8 +1161,6 @@
   }
 
   function validateRoutes() {
-    const checks = [];
-
     const exactRouteExpectations = [
       {
         label: "brand return route",
@@ -1162,7 +1198,7 @@
       }
     ];
 
-    exactRouteExpectations.forEach((expectation) => {
+    return exactRouteExpectations.map((expectation) => {
       const node = document.querySelector(
         expectation.selector
       );
@@ -1170,24 +1206,20 @@
       const actual =
         node?.getAttribute(expectation.attribute) ?? null;
 
-      checks.push(
-        makeCheck({
-          category: "ROUTE",
-          label: expectation.label,
-          status:
-            actual === expectation.expected
-              ? STATUS.PASS
-              : STATUS.FAIL,
-          expected: expectation.expected,
-          actual,
-          detail:
-            `${expectation.selector} ` +
-            `[${expectation.attribute}]`
-        })
-      );
+      return makeCheck({
+        category: "ROUTE",
+        label: expectation.label,
+        status:
+          actual === expectation.expected
+            ? STATUS.PASS
+            : STATUS.FAIL,
+        expected: expectation.expected,
+        actual,
+        detail:
+          `${expectation.selector} ` +
+          `[${expectation.attribute}]`
+      });
     });
-
-    return checks;
   }
 
   function validateDependencies() {
@@ -1207,30 +1239,43 @@
     let priorIndex = -1;
 
     EXPECTED_DEPENDENCIES.forEach((dependency) => {
-      const match = observed.find(
+      const matches = observed.filter(
         (script) => script.path === dependency.src
       );
 
-      if (!match) {
+      if (matches.length !== 1) {
         checks.push(
           makeCheck({
             category: "DEPENDENCY",
             label: dependency.key,
             status: STATUS.FAIL,
-            expected: dependency,
-            actual: null,
-            detail: "required script missing"
+            expected: {
+              count: 1,
+              path: dependency.src,
+              version: dependency.requiredVersion
+            },
+            actual: {
+              count: matches.length,
+              matches
+            },
+            detail:
+              matches.length === 0
+                ? "required script missing"
+                : "required script duplicated"
           })
         );
 
         return;
       }
 
+      const match = matches[0];
+
       const versionPasses =
         dependency.requiredVersion === null ||
         match.version === dependency.requiredVersion;
 
-      const orderPasses = match.index > priorIndex;
+      const orderPasses =
+        match.index > priorIndex;
 
       checks.push(
         makeCheck({
@@ -1246,15 +1291,16 @@
             afterIndex: priorIndex
           },
           actual: match,
-          detail: !versionPasses
-            ? "version mismatch"
-            : !orderPasses
-              ? "dependency order mismatch"
-              : null
+          detail:
+            !versionPasses
+              ? "version mismatch"
+              : !orderPasses
+                ? "dependency order mismatch"
+                : null
         })
       );
 
-      priorIndex = Math.max(priorIndex, match.index);
+      priorIndex = match.index;
     });
 
     FORBIDDEN_DEPENDENCIES.forEach((path) => {
@@ -1280,15 +1326,7 @@
   }
 
   function validateStaticCompleteness() {
-    const forbiddenAssemblyMarkers = [
-      "[data-showroom-build-mount]",
-      "[data-showroom-content]",
-      "[data-showroom-content-attr]",
-      "[data-showroom-build-state]",
-      "[data-showroom-build-receipt]"
-    ];
-
-    return forbiddenAssemblyMarkers.map((selector) => {
+    return FORBIDDEN_ASSEMBLY_MARKERS.map((selector) => {
       const actual = document.querySelectorAll(selector).length;
 
       return makeCheck({
@@ -1307,21 +1345,14 @@
   }
 
   function validateReceiptElementsRemainPassive() {
-    const selectors = [
-      "[data-showroom-controller-receipt]",
-      "[data-showroom-controller-validation]",
-      "[data-showroom-gauges-receipt]",
-      "[data-showroom-interactions-receipt]",
-      "[data-showroom-compositor-receipt]",
-      "[data-showroom-crystals-receipt]",
-      "[data-showroom-window-receipt]"
-    ];
-
-    return selectors.map((selector) => {
+    return RECEIPT_ELEMENT_SELECTORS.map((selector) => {
       const node = document.querySelector(selector);
 
-      const exists = Boolean(node);
-      const hidden = node?.hasAttribute("hidden") ?? false;
+      const exists =
+        Boolean(node);
+
+      const hidden =
+        node?.hasAttribute("hidden") ?? false;
 
       return makeCheck({
         category: "RECEIPT_ELEMENT",
@@ -1363,16 +1394,14 @@
           : STATUS.PASS;
 
     return deepFreeze({
-      receiptId:
-        "SHOWROOM_MIRRORLAND_STATIC_PAGE_VALIDATION_RECEIPT_TNT_v1",
+      receiptId: RECEIPT_ID,
+      receiptVersion: "2.0.0",
 
-      receiptVersion: "1.0.0",
       manifestId: MANIFEST_ID,
       manifestVersion: MANIFEST_VERSION,
       pageContract: PAGE_CONTRACT,
 
       validationMode: "READ_ONLY_NON_MUTATING",
-
       status: overallStatus,
 
       totals: {
@@ -1408,6 +1437,50 @@
     });
   }
 
+  function buildUnevaluableReceipt(error) {
+    return deepFreeze({
+      receiptId: RECEIPT_ID,
+      receiptVersion: "2.0.0",
+
+      manifestId: MANIFEST_ID,
+      manifestVersion: MANIFEST_VERSION,
+      pageContract: PAGE_CONTRACT,
+
+      validationMode: "READ_ONLY_NON_MUTATING",
+      status: STATUS.UNEVALUABLE,
+
+      totals: {
+        checks: 0,
+        passed: 0,
+        failed: 0,
+        unevaluable: 1
+      },
+
+      boundaries: {
+        domMutated: false,
+        repairAttempted: false,
+        navigationControlled: false,
+        eventsIntercepted: false,
+        runtimeSystemsInitialized: false
+      },
+
+      failures: [],
+
+      unevaluable: [
+        {
+          category: "VALIDATOR_EXECUTION",
+          label: "manifest validator",
+          detail:
+            error instanceof Error
+              ? error.message
+              : String(error)
+        }
+      ],
+
+      checkedAt: new Date().toISOString()
+    });
+  }
+
   function validate() {
     const checks = [
       ...validatePageAttributes(),
@@ -1427,6 +1500,17 @@
   }
 
   function publishImmutableGlobal(name, value) {
+    if (
+      Object.prototype.hasOwnProperty.call(
+        globalThis,
+        name
+      )
+    ) {
+      throw new Error(
+        `Immutable global already exists: ${name}`
+      );
+    }
+
     Object.defineProperty(globalThis, name, {
       value,
       enumerable: true,
@@ -1441,59 +1525,32 @@
     try {
       receipt = validate();
     } catch (error) {
-      receipt = deepFreeze({
-        receiptId:
-          "SHOWROOM_MIRRORLAND_STATIC_PAGE_VALIDATION_RECEIPT_TNT_v1",
-
-        receiptVersion: "1.0.0",
-        manifestId: MANIFEST_ID,
-        manifestVersion: MANIFEST_VERSION,
-        pageContract: PAGE_CONTRACT,
-
-        validationMode: "READ_ONLY_NON_MUTATING",
-        status: STATUS.UNEVALUABLE,
-
-        totals: {
-          checks: 0,
-          passed: 0,
-          failed: 0,
-          unevaluable: 1
-        },
-
-        boundaries: {
-          domMutated: false,
-          repairAttempted: false,
-          navigationControlled: false,
-          eventsIntercepted: false,
-          runtimeSystemsInitialized: false
-        },
-
-        failures: [],
-
-        unevaluable: [
-          {
-            category: "VALIDATOR_EXECUTION",
-            label: "manifest validator",
-            detail:
-              error instanceof Error
-                ? error.message
-                : String(error)
-          }
-        ],
-
-        checkedAt: new Date().toISOString()
-      });
+      receipt = buildUnevaluableReceipt(error);
     }
 
-    publishImmutableGlobal(
-      GLOBAL_MANIFEST_SYMBOL,
-      MANIFEST
-    );
+    try {
+      publishImmutableGlobal(
+        GLOBAL_MANIFEST_SYMBOL,
+        MANIFEST
+      );
 
-    publishImmutableGlobal(
-      GLOBAL_RECEIPT_SYMBOL,
-      receipt
-    );
+      publishImmutableGlobal(
+        GLOBAL_RECEIPT_SYMBOL,
+        receipt
+      );
+    } catch (error) {
+      if (
+        typeof console !== "undefined" &&
+        typeof console.warn === "function"
+      ) {
+        console.warn(
+          `[${MANIFEST_ID}] Immutable publication failed.`,
+          error
+        );
+      }
+
+      return;
+    }
 
     if (
       receipt.status !== STATUS.PASS &&

@@ -50,6 +50,8 @@
   data-showroom-route-confirmation-required="true"
   data-showroom-return-to-orbit="true"
   data-showroom-return-to-compass="true"
+  data-showroom-return-model="shared-bottom-zone"
+  data-showroom-return-zone="#showroom-return-zone"
   data-showroom-orbit-target="#showroom-orbit"
   data-showroom-compass-route="/index.html"
 
@@ -133,6 +135,14 @@
     href="#main"
   >
     Skip to the Showroom
+  </a>
+
+  <a
+    class="showroom-accessible-orbit-return"
+    href="#showroom-orbit"
+    data-showroom-accessible-orbit-return
+  >
+    Back to constellation
   </a>
 
   <div
@@ -450,29 +460,6 @@
             </strong>
           </div>
 
-          <nav
-            class="showroom-local-return"
-            aria-label="Leave Welcome to Mirrorland"
-          >
-            <a
-              class="button button-gold"
-              href="#showroom-orbit"
-              data-showroom-return-to-orbit
-            >
-              Return to Orbit
-            </a>
-
-            <button
-              class="button"
-              type="button"
-              data-showroom-open-compass-dialog
-              aria-haspopup="dialog"
-              aria-controls="showroom-compass-dialog"
-            >
-              Return to Compass
-            </button>
-          </nav>
-
           <details
             id="mirrorland-preface"
             class="architectural-drop mirrorland-preface"
@@ -510,29 +497,6 @@
                   questions can remain visible long enough to be
                   understood.
                 </p>
-
-                <nav
-                  class="showroom-local-return"
-                  aria-label="Leave the Mirrorland mission"
-                >
-                  <a
-                    class="button button-gold"
-                    href="#showroom-orbit"
-                    data-showroom-return-to-orbit
-                  >
-                    Return to Orbit
-                  </a>
-
-                  <button
-                    class="button"
-                    type="button"
-                    data-showroom-open-compass-dialog
-                    aria-haspopup="dialog"
-                    aria-controls="showroom-compass-dialog"
-                  >
-                    Return to Compass
-                  </button>
-                </nav>
               </section>
 
               <section
@@ -561,29 +525,6 @@
                   still emerging, and separates implemented systems from
                   planned ones.
                 </p>
-
-                <nav
-                  class="showroom-local-return"
-                  aria-label="Leave the Mirrorland timeline"
-                >
-                  <a
-                    class="button button-gold"
-                    href="#showroom-orbit"
-                    data-showroom-return-to-orbit
-                  >
-                    Return to Orbit
-                  </a>
-
-                  <button
-                    class="button"
-                    type="button"
-                    data-showroom-open-compass-dialog
-                    aria-haspopup="dialog"
-                    aria-controls="showroom-compass-dialog"
-                  >
-                    Return to Compass
-                  </button>
-                </nav>
               </section>
 
               <section
@@ -638,29 +579,6 @@
                   No single path contains all of Mirrorland. The world is
                   discovered by moving among its parts.
                 </p>
-
-                <nav
-                  class="showroom-local-return"
-                  aria-label="Leave Questions in the Glass"
-                >
-                  <a
-                    class="button button-gold"
-                    href="#showroom-orbit"
-                    data-showroom-return-to-orbit
-                  >
-                    Return to Orbit
-                  </a>
-
-                  <button
-                    class="button"
-                    type="button"
-                    data-showroom-open-compass-dialog
-                    aria-haspopup="dialog"
-                    aria-controls="showroom-compass-dialog"
-                  >
-                    Return to Compass
-                  </button>
-                </nav>
               </section>
 
               <section
@@ -686,29 +604,6 @@
                   A mirror shows what is already there. Mirrorland asks
                   what may happen next.
                 </p>
-
-                <nav
-                  class="showroom-local-return"
-                  aria-label="Leave the Mirrorland invitation"
-                >
-                  <a
-                    class="button button-gold"
-                    href="#showroom-orbit"
-                    data-showroom-return-to-orbit
-                  >
-                    Return to Orbit
-                  </a>
-
-                  <button
-                    class="button"
-                    type="button"
-                    data-showroom-open-compass-dialog
-                    aria-haspopup="dialog"
-                    aria-controls="showroom-compass-dialog"
-                  >
-                    Return to Compass
-                  </button>
-                </nav>
               </section>
             </div>
           </details>
@@ -1147,7 +1042,8 @@
                 data-showroom-object-behavior="local"
                 data-showroom-destination-kind="local-anchor"
                 data-showroom-target="#arrival"
-                data-showroom-return-options="orbit compass"
+                data-showroom-return-model="shared-bottom-zone"
+                data-showroom-return-zone="#showroom-return-zone"
                 data-showroom-visual-class="LOCAL"
                 data-showroom-emphasis="normal"
                 aria-label="Welcome to Mirrorland. Reveals the entrance within this Showroom."
@@ -1175,7 +1071,8 @@
                 data-showroom-destination-kind="local-disclosure-target"
                 data-showroom-target="#mirrorland-preface-mission"
                 data-showroom-open-ancestor="#mirrorland-preface"
-                data-showroom-return-options="orbit compass"
+                data-showroom-return-model="shared-bottom-zone"
+                data-showroom-return-zone="#showroom-return-zone"
                 data-showroom-visual-class="LOCAL"
                 data-showroom-emphasis="normal"
                 aria-label="Discover why Mirrorland exists within this Showroom."
@@ -1203,7 +1100,8 @@
                 data-showroom-destination-kind="local-disclosure-target"
                 data-showroom-target="#mirrorland-preface-timeline"
                 data-showroom-open-ancestor="#mirrorland-preface"
-                data-showroom-return-options="orbit compass"
+                data-showroom-return-model="shared-bottom-zone"
+                data-showroom-return-zone="#showroom-return-zone"
                 data-showroom-visual-class="LOCAL"
                 data-showroom-emphasis="normal"
                 aria-label="Read the story of Mirrorland so far within this Showroom."
@@ -1231,7 +1129,8 @@
                 data-showroom-destination-kind="local-disclosure-target"
                 data-showroom-target="#mirrorland-preface-invitation"
                 data-showroom-open-ancestor="#mirrorland-preface"
-                data-showroom-return-options="orbit compass"
+                data-showroom-return-model="shared-bottom-zone"
+                data-showroom-return-zone="#showroom-return-zone"
                 data-showroom-visual-class="LOCAL"
                 data-showroom-emphasis="normal"
                 aria-label="Step through the Mirrorland invitation within this Showroom."
@@ -1409,7 +1308,8 @@
                 data-showroom-target="#showroom-window-threshold"
                 data-showroom-required-front="#object-gauges"
                 data-showroom-semantic-activation="[data-showroom-window-control]"
-                data-showroom-return-options="orbit compass"
+                data-showroom-return-model="shared-bottom-zone"
+                data-showroom-return-zone="#showroom-return-zone"
                 data-showroom-visual-class="LOCAL"
                 data-showroom-emphasis="normal"
                 aria-label="Open the Mirrorland Window within this Showroom."
@@ -1437,7 +1337,8 @@
                 data-showroom-destination-kind="local-diamond-experience"
                 data-showroom-target="#showroom-diamond-stage"
                 data-showroom-required-front="#object-gauges"
-                data-showroom-return-options="orbit compass"
+                data-showroom-return-model="shared-bottom-zone"
+                data-showroom-return-zone="#showroom-return-zone"
                 data-showroom-visual-class="LOCAL"
                 data-showroom-emphasis="normal"
                 aria-label="Behold the independent Diamond exhibit within this Showroom."
@@ -1464,7 +1365,8 @@
                 data-showroom-object-behavior="local"
                 data-showroom-destination-kind="local-narrative-surface"
                 data-showroom-target="#showroom-star-reading"
-                data-showroom-return-options="orbit compass"
+                data-showroom-return-model="shared-bottom-zone"
+                data-showroom-return-zone="#showroom-return-zone"
                 data-showroom-visual-class="LOCAL"
                 data-showroom-emphasis="normal"
                 aria-label="Learn how to read the Mirrorland stars within this Showroom."
@@ -1534,7 +1436,8 @@
                 data-showroom-object-behavior="local"
                 data-showroom-destination-kind="local-narrative-surface"
                 data-showroom-target="#showroom-unfinished-world"
-                data-showroom-return-options="orbit compass"
+                data-showroom-return-model="shared-bottom-zone"
+                data-showroom-return-zone="#showroom-return-zone"
                 data-showroom-visual-class="LOCAL"
                 data-showroom-emphasis="normal"
                 aria-label="Discover what remains unfinished in Mirrorland within this Showroom."
@@ -1562,7 +1465,8 @@
                 data-showroom-destination-kind="local-disclosure-target"
                 data-showroom-target="#mirrorland-preface-exploration"
                 data-showroom-open-ancestor="#mirrorland-preface"
-                data-showroom-return-options="orbit compass"
+                data-showroom-return-model="shared-bottom-zone"
+                data-showroom-return-zone="#showroom-return-zone"
                 data-showroom-visual-class="LOCAL"
                 data-showroom-emphasis="normal"
                 aria-label="Explore the unresolved questions reflected in Mirrorland’s glass."
@@ -1589,7 +1493,8 @@
                 data-showroom-object-behavior="local"
                 data-showroom-destination-kind="local-narrative-surface"
                 data-showroom-target="#showroom-paths-not-yet-open"
-                data-showroom-return-options="orbit compass"
+                data-showroom-return-model="shared-bottom-zone"
+                data-showroom-return-zone="#showroom-return-zone"
                 data-showroom-visual-class="LOCAL"
                 data-showroom-emphasis="normal"
                 aria-label="Discover the Mirrorland paths that are not yet open."
@@ -1678,29 +1583,6 @@
           halos announce that they can carry you into another Mirrorland
           page, but only after you choose to continue.
         </p>
-
-        <nav
-          class="showroom-local-return"
-          aria-label="Leave Read the Stars"
-        >
-          <a
-            class="button button-gold"
-            href="#showroom-orbit"
-            data-showroom-return-to-orbit
-          >
-            Return to Orbit
-          </a>
-
-          <button
-            class="button"
-            type="button"
-            data-showroom-open-compass-dialog
-            aria-haspopup="dialog"
-            aria-controls="showroom-compass-dialog"
-          >
-            Return to Compass
-          </button>
-        </nav>
       </section>
 
       <section
@@ -1734,29 +1616,6 @@
           remains part of the world’s mystery: an open place where the
           next discovery can still change what the whole becomes.
         </p>
-
-        <nav
-          class="showroom-local-return"
-          aria-label="Leave The Unfinished World"
-        >
-          <a
-            class="button button-gold"
-            href="#showroom-orbit"
-            data-showroom-return-to-orbit
-          >
-            Return to Orbit
-          </a>
-
-          <button
-            class="button"
-            type="button"
-            data-showroom-open-compass-dialog
-            aria-haspopup="dialog"
-            aria-controls="showroom-compass-dialog"
-          >
-            Return to Compass
-          </button>
-        </nav>
       </section>
 
       <section
@@ -1788,29 +1647,6 @@
           Return later. The map is alive, and a star that is quiet today
           may become a doorway tomorrow.
         </p>
-
-        <nav
-          class="showroom-local-return"
-          aria-label="Leave Paths Not Yet Open"
-        >
-          <a
-            class="button button-gold"
-            href="#showroom-orbit"
-            data-showroom-return-to-orbit
-          >
-            Return to Orbit
-          </a>
-
-          <button
-            class="button"
-            type="button"
-            data-showroom-open-compass-dialog
-            aria-haspopup="dialog"
-            aria-controls="showroom-compass-dialog"
-          >
-            Return to Compass
-          </button>
-        </nav>
       </section>
 
       <div
@@ -2213,29 +2049,6 @@
               </div>
             </div>
           </div>
-
-          <nav
-            class="showroom-front-navigation"
-            aria-label="Leave the Object gauge dashboard"
-          >
-            <button
-              class="button"
-              type="button"
-              data-showroom-open-compass-dialog
-              aria-haspopup="dialog"
-              aria-controls="showroom-compass-dialog"
-            >
-              Return to Compass
-            </button>
-
-            <a
-              class="button button-gold"
-              href="#showroom-orbit"
-              data-showroom-return-to-orbit
-            >
-              Return to Orbit
-            </a>
-          </nav>
         </section>
 
         <section
@@ -2577,29 +2390,6 @@
               </div>
             </div>
           </div>
-
-          <nav
-            class="showroom-front-navigation"
-            aria-label="Leave the Structure gauge dashboard"
-          >
-            <button
-              class="button"
-              type="button"
-              data-showroom-open-compass-dialog
-              aria-haspopup="dialog"
-              aria-controls="showroom-compass-dialog"
-            >
-              Return to Compass
-            </button>
-
-            <a
-              class="button button-gold"
-              href="#showroom-orbit"
-              data-showroom-return-to-orbit
-            >
-              Return to Orbit
-            </a>
-          </nav>
         </section>
 
         <section
@@ -2936,29 +2726,6 @@
               </article>
             </div>
           </div>
-
-          <nav
-            class="showroom-front-navigation"
-            aria-label="Leave the Interaction gauge dashboard"
-          >
-            <button
-              class="button"
-              type="button"
-              data-showroom-open-compass-dialog
-              aria-haspopup="dialog"
-              aria-controls="showroom-compass-dialog"
-            >
-              Return to Compass
-            </button>
-
-            <a
-              class="button button-gold"
-              href="#showroom-orbit"
-              data-showroom-return-to-orbit
-            >
-              Return to Orbit
-            </a>
-          </nav>
         </section>
 
         <section
@@ -3153,29 +2920,6 @@
               </article>
             </div>
           </div>
-
-          <nav
-            class="showroom-front-navigation"
-            aria-label="Leave the Mirrorland Systems gauge dashboard"
-          >
-            <button
-              class="button"
-              type="button"
-              data-showroom-open-compass-dialog
-              aria-haspopup="dialog"
-              aria-controls="showroom-compass-dialog"
-            >
-              Return to Compass
-            </button>
-
-            <a
-              class="button button-gold"
-              href="#showroom-orbit"
-              data-showroom-return-to-orbit
-            >
-              Return to Orbit
-            </a>
-          </nav>
         </section>
 
         <section
@@ -3572,32 +3316,56 @@
               </div>
             </div>
           </div>
-
-          <nav
-            class="showroom-front-navigation"
-            aria-label="Leave the information front"
-          >
-            <button
-              class="button"
-              type="button"
-              data-showroom-open-compass-dialog
-              aria-haspopup="dialog"
-              aria-controls="showroom-compass-dialog"
-            >
-              Return to Compass
-            </button>
-
-            <a
-              class="button button-gold"
-              href="#showroom-orbit"
-              data-showroom-return-to-orbit
-            >
-              Return to Orbit
-            </a>
-          </nav>
         </section>
       </div>
     </main>
+
+    <section
+      id="showroom-return-zone"
+      class="showroom-return-zone panel"
+      aria-labelledby="showroom-return-zone-title"
+      data-showroom-return-zone
+    >
+      <div class="showroom-return-zone__heading">
+        <span class="showroom-return-zone__eyebrow">
+          Showroom Return Zone
+        </span>
+
+        <h2 id="showroom-return-zone-title">
+          Choose where to continue.
+        </h2>
+
+        <p>
+          Return to the Mirrorland constellation or request confirmed
+          passage back to the Diamond Gate Bridge Main Compass.
+        </p>
+      </div>
+
+      <nav
+        class="showroom-return-zone__controls"
+        aria-label="Showroom return controls"
+      >
+        <a
+          class="button button-gold"
+          href="#showroom-orbit"
+          data-showroom-shared-return-to-orbit
+        >
+          Return to Orbit
+        </a>
+
+        <button
+          class="button"
+          type="button"
+          data-showroom-shared-return-to-compass
+          data-showroom-open-compass-dialog
+          aria-label="Open the option to return to the Diamond Gate Bridge Main Compass"
+          aria-haspopup="dialog"
+          aria-controls="showroom-compass-dialog"
+        >
+          Return to Main Compass
+        </button>
+      </nav>
+    </section>
 
     <footer class="showroom-footer">
       <div>
@@ -3626,15 +3394,6 @@
           aria-controls="showroom-route-dialog"
         >
           Talk to Elara
-        </button>
-
-        <button
-          type="button"
-          data-showroom-open-compass-dialog
-          aria-haspopup="dialog"
-          aria-controls="showroom-compass-dialog"
-        >
-          Main Compass
         </button>
       </nav>
     </footer>

@@ -161,6 +161,8 @@
     data-showroom-window-state="closed"
     data-showroom-diamond-interactive="false"
     data-showroom-crystals-ready="false"
+    data-showroom-gauges-state="static"
+    data-showroom-gauges-ready="false"
     data-showroom-held="false"
   >
     <header
@@ -398,15 +400,15 @@
               <div class="fallback-navigation__group">
                 <strong>Information front</strong>
 
-                <a href="#platform-tab">
+                <a href="#platform-panel">
                   Platform
                 </a>
 
-                <a href="#engineering-tab">
+                <a href="#engineering-panel">
                   Engineering
                 </a>
 
-                <a href="#evidence-tab">
+                <a href="#evidence-panel">
                   Evidence
                 </a>
               </div>
@@ -464,7 +466,6 @@
             id="mirrorland-preface"
             class="architectural-drop mirrorland-preface"
             data-showroom-mirrorland-preface
-            open
           >
             <summary>
               Read the complete Mirrorland preface
@@ -611,168 +612,6 @@
       </section>
 
       <section
-        id="showroom-instructions"
-        class="showroom-instructions panel chamber-platform"
-        aria-labelledby="showroom-instructions-title"
-        data-showroom-instructions
-      >
-        <details
-          id="showroom-instructions-disclosure"
-          class="showroom-instructions__disclosure"
-          data-showroom-instructions-disclosure
-        >
-          <summary class="showroom-instructions__summary">
-            <span class="showroom-instructions__badge">
-              Page Instructions
-            </span>
-
-            <span class="showroom-instructions__summary-copy">
-              <strong id="showroom-instructions-title">
-                How to enter the Showroom
-              </strong>
-
-              <small>
-                Five stages. Open only the guidance you need.
-              </small>
-            </span>
-          </summary>
-
-          <div class="showroom-instructions__body">
-            <p class="showroom-instructions__introduction">
-              The Showroom contains independent interactive stages. Each
-              reveals a different part of Mirrorland.
-            </p>
-
-            <div
-              class="showroom-instructions__steps"
-              data-showroom-instruction-steps
-            >
-              <details
-                class="showroom-instruction"
-                data-showroom-instruction
-              >
-                <summary>
-                  <span>01</span>
-                  <strong>Follow the constellation</strong>
-                  <small>Move among stories, characters, wonders, and mysteries.</small>
-                </summary>
-
-                <div>
-                  <p>
-                    Drag the star field to move among the four cardinal
-                    paths. Select a cardinal to reveal its four child
-                    stars.
-                  </p>
-
-                  <a href="#showroom-orbit">
-                    Go to the constellation
-                  </a>
-                </div>
-              </details>
-
-              <details
-                class="showroom-instruction"
-                data-showroom-instruction
-              >
-                <summary>
-                  <span>02</span>
-                  <strong>Read each star</strong>
-                  <small>Local stars reveal. Portal stars offer passage.</small>
-                </summary>
-
-                <div>
-                  <p>
-                    Quieter stars reveal experiences inside the
-                    Showroom. Brighter portal stars offer a confirmed
-                    route into another Mirrorland page.
-                  </p>
-
-                  <a href="#showroom-star-reading">
-                    Learn how to read the stars
-                  </a>
-                </div>
-              </details>
-
-              <details
-                class="showroom-instruction"
-                data-showroom-instruction
-              >
-                <summary>
-                  <span>03</span>
-                  <strong>Open the Window</strong>
-                  <small>Reveal the Diamond threshold.</small>
-                </summary>
-
-                <div>
-                  <p>
-                    Use the Mirrorland Window control to open the
-                    stained-glass threshold and reveal the Diamond
-                    beneath it.
-                  </p>
-
-                  <a href="#showroom-window-threshold">
-                    Go to the Window
-                  </a>
-                </div>
-              </details>
-
-              <details
-                class="showroom-instruction"
-                data-showroom-instruction
-              >
-                <summary>
-                  <span>04</span>
-                  <strong>Inspect the Diamond</strong>
-                  <small>Rotate, zoom, compare, and reset.</small>
-                </summary>
-
-                <div>
-                  <p>
-                    Rotate and zoom the gem, switch between Object View
-                    and Lattice View, inspect its structure, and reset
-                    its presentation.
-                  </p>
-
-                  <a href="#showroom-diamond-controls">
-                    Go to Diamond controls
-                  </a>
-                </div>
-              </details>
-
-              <details
-                class="showroom-instruction"
-                data-showroom-instruction
-              >
-                <summary>
-                  <span>05</span>
-                  <strong>Use the Compass</strong>
-                  <small>Return to the larger navigation system.</small>
-                </summary>
-
-                <div>
-                  <p>
-                    The fixed Main Compass opens an explicit confirmation
-                    before leaving the Showroom.
-                  </p>
-
-                  <a href="#showroom-orbit">
-                    Go to the Main Compass
-                  </a>
-                </div>
-              </details>
-            </div>
-
-            <a
-              class="button button-gold showroom-instructions__enter"
-              href="#showroom-orbit"
-            >
-              Enter the Constellation
-            </a>
-          </div>
-        </details>
-      </section>
-
-      <section
         id="showroom-orbit"
         class="showroom-orbit panel"
         aria-labelledby="showroom-orbit-title"
@@ -878,37 +717,6 @@
               </span>
             </button>
           </div>
-
-          <aside
-            class="showroom-orbit-guide"
-            data-showroom-orbit-guide
-            aria-labelledby="showroom-orbit-guide-title"
-          >
-            <span class="showroom-orbit-guide__eyebrow">
-              Quick Guide
-            </span>
-
-            <h3 id="showroom-orbit-guide-title">
-              Move. Open. Discover. Pass through. Return.
-            </h3>
-
-            <ol>
-              <li>Drag the constellation</li>
-              <li>Open one cardinal cluster</li>
-              <li>Select a local or portal star</li>
-              <li>Return to the orbit when ready</li>
-              <li>Use the Main Compass only by confirmation</li>
-            </ol>
-
-            <a
-              href="#showroom-instructions"
-              data-showroom-open-instructions
-              aria-controls="showroom-instructions-disclosure"
-              aria-expanded="false"
-            >
-              Open complete instructions
-            </a>
-          </aside>
 
           <div
             class="showroom-semantic-star-layer"
@@ -1034,6 +842,7 @@
                 data-showroom-fallback-star
                 data-showroom-child-control
                 data-showroom-cardinal-id="north"
+                data-showroom-cluster-id="north"
                 data-showroom-child-id="north-1"
                 data-showroom-child-label="Welcome to Mirrorland"
                 data-showroom-object-id="north-1"
@@ -1062,6 +871,7 @@
                 data-showroom-fallback-star
                 data-showroom-child-control
                 data-showroom-cardinal-id="north"
+                data-showroom-cluster-id="north"
                 data-showroom-child-id="north-2"
                 data-showroom-child-label="Why Mirrorland Exists"
                 data-showroom-object-id="north-2"
@@ -1091,6 +901,7 @@
                 data-showroom-fallback-star
                 data-showroom-child-control
                 data-showroom-cardinal-id="north"
+                data-showroom-cluster-id="north"
                 data-showroom-child-id="north-3"
                 data-showroom-child-label="The Story So Far"
                 data-showroom-object-id="north-3"
@@ -1120,6 +931,7 @@
                 data-showroom-fallback-star
                 data-showroom-child-control
                 data-showroom-cardinal-id="north"
+                data-showroom-cluster-id="north"
                 data-showroom-child-id="north-4"
                 data-showroom-child-label="Step Through the Door"
                 data-showroom-object-id="north-4"
@@ -1161,6 +973,7 @@
                 data-showroom-fallback-star
                 data-showroom-child-control
                 data-showroom-cardinal-id="east"
+                data-showroom-cluster-id="east"
                 data-showroom-child-id="east-1"
                 data-showroom-child-label="Talk to Jeeves"
                 data-showroom-object-id="east-1"
@@ -1192,6 +1005,7 @@
                 data-showroom-fallback-star
                 data-showroom-child-control
                 data-showroom-cardinal-id="east"
+                data-showroom-cluster-id="east"
                 data-showroom-child-id="east-2"
                 data-showroom-child-label="Talk to Elara"
                 data-showroom-object-id="east-2"
@@ -1223,6 +1037,7 @@
                 data-showroom-fallback-star
                 data-showroom-child-control
                 data-showroom-cardinal-id="east"
+                data-showroom-cluster-id="east"
                 data-showroom-child-id="east-3"
                 data-showroom-child-label="Talk to Auren"
                 data-showroom-object-id="east-3"
@@ -1254,6 +1069,7 @@
                 data-showroom-fallback-star
                 data-showroom-child-control
                 data-showroom-cardinal-id="east"
+                data-showroom-cluster-id="east"
                 data-showroom-child-id="east-4"
                 data-showroom-child-label="Meet All Characters"
                 data-showroom-object-id="east-4"
@@ -1298,6 +1114,7 @@
                 data-showroom-fallback-star
                 data-showroom-child-control
                 data-showroom-cardinal-id="south"
+                data-showroom-cluster-id="south"
                 data-showroom-child-id="south-1"
                 data-showroom-child-label="Open the Window"
                 data-showroom-object-id="south-1"
@@ -1328,6 +1145,7 @@
                 data-showroom-fallback-star
                 data-showroom-child-control
                 data-showroom-cardinal-id="south"
+                data-showroom-cluster-id="south"
                 data-showroom-child-id="south-2"
                 data-showroom-child-label="Behold the Diamond"
                 data-showroom-object-id="south-2"
@@ -1357,6 +1175,7 @@
                 data-showroom-fallback-star
                 data-showroom-child-control
                 data-showroom-cardinal-id="south"
+                data-showroom-cluster-id="south"
                 data-showroom-child-id="south-3"
                 data-showroom-child-label="Read the Stars"
                 data-showroom-object-id="south-3"
@@ -1385,6 +1204,7 @@
                 data-showroom-fallback-star
                 data-showroom-child-control
                 data-showroom-cardinal-id="south"
+                data-showroom-cluster-id="south"
                 data-showroom-child-id="south-4"
                 data-showroom-child-label="Enter the Hearth"
                 data-showroom-object-id="south-4"
@@ -1428,6 +1248,7 @@
                 data-showroom-fallback-star
                 data-showroom-child-control
                 data-showroom-cardinal-id="west"
+                data-showroom-cluster-id="west"
                 data-showroom-child-id="west-1"
                 data-showroom-child-label="The Unfinished World"
                 data-showroom-object-id="west-1"
@@ -1456,6 +1277,7 @@
                 data-showroom-fallback-star
                 data-showroom-child-control
                 data-showroom-cardinal-id="west"
+                data-showroom-cluster-id="west"
                 data-showroom-child-id="west-2"
                 data-showroom-child-label="Questions in the Glass"
                 data-showroom-object-id="west-2"
@@ -1485,6 +1307,7 @@
                 data-showroom-fallback-star
                 data-showroom-child-control
                 data-showroom-cardinal-id="west"
+                data-showroom-cluster-id="west"
                 data-showroom-child-id="west-3"
                 data-showroom-child-label="Paths Not Yet Open"
                 data-showroom-object-id="west-3"
@@ -1513,6 +1336,7 @@
                 data-showroom-fallback-star
                 data-showroom-child-control
                 data-showroom-cardinal-id="west"
+                data-showroom-cluster-id="west"
                 data-showroom-child-id="west-4"
                 data-showroom-child-label="Journey into Audralia"
                 data-showroom-object-id="west-4"
@@ -1544,11 +1368,204 @@
           >
             <p>
               The constellation is an enhanced navigator. Every
-              destination remains available through the semantic
-              fallback menu.
+              destination remains reachable through the semantic
+              fallback navigation.
             </p>
           </div>
         </div>
+
+        <aside
+          class="showroom-orbit-guide"
+          data-showroom-orbit-guide
+          aria-labelledby="showroom-orbit-guide-title"
+        >
+          <span class="showroom-orbit-guide__eyebrow">
+            Quick Guide
+          </span>
+
+          <h3 id="showroom-orbit-guide-title">
+            Choose. Open. Discover. Pass through. Return.
+          </h3>
+
+          <ol>
+            <li>Select one cardinal path</li>
+            <li>Open its four-star cluster</li>
+            <li>Select a local or portal star</li>
+            <li>Return to the orbit when ready</li>
+            <li>Use the Main Compass only by confirmation</li>
+          </ol>
+
+          <a
+            href="#showroom-instructions"
+            data-showroom-open-instructions
+            aria-controls="showroom-instructions-disclosure"
+            aria-expanded="false"
+          >
+            Open complete instructions
+          </a>
+        </aside>
+      </section>
+
+      <section
+        id="showroom-instructions"
+        class="showroom-instructions panel chamber-platform"
+        aria-labelledby="showroom-instructions-title"
+        data-showroom-instructions
+      >
+        <details
+          id="showroom-instructions-disclosure"
+          class="showroom-instructions__disclosure"
+          data-showroom-instructions-disclosure
+        >
+          <summary class="showroom-instructions__summary">
+            <span class="showroom-instructions__badge">
+              Page Instructions
+            </span>
+
+            <span class="showroom-instructions__summary-copy">
+              <strong id="showroom-instructions-title">
+                How to enter the Showroom
+              </strong>
+
+              <small>
+                Five steps. Open only the guidance you need.
+              </small>
+            </span>
+          </summary>
+
+          <div class="showroom-instructions__body">
+            <p class="showroom-instructions__introduction">
+              The Showroom contains independent interactive surfaces.
+              Each reveals a different part of Mirrorland.
+            </p>
+
+            <div
+              class="showroom-instructions__steps"
+              data-showroom-instruction-steps
+            >
+              <details
+                class="showroom-instruction"
+                data-showroom-instruction
+              >
+                <summary>
+                  <span>01</span>
+                  <strong>Follow the constellation</strong>
+                  <small>Choose among stories, characters, wonders, and mysteries.</small>
+                </summary>
+
+                <div>
+                  <p>
+                    Select one of the four cardinal stars to open its
+                    cluster. Then choose one of its local or portal
+                    destinations.
+                  </p>
+
+                  <a href="#showroom-orbit">
+                    Go to the constellation
+                  </a>
+                </div>
+              </details>
+
+              <details
+                class="showroom-instruction"
+                data-showroom-instruction
+              >
+                <summary>
+                  <span>02</span>
+                  <strong>Read each star</strong>
+                  <small>Local stars reveal. Portal stars offer passage.</small>
+                </summary>
+
+                <div>
+                  <p>
+                    Quieter stars reveal experiences inside the
+                    Showroom. Brighter portal stars offer a confirmed
+                    route into another Mirrorland page.
+                  </p>
+
+                  <a href="#showroom-star-reading">
+                    Learn how to read the stars
+                  </a>
+                </div>
+              </details>
+
+              <details
+                class="showroom-instruction"
+                data-showroom-instruction
+              >
+                <summary>
+                  <span>03</span>
+                  <strong>Open the Window</strong>
+                  <small>Reveal the Diamond threshold.</small>
+                </summary>
+
+                <div>
+                  <p>
+                    Use the Mirrorland Window control to open the
+                    stained-glass threshold and reveal the Diamond
+                    beneath it.
+                  </p>
+
+                  <a href="#showroom-window-threshold">
+                    Go to the Window
+                  </a>
+                </div>
+              </details>
+
+              <details
+                class="showroom-instruction"
+                data-showroom-instruction
+              >
+                <summary>
+                  <span>04</span>
+                  <strong>Inspect the Diamond</strong>
+                  <small>Rotate, zoom, compare, and reset.</small>
+                </summary>
+
+                <div>
+                  <p>
+                    Rotate and zoom the gem, switch between Object View
+                    and Lattice View, inspect its structure, and reset
+                    its presentation.
+                  </p>
+
+                  <a href="#showroom-diamond-controls">
+                    Go to Diamond controls
+                  </a>
+                </div>
+              </details>
+
+              <details
+                class="showroom-instruction"
+                data-showroom-instruction
+              >
+                <summary>
+                  <span>05</span>
+                  <strong>Use the Compass</strong>
+                  <small>Return to the larger navigation system.</small>
+                </summary>
+
+                <div>
+                  <p>
+                    The fixed Main Compass opens an explicit confirmation
+                    before leaving the Showroom.
+                  </p>
+
+                  <a href="#showroom-orbit">
+                    Go to the Main Compass
+                  </a>
+                </div>
+              </details>
+            </div>
+
+            <a
+              class="button button-gold showroom-instructions__enter"
+              href="#showroom-orbit"
+            >
+              Enter the Constellation
+            </a>
+          </div>
+        </details>
       </section>
 
       <section
@@ -1684,7 +1701,7 @@
             class="showroom-gauge-dashboard showroom-gauge-dashboard--compact"
             data-showroom-gauge-dashboard
             data-gauge-dashboard-id="object"
-            data-gauge-dashboard-state="ready"
+            data-gauge-dashboard-state="static"
           >
             <div
               class="showroom-gauge-selector showroom-gauge-selector--metrics"
@@ -1782,7 +1799,6 @@
                 class="showroom-gauge-detail"
                 data-showroom-gauge-detail
                 data-gauge-detail-id="geometry-authority"
-                hidden
               >
                 <h3>
                   One deterministic geometry authority
@@ -1800,7 +1816,6 @@
                 class="showroom-gauge-detail"
                 data-showroom-gauge-detail
                 data-gauge-detail-id="renderer-state"
-                hidden
               >
                 <h3>
                   Native renderer
@@ -1818,7 +1833,6 @@
                 class="showroom-gauge-detail"
                 data-showroom-gauge-detail
                 data-gauge-detail-id="window-state"
-                hidden
               >
                 <h3>
                   Independent threshold Window
@@ -2081,7 +2095,7 @@
             class="showroom-gauge-dashboard showroom-gauge-dashboard--compact"
             data-showroom-gauge-dashboard
             data-gauge-dashboard-id="structure"
-            data-gauge-dashboard-state="ready"
+            data-gauge-dashboard-state="static"
           >
             <div
               class="showroom-gauge-selector showroom-gauge-selector--metrics"
@@ -2215,7 +2229,6 @@
                 class="showroom-gauge-detail"
                 data-showroom-gauge-detail
                 data-gauge-detail-id="structural-bands"
-                hidden
               >
                 <h3>Sixteen structural bands</h3>
 
@@ -2230,7 +2243,6 @@
                 class="showroom-gauge-detail"
                 data-showroom-gauge-detail
                 data-gauge-detail-id="addressable-seats"
-                hidden
               >
                 <h3>256 addressable seats</h3>
 
@@ -2245,7 +2257,6 @@
                 class="showroom-gauge-detail"
                 data-showroom-gauge-detail
                 data-gauge-detail-id="surface-triangles"
-                hidden
               >
                 <h3>512 exterior triangles</h3>
 
@@ -2260,7 +2271,6 @@
                 class="showroom-gauge-detail"
                 data-showroom-gauge-detail
                 data-gauge-detail-id="lattice-connections"
-                hidden
               >
                 <h3>800 internal connections</h3>
 
@@ -2275,7 +2285,6 @@
                 class="showroom-gauge-detail"
                 data-showroom-gauge-detail
                 data-gauge-detail-id="material-regions"
-                hidden
               >
                 <h3>Fourteen material regions</h3>
 
@@ -2289,6 +2298,8 @@
             <div
               class="showroom-composition-gauge showroom-composition-gauge--compact"
               data-showroom-composition-gauge
+              data-composition-id="diamond-anatomy"
+              data-showroom-composition-state="static"
               aria-labelledby="diamond-anatomy-title"
             >
               <header>
@@ -2422,7 +2433,7 @@
             class="showroom-gauge-dashboard showroom-gauge-dashboard--compact"
             data-showroom-gauge-dashboard
             data-gauge-dashboard-id="interaction"
-            data-gauge-dashboard-state="ready"
+            data-gauge-dashboard-state="static"
           >
             <div
               class="showroom-gauge-selector showroom-gauge-selector--capabilities"
@@ -2595,7 +2606,6 @@
                 class="showroom-gauge-detail"
                 data-showroom-gauge-detail
                 data-gauge-detail-id="touch"
-                hidden
               >
                 <h3>Touch rotation</h3>
 
@@ -2610,7 +2620,6 @@
                 class="showroom-gauge-detail"
                 data-showroom-gauge-detail
                 data-gauge-detail-id="pinch-zoom"
-                hidden
               >
                 <h3>Pinch zoom</h3>
 
@@ -2625,7 +2634,6 @@
                 class="showroom-gauge-detail"
                 data-showroom-gauge-detail
                 data-gauge-detail-id="wheel-zoom"
-                hidden
               >
                 <h3>Wheel zoom</h3>
 
@@ -2640,7 +2648,6 @@
                 class="showroom-gauge-detail"
                 data-showroom-gauge-detail
                 data-gauge-detail-id="keyboard"
-                hidden
               >
                 <h3>Keyboard access</h3>
 
@@ -2655,7 +2662,6 @@
                 class="showroom-gauge-detail"
                 data-showroom-gauge-detail
                 data-gauge-detail-id="inspection"
-                hidden
               >
                 <h3>Inspection</h3>
 
@@ -2670,7 +2676,6 @@
                 class="showroom-gauge-detail"
                 data-showroom-gauge-detail
                 data-gauge-detail-id="reset"
-                hidden
               >
                 <h3>Reset</h3>
 
@@ -2685,7 +2690,6 @@
                 class="showroom-gauge-detail"
                 data-showroom-gauge-detail
                 data-gauge-detail-id="reduced-motion"
-                hidden
               >
                 <h3>Reduced motion</h3>
 
@@ -2700,7 +2704,6 @@
                 class="showroom-gauge-detail"
                 data-showroom-gauge-detail
                 data-gauge-detail-id="responsive"
-                hidden
               >
                 <h3>Responsive presentation</h3>
 
@@ -2715,7 +2718,6 @@
                 class="showroom-gauge-detail"
                 data-showroom-gauge-detail
                 data-gauge-detail-id="fallback"
-                hidden
               >
                 <h3>Semantic fallback</h3>
 
@@ -2758,7 +2760,7 @@
             class="showroom-gauge-dashboard showroom-gauge-dashboard--compact"
             data-showroom-gauge-dashboard
             data-gauge-dashboard-id="systems"
-            data-gauge-dashboard-state="ready"
+            data-gauge-dashboard-state="static"
           >
             <div
               class="showroom-gauge-selector showroom-gauge-selector--status"
@@ -2861,7 +2863,6 @@
                 class="showroom-gauge-detail"
                 data-showroom-gauge-detail
                 data-gauge-detail-id="character-paths"
-                hidden
               >
                 <h3>Character paths</h3>
 
@@ -2876,7 +2877,6 @@
                 class="showroom-gauge-detail"
                 data-showroom-gauge-detail
                 data-gauge-detail-id="frontier-sciences"
-                hidden
               >
                 <h3>Frontier sciences</h3>
 
@@ -2892,7 +2892,6 @@
                 class="showroom-gauge-detail"
                 data-showroom-gauge-detail
                 data-gauge-detail-id="simulation-systems"
-                hidden
               >
                 <h3>Simulation systems</h3>
 
@@ -2908,7 +2907,6 @@
                 class="showroom-gauge-detail"
                 data-showroom-gauge-detail
                 data-gauge-detail-id="world-impact"
-                hidden
               >
                 <h3>World-impact pathways</h3>
 
@@ -2951,6 +2949,8 @@
           <div
             class="showroom-information-tabs"
             data-showroom-information-tabs
+            data-information-tabs-id="showroom-information"
+            data-showroom-information-state="static"
           >
             <div
               class="showroom-information-tablist"
@@ -2978,7 +2978,7 @@
                 data-information-tab-id="engineering"
                 aria-selected="false"
                 aria-controls="engineering-panel"
-                tabindex="-1"
+                tabindex="0"
               >
                 Engineering
               </button>
@@ -2991,7 +2991,7 @@
                 data-information-tab-id="evidence"
                 aria-selected="false"
                 aria-controls="evidence-panel"
-                tabindex="-1"
+                tabindex="0"
               >
                 Evidence
               </button>
@@ -3085,7 +3085,6 @@
               data-showroom-information-panel
               data-information-panel-id="engineering"
               aria-labelledby="engineering-tab"
-              hidden
             >
               <div class="showroom-information-summary">
                 <strong>
@@ -3130,8 +3129,8 @@
                     <p>
                       The compositor owns the orbit camera,
                       world-to-screen projection, Compass-plane depth
-                      classification, settlement, and authoritative hit
-                      coordinates.
+                      classification, layer orchestration, and
+                      authoritative rendered hit coordinates.
                     </p>
                   </div>
                 </details>
@@ -3207,7 +3206,6 @@
               data-showroom-information-panel
               data-information-panel-id="evidence"
               aria-labelledby="evidence-tab"
-              hidden
             >
               <div class="showroom-information-summary">
                 <strong>

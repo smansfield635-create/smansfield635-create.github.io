@@ -121,12 +121,6 @@
 
   <link
     rel="stylesheet"
-    href="/assets/compass/compass.css"
-    data-showroom-compass-css="true"
-  >
-
-  <link
-    rel="stylesheet"
     href="/showroom/index.css?v=SHOWROOM_MIRRORLAND_NARRATIVE_CONSTELLATION_CSS_TNT_v6"
     data-showroom-page-css="true"
     data-showroom-page-css-contract="SHOWROOM_MIRRORLAND_NARRATIVE_CONSTELLATION_CSS_TNT_v6"
@@ -163,10 +157,13 @@
       class="topbar showroom-topbar"
       aria-label="Showroom header"
     >
-      <a
+      <button
         class="brand"
-        href="/index.html"
-        aria-label="Return to the Diamond Gate Bridge Main Compass"
+        type="button"
+        data-showroom-open-compass-dialog
+        aria-label="Open the option to return to the Diamond Gate Bridge Main Compass"
+        aria-haspopup="dialog"
+        aria-controls="showroom-compass-dialog"
       >
         <span
           class="brand-mark"
@@ -179,24 +176,29 @@
           <span>Shadows Never Shatter</span>
           <strong>The Showroom</strong>
         </span>
-      </a>
+      </button>
 
       <nav
         class="nav showroom-nav"
         aria-label="Showroom guidance and fallback navigation"
       >
         <div class="elara-quick-path">
-          <elara-room-entry
-            href="/elara/index.html"
-            label="Talk to Elara"
+          <button
+            class="elara-primary-link"
+            type="button"
+            data-showroom-fallback-portal
+            data-showroom-destination-kind="external-route"
+            data-showroom-route="/elara/index.html"
+            data-showroom-route-label="Talk to Elara"
+            data-showroom-route-description="Enter Elara’s mission, story, personal-origin, and literary conversation surface."
+            data-showroom-route-confirmation-required="true"
+            data-showroom-immediate-navigation="false"
+            aria-label="Talk to Elara on another Mirrorland page. Confirmation required."
+            aria-haspopup="dialog"
+            aria-controls="showroom-route-dialog"
           >
-            <a
-              class="elara-primary-link"
-              href="/elara/index.html"
-            >
-              Talk to Elara
-            </a>
-          </elara-room-entry>
+            Talk to Elara
+          </button>
         </div>
 
         <details class="route-menu">
@@ -233,21 +235,70 @@
               <div class="fallback-navigation__group">
                 <strong>Meet the Characters</strong>
 
-                <a href="/showroom/globe/hearth/jeeves/">
+                <button
+                  type="button"
+                  data-showroom-fallback-portal
+                  data-showroom-destination-kind="external-route"
+                  data-showroom-route="/showroom/globe/hearth/jeeves/"
+                  data-showroom-route-label="Talk to Jeeves"
+                  data-showroom-route-description="Meet the House interface and receive guidance through the estate, the Hearth, Audralia, and Mirrorland."
+                  data-showroom-route-confirmation-required="true"
+                  data-showroom-immediate-navigation="false"
+                  aria-label="Talk to Jeeves on another Mirrorland page. Confirmation required."
+                  aria-haspopup="dialog"
+                  aria-controls="showroom-route-dialog"
+                >
                   Talk to Jeeves
-                </a>
+                </button>
 
-                <a href="/elara/index.html">
+                <button
+                  type="button"
+                  data-showroom-fallback-portal
+                  data-showroom-destination-kind="external-route"
+                  data-showroom-route="/elara/index.html"
+                  data-showroom-route-label="Talk to Elara"
+                  data-showroom-route-description="Enter Elara’s mission, story, personal-origin, and literary conversation surface."
+                  data-showroom-route-confirmation-required="true"
+                  data-showroom-immediate-navigation="false"
+                  aria-label="Talk to Elara on another Mirrorland page. Confirmation required."
+                  aria-haspopup="dialog"
+                  aria-controls="showroom-route-dialog"
+                >
                   Talk to Elara
-                </a>
+                </button>
 
-                <a href="/products/auren/">
+                <button
+                  type="button"
+                  data-showroom-fallback-portal
+                  data-showroom-destination-kind="external-route"
+                  data-showroom-route="/products/auren/"
+                  data-showroom-route-label="Talk to Auren"
+                  data-showroom-route-description="Enter the product-floor specialist’s room for practical systems, product interpretation, and bounded handoffs."
+                  data-showroom-route-confirmation-required="true"
+                  data-showroom-immediate-navigation="false"
+                  aria-label="Talk to Auren on another Diamond Gate Bridge page. Confirmation required."
+                  aria-haspopup="dialog"
+                  aria-controls="showroom-route-dialog"
+                >
                   Talk to Auren
-                </a>
+                </button>
 
-                <a href="/characters/">
+                <button
+                  type="button"
+                  data-showroom-fallback-portal
+                  data-showroom-destination-kind="external-route"
+                  data-showroom-route="/characters/"
+                  data-showroom-route-label="Meet All Characters"
+                  data-showroom-route-description="Open the central character directory and discover the wider Mirrorland cast."
+                  data-showroom-route-confirmation-required="true"
+                  data-showroom-immediate-navigation="false"
+                  data-showroom-route-role="directory"
+                  aria-label="Meet all Mirrorland characters on the character-directory page. Confirmation required."
+                  aria-haspopup="dialog"
+                  aria-controls="showroom-route-dialog"
+                >
                   Meet All Characters
-                </a>
+                </button>
               </div>
 
               <div class="fallback-navigation__group">
@@ -265,9 +316,21 @@
                   Read the Stars
                 </a>
 
-                <a href="/showroom/globe/hearth/">
+                <button
+                  type="button"
+                  data-showroom-fallback-portal
+                  data-showroom-destination-kind="external-route"
+                  data-showroom-route="/showroom/globe/hearth/"
+                  data-showroom-route-label="Enter the Hearth"
+                  data-showroom-route-description="Leave the Showroom for the inhabited facility where the House interface, characters, and Audralia-facing systems meet."
+                  data-showroom-route-confirmation-required="true"
+                  data-showroom-immediate-navigation="false"
+                  aria-label="Enter the Hearth facility on another Mirrorland page. Confirmation required."
+                  aria-haspopup="dialog"
+                  aria-controls="showroom-route-dialog"
+                >
                   Enter the Hearth
-                </a>
+                </button>
               </div>
 
               <div class="fallback-navigation__group">
@@ -285,9 +348,21 @@
                   Paths Not Yet Open
                 </a>
 
-                <a href="/showroom/globe/audralia/">
+                <button
+                  type="button"
+                  data-showroom-fallback-portal
+                  data-showroom-destination-kind="external-route"
+                  data-showroom-route="/showroom/globe/audralia/"
+                  data-showroom-route-label="Journey into Audralia"
+                  data-showroom-route-description="Travel toward Mirrorland’s constructive possibility world and its developing planetary rooms."
+                  data-showroom-route-confirmation-required="true"
+                  data-showroom-immediate-navigation="false"
+                  aria-label="Journey into Audralia on another Mirrorland page. Confirmation required."
+                  aria-haspopup="dialog"
+                  aria-controls="showroom-route-dialog"
+                >
                   Journey into Audralia
-                </a>
+                </button>
               </div>
 
               <div class="fallback-navigation__group">
@@ -375,10 +450,34 @@
             </strong>
           </div>
 
+          <nav
+            class="showroom-local-return"
+            aria-label="Leave Welcome to Mirrorland"
+          >
+            <a
+              class="button button-gold"
+              href="#showroom-orbit"
+              data-showroom-return-to-orbit
+            >
+              Return to Orbit
+            </a>
+
+            <button
+              class="button"
+              type="button"
+              data-showroom-open-compass-dialog
+              aria-haspopup="dialog"
+              aria-controls="showroom-compass-dialog"
+            >
+              Return to Compass
+            </button>
+          </nav>
+
           <details
             id="mirrorland-preface"
             class="architectural-drop mirrorland-preface"
             data-showroom-mirrorland-preface
+            open
           >
             <summary>
               Read the complete Mirrorland preface
@@ -428,6 +527,8 @@
                     class="button"
                     type="button"
                     data-showroom-open-compass-dialog
+                    aria-haspopup="dialog"
+                    aria-controls="showroom-compass-dialog"
                   >
                     Return to Compass
                   </button>
@@ -477,6 +578,8 @@
                     class="button"
                     type="button"
                     data-showroom-open-compass-dialog
+                    aria-haspopup="dialog"
+                    aria-controls="showroom-compass-dialog"
                   >
                     Return to Compass
                   </button>
@@ -552,6 +655,8 @@
                     class="button"
                     type="button"
                     data-showroom-open-compass-dialog
+                    aria-haspopup="dialog"
+                    aria-controls="showroom-compass-dialog"
                   >
                     Return to Compass
                   </button>
@@ -598,6 +703,8 @@
                     class="button"
                     type="button"
                     data-showroom-open-compass-dialog
+                    aria-haspopup="dialog"
+                    aria-controls="showroom-compass-dialog"
                   >
                     Return to Compass
                   </button>
@@ -891,25 +998,11 @@
             </h3>
 
             <ol>
-              <li>
-                Drag the constellation
-              </li>
-
-              <li>
-                Open one cardinal cluster
-              </li>
-
-              <li>
-                Select a local or portal star
-              </li>
-
-              <li>
-                Return to the orbit when ready
-              </li>
-
-              <li>
-                Use the Main Compass only by confirmation
-              </li>
+              <li>Drag the constellation</li>
+              <li>Open one cardinal cluster</li>
+              <li>Select a local or portal star</li>
+              <li>Return to the orbit when ready</li>
+              <li>Use the Main Compass only by confirmation</li>
             </ol>
 
             <a
@@ -1602,6 +1695,8 @@
             class="button"
             type="button"
             data-showroom-open-compass-dialog
+            aria-haspopup="dialog"
+            aria-controls="showroom-compass-dialog"
           >
             Return to Compass
           </button>
@@ -1656,6 +1751,8 @@
             class="button"
             type="button"
             data-showroom-open-compass-dialog
+            aria-haspopup="dialog"
+            aria-controls="showroom-compass-dialog"
           >
             Return to Compass
           </button>
@@ -1708,6 +1805,8 @@
             class="button"
             type="button"
             data-showroom-open-compass-dialog
+            aria-haspopup="dialog"
+            aria-controls="showroom-compass-dialog"
           >
             Return to Compass
           </button>
@@ -1928,6 +2027,7 @@
                         data-lattice-seats="256"
                         data-surface-triangles="512"
                         data-lattice-connections="800"
+                        data-material-regions="14"
                         data-webgl-state="loading"
                         data-showroom-diamond-pointer-enabled="true"
                         role="group"
@@ -2122,6 +2222,8 @@
               class="button"
               type="button"
               data-showroom-open-compass-dialog
+              aria-haspopup="dialog"
+              aria-controls="showroom-compass-dialog"
             >
               Return to Compass
             </button>
@@ -2287,9 +2389,7 @@
                 data-showroom-gauge-detail
                 data-gauge-detail-id="radial-sectors"
               >
-                <h3>
-                  Sixteen radial sectors
-                </h3>
+                <h3>Sixteen radial sectors</h3>
 
                 <p>
                   The radial field supplies the Diamond’s angular
@@ -2304,9 +2404,7 @@
                 data-gauge-detail-id="structural-bands"
                 hidden
               >
-                <h3>
-                  Sixteen structural bands
-                </h3>
+                <h3>Sixteen structural bands</h3>
 
                 <p>
                   The bands supply the second coordinate dimension and
@@ -2321,9 +2419,7 @@
                 data-gauge-detail-id="addressable-seats"
                 hidden
               >
-                <h3>
-                  256 addressable seats
-                </h3>
+                <h3>256 addressable seats</h3>
 
                 <p>
                   Every seat occupies a declared position that can be
@@ -2338,9 +2434,7 @@
                 data-gauge-detail-id="surface-triangles"
                 hidden
               >
-                <h3>
-                  512 exterior triangles
-                </h3>
+                <h3>512 exterior triangles</h3>
 
                 <p>
                   The visible surface is assembled from retained
@@ -2355,9 +2449,7 @@
                 data-gauge-detail-id="lattice-connections"
                 hidden
               >
-                <h3>
-                  800 internal connections
-                </h3>
+                <h3>800 internal connections</h3>
 
                 <p>
                   The internal field expresses continuity across the
@@ -2372,9 +2464,7 @@
                 data-gauge-detail-id="material-regions"
                 hidden
               >
-                <h3>
-                  Fourteen material regions
-                </h3>
+                <h3>Fourteen material regions</h3>
 
                 <p>
                   The regions govern the crown, girdle, pavilion, culet,
@@ -2398,71 +2488,75 @@
                 </h3>
               </header>
 
-              <div
+              <ul
                 class="showroom-composition-rail"
-                role="list"
                 aria-label="Diamond structural regions"
               >
-                <button
-                  type="button"
-                  role="listitem"
-                  data-showroom-composition-region
-                  data-region-id="crown"
-                  aria-pressed="true"
-                >
-                  <span>01</span>
-                  <strong>Gold Crown</strong>
-                  <small>Visible identity</small>
-                </button>
+                <li>
+                  <button
+                    type="button"
+                    data-showroom-composition-region
+                    data-region-id="crown"
+                    aria-pressed="true"
+                  >
+                    <span>01</span>
+                    <strong>Gold Crown</strong>
+                    <small>Visible identity</small>
+                  </button>
+                </li>
 
-                <button
-                  type="button"
-                  role="listitem"
-                  data-showroom-composition-region
-                  data-region-id="girdle"
-                  aria-pressed="false"
-                >
-                  <span>02</span>
-                  <strong>Bridge Girdle</strong>
-                  <small>Joining boundary</small>
-                </button>
+                <li>
+                  <button
+                    type="button"
+                    data-showroom-composition-region
+                    data-region-id="girdle"
+                    aria-pressed="false"
+                  >
+                    <span>02</span>
+                    <strong>Bridge Girdle</strong>
+                    <small>Joining boundary</small>
+                  </button>
+                </li>
 
-                <button
-                  type="button"
-                  role="listitem"
-                  data-showroom-composition-region
-                  data-region-id="pavilion"
-                  aria-pressed="false"
-                >
-                  <span>03</span>
-                  <strong>Sapphire Pavilion</strong>
-                  <small>Depth and support</small>
-                </button>
+                <li>
+                  <button
+                    type="button"
+                    data-showroom-composition-region
+                    data-region-id="pavilion"
+                    aria-pressed="false"
+                  >
+                    <span>03</span>
+                    <strong>Sapphire Pavilion</strong>
+                    <small>Depth and support</small>
+                  </button>
+                </li>
 
-                <button
-                  type="button"
-                  role="listitem"
-                  data-showroom-composition-region
-                  data-region-id="culet"
-                  aria-pressed="false"
-                >
-                  <span>04</span>
-                  <strong>Culet</strong>
-                  <small>Lower termination</small>
-                </button>
+                <li>
+                  <button
+                    type="button"
+                    data-showroom-composition-region
+                    data-region-id="culet"
+                    aria-pressed="false"
+                  >
+                    <span>04</span>
+                    <strong>Culet</strong>
+                    <small>Lower termination</small>
+                  </button>
+                </li>
 
-                <button
-                  type="button"
-                  role="listitem"
-                  data-showroom-composition-region
-                  data-region-id="lattice"
-                  aria-pressed="false"
-                >
-                  <span>05</span>
-                  <strong>Internal Lattice</strong>
-                  <small>Structural continuity</small>
-                </button>
-              </div>
+                <li>
+                  <button
+                    type="button"
+                    data-showroom-composition-region
+                    data-region-id="lattice"
+                    aria-pressed="false"
+                  >
+                    <span>05</span>
+                    <strong>Internal Lattice</strong>
+                    <small>Structural continuity</small>
+                  </button>
+                </li>
+              </ul>
 
               <div
                 class="showroom-composition-detail"
@@ -2492,6 +2586,8 @@
               class="button"
               type="button"
               data-showroom-open-compass-dialog
+              aria-haspopup="dialog"
+              aria-controls="showroom-compass-dialog"
             >
               Return to Compass
             </button>
@@ -2696,9 +2792,7 @@
                 data-showroom-gauge-detail
                 data-gauge-detail-id="pointer"
               >
-                <h3>
-                  Pointer rotation
-                </h3>
+                <h3>Pointer rotation</h3>
 
                 <p>
                   Direct pointer input rotates the Diamond on its
@@ -2713,9 +2807,7 @@
                 data-gauge-detail-id="touch"
                 hidden
               >
-                <h3>
-                  Touch rotation
-                </h3>
+                <h3>Touch rotation</h3>
 
                 <p>
                   Finger and thumb movement remain confined to the
@@ -2730,9 +2822,7 @@
                 data-gauge-detail-id="pinch-zoom"
                 hidden
               >
-                <h3>
-                  Pinch zoom
-                </h3>
+                <h3>Pinch zoom</h3>
 
                 <p>
                   The protected interaction contract retains touch-based
@@ -2747,9 +2837,7 @@
                 data-gauge-detail-id="wheel-zoom"
                 hidden
               >
-                <h3>
-                  Wheel zoom
-                </h3>
+                <h3>Wheel zoom</h3>
 
                 <p>
                   Desktop wheel input remains owned by the Diamond while
@@ -2764,9 +2852,7 @@
                 data-gauge-detail-id="keyboard"
                 hidden
               >
-                <h3>
-                  Keyboard access
-                </h3>
+                <h3>Keyboard access</h3>
 
                 <p>
                   Star destinations, gauges, tabs, dialogs, and controls
@@ -2781,9 +2867,7 @@
                 data-gauge-detail-id="inspection"
                 hidden
               >
-                <h3>
-                  Inspection
-                </h3>
+                <h3>Inspection</h3>
 
                 <p>
                   The Inspect control exposes the Diamond renderer’s
@@ -2798,9 +2882,7 @@
                 data-gauge-detail-id="reset"
                 hidden
               >
-                <h3>
-                  Reset
-                </h3>
+                <h3>Reset</h3>
 
                 <p>
                   Reset restores the renderer-defined accepted view
@@ -2815,9 +2897,7 @@
                 data-gauge-detail-id="reduced-motion"
                 hidden
               >
-                <h3>
-                  Reduced motion
-                </h3>
+                <h3>Reduced motion</h3>
 
                 <p>
                   Nonessential animation is removed when reduced motion
@@ -2832,9 +2912,7 @@
                 data-gauge-detail-id="responsive"
                 hidden
               >
-                <h3>
-                  Responsive presentation
-                </h3>
+                <h3>Responsive presentation</h3>
 
                 <p>
                   Orbit, dashboards, Window, information, and Diamond
@@ -2849,9 +2927,7 @@
                 data-gauge-detail-id="fallback"
                 hidden
               >
-                <h3>
-                  Semantic fallback
-                </h3>
+                <h3>Semantic fallback</h3>
 
                 <p>
                   The page remains navigable when enhanced rendering is
@@ -2869,6 +2945,8 @@
               class="button"
               type="button"
               data-showroom-open-compass-dialog
+              aria-haspopup="dialog"
+              aria-controls="showroom-compass-dialog"
             >
               Return to Compass
             </button>
@@ -3002,9 +3080,7 @@
                 data-showroom-gauge-detail
                 data-gauge-detail-id="narrative-environment"
               >
-                <h3>
-                  Mirrorland is the containing world
-                </h3>
+                <h3>Mirrorland is the containing world</h3>
 
                 <p>
                   Characters, scientific objects, gauges, simulations,
@@ -3020,9 +3096,7 @@
                 data-gauge-detail-id="character-paths"
                 hidden
               >
-                <h3>
-                  Character paths
-                </h3>
+                <h3>Character paths</h3>
 
                 <p>
                   Portal stars provide confirmed entry to character
@@ -3037,9 +3111,7 @@
                 data-gauge-detail-id="frontier-sciences"
                 hidden
               >
-                <h3>
-                  Frontier sciences
-                </h3>
+                <h3>Frontier sciences</h3>
 
                 <p>
                   Future areas may present unresolved scientific
@@ -3055,9 +3127,7 @@
                 data-gauge-detail-id="simulation-systems"
                 hidden
               >
-                <h3>
-                  Simulation systems
-                </h3>
+                <h3>Simulation systems</h3>
 
                 <p>
                   Planned environments may support user-directed
@@ -3073,9 +3143,7 @@
                 data-gauge-detail-id="world-impact"
                 hidden
               >
-                <h3>
-                  World-impact pathways
-                </h3>
+                <h3>World-impact pathways</h3>
 
                 <p>
                   Mirrorland may help examine whether experimental
@@ -3094,6 +3162,8 @@
               class="button"
               type="button"
               data-showroom-open-compass-dialog
+              aria-haspopup="dialog"
+              aria-controls="showroom-compass-dialog"
             >
               Return to Compass
             </button>
@@ -3205,9 +3275,7 @@
 
               <div class="drop-grid">
                 <details class="architectural-drop">
-                  <summary>
-                    Accessibility contract
-                  </summary>
+                  <summary>Accessibility contract</summary>
 
                   <div class="drop-content">
                     <p>
@@ -3219,9 +3287,7 @@
                 </details>
 
                 <details class="architectural-drop">
-                  <summary>
-                    Responsive behavior
-                  </summary>
+                  <summary>Responsive behavior</summary>
 
                   <div class="drop-content">
                     <p>
@@ -3232,9 +3298,7 @@
                 </details>
 
                 <details class="architectural-drop">
-                  <summary>
-                    Reduced motion
-                  </summary>
+                  <summary>Reduced motion</summary>
 
                   <div class="drop-content">
                     <p>
@@ -3245,9 +3309,7 @@
                 </details>
 
                 <details class="architectural-drop">
-                  <summary>
-                    Semantic fallback
-                  </summary>
+                  <summary>Semantic fallback</summary>
 
                   <div class="drop-content">
                     <p>
@@ -3259,9 +3321,7 @@
                 </details>
 
                 <details class="architectural-drop">
-                  <summary>
-                    Failure isolation
-                  </summary>
+                  <summary>Failure isolation</summary>
 
                   <div class="drop-content">
                     <p>
@@ -3296,9 +3356,7 @@
 
               <div class="drop-grid">
                 <details class="architectural-drop">
-                  <summary>
-                    Diamond geometry pipeline
-                  </summary>
+                  <summary>Diamond geometry pipeline</summary>
 
                   <div class="drop-content">
                     <p>
@@ -3310,9 +3368,7 @@
                 </details>
 
                 <details class="architectural-drop">
-                  <summary>
-                    Diamond rendering pipeline
-                  </summary>
+                  <summary>Diamond rendering pipeline</summary>
 
                   <div class="drop-content">
                     <p>
@@ -3324,9 +3380,7 @@
                 </details>
 
                 <details class="architectural-drop">
-                  <summary>
-                    Orbit composition pipeline
-                  </summary>
+                  <summary>Orbit composition pipeline</summary>
 
                   <div class="drop-content">
                     <p>
@@ -3339,9 +3393,7 @@
                 </details>
 
                 <details class="architectural-drop">
-                  <summary>
-                    Gauge presentation pipeline
-                  </summary>
+                  <summary>Gauge presentation pipeline</summary>
 
                   <div class="drop-content">
                     <p>
@@ -3353,9 +3405,7 @@
                 </details>
 
                 <details class="architectural-drop">
-                  <summary>
-                    Window pipeline
-                  </summary>
+                  <summary>Window pipeline</summary>
 
                   <div class="drop-content">
                     <p>
@@ -3367,9 +3417,7 @@
                 </details>
 
                 <details class="architectural-drop">
-                  <summary>
-                    Ownership boundaries
-                  </summary>
+                  <summary>Ownership boundaries</summary>
 
                   <div class="drop-content">
                     <p>
@@ -3466,9 +3514,7 @@
 
               <div class="drop-grid">
                 <details class="architectural-drop">
-                  <summary>
-                    Construction evidence
-                  </summary>
+                  <summary>Construction evidence</summary>
 
                   <div class="drop-content">
                     <p>
@@ -3480,9 +3526,7 @@
                 </details>
 
                 <details class="architectural-drop">
-                  <summary>
-                    Runtime evidence
-                  </summary>
+                  <summary>Runtime evidence</summary>
 
                   <div class="drop-content">
                     <p>
@@ -3493,9 +3537,7 @@
                 </details>
 
                 <details class="architectural-drop">
-                  <summary>
-                    Visual acceptance
-                  </summary>
+                  <summary>Visual acceptance</summary>
 
                   <div class="drop-content">
                     <p>
@@ -3506,9 +3548,7 @@
                 </details>
 
                 <details class="architectural-drop">
-                  <summary>
-                    Receipts
-                  </summary>
+                  <summary>Receipts</summary>
 
                   <div class="drop-content">
                     <p>
@@ -3519,9 +3559,7 @@
                 </details>
 
                 <details class="architectural-drop">
-                  <summary>
-                    Claim boundaries
-                  </summary>
+                  <summary>Claim boundaries</summary>
 
                   <div class="drop-content">
                     <p>
@@ -3543,6 +3581,8 @@
               class="button"
               type="button"
               data-showroom-open-compass-dialog
+              aria-haspopup="dialog"
+              aria-controls="showroom-compass-dialog"
             >
               Return to Compass
             </button>
@@ -3572,13 +3612,27 @@
       </div>
 
       <nav aria-label="Showroom footer links">
-        <a href="/elara/index.html">
+        <button
+          type="button"
+          data-showroom-fallback-portal
+          data-showroom-destination-kind="external-route"
+          data-showroom-route="/elara/index.html"
+          data-showroom-route-label="Talk to Elara"
+          data-showroom-route-description="Enter Elara’s mission, story, personal-origin, and literary conversation surface."
+          data-showroom-route-confirmation-required="true"
+          data-showroom-immediate-navigation="false"
+          aria-label="Talk to Elara on another Mirrorland page. Confirmation required."
+          aria-haspopup="dialog"
+          aria-controls="showroom-route-dialog"
+        >
           Talk to Elara
-        </a>
+        </button>
 
         <button
           type="button"
           data-showroom-open-compass-dialog
+          aria-haspopup="dialog"
+          aria-controls="showroom-compass-dialog"
         >
           Main Compass
         </button>
@@ -3669,14 +3723,15 @@
           Stay in the Showroom
         </button>
 
-        <a
+        <button
           class="button"
-          href="/index.html"
+          type="button"
           data-showroom-route-continue
           data-showroom-route-confirmed-navigation="true"
+          disabled
         >
           Continue to Destination
-        </a>
+        </button>
       </div>
     </div>
   </dialog>
@@ -3816,9 +3871,7 @@
 
       <div class="construction-details">
         <details class="architectural-drop">
-          <summary>
-            Construction identity
-          </summary>
+          <summary>Construction identity</summary>
 
           <div class="drop-content">
             <p>
@@ -3830,9 +3883,7 @@
         </details>
 
         <details class="architectural-drop">
-          <summary>
-            Stage separation
-          </summary>
+          <summary>Stage separation</summary>
 
           <div class="drop-content">
             <p>
@@ -3844,9 +3895,7 @@
         </details>
 
         <details class="architectural-drop">
-          <summary>
-            Gauge system
-          </summary>
+          <summary>Gauge system</summary>
 
           <div class="drop-content">
             <p>
@@ -3858,9 +3907,7 @@
         </details>
 
         <details class="architectural-drop">
-          <summary>
-            Navigation ownership
-          </summary>
+          <summary>Navigation ownership</summary>
 
           <div class="drop-content">
             <p>
@@ -3871,9 +3918,7 @@
         </details>
 
         <details class="architectural-drop">
-          <summary>
-            Claim boundary
-          </summary>
+          <summary>Claim boundary</summary>
 
           <div class="drop-content">
             <p>

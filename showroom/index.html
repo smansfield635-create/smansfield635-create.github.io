@@ -1,13 +1,14 @@
 <!-- TARGET FILE: /showroom/index.html -->
 <!-- TNT FULL-FILE REPLACEMENT -->
-<!-- SHOWROOM_MIRRORLAND_OFFICIAL_GATE_COMPACT_INSTRUCTIONS_AND_GAUGES_HTML_TNT_v6 -->
+<!-- SHOWROOM_MIRRORLAND_STRUCTURAL_HOST_TNT_v8 -->
 <!doctype html>
+
 <html
   lang="en"
   data-route="/showroom/"
   data-page="showroom"
-  data-version="SHOWROOM-MIRRORLAND-OFFICIAL-GATE-6.0.0"
-  data-contract="SHOWROOM_MIRRORLAND_OFFICIAL_GATE_COMPACT_INSTRUCTIONS_AND_GAUGES_HTML_TNT_v6"
+  data-version="SHOWROOM-MIRRORLAND-STRUCTURAL-HOST-8.0.0"
+  data-contract="SHOWROOM_MIRRORLAND_STRUCTURAL_HOST_TNT_v8"
   data-house-room="showroom"
   data-house-room-title="The Showroom"
   data-room-welcome="Welcome to Mirrorland"
@@ -18,8 +19,9 @@
   data-elara-homeroom="true"
   data-elara-route="/elara/index.html"
   data-talk-to-elara-prominent="true"
-
   data-showroom-root-contract="mirrorland-official-gate-constellation-gauge-information"
+  data-showroom-content="/showroom/index.content.js"
+  data-showroom-build="/showroom/index.build.js"
   data-showroom-controller="/showroom/index.controller.js"
   data-showroom-gauges="/showroom/index.gauges.js"
   data-showroom-interactions="/showroom/index.interactions.js"
@@ -27,13 +29,11 @@
   data-showroom-crystals="/showroom/index.crystals.js"
   data-showroom-window="/showroom/index.window.js"
   data-showroom-css="/showroom/index.css"
-
   data-showroom-navigation-model="compact-unlabeled-constellation"
   data-showroom-primary-mode="orbit"
   data-showroom-local-front-model="single-active-front"
   data-showroom-gauge-layout="compact-selector-shared-detail"
   data-showroom-instruction-layout="summary-near-compass-nested-disclosure"
-
   data-showroom-large-star-shape-count="1"
   data-showroom-small-star-shape-count="1"
   data-showroom-total-star-shape-count="2"
@@ -43,22 +43,18 @@
   data-showroom-information-color-family="violet"
   data-showroom-visible-star-labels="false"
   data-showroom-semantic-star-labels="true"
-
   data-showroom-fallback-stars="semantic-controls"
   data-showroom-fallback-stars-visible-until-crystals-ready="true"
   data-showroom-crystals-ready="false"
-
   data-showroom-route-confirmation-required="true"
   data-showroom-return-to-orbit="true"
   data-showroom-return-to-compass="true"
   data-showroom-orbit-target="#showroom-orbit"
   data-showroom-compass-route="/index.html"
-
   data-showroom-stage-separation="true"
   data-showroom-orbit-stage-independent="true"
   data-showroom-diamond-stage-independent="true"
   data-showroom-window-stage-diamond-only="true"
-
   data-compass-fixed-center="true"
   data-compass-orbital-reference="true"
   data-compass-page-local-decision="true"
@@ -68,14 +64,12 @@
   data-compass-control-purpose="open-main-compass-return-dialog"
   data-compass-renderer-navigation-authority="false"
   data-compass-controller-navigation-authority="true"
-
   data-mirrorland-window-independent="true"
   data-mirrorland-window-foreground="true"
   data-mirrorland-window-in-front-of-diamond="true"
   data-mirrorland-window-compass-owned="false"
   data-mirrorland-window-crystal-depth-participant="false"
   data-mirrorland-window-state="closed"
-
   data-diamond-generation="G3"
   data-diamond-render-mode="native-webgl"
   data-diamond-geometry="/showroom/index.diamond.geometry.js"
@@ -84,10 +78,8 @@
   data-diamond-protected-core="true"
   data-diamond-original-stage-restored="true"
   data-diamond-window-sibling-layer="true"
-
   data-native-webgl="true"
   data-webgl-fallback="true"
-
   data-radial-sectors="16"
   data-structural-bands="16"
   data-lattice-seats="256"
@@ -95,7 +87,6 @@
   data-lattice-connections="800"
   data-material-regions="14"
   data-public-views="2"
-
   data-generated-image="false"
   data-imported-3d-model="false"
   data-visual-pass-claimed="false"
@@ -111,13 +102,21 @@
     content="width=device-width,initial-scale=1,viewport-fit=cover"
   >
 
-  <title>
-    Welcome to Mirrorland · The Showroom
-  </title>
+  <title>Welcome to Mirrorland · The Showroom</title>
 
   <meta
     name="description"
     content="Enter Mirrorland through its official gate, follow its characters and timeline, explore its constellation, open the Window, inspect the Diamond, and enter its gauge and information systems."
+  >
+
+  <meta
+    name="showroom-content-contract"
+    content="SHOWROOM_MIRRORLAND_EDITABLE_CONTENT_SOURCE_TNT_v1"
+  >
+
+  <meta
+    name="showroom-build-contract"
+    content="SHOWROOM_MIRRORLAND_STRUCTURAL_ASSEMBLER_TNT_v2"
   >
 
   <link
@@ -145,6 +144,7 @@
   <a
     class="skip"
     href="#main"
+    data-showroom-content="document.skipLink"
   >
     Skip to the Showroom
   </a>
@@ -152,6 +152,7 @@
   <div
     class="shell showroom-shell"
     data-showroom-root
+    data-showroom-build-state="pending"
     data-showroom-state="orbit"
     data-showroom-presentation-mode="orbit"
     data-showroom-active-cluster=""
@@ -173,17 +174,25 @@
         class="brand"
         href="/index.html"
         aria-label="Return to the Diamond Gate Bridge Main Compass"
+        data-showroom-content-attr="aria-label:header.brand.returnLabel"
       >
         <span
           class="brand-mark"
           aria-hidden="true"
         >
-          <span>DG</span>
+          <span data-showroom-content="header.brand.mark">
+            DG
+          </span>
         </span>
 
         <span class="brand-copy">
-          <span>Shadows Never Shatter</span>
-          <strong>The Showroom</strong>
+          <span data-showroom-content="header.brand.parentTitle">
+            Shadows Never Shatter
+          </span>
+
+          <strong data-showroom-content="header.brand.roomTitle">
+            The Showroom
+          </strong>
         </span>
       </a>
 
@@ -195,10 +204,12 @@
           <elara-room-entry
             href="/elara/index.html"
             label="Talk to Elara"
+            data-showroom-content-attr="label:header.guide.primaryCharacterLabel"
           >
             <a
               class="elara-primary-link"
               href="/elara/index.html"
+              data-showroom-content="header.guide.primaryCharacterLabel"
             >
               Talk to Elara
             </a>
@@ -206,7 +217,7 @@
         </div>
 
         <details class="route-menu">
-          <summary>
+          <summary data-showroom-content="header.guide.fallbackMenuLabel">
             Explore without the constellation
           </summary>
 
@@ -215,55 +226,10 @@
               class="fallback-navigation"
               aria-label="Showroom semantic fallback"
               data-showroom-fallback-navigation
-            >
-              <div class="fallback-navigation__group">
-                <strong>Gauge dashboards</strong>
-
-                <a href="#object-gauges">
-                  Object
-                </a>
-
-                <a href="#structure-gauges">
-                  Structure
-                </a>
-
-                <a href="#interaction-gauges">
-                  Interaction
-                </a>
-
-                <a href="#systems-gauges">
-                  Systems
-                </a>
-              </div>
-
-              <div class="fallback-navigation__group">
-                <strong>Information front</strong>
-
-                <a href="#platform-tab">
-                  Platform
-                </a>
-
-                <a href="#engineering-tab">
-                  Engineering
-                </a>
-
-                <a href="#evidence-tab">
-                  Evidence
-                </a>
-              </div>
-
-              <div class="fallback-navigation__group">
-                <strong>Other destinations</strong>
-
-                <a href="/characters/">
-                  Meet the Characters
-                </a>
-
-                <a href="/index.html">
-                  Main Compass
-                </a>
-              </div>
-            </nav>
+              data-showroom-build-mount="fallback-navigation"
+              data-showroom-build-state="pending"
+              data-showroom-content-attr="aria-label:header.guide.fallbackNavigationLabel"
+            ></nav>
           </div>
         </details>
       </nav>
@@ -278,37 +244,56 @@
         data-showroom-official-gate
       >
         <div class="showroom-threshold__copy">
-          <div class="showroom-gate-badge">
+          <div
+            class="showroom-gate-badge"
+            data-showroom-content="threshold.badge"
+          >
             Official Gate · Mirrorland
           </div>
 
-          <h1 id="page-title">
+          <h1
+            id="page-title"
+            data-showroom-content="threshold.heading"
+          >
             Welcome to Mirrorland.
           </h1>
 
-          <p class="door-subtitle">
+          <p
+            class="door-subtitle"
+            data-showroom-content="threshold.subtitle"
+          >
             Your journey begins in the Showroom.
           </p>
 
-          <p class="showroom-threshold__lead">
-            Beyond this threshold is a living world of characters,
-            discoveries, unfinished questions, and systems waiting to be
-            explored.
+          <p
+            class="showroom-threshold__lead"
+            data-showroom-content="threshold.lead"
+          >
+            Beyond this threshold is a living world.
           </p>
 
-          <p class="showroom-threshold__support">
-            The Showroom is where Mirrorland first opens: its mission,
-            its timeline, its inhabitants, and the paths that connect
-            them.
+          <p
+            class="showroom-threshold__support"
+            data-showroom-content="threshold.support"
+          >
+            The Showroom is where Mirrorland first opens.
           </p>
 
           <div
             class="thesis-field mirrorland-thesis"
             aria-label="Mirrorland threshold statement"
+            data-showroom-content-attr="aria-label:threshold.thesisLabel"
           >
             <strong>
-              Every path reveals part of the world.<br>
-              Every character reveals why it matters.
+              <span data-showroom-content="threshold.thesis.0">
+                Every path reveals part of the world.
+              </span>
+
+              <br>
+
+              <span data-showroom-content="threshold.thesis.1">
+                Every character reveals why it matters.
+              </span>
             </strong>
           </div>
 
@@ -317,127 +302,15 @@
             class="architectural-drop mirrorland-preface"
             data-showroom-mirrorland-preface
           >
-            <summary>
+            <summary data-showroom-content="threshold.preface.summary">
               Read the complete Mirrorland preface
             </summary>
 
-            <div class="drop-content mirrorland-preface__content">
-              <section aria-labelledby="mirrorland-preface-mission">
-                <span class="mirrorland-preface__index">
-                  01
-                </span>
-
-                <h2 id="mirrorland-preface-mission">
-                  The mission
-                </h2>
-
-                <p>
-                  Mirrorland exists so consequential ideas can be
-                  examined before the real world is forced to absorb
-                  their consequences.
-                </p>
-
-                <p>
-                  It is a place where systems can be entered instead of
-                  merely described, where assumptions can be exposed,
-                  where outcomes can be compared, and where difficult
-                  questions can remain visible long enough to be
-                  understood.
-                </p>
-              </section>
-
-              <section aria-labelledby="mirrorland-preface-timeline">
-                <span class="mirrorland-preface__index">
-                  02
-                </span>
-
-                <h2 id="mirrorland-preface-timeline">
-                  The timeline
-                </h2>
-
-                <p>
-                  Mirrorland is not presented as a finished universe. It
-                  is a world under construction whose rooms, instruments,
-                  characters, simulations, and scientific objects become
-                  available as they are built.
-                </p>
-
-                <p>
-                  The Showroom stands at the beginning of that timeline.
-                  It introduces what already exists, identifies what is
-                  still emerging, and separates implemented systems from
-                  planned ones.
-                </p>
-              </section>
-
-              <section aria-labelledby="mirrorland-preface-characters">
-                <span class="mirrorland-preface__index">
-                  03
-                </span>
-
-                <h2 id="mirrorland-preface-characters">
-                  The inhabitants
-                </h2>
-
-                <p>
-                  Mirrorland is inhabited by characters who guide,
-                  interpret, question, remember, and challenge. They are
-                  not decorative mascots. Each character represents a
-                  different way of entering the world and understanding
-                  what its systems mean.
-                </p>
-
-                <p>
-                  Some paths lead directly to a character. Other paths
-                  lead to rooms, instruments, gauges, records, or
-                  simulations where those characters may later take part.
-                </p>
-              </section>
-
-              <section aria-labelledby="mirrorland-preface-exploration">
-                <span class="mirrorland-preface__index">
-                  04
-                </span>
-
-                <h2 id="mirrorland-preface-exploration">
-                  The exploration
-                </h2>
-
-                <p>
-                  The constellation is the first navigational field. The
-                  Window is a threshold. The Diamond is an inspectable
-                  object. The gauges expose structured evidence. The
-                  information fronts explain how the world is built and
-                  where its claims stop.
-                </p>
-
-                <p>
-                  No single path contains all of Mirrorland. The world is
-                  discovered by moving among its parts.
-                </p>
-              </section>
-
-              <section aria-labelledby="mirrorland-preface-invitation">
-                <span class="mirrorland-preface__index">
-                  05
-                </span>
-
-                <h2 id="mirrorland-preface-invitation">
-                  The invitation
-                </h2>
-
-                <p>
-                  Enter with curiosity. Follow the characters. Open the
-                  systems. Inspect what can be inspected. Question what
-                  remains unfinished.
-                </p>
-
-                <p>
-                  A mirror shows what is already there. Mirrorland asks
-                  what may happen next.
-                </p>
-              </section>
-            </div>
+            <div
+              class="drop-content mirrorland-preface__content"
+              data-showroom-build-mount="preface-sections"
+              data-showroom-build-state="pending"
+            ></div>
           </details>
         </div>
       </section>
@@ -454,149 +327,46 @@
           data-showroom-instructions-disclosure
         >
           <summary class="showroom-instructions__summary">
-            <span class="showroom-instructions__badge">
+            <span
+              class="showroom-instructions__badge"
+              data-showroom-content="instructions.badge"
+            >
               Page Instructions
             </span>
 
             <span class="showroom-instructions__summary-copy">
-              <strong id="showroom-instructions-title">
+              <strong
+                id="showroom-instructions-title"
+                data-showroom-content="instructions.heading"
+              >
                 How to enter the Showroom
               </strong>
 
-              <small>
+              <small data-showroom-content="instructions.summary">
                 Five stages. Open only the guidance you need.
               </small>
             </span>
           </summary>
 
           <div class="showroom-instructions__body">
-            <p class="showroom-instructions__introduction">
-              The Showroom contains independent interactive stages. Each
-              reveals a different part of Mirrorland.
+            <p
+              class="showroom-instructions__introduction"
+              data-showroom-content="instructions.introduction"
+            >
+              The Showroom contains independent interactive stages.
             </p>
 
             <div
               class="showroom-instructions__steps"
               data-showroom-instruction-steps
-            >
-              <details
-                class="showroom-instruction"
-                data-showroom-instruction
-              >
-                <summary>
-                  <span>01</span>
-                  <strong>Follow the constellation</strong>
-                  <small>Move among paths and destinations.</small>
-                </summary>
-
-                <div>
-                  <p>
-                    Drag the star field to move among routes, character
-                    paths, gauge clusters, and information destinations.
-                  </p>
-
-                  <a href="#showroom-orbit">
-                    Go to the constellation
-                  </a>
-                </div>
-              </details>
-
-              <details
-                class="showroom-instruction"
-                data-showroom-instruction
-              >
-                <summary>
-                  <span>02</span>
-                  <strong>Open the Window</strong>
-                  <small>Reveal the Diamond threshold.</small>
-                </summary>
-
-                <div>
-                  <p>
-                    Use the Mirrorland Window control to open the
-                    stained-glass threshold and reveal the Diamond
-                    beneath it.
-                  </p>
-
-                  <a href="#object-gauges">
-                    Go to the Window
-                  </a>
-                </div>
-              </details>
-
-              <details
-                class="showroom-instruction"
-                data-showroom-instruction
-              >
-                <summary>
-                  <span>03</span>
-                  <strong>Inspect the Diamond</strong>
-                  <small>Rotate, zoom, compare, and reset.</small>
-                </summary>
-
-                <div>
-                  <p>
-                    Rotate and zoom the gem, switch between Object View
-                    and Lattice View, inspect its structure, and reset
-                    its presentation.
-                  </p>
-
-                  <a href="#showroom-diamond-controls">
-                    Go to Diamond controls
-                  </a>
-                </div>
-              </details>
-
-              <details
-                class="showroom-instruction"
-                data-showroom-instruction
-              >
-                <summary>
-                  <span>04</span>
-                  <strong>Open gauges and information</strong>
-                  <small>Use cyan and violet paths.</small>
-                </summary>
-
-                <div>
-                  <p>
-                    Cyan paths open gauge dashboards. Violet paths open
-                    the Platform, Engineering, and Evidence information
-                    fronts.
-                  </p>
-
-                  <a href="#information-front">
-                    Go to the information front
-                  </a>
-                </div>
-              </details>
-
-              <details
-                class="showroom-instruction"
-                data-showroom-instruction
-              >
-                <summary>
-                  <span>05</span>
-                  <strong>Use the Compass</strong>
-                  <small>Return to the larger navigation system.</small>
-                </summary>
-
-                <div>
-                  <p>
-                    The fixed Main Compass provides an explicit route
-                    back to the larger Diamond Gate Bridge navigation
-                    system.
-                  </p>
-
-                  <a href="#showroom-orbit">
-                    Go to the Main Compass
-                  </a>
-                </div>
-              </details>
-            </div>
+              data-showroom-build-mount="instruction-steps"
+              data-showroom-build-state="pending"
+            ></div>
 
             <a
               class="button button-gold showroom-instructions__enter"
               href="#showroom-orbit"
+              data-showroom-content="instructions.enterLabel"
             >
               Enter the Constellation
             </a>
@@ -613,34 +383,48 @@
       >
         <header class="showroom-orbit__heading">
           <div>
-            <div class="kicker">
+            <div
+              class="kicker"
+              data-showroom-content="orbit.kicker"
+            >
               Mirrorland Constellation
             </div>
 
-            <h2 id="showroom-orbit-title">
+            <h2
+              id="showroom-orbit-title"
+              data-showroom-content="orbit.heading"
+            >
               Follow the stars.
             </h2>
           </div>
 
-          <p data-showroom-guidance>
-            Drag the constellation to move the field. Large stars reveal
-            routes or unfold clusters. Cyan stars open gauges. Violet
-            stars open information.
+          <p
+            data-showroom-guidance
+            data-showroom-content="orbit.guidance"
+          >
+            Drag the constellation to move the field.
           </p>
         </header>
 
         <div
           class="showroom-orbit__legend"
           aria-label="Constellation color key"
+          data-showroom-content-attr="aria-label:orbit.legend.label"
         >
           <span data-showroom-legend-kind="gauge">
             <i aria-hidden="true"></i>
-            Cyan opens gauges
+
+            <span data-showroom-content="orbit.legend.gauge">
+              Cyan opens gauges
+            </span>
           </span>
 
           <span data-showroom-legend-kind="information">
             <i aria-hidden="true"></i>
-            Violet opens information
+
+            <span data-showroom-content="orbit.legend.information">
+              Violet opens information
+            </span>
           </span>
         </div>
 
@@ -649,6 +433,7 @@
           data-showroom-orbit-field
           data-showroom-scene-field
           aria-label="Mirrorland constellation surrounding the fixed Main Compass"
+          data-showroom-content-attr="aria-label:orbit.sceneLabel"
         >
           <div
             class="showroom-cosmic-field"
@@ -687,6 +472,7 @@
               aria-haspopup="dialog"
               aria-expanded="false"
               aria-controls="showroom-compass-dialog"
+              data-showroom-content-attr="aria-label:orbit.compass.controlLabel"
             >
               <span
                 class="showroom-compass-control__mark"
@@ -698,11 +484,17 @@
                 <span>W</span>
               </span>
 
-              <span class="showroom-compass-control__label">
+              <span
+                class="showroom-compass-control__label"
+                data-showroom-content="orbit.compass.label"
+              >
                 Main Compass
               </span>
 
-              <span class="showroom-compass-control__instruction">
+              <span
+                class="showroom-compass-control__instruction"
+                data-showroom-content="orbit.compass.instruction"
+              >
                 Tap to return
               </span>
             </button>
@@ -713,41 +505,31 @@
             data-showroom-orbit-guide
             aria-labelledby="showroom-orbit-guide-title"
           >
-            <span class="showroom-orbit-guide__eyebrow">
+            <span
+              class="showroom-orbit-guide__eyebrow"
+              data-showroom-content="orbit.quickGuide.eyebrow"
+            >
               Quick Guide
             </span>
 
-            <h3 id="showroom-orbit-guide-title">
+            <h3
+              id="showroom-orbit-guide-title"
+              data-showroom-content="orbit.quickGuide.heading"
+            >
               Move. Open. Inspect. Explore. Return.
             </h3>
 
-            <ol>
-              <li>
-                Move the stars
-              </li>
-
-              <li>
-                Open the Window
-              </li>
-
-              <li>
-                Inspect the Diamond
-              </li>
-
-              <li>
-                Enter gauges or information
-              </li>
-
-              <li>
-                Return by Compass
-              </li>
-            </ol>
+            <ol
+              data-showroom-build-mount="quick-guide-steps"
+              data-showroom-build-state="pending"
+            ></ol>
 
             <a
               href="#showroom-instructions"
               data-showroom-open-instructions
               aria-controls="showroom-instructions-disclosure"
               aria-expanded="false"
+              data-showroom-content="orbit.quickGuide.completeInstructionsLabel"
             >
               Open complete instructions
             </a>
@@ -759,93 +541,10 @@
             data-showroom-fallback-star-layer
             data-showroom-fallback-star-visibility="visible"
             aria-label="Primary Mirrorland constellation paths"
-          >
-            <button
-              class="showroom-star showroom-star--large"
-              type="button"
-              data-showroom-object
-              data-showroom-semantic-star
-              data-showroom-fallback-star
-              data-showroom-object-id="characters-route"
-              data-showroom-object-size="large"
-              data-showroom-object-shape="cardinal-star"
-              data-showroom-object-behavior="route"
-              data-showroom-route-id="characters"
-              data-showroom-route-label="Meet the Characters"
-              data-showroom-route="/characters/"
-              data-showroom-route-description="Meet the characters who inhabit and guide Audralia and Mirrorland."
-              aria-label="Meet the Characters. Opens a destination decision."
-              aria-haspopup="dialog"
-              aria-controls="showroom-route-dialog"
-            >
-              <span class="sr-only">
-                Meet the Characters
-              </span>
-            </button>
-
-            <button
-              class="showroom-star showroom-star--large"
-              type="button"
-              data-showroom-object
-              data-showroom-semantic-star
-              data-showroom-fallback-star
-              data-showroom-object-id="elara-route"
-              data-showroom-object-size="large"
-              data-showroom-object-shape="cardinal-star"
-              data-showroom-object-behavior="route"
-              data-showroom-route-id="elara"
-              data-showroom-route-label="Talk to Elara"
-              data-showroom-route="/elara/index.html"
-              data-showroom-route-description="Continue into Elara’s dedicated room and conversation surface."
-              aria-label="Talk to Elara. Opens a destination decision."
-              aria-haspopup="dialog"
-              aria-controls="showroom-route-dialog"
-            >
-              <span class="sr-only">
-                Talk to Elara
-              </span>
-            </button>
-
-            <button
-              class="showroom-star showroom-star--large"
-              type="button"
-              data-showroom-object
-              data-showroom-semantic-star
-              data-showroom-fallback-star
-              data-showroom-object-id="gauge-cluster"
-              data-showroom-object-size="large"
-              data-showroom-object-shape="cardinal-star"
-              data-showroom-object-behavior="cluster"
-              data-showroom-cluster-id="gauges"
-              aria-label="Open or close the gauge constellation"
-              aria-expanded="false"
-              aria-controls="showroom-cluster-gauges"
-            >
-              <span class="sr-only">
-                Gauge constellation
-              </span>
-            </button>
-
-            <button
-              class="showroom-star showroom-star--large"
-              type="button"
-              data-showroom-object
-              data-showroom-semantic-star
-              data-showroom-fallback-star
-              data-showroom-object-id="information-cluster"
-              data-showroom-object-size="large"
-              data-showroom-object-shape="cardinal-star"
-              data-showroom-object-behavior="cluster"
-              data-showroom-cluster-id="information"
-              aria-label="Open or close the information constellation"
-              aria-expanded="false"
-              aria-controls="showroom-cluster-information"
-            >
-              <span class="sr-only">
-                Information constellation
-              </span>
-            </button>
-          </div>
+            data-showroom-build-mount="primary-stars"
+            data-showroom-build-state="pending"
+            data-showroom-content-attr="aria-label:constellation.primaryPathsLabel"
+          ></div>
 
           <div
             id="showroom-cluster-gauges"
@@ -856,83 +555,13 @@
             data-showroom-cluster-state="collapsed"
             data-showroom-fallback-star-visibility="visible"
             aria-label="Gauge destinations"
+            data-showroom-content-attr="aria-label:constellation.clusters.gauges.destinationsLabel"
             hidden
           >
-            <button
-              class="showroom-star showroom-star--small showroom-star--gauge"
-              type="button"
-              data-showroom-object
-              data-showroom-semantic-star
-              data-showroom-fallback-star
-              data-showroom-object-id="object-gauge-star"
-              data-showroom-object-size="small"
-              data-showroom-object-shape="child-star"
-              data-showroom-object-behavior="gauge"
-              data-showroom-front-id="object-gauges"
-              aria-label="Open the Object gauge dashboard"
-              aria-controls="object-gauges"
-            >
-              <span class="sr-only">
-                Object gauges
-              </span>
-            </button>
-
-            <button
-              class="showroom-star showroom-star--small showroom-star--gauge"
-              type="button"
-              data-showroom-object
-              data-showroom-semantic-star
-              data-showroom-fallback-star
-              data-showroom-object-id="structure-gauge-star"
-              data-showroom-object-size="small"
-              data-showroom-object-shape="child-star"
-              data-showroom-object-behavior="gauge"
-              data-showroom-front-id="structure-gauges"
-              aria-label="Open the Structure gauge dashboard"
-              aria-controls="structure-gauges"
-            >
-              <span class="sr-only">
-                Structure gauges
-              </span>
-            </button>
-
-            <button
-              class="showroom-star showroom-star--small showroom-star--gauge"
-              type="button"
-              data-showroom-object
-              data-showroom-semantic-star
-              data-showroom-fallback-star
-              data-showroom-object-id="interaction-gauge-star"
-              data-showroom-object-size="small"
-              data-showroom-object-shape="child-star"
-              data-showroom-object-behavior="gauge"
-              data-showroom-front-id="interaction-gauges"
-              aria-label="Open the Interaction gauge dashboard"
-              aria-controls="interaction-gauges"
-            >
-              <span class="sr-only">
-                Interaction gauges
-              </span>
-            </button>
-
-            <button
-              class="showroom-star showroom-star--small showroom-star--gauge"
-              type="button"
-              data-showroom-object
-              data-showroom-semantic-star
-              data-showroom-fallback-star
-              data-showroom-object-id="systems-gauge-star"
-              data-showroom-object-size="small"
-              data-showroom-object-shape="child-star"
-              data-showroom-object-behavior="gauge"
-              data-showroom-front-id="systems-gauges"
-              aria-label="Open the Mirrorland Systems gauge dashboard"
-              aria-controls="systems-gauges"
-            >
-              <span class="sr-only">
-                Mirrorland Systems gauges
-              </span>
-            </button>
+            <div
+              data-showroom-build-mount="gauge-stars"
+              data-showroom-build-state="pending"
+            ></div>
           </div>
 
           <div
@@ -944,77 +573,21 @@
             data-showroom-cluster-state="collapsed"
             data-showroom-fallback-star-visibility="visible"
             aria-label="Information destinations"
+            data-showroom-content-attr="aria-label:constellation.clusters.information.destinationsLabel"
             hidden
           >
-            <button
-              class="showroom-star showroom-star--small showroom-star--information"
-              type="button"
-              data-showroom-object
-              data-showroom-semantic-star
-              data-showroom-fallback-star
-              data-showroom-object-id="platform-information-star"
-              data-showroom-object-size="small"
-              data-showroom-object-shape="child-star"
-              data-showroom-object-behavior="information"
-              data-showroom-front-id="information-front"
-              data-showroom-information-tab="platform"
-              aria-label="Open the Platform information tab"
-              aria-controls="information-front"
-            >
-              <span class="sr-only">
-                Platform information
-              </span>
-            </button>
-
-            <button
-              class="showroom-star showroom-star--small showroom-star--information"
-              type="button"
-              data-showroom-object
-              data-showroom-semantic-star
-              data-showroom-fallback-star
-              data-showroom-object-id="engineering-information-star"
-              data-showroom-object-size="small"
-              data-showroom-object-shape="child-star"
-              data-showroom-object-behavior="information"
-              data-showroom-front-id="information-front"
-              data-showroom-information-tab="engineering"
-              aria-label="Open the Engineering information tab"
-              aria-controls="information-front"
-            >
-              <span class="sr-only">
-                Engineering information
-              </span>
-            </button>
-
-            <button
-              class="showroom-star showroom-star--small showroom-star--information"
-              type="button"
-              data-showroom-object
-              data-showroom-semantic-star
-              data-showroom-fallback-star
-              data-showroom-object-id="evidence-information-star"
-              data-showroom-object-size="small"
-              data-showroom-object-shape="child-star"
-              data-showroom-object-behavior="information"
-              data-showroom-front-id="information-front"
-              data-showroom-information-tab="evidence"
-              aria-label="Open the Evidence information tab"
-              aria-controls="information-front"
-            >
-              <span class="sr-only">
-                Evidence information
-              </span>
-            </button>
+            <div
+              data-showroom-build-mount="information-stars"
+              data-showroom-build-state="pending"
+            ></div>
           </div>
 
           <div
             class="showroom-orbit__fallback"
             data-showroom-orbit-fallback
           >
-            <p>
-              The constellation is an enhanced navigator. Every
-              destination remains available through the semantic
-              fallback menu.
+            <p data-showroom-content="orbit.fallback">
+              The constellation is an enhanced navigator.
             </p>
           </div>
         </div>
@@ -1036,15 +609,21 @@
         >
           <header class="showroom-front__heading">
             <div>
-              <div class="kicker">
+              <div
+                class="kicker"
+                data-showroom-content="fronts.object.kicker"
+              >
                 Object Gauge Set
               </div>
 
-              <h2 id="object-gauges-title">
+              <h2
+                id="object-gauges-title"
+                data-showroom-content="fronts.object.heading"
+              >
                 The Diamond at the Door
               </h2>
 
-              <p>
+              <p data-showroom-content="fronts.object.introduction">
                 One object, two accepted views, one geometry authority,
                 and one independent interactive stage.
               </p>
@@ -1061,146 +640,18 @@
               class="showroom-gauge-selector showroom-gauge-selector--metrics"
               role="group"
               aria-label="Object gauge selectors"
-            >
-              <button
-                class="showroom-gauge showroom-gauge--compact"
-                type="button"
-                data-showroom-gauge
-                data-gauge-id="public-views"
-                data-gauge-family="metric"
-                data-gauge-value="2"
-                data-gauge-display-value="2"
-                data-gauge-state="fixed"
-                aria-expanded="true"
-                aria-controls="gauge-detail-public-views"
-              >
-                <strong>2</strong>
-                <span>Public Views</span>
-                <small>Object · Lattice</small>
-              </button>
-
-              <button
-                class="showroom-gauge showroom-gauge--compact"
-                type="button"
-                data-showroom-gauge
-                data-gauge-id="geometry-authority"
-                data-gauge-family="metric"
-                data-gauge-value="1"
-                data-gauge-display-value="1"
-                data-gauge-state="fixed"
-                aria-expanded="false"
-                aria-controls="gauge-detail-geometry-authority"
-              >
-                <strong>1</strong>
-                <span>Geometry Authority</span>
-                <small>Deterministic source</small>
-              </button>
-
-              <button
-                class="showroom-gauge showroom-gauge--compact"
-                type="button"
-                data-showroom-gauge
-                data-gauge-id="renderer-state"
-                data-gauge-family="state"
-                data-gauge-state="implemented"
-                aria-expanded="false"
-                aria-controls="gauge-detail-renderer-state"
-              >
-                <strong>Native</strong>
-                <span>Diamond Renderer</span>
-                <small>WebGL implemented</small>
-              </button>
-
-              <button
-                class="showroom-gauge showroom-gauge--compact"
-                type="button"
-                data-showroom-gauge
-                data-gauge-id="window-state"
-                data-gauge-family="state"
-                data-gauge-state="closed"
-                aria-expanded="false"
-                aria-controls="gauge-detail-window-state"
-              >
-                <strong>Closed</strong>
-                <span>Mirrorland Window</span>
-                <small>Threshold foreground</small>
-              </button>
-            </div>
+              data-showroom-build-mount="object-gauge-selectors"
+              data-showroom-build-state="pending"
+              data-showroom-content-attr="aria-label:fronts.object.selectorLabel"
+            ></div>
 
             <div
               class="showroom-gauge-details showroom-gauge-details--shared"
               data-showroom-gauge-details
+              data-showroom-build-mount="object-gauge-details"
+              data-showroom-build-state="pending"
               aria-live="polite"
-            >
-              <article
-                id="gauge-detail-public-views"
-                class="showroom-gauge-detail"
-                data-showroom-gauge-detail
-                data-gauge-detail-id="public-views"
-              >
-                <h3>
-                  Two accepted public views
-                </h3>
-
-                <p>
-                  Object View presents the visible gem. Lattice View
-                  reveals its internal structural field.
-                </p>
-              </article>
-
-              <article
-                id="gauge-detail-geometry-authority"
-                class="showroom-gauge-detail"
-                data-showroom-gauge-detail
-                data-gauge-detail-id="geometry-authority"
-                hidden
-              >
-                <h3>
-                  One deterministic geometry authority
-                </h3>
-
-                <p>
-                  Exterior facets, internal seats, connections, regions,
-                  and both public views originate from one retained
-                  source.
-                </p>
-              </article>
-
-              <article
-                id="gauge-detail-renderer-state"
-                class="showroom-gauge-detail"
-                data-showroom-gauge-detail
-                data-gauge-detail-id="renderer-state"
-                hidden
-              >
-                <h3>
-                  Native renderer
-                </h3>
-
-                <p>
-                  The Diamond retains its own WebGL context, shaders,
-                  camera, projection, rotation, zoom, inspection, reset,
-                  and fallback.
-                </p>
-              </article>
-
-              <article
-                id="gauge-detail-window-state"
-                class="showroom-gauge-detail"
-                data-showroom-gauge-detail
-                data-gauge-detail-id="window-state"
-                hidden
-              >
-                <h3>
-                  Independent threshold Window
-                </h3>
-
-                <p>
-                  The stained-glass Window occupies a separate foreground
-                  layer over the Diamond viewport.
-                </p>
-              </article>
-            </div>
+            ></div>
           </div>
 
           <div class="diamond-layout">
@@ -1235,6 +686,7 @@
                         role="group"
                         tabindex="0"
                         aria-label="Interactive G3 Diamond Gate Bridge computational gem. Drag or swipe to rotate. Pinch or use the mouse wheel to zoom."
+                        data-showroom-content-attr="aria-label:fronts.object.diamond.stageLabel"
                       >
                         <canvas
                           data-showroom-diamond-canvas
@@ -1254,15 +706,12 @@
                               aria-hidden="true"
                             ></span>
 
-                            <strong>
+                            <strong data-showroom-content="fronts.object.diamond.fallback.title">
                               G3 Diamond Lattice fallback
                             </strong>
 
-                            <p>
-                              The live renderer is unavailable. The
-                              Diamond remains represented as a gold crown,
-                              bridge girdle, sapphire pavilion, culet,
-                              and internal lattice.
+                            <p data-showroom-content="fronts.object.diamond.fallback.description">
+                              The live renderer is unavailable.
                             </p>
                           </div>
                         </div>
@@ -1290,10 +739,12 @@
                     aria-controls="showroom-diamond-controls"
                     aria-expanded="false"
                     aria-label="Open the Mirrorland Window and reveal the Diamond"
+                    data-showroom-content-attr="aria-label:fronts.object.diamond.window.closedControlLabel"
                   >
                     <span
                       class="showroom-window-control__eyebrow"
                       aria-hidden="true"
+                      data-showroom-content="fronts.object.diamond.window.eyebrow"
                     >
                       Mirrorland Threshold
                     </span>
@@ -1301,6 +752,7 @@
                     <span
                       class="showroom-window-control__label"
                       data-showroom-window-label
+                      data-showroom-content="fronts.object.diamond.window.closedLabel"
                     >
                       Open the Window
                     </span>
@@ -1317,7 +769,7 @@
                   class="object-control-tray"
                   open
                 >
-                  <summary>
+                  <summary data-showroom-content="fronts.object.diamond.controls.traySummary">
                     Diamond controls
                   </summary>
 
@@ -1325,6 +777,7 @@
                     <div
                       class="two-view-buttons"
                       aria-label="Diamond Lattice two-view controls"
+                      data-showroom-content-attr="aria-label:fronts.object.diamond.controls.viewGroupLabel"
                     >
                       <button
                         type="button"
@@ -1332,6 +785,7 @@
                         data-diamond-dimension="object"
                         aria-pressed="true"
                         data-active
+                        data-showroom-content="fronts.object.diamond.controls.objectView"
                       >
                         Object View
                       </button>
@@ -1340,6 +794,7 @@
                         type="button"
                         data-diamond-lens="lattice"
                         aria-pressed="false"
+                        data-showroom-content="fronts.object.diamond.controls.latticeView"
                       >
                         Lattice View
                       </button>
@@ -1355,6 +810,7 @@
                         data-diamond-dimension="memory"
                         aria-pressed="false"
                         tabindex="-1"
+                        data-showroom-content="fronts.object.diamond.controls.technicalViews.worldMemory"
                       >
                         World Memory
                       </button>
@@ -1364,6 +820,7 @@
                         data-diamond-dimension="behind"
                         aria-pressed="false"
                         tabindex="-1"
+                        data-showroom-content="fronts.object.diamond.controls.technicalViews.latticeBehind"
                       >
                         Lattice Behind
                       </button>
@@ -1373,6 +830,7 @@
                         data-diamond-dimension="through"
                         aria-pressed="false"
                         tabindex="-1"
+                        data-showroom-content="fronts.object.diamond.controls.technicalViews.latticeThrough"
                       >
                         Lattice Through
                       </button>
@@ -1382,13 +840,17 @@
                         data-diamond-dimension="full"
                         aria-pressed="false"
                         tabindex="-1"
+                        data-showroom-content="fronts.object.diamond.controls.technicalViews.fullProof"
                       >
                         Full Proof
                       </button>
                     </div>
 
                     <div class="status-strip">
-                      <span data-showroom-diamond-status>
+                      <span
+                        data-showroom-diamond-status
+                        data-showroom-content="fronts.object.diamond.controls.loadingStatus"
+                      >
                         Preparing the G3 Diamond Lattice…
                       </span>
 
@@ -1397,6 +859,7 @@
                           class="button"
                           type="button"
                           data-showroom-diamond-inspect
+                          data-showroom-content="fronts.object.diamond.controls.inspectLabel"
                         >
                           Inspect
                         </button>
@@ -1405,6 +868,7 @@
                           class="button"
                           type="button"
                           data-showroom-diamond-reset
+                          data-showroom-content="fronts.object.diamond.controls.resetLabel"
                         >
                           Reset
                         </button>
@@ -1419,10 +883,12 @@
           <nav
             class="showroom-front-navigation"
             aria-label="Leave the Object gauge dashboard"
+            data-showroom-content-attr="aria-label:fronts.object.navigationLabel"
           >
             <a
               class="button"
               href="/index.html"
+              data-showroom-content="fronts.sharedNavigation.returnToCompass"
             >
               Return to Compass
             </a>
@@ -1431,6 +897,7 @@
               class="button button-gold"
               href="#showroom-orbit"
               data-showroom-return-to-orbit
+              data-showroom-content="fronts.sharedNavigation.returnToOrbit"
             >
               Return to Orbit
             </a>
@@ -1448,15 +915,21 @@
         >
           <header class="showroom-front__heading">
             <div>
-              <div class="kicker">
+              <div
+                class="kicker"
+                data-showroom-content="fronts.structure.kicker"
+              >
                 Structure Gauge Set
               </div>
 
-              <h2 id="structure-gauges-title">
+              <h2
+                id="structure-gauges-title"
+                data-showroom-content="fronts.structure.heading"
+              >
                 The order beneath the surface
               </h2>
 
-              <p>
+              <p data-showroom-content="fronts.structure.introduction">
                 Exact structural counts and the anatomy of one
                 computational object.
               </p>
@@ -1473,216 +946,18 @@
               class="showroom-gauge-selector showroom-gauge-selector--metrics"
               role="group"
               aria-label="Structure gauge selectors"
-            >
-              <button
-                class="showroom-gauge showroom-gauge--compact"
-                type="button"
-                data-showroom-gauge
-                data-gauge-id="radial-sectors"
-                data-gauge-family="metric"
-                data-gauge-value="16"
-                data-gauge-display-value="16"
-                data-gauge-state="fixed"
-                aria-expanded="true"
-                aria-controls="gauge-detail-radial-sectors"
-              >
-                <strong>16</strong>
-                <span>Radial Sectors</span>
-                <small>Angular field</small>
-              </button>
-
-              <button
-                class="showroom-gauge showroom-gauge--compact"
-                type="button"
-                data-showroom-gauge
-                data-gauge-id="structural-bands"
-                data-gauge-family="metric"
-                data-gauge-value="16"
-                data-gauge-display-value="16"
-                data-gauge-state="fixed"
-                aria-expanded="false"
-                aria-controls="gauge-detail-structural-bands"
-              >
-                <strong>16</strong>
-                <span>Structural Bands</span>
-                <small>Depth field</small>
-              </button>
-
-              <button
-                class="showroom-gauge showroom-gauge--compact"
-                type="button"
-                data-showroom-gauge
-                data-gauge-id="addressable-seats"
-                data-gauge-family="metric"
-                data-gauge-value="256"
-                data-gauge-display-value="256"
-                data-gauge-state="fixed"
-                aria-expanded="false"
-                aria-controls="gauge-detail-addressable-seats"
-              >
-                <strong>256</strong>
-                <span>Addressable Seats</span>
-                <small>16 × 16 field</small>
-              </button>
-
-              <button
-                class="showroom-gauge showroom-gauge--compact"
-                type="button"
-                data-showroom-gauge
-                data-gauge-id="surface-triangles"
-                data-gauge-family="metric"
-                data-gauge-value="512"
-                data-gauge-display-value="512"
-                data-gauge-state="fixed"
-                aria-expanded="false"
-                aria-controls="gauge-detail-surface-triangles"
-              >
-                <strong>512</strong>
-                <span>Exterior Triangles</span>
-                <small>Visible surface</small>
-              </button>
-
-              <button
-                class="showroom-gauge showroom-gauge--compact"
-                type="button"
-                data-showroom-gauge
-                data-gauge-id="lattice-connections"
-                data-gauge-family="metric"
-                data-gauge-value="800"
-                data-gauge-display-value="800"
-                data-gauge-state="fixed"
-                aria-expanded="false"
-                aria-controls="gauge-detail-lattice-connections"
-              >
-                <strong>800</strong>
-                <span>Internal Connections</span>
-                <small>Lattice continuity</small>
-              </button>
-
-              <button
-                class="showroom-gauge showroom-gauge--compact"
-                type="button"
-                data-showroom-gauge
-                data-gauge-id="material-regions"
-                data-gauge-family="metric"
-                data-gauge-value="14"
-                data-gauge-display-value="14"
-                data-gauge-state="fixed"
-                aria-expanded="false"
-                aria-controls="gauge-detail-material-regions"
-              >
-                <strong>14</strong>
-                <span>Material Regions</span>
-                <small>Visual composition</small>
-              </button>
-            </div>
+              data-showroom-build-mount="structure-gauge-selectors"
+              data-showroom-build-state="pending"
+              data-showroom-content-attr="aria-label:fronts.structure.selectorLabel"
+            ></div>
 
             <div
               class="showroom-gauge-details showroom-gauge-details--shared"
               data-showroom-gauge-details
+              data-showroom-build-mount="structure-gauge-details"
+              data-showroom-build-state="pending"
               aria-live="polite"
-            >
-              <article
-                id="gauge-detail-radial-sectors"
-                class="showroom-gauge-detail"
-                data-showroom-gauge-detail
-                data-gauge-detail-id="radial-sectors"
-              >
-                <h3>
-                  Sixteen radial sectors
-                </h3>
-
-                <p>
-                  The radial field supplies the Diamond’s angular
-                  coordinate dimension.
-                </p>
-              </article>
-
-              <article
-                id="gauge-detail-structural-bands"
-                class="showroom-gauge-detail"
-                data-showroom-gauge-detail
-                data-gauge-detail-id="structural-bands"
-                hidden
-              >
-                <h3>
-                  Sixteen structural bands
-                </h3>
-
-                <p>
-                  The bands supply the second coordinate dimension and
-                  intersect the sectors to form the 256-seat field.
-                </p>
-              </article>
-
-              <article
-                id="gauge-detail-addressable-seats"
-                class="showroom-gauge-detail"
-                data-showroom-gauge-detail
-                data-gauge-detail-id="addressable-seats"
-                hidden
-              >
-                <h3>
-                  256 addressable seats
-                </h3>
-
-                <p>
-                  Every seat occupies a declared position that can be
-                  identified, connected, inspected, and regenerated.
-                </p>
-              </article>
-
-              <article
-                id="gauge-detail-surface-triangles"
-                class="showroom-gauge-detail"
-                data-showroom-gauge-detail
-                data-gauge-detail-id="surface-triangles"
-                hidden
-              >
-                <h3>
-                  512 exterior triangles
-                </h3>
-
-                <p>
-                  The visible surface is assembled from retained
-                  structural geometry rather than an imported mesh.
-                </p>
-              </article>
-
-              <article
-                id="gauge-detail-lattice-connections"
-                class="showroom-gauge-detail"
-                data-showroom-gauge-detail
-                data-gauge-detail-id="lattice-connections"
-                hidden
-              >
-                <h3>
-                  800 internal connections
-                </h3>
-
-                <p>
-                  The internal field expresses continuity across the
-                  object and supports Lattice View.
-                </p>
-              </article>
-
-              <article
-                id="gauge-detail-material-regions"
-                class="showroom-gauge-detail"
-                data-showroom-gauge-detail
-                data-gauge-detail-id="material-regions"
-                hidden
-              >
-                <h3>
-                  Fourteen material regions
-                </h3>
-
-                <p>
-                  The regions govern the crown, girdle, pavilion, culet,
-                  lattice, lighting, and inspection expression.
-                </p>
-              </article>
-            </div>
+            ></div>
 
             <div
               class="showroom-composition-gauge showroom-composition-gauge--compact"
@@ -1690,11 +965,14 @@
               aria-labelledby="diamond-anatomy-title"
             >
               <header>
-                <span>
+                <span data-showroom-content="fronts.structure.composition.eyebrow">
                   Composition Gauge
                 </span>
 
-                <h3 id="diamond-anatomy-title">
+                <h3
+                  id="diamond-anatomy-title"
+                  data-showroom-content="fronts.structure.composition.heading"
+                >
                   Diamond anatomy
                 </h3>
               </header>
@@ -1703,67 +981,10 @@
                 class="showroom-composition-rail"
                 role="list"
                 aria-label="Diamond structural regions"
-              >
-                <button
-                  type="button"
-                  role="listitem"
-                  data-showroom-composition-region
-                  data-region-id="crown"
-                  aria-pressed="true"
-                >
-                  <span>01</span>
-                  <strong>Gold Crown</strong>
-                  <small>Visible identity</small>
-                </button>
-
-                <button
-                  type="button"
-                  role="listitem"
-                  data-showroom-composition-region
-                  data-region-id="girdle"
-                  aria-pressed="false"
-                >
-                  <span>02</span>
-                  <strong>Bridge Girdle</strong>
-                  <small>Joining boundary</small>
-                </button>
-
-                <button
-                  type="button"
-                  role="listitem"
-                  data-showroom-composition-region
-                  data-region-id="pavilion"
-                  aria-pressed="false"
-                >
-                  <span>03</span>
-                  <strong>Sapphire Pavilion</strong>
-                  <small>Depth and support</small>
-                </button>
-
-                <button
-                  type="button"
-                  role="listitem"
-                  data-showroom-composition-region
-                  data-region-id="culet"
-                  aria-pressed="false"
-                >
-                  <span>04</span>
-                  <strong>Culet</strong>
-                  <small>Lower termination</small>
-                </button>
-
-                <button
-                  type="button"
-                  role="listitem"
-                  data-showroom-composition-region
-                  data-region-id="lattice"
-                  aria-pressed="false"
-                >
-                  <span>05</span>
-                  <strong>Internal Lattice</strong>
-                  <small>Structural continuity</small>
-                </button>
-              </div>
+                data-showroom-build-mount="composition-regions"
+                data-showroom-build-state="pending"
+                data-showroom-content-attr="aria-label:fronts.structure.composition.railLabel"
+              ></div>
 
               <div
                 class="showroom-composition-detail"
@@ -1788,10 +1009,12 @@
           <nav
             class="showroom-front-navigation"
             aria-label="Leave the Structure gauge dashboard"
+            data-showroom-content-attr="aria-label:fronts.structure.navigationLabel"
           >
             <a
               class="button"
               href="/index.html"
+              data-showroom-content="fronts.sharedNavigation.returnToCompass"
             >
               Return to Compass
             </a>
@@ -1800,6 +1023,7 @@
               class="button button-gold"
               href="#showroom-orbit"
               data-showroom-return-to-orbit
+              data-showroom-content="fronts.sharedNavigation.returnToOrbit"
             >
               Return to Orbit
             </a>
@@ -1817,15 +1041,21 @@
         >
           <header class="showroom-front__heading">
             <div>
-              <div class="kicker">
+              <div
+                class="kicker"
+                data-showroom-content="fronts.interaction.kicker"
+              >
                 Interaction Gauge Set
               </div>
 
-              <h2 id="interaction-gauges-title">
+              <h2
+                id="interaction-gauges-title"
+                data-showroom-content="fronts.interaction.heading"
+              >
                 How the object responds
               </h2>
 
-              <p>
+              <p data-showroom-content="fronts.interaction.introduction">
                 Compact capability indicators for manipulation,
                 accessibility, recovery, and responsive presentation.
               </p>
@@ -1843,331 +1073,29 @@
               data-showroom-capability-grid
               role="group"
               aria-label="Interaction capability selectors"
-            >
-              <button
-                class="showroom-gauge showroom-gauge--capability-compact"
-                type="button"
-                data-showroom-gauge
-                data-gauge-id="pointer"
-                data-gauge-family="capability"
-                data-gauge-state="supported"
-                aria-expanded="true"
-                aria-controls="gauge-detail-pointer"
-              >
-                <strong>Pointer</strong>
-                <span>Rotation</span>
-              </button>
-
-              <button
-                class="showroom-gauge showroom-gauge--capability-compact"
-                type="button"
-                data-showroom-gauge
-                data-gauge-id="touch"
-                data-gauge-family="capability"
-                data-gauge-state="supported"
-                aria-expanded="false"
-                aria-controls="gauge-detail-touch"
-              >
-                <strong>Touch</strong>
-                <span>Rotation</span>
-              </button>
-
-              <button
-                class="showroom-gauge showroom-gauge--capability-compact"
-                type="button"
-                data-showroom-gauge
-                data-gauge-id="pinch-zoom"
-                data-gauge-family="capability"
-                data-gauge-state="supported"
-                aria-expanded="false"
-                aria-controls="gauge-detail-pinch-zoom"
-              >
-                <strong>Pinch</strong>
-                <span>Zoom</span>
-              </button>
-
-              <button
-                class="showroom-gauge showroom-gauge--capability-compact"
-                type="button"
-                data-showroom-gauge
-                data-gauge-id="wheel-zoom"
-                data-gauge-family="capability"
-                data-gauge-state="supported"
-                aria-expanded="false"
-                aria-controls="gauge-detail-wheel-zoom"
-              >
-                <strong>Wheel</strong>
-                <span>Zoom</span>
-              </button>
-
-              <button
-                class="showroom-gauge showroom-gauge--capability-compact"
-                type="button"
-                data-showroom-gauge
-                data-gauge-id="keyboard"
-                data-gauge-family="capability"
-                data-gauge-state="supported"
-                aria-expanded="false"
-                aria-controls="gauge-detail-keyboard"
-              >
-                <strong>Keyboard</strong>
-                <span>Semantic</span>
-              </button>
-
-              <button
-                class="showroom-gauge showroom-gauge--capability-compact"
-                type="button"
-                data-showroom-gauge
-                data-gauge-id="inspection"
-                data-gauge-family="capability"
-                data-gauge-state="supported"
-                aria-expanded="false"
-                aria-controls="gauge-detail-inspection"
-              >
-                <strong>Inspect</strong>
-                <span>Selection</span>
-              </button>
-
-              <button
-                class="showroom-gauge showroom-gauge--capability-compact"
-                type="button"
-                data-showroom-gauge
-                data-gauge-id="reset"
-                data-gauge-family="capability"
-                data-gauge-state="supported"
-                aria-expanded="false"
-                aria-controls="gauge-detail-reset"
-              >
-                <strong>Reset</strong>
-                <span>Restore</span>
-              </button>
-
-              <button
-                class="showroom-gauge showroom-gauge--capability-compact"
-                type="button"
-                data-showroom-gauge
-                data-gauge-id="reduced-motion"
-                data-gauge-family="capability"
-                data-gauge-state="supported"
-                aria-expanded="false"
-                aria-controls="gauge-detail-reduced-motion"
-              >
-                <strong>Motion</strong>
-                <span>Reduced</span>
-              </button>
-
-              <button
-                class="showroom-gauge showroom-gauge--capability-compact"
-                type="button"
-                data-showroom-gauge
-                data-gauge-id="responsive"
-                data-gauge-family="capability"
-                data-gauge-state="supported"
-                aria-expanded="false"
-                aria-controls="gauge-detail-responsive"
-              >
-                <strong>Responsive</strong>
-                <span>Resize</span>
-              </button>
-
-              <button
-                class="showroom-gauge showroom-gauge--capability-compact"
-                type="button"
-                data-showroom-gauge
-                data-gauge-id="fallback"
-                data-gauge-family="capability"
-                data-gauge-state="fallback"
-                aria-expanded="false"
-                aria-controls="gauge-detail-fallback"
-              >
-                <strong>Fallback</strong>
-                <span>Semantic</span>
-              </button>
-            </div>
+              data-showroom-build-mount="interaction-gauge-selectors"
+              data-showroom-build-state="pending"
+              data-showroom-content-attr="aria-label:fronts.interaction.selectorLabel"
+            ></div>
 
             <div
               class="showroom-gauge-details showroom-gauge-details--shared"
               data-showroom-gauge-details
+              data-showroom-build-mount="interaction-gauge-details"
+              data-showroom-build-state="pending"
               aria-live="polite"
-            >
-              <article
-                id="gauge-detail-pointer"
-                class="showroom-gauge-detail"
-                data-showroom-gauge-detail
-                data-gauge-detail-id="pointer"
-              >
-                <h3>
-                  Pointer rotation
-                </h3>
-
-                <p>
-                  Direct pointer input rotates the Diamond on its
-                  independent stage.
-                </p>
-              </article>
-
-              <article
-                id="gauge-detail-touch"
-                class="showroom-gauge-detail"
-                data-showroom-gauge-detail
-                data-gauge-detail-id="touch"
-                hidden
-              >
-                <h3>
-                  Touch rotation
-                </h3>
-
-                <p>
-                  Finger and thumb movement remain confined to the
-                  Diamond viewport.
-                </p>
-              </article>
-
-              <article
-                id="gauge-detail-pinch-zoom"
-                class="showroom-gauge-detail"
-                data-showroom-gauge-detail
-                data-gauge-detail-id="pinch-zoom"
-                hidden
-              >
-                <h3>
-                  Pinch zoom
-                </h3>
-
-                <p>
-                  The protected interaction contract retains touch-based
-                  scale control.
-                </p>
-              </article>
-
-              <article
-                id="gauge-detail-wheel-zoom"
-                class="showroom-gauge-detail"
-                data-showroom-gauge-detail
-                data-gauge-detail-id="wheel-zoom"
-                hidden
-              >
-                <h3>
-                  Wheel zoom
-                </h3>
-
-                <p>
-                  Desktop wheel input remains owned by the Diamond while
-                  the pointer is over its stage.
-                </p>
-              </article>
-
-              <article
-                id="gauge-detail-keyboard"
-                class="showroom-gauge-detail"
-                data-showroom-gauge-detail
-                data-gauge-detail-id="keyboard"
-                hidden
-              >
-                <h3>
-                  Keyboard access
-                </h3>
-
-                <p>
-                  Star destinations, gauges, tabs, dialogs, and controls
-                  retain semantic keyboard activation.
-                </p>
-              </article>
-
-              <article
-                id="gauge-detail-inspection"
-                class="showroom-gauge-detail"
-                data-showroom-gauge-detail
-                data-gauge-detail-id="inspection"
-                hidden
-              >
-                <h3>
-                  Inspection
-                </h3>
-
-                <p>
-                  The Inspect control exposes the Diamond renderer’s
-                  accepted facet-selection behavior.
-                </p>
-              </article>
-
-              <article
-                id="gauge-detail-reset"
-                class="showroom-gauge-detail"
-                data-showroom-gauge-detail
-                data-gauge-detail-id="reset"
-                hidden
-              >
-                <h3>
-                  Reset
-                </h3>
-
-                <p>
-                  Reset restores the renderer-defined accepted view
-                  without changing the constellation.
-                </p>
-              </article>
-
-              <article
-                id="gauge-detail-reduced-motion"
-                class="showroom-gauge-detail"
-                data-showroom-gauge-detail
-                data-gauge-detail-id="reduced-motion"
-                hidden
-              >
-                <h3>
-                  Reduced motion
-                </h3>
-
-                <p>
-                  Nonessential animation is removed when reduced motion
-                  is requested.
-                </p>
-              </article>
-
-              <article
-                id="gauge-detail-responsive"
-                class="showroom-gauge-detail"
-                data-showroom-gauge-detail
-                data-gauge-detail-id="responsive"
-                hidden
-              >
-                <h3>
-                  Responsive presentation
-                </h3>
-
-                <p>
-                  Orbit, dashboards, Window, information, and Diamond
-                  stages respond independently to viewport size.
-                </p>
-              </article>
-
-              <article
-                id="gauge-detail-fallback"
-                class="showroom-gauge-detail"
-                data-showroom-gauge-detail
-                data-gauge-detail-id="fallback"
-                hidden
-              >
-                <h3>
-                  Semantic fallback
-                </h3>
-
-                <p>
-                  The page remains navigable when enhanced rendering is
-                  unavailable.
-                </p>
-              </article>
-            </div>
+            ></div>
           </div>
 
           <nav
             class="showroom-front-navigation"
             aria-label="Leave the Interaction gauge dashboard"
+            data-showroom-content-attr="aria-label:fronts.interaction.navigationLabel"
           >
             <a
               class="button"
               href="/index.html"
+              data-showroom-content="fronts.sharedNavigation.returnToCompass"
             >
               Return to Compass
             </a>
@@ -2176,6 +1104,7 @@
               class="button button-gold"
               href="#showroom-orbit"
               data-showroom-return-to-orbit
+              data-showroom-content="fronts.sharedNavigation.returnToOrbit"
             >
               Return to Orbit
             </a>
@@ -2193,15 +1122,21 @@
         >
           <header class="showroom-front__heading">
             <div>
-              <div class="kicker">
+              <div
+                class="kicker"
+                data-showroom-content="fronts.systems.kicker"
+              >
                 Mirrorland Systems Gauge Set
               </div>
 
-              <h2 id="systems-gauges-title">
+              <h2
+                id="systems-gauges-title"
+                data-showroom-content="fronts.systems.heading"
+              >
                 The frontier environment taking shape
               </h2>
 
-              <p>
+              <p data-showroom-content="fronts.systems.introduction">
                 A compact status view of systems already present and
                 systems still being built.
               </p>
@@ -2218,180 +1153,29 @@
               class="showroom-gauge-selector showroom-gauge-selector--status"
               role="group"
               aria-label="Mirrorland system status selectors"
-            >
-              <button
-                class="showroom-gauge showroom-gauge--status-row"
-                type="button"
-                data-showroom-gauge
-                data-gauge-id="narrative-environment"
-                data-gauge-family="state"
-                data-gauge-state="implemented"
-                aria-expanded="true"
-                aria-controls="gauge-detail-narrative-environment"
-              >
-                <span>Narrative Environment</span>
-                <strong>Active</strong>
-              </button>
-
-              <button
-                class="showroom-gauge showroom-gauge--status-row"
-                type="button"
-                data-showroom-gauge
-                data-gauge-id="character-paths"
-                data-gauge-family="state"
-                data-gauge-state="available"
-                aria-expanded="false"
-                aria-controls="gauge-detail-character-paths"
-              >
-                <span>Character Paths</span>
-                <strong>Available</strong>
-              </button>
-
-              <button
-                class="showroom-gauge showroom-gauge--status-row"
-                type="button"
-                data-showroom-gauge
-                data-gauge-id="frontier-sciences"
-                data-gauge-family="state"
-                data-gauge-state="planned"
-                aria-expanded="false"
-                aria-controls="gauge-detail-frontier-sciences"
-              >
-                <span>Frontier Sciences</span>
-                <strong>Planned</strong>
-              </button>
-
-              <button
-                class="showroom-gauge showroom-gauge--status-row"
-                type="button"
-                data-showroom-gauge
-                data-gauge-id="simulation-systems"
-                data-gauge-family="state"
-                data-gauge-state="planned"
-                aria-expanded="false"
-                aria-controls="gauge-detail-simulation-systems"
-              >
-                <span>Simulation Systems</span>
-                <strong>Planned</strong>
-              </button>
-
-              <button
-                class="showroom-gauge showroom-gauge--status-row"
-                type="button"
-                data-showroom-gauge
-                data-gauge-id="world-impact"
-                data-gauge-family="state"
-                data-gauge-state="research"
-                aria-expanded="false"
-                aria-controls="gauge-detail-world-impact"
-              >
-                <span>World-Impact Pathways</span>
-                <strong>Research</strong>
-              </button>
-            </div>
+              data-showroom-build-mount="systems-gauge-selectors"
+              data-showroom-build-state="pending"
+              data-showroom-content-attr="aria-label:fronts.systems.selectorLabel"
+            ></div>
 
             <div
               class="showroom-gauge-details showroom-gauge-details--shared"
               data-showroom-gauge-details
+              data-showroom-build-mount="systems-gauge-details"
+              data-showroom-build-state="pending"
               aria-live="polite"
-            >
-              <article
-                id="gauge-detail-narrative-environment"
-                class="showroom-gauge-detail"
-                data-showroom-gauge-detail
-                data-gauge-detail-id="narrative-environment"
-              >
-                <h3>
-                  Mirrorland is the containing world
-                </h3>
-
-                <p>
-                  Characters, scientific objects, gauges, simulations,
-                  experiments, and exploration coexist inside one
-                  narrative environment.
-                </p>
-              </article>
-
-              <article
-                id="gauge-detail-character-paths"
-                class="showroom-gauge-detail"
-                data-showroom-gauge-detail
-                data-gauge-detail-id="character-paths"
-                hidden
-              >
-                <h3>
-                  Character paths
-                </h3>
-
-                <p>
-                  Route stars provide entry to character destinations
-                  without exposing their behavior before selection.
-                </p>
-              </article>
-
-              <article
-                id="gauge-detail-frontier-sciences"
-                class="showroom-gauge-detail"
-                data-showroom-gauge-detail
-                data-gauge-detail-id="frontier-sciences"
-                hidden
-              >
-                <h3>
-                  Frontier sciences
-                </h3>
-
-                <p>
-                  Future areas may present unresolved scientific
-                  questions, experimental models, and exploratory
-                  systems.
-                </p>
-              </article>
-
-              <article
-                id="gauge-detail-simulation-systems"
-                class="showroom-gauge-detail"
-                data-showroom-gauge-detail
-                data-gauge-detail-id="simulation-systems"
-                hidden
-              >
-                <h3>
-                  Simulation systems
-                </h3>
-
-                <p>
-                  Planned environments may support user-directed
-                  scenarios, variables, character participation, and
-                  recorded outcomes.
-                </p>
-              </article>
-
-              <article
-                id="gauge-detail-world-impact"
-                class="showroom-gauge-detail"
-                data-showroom-gauge-detail
-                data-gauge-detail-id="world-impact"
-                hidden
-              >
-                <h3>
-                  World-impact pathways
-                </h3>
-
-                <p>
-                  Mirrorland may help examine whether experimental
-                  systems could inform real-world decisions. Validation
-                  remains separate from aspiration.
-                </p>
-              </article>
-            </div>
+            ></div>
           </div>
 
           <nav
             class="showroom-front-navigation"
             aria-label="Leave the Mirrorland Systems gauge dashboard"
+            data-showroom-content-attr="aria-label:fronts.systems.navigationLabel"
           >
             <a
               class="button"
               href="/index.html"
+              data-showroom-content="fronts.sharedNavigation.returnToCompass"
             >
               Return to Compass
             </a>
@@ -2400,6 +1184,7 @@
               class="button button-gold"
               href="#showroom-orbit"
               data-showroom-return-to-orbit
+              data-showroom-content="fronts.sharedNavigation.returnToOrbit"
             >
               Return to Orbit
             </a>
@@ -2417,15 +1202,21 @@
         >
           <header class="showroom-front__heading">
             <div>
-              <div class="kicker">
+              <div
+                class="kicker"
+                data-showroom-content="fronts.information.kicker"
+              >
                 Information Front
               </div>
 
-              <h2 id="information-front-title">
+              <h2
+                id="information-front-title"
+                data-showroom-content="fronts.information.heading"
+              >
                 Platform, Engineering, and Evidence
               </h2>
 
-              <p>
+              <p data-showroom-content="fronts.information.introduction">
                 Three perspectives on how the Showroom is built,
                 governed, tested, and bounded.
               </p>
@@ -2440,6 +1231,7 @@
               class="showroom-information-tablist"
               role="tablist"
               aria-label="Showroom information categories"
+              data-showroom-content-attr="aria-label:fronts.information.tabListLabel"
             >
               <button
                 id="platform-tab"
@@ -2450,6 +1242,7 @@
                 aria-selected="true"
                 aria-controls="platform-panel"
                 tabindex="0"
+                data-showroom-content="fronts.information.tabs.platform"
               >
                 Platform
               </button>
@@ -2463,6 +1256,7 @@
                 aria-selected="false"
                 aria-controls="engineering-panel"
                 tabindex="-1"
+                data-showroom-content="fronts.information.tabs.engineering"
               >
                 Engineering
               </button>
@@ -2476,6 +1270,7 @@
                 aria-selected="false"
                 aria-controls="evidence-panel"
                 tabindex="-1"
+                data-showroom-content="fronts.information.tabs.evidence"
               >
                 Evidence
               </button>
@@ -2490,86 +1285,22 @@
               aria-labelledby="platform-tab"
             >
               <div class="showroom-information-summary">
-                <strong>
+                <strong data-showroom-content="fronts.information.platform.summaryTitle">
                   The platform preserves access, state separation, and
                   graceful failure.
                 </strong>
 
-                <p>
+                <p data-showroom-content="fronts.information.platform.summary">
                   The page remains usable before enhanced behavior
-                  initializes and when optional visual systems fail.
+                  initializes.
                 </p>
               </div>
 
-              <div class="drop-grid">
-                <details class="architectural-drop">
-                  <summary>
-                    Accessibility contract
-                  </summary>
-
-                  <div class="drop-content">
-                    <p>
-                      Every visual star has a semantic control,
-                      accessible name, declared destination, focus state,
-                      and fallback path.
-                    </p>
-                  </div>
-                </details>
-
-                <details class="architectural-drop">
-                  <summary>
-                    Responsive behavior
-                  </summary>
-
-                  <div class="drop-content">
-                    <p>
-                      Orbit, gauges, information, Window, and Diamond
-                      stages respond independently to viewport size.
-                    </p>
-                  </div>
-                </details>
-
-                <details class="architectural-drop">
-                  <summary>
-                    Reduced motion
-                  </summary>
-
-                  <div class="drop-content">
-                    <p>
-                      Continuous and nonessential movement is removed when
-                      reduced motion is requested.
-                    </p>
-                  </div>
-                </details>
-
-                <details class="architectural-drop">
-                  <summary>
-                    Semantic fallback
-                  </summary>
-
-                  <div class="drop-content">
-                    <p>
-                      Dashboards, tabs, routes, controls, and explanatory
-                      content remain available without enhanced
-                      rendering.
-                    </p>
-                  </div>
-                </details>
-
-                <details class="architectural-drop">
-                  <summary>
-                    Failure isolation
-                  </summary>
-
-                  <div class="drop-content">
-                    <p>
-                      A failure in stars, gauges, Window animation, or a
-                      renderer must not erase the narrative or unrelated
-                      systems.
-                    </p>
-                  </div>
-                </details>
-              </div>
+              <div
+                class="drop-grid"
+                data-showroom-build-mount="platform-disclosures"
+                data-showroom-build-state="pending"
+              ></div>
             </div>
 
             <div
@@ -2582,110 +1313,29 @@
               hidden
             >
               <div class="showroom-information-summary">
-                <strong>
+                <strong data-showroom-content="fronts.information.engineering.summaryTitle">
                   Engineering authority remains separated by system.
                 </strong>
 
-                <p>
+                <p data-showroom-content="fronts.information.engineering.summary">
                   The constellation and gauges surround the protected
-                  Diamond rather than replacing it.
+                  Diamond.
                 </p>
               </div>
 
-              <div class="drop-grid">
-                <details class="architectural-drop">
-                  <summary>
-                    Diamond geometry pipeline
-                  </summary>
-
-                  <div class="drop-content">
-                    <p>
-                      One geometry authority generates exterior,
-                      lattice, coordinates, regions, and structural
-                      relationships.
-                    </p>
-                  </div>
-                </details>
-
-                <details class="architectural-drop">
-                  <summary>
-                    Diamond rendering pipeline
-                  </summary>
-
-                  <div class="drop-content">
-                    <p>
-                      The Diamond renderer owns shaders, buffers,
-                      lighting, camera, projection, rotation, zoom,
-                      inspection, reset, and recovery.
-                    </p>
-                  </div>
-                </details>
-
-                <details class="architectural-drop">
-                  <summary>
-                    Orbit composition pipeline
-                  </summary>
-
-                  <div class="drop-content">
-                    <p>
-                      The compositor owns the orbit camera,
-                      world-to-screen projection, Compass-plane depth
-                      classification, and rear/front layers.
-                    </p>
-                  </div>
-                </details>
-
-                <details class="architectural-drop">
-                  <summary>
-                    Gauge presentation pipeline
-                  </summary>
-
-                  <div class="drop-content">
-                    <p>
-                      HTML owns values and relationships. CSS owns visual
-                      density and layout. The gauge module owns local
-                      selection and accessible state.
-                    </p>
-                  </div>
-                </details>
-
-                <details class="architectural-drop">
-                  <summary>
-                    Window pipeline
-                  </summary>
-
-                  <div class="drop-content">
-                    <p>
-                      The Window retains an independent canvas,
-                      lifecycle, reduced-motion behavior, and foreground
-                      relationship to the Diamond.
-                    </p>
-                  </div>
-                </details>
-
-                <details class="architectural-drop">
-                  <summary>
-                    Ownership boundaries
-                  </summary>
-
-                  <div class="drop-content">
-                    <p>
-                      Controller owns page state. Interactions owns
-                      gesture interpretation. Compositor owns projection.
-                      Crystals owns orbital meshes. Gauges owns dashboard
-                      behavior. Diamond files retain Diamond authority.
-                    </p>
-                  </div>
-                </details>
-              </div>
+              <div
+                class="drop-grid"
+                data-showroom-build-mount="engineering-disclosures"
+                data-showroom-build-state="pending"
+              ></div>
 
               <div class="construction-access">
                 <div>
-                  <strong>
+                  <strong data-showroom-content="fronts.information.engineering.constructionRecord.title">
                     Open the complete Diamond construction record.
                   </strong>
 
-                  <p>
+                  <p data-showroom-content="fronts.information.engineering.constructionRecord.description">
                     Review geometry, materials, rendering, interaction,
                     stage separation, and claim boundaries.
                   </p>
@@ -2697,6 +1347,7 @@
                   data-open-construction-record
                   aria-haspopup="dialog"
                   aria-controls="construction-record-dialog"
+                  data-showroom-content="fronts.information.engineering.constructionRecord.actionLabel"
                 >
                   Open Construction Record
                 </button>
@@ -2713,12 +1364,12 @@
               hidden
             >
               <div class="showroom-information-summary">
-                <strong>
+                <strong data-showroom-content="fronts.information.evidence.summaryTitle">
                   Implementation, runtime evidence, visual acceptance,
                   and authorization remain separate.
                 </strong>
 
-                <p>
+                <p data-showroom-content="fronts.information.evidence.summary">
                   Source declarations do not convert automatically into
                   validation or release claims.
                 </p>
@@ -2727,116 +1378,28 @@
               <div
                 class="showroom-evidence-statuses"
                 aria-label="Evidence and authorization status"
-              >
-                <article data-evidence-state="implemented">
-                  <span>Geometry</span>
-                  <strong>Implemented</strong>
-                </article>
+                data-showroom-build-mount="evidence-statuses"
+                data-showroom-build-state="pending"
+                data-showroom-content-attr="aria-label:fronts.information.evidence.statusLabel"
+              ></div>
 
-                <article data-evidence-state="implemented">
-                  <span>Renderer</span>
-                  <strong>Implemented</strong>
-                </article>
-
-                <article data-evidence-state="not-claimed">
-                  <span>Runtime Pass</span>
-                  <strong>Not Claimed</strong>
-                </article>
-
-                <article data-evidence-state="not-claimed">
-                  <span>Visual Acceptance</span>
-                  <strong>Not Claimed</strong>
-                </article>
-
-                <article data-evidence-state="not-authorized">
-                  <span>Production</span>
-                  <strong>Not Authorized</strong>
-                </article>
-
-                <article data-evidence-state="not-authorized">
-                  <span>Deployment</span>
-                  <strong>Not Authorized</strong>
-                </article>
-              </div>
-
-              <div class="drop-grid">
-                <details class="architectural-drop">
-                  <summary>
-                    Construction evidence
-                  </summary>
-
-                  <div class="drop-content">
-                    <p>
-                      Retained files identify counts, renderer identity,
-                      materials, controls, ownership boundaries, and
-                      fallback surfaces.
-                    </p>
-                  </div>
-                </details>
-
-                <details class="architectural-drop">
-                  <summary>
-                    Runtime evidence
-                  </summary>
-
-                  <div class="drop-content">
-                    <p>
-                      Source completeness is not the same as successful
-                      initialization and interaction in deployment.
-                    </p>
-                  </div>
-                </details>
-
-                <details class="architectural-drop">
-                  <summary>
-                    Visual acceptance
-                  </summary>
-
-                  <div class="drop-content">
-                    <p>
-                      Acceptance requires inspection of actual layout,
-                      motion, depth, responsiveness, and interaction.
-                    </p>
-                  </div>
-                </details>
-
-                <details class="architectural-drop">
-                  <summary>
-                    Receipts
-                  </summary>
-
-                  <div class="drop-content">
-                    <p>
-                      Runtime modules may publish bounded identity,
-                      readiness, state, failure, and ownership receipts.
-                    </p>
-                  </div>
-                </details>
-
-                <details class="architectural-drop">
-                  <summary>
-                    Claim boundaries
-                  </summary>
-
-                  <div class="drop-content">
-                    <p>
-                      No source declaration establishes empirical proof,
-                      production readiness, deployment authorization, or
-                      public-release authority.
-                    </p>
-                  </div>
-                </details>
-              </div>
+              <div
+                class="drop-grid"
+                data-showroom-build-mount="evidence-disclosures"
+                data-showroom-build-state="pending"
+              ></div>
             </div>
           </div>
 
           <nav
             class="showroom-front-navigation"
             aria-label="Leave the information front"
+            data-showroom-content-attr="aria-label:fronts.information.navigationLabel"
           >
             <a
               class="button"
               href="/index.html"
+              data-showroom-content="fronts.sharedNavigation.returnToCompass"
             >
               Return to Compass
             </a>
@@ -2845,6 +1408,7 @@
               class="button button-gold"
               href="#showroom-orbit"
               data-showroom-return-to-orbit
+              data-showroom-content="fronts.sharedNavigation.returnToOrbit"
             >
               Return to Orbit
             </a>
@@ -2855,25 +1419,39 @@
 
     <footer class="showroom-footer">
       <div>
-        <strong>
+        <strong data-showroom-content="footer.title">
           The Showroom · The Door to Mirrorland
         </strong>
 
-        <span>
+        <span data-showroom-content="footer.description">
           Follow the stars. Open the Window. Inspect the Diamond.
         </span>
       </div>
 
-      <nav aria-label="Showroom footer links">
-        <a href="/elara/index.html">
+      <nav
+        aria-label="Showroom footer links"
+        data-showroom-content-attr="aria-label:footer.navigationLabel"
+      >
+        <a
+          href="/elara/index.html"
+          data-showroom-content="footer.links.elara"
+        >
           Talk to Elara
         </a>
 
-        <a href="/index.html">
+        <a
+          href="/index.html"
+          data-showroom-content="footer.links.mainCompass"
+        >
           Main Compass
         </a>
       </nav>
     </footer>
+
+    <output
+      data-showroom-build-receipt
+      hidden
+    ></output>
 
     <output
       data-showroom-controller-receipt
@@ -2909,282 +1487,209 @@
       data-showroom-window-receipt
       hidden
     ></output>
+
+    <dialog
+      id="showroom-route-dialog"
+      class="showroom-route-dialog"
+      data-showroom-route-dialog
+      aria-labelledby="showroom-route-dialog-title"
+      aria-describedby="showroom-route-dialog-description"
+    >
+      <div class="dialog-shell">
+        <div class="dialog-header">
+          <div class="dialog-title">
+            <span data-showroom-content="dialogs.route.eyebrow">
+              Constellation Route
+            </span>
+
+            <h2
+              id="showroom-route-dialog-title"
+              data-showroom-route-dialog-title
+              data-showroom-content="dialogs.route.defaultTitle"
+            >
+              A new path is available.
+            </h2>
+          </div>
+
+          <button
+            class="dialog-close"
+            type="button"
+            data-showroom-route-close
+            aria-label="Close the route decision and stay in the Showroom"
+            data-showroom-content-attr="aria-label:dialogs.route.closeLabel"
+          >
+            ×
+          </button>
+        </div>
+
+        <p
+          id="showroom-route-dialog-description"
+          data-showroom-route-dialog-description
+          data-showroom-content="dialogs.route.defaultDescription"
+        >
+          This star offers a path beyond the current Showroom page.
+        </p>
+
+        <div class="showroom-route-dialog__choices">
+          <button
+            class="button button-gold"
+            type="button"
+            data-showroom-route-stay
+            data-showroom-content="dialogs.route.stayLabel"
+          >
+            Stay in the Showroom
+          </button>
+
+          <a
+            class="button"
+            href="/index.html"
+            data-showroom-route-continue
+            data-showroom-content="dialogs.route.continueLabel"
+          >
+            Continue to Destination
+          </a>
+        </div>
+      </div>
+    </dialog>
+
+    <dialog
+      id="showroom-compass-dialog"
+      class="showroom-compass-dialog"
+      data-showroom-compass-dialog
+      data-showroom-controller-surface="compass-return-dialog"
+      data-showroom-dialog-state="closed"
+      aria-labelledby="showroom-compass-dialog-title"
+      aria-describedby="showroom-compass-dialog-description"
+    >
+      <div class="dialog-shell">
+        <div class="dialog-header">
+          <div class="dialog-title">
+            <span data-showroom-content="dialogs.compass.eyebrow">
+              Main Compass
+            </span>
+
+            <h2
+              id="showroom-compass-dialog-title"
+              data-showroom-content="dialogs.compass.title"
+            >
+              Return to the Main Compass?
+            </h2>
+          </div>
+
+          <button
+            class="dialog-close"
+            type="button"
+            data-showroom-compass-close
+            data-showroom-controller-action="close-compass-return-dialog"
+            aria-label="Close the return option and remain in the Showroom"
+            data-showroom-content-attr="aria-label:dialogs.compass.closeLabel"
+          >
+            ×
+          </button>
+        </div>
+
+        <p
+          id="showroom-compass-dialog-description"
+          data-showroom-content="dialogs.compass.description"
+        >
+          Leave the Showroom and return to Audralia’s Main Compass.
+        </p>
+
+        <div class="showroom-compass-dialog__choices">
+          <button
+            class="button button-gold"
+            type="button"
+            data-showroom-compass-stay
+            data-showroom-controller-action="stay-in-showroom"
+            data-showroom-content="dialogs.compass.stayLabel"
+          >
+            Stay in the Showroom
+          </button>
+
+          <a
+            class="button"
+            href="/index.html"
+            data-showroom-compass-return
+            data-showroom-controller-action="return-to-main-compass"
+            data-showroom-hard-navigation="true"
+            data-showroom-content="dialogs.compass.returnLabel"
+          >
+            Return to Main Compass
+          </a>
+        </div>
+      </div>
+    </dialog>
+
+    <dialog
+      id="construction-record-dialog"
+      aria-labelledby="construction-dialog-title"
+    >
+      <div class="dialog-shell">
+        <div class="dialog-header">
+          <div class="dialog-title">
+            <span data-showroom-content="dialogs.construction.eyebrow">
+              Complete Showroom Exhibit Record
+            </span>
+
+            <h2
+              id="construction-dialog-title"
+              data-showroom-content="dialogs.construction.title"
+            >
+              What we built into the Diamond
+            </h2>
+          </div>
+
+          <button
+            class="dialog-close"
+            type="button"
+            data-close-construction-record
+            aria-label="Close construction record"
+            data-showroom-content-attr="aria-label:dialogs.construction.closeLabel"
+          >
+            ×
+          </button>
+        </div>
+
+        <div
+          class="construction-grid"
+          data-showroom-build-mount="construction-records"
+          data-showroom-build-state="pending"
+        ></div>
+
+        <div
+          class="construction-details"
+          data-showroom-build-mount="construction-disclosures"
+          data-showroom-build-state="pending"
+        ></div>
+
+        <div class="actions">
+          <button
+            class="button button-gold"
+            type="button"
+            data-close-construction-record
+            data-showroom-content="dialogs.construction.returnLabel"
+          >
+            Return to the Showroom
+          </button>
+        </div>
+      </div>
+    </dialog>
   </div>
 
-  <dialog
-    id="showroom-route-dialog"
-    class="showroom-route-dialog"
-    data-showroom-route-dialog
-    aria-labelledby="showroom-route-dialog-title"
-    aria-describedby="showroom-route-dialog-description"
-  >
-    <div class="dialog-shell">
-      <div class="dialog-header">
-        <div class="dialog-title">
-          <span>
-            Constellation Route
-          </span>
+  <!--
+    Content and structural assembly must complete before any runtime
+    module reads the page contract.
+  -->
 
-          <h2
-            id="showroom-route-dialog-title"
-            data-showroom-route-dialog-title
-          >
-            A new path is available.
-          </h2>
-        </div>
+  <script
+    src="/showroom/index.content.js?v=SHOWROOM_MIRRORLAND_EDITABLE_CONTENT_SOURCE_TNT_v1"
+    data-showroom-source="content"
+  ></script>
 
-        <button
-          class="dialog-close"
-          type="button"
-          data-showroom-route-close
-          aria-label="Close the route decision and stay in the Showroom"
-        >
-          ×
-        </button>
-      </div>
-
-      <p
-        id="showroom-route-dialog-description"
-        data-showroom-route-dialog-description
-      >
-        This star offers a path beyond the current Showroom page.
-      </p>
-
-      <div class="showroom-route-dialog__choices">
-        <button
-          class="button button-gold"
-          type="button"
-          data-showroom-route-stay
-        >
-          Stay in the Showroom
-        </button>
-
-        <a
-          class="button"
-          href="/index.html"
-          data-showroom-route-continue
-        >
-          Continue to Destination
-        </a>
-      </div>
-    </div>
-  </dialog>
-
-  <dialog
-    id="showroom-compass-dialog"
-    class="showroom-compass-dialog"
-    data-showroom-compass-dialog
-    data-showroom-controller-surface="compass-return-dialog"
-    data-showroom-dialog-state="closed"
-    aria-labelledby="showroom-compass-dialog-title"
-    aria-describedby="showroom-compass-dialog-description"
-  >
-    <div class="dialog-shell">
-      <div class="dialog-header">
-        <div class="dialog-title">
-          <span>
-            Main Compass
-          </span>
-
-          <h2 id="showroom-compass-dialog-title">
-            Return to the Main Compass?
-          </h2>
-        </div>
-
-        <button
-          class="dialog-close"
-          type="button"
-          data-showroom-compass-close
-          data-showroom-controller-action="close-compass-return-dialog"
-          aria-label="Close the return option and remain in the Showroom"
-        >
-          ×
-        </button>
-      </div>
-
-      <p id="showroom-compass-dialog-description">
-        Leave the Showroom and return to Audralia’s Main Compass, or
-        remain here and continue exploring Mirrorland.
-      </p>
-
-      <div class="showroom-compass-dialog__choices">
-        <button
-          class="button button-gold"
-          type="button"
-          data-showroom-compass-stay
-          data-showroom-controller-action="stay-in-showroom"
-        >
-          Stay in the Showroom
-        </button>
-
-        <a
-          class="button"
-          href="/index.html"
-          data-showroom-compass-return
-          data-showroom-controller-action="return-to-main-compass"
-          data-showroom-hard-navigation="true"
-        >
-          Return to Main Compass
-        </a>
-      </div>
-    </div>
-  </dialog>
-
-  <dialog
-    id="construction-record-dialog"
-    aria-labelledby="construction-dialog-title"
-  >
-    <div class="dialog-shell">
-      <div class="dialog-header">
-        <div class="dialog-title">
-          <span>
-            Complete Showroom Exhibit Record
-          </span>
-
-          <h2 id="construction-dialog-title">
-            What we built into the Diamond
-          </h2>
-        </div>
-
-        <button
-          class="dialog-close"
-          type="button"
-          data-close-construction-record
-          aria-label="Close construction record"
-        >
-          ×
-        </button>
-      </div>
-
-      <div class="construction-grid">
-        <article class="construction-record">
-          <strong>16</strong>
-          <span>Radial Sectors</span>
-        </article>
-
-        <article class="construction-record">
-          <strong>16</strong>
-          <span>Structural Bands</span>
-        </article>
-
-        <article class="construction-record">
-          <strong>256</strong>
-          <span>Addressable Seats</span>
-        </article>
-
-        <article class="construction-record">
-          <strong>512</strong>
-          <span>Exterior Facets</span>
-        </article>
-
-        <article class="construction-record">
-          <strong>800</strong>
-          <span>Internal Connections</span>
-        </article>
-
-        <article class="construction-record">
-          <strong>14</strong>
-          <span>Material Regions</span>
-        </article>
-
-        <article class="construction-record">
-          <strong>2</strong>
-          <span>Public Views</span>
-        </article>
-
-        <article class="construction-record">
-          <strong>WebGL</strong>
-          <span>Native Renderer</span>
-        </article>
-
-        <article class="construction-record">
-          <strong>1</strong>
-          <span>Geometry Authority</span>
-        </article>
-      </div>
-
-      <div class="construction-details">
-        <details class="architectural-drop">
-          <summary>
-            Construction identity
-          </summary>
-
-          <div class="drop-content">
-            <p>
-              The G3 Diamond Lattice is a purpose-built computational
-              object, not an imported model, generated image, video, or
-              static illustration.
-            </p>
-          </div>
-        </details>
-
-        <details class="architectural-drop">
-          <summary>
-            Stage separation
-          </summary>
-
-          <div class="drop-content">
-            <p>
-              The constellation and Diamond exhibit remain independent
-              stages. The Diamond retains its renderer, motion, zoom,
-              camera, controls, and fallback.
-            </p>
-          </div>
-        </details>
-
-        <details class="architectural-drop">
-          <summary>
-            Gauge system
-          </summary>
-
-          <div class="drop-content">
-            <p>
-              Gauge markup contains values, states, detail relationships,
-              and accessible labels. CSS owns presentation density. The
-              gauge module owns local activation and correspondence.
-            </p>
-          </div>
-        </details>
-
-        <details class="architectural-drop">
-          <summary>
-            Navigation ownership
-          </summary>
-
-          <div class="drop-content">
-            <p>
-              The visual Compass does not navigate. The semantic Compass
-              control requests a controller-owned return decision.
-            </p>
-          </div>
-        </details>
-
-        <details class="architectural-drop">
-          <summary>
-            Claim boundary
-          </summary>
-
-          <div class="drop-content">
-            <p>
-              Implemented source structure does not establish runtime
-              pass, visual acceptance, production authorization,
-              deployment authorization, or empirical validity.
-            </p>
-          </div>
-        </details>
-      </div>
-
-      <div class="actions">
-        <button
-          class="button button-gold"
-          type="button"
-          data-close-construction-record
-        >
-          Return to the Showroom
-        </button>
-      </div>
-    </div>
-  </dialog>
+  <script
+    src="/showroom/index.build.js?v=SHOWROOM_MIRRORLAND_STRUCTURAL_ASSEMBLER_TNT_v2"
+    data-showroom-source="build"
+  ></script>
 
   <script
     src="/showroom/index.controller.js?v=SHOWROOM_MIRRORLAND_FOCAL_CONTROLLER_TNT_v4"

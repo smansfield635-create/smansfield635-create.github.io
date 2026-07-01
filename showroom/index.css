@@ -1,12 +1,20 @@
 /* TARGET FILE: /showroom/index.css */
-/* TNT FULL-FILE REPLACEMENT */
-/* SHOWROOM_MIRRORLAND_NARRATIVE_CONSTELLATION_CSS_TNT_v10 */
+/* TNT FULL-FILE BROWSER-RECOVERY REPLACEMENT */
+/* SHOWROOM_MIRRORLAND_NARRATIVE_CONSTELLATION_CSS_TNT_v11 */
 /*
-  Bounded renewal:
-  - receipt and validation outputs are suppressed;
-  - controller-published active-cluster state controls cardinal/cluster
-    presentation;
-  - the orbit fallback notice is pointer-transparent.
+  Browser-recovery revision:
+  - semantic fallback stars remain visible unless a verified root-owned
+    visibly-renderable crystal state is introduced by the runtime;
+  - compositor-owned rear/front canvas ordering is not flattened by CSS;
+  - root active-cluster state is the sole enhanced cluster visibility authority;
+  - gauge and information content remains readable before successful
+    gauge enhancement;
+  - receipt and validation outputs remain suppressed;
+  - the orbit fallback notice remains pointer-transparent.
+
+  Static browser-recovery repair: authorized and applied.
+  Deployed runtime validation: required after deployment.
+  Final integrated pass: not yet established.
 */
 
 @layer reset, foundation, shell, header, stages, controls, narrative, fronts, dialogs, responsive, accessibility;
@@ -780,17 +788,6 @@
       rgba(232, 199, 119, 0.8);
   }
 
-  /*
-    The orbit field is the bounded interactive landscape.
-
-    touch-action:none prevents the browser from converting a gesture begun
-    inside this field into document panning or pinch handling.
-
-    overscroll-behavior:contain prevents gesture chaining into the page.
-
-    These declarations are deliberately scoped to the constellation field.
-    Normal document scrolling remains available everywhere outside it.
-  */
   .showroom-orbit__field,
   [data-showroom-orbit-field],
   [data-showroom-scene-field] {
@@ -885,16 +882,13 @@
   }
 
   /*
-    The canvases remain visual surfaces only.
-
-    Semantic controls and field-level gesture handling retain pointer
-    authority. The canvases must not intercept taps from the semantic layer.
+    Orbit canvases receive bounded geometry and pointer transparency only.
+    The compositor retains authority over rear/front stacking order.
   */
   [data-showroom-orbit-field] canvas,
   [data-showroom-scene-field] canvas {
     position: absolute;
     inset: 0;
-    z-index: 3;
     width: 100%;
     height: 100%;
     pointer-events: none;
@@ -1104,15 +1098,10 @@
     opacity: 1;
   }
 
-  .showroom-star-cluster[aria-hidden="false"] {
-    visibility: visible;
-    opacity: 1;
-  }
-
   /*
-    Semantic controls remain the accessible hit surfaces over the enhanced
-    WebGL crystals. They retain pointer authority even when their fallback
-    pseudo-element artwork is visually suppressed.
+    Root data-showroom-active-cluster is the sole enhanced population
+    visibility authority. ARIA may reflect state but does not independently
+    reveal a cluster.
   */
   .showroom-star {
     position: absolute;
@@ -1386,33 +1375,14 @@
       rgba(255, 255, 255, 0.48);
   }
 
-  html[data-showroom-crystals-ready="true"]
-  .showroom-star::before,
-  html[data-showroom-crystals-ready="true"]
-  .showroom-star::after,
-  [data-showroom-root][data-showroom-crystals-ready="true"]
-  .showroom-star::before,
-  [data-showroom-root][data-showroom-crystals-ready="true"]
-  .showroom-star::after {
-    opacity: 0;
-  }
+  /*
+    No readiness selector suppresses fallback pseudo-element artwork.
 
-  html[data-showroom-crystals-ready="true"]
-  .showroom-star,
-  [data-showroom-root][data-showroom-crystals-ready="true"]
-  .showroom-star {
-    visibility: visible;
-    opacity: 1;
-    pointer-events: auto;
-    touch-action: none;
-  }
-
-  html[data-showroom-crystals-ready="false"]
-  .showroom-primary-stars,
-  [data-showroom-root][data-showroom-crystals-ready="false"]
-  .showroom-primary-stars {
-    opacity: 1;
-  }
+    The existing broad crystals-ready flag does not prove that the enhanced
+    field is initialized, retained and visibly renderable. Fallback artwork
+    therefore remains visible until the runtime publishes a verified
+    root-owned visible-render state.
+  */
 
   .showroom-orbit__fallback {
     position: absolute;
@@ -1433,8 +1403,6 @@
     text-align: center;
   }
 
-  html[data-showroom-crystals-ready="true"]
-  .showroom-orbit__fallback,
   [data-showroom-root][data-showroom-crystals-ready="true"]
   .showroom-orbit__fallback {
     display: none;
@@ -2176,20 +2144,45 @@
       rgba(5, 9, 18, 0.66);
   }
 
-  .showroom-gauge-detail {
+  /*
+    Progressive-enhancement fallback:
+    substantive gauge and information content remains readable until the
+    gauges runtime explicitly reports successful readiness on the root.
+  */
+  .showroom-gauge-detail,
+  .showroom-information-panel {
+    display: block;
+  }
+
+  .showroom-gauge-detail + .showroom-gauge-detail,
+  .showroom-information-panel + .showroom-information-panel {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--showroom-line);
+  }
+
+  [data-showroom-root][data-showroom-gauges-ready="true"]
+  .showroom-gauge-detail,
+  [data-showroom-root][data-showroom-gauges-ready="true"]
+  .showroom-information-panel {
     display: none;
   }
 
-  .showroom-gauge-detail:first-child {
-    display: block;
-  }
-
+  [data-showroom-root][data-showroom-gauges-ready="true"]
   .showroom-gauge-detail[data-active],
-  .showroom-gauge-detail[aria-hidden="false"] {
+  [data-showroom-root][data-showroom-gauges-ready="true"]
+  .showroom-gauge-detail[aria-hidden="false"],
+  [data-showroom-root][data-showroom-gauges-ready="true"]
+  .showroom-information-panel[data-active],
+  [data-showroom-root][data-showroom-gauges-ready="true"]
+  .showroom-information-panel[aria-hidden="false"] {
     display: block;
   }
 
-  .showroom-gauge-detail[aria-hidden="true"] {
+  [data-showroom-root][data-showroom-gauges-ready="true"]
+  .showroom-gauge-detail[aria-hidden="true"],
+  [data-showroom-root][data-showroom-gauges-ready="true"]
+  .showroom-information-panel[aria-hidden="true"] {
     display: none;
   }
 
@@ -2237,23 +2230,7 @@
   }
 
   .showroom-information-panel {
-    display: none;
     padding-top: 1rem;
-  }
-
-  .showroom-information-panel
-  [data-information-panel-id="platform"],
-  .showroom-information-panel[data-information-panel-id="platform"] {
-    display: block;
-  }
-
-  .showroom-information-panel[data-active],
-  .showroom-information-panel[aria-hidden="false"] {
-    display: block;
-  }
-
-  .showroom-information-panel[aria-hidden="true"] {
-    display: none;
   }
 
   .showroom-information-panel h3 {
@@ -2552,10 +2529,6 @@
       aspect-ratio: 1;
     }
 
-    /*
-      Mobile retains the same bounded interaction contract. The orbit field
-      must not pass a gesture into document scrolling.
-    */
     .showroom-orbit__field,
     [data-showroom-orbit-field],
     [data-showroom-scene-field],

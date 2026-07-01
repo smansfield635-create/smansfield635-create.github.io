@@ -478,6 +478,14 @@
                     questions can remain visible long enough to be
                     understood.
                   </p>
+
+                  <a
+                    class="button showroom-local-return"
+                    href="#showroom-orbit"
+                    data-showroom-local-return-to-orbit
+                  >
+                    Return to Orbit
+                  </a>
                 </section>
 
                 <section
@@ -504,6 +512,14 @@
                     identifies what is still emerging, and separates
                     implemented systems from planned ones.
                   </p>
+
+                  <a
+                    class="button showroom-local-return"
+                    href="#showroom-orbit"
+                    data-showroom-local-return-to-orbit
+                  >
+                    Return to Orbit
+                  </a>
                 </section>
 
                 <section
@@ -553,6 +569,14 @@
                     No single path contains all of Mirrorland. The world
                     is discovered by moving among its parts.
                   </p>
+
+                  <a
+                    class="button showroom-local-return"
+                    href="#showroom-orbit"
+                    data-showroom-local-return-to-orbit
+                  >
+                    Return to Orbit
+                  </a>
                 </section>
 
                 <section
@@ -578,9 +602,25 @@
                     A mirror shows what is already there. Mirrorland asks
                     what may happen next.
                   </p>
+
+                  <a
+                    class="button showroom-local-return"
+                    href="#showroom-orbit"
+                    data-showroom-local-return-to-orbit
+                  >
+                    Return to Orbit
+                  </a>
                 </section>
               </div>
             </details>
+
+            <a
+              class="button showroom-local-return"
+              href="#showroom-orbit"
+              data-showroom-local-return-to-orbit
+            >
+              Return to Orbit
+            </a>
           </div>
         </section>
 
@@ -1817,6 +1857,14 @@
             </div>
           </details>
         </div>
+
+        <a
+          class="button showroom-local-return"
+          href="#showroom-orbit"
+          data-showroom-local-return-to-orbit
+        >
+          Return to Orbit
+        </a>
       </section>
 
       <section
@@ -1992,6 +2040,14 @@
             </article>
           </div>
         </div>
+
+        <a
+          class="button showroom-local-return"
+          href="#showroom-orbit"
+          data-showroom-local-return-to-orbit
+        >
+          Return to Orbit
+        </a>
       </section>
 
       <section
@@ -2071,6 +2127,14 @@
               South reveals wonders. West turns toward what remains
               hidden, unfinished, or unknown.
             </p>
+
+            <a
+              class="button showroom-local-return"
+              href="#showroom-orbit"
+              data-showroom-local-return-to-orbit
+            >
+              Return to Orbit
+            </a>
           </article>
 
           <article
@@ -2088,6 +2152,14 @@
               incompleteness remains visible rather than being concealed
               as completion.
             </p>
+
+            <a
+              class="button showroom-local-return"
+              href="#showroom-orbit"
+              data-showroom-local-return-to-orbit
+            >
+              Return to Orbit
+            </a>
           </article>
 
           <article
@@ -2104,6 +2176,14 @@
               Some connections have not yet become safe, coherent, or
               complete enough to invite a visitor through.
             </p>
+
+            <a
+              class="button showroom-local-return"
+              href="#showroom-orbit"
+              data-showroom-local-return-to-orbit
+            >
+              Return to Orbit
+            </a>
           </article>
         </div>
       </section>
@@ -2265,6 +2345,14 @@
               </article>
             </div>
           </div>
+
+          <a
+            class="button showroom-local-return"
+            href="#showroom-orbit"
+            data-showroom-local-return-to-orbit
+          >
+            Return to Orbit
+          </a>
         </section>
 
         <section
@@ -2407,6 +2495,14 @@
               </article>
             </div>
           </div>
+
+          <a
+            class="button showroom-local-return"
+            href="#showroom-orbit"
+            data-showroom-local-return-to-orbit
+          >
+            Return to Orbit
+          </a>
         </section>
 
         <section
@@ -2525,6 +2621,14 @@
               </article>
             </div>
           </div>
+
+          <a
+            class="button showroom-local-return"
+            href="#showroom-orbit"
+            data-showroom-local-return-to-orbit
+          >
+            Return to Orbit
+          </a>
         </section>
 
         <section
@@ -2650,6 +2754,14 @@
               </p>
             </div>
           </div>
+
+          <a
+            class="button showroom-local-return"
+            href="#showroom-orbit"
+            data-showroom-local-return-to-orbit
+          >
+            Return to Orbit
+          </a>
         </section>
       </div>
     </main>
@@ -2670,8 +2782,8 @@
         </h2>
 
         <p>
-          Return to the constellation or select the Main Compass option
-          in the controller panel.
+          Return to the constellation or leave the Showroom through the
+          Main Compass.
         </p>
       </div>
 
@@ -2687,16 +2799,14 @@
           Return to Orbit
         </a>
 
-        <button
+        <a
           class="button"
-          type="button"
+          href="/index.html"
           data-showroom-shared-return-to-compass
-          data-showroom-compass-selection-alias
-          data-showroom-controller-action="request-compass-selection"
-          aria-label="Select the Main Compass return option in the Showroom controller"
+          data-showroom-hard-navigation="true"
         >
-          Select Main Compass
-        </button>
+          Return to Main Compass
+        </a>
       </nav>
     </section>
 
@@ -2884,46 +2994,88 @@
 </html>
 
 <!--
-SHOWROOM_DESTINATION_EXECUTOR_HTML_INTEGRATION_RECEIPT
+SHOWROOM_FINAL_LOCAL_RETURN_HTML_CONSTRUCTION_RECEIPT
 
 FILE MODIFIED:
 /showroom/index.html
 
-DESTINATION SCRIPT PATH:
-/showroom/index.destinations.js
+RETURN TO ORBIT ANCHORS PRESENT:
+14
 
-QUERY IDENTIFIER:
-SHOWROOM_DESTINATION_EXECUTOR_TNT_v1
-
-QUERY IDENTIFIER CONVENTION:
-APPENDED TO src USING ?v=
-
-CHILD MARKER:
-data-showroom-child="destinations"
-
-LOAD POSITION:
-IMMEDIATELY AFTER /showroom/index.controller.js
-IMMEDIATELY BEFORE /showroom/index.gauges.js
-
-PRIOR DEFERRED SCRIPT COUNT:
-12
-
-NEW DEFERRED SCRIPT COUNT:
-13
-
-DESTINATION SCRIPT DECLARATION COUNT:
+ARRIVAL RETURN:
 1
 
-PRIOR SCRIPT DECLARATIONS:
-ALL 12 RETAINED
-NO PRIOR SCRIPT REORDERED
+LOCATION:
+#arrival .showroom-threshold__copy
+immediately after #mirrorland-preface
 
-FALLBACK PORTALS:
-8 RETAINED UNCHANGED
+PREFACE SUBSECTION RETURNS ADDED:
+4
 
-ROUTE DIALOG:
-RETAINED OUTSIDE [data-showroom-root]
-STRUCTURE AND ARIA RELATIONSHIPS UNCHANGED
+LOCATIONS:
+
+- #mirrorland-preface-mission
+- #mirrorland-preface-timeline
+- #mirrorland-preface-exploration
+- #mirrorland-preface-invitation
+
+PREFACE CHARACTERS RETURN:
+NOT ADDED
+
+DIAMOND-REGION RETURN:
+1
+
+LOCATION:
+#showroom-diamond-reveal
+immediately after #showroom-diamond-controls
+
+NARRATIVE ARTICLE RETURNS:
+3
+
+LOCATIONS:
+
+- #showroom-star-reading
+- #showroom-unfinished-world
+- #showroom-paths-not-yet-open
+
+TECHNICAL-FRONT RETURNS PRESENT:
+5
+
+LOCATIONS:
+
+- #object-gauges
+- #structure-gauges
+- #interaction-gauges
+- #systems-gauges
+- #information-front
+
+CATCH-ALL FRONT-HOST RETURN:
+REMOVED
+
+BOTTOM RETURN-ZONE COPY:
+CORRECTED
+
+CURRENT COPY:
+Return to the constellation or leave the Showroom through the Main
+Compass.
+
+BOTTOM MAIN COMPASS ROUTE:
+RETAINED AS /index.html
+
+BOTTOM MAIN COMPASS CONTROL:
+NATIVE ANCHOR
+
+DESTINATION EXECUTOR SCRIPT:
+RETAINED
+
+DESTINATION EXECUTOR PATH:
+/showroom/index.destinations.js
+
+DESTINATION EXECUTOR QUERY:
+SHOWROOM_DESTINATION_EXECUTOR_TNT_v1
+
+SCRIPT DECLARATIONS:
+UNCHANGED
 
 FILES NOT MODIFIED:
 
@@ -2952,6 +3104,7 @@ STOP CONFIRMATION:
 
 NO JAVASCRIPT MODIFIED
 NO CSS MODIFIED
-NO RUNTIME VALIDATION SELF-ACTIVATED
-NO MOBILE COMPRESSION WORK STARTED
+NO ENTER SELECTED PATH DIAGNOSIS PERFORMED
+NO CONSTELLATION-TO-CONTROLLER GAP DIAGNOSIS PERFORMED
+NO RUNTIME TESTING SELF-ACTIVATED
 -->

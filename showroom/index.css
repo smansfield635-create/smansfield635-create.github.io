@@ -1,17 +1,24 @@
 /* TARGET FILE: /showroom/index.css */
 /* TNT FULL-FILE REPLACEMENT */
-/* SHOWROOM_MIRRORLAND_NARRATIVE_CONSTELLATION_CSS_TNT_v8 */
+/* SHOWROOM_MIRRORLAND_NARRATIVE_CONSTELLATION_CSS_TNT_v9 */
 /*
-  Interaction renewal:
-  - the constellation field is an owned touch-interaction landscape;
-  - document scrolling is suppressed only inside the orbit field;
-  - normal document scrolling remains available outside the field;
-  - compositor canvases remain visually authoritative and pointer-transparent;
-  - semantic star controls retain pointer authority;
-  - Compass control retains its independent pointer surface;
-  - Diamond interaction remains independent;
-  - no controller, compositor, crystal, Diamond, Window, or navigation
-    ownership is transferred into CSS.
+  Coordinated HTML/CSS fine-tuning renewal.
+
+  Scope:
+  - preserves global hidden-surface protection;
+  - restores controller-reflected cardinal-to-cluster visibility;
+  - preserves semantic controls beneath enhanced crystal rendering;
+  - keeps all gauge details and information panels readable before
+    successful gauges enhancement;
+  - returns selected-detail and selected-panel visibility to the gauges
+    runtime after readiness;
+  - makes the orbit fallback notice pointer-transparent;
+  - preserves orbit, Diamond, Window, secondary-object, supporting-front,
+    controller, narrative, return, and footer layout participation;
+  - adds bounded dialog overflow behavior;
+  - does not assume destination execution, confirmation ownership, route
+    execution, compositor ownership, crystal ownership, Diamond ownership,
+    Window ownership, controller ownership, or gauges ownership.
 */
 
 @layer reset, foundation, shell, header, stages, controls, narrative, fronts, dialogs, responsive, accessibility;
@@ -66,8 +73,29 @@
     border: 0;
   }
 
+  /*
+    Global hidden protection remains authoritative.
+
+    Runtime-managed content must remove its hidden attribute before it can
+    render. Receipt, validation, diagnostic, and inert technical surfaces
+    therefore cannot be exposed by unrelated layout selectors.
+  */
   [hidden] {
     display: none !important;
+  }
+
+  output[hidden],
+  output[aria-hidden="true"],
+  [data-showroom-controller-receipt],
+  [data-showroom-controller-validation],
+  [data-showroom-gauges-receipt],
+  [data-showroom-interactions-receipt],
+  [data-showroom-compositor-receipt],
+  [data-showroom-crystals-receipt],
+  [data-showroom-window-receipt] {
+    display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
   }
 }
 
@@ -771,17 +799,6 @@
       rgba(232, 199, 119, 0.8);
   }
 
-  /*
-    The orbit field is the bounded interactive landscape.
-
-    touch-action:none prevents the browser from converting a gesture begun
-    inside this field into document panning or pinch handling.
-
-    overscroll-behavior:contain prevents gesture chaining into the page.
-
-    These declarations are deliberately scoped to the constellation field.
-    Normal document scrolling remains available everywhere outside it.
-  */
   .showroom-orbit__field,
   [data-showroom-orbit-field],
   [data-showroom-scene-field] {
@@ -875,12 +892,6 @@
       );
   }
 
-  /*
-    The canvases remain visual surfaces only.
-
-    Semantic controls and field-level gesture handling retain pointer
-    authority. The canvases must not intercept taps from the semantic layer.
-  */
   [data-showroom-orbit-field] canvas,
   [data-showroom-scene-field] canvas {
     position: absolute;
@@ -1059,19 +1070,76 @@
     inset: 0;
     pointer-events: none;
     touch-action: none;
+    transition:
+      opacity var(--showroom-transition-fast),
+      visibility var(--showroom-transition-fast);
   }
 
   /*
-    Semantic controls remain the accessible hit surfaces over the enhanced
-    WebGL crystals. They retain pointer authority even when their fallback
-    pseudo-element artwork is visually suppressed.
+    Base state:
+    - cardinal layer visible;
+    - all room clusters nonvisual and noninteractive;
+    - fallback navigation outside the orbit remains the no-JavaScript path.
   */
+  .showroom-primary-stars {
+    visibility: visible;
+    opacity: 1;
+  }
+
+  .showroom-star-cluster {
+    visibility: hidden;
+    opacity: 0;
+  }
+
+  /*
+    Controller-reflected state.
+
+    CSS reads the controller-owned active-cluster value. It does not choose
+    or mutate navigation state. Exactly one matching room cluster becomes
+    visible and pointer-capable.
+  */
+  [data-showroom-root][data-showroom-active-cluster="north"]
+  .showroom-primary-stars,
+  [data-showroom-root][data-showroom-active-cluster="east"]
+  .showroom-primary-stars,
+  [data-showroom-root][data-showroom-active-cluster="south"]
+  .showroom-primary-stars,
+  [data-showroom-root][data-showroom-active-cluster="west"]
+  .showroom-primary-stars {
+    visibility: hidden;
+    opacity: 0;
+  }
+
+  [data-showroom-root][data-showroom-active-cluster="north"]
+  .showroom-star-cluster[data-showroom-cluster-id="north"],
+  [data-showroom-root][data-showroom-active-cluster="east"]
+  .showroom-star-cluster[data-showroom-cluster-id="east"],
+  [data-showroom-root][data-showroom-active-cluster="south"]
+  .showroom-star-cluster[data-showroom-cluster-id="south"],
+  [data-showroom-root][data-showroom-active-cluster="west"]
+  .showroom-star-cluster[data-showroom-cluster-id="west"] {
+    visibility: visible;
+    opacity: 1;
+  }
+
+  /*
+    aria-hidden remains a semantic state surface. It must not override the
+    controller-reflected visual state, because the retained controller may
+    use data state as its authoritative presentation publication.
+  */
+  .showroom-star-cluster[aria-hidden="false"] {
+    visibility: visible;
+    opacity: 1;
+  }
+
   .showroom-star {
     position: absolute;
     z-index: 2;
     display: grid;
     place-items: center;
-    width: 2.2rem;
+    width: 2.75rem;
+    min-width: 2.75rem;
+    min-height: 2.75rem;
     aspect-ratio: 1;
     padding: 0;
     border: 0;
@@ -1328,7 +1396,10 @@
   }
 
   .showroom-star[aria-expanded="true"]::before,
-  .showroom-star[data-active]::before {
+  .showroom-star[data-active]::before,
+  .showroom-star[data-showroom-active="true"]::before,
+  .showroom-star[data-showroom-selected="true"]::before,
+  .showroom-star[data-showroom-primary="true"]::before {
     box-shadow:
       0 0 1.6rem
       rgba(255, 238, 184, 0.92),
@@ -1338,6 +1409,12 @@
       rgba(255, 255, 255, 0.48);
   }
 
+  /*
+    Successful crystals enhancement hides only fallback artwork.
+
+    Semantic buttons remain visible and pointer-capable. Their wrappers are
+    never discarded as disposable rendering layers.
+  */
   html[data-showroom-crystals-ready="true"]
   .showroom-star::before,
   html[data-showroom-crystals-ready="true"]
@@ -1347,15 +1424,6 @@
   [data-showroom-root][data-showroom-crystals-ready="true"]
   .showroom-star::after {
     opacity: 0;
-  }
-
-  html[data-showroom-crystals-ready="true"]
-  [data-showroom-fallback-star-layer],
-  [data-showroom-root][data-showroom-crystals-ready="true"]
-  [data-showroom-fallback-star-layer] {
-    visibility: visible;
-    opacity: 1;
-    pointer-events: none;
   }
 
   html[data-showroom-crystals-ready="true"]
@@ -1372,10 +1440,13 @@
   [data-showroom-fallback-star-layer],
   [data-showroom-root][data-showroom-crystals-ready="false"]
   [data-showroom-fallback-star-layer] {
-    visibility: visible;
     opacity: 1;
   }
 
+  /*
+    The notice is informational only and must never intercept the orbit,
+    cardinal, room, Compass, or gesture surfaces.
+  */
   .showroom-orbit__fallback {
     position: absolute;
     right: 1rem;
@@ -1387,6 +1458,8 @@
     border-radius: var(--showroom-radius-sm);
     background: rgba(5, 8, 16, 0.78);
     backdrop-filter: blur(8px);
+    pointer-events: none;
+    user-select: none;
   }
 
   .showroom-orbit__fallback p {
@@ -1687,7 +1760,7 @@
 
   .showroom-secondary-object-stage {
     display: grid;
-    gap: 1.2rem;
+    gap: 1rem;
     width:
       min(
         100%,
@@ -1715,9 +1788,9 @@
 
   .showroom-secondary-object-viewport {
     display: grid;
-    min-height: 20rem;
+    min-height: 12rem;
     place-items: center;
-    padding: 2rem;
+    padding: 1.5rem;
     border: 1px dashed rgba(167, 192, 234, 0.26);
     border-radius: var(--showroom-radius-lg);
     color: var(--showroom-text-dim);
@@ -1735,9 +1808,21 @@
     display: none !important;
   }
 
+  /*
+    Protected stages remain visible independently of enhancement readiness.
+  */
   #showroom-orbit,
   #showroom-diamond-reveal,
-  #showroom-secondary-object {
+  #showroom-secondary-object,
+  #showroom-window-threshold,
+  [data-showroom-window-layer],
+  [data-showroom-window-mount],
+  [data-showroom-front-host],
+  [data-showroom-controller-panel],
+  [data-showroom-orbit-guide],
+  .showroom-narrative-region,
+  .showroom-return-zone,
+  .showroom-footer {
     visibility: visible;
     opacity: 1;
   }
@@ -1755,6 +1840,10 @@
     display: grid;
   }
 
+  /*
+    Supporting-front runtime state is allowed to hide only declared
+    supporting fronts. It cannot collapse protected stages or the host.
+  */
   .showroom-front-host
   [data-showroom-front-state="inactive"],
   .showroom-front-host
@@ -2124,7 +2213,9 @@
   }
 
   .showroom-gauge-details {
+    display: grid;
     min-height: 100%;
+    gap: 0.8rem;
     padding: 1.2rem;
     border: 1px solid var(--showroom-line);
     border-radius: var(--showroom-radius-lg);
@@ -2137,21 +2228,44 @@
       rgba(5, 9, 18, 0.66);
   }
 
+  /*
+    Progressive gauge fallback:
+    before gauges readiness, every substantive detail remains readable.
+  */
+  .showroom-gauge-detail {
+    display: block;
+    padding-bottom: 0.85rem;
+    border-bottom: 1px solid var(--showroom-line);
+  }
+
+  .showroom-gauge-detail:last-child {
+    padding-bottom: 0;
+    border-bottom: 0;
+  }
+
+  /*
+    After successful enhancement, runtime state owns detail visibility.
+    The gauges module applies hidden, aria-hidden, and data-active.
+  */
+  [data-showroom-root][data-showroom-gauges-ready="true"]
   .showroom-gauge-detail {
     display: none;
+    padding-bottom: 0;
+    border-bottom: 0;
   }
 
-  .showroom-gauge-detail:first-child {
-    display: block;
-  }
-
+  [data-showroom-root][data-showroom-gauges-ready="true"]
   .showroom-gauge-detail[data-active],
+  [data-showroom-root][data-showroom-gauges-ready="true"]
   .showroom-gauge-detail[aria-hidden="false"] {
     display: block;
   }
 
-  .showroom-gauge-detail[aria-hidden="true"] {
-    display: none;
+  [data-showroom-root][data-showroom-gauges-ready="true"]
+  .showroom-gauge-detail[aria-hidden="true"],
+  [data-showroom-root][data-showroom-gauges-ready="true"]
+  .showroom-gauge-detail[hidden] {
+    display: none !important;
   }
 
   .showroom-gauge-detail h3 {
@@ -2197,24 +2311,44 @@
       );
   }
 
+  /*
+    Progressive information fallback:
+    before gauges readiness, all declared information panels remain readable.
+  */
+  .showroom-information-panel {
+    display: block;
+    padding-block: 1rem;
+    border-bottom: 1px solid var(--showroom-line);
+  }
+
+  .showroom-information-panel:last-child {
+    border-bottom: 0;
+  }
+
+  /*
+    After successful gauges enhancement, the retained gauges runtime owns
+    tab-panel visibility.
+  */
+  [data-showroom-root][data-showroom-gauges-ready="true"]
   .showroom-information-panel {
     display: none;
     padding-top: 1rem;
+    padding-bottom: 0;
+    border-bottom: 0;
   }
 
-  .showroom-information-panel
-  [data-information-panel-id="platform"],
-  .showroom-information-panel[data-information-panel-id="platform"] {
-    display: block;
-  }
-
+  [data-showroom-root][data-showroom-gauges-ready="true"]
   .showroom-information-panel[data-active],
+  [data-showroom-root][data-showroom-gauges-ready="true"]
   .showroom-information-panel[aria-hidden="false"] {
     display: block;
   }
 
-  .showroom-information-panel[aria-hidden="true"] {
-    display: none;
+  [data-showroom-root][data-showroom-gauges-ready="true"]
+  .showroom-information-panel[aria-hidden="true"],
+  [data-showroom-root][data-showroom-gauges-ready="true"]
+  .showroom-information-panel[hidden] {
+    display: none !important;
   }
 
   .showroom-information-panel h3 {
@@ -2288,7 +2422,14 @@
         36rem,
         calc(100% - 2rem)
       );
+    max-height:
+      min(
+        90vh,
+        46rem
+      );
     padding: 0;
+    overflow: auto;
+    overscroll-behavior: contain;
     border: 1px solid var(--showroom-line-strong);
     border-radius: var(--showroom-radius-xl);
     color: var(--showroom-text);
@@ -2487,7 +2628,7 @@
     .route-menu-panel {
       position: static;
       width: 100%;
-      max-height: none;
+      max-height: min(70vh, 38rem);
       margin-top: 0.6rem;
     }
 
@@ -2513,10 +2654,6 @@
       aspect-ratio: 1;
     }
 
-    /*
-      Mobile retains the same bounded interaction contract. The orbit field
-      must not pass a gesture into document scrolling.
-    */
     .showroom-orbit__field,
     [data-showroom-orbit-field],
     [data-showroom-scene-field],
@@ -2572,6 +2709,19 @@
     .showroom-footer button {
       width: 100%;
     }
+
+    .showroom-secondary-object-viewport {
+      min-height: 10rem;
+    }
+
+    .showroom-route-dialog {
+      width: calc(100% - 1rem);
+      max-height: calc(100vh - 1rem);
+    }
+
+    .dialog-shell {
+      padding: 1rem;
+    }
   }
 
   @media (max-width: 34rem) {
@@ -2625,7 +2775,7 @@
     }
 
     .showroom-secondary-object-viewport {
-      min-height: 16rem;
+      min-height: 9rem;
     }
 
     .showroom-window-control {
@@ -2633,6 +2783,12 @@
       width: calc(100% - 1.4rem);
       min-width: 0;
       transform: translateX(50%);
+    }
+
+    .showroom-orbit__fallback {
+      right: 0.65rem;
+      bottom: 0.65rem;
+      left: 0.65rem;
     }
   }
 }
@@ -2679,10 +2835,18 @@
       box-shadow: none;
     }
 
+    .showroom-star {
+      border: 1px solid transparent;
+    }
+
     .showroom-star::before {
       border: 2px solid ButtonText;
       background: ButtonFace;
       box-shadow: none;
+    }
+
+    .showroom-star:focus-visible {
+      border-color: Highlight;
     }
 
     .button,

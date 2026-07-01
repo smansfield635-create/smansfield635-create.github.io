@@ -33,6 +33,14 @@
   - outgoing populations do not visually fade after replacement;
   - only the newly accepted population may interpolate into view.
 
+  Visual-sizing renewal:
+  - cardinal crystals are increased by 50 percent;
+  - room crystals are increased by 50 percent;
+  - cardinal positions are moved outward toward the second orbit ring;
+  - room-cluster positions are moved outward proportionally;
+  - original depth coordinates remain unchanged;
+  - compositor hit radii continue to scale with rendered crystal size.
+
   Startup orchestration:
   - validate the compositor contract when available;
   - initialize immediately when the compositor is already ready;
@@ -230,13 +238,13 @@
     north:
       Object.freeze([
         0,
-        1.42,
+        1.68,
         -0.48
       ]),
 
     east:
       Object.freeze([
-        1.58,
+        1.86,
         0,
         0.54
       ]),
@@ -244,13 +252,13 @@
     south:
       Object.freeze([
         0,
-        -1.42,
+        -1.68,
         0.44
       ]),
 
     west:
       Object.freeze([
-        -1.58,
+        -1.86,
         0,
         -0.58
       ])
@@ -259,29 +267,29 @@
   const ROOM_BASE_POSITIONS = Object.freeze({
     1:
       Object.freeze([
-        -0.92,
-        0.82,
+        -1.06,
+        0.94,
         -0.46
       ]),
 
     2:
       Object.freeze([
-        0.92,
-        0.82,
+        1.06,
+        0.94,
         0.50
       ]),
 
     3:
       Object.freeze([
-        0.92,
-        -0.82,
+        1.06,
+        -0.94,
         -0.42
       ]),
 
     4:
       Object.freeze([
-        -0.92,
-        -0.82,
+        -1.06,
+        -0.94,
         0.46
       ])
   });
@@ -416,10 +424,10 @@
     CARDINAL:
       Object.freeze({
         baseScale:
-          0.82,
+          1.23,
 
         activeScale:
-          1.00,
+          1.50,
 
         opacity:
           0.97,
@@ -446,10 +454,10 @@
     LOCAL:
       Object.freeze({
         baseScale:
-          0.75,
+          1.125,
 
         activeScale:
-          0.88,
+          1.32,
 
         opacity:
           0.93,
@@ -476,10 +484,10 @@
     PORTAL:
       Object.freeze({
         baseScale:
-          0.78,
+          1.17,
 
         activeScale:
-          0.92,
+          1.38,
 
         opacity:
           0.95,
@@ -506,10 +514,10 @@
     PRIMARY_PORTAL:
       Object.freeze({
         baseScale:
-          0.82,
+          1.23,
 
         activeScale:
-          0.98,
+          1.47,
 
         opacity:
           0.98,
@@ -5371,11 +5379,6 @@
   }
 
   function activateRuntime() {
-    /*
-      This remains a defensive activation invariant. Startup no longer
-      terminates merely because the compositor is not ready on first check;
-      tryInitializeRuntime waits for readiness before reaching this function.
-    */
     invariant(
       compositorReady(),
       "SHOWROOM_CRYSTALS_COMPOSITOR_NOT_READY_DURING_ACTIVATION"
@@ -5490,6 +5493,24 @@
         compassLifecycleMutated:
           false,
 
+        cardinalScaleIncrease:
+          1.5,
+
+        roomScaleIncrease:
+          1.5,
+
+        cardinalPositionsMovedOutward:
+          true,
+
+        roomPositionsMovedOutward:
+          true,
+
+        originalDepthCoordinatesPreserved:
+          true,
+
+        hitRadiusScalesWithVisualSize:
+          true,
+
         compositorReadinessWaitSupported:
           true,
 
@@ -5520,6 +5541,15 @@
           true,
 
         rendererCreatedContexts:
+          true,
+
+        cardinalScaleIncrease:
+          1.5,
+
+        roomScaleIncrease:
+          1.5,
+
+        positionsMovedOutward:
           true,
 
         compositorReadinessWaitSupported:
@@ -5862,6 +5892,26 @@
 
       animationRunning:
         state.animationRunning,
+
+      visualRenewal: {
+        cardinalScaleMultiplier:
+          1.5,
+
+        roomScaleMultiplier:
+          1.5,
+
+        cardinalPositionsMovedOutward:
+          true,
+
+        roomPositionsMovedOutward:
+          true,
+
+        depthCoordinatesPreserved:
+          true,
+
+        proportionalHitRadius:
+          true
+      },
 
       startupContract: {
         compositorReadyEvent:

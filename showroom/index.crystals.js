@@ -1,6 +1,6 @@
 /* TARGET FILE: /showroom/index.crystals.js */
 /* TNT FULL-FILE REPLACEMENT */
-/* SHOWROOM_FOUR_BY_FOUR_NARRATIVE_CONSTELLATION_CRYSTALS_TNT_v7 */
+/* SHOWROOM_FOUR_BY_FOUR_NARRATIVE_CONSTELLATION_CRYSTALS_TNT_v8 */
 /*
   Accepted dependencies:
   - window.SHOWROOM_MIRRORLAND_CONSTELLATION_CONTROLLER
@@ -22,7 +22,8 @@
   - one compositor renderer registration;
   - exclusive rear/front clear callbacks;
   - projection-aware rear/front drawing;
-  - crystal readiness, degradation, recovery, failure, and disposal.
+  - crystal readiness, degradation, recovery, failure, and disposal;
+  - bounded compositor-readiness waiting and startup orchestration.
 
   Frozen non-additive presentation rule:
   - CONSTELLATION exposes only four cardinal crystals;
@@ -31,6 +32,14 @@
   - inactive nodes publish visible:false immediately;
   - outgoing populations do not visually fade after replacement;
   - only the newly accepted population may interpolate into view.
+
+  Startup orchestration:
+  - validate the compositor contract when available;
+  - initialize immediately when the compositor is already ready;
+  - otherwise wait for SHOWROOM_COMPOSITOR_READY;
+  - fail only on compositor failure, compositor disposal, invalid dependency,
+    initialization failure, or bounded readiness timeout;
+  - prevent duplicate bootstrap and duplicate runtime initialization.
 
   Explicit exclusions:
   - no navigation-state mutation;
@@ -55,7 +64,7 @@
   "use strict";
 
   const CONTRACT =
-    "SHOWROOM_FOUR_BY_FOUR_NARRATIVE_CONSTELLATION_CRYSTALS_TNT_v7";
+    "SHOWROOM_FOUR_BY_FOUR_NARRATIVE_CONSTELLATION_CRYSTALS_TNT_v8";
 
   const OWNER =
     "/showroom/index.crystals.js";
@@ -82,6 +91,9 @@
     controllerFailure:
       "SHOWROOM_CONTROLLER_FAILURE",
 
+    compositorReady:
+      "SHOWROOM_COMPOSITOR_READY",
+
     compositorFailure:
       "SHOWROOM_COMPOSITOR_FAILURE",
 
@@ -99,6 +111,11 @@
 
     crystalsReceipt:
       "SHOWROOM_CRYSTALS_RECEIPT"
+  });
+
+  const STARTUP = Object.freeze({
+    compositorReadyTimeoutMs:
+      8000
   });
 
   const SELECTORS = Object.freeze({
@@ -527,6 +544,18 @@
     compositor: null,
     controllerFrame: null,
 
+    bootstrapBound:
+      false,
+
+    waitingForCompositor:
+      false,
+
+    compositorReadyTimer:
+      0,
+
+    waitingReceiptPublished:
+      false,
+
     controllerBinding:
       false,
 
@@ -652,6 +681,12 @@
         0,
 
       holdReleases:
+        0,
+
+      compositorWaits:
+        0,
+
+      compositorReadySignals:
         0,
 
       failures:
@@ -1084,8 +1119,17 @@
         timestamp:
           nowIso(),
 
+        bootstrapBound:
+          state.bootstrapBound,
+
+        waitingForCompositor:
+          state.waitingForCompositor,
+
         initialized:
           state.initialized,
+
+        initializing:
+          state.initializing,
 
         ready:
           state.ready,
@@ -1232,6 +1276,48 @@
         /* Best-effort disposal. */
       }
     }
+  }
+
+  function clearCompositorReadyTimeout() {
+    if (!state.compositorReadyTimer) {
+      return;
+    }
+
+    window.clearTimeout(
+      state.compositorReadyTimer
+    );
+
+    state.compositorReadyTimer =
+      0;
+  }
+
+  function startCompositorReadyTimeout() {
+    clearCompositorReadyTimeout();
+
+    state.compositorReadyTimer =
+      window.setTimeout(
+        () => {
+          state.compositorReadyTimer =
+            0;
+
+          if (
+            state.initialized ||
+            state.initializing ||
+            state.failed ||
+            state.disposed
+          ) {
+            return;
+          }
+
+          failRuntime(
+            new Error(
+              "SHOWROOM_CRYSTALS_COMPOSITOR_READY_TIMEOUT"
+            ),
+            "compositor-ready-timeout"
+          );
+        },
+        STARTUP.compositorReadyTimeoutMs
+      );
   }
 
   function countNodesByKind(kind) {
@@ -2231,6 +2317,14 @@
   }
 
   function compositorReady() {
+    if (
+      !state.compositor ||
+      typeof state.compositor.getState !==
+        "function"
+    ) {
+      return false;
+    }
+
     const compositorState =
       state.compositor.getState();
 
@@ -5277,9 +5371,14 @@
   }
 
   function activateRuntime() {
+    /*
+      This remains a defensive activation invariant. Startup no longer
+      terminates merely because the compositor is not ready on first check;
+      tryInitializeRuntime waits for readiness before reaching this function.
+    */
     invariant(
       compositorReady(),
-      "SHOWROOM_CRYSTALS_COMPOSITOR_NOT_READY"
+      "SHOWROOM_CRYSTALS_COMPOSITOR_NOT_READY_DURING_ACTIVATION"
     );
 
     createGpuResources();
@@ -5331,6 +5430,14 @@
     state.readyPublished =
       true;
 
+    state.waitingForCompositor =
+      false;
+
+    state.waitingReceiptPublished =
+      false;
+
+    clearCompositorReadyTimeout();
+
     setRootState(
       true,
       state.held
@@ -5381,7 +5488,13 @@
           false,
 
         compassLifecycleMutated:
-          false
+          false,
+
+        compositorReadinessWaitSupported:
+          true,
+
+        compositorReadyTimeoutMs:
+          STARTUP.compositorReadyTimeoutMs
       }
     );
 
@@ -5407,6 +5520,9 @@
           true,
 
         rendererCreatedContexts:
+          true,
+
+        compositorReadinessWaitSupported:
           true
       }
     );
@@ -5438,6 +5554,36 @@
 
     addListener(
       window,
+      EVENTS.compositorReady,
+      () => {
+        if (
+          state.failed ||
+          state.disposed ||
+          state.initialized ||
+          state.initializing
+        ) {
+          return;
+        }
+
+        state.counters
+          .compositorReadySignals +=
+          1;
+
+        try {
+          tryInitializeRuntime(
+            "compositor-ready-event"
+          );
+        } catch (error) {
+          failRuntime(
+            error,
+            "compositor-ready-event"
+          );
+        }
+      }
+    );
+
+    addListener(
+      window,
       EVENTS.compositorFailure,
       event => {
         failRuntime(
@@ -5457,8 +5603,22 @@
       window,
       EVENTS.compositorDisposed,
       () => {
-        dispose(
-          "compositor-disposed"
+        if (
+          state.initialized ||
+          state.ready
+        ) {
+          dispose(
+            "compositor-disposed"
+          );
+
+          return;
+        }
+
+        failRuntime(
+          new Error(
+            "SHOWROOM_COMPOSITOR_DISPOSED_BEFORE_CRYSTALS_READY"
+          ),
+          "compositor-disposed-before-ready"
         );
       }
     );
@@ -5475,7 +5635,10 @@
         } else {
           evaluateAnimation();
 
-          if (state.ready) {
+          if (
+            state.ready &&
+            state.compositor
+          ) {
             state.compositor.requestRender(
               "crystals-document-visible"
             );
@@ -5581,6 +5744,17 @@
 
       compositorContract:
         COMPOSITOR_CONTRACT,
+
+      bootstrapBound:
+        state.bootstrapBound,
+
+      waitingForCompositor:
+        state.waitingForCompositor,
+
+      compositorReadyTimeoutActive:
+        Boolean(
+          state.compositorReadyTimer
+        ),
 
       initialized:
         state.initialized,
@@ -5688,6 +5862,20 @@
 
       animationRunning:
         state.animationRunning,
+
+      startupContract: {
+        compositorReadyEvent:
+          EVENTS.compositorReady,
+
+        boundedWait:
+          true,
+
+        timeoutMs:
+          STARTUP.compositorReadyTimeoutMs,
+
+        duplicateInitializationPrevented:
+          true
+      },
 
       ownership: {
         cardinalGeometryOwned:
@@ -5863,6 +6051,8 @@
   }
 
   function teardownRuntime() {
+    clearCompositorReadyTimeout();
+
     stopAnimation();
 
     unbindController();
@@ -5901,6 +6091,9 @@
       false;
 
     state.readyPublished =
+      false;
+
+    state.waitingForCompositor =
       false;
 
     state.failureReason =
@@ -5995,6 +6188,9 @@
     state.readyPublished =
       false;
 
+    state.waitingForCompositor =
+      false;
+
     setRootState(
       false,
       "disposed"
@@ -6067,7 +6263,7 @@
     return true;
   }
 
-  function initialize() {
+  function initializeRuntime() {
     if (
       state.initialized ||
       state.initializing ||
@@ -6080,27 +6276,22 @@
     state.initializing =
       true;
 
+    state.waitingForCompositor =
+      false;
+
+    state.waitingReceiptPublished =
+      false;
+
+    clearCompositorReadyTimeout();
+
+    setRootState(
+      false,
+      "initializing"
+    );
+
     try {
-      discoverDom();
-
-      setRootState(
-        false,
-        "initializing"
-      );
-
       const dom =
         validateDom();
-
-      state.controller =
-        requireController();
-
-      state.compositor =
-        requireCompositor();
-
-      invariant(
-        compositorReady(),
-        "SHOWROOM_CRYSTALS_COMPOSITOR_NOT_READY"
-      );
 
       state.controllerFrame =
         readControllerFrame();
@@ -6154,8 +6345,6 @@
       */
       activateRuntime();
 
-      initializeBindings();
-
       bindControllerTransactional();
 
       exposeApi();
@@ -6178,19 +6367,131 @@
     }
   }
 
+  function tryInitializeRuntime(
+    reason = "bootstrap"
+  ) {
+    if (
+      state.initialized ||
+      state.initializing ||
+      state.failed ||
+      state.disposed
+    ) {
+      return;
+    }
+
+    state.controller =
+      requireController();
+
+    state.compositor =
+      requireCompositor();
+
+    if (!compositorReady()) {
+      if (!state.waitingForCompositor) {
+        state.counters
+          .compositorWaits +=
+          1;
+      }
+
+      state.waitingForCompositor =
+        true;
+
+      setRootState(
+        false,
+        "waiting-for-compositor"
+      );
+
+      if (!state.waitingReceiptPublished) {
+        state.waitingReceiptPublished =
+          true;
+
+        publishReceipt(
+          "waiting-for-compositor",
+          {
+            reason,
+
+            recoverable:
+              true,
+
+            event:
+              EVENTS.compositorReady,
+
+            timeoutMs:
+              STARTUP.compositorReadyTimeoutMs
+          }
+        );
+      }
+
+      if (!state.compositorReadyTimer) {
+        startCompositorReadyTimeout();
+      }
+
+      return;
+    }
+
+    state.waitingForCompositor =
+      false;
+
+    state.waitingReceiptPublished =
+      false;
+
+    clearCompositorReadyTimeout();
+
+    initializeRuntime();
+  }
+
+  function bootstrap() {
+    if (
+      state.bootstrapBound ||
+      state.failed ||
+      state.disposed
+    ) {
+      return;
+    }
+
+    state.bootstrapBound =
+      true;
+
+    try {
+      discoverDom();
+
+      setRootState(
+        false,
+        "bootstrapping"
+      );
+
+      /*
+        Bind readiness, failure, disposal, visibility, and page lifecycle
+        listeners before the first compositor readiness check. A later
+        SHOWROOM_COMPOSITOR_READY event can therefore resume startup.
+      */
+      initializeBindings();
+
+      startCompositorReadyTimeout();
+
+      tryInitializeRuntime(
+        "initial-bootstrap"
+      );
+    } catch (error) {
+      failRuntime(
+        error,
+        "bootstrap"
+      );
+    }
+  }
+
   if (
     document.readyState ===
       "loading"
   ) {
     document.addEventListener(
       "DOMContentLoaded",
-      initialize,
+      bootstrap,
       {
         once:
           true
       }
     );
   } else {
-    initialize();
+    bootstrap();
   }
 })();

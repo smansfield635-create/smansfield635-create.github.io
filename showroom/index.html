@@ -1,14 +1,14 @@
 <!-- TARGET FILE: /showroom/index.html -->
 <!-- TNT FULL-FILE REPLACEMENT -->
-<!-- SHOWROOM_MIRRORLAND_NARRATIVE_CONSTELLATION_STATIC_HTML_TNT_v10 -->
+<!-- SHOWROOM_MIRRORLAND_NARRATIVE_CONSTELLATION_STATIC_HTML_TNT_v11 -->
 <!doctype html>
 
 <html
   lang="en"
   data-route="/showroom/"
   data-page="showroom"
-  data-version="SHOWROOM-MIRRORLAND-NARRATIVE-CONSTELLATION-10.0.0"
-  data-contract="SHOWROOM_MIRRORLAND_NARRATIVE_CONSTELLATION_STATIC_HTML_TNT_v10"
+  data-version="SHOWROOM-MIRRORLAND-NARRATIVE-CONSTELLATION-11.0.0"
+  data-contract="SHOWROOM_MIRRORLAND_NARRATIVE_CONSTELLATION_STATIC_HTML_TNT_v11"
 
   data-house-room="showroom"
   data-house-room-title="The Showroom"
@@ -26,6 +26,7 @@
   data-showroom-gauges="/showroom/index.gauges.js"
   data-showroom-compositor="/showroom/index.compositor.js"
   data-showroom-crystals="/showroom/index.crystals.js"
+  data-showroom-interaction-gestures="/showroom/index.interaction.gestures.js"
   data-showroom-interactions="/showroom/index.interactions.js"
   data-showroom-window="/showroom/index.window.js"
   data-showroom-css="/showroom/index.css"
@@ -110,7 +111,7 @@
 
   <meta
     name="showroom-page-contract"
-    content="SHOWROOM_MIRRORLAND_NARRATIVE_CONSTELLATION_STATIC_HTML_TNT_v10"
+    content="SHOWROOM_MIRRORLAND_NARRATIVE_CONSTELLATION_STATIC_HTML_TNT_v11"
   >
 
   <link
@@ -2954,7 +2955,13 @@
   ></script>
 
   <script
-    src="/showroom/index.interactions.js?v=SHOWROOM_SCENE_BOUNDED_CONSTELLATION_INTERACTIONS_TNT_v4"
+    src="/showroom/index.interaction.gestures.js?v=SHOWROOM_INTERACTION_GESTURE_SUPPORT_TNT_v1"
+    defer
+    data-showroom-child="interaction-gestures"
+  ></script>
+
+  <script
+    src="/showroom/index.interactions.js?v=SHOWROOM_COMPLETE_QUATERNION_INTERACTIONS_TNT_v6"
     defer
     data-showroom-child="interactions"
   ></script>
@@ -2994,117 +3001,40 @@
 </html>
 
 <!--
-SHOWROOM_FINAL_LOCAL_RETURN_HTML_CONSTRUCTION_RECEIPT
+SHOWROOM_HTML_INTERACTION_HELPER_INTEGRATION_BASELINE_RECEIPT_v11
 
 FILE MODIFIED:
 /showroom/index.html
 
-RETURN TO ORBIT ANCHORS PRESENT:
-14
+BASELINE PRESERVATION:
+Full v10 structure retained.
 
-ARRIVAL RETURN:
-1
+AUTHORIZED CHANGES ONLY:
+- Contract advanced from SHOWROOM_MIRRORLAND_NARRATIVE_CONSTELLATION_STATIC_HTML_TNT_v10 to SHOWROOM_MIRRORLAND_NARRATIVE_CONSTELLATION_STATIC_HTML_TNT_v11.
+- Root metadata now declares /showroom/index.interaction.gestures.js.
+- Gesture helper script added immediately before /showroom/index.interactions.js.
+- Interaction parent script query updated to SHOWROOM_COMPLETE_QUATERNION_INTERACTIONS_TNT_v6.
 
-LOCATION:
-#arrival .showroom-threshold__copy
-immediately after #mirrorland-preface
+SCRIPT ORDER REQUIRED:
+1. /showroom/index.interaction.gestures.js
+2. /showroom/index.interactions.js
 
-PREFACE SUBSECTION RETURNS ADDED:
-4
+CONTENT REMOVED:
+None.
 
-LOCATIONS:
+ARCHITECTURE CHANGED:
+No.
 
-- #mirrorland-preface-mission
-- #mirrorland-preface-timeline
-- #mirrorland-preface-exploration
-- #mirrorland-preface-invitation
-
-PREFACE CHARACTERS RETURN:
-NOT ADDED
-
-DIAMOND-REGION RETURN:
-1
-
-LOCATION:
-#showroom-diamond-reveal
-immediately after #showroom-diamond-controls
-
-NARRATIVE ARTICLE RETURNS:
-3
-
-LOCATIONS:
-
-- #showroom-star-reading
-- #showroom-unfinished-world
-- #showroom-paths-not-yet-open
-
-TECHNICAL-FRONT RETURNS PRESENT:
-5
-
-LOCATIONS:
-
-- #object-gauges
-- #structure-gauges
-- #interaction-gauges
-- #systems-gauges
-- #information-front
-
-CATCH-ALL FRONT-HOST RETURN:
-REMOVED
-
-BOTTOM RETURN-ZONE COPY:
-CORRECTED
-
-CURRENT COPY:
-Return to the constellation or leave the Showroom through the Main
-Compass.
-
-BOTTOM MAIN COMPASS ROUTE:
-RETAINED AS /index.html
-
-BOTTOM MAIN COMPASS CONTROL:
-NATIVE ANCHOR
-
-DESTINATION EXECUTOR SCRIPT:
-RETAINED
-
-DESTINATION EXECUTOR PATH:
-/showroom/index.destinations.js
-
-DESTINATION EXECUTOR QUERY:
-SHOWROOM_DESTINATION_EXECUTOR_TNT_v1
-
-SCRIPT DECLARATIONS:
-UNCHANGED
-
-FILES NOT MODIFIED:
-
-- /showroom/index.destinations.js
-- /showroom/index.controller.js
-- /showroom/index.interactions.js
-- /showroom/index.ui.js
-- /showroom/index.compositor.js
-- /showroom/index.crystals.js
-- /showroom/index.window.js
-- /showroom/index.css
-- /assets/elara/elara.room-entry.js
-- Diamond assets
-- Compass assets
-- gauge assets
-- blueprint assets
-- character assets
+NAVIGATION PURPOSE:
+Complete runtime dependency order while preserving the existing user journey:
+select, confirm, continue, return.
 
 BROWSER VALIDATION:
-NOT PERFORMED
+NOT PERFORMED.
 
 DEPLOYED RUNTIME STATUS:
-UNVERIFIED
+UNVERIFIED.
 
-STOP CONFIRMATION:
-
-NO JAVASCRIPT MODIFIED
-NO CSS MODIFIED
-NO ENTER SELECTED PATH DIAGNOSIS PERFORMED
-NO CONSTELLATION-TO-CONTROLLER GAP DIAGNOSIS PERFORMED
-NO RUNTIME TESTING SELF-ACTIVATED
+FINAL ACCEPTANCE:
+CONTINGENT ON FULL-SYSTEM INTEGRATION VALIDATION.
 -->

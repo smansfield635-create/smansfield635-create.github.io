@@ -1,14 +1,14 @@
 <!-- TARGET FILE: /showroom/index.html -->
 <!-- TNT FULL-FILE REPLACEMENT -->
-<!-- SHOWROOM_MIRRORLAND_NARRATIVE_CONSTELLATION_STATIC_HTML_TNT_v10 -->
+<!-- SHOWROOM_MIRRORLAND_NARRATIVE_CONSTELLATION_STATIC_HTML_TNT_v11 -->
 <!doctype html>
 
 <html
   lang="en"
   data-route="/showroom/"
   data-page="showroom"
-  data-version="SHOWROOM-MIRRORLAND-NARRATIVE-CONSTELLATION-10.0.0"
-  data-contract="SHOWROOM_MIRRORLAND_NARRATIVE_CONSTELLATION_STATIC_HTML_TNT_v10"
+  data-version="SHOWROOM-MIRRORLAND-NARRATIVE-CONSTELLATION-11.0.0"
+  data-contract="SHOWROOM_MIRRORLAND_NARRATIVE_CONSTELLATION_STATIC_HTML_TNT_v11"
 
   data-house-room="showroom"
   data-house-room-title="The Showroom"
@@ -110,7 +110,7 @@
 
   <meta
     name="showroom-page-contract"
-    content="SHOWROOM_MIRRORLAND_NARRATIVE_CONSTELLATION_STATIC_HTML_TNT_v10"
+    content="SHOWROOM_MIRRORLAND_NARRATIVE_CONSTELLATION_STATIC_HTML_TNT_v11"
   >
 
   <link
@@ -148,6 +148,8 @@
     class="shell showroom-shell"
     data-showroom-root
     data-showroom-state="CONSTELLATION"
+    data-showroom-controller-state="CONSTELLATION"
+    data-showroom-navigation-state="CONSTELLATION"
     data-showroom-presentation-mode="constellation"
     data-showroom-active-cardinal=""
     data-showroom-active-child=""
@@ -804,7 +806,7 @@
                 data-showroom-cluster-state="collapsed"
                 data-showroom-fallback-star-visibility="visible"
                 aria-label="The Story Begins destinations"
-                hidden
+                aria-hidden="true"
               >
                 <button
                   class="showroom-star showroom-star--small showroom-star--local"
@@ -947,7 +949,7 @@
                 data-showroom-cluster-state="collapsed"
                 data-showroom-fallback-star-visibility="visible"
                 aria-label="Meet the Characters destinations"
-                hidden
+                aria-hidden="true"
               >
                 <button
                   class="showroom-star showroom-star--small showroom-star--portal"
@@ -1108,7 +1110,7 @@
                 data-showroom-cluster-state="collapsed"
                 data-showroom-fallback-star-visibility="visible"
                 aria-label="Wonders of Mirrorland destinations"
-                hidden
+                aria-hidden="true"
               >
                 <button
                   class="showroom-star showroom-star--small showroom-star--local"
@@ -1256,7 +1258,7 @@
                 data-showroom-cluster-state="collapsed"
                 data-showroom-fallback-star-visibility="visible"
                 aria-label="Mysteries Yet Unfolding destinations"
-                hidden
+                aria-hidden="true"
               >
                 <button
                   class="showroom-star showroom-star--small showroom-star--local"
@@ -1397,10 +1399,11 @@
             <div
               class="showroom-orbit__fallback"
               data-showroom-orbit-fallback
+              aria-hidden="true"
             >
               <p>
-                Every constellation destination remains available through
-                semantic fallback navigation.
+                The visible star controls remain available while the
+                enhanced crystal field is preparing.
               </p>
             </div>
           </div>
@@ -2403,7 +2406,7 @@
                 data-gauge-detail-id="fallback"
               >
                 <h3>Semantic fallback</h3>
-                <p>Destinations remain reachable without enhanced rendering.</p>
+                <p>Destinations remain represented without enhanced rendering.</p>
               </article>
             </div>
           </div>
@@ -2580,7 +2583,7 @@
                 data-information-tab-id="engineering"
                 aria-selected="false"
                 aria-controls="engineering-panel"
-                tabindex="0"
+                tabindex="-1"
               >
                 Engineering
               </button>
@@ -2593,7 +2596,7 @@
                 data-information-tab-id="evidence"
                 aria-selected="false"
                 aria-controls="evidence-panel"
-                tabindex="0"
+                tabindex="-1"
               >
                 Evidence
               </button>
@@ -2731,13 +2734,47 @@
       </nav>
     </footer>
 
-    <output data-showroom-controller-receipt hidden></output>
-    <output data-showroom-controller-validation hidden></output>
-    <output data-showroom-gauges-receipt hidden></output>
-    <output data-showroom-interactions-receipt hidden></output>
-    <output data-showroom-compositor-receipt hidden></output>
-    <output data-showroom-crystals-receipt hidden></output>
-    <output data-showroom-window-receipt hidden></output>
+    <output
+      data-showroom-controller-receipt
+      hidden
+      aria-hidden="true"
+    ></output>
+
+    <output
+      data-showroom-controller-validation
+      hidden
+      aria-hidden="true"
+    ></output>
+
+    <output
+      data-showroom-gauges-receipt
+      hidden
+      aria-hidden="true"
+    ></output>
+
+    <output
+      data-showroom-interactions-receipt
+      hidden
+      aria-hidden="true"
+    ></output>
+
+    <output
+      data-showroom-compositor-receipt
+      hidden
+      aria-hidden="true"
+    ></output>
+
+    <output
+      data-showroom-crystals-receipt
+      hidden
+      aria-hidden="true"
+    ></output>
+
+    <output
+      data-showroom-window-receipt
+      hidden
+      aria-hidden="true"
+    ></output>
   </div>
 
   <dialog
@@ -2808,7 +2845,7 @@
   ></script>
 
   <script
-    src="/showroom/index.gauges.js?v=SHOWROOM_MIRRORLAND_COMPACT_GAUGE_DASHBOARD_TNT_v2"
+    src="/showroom/index.gauges.js?v=SHOWROOM_MIRRORLAND_COMPACT_GAUGE_DASHBOARD_TNT_v4"
     defer
     data-showroom-child="gauges"
   ></script>
@@ -2838,7 +2875,7 @@
   ></script>
 
   <script
-    src="/showroom/index.interactions.js?v=SHOWROOM_SCENE_BOUNDED_CONSTELLATION_INTERACTIONS_TNT_v4"
+    src="/showroom/index.interactions.js?v=SHOWROOM_COMPLETE_QUATERNION_INTERACTIONS_TNT_v6"
     defer
     data-showroom-child="interactions"
   ></script>
@@ -2870,7 +2907,7 @@
   ></script>
 
   <script
-    src="/assets/elara/elara.room-entry.js?v=ELARA_ROOM_ENTRY_ISOLATED_HARD_NAVIGATION_ASSET_TNT_v1"
+    src="/assets/elara/elara.room-entry.js?v=ELARA_ROOM_ENTRY_RESTRAINED_ROOM_HARMONY_HARD_NAVIGATION_ASSET_TNT_v2"
     defer
     data-elara-room-entry-asset="true"
   ></script>

@@ -1,25 +1,37 @@
 /* TARGET FILE: /showroom/index.css */
 /* TNT FULL-FILE REPLACEMENT */
-/* SHOWROOM_MIRRORLAND_NARRATIVE_CONSTELLATION_CSS_TNT_v9 */
+/* SHOWROOM_MIRRORLAND_NARRATIVE_CONSTELLATION_CSS_TNT_v10 */
 /*
-  Coordinated HTML/CSS fine-tuning renewal.
+  Forward recovery renewal.
 
-  Scope:
-  - preserves global hidden-surface protection;
+  Construction basis:
+  - derived from the last successful CSS v8 layout model;
+  - preserves normal document flow for shell, main, intro, and all stages;
+  - keeps the orbit bounded inside its panel;
+  - keeps compositor canvases absolute and pointer-transparent inside the
+    orbit field;
+  - preserves semantic star and Compass pointer authority;
+  - preserves Diamond, Window, controller, compositor, crystal, gauges,
+    and navigation ownership boundaries.
+
+  Bounded forward corrections:
+  - protects hidden receipt and validation outputs;
   - restores controller-reflected cardinal-to-cluster visibility;
-  - preserves semantic controls beneath enhanced crystal rendering;
-  - keeps all gauge details and information panels readable before
-    successful gauges enhancement;
-  - returns selected-detail and selected-panel visibility to the gauges
+  - preserves readable gauge and information fallback content before
+    gauges readiness;
+  - returns selected gauge and information visibility to the gauges
     runtime after readiness;
   - makes the orbit fallback notice pointer-transparent;
-  - preserves orbit, Diamond, Window threshold, secondary-object,
-    supporting-front, controller, narrative, return, and footer layout
-    participation without overriding Window-owned internal state;
-  - adds bounded dialog overflow behavior;
-  - does not assume destination execution, confirmation ownership, route
-    execution, compositor ownership, crystal ownership, Diamond ownership,
-    Window ownership, controller ownership, or gauges ownership.
+  - adds bounded dialog overflow;
+  - enlarges semantic star hit surfaces.
+
+  Explicit exclusions:
+  - no broad protected-stage visibility forcing;
+  - no forced stage display overrides;
+  - no root, shell, main, or intro fixed positioning;
+  - no viewport-sized scene conversion;
+  - no page-level clipping;
+  - no unrelated layout restructuring.
 */
 
 @layer reset, foundation, shell, header, stages, controls, narrative, fronts, dialogs, responsive, accessibility;
@@ -1726,7 +1738,7 @@
 
   .showroom-secondary-object-stage {
     display: grid;
-    gap: 1rem;
+    gap: 1.2rem;
     width:
       min(
         100%,
@@ -1754,9 +1766,9 @@
 
   .showroom-secondary-object-viewport {
     display: grid;
-    min-height: 12rem;
+    min-height: 20rem;
     place-items: center;
-    padding: 1.5rem;
+    padding: 2rem;
     border: 1px dashed rgba(167, 192, 234, 0.26);
     border-radius: var(--showroom-radius-lg);
     color: var(--showroom-text-dim);
@@ -1774,21 +1786,9 @@
     display: none !important;
   }
 
-  /*
-    Protected structural stages remain visible independently of enhancement
-    readiness. Window-owned internal layer and mount are deliberately not
-    forced visible here.
-  */
   #showroom-orbit,
   #showroom-diamond-reveal,
-  #showroom-secondary-object,
-  #showroom-window-threshold,
-  [data-showroom-front-host],
-  [data-showroom-controller-panel],
-  [data-showroom-orbit-guide],
-  .showroom-narrative-region,
-  .showroom-return-zone,
-  .showroom-footer {
+  #showroom-secondary-object {
     visibility: visible;
     opacity: 1;
   }
@@ -2656,10 +2656,6 @@
       width: 100%;
     }
 
-    .showroom-secondary-object-viewport {
-      min-height: 10rem;
-    }
-
     .showroom-route-dialog {
       width: calc(100% - 1rem);
       max-height: calc(100vh - 1rem);
@@ -2721,7 +2717,7 @@
     }
 
     .showroom-secondary-object-viewport {
-      min-height: 9rem;
+      min-height: 16rem;
     }
 
     .showroom-window-control {

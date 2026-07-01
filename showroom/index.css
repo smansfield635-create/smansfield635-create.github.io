@@ -13,8 +13,9 @@
   - returns selected-detail and selected-panel visibility to the gauges
     runtime after readiness;
   - makes the orbit fallback notice pointer-transparent;
-  - preserves orbit, Diamond, Window, secondary-object, supporting-front,
-    controller, narrative, return, and footer layout participation;
+  - preserves orbit, Diamond, Window threshold, secondary-object,
+    supporting-front, controller, narrative, return, and footer layout
+    participation without overriding Window-owned internal state;
   - adds bounded dialog overflow behavior;
   - does not assume destination execution, confirmation ownership, route
     execution, compositor ownership, crystal ownership, Diamond ownership,
@@ -73,13 +74,6 @@
     border: 0;
   }
 
-  /*
-    Global hidden protection remains authoritative.
-
-    Runtime-managed content must remove its hidden attribute before it can
-    render. Receipt, validation, diagnostic, and inert technical surfaces
-    therefore cannot be exposed by unrelated layout selectors.
-  */
   [hidden] {
     display: none !important;
   }
@@ -1075,12 +1069,6 @@
       visibility var(--showroom-transition-fast);
   }
 
-  /*
-    Base state:
-    - cardinal layer visible;
-    - all room clusters nonvisual and noninteractive;
-    - fallback navigation outside the orbit remains the no-JavaScript path.
-  */
   .showroom-primary-stars {
     visibility: visible;
     opacity: 1;
@@ -1091,13 +1079,6 @@
     opacity: 0;
   }
 
-  /*
-    Controller-reflected state.
-
-    CSS reads the controller-owned active-cluster value. It does not choose
-    or mutate navigation state. Exactly one matching room cluster becomes
-    visible and pointer-capable.
-  */
   [data-showroom-root][data-showroom-active-cluster="north"]
   .showroom-primary-stars,
   [data-showroom-root][data-showroom-active-cluster="east"]
@@ -1122,11 +1103,6 @@
     opacity: 1;
   }
 
-  /*
-    aria-hidden remains a semantic state surface. It must not override the
-    controller-reflected visual state, because the retained controller may
-    use data state as its authoritative presentation publication.
-  */
   .showroom-star-cluster[aria-hidden="false"] {
     visibility: visible;
     opacity: 1;
@@ -1409,12 +1385,6 @@
       rgba(255, 255, 255, 0.48);
   }
 
-  /*
-    Successful crystals enhancement hides only fallback artwork.
-
-    Semantic buttons remain visible and pointer-capable. Their wrappers are
-    never discarded as disposable rendering layers.
-  */
   html[data-showroom-crystals-ready="true"]
   .showroom-star::before,
   html[data-showroom-crystals-ready="true"]
@@ -1443,10 +1413,6 @@
     opacity: 1;
   }
 
-  /*
-    The notice is informational only and must never intercept the orbit,
-    cardinal, room, Compass, or gesture surfaces.
-  */
   .showroom-orbit__fallback {
     position: absolute;
     right: 1rem;
@@ -1809,14 +1775,14 @@
   }
 
   /*
-    Protected stages remain visible independently of enhancement readiness.
+    Protected structural stages remain visible independently of enhancement
+    readiness. Window-owned internal layer and mount are deliberately not
+    forced visible here.
   */
   #showroom-orbit,
   #showroom-diamond-reveal,
   #showroom-secondary-object,
   #showroom-window-threshold,
-  [data-showroom-window-layer],
-  [data-showroom-window-mount],
   [data-showroom-front-host],
   [data-showroom-controller-panel],
   [data-showroom-orbit-guide],
@@ -1840,10 +1806,6 @@
     display: grid;
   }
 
-  /*
-    Supporting-front runtime state is allowed to hide only declared
-    supporting fronts. It cannot collapse protected stages or the host.
-  */
   .showroom-front-host
   [data-showroom-front-state="inactive"],
   .showroom-front-host
@@ -2228,10 +2190,6 @@
       rgba(5, 9, 18, 0.66);
   }
 
-  /*
-    Progressive gauge fallback:
-    before gauges readiness, every substantive detail remains readable.
-  */
   .showroom-gauge-detail {
     display: block;
     padding-bottom: 0.85rem;
@@ -2243,10 +2201,6 @@
     border-bottom: 0;
   }
 
-  /*
-    After successful enhancement, runtime state owns detail visibility.
-    The gauges module applies hidden, aria-hidden, and data-active.
-  */
   [data-showroom-root][data-showroom-gauges-ready="true"]
   .showroom-gauge-detail {
     display: none;
@@ -2311,10 +2265,6 @@
       );
   }
 
-  /*
-    Progressive information fallback:
-    before gauges readiness, all declared information panels remain readable.
-  */
   .showroom-information-panel {
     display: block;
     padding-block: 1rem;
@@ -2325,10 +2275,6 @@
     border-bottom: 0;
   }
 
-  /*
-    After successful gauges enhancement, the retained gauges runtime owns
-    tab-panel visibility.
-  */
   [data-showroom-root][data-showroom-gauges-ready="true"]
   .showroom-information-panel {
     display: none;

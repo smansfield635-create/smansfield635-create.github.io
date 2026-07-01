@@ -1,68 +1,63 @@
 /* TARGET FILE: /showroom/index.interactions.js */
 /* TNT FULL-FILE REPLACEMENT */
-/* SHOWROOM_SCENE_BOUNDED_CONSTELLATION_INTERACTIONS_TNT_v4 */
+/* SHOWROOM_COMPLETE_QUATERNION_DIRECT_INTERACTIONS_TNT_v5 */
 /*
-  Current-runtime interaction renewal.
-
-  Upstream semantic authority:
-  - /showroom/index.controller.js
+  Accepted dependencies:
   - window.SHOWROOM_MIRRORLAND_CONSTELLATION_CONTROLLER
-  - moduleId:
+  - controller module:
       SHOWROOM_MIRRORLAND_CONSTELLATION_CONTROLLER
-  - moduleVersion:
       7.0.0-controller-interaction-semantic-priority
-
-  Projection authority:
-  - /showroom/index.compositor.js
   - window.SHOWROOM_COMPOSITOR
-  - contract:
+  - compositor contract:
       SHOWROOM_CONSTELLATION_SINGLE_FRAME_COMPOSITOR_TNT_v5
 
-  Rendered-object authority:
-  - /showroom/index.crystals.js
-  - crystal rendering and compositor-node registration remain external.
-
   Interaction authority:
-  - bounded orbit-field pointer listeners;
+  - bounded orbit-field pointer lifecycle;
   - one active primary pointer;
   - pointer capture and release;
   - authoritative compositor hit-test consumption;
-  - projected tap correspondence;
-  - semantic-control activation;
-  - drag and flick classification;
-  - optional controller preview calls when supported;
-  - optional cluster return calls when supported;
+  - semantic-control correspondence;
+  - tap, drag, flick, interruption, and cancellation classification;
+  - complete quaternion construction;
+  - orbit primary-cardinal inference;
+  - cluster primary-room inference;
+  - controller gesture transaction orchestration;
+  - orbit preview, commit, and cancellation;
+  - cluster preview, commit, and cancellation;
+  - cluster flick return to constellation;
+  - cardinal, room, and Compass semantic activation;
+  - native semantic-control delegation;
   - duplicate native-click suppression;
-  - interruption cancellation;
   - runtime readiness recovery;
   - complete listener and style restoration.
 
-  Explicit exclusions:
-  - no world-to-screen projection;
-  - no hit-region construction;
-  - no crystal geometry or rendering;
-  - no camera mutation;
-  - no controller-state construction;
-  - no route interpretation;
-  - no destination interpretation;
-  - no Compass rendering lifecycle;
-  - no root, compositor, or crystal readiness ownership.
+  Exact controller gesture signatures:
+  - beginOrbitGesture()
+  - requestOrbitPreview({ quaternion, primaryId })
+  - requestOrbitCommit()
+  - requestOrbitCancel(reason)
+  - beginClusterGesture(wing)
+  - requestClusterPreview(wing, { quaternion, primaryId })
+  - requestClusterCommit(wing)
+  - requestClusterCancel(wing, reason)
 
-  Form A behavior:
-  - projected taps activate the compositor-corresponding semantic control;
-  - Compass taps retain their native semantic-control path;
-  - ordinary drag is consumed but does not mutate orientation;
-  - a qualifying flick may request cluster return when the controller exposes
-    an accepted closeCluster() or returnToOrbit() surface;
-  - continuous direct manipulation remains unavailable unless an upstream
-    controller transaction surface is explicitly exposed.
+  Explicit exclusions:
+  - no accepted navigation-state ownership;
+  - no route interpretation or destination execution;
+  - no crystal geometry or rendering;
+  - no compositor projection construction;
+  - no camera mutation;
+  - no Compass rendering lifecycle;
+  - no controller-panel ownership;
+  - no front-host visibility ownership;
+  - no Diamond or Window ownership.
 */
 
 (() => {
   "use strict";
 
   const CONTRACT =
-    "SHOWROOM_SCENE_BOUNDED_CONSTELLATION_INTERACTIONS_TNT_v4";
+    "SHOWROOM_COMPLETE_QUATERNION_DIRECT_INTERACTIONS_TNT_v5";
 
   const OWNER =
     "/showroom/index.interactions.js";
@@ -75,6 +70,12 @@
 
   const CONTROLLER_MODULE_VERSION =
     "7.0.0-controller-interaction-semantic-priority";
+
+  const CONTROLLER_INTERACTION_MODULE_ID =
+    "DGB_ARCHCOIN_INTERACTIONS";
+
+  const CONTROLLER_INTERACTION_MODULE_VERSION =
+    "1.0.0-pointer-gesture-interpreter";
 
   const COMPOSITOR_GLOBAL =
     "SHOWROOM_COMPOSITOR";
@@ -92,7 +93,7 @@
     compositorReady:
       "SHOWROOM_COMPOSITOR_READY",
 
-    compositorFailed:
+    compositorFailure:
       "SHOWROOM_COMPOSITOR_FAILURE",
 
     compositorDisposed:
@@ -104,7 +105,7 @@
     crystalsReady:
       "SHOWROOM_CRYSTALS_READY",
 
-    crystalsFailed:
+    crystalsFailure:
       "ARCHCOIN_CRYSTALS_RENDER_FAILURE",
 
     crystalsDisposed:
@@ -113,7 +114,7 @@
     interactionsReady:
       "SHOWROOM_INTERACTIONS_READY",
 
-    interactionsFailed:
+    interactionsFailure:
       "SHOWROOM_INTERACTIONS_FAILURE",
 
     interactionsDisposed:
@@ -121,35 +122,6 @@
 
     interactionsReceipt:
       "SHOWROOM_INTERACTIONS_RECEIPT"
-  });
-
-  const LEGACY_EVENT_ALIASES = Object.freeze({
-    controllerReady:
-      "showroom:controller-ready",
-
-    controllerFrameChanged:
-      "showroom:frame-state-changed",
-
-    controllerStateChanged:
-      "showroom:state-changed",
-
-    compositorReady:
-      "showroom:compositor-ready",
-
-    compositorFailed:
-      "showroom:compositor-failed",
-
-    compositorDisposed:
-      "showroom:compositor-disposed",
-
-    crystalsReady:
-      "showroom:crystals-ready",
-
-    crystalsFailed:
-      "showroom:crystals-failed",
-
-    crystalsDisposed:
-      "showroom:crystals-disposed"
   });
 
   const SELECTORS = Object.freeze({
@@ -162,65 +134,158 @@
     receipt:
       "[data-showroom-interactions-receipt]",
 
-    semanticObject:
-      [
-        "[data-showroom-object]",
-        "[data-showroom-object-id]",
-        "[data-showroom-cardinal-control]",
-        "[data-showroom-child-control]",
-        "[data-showroom-child-id]"
-      ].join(","),
+    cardinalControl:
+      "[data-showroom-cardinal-control][data-showroom-cardinal-id]",
+
+    roomControl:
+      "[data-showroom-child-control][data-showroom-child-id]" +
+      "[data-showroom-cardinal-id]",
 
     compassControl:
       "[data-showroom-compass-control]",
 
+    semanticControl:
+      [
+        "[data-showroom-cardinal-control][data-showroom-cardinal-id]",
+        "[data-showroom-child-control][data-showroom-child-id]",
+        "[data-showroom-compass-control]"
+      ].join(","),
+
     protectedTarget:
       [
+        "[data-showroom-controller-panel]",
         "[data-showroom-diamond-stage]",
         "[data-showroom-window-control]",
         "[data-showroom-diamond-controls]",
         "[data-showroom-gauge-dashboard]",
         "[data-showroom-information-tabs]",
-        "dialog"
+        "[data-showroom-controller-enter]",
+        "[data-showroom-controller-return-to-orbit]",
+        "[data-showroom-controller-return-home-compass]",
+        "dialog",
+        "input",
+        "textarea",
+        "select",
+        "summary"
       ].join(",")
   });
 
+  const NAVIGATION_STATES = Object.freeze({
+    CONSTELLATION:
+      "CONSTELLATION",
+
+    CLUSTER_OPEN:
+      "CLUSTER_OPEN",
+
+    ROOM_SELECTED:
+      "ROOM_SELECTED",
+
+    SYSTEM_HELD:
+      "SYSTEM_HELD"
+  });
+
+  const GESTURE_SCOPES = Object.freeze({
+    ORBIT:
+      "orbit",
+
+    CLUSTER:
+      "cluster"
+  });
+
+  const POINTER_TERRITORIES = Object.freeze({
+    COMPASS:
+      "compass",
+
+    CARDINAL:
+      "cardinal",
+
+    ROOM:
+      "room",
+
+    EMPTY_FIELD:
+      "empty-field"
+  });
+
+  const OUTCOMES = Object.freeze({
+    CARDINAL_TAP:
+      "cardinal-tap",
+
+    ROOM_TAP:
+      "room-tap",
+
+    COMPASS_TAP:
+      "compass-tap",
+
+    EMPTY_TAP:
+      "empty-tap",
+
+    ORBIT_COMMIT:
+      "orbit-commit",
+
+    CLUSTER_COMMIT:
+      "cluster-commit",
+
+    CLUSTER_FLICK_RETURN:
+      "cluster-flick-return",
+
+    CANCELLED:
+      "cancelled",
+
+    INTERRUPTED:
+      "interrupted",
+
+    REJECTED:
+      "rejected",
+
+    AMBIGUOUS:
+      "ambiguous"
+  });
+
   const CONFIG = Object.freeze({
-    minimumDragDistancePx:
-      8,
+    dragDeadZonePx:
+      7,
 
     maximumTapDistancePx:
       13,
 
-    suppressClickMs:
-      520,
+    minimumCommitDistancePx:
+      8,
+
+    radiansPerViewport:
+      Math.PI * 1.18,
+
+    maximumPitchRadians:
+      Math.PI * 0.74,
 
     maximumSamples:
-      18,
+      20,
 
     sampleWindowMs:
-      140,
+      150,
 
     flickMaximumDurationMs:
-      280,
+      285,
 
     flickMinimumDistancePx:
-      48,
+      50,
 
     flickMinimumAverageVelocityPxPerMs:
-      0.48,
+      0.50,
 
     flickMinimumReleaseVelocityPxPerMs:
-      0.62,
+      0.65,
 
     flickMinimumDirectionalRatio:
-      1.22,
+      1.20,
 
     flickMaximumPauseBeforeReleaseMs:
       110,
 
     flickMaximumPathEfficiencyLoss:
-      0.3,
+      0.30,
+
+    suppressClickMs:
+      560,
 
     runtimeRetryLimit:
       120,
@@ -229,69 +294,237 @@
       100
   });
 
+  const WINGS = Object.freeze([
+    "north",
+    "east",
+    "south",
+    "west"
+  ]);
+
+  const CARDINAL_BASE_POSITIONS = Object.freeze({
+    north:
+      Object.freeze([
+        0,
+        1.42,
+        -0.48
+      ]),
+
+    east:
+      Object.freeze([
+        1.58,
+        0,
+        0.54
+      ]),
+
+    south:
+      Object.freeze([
+        0,
+        -1.42,
+        0.44
+      ]),
+
+    west:
+      Object.freeze([
+        -1.58,
+        0,
+        -0.58
+      ])
+  });
+
+  const ROOM_BASE_POSITIONS = Object.freeze({
+    1:
+      Object.freeze([
+        -0.92,
+        0.82,
+        -0.46
+      ]),
+
+    2:
+      Object.freeze([
+        0.92,
+        0.82,
+        0.50
+      ]),
+
+    3:
+      Object.freeze([
+        0.92,
+        -0.82,
+        -0.42
+      ]),
+
+    4:
+      Object.freeze([
+        -0.92,
+        -0.82,
+        0.46
+      ])
+  });
+
+  const PRIMARY_ANCHORS = Object.freeze({
+    orbit:
+      Object.freeze([
+        0,
+        1,
+        0.08
+      ]),
+
+    cluster:
+      Object.freeze([
+        0,
+        1,
+        0.18
+      ])
+  });
+
   const state = {
-    root: null,
-    orbitField: null,
-    receipt: null,
+    root:
+      null,
 
-    controller: null,
-    compositor: null,
+    orbitField:
+      null,
 
-    controllerFrameUnsubscribe: null,
-    controllerHeldUnsubscribe: null,
+    receipt:
+      null,
 
-    pointer: null,
-    suppressedClick: null,
+    controller:
+      null,
 
-    initialized: false,
-    initializing: false,
-    disposed: false,
-    failed: false,
+    compositor:
+      null,
 
-    runtimeActive: false,
-    waitingForRuntime: true,
-    readyPublished: false,
+    controllerFrameUnsubscribe:
+      null,
 
-    apiExposed: false,
+    controllerHeldUnsubscribe:
+      null,
 
-    coreListeners: [],
-    runtimeListeners: [],
+    pointer:
+      null,
 
-    nativeOrbitFieldStyle: null,
-    orbitFieldStyleCaptured: false,
+    suppressedClick:
+      null,
 
-    retryTimer: 0,
-    retryCount: 0,
+    initialized:
+      false,
+
+    initializing:
+      false,
+
+    runtimeActive:
+      false,
+
+    waitingForRuntime:
+      true,
+
+    readyPublished:
+      false,
+
+    failed:
+      false,
+
+    disposed:
+      false,
+
+    apiExposed:
+      false,
+
+    coreListeners:
+      [],
+
+    runtimeListeners:
+      [],
+
+    nativeOrbitFieldStyle:
+      null,
+
+    orbitFieldStyleCaptured:
+      false,
+
+    retryTimer:
+      0,
+
+    retryCount:
+      0,
 
     counters: {
-      readinessChecks: 0,
-      runtimeActivations: 0,
-      runtimeDeactivations: 0,
+      readinessChecks:
+        0,
 
-      pointerDown: 0,
-      pointerMove: 0,
-      pointerUp: 0,
-      pointerCancel: 0,
+      runtimeActivations:
+        0,
 
-      pointerCaptureFailures: 0,
-      projectedHits: 0,
-      projectedMisses: 0,
-      projectedTapCommits: 0,
-      projectedTapRejects: 0,
-      compassTapCommits: 0,
-      compassTapRejects: 0,
+      runtimeDeactivations:
+        0,
 
-      previewsBegun: 0,
-      previewsCancelled: 0,
+      pointerDown:
+        0,
 
-      dragsConsumed: 0,
-      flicksQualified: 0,
-      clusterReturnsCommitted: 0,
-      ambiguousReleases: 0,
+      pointerMove:
+        0,
 
-      nativeClicksSuppressed: 0,
-      interruptions: 0,
-      failures: 0
+      pointerUp:
+        0,
+
+      pointerCancel:
+        0,
+
+      pointerCaptureFailures:
+        0,
+
+      compositorHits:
+        0,
+
+      compositorMisses:
+        0,
+
+      cardinalSelections:
+        0,
+
+      roomSelections:
+        0,
+
+      compassSelections:
+        0,
+
+      orbitBegins:
+        0,
+
+      orbitPreviews:
+        0,
+
+      orbitCommits:
+        0,
+
+      orbitCancels:
+        0,
+
+      clusterBegins:
+        0,
+
+      clusterPreviews:
+        0,
+
+      clusterCommits:
+        0,
+
+      clusterCancels:
+        0,
+
+      flicksQualified:
+        0,
+
+      clusterReturns:
+        0,
+
+      nativeClicksSuppressed:
+        0,
+
+      interruptions:
+        0,
+
+      failures:
+        0
     }
   };
 
@@ -303,37 +536,67 @@
     ).trim();
   }
 
+  function normalizeLower(value) {
+    return normalize(value)
+      .toLowerCase();
+  }
+
+  function normalizeWing(value) {
+    const wing =
+      normalizeLower(value);
+
+    return WINGS.includes(wing)
+      ? wing
+      : "";
+  }
+
+  function normalizeRoomId(value) {
+    return normalize(value);
+  }
+
+  function finiteNumber(
+    value,
+    fallback = 0
+  ) {
+    const numeric =
+      Number(value);
+
+    return Number.isFinite(numeric)
+      ? numeric
+      : fallback;
+  }
+
+  function clamp(
+    value,
+    minimum,
+    maximum
+  ) {
+    return Math.min(
+      maximum,
+      Math.max(
+        minimum,
+        value
+      )
+    );
+  }
+
   function nowIso() {
     return new Date().toISOString();
   }
 
   function isElement(value) {
-    return value instanceof Element;
-  }
-
-  function isFiniteNumber(value) {
     return (
-      typeof value === "number" &&
-      Number.isFinite(value)
-    );
-  }
-
-  function distance2d(
-    x1,
-    y1,
-    x2,
-    y2
-  ) {
-    return Math.hypot(
-      x2 - x1,
-      y2 - y1
+      typeof Element !==
+        "undefined" &&
+      value instanceof Element
     );
   }
 
   function freezePlain(value) {
     if (
       value === null ||
-      typeof value !== "object"
+      typeof value !==
+        "object"
     ) {
       return value;
     }
@@ -358,26 +621,6 @@
     }
 
     return Object.freeze(output);
-  }
-
-  function cssEscape(value) {
-    const normalized =
-      normalize(value);
-
-    if (
-      globalThis.CSS &&
-      typeof globalThis.CSS.escape ===
-        "function"
-    ) {
-      return globalThis.CSS.escape(
-        normalized
-      );
-    }
-
-    return normalized.replace(
-      /["\\]/g,
-      "\\$&"
-    );
   }
 
   function dispatch(
@@ -422,7 +665,7 @@
 
   function createReceipt(
     event,
-    extra = {}
+    detail = {}
   ) {
     const pointer =
       state.pointer;
@@ -440,6 +683,12 @@
       controllerModuleVersion:
         CONTROLLER_MODULE_VERSION,
 
+      interactionModuleId:
+        CONTROLLER_INTERACTION_MODULE_ID,
+
+      interactionModuleVersion:
+        CONTROLLER_INTERACTION_MODULE_VERSION,
+
       compositorContract:
         COMPOSITOR_CONTRACT,
 
@@ -454,12 +703,6 @@
       initializing:
         state.initializing,
 
-      disposed:
-        state.disposed,
-
-      failed:
-        state.failed,
-
       runtimeActive:
         state.runtimeActive,
 
@@ -469,11 +712,21 @@
       readyPublished:
         state.readyPublished,
 
+      failed:
+        state.failed,
+
+      disposed:
+        state.disposed,
+
       controllerAvailable:
-        Boolean(state.controller),
+        Boolean(
+          state.controller
+        ),
 
       compositorAvailable:
-        Boolean(state.compositor),
+        Boolean(
+          state.compositor
+        ),
 
       pointerActive:
         Boolean(pointer),
@@ -490,23 +743,26 @@
               territory:
                 pointer.territory,
 
+              gestureScope:
+                pointer.gestureScope,
+
               dragging:
                 pointer.dragging,
 
-              downSemanticObjectId:
-                pointer.downSemanticObjectId ||
+              transactionBegan:
+                pointer.transactionBegan,
+
+              identity:
+                pointer.identity ||
                 null,
 
-              downProjectionId:
-                pointer.downProjectionId ||
+              activeWing:
+                pointer.activeWing ||
                 null,
 
-              activeClusterId:
-                pointer.activeClusterId ||
-                null,
-
-              previewActive:
-                pointer.previewActive
+              currentPrimaryId:
+                pointer.currentPrimaryId ||
+                null
             }
           : null,
 
@@ -514,18 +770,18 @@
         ...state.counters
       },
 
-      ...extra
+      ...detail
     });
   }
 
   function publishReceipt(
     event,
-    extra = {}
+    detail = {}
   ) {
     const payload =
       createReceipt(
         event,
-        extra
+        detail
       );
 
     if (state.receipt) {
@@ -629,6 +885,471 @@
     }
   }
 
+  function vectorLength(vector) {
+    return Math.hypot(
+      vector[0],
+      vector[1],
+      vector[2]
+    );
+  }
+
+  function normalizeVector(
+    vector,
+    fallback = [
+      0,
+      0,
+      1
+    ]
+  ) {
+    const length =
+      vectorLength(vector);
+
+    if (
+      !Number.isFinite(length) ||
+      length <= 1e-12
+    ) {
+      return fallback.slice();
+    }
+
+    return [
+      vector[0] / length,
+      vector[1] / length,
+      vector[2] / length
+    ];
+  }
+
+  function dot(
+    first,
+    second
+  ) {
+    return (
+      first[0] * second[0] +
+      first[1] * second[1] +
+      first[2] * second[2]
+    );
+  }
+
+  function quaternionNormalize(
+    value,
+    fallback = [
+      0,
+      0,
+      0,
+      1
+    ]
+  ) {
+    const source =
+      Array.isArray(value) ||
+      ArrayBuffer.isView(value)
+        ? Array.from(value)
+        : [];
+
+    if (source.length !== 4) {
+      return fallback.slice();
+    }
+
+    const quaternion = [
+      finiteNumber(
+        source[0],
+        0
+      ),
+
+      finiteNumber(
+        source[1],
+        0
+      ),
+
+      finiteNumber(
+        source[2],
+        0
+      ),
+
+      finiteNumber(
+        source[3],
+        1
+      )
+    ];
+
+    const length =
+      Math.hypot(
+        quaternion[0],
+        quaternion[1],
+        quaternion[2],
+        quaternion[3]
+      );
+
+    if (
+      !Number.isFinite(length) ||
+      length <= 1e-12
+    ) {
+      return fallback.slice();
+    }
+
+    return quaternion.map(
+      component =>
+        component / length
+    );
+  }
+
+  function quaternionMultiplyRaw(
+    first,
+    second
+  ) {
+    return [
+      first[3] * second[0] +
+        first[0] * second[3] +
+        first[1] * second[2] -
+        first[2] * second[1],
+
+      first[3] * second[1] -
+        first[0] * second[2] +
+        first[1] * second[3] +
+        first[2] * second[0],
+
+      first[3] * second[2] +
+        first[0] * second[1] -
+        first[1] * second[0] +
+        first[2] * second[3],
+
+      first[3] * second[3] -
+        first[0] * second[0] -
+        first[1] * second[1] -
+        first[2] * second[2]
+    ];
+  }
+
+  function quaternionMultiply(
+    first,
+    second
+  ) {
+    return quaternionNormalize(
+      quaternionMultiplyRaw(
+        quaternionNormalize(first),
+        quaternionNormalize(second)
+      )
+    );
+  }
+
+  function quaternionConjugate(
+    quaternion
+  ) {
+    return [
+      -quaternion[0],
+      -quaternion[1],
+      -quaternion[2],
+      quaternion[3]
+    ];
+  }
+
+  function quaternionFromAxisAngle(
+    axis,
+    angle
+  ) {
+    const normalizedAxis =
+      normalizeVector(axis);
+
+    const half =
+      angle * 0.5;
+
+    const sine =
+      Math.sin(half);
+
+    return quaternionNormalize([
+      normalizedAxis[0] * sine,
+      normalizedAxis[1] * sine,
+      normalizedAxis[2] * sine,
+      Math.cos(half)
+    ]);
+  }
+
+  function quaternionRotateVector(
+    quaternionValue,
+    vector
+  ) {
+    const quaternion =
+      quaternionNormalize(
+        quaternionValue
+      );
+
+    const pure = [
+      vector[0],
+      vector[1],
+      vector[2],
+      0
+    ];
+
+    const rotated =
+      quaternionMultiplyRaw(
+        quaternionMultiplyRaw(
+          quaternion,
+          pure
+        ),
+        quaternionConjugate(
+          quaternion
+        )
+      );
+
+    return [
+      rotated[0],
+      rotated[1],
+      rotated[2]
+    ];
+  }
+
+  function orientationQuaternion(
+    orientation
+  ) {
+    if (
+      orientation &&
+      (
+        Array.isArray(
+          orientation.quaternion
+        ) ||
+        ArrayBuffer.isView(
+          orientation.quaternion
+        )
+      )
+    ) {
+      return quaternionNormalize(
+        orientation.quaternion
+      );
+    }
+
+    return [
+      0,
+      0,
+      0,
+      1
+    ];
+  }
+
+  function roomOrdinal(
+    roomId
+  ) {
+    const match =
+      normalizeRoomId(roomId)
+        .match(/-(\d+)$/);
+
+    if (!match) {
+      return 0;
+    }
+
+    const ordinal =
+      Number(match[1]);
+
+    return (
+      ordinal >= 1 &&
+      ordinal <= 4
+    )
+      ? ordinal
+      : 0;
+  }
+
+  function deriveOrbitPrimaryId(
+    quaternion
+  ) {
+    const anchor =
+      normalizeVector(
+        PRIMARY_ANCHORS.orbit
+      );
+
+    let bestId =
+      "north";
+
+    let bestScore =
+      -Infinity;
+
+    for (
+      const wing
+      of WINGS
+    ) {
+      const vector =
+        normalizeVector(
+          quaternionRotateVector(
+            quaternion,
+            CARDINAL_BASE_POSITIONS[
+              wing
+            ]
+          )
+        );
+
+      const score =
+        dot(
+          vector,
+          anchor
+        );
+
+      if (score > bestScore) {
+        bestScore =
+          score;
+
+        bestId =
+          wing;
+      }
+    }
+
+    return bestId;
+  }
+
+  function deriveClusterPrimaryId(
+    frame,
+    quaternion
+  ) {
+    const wing =
+      normalizeWing(
+        frame &&
+        frame.activeClusterWing
+      ) ||
+      normalizeWing(
+        frame &&
+        frame.selectedCardinal
+      );
+
+    const roomIds =
+      frame &&
+      frame.cluster &&
+      Array.isArray(
+        frame.cluster.roomIds
+      )
+        ? frame.cluster.roomIds
+            .map(normalizeRoomId)
+            .filter(Boolean)
+        : [];
+
+    if (
+      !wing ||
+      roomIds.length !== 4
+    ) {
+      return "";
+    }
+
+    const anchor =
+      normalizeVector(
+        PRIMARY_ANCHORS.cluster
+      );
+
+    let bestId =
+      roomIds[0];
+
+    let bestScore =
+      -Infinity;
+
+    for (
+      const roomId
+      of roomIds
+    ) {
+      const ordinal =
+        roomOrdinal(roomId);
+
+      if (!ordinal) {
+        continue;
+      }
+
+      const vector =
+        normalizeVector(
+          quaternionRotateVector(
+            quaternion,
+            ROOM_BASE_POSITIONS[
+              ordinal
+            ]
+          )
+        );
+
+      const score =
+        dot(
+          vector,
+          anchor
+        );
+
+      if (score > bestScore) {
+        bestScore =
+          score;
+
+        bestId =
+          roomId;
+      }
+    }
+
+    return bestId;
+  }
+
+  function dragQuaternionFromPointer(
+    pointer,
+    clientX,
+    clientY
+  ) {
+    const rect =
+      state.orbitField
+        .getBoundingClientRect();
+
+    const width =
+      Math.max(
+        1,
+        rect.width
+      );
+
+    const height =
+      Math.max(
+        1,
+        rect.height
+      );
+
+    const deltaX =
+      clientX -
+      pointer.startX;
+
+    const deltaY =
+      clientY -
+      pointer.startY;
+
+    const yaw =
+      (
+        deltaX /
+        width
+      ) *
+      CONFIG.radiansPerViewport;
+
+    const pitch =
+      clamp(
+        (
+          deltaY /
+          height
+        ) *
+        CONFIG.radiansPerViewport,
+
+        -CONFIG.maximumPitchRadians,
+        CONFIG.maximumPitchRadians
+      );
+
+    const yawQuaternion =
+      quaternionFromAxisAngle(
+        [
+          0,
+          1,
+          0
+        ],
+        yaw
+      );
+
+    const pitchQuaternion =
+      quaternionFromAxisAngle(
+        [
+          1,
+          0,
+          0
+        ],
+        pitch
+      );
+
+    return quaternionMultiply(
+      pitchQuaternion,
+      quaternionMultiply(
+        yawQuaternion,
+        pointer.startQuaternion
+      )
+    );
+  }
+
   function discoverDom() {
     state.root =
       document.querySelector(
@@ -636,17 +1357,51 @@
       );
 
     state.orbitField =
-      document.querySelector(
-        SELECTORS.orbitField
-      );
+      state.root
+        ? state.root.querySelector(
+            SELECTORS.orbitField
+          )
+        : null;
 
     state.receipt =
-      document.querySelector(
-        SELECTORS.receipt
-      );
+      state.root
+        ? state.root.querySelector(
+            SELECTORS.receipt
+          )
+        : null;
   }
 
-  function isValidControllerApi(
+  function validateDom() {
+    const issues = [];
+
+    if (!state.root) {
+      issues.push(
+        "Missing [data-showroom-root]."
+      );
+    }
+
+    if (!state.orbitField) {
+      issues.push(
+        "Missing [data-showroom-orbit-field]."
+      );
+    }
+
+    if (
+      state.root &&
+      state.orbitField &&
+      !state.root.contains(
+        state.orbitField
+      )
+    ) {
+      issues.push(
+        "The Showroom orbit field is outside the Showroom root."
+      );
+    }
+
+    return issues;
+  }
+
+  function validControllerApi(
     controller
   ) {
     return Boolean(
@@ -660,11 +1415,35 @@
       typeof controller.getFrameState ===
         "function" &&
       typeof controller.subscribeFrameState ===
+        "function" &&
+      typeof controller.beginOrbitGesture ===
+        "function" &&
+      typeof controller.requestOrbitPreview ===
+        "function" &&
+      typeof controller.requestOrbitCommit ===
+        "function" &&
+      typeof controller.requestOrbitCancel ===
+        "function" &&
+      typeof controller.beginClusterGesture ===
+        "function" &&
+      typeof controller.requestClusterPreview ===
+        "function" &&
+      typeof controller.requestClusterCommit ===
+        "function" &&
+      typeof controller.requestClusterCancel ===
+        "function" &&
+      typeof controller.requestCardinalSelection ===
+        "function" &&
+      typeof controller.requestRoomSelection ===
+        "function" &&
+      typeof controller.requestCompassSelection ===
+        "function" &&
+      typeof controller.requestReturnToConstellation ===
         "function"
     );
   }
 
-  function isValidControllerFrame(
+  function validControllerFrame(
     frame
   ) {
     return Boolean(
@@ -682,7 +1461,25 @@
       typeof frame.presentationMode ===
         "string" &&
       typeof frame.held ===
-        "boolean"
+        "boolean" &&
+      frame.orbitOrientation &&
+      typeof frame.orbitOrientation ===
+        "object" &&
+      Array.isArray(
+        frame.orbitOrientation
+          .quaternion
+      ) &&
+      frame.orbitOrientation
+        .quaternion.length ===
+        4 &&
+      (
+        frame.cluster === null ||
+        (
+          frame.cluster &&
+          typeof frame.cluster ===
+            "object"
+        )
+      )
     );
   }
 
@@ -692,11 +1489,7 @@
         CONTROLLER_GLOBAL
       ];
 
-    if (
-      !isValidControllerApi(
-        controller
-      )
-    ) {
+    if (!validControllerApi(controller)) {
       state.controller =
         null;
 
@@ -722,33 +1515,27 @@
       const frame =
         controller.getFrameState();
 
-      if (
-        !isValidControllerFrame(
-          frame
-        )
-      ) {
-        return null;
-      }
-
-      return frame;
+      return validControllerFrame(frame)
+        ? frame
+        : null;
     } catch {
       return null;
     }
   }
 
-  function controllerInteractionAllowed() {
+  function controllerReady() {
     const frame =
       readControllerFrame();
 
     return Boolean(
       frame &&
       frame.held === false &&
-      frame.disposed !== true &&
-      frame.failed !== true
+      frame.navigationState !==
+        NAVIGATION_STATES.SYSTEM_HELD
     );
   }
 
-  function isValidCompositorApi(
+  function validCompositorApi(
     compositor
   ) {
     return Boolean(
@@ -770,11 +1557,7 @@
         COMPOSITOR_GLOBAL
       ];
 
-    if (
-      !isValidCompositorApi(
-        compositor
-      )
-    ) {
+    if (!validCompositorApi(compositor)) {
       state.compositor =
         null;
 
@@ -800,21 +1583,19 @@
       const compositorState =
         compositor.getState();
 
-      if (
-        !compositorState ||
-        compositorState.contract !==
+      return (
+        compositorState &&
+        compositorState.contract ===
           COMPOSITOR_CONTRACT
-      ) {
-        return null;
-      }
-
-      return compositorState;
+      )
+        ? compositorState
+        : null;
     } catch {
       return null;
     }
   }
 
-  function compositorProjectionReady() {
+  function compositorReady() {
     const compositorState =
       readCompositorState();
 
@@ -822,278 +1603,38 @@
       compositorState &&
       compositorState.initialized ===
         true &&
-      compositorState.disposed ===
-        false &&
-      compositorState.failed ===
-        false &&
       compositorState.readyPublished ===
         true &&
       compositorState.controllerReady ===
-        true
+        true &&
+      compositorState.failed ===
+        false &&
+      compositorState.disposed ===
+        false &&
+      compositorState.held ===
+        false
     );
   }
 
-  function projectedSelectionAllowed() {
+  function runtimeReady() {
     return Boolean(
-      controllerInteractionAllowed() &&
-      compositorProjectionReady()
+      controllerReady() &&
+      compositorReady()
     );
-  }
-
-  function isPrimaryPointerEvent(
-    event
-  ) {
-    if (
-      event.pointerType ===
-        "mouse" &&
-      event.button !== 0
-    ) {
-      return false;
-    }
-
-    return event.isPrimary !== false;
-  }
-
-  function isInsideOrbitField(
-    target
-  ) {
-    return Boolean(
-      isElement(target) &&
-      state.orbitField &&
-      state.orbitField.contains(
-        target
-      )
-    );
-  }
-
-  function isProtectedTarget(
-    target
-  ) {
-    return Boolean(
-      isElement(target) &&
-      target.closest(
-        SELECTORS.protectedTarget
-      )
-    );
-  }
-
-  function resolveCompassControl(
-    target
-  ) {
-    if (
-      !isElement(target) ||
-      !state.orbitField
-    ) {
-      return null;
-    }
-
-    const control =
-      target.closest(
-        SELECTORS.compassControl
-      );
-
-    return (
-      control &&
-      state.orbitField.contains(
-        control
-      )
-        ? control
-        : null
-    );
-  }
-
-  function resolveDirectSemanticControl(
-    target
-  ) {
-    if (
-      !isElement(target) ||
-      !state.orbitField
-    ) {
-      return null;
-    }
-
-    const control =
-      target.closest(
-        SELECTORS.semanticObject
-      );
-
-    return (
-      control &&
-      state.orbitField.contains(
-        control
-      )
-        ? control
-        : null
-    );
-  }
-
-  function getElementSemanticEvidence(
-    element
-  ) {
-    if (!element) {
-      return null;
-    }
-
-    return freezePlain({
-      objectId:
-        normalize(
-          element.getAttribute(
-            "data-showroom-object-id"
-          )
-        ) ||
-        null,
-
-      cardinalId:
-        normalize(
-          element.getAttribute(
-            "data-showroom-cardinal-id"
-          )
-        ) ||
-        null,
-
-      childId:
-        normalize(
-          element.getAttribute(
-            "data-showroom-child-id"
-          )
-        ) ||
-        null,
-
-      clusterId:
-        normalize(
-          element.getAttribute(
-            "data-showroom-cluster-id"
-          )
-        ) ||
-        null
-    });
-  }
-
-  function querySemanticControlByAttribute(
-    attribute,
-    value
-  ) {
-    const normalizedValue =
-      normalize(value);
-
-    if (
-      !normalizedValue ||
-      !state.orbitField
-    ) {
-      return null;
-    }
-
-    const selector =
-      `[${attribute}="${cssEscape(
-        normalizedValue
-      )}"]`;
-
-    const candidates =
-      state.orbitField.querySelectorAll(
-        selector
-      );
-
-    for (
-      const candidate
-      of candidates
-    ) {
-      if (
-        candidate.matches(
-          SELECTORS.semanticObject
-        ) ||
-        candidate.matches(
-          "button, a, [role='button'], [tabindex]"
-        )
-      ) {
-        return candidate;
-      }
-
-      const nested =
-        candidate.querySelector(
-          [
-            SELECTORS.semanticObject,
-            "button",
-            "a",
-            "[role='button']",
-            "[tabindex]"
-          ].join(",")
-        );
-
-      if (nested) {
-        return nested;
-      }
-    }
-
-    return null;
-  }
-
-  function resolveSemanticControlFromHit(
-    hit
-  ) {
-    if (
-      !hit ||
-      !state.orbitField
-    ) {
-      return null;
-    }
-
-    const attempts = [
-      [
-        "data-showroom-object-id",
-        hit.semanticObjectId
-      ],
-      [
-        "data-showroom-child-id",
-        hit.childId
-      ],
-      [
-        "data-showroom-cardinal-id",
-        hit.cardinalId
-      ],
-      [
-        "data-showroom-cluster-id",
-        hit.clusterId
-      ],
-      [
-        "data-showroom-object-id",
-        hit.projectionId
-      ]
-    ];
-
-    for (
-      const [
-        attribute,
-        value
-      ]
-      of attempts
-    ) {
-      const control =
-        querySemanticControlByAttribute(
-          attribute,
-          value
-        );
-
-      if (control) {
-        return control;
-      }
-    }
-
-    return null;
   }
 
   function authoritativeHitTest(
     clientX,
     clientY
   ) {
-    if (!projectedSelectionAllowed()) {
-      return null;
-    }
-
     const compositor =
       state.compositor ||
       resolveCompositor();
 
-    if (!compositor) {
+    if (
+      !compositor ||
+      !compositorReady()
+    ) {
       return null;
     }
 
@@ -1105,450 +1646,354 @@
         );
 
       if (!hit) {
-        state.counters.projectedMisses +=
+        state.counters.compositorMisses +=
           1;
 
         return null;
       }
 
-      const hasIdentity =
-        Boolean(
-          normalize(
-            hit.semanticObjectId
-          ) ||
-          normalize(
-            hit.projectionId
-          ) ||
-          normalize(
-            hit.cardinalId
-          ) ||
-          normalize(
-            hit.childId
-          )
+      const identity =
+        normalize(
+          hit.semanticObjectId ||
+          hit.projectionId ||
+          hit.childId ||
+          hit.cardinalId ||
+          hit.id
         );
 
-      if (!hasIdentity) {
-        state.counters.projectedMisses +=
+      if (!identity) {
+        state.counters.compositorMisses +=
           1;
 
         return null;
       }
 
-      state.counters.projectedHits +=
+      state.counters.compositorHits +=
         1;
 
       return hit;
     } catch {
-      state.counters.projectedMisses +=
+      state.counters.compositorMisses +=
         1;
 
       return null;
     }
   }
 
-  function deriveHitIdentity(
-    hit
-  ) {
-    if (!hit) {
-      return "";
-    }
-
+  function identityFromHit(hit) {
     return normalize(
-      hit.semanticObjectId ||
-      hit.projectionId ||
-      hit.childId ||
-      hit.cardinalId ||
-      hit.id
-    );
-  }
-
-  function deriveFrameActiveClusterId(
-    frame
-  ) {
-    if (!frame) {
-      return "";
-    }
-
-    return normalize(
-      frame.activeClusterId ||
-      frame.selectedWing ||
-      frame.selectedCardinalId ||
+      hit &&
       (
-        frame.selection &&
-        frame.selection.clusterId
+        hit.semanticObjectId ||
+        hit.projectionId ||
+        hit.childId ||
+        hit.cardinalId ||
+        hit.id
       )
     );
   }
 
-  function appendSample(
-    pointer,
-    x,
-    y,
-    timestamp
-  ) {
-    pointer.samples.push({
-      x,
-      y,
-      timestamp
-    });
-
-    const cutoff =
-      timestamp -
-      CONFIG.sampleWindowMs;
-
-    while (
-      pointer.samples.length > 1 &&
-      pointer.samples[0].timestamp <
-        cutoff
-    ) {
-      pointer.samples.shift();
-    }
-
-    if (
-      pointer.samples.length >
-      CONFIG.maximumSamples
-    ) {
-      pointer.samples.splice(
-        0,
-        pointer.samples.length -
-          CONFIG.maximumSamples
-      );
-    }
-  }
-
-  function beginOptionalPreview(
-    pointer
-  ) {
-    if (
-      !pointer ||
-      !pointer.downSemanticObjectId ||
-      pointer.previewActive
-    ) {
-      return false;
-    }
-
-    const controller =
-      state.controller ||
-      resolveController();
-
-    if (
-      !controller ||
-      typeof controller.beginPreview !==
-        "function"
-    ) {
-      return false;
-    }
-
-    try {
-      const token =
-        controller.beginPreview(
-          pointer.downSemanticObjectId,
-          {
-            source:
-              "pointer",
-
-            contract:
-              CONTRACT
-          }
-        );
-
-      if (
-        token === false ||
-        token === null ||
-        token === undefined
-      ) {
-        return false;
-      }
-
-      pointer.previewToken =
-        token;
-
-      pointer.previewActive =
-        true;
-
-      state.counters.previewsBegun +=
-        1;
-
-      return true;
-    } catch {
-      return false;
-    }
-  }
-
-  function cancelOptionalPreview(
-    pointer,
-    reason
-  ) {
-    if (
-      !pointer ||
-      !pointer.previewActive
-    ) {
-      return false;
-    }
-
-    pointer.previewActive =
-      false;
-
-    pointer.previewToken =
-      null;
-
-    const controller =
-      state.controller ||
-      resolveController();
-
-    if (
-      !controller ||
-      typeof controller.cancelPreview !==
-        "function"
-    ) {
-      return false;
-    }
-
-    try {
-      const cancelled =
-        controller.cancelPreview(
-          reason,
-          {
-            source:
-              "pointer",
-
-            contract:
-              CONTRACT
-          }
-        ) !== false;
-
-      if (cancelled) {
-        state.counters.previewsCancelled +=
-          1;
-      }
-
-      return cancelled;
-    } catch {
-      return false;
-    }
-  }
-
-  function capturePointer(
-    pointerId
-  ) {
-    if (!state.orbitField) {
-      return false;
-    }
-
-    try {
-      state.orbitField.setPointerCapture(
-        pointerId
+  function semanticKindFromHit(hit) {
+    const kind =
+      normalizeLower(
+        hit &&
+        hit.kind
       );
 
-      return (
-        typeof state.orbitField
-          .hasPointerCapture !==
-          "function" ||
-        state.orbitField.hasPointerCapture(
-          pointerId
-        )
-      );
-    } catch {
-      state.counters.pointerCaptureFailures +=
-        1;
-
-      return false;
-    }
-  }
-
-  function releasePointer(
-    pointerId
-  ) {
-    if (!state.orbitField) {
-      return;
-    }
-
-    try {
-      if (
-        typeof state.orbitField
-          .hasPointerCapture !==
-          "function" ||
-        state.orbitField.hasPointerCapture(
-          pointerId
-        )
-      ) {
-        state.orbitField.releasePointerCapture(
-          pointerId
-        );
-      }
-    } catch {
-      /* Best-effort release. */
-    }
-  }
-
-  function armClickSuppression(
-    element,
-    clientX,
-    clientY,
-    reason
-  ) {
-    state.suppressedClick = {
-      element:
-        element ||
-        state.orbitField,
-
-      clientX:
-        isFiniteNumber(clientX)
-          ? clientX
-          : null,
-
-      clientY:
-        isFiniteNumber(clientY)
-          ? clientY
-          : null,
-
-      reason:
-        normalize(reason) ||
-        "pointer-gesture",
-
-      expires:
-        performance.now() +
-        CONFIG.suppressClickMs
-    };
-  }
-
-  function clearExpiredSuppression() {
     if (
-      state.suppressedClick &&
-      performance.now() >
-        state.suppressedClick.expires
+      kind === "cardinal" ||
+      kind === "coin"
     ) {
-      state.suppressedClick =
-        null;
+      return "cardinal";
     }
+
+    if (
+      kind === "room" ||
+      kind === "child"
+    ) {
+      return "room";
+    }
+
+    if (
+      normalize(
+        hit &&
+        hit.childId
+      )
+    ) {
+      return "room";
+    }
+
+    if (
+      normalize(
+        hit &&
+        hit.cardinalId
+      )
+    ) {
+      return "cardinal";
+    }
+
+    return "";
   }
 
-  function shouldSuppressClick(
-    event
+  function semanticControlFromTarget(
+    target
   ) {
-    clearExpiredSuppression();
-
-    const suppression =
-      state.suppressedClick;
-
-    if (!suppression) {
-      return false;
+    if (
+      !isElement(target) ||
+      !state.orbitField
+    ) {
+      return null;
     }
 
-    /*
-      Programmatic activation and keyboard activation use detail === 0 and
-      must remain available.
-    */
-    if (event.detail === 0) {
-      return false;
-    }
+    const control =
+      target.closest(
+        SELECTORS.semanticControl
+      );
 
-    const target =
-      isElement(event.target)
-        ? event.target
-        : null;
-
-    if (!target) {
-      return false;
-    }
-
-    const element =
-      suppression.element;
-
-    const related =
-      !element ||
-      element === target ||
-      element.contains(target) ||
-      target.contains(element);
-
-    if (!related) {
-      return false;
-    }
-
-    state.suppressedClick =
-      null;
-
-    return true;
+    return (
+      control &&
+      state.orbitField.contains(
+        control
+      )
+    )
+      ? control
+      : null;
   }
 
-  function handleClickCapture(
-    event
+  function semanticIdentityFromControl(
+    control
   ) {
-    if (!shouldSuppressClick(event)) {
-      return;
+    if (!control) {
+      return "";
     }
 
-    state.counters.nativeClicksSuppressed +=
-      1;
-
-    event.preventDefault();
-    event.stopPropagation();
-    event.stopImmediatePropagation();
-
-    publishReceipt(
-      "duplicate-click-suppressed"
+    return normalize(
+      control.getAttribute(
+        "data-showroom-child-id"
+      ) ||
+      control.getAttribute(
+        "data-showroom-cardinal-id"
+      ) ||
+      control.getAttribute(
+        "data-showroom-object-id"
+      )
     );
   }
 
-  function activateSemanticControl(
+  function semanticKindFromControl(
     control
   ) {
-    if (
-      !control ||
-      typeof control.click !==
-        "function"
-    ) {
-      return false;
+    if (!control) {
+      return "";
     }
 
     if (
       control.matches(
-        ":disabled"
-      ) ||
-      control.getAttribute(
-        "aria-disabled"
-      ) === "true"
+        SELECTORS.compassControl
+      )
+    ) {
+      return "compass";
+    }
+
+    if (
+      control.matches(
+        SELECTORS.roomControl
+      )
+    ) {
+      return "room";
+    }
+
+    if (
+      control.matches(
+        SELECTORS.cardinalControl
+      )
+    ) {
+      return "cardinal";
+    }
+
+    return "";
+  }
+
+  function isProtectedTarget(target) {
+    return Boolean(
+      isElement(target) &&
+      target.closest(
+        SELECTORS.protectedTarget
+      )
+    );
+  }
+
+  function isPrimaryPointerEvent(event) {
+    if (
+      event.pointerType ===
+        "mouse" &&
+      event.button !== 0
     ) {
       return false;
     }
 
-    try {
-      control.click();
+    return event.isPrimary !== false;
+  }
 
-      return true;
-    } catch {
-      return false;
+  function insideOrbitField(target) {
+    return Boolean(
+      state.orbitField &&
+      isElement(target) &&
+      state.orbitField.contains(
+        target
+      )
+    );
+  }
+
+  function deriveGestureScope(frame) {
+    if (!frame) {
+      return "";
     }
+
+    if (
+      frame.navigationState ===
+      NAVIGATION_STATES.CONSTELLATION
+    ) {
+      return GESTURE_SCOPES.ORBIT;
+    }
+
+    if (
+      frame.navigationState ===
+        NAVIGATION_STATES.CLUSTER_OPEN ||
+      frame.navigationState ===
+        NAVIGATION_STATES.ROOM_SELECTED
+    ) {
+      return GESTURE_SCOPES.CLUSTER;
+    }
+
+    return "";
+  }
+
+  function activeClusterWing(frame) {
+    return normalizeWing(
+      frame &&
+      (
+        frame.activeClusterWing ||
+        frame.selectedCardinal ||
+        (
+          frame.cluster &&
+          frame.cluster.wing
+        )
+      )
+    );
+  }
+
+  function startQuaternionFromFrame(
+    frame,
+    gestureScope
+  ) {
+    if (
+      gestureScope ===
+        GESTURE_SCOPES.CLUSTER &&
+      frame &&
+      frame.cluster &&
+      frame.cluster.orientation
+    ) {
+      return orientationQuaternion(
+        frame.cluster.orientation
+      );
+    }
+
+    return orientationQuaternion(
+      frame &&
+      frame.orbitOrientation
+    );
+  }
+
+  function classifyPointerTerritory(
+    event,
+    hit,
+    directControl
+  ) {
+    const directKind =
+      semanticKindFromControl(
+        directControl
+      );
+
+    if (directKind === "compass") {
+      return POINTER_TERRITORIES.COMPASS;
+    }
+
+    const hitKind =
+      semanticKindFromHit(hit);
+
+    if (
+      hitKind === "cardinal" ||
+      directKind === "cardinal"
+    ) {
+      return POINTER_TERRITORIES.CARDINAL;
+    }
+
+    if (
+      hitKind === "room" ||
+      directKind === "room"
+    ) {
+      return POINTER_TERRITORIES.ROOM;
+    }
+
+    return POINTER_TERRITORIES.EMPTY_FIELD;
   }
 
   function createPointerState(
     event,
-    frame,
-    compassControl,
-    directSemanticControl
+    frame
   ) {
-    const timestamp =
-      performance.now();
+    const directControl =
+      semanticControlFromTarget(
+        event.target
+      );
+
+    const directKind =
+      semanticKindFromControl(
+        directControl
+      );
 
     const hit =
-      compassControl
+      directKind === "compass"
         ? null
         : authoritativeHitTest(
             event.clientX,
             event.clientY
           );
 
-    const semanticControl =
-      hit
-        ? resolveSemanticControlFromHit(
-            hit
-          )
-        : null;
+    const hitIdentity =
+      identityFromHit(hit);
 
-    const semanticObjectId =
-      deriveHitIdentity(
-        hit
+    const directIdentity =
+      semanticIdentityFromControl(
+        directControl
       );
+
+    const identity =
+      hitIdentity ||
+      directIdentity;
+
+    const territory =
+      classifyPointerTerritory(
+        event,
+        hit,
+        directControl
+      );
+
+    const gestureScope =
+      territory ===
+        POINTER_TERRITORIES.COMPASS
+        ? ""
+        : deriveGestureScope(frame);
+
+    const startQuaternion =
+      startQuaternionFromFrame(
+        frame,
+        gestureScope
+      );
+
+    const timestamp =
+      performance.now();
 
     return {
       pointerId:
@@ -1560,14 +2005,18 @@
         ) ||
         "mouse",
 
-      territory:
-        compassControl
-          ? "compass"
-          : hit
-            ? "projected-object"
-            : directSemanticControl
-              ? "native-semantic"
-              : "orbit-field",
+      territory,
+
+      gestureScope,
+
+      identity,
+
+      hit,
+
+      directControl,
+
+      activeWing:
+        activeClusterWing(frame),
 
       startX:
         event.clientX,
@@ -1605,41 +2054,27 @@
       captureAcquired:
         false,
 
-      downHit:
-        hit,
-
-      downProjectionId:
-        normalize(
-          hit &&
-          hit.projectionId
-        ),
-
-      downSemanticObjectId:
-        semanticObjectId,
-
-      semanticControl,
-
-      compassControl,
-
-      directSemanticControl:
-        directSemanticControl ||
-        null,
-
-      directSemanticEvidence:
-        getElementSemanticEvidence(
-          directSemanticControl
-        ),
-
-      activeClusterId:
-        deriveFrameActiveClusterId(
-          frame
-        ),
-
-      previewToken:
-        null,
-
-      previewActive:
+      transactionBegan:
         false,
+
+      previewAccepted:
+        false,
+
+      startQuaternion,
+
+      currentQuaternion:
+        startQuaternion.slice(),
+
+      currentPrimaryId:
+        gestureScope ===
+          GESTURE_SCOPES.CLUSTER
+          ? deriveClusterPrimaryId(
+              frame,
+              startQuaternion
+            )
+          : deriveOrbitPrimaryId(
+              startQuaternion
+            ),
 
       samples: [
         {
@@ -1653,6 +2088,37 @@
         }
       ]
     };
+  }
+
+  function appendSample(
+    pointer,
+    x,
+    y,
+    timestamp
+  ) {
+    pointer.samples.push({
+      x,
+      y,
+      timestamp
+    });
+
+    const cutoff =
+      timestamp -
+      Math.max(
+        CONFIG.sampleWindowMs * 2,
+        280
+      );
+
+    pointer.samples =
+      pointer.samples
+        .filter(
+          sample =>
+            sample.timestamp >=
+            cutoff
+        )
+        .slice(
+          -CONFIG.maximumSamples
+        );
   }
 
   function updatePointer(
@@ -1678,21 +2144,24 @@
       timestamp;
 
     pointer.pathLength +=
-      distance2d(
-        previousX,
-        previousY,
-        pointer.currentX,
-        pointer.currentY
+      Math.hypot(
+        pointer.currentX -
+          previousX,
+
+        pointer.currentY -
+          previousY
       );
 
     pointer.maximumDistance =
       Math.max(
         pointer.maximumDistance,
-        distance2d(
-          pointer.startX,
-          pointer.startY,
-          pointer.currentX,
-          pointer.currentY
+
+        Math.hypot(
+          pointer.currentX -
+            pointer.startX,
+
+          pointer.currentY -
+            pointer.startY
         )
       );
 
@@ -1704,26 +2173,350 @@
     );
   }
 
+  function beginControllerTransaction(
+    pointer
+  ) {
+    const controller =
+      state.controller ||
+      resolveController();
+
+    if (
+      !controller ||
+      pointer.transactionBegan
+    ) {
+      return Boolean(
+        pointer.transactionBegan
+      );
+    }
+
+    let accepted =
+      false;
+
+    try {
+      if (
+        pointer.gestureScope ===
+        GESTURE_SCOPES.ORBIT
+      ) {
+        accepted =
+          controller.beginOrbitGesture() !==
+          false;
+
+        if (accepted) {
+          state.counters.orbitBegins +=
+            1;
+        }
+      } else if (
+        pointer.gestureScope ===
+          GESTURE_SCOPES.CLUSTER &&
+        pointer.activeWing
+      ) {
+        accepted =
+          controller.beginClusterGesture(
+            pointer.activeWing
+          ) !== false;
+
+        if (accepted) {
+          state.counters.clusterBegins +=
+            1;
+        }
+      }
+    } catch {
+      accepted =
+        false;
+    }
+
+    pointer.transactionBegan =
+      accepted;
+
+    return accepted;
+  }
+
+  function previewControllerTransaction(
+    pointer,
+    frame
+  ) {
+    const controller =
+      state.controller ||
+      resolveController();
+
+    if (
+      !controller ||
+      !pointer.transactionBegan
+    ) {
+      return false;
+    }
+
+    let accepted =
+      false;
+
+    if (
+      pointer.gestureScope ===
+      GESTURE_SCOPES.ORBIT
+    ) {
+      pointer.currentPrimaryId =
+        deriveOrbitPrimaryId(
+          pointer.currentQuaternion
+        );
+
+      try {
+        accepted =
+          controller.requestOrbitPreview({
+            quaternion:
+              pointer.currentQuaternion
+                .slice(),
+
+            primaryId:
+              pointer.currentPrimaryId
+          }) !== false;
+      } catch {
+        accepted =
+          false;
+      }
+
+      if (accepted) {
+        state.counters.orbitPreviews +=
+          1;
+      }
+    } else if (
+      pointer.gestureScope ===
+        GESTURE_SCOPES.CLUSTER &&
+      pointer.activeWing
+    ) {
+      pointer.currentPrimaryId =
+        deriveClusterPrimaryId(
+          frame,
+          pointer.currentQuaternion
+        );
+
+      if (!pointer.currentPrimaryId) {
+        return false;
+      }
+
+      try {
+        accepted =
+          controller.requestClusterPreview(
+            pointer.activeWing,
+            {
+              quaternion:
+                pointer.currentQuaternion
+                  .slice(),
+
+              primaryId:
+                pointer.currentPrimaryId
+            }
+          ) !== false;
+      } catch {
+        accepted =
+          false;
+      }
+
+      if (accepted) {
+        state.counters.clusterPreviews +=
+          1;
+      }
+    }
+
+    pointer.previewAccepted =
+      accepted;
+
+    return accepted;
+  }
+
+  function cancelControllerTransaction(
+    pointer,
+    reason
+  ) {
+    if (
+      !pointer ||
+      !pointer.transactionBegan
+    ) {
+      return false;
+    }
+
+    const controller =
+      state.controller ||
+      resolveController();
+
+    if (!controller) {
+      return false;
+    }
+
+    let cancelled =
+      false;
+
+    try {
+      if (
+        pointer.gestureScope ===
+        GESTURE_SCOPES.ORBIT
+      ) {
+        cancelled =
+          controller.requestOrbitCancel(
+            reason
+          ) !== false;
+
+        if (cancelled) {
+          state.counters.orbitCancels +=
+            1;
+        }
+      } else if (
+        pointer.gestureScope ===
+          GESTURE_SCOPES.CLUSTER &&
+        pointer.activeWing
+      ) {
+        cancelled =
+          controller.requestClusterCancel(
+            pointer.activeWing,
+            reason
+          ) !== false;
+
+        if (cancelled) {
+          state.counters.clusterCancels +=
+            1;
+        }
+      }
+    } catch {
+      cancelled =
+        false;
+    }
+
+    pointer.transactionBegan =
+      false;
+
+    pointer.previewAccepted =
+      false;
+
+    return cancelled;
+  }
+
+  function commitControllerTransaction(
+    pointer
+  ) {
+    if (
+      !pointer ||
+      !pointer.transactionBegan ||
+      !pointer.previewAccepted
+    ) {
+      return false;
+    }
+
+    const controller =
+      state.controller ||
+      resolveController();
+
+    if (!controller) {
+      return false;
+    }
+
+    let committed =
+      false;
+
+    try {
+      if (
+        pointer.gestureScope ===
+        GESTURE_SCOPES.ORBIT
+      ) {
+        committed =
+          controller.requestOrbitCommit() !==
+          false;
+
+        if (committed) {
+          state.counters.orbitCommits +=
+            1;
+        }
+      } else if (
+        pointer.gestureScope ===
+          GESTURE_SCOPES.CLUSTER &&
+        pointer.activeWing
+      ) {
+        committed =
+          controller.requestClusterCommit(
+            pointer.activeWing
+          ) !== false;
+
+        if (committed) {
+          state.counters.clusterCommits +=
+            1;
+        }
+      }
+    } catch {
+      committed =
+        false;
+    }
+
+    if (committed) {
+      pointer.transactionBegan =
+        false;
+
+      pointer.previewAccepted =
+        false;
+    }
+
+    return committed;
+  }
+
+  function capturePointer(pointerId) {
+    try {
+      state.orbitField.setPointerCapture(
+        pointerId
+      );
+
+      return (
+        typeof state.orbitField
+          .hasPointerCapture !==
+          "function" ||
+        state.orbitField.hasPointerCapture(
+          pointerId
+        )
+      );
+    } catch {
+      state.counters.pointerCaptureFailures +=
+        1;
+
+      return false;
+    }
+  }
+
+  function releasePointer(pointerId) {
+    if (!state.orbitField) {
+      return;
+    }
+
+    try {
+      if (
+        typeof state.orbitField
+          .hasPointerCapture !==
+          "function" ||
+        state.orbitField.hasPointerCapture(
+          pointerId
+        )
+      ) {
+        state.orbitField.releasePointerCapture(
+          pointerId
+        );
+      }
+    } catch {
+      /* Best-effort release. */
+    }
+  }
+
   function classifyFlick(
     pointer,
     releaseX,
     releaseY,
-    releaseTime,
-    previousX,
-    previousY
+    releaseTime
   ) {
-    const totalDeltaX =
+    const deltaX =
       releaseX -
       pointer.startX;
 
-    const totalDeltaY =
+    const deltaY =
       releaseY -
       pointer.startY;
 
     const distance =
       Math.hypot(
-        totalDeltaX,
-        totalDeltaY
+        deltaX,
+        deltaY
       );
 
     const duration =
@@ -1737,19 +2530,17 @@
       distance /
       duration;
 
-    const recentSamples =
+    const recent =
       pointer.samples.filter(
         sample =>
           sample.timestamp >=
-            releaseTime -
-              CONFIG.sampleWindowMs &&
-          sample.timestamp <
-            releaseTime
+          releaseTime -
+            CONFIG.sampleWindowMs
       );
 
     const releaseStart =
-      recentSamples.length
-        ? recentSamples[0]
+      recent.length
+        ? recent[0]
         : {
             x:
               pointer.startX,
@@ -1762,11 +2553,12 @@
           };
 
     const releaseDistance =
-      distance2d(
-        releaseStart.x,
-        releaseStart.y,
-        releaseX,
-        releaseY
+      Math.hypot(
+        releaseX -
+          releaseStart.x,
+
+        releaseY -
+          releaseStart.y
       );
 
     const releaseDuration =
@@ -1780,23 +2572,16 @@
       releaseDistance /
       releaseDuration;
 
-    const lastRecentSample =
-      recentSamples.length
-        ? recentSamples[
-            recentSamples.length - 1
-          ]
-        : null;
-
     const dominant =
       Math.max(
-        Math.abs(totalDeltaX),
-        Math.abs(totalDeltaY)
+        Math.abs(deltaX),
+        Math.abs(deltaY)
       );
 
     const secondary =
       Math.min(
-        Math.abs(totalDeltaX),
-        Math.abs(totalDeltaY)
+        Math.abs(deltaX),
+        Math.abs(deltaY)
       );
 
     const directionalRatio =
@@ -1805,50 +2590,48 @@
         : dominant /
           secondary;
 
-    const finalSegment =
-      distance2d(
-        previousX,
-        previousY,
-        releaseX,
-        releaseY
-      );
-
     const pathLength =
       Math.max(
         distance,
-        pointer.pathLength +
-          finalSegment
+        pointer.pathLength
       );
 
     const pathEfficiency =
-      pathLength <= 1e-6
-        ? 0
-        : distance /
-          pathLength;
+      pathLength > 1e-6
+        ? distance /
+          pathLength
+        : 0;
 
     const pathEfficiencyLoss =
       1 -
       pathEfficiency;
 
+    const lastSample =
+      recent.length
+        ? recent[
+            recent.length - 1
+          ]
+        : null;
+
     const pauseBeforeRelease =
-      lastRecentSample
+      lastSample
         ? Math.max(
             0,
             releaseTime -
-              lastRecentSample.timestamp
+              lastSample.timestamp
           )
         : duration;
 
     const direction =
-      Math.abs(totalDeltaX) >=
-      Math.abs(totalDeltaY)
+      Math.abs(deltaX) >=
+      Math.abs(deltaY)
         ? (
-            totalDeltaX >= 0
+            deltaX >= 0
               ? "right"
               : "left"
           )
         : (
-            totalDeltaY >= 0
+            deltaY >= 0
               ? "down"
               : "up"
           );
@@ -1875,56 +2658,170 @@
 
     return freezePlain({
       qualifies,
-
       direction,
-
-      duration,
-
       distance,
-
-      totalDeltaX,
-
-      totalDeltaY,
-
+      duration,
+      deltaX,
+      deltaY,
       averageVelocity,
-
       releaseVelocity,
-
       directionalRatio,
-
       pathLength,
-
-      finalSegment,
-
       pathEfficiency,
-
       pathEfficiencyLoss,
-
-      pauseBeforeRelease,
-
-      recentSampleCount:
-        recentSamples.length
+      pauseBeforeRelease
     });
+  }
+
+  function armClickSuppression(
+    element,
+    reason
+  ) {
+    state.suppressedClick = {
+      element:
+        element ||
+        state.orbitField,
+
+      reason:
+        normalize(reason) ||
+        "pointer-gesture",
+
+      expires:
+        performance.now() +
+        CONFIG.suppressClickMs
+    };
+  }
+
+  function shouldSuppressClick(event) {
+    const suppression =
+      state.suppressedClick;
+
+    if (!suppression) {
+      return false;
+    }
+
+    if (
+      performance.now() >
+      suppression.expires
+    ) {
+      state.suppressedClick =
+        null;
+
+      return false;
+    }
+
+    if (event.detail === 0) {
+      return false;
+    }
+
+    const target =
+      isElement(event.target)
+        ? event.target
+        : null;
+
+    if (!target) {
+      return false;
+    }
+
+    const element =
+      suppression.element;
+
+    const related =
+      !element ||
+      element === target ||
+      element.contains(target) ||
+      target.contains(element);
+
+    if (!related) {
+      return false;
+    }
+
+    state.suppressedClick =
+      null;
+
+    return true;
+  }
+
+  function invokeSemanticSelection(
+    kind,
+    identity
+  ) {
+    const controller =
+      state.controller ||
+      resolveController();
+
+    if (
+      !controller ||
+      !controllerReady()
+    ) {
+      return false;
+    }
+
+    let accepted =
+      false;
+
+    try {
+      if (kind === "compass") {
+        accepted =
+          controller.requestCompassSelection() !==
+          false;
+
+        if (accepted) {
+          state.counters.compassSelections +=
+            1;
+        }
+      } else if (kind === "cardinal") {
+        const wing =
+          normalizeWing(identity);
+
+        accepted =
+          Boolean(
+            wing &&
+            controller.requestCardinalSelection(
+              wing
+            ) !== false
+          );
+
+        if (accepted) {
+          state.counters.cardinalSelections +=
+            1;
+        }
+      } else if (kind === "room") {
+        const roomId =
+          normalizeRoomId(identity);
+
+        accepted =
+          Boolean(
+            roomId &&
+            controller.requestRoomSelection(
+              roomId
+            ) !== false
+          );
+
+        if (accepted) {
+          state.counters.roomSelections +=
+            1;
+        }
+      }
+    } catch {
+      accepted =
+        false;
+    }
+
+    return accepted;
   }
 
   function hitCorresponds(
     downHit,
     releaseHit
   ) {
-    if (
-      !downHit ||
-      !releaseHit
-    ) {
-      return false;
-    }
-
     const downIdentity =
-      deriveHitIdentity(
+      identityFromHit(
         downHit
       );
 
     const releaseIdentity =
-      deriveHitIdentity(
+      identityFromHit(
         releaseHit
       );
 
@@ -1936,161 +2833,134 @@
     );
   }
 
-  function commitProjectedTap(
+  function commitTap(
     pointer,
     event
   ) {
     if (
-      !pointer.downHit ||
-      !pointer.semanticControl ||
-      !projectedSelectionAllowed()
+      pointer.territory ===
+      POINTER_TERRITORIES.COMPASS
     ) {
-      state.counters.projectedTapRejects +=
-        1;
+      const releaseElement =
+        typeof document.elementFromPoint ===
+          "function"
+          ? document.elementFromPoint(
+              event.clientX,
+              event.clientY
+            )
+          : null;
 
-      cancelOptionalPreview(
-        pointer,
-        "projected-tap-runtime-unavailable"
-      );
+      const control =
+        pointer.directControl;
 
-      armClickSuppression(
-        state.orbitField,
-        event.clientX,
-        event.clientY,
-        "projected-tap-rejected"
-      );
-
-      return false;
-    }
-
-    const releaseHit =
-      authoritativeHitTest(
-        event.clientX,
-        event.clientY
-      );
-
-    if (
-      !hitCorresponds(
-        pointer.downHit,
-        releaseHit
-      )
-    ) {
-      state.counters.projectedTapRejects +=
-        1;
-
-      cancelOptionalPreview(
-        pointer,
-        "projected-tap-correspondence-mismatch"
-      );
-
-      armClickSuppression(
-        state.orbitField,
-        event.clientX,
-        event.clientY,
-        "projected-tap-correspondence-mismatch"
-      );
-
-      return false;
-    }
-
-    cancelOptionalPreview(
-      pointer,
-      "projected-semantic-activation"
-    );
-
-    armClickSuppression(
-      state.orbitField,
-      event.clientX,
-      event.clientY,
-      "projected-semantic-activation"
-    );
-
-    const activated =
-      activateSemanticControl(
-        pointer.semanticControl
-      );
-
-    if (activated) {
-      state.counters.projectedTapCommits +=
-        1;
-    } else {
-      state.counters.projectedTapRejects +=
-        1;
-    }
-
-    return activated;
-  }
-
-  function commitCompassTap(
-    pointer,
-    event
-  ) {
-    const control =
-      pointer.compassControl;
-
-    if (
-      !control ||
-      !controllerInteractionAllowed()
-    ) {
-      state.counters.compassTapRejects +=
-        1;
-
-      return false;
-    }
-
-    const releaseElement =
-      typeof document.elementFromPoint ===
-        "function"
-        ? document.elementFromPoint(
-            event.clientX,
-            event.clientY
+      const corresponds =
+        Boolean(
+          control &&
+          releaseElement &&
+          (
+            releaseElement === control ||
+            control.contains(
+              releaseElement
+            )
           )
-        : null;
+        );
 
-    const corresponds =
-      releaseElement === control ||
-      (
-        releaseElement &&
-        control.contains(
-          releaseElement
-        )
-      );
-
-    if (!corresponds) {
-      state.counters.compassTapRejects +=
-        1;
+      if (!corresponds) {
+        return false;
+      }
 
       armClickSuppression(
         control,
-        event.clientX,
-        event.clientY,
-        "compass-tap-correspondence-mismatch"
+        "compass-pointer-activation"
       );
 
-      return false;
+      return invokeSemanticSelection(
+        "compass",
+        "home-compass"
+      );
     }
 
-    armClickSuppression(
-      control,
-      event.clientX,
-      event.clientY,
-      "compass-semantic-activation"
-    );
+    if (
+      pointer.territory ===
+        POINTER_TERRITORIES.CARDINAL ||
+      pointer.territory ===
+        POINTER_TERRITORIES.ROOM
+    ) {
+      const releaseHit =
+        authoritativeHitTest(
+          event.clientX,
+          event.clientY
+        );
 
-    const activated =
-      activateSemanticControl(
-        control
+      if (
+        pointer.hit &&
+        releaseHit &&
+        !hitCorresponds(
+          pointer.hit,
+          releaseHit
+        )
+      ) {
+        return false;
+      }
+
+      const releaseControl =
+        semanticControlFromTarget(
+          typeof document.elementFromPoint ===
+            "function"
+            ? document.elementFromPoint(
+                event.clientX,
+                event.clientY
+              )
+            : null
+        );
+
+      const releaseIdentity =
+        identityFromHit(
+          releaseHit
+        ) ||
+        semanticIdentityFromControl(
+          releaseControl
+        ) ||
+        pointer.identity;
+
+      const releaseKind =
+        semanticKindFromHit(
+          releaseHit
+        ) ||
+        semanticKindFromControl(
+          releaseControl
+        ) ||
+        (
+          pointer.territory ===
+          POINTER_TERRITORIES.CARDINAL
+            ? "cardinal"
+            : "room"
+        );
+
+      if (
+        !releaseIdentity ||
+        (
+          pointer.identity &&
+          releaseIdentity !==
+            pointer.identity
+        )
+      ) {
+        return false;
+      }
+
+      armClickSuppression(
+        pointer.directControl ||
+        state.orbitField,
+        "projected-pointer-activation"
       );
 
-    if (activated) {
-      state.counters.compassTapCommits +=
-        1;
-    } else {
-      state.counters.compassTapRejects +=
-        1;
+      return invokeSemanticSelection(
+        releaseKind,
+        releaseIdentity
+      );
     }
 
-    return activated;
+    return false;
   }
 
   function requestClusterFlickReturn(
@@ -2101,96 +2971,63 @@
       state.controller ||
       resolveController();
 
-    const frame =
-      readControllerFrame();
-
     if (
       !controller ||
-      !frame ||
-      frame.held === true ||
-      frame.disposed === true
+      !pointer.activeWing
     ) {
       return false;
     }
 
-    cancelOptionalPreview(
-      pointer,
-      "cluster-flick-return"
-    );
-
-    const activeClusterId =
-      deriveFrameActiveClusterId(
-        frame
+    if (pointer.transactionBegan) {
+      cancelControllerTransaction(
+        pointer,
+        "cluster-flick-return"
       );
+    }
 
-    let committed =
+    let returned =
       false;
 
     try {
-      if (
-        activeClusterId &&
-        typeof controller.closeCluster ===
-          "function"
-      ) {
-        committed =
-          controller.closeCluster(
-            activeClusterId,
-            {
-              source:
-                "pointer-flick",
+      returned =
+        controller.requestReturnToConstellation({
+          scrollToScene:
+            true,
 
-              direction:
-                flick.direction,
+          source:
+            "pointer-flick",
 
-              contract:
-                CONTRACT
-            }
-          ) !== false;
-      } else if (
-        typeof controller.returnToOrbit ===
-          "function"
-      ) {
-        committed =
-          controller.returnToOrbit({
-            source:
-              "pointer-flick",
-
-            direction:
-              flick.direction,
-
-            contract:
-              CONTRACT
-          }) !== false;
-      }
+          direction:
+            flick.direction
+        }) !== false;
     } catch {
-      committed =
-        false;
+      /*
+        The controller accepts one options object but ignores unsupported
+        metadata. Retry with its minimum accepted options surface.
+      */
+      try {
+        returned =
+          controller.requestReturnToConstellation({
+            scrollToScene:
+              true
+          }) !== false;
+      } catch {
+        returned =
+          false;
+      }
     }
 
-    if (committed) {
-      state.counters.clusterReturnsCommitted +=
+    if (returned) {
+      state.counters.clusterReturns +=
         1;
     }
 
-    publishReceipt(
-      committed
-        ? "cluster-flick-return-committed"
-        : "cluster-flick-return-unavailable",
-      {
-        activeClusterId:
-          activeClusterId ||
-          null,
-
-        flick
-      }
-    );
-
-    return committed;
+    return returned;
   }
 
   function clearPointer(
     pointer,
-    options = {}
+    releaseCapture = true
   ) {
     if (!pointer) {
       return;
@@ -2199,16 +3036,12 @@
     pointer.finishing =
       true;
 
-    if (
-      state.pointer === pointer
-    ) {
+    if (state.pointer === pointer) {
       state.pointer =
         null;
     }
 
-    if (
-      options.releaseCapture !== false
-    ) {
+    if (releaseCapture) {
       releasePointer(
         pointer.pointerId
       );
@@ -2217,7 +3050,7 @@
 
   function interruptActivePointer(
     reason,
-    options = {}
+    releaseCapture = true
   ) {
     const pointer =
       state.pointer;
@@ -2232,7 +3065,7 @@
     state.counters.interruptions +=
       1;
 
-    cancelOptionalPreview(
+    cancelControllerTransaction(
       pointer,
       reason
     );
@@ -2243,21 +3076,15 @@
         CONFIG.maximumTapDistancePx
     ) {
       armClickSuppression(
-        pointer.compassControl ||
+        pointer.directControl ||
         state.orbitField,
-        pointer.currentX,
-        pointer.currentY,
         reason
       );
     }
 
     clearPointer(
       pointer,
-      {
-        releaseCapture:
-          options.releaseCapture !==
-          false
-      }
+      releaseCapture
     );
 
     publishReceipt(
@@ -2271,45 +3098,53 @@
         territory:
           pointer.territory,
 
-        dragging:
-          pointer.dragging
+        gestureScope:
+          pointer.gestureScope
       }
     );
 
     return true;
   }
 
-  function beginPointerTransaction(
-    event,
-    frame,
-    compassControl,
-    directSemanticControl
-  ) {
+  function handlePointerDown(event) {
+    if (
+      state.pointer ||
+      state.disposed ||
+      state.failed ||
+      !state.runtimeActive ||
+      !isPrimaryPointerEvent(event) ||
+      !insideOrbitField(
+        event.target
+      ) ||
+      isProtectedTarget(
+        event.target
+      )
+    ) {
+      return;
+    }
+
+    const frame =
+      readControllerFrame();
+
+    if (
+      !frame ||
+      frame.held === true
+    ) {
+      return;
+    }
+
     const pointer =
       createPointerState(
         event,
-        frame,
-        compassControl,
-        directSemanticControl
+        frame
       );
 
-    /*
-      Preserve native semantic fallback if a real semantic control received the
-      event but compositor projection did not identify an enhanced object.
-    */
     if (
-      pointer.territory ===
-        "native-semantic"
+      pointer.territory !==
+        POINTER_TERRITORIES.COMPASS &&
+      !pointer.gestureScope
     ) {
-      publishReceipt(
-        "native-semantic-fallback-preserved",
-        {
-          evidence:
-            pointer.directSemanticEvidence
-        }
-      );
-
-      return null;
+      return;
     }
 
     state.pointer =
@@ -2328,14 +3163,11 @@
         "pointer-capture-rejected",
         {
           pointerId:
-            pointer.pointerId,
-
-          territory:
-            pointer.territory
+            pointer.pointerId
         }
       );
 
-      return null;
+      return;
     }
 
     state.counters.pointerDown +=
@@ -2343,108 +3175,34 @@
 
     event.preventDefault();
 
-    if (
-      pointer.territory ===
-        "projected-object"
-    ) {
-      beginOptionalPreview(
-        pointer
-      );
-    }
-
     publishReceipt(
       "pointer-started",
       {
         pointerId:
           pointer.pointerId,
 
-        pointerType:
-          pointer.pointerType,
-
         territory:
           pointer.territory,
 
-        semanticObjectId:
-          pointer.downSemanticObjectId ||
+        gestureScope:
+          pointer.gestureScope,
+
+        identity:
+          pointer.identity ||
           null,
 
-        projectionId:
-          pointer.downProjectionId ||
+        activeWing:
+          pointer.activeWing ||
           null,
 
-        activeClusterId:
-          pointer.activeClusterId ||
+        primaryId:
+          pointer.currentPrimaryId ||
           null
       }
     );
-
-    return pointer;
   }
 
-  function handlePointerDown(
-    event
-  ) {
-    if (
-      state.pointer ||
-      state.disposed ||
-      state.failed ||
-      !state.runtimeActive ||
-      !isPrimaryPointerEvent(
-        event
-      ) ||
-      !isInsideOrbitField(
-        event.target
-      ) ||
-      isProtectedTarget(
-        event.target
-      )
-    ) {
-      return;
-    }
-
-    const compassControl =
-      resolveCompassControl(
-        event.target
-      );
-
-    if (
-      compassControl &&
-      !controllerInteractionAllowed()
-    ) {
-      return;
-    }
-
-    const directSemanticControl =
-      resolveDirectSemanticControl(
-        event.target
-      );
-
-    if (
-      !compassControl &&
-      !projectedSelectionAllowed() &&
-      !directSemanticControl
-    ) {
-      return;
-    }
-
-    const frame =
-      readControllerFrame();
-
-    if (!frame) {
-      return;
-    }
-
-    beginPointerTransaction(
-      event,
-      frame,
-      compassControl,
-      directSemanticControl
-    );
-  }
-
-  function handlePointerMove(
-    event
-  ) {
+  function handlePointerMove(event) {
     const pointer =
       state.pointer;
 
@@ -2457,20 +3215,9 @@
       return;
     }
 
-    if (
-      pointer.territory ===
-        "compass"
-    ) {
-      if (!controllerInteractionAllowed()) {
-        interruptActivePointer(
-          "controller-runtime-invalid"
-        );
-
-        return;
-      }
-    } else if (!projectedSelectionAllowed()) {
+    if (!runtimeReady()) {
       interruptActivePointer(
-        "projected-runtime-invalid"
+        "runtime-invalidated"
       );
 
       return;
@@ -2485,20 +3232,69 @@
     );
 
     if (
+      pointer.territory ===
+      POINTER_TERRITORIES.COMPASS
+    ) {
+      if (
+        pointer.maximumDistance >=
+        CONFIG.dragDeadZonePx
+      ) {
+        pointer.dragging =
+          true;
+      }
+
+      event.preventDefault();
+      return;
+    }
+
+    if (
       !pointer.dragging &&
       pointer.maximumDistance >=
-        CONFIG.minimumDragDistancePx
+        CONFIG.dragDeadZonePx
     ) {
       pointer.dragging =
         true;
 
-      cancelOptionalPreview(
-        pointer,
-        "drag-recognized"
-      );
+      if (
+        !beginControllerTransaction(
+          pointer
+        )
+      ) {
+        interruptActivePointer(
+          "gesture-transaction-rejected"
+        );
+
+        return;
+      }
+    }
+
+    if (!pointer.dragging) {
+      return;
     }
 
     event.preventDefault();
+
+    pointer.currentQuaternion =
+      dragQuaternionFromPointer(
+        pointer,
+        event.clientX,
+        event.clientY
+      );
+
+    const frame =
+      readControllerFrame();
+
+    if (
+      !frame ||
+      !previewControllerTransaction(
+        pointer,
+        frame
+      )
+    ) {
+      interruptActivePointer(
+        "gesture-preview-rejected"
+      );
+    }
   }
 
   function finishPointer(
@@ -2521,231 +3317,18 @@
       performance.now();
 
     const releaseX =
-      isFiniteNumber(
+      Number.isFinite(
         event.clientX
       )
         ? event.clientX
         : pointer.currentX;
 
     const releaseY =
-      isFiniteNumber(
+      Number.isFinite(
         event.clientY
       )
         ? event.clientY
         : pointer.currentY;
-
-    const previousX =
-      pointer.currentX;
-
-    const previousY =
-      pointer.currentY;
-
-    pointer.cancelled =
-      Boolean(cancelled);
-
-    pointer.maximumDistance =
-      Math.max(
-        pointer.maximumDistance,
-        distance2d(
-          pointer.startX,
-          pointer.startY,
-          releaseX,
-          releaseY
-        )
-      );
-
-    const duration =
-      Math.max(
-        0,
-        releaseTime -
-          pointer.startTime
-      );
-
-    let outcome =
-      "cancelled";
-
-    let activationCommitted =
-      false;
-
-    let flick =
-      null;
-
-    if (cancelled) {
-      cancelOptionalPreview(
-        pointer,
-        "pointer-cancelled"
-      );
-
-      if (
-        pointer.dragging ||
-        pointer.maximumDistance >
-          CONFIG.maximumTapDistancePx
-      ) {
-        armClickSuppression(
-          pointer.compassControl ||
-          state.orbitField,
-          releaseX,
-          releaseY,
-          "pointer-cancelled"
-        );
-      }
-    } else if (
-      pointer.territory ===
-        "compass" &&
-      !controllerInteractionAllowed()
-    ) {
-      cancelOptionalPreview(
-        pointer,
-        "compass-runtime-invalid"
-      );
-
-      armClickSuppression(
-        pointer.compassControl ||
-        state.orbitField,
-        releaseX,
-        releaseY,
-        "compass-runtime-invalid"
-      );
-
-      outcome =
-        "runtime-invalid";
-    } else if (
-      pointer.territory !==
-        "compass" &&
-      !projectedSelectionAllowed()
-    ) {
-      cancelOptionalPreview(
-        pointer,
-        "projected-runtime-invalid"
-      );
-
-      armClickSuppression(
-        state.orbitField,
-        releaseX,
-        releaseY,
-        "projected-runtime-invalid"
-      );
-
-      outcome =
-        "runtime-invalid";
-    } else if (
-      !pointer.dragging &&
-      pointer.maximumDistance <=
-        CONFIG.maximumTapDistancePx
-    ) {
-      if (
-        pointer.territory ===
-          "compass"
-      ) {
-        activationCommitted =
-          commitCompassTap(
-            pointer,
-            event
-          );
-
-        outcome =
-          activationCommitted
-            ? "compass-tap"
-            : "compass-tap-rejected";
-      } else if (
-        pointer.territory ===
-          "projected-object"
-      ) {
-        activationCommitted =
-          commitProjectedTap(
-            pointer,
-            event
-          );
-
-        outcome =
-          activationCommitted
-            ? "projected-tap"
-            : "projected-tap-rejected";
-      } else {
-        cancelOptionalPreview(
-          pointer,
-          "empty-field-tap"
-        );
-
-        outcome =
-          "empty-field-tap";
-      }
-    } else if (
-      pointer.dragging
-    ) {
-      flick =
-        classifyFlick(
-          pointer,
-          releaseX,
-          releaseY,
-          releaseTime,
-          previousX,
-          previousY
-        );
-
-      armClickSuppression(
-        pointer.compassControl ||
-        state.orbitField,
-        releaseX,
-        releaseY,
-        flick.qualifies
-          ? "flick-completion"
-          : "drag-completion"
-      );
-
-      cancelOptionalPreview(
-        pointer,
-        flick.qualifies
-          ? "flick-completion"
-          : "drag-completion"
-      );
-
-      if (
-        flick.qualifies &&
-        pointer.activeClusterId &&
-        pointer.territory !==
-          "compass"
-      ) {
-        state.counters.flicksQualified +=
-          1;
-
-        const returned =
-          requestClusterFlickReturn(
-            pointer,
-            flick
-          );
-
-        outcome =
-          returned
-            ? "cluster-flick-return"
-            : "flick-consumed";
-      } else {
-        state.counters.dragsConsumed +=
-          1;
-
-        outcome =
-          "drag-consumed";
-      }
-    } else {
-      cancelOptionalPreview(
-        pointer,
-        "ambiguous-release"
-      );
-
-      armClickSuppression(
-        pointer.compassControl ||
-        state.orbitField,
-        releaseX,
-        releaseY,
-        "ambiguous-release"
-      );
-
-      state.counters.ambiguousReleases +=
-        1;
-
-      outcome =
-        "ambiguous-release";
-    }
 
     pointer.currentX =
       releaseX;
@@ -2756,7 +3339,217 @@
     pointer.currentTime =
       releaseTime;
 
-    event.preventDefault();
+    pointer.maximumDistance =
+      Math.max(
+        pointer.maximumDistance,
+
+        Math.hypot(
+          releaseX -
+            pointer.startX,
+
+          releaseY -
+            pointer.startY
+        )
+      );
+
+    appendSample(
+      pointer,
+      releaseX,
+      releaseY,
+      releaseTime
+    );
+
+    const duration =
+      Math.max(
+        0,
+        releaseTime -
+          pointer.startTime
+      );
+
+    let outcome =
+      OUTCOMES.REJECTED;
+
+    let committed =
+      false;
+
+    let flick =
+      null;
+
+    if (cancelled) {
+      cancelControllerTransaction(
+        pointer,
+        "pointer-cancelled"
+      );
+
+      outcome =
+        OUTCOMES.CANCELLED;
+    } else if (!runtimeReady()) {
+      cancelControllerTransaction(
+        pointer,
+        "runtime-invalid-at-release"
+      );
+
+      outcome =
+        OUTCOMES.INTERRUPTED;
+    } else if (
+      !pointer.dragging &&
+      pointer.maximumDistance <=
+        CONFIG.maximumTapDistancePx
+    ) {
+      committed =
+        commitTap(
+          pointer,
+          event
+        );
+
+      if (
+        pointer.territory ===
+        POINTER_TERRITORIES.COMPASS
+      ) {
+        outcome =
+          committed
+            ? OUTCOMES.COMPASS_TAP
+            : OUTCOMES.REJECTED;
+      } else if (
+        pointer.territory ===
+        POINTER_TERRITORIES.CARDINAL
+      ) {
+        outcome =
+          committed
+            ? OUTCOMES.CARDINAL_TAP
+            : OUTCOMES.REJECTED;
+      } else if (
+        pointer.territory ===
+        POINTER_TERRITORIES.ROOM
+      ) {
+        outcome =
+          committed
+            ? OUTCOMES.ROOM_TAP
+            : OUTCOMES.REJECTED;
+      } else {
+        outcome =
+          OUTCOMES.EMPTY_TAP;
+      }
+    } else if (
+      pointer.dragging &&
+      pointer.gestureScope ===
+        GESTURE_SCOPES.CLUSTER
+    ) {
+      flick =
+        classifyFlick(
+          pointer,
+          releaseX,
+          releaseY,
+          releaseTime
+        );
+
+      armClickSuppression(
+        pointer.directControl ||
+        state.orbitField,
+        flick.qualifies
+          ? "cluster-flick"
+          : "cluster-drag"
+      );
+
+      if (flick.qualifies) {
+        state.counters.flicksQualified +=
+          1;
+
+        committed =
+          requestClusterFlickReturn(
+            pointer,
+            flick
+          );
+
+        outcome =
+          committed
+            ? OUTCOMES.CLUSTER_FLICK_RETURN
+            : OUTCOMES.REJECTED;
+      } else if (
+        pointer.maximumDistance >=
+        CONFIG.minimumCommitDistancePx
+      ) {
+        committed =
+          commitControllerTransaction(
+            pointer
+          );
+
+        if (!committed) {
+          cancelControllerTransaction(
+            pointer,
+            "cluster-commit-rejected"
+          );
+        }
+
+        outcome =
+          committed
+            ? OUTCOMES.CLUSTER_COMMIT
+            : OUTCOMES.REJECTED;
+      } else {
+        cancelControllerTransaction(
+          pointer,
+          "cluster-ambiguous-release"
+        );
+
+        outcome =
+          OUTCOMES.AMBIGUOUS;
+      }
+    } else if (
+      pointer.dragging &&
+      pointer.gestureScope ===
+        GESTURE_SCOPES.ORBIT
+    ) {
+      armClickSuppression(
+        pointer.directControl ||
+        state.orbitField,
+        "orbit-drag"
+      );
+
+      if (
+        pointer.maximumDistance >=
+        CONFIG.minimumCommitDistancePx
+      ) {
+        committed =
+          commitControllerTransaction(
+            pointer
+          );
+
+        if (!committed) {
+          cancelControllerTransaction(
+            pointer,
+            "orbit-commit-rejected"
+          );
+        }
+
+        outcome =
+          committed
+            ? OUTCOMES.ORBIT_COMMIT
+            : OUTCOMES.REJECTED;
+      } else {
+        cancelControllerTransaction(
+          pointer,
+          "orbit-ambiguous-release"
+        );
+
+        outcome =
+          OUTCOMES.AMBIGUOUS;
+      }
+    } else {
+      cancelControllerTransaction(
+        pointer,
+        "ambiguous-release"
+      );
+
+      outcome =
+        OUTCOMES.AMBIGUOUS;
+    }
+
+    if (
+      pointer.dragging ||
+      committed
+    ) {
+      event.preventDefault();
+    }
 
     clearPointer(
       pointer
@@ -2767,6 +3560,8 @@
       {
         outcome,
 
+        committed,
+
         pointerId:
           pointer.pointerId,
 
@@ -2776,44 +3571,38 @@
         territory:
           pointer.territory,
 
+        gestureScope:
+          pointer.gestureScope,
+
+        identity:
+          pointer.identity ||
+          null,
+
+        activeWing:
+          pointer.activeWing ||
+          null,
+
+        primaryId:
+          pointer.currentPrimaryId ||
+          null,
+
         duration,
 
         maximumDistance:
           pointer.maximumDistance,
 
         pathLength:
-          flick
-            ? flick.pathLength
-            : pointer.pathLength,
-
-        dragging:
-          pointer.dragging,
+          pointer.pathLength,
 
         cancelled:
-          pointer.cancelled,
-
-        activationCommitted,
-
-        semanticObjectId:
-          pointer.downSemanticObjectId ||
-          null,
-
-        projectionId:
-          pointer.downProjectionId ||
-          null,
-
-        activeClusterId:
-          pointer.activeClusterId ||
-          null,
+          Boolean(cancelled),
 
         flick
       }
     );
   }
 
-  function handlePointerUp(
-    event
-  ) {
+  function handlePointerUp(event) {
     if (
       !state.pointer ||
       state.pointer.pointerId !==
@@ -2831,9 +3620,7 @@
     );
   }
 
-  function handlePointerCancel(
-    event
-  ) {
+  function handlePointerCancel(event) {
     if (
       !state.pointer ||
       state.pointer.pointerId !==
@@ -2851,9 +3638,7 @@
     );
   }
 
-  function handleLostPointerCapture(
-    event
-  ) {
+  function handleLostPointerCapture(event) {
     const pointer =
       state.pointer;
 
@@ -2868,19 +3653,89 @@
 
     interruptActivePointer(
       "lost-pointer-capture",
+      false
+    );
+  }
+
+  function handleClickCapture(event) {
+    if (shouldSuppressClick(event)) {
+      state.counters.nativeClicksSuppressed +=
+        1;
+
+      event.preventDefault();
+      event.stopPropagation();
+      event.stopImmediatePropagation();
+
+      publishReceipt(
+        "duplicate-click-suppressed"
+      );
+
+      return;
+    }
+
+    if (
+      state.disposed ||
+      state.failed ||
+      !state.runtimeActive ||
+      event.defaultPrevented ||
+      event.detail === 0
+    ) {
+      return;
+    }
+
+    const control =
+      semanticControlFromTarget(
+        event.target
+      );
+
+    if (!control) {
+      return;
+    }
+
+    const kind =
+      semanticKindFromControl(
+        control
+      );
+
+    const identity =
+      semanticIdentityFromControl(
+        control
+      );
+
+    if (!kind) {
+      return;
+    }
+
+    const accepted =
+      invokeSemanticSelection(
+        kind,
+        identity
+      );
+
+    if (!accepted) {
+      return;
+    }
+
+    event.preventDefault();
+    event.stopPropagation();
+    event.stopImmediatePropagation();
+
+    publishReceipt(
+      "native-semantic-selection",
       {
-        releaseCapture:
-          false
+        kind,
+
+        identity:
+          identity ||
+          null
       }
     );
   }
 
-  function handleContextMenu(
-    event
-  ) {
+  function handleContextMenu(event) {
     if (
       state.pointer &&
-      isInsideOrbitField(
+      insideOrbitField(
         event.target
       )
     ) {
@@ -2888,11 +3743,9 @@
     }
   }
 
-  function handleDragStart(
-    event
-  ) {
+  function handleDragStart(event) {
     if (
-      isInsideOrbitField(
+      insideOrbitField(
         event.target
       )
     ) {
@@ -2953,7 +3806,7 @@
 
     if (
       state.nativeOrbitFieldStyle ===
-        null
+      null
     ) {
       state.orbitField.removeAttribute(
         "style"
@@ -3044,9 +3897,7 @@
     );
   }
 
-  function activateRuntime(
-    reason
-  ) {
+  function activateRuntime(reason) {
     if (
       state.runtimeActive ||
       state.disposed ||
@@ -3076,56 +3927,50 @@
         {
           reason,
 
-          form:
-            "A",
-
-          currentControllerAligned:
+          completeQuaternionDirectManipulation:
             true,
 
-          currentCompositorAligned:
+          exactControllerGestureSignatures:
             true,
 
-          projectedTapSelection:
+          orbitGestureTransactions:
             true,
 
-          authoritativeCompositorHitTest:
+          clusterGestureTransactions:
             true,
 
-          projectedTapCorrespondence:
+          orbitPrimaryInference:
             true,
 
-          semanticControlActivation:
+          clusterPrimaryInference:
             true,
 
-          pointerCapture:
+          compositorHitTestAuthoritative:
             true,
 
-          boundedTouchLandscape:
+          cardinalSemanticSelection:
+            true,
+
+          roomSemanticSelection:
+            true,
+
+          compassSemanticSelection:
+            true,
+
+          clusterFlickReturn:
             true,
 
           duplicateClickSuppression:
             true,
 
-          optionalSemanticPreview:
-            true,
-
-          dragClassification:
-            true,
-
-          flickClassification:
-            true,
-
-          optionalClusterReturn:
-            true,
-
-          continuousDirectManipulation:
+          controllerStateOwnership:
             false,
 
-          nativeSemanticFallbackPreserved:
-            true,
+          compositorProjectionOwnership:
+            false,
 
-          fixedCompassNativeActivationPreserved:
-            true
+          crystalRenderingOwnership:
+            false
         }
       );
 
@@ -3134,17 +3979,17 @@
         {
           reason,
 
-          contract:
-            CONTRACT,
-
-          form:
-            "A",
-
-          projectedTapSelection:
+          completeQuaternionDirectManipulation:
             true,
 
-          continuousDirectManipulation:
-            false,
+          orbitGestureTransactions:
+            true,
+
+          clusterGestureTransactions:
+            true,
+
+          clusterFlickReturn:
+            true,
 
           api: [
             "getState",
@@ -3159,9 +4004,7 @@
     return true;
   }
 
-  function deactivateRuntime(
-    reason
-  ) {
+  function deactivateRuntime(reason) {
     if (!state.runtimeActive) {
       return false;
     }
@@ -3185,6 +4028,13 @@
     state.counters.runtimeDeactivations +=
       1;
 
+    publishReceipt(
+      "runtime-deactivated",
+      {
+        reason
+      }
+    );
+
     return true;
   }
 
@@ -3199,9 +4049,7 @@
       0;
   }
 
-  function scheduleRuntimeRetry(
-    reason
-  ) {
+  function scheduleRuntimeRetry(reason) {
     if (
       state.retryTimer ||
       state.runtimeActive ||
@@ -3231,7 +4079,8 @@
   }
 
   function attemptRuntimeActivation(
-    reason = "runtime-check"
+    reason =
+      "runtime-check"
   ) {
     if (
       state.disposed ||
@@ -3244,28 +4093,19 @@
     state.counters.readinessChecks +=
       1;
 
-    const controller =
-      resolveController();
+    resolveController();
+    resolveCompositor();
 
-    const compositor =
-      resolveCompositor();
+    const ready =
+      runtimeReady();
 
-    const controllerReady =
-      Boolean(
-        controller &&
-        controllerInteractionAllowed()
-      );
+    if (!ready) {
+      if (state.runtimeActive) {
+        deactivateRuntime(
+          `${reason}:runtime-not-ready`
+        );
+      }
 
-    const compositorReady =
-      Boolean(
-        compositor &&
-        compositorProjectionReady()
-      );
-
-    if (
-      !controllerReady ||
-      !compositorReady
-    ) {
       state.waitingForRuntime =
         true;
 
@@ -3275,15 +4115,20 @@
           reason,
 
           controllerAvailable:
-            Boolean(controller),
+            Boolean(
+              state.controller
+            ),
 
-          controllerReady,
+          controllerReady:
+            controllerReady(),
 
           compositorAvailable:
-            Boolean(compositor),
+            Boolean(
+              state.compositor
+            ),
 
-          compositorProjectionReady:
-            compositorReady,
+          compositorReady:
+            compositorReady(),
 
           retryCount:
             state.retryCount
@@ -3302,20 +4147,20 @@
     state.retryCount =
       0;
 
-    return activateRuntime(
-      reason
-    );
+    return state.runtimeActive
+      ? true
+      : activateRuntime(
+          reason
+        );
   }
 
   function unsubscribeController() {
-    const subscriptions = [
-      "controllerFrameUnsubscribe",
-      "controllerHeldUnsubscribe"
-    ];
-
     for (
       const key
-      of subscriptions
+      of [
+        "controllerFrameUnsubscribe",
+        "controllerHeldUnsubscribe"
+      ]
     ) {
       const unsubscribe =
         state[key];
@@ -3325,12 +4170,12 @@
 
       if (
         typeof unsubscribe ===
-          "function"
+        "function"
       ) {
         try {
           unsubscribe();
         } catch {
-          /* Best-effort unsubscription. */
+          /* Best-effort cleanup. */
         }
       }
     }
@@ -3358,7 +4203,7 @@
             }
 
             if (
-              !isValidControllerFrame(
+              !validControllerFrame(
                 frame
               )
             ) {
@@ -3377,13 +4222,9 @@
               return;
             }
 
-            if (
-              frame.held === true ||
-              frame.disposed === true ||
-              frame.failed === true
-            ) {
+            if (frame.held === true) {
               interruptActivePointer(
-                "controller-frame-blocked"
+                "controller-held"
               );
             }
 
@@ -3399,7 +4240,7 @@
           "function"
       ) {
         throw new Error(
-          "Controller subscribeFrameState() returned an invalid unsubscribe surface."
+          "Controller subscribeFrameState() returned an invalid unsubscribe value."
         );
       }
 
@@ -3409,7 +4250,7 @@
 
       if (
         typeof controller.subscribeHeldState ===
-          "function"
+        "function"
       ) {
         const heldUnsubscribe =
           controller.subscribeHeldState(
@@ -3419,7 +4260,7 @@
                 heldState.held === true
               ) {
                 interruptActivePointer(
-                  "controller-held"
+                  "controller-held-state"
                 );
               }
 
@@ -3435,7 +4276,7 @@
             "function"
         ) {
           throw new Error(
-            "Controller subscribeHeldState() returned an invalid unsubscribe surface."
+            "Controller subscribeHeldState() returned an invalid unsubscribe value."
           );
         }
 
@@ -3469,135 +4310,6 @@
     }
   }
 
-  function handleControllerReady() {
-    resolveController();
-    bindControllerSubscriptions();
-
-    attemptRuntimeActivation(
-      "controller-ready-event"
-    );
-  }
-
-  function handleControllerFailure(
-    event
-  ) {
-    interruptActivePointer(
-      "controller-failure"
-    );
-
-    deactivateRuntime(
-      "controller-failure"
-    );
-
-    publishReceipt(
-      "controller-unavailable",
-      {
-        detail:
-          event &&
-          event.detail
-            ? event.detail
-            : null
-      }
-    );
-  }
-
-  function handleCompositorReady() {
-    resolveCompositor();
-
-    attemptRuntimeActivation(
-      "compositor-ready-event"
-    );
-  }
-
-  function handleCompositorProjectionChanged() {
-    if (
-      state.runtimeActive &&
-      state.pointer &&
-      !projectedSelectionAllowed()
-    ) {
-      interruptActivePointer(
-        "projection-invalidated"
-      );
-    }
-
-    attemptRuntimeActivation(
-      "compositor-projection"
-    );
-  }
-
-  function handleCompositorFailure(
-    event
-  ) {
-    interruptActivePointer(
-      "compositor-failure"
-    );
-
-    deactivateRuntime(
-      "compositor-failure"
-    );
-
-    state.compositor =
-      null;
-
-    publishReceipt(
-      "compositor-unavailable",
-      {
-        detail:
-          event &&
-          event.detail
-            ? event.detail
-            : null,
-
-        nativeSemanticFallbackPreserved:
-          true
-      }
-    );
-  }
-
-  function handleCompositorDisposed() {
-    interruptActivePointer(
-      "compositor-disposed"
-    );
-
-    deactivateRuntime(
-      "compositor-disposed"
-    );
-
-    state.compositor =
-      null;
-
-    scheduleRuntimeRetry(
-      "compositor-disposed"
-    );
-  }
-
-  function handleCrystalsReady() {
-    attemptRuntimeActivation(
-      "crystals-ready-event"
-    );
-  }
-
-  function handleCrystalsUnavailable(
-    reason
-  ) {
-    interruptActivePointer(
-      reason
-    );
-
-    publishReceipt(
-      "crystal-enhancement-unavailable",
-      {
-        reason,
-
-        compositorHitTestingRetained:
-          compositorProjectionReady(),
-
-        nativeSemanticFallbackPreserved:
-          true
-      }
-    );
-  }
-
   function initializeCoreListeners() {
     addCoreListener(
       document,
@@ -3609,37 +4321,40 @@
     addCoreListener(
       window,
       EVENTS.controllerReady,
-      handleControllerReady
-    );
-
-    addCoreListener(
-      window,
-      LEGACY_EVENT_ALIASES.controllerReady,
-      handleControllerReady
-    );
-
-    addCoreListener(
-      window,
-      EVENTS.controllerFailure,
-      handleControllerFailure
-    );
-
-    addCoreListener(
-      window,
-      LEGACY_EVENT_ALIASES.controllerFrameChanged,
       () => {
+        resolveController();
+        bindControllerSubscriptions();
+
         attemptRuntimeActivation(
-          "legacy-controller-frame-event"
+          "controller-ready"
         );
       }
     );
 
     addCoreListener(
       window,
-      LEGACY_EVENT_ALIASES.controllerStateChanged,
-      () => {
-        attemptRuntimeActivation(
-          "legacy-controller-state-event"
+      EVENTS.controllerFailure,
+      event => {
+        interruptActivePointer(
+          "controller-failure"
+        );
+
+        deactivateRuntime(
+          "controller-failure"
+        );
+
+        state.controller =
+          null;
+
+        publishReceipt(
+          "controller-unavailable",
+          {
+            detail:
+              event &&
+              event.detail
+                ? event.detail
+                : null
+          }
         );
       }
     );
@@ -3647,73 +4362,113 @@
     addCoreListener(
       window,
       EVENTS.compositorReady,
-      handleCompositorReady
-    );
-
-    addCoreListener(
-      window,
-      LEGACY_EVENT_ALIASES.compositorReady,
-      handleCompositorReady
-    );
-
-    addCoreListener(
-      window,
-      EVENTS.compositorProjectionChanged,
-      handleCompositorProjectionChanged
-    );
-
-    addCoreListener(
-      window,
-      EVENTS.compositorFailed,
-      handleCompositorFailure
-    );
-
-    addCoreListener(
-      window,
-      LEGACY_EVENT_ALIASES.compositorFailed,
-      handleCompositorFailure
-    );
-
-    addCoreListener(
-      window,
-      EVENTS.compositorDisposed,
-      handleCompositorDisposed
-    );
-
-    addCoreListener(
-      window,
-      LEGACY_EVENT_ALIASES.compositorDisposed,
-      handleCompositorDisposed
-    );
-
-    addCoreListener(
-      window,
-      EVENTS.crystalsReady,
-      handleCrystalsReady
-    );
-
-    addCoreListener(
-      window,
-      LEGACY_EVENT_ALIASES.crystalsReady,
-      handleCrystalsReady
-    );
-
-    addCoreListener(
-      window,
-      EVENTS.crystalsFailed,
       () => {
-        handleCrystalsUnavailable(
-          "crystals-failed"
+        resolveCompositor();
+
+        attemptRuntimeActivation(
+          "compositor-ready"
         );
       }
     );
 
     addCoreListener(
       window,
-      LEGACY_EVENT_ALIASES.crystalsFailed,
+      EVENTS.compositorProjectionChanged,
       () => {
-        handleCrystalsUnavailable(
-          "legacy-crystals-failed"
+        if (
+          state.pointer &&
+          !runtimeReady()
+        ) {
+          interruptActivePointer(
+            "projection-invalidated"
+          );
+        }
+
+        attemptRuntimeActivation(
+          "compositor-projection"
+        );
+      }
+    );
+
+    addCoreListener(
+      window,
+      EVENTS.compositorFailure,
+      event => {
+        interruptActivePointer(
+          "compositor-failure"
+        );
+
+        deactivateRuntime(
+          "compositor-failure"
+        );
+
+        state.compositor =
+          null;
+
+        publishReceipt(
+          "compositor-unavailable",
+          {
+            detail:
+              event &&
+              event.detail
+                ? event.detail
+                : null
+          }
+        );
+      }
+    );
+
+    addCoreListener(
+      window,
+      EVENTS.compositorDisposed,
+      () => {
+        interruptActivePointer(
+          "compositor-disposed"
+        );
+
+        deactivateRuntime(
+          "compositor-disposed"
+        );
+
+        state.compositor =
+          null;
+
+        scheduleRuntimeRetry(
+          "compositor-disposed"
+        );
+      }
+    );
+
+    addCoreListener(
+      window,
+      EVENTS.crystalsReady,
+      () => {
+        attemptRuntimeActivation(
+          "crystals-ready"
+        );
+      }
+    );
+
+    addCoreListener(
+      window,
+      EVENTS.crystalsFailure,
+      event => {
+        interruptActivePointer(
+          "crystals-failure"
+        );
+
+        publishReceipt(
+          "crystals-unavailable",
+          {
+            detail:
+              event &&
+              event.detail
+                ? event.detail
+                : null,
+
+            compositorProjectionRetained:
+              compositorReady()
+          }
         );
       }
     );
@@ -3722,18 +4477,12 @@
       window,
       EVENTS.crystalsDisposed,
       () => {
-        handleCrystalsUnavailable(
+        interruptActivePointer(
           "crystals-disposed"
         );
-      }
-    );
 
-    addCoreListener(
-      window,
-      LEGACY_EVENT_ALIASES.crystalsDisposed,
-      () => {
-        handleCrystalsUnavailable(
-          "legacy-crystals-disposed"
+        publishReceipt(
+          "crystals-disposed"
         );
       }
     );
@@ -3776,42 +4525,6 @@
     );
   }
 
-  function validateDom() {
-    const issues = [];
-
-    if (!state.root) {
-      issues.push(
-        "Missing [data-showroom-root]."
-      );
-    }
-
-    if (!state.orbitField) {
-      issues.push(
-        "Missing [data-showroom-orbit-field]."
-      );
-    }
-
-    if (
-      state.root &&
-      state.orbitField &&
-      !state.root.contains(
-        state.orbitField
-      )
-    ) {
-      issues.push(
-        "The orbit field is not inside the Showroom root."
-      );
-    }
-
-    return issues;
-  }
-
-  function getState() {
-    return createReceipt(
-      "state-requested"
-    );
-  }
-
   function exposeApi() {
     const api =
       Object.freeze({
@@ -3830,16 +4543,27 @@
         controllerModuleVersion:
           CONTROLLER_MODULE_VERSION,
 
+        interactionModuleId:
+          CONTROLLER_INTERACTION_MODULE_ID,
+
+        interactionModuleVersion:
+          CONTROLLER_INTERACTION_MODULE_VERSION,
+
         compositorGlobal:
           COMPOSITOR_GLOBAL,
 
         compositorContract:
           COMPOSITOR_CONTRACT,
 
-        getState,
+        getState() {
+          return createReceipt(
+            "state-requested"
+          );
+        },
 
         cancelGesture(
-          reason = "api"
+          reason =
+            "api"
         ) {
           return interruptActivePointer(
             `api:${normalize(reason) || "cancel"}`
@@ -3847,7 +4571,8 @@
         },
 
         retryRuntime(
-          reason = "api"
+          reason =
+            "api"
         ) {
           clearRetryTimer();
 
@@ -3899,86 +4624,7 @@
       false;
   }
 
-  function enterTerminalFailure(
-    reason,
-    error
-  ) {
-    if (
-      state.failed ||
-      state.disposed
-    ) {
-      return;
-    }
-
-    state.counters.failures +=
-      1;
-
-    clearRetryTimer();
-
-    interruptActivePointer(
-      reason
-    );
-
-    deactivateRuntime(
-      reason
-    );
-
-    unsubscribeController();
-
-    state.failed =
-      true;
-
-    state.waitingForRuntime =
-      false;
-
-    const errorPayload = {
-      name:
-        error instanceof Error
-          ? error.name
-          : "Error",
-
-      message:
-        error instanceof Error
-          ? error.message
-          : String(error)
-    };
-
-    publishReceipt(
-      "runtime-failed",
-      {
-        reason,
-
-        error:
-          errorPayload,
-
-        nativeSemanticFallbackPreserved:
-          true,
-
-        rootReadinessMutated:
-          false,
-
-        compositorStateMutated:
-          false,
-
-        crystalStateMutated:
-          false
-      }
-    );
-
-    dispatch(
-      EVENTS.interactionsFailed,
-      {
-        reason,
-
-        error:
-          errorPayload
-      }
-    );
-  }
-
-  function rollbackInitialization(
-    error
-  ) {
+  function rollbackInitialization(error) {
     clearRetryTimer();
 
     interruptActivePointer(
@@ -4004,11 +4650,11 @@
     state.initializing =
       false;
 
-    state.failed =
-      true;
-
     state.waitingForRuntime =
       false;
+
+    state.failed =
+      true;
 
     state.controller =
       null;
@@ -4043,19 +4689,16 @@
         pointerReleased:
           true,
 
-        orbitFieldRestored:
-          true,
-
         controllerSubscriptionsRemoved:
           true,
 
-        rootReadinessMutated:
-          false
+        orbitFieldStyleRestored:
+          true
       }
     );
 
     dispatch(
-      EVENTS.interactionsFailed,
+      EVENTS.interactionsFailure,
       {
         reason:
           "initialization-failed",
@@ -4112,26 +4755,19 @@
       publishReceipt(
         "core-initialized",
         {
-          controllerResolution:
-            state.controller
-              ? "resolved"
-              : "pending",
-
-          compositorResolution:
-            state.compositor
-              ? "resolved"
-              : "pending",
-
           pointerRuntime:
             "deferred-until-controller-and-compositor-ready",
 
-          currentControllerContractRequired:
+          completeQuaternionConstruction:
             true,
 
-          currentCompositorContractRequired:
+          exactControllerTransactionSurface:
             true,
 
-          nativeSemanticFallbackPreserved:
+          nativeSemanticDelegation:
+            true,
+
+          compositorHitTesting:
             true
         }
       );
@@ -4147,10 +4783,11 @@
   }
 
   function dispose(
-    reason = "api"
+    reason =
+      "api"
   ) {
     if (state.disposed) {
-      return;
+      return true;
     }
 
     state.disposed =
@@ -4207,13 +4844,10 @@
         controllerSubscriptionsRemoved:
           true,
 
-        orbitFieldRestored:
+        orbitFieldStyleRestored:
           true,
 
-        nativeSemanticFallbackPreserved:
-          true,
-
-        rootReadinessMutated:
+        controllerStateMutated:
           false,
 
         compositorStateMutated:
@@ -4233,6 +4867,8 @@
           true
       }
     );
+
+    return true;
   }
 
   if (

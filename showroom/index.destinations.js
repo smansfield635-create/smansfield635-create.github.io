@@ -1,6 +1,6 @@
 /* TARGET FILE: /showroom/index.destinations.js */
 /* TNT FULL-FILE REPLACEMENT */
-/* SHOWROOM_DESTINATION_EXECUTOR_TNT_v1_0_2 */
+/* SHOWROOM_DESTINATION_EXECUTOR_TNT_v1_1_0 */
 
 (() => {
   "use strict";
@@ -12,7 +12,7 @@
     "SHOWROOM_DESTINATION_EXECUTOR";
 
   const VERSION =
-    "1.0.2-bootstrap-and-optional-discovery-correction";
+    "1.1.0-local-constellation-direct-execution";
 
   const OWNER =
     "/showroom/index.destinations.js";
@@ -25,48 +25,27 @@
 
   if (
     existingGuard &&
-    existingGuard.contract ===
-      CONTRACT &&
-    existingGuard.moduleId ===
-      MODULE_ID &&
-    existingGuard.version ===
-      VERSION &&
-    existingGuard.owner ===
-      OWNER
+    existingGuard.contract === CONTRACT &&
+    existingGuard.moduleId === MODULE_ID &&
+    existingGuard.version === VERSION &&
+    existingGuard.owner === OWNER
   ) {
     return;
   }
-
-  const bootstrapGuard =
-    Object.freeze({
-      contract:
-        CONTRACT,
-
-      moduleId:
-        MODULE_ID,
-
-      version:
-        VERSION,
-
-      owner:
-        OWNER
-    });
 
   Object.defineProperty(
     window,
     GLOBAL_GUARD,
     {
-      configurable:
-        true,
-
-      enumerable:
-        false,
-
-      writable:
-        false,
-
-      value:
-        bootstrapGuard
+      configurable: true,
+      enumerable: false,
+      writable: false,
+      value: Object.freeze({
+        contract: CONTRACT,
+        moduleId: MODULE_ID,
+        version: VERSION,
+        owner: OWNER
+      })
     }
   );
 
@@ -89,197 +68,132 @@
     "SHOWROOM_ARCHCOIN_DESTINATION_ENTRY_REQUEST_v1";
 
   const EVENTS = Object.freeze({
-    ready:
-      "SHOWROOM_DESTINATIONS_READY",
-
-    failure:
-      "SHOWROOM_DESTINATIONS_FAILURE",
-
-    disposed:
-      "SHOWROOM_DESTINATIONS_DISPOSED",
-
-    receipt:
-      "SHOWROOM_DESTINATIONS_RECEIPT"
+    ready: "SHOWROOM_DESTINATIONS_READY",
+    failure: "SHOWROOM_DESTINATIONS_FAILURE",
+    disposed: "SHOWROOM_DESTINATIONS_DISPOSED",
+    receipt: "SHOWROOM_DESTINATIONS_RECEIPT"
   });
 
   const OUTCOMES = Object.freeze({
-    initialized:
-      "INITIALIZED",
-
-    requestRejected:
-      "REQUEST_REJECTED",
-
-    localExecuted:
-      "LOCAL_DESTINATION_EXECUTED",
-
-    dialogOpened:
-      "DIALOG_OPENED",
-
-    dialogCancelled:
-      "DIALOG_CANCELLED",
-
-    externalConfirmed:
-      "EXTERNAL_NAVIGATION_CONFIRMED",
-
-    executionFailed:
-      "EXECUTION_FAILED",
-
-    disposed:
-      "DISPOSED"
+    initialized: "INITIALIZED",
+    requestRejected: "REQUEST_REJECTED",
+    localExecuted: "LOCAL_DESTINATION_EXECUTED",
+    dialogOpened: "DIALOG_OPENED",
+    dialogCancelled: "DIALOG_CANCELLED",
+    externalConfirmed: "EXTERNAL_NAVIGATION_CONFIRMED",
+    executionFailed: "EXECUTION_FAILED",
+    disposed: "DISPOSED"
   });
 
   const OPERATIONS = Object.freeze({
-    scrollAnchor:
-      "scroll-anchor",
-
-    openDisclosureAndScroll:
-      "open-disclosure-and-scroll",
-
-    openFrontAndActivateWindow:
-      "open-front-and-activate-window",
-
-    openFrontAndScroll:
-      "open-front-and-scroll",
-
-    scrollLocalSurface:
-      "scroll-local-surface",
-
-    confirmedHardNavigation:
-      "confirmed-hard-navigation"
+    scrollAnchor: "scroll-anchor",
+    openDisclosureAndScroll: "open-disclosure-and-scroll",
+    openFrontAndActivateWindow: "open-front-and-activate-window",
+    openFrontAndScroll: "open-front-and-scroll",
+    scrollLocalSurface: "scroll-local-surface",
+    confirmedHardNavigation: "confirmed-hard-navigation"
   });
 
   const DESTINATION_TYPES = Object.freeze({
-    localAnchor:
-      "local-anchor",
-
-    localDisclosureTarget:
-      "local-disclosure-target",
-
-    localWindowExperience:
-      "local-window-experience",
-
-    localDiamondExperience:
-      "local-diamond-experience",
-
-    localNarrativeSurface:
-      "local-narrative-surface",
-
-    externalRoute:
-      "external-route"
+    localAnchor: "local-anchor",
+    localDisclosureTarget: "local-disclosure-target",
+    localWindowExperience: "local-window-experience",
+    localDiamondExperience: "local-diamond-experience",
+    localNarrativeSurface: "local-narrative-surface",
+    externalRoute: "external-route"
   });
 
-  const OPERATION_DESTINATION_TYPES =
-    Object.freeze({
-      [OPERATIONS.scrollAnchor]:
-        Object.freeze([
-          DESTINATION_TYPES.localAnchor
-        ]),
+  const LOCAL_KIND_TO_OPERATION = Object.freeze({
+    [DESTINATION_TYPES.localAnchor]:
+      OPERATIONS.scrollAnchor,
 
-      [OPERATIONS.openDisclosureAndScroll]:
-        Object.freeze([
-          DESTINATION_TYPES.localDisclosureTarget
-        ]),
+    [DESTINATION_TYPES.localDisclosureTarget]:
+      OPERATIONS.openDisclosureAndScroll,
 
-      [OPERATIONS.openFrontAndActivateWindow]:
-        Object.freeze([
-          DESTINATION_TYPES.localWindowExperience
-        ]),
+    [DESTINATION_TYPES.localWindowExperience]:
+      OPERATIONS.openFrontAndActivateWindow,
 
-      [OPERATIONS.openFrontAndScroll]:
-        Object.freeze([
-          DESTINATION_TYPES.localDiamondExperience
-        ]),
+    [DESTINATION_TYPES.localDiamondExperience]:
+      OPERATIONS.openFrontAndScroll,
 
-      [OPERATIONS.scrollLocalSurface]:
-        Object.freeze([
-          DESTINATION_TYPES.localNarrativeSurface
-        ]),
+    [DESTINATION_TYPES.localNarrativeSurface]:
+      OPERATIONS.scrollLocalSurface
+  });
 
-      [OPERATIONS.confirmedHardNavigation]:
-        Object.freeze([
-          DESTINATION_TYPES.externalRoute
-        ])
-    });
+  const OPERATION_DESTINATION_TYPES = Object.freeze({
+    [OPERATIONS.scrollAnchor]:
+      Object.freeze([DESTINATION_TYPES.localAnchor]),
+
+    [OPERATIONS.openDisclosureAndScroll]:
+      Object.freeze([DESTINATION_TYPES.localDisclosureTarget]),
+
+    [OPERATIONS.openFrontAndActivateWindow]:
+      Object.freeze([DESTINATION_TYPES.localWindowExperience]),
+
+    [OPERATIONS.openFrontAndScroll]:
+      Object.freeze([DESTINATION_TYPES.localDiamondExperience]),
+
+    [OPERATIONS.scrollLocalSurface]:
+      Object.freeze([DESTINATION_TYPES.localNarrativeSurface]),
+
+    [OPERATIONS.confirmedHardNavigation]:
+      Object.freeze([DESTINATION_TYPES.externalRoute])
+  });
 
   const SUPPORTED_OPERATIONS =
-    Object.freeze(
-      Object.values(
-        OPERATIONS
-      )
-    );
+    Object.freeze(Object.values(OPERATIONS));
 
-  const PAYLOAD_KEYS =
-    Object.freeze([
-      "contract",
-      "controllerId",
-      "controllerVersion",
-      "controllerFile",
-      "sourceState",
-      "wingId",
-      "wingLabel",
-      "roomId",
-      "destinationType",
-      "destinationId",
-      "contentId",
-      "route",
-      "localTarget",
-      "openAncestor",
-      "informationFront",
-      "confirmationRequired",
-      "operationType",
-      "label",
-      "lens",
-      "preview",
-      "whyEnter",
-      "semanticActivation",
-      "routeDescription",
-      "routeRole",
-      "visualClass",
-      "emphasis",
-      "returnModel",
-      "returnZone",
-      "authorizationGeneration",
-      "timestamp"
-    ]);
+  const PAYLOAD_KEYS = Object.freeze([
+    "contract",
+    "controllerId",
+    "controllerVersion",
+    "controllerFile",
+    "sourceState",
+    "wingId",
+    "wingLabel",
+    "roomId",
+    "destinationType",
+    "destinationId",
+    "contentId",
+    "route",
+    "localTarget",
+    "openAncestor",
+    "informationFront",
+    "confirmationRequired",
+    "operationType",
+    "label",
+    "lens",
+    "preview",
+    "whyEnter",
+    "semanticActivation",
+    "routeDescription",
+    "routeRole",
+    "visualClass",
+    "emphasis",
+    "returnModel",
+    "returnZone",
+    "authorizationGeneration",
+    "timestamp"
+  ]);
 
   const SELECTORS = Object.freeze({
-    root:
-      "[data-showroom-root]",
-
-    receipt:
-      "[data-showroom-destinations-receipt]",
-
-    controllerEnter:
-      "[data-showroom-controller-enter]",
-
-    portal:
-      "[data-showroom-fallback-portal]",
-
-    dialog:
-      "[data-showroom-route-dialog]",
-
-    dialogTitle:
-      "[data-showroom-route-dialog-title]",
-
-    dialogDescription:
-      "[data-showroom-route-dialog-description]",
-
-    close:
-      "[data-showroom-route-close]",
-
-    stay:
-      "[data-showroom-route-stay]",
-
-    continue:
-      "[data-showroom-route-continue]",
-
-    forbiddenSemanticActivation:
-      [
-        "[data-showroom-cardinal-control]",
-        "[data-showroom-child-control]",
-        "[data-showroom-compass-control]",
-        "[data-showroom-compass-selection-alias]"
-      ].join(",")
+    root: "[data-showroom-root]",
+    receipt: "[data-showroom-destinations-receipt]",
+    controllerEnter: "[data-showroom-controller-enter]",
+    portal: "[data-showroom-fallback-portal]",
+    childControl: "[data-showroom-child-control]",
+    dialog: "[data-showroom-route-dialog]",
+    dialogTitle: "[data-showroom-route-dialog-title]",
+    dialogDescription: "[data-showroom-route-dialog-description]",
+    close: "[data-showroom-route-close]",
+    stay: "[data-showroom-route-stay]",
+    continue: "[data-showroom-route-continue]",
+    forbiddenSemanticActivation: [
+      "[data-showroom-cardinal-control]",
+      "[data-showroom-child-control]",
+      "[data-showroom-compass-control]",
+      "[data-showroom-compass-selection-alias]"
+    ].join(",")
   });
 
   const MAX_CONSUMED_KEYS =
@@ -288,157 +202,88 @@
   const MAX_REQUEST_AGE_MS =
     5000;
 
+  const LOCAL_IN_FLIGHT_MS =
+    750;
+
   const state = {
-    root:
-      null,
-
-    receipt:
-      null,
-
-    controllerEnter:
-      null,
-
-    dialog:
-      null,
-
-    dialogTitle:
-      null,
-
-    dialogDescription:
-      null,
-
-    closeButton:
-      null,
-
-    stayButton:
-      null,
-
-    continueButton:
-      null,
-
-    portals:
-      [],
-
-    pending:
-      null,
-
-    activator:
-      null,
-
-    confirmationLocked:
-      false,
-
-    initialized:
-      false,
-
-    initializing:
-      false,
-
-    failed:
-      false,
-
-    disposed:
-      false,
-
-    listeners:
-      [],
-
-    consumedKeys:
-      new Map()
+    root: null,
+    receipt: null,
+    controllerEnter: null,
+    dialog: null,
+    dialogTitle: null,
+    dialogDescription: null,
+    closeButton: null,
+    stayButton: null,
+    continueButton: null,
+    portals: [],
+    pending: null,
+    activator: null,
+    confirmationLocked: false,
+    initialized: false,
+    initializing: false,
+    failed: false,
+    disposed: false,
+    listeners: [],
+    consumedKeys: new Map(),
+    localInFlightKeys: new Map()
   };
 
-  function normalize(
-    value
-  ) {
-    return String(
-      value == null
-        ? ""
-        : value
-    ).trim();
+  function normalize(value) {
+    return String(value == null ? "" : value).trim();
   }
 
-  function normalizeLower(
-    value
-  ) {
-    return normalize(value)
-      .toLowerCase();
+  function normalizeLower(value) {
+    return normalize(value).toLowerCase();
   }
 
   function nowIso() {
     return new Date().toISOString();
   }
 
-  function isElement(
-    value
-  ) {
+  function isElement(value) {
     return (
-      typeof Element !==
-        "undefined" &&
+      typeof Element !== "undefined" &&
       value instanceof Element
     );
   }
 
-  function isPrimitive(
-    value
-  ) {
+  function isPrimitive(value) {
     return (
       value === null ||
-      typeof value ===
-        "string" ||
-      typeof value ===
-        "boolean" ||
+      typeof value === "string" ||
+      typeof value === "boolean" ||
       (
-        typeof value ===
-          "number" &&
+        typeof value === "number" &&
         Number.isFinite(value)
       )
     );
   }
 
-  function freezeRecord(
-    value
-  ) {
+  function freezeRecord(value) {
     return Object.freeze({
       ...value
     });
   }
 
-  function addListener(
-    target,
-    type,
-    handler,
-    options
-  ) {
+  function addListener(target, type, handler, options) {
     if (
       !target ||
-      typeof target.addEventListener !==
-        "function"
+      typeof target.addEventListener !== "function"
     ) {
       return false;
     }
 
-    target.addEventListener(
-      type,
-      handler,
-      options
-    );
+    target.addEventListener(type, handler, options);
 
     state.listeners.push(() => {
-      target.removeEventListener(
-        type,
-        handler,
-        options
-      );
+      target.removeEventListener(type, handler, options);
     });
 
     return true;
   }
 
   function removeListeners() {
-    for (
-      const remove
-      of state.listeners.splice(0)
-    ) {
+    for (const remove of state.listeners.splice(0)) {
       try {
         remove();
       } catch {
@@ -447,27 +292,14 @@
     }
   }
 
-  function dispatch(
-    eventName,
-    detail
-  ) {
+  function dispatch(eventName, detail) {
     const payload =
       freezeRecord({
-        contract:
-          CONTRACT,
-
-        moduleId:
-          MODULE_ID,
-
-        version:
-          VERSION,
-
-        owner:
-          OWNER,
-
-        timestamp:
-          nowIso(),
-
+        contract: CONTRACT,
+        moduleId: MODULE_ID,
+        version: VERSION,
+        owner: OWNER,
+        timestamp: nowIso(),
         ...detail
       });
 
@@ -475,8 +307,7 @@
       new CustomEvent(
         eventName,
         {
-          detail:
-            payload
+          detail: payload
         }
       )
     );
@@ -484,41 +315,23 @@
     return payload;
   }
 
-  function publishReceipt(
-    outcome,
-    detail = {}
-  ) {
+  function publishReceipt(outcome, detail = {}) {
     const payload =
       freezeRecord({
-        contract:
-          CONTRACT,
-
-        moduleId:
-          MODULE_ID,
-
-        version:
-          VERSION,
-
-        owner:
-          OWNER,
-
+        contract: CONTRACT,
+        moduleId: MODULE_ID,
+        version: VERSION,
+        owner: OWNER,
         outcome,
-
-        timestamp:
-          nowIso(),
-
+        timestamp: nowIso(),
         ...detail
       });
 
     if (state.receipt) {
       const serialized =
-        JSON.stringify(
-          payload
-        );
+        JSON.stringify(payload);
 
-      if (
-        "value" in state.receipt
-      ) {
+      if ("value" in state.receipt) {
         state.receipt.value =
           serialized;
       }
@@ -527,18 +340,12 @@
         serialized;
     }
 
-    dispatch(
-      EVENTS.receipt,
-      payload
-    );
+    dispatch(EVENTS.receipt, payload);
 
     return payload;
   }
 
-  function failRequest(
-    reason,
-    detail = {}
-  ) {
+  function failRequest(reason, detail = {}) {
     publishReceipt(
       OUTCOMES.requestRejected,
       {
@@ -553,10 +360,7 @@
     return false;
   }
 
-  function failExecution(
-    reason,
-    detail = {}
-  ) {
+  function failExecution(reason, detail = {}) {
     publishReceipt(
       OUTCOMES.executionFailed,
       {
@@ -574,11 +378,8 @@
   function queryExactlyOne(
     selector,
     {
-      root =
-        document,
-
-      required =
-        true
+      root = document,
+      required = true
     } = {}
   ) {
     const normalized =
@@ -598,9 +399,7 @@
 
     try {
       matches =
-        root.querySelectorAll(
-          normalized
-        );
+        root.querySelectorAll(normalized);
     } catch {
       throw new Error(
         `DESTINATION_SELECTOR_INVALID:${normalized}`
@@ -614,9 +413,7 @@
       return null;
     }
 
-    if (
-      matches.length !== 1
-    ) {
+    if (matches.length !== 1) {
       throw new Error(
         matches.length === 0
           ? `DESTINATION_TARGET_NOT_FOUND:${normalized}`
@@ -627,9 +424,7 @@
     return matches[0];
   }
 
-  function parseBooleanAttribute(
-    value
-  ) {
+  function parseBooleanAttribute(value) {
     const normalized =
       normalizeLower(value);
 
@@ -644,9 +439,7 @@
     return null;
   }
 
-  function validateSameOriginRoute(
-    route
-  ) {
+  function validateSameOriginRoute(route) {
     const normalized =
       normalize(route);
 
@@ -675,12 +468,8 @@
     }
 
     if (
-      url.origin !==
-        window.location.origin ||
-      ![
-        "http:",
-        "https:"
-      ].includes(url.protocol) ||
+      url.origin !== window.location.origin ||
+      !["http:", "https:"].includes(url.protocol) ||
       url.username ||
       url.password
     ) {
@@ -696,9 +485,7 @@
     );
   }
 
-  function validateLocalSelector(
-    selector
-  ) {
+  function validateLocalSelector(selector) {
     const normalized =
       normalize(selector);
 
@@ -714,10 +501,7 @@
     return normalized;
   }
 
-  function validateNullableAbsent(
-    value,
-    code
-  ) {
+  function validateNullableAbsent(value, code) {
     if (
       value !== null &&
       normalize(value)
@@ -726,10 +510,7 @@
     }
   }
 
-  function validateRequiredSelectorValue(
-    value,
-    code
-  ) {
+  function validateRequiredSelectorValue(value, code) {
     const normalized =
       normalize(value);
 
@@ -741,9 +522,7 @@
     }
   }
 
-  function validateOperationCorrespondence(
-    payload
-  ) {
+  function validateOperationCorrespondence(payload) {
     const allowedTypes =
       OPERATION_DESTINATION_TYPES[
         payload.operationType
@@ -766,8 +545,7 @@
 
     if (isExternal) {
       if (
-        payload.confirmationRequired !==
-          true
+        payload.confirmationRequired !== true
       ) {
         throw new Error(
           "DESTINATION_EXTERNAL_CONFIRMATION_REQUIRED"
@@ -799,7 +577,7 @@
 
     if (
       payload.destinationType ===
-        DESTINATION_TYPES.externalRoute
+      DESTINATION_TYPES.externalRoute
     ) {
       throw new Error(
         "DESTINATION_LOCAL_EXTERNAL_TYPE_FORBIDDEN"
@@ -807,8 +585,7 @@
     }
 
     if (
-      payload.confirmationRequired !==
-        false
+      payload.confirmationRequired !== false
     ) {
       throw new Error(
         "DESTINATION_LOCAL_CONFIRMATION_FORBIDDEN"
@@ -820,9 +597,7 @@
       "DESTINATION_LOCAL_TARGET_REQUIRED"
     );
 
-    switch (
-      payload.operationType
-    ) {
+    switch (payload.operationType) {
       case OPERATIONS.scrollAnchor:
       case OPERATIONS.scrollLocalSurface:
         validateNullableAbsent(
@@ -886,11 +661,7 @@
           "DESTINATION_FRONT_OPEN_ANCESTOR_FORBIDDEN"
         );
 
-        if (
-          !normalize(
-            payload.semanticActivation
-          )
-        ) {
+        if (!normalize(payload.semanticActivation)) {
           throw new Error(
             "DESTINATION_SEMANTIC_ACTIVATION_REQUIRED"
           );
@@ -906,19 +677,13 @@
     return true;
   }
 
-  function validateRouteFragment(
-    route,
-    target
-  ) {
+  function validateRouteFragment(route, target) {
     const routeUrl =
-      new URL(
-        route,
-        window.location.origin
-      );
+      new URL(route, window.location.origin);
 
     if (
       routeUrl.pathname !==
-        window.location.pathname
+      window.location.pathname
     ) {
       throw new Error(
         "DESTINATION_LOCAL_ROUTE_PATH_MISMATCH"
@@ -928,8 +693,7 @@
     if (
       routeUrl.hash &&
       target.id &&
-      routeUrl.hash !==
-        `#${target.id}`
+      routeUrl.hash !== `#${target.id}`
     ) {
       throw new Error(
         "DESTINATION_LOCAL_ROUTE_FRAGMENT_MISMATCH"
@@ -939,20 +703,14 @@
 
   function getController() {
     const controller =
-      window[
-        CONTROLLER_GLOBAL
-      ];
+      window[CONTROLLER_GLOBAL];
 
     if (
       !controller ||
-      typeof controller !==
-        "object" ||
-      controller.moduleId !==
-        CONTROLLER_ID ||
-      controller.moduleVersion !==
-        CONTROLLER_VERSION ||
-      typeof controller.getFrameState !==
-        "function"
+      typeof controller !== "object" ||
+      controller.moduleId !== CONTROLLER_ID ||
+      controller.moduleVersion !== CONTROLLER_VERSION ||
+      typeof controller.getFrameState !== "function"
     ) {
       return null;
     }
@@ -960,13 +718,10 @@
     return controller;
   }
 
-  function validateControllerPayloadShape(
-    payload
-  ) {
+  function validateControllerPayloadShape(payload) {
     if (
       !payload ||
-      typeof payload !==
-        "object" ||
+      typeof payload !== "object" ||
       Array.isArray(payload)
     ) {
       throw new Error(
@@ -974,10 +729,7 @@
       );
     }
 
-    if (
-      Object.isFrozen(payload) !==
-        true
-    ) {
+    if (Object.isFrozen(payload) !== true) {
       throw new Error(
         "DESTINATION_PAYLOAD_NOT_FROZEN"
       );
@@ -986,52 +738,33 @@
     const keys =
       Object.keys(payload);
 
-    if (
-      keys.length !==
-        PAYLOAD_KEYS.length
-    ) {
+    if (keys.length !== PAYLOAD_KEYS.length) {
       throw new Error(
         "DESTINATION_PAYLOAD_KEY_COUNT_INVALID"
       );
     }
 
-    for (
-      const key
-      of PAYLOAD_KEYS
-    ) {
+    for (const key of PAYLOAD_KEYS) {
       if (
-        !Object.prototype
-          .hasOwnProperty
-          .call(
-            payload,
-            key
-          )
+        !Object.prototype.hasOwnProperty.call(
+          payload,
+          key
+        )
       ) {
         throw new Error(
           `DESTINATION_PAYLOAD_KEY_MISSING:${key}`
         );
       }
 
-      if (
-        !isPrimitive(
-          payload[key]
-        )
-      ) {
+      if (!isPrimitive(payload[key])) {
         throw new Error(
           `DESTINATION_PAYLOAD_VALUE_INVALID:${key}`
         );
       }
     }
 
-    for (
-      const key
-      of keys
-    ) {
-      if (
-        !PAYLOAD_KEYS.includes(
-          key
-        )
-      ) {
+    for (const key of keys) {
+      if (!PAYLOAD_KEYS.includes(key)) {
         throw new Error(
           `DESTINATION_PAYLOAD_KEY_UNEXPECTED:${key}`
         );
@@ -1039,16 +772,11 @@
     }
 
     if (
-      payload.contract !==
-        REQUEST_CONTRACT ||
-      payload.controllerId !==
-        CONTROLLER_ID ||
-      payload.controllerVersion !==
-        CONTROLLER_VERSION ||
-      payload.controllerFile !==
-        CONTROLLER_FILE ||
-      payload.sourceState !==
-        "ROOM_SELECTED"
+      payload.contract !== REQUEST_CONTRACT ||
+      payload.controllerId !== CONTROLLER_ID ||
+      payload.controllerVersion !== CONTROLLER_VERSION ||
+      payload.controllerFile !== CONTROLLER_FILE ||
+      payload.sourceState !== "ROOM_SELECTED"
     ) {
       throw new Error(
         "DESTINATION_PAYLOAD_IDENTITY_INVALID"
@@ -1056,11 +784,8 @@
     }
 
     if (
-      !Number.isSafeInteger(
-        payload.authorizationGeneration
-      ) ||
-      payload.authorizationGeneration <
-        0
+      !Number.isSafeInteger(payload.authorizationGeneration) ||
+      payload.authorizationGeneration < 0
     ) {
       throw new Error(
         "DESTINATION_AUTHORIZATION_GENERATION_INVALID"
@@ -1068,13 +793,9 @@
     }
 
     const timestamp =
-      Date.parse(
-        payload.timestamp
-      );
+      Date.parse(payload.timestamp);
 
-    if (
-      Number.isNaN(timestamp)
-    ) {
+    if (Number.isNaN(timestamp)) {
       throw new Error(
         "DESTINATION_TIMESTAMP_INVALID"
       );
@@ -1082,7 +803,7 @@
 
     if (
       Date.now() - timestamp >
-        MAX_REQUEST_AGE_MS
+      MAX_REQUEST_AGE_MS
     ) {
       throw new Error(
         "DESTINATION_REQUEST_EXPIRED"
@@ -1099,20 +820,13 @@
       );
     }
 
-    validateOperationCorrespondence(
-      payload
-    );
-
-    validateSameOriginRoute(
-      payload.route
-    );
+    validateOperationCorrespondence(payload);
+    validateSameOriginRoute(payload.route);
 
     return true;
   }
 
-  function validateControllerCorrespondence(
-    payload
-  ) {
+  function validateControllerCorrespondence(payload) {
     const controller =
       getController();
 
@@ -1135,26 +849,16 @@
 
     if (
       !frame ||
-      typeof frame !==
-        "object" ||
-      frame.held !==
-        false ||
-      frame.navigationState !==
-        "ROOM_SELECTED" ||
-      frame.compassSelected !==
-        false ||
-      frame.selectedRoom !==
-        payload.roomId ||
-      frame.selectedCardinal !==
-        payload.wingId ||
-      frame.selectedDestinationId !==
-        payload.destinationId ||
-      frame.selectedRoute !==
-        payload.route ||
-      frame.selectedContentId !==
-        payload.contentId ||
-      frame.selectedLens !==
-        payload.lens
+      typeof frame !== "object" ||
+      frame.held !== false ||
+      frame.navigationState !== "ROOM_SELECTED" ||
+      frame.compassSelected !== false ||
+      frame.selectedRoom !== payload.roomId ||
+      frame.selectedCardinal !== payload.wingId ||
+      frame.selectedDestinationId !== payload.destinationId ||
+      frame.selectedRoute !== payload.route ||
+      frame.selectedContentId !== payload.contentId ||
+      frame.selectedLens !== payload.lens
     ) {
       throw new Error(
         "DESTINATION_CONTROLLER_STATE_STALE"
@@ -1164,56 +868,72 @@
     return frame;
   }
 
-  function requestKey(
-    request
-  ) {
+  function requestKey(request) {
     return [
       request.sourceType,
-      request.controllerId ||
-        "",
-      request.controllerVersion ||
-        "",
-      request.roomId ||
-        "",
+      request.controllerId || "",
+      request.controllerVersion || "",
+      request.roomId || "",
       request.route,
       request.operationType,
-      String(
-        request.authorizationGeneration ??
-        ""
-      )
+      String(request.authorizationGeneration ?? "")
     ].join("|");
   }
 
-  function rememberConsumedKey(
-    key
-  ) {
-    state.consumedKeys.set(
-      key,
-      Date.now()
-    );
+  function localRequestKey(request) {
+    return [
+      request.sourceType,
+      request.destinationId || "",
+      request.route,
+      request.operationType
+    ].join("|");
+  }
+
+  function rememberConsumedKey(key) {
+    state.consumedKeys.set(key, Date.now());
 
     while (
       state.consumedKeys.size >
       MAX_CONSUMED_KEYS
     ) {
       const oldest =
-        state.consumedKeys
-          .keys()
-          .next()
-          .value;
+        state.consumedKeys.keys().next().value;
 
-      state.consumedKeys.delete(
-        oldest
-      );
+      state.consumedKeys.delete(oldest);
     }
   }
 
-  function isConsumed(
-    key
-  ) {
-    return state.consumedKeys.has(
-      key
-    );
+  function isConsumed(key) {
+    return state.consumedKeys.has(key);
+  }
+
+  function markLocalInFlight(key) {
+    const now =
+      Date.now();
+
+    for (
+      const [storedKey, timestamp]
+      of state.localInFlightKeys
+    ) {
+      if (
+        now - timestamp >
+        LOCAL_IN_FLIGHT_MS
+      ) {
+        state.localInFlightKeys.delete(storedKey);
+      }
+    }
+
+    if (state.localInFlightKeys.has(key)) {
+      return false;
+    }
+
+    state.localInFlightKeys.set(key, now);
+
+    return true;
+  }
+
+  function clearLocalInFlight(key) {
+    state.localInFlightKeys.delete(key);
   }
 
   function readReducedMotion() {
@@ -1222,13 +942,10 @@
 
     if (
       controller &&
-      typeof controller.getReducedMotion ===
-        "function"
+      typeof controller.getReducedMotion === "function"
     ) {
       try {
-        return Boolean(
-          controller.getReducedMotion()
-        );
+        return Boolean(controller.getReducedMotion());
       } catch {
         /* Use media-query fallback. */
       }
@@ -1237,43 +954,29 @@
     return Boolean(
       window.matchMedia &&
       window
-        .matchMedia(
-          "(prefers-reduced-motion: reduce)"
-        )
+        .matchMedia("(prefers-reduced-motion: reduce)")
         .matches
     );
   }
 
-  function scrollToTarget(
-    target
-  ) {
+  function scrollToTarget(target) {
     target.scrollIntoView({
       behavior:
         readReducedMotion()
           ? "auto"
           : "smooth",
-
-      block:
-        "start",
-
-      inline:
-        "nearest"
+      block: "start",
+      inline: "nearest"
     });
   }
 
-  function updateFragment(
-    route
-  ) {
+  function updateFragment(route) {
     const url =
-      new URL(
-        route,
-        window.location.origin
-      );
+      new URL(route, window.location.origin);
 
     if (
       !url.hash ||
-      url.hash ===
-        window.location.hash
+      url.hash === window.location.hash
     ) {
       return;
     }
@@ -1289,18 +992,12 @@
     );
   }
 
-  function preflightLocalTarget(
-    request
-  ) {
+  function preflightLocalTarget(request) {
     const selector =
-      validateLocalSelector(
-        request.localTarget
-      );
+      validateLocalSelector(request.localTarget);
 
     const target =
-      queryExactlyOne(
-        selector
-      );
+      queryExactlyOne(selector);
 
     validateRouteFragment(
       request.route,
@@ -1310,24 +1007,14 @@
     return target;
   }
 
-  function preflightDisclosure(
-    request
-  ) {
+  function preflightDisclosure(request) {
     const selector =
-      validateLocalSelector(
-        request.openAncestor
-      );
+      validateLocalSelector(request.openAncestor);
 
     const ancestor =
-      queryExactlyOne(
-        selector
-      );
+      queryExactlyOne(selector);
 
-    if (
-      !(
-        "open" in ancestor
-      )
-    ) {
+    if (!("open" in ancestor)) {
       throw new Error(
         "DESTINATION_DISCLOSURE_NOT_OPEN_CAPABLE"
       );
@@ -1336,9 +1023,7 @@
     return ancestor;
   }
 
-  function elementIsVisiblyAvailable(
-    element
-  ) {
+  function elementIsVisiblyAvailable(element) {
     if (
       !element ||
       !element.isConnected ||
@@ -1348,53 +1033,34 @@
     }
 
     const style =
-      window.getComputedStyle(
-        element
-      );
+      window.getComputedStyle(element);
 
     return (
-      style.display !==
-        "none" &&
-      style.visibility !==
-        "hidden" &&
-      style.visibility !==
-        "collapse"
+      style.display !== "none" &&
+      style.visibility !== "hidden" &&
+      style.visibility !== "collapse"
     );
   }
 
-  function preflightInformationFront(
-    request
-  ) {
+  function preflightInformationFront(request) {
     const selector =
-      validateLocalSelector(
-        request.informationFront
-      );
+      validateLocalSelector(request.informationFront);
 
     const front =
-      queryExactlyOne(
-        selector
-      );
+      queryExactlyOne(selector);
 
-    if (
-      !elementIsVisiblyAvailable(
-        front
-      )
-    ) {
+    if (!front.isConnected) {
       throw new Error(
-        "DESTINATION_INFORMATION_FRONT_HAS_NO_PUBLIC_EXPOSURE_METHOD"
+        "DESTINATION_INFORMATION_FRONT_DISCONNECTED"
       );
     }
 
     return front;
   }
 
-  function preflightSemanticActivation(
-    request
-  ) {
+  function preflightSemanticActivation(request) {
     const selector =
-      normalize(
-        request.semanticActivation
-      );
+      normalize(request.semanticActivation);
 
     if (!selector) {
       throw new Error(
@@ -1403,9 +1069,7 @@
     }
 
     const target =
-      queryExactlyOne(
-        selector
-      );
+      queryExactlyOne(selector);
 
     if (
       target.matches(
@@ -1425,18 +1089,10 @@
         "SELECT",
         "TEXTAREA",
         "SUMMARY"
-      ].includes(
-        target.tagName
-      ) ||
-      target.matches(
-        ":disabled"
-      ) ||
-      target.getAttribute(
-        "aria-disabled"
-      ) === "true" ||
-      !elementIsVisiblyAvailable(
-        target
-      )
+      ].includes(target.tagName) ||
+      target.matches(":disabled") ||
+      target.getAttribute("aria-disabled") === "true" ||
+      !elementIsVisiblyAvailable(target)
     ) {
       throw new Error(
         "DESTINATION_SEMANTIC_ACTIVATION_UNAVAILABLE"
@@ -1446,41 +1102,27 @@
     return target;
   }
 
-  function executeLocalRequest(
-    request
-  ) {
+  function executeLocalRequest(request) {
     let target;
     let disclosure;
     let informationFront;
     let semanticTarget;
 
-    switch (
-      request.operationType
-    ) {
+    switch (request.operationType) {
       case OPERATIONS.scrollAnchor:
       case OPERATIONS.scrollLocalSurface:
         target =
-          preflightLocalTarget(
-            request
-          );
+          preflightLocalTarget(request);
         break;
 
       case OPERATIONS.openDisclosureAndScroll:
         disclosure =
-          preflightDisclosure(
-            request
-          );
+          preflightDisclosure(request);
 
         target =
-          preflightLocalTarget(
-            request
-          );
+          preflightLocalTarget(request);
 
-        if (
-          !disclosure.contains(
-            target
-          )
-        ) {
+        if (!disclosure.contains(target)) {
           throw new Error(
             "DESTINATION_TARGET_OUTSIDE_DISCLOSURE"
           );
@@ -1489,31 +1131,21 @@
 
       case OPERATIONS.openFrontAndScroll:
         informationFront =
-          preflightInformationFront(
-            request
-          );
+          preflightInformationFront(request);
 
         target =
-          preflightLocalTarget(
-            request
-          );
+          preflightLocalTarget(request);
         break;
 
       case OPERATIONS.openFrontAndActivateWindow:
         informationFront =
-          preflightInformationFront(
-            request
-          );
+          preflightInformationFront(request);
 
         semanticTarget =
-          preflightSemanticActivation(
-            request
-          );
+          preflightSemanticActivation(request);
 
         target =
-          preflightLocalTarget(
-            request
-          );
+          preflightLocalTarget(request);
         break;
 
       default:
@@ -1540,55 +1172,39 @@
       semanticTarget.click();
     }
 
-    scrollToTarget(
-      target
-    );
-
-    updateFragment(
-      request.route
-    );
+    scrollToTarget(target);
+    updateFragment(request.route);
 
     return true;
   }
 
-  function focusElement(
-    element
-  ) {
+  function focusElement(element) {
     if (
       !element ||
       !element.isConnected ||
-      typeof element.focus !==
-        "function"
+      typeof element.focus !== "function"
     ) {
       return;
     }
 
-    window.requestAnimationFrame(
-      () => {
-        if (
-          !element.isConnected
-        ) {
-          return;
-        }
-
-        try {
-          element.focus({
-            preventScroll:
-              true
-          });
-        } catch {
-          element.focus();
-        }
+    window.requestAnimationFrame(() => {
+      if (!element.isConnected) {
+        return;
       }
-    );
+
+      try {
+        element.focus({
+          preventScroll: true
+        });
+      } catch {
+        element.focus();
+      }
+    });
   }
 
   function clearPending({
-    restoreFocus =
-      false,
-
-    closeDialog =
-      false
+    restoreFocus = false,
+    closeDialog = false
   } = {}) {
     const activator =
       state.activator;
@@ -1602,9 +1218,7 @@
     state.confirmationLocked =
       false;
 
-    if (
-      state.continueButton
-    ) {
+    if (state.continueButton) {
       state.continueButton.disabled =
         true;
     }
@@ -1622,9 +1236,7 @@
     }
 
     if (restoreFocus) {
-      focusElement(
-        activator
-      );
+      focusElement(activator);
     }
   }
 
@@ -1646,10 +1258,7 @@
     );
   }
 
-  function prepareDialog(
-    request,
-    activator
-  ) {
+  function prepareDialog(request, activator) {
     if (
       !state.dialog ||
       !state.dialogTitle ||
@@ -1666,11 +1275,8 @@
       state.pending
     ) {
       clearPending({
-        restoreFocus:
-          false,
-
-        closeDialog:
-          true
+        restoreFocus: false,
+        closeDialog: true
       });
     }
 
@@ -1688,9 +1294,7 @@
       false;
 
     state.dialogTitle.textContent =
-      `Continue to ${
-        request.label
-      }?`;
+      `Continue to ${request.label}?`;
 
     state.dialogDescription.textContent =
       request.routeDescription;
@@ -1700,58 +1304,38 @@
 
     state.dialog.showModal();
 
-    window.requestAnimationFrame(
-      () => {
-        if (
-          state.dialog.open &&
-          state.continueButton &&
-          !state.continueButton.disabled
-        ) {
-          state.continueButton.focus();
-        }
+    window.requestAnimationFrame(() => {
+      if (
+        state.dialog.open &&
+        state.continueButton &&
+        !state.continueButton.disabled
+      ) {
+        state.continueButton.focus();
       }
-    );
+    });
 
     publishReceipt(
       OUTCOMES.dialogOpened,
       {
-        sourceType:
-          request.sourceType,
-
-        roomId:
-          request.roomId ||
-          "",
-
-        destinationId:
-          request.destinationId ||
-          "",
-
-        operationType:
-          request.operationType,
-
-        route:
-          request.route,
-
-        requestKey:
-          request.key
+        sourceType: request.sourceType,
+        roomId: request.roomId || "",
+        destinationId: request.destinationId || "",
+        operationType: request.operationType,
+        route: request.route,
+        requestKey: request.key
       }
     );
 
     return true;
   }
 
-  function cancelDialog(
-    reason
-  ) {
+  function cancelDialog(reason) {
     const pending =
       state.pending;
 
     clearPending({
-      restoreFocus:
-        true,
-
-      closeDialog:
-        true
+      restoreFocus: true,
+      closeDialog: true
     });
 
     publishReceipt(
@@ -1776,157 +1360,86 @@
     return true;
   }
 
-  function createControllerRequest(
-    payload
-  ) {
-    validateControllerPayloadShape(
-      payload
-    );
-
-    validateControllerCorrespondence(
-      payload
-    );
+  function createControllerRequest(payload) {
+    validateControllerPayloadShape(payload);
+    validateControllerCorrespondence(payload);
 
     const validatedRoute =
-      validateSameOriginRoute(
-        payload.route
-      );
+      validateSameOriginRoute(payload.route);
 
     const request =
       freezeRecord({
-        sourceType:
-          "controller",
-
-        contract:
-          payload.contract,
-
-        controllerId:
-          payload.controllerId,
-
-        controllerVersion:
-          payload.controllerVersion,
-
-        roomId:
-          payload.roomId,
-
-        wingId:
-          payload.wingId,
-
-        destinationType:
-          payload.destinationType,
-
-        destinationId:
-          payload.destinationId,
-
-        contentId:
-          payload.contentId,
-
-        route:
-          validatedRoute,
-
-        localTarget:
-          payload.localTarget,
-
-        openAncestor:
-          payload.openAncestor,
-
-        informationFront:
-          payload.informationFront,
-
-        confirmationRequired:
-          payload.confirmationRequired,
-
-        operationType:
-          payload.operationType,
-
-        semanticActivation:
-          payload.semanticActivation,
-
-        label:
-          normalize(
-            payload.label
-          ),
-
-        lens:
-          payload.lens,
-
-        routeDescription:
-          normalize(
-            payload.routeDescription
-          ),
-
-        authorizationGeneration:
-          payload.authorizationGeneration,
-
-        timestamp:
-          payload.timestamp
+        sourceType: "controller",
+        contract: payload.contract,
+        controllerId: payload.controllerId,
+        controllerVersion: payload.controllerVersion,
+        roomId: payload.roomId,
+        wingId: payload.wingId,
+        destinationType: payload.destinationType,
+        destinationId: payload.destinationId,
+        contentId: payload.contentId,
+        route: validatedRoute,
+        localTarget: payload.localTarget,
+        openAncestor: payload.openAncestor,
+        informationFront: payload.informationFront,
+        confirmationRequired: payload.confirmationRequired,
+        operationType: payload.operationType,
+        semanticActivation: payload.semanticActivation,
+        label: normalize(payload.label),
+        lens: payload.lens,
+        routeDescription: normalize(payload.routeDescription),
+        authorizationGeneration: payload.authorizationGeneration,
+        timestamp: payload.timestamp
       });
 
     return freezeRecord({
       ...request,
-
-      key:
-        requestKey(
-          request
-        )
+      key: requestKey(request)
     });
   }
 
-  function createPortalRequest(
-    control
-  ) {
+  function createPortalRequest(control) {
     const destinationType =
       normalizeLower(
-        control.dataset
-          .showroomDestinationKind
+        control.dataset.showroomDestinationKind
       );
 
     const route =
       validateSameOriginRoute(
-        control.dataset
-          .showroomRoute
+        control.dataset.showroomRoute
       );
 
     const label =
       normalize(
-        control.dataset
-          .showroomRouteLabel
+        control.dataset.showroomRouteLabel
       );
 
     const description =
       normalize(
-        control.dataset
-          .showroomRouteDescription
+        control.dataset.showroomRouteDescription
       );
 
     const confirmationRequired =
       parseBooleanAttribute(
-        control.dataset
-          .showroomRouteConfirmationRequired
+        control.dataset.showroomRouteConfirmationRequired
       );
 
     const immediateNavigation =
       parseBooleanAttribute(
-        control.dataset
-          .showroomImmediateNavigation
+        control.dataset.showroomImmediateNavigation
       );
 
     const ariaControls =
       normalize(
-        control.getAttribute(
-          "aria-controls"
-        )
+        control.getAttribute("aria-controls")
       );
 
     if (
-      destinationType !==
-        DESTINATION_TYPES.externalRoute ||
+      destinationType !== DESTINATION_TYPES.externalRoute ||
       !label ||
       !description ||
-      confirmationRequired !==
-        true ||
-      immediateNavigation !==
-        false
+      confirmationRequired !== true ||
+      immediateNavigation !== false
     ) {
       throw new Error(
         "DESTINATION_PORTAL_METADATA_INVALID"
@@ -1935,8 +1448,7 @@
 
     if (
       !state.dialog.id ||
-      ariaControls !==
-        state.dialog.id
+      ariaControls !== state.dialog.id
     ) {
       throw new Error(
         "DESTINATION_PORTAL_DIALOG_CORRESPONDENCE_INVALID"
@@ -1945,83 +1457,134 @@
 
     const request =
       freezeRecord({
-        sourceType:
-          "fallback-portal",
-
-        controllerId:
-          "",
-
-        controllerVersion:
-          "",
-
-        roomId:
-          "",
-
-        wingId:
-          "",
-
+        sourceType: "fallback-portal",
+        controllerId: "",
+        controllerVersion: "",
+        roomId: "",
+        wingId: "",
         destinationType,
-
         destinationId:
           normalize(
-            control.dataset
-              .showroomContentId
+            control.dataset.showroomContentId
           ),
-
         contentId:
           normalize(
-            control.dataset
-              .showroomContentId
+            control.dataset.showroomContentId
           ),
-
         route,
-
-        localTarget:
-          null,
-
-        openAncestor:
-          null,
-
-        informationFront:
-          null,
-
-        confirmationRequired:
-          true,
-
-        operationType:
-          OPERATIONS.confirmedHardNavigation,
-
-        semanticActivation:
-          null,
-
+        localTarget: null,
+        openAncestor: null,
+        informationFront: null,
+        confirmationRequired: true,
+        operationType: OPERATIONS.confirmedHardNavigation,
+        semanticActivation: null,
         label,
-
-        lens:
-          "",
-
-        routeDescription:
-          description,
-
-        authorizationGeneration:
-          null,
-
-        timestamp:
-          nowIso()
+        lens: "",
+        routeDescription: description,
+        authorizationGeneration: null,
+        timestamp: nowIso()
       });
 
     return freezeRecord({
       ...request,
-
-      key:
-        requestKey(
-          request
-        )
+      key: requestKey(request)
     });
   }
 
-  function processControllerRequest(
-    event
-  ) {
+  function createLocalControlRequest(control) {
+    const destinationType =
+      normalizeLower(
+        control.dataset.showroomDestinationKind
+      );
+
+    if (
+      destinationType ===
+      DESTINATION_TYPES.externalRoute
+    ) {
+      return null;
+    }
+
+    const operationType =
+      LOCAL_KIND_TO_OPERATION[
+        destinationType
+      ];
+
+    if (!operationType) {
+      return null;
+    }
+
+    const route =
+      validateSameOriginRoute(
+        control.dataset.showroomControllerRoute ||
+        control.dataset.showroomRoute
+      );
+
+    const request =
+      freezeRecord({
+        sourceType: "constellation-local-control",
+        controllerId: "",
+        controllerVersion: "",
+        roomId:
+          normalize(
+            control.dataset.showroomChildId
+          ),
+        wingId:
+          normalizeLower(
+            control.dataset.showroomCardinalId
+          ),
+        destinationType,
+        destinationId:
+          normalize(
+            control.dataset.showroomContentId ||
+            control.dataset.showroomChildId
+          ),
+        contentId:
+          normalize(
+            control.dataset.showroomContentId
+          ),
+        route,
+        localTarget:
+          normalize(
+            control.dataset.showroomTarget
+          ) || null,
+        openAncestor:
+          normalize(
+            control.dataset.showroomOpenAncestor
+          ) || null,
+        informationFront:
+          normalize(
+            control.dataset.showroomRequiredFront
+          ) || null,
+        confirmationRequired: false,
+        operationType,
+        semanticActivation:
+          normalize(
+            control.dataset.showroomSemanticActivation
+          ) || null,
+        label:
+          normalize(
+            control.dataset.showroomChildLabel ||
+            control.textContent
+          ),
+        lens:
+          normalizeLower(
+            control.dataset.showroomLens
+          ),
+        routeDescription: "",
+        authorizationGeneration: null,
+        timestamp: nowIso()
+      });
+
+    validateOperationCorrespondence(request);
+    validateSameOriginRoute(request.route);
+
+    return freezeRecord({
+      ...request,
+      key: localRequestKey(request)
+    });
+  }
+
+  function processControllerRequest(event) {
     if (
       state.disposed ||
       state.failed ||
@@ -2034,15 +1597,9 @@
 
     try {
       request =
-        createControllerRequest(
-          event.detail
-        );
+        createControllerRequest(event.detail);
 
-      if (
-        isConsumed(
-          request.key
-        )
-      ) {
+      if (isConsumed(request.key)) {
         throw new Error(
           "DESTINATION_REQUEST_ALREADY_CONSUMED"
         );
@@ -2050,8 +1607,7 @@
 
       if (
         state.pending &&
-        state.pending.key ===
-          request.key
+        state.pending.key === request.key
       ) {
         throw new Error(
           "DESTINATION_REQUEST_ALREADY_PENDING"
@@ -2060,7 +1616,7 @@
 
       if (
         request.operationType ===
-          OPERATIONS.confirmedHardNavigation
+        OPERATIONS.confirmedHardNavigation
       ) {
         prepareDialog(
           request,
@@ -2070,37 +1626,19 @@
         return;
       }
 
-      executeLocalRequest(
-        request
-      );
-
-      rememberConsumedKey(
-        request.key
-      );
+      executeLocalRequest(request);
+      rememberConsumedKey(request.key);
 
       publishReceipt(
         OUTCOMES.localExecuted,
         {
-          sourceType:
-            request.sourceType,
-
-          roomId:
-            request.roomId,
-
-          destinationId:
-            request.destinationId,
-
-          operationType:
-            request.operationType,
-
-          route:
-            request.route,
-
-          authorizationGeneration:
-            request.authorizationGeneration,
-
-          requestKey:
-            request.key
+          sourceType: request.sourceType,
+          roomId: request.roomId,
+          destinationId: request.destinationId,
+          operationType: request.operationType,
+          route: request.route,
+          authorizationGeneration: request.authorizationGeneration,
+          requestKey: request.key
         }
       );
     } catch (error) {
@@ -2108,21 +1646,16 @@
         error instanceof Error
           ? error.message
           : String(error),
-
         {
-          sourceType:
-            "controller",
-
+          sourceType: "controller",
           roomId:
             request
               ? request.roomId
               : "",
-
           operationType:
             request
               ? request.operationType
               : "",
-
           route:
             request
               ? request.route
@@ -2132,9 +1665,127 @@
     }
   }
 
-  function handlePortalClick(
-    event
-  ) {
+  function handleLocalConstellationActivation(event) {
+    if (
+      state.disposed ||
+      state.failed ||
+      !state.initialized ||
+      event.defaultPrevented
+    ) {
+      return;
+    }
+
+    const target =
+      isElement(event.target)
+        ? event.target
+        : null;
+
+    const control =
+      target
+        ? target.closest(SELECTORS.childControl)
+        : null;
+
+    if (
+      !control ||
+      !state.root.contains(control) ||
+      !control.isConnected ||
+      control.matches(":disabled") ||
+      control.getAttribute("aria-disabled") === "true"
+    ) {
+      return;
+    }
+
+    const destinationType =
+      normalizeLower(
+        control.dataset.showroomDestinationKind
+      );
+
+    if (
+      destinationType ===
+      DESTINATION_TYPES.externalRoute
+    ) {
+      return;
+    }
+
+    let request;
+
+    try {
+      request =
+        createLocalControlRequest(control);
+
+      if (!request) {
+        return;
+      }
+
+      if (!markLocalInFlight(request.key)) {
+        return;
+      }
+
+      window.requestAnimationFrame(() => {
+        try {
+          executeLocalRequest(request);
+
+          publishReceipt(
+            OUTCOMES.localExecuted,
+            {
+              sourceType: request.sourceType,
+              destinationType: request.destinationType,
+              destinationId: request.destinationId,
+              operationType: request.operationType,
+              route: request.route,
+              localTarget: request.localTarget || "",
+              requestKey: request.key
+            }
+          );
+        } catch (error) {
+          failExecution(
+            error instanceof Error
+              ? error.message
+              : String(error),
+            {
+              sourceType:
+                "constellation-local-control",
+              destinationType:
+                request.destinationType,
+              destinationId:
+                request.destinationId,
+              operationType:
+                request.operationType,
+              route:
+                request.route,
+              localTarget:
+                request.localTarget || ""
+            }
+          );
+        } finally {
+          clearLocalInFlight(request.key);
+        }
+      });
+    } catch (error) {
+      if (request && request.key) {
+        clearLocalInFlight(request.key);
+      }
+
+      failRequest(
+        error instanceof Error
+          ? error.message
+          : String(error),
+        {
+          sourceType:
+            "constellation-local-control",
+          route:
+            request
+              ? request.route
+              : normalize(
+                  control.dataset.showroomControllerRoute ||
+                  control.dataset.showroomRoute
+                )
+        }
+      );
+    }
+  }
+
+  function handlePortalClick(event) {
     if (
       state.disposed ||
       state.failed ||
@@ -2150,16 +1801,12 @@
 
     const control =
       target
-        ? target.closest(
-            SELECTORS.portal
-          )
+        ? target.closest(SELECTORS.portal)
         : null;
 
     if (
       !control ||
-      !state.portals.includes(
-        control
-      )
+      !state.portals.includes(control)
     ) {
       return;
     }
@@ -2170,15 +1817,9 @@
 
     try {
       request =
-        createPortalRequest(
-          control
-        );
+        createPortalRequest(control);
 
-      if (
-        isConsumed(
-          request.key
-        )
-      ) {
+      if (isConsumed(request.key)) {
         throw new Error(
           "DESTINATION_PORTAL_ALREADY_CONSUMED"
         );
@@ -2186,34 +1827,26 @@
 
       if (
         state.pending &&
-        state.pending.key ===
-          request.key
+        state.pending.key === request.key
       ) {
         throw new Error(
           "DESTINATION_PORTAL_ALREADY_PENDING"
         );
       }
 
-      prepareDialog(
-        request,
-        control
-      );
+      prepareDialog(request, control);
     } catch (error) {
       failRequest(
         error instanceof Error
           ? error.message
           : String(error),
-
         {
-          sourceType:
-            "fallback-portal",
-
+          sourceType: "fallback-portal",
           route:
             request
               ? request.route
               : normalize(
-                  control.dataset
-                    .showroomRoute
+                  control.dataset.showroomRoute
                 )
         }
       );
@@ -2240,117 +1873,72 @@
 
     try {
       if (
-        pending.sourceType ===
-          "controller"
+        pending.sourceType === "controller"
       ) {
-        validateControllerCorrespondence(
-          pending
-        );
+        validateControllerCorrespondence(pending);
       }
 
       const route =
-        validateSameOriginRoute(
-          pending.route
-        );
+        validateSameOriginRoute(pending.route);
 
-      if (
-        isConsumed(
-          pending.key
-        )
-      ) {
+      if (isConsumed(pending.key)) {
         throw new Error(
           "DESTINATION_REQUEST_ALREADY_CONSUMED"
         );
       }
 
-      window.location.assign(
-        route
-      );
+      window.location.assign(route);
 
-      rememberConsumedKey(
-        pending.key
-      );
+      rememberConsumedKey(pending.key);
 
       publishReceipt(
         OUTCOMES.externalConfirmed,
         {
-          sourceType:
-            pending.sourceType,
-
-          roomId:
-            pending.roomId ||
-            "",
-
-          destinationId:
-            pending.destinationId ||
-            "",
-
-          operationType:
-            pending.operationType,
-
+          sourceType: pending.sourceType,
+          roomId: pending.roomId || "",
+          destinationId: pending.destinationId || "",
+          operationType: pending.operationType,
           route,
-
           authorizationGeneration:
             pending.authorizationGeneration,
-
-          requestKey:
-            pending.key
+          requestKey: pending.key
         }
       );
     } catch (error) {
       clearPending({
-        restoreFocus:
-          true,
-
-        closeDialog:
-          true
+        restoreFocus: true,
+        closeDialog: true
       });
 
       failExecution(
         error instanceof Error
           ? error.message
           : String(error),
-
         {
-          sourceType:
-            pending.sourceType,
-
-          roomId:
-            pending.roomId ||
-            "",
-
-          route:
-            pending.route
+          sourceType: pending.sourceType,
+          roomId: pending.roomId || "",
+          route: pending.route
         }
       );
     }
   }
 
-  function handleDialogCancel(
-    event
-  ) {
+  function handleDialogCancel(event) {
     event.preventDefault();
 
-    cancelDialog(
-      "escape"
-    );
+    cancelDialog("escape");
   }
 
   function discoverDom() {
     state.root =
-      queryExactlyOne(
-        SELECTORS.root
-      );
+      queryExactlyOne(SELECTORS.root);
 
     state.receipt =
       queryExactlyOne(
         SELECTORS.receipt,
         {
-          root:
-            state.root,
-
-          required:
-            false
+          root: state.root,
+          required: false
         }
       );
 
@@ -2358,90 +1946,62 @@
       queryExactlyOne(
         SELECTORS.controllerEnter,
         {
-          root:
-            state.root,
-
-          required:
-            false
+          root: state.root,
+          required: false
         }
       );
 
     state.dialog =
-      queryExactlyOne(
-        SELECTORS.dialog
-      );
+      queryExactlyOne(SELECTORS.dialog);
 
     state.dialogTitle =
-      queryExactlyOne(
-        SELECTORS.dialogTitle
-      );
+      queryExactlyOne(SELECTORS.dialogTitle);
 
     state.dialogDescription =
-      queryExactlyOne(
-        SELECTORS.dialogDescription
-      );
+      queryExactlyOne(SELECTORS.dialogDescription);
 
     state.closeButton =
-      queryExactlyOne(
-        SELECTORS.close
-      );
+      queryExactlyOne(SELECTORS.close);
 
     state.stayButton =
-      queryExactlyOne(
-        SELECTORS.stay
-      );
+      queryExactlyOne(SELECTORS.stay);
 
     state.continueButton =
-      queryExactlyOne(
-        SELECTORS.continue
-      );
+      queryExactlyOne(SELECTORS.continue);
 
     state.portals =
       Array.from(
-        document.querySelectorAll(
-          SELECTORS.portal
-        )
+        document.querySelectorAll(SELECTORS.portal)
       );
   }
 
   function validateDialogContainment() {
     for (
-      const [
-        node,
-        code
-      ]
+      const [node, code]
       of [
         [
           state.dialogTitle,
           "DESTINATION_DIALOG_TITLE_OUTSIDE_DIALOG"
         ],
-
         [
           state.dialogDescription,
           "DESTINATION_DIALOG_DESCRIPTION_OUTSIDE_DIALOG"
         ],
-
         [
           state.closeButton,
           "DESTINATION_DIALOG_CLOSE_OUTSIDE_DIALOG"
         ],
-
         [
           state.stayButton,
           "DESTINATION_DIALOG_STAY_OUTSIDE_DIALOG"
         ],
-
         [
           state.continueButton,
           "DESTINATION_DIALOG_CONTINUE_OUTSIDE_DIALOG"
         ]
       ]
     ) {
-      if (
-        !state.dialog.contains(
-          node
-        )
-      ) {
+      if (!state.dialog.contains(node)) {
         throw new Error(code);
       }
     }
@@ -2449,10 +2009,7 @@
 
   function validateStaticContract() {
     if (
-      !(
-        state.dialog instanceof
-        HTMLDialogElement
-      )
+      !(state.dialog instanceof HTMLDialogElement)
     ) {
       throw new Error(
         "DESTINATION_DIALOG_ELEMENT_INVALID"
@@ -2461,23 +2018,16 @@
 
     validateDialogContainment();
 
-    if (
-      state.portals.length !==
-        8
-    ) {
+    if (state.portals.length !== 8) {
       throw new Error(
         `DESTINATION_PORTAL_COUNT_INVALID:${state.portals.length}`
       );
     }
 
     if (
-      state.dialog.getAttribute(
-        "aria-labelledby"
-      ) !==
+      state.dialog.getAttribute("aria-labelledby") !==
         state.dialogTitle.id ||
-      state.dialog.getAttribute(
-        "aria-describedby"
-      ) !==
+      state.dialog.getAttribute("aria-describedby") !==
         state.dialogDescription.id
     ) {
       throw new Error(
@@ -2485,13 +2035,8 @@
       );
     }
 
-    for (
-      const portal
-      of state.portals
-    ) {
-      createPortalRequest(
-        portal
-      );
+    for (const portal of state.portals) {
+      createPortalRequest(portal);
     }
 
     state.continueButton.disabled =
@@ -2508,6 +2053,13 @@
     addListener(
       document,
       "click",
+      handleLocalConstellationActivation,
+      true
+    );
+
+    addListener(
+      document,
+      "click",
       handlePortalClick
     );
 
@@ -2515,9 +2067,7 @@
       state.closeButton,
       "click",
       () => {
-        cancelDialog(
-          "close"
-        );
+        cancelDialog("close");
       }
     );
 
@@ -2525,9 +2075,7 @@
       state.stayButton,
       "click",
       () => {
-        cancelDialog(
-          "stay"
-        );
+        cancelDialog("stay");
       }
     );
 
@@ -2548,9 +2096,7 @@
       "pagehide",
       event => {
         if (!event.persisted) {
-          dispose(
-            "pagehide"
-          );
+          dispose("pagehide");
         }
       }
     );
@@ -2559,81 +2105,53 @@
   function exposeApi() {
     const api =
       Object.freeze({
-        contract:
-          CONTRACT,
-
-        moduleId:
-          MODULE_ID,
-
-        moduleVersion:
-          VERSION,
-
-        owner:
-          OWNER,
+        contract: CONTRACT,
+        moduleId: MODULE_ID,
+        moduleVersion: VERSION,
+        owner: OWNER,
 
         getState() {
           return freezeRecord({
-            initialized:
-              state.initialized,
-
-            failed:
-              state.failed,
-
-            disposed:
-              state.disposed,
-
-            portalCount:
-              state.portals.length,
-
+            initialized: state.initialized,
+            failed: state.failed,
+            disposed: state.disposed,
+            portalCount: state.portals.length,
             dialogOpen:
               Boolean(
                 state.dialog &&
                 state.dialog.open
               ),
-
             pending:
               state.pending
                 ? freezeRecord({
                     sourceType:
                       state.pending.sourceType,
-
                     roomId:
-                      state.pending.roomId ||
-                      "",
-
+                      state.pending.roomId || "",
                     destinationId:
-                      state.pending.destinationId ||
-                      "",
-
+                      state.pending.destinationId || "",
                     operationType:
                       state.pending.operationType,
-
                     route:
                       state.pending.route
                   })
                 : null,
-
             confirmationLocked:
               state.confirmationLocked,
-
             consumedRequestCount:
-              state.consumedKeys.size
+              state.consumedKeys.size,
+            localInFlightCount:
+              state.localInFlightKeys.size
           });
         },
 
-        cancelPending(
-          reason =
-            "api"
-        ) {
+        cancelPending(reason = "api") {
           if (!state.pending) {
             return false;
           }
 
           return cancelDialog(
-            `api:${
-              normalize(reason) ||
-              "cancel"
-            }`
+            `api:${normalize(reason) || "cancel"}`
           );
         },
 
@@ -2644,17 +2162,10 @@
       window,
       "SHOWROOM_DESTINATIONS",
       {
-        configurable:
-          true,
-
-        enumerable:
-          false,
-
-        writable:
-          false,
-
-        value:
-          api
+        configurable: true,
+        enumerable: false,
+        writable: false,
+        value: api
       }
     );
   }
@@ -2665,18 +2176,13 @@
 
     if (
       api &&
-      api.contract ===
-        CONTRACT &&
-      api.moduleId ===
-        MODULE_ID &&
-      api.moduleVersion ===
-        VERSION &&
-      api.owner ===
-        OWNER
+      api.contract === CONTRACT &&
+      api.moduleId === MODULE_ID &&
+      api.moduleVersion === VERSION &&
+      api.owner === OWNER
     ) {
       try {
-        delete window
-          .SHOWROOM_DESTINATIONS;
+        delete window.SHOWROOM_DESTINATIONS;
       } catch {
         /* Best-effort removal. */
       }
@@ -2689,29 +2195,20 @@
 
     if (
       guard &&
-      guard.contract ===
-        CONTRACT &&
-      guard.moduleId ===
-        MODULE_ID &&
-      guard.version ===
-        VERSION &&
-      guard.owner ===
-        OWNER
+      guard.contract === CONTRACT &&
+      guard.moduleId === MODULE_ID &&
+      guard.version === VERSION &&
+      guard.owner === OWNER
     ) {
       try {
-        delete window[
-          GLOBAL_GUARD
-        ];
+        delete window[GLOBAL_GUARD];
       } catch {
         /* Best-effort removal. */
       }
     }
   }
 
-  function dispose(
-    reason =
-      "api"
-  ) {
+  function dispose(reason = "api") {
     if (state.disposed) {
       return true;
     }
@@ -2722,14 +2219,12 @@
     removeListeners();
 
     clearPending({
-      restoreFocus:
-        true,
-
-      closeDialog:
-        true
+      restoreFocus: true,
+      closeDialog: true
     });
 
     state.consumedKeys.clear();
+    state.localInFlightKeys.clear();
     state.portals = [];
 
     removeApi();
@@ -2744,12 +2239,8 @@
         reason:
           normalize(reason) ||
           "api",
-
-        listenersRemoved:
-          true,
-
-        pendingCleared:
-          true
+        listenersRemoved: true,
+        pendingCleared: true
       }
     );
 
@@ -2765,22 +2256,15 @@
     return true;
   }
 
-  function rollbackInitialization(
-    error
-  ) {
+  function rollbackInitialization(error) {
     removeListeners();
 
     clearPending({
-      restoreFocus:
-        false,
-
-      closeDialog:
-        true
+      restoreFocus: false,
+      closeDialog: true
     });
 
-    if (
-      state.continueButton
-    ) {
+    if (state.continueButton) {
       state.continueButton.disabled =
         true;
     }
@@ -2805,9 +2289,7 @@
     publishReceipt(
       OUTCOMES.executionFailed,
       {
-        phase:
-          "initialization",
-
+        phase: "initialization",
         reason
       }
     );
@@ -2815,9 +2297,7 @@
     dispatch(
       EVENTS.failure,
       {
-        phase:
-          "initialization",
-
+        phase: "initialization",
         reason
       }
     );
@@ -2853,76 +2333,53 @@
       publishReceipt(
         OUTCOMES.initialized,
         {
-          controllerEvent:
-            REQUEST_EVENT,
-
-          controllerContract:
-            REQUEST_CONTRACT,
-
-          portalSelector:
-            SELECTORS.portal,
-
-          portalCount:
-            state.portals.length,
-
-          dialogSelector:
-            SELECTORS.dialog,
-
-          fullyImplementedOperations:
-            [
-              OPERATIONS.scrollAnchor,
-              OPERATIONS.openDisclosureAndScroll,
-              OPERATIONS.scrollLocalSurface,
-              OPERATIONS.confirmedHardNavigation
-            ].join(","),
-
-          conditionallyImplementedOperations:
-            [
-              OPERATIONS.openFrontAndScroll,
-              OPERATIONS.openFrontAndActivateWindow
-            ].join(","),
-
-          listenersBound:
-            true
+          controllerEvent: REQUEST_EVENT,
+          controllerContract: REQUEST_CONTRACT,
+          portalSelector: SELECTORS.portal,
+          childControlSelector: SELECTORS.childControl,
+          portalCount: state.portals.length,
+          dialogSelector: SELECTORS.dialog,
+          localConstellationDirectExecution: true,
+          localConstellationListenerCapture: true,
+          fullyImplementedOperations: [
+            OPERATIONS.scrollAnchor,
+            OPERATIONS.openDisclosureAndScroll,
+            OPERATIONS.scrollLocalSurface,
+            OPERATIONS.confirmedHardNavigation
+          ].join(","),
+          conditionallyImplementedOperations: [
+            OPERATIONS.openFrontAndScroll,
+            OPERATIONS.openFrontAndActivateWindow
+          ].join(","),
+          listenersBound: true
         }
       );
 
       dispatch(
         EVENTS.ready,
         {
-          controllerEvent:
-            REQUEST_EVENT,
-
-          controllerContract:
-            REQUEST_CONTRACT,
-
-          portalCount:
-            state.portals.length,
-
-          dialogDiscovered:
-            true,
-
-          listenersBound:
-            true
+          controllerEvent: REQUEST_EVENT,
+          controllerContract: REQUEST_CONTRACT,
+          portalCount: state.portals.length,
+          dialogDiscovered: true,
+          localConstellationDirectExecution: true,
+          localConstellationListenerCapture: true,
+          listenersBound: true
         }
       );
     } catch (error) {
-      rollbackInitialization(
-        error
-      );
+      rollbackInitialization(error);
     }
   }
 
   if (
-    document.readyState ===
-      "loading"
+    document.readyState === "loading"
   ) {
     document.addEventListener(
       "DOMContentLoaded",
       initialize,
       {
-        once:
-          true
+        once: true
       }
     );
   } else {
@@ -2931,12 +2388,9 @@
 })();
 
 /*
-SHOWROOM_DESTINATION_EXECUTOR_CONSTRUCTION_RECEIPT
+SHOWROOM_LOCAL_CONSTELLATION_DIRECT_EXECUTION_CONSTRUCTION_RECEIPT
 
 FILE CONSTRUCTED:
-YES — CANDIDATE FULL-FILE REPLACEMENT PROVIDED
-
-TARGET FILE:
 /showroom/index.destinations.js
 
 CONTRACT:
@@ -2946,93 +2400,61 @@ MODULE ID:
 SHOWROOM_DESTINATION_EXECUTOR
 
 VERSION:
-1.0.2-bootstrap-and-optional-discovery-correction
+1.1.0-local-constellation-direct-execution
 
-EVENT CONSUMED:
-SHOWROOM_ARCHCOIN_DESTINATION_ENTRY_REQUESTED
+DELEGATED LOCAL LISTENER:
+ADDED
 
-PORTAL SELECTOR BOUND:
-[data-showroom-fallback-portal]
+LOCAL LISTENER PHASE:
+CAPTURE
 
-DIALOG SELECTOR BOUND:
-[data-showroom-route-dialog]
+LOCAL DESTINATION KINDS HANDLED:
 
-FULLY IMPLEMENTED OPERATIONS:
+- local-anchor
+- local-disclosure-target
+- local-window-experience
+- local-diamond-experience
+- local-narrative-surface
 
-- scroll-anchor
-- open-disclosure-and-scroll
-- scroll-local-surface
-- confirmed-hard-navigation
+EXTERNAL CONSTELLATION CONTROLS:
+IGNORED BY LOCAL HANDLER
 
-CONDITIONALLY IMPLEMENTED OPERATIONS:
+LOCAL EXECUTION SOURCE:
+HTML CONSTELLATION CHILD METADATA
 
-- open-front-and-scroll
-- open-front-and-activate-window
+CONTROLLER PAYLOAD VALIDATION:
+RETAINED FOR CONTROLLER-ISSUED REQUESTS ONLY
 
-OPTIONAL DOM DISCOVERY:
+LOCAL HTML REQUEST VALIDATION:
+DEDICATED DIRECT-LOCAL REQUEST PATH
 
-[data-showroom-destinations-receipt]:
-ZERO MATCHES RETURN null
+LOCAL DEDUPLICATION:
+IN-FLIGHT ONLY
 
-[data-showroom-controller-enter]:
-ZERO MATCHES RETURN null
+REQUESTANIMATIONFRAME SCHEDULING:
+SINGLE FRAME RETAINED
 
-DUPLICATE BOOTSTRAP PROTECTION:
+WINDOW PUBLIC CONTROL:
+PRESERVED THROUGH DECLARED SEMANTIC ACTIVATION ONLY
 
-- immediate global sentinel installed before DOM readiness scheduling;
-- duplicate pre-DOMContentLoaded execution rejected;
-- guard identity includes contract, module ID, version, and owner;
-- guard removed during initialization rollback;
-- guard removed during disposal;
-- guard removal is ownership checked.
+DIAMOND BEHAVIOR:
+DIRECT LOCAL SCROLL ONLY
 
-FOCUS RESTORATION:
+CONTROLLER MODIFIED:
+NO
 
-- controller requests retain the active initiating element when available;
-- Enter control is the defensive fallback;
-- structural Showroom root is not used as a focus fallback;
-- pending-dialog replacement does not restore obsolete focus.
+HTML MODIFIED:
+NO
 
-INFORMATION-FRONT STATUS:
-CONDITIONALLY IMPLEMENTED
+CSS MODIFIED:
+NO
 
-CURRENT BOUNDARY:
-Execution succeeds only when the declared information front is already
-connected and visibly available. No private front, gauge, Window, Diamond,
-controller, or interaction state mutation is invented.
-
-SOURCE-LEVEL REVIEW STATUS:
-COMPLETE FULL-FILE CANDIDATE PROVIDED
+INTERACTIONS MODIFIED:
+NO
 
 BROWSER VALIDATION:
 NOT PERFORMED
 
-DEPLOYED RUNTIME SUCCESS:
+DEPLOYED RUNTIME STATUS:
 NOT CLAIMED
-
-HTML INTEGRATION:
-NOT AUTHORIZED
-NOT PERFORMED
-
-FILES NOT MODIFIED:
-
-- /showroom/index.html
-- /showroom/index.controller.js
-- /showroom/index.interactions.js
-- /showroom/index.ui.js
-- /assets/elara/elara.room-entry.js
-- /showroom/index.css
-
-FINAL SOURCE DISPOSITION:
-READY_FOR_FINAL_SOURCE_REVIEW
-
-STOP CONFIRMATION:
-
-NO HTML SCRIPT TAG ADDED
-NO CONTROLLER MODIFIED
-NO INTERACTION MODULE MODIFIED
-NO UI MODIFIED
-NO ELARA ASSET MODIFIED
-NO CSS MODIFIED
-NO INTEGRATION SELF-ACTIVATED
 */

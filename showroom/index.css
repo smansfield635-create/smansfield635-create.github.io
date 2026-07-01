@@ -2,36 +2,25 @@
 /* TNT FULL-FILE REPLACEMENT */
 /* SHOWROOM_MIRRORLAND_NARRATIVE_CONSTELLATION_CSS_TNT_v10 */
 /*
-  Forward recovery renewal.
+  Bounded forward recovery renewal.
 
   Construction basis:
-  - derived from the last successful CSS v8 layout model;
-  - preserves normal document flow for shell, main, intro, and all stages;
-  - keeps the orbit bounded inside its panel;
-  - keeps compositor canvases absolute and pointer-transparent inside the
-    orbit field;
-  - preserves semantic star and Compass pointer authority;
-  - preserves Diamond, Window, controller, compositor, crystal, gauges,
-    and navigation ownership boundaries.
+  - exact successful CSS v8 layout and sizing model;
+  - no shell, main, intro, orbit, stage, responsive, or secondary-object
+    layout renewal;
+  - no broad visibility safeguards;
+  - no forced stage-display additions;
+  - no dialog renewal;
+  - no semantic-hit-area enlargement.
 
-  Bounded forward corrections:
-  - protects hidden receipt and validation outputs;
-  - restores controller-reflected cardinal-to-cluster visibility;
-  - preserves readable gauge and information fallback content before
-    gauges readiness;
-  - returns selected gauge and information visibility to the gauges
-    runtime after readiness;
-  - makes the orbit fallback notice pointer-transparent;
-  - adds bounded dialog overflow;
-  - enlarges semantic star hit surfaces.
+  Approved bounded changes only:
+  1. hidden receipt and validation output protection;
+  2. controller-reflected cardinal-to-cluster visibility;
+  3. readable gauge and information fallback before gauges readiness;
+  4. runtime-owned selected detail and panel visibility after readiness;
+  5. orbit fallback pointer transparency.
 
-  Explicit exclusions:
-  - no broad protected-stage visibility forcing;
-  - no forced stage display overrides;
-  - no root, shell, main, or intro fixed positioning;
-  - no viewport-sized scene conversion;
-  - no page-level clipping;
-  - no unrelated layout restructuring.
+  HTML separately owns CSS v10 and crystals v8 query correspondence.
 */
 
 @layer reset, foundation, shell, header, stages, controls, narrative, fronts, dialogs, responsive, accessibility;
@@ -1125,9 +1114,7 @@
     z-index: 2;
     display: grid;
     place-items: center;
-    width: 2.75rem;
-    min-width: 2.75rem;
-    min-height: 2.75rem;
+    width: 2.2rem;
     aspect-ratio: 1;
     padding: 0;
     border: 0;
@@ -1384,10 +1371,7 @@
   }
 
   .showroom-star[aria-expanded="true"]::before,
-  .showroom-star[data-active]::before,
-  .showroom-star[data-showroom-active="true"]::before,
-  .showroom-star[data-showroom-selected="true"]::before,
-  .showroom-star[data-showroom-primary="true"]::before {
+  .showroom-star[data-active]::before {
     box-shadow:
       0 0 1.6rem
       rgba(255, 238, 184, 0.92),
@@ -1419,9 +1403,9 @@
   }
 
   html[data-showroom-crystals-ready="false"]
-  [data-showroom-fallback-star-layer],
+  .showroom-primary-stars,
   [data-showroom-root][data-showroom-crystals-ready="false"]
-  [data-showroom-fallback-star-layer] {
+  .showroom-primary-stars {
     opacity: 1;
   }
 
@@ -1437,7 +1421,6 @@
     background: rgba(5, 8, 16, 0.78);
     backdrop-filter: blur(8px);
     pointer-events: none;
-    user-select: none;
   }
 
   .showroom-orbit__fallback p {
@@ -2201,6 +2184,11 @@
     border-bottom: 0;
   }
 
+  [data-showroom-root][data-showroom-gauges-ready="false"]
+  .showroom-gauge-detail[hidden] {
+    display: block !important;
+  }
+
   [data-showroom-root][data-showroom-gauges-ready="true"]
   .showroom-gauge-detail {
     display: none;
@@ -2273,6 +2261,11 @@
 
   .showroom-information-panel:last-child {
     border-bottom: 0;
+  }
+
+  [data-showroom-root][data-showroom-gauges-ready="false"]
+  .showroom-information-panel[hidden] {
+    display: block !important;
   }
 
   [data-showroom-root][data-showroom-gauges-ready="true"]
@@ -2368,14 +2361,7 @@
         36rem,
         calc(100% - 2rem)
       );
-    max-height:
-      min(
-        90vh,
-        46rem
-      );
     padding: 0;
-    overflow: auto;
-    overscroll-behavior: contain;
     border: 1px solid var(--showroom-line-strong);
     border-radius: var(--showroom-radius-xl);
     color: var(--showroom-text);
@@ -2574,7 +2560,7 @@
     .route-menu-panel {
       position: static;
       width: 100%;
-      max-height: min(70vh, 38rem);
+      max-height: none;
       margin-top: 0.6rem;
     }
 
@@ -2655,15 +2641,6 @@
     .showroom-footer button {
       width: 100%;
     }
-
-    .showroom-route-dialog {
-      width: calc(100% - 1rem);
-      max-height: calc(100vh - 1rem);
-    }
-
-    .dialog-shell {
-      padding: 1rem;
-    }
   }
 
   @media (max-width: 34rem) {
@@ -2726,12 +2703,6 @@
       min-width: 0;
       transform: translateX(50%);
     }
-
-    .showroom-orbit__fallback {
-      right: 0.65rem;
-      bottom: 0.65rem;
-      left: 0.65rem;
-    }
   }
 }
 
@@ -2777,18 +2748,10 @@
       box-shadow: none;
     }
 
-    .showroom-star {
-      border: 1px solid transparent;
-    }
-
     .showroom-star::before {
       border: 2px solid ButtonText;
       background: ButtonFace;
       box-shadow: none;
-    }
-
-    .showroom-star:focus-visible {
-      border-color: Highlight;
     }
 
     .button,

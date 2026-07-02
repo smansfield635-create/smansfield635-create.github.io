@@ -1,17 +1,18 @@
 /* TARGET FILE: /showroom/index.controller.js */
 /* TNT FULL-FILE REPLACEMENT */
-/* SHOWROOM_MIRRORLAND_CONSTELLATION_CONTROLLER_TNT_v8 */
+/* SHOWROOM_MIRRORLAND_CONSTELLATION_CONTROLLER_TNT_v9 */
 
 (() => {
   "use strict";
 
   const MODULE = Object.freeze({
     id: "SHOWROOM_MIRRORLAND_CONSTELLATION_CONTROLLER",
-    version: "8.0.0-intent-selection-authority",
+    version: "9.0.0-archcoin-route-gateway",
     file: "/showroom/index.controller.js",
     interactionModuleId: "DGB_ARCHCOIN_INTERACTIONS",
     interactionModuleVersion: "1.0.0-pointer-gesture-interpreter",
-    motionContractId: "AUDRALIA_ARCHCOIN_COMPLETE_QUATERNION_MOTION_CONTRACT_v1",
+    motionContractId:
+      "AUDRALIA_ARCHCOIN_COMPLETE_QUATERNION_MOTION_CONTRACT_v1",
     motionContractVersion: "1.0.0"
   });
 
@@ -26,12 +27,6 @@
     CONSTELLATION: "CONSTELLATION",
     CLUSTER: "CLUSTER",
     HELD: "HELD"
-  });
-
-  const DESTINATION_KINDS = Object.freeze({
-    INTERNAL_INFO: "internal-info",
-    OBJECT_INSPECT: "object-inspect",
-    EXTERNAL_ROUTE: "external-route"
   });
 
   const DESTINATION_TYPES = Object.freeze({
@@ -61,39 +56,6 @@
     COMPASS_STATE: "compassState",
     SEMANTIC_PROJECTION: "semanticProjection"
   });
-
-  const INTENT_ENTRY = Object.freeze({
-    event: "SHOWROOM_ARCHCOIN_DESTINATION_ENTRY_REQUESTED",
-    contract: "SHOWROOM_DESTINATION_INTENT_REQUEST_v2"
-  });
-
-  const INTENT_PAYLOAD_KEYS = Object.freeze([
-    "contract",
-    "controllerId",
-    "controllerVersion",
-    "controllerFile",
-    "sourceState",
-    "wingId",
-    "wingLabel",
-    "childId",
-    "childLabel",
-    "destinationKind",
-    "infoId",
-    "route",
-    "routeLabel",
-    "routeDescription",
-    "routeEvidence",
-    "routeRole",
-    "objectTarget",
-    "semanticActivation",
-    "lens",
-    "visualClass",
-    "emphasis",
-    "returnModel",
-    "returnZone",
-    "authorizationGeneration",
-    "timestamp"
-  ]);
 
   const WINGS = Object.freeze([
     "north",
@@ -135,17 +97,22 @@
     "primaryId"
   ]);
 
-  const PREVIEW_PAYLOAD_KEY_SET =
-    new Set(PREVIEW_PAYLOAD_KEYS);
+  const PREVIEW_PAYLOAD_KEY_SET = new Set(PREVIEW_PAYLOAD_KEYS);
 
-  const HALF_SQRT_TWO =
-    Math.SQRT1_2;
+  const HALF_SQRT_TWO = Math.SQRT1_2;
 
   const CANONICAL_CONSTELLATION_QUATERNIONS = Object.freeze({
     north: Object.freeze([0, 0, 0, 1]),
     east: Object.freeze([0, 0, -HALF_SQRT_TWO, HALF_SQRT_TWO]),
     south: Object.freeze([0, 0, 1, 0]),
     west: Object.freeze([0, 0, HALF_SQRT_TWO, HALF_SQRT_TWO])
+  });
+
+  const PRESENTATION_MODE_BY_STATE = Object.freeze({
+    [STATES.CONSTELLATION]: PRESENTATION_MODES.CONSTELLATION,
+    [STATES.CLUSTER_OPEN]: PRESENTATION_MODES.CLUSTER,
+    [STATES.ROOM_SELECTED]: PRESENTATION_MODES.CLUSTER,
+    [STATES.SYSTEM_HELD]: PRESENTATION_MODES.HELD
   });
 
   const PRESENTATION_BY_STATE = Object.freeze({
@@ -178,13 +145,6 @@
     })
   });
 
-  const PRESENTATION_MODE_BY_STATE = Object.freeze({
-    [STATES.CONSTELLATION]: PRESENTATION_MODES.CONSTELLATION,
-    [STATES.CLUSTER_OPEN]: PRESENTATION_MODES.CLUSTER,
-    [STATES.ROOM_SELECTED]: PRESENTATION_MODES.CLUSTER,
-    [STATES.SYSTEM_HELD]: PRESENTATION_MODES.HELD
-  });
-
   const TRANSITIONS = Object.freeze({
     [STATES.CONSTELLATION]: Object.freeze([
       STATES.CONSTELLATION,
@@ -211,6 +171,283 @@
     ])
   });
 
+  function freezeRecord(record) {
+    return Object.freeze({
+      wing: record.wing,
+      coin: record.coin,
+      roomId: record.roomId,
+      label: record.label,
+      route: record.route,
+      contentId: record.contentId,
+      lens: record.lens,
+      routeDescription: record.routeDescription,
+      visualClass: record.visualClass,
+      emphasis: record.emphasis,
+      existingRoute: Boolean(record.existingRoute)
+    });
+  }
+
+  const CANONICAL_ROOM_RECORDS = Object.freeze([
+    freezeRecord({
+      wing: "north",
+      coin: "story",
+      roomId: "north-1",
+      label: "Welcome to Mirrorland",
+      route: "/showroom/story/welcome/",
+      contentId: "welcome",
+      lens: "story",
+      routeDescription: "Open the Welcome to Mirrorland story page.",
+      visualClass: "ROUTE_SHELL",
+      emphasis: "normal",
+      existingRoute: false
+    }),
+
+    freezeRecord({
+      wing: "north",
+      coin: "story",
+      roomId: "north-2",
+      label: "Why Mirrorland Exists",
+      route: "/showroom/story/mission/",
+      contentId: "mission",
+      lens: "mission",
+      routeDescription: "Open the Mirrorland mission page.",
+      visualClass: "ROUTE_SHELL",
+      emphasis: "normal",
+      existingRoute: false
+    }),
+
+    freezeRecord({
+      wing: "north",
+      coin: "story",
+      roomId: "north-3",
+      label: "The Story So Far",
+      route: "/showroom/story/timeline/",
+      contentId: "timeline",
+      lens: "timeline",
+      routeDescription: "Open the Mirrorland timeline page.",
+      visualClass: "ROUTE_SHELL",
+      emphasis: "normal",
+      existingRoute: false
+    }),
+
+    freezeRecord({
+      wing: "north",
+      coin: "story",
+      roomId: "north-4",
+      label: "Step Through the Door",
+      route: "/showroom/story/invitation/",
+      contentId: "invitation",
+      lens: "invitation",
+      routeDescription: "Open the Mirrorland invitation page.",
+      visualClass: "ROUTE_SHELL",
+      emphasis: "normal",
+      existingRoute: false
+    }),
+
+    freezeRecord({
+      wing: "east",
+      coin: "characters",
+      roomId: "east-1",
+      label: "Talk to Jeeves",
+      route: "/showroom/globe/hearth/jeeves/",
+      contentId: "jeeves",
+      lens: "character",
+      routeDescription:
+        "Meet the House interface and receive guidance through the estate and Hearth.",
+      visualClass: "EXTERNAL_ROUTE",
+      emphasis: "external",
+      existingRoute: true
+    }),
+
+    freezeRecord({
+      wing: "east",
+      coin: "characters",
+      roomId: "east-2",
+      label: "Talk to Elara",
+      route: "/elara/index.html",
+      contentId: "elara",
+      lens: "character",
+      routeDescription:
+        "Enter Elara’s mission, story, personal-origin, and literary conversation surface.",
+      visualClass: "EXTERNAL_ROUTE",
+      emphasis: "external",
+      existingRoute: true
+    }),
+
+    freezeRecord({
+      wing: "east",
+      coin: "characters",
+      roomId: "east-3",
+      label: "Talk to Auren",
+      route: "/products/auren/",
+      contentId: "auren",
+      lens: "character",
+      routeDescription:
+        "Enter the product-floor specialist’s room for practical systems and bounded handoffs.",
+      visualClass: "EXTERNAL_ROUTE",
+      emphasis: "external",
+      existingRoute: true
+    }),
+
+    freezeRecord({
+      wing: "east",
+      coin: "characters",
+      roomId: "east-4",
+      label: "Meet All Characters",
+      route: "/characters/",
+      contentId: "characters-directory",
+      lens: "directory",
+      routeDescription:
+        "Open the central character directory and discover the wider Mirrorland cast.",
+      visualClass: "PRIMARY_EXTERNAL_ROUTE",
+      emphasis: "primary-external",
+      existingRoute: true
+    }),
+
+    freezeRecord({
+      wing: "south",
+      coin: "wonders",
+      roomId: "south-1",
+      label: "Open the Window",
+      route: "/showroom/wonders/window/",
+      contentId: "window",
+      lens: "object-threshold",
+      routeDescription: "Open the Mirrorland Window route shell.",
+      visualClass: "ROUTE_SHELL",
+      emphasis: "object",
+      existingRoute: false
+    }),
+
+    freezeRecord({
+      wing: "south",
+      coin: "wonders",
+      roomId: "south-2",
+      label: "Behold the Diamond",
+      route: "/showroom/wonders/diamond/",
+      contentId: "diamond",
+      lens: "object",
+      routeDescription: "Open the Diamond route shell.",
+      visualClass: "ROUTE_SHELL",
+      emphasis: "object",
+      existingRoute: false
+    }),
+
+    freezeRecord({
+      wing: "south",
+      coin: "wonders",
+      roomId: "south-3",
+      label: "Read the Stars",
+      route: "/showroom/wonders/stars/",
+      contentId: "stars",
+      lens: "narrative",
+      routeDescription: "Open the constellation-reading page.",
+      visualClass: "ROUTE_SHELL",
+      emphasis: "normal",
+      existingRoute: false
+    }),
+
+    freezeRecord({
+      wing: "south",
+      coin: "wonders",
+      roomId: "south-4",
+      label: "Enter the Hearth",
+      route: "/showroom/globe/hearth/",
+      contentId: "hearth",
+      lens: "world",
+      routeDescription:
+        "Enter the inhabited facility where characters and Audralia-facing systems meet.",
+      visualClass: "EXTERNAL_ROUTE",
+      emphasis: "external",
+      existingRoute: true
+    }),
+
+    freezeRecord({
+      wing: "west",
+      coin: "mysteries",
+      roomId: "west-1",
+      label: "The Unfinished World",
+      route: "/showroom/mysteries/unfinished-world/",
+      contentId: "unfinished-world",
+      lens: "unfinished",
+      routeDescription: "Open the unfinished-world route shell.",
+      visualClass: "ROUTE_SHELL",
+      emphasis: "normal",
+      existingRoute: false
+    }),
+
+    freezeRecord({
+      wing: "west",
+      coin: "mysteries",
+      roomId: "west-2",
+      label: "Questions in the Glass",
+      route: "/showroom/mysteries/questions-in-the-glass/",
+      contentId: "questions-in-the-glass",
+      lens: "exploration",
+      routeDescription: "Open the questions-in-the-glass route shell.",
+      visualClass: "ROUTE_SHELL",
+      emphasis: "normal",
+      existingRoute: false
+    }),
+
+    freezeRecord({
+      wing: "west",
+      coin: "mysteries",
+      roomId: "west-3",
+      label: "Paths Not Yet Open",
+      route: "/showroom/mysteries/paths-not-yet-open/",
+      contentId: "paths-not-yet-open",
+      lens: "future",
+      routeDescription: "Open the paths-not-yet-open route shell.",
+      visualClass: "ROUTE_SHELL",
+      emphasis: "normal",
+      existingRoute: false
+    }),
+
+    freezeRecord({
+      wing: "west",
+      coin: "mysteries",
+      roomId: "west-4",
+      label: "Journey into Audralia",
+      route: "/showroom/globe/audralia/",
+      contentId: "audralia",
+      lens: "world",
+      routeDescription:
+        "Travel toward Mirrorland’s constructive possibility world and developing planetary rooms.",
+      visualClass: "EXTERNAL_ROUTE",
+      emphasis: "external",
+      existingRoute: true
+    })
+  ]);
+
+  const CANONICAL_ROOM_ROUTES = Object.freeze(
+    CANONICAL_ROOM_RECORDS.map(record => record.route)
+  );
+
+  const ROOM_BY_ID = new Map(
+    CANONICAL_ROOM_RECORDS.map(record => [
+      record.roomId,
+      record
+    ])
+  );
+
+  const ROOM_BY_ROUTE = new Map(
+    CANONICAL_ROOM_RECORDS.map(record => [
+      record.route,
+      record
+    ])
+  );
+
+  const ROOMS_BY_WING = new Map(
+    WINGS.map(wing => [
+      wing,
+      Object.freeze(
+        CANONICAL_ROOM_RECORDS
+          .filter(record => record.wing === wing)
+          .map(record => record.roomId)
+      )
+    ])
+  );
+
   const subscribers = Object.freeze({
     frame: new Set(),
     reducedMotion: new Set(),
@@ -224,6 +461,7 @@
     scene: null,
     sceneField: null,
     panel: null,
+
     panelEyebrow: null,
     panelTitle: null,
     panelPurpose: null,
@@ -234,12 +472,14 @@
     panelSelectionState: null,
     panelRouteStatus: null,
     panelLens: null,
+
     enterButton: null,
     enterLabel: null,
     returnToOrbitButton: null,
     returnToOrbitLabel: null,
     returnHomeButton: null,
     guidance: null,
+
     controllerReceiptOutput: null,
     controllerValidationOutput: null,
     compassControl: null,
@@ -262,29 +502,20 @@
     selectedCoin: "",
     selectedRoom: "",
     selectedDestinationType: DESTINATION_TYPES.NONE,
-    selectedDestinationKind: "",
-    selectedInfoId: "",
-    selectedObjectTarget: "",
-    selectedRouteEvidence: "",
     selectedDestinationId: "",
     selectedDestinationLabel: "",
     selectedRoute: "",
     selectedContentId: "",
     selectedLens: "overview",
     selectedParagraph: "",
-    selectedSemanticActivation: "",
-    selectedRouteLabel: "",
     selectedRouteDescription: "",
-    selectedRouteRole: "",
     selectedVisualClass: "",
     selectedEmphasis: "",
-    selectedReturnModel: "",
-    selectedReturnZone: "",
-
-    destinationAuthorizationGeneration: 0,
+    selectedExistingRoute: false,
 
     compassSelected: false,
     panelDescended: false,
+
     panelDescentFrame: 0,
     panelDescentCommitFrame: 0,
     sceneAscentFrame: 0,
@@ -340,6 +571,10 @@
     return WINGS.includes(wing) ? wing : "";
   }
 
+  function normalizeRoomId(value) {
+    return normalize(value);
+  }
+
   function normalizeRoute(value) {
     const route = normalize(value);
     return route.startsWith("/") ? route : "";
@@ -347,24 +582,6 @@
 
   function normalizeLabel(value, fallback = "") {
     return normalize(value) || fallback;
-  }
-
-  function normalizeNullableString(value) {
-    return normalize(value) || null;
-  }
-
-  function normalizeDestinationKind(value) {
-    const kind = normalizeLower(value);
-
-    if (
-      kind === DESTINATION_KINDS.INTERNAL_INFO ||
-      kind === DESTINATION_KINDS.OBJECT_INSPECT ||
-      kind === DESTINATION_KINDS.EXTERNAL_ROUTE
-    ) {
-      return kind;
-    }
-
-    return "";
   }
 
   function normalizeDepthLayer(value) {
@@ -379,32 +596,6 @@
     }
 
     return DEPTH_LAYERS.UNKNOWN;
-  }
-
-  function isPrimitiveIntentPayloadValue(value) {
-    return (
-      value === null ||
-      typeof value === "string" ||
-      typeof value === "boolean" ||
-      (
-        typeof value === "number" &&
-        Number.isFinite(value)
-      )
-    );
-  }
-
-  function escapeSelectorValue(value) {
-    const source =
-      String(value || "");
-
-    if (
-      globalThis.CSS &&
-      typeof globalThis.CSS.escape === "function"
-    ) {
-      return globalThis.CSS.escape(source);
-    }
-
-    return source.replace(/["\\]/g, "\\$&");
   }
 
   function unexpectedPreviewPayloadKeys(payload) {
@@ -432,24 +623,20 @@
       return null;
     }
 
-    const quaternion =
-      source.map(component => Number(component));
+    const quaternion = source.map(component => Number(component));
 
     if (
-      quaternion.some(
-        component => !Number.isFinite(component)
-      )
+      quaternion.some(component => !Number.isFinite(component))
     ) {
       return null;
     }
 
-    const length =
-      Math.hypot(
-        quaternion[0],
-        quaternion[1],
-        quaternion[2],
-        quaternion[3]
-      );
+    const length = Math.hypot(
+      quaternion[0],
+      quaternion[1],
+      quaternion[2],
+      quaternion[3]
+    );
 
     if (
       !Number.isFinite(length) ||
@@ -458,9 +645,7 @@
       return null;
     }
 
-    return quaternion.map(
-      component => component / length
-    );
+    return quaternion.map(component => component / length);
   }
 
   function normalizeStoredQuaternion(
@@ -474,12 +659,11 @@
   }
 
   function createOrientation(quaternion, primaryId) {
-    const normalized =
-      normalizeQuaternionStrict(quaternion);
+    const normalized = normalizeQuaternionStrict(quaternion);
 
     invariant(
       normalized,
-      "ARCHCOIN_CONTROLLER_INVALID_QUATERNION"
+      "SHOWROOM_CONTROLLER_INVALID_QUATERNION"
     );
 
     return {
@@ -505,8 +689,7 @@
   }
 
   function freezeOrientation(orientation) {
-    const value =
-      cloneOrientation(orientation);
+    const value = cloneOrientation(orientation);
 
     return Object.freeze({
       quaternion: Object.freeze(value.quaternion.slice()),
@@ -515,8 +698,7 @@
   }
 
   function canonicalConstellationOrientation(wing) {
-    const normalizedWing =
-      normalizeWing(wing) || "north";
+    const normalizedWing = normalizeWing(wing) || "north";
 
     return createOrientation(
       CANONICAL_CONSTELLATION_QUATERNIONS[normalizedWing],
@@ -524,9 +706,110 @@
     );
   }
 
-  function presentationModeForState(
-    navigationState = state.current
-  ) {
+  function validateOrbitPreviewPayload(payload) {
+    if (
+      !payload ||
+      typeof payload !== "object" ||
+      Array.isArray(payload)
+    ) {
+      return Object.freeze({
+        pass: false,
+        code: "SHOWROOM_ORBIT_PREVIEW_PAYLOAD_REQUIRED"
+      });
+    }
+
+    const unexpectedKeys = unexpectedPreviewPayloadKeys(payload);
+
+    if (unexpectedKeys.length > 0) {
+      return Object.freeze({
+        pass: false,
+        code: "SHOWROOM_ORBIT_PREVIEW_UNEXPECTED_FIELDS_FORBIDDEN",
+        unexpectedKeys: Object.freeze(unexpectedKeys.slice())
+      });
+    }
+
+    const quaternion = normalizeQuaternionStrict(payload.quaternion);
+
+    if (!quaternion) {
+      return Object.freeze({
+        pass: false,
+        code: "SHOWROOM_ORBIT_PREVIEW_COMPLETE_QUATERNION_REQUIRED"
+      });
+    }
+
+    const primaryId = normalizeWing(payload.primaryId);
+
+    if (!primaryId) {
+      return Object.freeze({
+        pass: false,
+        code: "SHOWROOM_ORBIT_PREVIEW_CANONICAL_PRIMARY_WING_REQUIRED"
+      });
+    }
+
+    return Object.freeze({
+      pass: true,
+      orientation: Object.freeze({
+        quaternion: Object.freeze(quaternion.slice()),
+        primaryId
+      })
+    });
+  }
+
+  function validateClusterPreviewPayload(cluster, payload) {
+    if (
+      !cluster ||
+      !payload ||
+      typeof payload !== "object" ||
+      Array.isArray(payload)
+    ) {
+      return Object.freeze({
+        pass: false,
+        code: "SHOWROOM_CLUSTER_PREVIEW_PAYLOAD_REQUIRED"
+      });
+    }
+
+    const unexpectedKeys = unexpectedPreviewPayloadKeys(payload);
+
+    if (unexpectedKeys.length > 0) {
+      return Object.freeze({
+        pass: false,
+        code: "SHOWROOM_CLUSTER_PREVIEW_UNEXPECTED_FIELDS_FORBIDDEN",
+        unexpectedKeys: Object.freeze(unexpectedKeys.slice())
+      });
+    }
+
+    const quaternion = normalizeQuaternionStrict(payload.quaternion);
+
+    if (!quaternion) {
+      return Object.freeze({
+        pass: false,
+        code: "SHOWROOM_CLUSTER_PREVIEW_COMPLETE_QUATERNION_REQUIRED"
+      });
+    }
+
+    const primaryId = normalizeRoomId(payload.primaryId);
+
+    if (
+      !primaryId ||
+      !cluster.roomIds.includes(primaryId)
+    ) {
+      return Object.freeze({
+        pass: false,
+        code:
+          `SHOWROOM_CLUSTER_PREVIEW_CANONICAL_PRIMARY_ROOM_REQUIRED:${cluster.wing}`
+      });
+    }
+
+    return Object.freeze({
+      pass: true,
+      orientation: Object.freeze({
+        quaternion: Object.freeze(quaternion.slice()),
+        primaryId
+      })
+    });
+  }
+
+  function presentationModeForState(navigationState = state.current) {
     return (
       PRESENTATION_MODE_BY_STATE[navigationState] ||
       PRESENTATION_MODES.HELD
@@ -537,84 +820,21 @@
     return WING_TO_COIN[normalizeWing(wing)] || "";
   }
 
-  function canTransition(fromState, toState) {
-    return Boolean(
-      TRANSITIONS[fromState] &&
-      TRANSITIONS[fromState].includes(toState)
-    );
-  }
-
-  function isHeld() {
-    return state.current === STATES.SYSTEM_HELD;
-  }
-
-  function interactionAllowed() {
-    return !isHeld();
-  }
-
-  function subscribe(channel, callback) {
-    const set =
-      subscribers[channel];
-
-    if (
-      !set ||
-      typeof callback !== "function"
-    ) {
-      return () => false;
-    }
-
-    set.add(callback);
-
-    return () => {
-      set.delete(callback);
-      return true;
-    };
-  }
-
-  function publish(channel, payload) {
-    const set =
-      subscribers[channel];
-
-    if (!set) {
-      return;
-    }
-
-    for (const callback of set) {
-      try {
-        callback(payload);
-      } catch (_) {}
-    }
-  }
-
-  function getDeclaredRoomIdsByWing(wing) {
-    if (!state.root) {
-      return [];
-    }
-
-    return qsa(
-      `[data-showroom-child-control][data-showroom-cardinal-id="${escapeSelectorValue(wing)}"]`,
-      state.root
-    )
-      .map(element => normalize(element.dataset.showroomChildId))
-      .filter(Boolean);
-  }
-
   function createClusterState(wing) {
     const roomIds =
-      getDeclaredRoomIdsByWing(wing);
+      ROOMS_BY_WING.get(wing) ||
+      Object.freeze([]);
 
-    const primaryRoom =
-      roomIds[0] || "";
+    const primaryRoom = roomIds[0] || "";
 
-    const orientation =
-      createOrientation(
-        QUATERNION.identity,
-        primaryRoom
-      );
+    const orientation = createOrientation(
+      QUATERNION.identity,
+      primaryRoom
+    );
 
     return {
       wing,
-      roomIds: roomIds.slice(),
+      roomIds: Array.from(roomIds),
       primaryRoom,
       previewPrimaryRoom: primaryRoom,
       phase: ORIENTATION_PHASES.COMMITTED,
@@ -628,8 +848,7 @@
   }
 
   function getCluster(wing) {
-    const normalizedWing =
-      normalizeWing(wing);
+    const normalizedWing = normalizeWing(wing);
 
     return normalizedWing
       ? state.clusters.get(normalizedWing) || null
@@ -651,11 +870,73 @@
     return getCluster(activeClusterWing());
   }
 
-  function findCoinElement(wing) {
-    const normalizedWing =
-      normalizeWing(wing);
+  function canTransition(fromState, toState) {
+    return Boolean(
+      TRANSITIONS[fromState] &&
+      TRANSITIONS[fromState].includes(toState)
+    );
+  }
 
-    if (!normalizedWing || !state.root) {
+  function isHeld() {
+    return state.current === STATES.SYSTEM_HELD;
+  }
+
+  function interactionAllowed() {
+    return !isHeld();
+  }
+
+  function subscribe(channel, callback) {
+    const set = subscribers[channel];
+
+    if (
+      !set ||
+      typeof callback !== "function"
+    ) {
+      return () => false;
+    }
+
+    set.add(callback);
+
+    return () => {
+      set.delete(callback);
+      return true;
+    };
+  }
+
+  function publish(channel, payload) {
+    const set = subscribers[channel];
+
+    if (!set) {
+      return;
+    }
+
+    for (const callback of set) {
+      try {
+        callback(payload);
+      } catch (_) {}
+    }
+  }
+
+  function escapeSelectorValue(value) {
+    const source = String(value || "");
+
+    if (
+      globalThis.CSS &&
+      typeof globalThis.CSS.escape === "function"
+    ) {
+      return globalThis.CSS.escape(source);
+    }
+
+    return source.replace(/["\\]/g, "\\$&");
+  }
+
+  function findCoinElement(wing) {
+    const normalizedWing = normalizeWing(wing);
+
+    if (
+      !normalizedWing ||
+      !state.root
+    ) {
       return null;
     }
 
@@ -666,10 +947,12 @@
   }
 
   function findRoomElement(roomId) {
-    const id =
-      normalize(roomId);
+    const id = normalizeRoomId(roomId);
 
-    if (!id || !state.root) {
+    if (
+      !id ||
+      !state.root
+    ) {
       return null;
     }
 
@@ -680,16 +963,14 @@
   }
 
   function canonicalControlExists(record) {
-    const kind =
-      normalizeLower(record.kind);
+    const kind = normalizeLower(record.kind);
 
-    const id =
-      normalize(
-        record.id ||
-        record.roomId ||
-        record.wing ||
-        record.cardinalId
-      );
+    const id = normalize(
+      record.id ||
+      record.roomId ||
+      record.wing ||
+      record.cardinalId
+    );
 
     if (!id) {
       return false;
@@ -712,199 +993,128 @@
     );
   }
 
-  function readChildIntentFromElement(element) {
+  function destinationFromCoinElement(element) {
     if (!element) {
       return null;
     }
 
-    const childId =
-      normalize(element.dataset.showroomChildId);
-
-    const childLabel =
-      normalizeLabel(
-        element.dataset.showroomChildLabel ||
-        element.textContent,
-        childId || "Selected star"
-      );
-
-    const destinationKind =
-      normalizeDestinationKind(
-        element.dataset.showroomDestinationKind
-      );
-
-    const infoId =
-      normalize(
-        element.dataset.showroomInfoId ||
-        childId
-      );
-
-    const route =
-      normalizeRoute(
-        element.dataset.showroomRoute ||
-        element.dataset.showroomControllerRoute ||
-        element.getAttribute("href")
-      );
+    const wing = normalizeWing(element.dataset.showroomCardinalId);
 
     return Object.freeze({
-      wingId: normalizeWing(element.dataset.showroomCardinalId),
-      wingLabel: "",
-      childId,
-      childLabel,
-      destinationKind,
-      infoId,
-      route,
-      routeLabel: normalize(
-        element.dataset.showroomRouteLabel ||
-        childLabel
+      destinationType: DESTINATION_TYPES.COIN,
+      destinationId: wing,
+      label: normalizeLabel(
+        element.dataset.showroomCardinalLabel,
+        WING_LABELS[wing] || wingToCoin(wing)
       ),
-      routeDescription: normalize(
-        element.dataset.showroomRouteDescription
+      route: ""
+    });
+  }
+
+  function destinationFromRoomRecord(record, element = null) {
+    if (!record) {
+      return null;
+    }
+
+    return Object.freeze({
+      destinationType: DESTINATION_TYPES.ROOM,
+      destinationId: record.roomId,
+      label: normalizeLabel(
+        element && element.dataset.showroomChildLabel,
+        record.label
       ),
-      routeEvidence: normalize(
-        element.dataset.showroomRouteEvidence
-      ),
-      routeRole: normalize(
-        element.dataset.showroomRouteRole
-      ),
-      objectTarget: normalize(
-        element.dataset.showroomObjectTarget
-      ),
-      semanticActivation: normalize(
-        element.dataset.showroomSemanticActivation
+      route: record.route,
+      contentId: normalizeLabel(
+        element && element.dataset.showroomContentId,
+        record.contentId
       ),
       lens: normalizeLower(
-        element.dataset.showroomLens || "overview"
-      ) || "overview",
-      visualClass: normalize(
-        element.dataset.showroomVisualClass
-      ),
-      emphasis: normalize(
-        element.dataset.showroomEmphasis
-      ),
-      returnModel: normalize(
-        element.dataset.showroomReturnModel
-      ),
-      returnZone: normalize(
-        element.dataset.showroomReturnZone
-      ),
-      preview: normalize(
-        element.dataset.showroomPreview ||
-        element.dataset.showroomRoomSummary ||
-        element.dataset.showroomLocalFunction ||
-        element.dataset.showroomRoomFunction ||
-        element.dataset.showroomPanelBody ||
-        element.dataset.showroomWhyEnter ||
-        element.dataset.showroomPanelWhy
+        element && element.dataset.showroomLens
+      ) || record.lens,
+      paragraph: normalizeLabel(
+        element &&
+          (
+            element.dataset.showroomPreview ||
+            element.dataset.showroomRouteDescription
+          ),
+        record.routeDescription
       )
     });
   }
 
-  function intentPanelRouteStatus(intent) {
-    if (!intent) {
-      return "No destination prepared";
-    }
-
-    if (
-      intent.destinationKind ===
-      DESTINATION_KINDS.INTERNAL_INFO
-    ) {
-      return "Information panel";
-    }
-
-    if (
-      intent.destinationKind ===
-      DESTINATION_KINDS.OBJECT_INSPECT
-    ) {
-      return "Information panel · object inspection available";
-    }
-
-    if (
-      intent.destinationKind ===
-      DESTINATION_KINDS.EXTERNAL_ROUTE
-    ) {
-      return "Information panel · confirmed-route check required";
-    }
-
-    return "Invalid intent";
-  }
-
-  function roomParagraphFromIntent(intent) {
-    if (!intent) {
-      return "This star is part of the selected Mirrorland path.";
-    }
-
-    return (
-      intent.preview ||
-      "This star opens a Mirrorland explanation. Review the selection, then choose Open Selection."
+  function roomParagraphFromRecord(record, element = null) {
+    return normalizeLabel(
+      element &&
+        (
+          element.dataset.showroomPreview ||
+          element.dataset.showroomRouteDescription ||
+          element.dataset.showroomRoomSummary ||
+          element.dataset.showroomLocalFunction ||
+          element.dataset.showroomPanelBody
+        ),
+      record
+        ? record.routeDescription
+        : "This star opens a dedicated Mirrorland page."
     );
   }
 
   function panelFromCoin(element) {
-    const wing =
-      normalizeWing(element && element.dataset.showroomCardinalId);
+    const wing = normalizeWing(
+      element && element.dataset.showroomCardinalId
+    );
 
     return Object.freeze({
-      eyebrow:
-        normalizeLabel(
-          element && element.dataset.showroomCardinalLabel,
-          wing ? WING_LABELS[wing] : "Selected path"
-        ),
+      eyebrow: normalizeLabel(
+        element && element.dataset.showroomCardinalLabel,
+        wing ? WING_LABELS[wing] : "Selected path"
+      ),
 
-      title:
-        normalizeLabel(
-          element &&
-            (
-              element.dataset.showroomPanelTitle ||
-              element.dataset.showroomCardinalLabel
-            ),
-          wing ? WING_LABELS[wing] : "Selected path"
-        ),
+      title: normalizeLabel(
+        element &&
+          (
+            element.dataset.showroomPanelTitle ||
+            element.dataset.showroomCardinalLabel
+          ),
+        wing ? WING_LABELS[wing] : "Selected path"
+      ),
 
-      purpose:
-        normalizeLabel(
-          element &&
-            (
-              element.dataset.showroomPanelBody ||
-              element.dataset.showroomCardinalBody ||
-              element.dataset.showroomCardinalFunction
-            ),
-          "This Mirrorland direction opens a four-star constellation cluster."
-        ),
+      purpose: normalizeLabel(
+        element &&
+          (
+            element.dataset.showroomPanelBody ||
+            element.dataset.showroomCardinalBody ||
+            element.dataset.showroomCardinalFunction
+          ),
+        "This Mirrorland direction opens a four-page route cluster."
+      ),
 
-      relationship:
-        normalizeLabel(
-          element &&
-            (
-              element.dataset.showroomPanelWhy ||
-              element.dataset.showroomCardinalWhy
-            ),
-          "Choose one child star to open its explanation."
-        )
+      relationship: normalizeLabel(
+        element &&
+          (
+            element.dataset.showroomPanelWhy ||
+            element.dataset.showroomCardinalWhy
+          ),
+        "Choose one child star to prepare its route."
+      )
     });
   }
 
-  function panelFromRoom(element) {
-    const intent =
-      readChildIntentFromElement(element);
-
+  function panelFromRoom(record, element) {
     return Object.freeze({
-      eyebrow:
-        normalizeLabel(
-          intent && intent.destinationKind,
-          "Selected star"
-        ),
+      eyebrow: normalizeLabel(
+        record && WING_LABELS[record.wing],
+        "Selected path"
+      ),
 
-      title:
-        normalizeLabel(
-          intent && intent.childLabel,
-          "Selected star"
-        ),
+      title: normalizeLabel(
+        element && element.dataset.showroomChildLabel,
+        record ? record.label : "Selected route"
+      ),
 
-      purpose:
-        roomParagraphFromIntent(intent),
+      purpose: roomParagraphFromRecord(record, element),
 
       relationship:
-        "Choose Open Selection to send this destination intent, or Return to Orbit to restore the active cluster."
+        "Choose Open Selection to navigate to this route, or Return to Orbit to restore the active cluster."
     });
   }
 
@@ -912,8 +1122,10 @@
     return Object.freeze({
       eyebrow: "Mirrorland Showroom",
       title: "Choose a direction",
-      purpose: "Begin with the Mirrorland direction that matches the journey in front of you.",
-      relationship: "Select a cardinal crystal or label to open its four-star cluster."
+      purpose:
+        "Begin with the Mirrorland direction that most closely matches the journey in front of you.",
+      relationship:
+        "Select a cardinal crystal or label to open its four-page route cluster."
     });
   }
 
@@ -921,8 +1133,10 @@
     return Object.freeze({
       eyebrow: "Main Compass",
       title: "Choose where to return",
-      purpose: "The fixed-center Compass is selected. It does not navigate until you choose the explicit return action.",
-      relationship: "Return to Main Compass opens the Diamond Gate Bridge homepage. Return to Orbit restores the active Mirrorland field."
+      purpose:
+        "The fixed-center Compass is selected. It does not navigate until you choose the explicit return action.",
+      relationship:
+        "Return to Main Compass opens the Diamond Gate Bridge homepage. Return to Orbit restores the active Mirrorland field."
     });
   }
 
@@ -932,17 +1146,10 @@
     purpose,
     relationship
   }) {
-    state.panelEyebrow.textContent =
-      eyebrow || "Selected path";
-
-    state.panelTitle.textContent =
-      title || "Choose a direction";
-
-    state.panelPurpose.textContent =
-      purpose || "";
-
-    state.panelRelationship.textContent =
-      relationship || "";
+    state.panelEyebrow.textContent = eyebrow || "Selected path";
+    state.panelTitle.textContent = title || "Choose a direction";
+    state.panelPurpose.textContent = purpose || "";
+    state.panelRelationship.textContent = relationship || "";
   }
 
   function setPanelMetadata({
@@ -953,58 +1160,40 @@
     route = "No destination prepared",
     lens = "Overview"
   } = {}) {
-    state.panelDomain.textContent =
-      domain;
-
-    state.panelFunction.textContent =
-      functionLabel;
-
-    state.panelCoordinate.textContent =
-      coordinate;
-
-    state.panelSelectionState.textContent =
-      selection;
-
-    state.panelRouteStatus.textContent =
-      route;
-
-    state.panelLens.textContent =
-      lens;
+    state.panelDomain.textContent = domain;
+    state.panelFunction.textContent = functionLabel;
+    state.panelCoordinate.textContent = coordinate;
+    state.panelSelectionState.textContent = selection;
+    state.panelRouteStatus.textContent = route;
+    state.panelLens.textContent = lens;
   }
 
   function setGuidance(message) {
-    state.guidance.textContent =
-      String(message || "");
+    state.guidance.textContent = String(message || "");
   }
 
   function setEnterEnabled(
     enabled,
     label = "Open Selection"
   ) {
-    state.enterButton.disabled =
-      !enabled;
+    state.enterButton.disabled = !enabled;
 
     state.enterButton.setAttribute(
       "aria-disabled",
       enabled ? "false" : "true"
     );
 
-    state.enterLabel.textContent =
-      label;
+    state.enterLabel.textContent = label;
   }
 
   function setReturnToOrbitVisible(
     visible,
     label = "Return to Orbit"
   ) {
-    const control =
-      state.returnToOrbitButton;
+    const control = state.returnToOrbitButton;
 
-    control.hidden =
-      !visible;
-
-    control.disabled =
-      !visible;
+    control.hidden = !visible;
+    control.disabled = !visible;
 
     control.setAttribute(
       "aria-hidden",
@@ -1022,13 +1211,11 @@
       control.setAttribute("tabindex", "-1");
     }
 
-    state.returnToOrbitLabel.textContent =
-      label;
+    state.returnToOrbitLabel.textContent = label;
   }
 
   function setReturnHomeVisible(visible) {
-    state.returnHomeButton.hidden =
-      !visible;
+    state.returnHomeButton.hidden = !visible;
 
     state.returnHomeButton.setAttribute(
       "aria-hidden",
@@ -1074,32 +1261,30 @@
   function schedulePanelDescent(predicate, action) {
     clearViewportSchedules();
 
-    state.panelDescentFrame =
-      requestAnimationFrame(() => {
-        state.panelDescentFrame = 0;
+    state.panelDescentFrame = requestAnimationFrame(() => {
+      state.panelDescentFrame = 0;
 
-        state.panelDescentCommitFrame =
-          requestAnimationFrame(() => {
-            state.panelDescentCommitFrame = 0;
+      state.panelDescentCommitFrame = requestAnimationFrame(() => {
+        state.panelDescentCommitFrame = 0;
 
-            if (
-              typeof predicate === "function" &&
-              !predicate()
-            ) {
-              return;
-            }
+        if (
+          typeof predicate === "function" &&
+          !predicate()
+        ) {
+          return;
+        }
 
-            state.panel.scrollIntoView({
-              behavior: state.reducedMotion ? "auto" : "smooth",
-              block: "start",
-              inline: "nearest"
-            });
+        state.panel.scrollIntoView({
+          behavior: state.reducedMotion ? "auto" : "smooth",
+          block: "start",
+          inline: "nearest"
+        });
 
-            state.panelDescended = true;
+        state.panelDescended = true;
 
-            recordAction(action);
-          });
+        recordAction(action);
       });
+    });
   }
 
   function scheduleRoomPanelDescent(expectedRoomId) {
@@ -1122,41 +1307,34 @@
   function scheduleSceneAscent(expectedState, expectedWing = "") {
     clearViewportSchedules();
 
-    state.sceneAscentFrame =
-      requestAnimationFrame(() => {
-        state.sceneAscentFrame = 0;
+    state.sceneAscentFrame = requestAnimationFrame(() => {
+      state.sceneAscentFrame = 0;
 
-        state.sceneAscentCommitFrame =
-          requestAnimationFrame(() => {
-            state.sceneAscentCommitFrame = 0;
+      state.sceneAscentCommitFrame = requestAnimationFrame(() => {
+        state.sceneAscentCommitFrame = 0;
 
-            if (state.current !== expectedState) {
-              return;
-            }
+        if (state.current !== expectedState) {
+          return;
+        }
 
-            if (
-              expectedWing &&
-              state.selectedCardinal !== expectedWing
-            ) {
-              return;
-            }
+        if (
+          expectedWing &&
+          state.selectedCardinal !== expectedWing
+        ) {
+          return;
+        }
 
-            state.scene.scrollIntoView({
-              behavior: state.reducedMotion ? "auto" : "smooth",
-              block: "start",
-              inline: "nearest"
-            });
+        state.scene.scrollIntoView({
+          behavior: state.reducedMotion ? "auto" : "smooth",
+          block: "start",
+          inline: "nearest"
+        });
 
-            recordAction(
-              `scene-restored:${expectedState}:${expectedWing || "constellation"}`
-            );
-          });
+        recordAction(
+          `scene-restored:${expectedState}:${expectedWing || "constellation"}`
+        );
       });
-  }
-
-  function invalidateDestinationAuthorization() {
-    state.destinationAuthorizationGeneration += 1;
-    return state.destinationAuthorizationGeneration;
+    });
   }
 
   function resetSelection({
@@ -1166,27 +1344,17 @@
     state.selectedCoin = "";
     state.selectedRoom = "";
     state.selectedDestinationType = DESTINATION_TYPES.NONE;
-    state.selectedDestinationKind = "";
-    state.selectedInfoId = "";
-    state.selectedObjectTarget = "";
-    state.selectedRouteEvidence = "";
     state.selectedDestinationId = "";
     state.selectedDestinationLabel = "";
     state.selectedRoute = "";
     state.selectedContentId = "";
     state.selectedLens = "overview";
     state.selectedParagraph = "";
-    state.selectedSemanticActivation = "";
-    state.selectedRouteLabel = "";
     state.selectedRouteDescription = "";
-    state.selectedRouteRole = "";
     state.selectedVisualClass = "";
     state.selectedEmphasis = "";
-    state.selectedReturnModel = "";
-    state.selectedReturnZone = "";
+    state.selectedExistingRoute = false;
     state.panelDescended = false;
-
-    invalidateDestinationAuthorization();
 
     if (!preserveCompass) {
       state.compassSelected = false;
@@ -1216,7 +1384,7 @@
       presentationMode: presentationModeForState(),
       reason:
         isHeld()
-          ? state.lastFailure || "ARCHCOIN_SYSTEM_HELD"
+          ? state.lastFailure || "SHOWROOM_SYSTEM_HELD"
           : ""
     });
   }
@@ -1239,59 +1407,24 @@
 
   function createSemanticProjectionSnapshot() {
     return Object.freeze(
-      Array.from(state.semanticProjection.values()).map(
-        record =>
-          Object.freeze({
-            id: record.id,
-            kind: record.kind,
-            x: record.x,
-            y: record.y,
-            radiusPx: record.radiusPx,
-            depthLayer: record.depthLayer,
-            compassOverlap: record.compassOverlap,
-            visible: record.visible
-          })
-      )
-    );
-  }
-
-  function getCanonicalRoomRecordsSnapshot() {
-    if (!state.root) {
-      return Object.freeze([]);
-    }
-
-    return Object.freeze(
-      qsa("[data-showroom-child-control]", state.root).map(
-        element => {
-          const intent =
-            readChildIntentFromElement(element);
-
-          return Object.freeze({
-            wing: intent.wingId,
-            coin: wingToCoin(intent.wingId),
-            roomId: intent.childId,
-            label: intent.childLabel,
-            destinationKind: intent.destinationKind,
-            infoId: intent.infoId,
-            route: intent.route,
-            routeEvidence: intent.routeEvidence,
-            objectTarget: intent.objectTarget,
-            lens: intent.lens
-          });
-        }
+      Array.from(state.semanticProjection.values()).map(record =>
+        Object.freeze({
+          id: record.id,
+          kind: record.kind,
+          x: record.x,
+          y: record.y,
+          radiusPx: record.radiusPx,
+          depthLayer: record.depthLayer,
+          compassOverlap: record.compassOverlap,
+          visible: record.visible
+        })
       )
     );
   }
 
   function createFrameState() {
-    const cluster =
-      activeCluster();
-
-    const presentation =
-      createPresentationState();
-
-    const roomRecords =
-      getCanonicalRoomRecordsSnapshot();
+    const cluster = activeCluster();
+    const presentation = createPresentationState();
 
     return Object.freeze({
       moduleId: MODULE.id,
@@ -1311,7 +1444,8 @@
       orbitPreviewAccepted: state.orbitPreviewAccepted,
       orbitRevision: state.orbitRevision,
       orbitOrientation: freezeOrientation(state.orbitOrientation),
-      committedOrbitOrientation: freezeOrientation(state.committedOrbitOrientation),
+      committedOrbitOrientation:
+        freezeOrientation(state.committedOrbitOrientation),
 
       activeClusterWing: cluster ? cluster.wing : "",
 
@@ -1327,7 +1461,8 @@
               previewAccepted: cluster.previewAccepted,
               revision: cluster.revision,
               orientation: freezeOrientation(cluster.orientation),
-              committedOrientation: freezeOrientation(cluster.committedOrientation)
+              committedOrientation:
+                freezeOrientation(cluster.committedOrientation)
             })
           : null,
 
@@ -1335,24 +1470,16 @@
       selectedCoin: state.selectedCoin,
       selectedRoom: state.selectedRoom,
       selectedDestinationType: state.selectedDestinationType,
-      selectedDestinationKind: state.selectedDestinationKind,
-      selectedInfoId: state.selectedInfoId,
-      selectedObjectTarget: state.selectedObjectTarget,
-      selectedRouteEvidence: state.selectedRouteEvidence,
       selectedDestinationId: state.selectedDestinationId,
       selectedDestinationLabel: state.selectedDestinationLabel,
       selectedRoute: state.selectedRoute,
       selectedContentId: state.selectedContentId,
       selectedLens: state.selectedLens,
       selectedParagraph: state.selectedParagraph,
-      selectedSemanticActivation: state.selectedSemanticActivation,
-      selectedRouteLabel: state.selectedRouteLabel,
       selectedRouteDescription: state.selectedRouteDescription,
-      selectedRouteRole: state.selectedRouteRole,
       selectedVisualClass: state.selectedVisualClass,
       selectedEmphasis: state.selectedEmphasis,
-      selectedReturnModel: state.selectedReturnModel,
-      selectedReturnZone: state.selectedReturnZone,
+      selectedExistingRoute: state.selectedExistingRoute,
 
       compassSelected: state.compassSelected,
       panelDescended: state.panelDescended,
@@ -1363,22 +1490,26 @@
       semanticProjectionRevision: state.semanticProjectionRevision,
       semanticProjection: createSemanticProjectionSnapshot(),
 
-      canonicalRoomRecords: roomRecords,
-      canonicalRoomRoutes: Object.freeze(
-        roomRecords.map(record => record.route)
-      ),
-
+      canonicalRoomRecords: CANONICAL_ROOM_RECORDS,
+      canonicalRoomRoutes: CANONICAL_ROOM_ROUTES,
       mainCompass: MAIN_COMPASS,
+
       interactionModuleId: MODULE.interactionModuleId,
       interactionModuleVersion: MODULE.interactionModuleVersion,
       motionOwner: MODULE.interactionModuleId,
       acceptedStateAuthority: MODULE.id,
       navigationTransitionAuthority: MODULE.id,
-      destinationExecutionAuthority: false,
-      intentSelectionAuthority: MODULE.id,
+      routeExecutionAuthority: MODULE.id,
+
       modalOpeningAuthority: false,
-      routeConfirmationAuthority: false,
+      anchorScrollAuthority: false,
+      disclosureOpeningAuthority: false,
+      frontActivationAuthority: false,
       objectInspectionExecutionAuthority: false,
+      diamondRuntimeAuthority: false,
+      compositorRuntimeAuthority: false,
+      crystalRenderingAuthority: false,
+      interactionGestureInterpretationAuthority: false,
 
       lastAction: state.lastAction,
       lastFailure: state.lastFailure
@@ -1387,7 +1518,7 @@
 
   function createCompatibilityReceipt(frame) {
     return Object.freeze({
-      contractId: "SHOWROOM_CONSTELLATION_CONTROLLER_INTERACTION_v2",
+      contractId: "SHOWROOM_ARCHCOIN_PATTERN_CONTROLLER_ROUTE_GATEWAY_v1",
       motionContractId: MODULE.motionContractId,
       motionContractVersion: MODULE.motionContractVersion,
 
@@ -1410,24 +1541,31 @@
 
       activeClusterWing: frame.activeClusterWing,
       clusterPrimaryRoom: frame.cluster ? frame.cluster.primaryRoom : "",
-      clusterPreviewPrimaryRoom: frame.cluster ? frame.cluster.previewPrimaryRoom : "",
-      clusterPhase: frame.cluster ? frame.cluster.phase : ORIENTATION_PHASES.IDLE,
-      clusterGestureActive: frame.cluster ? frame.cluster.gestureActive : false,
-      clusterPreviewAccepted: frame.cluster ? frame.cluster.previewAccepted : false,
-      clusterRevision: frame.cluster ? frame.cluster.revision : 0,
-      clusterQuaternion: frame.cluster ? frame.cluster.orientation.quaternion : QUATERNION.identity,
+      clusterPreviewPrimaryRoom:
+        frame.cluster ? frame.cluster.previewPrimaryRoom : "",
+      clusterPhase:
+        frame.cluster ? frame.cluster.phase : ORIENTATION_PHASES.IDLE,
+      clusterGestureActive:
+        frame.cluster ? frame.cluster.gestureActive : false,
+      clusterPreviewAccepted:
+        frame.cluster ? frame.cluster.previewAccepted : false,
+      clusterRevision:
+        frame.cluster ? frame.cluster.revision : 0,
+      clusterQuaternion:
+        frame.cluster
+          ? frame.cluster.orientation.quaternion
+          : QUATERNION.identity,
 
       selectedCardinal: frame.selectedCardinal,
       selectedCoin: frame.selectedCoin,
       selectedRoom: frame.selectedRoom,
       selectedDestinationType: frame.selectedDestinationType,
-      selectedDestinationKind: frame.selectedDestinationKind,
-      selectedInfoId: frame.selectedInfoId,
-      selectedObjectTarget: frame.selectedObjectTarget,
-      selectedRouteEvidence: frame.selectedRouteEvidence,
       selectedDestinationId: frame.selectedDestinationId,
       selectedDestinationLabel: frame.selectedDestinationLabel,
       selectedRoute: frame.selectedRoute,
+      selectedContentId: frame.selectedContentId,
+      selectedLens: frame.selectedLens,
+      selectedExistingRoute: frame.selectedExistingRoute,
 
       compassSelected: frame.compassSelected,
       panelDescended: frame.panelDescended,
@@ -1451,23 +1589,30 @@
         "visible"
       ]),
 
-      destinationExecutionAuthority: false,
-      intentSelectionAuthority: MODULE.id,
-      modalOpeningAuthority: false,
-      routeConfirmationAuthority: false,
-      routeDowngradeAuthority: false,
-      objectInspectionExecutionAuthority: false,
-      anchorScrollAuthority: false,
-      disclosureOpeningAuthority: false,
-      frontActivationAuthority: false,
+      routeExecutionAuthority: MODULE.id,
+      controllerDirectNavigation: true,
+      exactlyFourCardinals: true,
+      exactlySixteenDestinations: true,
+      allChildrenCanonicalRoutes: true,
+      samePageAnchorExecutionOwned: false,
+      modalOpeningOwned: false,
+      disclosureOpeningOwned: false,
+      frontActivationOwned: false,
+      objectInspectionExecutionOwned: false,
 
       pointerInterpreterOwner: MODULE.interactionModuleId,
       pointerTapArbitrationOwner: MODULE.interactionModuleId,
       wholeCrystalHitTestOwner: MODULE.interactionModuleId,
       syntheticClickSuppressionOwner: MODULE.interactionModuleId,
       clusterExitSwipeClassificationOwner: MODULE.interactionModuleId,
+      interactionPriorityDerivationOwner: MODULE.interactionModuleId,
       projectionDomApplicationOwner: MODULE.interactionModuleId,
+      motionDirectionOwner: MODULE.interactionModuleId,
+      motionSensitivityOwner: MODULE.interactionModuleId,
+      gestureAxisSelectionOwner: MODULE.interactionModuleId,
       gestureQuaternionConstructionOwner: MODULE.interactionModuleId,
+      grabbedObjectTrackingOwner: MODULE.interactionModuleId,
+      primaryVisualIdentityCalculationOwner: MODULE.interactionModuleId,
 
       orbitStateAuthority: MODULE.id,
       clusterStateAuthority: MODULE.id,
@@ -1480,230 +1625,148 @@
   }
 
   function syncDatasets(frame) {
-    const cluster =
-      frame.cluster;
+    const cluster = frame.cluster;
+    const reflectedPresentationMode = normalizeLower(frame.presentationMode);
 
-    const reflectedPresentationMode =
-      normalizeLower(frame.presentationMode);
+    state.root.dataset.showroomState = frame.navigationState;
+    state.root.dataset.showroomControllerState = frame.navigationState;
+    state.root.dataset.showroomNavigationState = frame.navigationState;
+    state.root.dataset.showroomPresentationMode = reflectedPresentationMode;
 
-    state.root.dataset.showroomState =
-      frame.navigationState;
-
-    state.root.dataset.showroomControllerState =
-      frame.navigationState;
-
-    state.root.dataset.showroomNavigationState =
-      frame.navigationState;
-
-    state.root.dataset.showroomPresentationMode =
-      reflectedPresentationMode;
-
-    state.root.dataset.showroomOrbitFocus =
-      frame.orbitFocus;
-
-    state.root.dataset.showroomOrbitPreviewFocus =
-      frame.orbitPreviewFocus;
-
-    state.root.dataset.showroomOrbitPhase =
-      frame.orbitPhase;
-
+    state.root.dataset.showroomOrbitFocus = frame.orbitFocus;
+    state.root.dataset.showroomOrbitPreviewFocus = frame.orbitPreviewFocus;
+    state.root.dataset.showroomOrbitPhase = frame.orbitPhase;
     state.root.dataset.showroomOrbitGestureActive =
       frame.orbitGestureActive ? "true" : "false";
-
     state.root.dataset.showroomOrbitPreviewAccepted =
       frame.orbitPreviewAccepted ? "true" : "false";
-
-    state.root.dataset.showroomOrbitRevision =
-      String(frame.orbitRevision);
-
+    state.root.dataset.showroomOrbitRevision = String(frame.orbitRevision);
     state.root.dataset.showroomOrbitQuaternion =
       JSON.stringify(frame.orbitOrientation.quaternion);
 
-    state.root.dataset.showroomActiveCluster =
-      frame.activeClusterWing;
-
+    state.root.dataset.showroomActiveCluster = frame.activeClusterWing;
     state.root.dataset.showroomClusterPrimaryRoom =
       cluster ? cluster.primaryRoom : "";
-
     state.root.dataset.showroomClusterPreviewPrimaryRoom =
       cluster ? cluster.previewPrimaryRoom : "";
-
     state.root.dataset.showroomClusterPhase =
       cluster ? cluster.phase : ORIENTATION_PHASES.IDLE;
-
     state.root.dataset.showroomClusterGestureActive =
       cluster && cluster.gestureActive ? "true" : "false";
-
     state.root.dataset.showroomClusterPreviewAccepted =
       cluster && cluster.previewAccepted ? "true" : "false";
-
     state.root.dataset.showroomClusterRevision =
       String(cluster ? cluster.revision : 0);
-
     state.root.dataset.showroomClusterQuaternion =
-      cluster
-        ? JSON.stringify(cluster.orientation.quaternion)
-        : "";
+      cluster ? JSON.stringify(cluster.orientation.quaternion) : "";
 
-    state.root.dataset.showroomActiveCardinal =
-      frame.selectedCardinal;
-
-    state.root.dataset.showroomActiveChild =
-      frame.selectedRoom;
-
+    state.root.dataset.showroomActiveCardinal = frame.selectedCardinal;
+    state.root.dataset.showroomActiveChild = frame.selectedRoom;
     state.root.dataset.showroomSelectedDestinationType =
       frame.selectedDestinationType;
-
-    state.root.dataset.showroomSelectedDestinationKind =
-      frame.selectedDestinationKind;
-
-    state.root.dataset.showroomSelectedInfoId =
-      frame.selectedInfoId;
-
-    state.root.dataset.showroomSelectedObjectTarget =
-      frame.selectedObjectTarget;
-
-    state.root.dataset.showroomSelectedRouteEvidence =
-      frame.selectedRouteEvidence;
-
     state.root.dataset.showroomSelectedDestinationId =
       frame.selectedDestinationId;
-
     state.root.dataset.showroomSelectedDestinationLabel =
       frame.selectedDestinationLabel;
-
-    state.root.dataset.showroomSelectedRoute =
-      frame.selectedRoute;
-
-    state.root.dataset.showroomSelectedContentId =
-      frame.selectedContentId;
-
-    state.root.dataset.showroomSelectedLens =
-      frame.selectedLens;
-
-    state.root.dataset.showroomSelectedParagraph =
-      frame.selectedParagraph;
-
+    state.root.dataset.showroomSelectedRoute = frame.selectedRoute;
+    state.root.dataset.showroomSelectedContentId = frame.selectedContentId;
+    state.root.dataset.showroomSelectedLens = frame.selectedLens;
+    state.root.dataset.showroomSelectedParagraph = frame.selectedParagraph;
     state.root.dataset.showroomCompassSelected =
       frame.compassSelected ? "true" : "false";
-
     state.root.dataset.showroomPanelDescended =
       frame.panelDescended ? "true" : "false";
-
     state.root.dataset.showroomReducedMotion =
       frame.reducedMotion ? "true" : "false";
-
-    state.root.dataset.showroomHeld =
-      frame.held ? "true" : "false";
-
+    state.root.dataset.showroomHeld = frame.held ? "true" : "false";
     state.root.dataset.showroomControllerStatus =
       frame.held ? "held" : "available";
-
-    state.root.dataset.showroomControllerVersion =
-      MODULE.version;
-
-    state.root.dataset.showroomMotionContractId =
-      MODULE.motionContractId;
-
+    state.root.dataset.showroomControllerVersion = MODULE.version;
+    state.root.dataset.showroomMotionContractId = MODULE.motionContractId;
     state.root.dataset.showroomMotionContractVersion =
       MODULE.motionContractVersion;
-
     state.root.dataset.showroomSemanticProjectionRevision =
       String(frame.semanticProjectionRevision);
 
-    qsa("[data-showroom-cardinal-control]", state.root)
-      .forEach(element => {
-        const wing =
-          normalizeWing(element.dataset.showroomCardinalId);
+    qsa("[data-showroom-cardinal-control]", state.root).forEach(element => {
+      const wing = normalizeWing(element.dataset.showroomCardinalId);
+      const active = frame.presentation.outerCardinalsActive;
+      const primary = active && wing === frame.orbitFocus;
 
-        const active =
-          frame.presentation.outerCardinalsActive;
+      element.dataset.showroomActive = active ? "true" : "false";
 
-        const primary =
-          active && wing === frame.orbitFocus;
+      element.dataset.showroomSelected =
+        !frame.compassSelected &&
+        frame.selectedDestinationType === DESTINATION_TYPES.COIN &&
+        frame.selectedCardinal === wing
+          ? "true"
+          : "false";
 
-        element.dataset.showroomActive =
-          active ? "true" : "false";
+      element.dataset.showroomPrimary = primary ? "true" : "false";
 
-        element.dataset.showroomSelected =
-          !frame.compassSelected &&
-          frame.selectedDestinationType === DESTINATION_TYPES.COIN &&
-          frame.selectedCardinal === wing
-            ? "true"
-            : "false";
+      element.setAttribute(
+        "aria-disabled",
+        active ? "false" : "true"
+      );
 
-        element.dataset.showroomPrimary =
-          primary ? "true" : "false";
+      if (primary) {
+        element.setAttribute("aria-current", "true");
+      } else {
+        element.removeAttribute("aria-current");
+      }
+    });
 
-        element.setAttribute(
-          "aria-disabled",
-          active ? "false" : "true"
+    qsa("[data-showroom-child-control]", state.root).forEach(element => {
+      const roomId = normalizeRoomId(element.dataset.showroomChildId);
+      const roomRecord = ROOM_BY_ID.get(roomId);
+
+      const inActiveCluster =
+        Boolean(
+          cluster &&
+          roomRecord &&
+          roomRecord.wing === cluster.wing
         );
 
-        if (primary) {
-          element.setAttribute("aria-current", "true");
-        } else {
-          element.removeAttribute("aria-current");
-        }
-      });
+      const selected =
+        !frame.compassSelected &&
+        inActiveCluster &&
+        roomId === frame.selectedRoom;
 
-    qsa("[data-showroom-child-control]", state.root)
-      .forEach(element => {
-        const roomId =
-          normalize(element.dataset.showroomChildId);
+      const primary =
+        inActiveCluster &&
+        roomId === cluster.primaryRoom;
 
-        const roomWing =
-          normalizeWing(element.dataset.showroomCardinalId);
+      element.dataset.showroomActive =
+        inActiveCluster ? "true" : "false";
 
-        const inActiveCluster =
-          Boolean(
-            cluster &&
-            roomWing &&
-            roomWing === cluster.wing &&
-            cluster.roomIds.includes(roomId)
-          );
+      element.dataset.showroomSelected =
+        selected ? "true" : "false";
 
-        const selected =
-          !frame.compassSelected &&
-          inActiveCluster &&
-          roomId === frame.selectedRoom;
+      element.dataset.showroomPrimary =
+        primary ? "true" : "false";
 
-        const primary =
-          inActiveCluster &&
-          roomId === cluster.primaryRoom;
+      if (roomRecord) {
+        element.dataset.showroomControllerRoute = roomRecord.route;
+      }
 
-        element.dataset.showroomActive =
-          inActiveCluster ? "true" : "false";
+      element.setAttribute(
+        "aria-disabled",
+        inActiveCluster ? "false" : "true"
+      );
 
-        element.dataset.showroomSelected =
-          selected ? "true" : "false";
-
-        element.dataset.showroomPrimary =
-          primary ? "true" : "false";
-
-        element.setAttribute(
-          "aria-disabled",
-          inActiveCluster ? "false" : "true"
-        );
-
-        if (selected || primary) {
-          element.setAttribute("aria-current", "true");
-        } else {
-          element.removeAttribute("aria-current");
-        }
-      });
+      if (selected || primary) {
+        element.setAttribute("aria-current", "true");
+      } else {
+        element.removeAttribute("aria-current");
+      }
+    });
 
     state.compassControl.dataset.showroomSelected =
       frame.compassSelected ? "true" : "false";
-
-    state.compassControl.dataset.fixedCenter =
-      "true";
-
+    state.compassControl.dataset.fixedCenter = "true";
     state.compassControl.dataset.interactionEnabled =
       frame.compass.interactionEnabled ? "true" : "false";
-
-    state.compassControl.dataset.immediateNavigation =
-      "false";
+    state.compassControl.dataset.immediateNavigation = "false";
 
     state.compassControl.setAttribute(
       "aria-expanded",
@@ -1718,45 +1781,33 @@
   }
 
   function writeCompatibilityReceipt(frame) {
-    const receipt =
-      createCompatibilityReceipt(frame);
+    const receipt = createCompatibilityReceipt(frame);
+    const serialized = JSON.stringify(receipt);
 
-    const serialized =
-      JSON.stringify(receipt);
-
-    state.root.dataset.showroomControllerReceipt =
-      serialized;
+    state.root.dataset.showroomControllerReceipt = serialized;
 
     if ("value" in state.controllerReceiptOutput) {
-      state.controllerReceiptOutput.value =
-        serialized;
+      state.controllerReceiptOutput.value = serialized;
     }
 
-    state.controllerReceiptOutput.textContent =
-      serialized;
+    state.controllerReceiptOutput.textContent = serialized;
 
-    globalThis.SHOWROOM_CONTROLLER_RECEIPT =
-      receipt;
+    globalThis.SHOWROOM_CONTROLLER_RECEIPT = receipt;
   }
 
   function publishFrame() {
-    const frame =
-      createFrameState();
+    const frame = createFrameState();
 
     syncDatasets(frame);
     writeCompatibilityReceipt(frame);
-
     publish(CHANNELS.FRAME, frame);
 
     return frame;
   }
 
   function recordAction(action, failure = "") {
-    state.lastAction =
-      String(action || "");
-
-    state.lastFailure =
-      String(failure || "");
+    state.lastAction = String(action || "");
+    state.lastFailure = String(failure || "");
 
     return publishFrame();
   }
@@ -1764,114 +1815,6 @@
   function rejectRequest(action, code) {
     recordAction(action, code);
     return false;
-  }
-
-  function validateOrbitPreviewPayload(payload) {
-    if (
-      !payload ||
-      typeof payload !== "object" ||
-      Array.isArray(payload)
-    ) {
-      return Object.freeze({
-        pass: false,
-        code: "ARCHCOIN_ORBIT_PREVIEW_PAYLOAD_REQUIRED"
-      });
-    }
-
-    const unexpectedKeys =
-      unexpectedPreviewPayloadKeys(payload);
-
-    if (unexpectedKeys.length > 0) {
-      return Object.freeze({
-        pass: false,
-        code: "ARCHCOIN_ORBIT_PREVIEW_UNEXPECTED_FIELDS_FORBIDDEN",
-        unexpectedKeys: Object.freeze(unexpectedKeys.slice())
-      });
-    }
-
-    const quaternion =
-      normalizeQuaternionStrict(payload.quaternion);
-
-    if (!quaternion) {
-      return Object.freeze({
-        pass: false,
-        code: "ARCHCOIN_ORBIT_PREVIEW_COMPLETE_QUATERNION_REQUIRED"
-      });
-    }
-
-    const primaryId =
-      normalizeWing(payload.primaryId);
-
-    if (!primaryId) {
-      return Object.freeze({
-        pass: false,
-        code: "ARCHCOIN_ORBIT_PREVIEW_CANONICAL_PRIMARY_WING_REQUIRED"
-      });
-    }
-
-    return Object.freeze({
-      pass: true,
-      orientation: Object.freeze({
-        quaternion: Object.freeze(quaternion.slice()),
-        primaryId
-      })
-    });
-  }
-
-  function validateClusterPreviewPayload(cluster, payload) {
-    if (
-      !cluster ||
-      !payload ||
-      typeof payload !== "object" ||
-      Array.isArray(payload)
-    ) {
-      return Object.freeze({
-        pass: false,
-        code: "ARCHCOIN_CLUSTER_PREVIEW_PAYLOAD_REQUIRED"
-      });
-    }
-
-    const unexpectedKeys =
-      unexpectedPreviewPayloadKeys(payload);
-
-    if (unexpectedKeys.length > 0) {
-      return Object.freeze({
-        pass: false,
-        code: "ARCHCOIN_CLUSTER_PREVIEW_UNEXPECTED_FIELDS_FORBIDDEN",
-        unexpectedKeys: Object.freeze(unexpectedKeys.slice())
-      });
-    }
-
-    const quaternion =
-      normalizeQuaternionStrict(payload.quaternion);
-
-    if (!quaternion) {
-      return Object.freeze({
-        pass: false,
-        code: "ARCHCOIN_CLUSTER_PREVIEW_COMPLETE_QUATERNION_REQUIRED"
-      });
-    }
-
-    const primaryId =
-      normalize(payload.primaryId);
-
-    if (
-      !primaryId ||
-      !cluster.roomIds.includes(primaryId)
-    ) {
-      return Object.freeze({
-        pass: false,
-        code: `ARCHCOIN_CLUSTER_PREVIEW_CANONICAL_PRIMARY_ROOM_REQUIRED:${cluster.wing}`
-      });
-    }
-
-    return Object.freeze({
-      pass: true,
-      orientation: Object.freeze({
-        quaternion: Object.freeze(quaternion.slice()),
-        primaryId
-      })
-    });
   }
 
   function syncPresentation() {
@@ -1913,45 +1856,41 @@
       setReturnToOrbitVisible(false);
 
       setGuidance(
-        "Select a cardinal crystal or label to open its four-star cluster."
+        "Select a cardinal crystal or label to open its four-route cluster."
       );
 
       return;
     }
 
     if (state.current === STATES.CLUSTER_OPEN) {
-      const coin =
-        findCoinElement(state.selectedCardinal);
+      const coin = findCoinElement(state.selectedCardinal);
 
       setPanel(panelFromCoin(coin));
 
       setPanelMetadata({
-        domain:
-          normalizeLabel(
-            coin && coin.dataset.showroomCardinalLabel,
-            WING_LABELS[state.selectedCardinal] ||
-              wingToCoin(state.selectedCardinal)
-          ),
+        domain: normalizeLabel(
+          coin && coin.dataset.showroomCardinalLabel,
+          WING_LABELS[state.selectedCardinal] ||
+            wingToCoin(state.selectedCardinal)
+        ),
 
-        functionLabel:
-          normalizeLabel(
-            coin &&
-              (
-                coin.dataset.showroomPanelTitle ||
-                coin.dataset.showroomCardinalFunction ||
-                coin.dataset.showroomCardinalLabel
-              ),
-            "Mirrorland direction"
-          ),
+        functionLabel: normalizeLabel(
+          coin &&
+            (
+              coin.dataset.showroomPanelTitle ||
+              coin.dataset.showroomCardinalFunction ||
+              coin.dataset.showroomCardinalLabel
+            ),
+          "Mirrorland direction"
+        ),
 
-        coordinate:
-          normalizeLabel(
-            coin && coin.dataset.showroomCoordinateLabel,
-            state.selectedCardinal
-          ),
+        coordinate: normalizeLabel(
+          coin && coin.dataset.showroomCoordinateLabel,
+          state.selectedCardinal
+        ),
 
         selection: "Cluster open",
-        route: "Star required",
+        route: "Route required",
         lens: "Overview"
       });
 
@@ -1959,56 +1898,48 @@
       setReturnToOrbitVisible(false);
 
       setGuidance(
-        "Choose one child star to review its intent."
+        "Choose one child star to prepare its dedicated route."
       );
 
       return;
     }
 
     if (state.current === STATES.ROOM_SELECTED) {
-      const room =
-        findRoomElement(state.selectedRoom);
+      const room = findRoomElement(state.selectedRoom);
+      const record = ROOM_BY_ID.get(state.selectedRoom);
 
-      const intent =
-        readChildIntentFromElement(room);
-
-      setPanel(panelFromRoom(room));
+      setPanel(panelFromRoom(record, room));
 
       setPanelMetadata({
-        domain:
-          normalizeLabel(
-            WING_LABELS[state.selectedCardinal] ||
-              state.selectedCoin,
-            "Selected direction"
-          ),
+        domain: normalizeLabel(
+          WING_LABELS[state.selectedCardinal] || state.selectedCoin,
+          "Selected direction"
+        ),
 
-        functionLabel:
-          intentPanelRouteStatus(intent),
+        functionLabel: normalizeLabel(
+          record && record.visualClass,
+          "Route"
+        ),
 
-        coordinate:
-          normalizeLabel(
-            room && room.dataset.showroomLocalCoordinate,
-            state.selectedRoom
-          ),
+        coordinate: normalizeLabel(
+          room && room.dataset.showroomLocalCoordinate,
+          state.selectedRoom
+        ),
 
-        selection: "Star selected",
-
-        route:
-          intentPanelRouteStatus(intent),
-
-        lens:
-          normalizeLabel(state.selectedLens, "Overview")
+        selection: "Route selected",
+        route: state.selectedRoute || "No route",
+        lens: normalizeLabel(state.selectedLens, "Overview")
       });
 
       setEnterEnabled(
-        Boolean(state.selectedInfoId),
+        Boolean(state.selectedRoute),
         "Open Selection"
       );
 
       setReturnToOrbitVisible(true, "Return to Orbit");
 
       setGuidance(
-        "Review the selected star. Open Selection sends its intent to the destination resolver."
+        "Review the selected route. Open Selection navigates to the canonical destination page."
       );
 
       return;
@@ -2017,8 +1948,10 @@
     setPanel({
       eyebrow: "System held",
       title: "Mirrorland navigation is unavailable",
-      purpose: "The controller could not establish or preserve a safe interaction state.",
-      relationship: "Static content may remain available, but interactive requests are rejected."
+      purpose:
+        "The controller could not establish or preserve a safe interaction state.",
+      relationship:
+        "Static content may remain available, but interactive requests are rejected."
     });
 
     setPanelMetadata({
@@ -2042,18 +1975,16 @@
   function applyState(nextState, patch = {}, action = "") {
     invariant(
       canTransition(state.current, nextState),
-      "ARCHCOIN_ILLEGAL_STATE_TRANSITION",
+      "SHOWROOM_ILLEGAL_STATE_TRANSITION",
       {
         from: state.current,
         to: nextState
       }
     );
 
-    const previousHeld =
-      isHeld();
+    const previousHeld = isHeld();
 
-    state.current =
-      nextState;
+    state.current = nextState;
 
     for (const [key, value] of Object.entries(patch)) {
       if (
@@ -2065,8 +1996,7 @@
 
     syncPresentation();
 
-    const frame =
-      recordAction(action);
+    const frame = recordAction(action);
 
     if (previousHeld !== frame.held) {
       publish(CHANNELS.HELD_STATE, createHeldState());
@@ -2086,42 +2016,27 @@
       incrementRevision = false
     } = {}
   ) {
-    const normalized =
-      cloneOrientation(orientation);
+    const normalized = cloneOrientation(orientation);
 
     invariant(
       normalizeWing(normalized.primaryId),
-      "ARCHCOIN_CONSTELLATION_PRIMARY_WING_INVALID"
+      "SHOWROOM_CONSTELLATION_PRIMARY_WING_INVALID"
     );
 
-    state.orbitOrientation =
-      normalized;
-
-    state.orbitPreviewFocus =
-      normalized.primaryId;
-
-    state.orbitPhase =
-      phase;
-
-    state.orbitGestureActive =
-      Boolean(gestureActive);
-
-    state.orbitPreviewAccepted =
-      Boolean(previewAccepted);
+    state.orbitOrientation = normalized;
+    state.orbitPreviewFocus = normalized.primaryId;
+    state.orbitPhase = phase;
+    state.orbitGestureActive = Boolean(gestureActive);
+    state.orbitPreviewAccepted = Boolean(previewAccepted);
 
     if (incrementRevision) {
       state.orbitRevision += 1;
     }
 
     if (committed) {
-      state.committedOrbitOrientation =
-        cloneOrientation(normalized);
-
-      state.orbitFocus =
-        normalized.primaryId;
-
-      state.orbitPreviewFocus =
-        normalized.primaryId;
+      state.committedOrbitOrientation = cloneOrientation(normalized);
+      state.orbitFocus = normalized.primaryId;
+      state.orbitPreviewFocus = normalized.primaryId;
     }
   }
 
@@ -2136,44 +2051,29 @@
       incrementRevision = false
     } = {}
   ) {
-    invariant(cluster, "ARCHCOIN_CLUSTER_REQUIRED");
+    invariant(cluster, "SHOWROOM_CLUSTER_REQUIRED");
 
-    const normalized =
-      cloneOrientation(orientation);
+    const normalized = cloneOrientation(orientation);
 
     invariant(
       cluster.roomIds.includes(normalized.primaryId),
-      `ARCHCOIN_CLUSTER_PRIMARY_ROOM_INVALID:${cluster.wing}`
+      `SHOWROOM_CLUSTER_PRIMARY_ROOM_INVALID:${cluster.wing}`
     );
 
-    cluster.orientation =
-      normalized;
-
-    cluster.previewPrimaryRoom =
-      normalized.primaryId;
-
-    cluster.phase =
-      phase;
-
-    cluster.gestureActive =
-      Boolean(gestureActive);
-
-    cluster.previewAccepted =
-      Boolean(previewAccepted);
+    cluster.orientation = normalized;
+    cluster.previewPrimaryRoom = normalized.primaryId;
+    cluster.phase = phase;
+    cluster.gestureActive = Boolean(gestureActive);
+    cluster.previewAccepted = Boolean(previewAccepted);
 
     if (incrementRevision) {
       cluster.revision += 1;
     }
 
     if (committed) {
-      cluster.committedOrientation =
-        cloneOrientation(normalized);
-
-      cluster.primaryRoom =
-        normalized.primaryId;
-
-      cluster.previewPrimaryRoom =
-        normalized.primaryId;
+      cluster.committedOrientation = cloneOrientation(normalized);
+      cluster.primaryRoom = normalized.primaryId;
+      cluster.previewPrimaryRoom = normalized.primaryId;
     }
 
     return true;
@@ -2183,7 +2083,7 @@
     if (arguments.length !== 0) {
       return rejectRequest(
         "orbit-gesture-begin-rejected",
-        "ARCHCOIN_ORBIT_GESTURE_BEGIN_ACCEPTS_NO_PAYLOAD"
+        "SHOWROOM_ORBIT_GESTURE_BEGIN_ACCEPTS_NO_PAYLOAD"
       );
     }
 
@@ -2220,7 +2120,7 @@
     if (arguments.length !== 1) {
       return rejectRequest(
         "orbit-preview-rejected",
-        "ARCHCOIN_ORBIT_PREVIEW_EXACT_PAYLOAD_REQUIRED"
+        "SHOWROOM_ORBIT_PREVIEW_EXACT_PAYLOAD_REQUIRED"
       );
     }
 
@@ -2234,12 +2134,11 @@
     if (!state.orbitGestureActive) {
       return rejectRequest(
         "orbit-preview-rejected",
-        "ARCHCOIN_ORBIT_PREVIEW_ACTIVE_TRANSACTION_REQUIRED"
+        "SHOWROOM_ORBIT_PREVIEW_ACTIVE_TRANSACTION_REQUIRED"
       );
     }
 
-    const validation =
-      validateOrbitPreviewPayload(payload);
+    const validation = validateOrbitPreviewPayload(payload);
 
     if (!validation.pass) {
       return rejectRequest(
@@ -2269,7 +2168,7 @@
     if (arguments.length !== 0) {
       return rejectRequest(
         "orbit-commit-rejected",
-        "ARCHCOIN_ORBIT_COMMIT_ACCEPTS_NO_PAYLOAD"
+        "SHOWROOM_ORBIT_COMMIT_ACCEPTS_NO_PAYLOAD"
       );
     }
 
@@ -2286,12 +2185,11 @@
     ) {
       return rejectRequest(
         "orbit-commit-rejected",
-        "ARCHCOIN_ORBIT_COMMIT_ACCEPTED_PREVIEW_REQUIRED"
+        "SHOWROOM_ORBIT_COMMIT_ACCEPTED_PREVIEW_REQUIRED"
       );
     }
 
-    const committed =
-      cloneOrientation(state.orbitOrientation);
+    const committed = cloneOrientation(state.orbitOrientation);
 
     setConstellationOrientation(
       committed,
@@ -2304,12 +2202,9 @@
       }
     );
 
-    state.orbitGestureOrigin =
-      null;
+    state.orbitGestureOrigin = null;
 
-    recordAction(
-      `orbit-committed:${committed.primaryId}`
-    );
+    recordAction(`orbit-committed:${committed.primaryId}`);
 
     return true;
   }
@@ -2318,7 +2213,7 @@
     if (arguments.length > 1) {
       return rejectRequest(
         "orbit-cancel-rejected",
-        "ARCHCOIN_ORBIT_CANCEL_ARGUMENT_COUNT_INVALID"
+        "SHOWROOM_ORBIT_CANCEL_ARGUMENT_COUNT_INVALID"
       );
     }
 
@@ -2330,11 +2225,10 @@
       return false;
     }
 
-    const restored =
-      cloneOrientation(
-        state.orbitGestureOrigin ||
-        state.committedOrbitOrientation
-      );
+    const restored = cloneOrientation(
+      state.orbitGestureOrigin ||
+      state.committedOrbitOrientation
+    );
 
     setConstellationOrientation(
       restored,
@@ -2346,15 +2240,13 @@
       }
     );
 
-    state.orbitGestureOrigin =
-      null;
+    state.orbitGestureOrigin = null;
 
     recordAction(
       `orbit-cancelled:${String(reason || "cancelled")}`
     );
 
-    state.orbitPhase =
-      ORIENTATION_PHASES.COMMITTED;
+    state.orbitPhase = ORIENTATION_PHASES.COMMITTED;
 
     recordAction("orbit-cancel-settled");
 
@@ -2366,8 +2258,7 @@
       return false;
     }
 
-    const normalizedWing =
-      normalizeWing(wing);
+    const normalizedWing = normalizeWing(wing);
 
     if (
       isHeld() ||
@@ -2392,12 +2283,9 @@
       }
     );
 
-    state.orbitGestureOrigin =
-      null;
+    state.orbitGestureOrigin = null;
 
-    recordAction(
-      `orbit-focus-settled:${normalizedWing}`
-    );
+    recordAction(`orbit-focus-settled:${normalizedWing}`);
 
     return true;
   }
@@ -2406,7 +2294,7 @@
     if (arguments.length !== 1) {
       return rejectRequest(
         "cluster-gesture-begin-rejected",
-        "ARCHCOIN_CLUSTER_GESTURE_BEGIN_EXACT_WING_REQUIRED"
+        "SHOWROOM_CLUSTER_GESTURE_BEGIN_EXACT_WING_REQUIRED"
       );
     }
 
@@ -2414,11 +2302,8 @@
       return false;
     }
 
-    const normalizedWing =
-      normalizeWing(wing);
-
-    const cluster =
-      getCluster(normalizedWing);
+    const normalizedWing = normalizeWing(wing);
+    const cluster = getCluster(normalizedWing);
 
     if (
       !cluster ||
@@ -2435,8 +2320,7 @@
       return true;
     }
 
-    cluster.gestureOrigin =
-      cloneOrientation(cluster.committedOrientation);
+    cluster.gestureOrigin = cloneOrientation(cluster.committedOrientation);
 
     setClusterOrientation(
       cluster,
@@ -2449,9 +2333,7 @@
       }
     );
 
-    recordAction(
-      `cluster-gesture-began:${normalizedWing}`
-    );
+    recordAction(`cluster-gesture-began:${normalizedWing}`);
 
     return true;
   }
@@ -2460,7 +2342,7 @@
     if (arguments.length !== 2) {
       return rejectRequest(
         "cluster-preview-rejected",
-        "ARCHCOIN_CLUSTER_PREVIEW_EXACT_WING_AND_PAYLOAD_REQUIRED"
+        "SHOWROOM_CLUSTER_PREVIEW_EXACT_WING_AND_PAYLOAD_REQUIRED"
       );
     }
 
@@ -2468,11 +2350,8 @@
       return false;
     }
 
-    const normalizedWing =
-      normalizeWing(wing);
-
-    const cluster =
-      getCluster(normalizedWing);
+    const normalizedWing = normalizeWing(wing);
+    const cluster = getCluster(normalizedWing);
 
     if (
       !cluster ||
@@ -2488,12 +2367,11 @@
     if (!cluster.gestureActive) {
       return rejectRequest(
         "cluster-preview-rejected",
-        `ARCHCOIN_CLUSTER_PREVIEW_ACTIVE_TRANSACTION_REQUIRED:${normalizedWing}`
+        `SHOWROOM_CLUSTER_PREVIEW_ACTIVE_TRANSACTION_REQUIRED:${normalizedWing}`
       );
     }
 
-    const validation =
-      validateClusterPreviewPayload(cluster, payload);
+    const validation = validateClusterPreviewPayload(cluster, payload);
 
     if (!validation.pass) {
       return rejectRequest(
@@ -2524,7 +2402,7 @@
     if (arguments.length !== 1) {
       return rejectRequest(
         "cluster-commit-rejected",
-        "ARCHCOIN_CLUSTER_COMMIT_EXACT_WING_REQUIRED"
+        "SHOWROOM_CLUSTER_COMMIT_EXACT_WING_REQUIRED"
       );
     }
 
@@ -2532,11 +2410,8 @@
       return false;
     }
 
-    const normalizedWing =
-      normalizeWing(wing);
-
-    const cluster =
-      getCluster(normalizedWing);
+    const normalizedWing = normalizeWing(wing);
+    const cluster = getCluster(normalizedWing);
 
     if (
       !cluster ||
@@ -2555,12 +2430,11 @@
     ) {
       return rejectRequest(
         "cluster-commit-rejected",
-        `ARCHCOIN_CLUSTER_COMMIT_ACCEPTED_PREVIEW_REQUIRED:${normalizedWing}`
+        `SHOWROOM_CLUSTER_COMMIT_ACCEPTED_PREVIEW_REQUIRED:${normalizedWing}`
       );
     }
 
-    const committed =
-      cloneOrientation(cluster.orientation);
+    const committed = cloneOrientation(cluster.orientation);
 
     setClusterOrientation(
       cluster,
@@ -2574,8 +2448,7 @@
       }
     );
 
-    cluster.gestureOrigin =
-      null;
+    cluster.gestureOrigin = null;
 
     recordAction(
       `cluster-committed:${normalizedWing}:${committed.primaryId}`
@@ -2591,7 +2464,7 @@
     ) {
       return rejectRequest(
         "cluster-cancel-rejected",
-        "ARCHCOIN_CLUSTER_CANCEL_ARGUMENT_COUNT_INVALID"
+        "SHOWROOM_CLUSTER_CANCEL_ARGUMENT_COUNT_INVALID"
       );
     }
 
@@ -2599,11 +2472,8 @@
       return false;
     }
 
-    const normalizedWing =
-      normalizeWing(wing);
-
-    const cluster =
-      getCluster(normalizedWing);
+    const normalizedWing = normalizeWing(wing);
+    const cluster = getCluster(normalizedWing);
 
     if (
       !cluster ||
@@ -2612,11 +2482,10 @@
       return false;
     }
 
-    const restored =
-      cloneOrientation(
-        cluster.gestureOrigin ||
-        cluster.committedOrientation
-      );
+    const restored = cloneOrientation(
+      cluster.gestureOrigin ||
+      cluster.committedOrientation
+    );
 
     setClusterOrientation(
       cluster,
@@ -2629,19 +2498,15 @@
       }
     );
 
-    cluster.gestureOrigin =
-      null;
+    cluster.gestureOrigin = null;
 
     recordAction(
       `cluster-cancelled:${normalizedWing}:${String(reason || "cancelled")}`
     );
 
-    cluster.phase =
-      ORIENTATION_PHASES.COMMITTED;
+    cluster.phase = ORIENTATION_PHASES.COMMITTED;
 
-    recordAction(
-      `cluster-cancel-settled:${normalizedWing}`
-    );
+    recordAction(`cluster-cancel-settled:${normalizedWing}`);
 
     return true;
   }
@@ -2659,8 +2524,7 @@
   }
 
   function requestCardinalSelection(cardinalId) {
-    const wing =
-      normalizeWing(cardinalId);
+    const wing = normalizeWing(cardinalId);
 
     if (
       isHeld() ||
@@ -2670,8 +2534,7 @@
       return false;
     }
 
-    const element =
-      findCoinElement(wing);
+    const element = findCoinElement(wing);
 
     if (!element) {
       recordAction(
@@ -2699,6 +2562,8 @@
 
     resetSelection();
 
+    const destination = destinationFromCoinElement(element);
+
     return applyState(
       STATES.CLUSTER_OPEN,
       {
@@ -2707,10 +2572,7 @@
         selectedDestinationType: DESTINATION_TYPES.COIN,
         selectedDestinationId: wing,
         selectedDestinationLabel:
-          normalizeLabel(
-            element.dataset.showroomCardinalLabel,
-            WING_LABELS[wing] || wingToCoin(wing)
-          ),
+          destination ? destination.label : WING_LABELS[wing],
         selectedRoute: "",
         selectedParagraph: "",
         compassSelected: false,
@@ -2720,49 +2582,8 @@
     );
   }
 
-  function validateChildIntent(intent) {
-    if (!intent) {
-      throw new Error("SHOWROOM_CHILD_INTENT_INVALID");
-    }
-
-    if (!intent.childId) {
-      throw new Error("SHOWROOM_CHILD_ID_REQUIRED");
-    }
-
-    if (!intent.wingId) {
-      throw new Error("SHOWROOM_CHILD_WING_REQUIRED");
-    }
-
-    if (!intent.infoId) {
-      throw new Error("SHOWROOM_CHILD_INFO_ID_REQUIRED");
-    }
-
-    if (!intent.destinationKind) {
-      throw new Error("SHOWROOM_CHILD_DESTINATION_KIND_INVALID");
-    }
-
-    if (
-      intent.destinationKind ===
-        DESTINATION_KINDS.OBJECT_INSPECT &&
-      !intent.objectTarget
-    ) {
-      throw new Error("SHOWROOM_OBJECT_TARGET_REQUIRED");
-    }
-
-    if (
-      intent.destinationKind ===
-        DESTINATION_KINDS.EXTERNAL_ROUTE &&
-      !intent.route
-    ) {
-      throw new Error("SHOWROOM_EXTERNAL_ROUTE_METADATA_PRESENT");
-    }
-
-    return true;
-  }
-
   function requestRoomSelection(roomId) {
-    const id =
-      normalize(roomId);
+    const id = normalizeRoomId(roomId);
 
     if (
       isHeld() ||
@@ -2775,10 +2596,13 @@
       return false;
     }
 
-    const element =
-      findRoomElement(id);
+    const canonical = ROOM_BY_ID.get(id);
+    const element = findRoomElement(id);
 
-    if (!element) {
+    if (
+      !canonical ||
+      !element
+    ) {
       recordAction(
         "room-selection-rejected",
         `ROOM_NOT_FOUND:${id}`
@@ -2787,23 +2611,7 @@
       return false;
     }
 
-    const intent =
-      readChildIntentFromElement(element);
-
-    try {
-      validateChildIntent(intent);
-    } catch (error) {
-      recordAction(
-        "room-selection-rejected",
-        error && error.message
-          ? error.message
-          : "SHOWROOM_CHILD_INTENT_INVALID"
-      );
-
-      return false;
-    }
-
-    if (intent.wingId !== state.selectedCardinal) {
+    if (canonical.wing !== state.selectedCardinal) {
       recordAction(
         "room-selection-rejected",
         `ROOM_OUTSIDE_ACTIVE_CLUSTER:${id}`
@@ -2812,8 +2620,18 @@
       return false;
     }
 
-    const cluster =
-      getCluster(intent.wingId);
+    const declaredWing = normalizeWing(element.dataset.showroomCardinalId);
+
+    if (declaredWing !== canonical.wing) {
+      recordAction(
+        "room-selection-rejected",
+        `ROOM_DECLARED_WING_INVALID:${id}`
+      );
+
+      return false;
+    }
+
+    const cluster = getCluster(canonical.wing);
 
     if (
       !cluster ||
@@ -2828,55 +2646,41 @@
     }
 
     if (cluster.gestureActive) {
-      requestClusterCancel(
-        intent.wingId,
-        "room-selection"
-      );
+      requestClusterCancel(canonical.wing, "room-selection");
     }
 
     clearViewportSchedules();
 
-    if (state.selectedRoom !== id) {
-      invalidateDestinationAuthorization();
-    }
+    const destination = destinationFromRoomRecord(canonical, element);
 
-    const committed =
-      applyState(
-        STATES.ROOM_SELECTED,
-        {
-          selectedCardinal: intent.wingId,
-          selectedCoin: wingToCoin(intent.wingId),
-          selectedRoom: id,
-          selectedDestinationType: DESTINATION_TYPES.ROOM,
-          selectedDestinationKind: intent.destinationKind,
-          selectedInfoId: intent.infoId,
-          selectedObjectTarget: intent.objectTarget,
-          selectedRouteEvidence: intent.routeEvidence,
-          selectedDestinationId: id,
-          selectedDestinationLabel: intent.childLabel,
-          selectedRoute: intent.route,
-          selectedContentId: intent.infoId,
-          selectedLens: intent.lens,
-          selectedParagraph: roomParagraphFromIntent(intent),
-          selectedSemanticActivation: intent.semanticActivation,
-          selectedRouteLabel: intent.routeLabel,
-          selectedRouteDescription: intent.routeDescription,
-          selectedRouteRole: intent.routeRole,
-          selectedVisualClass: intent.visualClass,
-          selectedEmphasis: intent.emphasis,
-          selectedReturnModel: intent.returnModel,
-          selectedReturnZone: intent.returnZone,
-          compassSelected: false,
-          panelDescended: true
-        },
-        `room-selected:${id}`
-      );
+    const committed = applyState(
+      STATES.ROOM_SELECTED,
+      {
+        selectedCardinal: canonical.wing,
+        selectedCoin: canonical.coin,
+        selectedRoom: canonical.roomId,
+        selectedDestinationType: DESTINATION_TYPES.ROOM,
+        selectedDestinationId: canonical.roomId,
+        selectedDestinationLabel: destination.label,
+        selectedRoute: canonical.route,
+        selectedContentId: destination.contentId,
+        selectedLens: destination.lens,
+        selectedParagraph: roomParagraphFromRecord(canonical, element),
+        selectedRouteDescription: canonical.routeDescription,
+        selectedVisualClass: canonical.visualClass,
+        selectedEmphasis: canonical.emphasis,
+        selectedExistingRoute: canonical.existingRoute,
+        compassSelected: false,
+        panelDescended: true
+      },
+      `room-selected:${canonical.roomId}`
+    );
 
     if (!committed) {
       return false;
     }
 
-    scheduleRoomPanelDescent(id);
+    scheduleRoomPanelDescent(canonical.roomId);
 
     return true;
   }
@@ -2891,12 +2695,10 @@
 
     state.compassSelected = true;
     state.selectedDestinationType = DESTINATION_TYPES.HOME_COMPASS;
-    state.selectedDestinationKind = "";
     state.selectedDestinationId = MAIN_COMPASS.destinationId;
     state.selectedDestinationLabel = MAIN_COMPASS.destinationLabel;
     state.selectedRoute = MAIN_COMPASS.route;
     state.selectedContentId = "home-compass";
-    state.selectedInfoId = "";
     state.selectedLens = "return";
     state.selectedParagraph =
       "Return to the Diamond Gate Bridge Main Compass only after choosing the explicit return action.";
@@ -2916,160 +2718,6 @@
     return true;
   }
 
-  function createSelectedIntentPayload(intent, authorizationGeneration) {
-    return Object.freeze({
-      contract: INTENT_ENTRY.contract,
-      controllerId: MODULE.id,
-      controllerVersion: MODULE.version,
-      controllerFile: MODULE.file,
-      sourceState: STATES.ROOM_SELECTED,
-
-      wingId: intent.wingId,
-      wingLabel: WING_LABELS[intent.wingId] || "",
-      childId: intent.childId,
-      childLabel: intent.childLabel,
-      destinationKind: intent.destinationKind,
-      infoId: intent.infoId,
-
-      route: normalizeNullableString(intent.route),
-      routeLabel: normalizeNullableString(intent.routeLabel),
-      routeDescription: normalizeNullableString(intent.routeDescription),
-      routeEvidence: normalizeNullableString(intent.routeEvidence),
-      routeRole: normalizeNullableString(intent.routeRole),
-
-      objectTarget: normalizeNullableString(intent.objectTarget),
-      semanticActivation: normalizeNullableString(intent.semanticActivation),
-      lens: intent.lens,
-
-      visualClass: normalizeNullableString(intent.visualClass),
-      emphasis: normalizeNullableString(intent.emphasis),
-      returnModel: normalizeNullableString(intent.returnModel),
-      returnZone: normalizeNullableString(intent.returnZone),
-
-      authorizationGeneration,
-      timestamp: new Date().toISOString()
-    });
-  }
-
-  function validateSelectedIntentPayload(payload) {
-    invariant(
-      payload &&
-        typeof payload === "object" &&
-        !Array.isArray(payload),
-      "SHOWROOM_SELECTED_INTENT_PAYLOAD_OBJECT_REQUIRED"
-    );
-
-    invariant(
-      Object.isFrozen(payload) === true,
-      "SHOWROOM_SELECTED_INTENT_PAYLOAD_NOT_FROZEN"
-    );
-
-    const keys =
-      Object.keys(payload);
-
-    invariant(
-      keys.length === INTENT_PAYLOAD_KEYS.length,
-      "SHOWROOM_SELECTED_INTENT_PAYLOAD_KEY_COUNT_INVALID",
-      {
-        expected: INTENT_PAYLOAD_KEYS.length,
-        actual: keys.length
-      }
-    );
-
-    for (const key of INTENT_PAYLOAD_KEYS) {
-      invariant(
-        Object.prototype.hasOwnProperty.call(payload, key),
-        "SHOWROOM_SELECTED_INTENT_PAYLOAD_KEY_MISSING",
-        { key }
-      );
-
-      invariant(
-        isPrimitiveIntentPayloadValue(payload[key]),
-        "SHOWROOM_SELECTED_INTENT_PAYLOAD_NON_PRIMITIVE_VALUE",
-        {
-          key,
-          type: typeof payload[key]
-        }
-      );
-    }
-
-    for (const key of keys) {
-      invariant(
-        INTENT_PAYLOAD_KEYS.includes(key),
-        "SHOWROOM_SELECTED_INTENT_PAYLOAD_UNEXPECTED_KEY",
-        { key }
-      );
-    }
-
-    invariant(
-      payload.contract === INTENT_ENTRY.contract,
-      "SHOWROOM_SELECTED_INTENT_PAYLOAD_CONTRACT_INVALID"
-    );
-
-    invariant(
-      payload.controllerId === MODULE.id,
-      "SHOWROOM_SELECTED_INTENT_PAYLOAD_CONTROLLER_ID_INVALID"
-    );
-
-    invariant(
-      payload.controllerVersion === MODULE.version,
-      "SHOWROOM_SELECTED_INTENT_PAYLOAD_CONTROLLER_VERSION_INVALID"
-    );
-
-    invariant(
-      payload.controllerFile === MODULE.file,
-      "SHOWROOM_SELECTED_INTENT_PAYLOAD_CONTROLLER_FILE_INVALID"
-    );
-
-    invariant(
-      payload.sourceState === STATES.ROOM_SELECTED,
-      "SHOWROOM_SELECTED_INTENT_PAYLOAD_SOURCE_STATE_INVALID"
-    );
-
-    invariant(
-      Number.isSafeInteger(payload.authorizationGeneration) &&
-        payload.authorizationGeneration >= 0,
-      "SHOWROOM_SELECTED_INTENT_PAYLOAD_GENERATION_INVALID"
-    );
-
-    invariant(
-      !Number.isNaN(Date.parse(payload.timestamp)),
-      "SHOWROOM_SELECTED_INTENT_PAYLOAD_TIMESTAMP_INVALID"
-    );
-
-    invariant(
-      normalizeDestinationKind(payload.destinationKind),
-      "SHOWROOM_SELECTED_INTENT_PAYLOAD_KIND_INVALID"
-    );
-
-    invariant(
-      payload.infoId,
-      "SHOWROOM_SELECTED_INTENT_PAYLOAD_INFO_ID_REQUIRED"
-    );
-
-    if (
-      payload.destinationKind ===
-      DESTINATION_KINDS.OBJECT_INSPECT
-    ) {
-      invariant(
-        payload.objectTarget,
-        "SHOWROOM_SELECTED_INTENT_PAYLOAD_OBJECT_TARGET_REQUIRED"
-      );
-    }
-
-    if (
-      payload.destinationKind ===
-      DESTINATION_KINDS.EXTERNAL_ROUTE
-    ) {
-      invariant(
-        payload.route,
-        "SHOWROOM_SELECTED_INTENT_PAYLOAD_ROUTE_METADATA_REQUIRED"
-      );
-    }
-
-    return true;
-  }
-
   function requestEnterSelection() {
     if (
       isHeld() ||
@@ -3079,119 +2727,28 @@
       return false;
     }
 
-    const element =
-      findRoomElement(state.selectedRoom);
-
-    if (!element) {
-      recordAction(
-        "selected-intent-entry-rejected",
-        "SHOWROOM_SELECTED_CHILD_NOT_FOUND"
-      );
-
-      return false;
-    }
-
-    const intent =
-      readChildIntentFromElement(element);
-
-    try {
-      validateChildIntent(intent);
-    } catch (error) {
-      recordAction(
-        "selected-intent-entry-rejected",
-        error && error.message
-          ? error.message
-          : "SHOWROOM_CHILD_INTENT_INVALID"
-      );
-
-      return false;
-    }
+    const canonical = ROOM_BY_ID.get(state.selectedRoom);
 
     if (
-      intent.childId !== state.selectedRoom ||
-      intent.wingId !== state.selectedCardinal ||
-      intent.destinationKind !== state.selectedDestinationKind ||
-      intent.infoId !== state.selectedInfoId ||
-      intent.lens !== state.selectedLens
+      !canonical ||
+      state.selectedDestinationType !== DESTINATION_TYPES.ROOM ||
+      state.selectedDestinationId !== canonical.roomId ||
+      state.selectedRoute !== canonical.route ||
+      !ROOM_BY_ROUTE.has(state.selectedRoute)
     ) {
       recordAction(
-        "selected-intent-entry-rejected",
-        "SHOWROOM_SELECTED_INTENT_STALE"
-      );
-
-      return false;
-    }
-
-    const authorizationGeneration =
-      state.destinationAuthorizationGeneration;
-
-    const payload =
-      createSelectedIntentPayload(
-        intent,
-        authorizationGeneration
-      );
-
-    try {
-      validateSelectedIntentPayload(payload);
-    } catch (error) {
-      recordAction(
-        "selected-intent-entry-payload-rejected",
-        error &&
-          (
-            error.code ||
-            error.message
-          )
-          ? String(error.code || error.message)
-          : "SHOWROOM_SELECTED_INTENT_PAYLOAD_INVALID"
-      );
-
-      return false;
-    }
-
-    if (
-      authorizationGeneration !==
-        state.destinationAuthorizationGeneration ||
-      state.selectedRoom !== intent.childId ||
-      state.current !== STATES.ROOM_SELECTED ||
-      state.compassSelected ||
-      isHeld()
-    ) {
-      recordAction(
-        "selected-intent-entry-rejected",
-        "SHOWROOM_SELECTED_INTENT_STALE"
-      );
-
-      return false;
-    }
-
-    try {
-      state.root.dispatchEvent(
-        new CustomEvent(
-          INTENT_ENTRY.event,
-          {
-            detail: payload,
-            bubbles: true
-          }
-        )
-      );
-    } catch (error) {
-      recordAction(
-        "selected-intent-entry-dispatch-failed",
-        error &&
-          (
-            error.code ||
-            error.message
-          )
-          ? String(error.code || error.message)
-          : "SHOWROOM_SELECTED_INTENT_DISPATCH_FAILED"
+        "selected-path-entry-rejected",
+        "SELECTED_ROOM_ROUTE_NOT_CANONICAL"
       );
 
       return false;
     }
 
     recordAction(
-      `selected-intent-entry-authorized:${intent.childId}:${authorizationGeneration}`
+      `selected-path-entry-confirmed:${canonical.roomId}`
     );
+
+    globalThis.location.assign(canonical.route);
 
     return true;
   }
@@ -3223,45 +2780,38 @@
       state.compassSelected = false;
 
       if (state.current === STATES.ROOM_SELECTED) {
-        const wing =
-          normalizeWing(state.selectedCardinal);
+        const wing = normalizeWing(state.selectedCardinal);
 
         if (!wing) {
           return false;
         }
 
-        const coin =
-          findCoinElement(wing);
+        const coin = findCoinElement(wing);
+        const destination = destinationFromCoinElement(coin);
 
-        invalidateDestinationAuthorization();
-
-        const committed =
-          applyState(
-            STATES.CLUSTER_OPEN,
-            {
-              selectedCardinal: wing,
-              selectedCoin: wingToCoin(wing),
-              selectedRoom: "",
-              selectedDestinationType: DESTINATION_TYPES.COIN,
-              selectedDestinationKind: "",
-              selectedInfoId: "",
-              selectedObjectTarget: "",
-              selectedRouteEvidence: "",
-              selectedDestinationId: wing,
-              selectedDestinationLabel:
-                normalizeLabel(
-                  coin && coin.dataset.showroomCardinalLabel,
-                  WING_LABELS[wing] || wingToCoin(wing)
-                ),
-              selectedRoute: "",
-              selectedContentId: "",
-              selectedLens: "overview",
-              selectedParagraph: "",
-              compassSelected: false,
-              panelDescended: false
-            },
-            `compass-returned-to-orbit:${wing}`
-          );
+        const committed = applyState(
+          STATES.CLUSTER_OPEN,
+          {
+            selectedCardinal: wing,
+            selectedCoin: wingToCoin(wing),
+            selectedRoom: "",
+            selectedDestinationType: DESTINATION_TYPES.COIN,
+            selectedDestinationId: wing,
+            selectedDestinationLabel:
+              destination ? destination.label : WING_LABELS[wing],
+            selectedRoute: "",
+            selectedContentId: "",
+            selectedLens: "overview",
+            selectedParagraph: "",
+            selectedRouteDescription: "",
+            selectedVisualClass: "",
+            selectedEmphasis: "",
+            selectedExistingRoute: false,
+            compassSelected: false,
+            panelDescended: false
+          },
+          `compass-returned-to-orbit:${wing}`
+        );
 
         if (committed) {
           scheduleSceneAscent(STATES.CLUSTER_OPEN, wing);
@@ -3271,21 +2821,13 @@
       }
 
       if (state.current === STATES.CLUSTER_OPEN) {
-        state.selectedDestinationType =
-          DESTINATION_TYPES.COIN;
-
-        state.selectedDestinationId =
-          state.selectedCardinal;
-
+        state.selectedDestinationType = DESTINATION_TYPES.COIN;
+        state.selectedDestinationId = state.selectedCardinal;
         state.selectedDestinationLabel =
           WING_LABELS[state.selectedCardinal] ||
           wingToCoin(state.selectedCardinal);
-
-        state.selectedRoute =
-          "";
-
-        state.panelDescended =
-          false;
+        state.selectedRoute = "";
+        state.panelDescended = false;
 
         syncPresentation();
 
@@ -3317,8 +2859,7 @@
       return false;
     }
 
-    const wing =
-      normalizeWing(state.selectedCardinal);
+    const wing = normalizeWing(state.selectedCardinal);
 
     if (!wing) {
       recordAction(
@@ -3329,46 +2870,32 @@
       return false;
     }
 
-    const coin =
-      findCoinElement(wing);
+    const coin = findCoinElement(wing);
+    const destination = destinationFromCoinElement(coin);
 
-    invalidateDestinationAuthorization();
-
-    const committed =
-      applyState(
-        STATES.CLUSTER_OPEN,
-        {
-          selectedCardinal: wing,
-          selectedCoin: wingToCoin(wing),
-          selectedRoom: "",
-          selectedDestinationType: DESTINATION_TYPES.COIN,
-          selectedDestinationKind: "",
-          selectedInfoId: "",
-          selectedObjectTarget: "",
-          selectedRouteEvidence: "",
-          selectedDestinationId: wing,
-          selectedDestinationLabel:
-            normalizeLabel(
-              coin && coin.dataset.showroomCardinalLabel,
-              WING_LABELS[wing] || wingToCoin(wing)
-            ),
-          selectedRoute: "",
-          selectedContentId: "",
-          selectedLens: "overview",
-          selectedParagraph: "",
-          selectedSemanticActivation: "",
-          selectedRouteLabel: "",
-          selectedRouteDescription: "",
-          selectedRouteRole: "",
-          selectedVisualClass: "",
-          selectedEmphasis: "",
-          selectedReturnModel: "",
-          selectedReturnZone: "",
-          compassSelected: false,
-          panelDescended: false
-        },
-        `returned-to-orbit:${wing}`
-      );
+    const committed = applyState(
+      STATES.CLUSTER_OPEN,
+      {
+        selectedCardinal: wing,
+        selectedCoin: wingToCoin(wing),
+        selectedRoom: "",
+        selectedDestinationType: DESTINATION_TYPES.COIN,
+        selectedDestinationId: wing,
+        selectedDestinationLabel:
+          destination ? destination.label : WING_LABELS[wing],
+        selectedRoute: "",
+        selectedContentId: "",
+        selectedLens: "overview",
+        selectedParagraph: "",
+        selectedRouteDescription: "",
+        selectedVisualClass: "",
+        selectedEmphasis: "",
+        selectedExistingRoute: false,
+        compassSelected: false,
+        panelDescended: false
+      },
+      `returned-to-orbit:${wing}`
+    );
 
     if (committed) {
       scheduleSceneAscent(STATES.CLUSTER_OPEN, wing);
@@ -3403,16 +2930,15 @@
 
     resetSelection();
 
-    const committed =
-      applyState(
-        STATES.CONSTELLATION,
-        {
-          orbitFocus: previousWing,
-          orbitPreviewFocus: previousWing,
-          compassSelected: false
-        },
-        `returned-to-constellation:${previousWing}`
-      );
+    const committed = applyState(
+      STATES.CONSTELLATION,
+      {
+        orbitFocus: previousWing,
+        orbitPreviewFocus: previousWing,
+        compassSelected: false
+      },
+      `returned-to-constellation:${previousWing}`
+    );
 
     if (
       committed &&
@@ -3429,8 +2955,7 @@
       return false;
     }
 
-    const next =
-      new Map();
+    const next = new Map();
 
     for (const input of records) {
       if (
@@ -3440,20 +2965,18 @@
         continue;
       }
 
-      const id =
-        normalize(
-          input.id ||
-          input.roomId ||
-          input.wing ||
-          input.cardinalId
-        );
+      const id = normalize(
+        input.id ||
+        input.roomId ||
+        input.wing ||
+        input.cardinalId
+      );
 
       if (!id) {
         continue;
       }
 
-      const kind =
-        normalizeLower(input.kind);
+      const kind = normalizeLower(input.kind);
 
       if (
         !canonicalControlExists({
@@ -3464,29 +2987,26 @@
         continue;
       }
 
-      const projection =
-        Object.freeze({
-          id,
-          kind,
-          x: finiteNumber(input.x, 0),
-          y: finiteNumber(input.y, 0),
-          radiusPx:
-            Math.max(
-              0,
-              finiteNumber(
-                input.radiusPx ??
-                  input.projectedRadius,
-                0
-              )
-            ),
-          depthLayer:
-            normalizeDepthLayer(
-              input.depthLayer ||
-              input.layer
-            ),
-          compassOverlap: Boolean(input.compassOverlap),
-          visible: input.visible !== false
-        });
+      const projection = Object.freeze({
+        id,
+        kind,
+        x: finiteNumber(input.x, 0),
+        y: finiteNumber(input.y, 0),
+        radiusPx: Math.max(
+          0,
+          finiteNumber(
+            input.radiusPx ??
+              input.projectedRadius,
+            0
+          )
+        ),
+        depthLayer: normalizeDepthLayer(
+          input.depthLayer ||
+          input.layer
+        ),
+        compassOverlap: Boolean(input.compassOverlap),
+        visible: input.visible !== false
+      });
 
       next.set(
         `${projection.kind}:${id}`,
@@ -3494,13 +3014,10 @@
       );
     }
 
-    state.semanticProjection =
-      next;
-
+    state.semanticProjection = next;
     state.semanticProjectionRevision += 1;
 
-    const snapshot =
-      createSemanticProjectionSnapshot();
+    const snapshot = createSemanticProjectionSnapshot();
 
     publish(
       CHANNELS.SEMANTIC_PROJECTION,
@@ -3541,19 +3058,18 @@
   }
 
   function handleCrystalsFailure(event) {
-    const reason =
-      String(
-        event &&
-        event.detail &&
-        event.detail.reason
-          ? event.detail.reason
-          : "ARCHCOIN_CRYSTALS_RENDER_FAILURE"
-      );
+    const reason = String(
+      event &&
+      event.detail &&
+      event.detail.reason
+        ? event.detail.reason
+        : "SHOWROOM_CRYSTALS_RENDER_FAILURE"
+    );
 
     cancelActiveGestures("crystals-failure");
 
     setGuidance(
-      "The visual crystal field is temporarily unavailable. Semantic destinations remain preserved."
+      "The visual crystal field is temporarily unavailable. Canonical routes and semantic records remain preserved."
     );
 
     recordAction(
@@ -3563,54 +3079,48 @@
   }
 
   function readReducedMotion() {
-    const media =
-      globalThis.matchMedia(
-        "(prefers-reduced-motion: reduce)"
-      );
+    const media = globalThis.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    );
 
-    state.mediaQuery =
-      media;
+    state.mediaQuery = media;
 
     state.reducedMotion =
       Boolean(media.matches) ||
-      state.root.dataset.showroomReducedMotion === "true";
+      state.root.dataset.showroomReducedMotion === "true" ||
+      state.root.dataset.reducedMotion === "true";
   }
 
   function bindReducedMotion() {
-    const media =
-      state.mediaQuery;
+    const media = state.mediaQuery;
 
     if (!media) {
       return;
     }
 
-    const update =
-      event => {
-        const previous =
-          state.reducedMotion;
+    const update = event => {
+      const previous = state.reducedMotion;
 
-        state.reducedMotion =
-          Boolean(event.matches);
+      state.reducedMotion = Boolean(event.matches);
 
-        if (previous === state.reducedMotion) {
-          return;
-        }
+      if (previous === state.reducedMotion) {
+        return;
+      }
 
-        publish(
-          CHANNELS.REDUCED_MOTION,
-          state.reducedMotion
-        );
+      publish(
+        CHANNELS.REDUCED_MOTION,
+        state.reducedMotion
+      );
 
-        publish(
-          CHANNELS.COMPASS_STATE,
-          createCompassState()
-        );
+      publish(
+        CHANNELS.COMPASS_STATE,
+        createCompassState()
+      );
 
-        recordAction("reduced-motion-updated");
-      };
+      recordAction("reduced-motion-updated");
+    };
 
-    state.mediaQueryListener =
-      update;
+    state.mediaQueryListener = update;
 
     if (typeof media.addEventListener === "function") {
       media.addEventListener("change", update);
@@ -3623,22 +3133,16 @@
   }
 
   function resolveDom() {
-    state.root =
-      qs("[data-showroom-root]");
+    state.root = qs("[data-showroom-root]");
 
     invariant(
       state.root,
       "SHOWROOM_ROOT_NOT_FOUND"
     );
 
-    state.scene =
-      qs("[data-showroom-scene]", state.root);
-
-    state.sceneField =
-      qs("[data-showroom-scene-field]", state.root);
-
-    state.panel =
-      qs("[data-showroom-controller-panel]", state.root);
+    state.scene = qs("[data-showroom-scene]", state.root);
+    state.sceneField = qs("[data-showroom-scene-field]", state.root);
+    state.panel = qs("[data-showroom-controller-panel]", state.root);
 
     invariant(state.scene, "SHOWROOM_SCENE_NOT_FOUND");
     invariant(state.sceneField, "SHOWROOM_SCENE_FIELD_NOT_FOUND");
@@ -3698,112 +3202,86 @@
     state.controllerValidationOutput =
       qs("[data-showroom-controller-validation]", state.root);
 
-    const requiredPanelNodes =
-      Object.freeze([
-        ["SHOWROOM_PANEL_EYEBROW_NOT_FOUND", state.panelEyebrow],
-        ["SHOWROOM_PANEL_TITLE_NOT_FOUND", state.panelTitle],
-        ["SHOWROOM_PANEL_PURPOSE_NOT_FOUND", state.panelPurpose],
-        ["SHOWROOM_PANEL_RELATIONSHIP_NOT_FOUND", state.panelRelationship],
-        ["SHOWROOM_PANEL_DOMAIN_NOT_FOUND", state.panelDomain],
-        ["SHOWROOM_PANEL_FUNCTION_NOT_FOUND", state.panelFunction],
-        ["SHOWROOM_PANEL_COORDINATE_NOT_FOUND", state.panelCoordinate],
-        ["SHOWROOM_PANEL_SELECTION_STATE_NOT_FOUND", state.panelSelectionState],
-        ["SHOWROOM_PANEL_ROUTE_STATUS_NOT_FOUND", state.panelRouteStatus],
-        ["SHOWROOM_PANEL_LENS_NOT_FOUND", state.panelLens],
-        ["SHOWROOM_ENTER_CONTROL_NOT_FOUND", state.enterButton],
-        ["SHOWROOM_ENTER_LABEL_NOT_FOUND", state.enterLabel],
-        ["SHOWROOM_RETURN_TO_ORBIT_CONTROL_NOT_FOUND", state.returnToOrbitButton],
-        ["SHOWROOM_RETURN_TO_ORBIT_LABEL_NOT_FOUND", state.returnToOrbitLabel],
-        ["SHOWROOM_RETURN_HOME_CONTROL_NOT_FOUND", state.returnHomeButton],
-        ["SHOWROOM_GUIDANCE_NOT_FOUND", state.guidance],
-        ["SHOWROOM_CONTROLLER_RECEIPT_OUTPUT_NOT_FOUND", state.controllerReceiptOutput],
-        ["SHOWROOM_CONTROLLER_VALIDATION_OUTPUT_NOT_FOUND", state.controllerValidationOutput]
-      ]);
+    state.compassControl =
+      qs("[data-showroom-compass-control]", state.root) ||
+      qs("[data-upstream-compass-control]", state.root);
 
-    for (const [code, node] of requiredPanelNodes) {
+    const required = Object.freeze([
+      ["SHOWROOM_PANEL_EYEBROW_NOT_FOUND", state.panelEyebrow],
+      ["SHOWROOM_PANEL_TITLE_NOT_FOUND", state.panelTitle],
+      ["SHOWROOM_PANEL_PURPOSE_NOT_FOUND", state.panelPurpose],
+      ["SHOWROOM_PANEL_RELATIONSHIP_NOT_FOUND", state.panelRelationship],
+      ["SHOWROOM_PANEL_DOMAIN_NOT_FOUND", state.panelDomain],
+      ["SHOWROOM_PANEL_FUNCTION_NOT_FOUND", state.panelFunction],
+      ["SHOWROOM_PANEL_COORDINATE_NOT_FOUND", state.panelCoordinate],
+      ["SHOWROOM_PANEL_SELECTION_STATE_NOT_FOUND", state.panelSelectionState],
+      ["SHOWROOM_PANEL_ROUTE_STATUS_NOT_FOUND", state.panelRouteStatus],
+      ["SHOWROOM_PANEL_LENS_NOT_FOUND", state.panelLens],
+      ["SHOWROOM_ENTER_CONTROL_NOT_FOUND", state.enterButton],
+      ["SHOWROOM_ENTER_LABEL_NOT_FOUND", state.enterLabel],
+      ["SHOWROOM_RETURN_TO_ORBIT_CONTROL_NOT_FOUND", state.returnToOrbitButton],
+      ["SHOWROOM_RETURN_TO_ORBIT_LABEL_NOT_FOUND", state.returnToOrbitLabel],
+      ["SHOWROOM_RETURN_HOME_CONTROL_NOT_FOUND", state.returnHomeButton],
+      ["SHOWROOM_GUIDANCE_NOT_FOUND", state.guidance],
+      ["SHOWROOM_CONTROLLER_RECEIPT_OUTPUT_NOT_FOUND", state.controllerReceiptOutput],
+      ["SHOWROOM_CONTROLLER_VALIDATION_OUTPUT_NOT_FOUND", state.controllerValidationOutput],
+      ["SHOWROOM_COMPASS_CONTROL_NOT_FOUND", state.compassControl]
+    ]);
+
+    for (const [code, node] of required) {
       invariant(node, code);
     }
-
-    state.compassControl =
-      qs("[data-showroom-compass-control]", state.root);
-
-    invariant(
-      state.compassControl,
-      "SHOWROOM_COMPASS_CONTROL_NOT_FOUND"
-    );
   }
 
   function initializeOrientationState() {
     const requestedFocus =
       normalizeWing(
-        state.root.dataset.showroomOrbitFocus
+        state.root.dataset.showroomOrbitFocus ||
+        state.root.dataset.orbitFocus
       ) || "north";
 
-    let initial =
-      canonicalConstellationOrientation(requestedFocus);
+    let initial = canonicalConstellationOrientation(requestedFocus);
 
-    const serialized =
-      normalize(state.root.dataset.showroomOrbitQuaternion);
+    const serialized = normalize(
+      state.root.dataset.showroomOrbitQuaternion ||
+      state.root.dataset.orbitQuaternion
+    );
 
     if (serialized) {
       try {
-        const parsed =
-          JSON.parse(serialized);
-
-        const normalized =
-          normalizeQuaternionStrict(parsed);
+        const parsed = JSON.parse(serialized);
+        const normalized = normalizeQuaternionStrict(parsed);
 
         if (normalized) {
-          initial =
-            createOrientation(
-              normalized,
-              requestedFocus
-            );
+          initial = createOrientation(normalized, requestedFocus);
         }
       } catch (_) {}
     }
 
-    state.orbitFocus =
-      requestedFocus;
-
-    state.orbitPreviewFocus =
-      requestedFocus;
-
-    state.orbitPhase =
-      ORIENTATION_PHASES.COMMITTED;
-
-    state.orbitGestureActive =
-      false;
-
-    state.orbitPreviewAccepted =
-      false;
-
-    state.orbitRevision =
-      finiteNumber(
-        state.root.dataset.showroomOrbitRevision,
-        0
-      );
-
-    state.orbitOrientation =
-      cloneOrientation(initial);
-
-    state.committedOrbitOrientation =
-      cloneOrientation(initial);
-
-    state.orbitGestureOrigin =
-      null;
+    state.orbitFocus = requestedFocus;
+    state.orbitPreviewFocus = requestedFocus;
+    state.orbitPhase = ORIENTATION_PHASES.COMMITTED;
+    state.orbitGestureActive = false;
+    state.orbitPreviewAccepted = false;
+    state.orbitRevision = finiteNumber(
+      state.root.dataset.showroomOrbitRevision ||
+        state.root.dataset.orbitRevision,
+      0
+    );
+    state.orbitOrientation = cloneOrientation(initial);
+    state.committedOrbitOrientation = cloneOrientation(initial);
+    state.orbitGestureOrigin = null;
   }
 
   function initializeClusters() {
     state.clusters.clear();
 
     for (const wing of WINGS) {
-      const cluster =
-        createClusterState(wing);
+      const cluster = createClusterState(wing);
 
       invariant(
         cluster.roomIds.length === 4,
-        "ARCHCOIN_CLUSTER_ROOM_COUNT_INVALID",
+        "SHOWROOM_CLUSTER_ROOM_COUNT_INVALID",
         {
           wing,
           count: cluster.roomIds.length
@@ -3815,8 +3293,7 @@
   }
 
   function getClusterState(wing) {
-    const cluster =
-      getCluster(wing);
+    const cluster = getCluster(wing);
 
     if (!cluster) {
       return null;
@@ -3836,9 +3313,101 @@
     });
   }
 
+  function validateCanonicalRegistry() {
+    invariant(
+      WINGS.length === 4,
+      "SHOWROOM_WING_COUNT_INVALID"
+    );
+
+    invariant(
+      new Set(WINGS).size === 4,
+      "SHOWROOM_DUPLICATE_WING"
+    );
+
+    invariant(
+      CANONICAL_ROOM_RECORDS.length === 16,
+      "SHOWROOM_CANONICAL_ROOM_COUNT_INVALID"
+    );
+
+    const ids = new Set();
+    const routes = new Set();
+
+    for (const wing of WINGS) {
+      const rooms = ROOMS_BY_WING.get(wing);
+
+      invariant(
+        rooms &&
+          rooms.length === 4,
+        "SHOWROOM_ROOMS_PER_WING_INVALID",
+        { wing }
+      );
+    }
+
+    for (const record of CANONICAL_ROOM_RECORDS) {
+      invariant(
+        WINGS.includes(record.wing),
+        "SHOWROOM_ROOM_WING_INVALID"
+      );
+
+      invariant(
+        WING_TO_COIN[record.wing] === record.coin,
+        "SHOWROOM_ROOM_COIN_MAPPING_INVALID"
+      );
+
+      invariant(
+        record.roomId,
+        "SHOWROOM_ROOM_ID_REQUIRED"
+      );
+
+      invariant(
+        record.label,
+        "SHOWROOM_ROOM_LABEL_REQUIRED"
+      );
+
+      invariant(
+        normalizeRoute(record.route) === record.route,
+        "SHOWROOM_ROOM_ROUTE_INVALID",
+        { roomId: record.roomId, route: record.route }
+      );
+
+      invariant(
+        !ids.has(record.roomId),
+        "SHOWROOM_DUPLICATE_ROOM_ID",
+        { roomId: record.roomId }
+      );
+
+      invariant(
+        !routes.has(record.route),
+        "SHOWROOM_DUPLICATE_ROOM_ROUTE",
+        { route: record.route }
+      );
+
+      ids.add(record.roomId);
+      routes.add(record.route);
+    }
+
+    invariant(
+      ROOM_BY_ID.size === 16,
+      "SHOWROOM_ROOM_ID_REGISTRY_INVALID"
+    );
+
+    invariant(
+      ROOM_BY_ROUTE.size === 16,
+      "SHOWROOM_ROUTE_REGISTRY_INVALID"
+    );
+
+    return Object.freeze({
+      pass: true,
+      wingCount: 4,
+      roomCount: 16,
+      routeCount: 16,
+      roomsPerWing: 4,
+      allChildrenCanonicalRoutes: true
+    });
+  }
+
   function validateDeclaredCardinals() {
-    const declared =
-      qsa("[data-showroom-cardinal-control]", state.root);
+    const declared = qsa("[data-showroom-cardinal-control]", state.root);
 
     invariant(
       declared.length === 4,
@@ -3849,12 +3418,10 @@
       }
     );
 
-    const seenWings =
-      new Set();
+    const seen = new Set();
 
     for (const element of declared) {
-      const wing =
-        normalizeWing(element.dataset.showroomCardinalId);
+      const wing = normalizeWing(element.dataset.showroomCardinalId);
 
       invariant(
         wing,
@@ -3862,13 +3429,14 @@
       );
 
       invariant(
-        !seenWings.has(wing),
+        !seen.has(wing),
         "SHOWROOM_DUPLICATE_CARDINAL_ID",
         { wing }
       );
 
       invariant(
-        element.dataset.showroomCardinalLabel === WING_LABELS[wing],
+        normalizeLabel(element.dataset.showroomCardinalLabel) ===
+          WING_LABELS[wing],
         "SHOWROOM_CARDINAL_LABEL_MISMATCH",
         {
           wing,
@@ -3877,16 +3445,7 @@
         }
       );
 
-      invariant(
-        normalizeWing(element.dataset.showroomClusterId) === wing,
-        "SHOWROOM_CARDINAL_CLUSTER_MISMATCH",
-        {
-          wing,
-          cluster: element.dataset.showroomClusterId || ""
-        }
-      );
-
-      seenWings.add(wing);
+      seen.add(wing);
     }
 
     return Object.freeze({
@@ -3896,8 +3455,7 @@
   }
 
   function validateDeclaredRooms() {
-    const declared =
-      qsa("[data-showroom-child-control]", state.root);
+    const declared = qsa("[data-showroom-child-control]", state.root);
 
     invariant(
       declared.length === 16,
@@ -3908,86 +3466,64 @@
       }
     );
 
-    const seenIds =
-      new Set();
+    const seen = new Set();
 
     for (const element of declared) {
-      const intent =
-        readChildIntentFromElement(element);
+      const roomId = normalizeRoomId(element.dataset.showroomChildId);
+      const wing = normalizeWing(element.dataset.showroomCardinalId);
+      const canonical = ROOM_BY_ID.get(roomId);
 
       invariant(
-        intent.childId,
+        roomId,
         "SHOWROOM_CHILD_ID_REQUIRED"
       );
 
       invariant(
-        !seenIds.has(intent.childId),
+        !seen.has(roomId),
         "SHOWROOM_DUPLICATE_DECLARED_ROOM_ID",
-        { childId: intent.childId }
+        { roomId }
       );
 
       invariant(
-        intent.wingId,
-        "SHOWROOM_CHILD_WING_REQUIRED",
-        { childId: intent.childId }
+        canonical,
+        "SHOWROOM_UNKNOWN_DECLARED_ROOM_ID",
+        { roomId }
       );
 
       invariant(
-        WINGS.includes(intent.wingId),
-        "SHOWROOM_CHILD_WING_INVALID",
+        wing === canonical.wing,
+        "SHOWROOM_ROOM_WING_MISMATCH",
         {
-          childId: intent.childId,
-          wingId: intent.wingId
+          roomId,
+          expected: canonical.wing,
+          actual: wing
         }
       );
 
       invariant(
-        intent.infoId,
-        "SHOWROOM_CHILD_INFO_ID_REQUIRED",
-        { childId: intent.childId }
+        normalizeLabel(
+          element.dataset.showroomChildLabel,
+          canonical.label
+        ) === canonical.label,
+        "SHOWROOM_ROOM_LABEL_MISMATCH",
+        {
+          roomId,
+          expected: canonical.label,
+          actual: element.dataset.showroomChildLabel || ""
+        }
       );
 
-      invariant(
-        intent.destinationKind,
-        "SHOWROOM_CHILD_DESTINATION_KIND_INVALID",
-        { childId: intent.childId }
-      );
-
-      if (
-        intent.destinationKind ===
-        DESTINATION_KINDS.OBJECT_INSPECT
-      ) {
-        invariant(
-          intent.objectTarget,
-          "SHOWROOM_OBJECT_TARGET_REQUIRED",
-          { childId: intent.childId }
-        );
-      }
-
-      if (
-        intent.destinationKind ===
-        DESTINATION_KINDS.EXTERNAL_ROUTE
-      ) {
-        invariant(
-          Boolean(intent.route),
-          "SHOWROOM_EXTERNAL_ROUTE_METADATA_PRESENT",
-          { childId: intent.childId }
-        );
-      }
-
-      seenIds.add(intent.childId);
+      seen.add(roomId);
     }
 
     for (const wing of WINGS) {
-      const count =
-        declared.filter(
-          element =>
-            normalizeWing(element.dataset.showroomCardinalId) === wing
-        ).length;
+      const count = declared.filter(element =>
+        normalizeWing(element.dataset.showroomCardinalId) === wing
+      ).length;
 
       invariant(
         count === 4,
-        "SHOWROOM_ROOMS_PER_WING_INVALID",
+        "SHOWROOM_DECLARED_ROOMS_PER_WING_INVALID",
         {
           wing,
           count
@@ -3998,59 +3534,61 @@
     return Object.freeze({
       pass: true,
       declaredRoomCount: 16,
-      controllerValidatesRouteExistence: false,
-      generatedRoomProxiesRequired: false
+      declaredRouteCount: 16,
+      controllerUsesCanonicalRouteRegistry: true,
+      samePageAnchorDependency: false,
+      modalDependency: false,
+      objectActivationDependency: false
     });
   }
 
   function validateTransitionTable() {
-    const declaredStates =
-      Object.values(STATES);
+    const declaredStates = Object.values(STATES);
 
     invariant(
       declaredStates.length === 4,
-      "ARCHCOIN_STATE_COUNT_INVALID"
+      "SHOWROOM_STATE_COUNT_INVALID"
     );
 
     invariant(
       !declaredStates.includes("COMPASS_DECISION"),
-      "ARCHCOIN_FORBIDDEN_COMPASS_DECISION_STATE"
+      "SHOWROOM_FORBIDDEN_COMPASS_DECISION_STATE"
     );
 
     invariant(
       !declaredStates.includes("CONSTELLATION_WITH_CLUSTER"),
-      "ARCHCOIN_FORBIDDEN_ADDITIVE_STATE"
+      "SHOWROOM_FORBIDDEN_ADDITIVE_STATE"
     );
 
     invariant(
       canTransition(STATES.CONSTELLATION, STATES.CLUSTER_OPEN),
-      "ARCHCOIN_REQUIRED_TRANSITION_MISSING"
+      "SHOWROOM_REQUIRED_TRANSITION_MISSING"
     );
 
     invariant(
       canTransition(STATES.CLUSTER_OPEN, STATES.ROOM_SELECTED),
-      "ARCHCOIN_REQUIRED_TRANSITION_MISSING"
+      "SHOWROOM_REQUIRED_TRANSITION_MISSING"
     );
 
     invariant(
       canTransition(STATES.ROOM_SELECTED, STATES.CLUSTER_OPEN),
-      "ARCHCOIN_REQUIRED_TRANSITION_MISSING"
+      "SHOWROOM_REQUIRED_TRANSITION_MISSING"
     );
 
     invariant(
       canTransition(STATES.CLUSTER_OPEN, STATES.CONSTELLATION),
-      "ARCHCOIN_REQUIRED_TRANSITION_MISSING"
+      "SHOWROOM_REQUIRED_TRANSITION_MISSING"
     );
 
     invariant(
       canTransition(STATES.ROOM_SELECTED, STATES.CONSTELLATION),
-      "ARCHCOIN_REQUIRED_TRANSITION_MISSING"
+      "SHOWROOM_REQUIRED_TRANSITION_MISSING"
     );
 
     invariant(
       TRANSITIONS[STATES.SYSTEM_HELD].length === 1 &&
         TRANSITIONS[STATES.SYSTEM_HELD][0] === STATES.SYSTEM_HELD,
-      "ARCHCOIN_HELD_STATE_NOT_TERMINAL"
+      "SHOWROOM_HELD_STATE_NOT_TERMINAL"
     );
 
     return Object.freeze({
@@ -4069,7 +3607,7 @@
           presentation.outerCardinalsActive &&
           presentation.activeRoomCluster
         ),
-        "ARCHCOIN_ADDITIVE_PRESENTATION_FORBIDDEN"
+        "SHOWROOM_ADDITIVE_PRESENTATION_FORBIDDEN"
       );
     }
 
@@ -4081,37 +3619,36 @@
   }
 
   function validateCompassContract() {
-    const compass =
-      createCompassState();
+    const compass = createCompassState();
 
     invariant(
       compass.fixedCenter === true,
-      "ARCHCOIN_COMPASS_FIXED_CENTER_INVALID"
+      "SHOWROOM_COMPASS_FIXED_CENTER_INVALID"
     );
 
     invariant(
       compass.mainCompassRoute === "/index.html",
-      "ARCHCOIN_COMPASS_ROUTE_INVALID"
+      "SHOWROOM_COMPASS_ROUTE_INVALID"
     );
 
     invariant(
       compass.immediateNavigation === false,
-      "ARCHCOIN_COMPASS_IMMEDIATE_NAVIGATION_INVALID"
+      "SHOWROOM_COMPASS_IMMEDIATE_NAVIGATION_INVALID"
     );
 
     invariant(
       compass.explicitReturnRequired === true,
-      "ARCHCOIN_COMPASS_EXPLICIT_RETURN_INVALID"
+      "SHOWROOM_COMPASS_EXPLICIT_RETURN_INVALID"
     );
 
     invariant(
       compass.inheritsNavigationOrientation === false,
-      "ARCHCOIN_COMPASS_ORIENTATION_INHERITANCE_INVALID"
+      "SHOWROOM_COMPASS_ORIENTATION_INHERITANCE_INVALID"
     );
 
     invariant(
       compass.participatesInNavigationSettlement === false,
-      "ARCHCOIN_COMPASS_SETTLEMENT_PARTICIPATION_INVALID"
+      "SHOWROOM_COMPASS_SETTLEMENT_PARTICIPATION_INVALID"
     );
 
     return Object.freeze({
@@ -4128,78 +3665,97 @@
     invariant(
       MODULE.motionContractId ===
         "AUDRALIA_ARCHCOIN_COMPLETE_QUATERNION_MOTION_CONTRACT_v1",
-      "ARCHCOIN_MOTION_CONTRACT_ID_INVALID"
+      "SHOWROOM_MOTION_CONTRACT_ID_INVALID"
     );
 
     invariant(
       MODULE.motionContractVersion === "1.0.0",
-      "ARCHCOIN_MOTION_CONTRACT_VERSION_INVALID"
+      "SHOWROOM_MOTION_CONTRACT_VERSION_INVALID"
     );
 
-    const validOrbit =
-      validateOrbitPreviewPayload({
-        quaternion: [0, 0.2, 0, 0.98],
-        primaryId: "east"
-      });
+    const validOrbit = validateOrbitPreviewPayload({
+      quaternion: [0, 0.2, 0, 0.98],
+      primaryId: "east"
+    });
 
     invariant(
       validOrbit.pass === true,
-      "ARCHCOIN_VALID_ORBIT_PREVIEW_REJECTED"
+      "SHOWROOM_VALID_ORBIT_PREVIEW_REJECTED"
     );
 
-    const eulerOrbit =
-      validateOrbitPreviewPayload({
-        yaw: 1,
-        pitch: 1,
-        roll: 0,
-        primaryId: "east"
-      });
+    const eulerOrbit = validateOrbitPreviewPayload({
+      yaw: 1,
+      pitch: 1,
+      roll: 0,
+      primaryId: "east"
+    });
 
     invariant(
       eulerOrbit.pass === false,
-      "ARCHCOIN_CONTROLLER_MUST_REJECT_EULER_PREVIEW"
+      "SHOWROOM_CONTROLLER_MUST_REJECT_EULER_PREVIEW"
     );
 
-    const mixedOrbit =
-      validateOrbitPreviewPayload({
-        quaternion: [0, 0, 0, 1],
-        primaryId: "east",
-        dx: 40
-      });
+    const mixedOrbit = validateOrbitPreviewPayload({
+      quaternion: [0, 0, 0, 1],
+      primaryId: "east",
+      dx: 40
+    });
 
     invariant(
       mixedOrbit.pass === false,
-      "ARCHCOIN_CONTROLLER_MUST_REJECT_MIXED_MOTION_PAYLOAD"
+      "SHOWROOM_CONTROLLER_MUST_REJECT_MIXED_MOTION_PAYLOAD"
+    );
+
+    const testCluster = createClusterState("north");
+
+    const validCluster = validateClusterPreviewPayload(testCluster, {
+      quaternion: [0.1, 0, 0, 0.99],
+      primaryId: "north-3"
+    });
+
+    invariant(
+      validCluster.pass === true,
+      "SHOWROOM_VALID_CLUSTER_PREVIEW_REJECTED"
+    );
+
+    const foreignRoom = validateClusterPreviewPayload(testCluster, {
+      quaternion: [0, 0, 0, 1],
+      primaryId: "south-1"
+    });
+
+    invariant(
+      foreignRoom.pass === false,
+      "SHOWROOM_FOREIGN_CLUSTER_ROOM_ACCEPTED"
     );
 
     invariant(
       beginOrbitGesture.length === 0,
-      "ARCHCOIN_ORBIT_BEGIN_SIGNATURE_INVALID"
+      "SHOWROOM_ORBIT_BEGIN_SIGNATURE_INVALID"
     );
 
     invariant(
       requestOrbitPreview.length === 1,
-      "ARCHCOIN_ORBIT_PREVIEW_SIGNATURE_INVALID"
+      "SHOWROOM_ORBIT_PREVIEW_SIGNATURE_INVALID"
     );
 
     invariant(
       requestOrbitCommit.length === 0,
-      "ARCHCOIN_ORBIT_COMMIT_SIGNATURE_INVALID"
+      "SHOWROOM_ORBIT_COMMIT_SIGNATURE_INVALID"
     );
 
     invariant(
       beginClusterGesture.length === 1,
-      "ARCHCOIN_CLUSTER_BEGIN_SIGNATURE_INVALID"
+      "SHOWROOM_CLUSTER_BEGIN_SIGNATURE_INVALID"
     );
 
     invariant(
       requestClusterPreview.length === 2,
-      "ARCHCOIN_CLUSTER_PREVIEW_SIGNATURE_INVALID"
+      "SHOWROOM_CLUSTER_PREVIEW_SIGNATURE_INVALID"
     );
 
     invariant(
       requestClusterCommit.length === 1,
-      "ARCHCOIN_CLUSTER_COMMIT_SIGNATURE_INVALID"
+      "SHOWROOM_CLUSTER_COMMIT_SIGNATURE_INVALID"
     );
 
     return Object.freeze({
@@ -4210,6 +3766,7 @@
       unexpectedPreviewFieldsForbidden: true,
       completeQuaternionPreviewRequired: true,
       explicitPrimaryIdentityRequired: true,
+      controllerInfersPrimaryFromQuaternion: false,
       controllerInterpretsEulerMotion: false,
       controllerConstructsGestureQuaternion: false,
       motionOwner: MODULE.interactionModuleId,
@@ -4218,21 +3775,20 @@
   }
 
   function validateProjectionStorageContract() {
-    const sample =
-      Object.freeze({
-        id: "north",
-        kind: "cardinal",
-        x: 10,
-        y: 20,
-        radiusPx: 30,
-        depthLayer: DEPTH_LAYERS.FRONT,
-        compassOverlap: false,
-        visible: true
-      });
+    const sample = Object.freeze({
+      id: "north",
+      kind: "cardinal",
+      x: 10,
+      y: 20,
+      radiusPx: 30,
+      depthLayer: DEPTH_LAYERS.FRONT,
+      compassOverlap: false,
+      visible: true
+    });
 
     invariant(
       !Object.prototype.hasOwnProperty.call(sample, "interactionPriority"),
-      "ARCHCOIN_CONTROLLER_MUST_NOT_STORE_INTERACTION_PRIORITY"
+      "SHOWROOM_CONTROLLER_MUST_NOT_STORE_INTERACTION_PRIORITY"
     );
 
     return Object.freeze({
@@ -4260,12 +3816,12 @@
   function validateFileSplitContract() {
     invariant(
       !Object.prototype.hasOwnProperty.call(state, "pointer"),
-      "ARCHCOIN_CONTROLLER_POINTER_STATE_NOT_EXTRACTED"
+      "SHOWROOM_CONTROLLER_POINTER_STATE_NOT_EXTRACTED"
     );
 
     invariant(
       !Object.prototype.hasOwnProperty.call(state, "suppressedSemanticClick"),
-      "ARCHCOIN_CONTROLLER_CLICK_SUPPRESSION_NOT_EXTRACTED"
+      "SHOWROOM_CONTROLLER_CLICK_SUPPRESSION_NOT_EXTRACTED"
     );
 
     return Object.freeze({
@@ -4278,34 +3834,34 @@
       syntheticClickSuppressionOwned: false,
       projectionDomApplicationOwned: false,
       interactionPriorityDerivationOwned: false,
+      clusterExitSwipeClassificationOwned: false,
       gestureAxisSelectionOwned: false,
       gestureQuaternionConstructionOwned: false,
       directManipulationOwned: false,
       grabbedObjectTrackingOwned: false,
+      quaternionToPrimaryInferenceOwned: false,
       interactionModuleId: MODULE.interactionModuleId,
       acceptedStateAuthority: MODULE.id,
       navigationTransitionAuthority: MODULE.id
     });
   }
 
-  function validateIntentOwnershipContract() {
+  function validateRouteGatewayContract() {
     return Object.freeze({
       pass: true,
-      controllerOwnsSelectionState: true,
-      controllerOwnsIntentPayloadDispatch: true,
-      controllerExecutesDestinations: false,
+      controllerRouteExecutionAuthority: true,
+      sixteenPathGateway: true,
+      allDestinationsAreRoutes: true,
+      samePageAnchorExecutionOwned: false,
       modalOpeningOwned: false,
-      modalOpeningOwner: "/showroom/index.destinations.js",
-      routeConfirmationOwned: false,
-      routeConfirmationOwner: "/showroom/index.destinations.js",
-      routeDowngradeOwned: false,
-      routeDowngradeOwner: "/showroom/index.destinations.js",
-      objectInspectionExecutionOwned: false,
-      objectInspectionExecutionOwner: "/showroom/index.destinations.js",
-      anchorScrollingOwned: false,
       disclosureOpeningOwned: false,
       gaugeFrontActivationOwned: false,
-      routeExistenceValidationOwned: false
+      objectInspectionExecutionOwned: false,
+      pageContentRenderingOwned: false,
+      diamondRuntimeOwned: false,
+      compositorRuntimeOwned: false,
+      crystalRenderingOwned: false,
+      interactionGestureInterpretationOwned: false
     });
   }
 
@@ -4313,13 +3869,14 @@
     includeDom = false
   } = {}) {
     const results = {
+      registry: validateCanonicalRegistry(),
       transitions: validateTransitionTable(),
       presentation: validatePresentationContract(),
       compass: validateCompassContract(),
       motionContract: validateMotionContract(),
       projectionStorage: validateProjectionStorageContract(),
       fileSplit: validateFileSplitContract(),
-      intentOwnership: validateIntentOwnershipContract(),
+      routeGateway: validateRouteGatewayContract(),
       declaredCardinals:
         includeDom
           ? validateDeclaredCardinals()
@@ -4336,13 +3893,13 @@
             })
     };
 
-    const pass =
-      Object.values(results).every(
-        result => result.pass === true
-      );
+    const pass = Object.values(results).every(
+      result => result.pass === true
+    );
 
     return Object.freeze({
-      receiptSchema: "SHOWROOM_CONSTELLATION_CONTROLLER_VALIDATION_RECEIPT_v2",
+      receiptSchema:
+        "SHOWROOM_ARCHCOIN_PATTERN_ROUTE_GATEWAY_CONTROLLER_VALIDATION_RECEIPT_v1",
       moduleId: MODULE.id,
       moduleVersion: MODULE.version,
       motionContractId: MODULE.motionContractId,
@@ -4354,23 +3911,20 @@
       wholeCrystalHitTestOwner: MODULE.interactionModuleId,
       syntheticClickSuppressionOwner: MODULE.interactionModuleId,
       projectionDomApplicationOwner: MODULE.interactionModuleId,
+      interactionPriorityDerivationOwner: MODULE.interactionModuleId,
+      clusterExitSwipeClassificationOwner: MODULE.interactionModuleId,
       gestureAxisSelectionOwner: MODULE.interactionModuleId,
       gestureQuaternionConstructionOwner: MODULE.interactionModuleId,
+      directManipulationOwner: MODULE.interactionModuleId,
+      grabbedObjectTrackingOwner: MODULE.interactionModuleId,
+      primaryVisualIdentityCalculationOwner: MODULE.interactionModuleId,
 
       orbitStateAuthority: MODULE.id,
       clusterStateAuthority: MODULE.id,
       quaternionAcceptanceAuthority: MODULE.id,
+      clusterExitTransitionAuthority: MODULE.id,
       navigationTransitionAuthority: MODULE.id,
-      intentSelectionAuthority: MODULE.id,
-
-      destinationExecutionAuthority: false,
-      modalOpeningAuthority: false,
-      routeConfirmationAuthority: false,
-      routeDowngradeAuthority: false,
-      objectInspectionExecutionAuthority: false,
-      anchorScrollAuthority: false,
-      disclosureOpeningAuthority: false,
-      frontActivationAuthority: false,
+      routeExecutionAuthority: MODULE.id,
 
       cameraOwnership: false,
       crystalRendererOwnership: false,
@@ -4381,30 +3935,31 @@
       compassPageLocalSelection: true,
       explicitMainCompassReturn: true,
 
+      modalOpeningAuthority: false,
+      anchorScrollAuthority: false,
+      disclosureOpeningAuthority: false,
+      frontActivationAuthority: false,
+      objectInspectionExecutionAuthority: false,
+      diamondRuntimeAuthority: false,
+
       results: Object.freeze(results)
     });
   }
 
   function writeValidationReceipt(receipt) {
-    state.validationReceipt =
-      receipt;
+    state.validationReceipt = receipt;
 
-    const serialized =
-      JSON.stringify(receipt);
+    const serialized = JSON.stringify(receipt);
 
-    state.root.dataset.showroomControllerValidation =
-      serialized;
+    state.root.dataset.showroomControllerValidation = serialized;
 
     if ("value" in state.controllerValidationOutput) {
-      state.controllerValidationOutput.value =
-        serialized;
+      state.controllerValidationOutput.value = serialized;
     }
 
-    state.controllerValidationOutput.textContent =
-      serialized;
+    state.controllerValidationOutput.textContent = serialized;
 
-    globalThis.SHOWROOM_CONTROLLER_VALIDATION_RECEIPT =
-      receipt;
+    globalThis.SHOWROOM_CONTROLLER_VALIDATION_RECEIPT = receipt;
   }
 
   function exposeApi() {
@@ -4420,13 +3975,12 @@
         states: STATES,
         presentationModes: PRESENTATION_MODES,
         destinationTypes: DESTINATION_TYPES,
-        destinationKinds: DESTINATION_KINDS,
         orientationPhases: ORIENTATION_PHASES,
         depthLayers: DEPTH_LAYERS,
         mainCompass: MAIN_COMPASS,
-        intentEntry: INTENT_ENTRY,
-
-        wingToCoin,
+        canonicalRoomRecords: CANONICAL_ROOM_RECORDS,
+        canonicalRoomRoutes: CANONICAL_ROOM_ROUTES,
+        wingToCoin: WING_TO_COIN,
 
         getFrameState: createFrameState,
         getPresentationMode: () => presentationModeForState(),
@@ -4472,7 +4026,6 @@
         requestReturnToMainCompass,
 
         updateSemanticProjection,
-
         runSelfTest: runControllerSelfTest
       });
   }
@@ -4508,6 +4061,11 @@
     );
 
     globalThis.addEventListener(
+      "SHOWROOM_CRYSTALS_RENDER_FAILURE",
+      handleCrystalsFailure
+    );
+
+    globalThis.addEventListener(
       "ARCHCOIN_CRYSTALS_RENDER_FAILURE",
       handleCrystalsFailure
     );
@@ -4515,19 +4073,11 @@
 
   function enterHeldState(error) {
     clearViewportSchedules();
-    invalidateDestinationAuthorization();
 
-    state.current =
-      STATES.SYSTEM_HELD;
-
-    state.orbitGestureActive =
-      false;
-
-    state.orbitPreviewAccepted =
-      false;
-
-    state.orbitGestureOrigin =
-      null;
+    state.current = STATES.SYSTEM_HELD;
+    state.orbitGestureActive = false;
+    state.orbitPreviewAccepted = false;
+    state.orbitGestureOrigin = null;
 
     for (const cluster of state.clusters.values()) {
       cluster.gestureActive = false;
@@ -4536,8 +4086,7 @@
       cluster.phase = ORIENTATION_PHASES.COMMITTED;
     }
 
-    state.lastAction =
-      "controller-initialization-failed";
+    state.lastAction = "controller-initialization-failed";
 
     state.lastFailure =
       error &&
@@ -4576,18 +4125,10 @@
         state.compassControl &&
         state.controllerReceiptOutput
       ) {
-        const frame =
-          publishFrame();
+        const frame = publishFrame();
 
-        publish(
-          CHANNELS.HELD_STATE,
-          createHeldState()
-        );
-
-        publish(
-          CHANNELS.COMPASS_STATE,
-          frame.compass
-        );
+        publish(CHANNELS.HELD_STATE, createHeldState());
+        publish(CHANNELS.COMPASS_STATE, frame.compass);
       }
     } catch (_) {}
 
@@ -4595,10 +4136,9 @@
       new CustomEvent(
         "SHOWROOM_CONTROLLER_FAILURE",
         {
-          detail:
-            Object.freeze({
-              reason: state.lastFailure
-            })
+          detail: Object.freeze({
+            reason: state.lastFailure
+          })
         }
       )
     );
@@ -4606,10 +4146,9 @@
 
   function initialize() {
     try {
-      const sourceReceipt =
-        runControllerSelfTest({
-          includeDom: false
-        });
+      const sourceReceipt = runControllerSelfTest({
+        includeDom: false
+      });
 
       invariant(
         sourceReceipt.pass === true,
@@ -4622,10 +4161,9 @@
       initializeOrientationState();
       initializeClusters();
 
-      const runtimeReceipt =
-        runControllerSelfTest({
-          includeDom: true
-        });
+      const runtimeReceipt = runControllerSelfTest({
+        includeDom: true
+      });
 
       invariant(
         runtimeReceipt.pass === true,
@@ -4641,53 +4179,42 @@
       resetSelection();
       syncPresentation();
 
-      state.initialized =
-        true;
+      state.initialized = true;
 
-      const frame =
-        recordAction("controller-initialized");
+      const frame = recordAction("controller-initialized");
 
-      publish(
-        CHANNELS.REDUCED_MOTION,
-        state.reducedMotion
-      );
-
-      publish(
-        CHANNELS.HELD_STATE,
-        createHeldState()
-      );
-
-      publish(
-        CHANNELS.COMPASS_STATE,
-        frame.compass
-      );
+      publish(CHANNELS.REDUCED_MOTION, state.reducedMotion);
+      publish(CHANNELS.HELD_STATE, createHeldState());
+      publish(CHANNELS.COMPASS_STATE, frame.compass);
 
       globalThis.dispatchEvent(
         new CustomEvent(
           "SHOWROOM_CONTROLLER_READY",
           {
-            detail:
-              Object.freeze({
-                moduleId: MODULE.id,
-                moduleVersion: MODULE.version,
-                interactionModuleRequired: true,
-                interactionModuleId: MODULE.interactionModuleId,
-                interactionModuleVersion: MODULE.interactionModuleVersion,
-                motionContractId: MODULE.motionContractId,
-                motionContractVersion: MODULE.motionContractVersion,
-                completeGestureQuaternionRequired: true,
-                exactPreviewPayloadRequired: true,
-                explicitPrimaryIdentityRequired: true,
-                semanticProjectionFactsOnly: true,
-                intentSelectionAuthority: MODULE.id,
-                destinationExecutionAuthority: false,
-                modalOpeningAuthority: false,
-                routeConfirmationAuthority: false,
-                routeDowngradeAuthority: false,
-                objectInspectionExecutionAuthority: false,
-                acceptedStateAuthority: MODULE.id,
-                navigationTransitionAuthority: MODULE.id
-              })
+            detail: Object.freeze({
+              moduleId: MODULE.id,
+              moduleVersion: MODULE.version,
+              interactionModuleRequired: true,
+              interactionModuleId: MODULE.interactionModuleId,
+              interactionModuleVersion: MODULE.interactionModuleVersion,
+              motionContractId: MODULE.motionContractId,
+              motionContractVersion: MODULE.motionContractVersion,
+              completeGestureQuaternionRequired: true,
+              exactPreviewPayloadRequired: true,
+              explicitPrimaryIdentityRequired: true,
+              semanticProjectionFactsOnly: true,
+              controllerRouteExecutionAuthority: true,
+              sixteenPathGateway: true,
+              allDestinationsAreRoutes: true,
+              acceptedStateAuthority: MODULE.id,
+              navigationTransitionAuthority: MODULE.id,
+              modalOpeningAuthority: false,
+              anchorScrollAuthority: false,
+              disclosureOpeningAuthority: false,
+              frontActivationAuthority: false,
+              objectInspectionExecutionAuthority: false,
+              diamondRuntimeAuthority: false
+            })
           }
         )
       );
@@ -4710,66 +4237,89 @@
 })();
 
 /*
-SHOWROOM_CONTROLLER_INTENT_RENEWAL_RECEIPT_v8
+SHOWROOM_CONTROLLER_ARCHCOIN_PATTERN_ROUTE_GATEWAY_RECEIPT_v9
 
 FILE MODIFIED:
 /showroom/index.controller.js
 
 NEW VERSION:
-8.0.0-intent-selection-authority
+9.0.0-archcoin-route-gateway
 
 PRIMARY CHANGE:
-Controller emits selected destination intent only.
+The Showroom controller is now an ARCHCOIN-pattern route gateway.
 
-CONTROLLER RETAINS:
-- navigation state machine
-- orbit state
-- cluster state
-- quaternion acceptance
-- gesture transaction validation
-- semantic projection fact storage
-- compass selection
+ROUTE TAXONOMY:
+north-1 /showroom/story/welcome/
+north-2 /showroom/story/mission/
+north-3 /showroom/story/timeline/
+north-4 /showroom/story/invitation/
+east-1 /showroom/globe/hearth/jeeves/
+east-2 /elara/index.html
+east-3 /products/auren/
+east-4 /characters/
+south-1 /showroom/wonders/window/
+south-2 /showroom/wonders/diamond/
+south-3 /showroom/wonders/stars/
+south-4 /showroom/globe/hearth/
+west-1 /showroom/mysteries/unfinished-world/
+west-2 /showroom/mysteries/questions-in-the-glass/
+west-3 /showroom/mysteries/paths-not-yet-open/
+west-4 /showroom/globe/audralia/
+
+CONTROLLER OWNS:
+- constellation state
+- cardinal selection
+- cluster opening
+- child selection
+- selected route reflection
+- Open Selection
 - Return to Orbit
-- Return to Main Compass
-- controller panel ownership
-- lifecycle events
-- public global
-- receipts
-- validation self-test
+- Main Compass selection and return
+- quaternion orbit and cluster state
+- semantic projection facts
+- controller panel display
+- direct navigation to canonical route
 
-CONTROLLER NO LONGER OWNS:
+CONTROLLER DOES NOT OWN:
 - modal opening
-- route confirmation
-- route downgrade
-- object inspection execution
-- anchor scrolling
+- same-page anchor execution
 - disclosure opening
-- information/gauge/front activation
-- route existence validation
+- gauge/front activation
+- object inspection execution
+- page content rendering
+- Diamond runtime
+- compositor runtime
+- crystal rendering
+- interaction gesture interpretation
 
-DESTINATION INTENT KINDS:
-- internal-info
-- object-inspect
-- external-route
+PRESERVED PUBLIC GLOBAL:
+SHOWROOM_MIRRORLAND_CONSTELLATION_CONTROLLER
 
-EVENT PRESERVED:
-SHOWROOM_ARCHCOIN_DESTINATION_ENTRY_REQUESTED
-
-PAYLOAD CONTRACT CHANGED:
-SHOWROOM_DESTINATION_INTENT_REQUEST_v2
+PRESERVED LIFECYCLE:
+SHOWROOM_CONTROLLER_READY
+SHOWROOM_CONTROLLER_FAILURE
 
 INTERACTIONS MODIFIED:
-No.
+FALSE
 
-DESTINATIONS MODIFIED:
-No.
+COMPOSITOR MODIFIED:
+FALSE
+
+CRYSTALS MODIFIED:
+FALSE
+
+DIAMOND FILES MODIFIED:
+FALSE
+
+WINDOW FILES MODIFIED:
+FALSE
 
 CSS MODIFIED:
-No.
+FALSE
 
 HTML MODIFIED:
-No.
+FALSE
 
-FINAL STATUS:
-Runtime validation not performed.
+RUNTIME VALIDATION:
+NOT PERFORMED
 */

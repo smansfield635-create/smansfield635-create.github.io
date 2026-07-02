@@ -1,6 +1,6 @@
 /* TARGET FILE: /showroom/index.cosmos.js */
 /* TNT FULL-FILE REPLACEMENT */
-/* SHOWROOM_COSMOS_HARDENED_v1 */
+/* SHOWROOM_COSMOS_HARDENED_v1 */ 
 
 /*
   Showroom — Autonomous cosmic atmosphere and randomized spacecraft engine.

@@ -1,13 +1,13 @@
 <!-- TARGET FILE: /showroom/index.html -->
 <!-- TNT FULL-FILE REPLACEMENT -->
-<!-- SHOWROOM_MIRRORLAND_ROUTE_GATEWAY_STATIC_HTML_TNT_v14 -->
+<!-- SHOWROOM_MIRRORLAND_DYNAMIC_COSMOS_EVIDENCE_HTML_TNT_v15 -->
 <!doctype html>
 <html
   lang="en"
   data-route="/showroom/"
   data-page="showroom"
-  data-version="SHOWROOM-MIRRORLAND-ROUTE-GATEWAY-14.0.0"
-  data-contract="SHOWROOM_MIRRORLAND_ROUTE_GATEWAY_STATIC_HTML_TNT_v14"
+  data-version="SHOWROOM-MIRRORLAND-DYNAMIC-COSMOS-EVIDENCE-15.0.0"
+  data-contract="SHOWROOM_MIRRORLAND_DYNAMIC_COSMOS_EVIDENCE_HTML_TNT_v15"
 
   data-house-room="showroom"
   data-house-room-title="The Showroom"
@@ -26,11 +26,12 @@
   data-showroom-interaction-gestures="/showroom/index.interaction.gestures.js"
   data-showroom-interactions="/showroom/index.interactions.js"
   data-showroom-window="/showroom/index.window.js"
+  data-showroom-cosmos="/showroom/index.cosmos.js"
   data-showroom-css="/showroom/index.css"
 
   data-showroom-navigation-model="four-cardinal-sixteen-child-route-gateway"
   data-showroom-primary-mode="constellation-route-gateway"
-  data-showroom-display-model="intro-compass-constellation-controller-diamond"
+  data-showroom-display-model="intro-compass-constellation-controller-diamond-evidence"
   data-showroom-cardinal-count="4"
   data-showroom-child-count="16"
   data-showroom-route-destination-count="16"
@@ -44,6 +45,20 @@
   data-showroom-return-to-compass="true"
   data-showroom-orbit-target="#showroom-orbit"
   data-showroom-compass-route="/index.html"
+
+  data-showroom-cosmos-contract="SHOWROOM_COSMOS_HARDENED_v1"
+  data-showroom-cosmos-decorative="true"
+  data-showroom-cosmos-functional-dependency="false"
+  data-showroom-cosmos-compositor-participant="false"
+  data-showroom-cosmos-navigation-authority="false"
+  data-showroom-cosmos-static-fallback="css-atmosphere"
+
+  data-showroom-evidence-model="local-accessible-tabs"
+  data-showroom-evidence-navigation-authority="false"
+  data-showroom-evidence-controller-authority="false"
+  data-showroom-evidence-compositor-authority="false"
+  data-showroom-evidence-crystal-authority="false"
+  data-showroom-evidence-route-authority="false"
 
   data-compass-fixed-center="true"
   data-compass-orbital-reference="true"
@@ -85,12 +100,12 @@
 
   <meta
     name="description"
-    content="Enter Mirrorland through the Showroom, follow its four-cardinal constellation, choose one of sixteen route paths, and behold the Diamond at the center of the page."
+    content="Enter Mirrorland through the Showroom, follow its four-cardinal constellation, choose one of sixteen route paths, behold the Diamond, and inspect the evidence behind the experience."
   >
 
   <meta
     name="showroom-page-contract"
-    content="SHOWROOM_MIRRORLAND_ROUTE_GATEWAY_STATIC_HTML_TNT_v14"
+    content="SHOWROOM_MIRRORLAND_DYNAMIC_COSMOS_EVIDENCE_HTML_TNT_v15"
   >
 
   <link
@@ -102,9 +117,9 @@
 
   <link
     rel="stylesheet"
-    href="/showroom/index.css?v=SHOWROOM_MIRRORLAND_ROUTE_GATEWAY_CSS_TNT_v10"
+    href="/showroom/index.css?v=SHOWROOM_MIRRORLAND_DYNAMIC_COSMOS_EVIDENCE_CSS_TNT_v11"
     data-showroom-page-css="true"
-    data-showroom-page-css-contract="SHOWROOM_MIRRORLAND_ROUTE_GATEWAY_CSS_TNT_v10"
+    data-showroom-page-css-contract="SHOWROOM_MIRRORLAND_DYNAMIC_COSMOS_EVIDENCE_CSS_TNT_v11"
   >
 </head>
 
@@ -138,6 +153,10 @@
     data-showroom-diamond-interactive="false"
     data-showroom-crystals-ready="false"
     data-showroom-held="false"
+    data-showroom-cosmos-status="pending"
+    data-showroom-cosmos-running="false"
+    data-showroom-cosmos-suspended="false"
+    data-showroom-evidence-active-tab="overview"
   >
     <header
       class="topbar showroom-topbar"
@@ -458,7 +477,9 @@
                 data-showroom-preview="Begin at the first Mirrorland threshold."
                 aria-label="Welcome to Mirrorland. Route path."
               >
-                <span class="sr-only">Welcome to Mirrorland</span>
+                <span class="sr-only">
+                  Welcome to Mirrorland
+                </span>
               </button>
 
               <button
@@ -479,7 +500,9 @@
                 data-showroom-preview="Read the mission and purpose of Mirrorland."
                 aria-label="Why Mirrorland Exists. Route path."
               >
-                <span class="sr-only">Why Mirrorland Exists</span>
+                <span class="sr-only">
+                  Why Mirrorland Exists
+                </span>
               </button>
 
               <button
@@ -500,7 +523,9 @@
                 data-showroom-preview="Review the Mirrorland timeline."
                 aria-label="The Story So Far. Route path."
               >
-                <span class="sr-only">The Story So Far</span>
+                <span class="sr-only">
+                  The Story So Far
+                </span>
               </button>
 
               <button
@@ -521,7 +546,9 @@
                 data-showroom-preview="Accept the invitation into Mirrorland."
                 aria-label="Step Through the Door. Route path."
               >
-                <span class="sr-only">Step Through the Door</span>
+                <span class="sr-only">
+                  Step Through the Door
+                </span>
               </button>
             </div>
 
@@ -554,7 +581,9 @@
                 data-showroom-preview="Meet the House interface."
                 aria-label="Talk to Jeeves. Route path."
               >
-                <span class="sr-only">Talk to Jeeves</span>
+                <span class="sr-only">
+                  Talk to Jeeves
+                </span>
               </button>
 
               <button
@@ -575,7 +604,9 @@
                 data-showroom-preview="Enter Elara’s conversation surface."
                 aria-label="Talk to Elara. Route path."
               >
-                <span class="sr-only">Talk to Elara</span>
+                <span class="sr-only">
+                  Talk to Elara
+                </span>
               </button>
 
               <button
@@ -596,7 +627,9 @@
                 data-showroom-preview="Enter Auren’s product-facing room."
                 aria-label="Talk to Auren. Route path."
               >
-                <span class="sr-only">Talk to Auren</span>
+                <span class="sr-only">
+                  Talk to Auren
+                </span>
               </button>
 
               <button
@@ -617,7 +650,9 @@
                 data-showroom-preview="Open the character directory."
                 aria-label="Meet All Characters. Route path."
               >
-                <span class="sr-only">Meet All Characters</span>
+                <span class="sr-only">
+                  Meet All Characters
+                </span>
               </button>
             </div>
 
@@ -650,7 +685,9 @@
                 data-showroom-preview="Open the Window page."
                 aria-label="Open the Window. Route path."
               >
-                <span class="sr-only">Open the Window</span>
+                <span class="sr-only">
+                  Open the Window
+                </span>
               </button>
 
               <button
@@ -671,7 +708,9 @@
                 data-showroom-preview="Open the Diamond page."
                 aria-label="Behold the Diamond. Route path."
               >
-                <span class="sr-only">Behold the Diamond</span>
+                <span class="sr-only">
+                  Behold the Diamond
+                </span>
               </button>
 
               <button
@@ -692,7 +731,9 @@
                 data-showroom-preview="Read the constellation model."
                 aria-label="Read the Stars. Route path."
               >
-                <span class="sr-only">Read the Stars</span>
+                <span class="sr-only">
+                  Read the Stars
+                </span>
               </button>
 
               <button
@@ -713,7 +754,9 @@
                 data-showroom-preview="Enter the Hearth."
                 aria-label="Enter the Hearth. Route path."
               >
-                <span class="sr-only">Enter the Hearth</span>
+                <span class="sr-only">
+                  Enter the Hearth
+                </span>
               </button>
             </div>
 
@@ -746,7 +789,9 @@
                 data-showroom-preview="Open the unfinished world path."
                 aria-label="The Unfinished World. Route path."
               >
-                <span class="sr-only">The Unfinished World</span>
+                <span class="sr-only">
+                  The Unfinished World
+                </span>
               </button>
 
               <button
@@ -767,7 +812,9 @@
                 data-showroom-preview="Open the questions path."
                 aria-label="Questions in the Glass. Route path."
               >
-                <span class="sr-only">Questions in the Glass</span>
+                <span class="sr-only">
+                  Questions in the Glass
+                </span>
               </button>
 
               <button
@@ -788,7 +835,9 @@
                 data-showroom-preview="Open the future paths page."
                 aria-label="Paths Not Yet Open. Route path."
               >
-                <span class="sr-only">Paths Not Yet Open</span>
+                <span class="sr-only">
+                  Paths Not Yet Open
+                </span>
               </button>
 
               <button
@@ -809,7 +858,9 @@
                 data-showroom-preview="Journey into Audralia."
                 aria-label="Journey into Audralia. Route path."
               >
-                <span class="sr-only">Journey into Audralia</span>
+                <span class="sr-only">
+                  Journey into Audralia
+                </span>
               </button>
             </div>
           </div>
@@ -1166,6 +1217,888 @@
           </details>
         </div>
       </section>
+
+      <section
+        id="showroom-evidence"
+        class="panel showroom-evidence"
+        aria-labelledby="showroom-evidence-title"
+        data-showroom-evidence
+      >
+        <header class="showroom-evidence__heading">
+          <span data-showroom-evidence-eyebrow>
+            Experience and Evidence
+          </span>
+
+          <h2 id="showroom-evidence-title">
+            See how the Showroom works.
+          </h2>
+
+          <p>
+            These tabs explain the layers behind the experience. They do
+            not select a route, move the constellation, change the
+            Compass, or control the Diamond and Window renderers.
+          </p>
+        </header>
+
+        <div
+          class="showroom-evidence-tabs"
+          data-showroom-evidence-tabs
+          data-showroom-evidence-active-tab="overview"
+        >
+          <div
+            class="showroom-evidence-tablist"
+            role="tablist"
+            aria-label="Showroom evidence views"
+            aria-orientation="horizontal"
+            data-showroom-evidence-tablist
+          >
+            <button
+              id="showroom-evidence-tab-overview"
+              class="showroom-evidence-tab"
+              type="button"
+              role="tab"
+              aria-selected="true"
+              aria-controls="showroom-evidence-panel-overview"
+              tabindex="0"
+              data-showroom-evidence-tab="overview"
+            >
+              Overview
+            </button>
+
+            <button
+              id="showroom-evidence-tab-navigation"
+              class="showroom-evidence-tab"
+              type="button"
+              role="tab"
+              aria-selected="false"
+              aria-controls="showroom-evidence-panel-navigation"
+              tabindex="-1"
+              data-showroom-evidence-tab="navigation"
+            >
+              Navigation
+            </button>
+
+            <button
+              id="showroom-evidence-tab-constellation"
+              class="showroom-evidence-tab"
+              type="button"
+              role="tab"
+              aria-selected="false"
+              aria-controls="showroom-evidence-panel-constellation"
+              tabindex="-1"
+              data-showroom-evidence-tab="constellation"
+            >
+              Constellation
+            </button>
+
+            <button
+              id="showroom-evidence-tab-compass"
+              class="showroom-evidence-tab"
+              type="button"
+              role="tab"
+              aria-selected="false"
+              aria-controls="showroom-evidence-panel-compass"
+              tabindex="-1"
+              data-showroom-evidence-tab="compass"
+            >
+              Compass
+            </button>
+
+            <button
+              id="showroom-evidence-tab-diamond"
+              class="showroom-evidence-tab"
+              type="button"
+              role="tab"
+              aria-selected="false"
+              aria-controls="showroom-evidence-panel-diamond"
+              tabindex="-1"
+              data-showroom-evidence-tab="diamond"
+            >
+              Diamond
+            </button>
+
+            <button
+              id="showroom-evidence-tab-window"
+              class="showroom-evidence-tab"
+              type="button"
+              role="tab"
+              aria-selected="false"
+              aria-controls="showroom-evidence-panel-window"
+              tabindex="-1"
+              data-showroom-evidence-tab="window"
+            >
+              Window
+            </button>
+
+            <button
+              id="showroom-evidence-tab-systems"
+              class="showroom-evidence-tab"
+              type="button"
+              role="tab"
+              aria-selected="false"
+              aria-controls="showroom-evidence-panel-systems"
+              tabindex="-1"
+              data-showroom-evidence-tab="systems"
+            >
+              Systems
+            </button>
+
+            <button
+              id="showroom-evidence-tab-receipts"
+              class="showroom-evidence-tab"
+              type="button"
+              role="tab"
+              aria-selected="false"
+              aria-controls="showroom-evidence-panel-receipts"
+              tabindex="-1"
+              data-showroom-evidence-tab="receipts"
+            >
+              Receipts
+            </button>
+          </div>
+
+          <section
+            id="showroom-evidence-panel-overview"
+            class="showroom-evidence-panel"
+            role="tabpanel"
+            aria-labelledby="showroom-evidence-tab-overview"
+            tabindex="0"
+            data-showroom-evidence-panel="overview"
+          >
+            <div
+              class="showroom-evidence-panel__grid"
+              data-showroom-evidence-panel-grid
+            >
+              <article
+                class="showroom-evidence-card"
+                data-showroom-evidence-card
+              >
+                <h3>
+                  A threshold, not a directory
+                </h3>
+
+                <p>
+                  The Showroom introduces Mirrorland through a layered
+                  experience: atmosphere establishes scale, the
+                  constellation establishes direction, and the Diamond
+                  establishes the central engineering object.
+                </p>
+              </article>
+
+              <article
+                class="showroom-evidence-card"
+                data-showroom-evidence-card
+              >
+                <h3>
+                  Four independent layers
+                </h3>
+
+                <ul
+                  class="showroom-evidence-list"
+                  data-showroom-evidence-list
+                >
+                  <li>Cosmos establishes environmental depth.</li>
+                  <li>Constellation establishes route selection.</li>
+                  <li>Diamond establishes object inspection.</li>
+                  <li>Window establishes the foreground threshold.</li>
+                </ul>
+              </article>
+            </div>
+
+            <div
+              class="showroom-evidence-relationship"
+              data-showroom-evidence-relationship
+            >
+              <strong>
+                Experience relationship
+              </strong>
+
+              <div
+                class="showroom-evidence-flow"
+                data-showroom-evidence-flow
+              >
+                <div>
+                  <strong>Cosmos</strong>
+                  <span>Decorative page atmosphere</span>
+                </div>
+
+                <div>
+                  <strong>Constellation</strong>
+                  <span>Cardinal and room navigation</span>
+                </div>
+
+                <div>
+                  <strong>Diamond</strong>
+                  <span>Interactive engineering object</span>
+                </div>
+
+                <div>
+                  <strong>Evidence</strong>
+                  <span>Explanation and verification</span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section
+            id="showroom-evidence-panel-navigation"
+            class="showroom-evidence-panel"
+            role="tabpanel"
+            aria-labelledby="showroom-evidence-tab-navigation"
+            tabindex="0"
+            data-showroom-evidence-panel="navigation"
+            hidden
+          >
+            <div
+              class="showroom-evidence-panel__grid"
+              data-showroom-evidence-panel-grid
+            >
+              <article
+                class="showroom-evidence-card"
+                data-showroom-evidence-card
+              >
+                <h3>
+                  Four cardinal gateways
+                </h3>
+
+                <ul
+                  class="showroom-evidence-list"
+                  data-showroom-evidence-list
+                >
+                  <li>North begins the Mirrorland story.</li>
+                  <li>East opens character routes.</li>
+                  <li>South opens wonders and world routes.</li>
+                  <li>West opens mysteries and unfinished paths.</li>
+                </ul>
+              </article>
+
+              <article
+                class="showroom-evidence-card"
+                data-showroom-evidence-card
+              >
+                <h3>
+                  Sixteen explicit destinations
+                </h3>
+
+                <p>
+                  Each cardinal opens a four-route cluster. Selecting a
+                  room prepares its route in the controller. Entering the
+                  destination remains an explicit action.
+                </p>
+              </article>
+            </div>
+
+            <p
+              class="showroom-evidence-boundary"
+              data-showroom-evidence-boundary
+            >
+              Evidence tabs do not call controller route methods, open
+              clusters, select child routes, alter the URL, or enter a
+              destination.
+            </p>
+          </section>
+
+          <section
+            id="showroom-evidence-panel-constellation"
+            class="showroom-evidence-panel"
+            role="tabpanel"
+            aria-labelledby="showroom-evidence-tab-constellation"
+            tabindex="0"
+            data-showroom-evidence-panel="constellation"
+            hidden
+          >
+            <div
+              class="showroom-evidence-panel__grid"
+              data-showroom-evidence-panel-grid
+            >
+              <article
+                class="showroom-evidence-card"
+                data-showroom-evidence-card
+              >
+                <h3>
+                  Visual rendering
+                </h3>
+
+                <p>
+                  The compositor coordinates rear and front crystal
+                  drawing around the fixed Compass plane. The crystal
+                  system owns meshes, orbital targets, animation, and
+                  visible crystal drawing.
+                </p>
+              </article>
+
+              <article
+                class="showroom-evidence-card"
+                data-showroom-evidence-card
+              >
+                <h3>
+                  Semantic continuity
+                </h3>
+
+                <p>
+                  Four cardinal controls and sixteen child controls remain
+                  in the document whether or not crystal rendering is
+                  available. Their fallback artwork disappears only after
+                  the crystal renderer declares readiness.
+                </p>
+              </article>
+            </div>
+
+            <p
+              class="showroom-evidence-note"
+              data-showroom-evidence-note
+            >
+              A hidden fallback drawing is not a removed control. Semantic
+              route targets remain available to keyboard, pointer, and
+              assistive technology users.
+            </p>
+          </section>
+
+          <section
+            id="showroom-evidence-panel-compass"
+            class="showroom-evidence-panel"
+            role="tabpanel"
+            aria-labelledby="showroom-evidence-tab-compass"
+            tabindex="0"
+            data-showroom-evidence-panel="compass"
+            hidden
+          >
+            <div
+              class="showroom-evidence-panel__grid"
+              data-showroom-evidence-panel-grid
+            >
+              <article
+                class="showroom-evidence-card"
+                data-showroom-evidence-card
+              >
+                <h3>
+                  Fixed center
+                </h3>
+
+                <p>
+                  The Showroom Compass remains centered while crystals
+                  move around it. Its visual mount is not navigation
+                  authority and does not inherit crystal geometry.
+                </p>
+              </article>
+
+              <article
+                class="showroom-evidence-card"
+                data-showroom-evidence-card
+              >
+                <h3>
+                  Explicit return
+                </h3>
+
+                <p>
+                  Selecting the Compass prepares the Main Compass return
+                  option through the Showroom controller. It does not
+                  navigate immediately.
+                </p>
+              </article>
+            </div>
+
+            <p
+              class="showroom-evidence-boundary"
+              data-showroom-evidence-boundary
+            >
+              The page-level Cosmos does not read Compass geometry,
+              change Compass selection, or register itself as a Compass
+              renderer.
+            </p>
+          </section>
+
+          <section
+            id="showroom-evidence-panel-diamond"
+            class="showroom-evidence-panel"
+            role="tabpanel"
+            aria-labelledby="showroom-evidence-tab-diamond"
+            tabindex="0"
+            data-showroom-evidence-panel="diamond"
+            hidden
+          >
+            <div
+              class="showroom-evidence-panel__grid"
+              data-showroom-evidence-panel-grid
+            >
+              <article
+                class="showroom-evidence-card"
+                data-showroom-evidence-card
+              >
+                <h3>
+                  G3 computational gem
+                </h3>
+
+                <ul
+                  class="showroom-evidence-list"
+                  data-showroom-evidence-list
+                >
+                  <li>16 radial sectors.</li>
+                  <li>16 structural bands.</li>
+                  <li>256 lattice seats.</li>
+                  <li>512 surface triangles.</li>
+                  <li>800 lattice connections.</li>
+                </ul>
+              </article>
+
+              <article
+                class="showroom-evidence-card"
+                data-showroom-evidence-card
+              >
+                <h3>
+                  Two public views
+                </h3>
+
+                <p>
+                  Object View presents the computational gem as a whole.
+                  Lattice View reveals its internal structural system. The
+                  evidence tabs do not replace those renderer controls.
+                </p>
+              </article>
+            </div>
+
+            <p
+              class="showroom-evidence-note"
+              data-showroom-evidence-note
+            >
+              Diamond controls remain inside the Diamond ownership
+              surface. Explanatory tabs remain outside it.
+            </p>
+          </section>
+
+          <section
+            id="showroom-evidence-panel-window"
+            class="showroom-evidence-panel"
+            role="tabpanel"
+            aria-labelledby="showroom-evidence-tab-window"
+            tabindex="0"
+            data-showroom-evidence-panel="window"
+            hidden
+          >
+            <div
+              class="showroom-evidence-panel__grid"
+              data-showroom-evidence-panel-grid
+            >
+              <article
+                class="showroom-evidence-card"
+                data-showroom-evidence-card
+              >
+                <h3>
+                  Foreground threshold
+                </h3>
+
+                <p>
+                  The Window is rendered in front of the Diamond and
+                  opens the threshold into the central object stage.
+                </p>
+              </article>
+
+              <article
+                class="showroom-evidence-card"
+                data-showroom-evidence-card
+              >
+                <h3>
+                  Independent ownership
+                </h3>
+
+                <p>
+                  The Window is not owned by the Compass, does not
+                  participate in crystal depth classification, and does
+                  not depend on the Cosmos renderer.
+                </p>
+              </article>
+            </div>
+          </section>
+
+          <section
+            id="showroom-evidence-panel-systems"
+            class="showroom-evidence-panel"
+            role="tabpanel"
+            aria-labelledby="showroom-evidence-tab-systems"
+            tabindex="0"
+            data-showroom-evidence-panel="systems"
+            hidden
+          >
+            <div
+              class="showroom-evidence-panel__grid"
+              data-showroom-evidence-panel-grid
+            >
+              <article
+                class="showroom-evidence-card"
+                data-showroom-evidence-card
+              >
+                <h3>
+                  Functional chain
+                </h3>
+
+                <ul
+                  class="showroom-evidence-list"
+                  data-showroom-evidence-list
+                >
+                  <li>Controller owns selection and routes.</li>
+                  <li>Compositor owns projection and layer ordering.</li>
+                  <li>Crystals owns crystal geometry and drawing.</li>
+                  <li>Interactions owns pointer and gesture behavior.</li>
+                  <li>Diamond and Window own their own stages.</li>
+                </ul>
+              </article>
+
+              <article
+                class="showroom-evidence-card"
+                data-showroom-evidence-card
+              >
+                <h3>
+                  Decorative atmosphere
+                </h3>
+
+                <p>
+                  Cosmos owns one inert fixed 2D canvas, stars, dust,
+                  sparkles, rare meteors, and rare spacecraft. Its failure
+                  is nonfatal and leaves static CSS atmosphere behind.
+                </p>
+              </article>
+            </div>
+
+            <div
+              class="showroom-evidence-relationship"
+              data-showroom-evidence-relationship
+            >
+              <strong>
+                Ownership boundary
+              </strong>
+
+              <p>
+                Cosmos does not register compositor nodes, read crystal
+                projection, claim pointer input, modify semantic controls,
+                alter routes, or supervise Diamond and Window lifecycle.
+              </p>
+            </div>
+          </section>
+
+          <section
+            id="showroom-evidence-panel-receipts"
+            class="showroom-evidence-panel"
+            role="tabpanel"
+            aria-labelledby="showroom-evidence-tab-receipts"
+            tabindex="0"
+            data-showroom-evidence-panel="receipts"
+            hidden
+          >
+            <p
+              class="showroom-evidence-note"
+              data-showroom-evidence-note
+            >
+              These summaries report the strongest evidence currently
+              available in the page. Element presence alone is not treated
+              as runtime readiness.
+            </p>
+
+            <div
+              class="showroom-receipt-grid"
+              data-showroom-receipt-grid
+            >
+              <article
+                class="showroom-receipt-summary"
+                data-showroom-receipt-summary="controller"
+              >
+                <div
+                  class="showroom-receipt-summary__heading"
+                  data-showroom-receipt-summary-heading
+                >
+                  <strong
+                    class="showroom-receipt-summary__module"
+                    data-showroom-receipt-module
+                  >
+                    Controller
+                  </strong>
+
+                  <span
+                    class="showroom-receipt-summary__status"
+                    data-showroom-receipt-status="pending"
+                  >
+                    Pending
+                  </span>
+                </div>
+
+                <dl>
+                  <dt>Evidence</dt>
+                  <dd data-showroom-receipt-evidence>
+                    Receipt surface present
+                  </dd>
+
+                  <dt>State</dt>
+                  <dd data-showroom-receipt-state>
+                    Runtime not yet inspected
+                  </dd>
+                </dl>
+              </article>
+
+              <article
+                class="showroom-receipt-summary"
+                data-showroom-receipt-summary="compositor"
+              >
+                <div
+                  class="showroom-receipt-summary__heading"
+                  data-showroom-receipt-summary-heading
+                >
+                  <strong
+                    class="showroom-receipt-summary__module"
+                    data-showroom-receipt-module
+                  >
+                    Compositor
+                  </strong>
+
+                  <span
+                    class="showroom-receipt-summary__status"
+                    data-showroom-receipt-status="pending"
+                  >
+                    Pending
+                  </span>
+                </div>
+
+                <dl>
+                  <dt>Evidence</dt>
+                  <dd data-showroom-receipt-evidence>
+                    Receipt surface present
+                  </dd>
+
+                  <dt>State</dt>
+                  <dd data-showroom-receipt-state>
+                    Runtime not yet inspected
+                  </dd>
+                </dl>
+              </article>
+
+              <article
+                class="showroom-receipt-summary"
+                data-showroom-receipt-summary="crystals"
+              >
+                <div
+                  class="showroom-receipt-summary__heading"
+                  data-showroom-receipt-summary-heading
+                >
+                  <strong
+                    class="showroom-receipt-summary__module"
+                    data-showroom-receipt-module
+                  >
+                    Crystals
+                  </strong>
+
+                  <span
+                    class="showroom-receipt-summary__status"
+                    data-showroom-receipt-status="pending"
+                  >
+                    Pending
+                  </span>
+                </div>
+
+                <dl>
+                  <dt>Evidence</dt>
+                  <dd data-showroom-receipt-evidence>
+                    Receipt surface present
+                  </dd>
+
+                  <dt>State</dt>
+                  <dd data-showroom-receipt-state>
+                    Runtime not yet inspected
+                  </dd>
+                </dl>
+              </article>
+
+              <article
+                class="showroom-receipt-summary"
+                data-showroom-receipt-summary="interactions"
+              >
+                <div
+                  class="showroom-receipt-summary__heading"
+                  data-showroom-receipt-summary-heading
+                >
+                  <strong
+                    class="showroom-receipt-summary__module"
+                    data-showroom-receipt-module
+                  >
+                    Interactions
+                  </strong>
+
+                  <span
+                    class="showroom-receipt-summary__status"
+                    data-showroom-receipt-status="pending"
+                  >
+                    Pending
+                  </span>
+                </div>
+
+                <dl>
+                  <dt>Evidence</dt>
+                  <dd data-showroom-receipt-evidence>
+                    Receipt surface present
+                  </dd>
+
+                  <dt>State</dt>
+                  <dd data-showroom-receipt-state>
+                    Runtime not yet inspected
+                  </dd>
+                </dl>
+              </article>
+
+              <article
+                class="showroom-receipt-summary"
+                data-showroom-receipt-summary="window"
+              >
+                <div
+                  class="showroom-receipt-summary__heading"
+                  data-showroom-receipt-summary-heading
+                >
+                  <strong
+                    class="showroom-receipt-summary__module"
+                    data-showroom-receipt-module
+                  >
+                    Window
+                  </strong>
+
+                  <span
+                    class="showroom-receipt-summary__status"
+                    data-showroom-receipt-status="pending"
+                  >
+                    Pending
+                  </span>
+                </div>
+
+                <dl>
+                  <dt>Evidence</dt>
+                  <dd data-showroom-receipt-evidence>
+                    Receipt surface present
+                  </dd>
+
+                  <dt>State</dt>
+                  <dd data-showroom-receipt-state>
+                    Runtime not yet inspected
+                  </dd>
+                </dl>
+              </article>
+
+              <article
+                class="showroom-receipt-summary"
+                data-showroom-receipt-summary="cosmos"
+              >
+                <div
+                  class="showroom-receipt-summary__heading"
+                  data-showroom-receipt-summary-heading
+                >
+                  <strong
+                    class="showroom-receipt-summary__module"
+                    data-showroom-receipt-module
+                  >
+                    Cosmos
+                  </strong>
+
+                  <span
+                    class="showroom-receipt-summary__status"
+                    data-showroom-receipt-status="pending"
+                  >
+                    Pending
+                  </span>
+                </div>
+
+                <dl>
+                  <dt>Evidence</dt>
+                  <dd data-showroom-receipt-evidence>
+                    Receipt surface present
+                  </dd>
+
+                  <dt>State</dt>
+                  <dd data-showroom-receipt-state>
+                    Runtime not yet inspected
+                  </dd>
+                </dl>
+              </article>
+
+              <article
+                class="showroom-receipt-summary"
+                data-showroom-receipt-summary="diamond"
+              >
+                <div
+                  class="showroom-receipt-summary__heading"
+                  data-showroom-receipt-summary-heading
+                >
+                  <strong
+                    class="showroom-receipt-summary__module"
+                    data-showroom-receipt-module
+                  >
+                    Diamond
+                  </strong>
+
+                  <span
+                    class="showroom-receipt-summary__status"
+                    data-showroom-receipt-status="pending"
+                  >
+                    Pending
+                  </span>
+                </div>
+
+                <dl>
+                  <dt>Evidence</dt>
+                  <dd data-showroom-receipt-evidence>
+                    Stage present
+                  </dd>
+
+                  <dt>State</dt>
+                  <dd data-showroom-receipt-state>
+                    Renderer state not yet inspected
+                  </dd>
+                </dl>
+              </article>
+
+              <article
+                class="showroom-receipt-summary"
+                data-showroom-receipt-summary="evidence-tabs"
+              >
+                <div
+                  class="showroom-receipt-summary__heading"
+                  data-showroom-receipt-summary-heading
+                >
+                  <strong
+                    class="showroom-receipt-summary__module"
+                    data-showroom-receipt-module
+                  >
+                    Evidence tabs
+                  </strong>
+
+                  <span
+                    class="showroom-receipt-summary__status"
+                    data-showroom-receipt-status="available"
+                  >
+                    Available
+                  </span>
+                </div>
+
+                <dl>
+                  <dt>Evidence</dt>
+                  <dd data-showroom-receipt-evidence>
+                    Local tab contract initialized
+                  </dd>
+
+                  <dt>State</dt>
+                  <dd data-showroom-receipt-state>
+                    Explanatory only
+                  </dd>
+                </dl>
+              </article>
+            </div>
+
+            <details>
+              <summary>
+                Inspect current receipt snapshots
+              </summary>
+
+              <pre
+                class="showroom-raw-receipt"
+                data-showroom-raw-receipt
+              >Runtime receipt snapshots have not yet been collected.</pre>
+            </details>
+          </section>
+        </div>
+      </section>
     </main>
 
     <div
@@ -1206,6 +2139,8 @@
     <output data-showroom-compositor-receipt hidden></output>
     <output data-showroom-crystals-receipt hidden></output>
     <output data-showroom-window-receipt hidden></output>
+    <output data-showroom-cosmos-receipt hidden></output>
+    <output data-showroom-evidence-tabs-receipt hidden></output>
   </div>
 
   <script
@@ -1263,6 +2198,12 @@
   ></script>
 
   <script
+    src="/showroom/index.cosmos.js?v=SHOWROOM_COSMOS_HARDENED_v1"
+    defer
+    data-showroom-child="cosmos"
+  ></script>
+
+  <script
     src="/assets/manor-blueprint/manor.blueprint.registry.js?v=MANOR_BLUEPRINT_MENU_CATEGORY_OWNERSHIP_REGISTRY_TNT_v1"
     defer
     data-mirrorland-blueprint-marker="true"
@@ -1281,72 +2222,1005 @@
     defer
     data-elara-room-entry-asset="true"
   ></script>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const CONTRACT =
+        "SHOWROOM_EVIDENCE_TABS_LOCAL_CONTROLLER_v1";
+
+      const ROOT_SELECTOR =
+        "[data-showroom-root]";
+
+      const TABS_SELECTOR =
+        "[data-showroom-evidence-tabs]";
+
+      const TAB_SELECTOR =
+        "[data-showroom-evidence-tab]";
+
+      const PANEL_SELECTOR =
+        "[data-showroom-evidence-panel]";
+
+      const RECEIPT_OUTPUT_SELECTOR =
+        "[data-showroom-evidence-tabs-receipt]";
+
+      const RAW_RECEIPT_SELECTOR =
+        "[data-showroom-raw-receipt]";
+
+      const MODULES = Object.freeze({
+        controller: Object.freeze({
+          output:
+            "[data-showroom-controller-receipt]",
+
+          globalKeys: Object.freeze([
+            "SHOWROOM_MIRRORLAND_CONSTELLATION_CONTROLLER_RECEIPT",
+            "SHOWROOM_CONTROLLER_RECEIPT"
+          ])
+        }),
+
+        compositor: Object.freeze({
+          output:
+            "[data-showroom-compositor-receipt]",
+
+          globalKeys: Object.freeze([
+            "SHOWROOM_COMPOSITOR_RECEIPT"
+          ])
+        }),
+
+        crystals: Object.freeze({
+          output:
+            "[data-showroom-crystals-receipt]",
+
+          globalKeys: Object.freeze([
+            "SHOWROOM_CRYSTALS_RECEIPT"
+          ])
+        }),
+
+        interactions: Object.freeze({
+          output:
+            "[data-showroom-interactions-receipt]",
+
+          globalKeys: Object.freeze([
+            "SHOWROOM_INTERACTIONS_RECEIPT"
+          ])
+        }),
+
+        window: Object.freeze({
+          output:
+            "[data-showroom-window-receipt]",
+
+          globalKeys: Object.freeze([
+            "SHOWROOM_WINDOW_RECEIPT"
+          ])
+        }),
+
+        cosmos: Object.freeze({
+          output:
+            "[data-showroom-cosmos-receipt]",
+
+          globalKeys: Object.freeze([
+            "SHOWROOM_COSMOS_RECEIPT"
+          ])
+        })
+      });
+
+      const state = {
+        root:
+          null,
+
+        tabsRoot:
+          null,
+
+        tabs:
+          [],
+
+        panels:
+          [],
+
+        receiptOutput:
+          null,
+
+        rawReceipt:
+          null,
+
+        initialized:
+          false,
+
+        activeTab:
+          "overview",
+
+        listeners:
+          []
+      };
+
+      function parseJson(
+        value
+      ) {
+        if (
+          typeof value !==
+            "string" ||
+          !value.trim()
+        ) {
+          return null;
+        }
+
+        try {
+          return JSON.parse(
+            value
+          );
+        } catch {
+          return null;
+        }
+      }
+
+      function readOutput(
+        selector
+      ) {
+        const output =
+          state.root.querySelector(
+            selector
+          );
+
+        if (!output) {
+          return null;
+        }
+
+        const value =
+          typeof output.value ===
+            "string" &&
+          output.value
+            ? output.value
+            : output.textContent;
+
+        return (
+          parseJson(value) ||
+          (
+            value &&
+            value.trim()
+              ? {
+                  status:
+                    "present",
+
+                  raw:
+                    value.trim()
+                }
+              : null
+          )
+        );
+      }
+
+      function readGlobal(
+        keys
+      ) {
+        for (
+          const key of
+          keys
+        ) {
+          if (
+            window[key] != null
+          ) {
+            return window[key];
+          }
+        }
+
+        return null;
+      }
+
+      function readModuleEvidence(
+        module
+      ) {
+        return (
+          readGlobal(
+            module.globalKeys
+          ) ||
+          readOutput(
+            module.output
+          )
+        );
+      }
+
+      function normalizeStatus(
+        receipt
+      ) {
+        if (!receipt) {
+          return "pending";
+        }
+
+        const direct =
+          String(
+            receipt.status ||
+            receipt.state ||
+            ""
+          )
+            .trim()
+            .toLowerCase();
+
+        if (
+          direct.includes(
+            "destroy"
+          ) ||
+          direct.includes(
+            "dispose"
+          )
+        ) {
+          return "destroyed";
+        }
+
+        if (
+          direct.includes(
+            "fail"
+          ) ||
+          direct.includes(
+            "held"
+          ) ||
+          receipt.failed ===
+            true
+        ) {
+          return "held";
+        }
+
+        if (
+          receipt.running ===
+            true ||
+          direct.includes(
+            "running"
+          ) ||
+          direct.includes(
+            "drawing"
+          )
+        ) {
+          return "running";
+        }
+
+        if (
+          receipt.suspended ===
+            true ||
+          direct.includes(
+            "suspend"
+          )
+        ) {
+          return "suspended";
+        }
+
+        if (
+          receipt.ready ===
+            true ||
+          receipt.initialized ===
+            true ||
+          direct.includes(
+            "ready"
+          ) ||
+          direct.includes(
+            "available"
+          )
+        ) {
+          return "available";
+        }
+
+        return "present";
+      }
+
+      function describeEvidence(
+        receipt
+      ) {
+        if (!receipt) {
+          return "Receipt surface present; no populated runtime receipt found";
+        }
+
+        if (
+          receipt.running ===
+          true
+        ) {
+          return "Runtime receipt reports active drawing or execution";
+        }
+
+        if (
+          receipt.ready ===
+            true ||
+          receipt.initialized ===
+            true
+        ) {
+          return "Runtime receipt reports initialization or readiness";
+        }
+
+        if (
+          receipt.failed ===
+            true
+        ) {
+          return "Runtime receipt reports failure or held state";
+        }
+
+        return "Populated runtime receipt found";
+      }
+
+      function describeState(
+        receipt
+      ) {
+        if (!receipt) {
+          return "Presence only; readiness not established";
+        }
+
+        if (
+          receipt.destroyed ===
+          true
+        ) {
+          return "Disposed or destroyed";
+        }
+
+        if (
+          receipt.failed ===
+            true
+        ) {
+          return String(
+            receipt.failureReason ||
+            receipt.lastFailure ||
+            "Failure reported"
+          );
+        }
+
+        if (
+          receipt.running ===
+            true
+        ) {
+          return "Running";
+        }
+
+        if (
+          receipt.suspended ===
+            true
+        ) {
+          return "Suspended";
+        }
+
+        if (
+          receipt.ready ===
+            true
+        ) {
+          return "Ready";
+        }
+
+        if (
+          receipt.initialized ===
+            true
+        ) {
+          return "Initialized";
+        }
+
+        return String(
+          receipt.status ||
+          receipt.state ||
+          "Receipt populated"
+        );
+      }
+
+      function updateReceiptSummary(
+        key,
+        receipt
+      ) {
+        const card =
+          state.root.querySelector(
+            `[data-showroom-receipt-summary="${key}"]`
+          );
+
+        if (!card) {
+          return;
+        }
+
+        const status =
+          normalizeStatus(
+            receipt
+          );
+
+        const statusNode =
+          card.querySelector(
+            "[data-showroom-receipt-status]"
+          );
+
+        const evidenceNode =
+          card.querySelector(
+            "[data-showroom-receipt-evidence]"
+          );
+
+        const stateNode =
+          card.querySelector(
+            "[data-showroom-receipt-state]"
+          );
+
+        if (statusNode) {
+          statusNode.dataset
+            .showroomReceiptStatus =
+            status;
+
+          statusNode.textContent =
+            status.charAt(0)
+              .toUpperCase() +
+            status.slice(1);
+        }
+
+        if (evidenceNode) {
+          evidenceNode.textContent =
+            describeEvidence(
+              receipt
+            );
+        }
+
+        if (stateNode) {
+          stateNode.textContent =
+            describeState(
+              receipt
+            );
+        }
+      }
+
+      function collectReceipts() {
+        const snapshots = {};
+
+        for (
+          const [
+            key,
+            module
+          ] of Object.entries(
+            MODULES
+          )
+        ) {
+          const receipt =
+            readModuleEvidence(
+              module
+            );
+
+          snapshots[key] =
+            receipt;
+
+          updateReceiptSummary(
+            key,
+            receipt
+          );
+        }
+
+        const diamondStage =
+          state.root.querySelector(
+            "[data-showroom-diamond-stage]"
+          );
+
+        const diamondReceipt =
+          diamondStage
+            ? {
+                status:
+                  diamondStage.dataset
+                    .webglState ||
+                  "present",
+
+                initialized:
+                  diamondStage.dataset
+                    .webglState ===
+                  "ready",
+
+                running:
+                  diamondStage.dataset
+                    .webglState ===
+                  "ready",
+
+                stagePresent:
+                  true
+              }
+            : null;
+
+        snapshots.diamond =
+          diamondReceipt;
+
+        updateReceiptSummary(
+          "diamond",
+          diamondReceipt
+        );
+
+        snapshots.evidenceTabs = {
+          contract:
+            CONTRACT,
+
+          status:
+            "available",
+
+          initialized:
+            state.initialized,
+
+          activeTab:
+            state.activeTab,
+
+          navigationAffected:
+            false,
+
+          controllerMutated:
+            false,
+
+          compositorMutated:
+            false,
+
+          crystalsMutated:
+            false,
+
+          diamondMutated:
+            false,
+
+          windowMutated:
+            false
+        };
+
+        if (
+          state.rawReceipt
+        ) {
+          state.rawReceipt.textContent =
+            JSON.stringify(
+              snapshots,
+              null,
+              2
+            );
+        }
+
+        return snapshots;
+      }
+
+      function emitReceipt(
+        action
+      ) {
+        const receipt = Object.freeze({
+          contract:
+            CONTRACT,
+
+          status:
+            "available",
+
+          initialized:
+            state.initialized,
+
+          activeTab:
+            state.activeTab,
+
+          tabCount:
+            state.tabs.length,
+
+          panelCount:
+            state.panels.length,
+
+          navigationAffected:
+            false,
+
+          controllerMutated:
+            false,
+
+          compositorMutated:
+            false,
+
+          crystalsMutated:
+            false,
+
+          interactionsMutated:
+            false,
+
+          diamondMutated:
+            false,
+
+          windowMutated:
+            false,
+
+          lastAction:
+            action,
+
+          timestamp:
+            new Date()
+              .toISOString()
+        });
+
+        const serialized =
+          JSON.stringify(
+            receipt
+          );
+
+        if (
+          state.receiptOutput
+        ) {
+          state.receiptOutput.value =
+            serialized;
+
+          state.receiptOutput.textContent =
+            serialized;
+        }
+
+        window.SHOWROOM_EVIDENCE_TABS_RECEIPT =
+          receipt;
+
+        return receipt;
+      }
+
+      function activateTab(
+        tab,
+        moveFocus
+      ) {
+        const name =
+          tab.dataset
+            .showroomEvidenceTab;
+
+        const controlledId =
+          tab.getAttribute(
+            "aria-controls"
+          );
+
+        for (
+          const candidate of
+          state.tabs
+        ) {
+          const selected =
+            candidate ===
+            tab;
+
+          candidate.setAttribute(
+            "aria-selected",
+            selected
+              ? "true"
+              : "false"
+          );
+
+          candidate.tabIndex =
+            selected
+              ? 0
+              : -1;
+        }
+
+        for (
+          const panel of
+          state.panels
+        ) {
+          panel.hidden =
+            panel.id !==
+            controlledId;
+        }
+
+        state.activeTab =
+          name;
+
+        state.tabsRoot.dataset
+          .showroomEvidenceActiveTab =
+          name;
+
+        state.root.dataset
+          .showroomEvidenceActiveTab =
+          name;
+
+        if (
+          moveFocus
+        ) {
+          tab.focus({
+            preventScroll:
+              true
+          });
+        }
+
+        emitReceipt(
+          `tab-activated:${name}`
+        );
+
+        if (
+          name ===
+          "receipts"
+        ) {
+          collectReceipts();
+        }
+      }
+
+      function moveFocus(
+        currentIndex,
+        direction
+      ) {
+        const count =
+          state.tabs.length;
+
+        const nextIndex =
+          (
+            currentIndex +
+            direction +
+            count
+          ) %
+          count;
+
+        state.tabs[
+          nextIndex
+        ].focus({
+          preventScroll:
+            true
+        });
+      }
+
+      function handleTabKeydown(
+        event
+      ) {
+        const tab =
+          event.currentTarget;
+
+        const index =
+          state.tabs.indexOf(
+            tab
+          );
+
+        switch (
+          event.key
+        ) {
+          case "ArrowRight":
+            event.preventDefault();
+            moveFocus(
+              index,
+              1
+            );
+            break;
+
+          case "ArrowLeft":
+            event.preventDefault();
+            moveFocus(
+              index,
+              -1
+            );
+            break;
+
+          case "Home":
+            event.preventDefault();
+            state.tabs[0]
+              .focus({
+                preventScroll:
+                  true
+              });
+            break;
+
+          case "End":
+            event.preventDefault();
+            state.tabs[
+              state.tabs.length -
+              1
+            ].focus({
+              preventScroll:
+                true
+            });
+            break;
+
+          case "Enter":
+          case " ":
+            event.preventDefault();
+            activateTab(
+              tab,
+              true
+            );
+            break;
+
+          default:
+            break;
+        }
+      }
+
+      function bind(
+        target,
+        type,
+        listener
+      ) {
+        target.addEventListener(
+          type,
+          listener
+        );
+
+        state.listeners.push({
+          target,
+          type,
+          listener
+        });
+      }
+
+      function initialize() {
+        if (
+          state.initialized
+        ) {
+          return;
+        }
+
+        state.root =
+          document.querySelector(
+            ROOT_SELECTOR
+          );
+
+        if (!state.root) {
+          return;
+        }
+
+        state.tabsRoot =
+          state.root.querySelector(
+            TABS_SELECTOR
+          );
+
+        if (!state.tabsRoot) {
+          return;
+        }
+
+        state.tabs =
+          Array.from(
+            state.tabsRoot
+              .querySelectorAll(
+                TAB_SELECTOR
+              )
+          );
+
+        state.panels =
+          Array.from(
+            state.tabsRoot
+              .querySelectorAll(
+                PANEL_SELECTOR
+              )
+          );
+
+        state.receiptOutput =
+          state.root.querySelector(
+            RECEIPT_OUTPUT_SELECTOR
+          );
+
+        state.rawReceipt =
+          state.root.querySelector(
+            RAW_RECEIPT_SELECTOR
+          );
+
+        for (
+          const tab of
+          state.tabs
+        ) {
+          bind(
+            tab,
+            "click",
+            () => {
+              activateTab(
+                tab,
+                false
+              );
+            }
+          );
+
+          bind(
+            tab,
+            "keydown",
+            handleTabKeydown
+          );
+        }
+
+        const selectedTab =
+          state.tabs.find(
+            tab =>
+              tab.getAttribute(
+                "aria-selected"
+              ) ===
+              "true"
+          ) ||
+          state.tabs[0];
+
+        state.initialized =
+          true;
+
+        activateTab(
+          selectedTab,
+          false
+        );
+
+        collectReceipts();
+
+        window.setTimeout(
+          collectReceipts,
+          500
+        );
+
+        window.setTimeout(
+          collectReceipts,
+          1800
+        );
+
+        emitReceipt(
+          "evidence-tabs-initialized"
+        );
+      }
+
+      if (
+        document.readyState ===
+        "loading"
+      ) {
+        document.addEventListener(
+          "DOMContentLoaded",
+          initialize,
+          {
+            once:
+              true
+          }
+        );
+      } else {
+        initialize();
+      }
+    })();
+  </script>
 </body>
 </html>
 
 <!--
-SHOWROOM_HTML_ROUTE_GATEWAY_RECONSTRUCTION_RECEIPT_v14
+SHOWROOM_HTML_DYNAMIC_COSMOS_EVIDENCE_RECEIPT_v15
 
 FILE MODIFIED:
 /showroom/index.html
 
 NEW BASELINE:
-SHOWROOM_MIRRORLAND_ROUTE_GATEWAY_STATIC_HTML_TNT_v14
+SHOWROOM_MIRRORLAND_DYNAMIC_COSMOS_EVIDENCE_HTML_TNT_v15
 
-PRIMARY MODEL:
-Intro + bounded constellation field + separate controller panel + retained Diamond stage.
+CSS:
+- /showroom/index.css?v=SHOWROOM_MIRRORLAND_DYNAMIC_COSMOS_EVIDENCE_CSS_TNT_v11
 
-CORE FIX:
-The controller panel is outside .showroom-orbit__field.
-The orbit visual field contains only compass, crystal/star semantic controls, and visual layers.
-A dedicated page-level front host is present inside the Showroom root and outside the orbit field.
+COSMOS:
+- /showroom/index.cosmos.js?v=SHOWROOM_COSMOS_HARDENED_v1
+- window.SHOWROOM_COSMOS
+- window.SHOWROOM_COSMOS_RECEIPT
+- SHOWROOM_COSMOS_FAILURE
+- SHOWROOM_REDUCED_MOTION_CHANGE
+- body-level generated layer
+- no functional dependency
 
-CSS INTEGRATION:
-- /showroom/index.css?v=SHOWROOM_MIRRORLAND_ROUTE_GATEWAY_CSS_TNT_v10
-- data-showroom-page-css-contract="SHOWROOM_MIRRORLAND_ROUTE_GATEWAY_CSS_TNT_v10"
-
-PRESERVED:
+PRESERVED ATTACHMENT AND CONTAINMENT CONTRACTS:
 - data-showroom-root
 - data-showroom-scene
 - data-showroom-scene-field
+- data-showroom-orbit-scene
+- data-showroom-orbit-field
+- data-showroom-compass-layer
+- data-showroom-compass-visual-mount
+- data-showroom-semantic-star-layer
 - data-showroom-front-host
 - exactly 4 data-showroom-cardinal-control records
 - exactly 16 data-showroom-child-control records
-- compass mount/control pair
+- controller panel outside orbit field
+- front host outside orbit field
+- Compass mount/control pair
 - controller panel descendants
-- receipt outputs
 - Diamond stage/canvas/controls
 - Window mount/control
-- compositor/crystals/interactions/Diamond/Window scripts
+- all protected runtime scripts
+- all existing protected receipt outputs
 
-REMOVED AS PRIMARY ARCHITECTURE:
-- reusable information dialog
-- information source bank
-- route dialog
-- modal destination model
-- same-page anchor destination model
-- object inspection destination handoff
-- technical front stack
-- narrative destination stack
-- secondary object reservation section
+ADDED:
+- Showroom Cosmos metadata
+- Showroom Cosmos receipt output
+- Showroom Cosmos deferred script
+- separate explanatory evidence section
+- eight accessible evidence tabs
+- keyboard tab movement and manual activation
+- receipt summaries
+- raw receipt snapshot view
+- local evidence-tabs receipt
 
-ROUTE TAXONOMY:
-north-1 /showroom/story/welcome/
-north-2 /showroom/story/mission/
-north-3 /showroom/story/timeline/
-north-4 /showroom/story/invitation/
-east-1 /showroom/globe/hearth/jeeves/
-east-2 /elara/index.html
-east-3 /products/auren/
-east-4 /characters/
-south-1 /showroom/wonders/window/
-south-2 /showroom/wonders/diamond/
-south-3 /showroom/wonders/stars/
-south-4 /showroom/globe/hearth/
-west-1 /showroom/mysteries/unfinished-world/
-west-2 /showroom/mysteries/questions-in-the-glass/
-west-3 /showroom/mysteries/paths-not-yet-open/
-west-4 /showroom/globe/audralia/
+EVIDENCE-TAB AUTHORITY:
+- no route authority
+- no controller mutation
+- no compositor participation
+- no crystal ownership
+- no gesture ownership
+- no Diamond lifecycle ownership
+- no Window lifecycle ownership
+
+RECEIPT DISTINCTIONS:
+- surface presence
+- populated receipt
+- initialization
+- readiness
+- running
+- suspension
+- failure/held
+- destroyed/disposed
+
+FILES INTENTIONALLY UNCHANGED:
+- /showroom/index.controller.js
+- /showroom/index.compositor.js
+- /showroom/index.crystals.js
+- /showroom/index.interaction.gestures.js
+- /showroom/index.interactions.js
+- /showroom/index.diamond.geometry.js
+- /showroom/index.diamond.js
+- /showroom/index.window.js
+- /showroom/index.ui.js
 
 BROWSER VALIDATION:
 NOT PERFORMED

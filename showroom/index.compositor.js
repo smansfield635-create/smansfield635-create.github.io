@@ -5,7 +5,7 @@
   Upstream semantic authority:
   - /showroom/index.controller.js
   - SHOWROOM_MIRRORLAND_CONSTELLATION_CONTROLLER
-  - 7.0.0-controller-interaction-semantic-priority
+  - 9.0.0-archcoin-route-gateway
 
   Frozen DOM attachment contract:
   - [data-showroom-root]
@@ -65,7 +65,7 @@
     "SHOWROOM_MIRRORLAND_CONSTELLATION_CONTROLLER";
 
   const CONTROLLER_MODULE_VERSION =
-    "7.0.0-controller-interaction-semantic-priority";
+    "9.0.0-archcoin-route-gateway";
 
   const SELECTORS = Object.freeze({
     root:

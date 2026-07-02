@@ -1168,6 +1168,12 @@
       </section>
     </main>
 
+    <div
+      class="showroom-front-host"
+      data-showroom-front-host
+      hidden
+    ></div>
+
     <footer class="showroom-footer">
       <div>
         <strong>
@@ -1293,6 +1299,7 @@ Intro + bounded constellation field + separate controller panel + retained Diamo
 CORE FIX:
 The controller panel is outside .showroom-orbit__field.
 The orbit visual field contains only compass, crystal/star semantic controls, and visual layers.
+A dedicated page-level front host is present inside the Showroom root and outside the orbit field.
 
 CSS INTEGRATION:
 - /showroom/index.css?v=SHOWROOM_MIRRORLAND_ROUTE_GATEWAY_CSS_TNT_v10
@@ -1302,6 +1309,7 @@ PRESERVED:
 - data-showroom-root
 - data-showroom-scene
 - data-showroom-scene-field
+- data-showroom-front-host
 - exactly 4 data-showroom-cardinal-control records
 - exactly 16 data-showroom-child-control records
 - compass mount/control pair

@@ -18,7 +18,7 @@
     "SHOWROOM_MIRRORLAND_CONSTELLATION_CONTROLLER";
 
   const CONTROLLER_MODULE_VERSION =
-    "7.0.0-controller-interaction-semantic-priority";
+    "9.0.0-archcoin-route-gateway";
 
   const EXPECTED_INTERACTION_MODULE_ID =
     "DGB_ARCHCOIN_INTERACTIONS";
@@ -61,7 +61,7 @@
       "SHOWROOM_CRYSTALS_READY",
 
     crystalsFailure:
-      "ARCHCOIN_CRYSTALS_RENDER_FAILURE",
+      "SHOWROOM_CRYSTALS_FAILURE",
 
     crystalsDisposed:
       "SHOWROOM_CRYSTALS_DISPOSED",

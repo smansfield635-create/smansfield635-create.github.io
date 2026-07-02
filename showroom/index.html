@@ -1,14 +1,14 @@
 <!-- TARGET FILE: /showroom/index.html -->
 <!-- TNT FULL-FILE REPLACEMENT -->
-<!-- SHOWROOM_MIRRORLAND_NARRATIVE_CONSTELLATION_STATIC_HTML_TNT_v11 -->
+<!-- SHOWROOM_MIRRORLAND_NARRATIVE_CONSTELLATION_STATIC_HTML_TNT_v12 -->
 <!doctype html>
 
 <html
   lang="en"
   data-route="/showroom/"
   data-page="showroom"
-  data-version="SHOWROOM-MIRRORLAND-NARRATIVE-CONSTELLATION-11.0.0"
-  data-contract="SHOWROOM_MIRRORLAND_NARRATIVE_CONSTELLATION_STATIC_HTML_TNT_v11"
+  data-version="SHOWROOM-MIRRORLAND-NARRATIVE-CONSTELLATION-12.0.0"
+  data-contract="SHOWROOM_MIRRORLAND_NARRATIVE_CONSTELLATION_STATIC_HTML_TNT_v12"
 
   data-house-room="showroom"
   data-house-room-title="The Showroom"
@@ -21,20 +21,22 @@
   data-elara-route="/elara/index.html"
   data-talk-to-elara-prominent="true"
 
-  data-showroom-root-contract="mirrorland-narrative-constellation-gauge-information"
+  data-showroom-root-contract="mirrorland-narrative-constellation-gateway-modal-object-stage"
   data-showroom-controller="/showroom/index.controller.js"
   data-showroom-gauges="/showroom/index.gauges.js"
   data-showroom-compositor="/showroom/index.compositor.js"
   data-showroom-crystals="/showroom/index.crystals.js"
   data-showroom-interaction-gestures="/showroom/index.interaction.gestures.js"
   data-showroom-interactions="/showroom/index.interactions.js"
+  data-showroom-destinations="/showroom/index.destinations.js"
   data-showroom-window="/showroom/index.window.js"
   data-showroom-css="/showroom/index.css"
 
   data-showroom-navigation-model="four-cardinal-sixteen-child-narrative-constellation"
   data-showroom-primary-mode="constellation"
-  data-showroom-local-front-model="single-active-front"
-  data-showroom-gauge-layout="compact-selector-shared-detail"
+  data-showroom-display-model="orbit-information-modal-retained-object-stage"
+  data-showroom-local-front-model="modal-content-source"
+  data-showroom-gauge-layout="modal-technical-source"
   data-showroom-instruction-layout="compact-disclosure"
 
   data-showroom-cardinal-count="4"
@@ -50,7 +52,7 @@
   data-showroom-route-confirmation-required="true"
   data-showroom-return-to-orbit="true"
   data-showroom-return-to-compass="true"
-  data-showroom-return-model="shared-bottom-zone"
+  data-showroom-return-model="modal-close-or-shared-bottom-zone"
   data-showroom-return-zone="#showroom-return-zone"
   data-showroom-orbit-target="#showroom-orbit"
   data-showroom-compass-route="/index.html"
@@ -111,7 +113,7 @@
 
   <meta
     name="showroom-page-contract"
-    content="SHOWROOM_MIRRORLAND_NARRATIVE_CONSTELLATION_STATIC_HTML_TNT_v11"
+    content="SHOWROOM_MIRRORLAND_NARRATIVE_CONSTELLATION_STATIC_HTML_TNT_v12"
   >
 
   <link
@@ -123,9 +125,9 @@
 
   <link
     rel="stylesheet"
-    href="/showroom/index.css?v=SHOWROOM_MIRRORLAND_NARRATIVE_CONSTELLATION_CSS_TNT_v8"
+    href="/showroom/index.css?v=SHOWROOM_MIRRORLAND_NARRATIVE_CONSTELLATION_CSS_TNT_v9"
     data-showroom-page-css="true"
-    data-showroom-page-css-contract="SHOWROOM_MIRRORLAND_NARRATIVE_CONSTELLATION_CSS_TNT_v8"
+    data-showroom-page-css-contract="SHOWROOM_MIRRORLAND_NARRATIVE_CONSTELLATION_CSS_TNT_v9"
   >
 </head>
 
@@ -150,17 +152,20 @@
     data-showroom-root
     data-showroom-state="CONSTELLATION"
     data-showroom-presentation-mode="constellation"
+    data-showroom-display-mode="orbit"
     data-showroom-active-cardinal=""
     data-showroom-active-child=""
     data-showroom-active-cluster=""
     data-showroom-active-front=""
+    data-showroom-active-info=""
     data-showroom-active-gauge-set=""
     data-showroom-active-information-tab=""
+    data-showroom-information-dialog-open="false"
     data-showroom-route-dialog-open="false"
     data-showroom-window-state="closed"
     data-showroom-diamond-interactive="false"
     data-showroom-crystals-ready="false"
-    data-showroom-gauges-state="static"
+    data-showroom-gauges-state="modal-source"
     data-showroom-gauges-ready="false"
     data-showroom-held="false"
   >
@@ -197,11 +202,13 @@
           type="button"
           data-showroom-fallback-portal
           data-showroom-destination-kind="external-route"
+          data-showroom-info-id="east-2"
           data-showroom-route="/elara/index.html"
           data-showroom-route-label="Talk to Elara"
           data-showroom-route-description="Enter Elara’s mission, story, personal-origin, and literary conversation surface."
           data-showroom-route-confirmation-required="true"
           data-showroom-immediate-navigation="false"
+          data-showroom-route-evidence="declared-existing-route"
           aria-label="Talk to Elara on another Mirrorland page. Confirmation required."
           aria-haspopup="dialog"
           aria-controls="showroom-route-dialog"
@@ -223,21 +230,41 @@
               <div class="fallback-navigation__group">
                 <strong>The Story Begins</strong>
 
-                <a href="#arrival">
+                <button
+                  type="button"
+                  data-showroom-fallback-info
+                  data-showroom-destination-kind="internal-info"
+                  data-showroom-info-id="north-1"
+                >
                   Welcome to Mirrorland
-                </a>
+                </button>
 
-                <a href="#mirrorland-preface-mission">
+                <button
+                  type="button"
+                  data-showroom-fallback-info
+                  data-showroom-destination-kind="internal-info"
+                  data-showroom-info-id="north-2"
+                >
                   Why Mirrorland Exists
-                </a>
+                </button>
 
-                <a href="#mirrorland-preface-timeline">
+                <button
+                  type="button"
+                  data-showroom-fallback-info
+                  data-showroom-destination-kind="internal-info"
+                  data-showroom-info-id="north-3"
+                >
                   The Story So Far
-                </a>
+                </button>
 
-                <a href="#mirrorland-preface-invitation">
+                <button
+                  type="button"
+                  data-showroom-fallback-info
+                  data-showroom-destination-kind="internal-info"
+                  data-showroom-info-id="north-4"
+                >
                   Step Through the Door
-                </a>
+                </button>
               </div>
 
               <div class="fallback-navigation__group">
@@ -247,11 +274,13 @@
                   type="button"
                   data-showroom-fallback-portal
                   data-showroom-destination-kind="external-route"
+                  data-showroom-info-id="east-1"
                   data-showroom-route="/showroom/globe/hearth/jeeves/"
                   data-showroom-route-label="Talk to Jeeves"
                   data-showroom-route-description="Meet the House interface and receive guidance through the estate, the Hearth, Audralia, and Mirrorland."
                   data-showroom-route-confirmation-required="true"
                   data-showroom-immediate-navigation="false"
+                  data-showroom-route-evidence="declared-existing-route"
                   aria-haspopup="dialog"
                   aria-controls="showroom-route-dialog"
                 >
@@ -262,11 +291,13 @@
                   type="button"
                   data-showroom-fallback-portal
                   data-showroom-destination-kind="external-route"
+                  data-showroom-info-id="east-2"
                   data-showroom-route="/elara/index.html"
                   data-showroom-route-label="Talk to Elara"
                   data-showroom-route-description="Enter Elara’s mission, story, personal-origin, and literary conversation surface."
                   data-showroom-route-confirmation-required="true"
                   data-showroom-immediate-navigation="false"
+                  data-showroom-route-evidence="declared-existing-route"
                   aria-haspopup="dialog"
                   aria-controls="showroom-route-dialog"
                 >
@@ -277,11 +308,13 @@
                   type="button"
                   data-showroom-fallback-portal
                   data-showroom-destination-kind="external-route"
+                  data-showroom-info-id="east-3"
                   data-showroom-route="/products/auren/"
                   data-showroom-route-label="Talk to Auren"
                   data-showroom-route-description="Enter the product-floor specialist’s room for practical systems, product interpretation, and bounded handoffs."
                   data-showroom-route-confirmation-required="true"
                   data-showroom-immediate-navigation="false"
+                  data-showroom-route-evidence="declared-existing-route"
                   aria-haspopup="dialog"
                   aria-controls="showroom-route-dialog"
                 >
@@ -292,11 +325,13 @@
                   type="button"
                   data-showroom-fallback-portal
                   data-showroom-destination-kind="external-route"
+                  data-showroom-info-id="east-4"
                   data-showroom-route="/characters/"
                   data-showroom-route-label="Meet All Characters"
                   data-showroom-route-description="Open the central character directory and discover the wider Mirrorland cast."
                   data-showroom-route-confirmation-required="true"
                   data-showroom-immediate-navigation="false"
+                  data-showroom-route-evidence="declared-existing-route"
                   aria-haspopup="dialog"
                   aria-controls="showroom-route-dialog"
                 >
@@ -307,27 +342,46 @@
               <div class="fallback-navigation__group">
                 <strong>Wonders of Mirrorland</strong>
 
-                <a href="#showroom-window-threshold">
+                <button
+                  type="button"
+                  data-showroom-fallback-info
+                  data-showroom-destination-kind="object-inspect"
+                  data-showroom-info-id="south-1"
+                  data-showroom-object-target="#showroom-window-threshold"
+                >
                   Open the Window
-                </a>
+                </button>
 
-                <a href="#showroom-diamond-stage">
+                <button
+                  type="button"
+                  data-showroom-fallback-info
+                  data-showroom-destination-kind="object-inspect"
+                  data-showroom-info-id="south-2"
+                  data-showroom-object-target="#showroom-diamond-stage"
+                >
                   Behold the Diamond
-                </a>
+                </button>
 
-                <a href="#showroom-star-reading">
+                <button
+                  type="button"
+                  data-showroom-fallback-info
+                  data-showroom-destination-kind="internal-info"
+                  data-showroom-info-id="south-3"
+                >
                   Read the Stars
-                </a>
+                </button>
 
                 <button
                   type="button"
                   data-showroom-fallback-portal
                   data-showroom-destination-kind="external-route"
+                  data-showroom-info-id="south-4"
                   data-showroom-route="/showroom/globe/hearth/"
                   data-showroom-route-label="Enter the Hearth"
                   data-showroom-route-description="Leave the Showroom for the inhabited facility where the House interface, characters, and Audralia-facing systems meet."
                   data-showroom-route-confirmation-required="true"
                   data-showroom-immediate-navigation="false"
+                  data-showroom-route-evidence="declared-existing-route"
                   aria-haspopup="dialog"
                   aria-controls="showroom-route-dialog"
                 >
@@ -338,27 +392,44 @@
               <div class="fallback-navigation__group">
                 <strong>Mysteries Yet Unfolding</strong>
 
-                <a href="#showroom-unfinished-world">
+                <button
+                  type="button"
+                  data-showroom-fallback-info
+                  data-showroom-destination-kind="internal-info"
+                  data-showroom-info-id="west-1"
+                >
                   The Unfinished World
-                </a>
+                </button>
 
-                <a href="#mirrorland-preface-exploration">
+                <button
+                  type="button"
+                  data-showroom-fallback-info
+                  data-showroom-destination-kind="internal-info"
+                  data-showroom-info-id="west-2"
+                >
                   Questions in the Glass
-                </a>
+                </button>
 
-                <a href="#showroom-paths-not-yet-open">
+                <button
+                  type="button"
+                  data-showroom-fallback-info
+                  data-showroom-destination-kind="internal-info"
+                  data-showroom-info-id="west-3"
+                >
                   Paths Not Yet Open
-                </a>
+                </button>
 
                 <button
                   type="button"
                   data-showroom-fallback-portal
                   data-showroom-destination-kind="external-route"
+                  data-showroom-info-id="west-4"
                   data-showroom-route="/showroom/globe/audralia/"
                   data-showroom-route-label="Journey into Audralia"
                   data-showroom-route-description="Travel toward Mirrorland’s constructive possibility world and its developing planetary rooms."
                   data-showroom-route-confirmation-required="true"
                   data-showroom-immediate-navigation="false"
+                  data-showroom-route-evidence="declared-existing-route"
                   aria-haspopup="dialog"
                   aria-controls="showroom-route-dialog"
                 >
@@ -369,25 +440,50 @@
               <div class="fallback-navigation__group">
                 <strong>Technical Fronts</strong>
 
-                <a href="#object-gauges">
+                <button
+                  type="button"
+                  data-showroom-fallback-info
+                  data-showroom-destination-kind="internal-info"
+                  data-showroom-info-id="technical-object"
+                >
                   Object
-                </a>
+                </button>
 
-                <a href="#structure-gauges">
+                <button
+                  type="button"
+                  data-showroom-fallback-info
+                  data-showroom-destination-kind="internal-info"
+                  data-showroom-info-id="technical-structure"
+                >
                   Structure
-                </a>
+                </button>
 
-                <a href="#interaction-gauges">
+                <button
+                  type="button"
+                  data-showroom-fallback-info
+                  data-showroom-destination-kind="internal-info"
+                  data-showroom-info-id="technical-interaction"
+                >
                   Interaction
-                </a>
+                </button>
 
-                <a href="#systems-gauges">
+                <button
+                  type="button"
+                  data-showroom-fallback-info
+                  data-showroom-destination-kind="internal-info"
+                  data-showroom-info-id="technical-systems"
+                >
                   Systems
-                </a>
+                </button>
 
-                <a href="#information-front">
+                <button
+                  type="button"
+                  data-showroom-fallback-info
+                  data-showroom-destination-kind="internal-info"
+                  data-showroom-info-id="technical-information"
+                >
                   Information
-                </a>
+                </button>
               </div>
             </nav>
           </div>
@@ -407,6 +503,7 @@
           data-showroom-threshold-introduction
           data-showroom-official-gate
           data-showroom-local-destination-surface="north-1"
+          data-showroom-content-source="north-1"
         >
           <div class="showroom-threshold__copy">
             <div class="showroom-gate-badge">
@@ -457,6 +554,7 @@
                   id="mirrorland-preface-mission"
                   aria-labelledby="mirrorland-preface-mission-title"
                   data-showroom-local-destination-surface="north-2"
+                  data-showroom-content-source="north-2"
                 >
                   <span class="mirrorland-preface__index">
                     01
@@ -493,6 +591,7 @@
                   id="mirrorland-preface-timeline"
                   aria-labelledby="mirrorland-preface-timeline-title"
                   data-showroom-local-destination-surface="north-3"
+                  data-showroom-content-source="north-3"
                 >
                   <span class="mirrorland-preface__index">
                     02
@@ -526,6 +625,7 @@
                 <section
                   id="mirrorland-preface-characters"
                   aria-labelledby="mirrorland-preface-characters-title"
+                  data-showroom-content-source="east-characters"
                 >
                   <span class="mirrorland-preface__index">
                     03
@@ -550,6 +650,7 @@
                   id="mirrorland-preface-exploration"
                   aria-labelledby="mirrorland-preface-exploration-title"
                   data-showroom-local-destination-surface="west-2"
+                  data-showroom-content-source="west-2"
                 >
                   <span class="mirrorland-preface__index">
                     04
@@ -584,6 +685,7 @@
                   id="mirrorland-preface-invitation"
                   aria-labelledby="mirrorland-preface-invitation-title"
                   data-showroom-local-destination-surface="north-4"
+                  data-showroom-content-source="north-4"
                 >
                   <span class="mirrorland-preface__index">
                     05
@@ -657,14 +759,19 @@
             class="showroom-orbit__legend"
             aria-label="Constellation destination key"
           >
-            <span data-showroom-legend-kind="local">
+            <span data-showroom-legend-kind="internal-info">
               <i aria-hidden="true"></i>
-              Quiet stars reveal this Showroom
+              Quiet stars open information
             </span>
 
-            <span data-showroom-legend-kind="portal">
+            <span data-showroom-legend-kind="object-inspect">
               <i aria-hidden="true"></i>
-              Bright stars offer passage elsewhere
+              Object stars explain, then inspect
+            </span>
+
+            <span data-showroom-legend-kind="external-route">
+              <i aria-hidden="true"></i>
+              Bright stars continue to confirmed routes
             </span>
           </div>
 
@@ -861,18 +968,14 @@
                   data-showroom-object-id="north-1"
                   data-showroom-object-size="small"
                   data-showroom-object-shape="child-star"
-                  data-showroom-object-behavior="local"
-                  data-showroom-destination-kind="local-anchor"
-                  data-showroom-target="#arrival"
-                  data-showroom-controller-route="/showroom/#arrival"
-                  data-showroom-content-id="arrival"
-                  data-showroom-lens="story"
-                  data-showroom-return-model="shared-bottom-zone"
-                  data-showroom-return-zone="#showroom-return-zone"
-                  data-showroom-visual-class="LOCAL"
+                  data-showroom-object-behavior="information"
+                  data-showroom-destination-kind="internal-info"
+                  data-showroom-info-id="north-1"
+                  data-showroom-visual-class="INTERNAL_INFO"
                   data-showroom-emphasis="normal"
-                  aria-label="Welcome to Mirrorland. Reveals the entrance within this Showroom."
-                  aria-controls="arrival"
+                  aria-label="Welcome to Mirrorland. Opens an information panel."
+                  aria-haspopup="dialog"
+                  aria-controls="showroom-information-dialog"
                 >
                   <span class="sr-only">
                     Welcome to Mirrorland
@@ -893,19 +996,14 @@
                   data-showroom-object-id="north-2"
                   data-showroom-object-size="small"
                   data-showroom-object-shape="child-star"
-                  data-showroom-object-behavior="local"
-                  data-showroom-destination-kind="local-disclosure-target"
-                  data-showroom-target="#mirrorland-preface-mission"
-                  data-showroom-controller-route="/showroom/#mirrorland-preface-mission"
-                  data-showroom-content-id="mirrorland-preface-mission"
-                  data-showroom-lens="mission"
-                  data-showroom-open-ancestor="#mirrorland-preface"
-                  data-showroom-return-model="shared-bottom-zone"
-                  data-showroom-return-zone="#showroom-return-zone"
-                  data-showroom-visual-class="LOCAL"
+                  data-showroom-object-behavior="information"
+                  data-showroom-destination-kind="internal-info"
+                  data-showroom-info-id="north-2"
+                  data-showroom-visual-class="INTERNAL_INFO"
                   data-showroom-emphasis="normal"
-                  aria-label="Discover why Mirrorland exists within this Showroom."
-                  aria-controls="mirrorland-preface-mission"
+                  aria-label="Discover why Mirrorland exists. Opens an information panel."
+                  aria-haspopup="dialog"
+                  aria-controls="showroom-information-dialog"
                 >
                   <span class="sr-only">
                     Why Mirrorland Exists
@@ -926,19 +1024,14 @@
                   data-showroom-object-id="north-3"
                   data-showroom-object-size="small"
                   data-showroom-object-shape="child-star"
-                  data-showroom-object-behavior="local"
-                  data-showroom-destination-kind="local-disclosure-target"
-                  data-showroom-target="#mirrorland-preface-timeline"
-                  data-showroom-controller-route="/showroom/#mirrorland-preface-timeline"
-                  data-showroom-content-id="mirrorland-preface-timeline"
-                  data-showroom-lens="timeline"
-                  data-showroom-open-ancestor="#mirrorland-preface"
-                  data-showroom-return-model="shared-bottom-zone"
-                  data-showroom-return-zone="#showroom-return-zone"
-                  data-showroom-visual-class="LOCAL"
+                  data-showroom-object-behavior="information"
+                  data-showroom-destination-kind="internal-info"
+                  data-showroom-info-id="north-3"
+                  data-showroom-visual-class="INTERNAL_INFO"
                   data-showroom-emphasis="normal"
-                  aria-label="Read the story of Mirrorland so far within this Showroom."
-                  aria-controls="mirrorland-preface-timeline"
+                  aria-label="Read the story of Mirrorland so far. Opens an information panel."
+                  aria-haspopup="dialog"
+                  aria-controls="showroom-information-dialog"
                 >
                   <span class="sr-only">
                     The Story So Far
@@ -959,19 +1052,14 @@
                   data-showroom-object-id="north-4"
                   data-showroom-object-size="small"
                   data-showroom-object-shape="child-star"
-                  data-showroom-object-behavior="local"
-                  data-showroom-destination-kind="local-disclosure-target"
-                  data-showroom-target="#mirrorland-preface-invitation"
-                  data-showroom-controller-route="/showroom/#mirrorland-preface-invitation"
-                  data-showroom-content-id="mirrorland-preface-invitation"
-                  data-showroom-lens="invitation"
-                  data-showroom-open-ancestor="#mirrorland-preface"
-                  data-showroom-return-model="shared-bottom-zone"
-                  data-showroom-return-zone="#showroom-return-zone"
-                  data-showroom-visual-class="LOCAL"
+                  data-showroom-object-behavior="information"
+                  data-showroom-destination-kind="internal-info"
+                  data-showroom-info-id="north-4"
+                  data-showroom-visual-class="INTERNAL_INFO"
                   data-showroom-emphasis="normal"
-                  aria-label="Step through the Mirrorland invitation within this Showroom."
-                  aria-controls="mirrorland-preface-invitation"
+                  aria-label="Step through the Mirrorland invitation. Opens an information panel."
+                  aria-haspopup="dialog"
+                  aria-controls="showroom-information-dialog"
                 >
                   <span class="sr-only">
                     Step Through the Door
@@ -1006,6 +1094,7 @@
                   data-showroom-object-shape="child-star"
                   data-showroom-object-behavior="portal"
                   data-showroom-destination-kind="external-route"
+                  data-showroom-info-id="east-1"
                   data-showroom-route="/showroom/globe/hearth/jeeves/"
                   data-showroom-controller-route="/showroom/globe/hearth/jeeves/"
                   data-showroom-content-id="jeeves"
@@ -1014,13 +1103,14 @@
                   data-showroom-route-description="Meet the House interface and receive guidance through the estate, the Hearth, Audralia, and Mirrorland."
                   data-showroom-route-confirmation-required="true"
                   data-showroom-immediate-navigation="false"
-                  data-showroom-return-model="shared-bottom-zone"
+                  data-showroom-route-evidence="declared-existing-route"
+                  data-showroom-return-model="modal-or-shared-bottom-zone"
                   data-showroom-return-zone="#showroom-return-zone"
-                  data-showroom-visual-class="PORTAL"
+                  data-showroom-visual-class="EXTERNAL_ROUTE"
                   data-showroom-emphasis="external"
                   aria-label="Talk to Jeeves on another Mirrorland page. Confirmation required."
                   aria-haspopup="dialog"
-                  aria-controls="showroom-route-dialog"
+                  aria-controls="showroom-information-dialog showroom-route-dialog"
                 >
                   <span class="sr-only">
                     Talk to Jeeves
@@ -1043,6 +1133,7 @@
                   data-showroom-object-shape="child-star"
                   data-showroom-object-behavior="portal"
                   data-showroom-destination-kind="external-route"
+                  data-showroom-info-id="east-2"
                   data-showroom-route="/elara/index.html"
                   data-showroom-controller-route="/elara/index.html"
                   data-showroom-content-id="elara"
@@ -1051,13 +1142,14 @@
                   data-showroom-route-description="Enter Elara’s mission, story, personal-origin, and literary conversation surface."
                   data-showroom-route-confirmation-required="true"
                   data-showroom-immediate-navigation="false"
-                  data-showroom-return-model="shared-bottom-zone"
+                  data-showroom-route-evidence="declared-existing-route"
+                  data-showroom-return-model="modal-or-shared-bottom-zone"
                   data-showroom-return-zone="#showroom-return-zone"
-                  data-showroom-visual-class="PORTAL"
+                  data-showroom-visual-class="EXTERNAL_ROUTE"
                   data-showroom-emphasis="external"
                   aria-label="Talk to Elara on another Mirrorland page. Confirmation required."
                   aria-haspopup="dialog"
-                  aria-controls="showroom-route-dialog"
+                  aria-controls="showroom-information-dialog showroom-route-dialog"
                 >
                   <span class="sr-only">
                     Talk to Elara
@@ -1080,6 +1172,7 @@
                   data-showroom-object-shape="child-star"
                   data-showroom-object-behavior="portal"
                   data-showroom-destination-kind="external-route"
+                  data-showroom-info-id="east-3"
                   data-showroom-route="/products/auren/"
                   data-showroom-controller-route="/products/auren/"
                   data-showroom-content-id="auren"
@@ -1088,13 +1181,14 @@
                   data-showroom-route-description="Enter the product-floor specialist’s room for practical systems, product interpretation, and bounded handoffs."
                   data-showroom-route-confirmation-required="true"
                   data-showroom-immediate-navigation="false"
-                  data-showroom-return-model="shared-bottom-zone"
+                  data-showroom-route-evidence="declared-existing-route"
+                  data-showroom-return-model="modal-or-shared-bottom-zone"
                   data-showroom-return-zone="#showroom-return-zone"
-                  data-showroom-visual-class="PORTAL"
+                  data-showroom-visual-class="EXTERNAL_ROUTE"
                   data-showroom-emphasis="external"
                   aria-label="Talk to Auren on another Diamond Gate Bridge page. Confirmation required."
                   aria-haspopup="dialog"
-                  aria-controls="showroom-route-dialog"
+                  aria-controls="showroom-information-dialog showroom-route-dialog"
                 >
                   <span class="sr-only">
                     Talk to Auren
@@ -1117,6 +1211,7 @@
                   data-showroom-object-shape="child-star"
                   data-showroom-object-behavior="portal"
                   data-showroom-destination-kind="external-route"
+                  data-showroom-info-id="east-4"
                   data-showroom-route="/characters/"
                   data-showroom-controller-route="/characters/"
                   data-showroom-content-id="characters-directory"
@@ -1125,14 +1220,15 @@
                   data-showroom-route-description="Open the central character directory and discover the wider Mirrorland cast."
                   data-showroom-route-confirmation-required="true"
                   data-showroom-immediate-navigation="false"
+                  data-showroom-route-evidence="declared-existing-route"
                   data-showroom-route-role="directory"
-                  data-showroom-return-model="shared-bottom-zone"
+                  data-showroom-return-model="modal-or-shared-bottom-zone"
                   data-showroom-return-zone="#showroom-return-zone"
-                  data-showroom-visual-class="PRIMARY_PORTAL"
+                  data-showroom-visual-class="PRIMARY_EXTERNAL_ROUTE"
                   data-showroom-emphasis="primary-external"
                   aria-label="Meet all Mirrorland characters on the character-directory page. Confirmation required."
                   aria-haspopup="dialog"
-                  aria-controls="showroom-route-dialog"
+                  aria-controls="showroom-information-dialog showroom-route-dialog"
                 >
                   <span class="sr-only">
                     Meet All Characters
@@ -1152,7 +1248,7 @@
                 hidden
               >
                 <button
-                  class="showroom-star showroom-star--small showroom-star--local"
+                  class="showroom-star showroom-star--small showroom-star--object"
                   type="button"
                   data-showroom-object
                   data-showroom-semantic-star
@@ -1165,20 +1261,21 @@
                   data-showroom-object-id="south-1"
                   data-showroom-object-size="small"
                   data-showroom-object-shape="child-star"
-                  data-showroom-object-behavior="local"
-                  data-showroom-destination-kind="local-window-experience"
-                  data-showroom-target="#showroom-window-threshold"
-                  data-showroom-controller-route="/showroom/#showroom-window-threshold"
+                  data-showroom-object-behavior="object-inspect"
+                  data-showroom-destination-kind="object-inspect"
+                  data-showroom-info-id="south-1"
+                  data-showroom-object-target="#showroom-window-threshold"
                   data-showroom-content-id="showroom-window-threshold"
                   data-showroom-lens="object-threshold"
                   data-showroom-required-front="#object-gauges"
                   data-showroom-semantic-activation="[data-showroom-window-control]"
-                  data-showroom-return-model="shared-bottom-zone"
+                  data-showroom-return-model="modal-or-shared-bottom-zone"
                   data-showroom-return-zone="#showroom-return-zone"
-                  data-showroom-visual-class="LOCAL"
-                  data-showroom-emphasis="normal"
-                  aria-label="Open the Mirrorland Window within this Showroom."
-                  aria-controls="showroom-window-threshold"
+                  data-showroom-visual-class="OBJECT_INSPECT"
+                  data-showroom-emphasis="object"
+                  aria-label="Open the Mirrorland Window explanation, then inspect the existing Window stage."
+                  aria-haspopup="dialog"
+                  aria-controls="showroom-information-dialog showroom-window-threshold"
                 >
                   <span class="sr-only">
                     Open the Window
@@ -1186,7 +1283,7 @@
                 </button>
 
                 <button
-                  class="showroom-star showroom-star--small showroom-star--local"
+                  class="showroom-star showroom-star--small showroom-star--object"
                   type="button"
                   data-showroom-object
                   data-showroom-semantic-star
@@ -1199,19 +1296,20 @@
                   data-showroom-object-id="south-2"
                   data-showroom-object-size="small"
                   data-showroom-object-shape="child-star"
-                  data-showroom-object-behavior="local"
-                  data-showroom-destination-kind="local-diamond-experience"
-                  data-showroom-target="#showroom-diamond-stage"
-                  data-showroom-controller-route="/showroom/#showroom-diamond-stage"
+                  data-showroom-object-behavior="object-inspect"
+                  data-showroom-destination-kind="object-inspect"
+                  data-showroom-info-id="south-2"
+                  data-showroom-object-target="#showroom-diamond-stage"
                   data-showroom-content-id="showroom-diamond-stage"
                   data-showroom-lens="object"
                   data-showroom-required-front="#object-gauges"
-                  data-showroom-return-model="shared-bottom-zone"
+                  data-showroom-return-model="modal-or-shared-bottom-zone"
                   data-showroom-return-zone="#showroom-return-zone"
-                  data-showroom-visual-class="LOCAL"
-                  data-showroom-emphasis="normal"
-                  aria-label="Behold the independent Diamond exhibit within this Showroom."
-                  aria-controls="showroom-diamond-stage"
+                  data-showroom-visual-class="OBJECT_INSPECT"
+                  data-showroom-emphasis="object"
+                  aria-label="Open the Diamond explanation, then inspect the existing Diamond stage."
+                  aria-haspopup="dialog"
+                  aria-controls="showroom-information-dialog showroom-diamond-stage"
                 >
                   <span class="sr-only">
                     Behold the Diamond
@@ -1232,18 +1330,18 @@
                   data-showroom-object-id="south-3"
                   data-showroom-object-size="small"
                   data-showroom-object-shape="child-star"
-                  data-showroom-object-behavior="local"
-                  data-showroom-destination-kind="local-narrative-surface"
-                  data-showroom-target="#showroom-star-reading"
-                  data-showroom-controller-route="/showroom/#showroom-star-reading"
+                  data-showroom-object-behavior="information"
+                  data-showroom-destination-kind="internal-info"
+                  data-showroom-info-id="south-3"
                   data-showroom-content-id="showroom-star-reading"
                   data-showroom-lens="narrative"
-                  data-showroom-return-model="shared-bottom-zone"
+                  data-showroom-return-model="modal-or-shared-bottom-zone"
                   data-showroom-return-zone="#showroom-return-zone"
-                  data-showroom-visual-class="LOCAL"
+                  data-showroom-visual-class="INTERNAL_INFO"
                   data-showroom-emphasis="normal"
-                  aria-label="Learn how to read the Mirrorland stars within this Showroom."
-                  aria-controls="showroom-star-reading"
+                  aria-label="Learn how to read the Mirrorland stars. Opens an information panel."
+                  aria-haspopup="dialog"
+                  aria-controls="showroom-information-dialog"
                 >
                   <span class="sr-only">
                     Read the Stars
@@ -1266,6 +1364,7 @@
                   data-showroom-object-shape="child-star"
                   data-showroom-object-behavior="portal"
                   data-showroom-destination-kind="external-route"
+                  data-showroom-info-id="south-4"
                   data-showroom-route="/showroom/globe/hearth/"
                   data-showroom-controller-route="/showroom/globe/hearth/"
                   data-showroom-content-id="hearth"
@@ -1274,13 +1373,14 @@
                   data-showroom-route-description="Leave the Showroom for the inhabited facility where the House interface, characters, and Audralia-facing systems meet."
                   data-showroom-route-confirmation-required="true"
                   data-showroom-immediate-navigation="false"
-                  data-showroom-return-model="shared-bottom-zone"
+                  data-showroom-route-evidence="declared-existing-route"
+                  data-showroom-return-model="modal-or-shared-bottom-zone"
                   data-showroom-return-zone="#showroom-return-zone"
-                  data-showroom-visual-class="PORTAL"
+                  data-showroom-visual-class="EXTERNAL_ROUTE"
                   data-showroom-emphasis="external"
                   aria-label="Enter the Hearth facility on another Mirrorland page. Confirmation required."
                   aria-haspopup="dialog"
-                  aria-controls="showroom-route-dialog"
+                  aria-controls="showroom-information-dialog showroom-route-dialog"
                 >
                   <span class="sr-only">
                     Enter the Hearth
@@ -1313,18 +1413,18 @@
                   data-showroom-object-id="west-1"
                   data-showroom-object-size="small"
                   data-showroom-object-shape="child-star"
-                  data-showroom-object-behavior="local"
-                  data-showroom-destination-kind="local-narrative-surface"
-                  data-showroom-target="#showroom-unfinished-world"
-                  data-showroom-controller-route="/showroom/#showroom-unfinished-world"
+                  data-showroom-object-behavior="information"
+                  data-showroom-destination-kind="internal-info"
+                  data-showroom-info-id="west-1"
                   data-showroom-content-id="showroom-unfinished-world"
                   data-showroom-lens="unfinished"
-                  data-showroom-return-model="shared-bottom-zone"
+                  data-showroom-return-model="modal-or-shared-bottom-zone"
                   data-showroom-return-zone="#showroom-return-zone"
-                  data-showroom-visual-class="LOCAL"
+                  data-showroom-visual-class="INTERNAL_INFO"
                   data-showroom-emphasis="normal"
-                  aria-label="Discover what remains unfinished in Mirrorland within this Showroom."
-                  aria-controls="showroom-unfinished-world"
+                  aria-label="Discover what remains unfinished in Mirrorland. Opens an information panel."
+                  aria-haspopup="dialog"
+                  aria-controls="showroom-information-dialog"
                 >
                   <span class="sr-only">
                     The Unfinished World
@@ -1345,19 +1445,19 @@
                   data-showroom-object-id="west-2"
                   data-showroom-object-size="small"
                   data-showroom-object-shape="child-star"
-                  data-showroom-object-behavior="local"
-                  data-showroom-destination-kind="local-disclosure-target"
-                  data-showroom-target="#mirrorland-preface-exploration"
-                  data-showroom-controller-route="/showroom/#mirrorland-preface-exploration"
+                  data-showroom-object-behavior="information"
+                  data-showroom-destination-kind="internal-info"
+                  data-showroom-info-id="west-2"
                   data-showroom-content-id="mirrorland-preface-exploration"
                   data-showroom-lens="exploration"
                   data-showroom-open-ancestor="#mirrorland-preface"
-                  data-showroom-return-model="shared-bottom-zone"
+                  data-showroom-return-model="modal-or-shared-bottom-zone"
                   data-showroom-return-zone="#showroom-return-zone"
-                  data-showroom-visual-class="LOCAL"
+                  data-showroom-visual-class="INTERNAL_INFO"
                   data-showroom-emphasis="normal"
-                  aria-label="Explore the unresolved questions reflected in Mirrorland’s glass."
-                  aria-controls="mirrorland-preface-exploration"
+                  aria-label="Explore unresolved questions reflected in Mirrorland’s glass. Opens an information panel."
+                  aria-haspopup="dialog"
+                  aria-controls="showroom-information-dialog"
                 >
                   <span class="sr-only">
                     Questions in the Glass
@@ -1378,18 +1478,18 @@
                   data-showroom-object-id="west-3"
                   data-showroom-object-size="small"
                   data-showroom-object-shape="child-star"
-                  data-showroom-object-behavior="local"
-                  data-showroom-destination-kind="local-narrative-surface"
-                  data-showroom-target="#showroom-paths-not-yet-open"
-                  data-showroom-controller-route="/showroom/#showroom-paths-not-yet-open"
+                  data-showroom-object-behavior="information"
+                  data-showroom-destination-kind="internal-info"
+                  data-showroom-info-id="west-3"
                   data-showroom-content-id="showroom-paths-not-yet-open"
                   data-showroom-lens="future"
-                  data-showroom-return-model="shared-bottom-zone"
+                  data-showroom-return-model="modal-or-shared-bottom-zone"
                   data-showroom-return-zone="#showroom-return-zone"
-                  data-showroom-visual-class="LOCAL"
+                  data-showroom-visual-class="INTERNAL_INFO"
                   data-showroom-emphasis="normal"
-                  aria-label="Discover the Mirrorland paths that are not yet open."
-                  aria-controls="showroom-paths-not-yet-open"
+                  aria-label="Discover the Mirrorland paths that are not yet open. Opens an information panel."
+                  aria-haspopup="dialog"
+                  aria-controls="showroom-information-dialog"
                 >
                   <span class="sr-only">
                     Paths Not Yet Open
@@ -1412,6 +1512,7 @@
                   data-showroom-object-shape="child-star"
                   data-showroom-object-behavior="portal"
                   data-showroom-destination-kind="external-route"
+                  data-showroom-info-id="west-4"
                   data-showroom-route="/showroom/globe/audralia/"
                   data-showroom-controller-route="/showroom/globe/audralia/"
                   data-showroom-content-id="audralia"
@@ -1420,13 +1521,14 @@
                   data-showroom-route-description="Travel toward Mirrorland’s constructive possibility world and its developing planetary rooms."
                   data-showroom-route-confirmation-required="true"
                   data-showroom-immediate-navigation="false"
-                  data-showroom-return-model="shared-bottom-zone"
+                  data-showroom-route-evidence="declared-existing-route"
+                  data-showroom-return-model="modal-or-shared-bottom-zone"
                   data-showroom-return-zone="#showroom-return-zone"
-                  data-showroom-visual-class="PORTAL"
+                  data-showroom-visual-class="EXTERNAL_ROUTE"
                   data-showroom-emphasis="external"
                   aria-label="Journey into Audralia on another Mirrorland page. Confirmation required."
                   aria-haspopup="dialog"
-                  aria-controls="showroom-route-dialog"
+                  aria-controls="showroom-information-dialog showroom-route-dialog"
                 >
                   <span class="sr-only">
                     Journey into Audralia
@@ -1510,7 +1612,7 @@
               <div>
                 <dt>Route</dt>
                 <dd data-showroom-controller-panel-route-status>
-                  No route prepared
+                  No destination prepared
                 </dd>
               </div>
 
@@ -1530,7 +1632,7 @@
                 disabled
               >
                 <span data-showroom-controller-enter-label>
-                  Enter Selection
+                  Open Selection
                 </span>
               </button>
 
@@ -1574,14 +1676,14 @@
             </span>
 
             <h3 id="showroom-orbit-guide-title">
-              Choose. Open. Discover. Return.
+              Choose. Read. Inspect or Continue. Return.
             </h3>
 
             <ol>
               <li>Select one cardinal path</li>
               <li>Open its four-star cluster</li>
-              <li>Select a local or portal star</li>
-              <li>Use the controller panel to continue</li>
+              <li>Select a star to open its explanation</li>
+              <li>Return, inspect the object, or continue to a confirmed route</li>
             </ol>
           </aside>
         </section>
@@ -1609,18 +1711,18 @@
               </strong>
 
               <small>
-                Constellation, Diamond, and future-object stages remain
-                independent.
+                Constellation, information panels, Diamond, and future-object
+                stages remain independent.
               </small>
             </span>
           </summary>
 
           <div class="showroom-instructions__body">
             <p>
-              Use the constellation to choose a path. Use the controller
-              panel to enter the selected destination. The Diamond below
-              has its own renderer, camera, zoom, touch, pointer state,
-              controls, and lifecycle.
+              Use the constellation to choose a path. Stars open
+              information panels first. Object stars can then inspect the
+              existing object stage. External stars continue only through
+              confirmed routes.
             </p>
           </div>
         </details>
@@ -1630,6 +1732,7 @@
         id="showroom-diamond-reveal"
         class="panel showroom-diamond-reveal chamber-exhibit"
         aria-labelledby="showroom-diamond-reveal-title"
+        data-showroom-retained-object-stage
       >
         <header class="showroom-diamond-reveal__heading">
           <div class="kicker">
@@ -1652,6 +1755,7 @@
           data-showroom-reveal-scene
           data-showroom-window-state="closed"
           data-showroom-local-destination-surface="south-1"
+          data-showroom-object-inspect-target="south-1"
         >
           <div
             class="showroom-diamond-layer"
@@ -1664,6 +1768,7 @@
                   class="diamond-stage"
                   data-showroom-diamond-stage
                   data-showroom-local-destination-surface="south-2"
+                  data-showroom-object-inspect-target="south-2"
                   data-diamond-object-stage="true"
                   data-diamond-generation="G3"
                   data-diamond-render-mode="native-webgl"
@@ -1874,7 +1979,8 @@
         data-showroom-front
         data-showroom-front-kind="gauge"
         data-showroom-gauge-set="object"
-        data-showroom-front-state="fallback"
+        data-showroom-front-state="modal-source"
+        data-showroom-modal-source="technical-object"
         aria-labelledby="object-gauges-title"
       >
         <header class="showroom-front__heading">
@@ -1898,7 +2004,7 @@
           class="showroom-gauge-dashboard showroom-gauge-dashboard--compact"
           data-showroom-gauge-dashboard
           data-gauge-dashboard-id="object"
-          data-gauge-dashboard-state="static"
+          data-gauge-dashboard-state="modal-source"
         >
           <div
             class="showroom-gauge-selector showroom-gauge-selector--metrics"
@@ -2101,6 +2207,8 @@
       <section
         class="panel showroom-narrative-region"
         aria-labelledby="showroom-narrative-region-title"
+        data-showroom-narrative-region
+        data-showroom-modal-source-region
       >
         <header>
           <div class="kicker">
@@ -2117,6 +2225,7 @@
             id="showroom-star-reading"
             class="showroom-narrative-destination"
             data-showroom-local-destination-surface="south-3"
+            data-showroom-content-source="south-3"
             aria-labelledby="showroom-star-reading-title"
           >
             <h3 id="showroom-star-reading-title">
@@ -2142,6 +2251,7 @@
             id="showroom-unfinished-world"
             class="showroom-narrative-destination"
             data-showroom-local-destination-surface="west-1"
+            data-showroom-content-source="west-1"
             aria-labelledby="showroom-unfinished-world-title"
           >
             <h3 id="showroom-unfinished-world-title">
@@ -2167,6 +2277,7 @@
             id="showroom-paths-not-yet-open"
             class="showroom-narrative-destination"
             data-showroom-local-destination-surface="west-3"
+            data-showroom-content-source="west-3"
             aria-labelledby="showroom-paths-not-yet-open-title"
           >
             <h3 id="showroom-paths-not-yet-open-title">
@@ -2192,6 +2303,7 @@
       <div
         class="showroom-front-host"
         data-showroom-front-host
+        data-showroom-modal-source-host
         aria-live="polite"
       >
         <section
@@ -2200,7 +2312,8 @@
           data-showroom-front
           data-showroom-front-kind="gauge"
           data-showroom-gauge-set="structure"
-          data-showroom-front-state="fallback"
+          data-showroom-front-state="modal-source"
+          data-showroom-modal-source="technical-structure"
           aria-labelledby="structure-gauges-title"
         >
           <header class="showroom-front__heading">
@@ -2224,7 +2337,7 @@
             class="showroom-gauge-dashboard showroom-gauge-dashboard--compact"
             data-showroom-gauge-dashboard
             data-gauge-dashboard-id="structure"
-            data-gauge-dashboard-state="static"
+            data-gauge-dashboard-state="modal-source"
           >
             <div
               class="showroom-gauge-selector showroom-gauge-selector--metrics"
@@ -2362,7 +2475,8 @@
           data-showroom-front
           data-showroom-front-kind="gauge"
           data-showroom-gauge-set="interaction"
-          data-showroom-front-state="fallback"
+          data-showroom-front-state="modal-source"
+          data-showroom-modal-source="technical-interaction"
           aria-labelledby="interaction-gauges-title"
         >
           <header class="showroom-front__heading">
@@ -2386,7 +2500,7 @@
             class="showroom-gauge-dashboard showroom-gauge-dashboard--compact"
             data-showroom-gauge-dashboard
             data-gauge-dashboard-id="interaction"
-            data-gauge-dashboard-state="static"
+            data-gauge-dashboard-state="modal-source"
           >
             <div
               class="showroom-gauge-selector showroom-gauge-selector--capabilities"
@@ -2512,7 +2626,8 @@
           data-showroom-front
           data-showroom-front-kind="gauge"
           data-showroom-gauge-set="systems"
-          data-showroom-front-state="fallback"
+          data-showroom-front-state="modal-source"
+          data-showroom-modal-source="technical-systems"
           aria-labelledby="systems-gauges-title"
         >
           <header class="showroom-front__heading">
@@ -2536,7 +2651,7 @@
             class="showroom-gauge-dashboard showroom-gauge-dashboard--compact"
             data-showroom-gauge-dashboard
             data-gauge-dashboard-id="systems"
-            data-gauge-dashboard-state="static"
+            data-gauge-dashboard-state="modal-source"
           >
             <div
               class="showroom-gauge-selector showroom-gauge-selector--status"
@@ -2637,7 +2752,8 @@
           class="panel showroom-front showroom-information-front chamber-construction"
           data-showroom-front
           data-showroom-front-kind="information"
-          data-showroom-front-state="fallback"
+          data-showroom-front-state="modal-source"
+          data-showroom-modal-source="technical-information"
           data-showroom-information-front
           aria-labelledby="information-front-title"
         >
@@ -2657,7 +2773,7 @@
             class="showroom-information-tabs"
             data-showroom-information-tabs
             data-information-tabs-id="showroom-information"
-            data-showroom-information-state="static"
+            data-showroom-information-state="modal-source"
           >
             <div
               class="showroom-information-tablist"
@@ -2828,11 +2944,13 @@
           type="button"
           data-showroom-fallback-portal
           data-showroom-destination-kind="external-route"
+          data-showroom-info-id="east-2"
           data-showroom-route="/elara/index.html"
           data-showroom-route-label="Talk to Elara"
           data-showroom-route-description="Enter Elara’s mission, story, personal-origin, and literary conversation surface."
           data-showroom-route-confirmation-required="true"
           data-showroom-immediate-navigation="false"
+          data-showroom-route-evidence="declared-existing-route"
           aria-label="Talk to Elara on another Mirrorland page. Confirmation required."
           aria-haspopup="dialog"
           aria-controls="showroom-route-dialog"
@@ -2849,7 +2967,836 @@
     <output data-showroom-compositor-receipt hidden></output>
     <output data-showroom-crystals-receipt hidden></output>
     <output data-showroom-window-receipt hidden></output>
+    <output data-showroom-information-receipt hidden></output>
   </div>
+
+  <dialog
+    id="showroom-information-dialog"
+    class="showroom-information-dialog"
+    data-showroom-information-dialog
+    data-showroom-information-dialog-state="closed"
+    data-showroom-active-info-id=""
+    data-showroom-active-destination-kind=""
+    data-showroom-active-object-target=""
+    data-showroom-active-route=""
+    aria-labelledby="showroom-information-dialog-title"
+    aria-describedby="showroom-information-dialog-description"
+  >
+    <div
+      class="showroom-information-dialog__shell"
+      data-showroom-information-dialog-shell
+    >
+      <header class="showroom-information-dialog__header">
+        <div>
+          <span
+            class="showroom-information-dialog__eyebrow"
+            data-showroom-information-dialog-identity
+          >
+            Showroom Selection
+          </span>
+
+          <h2
+            id="showroom-information-dialog-title"
+            data-showroom-information-dialog-title
+          >
+            Select a star to begin.
+          </h2>
+        </div>
+
+        <button
+          class="dialog-close"
+          type="button"
+          data-showroom-information-close
+          aria-label="Close information panel and return to the constellation"
+        >
+          ×
+        </button>
+      </header>
+
+      <p
+        id="showroom-information-dialog-description"
+        class="showroom-information-dialog__description"
+        data-showroom-information-dialog-description
+      >
+        Star selections open a focused explanation before inspection or travel.
+      </p>
+
+      <div
+        class="showroom-information-dialog__tabs"
+        role="tablist"
+        aria-label="Selected star explanation categories"
+        data-showroom-information-dialog-tabs
+      >
+        <button
+          id="showroom-information-tab-narrative"
+          type="button"
+          role="tab"
+          data-showroom-info-tab="narrative"
+          aria-selected="true"
+          aria-controls="showroom-information-panel-narrative"
+        >
+          Narrative
+        </button>
+
+        <button
+          id="showroom-information-tab-practical"
+          type="button"
+          role="tab"
+          data-showroom-info-tab="practical"
+          aria-selected="false"
+          aria-controls="showroom-information-panel-practical"
+        >
+          Practical
+        </button>
+
+        <button
+          id="showroom-information-tab-technical"
+          type="button"
+          role="tab"
+          data-showroom-info-tab="technical"
+          aria-selected="false"
+          aria-controls="showroom-information-panel-technical"
+        >
+          Technical
+        </button>
+      </div>
+
+      <div
+        class="showroom-information-dialog__panels"
+        data-showroom-information-dialog-panels
+      >
+        <section
+          id="showroom-information-panel-narrative"
+          class="showroom-information-dialog__panel"
+          role="tabpanel"
+          data-showroom-info-panel="narrative"
+          aria-labelledby="showroom-information-tab-narrative"
+        >
+          <p data-showroom-info-panel-copy>
+            Choose a star to read its story-world explanation.
+          </p>
+        </section>
+
+        <section
+          id="showroom-information-panel-practical"
+          class="showroom-information-dialog__panel"
+          role="tabpanel"
+          data-showroom-info-panel="practical"
+          aria-labelledby="showroom-information-tab-practical"
+          hidden
+        >
+          <p data-showroom-info-panel-copy>
+            Choose a star to read its real-world relevance.
+          </p>
+        </section>
+
+        <section
+          id="showroom-information-panel-technical"
+          class="showroom-information-dialog__panel"
+          role="tabpanel"
+          data-showroom-info-panel="technical"
+          aria-labelledby="showroom-information-tab-technical"
+          hidden
+        >
+          <p data-showroom-info-panel-copy>
+            Choose a star to read its implementation and evidence boundary.
+          </p>
+        </section>
+      </div>
+
+      <div
+        class="showroom-information-dialog__actions"
+        data-showroom-information-dialog-actions
+      >
+        <button
+          class="button button-gold"
+          type="button"
+          data-showroom-info-return-to-orbit
+        >
+          Return to Orbit
+        </button>
+
+        <button
+          class="button"
+          type="button"
+          data-showroom-info-inspect-object
+          hidden
+        >
+          Inspect Object
+        </button>
+
+        <button
+          class="button"
+          type="button"
+          data-showroom-info-continue-route
+          hidden
+        >
+          Continue to Destination
+        </button>
+      </div>
+    </div>
+  </dialog>
+
+  <section
+    class="showroom-information-source-bank"
+    data-showroom-information-source-bank
+    hidden
+  >
+    <article
+      data-showroom-info-source
+      data-showroom-info-id="north-1"
+      data-showroom-info-title="Welcome to Mirrorland"
+      data-showroom-info-identity="North · The Story Begins"
+      data-showroom-destination-kind="internal-info"
+    >
+      <div data-showroom-info-source-panel="narrative">
+        <p>
+          Mirrorland opens through the Showroom. This is the visitor’s
+          first threshold into a world of characters, objects, questions,
+          systems, and unfinished paths.
+        </p>
+      </div>
+
+      <div data-showroom-info-source-panel="practical">
+        <p>
+          The entrance gives visitors orientation before choice. It
+          reduces confusion by explaining what the Showroom is before
+          asking the visitor to navigate it.
+        </p>
+      </div>
+
+      <div data-showroom-info-source-panel="technical">
+        <p>
+          This star is an internal information destination. It should open
+          the reusable information dialog and should not depend on a fake
+          route or anchor execution path.
+        </p>
+      </div>
+    </article>
+
+    <article
+      data-showroom-info-source
+      data-showroom-info-id="north-2"
+      data-showroom-info-title="Why Mirrorland Exists"
+      data-showroom-info-identity="North · Mission"
+      data-showroom-destination-kind="internal-info"
+    >
+      <div data-showroom-info-source-panel="narrative">
+        <p>
+          Mirrorland exists so consequential ideas can be examined before
+          the real world is forced to absorb their consequences.
+        </p>
+      </div>
+
+      <div data-showroom-info-source-panel="practical">
+        <p>
+          The practical value is rehearsal. Visitors can inspect
+          assumptions, compare possible outcomes, and understand stakes
+          before action is required elsewhere.
+        </p>
+      </div>
+
+      <div data-showroom-info-source-panel="technical">
+        <p>
+          This is a modal information destination sourced from the
+          Mirrorland preface. It does not require destination routing and
+          should not alter controller, compositor, crystal, or interaction
+          ownership.
+        </p>
+      </div>
+    </article>
+
+    <article
+      data-showroom-info-source
+      data-showroom-info-id="north-3"
+      data-showroom-info-title="The Story So Far"
+      data-showroom-info-identity="North · Timeline"
+      data-showroom-destination-kind="internal-info"
+    >
+      <div data-showroom-info-source-panel="narrative">
+        <p>
+          Mirrorland is a world under construction. Its rooms,
+          instruments, characters, simulations, and objects become
+          available as they are built.
+        </p>
+      </div>
+
+      <div data-showroom-info-source-panel="practical">
+        <p>
+          This distinguishes available systems from planned systems so
+          visitors are not asked to trust unfinished work as if it were
+          already complete.
+        </p>
+      </div>
+
+      <div data-showroom-info-source-panel="technical">
+        <p>
+          The timeline is an internal information panel. It should be
+          rendered through destination intent resolution, not through a
+          long-scroll anchor as the primary user experience.
+        </p>
+      </div>
+    </article>
+
+    <article
+      data-showroom-info-source
+      data-showroom-info-id="north-4"
+      data-showroom-info-title="Step Through the Door"
+      data-showroom-info-identity="North · Invitation"
+      data-showroom-destination-kind="internal-info"
+    >
+      <div data-showroom-info-source-panel="narrative">
+        <p>
+          Enter with curiosity. Follow the characters. Open the systems.
+          Inspect what can be inspected. Question what remains unfinished.
+        </p>
+      </div>
+
+      <div data-showroom-info-source-panel="practical">
+        <p>
+          The invitation frames the visitor’s role: observe, inspect,
+          return, and continue only when a real destination or object is
+          available.
+        </p>
+      </div>
+
+      <div data-showroom-info-source-panel="technical">
+        <p>
+          This destination remains internal information. It should close
+          cleanly through Return to Orbit and restore the constellation
+          state without requiring a route.
+        </p>
+      </div>
+    </article>
+
+    <article
+      data-showroom-info-source
+      data-showroom-info-id="east-1"
+      data-showroom-info-title="Talk to Jeeves"
+      data-showroom-info-identity="East · Character Portal"
+      data-showroom-destination-kind="external-route"
+      data-showroom-route="/showroom/globe/hearth/jeeves/"
+      data-showroom-route-label="Talk to Jeeves"
+      data-showroom-route-evidence="declared-existing-route"
+    >
+      <div data-showroom-info-source-panel="narrative">
+        <p>
+          Jeeves is the House interface: a guide through the estate, the
+          Hearth, Audralia, and Mirrorland’s lived systems.
+        </p>
+      </div>
+
+      <div data-showroom-info-source-panel="practical">
+        <p>
+          Jeeves gives the visitor a guided entry point rather than
+          leaving them alone in the architecture.
+        </p>
+      </div>
+
+      <div data-showroom-info-source-panel="technical">
+        <p>
+          This star may expose Continue only while the route remains
+          verified. If the route cannot be confirmed in deployment, this
+          star must be downgraded to internal-info.
+        </p>
+      </div>
+    </article>
+
+    <article
+      data-showroom-info-source
+      data-showroom-info-id="east-2"
+      data-showroom-info-title="Talk to Elara"
+      data-showroom-info-identity="East · Character Portal"
+      data-showroom-destination-kind="external-route"
+      data-showroom-route="/elara/index.html"
+      data-showroom-route-label="Talk to Elara"
+      data-showroom-route-evidence="declared-existing-route"
+    >
+      <div data-showroom-info-source-panel="narrative">
+        <p>
+          Elara is the prominent Mirrorland guide for mission, story,
+          personal-origin, and literary conversation surfaces.
+        </p>
+      </div>
+
+      <div data-showroom-info-source-panel="practical">
+        <p>
+          Elara provides a human-facing entry point for understanding the
+          world’s purpose before navigating deeper systems.
+        </p>
+      </div>
+
+      <div data-showroom-info-source-panel="technical">
+        <p>
+          This is a confirmed external route candidate and should use
+          route confirmation before navigation.
+        </p>
+      </div>
+    </article>
+
+    <article
+      data-showroom-info-source
+      data-showroom-info-id="east-3"
+      data-showroom-info-title="Talk to Auren"
+      data-showroom-info-identity="East · Character Portal"
+      data-showroom-destination-kind="external-route"
+      data-showroom-route="/products/auren/"
+      data-showroom-route-label="Talk to Auren"
+      data-showroom-route-evidence="declared-existing-route"
+    >
+      <div data-showroom-info-source-panel="narrative">
+        <p>
+          Auren is the product-floor specialist, focused on practical
+          systems, product interpretation, and bounded handoffs.
+        </p>
+      </div>
+
+      <div data-showroom-info-source-panel="practical">
+        <p>
+          Auren connects Mirrorland’s story-world framing to practical
+          systems and product-facing interpretation.
+        </p>
+      </div>
+
+      <div data-showroom-info-source-panel="technical">
+        <p>
+          This destination may remain external only if the deployed route
+          exists. Otherwise, destination execution must downgrade it to
+          internal-info.
+        </p>
+      </div>
+    </article>
+
+    <article
+      data-showroom-info-source
+      data-showroom-info-id="east-4"
+      data-showroom-info-title="Meet All Characters"
+      data-showroom-info-identity="East · Character Directory"
+      data-showroom-destination-kind="external-route"
+      data-showroom-route="/characters/"
+      data-showroom-route-label="Meet All Characters"
+      data-showroom-route-evidence="declared-existing-route"
+    >
+      <div data-showroom-info-source-panel="narrative">
+        <p>
+          The character directory opens the wider Mirrorland cast beyond
+          the individual guide surfaces.
+        </p>
+      </div>
+
+      <div data-showroom-info-source-panel="practical">
+        <p>
+          A directory helps visitors choose who to follow and understand
+          how different characters interpret the world.
+        </p>
+      </div>
+
+      <div data-showroom-info-source-panel="technical">
+        <p>
+          This is the primary external character portal and should remain
+          confirmation-gated.
+        </p>
+      </div>
+    </article>
+
+    <article
+      data-showroom-info-source
+      data-showroom-info-id="south-1"
+      data-showroom-info-title="Open the Window"
+      data-showroom-info-identity="South · Object Threshold"
+      data-showroom-destination-kind="object-inspect"
+      data-showroom-object-target="#showroom-window-threshold"
+    >
+      <div data-showroom-info-source-panel="narrative">
+        <p>
+          The Window is the threshold before the Diamond. It frames the
+          act of looking into Mirrorland before inspecting the central
+          object.
+        </p>
+      </div>
+
+      <div data-showroom-info-source-panel="practical">
+        <p>
+          The Window separates invitation from inspection. It lets a
+          visitor understand that the object is meaningful before asking
+          them to interact with it.
+        </p>
+      </div>
+
+      <div data-showroom-info-source-panel="technical">
+        <p>
+          The object is not placed inside the modal. Inspect Object should
+          close the modal and move focus to the retained Window and
+          Diamond section.
+        </p>
+      </div>
+    </article>
+
+    <article
+      data-showroom-info-source
+      data-showroom-info-id="south-2"
+      data-showroom-info-title="Behold the Diamond"
+      data-showroom-info-identity="South · Central Object"
+      data-showroom-destination-kind="object-inspect"
+      data-showroom-object-target="#showroom-diamond-stage"
+    >
+      <div data-showroom-info-source-panel="narrative">
+        <p>
+          The Diamond is the central Mirrorland object: a visible gem and
+          an inspectable lattice at the door of the world.
+        </p>
+      </div>
+
+      <div data-showroom-info-source-panel="practical">
+        <p>
+          The Diamond gives visitors a concrete object to inspect rather
+          than asking them to understand the world only through text.
+        </p>
+      </div>
+
+      <div data-showroom-info-source-panel="technical">
+        <p>
+          The Diamond retains its own renderer, canvas, controls, pointer
+          state, camera, zoom, lifecycle, and fallback. It must not be
+          moved into the information modal.
+        </p>
+      </div>
+    </article>
+
+    <article
+      data-showroom-info-source
+      data-showroom-info-id="south-3"
+      data-showroom-info-title="Read the Stars"
+      data-showroom-info-identity="South · Constellation Meaning"
+      data-showroom-destination-kind="internal-info"
+    >
+      <div data-showroom-info-source-panel="narrative">
+        <p>
+          North begins the story. East introduces the inhabitants. South
+          reveals wonders. West turns toward what remains hidden,
+          unfinished, or unknown.
+        </p>
+      </div>
+
+      <div data-showroom-info-source-panel="practical">
+        <p>
+          The four directions reduce decision overload by grouping
+          destinations by purpose instead of presenting everything as one
+          flat list.
+        </p>
+      </div>
+
+      <div data-showroom-info-source-panel="technical">
+        <p>
+          This star explains the constellation model and should open as
+          internal information without route execution.
+        </p>
+      </div>
+    </article>
+
+    <article
+      data-showroom-info-source
+      data-showroom-info-id="south-4"
+      data-showroom-info-title="Enter the Hearth"
+      data-showroom-info-identity="South · World Portal"
+      data-showroom-destination-kind="external-route"
+      data-showroom-route="/showroom/globe/hearth/"
+      data-showroom-route-label="Enter the Hearth"
+      data-showroom-route-evidence="declared-existing-route"
+    >
+      <div data-showroom-info-source-panel="narrative">
+        <p>
+          The Hearth is the inhabited facility where the House interface,
+          characters, and Audralia-facing systems meet.
+        </p>
+      </div>
+
+      <div data-showroom-info-source-panel="practical">
+        <p>
+          The Hearth turns the Showroom from a presentation gateway into
+          a navigable inhabited place.
+        </p>
+      </div>
+
+      <div data-showroom-info-source-panel="technical">
+        <p>
+          This star may expose Continue only while the route remains real
+          and deployable. Confirmation remains required.
+        </p>
+      </div>
+    </article>
+
+    <article
+      data-showroom-info-source
+      data-showroom-info-id="west-1"
+      data-showroom-info-title="The Unfinished World"
+      data-showroom-info-identity="West · Unfinished"
+      data-showroom-destination-kind="internal-info"
+    >
+      <div data-showroom-info-source-panel="narrative">
+        <p>
+          Some rooms have not yet found their final shape. Their
+          incompleteness remains visible rather than being concealed as
+          completion.
+        </p>
+      </div>
+
+      <div data-showroom-info-source-panel="practical">
+        <p>
+          Showing unfinished work honestly helps visitors distinguish
+          available experiences from planned or incomplete systems.
+        </p>
+      </div>
+
+      <div data-showroom-info-source-panel="technical">
+        <p>
+          This is an internal information destination and must not be
+          represented as a route until a real target exists.
+        </p>
+      </div>
+    </article>
+
+    <article
+      data-showroom-info-source
+      data-showroom-info-id="west-2"
+      data-showroom-info-title="Questions in the Glass"
+      data-showroom-info-identity="West · Exploration"
+      data-showroom-destination-kind="internal-info"
+    >
+      <div data-showroom-info-source-panel="narrative">
+        <p>
+          No single path contains all of Mirrorland. The world is
+          discovered by moving among its parts and asking what remains
+          unresolved.
+        </p>
+      </div>
+
+      <div data-showroom-info-source-panel="practical">
+        <p>
+          The visitor is encouraged to inspect uncertainty rather than
+          avoid it. The goal is orientation, not forced certainty.
+        </p>
+      </div>
+
+      <div data-showroom-info-source-panel="technical">
+        <p>
+          This panel is sourced from the exploration preface and should
+          remain modal information unless a real destination is later
+          created.
+        </p>
+      </div>
+    </article>
+
+    <article
+      data-showroom-info-source
+      data-showroom-info-id="west-3"
+      data-showroom-info-title="Paths Not Yet Open"
+      data-showroom-info-identity="West · Future Paths"
+      data-showroom-destination-kind="internal-info"
+    >
+      <div data-showroom-info-source-panel="narrative">
+        <p>
+          Some connections have not yet become safe, coherent, or
+          complete enough to invite a visitor through.
+        </p>
+      </div>
+
+      <div data-showroom-info-source-panel="practical">
+        <p>
+          A closed path should be named as closed instead of disguised as
+          a destination. That protects trust in the navigation system.
+        </p>
+      </div>
+
+      <div data-showroom-info-source-panel="technical">
+        <p>
+          This star must not expose a fake route. It remains
+          internal-info until a deployed path exists.
+        </p>
+      </div>
+    </article>
+
+    <article
+      data-showroom-info-source
+      data-showroom-info-id="west-4"
+      data-showroom-info-title="Journey into Audralia"
+      data-showroom-info-identity="West · World Portal"
+      data-showroom-destination-kind="external-route"
+      data-showroom-route="/showroom/globe/audralia/"
+      data-showroom-route-label="Journey into Audralia"
+      data-showroom-route-evidence="declared-existing-route"
+    >
+      <div data-showroom-info-source-panel="narrative">
+        <p>
+          Audralia is Mirrorland’s constructive possibility world and its
+          developing planetary room system.
+        </p>
+      </div>
+
+      <div data-showroom-info-source-panel="practical">
+        <p>
+          Audralia gives future-facing systems a world context rather
+          than leaving them as disconnected technical claims.
+        </p>
+      </div>
+
+      <div data-showroom-info-source-panel="technical">
+        <p>
+          This star may remain external only while the route exists and
+          is deployable. Otherwise, it must be downgraded to internal-info.
+        </p>
+      </div>
+    </article>
+
+    <article
+      data-showroom-info-source
+      data-showroom-info-id="technical-object"
+      data-showroom-info-title="Object Front"
+      data-showroom-info-identity="Technical · Object"
+      data-showroom-destination-kind="internal-info"
+    >
+      <div data-showroom-info-source-panel="narrative">
+        <p>
+          The Diamond is the central object that makes the Showroom more
+          than a list of links.
+        </p>
+      </div>
+
+      <div data-showroom-info-source-panel="practical">
+        <p>
+          A single inspectable object gives visitors a stable focal point
+          while the wider world continues to develop.
+        </p>
+      </div>
+
+      <div data-showroom-info-source-panel="technical">
+        <p>
+          The object front records public views, geometry authority,
+          renderer state, and Window state. These facts should support
+          the modal and retained object stage rather than dominate the
+          primary page flow.
+        </p>
+      </div>
+    </article>
+
+    <article
+      data-showroom-info-source
+      data-showroom-info-id="technical-structure"
+      data-showroom-info-title="Structure Front"
+      data-showroom-info-identity="Technical · Structure"
+      data-showroom-destination-kind="internal-info"
+    >
+      <div data-showroom-info-source-panel="narrative">
+        <p>
+          The surface of the object conceals an ordered lattice beneath.
+        </p>
+      </div>
+
+      <div data-showroom-info-source-panel="practical">
+        <p>
+          Structure gives the object repeatable identity. It lets
+          inspection return to stable coordinates instead of pure visual
+          impression.
+        </p>
+      </div>
+
+      <div data-showroom-info-source-panel="technical">
+        <p>
+          The Diamond structure includes sixteen radial sectors, sixteen
+          structural bands, 256 seats, and 512 exterior facets.
+        </p>
+      </div>
+    </article>
+
+    <article
+      data-showroom-info-source
+      data-showroom-info-id="technical-interaction"
+      data-showroom-info-title="Interaction Front"
+      data-showroom-info-identity="Technical · Interaction"
+      data-showroom-destination-kind="internal-info"
+    >
+      <div data-showroom-info-source-panel="narrative">
+        <p>
+          The constellation and the Diamond are separate ways of touching
+          Mirrorland.
+        </p>
+      </div>
+
+      <div data-showroom-info-source-panel="practical">
+        <p>
+          Separating controls keeps the visitor from losing orientation:
+          the constellation chooses, while the Diamond is inspected.
+        </p>
+      </div>
+
+      <div data-showroom-info-source-panel="technical">
+        <p>
+          The constellation and Diamond do not share camera, zoom, touch,
+          pointer state, canvas, renderer lifecycle, or gesture authority.
+        </p>
+      </div>
+    </article>
+
+    <article
+      data-showroom-info-source
+      data-showroom-info-id="technical-systems"
+      data-showroom-info-title="Systems Front"
+      data-showroom-info-identity="Technical · Systems"
+      data-showroom-destination-kind="internal-info"
+    >
+      <div data-showroom-info-source-panel="narrative">
+        <p>
+          Mirrorland is a frontier environment where existing systems and
+          future systems remain visible together.
+        </p>
+      </div>
+
+      <div data-showroom-info-source-panel="practical">
+        <p>
+          Separating active systems from reserved systems prevents the
+          visitor from mistaking planned capacity for working behavior.
+        </p>
+      </div>
+
+      <div data-showroom-info-source-panel="technical">
+        <p>
+          Narrative environment, character paths, and the secondary
+          object reservation are tracked separately. The reserved object
+          owns no renderer, controller, interactivity, or readiness.
+        </p>
+      </div>
+    </article>
+
+    <article
+      data-showroom-info-source
+      data-showroom-info-id="technical-information"
+      data-showroom-info-title="Information Front"
+      data-showroom-info-identity="Technical · Evidence"
+      data-showroom-destination-kind="internal-info"
+    >
+      <div data-showroom-info-source-panel="narrative">
+        <p>
+          The Showroom tells the visitor where the world is open, where
+          it is still being built, and where its claims stop.
+        </p>
+      </div>
+
+      <div data-showroom-info-source-panel="practical">
+        <p>
+          Evidence boundaries protect the visitor from overclaiming what
+          a working source structure proves.
+        </p>
+      </div>
+
+      <div data-showroom-info-source-panel="technical">
+        <p>
+          Implemented source structure does not establish runtime
+          acceptance, production authorization, deployment authorization,
+          or empirical validity.
+        </p>
+      </div>
+    </article>
+  </section>
 
   <dialog
     id="showroom-route-dialog"
@@ -2919,7 +3866,7 @@
   ></script>
 
   <script
-    src="/showroom/index.destinations.js?v=SHOWROOM_DESTINATION_EXECUTOR_TNT_v1"
+    src="/showroom/index.destinations.js?v=SHOWROOM_DESTINATION_INTENT_RESOLVER_TNT_v2"
     defer
     data-showroom-child="destinations"
   ></script>
@@ -3001,40 +3948,99 @@
 </html>
 
 <!--
-SHOWROOM_HTML_INTERACTION_HELPER_INTEGRATION_BASELINE_RECEIPT_v11
+SHOWROOM_HTML_MODAL_GATEWAY_RECONSTRUCTION_RECEIPT_v12
 
 FILE MODIFIED:
 /showroom/index.html
 
-BASELINE PRESERVATION:
-Full v10 structure retained.
+BASELINE:
+SHOWROOM_MIRRORLAND_NARRATIVE_CONSTELLATION_STATIC_HTML_TNT_v11
 
-AUTHORIZED CHANGES ONLY:
-- Contract advanced from SHOWROOM_MIRRORLAND_NARRATIVE_CONSTELLATION_STATIC_HTML_TNT_v10 to SHOWROOM_MIRRORLAND_NARRATIVE_CONSTELLATION_STATIC_HTML_TNT_v11.
-- Root metadata now declares /showroom/index.interaction.gestures.js.
-- Gesture helper script added immediately before /showroom/index.interactions.js.
-- Interaction parent script query updated to SHOWROOM_COMPLETE_QUATERNION_INTERACTIONS_TNT_v6.
+NEW BASELINE:
+SHOWROOM_MIRRORLAND_NARRATIVE_CONSTELLATION_STATIC_HTML_TNT_v12
 
-SCRIPT ORDER REQUIRED:
-1. /showroom/index.interaction.gestures.js
-2. /showroom/index.interactions.js
+PRIMARY DISPLAY MODEL:
+Orbit + reusable information modal + retained object stage.
 
-CONTENT REMOVED:
-None.
+CORE DECISION:
+The Diamond / 3D object remains a real page section.
+The Diamond was not moved into a popup.
+The interaction subsystem was not reopened.
 
-ARCHITECTURE CHANGED:
-No.
+ADDED:
+- Reusable information dialog.
+- Narrative / Practical / Technical tabs.
+- Return to Orbit action.
+- Optional Inspect Object action.
+- Optional Continue to Destination action.
+- Information source bank keyed by data-showroom-info-id.
+- Star destination classification:
+  internal-info
+  object-inspect
+  external-route
 
-NAVIGATION PURPOSE:
-Complete runtime dependency order while preserving the existing user journey:
-select, confirm, continue, return.
+STAR CLASSIFICATION:
+north-1 internal-info
+north-2 internal-info
+north-3 internal-info
+north-4 internal-info
+east-1 external-route
+east-2 external-route
+east-3 external-route
+east-4 external-route
+south-1 object-inspect
+south-2 object-inspect
+south-3 internal-info
+south-4 external-route
+west-1 internal-info
+west-2 internal-info
+west-3 internal-info
+west-4 external-route
+
+EXTERNAL ROUTE DISCIPLINE:
+External routes include data-showroom-route-evidence.
+If route existence is not confirmed in deployment, destination execution must downgrade the star to internal-info.
+
+PRESERVED:
+- data-showroom-root
+- data-showroom-orbit-field
+- data-showroom-cardinal-control
+- data-showroom-child-control
+- data-showroom-compass-control
+- route dialog
+- receipt outputs
+- Diamond stage markup
+- Window/object markup
+- interaction gesture helper before interactions
+- controller/compositor/crystals/interactions ownership boundaries
+
+DESTINATION EXECUTOR EXPECTATION:
+index.destinations.js becomes the destination intent resolver:
+internal-info opens modal.
+object-inspect opens modal first, then Inspect Object closes modal and focuses/scrolls existing object target.
+external-route uses confirmation and continues only to real routes.
+
+FILES NOT MODIFIED:
+- /showroom/index.css
+- /showroom/index.destinations.js
+- /showroom/index.controller.js
+- /showroom/index.interactions.js
+- /showroom/index.interaction.gestures.js
+- /showroom/index.compositor.js
+- /showroom/index.crystals.js
+- /showroom/index.window.js
+- Diamond assets
+- Compass assets
+- gauge assets
+- blueprint assets
+- character assets
 
 BROWSER VALIDATION:
-NOT PERFORMED.
+NOT PERFORMED
 
 DEPLOYED RUNTIME STATUS:
-UNVERIFIED.
+UNVERIFIED
 
 FINAL ACCEPTANCE:
-CONTINGENT ON FULL-SYSTEM INTEGRATION VALIDATION.
+CONTINGENT ON CSS RECONSTRUCTION, DESTINATION INTENT RESOLUTION, AND FULL-SYSTEM INTEGRATION VALIDATION
 -->

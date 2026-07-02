@@ -1,12 +1,13 @@
 /* TARGET FILE: /showroom/index.css
    COMPLETE REPLACEMENT
 
-   SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v13
+   SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v13_1
 
    Scope:
    - compact Mirrorland threshold;
    - constellation-first composition;
    - live 23-record Mirrorland Atlas;
+   - corrected compound-root Atlas selectors;
    - Atlas precedence:
        held > compass > child > cardinal > idle;
    - exactly one visible compact narrative record;
@@ -128,7 +129,6 @@ html {
 
 body {
   position: relative;
-
   min-width: 20rem;
   min-height: 100vh;
   margin: 0;
@@ -320,6 +320,7 @@ dd {
   left: 0.75rem;
 
   padding: 0.7rem 1rem;
+
   border: 1px solid var(--showroom-gold-bright);
   border-radius: var(--showroom-radius-sm);
 
@@ -634,6 +635,7 @@ h3 {
 
 .showroom-nav a {
   padding: 0.5rem 0.68rem;
+
   border-radius: 999px;
 
   color: var(--showroom-muted-strong);
@@ -661,7 +663,6 @@ h3 {
 main {
   display: grid;
   gap: var(--showroom-space-7);
-
   padding-top: var(--showroom-space-4);
 }
 
@@ -709,6 +710,7 @@ main {
   position: relative;
 
   display: grid;
+
   grid-template-columns:
     minmax(0, 1.45fr)
     minmax(17rem, 0.55fr);
@@ -893,6 +895,7 @@ main {
   z-index: 2;
 
   display: grid;
+
   grid-template-columns:
     minmax(0, 1fr)
     minmax(15rem, 28rem);
@@ -908,6 +911,7 @@ main {
 .showroom-orbit__heading p,
 .showroom-diamond-reveal__heading p {
   margin-bottom: 0.25rem;
+
   color: var(--showroom-muted-strong);
 }
 
@@ -1274,51 +1278,43 @@ main {
   aspect-ratio: 1;
 }
 
-[data-showroom-cardinal-id="north"]
-[data-showroom-cardinal-control] {
+[data-showroom-cardinal-id="north"][data-showroom-cardinal-control] {
   top: 9%;
   left: 50%;
 
   transform: translateX(-50%);
 }
 
-[data-showroom-cardinal-id="east"]
-[data-showroom-cardinal-control] {
+[data-showroom-cardinal-id="east"][data-showroom-cardinal-control] {
   top: 50%;
   right: 10%;
 
   transform: translateY(-50%);
 }
 
-[data-showroom-cardinal-id="south"]
-[data-showroom-cardinal-control] {
+[data-showroom-cardinal-id="south"][data-showroom-cardinal-control] {
   bottom: 9%;
   left: 50%;
 
   transform: translateX(-50%);
 }
 
-[data-showroom-cardinal-id="west"]
-[data-showroom-cardinal-control] {
+[data-showroom-cardinal-id="west"][data-showroom-cardinal-control] {
   top: 50%;
   left: 10%;
 
   transform: translateY(-50%);
 }
 
-[data-showroom-cardinal-id="north"]
-[data-showroom-cardinal-control]:hover,
-[data-showroom-cardinal-id="south"]
-[data-showroom-cardinal-control]:hover {
+[data-showroom-cardinal-id="north"][data-showroom-cardinal-control]:hover,
+[data-showroom-cardinal-id="south"][data-showroom-cardinal-control]:hover {
   transform:
     translateX(-50%)
     scale(1.08);
 }
 
-[data-showroom-cardinal-id="east"]
-[data-showroom-cardinal-control]:hover,
-[data-showroom-cardinal-id="west"]
-[data-showroom-cardinal-control]:hover {
+[data-showroom-cardinal-id="east"][data-showroom-cardinal-control]:hover,
+[data-showroom-cardinal-id="west"][data-showroom-cardinal-control]:hover {
   transform:
     translateY(-50%)
     scale(1.08);
@@ -1458,23 +1454,19 @@ main {
     );
 }
 
-[data-showroom-root]
-[data-showroom-fallback-star] {
+[data-showroom-root] [data-showroom-fallback-star] {
   opacity: 1;
 }
 
-[data-showroom-root]
-[data-showroom-crystals-ready="true"]
+[data-showroom-root][data-showroom-crystals-ready="true"]
 [data-showroom-fallback-star] {
   opacity: 0;
   pointer-events: auto;
 }
 
-[data-showroom-root]
-[data-showroom-held="true"]
+[data-showroom-root][data-showroom-held="true"]
 [data-showroom-fallback-star],
-[data-showroom-root]
-[data-showroom-crystals-ready="false"]
+[data-showroom-root][data-showroom-crystals-ready="false"]
 [data-showroom-fallback-star] {
   opacity: 1;
 }
@@ -1859,6 +1851,7 @@ main {
 
   margin: 0;
   padding: 0.72rem;
+
   border-top: 1px solid var(--showroom-rule);
 }
 
@@ -1894,22 +1887,23 @@ main {
 /* ================================================================
    16. ATLAS RECORD PRECEDENCE AND EXACT VISIBILITY
 
+   Root state attributes are compounded on the same element.
+
    Precedence:
    held > compass > child > cardinal > idle
 
    All narrative records are hidden by default.
-   Exactly one compact record and one detail record become visible.
+   Exactly one compact record and one detail record become visible
+   for every valid declared state.
    ================================================================ */
 
 /* ------------------------------
    HELD
    ------------------------------ */
 
-[data-showroom-root]
-[data-showroom-held="true"]
+[data-showroom-root][data-showroom-held="true"]
 [data-showroom-atlas-narrative-record="held"],
-[data-showroom-root]
-[data-showroom-held="true"]
+[data-showroom-root][data-showroom-held="true"]
 [data-showroom-atlas-narrative-detail-record="held"] {
   display: block;
 }
@@ -1918,13 +1912,9 @@ main {
    COMPASS
    ------------------------------ */
 
-[data-showroom-root]
-[data-showroom-held="false"]
-[data-showroom-compass-selected="true"]
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="true"]
 [data-showroom-atlas-narrative-record="compass"],
-[data-showroom-root]
-[data-showroom-held="false"]
-[data-showroom-compass-selected="true"]
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="true"]
 [data-showroom-atlas-narrative-detail-record="compass"] {
   display: block;
 }
@@ -1933,54 +1923,30 @@ main {
    CHILD: NORTH
    ------------------------------ */
 
-[data-showroom-root]
-[data-showroom-held="false"]
-[data-showroom-compass-selected="false"]
-[data-showroom-active-child="north-1"]
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="north-1"]
 [data-showroom-atlas-narrative-record="north-1"],
-[data-showroom-root]
-[data-showroom-held="false"]
-[data-showroom-compass-selected="false"]
-[data-showroom-active-child="north-1"]
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="north-1"]
 [data-showroom-atlas-narrative-detail-record="north-1"] {
   display: block;
 }
 
-[data-showroom-root]
-[data-showroom-held="false"]
-[data-showroom-compass-selected="false"]
-[data-showroom-active-child="north-2"]
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="north-2"]
 [data-showroom-atlas-narrative-record="north-2"],
-[data-showroom-root]
-[data-showroom-held="false"]
-[data-showroom-compass-selected="false"]
-[data-showroom-active-child="north-2"]
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="north-2"]
 [data-showroom-atlas-narrative-detail-record="north-2"] {
   display: block;
 }
 
-[data-showroom-root]
-[data-showroom-held="false"]
-[data-showroom-compass-selected="false"]
-[data-showroom-active-child="north-3"]
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="north-3"]
 [data-showroom-atlas-narrative-record="north-3"],
-[data-showroom-root]
-[data-showroom-held="false"]
-[data-showroom-compass-selected="false"]
-[data-showroom-active-child="north-3"]
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="north-3"]
 [data-showroom-atlas-narrative-detail-record="north-3"] {
   display: block;
 }
 
-[data-showroom-root]
-[data-showroom-held="false"]
-[data-showroom-compass-selected="false"]
-[data-showroom-active-child="north-4"]
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="north-4"]
 [data-showroom-atlas-narrative-record="north-4"],
-[data-showroom-root]
-[data-showroom-held="false"]
-[data-showroom-compass-selected="false"]
-[data-showroom-active-child="north-4"]
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="north-4"]
 [data-showroom-atlas-narrative-detail-record="north-4"] {
   display: block;
 }
@@ -1989,54 +1955,30 @@ main {
    CHILD: EAST
    ------------------------------ */
 
-[data-showroom-root]
-[data-showroom-held="false"]
-[data-showroom-compass-selected="false"]
-[data-showroom-active-child="east-1"]
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="east-1"]
 [data-showroom-atlas-narrative-record="east-1"],
-[data-showroom-root]
-[data-showroom-held="false"]
-[data-showroom-compass-selected="false"]
-[data-showroom-active-child="east-1"]
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="east-1"]
 [data-showroom-atlas-narrative-detail-record="east-1"] {
   display: block;
 }
 
-[data-showroom-root]
-[data-showroom-held="false"]
-[data-showroom-compass-selected="false"]
-[data-showroom-active-child="east-2"]
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="east-2"]
 [data-showroom-atlas-narrative-record="east-2"],
-[data-showroom-root]
-[data-showroom-held="false"]
-[data-showroom-compass-selected="false"]
-[data-showroom-active-child="east-2"]
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="east-2"]
 [data-showroom-atlas-narrative-detail-record="east-2"] {
   display: block;
 }
 
-[data-showroom-root]
-[data-showroom-held="false"]
-[data-showroom-compass-selected="false"]
-[data-showroom-active-child="east-3"]
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="east-3"]
 [data-showroom-atlas-narrative-record="east-3"],
-[data-showroom-root]
-[data-showroom-held="false"]
-[data-showroom-compass-selected="false"]
-[data-showroom-active-child="east-3"]
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="east-3"]
 [data-showroom-atlas-narrative-detail-record="east-3"] {
   display: block;
 }
 
-[data-showroom-root]
-[data-showroom-held="false"]
-[data-showroom-compass-selected="false"]
-[data-showroom-active-child="east-4"]
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="east-4"]
 [data-showroom-atlas-narrative-record="east-4"],
-[data-showroom-root]
-[data-showroom-held="false"]
-[data-showroom-compass-selected="false"]
-[data-showroom-active-child="east-4"]
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="east-4"]
 [data-showroom-atlas-narrative-detail-record="east-4"] {
   display: block;
 }
@@ -2045,54 +1987,30 @@ main {
    CHILD: SOUTH
    ------------------------------ */
 
-[data-showroom-root]
-[data-showroom-held="false"]
-[data-showroom-compass-selected="false"]
-[data-showroom-active-child="south-1"]
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="south-1"]
 [data-showroom-atlas-narrative-record="south-1"],
-[data-showroom-root]
-[data-showroom-held="false"]
-[data-showroom-compass-selected="false"]
-[data-showroom-active-child="south-1"]
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="south-1"]
 [data-showroom-atlas-narrative-detail-record="south-1"] {
   display: block;
 }
 
-[data-showroom-root]
-[data-showroom-held="false"]
-[data-showroom-compass-selected="false"]
-[data-showroom-active-child="south-2"]
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="south-2"]
 [data-showroom-atlas-narrative-record="south-2"],
-[data-showroom-root]
-[data-showroom-held="false"]
-[data-showroom-compass-selected="false"]
-[data-showroom-active-child="south-2"]
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="south-2"]
 [data-showroom-atlas-narrative-detail-record="south-2"] {
   display: block;
 }
 
-[data-showroom-root]
-[data-showroom-held="false"]
-[data-showroom-compass-selected="false"]
-[data-showroom-active-child="south-3"]
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="south-3"]
 [data-showroom-atlas-narrative-record="south-3"],
-[data-showroom-root]
-[data-showroom-held="false"]
-[data-showroom-compass-selected="false"]
-[data-showroom-active-child="south-3"]
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="south-3"]
 [data-showroom-atlas-narrative-detail-record="south-3"] {
   display: block;
 }
 
-[data-showroom-root]
-[data-showroom-held="false"]
-[data-showroom-compass-selected="false"]
-[data-showroom-active-child="south-4"]
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="south-4"]
 [data-showroom-atlas-narrative-record="south-4"],
-[data-showroom-root]
-[data-showroom-held="false"]
-[data-showroom-compass-selected="false"]
-[data-showroom-active-child="south-4"]
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="south-4"]
 [data-showroom-atlas-narrative-detail-record="south-4"] {
   display: block;
 }
@@ -2101,54 +2019,30 @@ main {
    CHILD: WEST
    ------------------------------ */
 
-[data-showroom-root]
-[data-showroom-held="false"]
-[data-showroom-compass-selected="false"]
-[data-showroom-active-child="west-1"]
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="west-1"]
 [data-showroom-atlas-narrative-record="west-1"],
-[data-showroom-root]
-[data-showroom-held="false"]
-[data-showroom-compass-selected="false"]
-[data-showroom-active-child="west-1"]
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="west-1"]
 [data-showroom-atlas-narrative-detail-record="west-1"] {
   display: block;
 }
 
-[data-showroom-root]
-[data-showroom-held="false"]
-[data-showroom-compass-selected="false"]
-[data-showroom-active-child="west-2"]
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="west-2"]
 [data-showroom-atlas-narrative-record="west-2"],
-[data-showroom-root]
-[data-showroom-held="false"]
-[data-showroom-compass-selected="false"]
-[data-showroom-active-child="west-2"]
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="west-2"]
 [data-showroom-atlas-narrative-detail-record="west-2"] {
   display: block;
 }
 
-[data-showroom-root]
-[data-showroom-held="false"]
-[data-showroom-compass-selected="false"]
-[data-showroom-active-child="west-3"]
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="west-3"]
 [data-showroom-atlas-narrative-record="west-3"],
-[data-showroom-root]
-[data-showroom-held="false"]
-[data-showroom-compass-selected="false"]
-[data-showroom-active-child="west-3"]
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="west-3"]
 [data-showroom-atlas-narrative-detail-record="west-3"] {
   display: block;
 }
 
-[data-showroom-root]
-[data-showroom-held="false"]
-[data-showroom-compass-selected="false"]
-[data-showroom-active-child="west-4"]
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="west-4"]
 [data-showroom-atlas-narrative-record="west-4"],
-[data-showroom-root]
-[data-showroom-held="false"]
-[data-showroom-compass-selected="false"]
-[data-showroom-active-child="west-4"]
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="west-4"]
 [data-showroom-atlas-narrative-detail-record="west-4"] {
   display: block;
 }
@@ -2157,62 +2051,30 @@ main {
    CARDINAL
    ------------------------------ */
 
-[data-showroom-root]
-[data-showroom-held="false"]
-[data-showroom-compass-selected="false"]
-[data-showroom-active-child=""]
-[data-showroom-active-cardinal="north"]
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child=""][data-showroom-active-cardinal="north"]
 [data-showroom-atlas-narrative-record="north"],
-[data-showroom-root]
-[data-showroom-held="false"]
-[data-showroom-compass-selected="false"]
-[data-showroom-active-child=""]
-[data-showroom-active-cardinal="north"]
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child=""][data-showroom-active-cardinal="north"]
 [data-showroom-atlas-narrative-detail-record="north"] {
   display: block;
 }
 
-[data-showroom-root]
-[data-showroom-held="false"]
-[data-showroom-compass-selected="false"]
-[data-showroom-active-child=""]
-[data-showroom-active-cardinal="east"]
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child=""][data-showroom-active-cardinal="east"]
 [data-showroom-atlas-narrative-record="east"],
-[data-showroom-root]
-[data-showroom-held="false"]
-[data-showroom-compass-selected="false"]
-[data-showroom-active-child=""]
-[data-showroom-active-cardinal="east"]
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child=""][data-showroom-active-cardinal="east"]
 [data-showroom-atlas-narrative-detail-record="east"] {
   display: block;
 }
 
-[data-showroom-root]
-[data-showroom-held="false"]
-[data-showroom-compass-selected="false"]
-[data-showroom-active-child=""]
-[data-showroom-active-cardinal="south"]
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child=""][data-showroom-active-cardinal="south"]
 [data-showroom-atlas-narrative-record="south"],
-[data-showroom-root]
-[data-showroom-held="false"]
-[data-showroom-compass-selected="false"]
-[data-showroom-active-child=""]
-[data-showroom-active-cardinal="south"]
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child=""][data-showroom-active-cardinal="south"]
 [data-showroom-atlas-narrative-detail-record="south"] {
   display: block;
 }
 
-[data-showroom-root]
-[data-showroom-held="false"]
-[data-showroom-compass-selected="false"]
-[data-showroom-active-child=""]
-[data-showroom-active-cardinal="west"]
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child=""][data-showroom-active-cardinal="west"]
 [data-showroom-atlas-narrative-record="west"],
-[data-showroom-root]
-[data-showroom-held="false"]
-[data-showroom-compass-selected="false"]
-[data-showroom-active-child=""]
-[data-showroom-active-cardinal="west"]
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child=""][data-showroom-active-cardinal="west"]
 [data-showroom-atlas-narrative-detail-record="west"] {
   display: block;
 }
@@ -2221,26 +2083,14 @@ main {
    IDLE
    ------------------------------ */
 
-[data-showroom-root]
-[data-showroom-held="false"]
-[data-showroom-compass-selected="false"]
-[data-showroom-active-child=""]
-[data-showroom-active-cardinal=""]
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child=""][data-showroom-active-cardinal=""]
 [data-showroom-atlas-narrative-record="idle"],
-[data-showroom-root]
-[data-showroom-held="false"]
-[data-showroom-compass-selected="false"]
-[data-showroom-active-child=""]
-[data-showroom-active-cardinal=""]
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child=""][data-showroom-active-cardinal=""]
 [data-showroom-atlas-narrative-detail-record="idle"] {
   display: block;
 }
 
-[data-showroom-root]
-[data-showroom-held="false"]
-[data-showroom-compass-selected="false"]
-[data-showroom-active-child=""]
-[data-showroom-active-cardinal=""]
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child=""][data-showroom-active-cardinal=""]
 [data-showroom-atlas-legend] {
   display: grid;
 }
@@ -2249,8 +2099,7 @@ main {
    17. ATLAS STATE EMPHASIS
    ================================================================ */
 
-[data-showroom-root]
-[data-showroom-held="true"]
+[data-showroom-root][data-showroom-held="true"]
 .showroom-atlas-key {
   border-color: rgba(255, 141, 159, 0.44);
 
@@ -2259,17 +2108,15 @@ main {
     inset 0.22rem 0 0 var(--showroom-danger);
 }
 
-[data-showroom-root]
-[data-showroom-held="true"]
+[data-showroom-root][data-showroom-held="true"]
 .showroom-atlas-key__state {
   border-color: rgba(255, 141, 159, 0.42);
+
   color: var(--showroom-danger);
   background: rgba(255, 141, 159, 0.08);
 }
 
-[data-showroom-root]
-[data-showroom-held="false"]
-[data-showroom-compass-selected="true"]
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="true"]
 .showroom-atlas-key {
   border-color: var(--showroom-border-strong);
 
@@ -2278,10 +2125,15 @@ main {
     inset 0.22rem 0 0 var(--showroom-gold);
 }
 
-[data-showroom-root]
-[data-showroom-held="false"]
-[data-showroom-compass-selected="false"]
-:not([data-showroom-active-child=""])
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="true"]
+.showroom-atlas-key__state {
+  border-color: var(--showroom-border-strong);
+
+  color: var(--showroom-gold-bright);
+  background: var(--showroom-gold-faint);
+}
+
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"]:not([data-showroom-active-child=""])
 .showroom-atlas-key {
   border-color: rgba(141, 230, 176, 0.4);
 
@@ -2290,14 +2142,21 @@ main {
     inset 0.22rem 0 0 var(--showroom-success);
 }
 
-[data-showroom-root]
-[data-showroom-held="false"]
-[data-showroom-compass-selected="false"]
-:not([data-showroom-active-child=""])
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"]:not([data-showroom-active-child=""])
 .showroom-atlas-key__state {
   border-color: rgba(141, 230, 176, 0.4);
+
   color: var(--showroom-success);
   background: rgba(141, 230, 176, 0.09);
+}
+
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child=""]:not([data-showroom-active-cardinal=""])
+.showroom-atlas-key {
+  border-color: var(--showroom-border-strong);
+
+  box-shadow:
+    0 1.15rem 3rem rgba(0, 0, 0, 0.36),
+    inset 0.22rem 0 0 var(--showroom-gold);
 }
 
 /* ================================================================
@@ -2551,6 +2410,7 @@ main {
   gap: 0.9rem;
 
   padding: 0 1rem 1rem;
+
   border-top: 1px solid var(--showroom-rule);
 }
 
@@ -2802,6 +2662,7 @@ main {
   gap: 0.9rem;
 
   padding: 0 1rem 1rem;
+
   border-top: 1px solid var(--showroom-rule);
 }
 
@@ -2938,7 +2799,6 @@ main {
   border-left: 0.22rem solid var(--showroom-gold);
 
   color: var(--showroom-cream);
-
   background: var(--showroom-gold-faint);
 
   font-family:
@@ -3235,6 +3095,7 @@ main {
   gap: 0.65rem;
 
   padding: 0.8rem;
+
   border-top: 1px solid var(--showroom-rule);
 }
 
@@ -3360,12 +3221,14 @@ main {
 [data-showroom-receipt-status="ready"],
 [data-showroom-receipt-status="running"] {
   border-color: rgba(141, 230, 176, 0.42);
+
   color: var(--showroom-success);
   background: rgba(141, 230, 176, 0.08);
 }
 
 [data-showroom-receipt-status="suspended"] {
   border-color: rgba(255, 210, 122, 0.42);
+
   color: var(--showroom-warning);
   background: rgba(255, 210, 122, 0.08);
 }
@@ -3374,6 +3237,7 @@ main {
 [data-showroom-receipt-status="failed"],
 [data-showroom-receipt-status="destroyed"] {
   border-color: rgba(255, 141, 159, 0.42);
+
   color: var(--showroom-danger);
   background: rgba(255, 141, 159, 0.08);
 }
@@ -3510,6 +3374,7 @@ main {
 
 .showroom-footer a {
   padding: 0.42rem 0.58rem;
+
   border-radius: 999px;
 
   color: var(--showroom-muted-strong);
@@ -3777,23 +3642,19 @@ main {
     width: clamp(1.3rem, 5.8vw, 2rem);
   }
 
-  [data-showroom-cardinal-id="north"]
-  [data-showroom-cardinal-control] {
+  [data-showroom-cardinal-id="north"][data-showroom-cardinal-control] {
     top: 8%;
   }
 
-  [data-showroom-cardinal-id="east"]
-  [data-showroom-cardinal-control] {
+  [data-showroom-cardinal-id="east"][data-showroom-cardinal-control] {
     right: 7%;
   }
 
-  [data-showroom-cardinal-id="south"]
-  [data-showroom-cardinal-control] {
+  [data-showroom-cardinal-id="south"][data-showroom-cardinal-control] {
     bottom: 8%;
   }
 
-  [data-showroom-cardinal-id="west"]
-  [data-showroom-cardinal-control] {
+  [data-showroom-cardinal-id="west"][data-showroom-cardinal-control] {
     left: 7%;
   }
 
@@ -3954,7 +3815,6 @@ main {
     font-size: 0.68rem;
   }
 
-  .showroom-formal-facts,
   .showroom-metric-grid,
   .showroom-ownership-chain,
   .showroom-receipt-record dl,
@@ -4056,10 +3916,8 @@ main {
   }
 }
 
-[data-showroom-root]
-[data-showroom-reduced-motion="true"] *,
-[data-showroom-root]
-[data-reduced-motion="true"] * {
+[data-showroom-root][data-showroom-reduced-motion="true"] *,
+[data-showroom-root][data-reduced-motion="true"] * {
   animation-duration: 0.001ms !important;
   animation-iteration-count: 1 !important;
 
@@ -4191,12 +4049,24 @@ main {
     display: none !important;
   }
 
-  [data-showroom-root]
-  [data-showroom-held="true"]
+  [data-showroom-root][data-showroom-held="true"]
   [data-showroom-atlas-narrative-record="held"],
-  [data-showroom-root]
-  [data-showroom-held="true"]
+  [data-showroom-root][data-showroom-held="true"]
   [data-showroom-atlas-narrative-detail-record="held"] {
+    display: block !important;
+  }
+
+  [data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="true"]
+  [data-showroom-atlas-narrative-record="compass"],
+  [data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="true"]
+  [data-showroom-atlas-narrative-detail-record="compass"] {
+    display: block !important;
+  }
+
+  [data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child=""][data-showroom-active-cardinal=""]
+  [data-showroom-atlas-narrative-record="idle"],
+  [data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child=""][data-showroom-active-cardinal=""]
+  [data-showroom-atlas-narrative-detail-record="idle"] {
     display: block !important;
   }
 }
@@ -4205,7 +4075,16 @@ main {
    END RECEIPT
 
    CONTRACT:
-   SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v13
+   SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v13_1
+
+   CORRECTION:
+   - all root-state attributes are compounded on the same
+     [data-showroom-root] selector;
+   - descendant combinators now begin only after the complete root
+     state selector;
+   - fallback-star readiness and held selectors are corrected;
+   - Atlas emphasis selectors are corrected;
+   - print-state selectors are corrected.
 
    ATLAS RECORD COUNT:
    23
@@ -4216,6 +4095,13 @@ main {
    ATLAS VISIBILITY INVARIANTS:
    - VisibleCompactNarrativeRecordCount = 1
    - VisibleNarrativePositionRecordCount = 1
+
+   COMPASS DEPENDENCY:
+   - Compass narrative activation requires the controller or another
+     authorized runtime owner to set:
+       data-showroom-compass-selected="true"
+     on the [data-showroom-root] element.
+   - CSS does not infer Compass selection from unrelated attributes.
 
    REMOVED PRESENTATION CONTRACTS:
    - no evidence tablist;
@@ -4260,6 +4146,7 @@ main {
    - exactly one Narrative Position record visible;
    - idle-only Atlas legend;
    - controller title, purpose, guidance, state, and action updates;
+   - controller writes data-showroom-compass-selected;
    - Route Details nested disclosure behavior;
    - constellation tap behavior;
    - constellation drag behavior;

@@ -1,20 +1,8 @@
 /* TARGET FILE: /showroom/index.css */
 /* TNT FULL-FILE REPLACEMENT */
-/* SHOWROOM_MIRRORLAND_NARRATIVE_CONSTELLATION_CSS_TNT_v8 */
-/*
-  Interaction renewal:
-  - the constellation field is an owned touch-interaction landscape;
-  - document scrolling is suppressed only inside the orbit field;
-  - normal document scrolling remains available outside the field;
-  - compositor canvases remain visually authoritative and pointer-transparent;
-  - semantic star controls retain pointer authority;
-  - Compass control retains its independent pointer surface;
-  - Diamond interaction remains independent;
-  - no controller, compositor, crystal, Diamond, Window, or navigation
-    ownership is transferred into CSS.
-*/
+/* SHOWROOM_MIRRORLAND_ROUTE_GATEWAY_CSS_TNT_v9 */
 
-@layer reset, foundation, shell, header, stages, controls, narrative, fronts, dialogs, responsive, accessibility;
+@layer reset, foundation, shell, header, stages, controls, fronts, responsive, accessibility;
 
 @layer reset {
   *,
@@ -33,10 +21,7 @@
   h1,
   h2,
   h3,
-  h4,
   p,
-  figure,
-  blockquote,
   dl,
   dd {
     margin: 0;
@@ -75,11 +60,8 @@
   :root {
     --showroom-bg-0: #05070f;
     --showroom-bg-1: #090d19;
-    --showroom-bg-2: #10172a;
-    --showroom-bg-3: #17213a;
     --showroom-panel: rgba(13, 19, 34, 0.86);
     --showroom-panel-strong: rgba(10, 15, 28, 0.96);
-    --showroom-panel-soft: rgba(20, 29, 49, 0.72);
     --showroom-line: rgba(167, 192, 234, 0.18);
     --showroom-line-strong: rgba(189, 210, 245, 0.34);
     --showroom-line-gold: rgba(230, 196, 112, 0.38);
@@ -88,52 +70,25 @@
     --showroom-text-dim: #8390aa;
     --showroom-gold: #e8c777;
     --showroom-gold-bright: #ffe3a0;
-    --showroom-sapphire: #5d8fff;
     --showroom-cyan: #72d9ff;
-    --showroom-violet: #af8cff;
-    --showroom-rose: #ff8fb5;
-    --showroom-green: #87d7b0;
-    --showroom-danger: #ff8b95;
     --showroom-focus: #fff0ba;
-    --showroom-shadow:
-      0 1.6rem 4.8rem rgba(0, 0, 0, 0.38),
+    --showroom-shadow: 0 1.6rem 4.8rem rgba(0, 0, 0, 0.38),
       inset 0 1px 0 rgba(255, 255, 255, 0.035);
-    --showroom-shadow-soft:
-      0 1rem 3rem rgba(0, 0, 0, 0.24);
+    --showroom-shadow-soft: 0 1rem 3rem rgba(0, 0, 0, 0.24);
     --showroom-radius-xl: 2rem;
     --showroom-radius-lg: 1.35rem;
     --showroom-radius-md: 0.95rem;
     --showroom-radius-sm: 0.68rem;
     --showroom-shell-width: 96rem;
     --showroom-content-width: 82rem;
-    --showroom-reading-width: 68rem;
-    --showroom-orbit-width: 40rem;
-    --showroom-diamond-width: 68rem;
-    --showroom-gap-1: 0.4rem;
-    --showroom-gap-2: 0.7rem;
+    --showroom-orbit-width: 42rem;
+    --showroom-diamond-width: 72rem;
     --showroom-gap-3: 1rem;
     --showroom-gap-4: 1.4rem;
     --showroom-gap-5: 2rem;
-    --showroom-gap-6: 3rem;
-    --showroom-gap-7: 4.5rem;
-    --showroom-font-display:
-      "Iowan Old Style",
-      "Palatino Linotype",
-      Palatino,
-      Georgia,
-      serif;
-    --showroom-font-ui:
-      Inter,
-      ui-sans-serif,
-      system-ui,
-      -apple-system,
-      BlinkMacSystemFont,
-      "Segoe UI",
-      sans-serif;
+    --showroom-font-display: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+    --showroom-font-ui: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     --showroom-transition-fast: 140ms ease;
-    --showroom-transition: 240ms ease;
-    --showroom-transition-slow:
-      440ms cubic-bezier(0.22, 1, 0.36, 1);
   }
 
   body {
@@ -141,79 +96,26 @@
     overflow-x: hidden;
     color: var(--showroom-text);
     background:
-      radial-gradient(
-        circle at 16% 0%,
-        rgba(76, 103, 174, 0.2),
-        transparent 28rem
-      ),
-      radial-gradient(
-        circle at 88% 8%,
-        rgba(114, 68, 164, 0.15),
-        transparent 34rem
-      ),
-      radial-gradient(
-        circle at 50% 48%,
-        rgba(18, 28, 51, 0.56),
-        transparent 48rem
-      ),
-      linear-gradient(
-        180deg,
-        var(--showroom-bg-0) 0%,
-        var(--showroom-bg-1) 46%,
-        #070a13 100%
-      );
+      radial-gradient(circle at 16% 0%, rgba(76, 103, 174, 0.2), transparent 28rem),
+      radial-gradient(circle at 88% 8%, rgba(114, 68, 164, 0.15), transparent 34rem),
+      linear-gradient(180deg, var(--showroom-bg-0) 0%, var(--showroom-bg-1) 46%, #070a13 100%);
     font-family: var(--showroom-font-ui);
     line-height: 1.6;
     text-rendering: optimizeLegibility;
   }
 
-  body::before,
-  body::after {
+  body::before {
     position: fixed;
     inset: 0;
-    z-index: -2;
+    z-index: -1;
     pointer-events: none;
     content: "";
-  }
-
-  body::before {
-    opacity: 0.48;
+    opacity: 0.46;
     background-image:
-      radial-gradient(
-        circle at 10% 20%,
-        rgba(255, 255, 255, 0.7) 0 1px,
-        transparent 1.5px
-      ),
-      radial-gradient(
-        circle at 74% 14%,
-        rgba(232, 199, 119, 0.7) 0 1px,
-        transparent 1.6px
-      ),
-      radial-gradient(
-        circle at 38% 70%,
-        rgba(93, 143, 255, 0.58) 0 1px,
-        transparent 1.4px
-      ),
-      radial-gradient(
-        circle at 90% 78%,
-        rgba(255, 255, 255, 0.48) 0 1px,
-        transparent 1.5px
-      );
-    background-size:
-      19rem 19rem,
-      27rem 27rem,
-      23rem 23rem,
-      31rem 31rem;
-  }
-
-  body::after {
-    z-index: -1;
-    background:
-      linear-gradient(
-        180deg,
-        rgba(255, 255, 255, 0.015),
-        transparent 14rem
-      );
+      radial-gradient(circle at 10% 20%, rgba(255, 255, 255, 0.7) 0 1px, transparent 1.5px),
+      radial-gradient(circle at 74% 14%, rgba(232, 199, 119, 0.7) 0 1px, transparent 1.6px),
+      radial-gradient(circle at 38% 70%, rgba(93, 143, 255, 0.58) 0 1px, transparent 1.4px);
+    background-size: 19rem 19rem, 27rem 27rem, 23rem 23rem;
   }
 
   ::selection {
@@ -292,35 +194,15 @@
     border: 1px solid var(--showroom-line);
     border-radius: var(--showroom-radius-xl);
     background:
-      linear-gradient(
-        180deg,
-        rgba(255, 255, 255, 0.025),
-        transparent 38%
-      ),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.025), transparent 38%),
       var(--showroom-panel);
     box-shadow: var(--showroom-shadow);
     isolation: isolate;
   }
 
-  .panel::before {
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    border-radius: inherit;
-    pointer-events: none;
-    content: "";
-    background:
-      radial-gradient(
-        circle at 22% 0%,
-        rgba(255, 255, 255, 0.045),
-        transparent 24rem
-      );
-  }
-
   .button,
   .showroom-nav button,
   .showroom-footer button,
-  .fallback-navigation button,
   .fallback-navigation a {
     display: inline-flex;
     min-height: 2.75rem;
@@ -341,14 +223,12 @@
       transform var(--showroom-transition-fast),
       border-color var(--showroom-transition-fast),
       background-color var(--showroom-transition-fast),
-      color var(--showroom-transition-fast),
       opacity var(--showroom-transition-fast);
   }
 
   .button:hover,
   .showroom-nav button:hover,
   .showroom-footer button:hover,
-  .fallback-navigation button:hover,
   .fallback-navigation a:hover {
     border-color: rgba(255, 255, 255, 0.5);
     background: rgba(255, 255, 255, 0.075);
@@ -358,26 +238,9 @@
   .button-gold {
     color: #15120a;
     border-color: rgba(255, 225, 153, 0.7);
-    background:
-      linear-gradient(
-        180deg,
-        var(--showroom-gold-bright),
-        var(--showroom-gold)
-      );
-    box-shadow:
-      0 0.7rem 1.8rem rgba(232, 199, 119, 0.18),
+    background: linear-gradient(180deg, var(--showroom-gold-bright), var(--showroom-gold));
+    box-shadow: 0 0.7rem 1.8rem rgba(232, 199, 119, 0.18),
       inset 0 1px 0 rgba(255, 255, 255, 0.45);
-  }
-
-  .button-gold:hover {
-    color: #0d0b06;
-    border-color: #fff0bf;
-    background:
-      linear-gradient(
-        180deg,
-        #fff0bd,
-        #efcc7b
-      );
   }
 
   button:disabled,
@@ -386,18 +249,11 @@
     opacity: 0.42;
     transform: none;
   }
-
-  details > summary {
-    cursor: pointer;
-  }
 }
 
 @layer shell {
   .showroom-shell {
-    width: min(
-      calc(100% - 2rem),
-      var(--showroom-shell-width)
-    );
+    width: min(calc(100% - 2rem), var(--showroom-shell-width));
     margin-inline: auto;
     padding-block: 1rem 3rem;
   }
@@ -409,36 +265,20 @@
 
   .showroom-intro-layout {
     display: grid;
-    grid-template-columns:
-      minmax(0, 1.08fr)
-      minmax(30rem, 0.92fr);
+    grid-template-columns: minmax(0, 1.02fr) minmax(30rem, 0.98fr);
     gap: clamp(1.2rem, 3vw, 2.8rem);
     align-items: start;
   }
 
   .showroom-threshold,
   .showroom-orbit,
-  .showroom-instructions,
   .showroom-diamond-reveal,
-  #object-gauges,
-  .showroom-secondary-object-stage,
-  .showroom-narrative-region,
-  .showroom-front,
   .showroom-return-zone {
-    padding:
-      clamp(
-        1.2rem,
-        2.7vw,
-        2.3rem
-      );
+    padding: clamp(1.2rem, 2.7vw, 2.3rem);
   }
 
   .showroom-threshold {
-    min-height:
-      min(
-        48rem,
-        calc(100vh - 8rem)
-      );
+    min-height: min(42rem, calc(100vh - 8rem));
     display: grid;
     align-items: center;
   }
@@ -472,12 +312,7 @@
     max-width: 42rem;
     margin-top: 1.35rem;
     color: var(--showroom-text);
-    font-size:
-      clamp(
-        1.1rem,
-        1.8vw,
-        1.35rem
-      );
+    font-size: clamp(1.1rem, 1.8vw, 1.35rem);
     line-height: 1.58;
   }
 
@@ -490,63 +325,11 @@
     margin-top: 1.5rem;
     padding: 1.1rem 1.2rem;
     border-left: 3px solid var(--showroom-gold);
-    border-radius:
-      0
-      var(--showroom-radius-md)
-      var(--showroom-radius-md)
-      0;
+    border-radius: 0 var(--showroom-radius-md) var(--showroom-radius-md) 0;
     color: var(--showroom-text);
     background: rgba(232, 199, 119, 0.055);
     font-family: var(--showroom-font-display);
-    font-size:
-      clamp(
-        1.08rem,
-        1.8vw,
-        1.45rem
-      );
-  }
-
-  .mirrorland-preface {
-    margin-top: 1.4rem;
-    border-top: 1px solid var(--showroom-line);
-  }
-
-  .mirrorland-preface > summary {
-    padding-block: 1rem;
-    color: var(--showroom-text);
-    font-weight: 750;
-  }
-
-  .mirrorland-preface__content {
-    display: grid;
-    gap: 0.8rem;
-    padding-bottom: 0.4rem;
-  }
-
-  .mirrorland-preface__content section {
-    position: relative;
-    padding: 1rem 1rem 1rem 3.4rem;
-    border: 1px solid var(--showroom-line);
-    border-radius: var(--showroom-radius-md);
-    background: rgba(255, 255, 255, 0.025);
-  }
-
-  .mirrorland-preface__content h2 {
-    font-size: 1.35rem;
-  }
-
-  .mirrorland-preface__content p + p {
-    margin-top: 0.6rem;
-  }
-
-  .mirrorland-preface__index {
-    position: absolute;
-    top: 1rem;
-    left: 1rem;
-    color: var(--showroom-gold);
-    font-size: 0.72rem;
-    font-weight: 900;
-    letter-spacing: 0.12em;
+    font-size: clamp(1.08rem, 1.8vw, 1.45rem);
   }
 }
 
@@ -566,9 +349,7 @@
     border-radius: 1.2rem;
     background: rgba(8, 12, 22, 0.84);
     box-shadow: var(--showroom-shadow-soft);
-    backdrop-filter:
-      blur(18px)
-      saturate(140%);
+    backdrop-filter: blur(18px) saturate(140%);
   }
 
   .brand {
@@ -591,12 +372,7 @@
     border: 1px solid var(--showroom-line-gold);
     border-radius: 50%;
     color: var(--showroom-gold-bright);
-    background:
-      radial-gradient(
-        circle,
-        rgba(232, 199, 119, 0.14),
-        transparent 67%
-      );
+    background: radial-gradient(circle, rgba(232, 199, 119, 0.14), transparent 67%);
     font-family: var(--showroom-font-display);
     font-size: 0.9rem;
   }
@@ -636,79 +412,6 @@
     border-color: var(--showroom-line-gold);
     color: var(--showroom-gold-bright);
   }
-
-  .route-menu {
-    position: relative;
-  }
-
-  .route-menu > summary {
-    display: inline-flex;
-    min-height: 2.75rem;
-    align-items: center;
-    padding: 0.72rem 1rem;
-    border: 1px solid var(--showroom-line-strong);
-    border-radius: 999px;
-    color: var(--showroom-text);
-    background: rgba(255, 255, 255, 0.035);
-    font-weight: 750;
-    list-style: none;
-  }
-
-  .route-menu > summary::-webkit-details-marker {
-    display: none;
-  }
-
-  .route-menu-panel {
-    position: absolute;
-    top: calc(100% + 0.75rem);
-    right: 0;
-    width:
-      min(
-        34rem,
-        calc(100vw - 2rem)
-      );
-    max-height:
-      min(
-        75vh,
-        46rem
-      );
-    overflow: auto;
-    padding: 0.85rem;
-    border: 1px solid var(--showroom-line-strong);
-    border-radius: var(--showroom-radius-lg);
-    background: var(--showroom-panel-strong);
-    box-shadow: var(--showroom-shadow);
-  }
-
-  .fallback-navigation {
-    display: grid;
-    gap: 0.8rem;
-  }
-
-  .fallback-navigation__group {
-    display: grid;
-    gap: 0.45rem;
-    padding: 0.85rem;
-    border: 1px solid var(--showroom-line);
-    border-radius: var(--showroom-radius-md);
-    background: rgba(255, 255, 255, 0.022);
-  }
-
-  .fallback-navigation__group > strong {
-    color: var(--showroom-gold);
-    font-size: 0.72rem;
-    letter-spacing: 0.11em;
-    text-transform: uppercase;
-  }
-
-  .fallback-navigation button,
-  .fallback-navigation a {
-    justify-content: flex-start;
-    min-height: 2.35rem;
-    padding: 0.55rem 0.75rem;
-    border-radius: 0.65rem;
-    text-align: left;
-  }
 }
 
 @layer stages {
@@ -716,7 +419,7 @@
     width: 100%;
     max-width: var(--showroom-orbit-width);
     justify-self: end;
-    overflow: hidden;
+    overflow: visible;
   }
 
   .showroom-orbit__heading {
@@ -725,63 +428,13 @@
   }
 
   .showroom-orbit__heading h2 {
-    font-size:
-      clamp(
-        2rem,
-        4vw,
-        3.4rem
-      );
-  }
-
-  .showroom-orbit__heading p {
-    max-width: 36rem;
+    font-size: clamp(2rem, 4vw, 3.4rem);
   }
 
   .showroom-orbit__legend {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem 1rem;
-    margin-top: 1rem;
-    color: var(--showroom-text-dim);
-    font-size: 0.72rem;
+    display: none;
   }
 
-  .showroom-orbit__legend span {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-  }
-
-  .showroom-orbit__legend i {
-    width: 0.55rem;
-    aspect-ratio: 1;
-    border-radius: 50%;
-    background: var(--showroom-cyan);
-    box-shadow:
-      0 0 0.8rem
-      rgba(114, 217, 255, 0.65);
-  }
-
-  .showroom-orbit__legend
-  [data-showroom-legend-kind="portal"]
-  i {
-    background: var(--showroom-gold);
-    box-shadow:
-      0 0 0.9rem
-      rgba(232, 199, 119, 0.8);
-  }
-
-  /*
-    The orbit field is the bounded interactive landscape.
-
-    touch-action:none prevents the browser from converting a gesture begun
-    inside this field into document panning or pinch handling.
-
-    overscroll-behavior:contain prevents gesture chaining into the page.
-
-    These declarations are deliberately scoped to the constellation field.
-    Normal document scrolling remains available everywhere outside it.
-  */
   .showroom-orbit__field,
   [data-showroom-orbit-field],
   [data-showroom-scene-field] {
@@ -802,22 +455,12 @@
     border: 1px solid var(--showroom-line);
     border-radius: 50%;
     background:
-      radial-gradient(
-        circle at center,
-        rgba(52, 79, 137, 0.23),
-        transparent 19%
-      ),
-      radial-gradient(
-        circle at center,
-        rgba(4, 8, 17, 0.2) 0 34%,
-        rgba(4, 7, 14, 0.92) 76%
-      ),
+      radial-gradient(circle at center, rgba(52, 79, 137, 0.23), transparent 19%),
+      radial-gradient(circle at center, rgba(4, 8, 17, 0.2) 0 34%, rgba(4, 7, 14, 0.92) 76%),
       #060912;
     box-shadow:
-      inset 0 0 5rem
-      rgba(49, 82, 154, 0.16),
-      0 1.5rem 4rem
-      rgba(0, 0, 0, 0.32);
+      inset 0 0 5rem rgba(49, 82, 154, 0.16),
+      0 1.5rem 4rem rgba(0, 0, 0, 0.32);
     isolation: isolate;
     cursor: grab;
   }
@@ -848,39 +491,12 @@
     z-index: 0;
     pointer-events: none;
     background-image:
-      radial-gradient(
-        circle at 17% 24%,
-        rgba(255, 255, 255, 0.82) 0 1px,
-        transparent 1.7px
-      ),
-      radial-gradient(
-        circle at 78% 18%,
-        rgba(232, 199, 119, 0.82) 0 1px,
-        transparent 1.8px
-      ),
-      radial-gradient(
-        circle at 88% 62%,
-        rgba(114, 217, 255, 0.72) 0 1px,
-        transparent 1.8px
-      ),
-      radial-gradient(
-        circle at 36% 85%,
-        rgba(255, 255, 255, 0.63) 0 1px,
-        transparent 1.8px
-      ),
-      radial-gradient(
-        circle at 12% 68%,
-        rgba(175, 140, 255, 0.65) 0 1px,
-        transparent 1.8px
-      );
+      radial-gradient(circle at 17% 24%, rgba(255, 255, 255, 0.82) 0 1px, transparent 1.7px),
+      radial-gradient(circle at 78% 18%, rgba(232, 199, 119, 0.82) 0 1px, transparent 1.8px),
+      radial-gradient(circle at 88% 62%, rgba(114, 217, 255, 0.72) 0 1px, transparent 1.8px),
+      radial-gradient(circle at 36% 85%, rgba(255, 255, 255, 0.63) 0 1px, transparent 1.8px);
   }
 
-  /*
-    The canvases remain visual surfaces only.
-
-    Semantic controls and field-level gesture handling retain pointer
-    authority. The canvases must not intercept taps from the semantic layer.
-  */
   [data-showroom-orbit-field] canvas,
   [data-showroom-scene-field] canvas {
     position: absolute;
@@ -906,18 +522,9 @@
     position: absolute;
     top: 50%;
     left: 50%;
-    width:
-      clamp(
-        5.5rem,
-        22%,
-        7.5rem
-      );
+    width: clamp(5.5rem, 22%, 7.5rem);
     aspect-ratio: 1;
-    transform:
-      translate(
-        -50%,
-        -50%
-      );
+    transform: translate(-50%, -50%);
   }
 
   .showroom-compass-mount {
@@ -925,17 +532,9 @@
     place-items: center;
     border: 1px solid rgba(232, 199, 119, 0.36);
     border-radius: 50%;
-    background:
-      radial-gradient(
-        circle,
-        rgba(232, 199, 119, 0.12),
-        rgba(9, 13, 24, 0.88) 66%
-      );
-    box-shadow:
-      0 0 2.2rem
-      rgba(232, 199, 119, 0.16),
-      inset 0 0 1.4rem
-      rgba(255, 255, 255, 0.03);
+    background: radial-gradient(circle, rgba(232, 199, 119, 0.12), rgba(9, 13, 24, 0.88) 66%);
+    box-shadow: 0 0 2.2rem rgba(232, 199, 119, 0.16),
+      inset 0 0 1.4rem rgba(255, 255, 255, 0.03);
   }
 
   .showroom-compass-visual {
@@ -949,18 +548,10 @@
   .showroom-compass-visual::before,
   .showroom-compass-visual::after {
     position: absolute;
-    inset:
-      50%
-      auto
-      auto
-      50%;
+    inset: 50% auto auto 50%;
     content: "";
     background: rgba(232, 199, 119, 0.4);
-    transform:
-      translate(
-        -50%,
-        -50%
-      );
+    transform: translate(-50%, -50%);
   }
 
   .showroom-compass-visual::before {
@@ -973,8 +564,7 @@
     height: 1px;
   }
 
-  .showroom-compass-visual
-  [data-compass-point] {
+  .showroom-compass-visual [data-compass-point] {
     position: absolute;
     color: var(--showroom-gold-bright);
     font-size: 0.55rem;
@@ -982,26 +572,22 @@
     transform: rotate(-45deg);
   }
 
-  .showroom-compass-visual
-  [data-compass-point="north"] {
+  .showroom-compass-visual [data-compass-point="north"] {
     top: -1.2rem;
     left: calc(50% - 0.3rem);
   }
 
-  .showroom-compass-visual
-  [data-compass-point="east"] {
+  .showroom-compass-visual [data-compass-point="east"] {
     top: calc(50% - 0.35rem);
     right: -1.2rem;
   }
 
-  .showroom-compass-visual
-  [data-compass-point="south"] {
+  .showroom-compass-visual [data-compass-point="south"] {
     bottom: -1.2rem;
     left: calc(50% - 0.3rem);
   }
 
-  .showroom-compass-visual
-  [data-compass-point="west"] {
+  .showroom-compass-visual [data-compass-point="west"] {
     top: calc(50% - 0.35rem);
     left: -1.2rem;
   }
@@ -1027,12 +613,7 @@
   .showroom-compass-control__label {
     color: var(--showroom-gold-bright);
     font-family: var(--showroom-font-display);
-    font-size:
-      clamp(
-        0.72rem,
-        1.8vw,
-        0.95rem
-      );
+    font-size: clamp(0.72rem, 1.8vw, 0.95rem);
   }
 
   .showroom-compass-control__instruction {
@@ -1061,11 +642,6 @@
     touch-action: none;
   }
 
-  /*
-    Semantic controls remain the accessible hit surfaces over the enhanced
-    WebGL crystals. They retain pointer authority even when their fallback
-    pseudo-element artwork is visually suppressed.
-  */
   .showroom-star {
     position: absolute;
     z-index: 2;
@@ -1088,22 +664,11 @@
   .showroom-star::before,
   .showroom-star::after {
     position: absolute;
-    inset:
-      50%
-      auto
-      auto
-      50%;
+    inset: 50% auto auto 50%;
     pointer-events: none;
     content: "";
-    transform:
-      translate(
-        -50%,
-        -50%
-      )
-      rotate(45deg);
-    transition:
-      opacity var(--showroom-transition-fast),
-      transform var(--showroom-transition-fast);
+    transform: translate(-50%, -50%) rotate(45deg);
+    transition: opacity var(--showroom-transition-fast), transform var(--showroom-transition-fast);
   }
 
   .showroom-star::before {
@@ -1111,269 +676,167 @@
     aspect-ratio: 1;
     border: 1px solid rgba(255, 255, 255, 0.66);
     background:
-      linear-gradient(
-        135deg,
-        rgba(255, 255, 255, 0.95),
-        rgba(114, 217, 255, 0.35) 48%,
-        rgba(12, 20, 38, 0.92)
-      );
+      linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(114, 217, 255, 0.35) 48%, rgba(12, 20, 38, 0.92));
     box-shadow:
-      0 0 0.9rem
-      rgba(114, 217, 255, 0.56),
-      inset 0 0 0.55rem
-      rgba(255, 255, 255, 0.26);
+      0 0 0.9rem rgba(114, 217, 255, 0.56),
+      inset 0 0 0.55rem rgba(255, 255, 255, 0.26);
   }
 
   .showroom-star::after {
     width: 135%;
     height: 1px;
-    background:
-      linear-gradient(
-        90deg,
-        transparent,
-        rgba(255, 255, 255, 0.8),
-        transparent
-      );
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8), transparent);
   }
 
   .showroom-star--cardinal {
-    width:
-      clamp(
-        3.5rem,
-        12%,
-        4.8rem
-      );
+    width: clamp(3.5rem, 12%, 4.8rem);
   }
 
   .showroom-star--cardinal::before {
     border-color: rgba(255, 226, 157, 0.82);
-    background:
-      linear-gradient(
-        135deg,
-        #fff0bc,
-        #d7a94b 43%,
-        #4f3711 75%,
-        #120d07
-      );
+    background: linear-gradient(135deg, #fff0bc, #d7a94b 43%, #4f3711 75%, #120d07);
     box-shadow:
-      0 0 1.6rem
-      rgba(232, 199, 119, 0.56),
-      inset 0 0 0.7rem
-      rgba(255, 255, 255, 0.4);
+      0 0 1.6rem rgba(232, 199, 119, 0.56),
+      inset 0 0 0.7rem rgba(255, 255, 255, 0.4);
   }
 
   .showroom-star--portal::before {
     border-color: rgba(255, 224, 147, 0.86);
-    background:
-      linear-gradient(
-        135deg,
-        #fff2c3,
-        #d9ad56 50%,
-        #573c12
-      );
+    background: linear-gradient(135deg, #fff2c3, #d9ad56 50%, #573c12);
     box-shadow:
-      0 0 1.2rem
-      rgba(232, 199, 119, 0.68),
-      inset 0 0 0.5rem
-      rgba(255, 255, 255, 0.34);
+      0 0 1.2rem rgba(232, 199, 119, 0.68),
+      inset 0 0 0.5rem rgba(255, 255, 255, 0.34);
   }
 
   .showroom-star--primary-portal::before {
     box-shadow:
-      0 0 1.9rem
-      rgba(232, 199, 119, 0.95),
-      0 0 3rem
-      rgba(255, 217, 127, 0.28),
-      inset 0 0 0.6rem
-      rgba(255, 255, 255, 0.42);
+      0 0 1.9rem rgba(232, 199, 119, 0.95),
+      0 0 3rem rgba(255, 217, 127, 0.28),
+      inset 0 0 0.6rem rgba(255, 255, 255, 0.42);
   }
 
-  [data-showroom-cardinal-id="north"]
-  [data-showroom-cardinal-control],
   [data-showroom-cardinal-id="north"][data-showroom-cardinal-control] {
     top: 7%;
     left: 50%;
     transform: translateX(-50%);
   }
 
-  [data-showroom-cardinal-id="east"]
-  [data-showroom-cardinal-control],
   [data-showroom-cardinal-id="east"][data-showroom-cardinal-control] {
     top: 50%;
     right: 7%;
     transform: translateY(-50%);
   }
 
-  [data-showroom-cardinal-id="south"]
-  [data-showroom-cardinal-control],
   [data-showroom-cardinal-id="south"][data-showroom-cardinal-control] {
     bottom: 7%;
     left: 50%;
     transform: translateX(-50%);
   }
 
-  [data-showroom-cardinal-id="west"]
-  [data-showroom-cardinal-control],
   [data-showroom-cardinal-id="west"][data-showroom-cardinal-control] {
     top: 50%;
     left: 7%;
     transform: translateY(-50%);
   }
 
-  .showroom-star-cluster[data-showroom-cluster-id="north"]
-  [data-showroom-child-id="north-1"] {
+  .showroom-star-cluster[data-showroom-cluster-id="north"] [data-showroom-child-id="north-1"] {
     top: 20%;
     left: 33%;
   }
 
-  .showroom-star-cluster[data-showroom-cluster-id="north"]
-  [data-showroom-child-id="north-2"] {
+  .showroom-star-cluster[data-showroom-cluster-id="north"] [data-showroom-child-id="north-2"] {
     top: 16%;
     left: 44%;
   }
 
-  .showroom-star-cluster[data-showroom-cluster-id="north"]
-  [data-showroom-child-id="north-3"] {
+  .showroom-star-cluster[data-showroom-cluster-id="north"] [data-showroom-child-id="north-3"] {
     top: 16%;
     right: 44%;
   }
 
-  .showroom-star-cluster[data-showroom-cluster-id="north"]
-  [data-showroom-child-id="north-4"] {
+  .showroom-star-cluster[data-showroom-cluster-id="north"] [data-showroom-child-id="north-4"] {
     top: 20%;
     right: 33%;
   }
 
-  .showroom-star-cluster[data-showroom-cluster-id="east"]
-  [data-showroom-child-id="east-1"] {
+  .showroom-star-cluster[data-showroom-cluster-id="east"] [data-showroom-child-id="east-1"] {
     top: 33%;
     right: 20%;
   }
 
-  .showroom-star-cluster[data-showroom-cluster-id="east"]
-  [data-showroom-child-id="east-2"] {
+  .showroom-star-cluster[data-showroom-cluster-id="east"] [data-showroom-child-id="east-2"] {
     top: 44%;
     right: 16%;
   }
 
-  .showroom-star-cluster[data-showroom-cluster-id="east"]
-  [data-showroom-child-id="east-3"] {
+  .showroom-star-cluster[data-showroom-cluster-id="east"] [data-showroom-child-id="east-3"] {
     right: 16%;
     bottom: 44%;
   }
 
-  .showroom-star-cluster[data-showroom-cluster-id="east"]
-  [data-showroom-child-id="east-4"] {
+  .showroom-star-cluster[data-showroom-cluster-id="east"] [data-showroom-child-id="east-4"] {
     right: 20%;
     bottom: 33%;
   }
 
-  .showroom-star-cluster[data-showroom-cluster-id="south"]
-  [data-showroom-child-id="south-1"] {
+  .showroom-star-cluster[data-showroom-cluster-id="south"] [data-showroom-child-id="south-1"] {
     bottom: 20%;
     left: 33%;
   }
 
-  .showroom-star-cluster[data-showroom-cluster-id="south"]
-  [data-showroom-child-id="south-2"] {
+  .showroom-star-cluster[data-showroom-cluster-id="south"] [data-showroom-child-id="south-2"] {
     bottom: 16%;
     left: 44%;
   }
 
-  .showroom-star-cluster[data-showroom-cluster-id="south"]
-  [data-showroom-child-id="south-3"] {
+  .showroom-star-cluster[data-showroom-cluster-id="south"] [data-showroom-child-id="south-3"] {
     right: 44%;
     bottom: 16%;
   }
 
-  .showroom-star-cluster[data-showroom-cluster-id="south"]
-  [data-showroom-child-id="south-4"] {
+  .showroom-star-cluster[data-showroom-cluster-id="south"] [data-showroom-child-id="south-4"] {
     right: 33%;
     bottom: 20%;
   }
 
-  .showroom-star-cluster[data-showroom-cluster-id="west"]
-  [data-showroom-child-id="west-1"] {
+  .showroom-star-cluster[data-showroom-cluster-id="west"] [data-showroom-child-id="west-1"] {
     bottom: 33%;
     left: 20%;
   }
 
-  .showroom-star-cluster[data-showroom-cluster-id="west"]
-  [data-showroom-child-id="west-2"] {
+  .showroom-star-cluster[data-showroom-cluster-id="west"] [data-showroom-child-id="west-2"] {
     bottom: 44%;
     left: 16%;
   }
 
-  .showroom-star-cluster[data-showroom-cluster-id="west"]
-  [data-showroom-child-id="west-3"] {
+  .showroom-star-cluster[data-showroom-cluster-id="west"] [data-showroom-child-id="west-3"] {
     top: 44%;
     left: 16%;
   }
 
-  .showroom-star-cluster[data-showroom-cluster-id="west"]
-  [data-showroom-child-id="west-4"] {
+  .showroom-star-cluster[data-showroom-cluster-id="west"] [data-showroom-child-id="west-4"] {
     top: 33%;
     left: 20%;
   }
 
   .showroom-star:hover::before,
   .showroom-star:focus-visible::before {
-    transform:
-      translate(
-        -50%,
-        -50%
-      )
-      rotate(45deg)
-      scale(1.13);
+    transform: translate(-50%, -50%) rotate(45deg) scale(1.13);
   }
 
-  .showroom-star[aria-expanded="true"]::before,
-  .showroom-star[data-active]::before {
-    box-shadow:
-      0 0 1.6rem
-      rgba(255, 238, 184, 0.92),
-      0 0 3rem
-      rgba(232, 199, 119, 0.3),
-      inset 0 0 0.7rem
-      rgba(255, 255, 255, 0.48);
-  }
-
-  html[data-showroom-crystals-ready="true"]
-  .showroom-star::before,
-  html[data-showroom-crystals-ready="true"]
-  .showroom-star::after,
-  [data-showroom-root][data-showroom-crystals-ready="true"]
-  .showroom-star::before,
-  [data-showroom-root][data-showroom-crystals-ready="true"]
-  .showroom-star::after {
+  html[data-showroom-crystals-ready="true"] .showroom-star::before,
+  html[data-showroom-crystals-ready="true"] .showroom-star::after,
+  [data-showroom-root][data-showroom-crystals-ready="true"] .showroom-star::before,
+  [data-showroom-root][data-showroom-crystals-ready="true"] .showroom-star::after {
     opacity: 0;
   }
 
-  html[data-showroom-crystals-ready="true"]
-  [data-showroom-fallback-star-layer],
-  [data-showroom-root][data-showroom-crystals-ready="true"]
-  [data-showroom-fallback-star-layer] {
-    visibility: visible;
-    opacity: 1;
-    pointer-events: none;
-  }
-
-  html[data-showroom-crystals-ready="true"]
-  .showroom-star,
-  [data-showroom-root][data-showroom-crystals-ready="true"]
-  .showroom-star {
+  html[data-showroom-crystals-ready="true"] .showroom-star,
+  [data-showroom-root][data-showroom-crystals-ready="true"] .showroom-star {
     visibility: visible;
     opacity: 1;
     pointer-events: auto;
     touch-action: none;
-  }
-
-  html[data-showroom-crystals-ready="false"]
-  [data-showroom-fallback-star-layer],
-  [data-showroom-root][data-showroom-crystals-ready="false"]
-  [data-showroom-fallback-star-layer] {
-    visibility: visible;
-    opacity: 1;
   }
 
   .showroom-orbit__fallback {
@@ -1394,44 +857,18 @@
     text-align: center;
   }
 
-  html[data-showroom-crystals-ready="true"]
-  .showroom-orbit__fallback,
-  [data-showroom-root][data-showroom-crystals-ready="true"]
-  .showroom-orbit__fallback {
+  html[data-showroom-crystals-ready="true"] .showroom-orbit__fallback,
+  [data-showroom-root][data-showroom-crystals-ready="true"] .showroom-orbit__fallback {
     display: none;
   }
 
   .showroom-diamond-reveal {
     display: grid;
     gap: 1.3rem;
-    width:
-      min(
-        100%,
-        var(--showroom-diamond-width)
-      );
+    width: min(100%, var(--showroom-diamond-width));
     justify-self: center;
     overflow: hidden;
     border-color: rgba(232, 199, 119, 0.24);
-  }
-
-  .showroom-diamond-reveal::after {
-    position: absolute;
-    inset:
-      auto
-      10%
-      -10rem;
-    z-index: -1;
-    height: 22rem;
-    border-radius: 50%;
-    pointer-events: none;
-    content: "";
-    background:
-      radial-gradient(
-        ellipse,
-        rgba(93, 143, 255, 0.14),
-        transparent 70%
-      );
-    filter: blur(2rem);
   }
 
   .showroom-diamond-reveal__heading {
@@ -1450,16 +887,8 @@
     border: 1px solid var(--showroom-line-strong);
     border-radius: var(--showroom-radius-lg);
     background:
-      radial-gradient(
-        circle at 50% 42%,
-        rgba(72, 114, 206, 0.15),
-        transparent 34%
-      ),
-      linear-gradient(
-        180deg,
-        rgba(4, 7, 14, 0.72),
-        rgba(6, 9, 18, 0.98)
-      );
+      radial-gradient(circle at 50% 42%, rgba(72, 114, 206, 0.15), transparent 34%),
+      linear-gradient(180deg, rgba(4, 7, 14, 0.72), rgba(6, 9, 18, 0.98));
   }
 
   .showroom-diamond-layer,
@@ -1498,10 +927,6 @@
     cursor: grab;
   }
 
-  .diamond-stage:active {
-    cursor: grabbing;
-  }
-
   .diamond-stage canvas {
     width: 100%;
     height: 100%;
@@ -1514,12 +939,7 @@
     display: grid;
     place-items: center;
     padding: 1.5rem;
-    background:
-      radial-gradient(
-        circle,
-        rgba(14, 25, 47, 0.75),
-        rgba(5, 8, 15, 0.95)
-      );
+    background: radial-gradient(circle, rgba(14, 25, 47, 0.75), rgba(5, 8, 15, 0.95));
   }
 
   .diamond-fallback-card {
@@ -1537,26 +957,9 @@
   .diamond-fallback-object {
     width: 7rem;
     aspect-ratio: 1;
-    clip-path:
-      polygon(
-        50% 0%,
-        85% 28%,
-        72% 76%,
-        50% 100%,
-        28% 76%,
-        15% 28%
-      );
-    background:
-      linear-gradient(
-        160deg,
-        #fff0b1 0 18%,
-        #d8ac52 19% 37%,
-        #3b64c5 38% 74%,
-        #0c1a3c 75% 100%
-      );
-    box-shadow:
-      0 0 2rem
-      rgba(232, 199, 119, 0.26);
+    clip-path: polygon(50% 0%, 85% 28%, 72% 76%, 50% 100%, 28% 76%, 15% 28%);
+    background: linear-gradient(160deg, #fff0b1 0 18%, #d8ac52 19% 37%, #3b64c5 38% 74%, #0c1a3c 75% 100%);
+    box-shadow: 0 0 2rem rgba(232, 199, 119, 0.26);
   }
 
   .showroom-window-mount {
@@ -1577,15 +980,8 @@
     border: 1px solid var(--showroom-line-gold);
     border-radius: 999px;
     color: #131006;
-    background:
-      linear-gradient(
-        180deg,
-        var(--showroom-gold-bright),
-        var(--showroom-gold)
-      );
-    box-shadow:
-      0 1rem 2rem
-      rgba(0, 0, 0, 0.25);
+    background: linear-gradient(180deg, var(--showroom-gold-bright), var(--showroom-gold));
+    box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.25);
     text-align: left;
     pointer-events: auto;
     cursor: pointer;
@@ -1604,11 +1000,6 @@
     font-weight: 700;
   }
 
-  [data-showroom-window-state="open"]
-  .showroom-window-control {
-    opacity: 0.82;
-  }
-
   .showroom-diamond-controls {
     position: relative;
     z-index: 2;
@@ -1624,6 +1015,7 @@
     padding: 0.85rem 1rem;
     color: var(--showroom-text);
     font-weight: 800;
+    cursor: pointer;
   }
 
   .object-control-body {
@@ -1634,16 +1026,11 @@
 
   .two-view-buttons {
     display: grid;
-    grid-template-columns:
-      repeat(
-        2,
-        minmax(0, 1fr)
-      );
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 0.65rem;
   }
 
-  .two-view-buttons button,
-  .technical-control-bridge button {
+  .two-view-buttons button {
     min-height: 2.8rem;
     padding: 0.72rem 1rem;
     border: 1px solid var(--showroom-line-strong);
@@ -1658,12 +1045,7 @@
   .two-view-buttons button[data-active] {
     color: #151109;
     border-color: rgba(255, 233, 178, 0.9);
-    background:
-      linear-gradient(
-        180deg,
-        var(--showroom-gold-bright),
-        var(--showroom-gold)
-      );
+    background: linear-gradient(180deg, var(--showroom-gold-bright), var(--showroom-gold));
   }
 
   .technical-control-bridge {
@@ -1684,100 +1066,12 @@
     flex-wrap: wrap;
     gap: 0.55rem;
   }
-
-  .showroom-secondary-object-stage {
-    display: grid;
-    gap: 1.2rem;
-    width:
-      min(
-        100%,
-        var(--showroom-reading-width)
-      );
-    justify-self: center;
-    border-style: dashed;
-    border-color: rgba(167, 192, 234, 0.24);
-    background:
-      repeating-linear-gradient(
-        -45deg,
-        rgba(255, 255, 255, 0.012) 0 0.7rem,
-        transparent 0.7rem 1.4rem
-      ),
-      rgba(12, 17, 30, 0.72);
-  }
-
-  .showroom-secondary-object-stage__heading {
-    max-width: 45rem;
-  }
-
-  .showroom-secondary-object-stage__heading p {
-    margin-top: 0.7rem;
-  }
-
-  .showroom-secondary-object-viewport {
-    display: grid;
-    min-height: 20rem;
-    place-items: center;
-    padding: 2rem;
-    border: 1px dashed rgba(167, 192, 234, 0.26);
-    border-radius: var(--showroom-radius-lg);
-    color: var(--showroom-text-dim);
-    background:
-      radial-gradient(
-        circle at center,
-        rgba(93, 143, 255, 0.06),
-        transparent 45%
-      ),
-      rgba(4, 7, 14, 0.48);
-    text-align: center;
-  }
-
-  .showroom-secondary-object-stage canvas {
-    display: none !important;
-  }
-
-  #showroom-orbit,
-  #showroom-diamond-reveal,
-  #showroom-secondary-object {
-    visibility: visible;
-    opacity: 1;
-  }
-
-  .showroom-intro-layout
-  #showroom-orbit {
-    display: block;
-  }
-
-  #showroom-diamond-reveal {
-    display: grid;
-  }
-
-  #showroom-secondary-object {
-    display: grid;
-  }
-
-  .showroom-front-host
-  [data-showroom-front-state="inactive"],
-  .showroom-front-host
-  [data-showroom-front][hidden] {
-    display: none;
-  }
-
-  #showroom-orbit[data-showroom-front-state] {
-    display: block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-  }
-
-  #showroom-diamond-reveal[data-showroom-front-state],
-  #showroom-secondary-object[data-showroom-front-state] {
-    display: grid !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-  }
 }
 
 @layer controls {
   .showroom-controller-panel {
+    position: relative;
+    z-index: 10;
     display: grid;
     gap: 0.85rem;
     margin-top: 1rem;
@@ -1785,12 +1079,8 @@
     border: 1px solid var(--showroom-line-strong);
     border-radius: var(--showroom-radius-lg);
     background:
-      linear-gradient(
-        180deg,
-        rgba(255, 255, 255, 0.035),
-        transparent 55%
-      ),
-      rgba(7, 11, 21, 0.82);
+      linear-gradient(180deg, rgba(255, 255, 255, 0.035), transparent 55%),
+      rgba(7, 11, 21, 0.88);
   }
 
   .showroom-controller-panel__heading {
@@ -1800,7 +1090,6 @@
 
   [data-showroom-controller-panel-eyebrow],
   .showroom-orbit-guide__eyebrow,
-  .showroom-instructions__badge,
   .showroom-return-zone__eyebrow {
     color: var(--showroom-gold);
     font-size: 0.66rem;
@@ -1810,21 +1099,12 @@
   }
 
   .showroom-controller-panel h3 {
-    font-size:
-      clamp(
-        1.4rem,
-        2.3vw,
-        1.9rem
-      );
+    font-size: clamp(1.4rem, 2.3vw, 1.9rem);
   }
 
   .showroom-controller-panel__facts {
     display: grid;
-    grid-template-columns:
-      repeat(
-        2,
-        minmax(0, 1fr)
-      );
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 0.55rem;
   }
 
@@ -1863,17 +1143,6 @@
     font-size: 0.8rem;
   }
 
-  [data-showroom-controller-panel-state="cardinal-selected"] {
-    border-color: rgba(114, 217, 255, 0.34);
-  }
-
-  [data-showroom-controller-panel-state="child-selected"] {
-    border-color: rgba(232, 199, 119, 0.42);
-    box-shadow:
-      0 0 2rem
-      rgba(232, 199, 119, 0.08);
-  }
-
   .showroom-orbit-guide {
     margin-top: 1rem;
     padding: 1rem;
@@ -1895,350 +1164,16 @@
     color: var(--showroom-text-soft);
     font-size: 0.85rem;
   }
-
-  .showroom-instructions {
-    width:
-      min(
-        100%,
-        var(--showroom-reading-width)
-      );
-    justify-self: center;
-    padding-block: 0;
-  }
-
-  .showroom-instructions__disclosure > summary {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding-block: 1rem;
-    list-style: none;
-  }
-
-  .showroom-instructions__disclosure
-  > summary::-webkit-details-marker {
-    display: none;
-  }
-
-  .showroom-instructions__summary-copy {
-    display: grid;
-  }
-
-  .showroom-instructions__summary-copy small {
-    color: var(--showroom-text-dim);
-  }
-
-  .showroom-instructions__body {
-    padding: 0 0 1rem;
-    border-top: 1px solid var(--showroom-line);
-  }
-
-  .showroom-instructions__body p {
-    padding-top: 1rem;
-  }
-}
-
-@layer narrative {
-  .showroom-narrative-region {
-    width:
-      min(
-        100%,
-        var(--showroom-content-width)
-      );
-    justify-self: center;
-  }
-
-  .showroom-narrative-region > header {
-    max-width: 48rem;
-  }
-
-  .showroom-narrative-region__grid {
-    display: grid;
-    grid-template-columns:
-      repeat(
-        3,
-        minmax(0, 1fr)
-      );
-    gap: 1rem;
-    margin-top: 1.35rem;
-  }
-
-  .showroom-narrative-destination {
-    min-width: 0;
-    padding: 1.1rem;
-    border: 1px solid var(--showroom-line);
-    border-radius: var(--showroom-radius-lg);
-    background:
-      linear-gradient(
-        180deg,
-        rgba(255, 255, 255, 0.03),
-        transparent
-      ),
-      rgba(7, 11, 21, 0.6);
-  }
-
-  .showroom-narrative-destination h3 {
-    font-size: 1.45rem;
-  }
-
-  .showroom-narrative-destination p {
-    margin-top: 0.65rem;
-  }
-
-  [data-showroom-local-destination-surface]:target {
-    scroll-margin-top: 6.5rem;
-  }
-
-  .showroom-narrative-destination:target,
-  .mirrorland-preface__content section:target,
-  #arrival:target,
-  #showroom-window-threshold:target,
-  #showroom-diamond-stage:target {
-    border-color: rgba(232, 199, 119, 0.55);
-    box-shadow:
-      0 0 0 1px
-      rgba(232, 199, 119, 0.15),
-      0 0 2.2rem
-      rgba(232, 199, 119, 0.1);
-  }
 }
 
 @layer fronts {
-  #object-gauges,
-  .showroom-front-host {
-    width:
-      min(
-        100%,
-        var(--showroom-content-width)
-      );
-    justify-self: center;
-  }
-
-  .showroom-front-host {
-    display: grid;
-    gap: var(--showroom-gap-5);
-  }
-
-  .showroom-front__heading {
-    display: flex;
-    align-items: end;
-    justify-content: space-between;
-    gap: 1rem;
-  }
-
-  .showroom-front__heading p {
-    max-width: 46rem;
-    margin-top: 0.65rem;
-  }
-
-  .showroom-gauge-dashboard {
-    display: grid;
-    grid-template-columns:
-      minmax(18rem, 0.9fr)
-      minmax(0, 1.1fr);
-    gap: 1rem;
-    margin-top: 1.25rem;
-  }
-
-  .showroom-gauge-selector {
-    display: grid;
-    grid-template-columns:
-      repeat(
-        2,
-        minmax(0, 1fr)
-      );
-    gap: 0.7rem;
-    align-content: start;
-  }
-
-  .showroom-gauge-selector--status {
-    grid-template-columns: 1fr;
-  }
-
-  .showroom-gauge {
-    display: grid;
-    min-height: 7rem;
-    align-content: start;
-    gap: 0.2rem;
-    padding: 1rem;
-    border: 1px solid var(--showroom-line);
-    border-radius: var(--showroom-radius-md);
-    color: var(--showroom-text);
-    background:
-      linear-gradient(
-        180deg,
-        rgba(255, 255, 255, 0.03),
-        transparent
-      ),
-      rgba(255, 255, 255, 0.018);
-    text-align: left;
-    cursor: pointer;
-    transition:
-      border-color var(--showroom-transition-fast),
-      background-color var(--showroom-transition-fast),
-      transform var(--showroom-transition-fast);
-  }
-
-  .showroom-gauge:hover {
-    border-color: var(--showroom-line-strong);
-    transform: translateY(-1px);
-  }
-
-  .showroom-gauge[aria-expanded="true"] {
-    border-color: var(--showroom-line-gold);
-    background:
-      linear-gradient(
-        180deg,
-        rgba(232, 199, 119, 0.08),
-        transparent
-      ),
-      rgba(255, 255, 255, 0.025);
-  }
-
-  .showroom-gauge strong {
-    color: var(--showroom-gold-bright);
-    font-family: var(--showroom-font-display);
-    font-size: 1.55rem;
-  }
-
-  .showroom-gauge span {
-    font-weight: 800;
-  }
-
-  .showroom-gauge small {
-    color: var(--showroom-text-dim);
-  }
-
-  .showroom-gauge--capability-compact {
-    min-height: 5.4rem;
-  }
-
-  .showroom-gauge--status-row {
-    min-height: 4rem;
-    grid-template-columns: 1fr auto;
-    align-items: center;
-  }
-
-  .showroom-gauge--status-row strong {
-    font-family: var(--showroom-font-ui);
-    font-size: 0.88rem;
-  }
-
-  .showroom-gauge-details {
-    min-height: 100%;
-    padding: 1.2rem;
-    border: 1px solid var(--showroom-line);
-    border-radius: var(--showroom-radius-lg);
-    background:
-      radial-gradient(
-        circle at 100% 0%,
-        rgba(93, 143, 255, 0.08),
-        transparent 18rem
-      ),
-      rgba(5, 9, 18, 0.66);
-  }
-
-  .showroom-gauge-detail {
-    display: none;
-  }
-
-  .showroom-gauge-detail:first-child {
-    display: block;
-  }
-
-  .showroom-gauge-detail[data-active],
-  .showroom-gauge-detail[aria-hidden="false"] {
-    display: block;
-  }
-
-  .showroom-gauge-detail[aria-hidden="true"] {
-    display: none;
-  }
-
-  .showroom-gauge-detail h3 {
-    font-size: 1.65rem;
-  }
-
-  .showroom-gauge-detail p {
-    margin-top: 0.7rem;
-  }
-
-  .showroom-information-tabs {
-    margin-top: 1.25rem;
-  }
-
-  .showroom-information-tablist {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.55rem;
-    padding-bottom: 0.85rem;
-    border-bottom: 1px solid var(--showroom-line);
-  }
-
-  .showroom-information-tablist button {
-    min-height: 2.6rem;
-    padding: 0.65rem 0.9rem;
-    border: 1px solid var(--showroom-line);
-    border-radius: 999px;
-    color: var(--showroom-text-soft);
-    background: rgba(255, 255, 255, 0.025);
-    font-weight: 800;
-    cursor: pointer;
-  }
-
-  .showroom-information-tablist
-  button[aria-selected="true"] {
-    color: #151109;
-    border-color: var(--showroom-line-gold);
-    background:
-      linear-gradient(
-        180deg,
-        var(--showroom-gold-bright),
-        var(--showroom-gold)
-      );
-  }
-
-  .showroom-information-panel {
-    display: none;
-    padding-top: 1rem;
-  }
-
-  .showroom-information-panel
-  [data-information-panel-id="platform"],
-  .showroom-information-panel[data-information-panel-id="platform"] {
-    display: block;
-  }
-
-  .showroom-information-panel[data-active],
-  .showroom-information-panel[aria-hidden="false"] {
-    display: block;
-  }
-
-  .showroom-information-panel[aria-hidden="true"] {
-    display: none;
-  }
-
-  .showroom-information-panel h3 {
-    font-size: 1.65rem;
-  }
-
-  .showroom-information-panel p {
-    margin-top: 0.6rem;
-  }
-
   .showroom-return-zone {
     display: flex;
-    width:
-      min(
-        100%,
-        var(--showroom-content-width)
-      );
+    width: min(100%, var(--showroom-content-width));
     align-items: center;
     justify-content: space-between;
     gap: 1.5rem;
-    margin:
-      var(--showroom-gap-5)
-      auto
-      0;
+    margin: var(--showroom-gap-5) auto 0;
   }
 
   .showroom-return-zone__heading {
@@ -2279,85 +1214,6 @@
     color: var(--showroom-text-dim);
     font-size: 0.78rem;
   }
-}
-
-@layer dialogs {
-  .showroom-route-dialog {
-    width:
-      min(
-        36rem,
-        calc(100% - 2rem)
-      );
-    padding: 0;
-    border: 1px solid var(--showroom-line-strong);
-    border-radius: var(--showroom-radius-xl);
-    color: var(--showroom-text);
-    background: var(--showroom-panel-strong);
-    box-shadow:
-      0 2rem 7rem
-      rgba(0, 0, 0, 0.58);
-  }
-
-  .showroom-route-dialog::backdrop {
-    background: rgba(1, 3, 8, 0.78);
-    backdrop-filter: blur(8px);
-  }
-
-  .dialog-shell {
-    padding: 1.4rem;
-  }
-
-  .dialog-header {
-    display: flex;
-    align-items: start;
-    justify-content: space-between;
-    gap: 1rem;
-  }
-
-  .dialog-title > span {
-    color: var(--showroom-gold);
-    font-size: 0.66rem;
-    font-weight: 900;
-    letter-spacing: 0.13em;
-    text-transform: uppercase;
-  }
-
-  .dialog-title h2 {
-    margin-top: 0.35rem;
-    font-size:
-      clamp(
-        1.75rem,
-        4vw,
-        2.7rem
-      );
-  }
-
-  .dialog-close {
-    display: grid;
-    width: 2.5rem;
-    aspect-ratio: 1;
-    flex: 0 0 auto;
-    place-items: center;
-    border: 1px solid var(--showroom-line);
-    border-radius: 50%;
-    color: var(--showroom-text);
-    background: rgba(255, 255, 255, 0.035);
-    font-size: 1.25rem;
-    cursor: pointer;
-  }
-
-  .showroom-route-dialog
-  > .dialog-shell
-  > p {
-    margin-top: 1rem;
-  }
-
-  .showroom-route-dialog__choices {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.65rem;
-    margin-top: 1.25rem;
-  }
 
   .skip,
   .showroom-accessible-orbit-return {
@@ -2373,9 +1229,7 @@
     font-weight: 900;
     text-decoration: none;
     transform: translateY(-220%);
-    transition:
-      transform
-      var(--showroom-transition-fast);
+    transition: transform var(--showroom-transition-fast);
   }
 
   .skip:focus,
@@ -2391,9 +1245,7 @@
 @layer responsive {
   @media (max-width: 76rem) {
     .showroom-intro-layout {
-      grid-template-columns:
-        minmax(0, 1fr)
-        minmax(26rem, 0.9fr);
+      grid-template-columns: minmax(0, 1fr) minmax(26rem, 0.9fr);
     }
 
     .showroom-threshold {
@@ -2407,47 +1259,13 @@
     }
 
     .showroom-orbit {
-      width:
-        min(
-          100%,
-          38rem
-        );
+      width: min(100%, 38rem);
       max-width: 38rem;
       justify-self: center;
     }
 
     .showroom-threshold {
       min-height: auto;
-    }
-
-    .showroom-gauge-dashboard {
-      grid-template-columns: 1fr;
-    }
-
-    .showroom-gauge-selector {
-      grid-template-columns:
-        repeat(
-          4,
-          minmax(0, 1fr)
-        );
-    }
-
-    .showroom-gauge-selector--status {
-      grid-template-columns:
-        repeat(
-          3,
-          minmax(0, 1fr)
-        );
-    }
-
-    .showroom-gauge--status-row {
-      min-height: 6rem;
-      grid-template-columns: 1fr;
-      align-content: start;
-    }
-
-    .showroom-narrative-region__grid {
-      grid-template-columns: 1fr;
     }
 
     .showroom-return-zone {
@@ -2458,11 +1276,7 @@
 
   @media (max-width: 48rem) {
     .showroom-shell {
-      width:
-        min(
-          calc(100% - 1rem),
-          var(--showroom-shell-width)
-        );
+      width: min(calc(100% - 1rem), var(--showroom-shell-width));
       padding-top: 0.5rem;
     }
 
@@ -2478,26 +1292,14 @@
       flex-direction: column;
     }
 
-    .showroom-nav > button,
-    .route-menu > summary {
+    .showroom-nav > button {
       width: 100%;
       justify-content: center;
-    }
-
-    .route-menu-panel {
-      position: static;
-      width: 100%;
-      max-height: none;
-      margin-top: 0.6rem;
     }
 
     .showroom-threshold,
     .showroom-orbit,
     .showroom-diamond-reveal,
-    #object-gauges,
-    .showroom-secondary-object-stage,
-    .showroom-narrative-region,
-    .showroom-front,
     .showroom-return-zone {
       padding: 1rem;
       border-radius: 1.2rem;
@@ -2506,17 +1308,77 @@
     .showroom-orbit {
       width: 100%;
       max-width: 38rem;
+      overflow: visible;
     }
 
     .showroom-orbit__field {
+      height: min(78vw, 22rem);
       min-height: 0;
-      aspect-ratio: 1;
+      aspect-ratio: auto;
+      border-radius: 1.4rem;
+      overflow: hidden;
     }
 
-    /*
-      Mobile retains the same bounded interaction contract. The orbit field
-      must not pass a gesture into document scrolling.
-    */
+    .showroom-orbit__field::before,
+    .showroom-orbit__field::after {
+      border-radius: 1.4rem;
+    }
+
+    .showroom-semantic-star-layer {
+      inset: 0;
+    }
+
+    .showroom-primary-stars,
+    .showroom-star-cluster {
+      inset: 0;
+    }
+
+    .showroom-star {
+      width: 1.85rem;
+    }
+
+    .showroom-star--cardinal {
+      width: clamp(2.6rem, 10vw, 3.4rem);
+    }
+
+    .showroom-compass-mount,
+    .showroom-compass-control {
+      width: clamp(4.4rem, 18vw, 5.8rem);
+    }
+
+    .showroom-compass-control {
+      padding: 0.55rem;
+    }
+
+    .showroom-compass-control__label {
+      font-size: clamp(0.62rem, 2.5vw, 0.82rem);
+    }
+
+    .showroom-compass-control__instruction {
+      font-size: 0.46rem;
+    }
+
+    .showroom-orbit__fallback {
+      right: 0.7rem;
+      bottom: 0.7rem;
+      left: 0.7rem;
+      padding: 0.45rem 0.55rem;
+    }
+
+    .showroom-orbit__fallback p {
+      font-size: 0.62rem;
+    }
+
+    .showroom-controller-panel {
+      position: relative;
+      z-index: 10;
+      margin-top: 1rem;
+    }
+
+    .showroom-controller-panel__facts {
+      grid-template-columns: 1fr;
+    }
+
     .showroom-orbit__field,
     [data-showroom-orbit-field],
     [data-showroom-scene-field],
@@ -2527,8 +1389,10 @@
       overscroll-behavior: contain;
     }
 
-    .showroom-controller-panel__facts {
-      grid-template-columns: 1fr;
+    [data-showroom-orbit-field] canvas,
+    [data-showroom-scene-field] canvas {
+      pointer-events: none;
+      touch-action: none;
     }
 
     .showroom-reveal-scene {
@@ -2554,15 +1418,6 @@
       flex: 1;
     }
 
-    .showroom-gauge-selector,
-    .showroom-gauge-selector--status {
-      grid-template-columns:
-        repeat(
-          2,
-          minmax(0, 1fr)
-        );
-    }
-
     .showroom-footer {
       align-items: flex-start;
       flex-direction: column;
@@ -2576,56 +1431,31 @@
 
   @media (max-width: 34rem) {
     h1 {
-      font-size:
-        clamp(
-          2.6rem,
-          15vw,
-          4.4rem
-        );
+      font-size: clamp(2.6rem, 15vw, 4.4rem);
     }
 
     h2 {
-      font-size:
-        clamp(
-          1.9rem,
-          11vw,
-          3rem
-        );
+      font-size: clamp(1.9rem, 11vw, 3rem);
     }
 
-    .showroom-orbit__legend {
-      display: grid;
+    .showroom-orbit__field {
+      height: min(82vw, 20rem);
     }
 
     .showroom-controller-panel__actions,
-    .showroom-return-zone__controls,
-    .showroom-route-dialog__choices {
+    .showroom-return-zone__controls {
       display: grid;
       grid-template-columns: 1fr;
       width: 100%;
     }
 
     .showroom-controller-panel__actions > *,
-    .showroom-return-zone__controls > *,
-    .showroom-route-dialog__choices > * {
+    .showroom-return-zone__controls > * {
       width: 100%;
     }
 
     .two-view-buttons {
       grid-template-columns: 1fr;
-    }
-
-    .showroom-gauge-selector,
-    .showroom-gauge-selector--status {
-      grid-template-columns: 1fr;
-    }
-
-    .showroom-gauge {
-      min-height: 5.5rem;
-    }
-
-    .showroom-secondary-object-viewport {
-      min-height: 16rem;
     }
 
     .showroom-window-control {
@@ -2656,10 +1486,7 @@
     .showroom-star:focus-visible::before,
     .button:hover,
     .showroom-nav button:hover,
-    .showroom-footer button:hover,
-    .fallback-navigation button:hover,
-    .fallback-navigation a:hover,
-    .showroom-gauge:hover {
+    .showroom-footer button:hover {
       transform: none;
     }
   }
@@ -2668,11 +1495,7 @@
     .panel,
     .showroom-topbar,
     .showroom-controller-panel,
-    .showroom-orbit-guide,
-    .showroom-gauge,
-    .showroom-gauge-details,
-    .showroom-secondary-object-viewport,
-    .showroom-route-dialog {
+    .showroom-orbit-guide {
       border: 1px solid CanvasText;
       background: Canvas;
       color: CanvasText;
@@ -2701,9 +1524,7 @@
     }
 
     .panel,
-    .showroom-topbar,
-    .showroom-gauge,
-    .showroom-gauge-details {
+    .showroom-topbar {
       background-color: rgba(3, 5, 10, 0.96);
     }
   }

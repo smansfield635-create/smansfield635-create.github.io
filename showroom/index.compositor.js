@@ -1,6 +1,6 @@
 /* TARGET FILE: /showroom/index.compositor.js */
 /* TNT FULL-FILE REPLACEMENT */
-/* SHOWROOM_CONSTELLATION_SINGLE_FRAME_COMPOSITOR_TNT_v5 */
+/* SHOWROOM_CONSTELLATION_SINGLE_FRAME_COMPOSITOR_TNT_v6 */
 /*
   Upstream semantic authority:
   - /showroom/index.controller.js
@@ -19,6 +19,22 @@
   - [data-showroom-semantic-star-layer]
   - [data-showroom-front-host]
 
+  Compass bounds bridge:
+  - input contract:
+    SHOWROOM_EFFECTIVE_COMPASS_BOUNDS_RECORD_v1
+  - input surface:
+    SHOWROOM_COMPOSITOR.acceptCompassBounds(record)
+  - viewport CSS pixels are converted into existing Compass-layer-local
+    CSS pixels through [data-showroom-compass-layer].getBoundingClientRect()
+  - valid visible projected bounds are authoritative;
+  - otherwise the existing Compass visual-mount rectangle is the
+    nonterminal fallback source;
+  - the compositor publishes exactly seven owned CSS custom properties;
+  - the compositor publishes exactly five owned bounds datasets;
+  - the compositor emits SHOWROOM_COMPOSITOR_COMPASS_BOUNDS_CHANGED;
+  - disposal restores only the preexisting values of those exact properties
+    and attributes.
+
   Compositor authority:
   - camera eye and target;
   - view and projection matrices;
@@ -34,13 +50,17 @@
   - semantic-projection fact publication;
   - semantic-projection feedback suppression;
   - recoverable held-state suspension;
-  - terminal module-instance failure.
+  - terminal module-instance failure;
+  - effective Compass-bounds intake;
+  - Compass-layer-local coordinate conversion;
+  - bounded Compass CSS geometry publication.
 
   Explicit exclusions:
   - no semantic navigation ownership;
   - no route or destination decisions;
   - no Compass navigation ownership;
   - no Compass renderer lifecycle ownership;
+  - no Compass projection reconstruction;
   - no crystal mesh, material, geometry, or animation ownership;
   - no pointer or gesture interpretation;
   - no interaction-priority calculation or publication;
@@ -53,7 +73,7 @@
   "use strict";
 
   const CONTRACT =
-    "SHOWROOM_CONSTELLATION_SINGLE_FRAME_COMPOSITOR_TNT_v5";
+    "SHOWROOM_CONSTELLATION_SINGLE_FRAME_COMPOSITOR_TNT_v6";
 
   const OWNER =
     "/showroom/index.compositor.js";
@@ -66,6 +86,12 @@
 
   const CONTROLLER_MODULE_VERSION =
     "9.0.0-archcoin-route-gateway";
+
+  const EFFECTIVE_COMPASS_BOUNDS_CONTRACT =
+    "SHOWROOM_EFFECTIVE_COMPASS_BOUNDS_RECORD_v1";
+
+  const EFFECTIVE_COMPASS_BOUNDS_COORDINATE_SPACE =
+    "viewport-css-pixels";
 
   const SELECTORS = Object.freeze({
     root:
@@ -157,9 +183,94 @@
     compositorProjectionChanged:
       "SHOWROOM_COMPOSITOR_PROJECTION_CHANGED",
 
+    compositorCompassBoundsChanged:
+      "SHOWROOM_COMPOSITOR_COMPASS_BOUNDS_CHANGED",
+
     compositorReceipt:
       "SHOWROOM_COMPOSITOR_RECEIPT"
   });
+
+  const COMPASS_BOUNDS_CSS_PROPERTIES =
+    Object.freeze({
+      left:
+        "--showroom-compass-bounds-left",
+
+      top:
+        "--showroom-compass-bounds-top",
+
+      width:
+        "--showroom-compass-bounds-width",
+
+      height:
+        "--showroom-compass-bounds-height",
+
+      centerX:
+        "--showroom-compass-bounds-center-x",
+
+      centerY:
+        "--showroom-compass-bounds-center-y",
+
+      radius:
+        "--showroom-compass-bounds-radius"
+    });
+
+  const COMPASS_BOUNDS_DATASETS =
+    Object.freeze({
+      source:
+        "showroomCompassBoundsSource",
+
+      status:
+        "showroomCompassBoundsStatus",
+
+      valid:
+        "showroomCompassBoundsValid",
+
+      visible:
+        "showroomCompassBoundsVisible",
+
+      revision:
+        "showroomCompassBoundsRevision"
+    });
+
+  const COMPASS_BOUNDS_ATTRIBUTE_NAMES =
+    Object.freeze({
+      source:
+        "data-showroom-compass-bounds-source",
+
+      status:
+        "data-showroom-compass-bounds-status",
+
+      valid:
+        "data-showroom-compass-bounds-valid",
+
+      visible:
+        "data-showroom-compass-bounds-visible",
+
+      revision:
+        "data-showroom-compass-bounds-revision"
+    });
+
+  const COMPASS_BOUNDS_SOURCES =
+    Object.freeze({
+      PROJECTED:
+        "projected",
+
+      MOUNT_FALLBACK:
+        "mount-fallback",
+
+      UNAVAILABLE:
+        "unavailable"
+    });
+
+  const EFFECTIVE_COMPASS_BOUNDS_STATUSES =
+    Object.freeze([
+      "initializing",
+      "available",
+      "fallback",
+      "failed",
+      "disposed",
+      "invalid"
+    ]);
 
   const LAYERS = Object.freeze({
     REAR:
@@ -226,6 +337,9 @@
       0.075
   });
 
+  const COMPASS_BOUNDS_NUMERIC_TOLERANCE =
+    1e-4;
+
   const state = {
     root: null,
     orbit: null,
@@ -267,6 +381,48 @@
     },
 
     domRestored: true,
+
+    compassBounds: {
+      latestInput:
+        null,
+
+      latestPublished:
+        null,
+
+      latestSignature:
+        "",
+
+      inputAccepted:
+        false,
+
+      source:
+        COMPASS_BOUNDS_SOURCES
+          .UNAVAILABLE,
+
+      status:
+        "initializing",
+
+      valid:
+        false,
+
+      visible:
+        false,
+
+      revision:
+        0,
+
+      cssStateCaptured:
+        false,
+
+      cssStateRestored:
+        true,
+
+      nativeCssProperties:
+        new Map(),
+
+      nativeAttributes:
+        new Map()
+    },
 
     camera: {
       eye:
@@ -398,6 +554,12 @@
       rendererRegistrations: 0,
       rendererRemovals: 0,
       rendererReplacements: 0,
+      compassBoundsInputs: 0,
+      compassBoundsProjectedPublications: 0,
+      compassBoundsFallbackPublications: 0,
+      compassBoundsPublicationSkips: 0,
+      compassBoundsValidationFailures: 0,
+      compassBoundsRestorations: 0,
       holds: 0,
       holdReleases: 0,
       failures: 0
@@ -448,6 +610,21 @@
     return Number.isFinite(numeric)
       ? numeric
       : fallback;
+  }
+
+  function approximatelyEqual(
+    left,
+    right,
+    tolerance =
+      COMPASS_BOUNDS_NUMERIC_TOLERANCE
+  ) {
+    return (
+      Math.abs(
+        left -
+        right
+      ) <=
+      tolerance
+    );
   }
 
   function freezePlain(value) {
@@ -529,6 +706,17 @@
         controllerModuleVersion:
           CONTROLLER_MODULE_VERSION,
 
+        effectiveCompassBoundsContract:
+          EFFECTIVE_COMPASS_BOUNDS_CONTRACT,
+
+        compassBoundsCssProperties: {
+          ...COMPASS_BOUNDS_CSS_PROPERTIES
+        },
+
+        compassBoundsDatasets: {
+          ...COMPASS_BOUNDS_DATASETS
+        },
+
         event,
 
         timestamp:
@@ -563,6 +751,48 @@
 
         viewport: {
           ...state.viewport
+        },
+
+        compassBounds: {
+          inputAccepted:
+            state.compassBounds
+              .inputAccepted,
+
+          source:
+            state.compassBounds
+              .source,
+
+          status:
+            state.compassBounds
+              .status,
+
+          valid:
+            state.compassBounds
+              .valid,
+
+          visible:
+            state.compassBounds
+              .visible,
+
+          revision:
+            state.compassBounds
+              .revision,
+
+          cssStateCaptured:
+            state.compassBounds
+              .cssStateCaptured,
+
+          cssStateRestored:
+            state.compassBounds
+              .cssStateRestored,
+
+          latestInput:
+            state.compassBounds
+              .latestInput,
+
+          latestPublished:
+            state.compassBounds
+              .latestPublished
         },
 
         registeredNodes:
@@ -1691,6 +1921,1019 @@
     state.nativeDomState.semanticLayerStyle = null;
     state.nativeDomState.rearCanvasPlacement = null;
     state.nativeDomState.frontCanvasPlacement = null;
+  }
+
+  function captureCompassBoundsCssState() {
+    if (
+      state.compassBounds
+        .cssStateCaptured ||
+      !state.compassLayer
+    ) {
+      return;
+    }
+
+    state.compassBounds
+      .nativeCssProperties
+      .clear();
+
+    for (
+      const property
+      of Object.values(
+        COMPASS_BOUNDS_CSS_PROPERTIES
+      )
+    ) {
+      state.compassBounds
+        .nativeCssProperties
+        .set(
+          property,
+          Object.freeze({
+            value:
+              state.compassLayer
+                .style
+                .getPropertyValue(
+                  property
+                ),
+
+            priority:
+              state.compassLayer
+                .style
+                .getPropertyPriority(
+                  property
+                )
+          })
+        );
+    }
+
+    state.compassBounds
+      .nativeAttributes
+      .clear();
+
+    for (
+      const attribute
+      of Object.values(
+        COMPASS_BOUNDS_ATTRIBUTE_NAMES
+      )
+    ) {
+      state.compassBounds
+        .nativeAttributes
+        .set(
+          attribute,
+          state.compassLayer
+            .getAttribute(
+              attribute
+            )
+        );
+    }
+
+    state.compassBounds
+      .cssStateCaptured =
+      true;
+
+    state.compassBounds
+      .cssStateRestored =
+      false;
+  }
+
+  function restoreCompassBoundsCssState() {
+    if (
+      !state.compassBounds
+        .cssStateCaptured ||
+      state.compassBounds
+        .cssStateRestored ||
+      !state.compassLayer
+    ) {
+      return;
+    }
+
+    for (
+      const [
+        property,
+        captured
+      ]
+      of state.compassBounds
+        .nativeCssProperties
+    ) {
+      if (
+        captured.value ===
+        ""
+      ) {
+        state.compassLayer
+          .style
+          .removeProperty(
+            property
+          );
+      } else {
+        state.compassLayer
+          .style
+          .setProperty(
+            property,
+            captured.value,
+            captured.priority
+          );
+      }
+    }
+
+    for (
+      const [
+        attribute,
+        captured
+      ]
+      of state.compassBounds
+        .nativeAttributes
+    ) {
+      restoreNullableAttribute(
+        state.compassLayer,
+        attribute,
+        captured
+      );
+    }
+
+    state.compassBounds
+      .cssStateRestored =
+      true;
+
+    state.counters
+      .compassBoundsRestorations +=
+      1;
+  }
+
+  function effectiveCompassBoundsGeometryValid(
+    record
+  ) {
+    const numericFields = [
+      "left",
+      "top",
+      "right",
+      "bottom",
+      "width",
+      "height",
+      "centerX",
+      "centerY",
+      "radius"
+    ];
+
+    if (
+      !numericFields.every(
+        field =>
+          Number.isFinite(
+            record[field]
+          )
+      )
+    ) {
+      return false;
+    }
+
+    if (
+      record.width < 0 ||
+      record.height < 0 ||
+      record.radius < 0
+    ) {
+      return false;
+    }
+
+    return (
+      approximatelyEqual(
+        record.right,
+        record.left +
+          record.width
+      ) &&
+      approximatelyEqual(
+        record.bottom,
+        record.top +
+          record.height
+      ) &&
+      approximatelyEqual(
+        record.centerX,
+        record.left +
+          record.width /
+          2
+      ) &&
+      approximatelyEqual(
+        record.centerY,
+        record.top +
+          record.height /
+          2
+      ) &&
+      approximatelyEqual(
+        record.radius,
+        Math.max(
+          record.width,
+          record.height
+        ) /
+          2
+      )
+    );
+  }
+
+  function effectiveCompassBoundsZeroGeometry(
+    record
+  ) {
+    return (
+      record.left === 0 &&
+      record.top === 0 &&
+      record.right === 0 &&
+      record.bottom === 0 &&
+      record.width === 0 &&
+      record.height === 0 &&
+      record.centerX === 0 &&
+      record.centerY === 0 &&
+      record.radius === 0
+    );
+  }
+
+  function normalizeEffectiveCompassBoundsRecord(
+    record
+  ) {
+    if (
+      !record ||
+      typeof record !==
+        "object"
+    ) {
+      throw new TypeError(
+        "A Compass bounds record is required."
+      );
+    }
+
+    if (
+      record.contract !==
+      EFFECTIVE_COMPASS_BOUNDS_CONTRACT
+    ) {
+      throw new Error(
+        "The Compass bounds contract is incompatible."
+      );
+    }
+
+    if (
+      record.coordinateSpace !==
+      EFFECTIVE_COMPASS_BOUNDS_COORDINATE_SPACE
+    ) {
+      throw new Error(
+        "The Compass bounds coordinate space is incompatible."
+      );
+    }
+
+    if (
+      !EFFECTIVE_COMPASS_BOUNDS_STATUSES
+        .includes(
+          record.status
+        )
+    ) {
+      throw new Error(
+        `Unsupported Compass bounds status "${String(record.status)}".`
+      );
+    }
+
+    const sourceRevision =
+      Number(record.sourceRevision);
+
+    if (
+      !Number.isInteger(
+        sourceRevision
+      ) ||
+      sourceRevision < 0
+    ) {
+      throw new Error(
+        "The Compass bounds source revision is invalid."
+      );
+    }
+
+    const normalizedRecord =
+      freezePlain({
+        contract:
+          EFFECTIVE_COMPASS_BOUNDS_CONTRACT,
+
+        sourceContract:
+          normalize(
+            record.sourceContract
+          ),
+
+        sourceInstanceId:
+          normalize(
+            record.sourceInstanceId
+          ),
+
+        sourceRevision,
+
+        valid:
+          record.valid ===
+          true,
+
+        visible:
+          record.visible ===
+          true,
+
+        status:
+          record.status,
+
+        coordinateSpace:
+          EFFECTIVE_COMPASS_BOUNDS_COORDINATE_SPACE,
+
+        left:
+          Number(record.left),
+
+        top:
+          Number(record.top),
+
+        right:
+          Number(record.right),
+
+        bottom:
+          Number(record.bottom),
+
+        width:
+          Number(record.width),
+
+        height:
+          Number(record.height),
+
+        centerX:
+          Number(record.centerX),
+
+        centerY:
+          Number(record.centerY),
+
+        radius:
+          Number(record.radius)
+      });
+
+    if (
+      !effectiveCompassBoundsGeometryValid(
+        normalizedRecord
+      )
+    ) {
+      throw new Error(
+        "The Compass bounds geometry invariants are invalid."
+      );
+    }
+
+    if (
+      normalizedRecord.valid
+    ) {
+      if (
+        normalizedRecord.status !==
+          "available" ||
+        normalizedRecord.visible !==
+          true
+      ) {
+        throw new Error(
+          "A valid Compass bounds record must be available and visible."
+        );
+      }
+    } else if (
+      normalizedRecord.visible !==
+        false ||
+      !effectiveCompassBoundsZeroGeometry(
+        normalizedRecord
+      )
+    ) {
+      throw new Error(
+        "An invalid Compass bounds record must be invisible and zero-valued."
+      );
+    }
+
+    return normalizedRecord;
+  }
+
+  function normalizeCssPixelValue(
+    value
+  ) {
+    const numeric =
+      Math.abs(value) < 1e-9
+        ? 0
+        : value;
+
+    return `${
+      Math.round(
+        numeric *
+        1000
+      ) /
+      1000
+    }px`;
+  }
+
+  function createLayerLocalBounds(
+    viewportBounds,
+    layerRect,
+    source,
+    status,
+    revision,
+    inputValid,
+    inputVisible
+  ) {
+    const left =
+      viewportBounds.left -
+      layerRect.left;
+
+    const top =
+      viewportBounds.top -
+      layerRect.top;
+
+    const width =
+      Math.max(
+        0,
+        viewportBounds.width
+      );
+
+    const height =
+      Math.max(
+        0,
+        viewportBounds.height
+      );
+
+    const right =
+      left +
+      width;
+
+    const bottom =
+      top +
+      height;
+
+    const centerX =
+      left +
+      width / 2;
+
+    const centerY =
+      top +
+      height / 2;
+
+    const radius =
+      Math.max(
+        width,
+        height
+      ) / 2;
+
+    return freezePlain({
+      contract:
+        "SHOWROOM_COMPOSITOR_COMPASS_BOUNDS_LOCAL_v1",
+
+      source,
+
+      status,
+
+      valid:
+        width > 0 &&
+        height > 0,
+
+      visible:
+        width > 0 &&
+        height > 0,
+
+      revision,
+
+      inputValid:
+        inputValid ===
+        true,
+
+      inputVisible:
+        inputVisible ===
+        true,
+
+      coordinateSpace:
+        "compass-layer-local-css-pixels",
+
+      left,
+      top,
+      right,
+      bottom,
+      width,
+      height,
+      centerX,
+      centerY,
+      radius
+    });
+  }
+
+  function chooseCompassBoundsSource() {
+    if (
+      !state.compassLayer ||
+      !state.compassVisualMount
+    ) {
+      return freezePlain({
+        contract:
+          "SHOWROOM_COMPOSITOR_COMPASS_BOUNDS_LOCAL_v1",
+
+        source:
+          COMPASS_BOUNDS_SOURCES
+            .UNAVAILABLE,
+
+        status:
+          state.compassBounds
+            .latestInput
+            ? state.compassBounds
+                .latestInput
+                .status
+            : "initializing",
+
+        valid:
+          false,
+
+        visible:
+          false,
+
+        revision:
+          state.compassBounds
+            .latestInput
+            ? state.compassBounds
+                .latestInput
+                .sourceRevision
+            : 0,
+
+        inputValid:
+          false,
+
+        inputVisible:
+          false,
+
+        coordinateSpace:
+          "compass-layer-local-css-pixels",
+
+        left:
+          0,
+
+        top:
+          0,
+
+        right:
+          0,
+
+        bottom:
+          0,
+
+        width:
+          0,
+
+        height:
+          0,
+
+        centerX:
+          0,
+
+        centerY:
+          0,
+
+        radius:
+          0
+      });
+    }
+
+    const layerRect =
+      state.compassLayer
+        .getBoundingClientRect();
+
+    const input =
+      state.compassBounds
+        .latestInput;
+
+    if (
+      input &&
+      input.valid ===
+        true &&
+      input.visible ===
+        true &&
+      input.status ===
+        "available"
+    ) {
+      return createLayerLocalBounds(
+        input,
+        layerRect,
+        COMPASS_BOUNDS_SOURCES
+          .PROJECTED,
+        input.status,
+        input.sourceRevision,
+        true,
+        true
+      );
+    }
+
+    const mountRect =
+      state.compassVisualMount
+        .getBoundingClientRect();
+
+    return createLayerLocalBounds(
+      mountRect,
+      layerRect,
+      COMPASS_BOUNDS_SOURCES
+        .MOUNT_FALLBACK,
+      input
+        ? input.status
+        : "initializing",
+      input
+        ? input.sourceRevision
+        : 0,
+      input
+        ? input.valid
+        : false,
+      input
+        ? input.visible
+        : false
+    );
+  }
+
+  function createCompassBoundsSignature(
+    record
+  ) {
+    return JSON.stringify([
+      record.source,
+      record.status,
+      record.valid,
+      record.visible,
+      record.revision,
+      Math.round(
+        record.left *
+        1000
+      ) / 1000,
+      Math.round(
+        record.top *
+        1000
+      ) / 1000,
+      Math.round(
+        record.width *
+        1000
+      ) / 1000,
+      Math.round(
+        record.height *
+        1000
+      ) / 1000,
+      Math.round(
+        record.centerX *
+        1000
+      ) / 1000,
+      Math.round(
+        record.centerY *
+        1000
+      ) / 1000,
+      Math.round(
+        record.radius *
+        1000
+      ) / 1000
+    ]);
+  }
+
+  function writeCompassBoundsCss(
+    record
+  ) {
+    if (!state.compassLayer) {
+      return false;
+    }
+
+    captureCompassBoundsCssState();
+
+    state.compassLayer.style.setProperty(
+      COMPASS_BOUNDS_CSS_PROPERTIES.left,
+      normalizeCssPixelValue(
+        record.left
+      )
+    );
+
+    state.compassLayer.style.setProperty(
+      COMPASS_BOUNDS_CSS_PROPERTIES.top,
+      normalizeCssPixelValue(
+        record.top
+      )
+    );
+
+    state.compassLayer.style.setProperty(
+      COMPASS_BOUNDS_CSS_PROPERTIES.width,
+      normalizeCssPixelValue(
+        record.width
+      )
+    );
+
+    state.compassLayer.style.setProperty(
+      COMPASS_BOUNDS_CSS_PROPERTIES.height,
+      normalizeCssPixelValue(
+        record.height
+      )
+    );
+
+    state.compassLayer.style.setProperty(
+      COMPASS_BOUNDS_CSS_PROPERTIES.centerX,
+      normalizeCssPixelValue(
+        record.centerX
+      )
+    );
+
+    state.compassLayer.style.setProperty(
+      COMPASS_BOUNDS_CSS_PROPERTIES.centerY,
+      normalizeCssPixelValue(
+        record.centerY
+      )
+    );
+
+    state.compassLayer.style.setProperty(
+      COMPASS_BOUNDS_CSS_PROPERTIES.radius,
+      normalizeCssPixelValue(
+        record.radius
+      )
+    );
+
+    state.compassLayer.dataset[
+      COMPASS_BOUNDS_DATASETS.source
+    ] =
+      record.source;
+
+    state.compassLayer.dataset[
+      COMPASS_BOUNDS_DATASETS.status
+    ] =
+      record.status;
+
+    state.compassLayer.dataset[
+      COMPASS_BOUNDS_DATASETS.valid
+    ] =
+      record.valid
+        ? "true"
+        : "false";
+
+    state.compassLayer.dataset[
+      COMPASS_BOUNDS_DATASETS.visible
+    ] =
+      record.visible
+        ? "true"
+        : "false";
+
+    state.compassLayer.dataset[
+      COMPASS_BOUNDS_DATASETS.revision
+    ] =
+      String(
+        record.revision
+      );
+
+    state.compassBounds
+      .cssStateRestored =
+      false;
+
+    return true;
+  }
+
+  function publishCompassBoundsBridge(
+    reason = "refresh",
+    force = false
+  ) {
+    if (
+      state.disposed ||
+      state.failed ||
+      !state.initialized ||
+      !state.compassLayer ||
+      !state.compassVisualMount
+    ) {
+      return false;
+    }
+
+    const localBounds =
+      chooseCompassBoundsSource();
+
+    const signature =
+      createCompassBoundsSignature(
+        localBounds
+      );
+
+    if (
+      !force &&
+      signature ===
+        state.compassBounds
+          .latestSignature
+    ) {
+      state.counters
+        .compassBoundsPublicationSkips +=
+        1;
+
+      return false;
+    }
+
+    writeCompassBoundsCss(
+      localBounds
+    );
+
+    state.compassBounds
+      .latestPublished =
+      localBounds;
+
+    state.compassBounds
+      .latestSignature =
+      signature;
+
+    state.compassBounds
+      .source =
+      localBounds.source;
+
+    state.compassBounds
+      .status =
+      localBounds.status;
+
+    state.compassBounds
+      .valid =
+      localBounds.valid;
+
+    state.compassBounds
+      .visible =
+      localBounds.visible;
+
+    state.compassBounds
+      .revision =
+      localBounds.revision;
+
+    if (
+      localBounds.source ===
+        COMPASS_BOUNDS_SOURCES
+          .PROJECTED
+    ) {
+      state.counters
+        .compassBoundsProjectedPublications +=
+        1;
+    } else if (
+      localBounds.source ===
+        COMPASS_BOUNDS_SOURCES
+          .MOUNT_FALLBACK
+    ) {
+      state.counters
+        .compassBoundsFallbackPublications +=
+        1;
+    }
+
+    dispatch(
+      EVENTS
+        .compositorCompassBoundsChanged,
+      {
+        reason,
+
+        bounds:
+          localBounds,
+
+        cssProperties: {
+          ...COMPASS_BOUNDS_CSS_PROPERTIES
+        },
+
+        datasets: {
+          ...COMPASS_BOUNDS_DATASETS
+        }
+      }
+    );
+
+    return true;
+  }
+
+  function acceptCompassBounds(
+    record
+  ) {
+    if (
+      state.disposed ||
+      state.failed
+    ) {
+      return false;
+    }
+
+    let normalizedRecord;
+
+    try {
+      normalizedRecord =
+        normalizeEffectiveCompassBoundsRecord(
+          record
+        );
+    } catch (error) {
+      state.counters
+        .compassBoundsValidationFailures +=
+        1;
+
+      publishReceipt(
+        "compass-bounds-input-rejected",
+        {
+          nonterminal:
+            true,
+
+          error: {
+            name:
+              error instanceof Error
+                ? error.name
+                : "Error",
+
+            message:
+              error instanceof Error
+                ? error.message
+                : String(error)
+          }
+        }
+      );
+
+      return false;
+    }
+
+    const previous =
+      state.compassBounds
+        .latestInput;
+
+    if (
+      previous &&
+      normalizedRecord.sourceInstanceId ===
+        previous.sourceInstanceId &&
+      normalizedRecord.sourceRevision <
+        previous.sourceRevision
+    ) {
+      state.counters
+        .compassBoundsValidationFailures +=
+        1;
+
+      publishReceipt(
+        "compass-bounds-input-regressed",
+        {
+          nonterminal:
+            true,
+
+          previousRevision:
+            previous.sourceRevision,
+
+          receivedRevision:
+            normalizedRecord
+              .sourceRevision
+        }
+      );
+
+      return false;
+    }
+
+    state.compassBounds
+      .latestInput =
+      normalizedRecord;
+
+    state.compassBounds
+      .inputAccepted =
+      true;
+
+    state.counters
+      .compassBoundsInputs +=
+      1;
+
+    publishCompassBoundsBridge(
+      "adapter-effective-bounds",
+      false
+    );
+
+    return true;
+  }
+
+  function getCompassBoundsState() {
+    return freezePlain({
+      effectiveInputContract:
+        EFFECTIVE_COMPASS_BOUNDS_CONTRACT,
+
+      outputContract:
+        "SHOWROOM_COMPOSITOR_COMPASS_BOUNDS_LOCAL_v1",
+
+      inputAccepted:
+        state.compassBounds
+          .inputAccepted,
+
+      latestInput:
+        state.compassBounds
+          .latestInput,
+
+      latestPublished:
+        state.compassBounds
+          .latestPublished,
+
+      source:
+        state.compassBounds
+          .source,
+
+      status:
+        state.compassBounds
+          .status,
+
+      valid:
+        state.compassBounds
+          .valid,
+
+      visible:
+        state.compassBounds
+          .visible,
+
+      revision:
+        state.compassBounds
+          .revision,
+
+      cssProperties: {
+        ...COMPASS_BOUNDS_CSS_PROPERTIES
+      },
+
+      datasets: {
+        ...COMPASS_BOUNDS_DATASETS
+      },
+
+      outputEvent:
+        EVENTS
+          .compositorCompassBoundsChanged,
+
+      coordinateConversion:
+        "viewport-css-pixels-to-compass-layer-local-css-pixels",
+
+      fallbackSource:
+        "existing-compass-visual-mount-rectangle",
+
+      ownsCompassProjection:
+        false,
+
+      ownsCompassRendererLifecycle:
+        false
+    });
   }
 
   function isValidControllerApi(controller) {
@@ -3040,6 +4283,9 @@
             .radius
       },
 
+      compassBounds:
+        getCompassBoundsState(),
+
       projection:
         state.projectionSnapshot
     });
@@ -4228,6 +5474,10 @@
 
     measureViewport();
     measureCompassPlane();
+    publishCompassBoundsBridge(
+      "render-layout-refresh",
+      false
+    );
     rebuildMatrices();
 
     state.frameId +=
@@ -5719,6 +6969,18 @@
         compassNavigationOwned:
           false,
 
+        compassProjectionOwned:
+          false,
+
+        compassBoundsIntakeOwned:
+          true,
+
+        compassLayerLocalConversionOwned:
+          true,
+
+        compassCssBoundsBridgeOwned:
+          true,
+
         semanticNavigationOwned:
           false
       },
@@ -5806,6 +7068,9 @@
             .radius
       },
 
+      compassBounds:
+        getCompassBoundsState(),
+
       registeredNodeIds:
         Array.from(
           state.nodes.keys()
@@ -5841,6 +7106,11 @@
             state.lastSemanticProjectionSignature =
               "";
 
+            publishCompassBoundsBridge(
+              "resize-observer",
+              false
+            );
+
             requestRender(
               "resize-observer"
             );
@@ -5854,6 +7124,10 @@
       state.resizeObserver.observe(
         state.compassVisualMount
       );
+
+      state.resizeObserver.observe(
+        state.compassLayer
+      );
     } else {
       addListener(
         window,
@@ -5861,6 +7135,11 @@
         () => {
           state.lastSemanticProjectionSignature =
             "";
+
+          publishCompassBoundsBridge(
+            "window-resize",
+            false
+          );
 
           requestRender(
             "window-resize"
@@ -5886,9 +7165,53 @@
 
     state.mutationObserver =
       new MutationObserver(
-        () => {
+        mutations => {
+          const externalMutation =
+            mutations.some(
+              mutation => {
+                if (
+                  mutation.type !==
+                    "attributes"
+                ) {
+                  return true;
+                }
+
+                if (
+                  mutation.target !==
+                    state.compassLayer
+                ) {
+                  return true;
+                }
+
+                const attributeName =
+                  mutation.attributeName;
+
+                if (
+                  attributeName ===
+                    "style"
+                ) {
+                  return false;
+                }
+
+                return !Object.values(
+                  COMPASS_BOUNDS_ATTRIBUTE_NAMES
+                ).includes(
+                  attributeName
+                );
+              }
+            );
+
+          if (!externalMutation) {
+            return;
+          }
+
           state.lastSemanticProjectionSignature =
             "";
+
+          publishCompassBoundsBridge(
+            "compass-layout-mutation",
+            false
+          );
 
           requestRender(
             "compass-layout-mutation"
@@ -5903,7 +7226,19 @@
           true,
 
         subtree:
-          true
+          true,
+
+        attributes:
+          true,
+
+        attributeFilter: [
+          "class",
+          "style",
+          "hidden",
+          ...Object.values(
+            COMPASS_BOUNDS_ATTRIBUTE_NAMES
+          )
+        ]
       }
     );
 
@@ -6053,6 +7388,10 @@
 
       measureViewport();
       measureCompassPlane();
+      publishCompassBoundsBridge(
+        "readiness",
+        true
+      );
       rebuildMatrices();
 
       setRootState(
@@ -6099,6 +7438,38 @@
 
           compassPlaneInspected:
             true,
+
+          compassBoundsInputContract:
+            EFFECTIVE_COMPASS_BOUNDS_CONTRACT,
+
+          compassBoundsIntakeSurface:
+            "acceptCompassBounds",
+
+          compassBoundsCoordinateConversion:
+            "viewport-css-pixels-to-compass-layer-local-css-pixels",
+
+          compassBoundsProjectedSourcePreferred:
+            true,
+
+          compassBoundsMountFallbackNonterminal:
+            true,
+
+          compassBoundsCssPropertyCount:
+            Object.keys(
+              COMPASS_BOUNDS_CSS_PROPERTIES
+            ).length,
+
+          compassBoundsDatasetCount:
+            Object.keys(
+              COMPASS_BOUNDS_DATASETS
+            ).length,
+
+          compassBoundsChangeEvent:
+            EVENTS
+              .compositorCompassBoundsChanged,
+
+          compassProjectionReconstructed:
+            false,
 
           semanticNavigationOwned:
             false,
@@ -6158,6 +7529,13 @@
               LAYERS.FRONT
           },
 
+          effectiveCompassBoundsContract:
+            EFFECTIVE_COMPASS_BOUNDS_CONTRACT,
+
+          compassBoundsChangeEvent:
+            EVENTS
+              .compositorCompassBoundsChanged,
+
           semanticProjectionReturnedToController:
             true,
 
@@ -6185,6 +7563,8 @@
             "getProjectionSnapshot",
             "getCanvases",
             "getCamera",
+            "getCompassBoundsState",
+            "acceptCompassBounds",
             "setCamera",
             "setOrbitCamera",
             "setCompassPlaneWorldPoint",
@@ -6318,6 +7698,19 @@
         controllerModuleVersion:
           CONTROLLER_MODULE_VERSION,
 
+        effectiveCompassBoundsContract:
+          EFFECTIVE_COMPASS_BOUNDS_CONTRACT,
+
+        compassBoundsChangedEvent:
+          EVENTS
+            .compositorCompassBoundsChanged,
+
+        compassBoundsCssProperties:
+          COMPASS_BOUNDS_CSS_PROPERTIES,
+
+        compassBoundsDatasets:
+          COMPASS_BOUNDS_DATASETS,
+
         getState,
 
         getFrameState,
@@ -6327,6 +7720,10 @@
         getCanvases,
 
         getCamera,
+
+        getCompassBoundsState,
+
+        acceptCompassBounds,
 
         setCamera,
 
@@ -6444,6 +7841,45 @@
       null;
   }
 
+  function resetCompassBoundsState() {
+    state.compassBounds
+      .latestInput =
+      null;
+
+    state.compassBounds
+      .latestPublished =
+      null;
+
+    state.compassBounds
+      .latestSignature =
+      "";
+
+    state.compassBounds
+      .inputAccepted =
+      false;
+
+    state.compassBounds
+      .source =
+      COMPASS_BOUNDS_SOURCES
+        .UNAVAILABLE;
+
+    state.compassBounds
+      .status =
+      "disposed";
+
+    state.compassBounds
+      .valid =
+      false;
+
+    state.compassBounds
+      .visible =
+      false;
+
+    state.compassBounds
+      .revision =
+      0;
+  }
+
   function rollbackInitialization(error) {
     const rearCanvasCreated =
       state.rearCanvasCreated;
@@ -6477,6 +7913,9 @@
     state.lastNodeProjections.clear();
     state.pendingProjectionTombstones.clear();
     state.classifications.clear();
+
+    restoreCompassBoundsCssState();
+    resetCompassBoundsState();
 
     removeApi();
     restoreOwnedDom();
@@ -6554,6 +7993,9 @@
         semanticLayerStyleRestored:
           true,
 
+        compassBoundsCssStateRestored:
+          true,
+
         controllerSubscriptionsRemoved:
           true,
 
@@ -6603,6 +8045,7 @@
       }
 
       ensureCanvases();
+      captureCompassBoundsCssState();
       initializeResizeObservation();
       initializeMutationObservation();
       exposeApi();
@@ -6612,6 +8055,11 @@
 
       state.initializing =
         false;
+
+      publishCompassBoundsBridge(
+        "initial-mount-fallback",
+        true
+      );
 
       setRootState(
         false,
@@ -6640,7 +8088,10 @@
               "compositor-created-or-reused",
 
             compositorCreatesRenderingContext:
-              false
+              false,
+
+            compassBoundsFallbackPublished:
+              true
           }
         );
 
@@ -6671,7 +8122,10 @@
               "compositor-created-or-reused",
 
             compositorCreatesRenderingContext:
-              false
+              false,
+
+            compassBoundsFallbackPublished:
+              true
           }
         );
       }
@@ -6722,6 +8176,9 @@
     state.lastNodeProjections.clear();
     state.pendingProjectionTombstones.clear();
     state.classifications.clear();
+
+    restoreCompassBoundsCssState();
+    resetCompassBoundsState();
 
     removeApi();
     restoreOwnedDom();
@@ -6791,6 +8248,19 @@
         semanticLayerStyleRestored:
           true,
 
+        compassBoundsCssStateRestored:
+          true,
+
+        compassBoundsOwnedPropertyCount:
+          Object.keys(
+            COMPASS_BOUNDS_CSS_PROPERTIES
+          ).length,
+
+        compassBoundsOwnedDatasetCount:
+          Object.keys(
+            COMPASS_BOUNDS_DATASETS
+          ).length,
+
         controllerSubscriptionsRemoved:
           true,
 
@@ -6804,6 +8274,9 @@
           false,
 
         compassLifecycleMutated:
+          false,
+
+        compassProjectionRecomputed:
           false,
 
         frontHostMutated:
@@ -6852,3 +8325,131 @@
     }
   );
 })();
+
+/*
+SHOWROOM_COMPOSITOR_COMPASS_BOUNDS_BRIDGE_RENEWAL_RESULT_v1
+
+Artifact:
+/showroom/index.compositor.js
+
+Renewed compositor contract:
+SHOWROOM_CONSTELLATION_SINGLE_FRAME_COMPOSITOR_TNT_v6
+
+Prior compositor contract:
+SHOWROOM_CONSTELLATION_SINGLE_FRAME_COMPOSITOR_TNT_v5
+
+Authorized scope:
+EFFECTIVE_BOUNDS_INTAKE_LAYER_LOCAL_CONVERSION_CSS_BRIDGE
+
+Added effective input contract:
+SHOWROOM_EFFECTIVE_COMPASS_BOUNDS_RECORD_v1
+
+Added public API:
+SHOWROOM_COMPOSITOR.acceptCompassBounds(record)
+
+Added state surface:
+SHOWROOM_COMPOSITOR.getCompassBoundsState()
+
+Added event:
+SHOWROOM_COMPOSITOR_COMPASS_BOUNDS_CHANGED
+
+Exact CSS properties:
+--showroom-compass-bounds-left
+--showroom-compass-bounds-top
+--showroom-compass-bounds-width
+--showroom-compass-bounds-height
+--showroom-compass-bounds-center-x
+--showroom-compass-bounds-center-y
+--showroom-compass-bounds-radius
+
+Exact datasets:
+data-showroom-compass-bounds-source
+data-showroom-compass-bounds-status
+data-showroom-compass-bounds-valid
+data-showroom-compass-bounds-visible
+data-showroom-compass-bounds-revision
+
+Dataset keys:
+showroomCompassBoundsSource
+showroomCompassBoundsStatus
+showroomCompassBoundsValid
+showroomCompassBoundsVisible
+showroomCompassBoundsRevision
+
+Coordinate conversion:
+viewport CSS pixels
+→ subtract Compass-layer viewport left/top
+→ Compass-layer-local CSS pixels
+
+Effective-source arbitration:
+1. valid + visible + available adapter record:
+   source = projected
+
+2. all other adapter states:
+   source = mount-fallback
+
+3. missing DOM geometry:
+   source = unavailable
+
+Invalid adapter bounds:
+NONTERMINAL
+
+Invalid adapter bounds behavior:
+existing Compass visual-mount rectangle remains the local geometry source
+
+Projection ownership:
+NOT ACQUIRED
+
+Renderer lifecycle ownership:
+NOT ACQUIRED
+
+Camera ownership:
+PRESERVED
+
+View/projection matrices:
+PRESERVED
+
+Crystal projection:
+PRESERVED
+
+Front/rear classification:
+PRESERVED
+
+Layer ordering:
+PRESERVED
+
+Canvas custody:
+PRESERVED
+
+Controller binding:
+PRESERVED
+
+Semantic projection:
+PRESERVED
+
+Hit testing:
+PRESERVED
+
+Readiness timing:
+PRESERVED
+
+SHOWROOM_COMPOSITOR_READY:
+PRESERVED AND EXTENDED WITH BOUNDS-BRIDGE METADATA
+
+Cleanup:
+- captures prior values of only the seven owned CSS properties;
+- captures prior values of only the five owned attributes;
+- restores those exact prior values during rollback and disposal;
+- does not clear unrelated inline styles;
+- does not clear unrelated datasets;
+- does not alter controller-owned data-showroom-compass-selected.
+
+Runtime validation:
+NOT RUN
+
+Production authorization:
+FALSE
+
+Deployment authorization:
+FALSE
+*/

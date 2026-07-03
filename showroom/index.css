@@ -1,7 +1,7 @@
 /* TARGET FILE: /showroom/index.css
    COMPLETE REPLACEMENT
 
-   SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v13_2
+   SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v13_3
 
    Scope:
    - compact Mirrorland threshold;
@@ -16,10 +16,10 @@
    - retained Compass, Diamond, Window, front-host, receipt,
      compositor, crystal, and controller contracts;
    - Compass semantic-control projected-bounds consumption;
+   - durable orbit-field touch-arbitration baseline;
    - five independent native narrative disclosures;
    - one collapsed secondary runtime-evidence disclosure;
    - responsive mobile composition;
-   - no additional touch suppression;
    - Cosmos remains an independent body-level decorative layer.
 */
 
@@ -922,6 +922,11 @@ main {
 
   min-height: clamp(27rem, 60vw, 47rem);
   overflow: hidden;
+
+  touch-action: none;
+  overscroll-behavior: contain;
+  user-select: none;
+  -webkit-user-select: none;
 
   border: 1px solid rgba(117, 233, 255, 0.16);
   border-radius:
@@ -4145,10 +4150,37 @@ main {
    END RECEIPT
 
    CONTRACT:
+   SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v13_3
+
+   PREVIOUS CONTRACT:
    SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v13_2
 
    RENEWAL SCOPE:
-   COMPASS_SEMANTIC_CONTROL_PROJECTED_BOUNDS_CONSUMPTION_ONLY
+   ORBIT_FIELD_TOUCH_ARBITRATION_BASELINE
+   +
+   COMPASS_SEMANTIC_CONTROL_PROJECTED_BOUNDS_CONSUMPTION
+
+   ORBIT FIELD TOUCH BASELINE:
+   - selector:
+       .showroom-orbit__field
+   - touch-action:
+       none
+   - overscroll-behavior:
+       contain
+   - user-select:
+       none
+   - -webkit-user-select:
+       none
+   - the field now declares the browser-level gesture baseline needed
+     for the existing interaction runtime to receive orbit gestures
+     without page-scroll or text-selection competition;
+   - gesture interpretation, tap discrimination, drag thresholds,
+     pointer capture, quaternion updates, and navigation decisions
+     remain owned by the authorized interaction and controller
+     runtimes;
+   - this CSS does not create a second gesture recognizer;
+   - this CSS does not claim runtime swipe success without deployed
+     validation.
 
    COMPASS BOUNDS INPUT PROPERTIES:
    - --showroom-compass-bounds-left
@@ -4238,18 +4270,34 @@ main {
    - does not alter /showroom/index.compass.adapter.js;
    - does not alter /showroom/index.crystals.js;
    - does not alter /showroom/index.interactions.js;
+   - does not alter /showroom/index.interaction.gestures.js;
    - does not alter /showroom/index.window.js;
    - does not alter /showroom/index.ui.js;
    - does not alter /showroom/index.cosmos.js;
    - does not own Compass projection;
    - does not calculate Compass bounds;
    - does not infer semantic activation from bounds visibility;
-   - does not resolve orbit-field touch arbitration;
+   - does not interpret pointer gestures;
+   - does not own pointer capture;
+   - does not own orbit quaternion state;
    - does not redefine compositor depth convention;
    - does not alter Cosmos ownership;
    - does not infer runtime readiness from source presence.
 
+   REQUIRED COMPANION HTML CACHE QUERY:
+   /showroom/index.css?v=SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v13_3
+
    REQUIRED POST-DEPLOY VALIDATION:
+   - orbit field computed touch-action is none;
+   - orbit field computed overscroll-behavior is contain;
+   - orbit field text selection remains suppressed;
+   - constellation tap behavior remains functional;
+   - constellation drag behavior remains functional;
+   - pointer cancellation and release remain functional;
+   - page scrolling outside the orbit field remains functional;
+   - vertical swipe beginning inside the orbit field is retained by
+     the orbit interaction surface rather than page scrolling;
+   - controller-held state remains authoritative;
    - Compass control retains inset: 0 before bounds publication;
    - projected bounds resize and reposition the existing Compass
      semantic control;
@@ -4277,9 +4325,6 @@ main {
    - controller title, purpose, guidance, state, and action updates;
    - controller writes data-showroom-compass-selected;
    - Route Details nested disclosure behavior;
-   - constellation tap behavior;
-   - constellation drag behavior;
-   - vertical swipe beginning inside orbit field;
    - Diamond and Window layering;
    - five independent narrative disclosures;
    - secondary runtime-evidence disclosure;

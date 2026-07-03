@@ -1,14 +1,14 @@
 <!-- TARGET FILE: /showroom/index.html -->
 <!-- COMPLETE REPLACEMENT -->
-<!-- SHOWROOM_MIRRORLAND_IMMERSIVE_MISSION_CONTEXT_HTML_TNT_v17_2 -->
+<!-- SHOWROOM_MIRRORLAND_IMMERSIVE_MISSION_CONTEXT_HTML_TNT_v17_3 -->
 <!doctype html>
 
 <html
   lang="en"
   data-route="/showroom/"
   data-page="showroom"
-  data-version="SHOWROOM-MIRRORLAND-IMMERSIVE-MISSION-CONTEXT-17.2.0"
-  data-contract="SHOWROOM_MIRRORLAND_IMMERSIVE_MISSION_CONTEXT_HTML_TNT_v17_2"
+  data-version="SHOWROOM-MIRRORLAND-IMMERSIVE-MISSION-CONTEXT-17.3.0"
+  data-contract="SHOWROOM_MIRRORLAND_IMMERSIVE_MISSION_CONTEXT_HTML_TNT_v17_3"
 
   data-house-room="showroom"
   data-house-room-title="The Showroom"
@@ -22,7 +22,10 @@
 
   data-showroom-root-contract="mirrorland-route-gateway-constellation-diamond-stage"
   data-showroom-controller="/showroom/index.controller.js"
+  data-upstream-compass-geometry="/assets/compass/upstream-compass.geometry.js"
+  data-upstream-compass-renderer="/assets/compass/upstream-compass.renderer.js"
   data-showroom-compositor="/showroom/index.compositor.js"
+  data-showroom-compass-adapter="/showroom/index.compass.adapter.js"
   data-showroom-crystals="/showroom/index.crystals.js"
   data-showroom-interaction-gestures="/showroom/index.interaction.gestures.js"
   data-showroom-interactions="/showroom/index.interactions.js"
@@ -88,7 +91,7 @@
   data-compass-control-purpose="request-controller-compass-selection"
   data-compass-renderer-navigation-authority="false"
   data-compass-controller-navigation-authority="true"
-  data-compass-visual-implementation="showroom-local"
+  data-compass-visual-implementation="universal-renderer-through-showroom-adapter"
 
   data-mirrorland-window-independent="true"
   data-mirrorland-window-foreground="true"
@@ -124,7 +127,7 @@
 
   <meta
     name="showroom-page-contract"
-    content="SHOWROOM_MIRRORLAND_IMMERSIVE_MISSION_CONTEXT_HTML_TNT_v17_2"
+    content="SHOWROOM_MIRRORLAND_IMMERSIVE_MISSION_CONTEXT_HTML_TNT_v17_3"
   >
 
   <link
@@ -136,9 +139,9 @@
 
   <link
     rel="stylesheet"
-    href="/showroom/index.css?v=SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v13"
+    href="/showroom/index.css?v=SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v13_2"
     data-showroom-page-css="true"
-    data-showroom-page-css-contract="SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v13"
+    data-showroom-page-css-contract="SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v13_2"
   >
 </head>
 
@@ -319,7 +322,7 @@
             </div>
 
             <h2 id="showroom-orbit-title">
-              Where do you begin?
+              Which part of the mission should we open first?
             </h2>
           </div>
 
@@ -327,9 +330,9 @@
             id="showroom-orbit-guidance"
             data-showroom-orbit-guidance
           >
-            Choose a cardinal crystal. Each direction opens four
-            chambers and puts a different pressure in front of you:
-            origin, people, worlds, or futures still unresolved.
+            Choose one of the four cardinal crystals. We will open four
+            related paths and keep the Compass available so you can
+            return without losing your place.
           </p>
         </header>
 
@@ -370,7 +373,6 @@
               class="showroom-compass-control"
               type="button"
               data-showroom-compass-control
-              data-upstream-compass-control
               data-showroom-compass-selection-alias
               data-showroom-controller-action="request-compass-selection"
               data-showroom-interaction-target="compass"
@@ -969,7 +971,9 @@
               class="showroom-atlas-key__guidance"
               data-showroom-controller-guidance
             >
-              Select a cardinal crystal or label. Four chambers will open.
+              Choose a cardinal crystal. We will open its four paths
+              here, then you can inspect one before deciding whether to
+              enter.
             </p>
 
             <div
@@ -987,14 +991,17 @@
                 </span>
 
                 <p class="showroom-atlas-narrative-record__purpose">
-                  The door is open, but you have not chosen what to face.
-                  Somewhere ahead, a civilization is running out of time.
+                  We have four ways into the mission. You can begin with
+                  how the door opened, meet the people living under the
+                  pressure, inspect the worlds carrying its consequences,
+                  or enter the questions no one has solved yet.
                 </p>
 
                 <p class="showroom-atlas-narrative-record__relationship">
-                  Begin anywhere. Every route eventually returns to the
-                  same demand: understand the consequence before you try
-                  to carry the lesson home.
+                  Choose the question you are ready to examine first. We
+                  will keep the other three paths open, and the Compass
+                  will remain available when you need to recover your
+                  bearings.
                 </p>
               </article>
 
@@ -1007,14 +1014,15 @@
                 </span>
 
                 <p class="showroom-atlas-narrative-record__purpose">
-                  You have seen enough to lose your bearings. The Compass
-                  gives you a way out without pretending the encounter
-                  never happened.
+                  You can pause this path without leaving it. Select the
+                  Compass to reveal the Main Compass return. Returning
+                  remains a separate choice through the existing Return
+                  to Main Compass link.
                 </p>
 
                 <p class="showroom-atlas-narrative-record__relationship">
-                  Return does not erase what you learned. It asks whether
-                  you can carry it without distorting it.
+                  Nothing leaves Mirrorland until you activate that
+                  existing return action.
                 </p>
               </article>
 
@@ -1409,18 +1417,17 @@
                 data-showroom-atlas-narrative-record="held"
               >
                 <span class="showroom-atlas-narrative-record__category">
-                  Narrative System Held
+                  The Showroom Is Paused
                 </span>
 
                 <p class="showroom-atlas-narrative-record__purpose">
-                  Preserve the current Estate state while normal
-                  selection and route entry are unavailable.
+                  The current path is being preserved, so new selections
+                  and route changes are temporarily unavailable.
                 </p>
 
                 <p class="showroom-atlas-narrative-record__relationship">
-                  A held system protects continuity by preventing
-                  uncertain or invalid state from becoming narrative
-                  action.
+                  Nothing has been erased or advanced. When the hold
+                  clears, you will continue from the same place.
                 </p>
               </article>
             </div>
@@ -1507,7 +1514,7 @@
                 >
                   <dl>
                     <div>
-                      <dt>Ownership</dt>
+                      <dt>What this path shows</dt>
                       <dd>
                         General mission orientation to Mirrorland,
                         Dextrion’s anomaly, the Showroom, the
@@ -1517,7 +1524,7 @@
                     </div>
 
                     <div>
-                      <dt>Non-ownership</dt>
+                      <dt>What this path does not claim</dt>
                       <dd>
                         No route identity, scientific validation,
                         historical conclusion, character perspective,
@@ -1526,7 +1533,7 @@
                     </div>
 
                     <div>
-                      <dt>Historical position</dt>
+                      <dt>Where this happens</dt>
                       <dd>
                         You arrive after operational contact has become
                         possible and inside a survival history already in
@@ -1535,7 +1542,7 @@
                     </div>
 
                     <div>
-                      <dt>Character position</dt>
+                      <dt>Whose perspective you receive</dt>
                       <dd>
                         No individual human pressure lens has yet been
                         brought forward.
@@ -1543,7 +1550,7 @@
                     </div>
 
                     <div>
-                      <dt>World position</dt>
+                      <dt>Where this belongs</dt>
                       <dd>
                         Mirrorland stands before you as a reachable
                         future-shadow containing multiple worlds,
@@ -1552,7 +1559,7 @@
                     </div>
 
                     <div>
-                      <dt>Continuity consequence</dt>
+                      <dt>What must remain intact</dt>
                       <dd>
                         You may begin from any cardinal direction while
                         the full Constellation, Diamond, Clock, and
@@ -1568,7 +1575,7 @@
                 >
                   <dl>
                     <div>
-                      <dt>Ownership</dt>
+                      <dt>What this path shows</dt>
                       <dd>
                         Return orientation, estate-level wayfinding, and
                         the relationship between Mirrorland and the
@@ -1577,7 +1584,7 @@
                     </div>
 
                     <div>
-                      <dt>Non-ownership</dt>
+                      <dt>What this path does not claim</dt>
                       <dd>
                         No ownership of a character, story, historical
                         event, world, planet, or selected room.
@@ -1585,7 +1592,7 @@
                     </div>
 
                     <div>
-                      <dt>Historical position</dt>
+                      <dt>Where this happens</dt>
                       <dd>
                         The Compass stands outside any one historical
                         episode and remains available across eras.
@@ -1593,7 +1600,7 @@
                     </div>
 
                     <div>
-                      <dt>Character position</dt>
+                      <dt>Whose perspective you receive</dt>
                       <dd>
                         Characters may be encountered through paths, but
                         no character governs the Compass.
@@ -1601,7 +1608,7 @@
                     </div>
 
                     <div>
-                      <dt>World position</dt>
+                      <dt>Where this belongs</dt>
                       <dd>
                         The Compass relates Mirrorland to the wider
                         Estate without becoming a world or destination
@@ -1610,7 +1617,7 @@
                     </div>
 
                     <div>
-                      <dt>Continuity consequence</dt>
+                      <dt>What must remain intact</dt>
                       <dd>
                         You may return to the prior cluster or restore the
                         broader Constellation without rewriting the
@@ -1626,7 +1633,7 @@
                 >
                   <dl>
                     <div>
-                      <dt>Ownership</dt>
+                      <dt>What this path shows</dt>
                       <dd>
                         Contact origin, anomaly context, first passage,
                         mission premise, and the historical sequence that
@@ -1635,7 +1642,7 @@
                     </div>
 
                     <div>
-                      <dt>Non-ownership</dt>
+                      <dt>What this path does not claim</dt>
                       <dd>
                         Proof that the premise is externally validated,
                         complete Estate history, total world truth, or
@@ -1644,7 +1651,7 @@
                     </div>
 
                     <div>
-                      <dt>Historical position</dt>
+                      <dt>Where this happens</dt>
                       <dd>
                         You enter events and structures that precede you
                         and continue through the 300-year survival
@@ -1653,7 +1660,7 @@
                     </div>
 
                     <div>
-                      <dt>Character position</dt>
+                      <dt>Whose perspective you receive</dt>
                       <dd>
                         People encounter contact from bounded positions
                         and do not become the origin or sole interpreter
@@ -1662,7 +1669,7 @@
                     </div>
 
                     <div>
-                      <dt>World position</dt>
+                      <dt>Where this belongs</dt>
                       <dd>
                         Mirrorland is the primary reachable future-shadow
                         and the Showroom is its mission threshold.
@@ -1670,7 +1677,7 @@
                     </div>
 
                     <div>
-                      <dt>Continuity consequence</dt>
+                      <dt>What must remain intact</dt>
                       <dd>
                         Every foundational route must preserve the
                         Constellation, remain compatible with the Clock,
@@ -1686,7 +1693,7 @@
                 >
                   <dl>
                     <div>
-                      <dt>Ownership</dt>
+                      <dt>What this path shows</dt>
                       <dd>
                         Human pressure, character encounter, perspective,
                         agency, relationship, memory, responsibility, and
@@ -1695,7 +1702,7 @@
                     </div>
 
                     <div>
-                      <dt>Non-ownership</dt>
+                      <dt>What this path does not claim</dt>
                       <dd>
                         Total mission truth, complete planetary history,
                         humanity-wide representation, or authority to
@@ -1704,7 +1711,7 @@
                     </div>
 
                     <div>
-                      <dt>Historical position</dt>
+                      <dt>Where this happens</dt>
                       <dd>
                         Every person enters an existing survival sequence
                         and carries only what that life, generation, and
@@ -1713,7 +1720,7 @@
                     </div>
 
                     <div>
-                      <dt>Character position</dt>
+                      <dt>Whose perspective you receive</dt>
                       <dd>
                         Character identity remains distinct from narrator
                         authority, world authority, historical authority,
@@ -1722,7 +1729,7 @@
                     </div>
 
                     <div>
-                      <dt>World position</dt>
+                      <dt>Where this belongs</dt>
                       <dd>
                         People belong to institutions, cultures, places,
                         and worlds whose pressures exceed any individual
@@ -1731,7 +1738,7 @@
                     </div>
 
                     <div>
-                      <dt>Continuity consequence</dt>
+                      <dt>What must remain intact</dt>
                       <dd>
                         New character records may expand human evidence
                         while preserving established history, topology,
@@ -1747,7 +1754,7 @@
                 >
                   <dl>
                     <div>
-                      <dt>Ownership</dt>
+                      <dt>What this path shows</dt>
                       <dd>
                         Persistent objects, operational thresholds,
                         planetary pressures, inhabited environments,
@@ -1756,7 +1763,7 @@
                     </div>
 
                     <div>
-                      <dt>Non-ownership</dt>
+                      <dt>What this path does not claim</dt>
                       <dd>
                         The complete narrative universe, automatic proof
                         of system success, or authority to replace the
@@ -1765,7 +1772,7 @@
                     </div>
 
                     <div>
-                      <dt>Historical position</dt>
+                      <dt>Where this happens</dt>
                       <dd>
                         Objects and places retain evidence of construction,
                         habitation, failure, adaptation, loss, and return.
@@ -1773,7 +1780,7 @@
                     </div>
 
                     <div>
-                      <dt>Character position</dt>
+                      <dt>Whose perspective you receive</dt>
                       <dd>
                         People encounter and interpret these environments
                         but do not create their consequences by looking
@@ -1782,7 +1789,7 @@
                     </div>
 
                     <div>
-                      <dt>World position</dt>
+                      <dt>Where this belongs</dt>
                       <dd>
                         The Window and Diamond connect to planets,
                         settlements, institutions, ecologies, and
@@ -1791,7 +1798,7 @@
                     </div>
 
                     <div>
-                      <dt>Continuity consequence</dt>
+                      <dt>What must remain intact</dt>
                       <dd>
                         World expansion may add tested conditions and
                         records but may not replace the Diamond, restart
@@ -1807,7 +1814,7 @@
                 >
                   <dl>
                     <div>
-                      <dt>Ownership</dt>
+                      <dt>What this path shows</dt>
                       <dd>
                         Unresolved evidence, incomplete worlds, concealed
                         consequences, reserved routes, and future
@@ -1816,7 +1823,7 @@
                     </div>
 
                     <div>
-                      <dt>Non-ownership</dt>
+                      <dt>What this path does not claim</dt>
                       <dd>
                         Permission to contradict established invariants,
                         fabricate completion, or treat possibility as
@@ -1825,7 +1832,7 @@
                     </div>
 
                     <div>
-                      <dt>Historical position</dt>
+                      <dt>Where this happens</dt>
                       <dd>
                         This direction preserves gaps, competing accounts,
                         failed assumptions, and outcomes whose full
@@ -1834,7 +1841,7 @@
                     </div>
 
                     <div>
-                      <dt>Character position</dt>
+                      <dt>Whose perspective you receive</dt>
                       <dd>
                         People may investigate unresolved futures through
                         partial knowledge and conflicting perspectives.
@@ -1842,7 +1849,7 @@
                     </div>
 
                     <div>
-                      <dt>World position</dt>
+                      <dt>Where this belongs</dt>
                       <dd>
                         Space remains for unfinished regions, unqualified
                         systems, and cross-world relationships not yet
@@ -1851,7 +1858,7 @@
                     </div>
 
                     <div>
-                      <dt>Continuity consequence</dt>
+                      <dt>What must remain intact</dt>
                       <dd>
                         Later discoveries may clarify possibility but
                         must remain traceable to the Clock, Diamond,
@@ -1867,7 +1874,7 @@
                 >
                   <dl>
                     <div>
-                      <dt>Ownership</dt>
+                      <dt>What this path shows</dt>
                       <dd>
                         Entry orientation to Mirrorland as a reachable
                         future-shadow and to the Showroom as the first
@@ -1876,7 +1883,7 @@
                     </div>
 
                     <div>
-                      <dt>Non-ownership</dt>
+                      <dt>What this path does not claim</dt>
                       <dd>
                         The complete history, topology, cast, future, or
                         external scientific validation of the premise.
@@ -1884,7 +1891,7 @@
                     </div>
 
                     <div>
-                      <dt>Historical position</dt>
+                      <dt>Where this happens</dt>
                       <dd>
                         You arrive after Dextrion’s anomaly makes contact
                         possible and inside an already-continuing history.
@@ -1892,7 +1899,7 @@
                     </div>
 
                     <div>
-                      <dt>Character position</dt>
+                      <dt>Whose perspective you receive</dt>
                       <dd>
                         Human participation begins without granting you
                         or any guide total knowledge.
@@ -1900,7 +1907,7 @@
                     </div>
 
                     <div>
-                      <dt>World position</dt>
+                      <dt>Where this belongs</dt>
                       <dd>
                         Mirrorland is the future-shadow through which the
                         larger mission becomes explorable.
@@ -1908,7 +1915,7 @@
                     </div>
 
                     <div>
-                      <dt>Continuity consequence</dt>
+                      <dt>What must remain intact</dt>
                       <dd>
                         First contact must preserve the full
                         Constellation, the Diamond, the Clock, and the
@@ -1924,7 +1931,7 @@
                 >
                   <dl>
                     <div>
-                      <dt>Ownership</dt>
+                      <dt>What this path shows</dt>
                       <dd>
                         The reason for entering Mirrorland and its role as
                         a frontier environment for examining survival,
@@ -1933,7 +1940,7 @@
                     </div>
 
                     <div>
-                      <dt>Non-ownership</dt>
+                      <dt>What this path does not claim</dt>
                       <dd>
                         A claim that one discipline, character, system,
                         world, or experiment supplies a universal answer.
@@ -1941,7 +1948,7 @@
                     </div>
 
                     <div>
-                      <dt>Historical position</dt>
+                      <dt>Where this happens</dt>
                       <dd>
                         The mission operates inside a finite 300-year
                         interval preceding universal transition.
@@ -1949,7 +1956,7 @@
                     </div>
 
                     <div>
-                      <dt>Character position</dt>
+                      <dt>Whose perspective you receive</dt>
                       <dd>
                         Characters embody bounded human pressures and
                         responses rather than complete models of
@@ -1958,7 +1965,7 @@
                     </div>
 
                     <div>
-                      <dt>World position</dt>
+                      <dt>Where this belongs</dt>
                       <dd>
                         Mirrorland is a structured testing environment in
                         which consequences become visible across worlds
@@ -1967,7 +1974,7 @@
                     </div>
 
                     <div>
-                      <dt>Continuity consequence</dt>
+                      <dt>What must remain intact</dt>
                       <dd>
                         Any lesson intended for Earth must preserve
                         evidence boundaries, contextual limits, return,
@@ -1983,7 +1990,7 @@
                 >
                   <dl>
                     <div>
-                      <dt>Ownership</dt>
+                      <dt>What this path shows</dt>
                       <dd>
                         A bounded account of events, transitions, causes,
                         system responses, and consequences within the
@@ -1992,7 +1999,7 @@
                     </div>
 
                     <div>
-                      <dt>Non-ownership</dt>
+                      <dt>What this path does not claim</dt>
                       <dd>
                         The complete truth of the Estate or authority to
                         erase conflicting evidence, failed systems, or
@@ -2001,7 +2008,7 @@
                     </div>
 
                     <div>
-                      <dt>Historical position</dt>
+                      <dt>Where this happens</dt>
                       <dd>
                         Present action connects to earlier institutions,
                         conflicts, discoveries, reconstruction, ecology,
@@ -2010,7 +2017,7 @@
                     </div>
 
                     <div>
-                      <dt>Character position</dt>
+                      <dt>Whose perspective you receive</dt>
                       <dd>
                         People remember, misunderstand, inherit, test, or
                         discover history according to bounded knowledge.
@@ -2018,7 +2025,7 @@
                     </div>
 
                     <div>
-                      <dt>World position</dt>
+                      <dt>Where this belongs</dt>
                       <dd>
                         Historical consequences remain attached to the
                         worlds, regions, settlements, systems, and
@@ -2027,7 +2034,7 @@
                     </div>
 
                     <div>
-                      <dt>Continuity consequence</dt>
+                      <dt>What must remain intact</dt>
                       <dd>
                         Every account must remain compatible with the
                         Clock and later reconstructable through preserved
@@ -2043,7 +2050,7 @@
                 >
                   <dl>
                     <div>
-                      <dt>Ownership</dt>
+                      <dt>What this path shows</dt>
                       <dd>
                         The first intentional movement from observation
                         into active contact with a Mirrorland mission
@@ -2052,7 +2059,7 @@
                     </div>
 
                     <div>
-                      <dt>Non-ownership</dt>
+                      <dt>What this path does not claim</dt>
                       <dd>
                         Ownership of the destination, permanent
                         commitment to one route, or authority to close
@@ -2061,7 +2068,7 @@
                     </div>
 
                     <div>
-                      <dt>Historical position</dt>
+                      <dt>Where this happens</dt>
                       <dd>
                         Your crossing does not redefine the historical
                         beginning of Mirrorland.
@@ -2069,7 +2076,7 @@
                     </div>
 
                     <div>
-                      <dt>Character position</dt>
+                      <dt>Whose perspective you receive</dt>
                       <dd>
                         You remain a witness, participant, and returning
                         evaluator rather than the center of the world.
@@ -2077,7 +2084,7 @@
                     </div>
 
                     <div>
-                      <dt>World position</dt>
+                      <dt>Where this belongs</dt>
                       <dd>
                         The Showroom threshold connects to a deeper
                         mission location inside established topology.
@@ -2085,7 +2092,7 @@
                     </div>
 
                     <div>
-                      <dt>Continuity consequence</dt>
+                      <dt>What must remain intact</dt>
                       <dd>
                         Every passage must retain an Estate return path,
                         preserve mission evidence, and keep the
@@ -2101,7 +2108,7 @@
                 >
                   <dl>
                     <div>
-                      <dt>Ownership</dt>
+                      <dt>What this path shows</dt>
                       <dd>
                         Wayfinding assistance, operational explanation,
                         and bounded interpretation of available mission
@@ -2110,7 +2117,7 @@
                     </div>
 
                     <div>
-                      <dt>Non-ownership</dt>
+                      <dt>What this path does not claim</dt>
                       <dd>
                         Total truth, complete historical memory, system
                         validation, or authority over every world and
@@ -2119,7 +2126,7 @@
                     </div>
 
                     <div>
-                      <dt>Historical position</dt>
+                      <dt>Where this happens</dt>
                       <dd>
                         The guide operates inside inherited systems and
                         available records rather than outside the Clock.
@@ -2127,7 +2134,7 @@
                     </div>
 
                     <div>
-                      <dt>Character position</dt>
+                      <dt>Whose perspective you receive</dt>
                       <dd>
                         One functional pressure lens carries specific
                         access, knowledge limits, and responsibilities.
@@ -2135,7 +2142,7 @@
                     </div>
 
                     <div>
-                      <dt>World position</dt>
+                      <dt>Where this belongs</dt>
                       <dd>
                         Guidance connects you to mission locations and
                         systems without becoming their owner or proof.
@@ -2143,7 +2150,7 @@
                     </div>
 
                     <div>
-                      <dt>Continuity consequence</dt>
+                      <dt>What must remain intact</dt>
                       <dd>
                         Guidance must preserve your agency, route
                         authority, evidence checking, and ability to
@@ -2159,7 +2166,7 @@
                 >
                   <dl>
                     <div>
-                      <dt>Ownership</dt>
+                      <dt>What this path shows</dt>
                       <dd>
                         A bounded witness perspective shaped by memory,
                         relationship, experience, loss, and present
@@ -2168,7 +2175,7 @@
                     </div>
 
                     <div>
-                      <dt>Non-ownership</dt>
+                      <dt>What this path does not claim</dt>
                       <dd>
                         Uncontested authority over events not witnessed,
                         records beyond access, or humanity-wide
@@ -2177,7 +2184,7 @@
                     </div>
 
                     <div>
-                      <dt>Historical position</dt>
+                      <dt>Where this happens</dt>
                       <dd>
                         Selected traces of prior events and system
                         pressures are carried into the present mission.
@@ -2185,7 +2192,7 @@
                     </div>
 
                     <div>
-                      <dt>Character position</dt>
+                      <dt>Whose perspective you receive</dt>
                       <dd>
                         Identity and memory influence knowledge without
                         making testimony disposable or complete.
@@ -2193,7 +2200,7 @@
                     </div>
 
                     <div>
-                      <dt>World position</dt>
+                      <dt>Where this belongs</dt>
                       <dd>
                         Personal memory remains tied to the places,
                         institutions, cultures, and pressures in which it
@@ -2202,7 +2209,7 @@
                     </div>
 
                     <div>
-                      <dt>Continuity consequence</dt>
+                      <dt>What must remain intact</dt>
                       <dd>
                         Later evidence may challenge the account without
                         silently erasing the earlier witness record.
@@ -2217,7 +2224,7 @@
                 >
                   <dl>
                     <div>
-                      <dt>Ownership</dt>
+                      <dt>What this path shows</dt>
                       <dd>
                         Choice, response, growth, responsibility, and
                         consequences associated with action under
@@ -2226,7 +2233,7 @@
                     </div>
 
                     <div>
-                      <dt>Non-ownership</dt>
+                      <dt>What this path does not claim</dt>
                       <dd>
                         Control over every outcome, other people’s agency,
                         planetary conditions, or governing mission truth.
@@ -2234,7 +2241,7 @@
                     </div>
 
                     <div>
-                      <dt>Historical position</dt>
+                      <dt>Where this happens</dt>
                       <dd>
                         Present choices sit inside consequences inherited
                         from earlier generations, systems, and
@@ -2243,7 +2250,7 @@
                     </div>
 
                     <div>
-                      <dt>Character position</dt>
+                      <dt>Whose perspective you receive</dt>
                       <dd>
                         The person acts, but knowledge, power, and freedom
                         remain bounded.
@@ -2251,7 +2258,7 @@
                     </div>
 
                     <div>
-                      <dt>World position</dt>
+                      <dt>Where this belongs</dt>
                       <dd>
                         Agency remains tied to the laws, cultures,
                         environments, pressures, and political conditions
@@ -2260,7 +2267,7 @@
                     </div>
 
                     <div>
-                      <dt>Continuity consequence</dt>
+                      <dt>What must remain intact</dt>
                       <dd>
                         Change must produce traceable consequences without
                         rewriting foundational invariants or bypassing
@@ -2276,7 +2283,7 @@
                 >
                   <dl>
                     <div>
-                      <dt>Ownership</dt>
+                      <dt>What this path shows</dt>
                       <dd>
                         Character identity, relational context,
                         historical placement, world attachment, mission
@@ -2285,7 +2292,7 @@
                     </div>
 
                     <div>
-                      <dt>Non-ownership</dt>
+                      <dt>What this path does not claim</dt>
                       <dd>
                         A single authoritative human perspective or a
                         flattened cast in which all people represent the
@@ -2294,7 +2301,7 @@
                     </div>
 
                     <div>
-                      <dt>Historical position</dt>
+                      <dt>Where this happens</dt>
                       <dd>
                         Each character belongs to eras, generations,
                         institutions, conflicts, adaptations, and
@@ -2303,7 +2310,7 @@
                     </div>
 
                     <div>
-                      <dt>Character position</dt>
+                      <dt>Whose perspective you receive</dt>
                       <dd>
                         Difference in knowledge, agency, motivation,
                         responsibility, growth, and relationship remains
@@ -2312,7 +2319,7 @@
                     </div>
 
                     <div>
-                      <dt>World position</dt>
+                      <dt>Where this belongs</dt>
                       <dd>
                         Characters map to worlds, planets, regions,
                         settlements, systems, structures, and rooms.
@@ -2320,7 +2327,7 @@
                     </div>
 
                     <div>
-                      <dt>Continuity consequence</dt>
+                      <dt>What must remain intact</dt>
                       <dd>
                         New people may expand the human evidence base
                         while preserving relationships, history, world
@@ -2336,7 +2343,7 @@
                 >
                   <dl>
                     <div>
-                      <dt>Ownership</dt>
+                      <dt>What this path shows</dt>
                       <dd>
                         Foreground transition, operational passage, and
                         the immediate relationship between observer and
@@ -2345,7 +2352,7 @@
                     </div>
 
                     <div>
-                      <dt>Non-ownership</dt>
+                      <dt>What this path does not claim</dt>
                       <dd>
                         The permanent continuity role of the Diamond, the
                         full topology beyond the threshold, or proof of
@@ -2354,7 +2361,7 @@
                     </div>
 
                     <div>
-                      <dt>Historical position</dt>
+                      <dt>Where this happens</dt>
                       <dd>
                         The Window lets you encounter earlier construction,
                         memory, and world history directly.
@@ -2362,7 +2369,7 @@
                     </div>
 
                     <div>
-                      <dt>Character position</dt>
+                      <dt>Whose perspective you receive</dt>
                       <dd>
                         What you can currently see is not the same thing
                         as complete understanding.
@@ -2370,7 +2377,7 @@
                     </div>
 
                     <div>
-                      <dt>World position</dt>
+                      <dt>Where this belongs</dt>
                       <dd>
                         The current room opens into a deeper operational
                         layer within Mirrorland.
@@ -2378,7 +2385,7 @@
                     </div>
 
                     <div>
-                      <dt>Continuity consequence</dt>
+                      <dt>What must remain intact</dt>
                       <dd>
                         Opening or closing the threshold must not replace
                         the Diamond, erase evidence, or sever return.
@@ -2393,7 +2400,7 @@
                 >
                   <dl>
                     <div>
-                      <dt>Ownership</dt>
+                      <dt>What this path shows</dt>
                       <dd>
                         Permanence, central continuity, persistent return,
                         and the object-level relationship among changing
@@ -2402,7 +2409,7 @@
                     </div>
 
                     <div>
-                      <dt>Non-ownership</dt>
+                      <dt>What this path does not claim</dt>
                       <dd>
                         The individual truth of every character, the full
                         history of every world, route authority, or
@@ -2411,7 +2418,7 @@
                     </div>
 
                     <div>
-                      <dt>Historical position</dt>
+                      <dt>Where this happens</dt>
                       <dd>
                         The Diamond remains available across the Clock and
                         is not created or replaced by a later result.
@@ -2419,7 +2426,7 @@
                     </div>
 
                     <div>
-                      <dt>Character position</dt>
+                      <dt>Whose perspective you receive</dt>
                       <dd>
                         People may interpret, seek, protect,
                         misunderstand, or encounter the Diamond without
@@ -2428,7 +2435,7 @@
                     </div>
 
                     <div>
-                      <dt>World position</dt>
+                      <dt>Where this belongs</dt>
                       <dd>
                         It remains a central reference across topology
                         rather than a temporary room artifact.
@@ -2436,7 +2443,7 @@
                     </div>
 
                     <div>
-                      <dt>Continuity consequence</dt>
+                      <dt>What must remain intact</dt>
                       <dd>
                         No later object, system, story, world, or transfer
                         proposal may replace its continuity role.
@@ -2451,7 +2458,7 @@
                 >
                   <dl>
                     <div>
-                      <dt>Ownership</dt>
+                      <dt>What this path shows</dt>
                       <dd>
                         Celestial observation, pattern recognition,
                         spatial mission context, and symbolic or
@@ -2460,7 +2467,7 @@
                     </div>
 
                     <div>
-                      <dt>Non-ownership</dt>
+                      <dt>What this path does not claim</dt>
                       <dd>
                         Controller selection, canonical route entry,
                         system validation, or proof of meaning based on
@@ -2469,7 +2476,7 @@
                     </div>
 
                     <div>
-                      <dt>Historical position</dt>
+                      <dt>Where this happens</dt>
                       <dd>
                         Observations and patterns may span generations,
                         eras, worlds, and civilizational change.
@@ -2477,7 +2484,7 @@
                     </div>
 
                     <div>
-                      <dt>Character position</dt>
+                      <dt>Whose perspective you receive</dt>
                       <dd>
                         People may read the same sky differently according
                         to culture, knowledge, pressure, and position.
@@ -2485,7 +2492,7 @@
                     </div>
 
                     <div>
-                      <dt>World position</dt>
+                      <dt>Where this belongs</dt>
                       <dd>
                         Local settlements and worlds connect to the larger
                         planetary and mission architecture.
@@ -2493,7 +2500,7 @@
                     </div>
 
                     <div>
-                      <dt>Continuity consequence</dt>
+                      <dt>What must remain intact</dt>
                       <dd>
                         Interpretation may expand while preserving the
                         difference between observed pattern, canonical
@@ -2509,7 +2516,7 @@
                 >
                   <dl>
                     <div>
-                      <dt>Ownership</dt>
+                      <dt>What this path shows</dt>
                       <dd>
                         Environmental history, habitation, local memory,
                         survival systems, settlement life, and
@@ -2518,7 +2525,7 @@
                     </div>
 
                     <div>
-                      <dt>Non-ownership</dt>
+                      <dt>What this path does not claim</dt>
                       <dd>
                         The complete topology of Mirrorland or authority
                         to generalize one environment into every world or
@@ -2527,7 +2534,7 @@
                     </div>
 
                     <div>
-                      <dt>Historical position</dt>
+                      <dt>Where this happens</dt>
                       <dd>
                         Settlement preserves evidence of pressure,
                         adaptation, failure, loss, repair, and
@@ -2536,7 +2543,7 @@
                     </div>
 
                     <div>
-                      <dt>Character position</dt>
+                      <dt>Whose perspective you receive</dt>
                       <dd>
                         People are shaped by environment while retaining
                         distinct agency, memory, responsibility, and
@@ -2545,7 +2552,7 @@
                     </div>
 
                     <div>
-                      <dt>World position</dt>
+                      <dt>Where this belongs</dt>
                       <dd>
                         The Hearth is a specific inhabited consequence
                         world inside the broader planetary topology.
@@ -2553,7 +2560,7 @@
                     </div>
 
                     <div>
-                      <dt>Continuity consequence</dt>
+                      <dt>What must remain intact</dt>
                       <dd>
                         Environmental change must remain traceable through
                         history and may inform transfer only after
@@ -2569,7 +2576,7 @@
                 >
                   <dl>
                     <div>
-                      <dt>Ownership</dt>
+                      <dt>What this path shows</dt>
                       <dd>
                         Incomplete geography, developing civilization,
                         unresolved survival systems, and future world
@@ -2578,7 +2585,7 @@
                     </div>
 
                     <div>
-                      <dt>Non-ownership</dt>
+                      <dt>What this path does not claim</dt>
                       <dd>
                         Permission to erase established topology, restart
                         history, or declare incomplete material proven or
@@ -2587,7 +2594,7 @@
                     </div>
 
                     <div>
-                      <dt>Historical position</dt>
+                      <dt>Where this happens</dt>
                       <dd>
                         The world occupies a bounded place in the Clock
                         while later periods, populations, and
@@ -2596,7 +2603,7 @@
                     </div>
 
                     <div>
-                      <dt>Character position</dt>
+                      <dt>Whose perspective you receive</dt>
                       <dd>
                         People may inhabit, construct, remember, test, or
                         investigate the unfinished world without defining
@@ -2605,7 +2612,7 @@
                     </div>
 
                     <div>
-                      <dt>World position</dt>
+                      <dt>Where this belongs</dt>
                       <dd>
                         This is an expandable world, planet, region, or
                         settlement inside established mission topology.
@@ -2613,7 +2620,7 @@
                     </div>
 
                     <div>
-                      <dt>Continuity consequence</dt>
+                      <dt>What must remain intact</dt>
                       <dd>
                         Future construction must identify what was tested,
                         revised, added, or remains unknown.
@@ -2628,7 +2635,7 @@
                 >
                   <dl>
                     <div>
-                      <dt>Ownership</dt>
+                      <dt>What this path shows</dt>
                       <dd>
                         Questions of perception, evidence,
                         interpretation, concealed relationships, system
@@ -2637,7 +2644,7 @@
                     </div>
 
                     <div>
-                      <dt>Non-ownership</dt>
+                      <dt>What this path does not claim</dt>
                       <dd>
                         Authority to convert suspicion, appearance, or
                         narrative premise into validated fact without
@@ -2646,7 +2653,7 @@
                     </div>
 
                     <div>
-                      <dt>Historical position</dt>
+                      <dt>Where this happens</dt>
                       <dd>
                         Contradictions and missing evidence remain open
                         until they can be placed within the Clock and
@@ -2655,7 +2662,7 @@
                     </div>
 
                     <div>
-                      <dt>Character position</dt>
+                      <dt>Whose perspective you receive</dt>
                       <dd>
                         People may perceive different aspects of the same
                         event according to knowledge, memory, pressure,
@@ -2664,7 +2671,7 @@
                     </div>
 
                     <div>
-                      <dt>World position</dt>
+                      <dt>Where this belongs</dt>
                       <dd>
                         Mystery remains tied to specific places, objects,
                         systems, institutions, and environmental
@@ -2673,7 +2680,7 @@
                     </div>
 
                     <div>
-                      <dt>Continuity consequence</dt>
+                      <dt>What must remain intact</dt>
                       <dd>
                         Resolution must preserve earlier perspectives as
                         historical evidence even when later findings
@@ -2689,7 +2696,7 @@
                 >
                   <dl>
                     <div>
-                      <dt>Ownership</dt>
+                      <dt>What this path shows</dt>
                       <dd>
                         Reserved expansion space, future destinations,
                         proposed systems, and bounded mission
@@ -2698,7 +2705,7 @@
                     </div>
 
                     <div>
-                      <dt>Non-ownership</dt>
+                      <dt>What this path does not claim</dt>
                       <dd>
                         A claim that unopened material is complete,
                         reachable, validated, populated, or ready for
@@ -2707,7 +2714,7 @@
                     </div>
 
                     <div>
-                      <dt>Historical position</dt>
+                      <dt>Where this happens</dt>
                       <dd>
                         A future position may be reserved without
                         inventing events, outcomes, or evidence that do
@@ -2716,7 +2723,7 @@
                     </div>
 
                     <div>
-                      <dt>Character position</dt>
+                      <dt>Whose perspective you receive</dt>
                       <dd>
                         Future people may be anticipated structurally
                         without inventing final identity, history, or
@@ -2725,7 +2732,7 @@
                     </div>
 
                     <div>
-                      <dt>World position</dt>
+                      <dt>Where this belongs</dt>
                       <dd>
                         Topology may reserve space for later worlds,
                         systems, regions, structures, and rooms.
@@ -2733,7 +2740,7 @@
                     </div>
 
                     <div>
-                      <dt>Continuity consequence</dt>
+                      <dt>What must remain intact</dt>
                       <dd>
                         A path opens only when dependencies, evidence
                         boundaries, continuity, and return are
@@ -2749,7 +2756,7 @@
                 >
                   <dl>
                     <div>
-                      <dt>Ownership</dt>
+                      <dt>What this path shows</dt>
                       <dd>
                         Institutional history, governance, authority
                         boundaries, diagnostic culture, frontier
@@ -2758,7 +2765,7 @@
                     </div>
 
                     <div>
-                      <dt>Non-ownership</dt>
+                      <dt>What this path does not claim</dt>
                       <dd>
                         The complete meaning of Mirrorland, an automatic
                         model for Earth, or authority to absorb every
@@ -2767,7 +2774,7 @@
                     </div>
 
                     <div>
-                      <dt>Historical position</dt>
+                      <dt>Where this happens</dt>
                       <dd>
                         Institutions and civilizational change occupy
                         eras of formation, conflict, testing,
@@ -2776,7 +2783,7 @@
                     </div>
 
                     <div>
-                      <dt>Character position</dt>
+                      <dt>Whose perspective you receive</dt>
                       <dd>
                         People participate in institutions while retaining
                         individual knowledge, responsibility, agency, and
@@ -2785,7 +2792,7 @@
                     </div>
 
                     <div>
-                      <dt>World position</dt>
+                      <dt>Where this belongs</dt>
                       <dd>
                         Audralia is a distinct frontier civilization and
                         testing environment inside the larger topology.
@@ -2793,7 +2800,7 @@
                     </div>
 
                     <div>
-                      <dt>Continuity consequence</dt>
+                      <dt>What must remain intact</dt>
                       <dd>
                         Institutional findings must remain compatible
                         with the Clock, world history, Estate hierarchy,
@@ -2809,7 +2816,7 @@
                 >
                   <dl>
                     <div>
-                      <dt>Ownership</dt>
+                      <dt>What this path shows</dt>
                       <dd>
                         Temporary suspension messaging, integrity
                         preservation, and explanation that normal
@@ -2818,7 +2825,7 @@
                     </div>
 
                     <div>
-                      <dt>Non-ownership</dt>
+                      <dt>What this path does not claim</dt>
                       <dd>
                         A narrative event, route outcome, character
                         decision, world change, or alteration of
@@ -2827,7 +2834,7 @@
                     </div>
 
                     <div>
-                      <dt>Historical position</dt>
+                      <dt>Where this happens</dt>
                       <dd>
                         No historical advancement should be inferred
                         while the system is held.
@@ -2835,7 +2842,7 @@
                     </div>
 
                     <div>
-                      <dt>Character position</dt>
+                      <dt>Whose perspective you receive</dt>
                       <dd>
                         No character action or perspective change should
                         be inferred from a runtime hold.
@@ -2843,7 +2850,7 @@
                     </div>
 
                     <div>
-                      <dt>World position</dt>
+                      <dt>Where this belongs</dt>
                       <dd>
                         No world, room, or route transition should be
                         inferred until normal state is restored.
@@ -2851,7 +2858,7 @@
                     </div>
 
                     <div>
-                      <dt>Continuity consequence</dt>
+                      <dt>What must remain intact</dt>
                       <dd>
                         The interface must preserve recoverable state and
                         resume only through the existing controller
@@ -4291,6 +4298,18 @@ Rear_i  ⇔ Δz_i &lt; −h</code></pre>
   ></script>
 
   <script
+    src="/assets/compass/upstream-compass.geometry.js?v=3.0.0-fixed-center-independent-sibling"
+    defer
+    data-showroom-child="compass-geometry"
+  ></script>
+
+  <script
+    src="/assets/compass/upstream-compass.renderer.js?v=3.1.0-generic-projected-bounds"
+    defer
+    data-showroom-child="compass-renderer"
+  ></script>
+
+  <script
     src="/showroom/index.diamond.geometry.js?v=SHOWROOM_DIAMOND_G3_16X16_256_SEAT_GEOMETRY_AUTHORITY_TNT_v1"
     defer
     data-showroom-diamond-g3-child="geometry"
@@ -4303,9 +4322,15 @@ Rear_i  ⇔ Δz_i &lt; −h</code></pre>
   ></script>
 
   <script
-    src="/showroom/index.compositor.js?v=SHOWROOM_CONSTELLATION_SINGLE_FRAME_COMPOSITOR_TNT_v5"
+    src="/showroom/index.compositor.js?v=SHOWROOM_CONSTELLATION_SINGLE_FRAME_COMPOSITOR_TNT_v6"
     defer
     data-showroom-child="compositor"
+  ></script>
+
+  <script
+    src="/showroom/index.compass.adapter.js?v=1.0.1"
+    defer
+    data-showroom-child="compass-adapter"
   ></script>
 
   <script
@@ -4367,20 +4392,34 @@ Rear_i  ⇔ Δz_i &lt; −h</code></pre>
 </html>
 
 <!--
-SHOWROOM_MIRRORLAND_IMMERSIVE_MISSION_CONTEXT_HTML_RECEIPT_v17_2
+SHOWROOM_MIRRORLAND_IMMERSIVE_MISSION_CONTEXT_HTML_RECEIPT_v17_3
 
 TARGET:
 /showroom/index.html
 
 CONTRACT:
-SHOWROOM_MIRRORLAND_IMMERSIVE_MISSION_CONTEXT_HTML_TNT_v17_2
+SHOWROOM_MIRRORLAND_IMMERSIVE_MISSION_CONTEXT_HTML_TNT_v17_3
 
 COMPANION CSS RETAINED:
-/showroom/index.css?v=SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v13
+/showroom/index.css?v=SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v13_2
+
+SOURCE INSTALLATION:
+- universal Compass geometry installed;
+- universal Compass renderer installed;
+- Showroom compositor v6 installed;
+- Showroom Compass adapter v1.0.1 installed;
+- crystal runtime follows compositor and adapter;
+- Diamond geometry and renderer retain their existing relative order;
+- visual mount remains unmarked by data-upstream-compass-mount;
+- semantic control retains data-showroom-compass-control;
+- obsolete data-upstream-compass-control removed;
+- static Compass remains the renderer-failure fallback.
 
 CONTEXTUAL STANDARD:
 - second-person and present-tense primary narrative voice;
-- immediate stakes rather than architectural explanation;
+- immediate collaborative choices;
+- each revised prompt names the current situation, asks for a
+  concrete choice, and explains what the choice opens or preserves;
 - human pain points expressed through recognizable situations;
 - dialogue-like rhetorical movement;
 - practical consequence at the end of each chapter;
@@ -4391,15 +4430,39 @@ CONTEXTUAL STANDARD:
 
 PRESERVED:
 - frozen document architecture;
+- Compass hierarchy;
 - IDs and classes;
 - routes and route labels;
 - content IDs and lens values;
-- controller, compositor, crystal, interaction, Window, Diamond,
-  Cosmos, receipt, and script-order contracts;
-- held Atlas record;
-- stylesheet v13 identity;
+- controller, crystal, interaction, Window, Diamond, Cosmos,
+  receipt, and downstream script contracts;
+- compositor bounds bridge;
+- CSS bounds consumer;
+- all 23 compact Atlas records;
+- all 23 Narrative Position records;
+- held > compass > child > cardinal > idle precedence;
 - front-host location;
 - runtime evidence structure.
+
+COMPASS DOM CARDINALITY:
+- Compass layer: 1
+- visual mount: 1
+- fallback host: 1
+- semantic Compass control: 1
+
+COMPASS HIERARCHY:
+- visual mount remains a direct child of the Compass layer;
+- fallback host remains a direct child of the visual mount;
+- semantic control remains a direct sibling of the visual mount;
+- semantic control remains outside the aria-hidden visual subtree.
+
+NARRATIVE POSITION LABELS:
+- What this path shows
+- What this path does not claim
+- Where this happens
+- Whose perspective you receive
+- Where this belongs
+- What must remain intact
 
 ATLAS:
 - 23 compact records retained;
@@ -4408,6 +4471,18 @@ ATLAS:
 - exactly one compact record and one Narrative Position record remain
   intended to be visible for each valid state.
 
+ROUTES:
+UNCHANGED
+
+CONTROL STRUCTURE:
+UNCHANGED
+
 TOUCH ARBITRATION:
 NOT CLAIMED AS RESOLVED
+
+SOURCE STATUS:
+SOURCE_INSTALLED_IN_RENEWED_FILE
+
+RUNTIME STATUS:
+PENDING_RUNTIME_CONFIRMATION
 -->

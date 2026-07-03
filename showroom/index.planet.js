@@ -9,6 +9,7 @@
     authority instead of invented CSS geography.
   - Preserve the Showroom center object as the Main Compass return selector.
   - Keep the planet decorative and non-navigational.
+  - Reduce renderer-origin yellow glare and improve miniature globe integrity.
 
   Source geometry authority:
   - /assets/audralia/audralia.planet.js
@@ -41,6 +42,9 @@
 
   const MODEL =
     "AUDRALIA_GEOMETRY_AUTHORITY_MINIATURE_RENDERER_v1";
+
+  const VISUAL_REVISION =
+    "AUDRALIA_GEOMETRY_AUTHORITY_MINIATURE_RENDERER_GLARE_REDUCTION_v1";
 
   const AUDRALIA_GEOMETRY_CONTRACT =
     "AUDRALIA_G1_DETERMINISTIC_PLANET_GEOMETRY_AUTHORITY_TNT_v1";
@@ -100,6 +104,9 @@
 
     model:
       "data-showroom-planet-model",
+
+    visualRevision:
+      "data-showroom-planet-visual-revision",
 
     sourceContract:
       "data-showroom-planet-source-contract",
@@ -193,13 +200,13 @@
       80,
 
     rotationDurationMs:
-      64000,
+      72000,
 
     cloudDurationMs:
-      92000,
+      104000,
 
     pulseDurationMs:
-      9000,
+      12000,
 
     receiptAttribute:
       "data-showroom-planet-receipt",
@@ -283,58 +290,67 @@
       "rgba(0, 0, 0, 0)",
 
     deepOcean:
-      [9, 26, 64],
+      [8, 24, 58],
 
     openOcean:
-      [18, 69, 118],
+      [15, 64, 112],
 
     shelf:
-      [36, 132, 151],
+      [30, 121, 145],
 
     coastal:
-      [65, 165, 170],
+      [54, 151, 160],
 
     inlandSea:
-      [38, 112, 136],
+      [34, 103, 132],
 
     lake:
-      [54, 146, 168],
+      [48, 133, 160],
 
     beach:
-      [201, 170, 104],
+      [176, 153, 103],
 
     coast:
-      [155, 135, 82],
+      [132, 124, 83],
 
     lowland:
-      [65, 124, 76],
+      [56, 116, 74],
 
     forest:
-      [35, 96, 70],
+      [30, 86, 68],
 
     arid:
-      [158, 126, 72],
+      [132, 112, 77],
 
     upland:
-      [91, 122, 85],
+      [82, 113, 88],
 
     rock:
-      [116, 111, 112],
+      [104, 106, 112],
 
     snow:
-      [222, 226, 218],
+      [208, 220, 218],
 
     cloud:
-      [232, 244, 246],
+      [226, 240, 243],
 
     atmosphere:
-      [116, 224, 255],
+      [108, 218, 255],
 
     rim:
-      [152, 238, 255],
+      [145, 233, 255],
 
     night:
-      [3, 6, 18]
+      [3, 7, 21],
+
+    coolDay:
+      [186, 224, 228],
+
+    polarDay:
+      [214, 232, 229],
+
+    oceanDay:
+      [118, 209, 219]
   });
 
   const state = {
@@ -523,16 +539,22 @@
     );
   }
 
-  function safeNumber(
+  function resolveLevel(
     value,
-    fallback = 0
+    fallback
   ) {
-    const numeric =
-      Number(value);
+    if (
+      value == null ||
+      value === ""
+    ) {
+      return fallback;
+    }
 
-    return Number.isFinite(numeric)
-      ? numeric
-      : fallback;
+    return clamp(
+      value,
+      0,
+      6
+    );
   }
 
   function freezePlain(value) {
@@ -614,6 +636,9 @@
 
       model:
         MODEL,
+
+      visualRevision:
+        VISUAL_REVISION,
 
       owner:
         OWNER,
@@ -891,6 +916,11 @@
     root.setAttribute(
       ATTRIBUTES.model,
       MODEL
+    );
+
+    root.setAttribute(
+      ATTRIBUTES.visualRevision,
+      VISUAL_REVISION
     );
 
     root.setAttribute(
@@ -1345,36 +1375,28 @@
     const packet =
       authority.createGeometry({
         terrainLevel:
-          clamp(
+          resolveLevel(
             options.terrainLevel,
-            0,
-            6
-          ) ||
-          DEFAULTS.terrainLevel,
+            DEFAULTS.terrainLevel
+          ),
 
         oceanLevel:
-          clamp(
+          resolveLevel(
             options.oceanLevel,
-            0,
-            6
-          ) ||
-          DEFAULTS.oceanLevel,
+            DEFAULTS.oceanLevel
+          ),
 
         cloudLevel:
-          clamp(
+          resolveLevel(
             options.cloudLevel,
-            0,
-            6
-          ) ||
-          DEFAULTS.cloudLevel,
+            DEFAULTS.cloudLevel
+          ),
 
         atmosphereLevel:
-          clamp(
+          resolveLevel(
             options.atmosphereLevel,
-            0,
-            6
-          ) ||
-          DEFAULTS.atmosphereLevel,
+            DEFAULTS.atmosphereLevel
+          ),
 
         includeHydrology:
           false,
@@ -1887,7 +1909,8 @@
 
   function shadeColor(
     base,
-    light
+    light,
+    waterClass
   ) {
     const l =
       clamp(
@@ -1897,20 +1920,30 @@
       );
 
     const nightMix =
-      1 -
-      l;
+      (1 - l) *
+      0.54;
 
     const dimmed =
       mixColor(
         base,
         COLORS.night,
-        nightMix * 0.62
+        nightMix
       );
+
+    const dayTarget =
+      waterClass === WATER_CLASS.DEEP_OCEAN ||
+      waterClass === WATER_CLASS.OPEN_OCEAN ||
+      waterClass === WATER_CLASS.SHELF_WATER ||
+      waterClass === WATER_CLASS.COASTAL_WATER ||
+      waterClass === WATER_CLASS.INLAND_SEA ||
+      waterClass === WATER_CLASS.LAKE
+        ? COLORS.oceanDay
+        : COLORS.coolDay;
 
     return mixColor(
       dimmed,
-      [255, 248, 220],
-      Math.pow(l, 2.2) * 0.16
+      dayTarget,
+      Math.pow(l, 2.15) * 0.095
     );
   }
 
@@ -2112,13 +2145,13 @@
   function createLightVector() {
     return {
       x:
-        -0.46,
+        -0.18,
 
       y:
-        0.42,
+        0.24,
 
       z:
-        0.78
+        0.94
     };
   }
 
@@ -2139,11 +2172,67 @@
         point.z / length *
           light.z
       ) *
-        0.74 +
-        0.36,
+        0.56 +
+        0.44,
       0,
       1
     );
+  }
+
+  function drawBaseSphere(
+    context,
+    center,
+    radius,
+    pulse
+  ) {
+    const baseGradient =
+      context.createRadialGradient(
+        center - radius * 0.22,
+        center - radius * 0.2,
+        radius * 0.08,
+        center,
+        center,
+        radius
+      );
+
+    baseGradient.addColorStop(
+      0,
+      `rgba(96, 178, 181, ${0.32 + pulse * 0.015})`
+    );
+
+    baseGradient.addColorStop(
+      0.34,
+      "rgba(23, 91, 132, 0.94)"
+    );
+
+    baseGradient.addColorStop(
+      0.68,
+      "rgba(12, 42, 82, 0.98)"
+    );
+
+    baseGradient.addColorStop(
+      1,
+      "rgba(5, 14, 39, 1)"
+    );
+
+    context.save();
+
+    context.beginPath();
+
+    context.arc(
+      center,
+      center,
+      radius,
+      0,
+      Math.PI * 2
+    );
+
+    context.fillStyle =
+      baseGradient;
+
+    context.fill();
+
+    context.restore();
   }
 
   function drawAtmosphere(
@@ -2155,27 +2244,27 @@
   ) {
     const atmosphereGradient =
       context.createRadialGradient(
-        center - radius * 0.28,
-        center - radius * 0.22,
-        radius * 0.12,
+        center - radius * 0.18,
+        center - radius * 0.18,
+        radius * 0.16,
         center,
         center,
-        radius * 1.12
+        radius * 1.1
       );
 
     atmosphereGradient.addColorStop(
       0,
-      "rgba(255, 255, 255, 0.13)"
+      "rgba(255, 255, 255, 0.045)"
     );
 
     atmosphereGradient.addColorStop(
-      0.48,
-      `rgba(116, 224, 255, ${0.055 + pulse * 0.025})`
+      0.5,
+      `rgba(116, 224, 255, ${0.042 + pulse * 0.012})`
     );
 
     atmosphereGradient.addColorStop(
       0.78,
-      `rgba(116, 224, 255, ${0.12 + pulse * 0.035})`
+      `rgba(116, 224, 255, ${0.082 + pulse * 0.018})`
     );
 
     atmosphereGradient.addColorStop(
@@ -2190,7 +2279,7 @@
     context.arc(
       center,
       center,
-      radius * 1.12,
+      radius * 1.1,
       0,
       Math.PI * 2
     );
@@ -2215,12 +2304,12 @@
     );
 
     context.strokeStyle =
-      "rgba(152, 238, 255, 0.42)";
+      "rgba(152, 238, 255, 0.22)";
 
     context.lineWidth =
       Math.max(
         1,
-        size * 0.008
+        size * 0.006
       );
 
     context.stroke();
@@ -2235,10 +2324,10 @@
   ) {
     const gradient =
       context.createRadialGradient(
-        center + radius * 0.46,
-        center + radius * 0.1,
-        radius * 0.04,
-        center + radius * 0.34,
+        center + radius * 0.48,
+        center + radius * 0.12,
+        radius * 0.08,
+        center + radius * 0.36,
         center + radius * 0.12,
         radius * 1.18
       );
@@ -2249,13 +2338,70 @@
     );
 
     gradient.addColorStop(
-      0.45,
-      "rgba(0, 0, 0, 0.08)"
+      0.48,
+      "rgba(0, 0, 0, 0.07)"
     );
 
     gradient.addColorStop(
       1,
-      "rgba(0, 0, 0, 0.56)"
+      "rgba(0, 0, 0, 0.5)"
+    );
+
+    context.save();
+
+    context.beginPath();
+
+    context.arc(
+      center,
+      center,
+      radius,
+      0,
+      Math.PI * 2
+    );
+
+    context.clip();
+
+    context.fillStyle =
+      gradient;
+
+    context.fillRect(
+      center - radius,
+      center - radius,
+      radius * 2,
+      radius * 2
+    );
+
+    context.restore();
+  }
+
+  function drawSubtleSpecular(
+    context,
+    center,
+    radius
+  ) {
+    const gradient =
+      context.createRadialGradient(
+        center - radius * 0.22,
+        center - radius * 0.18,
+        radius * 0.02,
+        center - radius * 0.12,
+        center - radius * 0.08,
+        radius * 0.42
+      );
+
+    gradient.addColorStop(
+      0,
+      "rgba(218, 247, 250, 0.105)"
+    );
+
+    gradient.addColorStop(
+      0.35,
+      "rgba(168, 232, 238, 0.046)"
+    );
+
+    gradient.addColorStop(
+      1,
+      "rgba(168, 232, 238, 0)"
     );
 
     context.save();
@@ -2362,27 +2508,27 @@
 
       const alpha =
         clamp(
-          0.05 +
+          0.035 +
           rotated.z *
-          0.11,
+          0.08,
           0,
-          0.16
+          0.12
         );
 
       const width =
         radius *
         (
-          0.14 +
+          0.13 +
           band *
-          0.08
+          0.075
         );
 
       const height =
         radius *
         (
-          0.025 +
+          0.02 +
           band *
-          0.02
+          0.018
         );
 
       context.save();
@@ -2451,14 +2597,14 @@
       size,
       center,
       radius,
-      0.2
+      0.12
     );
 
     const gradient =
       context.createRadialGradient(
-        center - radius * 0.32,
-        center - radius * 0.32,
-        radius * 0.08,
+        center - radius * 0.22,
+        center - radius * 0.24,
+        radius * 0.12,
         center,
         center,
         radius
@@ -2466,22 +2612,22 @@
 
     gradient.addColorStop(
       0,
-      "rgba(245, 238, 210, 0.88)"
+      "rgba(170, 216, 205, 0.62)"
     );
 
     gradient.addColorStop(
-      0.26,
-      "rgba(74, 168, 166, 0.9)"
+      0.3,
+      "rgba(65, 148, 154, 0.88)"
     );
 
     gradient.addColorStop(
-      0.64,
-      "rgba(42, 91, 139, 0.95)"
+      0.66,
+      "rgba(34, 80, 129, 0.96)"
     );
 
     gradient.addColorStop(
       1,
-      "rgba(11, 24, 61, 1)"
+      "rgba(9, 23, 60, 1)"
     );
 
     context.beginPath();
@@ -2498,6 +2644,12 @@
       gradient;
 
     context.fill();
+
+    drawSubtleSpecular(
+      context,
+      center,
+      radius
+    );
 
     drawTerminator(
       context,
@@ -2689,6 +2841,13 @@
 
     context.clip();
 
+    drawBaseSphere(
+      context,
+      center,
+      radius,
+      pulse
+    );
+
     for (
       const triangle
       of triangles
@@ -2743,7 +2902,8 @@
       const color =
         shadeColor(
           baseColor,
-          lightValue
+          lightValue,
+          waterClass
         );
 
       drawTriangle(
@@ -2753,7 +2913,7 @@
         triangle.c,
         colorToCss(
           color,
-          1
+          0.985
         )
       );
     }
@@ -2766,6 +2926,12 @@
       radius,
       yaw,
       cloudTurn
+    );
+
+    drawSubtleSpecular(
+      context,
+      center,
+      radius
     );
 
     drawTerminator(
@@ -3007,6 +3173,12 @@
         visualIdentity:
           "mini-audralia",
 
+        visualRevision:
+          VISUAL_REVISION,
+
+        visualCorrection:
+          "renderer-origin-glare-reduction-and-cool-balanced-globe-lighting",
+
         navigationMeaning:
           "main-compass-return-selection",
 
@@ -3036,6 +3208,9 @@
 
         visualIdentity:
           "mini-audralia",
+
+        visualRevision:
+          VISUAL_REVISION,
 
         navigationMeaning:
           "main-compass-return-selection"
@@ -3146,6 +3321,9 @@
 
           visualIdentity:
             "mini-audralia",
+
+          visualRevision:
+            VISUAL_REVISION,
 
           navigationMeaning:
             "main-compass-return-selection",
@@ -3509,6 +3687,9 @@
         visualIdentity:
           "mini-audralia",
 
+        visualRevision:
+          VISUAL_REVISION,
+
         navigationMeaning:
           "main-compass-return-selection",
 
@@ -3561,6 +3742,9 @@
 
       model:
         MODEL,
+
+      visualRevision:
+        VISUAL_REVISION,
 
       owner:
         OWNER,
@@ -3630,6 +3814,9 @@
 
       visualIdentity:
         "mini-audralia",
+
+      visualRevision:
+        VISUAL_REVISION,
 
       navigationMeaning:
         "main-compass-return-selection",

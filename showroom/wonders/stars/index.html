@@ -1,0 +1,2545 @@
+<!-- TARGET FILE: /showroom/wonders/stars/index.html -->
+<!-- COMPLETE NEW FILE -->
+<!-- SHOWROOM_SATELLITE_READ_THE_STARS_HTML_TNT_v1 -->
+
+<!doctype html>
+
+<html
+  lang="en"
+  data-route="/showroom/wonders/stars/"
+  data-page="showroom-wonders-stars"
+  data-version="SHOWROOM-SATELLITE-READ-THE-STARS-1.0.0"
+  data-contract="SHOWROOM_SATELLITE_READ_THE_STARS_HTML_TNT_v1"
+  data-showroom-satellite="true"
+  data-showroom-route-family="wonders"
+  data-showroom-route-id="south-3"
+  data-showroom-route-title="Read the Stars"
+  data-showroom-parent-route="/showroom/"
+  data-showroom-previous-route="/showroom/wonders/diamond/"
+  data-showroom-next-route="/showroom/mysteries/unfinished-world/"
+  data-showroom-return-route="/showroom/"
+  data-showroom-main-compass-route="/index.html"
+  data-showroom-star-role="constellation-scale-orientation"
+  data-showroom-star-proof-authority="false"
+  data-showroom-interpretation-model="signal-pattern-route-boundary"
+>
+<head>
+  <meta charset="utf-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width,initial-scale=1,viewport-fit=cover"
+  >
+
+  <title>
+    Read the Stars · Shadows Never Shatter
+  </title>
+
+  <meta
+    name="description"
+    content="Read the Stars of Mirrorland. Learn how separate lights become constellations, how patterns guide without becoming proof, and how orientation differs from projection."
+  >
+
+  <meta
+    name="showroom-page-contract"
+    content="SHOWROOM_SATELLITE_READ_THE_STARS_HTML_TNT_v1"
+  >
+
+  <style>
+    /* ============================================================
+       SHOWROOM SATELLITE PAGE EMBEDDED VISUAL SYSTEM v1
+       Wonders / South expression
+       Stars chamber
+       ============================================================ */
+
+    :root {
+      color-scheme: dark;
+
+      --ink-0: #02040a;
+      --ink-1: #050914;
+      --ink-2: #091020;
+      --ink-3: #101a30;
+      --ink-4: #17233d;
+
+      --cream: #f5eddd;
+      --cream-soft: #ddd3c1;
+      --muted: #aab2c2;
+      --muted-strong: #c6ccd7;
+
+      --gold: #e0b85b;
+      --gold-bright: #f4d47e;
+      --gold-deep: #805b1c;
+      --gold-faint: rgba(224, 184, 91, 0.14);
+
+      --cyan: #75e9ff;
+      --cyan-soft: #b4f5ff;
+      --cyan-faint: rgba(117, 233, 255, 0.13);
+
+      --violet: #b798ff;
+      --violet-soft: #d5c5ff;
+      --violet-faint: rgba(183, 152, 255, 0.13);
+
+      --sapphire: #5aa9ff;
+      --sapphire-soft: #a9d2ff;
+      --sapphire-faint: rgba(90, 169, 255, 0.13);
+
+      --green: #8ce4ae;
+      --rose: #ff91a3;
+
+      --border: rgba(226, 197, 128, 0.24);
+      --border-strong: rgba(239, 205, 125, 0.5);
+      --border-cool: rgba(117, 233, 255, 0.25);
+      --border-violet: rgba(183, 152, 255, 0.26);
+      --rule: rgba(255, 255, 255, 0.085);
+
+      --glass:
+        linear-gradient(
+          145deg,
+          rgba(18, 27, 49, 0.9),
+          rgba(6, 10, 22, 0.93)
+        );
+
+      --shadow:
+        0 1.5rem 4rem rgba(0, 0, 0, 0.46),
+        0 0 0 1px rgba(255, 255, 255, 0.018) inset;
+
+      --shadow-deep:
+        0 2.4rem 7rem rgba(0, 0, 0, 0.62),
+        0 0 3rem rgba(70, 114, 190, 0.08);
+
+      --radius-sm: 0.72rem;
+      --radius-md: 1rem;
+      --radius-lg: 1.45rem;
+      --radius-xl: 2rem;
+
+      --page-width: 84rem;
+      --reading-width: 49rem;
+
+      --space-1: 0.4rem;
+      --space-2: 0.65rem;
+      --space-3: 0.95rem;
+      --space-4: 1.3rem;
+      --space-5: 1.8rem;
+      --space-6: 2.5rem;
+      --space-7: 3.5rem;
+
+      --transition-fast: 150ms ease;
+      --transition:
+        260ms cubic-bezier(0.2, 0.72, 0.25, 1);
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-width: 20rem;
+      scroll-behavior: smooth;
+      background: var(--ink-0);
+    }
+
+    body {
+      position: relative;
+
+      min-width: 20rem;
+      min-height: 100vh;
+      margin: 0;
+      overflow-x: hidden;
+
+      color: var(--cream);
+
+      background:
+        radial-gradient(
+          circle at 50% -10%,
+          rgba(80, 124, 198, 0.35),
+          transparent 35rem
+        ),
+        radial-gradient(
+          circle at 10% 36%,
+          rgba(57, 177, 190, 0.13),
+          transparent 28rem
+        ),
+        radial-gradient(
+          circle at 89% 52%,
+          rgba(135, 94, 204, 0.14),
+          transparent 32rem
+        ),
+        linear-gradient(
+          180deg,
+          #050916 0%,
+          #02040b 47%,
+          #080b16 100%
+        );
+
+      font-family:
+        Inter,
+        ui-sans-serif,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
+      font-size: 1rem;
+      line-height: 1.65;
+      text-rendering: optimizeLegibility;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body::before {
+      position: fixed;
+      z-index: 0;
+      inset: 0;
+
+      pointer-events: none;
+      content: "";
+
+      opacity: 0.74;
+
+      background-image:
+        radial-gradient(
+          circle,
+          rgba(255, 255, 255, 0.86) 0 0.05rem,
+          transparent 0.067rem
+        ),
+        radial-gradient(
+          circle,
+          rgba(117, 233, 255, 0.62) 0 0.04rem,
+          transparent 0.06rem
+        ),
+        radial-gradient(
+          circle,
+          rgba(239, 205, 126, 0.56) 0 0.045rem,
+          transparent 0.065rem
+        );
+
+      background-size:
+        5.8rem 5.8rem,
+        9.4rem 9.4rem,
+        13.8rem 13.8rem;
+
+      background-position:
+        0 0,
+        2.2rem 3.4rem,
+        5.7rem 1.6rem;
+    }
+
+    body::after {
+      position: fixed;
+      z-index: 1;
+      inset: 0;
+
+      pointer-events: none;
+      content: "";
+
+      background:
+        linear-gradient(
+          90deg,
+          rgba(0, 0, 0, 0.43),
+          transparent 11%,
+          transparent 89%,
+          rgba(0, 0, 0, 0.43)
+        ),
+        radial-gradient(
+          ellipse at center,
+          transparent 40%,
+          rgba(0, 0, 0, 0.48) 100%
+        );
+    }
+
+    a,
+    button {
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    h1,
+    h2,
+    h3,
+    p,
+    blockquote,
+    dl,
+    dd,
+    ul {
+      margin-top: 0;
+    }
+
+    h1,
+    h2,
+    h3,
+    strong,
+    summary {
+      text-wrap: balance;
+    }
+
+    p,
+    li,
+    dd,
+    blockquote {
+      text-wrap: pretty;
+    }
+
+    :focus-visible {
+      outline: 3px solid var(--cyan);
+      outline-offset: 4px;
+    }
+
+    .skip-link {
+      position: fixed;
+      z-index: 10000;
+      top: 0.75rem;
+      left: 0.75rem;
+
+      padding: 0.72rem 1rem;
+
+      border: 1px solid var(--gold-bright);
+      border-radius: var(--radius-sm);
+
+      color: var(--ink-0);
+      background: var(--gold-bright);
+
+      font-weight: 850;
+      text-decoration: none;
+
+      transform: translateY(-220%);
+      transition: transform var(--transition-fast);
+    }
+
+    .skip-link:focus {
+      transform: translateY(0);
+    }
+
+    .page-shell {
+      position: relative;
+      z-index: 2;
+
+      width: min(
+        calc(100% - 2rem),
+        var(--page-width)
+      );
+
+      margin-inline: auto;
+      padding-bottom: var(--space-6);
+    }
+
+    .eyebrow,
+    .route-kicker,
+    .chapter-index,
+    .star-label,
+    .practical-label {
+      color: var(--gold-bright);
+
+      font-size: 0.69rem;
+      font-weight: 850;
+      letter-spacing: 0.16em;
+      line-height: 1.35;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3 {
+      font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+      color: var(--cream);
+      font-weight: 600;
+      line-height: 1.02;
+    }
+
+    h1 {
+      max-width: 10ch;
+      margin-bottom: 0.95rem;
+
+      font-size: clamp(3.2rem, 8vw, 7rem);
+      letter-spacing: -0.05em;
+    }
+
+    h2 {
+      margin-bottom: 0;
+
+      font-size: clamp(2.2rem, 5vw, 4.8rem);
+      letter-spacing: -0.04em;
+    }
+
+    h3 {
+      font-size: clamp(1.35rem, 2.5vw, 2.2rem);
+      letter-spacing: -0.025em;
+    }
+
+    .button {
+      display: inline-flex;
+
+      min-height: 2.9rem;
+      align-items: center;
+      justify-content: center;
+      gap: 0.55rem;
+
+      padding: 0.75rem 1.05rem;
+
+      border: 1px solid rgba(226, 231, 241, 0.23);
+      border-radius: 999px;
+
+      color: var(--cream);
+
+      background:
+        linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.075),
+          rgba(255, 255, 255, 0.024)
+        ),
+        rgba(5, 9, 20, 0.84);
+
+      box-shadow:
+        0 0.7rem 1.8rem rgba(0, 0, 0, 0.2),
+        0 0 0 1px rgba(255, 255, 255, 0.018) inset;
+
+      font-size: 0.76rem;
+      font-weight: 850;
+      letter-spacing: 0.065em;
+      line-height: 1;
+      text-align: center;
+      text-decoration: none;
+      text-transform: uppercase;
+
+      transition:
+        border-color var(--transition-fast),
+        box-shadow var(--transition-fast),
+        transform var(--transition-fast);
+    }
+
+    .button:hover {
+      border-color: var(--border-strong);
+      transform: translateY(-1px);
+    }
+
+    .button-gold {
+      border-color: rgba(255, 222, 142, 0.76);
+      color: #171006;
+
+      background:
+        linear-gradient(
+          135deg,
+          #f6d985 0%,
+          #d4a94c 52%,
+          #f0ca69 100%
+        );
+
+      box-shadow:
+        0 0.95rem 2.3rem rgba(156, 105, 25, 0.24),
+        0 0 1.7rem rgba(245, 213, 130, 0.16);
+    }
+
+    /* ============================================================
+       TOPBAR
+       ============================================================ */
+
+    .page-topbar {
+      display: flex;
+
+      min-height: 4.7rem;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+
+      margin-top: 0.8rem;
+      padding: 0.72rem 0.88rem;
+
+      border: 1px solid rgba(225, 197, 127, 0.18);
+      border-radius: var(--radius-lg);
+
+      background:
+        linear-gradient(
+          180deg,
+          rgba(18, 26, 48, 0.84),
+          rgba(5, 9, 20, 0.78)
+        );
+
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(1rem);
+    }
+
+    .brand {
+      display: inline-flex;
+
+      min-width: 0;
+      align-items: center;
+      gap: 0.75rem;
+
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .brand-mark {
+      position: relative;
+
+      display: grid;
+
+      width: 2.75rem;
+      height: 2.75rem;
+      flex: 0 0 auto;
+      place-items: center;
+
+      border: 1px solid rgba(241, 207, 123, 0.58);
+      border-radius: 50%;
+
+      color: var(--gold-bright);
+
+      background:
+        radial-gradient(
+          circle,
+          rgba(221, 181, 89, 0.17),
+          rgba(12, 17, 33, 0.95)
+        );
+
+      box-shadow:
+        0 0 1.4rem rgba(220, 180, 87, 0.14),
+        inset 0 0 0 0.22rem rgba(255, 255, 255, 0.025);
+    }
+
+    .brand-mark::before {
+      width: 1.3rem;
+      height: 1.3rem;
+
+      content: "";
+
+      clip-path:
+        polygon(
+          50% 0,
+          59% 40%,
+          100% 50%,
+          59% 60%,
+          50% 100%,
+          41% 60%,
+          0 50%,
+          41% 40%
+        );
+
+      background:
+        linear-gradient(
+          145deg,
+          var(--gold-bright),
+          var(--cyan) 58%,
+          var(--sapphire)
+        );
+    }
+
+    .brand-mark::after {
+      position: absolute;
+
+      width: 1.65rem;
+      height: 1.65rem;
+
+      content: "";
+
+      border: 1px solid rgba(117, 233, 255, 0.34);
+      border-radius: 50%;
+    }
+
+    .brand-copy {
+      display: grid;
+      min-width: 0;
+      gap: 0.04rem;
+    }
+
+    .brand-copy span {
+      color: var(--muted);
+
+      font-size: 0.61rem;
+      font-weight: 750;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .brand-copy strong {
+      overflow: hidden;
+
+      color: var(--cream);
+
+      font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+      font-size: 1.02rem;
+      font-weight: 600;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .topbar-nav {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .topbar-nav a {
+      padding: 0.48rem 0.68rem;
+
+      border-radius: 999px;
+
+      color: var(--muted-strong);
+
+      font-size: 0.69rem;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      text-decoration: none;
+      text-transform: uppercase;
+    }
+
+    .topbar-nav a:hover {
+      color: var(--cream);
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    /* ============================================================
+       MAIN
+       ============================================================ */
+
+    main {
+      display: grid;
+      gap: var(--space-7);
+      padding-top: var(--space-4);
+    }
+
+    section {
+      scroll-margin-top: 1rem;
+    }
+
+    .section-heading {
+      display: grid;
+
+      grid-template-columns:
+        minmax(0, 1fr)
+        minmax(16rem, 27rem);
+
+      align-items: end;
+      gap: 1.5rem;
+
+      padding-inline: 0.35rem;
+    }
+
+    .section-heading p {
+      margin-bottom: 0.25rem;
+      color: var(--muted-strong);
+    }
+
+    /* ============================================================
+       HERO CONSTELLATION
+       ============================================================ */
+
+    .route-hero {
+      position: relative;
+
+      min-height: min(80vh, 50rem);
+      overflow: hidden;
+
+      border: 1px solid rgba(224, 184, 91, 0.23);
+      border-radius: var(--radius-xl);
+
+      background:
+        radial-gradient(
+          circle at 17% 18%,
+          rgba(117, 233, 255, 0.14),
+          transparent 24rem
+        ),
+        radial-gradient(
+          circle at 82% 72%,
+          rgba(183, 152, 255, 0.15),
+          transparent 29rem
+        ),
+        linear-gradient(
+          145deg,
+          rgba(16, 25, 46, 0.9),
+          rgba(3, 6, 15, 0.96)
+        );
+
+      box-shadow: var(--shadow-deep);
+      isolation: isolate;
+    }
+
+    .route-hero__inner {
+      display: grid;
+
+      min-height: inherit;
+
+      grid-template-columns:
+        minmax(0, 1.15fr)
+        minmax(18rem, 0.85fr);
+
+      align-items: center;
+      gap: clamp(2rem, 6vw, 6rem);
+
+      padding:
+        clamp(2rem, 6vw, 5rem)
+        clamp(1.2rem, 4vw, 4rem);
+    }
+
+    .route-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+
+      margin-bottom: 1.2rem;
+    }
+
+    .route-kicker::before {
+      width: 1.75rem;
+      height: 1px;
+
+      content: "";
+      background: currentColor;
+    }
+
+    .hero-subtitle {
+      max-width: 34rem;
+      margin-bottom: 0.85rem;
+
+      color: var(--cyan-soft);
+
+      font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+      font-size: clamp(1.25rem, 2.7vw, 2rem);
+      line-height: 1.22;
+    }
+
+    .hero-lead {
+      max-width: 44rem;
+      margin-bottom: 1.5rem;
+
+      color: var(--muted-strong);
+      font-size: clamp(1rem, 1.5vw, 1.15rem);
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.7rem;
+    }
+
+    .constellation-vault {
+      position: relative;
+
+      min-height: 28rem;
+      overflow: hidden;
+      padding: 1.4rem;
+
+      border: 1px solid var(--border-cool);
+      border-radius: var(--radius-lg);
+
+      background:
+        radial-gradient(
+          circle at 50% 38%,
+          rgba(90, 169, 255, 0.18),
+          transparent 11rem
+        ),
+        linear-gradient(
+          180deg,
+          rgba(19, 31, 55, 0.94),
+          rgba(5, 9, 20, 0.97)
+        );
+
+      box-shadow:
+        var(--shadow),
+        inset 0.24rem 0 0 rgba(117, 233, 255, 0.28);
+    }
+
+    .constellation-map {
+      position: absolute;
+      top: 7%;
+      left: 50%;
+
+      width: min(78%, 18rem);
+      height: 17rem;
+
+      border: 1px solid rgba(117, 233, 255, 0.14);
+      border-radius: 50%;
+
+      background:
+        radial-gradient(
+          circle at 19% 25%,
+          var(--gold-bright) 0 0.15rem,
+          transparent 0.18rem
+        ),
+        radial-gradient(
+          circle at 36% 43%,
+          var(--cyan) 0 0.2rem,
+          transparent 0.23rem
+        ),
+        radial-gradient(
+          circle at 51% 25%,
+          var(--cream) 0 0.12rem,
+          transparent 0.15rem
+        ),
+        radial-gradient(
+          circle at 67% 45%,
+          var(--violet-soft) 0 0.18rem,
+          transparent 0.21rem
+        ),
+        radial-gradient(
+          circle at 79% 70%,
+          var(--gold-bright) 0 0.15rem,
+          transparent 0.18rem
+        ),
+        radial-gradient(
+          circle at 51% 72%,
+          var(--cyan) 0 0.16rem,
+          transparent 0.19rem
+        ),
+        radial-gradient(
+          circle at 26% 78%,
+          var(--sapphire-soft) 0 0.18rem,
+          transparent 0.21rem
+        ),
+        radial-gradient(
+          circle at 50% 50%,
+          rgba(117, 233, 255, 0.1),
+          transparent 55%
+        ),
+        rgba(2, 6, 15, 0.7);
+
+      box-shadow:
+        0 0 3rem rgba(90, 169, 255, 0.12),
+        inset 0 0 2rem rgba(117, 233, 255, 0.05);
+
+      transform: translateX(-50%);
+    }
+
+    .constellation-map::before,
+    .constellation-map::after {
+      position: absolute;
+      inset: 0;
+
+      pointer-events: none;
+      content: "";
+    }
+
+    .constellation-map::before {
+      background:
+        linear-gradient(
+          38deg,
+          transparent 0 20%,
+          rgba(117, 233, 255, 0.3) 20.2% 20.5%,
+          transparent 20.7% 100%
+        ),
+        linear-gradient(
+          145deg,
+          transparent 0 37%,
+          rgba(244, 212, 126, 0.27) 37.2% 37.5%,
+          transparent 37.7% 100%
+        ),
+        linear-gradient(
+          72deg,
+          transparent 0 52%,
+          rgba(183, 152, 255, 0.26) 52.2% 52.5%,
+          transparent 52.7% 100%
+        );
+    }
+
+    .constellation-map::after {
+      inset: 11%;
+
+      border: 1px dashed rgba(224, 184, 91, 0.18);
+      border-radius: 50%;
+    }
+
+    .constellation-crosshair {
+      position: absolute;
+      z-index: 2;
+      top: 7%;
+      left: 50%;
+
+      width: min(78%, 18rem);
+      height: 17rem;
+
+      pointer-events: none;
+
+      background:
+        linear-gradient(
+          90deg,
+          transparent 49.7%,
+          rgba(117, 233, 255, 0.13) 50%,
+          transparent 50.3%
+        ),
+        linear-gradient(
+          180deg,
+          transparent 49.7%,
+          rgba(117, 233, 255, 0.13) 50%,
+          transparent 50.3%
+        );
+
+      transform: translateX(-50%);
+    }
+
+    .constellation-copy {
+      position: absolute;
+      z-index: 3;
+      right: 1.4rem;
+      bottom: 1.4rem;
+      left: 1.4rem;
+    }
+
+    .star-label {
+      display: block;
+      margin-bottom: 0.45rem;
+
+      color: var(--cyan);
+    }
+
+    .constellation-copy strong {
+      display: block;
+      margin-bottom: 0.65rem;
+
+      font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+      font-size: clamp(1.35rem, 2.5vw, 2rem);
+      font-weight: 600;
+      line-height: 1.12;
+    }
+
+    .constellation-copy p {
+      margin-bottom: 0;
+
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    /* ============================================================
+       STAR REVELATIONS
+       ============================================================ */
+
+    .revelation-stage {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .revelation-grid {
+      display: grid;
+
+      grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+      gap: 0.9rem;
+    }
+
+    .revelation-card {
+      position: relative;
+
+      min-width: 0;
+      overflow: hidden;
+
+      padding: 1.25rem;
+
+      border: 1px solid rgba(224, 184, 91, 0.17);
+      border-radius: var(--radius-lg);
+
+      background: var(--glass);
+      box-shadow: var(--shadow);
+
+      transition:
+        transform var(--transition),
+        border-color var(--transition),
+        box-shadow var(--transition);
+    }
+
+    .revelation-card:hover {
+      border-color: rgba(224, 184, 91, 0.34);
+
+      box-shadow:
+        0 1.7rem 4.5rem rgba(0, 0, 0, 0.48),
+        inset 0.2rem 0 0 rgba(117, 233, 255, 0.22);
+
+      transform: translateY(-3px);
+    }
+
+    .chapter-index {
+      display: block;
+      margin-bottom: 0.8rem;
+    }
+
+    .revelation-card h3 {
+      margin-bottom: 0.65rem;
+    }
+
+    .revelation-card p {
+      margin-bottom: 0;
+      color: var(--muted-strong);
+    }
+
+    .revelation-card blockquote {
+      margin: 1rem 0 0;
+      padding: 0.85rem 0.95rem;
+
+      border-left: 0.2rem solid var(--cyan);
+
+      color: var(--cream);
+      background: var(--cyan-faint);
+
+      font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+      font-size: 1.02rem;
+      line-height: 1.5;
+    }
+
+    /* ============================================================
+       STAR DIALOGUE
+       ============================================================ */
+
+    .dialogue-stage {
+      display: grid;
+
+      grid-template-columns:
+        minmax(0, 0.82fr)
+        minmax(0, 1.18fr);
+
+      gap: 1rem;
+    }
+
+    .dialogue-intro,
+    .dialogue-panel {
+      min-width: 0;
+      padding: clamp(1.2rem, 3vw, 2rem);
+
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+
+      background: var(--glass);
+      box-shadow: var(--shadow);
+    }
+
+    .dialogue-intro {
+      display: grid;
+      align-content: center;
+      gap: 0.9rem;
+    }
+
+    .dialogue-intro p {
+      margin-bottom: 0;
+      color: var(--muted-strong);
+    }
+
+    .dialogue-panel {
+      display: grid;
+      gap: 0.8rem;
+    }
+
+    .dialogue-line {
+      display: grid;
+      gap: 0.2rem;
+
+      max-width: 88%;
+      padding: 0.85rem 1rem;
+
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      border-radius: var(--radius-md);
+
+      background: rgba(255, 255, 255, 0.025);
+    }
+
+    .dialogue-line[data-speaker="visitor"] {
+      justify-self: start;
+
+      border-color: rgba(117, 233, 255, 0.19);
+      box-shadow: inset 0.2rem 0 0 rgba(117, 233, 255, 0.3);
+    }
+
+    .dialogue-line[data-speaker="stars"] {
+      justify-self: end;
+
+      border-color: rgba(224, 184, 91, 0.2);
+      box-shadow: inset -0.2rem 0 0 rgba(224, 184, 91, 0.3);
+    }
+
+    .dialogue-line span {
+      color: var(--gold-bright);
+
+      font-size: 0.61rem;
+      font-weight: 850;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .dialogue-line p {
+      margin-bottom: 0;
+      color: var(--cream-soft);
+    }
+
+    /* ============================================================
+       READING METHOD
+       ============================================================ */
+
+    .method-section {
+      display: grid;
+      gap: 1rem;
+
+      padding: clamp(1rem, 2.8vw, 2rem);
+
+      border: 1px solid var(--border-cool);
+      border-radius: var(--radius-xl);
+
+      background:
+        radial-gradient(
+          circle at 100% 0,
+          rgba(117, 233, 255, 0.09),
+          transparent 22rem
+        ),
+        linear-gradient(
+          145deg,
+          rgba(12, 24, 42, 0.86),
+          rgba(4, 7, 16, 0.94)
+        );
+
+      box-shadow: var(--shadow-deep);
+    }
+
+    .method-grid {
+      display: grid;
+
+      grid-template-columns:
+        repeat(5, minmax(0, 1fr));
+
+      gap: 0.7rem;
+    }
+
+    .method-card {
+      min-width: 0;
+      padding: 1rem;
+
+      border: 1px solid rgba(117, 233, 255, 0.14);
+      border-radius: var(--radius-md);
+
+      background:
+        linear-gradient(
+          145deg,
+          rgba(117, 233, 255, 0.05),
+          rgba(255, 255, 255, 0.015)
+        );
+    }
+
+    .method-card span {
+      display: block;
+      margin-bottom: 0.55rem;
+
+      color: var(--cyan);
+
+      font-size: 0.62rem;
+      font-weight: 850;
+      letter-spacing: 0.11em;
+      text-transform: uppercase;
+    }
+
+    .method-card strong {
+      display: block;
+      margin-bottom: 0.45rem;
+
+      font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+      font-size: 1.14rem;
+      font-weight: 600;
+      line-height: 1.16;
+    }
+
+    .method-card p {
+      margin-bottom: 0;
+
+      color: var(--muted);
+      font-size: 0.8rem;
+    }
+
+    /* ============================================================
+       ORIENTATION VERSUS PROJECTION
+       ============================================================ */
+
+    .contrast-section {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .contrast-grid {
+      display: grid;
+
+      grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+      gap: 0.8rem;
+    }
+
+    .contrast-card {
+      min-width: 0;
+      padding: 1.15rem;
+
+      border: 1px solid rgba(224, 184, 91, 0.17);
+      border-radius: var(--radius-md);
+
+      background: var(--glass);
+      box-shadow: var(--shadow);
+    }
+
+    .contrast-card[data-mode="orientation"] {
+      box-shadow:
+        var(--shadow),
+        inset 0.2rem 0 0 var(--cyan);
+    }
+
+    .contrast-card[data-mode="projection"] {
+      box-shadow:
+        var(--shadow),
+        inset 0.2rem 0 0 var(--rose);
+    }
+
+    .contrast-card span {
+      display: block;
+      margin-bottom: 0.55rem;
+
+      font-size: 0.62rem;
+      font-weight: 850;
+      letter-spacing: 0.11em;
+      text-transform: uppercase;
+    }
+
+    .contrast-card[data-mode="orientation"] span {
+      color: var(--cyan);
+    }
+
+    .contrast-card[data-mode="projection"] span {
+      color: var(--rose);
+    }
+
+    .contrast-card strong {
+      display: block;
+      margin-bottom: 0.45rem;
+
+      font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+      font-size: 1.35rem;
+      font-weight: 600;
+      line-height: 1.16;
+    }
+
+    .contrast-card p {
+      margin-bottom: 0;
+      color: var(--muted-strong);
+    }
+
+    /* ============================================================
+       PRACTICAL RETURN
+       ============================================================ */
+
+    .practical-return {
+      display: grid;
+
+      grid-template-columns:
+        minmax(0, 1fr)
+        minmax(16rem, 0.7fr);
+
+      align-items: center;
+      gap: 1.3rem;
+
+      padding: clamp(1.25rem, 3vw, 2rem);
+
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-lg);
+
+      background:
+        radial-gradient(
+          circle at 100% 0,
+          rgba(224, 184, 91, 0.13),
+          transparent 20rem
+        ),
+        linear-gradient(
+          145deg,
+          rgba(25, 31, 49, 0.9),
+          rgba(7, 11, 22, 0.96)
+        );
+
+      box-shadow:
+        var(--shadow),
+        inset 0.22rem 0 0 var(--gold);
+    }
+
+    .practical-copy h2 {
+      max-width: 13ch;
+      margin-bottom: 0.8rem;
+
+      font-size: clamp(2rem, 4.7vw, 4rem);
+    }
+
+    .practical-copy p {
+      max-width: var(--reading-width);
+      margin-bottom: 0;
+
+      color: var(--muted-strong);
+    }
+
+    .practical-actions {
+      display: grid;
+      gap: 0.6rem;
+    }
+
+    .practical-actions .button {
+      width: 100%;
+    }
+
+    /* ============================================================
+       EVIDENCE
+       ============================================================ */
+
+    .evidence-disclosure {
+      overflow: clip;
+
+      border: 1px solid rgba(224, 184, 91, 0.17);
+      border-radius: var(--radius-md);
+
+      background:
+        linear-gradient(
+          180deg,
+          rgba(17, 24, 44, 0.82),
+          rgba(7, 11, 23, 0.9)
+        );
+    }
+
+    .evidence-disclosure[open] {
+      border-color: rgba(224, 184, 91, 0.34);
+
+      box-shadow:
+        0 1rem 2.8rem rgba(0, 0, 0, 0.24),
+        inset 0.2rem 0 0 rgba(117, 233, 255, 0.26);
+    }
+
+    .evidence-disclosure > summary {
+      display: flex;
+
+      min-height: 4rem;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+
+      padding: 0.9rem 1rem;
+
+      color: var(--cream);
+      list-style: none;
+      cursor: pointer;
+    }
+
+    .evidence-disclosure
+    > summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .evidence-disclosure
+    > summary > span:first-child {
+      display: grid;
+      gap: 0.1rem;
+    }
+
+    .evidence-disclosure
+    > summary strong {
+      color: var(--gold-bright);
+
+      font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+
+    .evidence-disclosure
+    > summary small {
+      color: var(--muted);
+      font-size: 0.72rem;
+    }
+
+    .evidence-disclosure
+    > summary > span:last-child {
+      display: grid;
+
+      width: 2rem;
+      height: 2rem;
+      flex: 0 0 auto;
+      place-items: center;
+
+      border: 1px solid var(--border-cool);
+      border-radius: 50%;
+
+      color: var(--cyan);
+      background: var(--cyan-faint);
+
+      transition: transform var(--transition-fast);
+    }
+
+    .evidence-disclosure[open]
+    > summary > span:last-child {
+      transform: rotate(45deg);
+    }
+
+    .evidence-body {
+      display: grid;
+      gap: 0.75rem;
+
+      padding: 1rem;
+
+      border-top: 1px solid var(--rule);
+    }
+
+    .evidence-body > p {
+      max-width: var(--reading-width);
+      margin-bottom: 0;
+
+      color: var(--muted-strong);
+    }
+
+    .evidence-grid {
+      display: grid;
+
+      grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+      gap: 0.65rem;
+    }
+
+    .evidence-grid article {
+      min-width: 0;
+      padding: 0.85rem;
+
+      border: 1px solid rgba(255, 255, 255, 0.065);
+      border-radius: var(--radius-sm);
+
+      background: rgba(255, 255, 255, 0.022);
+    }
+
+    .evidence-grid span {
+      display: block;
+      margin-bottom: 0.3rem;
+
+      color: var(--cyan);
+
+      font-size: 0.58rem;
+      font-weight: 850;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .evidence-grid p {
+      margin-bottom: 0;
+
+      color: var(--muted);
+      font-size: 0.76rem;
+    }
+
+    /* ============================================================
+       FOOTER
+       ============================================================ */
+
+    .page-footer {
+      display: flex;
+
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+
+      margin-top: var(--space-6);
+      padding: 1.1rem 0.2rem 0.5rem;
+
+      border-top: 1px solid rgba(224, 184, 91, 0.18);
+    }
+
+    .page-footer > div {
+      display: grid;
+      gap: 0.1rem;
+    }
+
+    .page-footer strong {
+      font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+      font-weight: 600;
+    }
+
+    .page-footer span {
+      color: var(--muted);
+      font-size: 0.74rem;
+    }
+
+    .page-footer nav {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 0.35rem;
+    }
+
+    .page-footer a {
+      padding: 0.42rem 0.58rem;
+
+      border-radius: 999px;
+
+      color: var(--muted-strong);
+
+      font-size: 0.67rem;
+      font-weight: 760;
+      letter-spacing: 0.045em;
+      text-decoration: none;
+      text-transform: uppercase;
+    }
+
+    .page-footer a:hover {
+      color: var(--gold-bright);
+      background: var(--gold-faint);
+    }
+
+    /* ============================================================
+       RESPONSIVE
+       ============================================================ */
+
+    @media (max-width: 74rem) {
+      .method-grid {
+        grid-template-columns:
+          repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 68rem) {
+      .revelation-grid {
+        grid-template-columns:
+          repeat(2, minmax(0, 1fr));
+      }
+
+      .revelation-card:last-child {
+        grid-column: 1 / -1;
+      }
+
+      .evidence-grid {
+        grid-template-columns:
+          repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 54rem) {
+      .route-hero__inner,
+      .dialogue-stage,
+      .practical-return,
+      .section-heading {
+        grid-template-columns: 1fr;
+      }
+
+      .constellation-vault {
+        min-height: 25rem;
+      }
+
+      .section-heading {
+        gap: 0.75rem;
+      }
+
+      .method-grid {
+        grid-template-columns:
+          repeat(2, minmax(0, 1fr));
+      }
+
+      .practical-actions {
+        grid-template-columns:
+          repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 40rem) {
+      :root {
+        --space-7: 2.2rem;
+      }
+
+      body {
+        font-size: 0.96rem;
+      }
+
+      .page-shell {
+        width: min(
+          calc(100% - 0.8rem),
+          var(--page-width)
+        );
+
+        padding-bottom: 1.2rem;
+      }
+
+      .page-topbar {
+        min-height: 3.9rem;
+
+        margin-top: 0.4rem;
+        padding: 0.5rem 0.55rem;
+
+        border-radius: 1rem;
+      }
+
+      .brand-mark {
+        width: 2.2rem;
+        height: 2.2rem;
+      }
+
+      .brand-copy span {
+        display: none;
+      }
+
+      .brand-copy strong {
+        font-size: 0.9rem;
+      }
+
+      .topbar-nav a {
+        padding: 0.4rem 0.42rem;
+        font-size: 0.58rem;
+      }
+
+      .topbar-nav a:nth-child(2) {
+        display: none;
+      }
+
+      main {
+        gap: 2.2rem;
+        padding-top: 0.4rem;
+      }
+
+      h1 {
+        font-size: clamp(2.8rem, 14vw, 4.7rem);
+      }
+
+      h2 {
+        font-size: clamp(2rem, 10vw, 3.4rem);
+      }
+
+      .route-hero {
+        min-height: 0;
+        border-radius: 1.2rem;
+      }
+
+      .route-hero__inner {
+        gap: 1.2rem;
+        padding: 1.2rem 0.75rem;
+      }
+
+      .hero-subtitle {
+        font-size: 1.13rem;
+      }
+
+      .hero-lead {
+        font-size: 0.93rem;
+      }
+
+      .hero-actions,
+      .practical-actions {
+        display: grid;
+        grid-template-columns: 1fr;
+      }
+
+      .hero-actions .button,
+      .practical-actions .button {
+        width: 100%;
+      }
+
+      .constellation-vault {
+        min-height: 23rem;
+        padding: 1rem;
+      }
+
+      .constellation-map,
+      .constellation-crosshair {
+        width: 13rem;
+        height: 13rem;
+      }
+
+      .revelation-grid,
+      .method-grid,
+      .contrast-grid,
+      .evidence-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .revelation-card:last-child {
+        grid-column: auto;
+      }
+
+      .revelation-card,
+      .dialogue-intro,
+      .dialogue-panel,
+      .method-section,
+      .method-card,
+      .contrast-card,
+      .practical-return {
+        border-radius: 1rem;
+      }
+
+      .dialogue-line {
+        max-width: 95%;
+      }
+
+      .page-footer {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .page-footer nav {
+        justify-content: flex-start;
+      }
+    }
+
+    /* ============================================================
+       ACCESSIBILITY MODES
+       ============================================================ */
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+
+        transition-duration: 0.001ms !important;
+      }
+
+      .revelation-card:hover,
+      .button:hover {
+        transform: none;
+      }
+    }
+
+    @media (prefers-reduced-transparency: reduce) {
+      .page-topbar,
+      .revelation-card,
+      .dialogue-intro,
+      .dialogue-panel,
+      .method-section,
+      .method-card,
+      .contrast-card,
+      .practical-return,
+      .evidence-disclosure {
+        background-color: var(--ink-1);
+        backdrop-filter: none;
+      }
+    }
+
+    @media (forced-colors: active) {
+      body,
+      .page-topbar,
+      .route-hero,
+      .constellation-vault,
+      .revelation-card,
+      .dialogue-intro,
+      .dialogue-panel,
+      .method-section,
+      .method-card,
+      .contrast-card,
+      .practical-return,
+      .evidence-disclosure {
+        color: CanvasText;
+        background: Canvas;
+        box-shadow: none;
+      }
+
+      .button,
+      summary {
+        forced-color-adjust: auto;
+      }
+
+      .brand-mark,
+      .constellation-map {
+        border: 2px solid ButtonText;
+        background: ButtonFace;
+        box-shadow: none;
+      }
+    }
+
+    @media print {
+      body {
+        color: #111;
+        background: #fff;
+      }
+
+      body::before,
+      body::after,
+      .page-topbar,
+      .hero-actions,
+      .practical-actions,
+      .page-footer {
+        display: none !important;
+      }
+
+      .page-shell {
+        width: 100%;
+      }
+
+      .route-hero,
+      .constellation-vault,
+      .revelation-card,
+      .dialogue-intro,
+      .dialogue-panel,
+      .method-section,
+      .method-card,
+      .contrast-card,
+      .practical-return,
+      .evidence-disclosure {
+        color: #111;
+        background: #fff;
+        border: 1px solid #777;
+        box-shadow: none;
+      }
+
+      .route-hero,
+      .constellation-vault {
+        min-height: 0;
+      }
+
+      .constellation-map,
+      .constellation-crosshair {
+        display: none;
+      }
+
+      .evidence-disclosure:not([open])
+      > :not(summary) {
+        display: block;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <a
+    class="skip-link"
+    href="#main"
+  >
+    Skip to the Stars
+  </a>
+
+  <div class="page-shell">
+    <header
+      class="page-topbar"
+      aria-label="Read the Stars header"
+    >
+      <a
+        class="brand"
+        href="/showroom/"
+        aria-label="Return to the Showroom constellation"
+      >
+        <span
+          class="brand-mark"
+          aria-hidden="true"
+        ></span>
+
+        <span class="brand-copy">
+          <span>Shadows Never Shatter</span>
+          <strong>Read the Stars</strong>
+        </span>
+      </a>
+
+      <nav
+        class="topbar-nav"
+        aria-label="Direct routes"
+      >
+        <a href="/showroom/wonders/diamond/">
+          Previous
+        </a>
+
+        <a href="/showroom/">
+          Constellation
+        </a>
+
+        <a href="/index.html">
+          Compass
+        </a>
+      </nav>
+    </header>
+
+    <main id="main">
+      <section
+        class="route-hero"
+        aria-labelledby="page-title"
+      >
+        <div class="route-hero__inner">
+          <div>
+            <div class="route-kicker">
+              South Route · Chamber Three
+            </div>
+
+            <h1 id="page-title">
+              Read the Stars.
+            </h1>
+
+            <p class="hero-subtitle">
+              A single light tells you where something is. A
+              constellation tells you how separate things may belong
+              together.
+            </p>
+
+            <p class="hero-lead">
+              The Window taught you to describe before explaining. The
+              Diamond taught you to preserve continuity while the world
+              changes. Now the sky opens wider. Routes, worlds,
+              characters, signals, and unresolved events appear as
+              separate lights. Your task is not merely to notice them.
+              It is to determine which relationships are real, which are
+              temporary, and which exist only because you connected them.
+            </p>
+
+            <div class="hero-actions">
+              <a
+                class="button button-gold"
+                href="#reading-the-sky"
+              >
+                Enter the Starfield
+              </a>
+
+              <a
+                class="button"
+                href="/showroom/wonders/diamond/"
+              >
+                Return to the Diamond
+              </a>
+            </div>
+          </div>
+
+          <aside
+            class="constellation-vault"
+            aria-label="Mirrorland constellation map"
+          >
+            <div
+              class="constellation-map"
+              aria-hidden="true"
+            ></div>
+
+            <div
+              class="constellation-crosshair"
+              aria-hidden="true"
+            ></div>
+
+            <div class="constellation-copy">
+              <span class="star-label">
+                Constellation-Scale Orientation
+              </span>
+
+              <strong>
+                The pattern can guide you without proving itself.
+              </strong>
+
+              <p>
+                Every line between stars is an interpretation until the
+                relationship survives evidence, time, and return.
+              </p>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section
+        id="reading-the-sky"
+        class="revelation-stage"
+        aria-labelledby="reading-title"
+      >
+        <header class="section-heading">
+          <div>
+            <div class="eyebrow">
+              What the Starfield Reveals
+            </div>
+
+            <h2 id="reading-title">
+              Three scales of meaning appear.
+            </h2>
+          </div>
+
+          <p>
+            The sky becomes useful only when you distinguish the light,
+            the line, and the larger route they may form together.
+          </p>
+        </header>
+
+        <div class="revelation-grid">
+          <article class="revelation-card">
+            <span class="chapter-index">
+              01 · The Star
+            </span>
+
+            <h3>
+              A single signal occupies a real position.
+            </h3>
+
+            <p>
+              One event, person, world, object, or record can be located
+              and described without claiming it explains anything
+              beyond itself.
+            </p>
+
+            <blockquote>
+              “Begin with what is actually there before deciding what it
+              belongs to.”
+            </blockquote>
+          </article>
+
+          <article class="revelation-card">
+            <span class="chapter-index">
+              02 · The Line
+            </span>
+
+            <h3>
+              Relationship appears when two signals are connected.
+            </h3>
+
+            <p>
+              The connection may represent sequence, influence,
+              similarity, dependency, conflict, distance, or shared
+              consequence. The line is useful only when its meaning is
+              declared.
+            </p>
+
+            <blockquote>
+              “A connection is not neutral merely because it can be
+              drawn.”
+            </blockquote>
+          </article>
+
+          <article class="revelation-card">
+            <span class="chapter-index">
+              03 · The Constellation
+            </span>
+
+            <h3>
+              Multiple relationships become a navigable pattern.
+            </h3>
+
+            <p>
+              A constellation can help you orient across a larger system.
+              It reveals routes and clusters that no single signal could
+              show alone. It may still be incomplete, temporary, or
+              wrong.
+            </p>
+
+            <blockquote>
+              “A useful pattern remains open to correction by the stars
+              it claims to connect.”
+            </blockquote>
+          </article>
+        </div>
+      </section>
+
+      <section
+        class="dialogue-stage"
+        aria-labelledby="dialogue-title"
+      >
+        <div class="dialogue-intro">
+          <div class="eyebrow">
+            The Reader’s Temptation
+          </div>
+
+          <h2 id="dialogue-title">
+            You want the pattern to mean more than it does.
+          </h2>
+
+          <p>
+            Human beings connect lights quickly. That ability makes
+            navigation possible. It also allows expectation, fear, and
+            desire to turn coincidence into destiny.
+          </p>
+        </div>
+
+        <div
+          class="dialogue-panel"
+          aria-label="Starfield interpretation dialogue"
+        >
+          <div
+            class="dialogue-line"
+            data-speaker="visitor"
+          >
+            <span>Visitor</span>
+
+            <p>
+              “These three events form the same shape.”
+            </p>
+          </div>
+
+          <div
+            class="dialogue-line"
+            data-speaker="stars"
+          >
+            <span>Stars</span>
+
+            <p>
+              “Similarity is visible. Cause is not.”
+            </p>
+          </div>
+
+          <div
+            class="dialogue-line"
+            data-speaker="visitor"
+          >
+            <span>Visitor</span>
+
+            <p>
+              “But the sequence repeats.”
+            </p>
+          </div>
+
+          <div
+            class="dialogue-line"
+            data-speaker="stars"
+          >
+            <span>Stars</span>
+
+            <p>
+              “Then record the repetition. Do not call it law until the
+              relationship survives alternative explanations.”
+            </p>
+          </div>
+
+          <div
+            class="dialogue-line"
+            data-speaker="visitor"
+          >
+            <span>Visitor</span>
+
+            <p>
+              “How do I know whether the constellation is real?”
+            </p>
+          </div>
+
+          <div
+            class="dialogue-line"
+            data-speaker="stars"
+          >
+            <span>Stars</span>
+
+            <p>
+              “Test whether the route remains useful when the viewpoint
+              changes.”
+            </p>
+          </div>
+
+          <div
+            class="dialogue-line"
+            data-speaker="visitor"
+          >
+            <span>Visitor</span>
+
+            <p>
+              “And if the pattern disappears?”
+            </p>
+          </div>
+
+          <div
+            class="dialogue-line"
+            data-speaker="stars"
+          >
+            <span>Stars</span>
+
+            <p>
+              “Then you discovered something about your position, not
+              necessarily about the sky.”
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section
+        class="method-section"
+        aria-labelledby="method-title"
+      >
+        <header class="section-heading">
+          <div>
+            <div class="eyebrow">
+              Five Steps for Reading the Sky
+            </div>
+
+            <h2 id="method-title">
+              Build the pattern without becoming trapped by it.
+            </h2>
+          </div>
+
+          <p>
+            A responsible constellation remains traceable to its
+            component signals and revisable when those signals change.
+          </p>
+        </header>
+
+        <div class="method-grid">
+          <article class="method-card">
+            <span>Step One</span>
+
+            <strong>
+              Locate each light.
+            </strong>
+
+            <p>
+              Record the signal’s identity, time, position, source, and
+              observable state before drawing any relationship.
+            </p>
+          </article>
+
+          <article class="method-card">
+            <span>Step Two</span>
+
+            <strong>
+              Declare each line.
+            </strong>
+
+            <p>
+              Name whether the connection represents sequence,
+              similarity, dependency, ownership, conflict, or another
+              bounded relation.
+            </p>
+          </article>
+
+          <article class="method-card">
+            <span>Step Three</span>
+
+            <strong>
+              Change the viewpoint.
+            </strong>
+
+            <p>
+              Test the pattern from another time, scale, route, witness,
+              world, or institutional position.
+            </p>
+          </article>
+
+          <article class="method-card">
+            <span>Step Four</span>
+
+            <strong>
+              Preserve the gaps.
+            </strong>
+
+            <p>
+              Do not invent a line merely because the pattern feels
+              incomplete. Missing relationships remain meaningful
+              uncertainty.
+            </p>
+          </article>
+
+          <article class="method-card">
+            <span>Step Five</span>
+
+            <strong>
+              Return to the stars.
+            </strong>
+
+            <p>
+              Any constellation must remain recoverable as individual
+              signals rather than replacing them with the pattern.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section
+        class="contrast-section"
+        aria-labelledby="contrast-title"
+      >
+        <header class="section-heading">
+          <div>
+            <div class="eyebrow">
+              Orientation Versus Projection
+            </div>
+
+            <h2 id="contrast-title">
+              A map can guide you or merely resemble your expectations.
+            </h2>
+          </div>
+
+          <p>
+            Both may feel coherent. Only one remains accountable to the
+            world outside the reader.
+          </p>
+        </header>
+
+        <div class="contrast-grid">
+          <article
+            class="contrast-card"
+            data-mode="orientation"
+          >
+            <span>Orientation</span>
+
+            <strong>
+              The pattern helps you move among real signals.
+            </strong>
+
+            <p>
+              Routes remain connected to observable locations, declared
+              relationships, recoverable evidence, and clear limits.
+            </p>
+          </article>
+
+          <article
+            class="contrast-card"
+            data-mode="projection"
+          >
+            <span>Projection</span>
+
+            <strong>
+              The pattern explains whatever the reader wants explained.
+            </strong>
+
+            <p>
+              Contradictory signals are dismissed, missing lines are
+              invented, and every new event is absorbed into the same
+              interpretation.
+            </p>
+          </article>
+
+          <article
+            class="contrast-card"
+            data-mode="orientation"
+          >
+            <span>Orientation</span>
+
+            <strong>
+              The constellation survives a change in viewpoint.
+            </strong>
+
+            <p>
+              Another observer may describe it differently, but the
+              underlying relationships remain visible and testable.
+            </p>
+          </article>
+
+          <article
+            class="contrast-card"
+            data-mode="projection"
+          >
+            <span>Projection</span>
+
+            <strong>
+              The constellation exists only from one preferred angle.
+            </strong>
+
+            <p>
+              Move the observer, change the scale, or inspect the omitted
+              evidence and the apparent order disappears.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section
+        class="practical-return"
+        aria-labelledby="practical-title"
+      >
+        <div class="practical-copy">
+          <span class="practical-label">
+            The Rule of the Stars
+          </span>
+
+          <h2 id="practical-title">
+            Use the pattern. Do not worship it.
+          </h2>
+
+          <p>
+            A constellation is a navigational achievement, not a final
+            truth. Let it guide your next question, reveal a route, or
+            expose a missing relationship. Then return to the individual
+            signals. The moment the pattern becomes more important than
+            the stars, orientation has become projection.
+          </p>
+        </div>
+
+        <div class="practical-actions">
+          <a
+            class="button button-gold"
+            href="/showroom/mysteries/unfinished-world/"
+          >
+            Enter the Unfinished World
+          </a>
+
+          <a
+            class="button"
+            href="/showroom/"
+          >
+            Choose Another Chamber
+          </a>
+        </div>
+      </section>
+
+      <details class="evidence-disclosure">
+        <summary>
+          <span>
+            <strong>Constellation Interpretation Boundary</strong>
+            <small>
+              What the stars can orient—and what the pattern cannot prove
+            </small>
+          </span>
+
+          <span aria-hidden="true">+</span>
+        </summary>
+
+        <div class="evidence-body">
+          <p>
+            The Stars provide constellation-scale orientation within the
+            Mirrorland narrative architecture. They allow separate
+            signals to be located, related, clustered, and used for
+            navigation. A constellation does not automatically establish
+            causation, universal law, destiny, scientific proof, or
+            authority over the objects it connects.
+          </p>
+
+          <div class="evidence-grid">
+            <article>
+              <span>Established Here</span>
+
+              <p>
+                Responsible interpretation begins with individual
+                signals, declared lines, viewpoint testing, preserved
+                gaps, and recoverable return.
+              </p>
+            </article>
+
+            <article>
+              <span>Not Established Here</span>
+
+              <p>
+                Causation from visual similarity, certainty from
+                repetition, universal meaning, or proof through pattern
+                alone.
+              </p>
+            </article>
+
+            <article>
+              <span>Continuity Requirement</span>
+
+              <p>
+                Every constellation must remain subordinate to the
+                signals, evidence, routes, and Diamond continuity
+                references from which it was constructed.
+              </p>
+            </article>
+          </div>
+        </div>
+      </details>
+    </main>
+
+    <footer class="page-footer">
+      <div>
+        <strong>
+          Read the Stars
+        </strong>
+
+        <span>
+          The pattern can orient you. The lights remain the evidence.
+        </span>
+      </div>
+
+      <nav aria-label="Footer routes">
+        <a href="/showroom/wonders/diamond/">
+          Previous Chamber
+        </a>
+
+        <a href="/showroom/mysteries/unfinished-world/">
+          Next Chamber
+        </a>
+
+        <a href="/showroom/">
+          Constellation
+        </a>
+
+        <a href="/index.html">
+          Main Compass
+        </a>
+      </nav>
+    </footer>
+  </div>
+</body>
+</html>
+
+<!--
+SHOWROOM_SATELLITE_READ_THE_STARS_HTML_RECEIPT_v1
+
+TARGET:
+/showroom/wonders/stars/index.html
+
+STATUS:
+COMPLETE NEW SELF-CONTAINED HTML FILE
+
+EMBEDDED VISUAL SYSTEM:
+SHOWROOM_SATELLITE_PAGE_EMBEDDED_VISUAL_SYSTEM_v1
+
+ROUTE FAMILY:
+Wonders / South
+
+ROUTE ID:
+south-3
+
+PREVIOUS ROUTE:
+/showroom/wonders/diamond/
+
+NEXT ROUTE:
+/showroom/mysteries/unfinished-world/
+
+PARENT:
+/showroom/
+
+PURPOSE:
+- continue directly from Behold the Diamond;
+- complete the South wonders sequence;
+- move from continuity into constellation-scale interpretation;
+- distinguish stars, lines, constellations, and routes;
+- establish that patterns guide without becoming proof;
+- distinguish orientation from projection;
+- transition the visitor into the West mysteries sequence.
+
+PRESENTATION STANDARD:
+- immersive;
+- second-person;
+- cosmic;
+- dialogue-driven;
+- interpretation-oriented;
+- practical;
+- evidence boundary retained beneath the experience.
+
+ARCHITECTURAL FEATURES:
+- complete embedded CSS;
+- Showroom-aligned cosmic atmosphere;
+- CSS-built constellation map;
+- three-part starfield interpretation sequence;
+- visitor and Stars dialogue;
+- five-step constellation reading method;
+- orientation-versus-projection comparison;
+- practical interpretation rule;
+- evidence-boundary disclosure;
+- responsive mobile composition;
+- keyboard focus;
+- reduced motion;
+- reduced transparency;
+- forced colors;
+- print handling.
+
+NON-CLAIMS:
+- no causation from pattern alone;
+- no universal law;
+- no destiny claim;
+- no scientific validation;
+- no Earth-transfer authorization;
+- no runtime dependency;
+- no controller ownership;
+- no JavaScript requirement.
+-->

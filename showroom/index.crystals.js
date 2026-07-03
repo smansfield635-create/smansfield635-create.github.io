@@ -9,7 +9,7 @@
     9.0.0-archcoin-route-gateway
   - window.SHOWROOM_COMPOSITOR
   - compositor contract:
-    SHOWROOM_CONSTELLATION_SINGLE_FRAME_COMPOSITOR_TNT_v5
+    SHOWROOM_CONSTELLATION_SINGLE_FRAME_COMPOSITOR_TNT_v6
 
   Crystals authority:
   - cardinal and room crystal geometry;
@@ -90,7 +90,7 @@
     "SHOWROOM_COMPOSITOR";
 
   const COMPOSITOR_CONTRACT =
-    "SHOWROOM_CONSTELLATION_SINGLE_FRAME_COMPOSITOR_TNT_v5";
+    "SHOWROOM_CONSTELLATION_SINGLE_FRAME_COMPOSITOR_TNT_v6";
 
   const RENDERER_ID =
     "showroom-crystals-renderer";

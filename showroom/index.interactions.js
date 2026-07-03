@@ -1,8 +1,9 @@
 /* TARGET FILE: /showroom/index.interactions.js */
-/* TNT FULL-FILE REPLACEMENT */
+/* COMPLETE REPLACEMENT */
+/* GROUP_A_INTERACTIONS_CONSUMER_ALIGNMENT_TO_EXISTING_ANCHORS_ONLY */
 /* SHOWROOM_COMPLETE_QUATERNION_INTERACTIONS_TNT_v6_HELPER_INTEGRATED_PARITY_CORRECTED */
 
-(() => { 
+(() => {
   "use strict";
 
   const CONTRACT =
@@ -30,7 +31,7 @@
     "SHOWROOM_COMPOSITOR";
 
   const COMPOSITOR_CONTRACT =
-    "SHOWROOM_CONSTELLATION_SINGLE_FRAME_COMPOSITOR_TNT_v5";
+    "SHOWROOM_CONSTELLATION_SINGLE_FRAME_COMPOSITOR_TNT_v6";
 
   const GESTURES_GLOBAL =
     "SHOWROOM_INTERACTION_GESTURES";
@@ -62,6 +63,9 @@
 
     crystalsFailure:
       "SHOWROOM_CRYSTALS_FAILURE",
+
+    crystalsRenderFailure:
+      "ARCHCOIN_CRYSTALS_RENDER_FAILURE",
 
     crystalsDisposed:
       "SHOWROOM_CRYSTALS_DISPOSED",
@@ -4059,6 +4063,36 @@
 
             compositorProjectionRetained:
               compositorProjectionReady()
+          }
+        );
+      }
+    );
+
+    addCoreListener(
+      window,
+      EVENTS.crystalsRenderFailure,
+      event => {
+        interruptActivePointer(
+          "crystals-render-failure"
+        );
+
+        publishReceipt(
+          "crystals-unavailable",
+          {
+            detail:
+              event &&
+              event.detail
+                ? event.detail
+                : null,
+
+            compositorProjectionRetained:
+              compositorProjectionReady(),
+
+            sourceEvent:
+              EVENTS.crystalsRenderFailure,
+
+            aliasFor:
+              EVENTS.crystalsFailure
           }
         );
       }

@@ -1530,17 +1530,15 @@ main {
   opacity: 1;
 }
 
+[data-showroom-root][data-showroom-crystals-ready="false"]
+[data-showroom-fallback-star] {
+  opacity: 1;
+}
+
 [data-showroom-root][data-showroom-crystals-ready="true"]
 [data-showroom-fallback-star] {
   opacity: 0;
   pointer-events: auto;
-}
-
-[data-showroom-root][data-showroom-held="true"]
-[data-showroom-fallback-star],
-[data-showroom-root][data-showroom-crystals-ready="false"]
-[data-showroom-fallback-star] {
-  opacity: 1;
 }
 
 /* ================================================================
@@ -4187,7 +4185,10 @@ main {
      [data-showroom-root] selector;
    - descendant combinators begin only after the complete root
      state selector;
-   - fallback-star readiness and held selectors remain corrected;
+   - fallback-star readiness selectors remain corrected;
+   - fallback-star withdrawal is governed only by crystal readiness;
+   - held state no longer restores fallback stars after enhanced
+     crystal readiness succeeds;
    - Atlas emphasis selectors remain corrected;
    - print-state selectors remain corrected.
 

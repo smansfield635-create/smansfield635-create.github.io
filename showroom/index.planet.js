@@ -3,7 +3,7 @@
 /* GROUP_F_AUDRALIA_PLANETARY_OBJECT_RENEWAL */
 /* SHOWROOM_PLANETARY_FULCRUM_INDEPENDENT_CENTER_PLANET_TNT_v1 */
 /* AUDRALIA_GEOMETRY_AUTHORITY_MINIATURE_RENDERER_v1 */
-/*
+/* 
   Purpose:
   - Render the Showroom center planet from the canonical Audralia geometry
     authority instead of invented CSS geography.

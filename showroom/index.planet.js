@@ -10,7 +10,7 @@
   - Preserve the Showroom center object as the Main Compass return selector.
   - Keep the planet decorative and non-navigational.
   - Reduce renderer-origin yellow glare and improve miniature globe integrity.
-
+ 
   Source geometry authority:
   - /assets/audralia/audralia.planet.js
   - window.DGBAudraliaPlanetGeometry

@@ -3,7 +3,7 @@
 
    Module:
    DGB_UPSTREAM_COMPASS_RENDERER
-   3.0.1-fixed-center-runtime-corrections
+   3.1.0-generic-projected-bounds
 
    Dependency position:
    1. /products/archcoin/index.controller.js
@@ -19,11 +19,12 @@
      semantic activation meaning, and SYSTEM_HELD state.
    - Geometry owns the physical Compass form, CPU-side mesh buffers,
      material identities, fixed-center local posture, model bounds,
-     quality profiles, and static fallback shape data.
+     quality profiles, static fallback shape data, and the governed
+     visual-control alignment envelope.
    - This renderer owns WebGL resources, lighting, camera, local visual
      interpolation, fallback-first promotion, visual feedback, reduced-motion
-     response, instance lifecycle, automatic mount discovery, and renderer
-     receipts.
+     response, instance lifecycle, automatic mount discovery, renderer
+     receipts, and generic viewport-CSS projected visual bounds.
    - Crystals owns ARCHCOIN constellation and room-cluster scene execution.
    - HTML owns the canonical semantic Compass control.
    - CSS presents already-closed runtime state.
@@ -32,6 +33,18 @@
    FIXED_CENTER_PLACEMENT
    * LOCAL_PRESENTATION_TRANSFORM
    * RENDERER_OWNED_VISUAL_FEEDBACK
+
+   Projected-bounds law:
+   - The renderer projects only model.visualControlAlignmentEnvelope.
+   - Projection uses the current final model, view, and projection matrices.
+   - The governed circular perimeter is sampled at both declared depth limits.
+   - No additional geometry radius or renderer halo allowance is added.
+   - Records are published in viewport CSS pixels.
+   - Available records contain conservative axis-aligned projected bounds.
+   - Non-visible or non-enhanced records contain zero-valued geometry.
+   - Revisions advance only when the normalized record materially changes.
+   - Events originate from the exact active renderer mount.
+   - The projected-bounds capability is universal and page-agnostic.
 
    Automatic startup law:
    - After the renderer publishes its global API, it discovers every
@@ -54,7 +67,10 @@
    - renderer-owned click activation;
    - renderer-owned navigation;
    - renderer-owned semantic selection;
-   - renderer-authored semantic disabled state.
+   - renderer-authored semantic disabled state;
+   - page-specific projected-bounds interpretation;
+   - semantic-control positioning or sizing;
+   - page CSS-variable publication.
 
    Semantic-control law:
    - The renderer may observe hover, focus, and press for visual feedback.
@@ -62,6 +78,7 @@
    - The renderer does not prevent semantic click propagation.
    - The renderer does not invoke controller navigation APIs.
    - The renderer does not set aria-disabled or native disabled state.
+   - The renderer does not move or resize the semantic control.
 
    Promotion and opacity law:
    - Static fallback is visible before enhanced rendering is proven.
@@ -85,7 +102,7 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
       "DGB_UPSTREAM_COMPASS_RENDERER",
 
     version:
-      "3.0.1-fixed-center-runtime-corrections",
+      "3.1.0-generic-projected-bounds",
 
     file:
       "/assets/compass/upstream-compass.renderer.js"
@@ -111,6 +128,12 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
   const FAILURE_EVENT =
     "DGB_UPSTREAM_COMPASS_RENDERER_FAILURE";
 
+  const PROJECTED_BOUNDS_CONTRACT =
+    "DGB_UPSTREAM_COMPASS_PROJECTED_BOUNDS_v1";
+
+  const PROJECTED_BOUNDS_EVENT =
+    "DGB_UPSTREAM_COMPASS_PROJECTED_BOUNDS_CHANGED";
+
   const RENDERER_STATUS = Object.freeze({
     INITIALIZING:
       "initializing",
@@ -129,6 +152,71 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
 
     DISPOSED:
       "disposed"
+  });
+
+  const PROJECTED_BOUNDS_STATUS =
+    Object.freeze({
+      INITIALIZING:
+        "initializing",
+
+      AVAILABLE:
+        "available",
+
+      FALLBACK:
+        "fallback",
+
+      FAILED:
+        "failed",
+
+      DISPOSED:
+        "disposed"
+    });
+
+  const PROJECTED_BOUNDS_STATUS_VALUES =
+    Object.freeze([
+      PROJECTED_BOUNDS_STATUS
+        .INITIALIZING,
+
+      PROJECTED_BOUNDS_STATUS
+        .AVAILABLE,
+
+      PROJECTED_BOUNDS_STATUS
+        .FALLBACK,
+
+      PROJECTED_BOUNDS_STATUS
+        .FAILED,
+
+      PROJECTED_BOUNDS_STATUS
+        .DISPOSED
+    ]);
+
+  const PROJECTED_BOUNDS = Object.freeze({
+    projectionMethod:
+      "GOVERNED_PERIMETER_SAMPLING_WITH_CONTAINMENT_EPSILON",
+
+    authoritativeGeometrySource:
+      "model.visualControlAlignmentEnvelope",
+
+    coordinateSpace:
+      "viewport-css-pixels",
+
+    angularSamplesPerDepthPlane:
+      32,
+
+    depthPlaneCount:
+      2,
+
+    containmentEpsilonCssPixels:
+      0.25,
+
+    materialChangeToleranceCssPixels:
+      0.05,
+
+    geometryRadiusExpansion:
+      0,
+
+    haloExpansion:
+      0
   });
 
   const QUALITY = Object.freeze({
@@ -600,6 +688,62 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
 
     canvasPointerEvents:
       "none",
+
+    projectedBoundsContract:
+      PROJECTED_BOUNDS_CONTRACT,
+
+    projectedBoundsEvent:
+      PROJECTED_BOUNDS_EVENT,
+
+    projectedBoundsGetterPresent:
+      true,
+
+    projectedBoundsGeometrySource:
+      PROJECTED_BOUNDS
+        .authoritativeGeometrySource,
+
+    projectedBoundsProjectionMethod:
+      PROJECTED_BOUNDS
+        .projectionMethod,
+
+    projectedBoundsAngularSamplesPerDepthPlane:
+      PROJECTED_BOUNDS
+        .angularSamplesPerDepthPlane,
+
+    projectedBoundsDepthPlaneCount:
+      PROJECTED_BOUNDS
+        .depthPlaneCount,
+
+    projectedBoundsContainmentEpsilonCssPixels:
+      PROJECTED_BOUNDS
+        .containmentEpsilonCssPixels,
+
+    projectedBoundsMaterialChangeToleranceCssPixels:
+      PROJECTED_BOUNDS
+        .materialChangeToleranceCssPixels,
+
+    projectedBoundsGeometryRadiusExpansion:
+      PROJECTED_BOUNDS
+        .geometryRadiusExpansion,
+
+    projectedBoundsHaloExpansion:
+      PROJECTED_BOUNDS
+        .haloExpansion,
+
+    projectedBoundsInvalidRecordsParticipateInRevisionSequence:
+      true,
+
+    projectedBoundsStatusVocabulary:
+      PROJECTED_BOUNDS_STATUS_VALUES,
+
+    lastProjectedBoundsRevision:
+      0,
+
+    lastProjectedBoundsStatus:
+      "",
+
+    showroomAware:
+      false,
 
     visualPassClaimed:
       false
@@ -1226,6 +1370,47 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
     return output;
   }
 
+  function transformPoint4(
+    matrix,
+    point
+  ) {
+    const x =
+      point[0];
+
+    const y =
+      point[1];
+
+    const z =
+      point[2];
+
+    const w =
+      point.length > 3
+        ? point[3]
+        : 1;
+
+    return [
+      matrix[0] * x +
+        matrix[4] * y +
+        matrix[8] * z +
+        matrix[12] * w,
+
+      matrix[1] * x +
+        matrix[5] * y +
+        matrix[9] * z +
+        matrix[13] * w,
+
+      matrix[2] * x +
+        matrix[6] * y +
+        matrix[10] * z +
+        matrix[14] * w,
+
+      matrix[3] * x +
+        matrix[7] * y +
+        matrix[11] * z +
+        matrix[15] * w
+    ];
+  }
+
   function translate4(
     x,
     y,
@@ -1765,6 +1950,1068 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
     );
   }
 
+  function projectedBoundsStatusValid(
+    status
+  ) {
+    return PROJECTED_BOUNDS_STATUS_VALUES
+      .includes(status);
+  }
+
+  function freezeProjectedBoundsRecord(
+    record
+  ) {
+    invariant(
+      record &&
+      typeof record ===
+        "object",
+      "PROJECTED_BOUNDS_RECORD_REQUIRED"
+    );
+
+    invariant(
+      record.contract ===
+        PROJECTED_BOUNDS_CONTRACT,
+      "PROJECTED_BOUNDS_CONTRACT_INVALID"
+    );
+
+    invariant(
+      typeof record.instanceId ===
+        "string" &&
+      record.instanceId.length >
+        0,
+      "PROJECTED_BOUNDS_INSTANCE_ID_REQUIRED"
+    );
+
+    invariant(
+      projectedBoundsStatusValid(
+        record.status
+      ),
+      "PROJECTED_BOUNDS_STATUS_INVALID",
+      {
+        status:
+          record.status
+      }
+    );
+
+    invariant(
+      record.coordinateSpace ===
+        PROJECTED_BOUNDS
+          .coordinateSpace,
+      "PROJECTED_BOUNDS_COORDINATE_SPACE_INVALID"
+    );
+
+    invariant(
+      Number.isInteger(
+        record.revision
+      ) &&
+      record.revision >= 1,
+      "PROJECTED_BOUNDS_REVISION_INVALID",
+      {
+        revision:
+          record.revision
+      }
+    );
+
+    const numericFields = [
+      "left",
+      "top",
+      "right",
+      "bottom",
+      "width",
+      "height",
+      "centerX",
+      "centerY",
+      "radius"
+    ];
+
+    for (
+      const field
+      of numericFields
+    ) {
+      invariant(
+        Number.isFinite(
+          record[field]
+        ),
+        "PROJECTED_BOUNDS_NUMERIC_FIELD_INVALID",
+        {
+          field,
+          value:
+            record[field]
+        }
+      );
+    }
+
+    invariant(
+      record.width >= 0,
+      "PROJECTED_BOUNDS_WIDTH_NEGATIVE",
+      {
+        width:
+          record.width
+      }
+    );
+
+    invariant(
+      record.height >= 0,
+      "PROJECTED_BOUNDS_HEIGHT_NEGATIVE",
+      {
+        height:
+          record.height
+      }
+    );
+
+    invariant(
+      record.radius >= 0,
+      "PROJECTED_BOUNDS_RADIUS_NEGATIVE",
+      {
+        radius:
+          record.radius
+      }
+    );
+
+    const invariantTolerance =
+      1e-6;
+
+    invariant(
+      Math.abs(
+        record.right -
+        (
+          record.left +
+          record.width
+        )
+      ) <=
+        invariantTolerance,
+      "PROJECTED_BOUNDS_RIGHT_INVARIANT_FAILURE"
+    );
+
+    invariant(
+      Math.abs(
+        record.bottom -
+        (
+          record.top +
+          record.height
+        )
+      ) <=
+        invariantTolerance,
+      "PROJECTED_BOUNDS_BOTTOM_INVARIANT_FAILURE"
+    );
+
+    invariant(
+      Math.abs(
+        record.centerX -
+        (
+          record.left +
+          record.width /
+          2
+        )
+      ) <=
+        invariantTolerance,
+      "PROJECTED_BOUNDS_CENTER_X_INVARIANT_FAILURE"
+    );
+
+    invariant(
+      Math.abs(
+        record.centerY -
+        (
+          record.top +
+          record.height /
+          2
+        )
+      ) <=
+        invariantTolerance,
+      "PROJECTED_BOUNDS_CENTER_Y_INVARIANT_FAILURE"
+    );
+
+    invariant(
+      Math.abs(
+        record.radius -
+        Math.max(
+          record.width,
+          record.height
+        ) /
+        2
+      ) <=
+        invariantTolerance,
+      "PROJECTED_BOUNDS_RADIUS_INVARIANT_FAILURE"
+    );
+
+    if (
+      record.visible ===
+        false
+    ) {
+      invariant(
+        numericFields.every(
+          field =>
+            record[field] ===
+            0
+        ),
+        "PROJECTED_BOUNDS_INVALID_RECORD_MUST_BE_ZERO"
+      );
+    }
+
+    if (
+      record.visible ===
+        true
+    ) {
+      invariant(
+        record.status ===
+          PROJECTED_BOUNDS_STATUS
+            .AVAILABLE,
+        "PROJECTED_BOUNDS_VISIBLE_STATUS_INVALID"
+      );
+    }
+
+    return Object.freeze({
+      contract:
+        PROJECTED_BOUNDS_CONTRACT,
+
+      instanceId:
+        record.instanceId,
+
+      visible:
+        record.visible ===
+        true,
+
+      status:
+        record.status,
+
+      coordinateSpace:
+        PROJECTED_BOUNDS
+          .coordinateSpace,
+
+      left:
+        record.left,
+
+      top:
+        record.top,
+
+      right:
+        record.right,
+
+      bottom:
+        record.bottom,
+
+      width:
+        record.width,
+
+      height:
+        record.height,
+
+      centerX:
+        record.centerX,
+
+      centerY:
+        record.centerY,
+
+      radius:
+        record.radius,
+
+      revision:
+        record.revision
+    });
+  }
+
+  function normalizeProjectedBoundsCandidate(
+    instance,
+    candidate
+  ) {
+    invariant(
+      candidate &&
+      typeof candidate ===
+        "object",
+      "PROJECTED_BOUNDS_CANDIDATE_REQUIRED"
+    );
+
+    invariant(
+      projectedBoundsStatusValid(
+        candidate.status
+      ),
+      "PROJECTED_BOUNDS_STATUS_INVALID",
+      {
+        status:
+          candidate.status
+      }
+    );
+
+    if (
+      candidate.visible !==
+        true
+    ) {
+      return Object.freeze({
+        contract:
+          PROJECTED_BOUNDS_CONTRACT,
+
+        instanceId:
+          instance.id,
+
+        visible:
+          false,
+
+        status:
+          candidate.status,
+
+        coordinateSpace:
+          PROJECTED_BOUNDS
+            .coordinateSpace,
+
+        left:
+          0,
+
+        top:
+          0,
+
+        right:
+          0,
+
+        bottom:
+          0,
+
+        width:
+          0,
+
+        height:
+          0,
+
+        centerX:
+          0,
+
+        centerY:
+          0,
+
+        radius:
+          0
+      });
+    }
+
+    invariant(
+      candidate.status ===
+        PROJECTED_BOUNDS_STATUS
+          .AVAILABLE,
+      "PROJECTED_BOUNDS_AVAILABLE_STATUS_REQUIRED"
+    );
+
+    const left =
+      finiteNumber(
+        candidate.left,
+        NaN
+      );
+
+    const top =
+      finiteNumber(
+        candidate.top,
+        NaN
+      );
+
+    const width =
+      finiteNumber(
+        candidate.width,
+        NaN
+      );
+
+    const height =
+      finiteNumber(
+        candidate.height,
+        NaN
+      );
+
+    invariant(
+      Number.isFinite(left) &&
+      Number.isFinite(top) &&
+      Number.isFinite(width) &&
+      Number.isFinite(height) &&
+      width >= 0 &&
+      height >= 0,
+      "PROJECTED_BOUNDS_AVAILABLE_GEOMETRY_INVALID",
+      {
+        left,
+        top,
+        width,
+        height
+      }
+    );
+
+    const right =
+      left +
+      width;
+
+    const bottom =
+      top +
+      height;
+
+    const centerX =
+      left +
+      width /
+      2;
+
+    const centerY =
+      top +
+      height /
+      2;
+
+    const radius =
+      Math.max(
+        width,
+        height
+      ) /
+      2;
+
+    return Object.freeze({
+      contract:
+        PROJECTED_BOUNDS_CONTRACT,
+
+      instanceId:
+        instance.id,
+
+      visible:
+        true,
+
+      status:
+        PROJECTED_BOUNDS_STATUS
+          .AVAILABLE,
+
+      coordinateSpace:
+        PROJECTED_BOUNDS
+          .coordinateSpace,
+
+      left,
+      top,
+      right,
+      bottom,
+      width,
+      height,
+      centerX,
+      centerY,
+      radius
+    });
+  }
+
+  function projectedBoundsMateriallyEqual(
+    previous,
+    candidate
+  ) {
+    if (
+      !previous ||
+      previous.contract !==
+        candidate.contract ||
+      previous.instanceId !==
+        candidate.instanceId ||
+      previous.visible !==
+        candidate.visible ||
+      previous.status !==
+        candidate.status ||
+      previous.coordinateSpace !==
+        candidate.coordinateSpace
+    ) {
+      return false;
+    }
+
+    const tolerance =
+      PROJECTED_BOUNDS
+        .materialChangeToleranceCssPixels;
+
+    const numericFields = [
+      "left",
+      "top",
+      "right",
+      "bottom",
+      "width",
+      "height",
+      "centerX",
+      "centerY",
+      "radius"
+    ];
+
+    return numericFields.every(
+      field =>
+        Math.abs(
+          previous[field] -
+          candidate[field]
+        ) <=
+        tolerance
+    );
+  }
+
+  function dispatchProjectedBounds(
+    instance,
+    record
+  ) {
+    const mount =
+      instance.context.mount;
+
+    if (
+      !mount ||
+      typeof mount.dispatchEvent !==
+        "function" ||
+      typeof CustomEvent !==
+        "function"
+    ) {
+      return false;
+    }
+
+    mount.dispatchEvent(
+      new CustomEvent(
+        PROJECTED_BOUNDS_EVENT,
+        {
+          detail:
+            record,
+
+          bubbles:
+            true,
+
+          composed:
+            false
+        }
+      )
+    );
+
+    return true;
+  }
+
+  function publishProjectedBoundsCandidate(
+    instance,
+    candidate
+  ) {
+    const normalized =
+      normalizeProjectedBoundsCandidate(
+        instance,
+        candidate
+      );
+
+    if (
+      projectedBoundsMateriallyEqual(
+        instance.projectedBounds,
+        normalized
+      )
+    ) {
+      return false;
+    }
+
+    instance.projectedBoundsRevision +=
+      1;
+
+    instance.projectedBounds =
+      freezeProjectedBoundsRecord({
+        ...normalized,
+
+        revision:
+          instance
+            .projectedBoundsRevision
+      });
+
+    dispatchProjectedBounds(
+      instance,
+      instance.projectedBounds
+    );
+
+    publishReceipt({
+      lastProjectedBoundsRevision:
+        instance
+          .projectedBoundsRevision,
+
+      lastProjectedBoundsStatus:
+        instance.projectedBounds
+          .status
+    });
+
+    return true;
+  }
+
+  function publishInvalidProjectedBounds(
+    instance,
+    status
+  ) {
+    return publishProjectedBoundsCandidate(
+      instance,
+      {
+        visible:
+          false,
+
+        status
+      }
+    );
+  }
+
+  function projectedBoundsLifecycleStatus(
+    instance
+  ) {
+    if (
+      instance.destroyed ||
+      instance.rendererStatus ===
+        RENDERER_STATUS.DISPOSED
+    ) {
+      return PROJECTED_BOUNDS_STATUS
+        .DISPOSED;
+    }
+
+    if (
+      instance.renderFailureEmitted ||
+      instance.rendererStatus ===
+        RENDERER_STATUS.FAILED ||
+      instance.presentationState
+        .rendererFailure
+    ) {
+      return PROJECTED_BOUNDS_STATUS
+        .FAILED;
+    }
+
+    if (
+      instance.rendererStatus ===
+        RENDERER_STATUS.FALLBACK
+    ) {
+      return PROJECTED_BOUNDS_STATUS
+        .FALLBACK;
+    }
+
+    if (
+      !instance.firstEnhancedFrameCompleted
+    ) {
+      return PROJECTED_BOUNDS_STATUS
+        .INITIALIZING;
+    }
+
+    return PROJECTED_BOUNDS_STATUS
+      .AVAILABLE;
+  }
+
+  function buildProjectedEnvelopeSamples(
+    model
+  ) {
+    const envelope =
+      model &&
+      model
+        .visualControlAlignmentEnvelope;
+
+    invariant(
+      envelope &&
+      envelope.shape ===
+        "CIRCULAR_DISC",
+      "VISUAL_CONTROL_ALIGNMENT_ENVELOPE_REQUIRED"
+    );
+
+    const center =
+      normalizeArray3(
+        envelope.localCenter,
+        [0, 0, 0]
+      );
+
+    const radius =
+      finiteNumber(
+        envelope.radius,
+        0
+      );
+
+    const zIntervalSource =
+      Array.isArray(
+        envelope.zInterval
+      ) ||
+      ArrayBuffer.isView(
+        envelope.zInterval
+      )
+        ? Array.from(
+            envelope.zInterval
+          )
+        : [];
+
+    invariant(
+      radius > 0,
+      "VISUAL_CONTROL_ALIGNMENT_RADIUS_INVALID",
+      {
+        radius
+      }
+    );
+
+    invariant(
+      zIntervalSource.length ===
+        2 &&
+      zIntervalSource.every(
+        Number.isFinite
+      ),
+      "VISUAL_CONTROL_ALIGNMENT_DEPTH_INTERVAL_INVALID",
+      {
+        zInterval:
+          zIntervalSource
+      }
+    );
+
+    const samples = [];
+
+    for (
+      const z
+      of zIntervalSource
+    ) {
+      for (
+        let index = 0;
+        index <
+          PROJECTED_BOUNDS
+            .angularSamplesPerDepthPlane;
+        index += 1
+      ) {
+        const angle =
+          Math.PI *
+          2 *
+          index /
+          PROJECTED_BOUNDS
+            .angularSamplesPerDepthPlane;
+
+        samples.push(
+          Object.freeze([
+            center[0] +
+              radius *
+              Math.cos(angle),
+
+            center[1] +
+              radius *
+              Math.sin(angle),
+
+            z
+          ])
+        );
+      }
+    }
+
+    samples.push(
+      Object.freeze(
+        center.slice()
+      )
+    );
+
+    return Object.freeze(
+      samples
+    );
+  }
+
+  function projectEnvelopePointToViewport(
+    combinedMatrix,
+    point,
+    canvasRect
+  ) {
+    const clip =
+      transformPoint4(
+        combinedMatrix,
+        [
+          point[0],
+          point[1],
+          point[2],
+          1
+        ]
+      );
+
+    invariant(
+      clip.every(
+        Number.isFinite
+      ),
+      "PROJECTED_BOUNDS_CLIP_POINT_INVALID",
+      {
+        point,
+        clip
+      }
+    );
+
+    invariant(
+      Math.abs(
+        clip[3]
+      ) >
+        QUALITY.vectorEpsilon,
+      "PROJECTED_BOUNDS_CLIP_W_INVALID",
+      {
+        point,
+        clip
+      }
+    );
+
+    const inverseW =
+      1 /
+      clip[3];
+
+    const ndcX =
+      clip[0] *
+      inverseW;
+
+    const ndcY =
+      clip[1] *
+      inverseW;
+
+    invariant(
+      Number.isFinite(ndcX) &&
+      Number.isFinite(ndcY),
+      "PROJECTED_BOUNDS_NDC_INVALID",
+      {
+        point,
+        ndcX,
+        ndcY
+      }
+    );
+
+    return Object.freeze({
+      x:
+        canvasRect.left +
+        (
+          ndcX *
+          0.5 +
+          0.5
+        ) *
+        canvasRect.width,
+
+      y:
+        canvasRect.top +
+        (
+          1 -
+          (
+            ndcY *
+            0.5 +
+            0.5
+          )
+        ) *
+        canvasRect.height
+    });
+  }
+
+  function calculateAvailableProjectedBounds(
+    instance,
+    modelMatrix
+  ) {
+    const canvasRect =
+      instance.canvas
+        .getBoundingClientRect();
+
+    invariant(
+      Number.isFinite(
+        canvasRect.left
+      ) &&
+      Number.isFinite(
+        canvasRect.top
+      ) &&
+      Number.isFinite(
+        canvasRect.width
+      ) &&
+      Number.isFinite(
+        canvasRect.height
+      ) &&
+      canvasRect.width >
+        0 &&
+      canvasRect.height >
+        0,
+      "PROJECTED_BOUNDS_CANVAS_RECT_INVALID",
+      {
+        left:
+          canvasRect.left,
+
+        top:
+          canvasRect.top,
+
+        width:
+          canvasRect.width,
+
+        height:
+          canvasRect.height
+      }
+    );
+
+    const combinedMatrix =
+      multiply4(
+        instance.projection,
+        multiply4(
+          instance.view,
+          modelMatrix
+        )
+      );
+
+    let minimumX =
+      Infinity;
+
+    let minimumY =
+      Infinity;
+
+    let maximumX =
+      -Infinity;
+
+    let maximumY =
+      -Infinity;
+
+    for (
+      const sample
+      of instance
+        .projectedEnvelopeSamples
+    ) {
+      const projected =
+        projectEnvelopePointToViewport(
+          combinedMatrix,
+          sample,
+          canvasRect
+        );
+
+      minimumX =
+        Math.min(
+          minimumX,
+          projected.x
+        );
+
+      minimumY =
+        Math.min(
+          minimumY,
+          projected.y
+        );
+
+      maximumX =
+        Math.max(
+          maximumX,
+          projected.x
+        );
+
+      maximumY =
+        Math.max(
+          maximumY,
+          projected.y
+        );
+    }
+
+    invariant(
+      Number.isFinite(
+        minimumX
+      ) &&
+      Number.isFinite(
+        minimumY
+      ) &&
+      Number.isFinite(
+        maximumX
+      ) &&
+      Number.isFinite(
+        maximumY
+      ),
+      "PROJECTED_BOUNDS_EXTENTS_INVALID"
+    );
+
+    const epsilon =
+      PROJECTED_BOUNDS
+        .containmentEpsilonCssPixels;
+
+    const left =
+      minimumX -
+      epsilon;
+
+    const top =
+      minimumY -
+      epsilon;
+
+    const width =
+      Math.max(
+        0,
+        maximumX +
+        epsilon -
+        left
+      );
+
+    const height =
+      Math.max(
+        0,
+        maximumY +
+        epsilon -
+        top
+      );
+
+    return Object.freeze({
+      visible:
+        true,
+
+      status:
+        PROJECTED_BOUNDS_STATUS
+          .AVAILABLE,
+
+      left,
+      top,
+      width,
+      height
+    });
+  }
+
+  function updateProjectedBounds(
+    instance,
+    modelMatrix = null
+  ) {
+    const status =
+      projectedBoundsLifecycleStatus(
+        instance
+      );
+
+    if (
+      status !==
+        PROJECTED_BOUNDS_STATUS
+          .AVAILABLE ||
+      instance.presentationState
+        .visible !==
+        true
+    ) {
+      publishInvalidProjectedBounds(
+        instance,
+        status
+      );
+
+      return false;
+    }
+
+    const resolvedModelMatrix =
+      modelMatrix ||
+      currentModelMatrix(
+        instance
+      );
+
+    try {
+      return publishProjectedBoundsCandidate(
+        instance,
+        calculateAvailableProjectedBounds(
+          instance,
+          resolvedModelMatrix
+        )
+      );
+    } catch (error) {
+      safeEmitInstanceFailure(
+        instance,
+        error &&
+        (
+          error.code ||
+          error.message
+        )
+          ? String(
+              error.code ||
+              error.message
+            )
+          : "PROJECTED_BOUNDS_CALCULATION_FAILURE",
+
+        error &&
+        error.details
+          ? error.details
+          : null
+      );
+
+      return false;
+    }
+  }
+
+  function publishLifecycleProjectedBoundsIfInvalid(
+    instance
+  ) {
+    const status =
+      projectedBoundsLifecycleStatus(
+        instance
+      );
+
+    if (
+      status !==
+        PROJECTED_BOUNDS_STATUS
+          .AVAILABLE ||
+      instance.presentationState
+        .visible !==
+        true
+    ) {
+      publishInvalidProjectedBounds(
+        instance,
+        status
+      );
+
+      return true;
+    }
+
+    return false;
+  }
+
   function publishReceipt(
     extra = {}
   ) {
@@ -1842,6 +3089,56 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
 
         canvasPointerEvents:
           "none",
+
+        projectedBoundsContract:
+          PROJECTED_BOUNDS_CONTRACT,
+
+        projectedBoundsEvent:
+          PROJECTED_BOUNDS_EVENT,
+
+        projectedBoundsGetterPresent:
+          true,
+
+        projectedBoundsGeometrySource:
+          PROJECTED_BOUNDS
+            .authoritativeGeometrySource,
+
+        projectedBoundsProjectionMethod:
+          PROJECTED_BOUNDS
+            .projectionMethod,
+
+        projectedBoundsAngularSamplesPerDepthPlane:
+          PROJECTED_BOUNDS
+            .angularSamplesPerDepthPlane,
+
+        projectedBoundsDepthPlaneCount:
+          PROJECTED_BOUNDS
+            .depthPlaneCount,
+
+        projectedBoundsContainmentEpsilonCssPixels:
+          PROJECTED_BOUNDS
+            .containmentEpsilonCssPixels,
+
+        projectedBoundsMaterialChangeToleranceCssPixels:
+          PROJECTED_BOUNDS
+            .materialChangeToleranceCssPixels,
+
+        projectedBoundsGeometryRadiusExpansion:
+          PROJECTED_BOUNDS
+            .geometryRadiusExpansion,
+
+        projectedBoundsHaloExpansion:
+          PROJECTED_BOUNDS
+            .haloExpansion,
+
+        projectedBoundsInvalidRecordsParticipateInRevisionSequence:
+          true,
+
+        projectedBoundsStatusVocabulary:
+          PROJECTED_BOUNDS_STATUS_VALUES,
+
+        showroomAware:
+          false,
 
         visualPassClaimed:
           false
@@ -2064,6 +3361,50 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
           "decisionApproach"
         ),
       "GEOMETRY_DECISION_APPROACH_TRANSFORM_FORBIDDEN"
+    );
+
+    const envelope =
+      model
+        .visualControlAlignmentEnvelope;
+
+    invariant(
+      envelope &&
+      envelope.shape ===
+        "CIRCULAR_DISC",
+      "GEOMETRY_VISUAL_CONTROL_ALIGNMENT_ENVELOPE_REQUIRED"
+    );
+
+    invariant(
+      Array.isArray(
+        envelope.localCenter
+      ) &&
+      envelope.localCenter.length ===
+        3 &&
+      envelope.localCenter.every(
+        Number.isFinite
+      ),
+      "GEOMETRY_VISUAL_CONTROL_ALIGNMENT_CENTER_INVALID"
+    );
+
+    invariant(
+      Number.isFinite(
+        envelope.radius
+      ) &&
+      envelope.radius >
+        0,
+      "GEOMETRY_VISUAL_CONTROL_ALIGNMENT_RADIUS_INVALID"
+    );
+
+    invariant(
+      Array.isArray(
+        envelope.zInterval
+      ) &&
+      envelope.zInterval.length ===
+        2 &&
+      envelope.zInterval.every(
+        Number.isFinite
+      ),
+      "GEOMETRY_VISUAL_CONTROL_ALIGNMENT_DEPTH_INVALID"
     );
 
     return true;
@@ -2925,6 +4266,18 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
       instance
     );
 
+    if (
+      !publishLifecycleProjectedBoundsIfInvalid(
+        instance
+      ) &&
+      !instance.running &&
+      instance.firstEnhancedFrameCompleted
+    ) {
+      updateProjectedBounds(
+        instance
+      );
+    }
+
     return true;
   }
 
@@ -2968,6 +4321,17 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
     publishMountState(
       instance
     );
+
+    if (
+      !instance.running &&
+      instance.firstEnhancedFrameCompleted &&
+      instance.presentationState
+        .visible
+    ) {
+      updateProjectedBounds(
+        instance
+      );
+    }
   }
 
   function readInitialPresentation(
@@ -3191,6 +4555,17 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
       projection:
         identity4(),
 
+      projectedEnvelopeSamples:
+        buildProjectedEnvelopeSamples(
+          model
+        ),
+
+      projectedBoundsRevision:
+        0,
+
+      projectedBounds:
+        null,
+
       fallbackSurface:
         null,
 
@@ -3289,6 +4664,12 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
       RENDERER_STATUS.FAILED
     );
 
+    publishInvalidProjectedBounds(
+      instance,
+      PROJECTED_BOUNDS_STATUS
+        .FAILED
+    );
+
     applyPresentationVisibility(
       instance
     );
@@ -3328,7 +4709,17 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
 
       firstEnhancedFrameCompleted:
         instance
-          .firstEnhancedFrameCompleted
+          .firstEnhancedFrameCompleted,
+
+      lastProjectedBoundsRevision:
+        instance
+          .projectedBoundsRevision,
+
+      lastProjectedBoundsStatus:
+        instance.projectedBounds
+          ? instance.projectedBounds
+              .status
+          : ""
     });
 
     emitFailure(
@@ -3703,6 +5094,21 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
     publishMountState(
       instance
     );
+
+    if (
+      instance.reducedMotion &&
+      !instance.running &&
+      instance.firstEnhancedFrameCompleted &&
+      instance.presentationState
+        .visible
+    ) {
+      instance.feedbackScale =
+        instance.targetFeedbackScale;
+
+      updateProjectedBounds(
+        instance
+      );
+    }
   }
 
   function addTrackedListener(
@@ -4119,6 +5525,17 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
         0;
     }
 
+    setMountRendererStatus(
+      instance,
+      RENDERER_STATUS.DISPOSED
+    );
+
+    publishInvalidProjectedBounds(
+      instance,
+      PROJECTED_BOUNDS_STATUS
+        .DISPOSED
+    );
+
     unbindSubscriptions(
       instance
     );
@@ -4137,11 +5554,6 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
           instance.canvas
         );
     }
-
-    setMountRendererStatus(
-      instance,
-      RENDERER_STATUS.DISPOSED
-    );
 
     setCanvasVisible(
       instance,
@@ -4198,7 +5610,18 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
 
       firstEnhancedFrameCompleted:
         instance
-          .firstEnhancedFrameCompleted
+          .firstEnhancedFrameCompleted,
+
+      lastProjectedBoundsRevision:
+        instance
+          .projectedBoundsRevision,
+
+      lastProjectedBoundsStatus:
+        instance.projectedBounds
+          ? instance.projectedBounds
+              .status
+          : PROJECTED_BOUNDS_STATUS
+              .DISPOSED
     });
   }
 
@@ -4641,7 +6064,7 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
     if (
       instance.firstEnhancedFrameCompleted
     ) {
-      return;
+      return false;
     }
 
     instance.firstEnhancedFrameCompleted =
@@ -4655,6 +6078,8 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
     applyPresentationVisibility(
       instance
     );
+
+    return true;
   }
 
   function renderFrame(
@@ -4736,6 +6161,16 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
         40
       );
 
+    const modelMatrix =
+      currentModelMatrix(
+        instance
+      );
+
+    updateProjectedBounds(
+      instance,
+      modelMatrix
+    );
+
     const gl =
       instance.gl;
 
@@ -4773,11 +6208,6 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
     gl.useProgram(
       instance.program
     );
-
-    const modelMatrix =
-      currentModelMatrix(
-        instance
-      );
 
     if (
       instance.cssWidth >
@@ -4844,9 +6274,17 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
       return;
     }
 
-    commitFirstEnhancedFrame(
-      instance
-    );
+    const promoted =
+      commitFirstEnhancedFrame(
+        instance
+      );
+
+    if (promoted) {
+      updateProjectedBounds(
+        instance,
+        modelMatrix
+      );
+    }
 
     publishReceipt({
       status:
@@ -4883,7 +6321,17 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
 
       firstEnhancedFrameCompleted:
         instance
-          .firstEnhancedFrameCompleted
+          .firstEnhancedFrameCompleted,
+
+      lastProjectedBoundsRevision:
+        instance
+          .projectedBoundsRevision,
+
+      lastProjectedBoundsStatus:
+        instance.projectedBounds
+          ? instance.projectedBounds
+              .status
+          : ""
     });
 
     instance.raf =
@@ -4990,7 +6438,17 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
         instance.id,
 
       lastRendererStatus:
-        RENDERER_STATUS.STOPPED
+        RENDERER_STATUS.STOPPED,
+
+      lastProjectedBoundsRevision:
+        instance
+          .projectedBoundsRevision,
+
+      lastProjectedBoundsStatus:
+        instance.projectedBounds
+          ? instance.projectedBounds
+              .status
+          : ""
     });
 
     return true;
@@ -5185,6 +6643,12 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
         instance
       );
 
+      publishInvalidProjectedBounds(
+        instance,
+        PROJECTED_BOUNDS_STATUS
+          .INITIALIZING
+      );
+
       start(
         instance.id
       );
@@ -5223,7 +6687,17 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
             .held,
 
         firstEnhancedFrameCompleted:
-          false
+          false,
+
+        lastProjectedBoundsRevision:
+          instance
+            .projectedBoundsRevision,
+
+        lastProjectedBoundsStatus:
+          instance.projectedBounds
+            ? instance.projectedBounds
+                .status
+            : ""
       });
 
       return Object.freeze({
@@ -5282,6 +6756,9 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
               instance.id,
               active
             ),
+
+        getProjectedBounds: () =>
+          instance.projectedBounds,
 
         getState: () =>
           getInstanceState(
@@ -5437,6 +6914,47 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
       rendererFailure:
         instance.lastFailure,
 
+      projectedBoundsContract:
+        PROJECTED_BOUNDS_CONTRACT,
+
+      projectedBoundsEvent:
+        PROJECTED_BOUNDS_EVENT,
+
+      projectedBoundsGeometrySource:
+        PROJECTED_BOUNDS
+          .authoritativeGeometrySource,
+
+      projectedBoundsProjectionMethod:
+        PROJECTED_BOUNDS
+          .projectionMethod,
+
+      projectedBoundsAngularSamplesPerDepthPlane:
+        PROJECTED_BOUNDS
+          .angularSamplesPerDepthPlane,
+
+      projectedBoundsContainmentEpsilonCssPixels:
+        PROJECTED_BOUNDS
+          .containmentEpsilonCssPixels,
+
+      projectedBoundsMaterialChangeToleranceCssPixels:
+        PROJECTED_BOUNDS
+          .materialChangeToleranceCssPixels,
+
+      projectedBoundsGeometryRadiusExpansion:
+        PROJECTED_BOUNDS
+          .geometryRadiusExpansion,
+
+      projectedBoundsHaloExpansion:
+        PROJECTED_BOUNDS
+          .haloExpansion,
+
+      projectedBoundsRevision:
+        instance
+          .projectedBoundsRevision,
+
+      projectedBounds:
+        instance.projectedBounds,
+
       mountExclusivelyOwned:
         INSTANCE_BY_MOUNT.get(
           instance.context.mount
@@ -5492,7 +7010,10 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
         "CSS",
 
       canvasPromotionOpacity:
-        "BINARY"
+        "BINARY",
+
+      showroomAware:
+        false
     });
   }
 
@@ -5530,9 +7051,59 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
       model
     );
 
+    const samples =
+      buildProjectedEnvelopeSamples(
+        model
+      );
+
+    invariant(
+      samples.length ===
+        PROJECTED_BOUNDS
+          .angularSamplesPerDepthPlane *
+        PROJECTED_BOUNDS
+          .depthPlaneCount +
+        1,
+      "PROJECTED_BOUNDS_SAMPLE_COUNT_INVALID",
+      {
+        actual:
+          samples.length,
+
+        expected:
+          PROJECTED_BOUNDS
+            .angularSamplesPerDepthPlane *
+          PROJECTED_BOUNDS
+            .depthPlaneCount +
+          1
+      }
+    );
+
+    invariant(
+      PROJECTED_BOUNDS
+        .geometryRadiusExpansion ===
+        0,
+      "PROJECTED_BOUNDS_GEOMETRY_RADIUS_EXPANSION_FORBIDDEN"
+    );
+
+    invariant(
+      PROJECTED_BOUNDS
+        .haloExpansion ===
+        0,
+      "PROJECTED_BOUNDS_HALO_EXPANSION_FORBIDDEN"
+    );
+
+    invariant(
+      PROJECTED_BOUNDS_STATUS_VALUES
+        .length ===
+        5 &&
+      PROJECTED_BOUNDS_STATUS_VALUES
+        .join("|") ===
+        "initializing|available|fallback|failed|disposed",
+      "PROJECTED_BOUNDS_STATUS_VOCABULARY_INVALID"
+    );
+
     return Object.freeze({
       receiptSchema:
-        "DGB_UPSTREAM_COMPASS_RENDERER_FIXED_CENTER_CONTRACT_VALIDATION_v2",
+        "DGB_UPSTREAM_COMPASS_RENDERER_FIXED_CENTER_CONTRACT_VALIDATION_v3",
 
       moduleId:
         MODULE.id,
@@ -5614,7 +7185,75 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
         true,
 
       modelMatrixLaw:
-        "FIXED_CENTER_PLACEMENT * LOCAL_PRESENTATION_TRANSFORM * RENDERER_OWNED_VISUAL_FEEDBACK"
+        "FIXED_CENTER_PLACEMENT * LOCAL_PRESENTATION_TRANSFORM * RENDERER_OWNED_VISUAL_FEEDBACK",
+
+      projectedBoundsContract:
+        PROJECTED_BOUNDS_CONTRACT,
+
+      projectedBoundsEvent:
+        PROJECTED_BOUNDS_EVENT,
+
+      projectedBoundsGetterPresent:
+        true,
+
+      projectedBoundsGeometrySource:
+        PROJECTED_BOUNDS
+          .authoritativeGeometrySource,
+
+      projectedBoundsProjectionMethod:
+        PROJECTED_BOUNDS
+          .projectionMethod,
+
+      projectedBoundsAngularSamplesPerDepthPlane:
+        PROJECTED_BOUNDS
+          .angularSamplesPerDepthPlane,
+
+      projectedBoundsDepthPlaneCount:
+        PROJECTED_BOUNDS
+          .depthPlaneCount,
+
+      projectedBoundsCenterSampleIncluded:
+        true,
+
+      projectedBoundsTotalSampleCount:
+        samples.length,
+
+      projectedBoundsContainmentEpsilonCssPixels:
+        PROJECTED_BOUNDS
+          .containmentEpsilonCssPixels,
+
+      projectedBoundsMaterialChangeToleranceCssPixels:
+        PROJECTED_BOUNDS
+          .materialChangeToleranceCssPixels,
+
+      projectedBoundsGeometryRadiusExpansion:
+        PROJECTED_BOUNDS
+          .geometryRadiusExpansion,
+
+      projectedBoundsHaloExpansion:
+        PROJECTED_BOUNDS
+          .haloExpansion,
+
+      projectedBoundsInvalidRecordsParticipateInRevisionSequence:
+        true,
+
+      projectedBoundsStatusVocabulary:
+        PROJECTED_BOUNDS_STATUS_VALUES,
+
+      projectedBoundsStoppedStatusPresent:
+        false,
+
+      projectedBoundsEventOrigin:
+        "ACTIVE_RENDERER_MOUNT",
+
+      projectedBoundsEventBubbles:
+        true,
+
+      projectedBoundsEventComposed:
+        false,
+
+      showroomAware:
+        false
     });
   }
 
@@ -5708,7 +7347,13 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
       "",
 
     firstEnhancedFrameCompleted:
-      false
+      false,
+
+    lastProjectedBoundsRevision:
+      0,
+
+    lastProjectedBoundsStatus:
+      ""
   });
 
   scheduleAutomaticMountDiscovery();
@@ -5725,6 +7370,15 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
 
     rendererStatus:
       RENDERER_STATUS,
+
+    projectedBoundsContract:
+      PROJECTED_BOUNDS_CONTRACT,
+
+    projectedBoundsEvent:
+      PROJECTED_BOUNDS_EVENT,
+
+    projectedBoundsStatus:
+      PROJECTED_BOUNDS_STATUS,
 
     mount,
 
@@ -5773,14 +7427,14 @@ if (
 }
 
 /*
-AUDRALIA_ARCHCOIN_SHARED_HOME_COMPASS_RENDERER_RENEWAL_RESULT_v3
+AUDRALIA_ARCHCOIN_SHARED_HOME_COMPASS_RENDERER_RENEWAL_RESULT_v4
 
 Artifact:
 /assets/compass/upstream-compass.renderer.js
 
 Module:
 DGB_UPSTREAM_COMPASS_RENDERER
-3.0.1-fixed-center-runtime-corrections
+3.1.0-generic-projected-bounds
 
 Controller anchor:
 DGB_ARCHCOIN_CONTROLLER
@@ -5791,30 +7445,77 @@ DGB_UPSTREAM_COMPASS_GEOMETRY
 3.0.0-fixed-center-independent-sibling
 
 Disposition:
-FIXED_CENTER_RENDERER_AUTOMATIC_STARTUP_BOOTSTRAP_APPLIED
+GENERIC_PROJECTED_BOUNDS_ENHANCEMENT_APPLIED
 
-Proven defect:
-- The renderer exported mount() but never invoked it.
-- The actual ARCHCOIN mount remained unowned.
-- No fallback SVG was injected.
-- No WebGL canvas was created.
-- No renderer status progression occurred.
-- No first enhanced frame could be promoted.
+Authorized scope:
+NARROW_GENERIC_PROJECTED_BOUNDS_ENHANCEMENT_ONLY
 
-Applied correction:
-- mountDiscoveredCompasses() discovers every
-  [data-upstream-compass-mount].
-- Unowned mounts are passed to mount().
-- INSTANCE_BY_MOUNT prevents duplicate ownership.
-- scheduleAutomaticMountDiscovery() waits for DOMContentLoaded while the
-  document is still loading.
-- Late or dynamically loaded execution discovers mounts immediately.
-- Automatic startup failure is emitted through the existing renderer failure
-  surface.
-- Automatic discovery remains inside the renderer closure and has direct
-  access to INSTANCE_BY_MOUNT, mount(), and emitFailure().
+Added generic contract:
+DGB_UPSTREAM_COMPASS_PROJECTED_BOUNDS_v1
 
-Unchanged:
+Added generic event:
+DGB_UPSTREAM_COMPASS_PROJECTED_BOUNDS_CHANGED
+
+Added instance-handle surface:
+getProjectedBounds()
+
+Authoritative geometry source:
+model.visualControlAlignmentEnvelope
+
+Projection method:
+GOVERNED_PERIMETER_SAMPLING_WITH_CONTAINMENT_EPSILON
+
+Sampling:
+- 32 angular samples per depth plane
+- both governed depth extremes
+- one governed center validation sample
+- 65 total projected samples
+
+Numerical containment epsilon:
+0.25 CSS pixels
+
+Material-change tolerance:
+0.05 CSS pixels
+
+Geometry radius expansion:
+0
+
+Renderer halo expansion for bounds:
+0
+
+Coordinate space:
+viewport-css-pixels
+
+Projected-bounds status vocabulary:
+- initializing
+- available
+- fallback
+- failed
+- disposed
+
+Publication:
+- records are immutable
+- invalid records are zero-valued
+- invalid records participate in the revision sequence
+- unchanged normalized records do not increment revision
+- materially changed records increment revision
+- events originate from the exact active renderer mount
+- events bubble
+- events are not composed
+- stale available geometry is not retained after invalidation
+
+Lifecycle:
+- initialization publishes initializing invalid bounds
+- first successful enhanced promotion publishes available projected bounds
+- presentation invisibility publishes zero-valued geometry without creating
+  a new status literal
+- fallback publishes fallback invalid bounds
+- failure publishes failed invalid bounds
+- disposal publishes disposed invalid bounds before mount teardown
+- stop remains animation-loop suspension and introduces no projected stopped
+  status
+
+Preserved:
 - geometry authority
 - geometry version lock
 - model validation
@@ -5823,46 +7524,49 @@ Unchanged:
 - shaders
 - lighting
 - camera
-- projection
+- quality profiles
 - fixed-center mathematics
 - local interpolation
-- semantic-control law
+- semantic-control visual-feedback law
 - canvas promotion law
 - fallback promotion law
 - reduced-motion behavior
 - controller ownership
 - crystals ownership
-- HTML
-- shared Compass CSS
-- ARCHCOIN page CSS
+- HTML ownership
+- automatic mount discovery
+- one-active-instance-per-mount enforcement
+- existing renderer failure event
+- existing renderer receipt
+- start
+- stop
+- destroy
+- syncReducedMotion
+- syncPresentationState
+- setHover
+- setFocus
+- setPressed
+- getState
 
-Expected actual-page sequence:
-1. Renderer module loads.
-2. Global renderer API is published.
-3. Automatic discovery is scheduled.
-4. DOMContentLoaded occurs.
-5. ARCHCOIN Compass mount is discovered.
-6. Renderer instance is created.
-7. Static fallback SVG is injected.
-8. WebGL canvas is created.
-9. GPU resources initialize.
-10. Render loop starts.
-11. First error-free enhanced frame completes.
-12. Canvas is promoted.
-13. Static fallback is hidden.
-14. Three-dimensional fixed-center Compass becomes visible.
+Universal boundary:
+- no page-specific selectors
+- no page-specific state names
+- no page-specific route knowledge
+- no page-specific CSS variables
+- no compositor calls
+- no controller calls
+- no semantic-control positioning
+- no semantic-control sizing
+- no navigation logic
 
-Runtime execution:
-NOT PERFORMED
+Showroom awareness:
+FALSE
 
-Actual-page visual verification:
-PENDING RELOAD
+Source-level contract validation:
+IMPLEMENTED THROUGH runContractValidation()
 
-Star-selection work:
-NOT STARTED
-
-Swipe-return work:
-NOT STARTED
+Isolated browser/WebGL runtime validation:
+NOT RUN
 
 Production authorization:
 FALSE

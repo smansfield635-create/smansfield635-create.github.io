@@ -1,0 +1,2322 @@
+<!-- TARGET FILE: /showroom/story/welcome/index.html -->
+<!-- COMPLETE NEW FILE -->
+<!-- SHOWROOM_SATELLITE_WELCOME_TO_MIRRORLAND_HTML_TNT_v1 -->
+
+<!doctype html>
+
+<html
+  lang="en"
+  data-route="/showroom/story/welcome/"
+  data-page="showroom-story-welcome"
+  data-version="SHOWROOM-SATELLITE-WELCOME-TO-MIRRORLAND-1.0.0"
+  data-contract="SHOWROOM_SATELLITE_WELCOME_TO_MIRRORLAND_HTML_TNT_v1"
+  data-showroom-satellite="true"
+  data-showroom-route-family="story"
+  data-showroom-route-id="north-1"
+  data-showroom-route-title="Welcome to Mirrorland"
+  data-showroom-parent-route="/showroom/"
+  data-showroom-parent-target="#showroom-orbit"
+  data-showroom-return-route="/showroom/"
+  data-showroom-main-compass-route="/index.html"
+>
+<head>
+  <meta charset="utf-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width,initial-scale=1,viewport-fit=cover"
+  >
+
+  <title>
+    Welcome to Mirrorland · Shadows Never Shatter
+  </title>
+
+  <meta
+    name="description"
+    content="Enter the first Mirrorland threshold. Follow Dextrion’s anomaly from impossible signal to operational crossing, then confront the responsibility created when another future becomes reachable."
+  >
+
+  <meta
+    name="showroom-page-contract"
+    content="SHOWROOM_SATELLITE_WELCOME_TO_MIRRORLAND_HTML_TNT_v1"
+  >
+
+  <style>
+    /* ============================================================
+       SHOWROOM SATELLITE PAGE EMBEDDED VISUAL SYSTEM v1
+
+       Shared architectural language for:
+       - story routes;
+       - wonders routes;
+       - mystery routes.
+
+       This file uses the Story / North expression.
+
+       No external page-specific stylesheet is required.
+       ============================================================ */
+
+    :root {
+      color-scheme: dark;
+
+      --satellite-ink-0: #02040a;
+      --satellite-ink-1: #050914;
+      --satellite-ink-2: #091020;
+      --satellite-ink-3: #101a30;
+      --satellite-ink-4: #17233d;
+
+      --satellite-cream: #f5eddd;
+      --satellite-cream-soft: #ddd3c1;
+      --satellite-muted: #aab2c2;
+      --satellite-muted-strong: #c6ccd7;
+
+      --satellite-gold: #e0b85b;
+      --satellite-gold-bright: #f4d47e;
+      --satellite-gold-deep: #805b1c;
+      --satellite-gold-faint: rgba(224, 184, 91, 0.14);
+
+      --satellite-accent: #75e9ff;
+      --satellite-accent-soft: #b4f5ff;
+      --satellite-accent-faint: rgba(117, 233, 255, 0.13);
+
+      --satellite-secondary: #88aaff;
+      --satellite-secondary-soft: #bdccff;
+      --satellite-secondary-faint: rgba(136, 170, 255, 0.14);
+
+      --satellite-violet: #b798ff;
+      --satellite-danger: #ff91a3;
+      --satellite-success: #8ce4ae;
+      --satellite-warning: #ffd17a;
+
+      --satellite-border: rgba(226, 197, 128, 0.24);
+      --satellite-border-strong: rgba(239, 205, 125, 0.5);
+      --satellite-border-cool: rgba(117, 233, 255, 0.25);
+      --satellite-rule: rgba(255, 255, 255, 0.085);
+
+      --satellite-glass:
+        linear-gradient(
+          145deg,
+          rgba(18, 27, 49, 0.9),
+          rgba(6, 10, 22, 0.93)
+        );
+
+      --satellite-shadow:
+        0 1.5rem 4rem rgba(0, 0, 0, 0.46),
+        0 0 0 1px rgba(255, 255, 255, 0.018) inset;
+
+      --satellite-shadow-deep:
+        0 2.4rem 7rem rgba(0, 0, 0, 0.62),
+        0 0 3rem rgba(70, 114, 190, 0.08);
+
+      --satellite-radius-sm: 0.72rem;
+      --satellite-radius-md: 1rem;
+      --satellite-radius-lg: 1.45rem;
+      --satellite-radius-xl: 2rem;
+
+      --satellite-page-width: 84rem;
+      --satellite-reading-width: 49rem;
+
+      --satellite-space-1: 0.4rem;
+      --satellite-space-2: 0.65rem;
+      --satellite-space-3: 0.95rem;
+      --satellite-space-4: 1.3rem;
+      --satellite-space-5: 1.8rem;
+      --satellite-space-6: 2.5rem;
+      --satellite-space-7: 3.5rem;
+      --satellite-space-8: 5rem;
+
+      --satellite-transition-fast: 150ms ease;
+      --satellite-transition:
+        260ms cubic-bezier(0.2, 0.72, 0.25, 1);
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-width: 20rem;
+      scroll-behavior: smooth;
+      background: var(--satellite-ink-0);
+    }
+
+    body {
+      position: relative;
+
+      min-width: 20rem;
+      min-height: 100vh;
+      margin: 0;
+      overflow-x: hidden;
+
+      color: var(--satellite-cream);
+
+      background:
+        radial-gradient(
+          circle at 50% -12%,
+          rgba(71, 113, 190, 0.34),
+          transparent 35rem
+        ),
+        radial-gradient(
+          circle at 8% 30%,
+          rgba(34, 132, 167, 0.12),
+          transparent 27rem
+        ),
+        radial-gradient(
+          circle at 88% 48%,
+          rgba(120, 82, 181, 0.12),
+          transparent 31rem
+        ),
+        linear-gradient(
+          180deg,
+          #050916 0%,
+          #02040b 48%,
+          #070b15 100%
+        );
+
+      font-family:
+        Inter,
+        ui-sans-serif,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
+      font-size: 1rem;
+      line-height: 1.65;
+      text-rendering: optimizeLegibility;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body::before {
+      position: fixed;
+      z-index: 0;
+      inset: 0;
+
+      pointer-events: none;
+      content: "";
+
+      opacity: 0.72;
+
+      background-image:
+        radial-gradient(
+          circle,
+          rgba(255, 255, 255, 0.82) 0 0.05rem,
+          transparent 0.065rem
+        ),
+        radial-gradient(
+          circle,
+          rgba(117, 233, 255, 0.58) 0 0.04rem,
+          transparent 0.06rem
+        ),
+        radial-gradient(
+          circle,
+          rgba(239, 205, 126, 0.5) 0 0.045rem,
+          transparent 0.065rem
+        );
+
+      background-size:
+        6.2rem 6.2rem,
+        9.4rem 9.4rem,
+        13.6rem 13.6rem;
+
+      background-position:
+        0 0,
+        2.2rem 3.4rem,
+        5.7rem 1.6rem;
+    }
+
+    body::after {
+      position: fixed;
+      z-index: 1;
+      inset: 0;
+
+      pointer-events: none;
+      content: "";
+
+      background:
+        linear-gradient(
+          90deg,
+          rgba(0, 0, 0, 0.43),
+          transparent 11%,
+          transparent 89%,
+          rgba(0, 0, 0, 0.43)
+        ),
+        radial-gradient(
+          ellipse at center,
+          transparent 40%,
+          rgba(0, 0, 0, 0.48) 100%
+        );
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+    }
+
+    button,
+    a {
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    img,
+    svg,
+    canvas {
+      display: block;
+      max-width: 100%;
+    }
+
+    h1,
+    h2,
+    h3,
+    p,
+    blockquote,
+    dl,
+    dd,
+    ol,
+    ul {
+      margin-top: 0;
+    }
+
+    h1,
+    h2,
+    h3,
+    strong,
+    summary {
+      text-wrap: balance;
+    }
+
+    p,
+    li,
+    dd,
+    blockquote {
+      text-wrap: pretty;
+    }
+
+    [hidden] {
+      display: none !important;
+    }
+
+    :focus-visible {
+      outline: 3px solid var(--satellite-accent);
+      outline-offset: 4px;
+    }
+
+    .sr-only {
+      position: absolute !important;
+
+      width: 1px !important;
+      height: 1px !important;
+
+      padding: 0 !important;
+      margin: -1px !important;
+
+      overflow: hidden !important;
+      clip: rect(0, 0, 0, 0) !important;
+
+      white-space: nowrap !important;
+      border: 0 !important;
+    }
+
+    .skip-link {
+      position: fixed;
+      z-index: 10000;
+      top: 0.75rem;
+      left: 0.75rem;
+
+      padding: 0.72rem 1rem;
+
+      border: 1px solid var(--satellite-gold-bright);
+      border-radius: var(--satellite-radius-sm);
+
+      color: var(--satellite-ink-0);
+      background: var(--satellite-gold-bright);
+
+      font-weight: 850;
+      text-decoration: none;
+
+      transform: translateY(-220%);
+      transition: transform var(--satellite-transition-fast);
+    }
+
+    .skip-link:focus {
+      transform: translateY(0);
+    }
+
+    .page-shell {
+      position: relative;
+      z-index: 2;
+
+      width: min(
+        calc(100% - 2rem),
+        var(--satellite-page-width)
+      );
+
+      margin-inline: auto;
+      padding-bottom: var(--satellite-space-6);
+    }
+
+    .eyebrow,
+    .route-kicker,
+    .chapter-index,
+    .signal-label,
+    .practical-label,
+    .evidence-label {
+      color: var(--satellite-gold-bright);
+
+      font-size: 0.69rem;
+      font-weight: 850;
+      letter-spacing: 0.16em;
+      line-height: 1.35;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3 {
+      font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+      color: var(--satellite-cream);
+      font-weight: 600;
+      line-height: 1.02;
+    }
+
+    h1 {
+      max-width: 11ch;
+      margin-bottom: 0.95rem;
+
+      font-size: clamp(3.2rem, 8vw, 7.2rem);
+      letter-spacing: -0.05em;
+    }
+
+    h2 {
+      margin-bottom: 0;
+
+      font-size: clamp(2.2rem, 5vw, 4.8rem);
+      letter-spacing: -0.04em;
+    }
+
+    h3 {
+      font-size: clamp(1.35rem, 2.5vw, 2.2rem);
+      letter-spacing: -0.025em;
+    }
+
+    .button {
+      display: inline-flex;
+
+      min-height: 2.9rem;
+      align-items: center;
+      justify-content: center;
+      gap: 0.55rem;
+
+      padding: 0.75rem 1.05rem;
+
+      border: 1px solid rgba(226, 231, 241, 0.23);
+      border-radius: 999px;
+
+      color: var(--satellite-cream);
+      background:
+        linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.075),
+          rgba(255, 255, 255, 0.024)
+        ),
+        rgba(5, 9, 20, 0.84);
+
+      box-shadow:
+        0 0.7rem 1.8rem rgba(0, 0, 0, 0.2),
+        0 0 0 1px rgba(255, 255, 255, 0.018) inset;
+
+      font-size: 0.76rem;
+      font-weight: 850;
+      letter-spacing: 0.065em;
+      line-height: 1;
+      text-align: center;
+      text-decoration: none;
+      text-transform: uppercase;
+
+      cursor: pointer;
+
+      transition:
+        border-color var(--satellite-transition-fast),
+        color var(--satellite-transition-fast),
+        background var(--satellite-transition-fast),
+        box-shadow var(--satellite-transition-fast),
+        transform var(--satellite-transition-fast);
+    }
+
+    .button:hover {
+      border-color: var(--satellite-border-strong);
+      transform: translateY(-1px);
+    }
+
+    .button:active {
+      transform: translateY(0);
+    }
+
+    .button-gold {
+      border-color: rgba(255, 222, 142, 0.76);
+      color: #171006;
+
+      background:
+        linear-gradient(
+          135deg,
+          #f6d985 0%,
+          #d4a94c 52%,
+          #f0ca69 100%
+        );
+
+      box-shadow:
+        0 0.95rem 2.3rem rgba(156, 105, 25, 0.24),
+        0 0 1.7rem rgba(245, 213, 130, 0.16);
+    }
+
+    .button-gold:hover {
+      border-color: #fff1bf;
+
+      box-shadow:
+        0 1rem 2.7rem rgba(156, 105, 25, 0.3),
+        0 0 2rem rgba(245, 213, 130, 0.22);
+    }
+
+    /* ============================================================
+       TOPBAR
+       ============================================================ */
+
+    .page-topbar {
+      display: flex;
+
+      min-height: 4.7rem;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+
+      margin-top: 0.8rem;
+      padding: 0.72rem 0.88rem;
+
+      border: 1px solid rgba(225, 197, 127, 0.18);
+      border-radius: var(--satellite-radius-lg);
+
+      background:
+        linear-gradient(
+          180deg,
+          rgba(18, 26, 48, 0.84),
+          rgba(5, 9, 20, 0.78)
+        );
+
+      box-shadow: var(--satellite-shadow);
+      backdrop-filter: blur(1rem);
+    }
+
+    .brand {
+      display: inline-flex;
+
+      min-width: 0;
+      align-items: center;
+      gap: 0.75rem;
+
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .brand-mark {
+      position: relative;
+
+      display: grid;
+
+      width: 2.75rem;
+      height: 2.75rem;
+      flex: 0 0 auto;
+      place-items: center;
+
+      border: 1px solid rgba(241, 207, 123, 0.58);
+      border-radius: 50%;
+
+      color: var(--satellite-gold-bright);
+      background:
+        radial-gradient(
+          circle,
+          rgba(221, 181, 89, 0.17),
+          rgba(12, 17, 33, 0.95)
+        );
+
+      box-shadow:
+        0 0 1.4rem rgba(220, 180, 87, 0.14),
+        inset 0 0 0 0.22rem rgba(255, 255, 255, 0.025);
+    }
+
+    .brand-mark::before,
+    .brand-mark::after {
+      position: absolute;
+      inset: 24%;
+
+      content: "";
+
+      border: 1px solid currentColor;
+      transform: rotate(45deg);
+    }
+
+    .brand-mark::after {
+      inset: 34%;
+      opacity: 0.55;
+    }
+
+    .brand-copy {
+      display: grid;
+      min-width: 0;
+      gap: 0.04rem;
+    }
+
+    .brand-copy span {
+      color: var(--satellite-muted);
+
+      font-size: 0.61rem;
+      font-weight: 750;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .brand-copy strong {
+      overflow: hidden;
+
+      color: var(--satellite-cream);
+
+      font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+      font-size: 1.02rem;
+      font-weight: 600;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .topbar-nav {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .topbar-nav a {
+      padding: 0.48rem 0.68rem;
+
+      border-radius: 999px;
+
+      color: var(--satellite-muted-strong);
+
+      font-size: 0.69rem;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      text-decoration: none;
+      text-transform: uppercase;
+
+      transition:
+        color var(--satellite-transition-fast),
+        background var(--satellite-transition-fast);
+    }
+
+    .topbar-nav a:hover {
+      color: var(--satellite-cream);
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    /* ============================================================
+       MAIN FLOW
+       ============================================================ */
+
+    main {
+      display: grid;
+      gap: var(--satellite-space-7);
+      padding-top: var(--satellite-space-4);
+    }
+
+    section {
+      scroll-margin-top: 1rem;
+    }
+
+    /* ============================================================
+       HERO THRESHOLD
+       ============================================================ */
+
+    .route-hero {
+      position: relative;
+
+      min-height: min(79vh, 49rem);
+      overflow: hidden;
+
+      border: 1px solid rgba(224, 184, 91, 0.23);
+      border-radius: var(--satellite-radius-xl);
+
+      background:
+        radial-gradient(
+          circle at 17% 20%,
+          rgba(117, 233, 255, 0.14),
+          transparent 24rem
+        ),
+        radial-gradient(
+          circle at 84% 72%,
+          rgba(136, 170, 255, 0.13),
+          transparent 28rem
+        ),
+        linear-gradient(
+          145deg,
+          rgba(16, 25, 46, 0.89),
+          rgba(3, 6, 15, 0.96)
+        );
+
+      box-shadow: var(--satellite-shadow-deep);
+      isolation: isolate;
+    }
+
+    .route-hero::before {
+      position: absolute;
+      z-index: -1;
+      inset: 0;
+
+      content: "";
+
+      background:
+        linear-gradient(
+          115deg,
+          transparent 0 44%,
+          rgba(117, 233, 255, 0.035) 45%,
+          transparent 46% 58%,
+          rgba(224, 184, 91, 0.035) 59%,
+          transparent 60%
+        ),
+        radial-gradient(
+          circle at 72% 42%,
+          transparent 0 9rem,
+          rgba(117, 233, 255, 0.055) 9.1rem 9.2rem,
+          transparent 9.3rem
+        ),
+        radial-gradient(
+          circle at 72% 42%,
+          transparent 0 14rem,
+          rgba(224, 184, 91, 0.045) 14.1rem 14.2rem,
+          transparent 14.3rem
+        );
+    }
+
+    .route-hero__inner {
+      display: grid;
+
+      min-height: inherit;
+
+      grid-template-columns:
+        minmax(0, 1.2fr)
+        minmax(17rem, 0.8fr);
+
+      align-items: center;
+      gap: clamp(2rem, 6vw, 6rem);
+
+      padding:
+        clamp(2rem, 6vw, 5rem)
+        clamp(1.2rem, 4vw, 4rem);
+    }
+
+    .route-hero__copy {
+      position: relative;
+      z-index: 2;
+    }
+
+    .route-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+
+      margin-bottom: 1.2rem;
+    }
+
+    .route-kicker::before {
+      width: 1.75rem;
+      height: 1px;
+
+      content: "";
+      background: currentColor;
+      box-shadow: 0 0 1rem rgba(224, 184, 91, 0.3);
+    }
+
+    .hero-subtitle {
+      max-width: 32rem;
+      margin-bottom: 0.85rem;
+
+      color: var(--satellite-accent-soft);
+
+      font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+      font-size: clamp(1.25rem, 2.7vw, 2rem);
+      line-height: 1.22;
+    }
+
+    .hero-lead {
+      max-width: 44rem;
+      margin-bottom: 1.5rem;
+
+      color: var(--satellite-muted-strong);
+      font-size: clamp(1rem, 1.5vw, 1.15rem);
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.7rem;
+    }
+
+    .hero-signal {
+      position: relative;
+
+      display: grid;
+      align-content: end;
+      gap: 1rem;
+
+      min-height: 24rem;
+      padding: 1.4rem;
+
+      border: 1px solid var(--satellite-border-cool);
+      border-radius: var(--satellite-radius-lg);
+
+      background:
+        radial-gradient(
+          circle at 50% 32%,
+          rgba(117, 233, 255, 0.17),
+          transparent 9rem
+        ),
+        linear-gradient(
+          180deg,
+          rgba(19, 31, 55, 0.92),
+          rgba(5, 9, 20, 0.96)
+        );
+
+      box-shadow:
+        var(--satellite-shadow),
+        inset 0.24rem 0 0 rgba(117, 233, 255, 0.28);
+    }
+
+    .hero-signal::before {
+      position: absolute;
+      top: 14%;
+      left: 50%;
+
+      width: 9.5rem;
+      aspect-ratio: 1;
+
+      content: "";
+
+      border: 1px solid rgba(117, 233, 255, 0.34);
+      border-radius: 50%;
+
+      background:
+        radial-gradient(
+          circle,
+          rgba(245, 213, 130, 0.9) 0 0.28rem,
+          rgba(117, 233, 255, 0.35) 0.35rem 0.5rem,
+          transparent 0.62rem
+        ),
+        repeating-radial-gradient(
+          circle,
+          transparent 0 1.2rem,
+          rgba(117, 233, 255, 0.08) 1.23rem 1.27rem
+        );
+
+      box-shadow:
+        0 0 3rem rgba(117, 233, 255, 0.15),
+        inset 0 0 2rem rgba(117, 233, 255, 0.08);
+
+      transform: translateX(-50%);
+    }
+
+    .hero-signal::after {
+      position: absolute;
+      top: calc(14% + 4.75rem);
+      left: 50%;
+
+      width: 13rem;
+      height: 1px;
+
+      content: "";
+
+      background:
+        linear-gradient(
+          90deg,
+          transparent,
+          rgba(117, 233, 255, 0.8),
+          transparent
+        );
+
+      box-shadow:
+        0 0 1.2rem rgba(117, 233, 255, 0.38);
+
+      transform: translateX(-50%);
+    }
+
+    .signal-copy {
+      position: relative;
+      z-index: 2;
+    }
+
+    .signal-label {
+      display: block;
+      margin-bottom: 0.45rem;
+
+      color: var(--satellite-accent);
+    }
+
+    .signal-copy strong {
+      display: block;
+      margin-bottom: 0.65rem;
+
+      color: var(--satellite-cream);
+
+      font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+      font-size: clamp(1.35rem, 2.5vw, 2rem);
+      font-weight: 600;
+      line-height: 1.12;
+    }
+
+    .signal-copy p {
+      margin-bottom: 0;
+
+      color: var(--satellite-muted);
+      font-size: 0.9rem;
+    }
+
+    /* ============================================================
+       NARRATIVE STAGE
+       ============================================================ */
+
+    .narrative-stage {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .section-heading {
+      display: grid;
+
+      grid-template-columns:
+        minmax(0, 1fr)
+        minmax(16rem, 27rem);
+
+      align-items: end;
+      gap: 1.5rem;
+
+      padding-inline: 0.35rem;
+    }
+
+    .section-heading p {
+      margin-bottom: 0.25rem;
+
+      color: var(--satellite-muted-strong);
+    }
+
+    .chapter-grid {
+      display: grid;
+
+      grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+      gap: 0.9rem;
+    }
+
+    .chapter {
+      position: relative;
+
+      min-width: 0;
+      overflow: hidden;
+
+      padding: 1.25rem;
+
+      border: 1px solid rgba(224, 184, 91, 0.17);
+      border-radius: var(--satellite-radius-lg);
+
+      background: var(--satellite-glass);
+      box-shadow: var(--satellite-shadow);
+
+      transition:
+        transform var(--satellite-transition),
+        border-color var(--satellite-transition),
+        box-shadow var(--satellite-transition);
+    }
+
+    .chapter:hover {
+      border-color: rgba(224, 184, 91, 0.34);
+
+      box-shadow:
+        0 1.7rem 4.5rem rgba(0, 0, 0, 0.48),
+        inset 0.2rem 0 0 rgba(117, 233, 255, 0.22);
+
+      transform: translateY(-3px);
+    }
+
+    .chapter::before {
+      position: absolute;
+      top: 0;
+      right: 0;
+
+      width: 8rem;
+      height: 8rem;
+
+      pointer-events: none;
+      content: "";
+
+      background:
+        radial-gradient(
+          circle at 100% 0,
+          rgba(117, 233, 255, 0.11),
+          transparent 68%
+        );
+    }
+
+    .chapter-index {
+      display: block;
+      margin-bottom: 0.8rem;
+    }
+
+    .chapter h3 {
+      margin-bottom: 0.65rem;
+
+      font-size: clamp(1.45rem, 2.4vw, 2.1rem);
+    }
+
+    .chapter p {
+      margin-bottom: 0;
+
+      color: var(--satellite-muted-strong);
+    }
+
+    .chapter blockquote {
+      margin:
+        1rem 0
+        0;
+      padding: 0.85rem 0.95rem;
+
+      border-left: 0.2rem solid var(--satellite-accent);
+
+      color: var(--satellite-cream);
+      background: var(--satellite-accent-faint);
+
+      font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+      font-size: 1.02rem;
+      line-height: 1.5;
+    }
+
+    /* ============================================================
+       DIALOGUE STAGE
+       ============================================================ */
+
+    .dialogue-stage {
+      display: grid;
+
+      grid-template-columns:
+        minmax(0, 0.82fr)
+        minmax(0, 1.18fr);
+
+      gap: 1rem;
+    }
+
+    .dialogue-intro,
+    .dialogue-panel {
+      min-width: 0;
+      padding: clamp(1.2rem, 3vw, 2rem);
+
+      border: 1px solid var(--satellite-border);
+      border-radius: var(--satellite-radius-lg);
+
+      background: var(--satellite-glass);
+      box-shadow: var(--satellite-shadow);
+    }
+
+    .dialogue-intro {
+      display: grid;
+      align-content: center;
+      gap: 0.9rem;
+    }
+
+    .dialogue-intro p {
+      margin-bottom: 0;
+
+      color: var(--satellite-muted-strong);
+    }
+
+    .dialogue-panel {
+      display: grid;
+      gap: 0.8rem;
+    }
+
+    .dialogue-line {
+      display: grid;
+      gap: 0.2rem;
+
+      max-width: 88%;
+      padding: 0.85rem 1rem;
+
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      border-radius: var(--satellite-radius-md);
+
+      background: rgba(255, 255, 255, 0.025);
+    }
+
+    .dialogue-line[data-speaker="dextrion"] {
+      justify-self: start;
+
+      border-color: rgba(117, 233, 255, 0.19);
+      box-shadow: inset 0.2rem 0 0 rgba(117, 233, 255, 0.3);
+    }
+
+    .dialogue-line[data-speaker="mission"] {
+      justify-self: end;
+
+      border-color: rgba(224, 184, 91, 0.2);
+      box-shadow: inset -0.2rem 0 0 rgba(224, 184, 91, 0.3);
+    }
+
+    .dialogue-line span {
+      color: var(--satellite-gold-bright);
+
+      font-size: 0.61rem;
+      font-weight: 850;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .dialogue-line p {
+      margin-bottom: 0;
+
+      color: var(--satellite-cream-soft);
+    }
+
+    /* ============================================================
+       PRESSURE GRID
+       ============================================================ */
+
+    .pressure-section {
+      display: grid;
+      gap: 1rem;
+
+      padding: clamp(1rem, 2.8vw, 2rem);
+
+      border: 1px solid rgba(117, 233, 255, 0.18);
+      border-radius: var(--satellite-radius-xl);
+
+      background:
+        linear-gradient(
+          145deg,
+          rgba(12, 24, 42, 0.86),
+          rgba(4, 7, 16, 0.94)
+        );
+
+      box-shadow: var(--satellite-shadow-deep);
+    }
+
+    .pressure-grid {
+      display: grid;
+
+      grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+
+      gap: 0.75rem;
+    }
+
+    .pressure-card {
+      min-width: 0;
+      padding: 1rem;
+
+      border: 1px solid rgba(117, 233, 255, 0.13);
+      border-radius: var(--satellite-radius-md);
+
+      background:
+        linear-gradient(
+          145deg,
+          rgba(117, 233, 255, 0.055),
+          rgba(255, 255, 255, 0.015)
+        );
+    }
+
+    .pressure-card span {
+      display: block;
+      margin-bottom: 0.55rem;
+
+      color: var(--satellite-accent);
+
+      font-size: 0.62rem;
+      font-weight: 850;
+      letter-spacing: 0.11em;
+      text-transform: uppercase;
+    }
+
+    .pressure-card strong {
+      display: block;
+      margin-bottom: 0.45rem;
+
+      color: var(--satellite-cream);
+
+      font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+      font-size: 1.2rem;
+      font-weight: 600;
+      line-height: 1.16;
+    }
+
+    .pressure-card p {
+      margin-bottom: 0;
+
+      color: var(--satellite-muted);
+      font-size: 0.8rem;
+    }
+
+    /* ============================================================
+       PRACTICAL RETURN
+       ============================================================ */
+
+    .practical-return {
+      display: grid;
+
+      grid-template-columns:
+        minmax(0, 1fr)
+        minmax(16rem, 0.7fr);
+
+      align-items: center;
+      gap: 1.3rem;
+
+      padding: clamp(1.25rem, 3vw, 2rem);
+
+      border: 1px solid var(--satellite-border-strong);
+      border-radius: var(--satellite-radius-lg);
+
+      background:
+        radial-gradient(
+          circle at 100% 0,
+          rgba(224, 184, 91, 0.13),
+          transparent 20rem
+        ),
+        linear-gradient(
+          145deg,
+          rgba(25, 31, 49, 0.9),
+          rgba(7, 11, 22, 0.96)
+        );
+
+      box-shadow:
+        var(--satellite-shadow),
+        inset 0.22rem 0 0 var(--satellite-gold);
+    }
+
+    .practical-copy h2 {
+      max-width: 12ch;
+      margin-bottom: 0.8rem;
+
+      font-size: clamp(2rem, 4.7vw, 4rem);
+    }
+
+    .practical-copy p {
+      max-width: var(--satellite-reading-width);
+      margin-bottom: 0;
+
+      color: var(--satellite-muted-strong);
+    }
+
+    .practical-actions {
+      display: grid;
+      gap: 0.6rem;
+    }
+
+    .practical-actions .button {
+      width: 100%;
+    }
+
+    /* ============================================================
+       EVIDENCE DISCLOSURE
+       ============================================================ */
+
+    .evidence-disclosure {
+      overflow: clip;
+
+      border: 1px solid rgba(224, 184, 91, 0.17);
+      border-radius: var(--satellite-radius-md);
+
+      background:
+        linear-gradient(
+          180deg,
+          rgba(17, 24, 44, 0.82),
+          rgba(7, 11, 23, 0.9)
+        );
+    }
+
+    .evidence-disclosure[open] {
+      border-color: rgba(224, 184, 91, 0.34);
+
+      box-shadow:
+        0 1rem 2.8rem rgba(0, 0, 0, 0.24),
+        inset 0.2rem 0 0 rgba(117, 233, 255, 0.26);
+    }
+
+    .evidence-disclosure > summary {
+      display: flex;
+
+      min-height: 4rem;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+
+      padding: 0.9rem 1rem;
+
+      color: var(--satellite-cream);
+      list-style: none;
+      cursor: pointer;
+    }
+
+    .evidence-disclosure
+    > summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .evidence-disclosure
+    > summary > span:first-child {
+      display: grid;
+      gap: 0.1rem;
+    }
+
+    .evidence-disclosure
+    > summary strong {
+      color: var(--satellite-gold-bright);
+
+      font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+
+    .evidence-disclosure
+    > summary small {
+      color: var(--satellite-muted);
+      font-size: 0.72rem;
+    }
+
+    .evidence-disclosure
+    > summary > span:last-child {
+      display: grid;
+
+      width: 2rem;
+      height: 2rem;
+      flex: 0 0 auto;
+      place-items: center;
+
+      border: 1px solid var(--satellite-border-cool);
+      border-radius: 50%;
+
+      color: var(--satellite-accent);
+      background: var(--satellite-accent-faint);
+
+      transition: transform var(--satellite-transition-fast);
+    }
+
+    .evidence-disclosure[open]
+    > summary > span:last-child {
+      transform: rotate(45deg);
+    }
+
+    .evidence-body {
+      display: grid;
+      gap: 0.75rem;
+
+      padding: 1rem;
+
+      border-top: 1px solid var(--satellite-rule);
+    }
+
+    .evidence-body p {
+      max-width: var(--satellite-reading-width);
+      margin-bottom: 0;
+
+      color: var(--satellite-muted-strong);
+    }
+
+    .evidence-grid {
+      display: grid;
+
+      grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+      gap: 0.65rem;
+    }
+
+    .evidence-grid article {
+      min-width: 0;
+      padding: 0.85rem;
+
+      border: 1px solid rgba(255, 255, 255, 0.065);
+      border-radius: var(--satellite-radius-sm);
+
+      background: rgba(255, 255, 255, 0.022);
+    }
+
+    .evidence-grid span {
+      display: block;
+      margin-bottom: 0.3rem;
+
+      color: var(--satellite-accent);
+
+      font-size: 0.58rem;
+      font-weight: 850;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .evidence-grid p {
+      color: var(--satellite-muted);
+      font-size: 0.76rem;
+    }
+
+    /* ============================================================
+       FOOTER
+       ============================================================ */
+
+    .page-footer {
+      display: flex;
+
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+
+      margin-top: var(--satellite-space-6);
+      padding: 1.1rem 0.2rem 0.5rem;
+
+      border-top: 1px solid rgba(224, 184, 91, 0.18);
+    }
+
+    .page-footer > div {
+      display: grid;
+      gap: 0.1rem;
+    }
+
+    .page-footer strong {
+      color: var(--satellite-cream);
+
+      font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+      font-weight: 600;
+    }
+
+    .page-footer span {
+      color: var(--satellite-muted);
+      font-size: 0.74rem;
+    }
+
+    .page-footer nav {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 0.35rem;
+    }
+
+    .page-footer a {
+      padding: 0.42rem 0.58rem;
+
+      border-radius: 999px;
+
+      color: var(--satellite-muted-strong);
+
+      font-size: 0.67rem;
+      font-weight: 760;
+      letter-spacing: 0.045em;
+      text-decoration: none;
+      text-transform: uppercase;
+    }
+
+    .page-footer a:hover {
+      color: var(--satellite-gold-bright);
+      background: var(--satellite-gold-faint);
+    }
+
+    /* ============================================================
+       RESPONSIVE
+       ============================================================ */
+
+    @media (max-width: 68rem) {
+      .chapter-grid {
+        grid-template-columns:
+          repeat(2, minmax(0, 1fr));
+      }
+
+      .chapter:last-child {
+        grid-column: 1 / -1;
+      }
+
+      .pressure-grid {
+        grid-template-columns:
+          repeat(2, minmax(0, 1fr));
+      }
+
+      .evidence-grid {
+        grid-template-columns:
+          repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 54rem) {
+      .route-hero__inner,
+      .dialogue-stage,
+      .practical-return,
+      .section-heading {
+        grid-template-columns: 1fr;
+      }
+
+      .route-hero__inner {
+        align-items: start;
+      }
+
+      .hero-signal {
+        min-height: 21rem;
+      }
+
+      .section-heading {
+        gap: 0.75rem;
+      }
+
+      .practical-actions {
+        grid-template-columns:
+          repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 40rem) {
+      :root {
+        --satellite-space-7: 2.2rem;
+      }
+
+      body {
+        font-size: 0.96rem;
+      }
+
+      .page-shell {
+        width: min(
+          calc(100% - 0.8rem),
+          var(--satellite-page-width)
+        );
+
+        padding-bottom: 1.2rem;
+      }
+
+      .page-topbar {
+        min-height: 3.9rem;
+
+        margin-top: 0.4rem;
+        padding: 0.5rem 0.55rem;
+
+        border-radius: 1rem;
+      }
+
+      .brand-mark {
+        width: 2.2rem;
+        height: 2.2rem;
+      }
+
+      .brand-copy span {
+        display: none;
+      }
+
+      .brand-copy strong {
+        font-size: 0.9rem;
+      }
+
+      .topbar-nav a {
+        padding: 0.4rem 0.42rem;
+        font-size: 0.58rem;
+      }
+
+      .topbar-nav a:nth-child(2) {
+        display: none;
+      }
+
+      main {
+        gap: 2.2rem;
+        padding-top: 0.4rem;
+      }
+
+      h1 {
+        font-size: clamp(2.8rem, 14vw, 4.7rem);
+      }
+
+      h2 {
+        font-size: clamp(2rem, 10vw, 3.4rem);
+      }
+
+      .route-hero {
+        min-height: 0;
+        border-radius: 1.2rem;
+      }
+
+      .route-hero__inner {
+        gap: 1.2rem;
+        padding: 1.2rem 0.75rem;
+      }
+
+      .route-kicker {
+        margin-bottom: 0.85rem;
+        font-size: 0.6rem;
+      }
+
+      .hero-subtitle {
+        font-size: 1.13rem;
+      }
+
+      .hero-lead {
+        font-size: 0.93rem;
+      }
+
+      .hero-actions,
+      .practical-actions {
+        display: grid;
+        grid-template-columns: 1fr;
+      }
+
+      .hero-actions .button,
+      .practical-actions .button {
+        width: 100%;
+      }
+
+      .hero-signal {
+        min-height: 19rem;
+        padding: 1rem;
+      }
+
+      .hero-signal::before {
+        width: 8rem;
+      }
+
+      .hero-signal::after {
+        top: calc(14% + 4rem);
+        width: 10rem;
+      }
+
+      .chapter-grid,
+      .pressure-grid,
+      .evidence-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .chapter:last-child {
+        grid-column: auto;
+      }
+
+      .chapter,
+      .dialogue-intro,
+      .dialogue-panel,
+      .pressure-section,
+      .practical-return {
+        border-radius: 1rem;
+      }
+
+      .dialogue-line {
+        max-width: 95%;
+      }
+
+      .page-footer {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .page-footer nav {
+        justify-content: flex-start;
+      }
+    }
+
+    /* ============================================================
+       REDUCED MOTION
+       ============================================================ */
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+
+        transition-duration: 0.001ms !important;
+      }
+
+      .chapter:hover,
+      .button:hover {
+        transform: none;
+      }
+    }
+
+    /* ============================================================
+       REDUCED TRANSPARENCY
+       ============================================================ */
+
+    @media (prefers-reduced-transparency: reduce) {
+      .page-topbar,
+      .chapter,
+      .dialogue-intro,
+      .dialogue-panel,
+      .pressure-section,
+      .practical-return,
+      .evidence-disclosure {
+        background-color: var(--satellite-ink-1);
+        backdrop-filter: none;
+      }
+    }
+
+    /* ============================================================
+       FORCED COLORS
+       ============================================================ */
+
+    @media (forced-colors: active) {
+      body,
+      .page-topbar,
+      .route-hero,
+      .chapter,
+      .dialogue-intro,
+      .dialogue-panel,
+      .pressure-section,
+      .pressure-card,
+      .practical-return,
+      .evidence-disclosure {
+        color: CanvasText;
+        background: Canvas;
+        box-shadow: none;
+      }
+
+      .button,
+      summary {
+        forced-color-adjust: auto;
+      }
+
+      .brand-mark,
+      .hero-signal::before {
+        border: 2px solid ButtonText;
+        background: ButtonFace;
+        box-shadow: none;
+      }
+    }
+
+    /* ============================================================
+       PRINT
+       ============================================================ */
+
+    @media print {
+      body {
+        color: #111;
+        background: #fff;
+      }
+
+      body::before,
+      body::after,
+      .page-topbar,
+      .hero-actions,
+      .practical-actions,
+      .page-footer {
+        display: none !important;
+      }
+
+      .page-shell {
+        width: 100%;
+      }
+
+      .route-hero,
+      .chapter,
+      .dialogue-intro,
+      .dialogue-panel,
+      .pressure-section,
+      .pressure-card,
+      .practical-return,
+      .evidence-disclosure {
+        color: #111;
+        background: #fff;
+        border: 1px solid #777;
+        box-shadow: none;
+      }
+
+      .route-hero {
+        min-height: 0;
+      }
+
+      .hero-signal {
+        min-height: 0;
+      }
+
+      .hero-signal::before,
+      .hero-signal::after {
+        display: none;
+      }
+
+      .evidence-disclosure:not([open])
+      > :not(summary) {
+        display: block;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <a
+    class="skip-link"
+    href="#main"
+  >
+    Skip to the story
+  </a>
+
+  <div class="page-shell">
+    <header
+      class="page-topbar"
+      aria-label="Welcome to Mirrorland header"
+    >
+      <a
+        class="brand"
+        href="/showroom/"
+        aria-label="Return to the Showroom constellation"
+      >
+        <span
+          class="brand-mark"
+          aria-hidden="true"
+        ></span>
+
+        <span class="brand-copy">
+          <span>Shadows Never Shatter</span>
+          <strong>Welcome to Mirrorland</strong>
+        </span>
+      </a>
+
+      <nav
+        class="topbar-nav"
+        aria-label="Direct routes"
+      >
+        <a href="/showroom/">
+          Constellation
+        </a>
+
+        <a href="/showroom/story/mission/">
+          Mission
+        </a>
+
+        <a href="/index.html">
+          Compass
+        </a>
+      </nav>
+    </header>
+
+    <main id="main">
+      <section
+        class="route-hero"
+        aria-labelledby="page-title"
+      >
+        <div class="route-hero__inner">
+          <div class="route-hero__copy">
+            <div class="route-kicker">
+              North Route · Chamber One
+            </div>
+
+            <h1 id="page-title">
+              Welcome to Mirrorland.
+            </h1>
+
+            <p class="hero-subtitle">
+              The signal was never supposed to answer back.
+            </p>
+
+            <p class="hero-lead">
+              Dextrion began with an anomaly near the Bermuda region:
+              a repeating distortion where there should have been only
+              noise. Then the pattern changed. It responded. Not like
+              weather. Not like machinery. Like something on the other
+              side had noticed that someone was listening.
+            </p>
+
+            <div class="hero-actions">
+              <a
+                class="button button-gold"
+                href="#first-contact"
+              >
+                Follow the Signal
+              </a>
+
+              <a
+                class="button"
+                href="/showroom/"
+              >
+                Return to Constellation
+              </a>
+            </div>
+          </div>
+
+          <aside
+            class="hero-signal"
+            aria-label="First-contact signal"
+          >
+            <div class="signal-copy">
+              <span class="signal-label">
+                First Contact
+              </span>
+
+              <strong>
+                Something answered.
+              </strong>
+
+              <p>
+                The discovery did not create Mirrorland. It created a
+                path to a future that had already been living without us.
+              </p>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section
+        id="first-contact"
+        class="narrative-stage"
+        aria-labelledby="first-contact-title"
+      >
+        <header class="section-heading">
+          <div>
+            <div class="eyebrow">
+              The First Crossing
+            </div>
+
+            <h2 id="first-contact-title">
+              Curiosity opened the door.
+            </h2>
+          </div>
+
+          <p>
+            Responsibility entered one step later.
+          </p>
+        </header>
+
+        <div class="chapter-grid">
+          <article class="chapter">
+            <span class="chapter-index">
+              01 · The Distortion
+            </span>
+
+            <h3>
+              At first, it looked like an error.
+            </h3>
+
+            <p>
+              The anomaly appeared where measurements should have
+              stabilized. Instruments disagreed. Signals returned with
+              impossible timing. The easiest explanation was equipment
+              failure.
+            </p>
+
+            <blockquote>
+              “Run it again. Same coordinates. No assumptions.”
+            </blockquote>
+          </article>
+
+          <article class="chapter">
+            <span class="chapter-index">
+              02 · The Reply
+            </span>
+
+            <h3>
+              Then the pattern reacted.
+            </h3>
+
+            <p>
+              Dextrion changed the transmission. The anomaly changed
+              with it. The response was imperfect, delayed, and unlike
+              any known language—but it was not random.
+            </p>
+
+            <blockquote>
+              “We are not observing it anymore. It is observing us.”
+            </blockquote>
+          </article>
+
+          <article class="chapter">
+            <span class="chapter-index">
+              03 · The Crossing
+            </span>
+
+            <h3>
+              The question stopped being theoretical.
+            </h3>
+
+            <p>
+              Once passage became possible, no one could pretend the
+              discovery was only scientific. A reachable future carries
+              people, history, danger, loss, and claims of its own.
+            </p>
+
+            <blockquote>
+              “Before we cross, decide what crossing makes us responsible for.”
+            </blockquote>
+          </article>
+        </div>
+      </section>
+
+      <section
+        class="dialogue-stage"
+        aria-labelledby="dialogue-title"
+      >
+        <div class="dialogue-intro">
+          <div class="eyebrow">
+            The Conversation No One Could Avoid
+          </div>
+
+          <h2 id="dialogue-title">
+            What do you owe a future you can reach?
+          </h2>
+
+          <p>
+            This is where the mission begins—not with possession, but
+            with restraint. Discovery gives you access. It does not give
+            you ownership, understanding, or permission to act without
+            consequence.
+          </p>
+        </div>
+
+        <div
+          class="dialogue-panel"
+          aria-label="Dextrion first-contact dialogue"
+        >
+          <div
+            class="dialogue-line"
+            data-speaker="dextrion"
+          >
+            <span>Dextrion</span>
+
+            <p>
+              “We found a way through.”
+            </p>
+          </div>
+
+          <div
+            class="dialogue-line"
+            data-speaker="mission"
+          >
+            <span>Mission Control</span>
+
+            <p>
+              “That answers whether we can cross. It does not answer
+              whether we should.”
+            </p>
+          </div>
+
+          <div
+            class="dialogue-line"
+            data-speaker="dextrion"
+          >
+            <span>Dextrion</span>
+
+            <p>
+              “If the world is real, someone is already living with the
+              consequences we are only beginning to see.”
+            </p>
+          </div>
+
+          <div
+            class="dialogue-line"
+            data-speaker="mission"
+          >
+            <span>Mission Control</span>
+
+            <p>
+              “Then the first rule is simple: we enter as witnesses
+              before we behave like architects.”
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section
+        class="pressure-section"
+        aria-labelledby="pressure-title"
+      >
+        <header class="section-heading">
+          <div>
+            <div class="eyebrow">
+              What First Contact Changes
+            </div>
+
+            <h2 id="pressure-title">
+              Four assumptions break immediately.
+            </h2>
+          </div>
+
+          <p>
+            The practical danger is not only what waits on the other
+            side. It is what people bring with them when they believe
+            discovery makes them entitled to control.
+          </p>
+        </header>
+
+        <div class="pressure-grid">
+          <article class="pressure-card">
+            <span>Assumption One</span>
+
+            <strong>
+              Reachable does not mean understood.
+            </strong>
+
+            <p>
+              Access reveals a surface. It does not provide the complete
+              history, culture, system logic, or consequence map behind
+              it.
+            </p>
+          </article>
+
+          <article class="pressure-card">
+            <span>Assumption Two</span>
+
+            <strong>
+              Discovery does not create ownership.
+            </strong>
+
+            <p>
+              Mirrorland existed before Dextrion found it. Contact
+              changes the relationship, not the world’s right to exist
+              independently.
+            </p>
+          </article>
+
+          <article class="pressure-card">
+            <span>Assumption Three</span>
+
+            <strong>
+              Good intentions do not prevent damage.
+            </strong>
+
+            <p>
+              Help offered without context can destabilize the system it
+              is meant to repair.
+            </p>
+          </article>
+
+          <article class="pressure-card">
+            <span>Assumption Four</span>
+
+            <strong>
+              Returning home does not erase responsibility.
+            </strong>
+
+            <p>
+              Once you carry knowledge across the threshold, you must
+              decide what can be repeated, tested, adapted, or withheld.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section
+        class="practical-return"
+        aria-labelledby="practical-title"
+      >
+        <div class="practical-copy">
+          <span class="practical-label">
+            Your First Mission Decision
+          </span>
+
+          <h2 id="practical-title">
+            Enter as a witness.
+          </h2>
+
+          <p>
+            Before you try to fix a system, learn what it is protecting.
+            Before you transfer an idea, learn what conditions made it
+            work. Before you call something progress, identify who bears
+            the cost when it fails.
+          </p>
+        </div>
+
+        <div class="practical-actions">
+          <a
+            class="button button-gold"
+            href="/showroom/story/mission/"
+          >
+            Continue to the Mission
+          </a>
+
+          <a
+            class="button"
+            href="/showroom/"
+          >
+            Choose Another Chamber
+          </a>
+        </div>
+      </section>
+
+      <details class="evidence-disclosure">
+        <summary>
+          <span>
+            <strong>Premise and Evidence Boundary</strong>
+            <small>
+              What this chamber establishes—and what it does not claim
+            </small>
+          </span>
+
+          <span aria-hidden="true">+</span>
+        </summary>
+
+        <div class="evidence-body">
+          <p>
+            Dextrion’s anomaly, the operational crossing, Mirrorland as a
+            reachable future-shadow, and the first-contact mission are
+            governing premises within
+            <em>Shadows Never Shatter in Mirrorland</em>. This page does
+            not present them as externally validated scientific facts.
+          </p>
+
+          <div class="evidence-grid">
+            <article>
+              <span>Established Here</span>
+
+              <p>
+                The visitor enters after contact has become operational
+                and before responsible interpretation has been completed.
+              </p>
+            </article>
+
+            <article>
+              <span>Not Established Here</span>
+
+              <p>
+                Complete Mirrorland history, scientific proof, universal
+                transferability, or authority to intervene.
+              </p>
+            </article>
+
+            <article>
+              <span>Continuity Requirement</span>
+
+              <p>
+                Every path must preserve the Constellation, Diamond,
+                300-Year Clock, and recoverable Compass return.
+              </p>
+            </article>
+          </div>
+        </div>
+      </details>
+    </main>
+
+    <footer class="page-footer">
+      <div>
+        <strong>
+          Welcome to Mirrorland
+        </strong>
+
+        <span>
+          You found the door. The next question is why you should enter.
+        </span>
+      </div>
+
+      <nav aria-label="Footer routes">
+        <a href="/showroom/">
+          Constellation
+        </a>
+
+        <a href="/showroom/story/mission/">
+          Next Chamber
+        </a>
+
+        <a href="/index.html">
+          Main Compass
+        </a>
+      </nav>
+    </footer>
+  </div>
+</body>
+</html>
+
+<!--
+SHOWROOM_SATELLITE_WELCOME_TO_MIRRORLAND_HTML_RECEIPT_v1
+
+TARGET:
+/showroom/story/welcome/index.html
+
+STATUS:
+COMPLETE NEW SELF-CONTAINED HTML FILE
+
+EMBEDDED VISUAL SYSTEM:
+SHOWROOM_SATELLITE_PAGE_EMBEDDED_VISUAL_SYSTEM_v1
+
+ROUTE FAMILY:
+Story / North
+
+ROUTE ID:
+north-1
+
+PARENT:
+/showroom/
+
+NEXT ROUTE:
+/showroom/story/mission/
+
+PURPOSE:
+- establish the first operational Mirrorland threshold;
+- dramatize Dextrion’s anomaly and first contact;
+- convert discovery into responsibility;
+- introduce the evidence boundary;
+- hand the visitor into the mission chamber.
+
+PRESENTATION STANDARD:
+- immersive;
+- second-person;
+- dialogue-driven;
+- pressure-oriented;
+- practical consequence;
+- TED Talk-style progression;
+- technical structure subordinate to narrative experience.
+
+ARCHITECTURAL FEATURES:
+- self-contained embedded CSS;
+- cosmic Showroom atmosphere;
+- threshold hero;
+- live signal object;
+- three-part narrative sequence;
+- dialogue panel;
+- four-pressure grid;
+- practical return decision;
+- evidence-boundary disclosure;
+- responsive mobile composition;
+- keyboard focus;
+- reduced motion;
+- reduced transparency;
+- forced colors;
+- print handling.
+
+NON-CLAIMS:
+- no external scientific validation;
+- no runtime or renderer dependency;
+- no controller ownership;
+- no JavaScript requirement;
+- no Earth-transfer authorization.
+-->

@@ -1,13 +1,17 @@
 /* TARGET FILE: /showroom/index.planet.js */
-/* NEW FILE */
-/* GROUP_B_PLANET_MODULE_AFTER_CONSUMER_COMPATIBILITY */
+/* COMPLETE REPLACEMENT */
+/* GROUP_F_AUDRALIA_PLANETARY_OBJECT_RENEWAL */
 /* SHOWROOM_PLANETARY_FULCRUM_INDEPENDENT_CENTER_PLANET_TNT_v1 */
+/* AUDRALIA_PLANETARY_MODEL_EMITTER_v2 */
 
 (() => {
   "use strict";
 
   const CONTRACT =
     "SHOWROOM_PLANETARY_FULCRUM_INDEPENDENT_CENTER_PLANET_TNT_v1";
+
+  const MODEL =
+    "AUDRALIA_PLANETARY_MODEL_EMITTER_v2";
 
   const OWNER =
     "/showroom/index.planet.js";
@@ -33,6 +37,9 @@
     root:
       "data-showroom-planet-root",
 
+    model:
+      "data-showroom-planet-model",
+
     state:
       "data-showroom-planet-state",
 
@@ -43,27 +50,96 @@
       "data-showroom-planet-layer",
 
     decorative:
-      "data-showroom-planet-decorative"
+      "data-showroom-planet-decorative",
+
+    audralia:
+      "data-showroom-planet-audralia",
+
+    surfaceRole:
+      "data-showroom-planet-surface-role",
+
+    terrain:
+      "data-showroom-planet-terrain",
+
+    cloud:
+      "data-showroom-planet-cloud",
+
+    landmass:
+      "data-showroom-planet-landmass"
   });
 
   const CLASS_NAMES = Object.freeze({
     root:
       "showroom-planet-root",
 
+    glow:
+      "showroom-planet-glow",
+
+    orbitLine:
+      "showroom-planet-orbit-line",
+
     shell:
       "showroom-planet-shell",
+
+    body:
+      "showroom-planet-body",
+
+    ocean:
+      "showroom-planet-ocean",
+
+    terrain:
+      "showroom-planet-terrain",
+
+    terrainDeep:
+      "showroom-planet-terrain--deep",
+
+    terrainHigh:
+      "showroom-planet-terrain--high",
+
+    landmass:
+      "showroom-planet-landmass",
+
+    landmassNorth:
+      "showroom-planet-landmass--north",
+
+    landmassEast:
+      "showroom-planet-landmass--east",
+
+    landmassWest:
+      "showroom-planet-landmass--west",
+
+    landmassSouth:
+      "showroom-planet-landmass--south",
+
+    cloud:
+      "showroom-planet-clouds",
+
+    cloudLow:
+      "showroom-planet-clouds--low",
+
+    cloudHigh:
+      "showroom-planet-clouds--high",
 
     atmosphere:
       "showroom-planet-atmosphere",
 
-    surface:
-      "showroom-planet-surface",
+    rim:
+      "showroom-planet-rim",
+
+    terminator:
+      "showroom-planet-terminator",
+
+    shadow:
+      "showroom-planet-shadow",
 
     axis:
       "showroom-planet-axis",
 
-    glow:
-      "showroom-planet-glow",
+    meridian:
+      "showroom-planet-meridian",
+
+    fulcrum:
+      "showroom-planet-fulcrum",
 
     fallback:
       "showroom-planet-fallback"
@@ -94,7 +170,13 @@
 
   const DEFAULTS = Object.freeze({
     rotationDurationMs:
-      36000,
+      52000,
+
+    cloudDurationMs:
+      82000,
+
+    pulseDurationMs:
+      9000,
 
     receiptAttribute:
       "data-showroom-planet-receipt",
@@ -216,6 +298,9 @@
       contract:
         CONTRACT,
 
+      model:
+        MODEL,
+
       owner:
         OWNER,
 
@@ -286,6 +371,12 @@
 
       decorative:
         true,
+
+      audraliaVisualModel:
+        true,
+
+      autoMount:
+        false,
 
       counters: {
         ...state.counters
@@ -366,6 +457,20 @@
     return payload;
   }
 
+  function setRootProperty(
+    name,
+    value
+  ) {
+    if (!state.root) {
+      return;
+    }
+
+    state.root.style.setProperty(
+      name,
+      value
+    );
+  }
+
   function cancelAnimation() {
     if (state.frameId) {
       window.cancelAnimationFrame(
@@ -430,16 +535,40 @@
       timestamp -
       state.animationStartedAt;
 
-    const turn =
+    const bodyTurn =
       (
         elapsed %
         DEFAULTS.rotationDurationMs
       ) /
       DEFAULTS.rotationDurationMs;
 
-    state.root.style.setProperty(
+    const cloudTurn =
+      (
+        elapsed %
+        DEFAULTS.cloudDurationMs
+      ) /
+      DEFAULTS.cloudDurationMs;
+
+    const pulse =
+      (
+        elapsed %
+        DEFAULTS.pulseDurationMs
+      ) /
+      DEFAULTS.pulseDurationMs;
+
+    setRootProperty(
       "--showroom-planet-turn",
-      String(turn)
+      `${bodyTurn * 360}deg`
+    );
+
+    setRootProperty(
+      "--showroom-planet-cloud-turn",
+      `${cloudTurn * 360}deg`
+    );
+
+    setRootProperty(
+      "--showroom-planet-pulse",
+      String(pulse)
     );
 
     state.counters.animationFrames +=
@@ -472,12 +601,20 @@
   function stopAnimation() {
     cancelAnimation();
 
-    if (state.root) {
-      state.root.style.setProperty(
-        "--showroom-planet-turn",
-        "0"
-      );
-    }
+    setRootProperty(
+      "--showroom-planet-turn",
+      "0deg"
+    );
+
+    setRootProperty(
+      "--showroom-planet-cloud-turn",
+      "0deg"
+    );
+
+    setRootProperty(
+      "--showroom-planet-pulse",
+      "0"
+    );
   }
 
   function handleReducedMotionChange(event) {
@@ -558,7 +695,7 @@
           );
         } else if (
           typeof media.removeListener ===
-          "function"
+            "function"
         ) {
           media.removeListener(
             listener
@@ -578,7 +715,8 @@
 
   function createLayer(
     className,
-    layerName
+    layerName,
+    options = {}
   ) {
     const element =
       document.createElement("span");
@@ -596,6 +734,39 @@
       "true"
     );
 
+    if (options.surfaceRole) {
+      element.setAttribute(
+        ATTRIBUTES.surfaceRole,
+        options.surfaceRole
+      );
+    }
+
+    if (options.landmass) {
+      element.setAttribute(
+        ATTRIBUTES.landmass,
+        options.landmass
+      );
+    }
+
+    if (options.terrain) {
+      element.setAttribute(
+        ATTRIBUTES.terrain,
+        options.terrain
+      );
+    }
+
+    if (options.cloud) {
+      element.setAttribute(
+        ATTRIBUTES.cloud,
+        options.cloud
+      );
+    }
+
+    if (options.text != null) {
+      element.textContent =
+        String(options.text);
+    }
+
     return element;
   }
 
@@ -609,6 +780,11 @@
     root.setAttribute(
       ATTRIBUTES.root,
       "true"
+    );
+
+    root.setAttribute(
+      ATTRIBUTES.model,
+      MODEL
     );
 
     root.setAttribute(
@@ -629,6 +805,11 @@
     );
 
     root.setAttribute(
+      ATTRIBUTES.audralia,
+      "true"
+    );
+
+    root.setAttribute(
       "aria-hidden",
       "true"
     );
@@ -640,6 +821,16 @@
 
     root.style.setProperty(
       "--showroom-planet-turn",
+      "0deg"
+    );
+
+    root.style.setProperty(
+      "--showroom-planet-cloud-turn",
+      "0deg"
+    );
+
+    root.style.setProperty(
+      "--showroom-planet-pulse",
       "0"
     );
 
@@ -649,46 +840,299 @@
         "glow"
       );
 
+    const orbitLine =
+      createLayer(
+        CLASS_NAMES.orbitLine,
+        "orbit-line"
+      );
+
     const shell =
       createLayer(
         CLASS_NAMES.shell,
         "shell"
       );
 
-    const atmosphere =
+    const body =
       createLayer(
-        CLASS_NAMES.atmosphere,
-        "atmosphere"
+        CLASS_NAMES.body,
+        "body",
+        {
+          surfaceRole:
+            "world-body"
+        }
       );
 
-    const surface =
+    const ocean =
       createLayer(
-        CLASS_NAMES.surface,
-        "surface"
+        CLASS_NAMES.ocean,
+        "ocean",
+        {
+          surfaceRole:
+            "ocean"
+        }
+      );
+
+    const terrainDeep =
+      createLayer(
+        `${CLASS_NAMES.terrain} ${CLASS_NAMES.terrainDeep}`,
+        "terrain-deep",
+        {
+          surfaceRole:
+            "terrain",
+          terrain:
+            "deep"
+        }
+      );
+
+    const terrainHigh =
+      createLayer(
+        `${CLASS_NAMES.terrain} ${CLASS_NAMES.terrainHigh}`,
+        "terrain-high",
+        {
+          surfaceRole:
+            "terrain",
+          terrain:
+            "high"
+        }
+      );
+
+    const landNorth =
+      createLayer(
+        `${CLASS_NAMES.landmass} ${CLASS_NAMES.landmassNorth}`,
+        "landmass-north",
+        {
+          surfaceRole:
+            "landmass",
+          landmass:
+            "north"
+        }
+      );
+
+    const landEast =
+      createLayer(
+        `${CLASS_NAMES.landmass} ${CLASS_NAMES.landmassEast}`,
+        "landmass-east",
+        {
+          surfaceRole:
+            "landmass",
+          landmass:
+            "east"
+        }
+      );
+
+    const landWest =
+      createLayer(
+        `${CLASS_NAMES.landmass} ${CLASS_NAMES.landmassWest}`,
+        "landmass-west",
+        {
+          surfaceRole:
+            "landmass",
+          landmass:
+            "west"
+        }
+      );
+
+    const landSouth =
+      createLayer(
+        `${CLASS_NAMES.landmass} ${CLASS_NAMES.landmassSouth}`,
+        "landmass-south",
+        {
+          surfaceRole:
+            "landmass",
+          landmass:
+            "south"
+        }
+      );
+
+    const cloudLow =
+      createLayer(
+        `${CLASS_NAMES.cloud} ${CLASS_NAMES.cloudLow}`,
+        "clouds-low",
+        {
+          surfaceRole:
+            "clouds",
+          cloud:
+            "low"
+        }
+      );
+
+    const cloudHigh =
+      createLayer(
+        `${CLASS_NAMES.cloud} ${CLASS_NAMES.cloudHigh}`,
+        "clouds-high",
+        {
+          surfaceRole:
+            "clouds",
+          cloud:
+            "high"
+        }
+      );
+
+    const rim =
+      createLayer(
+        CLASS_NAMES.rim,
+        "rim",
+        {
+          surfaceRole:
+            "atmospheric-rim"
+        }
+      );
+
+    const terminator =
+      createLayer(
+        CLASS_NAMES.terminator,
+        "terminator",
+        {
+          surfaceRole:
+            "terminator"
+        }
+      );
+
+    const shadow =
+      createLayer(
+        CLASS_NAMES.shadow,
+        "shadow",
+        {
+          surfaceRole:
+            "shadow-limb"
+        }
+      );
+
+    const meridian =
+      createLayer(
+        CLASS_NAMES.meridian,
+        "meridian",
+        {
+          surfaceRole:
+            "meridian"
+        }
+      );
+
+    const fulcrum =
+      createLayer(
+        CLASS_NAMES.fulcrum,
+        "fulcrum",
+        {
+          surfaceRole:
+            "fulcrum"
+        }
       );
 
     const axis =
       createLayer(
         CLASS_NAMES.axis,
-        "axis"
+        "axis",
+        {
+          surfaceRole:
+            "axis"
+        }
+      );
+
+    const atmosphere =
+      createLayer(
+        CLASS_NAMES.atmosphere,
+        "atmosphere",
+        {
+          surfaceRole:
+            "atmosphere"
+        }
       );
 
     const fallback =
       createLayer(
         CLASS_NAMES.fallback,
-        "fallback"
+        "fallback",
+        {
+          surfaceRole:
+            "fallback",
+          text:
+            ""
+        }
       );
 
-    fallback.textContent =
-      "";
+    body.appendChild(
+      ocean
+    );
 
-    shell.appendChild(surface);
-    shell.appendChild(axis);
+    body.appendChild(
+      terrainDeep
+    );
 
-    root.appendChild(glow);
-    root.appendChild(shell);
-    root.appendChild(atmosphere);
-    root.appendChild(fallback);
+    body.appendChild(
+      terrainHigh
+    );
+
+    body.appendChild(
+      landNorth
+    );
+
+    body.appendChild(
+      landEast
+    );
+
+    body.appendChild(
+      landWest
+    );
+
+    body.appendChild(
+      landSouth
+    );
+
+    body.appendChild(
+      cloudLow
+    );
+
+    body.appendChild(
+      cloudHigh
+    );
+
+    body.appendChild(
+      rim
+    );
+
+    body.appendChild(
+      terminator
+    );
+
+    body.appendChild(
+      shadow
+    );
+
+    body.appendChild(
+      meridian
+    );
+
+    body.appendChild(
+      fulcrum
+    );
+
+    shell.appendChild(
+      body
+    );
+
+    shell.appendChild(
+      axis
+    );
+
+    root.appendChild(
+      glow
+    );
+
+    root.appendChild(
+      orbitLine
+    );
+
+    root.appendChild(
+      shell
+    );
+
+    root.appendChild(
+      atmosphere
+    );
+
+    root.appendChild(
+      fallback
+    );
 
     return root;
   }
@@ -831,7 +1275,13 @@
           true,
 
         animationAllowed:
-          animationAllowed()
+          animationAllowed(),
+
+        visualModel:
+          MODEL,
+
+        audraliaSurfaceHooks:
+          true
       }
     );
 
@@ -846,7 +1296,13 @@
           true,
 
         animationAllowed:
-          animationAllowed()
+          animationAllowed(),
+
+        visualModel:
+          MODEL,
+
+        audraliaSurfaceHooks:
+          true
       }
     );
 
@@ -935,7 +1391,29 @@
             false,
 
           cssIntegrationOwned:
-            false
+            false,
+
+          visualModel:
+            MODEL,
+
+          audraliaSurfaceHooks:
+            [
+              "body",
+              "ocean",
+              "terrain",
+              "landmass",
+              "clouds",
+              "atmosphere",
+              "rim",
+              "terminator",
+              "shadow",
+              "meridian",
+              "fulcrum",
+              "axis",
+              "orbit-line",
+              "glow",
+              "fallback"
+            ]
         }
       );
 
@@ -1207,6 +1685,12 @@
     return createReceipt(
       "state-requested",
       {
+        visualModel:
+          MODEL,
+
+        audraliaSurfaceHooks:
+          true,
+
         lastReceipt:
           state.lastReceipt
             ? {
@@ -1232,6 +1716,9 @@
     Object.freeze({
       contract:
         CONTRACT,
+
+      model:
+        MODEL,
 
       owner:
         OWNER,
@@ -1285,7 +1772,22 @@
         "none",
 
       decorative:
-        true
+        true,
+
+      visualModel:
+        MODEL,
+
+      audraliaSurfaceHooks:
+        true,
+
+      navigationAuthority:
+        false,
+
+      productionAuthorization:
+        false,
+
+      deploymentAuthorization:
+        false
     }
   );
 })();

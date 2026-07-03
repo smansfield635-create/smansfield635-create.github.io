@@ -1,97 +1,40 @@
-/* /assets/compass/upstream-compass.renderer.js
-   Shared fixed-center Home Compass renderer authority.
+/* TARGET FILE: /assets/compass/upstream-compass.renderer.js */
+/* COMPLETE REPLACEMENT */
+/* DGB_UPSTREAM_COMPASS_RENDERER_TNT_v3_1_1_GENERIC_LIFECYCLE_RECEIPT */
 
-   Module:
-   DGB_UPSTREAM_COMPASS_RENDERER
-   3.1.0-generic-projected-bounds
+/*
+  Shared fixed-center Home Compass renderer authority.
 
-   Dependency position:
-   1. /products/archcoin/index.controller.js
-   2. /assets/compass/upstream-compass.geometry.js
-   3. /assets/compass/upstream-compass.renderer.js
-   4. /products/archcoin/index.crystals.js
-   5. /products/archcoin/index.html
-   6. /assets/compass/upstream-compass.css
-   7. /products/archcoin/index.css
+  Module:
+  DGB_UPSTREAM_COMPASS_RENDERER
+  3.1.1-generic-lifecycle-receipt
 
-   Governing boundaries:
-   - The controller owns upstream-request meaning, navigation, route law,
-     semantic activation meaning, and SYSTEM_HELD state.
-   - Geometry owns the physical Compass form, CPU-side mesh buffers,
-     material identities, fixed-center local posture, model bounds,
-     quality profiles, static fallback shape data, and the governed
-     visual-control alignment envelope.
-   - This renderer owns WebGL resources, lighting, camera, local visual
-     interpolation, fallback-first promotion, visual feedback, reduced-motion
-     response, instance lifecycle, automatic mount discovery, renderer
-     receipts, and generic viewport-CSS projected visual bounds.
-   - Crystals owns ARCHCOIN constellation and room-cluster scene execution.
-   - HTML owns the canonical semantic Compass control.
-   - CSS presents already-closed runtime state.
+  Phase:
+  Phase 1 lifecycle instrumentation only.
 
-   Fixed-center transform law:
-   FIXED_CENTER_PLACEMENT
-   * LOCAL_PRESENTATION_TRANSFORM
-   * RENDERER_OWNED_VISUAL_FEEDBACK
+  Preserved behavior:
+  - fixed-center universal Compass rendering;
+  - page-agnostic renderer contract;
+  - one active instance per mount;
+  - automatic discovery of marked mounts;
+  - explicit unmarked mount support;
+  - fallback-first promotion;
+  - promotion only after one error-free enhanced frame;
+  - projected-bounds contract and event;
+  - semantic-control visual feedback only;
+  - host-owned navigation and semantic activation;
+  - existing WebGL error gate;
+  - existing permanent render-failure latch;
+  - existing fallback and canvas visibility policy.
 
-   Projected-bounds law:
-   - The renderer projects only model.visualControlAlignmentEnvelope.
-   - Projection uses the current final model, view, and projection matrices.
-   - The governed circular perimeter is sampled at both declared depth limits.
-   - No additional geometry radius or renderer halo allowance is added.
-   - Records are published in viewport CSS pixels.
-   - Available records contain conservative axis-aligned projected bounds.
-   - Non-visible or non-enhanced records contain zero-valued geometry.
-   - Revisions advance only when the normalized record materially changes.
-   - Events originate from the exact active renderer mount.
-   - The projected-bounds capability is universal and page-agnostic.
-
-   Automatic startup law:
-   - After the renderer publishes its global API, it discovers every
-     [data-upstream-compass-mount] present in the parsed document.
-   - Each unowned mount is initialized exactly once.
-   - Deferred-script execution normally schedules discovery at
-     DOMContentLoaded.
-   - Dynamically or late-loaded execution discovers mounts immediately.
-   - INSTANCE_BY_MOUNT prevents duplicate active ownership.
-
-   Prohibited:
-   - constellation orientation;
-   - cluster orientation;
-   - navigation orientation;
-   - parent quaternion inheritance;
-   - controller-frame orientation reconstruction;
-   - navigation settlement participation;
-   - Compass decision states;
-   - route or destination construction;
-   - renderer-owned click activation;
-   - renderer-owned navigation;
-   - renderer-owned semantic selection;
-   - renderer-authored semantic disabled state;
-   - page-specific projected-bounds interpretation;
-   - semantic-control positioning or sizing;
-   - page CSS-variable publication.
-
-   Semantic-control law:
-   - The renderer may observe hover, focus, and press for visual feedback.
-   - The renderer does not bind click activation.
-   - The renderer does not prevent semantic click propagation.
-   - The renderer does not invoke controller navigation APIs.
-   - The renderer does not set aria-disabled or native disabled state.
-   - The renderer does not move or resize the semantic control.
-
-   Promotion and opacity law:
-   - Static fallback is visible before enhanced rendering is proven.
-   - WebGL canvas is promoted only after one error-free enhanced frame.
-   - Canvas CSS opacity is binary promotion authority only.
-   - Enhanced visual opacity is shader-owned through uVisualOpacity.
-   - Fallback visual opacity is CSS-owned through currentOpacity.
-   - Renderer failure returns presentation to the static fallback.
-
-   Instance law:
-   - At most one active renderer instance may own a Compass mount.
-   - Canvas reuse is permitted only within an unowned mount.
-   - Disposal releases the mount ownership record.
+  Not included:
+  - no WebGL error-queue draining;
+  - no pre-draw/post-draw error isolation;
+  - no retry;
+  - no failure-latch reset;
+  - no forced promotion;
+  - no geometry change;
+  - no page-specific behavior.
 */
 
 const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
@@ -102,7 +45,7 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
       "DGB_UPSTREAM_COMPASS_RENDERER",
 
     version:
-      "3.1.0-generic-projected-bounds",
+      "3.1.1-generic-lifecycle-receipt",
 
     file:
       "/assets/compass/upstream-compass.renderer.js"
@@ -133,6 +76,9 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
 
   const PROJECTED_BOUNDS_EVENT =
     "DGB_UPSTREAM_COMPASS_PROJECTED_BOUNDS_CHANGED";
+
+  const MAX_LIFECYCLE_RECORDS =
+    32;
 
   const RENDERER_STATUS = Object.freeze({
     INITIALIZING:
@@ -189,6 +135,178 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
       PROJECTED_BOUNDS_STATUS
         .DISPOSED
     ]);
+
+  const CHECKPOINT = Object.freeze({
+    MOUNT_ENTERED:
+      "RENDERER_MOUNT_ENTERED",
+
+    CONTEXT_NORMALIZED:
+      "CONTEXT_NORMALIZED",
+
+    GEOMETRY_AUTHORITY_RESOLVED:
+      "GEOMETRY_AUTHORITY_RESOLVED",
+
+    GEOMETRY_MODEL_BUILT:
+      "GEOMETRY_MODEL_BUILT",
+
+    GEOMETRY_MODEL_VALIDATED:
+      "GEOMETRY_MODEL_VALIDATED",
+
+    CANVAS_CREATED:
+      "CANVAS_CREATED",
+
+    CANVAS_INSERTED:
+      "CANVAS_INSERTED",
+
+    WEBGL_CONTEXT_REQUESTED:
+      "WEBGL_CONTEXT_REQUESTED",
+
+    WEBGL_CONTEXT_CREATED:
+      "WEBGL_CONTEXT_CREATED",
+
+    SHADERS_COMPILED:
+      "SHADERS_COMPILED",
+
+    PROGRAM_LINKED:
+      "PROGRAM_LINKED",
+
+    GPU_RESOURCES_CREATED:
+      "GPU_RESOURCES_CREATED",
+
+    SUBSCRIPTIONS_REGISTERED:
+      "SUBSCRIPTIONS_REGISTERED",
+
+    INSTANCE_REGISTERED:
+      "INSTANCE_REGISTERED",
+
+    START_ENTERED:
+      "RENDERER_START_ENTERED",
+
+    FRAME_SCHEDULED:
+      "FRAME_SCHEDULED",
+
+    FIRST_FRAME_ENTERED:
+      "FIRST_FRAME_ENTERED",
+
+    FRAME_RESIZED:
+      "FRAME_RESIZED",
+
+    PRESENTATION_SNAPSHOT_APPLIED:
+      "PRESENTATION_SNAPSHOT_APPLIED",
+
+    PROJECTED_BOUNDS_INITIALIZED:
+      "PROJECTED_BOUNDS_INITIALIZED",
+
+    DRAW_PHASE_ENTERED:
+      "DRAW_PHASE_ENTERED",
+
+    DRAW_PHASE_COMPLETED:
+      "DRAW_PHASE_COMPLETED",
+
+    WEBGL_ERROR_CHECKED:
+      "WEBGL_ERROR_CHECKED",
+
+    FIRST_FRAME_COMMIT_ENTERED:
+      "FIRST_FRAME_COMMIT_ENTERED",
+
+    FIRST_FRAME_COMMITTED:
+      "FIRST_FRAME_COMMITTED",
+
+    CANVAS_PROMOTED:
+      "CANVAS_PROMOTED",
+
+    FALLBACK_WITHDRAWN:
+      "FALLBACK_WITHDRAWN",
+
+    PROJECTED_BOUNDS_AVAILABLE:
+      "PROJECTED_BOUNDS_AVAILABLE",
+
+    FAILURE:
+      "RENDERER_FAILURE",
+
+    INSTANCE_STOPPED:
+      "INSTANCE_STOPPED",
+
+    INSTANCE_DESTROYED:
+      "INSTANCE_DESTROYED"
+  });
+
+  const FAILURE_STAGE = Object.freeze({
+    CONTEXT_NORMALIZATION:
+      "CONTEXT_NORMALIZATION",
+
+    GEOMETRY_RESOLUTION:
+      "GEOMETRY_RESOLUTION",
+
+    GEOMETRY_BUILD:
+      "GEOMETRY_BUILD",
+
+    GEOMETRY_VALIDATION:
+      "GEOMETRY_VALIDATION",
+
+    CANVAS_CREATION:
+      "CANVAS_CREATION",
+
+    WEBGL_CONTEXT_CREATION:
+      "WEBGL_CONTEXT_CREATION",
+
+    SHADER_COMPILATION:
+      "SHADER_COMPILATION",
+
+    PROGRAM_LINK:
+      "PROGRAM_LINK",
+
+    GPU_RESOURCE_CREATION:
+      "GPU_RESOURCE_CREATION",
+
+    SUBSCRIPTION_SETUP:
+      "SUBSCRIPTION_SETUP",
+
+    FIRST_FRAME_RESIZE:
+      "FIRST_FRAME_RESIZE",
+
+    FIRST_FRAME_PRESENTATION:
+      "FIRST_FRAME_PRESENTATION",
+
+    FIRST_FRAME_TRANSFORM:
+      "FIRST_FRAME_TRANSFORM",
+
+    FIRST_FRAME_BOUNDS:
+      "FIRST_FRAME_BOUNDS",
+
+    FIRST_FRAME_DRAW:
+      "FIRST_FRAME_DRAW",
+
+    FIRST_FRAME_WEBGL_ERROR_GATE:
+      "FIRST_FRAME_WEBGL_ERROR_GATE",
+
+    FIRST_FRAME_COMMIT:
+      "FIRST_FRAME_COMMIT",
+
+    CONTEXT_LOSS:
+      "CONTEXT_LOSS",
+
+    PRESENTATION_STATE:
+      "PRESENTATION_STATE",
+
+    PROJECTED_BOUNDS:
+      "PROJECTED_BOUNDS",
+
+    START:
+      "START",
+
+    STOP:
+      "STOP",
+
+    DISPOSAL:
+      "DISPOSAL",
+
+    AUTOMATIC_DISCOVERY:
+      "AUTOMATIC_DISCOVERY",
+
+    UNKNOWN:
+      "UNKNOWN"
+  });
 
   const PROJECTED_BOUNDS = Object.freeze({
     projectionMethod:
@@ -593,6 +711,9 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
     moduleVersion:
       MODULE.version,
 
+    installed:
+      true,
+
     status:
       "available",
 
@@ -605,11 +726,32 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
     mountedInstanceCount:
       0,
 
+    lastMountedInstanceId:
+      "",
+
     lastInstanceId:
       "",
 
     lastFailure:
       "",
+
+    lastFailureCode:
+      "",
+
+    lastFailureMessage:
+      "",
+
+    lastFailureStage:
+      "",
+
+    lastFailureDetail:
+      null,
+
+    lastWebGLError:
+      0,
+
+    lastWebGLErrorName:
+      "NO_ERROR",
 
     lastRendererStatus:
       "",
@@ -631,6 +773,21 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
 
     firstEnhancedFrameCompleted:
       false,
+
+    lastProjectedBoundsRevision:
+      0,
+
+    lastProjectedBoundsStatus:
+      "",
+
+    lastLifecycleCheckpoint:
+      "",
+
+    lifecycleSequence:
+      Object.freeze([]),
+
+    receiptRevision:
+      0,
 
     fixedCenter:
       true,
@@ -736,17 +893,43 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
     projectedBoundsStatusVocabulary:
       PROJECTED_BOUNDS_STATUS_VALUES,
 
-    lastProjectedBoundsRevision:
-      0,
-
-    lastProjectedBoundsStatus:
-      "",
-
     showroomAware:
       false,
 
     visualPassClaimed:
       false
+  };
+
+  const GLOBAL_LIFECYCLE = {
+    sequence:
+      0,
+
+    history:
+      [],
+
+    lastCheckpoint:
+      "",
+
+    receiptRevision:
+      0,
+
+    lastFailureCode:
+      "",
+
+    lastFailureMessage:
+      "",
+
+    lastFailureStage:
+      "",
+
+    lastFailureDetail:
+      null,
+
+    lastWebGLError:
+      0,
+
+    lastWebGLErrorName:
+      "NO_ERROR"
   };
 
   const INSTANCES =
@@ -1031,6 +1214,392 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
         value
       )
     );
+  }
+
+  function nowIso() {
+    try {
+      return new Date().toISOString();
+    } catch (_) {
+      return "";
+    }
+  }
+
+  function serializableValue(
+    value,
+    depth = 0
+  ) {
+    if (
+      value === null ||
+      value === undefined
+    ) {
+      return value === undefined
+        ? null
+        : value;
+    }
+
+    if (
+      typeof value ===
+        "string" ||
+      typeof value ===
+        "boolean"
+    ) {
+      return value;
+    }
+
+    if (
+      typeof value ===
+        "number"
+    ) {
+      return Number.isFinite(value)
+        ? value
+        : null;
+    }
+
+    if (
+      depth >= 3
+    ) {
+      return String(value);
+    }
+
+    if (Array.isArray(value)) {
+      return value
+        .slice(0, 16)
+        .map(
+          entry =>
+            serializableValue(
+              entry,
+              depth + 1
+            )
+        );
+    }
+
+    if (
+      typeof value ===
+        "object"
+    ) {
+      const output = {};
+
+      for (
+        const key
+        of Object.keys(value)
+          .slice(0, 24)
+      ) {
+        const entry =
+          value[key];
+
+        if (
+          typeof entry ===
+            "function" ||
+          typeof entry ===
+            "symbol"
+        ) {
+          continue;
+        }
+
+        output[key] =
+          serializableValue(
+            entry,
+            depth + 1
+          );
+      }
+
+      return output;
+    }
+
+    return String(value);
+  }
+
+  function freezeSnapshot(value) {
+    if (
+      value === null ||
+      typeof value !==
+        "object"
+    ) {
+      return value;
+    }
+
+    if (Array.isArray(value)) {
+      return Object.freeze(
+        value.map(
+          freezeSnapshot
+        )
+      );
+    }
+
+    const output = {};
+
+    for (
+      const [
+        key,
+        entry
+      ]
+      of Object.entries(value)
+    ) {
+      output[key] =
+        freezeSnapshot(entry);
+    }
+
+    return Object.freeze(output);
+  }
+
+  function errorCodeFrom(
+    error,
+    fallback
+  ) {
+    if (
+      error &&
+      error.code
+    ) {
+      return String(
+        error.code
+      );
+    }
+
+    if (
+      error &&
+      error.name
+    ) {
+      return String(
+        error.name
+      );
+    }
+
+    return String(
+      fallback ||
+      "UNKNOWN_RENDERER_FAILURE"
+    );
+  }
+
+  function errorMessageFrom(
+    error,
+    fallback
+  ) {
+    if (
+      error &&
+      error.message
+    ) {
+      return String(
+        error.message
+      );
+    }
+
+    return String(
+      fallback ||
+      ""
+    );
+  }
+
+  function pushBoundedRecord(
+    history,
+    record
+  ) {
+    history.push(
+      record
+    );
+
+    if (
+      history.length >
+      MAX_LIFECYCLE_RECORDS
+    ) {
+      history.splice(
+        0,
+        history.length -
+          MAX_LIFECYCLE_RECORDS
+      );
+    }
+  }
+
+  function recordGlobalCheckpoint(
+    name,
+    detail = null,
+    options = {}
+  ) {
+    GLOBAL_LIFECYCLE.sequence +=
+      1;
+
+    const record =
+      freezeSnapshot({
+        name:
+          String(
+            name ||
+            "RENDERER_CHECKPOINT"
+          ),
+
+        sequence:
+          GLOBAL_LIFECYCLE
+            .sequence,
+
+        timestamp:
+          nowIso(),
+
+        instanceId:
+          String(
+            options.instanceId ||
+            ""
+          ),
+
+        detail:
+          serializableValue(
+            detail
+          ),
+
+        failureCode:
+          options.failureCode
+            ? String(
+                options.failureCode
+              )
+            : ""
+      });
+
+    pushBoundedRecord(
+      GLOBAL_LIFECYCLE.history,
+      record
+    );
+
+    GLOBAL_LIFECYCLE.lastCheckpoint =
+      record.name;
+
+    return record;
+  }
+
+  function recordInstanceCheckpoint(
+    instance,
+    name,
+    detail = null,
+    options = {}
+  ) {
+    if (!instance) {
+      return recordGlobalCheckpoint(
+        name,
+        detail,
+        options
+      );
+    }
+
+    instance.lifecycleSequenceNumber +=
+      1;
+
+    const record =
+      freezeSnapshot({
+        name:
+          String(
+            name ||
+            "RENDERER_CHECKPOINT"
+          ),
+
+        sequence:
+          instance
+            .lifecycleSequenceNumber,
+
+        timestamp:
+          nowIso(),
+
+        instanceId:
+          instance.id,
+
+        detail:
+          serializableValue(
+            detail
+          ),
+
+        failureCode:
+          options.failureCode
+            ? String(
+                options.failureCode
+              )
+            : ""
+      });
+
+    pushBoundedRecord(
+      instance.lifecycleHistory,
+      record
+    );
+
+    instance.lastLifecycleCheckpoint =
+      record.name;
+
+    recordGlobalCheckpoint(
+      record.name,
+      record.detail,
+      {
+        instanceId:
+          instance.id,
+
+        failureCode:
+          record.failureCode
+      }
+    );
+
+    return record;
+  }
+
+  function webGLErrorName(
+    gl,
+    code
+  ) {
+    if (
+      !Number.isFinite(code)
+    ) {
+      return "UNKNOWN_WEBGL_ERROR";
+    }
+
+    if (
+      gl &&
+      code === gl.NO_ERROR
+    ) {
+      return "NO_ERROR";
+    }
+
+    if (
+      gl &&
+      code === gl.INVALID_ENUM
+    ) {
+      return "INVALID_ENUM";
+    }
+
+    if (
+      gl &&
+      code === gl.INVALID_VALUE
+    ) {
+      return "INVALID_VALUE";
+    }
+
+    if (
+      gl &&
+      code === gl.INVALID_OPERATION
+    ) {
+      return "INVALID_OPERATION";
+    }
+
+    if (
+      gl &&
+      typeof gl
+        .INVALID_FRAMEBUFFER_OPERATION ===
+        "number" &&
+      code ===
+        gl.INVALID_FRAMEBUFFER_OPERATION
+    ) {
+      return "INVALID_FRAMEBUFFER_OPERATION";
+    }
+
+    if (
+      gl &&
+      code === gl.OUT_OF_MEMORY
+    ) {
+      return "OUT_OF_MEMORY";
+    }
+
+    if (
+      gl &&
+      typeof gl.CONTEXT_LOST_WEBGL ===
+        "number" &&
+      code ===
+        gl.CONTEXT_LOST_WEBGL
+    ) {
+      return "CONTEXT_LOST_WEBGL";
+    }
+
+    return `UNKNOWN_WEBGL_ERROR_${code}`;
   }
 
   function normalizeArray3(
@@ -1808,6 +2377,21 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
       error.code =
         "SHADER_COMPILE_FAILURE";
 
+      error.details =
+        {
+          shaderType:
+            type === gl.VERTEX_SHADER
+              ? "VERTEX_SHADER"
+              : type ===
+                  gl.FRAGMENT_SHADER
+                ? "FRAGMENT_SHADER"
+                : String(type),
+
+          infoLog:
+            String(info)
+              .slice(0, 1024)
+        };
+
       throw error;
     }
 
@@ -1880,6 +2464,13 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
 
       error.code =
         "PROGRAM_LINK_FAILURE";
+
+      error.details =
+        {
+          infoLog:
+            String(info)
+              .slice(0, 1024)
+        };
 
       throw error;
     }
@@ -2501,6 +3092,37 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
       instance.projectedBounds
     );
 
+    if (
+      instance.projectedBounds
+        .status ===
+        PROJECTED_BOUNDS_STATUS
+          .AVAILABLE
+    ) {
+      instance.projectedBoundsAvailable =
+        true;
+
+      recordInstanceCheckpoint(
+        instance,
+        CHECKPOINT
+          .PROJECTED_BOUNDS_AVAILABLE,
+        {
+          revision:
+            instance
+              .projectedBoundsRevision,
+
+          width:
+            instance
+              .projectedBounds
+              .width,
+
+          height:
+            instance
+              .projectedBounds
+              .height
+        }
+      );
+    }
+
     publishReceipt({
       lastProjectedBoundsRevision:
         instance
@@ -2508,7 +3130,10 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
 
       lastProjectedBoundsStatus:
         instance.projectedBounds
-          .status
+          .status,
+
+      lastInstanceId:
+        instance.id
     });
 
     return true;
@@ -2964,21 +3589,17 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
     } catch (error) {
       safeEmitInstanceFailure(
         instance,
-        error &&
-        (
-          error.code ||
-          error.message
-        )
-          ? String(
-              error.code ||
-              error.message
-            )
-          : "PROJECTED_BOUNDS_CALCULATION_FAILURE",
-
+        errorCodeFrom(
+          error,
+          "PROJECTED_BOUNDS_CALCULATION_FAILURE"
+        ),
         error &&
         error.details
           ? error.details
-          : null
+          : null,
+        FAILURE_STAGE
+          .PROJECTED_BOUNDS,
+        error
       );
 
       return false;
@@ -3015,6 +3636,9 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
   function publishReceipt(
     extra = {}
   ) {
+    GLOBAL_LIFECYCLE.receiptRevision +=
+      1;
+
     Object.assign(
       RECEIPT,
       {
@@ -3024,6 +3648,9 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
         moduleVersion:
           MODULE.version,
 
+        installed:
+          true,
+
         geometryAuthority:
           GEOMETRY_AUTHORITY.moduleId,
 
@@ -3032,6 +3659,45 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
 
         mountedInstanceCount:
           INSTANCES.size,
+
+        lastFailureCode:
+          GLOBAL_LIFECYCLE
+            .lastFailureCode,
+
+        lastFailureMessage:
+          GLOBAL_LIFECYCLE
+            .lastFailureMessage,
+
+        lastFailureStage:
+          GLOBAL_LIFECYCLE
+            .lastFailureStage,
+
+        lastFailureDetail:
+          GLOBAL_LIFECYCLE
+            .lastFailureDetail,
+
+        lastWebGLError:
+          GLOBAL_LIFECYCLE
+            .lastWebGLError,
+
+        lastWebGLErrorName:
+          GLOBAL_LIFECYCLE
+            .lastWebGLErrorName,
+
+        lastLifecycleCheckpoint:
+          GLOBAL_LIFECYCLE
+            .lastCheckpoint,
+
+        lifecycleSequence:
+          Object.freeze(
+            GLOBAL_LIFECYCLE
+              .history
+              .slice()
+          ),
+
+        receiptRevision:
+          GLOBAL_LIFECYCLE
+            .receiptRevision,
 
         fixedCenter:
           true,
@@ -3154,14 +3820,33 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
         RECEIPT_SYMBOL
       ] =
         Object.freeze({
-          ...RECEIPT
+          ...RECEIPT,
+
+          lifecycleSequence:
+            Object.freeze(
+              GLOBAL_LIFECYCLE
+                .history
+                .slice()
+            )
         });
     }
+
+    return Object.freeze({
+      ...RECEIPT,
+
+      lifecycleSequence:
+        Object.freeze(
+          GLOBAL_LIFECYCLE
+            .history
+            .slice()
+        )
+    });
   }
 
   function emitFailure(
     reason,
-    details = null
+    details = null,
+    options = {}
   ) {
     const normalizedReason =
       String(
@@ -3169,12 +3854,76 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
         "UNKNOWN_RENDERER_FAILURE"
       );
 
+    const code =
+      String(
+        options.code ||
+        normalizedReason
+      );
+
+    const message =
+      String(
+        options.message ||
+        normalizedReason
+      );
+
+    const stage =
+      String(
+        options.stage ||
+        FAILURE_STAGE.UNKNOWN
+      );
+
+    const detail =
+      freezeSnapshot(
+        serializableValue(
+          details
+        )
+      );
+
+    GLOBAL_LIFECYCLE.lastFailureCode =
+      code;
+
+    GLOBAL_LIFECYCLE.lastFailureMessage =
+      message;
+
+    GLOBAL_LIFECYCLE.lastFailureStage =
+      stage;
+
+    GLOBAL_LIFECYCLE.lastFailureDetail =
+      detail;
+
+    if (
+      Number.isFinite(
+        options.webglError
+      )
+    ) {
+      GLOBAL_LIFECYCLE.lastWebGLError =
+        options.webglError;
+
+      GLOBAL_LIFECYCLE.lastWebGLErrorName =
+        String(
+          options.webglErrorName ||
+          "UNKNOWN_WEBGL_ERROR"
+        );
+    }
+
     publishReceipt({
       status:
         "failed",
 
       lastFailure:
         normalizedReason,
+
+      lastFailureCode:
+        code,
+
+      lastFailureMessage:
+        message,
+
+      lastFailureStage:
+        stage,
+
+      lastFailureDetail:
+        detail,
 
       lastRendererStatus:
         RENDERER_STATUS.FAILED
@@ -3198,7 +3947,40 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
                 reason:
                   normalizedReason,
 
-                details
+                failureCode:
+                  code,
+
+                failureMessage:
+                  message,
+
+                failureStage:
+                  stage,
+
+                instanceId:
+                  String(
+                    options.instanceId ||
+                    ""
+                  ),
+
+                webglError:
+                  Number.isFinite(
+                    options.webglError
+                  )
+                    ? options.webglError
+                    : 0,
+
+                webglErrorName:
+                  String(
+                    options.webglErrorName ||
+                    ""
+                  ),
+
+                lifecycleCheckpoint:
+                  GLOBAL_LIFECYCLE
+                    .lastCheckpoint,
+
+                details:
+                  detail
               })
           }
         )
@@ -3626,7 +4408,16 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
       existing.style.visibility =
         "hidden";
 
-      return existing;
+      return Object.freeze({
+        canvas:
+          existing,
+
+        created:
+          false,
+
+        inserted:
+          true
+      });
     }
 
     const canvas =
@@ -3686,7 +4477,15 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
       canvas
     );
 
-    return canvas;
+    return Object.freeze({
+      canvas,
+
+      created:
+        true,
+
+      inserted:
+        true
+    });
   }
 
   function getGL(canvas) {
@@ -3755,6 +4554,11 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
       active
         ? "visible"
         : "hidden";
+
+    if (active) {
+      instance.canvasPromoted =
+        true;
+    }
   }
 
   function setFallbackVisible(
@@ -3794,6 +4598,11 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
       active
         ? "visible"
         : "hidden";
+
+    if (!active) {
+      instance.fallbackWithdrawn =
+        true;
+    }
   }
 
   function publishMountState(
@@ -3894,6 +4703,19 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
           ? instance.lastFailure
           : ""
       );
+
+    mount.dataset
+      .upstreamCompassRendererStage =
+      instance.lastLifecycleCheckpoint ||
+      "";
+
+    mount.dataset
+      .upstreamCompassWebglError =
+      instance.lastWebGLError
+        ? String(
+            instance.lastWebGLError
+          )
+        : "";
 
     mount.dataset
       .upstreamCompassEnhancedOpacityAuthority =
@@ -4414,7 +5236,7 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
     const instanceId =
       `home-compass-instance-${++instanceCounter}`;
 
-    const canvas =
+    const canvasRecord =
       createCanvas(
         context.mount
       );
@@ -4429,7 +5251,14 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
 
       context,
 
-      canvas,
+      canvas:
+        canvasRecord.canvas,
+
+      canvasCreated:
+        canvasRecord.created,
+
+      canvasInserted:
+        canvasRecord.inserted,
 
       gl:
         null,
@@ -4447,6 +5276,9 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
         [],
 
       running:
+        false,
+
+      stopped:
         false,
 
       raf:
@@ -4566,6 +5398,9 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
       projectedBounds:
         null,
 
+      projectedBoundsAvailable:
+        false,
+
       fallbackSurface:
         null,
 
@@ -4584,12 +5419,63 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
       lastFailure:
         "",
 
+      failureCode:
+        "",
+
+      failureMessage:
+        "",
+
+      failureStage:
+        "",
+
+      failureDetail:
+        null,
+
+      contextCreated:
+        false,
+
+      geometryAccepted:
+        true,
+
+      resourcesCreated:
+        false,
+
+      subscriptionsRegistered:
+        false,
+
+      firstFrameEntered:
+        false,
+
+      drawPhaseCompleted:
+        false,
+
+      lastWebGLError:
+        0,
+
+      lastWebGLErrorName:
+        "NO_ERROR",
+
       firstEnhancedFrameCompleted:
+        false,
+
+      canvasPromoted:
+        false,
+
+      fallbackWithdrawn:
         false,
 
       rendererStatus:
         RENDERER_STATUS
-          .INITIALIZING
+          .INITIALIZING,
+
+      lifecycleSequenceNumber:
+        0,
+
+      lifecycleHistory:
+        [],
+
+      lastLifecycleCheckpoint:
+        ""
     };
 
     synchronizeVisualTargets(
@@ -4625,7 +5511,10 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
   function safeEmitInstanceFailure(
     instance,
     reason,
-    details = null
+    details = null,
+    stage =
+      FAILURE_STAGE.UNKNOWN,
+    sourceError = null
   ) {
     if (
       instance.renderFailureEmitted
@@ -4639,14 +5528,48 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
         "UNKNOWN_RENDER_FAILURE"
       );
 
+    const code =
+      errorCodeFrom(
+        sourceError,
+        normalizedReason
+      );
+
+    const message =
+      errorMessageFrom(
+        sourceError,
+        normalizedReason
+      );
+
     instance.renderFailureEmitted =
       true;
 
     instance.lastFailure =
       normalizedReason;
 
+    instance.failureCode =
+      code;
+
+    instance.failureMessage =
+      message;
+
+    instance.failureStage =
+      String(
+        stage ||
+        FAILURE_STAGE.UNKNOWN
+      );
+
+    instance.failureDetail =
+      freezeSnapshot(
+        serializableValue(
+          details
+        )
+      );
+
     instance.running =
       false;
+
+    instance.stopped =
+      true;
 
     if (
       instance.raf
@@ -4658,6 +5581,35 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
       instance.raf =
         0;
     }
+
+    recordInstanceCheckpoint(
+      instance,
+      CHECKPOINT.FAILURE,
+      {
+        reason:
+          normalizedReason,
+
+        code,
+
+        message,
+
+        stage:
+          instance.failureStage,
+
+        detail:
+          instance.failureDetail,
+
+        webglError:
+          instance.lastWebGLError,
+
+        webglErrorName:
+          instance.lastWebGLErrorName
+      },
+      {
+        failureCode:
+          code
+      }
+    );
 
     setMountRendererStatus(
       instance,
@@ -4680,6 +5632,24 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
 
       lastFailure:
         normalizedReason,
+
+      lastFailureCode:
+        code,
+
+      lastFailureMessage:
+        message,
+
+      lastFailureStage:
+        instance.failureStage,
+
+      lastFailureDetail:
+        instance.failureDetail,
+
+      lastWebGLError:
+        instance.lastWebGLError,
+
+      lastWebGLErrorName:
+        instance.lastWebGLErrorName,
 
       lastInstanceId:
         instance.id,
@@ -4724,7 +5694,22 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
 
     emitFailure(
       normalizedReason,
-      details
+      details,
+      {
+        code,
+        message,
+        stage:
+          instance.failureStage,
+
+        instanceId:
+          instance.id,
+
+        webglError:
+          instance.lastWebGLError,
+
+        webglErrorName:
+          instance.lastWebGLErrorName
+      }
     );
   }
 
@@ -4734,8 +5719,105 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
     const gl =
       instance.gl;
 
+    const vertex =
+      compileShader(
+        gl,
+        gl.VERTEX_SHADER,
+        vertexShaderSource
+      );
+
+    const fragment =
+      compileShader(
+        gl,
+        gl.FRAGMENT_SHADER,
+        fragmentShaderSource
+      );
+
+    recordInstanceCheckpoint(
+      instance,
+      CHECKPOINT.SHADERS_COMPILED,
+      {
+        vertex:
+          true,
+
+        fragment:
+          true
+      }
+    );
+
+    const program =
+      gl.createProgram();
+
+    invariant(
+      program,
+      "PROGRAM_CREATION_FAILURE"
+    );
+
+    gl.attachShader(
+      program,
+      vertex
+    );
+
+    gl.attachShader(
+      program,
+      fragment
+    );
+
+    gl.linkProgram(
+      program
+    );
+
+    gl.deleteShader(
+      vertex
+    );
+
+    gl.deleteShader(
+      fragment
+    );
+
+    if (
+      !gl.getProgramParameter(
+        program,
+        gl.LINK_STATUS
+      )
+    ) {
+      const info =
+        gl.getProgramInfoLog(
+          program
+        ) ||
+        "PROGRAM_LINK_FAILURE";
+
+      gl.deleteProgram(
+        program
+      );
+
+      const error =
+        new Error(info);
+
+      error.code =
+        "PROGRAM_LINK_FAILURE";
+
+      error.details =
+        {
+          infoLog:
+            String(info)
+              .slice(0, 1024)
+        };
+
+      throw error;
+    }
+
     instance.program =
-      createProgram(gl);
+      program;
+
+    recordInstanceCheckpoint(
+      instance,
+      CHECKPOINT.PROGRAM_LINKED,
+      {
+        linked:
+          true
+      }
+    );
 
     instance.attribs =
       Object.freeze({
@@ -4965,6 +6047,16 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
   function initializeGL(
     instance
   ) {
+    recordInstanceCheckpoint(
+      instance,
+      CHECKPOINT
+        .WEBGL_CONTEXT_REQUESTED,
+      {
+        contextType:
+          "webgl"
+      }
+    );
+
     const gl =
       getGL(
         instance.canvas
@@ -4977,6 +6069,19 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
 
     instance.gl =
       gl;
+
+    instance.contextCreated =
+      true;
+
+    recordInstanceCheckpoint(
+      instance,
+      CHECKPOINT
+        .WEBGL_CONTEXT_CREATED,
+      {
+        contextType:
+          "webgl"
+      }
+    );
 
     gl.enable(
       gl.DEPTH_TEST
@@ -5008,13 +6113,29 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
         instance
       );
 
+    instance.resourcesCreated =
+      true;
+
+    recordInstanceCheckpoint(
+      instance,
+      CHECKPOINT
+        .GPU_RESOURCES_CREATED,
+      {
+        meshCount:
+          instance.gpuMeshes
+            .length
+      }
+    );
+
     const onContextLost =
       event => {
         event.preventDefault();
 
         safeEmitInstanceFailure(
           instance,
-          "WEBGL_CONTEXT_LOST"
+          "WEBGL_CONTEXT_LOST",
+          null,
+          FAILURE_STAGE.CONTEXT_LOSS
         );
       };
 
@@ -5022,7 +6143,9 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
       () => {
         safeEmitInstanceFailure(
           instance,
-          "WEBGL_CONTEXT_RESTORED_RELOAD_REQUIRED"
+          "WEBGL_CONTEXT_RESTORED_RELOAD_REQUIRED",
+          null,
+          FAILURE_STAGE.CONTEXT_LOSS
         );
       };
 
@@ -5394,6 +6517,31 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
     bindSemanticVisualFeedback(
       instance
     );
+
+    instance.subscriptionsRegistered =
+      true;
+
+    recordInstanceCheckpoint(
+      instance,
+      CHECKPOINT
+        .SUBSCRIPTIONS_REGISTERED,
+      {
+        presentationSubscription:
+          Boolean(
+            context
+              .subscribePresentationState
+          ),
+
+        reducedMotionSubscription:
+          Boolean(
+            context
+              .subscribeReducedMotion
+          ),
+
+        semanticVisualFeedback:
+          true
+      }
+    );
   }
 
   function unbindSubscriptions(
@@ -5514,6 +6662,9 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
     instance.running =
       false;
 
+    instance.stopped =
+      true;
+
     if (
       instance.raf
     ) {
@@ -5571,6 +6722,26 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
 
     releaseMountOwnership(
       instance
+    );
+
+    recordInstanceCheckpoint(
+      instance,
+      CHECKPOINT
+        .INSTANCE_DESTROYED,
+      {
+        rendererStatus:
+          RENDERER_STATUS
+            .DISPOSED,
+
+        mountOwnershipReleased:
+          true,
+
+        canvasRemoved:
+          true,
+
+        fallbackRestored:
+          true
+      }
     );
 
     publishReceipt({
@@ -6067,6 +7238,16 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
       return false;
     }
 
+    recordInstanceCheckpoint(
+      instance,
+      CHECKPOINT
+        .FIRST_FRAME_COMMIT_ENTERED,
+      {
+        rendererStatus:
+          instance.rendererStatus
+      }
+    );
+
     instance.firstEnhancedFrameCompleted =
       true;
 
@@ -6078,6 +7259,54 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
     applyPresentationVisibility(
       instance
     );
+
+    recordInstanceCheckpoint(
+      instance,
+      CHECKPOINT
+        .FIRST_FRAME_COMMITTED,
+      {
+        rendererStatus:
+          instance.rendererStatus
+      }
+    );
+
+    if (
+      instance.canvasPromoted
+    ) {
+      recordInstanceCheckpoint(
+        instance,
+        CHECKPOINT.CANVAS_PROMOTED,
+        {
+          canvasVisible:
+            instance.canvas.dataset
+              .upstreamCompassCanvasVisible ===
+              "true"
+        }
+      );
+    }
+
+    if (
+      instance.fallbackWithdrawn
+    ) {
+      recordInstanceCheckpoint(
+        instance,
+        CHECKPOINT
+          .FALLBACK_WITHDRAWN,
+        {
+          hidden:
+            instance.context
+              .fallback
+              .hidden ===
+              true,
+
+          display:
+            instance.context
+              .fallback
+              .style
+              .display
+        }
+      );
+    }
 
     return true;
   }
@@ -6091,6 +7320,27 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
       instance.destroyed
     ) {
       return;
+    }
+
+    const firstFrame =
+      !instance.firstFrameEntered;
+
+    if (firstFrame) {
+      instance.firstFrameEntered =
+        true;
+
+      recordInstanceCheckpoint(
+        instance,
+        CHECKPOINT
+          .FIRST_FRAME_ENTERED,
+        {
+          timeMs:
+            finiteNumber(
+              timeMs,
+              0
+            )
+        }
+      );
     }
 
     const seconds =
@@ -6112,115 +7362,303 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
     instance.lastTime =
       seconds;
 
-    updateExternalSnapshots(
-      instance
-    );
-
-    resize(
-      instance
-    );
-
-    updateTransforms(
-      instance,
-      deltaSeconds
-    );
-
-    applyPresentationVisibility(
-      instance
-    );
-
-    const aspect =
-      instance.width /
-      Math.max(
-        1,
-        instance.height
+    try {
+      updateExternalSnapshots(
+        instance
       );
 
-    instance.view =
-      lookAt4(
-        [
-          0,
-          0,
-          QUALITY.cameraDistance
-        ],
-        [0, 0, 0],
-        [0, 1, 0]
+      if (firstFrame) {
+        recordInstanceCheckpoint(
+          instance,
+          CHECKPOINT
+            .PRESENTATION_SNAPSHOT_APPLIED,
+          {
+            visible:
+              instance.presentationState
+                .visible,
+
+            interactionEnabled:
+              instance.presentationState
+                .interactionEnabled,
+
+            held:
+              instance.presentationState
+                .held,
+
+            reducedMotion:
+              instance.reducedMotion,
+
+            rendererFailure:
+              instance.presentationState
+                .rendererFailure
+          }
+        );
+      }
+    } catch (error) {
+      safeEmitInstanceFailure(
+        instance,
+        errorCodeFrom(
+          error,
+          "PRESENTATION_STATE_FAILURE"
+        ),
+        error &&
+        error.details
+          ? error.details
+          : null,
+        FAILURE_STAGE
+          .FIRST_FRAME_PRESENTATION,
+        error
       );
 
-    instance.projection =
-      perspective4(
-        aspect <
-          QUALITY.mobileAspectThreshold
-          ? QUALITY
-              .mobileFieldOfViewRadians
-          : QUALITY
-              .defaultFieldOfViewRadians,
+      return;
+    }
 
-        aspect,
-        0.1,
-        40
+    try {
+      resize(
+        instance
       );
+
+      if (firstFrame) {
+        recordInstanceCheckpoint(
+          instance,
+          CHECKPOINT.FRAME_RESIZED,
+          {
+            cssWidth:
+              instance.cssWidth,
+
+            cssHeight:
+              instance.cssHeight,
+
+            width:
+              instance.width,
+
+            height:
+              instance.height,
+
+            pixelRatio:
+              instance.pixelRatio
+          }
+        );
+      }
+    } catch (error) {
+      safeEmitInstanceFailure(
+        instance,
+        errorCodeFrom(
+          error,
+          "FIRST_FRAME_RESIZE_FAILURE"
+        ),
+        error &&
+        error.details
+          ? error.details
+          : null,
+        FAILURE_STAGE
+          .FIRST_FRAME_RESIZE,
+        error
+      );
+
+      return;
+    }
+
+    try {
+      updateTransforms(
+        instance,
+        deltaSeconds
+      );
+
+      applyPresentationVisibility(
+        instance
+      );
+
+      const aspect =
+        instance.width /
+        Math.max(
+          1,
+          instance.height
+        );
+
+      instance.view =
+        lookAt4(
+          [
+            0,
+            0,
+            QUALITY.cameraDistance
+          ],
+          [0, 0, 0],
+          [0, 1, 0]
+        );
+
+      instance.projection =
+        perspective4(
+          aspect <
+            QUALITY.mobileAspectThreshold
+            ? QUALITY
+                .mobileFieldOfViewRadians
+            : QUALITY
+                .defaultFieldOfViewRadians,
+
+          aspect,
+          0.1,
+          40
+        );
+    } catch (error) {
+      safeEmitInstanceFailure(
+        instance,
+        errorCodeFrom(
+          error,
+          "FIRST_FRAME_TRANSFORM_FAILURE"
+        ),
+        error &&
+        error.details
+          ? error.details
+          : null,
+        FAILURE_STAGE
+          .FIRST_FRAME_TRANSFORM,
+        error
+      );
+
+      return;
+    }
 
     const modelMatrix =
       currentModelMatrix(
         instance
       );
 
-    updateProjectedBounds(
-      instance,
-      modelMatrix
-    );
+    try {
+      updateProjectedBounds(
+        instance,
+        modelMatrix
+      );
 
-    const gl =
-      instance.gl;
+      if (firstFrame) {
+        recordInstanceCheckpoint(
+          instance,
+          CHECKPOINT
+            .PROJECTED_BOUNDS_INITIALIZED,
+          {
+            revision:
+              instance
+                .projectedBoundsRevision,
 
-    gl.clearColor(
-      0,
-      0,
-      0,
-      0
-    );
-
-    gl.clear(
-      gl.COLOR_BUFFER_BIT |
-      gl.DEPTH_BUFFER_BIT
-    );
-
-    if (
-      !instance.presentationState
-        .visible ||
-      instance.presentationState
-        .rendererFailure ||
-      instance.renderFailureEmitted
-    ) {
-      instance.raf =
-        requestAnimationFrame(
-          nextTime =>
-            renderFrame(
-              instance,
-              nextTime
-            )
+            status:
+              instance.projectedBounds
+                ? instance
+                    .projectedBounds
+                    .status
+                : ""
+          }
         );
+      }
+    } catch (error) {
+      safeEmitInstanceFailure(
+        instance,
+        errorCodeFrom(
+          error,
+          "FIRST_FRAME_BOUNDS_FAILURE"
+        ),
+        error &&
+        error.details
+          ? error.details
+          : null,
+        FAILURE_STAGE
+          .FIRST_FRAME_BOUNDS,
+        error
+      );
 
       return;
     }
 
-    gl.useProgram(
-      instance.program
-    );
+    const gl =
+      instance.gl;
 
-    if (
-      instance.cssWidth >
-      QUALITY.bloomDisableWidthPx
-    ) {
-      gl.depthMask(
-        false
+    try {
+      gl.clearColor(
+        0,
+        0,
+        0,
+        0
       );
 
-      gl.blendFunc(
-        gl.SRC_ALPHA,
-        gl.ONE
+      gl.clear(
+        gl.COLOR_BUFFER_BIT |
+        gl.DEPTH_BUFFER_BIT
       );
+
+      if (
+        !instance.presentationState
+          .visible ||
+        instance.presentationState
+          .rendererFailure ||
+        instance.renderFailureEmitted
+      ) {
+        instance.raf =
+          requestAnimationFrame(
+            nextTime =>
+              renderFrame(
+                instance,
+                nextTime
+              )
+          );
+
+        return;
+      }
+
+      if (firstFrame) {
+        recordInstanceCheckpoint(
+          instance,
+          CHECKPOINT
+            .DRAW_PHASE_ENTERED,
+          {
+            meshCount:
+              instance.gpuMeshes
+                .length,
+
+            haloPassEnabled:
+              instance.cssWidth >
+              QUALITY
+                .bloomDisableWidthPx
+          }
+        );
+      }
+
+      gl.useProgram(
+        instance.program
+      );
+
+      if (
+        instance.cssWidth >
+        QUALITY.bloomDisableWidthPx
+      ) {
+        gl.depthMask(
+          false
+        );
+
+        gl.blendFunc(
+          gl.SRC_ALPHA,
+          gl.ONE
+        );
+
+        for (
+          const gpuMesh
+          of instance.gpuMeshes
+        ) {
+          drawGpuMesh(
+            instance,
+            gpuMesh,
+            modelMatrix,
+            true
+          );
+        }
+
+        gl.depthMask(
+          true
+        );
+
+        gl.blendFunc(
+          gl.SRC_ALPHA,
+          gl.ONE_MINUS_SRC_ALPHA
+        );
+      }
 
       for (
         const gpuMesh
@@ -6230,34 +7668,80 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
           instance,
           gpuMesh,
           modelMatrix,
-          true
+          false
         );
       }
 
-      gl.depthMask(
-        true
-      );
+      instance.drawPhaseCompleted =
+        true;
 
-      gl.blendFunc(
-        gl.SRC_ALPHA,
-        gl.ONE_MINUS_SRC_ALPHA
-      );
-    }
-
-    for (
-      const gpuMesh
-      of instance.gpuMeshes
-    ) {
-      drawGpuMesh(
+      if (firstFrame) {
+        recordInstanceCheckpoint(
+          instance,
+          CHECKPOINT
+            .DRAW_PHASE_COMPLETED,
+          {
+            meshCount:
+              instance.gpuMeshes
+                .length
+          }
+        );
+      }
+    } catch (error) {
+      safeEmitInstanceFailure(
         instance,
-        gpuMesh,
-        modelMatrix,
-        false
+        errorCodeFrom(
+          error,
+          "FIRST_FRAME_DRAW_FAILURE"
+        ),
+        error &&
+        error.details
+          ? error.details
+          : null,
+        FAILURE_STAGE
+          .FIRST_FRAME_DRAW,
+        error
       );
+
+      return;
     }
 
     const error =
       gl.getError();
+
+    const errorName =
+      webGLErrorName(
+        gl,
+        error
+      );
+
+    instance.lastWebGLError =
+      error;
+
+    instance.lastWebGLErrorName =
+      errorName;
+
+    GLOBAL_LIFECYCLE.lastWebGLError =
+      error;
+
+    GLOBAL_LIFECYCLE.lastWebGLErrorName =
+      errorName;
+
+    if (firstFrame) {
+      recordInstanceCheckpoint(
+        instance,
+        CHECKPOINT
+          .WEBGL_ERROR_CHECKED,
+        {
+          error,
+          errorName
+        }
+      );
+    }
+
+    publishMountState(
+      instance
+    );
 
     if (
       error !==
@@ -6267,8 +7751,11 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
         instance,
         "WEBGL_RENDER_FAILURE",
         {
-          error
-        }
+          error,
+          errorName
+        },
+        FAILURE_STAGE
+          .FIRST_FRAME_WEBGL_ERROR_GATE
       );
 
       return;
@@ -6293,7 +7780,28 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
       lastFailure:
         "",
 
+      lastFailureCode:
+        "",
+
+      lastFailureMessage:
+        "",
+
+      lastFailureStage:
+        "",
+
+      lastFailureDetail:
+        null,
+
+      lastWebGLError:
+        instance.lastWebGLError,
+
+      lastWebGLErrorName:
+        instance.lastWebGLErrorName,
+
       lastInstanceId:
+        instance.id,
+
+      lastMountedInstanceId:
         instance.id,
 
       lastRendererStatus:
@@ -6368,8 +7876,20 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
       return true;
     }
 
+    recordInstanceCheckpoint(
+      instance,
+      CHECKPOINT.START_ENTERED,
+      {
+        rendererStatus:
+          instance.rendererStatus
+      }
+    );
+
     instance.running =
       true;
+
+    instance.stopped =
+      false;
 
     instance.lastTime =
       0;
@@ -6395,6 +7915,15 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
           )
       );
 
+    recordInstanceCheckpoint(
+      instance,
+      CHECKPOINT.FRAME_SCHEDULED,
+      {
+        raf:
+          instance.raf
+      }
+    );
+
     return true;
   }
 
@@ -6414,6 +7943,9 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
     instance.running =
       false;
 
+    instance.stopped =
+      true;
+
     if (
       instance.raf
     ) {
@@ -6428,6 +7960,17 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
     setMountRendererStatus(
       instance,
       RENDERER_STATUS.STOPPED
+    );
+
+    recordInstanceCheckpoint(
+      instance,
+      CHECKPOINT
+        .INSTANCE_STOPPED,
+      {
+        rendererStatus:
+          RENDERER_STATUS
+            .STOPPED
+      }
     );
 
     publishReceipt({
@@ -6594,40 +8137,507 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
   function mount(
     pageContext
   ) {
-    const context =
-      normalizeContext(
-        pageContext
-      );
+    let currentStage =
+      FAILURE_STAGE
+        .CONTEXT_NORMALIZATION;
 
-    invariant(
-      !INSTANCE_BY_MOUNT.has(
-        context.mount
-      ),
-      "UPSTREAM_COMPASS_MOUNT_ALREADY_ACTIVE"
+    let context =
+      null;
+
+    let instance =
+      null;
+
+    recordGlobalCheckpoint(
+      CHECKPOINT.MOUNT_ENTERED,
+      {
+        explicitMountProvided:
+          Boolean(
+            pageContext &&
+            pageContext.mount
+          )
+      }
     );
 
-    const instance =
-      createInstance(
-        context
+    try {
+      context =
+        normalizeContext(
+          pageContext
+        );
+
+      recordGlobalCheckpoint(
+        CHECKPOINT
+          .CONTEXT_NORMALIZED,
+        {
+          explicitMount:
+            Boolean(
+              pageContext &&
+              pageContext.mount
+            ),
+
+          semanticControlResolved:
+            true,
+
+          fallbackResolved:
+            true,
+
+          qualityProfileId:
+            context
+              .qualityProfileId
+        }
       );
 
-    try {
-      replaceFallbackContent(
+      invariant(
+        !INSTANCE_BY_MOUNT.has(
+          context.mount
+        ),
+        "UPSTREAM_COMPASS_MOUNT_ALREADY_ACTIVE"
+      );
+
+      currentStage =
+        FAILURE_STAGE
+          .GEOMETRY_RESOLUTION;
+
+      const geometry =
+        resolveGeometryAuthority();
+
+      recordGlobalCheckpoint(
+        CHECKPOINT
+          .GEOMETRY_AUTHORITY_RESOLVED,
+        {
+          moduleId:
+            geometry.moduleId,
+
+          moduleVersion:
+            geometry.moduleVersion
+        }
+      );
+
+      currentStage =
+        FAILURE_STAGE
+          .GEOMETRY_BUILD;
+
+      const model =
+        geometry.buildModel({
+          qualityProfileId:
+            context.qualityProfileId
+        });
+
+      recordGlobalCheckpoint(
+        CHECKPOINT
+          .GEOMETRY_MODEL_BUILT,
+        {
+          modelId:
+            model &&
+            model.modelId
+              ? model.modelId
+              : "",
+
+          qualityProfileId:
+            context
+              .qualityProfileId
+        }
+      );
+
+      currentStage =
+        FAILURE_STAGE
+          .GEOMETRY_VALIDATION;
+
+      validateGeometryModel(
+        geometry,
+        model
+      );
+
+      recordGlobalCheckpoint(
+        CHECKPOINT
+          .GEOMETRY_MODEL_VALIDATED,
+        {
+          modelId:
+            model.modelId,
+
+          meshCount:
+            Array.isArray(
+              model.meshes
+            )
+              ? model.meshes
+                  .length
+              : 0
+        }
+      );
+
+      const fixedCenterTransform =
+        normalizeLocalTransform(
+          model.presentationTransforms
+            .fixedCenter
+        );
+
+      const presentationState =
+        readInitialPresentation(
+          context
+        );
+
+      const reducedMotion =
+        readInitialReducedMotion(
+          context,
+          presentationState
+        );
+
+      const instanceId =
+        `home-compass-instance-${++instanceCounter}`;
+
+      currentStage =
+        FAILURE_STAGE
+          .CANVAS_CREATION;
+
+      const canvasRecord =
+        createCanvas(
+          context.mount
+        );
+
+      instance = {
+        id:
+          instanceId,
+
+        geometry,
+
+        model,
+
+        context,
+
+        canvas:
+          canvasRecord.canvas,
+
+        canvasCreated:
+          canvasRecord.created,
+
+        canvasInserted:
+          canvasRecord.inserted,
+
+        gl:
+          null,
+
+        program:
+          null,
+
+        attribs:
+          null,
+
+        uniforms:
+          null,
+
+        gpuMeshes:
+          [],
+
+        running:
+          false,
+
+        stopped:
+          false,
+
+        raf:
+          0,
+
+        lastTime:
+          0,
+
+        cssWidth:
+          1,
+
+        cssHeight:
+          1,
+
+        width:
+          1,
+
+        height:
+          1,
+
+        pixelRatio:
+          1,
+
+        presentationState,
+
+        reducedMotion,
+
+        localPosition:
+          fixedCenterTransform
+            .position
+            .slice(),
+
+        targetLocalPosition:
+          fixedCenterTransform
+            .position
+            .slice(),
+
+        localQuaternion:
+          fixedCenterTransform
+            .quaternion
+            .slice(),
+
+        targetLocalQuaternion:
+          fixedCenterTransform
+            .quaternion
+            .slice(),
+
+        localScale:
+          fixedCenterTransform
+            .scale
+            .slice(),
+
+        targetLocalScale:
+          fixedCenterTransform
+            .scale
+            .slice(),
+
+        semanticHoverActive:
+          false,
+
+        semanticFocusActive:
+          false,
+
+        semanticPressed:
+          false,
+
+        hoverActive:
+          presentationState
+            .hoverActive,
+
+        focusActive:
+          presentationState
+            .focusActive,
+
+        pressed:
+          presentationState
+            .pressed,
+
+        feedbackScale:
+          1,
+
+        targetFeedbackScale:
+          1,
+
+        currentOpacity:
+          presentationState
+            .visible
+            ? 1
+            : 0,
+
+        targetOpacity:
+          presentationState
+            .visible
+            ? 1
+            : 0,
+
+        currentBrightness:
+          1,
+
+        targetBrightness:
+          1,
+
+        view:
+          identity4(),
+
+        projection:
+          identity4(),
+
+        projectedEnvelopeSamples:
+          buildProjectedEnvelopeSamples(
+            model
+          ),
+
+        projectedBoundsRevision:
+          0,
+
+        projectedBounds:
+          null,
+
+        projectedBoundsAvailable:
+          false,
+
+        fallbackSurface:
+          null,
+
+        destroyed:
+          false,
+
+        unsubscribers:
+          [],
+
+        semanticListeners:
+          [],
+
+        renderFailureEmitted:
+          false,
+
+        lastFailure:
+          "",
+
+        failureCode:
+          "",
+
+        failureMessage:
+          "",
+
+        failureStage:
+          "",
+
+        failureDetail:
+          null,
+
+        contextCreated:
+          false,
+
+        geometryAccepted:
+          true,
+
+        resourcesCreated:
+          false,
+
+        subscriptionsRegistered:
+          false,
+
+        firstFrameEntered:
+          false,
+
+        drawPhaseCompleted:
+          false,
+
+        lastWebGLError:
+          0,
+
+        lastWebGLErrorName:
+          "NO_ERROR",
+
+        firstEnhancedFrameCompleted:
+          false,
+
+        canvasPromoted:
+          false,
+
+        fallbackWithdrawn:
+          false,
+
+        rendererStatus:
+          RENDERER_STATUS
+            .INITIALIZING,
+
+        lifecycleSequenceNumber:
+          0,
+
+        lifecycleHistory:
+          [],
+
+        lastLifecycleCheckpoint:
+          ""
+      };
+
+      recordInstanceCheckpoint(
+        instance,
+        CHECKPOINT.CANVAS_CREATED,
+        {
+          created:
+            instance.canvasCreated,
+
+          reused:
+            !instance.canvasCreated
+        }
+      );
+
+      recordInstanceCheckpoint(
+        instance,
+        CHECKPOINT.CANVAS_INSERTED,
+        {
+          inserted:
+            instance.canvasInserted,
+
+          parentIsMount:
+            instance.canvas
+              .parentElement ===
+              context.mount
+        }
+      );
+
+      recordInstanceCheckpoint(
+        instance,
+        CHECKPOINT
+          .GEOMETRY_AUTHORITY_RESOLVED,
+        {
+          moduleId:
+            geometry.moduleId,
+
+          moduleVersion:
+            geometry.moduleVersion
+        }
+      );
+
+      recordInstanceCheckpoint(
+        instance,
+        CHECKPOINT
+          .GEOMETRY_MODEL_BUILT,
+        {
+          modelId:
+            model.modelId,
+
+          qualityProfileId:
+            context
+              .qualityProfileId
+        }
+      );
+
+      recordInstanceCheckpoint(
+        instance,
+        CHECKPOINT
+          .GEOMETRY_MODEL_VALIDATED,
+        {
+          geometryAccepted:
+            true,
+
+          meshCount:
+            model.meshes.length
+        }
+      );
+
+      synchronizeVisualTargets(
         instance
       );
 
+      if (
+        reducedMotion
+      ) {
+        instance.feedbackScale =
+          instance.targetFeedbackScale;
+
+        instance.currentOpacity =
+          instance.targetOpacity;
+
+        instance.currentBrightness =
+          instance.targetBrightness;
+      }
+
       setMountRendererStatus(
         instance,
-        RENDERER_STATUS.INITIALIZING
+        RENDERER_STATUS
+          .INITIALIZING
       );
 
       applyPresentationVisibility(
         instance
       );
 
+      replaceFallbackContent(
+        instance
+      );
+
+      currentStage =
+        FAILURE_STAGE
+          .WEBGL_CONTEXT_CREATION;
+
       initializeGL(
         instance
       );
+
+      currentStage =
+        FAILURE_STAGE
+          .SUBSCRIPTION_SETUP;
 
       subscribeContextSignals(
         instance
@@ -6643,11 +8653,30 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
         instance
       );
 
+      recordInstanceCheckpoint(
+        instance,
+        CHECKPOINT
+          .INSTANCE_REGISTERED,
+        {
+          mountedInstanceCount:
+            INSTANCES.size,
+
+          mountExclusivelyOwned:
+            INSTANCE_BY_MOUNT.get(
+              context.mount
+            ) ===
+            instance
+        }
+      );
+
       publishInvalidProjectedBounds(
         instance,
         PROJECTED_BOUNDS_STATUS
           .INITIALIZING
       );
+
+      currentStage =
+        FAILURE_STAGE.START;
 
       start(
         instance.id
@@ -6659,6 +8688,21 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
 
         lastFailure:
           "",
+
+        lastFailureCode:
+          "",
+
+        lastFailureMessage:
+          "",
+
+        lastFailureStage:
+          "",
+
+        lastFailureDetail:
+          null,
+
+        lastMountedInstanceId:
+          instance.id,
 
         lastInstanceId:
           instance.id,
@@ -6766,46 +8810,104 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
           )
       });
     } catch (error) {
-      INSTANCES.delete(
-        instance.id
-      );
+      const code =
+        errorCodeFrom(
+          error,
+          "MOUNT_INITIALIZATION_FAILURE"
+        );
 
-      releaseMountOwnership(
-        instance
-      );
+      const message =
+        errorMessageFrom(
+          error,
+          code
+        );
 
-      unbindSubscriptions(
-        instance
-      );
-
-      destroyGpuResources(
-        instance
-      );
-
-      if (
-        instance.canvas &&
-        instance.canvas.parentNode
-      ) {
-        instance.canvas
-          .parentNode
-          .removeChild(
-            instance.canvas
-          );
-      }
-
-      safeEmitInstanceFailure(
-        instance,
+      const details =
         error &&
-        (
-          error.code ||
-          error.message
-        )
-          ? String(
-              error.code ||
-              error.message
+        error.details
+          ? error.details
+          : null;
+
+      if (instance) {
+        INSTANCES.delete(
+          instance.id
+        );
+
+        releaseMountOwnership(
+          instance
+        );
+
+        unbindSubscriptions(
+          instance
+        );
+
+        destroyGpuResources(
+          instance
+        );
+
+        if (
+          instance.canvas &&
+          instance.canvas.parentNode
+        ) {
+          instance.canvas
+            .parentNode
+            .removeChild(
+              instance.canvas
+            );
+        }
+
+        safeEmitInstanceFailure(
+          instance,
+          code,
+          details,
+          currentStage,
+          error
+        );
+      } else {
+        GLOBAL_LIFECYCLE.lastFailureCode =
+          code;
+
+        GLOBAL_LIFECYCLE.lastFailureMessage =
+          message;
+
+        GLOBAL_LIFECYCLE.lastFailureStage =
+          currentStage;
+
+        GLOBAL_LIFECYCLE.lastFailureDetail =
+          freezeSnapshot(
+            serializableValue(
+              details
             )
-          : "MOUNT_INITIALIZATION_FAILURE"
-      );
+          );
+
+        recordGlobalCheckpoint(
+          CHECKPOINT.FAILURE,
+          {
+            code,
+            message,
+            stage:
+              currentStage,
+
+            detail:
+              details
+          },
+          {
+            failureCode:
+              code
+          }
+        );
+
+        emitFailure(
+          code,
+          details,
+          {
+            code,
+            message,
+            stage:
+              currentStage
+          }
+        );
+      }
 
       throw error;
     }
@@ -6897,6 +8999,9 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
       running:
         instance.running,
 
+      stopped:
+        instance.stopped,
+
       destroyed:
         instance.destroyed,
 
@@ -6913,6 +9018,65 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
 
       rendererFailure:
         instance.lastFailure,
+
+      contextCreated:
+        instance.contextCreated,
+
+      geometryAccepted:
+        instance.geometryAccepted,
+
+      resourcesCreated:
+        instance.resourcesCreated,
+
+      subscriptionsRegistered:
+        instance
+          .subscriptionsRegistered,
+
+      firstFrameEntered:
+        instance.firstFrameEntered,
+
+      drawPhaseCompleted:
+        instance.drawPhaseCompleted,
+
+      canvasPromoted:
+        instance.canvasPromoted,
+
+      fallbackWithdrawn:
+        instance.fallbackWithdrawn,
+
+      lastWebGLError:
+        instance.lastWebGLError,
+
+      lastWebGLErrorName:
+        instance.lastWebGLErrorName,
+
+      failureCode:
+        instance.failureCode,
+
+      failureMessage:
+        instance.failureMessage,
+
+      failureStage:
+        instance.failureStage,
+
+      failureDetail:
+        instance.failureDetail,
+
+      lastLifecycleCheckpoint:
+        instance
+          .lastLifecycleCheckpoint,
+
+      lifecycleSequence:
+        Object.freeze(
+          instance.lifecycleHistory
+            .slice()
+        ),
+
+      projectedBoundsStatus:
+        instance.projectedBounds
+          ? instance.projectedBounds
+              .status
+          : "",
 
       projectedBoundsContract:
         PROJECTED_BOUNDS_CONTRACT,
@@ -7018,9 +9182,7 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
   }
 
   function getReceipt() {
-    return Object.freeze({
-      ...RECEIPT
-    });
+    return publishReceipt();
   }
 
   function disposeAll() {
@@ -7101,9 +9263,15 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
       "PROJECTED_BOUNDS_STATUS_VOCABULARY_INVALID"
     );
 
+    invariant(
+      MAX_LIFECYCLE_RECORDS ===
+        32,
+      "LIFECYCLE_HISTORY_BOUND_INVALID"
+    );
+
     return Object.freeze({
       receiptSchema:
-        "DGB_UPSTREAM_COMPASS_RENDERER_FIXED_CENTER_CONTRACT_VALIDATION_v3",
+        "DGB_UPSTREAM_COMPASS_RENDERER_FIXED_CENTER_CONTRACT_VALIDATION_v4",
 
       moduleId:
         MODULE.id,
@@ -7123,6 +9291,42 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
 
       pass:
         true,
+
+      lifecycleInstrumentation:
+        true,
+
+      maximumLifecycleRecords:
+        MAX_LIFECYCLE_RECORDS,
+
+      lifecycleHistoryBounded:
+        GLOBAL_LIFECYCLE
+          .history
+          .length <=
+        MAX_LIFECYCLE_RECORDS,
+
+      webglNumericErrorRecorded:
+        true,
+
+      webglSymbolicErrorRecorded:
+        true,
+
+      failureStageRecorded:
+        true,
+
+      instanceGetStateExtended:
+        true,
+
+      glErrorPolicyChanged:
+        false,
+
+      failureLatchChanged:
+        false,
+
+      retryAdded:
+        false,
+
+      promotionPolicyChanged:
+        false,
 
       fixedCenter:
         true,
@@ -7292,20 +9496,30 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
         });
       } catch (error) {
         emitFailure(
+          errorCodeFrom(
+            error,
+            "AUTOMATIC_MOUNT_FAILURE"
+          ),
           error &&
-          (
-            error.code ||
-            error.message
-          )
-            ? String(
-                error.code ||
-                error.message
-              )
-            : "AUTOMATIC_MOUNT_FAILURE",
-
+          error.details
+            ? error.details
+            : null,
           {
-            mount:
-              mountElement
+            code:
+              errorCodeFrom(
+                error,
+                "AUTOMATIC_MOUNT_FAILURE"
+              ),
+
+            message:
+              errorMessageFrom(
+                error,
+                "Automatic mount failed."
+              ),
+
+            stage:
+              FAILURE_STAGE
+                .AUTOMATIC_DISCOVERY
           }
         );
       }
@@ -7343,6 +9557,9 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
     status:
       "available",
 
+    installed:
+      true,
+
     lastRendererStatus:
       "",
 
@@ -7353,7 +9570,13 @@ const DGB_UPSTREAM_COMPASS_RENDERER = (() => {
       0,
 
     lastProjectedBoundsStatus:
-      ""
+      "",
+
+    lastWebGLError:
+      0,
+
+    lastWebGLErrorName:
+      "NO_ERROR"
   });
 
   scheduleAutomaticMountDiscovery();
@@ -7427,150 +9650,154 @@ if (
 }
 
 /*
-AUDRALIA_ARCHCOIN_SHARED_HOME_COMPASS_RENDERER_RENEWAL_RESULT_v4
+DGB_UPSTREAM_COMPASS_RENDERER_LIFECYCLE_INSTRUMENTATION_RESULT_v1
 
 Artifact:
 /assets/compass/upstream-compass.renderer.js
 
-Module:
+Previous module:
 DGB_UPSTREAM_COMPASS_RENDERER
 3.1.0-generic-projected-bounds
 
-Controller anchor:
-DGB_ARCHCOIN_CONTROLLER
-6.0.0-controller-foundation-renewal
-
-Geometry anchor:
-DGB_UPSTREAM_COMPASS_GEOMETRY
-3.0.0-fixed-center-independent-sibling
+Renewed module:
+DGB_UPSTREAM_COMPASS_RENDERER
+3.1.1-generic-lifecycle-receipt
 
 Disposition:
-GENERIC_PROJECTED_BOUNDS_ENHANCEMENT_APPLIED
+PHASE_1_GENERIC_LIFECYCLE_INSTRUMENTATION_CONSTRUCTED
 
-Authorized scope:
-NARROW_GENERIC_PROJECTED_BOUNDS_ENHANCEMENT_ONLY
+Existing receipt retained:
+globalThis.DGB_UPSTREAM_COMPASS_RENDERER_RECEIPT
 
-Added generic contract:
-DGB_UPSTREAM_COMPASS_PROJECTED_BOUNDS_v1
+Bounded lifecycle history:
+- global maximum: 32 records
+- per-instance maximum: 32 records
+- oldest records evicted first
+- no DOM nodes, functions, shaders, WebGL contexts, buffers, or cyclic
+  structures are exposed
 
-Added generic event:
-DGB_UPSTREAM_COMPASS_PROJECTED_BOUNDS_CHANGED
+Added lifecycle checkpoints:
+- RENDERER_MOUNT_ENTERED
+- CONTEXT_NORMALIZED
+- GEOMETRY_AUTHORITY_RESOLVED
+- GEOMETRY_MODEL_BUILT
+- GEOMETRY_MODEL_VALIDATED
+- CANVAS_CREATED
+- CANVAS_INSERTED
+- WEBGL_CONTEXT_REQUESTED
+- WEBGL_CONTEXT_CREATED
+- SHADERS_COMPILED
+- PROGRAM_LINKED
+- GPU_RESOURCES_CREATED
+- SUBSCRIPTIONS_REGISTERED
+- INSTANCE_REGISTERED
+- RENDERER_START_ENTERED
+- FRAME_SCHEDULED
+- FIRST_FRAME_ENTERED
+- FRAME_RESIZED
+- PRESENTATION_SNAPSHOT_APPLIED
+- PROJECTED_BOUNDS_INITIALIZED
+- DRAW_PHASE_ENTERED
+- DRAW_PHASE_COMPLETED
+- WEBGL_ERROR_CHECKED
+- FIRST_FRAME_COMMIT_ENTERED
+- FIRST_FRAME_COMMITTED
+- CANVAS_PROMOTED
+- FALLBACK_WITHDRAWN
+- PROJECTED_BOUNDS_AVAILABLE
+- RENDERER_FAILURE
+- INSTANCE_STOPPED
+- INSTANCE_DESTROYED
 
-Added instance-handle surface:
-getProjectedBounds()
+Added global receipt fields:
+- installed
+- lastMountedInstanceId
+- lastFailureCode
+- lastFailureMessage
+- lastFailureStage
+- lastFailureDetail
+- lastWebGLError
+- lastWebGLErrorName
+- lastLifecycleCheckpoint
+- lifecycleSequence
+- receiptRevision
 
-Authoritative geometry source:
-model.visualControlAlignmentEnvelope
+Added per-instance getState fields:
+- stopped
+- contextCreated
+- geometryAccepted
+- resourcesCreated
+- subscriptionsRegistered
+- firstFrameEntered
+- drawPhaseCompleted
+- canvasPromoted
+- fallbackWithdrawn
+- lastWebGLError
+- lastWebGLErrorName
+- failureCode
+- failureMessage
+- failureStage
+- failureDetail
+- projectedBoundsStatus
+- lastLifecycleCheckpoint
+- lifecycleSequence
 
-Projection method:
-GOVERNED_PERIMETER_SAMPLING_WITH_CONTAINMENT_EPSILON
+Added generic mount attributes:
+- data-upstream-compass-renderer-stage
+- data-upstream-compass-webgl-error
 
-Sampling:
-- 32 angular samples per depth plane
-- both governed depth extremes
-- one governed center validation sample
-- 65 total projected samples
-
-Numerical containment epsilon:
-0.25 CSS pixels
-
-Material-change tolerance:
-0.05 CSS pixels
-
-Geometry radius expansion:
-0
-
-Renderer halo expansion for bounds:
-0
-
-Coordinate space:
-viewport-css-pixels
-
-Projected-bounds status vocabulary:
-- initializing
-- available
-- fallback
-- failed
-- disposed
-
-Publication:
-- records are immutable
-- invalid records are zero-valued
-- invalid records participate in the revision sequence
-- unchanged normalized records do not increment revision
-- materially changed records increment revision
-- events originate from the exact active renderer mount
-- events bubble
-- events are not composed
-- stale available geometry is not retained after invalidation
-
-Lifecycle:
-- initialization publishes initializing invalid bounds
-- first successful enhanced promotion publishes available projected bounds
-- presentation invisibility publishes zero-valued geometry without creating
-  a new status literal
-- fallback publishes fallback invalid bounds
-- failure publishes failed invalid bounds
-- disposal publishes disposed invalid bounds before mount teardown
-- stop remains animation-loop suspension and introduces no projected stopped
-  status
+WebGL error naming:
+- NO_ERROR
+- INVALID_ENUM
+- INVALID_VALUE
+- INVALID_OPERATION
+- INVALID_FRAMEBUFFER_OPERATION
+- OUT_OF_MEMORY
+- CONTEXT_LOST_WEBGL
+- UNKNOWN_WEBGL_ERROR_<numericCode>
 
 Preserved:
-- geometry authority
-- geometry version lock
-- model validation
-- mesh data
-- GPU buffers
-- shaders
+- renderer.mount() arguments
+- returned lifecycle-handle methods
+- global public API
+- geometry authority and version
+- fixed-center transform law
+- shader source
 - lighting
+- material system
 - camera
-- quality profiles
-- fixed-center mathematics
-- local interpolation
-- semantic-control visual-feedback law
-- canvas promotion law
-- fallback promotion law
-- reduced-motion behavior
-- controller ownership
-- crystals ownership
-- HTML ownership
-- automatic mount discovery
-- one-active-instance-per-mount enforcement
-- existing renderer failure event
-- existing renderer receipt
-- start
-- stop
-- destroy
-- syncReducedMotion
-- syncPresentationState
-- setHover
-- setFocus
-- setPressed
-- getState
+- GPU mesh construction
+- projected-bounds contract
+- projected-bounds event
+- one-instance-per-mount enforcement
+- automatic discovery
+- explicit unmarked mount support
+- binary canvas promotion
+- static fallback on genuine failure
+- semantic-control sibling ownership
+- canvas pointer-events none
+- host-owned navigation
+- reduced-motion enhanced-frame behavior
 
-Universal boundary:
-- no page-specific selectors
-- no page-specific state names
-- no page-specific route knowledge
-- no page-specific CSS variables
-- no compositor calls
-- no controller calls
-- no semantic-control positioning
-- no semantic-control sizing
-- no navigation logic
+Phase 2 behavior not added:
+- no gl.getError() queue draining
+- no pre-draw/post-draw isolation
+- no renderFailureEmitted reset
+- no retry
+- no forced promotion
+- no fallback-policy change
+- no canvas-visibility-policy change
+- no geometry modification
 
-Showroom awareness:
+Required Showroom HTML cache query:
+/assets/compass/upstream-compass.renderer.js?v=3.1.1-generic-lifecycle-receipt
+
+Runtime execution:
+NOT PERFORMED
+
+Runtime visual success claimed:
 FALSE
 
-Source-level contract validation:
-IMPLEMENTED THROUGH runContractValidation()
-
-Isolated browser/WebGL runtime validation:
-NOT RUN
-
-Production authorization:
-FALSE
-
-Deployment authorization:
-FALSE
+Final classification:
+COMPASS_LIFECYCLE_INSTRUMENTATION_SOURCE_PASS
 */

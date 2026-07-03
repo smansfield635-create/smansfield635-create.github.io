@@ -2,7 +2,36 @@
 /* COMPLETE REPLACEMENT */
 /* GROUP_F_AUDRALIA_PLANETARY_OBJECT_RENEWAL */
 /* SHOWROOM_PLANETARY_FULCRUM_INDEPENDENT_CENTER_PLANET_TNT_v1 */
-/* AUDRALIA_PLANETARY_MODEL_EMITTER_v2 */
+/* AUDRALIA_GEOMETRY_AUTHORITY_MINIATURE_RENDERER_v1 */
+/*
+  Purpose:
+  - Render the Showroom center planet from the canonical Audralia geometry
+    authority instead of invented CSS geography.
+  - Preserve the Showroom center object as the Main Compass return selector.
+  - Keep the planet decorative and non-navigational.
+
+  Source geometry authority:
+  - /assets/audralia/audralia.planet.js
+  - window.DGBAudraliaPlanetGeometry
+  - AUDRALIA_G1_DETERMINISTIC_PLANET_GEOMETRY_AUTHORITY_TNT_v1
+
+  Showroom authority:
+  - This file exposes window.SHOWROOM_PLANET.
+  - The visible planet is decorative.
+  - Click / tap authority remains [data-showroom-compass-control].
+  - Route authority remains the Showroom controller.
+  - The semantic outcome remains Main Compass return selection, not Audralia navigation.
+
+  Does not own:
+  - semantic navigation;
+  - route decisions;
+  - controller state;
+  - compositor state;
+  - crystal geometry or drawing;
+  - pointer or gesture interpretation;
+  - Compass adapter, renderer, or geometry;
+  - Audralia geometry mutation.
+*/
 
 (() => {
   "use strict";
@@ -11,13 +40,19 @@
     "SHOWROOM_PLANETARY_FULCRUM_INDEPENDENT_CENTER_PLANET_TNT_v1";
 
   const MODEL =
-    "AUDRALIA_PLANETARY_MODEL_EMITTER_v2";
+    "AUDRALIA_GEOMETRY_AUTHORITY_MINIATURE_RENDERER_v1";
+
+  const AUDRALIA_GEOMETRY_CONTRACT =
+    "AUDRALIA_G1_DETERMINISTIC_PLANET_GEOMETRY_AUTHORITY_TNT_v1";
 
   const OWNER =
     "/showroom/index.planet.js";
 
   const GLOBAL_NAME =
     "SHOWROOM_PLANET";
+
+  const AUDRALIA_GEOMETRY_GLOBAL =
+    "DGBAudraliaPlanetGeometry";
 
   const EVENTS = Object.freeze({
     ready:
@@ -33,6 +68,32 @@
       "SHOWROOM_PLANET_RECEIPT"
   });
 
+  const STATES = Object.freeze({
+    mounted:
+      "mounted",
+
+    ready:
+      "ready",
+
+    waiting:
+      "waiting-for-audralia-geometry",
+
+    fallback:
+      "fallback",
+
+    paused:
+      "paused",
+
+    failed:
+      "failed",
+
+    unmounted:
+      "unmounted",
+
+    disposed:
+      "disposed"
+  });
+
   const ATTRIBUTES = Object.freeze({
     root:
       "data-showroom-planet-root",
@@ -40,14 +101,14 @@
     model:
       "data-showroom-planet-model",
 
+    sourceContract:
+      "data-showroom-planet-source-contract",
+
     state:
       "data-showroom-planet-state",
 
     reducedMotion:
       "data-showroom-planet-reduced-motion",
-
-    layer:
-      "data-showroom-planet-layer",
 
     decorative:
       "data-showroom-planet-decorative",
@@ -55,17 +116,11 @@
     audralia:
       "data-showroom-planet-audralia",
 
+    layer:
+      "data-showroom-planet-layer",
+
     surfaceRole:
-      "data-showroom-planet-surface-role",
-
-    terrain:
-      "data-showroom-planet-terrain",
-
-    cloud:
-      "data-showroom-planet-cloud",
-
-    landmass:
-      "data-showroom-planet-landmass"
+      "data-showroom-planet-surface-role"
   });
 
   const CLASS_NAMES = Object.freeze({
@@ -84,41 +139,8 @@
     body:
       "showroom-planet-body",
 
-    ocean:
-      "showroom-planet-ocean",
-
-    terrain:
-      "showroom-planet-terrain",
-
-    terrainDeep:
-      "showroom-planet-terrain--deep",
-
-    terrainHigh:
-      "showroom-planet-terrain--high",
-
-    landmass:
-      "showroom-planet-landmass",
-
-    landmassNorth:
-      "showroom-planet-landmass--north",
-
-    landmassEast:
-      "showroom-planet-landmass--east",
-
-    landmassWest:
-      "showroom-planet-landmass--west",
-
-    landmassSouth:
-      "showroom-planet-landmass--south",
-
-    cloud:
-      "showroom-planet-clouds",
-
-    cloudLow:
-      "showroom-planet-clouds--low",
-
-    cloudHigh:
-      "showroom-planet-clouds--high",
+    canvas:
+      "showroom-planet-canvas",
 
     atmosphere:
       "showroom-planet-atmosphere",
@@ -145,35 +167,36 @@
       "showroom-planet-fallback"
   });
 
-  const STATES = Object.freeze({
-    idle:
-      "idle",
-
-    mounted:
-      "mounted",
-
-    ready:
-      "ready",
-
-    paused:
-      "paused",
-
-    failed:
-      "failed",
-
-    unmounted:
-      "unmounted",
-
-    disposed:
-      "disposed"
-  });
-
   const DEFAULTS = Object.freeze({
+    terrainLevel:
+      4,
+
+    oceanLevel:
+      3,
+
+    cloudLevel:
+      3,
+
+    atmosphereLevel:
+      2,
+
+    maximumDevicePixelRatio:
+      2,
+
+    baseCanvasCssPixels:
+      256,
+
+    geometryWaitMs:
+      2600,
+
+    geometryPollMs:
+      80,
+
     rotationDurationMs:
-      52000,
+      64000,
 
     cloudDurationMs:
-      82000,
+      92000,
 
     pulseDurationMs:
       9000,
@@ -185,36 +208,271 @@
       "(prefers-reduced-motion: reduce)"
   });
 
+  const MATERIAL_HINT = Object.freeze({
+    DEEP_OCEAN:
+      0,
+
+    OPEN_OCEAN:
+      1,
+
+    SHELF:
+      2,
+
+    COAST:
+      3,
+
+    BEACH:
+      4,
+
+    LOWLAND:
+      5,
+
+    FOREST:
+      6,
+
+    ARID:
+      7,
+
+    UPLAND:
+      8,
+
+    ROCK:
+      9,
+
+    SNOW:
+      10,
+
+    LAKE:
+      11,
+
+    INLAND_SEA:
+      12
+  });
+
+  const WATER_CLASS = Object.freeze({
+    NONE:
+      0,
+
+    DEEP_OCEAN:
+      1,
+
+    OPEN_OCEAN:
+      2,
+
+    SHELF_WATER:
+      3,
+
+    COASTAL_WATER:
+      4,
+
+    INLAND_SEA:
+      5,
+
+    LAKE:
+      6,
+
+    CHANNEL:
+      7,
+
+    RIVER_PATH:
+      8
+  });
+
+  const COLORS = Object.freeze({
+    space:
+      "rgba(0, 0, 0, 0)",
+
+    deepOcean:
+      [9, 26, 64],
+
+    openOcean:
+      [18, 69, 118],
+
+    shelf:
+      [36, 132, 151],
+
+    coastal:
+      [65, 165, 170],
+
+    inlandSea:
+      [38, 112, 136],
+
+    lake:
+      [54, 146, 168],
+
+    beach:
+      [201, 170, 104],
+
+    coast:
+      [155, 135, 82],
+
+    lowland:
+      [65, 124, 76],
+
+    forest:
+      [35, 96, 70],
+
+    arid:
+      [158, 126, 72],
+
+    upland:
+      [91, 122, 85],
+
+    rock:
+      [116, 111, 112],
+
+    snow:
+      [222, 226, 218],
+
+    cloud:
+      [232, 244, 246],
+
+    atmosphere:
+      [116, 224, 255],
+
+    rim:
+      [152, 238, 255],
+
+    night:
+      [3, 6, 18]
+  });
+
   const state = {
-    target: null,
-    root: null,
-    receiptTarget: null,
+    target:
+      null,
 
-    mounted: false,
-    ready: false,
-    failed: false,
-    disposed: false,
-    paused: false,
+    root:
+      null,
 
-    reducedMotion: false,
-    reducedMotionMedia: null,
-    reducedMotionListener: null,
+    shell:
+      null,
 
-    frameId: 0,
-    animationStartedAt: 0,
-    pauseReason: "",
-    lastReceipt: null,
+    body:
+      null,
+
+    canvas:
+      null,
+
+    context:
+      null,
+
+    fallback:
+      null,
+
+    receiptTarget:
+      null,
+
+    geometryAuthority:
+      null,
+
+    geometryPacket:
+      null,
+
+    terrainMesh:
+      null,
+
+    cloudMesh:
+      null,
+
+    lastGeometryHash:
+      "",
+
+    mounted:
+      false,
+
+    ready:
+      false,
+
+    failed:
+      false,
+
+    disposed:
+      false,
+
+    paused:
+      false,
+
+    fallbackMode:
+      false,
+
+    waitingForGeometry:
+      false,
+
+    reducedMotion:
+      false,
+
+    reducedMotionMedia:
+      null,
+
+    reducedMotionListener:
+      null,
+
+    frameId:
+      0,
+
+    geometryWaitTimer:
+      0,
+
+    animationStartedAt:
+      0,
+
+    lastRenderTurn:
+      NaN,
+
+    lastCanvasSize:
+      0,
+
+    pauseReason:
+      "",
+
+    lastReceipt:
+      null,
 
     counters: {
-      mounts: 0,
-      unmounts: 0,
-      ready: 0,
-      failures: 0,
-      pauses: 0,
-      resumes: 0,
-      disposals: 0,
-      receipts: 0,
-      animationFrames: 0
+      mounts:
+        0,
+
+      unmounts:
+        0,
+
+      ready:
+        0,
+
+      failures:
+        0,
+
+      fallbacks:
+        0,
+
+      pauses:
+        0,
+
+      resumes:
+        0,
+
+      disposals:
+        0,
+
+      receipts:
+        0,
+
+      geometryAttempts:
+        0,
+
+      geometryAccepted:
+        0,
+
+      geometryUnavailable:
+        0,
+
+      renderFrames:
+        0,
+
+      renderSkips:
+        0,
+
+      canvasResizes:
+        0
     }
   };
 
@@ -237,12 +495,58 @@
     );
   }
 
+  function isCanvas(value) {
+    return (
+      typeof HTMLCanvasElement !== "undefined" &&
+      value instanceof HTMLCanvasElement
+    );
+  }
+
+  function clamp(
+    value,
+    minimum,
+    maximum
+  ) {
+    const numeric =
+      Number(value);
+
+    if (!Number.isFinite(numeric)) {
+      return minimum;
+    }
+
+    return Math.max(
+      minimum,
+      Math.min(
+        maximum,
+        numeric
+      )
+    );
+  }
+
+  function safeNumber(
+    value,
+    fallback = 0
+  ) {
+    const numeric =
+      Number(value);
+
+    return Number.isFinite(numeric)
+      ? numeric
+      : fallback;
+  }
+
   function freezePlain(value) {
     if (
       value === null ||
       typeof value !== "object"
     ) {
       return value;
+    }
+
+    if (ArrayBuffer.isView(value)) {
+      return Object.freeze(
+        Array.from(value)
+      );
     }
 
     if (Array.isArray(value)) {
@@ -259,8 +563,10 @@
         entry
       ] of Object.entries(value)
     ) {
-      output[key] =
-        freezePlain(entry);
+      if (typeof entry !== "function") {
+        output[key] =
+          freezePlain(entry);
+      }
     }
 
     return Object.freeze(output);
@@ -283,6 +589,14 @@
       return STATES.paused;
     }
 
+    if (state.fallbackMode) {
+      return STATES.fallback;
+    }
+
+    if (state.waitingForGeometry) {
+      return STATES.waiting;
+    }
+
     if (state.ready) {
       return STATES.ready;
     }
@@ -303,6 +617,15 @@
 
       owner:
         OWNER,
+
+      sourceAuthority:
+        "/assets/audralia/audralia.planet.js",
+
+      sourceGlobal:
+        AUDRALIA_GEOMETRY_GLOBAL,
+
+      sourceContract:
+        AUDRALIA_GEOMETRY_CONTRACT,
 
       event,
 
@@ -327,6 +650,12 @@
       paused:
         state.paused,
 
+      fallbackMode:
+        state.fallbackMode,
+
+      waitingForGeometry:
+        state.waitingForGeometry,
+
       reducedMotion:
         state.reducedMotion,
 
@@ -335,6 +664,34 @@
 
       rootAvailable:
         Boolean(state.root),
+
+      canvasAvailable:
+        Boolean(state.canvas),
+
+      geometryAuthorityAvailable:
+        Boolean(state.geometryAuthority),
+
+      geometryPacketAvailable:
+        Boolean(state.geometryPacket),
+
+      terrainMeshAvailable:
+        Boolean(state.terrainMesh),
+
+      geometryHash:
+        state.lastGeometryHash ||
+        "",
+
+      visualIdentity:
+        "mini-audralia",
+
+      navigationMeaning:
+        "main-compass-return-selection",
+
+      clickAuthority:
+        "[data-showroom-compass-control]",
+
+      semanticActivationOwned:
+        false,
 
       navigationAuthority:
         false,
@@ -366,16 +723,22 @@
       compassGeometryDependency:
         false,
 
-      semanticActivationOwned:
+      audraliaGeometryMutated:
         false,
 
       decorative:
         true,
 
-      audraliaVisualModel:
-        true,
-
       autoMount:
+        false,
+
+      webGL:
+        false,
+
+      generatedImage:
+        false,
+
+      visualPassClaimed:
         false,
 
       counters: {
@@ -457,269 +820,16 @@
     return payload;
   }
 
-  function setRootProperty(
-    name,
-    value
-  ) {
-    if (!state.root) {
-      return;
-    }
-
-    state.root.style.setProperty(
-      name,
-      value
-    );
-  }
-
-  function cancelAnimation() {
-    if (state.frameId) {
-      window.cancelAnimationFrame(
-        state.frameId
-      );
-    }
-
-    state.frameId =
-      0;
-  }
-
-  function applyReducedMotionAttribute() {
-    if (!state.root) {
-      return;
-    }
-
-    state.root.setAttribute(
-      ATTRIBUTES.reducedMotion,
-      state.reducedMotion
-        ? "true"
-        : "false"
-    );
-  }
-
-  function applyStateAttribute() {
-    if (!state.root) {
-      return;
-    }
-
-    state.root.setAttribute(
-      ATTRIBUTES.state,
-      currentStateName()
-    );
-  }
-
-  function animationAllowed() {
-    return Boolean(
-      state.mounted &&
-      state.ready &&
-      !state.disposed &&
-      !state.failed &&
-      !state.paused &&
-      !state.reducedMotion &&
-      state.root
-    );
-  }
-
-  function animationStep(timestamp) {
-    state.frameId =
-      0;
-
-    if (!animationAllowed()) {
-      return;
-    }
-
-    if (!state.animationStartedAt) {
-      state.animationStartedAt =
-        timestamp;
-    }
-
-    const elapsed =
-      timestamp -
-      state.animationStartedAt;
-
-    const bodyTurn =
-      (
-        elapsed %
-        DEFAULTS.rotationDurationMs
-      ) /
-      DEFAULTS.rotationDurationMs;
-
-    const cloudTurn =
-      (
-        elapsed %
-        DEFAULTS.cloudDurationMs
-      ) /
-      DEFAULTS.cloudDurationMs;
-
-    const pulse =
-      (
-        elapsed %
-        DEFAULTS.pulseDurationMs
-      ) /
-      DEFAULTS.pulseDurationMs;
-
-    setRootProperty(
-      "--showroom-planet-turn",
-      `${bodyTurn * 360}deg`
-    );
-
-    setRootProperty(
-      "--showroom-planet-cloud-turn",
-      `${cloudTurn * 360}deg`
-    );
-
-    setRootProperty(
-      "--showroom-planet-pulse",
-      String(pulse)
-    );
-
-    state.counters.animationFrames +=
-      1;
-
-    state.frameId =
-      window.requestAnimationFrame(
-        animationStep
-      );
-  }
-
-  function startAnimation() {
-    cancelAnimation();
-
-    if (!animationAllowed()) {
-      return false;
-    }
-
-    state.animationStartedAt =
-      0;
-
-    state.frameId =
-      window.requestAnimationFrame(
-        animationStep
-      );
-
-    return true;
-  }
-
-  function stopAnimation() {
-    cancelAnimation();
-
-    setRootProperty(
-      "--showroom-planet-turn",
-      "0deg"
-    );
-
-    setRootProperty(
-      "--showroom-planet-cloud-turn",
-      "0deg"
-    );
-
-    setRootProperty(
-      "--showroom-planet-pulse",
-      "0"
-    );
-  }
-
-  function handleReducedMotionChange(event) {
-    const nextValue =
-      Boolean(
-        event &&
-        event.matches
-      );
-
-    setReducedMotion(
-      nextValue,
-      "media-query"
-    );
-  }
-
-  function bindReducedMotion() {
-    if (
-      typeof window.matchMedia !==
-      "function"
-    ) {
-      state.reducedMotion =
-        false;
-
-      return;
-    }
-
-    const media =
-      window.matchMedia(
-        DEFAULTS.reducedMotionQuery
-      );
-
-    state.reducedMotionMedia =
-      media;
-
-    state.reducedMotion =
-      Boolean(media.matches);
-
-    state.reducedMotionListener =
-      handleReducedMotionChange;
-
-    if (
-      typeof media.addEventListener ===
-      "function"
-    ) {
-      media.addEventListener(
-        "change",
-        state.reducedMotionListener
-      );
-    } else if (
-      typeof media.addListener ===
-      "function"
-    ) {
-      media.addListener(
-        state.reducedMotionListener
-      );
-    }
-  }
-
-  function unbindReducedMotion() {
-    const media =
-      state.reducedMotionMedia;
-
-    const listener =
-      state.reducedMotionListener;
-
-    if (
-      media &&
-      listener
-    ) {
-      try {
-        if (
-          typeof media.removeEventListener ===
-          "function"
-        ) {
-          media.removeEventListener(
-            "change",
-            listener
-          );
-        } else if (
-          typeof media.removeListener ===
-            "function"
-        ) {
-          media.removeListener(
-            listener
-          );
-        }
-      } catch {
-        /* Best-effort reduced-motion listener cleanup. */
-      }
-    }
-
-    state.reducedMotionMedia =
-      null;
-
-    state.reducedMotionListener =
-      null;
-  }
-
   function createLayer(
     className,
     layerName,
     options = {}
   ) {
     const element =
-      document.createElement("span");
+      document.createElement(
+        options.tagName ||
+        "span"
+      );
 
     element.className =
       className;
@@ -741,33 +851,29 @@
       );
     }
 
-    if (options.landmass) {
-      element.setAttribute(
-        ATTRIBUTES.landmass,
-        options.landmass
-      );
-    }
-
-    if (options.terrain) {
-      element.setAttribute(
-        ATTRIBUTES.terrain,
-        options.terrain
-      );
-    }
-
-    if (options.cloud) {
-      element.setAttribute(
-        ATTRIBUTES.cloud,
-        options.cloud
-      );
-    }
-
     if (options.text != null) {
       element.textContent =
         String(options.text);
     }
 
     return element;
+  }
+
+  function applyAbsoluteFill(element) {
+    element.style.position =
+      "absolute";
+
+    element.style.inset =
+      "0";
+
+    element.style.width =
+      "100%";
+
+    element.style.height =
+      "100%";
+
+    element.style.pointerEvents =
+      "none";
   }
 
   function createPlanetDom() {
@@ -785,6 +891,11 @@
     root.setAttribute(
       ATTRIBUTES.model,
       MODEL
+    );
+
+    root.setAttribute(
+      ATTRIBUTES.sourceContract,
+      AUDRALIA_GEOMETRY_CONTRACT
     );
 
     root.setAttribute(
@@ -837,19 +948,31 @@
     const glow =
       createLayer(
         CLASS_NAMES.glow,
-        "glow"
+        "glow",
+        {
+          surfaceRole:
+            "decorative-glow"
+        }
       );
 
     const orbitLine =
       createLayer(
         CLASS_NAMES.orbitLine,
-        "orbit-line"
+        "orbit-line",
+        {
+          surfaceRole:
+            "decorative-orbit-line"
+        }
       );
 
     const shell =
       createLayer(
         CLASS_NAMES.shell,
-        "shell"
+        "shell",
+        {
+          surfaceRole:
+            "render-shell"
+        }
       );
 
     const body =
@@ -858,113 +981,59 @@
         "body",
         {
           surfaceRole:
-            "world-body"
+            "audralia-render-body"
         }
       );
 
-    const ocean =
-      createLayer(
-        CLASS_NAMES.ocean,
-        "ocean",
-        {
-          surfaceRole:
-            "ocean"
-        }
-      );
+    const canvas =
+      document.createElement("canvas");
 
-    const terrainDeep =
-      createLayer(
-        `${CLASS_NAMES.terrain} ${CLASS_NAMES.terrainDeep}`,
-        "terrain-deep",
-        {
-          surfaceRole:
-            "terrain",
-          terrain:
-            "deep"
-        }
-      );
+    canvas.className =
+      CLASS_NAMES.canvas;
 
-    const terrainHigh =
-      createLayer(
-        `${CLASS_NAMES.terrain} ${CLASS_NAMES.terrainHigh}`,
-        "terrain-high",
-        {
-          surfaceRole:
-            "terrain",
-          terrain:
-            "high"
-        }
-      );
+    canvas.setAttribute(
+      ATTRIBUTES.layer,
+      "audralia-canvas-renderer"
+    );
 
-    const landNorth =
-      createLayer(
-        `${CLASS_NAMES.landmass} ${CLASS_NAMES.landmassNorth}`,
-        "landmass-north",
-        {
-          surfaceRole:
-            "landmass",
-          landmass:
-            "north"
-        }
-      );
+    canvas.setAttribute(
+      ATTRIBUTES.surfaceRole,
+      "audralia-authority-rendered-surface"
+    );
 
-    const landEast =
-      createLayer(
-        `${CLASS_NAMES.landmass} ${CLASS_NAMES.landmassEast}`,
-        "landmass-east",
-        {
-          surfaceRole:
-            "landmass",
-          landmass:
-            "east"
-        }
-      );
+    canvas.setAttribute(
+      "aria-hidden",
+      "true"
+    );
 
-    const landWest =
-      createLayer(
-        `${CLASS_NAMES.landmass} ${CLASS_NAMES.landmassWest}`,
-        "landmass-west",
-        {
-          surfaceRole:
-            "landmass",
-          landmass:
-            "west"
-        }
-      );
+    canvas.style.display =
+      "block";
 
-    const landSouth =
-      createLayer(
-        `${CLASS_NAMES.landmass} ${CLASS_NAMES.landmassSouth}`,
-        "landmass-south",
-        {
-          surfaceRole:
-            "landmass",
-          landmass:
-            "south"
-        }
-      );
+    canvas.style.width =
+      "100%";
 
-    const cloudLow =
-      createLayer(
-        `${CLASS_NAMES.cloud} ${CLASS_NAMES.cloudLow}`,
-        "clouds-low",
-        {
-          surfaceRole:
-            "clouds",
-          cloud:
-            "low"
-        }
-      );
+    canvas.style.height =
+      "100%";
 
-    const cloudHigh =
+    canvas.style.pointerEvents =
+      "none";
+
+    canvas.style.borderRadius =
+      "50%";
+
+    canvas.style.position =
+      "relative";
+
+    canvas.style.zIndex =
+      "2";
+
+    const atmosphere =
       createLayer(
-        `${CLASS_NAMES.cloud} ${CLASS_NAMES.cloudHigh}`,
-        "clouds-high",
+        CLASS_NAMES.atmosphere,
+        "atmosphere",
         {
           surfaceRole:
-            "clouds",
-          cloud:
-            "high"
+            "css-atmospheric-augmentation"
         }
       );
 
@@ -974,7 +1043,7 @@
         "rim",
         {
           surfaceRole:
-            "atmospheric-rim"
+            "css-atmospheric-rim"
         }
       );
 
@@ -984,7 +1053,7 @@
         "terminator",
         {
           surfaceRole:
-            "terminator"
+            "css-terminator-overlay"
         }
       );
 
@@ -994,7 +1063,7 @@
         "shadow",
         {
           surfaceRole:
-            "shadow-limb"
+            "css-shadow-limb"
         }
       );
 
@@ -1004,7 +1073,7 @@
         "meridian",
         {
           surfaceRole:
-            "meridian"
+            "css-meridian"
         }
       );
 
@@ -1014,7 +1083,7 @@
         "fulcrum",
         {
           surfaceRole:
-            "fulcrum"
+            "css-fulcrum"
         }
       );
 
@@ -1024,17 +1093,7 @@
         "axis",
         {
           surfaceRole:
-            "axis"
-        }
-      );
-
-    const atmosphere =
-      createLayer(
-        CLASS_NAMES.atmosphere,
-        "atmosphere",
-        {
-          surfaceRole:
-            "atmosphere"
+            "css-axis"
         }
       );
 
@@ -1044,46 +1103,24 @@
         "fallback",
         {
           surfaceRole:
-            "fallback",
+            "static-fallback",
           text:
             ""
         }
       );
 
-    body.appendChild(
-      ocean
-    );
+    applyAbsoluteFill(body);
+    applyAbsoluteFill(atmosphere);
+    applyAbsoluteFill(rim);
+    applyAbsoluteFill(terminator);
+    applyAbsoluteFill(shadow);
+    applyAbsoluteFill(meridian);
+    applyAbsoluteFill(fulcrum);
+    applyAbsoluteFill(axis);
+    applyAbsoluteFill(fallback);
 
     body.appendChild(
-      terrainDeep
-    );
-
-    body.appendChild(
-      terrainHigh
-    );
-
-    body.appendChild(
-      landNorth
-    );
-
-    body.appendChild(
-      landEast
-    );
-
-    body.appendChild(
-      landWest
-    );
-
-    body.appendChild(
-      landSouth
-    );
-
-    body.appendChild(
-      cloudLow
-    );
-
-    body.appendChild(
-      cloudHigh
+      canvas
     );
 
     body.appendChild(
@@ -1134,6 +1171,27 @@
       fallback
     );
 
+    state.shell =
+      shell;
+
+    state.body =
+      body;
+
+    state.canvas =
+      canvas;
+
+    state.context =
+      canvas.getContext(
+        "2d",
+        {
+          alpha:
+            true
+        }
+      );
+
+    state.fallback =
+      fallback;
+
     return root;
   }
 
@@ -1147,8 +1205,7 @@
 
     if (
       options &&
-      typeof options.receiptSelector ===
-        "string" &&
+      typeof options.receiptSelector === "string" &&
       options.receiptSelector.trim()
     ) {
       try {
@@ -1187,6 +1244,380 @@
     return null;
   }
 
+  function setRootProperty(
+    name,
+    value
+  ) {
+    if (!state.root) {
+      return;
+    }
+
+    state.root.style.setProperty(
+      name,
+      value
+    );
+  }
+
+  function applyStateAttribute() {
+    if (!state.root) {
+      return;
+    }
+
+    state.root.setAttribute(
+      ATTRIBUTES.state,
+      currentStateName()
+    );
+  }
+
+  function applyReducedMotionAttribute() {
+    if (!state.root) {
+      return;
+    }
+
+    state.root.setAttribute(
+      ATTRIBUTES.reducedMotion,
+      state.reducedMotion
+        ? "true"
+        : "false"
+    );
+  }
+
+  function setFallbackText(text) {
+    if (!state.fallback) {
+      return;
+    }
+
+    state.fallback.textContent =
+      normalize(text);
+  }
+
+  function resolveGeometryAuthority() {
+    const authority =
+      window[AUDRALIA_GEOMETRY_GLOBAL];
+
+    if (
+      !authority ||
+      typeof authority !== "object"
+    ) {
+      return null;
+    }
+
+    if (
+      authority.contract !==
+      AUDRALIA_GEOMETRY_CONTRACT
+    ) {
+      return null;
+    }
+
+    if (
+      typeof authority.createGeometry !==
+        "function"
+    ) {
+      return null;
+    }
+
+    return authority;
+  }
+
+  function acceptGeometryAuthority(authority) {
+    state.geometryAuthority =
+      authority;
+
+    return true;
+  }
+
+  function createGeometryPacket(options = {}) {
+    const authority =
+      state.geometryAuthority ||
+      resolveGeometryAuthority();
+
+    if (!authority) {
+      return null;
+    }
+
+    acceptGeometryAuthority(
+      authority
+    );
+
+    state.counters.geometryAttempts +=
+      1;
+
+    const packet =
+      authority.createGeometry({
+        terrainLevel:
+          clamp(
+            options.terrainLevel,
+            0,
+            6
+          ) ||
+          DEFAULTS.terrainLevel,
+
+        oceanLevel:
+          clamp(
+            options.oceanLevel,
+            0,
+            6
+          ) ||
+          DEFAULTS.oceanLevel,
+
+        cloudLevel:
+          clamp(
+            options.cloudLevel,
+            0,
+            6
+          ) ||
+          DEFAULTS.cloudLevel,
+
+        atmosphereLevel:
+          clamp(
+            options.atmosphereLevel,
+            0,
+            6
+          ) ||
+          DEFAULTS.atmosphereLevel,
+
+        includeHydrology:
+          false,
+
+        deepValidation:
+          false
+      });
+
+    if (
+      !packet ||
+      packet.contract !==
+        AUDRALIA_GEOMETRY_CONTRACT ||
+      !packet.terrain ||
+      !packet.terrain.positions ||
+      !packet.terrain.indices
+    ) {
+      throw new Error(
+        "The Audralia geometry packet is invalid."
+      );
+    }
+
+    state.geometryPacket =
+      packet;
+
+    state.terrainMesh =
+      packet.terrain;
+
+    state.cloudMesh =
+      packet.clouds ||
+      null;
+
+    state.lastGeometryHash =
+      normalize(
+        packet.geometryHash ||
+        packet.terrain.geometryHash ||
+        ""
+      );
+
+    state.counters.geometryAccepted +=
+      1;
+
+    return packet;
+  }
+
+  function clearGeometryWaitTimer() {
+    if (state.geometryWaitTimer) {
+      clearTimeout(
+        state.geometryWaitTimer
+      );
+    }
+
+    state.geometryWaitTimer =
+      0;
+  }
+
+  function waitForGeometryAuthority(
+    startedAt,
+    options
+  ) {
+    if (
+      state.disposed ||
+      !state.mounted ||
+      state.failed
+    ) {
+      return;
+    }
+
+    const authority =
+      resolveGeometryAuthority();
+
+    if (authority) {
+      try {
+        acceptGeometryAuthority(
+          authority
+        );
+
+        createGeometryPacket(
+          options
+        );
+
+        state.waitingForGeometry =
+          false;
+
+        state.fallbackMode =
+          false;
+
+        markReady(
+          "audralia-geometry-authority-available"
+        );
+
+        return;
+      } catch (error) {
+        fail(
+          "audralia-geometry-packet-failed",
+          error
+        );
+
+        return;
+      }
+    }
+
+    const elapsed =
+      performance.now() -
+      startedAt;
+
+    if (
+      elapsed >=
+      DEFAULTS.geometryWaitMs
+    ) {
+      state.counters.geometryUnavailable +=
+        1;
+
+      enterFallbackMode(
+        "audralia-geometry-authority-unavailable"
+      );
+
+      return;
+    }
+
+    state.geometryWaitTimer =
+      setTimeout(
+        () => {
+          waitForGeometryAuthority(
+            startedAt,
+            options
+          );
+        },
+        DEFAULTS.geometryPollMs
+      );
+  }
+
+  function initializeGeometry(options = {}) {
+    const authority =
+      resolveGeometryAuthority();
+
+    if (authority) {
+      acceptGeometryAuthority(
+        authority
+      );
+
+      createGeometryPacket(
+        options
+      );
+
+      return true;
+    }
+
+    state.waitingForGeometry =
+      true;
+
+    applyStateAttribute();
+
+    publishReceipt(
+      "waiting-for-audralia-geometry-authority",
+      {
+        nonterminal:
+          true,
+
+        requiredScript:
+          "/assets/audralia/audralia.planet.js",
+
+        requiredGlobal:
+          AUDRALIA_GEOMETRY_GLOBAL,
+
+        requiredContract:
+          AUDRALIA_GEOMETRY_CONTRACT
+      }
+    );
+
+    waitForGeometryAuthority(
+      performance.now(),
+      options
+    );
+
+    return false;
+  }
+
+  function enterFallbackMode(reason) {
+    state.waitingForGeometry =
+      false;
+
+    state.fallbackMode =
+      true;
+
+    state.ready =
+      true;
+
+    state.failed =
+      false;
+
+    state.counters.fallbacks +=
+      1;
+
+    setFallbackText(
+      "Audralia"
+    );
+
+    applyStateAttribute();
+    applyReducedMotionAttribute();
+
+    renderFallbackDisk();
+
+    publishReceipt(
+      "fallback",
+      {
+        reason:
+          normalize(reason) ||
+          "fallback",
+
+        sourceGeometryUsed:
+          false,
+
+        audraliaGeometryAuthorityRequired:
+          true,
+
+        semanticActivation:
+          "none",
+
+        clickAuthority:
+          "[data-showroom-compass-control]",
+
+        navigationMeaning:
+          "main-compass-return-selection"
+      }
+    );
+
+    dispatch(
+      EVENTS.ready,
+      {
+        reason:
+          "fallback",
+
+        fallback:
+          true,
+
+        sourceGeometryUsed:
+          false
+      }
+    );
+
+    return true;
+  }
+
   function fail(
     reason,
     error = null
@@ -1200,7 +1631,11 @@
     state.paused =
       false;
 
+    state.waitingForGeometry =
+      false;
+
     stopAnimation();
+
     applyStateAttribute();
 
     state.counters.failures +=
@@ -1248,6 +1683,1252 @@
     return false;
   }
 
+  function bindReducedMotion() {
+    if (
+      typeof window.matchMedia !==
+      "function"
+    ) {
+      state.reducedMotion =
+        false;
+
+      return;
+    }
+
+    const media =
+      window.matchMedia(
+        DEFAULTS.reducedMotionQuery
+      );
+
+    state.reducedMotionMedia =
+      media;
+
+    state.reducedMotion =
+      Boolean(media.matches);
+
+    state.reducedMotionListener =
+      event => {
+        setReducedMotion(
+          Boolean(
+            event &&
+            event.matches
+          ),
+          "media-query"
+        );
+      };
+
+    if (
+      typeof media.addEventListener ===
+      "function"
+    ) {
+      media.addEventListener(
+        "change",
+        state.reducedMotionListener
+      );
+    } else if (
+      typeof media.addListener ===
+      "function"
+    ) {
+      media.addListener(
+        state.reducedMotionListener
+      );
+    }
+  }
+
+  function unbindReducedMotion() {
+    const media =
+      state.reducedMotionMedia;
+
+    const listener =
+      state.reducedMotionListener;
+
+    if (
+      media &&
+      listener
+    ) {
+      try {
+        if (
+          typeof media.removeEventListener ===
+          "function"
+        ) {
+          media.removeEventListener(
+            "change",
+            listener
+          );
+        } else if (
+          typeof media.removeListener ===
+            "function"
+        ) {
+          media.removeListener(
+            listener
+          );
+        }
+      } catch {
+        /* Best-effort listener cleanup. */
+      }
+    }
+
+    state.reducedMotionMedia =
+      null;
+
+    state.reducedMotionListener =
+      null;
+  }
+
+  function ensureCanvasSize() {
+    if (
+      !state.canvas ||
+      !state.context
+    ) {
+      return false;
+    }
+
+    const rect =
+      state.canvas.getBoundingClientRect();
+
+    const cssSize =
+      Math.max(
+        96,
+        Math.round(
+          Math.max(
+            rect.width,
+            rect.height,
+            DEFAULTS.baseCanvasCssPixels
+          )
+        )
+      );
+
+    const devicePixelRatio =
+      clamp(
+        window.devicePixelRatio || 1,
+        1,
+        DEFAULTS.maximumDevicePixelRatio
+      );
+
+    const pixelSize =
+      Math.max(
+        96,
+        Math.round(
+          cssSize *
+          devicePixelRatio
+        )
+      );
+
+    if (
+      state.canvas.width !== pixelSize ||
+      state.canvas.height !== pixelSize
+    ) {
+      state.canvas.width =
+        pixelSize;
+
+      state.canvas.height =
+        pixelSize;
+
+      state.lastCanvasSize =
+        pixelSize;
+
+      state.counters.canvasResizes +=
+        1;
+
+      return true;
+    }
+
+    return false;
+  }
+
+  function clearCanvas() {
+    if (
+      !state.context ||
+      !state.canvas
+    ) {
+      return;
+    }
+
+    state.context.clearRect(
+      0,
+      0,
+      state.canvas.width,
+      state.canvas.height
+    );
+  }
+
+  function colorToCss(
+    color,
+    alpha = 1
+  ) {
+    return `rgba(${Math.round(color[0])}, ${Math.round(color[1])}, ${Math.round(color[2])}, ${clamp(alpha, 0, 1)})`;
+  }
+
+  function mixColor(
+    base,
+    overlay,
+    amount
+  ) {
+    const t =
+      clamp(
+        amount,
+        0,
+        1
+      );
+
+    return [
+      base[0] +
+        (overlay[0] - base[0]) *
+        t,
+
+      base[1] +
+        (overlay[1] - base[1]) *
+        t,
+
+      base[2] +
+        (overlay[2] - base[2]) *
+        t
+    ];
+  }
+
+  function shadeColor(
+    base,
+    light
+  ) {
+    const l =
+      clamp(
+        light,
+        0,
+        1
+      );
+
+    const nightMix =
+      1 -
+      l;
+
+    const dimmed =
+      mixColor(
+        base,
+        COLORS.night,
+        nightMix * 0.62
+      );
+
+    return mixColor(
+      dimmed,
+      [255, 248, 220],
+      Math.pow(l, 2.2) * 0.16
+    );
+  }
+
+  function materialColor(
+    materialHint,
+    waterClass
+  ) {
+    if (
+      waterClass === WATER_CLASS.DEEP_OCEAN
+    ) {
+      return COLORS.deepOcean;
+    }
+
+    if (
+      waterClass === WATER_CLASS.OPEN_OCEAN
+    ) {
+      return COLORS.openOcean;
+    }
+
+    if (
+      waterClass === WATER_CLASS.SHELF_WATER
+    ) {
+      return COLORS.shelf;
+    }
+
+    if (
+      waterClass === WATER_CLASS.COASTAL_WATER
+    ) {
+      return COLORS.coastal;
+    }
+
+    if (
+      waterClass === WATER_CLASS.LAKE
+    ) {
+      return COLORS.lake;
+    }
+
+    if (
+      waterClass === WATER_CLASS.INLAND_SEA
+    ) {
+      return COLORS.inlandSea;
+    }
+
+    switch (materialHint) {
+      case MATERIAL_HINT.BEACH:
+        return COLORS.beach;
+
+      case MATERIAL_HINT.COAST:
+        return COLORS.coast;
+
+      case MATERIAL_HINT.FOREST:
+        return COLORS.forest;
+
+      case MATERIAL_HINT.ARID:
+        return COLORS.arid;
+
+      case MATERIAL_HINT.UPLAND:
+        return COLORS.upland;
+
+      case MATERIAL_HINT.ROCK:
+        return COLORS.rock;
+
+      case MATERIAL_HINT.SNOW:
+        return COLORS.snow;
+
+      case MATERIAL_HINT.LAKE:
+        return COLORS.lake;
+
+      case MATERIAL_HINT.INLAND_SEA:
+        return COLORS.inlandSea;
+
+      case MATERIAL_HINT.LOWLAND:
+      default:
+        return COLORS.lowland;
+    }
+  }
+
+  function rotatePoint(
+    x,
+    y,
+    z,
+    yaw,
+    pitch
+  ) {
+    const cosYaw =
+      Math.cos(yaw);
+
+    const sinYaw =
+      Math.sin(yaw);
+
+    const yawX =
+      x * cosYaw +
+      z * sinYaw;
+
+    const yawZ =
+      -x * sinYaw +
+      z * cosYaw;
+
+    const cosPitch =
+      Math.cos(pitch);
+
+    const sinPitch =
+      Math.sin(pitch);
+
+    return {
+      x:
+        yawX,
+
+      y:
+        y * cosPitch -
+        yawZ * sinPitch,
+
+      z:
+        y * sinPitch +
+        yawZ * cosPitch
+    };
+  }
+
+  function projectPoint(
+    point,
+    center,
+    scale
+  ) {
+    return {
+      x:
+        center +
+        point.x *
+        scale,
+
+      y:
+        center -
+        point.y *
+        scale,
+
+      z:
+        point.z
+    };
+  }
+
+  function triangleVisible(
+    a,
+    b,
+    c
+  ) {
+    const abx =
+      b.x -
+      a.x;
+
+    const aby =
+      b.y -
+      a.y;
+
+    const acx =
+      c.x -
+      a.x;
+
+    const acy =
+      c.y -
+      a.y;
+
+    return (
+      abx * acy -
+      aby * acx
+    ) < 0;
+  }
+
+  function drawTriangle(
+    context,
+    a,
+    b,
+    c,
+    color
+  ) {
+    context.beginPath();
+
+    context.moveTo(
+      a.x,
+      a.y
+    );
+
+    context.lineTo(
+      b.x,
+      b.y
+    );
+
+    context.lineTo(
+      c.x,
+      c.y
+    );
+
+    context.closePath();
+
+    context.fillStyle =
+      color;
+
+    context.fill();
+  }
+
+  function createLightVector() {
+    return {
+      x:
+        -0.46,
+
+      y:
+        0.42,
+
+      z:
+        0.78
+    };
+  }
+
+  function dotLight(point, light) {
+    const length =
+      Math.hypot(
+        point.x,
+        point.y,
+        point.z
+      ) || 1;
+
+    return clamp(
+      (
+        point.x / length *
+          light.x +
+        point.y / length *
+          light.y +
+        point.z / length *
+          light.z
+      ) *
+        0.74 +
+        0.36,
+      0,
+      1
+    );
+  }
+
+  function drawAtmosphere(
+    context,
+    size,
+    center,
+    radius,
+    pulse
+  ) {
+    const atmosphereGradient =
+      context.createRadialGradient(
+        center - radius * 0.28,
+        center - radius * 0.22,
+        radius * 0.12,
+        center,
+        center,
+        radius * 1.12
+      );
+
+    atmosphereGradient.addColorStop(
+      0,
+      "rgba(255, 255, 255, 0.13)"
+    );
+
+    atmosphereGradient.addColorStop(
+      0.48,
+      `rgba(116, 224, 255, ${0.055 + pulse * 0.025})`
+    );
+
+    atmosphereGradient.addColorStop(
+      0.78,
+      `rgba(116, 224, 255, ${0.12 + pulse * 0.035})`
+    );
+
+    atmosphereGradient.addColorStop(
+      1,
+      "rgba(116, 224, 255, 0)"
+    );
+
+    context.save();
+
+    context.beginPath();
+
+    context.arc(
+      center,
+      center,
+      radius * 1.12,
+      0,
+      Math.PI * 2
+    );
+
+    context.fillStyle =
+      atmosphereGradient;
+
+    context.fill();
+
+    context.restore();
+
+    context.save();
+
+    context.beginPath();
+
+    context.arc(
+      center,
+      center,
+      radius * 1.01,
+      0,
+      Math.PI * 2
+    );
+
+    context.strokeStyle =
+      "rgba(152, 238, 255, 0.42)";
+
+    context.lineWidth =
+      Math.max(
+        1,
+        size * 0.008
+      );
+
+    context.stroke();
+
+    context.restore();
+  }
+
+  function drawTerminator(
+    context,
+    center,
+    radius
+  ) {
+    const gradient =
+      context.createRadialGradient(
+        center + radius * 0.46,
+        center + radius * 0.1,
+        radius * 0.04,
+        center + radius * 0.34,
+        center + radius * 0.12,
+        radius * 1.18
+      );
+
+    gradient.addColorStop(
+      0,
+      "rgba(0, 0, 0, 0)"
+    );
+
+    gradient.addColorStop(
+      0.45,
+      "rgba(0, 0, 0, 0.08)"
+    );
+
+    gradient.addColorStop(
+      1,
+      "rgba(0, 0, 0, 0.56)"
+    );
+
+    context.save();
+
+    context.beginPath();
+
+    context.arc(
+      center,
+      center,
+      radius,
+      0,
+      Math.PI * 2
+    );
+
+    context.clip();
+
+    context.fillStyle =
+      gradient;
+
+    context.fillRect(
+      center - radius,
+      center - radius,
+      radius * 2,
+      radius * 2
+    );
+
+    context.restore();
+  }
+
+  function drawClouds(
+    context,
+    center,
+    radius,
+    yaw,
+    cloudTurn
+  ) {
+    const cloudCount =
+      34;
+
+    context.save();
+
+    context.beginPath();
+
+    context.arc(
+      center,
+      center,
+      radius * 1.01,
+      0,
+      Math.PI * 2
+    );
+
+    context.clip();
+
+    for (
+      let index = 0;
+      index < cloudCount;
+      index += 1
+    ) {
+      const latitude =
+        Math.sin(index * 12.9898) *
+        0.78;
+
+      const longitude =
+        index * 2.399963 +
+        cloudTurn *
+        Math.PI *
+        2;
+
+      const band =
+        0.62 +
+        0.38 *
+        Math.sin(index * 5.231);
+
+      const directionX =
+        Math.cos(latitude) *
+        Math.cos(longitude);
+
+      const directionY =
+        Math.sin(latitude);
+
+      const directionZ =
+        Math.cos(latitude) *
+        Math.sin(longitude);
+
+      const rotated =
+        rotatePoint(
+          directionX,
+          directionY,
+          directionZ,
+          yaw,
+          -0.22
+        );
+
+      if (rotated.z <= -0.08) {
+        continue;
+      }
+
+      const projected =
+        projectPoint(
+          rotated,
+          center,
+          radius * 0.94
+        );
+
+      const alpha =
+        clamp(
+          0.05 +
+          rotated.z *
+          0.11,
+          0,
+          0.16
+        );
+
+      const width =
+        radius *
+        (
+          0.14 +
+          band *
+          0.08
+        );
+
+      const height =
+        radius *
+        (
+          0.025 +
+          band *
+          0.02
+        );
+
+      context.save();
+
+      context.translate(
+        projected.x,
+        projected.y
+      );
+
+      context.rotate(
+        longitude * 0.37
+      );
+
+      context.beginPath();
+
+      context.ellipse(
+        0,
+        0,
+        width,
+        height,
+        0,
+        0,
+        Math.PI * 2
+      );
+
+      context.fillStyle =
+        colorToCss(
+          COLORS.cloud,
+          alpha
+        );
+
+      context.fill();
+
+      context.restore();
+    }
+
+    context.restore();
+  }
+
+  function renderFallbackDisk() {
+    if (
+      !state.context ||
+      !state.canvas
+    ) {
+      return false;
+    }
+
+    ensureCanvasSize();
+
+    const context =
+      state.context;
+
+    const size =
+      state.canvas.width;
+
+    const center =
+      size / 2;
+
+    const radius =
+      size * 0.39;
+
+    clearCanvas();
+
+    drawAtmosphere(
+      context,
+      size,
+      center,
+      radius,
+      0.2
+    );
+
+    const gradient =
+      context.createRadialGradient(
+        center - radius * 0.32,
+        center - radius * 0.32,
+        radius * 0.08,
+        center,
+        center,
+        radius
+      );
+
+    gradient.addColorStop(
+      0,
+      "rgba(245, 238, 210, 0.88)"
+    );
+
+    gradient.addColorStop(
+      0.26,
+      "rgba(74, 168, 166, 0.9)"
+    );
+
+    gradient.addColorStop(
+      0.64,
+      "rgba(42, 91, 139, 0.95)"
+    );
+
+    gradient.addColorStop(
+      1,
+      "rgba(11, 24, 61, 1)"
+    );
+
+    context.beginPath();
+
+    context.arc(
+      center,
+      center,
+      radius,
+      0,
+      Math.PI * 2
+    );
+
+    context.fillStyle =
+      gradient;
+
+    context.fill();
+
+    drawTerminator(
+      context,
+      center,
+      radius
+    );
+
+    return true;
+  }
+
+  function renderGeometryFrame(
+    turn,
+    cloudTurn,
+    pulse
+  ) {
+    if (
+      !state.context ||
+      !state.canvas ||
+      !state.terrainMesh
+    ) {
+      state.counters.renderSkips +=
+        1;
+
+      return false;
+    }
+
+    ensureCanvasSize();
+
+    const context =
+      state.context;
+
+    const mesh =
+      state.terrainMesh;
+
+    const positions =
+      mesh.positions;
+
+    const indices =
+      mesh.indices;
+
+    const materialHints =
+      mesh.materialHints ||
+      null;
+
+    const waterClasses =
+      mesh.waterClasses ||
+      null;
+
+    const size =
+      state.canvas.width;
+
+    const center =
+      size / 2;
+
+    const radius =
+      size * 0.39;
+
+    const yaw =
+      turn *
+      Math.PI *
+      2;
+
+    const pitch =
+      -0.24;
+
+    const light =
+      createLightVector();
+
+    const projected =
+      new Array(
+        mesh.vertexCount
+      );
+
+    for (
+      let vertexIndex = 0;
+      vertexIndex < mesh.vertexCount;
+      vertexIndex += 1
+    ) {
+      const offset =
+        vertexIndex *
+        3;
+
+      const rotated =
+        rotatePoint(
+          positions[offset],
+          positions[offset + 1],
+          positions[offset + 2],
+          yaw,
+          pitch
+        );
+
+      projected[vertexIndex] =
+        projectPoint(
+          rotated,
+          center,
+          radius
+        );
+    }
+
+    const triangles = [];
+
+    for (
+      let index = 0;
+      index < indices.length;
+      index += 3
+    ) {
+      const ia =
+        indices[index];
+
+      const ib =
+        indices[index + 1];
+
+      const ic =
+        indices[index + 2];
+
+      const a =
+        projected[ia];
+
+      const b =
+        projected[ib];
+
+      const c =
+        projected[ic];
+
+      const averageZ =
+        (
+          a.z +
+          b.z +
+          c.z
+        ) /
+        3;
+
+      if (averageZ <= -0.04) {
+        continue;
+      }
+
+      if (
+        !triangleVisible(
+          a,
+          b,
+          c
+        )
+      ) {
+        continue;
+      }
+
+      triangles.push({
+        ia,
+        ib,
+        ic,
+        a,
+        b,
+        c,
+        z:
+          averageZ
+      });
+    }
+
+    triangles.sort(
+      (
+        first,
+        second
+      ) =>
+        first.z -
+        second.z
+    );
+
+    clearCanvas();
+
+    drawAtmosphere(
+      context,
+      size,
+      center,
+      radius,
+      pulse
+    );
+
+    context.save();
+
+    context.beginPath();
+
+    context.arc(
+      center,
+      center,
+      radius * 1.015,
+      0,
+      Math.PI * 2
+    );
+
+    context.clip();
+
+    for (
+      const triangle
+      of triangles
+    ) {
+      const materialHint =
+        materialHints
+          ? Math.round(
+              (
+                materialHints[triangle.ia] +
+                materialHints[triangle.ib] +
+                materialHints[triangle.ic]
+              ) /
+              3
+            )
+          : MATERIAL_HINT.LOWLAND;
+
+      const waterClass =
+        waterClasses
+          ? Math.round(
+              (
+                waterClasses[triangle.ia] +
+                waterClasses[triangle.ib] +
+                waterClasses[triangle.ic]
+              ) /
+              3
+            )
+          : WATER_CLASS.NONE;
+
+      const baseColor =
+        materialColor(
+          materialHint,
+          waterClass
+        );
+
+      const lightValue =
+        (
+          dotLight(
+            triangle.a,
+            light
+          ) +
+          dotLight(
+            triangle.b,
+            light
+          ) +
+          dotLight(
+            triangle.c,
+            light
+          )
+        ) /
+        3;
+
+      const color =
+        shadeColor(
+          baseColor,
+          lightValue
+        );
+
+      drawTriangle(
+        context,
+        triangle.a,
+        triangle.b,
+        triangle.c,
+        colorToCss(
+          color,
+          1
+        )
+      );
+    }
+
+    context.restore();
+
+    drawClouds(
+      context,
+      center,
+      radius,
+      yaw,
+      cloudTurn
+    );
+
+    drawTerminator(
+      context,
+      center,
+      radius
+    );
+
+    state.counters.renderFrames +=
+      1;
+
+    return true;
+  }
+
+  function animationAllowed() {
+    return Boolean(
+      state.mounted &&
+      state.ready &&
+      !state.disposed &&
+      !state.failed &&
+      !state.paused &&
+      !state.reducedMotion &&
+      state.root &&
+      state.canvas
+    );
+  }
+
+  function renderStatic() {
+    if (state.fallbackMode) {
+      return renderFallbackDisk();
+    }
+
+    if (!state.terrainMesh) {
+      return false;
+    }
+
+    return renderGeometryFrame(
+      0.08,
+      0.18,
+      0
+    );
+  }
+
+  function animationStep(timestamp) {
+    state.frameId =
+      0;
+
+    if (!animationAllowed()) {
+      return;
+    }
+
+    if (!state.animationStartedAt) {
+      state.animationStartedAt =
+        timestamp;
+    }
+
+    const elapsed =
+      timestamp -
+      state.animationStartedAt;
+
+    const turn =
+      (
+        elapsed %
+        DEFAULTS.rotationDurationMs
+      ) /
+      DEFAULTS.rotationDurationMs;
+
+    const cloudTurn =
+      (
+        elapsed %
+        DEFAULTS.cloudDurationMs
+      ) /
+      DEFAULTS.cloudDurationMs;
+
+    const pulse =
+      (
+        elapsed %
+        DEFAULTS.pulseDurationMs
+      ) /
+      DEFAULTS.pulseDurationMs;
+
+    setRootProperty(
+      "--showroom-planet-turn",
+      `${turn * 360}deg`
+    );
+
+    setRootProperty(
+      "--showroom-planet-cloud-turn",
+      `${cloudTurn * 360}deg`
+    );
+
+    setRootProperty(
+      "--showroom-planet-pulse",
+      String(pulse)
+    );
+
+    renderGeometryFrame(
+      turn,
+      cloudTurn,
+      pulse
+    );
+
+    state.lastRenderTurn =
+      turn;
+
+    state.frameId =
+      window.requestAnimationFrame(
+        animationStep
+      );
+  }
+
+  function startAnimation() {
+    cancelAnimation();
+
+    if (!animationAllowed()) {
+      renderStatic();
+
+      return false;
+    }
+
+    state.animationStartedAt =
+      0;
+
+    state.frameId =
+      window.requestAnimationFrame(
+        animationStep
+      );
+
+    return true;
+  }
+
+  function cancelAnimation() {
+    if (state.frameId) {
+      window.cancelAnimationFrame(
+        state.frameId
+      );
+    }
+
+    state.frameId =
+      0;
+  }
+
+  function stopAnimation() {
+    cancelAnimation();
+
+    setRootProperty(
+      "--showroom-planet-turn",
+      "0deg"
+    );
+
+    setRootProperty(
+      "--showroom-planet-cloud-turn",
+      "0deg"
+    );
+
+    setRootProperty(
+      "--showroom-planet-pulse",
+      "0"
+    );
+
+    renderStatic();
+  }
+
   function markReady(reason) {
     state.ready =
       true;
@@ -1258,11 +2939,21 @@
     state.paused =
       false;
 
+    state.fallbackMode =
+      false;
+
+    state.waitingForGeometry =
+      false;
+
+    setFallbackText("");
+
     applyStateAttribute();
     applyReducedMotionAttribute();
 
     state.counters.ready +=
       1;
+
+    renderStatic();
 
     publishReceipt(
       "ready",
@@ -1271,16 +2962,64 @@
           normalize(reason) ||
           "mounted",
 
+        sourceGeometryUsed:
+          Boolean(state.geometryPacket),
+
+        sourceGeometryContract:
+          AUDRALIA_GEOMETRY_CONTRACT,
+
+        sourceGeometryHash:
+          state.lastGeometryHash,
+
+        terrainLevel:
+          state.terrainMesh
+            ? state.terrainMesh.level
+            : null,
+
+        terrainVertexCount:
+          state.terrainMesh
+            ? state.terrainMesh.vertexCount
+            : null,
+
+        terrainTriangleCount:
+          state.terrainMesh
+            ? state.terrainMesh.triangleCount
+            : null,
+
+        landCoverage:
+          state.terrainMesh &&
+          state.terrainMesh.metrics
+            ? state.terrainMesh.metrics.landCoverage
+            : null,
+
+        oceanCoverage:
+          state.terrainMesh &&
+          state.terrainMesh.metrics
+            ? state.terrainMesh.metrics.oceanCoverage
+            : null,
+
         staticFallbackAvailable:
           true,
 
         animationAllowed:
           animationAllowed(),
 
-        visualModel:
-          MODEL,
+        visualIdentity:
+          "mini-audralia",
 
-        audraliaSurfaceHooks:
+        navigationMeaning:
+          "main-compass-return-selection",
+
+        clickAuthority:
+          "[data-showroom-compass-control]",
+
+        semanticActivation:
+          "none",
+
+        webGL:
+          false,
+
+        canvas2dRenderer:
           true
       }
     );
@@ -1292,17 +3031,14 @@
           normalize(reason) ||
           "mounted",
 
-        staticFallbackAvailable:
-          true,
+        sourceGeometryUsed:
+          Boolean(state.geometryPacket),
 
-        animationAllowed:
-          animationAllowed(),
+        visualIdentity:
+          "mini-audralia",
 
-        visualModel:
-          MODEL,
-
-        audraliaSurfaceHooks:
-          true
+        navigationMeaning:
+          "main-compass-return-selection"
       }
     );
 
@@ -1354,6 +3090,15 @@
         root
       );
 
+      if (
+        !state.context ||
+        !isCanvas(state.canvas)
+      ) {
+        throw new Error(
+          "The mini Audralia planet requires a Canvas 2D context."
+        );
+      }
+
       state.mounted =
         true;
 
@@ -1364,6 +3109,12 @@
         false;
 
       state.paused =
+        false;
+
+      state.fallbackMode =
+        false;
+
+      state.waitingForGeometry =
         false;
 
       state.pauseReason =
@@ -1393,33 +3144,44 @@
           cssIntegrationOwned:
             false,
 
-          visualModel:
-            MODEL,
+          visualIdentity:
+            "mini-audralia",
 
-          audraliaSurfaceHooks:
-            [
-              "body",
-              "ocean",
-              "terrain",
-              "landmass",
-              "clouds",
-              "atmosphere",
-              "rim",
-              "terminator",
-              "shadow",
-              "meridian",
-              "fulcrum",
-              "axis",
-              "orbit-line",
-              "glow",
-              "fallback"
-            ]
+          navigationMeaning:
+            "main-compass-return-selection",
+
+          clickAuthority:
+            "[data-showroom-compass-control]",
+
+          audraliaGeometryAuthorityRequired:
+            true,
+
+          audraliaGeometryAuthorityGlobal:
+            AUDRALIA_GEOMETRY_GLOBAL,
+
+          audraliaGeometryAuthorityContract:
+            AUDRALIA_GEOMETRY_CONTRACT,
+
+          canvas2dRenderer:
+            true,
+
+          webGL:
+            false
         }
       );
 
-      return markReady(
-        "mounted"
-      );
+      const geometryReady =
+        initializeGeometry(
+          options
+        );
+
+      if (geometryReady) {
+        return markReady(
+          "mounted-with-audralia-geometry-authority"
+        );
+      }
+
+      return true;
     } catch (error) {
       return fail(
         "mount-failed",
@@ -1435,6 +3197,7 @@
       return true;
     }
 
+    clearGeometryWaitTimer();
     stopAnimation();
 
     const root =
@@ -1455,14 +3218,41 @@
 
     unbindReducedMotion();
 
+    state.target =
+      null;
+
     state.root =
       null;
 
-    state.target =
+    state.shell =
+      null;
+
+    state.body =
+      null;
+
+    state.canvas =
+      null;
+
+    state.context =
+      null;
+
+    state.fallback =
       null;
 
     state.receiptTarget =
       null;
+
+    state.geometryPacket =
+      null;
+
+    state.terrainMesh =
+      null;
+
+    state.cloudMesh =
+      null;
+
+    state.lastGeometryHash =
+      "";
 
     state.mounted =
       false;
@@ -1476,8 +3266,23 @@
     state.paused =
       false;
 
+    state.fallbackMode =
+      false;
+
+    state.waitingForGeometry =
+      false;
+
     state.pauseReason =
       "";
+
+    state.animationStartedAt =
+      0;
+
+    state.lastRenderTurn =
+      NaN;
+
+    state.lastCanvasSize =
+      0;
 
     state.counters.unmounts +=
       1;
@@ -1487,7 +3292,10 @@
       {
         reason:
           normalize(reason) ||
-          "api"
+          "api",
+
+        localDomRemoved:
+          true
       }
     );
 
@@ -1615,8 +3423,9 @@
       }`
     );
 
+    clearGeometryWaitTimer();
     unbindReducedMotion();
-    stopAnimation();
+    cancelAnimation();
 
     state.disposed =
       true;
@@ -1630,8 +3439,17 @@
     state.paused =
       false;
 
+    state.fallbackMode =
+      false;
+
+    state.waitingForGeometry =
+      false;
+
     state.pauseReason =
       "";
+
+    state.geometryAuthority =
+      null;
 
     state.counters.disposals +=
       1;
@@ -1648,6 +3466,9 @@
 
         listenersRemoved:
           true,
+
+        geometryAuthorityMutated:
+          false,
 
         controllerStateMutated:
           false,
@@ -1685,11 +3506,32 @@
     return createReceipt(
       "state-requested",
       {
-        visualModel:
-          MODEL,
+        visualIdentity:
+          "mini-audralia",
 
-        audraliaSurfaceHooks:
-          true,
+        navigationMeaning:
+          "main-compass-return-selection",
+
+        sourceGeometryContract:
+          AUDRALIA_GEOMETRY_CONTRACT,
+
+        sourceGeometryHash:
+          state.lastGeometryHash,
+
+        terrainLevel:
+          state.terrainMesh
+            ? state.terrainMesh.level
+            : null,
+
+        terrainVertexCount:
+          state.terrainMesh
+            ? state.terrainMesh.vertexCount
+            : null,
+
+        terrainTriangleCount:
+          state.terrainMesh
+            ? state.terrainMesh.triangleCount
+            : null,
 
         lastReceipt:
           state.lastReceipt
@@ -1722,6 +3564,18 @@
 
       owner:
         OWNER,
+
+      sourceAuthorityGlobal:
+        AUDRALIA_GEOMETRY_GLOBAL,
+
+      sourceAuthorityContract:
+        AUDRALIA_GEOMETRY_CONTRACT,
+
+      visualIdentity:
+        "mini-audralia",
+
+      navigationMeaning:
+        "main-compass-return-selection",
 
       getState,
 
@@ -1774,11 +3628,29 @@
       decorative:
         true,
 
-      visualModel:
-        MODEL,
+      visualIdentity:
+        "mini-audralia",
 
-      audraliaSurfaceHooks:
+      navigationMeaning:
+        "main-compass-return-selection",
+
+      clickAuthority:
+        "[data-showroom-compass-control]",
+
+      requiredGeometryAuthority:
+        "/assets/audralia/audralia.planet.js",
+
+      requiredGeometryGlobal:
+        AUDRALIA_GEOMETRY_GLOBAL,
+
+      requiredGeometryContract:
+        AUDRALIA_GEOMETRY_CONTRACT,
+
+      canvas2dRenderer:
         true,
+
+      webGL:
+        false,
 
       navigationAuthority:
         false,

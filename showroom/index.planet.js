@@ -2,15 +2,15 @@
 /* COMPLETE REPLACEMENT */
 /* GROUP_F_AUDRALIA_PLANETARY_OBJECT_RENEWAL */
 /* SHOWROOM_PLANETARY_FULCRUM_INDEPENDENT_CENTER_PLANET_TNT_v1 */
-/* AUDRALIA_GEOMETRY_AUTHORITY_MINIATURE_RENDERER_v1 */
+/* AUDRALIA_GEOMETRY_AUTHORITY_MINIATURE_3D_RENDERER_v1 */
 /*
   Purpose:
   - Render the Showroom center planet from the canonical Audralia geometry
-    authority instead of invented CSS geography.
+    authority as a compact real WebGL 3D object.
   - Preserve the Showroom center object as the Main Compass return selector.
-  - Keep the planet decorative and non-navigational.
-  - Reduce renderer-origin yellow glare and improve miniature globe integrity.
- 
+  - Keep the planet visual decorative and non-navigational.
+  - Provide the baseline planet module surface contract for downstream HTML/CSS.
+
   Source geometry authority:
   - /assets/audralia/audralia.planet.js
   - window.DGBAudraliaPlanetGeometry
@@ -21,7 +21,7 @@
   - The visible planet is decorative.
   - Click / tap authority remains [data-showroom-compass-control].
   - Route authority remains the Showroom controller.
-  - The semantic outcome remains Main Compass return selection, not Audralia navigation.
+  - The semantic outcome remains Main Compass return selection.
 
   Does not own:
   - semantic navigation;
@@ -41,10 +41,7 @@
     "SHOWROOM_PLANETARY_FULCRUM_INDEPENDENT_CENTER_PLANET_TNT_v1";
 
   const MODEL =
-    "AUDRALIA_GEOMETRY_AUTHORITY_MINIATURE_RENDERER_v1";
-
-  const VISUAL_REVISION =
-    "AUDRALIA_GEOMETRY_AUTHORITY_MINIATURE_RENDERER_GLARE_REDUCTION_v1";
+    "AUDRALIA_GEOMETRY_AUTHORITY_MINIATURE_3D_RENDERER_v1";
 
   const AUDRALIA_GEOMETRY_CONTRACT =
     "AUDRALIA_G1_DETERMINISTIC_PLANET_GEOMETRY_AUTHORITY_TNT_v1";
@@ -105,9 +102,6 @@
     model:
       "data-showroom-planet-model",
 
-    visualRevision:
-      "data-showroom-planet-visual-revision",
-
     sourceContract:
       "data-showroom-planet-source-contract",
 
@@ -127,7 +121,19 @@
       "data-showroom-planet-layer",
 
     surfaceRole:
-      "data-showroom-planet-surface-role"
+      "data-showroom-planet-surface-role",
+
+    renderer:
+      "data-showroom-planet-renderer",
+
+    clickAuthority:
+      "data-showroom-planet-click-authority",
+
+    navigationAuthority:
+      "data-showroom-planet-navigation-authority",
+
+    semanticActivationAuthority:
+      "data-showroom-planet-semantic-activation-authority"
   });
 
   const CLASS_NAMES = Object.freeze({
@@ -200,13 +206,13 @@
       80,
 
     rotationDurationMs:
-      72000,
+      76000,
 
     cloudDurationMs:
-      104000,
+      112000,
 
     pulseDurationMs:
-      12000,
+      14000,
 
     receiptAttribute:
       "data-showroom-planet-receipt",
@@ -286,71 +292,53 @@
   });
 
   const COLORS = Object.freeze({
-    space:
-      "rgba(0, 0, 0, 0)",
-
     deepOcean:
-      [8, 24, 58],
+      [0.028, 0.09, 0.23],
 
     openOcean:
-      [15, 64, 112],
+      [0.055, 0.24, 0.44],
 
     shelf:
-      [30, 121, 145],
+      [0.11, 0.48, 0.58],
 
     coastal:
-      [54, 151, 160],
+      [0.21, 0.6, 0.63],
 
     inlandSea:
-      [34, 103, 132],
+      [0.12, 0.39, 0.51],
 
     lake:
-      [48, 133, 160],
+      [0.18, 0.52, 0.63],
 
     beach:
-      [176, 153, 103],
+      [0.68, 0.59, 0.38],
 
     coast:
-      [132, 124, 83],
+      [0.5, 0.47, 0.32],
 
     lowland:
-      [56, 116, 74],
+      [0.21, 0.45, 0.29],
 
     forest:
-      [30, 86, 68],
+      [0.11, 0.33, 0.26],
 
     arid:
-      [132, 112, 77],
+      [0.52, 0.44, 0.31],
 
     upland:
-      [82, 113, 88],
+      [0.31, 0.43, 0.34],
 
     rock:
-      [104, 106, 112],
+      [0.41, 0.41, 0.43],
 
     snow:
-      [208, 220, 218],
+      [0.82, 0.88, 0.86],
 
     cloud:
-      [226, 240, 243],
+      [0.9, 0.96, 0.97],
 
     atmosphere:
-      [108, 218, 255],
-
-    rim:
-      [145, 233, 255],
-
-    night:
-      [3, 7, 21],
-
-    coolDay:
-      [186, 224, 228],
-
-    polarDay:
-      [214, 232, 229],
-
-    oceanDay:
-      [118, 209, 219]
+      [0.42, 0.85, 1.0]
   });
 
   const state = {
@@ -369,7 +357,7 @@
     canvas:
       null,
 
-    context:
+    gl:
       null,
 
     fallback:
@@ -388,6 +376,9 @@
       null,
 
     cloudMesh:
+      null,
+
+    renderer:
       null,
 
     lastGeometryHash:
@@ -423,6 +414,12 @@
     reducedMotionListener:
       null,
 
+    resizeObserver:
+      null,
+
+    resizeListener:
+      null,
+
     frameId:
       0,
 
@@ -430,12 +427,6 @@
       0,
 
     animationStartedAt:
-      0,
-
-    lastRenderTurn:
-      NaN,
-
-    lastCanvasSize:
       0,
 
     pauseReason:
@@ -481,6 +472,12 @@
       geometryUnavailable:
         0,
 
+      webglContexts:
+        0,
+
+      webglFailures:
+        0,
+
       renderFrames:
         0,
 
@@ -491,6 +488,99 @@
         0
     }
   };
+
+  const VERTEX_SHADER_SOURCE = `
+attribute vec3 aPosition;
+attribute vec3 aNormal;
+attribute vec3 aColor;
+
+uniform mat4 uProjection;
+uniform float uYaw;
+uniform float uPitch;
+uniform float uScale;
+uniform float uDistance;
+
+varying vec3 vNormal;
+varying vec3 vColor;
+varying vec3 vWorld;
+
+vec3 rotatePoint(vec3 point) {
+  float cy = cos(uYaw);
+  float sy = sin(uYaw);
+  float cp = cos(uPitch);
+  float sp = sin(uPitch);
+
+  vec3 yawed = vec3(
+    point.x * cy + point.z * sy,
+    point.y,
+    -point.x * sy + point.z * cy
+  );
+
+  return vec3(
+    yawed.x,
+    yawed.y * cp - yawed.z * sp,
+    yawed.y * sp + yawed.z * cp
+  );
+}
+
+void main() {
+  vec3 world = rotatePoint(aPosition * uScale);
+  vec3 normal = normalize(rotatePoint(aNormal));
+
+  world.z = world.z - uDistance;
+
+  vNormal = normal;
+  vColor = aColor;
+  vWorld = world;
+
+  gl_Position = uProjection * vec4(world, 1.0);
+}
+`;
+
+  const FRAGMENT_SHADER_SOURCE = `
+precision mediump float;
+
+uniform int uMode;
+uniform float uAlpha;
+uniform float uPulse;
+
+varying vec3 vNormal;
+varying vec3 vColor;
+varying vec3 vWorld;
+
+void main() {
+  vec3 normal = normalize(vNormal);
+  vec3 light = normalize(vec3(-0.18, 0.28, 0.94));
+  vec3 view = normalize(vec3(0.0, 0.0, 1.0));
+
+  float diffuse = max(dot(normal, light), 0.0);
+  float facing = max(dot(normal, view), 0.0);
+  float rim = pow(1.0 - facing, 2.3);
+
+  if (uMode == 1) {
+    float alpha = (0.035 + rim * 0.22 + uPulse * 0.018) * uAlpha;
+    vec3 color = vec3(0.42, 0.85, 1.0) * (0.78 + rim * 0.28);
+    gl_FragColor = vec4(color, alpha);
+    return;
+  }
+
+  if (uMode == 2) {
+    float alpha = (0.035 + diffuse * 0.095 + rim * 0.045) * uAlpha;
+    vec3 color = mix(vColor, vec3(1.0), 0.16 + diffuse * 0.12);
+    gl_FragColor = vec4(color, alpha);
+    return;
+  }
+
+  vec3 night = vec3(0.012, 0.025, 0.078);
+  vec3 coolDay = vec3(0.74, 0.88, 0.9);
+  vec3 lit = vColor * (0.42 + diffuse * 0.7);
+  lit = mix(lit, coolDay, pow(diffuse, 2.2) * 0.075);
+  lit = mix(lit, vec3(0.5, 0.88, 1.0), rim * 0.085);
+  lit = mix(night, lit, 0.94);
+
+  gl_FragColor = vec4(lit, uAlpha);
+}
+`;
 
   function normalize(value) {
     return String(
@@ -637,9 +727,6 @@
       model:
         MODEL,
 
-      visualRevision:
-        VISUAL_REVISION,
-
       owner:
         OWNER,
 
@@ -693,6 +780,9 @@
       canvasAvailable:
         Boolean(state.canvas),
 
+      webGLAvailable:
+        Boolean(state.gl),
+
       geometryAuthorityAvailable:
         Boolean(state.geometryAuthority),
 
@@ -702,6 +792,9 @@
       terrainMeshAvailable:
         Boolean(state.terrainMesh),
 
+      cloudMeshAvailable:
+        Boolean(state.cloudMesh),
+
       geometryHash:
         state.lastGeometryHash ||
         "",
@@ -709,10 +802,16 @@
       visualIdentity:
         "mini-audralia",
 
+      rendererMode:
+        "webgl-3d",
+
       navigationMeaning:
         "main-compass-return-selection",
 
       clickAuthority:
+        false,
+
+      clickAuthorityOwner:
         "[data-showroom-compass-control]",
 
       semanticActivationOwned:
@@ -758,12 +857,21 @@
         false,
 
       webGL:
+        Boolean(state.gl),
+
+      canvas2dRenderer:
         false,
 
       generatedImage:
         false,
 
       visualPassClaimed:
+        false,
+
+      productionAuthorization:
+        false,
+
+      deploymentAuthorization:
         false,
 
       counters: {
@@ -919,11 +1027,6 @@
     );
 
     root.setAttribute(
-      ATTRIBUTES.visualRevision,
-      VISUAL_REVISION
-    );
-
-    root.setAttribute(
       ATTRIBUTES.sourceContract,
       AUDRALIA_GEOMETRY_CONTRACT
     );
@@ -948,6 +1051,26 @@
     root.setAttribute(
       ATTRIBUTES.audralia,
       "true"
+    );
+
+    root.setAttribute(
+      ATTRIBUTES.renderer,
+      "webgl-3d"
+    );
+
+    root.setAttribute(
+      ATTRIBUTES.clickAuthority,
+      "false"
+    );
+
+    root.setAttribute(
+      ATTRIBUTES.navigationAuthority,
+      "false"
+    );
+
+    root.setAttribute(
+      ATTRIBUTES.semanticActivationAuthority,
+      "false"
     );
 
     root.setAttribute(
@@ -1023,12 +1146,12 @@
 
     canvas.setAttribute(
       ATTRIBUTES.layer,
-      "audralia-canvas-renderer"
+      "audralia-webgl-3d-renderer"
     );
 
     canvas.setAttribute(
       ATTRIBUTES.surfaceRole,
-      "audralia-authority-rendered-surface"
+      "audralia-authority-rendered-3d-surface"
     );
 
     canvas.setAttribute(
@@ -1210,15 +1333,6 @@
     state.canvas =
       canvas;
 
-    state.context =
-      canvas.getContext(
-        "2d",
-        {
-          alpha:
-            true
-        }
-      );
-
     state.fallback =
       fallback;
 
@@ -1321,6 +1435,76 @@
       normalize(text);
   }
 
+  function getAuthorityContract(authority) {
+    if (!authority) {
+      return "";
+    }
+
+    if (
+      typeof authority.contract ===
+      "string"
+    ) {
+      return authority.contract;
+    }
+
+    if (
+      authority.status &&
+      typeof authority.status.contract ===
+      "string"
+    ) {
+      return authority.status.contract;
+    }
+
+    if (
+      typeof authority.getStatus ===
+      "function"
+    ) {
+      try {
+        const status =
+          authority.getStatus();
+
+        if (
+          status &&
+          typeof status.contract ===
+          "string"
+        ) {
+          return status.contract;
+        }
+      } catch {
+        return "";
+      }
+    }
+
+    if (
+      typeof authority.getReceiptLight ===
+      "function"
+    ) {
+      try {
+        const receipt =
+          authority.getReceiptLight();
+
+        if (
+          receipt &&
+          typeof receipt.contract ===
+          "string"
+        ) {
+          return receipt.contract;
+        }
+      } catch {
+        return "";
+      }
+    }
+
+    if (
+      typeof window.__AUDRALIA_PLANET_GEOMETRY_CONTRACT__ ===
+      "string"
+    ) {
+      return window.__AUDRALIA_PLANET_GEOMETRY_CONTRACT__;
+    }
+
+    return "";
+  }
+
   function resolveGeometryAuthority() {
     const authority =
       window[AUDRALIA_GEOMETRY_GLOBAL];
@@ -1333,7 +1517,7 @@
     }
 
     if (
-      authority.contract !==
+      getAuthorityContract(authority) !==
       AUDRALIA_GEOMETRY_CONTRACT
     ) {
       return null;
@@ -1341,7 +1525,7 @@
 
     if (
       typeof authority.createGeometry !==
-        "function"
+      "function"
     ) {
       return null;
     }
@@ -1407,8 +1591,6 @@
 
     if (
       !packet ||
-      packet.contract !==
-        AUDRALIA_GEOMETRY_CONTRACT ||
       !packet.terrain ||
       !packet.terrain.positions ||
       !packet.terrain.indices
@@ -1482,6 +1664,8 @@
 
         state.fallbackMode =
           false;
+
+        buildRenderer();
 
         markReady(
           "audralia-geometry-authority-available"
@@ -1569,137 +1753,6 @@
     waitForGeometryAuthority(
       performance.now(),
       options
-    );
-
-    return false;
-  }
-
-  function enterFallbackMode(reason) {
-    state.waitingForGeometry =
-      false;
-
-    state.fallbackMode =
-      true;
-
-    state.ready =
-      true;
-
-    state.failed =
-      false;
-
-    state.counters.fallbacks +=
-      1;
-
-    setFallbackText(
-      "Audralia"
-    );
-
-    applyStateAttribute();
-    applyReducedMotionAttribute();
-
-    renderFallbackDisk();
-
-    publishReceipt(
-      "fallback",
-      {
-        reason:
-          normalize(reason) ||
-          "fallback",
-
-        sourceGeometryUsed:
-          false,
-
-        audraliaGeometryAuthorityRequired:
-          true,
-
-        semanticActivation:
-          "none",
-
-        clickAuthority:
-          "[data-showroom-compass-control]",
-
-        navigationMeaning:
-          "main-compass-return-selection"
-      }
-    );
-
-    dispatch(
-      EVENTS.ready,
-      {
-        reason:
-          "fallback",
-
-        fallback:
-          true,
-
-        sourceGeometryUsed:
-          false
-      }
-    );
-
-    return true;
-  }
-
-  function fail(
-    reason,
-    error = null
-  ) {
-    state.failed =
-      true;
-
-    state.ready =
-      false;
-
-    state.paused =
-      false;
-
-    state.waitingForGeometry =
-      false;
-
-    stopAnimation();
-
-    applyStateAttribute();
-
-    state.counters.failures +=
-      1;
-
-    const errorPayload =
-      error
-        ? {
-            name:
-              error instanceof Error
-                ? error.name
-                : "Error",
-
-            message:
-              error instanceof Error
-                ? error.message
-                : String(error)
-          }
-        : null;
-
-    publishReceipt(
-      "failure",
-      {
-        reason:
-          normalize(reason) ||
-          "planet-failure",
-
-        error:
-          errorPayload
-      }
-    );
-
-    dispatch(
-      EVENTS.failure,
-      {
-        reason:
-          normalize(reason) ||
-          "planet-failure",
-
-        error:
-          errorPayload
-      }
     );
 
     return false;
@@ -1796,155 +1849,208 @@
       null;
   }
 
-  function ensureCanvasSize() {
+  function bindResize() {
+    unbindResize();
+
     if (
-      !state.canvas ||
-      !state.context
+      state.body &&
+      typeof ResizeObserver !==
+      "undefined"
     ) {
-      return false;
+      state.resizeObserver =
+        new ResizeObserver(() => {
+          renderStatic();
+        });
+
+      state.resizeObserver.observe(
+        state.body
+      );
     }
 
-    const rect =
-      state.canvas.getBoundingClientRect();
+    state.resizeListener =
+      () => {
+        renderStatic();
+      };
 
-    const cssSize =
-      Math.max(
-        96,
-        Math.round(
-          Math.max(
-            rect.width,
-            rect.height,
-            DEFAULTS.baseCanvasCssPixels
-          )
-        )
+    window.addEventListener(
+      "resize",
+      state.resizeListener,
+      {
+        passive:
+          true
+      }
+    );
+  }
+
+  function unbindResize() {
+    if (state.resizeObserver) {
+      try {
+        state.resizeObserver.disconnect();
+      } catch {
+        /* Best-effort observer cleanup. */
+      }
+    }
+
+    state.resizeObserver =
+      null;
+
+    if (state.resizeListener) {
+      try {
+        window.removeEventListener(
+          "resize",
+          state.resizeListener
+        );
+      } catch {
+        /* Best-effort listener cleanup. */
+      }
+    }
+
+    state.resizeListener =
+      null;
+  }
+
+  function createWebGLContext(canvas) {
+    const attributes = {
+      alpha:
+        true,
+
+      antialias:
+        true,
+
+      depth:
+        true,
+
+      stencil:
+        false,
+
+      premultipliedAlpha:
+        true,
+
+      preserveDrawingBuffer:
+        false,
+
+      powerPreference:
+        "low-power"
+    };
+
+    const gl =
+      canvas.getContext(
+        "webgl",
+        attributes
+      ) ||
+      canvas.getContext(
+        "experimental-webgl",
+        attributes
       );
 
-    const devicePixelRatio =
-      clamp(
-        window.devicePixelRatio || 1,
-        1,
-        DEFAULTS.maximumDevicePixelRatio
-      );
-
-    const pixelSize =
-      Math.max(
-        96,
-        Math.round(
-          cssSize *
-          devicePixelRatio
-        )
-      );
-
-    if (
-      state.canvas.width !== pixelSize ||
-      state.canvas.height !== pixelSize
-    ) {
-      state.canvas.width =
-        pixelSize;
-
-      state.canvas.height =
-        pixelSize;
-
-      state.lastCanvasSize =
-        pixelSize;
-
-      state.counters.canvasResizes +=
+    if (!gl) {
+      state.counters.webglFailures +=
         1;
 
-      return true;
+      return null;
     }
 
-    return false;
+    state.counters.webglContexts +=
+      1;
+
+    return gl;
   }
 
-  function clearCanvas() {
+  function compileShader(
+    gl,
+    type,
+    source
+  ) {
+    const shader =
+      gl.createShader(type);
+
+    gl.shaderSource(
+      shader,
+      source
+    );
+
+    gl.compileShader(
+      shader
+    );
+
     if (
-      !state.context ||
-      !state.canvas
+      !gl.getShaderParameter(
+        shader,
+        gl.COMPILE_STATUS
+      )
     ) {
-      return;
+      const message =
+        gl.getShaderInfoLog(shader) ||
+        "Shader compilation failed.";
+
+      gl.deleteShader(shader);
+
+      throw new Error(message);
     }
 
-    state.context.clearRect(
-      0,
-      0,
-      state.canvas.width,
-      state.canvas.height
+    return shader;
+  }
+
+  function createProgram(
+    gl,
+    vertexSource,
+    fragmentSource
+  ) {
+    const vertexShader =
+      compileShader(
+        gl,
+        gl.VERTEX_SHADER,
+        vertexSource
+      );
+
+    const fragmentShader =
+      compileShader(
+        gl,
+        gl.FRAGMENT_SHADER,
+        fragmentSource
+      );
+
+    const program =
+      gl.createProgram();
+
+    gl.attachShader(
+      program,
+      vertexShader
     );
-  }
 
-  function colorToCss(
-    color,
-    alpha = 1
-  ) {
-    return `rgba(${Math.round(color[0])}, ${Math.round(color[1])}, ${Math.round(color[2])}, ${clamp(alpha, 0, 1)})`;
-  }
-
-  function mixColor(
-    base,
-    overlay,
-    amount
-  ) {
-    const t =
-      clamp(
-        amount,
-        0,
-        1
-      );
-
-    return [
-      base[0] +
-        (overlay[0] - base[0]) *
-        t,
-
-      base[1] +
-        (overlay[1] - base[1]) *
-        t,
-
-      base[2] +
-        (overlay[2] - base[2]) *
-        t
-    ];
-  }
-
-  function shadeColor(
-    base,
-    light,
-    waterClass
-  ) {
-    const l =
-      clamp(
-        light,
-        0,
-        1
-      );
-
-    const nightMix =
-      (1 - l) *
-      0.54;
-
-    const dimmed =
-      mixColor(
-        base,
-        COLORS.night,
-        nightMix
-      );
-
-    const dayTarget =
-      waterClass === WATER_CLASS.DEEP_OCEAN ||
-      waterClass === WATER_CLASS.OPEN_OCEAN ||
-      waterClass === WATER_CLASS.SHELF_WATER ||
-      waterClass === WATER_CLASS.COASTAL_WATER ||
-      waterClass === WATER_CLASS.INLAND_SEA ||
-      waterClass === WATER_CLASS.LAKE
-        ? COLORS.oceanDay
-        : COLORS.coolDay;
-
-    return mixColor(
-      dimmed,
-      dayTarget,
-      Math.pow(l, 2.15) * 0.095
+    gl.attachShader(
+      program,
+      fragmentShader
     );
+
+    gl.linkProgram(
+      program
+    );
+
+    gl.deleteShader(
+      vertexShader
+    );
+
+    gl.deleteShader(
+      fragmentShader
+    );
+
+    if (
+      !gl.getProgramParameter(
+        program,
+        gl.LINK_STATUS
+      )
+    ) {
+      const message =
+        gl.getProgramInfoLog(program) ||
+        "Program linking failed.";
+
+      gl.deleteProgram(program);
+
+      throw new Error(message);
+    }
+
+    return program;
   }
 
   function materialColor(
@@ -2021,674 +2127,61 @@
     }
   }
 
-  function rotatePoint(
-    x,
-    y,
-    z,
-    yaw,
-    pitch
-  ) {
-    const cosYaw =
-      Math.cos(yaw);
-
-    const sinYaw =
-      Math.sin(yaw);
-
-    const yawX =
-      x * cosYaw +
-      z * sinYaw;
-
-    const yawZ =
-      -x * sinYaw +
-      z * cosYaw;
-
-    const cosPitch =
-      Math.cos(pitch);
-
-    const sinPitch =
-      Math.sin(pitch);
-
-    return {
-      x:
-        yawX,
-
-      y:
-        y * cosPitch -
-        yawZ * sinPitch,
-
-      z:
-        y * sinPitch +
-        yawZ * cosPitch
-    };
-  }
-
-  function projectPoint(
-    point,
-    center,
-    scale
-  ) {
-    return {
-      x:
-        center +
-        point.x *
-        scale,
-
-      y:
-        center -
-        point.y *
-        scale,
-
-      z:
-        point.z
-    };
-  }
-
-  function triangleVisible(
-    a,
-    b,
-    c
-  ) {
-    const abx =
-      b.x -
-      a.x;
-
-    const aby =
-      b.y -
-      a.y;
-
-    const acx =
-      c.x -
-      a.x;
-
-    const acy =
-      c.y -
-      a.y;
-
-    return (
-      abx * acy -
-      aby * acx
-    ) < 0;
-  }
-
-  function drawTriangle(
-    context,
-    a,
-    b,
-    c,
-    color
-  ) {
-    context.beginPath();
-
-    context.moveTo(
-      a.x,
-      a.y
-    );
-
-    context.lineTo(
-      b.x,
-      b.y
-    );
-
-    context.lineTo(
-      c.x,
-      c.y
-    );
-
-    context.closePath();
-
-    context.fillStyle =
-      color;
-
-    context.fill();
-  }
-
-  function createLightVector() {
-    return {
-      x:
-        -0.18,
-
-      y:
-        0.24,
-
-      z:
-        0.94
-    };
-  }
-
-  function dotLight(point, light) {
-    const length =
-      Math.hypot(
-        point.x,
-        point.y,
-        point.z
-      ) || 1;
-
-    return clamp(
-      (
-        point.x / length *
-          light.x +
-        point.y / length *
-          light.y +
-        point.z / length *
-          light.z
-      ) *
-        0.56 +
-        0.44,
-      0,
-      1
-    );
-  }
-
-  function drawBaseSphere(
-    context,
-    center,
-    radius,
-    pulse
-  ) {
-    const baseGradient =
-      context.createRadialGradient(
-        center - radius * 0.22,
-        center - radius * 0.2,
-        radius * 0.08,
-        center,
-        center,
-        radius
+  function createNormalsFromPositions(positions) {
+    const normals =
+      new Float32Array(
+        positions.length
       );
-
-    baseGradient.addColorStop(
-      0,
-      `rgba(96, 178, 181, ${0.32 + pulse * 0.015})`
-    );
-
-    baseGradient.addColorStop(
-      0.34,
-      "rgba(23, 91, 132, 0.94)"
-    );
-
-    baseGradient.addColorStop(
-      0.68,
-      "rgba(12, 42, 82, 0.98)"
-    );
-
-    baseGradient.addColorStop(
-      1,
-      "rgba(5, 14, 39, 1)"
-    );
-
-    context.save();
-
-    context.beginPath();
-
-    context.arc(
-      center,
-      center,
-      radius,
-      0,
-      Math.PI * 2
-    );
-
-    context.fillStyle =
-      baseGradient;
-
-    context.fill();
-
-    context.restore();
-  }
-
-  function drawAtmosphere(
-    context,
-    size,
-    center,
-    radius,
-    pulse
-  ) {
-    const atmosphereGradient =
-      context.createRadialGradient(
-        center - radius * 0.18,
-        center - radius * 0.18,
-        radius * 0.16,
-        center,
-        center,
-        radius * 1.1
-      );
-
-    atmosphereGradient.addColorStop(
-      0,
-      "rgba(255, 255, 255, 0.045)"
-    );
-
-    atmosphereGradient.addColorStop(
-      0.5,
-      `rgba(116, 224, 255, ${0.042 + pulse * 0.012})`
-    );
-
-    atmosphereGradient.addColorStop(
-      0.78,
-      `rgba(116, 224, 255, ${0.082 + pulse * 0.018})`
-    );
-
-    atmosphereGradient.addColorStop(
-      1,
-      "rgba(116, 224, 255, 0)"
-    );
-
-    context.save();
-
-    context.beginPath();
-
-    context.arc(
-      center,
-      center,
-      radius * 1.1,
-      0,
-      Math.PI * 2
-    );
-
-    context.fillStyle =
-      atmosphereGradient;
-
-    context.fill();
-
-    context.restore();
-
-    context.save();
-
-    context.beginPath();
-
-    context.arc(
-      center,
-      center,
-      radius * 1.01,
-      0,
-      Math.PI * 2
-    );
-
-    context.strokeStyle =
-      "rgba(152, 238, 255, 0.22)";
-
-    context.lineWidth =
-      Math.max(
-        1,
-        size * 0.006
-      );
-
-    context.stroke();
-
-    context.restore();
-  }
-
-  function drawTerminator(
-    context,
-    center,
-    radius
-  ) {
-    const gradient =
-      context.createRadialGradient(
-        center + radius * 0.48,
-        center + radius * 0.12,
-        radius * 0.08,
-        center + radius * 0.36,
-        center + radius * 0.12,
-        radius * 1.18
-      );
-
-    gradient.addColorStop(
-      0,
-      "rgba(0, 0, 0, 0)"
-    );
-
-    gradient.addColorStop(
-      0.48,
-      "rgba(0, 0, 0, 0.07)"
-    );
-
-    gradient.addColorStop(
-      1,
-      "rgba(0, 0, 0, 0.5)"
-    );
-
-    context.save();
-
-    context.beginPath();
-
-    context.arc(
-      center,
-      center,
-      radius,
-      0,
-      Math.PI * 2
-    );
-
-    context.clip();
-
-    context.fillStyle =
-      gradient;
-
-    context.fillRect(
-      center - radius,
-      center - radius,
-      radius * 2,
-      radius * 2
-    );
-
-    context.restore();
-  }
-
-  function drawSubtleSpecular(
-    context,
-    center,
-    radius
-  ) {
-    const gradient =
-      context.createRadialGradient(
-        center - radius * 0.22,
-        center - radius * 0.18,
-        radius * 0.02,
-        center - radius * 0.12,
-        center - radius * 0.08,
-        radius * 0.42
-      );
-
-    gradient.addColorStop(
-      0,
-      "rgba(218, 247, 250, 0.105)"
-    );
-
-    gradient.addColorStop(
-      0.35,
-      "rgba(168, 232, 238, 0.046)"
-    );
-
-    gradient.addColorStop(
-      1,
-      "rgba(168, 232, 238, 0)"
-    );
-
-    context.save();
-
-    context.beginPath();
-
-    context.arc(
-      center,
-      center,
-      radius,
-      0,
-      Math.PI * 2
-    );
-
-    context.clip();
-
-    context.fillStyle =
-      gradient;
-
-    context.fillRect(
-      center - radius,
-      center - radius,
-      radius * 2,
-      radius * 2
-    );
-
-    context.restore();
-  }
-
-  function drawClouds(
-    context,
-    center,
-    radius,
-    yaw,
-    cloudTurn
-  ) {
-    const cloudCount =
-      34;
-
-    context.save();
-
-    context.beginPath();
-
-    context.arc(
-      center,
-      center,
-      radius * 1.01,
-      0,
-      Math.PI * 2
-    );
-
-    context.clip();
 
     for (
       let index = 0;
-      index < cloudCount;
-      index += 1
+      index < positions.length;
+      index += 3
     ) {
-      const latitude =
-        Math.sin(index * 12.9898) *
-        0.78;
+      const x =
+        positions[index];
 
-      const longitude =
-        index * 2.399963 +
-        cloudTurn *
-        Math.PI *
-        2;
+      const y =
+        positions[index + 1];
 
-      const band =
-        0.62 +
-        0.38 *
-        Math.sin(index * 5.231);
+      const z =
+        positions[index + 2];
 
-      const directionX =
-        Math.cos(latitude) *
-        Math.cos(longitude);
+      const length =
+        Math.hypot(
+          x,
+          y,
+          z
+        ) || 1;
 
-      const directionY =
-        Math.sin(latitude);
+      normals[index] =
+        x / length;
 
-      const directionZ =
-        Math.cos(latitude) *
-        Math.sin(longitude);
+      normals[index + 1] =
+        y / length;
 
-      const rotated =
-        rotatePoint(
-          directionX,
-          directionY,
-          directionZ,
-          yaw,
-          -0.22
-        );
-
-      if (rotated.z <= -0.08) {
-        continue;
-      }
-
-      const projected =
-        projectPoint(
-          rotated,
-          center,
-          radius * 0.94
-        );
-
-      const alpha =
-        clamp(
-          0.035 +
-          rotated.z *
-          0.08,
-          0,
-          0.12
-        );
-
-      const width =
-        radius *
-        (
-          0.13 +
-          band *
-          0.075
-        );
-
-      const height =
-        radius *
-        (
-          0.02 +
-          band *
-          0.018
-        );
-
-      context.save();
-
-      context.translate(
-        projected.x,
-        projected.y
-      );
-
-      context.rotate(
-        longitude * 0.37
-      );
-
-      context.beginPath();
-
-      context.ellipse(
-        0,
-        0,
-        width,
-        height,
-        0,
-        0,
-        Math.PI * 2
-      );
-
-      context.fillStyle =
-        colorToCss(
-          COLORS.cloud,
-          alpha
-        );
-
-      context.fill();
-
-      context.restore();
+      normals[index + 2] =
+        z / length;
     }
 
-    context.restore();
+    return normals;
   }
 
-  function renderFallbackDisk() {
-    if (
-      !state.context ||
-      !state.canvas
-    ) {
-      return false;
-    }
-
-    ensureCanvasSize();
-
-    const context =
-      state.context;
-
-    const size =
-      state.canvas.width;
-
-    const center =
-      size / 2;
-
-    const radius =
-      size * 0.39;
-
-    clearCanvas();
-
-    drawAtmosphere(
-      context,
-      size,
-      center,
-      radius,
-      0.12
-    );
-
-    const gradient =
-      context.createRadialGradient(
-        center - radius * 0.22,
-        center - radius * 0.24,
-        radius * 0.12,
-        center,
-        center,
-        radius
-      );
-
-    gradient.addColorStop(
-      0,
-      "rgba(170, 216, 205, 0.62)"
-    );
-
-    gradient.addColorStop(
-      0.3,
-      "rgba(65, 148, 154, 0.88)"
-    );
-
-    gradient.addColorStop(
-      0.66,
-      "rgba(34, 80, 129, 0.96)"
-    );
-
-    gradient.addColorStop(
-      1,
-      "rgba(9, 23, 60, 1)"
-    );
-
-    context.beginPath();
-
-    context.arc(
-      center,
-      center,
-      radius,
-      0,
-      Math.PI * 2
-    );
-
-    context.fillStyle =
-      gradient;
-
-    context.fill();
-
-    drawSubtleSpecular(
-      context,
-      center,
-      radius
-    );
-
-    drawTerminator(
-      context,
-      center,
-      radius
-    );
-
-    return true;
-  }
-
-  function renderGeometryFrame(
-    turn,
-    cloudTurn,
-    pulse
-  ) {
-    if (
-      !state.context ||
-      !state.canvas ||
-      !state.terrainMesh
-    ) {
-      state.counters.renderSkips +=
-        1;
-
-      return false;
-    }
-
-    ensureCanvasSize();
-
-    const context =
-      state.context;
-
-    const mesh =
-      state.terrainMesh;
-
+  function createColorsForMesh(mesh) {
     const positions =
       mesh.positions;
 
-    const indices =
-      mesh.indices;
+    const vertexCount =
+      mesh.vertexCount ||
+      Math.floor(
+        positions.length /
+        3
+      );
+
+    const colors =
+      new Float32Array(
+        vertexCount * 3
+      );
 
     const materialHints =
       mesh.materialHints ||
@@ -2698,14 +2191,756 @@
       mesh.waterClasses ||
       null;
 
+    for (
+      let index = 0;
+      index < vertexCount;
+      index += 1
+    ) {
+      const materialHint =
+        materialHints
+          ? Math.round(
+              materialHints[index]
+            )
+          : MATERIAL_HINT.LOWLAND;
+
+      const waterClass =
+        waterClasses
+          ? Math.round(
+              waterClasses[index]
+            )
+          : WATER_CLASS.NONE;
+
+      const color =
+        materialColor(
+          materialHint,
+          waterClass
+        );
+
+      const offset =
+        index * 3;
+
+      colors[offset] =
+        color[0];
+
+      colors[offset + 1] =
+        color[1];
+
+      colors[offset + 2] =
+        color[2];
+    }
+
+    return colors;
+  }
+
+  function createCloudColors(mesh) {
+    const positions =
+      mesh.positions;
+
+    const vertexCount =
+      mesh.vertexCount ||
+      Math.floor(
+        positions.length /
+        3
+      );
+
+    const colors =
+      new Float32Array(
+        vertexCount * 3
+      );
+
+    for (
+      let index = 0;
+      index < vertexCount;
+      index += 1
+    ) {
+      const offset =
+        index * 3;
+
+      colors[offset] =
+        COLORS.cloud[0];
+
+      colors[offset + 1] =
+        COLORS.cloud[1];
+
+      colors[offset + 2] =
+        COLORS.cloud[2];
+    }
+
+    return colors;
+  }
+
+  function normalizeIndexArray(indices) {
+    let maximum =
+      0;
+
+    for (
+      let index = 0;
+      index < indices.length;
+      index += 1
+    ) {
+      if (indices[index] > maximum) {
+        maximum =
+          indices[index];
+      }
+    }
+
+    if (maximum <= 65535) {
+      return {
+        array:
+          indices instanceof Uint16Array
+            ? indices
+            : new Uint16Array(indices),
+
+        type:
+          "uint16"
+      };
+    }
+
+    return {
+      array:
+        indices instanceof Uint32Array
+          ? indices
+          : new Uint32Array(indices),
+
+      type:
+        "uint32"
+    };
+  }
+
+  function createMeshBuffer(
+    gl,
+    mesh,
+    options = {}
+  ) {
+    if (
+      !mesh ||
+      !mesh.positions ||
+      !mesh.indices
+    ) {
+      return null;
+    }
+
+    const positions =
+      mesh.positions instanceof Float32Array
+        ? mesh.positions
+        : new Float32Array(mesh.positions);
+
+    const normalsSource =
+      mesh.normals ||
+      null;
+
+    const normals =
+      normalsSource
+        ? (
+            normalsSource instanceof Float32Array
+              ? normalsSource
+              : new Float32Array(normalsSource)
+          )
+        : createNormalsFromPositions(
+            positions
+          );
+
+    const colors =
+      options.cloud
+        ? createCloudColors(mesh)
+        : createColorsForMesh(mesh);
+
+    const indexData =
+      normalizeIndexArray(
+        mesh.indices
+      );
+
+    if (
+      indexData.type === "uint32" &&
+      !gl.getExtension("OES_element_index_uint")
+    ) {
+      throw new Error(
+        "The miniature planet mesh requires 32-bit indices, but this WebGL context does not support them."
+      );
+    }
+
+    const positionBuffer =
+      gl.createBuffer();
+
+    gl.bindBuffer(
+      gl.ARRAY_BUFFER,
+      positionBuffer
+    );
+
+    gl.bufferData(
+      gl.ARRAY_BUFFER,
+      positions,
+      gl.STATIC_DRAW
+    );
+
+    const normalBuffer =
+      gl.createBuffer();
+
+    gl.bindBuffer(
+      gl.ARRAY_BUFFER,
+      normalBuffer
+    );
+
+    gl.bufferData(
+      gl.ARRAY_BUFFER,
+      normals,
+      gl.STATIC_DRAW
+    );
+
+    const colorBuffer =
+      gl.createBuffer();
+
+    gl.bindBuffer(
+      gl.ARRAY_BUFFER,
+      colorBuffer
+    );
+
+    gl.bufferData(
+      gl.ARRAY_BUFFER,
+      colors,
+      gl.STATIC_DRAW
+    );
+
+    const indexBuffer =
+      gl.createBuffer();
+
+    gl.bindBuffer(
+      gl.ELEMENT_ARRAY_BUFFER,
+      indexBuffer
+    );
+
+    gl.bufferData(
+      gl.ELEMENT_ARRAY_BUFFER,
+      indexData.array,
+      gl.STATIC_DRAW
+    );
+
+    return {
+      positionBuffer,
+      normalBuffer,
+      colorBuffer,
+      indexBuffer,
+
+      indexType:
+        indexData.type === "uint32"
+          ? gl.UNSIGNED_INT
+          : gl.UNSIGNED_SHORT,
+
+      indexCount:
+        indexData.array.length,
+
+      vertexCount:
+        mesh.vertexCount ||
+        Math.floor(
+          positions.length /
+          3
+        ),
+
+      triangleCount:
+        mesh.triangleCount ||
+        Math.floor(
+          indexData.array.length /
+          3
+        )
+    };
+  }
+
+  function deleteMeshBuffer(
+    gl,
+    buffer
+  ) {
+    if (
+      !gl ||
+      !buffer
+    ) {
+      return;
+    }
+
+    [
+      buffer.positionBuffer,
+      buffer.normalBuffer,
+      buffer.colorBuffer,
+      buffer.indexBuffer
+    ].forEach(entry => {
+      if (entry) {
+        try {
+          gl.deleteBuffer(entry);
+        } catch {
+          /* Best-effort buffer cleanup. */
+        }
+      }
+    });
+  }
+
+  function makePerspective(
+    fovY,
+    aspect,
+    near,
+    far
+  ) {
+    const f =
+      1 /
+      Math.tan(
+        fovY / 2
+      );
+
+    const range =
+      1 /
+      (near - far);
+
+    return new Float32Array([
+      f / aspect,
+      0,
+      0,
+      0,
+
+      0,
+      f,
+      0,
+      0,
+
+      0,
+      0,
+      (far + near) * range,
+      -1,
+
+      0,
+      0,
+      2 * far * near * range,
+      0
+    ]);
+  }
+
+  function buildRenderer() {
+    if (
+      !state.canvas ||
+      !state.terrainMesh
+    ) {
+      return false;
+    }
+
+    const gl =
+      state.gl ||
+      createWebGLContext(
+        state.canvas
+      );
+
+    if (!gl) {
+      throw new Error(
+        "WebGL is unavailable for the miniature Audralia planet."
+      );
+    }
+
+    state.gl =
+      gl;
+
+    const program =
+      createProgram(
+        gl,
+        VERTEX_SHADER_SOURCE,
+        FRAGMENT_SHADER_SOURCE
+      );
+
+    const renderer = {
+      program,
+
+      attributes: {
+        position:
+          gl.getAttribLocation(
+            program,
+            "aPosition"
+          ),
+
+        normal:
+          gl.getAttribLocation(
+            program,
+            "aNormal"
+          ),
+
+        color:
+          gl.getAttribLocation(
+            program,
+            "aColor"
+          )
+      },
+
+      uniforms: {
+        projection:
+          gl.getUniformLocation(
+            program,
+            "uProjection"
+          ),
+
+        yaw:
+          gl.getUniformLocation(
+            program,
+            "uYaw"
+          ),
+
+        pitch:
+          gl.getUniformLocation(
+            program,
+            "uPitch"
+          ),
+
+        scale:
+          gl.getUniformLocation(
+            program,
+            "uScale"
+          ),
+
+        distance:
+          gl.getUniformLocation(
+            program,
+            "uDistance"
+          ),
+
+        mode:
+          gl.getUniformLocation(
+            program,
+            "uMode"
+          ),
+
+        alpha:
+          gl.getUniformLocation(
+            program,
+            "uAlpha"
+          ),
+
+        pulse:
+          gl.getUniformLocation(
+            program,
+            "uPulse"
+          )
+      },
+
+      terrain:
+        createMeshBuffer(
+          gl,
+          state.terrainMesh
+        ),
+
+      cloud:
+        state.cloudMesh
+          ? createMeshBuffer(
+              gl,
+              state.cloudMesh,
+              {
+                cloud:
+                  true
+              }
+            )
+          : null
+    };
+
+    if (!renderer.terrain) {
+      throw new Error(
+        "The Audralia terrain mesh could not be converted into WebGL buffers."
+      );
+    }
+
+    state.renderer =
+      renderer;
+
+    gl.enable(
+      gl.DEPTH_TEST
+    );
+
+    gl.depthFunc(
+      gl.LEQUAL
+    );
+
+    gl.enable(
+      gl.CULL_FACE
+    );
+
+    gl.cullFace(
+      gl.BACK
+    );
+
+    gl.enable(
+      gl.BLEND
+    );
+
+    gl.blendFunc(
+      gl.SRC_ALPHA,
+      gl.ONE_MINUS_SRC_ALPHA
+    );
+
+    gl.clearColor(
+      0,
+      0,
+      0,
+      0
+    );
+
+    return true;
+  }
+
+  function destroyRenderer() {
+    const gl =
+      state.gl;
+
+    const renderer =
+      state.renderer;
+
+    if (
+      gl &&
+      renderer
+    ) {
+      deleteMeshBuffer(
+        gl,
+        renderer.terrain
+      );
+
+      deleteMeshBuffer(
+        gl,
+        renderer.cloud
+      );
+
+      if (renderer.program) {
+        try {
+          gl.deleteProgram(
+            renderer.program
+          );
+        } catch {
+          /* Best-effort program cleanup. */
+        }
+      }
+    }
+
+    state.renderer =
+      null;
+  }
+
+  function ensureCanvasSize() {
+    if (
+      !state.canvas ||
+      !state.gl
+    ) {
+      return false;
+    }
+
+    const rect =
+      state.canvas.getBoundingClientRect();
+
+    const cssSize =
+      Math.max(
+        96,
+        Math.round(
+          Math.max(
+            rect.width,
+            rect.height,
+            DEFAULTS.baseCanvasCssPixels
+          )
+        )
+      );
+
+    const devicePixelRatio =
+      clamp(
+        window.devicePixelRatio || 1,
+        1,
+        DEFAULTS.maximumDevicePixelRatio
+      );
+
+    const pixelSize =
+      Math.max(
+        96,
+        Math.round(
+          cssSize *
+          devicePixelRatio
+        )
+      );
+
+    if (
+      state.canvas.width !== pixelSize ||
+      state.canvas.height !== pixelSize
+    ) {
+      state.canvas.width =
+        pixelSize;
+
+      state.canvas.height =
+        pixelSize;
+
+      state.gl.viewport(
+        0,
+        0,
+        pixelSize,
+        pixelSize
+      );
+
+      state.counters.canvasResizes +=
+        1;
+
+      return true;
+    }
+
+    return false;
+  }
+
+  function bindMesh(
+    gl,
+    renderer,
+    mesh
+  ) {
+    gl.bindBuffer(
+      gl.ARRAY_BUFFER,
+      mesh.positionBuffer
+    );
+
+    gl.enableVertexAttribArray(
+      renderer.attributes.position
+    );
+
+    gl.vertexAttribPointer(
+      renderer.attributes.position,
+      3,
+      gl.FLOAT,
+      false,
+      0,
+      0
+    );
+
+    gl.bindBuffer(
+      gl.ARRAY_BUFFER,
+      mesh.normalBuffer
+    );
+
+    gl.enableVertexAttribArray(
+      renderer.attributes.normal
+    );
+
+    gl.vertexAttribPointer(
+      renderer.attributes.normal,
+      3,
+      gl.FLOAT,
+      false,
+      0,
+      0
+    );
+
+    gl.bindBuffer(
+      gl.ARRAY_BUFFER,
+      mesh.colorBuffer
+    );
+
+    gl.enableVertexAttribArray(
+      renderer.attributes.color
+    );
+
+    gl.vertexAttribPointer(
+      renderer.attributes.color,
+      3,
+      gl.FLOAT,
+      false,
+      0,
+      0
+    );
+
+    gl.bindBuffer(
+      gl.ELEMENT_ARRAY_BUFFER,
+      mesh.indexBuffer
+    );
+  }
+
+  function drawMesh(
+    gl,
+    renderer,
+    mesh,
+    mode,
+    alpha,
+    scale,
+    yaw,
+    pitch,
+    pulse
+  ) {
+    if (!mesh) {
+      return;
+    }
+
+    bindMesh(
+      gl,
+      renderer,
+      mesh
+    );
+
+    gl.uniform1i(
+      renderer.uniforms.mode,
+      mode
+    );
+
+    gl.uniform1f(
+      renderer.uniforms.alpha,
+      alpha
+    );
+
+    gl.uniform1f(
+      renderer.uniforms.scale,
+      scale
+    );
+
+    gl.uniform1f(
+      renderer.uniforms.yaw,
+      yaw
+    );
+
+    gl.uniform1f(
+      renderer.uniforms.pitch,
+      pitch
+    );
+
+    gl.uniform1f(
+      renderer.uniforms.distance,
+      3.15
+    );
+
+    gl.uniform1f(
+      renderer.uniforms.pulse,
+      pulse
+    );
+
+    gl.drawElements(
+      gl.TRIANGLES,
+      mesh.indexCount,
+      mesh.indexType,
+      0
+    );
+  }
+
+  function renderFrame(
+    turn,
+    cloudTurn,
+    pulse
+  ) {
+    const gl =
+      state.gl;
+
+    const renderer =
+      state.renderer;
+
+    if (
+      !gl ||
+      !renderer ||
+      !renderer.terrain
+    ) {
+      state.counters.renderSkips +=
+        1;
+
+      return false;
+    }
+
+    ensureCanvasSize();
+
     const size =
       state.canvas.width;
 
-    const center =
-      size / 2;
-
-    const radius =
-      size * 0.39;
+    const projection =
+      makePerspective(
+        Math.PI / 3.16,
+        1,
+        0.1,
+        20
+      );
 
     const yaw =
       turn *
@@ -2715,235 +2950,126 @@
     const pitch =
       -0.24;
 
-    const light =
-      createLightVector();
+    const cloudYaw =
+      cloudTurn *
+      Math.PI *
+      2;
 
-    const projected =
-      new Array(
-        mesh.vertexCount
-      );
-
-    for (
-      let vertexIndex = 0;
-      vertexIndex < mesh.vertexCount;
-      vertexIndex += 1
-    ) {
-      const offset =
-        vertexIndex *
-        3;
-
-      const rotated =
-        rotatePoint(
-          positions[offset],
-          positions[offset + 1],
-          positions[offset + 2],
-          yaw,
-          pitch
-        );
-
-      projected[vertexIndex] =
-        projectPoint(
-          rotated,
-          center,
-          radius
-        );
-    }
-
-    const triangles = [];
-
-    for (
-      let index = 0;
-      index < indices.length;
-      index += 3
-    ) {
-      const ia =
-        indices[index];
-
-      const ib =
-        indices[index + 1];
-
-      const ic =
-        indices[index + 2];
-
-      const a =
-        projected[ia];
-
-      const b =
-        projected[ib];
-
-      const c =
-        projected[ic];
-
-      const averageZ =
-        (
-          a.z +
-          b.z +
-          c.z
-        ) /
-        3;
-
-      if (averageZ <= -0.04) {
-        continue;
-      }
-
-      if (
-        !triangleVisible(
-          a,
-          b,
-          c
-        )
-      ) {
-        continue;
-      }
-
-      triangles.push({
-        ia,
-        ib,
-        ic,
-        a,
-        b,
-        c,
-        z:
-          averageZ
-      });
-    }
-
-    triangles.sort(
-      (
-        first,
-        second
-      ) =>
-        first.z -
-        second.z
+    gl.useProgram(
+      renderer.program
     );
 
-    clearCanvas();
-
-    drawAtmosphere(
-      context,
-      size,
-      center,
-      radius,
-      pulse
-    );
-
-    context.save();
-
-    context.beginPath();
-
-    context.arc(
-      center,
-      center,
-      radius * 1.015,
+    gl.viewport(
       0,
-      Math.PI * 2
+      0,
+      size,
+      size
     );
 
-    context.clip();
+    gl.uniformMatrix4fv(
+      renderer.uniforms.projection,
+      false,
+      projection
+    );
 
-    drawBaseSphere(
-      context,
-      center,
-      radius,
+    gl.clear(
+      gl.COLOR_BUFFER_BIT |
+      gl.DEPTH_BUFFER_BIT
+    );
+
+    gl.depthMask(
+      true
+    );
+
+    gl.enable(
+      gl.DEPTH_TEST
+    );
+
+    gl.enable(
+      gl.CULL_FACE
+    );
+
+    drawMesh(
+      gl,
+      renderer,
+      renderer.terrain,
+      0,
+      1,
+      1,
+      yaw,
+      pitch,
       pulse
     );
 
-    for (
-      const triangle
-      of triangles
-    ) {
-      const materialHint =
-        materialHints
-          ? Math.round(
-              (
-                materialHints[triangle.ia] +
-                materialHints[triangle.ib] +
-                materialHints[triangle.ic]
-              ) /
-              3
-            )
-          : MATERIAL_HINT.LOWLAND;
+    if (renderer.cloud) {
+      gl.depthMask(
+        false
+      );
 
-      const waterClass =
-        waterClasses
-          ? Math.round(
-              (
-                waterClasses[triangle.ia] +
-                waterClasses[triangle.ib] +
-                waterClasses[triangle.ic]
-              ) /
-              3
-            )
-          : WATER_CLASS.NONE;
+      drawMesh(
+        gl,
+        renderer,
+        renderer.cloud,
+        2,
+        0.36,
+        1.018,
+        cloudYaw,
+        pitch,
+        pulse
+      );
 
-      const baseColor =
-        materialColor(
-          materialHint,
-          waterClass
-        );
-
-      const lightValue =
-        (
-          dotLight(
-            triangle.a,
-            light
-          ) +
-          dotLight(
-            triangle.b,
-            light
-          ) +
-          dotLight(
-            triangle.c,
-            light
-          )
-        ) /
-        3;
-
-      const color =
-        shadeColor(
-          baseColor,
-          lightValue,
-          waterClass
-        );
-
-      drawTriangle(
-        context,
-        triangle.a,
-        triangle.b,
-        triangle.c,
-        colorToCss(
-          color,
-          0.985
-        )
+      gl.depthMask(
+        true
       );
     }
 
-    context.restore();
+    gl.depthMask(
+      false
+    );
 
-    drawClouds(
-      context,
-      center,
-      radius,
+    gl.disable(
+      gl.CULL_FACE
+    );
+
+    drawMesh(
+      gl,
+      renderer,
+      renderer.terrain,
+      1,
+      1,
+      1.043,
       yaw,
-      cloudTurn
+      pitch,
+      pulse
     );
 
-    drawSubtleSpecular(
-      context,
-      center,
-      radius
+    gl.enable(
+      gl.CULL_FACE
     );
 
-    drawTerminator(
-      context,
-      center,
-      radius
+    gl.depthMask(
+      true
     );
 
     state.counters.renderFrames +=
       1;
 
     return true;
+  }
+
+  function renderStatic() {
+    if (
+      state.fallbackMode ||
+      !state.renderer
+    ) {
+      return false;
+    }
+
+    return renderFrame(
+      0.08,
+      0.18,
+      0
+    );
   }
 
   function animationAllowed() {
@@ -2955,23 +3081,9 @@
       !state.paused &&
       !state.reducedMotion &&
       state.root &&
-      state.canvas
-    );
-  }
-
-  function renderStatic() {
-    if (state.fallbackMode) {
-      return renderFallbackDisk();
-    }
-
-    if (!state.terrainMesh) {
-      return false;
-    }
-
-    return renderGeometryFrame(
-      0.08,
-      0.18,
-      0
+      state.canvas &&
+      state.gl &&
+      state.renderer
     );
   }
 
@@ -3028,19 +3140,27 @@
       String(pulse)
     );
 
-    renderGeometryFrame(
+    renderFrame(
       turn,
       cloudTurn,
       pulse
     );
 
-    state.lastRenderTurn =
-      turn;
-
     state.frameId =
       window.requestAnimationFrame(
         animationStep
       );
+  }
+
+  function cancelAnimation() {
+    if (state.frameId) {
+      window.cancelAnimationFrame(
+        state.frameId
+      );
+    }
+
+    state.frameId =
+      0;
   }
 
   function startAnimation() {
@@ -3063,17 +3183,6 @@
     return true;
   }
 
-  function cancelAnimation() {
-    if (state.frameId) {
-      window.cancelAnimationFrame(
-        state.frameId
-      );
-    }
-
-    state.frameId =
-      0;
-  }
-
   function stopAnimation() {
     cancelAnimation();
 
@@ -3093,6 +3202,145 @@
     );
 
     renderStatic();
+  }
+
+  function enterFallbackMode(reason) {
+    state.waitingForGeometry =
+      false;
+
+    state.fallbackMode =
+      true;
+
+    state.ready =
+      false;
+
+    state.failed =
+      true;
+
+    state.counters.fallbacks +=
+      1;
+
+    setFallbackText("");
+
+    applyStateAttribute();
+    applyReducedMotionAttribute();
+
+    publishReceipt(
+      "fallback",
+      {
+        reason:
+          normalize(reason) ||
+          "fallback",
+
+        sourceGeometryUsed:
+          false,
+
+        rendererMode:
+          "none",
+
+        audraliaGeometryAuthorityRequired:
+          true,
+
+        semanticActivation:
+          "none",
+
+        clickAuthority:
+          false,
+
+        clickAuthorityOwner:
+          "[data-showroom-compass-control]",
+
+        navigationMeaning:
+          "main-compass-return-selection",
+
+        webGL:
+          false,
+
+        canvas2dRenderer:
+          false
+      }
+    );
+
+    dispatch(
+      EVENTS.failure,
+      {
+        reason:
+          "fallback",
+
+        fallback:
+          true,
+
+        sourceGeometryUsed:
+          false
+      }
+    );
+
+    return true;
+  }
+
+  function fail(
+    reason,
+    error = null
+  ) {
+    state.failed =
+      true;
+
+    state.ready =
+      false;
+
+    state.paused =
+      false;
+
+    state.waitingForGeometry =
+      false;
+
+    stopAnimation();
+
+    applyStateAttribute();
+
+    state.counters.failures +=
+      1;
+
+    const errorPayload =
+      error
+        ? {
+            name:
+              error instanceof Error
+                ? error.name
+                : "Error",
+
+            message:
+              error instanceof Error
+                ? error.message
+                : String(error)
+          }
+        : null;
+
+    publishReceipt(
+      "failure",
+      {
+        reason:
+          normalize(reason) ||
+          "planet-failure",
+
+        error:
+          errorPayload
+      }
+    );
+
+    dispatch(
+      EVENTS.failure,
+      {
+        reason:
+          normalize(reason) ||
+          "planet-failure",
+
+        error:
+          errorPayload
+      }
+    );
+
+    return false;
   }
 
   function markReady(reason) {
@@ -3143,29 +3391,22 @@
             : null,
 
         terrainVertexCount:
-          state.terrainMesh
-            ? state.terrainMesh.vertexCount
+          state.renderer &&
+          state.renderer.terrain
+            ? state.renderer.terrain.vertexCount
             : null,
 
         terrainTriangleCount:
-          state.terrainMesh
-            ? state.terrainMesh.triangleCount
+          state.renderer &&
+          state.renderer.terrain
+            ? state.renderer.terrain.triangleCount
             : null,
 
-        landCoverage:
-          state.terrainMesh &&
-          state.terrainMesh.metrics
-            ? state.terrainMesh.metrics.landCoverage
-            : null,
-
-        oceanCoverage:
-          state.terrainMesh &&
-          state.terrainMesh.metrics
-            ? state.terrainMesh.metrics.oceanCoverage
-            : null,
+        cloudMeshAvailable:
+          Boolean(state.cloudMesh),
 
         staticFallbackAvailable:
-          true,
+          false,
 
         animationAllowed:
           animationAllowed(),
@@ -3173,26 +3414,26 @@
         visualIdentity:
           "mini-audralia",
 
-        visualRevision:
-          VISUAL_REVISION,
-
-        visualCorrection:
-          "renderer-origin-glare-reduction-and-cool-balanced-globe-lighting",
+        rendererMode:
+          "webgl-3d",
 
         navigationMeaning:
           "main-compass-return-selection",
 
         clickAuthority:
+          false,
+
+        clickAuthorityOwner:
           "[data-showroom-compass-control]",
 
         semanticActivation:
           "none",
 
         webGL:
-          false,
+          true,
 
         canvas2dRenderer:
-          true
+          false
       }
     );
 
@@ -3209,8 +3450,8 @@
         visualIdentity:
           "mini-audralia",
 
-        visualRevision:
-          VISUAL_REVISION,
+        rendererMode:
+          "webgl-3d",
 
         navigationMeaning:
           "main-compass-return-selection"
@@ -3265,12 +3506,20 @@
         root
       );
 
-      if (
-        !state.context ||
-        !isCanvas(state.canvas)
-      ) {
+      if (!isCanvas(state.canvas)) {
         throw new Error(
-          "The mini Audralia planet requires a Canvas 2D context."
+          "The mini Audralia planet requires a canvas host."
+        );
+      }
+
+      state.gl =
+        createWebGLContext(
+          state.canvas
+        );
+
+      if (!state.gl) {
+        throw new Error(
+          "The mini Audralia planet requires WebGL."
         );
       }
 
@@ -3298,6 +3547,7 @@
       state.counters.mounts +=
         1;
 
+      bindResize();
       applyStateAttribute();
       applyReducedMotionAttribute();
 
@@ -3322,13 +3572,16 @@
           visualIdentity:
             "mini-audralia",
 
-          visualRevision:
-            VISUAL_REVISION,
+          rendererMode:
+            "webgl-3d",
 
           navigationMeaning:
             "main-compass-return-selection",
 
           clickAuthority:
+            false,
+
+          clickAuthorityOwner:
             "[data-showroom-compass-control]",
 
           audraliaGeometryAuthorityRequired:
@@ -3341,10 +3594,10 @@
             AUDRALIA_GEOMETRY_CONTRACT,
 
           canvas2dRenderer:
-            true,
+            false,
 
           webGL:
-            false
+            true
         }
       );
 
@@ -3354,6 +3607,8 @@
         );
 
       if (geometryReady) {
+        buildRenderer();
+
         return markReady(
           "mounted-with-audralia-geometry-authority"
         );
@@ -3377,6 +3632,8 @@
 
     clearGeometryWaitTimer();
     stopAnimation();
+    destroyRenderer();
+    unbindResize();
 
     const root =
       state.root;
@@ -3411,7 +3668,7 @@
     state.canvas =
       null;
 
-    state.context =
+    state.gl =
       null;
 
     state.fallback =
@@ -3454,12 +3711,6 @@
       "";
 
     state.animationStartedAt =
-      0;
-
-    state.lastRenderTurn =
-      NaN;
-
-    state.lastCanvasSize =
       0;
 
     state.counters.unmounts +=
@@ -3603,6 +3854,7 @@
 
     clearGeometryWaitTimer();
     unbindReducedMotion();
+    unbindResize();
     cancelAnimation();
 
     state.disposed =
@@ -3687,8 +3939,8 @@
         visualIdentity:
           "mini-audralia",
 
-        visualRevision:
-          VISUAL_REVISION,
+        rendererMode:
+          "webgl-3d",
 
         navigationMeaning:
           "main-compass-return-selection",
@@ -3705,14 +3957,37 @@
             : null,
 
         terrainVertexCount:
-          state.terrainMesh
-            ? state.terrainMesh.vertexCount
+          state.renderer &&
+          state.renderer.terrain
+            ? state.renderer.terrain.vertexCount
             : null,
 
         terrainTriangleCount:
-          state.terrainMesh
-            ? state.terrainMesh.triangleCount
+          state.renderer &&
+          state.renderer.terrain
+            ? state.renderer.terrain.triangleCount
             : null,
+
+        cloudMeshAvailable:
+          Boolean(state.cloudMesh),
+
+        emittedDomSurfaces: [
+          ".showroom-planet-root",
+          ".showroom-planet-glow",
+          ".showroom-planet-orbit-line",
+          ".showroom-planet-shell",
+          ".showroom-planet-body",
+          ".showroom-planet-canvas",
+          ".showroom-planet-atmosphere",
+          ".showroom-planet-rim",
+          ".showroom-planet-terminator",
+          ".showroom-planet-shadow",
+          ".showroom-planet-meridian",
+          ".showroom-planet-fulcrum",
+          ".showroom-planet-axis",
+          ".showroom-planet-fallback",
+          '[data-showroom-planet-reduced-motion="true"]'
+        ],
 
         lastReceipt:
           state.lastReceipt
@@ -3743,9 +4018,6 @@
       model:
         MODEL,
 
-      visualRevision:
-        VISUAL_REVISION,
-
       owner:
         OWNER,
 
@@ -3757,6 +4029,9 @@
 
       visualIdentity:
         "mini-audralia",
+
+      rendererMode:
+        "webgl-3d",
 
       navigationMeaning:
         "main-compass-return-selection",
@@ -3815,13 +4090,16 @@
       visualIdentity:
         "mini-audralia",
 
-      visualRevision:
-        VISUAL_REVISION,
+      rendererMode:
+        "webgl-3d",
 
       navigationMeaning:
         "main-compass-return-selection",
 
       clickAuthority:
+        false,
+
+      clickAuthorityOwner:
         "[data-showroom-compass-control]",
 
       requiredGeometryAuthority:
@@ -3833,11 +4111,29 @@
       requiredGeometryContract:
         AUDRALIA_GEOMETRY_CONTRACT,
 
+      emittedDomSurfaces: [
+        ".showroom-planet-root",
+        ".showroom-planet-glow",
+        ".showroom-planet-orbit-line",
+        ".showroom-planet-shell",
+        ".showroom-planet-body",
+        ".showroom-planet-canvas",
+        ".showroom-planet-atmosphere",
+        ".showroom-planet-rim",
+        ".showroom-planet-terminator",
+        ".showroom-planet-shadow",
+        ".showroom-planet-meridian",
+        ".showroom-planet-fulcrum",
+        ".showroom-planet-axis",
+        ".showroom-planet-fallback",
+        '[data-showroom-planet-reduced-motion="true"]'
+      ],
+
       canvas2dRenderer:
-        true,
+        false,
 
       webGL:
-        false,
+        true,
 
       navigationAuthority:
         false,

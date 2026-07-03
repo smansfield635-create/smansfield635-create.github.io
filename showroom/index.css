@@ -1,22 +1,19 @@
 /* TARGET FILE: /showroom/index.css
    COMPLETE REPLACEMENT
 
-   SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v13_5_PLANET_CENTER_VISUAL_WEIGHT_NEWS_LOCK
+   SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v13_5_AUDRALIA_PLANET_CENTER_VISUAL_RENEWAL
 
    Scope:
    - compact Mirrorland threshold;
    - constellation-first composition;
    - live 23-record Mirrorland Atlas;
-   - corrected compound-root Atlas selectors;
-   - Atlas precedence:
-       held > compass > child > cardinal > idle;
+   - Atlas precedence: held > compass > child > cardinal > idle;
    - exactly one visible compact narrative record;
    - exactly one visible Narrative Position record;
    - retained semantic-star fallback;
    - retained center compatibility selector names;
-   - independent planet center visual;
-   - strengthened planetary fulcrum visual weight;
-   - full semantic Main Compass hit area with secondary lower badge;
+   - independent Audralia-style planet center visual;
+   - /showroom/index.planet.js v2 surface hooks;
    - removed multi-file Compass renderer / adapter CSS model;
    - no Compass projected-bounds CSS dependency;
    - durable orbit-field touch-arbitration baseline;
@@ -25,11 +22,11 @@
    - responsive mobile composition;
    - Cosmos remains an independent body-level decorative layer.
 
-   NEWS expression lock:
-   - expression-layer direction order is NEWS / N-E-W-S;
-   - do not express the visual-language direction order as another sequence;
-   - this file does not recreate static Compass lettering because the
-     planet module owns the active center visual and fallback.
+   Direction correction:
+   - legacy static Compass face must not be recreated as NESW;
+   - canonical expression order remains NEWS where written order is needed;
+   - this file does not recreate Compass lettering because the planet
+     module owns the active center visual and fallback.
 */
 
 /* ================================================================
@@ -115,13 +112,14 @@
   --showroom-static-star-opacity: 0.72;
 
   --showroom-center-size:
-    clamp(10.5rem, 24vw, 16.5rem);
+    clamp(12.25rem, 24vw, 18.75rem);
 
   --showroom-planet-size:
-    clamp(9.4rem, 21vw, 14.6rem);
+    clamp(10.65rem, 21vw, 16.15rem);
 
-  --showroom-planet-turn:
-    0deg;
+  --showroom-planet-turn: 0deg;
+  --showroom-planet-cloud-turn: 0deg;
+  --showroom-planet-pulse: 0;
 }
 
 /* ================================================================
@@ -768,8 +766,6 @@ main {
 
   content: "";
   background: currentColor;
-  box-shadow:
-    0 0 1.6rem rgba(224, 184, 91, 0.16);
 }
 
 .door-subtitle {
@@ -1018,7 +1014,7 @@ main {
 }
 
 /* ================================================================
-   10. CENTER COMPATIBILITY LAYER AND PLANETARY FULCRUM
+   10. CENTER COMPATIBILITY LAYER AND AUDRALIA PLANET VISUAL
    ================================================================ */
 
 .showroom-compass-layer,
@@ -1038,39 +1034,33 @@ main {
 [data-showroom-compass-visual-mount],
 [data-showroom-planet-mount] {
   position: absolute;
-  inset: 0;
+  inset: -7%;
 
   display: grid;
   place-items: center;
 
-  overflow: visible;
   pointer-events: none;
 }
 
-.showroom-planet-mount,
-[data-showroom-planet-mount] {
+.showroom-planet-mount {
   border-radius: 50%;
 
   background:
     radial-gradient(
-      circle at 50% 50%,
-      rgba(117, 233, 255, 0.16),
-      transparent 58%
+      circle at 48% 45%,
+      rgba(118, 231, 255, 0.16),
+      rgba(118, 231, 255, 0.06) 28%,
+      transparent 55%
     );
 
   filter:
     drop-shadow(
-      0 0 2.8rem rgba(117, 233, 255, 0.2)
-    )
-    drop-shadow(
-      0 0 4.4rem rgba(224, 184, 91, 0.08)
+      0 0 2.1rem rgba(117, 233, 255, 0.11)
     );
 }
 
 .showroom-planet-mount::before,
-.showroom-planet-mount::after,
-[data-showroom-planet-mount]::before,
-[data-showroom-planet-mount]::after {
+.showroom-planet-mount::after {
   position: absolute;
 
   border-radius: 50%;
@@ -1079,24 +1069,21 @@ main {
   content: "";
 }
 
-.showroom-planet-mount::before,
-[data-showroom-planet-mount]::before {
-  inset: -3%;
+.showroom-planet-mount::before {
+  inset: 6%;
 
-  border: 1px solid rgba(224, 184, 91, 0.22);
+  border: 1px solid rgba(224, 184, 91, 0.16);
 
   box-shadow:
-    0 0 2.8rem rgba(224, 184, 91, 0.13),
-    inset 0 0 2.6rem rgba(117, 233, 255, 0.1);
+    0 0 2.2rem rgba(224, 184, 91, 0.08),
+    inset 0 0 2rem rgba(117, 233, 255, 0.045);
 }
 
-.showroom-planet-mount::after,
-[data-showroom-planet-mount]::after {
-  inset: 9%;
+.showroom-planet-mount::after {
+  inset: 15%;
 
-  border: 1px solid rgba(117, 233, 255, 0.22);
+  border: 1px solid rgba(117, 233, 255, 0.14);
 
-  opacity: 0.9;
   transform: rotateX(62deg) rotateZ(-18deg);
 }
 
@@ -1114,17 +1101,75 @@ main {
   pointer-events: none;
   isolation: isolate;
 
-  filter:
-    drop-shadow(
-      0 0 2rem rgba(117, 233, 255, 0.22)
-    )
-    drop-shadow(
-      0 0 3.8rem rgba(224, 184, 91, 0.1)
+  --audralia-ocean-a: #10395b;
+  --audralia-ocean-b: #0f7c93;
+  --audralia-ocean-c: #1bbac1;
+  --audralia-land-a: #365d46;
+  --audralia-land-b: #7e8e5a;
+  --audralia-land-c: #c2a56b;
+  --audralia-ice: #e8fbff;
+  --audralia-shadow: rgba(1, 4, 12, 0.66);
+}
+
+.showroom-planet-glow {
+  position: absolute;
+  z-index: 0;
+  inset: -34%;
+
+  border-radius: 50%;
+
+  background:
+    radial-gradient(
+      circle at 45% 42%,
+      rgba(255, 238, 178, 0.18),
+      transparent 14%
+    ),
+    radial-gradient(
+      circle at 50% 50%,
+      rgba(117, 233, 255, 0.26),
+      rgba(65, 150, 189, 0.14) 34%,
+      rgba(73, 92, 177, 0.08) 52%,
+      transparent 73%
     );
+
+  filter: blur(0.18rem);
+  opacity: 0.96;
+}
+
+.showroom-planet-orbit-line {
+  position: absolute;
+  z-index: 1;
+  inset: -12%;
+
+  border: 1px solid rgba(245, 213, 130, 0.17);
+  border-radius: 50%;
+
+  opacity: 0.72;
+
+  transform:
+    rotateX(64deg)
+    rotateZ(-16deg);
+}
+
+.showroom-planet-orbit-line::before,
+.showroom-planet-orbit-line::after {
+  position: absolute;
+  inset: 13%;
+
+  border: 1px solid rgba(117, 233, 255, 0.11);
+  border-radius: 50%;
+
+  content: "";
+}
+
+.showroom-planet-orbit-line::after {
+  inset: -15%;
+  border-color: rgba(182, 151, 255, 0.075);
 }
 
 .showroom-planet-shell {
   position: absolute;
+  z-index: 3;
   inset: 0;
 
   display: grid;
@@ -1143,77 +1188,49 @@ main {
   transform-origin: 50% 50%;
 }
 
-.showroom-planet-atmosphere {
+.showroom-planet-body {
   position: absolute;
-  inset: -13%;
-
-  border-radius: 50%;
-
-  background:
-    radial-gradient(
-      circle at 38% 28%,
-      rgba(255, 249, 224, 0.58),
-      transparent 15%
-    ),
-    radial-gradient(
-      circle at 48% 46%,
-      rgba(117, 233, 255, 0.34),
-      rgba(117, 233, 255, 0.13) 46%,
-      transparent 74%
-    );
-
-  box-shadow:
-    0 0 2.1rem rgba(117, 233, 255, 0.28),
-    0 0 5.2rem rgba(117, 233, 255, 0.16),
-    inset 0 0 1.8rem rgba(255, 255, 255, 0.16);
-
-  opacity: 1;
-}
-
-.showroom-planet-surface {
-  position: absolute;
-  inset: 4%;
+  inset: 5%;
 
   overflow: hidden;
   border-radius: 50%;
 
   background:
     radial-gradient(
-      circle at 34% 28%,
-      rgba(255, 244, 207, 0.62),
-      transparent 12%
+      circle at 36% 27%,
+      rgba(255, 255, 239, 0.62),
+      transparent 9%
     ),
     radial-gradient(
-      circle at 58% 72%,
-      rgba(8, 154, 164, 0.72),
-      transparent 25%
-    ),
-    radial-gradient(
-      circle at 27% 67%,
-      rgba(107, 72, 176, 0.58),
-      transparent 22%
-    ),
-    radial-gradient(
-      circle at 72% 34%,
-      rgba(224, 184, 91, 0.34),
-      transparent 18%
+      circle at 58% 53%,
+      rgba(57, 238, 218, 0.28),
+      transparent 28%
     ),
     linear-gradient(
-      135deg,
-      #244f89 0%,
-      #188199 32%,
-      #7752a6 62%,
-      #142146 100%
+      138deg,
+      var(--audralia-ocean-a) 0%,
+      var(--audralia-ocean-b) 36%,
+      #4b538c 66%,
+      #14213d 100%
     );
 
   box-shadow:
-    inset -1.35rem -1.15rem 2rem rgba(0, 0, 0, 0.56),
-    inset 0.95rem 0.8rem 1.65rem rgba(255, 255, 255, 0.18),
-    0 0 3.2rem rgba(117, 233, 255, 0.28);
+    inset -1.55rem -1.25rem 2.1rem rgba(0, 0, 0, 0.62),
+    inset 1rem 0.8rem 1.6rem rgba(255, 255, 255, 0.16),
+    inset 0 0 1.1rem rgba(255, 255, 255, 0.055),
+    0 0 3rem rgba(117, 233, 255, 0.28);
+
+  transform:
+    rotate(
+      var(
+        --showroom-planet-turn,
+        0deg
+      )
+    );
 }
 
-.showroom-planet-surface::before,
-.showroom-planet-surface::after {
+.showroom-planet-body::before,
+.showroom-planet-body::after {
   position: absolute;
   inset: 0;
 
@@ -1221,54 +1238,406 @@ main {
   content: "";
 }
 
-.showroom-planet-surface::before {
-  opacity: 0.72;
+.showroom-planet-body::before {
+  z-index: 14;
 
   background:
-    repeating-linear-gradient(
-      108deg,
-      transparent 0 0.58rem,
-      rgba(255, 255, 255, 0.07) 0.62rem 0.7rem,
-      transparent 0.74rem 1.42rem
+    radial-gradient(
+      circle at 34% 27%,
+      rgba(255, 255, 255, 0.46),
+      transparent 12%
+    ),
+    linear-gradient(
+      122deg,
+      rgba(255, 255, 255, 0.18) 0%,
+      transparent 25%,
+      transparent 62%,
+      rgba(0, 0, 0, 0.28) 100%
+    );
+
+  mix-blend-mode: screen;
+  opacity: 0.72;
+}
+
+.showroom-planet-body::after {
+  z-index: 18;
+
+  background:
+    radial-gradient(
+      circle at 50% 50%,
+      transparent 0 58%,
+      rgba(117, 233, 255, 0.14) 60%,
+      rgba(255, 255, 255, 0.08) 65%,
+      transparent 70%
     ),
     radial-gradient(
-      ellipse at 30% 44%,
-      rgba(224, 184, 91, 0.34),
-      transparent 24%
-    ),
-    radial-gradient(
-      ellipse at 64% 42%,
-      rgba(117, 233, 255, 0.28),
-      transparent 28%
+      circle at 72% 74%,
+      rgba(0, 0, 0, 0.48),
+      transparent 36%
     );
 }
 
-.showroom-planet-surface::after {
+.showroom-planet-ocean,
+.showroom-planet-terrain,
+.showroom-planet-landmass,
+.showroom-planet-clouds,
+.showroom-planet-rim,
+.showroom-planet-terminator,
+.showroom-planet-shadow,
+.showroom-planet-meridian,
+.showroom-planet-fulcrum {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.showroom-planet-ocean {
+  z-index: 1;
+  inset: -8%;
+
   background:
     radial-gradient(
-      circle at 35% 28%,
-      rgba(255, 255, 255, 0.38),
-      transparent 15%
+      ellipse at 47% 43%,
+      rgba(96, 236, 229, 0.3),
+      transparent 30%
+    ),
+    repeating-linear-gradient(
+      112deg,
+      transparent 0 0.7rem,
+      rgba(255, 255, 255, 0.035) 0.74rem 0.8rem,
+      transparent 0.84rem 1.8rem
+    );
+
+  opacity: 0.72;
+}
+
+.showroom-planet-terrain {
+  z-index: 4;
+  inset: 0;
+
+  opacity: 0.86;
+}
+
+.showroom-planet-terrain--deep {
+  background:
+    radial-gradient(
+      ellipse at 18% 58%,
+      rgba(31, 74, 70, 0.64) 0 12%,
+      transparent 25%
     ),
     radial-gradient(
-      circle at 72% 76%,
-      rgba(0, 0, 0, 0.44),
-      transparent 36%
+      ellipse at 63% 39%,
+      rgba(42, 76, 85, 0.52) 0 13%,
+      transparent 28%
     ),
-    linear-gradient(
-      115deg,
-      transparent 0 38%,
-      rgba(255, 255, 255, 0.14) 48%,
-      transparent 60% 100%
+    radial-gradient(
+      ellipse at 45% 77%,
+      rgba(30, 57, 57, 0.42) 0 9%,
+      transparent 23%
     );
+}
+
+.showroom-planet-terrain--high {
+  z-index: 5;
+
+  background:
+    radial-gradient(
+      ellipse at 39% 30%,
+      rgba(210, 190, 126, 0.42) 0 8%,
+      transparent 18%
+    ),
+    radial-gradient(
+      ellipse at 72% 56%,
+      rgba(179, 144, 87, 0.28) 0 8%,
+      transparent 20%
+    ),
+    radial-gradient(
+      ellipse at 31% 70%,
+      rgba(188, 210, 173, 0.26) 0 7%,
+      transparent 18%
+    );
+}
+
+.showroom-planet-landmass {
+  z-index: 7;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(194, 165, 107, 0.9),
+      rgba(71, 116, 76, 0.82) 52%,
+      rgba(39, 79, 60, 0.82)
+    );
+
+  box-shadow:
+    inset 0.16rem 0.16rem 0.34rem rgba(255, 255, 255, 0.14),
+    inset -0.25rem -0.22rem 0.42rem rgba(0, 0, 0, 0.28);
+}
+
+.showroom-planet-landmass--north {
+  top: 13%;
+  left: 22%;
+
+  width: 34%;
+  height: 22%;
+
+  border-radius:
+    62% 38% 48% 52% /
+    42% 58% 38% 62%;
+
+  transform:
+    rotate(-21deg)
+    skewX(-8deg);
+}
+
+.showroom-planet-landmass--east {
+  top: 39%;
+  right: 13%;
+
+  width: 31%;
+  height: 25%;
+
+  border-radius:
+    41% 59% 55% 45% /
+    63% 39% 61% 37%;
+
+  transform:
+    rotate(17deg)
+    skewY(4deg);
+}
+
+.showroom-planet-landmass--west {
+  top: 44%;
+  left: 12%;
+
+  width: 30%;
+  height: 23%;
+
+  border-radius:
+    59% 41% 36% 64% /
+    48% 56% 44% 52%;
+
+  background:
+    linear-gradient(
+      138deg,
+      rgba(93, 128, 82, 0.78),
+      rgba(51, 94, 82, 0.72) 62%,
+      rgba(28, 75, 86, 0.62)
+    );
+
+  transform:
+    rotate(18deg)
+    skewX(7deg);
+}
+
+.showroom-planet-landmass--south {
+  right: 29%;
+  bottom: 12%;
+
+  width: 27%;
+  height: 18%;
+
+  border-radius:
+    50% 50% 62% 38% /
+    38% 64% 36% 62%;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(232, 251, 255, 0.66),
+      rgba(139, 198, 190, 0.46),
+      rgba(56, 103, 88, 0.58)
+    );
+
+  transform:
+    rotate(-11deg);
+}
+
+.showroom-planet-clouds {
+  z-index: 11;
+  inset: 1%;
+
+  opacity: 0.58;
+
+  transform:
+    rotate(
+      var(
+        --showroom-planet-cloud-turn,
+        0deg
+      )
+    );
+}
+
+.showroom-planet-clouds--low {
+  background:
+    radial-gradient(
+      ellipse at 27% 31%,
+      rgba(255, 255, 255, 0.45) 0 4%,
+      transparent 13%
+    ),
+    radial-gradient(
+      ellipse at 56% 21%,
+      rgba(255, 255, 255, 0.32) 0 5%,
+      transparent 16%
+    ),
+    radial-gradient(
+      ellipse at 65% 61%,
+      rgba(255, 255, 255, 0.25) 0 5%,
+      transparent 17%
+    ),
+    repeating-linear-gradient(
+      18deg,
+      transparent 0 1.35rem,
+      rgba(255, 255, 255, 0.13) 1.42rem 1.52rem,
+      transparent 1.62rem 2.75rem
+    );
+
+  filter: blur(0.02rem);
+}
+
+.showroom-planet-clouds--high {
+  z-index: 12;
+  inset: 4%;
+
+  background:
+    radial-gradient(
+      ellipse at 44% 37%,
+      rgba(255, 255, 255, 0.24) 0 7%,
+      transparent 18%
+    ),
+    radial-gradient(
+      ellipse at 31% 69%,
+      rgba(255, 255, 255, 0.22) 0 4%,
+      transparent 14%
+    ),
+    repeating-linear-gradient(
+      -29deg,
+      transparent 0 1.7rem,
+      rgba(227, 252, 255, 0.11) 1.76rem 1.86rem,
+      transparent 1.95rem 3.2rem
+    );
+
+  opacity: 0.5;
+  filter: blur(0.035rem);
+
+  transform:
+    rotate(
+      calc(
+        var(
+          --showroom-planet-cloud-turn,
+          0deg
+        ) * -1
+      )
+    );
+}
+
+.showroom-planet-rim {
+  z-index: 20;
+  inset: -1%;
+
+  border: 1px solid rgba(190, 250, 255, 0.24);
+
+  background:
+    radial-gradient(
+      circle at 50% 50%,
+      transparent 0 60%,
+      rgba(117, 233, 255, 0.18) 63%,
+      rgba(245, 213, 130, 0.08) 68%,
+      transparent 74%
+    );
+
+  box-shadow:
+    inset 0 0 0.7rem rgba(117, 233, 255, 0.12),
+    0 0 1.35rem rgba(117, 233, 255, 0.22);
+}
+
+.showroom-planet-terminator {
+  z-index: 17;
+  inset: -1%;
+
+  background:
+    linear-gradient(
+      120deg,
+      transparent 0 42%,
+      rgba(0, 0, 0, 0.18) 53%,
+      rgba(0, 0, 0, 0.54) 100%
+    );
+
+  mix-blend-mode: multiply;
+}
+
+.showroom-planet-shadow {
+  z-index: 19;
+  inset: 0;
+
+  background:
+    radial-gradient(
+      circle at 72% 74%,
+      rgba(0, 0, 0, 0.54),
+      transparent 38%
+    ),
+    radial-gradient(
+      circle at 88% 56%,
+      rgba(0, 0, 0, 0.28),
+      transparent 42%
+    );
+
+  mix-blend-mode: multiply;
+}
+
+.showroom-planet-meridian {
+  z-index: 21;
+  inset: 13%;
+
+  border: 1px solid rgba(255, 255, 255, 0.1);
+
+  opacity: 0.46;
+
+  transform:
+    rotateX(67deg)
+    rotateZ(-11deg);
+}
+
+.showroom-planet-meridian::before,
+.showroom-planet-meridian::after {
+  position: absolute;
+  inset: -16% 14%;
+
+  border: 1px solid rgba(117, 233, 255, 0.08);
+  border-radius: 50%;
+
+  content: "";
+}
+
+.showroom-planet-meridian::after {
+  inset: 14% -16%;
+}
+
+.showroom-planet-fulcrum {
+  z-index: 22;
+  top: 47%;
+  left: 50%;
+
+  width: 0.35rem;
+  height: 0.35rem;
+
+  border-radius: 50%;
+
+  background: rgba(245, 213, 130, 0.82);
+
+  box-shadow:
+    0 0 0.55rem rgba(245, 213, 130, 0.58),
+    0 0 1.2rem rgba(117, 233, 255, 0.28);
+
+  transform: translate(-50%, -50%);
 }
 
 .showroom-planet-axis {
   position: absolute;
-  z-index: 2;
+  z-index: 4;
 
-  width: 0.11rem;
-  height: 138%;
+  width: 0.12rem;
+  height: 132%;
 
   border-radius: 999px;
 
@@ -1277,45 +1646,69 @@ main {
       180deg,
       transparent,
       rgba(245, 213, 130, 0.72) 18%,
-      rgba(117, 233, 255, 0.62) 50%,
+      rgba(117, 233, 255, 0.46) 50%,
       rgba(245, 213, 130, 0.72) 82%,
       transparent
     );
 
   box-shadow:
-    0 0 0.9rem rgba(245, 213, 130, 0.32);
+    0 0 0.9rem rgba(245, 213, 130, 0.25);
 
-  opacity: 0.42;
-  transform: rotate(-17deg);
+  opacity: 0.48;
+
+  transform:
+    rotate(-18deg)
+    translateZ(0);
 }
 
-.showroom-planet-glow {
+.showroom-planet-atmosphere {
   position: absolute;
-  inset: -30%;
+  z-index: 5;
+  inset: -8%;
 
   border-radius: 50%;
 
+  pointer-events: none;
+
   background:
     radial-gradient(
+      circle at 36% 30%,
+      rgba(255, 251, 226, 0.26),
+      transparent 13%
+    ),
+    radial-gradient(
       circle at 50% 50%,
-      rgba(245, 213, 130, 0.18),
-      rgba(117, 233, 255, 0.16) 34%,
-      rgba(182, 151, 255, 0.09) 54%,
-      transparent 74%
+      rgba(117, 233, 255, 0.18),
+      rgba(117, 233, 255, 0.065) 46%,
+      transparent 72%
     );
 
-  filter: blur(0.1rem);
-  opacity: 1;
+  box-shadow:
+    0 0 1.4rem rgba(117, 233, 255, 0.17),
+    0 0 4.4rem rgba(117, 233, 255, 0.11),
+    inset 0 0 1.4rem rgba(255, 255, 255, 0.08);
+
+  opacity:
+    calc(
+      0.82 +
+      (
+        var(
+          --showroom-planet-pulse,
+          0
+        ) * 0.08
+      )
+    );
 }
 
 .showroom-planet-fallback {
   position: absolute;
+  z-index: 30;
   inset: 10%;
 
   display: none;
   place-items: center;
 
-  border: 1px solid rgba(117, 233, 255, 0.22);
+  border: 1px solid rgba(117, 233, 255, 0.2);
   border-radius: 50%;
 
   color: var(--showroom-cyan-soft);
@@ -1323,7 +1716,7 @@ main {
   background:
     radial-gradient(
       circle,
-      rgba(117, 233, 255, 0.2),
+      rgba(117, 233, 255, 0.13),
       rgba(7, 11, 24, 0.94) 68%
     );
 
@@ -1340,6 +1733,8 @@ main {
 .showroom-planet-root[data-showroom-planet-state="fallback"]
 .showroom-planet-fallback,
 .showroom-planet-root[data-showroom-planet-fallback="true"]
+.showroom-planet-fallback,
+.showroom-planet-root[data-showroom-planet-state="failed"]
 .showroom-planet-fallback {
   display: grid;
 }
@@ -1347,18 +1742,51 @@ main {
 .showroom-planet-root[data-showroom-planet-state="fallback"]
 .showroom-planet-shell,
 .showroom-planet-root[data-showroom-planet-fallback="true"]
+.showroom-planet-shell,
+.showroom-planet-root[data-showroom-planet-state="failed"]
 .showroom-planet-shell {
-  opacity: 0.42;
+  opacity: 0.34;
+}
+
+[data-showroom-planet-reduced-motion="true"]
+.showroom-planet-shell,
+.showroom-planet-root[data-showroom-planet-reduced-motion="true"]
+.showroom-planet-shell,
+[data-showroom-planet-reduced-motion="true"]
+.showroom-planet-body,
+.showroom-planet-root[data-showroom-planet-reduced-motion="true"]
+.showroom-planet-body,
+[data-showroom-planet-reduced-motion="true"]
+.showroom-planet-clouds,
+.showroom-planet-root[data-showroom-planet-reduced-motion="true"]
+.showroom-planet-clouds {
+  transform: none !important;
+}
+
+[data-showroom-planet-reduced-motion="true"]
+.showroom-planet-atmosphere,
+.showroom-planet-root[data-showroom-planet-reduced-motion="true"]
+.showroom-planet-atmosphere,
+[data-showroom-planet-reduced-motion="true"]
+.showroom-planet-glow,
+.showroom-planet-root[data-showroom-planet-reduced-motion="true"]
+.showroom-planet-glow {
+  filter: none;
 }
 
 .showroom-compass-control {
   position: absolute;
-  z-index: 3;
-  inset: -4%;
+  z-index: 8;
+  inset: 0;
 
-  display: block;
+  display: grid;
+  place-content: end center;
+  gap: 0.1rem;
 
-  padding: 0;
+  padding:
+    0
+    18%
+    21%;
 
   border: 0;
   border-radius: 50%;
@@ -1368,15 +1796,14 @@ main {
 
   text-align: center;
   cursor: pointer;
-  pointer-events: auto;
 }
 
 .showroom-compass-control::before {
   position: absolute;
-  inset: auto 50% 13% auto;
+  right: 18%;
+  bottom: 17%;
+  left: 18%;
 
-  width: min(7.4rem, 62%);
-  height: auto;
   min-height: 2.35rem;
 
   border: 1px solid rgba(245, 213, 130, 0.18);
@@ -1387,15 +1814,15 @@ main {
   background:
     linear-gradient(
       180deg,
-      rgba(7, 11, 24, 0.5),
-      rgba(7, 11, 24, 0.26)
+      rgba(7, 11, 24, 0.56),
+      rgba(7, 11, 24, 0.36)
     );
 
   box-shadow:
-    0 0.5rem 1.6rem rgba(0, 0, 0, 0.28),
-    0 0 1.4rem rgba(117, 233, 255, 0.08);
+    0 0.45rem 1rem rgba(0, 0, 0, 0.26),
+    inset 0 0 0.55rem rgba(117, 233, 255, 0.05);
 
-  transform: translateX(50%);
+  backdrop-filter: blur(0.25rem);
 
   transition:
     border-color var(--showroom-transition-fast),
@@ -1405,59 +1832,48 @@ main {
 
 .showroom-compass-control:hover::before,
 .showroom-compass-control:focus-visible::before {
-  border-color: rgba(245, 213, 130, 0.42);
+  border-color: rgba(245, 213, 130, 0.46);
 
   background:
     linear-gradient(
       180deg,
-      rgba(12, 18, 36, 0.72),
-      rgba(7, 11, 24, 0.44)
+      rgba(7, 11, 24, 0.72),
+      rgba(7, 11, 24, 0.5)
     );
 
   box-shadow:
-    0 0.7rem 1.8rem rgba(0, 0, 0, 0.36),
-    0 0 1.8rem rgba(245, 213, 130, 0.14);
+    0 0.55rem 1.35rem rgba(0, 0, 0, 0.32),
+    0 0 1.3rem rgba(245, 213, 130, 0.14);
 }
 
 .showroom-compass-control__label,
 .showroom-compass-control__instruction {
-  position: absolute;
-  z-index: 4;
-  right: 50%;
-
-  width: min(7.2rem, 60%);
-
-  text-align: center;
-
-  transform: translateX(50%);
+  position: relative;
+  z-index: 2;
 
   text-shadow:
-    0 0.1rem 0.35rem rgba(0, 0, 0, 0.82);
+    0 0.12rem 0.45rem rgba(0, 0, 0, 0.88),
+    0 0 0.7rem rgba(7, 11, 24, 0.96);
 }
 
 .showroom-compass-control__label {
-  bottom: calc(13% + 1.1rem);
-
-  color: rgba(246, 238, 223, 0.92);
-
   font-family:
     Georgia,
     "Times New Roman",
     serif;
 
-  font-size: clamp(0.58rem, 1vw, 0.76rem);
-  font-weight: 600;
-  line-height: 0.95;
+  font-size: clamp(0.7rem, 1.15vw, 0.9rem);
+  font-weight: 650;
+  line-height: 1.02;
 }
 
 .showroom-compass-control__instruction {
-  bottom: calc(13% + 0.35rem);
+  color: var(--showroom-cream-soft);
 
-  color: rgba(220, 210, 192, 0.68);
-
-  font-size: 0.46rem;
-  font-weight: 800;
+  font-size: 0.48rem;
+  font-weight: 850;
   letter-spacing: 0.12em;
+  line-height: 1;
   text-transform: uppercase;
 }
 
@@ -1743,7 +2159,7 @@ main {
 }
 
 /* ================================================================
-   12. LIVE ATLAS KEY
+   12. LIVE ATLAS / COMPASS KEY
    ================================================================ */
 
 .showroom-controller-panel,
@@ -2093,7 +2509,8 @@ main {
   background: rgba(255, 255, 255, 0.022);
 }
 
-.showroom-atlas-narrative-detail-record dt {
+.showroom-atlas-narrative-detail-record dt,
+.showroom-controller-panel__facts dt {
   margin-bottom: 0.24rem;
 
   color: var(--showroom-cyan);
@@ -2104,12 +2521,14 @@ main {
   text-transform: uppercase;
 }
 
-.showroom-atlas-narrative-detail-record dd {
+.showroom-atlas-narrative-detail-record dd,
+.showroom-controller-panel__facts dd {
   margin: 0;
 
   color: var(--showroom-muted-strong);
   font-size: 0.74rem;
   line-height: 1.48;
+  overflow-wrap: anywhere;
 }
 
 .showroom-controller-panel__facts {
@@ -2134,25 +2553,6 @@ main {
   border-radius: var(--showroom-radius-sm);
 
   background: rgba(255, 255, 255, 0.025);
-}
-
-.showroom-controller-panel__facts dt {
-  margin-bottom: 0.22rem;
-
-  color: var(--showroom-cyan);
-
-  font-size: 0.58rem;
-  font-weight: 800;
-  letter-spacing: 0.11em;
-  text-transform: uppercase;
-}
-
-.showroom-controller-panel__facts dd {
-  margin: 0;
-
-  color: var(--showroom-muted-strong);
-  font-size: 0.76rem;
-  overflow-wrap: anywhere;
 }
 
 /* ================================================================
@@ -3673,12 +4073,10 @@ main {
   :root {
     --showroom-space-7: 2.2rem;
     --showroom-space-8: 3rem;
-
     --showroom-center-size:
-      clamp(9.4rem, 42vw, 12.2rem);
-
+      clamp(10.6rem, 48vw, 14.8rem);
     --showroom-planet-size:
-      clamp(8.6rem, 38vw, 11.2rem);
+      clamp(9.4rem, 42vw, 13rem);
   }
 
   body {
@@ -3812,23 +4210,27 @@ main {
     border-radius: 0.95rem;
   }
 
-  .showroom-compass-control::before {
-    bottom: 10%;
+  .showroom-compass-control {
+    padding:
+      0
+      15%
+      19%;
+  }
 
-    width: min(6.4rem, 64%);
-    min-height: 2.15rem;
+  .showroom-compass-control::before {
+    right: 15%;
+    bottom: 15%;
+    left: 15%;
+
+    min-height: 2.05rem;
   }
 
   .showroom-compass-control__label {
-    bottom: calc(10% + 1rem);
-
-    font-size: 0.62rem;
+    font-size: 0.68rem;
   }
 
   .showroom-compass-control__instruction {
-    bottom: calc(10% + 0.32rem);
-
-    font-size: 0.42rem;
+    font-size: 0.46rem;
   }
 
   .showroom-star--large {
@@ -4059,6 +4461,14 @@ main {
    ================================================================ */
 
 @media (max-width: 25rem) {
+  :root {
+    --showroom-center-size:
+      clamp(9.5rem, 53vw, 12.75rem);
+
+    --showroom-planet-size:
+      clamp(8.55rem, 47vw, 11.4rem);
+  }
+
   .showroom-shell {
     width: calc(100% - 0.45rem);
   }
@@ -4083,6 +4493,14 @@ main {
   .showroom-star-cluster--south
   [data-showroom-child-id="south-4"] {
     right: 27%;
+  }
+
+  .showroom-compass-control__label {
+    font-size: 0.62rem;
+  }
+
+  .showroom-compass-control__instruction {
+    font-size: 0.42rem;
   }
 }
 
@@ -4113,6 +4531,8 @@ main {
   }
 
   .showroom-planet-shell,
+  .showroom-planet-body,
+  .showroom-planet-clouds,
   .showroom-planet-axis,
   .showroom-planet-atmosphere,
   .showroom-planet-glow {
@@ -4133,22 +4553,15 @@ main {
 .showroom-planet-shell,
 [data-showroom-root][data-reduced-motion="true"]
 .showroom-planet-shell,
-[data-showroom-planet-reduced-motion="true"]
-.showroom-planet-shell,
-.showroom-planet-root[data-showroom-planet-reduced-motion="true"]
-.showroom-planet-shell {
+[data-showroom-root][data-showroom-reduced-motion="true"]
+.showroom-planet-body,
+[data-showroom-root][data-reduced-motion="true"]
+.showroom-planet-body,
+[data-showroom-root][data-showroom-reduced-motion="true"]
+.showroom-planet-clouds,
+[data-showroom-root][data-reduced-motion="true"]
+.showroom-planet-clouds {
   transform: none !important;
-}
-
-[data-showroom-planet-reduced-motion="true"]
-.showroom-planet-atmosphere,
-.showroom-planet-root[data-showroom-planet-reduced-motion="true"]
-.showroom-planet-atmosphere,
-[data-showroom-planet-reduced-motion="true"]
-.showroom-planet-glow,
-.showroom-planet-root[data-showroom-planet-reduced-motion="true"]
-.showroom-planet-glow {
-  filter: none !important;
 }
 
 /* ================================================================
@@ -4202,7 +4615,7 @@ main {
   }
 
   .showroom-star::before,
-  .showroom-planet-surface,
+  .showroom-planet-body,
   .showroom-planet-fallback {
     border: 2px solid ButtonText;
 
@@ -4213,7 +4626,9 @@ main {
 
   .showroom-planet-atmosphere,
   .showroom-planet-glow,
-  .showroom-planet-axis {
+  .showroom-planet-axis,
+  .showroom-planet-clouds,
+  .showroom-planet-orbit-line {
     display: none;
   }
 
@@ -4314,71 +4729,65 @@ main {
    END RECEIPT
 
    CONTRACT:
-   SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v13_5_PLANET_CENTER_VISUAL_WEIGHT_NEWS_LOCK
+   SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v13_5_AUDRALIA_PLANET_CENTER_VISUAL_RENEWAL
 
    PREVIOUS CONTRACT:
    SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v13_4_PLANET_CENTER_INTEGRATED
 
-   RENEWAL MODE:
-   COMPLETE FILE REPLACEMENT ONLY
-
    RENEWAL SCOPE:
-   GROUP_C_ABOVE_HOOD_HTML_CSS_INTEGRATION
-   +
-   INDEPENDENT_CENTER_PLANET_INTEGRATION
-   +
-   CENTER_PLANET_VISUAL_WEIGHT_CORRECTION
-   +
-   NEWS_EXPRESSION_LAYER_DIRECTION_LOCK
+   GROUP_F_AUDRALIA_PLANETARY_OBJECT_VISUAL_RENEWAL
 
    ACTIVE CENTER VISUAL:
    - /showroom/index.planet.js
 
-   ONE ADDITIONALLY INTEGRATED FILE:
-   - /showroom/index.planet.js
+   PLANET MODEL:
+   - AUDRALIA_PLANETARY_MODEL_EMITTER_v2
 
    RETAINED COMPATIBILITY SELECTORS:
    - [data-showroom-compass-layer]
    - [data-showroom-compass-visual-mount]
    - [data-showroom-compass-control]
 
-   CENTER STRUCTURE:
-   - [data-showroom-compass-layer][data-showroom-center-layer]
-   - [data-showroom-compass-visual-mount][data-showroom-planet-mount]
-   - [data-showroom-compass-control]
+   NEW CENTER SELECTORS:
+   - [data-showroom-center-layer]
+   - [data-showroom-planet-mount]
 
    PLANET MODULE CSS SURFACES:
    - .showroom-planet-root
-   - .showroom-planet-shell
-   - .showroom-planet-atmosphere
-   - .showroom-planet-surface
-   - .showroom-planet-axis
    - .showroom-planet-glow
+   - .showroom-planet-orbit-line
+   - .showroom-planet-shell
+   - .showroom-planet-body
+   - .showroom-planet-ocean
+   - .showroom-planet-terrain
+   - .showroom-planet-terrain--deep
+   - .showroom-planet-terrain--high
+   - .showroom-planet-landmass
+   - .showroom-planet-landmass--north
+   - .showroom-planet-landmass--east
+   - .showroom-planet-landmass--west
+   - .showroom-planet-landmass--south
+   - .showroom-planet-clouds
+   - .showroom-planet-clouds--low
+   - .showroom-planet-clouds--high
+   - .showroom-planet-atmosphere
+   - .showroom-planet-rim
+   - .showroom-planet-terminator
+   - .showroom-planet-shadow
+   - .showroom-planet-meridian
+   - .showroom-planet-fulcrum
+   - .showroom-planet-axis
    - .showroom-planet-fallback
    - [data-showroom-planet-reduced-motion="true"]
-
-   CENTER VISUAL CORRECTION:
-   - planet visual enlarged;
-   - planet material contrast strengthened;
-   - atmosphere and glow strengthened;
-   - semantic control remains full-size hit area;
-   - visible Main Compass label demoted to secondary lower badge;
-   - return label no longer owns the visual center;
-   - planet should read first;
-   - return affordance should read second.
-
-   NEWS EXPRESSION LOCK:
-   - expression-layer direction order is NEWS / N-E-W-S;
-   - protocol-internal order is not changed by this CSS;
-   - no static direction lettering is recreated in this CSS;
-   - any future deliberate expression-layer fallback must use NEWS.
 
    RETIRED FROM CSS TARGET MODEL:
    - old Compass renderer visual styling;
    - old Compass adapter styling;
    - Compass projected-bounds CSS dependency;
-   - static Compass lettering in the center visual;
-   - CSS assumptions that the center visual is renderer-owned.
+   - static N/E/S/W Compass visual;
+   - universal Compass renderer compatibility claims;
+   - Showroom Compass adapter compatibility claims;
+   - CSS assumptions that the center visual is Compass-renderer-owned.
 
    SEMANTIC ACTIVATION:
    - semantic control remains:
@@ -4403,9 +4812,7 @@ main {
        none
    - gesture interpretation, tap discrimination, drag thresholds,
      pointer capture, quaternion updates, and navigation decisions
-     remain owned by authorized interaction and controller runtimes;
-   - this CSS does not create a second gesture recognizer;
-   - this CSS does not claim runtime swipe success.
+     remain owned by the authorized interaction and controller runtimes.
 
    ATLAS RECORD COUNT:
    23
@@ -4417,60 +4824,12 @@ main {
    - VisibleCompactNarrativeRecordCount = 1
    - VisibleNarrativePositionRecordCount = 1
 
-   PRESERVED:
-   - constellation field and semantic-star layers;
-   - retained center compatibility layer names;
-   - semantic fallback controls;
-   - Diamond stage, canvas, fallback, controls, and hidden
-     technical dimension bridge;
-   - foreground Window layer and control;
-   - front host;
-   - runtime receipt records;
-   - reduced-motion handling;
-   - forced-color handling;
-   - print handling;
-   - five native narrative disclosures;
-   - secondary runtime-evidence disclosure.
-
-   INTENTIONAL NON-CLAIMS:
-   - does not alter /showroom/index.html;
-   - does not alter /showroom/index.controller.js;
-   - does not alter /showroom/index.compositor.js;
-   - does not alter /showroom/index.planet.js;
-   - does not alter /showroom/index.crystals.js;
-   - does not alter /showroom/index.interactions.js;
-   - does not alter /showroom/index.interaction.gestures.js;
-   - does not alter /showroom/index.window.js;
-   - does not alter /showroom/index.ui.js;
-   - does not alter /showroom/index.cosmos.js;
-   - does not load or depend on upstream Compass geometry;
-   - does not load or depend on upstream Compass renderer;
-   - does not load or depend on Showroom Compass adapter;
-   - does not own projection;
-   - does not calculate bounds;
-   - does not infer semantic activation from visual state;
-   - does not interpret pointer gestures;
-   - does not own pointer capture;
-   - does not own orbit quaternion state;
-   - does not redefine compositor depth convention;
-   - does not alter Cosmos ownership;
-   - does not infer runtime readiness from source presence.
-
    REQUIRED COMPANION HTML CACHE QUERY:
-   /showroom/index.css?v=SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v13_5_PLANET_CENTER_VISUAL_WEIGHT_NEWS_LOCK
+   /showroom/index.css?v=SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v13_5_AUDRALIA_PLANET_CENTER_VISUAL_RENEWAL
 
-   REQUIRED POST-DEPLOY VALIDATION:
-   - center contains .showroom-planet-root inside [data-showroom-planet-mount];
-   - planet reads visually before the Main Compass label;
-   - label remains readable but secondary;
-   - full center semantic hit area remains functional;
-   - Main Compass selection path still reaches controller.requestCompassSelection();
-   - four cardinal crystals remain visible;
-   - child clusters remain selectable;
-   - Atlas record precedence remains exact;
-   - mobile layout remains contained;
-   - reduced-motion behavior remains stable;
-   - forced-colors behavior remains usable.
+   REQUIRED COMPANION HTML LEGEND ORDER FIX, LATER:
+   - current HTML legend source order still requires NEWS correction;
+   - this CSS does not alter source order.
 
    RUNTIME VALIDATION:
    NOT RUN

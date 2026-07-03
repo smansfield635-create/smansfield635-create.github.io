@@ -1,71 +1,34 @@
-/* /showroom/index.compass.adapter.js
-   Showroom-specific integration boundary for the universal fixed-center
-   Compass renderer.
+/* TARGET FILE: /showroom/index.compass.adapter.js */
+/* COMPLETE REPLACEMENT */
+/* SHOWROOM_COMPASS_ADAPTER_TNT_v1_0_2_COMPASS_LIFECYCLE_RECEIPT */
 
-   Module:
-   SHOWROOM_COMPASS_ADAPTER
-   1.0.1-adapter-foundation-corrections
+/*
+  Showroom-specific integration boundary for the universal fixed-center
+  Compass renderer.
 
-   Controlling contract:
-   SHOWROOM_3D_COMPASS_CONTRACT_FREEZE_PROPOSAL_v2
+  Module:
+  SHOWROOM_COMPASS_ADAPTER
+  1.0.2-compass-lifecycle-receipt
 
-   Scope:
-   EXPLICIT_MOUNT_TRANSLATION_VALIDATION_CUSTODY_FORWARDING
+  Controlling contract:
+  SHOWROOM_3D_COMPASS_CONTRACT_FREEZE_PROPOSAL_v2
 
-   Corrections incorporated:
-   - pre-handle projected-bounds events are retained and processed only after
-     the renderer handle and instance ID are known;
-   - available + visible:false + zero geometry is accepted as a coherent
-     presentation invalidation;
-   - controller subscriptions are supplied only through the renderer context;
-     the adapter does not create duplicate push subscriptions;
-   - contract validation compares every check against an explicit expected
-     value;
-   - controller and compositor integration use exact inspected surfaces.
+  Scope:
+  EXPLICIT_MOUNT_TRANSLATION_VALIDATION_CUSTODY_FORWARDING
+  +
+  BOUNDED_COMPASS_LIFECYCLE_INSTRUMENTATION
 
-   Exact controller surfaces:
-   - globalThis.SHOWROOM_MIRRORLAND_CONSTELLATION_CONTROLLER
-   - getFrameState()
-   - subscribe(callback)
-   - getReducedMotion()
-   - subscribeReducedMotion(callback)
+  Renderer dependency:
+  DGB_UPSTREAM_COMPASS_RENDERER
+  3.1.1-generic-lifecycle-receipt
 
-   Exact compositor surfaces:
-   - globalThis.SHOWROOM_COMPOSITOR
-   - acceptCompassBounds(record)
-   - SHOWROOM_COMPOSITOR_READY
-
-   Ownership:
-   - Resolves the existing Showroom Compass layer, visual mount, fallback,
-     and sibling semantic control.
-   - Explicitly mounts exactly one universal Compass renderer instance.
-   - Translates existing Showroom presentation and reduced-motion facts into
-     generic renderer inputs.
-   - Retains renderer-instance custody.
-   - Validates generic projected-bounds events originating from the owned
-     visual mount.
-   - Translates validated generic viewport bounds into the frozen effective
-     Showroom bounds record.
-   - Retains the latest effective record.
-   - Attaches to the Showroom compositor immediately or through its readiness
-     event and forwards the retained effective record.
-   - Publishes bounded failure and receipt surfaces.
-   - Performs complete adapter and renderer teardown.
-
-   Strict non-ownership:
-   - no navigation;
-   - no route construction;
-   - no controller mutation;
-   - no semantic activation;
-   - no semantic disabled-state authorship;
-   - no semantic-control movement or resizing;
-   - no CSS-variable publication;
-   - no Compass projection mathematics;
-   - no Compass matrix reconstruction;
-   - no crystal rendering;
-   - no front/rear classification;
-   - no compositor camera ownership;
-   - no Main Compass return interpretation.
+  Phase boundary:
+  - Phase 1 lifecycle instrumentation only.
+  - No WebGL error-policy change.
+  - No renderer retry.
+  - No forced promotion.
+  - No fallback-policy change.
+  - No navigation ownership.
 */
 
 const SHOWROOM_COMPASS_ADAPTER = (() => {
@@ -76,7 +39,7 @@ const SHOWROOM_COMPASS_ADAPTER = (() => {
       "SHOWROOM_COMPASS_ADAPTER",
 
     version:
-      "1.0.1-adapter-foundation-corrections",
+      "1.0.2-compass-lifecycle-receipt",
 
     file:
       "/showroom/index.compass.adapter.js"
@@ -107,13 +70,16 @@ const SHOWROOM_COMPASS_ADAPTER = (() => {
     "DGB_UPSTREAM_COMPASS_RENDERER";
 
   const REQUIRED_RENDERER_VERSION =
-    "3.1.0-generic-projected-bounds";
+    "3.1.1-generic-lifecycle-receipt";
 
   const CONTROLLER_MODULE_ID =
     "SHOWROOM_MIRRORLAND_CONSTELLATION_CONTROLLER";
 
   const COMPOSITOR_MODULE_ID =
     "SHOWROOM_COMPOSITOR";
+
+  const MAX_LIFECYCLE_RECORDS =
+    32;
 
   const CONTROLLER_SURFACES = Object.freeze({
     getFrameState:
@@ -210,6 +176,109 @@ const SHOWROOM_COMPASS_ADAPTER = (() => {
       EFFECTIVE_STATUS.INVALID
     ]);
 
+  const CHECKPOINT = Object.freeze({
+    SCRIPT_EVALUATED:
+      "ADAPTER_SCRIPT_EVALUATED",
+
+    INITIALIZATION_SCHEDULED:
+      "ADAPTER_INITIALIZATION_SCHEDULED",
+
+    INITIALIZATION_ENTERED:
+      "ADAPTER_INITIALIZATION_ENTERED",
+
+    RENDERER_GLOBAL_RESOLVED:
+      "RENDERER_GLOBAL_RESOLVED",
+
+    CONTROLLER_RESOLVED:
+      "CONTROLLER_RESOLVED",
+
+    DOM_RESOLVED:
+      "DOM_RESOLVED",
+
+    RENDERER_LISTENERS_REGISTERED:
+      "RENDERER_LISTENERS_REGISTERED",
+
+    RENDERER_MOUNT_ENTERED:
+      "RENDERER_MOUNT_ENTERED",
+
+    RENDERER_MOUNT_RETURNED:
+      "RENDERER_MOUNT_RETURNED",
+
+    RENDERER_HANDLE_VALIDATED:
+      "RENDERER_HANDLE_VALIDATED",
+
+    RENDERER_HANDLE_RETAINED:
+      "RENDERER_HANDLE_RETAINED",
+
+    COMPOSITOR_ATTACHMENT_SCHEDULED:
+      "COMPOSITOR_ATTACHMENT_SCHEDULED",
+
+    COMPOSITOR_ATTACHMENT_ACTIVE:
+      "COMPOSITOR_ATTACHMENT_ACTIVE",
+
+    INITIALIZATION_COMPLETE:
+      "ADAPTER_INITIALIZATION_COMPLETE",
+
+    FAILURE:
+      "ADAPTER_FAILURE",
+
+    DISPOSED:
+      "ADAPTER_DISPOSED"
+  });
+
+  const FAILURE_STAGE = Object.freeze({
+    SCRIPT:
+      "ADAPTER_SCRIPT",
+
+    INITIALIZATION:
+      "ADAPTER_INITIALIZATION",
+
+    RENDERER_RESOLUTION:
+      "RENDERER_RESOLUTION",
+
+    CONTROLLER_RESOLUTION:
+      "CONTROLLER_RESOLUTION",
+
+    DOM_RESOLUTION:
+      "DOM_RESOLUTION",
+
+    LISTENER_REGISTRATION:
+      "RENDERER_LISTENER_REGISTRATION",
+
+    RENDERER_MOUNT:
+      "RENDERER_MOUNT",
+
+    RENDERER_HANDLE_VALIDATION:
+      "RENDERER_HANDLE_VALIDATION",
+
+    RENDERER_STATE_SYNC:
+      "RENDERER_STATE_SYNCHRONIZATION",
+
+    PRESENTATION_STATE:
+      "PRESENTATION_STATE",
+
+    REDUCED_MOTION:
+      "REDUCED_MOTION",
+
+    BOUNDS_EVENT:
+      "BOUNDS_EVENT",
+
+    BOUNDS_VALIDATION:
+      "BOUNDS_VALIDATION",
+
+    COMPOSITOR_ATTACHMENT:
+      "COMPOSITOR_ATTACHMENT",
+
+    COMPOSITOR_FORWARDING:
+      "COMPOSITOR_FORWARDING",
+
+    RENDERER_RUNTIME:
+      "RENDERER_RUNTIME",
+
+    DISPOSAL:
+      "DISPOSAL"
+  });
+
   const SELECTORS = Object.freeze({
     root:
       "[data-showroom-root]",
@@ -240,6 +309,39 @@ const SHOWROOM_COMPASS_ADAPTER = (() => {
     status:
       STATUS.UNINITIALIZED,
 
+    initialized:
+      false,
+
+    initializing:
+      false,
+
+    failed:
+      false,
+
+    disposed:
+      false,
+
+    domResolved:
+      false,
+
+    rendererResolved:
+      false,
+
+    controllerResolved:
+      false,
+
+    compositorResolved:
+      false,
+
+    listenersRegistered:
+      false,
+
+    rendererMountAttempted:
+      false,
+
+    rendererHandleRetained:
+      false,
+
     rendererModuleId:
       "",
 
@@ -259,6 +361,18 @@ const SHOWROOM_COMPASS_ADAPTER = (() => {
       EFFECTIVE_BOUNDS_CONTRACT,
 
     activeInstanceId:
+      "",
+
+    rendererState:
+      null,
+
+    rendererStatus:
+      "",
+
+    rendererFirstEnhancedFrameCompleted:
+      false,
+
+    rendererFailure:
       "",
 
     mountResolved:
@@ -306,8 +420,17 @@ const SHOWROOM_COMPASS_ADAPTER = (() => {
     compositorAttachmentPending:
       false,
 
+    lastPresentationState:
+      null,
+
+    lastReducedMotionState:
+      false,
+
     lastGenericBoundsRevision:
       0,
+
+    lastGenericBoundsStatus:
+      "",
 
     lastEffectiveBoundsStatus:
       EFFECTIVE_STATUS.INVALID,
@@ -339,8 +462,26 @@ const SHOWROOM_COMPASS_ADAPTER = (() => {
     lastFailure:
       "",
 
-    disposed:
-      false,
+    lastFailureCode:
+      "",
+
+    lastFailureMessage:
+      "",
+
+    lastFailureStage:
+      "",
+
+    lastFailureDetail:
+      null,
+
+    lastLifecycleCheckpoint:
+      "",
+
+    lifecycleSequence:
+      Object.freeze([]),
+
+    receiptRevision:
+      0,
 
     runtimeVisualSuccessClaimed:
       false,
@@ -425,6 +566,15 @@ const SHOWROOM_COMPASS_ADAPTER = (() => {
     rendererInstanceId:
       "",
 
+    rendererMountAttempted:
+      false,
+
+    rendererHandleValidated:
+      false,
+
+    rendererStateSnapshot:
+      null,
+
     controller:
       null,
 
@@ -437,8 +587,17 @@ const SHOWROOM_COMPASS_ADAPTER = (() => {
     compositorAttachmentPending:
       false,
 
+    lastPresentationState:
+      null,
+
+    lastReducedMotionState:
+      false,
+
     lastGenericRevision:
       0,
+
+    lastGenericStatus:
+      "",
 
     rendererRecordObserved:
       false,
@@ -458,6 +617,18 @@ const SHOWROOM_COMPASS_ADAPTER = (() => {
     lastFailure:
       "",
 
+    lastFailureCode:
+      "",
+
+    lastFailureMessage:
+      "",
+
+    lastFailureStage:
+      "",
+
+    lastFailureDetail:
+      null,
+
     acceptingBounds:
       false,
 
@@ -474,7 +645,19 @@ const SHOWROOM_COMPASS_ADAPTER = (() => {
       null,
 
     effectiveSubscribers:
-      new Set()
+      new Set(),
+
+    lifecycleSequenceNumber:
+      0,
+
+    lifecycleHistory:
+      [],
+
+    lastLifecycleCheckpoint:
+      "",
+
+    receiptRevision:
+      0
   };
 
   function invariant(
@@ -525,9 +708,477 @@ const SHOWROOM_COMPASS_ADAPTER = (() => {
     );
   }
 
+  function nowIso() {
+    try {
+      return new Date().toISOString();
+    } catch (_) {
+      return "";
+    }
+  }
+
+  function serializableValue(
+    value,
+    depth = 0
+  ) {
+    if (
+      value === null ||
+      value === undefined
+    ) {
+      return value === undefined
+        ? null
+        : value;
+    }
+
+    if (
+      typeof value ===
+        "string" ||
+      typeof value ===
+        "boolean"
+    ) {
+      return value;
+    }
+
+    if (
+      typeof value ===
+        "number"
+    ) {
+      return Number.isFinite(value)
+        ? value
+        : null;
+    }
+
+    if (
+      depth >= 3
+    ) {
+      return String(value);
+    }
+
+    if (Array.isArray(value)) {
+      return value
+        .slice(0, 16)
+        .map(
+          entry =>
+            serializableValue(
+              entry,
+              depth + 1
+            )
+        );
+    }
+
+    if (
+      typeof value ===
+        "object"
+    ) {
+      const output = {};
+
+      for (
+        const key
+        of Object.keys(value)
+          .slice(0, 24)
+      ) {
+        const entry =
+          value[key];
+
+        if (
+          typeof entry ===
+            "function" ||
+          typeof entry ===
+            "symbol"
+        ) {
+          continue;
+        }
+
+        output[key] =
+          serializableValue(
+            entry,
+            depth + 1
+          );
+      }
+
+      return output;
+    }
+
+    return String(value);
+  }
+
+  function freezeSnapshot(value) {
+    if (
+      value === null ||
+      typeof value !==
+        "object"
+    ) {
+      return value;
+    }
+
+    if (Array.isArray(value)) {
+      return Object.freeze(
+        value.map(
+          freezeSnapshot
+        )
+      );
+    }
+
+    const output = {};
+
+    for (
+      const [
+        key,
+        entry
+      ]
+      of Object.entries(value)
+    ) {
+      output[key] =
+        freezeSnapshot(entry);
+    }
+
+    return Object.freeze(output);
+  }
+
+  function errorCodeFrom(
+    error,
+    fallback
+  ) {
+    if (
+      error &&
+      error.code
+    ) {
+      return String(
+        error.code
+      );
+    }
+
+    if (
+      error &&
+      error.name
+    ) {
+      return String(
+        error.name
+      );
+    }
+
+    return String(
+      fallback ||
+      "UNKNOWN_ADAPTER_FAILURE"
+    );
+  }
+
+  function errorMessageFrom(
+    error,
+    fallback
+  ) {
+    if (
+      error &&
+      error.message
+    ) {
+      return String(
+        error.message
+      );
+    }
+
+    return String(
+      fallback ||
+      ""
+    );
+  }
+
+  function recordLifecycleCheckpoint(
+    name,
+    detail = null,
+    options = {}
+  ) {
+    const checkpointName =
+      String(
+        name ||
+        "ADAPTER_CHECKPOINT"
+      );
+
+    STATE.lifecycleSequenceNumber +=
+      1;
+
+    const record =
+      freezeSnapshot({
+        name:
+          checkpointName,
+
+        sequence:
+          STATE
+            .lifecycleSequenceNumber,
+
+        timestamp:
+          nowIso(),
+
+        instanceId:
+          options.instanceId ||
+          STATE.rendererInstanceId ||
+          "",
+
+        detail:
+          serializableValue(
+            detail
+          ),
+
+        failureCode:
+          options.failureCode
+            ? String(
+                options.failureCode
+              )
+            : ""
+      });
+
+    STATE.lifecycleHistory.push(
+      record
+    );
+
+    if (
+      STATE.lifecycleHistory.length >
+      MAX_LIFECYCLE_RECORDS
+    ) {
+      STATE.lifecycleHistory.splice(
+        0,
+        STATE.lifecycleHistory.length -
+          MAX_LIFECYCLE_RECORDS
+      );
+    }
+
+    STATE.lastLifecycleCheckpoint =
+      checkpointName;
+
+    return record;
+  }
+
+  function normalizeRendererStateSnapshot(
+    rendererState
+  ) {
+    if (
+      !rendererState ||
+      typeof rendererState !==
+        "object"
+    ) {
+      return null;
+    }
+
+    const projectedBounds =
+      rendererState.projectedBounds &&
+      typeof rendererState
+        .projectedBounds ===
+        "object"
+        ? rendererState
+            .projectedBounds
+        : null;
+
+    return freezeSnapshot({
+      instanceId:
+        typeof rendererState
+          .instanceId ===
+          "string"
+          ? rendererState.instanceId
+          : "",
+
+      rendererStatus:
+        typeof rendererState
+          .rendererStatus ===
+          "string"
+          ? rendererState
+              .rendererStatus
+          : "",
+
+      running:
+        rendererState.running ===
+        true,
+
+      destroyed:
+        rendererState.destroyed ===
+        true,
+
+      stopped:
+        rendererState.stopped ===
+        true,
+
+      firstEnhancedFrameCompleted:
+        rendererState
+          .firstEnhancedFrameCompleted ===
+        true,
+
+      renderFailureEmitted:
+        rendererState
+          .renderFailureEmitted ===
+        true,
+
+      rendererFailure:
+        String(
+          rendererState
+            .rendererFailure ||
+          rendererState
+            .failureMessage ||
+          ""
+        ),
+
+      failureCode:
+        String(
+          rendererState
+            .failureCode ||
+          ""
+        ),
+
+      failureMessage:
+        String(
+          rendererState
+            .failureMessage ||
+          rendererState
+            .rendererFailure ||
+          ""
+        ),
+
+      failureStage:
+        String(
+          rendererState
+            .failureStage ||
+          ""
+        ),
+
+      contextCreated:
+        rendererState.contextCreated ===
+        true,
+
+      geometryAccepted:
+        rendererState.geometryAccepted ===
+        true,
+
+      resourcesCreated:
+        rendererState.resourcesCreated ===
+        true,
+
+      firstFrameEntered:
+        rendererState.firstFrameEntered ===
+        true,
+
+      drawPhaseCompleted:
+        rendererState.drawPhaseCompleted ===
+        true,
+
+      lastWebGLError:
+        Number.isFinite(
+          rendererState.lastWebGLError
+        )
+          ? rendererState
+              .lastWebGLError
+          : 0,
+
+      lastWebGLErrorName:
+        String(
+          rendererState
+            .lastWebGLErrorName ||
+          ""
+        ),
+
+      projectedBoundsStatus:
+        String(
+          rendererState
+            .projectedBoundsStatus ||
+          (
+            projectedBounds
+              ? projectedBounds.status
+              : ""
+          ) ||
+          ""
+        ),
+
+      projectedBoundsRevision:
+        Number.isInteger(
+          rendererState
+            .projectedBoundsRevision
+        )
+          ? rendererState
+              .projectedBoundsRevision
+          : (
+              projectedBounds &&
+              Number.isInteger(
+                projectedBounds.revision
+              )
+                ? projectedBounds
+                    .revision
+                : 0
+            ),
+
+      lastLifecycleCheckpoint:
+        String(
+          rendererState
+            .lastLifecycleCheckpoint ||
+          ""
+        )
+    });
+  }
+
+  function synchronizeRendererState(
+    options = {}
+  ) {
+    if (
+      !STATE.rendererHandle ||
+      typeof STATE.rendererHandle
+        .getState !==
+        "function"
+    ) {
+      STATE.rendererStateSnapshot =
+        null;
+
+      return null;
+    }
+
+    try {
+      const rendererState =
+        STATE.rendererHandle
+          .getState();
+
+      const snapshot =
+        normalizeRendererStateSnapshot(
+          rendererState
+        );
+
+      STATE.rendererStateSnapshot =
+        snapshot;
+
+      return snapshot;
+    } catch (error) {
+      if (
+        options.recordFailure ===
+        true
+      ) {
+        STATE.lastFailureCode =
+          errorCodeFrom(
+            error,
+            "RENDERER_STATE_SYNCHRONIZATION_FAILED"
+          );
+
+        STATE.lastFailureMessage =
+          errorMessageFrom(
+            error,
+            "Renderer state synchronization failed."
+          );
+
+        STATE.lastFailureStage =
+          FAILURE_STAGE
+            .RENDERER_STATE_SYNC;
+
+        STATE.lastFailureDetail =
+          freezeSnapshot({
+            recoverable:
+              true
+          });
+      }
+
+      return null;
+    }
+  }
+
   function publishReceipt(
     extra = {}
   ) {
+    STATE.receiptRevision +=
+      1;
+
+    const rendererState =
+      STATE.rendererStateSnapshot;
+
     Object.assign(
       RECEIPT,
       {
@@ -539,6 +1190,59 @@ const SHOWROOM_COMPASS_ADAPTER = (() => {
 
         status:
           STATE.status,
+
+        initialized:
+          STATE.initialized,
+
+        initializing:
+          STATE.initializing,
+
+        failed:
+          STATE.status ===
+            STATUS.FAILED,
+
+        disposed:
+          STATE.disposed,
+
+        domResolved:
+          Boolean(
+            STATE.root &&
+            STATE.layer &&
+            STATE.visualMount &&
+            STATE.fallback &&
+            STATE.semanticControl
+          ),
+
+        rendererResolved:
+          Boolean(
+            STATE.renderer
+          ),
+
+        controllerResolved:
+          Boolean(
+            STATE.controller
+          ),
+
+        compositorResolved:
+          Boolean(
+            STATE.compositor
+          ),
+
+        listenersRegistered:
+          Boolean(
+            STATE.boundsListener &&
+            STATE
+              .rendererFailureListener
+          ),
+
+        rendererMountAttempted:
+          STATE
+            .rendererMountAttempted,
+
+        rendererHandleRetained:
+          Boolean(
+            STATE.rendererHandle
+          ),
 
         rendererModuleId:
           STATE.renderer &&
@@ -576,6 +1280,32 @@ const SHOWROOM_COMPASS_ADAPTER = (() => {
 
         activeInstanceId:
           STATE.rendererInstanceId,
+
+        rendererState,
+
+        rendererStatus:
+          rendererState
+            ? rendererState
+                .rendererStatus
+            : "",
+
+        rendererFirstEnhancedFrameCompleted:
+          Boolean(
+            rendererState &&
+            rendererState
+              .firstEnhancedFrameCompleted
+          ),
+
+        rendererFailure:
+          rendererState
+            ? String(
+                rendererState
+                  .rendererFailure ||
+                rendererState
+                  .failureMessage ||
+                ""
+              )
+            : "",
 
         mountResolved:
           STATE.visualMount
@@ -673,12 +1403,14 @@ const SHOWROOM_COMPASS_ADAPTER = (() => {
         boundsListenerActive:
           Boolean(
             STATE.boundsListener &&
-            STATE.visualMount
+            STATE.visualMount &&
+            STATE.acceptingBounds
           ),
 
         failureListenerActive:
           Boolean(
-            STATE.rendererFailureListener
+            STATE.rendererFailureListener &&
+            STATE.acceptingFailures
           ),
 
         compositorForwardingReady:
@@ -691,8 +1423,17 @@ const SHOWROOM_COMPASS_ADAPTER = (() => {
           STATE
             .compositorAttachmentPending,
 
+        lastPresentationState:
+          STATE.lastPresentationState,
+
+        lastReducedMotionState:
+          STATE.lastReducedMotionState,
+
         lastGenericBoundsRevision:
           STATE.lastGenericRevision,
+
+        lastGenericBoundsStatus:
+          STATE.lastGenericStatus,
 
         lastEffectiveBoundsStatus:
           STATE.latestEffectiveBounds
@@ -734,8 +1475,29 @@ const SHOWROOM_COMPASS_ADAPTER = (() => {
         lastFailure:
           STATE.lastFailure,
 
-        disposed:
-          STATE.disposed,
+        lastFailureCode:
+          STATE.lastFailureCode,
+
+        lastFailureMessage:
+          STATE.lastFailureMessage,
+
+        lastFailureStage:
+          STATE.lastFailureStage,
+
+        lastFailureDetail:
+          STATE.lastFailureDetail,
+
+        lastLifecycleCheckpoint:
+          STATE.lastLifecycleCheckpoint,
+
+        lifecycleSequence:
+          Object.freeze(
+            STATE.lifecycleHistory
+              .slice()
+          ),
+
+        receiptRevision:
+          STATE.receiptRevision,
 
         runtimeVisualSuccessClaimed:
           false,
@@ -790,13 +1552,42 @@ const SHOWROOM_COMPASS_ADAPTER = (() => {
         RECEIPT_SYMBOL
       ] =
         Object.freeze({
-          ...RECEIPT
+          ...RECEIPT,
+
+          lifecycleSequence:
+            Object.freeze(
+              STATE.lifecycleHistory
+                .slice()
+            )
         });
     }
 
     return Object.freeze({
-      ...RECEIPT
+      ...RECEIPT,
+
+      lifecycleSequence:
+        Object.freeze(
+          STATE.lifecycleHistory
+            .slice()
+        )
     });
+  }
+
+  function publishCheckpoint(
+    name,
+    detail = null,
+    options = {}
+  ) {
+    const checkpoint =
+      recordLifecycleCheckpoint(
+        name,
+        detail,
+        options
+      );
+
+    publishReceipt();
+
+    return checkpoint;
   }
 
   function emitAdapterFailure(
@@ -841,14 +1632,44 @@ const SHOWROOM_COMPASS_ADAPTER = (() => {
                 reason:
                   normalizedReason,
 
+                failureCode:
+                  STATE
+                    .lastFailureCode,
+
+                failureMessage:
+                  STATE
+                    .lastFailureMessage,
+
+                failureStage:
+                  STATE
+                    .lastFailureStage,
+
+                terminal:
+                  STATE.status ===
+                    STATUS.FAILED,
+
+                instanceId:
+                  STATE
+                    .rendererInstanceId,
+
+                lifecycleCheckpoint:
+                  STATE
+                    .lastLifecycleCheckpoint,
+
+                presentationState:
+                  STATE
+                    .lastPresentationState,
+
+                reducedMotion:
+                  STATE
+                    .lastReducedMotionState,
+
                 details:
-                  details &&
-                  typeof details ===
-                    "object"
-                    ? Object.freeze({
-                        ...details
-                      })
-                    : details
+                  freezeSnapshot(
+                    serializableValue(
+                      details
+                    )
+                  )
               })
           }
         )
@@ -998,6 +1819,29 @@ const SHOWROOM_COMPASS_ADAPTER = (() => {
 
     STATE.fallback =
       fallback;
+
+    publishCheckpoint(
+      CHECKPOINT.DOM_RESOLVED,
+      {
+        root:
+          true,
+
+        layer:
+          true,
+
+        visualMount:
+          true,
+
+        fallback:
+          true,
+
+        semanticControl:
+          true,
+
+        mountMarkedForAutomaticDiscovery:
+          false
+      }
+    );
   }
 
   function resolveRenderer() {
@@ -1059,6 +1903,18 @@ const SHOWROOM_COMPASS_ADAPTER = (() => {
 
     STATE.renderer =
       renderer;
+
+    publishCheckpoint(
+      CHECKPOINT
+        .RENDERER_GLOBAL_RESOLVED,
+      {
+        moduleId:
+          renderer.moduleId,
+
+        moduleVersion:
+          renderer.moduleVersion
+      }
+    );
   }
 
   function resolveController() {
@@ -1112,6 +1968,26 @@ const SHOWROOM_COMPASS_ADAPTER = (() => {
 
     STATE.controller =
       controller;
+
+    publishCheckpoint(
+      CHECKPOINT.CONTROLLER_RESOLVED,
+      {
+        global:
+          CONTROLLER_MODULE_ID,
+
+        getFrameState:
+          true,
+
+        subscribe:
+          true,
+
+        getReducedMotion:
+          true,
+
+        subscribeReducedMotion:
+          true
+      }
+    );
   }
 
   function readControllerFrame() {
@@ -1167,6 +2043,7 @@ const SHOWROOM_COMPASS_ADAPTER = (() => {
           "held",
           "isHeld"
         ],
+        STATE.root &&
         STATE.root.dataset
           .showroomHeld ===
           "true"
@@ -1192,25 +2069,36 @@ const SHOWROOM_COMPASS_ADAPTER = (() => {
         true
       );
 
-    return Object.freeze({
-      visible,
+    const reducedMotion =
+      STATE.controller[
+        CONTROLLER_SURFACES
+          .getReducedMotion
+      ]() ===
+        true;
 
-      interactionEnabled:
-        interactionEnabled &&
-        !held,
+    const presentation =
+      Object.freeze({
+        visible,
 
-      held,
+        interactionEnabled:
+          interactionEnabled &&
+          !held,
 
-      reducedMotion:
-        STATE.controller[
-          CONTROLLER_SURFACES
-            .getReducedMotion
-        ]() ===
-          true,
+        held,
 
-      rendererFailure:
-        ""
-    });
+        reducedMotion,
+
+        rendererFailure:
+          ""
+      });
+
+    STATE.lastPresentationState =
+      presentation;
+
+    STATE.lastReducedMotionState =
+      reducedMotion;
+
+    return presentation;
   }
 
   function getPresentationState() {
@@ -1234,15 +2122,22 @@ const SHOWROOM_COMPASS_ADAPTER = (() => {
           .subscribe
       ](
         frame => {
-          callback(
+          const presentation =
             normalizePresentationFromFrame(
               frame &&
               typeof frame ===
                 "object"
                 ? frame
                 : readControllerFrame()
-            )
+            );
+
+          callback(
+            presentation
           );
+
+          synchronizeRendererState();
+
+          publishReceipt();
         }
       );
 
@@ -1253,13 +2148,17 @@ const SHOWROOM_COMPASS_ADAPTER = (() => {
   }
 
   function getReducedMotion() {
-    return (
+    const reducedMotion =
       STATE.controller[
         CONTROLLER_SURFACES
           .getReducedMotion
       ]() ===
-      true
-    );
+      true;
+
+    STATE.lastReducedMotionState =
+      reducedMotion;
+
+    return reducedMotion;
   }
 
   function subscribeReducedMotion(
@@ -1277,10 +2176,20 @@ const SHOWROOM_COMPASS_ADAPTER = (() => {
           .subscribeReducedMotion
       ](
         value => {
-          callback(
+          const reducedMotion =
             value ===
-              true
+            true;
+
+          STATE.lastReducedMotionState =
+            reducedMotion;
+
+          callback(
+            reducedMotion
           );
+
+          synchronizeRendererState();
+
+          publishReceipt();
         }
       );
 
@@ -1589,16 +2498,20 @@ const SHOWROOM_COMPASS_ADAPTER = (() => {
         "SHOWROOM_COMPOSITOR_BOUNDS_FORWARDING_FAILED",
         {
           message:
-            error &&
-            error.message
-              ? String(
-                  error.message
-                )
-              : ""
+            errorMessageFrom(
+              error,
+              ""
+            )
         },
         {
           terminal:
-            false
+            false,
+
+          stage:
+            FAILURE_STAGE
+              .COMPOSITOR_FORWARDING,
+
+          error
         }
       );
 
@@ -1619,6 +2532,8 @@ const SHOWROOM_COMPASS_ADAPTER = (() => {
     forwardEffectiveRecord(
       record
     );
+
+    synchronizeRendererState();
 
     publishReceipt();
 
@@ -1937,6 +2852,9 @@ const SHOWROOM_COMPASS_ADAPTER = (() => {
     STATE.lastGenericRevision =
       record.revision;
 
+    STATE.lastGenericStatus =
+      record.status;
+
     if (
       record.status ===
         GENERIC_STATUS.AVAILABLE &&
@@ -1975,6 +2893,9 @@ const SHOWROOM_COMPASS_ADAPTER = (() => {
         disposition ===
           "duplicate"
       ) {
+        synchronizeRendererState();
+        publishReceipt();
+
         return;
       }
 
@@ -2010,23 +2931,23 @@ const SHOWROOM_COMPASS_ADAPTER = (() => {
       );
 
       failAdapter(
-        error &&
-        (
-          error.code ||
-          error.message
-        )
-          ? String(
-              error.code ||
-              error.message
-            )
-          : "GENERIC_BOUNDS_VALIDATION_FAILED",
+        errorCodeFrom(
+          error,
+          "GENERIC_BOUNDS_VALIDATION_FAILED"
+        ),
         error &&
         error.details
           ? error.details
           : null,
         {
           terminal:
-            false
+            false,
+
+          stage:
+            FAILURE_STAGE
+              .BOUNDS_VALIDATION,
+
+          error
         }
       );
     }
@@ -2044,23 +2965,23 @@ const SHOWROOM_COMPASS_ADAPTER = (() => {
         );
     } catch (error) {
       failAdapter(
-        error &&
-        (
-          error.code ||
-          error.message
-        )
-          ? String(
-              error.code ||
-              error.message
-            )
-          : "GENERIC_BOUNDS_EVENT_ORIGIN_VALIDATION_FAILED",
+        errorCodeFrom(
+          error,
+          "GENERIC_BOUNDS_EVENT_ORIGIN_VALIDATION_FAILED"
+        ),
         error &&
         error.details
           ? error.details
           : null,
         {
           terminal:
-            false
+            false,
+
+          stage:
+            FAILURE_STAGE
+              .BOUNDS_EVENT,
+
+          error
         }
       );
 
@@ -2085,6 +3006,10 @@ const SHOWROOM_COMPASS_ADAPTER = (() => {
     processGenericBoundsRecord(
       record
     );
+
+    synchronizeRendererState();
+
+    publishReceipt();
   }
 
   function processRetainedPreHandleRecords() {
@@ -2132,38 +3057,26 @@ const SHOWROOM_COMPASS_ADAPTER = (() => {
   }
 
   function rendererFailureMatchesActiveInstance() {
-    if (
-      !STATE.rendererHandle ||
-      typeof STATE.rendererHandle
-        .getState !==
-        "function"
-    ) {
-      return false;
-    }
+    const rendererState =
+      synchronizeRendererState();
 
-    try {
-      const rendererState =
-        STATE.rendererHandle
-          .getState();
-
-      return Boolean(
-        rendererState &&
-        rendererState.instanceId ===
-          STATE.rendererInstanceId &&
-        (
-          rendererState
-            .renderFailureEmitted ===
-            true ||
-          rendererState
-            .rendererStatus ===
-            GENERIC_STATUS.FAILED ||
-          rendererState
-            .rendererFailure
-        )
-      );
-    } catch (_) {
-      return false;
-    }
+    return Boolean(
+      rendererState &&
+      rendererState.instanceId ===
+        STATE.rendererInstanceId &&
+      (
+        rendererState
+          .renderFailureEmitted ===
+          true ||
+        rendererState
+          .rendererStatus ===
+          GENERIC_STATUS.FAILED ||
+        rendererState
+          .rendererFailure ||
+        rendererState
+          .failureCode
+      )
+    );
   }
 
   function handleRendererFailure(
@@ -2176,9 +3089,13 @@ const SHOWROOM_COMPASS_ADAPTER = (() => {
       return;
     }
 
+    synchronizeRendererState();
+
     if (
       !rendererFailureMatchesActiveInstance()
     ) {
+      publishReceipt();
+
       return;
     }
 
@@ -2189,7 +3106,23 @@ const SHOWROOM_COMPASS_ADAPTER = (() => {
         ? String(
             event.detail.reason
           )
-        : "UPSTREAM_COMPASS_RENDERER_FAILURE";
+        : (
+            STATE.rendererStateSnapshot &&
+            STATE.rendererStateSnapshot
+              .failureCode
+              ? STATE.rendererStateSnapshot
+                  .failureCode
+              : "UPSTREAM_COMPASS_RENDERER_FAILURE"
+          );
+
+    const rendererStage =
+      STATE.rendererStateSnapshot &&
+      STATE.rendererStateSnapshot
+        .failureStage
+        ? STATE.rendererStateSnapshot
+            .failureStage
+        : FAILURE_STAGE
+            .RENDERER_RUNTIME;
 
     retainAndForwardEffectiveRecord(
       createInvalidEffectiveRecord(
@@ -2207,11 +3140,26 @@ const SHOWROOM_COMPASS_ADAPTER = (() => {
           "weak",
 
         correlationSurface:
-          "retained handle.getState()"
+          "retained handle.getState()",
+
+        rendererState:
+          STATE
+            .rendererStateSnapshot,
+
+        rendererEventDetail:
+          event &&
+          event.detail
+            ? serializableValue(
+                event.detail
+              )
+            : null
       },
       {
         terminal:
-          false
+          false,
+
+        stage:
+          rendererStage
       }
     );
   }
@@ -2275,12 +3223,40 @@ const SHOWROOM_COMPASS_ADAPTER = (() => {
       );
     }
 
-    publishReceipt();
+    publishCheckpoint(
+      CHECKPOINT
+        .COMPOSITOR_ATTACHMENT_ACTIVE,
+      {
+        compositorGlobal:
+          COMPOSITOR_MODULE_ID,
+
+        intakeSurface:
+          COMPOSITOR_SURFACES
+            .acceptCompassBounds,
+
+        retainedBoundsForwarded:
+          Boolean(
+            STATE.latestEffectiveBounds
+          )
+      }
+    );
 
     return true;
   }
 
   function scheduleCompositorAttachment() {
+    publishCheckpoint(
+      CHECKPOINT
+        .COMPOSITOR_ATTACHMENT_SCHEDULED,
+      {
+        immediateAttempt:
+          true,
+
+        readyEvent:
+          COMPOSITOR_READY_EVENT
+      }
+    );
+
     if (
       resolveCompositor()
     ) {
@@ -2304,7 +3280,30 @@ const SHOWROOM_COMPASS_ADAPTER = (() => {
 
     STATE.compositorReadyListener =
       () => {
-        resolveCompositor();
+        try {
+          resolveCompositor();
+        } catch (error) {
+          failAdapter(
+            errorCodeFrom(
+              error,
+              "SHOWROOM_COMPOSITOR_ATTACHMENT_FAILED"
+            ),
+            error &&
+            error.details
+              ? error.details
+              : null,
+            {
+              terminal:
+                false,
+
+              stage:
+                FAILURE_STAGE
+                  .COMPOSITOR_ATTACHMENT,
+
+              error
+            }
+          );
+        }
       };
 
     globalThis.addEventListener(
@@ -2357,6 +3356,24 @@ const SHOWROOM_COMPASS_ADAPTER = (() => {
       );
     }
 
+    STATE.rendererHandleValidated =
+      true;
+
+    publishCheckpoint(
+      CHECKPOINT
+        .RENDERER_HANDLE_VALIDATED,
+      {
+        instanceId:
+          handle.instanceId,
+
+        requiredMethods
+      },
+      {
+        instanceId:
+          handle.instanceId
+      }
+    );
+
     return true;
   }
 
@@ -2383,6 +3400,21 @@ const SHOWROOM_COMPASS_ADAPTER = (() => {
 
     STATE.acceptingFailures =
       true;
+
+    publishCheckpoint(
+      CHECKPOINT
+        .RENDERER_LISTENERS_REGISTERED,
+      {
+        boundsEvent:
+          GENERIC_BOUNDS_EVENT,
+
+        failureEvent:
+          RENDERER_FAILURE_EVENT,
+
+        boundsTarget:
+          "resolved visual mount"
+      }
+    );
   }
 
   function unregisterRendererListeners() {
@@ -2425,6 +3457,29 @@ const SHOWROOM_COMPASS_ADAPTER = (() => {
   }
 
   function mountRenderer() {
+    STATE.rendererMountAttempted =
+      true;
+
+    publishCheckpoint(
+      CHECKPOINT
+        .RENDERER_MOUNT_ENTERED,
+      {
+        mountMarkedForAutomaticDiscovery:
+          STATE.visualMount.matches(
+            "[data-upstream-compass-mount]"
+          ),
+
+        fallbackDirectChild:
+          STATE.fallback.parentElement ===
+          STATE.visualMount,
+
+        semanticControlSibling:
+          STATE.semanticControl
+            .parentElement ===
+          STATE.layer
+      }
+    );
+
     const handle =
       STATE.renderer.mount({
         root:
@@ -2448,6 +3503,30 @@ const SHOWROOM_COMPASS_ADAPTER = (() => {
         subscribeReducedMotion
       });
 
+    publishCheckpoint(
+      CHECKPOINT
+        .RENDERER_MOUNT_RETURNED,
+      {
+        handleReturned:
+          Boolean(handle),
+
+        instanceId:
+          handle &&
+          typeof handle.instanceId ===
+            "string"
+            ? handle.instanceId
+            : ""
+      },
+      {
+        instanceId:
+          handle &&
+          typeof handle.instanceId ===
+            "string"
+            ? handle.instanceId
+            : ""
+      }
+    );
+
     verifyRendererHandle(
       handle
     );
@@ -2458,9 +3537,38 @@ const SHOWROOM_COMPASS_ADAPTER = (() => {
     STATE.rendererInstanceId =
       handle.instanceId;
 
+    synchronizeRendererState({
+      recordFailure:
+        true
+    });
+
+    publishCheckpoint(
+      CHECKPOINT
+        .RENDERER_HANDLE_RETAINED,
+      {
+        instanceId:
+          STATE.rendererInstanceId,
+
+        rendererState:
+          STATE
+            .rendererStateSnapshot
+      },
+      {
+        instanceId:
+          STATE.rendererInstanceId
+      }
+    );
+
     processRetainedPreHandleRecords();
 
     readAndProcessHandleBounds();
+
+    synchronizeRendererState({
+      recordFailure:
+        true
+    });
+
+    publishReceipt();
   }
 
   function failAdapter(
@@ -2472,15 +3580,108 @@ const SHOWROOM_COMPASS_ADAPTER = (() => {
       options.terminal !==
       false;
 
-    STATE.lastFailure =
-      String(
+    const error =
+      options.error ||
+      null;
+
+    const code =
+      errorCodeFrom(
+        error,
         reason ||
         "UNKNOWN_ADAPTER_FAILURE"
       );
 
+    const message =
+      errorMessageFrom(
+        error,
+        reason ||
+        "Unknown adapter failure."
+      );
+
+    const stage =
+      String(
+        options.stage ||
+        STATE.lastLifecycleCheckpoint ||
+        FAILURE_STAGE.INITIALIZATION
+      );
+
+    STATE.lastFailure =
+      String(
+        reason ||
+        code
+      );
+
+    STATE.lastFailureCode =
+      code;
+
+    STATE.lastFailureMessage =
+      message;
+
+    STATE.lastFailureStage =
+      stage;
+
+    STATE.lastFailureDetail =
+      freezeSnapshot(
+        serializableValue(
+          details
+        )
+      );
+
+    synchronizeRendererState();
+
+    recordLifecycleCheckpoint(
+      CHECKPOINT.FAILURE,
+      {
+        reason:
+          STATE.lastFailure,
+
+        code,
+
+        message,
+
+        stage,
+
+        terminal,
+
+        detail:
+          STATE.lastFailureDetail,
+
+        presentationState:
+          STATE.lastPresentationState,
+
+        reducedMotion:
+          STATE.lastReducedMotionState,
+
+        rendererState:
+          STATE.rendererStateSnapshot
+      },
+      {
+        instanceId:
+          STATE.rendererInstanceId,
+
+        failureCode:
+          code
+      }
+    );
+
+    if (terminal) {
+      STATE.status =
+        STATUS.FAILED;
+
+      STATE.initialized =
+        false;
+    }
+
     emitAdapterFailure(
       STATE.lastFailure,
-      details
+      {
+        code,
+        message,
+        stage,
+        terminal,
+        detail:
+          STATE.lastFailureDetail
+      }
     );
 
     if (!terminal) {
@@ -2488,12 +3689,6 @@ const SHOWROOM_COMPASS_ADAPTER = (() => {
 
       return false;
     }
-
-    STATE.status =
-      STATUS.FAILED;
-
-    STATE.initialized =
-      false;
 
     retainAndForwardEffectiveRecord(
       createInvalidEffectiveRecord(
@@ -2547,6 +3742,12 @@ const SHOWROOM_COMPASS_ADAPTER = (() => {
     STATE.rendererInstanceId =
       "";
 
+    STATE.rendererStateSnapshot =
+      null;
+
+    STATE.rendererHandleValidated =
+      false;
+
     STATE.preHandleRendererRecords =
       [];
   }
@@ -2587,8 +3788,23 @@ const SHOWROOM_COMPASS_ADAPTER = (() => {
     STATE.lastFailure =
       "";
 
+    STATE.lastFailureCode =
+      "";
+
+    STATE.lastFailureMessage =
+      "";
+
+    STATE.lastFailureStage =
+      "";
+
+    STATE.lastFailureDetail =
+      null;
+
     STATE.lastGenericRevision =
       0;
+
+    STATE.lastGenericStatus =
+      "";
 
     STATE.rendererRecordObserved =
       false;
@@ -2602,16 +3818,55 @@ const SHOWROOM_COMPASS_ADAPTER = (() => {
     STATE.preHandleRendererRecords =
       [];
 
-    publishReceipt();
+    STATE.rendererMountAttempted =
+      false;
+
+    STATE.rendererHandleValidated =
+      false;
+
+    STATE.rendererStateSnapshot =
+      null;
+
+    publishCheckpoint(
+      CHECKPOINT
+        .INITIALIZATION_ENTERED,
+      {
+        documentReadyState:
+          typeof document !==
+            "undefined"
+            ? document.readyState
+            : "unavailable"
+      }
+    );
+
+    let currentStage =
+      FAILURE_STAGE
+        .RENDERER_RESOLUTION;
 
     try {
       resolveRenderer();
 
+      currentStage =
+        FAILURE_STAGE
+          .CONTROLLER_RESOLUTION;
+
       resolveController();
+
+      currentStage =
+        FAILURE_STAGE
+          .DOM_RESOLUTION;
 
       resolveDom();
 
+      currentStage =
+        FAILURE_STAGE
+          .LISTENER_REGISTRATION;
+
       registerRendererListeners();
+
+      currentStage =
+        FAILURE_STAGE
+          .RENDERER_MOUNT;
 
       mountRenderer();
 
@@ -2626,6 +3881,10 @@ const SHOWROOM_COMPASS_ADAPTER = (() => {
         );
       }
 
+      currentStage =
+        FAILURE_STAGE
+          .COMPOSITOR_ATTACHMENT;
+
       scheduleCompositorAttachment();
 
       STATE.initialized =
@@ -2637,7 +3896,36 @@ const SHOWROOM_COMPASS_ADAPTER = (() => {
       STATE.initializing =
         false;
 
-      publishReceipt();
+      synchronizeRendererState({
+        recordFailure:
+          true
+      });
+
+      publishCheckpoint(
+        CHECKPOINT
+          .INITIALIZATION_COMPLETE,
+        {
+          instanceId:
+            STATE.rendererInstanceId,
+
+          rendererState:
+            STATE
+              .rendererStateSnapshot,
+
+          compositorForwardingReady:
+            Boolean(
+              STATE.compositorIntake
+            ),
+
+          compositorAttachmentPending:
+            STATE
+              .compositorAttachmentPending
+        },
+        {
+          instanceId:
+            STATE.rendererInstanceId
+        }
+      );
 
       return true;
     } catch (error) {
@@ -2647,23 +3935,22 @@ const SHOWROOM_COMPASS_ADAPTER = (() => {
       cleanupPartialInitialization();
 
       failAdapter(
-        error &&
-        (
-          error.code ||
-          error.message
-        )
-          ? String(
-              error.code ||
-              error.message
-            )
-          : "SHOWROOM_COMPASS_ADAPTER_INITIALIZATION_FAILED",
+        errorCodeFrom(
+          error,
+          "SHOWROOM_COMPASS_ADAPTER_INITIALIZATION_FAILED"
+        ),
         error &&
         error.details
           ? error.details
           : null,
         {
           terminal:
-            true
+            true,
+
+          stage:
+            currentStage,
+
+          error
         }
       );
 
@@ -2689,6 +3976,8 @@ const SHOWROOM_COMPASS_ADAPTER = (() => {
 
     STATE.status =
       STATUS.DISPOSING;
+
+    synchronizeRendererState();
 
     publishReceipt();
 
@@ -2727,16 +4016,33 @@ const SHOWROOM_COMPASS_ADAPTER = (() => {
         STATE.rendererHandle
           .destroy();
       } catch (error) {
+        STATE.lastFailure =
+          "RENDERER_DESTROY_FAILED";
+
+        STATE.lastFailureCode =
+          errorCodeFrom(
+            error,
+            "RENDERER_DESTROY_FAILED"
+          );
+
+        STATE.lastFailureMessage =
+          errorMessageFrom(
+            error,
+            "Renderer destroy failed."
+          );
+
+        STATE.lastFailureStage =
+          FAILURE_STAGE.DISPOSAL;
+
+        STATE.lastFailureDetail =
+          null;
+
         emitAdapterFailure(
           "RENDERER_DESTROY_FAILED",
           {
             message:
-              error &&
-              error.message
-                ? String(
-                    error.message
-                  )
-                : ""
+              STATE
+                .lastFailureMessage
           }
         );
       }
@@ -2754,11 +4060,17 @@ const SHOWROOM_COMPASS_ADAPTER = (() => {
       disposedRecord
     );
 
+    const disposedInstanceId =
+      STATE.rendererInstanceId;
+
     STATE.rendererHandle =
       null;
 
     STATE.rendererInstanceId =
       "";
+
+    STATE.rendererStateSnapshot =
+      null;
 
     STATE.preHandleRendererRecords =
       [];
@@ -2778,12 +4090,32 @@ const SHOWROOM_COMPASS_ADAPTER = (() => {
     STATE.status =
       STATUS.DISPOSED;
 
-    publishReceipt();
+    publishCheckpoint(
+      CHECKPOINT.DISPOSED,
+      {
+        disposedInstanceId,
+
+        rendererDestroyed:
+          true,
+
+        listenersRemoved:
+          true,
+
+        compositorListenerRemoved:
+          true
+      },
+      {
+        instanceId:
+          disposedInstanceId
+      }
+    );
 
     return true;
   }
 
   function getState() {
+    synchronizeRendererState();
+
     return Object.freeze({
       moduleId:
         MODULE.id,
@@ -2800,11 +4132,53 @@ const SHOWROOM_COMPASS_ADAPTER = (() => {
       initializing:
         STATE.initializing,
 
+      failed:
+        STATE.status ===
+          STATUS.FAILED,
+
       disposing:
         STATE.disposing,
 
       disposed:
         STATE.disposed,
+
+      domResolved:
+        Boolean(
+          STATE.root &&
+          STATE.layer &&
+          STATE.visualMount &&
+          STATE.fallback &&
+          STATE.semanticControl
+        ),
+
+      rendererResolved:
+        Boolean(
+          STATE.renderer
+        ),
+
+      controllerResolved:
+        Boolean(
+          STATE.controller
+        ),
+
+      compositorResolved:
+        Boolean(
+          STATE.compositor
+        ),
+
+      listenersRegistered:
+        Boolean(
+          STATE.boundsListener &&
+          STATE.rendererFailureListener
+        ),
+
+      rendererMountAttempted:
+        STATE.rendererMountAttempted,
+
+      rendererHandleRetained:
+        Boolean(
+          STATE.rendererHandle
+        ),
 
       rendererModuleId:
         STATE.renderer
@@ -2819,6 +4193,31 @@ const SHOWROOM_COMPASS_ADAPTER = (() => {
 
       rendererInstanceId:
         STATE.rendererInstanceId,
+
+      rendererState:
+        STATE.rendererStateSnapshot,
+
+      rendererStatus:
+        STATE.rendererStateSnapshot
+          ? STATE
+              .rendererStateSnapshot
+              .rendererStatus
+          : "",
+
+      rendererFirstEnhancedFrameCompleted:
+        Boolean(
+          STATE.rendererStateSnapshot &&
+          STATE
+            .rendererStateSnapshot
+            .firstEnhancedFrameCompleted
+        ),
+
+      rendererFailure:
+        STATE.rendererStateSnapshot
+          ? STATE
+              .rendererStateSnapshot
+              .rendererFailure
+          : "",
 
       rendererIntegrationActive:
         Boolean(
@@ -2836,8 +4235,17 @@ const SHOWROOM_COMPASS_ADAPTER = (() => {
         STATE
           .compositorAttachmentPending,
 
+      lastPresentationState:
+        STATE.lastPresentationState,
+
+      lastReducedMotionState:
+        STATE.lastReducedMotionState,
+
       lastGenericRevision:
         STATE.lastGenericRevision,
+
+      lastGenericStatus:
+        STATE.lastGenericStatus,
 
       rendererRecordObserved:
         STATE.rendererRecordObserved,
@@ -2860,6 +4268,30 @@ const SHOWROOM_COMPASS_ADAPTER = (() => {
 
       lastFailure:
         STATE.lastFailure,
+
+      lastFailureCode:
+        STATE.lastFailureCode,
+
+      lastFailureMessage:
+        STATE.lastFailureMessage,
+
+      lastFailureStage:
+        STATE.lastFailureStage,
+
+      lastFailureDetail:
+        STATE.lastFailureDetail,
+
+      lastLifecycleCheckpoint:
+        STATE.lastLifecycleCheckpoint,
+
+      lifecycleSequence:
+        Object.freeze(
+          STATE.lifecycleHistory
+            .slice()
+        ),
+
+      receiptRevision:
+        STATE.receiptRevision,
 
       boundsEventAssociationStrength:
         "strong",
@@ -2946,7 +4378,11 @@ const SHOWROOM_COMPASS_ADAPTER = (() => {
 
         moduleVersion:
           MODULE.version ===
-          "1.0.1-adapter-foundation-corrections",
+          "1.0.2-compass-lifecycle-receipt",
+
+        requiredRendererVersion:
+          REQUIRED_RENDERER_VERSION ===
+          "3.1.1-generic-lifecycle-receipt",
 
         genericBoundsContract:
           GENERIC_BOUNDS_CONTRACT ===
@@ -2959,6 +4395,27 @@ const SHOWROOM_COMPASS_ADAPTER = (() => {
         effectiveBoundsContract:
           EFFECTIVE_BOUNDS_CONTRACT ===
           "SHOWROOM_EFFECTIVE_COMPASS_BOUNDS_RECORD_v1",
+
+        lifecycleHistoryBound:
+          MAX_LIFECYCLE_RECORDS ===
+          32,
+
+        lifecycleSequenceBounded:
+          STATE.lifecycleHistory
+            .length <=
+          MAX_LIFECYCLE_RECORDS,
+
+        lifecycleReceiptPresent:
+          Array.isArray(
+            RECEIPT.lifecycleSequence
+          ),
+
+        receiptRevisionPresent:
+          Number.isInteger(
+            STATE.receiptRevision
+          ) &&
+          STATE.receiptRevision >=
+            0,
 
         projectedBoundsAssociationStrong:
           true,
@@ -3083,6 +4540,9 @@ const SHOWROOM_COMPASS_ADAPTER = (() => {
         moduleVersion:
           true,
 
+        requiredRendererVersion:
+          true,
+
         genericBoundsContract:
           true,
 
@@ -3090,6 +4550,18 @@ const SHOWROOM_COMPASS_ADAPTER = (() => {
           true,
 
         effectiveBoundsContract:
+          true,
+
+        lifecycleHistoryBound:
+          true,
+
+        lifecycleSequenceBounded:
+          true,
+
+        lifecycleReceiptPresent:
+          true,
+
+        receiptRevisionPresent:
           true,
 
         projectedBoundsAssociationStrong:
@@ -3185,7 +4657,7 @@ const SHOWROOM_COMPASS_ADAPTER = (() => {
 
     return Object.freeze({
       receiptSchema:
-        "SHOWROOM_COMPASS_ADAPTER_CONTRACT_VALIDATION_v2",
+        "SHOWROOM_COMPASS_ADAPTER_CONTRACT_VALIDATION_v3",
 
       moduleId:
         MODULE.id,
@@ -3193,11 +4665,27 @@ const SHOWROOM_COMPASS_ADAPTER = (() => {
       moduleVersion:
         MODULE.version,
 
+      requiredRendererVersion:
+        REQUIRED_RENDERER_VERSION,
+
       pass,
 
       checks,
 
       expected,
+
+      maximumLifecycleRecords:
+        MAX_LIFECYCLE_RECORDS,
+
+      currentLifecycleRecordCount:
+        STATE.lifecycleHistory
+          .length,
+
+      lastLifecycleCheckpoint:
+        STATE.lastLifecycleCheckpoint,
+
+      receiptRevision:
+        STATE.receiptRevision,
 
       statusVocabulary:
         Object.freeze([
@@ -3265,15 +4753,16 @@ const SHOWROOM_COMPASS_ADAPTER = (() => {
       compositorAttachment:
         "IMMEDIATE_OR_DEFERRED_READY_EVENT",
 
+      lifecycleInstrumentation:
+        "BOUNDED_32_RECORD_ADAPTER_LIFECYCLE_RECEIPT",
+
       runtimeVisualSuccessClaimed:
         false
     });
   }
 
   function receipt() {
-    return Object.freeze({
-      ...RECEIPT
-    });
+    return publishReceipt();
   }
 
   function scheduleInitialization() {
@@ -3283,6 +4772,21 @@ const SHOWROOM_COMPASS_ADAPTER = (() => {
     ) {
       return;
     }
+
+    publishCheckpoint(
+      CHECKPOINT
+        .INITIALIZATION_SCHEDULED,
+      {
+        documentReadyState:
+          document.readyState,
+
+        trigger:
+          document.readyState ===
+            "loading"
+            ? "DOMContentLoaded"
+            : "immediate"
+      }
+    );
 
     if (
       document.readyState ===
@@ -3304,6 +4808,20 @@ const SHOWROOM_COMPASS_ADAPTER = (() => {
 
     initialize();
   }
+
+  recordLifecycleCheckpoint(
+    CHECKPOINT.SCRIPT_EVALUATED,
+    {
+      moduleId:
+        MODULE.id,
+
+      moduleVersion:
+        MODULE.version,
+
+      requiredRendererVersion:
+        REQUIRED_RENDERER_VERSION
+    }
+  );
 
   publishReceipt();
 
@@ -3360,171 +4878,139 @@ if (
 }
 
 /*
-SHOWROOM_COMPASS_ADAPTER_CONSTRUCTION_RESULT_v2
+SHOWROOM_COMPASS_ADAPTER_CONSTRUCTION_RESULT_v3
 
 Artifact:
 /showroom/index.compass.adapter.js
 
 Module:
 SHOWROOM_COMPASS_ADAPTER
+1.0.2-compass-lifecycle-receipt
+
+Previous module version:
 1.0.1-adapter-foundation-corrections
 
-Disposition:
-ADAPTER_FOUNDATION_CORRECTED
-
-Scope:
-EXPLICIT_MOUNT_TRANSLATION_VALIDATION_CUSTODY_FORWARDING
-
-Renderer dependency:
+Required renderer:
 DGB_UPSTREAM_COMPASS_RENDERER
-3.1.0-generic-projected-bounds
+3.1.1-generic-lifecycle-receipt
 
-Controller dependency:
-SHOWROOM_MIRRORLAND_CONSTELLATION_CONTROLLER
+Disposition:
+PHASE_1_ADAPTER_LIFECYCLE_INSTRUMENTATION_CONSTRUCTED
 
-Exact controller surfaces:
-- getFrameState()
-- subscribe(callback)
-- getReducedMotion()
-- subscribeReducedMotion(callback)
+Existing receipt retained:
+globalThis.SHOWROOM_COMPASS_ADAPTER_RECEIPT
 
-Compositor dependency:
-SHOWROOM_COMPOSITOR
+Bounded lifecycle history:
+- maximum records: 32
+- oldest records evicted first
+- records contain no DOM nodes, functions, WebGL objects, or cyclic references
+- each record contains:
+  - name
+  - sequence
+  - timestamp
+  - instanceId
+  - concise serializable detail
+  - failureCode
 
-Exact compositor surfaces:
-- acceptCompassBounds(record)
-- SHOWROOM_COMPOSITOR_READY
+Added lifecycle checkpoints:
+- ADAPTER_SCRIPT_EVALUATED
+- ADAPTER_INITIALIZATION_SCHEDULED
+- ADAPTER_INITIALIZATION_ENTERED
+- RENDERER_GLOBAL_RESOLVED
+- CONTROLLER_RESOLVED
+- DOM_RESOLVED
+- RENDERER_LISTENERS_REGISTERED
+- RENDERER_MOUNT_ENTERED
+- RENDERER_MOUNT_RETURNED
+- RENDERER_HANDLE_VALIDATED
+- RENDERER_HANDLE_RETAINED
+- COMPOSITOR_ATTACHMENT_SCHEDULED
+- COMPOSITOR_ATTACHMENT_ACTIVE
+- ADAPTER_INITIALIZATION_COMPLETE
+- ADAPTER_FAILURE
+- ADAPTER_DISPOSED
 
-Generic bounds contract:
-DGB_UPSTREAM_COMPASS_PROJECTED_BOUNDS_v1
+Added receipt fields:
+- initialized
+- initializing
+- failed
+- disposed
+- domResolved
+- rendererResolved
+- controllerResolved
+- compositorResolved
+- listenersRegistered
+- rendererMountAttempted
+- rendererHandleRetained
+- rendererState
+- rendererStatus
+- rendererFirstEnhancedFrameCompleted
+- rendererFailure
+- lastPresentationState
+- lastReducedMotionState
+- lastGenericBoundsStatus
+- lastFailureCode
+- lastFailureMessage
+- lastFailureStage
+- lastFailureDetail
+- lastLifecycleCheckpoint
+- lifecycleSequence
+- receiptRevision
 
-Generic bounds event:
-DGB_UPSTREAM_COMPASS_PROJECTED_BOUNDS_CHANGED
+Renderer-state synchronization:
+- reads retained rendererHandle.getState()
+- retains only bounded serializable scalar diagnostics
+- refreshes after:
+  - mount return
+  - handle retention
+  - bounds events
+  - renderer failure events
+  - presentation subscription updates
+  - reduced-motion subscription updates
+  - initialization completion
+  - disposal entry
 
-Effective bounds contract:
-SHOWROOM_EFFECTIVE_COMPASS_BOUNDS_RECORD_v1
+Preserved:
+- self-start
+- explicit renderer mount
+- unmarked Showroom visual mount
+- sibling semantic control
+- direct fallback reference
+- one retained renderer handle
+- projected-bounds validation
+- pre-handle bounds retention
+- duplicate revision handling
+- compositor forwarding
+- existing failure event
+- existing public API
+- renderer-owned controller subscription cleanup
+- adapter non-ownership boundaries
 
-Correction 1:
-INITIAL PROJECTED-BOUNDS EVENT RACE RESOLVED
+Not changed:
+- WebGL error policy
+- renderer failure latch
+- retry policy
+- first-frame promotion policy
+- fallback behavior
+- canvas visibility behavior
+- geometry
+- navigation
+- controller
+- compositor
+- interactions
+- crystals
+- CSS
+- HTML structure
 
-- the mount listener remains registered before renderer.mount();
-- events received before handle return are retained;
-- the renderer handle and instance ID are then stored;
-- retained records are processed through normal validation;
-- handle.getProjectedBounds() is read immediately afterward;
-- a getter/event duplicate revision is ignored rather than invalidated.
+Required Showroom HTML cache query:
+/showroom/index.compass.adapter.js?v=1.0.2-compass-lifecycle-receipt
 
-Correction 2:
-AVAILABLE INVISIBLE RECORD ACCEPTED
-
-Accepted coherent forms:
-- available + visible:true + valid finite geometry;
-- available + visible:false + zero geometry.
-
-The second form becomes:
-- effective valid:false;
-- effective visible:false;
-- effective status:available;
-- zero-valued geometry.
-
-It is not treated as an adapter contract failure.
-
-Correction 3:
-DUPLICATE CONTROLLER SUBSCRIPTIONS REMOVED
-
-- getters and subscription surfaces are supplied through renderer.mount();
-- the renderer owns their cleanup through its instance lifecycle;
-- the adapter does not separately subscribe and push the same facts;
-- redundant post-mount syncPresentationState() and syncReducedMotion()
-  calls are removed.
-
-Correction 4:
-CONTRACT VALIDATION CORRECTED
-
-- every check has an explicit expected value;
-- validation passes only when checks[key] exactly equals expected[key];
-- false values cannot accidentally satisfy unrelated false expectations.
-
-DOM resolution:
-- exactly one Showroom root;
-- exactly one Showroom Compass layer;
-- exactly one unmarked visual mount;
-- exactly one direct flat fallback host;
-- exactly one sibling semantic control;
-- no DOM cloning;
-- no DOM movement;
-- no universal mount marker;
-- no universal fallback marker.
-
-Renderer installation:
-- explicit unmarked mount;
-- direct fallback supplied;
-- sibling semantic control supplied;
-- exactly one retained renderer handle;
-- exact active instance ID retained;
-- automatic discovery not intercepted;
-- automatic discovery cannot claim the unmarked Showroom mount.
-
-Bounds validation:
-- listener attached directly to resolved visual mount;
-- event target must equal resolved visual mount;
-- event currentTarget must equal resolved visual mount;
-- contract identity validated;
-- active instance ID validated after handle retention;
-- coordinate space validated;
-- five-status vocabulary validated;
-- numeric fields validated;
-- geometric invariants validated;
-- visibility and status coherence validated;
-- duplicate revisions ignored;
-- regressed revisions invalidated;
-- stale available geometry not retained after invalidation.
-
-Failure association:
-- projected-bounds association: strong;
-- renderer-failure association: weak;
-- failure correlation: retained handle.getState();
-- weak association reported truthfully.
-
-Compositor attachment:
-- compositor not required before renderer mounting;
-- immediate attachment attempted;
-- readiness event used when unavailable;
-- latest effective record retained while waiting;
-- retained record forwarded immediately after attachment.
-
-Teardown:
-- adapter event listeners removed;
-- compositor readiness listener removed;
-- renderer instance destroyed;
-- renderer-owned controller subscriptions are released through destroy();
-- disposed invalid effective record retained and forwarded;
-- fallback restoration remains renderer-owned.
-
-Strict non-ownership:
-- navigation: false;
-- routes: false;
-- controller state: false;
-- Compass geometry: false;
-- renderer matrices: false;
-- semantic activation: false;
-- semantic disabled state: false;
-- semantic movement or resizing: false;
-- hit sizing: false;
-- crystal rendering: false;
-- front/rear classification: false;
-- compositor camera: false;
-- Main Compass return meaning: false.
+Runtime execution:
+NOT PERFORMED
 
 Runtime visual success claimed:
 FALSE
 
-Isolated runtime validation:
-NOT RUN
-
-Production authorization:
-FALSE
-
-Deployment authorization:
-FALSE
+Phase 2:
+NOT EXECUTED
 */

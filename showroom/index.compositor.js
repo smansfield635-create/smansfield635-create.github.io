@@ -1,5 +1,5 @@
 /* TARGET FILE: /showroom/index.compositor.js */
-/* TNT FULL-FILE REPLACEMENT */
+/* TNT FULL-FILE REPLACEMENT */ 
 /* SHOWROOM_CONSTELLATION_SINGLE_FRAME_COMPOSITOR_TNT_v6 */
 /*
   Upstream semantic authority:

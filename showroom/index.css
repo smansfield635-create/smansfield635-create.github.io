@@ -1,7 +1,7 @@
 /* TARGET FILE: /showroom/index.css
    COMPLETE REPLACEMENT
 
-   SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v13_4_PLANET_CENTER_INTEGRATED
+   SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v13_5_PLANET_CENTER_VISUAL_WEIGHT_NEWS_LOCK
 
    Scope:
    - compact Mirrorland threshold;
@@ -15,6 +15,8 @@
    - retained semantic-star fallback;
    - retained center compatibility selector names;
    - independent planet center visual;
+   - strengthened planetary fulcrum visual weight;
+   - full semantic Main Compass hit area with secondary lower badge;
    - removed multi-file Compass renderer / adapter CSS model;
    - no Compass projected-bounds CSS dependency;
    - durable orbit-field touch-arbitration baseline;
@@ -23,12 +25,11 @@
    - responsive mobile composition;
    - Cosmos remains an independent body-level decorative layer.
 
-   Direction correction:
-   - legacy static Compass face must not be recreated as NESW;
-   - if any future fallback lettering is deliberately introduced, the
-     canonical order is NEWS;
-   - this file does not recreate Compass lettering because the planet
-     module owns the active center visual and fallback.
+   NEWS expression lock:
+   - expression-layer direction order is NEWS / N-E-W-S;
+   - do not express the visual-language direction order as another sequence;
+   - this file does not recreate static Compass lettering because the
+     planet module owns the active center visual and fallback.
 */
 
 /* ================================================================
@@ -88,12 +89,6 @@
     0 2rem 6rem rgba(0, 0, 0, 0.6),
     0 0 3.4rem rgba(48, 92, 168, 0.08);
 
-  --showroom-glow-gold:
-    0 0 1.6rem rgba(224, 184, 91, 0.16);
-
-  --showroom-glow-cyan:
-    0 0 1.8rem rgba(117, 233, 255, 0.13);
-
   --showroom-radius-xs: 0.55rem;
   --showroom-radius-sm: 0.78rem;
   --showroom-radius-md: 1.05rem;
@@ -120,10 +115,10 @@
   --showroom-static-star-opacity: 0.72;
 
   --showroom-center-size:
-    clamp(9rem, 19vw, 14rem);
+    clamp(10.5rem, 24vw, 16.5rem);
 
   --showroom-planet-size:
-    clamp(7.8rem, 16.5vw, 12.2rem);
+    clamp(9.4rem, 21vw, 14.6rem);
 
   --showroom-planet-turn:
     0deg;
@@ -773,7 +768,8 @@ main {
 
   content: "";
   background: currentColor;
-  box-shadow: var(--showroom-glow-gold);
+  box-shadow:
+    0 0 1.6rem rgba(224, 184, 91, 0.16);
 }
 
 .door-subtitle {
@@ -1022,7 +1018,7 @@ main {
 }
 
 /* ================================================================
-   10. CENTER COMPATIBILITY LAYER AND PLANET VISUAL
+   10. CENTER COMPATIBILITY LAYER AND PLANETARY FULCRUM
    ================================================================ */
 
 .showroom-compass-layer,
@@ -1047,29 +1043,35 @@ main {
   display: grid;
   place-items: center;
 
+  overflow: visible;
   pointer-events: none;
 }
 
-.showroom-planet-mount {
+.showroom-planet-mount,
+[data-showroom-planet-mount] {
   border-radius: 50%;
 
   background:
     radial-gradient(
       circle at 50% 50%,
-      rgba(117, 233, 255, 0.08),
-      transparent 49%
+      rgba(117, 233, 255, 0.16),
+      transparent 58%
     );
 
   filter:
     drop-shadow(
-      0 0 2rem rgba(117, 233, 255, 0.08)
+      0 0 2.8rem rgba(117, 233, 255, 0.2)
+    )
+    drop-shadow(
+      0 0 4.4rem rgba(224, 184, 91, 0.08)
     );
 }
 
 .showroom-planet-mount::before,
-.showroom-planet-mount::after {
+.showroom-planet-mount::after,
+[data-showroom-planet-mount]::before,
+[data-showroom-planet-mount]::after {
   position: absolute;
-  inset: 6%;
 
   border-radius: 50%;
 
@@ -1077,19 +1079,24 @@ main {
   content: "";
 }
 
-.showroom-planet-mount::before {
-  border: 1px solid rgba(224, 184, 91, 0.18);
+.showroom-planet-mount::before,
+[data-showroom-planet-mount]::before {
+  inset: -3%;
+
+  border: 1px solid rgba(224, 184, 91, 0.22);
 
   box-shadow:
-    0 0 2.2rem rgba(224, 184, 91, 0.08),
-    inset 0 0 2rem rgba(117, 233, 255, 0.045);
+    0 0 2.8rem rgba(224, 184, 91, 0.13),
+    inset 0 0 2.6rem rgba(117, 233, 255, 0.1);
 }
 
-.showroom-planet-mount::after {
-  inset: 18%;
+.showroom-planet-mount::after,
+[data-showroom-planet-mount]::after {
+  inset: 9%;
 
-  border: 1px solid rgba(117, 233, 255, 0.16);
+  border: 1px solid rgba(117, 233, 255, 0.22);
 
+  opacity: 0.9;
   transform: rotateX(62deg) rotateZ(-18deg);
 }
 
@@ -1106,6 +1113,14 @@ main {
 
   pointer-events: none;
   isolation: isolate;
+
+  filter:
+    drop-shadow(
+      0 0 2rem rgba(117, 233, 255, 0.22)
+    )
+    drop-shadow(
+      0 0 3.8rem rgba(224, 184, 91, 0.1)
+    );
 }
 
 .showroom-planet-shell {
@@ -1130,34 +1145,34 @@ main {
 
 .showroom-planet-atmosphere {
   position: absolute;
-  inset: -9%;
+  inset: -13%;
 
   border-radius: 50%;
 
   background:
     radial-gradient(
-      circle at 42% 31%,
-      rgba(255, 249, 224, 0.34),
-      transparent 16%
+      circle at 38% 28%,
+      rgba(255, 249, 224, 0.58),
+      transparent 15%
     ),
     radial-gradient(
-      circle at 50% 50%,
-      rgba(117, 233, 255, 0.2),
-      rgba(117, 233, 255, 0.06) 48%,
-      transparent 70%
+      circle at 48% 46%,
+      rgba(117, 233, 255, 0.34),
+      rgba(117, 233, 255, 0.13) 46%,
+      transparent 74%
     );
 
   box-shadow:
-    0 0 1.4rem rgba(117, 233, 255, 0.16),
-    0 0 3.8rem rgba(117, 233, 255, 0.1),
-    inset 0 0 1.4rem rgba(255, 255, 255, 0.08);
+    0 0 2.1rem rgba(117, 233, 255, 0.28),
+    0 0 5.2rem rgba(117, 233, 255, 0.16),
+    inset 0 0 1.8rem rgba(255, 255, 255, 0.16);
 
-  opacity: 0.94;
+  opacity: 1;
 }
 
 .showroom-planet-surface {
   position: absolute;
-  inset: 8%;
+  inset: 4%;
 
   overflow: hidden;
   border-radius: 50%;
@@ -1165,31 +1180,36 @@ main {
   background:
     radial-gradient(
       circle at 34% 28%,
-      rgba(255, 244, 207, 0.46),
+      rgba(255, 244, 207, 0.62),
       transparent 12%
     ),
     radial-gradient(
       circle at 58% 72%,
-      rgba(10, 112, 128, 0.55),
-      transparent 24%
+      rgba(8, 154, 164, 0.72),
+      transparent 25%
     ),
     radial-gradient(
-      circle at 28% 66%,
-      rgba(78, 52, 148, 0.38),
-      transparent 20%
+      circle at 27% 67%,
+      rgba(107, 72, 176, 0.58),
+      transparent 22%
+    ),
+    radial-gradient(
+      circle at 72% 34%,
+      rgba(224, 184, 91, 0.34),
+      transparent 18%
     ),
     linear-gradient(
       135deg,
-      #183360 0%,
-      #1b5d73 34%,
-      #5d4785 62%,
-      #17213f 100%
+      #244f89 0%,
+      #188199 32%,
+      #7752a6 62%,
+      #142146 100%
     );
 
   box-shadow:
-    inset -1.1rem -1rem 1.8rem rgba(0, 0, 0, 0.52),
-    inset 0.75rem 0.65rem 1.4rem rgba(255, 255, 255, 0.12),
-    0 0 2.4rem rgba(117, 233, 255, 0.18);
+    inset -1.35rem -1.15rem 2rem rgba(0, 0, 0, 0.56),
+    inset 0.95rem 0.8rem 1.65rem rgba(255, 255, 255, 0.18),
+    0 0 3.2rem rgba(117, 233, 255, 0.28);
 }
 
 .showroom-planet-surface::before,
@@ -1202,23 +1222,23 @@ main {
 }
 
 .showroom-planet-surface::before {
-  opacity: 0.55;
+  opacity: 0.72;
 
   background:
     repeating-linear-gradient(
       108deg,
-      transparent 0 0.62rem,
-      rgba(255, 255, 255, 0.045) 0.66rem 0.72rem,
-      transparent 0.76rem 1.6rem
+      transparent 0 0.58rem,
+      rgba(255, 255, 255, 0.07) 0.62rem 0.7rem,
+      transparent 0.74rem 1.42rem
     ),
     radial-gradient(
       ellipse at 30% 44%,
-      rgba(224, 184, 91, 0.24),
+      rgba(224, 184, 91, 0.34),
       transparent 24%
     ),
     radial-gradient(
       ellipse at 64% 42%,
-      rgba(117, 233, 255, 0.18),
+      rgba(117, 233, 255, 0.28),
       transparent 28%
     );
 }
@@ -1227,19 +1247,19 @@ main {
   background:
     radial-gradient(
       circle at 35% 28%,
-      rgba(255, 255, 255, 0.28),
+      rgba(255, 255, 255, 0.38),
       transparent 15%
     ),
     radial-gradient(
       circle at 72% 76%,
-      rgba(0, 0, 0, 0.36),
+      rgba(0, 0, 0, 0.44),
       transparent 36%
     ),
     linear-gradient(
       115deg,
-      transparent 0 40%,
-      rgba(255, 255, 255, 0.09) 48%,
-      transparent 58% 100%
+      transparent 0 38%,
+      rgba(255, 255, 255, 0.14) 48%,
+      transparent 60% 100%
     );
 }
 
@@ -1248,7 +1268,7 @@ main {
   z-index: 2;
 
   width: 0.11rem;
-  height: 128%;
+  height: 138%;
 
   border-radius: 999px;
 
@@ -1256,36 +1276,36 @@ main {
     linear-gradient(
       180deg,
       transparent,
-      rgba(245, 213, 130, 0.76) 18%,
-      rgba(117, 233, 255, 0.6) 50%,
-      rgba(245, 213, 130, 0.76) 82%,
+      rgba(245, 213, 130, 0.72) 18%,
+      rgba(117, 233, 255, 0.62) 50%,
+      rgba(245, 213, 130, 0.72) 82%,
       transparent
     );
 
   box-shadow:
     0 0 0.9rem rgba(245, 213, 130, 0.32);
 
-  opacity: 0.58;
+  opacity: 0.42;
   transform: rotate(-17deg);
 }
 
 .showroom-planet-glow {
   position: absolute;
-  inset: -22%;
+  inset: -30%;
 
   border-radius: 50%;
 
   background:
     radial-gradient(
       circle at 50% 50%,
-      rgba(245, 213, 130, 0.16),
-      rgba(117, 233, 255, 0.09) 34%,
-      rgba(182, 151, 255, 0.06) 52%,
-      transparent 72%
+      rgba(245, 213, 130, 0.18),
+      rgba(117, 233, 255, 0.16) 34%,
+      rgba(182, 151, 255, 0.09) 54%,
+      transparent 74%
     );
 
   filter: blur(0.1rem);
-  opacity: 0.94;
+  opacity: 1;
 }
 
 .showroom-planet-fallback {
@@ -1295,7 +1315,7 @@ main {
   display: none;
   place-items: center;
 
-  border: 1px solid rgba(117, 233, 255, 0.2);
+  border: 1px solid rgba(117, 233, 255, 0.22);
   border-radius: 50%;
 
   color: var(--showroom-cyan-soft);
@@ -1303,7 +1323,7 @@ main {
   background:
     radial-gradient(
       circle,
-      rgba(117, 233, 255, 0.13),
+      rgba(117, 233, 255, 0.2),
       rgba(7, 11, 24, 0.94) 68%
     );
 
@@ -1328,37 +1348,17 @@ main {
 .showroom-planet-shell,
 .showroom-planet-root[data-showroom-planet-fallback="true"]
 .showroom-planet-shell {
-  opacity: 0.34;
-}
-
-[data-showroom-planet-reduced-motion="true"]
-.showroom-planet-shell,
-.showroom-planet-root[data-showroom-planet-reduced-motion="true"]
-.showroom-planet-shell {
-  transform: none;
-}
-
-[data-showroom-planet-reduced-motion="true"]
-.showroom-planet-atmosphere,
-.showroom-planet-root[data-showroom-planet-reduced-motion="true"]
-.showroom-planet-atmosphere,
-[data-showroom-planet-reduced-motion="true"]
-.showroom-planet-glow,
-.showroom-planet-root[data-showroom-planet-reduced-motion="true"]
-.showroom-planet-glow {
-  filter: none;
+  opacity: 0.42;
 }
 
 .showroom-compass-control {
   position: absolute;
   z-index: 3;
-  inset: 0;
+  inset: -4%;
 
-  display: grid;
-  place-content: center;
-  gap: 0.15rem;
+  display: block;
 
-  padding: 28%;
+  padding: 0;
 
   border: 0;
   border-radius: 50%;
@@ -1368,16 +1368,34 @@ main {
 
   text-align: center;
   cursor: pointer;
+  pointer-events: auto;
 }
 
 .showroom-compass-control::before {
   position: absolute;
-  inset: 20%;
+  inset: auto 50% 13% auto;
 
-  border: 1px solid transparent;
-  border-radius: 50%;
+  width: min(7.4rem, 62%);
+  height: auto;
+  min-height: 2.35rem;
+
+  border: 1px solid rgba(245, 213, 130, 0.18);
+  border-radius: 999px;
 
   content: "";
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(7, 11, 24, 0.5),
+      rgba(7, 11, 24, 0.26)
+    );
+
+  box-shadow:
+    0 0.5rem 1.6rem rgba(0, 0, 0, 0.28),
+    0 0 1.4rem rgba(117, 233, 255, 0.08);
+
+  transform: translateX(50%);
 
   transition:
     border-color var(--showroom-transition-fast),
@@ -1387,44 +1405,57 @@ main {
 
 .showroom-compass-control:hover::before,
 .showroom-compass-control:focus-visible::before {
-  border-color: rgba(245, 213, 130, 0.34);
+  border-color: rgba(245, 213, 130, 0.42);
 
   background:
-    radial-gradient(
-      circle,
-      rgba(245, 213, 130, 0.1),
-      transparent 62%
+    linear-gradient(
+      180deg,
+      rgba(12, 18, 36, 0.72),
+      rgba(7, 11, 24, 0.44)
     );
 
   box-shadow:
-    0 0 1.8rem rgba(245, 213, 130, 0.16);
+    0 0.7rem 1.8rem rgba(0, 0, 0, 0.36),
+    0 0 1.8rem rgba(245, 213, 130, 0.14);
 }
 
 .showroom-compass-control__label,
 .showroom-compass-control__instruction {
-  position: relative;
-  z-index: 2;
+  position: absolute;
+  z-index: 4;
+  right: 50%;
+
+  width: min(7.2rem, 60%);
+
+  text-align: center;
+
+  transform: translateX(50%);
 
   text-shadow:
-    0 0.12rem 0.45rem rgba(0, 0, 0, 0.78),
-    0 0 0.7rem rgba(7, 11, 24, 0.9);
+    0 0.1rem 0.35rem rgba(0, 0, 0, 0.82);
 }
 
 .showroom-compass-control__label {
+  bottom: calc(13% + 1.1rem);
+
+  color: rgba(246, 238, 223, 0.92);
+
   font-family:
     Georgia,
     "Times New Roman",
     serif;
 
-  font-size: clamp(0.72rem, 1.3vw, 0.95rem);
+  font-size: clamp(0.58rem, 1vw, 0.76rem);
   font-weight: 600;
-  line-height: 1.05;
+  line-height: 0.95;
 }
 
 .showroom-compass-control__instruction {
-  color: var(--showroom-muted);
+  bottom: calc(13% + 0.35rem);
 
-  font-size: 0.52rem;
+  color: rgba(220, 210, 192, 0.68);
+
+  font-size: 0.46rem;
   font-weight: 800;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -1712,7 +1743,7 @@ main {
 }
 
 /* ================================================================
-   12. LIVE ATLAS / COMPASS KEY
+   12. LIVE ATLAS KEY
    ================================================================ */
 
 .showroom-controller-panel,
@@ -2145,108 +2176,63 @@ main {
 [data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="north-1"]
 [data-showroom-atlas-narrative-record="north-1"],
 [data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="north-1"]
-[data-showroom-atlas-narrative-detail-record="north-1"] {
-  display: block;
-}
-
+[data-showroom-atlas-narrative-detail-record="north-1"],
 [data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="north-2"]
 [data-showroom-atlas-narrative-record="north-2"],
 [data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="north-2"]
-[data-showroom-atlas-narrative-detail-record="north-2"] {
-  display: block;
-}
-
+[data-showroom-atlas-narrative-detail-record="north-2"],
 [data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="north-3"]
 [data-showroom-atlas-narrative-record="north-3"],
 [data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="north-3"]
-[data-showroom-atlas-narrative-detail-record="north-3"] {
-  display: block;
-}
-
+[data-showroom-atlas-narrative-detail-record="north-3"],
 [data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="north-4"]
 [data-showroom-atlas-narrative-record="north-4"],
 [data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="north-4"]
-[data-showroom-atlas-narrative-detail-record="north-4"] {
-  display: block;
-}
-
+[data-showroom-atlas-narrative-detail-record="north-4"],
 [data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="east-1"]
 [data-showroom-atlas-narrative-record="east-1"],
 [data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="east-1"]
-[data-showroom-atlas-narrative-detail-record="east-1"] {
-  display: block;
-}
-
+[data-showroom-atlas-narrative-detail-record="east-1"],
 [data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="east-2"]
 [data-showroom-atlas-narrative-record="east-2"],
 [data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="east-2"]
-[data-showroom-atlas-narrative-detail-record="east-2"] {
-  display: block;
-}
-
+[data-showroom-atlas-narrative-detail-record="east-2"],
 [data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="east-3"]
 [data-showroom-atlas-narrative-record="east-3"],
 [data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="east-3"]
-[data-showroom-atlas-narrative-detail-record="east-3"] {
-  display: block;
-}
-
+[data-showroom-atlas-narrative-detail-record="east-3"],
 [data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="east-4"]
 [data-showroom-atlas-narrative-record="east-4"],
 [data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="east-4"]
-[data-showroom-atlas-narrative-detail-record="east-4"] {
-  display: block;
-}
-
+[data-showroom-atlas-narrative-detail-record="east-4"],
 [data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="south-1"]
 [data-showroom-atlas-narrative-record="south-1"],
 [data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="south-1"]
-[data-showroom-atlas-narrative-detail-record="south-1"] {
-  display: block;
-}
-
+[data-showroom-atlas-narrative-detail-record="south-1"],
 [data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="south-2"]
 [data-showroom-atlas-narrative-record="south-2"],
 [data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="south-2"]
-[data-showroom-atlas-narrative-detail-record="south-2"] {
-  display: block;
-}
-
+[data-showroom-atlas-narrative-detail-record="south-2"],
 [data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="south-3"]
 [data-showroom-atlas-narrative-record="south-3"],
 [data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="south-3"]
-[data-showroom-atlas-narrative-detail-record="south-3"] {
-  display: block;
-}
-
+[data-showroom-atlas-narrative-detail-record="south-3"],
 [data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="south-4"]
 [data-showroom-atlas-narrative-record="south-4"],
 [data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="south-4"]
-[data-showroom-atlas-narrative-detail-record="south-4"] {
-  display: block;
-}
-
+[data-showroom-atlas-narrative-detail-record="south-4"],
 [data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="west-1"]
 [data-showroom-atlas-narrative-record="west-1"],
 [data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="west-1"]
-[data-showroom-atlas-narrative-detail-record="west-1"] {
-  display: block;
-}
-
+[data-showroom-atlas-narrative-detail-record="west-1"],
 [data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="west-2"]
 [data-showroom-atlas-narrative-record="west-2"],
 [data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="west-2"]
-[data-showroom-atlas-narrative-detail-record="west-2"] {
-  display: block;
-}
-
+[data-showroom-atlas-narrative-detail-record="west-2"],
 [data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="west-3"]
 [data-showroom-atlas-narrative-record="west-3"],
 [data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="west-3"]
-[data-showroom-atlas-narrative-detail-record="west-3"] {
-  display: block;
-}
-
+[data-showroom-atlas-narrative-detail-record="west-3"],
 [data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="west-4"]
 [data-showroom-atlas-narrative-record="west-4"],
 [data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="west-4"]
@@ -2257,24 +2243,15 @@ main {
 [data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child=""][data-showroom-active-cardinal="north"]
 [data-showroom-atlas-narrative-record="north"],
 [data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child=""][data-showroom-active-cardinal="north"]
-[data-showroom-atlas-narrative-detail-record="north"] {
-  display: block;
-}
-
+[data-showroom-atlas-narrative-detail-record="north"],
 [data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child=""][data-showroom-active-cardinal="east"]
 [data-showroom-atlas-narrative-record="east"],
 [data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child=""][data-showroom-active-cardinal="east"]
-[data-showroom-atlas-narrative-detail-record="east"] {
-  display: block;
-}
-
+[data-showroom-atlas-narrative-detail-record="east"],
 [data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child=""][data-showroom-active-cardinal="south"]
 [data-showroom-atlas-narrative-record="south"],
 [data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child=""][data-showroom-active-cardinal="south"]
-[data-showroom-atlas-narrative-detail-record="south"] {
-  display: block;
-}
-
+[data-showroom-atlas-narrative-detail-record="south"],
 [data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child=""][data-showroom-active-cardinal="west"]
 [data-showroom-atlas-narrative-record="west"],
 [data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child=""][data-showroom-active-cardinal="west"]
@@ -3696,10 +3673,12 @@ main {
   :root {
     --showroom-space-7: 2.2rem;
     --showroom-space-8: 3rem;
+
     --showroom-center-size:
-      clamp(7.2rem, 31vw, 9.4rem);
+      clamp(9.4rem, 42vw, 12.2rem);
+
     --showroom-planet-size:
-      clamp(6.4rem, 27vw, 8.4rem);
+      clamp(8.6rem, 38vw, 11.2rem);
   }
 
   body {
@@ -3833,12 +3812,23 @@ main {
     border-radius: 0.95rem;
   }
 
+  .showroom-compass-control::before {
+    bottom: 10%;
+
+    width: min(6.4rem, 64%);
+    min-height: 2.15rem;
+  }
+
   .showroom-compass-control__label {
-    font-size: 0.68rem;
+    bottom: calc(10% + 1rem);
+
+    font-size: 0.62rem;
   }
 
   .showroom-compass-control__instruction {
-    font-size: 0.48rem;
+    bottom: calc(10% + 0.32rem);
+
+    font-size: 0.42rem;
   }
 
   .showroom-star--large {
@@ -4142,8 +4132,23 @@ main {
 [data-showroom-root][data-showroom-reduced-motion="true"]
 .showroom-planet-shell,
 [data-showroom-root][data-reduced-motion="true"]
+.showroom-planet-shell,
+[data-showroom-planet-reduced-motion="true"]
+.showroom-planet-shell,
+.showroom-planet-root[data-showroom-planet-reduced-motion="true"]
 .showroom-planet-shell {
   transform: none !important;
+}
+
+[data-showroom-planet-reduced-motion="true"]
+.showroom-planet-atmosphere,
+.showroom-planet-root[data-showroom-planet-reduced-motion="true"]
+.showroom-planet-atmosphere,
+[data-showroom-planet-reduced-motion="true"]
+.showroom-planet-glow,
+.showroom-planet-root[data-showroom-planet-reduced-motion="true"]
+.showroom-planet-glow {
+  filter: none !important;
 }
 
 /* ================================================================
@@ -4309,17 +4314,22 @@ main {
    END RECEIPT
 
    CONTRACT:
-   SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v13_4_PLANET_CENTER_INTEGRATED
+   SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v13_5_PLANET_CENTER_VISUAL_WEIGHT_NEWS_LOCK
 
    PREVIOUS CONTRACT:
-   SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v13_3
+   SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v13_4_PLANET_CENTER_INTEGRATED
+
+   RENEWAL MODE:
+   COMPLETE FILE REPLACEMENT ONLY
 
    RENEWAL SCOPE:
    GROUP_C_ABOVE_HOOD_HTML_CSS_INTEGRATION
    +
    INDEPENDENT_CENTER_PLANET_INTEGRATION
    +
-   MULTI_FILE_COMPASS_RUNTIME_CSS_RETIREMENT
+   CENTER_PLANET_VISUAL_WEIGHT_CORRECTION
+   +
+   NEWS_EXPRESSION_LAYER_DIRECTION_LOCK
 
    ACTIVE CENTER VISUAL:
    - /showroom/index.planet.js
@@ -4332,9 +4342,10 @@ main {
    - [data-showroom-compass-visual-mount]
    - [data-showroom-compass-control]
 
-   NEW CENTER SELECTORS:
-   - [data-showroom-center-layer]
-   - [data-showroom-planet-mount]
+   CENTER STRUCTURE:
+   - [data-showroom-compass-layer][data-showroom-center-layer]
+   - [data-showroom-compass-visual-mount][data-showroom-planet-mount]
+   - [data-showroom-compass-control]
 
    PLANET MODULE CSS SURFACES:
    - .showroom-planet-root
@@ -4346,20 +4357,28 @@ main {
    - .showroom-planet-fallback
    - [data-showroom-planet-reduced-motion="true"]
 
+   CENTER VISUAL CORRECTION:
+   - planet visual enlarged;
+   - planet material contrast strengthened;
+   - atmosphere and glow strengthened;
+   - semantic control remains full-size hit area;
+   - visible Main Compass label demoted to secondary lower badge;
+   - return label no longer owns the visual center;
+   - planet should read first;
+   - return affordance should read second.
+
+   NEWS EXPRESSION LOCK:
+   - expression-layer direction order is NEWS / N-E-W-S;
+   - protocol-internal order is not changed by this CSS;
+   - no static direction lettering is recreated in this CSS;
+   - any future deliberate expression-layer fallback must use NEWS.
+
    RETIRED FROM CSS TARGET MODEL:
    - old Compass renderer visual styling;
    - old Compass adapter styling;
    - Compass projected-bounds CSS dependency;
-   - static N/E/S/W Compass visual;
-   - universal Compass renderer compatibility claims;
-   - Showroom Compass adapter compatibility claims;
-   - CSS assumptions that the center visual is Compass-renderer-owned.
-
-   DIRECTION CORRECTION:
-   - legacy static Compass face was never supposed to be NESW;
-   - canonical future fallback order would be NEWS;
-   - this file does not recreate Compass lettering because the planet
-     module owns the center visual and fallback.
+   - static Compass lettering in the center visual;
+   - CSS assumptions that the center visual is renderer-owned.
 
    SEMANTIC ACTIVATION:
    - semantic control remains:
@@ -4382,16 +4401,11 @@ main {
        none
    - -webkit-user-select:
        none
-   - the field declares the browser-level gesture baseline needed
-     for the existing interaction runtime to receive orbit gestures
-     without page-scroll or text-selection competition;
    - gesture interpretation, tap discrimination, drag thresholds,
      pointer capture, quaternion updates, and navigation decisions
-     remain owned by the authorized interaction and controller
-     runtimes;
+     remain owned by authorized interaction and controller runtimes;
    - this CSS does not create a second gesture recognizer;
-   - this CSS does not claim runtime swipe success without deployed
-     validation.
+   - this CSS does not claim runtime swipe success.
 
    ATLAS RECORD COUNT:
    23
@@ -4419,6 +4433,7 @@ main {
    - secondary runtime-evidence disclosure.
 
    INTENTIONAL NON-CLAIMS:
+   - does not alter /showroom/index.html;
    - does not alter /showroom/index.controller.js;
    - does not alter /showroom/index.compositor.js;
    - does not alter /showroom/index.planet.js;
@@ -4442,7 +4457,20 @@ main {
    - does not infer runtime readiness from source presence.
 
    REQUIRED COMPANION HTML CACHE QUERY:
-   /showroom/index.css?v=SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v13_4_PLANET_CENTER_INTEGRATED
+   /showroom/index.css?v=SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v13_5_PLANET_CENTER_VISUAL_WEIGHT_NEWS_LOCK
+
+   REQUIRED POST-DEPLOY VALIDATION:
+   - center contains .showroom-planet-root inside [data-showroom-planet-mount];
+   - planet reads visually before the Main Compass label;
+   - label remains readable but secondary;
+   - full center semantic hit area remains functional;
+   - Main Compass selection path still reaches controller.requestCompassSelection();
+   - four cardinal crystals remain visible;
+   - child clusters remain selectable;
+   - Atlas record precedence remains exact;
+   - mobile layout remains contained;
+   - reduced-motion behavior remains stable;
+   - forced-colors behavior remains usable.
 
    RUNTIME VALIDATION:
    NOT RUN

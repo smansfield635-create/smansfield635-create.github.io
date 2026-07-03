@@ -1,7 +1,7 @@
 /* TARGET FILE: /showroom/index.css
    COMPLETE REPLACEMENT
 
-   SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v13_1
+   SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v13_2
 
    Scope:
    - compact Mirrorland threshold;
@@ -15,6 +15,7 @@
    - retained semantic-star fallback;
    - retained Compass, Diamond, Window, front-host, receipt,
      compositor, crystal, and controller contracts;
+   - Compass semantic-control projected-bounds consumption;
    - five independent native narrative disclosures;
    - one collapsed secondary runtime-evidence disclosure;
    - responsive mobile composition;
@@ -1154,6 +1155,77 @@ main {
 
   text-align: center;
   cursor: pointer;
+}
+
+/*
+  Compositor-published Compass bounds are expressed in
+  Compass-layer-local CSS pixels.
+
+  The selector intentionally keys only on the existence of the
+  compositor-owned source dataset. It does not infer activation,
+  enabled state, or navigation availability from the bounds status,
+  valid, or visible datasets.
+
+  Both projected and mount-fallback sources remain usable semantic
+  geometry. Controller and native control states retain all
+  interaction-availability authority.
+*/
+
+.showroom-compass-layer[data-showroom-compass-bounds-source]
+.showroom-compass-control {
+  inset: auto;
+
+  left:
+    var(
+      --showroom-compass-bounds-left,
+      0px
+    );
+
+  top:
+    var(
+      --showroom-compass-bounds-top,
+      0px
+    );
+
+  width:
+    var(
+      --showroom-compass-bounds-width,
+      100%
+    );
+
+  height:
+    var(
+      --showroom-compass-bounds-height,
+      100%
+    );
+
+  border-radius:
+    var(
+      --showroom-compass-bounds-radius,
+      50%
+    );
+
+  transform-origin:
+    calc(
+      var(
+        --showroom-compass-bounds-center-x,
+        50%
+      ) -
+      var(
+        --showroom-compass-bounds-left,
+        0px
+      )
+    )
+    calc(
+      var(
+        --showroom-compass-bounds-center-y,
+        50%
+      ) -
+      var(
+        --showroom-compass-bounds-top,
+        0px
+      )
+    );
 }
 
 .showroom-compass-control__label {
@@ -4075,16 +4147,49 @@ main {
    END RECEIPT
 
    CONTRACT:
-   SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v13_1
+   SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v13_2
+
+   RENEWAL SCOPE:
+   COMPASS_SEMANTIC_CONTROL_PROJECTED_BOUNDS_CONSUMPTION_ONLY
+
+   COMPASS BOUNDS INPUT PROPERTIES:
+   - --showroom-compass-bounds-left
+   - --showroom-compass-bounds-top
+   - --showroom-compass-bounds-width
+   - --showroom-compass-bounds-height
+   - --showroom-compass-bounds-center-x
+   - --showroom-compass-bounds-center-y
+   - --showroom-compass-bounds-radius
+
+   COMPASS BOUNDS DATASET TRIGGER:
+   - data-showroom-compass-bounds-source
+
+   COMPASS SEMANTIC CONTROL BEHAVIOR:
+   - before compositor publication, the existing inset: 0 fallback
+     remains active;
+   - after compositor publication, the semantic control consumes
+     Compass-layer-local left, top, width, and height;
+   - radius is consumed as the semantic control border radius;
+   - center-x and center-y are consumed to establish the control's
+     local transform origin;
+   - projected geometry and mount-fallback geometry are both valid
+     downstream positioning sources;
+   - CSS does not infer enabled, disabled, selected, held, or
+     navigation availability from bounds source, status, valid,
+     visible, or revision datasets;
+   - native control state and controller-owned root state remain
+     authoritative for interaction availability;
+   - the visual mount and Compass layer geometry are not moved or
+     resized by this renewal.
 
    CORRECTION:
    - all root-state attributes are compounded on the same
      [data-showroom-root] selector;
-   - descendant combinators now begin only after the complete root
+   - descendant combinators begin only after the complete root
      state selector;
-   - fallback-star readiness and held selectors are corrected;
-   - Atlas emphasis selectors are corrected;
-   - print-state selectors are corrected.
+   - fallback-star readiness and held selectors remain corrected;
+   - Atlas emphasis selectors remain corrected;
+   - print-state selectors remain corrected.
 
    ATLAS RECORD COUNT:
    23
@@ -4101,7 +4206,8 @@ main {
      authorized runtime owner to set:
        data-showroom-compass-selected="true"
      on the [data-showroom-root] element.
-   - CSS does not infer Compass selection from unrelated attributes.
+   - CSS does not infer Compass selection from projected geometry or
+     unrelated attributes.
 
    REMOVED PRESENTATION CONTRACTS:
    - no evidence tablist;
@@ -4111,7 +4217,9 @@ main {
 
    PRESERVED RUNTIME CONTRACTS:
    - constellation field and semantic-star layers;
-   - fixed Compass visual plane and Compass control;
+   - fixed Compass visual plane;
+   - universal Compass renderer compatibility;
+   - compositor-published Compass semantic bounds;
    - front and rear crystal composition compatibility;
    - semantic fallback controls;
    - Diamond stage, canvas, fallback, controls, and hidden
@@ -4126,17 +4234,37 @@ main {
    INTENTIONAL NON-CLAIMS:
    - does not alter /showroom/index.controller.js;
    - does not alter /showroom/index.compositor.js;
+   - does not alter /showroom/index.compass.adapter.js;
    - does not alter /showroom/index.crystals.js;
    - does not alter /showroom/index.interactions.js;
    - does not alter /showroom/index.window.js;
    - does not alter /showroom/index.ui.js;
    - does not alter /showroom/index.cosmos.js;
+   - does not own Compass projection;
+   - does not calculate Compass bounds;
+   - does not infer semantic activation from bounds visibility;
    - does not resolve orbit-field touch arbitration;
    - does not redefine compositor depth convention;
    - does not alter Cosmos ownership;
    - does not infer runtime readiness from source presence.
 
    REQUIRED POST-DEPLOY VALIDATION:
+   - Compass control retains inset: 0 before bounds publication;
+   - projected bounds resize and reposition the existing Compass
+     semantic control;
+   - mount-fallback bounds resize and reposition the existing
+     Compass semantic control;
+   - projected geometry may extend beyond the fixed visual mount;
+   - negative layer-local left and top values remain usable;
+   - control bounding rectangle corresponds to the compositor
+     properties within CSS pixel tolerance;
+   - control remains interactive when mount-fallback is published
+     and the controller permits interaction;
+   - controller-disabled and held states remain authoritative;
+   - data-showroom-compass-bounds-visible does not independently
+     enable or disable the semantic control;
+   - compositor disposal restores the pre-bridge inset: 0 geometry;
+   - desktop, tablet, mobile, zoom, and device-pixel-ratio layouts;
    - idle Atlas record;
    - Main Compass Atlas record;
    - all four cardinal Atlas records;
@@ -4159,4 +4287,13 @@ main {
    - keyboard focus;
    - reduced-motion behavior;
    - forced-colors behavior.
+
+   RUNTIME VALIDATION:
+   NOT RUN
+
+   PRODUCTION AUTHORIZATION:
+   FALSE
+
+   DEPLOYMENT AUTHORIZATION:
+   FALSE
    ================================================================ */

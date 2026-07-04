@@ -2,7 +2,7 @@
 /* COMPLETE REPLACEMENT */
 /* SHOWROOM_MIRRORLAND_FOREGROUND_WINDOW_TNT_v1_1_DISSOLVE_REVEAL */
 
-/*
+/* 
   Purpose:
   - Install the Showroom-local Mirrorland Window renderer.
   - Render a foreground stained-glass veil above the Diamond.

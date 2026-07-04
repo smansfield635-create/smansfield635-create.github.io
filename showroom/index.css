@@ -1,7 +1,7 @@
 /* TARGET FILE: /showroom/index.css
    COMPLETE REPLACEMENT
 
-   SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v13_9_AUDRALIA_WEBGL_3D_PLANET_CENTER_FULL_SEMANTIC_HIT_SURFACE
+   SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v13_10_CENTER_COMPASS_HIT_SURFACE_RESTORATION
 
    Scope:
    - compact Mirrorland threshold;
@@ -17,6 +17,9 @@
    - CSS no longer paints a second globe surface;
    - .showroom-planet-canvas is the dominant planet visual;
    - full visible center planet object is covered by the semantic Compass button;
+   - full-field star layout containers are pointer-transparent;
+   - actual star controls remain pointer-active;
+   - center Compass semantic control remains pointer-active;
    - WebGL renderer owns globe body, terrain, water, clouds, lighting, and terminator behavior;
    - interactions own semantic Compass recovery;
    - CSS owns hit-area layout, pointer layering, focus visibility, responsiveness, and subtle ambient staging only;
@@ -1266,6 +1269,7 @@ main {
   text-align: center;
   cursor: pointer;
   pointer-events: auto;
+  touch-action: manipulation;
 }
 
 .showroom-compass-control::before,
@@ -1356,13 +1360,26 @@ main {
 
 .showroom-semantic-star-layer,
 .showroom-primary-stars,
-.showroom-star-cluster {
+.showroom-star-cluster,
+[data-showroom-semantic-star-layer],
+[data-showroom-primary-stars],
+[data-showroom-cardinal-layer],
+[data-showroom-fallback-star-layer],
+[data-showroom-cluster] {
   position: absolute;
   inset: 0;
+  pointer-events: none;
 }
 
 .showroom-semantic-star-layer {
   z-index: 7;
+}
+
+.showroom-star,
+[data-showroom-cardinal-control],
+[data-showroom-child-control],
+[data-showroom-fallback-star] {
+  pointer-events: auto;
 }
 
 .showroom-star {
@@ -3944,13 +3961,13 @@ main {
    END RECEIPT
 
    CONTRACT:
-   SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v13_9_AUDRALIA_WEBGL_3D_PLANET_CENTER_FULL_SEMANTIC_HIT_SURFACE
+   SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v13_10_CENTER_COMPASS_HIT_SURFACE_RESTORATION
 
    PREVIOUS CONTRACT:
-   SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v13_8_AUDRALIA_WEBGL_3D_PLANET_STAGE_ONLY
+   SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v13_9_AUDRALIA_WEBGL_3D_PLANET_CENTER_FULL_SEMANTIC_HIT_SURFACE
 
    RENEWAL SCOPE:
-   GROUP_F_AUDRALIA_GEOMETRY_AUTHORITY_WEBGL_3D_PLANET_FULL_CENTER_SEMANTIC_HIT_SURFACE_CSS_CORRECTION
+   BOUNDED_CENTER_COMPASS_HIT_SURFACE_RESTORATION_FROM_FUNCTIONAL_BASELINE
 
    ACTIVE CENTER VISUAL:
    - /showroom/index.planet.js
@@ -3967,7 +3984,30 @@ main {
    PLANET MODEL:
    - AUDRALIA_GEOMETRY_AUTHORITY_MINIATURE_3D_RENDERER_v1
 
-   REQUIRED CORRECTION:
+   REQUIRED v13_10 CORRECTION:
+   - full-field star layout containers are pointer-transparent;
+   - .showroom-semantic-star-layer is pointer-events:none;
+   - .showroom-primary-stars is pointer-events:none;
+   - .showroom-star-cluster is pointer-events:none;
+   - [data-showroom-semantic-star-layer] is pointer-events:none;
+   - [data-showroom-primary-stars] is pointer-events:none;
+   - [data-showroom-cardinal-layer] is pointer-events:none;
+   - [data-showroom-fallback-star-layer] is pointer-events:none;
+   - [data-showroom-cluster] is pointer-events:none;
+   - actual star controls remain pointer-events:auto;
+   - [data-showroom-cardinal-control] remains pointer-events:auto;
+   - [data-showroom-child-control] remains pointer-events:auto;
+   - [data-showroom-fallback-star] remains pointer-events:auto;
+   - [data-showroom-compass-control] remains pointer-events:auto;
+   - [data-showroom-full-center-hit-target="true"] remains pointer-events:auto;
+   - center Compass semantic control receives touch-action:manipulation;
+   - center layer z-index remains unchanged at 5;
+   - semantic star layer z-index remains unchanged at 7;
+   - [data-showroom-planet-mount] remains treated as the visual/planet mount;
+   - no unified-host migration is performed;
+   - no anchoring interaction file change is required.
+
+   RETAINED v13_9 CORRECTIONS:
    - CSS no longer paints a second planet surface;
    - .showroom-planet-body is a transparent WebGL clipping host;
    - .showroom-planet-canvas is the dominant planet visual;
@@ -4032,7 +4072,8 @@ main {
    - universal Compass renderer compatibility claims;
    - Showroom Compass adapter compatibility claims;
    - CSS assumptions that the center visual is Compass-renderer-owned;
-   - Canvas 2D renderer language as the active planet model.
+   - Canvas 2D renderer language as the active planet model;
+   - v13_11 unified-host migration assumptions.
 
    DIRECTION EXPRESSION:
    - canonical written order is NEWS / N-E-W-S.
@@ -4073,13 +4114,10 @@ main {
 
    COMPANION HTML:
    - /showroom/index.html
-   - SHOWROOM_MIRRORLAND_IMMERSIVE_MISSION_CONTEXT_HTML_TNT_v17_9_AUDRALIA_WEBGL_3D_PLANET_CENTER_INTERACTIONS_OWNED_SEMANTIC_RECOVERY
+   - companion baseline remains functionally paired with the v13_9/v13_10 center compatibility model.
 
-   COMPANION HTML CACHE QUERY:
-   /showroom/index.css?v=SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v13_9_AUDRALIA_WEBGL_3D_PLANET_CENTER_FULL_SEMANTIC_HIT_SURFACE
-
-   COMPANION HTML LEGEND ORDER:
-   - companion HTML source order is NEWS / N-E-W-S.
+   COMPANION HTML CACHE QUERY TO UPDATE:
+   /showroom/index.css?v=SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v13_10_CENTER_COMPASS_HIT_SURFACE_RESTORATION
 
    COMPANION PLANET JS:
    - /showroom/index.planet.js
@@ -4089,6 +4127,9 @@ main {
    COMPANION INTERACTIONS JS:
    - /showroom/index.interactions.js
    - SHOWROOM_COMPLETE_QUATERNION_INTERACTIONS_TNT_v6_COMPASS_SEMANTIC_RECOVERY_INITIALIZATION_GATE_CORRECTED
+
+   ANCHORING FILES MODIFIED:
+   - none
 
    ATLAS RECORD COUNT:
    23

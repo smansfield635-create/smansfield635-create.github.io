@@ -1,5 +1,5 @@
 /* TARGET FILE: /showroom/index.window.js */
-/* COMPLETE REPLACEMENT */ 
+/* COMPLETE REPLACEMENT */
 /* SHOWROOM_WINDOW_OBJECT_v1_2_CRISP_3D_COMPOUND_CURTAIN_HOST */
 
 /*
@@ -7,7 +7,8 @@
 
   Purpose:
   - Render the Mirrorland Window as a motionless 3D compound curtain.
-  - Keep the Window as a foreground visual object over the Diamond.
+  - Keep the Window as a foreground visual object over the Diamond while closed.
+  - Become visually dormant when open so the Diamond can be revealed and manipulated.
   - Expose a stable object API for /showroom/index.window.controller.js.
   - Remain pointer-transparent except for behavior owned elsewhere.
   - Never own button behavior, Diamond behavior, route state, orbit gestures,
@@ -21,6 +22,8 @@
   - Treat the aperture as a beveled transparent opening.
   - Keep the object frozen in time; splendor comes from material and depth.
   - Remove per-frame receipt/dataset writes during transitions.
+  - Add open-state dormancy: at curtainAmount 0 the canvas is cleared,
+    hidden, render-suppressed, resize-suppressed, and visually absent.
 */
 
 (() => {
@@ -53,6 +56,12 @@
 
     canvasPointerEvents:
       "none",
+
+    dormantWhenOpen:
+      true,
+
+    openStateRenderSuppressed:
+      true,
 
     buttonOwnership:
       false,
@@ -390,6 +399,14 @@
       80
   });
 
+  const VISIBILITY = Object.freeze({
+    hiddenCutoff:
+      0.002,
+
+    transitionHiddenCutoff:
+      0.004
+  });
+
   const state = {
     mount:
       null,
@@ -452,7 +469,10 @@
       false,
 
     lastRenderTime:
-      0
+      0,
+
+    dormant:
+      false
   };
 
   const receipt = {
@@ -488,6 +508,15 @@
 
     curtainAmount:
       1,
+
+    canvasDormant:
+      false,
+
+    dormantWhenOpen:
+      true,
+
+    openStateRenderSuppressed:
+      true,
 
     paneCount:
       0,
@@ -651,6 +680,10 @@
     } catch (_) {}
   }
 
+  function isCurtainHidden(value = state.curtainAmount) {
+    return clamp(value, 0, 1) <= VISIBILITY.hiddenCutoff;
+  }
+
   function updateReceipt(extra = {}) {
     Object.assign(
       receipt,
@@ -681,6 +714,15 @@
 
         curtainAmount:
           state.curtainAmount,
+
+        canvasDormant:
+          Boolean(state.dormant || isCurtainHidden()),
+
+        dormantWhenOpen:
+          true,
+
+        openStateRenderSuppressed:
+          true,
 
         paneCount:
           state.geometry
@@ -754,6 +796,11 @@
       state.canvas.dataset.showroomWindowObjectStatus =
         receipt.status;
 
+      state.canvas.dataset.showroomWindowCanvasDormant =
+        receipt.canvasDormant
+          ? "true"
+          : "false";
+
       state.canvas.dataset.visualPassClaimed =
         "false";
     }
@@ -765,8 +812,25 @@
       state.mount.dataset.showroomWindowObjectContract =
         CONTRACT.id;
 
+      state.mount.dataset.showroomWindowCanvasDormant =
+        receipt.canvasDormant
+          ? "true"
+          : "false";
+
       state.mount.dataset.visualPassClaimed =
         "false";
+    }
+  }
+
+  function stopRenderLoop() {
+    state.running =
+      false;
+
+    if (state.raf) {
+      cancelAnimationFrame(state.raf);
+
+      state.raf =
+        0;
     }
   }
 
@@ -1580,6 +1644,9 @@
     canvas.dataset.showroomWindowObjectContract =
       CONTRACT.id;
 
+    canvas.dataset.showroomWindowCanvasDormant =
+      "false";
+
     canvas.setAttribute(
       "aria-hidden",
       "true"
@@ -1607,6 +1674,12 @@
 
         display:
           "block",
+
+        opacity:
+          "1",
+
+        visibility:
+          "visible",
 
         background:
           "transparent",
@@ -1701,12 +1774,110 @@
     );
   }
 
+  function showCanvasForCurtain() {
+    state.dormant =
+      false;
+
+    if (state.canvas) {
+      state.canvas.style.opacity =
+        "1";
+
+      state.canvas.style.visibility =
+        "visible";
+
+      state.canvas.style.display =
+        "block";
+
+      state.canvas.style.pointerEvents =
+        "none";
+
+      state.canvas.style.touchAction =
+        "none";
+
+      state.canvas.style.background =
+        "transparent";
+
+      state.canvas.dataset.showroomWindowCanvasDormant =
+        "false";
+    }
+
+    if (state.mount) {
+      state.mount.style.pointerEvents =
+        "none";
+
+      state.mount.style.background =
+        "transparent";
+
+      state.mount.dataset.showroomWindowCanvasDormant =
+        "false";
+    }
+  }
+
+  function hideCanvasForCurtain() {
+    state.dormant =
+      true;
+
+    clearCanvas();
+
+    if (state.canvas) {
+      state.canvas.style.opacity =
+        "0";
+
+      state.canvas.style.visibility =
+        "hidden";
+
+      state.canvas.style.display =
+        "block";
+
+      state.canvas.style.pointerEvents =
+        "none";
+
+      state.canvas.style.touchAction =
+        "none";
+
+      state.canvas.style.background =
+        "transparent";
+
+      state.canvas.dataset.showroomWindowCanvasDormant =
+        "true";
+    }
+
+    if (state.mount) {
+      state.mount.style.pointerEvents =
+        "none";
+
+      state.mount.style.background =
+        "transparent";
+
+      state.mount.dataset.showroomWindowCanvasDormant =
+        "true";
+    }
+  }
+
+  function applyCanvasVisibility() {
+    if (isCurtainHidden()) {
+      hideCanvasForCurtain();
+    } else {
+      showCanvasForCurtain();
+    }
+  }
+
+  function handleHiddenResizeOrRender() {
+    state.curtainAmount =
+      0;
+
+    resize();
+    hideCanvasForCurtain();
+
+    return false;
+  }
+
   function drawContactShadow(
     context,
     layout,
     amount
   ) {
-    if (amount <= 0.002) {
+    if (amount <= 0.035) {
       return;
     }
 
@@ -2366,6 +2537,10 @@
     layout,
     amount
   ) {
+    if (amount <= 0.002) {
+      return;
+    }
+
     const side =
       projectPolygon(
         segment.points,
@@ -2726,18 +2901,28 @@
       !state.context ||
       !state.geometry
     ) {
-      return;
+      return false;
     }
 
     resize();
+
+    state.curtainAmount =
+      clamp(state.curtainAmount, 0, 1);
+
+    if (isCurtainHidden()) {
+      state.curtainAmount =
+        0;
+
+      hideCanvasForCurtain();
+
+      return false;
+    }
+
+    showCanvasForCurtain();
     clearCanvas();
 
     const amount =
-      clamp(state.curtainAmount, 0, 1);
-
-    if (amount <= 0.002) {
-      return;
-    }
+      state.curtainAmount;
 
     const context =
       state.context;
@@ -2765,6 +2950,8 @@
 
     state.lastRenderTime =
       performance.now();
+
+    return true;
   }
 
   function render() {
@@ -2774,6 +2961,26 @@
       !state.initialized
     ) {
       return false;
+    }
+
+    if (isCurtainHidden()) {
+      handleHiddenResizeOrRender();
+
+      updateReceipt({
+        lastAction:
+          "window-object-render-hidden-suppressed",
+
+        curtainAmount:
+          0,
+
+        canvasDormant:
+          true,
+
+        lastFailure:
+          null
+      });
+
+      return true;
     }
 
     drawCurtainObject();
@@ -2798,18 +3005,6 @@
     );
 
     return true;
-  }
-
-  function stopRenderLoop() {
-    state.running =
-      false;
-
-    if (state.raf) {
-      cancelAnimationFrame(state.raf);
-
-      state.raf =
-        0;
-    }
   }
 
   function transitionStep(now) {
@@ -2852,6 +3047,61 @@
         eased
       );
 
+    if (
+      transition.to <= 0 &&
+      state.curtainAmount <= VISIBILITY.transitionHiddenCutoff
+    ) {
+      state.curtainAmount =
+        0;
+
+      const completed =
+        state.transition;
+
+      state.transition =
+        null;
+
+      state.running =
+        false;
+
+      hideCanvasForCurtain();
+
+      updateReceipt({
+        lastAction:
+          "window-object-curtain-hidden-dormant",
+
+        transitionId:
+          completed.id,
+
+        transitionTarget:
+          completed.to,
+
+        curtainAmount:
+          0,
+
+        canvasDormant:
+          true,
+
+        lastFailure:
+          null
+      });
+
+      dispatch(
+        EVENTS.TRANSITION_COMPLETE,
+        {
+          transitionId:
+            completed.id,
+
+          curtainAmount:
+            state.curtainAmount,
+
+          receipt:
+            getReceipt()
+        }
+      );
+
+      return;
+    }
+
     drawCurtainObject();
 
     if (raw < 1) {
@@ -2864,8 +3114,6 @@
     state.curtainAmount =
       transition.to;
 
-    drawCurtainObject();
-
     const completed =
       state.transition;
 
@@ -2875,17 +3123,33 @@
     state.running =
       false;
 
+    if (completed.to <= 0.002) {
+      state.curtainAmount =
+        0;
+
+      hideCanvasForCurtain();
+    } else {
+      showCanvasForCurtain();
+      drawCurtainObject();
+    }
+
     updateReceipt({
       lastAction:
         completed.to >= 1
           ? "window-object-curtain-shown"
-          : "window-object-curtain-hidden",
+          : "window-object-curtain-hidden-dormant",
 
       transitionId:
         completed.id,
 
       transitionTarget:
         completed.to,
+
+      curtainAmount:
+        state.curtainAmount,
+
+      canvasDormant:
+        isCurtainHidden(),
 
       lastFailure:
         null
@@ -2926,6 +3190,10 @@
       clamp(state.curtainAmount, 0, 1);
 
     stopRenderLoop();
+
+    if (to > 0) {
+      showCanvasForCurtain();
+    }
 
     const id =
       nowId("window-object-transition");
@@ -3011,11 +3279,41 @@
     state.curtainAmount =
       clamp(value, 0, 1);
 
+    if (isCurtainHidden()) {
+      state.curtainAmount =
+        0;
+
+      hideCanvasForCurtain();
+
+      updateReceipt({
+        lastAction:
+          "window-object-curtain-hidden-dormant-set",
+
+        curtainAmount:
+          0,
+
+        canvasDormant:
+          true,
+
+        lastFailure:
+          null
+      });
+
+      return true;
+    }
+
+    showCanvasForCurtain();
     drawCurtainObject();
 
     updateReceipt({
       lastAction:
         "window-object-curtain-amount-set",
+
+      curtainAmount:
+        state.curtainAmount,
+
+      canvasDormant:
+        false,
 
       lastFailure:
         null
@@ -3025,6 +3323,8 @@
   }
 
   function showCurtain(options = {}) {
+    showCanvasForCurtain();
+
     return startTransition(
       1,
       Number.isFinite(options.duration)
@@ -3046,11 +3346,22 @@
 
   function handleResizeFallback() {
     resize();
-    drawCurtainObject();
+
+    if (isCurtainHidden()) {
+      state.curtainAmount =
+        0;
+
+      hideCanvasForCurtain();
+    } else {
+      drawCurtainObject();
+    }
 
     updateReceipt({
       lastAction:
-        "window-object-resized"
+        "window-object-resized",
+
+      canvasDormant:
+        isCurtainHidden()
     });
   }
 
@@ -3067,11 +3378,22 @@
         new ResizeObserver(
           () => {
             resize();
-            drawCurtainObject();
+
+            if (isCurtainHidden()) {
+              state.curtainAmount =
+                0;
+
+              hideCanvasForCurtain();
+            } else {
+              drawCurtainObject();
+            }
 
             updateReceipt({
               lastAction:
-                "window-object-resized"
+                "window-object-resized",
+
+              canvasDormant:
+                isCurtainHidden()
             });
           }
         );
@@ -3218,6 +3540,15 @@
           state.canvas.height
         );
       }
+
+      state.canvas.style.opacity =
+        "0";
+
+      state.canvas.style.visibility =
+        "hidden";
+
+      state.canvas.style.pointerEvents =
+        "none";
     }
 
     state.disposed =
@@ -3235,6 +3566,9 @@
     state.context =
       null;
 
+    state.dormant =
+      true;
+
     updateReceipt({
       status:
         "disposed",
@@ -3247,6 +3581,9 @@
 
       canvasPresent:
         false,
+
+      canvasDormant:
+        true,
 
       lastAction:
         "window-object-disposed",
@@ -3333,17 +3670,35 @@
 
         resize:
           () => {
+            if (
+              state.disposed ||
+              state.failed ||
+              !state.initialized
+            ) {
+              return false;
+            }
+
             const changed =
               resize();
 
-            drawCurtainObject();
+            if (isCurtainHidden()) {
+              state.curtainAmount =
+                0;
+
+              hideCanvasForCurtain();
+            } else {
+              drawCurtainObject();
+            }
 
             updateReceipt({
               lastAction:
                 "window-object-resize-requested",
 
               resized:
-                changed
+                changed,
+
+              canvasDormant:
+                isCurtainHidden()
             });
 
             return changed;
@@ -3360,6 +3715,12 @@
         getCurtainAmount:
           () => state.curtainAmount,
 
+        isDormant:
+          () => Boolean(
+            state.dormant ||
+            isCurtainHidden()
+          ),
+
         isReady:
           () => Boolean(
             state.initialized &&
@@ -3371,6 +3732,18 @@
 
   function init() {
     try {
+      const previous =
+        globalThis.SHOWROOM_MIRRORLAND_WINDOW_OBJECT;
+
+      if (
+        previous &&
+        typeof previous.dispose === "function"
+      ) {
+        try {
+          previous.dispose();
+        } catch (_) {}
+      }
+
       state.mount =
         document.querySelector(
           SELECTORS.mount
@@ -3381,6 +3754,12 @@
           "SHOWROOM_WINDOW_MOUNT_NOT_FOUND"
         );
       }
+
+      state.mount.style.pointerEvents =
+        "none";
+
+      state.mount.style.background =
+        "transparent";
 
       state.geometry =
         makeGeometry();
@@ -3436,6 +3815,7 @@
 
       exposeObjectApi();
 
+      applyCanvasVisibility();
       drawCurtainObject();
 
       updateReceipt({
@@ -3453,6 +3833,9 @@
 
         curtainAmount:
           state.curtainAmount,
+
+        canvasDormant:
+          isCurtainHidden(),
 
         lastAction:
           "window-object-initialized-crisp-3d-curtain-visible",

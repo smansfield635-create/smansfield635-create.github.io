@@ -1,14 +1,14 @@
 <!-- TARGET FILE: /showroom/index.html -->
 <!-- COMPLETE REPLACEMENT -->
-<!-- SHOWROOM_MIRRORLAND_IMMERSIVE_MISSION_CONTEXT_HTML_TNT_v17_7_AUDRALIA_WEBGL_3D_PLANET_CENTER -->
+<!-- SHOWROOM_MIRRORLAND_IMMERSIVE_MISSION_CONTEXT_HTML_TNT_v17_12_AUDRALIA_WEBGL_3D_PLANET_CENTER_UNIFIED_HOST_SAFETY_RENEWAL -->
 <!doctype html>
 
 <html
   lang="en"
   data-route="/showroom/"
   data-page="showroom"
-  data-version="SHOWROOM-MIRRORLAND-IMMERSIVE-MISSION-CONTEXT-17.7.0"
-  data-contract="SHOWROOM_MIRRORLAND_IMMERSIVE_MISSION_CONTEXT_HTML_TNT_v17_7_AUDRALIA_WEBGL_3D_PLANET_CENTER"
+  data-version="SHOWROOM-MIRRORLAND-IMMERSIVE-MISSION-CONTEXT-17.12.0"
+  data-contract="SHOWROOM_MIRRORLAND_IMMERSIVE_MISSION_CONTEXT_HTML_TNT_v17_12_AUDRALIA_WEBGL_3D_PLANET_CENTER_UNIFIED_HOST_SAFETY_RENEWAL"
 
   data-house-room="showroom"
   data-house-room-title="The Showroom"
@@ -25,6 +25,7 @@
   data-showroom-compositor="/showroom/index.compositor.js"
   data-showroom-planet="/showroom/index.planet.js"
   data-showroom-planet-contract="SHOWROOM_PLANETARY_FULCRUM_INDEPENDENT_CENTER_PLANET_TNT_v1"
+  data-showroom-planet-unified-host-contract="SHOWROOM_PLANETARY_CENTER_OBJECT_UNIFIED_HOST_CONTRACT_v1"
   data-showroom-planet-source-authority="/assets/audralia/audralia.planet.js"
   data-showroom-planet-source-global="DGBAudraliaPlanetGeometry"
   data-showroom-planet-source-contract="AUDRALIA_G1_DETERMINISTIC_PLANET_GEOMETRY_AUTHORITY_TNT_v1"
@@ -54,7 +55,10 @@
   data-showroom-compass-route="/index.html"
 
   data-showroom-center-visual="independent-audralia-geometry-webgl-3d-planet"
+  data-showroom-center-structure="unified-center-object"
   data-showroom-center-compatibility-selectors="retained"
+  data-showroom-center-hit-surface="semantic-main-compass-control"
+  data-showroom-center-hit-authority="html-semantic-control-css-supported"
   data-showroom-planet-mounted="false"
 
   data-showroom-cosmos-contract="SHOWROOM_COSMOS_HARDENED_v1"
@@ -136,7 +140,7 @@
 
   <meta
     name="showroom-page-contract"
-    content="SHOWROOM_MIRRORLAND_IMMERSIVE_MISSION_CONTEXT_HTML_TNT_v17_7_AUDRALIA_WEBGL_3D_PLANET_CENTER"
+    content="SHOWROOM_MIRRORLAND_IMMERSIVE_MISSION_CONTEXT_HTML_TNT_v17_12_AUDRALIA_WEBGL_3D_PLANET_CENTER_UNIFIED_HOST_SAFETY_RENEWAL"
   >
 
   <link
@@ -148,9 +152,9 @@
 
   <link
     rel="stylesheet"
-    href="/showroom/index.css?v=SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v13_7_AUDRALIA_WEBGL_3D_PLANET_CENTER"
+    href="/showroom/index.css?v=SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v13_11_AUDRALIA_WEBGL_3D_PLANET_CENTER_UNIFIED_HOST_STACKING_SAFE_FULL_SEMANTIC_HIT_SURFACE"
     data-showroom-page-css="true"
-    data-showroom-page-css-contract="SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v13_7_AUDRALIA_WEBGL_3D_PLANET_CENTER"
+    data-showroom-page-css-contract="SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v13_11_AUDRALIA_WEBGL_3D_PLANET_CENTER_UNIFIED_HOST_STACKING_SAFE_FULL_SEMANTIC_HIT_SURFACE"
   >
 </head>
 
@@ -352,18 +356,31 @@
           ></div>
 
           <div
-            class="showroom-compass-layer"
+            class="showroom-compass-layer showroom-planet-mount"
             data-showroom-compass-layer
             data-showroom-center-layer
+            data-showroom-center-structure="unified-center-object"
+            data-showroom-planet-mount
+            data-showroom-planet-unified-host-contract="SHOWROOM_PLANETARY_CENTER_OBJECT_UNIFIED_HOST_CONTRACT_v1"
+            data-showroom-center-hit-surface="semantic-main-compass-control"
+            data-showroom-center-hit-authority="html-semantic-control-css-supported"
+            data-showroom-compass-pointer-authority="false"
+            data-showroom-planet-pointer-authority="false"
+            data-showroom-planet-navigation-authority="false"
+            data-showroom-planet-click-authority="false"
+            data-showroom-planet-semantic-activation-authority="false"
           >
             <div
-              class="showroom-compass-mount showroom-planet-mount"
+              class="showroom-planet-visual-host"
+              data-showroom-planet-visual-host
+              data-showroom-planet-render-target="true"
               data-showroom-compass-visual-mount
-              data-showroom-planet-mount
               data-showroom-compass-visual-only="true"
-              data-showroom-compass-pointer-authority="false"
-              data-showroom-planet-placement="center-compatibility-mount"
+              data-showroom-planet-placement="center-unified-visual-host"
+              data-showroom-planet-pointer-authority="false"
+              data-showroom-planet-navigation-authority="false"
               aria-hidden="true"
+              role="presentation"
             ></div>
 
             <button
@@ -374,6 +391,9 @@
               data-showroom-controller-action="request-compass-selection"
               data-showroom-interaction-target="compass"
               data-showroom-object-behavior="compass-return"
+              data-showroom-full-center-hit-target="true"
+              data-showroom-center-hit-authority="semantic-control"
+              data-showroom-center-object-member="semantic-control"
               data-fixed-center="true"
               data-interaction-enabled="true"
               data-immediate-navigation="false"
@@ -461,29 +481,6 @@
                 data-showroom-semantic-star
                 data-showroom-fallback-star
                 data-showroom-cardinal-control
-                data-showroom-cardinal-id="south"
-                data-showroom-cardinal-label="Wonders of Mirrorland"
-                data-showroom-object-id="cardinal-south"
-                data-showroom-object-size="large"
-                data-showroom-object-shape="cardinal-star"
-                data-showroom-object-behavior="cluster"
-                data-showroom-cluster-id="south"
-                aria-label="South, Wonders of Mirrorland. Open its four-star route cluster."
-                aria-expanded="false"
-                aria-controls="showroom-cluster-south"
-              >
-                <span class="sr-only">
-                  South — Wonders of Mirrorland
-                </span>
-              </button>
-
-              <button
-                class="showroom-star showroom-star--large showroom-star--cardinal"
-                type="button"
-                data-showroom-object
-                data-showroom-semantic-star
-                data-showroom-fallback-star
-                data-showroom-cardinal-control
                 data-showroom-cardinal-id="west"
                 data-showroom-cardinal-label="Mysteries Yet Unfolding"
                 data-showroom-object-id="cardinal-west"
@@ -497,6 +494,29 @@
               >
                 <span class="sr-only">
                   West — Mysteries Yet Unfolding
+                </span>
+              </button>
+
+              <button
+                class="showroom-star showroom-star--large showroom-star--cardinal"
+                type="button"
+                data-showroom-object
+                data-showroom-semantic-star
+                data-showroom-fallback-star
+                data-showroom-cardinal-control
+                data-showroom-cardinal-id="south"
+                data-showroom-cardinal-label="Wonders of Mirrorland"
+                data-showroom-object-id="cardinal-south"
+                data-showroom-object-size="large"
+                data-showroom-object-shape="cardinal-star"
+                data-showroom-object-behavior="cluster"
+                data-showroom-cluster-id="south"
+                aria-label="South, Wonders of Mirrorland. Open its four-star route cluster."
+                aria-expanded="false"
+                aria-controls="showroom-cluster-south"
+              >
+                <span class="sr-only">
+                  South — Wonders of Mirrorland
                 </span>
               </button>
             </div>
@@ -3726,8 +3746,8 @@ Rear_i  ⇔ Δz_i &lt; −h</code></pre>
                   <strong>Planet</strong>
                   <p>
                     Independent decorative WebGL 3D center renderer
-                    mounted inside the retained center compatibility
-                    layer.
+                    mounted into the unified center object host and
+                    rendered inside its internal visual host.
                   </p>
                 </article>
 
@@ -3910,7 +3930,7 @@ CompassRuntimeLoad = false</code></pre>
                     <div>
                       <dt>DOM attachment</dt>
                       <dd data-showroom-receipt-evidence>
-                        Center mount present
+                        Unified center object and visual host present
                       </dd>
                     </div>
 
@@ -4401,11 +4421,13 @@ CompassRuntimeLoad = false</code></pre>
     data-showroom-child="planet"
     data-showroom-planet-renderer-model="AUDRALIA_GEOMETRY_AUTHORITY_MINIATURE_3D_RENDERER_v1"
     data-showroom-planet-source-authority="/assets/audralia/audralia.planet.js"
+    data-showroom-planet-unified-host-contract="SHOWROOM_PLANETARY_CENTER_OBJECT_UNIFIED_HOST_CONTRACT_v1"
   ></script>
 
   <script
     defer
     data-showroom-child="planet-mount"
+    data-showroom-planet-mount-bridge="unified-center-object"
   >
 (() => {
   "use strict";
@@ -4537,16 +4559,38 @@ CompassRuntimeLoad = false</code></pre>
 </html>
 
 <!--
-SHOWROOM_MIRRORLAND_IMMERSIVE_MISSION_CONTEXT_HTML_RECEIPT_v17_7_AUDRALIA_WEBGL_3D_PLANET_CENTER
+SHOWROOM_MIRRORLAND_IMMERSIVE_MISSION_CONTEXT_HTML_RECEIPT_v17_12_AUDRALIA_WEBGL_3D_PLANET_CENTER_UNIFIED_HOST_SAFETY_RENEWAL
 
 TARGET:
 /showroom/index.html
 
 CONTRACT:
+SHOWROOM_MIRRORLAND_IMMERSIVE_MISSION_CONTEXT_HTML_TNT_v17_12_AUDRALIA_WEBGL_3D_PLANET_CENTER_UNIFIED_HOST_SAFETY_RENEWAL
+
+BASELINE SOURCE:
 SHOWROOM_MIRRORLAND_IMMERSIVE_MISSION_CONTEXT_HTML_TNT_v17_7_AUDRALIA_WEBGL_3D_PLANET_CENTER
 
 COMPANION CSS EXPECTED:
-/showroom/index.css?v=SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v13_7_AUDRALIA_WEBGL_3D_PLANET_CENTER
+/showroom/index.css?v=SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v13_11_AUDRALIA_WEBGL_3D_PLANET_CENTER_UNIFIED_HOST_STACKING_SAFE_FULL_SEMANTIC_HIT_SURFACE
+
+SURGICAL RENEWAL SCOPE:
+- Preserve v17_7 page content, route declarations, Atlas records, Narrative Position records, technical evidence, runtime receipt accordion, script order, and working semantic click path.
+- Renew only the HTML mount contract required by the v13_11 CSS and renewed /showroom/index.planet.js unified host model.
+- Update CSS cache query from v13_7 to v13_11.
+- Update contract/version markers from v17_7 to v17_12.
+- Add unified-host metadata only where needed to describe the corrected center model.
+
+PRIMARY CORRECTION:
+- [data-showroom-planet-mount] is promoted from the old inner visual mount to the outer unified center object host.
+- [data-showroom-planet-visual-host] is added as the internal visual host.
+- [data-showroom-compass-control] remains a native button inside the same unified center object.
+- planet.mount() continues targeting [data-showroom-planet-mount].
+- planet.mount() does not target [data-showroom-planet-visual-host].
+
+UNIFIED HOST STRUCTURE:
+[data-showroom-planet-mount]
+  [data-showroom-planet-visual-host]
+  [data-showroom-compass-control]
 
 SOURCE INSTALLATION:
 - Showroom controller remains first active route authority.
@@ -4554,7 +4598,7 @@ SOURCE INSTALLATION:
 - Showroom compositor loads after Diamond renderer.
 - Audralia geometry authority loads after compositor and before the Showroom planet renderer.
 - Showroom independent planet renderer loads after the Audralia geometry authority.
-- Planet mount bridge mounts /showroom/index.planet.js into the retained center compatibility mount.
+- Planet mount bridge mounts /showroom/index.planet.js into the unified center object host.
 - Crystal runtime loads after planet center integration.
 - Gesture helper loads before interactions.
 - Interactions remain after gesture helper.
@@ -4583,8 +4627,10 @@ CENTER VISUAL INTEGRATION:
   [data-showroom-compass-control];
 - center layer also declares:
   [data-showroom-center-layer];
-- visual mount also declares:
+- unified center object declares:
   [data-showroom-planet-mount];
+- internal planet visual host declares:
+  [data-showroom-planet-visual-host];
 - legacy static Compass lettering remains absent from the center mount;
 - canonical written expression order remains NEWS / N-E-W-S where written order is needed;
 - /showroom/index.planet.js provides its own local fallback behavior.
@@ -4619,7 +4665,10 @@ PRESERVED:
 - all 23 Narrative Position records;
 - held > compass > child > cardinal > idle precedence;
 - front-host location;
-- runtime evidence structure.
+- runtime evidence structure;
+- mobile orbit interaction status;
+- full receipt accordion;
+- controller/compositor/crystals/interactions/window/cosmos/diamond receipt surfaces.
 
 ABANDONED FOR SHOWROOM ROOT LOAD:
 - multi-file Showroom Compass runtime plan;
@@ -4632,14 +4681,15 @@ ABANDONED FOR SHOWROOM ROOT LOAD:
 
 COMPASS DOM CARDINALITY:
 - retained compatibility center layer: 1
-- retained visual mount / planet mount: 1
+- unified planet mount / center object host: 1
+- internal planet visual host: 1
 - semantic Compass control: 1
 
 COMPASS / CENTER HIERARCHY:
-- visual mount remains a direct child of the retained center compatibility layer;
-- semantic control remains a direct sibling of the visual mount;
+- unified planet mount remains a direct child of the retained center compatibility layer;
+- visual host remains a direct child of the unified planet mount;
+- semantic control remains a direct sibling of the visual host;
 - semantic control remains outside the aria-hidden visual subtree;
-- visual mount is now the planet mount;
 - the planet remains decorative by default.
 
 AUDRALIA GEOMETRY AUTHORITY:
@@ -4651,6 +4701,17 @@ AUDRALIA GEOMETRY AUTHORITY:
   AUDRALIA_G1_DETERMINISTIC_PLANET_GEOMETRY_AUTHORITY_TNT_v1;
 - Showroom consumes this authority only as a decorative geometry source.
 - Showroom does not mutate Audralia geometry authority state.
+
+FILES NOT CHANGED BY THIS HTML RENEWAL:
+- /showroom/index.controller.js
+- /showroom/index.interactions.js
+- /showroom/index.planet.js
+- /showroom/index.compositor.js
+- /showroom/index.crystals.js
+- /showroom/index.interaction.gestures.js
+- /showroom/index.css
+- /assets/compass/*
+- /assets/audralia/audralia.planet.js
 
 RUNTIME STATUS:
 NOT EXECUTED

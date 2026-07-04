@@ -2414,7 +2414,49 @@ main {
   min-height: 2.45rem;
   font-size: 0.68rem;
 }
+/* Window foreground stacking correction:
+   - Diamond remains behind.
+   - Window canvas remains inside the mount.
+   - Existing Window button remains above the canvas.
+   - Window layer and mount stay pointer-transparent.
+   - Button remains pointer-active.
+*/
 
+.showroom-diamond-layer,
+[data-showroom-diamond-layer] {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.showroom-window-layer,
+[data-showroom-window-layer] {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+}
+
+.showroom-window-mount,
+[data-showroom-window-mount] {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+canvas[data-showroom-window-canvas] {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.showroom-window-control,
+[data-showroom-window-control] {
+  z-index: 2;
+  pointer-events: auto;
+}
 /* ================================================================
    19. NARRATIVE FOUNDATIONS OUTER STRUCTURE
    ================================================================ */

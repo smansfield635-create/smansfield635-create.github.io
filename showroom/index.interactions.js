@@ -1,7 +1,7 @@
 /* TARGET FILE: /showroom/index.interactions.js */
 /* COMPLETE REPLACEMENT */
 /* GROUP_A_INTERACTIONS_CONSUMER_ALIGNMENT_TO_EXISTING_ANCHORS_ONLY */
-/* SHOWROOM_COMPLETE_QUATERNION_INTERACTIONS_TNT_v6_COMPASS_SEMANTIC_RECOVERY */
+/* SHOWROOM_COMPLETE_QUATERNION_INTERACTIONS_TNT_v6_COMPASS_SEMANTIC_RECOVERY_INITIALIZATION_GATE_CORRECTED */
 
 (() => {
   "use strict";
@@ -1175,6 +1175,12 @@
         planetRequired:
           false,
 
+        gestureHelperRequired:
+          false,
+
+        projectedRuntimeRequired:
+          false,
+
         immediateNavigation:
           false,
 
@@ -1900,6 +1906,12 @@
               false,
 
             planetRequired:
+              false,
+
+            gestureHelperRequired:
+              false,
+
+            projectedRuntimeRequired:
               false
           }
         );
@@ -1955,6 +1967,12 @@
             false,
 
           planetRequired:
+            false,
+
+          gestureHelperRequired:
+            false,
+
+          projectedRuntimeRequired:
             false,
 
           scrollOrFocusPanelAfterSelection:
@@ -2861,6 +2879,12 @@
             false,
 
           planetRequired:
+            false,
+
+          gestureHelperRequired:
+            false,
+
+          projectedRuntimeRequired:
             false
         }
       );
@@ -2962,6 +2986,16 @@
           pointer.territory === TERRITORIES.COMPASS,
 
         compositorRequired:
+          pointer.territory === TERRITORIES.COMPASS
+            ? false
+            : true,
+
+        gestureHelperRequired:
+          pointer.territory === TERRITORIES.COMPASS
+            ? false
+            : true,
+
+        projectedRuntimeRequired:
           pointer.territory === TERRITORIES.COMPASS
             ? false
             : true
@@ -3460,6 +3494,16 @@
         compositorRequired:
           pointer.territory === TERRITORIES.COMPASS
             ? false
+            : true,
+
+        gestureHelperRequired:
+          pointer.territory === TERRITORIES.COMPASS
+            ? false
+            : true,
+
+        projectedRuntimeRequired:
+          pointer.territory === TERRITORIES.COMPASS
+            ? false
             : true
       }
     );
@@ -3835,6 +3879,12 @@
           compassRequiresPlanet:
             false,
 
+          compassRequiresGestureHelper:
+            false,
+
+          compassRequiresProjectedRuntime:
+            false,
+
           syntheticSemanticClickCommit:
             false,
 
@@ -3889,6 +3939,12 @@
 
           compassSemanticRecovery:
             true,
+
+          compassRequiresGestureHelper:
+            false,
+
+          compassRequiresProjectedRuntime:
+            false,
 
           orbitDirectManipulation:
             true,
@@ -4069,6 +4125,9 @@
             false,
 
           compassRequiresProjectedRuntime:
+            false,
+
+          compassRequiresGestureHelper:
             false,
 
           retryCount:
@@ -4587,6 +4646,12 @@
         compassRequiresPlanet:
           false,
 
+        compassRequiresGestureHelper:
+          false,
+
+        compassRequiresProjectedRuntime:
+          false,
+
         getState() {
           return createReceipt(
             "state-requested",
@@ -4773,12 +4838,6 @@
         );
       }
 
-      if (!resolveGestures()) {
-        throw new Error(
-          "Missing or incompatible SHOWROOM_INTERACTION_GESTURES helper."
-        );
-      }
-
       initializeCoreListeners();
       exposeApi();
 
@@ -4793,6 +4852,9 @@
 
       state.waitingForRuntime =
         true;
+
+      const gestures =
+        resolveGestures();
 
       resolveController();
       resolveCompositor();
@@ -4812,9 +4874,15 @@
               : "pending",
 
           gestureHelperResolution:
-            state.gestures
+            gestures
               ? "resolved"
-              : "missing",
+              : "pending",
+
+          semanticLayer:
+            "initialized-before-projected-runtime",
+
+          projectedRuntime:
+            "deferred-until-gesture-controller-and-compositor-ready",
 
           pointerRuntime:
             "deferred-until-controller-and-compositor-ready",
@@ -4835,6 +4903,12 @@
             false,
 
           compassSemanticRequiresPlanet:
+            false,
+
+          compassSemanticRequiresGestureHelper:
+            false,
+
+          compassSemanticRequiresProjectedRuntime:
             false,
 
           nativeSemanticDelegation:
@@ -4982,7 +5056,7 @@
 
 /*
 RECEIPT:
-SHOWROOM_COMPLETE_QUATERNION_INTERACTIONS_RECEIPT_TNT_v6_COMPASS_SEMANTIC_RECOVERY
+SHOWROOM_COMPLETE_QUATERNION_INTERACTIONS_RECEIPT_TNT_v6_COMPASS_SEMANTIC_RECOVERY_INITIALIZATION_GATE_CORRECTED
 
 TARGET:
 - /showroom/index.interactions.js
@@ -4990,18 +5064,44 @@ TARGET:
 PURPOSE:
 - Restore Main Compass semantic activation after replacement of the center
   visual with the decorative Audralia WebGL planet.
+- Correct the initialization gate that previously made all interactions fail
+  when SHOWROOM_INTERACTION_GESTURES was absent or late.
 - Preserve stars, clusters, swipe, Atlas behavior, controller route authority,
   compositor projection authority, crystal ownership, and planet decorative
   status.
 
 PRIMARY CORRECTION:
-- Compass selection no longer depends on compositor readiness, WebGL readiness,
-  planet readiness, projected crystal hit testing, or strict projected-runtime
-  activation.
+- Core semantic initialization now runs before projected-runtime dependency
+  validation.
+- Document-level semantic click routing is registered before gesture helper,
+  compositor, WebGL, planet, crystal, or projected-runtime readiness is required.
+- Missing or late SHOWROOM_INTERACTION_GESTURES no longer causes fatal
+  initialization failure.
 - [data-showroom-compass-control], [data-showroom-compass-selection-alias],
   and data-showroom-controller-action="request-compass-selection" route directly
   to controller.requestCompassSelection() when the controller endpoint exists and
   the controller is not held, failed, or disposed.
+
+TWO-LAYER INITIALIZATION:
+1. CORE SEMANTIC LAYER:
+   - discovers root/orbit field/receipt;
+   - registers document-level semantic click listener;
+   - exposes SHOWROOM_INTERACTIONS;
+   - resolves controller when available;
+   - supports Main Compass semantic activation;
+   - does not require gesture helper;
+   - does not require compositor;
+   - does not require WebGL;
+   - does not require planet;
+   - does not require crystals;
+   - does not require projected runtime.
+
+2. PROJECTED GESTURE RUNTIME:
+   - waits for SHOWROOM_INTERACTION_GESTURES;
+   - waits for controller projected-interaction readiness;
+   - waits for compositor projection readiness;
+   - owns stars, clusters, swipe, projected hit testing, pointer capture,
+     quaternion previews, cluster flick return, and duplicate-click suppression.
 
 EXPECTED USER BEHAVIOR:
 - Tap Main Compass label or center semantic Compass button.
@@ -5017,10 +5117,19 @@ PRESERVED:
 - Planet JS remains decorative and owns no navigation.
 - CSS owns hit-area layout and stage support only.
 - Compositor remains required for projected star/cluster hit testing only.
-- Gesture helper remains required for orbit/cluster quaternion behavior.
+- Gesture helper remains required for orbit/cluster quaternion behavior only.
 - No shared Compass renderer, adapter, or geometry dependency is introduced.
 - Canonical written direction expression remains NEWS / N-E-W-S where written
   order is expressed.
+
+DO NOT CHANGE:
+- /showroom/index.controller.js
+- /showroom/index.planet.js
+- /showroom/index.html
+- /showroom/index.css
+- /showroom/index.compositor.js
+- /showroom/index.crystals.js
+- shared Compass assets
 
 RUNTIME VALIDATION:
 NOT RUN

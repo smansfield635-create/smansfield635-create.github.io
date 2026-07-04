@@ -1,14 +1,14 @@
 <!-- TARGET FILE: /showroom/index.html -->
 <!-- COMPLETE REPLACEMENT -->
-<!-- SHOWROOM_MIRRORLAND_IMMERSIVE_MISSION_CONTEXT_HTML_TNT_v17_6_AUDRALIA_GEOMETRY_PLANET_CENTER -->
+<!-- SHOWROOM_MIRRORLAND_IMMERSIVE_MISSION_CONTEXT_HTML_TNT_v17_7_AUDRALIA_WEBGL_3D_PLANET_CENTER -->
 <!doctype html>
 
 <html
   lang="en"
   data-route="/showroom/"
   data-page="showroom"
-  data-version="SHOWROOM-MIRRORLAND-IMMERSIVE-MISSION-CONTEXT-17.6.0"
-  data-contract="SHOWROOM_MIRRORLAND_IMMERSIVE_MISSION_CONTEXT_HTML_TNT_v17_6_AUDRALIA_GEOMETRY_PLANET_CENTER"
+  data-version="SHOWROOM-MIRRORLAND-IMMERSIVE-MISSION-CONTEXT-17.7.0"
+  data-contract="SHOWROOM_MIRRORLAND_IMMERSIVE_MISSION_CONTEXT_HTML_TNT_v17_7_AUDRALIA_WEBGL_3D_PLANET_CENTER"
 
   data-house-room="showroom"
   data-house-room-title="The Showroom"
@@ -28,7 +28,7 @@
   data-showroom-planet-source-authority="/assets/audralia/audralia.planet.js"
   data-showroom-planet-source-global="DGBAudraliaPlanetGeometry"
   data-showroom-planet-source-contract="AUDRALIA_G1_DETERMINISTIC_PLANET_GEOMETRY_AUTHORITY_TNT_v1"
-  data-showroom-planet-renderer-model="AUDRALIA_GEOMETRY_AUTHORITY_MINIATURE_RENDERER_v1"
+  data-showroom-planet-renderer-model="AUDRALIA_GEOMETRY_AUTHORITY_MINIATURE_3D_RENDERER_v1"
   data-showroom-crystals="/showroom/index.crystals.js"
   data-showroom-interaction-gestures="/showroom/index.interaction.gestures.js"
   data-showroom-interactions="/showroom/index.interactions.js"
@@ -53,7 +53,7 @@
   data-showroom-orbit-target="#showroom-orbit"
   data-showroom-compass-route="/index.html"
 
-  data-showroom-center-visual="independent-audralia-geometry-planet"
+  data-showroom-center-visual="independent-audralia-geometry-webgl-3d-planet"
   data-showroom-center-compatibility-selectors="retained"
   data-showroom-planet-mounted="false"
 
@@ -136,7 +136,7 @@
 
   <meta
     name="showroom-page-contract"
-    content="SHOWROOM_MIRRORLAND_IMMERSIVE_MISSION_CONTEXT_HTML_TNT_v17_6_AUDRALIA_GEOMETRY_PLANET_CENTER"
+    content="SHOWROOM_MIRRORLAND_IMMERSIVE_MISSION_CONTEXT_HTML_TNT_v17_7_AUDRALIA_WEBGL_3D_PLANET_CENTER"
   >
 
   <link
@@ -148,9 +148,9 @@
 
   <link
     rel="stylesheet"
-    href="/showroom/index.css?v=SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v13_6_AUDRALIA_CANVAS_PLANET_CENTER"
+    href="/showroom/index.css?v=SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v13_7_AUDRALIA_WEBGL_3D_PLANET_CENTER"
     data-showroom-page-css="true"
-    data-showroom-page-css-contract="SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v13_6_AUDRALIA_CANVAS_PLANET_CENTER"
+    data-showroom-page-css-contract="SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v13_7_AUDRALIA_WEBGL_3D_PLANET_CENTER"
   >
 </head>
 
@@ -3725,8 +3725,9 @@ Rear_i  ⇔ Δz_i &lt; −h</code></pre>
                 <article>
                   <strong>Planet</strong>
                   <p>
-                    Independent decorative center renderer mounted inside
-                    the retained center compatibility layer.
+                    Independent decorative WebGL 3D center renderer
+                    mounted inside the retained center compatibility
+                    layer.
                   </p>
                 </article>
 
@@ -3922,7 +3923,7 @@ CompassRuntimeLoad = false</code></pre>
 
                     <div>
                       <dt>Drawing</dt>
-                      <dd>Canvas 2D geometry-authority renderer</dd>
+                      <dd>WebGL 3D Audralia geometry-authority renderer</dd>
                     </div>
 
                     <div>
@@ -4395,10 +4396,10 @@ CompassRuntimeLoad = false</code></pre>
   ></script>
 
   <script
-    src="/showroom/index.planet.js?v=AUDRALIA_GEOMETRY_AUTHORITY_MINIATURE_RENDERER_v1"
+    src="/showroom/index.planet.js?v=AUDRALIA_GEOMETRY_AUTHORITY_MINIATURE_3D_RENDERER_v1"
     defer
     data-showroom-child="planet"
-    data-showroom-planet-renderer-model="AUDRALIA_GEOMETRY_AUTHORITY_MINIATURE_RENDERER_v1"
+    data-showroom-planet-renderer-model="AUDRALIA_GEOMETRY_AUTHORITY_MINIATURE_3D_RENDERER_v1"
     data-showroom-planet-source-authority="/assets/audralia/audralia.planet.js"
   ></script>
 
@@ -4448,7 +4449,7 @@ CompassRuntimeLoad = false</code></pre>
         {
           receiptTarget,
           reason:
-            "group-f-audralia-geometry-authority-miniature-renderer"
+            "group-f-audralia-geometry-authority-miniature-3d-renderer"
         }
       ) !== false;
 
@@ -4536,16 +4537,16 @@ CompassRuntimeLoad = false</code></pre>
 </html>
 
 <!--
-SHOWROOM_MIRRORLAND_IMMERSIVE_MISSION_CONTEXT_HTML_RECEIPT_v17_6_AUDRALIA_GEOMETRY_PLANET_CENTER
+SHOWROOM_MIRRORLAND_IMMERSIVE_MISSION_CONTEXT_HTML_RECEIPT_v17_7_AUDRALIA_WEBGL_3D_PLANET_CENTER
 
 TARGET:
 /showroom/index.html
 
 CONTRACT:
-SHOWROOM_MIRRORLAND_IMMERSIVE_MISSION_CONTEXT_HTML_TNT_v17_6_AUDRALIA_GEOMETRY_PLANET_CENTER
+SHOWROOM_MIRRORLAND_IMMERSIVE_MISSION_CONTEXT_HTML_TNT_v17_7_AUDRALIA_WEBGL_3D_PLANET_CENTER
 
-COMPANION CSS REQUIRED:
-/showroom/index.css?v=SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v13_6_AUDRALIA_CANVAS_PLANET_CENTER
+COMPANION CSS EXPECTED:
+/showroom/index.css?v=SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v13_7_AUDRALIA_WEBGL_3D_PLANET_CENTER
 
 SOURCE INSTALLATION:
 - Showroom controller remains first active route authority.
@@ -4558,9 +4559,9 @@ SOURCE INSTALLATION:
 - Gesture helper loads before interactions.
 - Interactions remain after gesture helper.
 - Window, Diamond UI, Cosmos, blueprint, and Elara assets remain loaded.
-- universal Compass geometry root load removed from Showroom HTML.
-- universal Compass renderer root load removed from Showroom HTML.
-- Showroom Compass adapter root load removed from Showroom HTML.
+- universal Compass geometry root load remains absent from Showroom HTML.
+- universal Compass renderer root load remains absent from Showroom HTML.
+- Showroom Compass adapter root load remains absent from Showroom HTML.
 - shared Compass asset files are not deleted or modified by this HTML.
 
 CENTER VISUAL INTEGRATION:
@@ -4573,7 +4574,7 @@ CENTER VISUAL INTEGRATION:
 - source geometry contract:
   AUDRALIA_G1_DETERMINISTIC_PLANET_GEOMETRY_AUTHORITY_TNT_v1;
 - renderer model:
-  AUDRALIA_GEOMETRY_AUTHORITY_MINIATURE_RENDERER_v1;
+  AUDRALIA_GEOMETRY_AUTHORITY_MINIATURE_3D_RENDERER_v1;
 - retained compatibility selector:
   [data-showroom-compass-layer];
 - retained compatibility selector:
@@ -4584,16 +4585,18 @@ CENTER VISUAL INTEGRATION:
   [data-showroom-center-layer];
 - visual mount also declares:
   [data-showroom-planet-mount];
-- legacy static Compass lettering removed from the center mount;
+- legacy static Compass lettering remains absent from the center mount;
 - canonical written expression order remains NEWS / N-E-W-S where written order is needed;
-- /showroom/index.planet.js provides its own local static fallback behavior.
+- /showroom/index.planet.js provides its own local fallback behavior.
 
 SEMANTIC ACTIVATION:
 - semantic control remains:
   [data-showroom-compass-control];
 - semantic bridge remains:
   [data-showroom-compass-control] -> controller.requestCompassSelection();
+- full visible center tap area is assigned to CSS hit-area support over this semantic control;
 - planet owns no navigation authority;
+- planet owns no pointer authority;
 - compositor owns no navigation authority;
 - renderer authority for Compass navigation remains false;
 - adapter authority is not present on this page.
@@ -4624,7 +4627,8 @@ ABANDONED FOR SHOWROOM ROOT LOAD:
 - universal Compass geometry root load;
 - Showroom Compass adapter root load;
 - Compass renderer/adaptor metadata claims;
-- legacy static Compass lettering inside the center mount.
+- legacy static Compass lettering inside the center mount;
+- Canvas 2D planet-center renderer language.
 
 COMPASS DOM CARDINALITY:
 - retained compatibility center layer: 1

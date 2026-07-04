@@ -1,30 +1,7 @@
 /* TARGET FILE: /showroom/index.compositor.js */
 /* COMPLETE REPLACEMENT */
-/* SHOWROOM_CONSTELLATION_SINGLE_FRAME_COMPOSITOR_TNT_v6_CENTER_HOST_STACKING_SAFE_RECOVERY */
-/*
-  Baseline-preserving renewal.
-
-  Preserved from the last functional compositor baseline:
-  - runtime contract string;
-  - controller contract;
-  - camera/projection model;
-  - rear/front canvas model;
-  - crystal node registration contract;
-  - crystal renderer registration contract;
-  - renderer-owned rear/front clear callbacks;
-  - semantic projection publication;
-  - compositor readiness event;
-  - hit-test surface;
-  - controller held-state recovery.
-
-  Surgical corrections:
-  - compositor no longer mutates [data-showroom-compass-layer] z-index;
-  - compositor no longer mutates [data-showroom-semantic-star-layer] z-index;
-  - CSS owns center-host and semantic-layer stacking;
-  - center-plane measurement prefers the unified center host / planet mount;
-  - [data-showroom-compass-visual-mount] remains a fallback measurement target;
-  - runtime contract remains SHOWROOM_CONSTELLATION_SINGLE_FRAME_COMPOSITOR_TNT_v6.
-*/
+/* GROUP_D_COMPOSITOR_COMPASS_SPECIFIC_REDUCTION */
+/* SHOWROOM_CONSTELLATION_SINGLE_FRAME_COMPOSITOR_TNT_v6_REDUCED_COMPASS_OVERLOAD */
 
 (() => {
   "use strict";
@@ -34,9 +11,6 @@
 
   const OWNER =
     "/showroom/index.compositor.js";
-
-  const FILE_CONTRACT =
-    "SHOWROOM_CONSTELLATION_SINGLE_FRAME_COMPOSITOR_TNT_v6_CENTER_HOST_STACKING_SAFE_RECOVERY";
 
   const CONTROLLER_GLOBAL =
     "SHOWROOM_MIRRORLAND_CONSTELLATION_CONTROLLER";
@@ -63,11 +37,6 @@
       "[data-showroom-orbit-field][data-showroom-scene-field], " +
       "[data-showroom-orbit-field], " +
       "[data-showroom-scene-field]",
-
-    centerLayer:
-      "[data-showroom-center-layer], " +
-      "[data-showroom-planet-mount], " +
-      "[data-showroom-compass-layer]",
 
     compassLayer:
       "[data-showroom-compass-layer]",
@@ -216,7 +185,6 @@
     orbit: null,
     scene: null,
     field: null,
-    centerLayer: null,
     compassLayer: null,
     compassVisualMount: null,
     semanticLayer: null,
@@ -246,6 +214,8 @@
 
     nativeDomState: {
       fieldStyle: null,
+      compassLayerStyle: null,
+      semanticLayerStyle: null,
       rearCanvasPlacement: null,
       frontCanvasPlacement: null
     },
@@ -473,9 +443,6 @@
         contract:
           CONTRACT,
 
-        fileContract:
-          FILE_CONTRACT,
-
         owner:
           OWNER,
 
@@ -506,9 +473,6 @@
       freezePlain({
         contract:
           CONTRACT,
-
-        fileContract:
-          FILE_CONTRACT,
 
         owner:
           OWNER,
@@ -567,30 +531,6 @@
 
         compassSpecificBoundsBridgeRemoved:
           true,
-
-        cssOwnsStacking:
-          true,
-
-        visualStackingOwned:
-          false,
-
-        centerHostZIndexMutated:
-          false,
-
-        compassLayerZIndexMutated:
-          false,
-
-        semanticLayerZIndexMutated:
-          false,
-
-        centerPlaneMeasurement:
-          state.centerLayer
-            ? "unified-center-host"
-            : (
-                state.compassVisualMount
-                  ? "compass-visual-mount-fallback"
-                  : "unavailable"
-              ),
 
         counters: {
           ...state.counters
@@ -1239,11 +1179,6 @@
         SELECTORS.field
       );
 
-    state.centerLayer =
-      document.querySelector(
-        SELECTORS.centerLayer
-      );
-
     state.compassLayer =
       document.querySelector(
         SELECTORS.compassLayer
@@ -1297,12 +1232,6 @@
       );
     }
 
-    if (!state.centerLayer) {
-      issues.push(
-        "Missing unified center layer / planet mount / Compass layer."
-      );
-    }
-
     if (!state.compassLayer) {
       issues.push(
         "Missing [data-showroom-compass-layer]."
@@ -1324,18 +1253,6 @@
     if (!state.frontHost) {
       issues.push(
         "Missing [data-showroom-front-host]."
-      );
-    }
-
-    if (
-      state.field &&
-      state.centerLayer &&
-      !state.field.contains(
-        state.centerLayer
-      )
-    ) {
-      issues.push(
-        "Unified center layer is not inside the orbit field."
       );
     }
 
@@ -1501,16 +1418,26 @@
   function ensureCanvases() {
     if (
       !state.field ||
-      !state.centerLayer
+      !state.compassLayer
     ) {
       throw new Error(
-        "Compositor canvases require the orbit field and retained unified center layer."
+        "Compositor canvases require the orbit field and retained center layer."
       );
     }
 
     state.nativeDomState.fieldStyle =
       captureStyleAttribute(
         state.field
+      );
+
+    state.nativeDomState.compassLayerStyle =
+      captureStyleAttribute(
+        state.compassLayer
+      );
+
+    state.nativeDomState.semanticLayerStyle =
+      captureStyleAttribute(
+        state.semanticLayer
       );
 
     state.nativeDomState.rearCanvasPlacement =
@@ -1618,22 +1545,22 @@
       state.rearCanvas.parentNode !==
         state.field ||
       state.rearCanvas.nextSibling !==
-        state.centerLayer
+        state.compassLayer
     ) {
       state.field.insertBefore(
         state.rearCanvas,
-        state.centerLayer
+        state.compassLayer
       );
     }
 
     const desiredFrontReference =
-      state.centerLayer.nextSibling;
+      state.compassLayer.nextSibling;
 
     if (
       state.frontCanvas.parentNode !==
         state.field ||
       state.frontCanvas.previousSibling !==
-        state.centerLayer
+        state.compassLayer
     ) {
       state.field.insertBefore(
         state.frontCanvas,
@@ -1641,16 +1568,11 @@
       );
     }
 
-    /*
-      Do not mutate center/Compass/semantic z-index here.
+    state.compassLayer.style.zIndex =
+      "2";
 
-      The prior functional baseline wrote:
-        state.compassLayer.style.zIndex = "2";
-        state.semanticLayer.style.zIndex = "4";
-
-      That is now intentionally removed. CSS owns the unified center host,
-      semantic layer, star controls, and pointer stacking.
-    */
+    state.semanticLayer.style.zIndex =
+      "4";
   }
 
   function restoreOwnedDom() {
@@ -1700,6 +1622,18 @@
       state.nativeDomState.fieldStyle
     );
 
+    restoreStyleAttribute(
+      state.compassLayer,
+      state.nativeDomState
+        .compassLayerStyle
+    );
+
+    restoreStyleAttribute(
+      state.semanticLayer,
+      state.nativeDomState
+        .semanticLayerStyle
+    );
+
     state.rearCanvas = null;
     state.frontCanvas = null;
 
@@ -1710,6 +1644,8 @@
     state.nativeFrontCanvasState = null;
 
     state.nativeDomState.fieldStyle = null;
+    state.nativeDomState.compassLayerStyle = null;
+    state.nativeDomState.semanticLayerStyle = null;
     state.nativeDomState.rearCanvasPlacement = null;
     state.nativeDomState.frontCanvasPlacement = null;
   }
@@ -2025,39 +1961,34 @@
   }
 
   function measureCompassPlane() {
-    if (!state.field) {
-      return;
-    }
-
-    const measurementElement =
-      state.centerLayer ||
-      state.compassVisualMount ||
-      state.compassLayer;
-
-    if (!measurementElement) {
+    if (
+      !state.compassVisualMount ||
+      !state.field
+    ) {
       return;
     }
 
     const fieldRect =
       state.field.getBoundingClientRect();
 
-    const centerRect =
-      measurementElement.getBoundingClientRect();
+    const compassRect =
+      state.compassVisualMount
+        .getBoundingClientRect();
 
     state.compassPlane.screenX =
-      centerRect.left -
+      compassRect.left -
       fieldRect.left +
-      centerRect.width / 2;
+      compassRect.width / 2;
 
     state.compassPlane.screenY =
-      centerRect.top -
+      compassRect.top -
       fieldRect.top +
-      centerRect.height / 2;
+      compassRect.height / 2;
 
     state.compassPlane.radius =
       Math.max(
-        centerRect.width,
-        centerRect.height
+        compassRect.width,
+        compassRect.height
       ) / 2;
   }
 
@@ -2984,9 +2915,6 @@
       contract:
         CONTRACT,
 
-      fileContract:
-        FILE_CONTRACT,
-
       controllerModuleId:
         CONTROLLER_MODULE_ID,
 
@@ -3265,9 +3193,6 @@
       contract:
         CONTRACT,
 
-      fileContract:
-        FILE_CONTRACT,
-
       frame:
         renderFrame,
 
@@ -3376,9 +3301,6 @@
         contract:
           CONTRACT,
 
-        fileContract:
-          FILE_CONTRACT,
-
         frame:
           renderFrame,
 
@@ -3421,9 +3343,6 @@
         contract:
           CONTRACT,
 
-        fileContract:
-          FILE_CONTRACT,
-
         frame:
           renderFrame,
 
@@ -3457,9 +3376,6 @@
     const basePayload = {
       contract:
         CONTRACT,
-
-      fileContract:
-        FILE_CONTRACT,
 
       frame:
         renderFrame,
@@ -5665,9 +5581,6 @@
       contract:
         CONTRACT,
 
-      fileContract:
-        FILE_CONTRACT,
-
       owner:
         OWNER,
 
@@ -5776,15 +5689,6 @@
           false,
 
         semanticNavigationOwned:
-          false,
-
-        visualStackingOwned:
-          false,
-
-        centerHostZIndexOwned:
-          false,
-
-        semanticLayerZIndexOwned:
           false
       },
 
@@ -5800,11 +5704,6 @@
 
         field:
           Boolean(state.field),
-
-        centerLayer:
-          Boolean(
-            state.centerLayer
-          ),
 
         compassLayer:
           Boolean(
@@ -5844,30 +5743,6 @@
 
         domRestored:
           state.domRestored
-      },
-
-      stacking: {
-        cssOwnsStacking:
-          true,
-
-        compositorMutatesCenterHostZIndex:
-          false,
-
-        compositorMutatesCompassLayerZIndex:
-          false,
-
-        compositorMutatesSemanticLayerZIndex:
-          false,
-
-        rearCanvasZIndex:
-          state.rearCanvas
-            ? state.rearCanvas.style.zIndex
-            : null,
-
-        frontCanvasZIndex:
-          state.frontCanvas
-            ? state.frontCanvas.style.zIndex
-            : null
       },
 
       camera:
@@ -5946,19 +5821,12 @@
       );
 
       state.resizeObserver.observe(
-        state.centerLayer ||
-        state.compassLayer
+        state.compassVisualMount
       );
 
-      if (
-        state.compassVisualMount &&
-        state.compassVisualMount !==
-          state.centerLayer
-      ) {
-        state.resizeObserver.observe(
-          state.compassVisualMount
-        );
-      }
+      state.resizeObserver.observe(
+        state.compassLayer
+      );
     } else {
       addListener(
         window,
@@ -5983,7 +5851,8 @@
     if (
       typeof MutationObserver !==
         "function" ||
-      !state.centerLayer
+      !state.compassLayer ||
+      !state.compassVisualMount
     ) {
       return;
     }
@@ -6001,7 +5870,7 @@
       );
 
     state.mutationObserver.observe(
-      state.centerLayer,
+      state.compassLayer,
       {
         childList:
           true,
@@ -6020,25 +5889,19 @@
       }
     );
 
-    if (
-      state.compassVisualMount &&
-      state.compassVisualMount !==
-        state.centerLayer
-    ) {
-      state.mutationObserver.observe(
-        state.compassVisualMount,
-        {
-          attributes:
-            true,
+    state.mutationObserver.observe(
+      state.compassVisualMount,
+      {
+        attributes:
+          true,
 
-          attributeFilter: [
-            "class",
-            "style",
-            "hidden"
-          ]
-        }
-      );
-    }
+        attributeFilter: [
+          "class",
+          "style",
+          "hidden"
+        ]
+      }
+    );
   }
 
   function disconnectObservers() {
@@ -6219,11 +6082,6 @@
           compassPlaneInspected:
             true,
 
-          centerPlaneMeasurement:
-            state.centerLayer
-              ? "unified-center-host"
-              : "compass-visual-mount-fallback",
-
           compassBoundsIntakeRemoved:
             true,
 
@@ -6237,21 +6095,6 @@
             false,
 
           interactionPriorityOwned:
-            false,
-
-          cssOwnsStacking:
-            true,
-
-          visualStackingOwned:
-            false,
-
-          centerHostZIndexMutated:
-            false,
-
-          compassLayerZIndexMutated:
-            false,
-
-          semanticLayerZIndexMutated:
             false,
 
           semanticProjectionReturnedToController:
@@ -6310,18 +6153,6 @@
             true,
 
           interactionPriorityPublished:
-            false,
-
-          cssOwnsStacking:
-            true,
-
-          visualStackingOwned:
-            false,
-
-          centerHostZIndexMutated:
-            false,
-
-          semanticLayerZIndexMutated:
             false,
 
           sharedCanvasClearTimingAuthority:
@@ -6469,9 +6300,6 @@
         contract:
           CONTRACT,
 
-        fileContract:
-          FILE_CONTRACT,
-
         controllerGlobal:
           CONTROLLER_GLOBAL,
 
@@ -6480,15 +6308,6 @@
 
         controllerModuleVersion:
           CONTROLLER_MODULE_VERSION,
-
-        cssOwnsStacking:
-          true,
-
-        compositorMutatesCenterHostZIndex:
-          false,
-
-        compositorMutatesSemanticLayerZIndex:
-          false,
 
         getState,
 
@@ -6720,17 +6539,11 @@
         fieldStyleRestored:
           true,
 
-        cssOwnsStacking:
+        compassLayerStyleRestored:
           true,
 
-        centerHostZIndexMutated:
-          false,
-
-        compassLayerZIndexMutated:
-          false,
-
-        semanticLayerZIndexMutated:
-          false,
+        semanticLayerStyleRestored:
+          true,
 
         controllerSubscriptionsRemoved:
           true,
@@ -6821,16 +6634,7 @@
               false,
 
             compassBoundsBridgeRemoved:
-              true,
-
-            cssOwnsStacking:
-              true,
-
-            centerHostZIndexMutated:
-              false,
-
-            semanticLayerZIndexMutated:
-              false
+              true
           }
         );
 
@@ -6864,16 +6668,7 @@
               false,
 
             compassBoundsBridgeRemoved:
-              true,
-
-            cssOwnsStacking:
-              true,
-
-            centerHostZIndexMutated:
-              false,
-
-            semanticLayerZIndexMutated:
-              false
+              true
           }
         );
       }
@@ -6987,17 +6782,11 @@
         fieldStyleRestored:
           true,
 
-        cssOwnsStacking:
+        compassLayerStyleRestored:
           true,
 
-        centerHostZIndexMutated:
-          false,
-
-        compassLayerZIndexMutated:
-          false,
-
-        semanticLayerZIndexMutated:
-          false,
+        semanticLayerStyleRestored:
+          true,
 
         compassBoundsBridgeRemoved:
           true,
@@ -7063,77 +6852,6 @@
     {
       once:
         true
-      }
     }
   );
 })();
-
-/*
-RECEIPT:
-SHOWROOM_CONSTELLATION_SINGLE_FRAME_COMPOSITOR_RECEIPT_TNT_v6_CENTER_HOST_STACKING_SAFE_RECOVERY
-
-SOURCE BASIS:
-- Last functional compositor baseline supplied by user:
-  GROUP_D_COMPOSITOR_COMPASS_SPECIFIC_REDUCTION
-  SHOWROOM_CONSTELLATION_SINGLE_FRAME_COMPOSITOR_TNT_v6_REDUCED_COMPASS_OVERLOAD
-
-RUNTIME CONTRACT PRESERVED:
-- SHOWROOM_CONSTELLATION_SINGLE_FRAME_COMPOSITOR_TNT_v6
-
-PRIMARY SURGICAL CORRECTIONS:
-- Removed inline write:
-    state.compassLayer.style.zIndex = "2";
-- Removed inline write:
-    state.semanticLayer.style.zIndex = "4";
-- CSS now remains sole authority for unified center host stacking.
-- CSS now remains sole authority for semantic star layer stacking.
-- Compositor-owned canvases remain pointer-inert.
-- Rear canvas remains compositor-owned, z-index 1.
-- Front canvas remains compositor-owned, z-index 3.
-- Center plane measurement now prefers:
-    [data-showroom-center-layer],
-    [data-showroom-planet-mount],
-    [data-showroom-compass-layer]
-  and falls back to [data-showroom-compass-visual-mount].
-
-PRESERVED:
-- window.SHOWROOM_COMPOSITOR
-- getState()
-- getFrameState()
-- getProjectionSnapshot()
-- getCanvases()
-- getCamera()
-- setCamera()
-- setOrbitCamera()
-- setCompassPlaneWorldPoint()
-- worldToScreen()
-- classifyWorldPoint()
-- hitTest()
-- registerNode()
-- unregisterNode()
-- registerRenderer()
-- unregisterRenderer()
-- requestRender()
-- dispose()
-- SHOWROOM_COMPOSITOR_READY
-- SHOWROOM_COMPOSITOR_PROJECTION_CHANGED
-- SHOWROOM_COMPOSITOR_FAILURE
-- SHOWROOM_COMPOSITOR_DISPOSED
-- renderer-owned clearRear/clearFront timing
-- crystal renderer payload shape
-- semantic projection publication to controller
-- held-state recovery
-
-DOES NOT MODIFY:
-- /showroom/index.crystals.js
-- /showroom/index.interactions.js
-- /showroom/index.controller.js
-- /showroom/index.css
-- /showroom/index.html
-- shared Compass assets
-- planet renderer
-
-VALIDATION NOT RUN:
-- Runtime validation not run in this room.
-- Visual validation not run in this room.
-*/

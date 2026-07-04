@@ -1,6 +1,38 @@
-/* TARGET FILE: /showroom/index.css */
-/* COMPLETE REPLACEMENT */ 
-/* SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v13_12_CENTER_COMPASS_PRESERVATION_SCROLL_GOVERNANCE_BRIDGED_FUNCTIONAL_BASELINE */
+/* TARGET FILE: /showroom/index.css
+   COMPLETE REPLACEMENT
+
+   SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v13_9_AUDRALIA_WEBGL_3D_PLANET_CENTER_FULL_SEMANTIC_HIT_SURFACE
+
+   Scope:
+   - compact Mirrorland threshold;
+   - constellation-first composition;
+   - live 23-record Mirrorland Atlas;
+   - Atlas precedence: held > compass > child > cardinal > idle;
+   - exactly one visible compact narrative record;
+   - exactly one visible Narrative Position record;
+   - retained semantic-star fallback;
+   - retained center compatibility selector names;
+   - independent Audralia geometry-authority WebGL 3D planet center visual;
+   - CSS stage-only support for /showroom/index.planet.js;
+   - CSS no longer paints a second globe surface;
+   - .showroom-planet-canvas is the dominant planet visual;
+   - full visible center planet object is covered by the semantic Compass button;
+   - WebGL renderer owns globe body, terrain, water, clouds, lighting, and terminator behavior;
+   - interactions own semantic Compass recovery;
+   - CSS owns hit-area layout, pointer layering, focus visibility, responsiveness, and subtle ambient staging only;
+   - no Compass projected-bounds CSS dependency;
+   - durable orbit-field touch-arbitration baseline;
+   - five independent native narrative disclosures;
+   - one collapsed secondary runtime-evidence disclosure;
+   - responsive mobile composition;
+   - Cosmos remains an independent body-level decorative layer.
+
+   Direction lock:
+   - canonical expression order is NEWS / N-E-W-S where written order is needed;
+   - legacy static Compass lettering must not be recreated in any non-NEWS order;
+   - this file does not recreate Compass lettering because the Audralia WebGL
+     planet renderer owns the active center visual and fallback.
+*/
 
 /* ================================================================
    1. DESIGN TOKENS
@@ -93,18 +125,6 @@
   --showroom-planet-turn: 0deg;
   --showroom-planet-cloud-turn: 0deg;
   --showroom-planet-pulse: 0;
-
-  --showroom-z-cosmos: 1;
-  --showroom-z-rear-canvas: 1;
-  --showroom-z-field-chrome: 2;
-  --showroom-z-front-canvas: 3;
-  --showroom-z-root: 3;
-  --showroom-z-star-layer: 7;
-  --showroom-z-center-host: 9;
-  --showroom-z-panel: 12;
-  --showroom-z-window: 14;
-  --showroom-z-front-host: 50;
-  --showroom-z-access: 100000;
 }
 
 /* ================================================================
@@ -132,29 +152,19 @@ body {
   color: var(--showroom-cream);
   background:
     radial-gradient(
-      ellipse at 14% 8%,
-      rgba(117, 233, 255, 0.11),
-      transparent 34rem
-    ),
-    radial-gradient(
-      ellipse at 80% 13%,
-      rgba(224, 184, 91, 0.1),
-      transparent 38rem
-    ),
-    radial-gradient(
-      ellipse at 88% 46%,
-      rgba(182, 151, 255, 0.08),
-      transparent 36rem
-    ),
-    radial-gradient(
-      ellipse at 12% 72%,
-      rgba(69, 132, 165, 0.1),
-      transparent 34rem
-    ),
-    radial-gradient(
       circle at 50% -10%,
       rgba(54, 88, 155, 0.28),
       transparent 34rem
+    ),
+    radial-gradient(
+      circle at 8% 24%,
+      rgba(84, 47, 151, 0.14),
+      transparent 28rem
+    ),
+    radial-gradient(
+      circle at 92% 54%,
+      rgba(15, 119, 156, 0.12),
+      transparent 31rem
     ),
     linear-gradient(
       180deg,
@@ -179,7 +189,7 @@ body {
 body::before {
   position: fixed;
   z-index: 0;
-  inset: -4%;
+  inset: 0;
   pointer-events: none;
   content: "";
   opacity: var(--showroom-static-star-opacity);
@@ -207,7 +217,6 @@ body::before {
     0 0,
     1.8rem 3.2rem,
     5.4rem 1.4rem;
-  mix-blend-mode: screen;
 }
 
 body::after {
@@ -239,8 +248,7 @@ textarea {
 }
 
 button,
-a,
-summary {
+a {
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -293,9 +301,7 @@ dd {
    3. ACCESSIBILITY UTILITIES
    ================================================================ */
 
-.sr-only,
-.visually-hidden,
-.showroom-visually-hidden {
+.sr-only {
   position: absolute !important;
   width: 1px !important;
   height: 1px !important;
@@ -310,7 +316,7 @@ dd {
 .skip,
 .showroom-accessible-orbit-return {
   position: fixed;
-  z-index: var(--showroom-z-access);
+  z-index: 100000;
   top: 0.75rem;
   left: 0.75rem;
   padding: 0.7rem 1rem;
@@ -348,21 +354,14 @@ summary:focus-visible {
 
 [data-showroom-cosmos-layer],
 .showroom-cosmos-layer {
-  z-index: var(--showroom-z-cosmos) !important;
+  z-index: 1 !important;
   pointer-events: none !important;
-}
-
-[data-showroom-cosmos-layer] *,
-.showroom-cosmos-layer * {
-  pointer-events: none !important;
-  user-select: none !important;
-  touch-action: none !important;
 }
 
 [data-showroom-root],
 .showroom-shell {
   position: relative;
-  z-index: var(--showroom-z-root);
+  z-index: 3;
   isolation: isolate;
 }
 
@@ -376,63 +375,13 @@ summary:focus-visible {
 }
 
 /* ================================================================
-   5. VARIANT-LAYER SCROLL GOVERNANCE
-   Anchoring interactions file is inspection-only and is not modified.
-   CSS preserves the solved center Compass path while reducing the
-   practical scroll-lock footprint of the orbit field.
-   ================================================================ */
-
-html,
-body,
-[data-showroom-root],
-.showroom-shell,
-main,
-.showroom-threshold,
-.showroom-orbit,
-.showroom-diamond-reveal,
-.showroom-narrative-foundations {
-  touch-action: pan-y;
-  overscroll-behavior-y: auto;
-}
-
-.showroom-orbit__field,
-[data-showroom-orbit-field],
-[data-showroom-scene-field] {
-  touch-action: pan-y !important;
-  overscroll-behavior-y: auto;
-  overscroll-behavior-x: contain;
-}
-
-.diamond-stage,
-[data-showroom-diamond-stage] {
-  touch-action: pan-y;
-}
-
-button,
-a,
-summary,
-.showroom-star,
-[data-showroom-cardinal-control],
-[data-showroom-child-control],
-[data-showroom-compass-control],
-[data-showroom-full-center-hit-target="true"],
-.showroom-window-control,
-[data-showroom-window-control],
-.two-view-buttons button,
-[data-showroom-diamond-inspect],
-[data-showroom-diamond-reset] {
-  touch-action: manipulation;
-}
-
-/* ================================================================
-   6. GLOBAL TYPOGRAPHY AND COMMON CONTROLS
+   5. GLOBAL TYPOGRAPHY AND COMMON CONTROLS
    ================================================================ */
 
 .kicker,
 .showroom-gate-badge,
 .showroom-atlas-key__eyebrow,
 .showroom-equation-card__label,
-.showroom-window-control__eyebrow,
 .showroom-narrative-foundations__heading > span {
   color: var(--showroom-gold-bright);
   font-size: 0.72rem;
@@ -459,10 +408,6 @@ h1 {
   margin-bottom: 0.8rem;
   font-size: clamp(3rem, 7vw, 6.7rem);
   letter-spacing: -0.045em;
-  text-shadow:
-    0 0.55rem 2.8rem rgba(0, 0, 0, 0.72),
-    0 0 1.9rem rgba(224, 184, 91, 0.14),
-    0 0 2.8rem rgba(117, 233, 255, 0.065);
 }
 
 h2 {
@@ -550,7 +495,7 @@ h3 {
 }
 
 /* ================================================================
-   7. TOPBAR
+   6. TOPBAR
    ================================================================ */
 
 .showroom-topbar {
@@ -668,7 +613,7 @@ h3 {
 }
 
 /* ================================================================
-   8. MAIN COMPOSITION
+   7. MAIN COMPOSITION
    ================================================================ */
 
 main {
@@ -686,7 +631,7 @@ main {
 }
 
 /* ================================================================
-   9. COMPACT THRESHOLD
+   8. COMPACT THRESHOLD
    ================================================================ */
 
 .showroom-threshold {
@@ -826,7 +771,7 @@ main {
 }
 
 /* ================================================================
-   10. CONSTELLATION FRAME
+   9. CONSTELLATION FRAME
    ================================================================ */
 
 .showroom-orbit {
@@ -887,13 +832,13 @@ main {
   color: var(--showroom-muted-strong);
 }
 
-.showroom-orbit__field,
-[data-showroom-orbit-field],
-[data-showroom-scene-field] {
+.showroom-orbit__field {
   position: relative;
   z-index: 1;
   min-height: clamp(27rem, 60vw, 47rem);
   overflow: hidden;
+  touch-action: none;
+  overscroll-behavior: contain;
   user-select: none;
   -webkit-user-select: none;
   border: 1px solid rgba(117, 233, 255, 0.16);
@@ -918,14 +863,12 @@ main {
   box-shadow:
     inset 0 0 4rem rgba(0, 0, 0, 0.5),
     inset 0 0 0 1px rgba(255, 255, 255, 0.018);
-  isolation: isolate;
 }
 
-.showroom-cosmic-field,
-[data-showroom-cosmic-field] {
+.showroom-cosmic-field {
   position: absolute;
   inset: 0;
-  pointer-events: none !important;
+  pointer-events: none;
   opacity: 0.9;
   background:
     radial-gradient(
@@ -955,88 +898,48 @@ main {
 }
 
 .showroom-cosmic-field::before,
-.showroom-cosmic-field::after,
-[data-showroom-cosmic-field]::before,
-[data-showroom-cosmic-field]::after {
+.showroom-cosmic-field::after {
   position: absolute;
   inset: 8%;
   border: 1px solid rgba(157, 198, 255, 0.06);
   border-radius: 50%;
   content: "";
-  pointer-events: none;
 }
 
-.showroom-cosmic-field::after,
-[data-showroom-cosmic-field]::after {
+.showroom-cosmic-field::after {
   inset: 18%;
   border-color: rgba(231, 197, 119, 0.075);
 }
 
 /* ================================================================
-   11. COMPOSITOR CANVAS SURFACE
-   ================================================================ */
-
-canvas[data-showroom-compositor-layer],
-canvas[data-showroom-compositor-layer="rear"],
-canvas[data-showroom-compositor-layer="front"],
-.showroom-compositor-canvas,
-.showroom-compositor-canvas--rear,
-.showroom-compositor-canvas--front,
-[data-showroom-compositor-canvas],
-[data-showroom-rear-canvas],
-[data-showroom-front-canvas] {
-  position: absolute;
-  inset: 0;
-  z-index: var(--showroom-z-rear-canvas);
-  display: block;
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  border: 0;
-  background: transparent;
-  pointer-events: none !important;
-  user-select: none !important;
-  touch-action: none !important;
-}
-
-canvas[data-showroom-compositor-layer="rear"],
-.showroom-compositor-canvas--rear,
-[data-showroom-rear-canvas] {
-  z-index: var(--showroom-z-rear-canvas);
-}
-
-canvas[data-showroom-compositor-layer="front"],
-.showroom-compositor-canvas--front,
-[data-showroom-front-canvas] {
-  z-index: var(--showroom-z-front-canvas);
-}
-
-/* ================================================================
-   12. UNIFIED CENTER HOST, WEBGL PLANET VISUAL HOST, AND FULL SEMANTIC HIT SURFACE
+   10. CENTER COMPATIBILITY LAYER, WEBGL PLANET STAGE, AND FULL SEMANTIC HIT SURFACE
    ================================================================ */
 
 .showroom-compass-layer,
-.showroom-planet-mount,
-.showroom-compass-layer.showroom-planet-mount,
 [data-showroom-compass-layer],
-[data-showroom-center-layer],
-[data-showroom-planet-mount],
-[data-showroom-planet-mount][data-showroom-center-structure="unified-center-object"] {
+[data-showroom-center-layer] {
   position: absolute;
-  z-index: var(--showroom-z-center-host);
+  z-index: 5;
   inset: 50% auto auto 50%;
   width: var(--showroom-center-size);
   aspect-ratio: 1;
-  border-radius: 50%;
-  pointer-events: none !important;
   transform: translate(-50%, -50%);
 }
 
-.showroom-compass-layer.showroom-planet-mount,
-[data-showroom-planet-mount][data-showroom-center-structure="unified-center-object"] {
-  display: block;
-  isolation: isolate;
-  contain: layout paint;
+.showroom-compass-mount,
+.showroom-planet-mount,
+[data-showroom-compass-visual-mount],
+[data-showroom-planet-mount] {
+  position: absolute;
+  inset: -7%;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.showroom-planet-mount,
+[data-showroom-planet-mount] {
   background:
     radial-gradient(
       circle at 50% 50%,
@@ -1050,55 +953,32 @@ canvas[data-showroom-compositor-layer="front"],
     );
 }
 
-.showroom-compass-layer.showroom-planet-mount::before,
-.showroom-compass-layer.showroom-planet-mount::after,
-[data-showroom-planet-mount][data-showroom-center-structure="unified-center-object"]::before,
-[data-showroom-planet-mount][data-showroom-center-structure="unified-center-object"]::after {
+.showroom-planet-mount::before,
+.showroom-planet-mount::after,
+[data-showroom-planet-mount]::before,
+[data-showroom-planet-mount]::after {
   position: absolute;
   border-radius: 50%;
   pointer-events: none;
   content: "";
 }
 
-.showroom-compass-layer.showroom-planet-mount::before,
-[data-showroom-planet-mount][data-showroom-center-structure="unified-center-object"]::before {
-  inset: 0%;
+.showroom-planet-mount::before,
+[data-showroom-planet-mount]::before {
+  inset: 7%;
   border: 1px solid rgba(117, 233, 255, 0.045);
   box-shadow:
     inset 0 0 1.15rem rgba(117, 233, 255, 0.02);
 }
 
-.showroom-compass-layer.showroom-planet-mount::after,
-[data-showroom-planet-mount][data-showroom-center-structure="unified-center-object"]::after {
-  inset: 8%;
+.showroom-planet-mount::after,
+[data-showroom-planet-mount]::after {
+  inset: 15%;
   border: 1px solid rgba(117, 233, 255, 0.045);
   opacity: 0.55;
   transform:
     rotateX(62deg)
     rotateZ(-18deg);
-}
-
-.showroom-compass-mount,
-.showroom-planet-mount > .showroom-planet-visual-host,
-[data-showroom-planet-mount] > [data-showroom-planet-visual-host],
-[data-showroom-planet-mount] > [data-showroom-planet-render-target="true"],
-[data-showroom-planet-mount] > [data-showroom-compass-visual-mount] {
-  position: absolute;
-  z-index: 3;
-  inset: -7%;
-  display: grid;
-  place-items: center;
-  border-radius: 50%;
-  pointer-events: none !important;
-  user-select: none !important;
-  touch-action: none !important;
-}
-
-.showroom-planet-mount > .showroom-planet-visual-host,
-[data-showroom-planet-mount] > [data-showroom-planet-visual-host],
-[data-showroom-planet-mount] > [data-showroom-planet-render-target="true"] {
-  background: transparent;
-  filter: none;
 }
 
 .showroom-planet-root {
@@ -1108,7 +988,7 @@ canvas[data-showroom-compositor-layer="front"],
   width: var(--showroom-planet-size);
   aspect-ratio: 1;
   border-radius: 50%;
-  pointer-events: none !important;
+  pointer-events: none;
   isolation: isolate;
   contain: layout paint;
 }
@@ -1118,7 +998,7 @@ canvas[data-showroom-compositor-layer="front"],
   z-index: 0;
   inset: -18%;
   border-radius: 50%;
-  pointer-events: none !important;
+  pointer-events: none;
   background:
     radial-gradient(
       circle at 50% 50%,
@@ -1137,7 +1017,7 @@ canvas[data-showroom-compositor-layer="front"],
   border: 1px solid rgba(117, 233, 255, 0.045);
   border-radius: 50%;
   opacity: 0.32;
-  pointer-events: none !important;
+  pointer-events: none;
   transform:
     rotateX(64deg)
     rotateZ(-16deg);
@@ -1165,9 +1045,7 @@ canvas[data-showroom-compositor-layer="front"],
   display: grid;
   place-items: center;
   border-radius: 50%;
-  background: transparent !important;
-  box-shadow: none !important;
-  pointer-events: none !important;
+  pointer-events: none;
   transform-origin: 50% 50%;
 }
 
@@ -1176,7 +1054,7 @@ canvas[data-showroom-compositor-layer="front"],
   inset: 5% !important;
   overflow: hidden;
   border-radius: 50%;
-  pointer-events: none !important;
+  pointer-events: none;
   background: transparent !important;
   box-shadow: none !important;
 }
@@ -1191,10 +1069,10 @@ canvas[data-showroom-compositor-layer="front"],
   position: relative;
   z-index: 8;
   display: block;
-  width: 100% !important;
-  height: 100% !important;
+  width: 100%;
+  height: 100%;
   border-radius: 50%;
-  pointer-events: none !important;
+  pointer-events: none;
   background: transparent;
   mix-blend-mode: normal;
 }
@@ -1206,7 +1084,7 @@ canvas[data-showroom-compositor-layer="front"],
 .showroom-planet-fulcrum {
   position: absolute;
   border-radius: 50%;
-  pointer-events: none !important;
+  pointer-events: none;
 }
 
 .showroom-planet-rim {
@@ -1237,7 +1115,7 @@ canvas[data-showroom-compositor-layer="front"],
   width: 0.09rem !important;
   height: 124% !important;
   border-radius: 999px;
-  pointer-events: none !important;
+  pointer-events: none;
   background:
     linear-gradient(
       180deg,
@@ -1257,7 +1135,7 @@ canvas[data-showroom-compositor-layer="front"],
   z-index: 5;
   inset: -6% !important;
   border-radius: 50%;
-  pointer-events: none !important;
+  pointer-events: none;
   background:
     radial-gradient(
       circle at 50% 50%,
@@ -1302,7 +1180,7 @@ canvas[data-showroom-compositor-layer="front"],
   font-size: 0.82rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  pointer-events: none !important;
+  pointer-events: none;
 }
 
 .showroom-planet-root[data-showroom-planet-state="fallback"]
@@ -1329,10 +1207,8 @@ canvas[data-showroom-compositor-layer="front"],
   display: none;
 }
 
+.showroom-planet-mount,
 [data-showroom-planet-mount],
-[data-showroom-planet-visual-host],
-[data-showroom-planet-render-target="true"],
-.showroom-planet-visual-host,
 .showroom-planet-root,
 .showroom-planet-shell,
 .showroom-planet-body,
@@ -1345,9 +1221,29 @@ canvas[data-showroom-compositor-layer="front"],
 .showroom-planet-fulcrum,
 .showroom-planet-axis,
 .showroom-planet-fallback {
-  pointer-events: none !important;
-  user-select: none !important;
-  touch-action: none !important;
+  pointer-events: none;
+}
+
+[data-showroom-planet-reduced-motion="true"]
+.showroom-planet-shell,
+.showroom-planet-root[data-showroom-planet-reduced-motion="true"]
+.showroom-planet-shell,
+[data-showroom-planet-reduced-motion="true"]
+.showroom-planet-body,
+.showroom-planet-root[data-showroom-planet-reduced-motion="true"]
+.showroom-planet-body {
+  transform: none !important;
+}
+
+[data-showroom-planet-reduced-motion="true"]
+.showroom-planet-atmosphere,
+.showroom-planet-root[data-showroom-planet-reduced-motion="true"]
+.showroom-planet-atmosphere,
+[data-showroom-planet-reduced-motion="true"]
+.showroom-planet-glow,
+.showroom-planet-root[data-showroom-planet-reduced-motion="true"]
+.showroom-planet-glow {
+  filter: none;
 }
 
 .showroom-compass-control,
@@ -1369,8 +1265,7 @@ canvas[data-showroom-compositor-layer="front"],
   background: transparent;
   text-align: center;
   cursor: pointer;
-  pointer-events: auto !important;
-  touch-action: manipulation !important;
+  pointer-events: auto;
 }
 
 .showroom-compass-control::before,
@@ -1430,7 +1325,7 @@ canvas[data-showroom-compositor-layer="front"],
 .showroom-compass-control__instruction {
   position: relative;
   z-index: 2;
-  pointer-events: none !important;
+  pointer-events: none;
   text-shadow:
     0 0.12rem 0.45rem rgba(0, 0, 0, 0.88),
     0 0 0.7rem rgba(7, 11, 24, 0.96);
@@ -1456,32 +1351,18 @@ canvas[data-showroom-compositor-layer="front"],
 }
 
 /* ================================================================
-   13. SEMANTIC STAR LAYERS AND STACKING-SAFE POINTER MODEL
+   11. SEMANTIC STAR LAYERS AND FALLBACK
    ================================================================ */
 
 .showroom-semantic-star-layer,
 .showroom-primary-stars,
-.showroom-star-cluster,
-[data-showroom-semantic-star-layer],
-[data-showroom-primary-stars],
-[data-showroom-cardinal-layer],
-[data-showroom-fallback-star-layer],
-[data-showroom-cluster] {
+.showroom-star-cluster {
   position: absolute;
   inset: 0;
-  pointer-events: none !important;
 }
 
-.showroom-semantic-star-layer,
-[data-showroom-semantic-star-layer] {
-  z-index: var(--showroom-z-star-layer);
-}
-
-.showroom-star,
-[data-showroom-cardinal-control],
-[data-showroom-child-control],
-[data-showroom-fallback-star] {
-  pointer-events: auto !important;
+.showroom-semantic-star-layer {
+  z-index: 7;
 }
 
 .showroom-star {
@@ -1537,8 +1418,7 @@ canvas[data-showroom-compositor-layer="front"],
     );
 }
 
-.showroom-star:hover,
-.showroom-star:focus-visible {
+.showroom-star:hover {
   filter: brightness(1.2);
   transform: scale(1.08);
 }
@@ -1582,110 +1462,120 @@ canvas[data-showroom-compositor-layer="front"],
 }
 
 [data-showroom-cardinal-id="north"][data-showroom-cardinal-control]:hover,
-[data-showroom-cardinal-id="north"][data-showroom-cardinal-control]:focus-visible,
-[data-showroom-cardinal-id="south"][data-showroom-cardinal-control]:hover,
-[data-showroom-cardinal-id="south"][data-showroom-cardinal-control]:focus-visible {
+[data-showroom-cardinal-id="south"][data-showroom-cardinal-control]:hover {
   transform:
     translateX(-50%)
     scale(1.08);
 }
 
 [data-showroom-cardinal-id="east"][data-showroom-cardinal-control]:hover,
-[data-showroom-cardinal-id="east"][data-showroom-cardinal-control]:focus-visible,
-[data-showroom-cardinal-id="west"][data-showroom-cardinal-control]:hover,
-[data-showroom-cardinal-id="west"][data-showroom-cardinal-control]:focus-visible {
+[data-showroom-cardinal-id="west"][data-showroom-cardinal-control]:hover {
   transform:
     translateY(-50%)
     scale(1.08);
 }
 
-.showroom-star-cluster--north [data-showroom-child-id="north-1"] {
+.showroom-star-cluster--north
+[data-showroom-child-id="north-1"] {
   top: 18%;
   left: 31%;
 }
 
-.showroom-star-cluster--north [data-showroom-child-id="north-2"] {
+.showroom-star-cluster--north
+[data-showroom-child-id="north-2"] {
   top: 11%;
   left: 41%;
 }
 
-.showroom-star-cluster--north [data-showroom-child-id="north-3"] {
+.showroom-star-cluster--north
+[data-showroom-child-id="north-3"] {
   top: 11%;
   right: 41%;
 }
 
-.showroom-star-cluster--north [data-showroom-child-id="north-4"] {
+.showroom-star-cluster--north
+[data-showroom-child-id="north-4"] {
   top: 18%;
   right: 31%;
 }
 
-.showroom-star-cluster--east [data-showroom-child-id="east-1"] {
+.showroom-star-cluster--east
+[data-showroom-child-id="east-1"] {
   top: 31%;
   right: 18%;
 }
 
-.showroom-star-cluster--east [data-showroom-child-id="east-2"] {
+.showroom-star-cluster--east
+[data-showroom-child-id="east-2"] {
   top: 41%;
   right: 11%;
 }
 
-.showroom-star-cluster--east [data-showroom-child-id="east-3"] {
+.showroom-star-cluster--east
+[data-showroom-child-id="east-3"] {
   right: 11%;
   bottom: 41%;
 }
 
-.showroom-star-cluster--east [data-showroom-child-id="east-4"] {
+.showroom-star-cluster--east
+[data-showroom-child-id="east-4"] {
   right: 18%;
   bottom: 31%;
 }
 
-.showroom-star-cluster--west [data-showroom-child-id="west-1"] {
+.showroom-star-cluster--west
+[data-showroom-child-id="west-1"] {
   top: 31%;
   left: 18%;
 }
 
-.showroom-star-cluster--west [data-showroom-child-id="west-2"] {
+.showroom-star-cluster--west
+[data-showroom-child-id="west-2"] {
   top: 41%;
   left: 11%;
 }
 
-.showroom-star-cluster--west [data-showroom-child-id="west-3"] {
+.showroom-star-cluster--west
+[data-showroom-child-id="west-3"] {
   bottom: 41%;
   left: 11%;
 }
 
-.showroom-star-cluster--west [data-showroom-child-id="west-4"] {
+.showroom-star-cluster--west
+[data-showroom-child-id="west-4"] {
   bottom: 31%;
   left: 18%;
 }
 
-.showroom-star-cluster--south [data-showroom-child-id="south-1"] {
+.showroom-star-cluster--south
+[data-showroom-child-id="south-1"] {
   bottom: 18%;
   left: 31%;
 }
 
-.showroom-star-cluster--south [data-showroom-child-id="south-2"] {
+.showroom-star-cluster--south
+[data-showroom-child-id="south-2"] {
   bottom: 11%;
   left: 41%;
 }
 
-.showroom-star-cluster--south [data-showroom-child-id="south-3"] {
+.showroom-star-cluster--south
+[data-showroom-child-id="south-3"] {
   right: 41%;
   bottom: 11%;
 }
 
-.showroom-star-cluster--south [data-showroom-child-id="south-4"] {
+.showroom-star-cluster--south
+[data-showroom-child-id="south-4"] {
   right: 31%;
   bottom: 18%;
 }
 
-.showroom-star--portal,
-.showroom-star--primary-portal {
+.showroom-star--portal {
   color: var(--showroom-cyan);
 }
 
-.showroom-star--portal::before,
-.showroom-star--primary-portal::before {
+.showroom-star--portal::before {
   background:
     radial-gradient(
       circle at 50% 38%,
@@ -1715,25 +1605,25 @@ canvas[data-showroom-compositor-layer="front"],
   opacity: 1;
 }
 
-[data-showroom-root][data-showroom-crystals-ready="false"] [data-showroom-fallback-star] {
+[data-showroom-root][data-showroom-crystals-ready="false"]
+[data-showroom-fallback-star] {
   opacity: 1;
-  pointer-events: auto !important;
 }
 
-[data-showroom-root][data-showroom-crystals-ready="true"] [data-showroom-fallback-star] {
+[data-showroom-root][data-showroom-crystals-ready="true"]
+[data-showroom-fallback-star] {
   opacity: 0;
-  pointer-events: none !important;
+  pointer-events: auto;
 }
 
 /* ================================================================
-   14. LIVE ATLAS / COMPASS KEY
+   12. LIVE ATLAS / COMPASS KEY
    ================================================================ */
 
 .showroom-controller-panel,
-.showroom-atlas-key,
-[data-showroom-controller-panel] {
+.showroom-atlas-key {
   position: relative;
-  z-index: var(--showroom-z-panel);
+  z-index: 3;
   display: grid;
   grid-template-columns:
     minmax(11rem, 0.72fr)
@@ -1814,23 +1704,21 @@ canvas[data-showroom-compositor-layer="front"],
   font-size: 0.8rem;
 }
 
-.showroom-atlas-key__actions,
-.showroom-controller-panel__actions {
+.showroom-atlas-key__actions {
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-end;
   gap: 0.45rem;
 }
 
-.showroom-atlas-key__actions .button,
-.showroom-controller-panel__actions .button {
+.showroom-atlas-key__actions .button {
   min-height: 2.55rem;
   padding-inline: 0.85rem;
   font-size: 0.7rem;
 }
 
 /* ================================================================
-   15. COMPACT ATLAS NARRATIVE VIEWPORT
+   13. COMPACT ATLAS NARRATIVE VIEWPORT
    ================================================================ */
 
 .showroom-atlas-key__narrative {
@@ -1879,11 +1767,10 @@ canvas[data-showroom-compositor-layer="front"],
 }
 
 /* ================================================================
-   16. ATLAS LEGEND
+   14. ATLAS LEGEND
    ================================================================ */
 
-.showroom-atlas-key__legend,
-[data-showroom-atlas-legend] {
+.showroom-atlas-key__legend {
   display: none;
   grid-template-columns:
     repeat(4, minmax(0, 1fr));
@@ -1915,7 +1802,7 @@ canvas[data-showroom-compositor-layer="front"],
 }
 
 /* ================================================================
-   17. ATLAS ROUTE DETAILS
+   15. ATLAS ROUTE DETAILS
    ================================================================ */
 
 .showroom-atlas-key__technical {
@@ -1940,18 +1827,21 @@ canvas[data-showroom-compositor-layer="front"],
   cursor: pointer;
 }
 
-.showroom-atlas-key__technical > summary::-webkit-details-marker {
+.showroom-atlas-key__technical
+> summary::-webkit-details-marker {
   display: none;
 }
 
-.showroom-atlas-key__technical > summary span:last-child {
+.showroom-atlas-key__technical
+> summary span:last-child {
   color: var(--showroom-gold-bright);
   font-size: 1rem;
   transition:
     transform var(--showroom-transition-fast);
 }
 
-.showroom-atlas-key__technical[open] > summary span:last-child {
+.showroom-atlas-key__technical[open]
+> summary span:last-child {
   transform: rotate(45deg);
 }
 
@@ -1978,11 +1868,13 @@ canvas[data-showroom-compositor-layer="front"],
   cursor: pointer;
 }
 
-.showroom-atlas-key__detail-group > summary::-webkit-details-marker {
+.showroom-atlas-key__detail-group
+> summary::-webkit-details-marker {
   display: none;
 }
 
-.showroom-atlas-key__detail-group > summary::after {
+.showroom-atlas-key__detail-group
+> summary::after {
   content: "+";
   color: var(--showroom-gold-bright);
   font-size: 1rem;
@@ -1990,7 +1882,8 @@ canvas[data-showroom-compositor-layer="front"],
     transform var(--showroom-transition-fast);
 }
 
-.showroom-atlas-key__detail-group[open] > summary::after {
+.showroom-atlas-key__detail-group[open]
+> summary::after {
   transform: rotate(45deg);
 }
 
@@ -2058,118 +1951,172 @@ canvas[data-showroom-compositor-layer="front"],
 }
 
 /* ================================================================
-   18. ATLAS RECORD PRECEDENCE AND EXACT VISIBILITY
+   16. ATLAS RECORD PRECEDENCE AND EXACT VISIBILITY
    ================================================================ */
 
-[data-showroom-root][data-showroom-held="true"] [data-showroom-atlas-narrative-record="held"],
-[data-showroom-root][data-showroom-held="true"] [data-showroom-atlas-narrative-detail-record="held"] {
+[data-showroom-root][data-showroom-held="true"]
+[data-showroom-atlas-narrative-record="held"],
+[data-showroom-root][data-showroom-held="true"]
+[data-showroom-atlas-narrative-detail-record="held"] {
   display: block;
 }
 
-[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="true"] [data-showroom-atlas-narrative-record="compass"],
-[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="true"] [data-showroom-atlas-narrative-detail-record="compass"] {
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="true"]
+[data-showroom-atlas-narrative-record="compass"],
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="true"]
+[data-showroom-atlas-narrative-detail-record="compass"] {
   display: block;
 }
 
-[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="north-1"] [data-showroom-atlas-narrative-record="north-1"],
-[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="north-1"] [data-showroom-atlas-narrative-detail-record="north-1"],
-[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="north-2"] [data-showroom-atlas-narrative-record="north-2"],
-[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="north-2"] [data-showroom-atlas-narrative-detail-record="north-2"],
-[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="north-3"] [data-showroom-atlas-narrative-record="north-3"],
-[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="north-3"] [data-showroom-atlas-narrative-detail-record="north-3"],
-[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="north-4"] [data-showroom-atlas-narrative-record="north-4"],
-[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="north-4"] [data-showroom-atlas-narrative-detail-record="north-4"],
-[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="east-1"] [data-showroom-atlas-narrative-record="east-1"],
-[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="east-1"] [data-showroom-atlas-narrative-detail-record="east-1"],
-[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="east-2"] [data-showroom-atlas-narrative-record="east-2"],
-[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="east-2"] [data-showroom-atlas-narrative-detail-record="east-2"],
-[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="east-3"] [data-showroom-atlas-narrative-record="east-3"],
-[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="east-3"] [data-showroom-atlas-narrative-detail-record="east-3"],
-[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="east-4"] [data-showroom-atlas-narrative-record="east-4"],
-[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="east-4"] [data-showroom-atlas-narrative-detail-record="east-4"],
-[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="west-1"] [data-showroom-atlas-narrative-record="west-1"],
-[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="west-1"] [data-showroom-atlas-narrative-detail-record="west-1"],
-[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="west-2"] [data-showroom-atlas-narrative-record="west-2"],
-[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="west-2"] [data-showroom-atlas-narrative-detail-record="west-2"],
-[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="west-3"] [data-showroom-atlas-narrative-record="west-3"],
-[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="west-3"] [data-showroom-atlas-narrative-detail-record="west-3"],
-[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="west-4"] [data-showroom-atlas-narrative-record="west-4"],
-[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="west-4"] [data-showroom-atlas-narrative-detail-record="west-4"],
-[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="south-1"] [data-showroom-atlas-narrative-record="south-1"],
-[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="south-1"] [data-showroom-atlas-narrative-detail-record="south-1"],
-[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="south-2"] [data-showroom-atlas-narrative-record="south-2"],
-[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="south-2"] [data-showroom-atlas-narrative-detail-record="south-2"],
-[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="south-3"] [data-showroom-atlas-narrative-record="south-3"],
-[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="south-3"] [data-showroom-atlas-narrative-detail-record="south-3"],
-[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="south-4"] [data-showroom-atlas-narrative-record="south-4"],
-[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="south-4"] [data-showroom-atlas-narrative-detail-record="south-4"] {
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="north-1"]
+[data-showroom-atlas-narrative-record="north-1"],
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="north-1"]
+[data-showroom-atlas-narrative-detail-record="north-1"],
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="north-2"]
+[data-showroom-atlas-narrative-record="north-2"],
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="north-2"]
+[data-showroom-atlas-narrative-detail-record="north-2"],
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="north-3"]
+[data-showroom-atlas-narrative-record="north-3"],
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="north-3"]
+[data-showroom-atlas-narrative-detail-record="north-3"],
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="north-4"]
+[data-showroom-atlas-narrative-record="north-4"],
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="north-4"]
+[data-showroom-atlas-narrative-detail-record="north-4"],
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="east-1"]
+[data-showroom-atlas-narrative-record="east-1"],
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="east-1"]
+[data-showroom-atlas-narrative-detail-record="east-1"],
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="east-2"]
+[data-showroom-atlas-narrative-record="east-2"],
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="east-2"]
+[data-showroom-atlas-narrative-detail-record="east-2"],
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="east-3"]
+[data-showroom-atlas-narrative-record="east-3"],
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="east-3"]
+[data-showroom-atlas-narrative-detail-record="east-3"],
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="east-4"]
+[data-showroom-atlas-narrative-record="east-4"],
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="east-4"]
+[data-showroom-atlas-narrative-detail-record="east-4"],
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="west-1"]
+[data-showroom-atlas-narrative-record="west-1"],
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="west-1"]
+[data-showroom-atlas-narrative-detail-record="west-1"],
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="west-2"]
+[data-showroom-atlas-narrative-record="west-2"],
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="west-2"]
+[data-showroom-atlas-narrative-detail-record="west-2"],
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="west-3"]
+[data-showroom-atlas-narrative-record="west-3"],
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="west-3"]
+[data-showroom-atlas-narrative-detail-record="west-3"],
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="west-4"]
+[data-showroom-atlas-narrative-record="west-4"],
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="west-4"]
+[data-showroom-atlas-narrative-detail-record="west-4"],
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="south-1"]
+[data-showroom-atlas-narrative-record="south-1"],
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="south-1"]
+[data-showroom-atlas-narrative-detail-record="south-1"],
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="south-2"]
+[data-showroom-atlas-narrative-record="south-2"],
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="south-2"]
+[data-showroom-atlas-narrative-detail-record="south-2"],
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="south-3"]
+[data-showroom-atlas-narrative-record="south-3"],
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="south-3"]
+[data-showroom-atlas-narrative-detail-record="south-3"],
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="south-4"]
+[data-showroom-atlas-narrative-record="south-4"],
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child="south-4"]
+[data-showroom-atlas-narrative-detail-record="south-4"] {
   display: block;
 }
 
-[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child=""][data-showroom-active-cardinal="north"] [data-showroom-atlas-narrative-record="north"],
-[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child=""][data-showroom-active-cardinal="north"] [data-showroom-atlas-narrative-detail-record="north"],
-[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child=""][data-showroom-active-cardinal="east"] [data-showroom-atlas-narrative-record="east"],
-[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child=""][data-showroom-active-cardinal="east"] [data-showroom-atlas-narrative-detail-record="east"],
-[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child=""][data-showroom-active-cardinal="west"] [data-showroom-atlas-narrative-record="west"],
-[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child=""][data-showroom-active-cardinal="west"] [data-showroom-atlas-narrative-detail-record="west"],
-[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child=""][data-showroom-active-cardinal="south"] [data-showroom-atlas-narrative-record="south"],
-[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child=""][data-showroom-active-cardinal="south"] [data-showroom-atlas-narrative-detail-record="south"] {
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child=""][data-showroom-active-cardinal="north"]
+[data-showroom-atlas-narrative-record="north"],
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child=""][data-showroom-active-cardinal="north"]
+[data-showroom-atlas-narrative-detail-record="north"],
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child=""][data-showroom-active-cardinal="east"]
+[data-showroom-atlas-narrative-record="east"],
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child=""][data-showroom-active-cardinal="east"]
+[data-showroom-atlas-narrative-detail-record="east"],
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child=""][data-showroom-active-cardinal="west"]
+[data-showroom-atlas-narrative-record="west"],
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child=""][data-showroom-active-cardinal="west"]
+[data-showroom-atlas-narrative-detail-record="west"],
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child=""][data-showroom-active-cardinal="south"]
+[data-showroom-atlas-narrative-record="south"],
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child=""][data-showroom-active-cardinal="south"]
+[data-showroom-atlas-narrative-detail-record="south"] {
   display: block;
 }
 
-[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child=""][data-showroom-active-cardinal=""] [data-showroom-atlas-narrative-record="idle"],
-[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child=""][data-showroom-active-cardinal=""] [data-showroom-atlas-narrative-detail-record="idle"] {
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child=""][data-showroom-active-cardinal=""]
+[data-showroom-atlas-narrative-record="idle"],
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child=""][data-showroom-active-cardinal=""]
+[data-showroom-atlas-narrative-detail-record="idle"] {
   display: block;
 }
 
-[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child=""][data-showroom-active-cardinal=""] [data-showroom-atlas-legend] {
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child=""][data-showroom-active-cardinal=""]
+[data-showroom-atlas-legend] {
   display: grid;
 }
 
 /* ================================================================
-   19. ATLAS STATE EMPHASIS
+   17. ATLAS STATE EMPHASIS
    ================================================================ */
 
-[data-showroom-root][data-showroom-held="true"] .showroom-atlas-key {
+[data-showroom-root][data-showroom-held="true"]
+.showroom-atlas-key {
   border-color: rgba(255, 141, 159, 0.44);
   box-shadow:
     0 1.15rem 3rem rgba(0, 0, 0, 0.36),
     inset 0.22rem 0 0 var(--showroom-danger);
 }
 
-[data-showroom-root][data-showroom-held="true"] .showroom-atlas-key__state {
+[data-showroom-root][data-showroom-held="true"]
+.showroom-atlas-key__state {
   border-color: rgba(255, 141, 159, 0.42);
   color: var(--showroom-danger);
   background: rgba(255, 141, 159, 0.08);
 }
 
-[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="true"] .showroom-atlas-key {
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="true"]
+.showroom-atlas-key {
   border-color: var(--showroom-border-strong);
   box-shadow:
     0 1.15rem 3rem rgba(0, 0, 0, 0.36),
     inset 0.22rem 0 0 var(--showroom-gold);
 }
 
-[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="true"] .showroom-atlas-key__state {
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="true"]
+.showroom-atlas-key__state {
   border-color: var(--showroom-border-strong);
   color: var(--showroom-gold-bright);
   background: var(--showroom-gold-faint);
 }
 
-[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"]:not([data-showroom-active-child=""]) .showroom-atlas-key {
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"]:not([data-showroom-active-child=""])
+.showroom-atlas-key {
   border-color: rgba(141, 230, 176, 0.4);
   box-shadow:
     0 1.15rem 3rem rgba(0, 0, 0, 0.36),
     inset 0.22rem 0 0 var(--showroom-success);
 }
 
-[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"]:not([data-showroom-active-child=""]) .showroom-atlas-key__state {
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"]:not([data-showroom-active-child=""])
+.showroom-atlas-key__state {
   border-color: rgba(141, 230, 176, 0.4);
   color: var(--showroom-success);
   background: rgba(141, 230, 176, 0.09);
 }
 
-[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child=""]:not([data-showroom-active-cardinal=""]) .showroom-atlas-key {
+[data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child=""]:not([data-showroom-active-cardinal=""])
+.showroom-atlas-key {
   border-color: var(--showroom-border-strong);
   box-shadow:
     0 1.15rem 3rem rgba(0, 0, 0, 0.36),
@@ -2177,11 +2124,10 @@ canvas[data-showroom-compositor-layer="front"],
 }
 
 /* ================================================================
-   20. DIAMOND AND WINDOW STAGE
+   18. DIAMOND AND WINDOW STAGE
    ================================================================ */
 
-.showroom-diamond-reveal,
-[data-showroom-retained-object-stage] {
+.showroom-diamond-reveal {
   display: grid;
   gap: 1rem;
   padding: clamp(1rem, 2.4vw, 1.8rem);
@@ -2202,8 +2148,7 @@ canvas[data-showroom-compositor-layer="front"],
   padding: 0.3rem 0.15rem;
 }
 
-.showroom-reveal-scene,
-[data-showroom-reveal-scene] {
+.showroom-reveal-scene {
   position: relative;
   min-height: clamp(29rem, 58vw, 48rem);
   overflow: hidden;
@@ -2226,35 +2171,27 @@ canvas[data-showroom-compositor-layer="front"],
 }
 
 .showroom-diamond-layer,
-[data-showroom-diamond-layer],
-.showroom-window-layer,
-[data-showroom-window-layer] {
+.showroom-window-layer {
   position: absolute;
   inset: 0;
 }
 
-.showroom-diamond-layer,
-[data-showroom-diamond-layer] {
+.showroom-diamond-layer {
   z-index: 1;
 }
 
-.showroom-window-layer,
-[data-showroom-window-layer] {
-  z-index: var(--showroom-z-window);
+.showroom-window-layer {
+  z-index: 4;
   pointer-events: none;
 }
 
-.showroom-window-mount,
-[data-showroom-window-mount],
-[data-showroom-mirrorland-window-mount] {
+.showroom-window-mount {
   position: absolute;
   inset: 0;
-  pointer-events: none !important;
+  pointer-events: none;
 }
 
-.showroom-window-control,
-[data-showroom-window-control],
-[data-showroom-mirrorland-window-control] {
+.showroom-window-control {
   position: absolute;
   right: 50%;
   bottom: 1.15rem;
@@ -2298,8 +2235,7 @@ canvas[data-showroom-compositor-layer="front"],
 
 .diamond-exhibit-frame,
 .diamond-viewport-card,
-.diamond-stage,
-[data-showroom-diamond-stage] {
+.diamond-stage {
   width: 100%;
   height: 100%;
 }
@@ -2314,8 +2250,7 @@ canvas[data-showroom-compositor-layer="front"],
   border-radius: var(--showroom-radius-md);
 }
 
-.diamond-stage,
-[data-showroom-diamond-stage] {
+.diamond-stage {
   position: relative;
   min-height: clamp(27rem, 55vw, 46rem);
   overflow: hidden;
@@ -2326,11 +2261,9 @@ canvas[data-showroom-compositor-layer="front"],
       transparent 26rem
     ),
     #040713;
-  pointer-events: auto;
 }
 
-.diamond-stage canvas,
-[data-showroom-diamond-canvas] {
+.diamond-stage canvas {
   width: 100%;
   height: 100%;
 }
@@ -2364,23 +2297,7 @@ canvas[data-showroom-compositor-layer="front"],
   margin-bottom: 0;
 }
 
-.diamond-fallback-object {
-  display: block;
-  width: 4rem;
-  height: 4rem;
-  margin: 0 auto 1rem;
-  transform: rotate(45deg);
-  border: 1px solid rgba(182, 151, 255, 0.52);
-  background:
-    linear-gradient(
-      135deg,
-      rgba(182, 151, 255, 0.28),
-      rgba(117, 233, 255, 0.12)
-    );
-}
-
-.showroom-diamond-controls,
-[data-showroom-diamond-controls] {
+.showroom-diamond-controls {
   position: relative;
 }
 
@@ -2410,7 +2327,8 @@ canvas[data-showroom-compositor-layer="front"],
   cursor: pointer;
 }
 
-.object-control-tray > summary::-webkit-details-marker {
+.object-control-tray
+> summary::-webkit-details-marker {
   display: none;
 }
 
@@ -2429,8 +2347,7 @@ canvas[data-showroom-compositor-layer="front"],
   padding-top: 0.9rem;
 }
 
-.two-view-buttons button,
-.technical-control-bridge button {
+.two-view-buttons button {
   min-height: 2.8rem;
   border: 1px solid rgba(182, 151, 255, 0.28);
   border-radius: var(--showroom-radius-sm);
@@ -2470,8 +2387,7 @@ canvas[data-showroom-compositor-layer="front"],
   font-size: 0.78rem;
 }
 
-.status-strip .actions,
-.actions {
+.status-strip .actions {
   display: flex;
   flex-wrap: wrap;
   gap: 0.45rem;
@@ -2483,11 +2399,10 @@ canvas[data-showroom-compositor-layer="front"],
 }
 
 /* ================================================================
-   21. NARRATIVE FOUNDATIONS OUTER STRUCTURE
+   19. NARRATIVE FOUNDATIONS OUTER STRUCTURE
    ================================================================ */
 
-.showroom-narrative-foundations,
-[data-showroom-narrative-foundations] {
+.showroom-narrative-foundations {
   display: grid;
   gap: 1.2rem;
   padding: clamp(1rem, 2.8vw, 2rem);
@@ -2526,7 +2441,7 @@ canvas[data-showroom-compositor-layer="front"],
 }
 
 /* ================================================================
-   22. NATIVE NARRATIVE DISCLOSURES
+   20. NATIVE NARRATIVE DISCLOSURES
    ================================================================ */
 
 .showroom-narrative-foundation,
@@ -2570,21 +2485,29 @@ canvas[data-showroom-compositor-layer="front"],
   cursor: pointer;
 }
 
-.showroom-narrative-foundation > summary::-webkit-details-marker,
-.showroom-runtime-evidence > summary::-webkit-details-marker,
-.showroom-runtime-evidence__group > summary::-webkit-details-marker,
-.showroom-raw-receipt-disclosure > summary::-webkit-details-marker {
+.showroom-narrative-foundation
+> summary::-webkit-details-marker,
+.showroom-runtime-evidence
+> summary::-webkit-details-marker,
+.showroom-runtime-evidence__group
+> summary::-webkit-details-marker,
+.showroom-raw-receipt-disclosure
+> summary::-webkit-details-marker {
   display: none;
 }
 
-.showroom-narrative-foundation > summary > span:first-child,
-.showroom-runtime-evidence > summary > span:first-child {
+.showroom-narrative-foundation
+> summary > span:first-child,
+.showroom-runtime-evidence
+> summary > span:first-child {
   display: grid;
   gap: 0.12rem;
 }
 
-.showroom-narrative-foundation > summary strong,
-.showroom-runtime-evidence > summary strong {
+.showroom-narrative-foundation
+> summary strong,
+.showroom-runtime-evidence
+> summary strong {
   color: var(--showroom-gold-bright);
   font-family:
     Georgia,
@@ -2596,13 +2519,16 @@ canvas[data-showroom-compositor-layer="front"],
   text-transform: none;
 }
 
-.showroom-narrative-foundation > summary > span:first-child {
+.showroom-narrative-foundation
+> summary > span:first-child {
   color: var(--showroom-muted-strong);
   font-size: 0.8rem;
 }
 
-.showroom-narrative-foundation > summary > span:last-child,
-.showroom-runtime-evidence > summary > span:last-child {
+.showroom-narrative-foundation
+> summary > span:last-child,
+.showroom-runtime-evidence
+> summary > span:last-child {
   display: grid;
   width: 2rem;
   height: 2rem;
@@ -2617,8 +2543,10 @@ canvas[data-showroom-compositor-layer="front"],
     transform var(--showroom-transition-fast);
 }
 
-.showroom-narrative-foundation[open] > summary > span:last-child,
-.showroom-runtime-evidence[open] > summary > span:last-child {
+.showroom-narrative-foundation[open]
+> summary > span:last-child,
+.showroom-runtime-evidence[open]
+> summary > span:last-child {
   transform: rotate(45deg);
 }
 
@@ -2660,8 +2588,10 @@ canvas[data-showroom-compositor-layer="front"],
   cursor: pointer;
 }
 
-.showroom-narrative-foundation__deeper > summary::after,
-.showroom-runtime-evidence__group > summary::after {
+.showroom-narrative-foundation__deeper
+> summary::after,
+.showroom-runtime-evidence__group
+> summary::after {
   content: "+";
   color: var(--showroom-gold-bright);
   font-size: 1rem;
@@ -2669,12 +2599,15 @@ canvas[data-showroom-compositor-layer="front"],
     transform var(--showroom-transition-fast);
 }
 
-.showroom-narrative-foundation__deeper[open] > summary::after,
-.showroom-runtime-evidence__group[open] > summary::after {
+.showroom-narrative-foundation__deeper[open]
+> summary::after,
+.showroom-runtime-evidence__group[open]
+> summary::after {
   transform: rotate(45deg);
 }
 
-.showroom-narrative-foundation__deeper > :not(summary) {
+.showroom-narrative-foundation__deeper
+> :not(summary) {
   margin-right: 0.85rem;
   margin-left: 0.85rem;
 }
@@ -2696,7 +2629,7 @@ canvas[data-showroom-compositor-layer="front"],
 }
 
 /* ================================================================
-   23. FOUNDATION-SPECIFIC STRUCTURES
+   21. FOUNDATION-SPECIFIC STRUCTURES
    ================================================================ */
 
 .showroom-clock-status {
@@ -2818,7 +2751,7 @@ canvas[data-showroom-compositor-layer="front"],
 }
 
 /* ================================================================
-   24. FORMAL EQUATIONS
+   22. FORMAL EQUATIONS
    ================================================================ */
 
 .showroom-equation-grid {
@@ -2890,7 +2823,7 @@ canvas[data-showroom-compositor-layer="front"],
 }
 
 /* ================================================================
-   25. METRICS AND OWNERSHIP
+   23. METRICS AND OWNERSHIP
    ================================================================ */
 
 .showroom-metric-grid {
@@ -2963,7 +2896,7 @@ canvas[data-showroom-compositor-layer="front"],
 }
 
 /* ================================================================
-   26. SECONDARY RUNTIME EVIDENCE
+   24. SECONDARY RUNTIME EVIDENCE
    ================================================================ */
 
 .showroom-runtime-evidence {
@@ -2974,11 +2907,13 @@ canvas[data-showroom-compositor-layer="front"],
   min-height: 4.2rem;
 }
 
-.showroom-runtime-evidence > summary strong {
+.showroom-runtime-evidence
+> summary strong {
   font-size: 1.12rem;
 }
 
-.showroom-runtime-evidence > summary > span:first-child {
+.showroom-runtime-evidence
+> summary > span:first-child {
   color: var(--showroom-muted);
   font-size: 0.74rem;
 }
@@ -2999,13 +2934,16 @@ canvas[data-showroom-compositor-layer="front"],
     );
 }
 
-.showroom-runtime-evidence__group > :not(summary) {
+.showroom-runtime-evidence__group
+> :not(summary) {
   margin-right: 0.85rem;
   margin-left: 0.85rem;
 }
 
-.showroom-runtime-evidence__group > .showroom-equation-grid,
-.showroom-runtime-evidence__group > .showroom-ownership-chain {
+.showroom-runtime-evidence__group
+> .showroom-equation-grid,
+.showroom-runtime-evidence__group
+> .showroom-ownership-chain {
   padding-block: 0.85rem;
 }
 
@@ -3015,19 +2953,17 @@ canvas[data-showroom-compositor-layer="front"],
 }
 
 /* ================================================================
-   27. RECEIPT ACCORDION
+   25. RECEIPT ACCORDION
    ================================================================ */
 
-.showroom-receipt-accordion,
-[data-showroom-receipt-grid] {
+.showroom-receipt-accordion {
   display: grid;
   gap: 0.5rem;
   margin-top: 0.8rem;
   margin-bottom: 0.8rem;
 }
 
-.showroom-receipt-record,
-[data-showroom-receipt-summary] {
+.showroom-receipt-record {
   overflow: clip;
   border: 1px solid rgba(255, 255, 255, 0.085);
   border-radius: var(--showroom-radius-sm);
@@ -3039,16 +2975,14 @@ canvas[data-showroom-compositor-layer="front"],
     );
 }
 
-.showroom-receipt-record[open],
-[data-showroom-receipt-summary][open] {
+.showroom-receipt-record[open] {
   border-color: rgba(117, 233, 255, 0.28);
   box-shadow:
     inset 0.18rem 0 0 rgba(117, 233, 255, 0.32),
     0 0.8rem 2rem rgba(0, 0, 0, 0.2);
 }
 
-.showroom-receipt-record > summary,
-[data-showroom-receipt-summary] > summary {
+.showroom-receipt-record > summary {
   display: flex;
   min-height: 4rem;
   align-items: center;
@@ -3059,23 +2993,26 @@ canvas[data-showroom-compositor-layer="front"],
   cursor: pointer;
 }
 
-.showroom-receipt-record > summary::-webkit-details-marker,
-[data-showroom-receipt-summary] > summary::-webkit-details-marker {
+.showroom-receipt-record
+> summary::-webkit-details-marker {
   display: none;
 }
 
-.showroom-receipt-record > summary > span:first-child {
+.showroom-receipt-record
+> summary > span:first-child {
   display: grid;
   min-width: 0;
 }
 
-.showroom-receipt-record > summary strong {
+.showroom-receipt-record
+> summary strong {
   overflow: hidden;
   color: var(--showroom-cream);
   text-overflow: ellipsis;
 }
 
-.showroom-receipt-record > summary small {
+.showroom-receipt-record
+> summary small {
   color: var(--showroom-muted);
   font-size: 0.7rem;
 }
@@ -3175,19 +3112,18 @@ canvas[data-showroom-compositor-layer="front"],
 }
 
 /* ================================================================
-   28. FRONT HOST
+   26. FRONT HOST
    ================================================================ */
 
-.showroom-front-host,
-[data-showroom-front-host] {
+.showroom-front-host {
   position: fixed;
-  z-index: var(--showroom-z-front-host);
+  z-index: 50;
   inset: 0;
-  pointer-events: none !important;
+  pointer-events: none;
 }
 
 /* ================================================================
-   29. FOOTER
+   27. FOOTER
    ================================================================ */
 
 .showroom-footer {
@@ -3243,20 +3179,18 @@ canvas[data-showroom-compositor-layer="front"],
 }
 
 /* ================================================================
-   30. LARGE TABLET
+   28. LARGE TABLET
    ================================================================ */
 
 @media (max-width: 72rem) {
   .showroom-controller-panel,
-  .showroom-atlas-key,
-  [data-showroom-controller-panel] {
+  .showroom-atlas-key {
     grid-template-columns:
       minmax(11rem, 0.7fr)
       minmax(0, 1.3fr);
   }
 
-  .showroom-atlas-key__actions,
-  .showroom-controller-panel__actions {
+  .showroom-atlas-key__actions {
     grid-column: 1 / -1;
     justify-content: flex-start;
   }
@@ -3279,7 +3213,7 @@ canvas[data-showroom-compositor-layer="front"],
 }
 
 /* ================================================================
-   31. TABLET
+   29. TABLET
    ================================================================ */
 
 @media (max-width: 58rem) {
@@ -3307,14 +3241,12 @@ canvas[data-showroom-compositor-layer="front"],
   }
 
   .showroom-controller-panel,
-  .showroom-atlas-key,
-  [data-showroom-controller-panel] {
+  .showroom-atlas-key {
     grid-template-columns: 1fr;
     align-items: start;
   }
 
-  .showroom-atlas-key__actions,
-  .showroom-controller-panel__actions {
+  .showroom-atlas-key__actions {
     grid-column: auto;
     justify-content: flex-start;
   }
@@ -3345,7 +3277,7 @@ canvas[data-showroom-compositor-layer="front"],
 }
 
 /* ================================================================
-   32. MOBILE
+   30. MOBILE
    ================================================================ */
 
 @media (max-width: 42rem) {
@@ -3356,16 +3288,10 @@ canvas[data-showroom-compositor-layer="front"],
       clamp(10.6rem, 48vw, 14.8rem);
     --showroom-planet-size:
       clamp(9.4rem, 42vw, 13rem);
-    --showroom-static-star-opacity: 0.5;
   }
 
   body {
     font-size: 0.96rem;
-  }
-
-  body::before {
-    inset: -6%;
-    opacity: var(--showroom-static-star-opacity);
   }
 
   .showroom-shell {
@@ -3471,8 +3397,7 @@ canvas[data-showroom-compositor-layer="front"],
   }
 
   .showroom-orbit,
-  .showroom-narrative-foundations,
-  [data-showroom-narrative-foundations] {
+  .showroom-narrative-foundations {
     padding: 0.62rem;
     border-radius: 1.2rem;
   }
@@ -3487,11 +3412,8 @@ canvas[data-showroom-compositor-layer="front"],
     font-size: 0.83rem;
   }
 
-  .showroom-orbit__field,
-  [data-showroom-orbit-field],
-  [data-showroom-scene-field] {
-    min-height: clamp(20rem, 86vw, 27rem);
-    max-height: 72vh;
+  .showroom-orbit__field {
+    min-height: min(124vw, 31rem);
     border-radius: 0.95rem;
   }
 
@@ -3547,8 +3469,7 @@ canvas[data-showroom-compositor-layer="front"],
   }
 
   .showroom-controller-panel,
-  .showroom-atlas-key,
-  [data-showroom-controller-panel] {
+  .showroom-atlas-key {
     gap: 0.72rem;
     padding: 0.82rem;
     border-radius: 1rem;
@@ -3586,21 +3507,18 @@ canvas[data-showroom-compositor-layer="front"],
     font-size: 0.72rem;
   }
 
-  .showroom-atlas-key__legend,
-  [data-showroom-atlas-legend] {
+  .showroom-atlas-key__legend {
     grid-template-columns:
       repeat(2, minmax(0, 1fr));
     gap: 0.38rem;
   }
 
-  .showroom-atlas-key__actions,
-  .showroom-controller-panel__actions {
+  .showroom-atlas-key__actions {
     display: grid;
     grid-template-columns: 1fr;
   }
 
-  .showroom-atlas-key__actions .button,
-  .showroom-controller-panel__actions .button {
+  .showroom-atlas-key__actions .button {
     width: 100%;
   }
 
@@ -3614,8 +3532,7 @@ canvas[data-showroom-compositor-layer="front"],
     padding: 0.62rem;
   }
 
-  .showroom-diamond-reveal,
-  [data-showroom-retained-object-stage] {
+  .showroom-diamond-reveal {
     gap: 0.65rem;
     padding: 0.65rem 0;
   }
@@ -3624,8 +3541,7 @@ canvas[data-showroom-compositor-layer="front"],
     padding-inline: 0.62rem;
   }
 
-  .showroom-reveal-scene,
-  [data-showroom-reveal-scene] {
+  .showroom-reveal-scene {
     min-height: min(128vw, 34rem);
     border-right: 0;
     border-left: 0;
@@ -3636,14 +3552,11 @@ canvas[data-showroom-compositor-layer="front"],
     padding: 0.32rem;
   }
 
-  .diamond-stage,
-  [data-showroom-diamond-stage] {
+  .diamond-stage {
     min-height: min(124vw, 32rem);
   }
 
-  .showroom-window-control,
-  [data-showroom-window-control],
-  [data-showroom-mirrorland-window-control] {
+  .showroom-window-control {
     bottom: 0.75rem;
     min-width: 10.5rem;
     padding: 0.65rem 0.85rem;
@@ -3653,8 +3566,7 @@ canvas[data-showroom-compositor-layer="front"],
     font-size: 0.94rem;
   }
 
-  .showroom-diamond-controls,
-  [data-showroom-diamond-controls] {
+  .showroom-diamond-controls {
     padding-inline: 0.62rem;
   }
 
@@ -3667,8 +3579,7 @@ canvas[data-showroom-compositor-layer="front"],
     flex-direction: column;
   }
 
-  .status-strip .actions,
-  .actions {
+  .status-strip .actions {
     width: 100%;
   }
 
@@ -3694,7 +3605,8 @@ canvas[data-showroom-compositor-layer="front"],
     padding: 0.8rem;
   }
 
-  .showroom-narrative-foundation > summary strong {
+  .showroom-narrative-foundation
+  > summary strong {
     font-size: 1.05rem;
   }
 
@@ -3731,7 +3643,8 @@ canvas[data-showroom-compositor-layer="front"],
     padding: 0.65rem;
   }
 
-  .showroom-receipt-record > summary small {
+  .showroom-receipt-record
+  > summary small {
     font-size: 0.62rem;
   }
 
@@ -3751,7 +3664,7 @@ canvas[data-showroom-compositor-layer="front"],
 }
 
 /* ================================================================
-   33. VERY SMALL VIEWPORTS
+   31. VERY SMALL VIEWPORTS
    ================================================================ */
 
 @media (max-width: 25rem) {
@@ -3771,18 +3684,21 @@ canvas[data-showroom-compositor-layer="front"],
     display: none;
   }
 
-  .showroom-atlas-key__legend,
-  [data-showroom-atlas-legend] {
+  .showroom-atlas-key__legend {
     grid-template-columns: 1fr;
   }
 
-  .showroom-star-cluster--north [data-showroom-child-id="north-1"],
-  .showroom-star-cluster--south [data-showroom-child-id="south-1"] {
+  .showroom-star-cluster--north
+  [data-showroom-child-id="north-1"],
+  .showroom-star-cluster--south
+  [data-showroom-child-id="south-1"] {
     left: 27%;
   }
 
-  .showroom-star-cluster--north [data-showroom-child-id="north-4"],
-  .showroom-star-cluster--south [data-showroom-child-id="south-4"] {
+  .showroom-star-cluster--north
+  [data-showroom-child-id="north-4"],
+  .showroom-star-cluster--south
+  [data-showroom-child-id="south-4"] {
     right: 27%;
   }
 
@@ -3802,7 +3718,7 @@ canvas[data-showroom-compositor-layer="front"],
 }
 
 /* ================================================================
-   34. REDUCED MOTION
+   32. REDUCED MOTION
    ================================================================ */
 
 @media (prefers-reduced-motion: reduce) {
@@ -3817,11 +3733,6 @@ canvas[data-showroom-compositor-layer="front"],
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
-  }
-
-  body::before,
-  body::after {
-    transform: none !important;
   }
 
   .showroom-star:hover,
@@ -3847,29 +3758,19 @@ canvas[data-showroom-compositor-layer="front"],
   transition-duration: 0.001ms !important;
 }
 
-[data-showroom-root][data-showroom-reduced-motion="true"] .showroom-planet-shell,
-[data-showroom-root][data-reduced-motion="true"] .showroom-planet-shell,
-[data-showroom-root][data-showroom-reduced-motion="true"] .showroom-planet-body,
-[data-showroom-root][data-reduced-motion="true"] .showroom-planet-body {
+[data-showroom-root][data-showroom-reduced-motion="true"]
+.showroom-planet-shell,
+[data-showroom-root][data-reduced-motion="true"]
+.showroom-planet-shell,
+[data-showroom-root][data-showroom-reduced-motion="true"]
+.showroom-planet-body,
+[data-showroom-root][data-reduced-motion="true"]
+.showroom-planet-body {
   transform: none !important;
-}
-
-[data-showroom-planet-reduced-motion="true"] .showroom-planet-shell,
-.showroom-planet-root[data-showroom-planet-reduced-motion="true"] .showroom-planet-shell,
-[data-showroom-planet-reduced-motion="true"] .showroom-planet-body,
-.showroom-planet-root[data-showroom-planet-reduced-motion="true"] .showroom-planet-body {
-  transform: none !important;
-}
-
-[data-showroom-planet-reduced-motion="true"] .showroom-planet-atmosphere,
-.showroom-planet-root[data-showroom-planet-reduced-motion="true"] .showroom-planet-atmosphere,
-[data-showroom-planet-reduced-motion="true"] .showroom-planet-glow,
-.showroom-planet-root[data-showroom-planet-reduced-motion="true"] .showroom-planet-glow {
-  filter: none;
 }
 
 /* ================================================================
-   35. REDUCED TRANSPARENCY
+   33. REDUCED TRANSPARENCY
    ================================================================ */
 
 @media (prefers-reduced-transparency: reduce) {
@@ -3889,7 +3790,7 @@ canvas[data-showroom-compositor-layer="front"],
 }
 
 /* ================================================================
-   36. FORCED COLORS
+   34. FORCED COLORS
    ================================================================ */
 
 @media (forced-colors: active) {
@@ -3955,7 +3856,7 @@ canvas[data-showroom-compositor-layer="front"],
 }
 
 /* ================================================================
-   37. PRINT
+   35. PRINT
    ================================================================ */
 
 @media print {
@@ -3968,16 +3869,10 @@ canvas[data-showroom-compositor-layer="front"],
   body::after,
   [data-showroom-cosmos-layer],
   .showroom-orbit__field,
-  [data-showroom-orbit-field],
-  [data-showroom-scene-field],
   .showroom-reveal-scene,
-  [data-showroom-reveal-scene],
   .showroom-front-host,
-  [data-showroom-front-host],
   .showroom-topbar,
-  .showroom-footer,
-  canvas[data-showroom-compositor-layer],
-  .showroom-compositor-canvas {
+  .showroom-footer {
     display: none !important;
   }
 
@@ -4007,10 +3902,14 @@ canvas[data-showroom-compositor-layer="front"],
     margin-bottom: 0.75rem;
   }
 
-  .showroom-narrative-foundation:not([open]) > :not(summary),
-  .showroom-runtime-evidence:not([open]) > :not(summary),
-  .showroom-runtime-evidence__group:not([open]) > :not(summary),
-  .showroom-receipt-record:not([open]) > :not(summary) {
+  .showroom-narrative-foundation:not([open])
+  > :not(summary),
+  .showroom-runtime-evidence:not([open])
+  > :not(summary),
+  .showroom-runtime-evidence__group:not([open])
+  > :not(summary),
+  .showroom-receipt-record:not([open])
+  > :not(summary) {
     display: block;
   }
 
@@ -4019,18 +3918,203 @@ canvas[data-showroom-compositor-layer="front"],
     display: none !important;
   }
 
-  [data-showroom-root][data-showroom-held="true"] [data-showroom-atlas-narrative-record="held"],
-  [data-showroom-root][data-showroom-held="true"] [data-showroom-atlas-narrative-detail-record="held"] {
+  [data-showroom-root][data-showroom-held="true"]
+  [data-showroom-atlas-narrative-record="held"],
+  [data-showroom-root][data-showroom-held="true"]
+  [data-showroom-atlas-narrative-detail-record="held"] {
     display: block !important;
   }
 
-  [data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="true"] [data-showroom-atlas-narrative-record="compass"],
-  [data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="true"] [data-showroom-atlas-narrative-detail-record="compass"] {
+  [data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="true"]
+  [data-showroom-atlas-narrative-record="compass"],
+  [data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="true"]
+  [data-showroom-atlas-narrative-detail-record="compass"] {
     display: block !important;
   }
 
-  [data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child=""][data-showroom-active-cardinal=""] [data-showroom-atlas-narrative-record="idle"],
-  [data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child=""][data-showroom-active-cardinal=""] [data-showroom-atlas-narrative-detail-record="idle"] {
+  [data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child=""][data-showroom-active-cardinal=""]
+  [data-showroom-atlas-narrative-record="idle"],
+  [data-showroom-root][data-showroom-held="false"][data-showroom-compass-selected="false"][data-showroom-active-child=""][data-showroom-active-cardinal=""]
+  [data-showroom-atlas-narrative-detail-record="idle"] {
     display: block !important;
   }
 }
+
+/* ================================================================
+   END RECEIPT
+
+   CONTRACT:
+   SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v13_9_AUDRALIA_WEBGL_3D_PLANET_CENTER_FULL_SEMANTIC_HIT_SURFACE
+
+   PREVIOUS CONTRACT:
+   SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v13_8_AUDRALIA_WEBGL_3D_PLANET_STAGE_ONLY
+
+   RENEWAL SCOPE:
+   GROUP_F_AUDRALIA_GEOMETRY_AUTHORITY_WEBGL_3D_PLANET_FULL_CENTER_SEMANTIC_HIT_SURFACE_CSS_CORRECTION
+
+   ACTIVE CENTER VISUAL:
+   - /showroom/index.planet.js
+
+   SOURCE GEOMETRY AUTHORITY:
+   - /assets/audralia/audralia.planet.js
+
+   SOURCE GEOMETRY GLOBAL:
+   - window.DGBAudraliaPlanetGeometry
+
+   SOURCE GEOMETRY CONTRACT:
+   - AUDRALIA_G1_DETERMINISTIC_PLANET_GEOMETRY_AUTHORITY_TNT_v1
+
+   PLANET MODEL:
+   - AUDRALIA_GEOMETRY_AUTHORITY_MINIATURE_3D_RENDERER_v1
+
+   REQUIRED CORRECTION:
+   - CSS no longer paints a second planet surface;
+   - .showroom-planet-body is a transparent WebGL clipping host;
+   - .showroom-planet-canvas is the dominant planet visual;
+   - WebGL renderer owns globe surface, terrain, water, clouds, lighting, and terminator behavior;
+   - semantic Compass button covers the full visible center planet object;
+   - desktop full-center semantic hit surface uses inset: -6%;
+   - mobile full-center semantic hit surface uses inset: -5%;
+   - very small viewport hit surface uses inset: -4%;
+   - semantic Compass button sits above the decorative planet stack;
+   - semantic Compass button uses pointer-events: auto;
+   - decorative planet stack uses pointer-events: none;
+   - Compass label, instruction, and pseudo-element use pointer-events: none;
+   - focus visibility remains on the actual semantic Compass control;
+   - .showroom-planet-body::before and .showroom-planet-body::after are neutralized;
+   - .showroom-planet-terminator is neutralized;
+   - .showroom-planet-shadow is neutralized;
+   - .showroom-planet-meridian is neutralized;
+   - .showroom-planet-fulcrum is neutralized;
+   - .showroom-planet-rim is reduced to a very subtle non-dominant edge treatment;
+   - .showroom-planet-atmosphere and .showroom-planet-glow are subtle ambient stage support only.
+
+   RETAINED COMPATIBILITY SELECTORS:
+   - [data-showroom-compass-layer]
+   - [data-showroom-compass-visual-mount]
+   - [data-showroom-compass-control]
+
+   CENTER SELECTORS:
+   - [data-showroom-center-layer]
+   - [data-showroom-planet-mount]
+   - [data-showroom-full-center-hit-target="true"]
+
+   PLANET MODULE CSS SURFACES:
+   - .showroom-planet-root
+   - .showroom-planet-glow
+   - .showroom-planet-orbit-line
+   - .showroom-planet-shell
+   - .showroom-planet-body
+   - .showroom-planet-canvas
+   - .showroom-planet-atmosphere
+   - .showroom-planet-rim
+   - .showroom-planet-terminator
+   - .showroom-planet-shadow
+   - .showroom-planet-meridian
+   - .showroom-planet-fulcrum
+   - .showroom-planet-axis
+   - .showroom-planet-fallback
+   - [data-showroom-planet-reduced-motion="true"]
+
+   RETIRED FROM ACTIVE CSS TARGET MODEL:
+   - CSS-painted globe surface;
+   - fake geography;
+   - fake ocean/land surface colors;
+   - independent CSS terminator;
+   - independent CSS globe shadow;
+   - dominant CSS atmosphere shell;
+   - large fake rim globe;
+   - meridian/fulcrum overlays that imply separate CSS globe geometry;
+   - old Compass renderer visual styling;
+   - old Compass adapter styling;
+   - Compass projected-bounds CSS dependency;
+   - legacy static Compass lettering;
+   - universal Compass renderer compatibility claims;
+   - Showroom Compass adapter compatibility claims;
+   - CSS assumptions that the center visual is Compass-renderer-owned;
+   - Canvas 2D renderer language as the active planet model.
+
+   DIRECTION EXPRESSION:
+   - canonical written order is NEWS / N-E-W-S.
+   - this file contains no active legacy letter-face recreation.
+
+   SEMANTIC ACTIVATION:
+   - semantic control remains:
+       [data-showroom-compass-control];
+   - semantic bridge remains:
+       [data-showroom-compass-control]
+       -> interaction semantic path
+       -> controller.requestCompassSelection();
+   - interactions own Compass semantic recovery;
+   - CSS does not own controller fallback;
+   - CSS does not reveal the Main Compass return link;
+   - CSS does not route;
+   - CSS does not transfer pointer authority to the planet;
+   - CSS supports full visible center hit-area by positioning the semantic control over the center layer;
+   - planet owns no navigation authority;
+   - planet owns no pointer authority;
+   - CSS owns no navigation authority.
+
+   ORBIT FIELD TOUCH BASELINE:
+   - selector:
+       .showroom-orbit__field
+   - touch-action:
+       none
+   - overscroll-behavior:
+       contain
+   - user-select:
+       none
+   - -webkit-user-select:
+       none
+   - gesture interpretation, tap discrimination, drag thresholds,
+     pointer capture, quaternion updates, Compass semantic recovery,
+     preview, commit, cancellation, and navigation decisions remain
+     owned by the authorized interaction and controller runtimes.
+
+   COMPANION HTML:
+   - /showroom/index.html
+   - SHOWROOM_MIRRORLAND_IMMERSIVE_MISSION_CONTEXT_HTML_TNT_v17_9_AUDRALIA_WEBGL_3D_PLANET_CENTER_INTERACTIONS_OWNED_SEMANTIC_RECOVERY
+
+   COMPANION HTML CACHE QUERY:
+   /showroom/index.css?v=SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v13_9_AUDRALIA_WEBGL_3D_PLANET_CENTER_FULL_SEMANTIC_HIT_SURFACE
+
+   COMPANION HTML LEGEND ORDER:
+   - companion HTML source order is NEWS / N-E-W-S.
+
+   COMPANION PLANET JS:
+   - /showroom/index.planet.js
+   - SHOWROOM_PLANETARY_FULCRUM_INDEPENDENT_CENTER_PLANET_TNT_v1
+   - AUDRALIA_GEOMETRY_AUTHORITY_MINIATURE_3D_RENDERER_v1
+
+   COMPANION INTERACTIONS JS:
+   - /showroom/index.interactions.js
+   - SHOWROOM_COMPLETE_QUATERNION_INTERACTIONS_TNT_v6_COMPASS_SEMANTIC_RECOVERY_INITIALIZATION_GATE_CORRECTED
+
+   ATLAS RECORD COUNT:
+   23
+
+   ATLAS PRECEDENCE:
+   held > compass > child > cardinal > idle
+
+   ATLAS VISIBILITY INVARIANTS:
+   - VisibleCompactNarrativeRecordCount = 1
+   - VisibleNarrativePositionRecordCount = 1
+
+   MAIN SOURCE RISK:
+   - CSS_OVER_EXPANSION_OR_UNDER_EXPANSION
+   - Runtime visual/touch testing is required to confirm that the
+     center hit target is large enough to activate the Compass but not
+     large enough to steal nearby cardinal or child star taps.
+
+   RUNTIME VALIDATION:
+   NOT RUN
+
+   VISUAL VALIDATION:
+   NOT RUN
+
+   PRODUCTION AUTHORIZATION:
+   FALSE
+
+   DEPLOYMENT AUTHORIZATION:
+   FALSE
+   ================================================================ */

@@ -1,9 +1,9 @@
 /* TARGET FILE: /showroom/index.interactions.js */
 /* COMPLETE REPLACEMENT */
+/* GROUP_A_INTERACTIONS_CONSUMER_ALIGNMENT_TO_EXISTING_ANCHORS_ONLY */
 /* SHOWROOM_COMPLETE_QUATERNION_INTERACTIONS_TNT_v6_COMPASS_SEMANTIC_RECOVERY_INITIALIZATION_GATE_CORRECTED */
-/* SHOWROOM_MAIN_COMPASS_UNIFIED_CENTER_OBJECT_INTERACTIONS_CONFORMANCE */
 
-(() => {
+(() => { 
   "use strict";
 
   const CONTRACT =
@@ -38,9 +38,6 @@
 
   const GESTURES_CONTRACT =
     "SHOWROOM_INTERACTION_GESTURE_SUPPORT_TNT_v1";
-
-  const UNIFIED_CENTER_OBJECT_CONTRACT =
-    "SHOWROOM_PLANETARY_CENTER_OBJECT_UNIFIED_HOST_CONTRACT_v1";
 
   const EVENTS = Object.freeze({
     controllerReady:
@@ -101,13 +98,6 @@
 
     returnHomeCompass:
       "[data-showroom-controller-return-home-compass]",
-
-    unifiedCenterObject:
-      "[data-showroom-planet-mount]" +
-      "[data-showroom-center-structure=\"unified-center-object\"]",
-
-    planetVisualHost:
-      "[data-showroom-planet-visual-host]",
 
     cardinalControl:
       "[data-showroom-cardinal-control][data-showroom-cardinal-id]",
@@ -298,12 +288,6 @@
       null,
 
     controllerPanel:
-      null,
-
-    unifiedCenterObject:
-      null,
-
-    planetVisualHost:
       null,
 
     controller:
@@ -536,7 +520,8 @@
       const [
         key,
         entry
-      ] of Object.entries(value)
+      ]
+      of Object.entries(value)
     ) {
       output[key] =
         freezePlain(entry);
@@ -568,9 +553,6 @@
 
         gestureHelperContract:
           GESTURES_CONTRACT,
-
-        unifiedCenterObjectContract:
-          UNIFIED_CENTER_OBJECT_CONTRACT,
 
         timestamp:
           nowIso(),
@@ -654,58 +636,6 @@
         Boolean(
           state.gestures
         ),
-
-      unifiedCenterObjectCompatible:
-        true,
-
-      unifiedCenterObjectContract:
-        UNIFIED_CENTER_OBJECT_CONTRACT,
-
-      unifiedCenterObjectAvailable:
-        Boolean(
-          state.unifiedCenterObject
-        ),
-
-      planetVisualHostAvailable:
-        Boolean(
-          state.planetVisualHost
-        ),
-
-      planetMountedRequiredForCompass:
-        false,
-
-      planetVisualHostRequiredForCompass:
-        false,
-
-      planetPointerAuthority:
-        false,
-
-      planetNavigationAuthority:
-        false,
-
-      planetSemanticActivationAuthority:
-        false,
-
-      compassSemanticSelector:
-        SELECTORS.compassSemanticControl,
-
-      compassRequiresCompositor:
-        false,
-
-      compassRequiresWebGL:
-        false,
-
-      compassRequiresPlanet:
-        false,
-
-      compassRequiresPlanetMounted:
-        false,
-
-      compassRequiresGestureHelper:
-        false,
-
-      compassRequiresProjectedRuntime:
-        false,
 
       pointerActive:
         Boolean(pointer),
@@ -919,26 +849,6 @@
             SELECTORS.controllerPanel
           )
         : null;
-
-    state.unifiedCenterObject =
-      state.root
-        ? state.root.querySelector(
-            SELECTORS.unifiedCenterObject
-          )
-        : null;
-
-    state.planetVisualHost =
-      state.unifiedCenterObject
-        ? state.unifiedCenterObject.querySelector(
-            SELECTORS.planetVisualHost
-          )
-        : (
-            state.root
-              ? state.root.querySelector(
-                  SELECTORS.planetVisualHost
-                )
-              : null
-          );
   }
 
   function validateDom() {
@@ -1253,38 +1163,8 @@
         selector:
           SELECTORS.compassSemanticControl,
 
-        semanticControlSelector:
-          SELECTORS.compassControl,
-
         directControllerRequest:
           true,
-
-        unifiedCenterObjectCompatible:
-          true,
-
-        unifiedCenterObjectContract:
-          UNIFIED_CENTER_OBJECT_CONTRACT,
-
-        centerObjectModel:
-          "html-css-semantic-hit-surface-over-decorative-planet",
-
-        objectSurfaceMeaning:
-          "visible-center-planet-is-covered-by-semantic-compass-button",
-
-        planetPointerAuthority:
-          false,
-
-        planetNavigationAuthority:
-          false,
-
-        planetSemanticActivationAuthority:
-          false,
-
-        planetMountedRequiredForCompass:
-          false,
-
-        planetVisualHostRequiredForCompass:
-          false,
 
         compositorRequired:
           false,
@@ -2019,15 +1899,6 @@
             reason:
               "compass-controller-unavailable-or-held",
 
-            directControllerRequest:
-              true,
-
-            requestedControllerMethod:
-              "requestCompassSelection",
-
-            unifiedCenterObjectCompatible:
-              true,
-
             compositorRequired:
               false,
 
@@ -2035,9 +1906,6 @@
               false,
 
             planetRequired:
-              false,
-
-            planetMountedRequired:
               false,
 
             gestureHelperRequired:
@@ -2089,12 +1957,6 @@
           requestedControllerMethod:
             "requestCompassSelection",
 
-          unifiedCenterObjectCompatible:
-            true,
-
-          centerObjectModel:
-            "semantic-control-over-decorative-planet",
-
           immediateNavigation:
             false,
 
@@ -2105,9 +1967,6 @@
             false,
 
           planetRequired:
-            false,
-
-          planetMountedRequired:
             false,
 
           gestureHelperRequired:
@@ -3013,9 +2872,6 @@
           reason:
             "compass-semantic-controller-not-ready",
 
-          unifiedCenterObjectCompatible:
-            true,
-
           compositorRequired:
             false,
 
@@ -3023,9 +2879,6 @@
             false,
 
           planetRequired:
-            false,
-
-          planetMountedRequired:
             false,
 
           gestureHelperRequired:
@@ -3130,9 +2983,6 @@
           null,
 
         compassSemanticDirect:
-          pointer.territory === TERRITORIES.COMPASS,
-
-        unifiedCenterObjectCompatible:
           pointer.territory === TERRITORIES.COMPASS,
 
         compositorRequired:
@@ -3641,9 +3491,6 @@
         compassSemanticDirect:
           pointer.territory === TERRITORIES.COMPASS,
 
-        unifiedCenterObjectCompatible:
-          pointer.territory === TERRITORIES.COMPASS,
-
         compositorRequired:
           pointer.territory === TERRITORIES.COMPASS
             ? false
@@ -4023,9 +3870,6 @@
           compassSemanticRecovery:
             true,
 
-          unifiedCenterObjectCompatible:
-            true,
-
           compassRequiresCompositor:
             false,
 
@@ -4035,16 +3879,10 @@
           compassRequiresPlanet:
             false,
 
-          compassRequiresPlanetMounted:
-            false,
-
           compassRequiresGestureHelper:
             false,
 
           compassRequiresProjectedRuntime:
-            false,
-
-          planetPointerAuthority:
             false,
 
           syntheticSemanticClickCommit:
@@ -4096,25 +3934,16 @@
           gestureHelperContract:
             GESTURES_CONTRACT,
 
-          unifiedCenterObjectContract:
-            UNIFIED_CENTER_OBJECT_CONTRACT,
-
           directControllerTapCommit:
             true,
 
           compassSemanticRecovery:
             true,
 
-          unifiedCenterObjectCompatible:
-            true,
-
           compassRequiresGestureHelper:
             false,
 
           compassRequiresProjectedRuntime:
-            false,
-
-          compassRequiresPlanetMounted:
             false,
 
           orbitDirectManipulation:
@@ -4222,8 +4051,6 @@
     state.counters.readinessChecks +=
       1;
 
-    discoverDom();
-
     const gestures =
       resolveGestures();
 
@@ -4297,16 +4124,10 @@
           projectedStarRuntimeReady:
             false,
 
-          unifiedCenterObjectCompatible:
-            true,
-
           compassRequiresProjectedRuntime:
             false,
 
           compassRequiresGestureHelper:
-            false,
-
-          compassRequiresPlanetMounted:
             false,
 
           retryCount:
@@ -4506,7 +4327,6 @@
       window,
       EVENTS.controllerReady,
       () => {
-        discoverDom();
         resolveController();
         bindControllerSubscriptions();
 
@@ -4814,17 +4634,8 @@
         gestureHelperContract:
           GESTURES_CONTRACT,
 
-        unifiedCenterObjectContract:
-          UNIFIED_CENTER_OBJECT_CONTRACT,
-
-        unifiedCenterObjectCompatible:
-          true,
-
         compassSemanticRecovery:
           true,
-
-        compassSemanticSelector:
-          SELECTORS.compassSemanticControl,
 
         compassRequiresCompositor:
           false,
@@ -4835,24 +4646,13 @@
         compassRequiresPlanet:
           false,
 
-        compassRequiresPlanetMounted:
-          false,
-
         compassRequiresGestureHelper:
           false,
 
         compassRequiresProjectedRuntime:
           false,
 
-        planetPointerAuthority:
-          false,
-
-        planetNavigationAuthority:
-          false,
-
         getState() {
-          discoverDom();
-
           return createReceipt(
             "state-requested",
             {
@@ -5087,31 +4887,6 @@
           pointerRuntime:
             "deferred-until-controller-and-compositor-ready",
 
-          unifiedCenterObjectCompatible:
-            true,
-
-          unifiedCenterObjectContract:
-            UNIFIED_CENTER_OBJECT_CONTRACT,
-
-          unifiedCenterObjectResolution:
-            state.unifiedCenterObject
-              ? "resolved"
-              : "pending-or-not-required",
-
-          planetVisualHostResolution:
-            state.planetVisualHost
-              ? "resolved"
-              : "pending-or-not-required",
-
-          planetMountedRequiredForCompass:
-            false,
-
-          planetVisualHostRequiredForCompass:
-            false,
-
-          planetPointerAuthority:
-            false,
-
           directProjectedTapCommit:
             true,
 
@@ -5128,9 +4903,6 @@
             false,
 
           compassSemanticRequiresPlanet:
-            false,
-
-          compassSemanticRequiresPlanetMounted:
             false,
 
           compassSemanticRequiresGestureHelper:
@@ -5284,7 +5056,7 @@
 
 /*
 RECEIPT:
-SHOWROOM_COMPLETE_QUATERNION_INTERACTIONS_RECEIPT_TNT_v6_COMPASS_SEMANTIC_RECOVERY_INITIALIZATION_GATE_CORRECTED_UNIFIED_CENTER_OBJECT_CONFORMANCE
+SHOWROOM_COMPLETE_QUATERNION_INTERACTIONS_RECEIPT_TNT_v6_COMPASS_SEMANTIC_RECOVERY_INITIALIZATION_GATE_CORRECTED
 
 TARGET:
 - /showroom/index.interactions.js
@@ -5294,10 +5066,6 @@ PURPOSE:
   visual with the decorative Audralia WebGL planet.
 - Correct the initialization gate that previously made all interactions fail
   when SHOWROOM_INTERACTION_GESTURES was absent or late.
-- Conform interactions to the unified center object architecture:
-    [data-showroom-planet-mount]
-      [data-showroom-planet-visual-host]
-      [data-showroom-compass-control]
 - Preserve stars, clusters, swipe, Atlas behavior, controller route authority,
   compositor projection authority, crystal ownership, and planet decorative
   status.
@@ -5314,19 +5082,6 @@ PRIMARY CORRECTION:
   to controller.requestCompassSelection() when the controller endpoint exists and
   the controller is not held, failed, or disposed.
 
-UNIFIED CENTER OBJECT CONFORMANCE:
-- The visible center planet is not treated as the interaction owner.
-- The semantic control remains [data-showroom-compass-control].
-- The decorative planet stack is not used as a semantic selector.
-- Interactions do not bind to .showroom-planet-root.
-- Interactions do not bind to .showroom-planet-canvas.
-- Interactions do not bind to [data-showroom-planet-visual-host].
-- Planet mounted state is not required for Compass selection.
-- Planet WebGL readiness is not required for Compass selection.
-- Planet geometry readiness is not required for Compass selection.
-- Planet pointer authority remains false.
-- Planet navigation authority remains false.
-
 TWO-LAYER INITIALIZATION:
 1. CORE SEMANTIC LAYER:
    - discovers root/orbit field/receipt;
@@ -5338,7 +5093,6 @@ TWO-LAYER INITIALIZATION:
    - does not require compositor;
    - does not require WebGL;
    - does not require planet;
-   - does not require planet mount;
    - does not require crystals;
    - does not require projected runtime.
 

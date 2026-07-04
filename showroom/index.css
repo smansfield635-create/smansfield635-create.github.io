@@ -1,7 +1,7 @@
 /* TARGET FILE: /showroom/index.css
    COMPLETE REPLACEMENT
 
-   SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v13_8_AUDRALIA_WEBGL_3D_PLANET_STAGE_ONLY
+   SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v13_9_AUDRALIA_WEBGL_3D_PLANET_CENTER_FULL_SEMANTIC_HIT_SURFACE
 
    Scope:
    - compact Mirrorland threshold;
@@ -16,7 +16,10 @@
    - CSS stage-only support for /showroom/index.planet.js;
    - CSS no longer paints a second globe surface;
    - .showroom-planet-canvas is the dominant planet visual;
+   - full visible center planet object is covered by the semantic Compass button;
    - WebGL renderer owns globe body, terrain, water, clouds, lighting, and terminator behavior;
+   - interactions own semantic Compass recovery;
+   - CSS owns hit-area layout, pointer layering, focus visibility, responsiveness, and subtle ambient staging only;
    - no Compass projected-bounds CSS dependency;
    - durable orbit-field touch-arbitration baseline;
    - five independent native narrative disclosures;
@@ -909,7 +912,7 @@ main {
 }
 
 /* ================================================================
-   10. CENTER COMPATIBILITY LAYER AND AUDRALIA WEBGL 3D PLANET STAGE
+   10. CENTER COMPATIBILITY LAYER, WEBGL PLANET STAGE, AND FULL SEMANTIC HIT SURFACE
    ================================================================ */
 
 .showroom-compass-layer,
@@ -1026,6 +1029,7 @@ main {
   inset: 13%;
   border: 1px solid rgba(117, 233, 255, 0.034);
   border-radius: 50%;
+  pointer-events: none;
   content: "";
 }
 
@@ -1176,6 +1180,7 @@ main {
   font-size: 0.82rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+  pointer-events: none;
 }
 
 .showroom-planet-root[data-showroom-planet-state="fallback"]
@@ -1202,6 +1207,23 @@ main {
   display: none;
 }
 
+.showroom-planet-mount,
+[data-showroom-planet-mount],
+.showroom-planet-root,
+.showroom-planet-shell,
+.showroom-planet-body,
+.showroom-planet-canvas,
+.showroom-planet-atmosphere,
+.showroom-planet-rim,
+.showroom-planet-terminator,
+.showroom-planet-shadow,
+.showroom-planet-meridian,
+.showroom-planet-fulcrum,
+.showroom-planet-axis,
+.showroom-planet-fallback {
+  pointer-events: none;
+}
+
 [data-showroom-planet-reduced-motion="true"]
 .showroom-planet-shell,
 .showroom-planet-root[data-showroom-planet-reduced-motion="true"]
@@ -1225,17 +1247,18 @@ main {
 }
 
 .showroom-compass-control,
-[data-showroom-compass-control] {
+[data-showroom-compass-control],
+[data-showroom-full-center-hit-target="true"] {
   position: absolute;
-  z-index: 8;
-  inset: 0;
+  z-index: 20;
+  inset: -6%;
   display: grid;
   place-content: end center;
   gap: 0.1rem;
   padding:
     0
     18%
-    21%;
+    20%;
   border: 0;
   border-radius: 50%;
   color: var(--showroom-cream);
@@ -1246,7 +1269,8 @@ main {
 }
 
 .showroom-compass-control::before,
-[data-showroom-compass-control]::before {
+[data-showroom-compass-control]::before,
+[data-showroom-full-center-hit-target="true"]::before {
   position: absolute;
   right: 18%;
   bottom: 17%;
@@ -1258,13 +1282,14 @@ main {
   background:
     linear-gradient(
       180deg,
-      rgba(7, 11, 24, 0.56),
-      rgba(7, 11, 24, 0.36)
+      rgba(7, 11, 24, 0.62),
+      rgba(7, 11, 24, 0.42)
     );
   box-shadow:
     0 0.45rem 1rem rgba(0, 0, 0, 0.26),
     inset 0 0 0.55rem rgba(117, 233, 255, 0.05);
   backdrop-filter: blur(0.25rem);
+  pointer-events: none;
   transition:
     border-color var(--showroom-transition-fast),
     background var(--showroom-transition-fast),
@@ -1274,7 +1299,9 @@ main {
 .showroom-compass-control:hover::before,
 .showroom-compass-control:focus-visible::before,
 [data-showroom-compass-control]:hover::before,
-[data-showroom-compass-control]:focus-visible::before {
+[data-showroom-compass-control]:focus-visible::before,
+[data-showroom-full-center-hit-target="true"]:hover::before,
+[data-showroom-full-center-hit-target="true"]:focus-visible::before {
   border-color: rgba(245, 213, 130, 0.46);
   background:
     linear-gradient(
@@ -1287,10 +1314,18 @@ main {
     0 0 1.3rem rgba(245, 213, 130, 0.14);
 }
 
+.showroom-compass-control:focus-visible,
+[data-showroom-compass-control]:focus-visible,
+[data-showroom-full-center-hit-target="true"]:focus-visible {
+  outline: 3px solid var(--showroom-cyan);
+  outline-offset: 0.24rem;
+}
+
 .showroom-compass-control__label,
 .showroom-compass-control__instruction {
   position: relative;
   z-index: 2;
+  pointer-events: none;
   text-shadow:
     0 0.12rem 0.45rem rgba(0, 0, 0, 0.88),
     0 0 0.7rem rgba(7, 11, 24, 0.96);
@@ -3383,7 +3418,9 @@ main {
   }
 
   .showroom-compass-control,
-  [data-showroom-compass-control] {
+  [data-showroom-compass-control],
+  [data-showroom-full-center-hit-target="true"] {
+    inset: -5%;
     padding:
       0
       15%
@@ -3391,7 +3428,8 @@ main {
   }
 
   .showroom-compass-control::before,
-  [data-showroom-compass-control]::before {
+  [data-showroom-compass-control]::before,
+  [data-showroom-full-center-hit-target="true"]::before {
     right: 15%;
     bottom: 15%;
     left: 15%;
@@ -3664,6 +3702,12 @@ main {
     right: 27%;
   }
 
+  .showroom-compass-control,
+  [data-showroom-compass-control],
+  [data-showroom-full-center-hit-target="true"] {
+    inset: -4%;
+  }
+
   .showroom-compass-control__label {
     font-size: 0.62rem;
   }
@@ -3771,6 +3815,7 @@ main {
   .showroom-star,
   .showroom-compass-control,
   [data-showroom-compass-control],
+  [data-showroom-full-center-hit-target="true"],
   .showroom-window-control,
   summary {
     forced-color-adjust: auto;
@@ -3899,13 +3944,13 @@ main {
    END RECEIPT
 
    CONTRACT:
-   SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v13_8_AUDRALIA_WEBGL_3D_PLANET_STAGE_ONLY
+   SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v13_9_AUDRALIA_WEBGL_3D_PLANET_CENTER_FULL_SEMANTIC_HIT_SURFACE
 
    PREVIOUS CONTRACT:
-   SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v13_7_AUDRALIA_WEBGL_3D_PLANET_CENTER
+   SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v13_8_AUDRALIA_WEBGL_3D_PLANET_STAGE_ONLY
 
    RENEWAL SCOPE:
-   GROUP_F_AUDRALIA_GEOMETRY_AUTHORITY_WEBGL_3D_PLANET_STAGE_ONLY_CSS_CORRECTION
+   GROUP_F_AUDRALIA_GEOMETRY_AUTHORITY_WEBGL_3D_PLANET_FULL_CENTER_SEMANTIC_HIT_SURFACE_CSS_CORRECTION
 
    ACTIVE CENTER VISUAL:
    - /showroom/index.planet.js
@@ -3927,6 +3972,15 @@ main {
    - .showroom-planet-body is a transparent WebGL clipping host;
    - .showroom-planet-canvas is the dominant planet visual;
    - WebGL renderer owns globe surface, terrain, water, clouds, lighting, and terminator behavior;
+   - semantic Compass button covers the full visible center planet object;
+   - desktop full-center semantic hit surface uses inset: -6%;
+   - mobile full-center semantic hit surface uses inset: -5%;
+   - very small viewport hit surface uses inset: -4%;
+   - semantic Compass button sits above the decorative planet stack;
+   - semantic Compass button uses pointer-events: auto;
+   - decorative planet stack uses pointer-events: none;
+   - Compass label, instruction, and pseudo-element use pointer-events: none;
+   - focus visibility remains on the actual semantic Compass control;
    - .showroom-planet-body::before and .showroom-planet-body::after are neutralized;
    - .showroom-planet-terminator is neutralized;
    - .showroom-planet-shadow is neutralized;
@@ -3943,6 +3997,7 @@ main {
    CENTER SELECTORS:
    - [data-showroom-center-layer]
    - [data-showroom-planet-mount]
+   - [data-showroom-full-center-hit-target="true"]
 
    PLANET MODULE CSS SURFACES:
    - .showroom-planet-root
@@ -3990,7 +4045,12 @@ main {
        [data-showroom-compass-control]
        -> interaction semantic path
        -> controller.requestCompassSelection();
-   - full visible center hit-area support is CSS-owned by positioning the semantic control over the center layer;
+   - interactions own Compass semantic recovery;
+   - CSS does not own controller fallback;
+   - CSS does not reveal the Main Compass return link;
+   - CSS does not route;
+   - CSS does not transfer pointer authority to the planet;
+   - CSS supports full visible center hit-area by positioning the semantic control over the center layer;
    - planet owns no navigation authority;
    - planet owns no pointer authority;
    - CSS owns no navigation authority.
@@ -4007,15 +4067,16 @@ main {
    - -webkit-user-select:
        none
    - gesture interpretation, tap discrimination, drag thresholds,
-     pointer capture, quaternion updates, and navigation decisions
-     remain owned by the authorized interaction and controller runtimes.
+     pointer capture, quaternion updates, Compass semantic recovery,
+     preview, commit, cancellation, and navigation decisions remain
+     owned by the authorized interaction and controller runtimes.
 
    COMPANION HTML:
    - /showroom/index.html
-   - SHOWROOM_MIRRORLAND_IMMERSIVE_MISSION_CONTEXT_HTML_TNT_v17_7_AUDRALIA_WEBGL_3D_PLANET_CENTER
+   - SHOWROOM_MIRRORLAND_IMMERSIVE_MISSION_CONTEXT_HTML_TNT_v17_9_AUDRALIA_WEBGL_3D_PLANET_CENTER_INTERACTIONS_OWNED_SEMANTIC_RECOVERY
 
    COMPANION HTML CACHE QUERY:
-   /showroom/index.css?v=SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v13_8_AUDRALIA_WEBGL_3D_PLANET_STAGE_ONLY
+   /showroom/index.css?v=SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v13_9_AUDRALIA_WEBGL_3D_PLANET_CENTER_FULL_SEMANTIC_HIT_SURFACE
 
    COMPANION HTML LEGEND ORDER:
    - companion HTML source order is NEWS / N-E-W-S.
@@ -4024,6 +4085,10 @@ main {
    - /showroom/index.planet.js
    - SHOWROOM_PLANETARY_FULCRUM_INDEPENDENT_CENTER_PLANET_TNT_v1
    - AUDRALIA_GEOMETRY_AUTHORITY_MINIATURE_3D_RENDERER_v1
+
+   COMPANION INTERACTIONS JS:
+   - /showroom/index.interactions.js
+   - SHOWROOM_COMPLETE_QUATERNION_INTERACTIONS_TNT_v6_COMPASS_SEMANTIC_RECOVERY_INITIALIZATION_GATE_CORRECTED
 
    ATLAS RECORD COUNT:
    23
@@ -4034,6 +4099,12 @@ main {
    ATLAS VISIBILITY INVARIANTS:
    - VisibleCompactNarrativeRecordCount = 1
    - VisibleNarrativePositionRecordCount = 1
+
+   MAIN SOURCE RISK:
+   - CSS_OVER_EXPANSION_OR_UNDER_EXPANSION
+   - Runtime visual/touch testing is required to confirm that the
+     center hit target is large enough to activate the Compass but not
+     large enough to steal nearby cardinal or child star taps.
 
    RUNTIME VALIDATION:
    NOT RUN

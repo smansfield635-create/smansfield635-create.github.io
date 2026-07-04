@@ -1,7 +1,7 @@
 /* TARGET FILE: /showroom/index.compositor.js */
 /* COMPLETE REPLACEMENT */
 /* SHOWROOM_CONSTELLATION_SINGLE_FRAME_COMPOSITOR_TNT_v6_CENTER_HOST_STACKING_SAFE_RECOVERY */
-/*
+/* 
   Baseline-preserving renewal.
 
   Preserved from the last functional compositor baseline:

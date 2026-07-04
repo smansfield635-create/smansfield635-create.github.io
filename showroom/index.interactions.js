@@ -1,7 +1,7 @@
 /* TARGET FILE: /showroom/index.interactions.js */
 /* COMPLETE REPLACEMENT */
 /* GROUP_A_INTERACTIONS_CONSUMER_ALIGNMENT_TO_EXISTING_ANCHORS_ONLY */
-/* SHOWROOM_COMPLETE_QUATERNION_INTERACTIONS_TNT_v6_HELPER_INTEGRATED_PARITY_CORRECTED */
+/* SHOWROOM_COMPLETE_QUATERNION_INTERACTIONS_TNT_v6_COMPASS_SEMANTIC_RECOVERY */
 
 (() => {
   "use strict";
@@ -93,6 +93,12 @@
     receipt:
       "[data-showroom-interactions-receipt]",
 
+    controllerPanel:
+      "[data-showroom-controller-panel]",
+
+    returnHomeCompass:
+      "[data-showroom-controller-return-home-compass]",
+
     cardinalControl:
       "[data-showroom-cardinal-control][data-showroom-cardinal-id]",
 
@@ -103,11 +109,29 @@
     compassControl:
       "[data-showroom-compass-control]",
 
+    compassAction:
+      "[data-showroom-controller-action=\"request-compass-selection\"]",
+
+    compassAlias:
+      "[data-showroom-compass-selection-alias]",
+
+    compassSemanticControl:
+      [
+        "[data-showroom-compass-control]",
+        "[data-showroom-compass-selection-alias]" +
+          "[data-showroom-controller-action=\"request-compass-selection\"]",
+        "[data-showroom-controller-action=\"request-compass-selection\"]"
+      ].join(","),
+
     semanticControl:
       [
         "[data-showroom-cardinal-control][data-showroom-cardinal-id]",
-        "[data-showroom-child-control][data-showroom-child-id]",
-        "[data-showroom-compass-control]"
+        "[data-showroom-child-control][data-showroom-child-id]" +
+          "[data-showroom-cardinal-id]",
+        "[data-showroom-compass-control]",
+        "[data-showroom-compass-selection-alias]" +
+          "[data-showroom-controller-action=\"request-compass-selection\"]",
+        "[data-showroom-controller-action=\"request-compass-selection\"]"
       ].join(","),
 
     protectedTarget:
@@ -240,7 +264,10 @@
       160,
 
     runtimeRetryIntervalMs:
-      100
+      100,
+
+    compassPanelScrollDelayMs:
+      35
   });
 
   const WINGS = Object.freeze([
@@ -251,76 +278,183 @@
   ]);
 
   const state = {
-    root: null,
-    orbitField: null,
-    receipt: null,
+    root:
+      null,
 
-    controller: null,
-    compositor: null,
-    gestures: null,
+    orbitField:
+      null,
 
-    controllerFrameUnsubscribe: null,
-    controllerHeldUnsubscribe: null,
+    receipt:
+      null,
 
-    pointer: null,
-    suppressedClick: null,
+    controllerPanel:
+      null,
 
-    initialized: false,
-    initializing: false,
-    runtimeActive: false,
-    waitingForRuntime: true,
-    readyPublished: false,
-    failed: false,
-    disposed: false,
-    apiExposed: false,
+    controller:
+      null,
 
-    coreListeners: [],
-    runtimeListeners: [],
+    compositor:
+      null,
 
-    nativeOrbitFieldStyle: null,
-    orbitFieldStyleCaptured: false,
+    gestures:
+      null,
 
-    retryTimer: 0,
-    retryCount: 0,
+    controllerFrameUnsubscribe:
+      null,
+
+    controllerHeldUnsubscribe:
+      null,
+
+    pointer:
+      null,
+
+    suppressedClick:
+      null,
+
+    initialized:
+      false,
+
+    initializing:
+      false,
+
+    runtimeActive:
+      false,
+
+    waitingForRuntime:
+      true,
+
+    readyPublished:
+      false,
+
+    compassSemanticReadyPublished:
+      false,
+
+    failed:
+      false,
+
+    disposed:
+      false,
+
+    apiExposed:
+      false,
+
+    coreListeners:
+      [],
+
+    runtimeListeners:
+      [],
+
+    nativeOrbitFieldStyle:
+      null,
+
+    orbitFieldStyleCaptured:
+      false,
+
+    retryTimer:
+      0,
+
+    retryCount:
+      0,
 
     counters: {
-      readinessChecks: 0,
-      runtimeActivations: 0,
-      runtimeDeactivations: 0,
+      readinessChecks:
+        0,
 
-      pointerDown: 0,
-      pointerMove: 0,
-      pointerUp: 0,
-      pointerCancel: 0,
-      pointerCaptureFailures: 0,
+      runtimeActivations:
+        0,
 
-      compositorHits: 0,
-      compositorMisses: 0,
+      runtimeDeactivations:
+        0,
 
-      projectedTapCommits: 0,
-      projectedTapRejects: 0,
+      compassSemanticReadinessChecks:
+        0,
 
-      nativeCardinalCommits: 0,
-      nativeRoomCommits: 0,
-      nativeCompassCommits: 0,
-      nativeSemanticRejects: 0,
+      pointerDown:
+        0,
 
-      orbitBegins: 0,
-      orbitPreviews: 0,
-      orbitCommits: 0,
-      orbitCancels: 0,
+      pointerMove:
+        0,
 
-      clusterBegins: 0,
-      clusterPreviews: 0,
-      clusterCommits: 0,
-      clusterCancels: 0,
+      pointerUp:
+        0,
 
-      flicksQualified: 0,
-      clusterReturns: 0,
+      pointerCancel:
+        0,
 
-      nativeClicksSuppressed: 0,
-      interruptions: 0,
-      failures: 0
+      pointerCaptureFailures:
+        0,
+
+      compositorHits:
+        0,
+
+      compositorMisses:
+        0,
+
+      projectedTapCommits:
+        0,
+
+      projectedTapRejects:
+        0,
+
+      nativeCardinalCommits:
+        0,
+
+      nativeRoomCommits:
+        0,
+
+      nativeCompassCommits:
+        0,
+
+      nativeSemanticRejects:
+        0,
+
+      compassDirectCommits:
+        0,
+
+      compassDirectRejects:
+        0,
+
+      compassPanelFocusAttempts:
+        0,
+
+      orbitBegins:
+        0,
+
+      orbitPreviews:
+        0,
+
+      orbitCommits:
+        0,
+
+      orbitCancels:
+        0,
+
+      clusterBegins:
+        0,
+
+      clusterPreviews:
+        0,
+
+      clusterCommits:
+        0,
+
+      clusterCancels:
+        0,
+
+      flicksQualified:
+        0,
+
+      clusterReturns:
+        0,
+
+      nativeClicksSuppressed:
+        0,
+
+      interruptions:
+        0,
+
+      failures:
+        0
     }
   };
 
@@ -361,8 +495,7 @@
 
   function isElement(value) {
     return (
-      typeof Element !==
-        "undefined" &&
+      typeof Element !== "undefined" &&
       value instanceof Element
     );
   }
@@ -370,8 +503,7 @@
   function freezePlain(value) {
     if (
       value === null ||
-      typeof value !==
-        "object"
+      typeof value !== "object"
     ) {
       return value;
     }
@@ -475,6 +607,9 @@
       readyPublished:
         state.readyPublished,
 
+      compassSemanticReadyPublished:
+        state.compassSemanticReadyPublished,
+
       failed:
         state.failed,
 
@@ -484,6 +619,12 @@
       controllerAvailable:
         Boolean(
           state.controller
+        ),
+
+      controllerCompassEndpointAvailable:
+        Boolean(
+          state.controller &&
+          typeof state.controller.requestCompassSelection === "function"
         ),
 
       compositorAvailable:
@@ -559,10 +700,7 @@
       const serialized =
         JSON.stringify(payload);
 
-      if (
-        "value" in
-        state.receipt
-      ) {
+      if ("value" in state.receipt) {
         state.receipt.value =
           serialized;
       }
@@ -588,8 +726,7 @@
   ) {
     if (
       !target ||
-      typeof target.addEventListener !==
-        "function"
+      typeof target.addEventListener !== "function"
     ) {
       return false;
     }
@@ -641,9 +778,7 @@
     );
   }
 
-  function removeListenerRegistry(
-    registry
-  ) {
+  function removeListenerRegistry(registry) {
     for (
       const remove
       of registry.splice(0)
@@ -656,37 +791,24 @@
     }
   }
 
-  function validGesturesApi(
-    gestures
-  ) {
+  function validGesturesApi(gestures) {
     return Boolean(
       gestures &&
-      typeof gestures ===
-        "object" &&
-      gestures.contract ===
-        GESTURES_CONTRACT &&
-      typeof gestures.orientationQuaternion ===
-        "function" &&
-      typeof gestures.dragQuaternion ===
-        "function" &&
-      typeof gestures.primaryWingForQuaternion ===
-        "function" &&
-      typeof gestures.primaryRoomForQuaternion ===
-        "function" &&
-      typeof gestures.appendSample ===
-        "function" &&
-      typeof gestures.classifyFlick ===
-        "function" &&
-      typeof gestures.distance2d ===
-        "function"
+      typeof gestures === "object" &&
+      gestures.contract === GESTURES_CONTRACT &&
+      typeof gestures.orientationQuaternion === "function" &&
+      typeof gestures.dragQuaternion === "function" &&
+      typeof gestures.primaryWingForQuaternion === "function" &&
+      typeof gestures.primaryRoomForQuaternion === "function" &&
+      typeof gestures.appendSample === "function" &&
+      typeof gestures.classifyFlick === "function" &&
+      typeof gestures.distance2d === "function"
     );
   }
 
   function resolveGestures() {
     const gestures =
-      window[
-        GESTURES_GLOBAL
-      ];
+      window[GESTURES_GLOBAL];
 
     if (!validGesturesApi(gestures)) {
       state.gestures =
@@ -718,6 +840,13 @@
       state.root
         ? state.root.querySelector(
             SELECTORS.receipt
+          )
+        : null;
+
+    state.controllerPanel =
+      state.root
+        ? state.root.querySelector(
+            SELECTORS.controllerPanel
           )
         : null;
   }
@@ -752,107 +881,99 @@
     return issues;
   }
 
-  function validControllerApi(
-    controller
-  ) {
+  function validControllerApi(controller) {
     return Boolean(
       controller &&
-      typeof controller ===
-        "object" &&
-      controller.moduleId ===
-        CONTROLLER_MODULE_ID &&
-      controller.moduleVersion ===
-        CONTROLLER_MODULE_VERSION &&
-      controller.interactionModuleId ===
-        EXPECTED_INTERACTION_MODULE_ID &&
-      controller.interactionModuleVersion ===
-        EXPECTED_INTERACTION_MODULE_VERSION &&
-      typeof controller.getFrameState ===
-        "function" &&
-      typeof controller.subscribeFrameState ===
-        "function" &&
-      typeof controller.beginOrbitGesture ===
-        "function" &&
-      typeof controller.requestOrbitPreview ===
-        "function" &&
-      typeof controller.requestOrbitCommit ===
-        "function" &&
-      typeof controller.requestOrbitCancel ===
-        "function" &&
-      typeof controller.beginClusterGesture ===
-        "function" &&
-      typeof controller.requestClusterPreview ===
-        "function" &&
-      typeof controller.requestClusterCommit ===
-        "function" &&
-      typeof controller.requestClusterCancel ===
-        "function" &&
-      typeof controller.requestCardinalSelection ===
-        "function" &&
-      typeof controller.requestRoomSelection ===
-        "function" &&
-      typeof controller.requestCompassSelection ===
-        "function" &&
-      typeof controller.requestReturnToConstellation ===
-        "function"
+      typeof controller === "object" &&
+      controller.moduleId === CONTROLLER_MODULE_ID &&
+      controller.moduleVersion === CONTROLLER_MODULE_VERSION &&
+      controller.interactionModuleId === EXPECTED_INTERACTION_MODULE_ID &&
+      controller.interactionModuleVersion === EXPECTED_INTERACTION_MODULE_VERSION &&
+      typeof controller.getFrameState === "function" &&
+      typeof controller.subscribeFrameState === "function" &&
+      typeof controller.beginOrbitGesture === "function" &&
+      typeof controller.requestOrbitPreview === "function" &&
+      typeof controller.requestOrbitCommit === "function" &&
+      typeof controller.requestOrbitCancel === "function" &&
+      typeof controller.beginClusterGesture === "function" &&
+      typeof controller.requestClusterPreview === "function" &&
+      typeof controller.requestClusterCommit === "function" &&
+      typeof controller.requestClusterCancel === "function" &&
+      typeof controller.requestCardinalSelection === "function" &&
+      typeof controller.requestRoomSelection === "function" &&
+      typeof controller.requestCompassSelection === "function" &&
+      typeof controller.requestReturnToConstellation === "function"
     );
   }
 
-  function validControllerFrame(
-    frame
-  ) {
+  function validCompassControllerApi(controller) {
     return Boolean(
-      frame &&
-      typeof frame ===
-        "object" &&
-      frame.moduleId ===
-        CONTROLLER_MODULE_ID &&
-      frame.moduleVersion ===
-        CONTROLLER_MODULE_VERSION &&
-      typeof frame.state ===
-        "string" &&
-      typeof frame.navigationState ===
-        "string" &&
-      typeof frame.presentationMode ===
-        "string" &&
-      typeof frame.held ===
-        "boolean" &&
-      frame.orbitOrientation &&
-      Array.isArray(
-        frame.orbitOrientation
-          .quaternion
-      ) &&
-      frame.orbitOrientation
-        .quaternion.length ===
-        4 &&
-      (
-        frame.cluster === null ||
-        (
-          frame.cluster &&
-          typeof frame.cluster ===
-            "object"
-        )
-      )
+      controller &&
+      typeof controller === "object" &&
+      typeof controller.requestCompassSelection === "function"
     );
   }
 
   function resolveController() {
     const controller =
-      window[
-        CONTROLLER_GLOBAL
-      ];
+      window[CONTROLLER_GLOBAL];
 
-    if (!validControllerApi(controller)) {
+    if (!controller || typeof controller !== "object") {
       state.controller =
         null;
 
       return null;
     }
 
-    state.controller =
-      controller;
+    if (
+      validControllerApi(controller) ||
+      validCompassControllerApi(controller)
+    ) {
+      state.controller =
+        controller;
 
-    return controller;
+      return controller;
+    }
+
+    state.controller =
+      null;
+
+    return null;
+  }
+
+  function strictControllerReady() {
+    const controller =
+      state.controller ||
+      resolveController();
+
+    return validControllerApi(
+      controller
+    );
+  }
+
+  function validControllerFrame(frame) {
+    return Boolean(
+      frame &&
+      typeof frame === "object" &&
+      frame.moduleId === CONTROLLER_MODULE_ID &&
+      frame.moduleVersion === CONTROLLER_MODULE_VERSION &&
+      typeof frame.state === "string" &&
+      typeof frame.navigationState === "string" &&
+      typeof frame.presentationMode === "string" &&
+      typeof frame.held === "boolean" &&
+      frame.orbitOrientation &&
+      Array.isArray(
+        frame.orbitOrientation.quaternion
+      ) &&
+      frame.orbitOrientation.quaternion.length === 4 &&
+      (
+        frame.cluster === null ||
+        (
+          frame.cluster &&
+          typeof frame.cluster === "object"
+        )
+      )
+    );
   }
 
   function readControllerFrame() {
@@ -860,7 +981,10 @@
       state.controller ||
       resolveController();
 
-    if (!controller) {
+    if (
+      !controller ||
+      typeof controller.getFrameState !== "function"
+    ) {
       return null;
     }
 
@@ -881,36 +1005,67 @@
       readControllerFrame();
 
     return Boolean(
+      strictControllerReady() &&
       frame &&
       frame.held === false &&
-      frame.navigationState !==
-        NAVIGATION_STATES.SYSTEM_HELD &&
+      frame.navigationState !== NAVIGATION_STATES.SYSTEM_HELD &&
       frame.disposed !== true &&
       frame.failed !== true
     );
   }
 
-  function validCompositorApi(
-    compositor
-  ) {
+  function compassControllerInteractionAllowed() {
+    const controller =
+      state.controller ||
+      resolveController();
+
+    if (!validCompassControllerApi(controller)) {
+      return false;
+    }
+
+    if (typeof controller.getFrameState !== "function") {
+      return true;
+    }
+
+    try {
+      const frame =
+        controller.getFrameState();
+
+      if (
+        !frame ||
+        typeof frame !== "object"
+      ) {
+        return true;
+      }
+
+      if (
+        frame.held === true ||
+        frame.failed === true ||
+        frame.disposed === true ||
+        frame.navigationState === NAVIGATION_STATES.SYSTEM_HELD
+      ) {
+        return false;
+      }
+
+      return true;
+    } catch {
+      return true;
+    }
+  }
+
+  function validCompositorApi(compositor) {
     return Boolean(
       compositor &&
-      typeof compositor ===
-        "object" &&
-      compositor.contract ===
-        COMPOSITOR_CONTRACT &&
-      typeof compositor.getState ===
-        "function" &&
-      typeof compositor.hitTest ===
-        "function"
+      typeof compositor === "object" &&
+      compositor.contract === COMPOSITOR_CONTRACT &&
+      typeof compositor.getState === "function" &&
+      typeof compositor.hitTest === "function"
     );
   }
 
   function resolveCompositor() {
     const compositor =
-      window[
-        COMPOSITOR_GLOBAL
-      ];
+      window[COMPOSITOR_GLOBAL];
 
     if (!validCompositorApi(compositor)) {
       state.compositor =
@@ -940,8 +1095,7 @@
 
       if (
         !compositorState ||
-        compositorState.contract !==
-          COMPOSITOR_CONTRACT
+        compositorState.contract !== COMPOSITOR_CONTRACT
       ) {
         return null;
       }
@@ -958,18 +1112,12 @@
 
     return Boolean(
       compositorState &&
-      compositorState.initialized ===
-        true &&
-      compositorState.readyPublished ===
-        true &&
-      compositorState.controllerReady ===
-        true &&
-      compositorState.failed !==
-        true &&
-      compositorState.disposed !==
-        true &&
-      compositorState.held !==
-        true
+      compositorState.initialized === true &&
+      compositorState.readyPublished === true &&
+      compositorState.controllerReady === true &&
+      compositorState.failed !== true &&
+      compositorState.disposed !== true &&
+      compositorState.held !== true
     );
   }
 
@@ -981,12 +1129,67 @@
     );
   }
 
-  function isPrimaryPointerEvent(
-    event
-  ) {
+  function compassSemanticReady() {
+    state.counters.compassSemanticReadinessChecks +=
+      1;
+
+    return Boolean(
+      state.initialized &&
+      !state.disposed &&
+      !state.failed &&
+      compassControllerInteractionAllowed()
+    );
+  }
+
+  function publishCompassSemanticReady(reason) {
+    if (state.compassSemanticReadyPublished) {
+      return;
+    }
+
+    if (!compassSemanticReady()) {
+      return;
+    }
+
+    state.compassSemanticReadyPublished =
+      true;
+
+    publishReceipt(
+      "compass-semantic-ready",
+      {
+        reason:
+          normalize(reason) ||
+          "controller-compass-endpoint-available",
+
+        selector:
+          SELECTORS.compassSemanticControl,
+
+        directControllerRequest:
+          true,
+
+        compositorRequired:
+          false,
+
+        webGLRequired:
+          false,
+
+        planetRequired:
+          false,
+
+        immediateNavigation:
+          false,
+
+        navigationMeaning:
+          "main-compass-return-selection",
+
+        scrollOrFocusPanelAfterSelection:
+          true
+      }
+    );
+  }
+
+  function isPrimaryPointerEvent(event) {
     if (
-      event.pointerType ===
-        "mouse" &&
+      event.pointerType === "mouse" &&
       event.button !== 0
     ) {
       return false;
@@ -995,21 +1198,23 @@
     return event.isPrimary !== false;
   }
 
-  function isInsideOrbitField(
-    target
-  ) {
+  function isInsideOrbitField(target) {
     return Boolean(
       isElement(target) &&
       state.orbitField &&
-      state.orbitField.contains(
-        target
-      )
+      state.orbitField.contains(target)
     );
   }
 
-  function isProtectedTarget(
-    target
-  ) {
+  function isInsideRoot(target) {
+    return Boolean(
+      isElement(target) &&
+      state.root &&
+      state.root.contains(target)
+    );
+  }
+
+  function isProtectedTarget(target) {
     return Boolean(
       isElement(target) &&
       target.closest(
@@ -1018,12 +1223,19 @@
     );
   }
 
-  function resolveSemanticControl(
-    target
-  ) {
+  function isCompassSemanticControl(control) {
+    return Boolean(
+      control &&
+      control.matches(
+        SELECTORS.compassSemanticControl
+      )
+    );
+  }
+
+  function resolveSemanticControl(target) {
     if (
       !isElement(target) ||
-      !state.orbitField
+      !state.root
     ) {
       return null;
     }
@@ -1033,26 +1245,34 @@
         SELECTORS.semanticControl
       );
 
+    if (!control) {
+      return null;
+    }
+
+    if (!state.root.contains(control)) {
+      return null;
+    }
+
+    if (isCompassSemanticControl(control)) {
+      return control;
+    }
+
     return (
-      control &&
-      state.orbitField.contains(
-        control
-      )
+      state.orbitField &&
+      state.orbitField.contains(control)
     )
       ? control
       : null;
   }
 
-  function semanticKindFromControl(
-    control
-  ) {
+  function semanticKindFromControl(control) {
     if (!control) {
       return "";
     }
 
     if (
       control.matches(
-        SELECTORS.compassControl
+        SELECTORS.compassSemanticControl
       )
     ) {
       return SEMANTIC_KINDS.COMPASS;
@@ -1077,9 +1297,7 @@
     return "";
   }
 
-  function semanticIdentityFromControl(
-    control
-  ) {
+  function semanticIdentityFromControl(control) {
     if (!control) {
       return "";
     }
@@ -1090,28 +1308,23 @@
       );
 
     if (
-      kind ===
-      SEMANTIC_KINDS.ROOM
+      kind === SEMANTIC_KINDS.ROOM
     ) {
       return normalizeRoomId(
-        control.dataset
-          .showroomChildId
+        control.dataset.showroomChildId
       );
     }
 
     if (
-      kind ===
-      SEMANTIC_KINDS.CARDINAL
+      kind === SEMANTIC_KINDS.CARDINAL
     ) {
       return normalizeWing(
-        control.dataset
-          .showroomCardinalId
+        control.dataset.showroomCardinalId
       );
     }
 
     if (
-      kind ===
-      SEMANTIC_KINDS.COMPASS
+      kind === SEMANTIC_KINDS.COMPASS
     ) {
       return "home-compass";
     }
@@ -1119,20 +1332,14 @@
     return "";
   }
 
-  function semanticControlEnabled(
-    control
-  ) {
+  function semanticControlEnabled(control) {
     if (!control) {
       return false;
     }
 
     return !(
-      control.matches(
-        ":disabled"
-      ) ||
-      control.getAttribute(
-        "aria-disabled"
-      ) === "true"
+      control.matches(":disabled") ||
+      control.getAttribute("aria-disabled") === "true"
     );
   }
 
@@ -1195,17 +1402,13 @@
     }
 
     if (
-      normalize(
-        hit.childId
-      )
+      normalize(hit.childId)
     ) {
       return SEMANTIC_KINDS.ROOM;
     }
 
     if (
-      normalizeWing(
-        hit.cardinalId
-      )
+      normalizeWing(hit.cardinalId)
     ) {
       return SEMANTIC_KINDS.CARDINAL;
     }
@@ -1228,16 +1431,14 @@
 
   function semanticIdentityFromHit(
     hit,
-    kind =
-      semanticKindFromHit(hit)
+    kind = semanticKindFromHit(hit)
   ) {
     if (!hit) {
       return "";
     }
 
     if (
-      kind ===
-      SEMANTIC_KINDS.ROOM
+      kind === SEMANTIC_KINDS.ROOM
     ) {
       return normalizeRoomId(
         hit.childId ||
@@ -1248,8 +1449,7 @@
     }
 
     if (
-      kind ===
-      SEMANTIC_KINDS.CARDINAL
+      kind === SEMANTIC_KINDS.CARDINAL
     ) {
       return normalizeWing(
         hit.cardinalId ||
@@ -1289,31 +1489,25 @@
         !hit ||
         !deriveHitIdentity(hit)
       ) {
-        state.counters
-          .compositorMisses +=
+        state.counters.compositorMisses +=
           1;
 
         return null;
       }
 
-      state.counters
-        .compositorHits +=
+      state.counters.compositorHits +=
         1;
 
       return hit;
     } catch {
-      state.counters
-        .compositorMisses +=
+      state.counters.compositorMisses +=
         1;
 
       return null;
     }
   }
 
-  function hitsCorrespond(
-    first,
-    second
-  ) {
+  function hitsCorrespond(first, second) {
     if (
       !first ||
       !second
@@ -1342,12 +1536,10 @@
     return Boolean(
       firstKind &&
       secondKind &&
-      firstKind ===
-        secondKind &&
+      firstKind === secondKind &&
       firstIdentity &&
       secondIdentity &&
-      firstIdentity ===
-        secondIdentity
+      firstIdentity === secondIdentity
     );
   }
 
@@ -1365,15 +1557,13 @@
       );
 
     if (
-      mode ===
-      PRESENTATION_MODES.CONSTELLATION
+      mode === PRESENTATION_MODES.CONSTELLATION
     ) {
       return PRESENTATION_MODES.CONSTELLATION;
     }
 
     if (
-      mode ===
-      PRESENTATION_MODES.CLUSTER
+      mode === PRESENTATION_MODES.CLUSTER
     ) {
       return PRESENTATION_MODES.CLUSTER;
     }
@@ -1386,15 +1576,13 @@
       presentationMode(frame);
 
     if (
-      mode ===
-      PRESENTATION_MODES.CONSTELLATION
+      mode === PRESENTATION_MODES.CONSTELLATION
     ) {
       return GESTURE_SCOPES.ORBIT;
     }
 
     if (
-      mode ===
-      PRESENTATION_MODES.CLUSTER
+      mode === PRESENTATION_MODES.CLUSTER
     ) {
       return GESTURE_SCOPES.CLUSTER;
     }
@@ -1423,13 +1611,9 @@
     if (
       frame &&
       frame.cluster &&
-      frame.cluster.wing ===
-        wing &&
-      Array.isArray(
-        frame.cluster.roomIds
-      ) &&
-      frame.cluster.roomIds.length ===
-        4
+      frame.cluster.wing === wing &&
+      Array.isArray(frame.cluster.roomIds) &&
+      frame.cluster.roomIds.length === 4
     ) {
       return frame.cluster.roomIds
         .map(normalizeRoomId);
@@ -1461,8 +1645,7 @@
     }
 
     if (
-      scope ===
-        GESTURE_SCOPES.CLUSTER &&
+      scope === GESTURE_SCOPES.CLUSTER &&
       frame &&
       frame.cluster
     ) {
@@ -1483,23 +1666,18 @@
     }
 
     try {
-      state.orbitField
-        .setPointerCapture(
-          pointerId
-        );
+      state.orbitField.setPointerCapture(
+        pointerId
+      );
 
       return (
-        typeof state.orbitField
-          .hasPointerCapture !==
-          "function" ||
-        state.orbitField
-          .hasPointerCapture(
-            pointerId
-          )
+        typeof state.orbitField.hasPointerCapture !== "function" ||
+        state.orbitField.hasPointerCapture(
+          pointerId
+        )
       );
     } catch {
-      state.counters
-        .pointerCaptureFailures +=
+      state.counters.pointerCaptureFailures +=
         1;
 
       return false;
@@ -1513,18 +1691,14 @@
 
     try {
       if (
-        typeof state.orbitField
-          .hasPointerCapture !==
-          "function" ||
-        state.orbitField
-          .hasPointerCapture(
-            pointerId
-          )
+        typeof state.orbitField.hasPointerCapture !== "function" ||
+        state.orbitField.hasPointerCapture(
+          pointerId
+        )
       ) {
-        state.orbitField
-          .releasePointerCapture(
-            pointerId
-          );
+        state.orbitField.releasePointerCapture(
+          pointerId
+        );
       }
     } catch {
       /* Best-effort release. */
@@ -1600,6 +1774,91 @@
     return true;
   }
 
+  function focusCompassPanelAfterSelection() {
+    const panel =
+      state.controllerPanel ||
+      (
+        state.root &&
+        state.root.querySelector(
+          SELECTORS.controllerPanel
+        )
+      );
+
+    if (!panel) {
+      return false;
+    }
+
+    state.controllerPanel =
+      panel;
+
+    state.counters.compassPanelFocusAttempts +=
+      1;
+
+    window.setTimeout(
+      () => {
+        try {
+          panel.scrollIntoView({
+            block:
+              "nearest",
+
+            inline:
+              "nearest",
+
+            behavior:
+              "smooth"
+          });
+        } catch {
+          try {
+            panel.scrollIntoView();
+          } catch {
+            /* Best-effort scroll. */
+          }
+        }
+
+        try {
+          const hadTabIndex =
+            panel.hasAttribute(
+              "tabindex"
+            );
+
+          if (!hadTabIndex) {
+            panel.setAttribute(
+              "tabindex",
+              "-1"
+            );
+          }
+
+          panel.focus({
+            preventScroll:
+              true
+          });
+
+          if (!hadTabIndex) {
+            window.setTimeout(
+              () => {
+                if (
+                  panel.getAttribute(
+                    "tabindex"
+                  ) === "-1"
+                ) {
+                  panel.removeAttribute(
+                    "tabindex"
+                  );
+                }
+              },
+              700
+            );
+          }
+        } catch {
+          /* Best-effort focus. */
+        }
+      },
+      CONFIG.compassPanelScrollDelayMs
+    );
+
+    return true;
+  }
+
   function requestSemanticSelection(
     kind,
     identity,
@@ -1609,6 +1868,103 @@
       state.controller ||
       resolveController();
 
+    let committed =
+      false;
+
+    if (
+      kind === SEMANTIC_KINDS.COMPASS
+    ) {
+      if (!compassControllerInteractionAllowed()) {
+        state.counters.compassDirectRejects +=
+          1;
+
+        publishReceipt(
+          "semantic-selection-rejected",
+          {
+            source,
+
+            kind:
+              SEMANTIC_KINDS.COMPASS,
+
+            identity:
+              identity ||
+              "home-compass",
+
+            reason:
+              "compass-controller-unavailable-or-held",
+
+            compositorRequired:
+              false,
+
+            webGLRequired:
+              false,
+
+            planetRequired:
+              false
+          }
+        );
+
+        return false;
+      }
+
+      try {
+        committed =
+          controller.requestCompassSelection() !== false;
+      } catch {
+        committed =
+          false;
+      }
+
+      if (committed) {
+        state.counters.compassDirectCommits +=
+          1;
+
+        focusCompassPanelAfterSelection();
+      } else {
+        state.counters.compassDirectRejects +=
+          1;
+      }
+
+      publishReceipt(
+        committed
+          ? "semantic-selection-committed"
+          : "semantic-selection-rejected",
+        {
+          source,
+
+          kind:
+            SEMANTIC_KINDS.COMPASS,
+
+          identity:
+            identity ||
+            "home-compass",
+
+          directControllerRequest:
+            true,
+
+          requestedControllerMethod:
+            "requestCompassSelection",
+
+          immediateNavigation:
+            false,
+
+          compositorRequired:
+            false,
+
+          webGLRequired:
+            false,
+
+          planetRequired:
+            false,
+
+          scrollOrFocusPanelAfterSelection:
+            committed
+        }
+      );
+
+      return committed;
+    }
+
     if (
       !controller ||
       !controllerInteractionAllowed()
@@ -1616,13 +1972,9 @@
       return false;
     }
 
-    let committed =
-      false;
-
     try {
       if (
-        kind ===
-        SEMANTIC_KINDS.CARDINAL
+        kind === SEMANTIC_KINDS.CARDINAL
       ) {
         const wing =
           normalizeWing(identity);
@@ -1630,14 +1982,12 @@
         committed =
           Boolean(
             wing &&
-            controller
-              .requestCardinalSelection(
-                wing
-              ) !== false
+            controller.requestCardinalSelection(
+              wing
+            ) !== false
           );
       } else if (
-        kind ===
-        SEMANTIC_KINDS.ROOM
+        kind === SEMANTIC_KINDS.ROOM
       ) {
         const roomId =
           normalizeRoomId(identity);
@@ -1645,19 +1995,10 @@
         committed =
           Boolean(
             roomId &&
-            controller
-              .requestRoomSelection(
-                roomId
-              ) !== false
+            controller.requestRoomSelection(
+              roomId
+            ) !== false
           );
-      } else if (
-        kind ===
-        SEMANTIC_KINDS.COMPASS
-      ) {
-        committed =
-          controller
-            .requestCompassSelection() !==
-          false;
       }
     } catch {
       committed =
@@ -1693,8 +2034,7 @@
       !pointer.downHit ||
       !runtimeReady()
     ) {
-      state.counters
-        .projectedTapRejects +=
+      state.counters.projectedTapRejects +=
         1;
 
       return false;
@@ -1713,8 +2053,7 @@
         releaseHit
       )
     ) {
-      state.counters
-        .projectedTapRejects +=
+      state.counters.projectedTapRejects +=
         1;
 
       armClickSuppression(
@@ -1741,8 +2080,7 @@
       !kind ||
       !identity
     ) {
-      state.counters
-        .projectedTapRejects +=
+      state.counters.projectedTapRejects +=
         1;
 
       return false;
@@ -1764,12 +2102,10 @@
     );
 
     if (committed) {
-      state.counters
-        .projectedTapCommits +=
+      state.counters.projectedTapCommits +=
         1;
     } else {
-      state.counters
-        .projectedTapRejects +=
+      state.counters.projectedTapRejects +=
         1;
     }
 
@@ -1786,35 +2122,32 @@
 
     if (
       !control ||
-      !semanticControlEnabled(
-        control
-      ) ||
-      !controllerInteractionAllowed()
+      !semanticControlEnabled(control) ||
+      !compassSemanticReady()
     ) {
       return false;
     }
 
     const releaseElement =
-      typeof document.elementFromPoint ===
-        "function"
+      typeof document.elementFromPoint === "function"
         ? document.elementFromPoint(
             event.clientX,
             event.clientY
           )
         : null;
 
-    const corresponds =
-      Boolean(
-        releaseElement &&
-        (
-          releaseElement === control ||
-          control.contains(
-            releaseElement
-          )
-        )
-      );
+    const releaseStillInRoot =
+      !releaseElement ||
+      isInsideRoot(releaseElement);
 
-    if (!corresponds) {
+    const movementAcceptable =
+      pointer.maximumDistance <=
+      CONFIG.maximumTapDistancePx;
+
+    if (
+      !releaseStillInRoot ||
+      !movementAcceptable
+    ) {
       armClickSuppression(
         control,
         "compass-tap-correspondence-rejected"
@@ -1840,9 +2173,7 @@
     return committed;
   }
 
-  function beginControllerGesture(
-    pointer
-  ) {
+  function beginControllerGesture(pointer) {
     const controller =
       state.controller ||
       resolveController();
@@ -1861,33 +2192,26 @@
 
     try {
       if (
-        pointer.gestureScope ===
-        GESTURE_SCOPES.ORBIT
+        pointer.gestureScope === GESTURE_SCOPES.ORBIT
       ) {
         accepted =
-          controller
-            .beginOrbitGesture() !==
-          false;
+          controller.beginOrbitGesture() !== false;
 
         if (accepted) {
-          state.counters
-            .orbitBegins +=
+          state.counters.orbitBegins +=
             1;
         }
       } else if (
-        pointer.gestureScope ===
-          GESTURE_SCOPES.CLUSTER &&
+        pointer.gestureScope === GESTURE_SCOPES.CLUSTER &&
         pointer.activeWing
       ) {
         accepted =
-          controller
-            .beginClusterGesture(
-              pointer.activeWing
-            ) !== false;
+          controller.beginClusterGesture(
+            pointer.activeWing
+          ) !== false;
 
         if (accepted) {
-          state.counters
-            .clusterBegins +=
+          state.counters.clusterBegins +=
             1;
         }
       }
@@ -1927,8 +2251,7 @@
 
     try {
       if (
-        pointer.gestureScope ===
-        GESTURE_SCOPES.ORBIT
+        pointer.gestureScope === GESTURE_SCOPES.ORBIT
       ) {
         const primaryId =
           gestures.primaryWingForQuaternion(
@@ -1936,26 +2259,22 @@
           );
 
         accepted =
-          controller
-            .requestOrbitPreview({
-              quaternion:
-                pointer.currentQuaternion
-                  .slice(),
+          controller.requestOrbitPreview({
+            quaternion:
+              pointer.currentQuaternion.slice(),
 
-              primaryId
-            }) !== false;
+            primaryId
+          }) !== false;
 
         pointer.previewPrimaryId =
           primaryId;
 
         if (accepted) {
-          state.counters
-            .orbitPreviews +=
+          state.counters.orbitPreviews +=
             1;
         }
       } else if (
-        pointer.gestureScope ===
-          GESTURE_SCOPES.CLUSTER &&
+        pointer.gestureScope === GESTURE_SCOPES.CLUSTER &&
         pointer.activeWing
       ) {
         const primaryId =
@@ -1969,24 +2288,21 @@
         }
 
         accepted =
-          controller
-            .requestClusterPreview(
-              pointer.activeWing,
-              {
-                quaternion:
-                  pointer.currentQuaternion
-                    .slice(),
+          controller.requestClusterPreview(
+            pointer.activeWing,
+            {
+              quaternion:
+                pointer.currentQuaternion.slice(),
 
-                primaryId
-              }
-            ) !== false;
+              primaryId
+            }
+          ) !== false;
 
         pointer.previewPrimaryId =
           primaryId;
 
         if (accepted) {
-          state.counters
-            .clusterPreviews +=
+          state.counters.clusterPreviews +=
             1;
         }
       }
@@ -2001,9 +2317,7 @@
     return accepted;
   }
 
-  function commitControllerGesture(
-    pointer
-  ) {
+  function commitControllerGesture(pointer) {
     const controller =
       state.controller ||
       resolveController();
@@ -2021,33 +2335,26 @@
 
     try {
       if (
-        pointer.gestureScope ===
-        GESTURE_SCOPES.ORBIT
+        pointer.gestureScope === GESTURE_SCOPES.ORBIT
       ) {
         committed =
-          controller
-            .requestOrbitCommit() !==
-          false;
+          controller.requestOrbitCommit() !== false;
 
         if (committed) {
-          state.counters
-            .orbitCommits +=
+          state.counters.orbitCommits +=
             1;
         }
       } else if (
-        pointer.gestureScope ===
-          GESTURE_SCOPES.CLUSTER &&
+        pointer.gestureScope === GESTURE_SCOPES.CLUSTER &&
         pointer.activeWing
       ) {
         committed =
-          controller
-            .requestClusterCommit(
-              pointer.activeWing
-            ) !== false;
+          controller.requestClusterCommit(
+            pointer.activeWing
+          ) !== false;
 
         if (committed) {
-          state.counters
-            .clusterCommits +=
+          state.counters.clusterCommits +=
             1;
         }
       }
@@ -2088,36 +2395,30 @@
     try {
       if (
         controller &&
-        pointer.gestureScope ===
-          GESTURE_SCOPES.ORBIT
+        pointer.gestureScope === GESTURE_SCOPES.ORBIT
       ) {
         cancelled =
-          controller
-            .requestOrbitCancel(
-              reason
-            ) !== false;
+          controller.requestOrbitCancel(
+            reason
+          ) !== false;
 
         if (cancelled) {
-          state.counters
-            .orbitCancels +=
+          state.counters.orbitCancels +=
             1;
         }
       } else if (
         controller &&
-        pointer.gestureScope ===
-          GESTURE_SCOPES.CLUSTER &&
+        pointer.gestureScope === GESTURE_SCOPES.CLUSTER &&
         pointer.activeWing
       ) {
         cancelled =
-          controller
-            .requestClusterCancel(
-              pointer.activeWing,
-              reason
-            ) !== false;
+          controller.requestClusterCancel(
+            pointer.activeWing,
+            reason
+          ) !== false;
 
         if (cancelled) {
-          state.counters
-            .clusterCancels +=
+          state.counters.clusterCancels +=
             1;
         }
       }
@@ -2145,8 +2446,7 @@
 
     if (
       !controller ||
-      pointer.gestureScope !==
-        GESTURE_SCOPES.CLUSTER ||
+      pointer.gestureScope !== GESTURE_SCOPES.CLUSTER ||
       !pointer.activeWing
     ) {
       return false;
@@ -2162,19 +2462,17 @@
 
     try {
       committed =
-        controller
-          .requestReturnToConstellation({
-            scrollToScene:
-              true
-          }) !== false;
+        controller.requestReturnToConstellation({
+          scrollToScene:
+            true
+        }) !== false;
     } catch {
       committed =
         false;
     }
 
     if (committed) {
-      state.counters
-        .clusterReturns +=
+      state.counters.clusterReturns +=
         1;
     }
 
@@ -2209,8 +2507,7 @@
       );
 
     const downHit =
-      directKind ===
-        SEMANTIC_KINDS.COMPASS
+      directKind === SEMANTIC_KINDS.COMPASS
         ? null
         : authoritativeHitTest(
             event.clientX,
@@ -2237,20 +2534,17 @@
       TERRITORIES.FIELD;
 
     if (
-      directKind ===
-      SEMANTIC_KINDS.COMPASS
+      directKind === SEMANTIC_KINDS.COMPASS
     ) {
       territory =
         TERRITORIES.COMPASS;
     } else if (
-      hitKind ===
-      SEMANTIC_KINDS.CARDINAL
+      hitKind === SEMANTIC_KINDS.CARDINAL
     ) {
       territory =
         TERRITORIES.CARDINAL;
     } else if (
-      hitKind ===
-      SEMANTIC_KINDS.ROOM
+      hitKind === SEMANTIC_KINDS.ROOM
     ) {
       territory =
         TERRITORIES.ROOM;
@@ -2260,19 +2554,13 @@
     }
 
     const gestureScope =
-      territory ===
-        TERRITORIES.COMPASS ||
-      territory ===
-        TERRITORIES.NATIVE_SEMANTIC
+      territory === TERRITORIES.COMPASS ||
+      territory === TERRITORIES.NATIVE_SEMANTIC
         ? ""
-        : gestureScopeForFrame(
-            frame
-          );
+        : gestureScopeForFrame(frame);
 
     const activeWing =
-      activeWingFromFrame(
-        frame
-      );
+      activeWingFromFrame(frame);
 
     const startQuaternion =
       startQuaternionFromFrame(
@@ -2288,9 +2576,7 @@
         event.pointerId,
 
       pointerType:
-        normalize(
-          event.pointerType
-        ) ||
+        normalize(event.pointerType) ||
         "mouse",
 
       territory,
@@ -2416,7 +2702,6 @@
     pointer.maximumDistance =
       Math.max(
         pointer.maximumDistance,
-
         gestures.distance2d(
           pointer.startX,
           pointer.startY,
@@ -2439,8 +2724,7 @@
 
   function clearPointer(
     pointer,
-    releaseCapture =
-      true
+    releaseCapture = true
   ) {
     if (!pointer) {
       return;
@@ -2449,9 +2733,7 @@
     pointer.finishing =
       true;
 
-    if (
-      state.pointer === pointer
-    ) {
+    if (state.pointer === pointer) {
       state.pointer =
         null;
     }
@@ -2465,8 +2747,7 @@
 
   function interruptActivePointer(
     reason,
-    releaseCapture =
-      true
+    releaseCapture = true
   ) {
     const pointer =
       state.pointer;
@@ -2478,8 +2759,7 @@
     pointer.cancelled =
       true;
 
-    state.counters
-      .interruptions +=
+    state.counters.interruptions +=
       1;
 
     cancelControllerGesture(
@@ -2489,8 +2769,7 @@
 
     if (
       pointer.dragging ||
-      pointer.maximumDistance >
-        CONFIG.maximumTapDistancePx
+      pointer.maximumDistance > CONFIG.maximumTapDistancePx
     ) {
       armClickSuppression(
         pointer.directControl ||
@@ -2528,14 +2807,26 @@
       state.pointer ||
       state.disposed ||
       state.failed ||
-      !state.runtimeActive ||
       !isPrimaryPointerEvent(event) ||
-      !isInsideOrbitField(
+      !isInsideOrbitField(event.target) ||
+      isProtectedTarget(event.target)
+    ) {
+      return;
+    }
+
+    const directControl =
+      resolveSemanticControl(
         event.target
-      ) ||
-      isProtectedTarget(
-        event.target
-      )
+      );
+
+    const directKind =
+      semanticKindFromControl(
+        directControl
+      );
+
+    if (
+      directKind !== SEMANTIC_KINDS.COMPASS &&
+      !state.runtimeActive
     ) {
       return;
     }
@@ -2544,9 +2835,36 @@
       readControllerFrame();
 
     if (
-      !frame ||
-      frame.held === true
+      directKind !== SEMANTIC_KINDS.COMPASS &&
+      (
+        !frame ||
+        frame.held === true
+      )
     ) {
+      return;
+    }
+
+    if (
+      directKind === SEMANTIC_KINDS.COMPASS &&
+      !compassSemanticReady()
+    ) {
+      publishReceipt(
+        "compass-pointer-rejected",
+        {
+          reason:
+            "compass-semantic-controller-not-ready",
+
+          compositorRequired:
+            false,
+
+          webGLRequired:
+            false,
+
+          planetRequired:
+            false
+        }
+      );
+
       return;
     }
 
@@ -2557,8 +2875,7 @@
       );
 
     if (
-      pointer.territory ===
-      TERRITORIES.NATIVE_SEMANTIC
+      pointer.territory === TERRITORIES.NATIVE_SEMANTIC
     ) {
       publishReceipt(
         "native-semantic-path-preserved",
@@ -2577,8 +2894,7 @@
     }
 
     if (
-      pointer.territory !==
-        TERRITORIES.COMPASS &&
+      pointer.territory !== TERRITORIES.COMPASS &&
       !pointer.gestureScope
     ) {
       return;
@@ -2610,8 +2926,7 @@
       return;
     }
 
-    state.counters
-      .pointerDown +=
+    state.counters.pointerDown +=
       1;
 
     event.preventDefault();
@@ -2641,7 +2956,15 @@
 
         activeWing:
           pointer.activeWing ||
-          null
+          null,
+
+        compassSemanticDirect:
+          pointer.territory === TERRITORIES.COMPASS,
+
+        compositorRequired:
+          pointer.territory === TERRITORIES.COMPASS
+            ? false
+            : true
       }
     );
   }
@@ -2652,20 +2975,18 @@
 
     if (
       !pointer ||
-      pointer.pointerId !==
-        event.pointerId ||
+      pointer.pointerId !== event.pointerId ||
       pointer.finishing
     ) {
       return;
     }
 
     if (
-      pointer.territory ===
-        TERRITORIES.COMPASS
+      pointer.territory === TERRITORIES.COMPASS
     ) {
-      if (!controllerInteractionAllowed()) {
+      if (!compassSemanticReady()) {
         interruptActivePointer(
-          "controller-runtime-invalid"
+          "compass-controller-runtime-invalid"
         );
 
         return;
@@ -2678,8 +2999,7 @@
       return;
     }
 
-    state.counters
-      .pointerMove +=
+    state.counters.pointerMove +=
       1;
 
     if (
@@ -2697,15 +3017,13 @@
 
     if (
       !pointer.dragging &&
-      pointer.maximumDistance >=
-        CONFIG.dragDeadZonePx
+      pointer.maximumDistance >= CONFIG.dragDeadZonePx
     ) {
       pointer.dragging =
         true;
 
       if (
-        pointer.territory !==
-        TERRITORIES.COMPASS
+        pointer.territory !== TERRITORIES.COMPASS
       ) {
         const began =
           beginControllerGesture(
@@ -2724,8 +3042,7 @@
 
     if (
       pointer.dragging &&
-      pointer.territory !==
-        TERRITORIES.COMPASS
+      pointer.territory !== TERRITORIES.COMPASS
     ) {
       const gestures =
         state.gestures ||
@@ -2740,8 +3057,7 @@
       }
 
       const rect =
-        state.orbitField
-          .getBoundingClientRect();
+        state.orbitField.getBoundingClientRect();
 
       pointer.currentQuaternion =
         gestures.dragQuaternion({
@@ -2799,8 +3115,7 @@
 
     if (
       !pointer ||
-      pointer.pointerId !==
-        event.pointerId ||
+      pointer.pointerId !== event.pointerId ||
       pointer.finishing
     ) {
       return;
@@ -2810,7 +3125,10 @@
       state.gestures ||
       resolveGestures();
 
-    if (!gestures) {
+    if (
+      !gestures &&
+      pointer.territory !== TERRITORIES.COMPASS
+    ) {
       interruptActivePointer(
         "gesture-helper-unavailable"
       );
@@ -2822,26 +3140,59 @@
       performance.now();
 
     const releaseX =
-      Number.isFinite(
-        event.clientX
-      )
+      Number.isFinite(event.clientX)
         ? event.clientX
         : pointer.currentX;
 
     const releaseY =
-      Number.isFinite(
-        event.clientY
-      )
+      Number.isFinite(event.clientY)
         ? event.clientY
         : pointer.currentY;
 
-    pointer.pathLength +=
-      gestures.distance2d(
-        pointer.currentX,
-        pointer.currentY,
-        releaseX,
-        releaseY
-      );
+    if (gestures) {
+      pointer.pathLength +=
+        gestures.distance2d(
+          pointer.currentX,
+          pointer.currentY,
+          releaseX,
+          releaseY
+        );
+
+      pointer.maximumDistance =
+        Math.max(
+          pointer.maximumDistance,
+          gestures.distance2d(
+            pointer.startX,
+            pointer.startY,
+            releaseX,
+            releaseY
+          )
+        );
+
+      pointer.samples =
+        gestures.appendSample(
+          pointer.samples,
+          releaseX,
+          releaseY,
+          releaseTime,
+          CONFIG
+        );
+    } else {
+      pointer.pathLength +=
+        Math.hypot(
+          pointer.currentX - releaseX,
+          pointer.currentY - releaseY
+        );
+
+      pointer.maximumDistance =
+        Math.max(
+          pointer.maximumDistance,
+          Math.hypot(
+            pointer.startX - releaseX,
+            pointer.startY - releaseY
+          )
+        );
+    }
 
     pointer.currentX =
       releaseX;
@@ -2852,35 +3203,14 @@
     pointer.currentTime =
       releaseTime;
 
-    pointer.maximumDistance =
-      Math.max(
-        pointer.maximumDistance,
-
-        gestures.distance2d(
-          pointer.startX,
-          pointer.startY,
-          releaseX,
-          releaseY
-        )
-      );
-
     pointer.cancelled =
       Boolean(cancelled);
-
-    pointer.samples =
-      gestures.appendSample(
-        pointer.samples,
-        releaseX,
-        releaseY,
-        releaseTime,
-        CONFIG
-      );
 
     const duration =
       Math.max(
         0,
         releaseTime -
-          pointer.startTime
+        pointer.startTime
       );
 
     let outcome =
@@ -2900,8 +3230,7 @@
 
       if (
         pointer.dragging ||
-        pointer.maximumDistance >
-          CONFIG.maximumTapDistancePx
+        pointer.maximumDistance > CONFIG.maximumTapDistancePx
       ) {
         armClickSuppression(
           pointer.directControl ||
@@ -2910,9 +3239,8 @@
         );
       }
     } else if (
-      pointer.territory ===
-        TERRITORIES.COMPASS &&
-      !controllerInteractionAllowed()
+      pointer.territory === TERRITORIES.COMPASS &&
+      !compassSemanticReady()
     ) {
       outcome =
         "runtime-invalid";
@@ -2922,8 +3250,7 @@
         "compass-runtime-invalid"
       );
     } else if (
-      pointer.territory !==
-        TERRITORIES.COMPASS &&
+      pointer.territory !== TERRITORIES.COMPASS &&
       !runtimeReady()
     ) {
       cancelControllerGesture(
@@ -2941,12 +3268,10 @@
       );
     } else if (
       !pointer.dragging &&
-      pointer.maximumDistance <=
-        CONFIG.maximumTapDistancePx
+      pointer.maximumDistance <= CONFIG.maximumTapDistancePx
     ) {
       if (
-        pointer.territory ===
-        TERRITORIES.COMPASS
+        pointer.territory === TERRITORIES.COMPASS
       ) {
         committed =
           commitCompassTap(
@@ -2959,10 +3284,8 @@
             ? "compass-tap-committed"
             : "compass-tap-rejected";
       } else if (
-        pointer.territory ===
-          TERRITORIES.CARDINAL ||
-        pointer.territory ===
-          TERRITORIES.ROOM
+        pointer.territory === TERRITORIES.CARDINAL ||
+        pointer.territory === TERRITORIES.ROOM
       ) {
         committed =
           commitProjectedTap(
@@ -2981,84 +3304,84 @@
     } else if (
       pointer.dragging
     ) {
-      flick =
-        gestures.classifyFlick(
-          pointer,
-          releaseX,
-          releaseY,
-          releaseTime,
-          CONFIG
+      if (!gestures) {
+        outcome =
+          "gesture-helper-unavailable";
+      } else {
+        flick =
+          gestures.classifyFlick(
+            pointer,
+            releaseX,
+            releaseY,
+            releaseTime,
+            CONFIG
+          );
+
+        armClickSuppression(
+          pointer.directControl ||
+          state.orbitField,
+          flick.qualifies
+            ? "flick-completion"
+            : "drag-completion"
         );
 
-      armClickSuppression(
-        pointer.directControl ||
-        state.orbitField,
-        flick.qualifies
-          ? "flick-completion"
-          : "drag-completion"
-      );
+        if (
+          pointer.territory === TERRITORIES.COMPASS
+        ) {
+          outcome =
+            "compass-drag-consumed";
+        } else if (
+          flick.qualifies &&
+          pointer.gestureScope === GESTURE_SCOPES.CLUSTER &&
+          pointer.activeWing
+        ) {
+          state.counters.flicksQualified +=
+            1;
 
-      if (
-        pointer.territory ===
-        TERRITORIES.COMPASS
-      ) {
-        outcome =
-          "compass-drag-consumed";
-      } else if (
-        flick.qualifies &&
-        pointer.gestureScope ===
-          GESTURE_SCOPES.CLUSTER &&
-        pointer.activeWing
-      ) {
-        state.counters
-          .flicksQualified +=
-          1;
+          committed =
+            requestClusterFlickReturn(
+              pointer,
+              flick
+            );
 
-        committed =
-          requestClusterFlickReturn(
-            pointer,
-            flick
-          );
+          outcome =
+            committed
+              ? "cluster-flick-return"
+              : "cluster-flick-return-rejected";
+        } else if (
+          pointer.maximumDistance >= CONFIG.minimumCommitDistancePx &&
+          pointer.controllerGestureActive &&
+          pointer.previewAccepted
+        ) {
+          committed =
+            commitControllerGesture(
+              pointer
+            );
 
-        outcome =
-          committed
-            ? "cluster-flick-return"
-            : "cluster-flick-return-rejected";
-      } else if (
-        pointer.maximumDistance >=
-          CONFIG.minimumCommitDistancePx &&
-        pointer.controllerGestureActive &&
-        pointer.previewAccepted
-      ) {
-        committed =
-          commitControllerGesture(
-            pointer
-          );
+          if (!committed) {
+            cancelControllerGesture(
+              pointer,
+              "gesture-commit-rejected"
+            );
+          }
 
-        if (!committed) {
+          outcome =
+            committed
+              ? (
+                  pointer.gestureScope === GESTURE_SCOPES.ORBIT
+                    ? "orbit-committed"
+                    : "cluster-committed"
+                )
+              : "gesture-commit-rejected";
+        } else {
           cancelControllerGesture(
             pointer,
-            "gesture-commit-rejected"
+            "drag-without-accepted-preview"
           );
+
+          outcome =
+            "drag-cancelled";
         }
-
-        outcome =
-          committed
-            ? (
-                pointer.gestureScope ===
-                  GESTURE_SCOPES.ORBIT
-                  ? "orbit-committed"
-                  : "cluster-committed"
-              )
-            : "gesture-commit-rejected";
-      } else {
-        cancelControllerGesture(
-          pointer,
-          "drag-without-accepted-preview"
-        );
-
-        outcome =
-          "drag-cancelled";
       }
     } else {
       cancelControllerGesture(
@@ -3129,7 +3452,15 @@
         cancelled:
           pointer.cancelled,
 
-        flick
+        flick,
+
+        compassSemanticDirect:
+          pointer.territory === TERRITORIES.COMPASS,
+
+        compositorRequired:
+          pointer.territory === TERRITORIES.COMPASS
+            ? false
+            : true
       }
     );
   }
@@ -3137,14 +3468,12 @@
   function handlePointerUp(event) {
     if (
       !state.pointer ||
-      state.pointer.pointerId !==
-        event.pointerId
+      state.pointer.pointerId !== event.pointerId
     ) {
       return;
     }
 
-    state.counters
-      .pointerUp +=
+    state.counters.pointerUp +=
       1;
 
     finishPointer(
@@ -3156,14 +3485,12 @@
   function handlePointerCancel(event) {
     if (
       !state.pointer ||
-      state.pointer.pointerId !==
-        event.pointerId
+      state.pointer.pointerId !== event.pointerId
     ) {
       return;
     }
 
-    state.counters
-      .pointerCancel +=
+    state.counters.pointerCancel +=
       1;
 
     finishPointer(
@@ -3178,8 +3505,7 @@
 
     if (
       !pointer ||
-      pointer.pointerId !==
-        event.pointerId ||
+      pointer.pointerId !== event.pointerId ||
       pointer.finishing
     ) {
       return;
@@ -3193,8 +3519,7 @@
 
   function handleSemanticClick(event) {
     if (shouldSuppressClick(event)) {
-      state.counters
-        .nativeClicksSuppressed +=
+      state.counters.nativeClicksSuppressed +=
         1;
 
       event.preventDefault();
@@ -3224,9 +3549,7 @@
 
     if (
       !control ||
-      !semanticControlEnabled(
-        control
-      )
+      !semanticControlEnabled(control)
     ) {
       return;
     }
@@ -3245,8 +3568,7 @@
       !kind ||
       !identity
     ) {
-      state.counters
-        .nativeSemanticRejects +=
+      state.counters.nativeSemanticRejects +=
         1;
 
       return;
@@ -3258,37 +3580,42 @@
         identity,
         event.detail === 0
           ? "keyboard-semantic-control"
-          : "native-semantic-control"
+          : (
+              kind === SEMANTIC_KINDS.COMPASS
+                ? "native-compass-semantic-control"
+                : "native-semantic-control"
+            )
       );
 
     if (!committed) {
-      state.counters
-        .nativeSemanticRejects +=
+      state.counters.nativeSemanticRejects +=
         1;
+
+      if (
+        kind === SEMANTIC_KINDS.COMPASS
+      ) {
+        event.preventDefault();
+        event.stopPropagation();
+        event.stopImmediatePropagation();
+      }
 
       return;
     }
 
     if (
-      kind ===
-      SEMANTIC_KINDS.CARDINAL
+      kind === SEMANTIC_KINDS.CARDINAL
     ) {
-      state.counters
-        .nativeCardinalCommits +=
+      state.counters.nativeCardinalCommits +=
         1;
     } else if (
-      kind ===
-      SEMANTIC_KINDS.ROOM
+      kind === SEMANTIC_KINDS.ROOM
     ) {
-      state.counters
-        .nativeRoomCommits +=
+      state.counters.nativeRoomCommits +=
         1;
     } else if (
-      kind ===
-      SEMANTIC_KINDS.COMPASS
+      kind === SEMANTIC_KINDS.COMPASS
     ) {
-      state.counters
-        .nativeCompassCommits +=
+      state.counters.nativeCompassCommits +=
         1;
     }
 
@@ -3300,9 +3627,7 @@
   function handleContextMenu(event) {
     if (
       state.pointer &&
-      isInsideOrbitField(
-        event.target
-      )
+      isInsideOrbitField(event.target)
     ) {
       event.preventDefault();
     }
@@ -3310,9 +3635,7 @@
 
   function handleDragStart(event) {
     if (
-      isInsideOrbitField(
-        event.target
-      )
+      isInsideOrbitField(event.target)
     ) {
       event.preventDefault();
     }
@@ -3370,8 +3693,7 @@
     }
 
     if (
-      state.nativeOrbitFieldStyle ===
-        null
+      state.nativeOrbitFieldStyle === null
     ) {
       state.orbitField.removeAttribute(
         "style"
@@ -3480,8 +3802,7 @@
     state.waitingForRuntime =
       false;
 
-    state.counters
-      .runtimeActivations +=
+    state.counters.runtimeActivations +=
       1;
 
     if (!state.readyPublished) {
@@ -3501,6 +3822,18 @@
 
           directControllerTapCommit:
             true,
+
+          compassSemanticRecovery:
+            true,
+
+          compassRequiresCompositor:
+            false,
+
+          compassRequiresWebGL:
+            false,
+
+          compassRequiresPlanet:
+            false,
 
           syntheticSemanticClickCommit:
             false,
@@ -3554,6 +3887,9 @@
           directControllerTapCommit:
             true,
 
+          compassSemanticRecovery:
+            true,
+
           orbitDirectManipulation:
             true,
 
@@ -3593,8 +3929,7 @@
     state.waitingForRuntime =
       true;
 
-    state.counters
-      .runtimeDeactivations +=
+    state.counters.runtimeDeactivations +=
       1;
 
     publishReceipt(
@@ -3624,8 +3959,7 @@
       state.runtimeActive ||
       state.disposed ||
       state.failed ||
-      state.retryCount >=
-        CONFIG.runtimeRetryLimit
+      state.retryCount >= CONFIG.runtimeRetryLimit
     ) {
       return;
     }
@@ -3648,8 +3982,7 @@
   }
 
   function attemptRuntimeActivation(
-    reason =
-      "runtime-check"
+    reason = "runtime-check"
   ) {
     if (
       state.disposed ||
@@ -3659,8 +3992,7 @@
       return false;
     }
 
-    state.counters
-      .readinessChecks +=
+    state.counters.readinessChecks +=
       1;
 
     const gestures =
@@ -3671,6 +4003,13 @@
 
     const compositor =
       resolveCompositor();
+
+    const compassReady =
+      compassSemanticReady();
+
+    if (compassReady) {
+      publishCompassSemanticReady(reason);
+    }
 
     const gesturesReady =
       Boolean(gestures);
@@ -3714,11 +4053,23 @@
 
           controllerReady,
 
+          compassSemanticReady:
+            compassReady,
+
+          compassSemanticPathUsable:
+            compassReady,
+
           compositorAvailable:
             Boolean(compositor),
 
           compositorProjectionReady:
             compositorReady,
+
+          projectedStarRuntimeReady:
+            false,
+
+          compassRequiresProjectedRuntime:
+            false,
 
           retryCount:
             state.retryCount
@@ -3755,8 +4106,7 @@
         null;
 
       if (
-        typeof unsubscribe ===
-          "function"
+        typeof unsubscribe === "function"
       ) {
         try {
           unsubscribe();
@@ -3773,7 +4123,10 @@
     const controller =
       resolveController();
 
-    if (!controller) {
+    if (
+      !controller ||
+      typeof controller.subscribeFrameState !== "function"
+    ) {
       return false;
     }
 
@@ -3789,32 +4142,31 @@
             }
 
             if (
-              !validControllerFrame(
-                frame
-              )
+              frame &&
+              frame.held === true
             ) {
               interruptActivePointer(
-                "invalid-controller-frame"
+                "controller-held"
               );
 
               deactivateRuntime(
-                "invalid-controller-frame"
+                "controller-held"
               );
-
-              scheduleRuntimeRetry(
-                "invalid-controller-frame"
-              );
-
-              return;
             }
 
-            if (frame.held === true) {
-              interruptActivePointer(
-                "controller-held"
-              );
+            if (
+              frame &&
+              !validControllerFrame(frame)
+            ) {
+              publishReceipt(
+                "controller-frame-nonstrict-for-runtime",
+                {
+                  compassSemanticPathRetained:
+                    compassSemanticReady(),
 
-              deactivateRuntime(
-                "controller-held"
+                  strictProjectedRuntimeRetained:
+                    false
+                }
               );
             }
 
@@ -3826,8 +4178,7 @@
 
       if (
         frameUnsubscribe != null &&
-        typeof frameUnsubscribe !==
-          "function"
+        typeof frameUnsubscribe !== "function"
       ) {
         throw new Error(
           "Controller subscribeFrameState() returned an invalid unsubscribe surface."
@@ -3839,16 +4190,14 @@
         null;
 
       if (
-        typeof controller.subscribeHeldState ===
-          "function"
+        typeof controller.subscribeHeldState === "function"
       ) {
         const heldUnsubscribe =
           controller.subscribeHeldState(
             heldState => {
               if (
                 heldState &&
-                heldState.held ===
-                  true
+                heldState.held === true
               ) {
                 interruptActivePointer(
                   "controller-held-state"
@@ -3867,8 +4216,7 @@
 
         if (
           heldUnsubscribe != null &&
-          typeof heldUnsubscribe !==
-            "function"
+          typeof heldUnsubscribe !== "function"
         ) {
           throw new Error(
             "Controller subscribeHeldState() returned an invalid unsubscribe surface."
@@ -3897,7 +4245,10 @@
               error instanceof Error
                 ? error.message
                 : String(error)
-          }
+          },
+
+          compassSemanticPathRetained:
+            compassSemanticReady()
         }
       );
 
@@ -3920,6 +4271,10 @@
         resolveController();
         bindControllerSubscriptions();
 
+        publishCompassSemanticReady(
+          "controller-ready"
+        );
+
         attemptRuntimeActivation(
           "controller-ready"
         );
@@ -3940,6 +4295,9 @@
 
         state.controller =
           null;
+
+        state.compassSemanticReadyPublished =
+          false;
 
         publishReceipt(
           "controller-unavailable",
@@ -3972,6 +4330,7 @@
       () => {
         if (
           state.pointer &&
+          state.pointer.territory !== TERRITORIES.COMPASS &&
           !runtimeReady()
         ) {
           interruptActivePointer(
@@ -3989,9 +4348,14 @@
       window,
       EVENTS.compositorFailure,
       event => {
-        interruptActivePointer(
-          "compositor-failure"
-        );
+        if (
+          state.pointer &&
+          state.pointer.territory !== TERRITORIES.COMPASS
+        ) {
+          interruptActivePointer(
+            "compositor-failure"
+          );
+        }
 
         deactivateRuntime(
           "compositor-failure"
@@ -4007,7 +4371,10 @@
               event &&
               event.detail
                 ? event.detail
-                : null
+                : null,
+
+            compassSemanticPathRetained:
+              compassSemanticReady()
           }
         );
       }
@@ -4017,9 +4384,14 @@
       window,
       EVENTS.compositorDisposed,
       () => {
-        interruptActivePointer(
-          "compositor-disposed"
-        );
+        if (
+          state.pointer &&
+          state.pointer.territory !== TERRITORIES.COMPASS
+        ) {
+          interruptActivePointer(
+            "compositor-disposed"
+          );
+        }
 
         deactivateRuntime(
           "compositor-disposed"
@@ -4048,33 +4420,14 @@
       window,
       EVENTS.crystalsFailure,
       event => {
-        interruptActivePointer(
-          "crystals-failure"
-        );
-
-        publishReceipt(
-          "crystals-unavailable",
-          {
-            detail:
-              event &&
-              event.detail
-                ? event.detail
-                : null,
-
-            compositorProjectionRetained:
-              compositorProjectionReady()
-          }
-        );
-      }
-    );
-
-    addCoreListener(
-      window,
-      EVENTS.crystalsRenderFailure,
-      event => {
-        interruptActivePointer(
-          "crystals-render-failure"
-        );
+        if (
+          state.pointer &&
+          state.pointer.territory !== TERRITORIES.COMPASS
+        ) {
+          interruptActivePointer(
+            "crystals-failure"
+          );
+        }
 
         publishReceipt(
           "crystals-unavailable",
@@ -4087,6 +4440,41 @@
 
             compositorProjectionRetained:
               compositorProjectionReady(),
+
+            compassSemanticPathRetained:
+              compassSemanticReady()
+          }
+        );
+      }
+    );
+
+    addCoreListener(
+      window,
+      EVENTS.crystalsRenderFailure,
+      event => {
+        if (
+          state.pointer &&
+          state.pointer.territory !== TERRITORIES.COMPASS
+        ) {
+          interruptActivePointer(
+            "crystals-render-failure"
+          );
+        }
+
+        publishReceipt(
+          "crystals-unavailable",
+          {
+            detail:
+              event &&
+              event.detail
+                ? event.detail
+                : null,
+
+            compositorProjectionRetained:
+              compositorProjectionReady(),
+
+            compassSemanticPathRetained:
+              compassSemanticReady(),
 
             sourceEvent:
               EVENTS.crystalsRenderFailure,
@@ -4102,12 +4490,21 @@
       window,
       EVENTS.crystalsDisposed,
       () => {
-        interruptActivePointer(
-          "crystals-disposed"
-        );
+        if (
+          state.pointer &&
+          state.pointer.territory !== TERRITORIES.COMPASS
+        ) {
+          interruptActivePointer(
+            "crystals-disposed"
+          );
+        }
 
         publishReceipt(
-          "crystals-disposed"
+          "crystals-disposed",
+          {
+            compassSemanticPathRetained:
+              compassSemanticReady()
+          }
         );
       }
     );
@@ -4178,27 +4575,41 @@
         gestureHelperContract:
           GESTURES_CONTRACT,
 
+        compassSemanticRecovery:
+          true,
+
+        compassRequiresCompositor:
+          false,
+
+        compassRequiresWebGL:
+          false,
+
+        compassRequiresPlanet:
+          false,
+
         getState() {
           return createReceipt(
-            "state-requested"
+            "state-requested",
+            {
+              compassSemanticReady:
+                compassSemanticReady(),
+
+              projectedRuntimeReady:
+                runtimeReady()
+            }
           );
         },
 
         cancelGesture(
-          reason =
-            "api"
+          reason = "api"
         ) {
           return interruptActivePointer(
-            `api:${
-              normalize(reason) ||
-              "cancel"
-            }`
+            `api:${normalize(reason) || "cancel"}`
           );
         },
 
         retryRuntime(
-          reason =
-            "api"
+          reason = "api"
         ) {
           clearRetryTimer();
 
@@ -4206,10 +4617,7 @@
             0;
 
           return attemptRuntimeActivation(
-            `api:${
-              normalize(reason) ||
-              "retry"
-            }`
+            `api:${normalize(reason) || "retry"}`
           );
         },
 
@@ -4244,8 +4652,7 @@
     }
 
     try {
-      delete window
-        .SHOWROOM_INTERACTIONS;
+      delete window.SHOWROOM_INTERACTIONS;
     } catch {
       /* Best-effort removal. */
     }
@@ -4254,9 +4661,7 @@
       false;
   }
 
-  function rollbackInitialization(
-    error
-  ) {
+  function rollbackInitialization(error) {
     clearRetryTimer();
 
     interruptActivePointer(
@@ -4420,6 +4825,18 @@
           directCompassTapCommit:
             true,
 
+          compassSemanticRecovery:
+            true,
+
+          compassSemanticRequiresCompositor:
+            false,
+
+          compassSemanticRequiresWebGL:
+            false,
+
+          compassSemanticRequiresPlanet:
+            false,
+
           nativeSemanticDelegation:
             true,
 
@@ -4434,6 +4851,10 @@
         }
       );
 
+      publishCompassSemanticReady(
+        "startup"
+      );
+
       attemptRuntimeActivation(
         "startup"
       );
@@ -4442,10 +4863,7 @@
     }
   }
 
-  function dispose(
-    reason =
-      "api"
-  ) {
+  function dispose(reason = "api") {
     if (state.disposed) {
       return true;
     }
@@ -4456,17 +4874,11 @@
     clearRetryTimer();
 
     interruptActivePointer(
-      `dispose:${
-        normalize(reason) ||
-        "api"
-      }`
+      `dispose:${normalize(reason) || "api"}`
     );
 
     deactivateRuntime(
-      `dispose:${
-        normalize(reason) ||
-        "api"
-      }`
+      `dispose:${normalize(reason) || "api"}`
     );
 
     unsubscribeController();
@@ -4499,6 +4911,9 @@
     state.waitingForRuntime =
       false;
 
+    state.compassSemanticReadyPublished =
+      false;
+
     publishReceipt(
       "disposed",
       {
@@ -4526,6 +4941,12 @@
           false,
 
         gestureHelperMutated:
+          false,
+
+        planetStateMutated:
+          false,
+
+        compassRendererMutated:
           false
       }
     );
@@ -4544,8 +4965,7 @@
   }
 
   if (
-    document.readyState ===
-      "loading"
+    document.readyState === "loading"
   ) {
     document.addEventListener(
       "DOMContentLoaded",
@@ -4559,3 +4979,58 @@
     initialize();
   }
 })();
+
+/*
+RECEIPT:
+SHOWROOM_COMPLETE_QUATERNION_INTERACTIONS_RECEIPT_TNT_v6_COMPASS_SEMANTIC_RECOVERY
+
+TARGET:
+- /showroom/index.interactions.js
+
+PURPOSE:
+- Restore Main Compass semantic activation after replacement of the center
+  visual with the decorative Audralia WebGL planet.
+- Preserve stars, clusters, swipe, Atlas behavior, controller route authority,
+  compositor projection authority, crystal ownership, and planet decorative
+  status.
+
+PRIMARY CORRECTION:
+- Compass selection no longer depends on compositor readiness, WebGL readiness,
+  planet readiness, projected crystal hit testing, or strict projected-runtime
+  activation.
+- [data-showroom-compass-control], [data-showroom-compass-selection-alias],
+  and data-showroom-controller-action="request-compass-selection" route directly
+  to controller.requestCompassSelection() when the controller endpoint exists and
+  the controller is not held, failed, or disposed.
+
+EXPECTED USER BEHAVIOR:
+- Tap Main Compass label or center semantic Compass button.
+- Do not immediately hard-navigate.
+- Request controller Compass-selection state.
+- Scroll/focus the Atlas panel after accepted selection.
+- Existing controller-owned state should expose the Return to Main Compass
+  option.
+
+PRESERVED:
+- Controller owns route state and Main Compass selection state.
+- Interactions owns pointer/click/tap routing only.
+- Planet JS remains decorative and owns no navigation.
+- CSS owns hit-area layout and stage support only.
+- Compositor remains required for projected star/cluster hit testing only.
+- Gesture helper remains required for orbit/cluster quaternion behavior.
+- No shared Compass renderer, adapter, or geometry dependency is introduced.
+- Canonical written direction expression remains NEWS / N-E-W-S where written
+  order is expressed.
+
+RUNTIME VALIDATION:
+NOT RUN
+
+VISUAL VALIDATION:
+NOT RUN
+
+PRODUCTION AUTHORIZATION:
+FALSE
+
+DEPLOYMENT AUTHORIZATION:
+FALSE
+*/

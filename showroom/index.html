@@ -4497,9 +4497,15 @@ CompassRuntimeLoad = false</code></pre>
   ></script>
 
   <script
-    src="/showroom/index.window.js?v=SHOWROOM_MIRRORLAND_FOREGROUND_WINDOW_TNT_v1"
+    src="/showroom/index.window.js?v=SHOWROOM_WINDOW_OBJECT_v1_2_CRISP_3D_COMPOUND_CURTAIN_HOST"
     defer
-    data-showroom-child="window"
+    data-showroom-child="window-object"
+  ></script>
+
+  <script
+    src="/showroom/index.window.controller.js?v=SHOWROOM_WINDOW_CONTROLLER_v1_EXISTING_BUTTON_CURTAIN_TOGGLE"
+    defer
+    data-showroom-child="window-controller"
   ></script>
 
   <script
@@ -4558,7 +4564,9 @@ SOURCE INSTALLATION:
 - Crystal runtime loads after planet center integration.
 - Gesture helper loads before interactions.
 - Interactions remain after gesture helper.
-- Window, Diamond UI, Cosmos, blueprint, and Elara assets remain loaded.
+- Window object runtime loads after interactions.
+- Window controller runtime loads after the Window object runtime.
+- Diamond UI, Cosmos, blueprint, and Elara assets remain loaded.
 - universal Compass geometry root load remains absent from Showroom HTML.
 - universal Compass renderer root load remains absent from Showroom HTML.
 - Showroom Compass adapter root load remains absent from Showroom HTML.
@@ -4607,7 +4615,7 @@ PRESERVED:
 - route/control structure;
 - receipt structure;
 - Diamond assets and loading;
-- Window assets and loading;
+- Window object/controller assets and loading;
 - Cosmos assets and loading;
 - blueprint assets;
 - Elara assets;

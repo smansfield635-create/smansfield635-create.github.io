@@ -1,36 +1,26 @@
 /* TARGET FILE: /showroom/index.window.js */
 /* COMPLETE REPLACEMENT */
-/* SHOWROOM_WINDOW_OBJECT_v1_TRUE_3D_CURTAIN_HOST */
+/* SHOWROOM_WINDOW_OBJECT_v1_2_CRISP_3D_COMPOUND_CURTAIN_HOST */
 
 /*
-  Window Object Host
+  Mirrorland Window Object Host
 
-  Role:
-  - Own the Mirrorland Window visual object only.
-  - Translate the existing stained-glass design into a normalized X/Y/Z
-    geometric compound.
-  - Render the Window as a dimensional foreground curtain.
-  - Expose a stable object API for a separate controller.
+  Purpose:
+  - Render the Mirrorland Window as a motionless 3D compound curtain.
+  - Keep the Window as a foreground visual object over the Diamond.
+  - Expose a stable object API for /showroom/index.window.controller.js.
+  - Remain pointer-transparent except for behavior owned elsewhere.
+  - Never own button behavior, Diamond behavior, route state, orbit gestures,
+    Compass, stars, or broad page state.
 
-  Owns:
-  - [data-showroom-window-mount] canvas creation
-  - pointer-transparent visual canvas
-  - normalized object-space geometry
-  - pane/frame/aperture/depth/material definitions
-  - curtain amount rendering
-  - visual show/hide transitions
-  - object-level receipt
-
-  Does not own:
-  - [data-showroom-window-control]
-  - labels
-  - aria-expanded
-  - open/restore decision
-  - Diamond renderer state
-  - Diamond wake behavior
-  - route state
-  - orbit gestures
-  - Compass or star interactions
+  Strategic changes from prior object model:
+  - Replace cartoon stroke language with compound layered geometry.
+  - Treat glass as inset plates.
+  - Treat lead came as raised strips.
+  - Treat the frame as layered architectural bands.
+  - Treat the aperture as a beveled transparent opening.
+  - Keep the object frozen in time; splendor comes from material and depth.
+  - Remove per-frame receipt/dataset writes during transitions.
 */
 
 (() => {
@@ -38,6 +28,9 @@
 
   const CONTRACT = Object.freeze({
     id:
+      "SHOWROOM_WINDOW_OBJECT_v1_2_CRISP_3D_COMPOUND_CURTAIN_HOST",
+
+    previousId:
       "SHOWROOM_WINDOW_OBJECT_v1_TRUE_3D_CURTAIN_HOST",
 
     file:
@@ -46,14 +39,14 @@
     publicSurface:
       "SHOWROOM_MIRRORLAND_WINDOW_OBJECT",
 
-    previousSingleFileContract:
-      "SHOWROOM_MIRRORLAND_FOREGROUND_WINDOW_TNT_v1_2_APERTURE_CONTROL_HARDENING",
-
     role:
       "visual-object-host-only",
 
     rendererModel:
-      "canvas-2d-dimensional-geometry-with-webgl-upgrade-seam",
+      "canvas-2d-crisp-3d-compound-geometry-with-webgl-upgrade-seam",
+
+    motionModel:
+      "motionless-object-transition-only",
 
     defaultCurtainAmount:
       1,
@@ -80,6 +73,9 @@
       false,
 
     compassOwnership:
+      false,
+
+    starOwnership:
       false,
 
     visualPassClaimed:
@@ -141,147 +137,246 @@
   });
 
   const DEPTH = Object.freeze({
-    rearShadow:
-      -0.18,
+    rearOcclusion:
+      -0.28,
 
-    rearGlass:
-      -0.08,
+    rearGlassShadow:
+      -0.15,
 
-    glass:
-      0,
+    glassBack:
+      -0.085,
 
-    glassHighlight:
-      0.025,
+    glassCore:
+      -0.018,
 
-    leadBack:
-      0.035,
+    glassFace:
+      0.018,
 
-    leadFace:
+    glassBevel:
+      0.050,
+
+    cameSide:
       0.075,
 
+    cameFace:
+      0.132,
+
+    mullionSide:
+      0.150,
+
+    mullionFace:
+      0.220,
+
     frameBack:
-      0.03,
+      0.010,
+
+    frameBody:
+      0.125,
 
     frameFace:
-      0.13,
+      0.245,
 
-    frameEdge:
-      0.19,
+    frameLip:
+      0.318,
 
-    apertureBack:
-      0.06,
+    apertureWall:
+      0.155,
 
     apertureFace:
-      0.18,
+      0.298,
 
-    dust:
-      0.22
+    apertureLip:
+      0.370,
+
+    surfaceAge:
+      0.385
   });
 
   const MATERIALS = Object.freeze({
     frame:
       Object.freeze({
-        base:
-          Object.freeze([13, 17, 25]),
+        shadow:
+          Object.freeze([1, 2, 5]),
 
-        mid:
-          Object.freeze([31, 38, 52]),
+        black:
+          Object.freeze([7, 10, 15]),
 
-        edge:
-          Object.freeze([94, 75, 48]),
+        body:
+          Object.freeze([20, 25, 33]),
+
+        stone:
+          Object.freeze([34, 38, 44]),
+
+        bevel:
+          Object.freeze([58, 58, 62]),
 
         gold:
-          Object.freeze([205, 151, 82]),
+          Object.freeze([168, 117, 58]),
 
-        shadow:
-          Object.freeze([2, 3, 7]),
+        goldBright:
+          Object.freeze([232, 178, 96]),
 
         patina:
-          Object.freeze([45, 74, 76]),
+          Object.freeze([32, 66, 67]),
 
-        roughness:
-          0.74,
-
-        metallic:
-          0.76
+        coldEdge:
+          Object.freeze([93, 126, 132])
       }),
 
     lead:
       Object.freeze({
-        base:
-          Object.freeze([16, 18, 25]),
+        shadow:
+          Object.freeze([4, 5, 9]),
 
-        edge:
-          Object.freeze([71, 76, 88]),
+        dark:
+          Object.freeze([11, 13, 18]),
+
+        body:
+          Object.freeze([27, 29, 35]),
+
+        bevel:
+          Object.freeze([70, 70, 74]),
 
         highlight:
-          Object.freeze([154, 142, 117]),
+          Object.freeze([157, 145, 112]),
 
-        patina:
-          Object.freeze([40, 65, 67]),
-
-        roughness:
-          0.68,
-
-        metallic:
-          0.82
+        cold:
+          Object.freeze([80, 111, 116])
       }),
 
     aperture:
       Object.freeze({
-        dark:
-          Object.freeze([9, 10, 14]),
+        wall:
+          Object.freeze([4, 5, 8]),
 
-        rim:
-          Object.freeze([119, 87, 50]),
+        bronze:
+          Object.freeze([115, 75, 36]),
+
+        gold:
+          Object.freeze([204, 139, 62]),
 
         bright:
-          Object.freeze([227, 179, 104]),
+          Object.freeze([255, 218, 139]),
 
-        coldEdge:
-          Object.freeze([124, 162, 178])
+        cold:
+          Object.freeze([122, 169, 181])
       }),
 
     glass:
       Object.freeze({
-        cyan:
-          Object.freeze([61, 190, 207]),
+        frost:
+          Object.freeze([132, 197, 203]),
 
-        teal:
-          Object.freeze([45, 149, 159]),
+        cyan:
+          Object.freeze([58, 170, 181]),
+
+        cyanDeep:
+          Object.freeze([21, 111, 126]),
 
         blue:
-          Object.freeze([43, 92, 172]),
+          Object.freeze([42, 82, 151]),
 
-        deepBlue:
-          Object.freeze([22, 58, 126]),
+        blueDeep:
+          Object.freeze([16, 42, 98]),
 
         violet:
-          Object.freeze([111, 70, 180]),
+          Object.freeze([100, 64, 151]),
 
-        deepViolet:
-          Object.freeze([77, 48, 133]),
+        violetDeep:
+          Object.freeze([56, 36, 98]),
 
         rose:
-          Object.freeze([177, 74, 115]),
+          Object.freeze([151, 66, 99]),
+
+        roseDeep:
+          Object.freeze([95, 35, 65]),
 
         amber:
-          Object.freeze([208, 146, 65]),
+          Object.freeze([180, 119, 47]),
 
-        paleCyan:
-          Object.freeze([133, 216, 225]),
+        amberDeep:
+          Object.freeze([113, 69, 27]),
 
         paleViolet:
-          Object.freeze([166, 130, 211]),
-
-        paleRose:
-          Object.freeze([213, 129, 164])
+          Object.freeze([145, 115, 181])
       })
   });
 
-  const COLORS = Object.freeze({
-    transparent:
-      "rgba(0, 0, 0, 0)"
+  const RENDER = Object.freeze({
+    maxDevicePixelRatio:
+      2,
+
+    objectScale:
+      0.925,
+
+    focalLength:
+      3.35,
+
+    perspectiveStrength:
+      0.88,
+
+    frozenTiltX:
+      -0.038,
+
+    frozenTiltY:
+      0.058,
+
+    frozenTiltZ:
+      0,
+
+    contactShadowAlpha:
+      0.46,
+
+    frameShadowBlur:
+      20,
+
+    glassAlpha:
+      0.72,
+
+    cameWidth:
+      7.2,
+
+    cameSideWidth:
+      10.8,
+
+    cameBevelWidth:
+      4.2,
+
+    cameHighlightWidth:
+      1.15,
+
+    outerFrameWidth:
+      29,
+
+    outerFrameFaceWidth:
+      21,
+
+    outerFrameLipWidth:
+      5.8,
+
+    innerFrameWidth:
+      13,
+
+    innerFrameLipWidth:
+      3.3,
+
+    mullionInset:
+      7,
+
+    apertureWallWidth:
+      18,
+
+    apertureFaceWidth:
+      11.5,
+
+    apertureLipWidth:
+      2.5,
+
+    textureLineCount:
+      5,
+
+    textureSpeckCount:
+      32
   });
 
   const TIMING = Object.freeze({
@@ -293,53 +388,6 @@
 
     reducedMs:
       80
-  });
-
-  const RENDER = Object.freeze({
-    maxDevicePixelRatio:
-      2,
-
-    focalLength:
-      3.1,
-
-    basePerspective:
-      0.92,
-
-    idleTiltX:
-      -0.035,
-
-    idleTiltY:
-      0.045,
-
-    idleTiltZ:
-      0,
-
-    objectScale:
-      0.92,
-
-    apertureClearAlpha:
-      1,
-
-    glassAlpha:
-      0.72,
-
-    leadWidth:
-      5.6,
-
-    leadHighlightWidth:
-      1.35,
-
-    paneBevelOffset:
-      3.4,
-
-    frameOuterLine:
-      18,
-
-    frameInnerLine:
-      9,
-
-    frameGlow:
-      34
   });
 
   const state = {
@@ -355,12 +403,6 @@
     createdCanvas:
       false,
 
-    resizeObserver:
-      null,
-
-    resizeFallbackBound:
-      false,
-
     width:
       1,
 
@@ -369,6 +411,9 @@
 
     pixelRatio:
       1,
+
+    geometry:
+      null,
 
     curtainAmount:
       1,
@@ -382,6 +427,21 @@
     running:
       false,
 
+    resizeObserver:
+      null,
+
+    resizeFallbackBound:
+      false,
+
+    reducedMotion:
+      false,
+
+    reducedMotionQuery:
+      null,
+
+    reducedMotionBound:
+      false,
+
     initialized:
       false,
 
@@ -391,25 +451,16 @@
     failed:
       false,
 
-    geometry:
-      null,
-
     lastRenderTime:
-      0,
-
-    reducedMotion:
-      false,
-
-    reducedMotionQuery:
-      null,
-
-    reducedMotionBound:
-      false
+      0
   };
 
   const receipt = {
     contractId:
       CONTRACT.id,
+
+    previousContractId:
+      CONTRACT.previousId,
 
     file:
       CONTRACT.file,
@@ -441,7 +492,10 @@
     paneCount:
       0,
 
-    frameCurveCount:
+    uniqueCameSegmentCount:
+      0,
+
+    frameBandCount:
       0,
 
     aperturePointCount:
@@ -450,8 +504,14 @@
     rendererModel:
       CONTRACT.rendererModel,
 
+    motionModel:
+      CONTRACT.motionModel,
+
     canvasPointerEvents:
       CONTRACT.canvasPointerEvents,
+
+    perFrameReceiptWrites:
+      false,
 
     ownsButton:
       false,
@@ -472,6 +532,9 @@
       false,
 
     ownsCompass:
+      false,
+
+    ownsStars:
       false,
 
     visualPassClaimed:
@@ -557,15 +620,6 @@
     return `rgba(${color[0]}, ${color[1]}, ${color[2]}, ${clamp(alpha, 0, 1)})`;
   }
 
-  function hsla(
-    h,
-    s,
-    l,
-    a
-  ) {
-    return `hsla(${h}, ${s}%, ${l}%, ${clamp(a, 0, 1)})`;
-  }
-
   function nowId(prefix) {
     return `${prefix}-${Date.now()}-${Math.random()
       .toString(36)
@@ -633,15 +687,23 @@
             ? state.geometry.panes.length
             : 0,
 
-        frameCurveCount:
+        uniqueCameSegmentCount:
           state.geometry
-            ? state.geometry.frame.curves.length
+            ? state.geometry.cameSegments.length
+            : 0,
+
+        frameBandCount:
+          state.geometry
+            ? state.geometry.frameBands.length
             : 0,
 
         aperturePointCount:
           state.geometry
-            ? state.geometry.aperture.points.length
+            ? state.geometry.aperture.outer.length
             : 0,
+
+        perFrameReceiptWrites:
+          false,
 
         ownsButton:
           false,
@@ -664,6 +726,9 @@
         ownsCompass:
           false,
 
+        ownsStars:
+          false,
+
         visualPassClaimed:
           false,
 
@@ -683,8 +748,11 @@
       });
 
     if (state.canvas) {
-      state.canvas.dataset.showroomWindowObjectReceipt =
-        JSON.stringify(receipt);
+      state.canvas.dataset.showroomWindowObjectContract =
+        CONTRACT.id;
+
+      state.canvas.dataset.showroomWindowObjectStatus =
+        receipt.status;
 
       state.canvas.dataset.visualPassClaimed =
         "false";
@@ -757,417 +825,417 @@
     );
   }
 
+  function sourcePointKey(point) {
+    return `${Math.round(point[0])},${Math.round(point[1])}`;
+  }
+
+  function segmentKey(
+    a,
+    b
+  ) {
+    const keyA =
+      sourcePointKey(a);
+
+    const keyB =
+      sourcePointKey(b);
+
+    return keyA < keyB
+      ? `${keyA}|${keyB}`
+      : `${keyB}|${keyA}`;
+  }
+
   function createPane(
     id,
-    points,
+    sourcePoints,
     material,
-    z,
     options = {}
   ) {
-    const normalized =
-      normalizePolygon(points, z);
-
     return freezeDeep({
       id,
-      points:
-        normalized,
 
       sourcePoints:
-        points.map(point =>
+        sourcePoints.map(point =>
           Object.freeze([point[0], point[1]])
         ),
 
+      points:
+        normalizePolygon(sourcePoints, DEPTH.glassCore),
+
       material,
-      z,
 
-      glassDepth:
-        options.glassDepth ?? 0.035,
+      rearZ:
+        DEPTH.glassBack,
 
-      bevel:
-        options.bevel ?? 0.018,
+      coreZ:
+        DEPTH.glassCore,
+
+      faceZ:
+        DEPTH.glassFace,
+
+      bevelZ:
+        DEPTH.glassBevel,
 
       alpha:
-        options.alpha ?? 0.72,
-
-      roughness:
-        options.roughness ?? 0.62,
+        options.alpha ?? 0.70,
 
       age:
-        options.age ?? 0.36,
+        options.age ?? 0.42,
 
       refraction:
-        options.refraction ?? 0.24,
+        options.refraction ?? 0.28,
 
-      internalGlow:
-        options.internalGlow ?? 0.22,
+      internalContrast:
+        options.internalContrast ?? 0.32,
+
+      coldLight:
+        options.coldLight ?? 0.22,
+
+      warmLight:
+        options.warmLight ?? 0.10,
 
       phase:
         options.phase ?? 0
     });
   }
 
-  function createFrameCurve(
-    id,
-    points,
-    z,
-    width,
-    material
-  ) {
-    return freezeDeep({
-      id,
-
-      points:
-        normalizePolygon(points, z),
-
-      sourcePoints:
-        points.map(point =>
-          Object.freeze([point[0], point[1]])
-        ),
-
-      z,
-      width,
-      material
-    });
-  }
-
-  function makeGeometry() {
+  function buildPanes() {
     const glass =
       MATERIALS.glass;
 
-    const panes = Object.freeze([
+    return Object.freeze([
       createPane(
         "crown-left",
-        [[240, 46], [164, 106], [204, 168], [240, 134]],
-        glass.paleCyan,
-        DEPTH.glass,
-        { alpha: 0.66, internalGlow: 0.32, phase: 0.15 }
+        [[240, 48], [164, 108], [204, 168], [240, 134]],
+        glass.frost,
+        { alpha: 0.64, refraction: 0.38, coldLight: 0.30, phase: 0.12 }
       ),
 
       createPane(
         "crown-right",
-        [[240, 46], [240, 134], [278, 168], [318, 106]],
+        [[240, 48], [240, 134], [278, 168], [318, 108]],
         glass.paleViolet,
-        DEPTH.glass,
-        { alpha: 0.64, internalGlow: 0.30, phase: 0.51 }
+        { alpha: 0.63, refraction: 0.35, phase: 0.44 }
       ),
 
       createPane(
         "upper-left-edge",
-        [[164, 106], [98, 210], [154, 246], [204, 168]],
+        [[164, 108], [98, 210], [154, 246], [204, 168]],
         glass.blue,
-        DEPTH.glass,
-        { alpha: 0.68, age: 0.48, phase: 0.91 }
+        { alpha: 0.69, age: 0.50, internalContrast: 0.42, phase: 0.82 }
       ),
 
       createPane(
         "upper-right-edge",
-        [[318, 106], [278, 168], [326, 246], [382, 210]],
+        [[318, 108], [278, 168], [326, 246], [382, 210]],
         glass.violet,
-        DEPTH.glass,
-        { alpha: 0.67, age: 0.45, phase: 1.22 }
+        { alpha: 0.68, age: 0.48, internalContrast: 0.40, phase: 1.16 }
       ),
 
       createPane(
         "upper-center-left",
         [[204, 168], [154, 246], [216, 268], [240, 208], [240, 134]],
         glass.cyan,
-        DEPTH.glass,
-        { alpha: 0.65, refraction: 0.34, phase: 1.63 }
+        { alpha: 0.65, refraction: 0.36, coldLight: 0.30, phase: 1.52 }
       ),
 
       createPane(
         "upper-center-right",
         [[240, 134], [240, 208], [264, 268], [326, 246], [278, 168]],
         glass.rose,
-        DEPTH.glass,
-        { alpha: 0.64, refraction: 0.31, phase: 1.92 }
+        { alpha: 0.64, refraction: 0.32, warmLight: 0.17, phase: 1.88 }
       ),
 
       createPane(
         "mid-left-high",
         [[98, 210], [66, 332], [148, 338], [154, 246]],
-        glass.deepBlue,
-        DEPTH.glass,
-        { alpha: 0.69, age: 0.55, phase: 2.27 }
+        glass.blueDeep,
+        { alpha: 0.71, age: 0.58, internalContrast: 0.45, phase: 2.22 }
       ),
 
       createPane(
         "mid-left-inner",
         [[154, 246], [148, 338], [212, 334], [216, 268]],
-        glass.deepViolet,
-        DEPTH.glass,
-        { alpha: 0.67, internalGlow: 0.18, phase: 2.56 }
+        glass.violetDeep,
+        { alpha: 0.69, age: 0.50, phase: 2.58 }
       ),
 
       createPane(
         "mid-center",
         [[216, 268], [212, 334], [240, 382], [268, 334], [264, 268], [240, 208]],
-        glass.paleCyan,
-        DEPTH.glass,
-        { alpha: 0.62, internalGlow: 0.35, phase: 2.94 }
+        glass.frost,
+        { alpha: 0.58, refraction: 0.44, coldLight: 0.34, phase: 2.93 }
       ),
 
       createPane(
         "mid-right-inner",
         [[264, 268], [268, 334], [332, 338], [326, 246]],
-        glass.teal,
-        DEPTH.glass,
-        { alpha: 0.66, internalGlow: 0.20, phase: 3.18 }
+        glass.cyanDeep,
+        { alpha: 0.68, age: 0.46, phase: 3.18 }
       ),
 
       createPane(
         "mid-right-high",
         [[326, 246], [332, 338], [414, 332], [382, 210]],
         glass.blue,
-        DEPTH.glass,
-        { alpha: 0.68, age: 0.50, phase: 3.52 }
+        { alpha: 0.69, age: 0.52, internalContrast: 0.42, phase: 3.54 }
       ),
 
       createPane(
         "lower-left-edge",
         [[66, 332], [82, 470], [156, 446], [148, 338]],
-        glass.rose,
-        DEPTH.glass,
-        { alpha: 0.68, age: 0.58, phase: 3.86 }
+        glass.roseDeep,
+        { alpha: 0.70, age: 0.60, warmLight: 0.18, phase: 3.90 }
       ),
 
       createPane(
         "lower-left-center",
         [[148, 338], [156, 446], [216, 430], [240, 382], [212, 334]],
         glass.cyan,
-        DEPTH.glass,
-        { alpha: 0.65, refraction: 0.30, phase: 4.19 }
+        { alpha: 0.66, refraction: 0.34, coldLight: 0.28, phase: 4.23 }
       ),
 
       createPane(
         "lower-right-center",
         [[268, 334], [240, 382], [264, 430], [324, 446], [332, 338]],
         glass.violet,
-        DEPTH.glass,
-        { alpha: 0.65, refraction: 0.30, phase: 4.54 }
+        { alpha: 0.66, refraction: 0.32, phase: 4.55 }
       ),
 
       createPane(
         "lower-right-edge",
         [[332, 338], [324, 446], [398, 470], [414, 332]],
         glass.amber,
-        DEPTH.glass,
-        { alpha: 0.67, age: 0.53, internalGlow: 0.23, phase: 4.89 }
+        { alpha: 0.69, age: 0.54, warmLight: 0.26, phase: 4.92 }
       ),
 
       createPane(
         "lower-left-deep",
         [[82, 470], [116, 594], [192, 530], [156, 446]],
         glass.blue,
-        DEPTH.glass,
-        { alpha: 0.68, age: 0.54, phase: 5.23 }
+        { alpha: 0.70, age: 0.56, internalContrast: 0.42, phase: 5.24 }
       ),
 
       createPane(
         "lower-center-left",
         [[156, 446], [192, 530], [240, 624], [240, 500], [216, 430]],
         glass.paleViolet,
-        DEPTH.glass,
-        { alpha: 0.64, internalGlow: 0.28, phase: 5.57 }
+        { alpha: 0.64, refraction: 0.34, phase: 5.56 }
       ),
 
       createPane(
         "lower-center-right",
         [[264, 430], [240, 500], [240, 624], [288, 530], [324, 446]],
-        glass.paleRose,
-        DEPTH.glass,
-        { alpha: 0.64, internalGlow: 0.28, phase: 5.91 }
+        glass.rose,
+        { alpha: 0.64, refraction: 0.33, warmLight: 0.16, phase: 5.92 }
       ),
 
       createPane(
         "lower-right-deep",
         [[324, 446], [288, 530], [364, 594], [398, 470]],
-        glass.teal,
-        DEPTH.glass,
-        { alpha: 0.68, age: 0.53, phase: 6.26 }
+        glass.cyanDeep,
+        { alpha: 0.69, age: 0.53, coldLight: 0.22, phase: 6.23 }
       ),
 
       createPane(
         "base-left",
         [[116, 594], [168, 660], [240, 676], [240, 624], [192, 530]],
-        glass.amber,
-        DEPTH.glass,
-        { alpha: 0.65, internalGlow: 0.26, phase: 6.58 }
+        glass.amberDeep,
+        { alpha: 0.68, age: 0.58, warmLight: 0.24, phase: 6.54 }
       ),
 
       createPane(
         "base-right",
         [[288, 530], [240, 624], [240, 676], [312, 660], [364, 594]],
-        glass.deepBlue,
-        DEPTH.glass,
-        { alpha: 0.67, age: 0.50, phase: 6.91 }
+        glass.blueDeep,
+        { alpha: 0.69, age: 0.54, internalContrast: 0.42, phase: 6.88 }
       )
     ]);
+  }
 
-    const outerLeft = [
-      [240, 24],
-      [170, 54],
-      [106, 120],
-      [66, 220],
-      [48, 344],
-      [60, 482],
-      [104, 594],
-      [164, 660],
-      [240, 704]
-    ];
+  function collectCameSegments(panes) {
+    const map =
+      new Map();
 
-    const outerRight = [
-      [240, 24],
-      [310, 54],
-      [374, 120],
-      [414, 220],
-      [432, 344],
-      [420, 482],
-      [376, 594],
-      [316, 660],
-      [240, 704]
-    ];
+    panes.forEach(pane => {
+      pane.sourcePoints.forEach(
+        (point, index) => {
+          const next =
+            pane.sourcePoints[
+              (index + 1) % pane.sourcePoints.length
+            ];
 
-    const innerLeft = [
-      [240, 50],
-      [180, 82],
-      [126, 146],
-      [92, 238],
-      [80, 344],
-      [90, 462],
-      [128, 566],
-      [178, 632],
-      [240, 676]
-    ];
+          const key =
+            segmentKey(point, next);
 
-    const innerRight = [
-      [240, 50],
-      [300, 82],
-      [354, 146],
-      [388, 238],
-      [400, 344],
-      [390, 462],
-      [352, 566],
-      [302, 632],
-      [240, 676]
-    ];
+          if (!map.has(key)) {
+            map.set(
+              key,
+              freezeDeep({
+                id:
+                  `came-${map.size + 1}`,
 
-    const centralSpineTop =
-      [[240, 56], [240, 134], [240, 208], [240, 236]];
+                source:
+                  Object.freeze([
+                    Object.freeze([point[0], point[1]]),
+                    Object.freeze([next[0], next[1]])
+                  ]),
 
-    const centralSpineBottom =
-      [[240, 416], [240, 500], [240, 624], [240, 676]];
-
-    const frame = freezeDeep({
-      curves:
-        Object.freeze([
-          createFrameCurve(
-            "outer-left",
-            outerLeft,
-            DEPTH.frameFace,
-            18,
-            MATERIALS.frame
-          ),
-
-          createFrameCurve(
-            "outer-right",
-            outerRight,
-            DEPTH.frameFace,
-            18,
-            MATERIALS.frame
-          ),
-
-          createFrameCurve(
-            "inner-left",
-            innerLeft,
-            DEPTH.frameFace,
-            9,
-            MATERIALS.frame
-          ),
-
-          createFrameCurve(
-            "inner-right",
-            innerRight,
-            DEPTH.frameFace,
-            9,
-            MATERIALS.frame
-          ),
-
-          createFrameCurve(
-            "central-spine-top",
-            centralSpineTop,
-            DEPTH.leadFace,
-            7,
-            MATERIALS.lead
-          ),
-
-          createFrameCurve(
-            "central-spine-bottom",
-            centralSpineBottom,
-            DEPTH.leadFace,
-            7,
-            MATERIALS.lead
-          )
-        ]),
-
-      source:
-        Object.freeze({
-          outerLeft,
-          outerRight,
-          innerLeft,
-          innerRight,
-          centralSpineTop,
-          centralSpineBottom
-        })
+                points:
+                  Object.freeze([
+                    normalizePoint(point, DEPTH.cameFace),
+                    normalizePoint(next, DEPTH.cameFace)
+                  ])
+              })
+            );
+          }
+        }
+      );
     });
 
-    const aperturePoints =
-      [[240, 236], [276, 328], [240, 416], [204, 328]];
+    return Object.freeze(
+      Array.from(map.values())
+    );
+  }
 
-    const aperture = freezeDeep({
+  function buildFrameBands() {
+    const outerLeft =
+      [[240, 22], [174, 50], [111, 112], [70, 210], [50, 338], [62, 478], [106, 592], [165, 662], [240, 706]];
+
+    const outerRight =
+      [[240, 22], [306, 50], [369, 112], [410, 210], [430, 338], [418, 478], [374, 592], [315, 662], [240, 706]];
+
+    const faceLeft =
+      [[240, 31], [178, 61], [120, 122], [82, 216], [64, 340], [75, 470], [116, 580], [172, 649], [240, 692]];
+
+    const faceRight =
+      [[240, 31], [302, 61], [360, 122], [398, 216], [416, 340], [405, 470], [364, 580], [308, 649], [240, 692]];
+
+    const innerLeft =
+      [[240, 55], [184, 85], [132, 150], [98, 238], [84, 342], [94, 458], [132, 560], [181, 628], [240, 672]];
+
+    const innerRight =
+      [[240, 55], [296, 85], [348, 150], [382, 238], [396, 342], [386, 458], [348, 560], [299, 628], [240, 672]];
+
+    const mullionTop =
+      [[233, 62], [247, 62], [247, 228], [233, 228]];
+
+    const mullionBottom =
+      [[233, 428], [247, 428], [247, 674], [233, 674]];
+
+    const topCap =
+      [[224, 30], [256, 30], [276, 45], [260, 62], [220, 62], [204, 45]];
+
+    const bottomCap =
+      [[218, 676], [262, 676], [278, 694], [240, 710], [202, 694]];
+
+    function band(
+      id,
+      source,
+      z,
+      width,
+      tier
+    ) {
+      return freezeDeep({
+        id,
+        source:
+          source.map(point =>
+            Object.freeze([point[0], point[1]])
+          ),
+
+        points:
+          normalizePolygon(source, z),
+
+        z,
+        width,
+        tier
+      });
+    }
+
+    return Object.freeze([
+      band("outer-left-back-band", outerLeft, DEPTH.frameBack, RENDER.outerFrameWidth, "outer-back"),
+      band("outer-right-back-band", outerRight, DEPTH.frameBack, RENDER.outerFrameWidth, "outer-back"),
+      band("outer-left-face-band", faceLeft, DEPTH.frameFace, RENDER.outerFrameFaceWidth, "outer-face"),
+      band("outer-right-face-band", faceRight, DEPTH.frameFace, RENDER.outerFrameFaceWidth, "outer-face"),
+      band("inner-left-lip-band", innerLeft, DEPTH.frameLip, RENDER.innerFrameWidth, "inner-lip"),
+      band("inner-right-lip-band", innerRight, DEPTH.frameLip, RENDER.innerFrameWidth, "inner-lip"),
+      band("center-mullion-top-compound", mullionTop, DEPTH.mullionFace, 0, "mullion"),
+      band("center-mullion-bottom-compound", mullionBottom, DEPTH.mullionFace, 0, "mullion"),
+      band("top-metal-cap", topCap, DEPTH.frameLip, 0, "cap"),
+      band("bottom-metal-cap", bottomCap, DEPTH.frameLip, 0, "cap")
+    ]);
+  }
+
+  function buildAperture() {
+    const outer =
+      [[240, 232], [283, 328], [240, 424], [197, 328]];
+
+    const middle =
+      [[240, 252], [268, 328], [240, 404], [212, 328]];
+
+    const inner =
+      [[240, 272], [258, 328], [240, 384], [222, 328]];
+
+    const clear =
+      [[240, 266], [264, 328], [240, 390], [216, 328]];
+
+    return freezeDeep({
       id:
-        "central-diamond-viewing-aperture",
-
-      points:
-        normalizePolygon(
-          aperturePoints,
-          DEPTH.apertureFace
-        ),
-
-      sourcePoints:
-        aperturePoints.map(point =>
-          Object.freeze([point[0], point[1]])
-        ),
-
-      bevelPlanes:
-        Object.freeze([
-          DEPTH.apertureBack,
-          DEPTH.apertureFace,
-          DEPTH.frameEdge
-        ]),
+        "central-diamond-aperture-compound",
 
       transparent:
         true,
+
+      outer:
+        normalizePolygon(outer, DEPTH.apertureFace),
+
+      middle:
+        normalizePolygon(middle, DEPTH.apertureLip),
+
+      inner:
+        normalizePolygon(inner, DEPTH.apertureWall),
+
+      clear:
+        normalizePolygon(clear, DEPTH.apertureLip),
+
+      source:
+        Object.freeze({
+          outer:
+            outer.map(point => Object.freeze([point[0], point[1]])),
+
+          middle:
+            middle.map(point => Object.freeze([point[0], point[1]])),
+
+          inner:
+            inner.map(point => Object.freeze([point[0], point[1]])),
+
+          clear:
+            clear.map(point => Object.freeze([point[0], point[1]]))
+        }),
 
       subtractivePhase1:
         "canvas-destination-out",
 
       subtractiveFuture:
-        "explicit-geometry-stencil-or-triangulation"
+        "explicit-3d-aperture-bevel-geometry"
     });
+  }
+
+  function makeGeometry() {
+    const panes =
+      buildPanes();
+
+    const cameSegments =
+      collectCameSegments(panes);
+
+    const frameBands =
+      buildFrameBands();
+
+    const aperture =
+      buildAperture();
 
     return freezeDeep({
       contractId:
         CONTRACT.id,
-
-      design:
-        DESIGN,
-
-      depth:
-        DEPTH,
-
-      materials:
-        MATERIALS,
 
       coordinateSystem:
         Object.freeze({
@@ -1184,11 +1252,24 @@
             "depth-positive-toward-viewer",
 
           origin:
-            "center-of-original-window-design"
+            "center-of-original-window-design",
+
+          motion:
+            "object-frozen-in-time"
         }),
 
+      design:
+        DESIGN,
+
+      depth:
+        DEPTH,
+
+      materials:
+        MATERIALS,
+
       panes,
-      frame,
+      cameSegments,
+      frameBands,
       aperture
     });
   }
@@ -1250,15 +1331,13 @@
     const y3 =
       x * sinZ + y * cosZ;
 
+    x = x3;
+    y = y3;
+
     return {
-      x:
-        x3,
-
-      y:
-        y3,
-
-      z:
-        z2
+      x,
+      y,
+      z
     };
   }
 
@@ -1279,17 +1358,16 @@
           z:
             point.z + extraZ
         },
-        RENDER.idleTiltX,
-        RENDER.idleTiltY,
-        RENDER.idleTiltZ
+        RENDER.frozenTiltX,
+        RENDER.frozenTiltY,
+        RENDER.frozenTiltZ
       );
 
     const perspective =
       RENDER.focalLength /
       (
         RENDER.focalLength -
-        rotated.z *
-          RENDER.basePerspective
+        rotated.z * RENDER.perspectiveStrength
       );
 
     return {
@@ -1318,15 +1396,11 @@
     extraZ = 0
   ) {
     return points.map(point =>
-      projectPoint(
-        point,
-        layout,
-        extraZ
-      )
+      projectPoint(point, layout, extraZ)
     );
   }
 
-  function traceProjectedPolygon(
+  function tracePolygon(
     context,
     points
   ) {
@@ -1355,7 +1429,7 @@
     context.closePath();
   }
 
-  function traceProjectedCurve(
+  function traceCurve(
     context,
     points
   ) {
@@ -1404,20 +1478,20 @@
     );
   }
 
-  function projectedBounds(points) {
+  function boundsOf(points) {
     return points.reduce(
-      (box, point) => ({
+      (bounds, point) => ({
         minX:
-          Math.min(box.minX, point.x),
+          Math.min(bounds.minX, point.x),
 
         maxX:
-          Math.max(box.maxX, point.x),
+          Math.max(bounds.maxX, point.x),
 
         minY:
-          Math.min(box.minY, point.y),
+          Math.min(bounds.minY, point.y),
 
         maxY:
-          Math.max(box.maxY, point.y)
+          Math.max(bounds.maxY, point.y)
       }),
       {
         minX:
@@ -1435,6 +1509,19 @@
     );
   }
 
+  function lineWidth(value) {
+    const scale =
+      Math.max(
+        0.75,
+        Math.min(
+          2.4,
+          Math.min(state.width, state.height) / 760
+        )
+      );
+
+    return value * scale;
+  }
+
   function makeLayout() {
     const cssWidth =
       state.width / state.pixelRatio;
@@ -1442,15 +1529,14 @@
     const cssHeight =
       state.height / state.pixelRatio;
 
-    const stageScale =
+    const fit =
       Math.min(
         cssWidth / DESIGN.width,
         cssHeight / DESIGN.height
       );
 
     const objectScale =
-      stageScale *
-      RENDER.objectScale;
+      fit * RENDER.objectScale;
 
     return {
       cssWidth,
@@ -1468,7 +1554,6 @@
       scaleY:
         DESIGN.objectHalfHeight * objectScale,
 
-      stageScale,
       objectScale
     };
   }
@@ -1479,60 +1564,12 @@
         SELECTORS.existingCanvas
       );
 
-    if (existing) {
-      state.createdCanvas =
-        false;
-
-      existing.setAttribute(
-        "aria-hidden",
-        "true"
-      );
-
-      existing.setAttribute(
-        "role",
-        "presentation"
-      );
-
-      Object.assign(
-        existing.style,
-        {
-          position:
-            "absolute",
-
-          inset:
-            "0",
-
-          width:
-            "100%",
-
-          height:
-            "100%",
-
-          display:
-            "block",
-
-          background:
-            "transparent",
-
-          pointerEvents:
-            "none",
-
-          touchAction:
-            "none",
-
-          zIndex:
-            "1"
-        }
-      );
-
-      return existing;
-    }
-
     const canvas =
+      existing ||
       document.createElement("canvas");
 
     state.createdCanvas =
-      true;
+      !existing;
 
     canvas.dataset.showroomWindowCanvas =
       "true";
@@ -1585,7 +1622,9 @@
       }
     );
 
-    state.mount.appendChild(canvas);
+    if (!existing) {
+      state.mount.appendChild(canvas);
+    }
 
     return canvas;
   }
@@ -1662,12 +1701,12 @@
     );
   }
 
-  function drawSceneShadow(
+  function drawContactShadow(
     context,
     layout,
     amount
   ) {
-    if (amount <= 0.004) {
+    if (amount <= 0.002) {
       return;
     }
 
@@ -1676,26 +1715,26 @@
     const gradient =
       context.createRadialGradient(
         layout.centerX,
-        layout.centerY + layout.scaleY * 0.05,
-        layout.scaleX * 0.12,
+        layout.centerY + layout.scaleY * 0.06,
+        layout.scaleX * 0.16,
         layout.centerX,
-        layout.centerY + layout.scaleY * 0.05,
-        layout.scaleX * 1.02
+        layout.centerY + layout.scaleY * 0.04,
+        layout.scaleX * 1.04
       );
 
     gradient.addColorStop(
       0,
-      `rgba(7, 11, 24, ${0.08 * amount})`
+      `rgba(0, 0, 0, ${0.10 * amount})`
     );
 
     gradient.addColorStop(
       0.55,
-      `rgba(2, 4, 12, ${0.22 * amount})`
+      `rgba(0, 0, 0, ${0.28 * amount})`
     );
 
     gradient.addColorStop(
       1,
-      `rgba(0, 0, 0, ${0.64 * amount})`
+      `rgba(0, 0, 0, ${RENDER.contactShadowAlpha * amount})`
     );
 
     context.fillStyle =
@@ -1711,59 +1750,317 @@
     context.restore();
   }
 
-  function paneGradient(
+  function drawFrameBand(
+    context,
+    band,
+    layout,
+    amount
+  ) {
+    if (amount <= 0.002) {
+      return;
+    }
+
+    const projected =
+      projectPolygon(
+        band.points,
+        layout
+      );
+
+    context.save();
+
+    context.globalAlpha =
+      amount;
+
+    if (
+      band.tier === "mullion" ||
+      band.tier === "cap"
+    ) {
+      tracePolygon(
+        context,
+        projected
+      );
+
+      const box =
+        boundsOf(projected);
+
+      const gradient =
+        context.createLinearGradient(
+          box.minX,
+          box.minY,
+          box.maxX,
+          box.maxY
+        );
+
+      gradient.addColorStop(
+        0,
+        rgba(MATERIALS.frame.shadow, 0.96)
+      );
+
+      gradient.addColorStop(
+        0.34,
+        rgba(MATERIALS.frame.body, 0.97)
+      );
+
+      gradient.addColorStop(
+        0.64,
+        rgba(MATERIALS.frame.bevel, 0.88)
+      );
+
+      gradient.addColorStop(
+        1,
+        rgba(MATERIALS.frame.shadow, 0.98)
+      );
+
+      context.fillStyle =
+        gradient;
+
+      context.shadowBlur =
+        lineWidth(8) * amount;
+
+      context.shadowColor =
+        `rgba(0, 0, 0, ${0.46 * amount})`;
+
+      context.fill();
+
+      context.shadowBlur =
+        0;
+
+      tracePolygon(
+        context,
+        projected
+      );
+
+      context.strokeStyle =
+        rgba(MATERIALS.frame.gold, 0.22 * amount);
+
+      context.lineWidth =
+        lineWidth(1.2);
+
+      context.stroke();
+
+      context.restore();
+
+      return;
+    }
+
+    context.lineCap =
+      "round";
+
+    context.lineJoin =
+      "round";
+
+    if (band.tier === "outer-back") {
+      traceCurve(
+        context,
+        projected
+      );
+
+      context.shadowBlur =
+        lineWidth(RENDER.frameShadowBlur) * amount;
+
+      context.shadowColor =
+        `rgba(0, 0, 0, ${0.68 * amount})`;
+
+      context.strokeStyle =
+        rgba(MATERIALS.frame.shadow, 0.94 * amount);
+
+      context.lineWidth =
+        lineWidth(band.width + 8);
+
+      context.stroke();
+
+      context.shadowBlur =
+        0;
+    }
+
+    if (band.tier === "outer-face") {
+      traceCurve(
+        context,
+        projected
+      );
+
+      context.strokeStyle =
+        rgba(MATERIALS.frame.black, 0.98 * amount);
+
+      context.lineWidth =
+        lineWidth(band.width + 4);
+
+      context.stroke();
+
+      traceCurve(
+        context,
+        projected
+      );
+
+      context.strokeStyle =
+        rgba(MATERIALS.frame.body, 0.96 * amount);
+
+      context.lineWidth =
+        lineWidth(band.width);
+
+      context.stroke();
+
+      traceCurve(
+        context,
+        projected
+      );
+
+      context.strokeStyle =
+        rgba(MATERIALS.frame.patina, 0.18 * amount);
+
+      context.lineWidth =
+        lineWidth(band.width * 0.62);
+
+      context.stroke();
+
+      traceCurve(
+        context,
+        projected
+      );
+
+      context.strokeStyle =
+        rgba(MATERIALS.frame.gold, 0.34 * amount);
+
+      context.lineWidth =
+        lineWidth(RENDER.outerFrameLipWidth);
+
+      context.stroke();
+
+      traceCurve(
+        context,
+        projected
+      );
+
+      context.strokeStyle =
+        rgba(MATERIALS.frame.goldBright, 0.20 * amount);
+
+      context.lineWidth =
+        lineWidth(1.1);
+
+      context.stroke();
+    }
+
+    if (band.tier === "inner-lip") {
+      traceCurve(
+        context,
+        projected
+      );
+
+      context.strokeStyle =
+        rgba(MATERIALS.frame.shadow, 0.86 * amount);
+
+      context.lineWidth =
+        lineWidth(band.width + 5);
+
+      context.stroke();
+
+      traceCurve(
+        context,
+        projected
+      );
+
+      context.strokeStyle =
+        rgba(MATERIALS.frame.body, 0.95 * amount);
+
+      context.lineWidth =
+        lineWidth(band.width);
+
+      context.stroke();
+
+      traceCurve(
+        context,
+        projected
+      );
+
+      context.strokeStyle =
+        rgba(MATERIALS.frame.gold, 0.30 * amount);
+
+      context.lineWidth =
+        lineWidth(RENDER.innerFrameLipWidth);
+
+      context.stroke();
+
+      traceCurve(
+        context,
+        projected
+      );
+
+      context.strokeStyle =
+        rgba(MATERIALS.frame.coldEdge, 0.14 * amount);
+
+      context.lineWidth =
+        lineWidth(0.9);
+
+      context.stroke();
+    }
+
+    context.restore();
+  }
+
+  function drawFrameBands(
+    context,
+    layout,
+    amount
+  ) {
+    state.geometry.frameBands
+      .filter(band => band.tier === "outer-back")
+      .forEach(band => drawFrameBand(context, band, layout, amount));
+
+    state.geometry.frameBands
+      .filter(band => band.tier === "outer-face")
+      .forEach(band => drawFrameBand(context, band, layout, amount));
+
+    state.geometry.frameBands
+      .filter(band => band.tier === "inner-lip")
+      .forEach(band => drawFrameBand(context, band, layout, amount));
+  }
+
+  function glassGradient(
     context,
     pane,
     projected,
     amount
   ) {
-    const bounds =
-      projectedBounds(projected);
+    const box =
+      boundsOf(projected);
 
     const gradient =
       context.createLinearGradient(
-        bounds.minX,
-        bounds.minY,
-        bounds.maxX,
-        bounds.maxY
+        box.minX,
+        box.minY,
+        box.maxX,
+        box.maxY
       );
 
     gradient.addColorStop(
       0,
-      rgba(
-        pane.material,
-        pane.alpha * 0.42 * amount
-      )
+      rgba(pane.material, pane.alpha * 0.22 * amount)
     );
 
     gradient.addColorStop(
-      0.35,
-      rgba(
-        pane.material,
-        pane.alpha * 0.84 * amount
-      )
+      0.24,
+      rgba(pane.material, pane.alpha * 0.72 * amount)
     );
 
     gradient.addColorStop(
-      0.72,
-      rgba(
-        pane.material,
-        pane.alpha * 0.64 * amount
-      )
+      0.48,
+      rgba(pane.material, pane.alpha * 0.52 * amount)
+    );
+
+    gradient.addColorStop(
+      0.76,
+      rgba(pane.material, pane.alpha * 0.82 * amount)
     );
 
     gradient.addColorStop(
       1,
-      rgba(
-        pane.material,
-        pane.alpha * 0.28 * amount
-      )
+      rgba(pane.material, pane.alpha * 0.24 * amount)
     );
 
     return gradient;
   }
 
-  function drawPaneBackDepth(
+  function drawGlassSidewalls(
     context,
     pane,
     layout,
@@ -1773,14 +2070,14 @@
       projectPolygon(
         pane.points,
         layout,
-        -pane.glassDepth
+        pane.rearZ - pane.coreZ
       );
 
-    const front =
+    const face =
       projectPolygon(
         pane.points,
         layout,
-        pane.glassDepth
+        pane.faceZ - pane.coreZ
       );
 
     context.save();
@@ -1790,11 +2087,11 @@
 
     for (
       let index = 0;
-      index < front.length;
+      index < face.length;
       index += 1
     ) {
       const next =
-        (index + 1) % front.length;
+        (index + 1) % face.length;
 
       context.beginPath();
 
@@ -1809,13 +2106,13 @@
       );
 
       context.lineTo(
-        front[next].x,
-        front[next].y
+        face[next].x,
+        face[next].y
       );
 
       context.lineTo(
-        front[index].x,
-        front[index].y
+        face[index].x,
+        face[index].y
       );
 
       context.closePath();
@@ -1823,7 +2120,7 @@
       context.fillStyle =
         rgba(
           pane.material,
-          0.16 * amount
+          0.15 * amount
         );
 
       context.fill();
@@ -1838,22 +2135,18 @@
     projected,
     amount
   ) {
-    if (amount <= 0.03) {
-      return;
-    }
-
-    const bounds =
-      projectedBounds(projected);
+    const box =
+      boundsOf(projected);
 
     const width =
-      Math.max(1, bounds.maxX - bounds.minX);
+      Math.max(1, box.maxX - box.minX);
 
     const height =
-      Math.max(1, bounds.maxY - bounds.minY);
+      Math.max(1, box.maxY - box.minY);
 
     context.save();
 
-    traceProjectedPolygon(
+    tracePolygon(
       context,
       projected
     );
@@ -1862,22 +2155,22 @@
 
     const haze =
       context.createRadialGradient(
-        bounds.minX + width * 0.32,
-        bounds.minY + height * 0.28,
-        2,
-        bounds.minX + width * 0.42,
-        bounds.minY + height * 0.36,
-        Math.max(width, height) * 0.88
+        box.minX + width * 0.34,
+        box.minY + height * 0.24,
+        1,
+        box.minX + width * 0.47,
+        box.minY + height * 0.42,
+        Math.max(width, height) * 0.86
       );
 
     haze.addColorStop(
       0,
-      `rgba(255, 255, 255, ${0.18 * pane.refraction * amount})`
+      `rgba(255, 255, 255, ${0.10 * pane.refraction * amount})`
     );
 
     haze.addColorStop(
-      0.42,
-      `rgba(255, 255, 255, ${0.045 * amount})`
+      0.38,
+      `rgba(255, 255, 255, ${0.034 * amount})`
     );
 
     haze.addColorStop(
@@ -1889,108 +2182,117 @@
       haze;
 
     context.fillRect(
-      bounds.minX,
-      bounds.minY,
+      box.minX,
+      box.minY,
       width,
       height
     );
 
-    const veinCount =
-      4;
-
     context.lineWidth =
-      Math.max(0.6, layoutLineWidth(0.6));
+      lineWidth(0.58);
 
     for (
       let index = 0;
-      index < veinCount;
+      index < RENDER.textureLineCount;
       index += 1
     ) {
       const seed =
-        pane.phase * 17.3 + index * 9.1;
+        pane.phase * 19.31 + index * 7.17;
 
-      const x0 =
-        bounds.minX +
+      const x =
+        box.minX +
         width *
           (
-            0.12 +
-            0.76 *
+            0.10 +
+            0.78 *
               (
                 Math.sin(seed) * 0.5 + 0.5
               )
           );
 
-      const y0 =
-        bounds.minY +
+      const y =
+        box.minY +
         height *
           (
-            0.10 +
-            0.78 *
+            0.08 +
+            0.76 *
               (
-                Math.sin(seed * 1.71) * 0.5 + 0.5
+                Math.sin(seed * 1.37) * 0.5 + 0.5
               )
           );
 
       context.beginPath();
 
       context.moveTo(
-        x0,
-        y0
+        x,
+        y
       );
 
       context.bezierCurveTo(
-        x0 + Math.sin(seed * 0.7) * width * 0.12,
-        y0 + height * 0.20,
-        x0 + Math.cos(seed * 0.5) * width * 0.16,
-        y0 + height * 0.42,
-        x0 + Math.sin(seed * 0.9) * width * 0.08,
-        y0 + height * 0.72
+        x + Math.sin(seed * 0.83) * width * 0.10,
+        y + height * 0.18,
+        x + Math.cos(seed * 0.59) * width * 0.14,
+        y + height * 0.44,
+        x + Math.sin(seed * 1.03) * width * 0.07,
+        y + height * 0.76
       );
 
       context.strokeStyle =
-        `rgba(255, 255, 255, ${0.045 * pane.age * amount})`;
+        `rgba(255, 255, 255, ${0.038 * pane.age * amount})`;
 
       context.stroke();
+    }
+
+    for (
+      let index = 0;
+      index < 4;
+      index += 1
+    ) {
+      const seed =
+        pane.phase * 11.73 + index * 5.91;
+
+      const x =
+        box.minX + width * (Math.sin(seed) * 0.5 + 0.5);
+
+      const y =
+        box.minY + height * (Math.cos(seed * 1.9) * 0.5 + 0.5);
+
+      context.fillStyle =
+        `rgba(235, 242, 228, ${0.026 * pane.age * amount})`;
+
+      context.fillRect(
+        x,
+        y,
+        lineWidth(0.75),
+        lineWidth(0.75)
+      );
     }
 
     context.restore();
   }
 
-  function layoutLineWidth(value) {
-    const scale =
-      Math.max(
-        0.8,
-        Math.min(
-          2.4,
-          Math.min(state.width, state.height) / 700
-        )
-      );
-
-    return value * scale;
-  }
-
-  function drawPane(
+  function drawGlassPane(
     context,
     pane,
     layout,
     amount
   ) {
-    if (amount <= 0.004) {
+    if (amount <= 0.002) {
       return;
     }
 
-    drawPaneBackDepth(
+    drawGlassSidewalls(
       context,
       pane,
       layout,
       amount
     );
 
-    const projected =
+    const face =
       projectPolygon(
         pane.points,
         layout,
-        pane.glassDepth
+        pane.faceZ - pane.coreZ
       );
 
     context.save();
@@ -1998,27 +2300,25 @@
     context.globalAlpha =
       amount;
 
+    tracePolygon(
+      context,
+      face
+    );
+
     context.shadowBlur =
-      layoutLineWidth(12) *
-      pane.internalGlow *
-      amount;
+      lineWidth(4.5) * amount;
 
     context.shadowColor =
       rgba(
         pane.material,
-        0.36 * pane.internalGlow * amount
+        0.14 * amount
       );
 
-    traceProjectedPolygon(
-      context,
-      projected
-    );
-
     context.fillStyle =
-      paneGradient(
+      glassGradient(
         context,
         pane,
-        projected,
+        face,
         amount
       );
 
@@ -2027,326 +2327,197 @@
     context.shadowBlur =
       0;
 
-    traceProjectedPolygon(
+    tracePolygon(
       context,
-      projected
+      face
     );
 
     context.strokeStyle =
-      `rgba(255, 255, 255, ${0.10 * amount})`;
+      `rgba(255, 255, 255, ${0.09 * amount})`;
 
     context.lineWidth =
-      layoutLineWidth(1.05);
+      lineWidth(0.78);
 
     context.stroke();
 
     drawGlassTexture(
       context,
       pane,
-      projected,
+      face,
       amount
     );
 
     context.restore();
   }
 
-  function drawAllPanes(
+  function drawGlassPanes(
     context,
     layout,
     amount
   ) {
     state.geometry.panes.forEach(
-      pane => drawPane(
-        context,
-        pane,
-        layout,
-        amount
-      )
+      pane => drawGlassPane(context, pane, layout, amount)
     );
   }
 
-  function drawLeadNetwork(
+  function drawCameSegment(
     context,
+    segment,
     layout,
     amount
   ) {
-    if (amount <= 0.004) {
-      return;
-    }
+    const side =
+      projectPolygon(
+        segment.points,
+        layout,
+        DEPTH.cameSide - DEPTH.cameFace
+      );
+
+    const face =
+      projectPolygon(
+        segment.points,
+        layout,
+        0
+      );
 
     context.save();
-
-    context.lineJoin =
-      "round";
 
     context.lineCap =
       "round";
 
-    state.geometry.panes.forEach(
-      pane => {
-        const back =
-          projectPolygon(
-            pane.points,
-            layout,
-            DEPTH.leadBack
-          );
-
-        const face =
-          projectPolygon(
-            pane.points,
-            layout,
-            DEPTH.leadFace
-          );
-
-        traceProjectedPolygon(
-          context,
-          back
-        );
-
-        context.strokeStyle =
-          rgba(
-            MATERIALS.lead.base,
-            0.92 * amount
-          );
-
-        context.lineWidth =
-          layoutLineWidth(RENDER.leadWidth + 2.5);
-
-        context.stroke();
-
-        traceProjectedPolygon(
-          context,
-          face
-        );
-
-        context.strokeStyle =
-          rgba(
-            MATERIALS.lead.base,
-            0.98 * amount
-          );
-
-        context.lineWidth =
-          layoutLineWidth(RENDER.leadWidth);
-
-        context.stroke();
-
-        traceProjectedPolygon(
-          context,
-          face
-        );
-
-        context.strokeStyle =
-          rgba(
-            MATERIALS.lead.highlight,
-            0.24 * amount
-          );
-
-        context.lineWidth =
-          layoutLineWidth(RENDER.leadHighlightWidth);
-
-        context.stroke();
-      }
-    );
-
-    context.restore();
-  }
-
-  function drawFrameCurves(
-    context,
-    layout,
-    amount
-  ) {
-    if (amount <= 0.004) {
-      return;
-    }
-
-    context.save();
-
     context.lineJoin =
       "round";
 
-    context.lineCap =
-      "round";
-
-    state.geometry.frame.curves.forEach(
-      curve => {
-        const back =
-          projectPolygon(
-            curve.points,
-            layout,
-            DEPTH.frameBack
-          );
-
-        const face =
-          projectPolygon(
-            curve.points,
-            layout,
-            curve.z
-          );
-
-        const edge =
-          projectPolygon(
-            curve.points,
-            layout,
-            DEPTH.frameEdge
-          );
-
-        traceProjectedCurve(
-          context,
-          back
-        );
-
-        context.strokeStyle =
-          rgba(
-            MATERIALS.frame.shadow,
-            0.86 * amount
-          );
-
-        context.lineWidth =
-          layoutLineWidth(curve.width + 8);
-
-        context.stroke();
-
-        traceProjectedCurve(
-          context,
-          face
-        );
-
-        context.shadowBlur =
-          layoutLineWidth(RENDER.frameGlow) *
-          0.18 *
-          amount;
-
-        context.shadowColor =
-          rgba(
-            MATERIALS.frame.gold,
-            0.18 * amount
-          );
-
-        context.strokeStyle =
-          rgba(
-            MATERIALS.frame.base,
-            0.98 * amount
-          );
-
-        context.lineWidth =
-          layoutLineWidth(curve.width);
-
-        context.stroke();
-
-        context.shadowBlur =
-          0;
-
-        traceProjectedCurve(
-          context,
-          edge
-        );
-
-        context.strokeStyle =
-          rgba(
-            MATERIALS.frame.gold,
-            0.36 * amount
-          );
-
-        context.lineWidth =
-          layoutLineWidth(Math.max(1.2, curve.width * 0.18));
-
-        context.stroke();
-
-        traceProjectedCurve(
-          context,
-          edge
-        );
-
-        context.strokeStyle =
-          rgba(
-            MATERIALS.frame.patina,
-            0.18 * amount
-          );
-
-        context.lineWidth =
-          layoutLineWidth(Math.max(0.9, curve.width * 0.10));
-
-        context.stroke();
-      }
-    );
-
-    context.restore();
-  }
-
-  function drawOuterFrameSilhouette(
-    context,
-    layout,
-    amount
-  ) {
-    if (amount <= 0.004) {
-      return;
-    }
-
-    const left =
-      projectPolygon(
-        state.geometry.frame.curves[0].points,
-        layout,
-        DEPTH.frameFace
-      );
-
-    const right =
-      projectPolygon(
-        state.geometry.frame.curves[1].points,
-        layout,
-        DEPTH.frameFace
-      );
-
-    const outer =
-      left.concat(
-        right.slice().reverse()
-      );
-
-    context.save();
-
-    traceProjectedPolygon(
-      context,
-      outer
-    );
-
-    context.strokeStyle =
-      rgba(
-        MATERIALS.frame.shadow,
-        0.86 * amount
-      );
-
-    context.lineWidth =
-      layoutLineWidth(25);
-
-    context.shadowBlur =
-      layoutLineWidth(24) *
+    context.globalAlpha =
       amount;
 
-    context.shadowColor =
-      `rgba(0, 0, 0, ${0.72 * amount})`;
+    context.beginPath();
 
-    context.stroke();
+    context.moveTo(
+      side[0].x,
+      side[0].y
+    );
 
-    context.shadowBlur =
-      0;
-
-    traceProjectedPolygon(
-      context,
-      outer
+    context.lineTo(
+      side[1].x,
+      side[1].y
     );
 
     context.strokeStyle =
-      rgba(
-        MATERIALS.frame.gold,
-        0.22 * amount
-      );
+      rgba(MATERIALS.lead.shadow, 0.92 * amount);
 
     context.lineWidth =
-      layoutLineWidth(2.2);
+      lineWidth(RENDER.cameSideWidth);
+
+    context.stroke();
+
+    context.beginPath();
+
+    context.moveTo(
+      face[0].x,
+      face[0].y
+    );
+
+    context.lineTo(
+      face[1].x,
+      face[1].y
+    );
+
+    context.strokeStyle =
+      rgba(MATERIALS.lead.dark, 0.98 * amount);
+
+    context.lineWidth =
+      lineWidth(RENDER.cameWidth + 1.3);
+
+    context.stroke();
+
+    context.beginPath();
+
+    context.moveTo(
+      face[0].x,
+      face[0].y
+    );
+
+    context.lineTo(
+      face[1].x,
+      face[1].y
+    );
+
+    context.strokeStyle =
+      rgba(MATERIALS.lead.body, 0.98 * amount);
+
+    context.lineWidth =
+      lineWidth(RENDER.cameWidth);
+
+    context.stroke();
+
+    context.beginPath();
+
+    context.moveTo(
+      face[0].x,
+      face[0].y
+    );
+
+    context.lineTo(
+      face[1].x,
+      face[1].y
+    );
+
+    context.strokeStyle =
+      rgba(MATERIALS.lead.bevel, 0.38 * amount);
+
+    context.lineWidth =
+      lineWidth(RENDER.cameBevelWidth);
+
+    context.stroke();
+
+    context.beginPath();
+
+    context.moveTo(
+      face[0].x,
+      face[0].y
+    );
+
+    context.lineTo(
+      face[1].x,
+      face[1].y
+    );
+
+    context.strokeStyle =
+      rgba(MATERIALS.lead.highlight, 0.24 * amount);
+
+    context.lineWidth =
+      lineWidth(RENDER.cameHighlightWidth);
 
     context.stroke();
 
     context.restore();
+  }
+
+  function drawLeadCame(
+    context,
+    layout,
+    amount
+  ) {
+    state.geometry.cameSegments.forEach(
+      segment => drawCameSegment(context, segment, layout, amount)
+    );
+  }
+
+  function drawMullionsAndCaps(
+    context,
+    layout,
+    amount
+  ) {
+    state.geometry.frameBands
+      .filter(
+        band =>
+          band.tier === "mullion" ||
+          band.tier === "cap"
+      )
+      .forEach(
+        band => drawFrameBand(context, band, layout, amount)
+      );
   }
 
   function drawApertureClear(
@@ -2354,15 +2525,14 @@
     layout,
     amount
   ) {
-    if (amount <= 0.004) {
+    if (amount <= 0.002) {
       return;
     }
 
-    const aperture =
+    const clear =
       projectPolygon(
-        state.geometry.aperture.points,
-        layout,
-        DEPTH.apertureFace
+        state.geometry.aperture.clear,
+        layout
       );
 
     context.save();
@@ -2370,13 +2540,13 @@
     context.globalCompositeOperation =
       "destination-out";
 
-    traceProjectedPolygon(
+    tracePolygon(
       context,
-      aperture
+      clear
     );
 
     context.fillStyle =
-      `rgba(0, 0, 0, ${RENDER.apertureClearAlpha})`;
+      "rgba(0, 0, 0, 1)";
 
     context.fill();
 
@@ -2388,29 +2558,26 @@
     layout,
     amount
   ) {
-    if (amount <= 0.004) {
+    if (amount <= 0.002) {
       return;
     }
 
-    const back =
+    const outer =
       projectPolygon(
-        state.geometry.aperture.points,
-        layout,
-        DEPTH.apertureBack
+        state.geometry.aperture.outer,
+        layout
       );
 
-    const face =
+    const middle =
       projectPolygon(
-        state.geometry.aperture.points,
-        layout,
-        DEPTH.apertureFace
+        state.geometry.aperture.middle,
+        layout
       );
 
-    const edge =
+    const inner =
       projectPolygon(
-        state.geometry.aperture.points,
-        layout,
-        DEPTH.frameEdge
+        state.geometry.aperture.inner,
+        layout
       );
 
     context.save();
@@ -2421,79 +2588,89 @@
     context.lineCap =
       "round";
 
-    traceProjectedPolygon(
+    tracePolygon(
       context,
-      back
+      outer
     );
 
     context.strokeStyle =
-      rgba(
-        MATERIALS.aperture.dark,
-        0.96 * amount
-      );
+      rgba(MATERIALS.aperture.wall, 0.96 * amount);
 
     context.lineWidth =
-      layoutLineWidth(18);
+      lineWidth(RENDER.apertureWallWidth);
+
+    context.shadowBlur =
+      lineWidth(8) * amount;
+
+    context.shadowColor =
+      `rgba(0, 0, 0, ${0.60 * amount})`;
 
     context.stroke();
 
-    traceProjectedPolygon(
+    context.shadowBlur =
+      0;
+
+    tracePolygon(
       context,
-      face
+      outer
     );
 
     context.strokeStyle =
-      rgba(
-        MATERIALS.aperture.rim,
-        0.86 * amount
-      );
+      rgba(MATERIALS.aperture.bronze, 0.92 * amount);
 
     context.lineWidth =
-      layoutLineWidth(10.5);
+      lineWidth(RENDER.apertureFaceWidth);
 
     context.stroke();
 
-    traceProjectedPolygon(
+    tracePolygon(
       context,
-      edge
+      middle
     );
 
     context.strokeStyle =
-      rgba(
-        MATERIALS.aperture.bright,
-        0.38 * amount
-      );
+      rgba(MATERIALS.aperture.gold, 0.70 * amount);
 
     context.lineWidth =
-      layoutLineWidth(2.1);
+      lineWidth(RENDER.apertureFaceWidth * 0.60);
 
     context.stroke();
 
-    traceProjectedPolygon(
+    tracePolygon(
       context,
-      edge
+      inner
     );
 
     context.strokeStyle =
-      rgba(
-        MATERIALS.aperture.coldEdge,
-        0.20 * amount
-      );
+      rgba(MATERIALS.aperture.bright, 0.36 * amount);
 
     context.lineWidth =
-      layoutLineWidth(0.9);
+      lineWidth(RENDER.apertureLipWidth);
+
+    context.stroke();
+
+    tracePolygon(
+      context,
+      inner
+    );
+
+    context.strokeStyle =
+      rgba(MATERIALS.aperture.cold, 0.22 * amount);
+
+    context.lineWidth =
+      lineWidth(0.85);
 
     context.stroke();
 
     context.restore();
   }
 
-  function drawAgedDustAndEdgeWear(
+  function drawSurfaceAge(
     context,
     layout,
     amount
   ) {
-    if (amount <= 0.08) {
+    if (amount <= 0.05) {
       return;
     }
 
@@ -2502,52 +2679,28 @@
     context.globalCompositeOperation =
       "screen";
 
-    const dustAlpha =
-      0.035 * amount;
-
     for (
       let index = 0;
-      index < 36;
+      index < RENDER.textureSpeckCount;
       index += 1
     ) {
       const seed =
-        index * 12.9898;
+        index * 15.873;
 
       const x =
         layout.centerX +
-        Math.sin(seed) *
-          layout.scaleX *
-          0.72 +
-        Math.sin(seed * 2.17) *
-          layout.scaleX *
-          0.08;
+        Math.sin(seed) * layout.scaleX * 0.74 +
+        Math.sin(seed * 0.31) * layout.scaleX * 0.08;
 
       const y =
         layout.centerY +
-        Math.cos(seed * 0.77) *
-          layout.scaleY *
-          0.82;
+        Math.cos(seed * 0.79) * layout.scaleY * 0.83;
 
       const radius =
-        layoutLineWidth(
-          0.55 +
-          (
-            Math.sin(seed * 1.31) * 0.5 + 0.5
-          ) *
-            1.4
+        lineWidth(
+          0.32 +
+          (Math.sin(seed * 2.31) * 0.5 + 0.5) * 0.76
         );
-
-      context.fillStyle =
-        `rgba(230, 218, 184, ${
-          dustAlpha *
-          (
-            0.3 +
-            (
-              Math.sin(seed * 0.43) * 0.5 + 0.5
-            ) *
-              0.7
-          )
-        })`;
 
       context.beginPath();
 
@@ -2558,6 +2711,9 @@
         0,
         Math.PI * 2
       );
+
+      context.fillStyle =
+        `rgba(225, 218, 185, ${0.018 * amount})`;
 
       context.fill();
     }
@@ -2573,23 +2729,18 @@
       return;
     }
 
-    const context =
-      state.context;
-
     resize();
-
     clearCanvas();
 
     const amount =
-      clamp(
-        state.curtainAmount,
-        0,
-        1
-      );
+      clamp(state.curtainAmount, 0, 1);
 
     if (amount <= 0.002) {
       return;
     }
+
+    const context =
+      state.context;
 
     const layout =
       makeLayout();
@@ -2601,55 +2752,19 @@
       state.pixelRatio
     );
 
-    drawSceneShadow(
-      context,
-      layout,
-      amount
-    );
-
-    drawOuterFrameSilhouette(
-      context,
-      layout,
-      amount
-    );
-
-    drawAllPanes(
-      context,
-      layout,
-      amount
-    );
-
-    drawLeadNetwork(
-      context,
-      layout,
-      amount
-    );
-
-    drawFrameCurves(
-      context,
-      layout,
-      amount
-    );
-
-    drawApertureClear(
-      context,
-      layout,
-      amount
-    );
-
-    drawApertureBevel(
-      context,
-      layout,
-      amount
-    );
-
-    drawAgedDustAndEdgeWear(
-      context,
-      layout,
-      amount
-    );
+    drawContactShadow(context, layout, amount);
+    drawFrameBands(context, layout, amount);
+    drawGlassPanes(context, layout, amount);
+    drawLeadCame(context, layout, amount);
+    drawMullionsAndCaps(context, layout, amount);
+    drawApertureClear(context, layout, amount);
+    drawApertureBevel(context, layout, amount);
+    drawSurfaceAge(context, layout, amount);
 
     context.restore();
+
+    state.lastRenderTime =
+      performance.now();
   }
 
   function render() {
@@ -2662,9 +2777,6 @@
     }
 
     drawCurtainObject();
-
-    state.lastRenderTime =
-      performance.now();
 
     updateReceipt({
       lastAction:
@@ -2694,6 +2806,7 @@
 
     if (state.raf) {
       cancelAnimationFrame(state.raf);
+
       state.raf =
         0;
     }
@@ -2740,17 +2853,6 @@
       );
 
     drawCurtainObject();
-
-    updateReceipt({
-      lastAction:
-        "window-object-transition-rendered",
-
-      transitionId:
-        transition.id,
-
-      transitionTarget:
-        transition.to
-    });
 
     if (raw < 1) {
       state.raf =
@@ -2833,6 +2935,7 @@
         id,
         from,
         to,
+
         startTime:
           performance.now(),
 
@@ -2941,6 +3044,16 @@
     );
   }
 
+  function handleResizeFallback() {
+    resize();
+    drawCurtainObject();
+
+    updateReceipt({
+      lastAction:
+        "window-object-resized"
+    });
+  }
+
   function bindResize() {
     if (
       state.resizeObserver ||
@@ -3002,13 +3115,16 @@
     }
   }
 
-  function handleResizeFallback() {
-    resize();
-    drawCurtainObject();
+  function handleReducedMotionChange() {
+    state.reducedMotion =
+      Boolean(
+        state.reducedMotionQuery &&
+        state.reducedMotionQuery.matches
+      );
 
     updateReceipt({
       lastAction:
-        "window-object-resized"
+        "window-object-reduced-motion-updated"
     });
   }
 
@@ -3075,19 +3191,6 @@
       null;
   }
 
-  function handleReducedMotionChange() {
-    state.reducedMotion =
-      Boolean(
-        state.reducedMotionQuery &&
-        state.reducedMotionQuery.matches
-      );
-
-    updateReceipt({
-      lastAction:
-        "window-object-reduced-motion-updated"
-    });
-  }
-
   function dispose() {
     if (state.disposed) {
       return true;
@@ -3104,14 +3207,17 @@
     ) {
       state.canvas.remove();
     } else if (state.canvas) {
-      state.canvas
-        .getContext("2d")
-        ?.clearRect(
+      const context =
+        state.canvas.getContext("2d");
+
+      if (context) {
+        context.clearRect(
           0,
           0,
           state.canvas.width,
           state.canvas.height
         );
+      }
     }
 
     state.disposed =
@@ -3187,11 +3293,14 @@
       paneCount:
         state.geometry.panes.length,
 
-      frameCurveCount:
-        state.geometry.frame.curves.length,
+      uniqueCameSegmentCount:
+        state.geometry.cameSegments.length,
+
+      frameBandCount:
+        state.geometry.frameBands.length,
 
       aperturePointCount:
-        state.geometry.aperture.points.length,
+        state.geometry.aperture.outer.length,
 
       apertureTransparent:
         state.geometry.aperture.transparent,
@@ -3200,7 +3309,10 @@
         state.geometry.depth,
 
       materialGroups:
-        Object.keys(state.geometry.materials)
+        Object.keys(state.geometry.materials),
+
+      geometryQualityIntent:
+        "crisp-compound-frame-came-glass-aperture-depth"
     });
   }
 
@@ -3343,7 +3455,7 @@
           state.curtainAmount,
 
         lastAction:
-          "window-object-initialized-default-curtain-visible",
+          "window-object-initialized-crisp-3d-curtain-visible",
 
         lastFailure:
           null
@@ -3377,7 +3489,7 @@
       {
         once:
           true
-        }
+      }
     );
   } else {
     init();

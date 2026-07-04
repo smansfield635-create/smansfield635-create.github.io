@@ -1,7 +1,7 @@
 /* TARGET FILE: /showroom/index.css
    COMPLETE REPLACEMENT
 
-   SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v13_10_AUDRALIA_WEBGL_3D_PLANET_CENTER_UNIFIED_HOST_FULL_SEMANTIC_HIT_SURFACE
+   SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v13_11_AUDRALIA_WEBGL_3D_PLANET_CENTER_UNIFIED_HOST_STACKING_SAFE_FULL_SEMANTIC_HIT_SURFACE
 
    Scope:
    - compact Mirrorland threshold;
@@ -20,7 +20,9 @@
    - [data-showroom-planet-mount] is the unified center object host;
    - [data-showroom-planet-visual-host] is the WebGL visual render host;
    - [data-showroom-compass-control] is the full semantic hit surface;
-   - full visible center planet object is covered by the semantic Compass button;
+   - unified center object stacks above full-field star layout containers;
+   - full-field star layout containers are pointer-transparent;
+   - actual star controls remain pointer-active;
    - WebGL renderer owns globe body, terrain, water, clouds, lighting, and terminator behavior;
    - interactions own semantic Compass recovery;
    - CSS owns hit-area layout, pointer layering, focus visibility, responsiveness, and subtle ambient staging only;
@@ -916,7 +918,7 @@ main {
 }
 
 /* ================================================================
-   10. UNIFIED CENTER HOST, WEBGL PLANET VISUAL HOST, AND FULL SEMANTIC HIT SURFACE
+   10. UNIFIED CENTER HOST, WEBGL PLANET VISUAL HOST, AND STACKING-SAFE FULL SEMANTIC HIT SURFACE
    ================================================================ */
 
 .showroom-compass-layer,
@@ -925,7 +927,7 @@ main {
 [data-showroom-center-structure="unified-center-object"],
 [data-showroom-planet-mount] {
   position: absolute;
-  z-index: 5;
+  z-index: 9;
   inset: 50% auto auto 50%;
   width: var(--showroom-center-size);
   aspect-ratio: 1;
@@ -1373,7 +1375,7 @@ main {
 }
 
 /* ================================================================
-   11. SEMANTIC STAR LAYERS AND FALLBACK
+   11. SEMANTIC STAR LAYERS AND STACKING-SAFE POINTER MODEL
    ================================================================ */
 
 .showroom-semantic-star-layer,
@@ -1381,10 +1383,17 @@ main {
 .showroom-star-cluster {
   position: absolute;
   inset: 0;
+  pointer-events: none;
 }
 
 .showroom-semantic-star-layer {
   z-index: 7;
+}
+
+.showroom-star,
+[data-showroom-cardinal-control],
+[data-showroom-child-control] {
+  pointer-events: auto;
 }
 
 .showroom-star {
@@ -3966,13 +3975,13 @@ main {
    END RECEIPT
 
    CONTRACT:
-   SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v13_10_AUDRALIA_WEBGL_3D_PLANET_CENTER_UNIFIED_HOST_FULL_SEMANTIC_HIT_SURFACE
+   SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v13_11_AUDRALIA_WEBGL_3D_PLANET_CENTER_UNIFIED_HOST_STACKING_SAFE_FULL_SEMANTIC_HIT_SURFACE
 
    PREVIOUS CONTRACT:
-   SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v13_9_AUDRALIA_WEBGL_3D_PLANET_CENTER_FULL_SEMANTIC_HIT_SURFACE
+   SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v13_10_AUDRALIA_WEBGL_3D_PLANET_CENTER_UNIFIED_HOST_FULL_SEMANTIC_HIT_SURFACE
 
    RENEWAL SCOPE:
-   GROUP_F_AUDRALIA_GEOMETRY_AUTHORITY_WEBGL_3D_PLANET_UNIFIED_HOST_FULL_CENTER_SEMANTIC_HIT_SURFACE_CSS_CONFORMANCE
+   GROUP_F_AUDRALIA_GEOMETRY_AUTHORITY_WEBGL_3D_PLANET_UNIFIED_HOST_FULL_CENTER_SEMANTIC_HIT_SURFACE_STACKING_CORRECTION
 
    ACTIVE CENTER VISUAL:
    - /showroom/index.planet.js
@@ -3992,8 +4001,17 @@ main {
    UNIFIED HOST CONTRACT:
    - SHOWROOM_PLANETARY_CENTER_OBJECT_UNIFIED_HOST_CONTRACT_v1
 
-   REQUIRED CORRECTION:
+   REQUIRED v13_11 CORRECTION:
    - CSS treats [data-showroom-planet-mount] as the unified center object host;
+   - unified center host now stacks above full-field star layout containers;
+   - unified center host z-index is 9;
+   - .showroom-semantic-star-layer remains z-index 7;
+   - .showroom-semantic-star-layer is pointer-transparent;
+   - .showroom-primary-stars is pointer-transparent;
+   - .showroom-star-cluster is pointer-transparent;
+   - actual star buttons remain pointer-events:auto;
+   - [data-showroom-cardinal-control] remains pointer-events:auto;
+   - [data-showroom-child-control] remains pointer-events:auto;
    - CSS no longer treats [data-showroom-planet-mount] as the planet visual stage;
    - CSS retargets WebGL visual staging to [data-showroom-planet-visual-host];
    - CSS retargets render-host staging to [data-showroom-planet-render-target="true"];
@@ -4005,7 +4023,7 @@ main {
    - desktop full-center semantic hit surface uses inset: -6%;
    - mobile full-center semantic hit surface uses inset: -5%;
    - very small viewport hit surface uses inset: -4%;
-   - semantic Compass button sits above the decorative planet stack;
+   - semantic Compass button sits above the decorative planet stack locally and above full-field star containers globally through its parent host;
    - semantic Compass button uses pointer-events: auto;
    - unified center host, planet visual host, and decorative planet stack use pointer-events: none;
    - Compass label, instruction, and pseudo-element use pointer-events: none;
@@ -4034,6 +4052,19 @@ main {
    [data-showroom-planet-mount]
      [data-showroom-planet-visual-host]
      [data-showroom-compass-control]
+
+   PROVEN STACKING CORRECTION:
+   - center host:
+       z-index: 9;
+   - full-field star layer:
+       z-index: 7;
+       pointer-events: none;
+   - full-field star containers:
+       pointer-events: none;
+   - actual star buttons:
+       pointer-events: auto;
+   - center semantic button:
+       pointer-events: auto;
 
    PLANET MODULE CSS SURFACES:
    - .showroom-planet-root
@@ -4069,7 +4100,8 @@ main {
    - Showroom Compass adapter compatibility claims;
    - CSS assumptions that the center visual is Compass-renderer-owned;
    - Canvas 2D renderer language as the active planet model;
-   - v13_9 assumption that [data-showroom-planet-mount] is the visual host.
+   - v13_9 assumption that [data-showroom-planet-mount] is the visual host;
+   - v13_10 global stacking failure where the full-field star layer could sit above the center host and intercept center taps.
 
    DIRECTION EXPRESSION:
    - canonical written order is NEWS / N-E-W-S.
@@ -4112,8 +4144,8 @@ main {
    - /showroom/index.html
    - SHOWROOM_MIRRORLAND_IMMERSIVE_MISSION_CONTEXT_HTML_TNT_v17_10_AUDRALIA_WEBGL_3D_PLANET_CENTER_UNIFIED_HOST_CONFORMANCE
 
-   COMPANION HTML CACHE QUERY:
-   /showroom/index.css?v=SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v13_10_AUDRALIA_WEBGL_3D_PLANET_CENTER_UNIFIED_HOST_FULL_SEMANTIC_HIT_SURFACE
+   COMPANION HTML CACHE QUERY TO UPDATE:
+   /showroom/index.css?v=SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v13_11_AUDRALIA_WEBGL_3D_PLANET_CENTER_UNIFIED_HOST_STACKING_SAFE_FULL_SEMANTIC_HIT_SURFACE
 
    COMPANION HTML LEGEND ORDER:
    - companion HTML source order is NEWS / N-E-W-S.
@@ -4127,6 +4159,17 @@ main {
    COMPANION INTERACTIONS JS:
    - /showroom/index.interactions.js
    - SHOWROOM_COMPLETE_QUATERNION_INTERACTIONS_TNT_v6_COMPASS_SEMANTIC_RECOVERY_INITIALIZATION_GATE_CORRECTED
+
+   FILES NOT MODIFIED BY THIS CSS RENEWAL:
+   - /showroom/index.html
+   - /showroom/index.planet.js
+   - /showroom/index.interactions.js
+   - /showroom/index.controller.js
+   - /showroom/index.compositor.js
+   - /showroom/index.crystals.js
+   - /assets/compass/upstream-compass.geometry.js
+   - /assets/compass/upstream-compass.renderer.js
+   - /showroom/index.compass.adapter.js
 
    ATLAS RECORD COUNT:
    23

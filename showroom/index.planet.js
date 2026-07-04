@@ -3,15 +3,13 @@
 /* GROUP_F_AUDRALIA_PLANETARY_OBJECT_RENEWAL */
 /* SHOWROOM_PLANETARY_FULCRUM_INDEPENDENT_CENTER_PLANET_TNT_v1 */
 /* AUDRALIA_GEOMETRY_AUTHORITY_MINIATURE_3D_RENDERER_v1 */
-/* SHOWROOM_PLANETARY_CENTER_OBJECT_UNIFIED_HOST_CONTRACT_v1 */
 /*
   Purpose:
   - Render the Showroom center planet from the canonical Audralia geometry
     authority as a compact real WebGL 3D object.
   - Preserve the Showroom center object as the Main Compass return selector.
   - Keep the planet visual decorative and non-navigational.
-  - Support the unified center-object structure where the decorative planet
-    visual host and semantic Compass control live inside the same center object.
+  - Provide the baseline planet module surface contract for downstream HTML/CSS.
 
   Source geometry authority:
   - /assets/audralia/audralia.planet.js
@@ -24,17 +22,6 @@
   - Click / tap authority remains [data-showroom-compass-control].
   - Route authority remains the Showroom controller.
   - The semantic outcome remains Main Compass return selection.
-
-  Unified host contract:
-  - Outer object:
-      [data-showroom-planet-mount]
-  - Inner visual host:
-      [data-showroom-planet-visual-host]
-  - Semantic click control:
-      [data-showroom-compass-control]
-
-  This module may render only inside [data-showroom-planet-visual-host].
-  It must not clear, replace, disable, or intercept the semantic Compass button.
 
   Does not own:
   - semantic navigation;
@@ -55,9 +42,6 @@
 
   const MODEL =
     "AUDRALIA_GEOMETRY_AUTHORITY_MINIATURE_3D_RENDERER_v1";
-
-  const UNIFIED_HOST_CONTRACT =
-    "SHOWROOM_PLANETARY_CENTER_OBJECT_UNIFIED_HOST_CONTRACT_v1";
 
   const AUDRALIA_GEOMETRY_CONTRACT =
     "AUDRALIA_G1_DETERMINISTIC_PLANET_GEOMETRY_AUTHORITY_TNT_v1";
@@ -115,20 +99,11 @@
     root:
       "data-showroom-planet-root",
 
-    visualHost:
-      "data-showroom-planet-visual-host",
-
-    visualHostCreated:
-      "data-showroom-planet-visual-host-created",
-
     model:
       "data-showroom-planet-model",
 
     sourceContract:
       "data-showroom-planet-source-contract",
-
-    unifiedHostContract:
-      "data-showroom-planet-unified-host-contract",
 
     state:
       "data-showroom-planet-state",
@@ -161,32 +136,7 @@
       "data-showroom-planet-semantic-activation-authority"
   });
 
-  const SELECTORS = Object.freeze({
-    visualHost:
-      `[${ATTRIBUTES.visualHost}]`,
-
-    compassControl:
-      "[data-showroom-compass-control]",
-
-    compassAlias:
-      "[data-showroom-compass-selection-alias]",
-
-    compassAction:
-      "[data-showroom-controller-action=\"request-compass-selection\"]",
-
-    compassSemanticControl:
-      [
-        "[data-showroom-compass-control]",
-        "[data-showroom-compass-selection-alias]" +
-          "[data-showroom-controller-action=\"request-compass-selection\"]",
-        "[data-showroom-controller-action=\"request-compass-selection\"]"
-      ].join(",")
-  });
-
   const CLASS_NAMES = Object.freeze({
-    visualHost:
-      "showroom-planet-visual-host",
-
     root:
       "showroom-planet-root",
 
@@ -395,12 +345,6 @@
     target:
       null,
 
-    visualHost:
-      null,
-
-    visualHostCreated:
-      false,
-
     root:
       null,
 
@@ -541,15 +485,6 @@
         0,
 
       canvasResizes:
-        0,
-
-      visualHostResolved:
-        0,
-
-      visualHostCreated:
-        0,
-
-      semanticControlsPreserved:
         0
     }
   };
@@ -781,25 +716,6 @@ void main() {
     return STATES.mounted;
   }
 
-  function semanticControlPresent(target = state.target) {
-    if (
-      !target ||
-      typeof target.querySelector !== "function"
-    ) {
-      return false;
-    }
-
-    try {
-      return Boolean(
-        target.querySelector(
-          SELECTORS.compassSemanticControl
-        )
-      );
-    } catch {
-      return false;
-    }
-  }
-
   function createReceipt(
     event,
     detail = {}
@@ -810,9 +726,6 @@ void main() {
 
       model:
         MODEL,
-
-      unifiedHostContract:
-        UNIFIED_HOST_CONTRACT,
 
       owner:
         OWNER,
@@ -861,25 +774,6 @@ void main() {
       targetAvailable:
         Boolean(state.target),
 
-      outerMountPreserved:
-        Boolean(state.target),
-
-      visualHostAvailable:
-        Boolean(state.visualHost),
-
-      visualHostOwned:
-        Boolean(state.visualHost),
-
-      visualHostCreatedByPlanet:
-        state.visualHostCreated,
-
-      renderedIntoVisualHost:
-        Boolean(
-          state.root &&
-          state.visualHost &&
-          state.root.parentNode === state.visualHost
-        ),
-
       rootAvailable:
         Boolean(state.root),
 
@@ -888,9 +782,6 @@ void main() {
 
       webGLAvailable:
         Boolean(state.gl),
-
-      semanticControlPreserved:
-        semanticControlPresent(),
 
       geometryAuthorityAvailable:
         Boolean(state.geometryAuthority),
@@ -1118,109 +1009,6 @@ void main() {
       "none";
   }
 
-  function createVisualHost() {
-    const host =
-      document.createElement("div");
-
-    host.className =
-      CLASS_NAMES.visualHost;
-
-    host.setAttribute(
-      ATTRIBUTES.visualHost,
-      "true"
-    );
-
-    host.setAttribute(
-      ATTRIBUTES.visualHostCreated,
-      "true"
-    );
-
-    host.setAttribute(
-      ATTRIBUTES.unifiedHostContract,
-      UNIFIED_HOST_CONTRACT
-    );
-
-    host.setAttribute(
-      "aria-hidden",
-      "true"
-    );
-
-    host.setAttribute(
-      "role",
-      "presentation"
-    );
-
-    host.style.pointerEvents =
-      "none";
-
-    return host;
-  }
-
-  function resolveVisualHost(target) {
-    if (!isElement(target)) {
-      return null;
-    }
-
-    let host =
-      null;
-
-    try {
-      host =
-        target.querySelector(
-          SELECTORS.visualHost
-        );
-    } catch {
-      host =
-        null;
-    }
-
-    if (isElement(host)) {
-      host.setAttribute(
-        ATTRIBUTES.visualHost,
-        "true"
-      );
-
-      host.setAttribute(
-        ATTRIBUTES.unifiedHostContract,
-        UNIFIED_HOST_CONTRACT
-      );
-
-      host.setAttribute(
-        "aria-hidden",
-        "true"
-      );
-
-      host.style.pointerEvents =
-        "none";
-
-      state.visualHostCreated =
-        host.getAttribute(
-          ATTRIBUTES.visualHostCreated
-        ) === "true";
-
-      state.counters.visualHostResolved +=
-        1;
-
-      return host;
-    }
-
-    host =
-      createVisualHost();
-
-    target.insertBefore(
-      host,
-      target.firstChild
-    );
-
-    state.visualHostCreated =
-      true;
-
-    state.counters.visualHostCreated +=
-      1;
-
-    return host;
-  }
-
   function createPlanetDom() {
     const root =
       document.createElement("div");
@@ -1241,11 +1029,6 @@ void main() {
     root.setAttribute(
       ATTRIBUTES.sourceContract,
       AUDRALIA_GEOMETRY_CONTRACT
-    );
-
-    root.setAttribute(
-      ATTRIBUTES.unifiedHostContract,
-      UNIFIED_HOST_CONTRACT
     );
 
     root.setAttribute(
@@ -1299,9 +1082,6 @@ void main() {
       "role",
       "presentation"
     );
-
-    root.style.pointerEvents =
-      "none";
 
     root.style.setProperty(
       "--showroom-planet-turn",
@@ -1966,23 +1746,7 @@ void main() {
           AUDRALIA_GEOMETRY_GLOBAL,
 
         requiredContract:
-          AUDRALIA_GEOMETRY_CONTRACT,
-
-        outerMountPreserved:
-          true,
-
-        visualHostOwned:
-          Boolean(state.visualHost),
-
-        renderedIntoVisualHost:
-          Boolean(
-            state.root &&
-            state.visualHost &&
-            state.root.parentNode === state.visualHost
-          ),
-
-        semanticControlPreserved:
-          semanticControlPresent()
+          AUDRALIA_GEOMETRY_CONTRACT
       }
     );
 
@@ -3489,22 +3253,6 @@ void main() {
         navigationMeaning:
           "main-compass-return-selection",
 
-        outerMountPreserved:
-          true,
-
-        visualHostOwned:
-          Boolean(state.visualHost),
-
-        renderedIntoVisualHost:
-          Boolean(
-            state.root &&
-            state.visualHost &&
-            state.root.parentNode === state.visualHost
-          ),
-
-        semanticControlPreserved:
-          semanticControlPresent(),
-
         webGL:
           false,
 
@@ -3576,23 +3324,7 @@ void main() {
           "planet-failure",
 
         error:
-          errorPayload,
-
-        outerMountPreserved:
-          Boolean(state.target),
-
-        visualHostOwned:
-          Boolean(state.visualHost),
-
-        renderedIntoVisualHost:
-          Boolean(
-            state.root &&
-            state.visualHost &&
-            state.root.parentNode === state.visualHost
-          ),
-
-        semanticControlPreserved:
-          semanticControlPresent()
+          errorPayload
       }
     );
 
@@ -3697,25 +3429,6 @@ void main() {
         semanticActivation:
           "none",
 
-        outerMountPreserved:
-          true,
-
-        visualHostOwned:
-          Boolean(state.visualHost),
-
-        visualHostCreatedByPlanet:
-          state.visualHostCreated,
-
-        renderedIntoVisualHost:
-          Boolean(
-            state.root &&
-            state.visualHost &&
-            state.root.parentNode === state.visualHost
-          ),
-
-        semanticControlPreserved:
-          semanticControlPresent(),
-
         webGL:
           true,
 
@@ -3741,26 +3454,7 @@ void main() {
           "webgl-3d",
 
         navigationMeaning:
-          "main-compass-return-selection",
-
-        unifiedHostContract:
-          UNIFIED_HOST_CONTRACT,
-
-        outerMountPreserved:
-          true,
-
-        visualHostOwned:
-          Boolean(state.visualHost),
-
-        renderedIntoVisualHost:
-          Boolean(
-            state.root &&
-            state.visualHost &&
-            state.root.parentNode === state.visualHost
-          ),
-
-        semanticControlPreserved:
-          semanticControlPresent()
+          "main-compass-return-selection"
       }
     );
 
@@ -3797,25 +3491,9 @@ void main() {
       state.target =
         target;
 
-      state.visualHost =
-        resolveVisualHost(
-          target
-        );
-
-      if (!state.visualHost) {
-        throw new Error(
-          "The Showroom planet requires a visual host inside the center object."
-        );
-      }
-
       state.receiptTarget =
         resolveReceiptTarget(
           options
-        );
-
-      const semanticPresentBeforeMount =
-        semanticControlPresent(
-          target
         );
 
       const root =
@@ -3824,7 +3502,7 @@ void main() {
       state.root =
         root;
 
-      state.visualHost.appendChild(
+      state.target.appendChild(
         root
       );
 
@@ -3869,14 +3547,6 @@ void main() {
       state.counters.mounts +=
         1;
 
-      if (
-        semanticPresentBeforeMount &&
-        semanticControlPresent(target)
-      ) {
-        state.counters.semanticControlsPreserved +=
-          1;
-      }
-
       bindResize();
       applyStateAttribute();
       applyReducedMotionAttribute();
@@ -3886,28 +3556,6 @@ void main() {
         {
           targetAccepted:
             true,
-
-          outerMountPreserved:
-            true,
-
-          visualHostOwned:
-            true,
-
-          visualHostCreatedByPlanet:
-            state.visualHostCreated,
-
-          renderedIntoVisualHost:
-            Boolean(
-              state.root &&
-              state.visualHost &&
-              state.root.parentNode === state.visualHost
-            ),
-
-          semanticControlPresentBeforeMount:
-            semanticPresentBeforeMount,
-
-          semanticControlPreserved:
-            semanticControlPresent(target),
 
           decorative:
             true,
@@ -3990,16 +3638,6 @@ void main() {
     const root =
       state.root;
 
-    const visualHost =
-      state.visualHost;
-
-    const removeCreatedVisualHost =
-      Boolean(
-        state.visualHostCreated &&
-        visualHost &&
-        visualHost.parentNode
-      );
-
     if (
       root &&
       root.parentNode
@@ -4013,26 +3651,10 @@ void main() {
       }
     }
 
-    if (removeCreatedVisualHost) {
-      try {
-        visualHost.parentNode.removeChild(
-          visualHost
-        );
-      } catch {
-        /* Best-effort visual-host cleanup. */
-      }
-    }
-
     unbindReducedMotion();
 
     state.target =
       null;
-
-    state.visualHost =
-      null;
-
-    state.visualHostCreated =
-      false;
 
     state.root =
       null;
@@ -4102,16 +3724,7 @@ void main() {
           "api",
 
         localDomRemoved:
-          true,
-
-        outerMountPreserved:
-          true,
-
-        visualHostRemoved:
-          removeCreatedVisualHost,
-
-        authorProvidedVisualHostPreserved:
-          !removeCreatedVisualHost
+          true
       }
     );
 
@@ -4145,23 +3758,7 @@ void main() {
           "api",
 
         reducedMotion:
-          state.reducedMotion,
-
-        outerMountPreserved:
-          Boolean(state.target),
-
-        visualHostOwned:
-          Boolean(state.visualHost),
-
-        renderedIntoVisualHost:
-          Boolean(
-            state.root &&
-            state.visualHost &&
-            state.root.parentNode === state.visualHost
-          ),
-
-        semanticControlPreserved:
-          semanticControlPresent()
+          state.reducedMotion
       }
     );
 
@@ -4195,23 +3792,7 @@ void main() {
       "paused",
       {
         reason:
-          state.pauseReason,
-
-        outerMountPreserved:
-          Boolean(state.target),
-
-        visualHostOwned:
-          Boolean(state.visualHost),
-
-        renderedIntoVisualHost:
-          Boolean(
-            state.root &&
-            state.visualHost &&
-            state.root.parentNode === state.visualHost
-          ),
-
-        semanticControlPreserved:
-          semanticControlPresent()
+          state.pauseReason
       }
     );
 
@@ -4248,23 +3829,7 @@ void main() {
           "api",
 
         animationAllowed:
-          animationAllowed(),
-
-        outerMountPreserved:
-          Boolean(state.target),
-
-        visualHostOwned:
-          Boolean(state.visualHost),
-
-        renderedIntoVisualHost:
-          Boolean(
-            state.root &&
-            state.visualHost &&
-            state.root.parentNode === state.visualHost
-          ),
-
-        semanticControlPreserved:
-          semanticControlPresent()
+          animationAllowed()
       }
     );
 
@@ -4332,12 +3897,6 @@ void main() {
         listenersRemoved:
           true,
 
-        outerMountPreserved:
-          true,
-
-        visualHostContract:
-          UNIFIED_HOST_CONTRACT,
-
         geometryAuthorityMutated:
           false,
 
@@ -4386,9 +3945,6 @@ void main() {
         navigationMeaning:
           "main-compass-return-selection",
 
-        unifiedHostContract:
-          UNIFIED_HOST_CONTRACT,
-
         sourceGeometryContract:
           AUDRALIA_GEOMETRY_CONTRACT,
 
@@ -4416,8 +3972,6 @@ void main() {
           Boolean(state.cloudMesh),
 
         emittedDomSurfaces: [
-          ".showroom-planet-visual-host",
-          "[data-showroom-planet-visual-host]",
           ".showroom-planet-root",
           ".showroom-planet-glow",
           ".showroom-planet-orbit-line",
@@ -4464,9 +4018,6 @@ void main() {
       model:
         MODEL,
 
-      unifiedHostContract:
-        UNIFIED_HOST_CONTRACT,
-
       owner:
         OWNER,
 
@@ -4484,12 +4035,6 @@ void main() {
 
       navigationMeaning:
         "main-compass-return-selection",
-
-      visualHostSelector:
-        SELECTORS.visualHost,
-
-      clickAuthorityOwner:
-        SELECTORS.compassControl,
 
       getState,
 
@@ -4536,21 +4081,6 @@ void main() {
       requiresExternalMountTarget:
         true,
 
-      unifiedHostContract:
-        UNIFIED_HOST_CONTRACT,
-
-      visualHostSelector:
-        SELECTORS.visualHost,
-
-      outerMountPreserved:
-        true,
-
-      renderedIntoVisualHost:
-        "on-mount",
-
-      semanticControlPreserved:
-        "on-mount",
-
       semanticActivation:
         "none",
 
@@ -4582,8 +4112,6 @@ void main() {
         AUDRALIA_GEOMETRY_CONTRACT,
 
       emittedDomSurfaces: [
-        ".showroom-planet-visual-host",
-        "[data-showroom-planet-visual-host]",
         ".showroom-planet-root",
         ".showroom-planet-glow",
         ".showroom-planet-orbit-line",

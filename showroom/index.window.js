@@ -1,25 +1,26 @@
 /* TARGET FILE: /showroom/index.window.js */
 /* COMPLETE REPLACEMENT */
-/* SHOWROOM_MIRRORLAND_FOREGROUND_WINDOW_TNT_v1_1_DISSOLVE_REVEAL */
+/* SHOWROOM_MIRRORLAND_FOREGROUND_WINDOW_TNT_v1_2_APERTURE_CONTROL_HARDENING */
 
-/* 
+/*
   Purpose:
-  - Install the Showroom-local Mirrorland Window renderer.
-  - Render a foreground stained-glass veil above the Diamond.
-  - Closed means glass is visible and the Diamond is hidden.
-  - Opening means the glass dissolves/withdraws and the Diamond is revealed.
-  - Open means the glass is gone or nearly invisible.
-  - Restoring means the glass returns over the Diamond.
-  - Keep the generated canvas pointer-transparent.
-  - Keep [data-showroom-window-control] as the only Window interaction target.
-  - Avoid Compass globals and shared Compass ownership.
+  - Render the Showroom-local Mirrorland Window as a foreground stained-glass
+    veil above the Diamond.
+  - Closed state: glass covers the Diamond, with an intentional transparent
+    central aperture so the rotating Diamond remains partially visible.
+  - Open state: glass dissolves away so the full Diamond is revealed.
+  - Restore state: glass returns over the Diamond while preserving the aperture.
+  - Keep the Window canvas pointer-transparent.
+  - Keep the existing [data-showroom-window-control] visible above the canvas.
+  - Avoid Compass globals, Diamond internals, route ownership, compositor
+    ownership, and orbit gesture ownership.
 
-  Notification-only events:
+  Notification-only lifecycle events:
   - SHOWROOM_MIRRORLAND_WINDOW_OPEN_REQUEST
   - SHOWROOM_MIRRORLAND_WINDOW_RESTORE_REQUEST
 
   These events are emitted as lifecycle notifications. This file does not
-  listen for them as external commands.
+  listen for them as external command events.
 */
 
 (() => {
@@ -27,19 +28,19 @@
 
   const CONTRACT = Object.freeze({
     id:
-      "SHOWROOM_MIRRORLAND_FOREGROUND_WINDOW_TNT_v1_1_DISSOLVE_REVEAL",
+      "SHOWROOM_MIRRORLAND_FOREGROUND_WINDOW_TNT_v1_2_APERTURE_CONTROL_HARDENING",
 
     previousId:
-      "SHOWROOM_MIRRORLAND_FOREGROUND_WINDOW_TNT_v1",
+      "SHOWROOM_MIRRORLAND_FOREGROUND_WINDOW_TNT_v1_1_DISSOLVE_REVEAL",
 
     file:
       "/showroom/index.window.js",
 
     rendererClass:
-      "SHOWROOM_LOCAL_2_5D_STAINED_GLASS_DISSOLVE_VEIL",
+      "SHOWROOM_LOCAL_2_5D_STAINED_GLASS_APERTURE_VEIL",
 
     visualModel:
-      "closed-glass-visible-open-glass-dissolved",
+      "closed-glass-visible-with-transparent-aperture-open-glass-dissolved",
 
     externalObjectDependencyRequired:
       false,
@@ -155,10 +156,7 @@
       100,
 
     dissolveDrift:
-      18,
-
-    sparklePeriodSeconds:
-      2.7
+      18
   });
 
   const DIMENSIONS = Object.freeze({
@@ -203,6 +201,18 @@
 
     ribHighlightWidthOpen:
       0.1,
+
+    apertureDarkRimClosed:
+      7,
+
+    apertureDarkRimOpen:
+      0,
+
+    apertureLightRimClosed:
+      1.5,
+
+    apertureLightRimOpen:
+      0,
 
     maximumDevicePixelRatio:
       2
@@ -286,11 +296,20 @@
     buttonOnlyInteraction:
       true,
 
+    controlHardened:
+      false,
+
     paneCount:
       0,
 
     frameCount:
       0,
+
+    apertureDeclared:
+      true,
+
+    apertureTransparent:
+      true,
 
     veilAmount:
       1,
@@ -298,8 +317,11 @@
     glassAmount:
       1,
 
+    revealAmount:
+      0,
+
     visualSemantics:
-      "closed-glass-visible-open-glass-dissolved",
+      "closed-glass-visible-with-aperture-open-glass-dissolved",
 
     reducedMotion:
       false,
@@ -317,6 +339,9 @@
       false,
 
     labelRequired:
+      false,
+
+    stableAnimation:
       false,
 
     lastAction:
@@ -446,6 +471,9 @@
     geometryReady:
       false,
 
+    controlHardened:
+      false,
+
     initialized:
       false,
 
@@ -474,12 +502,15 @@
     minimum,
     maximum
   ) {
+    const number =
+      Number(value);
+
     return Math.max(
       minimum,
       Math.min(
         maximum,
-        Number.isFinite(value)
-          ? value
+        Number.isFinite(number)
+          ? number
           : minimum
       )
     );
@@ -621,14 +652,12 @@
           : "false"
       );
 
-      if (!state.label) {
-        state.control.setAttribute(
-          "aria-label",
-          expanded
-            ? "Restore the Mirrorland Window and hide the Diamond"
-            : "Open the Mirrorland Window and reveal the Diamond"
-        );
-      }
+      state.control.setAttribute(
+        "aria-label",
+        expanded
+          ? "Restore the Mirrorland Window over the rotating Diamond"
+          : "Open the Mirrorland Window and reveal the rotating Diamond"
+      );
     }
 
     if (state.label) {
@@ -667,6 +696,9 @@
         canvasPresent:
           Boolean(state.canvas),
 
+        controlHardened:
+          state.controlHardened,
+
         paneCount:
           state.panes.length,
 
@@ -678,6 +710,9 @@
 
         glassAmount:
           glassAmount(),
+
+        revealAmount:
+          revealAmount(),
 
         reducedMotion:
           state.reducedMotion,
@@ -789,17 +824,7 @@
     state.rendererState =
       STATES.HELD;
 
-    state.running =
-      false;
-
-    if (state.raf) {
-      cancelAnimationFrame(
-        state.raf
-      );
-
-      state.raf =
-        0;
-    }
+    stopRenderLoop();
 
     writeWindowState();
 
@@ -923,6 +948,51 @@
     );
 
     return canvas;
+  }
+
+  function hardenControlSurface() {
+    if (!state.control) {
+      return;
+    }
+
+    Object.assign(
+      state.control.style,
+      {
+        position:
+          "absolute",
+
+        left:
+          "50%",
+
+        bottom:
+          "1.15rem",
+
+        transform:
+          "translateX(-50%)",
+
+        zIndex:
+          "5",
+
+        pointerEvents:
+          "auto",
+
+        visibility:
+          "visible",
+
+        opacity:
+          "1"
+      }
+    );
+
+    state.control.hidden =
+      false;
+
+    state.control.removeAttribute(
+      "hidden"
+    );
+
+    state.controlHardened =
+      true;
   }
 
   function createPane(
@@ -1324,6 +1394,34 @@
     appendInnerWindow(context);
   }
 
+  function traceViewingAperture(
+    context
+  ) {
+    context.beginPath();
+
+    context.moveTo(
+      240,
+      236
+    );
+
+    context.lineTo(
+      276,
+      328
+    );
+
+    context.lineTo(
+      240,
+      416
+    );
+
+    context.lineTo(
+      204,
+      328
+    );
+
+    context.closePath();
+  }
+
   function createPaneGradient(
     context,
     pane,
@@ -1395,7 +1493,7 @@
           (
             0.52 +
             shimmer *
-            0.04
+              0.04
           )
       )
     );
@@ -1408,7 +1506,7 @@
           (
             0.92 +
             shimmer *
-            0.06
+              0.06
           )
       )
     );
@@ -1963,50 +2061,96 @@
       DIMENSIONS.designHeight
     );
 
-    if (
-      !state.reducedMotion &&
-      glass > 0.18
-    ) {
-      const beam =
-        context.createLinearGradient(
-          70,
-          80,
-          410,
-          650
-        );
+    context.restore();
+  }
 
-      beam.addColorStop(
-        0,
-        "rgba(255, 255, 255, 0)"
-      );
-
-      beam.addColorStop(
-        0.48,
-        `rgba(255, 255, 255, ${
-          glass *
-            (
-              0.030 +
-              pulse *
-                0.018
-            )
-        })`
-      );
-
-      beam.addColorStop(
-        0.58,
-        "rgba(255, 255, 255, 0)"
-      );
-
-      context.fillStyle =
-        beam;
-
-      context.fillRect(
-        0,
-        0,
-        DIMENSIONS.designWidth,
-        DIMENSIONS.designHeight
-      );
+  function clearViewingAperture(
+    context,
+    glass
+  ) {
+    if (glass <= 0.006) {
+      return;
     }
+
+    context.save();
+
+    context.globalCompositeOperation =
+      "destination-out";
+
+    traceViewingAperture(
+      context
+    );
+
+    context.fillStyle =
+      `rgba(0, 0, 0, ${
+        0.94 *
+          glass
+      })`;
+
+    context.fill();
+
+    context.restore();
+  }
+
+  function drawViewingApertureRim(
+    context,
+    glass
+  ) {
+    if (glass <= 0.006) {
+      return;
+    }
+
+    const darkWidth =
+      lerp(
+        DIMENSIONS.apertureDarkRimOpen,
+        DIMENSIONS.apertureDarkRimClosed,
+        glass
+      );
+
+    const lightWidth =
+      lerp(
+        DIMENSIONS.apertureLightRimOpen,
+        DIMENSIONS.apertureLightRimClosed,
+        glass
+      );
+
+    context.save();
+
+    context.lineJoin =
+      "round";
+
+    context.lineCap =
+      "round";
+
+    traceViewingAperture(
+      context
+    );
+
+    context.strokeStyle =
+      `rgba(10, 14, 22, ${
+        0.95 *
+          glass
+      })`;
+
+    context.lineWidth =
+      darkWidth;
+
+    context.stroke();
+
+    traceViewingAperture(
+      context
+    );
+
+    context.strokeStyle =
+      `rgba(196, 221, 238, ${
+        0.22 *
+          glass
+      })`;
+
+    context.lineWidth =
+      lightWidth;
+
+    context.stroke();
 
     context.restore();
   }
@@ -2147,115 +2291,47 @@
     context.restore();
   }
 
-  function drawSparkles(
+  function drawApertureGlint(
     context,
     glass,
     time
   ) {
     if (
       state.reducedMotion ||
-      glass < 0.34
+      glass <= 0.08
     ) {
       return;
     }
 
+    const pulse =
+      Math.sin(
+        time *
+          1.9
+      ) *
+        0.5 +
+      0.5;
+
     context.save();
 
-    traceInnerWindow(context);
-
-    context.clip();
-
-    const points = [
-      [186, 180, 0.0],
-      [292, 248, 1.4],
-      [234, 340, 2.7],
-      [148, 418, 4.1],
-      [320, 516, 5.3],
-      [248, 592, 6.4]
-    ];
-
-    points.forEach(
-      point => {
-        const pulse =
-          Math.sin(
-            time *
-              (
-                Math.PI *
-                2 /
-                TIMING.sparklePeriodSeconds
-              ) +
-              point[2]
-          );
-
-        const alpha =
-          clamp(
-            (
-              pulse -
-                0.52
-            ) *
-              1.9,
-            0,
-            1
-          ) *
-          glass *
-          0.48;
-
-        if (alpha <= 0.01) {
-          return;
-        }
-
-        const radius =
-          1.2 +
-          alpha *
-            2.4;
-
-        const gradient =
-          context.createRadialGradient(
-            point[0],
-            point[1],
-            0,
-            point[0],
-            point[1],
-            radius *
-              5
-          );
-
-        gradient.addColorStop(
-          0,
-          `rgba(255, 250, 224, ${alpha})`
-        );
-
-        gradient.addColorStop(
-          0.28,
-          `rgba(187, 229, 255, ${
-            alpha *
-              0.48
-          })`
-        );
-
-        gradient.addColorStop(
-          1,
-          "rgba(255, 255, 255, 0)"
-        );
-
-        context.fillStyle =
-          gradient;
-
-        context.beginPath();
-
-        context.arc(
-          point[0],
-          point[1],
-          radius *
-            5,
-          0,
-          Math.PI *
-            2
-        );
-
-        context.fill();
-      }
+    traceViewingAperture(
+      context
     );
+
+    context.strokeStyle =
+      `rgba(226, 244, 255, ${
+        0.12 *
+          glass *
+          pulse
+      })`;
+
+    context.lineWidth =
+      3 *
+        glass;
+
+    context.lineJoin =
+      "round";
+
+    context.stroke();
 
     context.restore();
   }
@@ -2303,6 +2379,149 @@
       glass
     );
 
+    if (glass > 0.004) {
+      const designScale =
+        Math.min(
+          cssWidth /
+            DIMENSIONS.designWidth,
+          cssHeight /
+            DIMENSIONS.designHeight
+        );
+
+      const scale =
+        lerp(
+          DIMENSIONS.glassScaleOpen,
+          DIMENSIONS.glassScaleClosed,
+          glass
+        );
+
+      const opacity =
+        lerp(
+          DIMENSIONS.glassOpacityOpen,
+          DIMENSIONS.glassOpacityClosed,
+          glass
+        );
+
+      const dissolve =
+        1 -
+          glass;
+
+      const horizontalDrift =
+        state.reducedMotion
+          ? 0
+          : Math.sin(
+              state.time *
+                0.23
+            ) *
+            1.6 *
+            dissolve;
+
+      const verticalDrift =
+        state.reducedMotion
+          ? 0
+          : -TIMING.dissolveDrift *
+              0.34 *
+              dissolve +
+            Math.sin(
+              state.time *
+                0.30 +
+                1.2
+            ) *
+              1.2 *
+              dissolve;
+
+      context.translate(
+        cssWidth /
+          2 +
+          horizontalDrift,
+        cssHeight /
+          2 +
+          verticalDrift
+      );
+
+      context.scale(
+        designScale *
+          scale,
+        designScale *
+          scale
+      );
+
+      context.translate(
+        -DIMENSIONS.designWidth /
+          2,
+        -DIMENSIONS.designHeight /
+          2
+      );
+
+      context.globalAlpha =
+        opacity;
+
+      context.save();
+
+      traceInnerWindow(context);
+
+      context.clip();
+
+      drawInnerLight(
+        context,
+        glass,
+        state.time
+      );
+
+      state.panes.forEach(
+        pane => {
+          drawPane(
+            context,
+            pane,
+            glass,
+            state.time
+          );
+        }
+      );
+
+      context.restore();
+
+      drawLeadLines(
+        context,
+        glass
+      );
+
+      drawFrameRibs(
+        context,
+        glass
+      );
+
+      drawOuterFrame(
+        context,
+        glass
+      );
+
+      clearViewingAperture(
+        context,
+        glass
+      );
+
+      drawViewingApertureRim(
+        context,
+        glass
+      );
+
+      drawApertureGlint(
+        context,
+        glass,
+        state.time
+      );
+    }
+
+    context.restore();
+
+    context.save();
+
+    context.scale(
+      state.pixelRatio,
+      state.pixelRatio
+    );
+
     drawRevealHaze(
       context,
       cssWidth,
@@ -2310,134 +2529,6 @@
       reveal
     );
 
-    if (glass <= 0.004) {
-      context.restore();
-      return;
-    }
-
-    const designScale =
-      Math.min(
-        cssWidth /
-          DIMENSIONS.designWidth,
-        cssHeight /
-          DIMENSIONS.designHeight
-      );
-
-    const scale =
-      lerp(
-        DIMENSIONS.glassScaleOpen,
-        DIMENSIONS.glassScaleClosed,
-        glass
-      );
-
-    const opacity =
-      lerp(
-        DIMENSIONS.glassOpacityOpen,
-        DIMENSIONS.glassOpacityClosed,
-        glass
-      );
-
-    const dissolve =
-      1 -
-        glass;
-
-    const horizontalDrift =
-      state.reducedMotion
-        ? 0
-        : Math.sin(
-            state.time *
-              0.23
-          ) *
-          1.6 *
-          dissolve;
-
-    const verticalDrift =
-      state.reducedMotion
-        ? 0
-        : -TIMING.dissolveDrift *
-            0.34 *
-            dissolve +
-          Math.sin(
-            state.time *
-              0.30 +
-              1.2
-          ) *
-            1.2 *
-            dissolve;
-
-    context.translate(
-      cssWidth /
-        2 +
-        horizontalDrift,
-      cssHeight /
-        2 +
-        verticalDrift
-    );
-
-    context.scale(
-      designScale *
-        scale,
-      designScale *
-        scale
-    );
-
-    context.translate(
-      -DIMENSIONS.designWidth /
-        2,
-      -DIMENSIONS.designHeight /
-        2
-    );
-
-    context.globalAlpha =
-      opacity;
-
-    context.save();
-
-    traceInnerWindow(context);
-
-    context.clip();
-
-    drawInnerLight(
-      context,
-      glass,
-      state.time
-    );
-
-    state.panes.forEach(
-      pane => {
-        drawPane(
-          context,
-          pane,
-          glass,
-          state.time
-        );
-      }
-    );
-
-    context.restore();
-
-    drawLeadLines(
-      context,
-      glass
-    );
-
-    drawFrameRibs(
-      context,
-      glass
-    );
-
-    drawOuterFrame(
-      context,
-      glass
-    );
-
-    drawSparkles(
-      context,
-      glass,
-      state.time
-    );
-
-    context.restore();
     context.restore();
   }
 
@@ -2504,6 +2595,50 @@
       ratio;
   }
 
+  function transitionActive() {
+    return (
+      state.rendererState === STATES.OPENING ||
+      state.rendererState === STATES.CLOSING
+    );
+  }
+
+  function stopRenderLoop() {
+    state.running =
+      false;
+
+    if (state.raf) {
+      cancelAnimationFrame(
+        state.raf
+      );
+
+      state.raf =
+        0;
+    }
+  }
+
+  function requestRender() {
+    if (
+      state.failed ||
+      state.disposed ||
+      !state.initialized ||
+      !state.context
+    ) {
+      return;
+    }
+
+    if (state.raf) {
+      return;
+    }
+
+    state.running =
+      true;
+
+    state.raf =
+      requestAnimationFrame(
+        render
+      );
+  }
+
   function completeOpen() {
     const id =
       state.activeTransitionId;
@@ -2531,6 +2666,9 @@
       lastAction:
         "window-open-complete-diamond-revealed",
 
+      stableAnimation:
+        false,
+
       lastFailure:
         null
     });
@@ -2545,6 +2683,9 @@
           true,
 
         glassVisible:
+          false,
+
+        apertureVisible:
           false
       }
     );
@@ -2578,7 +2719,10 @@
 
     emitReceipt({
       lastAction:
-        "window-restore-complete-diamond-hidden",
+        "window-restore-complete-diamond-hidden-with-aperture-glimpse",
+
+      stableAnimation:
+        false,
 
       lastFailure:
         null
@@ -2594,6 +2738,9 @@
           false,
 
         glassVisible:
+          true,
+
+        apertureVisible:
           true
       }
     );
@@ -2602,10 +2749,7 @@
   function updateTransition(
     now
   ) {
-    if (
-      state.rendererState !== STATES.OPENING &&
-      state.rendererState !== STATES.CLOSING
-    ) {
+    if (!transitionActive()) {
       return;
     }
 
@@ -2660,6 +2804,9 @@
   function render(
     now
   ) {
+    state.raf =
+      0;
+
     if (
       !state.running ||
       state.failed ||
@@ -2680,10 +2827,15 @@
 
     drawWindow();
 
-    state.raf =
-      requestAnimationFrame(
-        render
-      );
+    if (transitionActive()) {
+      state.raf =
+        requestAnimationFrame(
+          render
+        );
+    } else {
+      state.running =
+        false;
+    }
   }
 
   function controllerReducedMotion() {
@@ -2794,9 +2946,14 @@
       lastAction:
         action,
 
+      stableAnimation:
+        false,
+
       lastFailure:
         null
     });
+
+    requestRender();
 
     return true;
   }
@@ -2840,6 +2997,9 @@
               true,
 
             glassVisible:
+              false,
+
+            apertureVisible:
               false
           }
         );
@@ -2858,7 +3018,7 @@
           true,
 
         requestedEffect:
-          "dissolve-glass-reveal-diamond"
+          "dissolve-glass-reveal-full-diamond"
       }
     );
 
@@ -2920,6 +3080,9 @@
               false,
 
             glassVisible:
+              true,
+
+            apertureVisible:
               true
           }
         );
@@ -2941,7 +3104,7 @@
           true,
 
         requestedEffect:
-          "restore-glass-hide-diamond"
+          "restore-glass-hide-diamond-with-aperture-glimpse"
       }
     );
 
@@ -3008,10 +3171,13 @@
       reducedMotionChanged:
         previous !== state.reducedMotion
     });
+
+    requestRender();
   }
 
   function handleWindowResize() {
     resize();
+    requestRender();
   }
 
   function bindEvents() {
@@ -3126,7 +3292,10 @@
     ) {
       state.resizeObserver =
         new ResizeObserver(
-          resize
+          () => {
+            resize();
+            requestRender();
+          }
         );
 
       state.resizeObserver.observe(
@@ -3200,17 +3369,7 @@
   function rollbackPartialInitialization(
     reason
   ) {
-    state.running =
-      false;
-
-    if (state.raf) {
-      cancelAnimationFrame(
-        state.raf
-      );
-
-      state.raf =
-        0;
-    }
+    stopRenderLoop();
 
     unbindEvents();
     unbindReducedMotion();
@@ -3235,17 +3394,7 @@
     state.disposed =
       true;
 
-    state.running =
-      false;
-
-    if (state.raf) {
-      cancelAnimationFrame(
-        state.raf
-      );
-
-      state.raf =
-        0;
-    }
+    stopRenderLoop();
 
     unbindEvents();
     unbindReducedMotion();
@@ -3368,8 +3517,17 @@
               disposed:
                 state.disposed,
 
+              controlHardened:
+                state.controlHardened,
+
+              apertureDeclared:
+                true,
+
+              apertureTransparent:
+                true,
+
               visualSemantics:
-                "closed-glass-visible-open-glass-dissolved",
+                "closed-glass-visible-with-aperture-open-glass-dissolved",
 
               canvasPointerEvents:
                 "none",
@@ -3402,17 +3560,7 @@
               return;
             }
 
-            state.running =
-              false;
-
-            if (state.raf) {
-              cancelAnimationFrame(
-                state.raf
-              );
-
-              state.raf =
-                0;
-            }
+            stopRenderLoop();
 
             emitReceipt({
               status:
@@ -3425,23 +3573,7 @@
 
         start:
           () => {
-            if (
-              state.failed ||
-              state.disposed ||
-              state.running ||
-              !state.initialized ||
-              !state.context
-            ) {
-              return;
-            }
-
-            state.running =
-              true;
-
-            state.raf =
-              requestAnimationFrame(
-                render
-              );
+            requestRender();
 
             emitReceipt({
               status:
@@ -3563,6 +3695,7 @@
         false;
 
       resolveDom();
+      hardenControlSurface();
       exposeApi();
       bindReducedMotion();
       initGeometry();
@@ -3581,6 +3714,17 @@
               true
           }
         );
+
+      if (!state.context) {
+        state.context =
+          state.canvas.getContext(
+            "2d",
+            {
+              alpha:
+                true
+            }
+          );
+      }
 
       if (!state.context) {
         throw new Error(
@@ -3622,9 +3766,6 @@
       state.initialized =
         true;
 
-      state.running =
-        true;
-
       writeWindowState();
 
       emitReceipt({
@@ -3640,8 +3781,20 @@
         glassAmount:
           1,
 
+        revealAmount:
+          0,
+
+        apertureTransparent:
+          true,
+
+        controlHardened:
+          state.controlHardened,
+
+        stableAnimation:
+          false,
+
         lastAction:
-          "window-renderer-initialized-glass-covering-diamond",
+          "window-renderer-initialized-glass-covering-diamond-with-aperture",
 
         lastFailure:
           null,
@@ -3650,10 +3803,7 @@
           "startup"
       });
 
-      state.raf =
-        requestAnimationFrame(
-          render
-        );
+      requestRender();
     } catch (error) {
       rollbackPartialInitialization(
         `SHOWROOM_WINDOW_INIT_FAILURE:${

@@ -1,8 +1,8 @@
 /* TARGET FILE: /showroom/index.interaction.gestures.js */
-/* COMPLETE REPLACEMENT */
-/* SHOWROOM_INTERACTION_GESTURE_SUPPORT_TNT_v1_NEWS_DIRECTION_ORDER_CORRECTED */
+/* TNT FULL-FILE ADDITION */
+/* SHOWROOM_INTERACTION_GESTURE_SUPPORT_TNT_v1 */
 
-(() => { 
+(() => {
   "use strict";
 
   const root =
@@ -11,9 +11,6 @@
       : globalThis;
 
   const CONTRACT =
-    "SHOWROOM_INTERACTION_GESTURE_SUPPORT_TNT_v1_NEWS_DIRECTION_ORDER_CORRECTED";
-
-  const LEGACY_COMPATIBLE_CONTRACT =
     "SHOWROOM_INTERACTION_GESTURE_SUPPORT_TNT_v1";
 
   const GLOBAL_NAME =
@@ -21,11 +18,7 @@
 
   if (
     root[GLOBAL_NAME] &&
-    (
-      root[GLOBAL_NAME].contract === CONTRACT ||
-      root[GLOBAL_NAME].contract === LEGACY_COMPATIBLE_CONTRACT
-    ) &&
-    root[GLOBAL_NAME].directionOrder === "NEWS"
+    root[GLOBAL_NAME].contract === CONTRACT
   ) {
     return;
   }
@@ -33,15 +26,15 @@
   const WINGS = Object.freeze([
     "north",
     "east",
-    "west",
-    "south"
+    "south",
+    "west"
   ]);
 
   const CARDINAL_BASE_POSITIONS = Object.freeze({
     north: Object.freeze([0, 1.42, -0.48]),
     east: Object.freeze([1.58, 0, 0.54]),
-    west: Object.freeze([-1.58, 0, -0.58]),
-    south: Object.freeze([0, -1.42, 0.44])
+    south: Object.freeze([0, -1.42, 0.44]),
+    west: Object.freeze([-1.58, 0, -0.58])
   });
 
   const ROOM_BASE_POSITIONS = Object.freeze({
@@ -72,42 +65,25 @@
 
   function finiteNumber(value, fallback = 0) {
     const numeric = Number(value);
-
-    return Number.isFinite(numeric)
-      ? numeric
-      : fallback;
+    return Number.isFinite(numeric) ? numeric : fallback;
   }
 
   function clamp(value, minimum, maximum) {
-    return Math.min(
-      maximum,
-      Math.max(minimum, value)
-    );
+    return Math.min(maximum, Math.max(minimum, value));
   }
 
   function distance2d(x1, y1, x2, y2) {
-    return Math.hypot(
-      x2 - x1,
-      y2 - y1
-    );
+    return Math.hypot(x2 - x1, y2 - y1);
   }
 
   function vectorLength(vector) {
-    return Math.hypot(
-      vector[0],
-      vector[1],
-      vector[2]
-    );
+    return Math.hypot(vector[0], vector[1], vector[2]);
   }
 
   function normalizeVector(vector, fallback = [0, 0, 1]) {
-    const length =
-      vectorLength(vector);
+    const length = vectorLength(vector);
 
-    if (
-      !Number.isFinite(length) ||
-      length <= 1e-12
-    ) {
+    if (!Number.isFinite(length) || length <= 1e-12) {
       return fallback.slice();
     }
 
@@ -143,24 +119,18 @@
       finiteNumber(source[3], 1)
     ];
 
-    const length =
-      Math.hypot(
-        quaternion[0],
-        quaternion[1],
-        quaternion[2],
-        quaternion[3]
-      );
+    const length = Math.hypot(
+      quaternion[0],
+      quaternion[1],
+      quaternion[2],
+      quaternion[3]
+    );
 
-    if (
-      !Number.isFinite(length) ||
-      length <= 1e-12
-    ) {
+    if (!Number.isFinite(length) || length <= 1e-12) {
       return fallback.slice();
     }
 
-    return quaternion.map(
-      component => component / length
-    );
+    return quaternion.map(component => component / length);
   }
 
   function quaternionMultiplyRaw(first, second) {
@@ -197,8 +167,7 @@
   }
 
   function quaternionConjugate(value) {
-    const quaternion =
-      quaternionNormalize(value);
+    const quaternion = quaternionNormalize(value);
 
     return [
       -quaternion[0],
@@ -209,14 +178,9 @@
   }
 
   function quaternionFromAxisAngle(axis, angle) {
-    const normalizedAxis =
-      normalizeVector(axis);
-
-    const half =
-      angle * 0.5;
-
-    const sine =
-      Math.sin(half);
+    const normalizedAxis = normalizeVector(axis);
+    const half = angle * 0.5;
+    const sine = Math.sin(half);
 
     return quaternionNormalize([
       normalizedAxis[0] * sine,
@@ -227,8 +191,7 @@
   }
 
   function quaternionRotateVector(quaternionValue, vector) {
-    const quaternion =
-      quaternionNormalize(quaternionValue);
+    const quaternion = quaternionNormalize(quaternionValue);
 
     const pure = [
       finiteNumber(vector[0], 0),
@@ -239,10 +202,7 @@
 
     const rotated =
       quaternionMultiplyRaw(
-        quaternionMultiplyRaw(
-          quaternion,
-          pure
-        ),
+        quaternionMultiplyRaw(quaternion, pure),
         quaternionConjugate(quaternion)
       );
 
@@ -262,39 +222,15 @@
   }
 
   function dragQuaternion(options) {
-    const pointer =
-      options && options.pointer;
+    const pointer = options && options.pointer;
+    const clientX = finiteNumber(options && options.clientX, 0);
+    const clientY = finiteNumber(options && options.clientY, 0);
+    const width = Math.max(1, finiteNumber(options && options.width, 1));
+    const height = Math.max(1, finiteNumber(options && options.height, 1));
+    const config = options && options.config ? options.config : DEFAULT_CONFIG;
 
-    const clientX =
-      finiteNumber(options && options.clientX, 0);
-
-    const clientY =
-      finiteNumber(options && options.clientY, 0);
-
-    const width =
-      Math.max(
-        1,
-        finiteNumber(options && options.width, 1)
-      );
-
-    const height =
-      Math.max(
-        1,
-        finiteNumber(options && options.height, 1)
-      );
-
-    const config =
-      options && options.config
-        ? options.config
-        : DEFAULT_CONFIG;
-
-    const deltaX =
-      clientX -
-      finiteNumber(pointer && pointer.startX, clientX);
-
-    const deltaY =
-      clientY -
-      finiteNumber(pointer && pointer.startY, clientY);
+    const deltaX = clientX - finiteNumber(pointer && pointer.startX, clientX);
+    const deltaY = clientY - finiteNumber(pointer && pointer.startY, clientY);
 
     const yaw =
       (deltaX / width) *
@@ -349,8 +285,7 @@
       return 0;
     }
 
-    const ordinal =
-      Number(match[1]);
+    const ordinal = Number(match[1]);
 
     return ordinal >= 1 && ordinal <= 4
       ? ordinal
@@ -358,17 +293,11 @@
   }
 
   function primaryWingForQuaternion(quaternion) {
-    const anchor =
-      normalizeVector(PRIMARY_ANCHORS.orbit);
+    const anchor = normalizeVector(PRIMARY_ANCHORS.orbit);
+    const normalizedQuaternion = quaternionNormalize(quaternion);
 
-    const normalizedQuaternion =
-      quaternionNormalize(quaternion);
-
-    let bestWing =
-      "north";
-
-    let bestScore =
-      -Infinity;
+    let bestWing = "north";
+    let bestScore = -Infinity;
 
     for (const wing of WINGS) {
       const rotated =
@@ -379,15 +308,11 @@
           )
         );
 
-      const score =
-        dot(rotated, anchor);
+      const score = dot(rotated, anchor);
 
       if (score > bestScore) {
-        bestScore =
-          score;
-
-        bestWing =
-          wing;
+        bestScore = score;
+        bestWing = wing;
       }
     }
 
@@ -395,18 +320,13 @@
   }
 
   function primaryRoomForQuaternion(roomIds, quaternion) {
-    const anchor =
-      normalizeVector(PRIMARY_ANCHORS.cluster);
-
-    const normalizedQuaternion =
-      quaternionNormalize(quaternion);
+    const anchor = normalizeVector(PRIMARY_ANCHORS.cluster);
+    const normalizedQuaternion = quaternionNormalize(quaternion);
 
     const candidates =
       Array.isArray(roomIds)
         ? roomIds
-            .map(roomId =>
-              String(roomId == null ? "" : roomId).trim()
-            )
+            .map(roomId => String(roomId == null ? "" : roomId).trim())
             .filter(roomId => roomOrdinal(roomId) > 0)
         : [];
 
@@ -414,15 +334,11 @@
       return "";
     }
 
-    let bestRoom =
-      candidates[0];
-
-    let bestScore =
-      -Infinity;
+    let bestRoom = candidates[0];
+    let bestScore = -Infinity;
 
     for (const roomId of candidates) {
-      const ordinal =
-        roomOrdinal(roomId);
+      const ordinal = roomOrdinal(roomId);
 
       const rotated =
         normalizeVector(
@@ -432,15 +348,11 @@
           )
         );
 
-      const score =
-        dot(rotated, anchor);
+      const score = dot(rotated, anchor);
 
       if (score > bestScore) {
-        bestScore =
-          score;
-
-        bestRoom =
-          roomId;
+        bestScore = score;
+        bestRoom = roomId;
       }
     }
 
@@ -463,72 +375,37 @@
     const cutoff =
       finiteNumber(timestamp, 0) -
       Math.max(
-        finiteNumber(
-          config.sampleWindowMs,
-          DEFAULT_CONFIG.sampleWindowMs
-        ) * 2,
+        finiteNumber(config.sampleWindowMs, DEFAULT_CONFIG.sampleWindowMs) * 2,
         300
       );
 
     return nextSamples
-      .filter(sample =>
-        finiteNumber(sample.timestamp, 0) >= cutoff
-      )
+      .filter(sample => finiteNumber(sample.timestamp, 0) >= cutoff)
       .slice(
         -Math.max(
           1,
           Math.floor(
-            finiteNumber(
-              config.maximumSamples,
-              DEFAULT_CONFIG.maximumSamples
-            )
+            finiteNumber(config.maximumSamples, DEFAULT_CONFIG.maximumSamples)
           )
         )
       );
   }
 
-  function classifyFlick(
-    pointer,
-    releaseX,
-    releaseY,
-    releaseTime,
-    config = DEFAULT_CONFIG
-  ) {
-    const startX =
-      finiteNumber(pointer && pointer.startX, releaseX);
+  function classifyFlick(pointer, releaseX, releaseY, releaseTime, config = DEFAULT_CONFIG) {
+    const startX = finiteNumber(pointer && pointer.startX, releaseX);
+    const startY = finiteNumber(pointer && pointer.startY, releaseY);
+    const startTime = finiteNumber(pointer && pointer.startTime, releaseTime);
+    const pathLengthInput = finiteNumber(pointer && pointer.pathLength, 0);
 
-    const startY =
-      finiteNumber(pointer && pointer.startY, releaseY);
+    const deltaX = finiteNumber(releaseX, startX) - startX;
+    const deltaY = finiteNumber(releaseY, startY) - startY;
 
-    const startTime =
-      finiteNumber(pointer && pointer.startTime, releaseTime);
-
-    const pathLengthInput =
-      finiteNumber(pointer && pointer.pathLength, 0);
-
-    const deltaX =
-      finiteNumber(releaseX, startX) - startX;
-
-    const deltaY =
-      finiteNumber(releaseY, startY) - startY;
-
-    const distance =
-      Math.hypot(deltaX, deltaY);
-
-    const duration =
-      Math.max(
-        1,
-        finiteNumber(releaseTime, startTime) - startTime
-      );
-
-    const averageVelocity =
-      distance / duration;
+    const distance = Math.hypot(deltaX, deltaY);
+    const duration = Math.max(1, finiteNumber(releaseTime, startTime) - startTime);
+    const averageVelocity = distance / duration;
 
     const sampleWindowMs =
-      finiteNumber(
-        config.sampleWindowMs,
-        DEFAULT_CONFIG.sampleWindowMs
-      );
+      finiteNumber(config.sampleWindowMs, DEFAULT_CONFIG.sampleWindowMs);
 
     const samples =
       Array.isArray(pointer && pointer.samples)
@@ -570,16 +447,10 @@
       releaseDistance / releaseDuration;
 
     const dominant =
-      Math.max(
-        Math.abs(deltaX),
-        Math.abs(deltaY)
-      );
+      Math.max(Math.abs(deltaX), Math.abs(deltaY));
 
     const secondary =
-      Math.min(
-        Math.abs(deltaX),
-        Math.abs(deltaY)
-      );
+      Math.min(Math.abs(deltaX), Math.abs(deltaY));
 
     const directionalRatio =
       secondary <= 1e-6
@@ -677,9 +548,6 @@
   const api =
     Object.freeze({
       contract: CONTRACT,
-      compatibleContract: LEGACY_COMPATIBLE_CONTRACT,
-      directionOrder: "NEWS",
-      directionOrderWritten: "N-E-W-S",
 
       defaultConfig: DEFAULT_CONFIG,
 

@@ -2,7 +2,7 @@
 /* COMPLETE REPLACEMENT */
 /* SHOWROOM_INTERACTION_GESTURE_SUPPORT_TNT_v1_NEWS_DIRECTION_ORDER_CORRECTED */
 
-(() => {
+(() => { 
   "use strict";
 
   const root =

@@ -1,7 +1,7 @@
 /* TARGET FILE: /showroom/index.css
-   COMPLETE REPLACEMENT 
+   COMPLETE REPLACEMENT
 
-   SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v13_7_AUDRALIA_WEBGL_3D_PLANET_CENTER
+   SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v13_8_AUDRALIA_WEBGL_3D_PLANET_STAGE_ONLY
 
    Scope:
    - compact Mirrorland threshold;
@@ -13,9 +13,10 @@
    - retained semantic-star fallback;
    - retained center compatibility selector names;
    - independent Audralia geometry-authority WebGL 3D planet center visual;
-   - /showroom/index.planet.js WebGL miniature 3D renderer model;
-   - reduced CSS-side artificial glow and glare contribution;
-   - removed multi-file Compass renderer / adapter CSS model;
+   - CSS stage-only support for /showroom/index.planet.js;
+   - CSS no longer paints a second globe surface;
+   - .showroom-planet-canvas is the dominant planet visual;
+   - WebGL renderer owns globe body, terrain, water, clouds, lighting, and terminator behavior;
    - no Compass projected-bounds CSS dependency;
    - durable orbit-field touch-arbitration baseline;
    - five independent native narrative disclosures;
@@ -26,7 +27,7 @@
    Direction lock:
    - canonical expression order is NEWS / N-E-W-S where written order is needed;
    - legacy static Compass lettering must not be recreated in any non-NEWS order;
-   - this file does not recreate Compass lettering because the Audralia geometry
+   - this file does not recreate Compass lettering because the Audralia WebGL
      planet renderer owns the active center visual and fallback.
 */
 
@@ -908,7 +909,7 @@ main {
 }
 
 /* ================================================================
-   10. CENTER COMPATIBILITY LAYER AND AUDRALIA WEBGL 3D PLANET
+   10. CENTER COMPATIBILITY LAYER AND AUDRALIA WEBGL 3D PLANET STAGE
    ================================================================ */
 
 .showroom-compass-layer,
@@ -939,13 +940,13 @@ main {
   background:
     radial-gradient(
       circle at 50% 50%,
-      rgba(117, 233, 255, 0.08),
-      rgba(117, 233, 255, 0.025) 34%,
-      transparent 62%
+      rgba(117, 233, 255, 0.055),
+      rgba(117, 233, 255, 0.018) 34%,
+      transparent 66%
     );
   filter:
     drop-shadow(
-      0 0 1.15rem rgba(117, 233, 255, 0.055)
+      0 0 0.8rem rgba(117, 233, 255, 0.04)
     );
 }
 
@@ -962,17 +963,16 @@ main {
 .showroom-planet-mount::before,
 [data-showroom-planet-mount]::before {
   inset: 7%;
-  border: 1px solid rgba(224, 184, 91, 0.07);
+  border: 1px solid rgba(117, 233, 255, 0.045);
   box-shadow:
-    0 0 1rem rgba(224, 184, 91, 0.025),
-    inset 0 0 1.4rem rgba(117, 233, 255, 0.025);
+    inset 0 0 1.15rem rgba(117, 233, 255, 0.02);
 }
 
 .showroom-planet-mount::after,
 [data-showroom-planet-mount]::after {
   inset: 15%;
-  border: 1px solid rgba(117, 233, 255, 0.075);
-  opacity: 0.82;
+  border: 1px solid rgba(117, 233, 255, 0.045);
+  opacity: 0.55;
   transform:
     rotateX(62deg)
     rotateZ(-18deg);
@@ -993,27 +993,28 @@ main {
 .showroom-planet-glow {
   position: absolute;
   z-index: 0;
-  inset: -30%;
+  inset: -18%;
   border-radius: 50%;
+  pointer-events: none;
   background:
     radial-gradient(
       circle at 50% 50%,
-      rgba(117, 233, 255, 0.14),
-      rgba(65, 150, 189, 0.07) 36%,
-      rgba(73, 92, 177, 0.035) 54%,
-      transparent 74%
+      rgba(117, 233, 255, 0.08),
+      rgba(65, 150, 189, 0.035) 38%,
+      transparent 72%
     );
-  filter: blur(0.12rem);
-  opacity: 0.68;
+  filter: blur(0.08rem);
+  opacity: 0.48;
 }
 
 .showroom-planet-orbit-line {
   position: absolute;
   z-index: 1;
   inset: -12%;
-  border: 1px solid rgba(245, 213, 130, 0.085);
+  border: 1px solid rgba(117, 233, 255, 0.045);
   border-radius: 50%;
-  opacity: 0.44;
+  opacity: 0.32;
+  pointer-events: none;
   transform:
     rotateX(64deg)
     rotateZ(-16deg);
@@ -1023,14 +1024,14 @@ main {
 .showroom-planet-orbit-line::after {
   position: absolute;
   inset: 13%;
-  border: 1px solid rgba(117, 233, 255, 0.066);
+  border: 1px solid rgba(117, 233, 255, 0.034);
   border-radius: 50%;
   content: "";
 }
 
 .showroom-planet-orbit-line::after {
   inset: -15%;
-  border-color: rgba(182, 151, 255, 0.046);
+  border-color: rgba(182, 151, 255, 0.028);
 }
 
 .showroom-planet-shell {
@@ -1040,6 +1041,7 @@ main {
   display: grid;
   place-items: center;
   border-radius: 50%;
+  pointer-events: none;
   transform-origin: 50% 50%;
 }
 
@@ -1048,78 +1050,26 @@ main {
   inset: 5% !important;
   overflow: hidden;
   border-radius: 50%;
-  background:
-    radial-gradient(
-      circle at 38% 28%,
-      rgba(255, 255, 255, 0.045),
-      transparent 8%
-    ),
-    linear-gradient(
-      138deg,
-      #0d2746 0%,
-      #0f617a 36%,
-      #203052 68%,
-      #0b1125 100%
-    );
-  box-shadow:
-    inset -1.45rem -1.18rem 2rem rgba(0, 0, 0, 0.42),
-    inset 0.55rem 0.5rem 0.95rem rgba(255, 255, 255, 0.025),
-    inset 0 0 0.9rem rgba(255, 255, 255, 0.018),
-    0 0 1.45rem rgba(117, 233, 255, 0.14);
+  pointer-events: none;
+  background: transparent !important;
+  box-shadow: none !important;
 }
 
 .showroom-planet-body::before,
 .showroom-planet-body::after {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  content: "";
-  border-radius: inherit;
-}
-
-.showroom-planet-body::before {
-  z-index: 14;
-  background:
-    radial-gradient(
-      circle at 35% 28%,
-      rgba(255, 255, 255, 0.11),
-      transparent 7%
-    ),
-    linear-gradient(
-      122deg,
-      rgba(255, 255, 255, 0.026) 0%,
-      transparent 24%,
-      transparent 69%,
-      rgba(0, 0, 0, 0.15) 100%
-    );
-  mix-blend-mode: screen;
-  opacity: 0.2;
-}
-
-.showroom-planet-body::after {
-  z-index: 18;
-  background:
-    radial-gradient(
-      circle at 50% 50%,
-      transparent 0 62%,
-      rgba(117, 233, 255, 0.055) 65%,
-      rgba(255, 255, 255, 0.025) 68%,
-      transparent 74%
-    ),
-    radial-gradient(
-      circle at 72% 74%,
-      rgba(0, 0, 0, 0.32),
-      transparent 36%
-    );
+  display: none !important;
+  content: none !important;
 }
 
 .showroom-planet-canvas {
   position: relative;
   z-index: 8;
+  display: block;
   width: 100%;
   height: 100%;
   border-radius: 50%;
   pointer-events: none;
+  background: transparent;
   mix-blend-mode: normal;
 }
 
@@ -1135,107 +1085,42 @@ main {
 
 .showroom-planet-rim {
   z-index: 20;
-  inset: -1%;
-  border: 1px solid rgba(190, 250, 255, 0.13);
-  background:
-    radial-gradient(
-      circle at 50% 50%,
-      transparent 0 63%,
-      rgba(117, 233, 255, 0.085) 66%,
-      rgba(245, 213, 130, 0.012) 70%,
-      transparent 76%
-    );
+  inset: -0.5%;
+  border: 1px solid rgba(190, 250, 255, 0.065);
+  background: transparent;
   box-shadow:
-    inset 0 0 0.35rem rgba(117, 233, 255, 0.06),
-    0 0 0.72rem rgba(117, 233, 255, 0.11);
+    0 0 0.35rem rgba(117, 233, 255, 0.04);
+  opacity: 0.42;
 }
 
-.showroom-planet-terminator {
-  z-index: 17;
-  inset: -1%;
-  background:
-    linear-gradient(
-      120deg,
-      transparent 0 45%,
-      rgba(0, 0, 0, 0.09) 56%,
-      rgba(0, 0, 0, 0.28) 100%
-    );
-  mix-blend-mode: multiply;
-}
-
-.showroom-planet-shadow {
-  z-index: 19;
-  inset: 0;
-  background:
-    radial-gradient(
-      circle at 72% 74%,
-      rgba(0, 0, 0, 0.34),
-      transparent 38%
-    ),
-    radial-gradient(
-      circle at 88% 56%,
-      rgba(0, 0, 0, 0.14),
-      transparent 42%
-    );
-  mix-blend-mode: multiply;
-}
-
-.showroom-planet-meridian {
-  z-index: 21;
-  inset: 13%;
-  border: 1px solid rgba(255, 255, 255, 0.055);
-  opacity: 0.24;
-  transform:
-    rotateX(67deg)
-    rotateZ(-11deg);
-}
-
-.showroom-planet-meridian::before,
-.showroom-planet-meridian::after {
-  position: absolute;
-  inset: -16% 14%;
-  border: 1px solid rgba(117, 233, 255, 0.044);
-  border-radius: 50%;
-  content: "";
-}
-
-.showroom-planet-meridian::after {
-  inset: 14% -16%;
-}
-
+.showroom-planet-terminator,
+.showroom-planet-shadow,
+.showroom-planet-meridian,
 .showroom-planet-fulcrum {
-  z-index: 22;
-  top: 47%;
-  left: 50%;
-  width: 0.28rem;
-  height: 0.28rem;
-  border-radius: 50%;
-  background: rgba(245, 213, 130, 0.38);
-  box-shadow:
-    0 0 0.32rem rgba(245, 213, 130, 0.22),
-    0 0 0.65rem rgba(117, 233, 255, 0.16);
-  transform: translate(-50%, -50%);
+  display: none !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  opacity: 0 !important;
 }
 
 .showroom-planet-axis {
   position: absolute !important;
   z-index: 4;
   inset: auto !important;
-  width: 0.11rem !important;
-  height: 132% !important;
+  width: 0.09rem !important;
+  height: 124% !important;
   border-radius: 999px;
+  pointer-events: none;
   background:
     linear-gradient(
       180deg,
       transparent,
-      rgba(245, 213, 130, 0.22) 18%,
-      rgba(117, 233, 255, 0.28) 50%,
-      rgba(245, 213, 130, 0.22) 82%,
+      rgba(117, 233, 255, 0.16) 50%,
       transparent
     );
-  box-shadow:
-    0 0 0.42rem rgba(245, 213, 130, 0.08);
-  opacity: 0.26;
+  box-shadow: none;
+  opacity: 0.16;
   transform:
     rotate(-18deg)
     translateZ(0);
@@ -1244,33 +1129,27 @@ main {
 .showroom-planet-atmosphere {
   position: absolute !important;
   z-index: 5;
-  inset: -8% !important;
+  inset: -6% !important;
   border-radius: 50%;
   pointer-events: none;
   background:
     radial-gradient(
-      circle at 38% 31%,
-      rgba(255, 255, 255, 0.045),
-      transparent 9%
-    ),
-    radial-gradient(
       circle at 50% 50%,
-      rgba(117, 233, 255, 0.095),
-      rgba(117, 233, 255, 0.032) 46%,
-      transparent 72%
+      rgba(117, 233, 255, 0.045),
+      rgba(117, 233, 255, 0.018) 48%,
+      transparent 73%
     );
   box-shadow:
-    0 0 0.75rem rgba(117, 233, 255, 0.085),
-    0 0 2.3rem rgba(117, 233, 255, 0.052),
-    inset 0 0 0.75rem rgba(255, 255, 255, 0.028);
+    0 0 0.55rem rgba(117, 233, 255, 0.045),
+    0 0 1.6rem rgba(117, 233, 255, 0.028);
   opacity:
     calc(
-      0.44 +
+      0.28 +
       (
         var(
           --showroom-planet-pulse,
           0
-        ) * 0.025
+        ) * 0.015
       )
     );
 }
@@ -1363,6 +1242,7 @@ main {
   background: transparent;
   text-align: center;
   cursor: pointer;
+  pointer-events: auto;
 }
 
 .showroom-compass-control::before,
@@ -3861,7 +3741,7 @@ main {
 
   .showroom-planet-atmosphere,
   .showroom-planet-glow {
-    opacity: 0.24;
+    opacity: 0.18;
   }
 }
 
@@ -3897,11 +3777,17 @@ main {
   }
 
   .showroom-star::before,
-  .showroom-planet-body,
   .showroom-planet-fallback {
     border: 2px solid ButtonText;
     background: ButtonFace;
     box-shadow: none;
+    filter: none;
+  }
+
+  .showroom-planet-body {
+    border: 2px solid ButtonText;
+    background: transparent !important;
+    box-shadow: none !important;
     filter: none;
   }
 
@@ -3914,7 +3800,7 @@ main {
   .showroom-planet-terminator,
   .showroom-planet-meridian,
   .showroom-planet-fulcrum {
-    display: none;
+    display: none !important;
   }
 
   .two-view-buttons button[aria-pressed="true"] {
@@ -4013,13 +3899,13 @@ main {
    END RECEIPT
 
    CONTRACT:
-   SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v13_7_AUDRALIA_WEBGL_3D_PLANET_CENTER
+   SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v13_8_AUDRALIA_WEBGL_3D_PLANET_STAGE_ONLY
 
    PREVIOUS CONTRACT:
-   SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v13_7_AUDRALIA_PLANET_GLARE_REDUCTION
+   SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v13_7_AUDRALIA_WEBGL_3D_PLANET_CENTER
 
    RENEWAL SCOPE:
-   GROUP_F_AUDRALIA_GEOMETRY_AUTHORITY_WEBGL_3D_PLANET_CENTER_CSS_SUPPORT
+   GROUP_F_AUDRALIA_GEOMETRY_AUTHORITY_WEBGL_3D_PLANET_STAGE_ONLY_CSS_CORRECTION
 
    ACTIVE CENTER VISUAL:
    - /showroom/index.planet.js
@@ -4036,14 +3922,18 @@ main {
    PLANET MODEL:
    - AUDRALIA_GEOMETRY_AUTHORITY_MINIATURE_3D_RENDERER_v1
 
-   VISUAL CORRECTION:
-   - supports WebGL 3D canvas host;
-   - reduces CSS-side artificial glare and gold/yellow wash;
-   - reduces atmosphere opacity and pulse intensity;
-   - reduces mount-level glow and rim wash;
-   - preserves subtle globe shine;
-   - preserves decorative CSS atmospheric framing;
-   - leaves primary planet lighting and terrain integrity to /showroom/index.planet.js.
+   REQUIRED CORRECTION:
+   - CSS no longer paints a second planet surface;
+   - .showroom-planet-body is a transparent WebGL clipping host;
+   - .showroom-planet-canvas is the dominant planet visual;
+   - WebGL renderer owns globe surface, terrain, water, clouds, lighting, and terminator behavior;
+   - .showroom-planet-body::before and .showroom-planet-body::after are neutralized;
+   - .showroom-planet-terminator is neutralized;
+   - .showroom-planet-shadow is neutralized;
+   - .showroom-planet-meridian is neutralized;
+   - .showroom-planet-fulcrum is neutralized;
+   - .showroom-planet-rim is reduced to a very subtle non-dominant edge treatment;
+   - .showroom-planet-atmosphere and .showroom-planet-glow are subtle ambient stage support only.
 
    RETAINED COMPATIBILITY SELECTORS:
    - [data-showroom-compass-layer]
@@ -4071,7 +3961,15 @@ main {
    - .showroom-planet-fallback
    - [data-showroom-planet-reduced-motion="true"]
 
-   RETIRED FROM CSS TARGET MODEL:
+   RETIRED FROM ACTIVE CSS TARGET MODEL:
+   - CSS-painted globe surface;
+   - fake geography;
+   - fake ocean/land surface colors;
+   - independent CSS terminator;
+   - independent CSS globe shadow;
+   - dominant CSS atmosphere shell;
+   - large fake rim globe;
+   - meridian/fulcrum overlays that imply separate CSS globe geometry;
    - old Compass renderer visual styling;
    - old Compass adapter styling;
    - Compass projected-bounds CSS dependency;
@@ -4079,9 +3977,7 @@ main {
    - universal Compass renderer compatibility claims;
    - Showroom Compass adapter compatibility claims;
    - CSS assumptions that the center visual is Compass-renderer-owned;
-   - invented CSS geography surfaces for the active center visual;
-   - Canvas 2D renderer language as the active planet model;
-   - overpowering CSS-side solar glare crescent as a dominant planet feature.
+   - Canvas 2D renderer language as the active planet model.
 
    DIRECTION EXPRESSION:
    - canonical written order is NEWS / N-E-W-S.
@@ -4119,7 +4015,7 @@ main {
    - SHOWROOM_MIRRORLAND_IMMERSIVE_MISSION_CONTEXT_HTML_TNT_v17_7_AUDRALIA_WEBGL_3D_PLANET_CENTER
 
    COMPANION HTML CACHE QUERY:
-   /showroom/index.css?v=SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v13_7_AUDRALIA_WEBGL_3D_PLANET_CENTER
+   /showroom/index.css?v=SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v13_8_AUDRALIA_WEBGL_3D_PLANET_STAGE_ONLY
 
    COMPANION HTML LEGEND ORDER:
    - companion HTML source order is NEWS / N-E-W-S.

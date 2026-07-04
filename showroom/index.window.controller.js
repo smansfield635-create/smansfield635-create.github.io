@@ -15,7 +15,7 @@
   Owns:
   - [data-showroom-window-control] click binding
   - [data-showroom-window-label] label text
-  - aria-expanded / aria-busy on the Window control
+  - aria-expanded / aria-busy / aria-label on the Window control
   - local data-showroom-window-state values
   - open / restore transition decisions
   - controller-level receipt
@@ -174,19 +174,39 @@
       "Open the Window",
 
     opening:
-      "Opening the Window",
+      "Restore the Window",
 
     open:
       "Restore the Window",
 
     closing:
-      "Restoring the Window",
+      "Open the Window",
 
     waiting:
       "Preparing the Window",
 
     failed:
+      "Window Unavailable",
+
+    disposed:
       "Window Unavailable"
+  });
+
+  const ARIA_LABELS = Object.freeze({
+    openAction:
+      "Open the Mirrorland Window and reveal the rotating Diamond",
+
+    restoreAction:
+      "Restore the Mirrorland Window over the rotating Diamond",
+
+    waiting:
+      "Preparing the Mirrorland Window",
+
+    failed:
+      "Mirrorland Window unavailable",
+
+    disposed:
+      "Mirrorland Window unavailable"
   });
 
   const TIMING = Object.freeze({
@@ -387,8 +407,8 @@
     try {
       return Boolean(
         object &&
-        typeof object.isReady === "function" &&
-        object.isReady()
+          typeof object.isReady === "function" &&
+          object.isReady()
       );
     } catch (_) {
       return false;
@@ -518,6 +538,35 @@
       String(text);
   }
 
+  function ariaLabelForState(nextState) {
+    if (
+      nextState === STATES.OPEN ||
+      nextState === STATES.OPENING
+    ) {
+      return ARIA_LABELS.restoreAction;
+    }
+
+    if (
+      nextState === STATES.WAITING
+    ) {
+      return ARIA_LABELS.waiting;
+    }
+
+    if (
+      nextState === STATES.FAILED
+    ) {
+      return ARIA_LABELS.failed;
+    }
+
+    if (
+      nextState === STATES.DISPOSED
+    ) {
+      return ARIA_LABELS.disposed;
+    }
+
+    return ARIA_LABELS.openAction;
+  }
+
   function setLocalState(nextState) {
     state.windowState =
       nextState;
@@ -555,6 +604,11 @@
         nextState === STATES.CLOSING
           ? "true"
           : "false"
+      );
+
+      state.control.setAttribute(
+        "aria-label",
+        ariaLabelForState(nextState)
       );
 
       state.control.disabled =
@@ -624,6 +678,7 @@
 
     if (state.objectReadyTimer) {
       clearTimeout(state.objectReadyTimer);
+
       state.objectReadyTimer =
         0;
     }
@@ -653,6 +708,60 @@
     );
   }
 
+  function completeOpen(detail = {}) {
+    if (
+      state.object &&
+      typeof state.object.setCurtainAmount === "function"
+    ) {
+      state.object.setCurtainAmount(0);
+    }
+
+    state.pendingTransition =
+      null;
+
+    setLocalState(STATES.OPEN);
+
+    updateReceipt({
+      lastAction:
+        "window-controller-open-complete",
+
+      curtainAmount:
+        typeof detail.curtainAmount === "number"
+          ? detail.curtainAmount
+          : 0,
+
+      lastFailure:
+        null
+    });
+  }
+
+  function completeClosed(detail = {}) {
+    if (
+      state.object &&
+      typeof state.object.setCurtainAmount === "function"
+    ) {
+      state.object.setCurtainAmount(1);
+    }
+
+    state.pendingTransition =
+      null;
+
+    setLocalState(STATES.CLOSED);
+
+    updateReceipt({
+      lastAction:
+        "window-controller-restore-complete",
+
+      curtainAmount:
+        typeof detail.curtainAmount === "number"
+          ? detail.curtainAmount
+          : 1,
+
+      lastFailure:
+        null
+    });
+  }
+
   function handleObjectTransitionComplete(event) {
     if (
       state.disposed ||
@@ -667,64 +776,13 @@
         ? event.detail
         : {};
 
-    const amount =
-      typeof detail.curtainAmount === "number"
-        ? detail.curtainAmount
-        : state.object &&
-          typeof state.object.getCurtainAmount === "function"
-          ? state.object.getCurtainAmount()
-          : null;
-
     if (state.pendingTransition === "open") {
-      if (
-        state.object &&
-        typeof state.object.setCurtainAmount === "function"
-      ) {
-        state.object.setCurtainAmount(0);
-      }
-
-      state.pendingTransition =
-        null;
-
-      setLocalState(STATES.OPEN);
-
-      updateReceipt({
-        lastAction:
-          "window-controller-open-complete",
-
-        curtainAmount:
-          amount,
-
-        lastFailure:
-          null
-      });
-
+      completeOpen(detail);
       return;
     }
 
     if (state.pendingTransition === "closed") {
-      if (
-        state.object &&
-        typeof state.object.setCurtainAmount === "function"
-      ) {
-        state.object.setCurtainAmount(1);
-      }
-
-      state.pendingTransition =
-        null;
-
-      setLocalState(STATES.CLOSED);
-
-      updateReceipt({
-        lastAction:
-          "window-controller-restore-complete",
-
-        curtainAmount:
-          amount,
-
-        lastFailure:
-          null
-      });
+      completeClosed(detail);
     }
   }
 
@@ -968,10 +1026,10 @@
       state.object.setCurtainAmount(1);
     }
 
-    setLocalState(STATES.CLOSED);
-
     state.initialized =
       true;
+
+    setLocalState(STATES.CLOSED);
 
     updateReceipt({
       status:
@@ -1011,6 +1069,7 @@
 
     if (state.objectReadyTimer) {
       clearTimeout(state.objectReadyTimer);
+
       state.objectReadyTimer =
         0;
     }
@@ -1077,6 +1136,7 @@
 
     if (state.objectReadyTimer) {
       clearTimeout(state.objectReadyTimer);
+
       state.objectReadyTimer =
         0;
     }
@@ -1263,7 +1323,7 @@
       {
         once:
           true
-        }
+      }
     );
   } else {
     init();

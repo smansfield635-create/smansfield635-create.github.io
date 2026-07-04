@@ -1,7 +1,7 @@
 /* TARGET FILE: /showroom/index.css
    COMPLETE REPLACEMENT
 
-   SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v13_9_AUDRALIA_WEBGL_3D_PLANET_CENTER_FULL_SEMANTIC_HIT_SURFACE
+   SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v13_10_AUDRALIA_WEBGL_3D_PLANET_CENTER_UNIFIED_HOST_FULL_SEMANTIC_HIT_SURFACE
 
    Scope:
    - compact Mirrorland threshold;
@@ -12,10 +12,14 @@
    - exactly one visible Narrative Position record;
    - retained semantic-star fallback;
    - retained center compatibility selector names;
+   - unified center object host conformance;
    - independent Audralia geometry-authority WebGL 3D planet center visual;
    - CSS stage-only support for /showroom/index.planet.js;
    - CSS no longer paints a second globe surface;
    - .showroom-planet-canvas is the dominant planet visual;
+   - [data-showroom-planet-mount] is the unified center object host;
+   - [data-showroom-planet-visual-host] is the WebGL visual render host;
+   - [data-showroom-compass-control] is the full semantic hit surface;
    - full visible center planet object is covered by the semantic Compass button;
    - WebGL renderer owns globe body, terrain, water, clouds, lighting, and terminator behavior;
    - interactions own semantic Compass recovery;
@@ -912,34 +916,29 @@ main {
 }
 
 /* ================================================================
-   10. CENTER COMPATIBILITY LAYER, WEBGL PLANET STAGE, AND FULL SEMANTIC HIT SURFACE
+   10. UNIFIED CENTER HOST, WEBGL PLANET VISUAL HOST, AND FULL SEMANTIC HIT SURFACE
    ================================================================ */
 
 .showroom-compass-layer,
 [data-showroom-compass-layer],
-[data-showroom-center-layer] {
+[data-showroom-center-layer],
+[data-showroom-center-structure="unified-center-object"],
+[data-showroom-planet-mount] {
   position: absolute;
   z-index: 5;
   inset: 50% auto auto 50%;
   width: var(--showroom-center-size);
   aspect-ratio: 1;
+  border-radius: 50%;
+  pointer-events: none;
   transform: translate(-50%, -50%);
 }
 
-.showroom-compass-mount,
-.showroom-planet-mount,
-[data-showroom-compass-visual-mount],
-[data-showroom-planet-mount] {
-  position: absolute;
-  inset: -7%;
-  display: grid;
-  place-items: center;
-  border-radius: 50%;
-  pointer-events: none;
-}
-
-.showroom-planet-mount,
-[data-showroom-planet-mount] {
+.showroom-compass-layer.showroom-planet-mount,
+[data-showroom-planet-mount][data-showroom-center-structure="unified-center-object"] {
+  display: block;
+  isolation: isolate;
+  contain: layout paint;
   background:
     radial-gradient(
       circle at 50% 50%,
@@ -953,32 +952,53 @@ main {
     );
 }
 
-.showroom-planet-mount::before,
-.showroom-planet-mount::after,
-[data-showroom-planet-mount]::before,
-[data-showroom-planet-mount]::after {
+.showroom-compass-layer.showroom-planet-mount::before,
+.showroom-compass-layer.showroom-planet-mount::after,
+[data-showroom-planet-mount][data-showroom-center-structure="unified-center-object"]::before,
+[data-showroom-planet-mount][data-showroom-center-structure="unified-center-object"]::after {
   position: absolute;
   border-radius: 50%;
   pointer-events: none;
   content: "";
 }
 
-.showroom-planet-mount::before,
-[data-showroom-planet-mount]::before {
-  inset: 7%;
+.showroom-compass-layer.showroom-planet-mount::before,
+[data-showroom-planet-mount][data-showroom-center-structure="unified-center-object"]::before {
+  inset: 0%;
   border: 1px solid rgba(117, 233, 255, 0.045);
   box-shadow:
     inset 0 0 1.15rem rgba(117, 233, 255, 0.02);
 }
 
-.showroom-planet-mount::after,
-[data-showroom-planet-mount]::after {
-  inset: 15%;
+.showroom-compass-layer.showroom-planet-mount::after,
+[data-showroom-planet-mount][data-showroom-center-structure="unified-center-object"]::after {
+  inset: 8%;
   border: 1px solid rgba(117, 233, 255, 0.045);
   opacity: 0.55;
   transform:
     rotateX(62deg)
     rotateZ(-18deg);
+}
+
+.showroom-compass-mount,
+.showroom-planet-visual-host,
+[data-showroom-compass-visual-mount],
+[data-showroom-planet-visual-host],
+[data-showroom-planet-render-target="true"] {
+  position: absolute;
+  z-index: 3;
+  inset: -7%;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.showroom-planet-visual-host,
+[data-showroom-planet-visual-host],
+[data-showroom-planet-render-target="true"] {
+  background: transparent;
+  filter: none;
 }
 
 .showroom-planet-root {
@@ -1207,8 +1227,10 @@ main {
   display: none;
 }
 
-.showroom-planet-mount,
 [data-showroom-planet-mount],
+[data-showroom-planet-visual-host],
+[data-showroom-planet-render-target="true"],
+.showroom-planet-visual-host,
 .showroom-planet-root,
 .showroom-planet-shell,
 .showroom-planet-body,
@@ -3944,13 +3966,13 @@ main {
    END RECEIPT
 
    CONTRACT:
-   SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v13_9_AUDRALIA_WEBGL_3D_PLANET_CENTER_FULL_SEMANTIC_HIT_SURFACE
+   SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v13_10_AUDRALIA_WEBGL_3D_PLANET_CENTER_UNIFIED_HOST_FULL_SEMANTIC_HIT_SURFACE
 
    PREVIOUS CONTRACT:
-   SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v13_8_AUDRALIA_WEBGL_3D_PLANET_STAGE_ONLY
+   SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v13_9_AUDRALIA_WEBGL_3D_PLANET_CENTER_FULL_SEMANTIC_HIT_SURFACE
 
    RENEWAL SCOPE:
-   GROUP_F_AUDRALIA_GEOMETRY_AUTHORITY_WEBGL_3D_PLANET_FULL_CENTER_SEMANTIC_HIT_SURFACE_CSS_CORRECTION
+   GROUP_F_AUDRALIA_GEOMETRY_AUTHORITY_WEBGL_3D_PLANET_UNIFIED_HOST_FULL_CENTER_SEMANTIC_HIT_SURFACE_CSS_CONFORMANCE
 
    ACTIVE CENTER VISUAL:
    - /showroom/index.planet.js
@@ -3967,7 +3989,14 @@ main {
    PLANET MODEL:
    - AUDRALIA_GEOMETRY_AUTHORITY_MINIATURE_3D_RENDERER_v1
 
+   UNIFIED HOST CONTRACT:
+   - SHOWROOM_PLANETARY_CENTER_OBJECT_UNIFIED_HOST_CONTRACT_v1
+
    REQUIRED CORRECTION:
+   - CSS treats [data-showroom-planet-mount] as the unified center object host;
+   - CSS no longer treats [data-showroom-planet-mount] as the planet visual stage;
+   - CSS retargets WebGL visual staging to [data-showroom-planet-visual-host];
+   - CSS retargets render-host staging to [data-showroom-planet-render-target="true"];
    - CSS no longer paints a second planet surface;
    - .showroom-planet-body is a transparent WebGL clipping host;
    - .showroom-planet-canvas is the dominant planet visual;
@@ -3978,7 +4007,7 @@ main {
    - very small viewport hit surface uses inset: -4%;
    - semantic Compass button sits above the decorative planet stack;
    - semantic Compass button uses pointer-events: auto;
-   - decorative planet stack uses pointer-events: none;
+   - unified center host, planet visual host, and decorative planet stack use pointer-events: none;
    - Compass label, instruction, and pseudo-element use pointer-events: none;
    - focus visibility remains on the actual semantic Compass control;
    - .showroom-planet-body::before and .showroom-planet-body::after are neutralized;
@@ -3997,7 +4026,14 @@ main {
    CENTER SELECTORS:
    - [data-showroom-center-layer]
    - [data-showroom-planet-mount]
+   - [data-showroom-planet-visual-host]
+   - [data-showroom-planet-render-target="true"]
    - [data-showroom-full-center-hit-target="true"]
+
+   UNIFIED HOST STRUCTURE:
+   [data-showroom-planet-mount]
+     [data-showroom-planet-visual-host]
+     [data-showroom-compass-control]
 
    PLANET MODULE CSS SURFACES:
    - .showroom-planet-root
@@ -4032,7 +4068,8 @@ main {
    - universal Compass renderer compatibility claims;
    - Showroom Compass adapter compatibility claims;
    - CSS assumptions that the center visual is Compass-renderer-owned;
-   - Canvas 2D renderer language as the active planet model.
+   - Canvas 2D renderer language as the active planet model;
+   - v13_9 assumption that [data-showroom-planet-mount] is the visual host.
 
    DIRECTION EXPRESSION:
    - canonical written order is NEWS / N-E-W-S.
@@ -4050,7 +4087,7 @@ main {
    - CSS does not reveal the Main Compass return link;
    - CSS does not route;
    - CSS does not transfer pointer authority to the planet;
-   - CSS supports full visible center hit-area by positioning the semantic control over the center layer;
+   - CSS supports full visible center hit-area by positioning the semantic control over the unified center object;
    - planet owns no navigation authority;
    - planet owns no pointer authority;
    - CSS owns no navigation authority.
@@ -4073,10 +4110,10 @@ main {
 
    COMPANION HTML:
    - /showroom/index.html
-   - SHOWROOM_MIRRORLAND_IMMERSIVE_MISSION_CONTEXT_HTML_TNT_v17_9_AUDRALIA_WEBGL_3D_PLANET_CENTER_INTERACTIONS_OWNED_SEMANTIC_RECOVERY
+   - SHOWROOM_MIRRORLAND_IMMERSIVE_MISSION_CONTEXT_HTML_TNT_v17_10_AUDRALIA_WEBGL_3D_PLANET_CENTER_UNIFIED_HOST_CONFORMANCE
 
    COMPANION HTML CACHE QUERY:
-   /showroom/index.css?v=SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v13_9_AUDRALIA_WEBGL_3D_PLANET_CENTER_FULL_SEMANTIC_HIT_SURFACE
+   /showroom/index.css?v=SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v13_10_AUDRALIA_WEBGL_3D_PLANET_CENTER_UNIFIED_HOST_FULL_SEMANTIC_HIT_SURFACE
 
    COMPANION HTML LEGEND ORDER:
    - companion HTML source order is NEWS / N-E-W-S.
@@ -4084,6 +4121,7 @@ main {
    COMPANION PLANET JS:
    - /showroom/index.planet.js
    - SHOWROOM_PLANETARY_FULCRUM_INDEPENDENT_CENTER_PLANET_TNT_v1
+   - SHOWROOM_PLANETARY_CENTER_OBJECT_UNIFIED_HOST_CONTRACT_v1
    - AUDRALIA_GEOMETRY_AUTHORITY_MINIATURE_3D_RENDERER_v1
 
    COMPANION INTERACTIONS JS:

@@ -1,17 +1,16 @@
 /* TARGET FILE: /showroom/index.window.definition.js */
-/* COMPLETE NEW FILE */ 
+/* COMPLETE REPLACEMENT */
 /* SHOWROOM_WINDOW_OBJECT_DEFINITION_v1_FOREGROUND_LENS_SPLENDOR_AUTHORITY */
 
 /*
   Mirrorland Window Definition Authority
 
-  Purpose:
-  - Define the visual splendor layer for the compatible v1_3 Window object host.
-  - Publish pane-by-pane stained-glass material roles, optical values, frame/came doctrine,
-    aperture chrome-gold doctrine, surface texture, and state profiles.
-  - Preserve the host/controller contract by changing no lifecycle behavior.
-  - Never own button behavior, Window open/close behavior, Diamond behavior, route state,
-    orbit gestures, Compass, stars, CSS layout, or broad page state.
+  Renewal purpose:
+  - Keep the working HTML load path and compatible v1_3 Window host contract.
+  - Increase visible stained-glass color, separation, glow, refraction, and pane identity.
+  - Preserve Diamond visibility through the center lens.
+  - Preserve button/controller/open/restore behavior by publishing definition data only.
+  - Own no lifecycle, route, gesture, Compass, Diamond, CSS layout, or broad page state.
 
   Consumer:
   - /showroom/index.window.js
@@ -32,6 +31,9 @@
   const CONTRACT = Object.freeze({
     id:
       "SHOWROOM_WINDOW_OBJECT_DEFINITION_v1_FOREGROUND_LENS_SPLENDOR_AUTHORITY",
+
+    renewal:
+      "SHOWROOM_WINDOW_OBJECT_DEFINITION_VISIBLE_SPLENDOR_RENEWAL_PASS_02",
 
     file:
       "/showroom/index.window.definition.js",
@@ -58,7 +60,7 @@
       "window-object-visual-definition-authority",
 
     definitionClass:
-      "foreground-lens-stained-glass-splendor-authority",
+      "foreground-lens-visible-jeweled-stained-glass-splendor-authority",
 
     scope:
       "visual-definition-only",
@@ -135,885 +137,1251 @@
     "base-right"
   ]);
 
+  function rgb(red, green, blue) {
+    return Object.freeze([
+      red,
+      green,
+      blue
+    ]);
+  }
+
+  function freezeRecord(record) {
+    return Object.freeze({
+      ...record
+    });
+  }
+
+  function pane(config) {
+    return Object.freeze({
+      role:
+        config.role,
+
+      material:
+        config.material,
+
+      alpha:
+        config.alpha,
+
+      transmission:
+        config.transmission,
+
+      age:
+        config.age,
+
+      refraction:
+        config.refraction,
+
+      internalContrast:
+        config.internalContrast,
+
+      coldLight:
+        config.coldLight,
+
+      warmLight:
+        config.warmLight,
+
+      phase:
+        config.phase,
+
+      saturation:
+        config.saturation,
+
+      glow:
+        config.glow,
+
+      edgeLight:
+        config.edgeLight,
+
+      jewelDepth:
+        config.jewelDepth
+    });
+  }
+
   const MATERIALS = Object.freeze({
     frame:
       Object.freeze({
         shadow:
-          Object.freeze([1, 2, 6]),
+          rgb(1, 2, 7),
 
         black:
-          Object.freeze([8, 10, 16]),
+          rgb(10, 12, 18),
 
         body:
-          Object.freeze([27, 31, 40]),
+          rgb(31, 35, 46),
 
         bevel:
-          Object.freeze([86, 86, 88]),
+          rgb(116, 112, 100),
 
         gold:
-          Object.freeze([184, 130, 64]),
+          rgb(210, 146, 54),
 
         goldBright:
-          Object.freeze([245, 194, 108]),
+          rgb(255, 204, 92),
+
+        goldWhite:
+          rgb(255, 238, 174),
 
         patina:
-          Object.freeze([38, 84, 82]),
+          rgb(38, 104, 100),
 
         coldEdge:
-          Object.freeze([112, 154, 162])
+          rgb(134, 202, 214)
       }),
 
     lead:
       Object.freeze({
         shadow:
-          Object.freeze([4, 5, 10]),
+          rgb(4, 5, 11),
 
         dark:
-          Object.freeze([13, 15, 21]),
+          rgb(16, 18, 26),
 
         body:
-          Object.freeze([34, 36, 43]),
+          rgb(43, 46, 55),
 
         bevel:
-          Object.freeze([88, 88, 90]),
+          rgb(112, 110, 104),
 
         highlight:
-          Object.freeze([176, 164, 126]),
+          rgb(205, 188, 132),
 
         goldHairline:
-          Object.freeze([248, 202, 116])
+          rgb(255, 211, 104),
+
+        coldHairline:
+          rgb(118, 202, 218)
       }),
 
     aperture:
       Object.freeze({
         wall:
-          Object.freeze([4, 5, 9]),
+          rgb(5, 6, 12),
 
         deepBronze:
-          Object.freeze([112, 66, 27]),
+          rgb(126, 70, 24),
 
         bronze:
-          Object.freeze([166, 100, 38]),
+          rgb(188, 108, 32),
 
         gold:
-          Object.freeze([238, 166, 56]),
+          rgb(246, 169, 42),
 
         chromeGold:
-          Object.freeze([255, 207, 78]),
+          rgb(255, 213, 72),
 
         bright:
-          Object.freeze([255, 232, 142]),
+          rgb(255, 235, 134),
 
         whiteGold:
-          Object.freeze([255, 249, 214]),
+          rgb(255, 250, 214),
 
         cold:
-          Object.freeze([144, 218, 234]),
+          rgb(166, 235, 244),
 
         coldEdge:
-          Object.freeze([96, 186, 216]),
+          rgb(96, 202, 232),
 
         innerLight:
-          Object.freeze([255, 222, 120])
+          rgb(255, 226, 118),
+
+        diamondFlash:
+          rgb(255, 255, 238)
       }),
 
     glass:
       Object.freeze({
         frost:
-          Object.freeze([166, 228, 230]),
+          rgb(190, 246, 244),
 
         aquamarine:
-          Object.freeze([76, 210, 210]),
+          rgb(55, 236, 224),
 
         cyan:
-          Object.freeze([58, 182, 196]),
+          rgb(38, 204, 232),
 
         cyanDeep:
-          Object.freeze([20, 122, 142]),
+          rgb(8, 148, 180),
 
         blue:
-          Object.freeze([48, 100, 178]),
+          rgb(54, 122, 226),
 
         blueDeep:
-          Object.freeze([18, 48, 118]),
+          rgb(20, 58, 162),
 
         sapphire:
-          Object.freeze([32, 76, 164]),
+          rgb(36, 84, 212),
 
         violet:
-          Object.freeze([118, 78, 176]),
+          rgb(142, 82, 224),
 
         violetDeep:
-          Object.freeze([64, 42, 118]),
+          rgb(78, 40, 164),
 
         paleViolet:
-          Object.freeze([164, 128, 206]),
+          rgb(192, 142, 238),
 
         rose:
-          Object.freeze([174, 74, 116]),
+          rgb(224, 72, 138),
 
         roseDeep:
-          Object.freeze([110, 38, 78]),
+          rgb(146, 30, 86),
+
+        ruby:
+          rgb(210, 28, 92),
 
         amber:
-          Object.freeze([214, 140, 48]),
+          rgb(240, 158, 38),
 
         amberDeep:
-          Object.freeze([128, 76, 24]),
+          rgb(170, 92, 20),
+
+        goldGlass:
+          rgb(255, 188, 54),
 
         emerald:
-          Object.freeze([52, 156, 126]),
+          rgb(42, 194, 138),
 
         emeraldDeep:
-          Object.freeze([20, 94, 80])
+          rgb(16, 122, 92),
+
+        teal:
+          rgb(20, 184, 168),
+
+        moonstone:
+          rgb(212, 238, 255)
       })
   });
 
   const OPTICAL = Object.freeze({
     objectShadowAlpha:
-      0.17,
+      0.21,
 
     objectShadowBlur:
-      16,
+      18,
 
     frameShadowBlur:
-      13,
+      15,
 
     glassAlpha:
-      0.42,
+      0.72,
 
     glassTransmission:
-      0.70,
+      0.50,
 
     centerGlassTransmission:
-      0.92,
+      0.91,
 
     apertureGlowAlpha:
-      0.48,
+      0.60,
 
     apertureSpecularAlpha:
-      0.78,
+      0.92,
 
     apertureInnerGlowAlpha:
-      0.34,
+      0.48,
 
     textureLineCount:
-      3,
+      6,
 
     textureSpeckCount:
-      14,
+      28,
 
     paneDefaultAlpha:
-      0.38,
+      0.66,
 
     paneDefaultAge:
-      0.26,
+      0.18,
 
     paneDefaultRefraction:
-      0.38,
+      0.56,
 
     paneDefaultInternalContrast:
-      0.22,
+      0.46,
 
     paneDefaultColdLight:
-      0.22,
+      0.44,
 
     paneDefaultWarmLight:
-      0.10
+      0.28,
+
+    paneDefaultSaturation:
+      1.28,
+
+    paneDefaultGlow:
+      0.36,
+
+    paneDefaultEdgeLight:
+      0.34,
+
+    paneDefaultJewelDepth:
+      0.52,
+
+    leadContrast:
+      1.18,
+
+    leadHighlight:
+      0.42,
+
+    frameGoldAccent:
+      0.50,
+
+    frameColdAccent:
+      0.28,
+
+    apertureGoldDominance:
+      0.72,
+
+    apertureColdCounterlight:
+      0.34,
+
+    diamondVisibilityPriority:
+      1
   });
 
   const PANE_VISUALS = Object.freeze({
     "crown-left":
-      Object.freeze({
+      pane({
         role:
-          "upper-frosted-crown-glass",
+          "bright-frost-crown-glass",
 
         material:
-          "frost",
+          "moonstone",
 
         alpha:
-          0.38,
+          0.62,
 
         transmission:
-          0.76,
+          0.62,
 
         age:
-          0.18,
+          0.10,
 
         refraction:
-          0.48,
+          0.66,
 
         internalContrast:
-          0.18,
+          0.32,
 
         coldLight:
-          0.34,
+          0.68,
 
         warmLight:
-          0.08,
+          0.18,
 
         phase:
-          0.12
+          0.12,
+
+        saturation:
+          1.12,
+
+        glow:
+          0.44,
+
+        edgeLight:
+          0.46,
+
+        jewelDepth:
+          0.34
       }),
 
     "crown-right":
-      Object.freeze({
+      pane({
         role:
-          "upper-violet-crown-glass",
+          "opal-violet-crown-glass",
 
         material:
           "paleViolet",
 
         alpha:
-          0.38,
+          0.64,
 
         transmission:
-          0.74,
+          0.58,
 
         age:
-          0.20,
+          0.12,
 
         refraction:
-          0.44,
+          0.62,
 
         internalContrast:
-          0.18,
+          0.36,
 
         coldLight:
-          0.24,
+          0.44,
 
         warmLight:
-          0.10,
+          0.30,
 
         phase:
-          0.44
+          0.44,
+
+        saturation:
+          1.20,
+
+        glow:
+          0.40,
+
+        edgeLight:
+          0.42,
+
+        jewelDepth:
+          0.38
       }),
 
     "upper-left-edge":
-      Object.freeze({
+      pane({
         role:
-          "outer-sapphire-shoulder-glass",
+          "saturated-sapphire-outer-shoulder-glass",
 
         material:
           "sapphire",
 
         alpha:
-          0.42,
+          0.74,
 
         transmission:
-          0.66,
+          0.42,
 
         age:
-          0.30,
+          0.22,
 
         refraction:
-          0.36,
+          0.52,
 
         internalContrast:
-          0.28,
+          0.60,
 
         coldLight:
-          0.20,
+          0.48,
 
         warmLight:
-          0.05,
+          0.08,
 
         phase:
-          0.82
+          0.82,
+
+        saturation:
+          1.46,
+
+        glow:
+          0.30,
+
+        edgeLight:
+          0.36,
+
+        jewelDepth:
+          0.72
       }),
 
     "upper-right-edge":
-      Object.freeze({
+      pane({
         role:
-          "outer-violet-shoulder-glass",
+          "saturated-violet-outer-shoulder-glass",
 
         material:
           "violet",
 
         alpha:
-          0.41,
+          0.72,
 
         transmission:
-          0.66,
+          0.44,
 
         age:
-          0.29,
+          0.20,
 
         refraction:
-          0.36,
+          0.52,
 
         internalContrast:
-          0.26,
+          0.56,
 
         coldLight:
-          0.18,
+          0.34,
 
         warmLight:
-          0.10,
+          0.30,
 
         phase:
-          1.16
+          1.16,
+
+        saturation:
+          1.42,
+
+        glow:
+          0.32,
+
+        edgeLight:
+          0.36,
+
+        jewelDepth:
+          0.68
       }),
 
     "upper-center-left":
-      Object.freeze({
+      pane({
         role:
-          "cool-lens-approach-glass",
+          "bright-aquamarine-lens-approach-glass",
 
         material:
           "aquamarine",
 
         alpha:
-          0.36,
+          0.68,
 
         transmission:
-          0.78,
+          0.56,
 
         age:
-          0.18,
+          0.10,
 
         refraction:
-          0.44,
+          0.62,
 
         internalContrast:
-          0.18,
+          0.40,
 
         coldLight:
-          0.34,
+          0.72,
 
         warmLight:
-          0.06,
+          0.12,
 
         phase:
-          1.52
+          1.52,
+
+        saturation:
+          1.36,
+
+        glow:
+          0.44,
+
+        edgeLight:
+          0.42,
+
+        jewelDepth:
+          0.46
       }),
 
     "upper-center-right":
-      Object.freeze({
+      pane({
         role:
-          "warm-lens-approach-glass",
+          "bright-rose-lens-approach-glass",
 
         material:
           "rose",
 
         alpha:
-          0.37,
+          0.68,
 
         transmission:
-          0.76,
+          0.54,
 
         age:
-          0.20,
-
-        refraction:
-          0.40,
-
-        internalContrast:
-          0.20,
-
-        coldLight:
           0.12,
 
-        warmLight:
+        refraction:
+          0.58,
+
+        internalContrast:
+          0.42,
+
+        coldLight:
           0.20,
 
+        warmLight:
+          0.54,
+
         phase:
-          1.88
+          1.88,
+
+        saturation:
+          1.42,
+
+        glow:
+          0.38,
+
+        edgeLight:
+          0.38,
+
+        jewelDepth:
+          0.50
       }),
 
     "mid-left-high":
-      Object.freeze({
+      pane({
         role:
-          "deep-left-outer-glass",
+          "deep-blue-left-outer-glass",
 
         material:
           "blueDeep",
 
         alpha:
-          0.44,
+          0.76,
 
         transmission:
-          0.62,
+          0.38,
 
         age:
-          0.34,
+          0.24,
 
         refraction:
-          0.34,
+          0.50,
 
         internalContrast:
-          0.32,
+          0.66,
 
         coldLight:
-          0.20,
+          0.42,
 
         warmLight:
-          0.04,
+          0.06,
 
         phase:
-          2.22
+          2.22,
+
+        saturation:
+          1.52,
+
+        glow:
+          0.24,
+
+        edgeLight:
+          0.34,
+
+        jewelDepth:
+          0.82
       }),
 
     "mid-left-inner":
-      Object.freeze({
+      pane({
         role:
-          "violet-left-inner-glass",
+          "deep-violet-left-inner-glass",
 
         material:
           "violetDeep",
 
         alpha:
-          0.40,
+          0.72,
 
         transmission:
-          0.68,
+          0.42,
 
         age:
-          0.28,
+          0.20,
 
         refraction:
-          0.36,
+          0.52,
 
         internalContrast:
-          0.26,
+          0.60,
 
         coldLight:
-          0.16,
+          0.30,
 
         warmLight:
-          0.10,
+          0.24,
 
         phase:
-          2.58
+          2.58,
+
+        saturation:
+          1.48,
+
+        glow:
+          0.28,
+
+        edgeLight:
+          0.34,
+
+        jewelDepth:
+          0.76
       }),
 
     "mid-center":
-      Object.freeze({
+      pane({
         role:
-          "central-transmissive-lens-glass",
+          "clear-central-diamond-transmissive-lens-glass",
 
         material:
           "frost",
 
         alpha:
-          0.24,
+          0.30,
 
         transmission:
           0.94,
 
         age:
-          0.12,
+          0.06,
 
         refraction:
-          0.60,
+          0.74,
 
         internalContrast:
-          0.14,
+          0.24,
 
         coldLight:
-          0.40,
+          0.62,
 
         warmLight:
-          0.22,
+          0.42,
 
         phase:
-          2.93
+          2.93,
+
+        saturation:
+          0.94,
+
+        glow:
+          0.38,
+
+        edgeLight:
+          0.58,
+
+        jewelDepth:
+          0.18
       }),
 
     "mid-right-inner":
-      Object.freeze({
+      pane({
         role:
-          "cyan-right-inner-glass",
+          "deep-cyan-right-inner-glass",
 
         material:
           "cyanDeep",
 
         alpha:
-          0.40,
+          0.72,
 
         transmission:
-          0.68,
+          0.42,
 
         age:
-          0.26,
+          0.18,
 
         refraction:
-          0.36,
+          0.52,
 
         internalContrast:
-          0.24,
+          0.58,
 
         coldLight:
-          0.24,
+          0.58,
 
         warmLight:
-          0.06,
+          0.10,
 
         phase:
-          3.18
+          3.18,
+
+        saturation:
+          1.48,
+
+        glow:
+          0.30,
+
+        edgeLight:
+          0.36,
+
+        jewelDepth:
+          0.72
       }),
 
     "mid-right-high":
-      Object.freeze({
+      pane({
         role:
-          "blue-right-outer-glass",
+          "bright-blue-right-outer-glass",
 
         material:
           "blue",
 
         alpha:
-          0.42,
+          0.74,
 
         transmission:
-          0.64,
+          0.40,
 
         age:
-          0.30,
-
-        refraction:
-          0.35,
-
-        internalContrast:
-          0.28,
-
-        coldLight:
           0.22,
 
+        refraction:
+          0.50,
+
+        internalContrast:
+          0.62,
+
+        coldLight:
+          0.52,
+
         warmLight:
-          0.04,
+          0.08,
 
         phase:
-          3.54
+          3.54,
+
+        saturation:
+          1.50,
+
+        glow:
+          0.28,
+
+        edgeLight:
+          0.36,
+
+        jewelDepth:
+          0.76
       }),
 
     "lower-left-edge":
-      Object.freeze({
+      pane({
         role:
-          "rose-lower-left-edge-glass",
+          "ruby-rose-lower-left-edge-glass",
 
         material:
-          "roseDeep",
+          "ruby",
 
         alpha:
-          0.43,
-
-        transmission:
-          0.62,
-
-        age:
-          0.34,
-
-        refraction:
-          0.34,
-
-        internalContrast:
-          0.28,
-
-        coldLight:
-          0.08,
-
-        warmLight:
-          0.22,
-
-        phase:
-          3.90
-      }),
-
-    "lower-left-center":
-      Object.freeze({
-        role:
-          "cyan-lower-left-center-glass",
-
-        material:
-          "cyan",
-
-        alpha:
-          0.37,
-
-        transmission:
           0.76,
 
-        age:
-          0.22,
-
-        refraction:
-          0.42,
-
-        internalContrast:
-          0.20,
-
-        coldLight:
-          0.30,
-
-        warmLight:
-          0.06,
-
-        phase:
-          4.23
-      }),
-
-    "lower-right-center":
-      Object.freeze({
-        role:
-          "violet-lower-right-center-glass",
-
-        material:
-          "violet",
-
-        alpha:
-          0.37,
-
         transmission:
-          0.74,
-
-        age:
-          0.22,
-
-        refraction:
-          0.40,
-
-        internalContrast:
-          0.20,
-
-        coldLight:
-          0.16,
-
-        warmLight:
-          0.12,
-
-        phase:
-          4.55
-      }),
-
-    "lower-right-edge":
-      Object.freeze({
-        role:
-          "amber-lower-right-edge-glass",
-
-        material:
-          "amber",
-
-        alpha:
-          0.42,
-
-        transmission:
-          0.64,
-
-        age:
-          0.30,
-
-        refraction:
-          0.34,
-
-        internalContrast:
-          0.26,
-
-        coldLight:
-          0.06,
-
-        warmLight:
-          0.28,
-
-        phase:
-          4.92
-      }),
-
-    "lower-left-deep":
-      Object.freeze({
-        role:
-          "blue-lower-left-depth-glass",
-
-        material:
-          "blue",
-
-        alpha:
-          0.42,
-
-        transmission:
-          0.64,
-
-        age:
-          0.32,
-
-        refraction:
-          0.34,
-
-        internalContrast:
-          0.28,
-
-        coldLight:
-          0.22,
-
-        warmLight:
-          0.04,
-
-        phase:
-          5.24
-      }),
-
-    "lower-center-left":
-      Object.freeze({
-        role:
-          "pale-violet-lower-center-glass",
-
-        material:
-          "paleViolet",
-
-        alpha:
           0.38,
-
-        transmission:
-          0.72,
 
         age:
           0.24,
 
         refraction:
-          0.38,
+          0.48,
 
         internalContrast:
-          0.20,
-
-        coldLight:
-          0.18,
-
-        warmLight:
-          0.14,
-
-        phase:
-          5.56
-      }),
-
-    "lower-center-right":
-      Object.freeze({
-        role:
-          "rose-lower-center-glass",
-
-        material:
-          "rose",
-
-        alpha:
-          0.38,
-
-        transmission:
-          0.72,
-
-        age:
-          0.24,
-
-        refraction:
-          0.38,
-
-        internalContrast:
-          0.20,
+          0.66,
 
         coldLight:
           0.10,
 
         warmLight:
-          0.20,
+          0.62,
 
         phase:
-          5.92
+          3.90,
+
+        saturation:
+          1.56,
+
+        glow:
+          0.28,
+
+        edgeLight:
+          0.36,
+
+        jewelDepth:
+          0.82
+      }),
+
+    "lower-left-center":
+      pane({
+        role:
+          "bright-cyan-lower-left-center-glass",
+
+        material:
+          "cyan",
+
+        alpha:
+          0.68,
+
+        transmission:
+          0.54,
+
+        age:
+          0.14,
+
+        refraction:
+          0.58,
+
+        internalContrast:
+          0.44,
+
+        coldLight:
+          0.66,
+
+        warmLight:
+          0.12,
+
+        phase:
+          4.23,
+
+        saturation:
+          1.38,
+
+        glow:
+          0.40,
+
+        edgeLight:
+          0.40,
+
+        jewelDepth:
+          0.50
+      }),
+
+    "lower-right-center":
+      pane({
+        role:
+          "bright-violet-lower-right-center-glass",
+
+        material:
+          "violet",
+
+        alpha:
+          0.68,
+
+        transmission:
+          0.52,
+
+        age:
+          0.14,
+
+        refraction:
+          0.56,
+
+        internalContrast:
+          0.44,
+
+        coldLight:
+          0.34,
+
+        warmLight:
+          0.34,
+
+        phase:
+          4.55,
+
+        saturation:
+          1.36,
+
+        glow:
+          0.38,
+
+        edgeLight:
+          0.38,
+
+        jewelDepth:
+          0.52
+      }),
+
+    "lower-right-edge":
+      pane({
+        role:
+          "golden-amber-lower-right-edge-glass",
+
+        material:
+          "goldGlass",
+
+        alpha:
+          0.74,
+
+        transmission:
+          0.40,
+
+        age:
+          0.20,
+
+        refraction:
+          0.48,
+
+        internalContrast:
+          0.60,
+
+        coldLight:
+          0.08,
+
+        warmLight:
+          0.70,
+
+        phase:
+          4.92,
+
+        saturation:
+          1.48,
+
+        glow:
+          0.34,
+
+        edgeLight:
+          0.36,
+
+        jewelDepth:
+          0.74
+      }),
+
+    "lower-left-deep":
+      pane({
+        role:
+          "deep-blue-lower-left-depth-glass",
+
+        material:
+          "blue",
+
+        alpha:
+          0.72,
+
+        transmission:
+          0.42,
+
+        age:
+          0.22,
+
+        refraction:
+          0.50,
+
+        internalContrast:
+          0.58,
+
+        coldLight:
+          0.50,
+
+        warmLight:
+          0.08,
+
+        phase:
+          5.24,
+
+        saturation:
+          1.44,
+
+        glow:
+          0.28,
+
+        edgeLight:
+          0.34,
+
+        jewelDepth:
+          0.70
+      }),
+
+    "lower-center-left":
+      pane({
+        role:
+          "opal-violet-lower-center-left-glass",
+
+        material:
+          "paleViolet",
+
+        alpha:
+          0.66,
+
+        transmission:
+          0.54,
+
+        age:
+          0.16,
+
+        refraction:
+          0.54,
+
+        internalContrast:
+          0.42,
+
+        coldLight:
+          0.36,
+
+        warmLight:
+          0.34,
+
+        phase:
+          5.56,
+
+        saturation:
+          1.30,
+
+        glow:
+          0.36,
+
+        edgeLight:
+          0.36,
+
+        jewelDepth:
+          0.48
+      }),
+
+    "lower-center-right":
+      pane({
+        role:
+          "bright-rose-lower-center-right-glass",
+
+        material:
+          "rose",
+
+        alpha:
+          0.66,
+
+        transmission:
+          0.54,
+
+        age:
+          0.16,
+
+        refraction:
+          0.54,
+
+        internalContrast:
+          0.42,
+
+        coldLight:
+          0.18,
+
+        warmLight:
+          0.54,
+
+        phase:
+          5.92,
+
+        saturation:
+          1.34,
+
+        glow:
+          0.36,
+
+        edgeLight:
+          0.36,
+
+        jewelDepth:
+          0.50
       }),
 
     "lower-right-deep":
-      Object.freeze({
+      pane({
         role:
-          "cyan-lower-right-depth-glass",
+          "deep-cyan-lower-right-depth-glass",
 
         material:
           "cyanDeep",
 
         alpha:
-          0.41,
+          0.72,
 
         transmission:
-          0.66,
+          0.42,
 
         age:
-          0.30,
+          0.20,
 
         refraction:
-          0.34,
+          0.50,
 
         internalContrast:
-          0.26,
+          0.58,
 
         coldLight:
-          0.26,
+          0.60,
 
         warmLight:
-          0.04,
+          0.08,
 
         phase:
-          6.23
+          6.23,
+
+        saturation:
+          1.44,
+
+        glow:
+          0.30,
+
+        edgeLight:
+          0.34,
+
+        jewelDepth:
+          0.70
       }),
 
     "base-left":
-      Object.freeze({
+      pane({
         role:
-          "amber-foundation-left-glass",
+          "molten-amber-foundation-left-glass",
 
         material:
           "amberDeep",
 
         alpha:
-          0.40,
+          0.72,
 
         transmission:
-          0.66,
+          0.42,
 
         age:
-          0.32,
+          0.22,
 
         refraction:
-          0.34,
+          0.48,
 
         internalContrast:
-          0.26,
+          0.58,
 
         coldLight:
-          0.06,
+          0.08,
 
         warmLight:
-          0.26,
+          0.66,
 
         phase:
-          6.54
+          6.54,
+
+        saturation:
+          1.42,
+
+        glow:
+          0.30,
+
+        edgeLight:
+          0.34,
+
+        jewelDepth:
+          0.68
       }),
 
     "base-right":
-      Object.freeze({
+      pane({
         role:
-          "blue-foundation-right-glass",
+          "deep-sapphire-foundation-right-glass",
 
         material:
           "blueDeep",
 
         alpha:
-          0.40,
+          0.72,
 
         transmission:
-          0.66,
+          0.42,
 
         age:
-          0.30,
-
-        refraction:
-          0.34,
-
-        internalContrast:
-          0.26,
-
-        coldLight:
           0.22,
 
+        refraction:
+          0.48,
+
+        internalContrast:
+          0.58,
+
+        coldLight:
+          0.54,
+
         warmLight:
-          0.04,
+          0.08,
 
         phase:
-          6.88
+          6.88,
+
+        saturation:
+          1.42,
+
+        glow:
+          0.28,
+
+        edgeLight:
+          0.34,
+
+        jewelDepth:
+          0.68
       })
   });
 
@@ -1024,10 +1392,16 @@
           1,
 
         densityMultiplier:
-          0.96,
+          1.02,
 
         apertureMultiplier:
-          1.14
+          1.18,
+
+        paneGlowMultiplier:
+          1,
+
+        frameContrastMultiplier:
+          1
       }),
 
     opening:
@@ -1036,10 +1410,16 @@
           1,
 
         densityMultiplier:
-          0.78,
+          0.82,
 
         apertureMultiplier:
-          1.18
+          1.22,
+
+        paneGlowMultiplier:
+          1.08,
+
+        frameContrastMultiplier:
+          0.96
       }),
 
     closing:
@@ -1048,10 +1428,16 @@
           1,
 
         densityMultiplier:
-          0.88,
+          0.92,
 
         apertureMultiplier:
-          1.16
+          1.18,
+
+        paneGlowMultiplier:
+          0.96,
+
+        frameContrastMultiplier:
+          1
       }),
 
     open:
@@ -1063,6 +1449,12 @@
           0,
 
         apertureMultiplier:
+          0,
+
+        paneGlowMultiplier:
+          0,
+
+        frameContrastMultiplier:
           0
       })
   });
@@ -1073,6 +1465,9 @@
 
     id:
       CONTRACT.id,
+
+    renewal:
+      CONTRACT.renewal,
 
     file:
       CONTRACT.file,
@@ -1101,28 +1496,28 @@
     doctrine:
       Object.freeze({
         visualGoal:
-          "restore stained-glass splendor while preserving Window controller compatibility and Diamond visibility",
+          "make the Window visibly jeweled and readable after the HTML definition load path is active",
 
         densityGoal:
-          "richer than the minimal host fallback without reintroducing blackout",
+          "stronger stained-glass color and separation without returning to full blackout",
 
         glassGoal:
-          "luminous pane separation with transmissive center lens",
+          "distinct pane identities with saturated jewel color, visible cool/warm light, and preserved center transmission",
 
         apertureGoal:
-          "chrome-gold focal threshold with cool highlight balance",
+          "chrome-gold focal threshold with stronger rim light while keeping Diamond visibility",
 
         frameGoal:
-          "dark readable metal with gold/cold-edge highlights",
+          "dark metal frame with readable gold and cold-edge highlights",
 
         cameGoal:
-          "structured lead lines with restrained bevel and enough contrast for pane definition",
+          "lead/came lines remain structural, not dominant; color panes must read through them",
 
         textureGoal:
-          "surface age as detail, not noise",
+          "more visible antique glass variation without noisy surface collapse",
 
         lifecycleGoal:
-          "definition changes image only and never changes open/restore behavior"
+          "definition changes visual material only and never changes open/restore behavior"
       }),
 
     materials:
@@ -1198,6 +1593,9 @@
   const receipt = {
     contractId:
       CONTRACT.id,
+
+    renewal:
+      CONTRACT.renewal,
 
     file:
       CONTRACT.file,
@@ -1309,6 +1707,9 @@
                 contractId:
                   CONTRACT.id,
 
+                renewal:
+                  CONTRACT.renewal,
+
                 file:
                   CONTRACT.file,
 
@@ -1346,18 +1747,42 @@
         profile => Object.prototype.hasOwnProperty.call(STATE_PROFILES, profile)
       );
 
+    const paneValuesComplete =
+      EXPECTED_PANE_IDS.every(
+        paneId => {
+          const visual =
+            PANE_VISUALS[paneId];
+
+          return Boolean(
+            visual &&
+            typeof visual.role === "string" &&
+            typeof visual.material === "string" &&
+            typeof visual.alpha === "number" &&
+            typeof visual.transmission === "number" &&
+            typeof visual.age === "number" &&
+            typeof visual.refraction === "number" &&
+            typeof visual.internalContrast === "number" &&
+            typeof visual.coldLight === "number" &&
+            typeof visual.warmLight === "number" &&
+            typeof visual.phase === "number"
+          );
+        }
+      );
+
     return {
       valid:
         paneIdsComplete &&
         materialGroupsComplete &&
-        stateProfilesComplete,
+        stateProfilesComplete &&
+        paneValuesComplete,
 
       paneDefinitionCount:
         paneKeys.length,
 
       paneIdsComplete,
       materialGroupsComplete,
-      stateProfilesComplete
+      stateProfilesComplete,
+      paneValuesComplete
     };
   }
 
@@ -1390,6 +1815,9 @@
 
         stateProfilesComplete:
           validation.stateProfilesComplete,
+
+        paneValuesComplete:
+          validation.paneValuesComplete,
 
         lastAction:
           "window-definition-validation-failed",
@@ -1436,8 +1864,11 @@
         stateProfilesComplete:
           validation.stateProfilesComplete,
 
+        paneValuesComplete:
+          validation.paneValuesComplete,
+
         lastAction:
-          "window-definition-published",
+          "window-definition-published-visible-splendor-renewal",
 
         lastFailure:
           null
@@ -1463,7 +1894,7 @@
     ) {
       try {
         host.applyExternalDefinition(
-          "definition-published-after-host-detected"
+          "definition-published-after-host-detected-visible-splendor-renewal"
         );
       } catch (_) {}
     }
@@ -1471,5 +1902,6 @@
     return true;
   }
 
+  freezeRecord(CONTRACT);
   publish();
 })();

@@ -2510,18 +2510,22 @@ canvas[data-showroom-window-canvas][data-showroom-window-canvas-dormant="true"] 
   background: transparent !important;
 }
 /* SECTION 18 ADDITIVE TAIL */
-/* SHOWROOM_DIAMOND_OPEN_WINDOW_FRAMING_CORRECTION_v1
+/* SHOWROOM_DIAMOND_OPEN_WINDOW_FRAMING_CORRECTION_v2
    Purpose:
    - Preserve the closed Window foreground.
    - Preserve the open Window dormant state.
+   - Correct selector coverage for both class and data scene forms.
    - Reduce Diamond overfill when the Window is open.
+   - Preserve more initial reveal distance on mobile.
    - Keep Diamond interaction available.
 */
 
+.showroom-reveal-scene,
 [data-showroom-reveal-scene] {
-  --showroom-diamond-open-scale: 0.78;
+  --showroom-diamond-open-scale: 0.66;
   --showroom-diamond-open-origin-x: 50%;
   --showroom-diamond-open-origin-y: 50%;
+  --showroom-diamond-open-translate-y: -2.5%;
 }
 
 [data-showroom-diamond-layer],
@@ -2542,17 +2546,32 @@ canvas[data-showroom-window-canvas] {
   pointer-events: auto;
 }
 
+/* Open-state Diamond framing: support both actual class and data selector forms. */
+
+.showroom-reveal-scene[data-showroom-window-state="open"]
+[data-showroom-diamond-stage],
+.showroom-reveal-scene[data-showroom-window-state="open"]
+.diamond-stage,
 [data-showroom-reveal-scene][data-showroom-window-state="open"]
 [data-showroom-diamond-stage],
 [data-showroom-reveal-scene][data-showroom-window-state="open"]
 .diamond-stage {
   transform:
+    translateY(var(--showroom-diamond-open-translate-y))
     scale(var(--showroom-diamond-open-scale));
   transform-origin:
     var(--showroom-diamond-open-origin-x)
     var(--showroom-diamond-open-origin-y);
 }
 
+/* Dormant Window surface when open. */
+
+.showroom-reveal-scene[data-showroom-window-state="open"]
+[data-showroom-window-mount],
+.showroom-reveal-scene[data-showroom-window-state="open"]
+.showroom-window-mount,
+.showroom-reveal-scene[data-showroom-window-state="open"]
+canvas[data-showroom-window-canvas],
 [data-showroom-reveal-scene][data-showroom-window-state="open"]
 [data-showroom-window-mount],
 [data-showroom-reveal-scene][data-showroom-window-state="open"]
@@ -2565,6 +2584,27 @@ canvas[data-showroom-window-canvas],
   pointer-events: none !important;
   background: transparent !important;
 }
+
+/* Mobile-specific reveal distance. */
+
+@media (max-width: 42rem) {
+  .showroom-reveal-scene,
+  [data-showroom-reveal-scene] {
+    --showroom-diamond-open-scale: 0.56;
+    --showroom-diamond-open-translate-y: -4%;
+  }
+}
+
+/* Very small viewport reveal distance. */
+
+@media (max-width: 25rem) {
+  .showroom-reveal-scene,
+  [data-showroom-reveal-scene] {
+    --showroom-diamond-open-scale: 0.50;
+    --showroom-diamond-open-translate-y: -5%;
+  }
+}
+
 /* ================================================================
    19. NARRATIVE FOUNDATIONS OUTER STRUCTURE
    ================================================================ */

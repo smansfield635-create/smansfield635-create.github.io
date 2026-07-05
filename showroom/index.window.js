@@ -1,28 +1,25 @@
 /* TARGET FILE: /showroom/index.window.js */
 /* COMPLETE REPLACEMENT */
-/* SHOWROOM_WINDOW_OBJECT_v1_3_FOREGROUND_LENS_APERTURE_FOCUS_OPTIMIZED_BASE */
+/* SHOWROOM_WINDOW_OBJECT_v1_4_DEFINITION_CONSUMER_GEOMETRY_HOST */
 
 /*
   Mirrorland Window Object Host
 
   Purpose:
-  - Render the Mirrorland Window as a foreground stained-glass lens over the Diamond.
-  - Keep the Diamond relationship visually readable through the aperture and filtered glass.
-  - Make the central aperture the focal chrome-gold optical threshold.
+  - Own the base Window object origin.
+  - Own canvas creation, resize, projection, geometry, drawing execution, lifecycle, and API.
+  - Define canonical pane/frame/aperture geometry without making this file the final image authority.
+  - Consume an optional external Window definition file when present.
+  - Preserve a minimal fallback definition so the Window remains renderable without the external definition.
   - Become visually dormant when open so the Diamond can be revealed and manipulated.
-  - Expose a stable object API for /showroom/index.window.controller.js.
-  - Remain pointer-transparent except for behavior owned elsewhere.
-  - Never own button behavior, Diamond behavior, route state, orbit gestures,
-    Compass, stars, or broad page state.
+  - Remain pointer-transparent.
+  - Never own button behavior, Diamond behavior, routes, orbit gestures, Compass, stars, CSS layout, or page state.
 
-  v1_3 optimization:
-  - Replaces blackout behavior with object-local shadow.
-  - Refines aperture geometry for a stronger Diamond focus.
-  - Narrows and interrupts central mullion geometry.
-  - Makes glass panes behave as transmissive foreground lens plates.
-  - Adds chrome-gold aperture material model.
-  - Adds definition-ready receipt fields without consuming an external definition file.
-  - Preserves the public API and controller contract from v1_2.
+  v1_4 architectural correction:
+  - Removes the final image doctrine from the base object host.
+  - Keeps geometry, projection, lifecycle, dormant-open suppression, and public API in this file.
+  - Moves material/visual doctrine into a definition-consumer surface.
+  - Provides only a small fallback definition until /showroom/index.window.definition.js is available.
 */
 
 (() => {
@@ -30,10 +27,10 @@
 
   const CONTRACT = Object.freeze({
     id:
-      "SHOWROOM_WINDOW_OBJECT_v1_3_FOREGROUND_LENS_APERTURE_FOCUS_OPTIMIZED_BASE",
+      "SHOWROOM_WINDOW_OBJECT_v1_4_DEFINITION_CONSUMER_GEOMETRY_HOST",
 
     previousId:
-      "SHOWROOM_WINDOW_OBJECT_v1_2_CRISP_3D_COMPOUND_CURTAIN_HOST",
+      "SHOWROOM_WINDOW_OBJECT_v1_3_FOREGROUND_LENS_APERTURE_FOCUS_OPTIMIZED_BASE",
 
     file:
       "/showroom/index.window.js",
@@ -41,11 +38,17 @@
     publicSurface:
       "SHOWROOM_MIRRORLAND_WINDOW_OBJECT",
 
+    definitionSurface:
+      "SHOWROOM_MIRRORLAND_WINDOW_DEFINITION",
+
+    definitionReceiptSurface:
+      "SHOWROOM_MIRRORLAND_WINDOW_DEFINITION_RECEIPT",
+
     role:
-      "visual-object-host-only",
+      "window-object-geometry-render-host",
 
     rendererModel:
-      "canvas-2d-foreground-lens-aperture-focus-definition-ready",
+      "canvas-2d-definition-consuming-geometry-host",
 
     motionModel:
       "motionless-object-transition-only",
@@ -60,9 +63,12 @@
       true,
 
     definitionExternalized:
-      false,
+      true,
 
     definitionConsumerReady:
+      true,
+
+    fallbackDefinitionPresent:
       true,
 
     defaultCurtainAmount:
@@ -101,6 +107,9 @@
     starOwnership:
       false,
 
+    cssLayoutOwnership:
+      false,
+
     visualPassClaimed:
       false,
 
@@ -132,11 +141,19 @@
     TRANSITION_COMPLETE:
       "SHOWROOM_MIRRORLAND_WINDOW_OBJECT_TRANSITION_COMPLETE",
 
+    DEFINITION_APPLIED:
+      "SHOWROOM_MIRRORLAND_WINDOW_OBJECT_DEFINITION_APPLIED",
+
     DISPOSED:
       "SHOWROOM_MIRRORLAND_WINDOW_OBJECT_DISPOSED",
 
     FAILURE:
       "SHOWROOM_MIRRORLAND_WINDOW_OBJECT_FAILURE"
+  });
+
+  const DEFINITION_EVENTS = Object.freeze({
+    READY:
+      "SHOWROOM_MIRRORLAND_WINDOW_DEFINITION_READY"
   });
 
   const DESIGN = Object.freeze({
@@ -160,11 +177,8 @@
   });
 
   const DEPTH = Object.freeze({
-    rearOcclusion:
-      -0.20,
-
     rearGlassShadow:
-      -0.12,
+      -0.120,
 
     glassBack:
       -0.085,
@@ -183,9 +197,6 @@
 
     cameFace:
       0.132,
-
-    mullionSide:
-      0.150,
 
     mullionFace:
       0.220,
@@ -218,135 +229,7 @@
       0.392
   });
 
-  const MATERIALS = Object.freeze({
-    frame:
-      Object.freeze({
-        shadow:
-          Object.freeze([1, 2, 5]),
-
-        black:
-          Object.freeze([7, 10, 15]),
-
-        body:
-          Object.freeze([20, 25, 33]),
-
-        stone:
-          Object.freeze([34, 38, 44]),
-
-        bevel:
-          Object.freeze([58, 58, 62]),
-
-        gold:
-          Object.freeze([168, 117, 58]),
-
-        goldBright:
-          Object.freeze([232, 178, 96]),
-
-        patina:
-          Object.freeze([32, 66, 67]),
-
-        coldEdge:
-          Object.freeze([93, 126, 132])
-      }),
-
-    lead:
-      Object.freeze({
-        shadow:
-          Object.freeze([4, 5, 9]),
-
-        dark:
-          Object.freeze([11, 13, 18]),
-
-        body:
-          Object.freeze([27, 29, 35]),
-
-        bevel:
-          Object.freeze([70, 70, 74]),
-
-        highlight:
-          Object.freeze([157, 145, 112]),
-
-        goldHairline:
-          Object.freeze([238, 189, 104]),
-
-        cold:
-          Object.freeze([80, 111, 116])
-      }),
-
-    aperture:
-      Object.freeze({
-        wall:
-          Object.freeze([3, 4, 7]),
-
-        deepBronze:
-          Object.freeze([94, 58, 24]),
-
-        bronze:
-          Object.freeze([139, 86, 32]),
-
-        gold:
-          Object.freeze([225, 154, 54]),
-
-        chromeGold:
-          Object.freeze([255, 196, 78]),
-
-        bright:
-          Object.freeze([255, 225, 142]),
-
-        whiteGold:
-          Object.freeze([255, 244, 203]),
-
-        cold:
-          Object.freeze([126, 194, 210]),
-
-        coldEdge:
-          Object.freeze([87, 168, 194]),
-
-        innerLight:
-          Object.freeze([255, 212, 105])
-      }),
-
-    glass:
-      Object.freeze({
-        frost:
-          Object.freeze([132, 197, 203]),
-
-        cyan:
-          Object.freeze([58, 170, 181]),
-
-        cyanDeep:
-          Object.freeze([21, 111, 126]),
-
-        blue:
-          Object.freeze([42, 82, 151]),
-
-        blueDeep:
-          Object.freeze([16, 42, 98]),
-
-        violet:
-          Object.freeze([100, 64, 151]),
-
-        violetDeep:
-          Object.freeze([56, 36, 98]),
-
-        rose:
-          Object.freeze([151, 66, 99]),
-
-        roseDeep:
-          Object.freeze([95, 35, 65]),
-
-        amber:
-          Object.freeze([180, 119, 47]),
-
-        amberDeep:
-          Object.freeze([113, 69, 27]),
-
-        paleViolet:
-          Object.freeze([145, 115, 181])
-      })
-  });
-
-  const RENDER = Object.freeze({
+  const BASE_RENDER = Object.freeze({
     maxDevicePixelRatio:
       2,
 
@@ -367,24 +250,6 @@
 
     frozenTiltZ:
       0,
-
-    objectShadowAlpha:
-      0.28,
-
-    objectShadowBlur:
-      22,
-
-    frameShadowBlur:
-      18,
-
-    glassAlpha:
-      0.46,
-
-    glassTransmission:
-      0.54,
-
-    centerGlassTransmission:
-      0.68,
 
     cameWidth:
       6.7,
@@ -413,9 +278,6 @@
     innerFrameLipWidth:
       3.3,
 
-    mullionInset:
-      7,
-
     apertureWallWidth:
       20,
 
@@ -426,22 +288,7 @@
       8.4,
 
     apertureLipWidth:
-      2.9,
-
-    apertureGlowAlpha:
-      0.40,
-
-    apertureSpecularAlpha:
-      0.72,
-
-    apertureInnerGlowAlpha:
-      0.24,
-
-    textureLineCount:
-      5,
-
-    textureSpeckCount:
-      28
+      2.9
   });
 
   const TIMING = Object.freeze({
@@ -461,6 +308,314 @@
 
     transitionHiddenCutoff:
       0.004
+  });
+
+  const FALLBACK_DEFINITION = freezeDeep({
+    contractId:
+      "SHOWROOM_WINDOW_OBJECT_INTERNAL_FALLBACK_DEFINITION_v1",
+
+    source:
+      "internal-fallback",
+
+    role:
+      "minimal-window-object-definition-fallback",
+
+    visualPassClaimed:
+      false,
+
+    materials:
+      {
+        frame:
+          {
+            shadow:
+              [1, 2, 5],
+
+            black:
+              [7, 10, 15],
+
+            body:
+              [26, 30, 38],
+
+            bevel:
+              [64, 64, 68],
+
+            gold:
+              [168, 117, 58],
+
+            goldBright:
+              [232, 178, 96],
+
+            patina:
+              [32, 66, 67],
+
+            coldEdge:
+              [93, 126, 132]
+          },
+
+        lead:
+          {
+            shadow:
+              [4, 5, 9],
+
+            dark:
+              [12, 14, 20],
+
+            body:
+              [30, 32, 38],
+
+            bevel:
+              [72, 72, 76],
+
+            highlight:
+              [157, 145, 112],
+
+            goldHairline:
+              [238, 189, 104]
+          },
+
+        aperture:
+          {
+            wall:
+              [3, 4, 7],
+
+            deepBronze:
+              [94, 58, 24],
+
+            bronze:
+              [139, 86, 32],
+
+            gold:
+              [225, 154, 54],
+
+            chromeGold:
+              [255, 196, 78],
+
+            bright:
+              [255, 225, 142],
+
+            whiteGold:
+              [255, 244, 203],
+
+            cold:
+              [126, 194, 210],
+
+            coldEdge:
+              [87, 168, 194],
+
+            innerLight:
+              [255, 212, 105]
+          },
+
+        glass:
+          {
+            frost:
+              [132, 197, 203],
+
+            cyan:
+              [58, 170, 181],
+
+            cyanDeep:
+              [21, 111, 126],
+
+            blue:
+              [42, 82, 151],
+
+            blueDeep:
+              [16, 42, 98],
+
+            violet:
+              [100, 64, 151],
+
+            violetDeep:
+              [56, 36, 98],
+
+            rose:
+              [151, 66, 99],
+
+            roseDeep:
+              [95, 35, 65],
+
+            amber:
+              [180, 119, 47],
+
+            amberDeep:
+              [113, 69, 27],
+
+            paleViolet:
+              [145, 115, 181]
+          }
+      },
+
+    optical:
+      {
+        objectShadowAlpha:
+          0.20,
+
+        objectShadowBlur:
+          18,
+
+        frameShadowBlur:
+          15,
+
+        glassAlpha:
+          0.38,
+
+        glassTransmission:
+          0.62,
+
+        centerGlassTransmission:
+          0.78,
+
+        apertureGlowAlpha:
+          0.34,
+
+        apertureSpecularAlpha:
+          0.62,
+
+        apertureInnerGlowAlpha:
+          0.20,
+
+        textureLineCount:
+          3,
+
+        textureSpeckCount:
+          16,
+
+        paneDefaultAlpha:
+          0.38,
+
+        paneDefaultAge:
+          0.34,
+
+        paneDefaultRefraction:
+          0.32,
+
+        paneDefaultInternalContrast:
+          0.22,
+
+        paneDefaultColdLight:
+          0.18,
+
+        paneDefaultWarmLight:
+          0.08
+      },
+
+    paneVisuals:
+      {
+        "crown-left":
+          { material: "frost", alpha: 0.36, transmission: 0.66, refraction: 0.36, coldLight: 0.24, phase: 0.12 },
+
+        "crown-right":
+          { material: "paleViolet", alpha: 0.36, transmission: 0.66, refraction: 0.34, phase: 0.44 },
+
+        "upper-left-edge":
+          { material: "blue", alpha: 0.40, transmission: 0.58, age: 0.40, internalContrast: 0.28, phase: 0.82 },
+
+        "upper-right-edge":
+          { material: "violet", alpha: 0.39, transmission: 0.58, age: 0.38, internalContrast: 0.26, phase: 1.16 },
+
+        "upper-center-left":
+          { material: "cyan", alpha: 0.34, transmission: 0.70, refraction: 0.38, coldLight: 0.26, phase: 1.52 },
+
+        "upper-center-right":
+          { material: "rose", alpha: 0.35, transmission: 0.68, refraction: 0.34, warmLight: 0.14, phase: 1.88 },
+
+        "mid-left-high":
+          { material: "blueDeep", alpha: 0.41, transmission: 0.56, age: 0.44, internalContrast: 0.30, phase: 2.22 },
+
+        "mid-left-inner":
+          { material: "violetDeep", alpha: 0.38, transmission: 0.61, age: 0.40, phase: 2.58 },
+
+        "mid-center":
+          { material: "frost", alpha: 0.26, transmission: 0.82, refraction: 0.50, coldLight: 0.34, phase: 2.93 },
+
+        "mid-right-inner":
+          { material: "cyanDeep", alpha: 0.37, transmission: 0.62, age: 0.36, phase: 3.18 },
+
+        "mid-right-high":
+          { material: "blue", alpha: 0.39, transmission: 0.58, age: 0.40, internalContrast: 0.28, phase: 3.54 },
+
+        "lower-left-edge":
+          { material: "roseDeep", alpha: 0.40, transmission: 0.56, age: 0.44, warmLight: 0.14, phase: 3.90 },
+
+        "lower-left-center":
+          { material: "cyan", alpha: 0.35, transmission: 0.70, refraction: 0.36, coldLight: 0.24, phase: 4.23 },
+
+        "lower-right-center":
+          { material: "violet", alpha: 0.35, transmission: 0.68, refraction: 0.34, phase: 4.55 },
+
+        "lower-right-edge":
+          { material: "amber", alpha: 0.39, transmission: 0.58, age: 0.40, warmLight: 0.20, phase: 4.92 },
+
+        "lower-left-deep":
+          { material: "blue", alpha: 0.39, transmission: 0.58, age: 0.42, internalContrast: 0.28, phase: 5.24 },
+
+        "lower-center-left":
+          { material: "paleViolet", alpha: 0.36, transmission: 0.66, refraction: 0.34, phase: 5.56 },
+
+        "lower-center-right":
+          { material: "rose", alpha: 0.36, transmission: 0.66, refraction: 0.34, warmLight: 0.14, phase: 5.92 },
+
+        "lower-right-deep":
+          { material: "cyanDeep", alpha: 0.38, transmission: 0.60, age: 0.40, coldLight: 0.18, phase: 6.23 },
+
+        "base-left":
+          { material: "amberDeep", alpha: 0.38, transmission: 0.60, age: 0.42, warmLight: 0.18, phase: 6.54 },
+
+        "base-right":
+          { material: "blueDeep", alpha: 0.38, transmission: 0.60, age: 0.40, internalContrast: 0.28, phase: 6.88 }
+      },
+
+    stateProfiles:
+      {
+        closed:
+          {
+            opacityMultiplier:
+              1,
+
+            densityMultiplier:
+              1,
+
+            apertureMultiplier:
+              1
+          },
+
+        opening:
+          {
+            opacityMultiplier:
+              1,
+
+            densityMultiplier:
+              0.88,
+
+            apertureMultiplier:
+              1.04
+          },
+
+        closing:
+          {
+            opacityMultiplier:
+              1,
+
+            densityMultiplier:
+              0.94,
+
+            apertureMultiplier:
+              1.02
+          },
+
+        open:
+          {
+            opacityMultiplier:
+              0,
+
+            densityMultiplier:
+              0,
+
+            apertureMultiplier:
+              0
+          }
+      }
   });
 
   const state = {
@@ -488,6 +643,12 @@
     geometry:
       null,
 
+    definition:
+      FALLBACK_DEFINITION,
+
+    externalDefinitionApplied:
+      false,
+
     curtainAmount:
       1,
 
@@ -513,6 +674,9 @@
       null,
 
     reducedMotionBound:
+      false,
+
+    definitionListenerBound:
       false,
 
     initialized:
@@ -544,6 +708,9 @@
     publicSurface:
       CONTRACT.publicSurface,
 
+    definitionSurface:
+      CONTRACT.definitionSurface,
+
     status:
       "pending",
 
@@ -561,6 +728,15 @@
 
     geometryPresent:
       false,
+
+    definitionPresent:
+      true,
+
+    externalDefinitionApplied:
+      false,
+
+    activeDefinitionContractId:
+      FALLBACK_DEFINITION.contractId,
 
     curtainAmount:
       1,
@@ -584,9 +760,12 @@
       true,
 
     definitionExternalized:
-      false,
+      true,
 
     definitionConsumerReady:
+      true,
+
+    fallbackDefinitionPresent:
       true,
 
     paneCount:
@@ -637,6 +816,9 @@
     ownsStars:
       false,
 
+    ownsCssLayout:
+      false,
+
     visualPassClaimed:
       false,
 
@@ -671,6 +853,70 @@
     return value;
   }
 
+  function clonePlain(value) {
+    if (
+      !value ||
+      typeof value !== "object"
+    ) {
+      return value;
+    }
+
+    if (Array.isArray(value)) {
+      return value.map(clonePlain);
+    }
+
+    const output =
+      {};
+
+    Object.keys(value).forEach(
+      key => {
+        output[key] =
+          clonePlain(value[key]);
+      }
+    );
+
+    return output;
+  }
+
+  function mergePlain(
+    base,
+    override
+  ) {
+    const output =
+      clonePlain(base);
+
+    if (
+      !override ||
+      typeof override !== "object"
+    ) {
+      return output;
+    }
+
+    Object.keys(override).forEach(
+      key => {
+        const next =
+          override[key];
+
+        if (
+          next &&
+          typeof next === "object" &&
+          !Array.isArray(next) &&
+          output[key] &&
+          typeof output[key] === "object" &&
+          !Array.isArray(output[key])
+        ) {
+          output[key] =
+            mergePlain(output[key], next);
+        } else {
+          output[key] =
+            clonePlain(next);
+        }
+      }
+    );
+
+    return output;
+  }
+
   function clamp(
     value,
     minimum,
@@ -690,6 +936,18 @@
         number
       )
     );
+  }
+
+  function numeric(
+    value,
+    fallback
+  ) {
+    const number =
+      Number(value);
+
+    return Number.isFinite(number)
+      ? number
+      : fallback;
   }
 
   function lerp(
@@ -717,7 +975,12 @@
     color,
     alpha
   ) {
-    return `rgba(${color[0]}, ${color[1]}, ${color[2]}, ${clamp(alpha, 0, 1)})`;
+    const safe =
+      Array.isArray(color)
+        ? color
+        : [255, 255, 255];
+
+    return `rgba(${safe[0] || 0}, ${safe[1] || 0}, ${safe[2] || 0}, ${clamp(alpha, 0, 1)})`;
   }
 
   function nowId(prefix) {
@@ -755,6 +1018,211 @@
     return clamp(value, 0, 1) <= VISIBILITY.hiddenCutoff;
   }
 
+  function currentVisualState() {
+    if (isCurtainHidden()) {
+      return "open";
+    }
+
+    if (!state.transition) {
+      return state.curtainAmount >= 0.999
+        ? "closed"
+        : "opening";
+    }
+
+    return state.transition.to > state.transition.from
+      ? "closing"
+      : "opening";
+  }
+
+  function getDefinitionProfile() {
+    const profiles =
+      state.definition &&
+      state.definition.stateProfiles
+        ? state.definition.stateProfiles
+        : FALLBACK_DEFINITION.stateProfiles;
+
+    return profiles[currentVisualState()] ||
+      FALLBACK_DEFINITION.stateProfiles.closed;
+  }
+
+  function optical(key) {
+    const definitionOptical =
+      state.definition &&
+      state.definition.optical
+        ? state.definition.optical
+        : FALLBACK_DEFINITION.optical;
+
+    return definitionOptical[key] ??
+      FALLBACK_DEFINITION.optical[key];
+  }
+
+  function material(
+    group,
+    key
+  ) {
+    const definitionMaterials =
+      state.definition &&
+      state.definition.materials
+        ? state.definition.materials
+        : FALLBACK_DEFINITION.materials;
+
+    const groupValue =
+      definitionMaterials[group] ||
+      FALLBACK_DEFINITION.materials[group] ||
+      {};
+
+    const fallbackGroup =
+      FALLBACK_DEFINITION.materials[group] ||
+      {};
+
+    return groupValue[key] ||
+      fallbackGroup[key] ||
+      [255, 255, 255];
+  }
+
+  function paneVisual(pane) {
+    const visuals =
+      state.definition &&
+      state.definition.paneVisuals
+        ? state.definition.paneVisuals
+        : FALLBACK_DEFINITION.paneVisuals;
+
+    return visuals[pane.id] ||
+      FALLBACK_DEFINITION.paneVisuals[pane.id] ||
+      {};
+  }
+
+  function normalizeDefinition(candidate) {
+    if (
+      !candidate ||
+      typeof candidate !== "object"
+    ) {
+      return FALLBACK_DEFINITION;
+    }
+
+    const merged =
+      mergePlain(
+        FALLBACK_DEFINITION,
+        candidate
+      );
+
+    merged.source =
+      candidate.source ||
+      candidate.file ||
+      "external-definition";
+
+    merged.contractId =
+      candidate.contractId ||
+      candidate.contract ||
+      candidate.id ||
+      "UNKNOWN_WINDOW_EXTERNAL_DEFINITION";
+
+    return freezeDeep(merged);
+  }
+
+  function applyExternalDefinition(reason = "definition-scan") {
+    const candidate =
+      globalThis.SHOWROOM_MIRRORLAND_WINDOW_DEFINITION;
+
+    if (
+      !candidate ||
+      typeof candidate !== "object"
+    ) {
+      state.definition =
+        FALLBACK_DEFINITION;
+
+      state.externalDefinitionApplied =
+        false;
+
+      updateReceipt({
+        definitionPresent:
+          true,
+
+        externalDefinitionApplied:
+          false,
+
+        activeDefinitionContractId:
+          FALLBACK_DEFINITION.contractId,
+
+        lastAction:
+          "window-object-fallback-definition-active"
+      });
+
+      return false;
+    }
+
+    const normalized =
+      normalizeDefinition(candidate);
+
+    state.definition =
+      normalized;
+
+    state.externalDefinitionApplied =
+      normalized.contractId !== FALLBACK_DEFINITION.contractId;
+
+    updateReceipt({
+      definitionPresent:
+        true,
+
+      externalDefinitionApplied:
+        state.externalDefinitionApplied,
+
+      activeDefinitionContractId:
+        normalized.contractId,
+
+      lastAction:
+        "window-object-external-definition-applied",
+
+      definitionReason:
+        reason
+    });
+
+    if (
+      state.initialized &&
+      !state.failed &&
+      !state.disposed
+    ) {
+      if (isCurtainHidden()) {
+        hideCanvasForCurtain();
+      } else {
+        drawCurtainObject();
+      }
+    }
+
+    dispatch(
+      EVENTS.DEFINITION_APPLIED,
+      {
+        reason,
+        externalDefinitionApplied:
+          state.externalDefinitionApplied,
+        definitionContractId:
+          normalized.contractId,
+        receipt:
+          getReceipt()
+      }
+    );
+
+    return state.externalDefinitionApplied;
+  }
+
+  function bindDefinitionListener() {
+    if (state.definitionListenerBound) {
+      return;
+    }
+
+    state.definitionListenerBound =
+      true;
+
+    globalThis.addEventListener(
+      DEFINITION_EVENTS.READY,
+      () => {
+        applyExternalDefinition(
+          "definition-ready-event"
+        );
+      }
+    );
+  }
+
   function updateReceipt(extra = {}) {
     Object.assign(
       receipt,
@@ -783,6 +1251,17 @@
         geometryPresent:
           Boolean(state.geometry),
 
+        definitionPresent:
+          Boolean(state.definition),
+
+        externalDefinitionApplied:
+          Boolean(state.externalDefinitionApplied),
+
+        activeDefinitionContractId:
+          state.definition && state.definition.contractId
+            ? state.definition.contractId
+            : FALLBACK_DEFINITION.contractId,
+
         curtainAmount:
           state.curtainAmount,
 
@@ -805,9 +1284,12 @@
           true,
 
         definitionExternalized:
-          false,
+          true,
 
         definitionConsumerReady:
+          true,
+
+        fallbackDefinitionPresent:
           true,
 
         paneCount:
@@ -857,6 +1339,9 @@
         ownsStars:
           false,
 
+        ownsCssLayout:
+          false,
+
         visualPassClaimed:
           false,
 
@@ -887,6 +1372,14 @@
           ? "true"
           : "false";
 
+      state.canvas.dataset.showroomWindowDefinitionContract =
+        receipt.activeDefinitionContractId;
+
+      state.canvas.dataset.showroomWindowExternalDefinitionApplied =
+        receipt.externalDefinitionApplied
+          ? "true"
+          : "false";
+
       state.canvas.dataset.visualPassClaimed =
         "false";
     }
@@ -908,6 +1401,14 @@
 
       state.mount.dataset.showroomWindowApertureFocus =
         "true";
+
+      state.mount.dataset.showroomWindowDefinitionContract =
+        receipt.activeDefinitionContractId;
+
+      state.mount.dataset.showroomWindowExternalDefinitionApplied =
+        receipt.externalDefinitionApplied
+          ? "true"
+          : "false";
 
       state.mount.dataset.visualPassClaimed =
         "false";
@@ -1002,9 +1503,7 @@
 
   function createPane(
     id,
-    sourcePoints,
-    material,
-    options = {}
+    sourcePoints
   ) {
     return freezeDeep({
       id,
@@ -1017,8 +1516,6 @@
       points:
         normalizePolygon(sourcePoints, DEPTH.glassCore),
 
-      material,
-
       rearZ:
         DEPTH.glassBack,
 
@@ -1029,185 +1526,33 @@
         DEPTH.glassFace,
 
       bevelZ:
-        DEPTH.glassBevel,
-
-      alpha:
-        options.alpha ?? 0.44,
-
-      age:
-        options.age ?? 0.42,
-
-      refraction:
-        options.refraction ?? 0.34,
-
-      internalContrast:
-        options.internalContrast ?? 0.28,
-
-      coldLight:
-        options.coldLight ?? 0.22,
-
-      warmLight:
-        options.warmLight ?? 0.10,
-
-      transmission:
-        options.transmission ?? RENDER.glassTransmission,
-
-      phase:
-        options.phase ?? 0
+        DEPTH.glassBevel
     });
   }
 
   function buildPanes() {
-    const glass =
-      MATERIALS.glass;
-
     return Object.freeze([
-      createPane(
-        "crown-left",
-        [[240, 48], [164, 108], [204, 168], [240, 134]],
-        glass.frost,
-        { alpha: 0.42, transmission: 0.58, refraction: 0.40, coldLight: 0.30, phase: 0.12 }
-      ),
-
-      createPane(
-        "crown-right",
-        [[240, 48], [240, 134], [278, 168], [318, 108]],
-        glass.paleViolet,
-        { alpha: 0.41, transmission: 0.58, refraction: 0.37, phase: 0.44 }
-      ),
-
-      createPane(
-        "upper-left-edge",
-        [[164, 108], [98, 210], [154, 246], [204, 168]],
-        glass.blue,
-        { alpha: 0.46, transmission: 0.52, age: 0.50, internalContrast: 0.38, phase: 0.82 }
-      ),
-
-      createPane(
-        "upper-right-edge",
-        [[318, 108], [278, 168], [326, 246], [382, 210]],
-        glass.violet,
-        { alpha: 0.45, transmission: 0.52, age: 0.48, internalContrast: 0.36, phase: 1.16 }
-      ),
-
-      createPane(
-        "upper-center-left",
-        [[204, 168], [154, 246], [216, 268], [240, 208], [240, 134]],
-        glass.cyan,
-        { alpha: 0.39, transmission: 0.64, refraction: 0.40, coldLight: 0.30, phase: 1.52 }
-      ),
-
-      createPane(
-        "upper-center-right",
-        [[240, 134], [240, 208], [264, 268], [326, 246], [278, 168]],
-        glass.rose,
-        { alpha: 0.40, transmission: 0.62, refraction: 0.36, warmLight: 0.17, phase: 1.88 }
-      ),
-
-      createPane(
-        "mid-left-high",
-        [[98, 210], [66, 332], [148, 338], [154, 246]],
-        glass.blueDeep,
-        { alpha: 0.47, transmission: 0.50, age: 0.58, internalContrast: 0.40, phase: 2.22 }
-      ),
-
-      createPane(
-        "mid-left-inner",
-        [[154, 246], [148, 338], [212, 334], [216, 268]],
-        glass.violetDeep,
-        { alpha: 0.43, transmission: 0.56, age: 0.50, phase: 2.58 }
-      ),
-
-      createPane(
-        "mid-center",
-        [[216, 268], [212, 334], [240, 382], [268, 334], [264, 268], [240, 208]],
-        glass.frost,
-        { alpha: 0.30, transmission: 0.76, refraction: 0.52, coldLight: 0.40, phase: 2.93 }
-      ),
-
-      createPane(
-        "mid-right-inner",
-        [[264, 268], [268, 334], [332, 338], [326, 246]],
-        glass.cyanDeep,
-        { alpha: 0.41, transmission: 0.58, age: 0.46, phase: 3.18 }
-      ),
-
-      createPane(
-        "mid-right-high",
-        [[326, 246], [332, 338], [414, 332], [382, 210]],
-        glass.blue,
-        { alpha: 0.45, transmission: 0.52, age: 0.52, internalContrast: 0.38, phase: 3.54 }
-      ),
-
-      createPane(
-        "lower-left-edge",
-        [[66, 332], [82, 470], [156, 446], [148, 338]],
-        glass.roseDeep,
-        { alpha: 0.46, transmission: 0.50, age: 0.60, warmLight: 0.18, phase: 3.90 }
-      ),
-
-      createPane(
-        "lower-left-center",
-        [[148, 338], [156, 446], [216, 430], [240, 382], [212, 334]],
-        glass.cyan,
-        { alpha: 0.39, transmission: 0.64, refraction: 0.38, coldLight: 0.28, phase: 4.23 }
-      ),
-
-      createPane(
-        "lower-right-center",
-        [[268, 334], [240, 382], [264, 430], [324, 446], [332, 338]],
-        glass.violet,
-        { alpha: 0.40, transmission: 0.62, refraction: 0.36, phase: 4.55 }
-      ),
-
-      createPane(
-        "lower-right-edge",
-        [[332, 338], [324, 446], [398, 470], [414, 332]],
-        glass.amber,
-        { alpha: 0.45, transmission: 0.52, age: 0.54, warmLight: 0.26, phase: 4.92 }
-      ),
-
-      createPane(
-        "lower-left-deep",
-        [[82, 470], [116, 594], [192, 530], [156, 446]],
-        glass.blue,
-        { alpha: 0.45, transmission: 0.52, age: 0.56, internalContrast: 0.38, phase: 5.24 }
-      ),
-
-      createPane(
-        "lower-center-left",
-        [[156, 446], [192, 530], [240, 624], [240, 500], [216, 430]],
-        glass.paleViolet,
-        { alpha: 0.41, transmission: 0.60, refraction: 0.36, phase: 5.56 }
-      ),
-
-      createPane(
-        "lower-center-right",
-        [[264, 430], [240, 500], [240, 624], [288, 530], [324, 446]],
-        glass.rose,
-        { alpha: 0.41, transmission: 0.60, refraction: 0.35, warmLight: 0.16, phase: 5.92 }
-      ),
-
-      createPane(
-        "lower-right-deep",
-        [[324, 446], [288, 530], [364, 594], [398, 470]],
-        glass.cyanDeep,
-        { alpha: 0.44, transmission: 0.54, age: 0.53, coldLight: 0.22, phase: 6.23 }
-      ),
-
-      createPane(
-        "base-left",
-        [[116, 594], [168, 660], [240, 676], [240, 624], [192, 530]],
-        glass.amberDeep,
-        { alpha: 0.44, transmission: 0.54, age: 0.58, warmLight: 0.24, phase: 6.54 }
-      ),
-
-      createPane(
-        "base-right",
-        [[288, 530], [240, 624], [240, 676], [312, 660], [364, 594]],
-        glass.blueDeep,
-        { alpha: 0.44, transmission: 0.54, age: 0.54, internalContrast: 0.38, phase: 6.88 }
-      )
+      createPane("crown-left", [[240, 48], [164, 108], [204, 168], [240, 134]]),
+      createPane("crown-right", [[240, 48], [240, 134], [278, 168], [318, 108]]),
+      createPane("upper-left-edge", [[164, 108], [98, 210], [154, 246], [204, 168]]),
+      createPane("upper-right-edge", [[318, 108], [278, 168], [326, 246], [382, 210]]),
+      createPane("upper-center-left", [[204, 168], [154, 246], [216, 268], [240, 208], [240, 134]]),
+      createPane("upper-center-right", [[240, 134], [240, 208], [264, 268], [326, 246], [278, 168]]),
+      createPane("mid-left-high", [[98, 210], [66, 332], [148, 338], [154, 246]]),
+      createPane("mid-left-inner", [[154, 246], [148, 338], [212, 334], [216, 268]]),
+      createPane("mid-center", [[216, 268], [212, 334], [240, 382], [268, 334], [264, 268], [240, 208]]),
+      createPane("mid-right-inner", [[264, 268], [268, 334], [332, 338], [326, 246]]),
+      createPane("mid-right-high", [[326, 246], [332, 338], [414, 332], [382, 210]]),
+      createPane("lower-left-edge", [[66, 332], [82, 470], [156, 446], [148, 338]]),
+      createPane("lower-left-center", [[148, 338], [156, 446], [216, 430], [240, 382], [212, 334]]),
+      createPane("lower-right-center", [[268, 334], [240, 382], [264, 430], [324, 446], [332, 338]]),
+      createPane("lower-right-edge", [[332, 338], [324, 446], [398, 470], [414, 332]]),
+      createPane("lower-left-deep", [[82, 470], [116, 594], [192, 530], [156, 446]]),
+      createPane("lower-center-left", [[156, 446], [192, 530], [240, 624], [240, 500], [216, 430]]),
+      createPane("lower-center-right", [[264, 430], [240, 500], [240, 624], [288, 530], [324, 446]]),
+      createPane("lower-right-deep", [[324, 446], [288, 530], [364, 594], [398, 470]]),
+      createPane("base-left", [[116, 594], [168, 660], [240, 676], [240, 624], [192, 530]]),
+      createPane("base-right", [[288, 530], [240, 624], [240, 676], [312, 660], [364, 594]])
     ]);
   }
 
@@ -1318,21 +1663,16 @@
     }
 
     return Object.freeze([
-      band("outer-left-back-band", outerLeft, DEPTH.frameBack, RENDER.outerFrameWidth, "outer-back"),
-      band("outer-right-back-band", outerRight, DEPTH.frameBack, RENDER.outerFrameWidth, "outer-back"),
-
-      band("outer-left-face-band", faceLeft, DEPTH.frameFace, RENDER.outerFrameFaceWidth, "outer-face"),
-      band("outer-right-face-band", faceRight, DEPTH.frameFace, RENDER.outerFrameFaceWidth, "outer-face"),
-
-      band("inner-left-lip-band", innerLeft, DEPTH.frameLip, RENDER.innerFrameWidth, "inner-lip"),
-      band("inner-right-lip-band", innerRight, DEPTH.frameLip, RENDER.innerFrameWidth, "inner-lip"),
-
+      band("outer-left-back-band", outerLeft, DEPTH.frameBack, BASE_RENDER.outerFrameWidth, "outer-back"),
+      band("outer-right-back-band", outerRight, DEPTH.frameBack, BASE_RENDER.outerFrameWidth, "outer-back"),
+      band("outer-left-face-band", faceLeft, DEPTH.frameFace, BASE_RENDER.outerFrameFaceWidth, "outer-face"),
+      band("outer-right-face-band", faceRight, DEPTH.frameFace, BASE_RENDER.outerFrameFaceWidth, "outer-face"),
+      band("inner-left-lip-band", innerLeft, DEPTH.frameLip, BASE_RENDER.innerFrameWidth, "inner-lip"),
+      band("inner-right-lip-band", innerRight, DEPTH.frameLip, BASE_RENDER.innerFrameWidth, "inner-lip"),
       band("center-mullion-top-compound-refined", mullionTop, DEPTH.mullionFace, 0, "mullion"),
       band("center-mullion-bottom-compound-refined", mullionBottom, DEPTH.mullionFace, 0, "mullion"),
-
       band("center-mullion-top-gold-hairline", mullionTopGoldHairline, DEPTH.apertureLip, 0, "mullion-hairline"),
       band("center-mullion-bottom-gold-hairline", mullionBottomGoldHairline, DEPTH.apertureLip, 0, "mullion-hairline"),
-
       band("top-metal-cap", topCap, DEPTH.frameLip, 0, "cap"),
       band("bottom-metal-cap", bottomCap, DEPTH.frameLip, 0, "cap")
     ]);
@@ -1415,9 +1755,6 @@
       subtractivePhase1:
         "canvas-destination-out",
 
-      subtractiveFuture:
-        "explicit-3d-aperture-bevel-geometry",
-
       focalRole:
         "foreground-lens-focus-to-diamond-behind",
 
@@ -1470,11 +1807,8 @@
       depth:
         DEPTH,
 
-      materials:
-        MATERIALS,
-
-      render:
-        RENDER,
+      baseRender:
+        BASE_RENDER,
 
       panes,
       cameSegments,
@@ -1576,16 +1910,16 @@
           z:
             point.z + extraZ
         },
-        RENDER.frozenTiltX,
-        RENDER.frozenTiltY,
-        RENDER.frozenTiltZ
+        BASE_RENDER.frozenTiltX,
+        BASE_RENDER.frozenTiltY,
+        BASE_RENDER.frozenTiltZ
       );
 
     const perspective =
-      RENDER.focalLength /
+      BASE_RENDER.focalLength /
       (
-        RENDER.focalLength -
-        rotated.z * RENDER.perspectiveStrength
+        BASE_RENDER.focalLength -
+        rotated.z * BASE_RENDER.perspectiveStrength
       );
 
     return {
@@ -1754,7 +2088,7 @@
       );
 
     const objectScale =
-      fit * RENDER.objectScale;
+      fit * BASE_RENDER.objectScale;
 
     return {
       cssWidth,
@@ -1876,7 +2210,7 @@
     const pixelRatio =
       Math.min(
         globalThis.devicePixelRatio || 1,
-        RENDER.maxDevicePixelRatio
+        BASE_RENDER.maxDevicePixelRatio
       );
 
     const width =
@@ -2037,14 +2371,21 @@
     layout,
     amount
   ) {
-    if (amount <= 0.035) {
+    const profile =
+      getDefinitionProfile();
+
+    const adjusted =
+      amount *
+      numeric(profile.densityMultiplier, 1);
+
+    if (adjusted <= 0.035) {
       return;
     }
 
     context.save();
 
     context.globalAlpha =
-      amount;
+      adjusted;
 
     const centerX =
       layout.centerX;
@@ -2068,19 +2409,25 @@
         radiusX
       );
 
+    const shadowAlpha =
+      numeric(
+        optical("objectShadowAlpha"),
+        FALLBACK_DEFINITION.optical.objectShadowAlpha
+      );
+
     gradient.addColorStop(
       0,
-      `rgba(0, 0, 0, ${0.03 * amount})`
+      `rgba(0, 0, 0, ${0.02 * adjusted})`
     );
 
     gradient.addColorStop(
       0.58,
-      `rgba(0, 0, 0, ${0.10 * amount})`
+      `rgba(0, 0, 0, ${0.07 * adjusted})`
     );
 
     gradient.addColorStop(
       1,
-      `rgba(0, 0, 0, ${RENDER.objectShadowAlpha * amount})`
+      `rgba(0, 0, 0, ${shadowAlpha * adjusted})`
     );
 
     context.beginPath();
@@ -2099,7 +2446,7 @@
       gradient;
 
     context.filter =
-      `blur(${lineWidth(RENDER.objectShadowBlur)}px)`;
+      `blur(${lineWidth(numeric(optical("objectShadowBlur"), 18))}px)`;
 
     context.fill();
 
@@ -2119,6 +2466,13 @@
       return;
     }
 
+    const profile =
+      getDefinitionProfile();
+
+    const adjusted =
+      amount *
+      numeric(profile.densityMultiplier, 1);
+
     const projected =
       projectPolygon(
         band.points,
@@ -2128,7 +2482,7 @@
     context.save();
 
     context.globalAlpha =
-      amount;
+      adjusted;
 
     if (band.tier === "mullion-hairline") {
       tracePolygon(
@@ -2137,13 +2491,13 @@
       );
 
       context.fillStyle =
-        rgba(MATERIALS.lead.goldHairline, 0.58 * amount);
+        rgba(material("lead", "goldHairline"), 0.58 * adjusted);
 
       context.shadowBlur =
-        lineWidth(5) * amount;
+        lineWidth(5) * adjusted;
 
       context.shadowColor =
-        rgba(MATERIALS.aperture.chromeGold, 0.30 * amount);
+        rgba(material("aperture", "chromeGold"), 0.30 * adjusted);
 
       context.fill();
 
@@ -2177,37 +2531,37 @@
 
       gradient.addColorStop(
         0,
-        rgba(MATERIALS.frame.shadow, 0.92)
+        rgba(material("frame", "shadow"), 0.86)
       );
 
       gradient.addColorStop(
         0.34,
-        rgba(MATERIALS.frame.body, 0.94)
+        rgba(material("frame", "body"), 0.90)
       );
 
       gradient.addColorStop(
         0.62,
-        rgba(MATERIALS.frame.bevel, 0.74)
+        rgba(material("frame", "bevel"), 0.66)
       );
 
       gradient.addColorStop(
         0.82,
-        rgba(MATERIALS.frame.gold, 0.22)
+        rgba(material("frame", "gold"), 0.18)
       );
 
       gradient.addColorStop(
         1,
-        rgba(MATERIALS.frame.shadow, 0.94)
+        rgba(material("frame", "shadow"), 0.88)
       );
 
       context.fillStyle =
         gradient;
 
       context.shadowBlur =
-        lineWidth(6) * amount;
+        lineWidth(5) * adjusted;
 
       context.shadowColor =
-        `rgba(0, 0, 0, ${0.38 * amount})`;
+        `rgba(0, 0, 0, ${0.32 * adjusted})`;
 
       context.fill();
 
@@ -2220,10 +2574,10 @@
       );
 
       context.strokeStyle =
-        rgba(MATERIALS.frame.goldBright, 0.16 * amount);
+        rgba(material("frame", "goldBright"), 0.14 * adjusted);
 
       context.lineWidth =
-        lineWidth(0.9);
+        lineWidth(0.85);
 
       context.stroke();
 
@@ -2245,16 +2599,16 @@
       );
 
       context.shadowBlur =
-        lineWidth(RENDER.frameShadowBlur) * amount;
+        lineWidth(numeric(optical("frameShadowBlur"), 15)) * adjusted;
 
       context.shadowColor =
-        `rgba(0, 0, 0, ${0.54 * amount})`;
+        `rgba(0, 0, 0, ${0.44 * adjusted})`;
 
       context.strokeStyle =
-        rgba(MATERIALS.frame.shadow, 0.88 * amount);
+        rgba(material("frame", "shadow"), 0.80 * adjusted);
 
       context.lineWidth =
-        lineWidth(band.width + 7);
+        lineWidth(band.width + 6);
 
       context.stroke();
 
@@ -2269,10 +2623,10 @@
       );
 
       context.strokeStyle =
-        rgba(MATERIALS.frame.black, 0.94 * amount);
+        rgba(material("frame", "black"), 0.88 * adjusted);
 
       context.lineWidth =
-        lineWidth(band.width + 4);
+        lineWidth(band.width + 3.5);
 
       context.stroke();
 
@@ -2282,7 +2636,7 @@
       );
 
       context.strokeStyle =
-        rgba(MATERIALS.frame.body, 0.94 * amount);
+        rgba(material("frame", "body"), 0.88 * adjusted);
 
       context.lineWidth =
         lineWidth(band.width);
@@ -2295,10 +2649,10 @@
       );
 
       context.strokeStyle =
-        rgba(MATERIALS.frame.patina, 0.14 * amount);
+        rgba(material("frame", "patina"), 0.10 * adjusted);
 
       context.lineWidth =
-        lineWidth(band.width * 0.58);
+        lineWidth(band.width * 0.54);
 
       context.stroke();
 
@@ -2308,10 +2662,10 @@
       );
 
       context.strokeStyle =
-        rgba(MATERIALS.frame.gold, 0.30 * amount);
+        rgba(material("frame", "gold"), 0.25 * adjusted);
 
       context.lineWidth =
-        lineWidth(RENDER.outerFrameLipWidth);
+        lineWidth(BASE_RENDER.outerFrameLipWidth);
 
       context.stroke();
 
@@ -2321,10 +2675,10 @@
       );
 
       context.strokeStyle =
-        rgba(MATERIALS.frame.goldBright, 0.18 * amount);
+        rgba(material("frame", "goldBright"), 0.14 * adjusted);
 
       context.lineWidth =
-        lineWidth(1.0);
+        lineWidth(0.9);
 
       context.stroke();
 
@@ -2334,10 +2688,10 @@
       );
 
       context.strokeStyle =
-        rgba(MATERIALS.frame.coldEdge, 0.08 * amount);
+        rgba(material("frame", "coldEdge"), 0.07 * adjusted);
 
       context.lineWidth =
-        lineWidth(0.85);
+        lineWidth(0.75);
 
       context.stroke();
     }
@@ -2349,7 +2703,7 @@
       );
 
       context.strokeStyle =
-        rgba(MATERIALS.frame.shadow, 0.78 * amount);
+        rgba(material("frame", "shadow"), 0.70 * adjusted);
 
       context.lineWidth =
         lineWidth(band.width + 4);
@@ -2362,7 +2716,7 @@
       );
 
       context.strokeStyle =
-        rgba(MATERIALS.frame.body, 0.90 * amount);
+        rgba(material("frame", "body"), 0.84 * adjusted);
 
       context.lineWidth =
         lineWidth(band.width);
@@ -2375,10 +2729,10 @@
       );
 
       context.strokeStyle =
-        rgba(MATERIALS.frame.gold, 0.28 * amount);
+        rgba(material("frame", "gold"), 0.24 * adjusted);
 
       context.lineWidth =
-        lineWidth(RENDER.innerFrameLipWidth);
+        lineWidth(BASE_RENDER.innerFrameLipWidth);
 
       context.stroke();
 
@@ -2388,10 +2742,10 @@
       );
 
       context.strokeStyle =
-        rgba(MATERIALS.frame.goldBright, 0.14 * amount);
+        rgba(material("frame", "goldBright"), 0.12 * adjusted);
 
       context.lineWidth =
-        lineWidth(0.8);
+        lineWidth(0.75);
 
       context.stroke();
 
@@ -2401,10 +2755,10 @@
       );
 
       context.strokeStyle =
-        rgba(MATERIALS.frame.coldEdge, 0.12 * amount);
+        rgba(material("frame", "coldEdge"), 0.10 * adjusted);
 
       context.lineWidth =
-        lineWidth(0.8);
+        lineWidth(0.7);
 
       context.stroke();
     }
@@ -2436,6 +2790,15 @@
     projected,
     amount
   ) {
+    const visual =
+      paneVisual(pane);
+
+    const color =
+      material(
+        "glass",
+        visual.material || "frost"
+      );
+
     const box =
       boundsOf(projected);
 
@@ -2448,33 +2811,39 @@
       );
 
     const baseAlpha =
-      pane.alpha *
-      RENDER.glassAlpha *
+      numeric(
+        visual.alpha,
+        numeric(optical("paneDefaultAlpha"), 0.38)
+      ) *
+      numeric(
+        optical("glassAlpha"),
+        0.38
+      ) *
       amount;
 
     gradient.addColorStop(
       0,
-      rgba(pane.material, baseAlpha * 0.18)
+      rgba(color, baseAlpha * 0.16)
     );
 
     gradient.addColorStop(
       0.22,
-      rgba(pane.material, baseAlpha * 0.62)
+      rgba(color, baseAlpha * 0.54)
     );
 
     gradient.addColorStop(
       0.48,
-      rgba(pane.material, baseAlpha * 0.34)
+      rgba(color, baseAlpha * 0.30)
     );
 
     gradient.addColorStop(
       0.74,
-      rgba(pane.material, baseAlpha * 0.66)
+      rgba(color, baseAlpha * 0.58)
     );
 
     gradient.addColorStop(
       1,
-      rgba(pane.material, baseAlpha * 0.20)
+      rgba(color, baseAlpha * 0.18)
     );
 
     return gradient;
@@ -2486,6 +2855,15 @@
     layout,
     amount
   ) {
+    const visual =
+      paneVisual(pane);
+
+    const color =
+      material(
+        "glass",
+        visual.material || "frost"
+      );
+
     const rear =
       projectPolygon(
         pane.points,
@@ -2539,8 +2917,8 @@
 
       context.fillStyle =
         rgba(
-          pane.material,
-          0.07 * amount
+          color,
+          0.052 * amount
         );
 
       context.fill();
@@ -2555,6 +2933,9 @@
     projected,
     amount
   ) {
+    const visual =
+      paneVisual(pane);
+
     const box =
       boundsOf(projected);
 
@@ -2563,6 +2944,18 @@
 
     const height =
       Math.max(1, box.maxY - box.minY);
+
+    const age =
+      numeric(
+        visual.age,
+        numeric(optical("paneDefaultAge"), 0.34)
+      );
+
+    const refraction =
+      numeric(
+        visual.refraction,
+        numeric(optical("paneDefaultRefraction"), 0.32)
+      );
 
     context.save();
 
@@ -2585,12 +2978,12 @@
 
     haze.addColorStop(
       0,
-      `rgba(255, 255, 255, ${0.12 * pane.refraction * amount})`
+      `rgba(255, 255, 255, ${0.10 * refraction * amount})`
     );
 
     haze.addColorStop(
       0.38,
-      `rgba(255, 255, 255, ${0.040 * amount})`
+      `rgba(255, 255, 255, ${0.032 * amount})`
     );
 
     haze.addColorStop(
@@ -2608,10 +3001,13 @@
       height
     );
 
-    const centerTransmission =
+    const transmission =
       pane.id === "mid-center"
-        ? RENDER.centerGlassTransmission
-        : pane.transmission;
+        ? numeric(optical("centerGlassTransmission"), 0.78)
+        : numeric(
+          visual.transmission,
+          numeric(optical("glassTransmission"), 0.62)
+        );
 
     const lens =
       context.createRadialGradient(
@@ -2625,12 +3021,12 @@
 
     lens.addColorStop(
       0,
-      `rgba(255, 240, 180, ${0.055 * centerTransmission * amount})`
+      `rgba(255, 240, 180, ${0.050 * transmission * amount})`
     );
 
     lens.addColorStop(
       0.48,
-      `rgba(100, 210, 230, ${0.030 * centerTransmission * amount})`
+      `rgba(100, 210, 230, ${0.026 * transmission * amount})`
     );
 
     lens.addColorStop(
@@ -2655,15 +3051,26 @@
       "source-over";
 
     context.lineWidth =
-      lineWidth(0.52);
+      lineWidth(0.48);
+
+    const textureLineCount =
+      Math.max(
+        0,
+        Math.floor(
+          numeric(optical("textureLineCount"), 3)
+        )
+      );
 
     for (
       let index = 0;
-      index < RENDER.textureLineCount;
+      index < textureLineCount;
       index += 1
     ) {
+      const phase =
+        numeric(visual.phase, 0);
+
       const seed =
-        pane.phase * 19.31 + index * 7.17;
+        phase * 19.31 + index * 7.17;
 
       const x =
         box.minX +
@@ -2704,18 +3111,21 @@
       );
 
       context.strokeStyle =
-        `rgba(255, 255, 255, ${0.034 * pane.age * amount})`;
+        `rgba(255, 255, 255, ${0.028 * age * amount})`;
 
       context.stroke();
     }
 
     for (
       let index = 0;
-      index < 4;
+      index < 3;
       index += 1
     ) {
+      const phase =
+        numeric(visual.phase, 0);
+
       const seed =
-        pane.phase * 11.73 + index * 5.91;
+        phase * 11.73 + index * 5.91;
 
       const x =
         box.minX + width * (Math.sin(seed) * 0.5 + 0.5);
@@ -2724,13 +3134,13 @@
         box.minY + height * (Math.cos(seed * 1.9) * 0.5 + 0.5);
 
       context.fillStyle =
-        `rgba(235, 242, 228, ${0.022 * pane.age * amount})`;
+        `rgba(235, 242, 228, ${0.018 * age * amount})`;
 
       context.fillRect(
         x,
         y,
-        lineWidth(0.65),
-        lineWidth(0.65)
+        lineWidth(0.55),
+        lineWidth(0.55)
       );
     }
 
@@ -2747,11 +3157,18 @@
       return;
     }
 
+    const profile =
+      getDefinitionProfile();
+
+    const adjusted =
+      amount *
+      numeric(profile.densityMultiplier, 1);
+
     drawGlassSidewalls(
       context,
       pane,
       layout,
-      amount
+      adjusted
     );
 
     const face =
@@ -2764,20 +3181,29 @@
     context.save();
 
     context.globalAlpha =
-      amount;
+      adjusted;
 
     tracePolygon(
       context,
       face
     );
 
+    const visual =
+      paneVisual(pane);
+
+    const color =
+      material(
+        "glass",
+        visual.material || "frost"
+      );
+
     context.shadowBlur =
-      lineWidth(3.2) * amount;
+      lineWidth(2.5) * adjusted;
 
     context.shadowColor =
       rgba(
-        pane.material,
-        0.08 * amount
+        color,
+        0.06 * adjusted
       );
 
     context.fillStyle =
@@ -2785,7 +3211,7 @@
         context,
         pane,
         face,
-        amount
+        adjusted
       );
 
     context.fill();
@@ -2799,10 +3225,10 @@
     );
 
     context.strokeStyle =
-      `rgba(255, 255, 255, ${0.105 * amount})`;
+      `rgba(255, 255, 255, ${0.090 * adjusted})`;
 
     context.lineWidth =
-      lineWidth(0.70);
+      lineWidth(0.65);
 
     context.stroke();
 
@@ -2812,10 +3238,10 @@
     );
 
     context.strokeStyle =
-      `rgba(88, 209, 228, ${0.050 * amount})`;
+      `rgba(88, 209, 228, ${0.042 * adjusted})`;
 
     context.lineWidth =
-      lineWidth(0.44);
+      lineWidth(0.40);
 
     context.stroke();
 
@@ -2823,7 +3249,7 @@
       context,
       pane,
       face,
-      amount
+      adjusted
     );
 
     context.restore();
@@ -2849,6 +3275,13 @@
       return;
     }
 
+    const profile =
+      getDefinitionProfile();
+
+    const adjusted =
+      amount *
+      numeric(profile.densityMultiplier, 1);
+
     const side =
       projectPolygon(
         segment.points,
@@ -2872,7 +3305,7 @@
       "round";
 
     context.globalAlpha =
-      amount;
+      adjusted;
 
     context.beginPath();
 
@@ -2887,10 +3320,10 @@
     );
 
     context.strokeStyle =
-      rgba(MATERIALS.lead.shadow, 0.86 * amount);
+      rgba(material("lead", "shadow"), 0.78 * adjusted);
 
     context.lineWidth =
-      lineWidth(RENDER.cameSideWidth);
+      lineWidth(BASE_RENDER.cameSideWidth);
 
     context.stroke();
 
@@ -2907,10 +3340,10 @@
     );
 
     context.strokeStyle =
-      rgba(MATERIALS.lead.dark, 0.94 * amount);
+      rgba(material("lead", "dark"), 0.86 * adjusted);
 
     context.lineWidth =
-      lineWidth(RENDER.cameWidth + 1.1);
+      lineWidth(BASE_RENDER.cameWidth + 0.9);
 
     context.stroke();
 
@@ -2927,10 +3360,10 @@
     );
 
     context.strokeStyle =
-      rgba(MATERIALS.lead.body, 0.92 * amount);
+      rgba(material("lead", "body"), 0.84 * adjusted);
 
     context.lineWidth =
-      lineWidth(RENDER.cameWidth);
+      lineWidth(BASE_RENDER.cameWidth);
 
     context.stroke();
 
@@ -2947,10 +3380,10 @@
     );
 
     context.strokeStyle =
-      rgba(MATERIALS.lead.bevel, 0.32 * amount);
+      rgba(material("lead", "bevel"), 0.26 * adjusted);
 
     context.lineWidth =
-      lineWidth(RENDER.cameBevelWidth);
+      lineWidth(BASE_RENDER.cameBevelWidth);
 
     context.stroke();
 
@@ -2967,10 +3400,10 @@
     );
 
     context.strokeStyle =
-      rgba(MATERIALS.lead.highlight, 0.20 * amount);
+      rgba(material("lead", "highlight"), 0.16 * adjusted);
 
     context.lineWidth =
-      lineWidth(RENDER.cameHighlightWidth);
+      lineWidth(BASE_RENDER.cameHighlightWidth);
 
     context.stroke();
 
@@ -3013,6 +3446,13 @@
       return;
     }
 
+    const profile =
+      getDefinitionProfile();
+
+    const adjusted =
+      amount *
+      numeric(profile.apertureMultiplier, 1);
+
     const glow =
       projectPolygon(
         state.geometry.aperture.glow,
@@ -3049,19 +3489,22 @@
         radius
       );
 
+    const glowAlpha =
+      numeric(optical("apertureGlowAlpha"), 0.34);
+
     gradient.addColorStop(
       0,
-      rgba(MATERIALS.aperture.whiteGold, RENDER.apertureGlowAlpha * 0.42 * amount)
+      rgba(material("aperture", "whiteGold"), glowAlpha * 0.42 * adjusted)
     );
 
     gradient.addColorStop(
       0.32,
-      rgba(MATERIALS.aperture.chromeGold, RENDER.apertureGlowAlpha * 0.30 * amount)
+      rgba(material("aperture", "chromeGold"), glowAlpha * 0.30 * adjusted)
     );
 
     gradient.addColorStop(
       0.58,
-      rgba(MATERIALS.aperture.coldEdge, RENDER.apertureGlowAlpha * 0.16 * amount)
+      rgba(material("aperture", "coldEdge"), glowAlpha * 0.16 * adjusted)
     );
 
     gradient.addColorStop(
@@ -3124,6 +3567,13 @@
       return;
     }
 
+    const profile =
+      getDefinitionProfile();
+
+    const adjusted =
+      amount *
+      numeric(profile.apertureMultiplier, 1);
+
     const clear =
       projectPolygon(
         state.geometry.aperture.clear,
@@ -3167,19 +3617,22 @@
         radius
       );
 
+    const innerAlpha =
+      numeric(optical("apertureInnerGlowAlpha"), 0.20);
+
     gradient.addColorStop(
       0,
-      rgba(MATERIALS.aperture.whiteGold, RENDER.apertureInnerGlowAlpha * amount)
+      rgba(material("aperture", "whiteGold"), innerAlpha * adjusted)
     );
 
     gradient.addColorStop(
       0.44,
-      rgba(MATERIALS.aperture.innerLight, RENDER.apertureInnerGlowAlpha * 0.48 * amount)
+      rgba(material("aperture", "innerLight"), innerAlpha * 0.48 * adjusted)
     );
 
     gradient.addColorStop(
       0.72,
-      rgba(MATERIALS.aperture.cold, RENDER.apertureInnerGlowAlpha * 0.28 * amount)
+      rgba(material("aperture", "cold"), innerAlpha * 0.28 * adjusted)
     );
 
     gradient.addColorStop(
@@ -3208,6 +3661,13 @@
     if (amount <= 0.002) {
       return;
     }
+
+    const profile =
+      getDefinitionProfile();
+
+    const adjusted =
+      amount *
+      numeric(profile.apertureMultiplier, 1);
 
     const outer =
       projectPolygon(
@@ -3241,16 +3701,16 @@
     );
 
     context.strokeStyle =
-      rgba(MATERIALS.aperture.wall, 0.94 * amount);
+      rgba(material("aperture", "wall"), 0.86 * adjusted);
 
     context.lineWidth =
-      lineWidth(RENDER.apertureWallWidth);
+      lineWidth(BASE_RENDER.apertureWallWidth);
 
     context.shadowBlur =
-      lineWidth(8) * amount;
+      lineWidth(7) * adjusted;
 
     context.shadowColor =
-      `rgba(0, 0, 0, ${0.48 * amount})`;
+      `rgba(0, 0, 0, ${0.40 * adjusted})`;
 
     context.stroke();
 
@@ -3263,10 +3723,10 @@
     );
 
     context.strokeStyle =
-      rgba(MATERIALS.aperture.deepBronze, 0.92 * amount);
+      rgba(material("aperture", "deepBronze"), 0.84 * adjusted);
 
     context.lineWidth =
-      lineWidth(RENDER.apertureFaceWidth + 2.4);
+      lineWidth(BASE_RENDER.apertureFaceWidth + 2.0);
 
     context.stroke();
 
@@ -3276,10 +3736,10 @@
     );
 
     context.strokeStyle =
-      rgba(MATERIALS.aperture.bronze, 0.66 * amount);
+      rgba(material("aperture", "bronze"), 0.58 * adjusted);
 
     context.lineWidth =
-      lineWidth(RENDER.apertureFaceWidth);
+      lineWidth(BASE_RENDER.apertureFaceWidth);
 
     context.stroke();
 
@@ -3289,10 +3749,10 @@
     );
 
     context.strokeStyle =
-      rgba(MATERIALS.aperture.gold, 0.78 * amount);
+      rgba(material("aperture", "gold"), 0.72 * adjusted);
 
     context.lineWidth =
-      lineWidth(RENDER.apertureChromeWidth);
+      lineWidth(BASE_RENDER.apertureChromeWidth);
 
     context.stroke();
 
@@ -3302,10 +3762,10 @@
     );
 
     context.strokeStyle =
-      rgba(MATERIALS.aperture.chromeGold, 0.56 * amount);
+      rgba(material("aperture", "chromeGold"), 0.50 * adjusted);
 
     context.lineWidth =
-      lineWidth(RENDER.apertureChromeWidth * 0.56);
+      lineWidth(BASE_RENDER.apertureChromeWidth * 0.56);
 
     context.stroke();
 
@@ -3315,10 +3775,10 @@
     );
 
     context.strokeStyle =
-      rgba(MATERIALS.aperture.bright, 0.58 * amount);
+      rgba(material("aperture", "bright"), 0.50 * adjusted);
 
     context.lineWidth =
-      lineWidth(RENDER.apertureLipWidth);
+      lineWidth(BASE_RENDER.apertureLipWidth);
 
     context.stroke();
 
@@ -3328,10 +3788,10 @@
     );
 
     context.strokeStyle =
-      rgba(MATERIALS.aperture.whiteGold, 0.32 * amount);
+      rgba(material("aperture", "whiteGold"), 0.26 * adjusted);
 
     context.lineWidth =
-      lineWidth(0.95);
+      lineWidth(0.9);
 
     context.stroke();
 
@@ -3341,10 +3801,10 @@
     );
 
     context.strokeStyle =
-      rgba(MATERIALS.aperture.cold, 0.28 * amount);
+      rgba(material("aperture", "cold"), 0.22 * adjusted);
 
     context.lineWidth =
-      lineWidth(0.75);
+      lineWidth(0.7);
 
     context.stroke();
 
@@ -3353,7 +3813,7 @@
     drawApertureSpeculars(
       context,
       layout,
-      amount
+      adjusted
     );
   }
 
@@ -3373,6 +3833,9 @@
 
     context.globalCompositeOperation =
       "screen";
+
+    const specularAlpha =
+      numeric(optical("apertureSpecularAlpha"), 0.62);
 
     state.geometry.aperture.specular.forEach(
       (shape, index) => {
@@ -3400,17 +3863,17 @@
 
         gradient.addColorStop(
           0,
-          rgba(MATERIALS.aperture.chromeGold, 0.06 * amount)
+          rgba(material("aperture", "chromeGold"), 0.05 * amount)
         );
 
         gradient.addColorStop(
           0.45,
-          rgba(MATERIALS.aperture.whiteGold, RENDER.apertureSpecularAlpha * amount)
+          rgba(material("aperture", "whiteGold"), specularAlpha * amount)
         );
 
         gradient.addColorStop(
           1,
-          rgba(MATERIALS.aperture.cold, 0.16 * amount)
+          rgba(material("aperture", "cold"), 0.14 * amount)
         );
 
         context.fillStyle =
@@ -3420,7 +3883,7 @@
           lineWidth(index === 0 ? 5 : 3) * amount;
 
         context.shadowColor =
-          rgba(MATERIALS.aperture.chromeGold, 0.34 * amount);
+          rgba(material("aperture", "chromeGold"), 0.30 * amount);
 
         context.fill();
 
@@ -3441,6 +3904,21 @@
       return;
     }
 
+    const profile =
+      getDefinitionProfile();
+
+    const adjusted =
+      amount *
+      numeric(profile.densityMultiplier, 1);
+
+    const speckCount =
+      Math.max(
+        0,
+        Math.floor(
+          numeric(optical("textureSpeckCount"), 16)
+        )
+      );
+
     context.save();
 
     context.globalCompositeOperation =
@@ -3448,7 +3926,7 @@
 
     for (
       let index = 0;
-      index < RENDER.textureSpeckCount;
+      index < speckCount;
       index += 1
     ) {
       const seed =
@@ -3465,8 +3943,8 @@
 
       const radius =
         lineWidth(
-          0.28 +
-          (Math.sin(seed * 2.31) * 0.5 + 0.5) * 0.62
+          0.24 +
+          (Math.sin(seed * 2.31) * 0.5 + 0.5) * 0.52
         );
 
       context.beginPath();
@@ -3480,7 +3958,7 @@
       );
 
       context.fillStyle =
-        `rgba(225, 218, 185, ${0.014 * amount})`;
+        `rgba(225, 218, 185, ${0.010 * adjusted})`;
 
       context.fill();
     }
@@ -3513,8 +3991,12 @@
     showCanvasForCurtain();
     clearCanvas();
 
+    const profile =
+      getDefinitionProfile();
+
     const amount =
-      state.curtainAmount;
+      state.curtainAmount *
+      numeric(profile.opacityMultiplier, 1);
 
     const context =
       state.context;
@@ -4215,6 +4697,9 @@
       present:
         true,
 
+      contractId:
+        CONTRACT.id,
+
       coordinateSystem:
         state.geometry.coordinateSystem,
 
@@ -4224,11 +4709,21 @@
       paneCount:
         state.geometry.panes.length,
 
+      paneIds:
+        Object.freeze(
+          state.geometry.panes.map(pane => pane.id)
+        ),
+
       uniqueCameSegmentCount:
         state.geometry.cameSegments.length,
 
       frameBandCount:
         state.geometry.frameBands.length,
+
+      frameBandIds:
+        Object.freeze(
+          state.geometry.frameBands.map(band => band.id)
+        ),
 
       aperturePointCount:
         state.geometry.aperture.outer.length,
@@ -4245,14 +4740,43 @@
       depth:
         state.geometry.depth,
 
-      materialGroups:
-        Object.keys(state.geometry.materials),
+      baseRender:
+        state.geometry.baseRender,
 
-      renderModel:
-        state.geometry.render,
+      activeDefinitionContractId:
+        state.definition && state.definition.contractId
+          ? state.definition.contractId
+          : FALLBACK_DEFINITION.contractId,
+
+      externalDefinitionApplied:
+        Boolean(state.externalDefinitionApplied),
 
       geometryQualityIntent:
-        "foreground-lens-aperture-focus-chrome-gold-definition-ready"
+        "window-object-origin-geometry-definition-consumer"
+    });
+  }
+
+  function getDefinitionReceipt() {
+    return Object.freeze({
+      present:
+        Boolean(state.definition),
+
+      externalDefinitionApplied:
+        Boolean(state.externalDefinitionApplied),
+
+      activeDefinitionContractId:
+        state.definition && state.definition.contractId
+          ? state.definition.contractId
+          : FALLBACK_DEFINITION.contractId,
+
+      fallbackDefinitionContractId:
+        FALLBACK_DEFINITION.contractId,
+
+      definitionSurface:
+        CONTRACT.definitionSurface,
+
+      visualPassClaimed:
+        false
     });
   }
 
@@ -4265,11 +4789,16 @@
         events:
           EVENTS,
 
+        definitionEvents:
+          DEFINITION_EVENTS,
+
         showCurtain,
 
         hideCurtain,
 
         setCurtainAmount,
+
+        applyExternalDefinition,
 
         resize:
           () => {
@@ -4314,6 +4843,8 @@
         getReceipt,
 
         getGeometryReceipt,
+
+        getDefinitionReceipt,
 
         getCurtainAmount:
           () => state.curtainAmount,
@@ -4379,6 +4910,9 @@
         );
       }
 
+      bindDefinitionListener();
+      applyExternalDefinition("window-object-init");
+
       state.canvas =
         createCanvas();
 
@@ -4440,6 +4974,17 @@
         geometryPresent:
           true,
 
+        definitionPresent:
+          true,
+
+        externalDefinitionApplied:
+          state.externalDefinitionApplied,
+
+        activeDefinitionContractId:
+          state.definition && state.definition.contractId
+            ? state.definition.contractId
+            : FALLBACK_DEFINITION.contractId,
+
         curtainAmount:
           state.curtainAmount,
 
@@ -4447,7 +4992,7 @@
           isCurtainHidden(),
 
         lastAction:
-          "window-object-initialized-foreground-lens-aperture-focus",
+          "window-object-initialized-definition-consumer-geometry-host",
 
         lastFailure:
           null
@@ -4460,7 +5005,10 @@
             getReceipt(),
 
           geometry:
-            getGeometryReceipt()
+            getGeometryReceipt(),
+
+          definition:
+            getDefinitionReceipt()
         }
       );
     } catch (error) {
@@ -4474,6 +5022,8 @@
     }
   }
 
+  exposeObjectApi();
+
   if (document.readyState === "loading") {
     document.addEventListener(
       "DOMContentLoaded",
@@ -4481,7 +5031,7 @@
       {
         once:
           true
-      }
+        }
     );
   } else {
     init();

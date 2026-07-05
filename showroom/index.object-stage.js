@@ -1,30 +1,34 @@
 /* TARGET FILE: /showroom/index.object-stage.js */
-/* COMPLETE NEW FILE */ 
-/* SHOWROOM_OBJECT_STAGE_v2_SHARED_3D_256_LATTICE_ENVIRONMENT_WITHIN_EXISTING_CORRIDOR */
+/* COMPLETE NEW FILE */
+/* SHOWROOM_WINDOW_DIAMOND_STAGE_CASE_v2_256_LATTICE_CORRIDOR_ENVIRONMENT */
 
 /*
-  Showroom Object Stage
+  Showroom Window / Diamond Stage-Case
 
   Purpose:
-  - Define the shared 3D environment for the Diamond and Window objects.
-  - Build the environment from the two object geometry authorities:
-    1. /showroom/index.diamond.geometry.js
-    2. /showroom/index.window.js
-  - Preserve the existing CSS corridor as the hard external boundary.
-  - Establish a 16 × 16 / 256-seat diagnostic lattice scope.
-  - Place Diamond and Window into one shared x/y/z world.
-  - Define the aperture corridor from the Window foreground plane to the Diamond focal target.
-  - Publish transforms, placements, projection data, receipts, and CSS variables.
+  - Define a shared 3D environment-case for the Window and Diamond objects.
+  - Use the existing CSS reveal corridor as a hard external boundary.
+  - Use the Diamond geometry authority as the live rear-object source.
+  - Use the current Window v1_3 geometry as the static foreground case source.
+  - Optionally read the Window geometry receipt when available for confirmation.
+  - Establish a 16 × 16 / 256-seat diagnostic stage lattice.
+  - Place the Diamond and Window into one shared x/y/z coordinate system.
+  - Define the optical corridor from the Window aperture to the Diamond target.
+  - Publish spatial receipts, transforms, placements, and CSS variables.
   - Draw nothing.
   - Move no DOM nodes.
   - Expand no CSS box.
   - Own no controls, gestures, routes, UI, renderer internals, or object internals.
 
-  Boundary:
-  - The stage owns spatial authority only.
-  - Diamond owns Diamond geometry.
-  - Window owns Window geometry.
-  - Controls behave inside the already-defined space.
+  Classification:
+  - This is a stage-case, not a pure live-derived stage.
+  - Diamond geometry is live-derived from DGBShowroomDiamondGeometryG3.
+  - Window geometry is static-bound to the supplied v1_3 Window object contract.
+  - Window getGeometryReceipt(), when available, is used as confirmation metadata.
+
+  Runtime safety:
+  - The mutation observer does not observe style/class.
+  - Stage DOM writes are guarded to avoid self-refresh churn.
 */
 
 (() => {
@@ -32,7 +36,7 @@
 
   const CONTRACT = Object.freeze({
     id:
-      "SHOWROOM_OBJECT_STAGE_v2_SHARED_3D_256_LATTICE_ENVIRONMENT_WITHIN_EXISTING_CORRIDOR",
+      "SHOWROOM_WINDOW_DIAMOND_STAGE_CASE_v2_256_LATTICE_CORRIDOR_ENVIRONMENT",
 
     file:
       "/showroom/index.object-stage.js",
@@ -50,7 +54,19 @@
       ]),
 
     role:
-      "shared-3d-spatial-environment-authority",
+      "shared-3d-stage-case-spatial-authority",
+
+    fileClass:
+      "stage-case",
+
+    pureLiveStage:
+      false,
+
+    diamondSourceMode:
+      "live-geometry-authority",
+
+    windowSourceMode:
+      "static-bound-window-v1-3-with-optional-receipt-confirmation",
 
     corridorBound:
       true,
@@ -135,8 +151,8 @@
     windowControl:
       "[data-showroom-window-control]",
 
-    windowReceipt:
-      "[data-showroom-window-receipt]"
+    receiptTarget:
+      "[data-showroom-object-stage-receipt], [data-showroom-window-receipt]"
   });
 
   const EVENTS = Object.freeze({
@@ -151,6 +167,17 @@
 
     FAILURE:
       "SHOWROOM_OBJECT_STAGE_FAILURE"
+  });
+
+  const EXTERNAL_EVENTS = Object.freeze({
+    WINDOW_READY:
+      "SHOWROOM_MIRRORLAND_WINDOW_OBJECT_READY",
+
+    WINDOW_RENDERED:
+      "SHOWROOM_MIRRORLAND_WINDOW_OBJECT_RENDERED",
+
+    WINDOW_TRANSITION_COMPLETE:
+      "SHOWROOM_MIRRORLAND_WINDOW_OBJECT_TRANSITION_COMPLETE"
   });
 
   const LATTICE_SCOPE = Object.freeze({
@@ -180,7 +207,7 @@
           "depth",
 
         origin:
-          "shared-diamond-window-stage-origin",
+          "shared-window-diamond-stage-case-origin",
 
         zPositive:
           "toward-viewer"
@@ -251,8 +278,17 @@
     global:
       "DGBShowroomDiamondGeometryG3",
 
+    expectedContract:
+      "SHOWROOM_DIAMOND_G3_16X16_256_SEAT_GEOMETRY_AUTHORITY_TNT_v1",
+
     role:
       "rear-3d-object",
+
+    readMode:
+      "fallback-static-diamond-source",
+
+    liveGeometryRead:
+      false,
 
     coordinateSystem:
       Object.freeze({
@@ -266,7 +302,13 @@
           "depth",
 
         origin:
-          Object.freeze([0, 0, 0])
+          Object.freeze([0, 0, 0]),
+
+        automaticRotationAxis:
+          "local-y",
+
+        groundPlaneY:
+          -1.31
       }),
 
     lattice:
@@ -296,7 +338,10 @@
           Object.freeze([0, -1.145, 0]),
 
         target:
-          Object.freeze([0, -0.12, 0])
+          Object.freeze([0, -0.12, 0]),
+
+        groundY:
+          -1.31
       }),
 
     cameraPreparation:
@@ -321,18 +366,33 @@
       })
   });
 
-  const WINDOW_SOURCE = Object.freeze({
+  const WINDOW_SOURCE_STATIC = Object.freeze({
     source:
       "/showroom/index.window.js",
 
     global:
       "SHOWROOM_MIRRORLAND_WINDOW_OBJECT",
 
+    expectedContract:
+      "SHOWROOM_WINDOW_OBJECT_v1_3_FOREGROUND_LENS_APERTURE_FOCUS_OPTIMIZED_BASE",
+
     role:
       "foreground-3d-threshold-object",
 
+    readMode:
+      "static-bound-window-v1-3-source",
+
+    liveGeometryRead:
+      false,
+
+    staticGeometryBound:
+      true,
+
     coordinateSystem:
       Object.freeze({
+        name:
+          "W",
+
         x:
           "left-right-normalized-from-original-480-design-width",
 
@@ -343,7 +403,10 @@
           "depth-positive-toward-viewer",
 
         origin:
-          "center-of-original-window-design"
+          "center-of-original-window-design",
+
+        motion:
+          "object-frozen-in-time"
       }),
 
     design:
@@ -384,6 +447,9 @@
         rearOcclusion:
           -0.20,
 
+        rearGlassShadow:
+          -0.12,
+
         glassBack:
           -0.085,
 
@@ -396,17 +462,32 @@
         glassBevel:
           0.050,
 
+        cameSide:
+          0.075,
+
         cameFace:
           0.132,
 
+        mullionSide:
+          0.150,
+
         mullionFace:
           0.220,
+
+        frameBack:
+          0.010,
+
+        frameBody:
+          0.125,
 
         frameFace:
           0.245,
 
         frameLip:
           0.318,
+
+        apertureWall:
+          0.155,
 
         apertureFace:
           0.298,
@@ -469,6 +550,27 @@
 
         focalRole:
           "foreground-lens-focus-to-diamond-behind"
+      }),
+
+    geometrySummary:
+      Object.freeze({
+        paneCount:
+          21,
+
+        uniqueCameSegmentCount:
+          null,
+
+        frameBandCount:
+          12,
+
+        aperturePointCount:
+          4,
+
+        apertureTransparent:
+          true,
+
+        apertureFocalRole:
+          "foreground-lens-focus-to-diamond-behind"
       })
   });
 
@@ -506,6 +608,9 @@
     diamondSource:
       DIAMOND_SOURCE_DEFAULT,
 
+    windowSource:
+      WINDOW_SOURCE_STATIC,
+
     lattice:
       null,
 
@@ -536,8 +641,14 @@
     resizeFallbackBound:
       false,
 
+    windowEventBound:
+      false,
+
     subscribers:
       new Set(),
+
+    writingDom:
+      false,
 
     lastAction:
       "",
@@ -562,6 +673,28 @@
     );
 
     return value;
+  }
+
+  function clonePlain(value) {
+    if (
+      !value ||
+      typeof value !== "object"
+    ) {
+      return value;
+    }
+
+    if (Array.isArray(value)) {
+      return value.map(clonePlain);
+    }
+
+    const output = {};
+
+    Object.keys(value).forEach(key => {
+      output[key] =
+        clonePlain(value[key]);
+    });
+
+    return output;
   }
 
   function clamp(
@@ -590,22 +723,6 @@
       a[0] - b[0],
       a[1] - b[1],
       a[2] - b[2]
-    ];
-  }
-
-  function add(a, b) {
-    return [
-      a[0] + b[0],
-      a[1] + b[1],
-      a[2] + b[2]
-    ];
-  }
-
-  function scaleVector(vector, scale) {
-    return [
-      vector[0] * scale,
-      vector[1] * scale,
-      vector[2] * scale
     ];
   }
 
@@ -648,23 +765,55 @@
     ];
   }
 
-  function copyVector(vector) {
+  function safeNumber(
+    value,
+    fallback
+  ) {
+    const number =
+      Number(value);
+
+    return Number.isFinite(number)
+      ? number
+      : fallback;
+  }
+
+  function copyVector(
+    vector,
+    fallback = [0, 0, 0]
+  ) {
+    const source =
+      Array.isArray(vector) &&
+      vector.length >= 3
+        ? vector
+        : fallback;
+
     return Object.freeze([
-      Number(vector[0]),
-      Number(vector[1]),
-      Number(vector[2])
+      safeNumber(source[0], fallback[0]),
+      safeNumber(source[1], fallback[1]),
+      safeNumber(source[2], fallback[2])
     ]);
   }
 
-  function copyRange(range) {
+  function copyRange(
+    range,
+    fallback
+  ) {
+    const source =
+      Array.isArray(range) &&
+      range.length >= 2
+        ? range
+        : fallback;
+
     return Object.freeze([
-      Number(range[0]),
-      Number(range[1])
+      safeNumber(source[0], fallback[0]),
+      safeNumber(source[1], fallback[1])
     ]);
   }
 
   function rangeSize(range) {
-    return Math.abs(range[1] - range[0]);
+    return Math.abs(
+      range[1] - range[0]
+    );
   }
 
   function boundsSize(bounds) {
@@ -894,6 +1043,21 @@
     });
   }
 
+  function safeAnchorPosition(
+    anchors,
+    name,
+    fallback
+  ) {
+    return copyVector(
+      anchors &&
+      anchors[name] &&
+      anchors[name].position
+        ? anchors[name].position
+        : fallback,
+      fallback
+    );
+  }
+
   function buildDiagnosticLattice() {
     const seats = [];
 
@@ -1012,7 +1176,7 @@
     if (
       !api ||
       api.contract !==
-        "SHOWROOM_DIAMOND_G3_16X16_256_SEAT_GEOMETRY_AUTHORITY_TNT_v1"
+        DIAMOND_SOURCE_DEFAULT.expectedContract
     ) {
       return DIAMOND_SOURCE_DEFAULT;
     }
@@ -1022,64 +1186,119 @@
       api.bounds.declaredWorldBounds;
 
     const localBounds =
-      declared
-        ? Object.freeze({
-            x:
-              copyRange(declared.x),
+      Object.freeze({
+        x:
+          copyRange(
+            declared && declared.x,
+            DIAMOND_SOURCE_DEFAULT.localBounds.x
+          ),
 
-            y:
-              copyRange(declared.y),
+        y:
+          copyRange(
+            declared && declared.y,
+            DIAMOND_SOURCE_DEFAULT.localBounds.y
+          ),
 
-            z:
-              copyRange(declared.z)
-          })
-        : DIAMOND_SOURCE_DEFAULT.localBounds;
+        z:
+          copyRange(
+            declared && declared.z,
+            DIAMOND_SOURCE_DEFAULT.localBounds.z
+          )
+      });
 
     const profile =
       api.profile || {};
+
+    const profileCoordinateSystem =
+      profile.coordinateSystem || {};
 
     const cameraPreparation =
       profile.cameraPreparation
         ? Object.freeze({
             position:
-              copyVector(profile.cameraPreparation.initialPosition || DIAMOND_SOURCE_DEFAULT.cameraPreparation.position),
+              copyVector(
+                profile.cameraPreparation.initialPosition,
+                DIAMOND_SOURCE_DEFAULT.cameraPreparation.position
+              ),
 
             target:
-              copyVector(profile.cameraPreparation.initialTarget || DIAMOND_SOURCE_DEFAULT.cameraPreparation.target),
+              copyVector(
+                profile.cameraPreparation.initialTarget,
+                DIAMOND_SOURCE_DEFAULT.cameraPreparation.target
+              ),
 
             fieldOfViewDegrees:
-              Number(profile.cameraPreparation.fieldOfViewDegrees || DIAMOND_SOURCE_DEFAULT.cameraPreparation.fieldOfViewDegrees),
+              safeNumber(
+                profile.cameraPreparation.fieldOfViewDegrees,
+                DIAMOND_SOURCE_DEFAULT.cameraPreparation.fieldOfViewDegrees
+              ),
 
             distanceInitial:
-              Number(profile.cameraPreparation.distanceInitial || DIAMOND_SOURCE_DEFAULT.cameraPreparation.distanceInitial),
+              safeNumber(
+                profile.cameraPreparation.distanceInitial,
+                DIAMOND_SOURCE_DEFAULT.cameraPreparation.distanceInitial
+              ),
 
             distanceMinimum:
-              Number(profile.cameraPreparation.distanceMinimum || DIAMOND_SOURCE_DEFAULT.cameraPreparation.distanceMinimum),
+              safeNumber(
+                profile.cameraPreparation.distanceMinimum,
+                DIAMOND_SOURCE_DEFAULT.cameraPreparation.distanceMinimum
+              ),
 
             distanceMaximum:
-              Number(profile.cameraPreparation.distanceMaximum || DIAMOND_SOURCE_DEFAULT.cameraPreparation.distanceMaximum)
+              safeNumber(
+                profile.cameraPreparation.distanceMaximum,
+                DIAMOND_SOURCE_DEFAULT.cameraPreparation.distanceMaximum
+              )
           })
         : DIAMOND_SOURCE_DEFAULT.cameraPreparation;
 
     const anchors =
-      api.anchors
-        ? Object.freeze({
-            table:
-              copyVector(api.anchors.table.position || DIAMOND_SOURCE_DEFAULT.anchors.table),
+      Object.freeze({
+        table:
+          safeAnchorPosition(
+            api.anchors,
+            "table",
+            DIAMOND_SOURCE_DEFAULT.anchors.table
+          ),
 
-            origin:
-              copyVector(api.anchors.origin.position || DIAMOND_SOURCE_DEFAULT.anchors.origin),
+        origin:
+          safeAnchorPosition(
+            api.anchors,
+            "origin",
+            DIAMOND_SOURCE_DEFAULT.anchors.origin
+          ),
 
-            culet:
-              copyVector(api.anchors.culet.position || DIAMOND_SOURCE_DEFAULT.anchors.culet),
+        culet:
+          safeAnchorPosition(
+            api.anchors,
+            "culet",
+            DIAMOND_SOURCE_DEFAULT.anchors.culet
+          ),
 
-            target:
-              copyVector(cameraPreparation.target)
-          })
-        : DIAMOND_SOURCE_DEFAULT.anchors;
+        target:
+          copyVector(
+            cameraPreparation.target,
+            DIAMOND_SOURCE_DEFAULT.anchors.target
+          ),
+
+        groundY:
+          safeNumber(
+            api.anchors &&
+              api.anchors.ground &&
+              api.anchors.ground.y,
+            DIAMOND_SOURCE_DEFAULT.anchors.groundY
+          )
+      });
 
     return freezeDeep({
       ...DIAMOND_SOURCE_DEFAULT,
+
+      readMode:
+        "live-diamond-geometry-authority",
+
+      liveGeometryRead:
+        true,
 
       contract:
         api.contract,
@@ -1092,16 +1311,47 @@
           ? api.getReceipt()
           : api.receipt,
 
+      coordinateSystem:
+        Object.freeze({
+          x:
+            profileCoordinateSystem.x ||
+            DIAMOND_SOURCE_DEFAULT.coordinateSystem.x,
+
+          y:
+            profileCoordinateSystem.y ||
+            DIAMOND_SOURCE_DEFAULT.coordinateSystem.y,
+
+          z:
+            profileCoordinateSystem.z ||
+            DIAMOND_SOURCE_DEFAULT.coordinateSystem.z,
+
+          origin:
+            copyVector(
+              profileCoordinateSystem.origin,
+              DIAMOND_SOURCE_DEFAULT.coordinateSystem.origin
+            ),
+
+          automaticRotationAxis:
+            profileCoordinateSystem.automaticRotationAxis ||
+            DIAMOND_SOURCE_DEFAULT.coordinateSystem.automaticRotationAxis,
+
+          groundPlaneY:
+            safeNumber(
+              profileCoordinateSystem.groundPlaneY,
+              DIAMOND_SOURCE_DEFAULT.coordinateSystem.groundPlaneY
+            )
+        }),
+
       lattice:
         Object.freeze({
           radial:
-            Number(api.radialCount || 16),
+            safeNumber(api.radialCount, 16),
 
           bands:
-            Number(api.bandCount || 16),
+            safeNumber(api.bandCount, 16),
 
           seats:
-            Number(api.seatCount || 256),
+            safeNumber(api.seatCount, 256),
 
           addressFormula:
             LATTICE_SCOPE.addressFormula
@@ -1110,6 +1360,110 @@
       localBounds,
       anchors,
       cameraPreparation
+    });
+  }
+
+  function readWindowSource() {
+    const api =
+      globalThis.SHOWROOM_MIRRORLAND_WINDOW_OBJECT;
+
+    const base =
+      {
+        ...WINDOW_SOURCE_STATIC
+      };
+
+    if (
+      !api ||
+      typeof api.getGeometryReceipt !== "function"
+    ) {
+      return freezeDeep({
+        ...base,
+
+        readMode:
+          "static-bound-window-source-no-live-object",
+
+        liveGeometryRead:
+          false,
+
+        receiptConfirmed:
+          false,
+
+        geometryReceipt:
+          null
+      });
+    }
+
+    const geometryReceipt =
+      api.getGeometryReceipt();
+
+    if (
+      !geometryReceipt ||
+      !geometryReceipt.present
+    ) {
+      return freezeDeep({
+        ...base,
+
+        readMode:
+          "static-bound-window-source-geometry-receipt-unavailable",
+
+        liveGeometryRead:
+          false,
+
+        receiptConfirmed:
+          false,
+
+        geometryReceipt:
+          geometryReceipt || null
+      });
+    }
+
+    return freezeDeep({
+      ...base,
+
+      readMode:
+        "static-bound-window-source-with-live-receipt-confirmation",
+
+      liveGeometryRead:
+        false,
+
+      receiptConfirmed:
+        true,
+
+      geometryReceipt:
+        clonePlain(geometryReceipt),
+
+      receiptSummary:
+        Object.freeze({
+          coordinateSystem:
+            geometryReceipt.coordinateSystem || null,
+
+          design:
+            geometryReceipt.design || null,
+
+          paneCount:
+            geometryReceipt.paneCount,
+
+          uniqueCameSegmentCount:
+            geometryReceipt.uniqueCameSegmentCount,
+
+          frameBandCount:
+            geometryReceipt.frameBandCount,
+
+          aperturePointCount:
+            geometryReceipt.aperturePointCount,
+
+          apertureTransparent:
+            geometryReceipt.apertureTransparent,
+
+          apertureFocalRole:
+            geometryReceipt.apertureFocalRole,
+
+          depth:
+            geometryReceipt.depth || null,
+
+          renderModel:
+            geometryReceipt.renderModel || null
+        })
     });
   }
 
@@ -1145,10 +1499,16 @@
       DIAMOND_SOURCE_DEFAULT.cameraPreparation;
 
     const position =
-      copyVector(prep.position);
+      copyVector(
+        prep.position,
+        DIAMOND_SOURCE_DEFAULT.cameraPreparation.position
+      );
 
     const target =
-      copyVector(prep.target);
+      copyVector(
+        prep.target,
+        DIAMOND_SOURCE_DEFAULT.cameraPreparation.target
+      );
 
     const forward =
       normalize(
@@ -1158,10 +1518,15 @@
     const worldUp =
       [0, 1, 0];
 
-    const right =
+    let right =
       normalize(
         cross(forward, worldUp)
       );
+
+    if (magnitude(right) <= 1e-9) {
+      right =
+        [1, 0, 0];
+    }
 
     const up =
       normalize(
@@ -1170,10 +1535,11 @@
 
     return freezeDeep({
       model:
-        "shared-stage-camera-derived-from-diamond-camera-preparation",
+        "shared-stage-case-camera-derived-from-diamond-camera-preparation",
 
       position,
       target,
+
       forward:
         Object.freeze(forward),
 
@@ -1184,21 +1550,34 @@
         Object.freeze(up),
 
       fieldOfViewDegrees:
-        Number(prep.fieldOfViewDegrees),
+        safeNumber(
+          prep.fieldOfViewDegrees,
+          32
+        ),
 
       distanceInitial:
-        Number(prep.distanceInitial),
+        safeNumber(
+          prep.distanceInitial,
+          3.85
+        ),
 
       distanceMinimum:
-        Number(prep.distanceMinimum),
+        safeNumber(
+          prep.distanceMinimum,
+          2.75
+        ),
 
       distanceMaximum:
-        Number(prep.distanceMaximum)
+        safeNumber(
+          prep.distanceMaximum,
+          5.40
+        )
     });
   }
 
   function buildObjectPlacements(
-    diamondSource
+    diamondSource,
+    windowSource
   ) {
     const diamondScale =
       fitScaleToEnvelope(
@@ -1219,10 +1598,19 @@
           diamondBoundsCenter[2] * diamondScale
       ]);
 
+    const diamondPlacementShell =
+      {
+        position:
+          diamondPosition,
+
+        scale:
+          diamondScale
+      };
+
     const diamondPlacement =
       freezeDeep({
         id:
-          "stage-object-diamond",
+          "stage-case-object-diamond",
 
         role:
           "rear-3d-object",
@@ -1232,6 +1620,12 @@
 
         sourceGlobal:
           diamondSource.global,
+
+        sourceReadMode:
+          diamondSource.readMode,
+
+        liveGeometryRead:
+          diamondSource.liveGeometryRead,
 
         localCoordinateSystem:
           diamondSource.coordinateSystem,
@@ -1252,56 +1646,35 @@
           STAGE_WORLD.depthPlanes.rearObject,
 
         localTarget:
-          copyVector(diamondSource.anchors.target),
+          copyVector(
+            diamondSource.anchors.target,
+            DIAMOND_SOURCE_DEFAULT.anchors.target
+          ),
 
         localAnchors:
           diamondSource.anchors,
 
         worldTarget:
           localToWorld(
-            {
-              position:
-                diamondPosition,
-
-              scale:
-                diamondScale
-            },
+            diamondPlacementShell,
             diamondSource.anchors.target
           ),
 
         worldOrigin:
           localToWorld(
-            {
-              position:
-                diamondPosition,
-
-              scale:
-                diamondScale
-            },
+            diamondPlacementShell,
             diamondSource.anchors.origin
           ),
 
         worldTable:
           localToWorld(
-            {
-              position:
-                diamondPosition,
-
-              scale:
-                diamondScale
-            },
+            diamondPlacementShell,
             diamondSource.anchors.table
           ),
 
         worldCulet:
           localToWorld(
-            {
-              position:
-                diamondPosition,
-
-              scale:
-                diamondScale
-            },
+            diamondPlacementShell,
             diamondSource.anchors.culet
           ),
 
@@ -1317,12 +1690,12 @@
 
     const windowScale =
       fitScaleToEnvelope(
-        WINDOW_SOURCE.localBounds,
+        windowSource.localBounds,
         STAGE_WORLD.fitEnvelope.window
       );
 
     const apertureLocal =
-      WINDOW_SOURCE.aperture.localCenter;
+      windowSource.aperture.localCenter;
 
     const target =
       diamondPlacement.worldTarget;
@@ -1334,37 +1707,58 @@
         STAGE_WORLD.depthPlanes.foregroundObject
       ]);
 
+    const windowPlacementShell =
+      {
+        position:
+          windowPosition,
+
+        scale:
+          windowScale
+      };
+
     const windowPlacement =
       freezeDeep({
         id:
-          "stage-object-window",
+          "stage-case-object-window",
 
         role:
           "foreground-3d-threshold-object",
 
         source:
-          WINDOW_SOURCE.source,
+          windowSource.source,
 
         sourceGlobal:
-          WINDOW_SOURCE.global,
+          windowSource.global,
+
+        sourceReadMode:
+          windowSource.readMode,
+
+        liveGeometryRead:
+          false,
+
+        staticGeometryBound:
+          true,
+
+        receiptConfirmed:
+          Boolean(windowSource.receiptConfirmed),
 
         localCoordinateSystem:
-          WINDOW_SOURCE.coordinateSystem,
+          windowSource.coordinateSystem,
 
         localBounds:
-          WINDOW_SOURCE.localBounds,
+          windowSource.localBounds,
 
         localBoundsCenter:
-          boundsCenter(WINDOW_SOURCE.localBounds),
+          boundsCenter(windowSource.localBounds),
 
         design:
-          WINDOW_SOURCE.design,
+          windowSource.design,
 
         depth:
-          WINDOW_SOURCE.depth,
+          windowSource.depth,
 
         projection:
-          WINDOW_SOURCE.projection,
+          windowSource.projection,
 
         position:
           windowPosition,
@@ -1380,18 +1774,15 @@
 
         worldApertureCenter:
           localToWorld(
-            {
-              position:
-                windowPosition,
-
-              scale:
-                windowScale
-            },
+            windowPlacementShell,
             apertureLocal
           ),
 
         aperture:
-          WINDOW_SOURCE.aperture,
+          windowSource.aperture,
+
+        geometryReceipt:
+          windowSource.geometryReceipt || null,
 
         ownsGeometry:
           false,
@@ -1428,7 +1819,7 @@
       apertureCorridor:
         Object.freeze({
           id:
-            "stage-aperture-corridor-window-to-diamond",
+            "stage-case-aperture-corridor-window-to-diamond",
 
           role:
             "optical-corridor",
@@ -1479,19 +1870,15 @@
         camera.position
       );
 
-    const x =
-      dot(relative, camera.right);
-
-    const y =
-      dot(relative, camera.up);
-
-    const z =
-      dot(relative, camera.forward);
-
     return Object.freeze({
-      x,
-      y,
-      z
+      x:
+        dot(relative, camera.right),
+
+      y:
+        dot(relative, camera.up),
+
+      z:
+        dot(relative, camera.forward)
     });
   }
 
@@ -1675,10 +2062,12 @@
               : true,
 
           windowControl:
-            rectWithin(
-              windowControlRect,
-              sceneRect
-            )
+            windowControlRect.present
+              ? rectWithin(
+                  windowControlRect,
+                  sceneRect
+                )
+              : true
         }),
 
       relative:
@@ -1737,75 +2126,6 @@
     });
   }
 
-  function buildEnvironment(reason) {
-    const diamondSource =
-      readDiamondSource();
-
-    state.diamondSource =
-      diamondSource;
-
-    const lattice =
-      buildDiagnosticLattice();
-
-    const corridor =
-      buildCorridor();
-
-    const camera =
-      buildCamera(diamondSource);
-
-    const placements =
-      buildObjectPlacements(diamondSource);
-
-    const environmentShell =
-      {
-        id:
-          `showroom-object-stage-environment-${Date.now()}`,
-
-        contractId:
-          CONTRACT.id,
-
-        reason:
-          String(reason || "environment-refresh"),
-
-        timestamp:
-          Date.now(),
-
-        world:
-          STAGE_WORLD,
-
-        lattice,
-
-        sourceBasis:
-          Object.freeze({
-            diamond:
-              diamondSource,
-
-            window:
-              WINDOW_SOURCE
-          }),
-
-        corridor,
-
-        camera,
-
-        objects:
-          placements,
-
-        validation:
-          null
-      };
-
-    const environment =
-      freezeDeep({
-        ...environmentShell,
-
-        validation:
-          validateEnvironment(environmentShell)
-      });
-
-    return environment;
-  }
-
   function validateEnvironment(environment) {
     const checks = [];
 
@@ -1838,11 +2158,27 @@
     );
 
     check(
+      "diamond-layer-present",
+      Boolean(state.diamondLayer),
+      true,
+      Boolean(state.diamondLayer),
+      "The Diamond layer must be present inside the corridor."
+    );
+
+    check(
       "diamond-stage-present",
       Boolean(state.diamondStage),
       true,
       Boolean(state.diamondStage),
       "The Diamond stage must be present inside the corridor."
+    );
+
+    check(
+      "window-layer-present",
+      Boolean(state.windowLayer),
+      true,
+      Boolean(state.windowLayer),
+      "The Window layer must be present inside the corridor."
     );
 
     check(
@@ -1854,11 +2190,19 @@
     );
 
     check(
-      "lattice-seat-count",
+      "stage-lattice-seat-count",
       environment.lattice.seatCount === 256,
       256,
       environment.lattice.seatCount,
-      "The stage diagnostic lattice must expose exactly 256 seats."
+      "The stage-case diagnostic lattice must expose exactly 256 seats."
+    );
+
+    check(
+      "diamond-live-geometry-read",
+      environment.sourceBasis.diamond.liveGeometryRead === true,
+      true,
+      environment.sourceBasis.diamond.liveGeometryRead,
+      "The Diamond side should be live-derived from DGBShowroomDiamondGeometryG3."
     );
 
     check(
@@ -1872,11 +2216,20 @@
     );
 
     check(
-      "window-3d-depth-present",
-      WINDOW_SOURCE.localBounds.z[0] < WINDOW_SOURCE.localBounds.z[1],
+      "window-static-bound-declared",
+      environment.sourceBasis.window.staticGeometryBound === true,
       true,
-      WINDOW_SOURCE.localBounds.z,
-      "The Window must expose a positive 3D depth interval."
+      environment.sourceBasis.window.staticGeometryBound,
+      "The Window side must honestly declare static-bound stage-case geometry."
+    );
+
+    check(
+      "window-3d-depth-present",
+      environment.sourceBasis.window.localBounds.z[0] <
+        environment.sourceBasis.window.localBounds.z[1],
+      true,
+      environment.sourceBasis.window.localBounds.z,
+      "The Window stage-case source must expose a positive 3D depth interval."
     );
 
     check(
@@ -1884,7 +2237,7 @@
       environment.objects.apertureCorridor.length > 0,
       true,
       environment.objects.apertureCorridor.length,
-      "The stage must define an optical corridor from Window aperture to Diamond focal target."
+      "The stage-case must define an optical corridor from Window aperture to Diamond target."
     );
 
     check(
@@ -1892,7 +2245,7 @@
       environment.objects.apertureCorridor.alignedInX,
       true,
       environment.objects.apertureCorridor.alignedInX,
-      "The Window aperture and Diamond focal target must align horizontally in stage space."
+      "The Window aperture and Diamond target must align horizontally in stage-case space."
     );
 
     check(
@@ -1900,7 +2253,7 @@
       environment.objects.apertureCorridor.alignedInY,
       true,
       environment.objects.apertureCorridor.alignedInY,
-      "The Window aperture and Diamond focal target must align vertically in stage space."
+      "The Window aperture and Diamond target must align vertically in stage-case space."
     );
 
     check(
@@ -1923,7 +2276,7 @@
       environment.corridor.cssExpansion === false,
       false,
       environment.corridor.cssExpansion,
-      "The stage must not expand the existing CSS corridor."
+      "The stage-case must not expand the existing CSS corridor."
     );
 
     check(
@@ -1931,7 +2284,7 @@
       environment.corridor.newWrapperRequired === false,
       false,
       environment.corridor.newWrapperRequired,
-      "The stage must not require a new wrapper."
+      "The stage-case must not require a new wrapper."
     );
 
     const failed =
@@ -1958,6 +2311,80 @@
     });
   }
 
+  function buildEnvironment(reason) {
+    const diamondSource =
+      readDiamondSource();
+
+    const windowSource =
+      readWindowSource();
+
+    state.diamondSource =
+      diamondSource;
+
+    state.windowSource =
+      windowSource;
+
+    const lattice =
+      buildDiagnosticLattice();
+
+    const corridor =
+      buildCorridor();
+
+    const camera =
+      buildCamera(diamondSource);
+
+    const objects =
+      buildObjectPlacements(
+        diamondSource,
+        windowSource
+      );
+
+    const environmentShell =
+      {
+        id:
+          `showroom-window-diamond-stage-case-${Date.now()}`,
+
+        contractId:
+          CONTRACT.id,
+
+        fileClass:
+          CONTRACT.fileClass,
+
+        reason:
+          String(reason || "environment-refresh"),
+
+        timestamp:
+          Date.now(),
+
+        world:
+          STAGE_WORLD,
+
+        lattice,
+
+        sourceBasis:
+          Object.freeze({
+            diamond:
+              diamondSource,
+
+            window:
+              windowSource
+          }),
+
+        corridor,
+
+        camera,
+
+        objects
+      };
+
+    return freezeDeep({
+      ...environmentShell,
+
+      validation:
+        validateEnvironment(environmentShell)
+    });
+  }
+
   function writeEnvironmentToDom() {
     const environment =
       state.environment;
@@ -1969,136 +2396,163 @@
       return;
     }
 
-    const aperturePixel =
-      projectWorldToCorridorPixel(
-        environment.objects.window.worldApertureCenter,
-        environment
-      );
+    state.writingDom =
+      true;
 
-    const diamondPixel =
-      projectWorldToCorridorPixel(
-        environment.objects.diamond.worldTarget,
-        environment
-      );
+    try {
+      const aperturePixel =
+        projectWorldToCorridorPixel(
+          environment.objects.window.worldApertureCenter,
+          environment
+        );
 
-    state.scene.dataset.showroomObjectStage =
-      "ready";
+      const diamondPixel =
+        projectWorldToCorridorPixel(
+          environment.objects.diamond.worldTarget,
+          environment
+        );
 
-    state.scene.dataset.showroomObjectStageContract =
-      CONTRACT.id;
+      state.scene.dataset.showroomObjectStage =
+        "ready";
 
-    state.scene.dataset.showroomObjectStageType =
-      "shared-3d-256-lattice-environment";
+      state.scene.dataset.showroomObjectStageContract =
+        CONTRACT.id;
 
-    state.scene.dataset.showroomObjectStageCorridorBound =
-      "true";
+      state.scene.dataset.showroomObjectStageType =
+        "window-diamond-stage-case-3d-256-lattice";
 
-    state.scene.dataset.showroomObjectStageCssExpansion =
-      "false";
+      state.scene.dataset.showroomObjectStageFileClass =
+        "stage-case";
 
-    state.scene.dataset.showroomObjectStageLatticeSeats =
-      String(LATTICE_SCOPE.seats);
+      state.scene.dataset.showroomObjectStageCorridorBound =
+        "true";
 
-    state.scene.dataset.showroomObjectStageApertureCorridor =
-      "available";
+      state.scene.dataset.showroomObjectStageCssExpansion =
+        "false";
 
-    state.scene.dataset.showroomObjectStageValidation =
-      environment.validation.passed
-        ? "pass"
-        : "fail";
-
-    state.scene.style.setProperty(
-      "--showroom-object-stage-aperture-x",
-      `${aperturePixel.x}px`
-    );
-
-    state.scene.style.setProperty(
-      "--showroom-object-stage-aperture-y",
-      `${aperturePixel.y}px`
-    );
-
-    state.scene.style.setProperty(
-      "--showroom-object-stage-aperture-x-ratio",
-      String(aperturePixel.normalizedX)
-    );
-
-    state.scene.style.setProperty(
-      "--showroom-object-stage-aperture-y-ratio",
-      String(aperturePixel.normalizedY)
-    );
-
-    state.scene.style.setProperty(
-      "--showroom-object-stage-diamond-target-x",
-      `${diamondPixel.x}px`
-    );
-
-    state.scene.style.setProperty(
-      "--showroom-object-stage-diamond-target-y",
-      `${diamondPixel.y}px`
-    );
-
-    state.scene.style.setProperty(
-      "--showroom-object-stage-diamond-target-x-ratio",
-      String(diamondPixel.normalizedX)
-    );
-
-    state.scene.style.setProperty(
-      "--showroom-object-stage-diamond-target-y-ratio",
-      String(diamondPixel.normalizedY)
-    );
-
-    state.scene.style.setProperty(
-      "--showroom-object-stage-diamond-scale",
-      String(environment.objects.diamond.scale)
-    );
-
-    state.scene.style.setProperty(
-      "--showroom-object-stage-window-scale",
-      String(environment.objects.window.scale)
-    );
-
-    if (state.diamondLayer) {
-      state.diamondLayer.dataset.showroomObjectStageParticipant =
-        "diamond";
-
-      state.diamondLayer.dataset.showroomObjectStageRole =
-        "rear-3d-object";
-
-      state.diamondLayer.dataset.showroomObjectStageDepth =
-        String(environment.objects.diamond.stageDepthPlane);
-    }
-
-    if (state.diamondStage) {
-      state.diamondStage.dataset.showroomObjectStageParticipant =
-        "diamond-stage";
-
-      state.diamondStage.dataset.showroomObjectStageLatticeSeats =
+      state.scene.dataset.showroomObjectStageLatticeSeats =
         String(LATTICE_SCOPE.seats);
 
-      state.diamondStage.dataset.showroomObjectStageScale =
-        String(environment.objects.diamond.scale);
-    }
-
-    if (state.windowLayer) {
-      state.windowLayer.dataset.showroomObjectStageParticipant =
-        "window";
-
-      state.windowLayer.dataset.showroomObjectStageRole =
-        "foreground-3d-threshold-object";
-
-      state.windowLayer.dataset.showroomObjectStageDepth =
-        String(environment.objects.window.stageDepthPlane);
-    }
-
-    if (state.windowMount) {
-      state.windowMount.dataset.showroomObjectStageParticipant =
-        "window-mount";
-
-      state.windowMount.dataset.showroomObjectStageApertureCorridor =
+      state.scene.dataset.showroomObjectStageApertureCorridor =
         "available";
 
-      state.windowMount.dataset.showroomObjectStageScale =
-        String(environment.objects.window.scale);
+      state.scene.dataset.showroomObjectStageValidation =
+        environment.validation.passed
+          ? "pass"
+          : "fail";
+
+      state.scene.dataset.showroomObjectStageDiamondSource =
+        environment.sourceBasis.diamond.readMode;
+
+      state.scene.dataset.showroomObjectStageWindowSource =
+        environment.sourceBasis.window.readMode;
+
+      state.scene.style.setProperty(
+        "--showroom-object-stage-aperture-x",
+        `${aperturePixel.x}px`
+      );
+
+      state.scene.style.setProperty(
+        "--showroom-object-stage-aperture-y",
+        `${aperturePixel.y}px`
+      );
+
+      state.scene.style.setProperty(
+        "--showroom-object-stage-aperture-x-ratio",
+        String(aperturePixel.normalizedX)
+      );
+
+      state.scene.style.setProperty(
+        "--showroom-object-stage-aperture-y-ratio",
+        String(aperturePixel.normalizedY)
+      );
+
+      state.scene.style.setProperty(
+        "--showroom-object-stage-diamond-target-x",
+        `${diamondPixel.x}px`
+      );
+
+      state.scene.style.setProperty(
+        "--showroom-object-stage-diamond-target-y",
+        `${diamondPixel.y}px`
+      );
+
+      state.scene.style.setProperty(
+        "--showroom-object-stage-diamond-target-x-ratio",
+        String(diamondPixel.normalizedX)
+      );
+
+      state.scene.style.setProperty(
+        "--showroom-object-stage-diamond-target-y-ratio",
+        String(diamondPixel.normalizedY)
+      );
+
+      state.scene.style.setProperty(
+        "--showroom-object-stage-diamond-scale",
+        String(environment.objects.diamond.scale)
+      );
+
+      state.scene.style.setProperty(
+        "--showroom-object-stage-window-scale",
+        String(environment.objects.window.scale)
+      );
+
+      if (state.diamondLayer) {
+        state.diamondLayer.dataset.showroomObjectStageParticipant =
+          "diamond";
+
+        state.diamondLayer.dataset.showroomObjectStageRole =
+          "rear-3d-object";
+
+        state.diamondLayer.dataset.showroomObjectStageDepth =
+          String(environment.objects.diamond.stageDepthPlane);
+
+        state.diamondLayer.dataset.showroomObjectStageSource =
+          environment.sourceBasis.diamond.readMode;
+      }
+
+      if (state.diamondStage) {
+        state.diamondStage.dataset.showroomObjectStageParticipant =
+          "diamond-stage";
+
+        state.diamondStage.dataset.showroomObjectStageLatticeSeats =
+          String(LATTICE_SCOPE.seats);
+
+        state.diamondStage.dataset.showroomObjectStageScale =
+          String(environment.objects.diamond.scale);
+      }
+
+      if (state.windowLayer) {
+        state.windowLayer.dataset.showroomObjectStageParticipant =
+          "window";
+
+        state.windowLayer.dataset.showroomObjectStageRole =
+          "foreground-3d-threshold-object";
+
+        state.windowLayer.dataset.showroomObjectStageDepth =
+          String(environment.objects.window.stageDepthPlane);
+
+        state.windowLayer.dataset.showroomObjectStageSource =
+          environment.sourceBasis.window.readMode;
+      }
+
+      if (state.windowMount) {
+        state.windowMount.dataset.showroomObjectStageParticipant =
+          "window-mount";
+
+        state.windowMount.dataset.showroomObjectStageApertureCorridor =
+          "available";
+
+        state.windowMount.dataset.showroomObjectStageScale =
+          String(environment.objects.window.scale);
+      }
+    } finally {
+      requestAnimationFrame(
+        () => {
+          state.writingDom =
+            false;
+        }
+      );
     }
   }
 
@@ -2135,8 +2589,40 @@
         failed:
           state.failed,
 
+        fileClass:
+          CONTRACT.fileClass,
+
+        pureLiveStage:
+          false,
+
+        stageCase:
+          true,
+
         sourceBasis:
           CONTRACT.sourceBasis,
+
+        diamondSourceMode:
+          state.diamondSource
+            ? state.diamondSource.readMode
+            : "unknown",
+
+        diamondLiveGeometryRead:
+          state.diamondSource
+            ? Boolean(state.diamondSource.liveGeometryRead)
+            : false,
+
+        windowSourceMode:
+          state.windowSource
+            ? state.windowSource.readMode
+            : "unknown",
+
+        windowStaticGeometryBound:
+          true,
+
+        windowReceiptConfirmed:
+          state.windowSource
+            ? Boolean(state.windowSource.receiptConfirmed)
+            : false,
 
         corridorBound:
           true,
@@ -2154,7 +2640,7 @@
           false,
 
         stageType:
-          "shared-3d-256-lattice-environment",
+          "window-diamond-stage-case-3d-256-lattice",
 
         latticeSeats:
           environment
@@ -2170,8 +2656,14 @@
         corridorPresent:
           Boolean(state.scene),
 
+        diamondLayerPresent:
+          Boolean(state.diamondLayer),
+
         diamondStagePresent:
           Boolean(state.diamondStage),
+
+        windowLayerPresent:
+          Boolean(state.windowLayer),
 
         windowMountPresent:
           Boolean(state.windowMount),
@@ -2332,7 +2824,7 @@
     writeEnvironmentToDom();
 
     state.lastAction =
-      "object-stage-environment-refreshed";
+      "stage-case-environment-refreshed";
 
     createReceipt({
       lastAction:
@@ -2390,7 +2882,7 @@
 
     if (!state.scene) {
       throw new Error(
-        "SHOWROOM_OBJECT_STAGE_CORRIDOR_NOT_FOUND"
+        "SHOWROOM_STAGE_CASE_CORRIDOR_NOT_FOUND"
       );
     }
 
@@ -2431,30 +2923,30 @@
 
     state.receiptTarget =
       document.querySelector(
-        SELECTORS.windowReceipt
+        SELECTORS.receiptTarget
       );
 
     if (!state.diamondLayer) {
       throw new Error(
-        "SHOWROOM_OBJECT_STAGE_DIAMOND_LAYER_NOT_FOUND"
+        "SHOWROOM_STAGE_CASE_DIAMOND_LAYER_NOT_FOUND"
       );
     }
 
     if (!state.diamondStage) {
       throw new Error(
-        "SHOWROOM_OBJECT_STAGE_DIAMOND_STAGE_NOT_FOUND"
+        "SHOWROOM_STAGE_CASE_DIAMOND_STAGE_NOT_FOUND"
       );
     }
 
     if (!state.windowLayer) {
       throw new Error(
-        "SHOWROOM_OBJECT_STAGE_WINDOW_LAYER_NOT_FOUND"
+        "SHOWROOM_STAGE_CASE_WINDOW_LAYER_NOT_FOUND"
       );
     }
 
     if (!state.windowMount) {
       throw new Error(
-        "SHOWROOM_OBJECT_STAGE_WINDOW_MOUNT_NOT_FOUND"
+        "SHOWROOM_STAGE_CASE_WINDOW_MOUNT_NOT_FOUND"
       );
     }
 
@@ -2463,6 +2955,9 @@
 
     state.scene.dataset.showroomObjectStageContract =
       CONTRACT.id;
+
+    state.scene.dataset.showroomObjectStageFileClass =
+      "stage-case";
 
     state.scene.dataset.showroomObjectStageCssExpansion =
       "false";
@@ -2515,6 +3010,54 @@
     requestRefresh("resize-event");
   }
 
+  function handleWindowGeometryEvent() {
+    requestRefresh("window-object-geometry-event");
+  }
+
+  function bindWindowEvents() {
+    if (state.windowEventBound) {
+      return;
+    }
+
+    state.windowEventBound =
+      true;
+
+    [
+      EXTERNAL_EVENTS.WINDOW_READY,
+      EXTERNAL_EVENTS.WINDOW_RENDERED,
+      EXTERNAL_EVENTS.WINDOW_TRANSITION_COMPLETE
+    ].forEach(type => {
+      globalThis.addEventListener(
+        type,
+        handleWindowGeometryEvent,
+        {
+          passive:
+            true
+        }
+      );
+    });
+  }
+
+  function unbindWindowEvents() {
+    if (!state.windowEventBound) {
+      return;
+    }
+
+    state.windowEventBound =
+      false;
+
+    [
+      EXTERNAL_EVENTS.WINDOW_READY,
+      EXTERNAL_EVENTS.WINDOW_RENDERED,
+      EXTERNAL_EVENTS.WINDOW_TRANSITION_COMPLETE
+    ].forEach(type => {
+      globalThis.removeEventListener(
+        type,
+        handleWindowGeometryEvent
+      );
+    });
+  }
+
   function bindMutationObserver() {
     if (
       typeof MutationObserver !== "function" ||
@@ -2527,14 +3070,16 @@
     state.mutationObserver =
       new MutationObserver(
         mutations => {
+          if (state.writingDom) {
+            return;
+          }
+
           const shouldRefresh =
             mutations.some(mutation =>
               mutation.type === "childList" ||
               (
                 mutation.type === "attributes" &&
                 [
-                  "style",
-                  "class",
                   "hidden",
                   "data-showroom-window-state",
                   "data-showroom-window-canvas-dormant"
@@ -2572,8 +3117,6 @@
 
         attributeFilter:
           [
-            "style",
-            "class",
             "hidden",
             "data-showroom-window-state",
             "data-showroom-window-canvas-dormant"
@@ -2613,6 +3156,8 @@
         handleResizeFallback
       );
     }
+
+    unbindWindowEvents();
   }
 
   function fail(reason) {
@@ -2620,7 +3165,7 @@
       true;
 
     state.lastFailure =
-      String(reason || "SHOWROOM_OBJECT_STAGE_FAILURE");
+      String(reason || "SHOWROOM_STAGE_CASE_FAILURE");
 
     unbind();
 
@@ -2637,7 +3182,7 @@
         "failed",
 
       lastAction:
-        "object-stage-failed",
+        "stage-case-failed",
 
       lastFailure:
         state.lastFailure
@@ -2676,7 +3221,7 @@
     }
 
     state.lastAction =
-      "object-stage-disposed";
+      "stage-case-disposed";
 
     createReceipt({
       status:
@@ -2789,9 +3334,7 @@
     );
   }
 
-  function publicWorldToCorridor(
-    worldPoint
-  ) {
+  function publicWorldToCorridor(worldPoint) {
     if (!state.environment) {
       return null;
     }
@@ -2893,9 +3436,10 @@
 
       bindResize();
       bindMutationObserver();
+      bindWindowEvents();
 
       state.lastAction =
-        "object-stage-shared-3d-environment-initialized";
+        "window-diamond-stage-case-initialized";
 
       createReceipt({
         status:

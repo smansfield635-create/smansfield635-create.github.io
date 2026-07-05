@@ -1153,6 +1153,143 @@ summary:focus-visible {
 }
 
 /* -------------------------------------------------------------------------- */
+/* Equation-context support                                                   */
+/* Added for Compass contextual equation renewal.                             */
+/* No scene, renderer, route, Mirrorland, canvas, or controller ownership.     */
+/* -------------------------------------------------------------------------- */
+
+.compass-formula-artifact--primary {
+  border-color: rgba(243, 217, 139, 0.42);
+  background:
+    radial-gradient(
+      circle at 16% 0%,
+      rgba(243, 217, 139, 0.13),
+      transparent 16rem
+    ),
+    radial-gradient(
+      circle at 88% 36%,
+      rgba(124, 220, 255, 0.085),
+      transparent 17rem
+    ),
+    rgba(5, 8, 14, 0.95);
+  box-shadow:
+    0 18px 50px rgba(0, 0, 0, 0.34),
+    0 0 28px rgba(243, 217, 139, 0.075),
+    inset 0 1px 0 rgba(255, 255, 255, 0.09);
+}
+
+.compass-formula-artifact--stacked .compass-formula-artifact__math {
+  display: grid;
+  gap: 8px;
+  text-align: center;
+}
+
+.compass-formula-artifact__math br {
+  display: none;
+}
+
+.compass-formula-artifact__math .formula-line {
+  display: block;
+}
+
+.compass-formula-artifact__math .formula-line + .formula-line {
+  margin-top: 4px;
+}
+
+.compass-lens-panel p + p {
+  margin-top: 12px;
+}
+
+.compass-equation-status {
+  display: grid;
+  gap: 8px;
+  margin-top: 2px;
+}
+
+.compass-equation-status__row {
+  display: grid;
+  grid-template-columns: minmax(9rem, 0.42fr) minmax(0, 1fr);
+  gap: 10px;
+  align-items: start;
+  padding: 10px 12px;
+  border: 1px solid rgba(225, 218, 198, 0.10);
+  border-radius: 14px;
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.026),
+      rgba(124, 220, 255, 0.014)
+    ),
+    rgba(3, 5, 9, 0.72);
+}
+
+.compass-equation-status__label {
+  color: rgba(243, 217, 139, 0.92);
+  font-size: 0.66rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  line-height: 1.35;
+  text-transform: uppercase;
+}
+
+.compass-equation-status__value {
+  color: var(--compass-text-secondary);
+  font-size: 0.92rem;
+  line-height: 1.55;
+}
+
+.compass-equation-boundary {
+  margin-top: 10px;
+  padding: 12px 14px;
+  border: 1px solid rgba(243, 217, 139, 0.24);
+  border-radius: 15px;
+  color: var(--compass-text-secondary);
+  background:
+    radial-gradient(
+      circle at 12% 0%,
+      rgba(243, 217, 139, 0.06),
+      transparent 12rem
+    ),
+    rgba(3, 5, 9, 0.76);
+  font-size: 0.94rem;
+  line-height: 1.58;
+}
+
+.compass-equation-boundary strong {
+  color: rgba(243, 217, 139, 0.96);
+  font-weight: 900;
+}
+
+.compass-discovery__item--wide {
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 560px) {
+  .compass-formula-artifact--stacked .compass-formula-artifact__math {
+    gap: 6px;
+  }
+
+  .compass-formula-artifact__math .formula-line + .formula-line {
+    margin-top: 2px;
+  }
+
+  .compass-equation-status__row {
+    grid-template-columns: 1fr;
+    gap: 4px;
+    padding: 10px;
+  }
+
+  .compass-equation-status__value {
+    font-size: 0.90rem;
+  }
+
+  .compass-equation-boundary {
+    padding: 11px 12px;
+    font-size: 0.91rem;
+  }
+}
+
+/* -------------------------------------------------------------------------- */
 /* Compass scene                                                              */
 /* -------------------------------------------------------------------------- */
 

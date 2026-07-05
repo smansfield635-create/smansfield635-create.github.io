@@ -2414,19 +2414,44 @@ main {
   min-height: 2.45rem;
   font-size: 0.68rem;
 }
-/* Window foreground stacking correction:
-   - Diamond remains behind.
-   - Window canvas remains inside the mount.
-   - Existing Window button remains above the canvas.
+/* Window / Diamond shared corridor correction:
+   - Diamond remains the rear object.
+   - Window mount/canvas remain foreground-only while visible.
+   - Window mount/canvas become visually dormant when open.
    - Window layer and mount stay pointer-transparent.
-   - Button remains pointer-active.
+   - Existing Window button remains above the Window canvas and pointer-active.
+   - Diamond interaction is not blocked by dormant Window surfaces.
 */
+
+.showroom-reveal-scene,
+[data-showroom-reveal-scene] {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
 
 .showroom-diamond-layer,
 [data-showroom-diamond-layer] {
   position: absolute;
   inset: 0;
   z-index: 1;
+  pointer-events: auto;
+}
+
+.diamond-stage,
+[data-showroom-diamond-stage] {
+  position: relative;
+  z-index: 1;
+}
+
+.diamond-stage canvas,
+canvas[data-showroom-diamond-canvas] {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: auto;
+  touch-action: none;
 }
 
 .showroom-window-layer,
@@ -2443,19 +2468,46 @@ main {
   inset: 0;
   z-index: 1;
   pointer-events: none;
+  background: transparent;
 }
 
 canvas[data-showroom-window-canvas] {
   position: absolute;
   inset: 0;
   z-index: 1;
+  width: 100%;
+  height: 100%;
+  display: block;
+  opacity: 1;
+  visibility: visible;
   pointer-events: none;
+  touch-action: none;
+  background: transparent;
 }
 
 .showroom-window-control,
 [data-showroom-window-control] {
-  z-index: 2;
+  position: absolute;
+  z-index: 6;
   pointer-events: auto;
+  touch-action: manipulation;
+}
+
+[data-showroom-window-state="open"] [data-showroom-window-mount],
+[data-showroom-window-state="open"] .showroom-window-mount,
+[data-showroom-window-canvas-dormant="true"][data-showroom-window-mount],
+[data-showroom-window-canvas-dormant="true"].showroom-window-mount {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+[data-showroom-window-state="open"] canvas[data-showroom-window-canvas],
+canvas[data-showroom-window-canvas][data-showroom-window-canvas-dormant="true"] {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  background: transparent !important;
 }
 /* ================================================================
    19. NARRATIVE FOUNDATIONS OUTER STRUCTURE

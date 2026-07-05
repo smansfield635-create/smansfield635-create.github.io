@@ -1,6 +1,6 @@
 <!-- TARGET FILE: /showroom/story/timeline/index.html -->
-<!-- COMPLETE NEW FILE -->
-<!-- SHOWROOM_SATELLITE_THE_STORY_SO_FAR_HTML_TNT_v1 -->
+<!-- COMPLETE REPLACEMENT -->
+<!-- SHOWROOM_SATELLITE_THE_STORY_SO_FAR_HTML_TNT_v2_300_YEAR_CLOCK_INHERITED_CONSEQUENCE -->
 
 <!doctype html>
 
@@ -8,8 +8,8 @@
   lang="en"
   data-route="/showroom/story/timeline/"
   data-page="showroom-story-timeline"
-  data-version="SHOWROOM-SATELLITE-THE-STORY-SO-FAR-1.0.0"
-  data-contract="SHOWROOM_SATELLITE_THE_STORY_SO_FAR_HTML_TNT_v1"
+  data-version="SHOWROOM-SATELLITE-THE-STORY-SO-FAR-2.0.0"
+  data-contract="SHOWROOM_SATELLITE_THE_STORY_SO_FAR_HTML_TNT_v2_300_YEAR_CLOCK_INHERITED_CONSEQUENCE"
   data-showroom-satellite="true"
   data-showroom-route-family="story"
   data-showroom-route-id="north-3"
@@ -36,19 +36,27 @@
 
   <meta
     name="description"
-    content="Enter the 300-Year Clock and follow the story of Mirrorland from first contact through expansion, fracture, reconstruction, and the unresolved present."
+    content="The mirrors showed repetition becoming trajectory. Now the 300-Year Clock reveals that the present is inherited consequence, not an isolated crisis."
   >
 
   <meta
     name="showroom-page-contract"
-    content="SHOWROOM_SATELLITE_THE_STORY_SO_FAR_HTML_TNT_v1"
+    content="SHOWROOM_SATELLITE_THE_STORY_SO_FAR_HTML_TNT_v2_300_YEAR_CLOCK_INHERITED_CONSEQUENCE"
   >
 
   <style>
     /* ============================================================
-       SHOWROOM SATELLITE PAGE EMBEDDED VISUAL SYSTEM v1
-       Story / North expression
-       Timeline chamber
+       SHOWROOM SATELLITE PAGE EMBEDDED VISUAL SYSTEM v2
+       PAGE: north-3 · The Story So Far
+
+       Page-specific standard:
+       - one-file route page;
+       - embedded CSS;
+       - page-local JavaScript only;
+       - no external dependencies;
+       - no shared Showroom runtime ownership;
+       - no repeating tiled starfield as primary atmosphere;
+       - dominant animation object: 300-Year Clock.
        ============================================================ */
 
     :root {
@@ -67,7 +75,7 @@
 
       --satellite-gold: #e0b85b;
       --satellite-gold-bright: #f4d47e;
-      --satellite-gold-deep: #805b1c;
+      --satellite-gold-soft: #ffe7a5;
       --satellite-gold-faint: rgba(224, 184, 91, 0.14);
 
       --satellite-accent: #75e9ff;
@@ -75,16 +83,9 @@
       --satellite-accent-faint: rgba(117, 233, 255, 0.13);
 
       --satellite-secondary: #8fa8ff;
-      --satellite-secondary-soft: #c4d0ff;
-      --satellite-secondary-faint: rgba(143, 168, 255, 0.14);
-
       --satellite-violet: #b798ff;
       --satellite-violet-soft: #d5c5ff;
       --satellite-violet-faint: rgba(183, 152, 255, 0.13);
-
-      --satellite-danger: #ff91a3;
-      --satellite-success: #8ce4ae;
-      --satellite-warning: #ffd17a;
 
       --satellite-border: rgba(226, 197, 128, 0.24);
       --satellite-border-strong: rgba(239, 205, 125, 0.5);
@@ -113,16 +114,11 @@
       --satellite-radius-xl: 2rem;
 
       --satellite-page-width: 84rem;
-      --satellite-reading-width: 49rem;
+      --satellite-reading-width: 52rem;
 
-      --satellite-space-1: 0.4rem;
-      --satellite-space-2: 0.65rem;
-      --satellite-space-3: 0.95rem;
       --satellite-space-4: 1.3rem;
-      --satellite-space-5: 1.8rem;
       --satellite-space-6: 2.5rem;
       --satellite-space-7: 3.5rem;
-      --satellite-space-8: 5rem;
 
       --satellite-transition-fast: 150ms ease;
       --satellite-transition:
@@ -197,34 +193,39 @@
       pointer-events: none;
       content: "";
 
-      opacity: 0.72;
+      opacity: 0.62;
 
-      background-image:
+      background:
         radial-gradient(
-          circle,
-          rgba(255, 255, 255, 0.82) 0 0.05rem,
-          transparent 0.065rem
-        ),
-        radial-gradient(
-          circle,
-          rgba(117, 233, 255, 0.58) 0 0.04rem,
+          circle at 17% 18%,
+          rgba(255, 255, 255, 0.82) 0 0.045rem,
           transparent 0.06rem
         ),
         radial-gradient(
-          circle,
-          rgba(239, 205, 126, 0.5) 0 0.045rem,
+          circle at 79% 16%,
+          rgba(117, 233, 255, 0.72) 0 0.04rem,
+          transparent 0.06rem
+        ),
+        radial-gradient(
+          circle at 91% 68%,
+          rgba(244, 212, 126, 0.7) 0 0.045rem,
           transparent 0.065rem
+        ),
+        radial-gradient(
+          circle at 34% 83%,
+          rgba(255, 255, 255, 0.58) 0 0.036rem,
+          transparent 0.055rem
+        ),
+        radial-gradient(
+          circle at 11% 66%,
+          rgba(117, 233, 255, 0.48) 0 0.032rem,
+          transparent 0.052rem
+        ),
+        radial-gradient(
+          circle at 58% 31%,
+          rgba(244, 212, 126, 0.42) 0 0.032rem,
+          transparent 0.052rem
         );
-
-      background-size:
-        6.2rem 6.2rem,
-        9.4rem 9.4rem,
-        13.6rem 13.6rem;
-
-      background-position:
-        0 0,
-        2.2rem 3.4rem,
-        5.7rem 1.6rem;
     }
 
     body::after {
@@ -266,22 +267,11 @@
       color: inherit;
     }
 
-    img,
-    svg,
-    canvas {
-      display: block;
-      max-width: 100%;
-    }
-
     h1,
     h2,
     h3,
     p,
-    blockquote,
-    dl,
-    dd,
-    ol,
-    ul {
+    blockquote {
       margin-top: 0;
     }
 
@@ -294,8 +284,6 @@
     }
 
     p,
-    li,
-    dd,
     blockquote {
       text-wrap: pretty;
     }
@@ -365,10 +353,9 @@
 
     .eyebrow,
     .route-kicker,
-    .era-index,
-    .signal-label,
-    .practical-label,
-    .evidence-label {
+    .scene-index,
+    .clock-label,
+    .practical-label {
       color: var(--satellite-gold-bright);
 
       font-size: 0.69rem;
@@ -555,33 +542,20 @@
         inset 0 0 0 0.22rem rgba(255, 255, 255, 0.025);
     }
 
-    .brand-mark::before {
+    .brand-mark::before,
+    .brand-mark::after {
       position: absolute;
-      inset: 20%;
+      inset: 24%;
 
       content: "";
 
       border: 1px solid currentColor;
-      border-radius: 50%;
+      transform: rotate(45deg);
     }
 
     .brand-mark::after {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-
-      width: 0.45rem;
-      height: 1rem;
-
-      content: "";
-
-      border: solid var(--satellite-accent);
-      border-width: 0 1px 1px 0;
-
-      transform:
-        translate(-50%, -72%)
-        rotate(38deg);
-      transform-origin: 50% 100%;
+      inset: 34%;
+      opacity: 0.55;
     }
 
     .brand-copy {
@@ -659,13 +633,13 @@
     }
 
     /* ============================================================
-       HERO
+       HERO / CLOCK
        ============================================================ */
 
     .route-hero {
       position: relative;
 
-      min-height: min(79vh, 49rem);
+      min-height: min(82vh, 52rem);
       overflow: hidden;
 
       border: 1px solid rgba(224, 184, 91, 0.23);
@@ -673,19 +647,24 @@
 
       background:
         radial-gradient(
-          circle at 18% 18%,
+          circle at 16% 18%,
           rgba(117, 233, 255, 0.14),
           transparent 24rem
         ),
         radial-gradient(
-          circle at 82% 72%,
-          rgba(143, 168, 255, 0.15),
-          transparent 29rem
+          circle at 83% 70%,
+          rgba(136, 170, 255, 0.14),
+          transparent 28rem
+        ),
+        radial-gradient(
+          circle at 58% 50%,
+          rgba(244, 212, 126, 0.08),
+          transparent 20rem
         ),
         linear-gradient(
           145deg,
-          rgba(16, 25, 46, 0.89),
-          rgba(3, 6, 15, 0.96)
+          rgba(16, 25, 46, 0.9),
+          rgba(3, 6, 15, 0.97)
         );
 
       box-shadow: var(--satellite-shadow-deep);
@@ -702,23 +681,23 @@
       background:
         linear-gradient(
           115deg,
-          transparent 0 44%,
-          rgba(117, 233, 255, 0.035) 45%,
-          transparent 46% 58%,
-          rgba(224, 184, 91, 0.035) 59%,
-          transparent 60%
+          transparent 0 42%,
+          rgba(117, 233, 255, 0.035) 42.4%,
+          transparent 43% 58%,
+          rgba(224, 184, 91, 0.035) 58.5%,
+          transparent 59%
         ),
         radial-gradient(
-          circle at 72% 42%,
-          transparent 0 8rem,
-          rgba(117, 233, 255, 0.055) 8.1rem 8.2rem,
-          transparent 8.3rem
+          circle at 70% 42%,
+          transparent 0 9rem,
+          rgba(117, 233, 255, 0.055) 9.1rem 9.2rem,
+          transparent 9.3rem
         ),
         radial-gradient(
-          circle at 72% 42%,
-          transparent 0 13rem,
-          rgba(224, 184, 91, 0.045) 13.1rem 13.2rem,
-          transparent 13.3rem
+          circle at 70% 42%,
+          transparent 0 14rem,
+          rgba(224, 184, 91, 0.045) 14.1rem 14.2rem,
+          transparent 14.3rem
         );
     }
 
@@ -728,8 +707,8 @@
       min-height: inherit;
 
       grid-template-columns:
-        minmax(0, 1.2fr)
-        minmax(17rem, 0.8fr);
+        minmax(0, 1.08fr)
+        minmax(18rem, 0.92fr);
 
       align-items: center;
       gap: clamp(2rem, 6vw, 6rem);
@@ -777,7 +756,7 @@
     }
 
     .hero-lead {
-      max-width: 44rem;
+      max-width: 45rem;
       margin-bottom: 1.5rem;
 
       color: var(--satellite-muted-strong);
@@ -790,14 +769,15 @@
       gap: 0.7rem;
     }
 
-    .hero-clock {
+    .clock-stage {
       position: relative;
 
       display: grid;
       align-content: end;
       gap: 1rem;
 
-      min-height: 24rem;
+      min-height: 28rem;
+      overflow: hidden;
       padding: 1.4rem;
 
       border: 1px solid var(--satellite-border-cool);
@@ -805,9 +785,14 @@
 
       background:
         radial-gradient(
-          circle at 50% 32%,
-          rgba(117, 233, 255, 0.17),
-          transparent 9rem
+          circle at 50% 35%,
+          rgba(117, 233, 255, 0.18),
+          transparent 10rem
+        ),
+        radial-gradient(
+          circle at 50% 30%,
+          rgba(244, 212, 126, 0.08),
+          transparent 13rem
         ),
         linear-gradient(
           180deg,
@@ -820,102 +805,186 @@
         inset 0.24rem 0 0 rgba(117, 233, 255, 0.28);
     }
 
-    .hero-clock__face {
+    .clock-orbit {
       position: absolute;
-      top: 11%;
+      top: 9%;
       left: 50%;
 
-      width: 10.5rem;
+      width: min(16.5rem, 74vw);
       aspect-ratio: 1;
 
-      border: 1px solid rgba(117, 233, 255, 0.38);
+      pointer-events: none;
+
+      border: 1px solid rgba(117, 233, 255, 0.25);
       border-radius: 50%;
 
       background:
         repeating-conic-gradient(
-          from -1deg,
-          rgba(224, 184, 91, 0.7) 0 1deg,
-          transparent 1deg 29deg
+          from -2deg,
+          rgba(244, 212, 126, 0.54) 0 1deg,
+          transparent 1deg 11deg
         ),
         radial-gradient(
           circle,
-          rgba(245, 213, 130, 0.12) 0 8%,
-          rgba(7, 14, 30, 0.96) 9% 66%,
-          rgba(117, 233, 255, 0.08) 67% 74%,
-          rgba(5, 9, 20, 0.98) 75%
+          rgba(180, 245, 255, 0.08) 0 8%,
+          rgba(5, 9, 20, 0.96) 9% 33%,
+          rgba(117, 233, 255, 0.06) 34% 35%,
+          rgba(5, 9, 20, 0.72) 36% 63%,
+          rgba(244, 212, 126, 0.08) 64% 65%,
+          rgba(5, 9, 20, 0.96) 66%
         );
 
       box-shadow:
-        0 0 3rem rgba(117, 233, 255, 0.15),
-        inset 0 0 2rem rgba(117, 233, 255, 0.08);
+        0 0 3.4rem rgba(117, 233, 255, 0.16),
+        inset 0 0 2rem rgba(117, 233, 255, 0.06);
 
       transform: translateX(-50%);
+      animation: clockBreath 8s ease-in-out infinite;
     }
 
-    .hero-clock__face::before,
-    .hero-clock__face::after {
+    .clock-orbit::before,
+    .clock-orbit::after {
+      position: absolute;
+      inset: 17%;
+
+      content: "";
+
+      border: 1px solid rgba(244, 212, 126, 0.2);
+      border-radius: 50%;
+    }
+
+    .clock-orbit::after {
+      inset: 31%;
+      border-color: rgba(117, 233, 255, 0.25);
+    }
+
+    .clock-hand {
       position: absolute;
       top: 50%;
       left: 50%;
 
-      content: "";
+      width: 0.16rem;
 
-      background: var(--satellite-gold-bright);
+      pointer-events: none;
+
       border-radius: 999px;
-
       transform-origin: 50% 100%;
+      box-shadow: 0 0 0.9rem currentColor;
     }
 
-    .hero-clock__face::before {
-      width: 0.14rem;
-      height: 2.9rem;
+    .clock-hand--chosen {
+      height: 5.9rem;
+
+      color: var(--satellite-gold-bright);
+      background: var(--satellite-gold-bright);
 
       transform:
         translate(-50%, -100%)
-        rotate(28deg);
+        rotate(42deg);
+
+      animation: handChosen 9s ease-in-out infinite;
     }
 
-    .hero-clock__face::after {
-      width: 0.12rem;
-      height: 2rem;
+    .clock-hand--inherited {
+      height: 4.7rem;
 
+      color: var(--satellite-accent);
       background: var(--satellite-accent);
 
       transform:
         translate(-50%, -100%)
-        rotate(122deg);
+        rotate(138deg);
+
+      animation: handInherited 10s ease-in-out infinite;
     }
 
-    .hero-clock__center {
+    .clock-hand--forgotten {
+      height: 3.6rem;
+
+      color: var(--satellite-violet-soft);
+      background: var(--satellite-violet-soft);
+
+      transform:
+        translate(-50%, -100%)
+        rotate(258deg);
+
+      animation: handForgotten 12s ease-in-out infinite;
+    }
+
+    .clock-center {
       position: absolute;
-      z-index: 2;
       top: 50%;
       left: 50%;
 
-      width: 0.75rem;
-      height: 0.75rem;
+      width: 1rem;
+      aspect-ratio: 1;
 
       border: 2px solid var(--satellite-gold-bright);
       border-radius: 50%;
 
       background: var(--satellite-ink-0);
+      box-shadow:
+        0 0 1rem rgba(244, 212, 126, 0.35);
 
       transform: translate(-50%, -50%);
     }
 
-    .hero-clock__copy {
+    .clock-fragment {
+      position: absolute;
+
+      padding: 0.35rem 0.5rem;
+
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 999px;
+
+      color: var(--satellite-muted-strong);
+      background: rgba(5, 9, 20, 0.75);
+
+      font-size: 0.6rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+
+      animation: fragmentPulse 6s ease-in-out infinite;
+    }
+
+    .clock-fragment:nth-of-type(1) {
+      top: 16%;
+      left: 9%;
+      animation-delay: -1s;
+    }
+
+    .clock-fragment:nth-of-type(2) {
+      top: 20%;
+      right: 7%;
+      animation-delay: -2.2s;
+    }
+
+    .clock-fragment:nth-of-type(3) {
+      top: 53%;
+      left: 8%;
+      animation-delay: -3.4s;
+    }
+
+    .clock-fragment:nth-of-type(4) {
+      top: 59%;
+      right: 8%;
+      animation-delay: -4.4s;
+    }
+
+    .clock-copy {
       position: relative;
       z-index: 2;
     }
 
-    .signal-label {
+    .clock-label {
       display: block;
       margin-bottom: 0.45rem;
 
       color: var(--satellite-accent);
     }
 
-    .hero-clock__copy strong {
+    .clock-copy strong {
       display: block;
       margin-bottom: 0.65rem;
 
@@ -931,7 +1000,7 @@
       line-height: 1.12;
     }
 
-    .hero-clock__copy p {
+    .clock-copy p {
       margin-bottom: 0;
 
       color: var(--satellite-muted);
@@ -939,7 +1008,7 @@
     }
 
     /* ============================================================
-       SECTION HEADINGS
+       COMMON SECTION LAYOUT
        ============================================================ */
 
     .section-heading {
@@ -961,53 +1030,27 @@
       color: var(--satellite-muted-strong);
     }
 
-    /* ============================================================
-       ERA TIMELINE
-       ============================================================ */
-
-    .timeline-stage {
+    .story-stage {
       display: grid;
       gap: 1rem;
     }
 
-    .era-list {
-      position: relative;
-
+    .scene-grid {
       display: grid;
+
+      grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
       gap: 0.9rem;
-
-      padding-left: 3.2rem;
     }
 
-    .era-list::before {
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      left: 1.25rem;
-
-      width: 1px;
-
-      content: "";
-
-      background:
-        linear-gradient(
-          180deg,
-          transparent,
-          var(--satellite-accent) 8%,
-          var(--satellite-gold) 52%,
-          var(--satellite-violet) 92%,
-          transparent
-        );
-
-      box-shadow:
-        0 0 1rem rgba(117, 233, 255, 0.2);
-    }
-
-    .era-card {
+    .scene-card {
       position: relative;
 
       min-width: 0;
-      padding: 1.2rem;
+      overflow: hidden;
+
+      padding: 1.25rem;
 
       border: 1px solid rgba(224, 184, 91, 0.17);
       border-radius: var(--satellite-radius-lg);
@@ -1021,103 +1064,82 @@
         box-shadow var(--satellite-transition);
     }
 
-    .era-card::before {
-      position: absolute;
-      top: 1.45rem;
-      left: -2.55rem;
-
-      width: 1rem;
-      height: 1rem;
-
-      content: "";
-
-      border: 2px solid var(--satellite-accent);
-      border-radius: 50%;
-
-      background: var(--satellite-ink-1);
-
-      box-shadow:
-        0 0 0 0.35rem rgba(117, 233, 255, 0.07),
-        0 0 1.2rem rgba(117, 233, 255, 0.22);
-    }
-
-    .era-card:hover {
+    .scene-card:hover {
       border-color: rgba(224, 184, 91, 0.34);
 
       box-shadow:
         0 1.7rem 4.5rem rgba(0, 0, 0, 0.48),
         inset 0.2rem 0 0 rgba(117, 233, 255, 0.22);
 
-      transform: translateX(3px);
+      transform: translateY(-3px);
     }
 
-    .era-card__header {
-      display: grid;
+    .scene-card::before {
+      position: absolute;
+      top: 0;
+      right: 0;
 
-      grid-template-columns:
-        minmax(0, 1fr)
-        auto;
+      width: 8rem;
+      height: 8rem;
 
-      align-items: start;
-      gap: 1rem;
+      pointer-events: none;
+      content: "";
+
+      background:
+        radial-gradient(
+          circle at 100% 0,
+          rgba(117, 233, 255, 0.11),
+          transparent 68%
+        );
     }
 
-    .era-card h3 {
+    .scene-index {
+      display: block;
+      margin-bottom: 0.8rem;
+    }
+
+    .scene-card h3 {
       margin-bottom: 0.65rem;
 
       font-size: clamp(1.45rem, 2.4vw, 2.1rem);
     }
 
-    .era-year {
-      padding: 0.36rem 0.58rem;
-
-      border: 1px solid var(--satellite-border-cool);
-      border-radius: 999px;
-
-      color: var(--satellite-accent-soft);
-      background: var(--satellite-accent-faint);
-
-      font-size: 0.64rem;
-      font-weight: 850;
-      letter-spacing: 0.08em;
-      white-space: nowrap;
-      text-transform: uppercase;
-    }
-
-    .era-card > p {
-      margin-bottom: 0.8rem;
+    .scene-card p {
+      margin-bottom: 0;
 
       color: var(--satellite-muted-strong);
     }
 
-    .era-consequence {
-      margin: 0;
-      padding: 0.82rem 0.92rem;
+    .scene-card blockquote {
+      margin:
+        1rem 0
+        0;
+      padding: 0.85rem 0.95rem;
 
-      border-left: 0.2rem solid var(--satellite-gold);
+      border-left: 0.2rem solid var(--satellite-accent);
 
-      color: var(--satellite-cream-soft);
-      background: var(--satellite-gold-faint);
+      color: var(--satellite-cream);
+      background: var(--satellite-accent-faint);
 
       font-family:
         Georgia,
         "Times New Roman",
         serif;
 
-      font-size: 1rem;
+      font-size: 1.02rem;
       line-height: 1.5;
     }
 
     /* ============================================================
-       GENERATIONAL DIALOGUE
+       CLOCK DIALOGUE
        ============================================================ */
 
-    .dialogue-stage {
+    .clock-dialogue {
       display: grid;
 
       grid-template-columns:
-        minmax(0, 0.82fr)
-        minmax(0, 1.18fr);
+        minmax(0, 0.86fr)
+        minmax(0, 1.14fr);
 
       gap: 1rem;
     }
@@ -1148,7 +1170,7 @@
 
     .dialogue-panel {
       display: grid;
-      gap: 0.8rem;
+      gap: 0.85rem;
     }
 
     .dialogue-line {
@@ -1164,14 +1186,14 @@
       background: rgba(255, 255, 255, 0.025);
     }
 
-    .dialogue-line[data-generation="earlier"] {
+    .dialogue-line[data-side="past"] {
       justify-self: start;
 
       border-color: rgba(117, 233, 255, 0.19);
       box-shadow: inset 0.2rem 0 0 rgba(117, 233, 255, 0.3);
     }
 
-    .dialogue-line[data-generation="later"] {
+    .dialogue-line[data-side="present"] {
       justify-self: end;
 
       border-color: rgba(224, 184, 91, 0.2);
@@ -1194,7 +1216,7 @@
     }
 
     /* ============================================================
-       MEMORY ARCHITECTURE
+       MEMORY GRID
        ============================================================ */
 
     .memory-section {
@@ -1317,7 +1339,7 @@
     }
 
     .practical-copy h2 {
-      max-width: 13ch;
+      max-width: 12ch;
       margin-bottom: 0.8rem;
 
       font-size: clamp(2rem, 4.7vw, 4rem);
@@ -1340,7 +1362,7 @@
     }
 
     /* ============================================================
-       EVIDENCE DISCLOSURE
+       REVEAL DISCLOSURE
        ============================================================ */
 
     .evidence-disclosure {
@@ -1442,7 +1464,7 @@
       border-top: 1px solid var(--satellite-rule);
     }
 
-    .evidence-body > p {
+    .evidence-body p {
       max-width: var(--satellite-reading-width);
       margin-bottom: 0;
 
@@ -1481,8 +1503,6 @@
     }
 
     .evidence-grid p {
-      margin-bottom: 0;
-
       color: var(--satellite-muted);
       font-size: 0.76rem;
     }
@@ -1552,10 +1572,116 @@
     }
 
     /* ============================================================
+       ANIMATION
+       ============================================================ */
+
+    @keyframes clockBreath {
+      0%,
+      100% {
+        opacity: 0.68;
+        transform:
+          translateX(-50%)
+          scale(0.96);
+      }
+
+      50% {
+        opacity: 0.96;
+        transform:
+          translateX(-50%)
+          scale(1.02);
+      }
+    }
+
+    @keyframes handChosen {
+      0%,
+      100% {
+        transform:
+          translate(-50%, -100%)
+          rotate(42deg);
+      }
+
+      50% {
+        transform:
+          translate(-50%, -100%)
+          rotate(64deg);
+      }
+    }
+
+    @keyframes handInherited {
+      0%,
+      100% {
+        transform:
+          translate(-50%, -100%)
+          rotate(138deg);
+      }
+
+      50% {
+        transform:
+          translate(-50%, -100%)
+          rotate(118deg);
+      }
+    }
+
+    @keyframes handForgotten {
+      0%,
+      100% {
+        transform:
+          translate(-50%, -100%)
+          rotate(258deg);
+      }
+
+      50% {
+        transform:
+          translate(-50%, -100%)
+          rotate(281deg);
+      }
+    }
+
+    @keyframes fragmentPulse {
+      0%,
+      100% {
+        opacity: 0.42;
+        transform: translateY(0);
+      }
+
+      50% {
+        opacity: 0.9;
+        transform: translateY(-0.25rem);
+      }
+    }
+
+    .js .reveal {
+      opacity: 0;
+      transform: translateY(1rem);
+      transition:
+        opacity 520ms ease,
+        transform 520ms cubic-bezier(0.2, 0.72, 0.25, 1);
+    }
+
+    .js .reveal.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .js .clock-stage.is-awake .clock-orbit {
+      animation:
+        clockBreath 8s ease-in-out infinite;
+    }
+
+    /* ============================================================
        RESPONSIVE
        ============================================================ */
 
     @media (max-width: 68rem) {
+      .scene-grid {
+        grid-template-columns:
+          repeat(2, minmax(0, 1fr));
+      }
+
+      .scene-card:last-child {
+        grid-column: 1 / -1;
+      }
+
       .memory-grid {
         grid-template-columns:
           repeat(2, minmax(0, 1fr));
@@ -1569,7 +1695,7 @@
 
     @media (max-width: 54rem) {
       .route-hero__inner,
-      .dialogue-stage,
+      .clock-dialogue,
       .practical-return,
       .section-heading {
         grid-template-columns: 1fr;
@@ -1579,8 +1705,8 @@
         align-items: start;
       }
 
-      .hero-clock {
-        min-height: 21rem;
+      .clock-stage {
+        min-height: 25rem;
       }
 
       .section-heading {
@@ -1689,51 +1815,39 @@
         width: 100%;
       }
 
-      .hero-clock {
-        min-height: 19rem;
+      .clock-stage {
+        min-height: 22rem;
         padding: 1rem;
       }
 
-      .hero-clock__face {
-        width: 8.4rem;
+      .clock-orbit {
+        width: min(12.5rem, 66vw);
       }
 
-      .era-list {
-        padding-left: 2.1rem;
+      .clock-fragment {
+        font-size: 0.52rem;
       }
 
-      .era-list::before {
-        left: 0.68rem;
-      }
-
-      .era-card::before {
-        left: -1.88rem;
-      }
-
-      .era-card__header {
-        grid-template-columns: 1fr;
-      }
-
-      .era-year {
-        justify-self: start;
-      }
-
+      .scene-grid,
       .memory-grid,
       .evidence-grid {
         grid-template-columns: 1fr;
       }
 
-      .era-card,
+      .scene-card:last-child {
+        grid-column: auto;
+      }
+
+      .scene-card,
       .dialogue-intro,
       .dialogue-panel,
       .memory-section,
-      .memory-card,
       .practical-return {
         border-radius: 1rem;
       }
 
       .dialogue-line {
-        max-width: 95%;
+        max-width: 96%;
       }
 
       .page-footer {
@@ -1747,7 +1861,7 @@
     }
 
     /* ============================================================
-       ACCESSIBILITY MODES
+       REDUCED MOTION
        ============================================================ */
 
     @media (prefers-reduced-motion: reduce) {
@@ -1766,19 +1880,27 @@
         transition-duration: 0.001ms !important;
       }
 
-      .era-card:hover,
+      .scene-card:hover,
       .button:hover {
+        transform: none;
+      }
+
+      .js .reveal {
+        opacity: 1;
         transform: none;
       }
     }
 
+    /* ============================================================
+       REDUCED TRANSPARENCY
+       ============================================================ */
+
     @media (prefers-reduced-transparency: reduce) {
       .page-topbar,
-      .era-card,
+      .scene-card,
       .dialogue-intro,
       .dialogue-panel,
       .memory-section,
-      .memory-card,
       .practical-return,
       .evidence-disclosure {
         background-color: var(--satellite-ink-1);
@@ -1786,17 +1908,23 @@
       }
     }
 
+    /* ============================================================
+       FORCED COLORS
+       ============================================================ */
+
     @media (forced-colors: active) {
       body,
       .page-topbar,
       .route-hero,
-      .era-card,
+      .scene-card,
       .dialogue-intro,
       .dialogue-panel,
       .memory-section,
       .memory-card,
       .practical-return,
-      .evidence-disclosure {
+      .evidence-disclosure,
+      .clock-stage,
+      .clock-orbit {
         color: CanvasText;
         background: Canvas;
         box-shadow: none;
@@ -1808,12 +1936,16 @@
       }
 
       .brand-mark,
-      .hero-clock__face {
+      .clock-orbit {
         border: 2px solid ButtonText;
         background: ButtonFace;
         box-shadow: none;
       }
     }
+
+    /* ============================================================
+       PRINT
+       ============================================================ */
 
     @media print {
       body {
@@ -1826,7 +1958,9 @@
       .page-topbar,
       .hero-actions,
       .practical-actions,
-      .page-footer {
+      .page-footer,
+      .clock-fragment,
+      .clock-orbit {
         display: none !important;
       }
 
@@ -1835,13 +1969,14 @@
       }
 
       .route-hero,
-      .era-card,
+      .scene-card,
       .dialogue-intro,
       .dialogue-panel,
       .memory-section,
       .memory-card,
       .practical-return,
-      .evidence-disclosure {
+      .evidence-disclosure,
+      .clock-stage {
         color: #111;
         background: #fff;
         border: 1px solid #777;
@@ -1849,12 +1984,8 @@
       }
 
       .route-hero,
-      .hero-clock {
+      .clock-stage {
         min-height: 0;
-      }
-
-      .hero-clock__face {
-        display: none;
       }
 
       .evidence-disclosure:not([open])
@@ -1870,7 +2001,7 @@
     class="skip-link"
     href="#main"
   >
-    Skip to the timeline
+    Skip to the story
   </a>
 
   <div class="page-shell">
@@ -1902,8 +2033,8 @@
           Previous
         </a>
 
-        <a href="/showroom/">
-          Constellation
+        <a href="/showroom/story/invitation/">
+          Next
         </a>
 
         <a href="/index.html">
@@ -1918,7 +2049,7 @@
         aria-labelledby="page-title"
       >
         <div class="route-hero__inner">
-          <div class="route-hero__copy">
+          <div class="route-hero__copy reveal">
             <div class="route-kicker">
               North Route · Chamber Three
             </div>
@@ -1928,24 +2059,22 @@
             </h1>
 
             <p class="hero-subtitle">
-              Three hundred years sounds like time until you realize no
-              one lives long enough to hold the whole mission.
+              The mirrors showed repetition. The Clock shows how long
+              repetition has been moving.
             </p>
 
             <p class="hero-lead">
-              You know why Mirrorland exists. Now you must learn what has
-              already happened here. The world did not wait for you to
-              arrive. People were born, systems rose, institutions
-              hardened, discoveries were forgotten, and entire
-              generations inherited problems they did not create.
-              History is not background. It is the pressure already
-              inside every room.
+              You leave the mirror chamber expecting the next door. There
+              is no door. There is only a clock hanging where the passage
+              should be. It does not count hours. It counts what one
+              generation chose, what the next generation inherited, and
+              what no one remembered clearly enough to explain.
             </p>
 
             <div class="hero-actions">
               <a
                 class="button button-gold"
-                href="#timeline"
+                href="#clock-room"
               >
                 Enter the Clock
               </a>
@@ -1954,35 +2083,66 @@
                 class="button"
                 href="/showroom/story/mission/"
               >
-                Return to the Mission
+                Return to the Mirrors
               </a>
             </div>
           </div>
 
           <aside
-            class="hero-clock"
+            class="clock-stage reveal"
             aria-label="The 300-Year Clock"
           >
-            <div
-              class="hero-clock__face"
+            <span
+              class="clock-fragment"
               aria-hidden="true"
             >
-              <span class="hero-clock__center"></span>
+              chosen
+            </span>
+
+            <span
+              class="clock-fragment"
+              aria-hidden="true"
+            >
+              inherited
+            </span>
+
+            <span
+              class="clock-fragment"
+              aria-hidden="true"
+            >
+              forgotten
+            </span>
+
+            <span
+              class="clock-fragment"
+              aria-hidden="true"
+            >
+              recorded
+            </span>
+
+            <div
+              class="clock-orbit"
+              aria-hidden="true"
+            >
+              <span class="clock-hand clock-hand--chosen"></span>
+              <span class="clock-hand clock-hand--inherited"></span>
+              <span class="clock-hand clock-hand--forgotten"></span>
+              <span class="clock-center"></span>
             </div>
 
-            <div class="hero-clock__copy">
-              <span class="signal-label">
+            <div class="clock-copy">
+              <span class="clock-label">
                 The 300-Year Clock
               </span>
 
               <strong>
-                The work must outlive the people who begin it.
+                The hands do not agree.
               </strong>
 
               <p>
-                Every generation receives an incomplete record, makes
-                decisions under pressure, and decides what the next
-                generation will be allowed to remember.
+                One hand marks the choice. One marks the inheritance.
+                One marks the part of the story that became unclear
+                before anyone thought to protect it.
               </p>
             </div>
           </aside>
@@ -1990,265 +2150,166 @@
       </section>
 
       <section
-        id="timeline"
-        class="timeline-stage"
-        aria-labelledby="timeline-title"
+        id="clock-room"
+        class="story-stage"
+        aria-labelledby="clock-room-title"
       >
-        <header class="section-heading">
+        <header class="section-heading reveal">
           <div>
             <div class="eyebrow">
-              A History Still in Motion
+              Inside the Clock Room
             </div>
 
-            <h2 id="timeline-title">
-              Five eras brought you here.
+            <h2 id="clock-room-title">
+              The present did not begin with you.
             </h2>
           </div>
 
           <p>
-            This is not a complete history of Mirrorland. It is the
-            minimum sequence required to understand why the present
-            cannot be judged as though it began today.
+            Mirrorland does not hand you a clean timeline. It lets you
+            feel the way history arrives already tangled.
           </p>
         </header>
 
-        <div class="era-list">
-          <article class="era-card">
-            <div class="era-card__header">
-              <div>
-                <span class="era-index">
-                  Era One · Contact
-                </span>
+        <div class="scene-grid">
+          <article class="scene-card reveal">
+            <span class="scene-index">
+              01 · What Was Chosen
+            </span>
 
-                <h3>
-                  The anomaly became a door.
-                </h3>
-              </div>
-
-              <span class="era-year">
-                Opening Years
-              </span>
-            </div>
+            <h3>
+              A repair was postponed.
+            </h3>
 
             <p>
-              Dextrion’s signal crossed the boundary and returned with a
-              response. The earliest missions entered cautiously,
-              recording geography, language, environmental conditions,
-              and signs of inhabited history. The first mistake was
-              almost immediate: some observers assumed that what they
-              could measure was all that mattered.
+              The first hand moves. A room appears inside the clock face:
+              officials around a table, a broken system, a safer fix that
+              costs too much time, and a temporary patch everyone agrees
+              will be replaced later.
             </p>
 
-            <blockquote class="era-consequence">
-              First contact created access. It did not create
-              understanding.
+            <blockquote>
+              The record says the decision was practical.
             </blockquote>
           </article>
 
-          <article class="era-card">
-            <div class="era-card__header">
-              <div>
-                <span class="era-index">
-                  Era Two · Expansion
-                </span>
+          <article class="scene-card reveal">
+            <span class="scene-index">
+              02 · What Was Inherited
+            </span>
 
-                <h3>
-                  Knowledge became infrastructure.
-                </h3>
-              </div>
-
-              <span class="era-year">
-                Early Generations
-              </span>
-            </div>
+            <h3>
+              Later became normal.
+            </h3>
 
             <p>
-              Passage stabilized. Settlements formed around reliable
-              thresholds. Institutions were created to preserve records,
-              coordinate missions, regulate contact, and protect the
-              growing exchange between worlds. Tools became systems.
-              Systems became authority.
+              The second hand moves. Years pass in a breath. The patch is
+              still there, but no one calls it temporary anymore. New
+              workers are trained around it. New budgets assume it. New
+              children grow up inside its limits.
             </p>
 
-            <blockquote class="era-consequence">
-              The structures built to preserve the mission began to
-              shape what the mission was allowed to become.
+            <blockquote>
+              The inheritance arrives without the original warning label.
             </blockquote>
           </article>
 
-          <article class="era-card">
-            <div class="era-card__header">
-              <div>
-                <span class="era-index">
-                  Era Three · Fracture
-                </span>
+          <article class="scene-card reveal">
+            <span class="scene-index">
+              03 · What Was Forgotten
+            </span>
 
-                <h3>
-                  The record stopped agreeing with itself.
-                </h3>
-              </div>
-
-              <span class="era-year">
-                Middle Generations
-              </span>
-            </div>
+            <h3>
+              The reason disappears.
+            </h3>
 
             <p>
-              Different worlds remembered the same events differently.
-              Institutions protected incompatible versions of history.
-              Some evidence disappeared through neglect. Some was hidden
-              deliberately. Some was preserved so poorly that later
-              generations could no longer distinguish observation from
-              interpretation.
+              The third hand moves last. A later generation finds the old
+              rule but not the emergency that made it necessary. They
+              argue over whether the rule was wisdom, fear, corruption,
+              caution, or habit.
             </p>
 
-            <blockquote class="era-consequence">
-              The crisis was not that people disagreed. The crisis was
-              that no one could prove what had been changed.
-            </blockquote>
-          </article>
-
-          <article class="era-card">
-            <div class="era-card__header">
-              <div>
-                <span class="era-index">
-                  Era Four · Reconstruction
-                </span>
-
-                <h3>
-                  Survival required more than repair.
-                </h3>
-              </div>
-
-              <span class="era-year">
-                Later Generations
-              </span>
-            </div>
-
-            <p>
-              Broken systems were rebuilt, but reconstruction exposed a
-              deeper problem: restoring function could also restore the
-              assumptions that caused the failure. Communities began
-              preserving contradictory accounts, tracing decisions to
-              their owners, and separating what was known from what had
-              merely become customary.
-            </p>
-
-            <blockquote class="era-consequence">
-              A repaired institution is not a corrected institution
-              unless it can explain what it changed.
-            </blockquote>
-          </article>
-
-          <article class="era-card">
-            <div class="era-card__header">
-              <div>
-                <span class="era-index">
-                  Era Five · The Unresolved Present
-                </span>
-
-                <h3>
-                  The mission is still unfinished.
-                </h3>
-              </div>
-
-              <span class="era-year">
-                Your Arrival
-              </span>
-            </div>
-
-            <p>
-              The Clock continues. Some worlds have stabilized. Others
-              remain under pressure. Some institutions have learned to
-              preserve uncertainty honestly. Others still convert
-              authority into certainty. The future is more visible than
-              it was at first contact, but visibility has not made it
-              safe.
-            </p>
-
-            <blockquote class="era-consequence">
-              You did not arrive at the ending. You arrived at the point
-              where your decisions enter the record.
+            <blockquote>
+              No one can repair the past cleanly when the missing context
+              has become part of the damage.
             </blockquote>
           </article>
         </div>
       </section>
 
       <section
-        class="dialogue-stage"
+        class="clock-dialogue"
         aria-labelledby="dialogue-title"
       >
-        <div class="dialogue-intro">
+        <div class="dialogue-intro reveal">
           <div class="eyebrow">
-            Across the Generations
+            Across the Clock
           </div>
 
           <h2 id="dialogue-title">
-            What did they leave for you?
+            History answers in fragments.
           </h2>
 
           <p>
-            Every generation believes the next will understand what it
-            meant. That belief is often wrong. Context disappears.
-            Language changes. Emergency decisions become traditions.
-            Temporary compromises become permanent architecture.
+            You listen for a single explanation. The Clock gives you
+            voices instead. No one voice holds the whole mission.
           </p>
         </div>
 
         <div
-          class="dialogue-panel"
-          aria-label="Intergenerational Mirrorland dialogue"
+          class="dialogue-panel reveal"
+          aria-label="Inherited consequence dialogue"
         >
           <div
             class="dialogue-line"
-            data-generation="earlier"
+            data-side="past"
           >
             <span>Earlier Generation</span>
 
             <p>
-              “We did what was necessary to keep the passage open.”
+              “We were trying to keep the passage open.”
             </p>
           </div>
 
           <div
             class="dialogue-line"
-            data-generation="later"
+            data-side="present"
           >
             <span>Later Generation</span>
 
             <p>
-              “You preserved the passage. You did not preserve why the
-              restrictions existed.”
+              “You kept it open, but you did not leave us the reason for
+              every restriction.”
             </p>
           </div>
 
           <div
             class="dialogue-line"
-            data-generation="earlier"
+            data-side="past"
           >
             <span>Earlier Generation</span>
 
             <p>
-              “We expected the record to explain it.”
+              “We thought the record would be enough.”
             </p>
           </div>
 
           <div
             class="dialogue-line"
-            data-generation="later"
+            data-side="present"
           >
             <span>Later Generation</span>
 
             <p>
-              “The record contains the decision. It does not contain the
-              fear, the missing evidence, or the alternatives you
-              rejected.”
+              “The record kept the decision. It lost the pressure around
+              the decision.”
             </p>
           </div>
 
           <div
             class="dialogue-line"
-            data-generation="earlier"
+            data-side="past"
           >
             <span>Earlier Generation</span>
 
@@ -2259,7 +2320,7 @@
 
           <div
             class="dialogue-line"
-            data-generation="later"
+            data-side="present"
           >
             <span>Later Generation</span>
 
@@ -2275,98 +2336,96 @@
         class="memory-section"
         aria-labelledby="memory-title"
       >
-        <header class="section-heading">
+        <header class="section-heading reveal">
           <div>
             <div class="eyebrow">
-              What History Must Carry
+              What the Clock Teaches
             </div>
 
             <h2 id="memory-title">
-              A date is not enough.
+              A useful record carries more than events.
             </h2>
           </div>
 
           <p>
-            A useful historical record must preserve not only what
-            happened, but where it happened, who knew what, what choices
-            were available, and what consequences followed.
+            The Clock does not ask you to memorize history. It asks you
+            to stop treating the present as if it arrived without causes.
           </p>
         </header>
 
         <div class="memory-grid">
-          <article class="memory-card">
-            <span>Event</span>
+          <article class="memory-card reveal">
+            <span>Choice</span>
 
             <strong>
-              What happened?
+              What was decided?
             </strong>
 
             <p>
-              The observable occurrence, decision, failure, discovery,
-              conflict, or transition.
+              The visible action, repair, delay, rule, compromise, or
+              refusal.
             </p>
           </article>
 
-          <article class="memory-card">
-            <span>Position</span>
+          <article class="memory-card reveal">
+            <span>Pressure</span>
 
             <strong>
-              Who could know what?
+              Why did it seem necessary?
             </strong>
 
             <p>
-              The knowledge, access, pressure, authority, and perspective
-              available to each participant.
+              The threat, scarcity, fear, evidence, missing evidence, and
+              urgency surrounding the choice.
             </p>
           </article>
 
-          <article class="memory-card">
-            <span>Alternatives</span>
+          <article class="memory-card reveal">
+            <span>Inheritance</span>
 
             <strong>
-              What else could have happened?
+              What did others receive?
             </strong>
 
             <p>
-              The options considered, rejected, concealed, unavailable,
-              or impossible under the conditions of the time.
+              The burden, habit, tool, restriction, assumption, or
+              unfinished repair passed forward.
             </p>
           </article>
 
-          <article class="memory-card">
-            <span>Consequence</span>
+          <article class="memory-card reveal">
+            <span>Gap</span>
 
             <strong>
-              What did the choice become?
+              What became unclear?
             </strong>
 
             <p>
-              The immediate result, delayed burden, institutional habit,
-              cultural memory, and effect on later generations.
+              The missing context future generations must not replace
+              with false certainty.
             </p>
           </article>
         </div>
       </section>
 
       <section
-        class="practical-return"
+        class="practical-return reveal"
         aria-labelledby="practical-title"
       >
         <div class="practical-copy">
           <span class="practical-label">
-            What the Clock Asks of You
+            The Third Threshold
           </span>
 
           <h2 id="practical-title">
-            Leave more than a conclusion.
+            Enter a story already moving.
           </h2>
 
           <p>
-            Preserve the conditions that made the conclusion reasonable.
-            Record what was missing. Name who carried the risk. Keep the
-            failed options visible. The next generation should not have
-            to repeat your crisis merely to understand why you chose the
-            path you did.
+            The Clock does not tell you to worship the past. It tells you
+            not to walk through the next door as if the present is clean.
+            If history is already inside the room, then stepping forward
+            means stepping into consequence.
           </p>
         </div>
 
@@ -2390,9 +2449,9 @@
       <details class="evidence-disclosure">
         <summary>
           <span>
-            <strong>Historical Record Boundary</strong>
+            <strong>Story Reveal Boundary</strong>
             <small>
-              What this chamber establishes—and what remains open
+              What this chamber reveals, and what remains withheld
             </small>
           </span>
 
@@ -2401,41 +2460,40 @@
 
         <div class="evidence-body">
           <p>
-            This chamber establishes a bounded five-era orientation for
-            the Mirrorland mission and the governing importance of the
-            300-Year Clock. It does not claim to provide the complete
-            history of every world, planet, settlement, institution, or
-            character.
+            This chamber reveals that the present is inherited
+            consequence, not an isolated crisis. The 300-Year Clock shows
+            that no single generation holds the whole mission and that
+            missing context can become part of the damage.
           </p>
 
           <div class="evidence-grid">
             <article>
-              <span>Established Here</span>
+              <span>Revealed Here</span>
 
               <p>
-                Contact, expansion, fracture, reconstruction, and the
-                unresolved present form the minimum historical sequence
-                required for mission orientation.
+                The player learns that history is not background. It is
+                already inside the next threshold through choice,
+                pressure, inheritance, and missing context.
               </p>
             </article>
 
             <article>
-              <span>Not Established Here</span>
+              <span>Withheld Here</span>
 
               <p>
-                Exact dates for every event, a complete population
-                history, uncontested interpretation, or final outcomes
-                for the 300-year interval.
+                The full team structure, conjugation, embodiment,
+                Hearth, H-Earth, ZIONTS, full Audralia systems, and
+                final Earth stakes remain closed.
               </p>
             </article>
 
             <article>
-              <span>Continuity Requirement</span>
+              <span>Next Pressure</span>
 
               <p>
-                Later historical records must preserve chronology,
-                location, participant knowledge, evidence boundaries,
-                contradiction, and downstream consequence.
+                If the present is inherited consequence, then stepping
+                through the door means entering a story already in
+                motion.
               </p>
             </article>
           </div>
@@ -2450,7 +2508,7 @@
         </strong>
 
         <span>
-          History is what the next generation receives before it can choose.
+          History is already inside the door you are about to open.
         </span>
       </div>
 
@@ -2473,20 +2531,158 @@
       </nav>
     </footer>
   </div>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const CONTRACT =
+        "SHOWROOM_SATELLITE_THE_STORY_SO_FAR_HTML_TNT_v2_300_YEAR_CLOCK_INHERITED_CONSEQUENCE";
+
+      const root =
+        document.documentElement;
+
+      root.classList.add("js");
+
+      const reducedMotionQuery =
+        window.matchMedia &&
+        window.matchMedia("(prefers-reduced-motion: reduce)");
+
+      const reducedMotion =
+        Boolean(
+          reducedMotionQuery &&
+          reducedMotionQuery.matches
+        );
+
+      function markVisible(elements) {
+        for (const element of elements) {
+          element.classList.add("is-visible");
+        }
+      }
+
+      function initializeReveals() {
+        const revealElements =
+          Array.from(
+            document.querySelectorAll(".reveal")
+          );
+
+        if (!revealElements.length) {
+          return;
+        }
+
+        if (
+          reducedMotion ||
+          typeof IntersectionObserver !== "function"
+        ) {
+          markVisible(revealElements);
+          return;
+        }
+
+        const observer =
+          new IntersectionObserver(
+            entries => {
+              for (const entry of entries) {
+                if (!entry.isIntersecting) {
+                  continue;
+                }
+
+                entry.target.classList.add("is-visible");
+                observer.unobserve(entry.target);
+              }
+            },
+            {
+              root: null,
+              threshold: 0.14,
+              rootMargin: "0px 0px -6% 0px"
+            }
+          );
+
+        for (const element of revealElements) {
+          observer.observe(element);
+        }
+      }
+
+      function initializeClockStage() {
+        const clockStage =
+          document.querySelector(".clock-stage");
+
+        if (!clockStage || reducedMotion) {
+          return;
+        }
+
+        window.setTimeout(
+          () => {
+            clockStage.classList.add("is-awake");
+          },
+          240
+        );
+      }
+
+      function publishReceipt() {
+        const payload = {
+          contract: CONTRACT,
+          route: "/showroom/story/timeline/",
+          routeId: "north-3",
+          page: "The Story So Far",
+          localEnhancementOnly: true,
+          globalRuntimeOwned: false,
+          navigationOwned: false,
+          systematicReveal: "present-is-inherited-consequence",
+          previousRoute: "/showroom/story/mission/",
+          nextRoute: "/showroom/story/invitation/",
+          clockSpanYears: 300,
+          historyMode: "era-generation-event-consequence",
+          reducedMotion: reducedMotion,
+          timestamp: new Date().toISOString()
+        };
+
+        window.dispatchEvent(
+          new CustomEvent(
+            "SHOWROOM_SATELLITE_PAGE_READY",
+            {
+              detail: Object.freeze(payload)
+            }
+          )
+        );
+      }
+
+      if (document.readyState === "loading") {
+        document.addEventListener(
+          "DOMContentLoaded",
+          () => {
+            initializeReveals();
+            initializeClockStage();
+            publishReceipt();
+          },
+          {
+            once: true
+          }
+        );
+      } else {
+        initializeReveals();
+        initializeClockStage();
+        publishReceipt();
+      }
+    })();
+  </script>
 </body>
 </html>
 
 <!--
-SHOWROOM_SATELLITE_THE_STORY_SO_FAR_HTML_RECEIPT_v1
+SHOWROOM_SATELLITE_THE_STORY_SO_FAR_HTML_RECEIPT_v2_300_YEAR_CLOCK_INHERITED_CONSEQUENCE
 
 TARGET:
 /showroom/story/timeline/index.html
 
 STATUS:
-COMPLETE NEW SELF-CONTAINED HTML FILE
+COMPLETE SELF-CONTAINED HTML REPLACEMENT
 
-EMBEDDED VISUAL SYSTEM:
-SHOWROOM_SATELLITE_PAGE_EMBEDDED_VISUAL_SYSTEM_v1
+SOURCE BASELINE:
+SHOWROOM_SATELLITE_THE_STORY_SO_FAR_HTML_TNT_v1
+supplied by user as current source baseline for north-3.
+
+NEW CONTRACT:
+SHOWROOM_SATELLITE_THE_STORY_SO_FAR_HTML_TNT_v2_300_YEAR_CLOCK_INHERITED_CONSEQUENCE
 
 ROUTE FAMILY:
 Story / North
@@ -2494,55 +2690,108 @@ Story / North
 ROUTE ID:
 north-3
 
+ROUTE TITLE:
+The Story So Far
+
+PARENT:
+/showroom/
+
 PREVIOUS ROUTE:
 /showroom/story/mission/
 
 NEXT ROUTE:
 /showroom/story/invitation/
 
-PARENT:
+RETURN ROUTE:
 /showroom/
 
-PURPOSE:
-- continue directly from Why Mirrorland Exists;
-- introduce the 300-Year Clock as an intergenerational burden;
-- establish the minimum five-era Mirrorland timeline;
-- show how institutional and historical consequence accumulates;
-- dramatize loss of context between generations;
-- define what a useful historical record must preserve;
-- prepare the visitor for active entry through the final North chamber.
+MAIN COMPASS:
+/index.html
 
-PRESENTATION STANDARD:
-- immersive;
-- second-person;
-- chronology-driven;
-- dialogue-driven;
-- pressure-oriented;
-- practical;
-- TED Talk-style progression;
-- evidence structure subordinate to narrative experience.
+CLOCK SPAN:
+300 years
 
-ARCHITECTURAL FEATURES:
-- complete embedded CSS;
-- Showroom-aligned cosmic atmosphere;
-- 300-Year Clock hero object;
-- five-era vertical timeline;
-- intergenerational dialogue;
-- four-part historical memory architecture;
-- practical continuity conclusion;
-- evidence-boundary disclosure;
-- responsive mobile composition;
-- keyboard focus;
-- reduced motion;
-- reduced transparency;
-- forced colors;
-- print handling.
+HISTORY MODE:
+era-generation-event-consequence
 
-NON-CLAIMS:
-- no complete Mirrorland chronology claimed;
-- no external scientific validation;
-- no direct Earth deployment authorization;
-- no runtime dependency;
-- no controller ownership;
-- no JavaScript requirement.
+NARRATIVE AUTHORITY:
+SHOWROOM_MIRRORLAND_AUDRALIA_ROUTE_PAGE_NARRATIVE_FREEZE_PACKET_v1_1
+SHOWROOM_ROUTE_PAGE_RENEWAL_RULES_LOCK_v1
+
+PRIMARY NARRATIVE CORRECTIONS FROM v1:
+- Removed broad five-era historical briefing as the main experience.
+- Rebuilt the page as an immediate Clock-room scene.
+- Preserved infrastructure routes, route identity, 300-year clock metadata, and history-mode metadata.
+- Established that the present is inherited consequence, not an isolated crisis.
+- Connected north-2 repetition/trajectory to north-3 inherited history.
+- Connected north-3 directly to north-4 by making the next door a story already in motion.
+
+PAGE 3 STORY SPINE:
+1. The player leaves the mirror chamber.
+2. The next room contains no ordinary door.
+3. A clock hangs where the passage should be.
+4. The clock has three hands:
+   - what was chosen;
+   - what was inherited;
+   - what was forgotten.
+5. The hands do not agree.
+6. The player sees a postponed repair, normalized inheritance, and lost context.
+7. The player learns that history is not background.
+8. The player is turned toward the next door.
+
+CONTROLLED REVEAL:
+The present is inherited consequence.
+No single generation holds the whole mission.
+Missing context can become part of the damage.
+
+WITHHELD:
+- full team structure;
+- conjugation;
+- embodiment mechanics;
+- Hearth;
+- H-Earth;
+- ZIONTS;
+- full Audralia systems;
+- final Earth stakes.
+
+DOMINANT ANIMATION IDEA:
+The 300-Year Clock breathes and moves through three disagreeing hands:
+chosen, inherited, forgotten.
+
+ANTI-TILED-STAR CORRECTION:
+The page does not use repeating square-cell starfields as the main atmosphere.
+Atmospheric stars are hand-positioned through fixed radial points.
+The dominant animated visual is the Clock.
+
+EMBEDDED SYSTEM:
+- HTML structure
+- embedded CSS
+- embedded page-local JavaScript
+- no external dependencies
+- no shared runtime ownership
+
+PAGE-LOCAL JAVASCRIPT AUTHORITY:
+- local reveal enhancement only
+- local clock-stage awakening only
+- local readiness event only
+- no navigation ownership
+- no controller calls
+- no constellation mutation
+- no Main Compass ownership
+- safe without JavaScript
+
+ACCESSIBILITY / RESILIENCE:
+- skip link
+- semantic sections
+- focus-visible handling
+- reduced-motion support
+- reduced-transparency support
+- forced-colors support
+- print handling
+- readable without JavaScript
+
+NOT CLAIMED:
+- runtime validation
+- browser visual pass
+- deployment pass
 -->

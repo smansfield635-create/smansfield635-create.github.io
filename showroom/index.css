@@ -1,4 +1,4 @@
-/* TARGET FILE: /showroom/index.css
+E/* TARGET FILE: /showroom/index.css
    COMPLETE REPLACEMENT
 
    SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v13_10_CENTER_COMPASS_HIT_SURFACE_RESTORATION
@@ -2504,6 +2504,62 @@ canvas[data-showroom-window-canvas] {
 
 [data-showroom-window-state="open"] canvas[data-showroom-window-canvas],
 canvas[data-showroom-window-canvas][data-showroom-window-canvas-dormant="true"] {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  background: transparent !important;
+}
+/* SECTION 18 ADDITIVE TAIL */
+/* SHOWROOM_DIAMOND_OPEN_WINDOW_FRAMING_CORRECTION_v1
+   Purpose:
+   - Preserve the closed Window foreground.
+   - Preserve the open Window dormant state.
+   - Reduce Diamond overfill when the Window is open.
+   - Keep Diamond interaction available.
+*/
+
+[data-showroom-reveal-scene] {
+  --showroom-diamond-open-scale: 0.78;
+  --showroom-diamond-open-origin-x: 50%;
+  --showroom-diamond-open-origin-y: 50%;
+}
+
+[data-showroom-diamond-layer],
+.showroom-diamond-layer {
+  pointer-events: auto;
+}
+
+[data-showroom-window-layer],
+.showroom-window-layer,
+[data-showroom-window-mount],
+.showroom-window-mount,
+canvas[data-showroom-window-canvas] {
+  pointer-events: none;
+}
+
+[data-showroom-window-control],
+.showroom-window-control {
+  pointer-events: auto;
+}
+
+[data-showroom-reveal-scene][data-showroom-window-state="open"]
+[data-showroom-diamond-stage],
+[data-showroom-reveal-scene][data-showroom-window-state="open"]
+.diamond-stage {
+  transform:
+    scale(var(--showroom-diamond-open-scale));
+  transform-origin:
+    var(--showroom-diamond-open-origin-x)
+    var(--showroom-diamond-open-origin-y);
+}
+
+[data-showroom-reveal-scene][data-showroom-window-state="open"]
+[data-showroom-window-mount],
+[data-showroom-reveal-scene][data-showroom-window-state="open"]
+.showroom-window-mount,
+[data-showroom-reveal-scene][data-showroom-window-state="open"]
+canvas[data-showroom-window-canvas],
+[data-showroom-window-canvas-dormant="true"] {
   opacity: 0 !important;
   visibility: hidden !important;
   pointer-events: none !important;

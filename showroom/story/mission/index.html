@@ -1,6 +1,6 @@
 <!-- TARGET FILE: /showroom/story/mission/index.html -->
-<!-- COMPLETE NEW FILE -->
-<!-- SHOWROOM_SATELLITE_WHY_MIRRORLAND_EXISTS_HTML_TNT_v1 -->
+<!-- COMPLETE REPLACEMENT -->
+<!-- SHOWROOM_SATELLITE_WHY_MIRRORLAND_EXISTS_HTML_TNT_v2_MIRROR_REPEAT_TRAJECTORY -->
 
 <!doctype html>
 
@@ -8,8 +8,8 @@
   lang="en"
   data-route="/showroom/story/mission/"
   data-page="showroom-story-mission"
-  data-version="SHOWROOM-SATELLITE-WHY-MIRRORLAND-EXISTS-1.0.0"
-  data-contract="SHOWROOM_SATELLITE_WHY_MIRRORLAND_EXISTS_HTML_TNT_v1"
+  data-version="SHOWROOM-SATELLITE-WHY-MIRRORLAND-EXISTS-2.0.0"
+  data-contract="SHOWROOM_SATELLITE_WHY_MIRRORLAND_EXISTS_HTML_TNT_v2_MIRROR_REPEAT_TRAJECTORY"
   data-showroom-satellite="true"
   data-showroom-route-family="story"
   data-showroom-route-id="north-2"
@@ -34,18 +34,27 @@
 
   <meta
     name="description"
-    content="Continue the Mirrorland mission. Discover why a reachable future matters, why survival cannot be tested safely in theory alone, and why no idea should return to Earth without evidence, context, and restraint."
+    content="The ticket gave access. Now the mirrors begin to show why Mirrorland exists: repeated choices are building the wrong tomorrow."
   >
 
   <meta
     name="showroom-page-contract"
-    content="SHOWROOM_SATELLITE_WHY_MIRRORLAND_EXISTS_HTML_TNT_v1"
+    content="SHOWROOM_SATELLITE_WHY_MIRRORLAND_EXISTS_HTML_TNT_v2_MIRROR_REPEAT_TRAJECTORY"
   >
 
   <style>
     /* ============================================================
-       SHOWROOM SATELLITE PAGE EMBEDDED VISUAL SYSTEM v1
-       Story / North expression
+       SHOWROOM SATELLITE PAGE EMBEDDED VISUAL SYSTEM v2
+       PAGE: north-2 · Why Mirrorland Exists
+
+       Page-specific standard:
+       - one-file route page;
+       - embedded CSS;
+       - page-local JavaScript only;
+       - no external dependencies;
+       - no shared Showroom runtime ownership;
+       - no repeating tiled starfield as primary atmosphere;
+       - dominant animation object: misaligned mirror field.
        ============================================================ */
 
     :root {
@@ -64,7 +73,7 @@
 
       --satellite-gold: #e0b85b;
       --satellite-gold-bright: #f4d47e;
-      --satellite-gold-deep: #805b1c;
+      --satellite-gold-soft: #ffe7a5;
       --satellite-gold-faint: rgba(224, 184, 91, 0.14);
 
       --satellite-accent: #75e9ff;
@@ -72,13 +81,8 @@
       --satellite-accent-faint: rgba(117, 233, 255, 0.13);
 
       --satellite-secondary: #8fa8ff;
-      --satellite-secondary-soft: #c4d0ff;
-      --satellite-secondary-faint: rgba(143, 168, 255, 0.14);
-
       --satellite-violet: #b798ff;
-      --satellite-danger: #ff91a3;
-      --satellite-success: #8ce4ae;
-      --satellite-warning: #ffd17a;
+      --satellite-rose: #ffb3c3;
 
       --satellite-border: rgba(226, 197, 128, 0.24);
       --satellite-border-strong: rgba(239, 205, 125, 0.5);
@@ -106,7 +110,7 @@
       --satellite-radius-xl: 2rem;
 
       --satellite-page-width: 84rem;
-      --satellite-reading-width: 49rem;
+      --satellite-reading-width: 52rem;
 
       --satellite-space-1: 0.4rem;
       --satellite-space-2: 0.65rem;
@@ -190,34 +194,39 @@
       pointer-events: none;
       content: "";
 
-      opacity: 0.72;
+      opacity: 0.62;
 
-      background-image:
+      background:
         radial-gradient(
-          circle,
-          rgba(255, 255, 255, 0.82) 0 0.05rem,
-          transparent 0.065rem
-        ),
-        radial-gradient(
-          circle,
-          rgba(117, 233, 255, 0.58) 0 0.04rem,
+          circle at 17% 18%,
+          rgba(255, 255, 255, 0.82) 0 0.045rem,
           transparent 0.06rem
         ),
         radial-gradient(
-          circle,
-          rgba(239, 205, 126, 0.5) 0 0.045rem,
+          circle at 79% 16%,
+          rgba(117, 233, 255, 0.72) 0 0.04rem,
+          transparent 0.06rem
+        ),
+        radial-gradient(
+          circle at 91% 68%,
+          rgba(244, 212, 126, 0.7) 0 0.045rem,
           transparent 0.065rem
+        ),
+        radial-gradient(
+          circle at 34% 83%,
+          rgba(255, 255, 255, 0.58) 0 0.036rem,
+          transparent 0.055rem
+        ),
+        radial-gradient(
+          circle at 11% 66%,
+          rgba(117, 233, 255, 0.48) 0 0.032rem,
+          transparent 0.052rem
+        ),
+        radial-gradient(
+          circle at 58% 31%,
+          rgba(244, 212, 126, 0.42) 0 0.032rem,
+          transparent 0.052rem
         );
-
-      background-size:
-        6.2rem 6.2rem,
-        9.4rem 9.4rem,
-        13.6rem 13.6rem;
-
-      background-position:
-        0 0,
-        2.2rem 3.4rem,
-        5.7rem 1.6rem;
     }
 
     body::after {
@@ -358,10 +367,9 @@
 
     .eyebrow,
     .route-kicker,
-    .chapter-index,
-    .signal-label,
-    .practical-label,
-    .evidence-label {
+    .scene-index,
+    .mirror-label,
+    .practical-label {
       color: var(--satellite-gold-bright);
 
       font-size: 0.69rem;
@@ -548,24 +556,20 @@
         inset 0 0 0 0.22rem rgba(255, 255, 255, 0.025);
     }
 
-    .brand-mark::before {
+    .brand-mark::before,
+    .brand-mark::after {
       position: absolute;
-      inset: 20%;
+      inset: 24%;
 
       content: "";
 
       border: 1px solid currentColor;
-      border-radius: 50%;
+      transform: rotate(45deg);
     }
 
     .brand-mark::after {
-      position: absolute;
-      inset: 35%;
-
-      content: "";
-
-      border: 1px solid var(--satellite-accent);
-      transform: rotate(45deg);
+      inset: 34%;
+      opacity: 0.55;
     }
 
     .brand-copy {
@@ -643,13 +647,13 @@
     }
 
     /* ============================================================
-       HERO
+       HERO / MIRROR FIELD
        ============================================================ */
 
     .route-hero {
       position: relative;
 
-      min-height: min(79vh, 49rem);
+      min-height: min(82vh, 52rem);
       overflow: hidden;
 
       border: 1px solid rgba(224, 184, 91, 0.23);
@@ -657,19 +661,24 @@
 
       background:
         radial-gradient(
-          circle at 18% 18%,
+          circle at 16% 18%,
           rgba(117, 233, 255, 0.14),
           transparent 24rem
         ),
         radial-gradient(
-          circle at 82% 72%,
-          rgba(143, 168, 255, 0.15),
-          transparent 29rem
+          circle at 83% 70%,
+          rgba(136, 170, 255, 0.14),
+          transparent 28rem
+        ),
+        radial-gradient(
+          circle at 58% 50%,
+          rgba(244, 212, 126, 0.08),
+          transparent 20rem
         ),
         linear-gradient(
           145deg,
-          rgba(16, 25, 46, 0.89),
-          rgba(3, 6, 15, 0.96)
+          rgba(16, 25, 46, 0.9),
+          rgba(3, 6, 15, 0.97)
         );
 
       box-shadow: var(--satellite-shadow-deep);
@@ -686,23 +695,23 @@
       background:
         linear-gradient(
           115deg,
-          transparent 0 44%,
-          rgba(117, 233, 255, 0.035) 45%,
-          transparent 46% 58%,
-          rgba(224, 184, 91, 0.035) 59%,
-          transparent 60%
+          transparent 0 42%,
+          rgba(117, 233, 255, 0.035) 42.4%,
+          transparent 43% 58%,
+          rgba(224, 184, 91, 0.035) 58.5%,
+          transparent 59%
         ),
         radial-gradient(
-          circle at 72% 42%,
-          transparent 0 8rem,
-          rgba(117, 233, 255, 0.055) 8.1rem 8.2rem,
-          transparent 8.3rem
+          circle at 70% 42%,
+          transparent 0 9rem,
+          rgba(117, 233, 255, 0.055) 9.1rem 9.2rem,
+          transparent 9.3rem
         ),
         radial-gradient(
-          circle at 72% 42%,
-          transparent 0 13rem,
-          rgba(224, 184, 91, 0.045) 13.1rem 13.2rem,
-          transparent 13.3rem
+          circle at 70% 42%,
+          transparent 0 14rem,
+          rgba(224, 184, 91, 0.045) 14.1rem 14.2rem,
+          transparent 14.3rem
         );
     }
 
@@ -712,8 +721,8 @@
       min-height: inherit;
 
       grid-template-columns:
-        minmax(0, 1.2fr)
-        minmax(17rem, 0.8fr);
+        minmax(0, 1.08fr)
+        minmax(18rem, 0.92fr);
 
       align-items: center;
       gap: clamp(2rem, 6vw, 6rem);
@@ -761,7 +770,7 @@
     }
 
     .hero-lead {
-      max-width: 44rem;
+      max-width: 45rem;
       margin-bottom: 1.5rem;
 
       color: var(--satellite-muted-strong);
@@ -774,14 +783,15 @@
       gap: 0.7rem;
     }
 
-    .hero-signal {
+    .mirror-stage {
       position: relative;
 
       display: grid;
       align-content: end;
       gap: 1rem;
 
-      min-height: 24rem;
+      min-height: 28rem;
+      overflow: hidden;
       padding: 1.4rem;
 
       border: 1px solid var(--satellite-border-cool);
@@ -789,9 +799,14 @@
 
       background:
         radial-gradient(
-          circle at 50% 32%,
-          rgba(117, 233, 255, 0.17),
-          transparent 9rem
+          circle at 50% 35%,
+          rgba(117, 233, 255, 0.18),
+          transparent 10rem
+        ),
+        radial-gradient(
+          circle at 50% 30%,
+          rgba(244, 212, 126, 0.08),
+          transparent 13rem
         ),
         linear-gradient(
           180deg,
@@ -804,83 +819,253 @@
         inset 0.24rem 0 0 rgba(117, 233, 255, 0.28);
     }
 
-    .hero-signal::before {
+    .mirror-stage__glow {
       position: absolute;
       top: 12%;
       left: 50%;
 
-      width: 10rem;
+      width: 14rem;
       aspect-ratio: 1;
 
-      content: "";
+      pointer-events: none;
 
-      border: 1px solid rgba(117, 233, 255, 0.34);
+      border: 1px solid rgba(117, 233, 255, 0.2);
       border-radius: 50%;
 
       background:
-        conic-gradient(
-          from 0deg,
-          rgba(117, 233, 255, 0.05),
-          rgba(224, 184, 91, 0.25),
-          rgba(143, 168, 255, 0.08),
-          rgba(117, 233, 255, 0.05)
+        radial-gradient(
+          circle,
+          rgba(180, 245, 255, 0.18),
+          transparent 62%
         );
 
       box-shadow:
-        0 0 3rem rgba(117, 233, 255, 0.15),
-        inset 0 0 2rem rgba(117, 233, 255, 0.08);
+        0 0 3.4rem rgba(117, 233, 255, 0.16),
+        inset 0 0 2rem rgba(117, 233, 255, 0.06);
 
       transform: translateX(-50%);
+      animation: mirrorHalo 8s ease-in-out infinite;
     }
 
-    .hero-signal::after {
+    .mirror-field {
       position: absolute;
-      top: calc(12% + 2.1rem);
-      left: 50%;
+      inset: 1rem 1rem 6.6rem;
 
-      width: 5.8rem;
-      aspect-ratio: 1;
+      pointer-events: none;
+      perspective: 34rem;
+    }
 
-      content: "";
+    .mirror-pane {
+      position: absolute;
 
-      clip-path:
-        polygon(
-          50% 0,
-          61% 36%,
-          100% 50%,
-          61% 64%,
-          50% 100%,
-          39% 64%,
-          0 50%,
-          39% 36%
-        );
+      display: grid;
+      place-items: center;
+
+      width: 5.7rem;
+      height: 8rem;
+
+      border: 1px solid rgba(180, 245, 255, 0.35);
+      border-radius: 0.65rem;
 
       background:
         linear-gradient(
           135deg,
-          var(--satellite-gold-bright),
-          var(--satellite-accent)
-        );
+          rgba(180, 245, 255, 0.22),
+          rgba(255, 255, 255, 0.04) 42%,
+          rgba(224, 184, 91, 0.08)
+        ),
+        rgba(5, 9, 20, 0.72);
 
       box-shadow:
-        0 0 1.7rem rgba(117, 233, 255, 0.3);
+        0 1rem 2rem rgba(0, 0, 0, 0.35),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.05),
+        inset 0 0 1.4rem rgba(117, 233, 255, 0.07);
 
-      transform: translateX(-50%);
+      opacity: 0.86;
+      transform-style: preserve-3d;
+      animation:
+        paneDrift 7s ease-in-out infinite;
     }
 
-    .signal-copy {
+    .mirror-pane::before {
+      position: absolute;
+      inset: 0.55rem;
+
+      content: "";
+
+      border-radius: 0.38rem;
+
+      background:
+        linear-gradient(
+          105deg,
+          transparent 0 28%,
+          rgba(255, 255, 255, 0.24) 32%,
+          transparent 38% 100%
+        );
+
+      opacity: 0.55;
+    }
+
+    .mirror-pane::after {
+      position: absolute;
+      right: 0.55rem;
+      bottom: 0.55rem;
+      left: 0.55rem;
+
+      height: 0.2rem;
+
+      content: "";
+
+      border-radius: 999px;
+      background: rgba(244, 212, 126, 0.65);
+      box-shadow: 0 0 0.9rem rgba(244, 212, 126, 0.34);
+    }
+
+    .mirror-pane span {
+      position: relative;
+      z-index: 1;
+
+      padding: 0 0.35rem;
+
+      color: var(--satellite-cream);
+
+      font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+      font-size: 0.78rem;
+      line-height: 1.08;
+      text-align: center;
+    }
+
+    .mirror-pane:nth-child(1) {
+      top: 11%;
+      left: 9%;
+      transform:
+        rotateZ(-7deg)
+        rotateY(15deg);
+      animation-delay: -0.7s;
+    }
+
+    .mirror-pane:nth-child(2) {
+      top: 4%;
+      left: 38%;
+      width: 6.2rem;
+      height: 8.8rem;
+      transform:
+        rotateZ(3deg)
+        rotateY(-12deg);
+      animation-delay: -2.4s;
+    }
+
+    .mirror-pane:nth-child(3) {
+      top: 16%;
+      right: 8%;
+      transform:
+        rotateZ(8deg)
+        rotateY(-18deg);
+      animation-delay: -4s;
+    }
+
+    .mirror-pane:nth-child(4) {
+      top: 47%;
+      left: 17%;
+      width: 5.2rem;
+      height: 7.4rem;
+      transform:
+        rotateZ(5deg)
+        rotateY(18deg);
+      animation-delay: -3.1s;
+    }
+
+    .mirror-pane:nth-child(5) {
+      top: 42%;
+      left: 48%;
+      width: 6.6rem;
+      height: 9.2rem;
+      border-color: rgba(244, 212, 126, 0.42);
+      transform:
+        translateX(-50%)
+        rotateZ(-3deg)
+        rotateY(0deg);
+      animation-delay: -1.4s;
+    }
+
+    .mirror-pane:nth-child(6) {
+      top: 51%;
+      right: 14%;
+      width: 5.1rem;
+      height: 7.1rem;
+      transform:
+        rotateZ(-9deg)
+        rotateY(-16deg);
+      animation-delay: -5.2s;
+    }
+
+    .mirror-trajectory {
+      position: absolute;
+      right: 2.2rem;
+      bottom: 6.2rem;
+      left: 2.2rem;
+
+      height: 1px;
+
+      pointer-events: none;
+
+      background:
+        linear-gradient(
+          90deg,
+          transparent,
+          rgba(117, 233, 255, 0.18),
+          rgba(244, 212, 126, 0.68),
+          rgba(117, 233, 255, 0.18),
+          transparent
+        );
+
+      box-shadow: 0 0 1.3rem rgba(244, 212, 126, 0.25);
+    }
+
+    .mirror-trajectory::before,
+    .mirror-trajectory::after {
+      position: absolute;
+      top: 50%;
+
+      width: 0.55rem;
+      aspect-ratio: 1;
+
+      content: "";
+
+      border-radius: 50%;
+      background: var(--satellite-gold-bright);
+      box-shadow: 0 0 1rem rgba(244, 212, 126, 0.5);
+
+      transform: translateY(-50%);
+      animation: trajectoryPulse 3.5s ease-in-out infinite;
+    }
+
+    .mirror-trajectory::before {
+      left: 18%;
+    }
+
+    .mirror-trajectory::after {
+      right: 17%;
+      animation-delay: -1.6s;
+    }
+
+    .mirror-copy {
       position: relative;
       z-index: 2;
     }
 
-    .signal-label {
+    .mirror-label {
       display: block;
       margin-bottom: 0.45rem;
 
       color: var(--satellite-accent);
     }
 
-    .signal-copy strong {
+    .mirror-copy strong {
       display: block;
       margin-bottom: 0.65rem;
 
@@ -896,7 +1081,7 @@
       line-height: 1.12;
     }
 
-    .signal-copy p {
+    .mirror-copy p {
       margin-bottom: 0;
 
       color: var(--satellite-muted);
@@ -904,7 +1089,7 @@
     }
 
     /* ============================================================
-       SECTION HEADINGS
+       SECTION HEADING
        ============================================================ */
 
     .section-heading {
@@ -927,15 +1112,15 @@
     }
 
     /* ============================================================
-       PREMISE STAGE
+       SCENE STAGE
        ============================================================ */
 
-    .premise-stage {
+    .story-stage {
       display: grid;
       gap: 1rem;
     }
 
-    .premise-grid {
+    .scene-grid {
       display: grid;
 
       grid-template-columns:
@@ -944,7 +1129,7 @@
       gap: 0.9rem;
     }
 
-    .premise-card {
+    .scene-card {
       position: relative;
 
       min-width: 0;
@@ -964,7 +1149,7 @@
         box-shadow var(--satellite-transition);
     }
 
-    .premise-card:hover {
+    .scene-card:hover {
       border-color: rgba(224, 184, 91, 0.34);
 
       box-shadow:
@@ -974,7 +1159,7 @@
       transform: translateY(-3px);
     }
 
-    .premise-card::before {
+    .scene-card::before {
       position: absolute;
       top: 0;
       right: 0;
@@ -993,25 +1178,27 @@
         );
     }
 
-    .chapter-index {
+    .scene-index {
       display: block;
       margin-bottom: 0.8rem;
     }
 
-    .premise-card h3 {
+    .scene-card h3 {
       margin-bottom: 0.65rem;
 
       font-size: clamp(1.45rem, 2.4vw, 2.1rem);
     }
 
-    .premise-card p {
+    .scene-card p {
       margin-bottom: 0;
 
       color: var(--satellite-muted-strong);
     }
 
-    .premise-card blockquote {
-      margin: 1rem 0 0;
+    .scene-card blockquote {
+      margin:
+        1rem 0
+        0;
       padding: 0.85rem 0.95rem;
 
       border-left: 0.2rem solid var(--satellite-accent);
@@ -1029,21 +1216,21 @@
     }
 
     /* ============================================================
-       MISSION DIALOGUE
+       REFLECTION CHAMBER
        ============================================================ */
 
-    .dialogue-stage {
+    .reflection-stage {
       display: grid;
 
       grid-template-columns:
-        minmax(0, 0.82fr)
-        minmax(0, 1.18fr);
+        minmax(0, 0.86fr)
+        minmax(0, 1.14fr);
 
       gap: 1rem;
     }
 
-    .dialogue-intro,
-    .dialogue-panel {
+    .reflection-intro,
+    .reflection-panel {
       min-width: 0;
       padding: clamp(1.2rem, 3vw, 2rem);
 
@@ -1054,24 +1241,24 @@
       box-shadow: var(--satellite-shadow);
     }
 
-    .dialogue-intro {
+    .reflection-intro {
       display: grid;
       align-content: center;
       gap: 0.9rem;
     }
 
-    .dialogue-intro p {
+    .reflection-intro p {
       margin-bottom: 0;
 
       color: var(--satellite-muted-strong);
     }
 
-    .dialogue-panel {
+    .reflection-panel {
       display: grid;
-      gap: 0.8rem;
+      gap: 0.85rem;
     }
 
-    .dialogue-line {
+    .reflection-line {
       display: grid;
       gap: 0.2rem;
 
@@ -1084,21 +1271,21 @@
       background: rgba(255, 255, 255, 0.025);
     }
 
-    .dialogue-line[data-speaker="visitor"] {
+    .reflection-line[data-side="choice"] {
       justify-self: start;
 
       border-color: rgba(117, 233, 255, 0.19);
       box-shadow: inset 0.2rem 0 0 rgba(117, 233, 255, 0.3);
     }
 
-    .dialogue-line[data-speaker="mission"] {
+    .reflection-line[data-side="future"] {
       justify-self: end;
 
       border-color: rgba(224, 184, 91, 0.2);
       box-shadow: inset -0.2rem 0 0 rgba(224, 184, 91, 0.3);
     }
 
-    .dialogue-line span {
+    .reflection-line span {
       color: var(--satellite-gold-bright);
 
       font-size: 0.61rem;
@@ -1107,17 +1294,17 @@
       text-transform: uppercase;
     }
 
-    .dialogue-line p {
+    .reflection-line p {
       margin-bottom: 0;
 
       color: var(--satellite-cream-soft);
     }
 
     /* ============================================================
-       MISSION ARCHITECTURE
+       REPEATING CHOICES GRID
        ============================================================ */
 
-    .mission-architecture {
+    .contents-section {
       display: grid;
       gap: 1rem;
 
@@ -1136,21 +1323,17 @@
       box-shadow: var(--satellite-shadow-deep);
     }
 
-    .mission-chain {
+    .contents-grid {
       display: grid;
 
       grid-template-columns:
-        repeat(5, minmax(0, 1fr));
+        repeat(4, minmax(0, 1fr));
 
-      gap: 0.65rem;
+      gap: 0.75rem;
     }
 
-    .mission-step {
-      position: relative;
-
+    .content-card {
       min-width: 0;
-      min-height: 9rem;
-
       padding: 1rem;
 
       border: 1px solid rgba(117, 233, 255, 0.13);
@@ -1164,26 +1347,7 @@
         );
     }
 
-    .mission-step:not(:last-child)::after {
-      position: absolute;
-      z-index: 2;
-      top: 50%;
-      right: -0.55rem;
-
-      width: 0.45rem;
-      height: 0.45rem;
-
-      content: "";
-
-      border-top: 1px solid var(--satellite-gold-bright);
-      border-right: 1px solid var(--satellite-gold-bright);
-
-      transform:
-        translateY(-50%)
-        rotate(45deg);
-    }
-
-    .mission-step span {
+    .content-card span {
       display: block;
       margin-bottom: 0.55rem;
 
@@ -1195,7 +1359,7 @@
       text-transform: uppercase;
     }
 
-    .mission-step strong {
+    .content-card strong {
       display: block;
       margin-bottom: 0.45rem;
 
@@ -1206,86 +1370,16 @@
         "Times New Roman",
         serif;
 
-      font-size: 1.18rem;
+      font-size: 1.2rem;
       font-weight: 600;
       line-height: 1.16;
     }
 
-    .mission-step p {
+    .content-card p {
       margin-bottom: 0;
 
       color: var(--satellite-muted);
-      font-size: 0.78rem;
-    }
-
-    /* ============================================================
-       PAIN POINTS
-       ============================================================ */
-
-    .pressure-section {
-      display: grid;
-      gap: 1rem;
-    }
-
-    .pressure-grid {
-      display: grid;
-
-      grid-template-columns:
-        repeat(2, minmax(0, 1fr));
-
-      gap: 0.8rem;
-    }
-
-    .pressure-card {
-      min-width: 0;
-      padding: 1.1rem;
-
-      border: 1px solid rgba(224, 184, 91, 0.17);
-      border-radius: var(--satellite-radius-md);
-
-      background:
-        radial-gradient(
-          circle at 100% 0,
-          rgba(224, 184, 91, 0.08),
-          transparent 13rem
-        ),
-        var(--satellite-glass);
-
-      box-shadow: var(--satellite-shadow);
-    }
-
-    .pressure-card span {
-      display: block;
-      margin-bottom: 0.55rem;
-
-      color: var(--satellite-gold-bright);
-
-      font-size: 0.62rem;
-      font-weight: 850;
-      letter-spacing: 0.11em;
-      text-transform: uppercase;
-    }
-
-    .pressure-card strong {
-      display: block;
-      margin-bottom: 0.45rem;
-
-      color: var(--satellite-cream);
-
-      font-family:
-        Georgia,
-        "Times New Roman",
-        serif;
-
-      font-size: 1.35rem;
-      font-weight: 600;
-      line-height: 1.16;
-    }
-
-    .pressure-card p {
-      margin-bottom: 0;
-
-      color: var(--satellite-muted-strong);
+      font-size: 0.8rem;
     }
 
     /* ============================================================
@@ -1348,7 +1442,7 @@
     }
 
     /* ============================================================
-       EVIDENCE DISCLOSURE
+       REVEAL DISCLOSURE
        ============================================================ */
 
     .evidence-disclosure {
@@ -1450,7 +1544,7 @@
       border-top: 1px solid var(--satellite-rule);
     }
 
-    .evidence-body > p {
+    .evidence-body p {
       max-width: var(--satellite-reading-width);
       margin-bottom: 0;
 
@@ -1489,8 +1583,6 @@
     }
 
     .evidence-grid p {
-      margin-bottom: 0;
-
       color: var(--satellite-muted);
       font-size: 0.76rem;
     }
@@ -1560,17 +1652,224 @@
     }
 
     /* ============================================================
+       ANIMATION
+       ============================================================ */
+
+    @keyframes mirrorHalo {
+      0%,
+      100% {
+        opacity: 0.48;
+        transform:
+          translateX(-50%)
+          scale(0.94);
+      }
+
+      50% {
+        opacity: 0.84;
+        transform:
+          translateX(-50%)
+          scale(1.04);
+      }
+    }
+
+    @keyframes paneDrift {
+      0%,
+      100% {
+        filter: brightness(0.92);
+      }
+
+      50% {
+        filter: brightness(1.16);
+      }
+    }
+
+    @keyframes trajectoryPulse {
+      0%,
+      100% {
+        opacity: 0.42;
+        transform:
+          translateY(-50%)
+          scale(0.8);
+      }
+
+      50% {
+        opacity: 1;
+        transform:
+          translateY(-50%)
+          scale(1.08);
+      }
+    }
+
+    .js .reveal {
+      opacity: 0;
+      transform: translateY(1rem);
+      transition:
+        opacity 520ms ease,
+        transform 520ms cubic-bezier(0.2, 0.72, 0.25, 1);
+    }
+
+    .js .reveal.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .js .mirror-stage.is-awake .mirror-pane:nth-child(1) {
+      animation:
+        paneDrift 7s ease-in-out infinite,
+        paneShiftOne 9s ease-in-out infinite;
+    }
+
+    .js .mirror-stage.is-awake .mirror-pane:nth-child(2) {
+      animation:
+        paneDrift 7s ease-in-out infinite,
+        paneShiftTwo 10s ease-in-out infinite;
+    }
+
+    .js .mirror-stage.is-awake .mirror-pane:nth-child(3) {
+      animation:
+        paneDrift 7s ease-in-out infinite,
+        paneShiftThree 8s ease-in-out infinite;
+    }
+
+    .js .mirror-stage.is-awake .mirror-pane:nth-child(4) {
+      animation:
+        paneDrift 7s ease-in-out infinite,
+        paneShiftFour 9.5s ease-in-out infinite;
+    }
+
+    .js .mirror-stage.is-awake .mirror-pane:nth-child(5) {
+      animation:
+        paneDrift 7s ease-in-out infinite,
+        paneShiftFive 11s ease-in-out infinite;
+    }
+
+    .js .mirror-stage.is-awake .mirror-pane:nth-child(6) {
+      animation:
+        paneDrift 7s ease-in-out infinite,
+        paneShiftSix 8.8s ease-in-out infinite;
+    }
+
+    @keyframes paneShiftOne {
+      0%,
+      100% {
+        transform:
+          rotateZ(-7deg)
+          rotateY(15deg)
+          translateY(0);
+      }
+
+      50% {
+        transform:
+          rotateZ(-3deg)
+          rotateY(24deg)
+          translateY(-0.35rem);
+      }
+    }
+
+    @keyframes paneShiftTwo {
+      0%,
+      100% {
+        transform:
+          rotateZ(3deg)
+          rotateY(-12deg)
+          translateY(0);
+      }
+
+      50% {
+        transform:
+          rotateZ(-2deg)
+          rotateY(-22deg)
+          translateY(0.25rem);
+      }
+    }
+
+    @keyframes paneShiftThree {
+      0%,
+      100% {
+        transform:
+          rotateZ(8deg)
+          rotateY(-18deg)
+          translateY(0);
+      }
+
+      50% {
+        transform:
+          rotateZ(3deg)
+          rotateY(-8deg)
+          translateY(-0.3rem);
+      }
+    }
+
+    @keyframes paneShiftFour {
+      0%,
+      100% {
+        transform:
+          rotateZ(5deg)
+          rotateY(18deg)
+          translateY(0);
+      }
+
+      50% {
+        transform:
+          rotateZ(9deg)
+          rotateY(10deg)
+          translateY(0.3rem);
+      }
+    }
+
+    @keyframes paneShiftFive {
+      0%,
+      100% {
+        transform:
+          translateX(-50%)
+          rotateZ(-3deg)
+          rotateY(0deg)
+          translateY(0);
+      }
+
+      50% {
+        transform:
+          translateX(-50%)
+          rotateZ(1deg)
+          rotateY(7deg)
+          translateY(-0.25rem);
+      }
+    }
+
+    @keyframes paneShiftSix {
+      0%,
+      100% {
+        transform:
+          rotateZ(-9deg)
+          rotateY(-16deg)
+          translateY(0);
+      }
+
+      50% {
+        transform:
+          rotateZ(-4deg)
+          rotateY(-26deg)
+          translateY(0.28rem);
+      }
+    }
+
+    /* ============================================================
        RESPONSIVE
        ============================================================ */
 
-    @media (max-width: 70rem) {
-      .mission-chain {
+    @media (max-width: 68rem) {
+      .scene-grid {
         grid-template-columns:
-          repeat(3, minmax(0, 1fr));
+          repeat(2, minmax(0, 1fr));
       }
 
-      .mission-step:not(:last-child)::after {
-        display: none;
+      .scene-card:last-child {
+        grid-column: 1 / -1;
+      }
+
+      .contents-grid {
+        grid-template-columns:
+          repeat(2, minmax(0, 1fr));
       }
 
       .evidence-grid {
@@ -1579,20 +1878,9 @@
       }
     }
 
-    @media (max-width: 64rem) {
-      .premise-grid {
-        grid-template-columns:
-          repeat(2, minmax(0, 1fr));
-      }
-
-      .premise-card:last-child {
-        grid-column: 1 / -1;
-      }
-    }
-
     @media (max-width: 54rem) {
       .route-hero__inner,
-      .dialogue-stage,
+      .reflection-stage,
       .practical-return,
       .section-heading {
         grid-template-columns: 1fr;
@@ -1602,18 +1890,12 @@
         align-items: start;
       }
 
-      .hero-signal {
-        min-height: 21rem;
+      .mirror-stage {
+        min-height: 25rem;
       }
 
       .section-heading {
         gap: 0.75rem;
-      }
-
-      .mission-chain,
-      .pressure-grid {
-        grid-template-columns:
-          repeat(2, minmax(0, 1fr));
       }
 
       .practical-actions {
@@ -1718,42 +2000,54 @@
         width: 100%;
       }
 
-      .hero-signal {
-        min-height: 19rem;
+      .mirror-stage {
+        min-height: 22rem;
         padding: 1rem;
       }
 
-      .hero-signal::before {
-        width: 8rem;
+      .mirror-stage__glow {
+        width: 11rem;
       }
 
-      .hero-signal::after {
-        top: calc(12% + 1.7rem);
-        width: 4.7rem;
+      .mirror-field {
+        inset: 0.75rem 0.75rem 6.4rem;
       }
 
-      .premise-grid,
-      .mission-chain,
-      .pressure-grid,
+      .mirror-pane {
+        width: 4.35rem;
+        height: 6.2rem;
+      }
+
+      .mirror-pane:nth-child(2),
+      .mirror-pane:nth-child(5) {
+        width: 4.9rem;
+        height: 6.8rem;
+      }
+
+      .mirror-pane span {
+        font-size: 0.64rem;
+      }
+
+      .scene-grid,
+      .contents-grid,
       .evidence-grid {
         grid-template-columns: 1fr;
       }
 
-      .premise-card:last-child {
+      .scene-card:last-child {
         grid-column: auto;
       }
 
-      .premise-card,
-      .dialogue-intro,
-      .dialogue-panel,
-      .mission-architecture,
-      .pressure-card,
+      .scene-card,
+      .reflection-intro,
+      .reflection-panel,
+      .contents-section,
       .practical-return {
         border-radius: 1rem;
       }
 
-      .dialogue-line {
-        max-width: 95%;
+      .reflection-line {
+        max-width: 96%;
       }
 
       .page-footer {
@@ -1767,7 +2061,7 @@
     }
 
     /* ============================================================
-       ACCESSIBILITY MODES
+       REDUCED MOTION
        ============================================================ */
 
     @media (prefers-reduced-motion: reduce) {
@@ -1786,19 +2080,27 @@
         transition-duration: 0.001ms !important;
       }
 
-      .premise-card:hover,
+      .scene-card:hover,
       .button:hover {
+        transform: none;
+      }
+
+      .js .reveal {
+        opacity: 1;
         transform: none;
       }
     }
 
+    /* ============================================================
+       REDUCED TRANSPARENCY
+       ============================================================ */
+
     @media (prefers-reduced-transparency: reduce) {
       .page-topbar,
-      .premise-card,
-      .dialogue-intro,
-      .dialogue-panel,
-      .mission-architecture,
-      .pressure-card,
+      .scene-card,
+      .reflection-intro,
+      .reflection-panel,
+      .contents-section,
       .practical-return,
       .evidence-disclosure {
         background-color: var(--satellite-ink-1);
@@ -1806,18 +2108,23 @@
       }
     }
 
+    /* ============================================================
+       FORCED COLORS
+       ============================================================ */
+
     @media (forced-colors: active) {
       body,
       .page-topbar,
       .route-hero,
-      .premise-card,
-      .dialogue-intro,
-      .dialogue-panel,
-      .mission-architecture,
-      .mission-step,
-      .pressure-card,
+      .scene-card,
+      .reflection-intro,
+      .reflection-panel,
+      .contents-section,
+      .content-card,
       .practical-return,
-      .evidence-disclosure {
+      .evidence-disclosure,
+      .mirror-stage,
+      .mirror-pane {
         color: CanvasText;
         background: Canvas;
         box-shadow: none;
@@ -1829,13 +2136,17 @@
       }
 
       .brand-mark,
-      .hero-signal::before,
-      .hero-signal::after {
+      .mirror-pane,
+      .mirror-stage__glow {
         border: 2px solid ButtonText;
         background: ButtonFace;
         box-shadow: none;
       }
     }
+
+    /* ============================================================
+       PRINT
+       ============================================================ */
 
     @media print {
       body {
@@ -1848,7 +2159,9 @@
       .page-topbar,
       .hero-actions,
       .practical-actions,
-      .page-footer {
+      .page-footer,
+      .mirror-stage__glow,
+      .mirror-trajectory {
         display: none !important;
       }
 
@@ -1857,14 +2170,15 @@
       }
 
       .route-hero,
-      .premise-card,
-      .dialogue-intro,
-      .dialogue-panel,
-      .mission-architecture,
-      .mission-step,
-      .pressure-card,
+      .scene-card,
+      .reflection-intro,
+      .reflection-panel,
+      .contents-section,
+      .content-card,
       .practical-return,
-      .evidence-disclosure {
+      .evidence-disclosure,
+      .mirror-stage,
+      .mirror-pane {
         color: #111;
         background: #fff;
         border: 1px solid #777;
@@ -1872,13 +2186,25 @@
       }
 
       .route-hero,
-      .hero-signal {
+      .mirror-stage {
         min-height: 0;
       }
 
-      .hero-signal::before,
-      .hero-signal::after {
-        display: none;
+      .mirror-field {
+        position: static;
+        display: grid;
+        grid-template-columns:
+          repeat(3, minmax(0, 1fr));
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+      }
+
+      .mirror-pane {
+        position: static;
+        width: auto;
+        height: auto;
+        min-height: 4rem;
+        transform: none !important;
       }
 
       .evidence-disclosure:not([open])
@@ -1894,7 +2220,7 @@
     class="skip-link"
     href="#main"
   >
-    Skip to the mission
+    Skip to the story
   </a>
 
   <div class="page-shell">
@@ -1926,8 +2252,8 @@
           Previous
         </a>
 
-        <a href="/showroom/">
-          Constellation
+        <a href="/showroom/story/timeline/">
+          Next
         </a>
 
         <a href="/index.html">
@@ -1942,7 +2268,7 @@
         aria-labelledby="page-title"
       >
         <div class="route-hero__inner">
-          <div class="route-hero__copy">
+          <div class="route-hero__copy reveal">
             <div class="route-kicker">
               North Route · Chamber Two
             </div>
@@ -1952,53 +2278,89 @@
             </h1>
 
             <p class="hero-subtitle">
-              Because some failures become visible only after they have
-              already become normal.
+              The ticket gave access. The mirrors explain why access had
+              to begin here.
             </p>
 
             <p class="hero-lead">
-              You crossed the threshold believing the difficult question
-              was whether another future could be reached. It was not.
-              The difficult question is whether humanity can recognize
-              the shape of its own failure early enough to change course.
-              Mirrorland exists because theory can hide consequences that
-              lived worlds cannot.
+              No one gives you a briefing when you enter. The room only
+              brightens. One mirror wakes, then another, then dozens. At
+              first they show ordinary choices. Nothing looks dramatic
+              enough to end a world. That is the point.
             </p>
 
             <div class="hero-actions">
               <a
                 class="button button-gold"
-                href="#mission-premise"
+                href="#first-reflections"
               >
-                Enter the Mission
+                Read the Mirrors
               </a>
 
               <a
                 class="button"
                 href="/showroom/story/welcome/"
               >
-                Return to First Contact
+                Return to the Ticket
               </a>
             </div>
           </div>
 
           <aside
-            class="hero-signal"
-            aria-label="Mirrorland mission signal"
+            class="mirror-stage reveal"
+            aria-label="Misaligned mirror field"
           >
-            <div class="signal-copy">
-              <span class="signal-label">
-                Mission Premise
+            <span
+              class="mirror-stage__glow"
+              aria-hidden="true"
+            ></span>
+
+            <div
+              class="mirror-field"
+              aria-hidden="true"
+            >
+              <span class="mirror-pane">
+                <span>shortcut</span>
+              </span>
+
+              <span class="mirror-pane">
+                <span>delay</span>
+              </span>
+
+              <span class="mirror-pane">
+                <span>warning</span>
+              </span>
+
+              <span class="mirror-pane">
+                <span>copy</span>
+              </span>
+
+              <span class="mirror-pane">
+                <span>future</span>
+              </span>
+
+              <span class="mirror-pane">
+                <span>memory</span>
+              </span>
+            </div>
+
+            <span
+              class="mirror-trajectory"
+              aria-hidden="true"
+            ></span>
+
+            <div class="mirror-copy">
+              <span class="mirror-label">
+                Mirror Sequence
               </span>
 
               <strong>
-                The future is not here to impress you.
+                Small choices begin to end in the same place.
               </strong>
 
               <p>
-                It is here to show you what present-day choices look like
-                after enough time has passed for their consequences to
-                become architecture, culture, memory, and survival.
+                The mirrors do not accuse you. They repeat the pattern
+                until the pattern becomes impossible to dismiss.
               </p>
             </div>
           </aside>
@@ -2006,381 +2368,281 @@
       </section>
 
       <section
-        id="mission-premise"
-        class="premise-stage"
-        aria-labelledby="mission-premise-title"
+        id="first-reflections"
+        class="story-stage"
+        aria-labelledby="first-reflections-title"
       >
-        <header class="section-heading">
+        <header class="section-heading reveal">
           <div>
             <div class="eyebrow">
-              The Reason for the World
+              The First Reflections
             </div>
 
-            <h2 id="mission-premise-title">
-              Mirrorland makes consequence impossible to ignore.
+            <h2 id="first-reflections-title">
+              The room starts with ordinary things.
             </h2>
           </div>
 
           <p>
-            A warning spoken in the present can sound abstract. A world
-            forced to live with that warning becomes evidence.
+            Mirrorland does not begin with disaster. It begins with what
+            people learn to excuse.
           </p>
         </header>
 
-        <div class="premise-grid">
-          <article class="premise-card">
-            <span class="chapter-index">
-              01 · The Present Hides Delay
+        <div class="scene-grid">
+          <article class="scene-card reveal">
+            <span class="scene-index">
+              01 · The Shortcut
             </span>
 
             <h3>
-              Harm rarely arrives all at once.
+              A repair is delayed.
             </h3>
 
             <p>
-              Systems can deteriorate slowly enough that each generation
-              adapts to a slightly worse condition and calls it normal.
-              By the time collapse becomes undeniable, the habits that
-              created it may already be embedded in law, infrastructure,
-              education, and identity.
+              In one mirror, a cracked line under a street is marked for
+              later. The city is busy. The budget is thin. The report is
+              filed correctly, which makes everyone feel less responsible
+              for what happens next.
             </p>
 
             <blockquote>
-              “A crisis can begin long before anyone agrees to call it one.”
+              Nothing breaks today, so the choice is called harmless.
             </blockquote>
           </article>
 
-          <article class="premise-card">
-            <span class="chapter-index">
-              02 · Theory Can Stay Comfortable
+          <article class="scene-card reveal">
+            <span class="scene-index">
+              02 · The Lesson
             </span>
 
             <h3>
-              Diagrams do not feel the cost.
+              A child watches fear become policy.
             </h3>
 
             <p>
-              A model can describe scarcity without hearing a parent
-              choose which child receives medicine. It can describe
-              institutional failure without standing in the hallway
-              where no one will accept responsibility.
+              In another mirror, adults speak as if suspicion is wisdom.
+              A child learns the posture before learning the reason. By
+              the time someone corrects the facts, the habit has already
+              found a home.
             </p>
 
             <blockquote>
-              “A system does not become real until someone has to live inside it.”
+              The future copies more than instructions.
             </blockquote>
           </article>
 
-          <article class="premise-card">
-            <span class="chapter-index">
-              03 · The Future Returns the Question
+          <article class="scene-card reveal">
+            <span class="scene-index">
+              03 · The Warning
             </span>
 
             <h3>
-              Mirrorland asks what your choices become.
+              A clear signal is softened.
             </h3>
 
             <p>
-              The world does not hand you a clean prediction. It gives
-              you consequences shaped by politics, memory, ecology,
-              technology, fear, adaptation, and generations of human
-              decisions.
+              A warning reaches a room where everyone understands it, but
+              no one wants to carry it first. The words are revised until
+              they sound balanced, careful, and late.
             </p>
 
             <blockquote>
-              “You wanted to know where the path leads. Now decide whether you still want to walk it.”
+              The mirror does not show panic. It shows delay with good manners.
             </blockquote>
           </article>
         </div>
       </section>
 
       <section
-        class="dialogue-stage"
-        aria-labelledby="dialogue-title"
+        class="reflection-stage"
+        aria-labelledby="reflection-title"
       >
-        <div class="dialogue-intro">
+        <div class="reflection-intro reveal">
           <div class="eyebrow">
-            The Mission Briefing
+            The Misalignment
           </div>
 
-          <h2 id="dialogue-title">
-            Are you here to save Mirrorland?
+          <h2 id="reflection-title">
+            At first, the mirrors disagree.
           </h2>
 
           <p>
-            That is the wrong first question. The desire to save a world
-            can become dangerous when it arrives before understanding.
-            Mirrorland is not a helpless demonstration waiting for an
-            outsider to fix it.
+            Each reflection looks local. Each scene has an excuse. Each
+            person seems able to defend the choice they made. Then the
+            mirrors begin to drift, and their separate endings start to
+            overlap.
           </p>
         </div>
 
         <div
-          class="dialogue-panel"
-          aria-label="Mirrorland mission dialogue"
+          class="reflection-panel reveal"
+          aria-label="Choice and future reflections"
         >
           <div
-            class="dialogue-line"
-            data-speaker="visitor"
+            class="reflection-line"
+            data-side="choice"
           >
-            <span>Visitor</span>
+            <span>Choice</span>
 
             <p>
-              “If we can see what is going wrong, why not intervene?”
+              “We can wait one more year.”
             </p>
           </div>
 
           <div
-            class="dialogue-line"
-            data-speaker="mission"
+            class="reflection-line"
+            data-side="future"
           >
-            <span>Mission</span>
+            <span>Future</span>
 
             <p>
-              “Because seeing the symptom does not mean you understand
-              the system protecting it.”
+              The next generation inherits the cost with no memory of
+              the first postponement.
             </p>
           </div>
 
           <div
-            class="dialogue-line"
-            data-speaker="visitor"
+            class="reflection-line"
+            data-side="choice"
           >
-            <span>Visitor</span>
+            <span>Choice</span>
 
             <p>
-              “Then what am I supposed to do here?”
+              “No one will notice if the record is simplified.”
             </p>
           </div>
 
           <div
-            class="dialogue-line"
-            data-speaker="mission"
+            class="reflection-line"
+            data-side="future"
           >
-            <span>Mission</span>
+            <span>Future</span>
 
             <p>
-              “Observe. Listen. Test relationships. Trace consequence.
-              Learn what survives contact with reality.”
+              Later, no one can reconstruct what actually happened.
             </p>
           </div>
 
           <div
-            class="dialogue-line"
-            data-speaker="visitor"
+            class="reflection-line"
+            data-side="choice"
           >
-            <span>Visitor</span>
+            <span>Choice</span>
 
             <p>
-              “And then bring the answer home?”
+              “The system held last time.”
             </p>
           </div>
 
           <div
-            class="dialogue-line"
-            data-speaker="mission"
+            class="reflection-line"
+            data-side="future"
           >
-            <span>Mission</span>
+            <span>Future</span>
 
             <p>
-              “Bring home only what remains true after context, evidence,
-              failure, and human cost have been accounted for.”
+              The mirror answers: surviving once was mistaken for being
+              safe.
             </p>
           </div>
         </div>
       </section>
 
       <section
-        class="mission-architecture"
-        aria-labelledby="mission-architecture-title"
+        class="contents-section"
+        aria-labelledby="contents-title"
       >
-        <header class="section-heading">
+        <header class="section-heading reveal">
           <div>
             <div class="eyebrow">
-              The Closed Mission Loop
+              Why the World Was Built
             </div>
 
-            <h2 id="mission-architecture-title">
-              Every path must return with proof.
+            <h2 id="contents-title">
+              Mirrorland exists to make repetition visible.
             </h2>
           </div>
 
           <p>
-            Mirrorland is not a one-way escape into spectacle. It is a
-            disciplined journey from discovery to consequence and back
-            to responsible judgment.
+            The controlled reveal is not that Earth is doomed. It is that
+            Earth keeps rehearsing tomorrow without noticing.
           </p>
         </header>
 
-        <div class="mission-chain">
-          <article class="mission-step">
-            <span>01 · Enter</span>
+        <div class="contents-grid">
+          <article class="content-card reveal">
+            <span>One</span>
 
             <strong>
-              Cross through the Showroom.
+              Repetition becomes trajectory.
             </strong>
 
             <p>
-              Begin with a declared route, a visible purpose, and a
-              recoverable way home.
+              A choice repeated long enough stops feeling like a choice
+              and starts behaving like a path.
             </p>
           </article>
 
-          <article class="mission-step">
-            <span>02 · Encounter</span>
+          <article class="content-card reveal">
+            <span>Two</span>
 
             <strong>
-              Meet people and systems under pressure.
+              Delay becomes inheritance.
             </strong>
 
             <p>
-              Observe how choices change when time, knowledge, power, and
-              survival are unevenly distributed.
+              What one generation avoids, another generation receives as
+              ordinary life.
             </p>
           </article>
 
-          <article class="mission-step">
-            <span>03 · Test</span>
+          <article class="content-card reveal">
+            <span>Three</span>
 
             <strong>
-              Follow consequence beyond intention.
+              Comfort hides consequence.
             </strong>
 
             <p>
-              Ask not only what a system promises, but what it produces
-              when stressed.
+              The mirrors show how people can protect normalcy while the
+              future quietly narrows.
             </p>
           </article>
 
-          <article class="mission-step">
-            <span>04 · Preserve</span>
+          <article class="content-card reveal">
+            <span>Four</span>
 
             <strong>
-              Keep history, evidence, and contradiction.
+              Mirrorland comes before action.
             </strong>
 
             <p>
-              Do not erase failed paths simply because later answers are
-              more comfortable.
-            </p>
-          </article>
-
-          <article class="mission-step">
-            <span>05 · Return</span>
-
-            <strong>
-              Carry back only qualified insight.
-            </strong>
-
-            <p>
-              Separate what was observed from what was inferred, and what
-              worked there from what may work here.
+              You cannot repair what you still describe incorrectly.
+              First, the pattern must be seen.
             </p>
           </article>
         </div>
       </section>
 
       <section
-        class="pressure-section"
-        aria-labelledby="pressure-title"
-      >
-        <header class="section-heading">
-          <div>
-            <div class="eyebrow">
-              The Pain Mirrorland Refuses to Hide
-            </div>
-
-            <h2 id="pressure-title">
-              Civilization fails through ordinary decisions.
-            </h2>
-          </div>
-
-          <p>
-            Grand collapse is usually assembled from smaller moments in
-            which people protect convenience, status, speed, or certainty
-            at the expense of continuity.
-          </p>
-        </header>
-
-        <div class="pressure-grid">
-          <article class="pressure-card">
-            <span>Pain Point One</span>
-
-            <strong>
-              Knowledge dies with the person who carried it.
-            </strong>
-
-            <p>
-              A discovery is not preserved merely because someone once
-              understood it. It must be recorded, translated, challenged,
-              taught, and made usable by people who were not present when
-              it was found.
-            </p>
-          </article>
-
-          <article class="pressure-card">
-            <span>Pain Point Two</span>
-
-            <strong>
-              Institutions protect themselves before the mission.
-            </strong>
-
-            <p>
-              When reputation, authority, or continuity of office becomes
-              more important than correcting error, the institution can
-              remain stable while the civilization beneath it weakens.
-            </p>
-          </article>
-
-          <article class="pressure-card">
-            <span>Pain Point Three</span>
-
-            <strong>
-              People are asked to decide without enough time.
-            </strong>
-
-            <p>
-              Real decisions arrive before evidence is complete. The
-              mission therefore depends on bounded judgment, transparent
-              uncertainty, and the ability to revise without pretending
-              the earlier decision never happened.
-            </p>
-          </article>
-
-          <article class="pressure-card">
-            <span>Pain Point Four</span>
-
-            <strong>
-              Temporary success is mistaken for survival.
-            </strong>
-
-            <p>
-              A system may appear healthy because it delayed the cost,
-              moved the burden elsewhere, or survived one generation.
-              Mirrorland forces the question to continue across the Clock.
-            </p>
-          </article>
-        </div>
-      </section>
-
-      <section
-        class="practical-return"
+        class="practical-return reveal"
         aria-labelledby="practical-title"
       >
         <div class="practical-copy">
           <span class="practical-label">
-            The Mission You Carry Forward
+            The Second Threshold
           </span>
 
           <h2 id="practical-title">
-            Do not bring home a miracle.
+            Ask how long.
           </h2>
 
           <p>
-            Bring home a traceable lesson. Name where it worked, what it
-            required, who paid the cost, what failed beside it, and what
-            remains unknown. An idea becomes responsible only when its
-            limits are preserved with its promise.
+            If repeated choices are building the wrong tomorrow, the next
+            question is not whether the pattern exists. The next question
+            is how long the pattern has been moving. Mirrorland turns you
+            toward the Clock.
           </p>
         </div>
 
@@ -2404,9 +2666,9 @@
       <details class="evidence-disclosure">
         <summary>
           <span>
-            <strong>Mission and Transfer Boundary</strong>
+            <strong>Story Reveal Boundary</strong>
             <small>
-              What Mirrorland may reveal—and what it cannot automatically authorize
+              What this chamber reveals, and what remains withheld
             </small>
           </span>
 
@@ -2415,41 +2677,41 @@
 
         <div class="evidence-body">
           <p>
-            Mirrorland functions as a structured narrative and frontier
-            testing environment within
-            <em>Shadows Never Shatter in Mirrorland</em>. Its stories may
-            expose relationships, consequences, assumptions, and system
-            pressures. Narrative success inside Mirrorland does not by
-            itself establish scientific validity, universal applicability,
-            or permission for direct Earth deployment.
+            This chamber reveals why Mirrorland exists: it makes repeated
+            choices and delayed consequence visible before the story
+            moves into deeper history. It does not yet explain Audralia,
+            Hearth, H-Earth, ZIONTS, conjugation, or the full cost of the
+            ticket.
           </p>
 
           <div class="evidence-grid">
             <article>
-              <span>Mission Purpose</span>
+              <span>Revealed Here</span>
 
               <p>
-                Make delayed consequence visible through people, worlds,
-                institutions, history, and survival pressure.
+                Mirrorland exists because Earth’s repeated choices are
+                building the wrong tomorrow, and the player must learn to
+                see trajectory before attempting action.
               </p>
             </article>
 
             <article>
-              <span>Required Discipline</span>
+              <span>Withheld Here</span>
 
               <p>
-                Preserve location, time, context, evidence, contradiction,
-                knowledge boundaries, and recoverable return.
+                The full danger, the team’s structure, embodiment,
+                frontier systems, Hearth, H-Earth, ZIONTS, and Audralia’s
+                deeper mechanics remain closed.
               </p>
             </article>
 
             <article>
-              <span>Transfer Boundary</span>
+              <span>Next Pressure</span>
 
               <p>
-                Any Earth-facing proposal requires independent testing,
-                contextual qualification, safety review, and authority
-                outside the narrative mission.
+                If repetition has become trajectory, the next chamber
+                must ask how long the pattern has been moving and what
+                the present has inherited.
               </p>
             </article>
           </div>
@@ -2464,7 +2726,7 @@
         </strong>
 
         <span>
-          The future is not an answer. It is a consequence you must learn to read.
+          Earth keeps rehearsing tomorrow without noticing.
         </span>
       </div>
 
@@ -2487,20 +2749,156 @@
       </nav>
     </footer>
   </div>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const CONTRACT =
+        "SHOWROOM_SATELLITE_WHY_MIRRORLAND_EXISTS_HTML_TNT_v2_MIRROR_REPEAT_TRAJECTORY";
+
+      const root =
+        document.documentElement;
+
+      root.classList.add("js");
+
+      const reducedMotionQuery =
+        window.matchMedia &&
+        window.matchMedia("(prefers-reduced-motion: reduce)");
+
+      const reducedMotion =
+        Boolean(
+          reducedMotionQuery &&
+          reducedMotionQuery.matches
+        );
+
+      function markVisible(elements) {
+        for (const element of elements) {
+          element.classList.add("is-visible");
+        }
+      }
+
+      function initializeReveals() {
+        const revealElements =
+          Array.from(
+            document.querySelectorAll(".reveal")
+          );
+
+        if (!revealElements.length) {
+          return;
+        }
+
+        if (
+          reducedMotion ||
+          typeof IntersectionObserver !== "function"
+        ) {
+          markVisible(revealElements);
+          return;
+        }
+
+        const observer =
+          new IntersectionObserver(
+            entries => {
+              for (const entry of entries) {
+                if (!entry.isIntersecting) {
+                  continue;
+                }
+
+                entry.target.classList.add("is-visible");
+                observer.unobserve(entry.target);
+              }
+            },
+            {
+              root: null,
+              threshold: 0.14,
+              rootMargin: "0px 0px -6% 0px"
+            }
+          );
+
+        for (const element of revealElements) {
+          observer.observe(element);
+        }
+      }
+
+      function initializeMirrorStage() {
+        const mirrorStage =
+          document.querySelector(".mirror-stage");
+
+        if (!mirrorStage || reducedMotion) {
+          return;
+        }
+
+        window.setTimeout(
+          () => {
+            mirrorStage.classList.add("is-awake");
+          },
+          240
+        );
+      }
+
+      function publishReceipt() {
+        const payload = {
+          contract: CONTRACT,
+          route: "/showroom/story/mission/",
+          routeId: "north-2",
+          page: "Why Mirrorland Exists",
+          localEnhancementOnly: true,
+          globalRuntimeOwned: false,
+          navigationOwned: false,
+          systematicReveal: "repeated-choice-becomes-trajectory",
+          previousRoute: "/showroom/story/welcome/",
+          nextRoute: "/showroom/story/timeline/",
+          reducedMotion: reducedMotion,
+          timestamp: new Date().toISOString()
+        };
+
+        window.dispatchEvent(
+          new CustomEvent(
+            "SHOWROOM_SATELLITE_PAGE_READY",
+            {
+              detail: Object.freeze(payload)
+            }
+          )
+        );
+      }
+
+      if (document.readyState === "loading") {
+        document.addEventListener(
+          "DOMContentLoaded",
+          () => {
+            initializeReveals();
+            initializeMirrorStage();
+            publishReceipt();
+          },
+          {
+            once: true
+          }
+        );
+      } else {
+        initializeReveals();
+        initializeMirrorStage();
+        publishReceipt();
+      }
+    })();
+  </script>
 </body>
 </html>
 
 <!--
-SHOWROOM_SATELLITE_WHY_MIRRORLAND_EXISTS_HTML_RECEIPT_v1
+SHOWROOM_SATELLITE_WHY_MIRRORLAND_EXISTS_HTML_RECEIPT_v2_MIRROR_REPEAT_TRAJECTORY
 
 TARGET:
 /showroom/story/mission/index.html
 
 STATUS:
-COMPLETE NEW SELF-CONTAINED HTML FILE
+COMPLETE SELF-CONTAINED HTML REPLACEMENT
 
-EMBEDDED VISUAL SYSTEM:
-SHOWROOM_SATELLITE_PAGE_EMBEDDED_VISUAL_SYSTEM_v1
+SOURCE BASELINE:
+SHOWROOM_SATELLITE_WHY_MIRRORLAND_EXISTS_HTML_TNT_v1
+supplied by user as current source baseline for north-2.
+
+NEW CONTRACT:
+SHOWROOM_SATELLITE_WHY_MIRRORLAND_EXISTS_HTML_TNT_v2_MIRROR_REPEAT_TRAJECTORY
 
 ROUTE FAMILY:
 Story / North
@@ -2508,56 +2906,99 @@ Story / North
 ROUTE ID:
 north-2
 
+ROUTE TITLE:
+Why Mirrorland Exists
+
+PARENT:
+/showroom/
+
 PREVIOUS ROUTE:
 /showroom/story/welcome/
 
 NEXT ROUTE:
 /showroom/story/timeline/
 
-PARENT:
+RETURN ROUTE:
 /showroom/
 
-PURPOSE:
-- continue directly from first contact;
-- establish why Mirrorland exists;
-- present Mirrorland as a consequence-revealing frontier;
-- distinguish witnessing from intervention;
-- establish the closed mission loop;
-- expose four practical civilizational pain points;
-- preserve the Earth-transfer qualification boundary.
+MAIN COMPASS:
+/index.html
 
-PRESENTATION STANDARD:
-- immersive;
-- second-person;
-- dialogue-driven;
-- pressure-oriented;
-- practical;
-- TED Talk-style progression;
-- architecture subordinate to experience;
-- evidence boundary retained beneath the narrative.
+NARRATIVE AUTHORITY:
+SHOWROOM_MIRRORLAND_AUDRALIA_ROUTE_PAGE_NARRATIVE_FREEZE_PACKET_v1_1
+SHOWROOM_ROUTE_PAGE_RENEWAL_RULES_LOCK_v1
 
-ARCHITECTURAL FEATURES:
-- complete embedded CSS;
-- Showroom-aligned cosmic atmosphere;
-- mission-threshold hero;
-- symbolic mission object;
-- three-part premise sequence;
-- visitor and mission dialogue;
-- five-stage mission chain;
-- four pain-point panels;
-- practical transfer conclusion;
-- evidence-boundary disclosure;
-- responsive mobile composition;
-- keyboard focus;
-- reduced motion;
-- reduced transparency;
-- forced colors;
-- print handling.
+PRIMARY NARRATIVE CORRECTIONS FROM v1:
+- Removed mission-control / first-contact / transfer-boundary framing.
+- Rebuilt the page as a concrete mirror sequence.
+- Preserved infrastructure routes and page identity.
+- Established that the ticket gave access and Mirrorland now explains why access begins here.
+- Revealed that Earth’s repeated choices are building the wrong tomorrow.
+- Connected the page to north-3 by asking how long the pattern has been moving.
 
-NON-CLAIMS:
-- no external scientific validation;
-- no direct Earth deployment authorization;
-- no runtime dependency;
-- no controller ownership;
-- no JavaScript requirement.
+PAGE 2 STORY SPINE:
+1. The player enters after the ticket.
+2. Mirrorland does not brief the player.
+3. A mirror wakes, then another, then dozens.
+4. The mirrors show ordinary choices.
+5. The choices look harmless at first.
+6. Their endings begin to match.
+7. The player realizes repetition has become trajectory.
+8. The page turns the player toward the 300-Year Clock.
+
+CONTROLLED REVEAL:
+Mirrorland exists because Earth keeps rehearsing tomorrow without noticing.
+Repeated choices become trajectory.
+Delay becomes inheritance.
+Pattern must be seen before action can be trusted.
+
+WITHHELD:
+- full Earth danger;
+- team structure;
+- conjugation;
+- embodiment mechanics;
+- Hearth;
+- H-Earth;
+- ZIONTS;
+- full Audralia systems.
+
+DOMINANT ANIMATION IDEA:
+Misaligned mirror panes drift until separate choices imply one shared trajectory.
+
+ANTI-TILED-STAR CORRECTION:
+The page does not use repeating square-cell starfields as the main atmosphere.
+Atmospheric stars are hand-positioned through fixed radial points.
+The dominant animated visual is the mirror field.
+
+EMBEDDED SYSTEM:
+- HTML structure
+- embedded CSS
+- embedded page-local JavaScript
+- no external dependencies
+- no shared runtime ownership
+
+PAGE-LOCAL JAVASCRIPT AUTHORITY:
+- local reveal enhancement only
+- local mirror-stage awakening only
+- local readiness event only
+- no navigation ownership
+- no controller calls
+- no constellation mutation
+- no Main Compass ownership
+- safe without JavaScript
+
+ACCESSIBILITY / RESILIENCE:
+- skip link
+- semantic sections
+- focus-visible handling
+- reduced-motion support
+- reduced-transparency support
+- forced-colors support
+- print handling
+- readable without JavaScript
+
+NOT CLAIMED:
+- runtime validation
+- browser visual pass
+- deployment pass
 -->

@@ -1,6 +1,6 @@
 <!-- TARGET FILE: /showroom/wonders/diamond/index.html -->
-<!-- COMPLETE NEW FILE -->
-<!-- SHOWROOM_SATELLITE_BEHOLD_THE_DIAMOND_HTML_TNT_v1 -->
+<!-- COMPLETE REPLACEMENT -->
+<!-- SHOWROOM_SATELLITE_BEHOLD_THE_DIAMOND_HTML_TNT_v2_FORM_UNDER_PRESSURE -->
 
 <!doctype html>
 
@@ -8,8 +8,8 @@
   lang="en"
   data-route="/showroom/wonders/diamond/"
   data-page="showroom-wonders-diamond"
-  data-version="SHOWROOM-SATELLITE-BEHOLD-THE-DIAMOND-1.0.0"
-  data-contract="SHOWROOM_SATELLITE_BEHOLD_THE_DIAMOND_HTML_TNT_v1"
+  data-version="SHOWROOM-SATELLITE-BEHOLD-THE-DIAMOND-2.0.0"
+  data-contract="SHOWROOM_SATELLITE_BEHOLD_THE_DIAMOND_HTML_TNT_v2_FORM_UNDER_PRESSURE"
   data-showroom-satellite="true"
   data-showroom-route-family="wonders"
   data-showroom-route-id="south-2"
@@ -37,19 +37,27 @@
 
   <meta
     name="description"
-    content="Stand before the Diamond, Mirrorland’s persistent continuity reference. Discover what must remain recognizable when worlds change, memories fracture, and every route risks losing its way home."
+    content="After the Window grants perception without agency, the Diamond tests whether form can remain coherent under pressure before agency can safely increase."
   >
 
   <meta
     name="showroom-page-contract"
-    content="SHOWROOM_SATELLITE_BEHOLD_THE_DIAMOND_HTML_TNT_v1"
+    content="SHOWROOM_SATELLITE_BEHOLD_THE_DIAMOND_HTML_TNT_v2_FORM_UNDER_PRESSURE"
   >
 
   <style>
     /* ============================================================
-       SHOWROOM SATELLITE PAGE EMBEDDED VISUAL SYSTEM v1
-       Wonders / South expression
-       Diamond chamber
+       SHOWROOM SATELLITE PAGE EMBEDDED VISUAL SYSTEM v2
+       PAGE: south-2 · Behold the Diamond
+
+       Page-specific standard:
+       - one-file route page;
+       - embedded CSS;
+       - page-local JavaScript only;
+       - no external dependencies;
+       - no shared Showroom runtime ownership;
+       - no repeating tiled starfield as primary atmosphere;
+       - dominant animation object: Diamond pressure field.
        ============================================================ */
 
     :root {
@@ -59,7 +67,6 @@
       --ink-1: #050914;
       --ink-2: #091020;
       --ink-3: #101a30;
-      --ink-4: #17233d;
 
       --cream: #f5eddd;
       --cream-soft: #ddd3c1;
@@ -68,7 +75,7 @@
 
       --gold: #e0b85b;
       --gold-bright: #f4d47e;
-      --gold-deep: #805b1c;
+      --gold-soft: #ffe7a5;
       --gold-faint: rgba(224, 184, 91, 0.14);
 
       --cyan: #75e9ff;
@@ -79,12 +86,12 @@
       --violet-soft: #d5c5ff;
       --violet-faint: rgba(183, 152, 255, 0.13);
 
+      --rose: #ff91a3;
+      --rose-faint: rgba(255, 145, 163, 0.11);
+
       --sapphire: #5aa9ff;
       --sapphire-soft: #a9d2ff;
       --sapphire-faint: rgba(90, 169, 255, 0.13);
-
-      --green: #8ce4ae;
-      --rose: #ff91a3;
 
       --border: rgba(226, 197, 128, 0.24);
       --border-strong: rgba(239, 205, 125, 0.5);
@@ -113,13 +120,9 @@
       --radius-xl: 2rem;
 
       --page-width: 84rem;
-      --reading-width: 49rem;
+      --reading-width: 52rem;
 
-      --space-1: 0.4rem;
-      --space-2: 0.65rem;
-      --space-3: 0.95rem;
       --space-4: 1.3rem;
-      --space-5: 1.8rem;
       --space-6: 2.5rem;
       --space-7: 3.5rem;
 
@@ -196,34 +199,39 @@
       pointer-events: none;
       content: "";
 
-      opacity: 0.72;
+      opacity: 0.62;
 
-      background-image:
+      background:
         radial-gradient(
-          circle,
-          rgba(255, 255, 255, 0.82) 0 0.05rem,
-          transparent 0.065rem
-        ),
-        radial-gradient(
-          circle,
-          rgba(117, 233, 255, 0.58) 0 0.04rem,
+          circle at 17% 18%,
+          rgba(255, 255, 255, 0.82) 0 0.045rem,
           transparent 0.06rem
         ),
         radial-gradient(
-          circle,
-          rgba(239, 205, 126, 0.5) 0 0.045rem,
+          circle at 79% 16%,
+          rgba(117, 233, 255, 0.72) 0 0.04rem,
+          transparent 0.06rem
+        ),
+        radial-gradient(
+          circle at 91% 68%,
+          rgba(244, 212, 126, 0.7) 0 0.045rem,
           transparent 0.065rem
+        ),
+        radial-gradient(
+          circle at 34% 83%,
+          rgba(255, 255, 255, 0.58) 0 0.036rem,
+          transparent 0.055rem
+        ),
+        radial-gradient(
+          circle at 11% 66%,
+          rgba(117, 233, 255, 0.48) 0 0.032rem,
+          transparent 0.052rem
+        ),
+        radial-gradient(
+          circle at 58% 31%,
+          rgba(244, 212, 126, 0.42) 0 0.032rem,
+          transparent 0.052rem
         );
-
-      background-size:
-        6.2rem 6.2rem,
-        9.4rem 9.4rem,
-        13.6rem 13.6rem;
-
-      background-position:
-        0 0,
-        2.2rem 3.4rem,
-        5.7rem 1.6rem;
     }
 
     body::after {
@@ -249,6 +257,13 @@
         );
     }
 
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+    }
+
     a,
     button {
       -webkit-tap-highlight-color: transparent;
@@ -262,10 +277,7 @@
     h2,
     h3,
     p,
-    blockquote,
-    dl,
-    dd,
-    ul {
+    blockquote {
       margin-top: 0;
     }
 
@@ -278,15 +290,33 @@
     }
 
     p,
-    li,
-    dd,
     blockquote {
       text-wrap: pretty;
+    }
+
+    [hidden] {
+      display: none !important;
     }
 
     :focus-visible {
       outline: 3px solid var(--cyan);
       outline-offset: 4px;
+    }
+
+    .sr-only {
+      position: absolute !important;
+
+      width: 1px !important;
+      height: 1px !important;
+
+      padding: 0 !important;
+      margin: -1px !important;
+
+      overflow: hidden !important;
+      clip: rect(0, 0, 0, 0) !important;
+
+      white-space: nowrap !important;
+      border: 0 !important;
     }
 
     .skip-link {
@@ -329,7 +359,7 @@
 
     .eyebrow,
     .route-kicker,
-    .chapter-index,
+    .scene-index,
     .diamond-label,
     .practical-label {
       color: var(--gold-bright);
@@ -420,6 +450,10 @@
       transform: translateY(-1px);
     }
 
+    .button:active {
+      transform: translateY(0);
+    }
+
     .button-gold {
       border-color: rgba(255, 222, 142, 0.76);
       color: #171006;
@@ -435,6 +469,14 @@
       box-shadow:
         0 0.95rem 2.3rem rgba(156, 105, 25, 0.24),
         0 0 1.7rem rgba(245, 213, 130, 0.16);
+    }
+
+    .button-gold:hover {
+      border-color: #fff1bf;
+
+      box-shadow:
+        0 1rem 2.7rem rgba(156, 105, 25, 0.3),
+        0 0 2rem rgba(245, 213, 130, 0.22);
     }
 
     /* ============================================================
@@ -590,6 +632,10 @@
       letter-spacing: 0.05em;
       text-decoration: none;
       text-transform: uppercase;
+
+      transition:
+        color var(--transition-fast),
+        background var(--transition-fast);
     }
 
     .topbar-nav a:hover {
@@ -630,13 +676,13 @@
     }
 
     /* ============================================================
-       HERO DIAMOND
+       HERO / DIAMOND PRESSURE FIELD
        ============================================================ */
 
     .route-hero {
       position: relative;
 
-      min-height: min(80vh, 50rem);
+      min-height: min(82vh, 52rem);
       overflow: hidden;
 
       border: 1px solid rgba(224, 184, 91, 0.23);
@@ -644,23 +690,58 @@
 
       background:
         radial-gradient(
-          circle at 17% 18%,
+          circle at 16% 18%,
           rgba(117, 233, 255, 0.14),
           transparent 24rem
         ),
         radial-gradient(
-          circle at 82% 72%,
-          rgba(183, 152, 255, 0.15),
-          transparent 29rem
+          circle at 83% 70%,
+          rgba(136, 170, 255, 0.14),
+          transparent 28rem
+        ),
+        radial-gradient(
+          circle at 58% 50%,
+          rgba(244, 212, 126, 0.08),
+          transparent 20rem
         ),
         linear-gradient(
           145deg,
           rgba(16, 25, 46, 0.9),
-          rgba(3, 6, 15, 0.96)
+          rgba(3, 6, 15, 0.97)
         );
 
       box-shadow: var(--shadow-deep);
       isolation: isolate;
+    }
+
+    .route-hero::before {
+      position: absolute;
+      z-index: -1;
+      inset: 0;
+
+      content: "";
+
+      background:
+        linear-gradient(
+          115deg,
+          transparent 0 42%,
+          rgba(117, 233, 255, 0.035) 42.4%,
+          transparent 43% 58%,
+          rgba(224, 184, 91, 0.035) 58.5%,
+          transparent 59%
+        ),
+        radial-gradient(
+          circle at 70% 42%,
+          transparent 0 9rem,
+          rgba(117, 233, 255, 0.055) 9.1rem 9.2rem,
+          transparent 9.3rem
+        ),
+        radial-gradient(
+          circle at 70% 42%,
+          transparent 0 14rem,
+          rgba(224, 184, 91, 0.045) 14.1rem 14.2rem,
+          transparent 14.3rem
+        );
     }
 
     .route-hero__inner {
@@ -669,8 +750,8 @@
       min-height: inherit;
 
       grid-template-columns:
-        minmax(0, 1.15fr)
-        minmax(18rem, 0.85fr);
+        minmax(0, 1.08fr)
+        minmax(18rem, 0.92fr);
 
       align-items: center;
       gap: clamp(2rem, 6vw, 6rem);
@@ -694,10 +775,11 @@
 
       content: "";
       background: currentColor;
+      box-shadow: 0 0 1rem rgba(224, 184, 91, 0.3);
     }
 
     .hero-subtitle {
-      max-width: 34rem;
+      max-width: 35rem;
       margin-bottom: 0.85rem;
 
       color: var(--cyan-soft);
@@ -712,7 +794,7 @@
     }
 
     .hero-lead {
-      max-width: 44rem;
+      max-width: 45rem;
       margin-bottom: 1.5rem;
 
       color: var(--muted-strong);
@@ -725,8 +807,12 @@
       gap: 0.7rem;
     }
 
-    .diamond-vault {
+    .diamond-stage {
       position: relative;
+
+      display: grid;
+      align-content: end;
+      gap: 1rem;
 
       min-height: 28rem;
       overflow: hidden;
@@ -737,9 +823,14 @@
 
       background:
         radial-gradient(
-          circle at 50% 38%,
-          rgba(90, 169, 255, 0.2),
+          circle at 50% 35%,
+          rgba(117, 233, 255, 0.18),
           transparent 10rem
+        ),
+        radial-gradient(
+          circle at 50% 30%,
+          rgba(244, 212, 126, 0.08),
+          transparent 13rem
         ),
         linear-gradient(
           180deg,
@@ -752,22 +843,22 @@
         inset 0.24rem 0 0 rgba(117, 233, 255, 0.28);
     }
 
-    .diamond-vault::before,
-    .diamond-vault::after {
+    .pressure-field {
       position: absolute;
-      left: 50%;
+      inset: 1rem 1rem 6.5rem;
 
-      content: "";
-      transform: translateX(-50%);
+      pointer-events: none;
     }
 
-    .diamond-vault::before {
-      top: 9%;
+    .pressure-ring {
+      position: absolute;
+      top: 42%;
+      left: 50%;
 
-      width: 14rem;
-      height: 14rem;
+      width: 14.5rem;
+      aspect-ratio: 1;
 
-      border: 1px solid rgba(117, 233, 255, 0.16);
+      border: 1px solid rgba(117, 233, 255, 0.14);
       border-radius: 50%;
 
       background:
@@ -780,13 +871,93 @@
       box-shadow:
         0 0 3rem rgba(90, 169, 255, 0.12),
         inset 0 0 2rem rgba(117, 233, 255, 0.05);
+
+      transform: translate(-50%, -50%);
+      animation: pressureRing 7s ease-in-out infinite;
     }
 
-    .diamond-vault::after {
-      top: 6.7rem;
+    .pressure-ring:nth-child(2) {
+      width: 10.6rem;
+      border-color: rgba(244, 212, 126, 0.18);
+      animation-delay: -2.6s;
+    }
 
-      width: 8.6rem;
-      height: 9.8rem;
+    .pressure-ring:nth-child(3) {
+      width: 18.5rem;
+      border-color: rgba(183, 152, 255, 0.14);
+      animation-delay: -4.4s;
+    }
+
+    .pressure-wave {
+      position: absolute;
+
+      width: 5.2rem;
+      height: 1px;
+
+      background:
+        linear-gradient(
+          90deg,
+          transparent,
+          rgba(244, 212, 126, 0.9)
+        );
+
+      box-shadow:
+        0 0 1rem rgba(244, 212, 126, 0.34);
+    }
+
+    .pressure-wave::after {
+      position: absolute;
+      top: 50%;
+      right: 0;
+
+      width: 0.48rem;
+      height: 0.48rem;
+
+      content: "";
+
+      border-top: 1px solid var(--gold-bright);
+      border-right: 1px solid var(--gold-bright);
+
+      transform:
+        translateY(-50%)
+        rotate(45deg);
+    }
+
+    .pressure-wave--north {
+      top: 11%;
+      left: 50%;
+      transform:
+        translateX(-50%)
+        rotate(90deg);
+    }
+
+    .pressure-wave--east {
+      top: 42%;
+      right: 5%;
+      transform: rotate(180deg);
+    }
+
+    .pressure-wave--south {
+      bottom: 8%;
+      left: 50%;
+      transform:
+        translateX(-50%)
+        rotate(-90deg);
+    }
+
+    .pressure-wave--west {
+      top: 42%;
+      left: 5%;
+    }
+
+    .diamond-core {
+      position: absolute;
+      z-index: 2;
+      top: 42%;
+      left: 50%;
+
+      width: 8.9rem;
+      height: 10.1rem;
 
       clip-path:
         polygon(
@@ -817,28 +988,16 @@
           0 0 1.6rem
           rgba(117, 233, 255, 0.28)
         );
+
+      transform: translate(-50%, -50%);
+      animation: diamondTremor 5.4s ease-in-out infinite;
     }
 
-    .diamond-facets {
+    .diamond-core::before {
       position: absolute;
-      z-index: 2;
-      top: 6.7rem;
-      left: 50%;
+      inset: 0;
 
-      width: 8.6rem;
-      height: 9.8rem;
-
-      pointer-events: none;
-
-      clip-path:
-        polygon(
-          50% 0,
-          82% 20%,
-          100% 47%,
-          50% 100%,
-          0 47%,
-          18% 20%
-        );
+      content: "";
 
       background:
         linear-gradient(
@@ -859,13 +1018,48 @@
           rgba(255, 255, 255, 0.2) 50%,
           transparent 51%
         );
+    }
 
-      transform: translateX(-50%);
+    .facet-split {
+      position: absolute;
+      z-index: 3;
+      top: 42%;
+      left: 50%;
+
+      width: 8.9rem;
+      height: 10.1rem;
+
+      clip-path:
+        polygon(
+          50% 0,
+          82% 20%,
+          100% 47%,
+          50% 100%,
+          0 47%,
+          18% 20%
+        );
+
+      background:
+        linear-gradient(
+          90deg,
+          transparent 0 28%,
+          rgba(255, 255, 255, 0.18) 28.5% 29%,
+          transparent 29.5% 49%,
+          rgba(255, 255, 255, 0.24) 49.5% 50%,
+          transparent 50.5% 71%,
+          rgba(255, 255, 255, 0.14) 71.5% 72%,
+          transparent 72.5%
+        );
+
+      opacity: 0.85;
+
+      transform: translate(-50%, -50%);
+      animation: facetMisalign 5.4s ease-in-out infinite;
     }
 
     .diamond-platform {
       position: absolute;
-      top: 16.5rem;
+      top: calc(42% + 5.2rem);
       left: 50%;
 
       width: 13rem;
@@ -888,11 +1082,8 @@
     }
 
     .diamond-copy {
-      position: absolute;
-      z-index: 3;
-      right: 1.4rem;
-      bottom: 1.4rem;
-      left: 1.4rem;
+      position: relative;
+      z-index: 4;
     }
 
     .diamond-label {
@@ -924,15 +1115,15 @@
     }
 
     /* ============================================================
-       CONTINUITY REVELATIONS
+       STORY CARDS
        ============================================================ */
 
-    .revelation-stage {
+    .story-stage {
       display: grid;
       gap: 1rem;
     }
 
-    .revelation-grid {
+    .scene-grid {
       display: grid;
 
       grid-template-columns:
@@ -941,7 +1132,7 @@
       gap: 0.9rem;
     }
 
-    .revelation-card {
+    .scene-card {
       position: relative;
 
       min-width: 0;
@@ -961,7 +1152,7 @@
         box-shadow var(--transition);
     }
 
-    .revelation-card:hover {
+    .scene-card:hover {
       border-color: rgba(224, 184, 91, 0.34);
 
       box-shadow:
@@ -971,22 +1162,43 @@
       transform: translateY(-3px);
     }
 
-    .chapter-index {
+    .scene-card::before {
+      position: absolute;
+      top: 0;
+      right: 0;
+
+      width: 8rem;
+      height: 8rem;
+
+      pointer-events: none;
+      content: "";
+
+      background:
+        radial-gradient(
+          circle at 100% 0,
+          rgba(117, 233, 255, 0.11),
+          transparent 68%
+        );
+    }
+
+    .scene-index {
       display: block;
       margin-bottom: 0.8rem;
     }
 
-    .revelation-card h3 {
+    .scene-card h3 {
       margin-bottom: 0.65rem;
     }
 
-    .revelation-card p {
+    .scene-card p {
       margin-bottom: 0;
       color: var(--muted-strong);
     }
 
-    .revelation-card blockquote {
-      margin: 1rem 0 0;
+    .scene-card blockquote {
+      margin:
+        1rem 0
+        0;
       padding: 0.85rem 0.95rem;
 
       border-left: 0.2rem solid var(--cyan);
@@ -1011,8 +1223,8 @@
       display: grid;
 
       grid-template-columns:
-        minmax(0, 0.82fr)
-        minmax(0, 1.18fr);
+        minmax(0, 0.86fr)
+        minmax(0, 1.14fr);
 
       gap: 1rem;
     }
@@ -1042,7 +1254,7 @@
 
     .dialogue-panel {
       display: grid;
-      gap: 0.8rem;
+      gap: 0.85rem;
     }
 
     .dialogue-line {
@@ -1058,14 +1270,14 @@
       background: rgba(255, 255, 255, 0.025);
     }
 
-    .dialogue-line[data-speaker="visitor"] {
+    .dialogue-line[data-side="you"] {
       justify-self: start;
 
       border-color: rgba(117, 233, 255, 0.19);
       box-shadow: inset 0.2rem 0 0 rgba(117, 233, 255, 0.3);
     }
 
-    .dialogue-line[data-speaker="diamond"] {
+    .dialogue-line[data-side="diamond"] {
       justify-self: end;
 
       border-color: rgba(224, 184, 91, 0.2);
@@ -1087,62 +1299,62 @@
     }
 
     /* ============================================================
-       INVARIANTS
+       COHERENCE GRID
        ============================================================ */
 
-    .invariant-section {
+    .coherence-section {
       display: grid;
       gap: 1rem;
 
       padding: clamp(1rem, 2.8vw, 2rem);
 
-      border: 1px solid var(--border-cool);
+      border: 1px solid var(--border-violet);
       border-radius: var(--radius-xl);
 
       background:
         radial-gradient(
           circle at 100% 0,
-          rgba(117, 233, 255, 0.09),
+          rgba(183, 152, 255, 0.1),
           transparent 22rem
         ),
         linear-gradient(
           145deg,
-          rgba(12, 24, 42, 0.86),
-          rgba(4, 7, 16, 0.94)
+          rgba(17, 20, 43, 0.9),
+          rgba(4, 7, 16, 0.95)
         );
 
       box-shadow: var(--shadow-deep);
     }
 
-    .invariant-grid {
+    .coherence-grid {
       display: grid;
 
       grid-template-columns:
-        repeat(5, minmax(0, 1fr));
+        repeat(4, minmax(0, 1fr));
 
-      gap: 0.7rem;
+      gap: 0.75rem;
     }
 
-    .invariant-card {
+    .coherence-card {
       min-width: 0;
       padding: 1rem;
 
-      border: 1px solid rgba(117, 233, 255, 0.14);
+      border: 1px solid rgba(183, 152, 255, 0.16);
       border-radius: var(--radius-md);
 
       background:
         linear-gradient(
           145deg,
-          rgba(117, 233, 255, 0.05),
+          rgba(183, 152, 255, 0.065),
           rgba(255, 255, 255, 0.015)
         );
     }
 
-    .invariant-card span {
+    .coherence-card span {
       display: block;
       margin-bottom: 0.55rem;
 
-      color: var(--cyan);
+      color: var(--violet-soft);
 
       font-size: 0.62rem;
       font-weight: 850;
@@ -1150,7 +1362,7 @@
       text-transform: uppercase;
     }
 
-    .invariant-card strong {
+    .coherence-card strong {
       display: block;
       margin-bottom: 0.45rem;
 
@@ -1159,94 +1371,16 @@
         "Times New Roman",
         serif;
 
-      font-size: 1.14rem;
+      font-size: 1.2rem;
       font-weight: 600;
       line-height: 1.16;
     }
 
-    .invariant-card p {
+    .coherence-card p {
       margin-bottom: 0;
 
       color: var(--muted);
       font-size: 0.8rem;
-    }
-
-    /* ============================================================
-       FALSE STABILITY
-       ============================================================ */
-
-    .contrast-section {
-      display: grid;
-      gap: 1rem;
-    }
-
-    .contrast-grid {
-      display: grid;
-
-      grid-template-columns:
-        repeat(2, minmax(0, 1fr));
-
-      gap: 0.8rem;
-    }
-
-    .contrast-card {
-      min-width: 0;
-      padding: 1.15rem;
-
-      border: 1px solid rgba(224, 184, 91, 0.17);
-      border-radius: var(--radius-md);
-
-      background: var(--glass);
-      box-shadow: var(--shadow);
-    }
-
-    .contrast-card[data-mode="stable"] {
-      box-shadow:
-        var(--shadow),
-        inset 0.2rem 0 0 var(--cyan);
-    }
-
-    .contrast-card[data-mode="false"] {
-      box-shadow:
-        var(--shadow),
-        inset 0.2rem 0 0 var(--rose);
-    }
-
-    .contrast-card span {
-      display: block;
-      margin-bottom: 0.55rem;
-
-      font-size: 0.62rem;
-      font-weight: 850;
-      letter-spacing: 0.11em;
-      text-transform: uppercase;
-    }
-
-    .contrast-card[data-mode="stable"] span {
-      color: var(--cyan);
-    }
-
-    .contrast-card[data-mode="false"] span {
-      color: var(--rose);
-    }
-
-    .contrast-card strong {
-      display: block;
-      margin-bottom: 0.45rem;
-
-      font-family:
-        Georgia,
-        "Times New Roman",
-        serif;
-
-      font-size: 1.35rem;
-      font-weight: 600;
-      line-height: 1.16;
-    }
-
-    .contrast-card p {
-      margin-bottom: 0;
-      color: var(--muted-strong);
     }
 
     /* ============================================================
@@ -1286,7 +1420,7 @@
     }
 
     .practical-copy h2 {
-      max-width: 13ch;
+      max-width: 12ch;
       margin-bottom: 0.8rem;
 
       font-size: clamp(2rem, 4.7vw, 4rem);
@@ -1411,7 +1545,7 @@
       border-top: 1px solid var(--rule);
     }
 
-    .evidence-body > p {
+    .evidence-body p {
       max-width: var(--reading-width);
       margin-bottom: 0;
 
@@ -1450,8 +1584,6 @@
     }
 
     .evidence-grid p {
-      margin-bottom: 0;
-
       color: var(--muted);
       font-size: 0.76rem;
     }
@@ -1519,29 +1651,128 @@
     }
 
     /* ============================================================
-       RESPONSIVE
+       ANIMATION
        ============================================================ */
 
-    @media (max-width: 74rem) {
-      .invariant-grid {
-        grid-template-columns:
-          repeat(3, minmax(0, 1fr));
+    @keyframes pressureRing {
+      0%,
+      100% {
+        opacity: 0.3;
+        transform:
+          translate(-50%, -50%)
+          scale(0.9);
       }
 
-      .invariant-card:nth-child(4),
-      .invariant-card:nth-child(5) {
-        grid-column: span 1;
+      50% {
+        opacity: 0.85;
+        transform:
+          translate(-50%, -50%)
+          scale(1.04);
       }
     }
 
+    @keyframes diamondTremor {
+      0%,
+      100% {
+        filter:
+          drop-shadow(
+            0 0 1.6rem
+            rgba(117, 233, 255, 0.28)
+          )
+          brightness(1);
+        transform:
+          translate(-50%, -50%)
+          rotate(0deg)
+          scale(1);
+      }
+
+      18% {
+        transform:
+          translate(calc(-50% - 0.08rem), -50%)
+          rotate(-0.7deg)
+          scale(0.992);
+      }
+
+      36% {
+        transform:
+          translate(calc(-50% + 0.1rem), calc(-50% + 0.04rem))
+          rotate(0.8deg)
+          scale(1.006);
+      }
+
+      60% {
+        filter:
+          drop-shadow(
+            0 0 2.1rem
+            rgba(244, 212, 126, 0.32)
+          )
+          brightness(1.11);
+        transform:
+          translate(-50%, -50%)
+          rotate(0deg)
+          scale(1.02);
+      }
+    }
+
+    @keyframes facetMisalign {
+      0%,
+      100% {
+        opacity: 0.72;
+        transform:
+          translate(-50%, -50%)
+          skew(0deg, 0deg);
+      }
+
+      30% {
+        opacity: 0.96;
+        transform:
+          translate(calc(-50% + 0.12rem), -50%)
+          skew(-2deg, 1deg);
+      }
+
+      60% {
+        opacity: 0.82;
+        transform:
+          translate(-50%, -50%)
+          skew(0deg, 0deg);
+      }
+    }
+
+    .js .reveal {
+      opacity: 0;
+      transform: translateY(1rem);
+      transition:
+        opacity 520ms ease,
+        transform 520ms cubic-bezier(0.2, 0.72, 0.25, 1);
+    }
+
+    .js .reveal.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .js .diamond-stage.is-awake .diamond-core {
+      animation:
+        diamondTremor 5.4s ease-in-out infinite;
+    }
+
+    /* ============================================================
+       RESPONSIVE
+       ============================================================ */
+
     @media (max-width: 68rem) {
-      .revelation-grid {
+      .scene-grid {
         grid-template-columns:
           repeat(2, minmax(0, 1fr));
       }
 
-      .revelation-card:last-child {
+      .scene-card:last-child {
         grid-column: 1 / -1;
+      }
+
+      .coherence-grid {
+        grid-template-columns:
+          repeat(2, minmax(0, 1fr));
       }
 
       .evidence-grid {
@@ -1558,17 +1789,12 @@
         grid-template-columns: 1fr;
       }
 
-      .diamond-vault {
+      .diamond-stage {
         min-height: 25rem;
       }
 
       .section-heading {
         gap: 0.75rem;
-      }
-
-      .invariant-grid {
-        grid-template-columns:
-          repeat(2, minmax(0, 1fr));
       }
 
       .practical-actions {
@@ -1668,51 +1894,57 @@
         width: 100%;
       }
 
-      .diamond-vault {
-        min-height: 23rem;
+      .diamond-stage {
+        min-height: 22rem;
         padding: 1rem;
       }
 
-      .diamond-vault::before {
+      .pressure-ring {
         width: 11rem;
-        height: 11rem;
       }
 
-      .diamond-vault::after,
-      .diamond-facets {
-        top: 5.6rem;
+      .pressure-ring:nth-child(2) {
+        width: 8.2rem;
+      }
+
+      .pressure-ring:nth-child(3) {
+        width: 13.5rem;
+      }
+
+      .diamond-core,
+      .facet-split {
         width: 6.9rem;
         height: 7.9rem;
       }
 
       .diamond-platform {
-        top: 13.2rem;
         width: 10rem;
       }
 
-      .revelation-grid,
-      .invariant-grid,
-      .contrast-grid,
+      .pressure-wave {
+        width: 3.7rem;
+      }
+
+      .scene-grid,
+      .coherence-grid,
       .evidence-grid {
         grid-template-columns: 1fr;
       }
 
-      .revelation-card:last-child {
+      .scene-card:last-child {
         grid-column: auto;
       }
 
-      .revelation-card,
+      .scene-card,
       .dialogue-intro,
       .dialogue-panel,
-      .invariant-section,
-      .invariant-card,
-      .contrast-card,
+      .coherence-section,
       .practical-return {
         border-radius: 1rem;
       }
 
       .dialogue-line {
-        max-width: 95%;
+        max-width: 96%;
       }
 
       .page-footer {
@@ -1745,20 +1977,23 @@
         transition-duration: 0.001ms !important;
       }
 
-      .revelation-card:hover,
+      .scene-card:hover,
       .button:hover {
+        transform: none;
+      }
+
+      .js .reveal {
+        opacity: 1;
         transform: none;
       }
     }
 
     @media (prefers-reduced-transparency: reduce) {
       .page-topbar,
-      .revelation-card,
+      .scene-card,
       .dialogue-intro,
       .dialogue-panel,
-      .invariant-section,
-      .invariant-card,
-      .contrast-card,
+      .coherence-section,
       .practical-return,
       .evidence-disclosure {
         background-color: var(--ink-1);
@@ -1770,15 +2005,15 @@
       body,
       .page-topbar,
       .route-hero,
-      .diamond-vault,
-      .revelation-card,
+      .diamond-stage,
+      .scene-card,
       .dialogue-intro,
       .dialogue-panel,
-      .invariant-section,
-      .invariant-card,
-      .contrast-card,
+      .coherence-section,
+      .coherence-card,
       .practical-return,
-      .evidence-disclosure {
+      .evidence-disclosure,
+      .diamond-core {
         color: CanvasText;
         background: Canvas;
         box-shadow: none;
@@ -1790,7 +2025,7 @@
       }
 
       .brand-mark,
-      .diamond-vault::after {
+      .diamond-core {
         border: 2px solid ButtonText;
         background: ButtonFace;
         box-shadow: none;
@@ -1808,7 +2043,8 @@
       .page-topbar,
       .hero-actions,
       .practical-actions,
-      .page-footer {
+      .page-footer,
+      .pressure-field {
         display: none !important;
       }
 
@@ -1817,13 +2053,12 @@
       }
 
       .route-hero,
-      .diamond-vault,
-      .revelation-card,
+      .diamond-stage,
+      .scene-card,
       .dialogue-intro,
       .dialogue-panel,
-      .invariant-section,
-      .invariant-card,
-      .contrast-card,
+      .coherence-section,
+      .coherence-card,
       .practical-return,
       .evidence-disclosure {
         color: #111;
@@ -1833,15 +2068,8 @@
       }
 
       .route-hero,
-      .diamond-vault {
+      .diamond-stage {
         min-height: 0;
-      }
-
-      .diamond-vault::before,
-      .diamond-vault::after,
-      .diamond-facets,
-      .diamond-platform {
-        display: none;
       }
 
       .evidence-disclosure:not([open])
@@ -1857,7 +2085,7 @@
     class="skip-link"
     href="#main"
   >
-    Skip to the Diamond
+    Skip to the story
   </a>
 
   <div class="page-shell">
@@ -1889,8 +2117,8 @@
           Previous
         </a>
 
-        <a href="/showroom/">
-          Constellation
+        <a href="/showroom/wonders/stars/">
+          Next
         </a>
 
         <a href="/index.html">
@@ -1905,7 +2133,7 @@
         aria-labelledby="page-title"
       >
         <div class="route-hero__inner">
-          <div>
+          <div class="reveal">
             <div class="route-kicker">
               South Route · Chamber Two
             </div>
@@ -1915,24 +2143,23 @@
             </h1>
 
             <p class="hero-subtitle">
-              The Window showed you what can change. The Diamond asks
-              what must remain.
+              The Window let you see. The Diamond asks whether what sees
+              can hold together.
             </p>
 
             <p class="hero-lead">
-              Worlds shift. Governments fall. Records fragment.
-              Generations inherit decisions they did not make. Even the
-              route you followed to arrive here can be renamed,
-              misunderstood, or lost. The Diamond exists so change does
-              not become disorientation. It does not freeze the world.
-              It preserves the reference that lets you recognize whether
-              the world is still itself.
+              You leave the Window still unable to touch the world beyond
+              it. The next chamber does not give you a hand, a voice, or
+              a tool. It gives you pressure. A Diamond hangs in the dark,
+              suspended where the world should have opened. Waves strike
+              it from every side, and for a moment the facets do not
+              agree.
             </p>
 
             <div class="hero-actions">
               <a
                 class="button button-gold"
-                href="#continuity"
+                href="#pressure-test"
               >
                 Approach the Diamond
               </a>
@@ -1947,32 +2174,40 @@
           </div>
 
           <aside
-            class="diamond-vault"
-            aria-label="Mirrorland Diamond"
+            class="diamond-stage reveal"
+            aria-label="Diamond pressure field"
           >
             <div
-              class="diamond-facets"
+              class="pressure-field"
               aria-hidden="true"
-            ></div>
+            >
+              <span class="pressure-ring"></span>
+              <span class="pressure-ring"></span>
+              <span class="pressure-ring"></span>
 
-            <div
-              class="diamond-platform"
-              aria-hidden="true"
-            ></div>
+              <span class="pressure-wave pressure-wave--north"></span>
+              <span class="pressure-wave pressure-wave--east"></span>
+              <span class="pressure-wave pressure-wave--south"></span>
+              <span class="pressure-wave pressure-wave--west"></span>
+
+              <span class="diamond-core"></span>
+              <span class="facet-split"></span>
+              <span class="diamond-platform"></span>
+            </div>
 
             <div class="diamond-copy">
               <span class="diamond-label">
-                Persistent Continuity Reference
+                Pressure Field
               </span>
 
               <strong>
-                Still recognizable after everything else moves.
+                Form is what survives pressure.
               </strong>
 
               <p>
-                The Diamond does not tell you what every choice should
-                be. It tells you whether the route has lost the
-                conditions that made return possible.
+                The Diamond is not here to decorate the chamber. It is
+                here to show why agency cannot increase before form can
+                remain coherent.
               </p>
             </div>
           </aside>
@@ -1980,89 +2215,88 @@
       </section>
 
       <section
-        id="continuity"
-        class="revelation-stage"
-        aria-labelledby="continuity-title"
+        id="pressure-test"
+        class="story-stage"
+        aria-labelledby="pressure-test-title"
       >
-        <header class="section-heading">
+        <header class="section-heading reveal">
           <div>
             <div class="eyebrow">
-              What the Diamond Preserves
+              The First Pressure Test
             </div>
 
-            <h2 id="continuity-title">
-              Continuity is not sameness.
+            <h2 id="pressure-test-title">
+              The chamber does not ask what you saw.
             </h2>
           </div>
 
           <p>
-            A living world must change. The question is whether it can
-            change without losing the relationships that make its
-            history, identity, and return path intelligible.
+            It asks whether seeing made you stable enough to receive more.
           </p>
         </header>
 
-        <div class="revelation-grid">
-          <article class="revelation-card">
-            <span class="chapter-index">
-              01 · Recognition
+        <div class="scene-grid">
+          <article class="scene-card reveal">
+            <span class="scene-index">
+              01 · Pressure Strikes
             </span>
 
             <h3>
-              You can still tell what you are looking at.
+              The Diamond trembles.
             </h3>
 
             <p>
-              A world may grow, divide, repair, rename institutions, and
-              rebuild its structures. Continuity means those changes
-              remain traceable to what came before.
+              The first wave comes from the direction of the Window:
+              everything you wanted to touch, fix, answer, and name. The
+              Diamond receives it without moving away. Its surface shakes,
+              but it does not shatter.
             </p>
 
             <blockquote>
-              “Change is not loss until the path between before and after
-              can no longer be recovered.”
+              Seeing creates desire. Desire creates pressure.
             </blockquote>
           </article>
 
-          <article class="revelation-card">
-            <span class="chapter-index">
-              02 · Relationship
+          <article class="scene-card reveal">
+            <span class="scene-index">
+              02 · Facets Misalign
             </span>
 
             <h3>
-              The parts still belong to the same larger order.
+              The image splits.
             </h3>
 
             <p>
-              Rooms remain connected to structures. Structures remain
-              connected to settlements. Settlements remain attached to
-              regions, planets, worlds, and the Estate that contains
-              them.
+              One facet shows urgency. Another shows fear. Another shows
+              the need to be useful. Another shows the wish to be certain.
+              Each reflection is real, but none of them is allowed to
+              become the whole form.
             </p>
 
             <blockquote>
-              “A fragment becomes dangerous when it forgets what it was a
-              fragment of.”
+              A single strong feeling can impersonate truth.
             </blockquote>
           </article>
 
-          <article class="revelation-card">
-            <span class="chapter-index">
-              03 · Return
+          <article class="scene-card reveal">
+            <span class="scene-index">
+              03 · Partial Stability Returns
             </span>
 
             <h3>
-              You can still find your way back.
+              The Diamond holds, but not completely.
             </h3>
 
             <p>
-              Every meaningful journey needs a recoverable route to its
-              source. Without return, exploration becomes abandonment and
-              insight becomes detached from the evidence that produced it.
+              The facets settle enough to show one thing clearly: agency
+              cannot be given to whatever part of you reacts first. If
+              the form breaks under pressure, action would only carry the
+              break farther.
             </p>
 
             <blockquote>
-              “A path that cannot return cannot prove where it has been.”
+              The Diamond does not grant power. It measures whether power
+              would distort the form.
             </blockquote>
           </article>
         </div>
@@ -2072,305 +2306,174 @@
         class="dialogue-stage"
         aria-labelledby="dialogue-title"
       >
-        <div class="dialogue-intro">
+        <div class="dialogue-intro reveal">
           <div class="eyebrow">
-            The Question at the Center
+            The Diamond’s Question
           </div>
 
           <h2 id="dialogue-title">
-            Why not replace the Diamond?
+            What part of you wants to act?
           </h2>
 
           <p>
-            Every generation is tempted to believe its new system is
-            cleaner, faster, wiser, or more complete than the inherited
-            one. Replacement feels efficient. It can also sever the
-            record that proves what changed.
+            The question is not an accusation. It is a structural test.
+            The first impulse may be sincere and still be incomplete.
           </p>
         </div>
 
         <div
-          class="dialogue-panel"
-          aria-label="Diamond continuity dialogue"
+          class="dialogue-panel reveal"
+          aria-label="Diamond pressure dialogue"
         >
           <div
             class="dialogue-line"
-            data-speaker="visitor"
+            data-side="you"
           >
-            <span>Visitor</span>
+            <span>You</span>
 
             <p>
-              “What if we build something better?”
+              “If I can see what is wrong, why can’t I help?”
             </p>
           </div>
 
           <div
             class="dialogue-line"
-            data-speaker="diamond"
+            data-side="diamond"
           >
             <span>Diamond</span>
 
             <p>
-              “Build it. Test it. Preserve what it replaces.”
+              “Because seeing a need does not prove your form can carry
+              the answer.”
             </p>
           </div>
 
           <div
             class="dialogue-line"
-            data-speaker="visitor"
+            data-side="you"
           >
-            <span>Visitor</span>
+            <span>You</span>
 
             <p>
-              “What if the old structure failed?”
+              “Then what are you testing?”
             </p>
           </div>
 
           <div
             class="dialogue-line"
-            data-speaker="diamond"
-          >
-            <span>Diamond</span>
-
-            <p>
-              “Then the failure belongs in the record. Erasing it does
-              not make the new structure safer.”
-            </p>
-          </div>
-
-          <div
-            class="dialogue-line"
-            data-speaker="visitor"
-          >
-            <span>Visitor</span>
-
-            <p>
-              “What if everyone agrees the new system is superior?”
-            </p>
-          </div>
-
-          <div
-            class="dialogue-line"
-            data-speaker="diamond"
+            data-side="diamond"
           >
             <span>Diamond</span>
 
             <p>
-              “Agreement can establish commitment. It cannot establish
-              continuity by itself.”
+              “Whether perception, identity, and intention remain
+              coherent when pressure arrives.”
             </p>
           </div>
 
           <div
             class="dialogue-line"
-            data-speaker="visitor"
+            data-side="you"
           >
-            <span>Visitor</span>
+            <span>You</span>
 
             <p>
-              “Then what are you protecting?”
+              “What happens if they do not?”
             </p>
           </div>
 
           <div
             class="dialogue-line"
-            data-speaker="diamond"
+            data-side="diamond"
           >
             <span>Diamond</span>
 
             <p>
-              “The ability to prove what changed, what remained, and how
-              you found your way home.”
+              “Then action would magnify the fracture.”
             </p>
           </div>
         </div>
       </section>
 
       <section
-        class="invariant-section"
-        aria-labelledby="invariant-title"
+        class="coherence-section"
+        aria-labelledby="coherence-title"
       >
-        <header class="section-heading">
+        <header class="section-heading reveal">
           <div>
             <div class="eyebrow">
-              Five Diamond Invariants
+              What Must Hold
             </div>
 
-            <h2 id="invariant-title">
-              What must survive every expansion.
+            <h2 id="coherence-title">
+              Agency requires stable form.
             </h2>
           </div>
 
           <p>
-            These conditions do not prevent new stories, systems, worlds,
-            or interpretations. They prevent expansion from quietly
-            destroying the architecture that makes those additions
-            meaningful.
+            The Diamond does not demand perfection. It demands enough
+            coherence that action will not be ruled by the loudest
+            fragment.
           </p>
         </header>
 
-        <div class="invariant-grid">
-          <article class="invariant-card">
-            <span>Invariant One</span>
+        <div class="coherence-grid">
+          <article class="coherence-card reveal">
+            <span>Perception</span>
 
             <strong>
-              The Diamond remains identifiable.
+              Can you keep seeing what is there?
             </strong>
 
             <p>
-              No later object or system silently inherits its continuity
-              role through convenience or visual similarity.
+              Pressure must not turn evidence into whatever your fear or
+              urgency wants it to become.
             </p>
           </article>
 
-          <article class="invariant-card">
-            <span>Invariant Two</span>
+          <article class="coherence-card reveal">
+            <span>Identity</span>
 
             <strong>
-              The Clock continues.
+              Can you remain yourself without becoming the crisis?
             </strong>
 
             <p>
-              New events enter the existing historical sequence rather
-              than restarting time around themselves.
+              You must not confuse being needed with being authorized,
+              chosen, correct, or complete.
             </p>
           </article>
 
-          <article class="invariant-card">
-            <span>Invariant Three</span>
+          <article class="coherence-card reveal">
+            <span>Intention</span>
 
             <strong>
-              Return remains possible.
+              Can your purpose stay clean under strain?
             </strong>
 
             <p>
-              Every route preserves a recoverable path to its source,
-              parent structure, and broader Estate context.
+              Help, control, rescue, recognition, and relief can look
+              similar when pressure rises.
             </p>
           </article>
 
-          <article class="invariant-card">
-            <span>Invariant Four</span>
+          <article class="coherence-card reveal">
+            <span>Continuity</span>
 
             <strong>
-              Evidence remains traceable.
+              Can you return without rewriting what happened?
             </strong>
 
             <p>
-              Claims can still be connected to the observations,
-              records, perspectives, and conditions that produced them.
-            </p>
-          </article>
-
-          <article class="invariant-card">
-            <span>Invariant Five</span>
-
-            <strong>
-              Expansion cannot invert the Estate.
-            </strong>
-
-            <p>
-              A room may reveal a world. A character may challenge an
-              institution. Neither may quietly become the whole
-              architecture.
+              The Diamond still preserves traceability, but here it tests
+              whether you can remain traceable to yourself.
             </p>
           </article>
         </div>
       </section>
 
       <section
-        class="contrast-section"
-        aria-labelledby="contrast-title"
-      >
-        <header class="section-heading">
-          <div>
-            <div class="eyebrow">
-              Stability Versus Appearance
-            </div>
-
-            <h2 id="contrast-title">
-              Some systems look stable because the damage is hidden.
-            </h2>
-          </div>
-
-          <p>
-            The Diamond is not impressed by stillness. It tests whether
-            the relationships required for continuity remain intact.
-          </p>
-        </header>
-
-        <div class="contrast-grid">
-          <article
-            class="contrast-card"
-            data-mode="stable"
-          >
-            <span>Real Continuity</span>
-
-            <strong>
-              Change remains explainable.
-            </strong>
-
-            <p>
-              The system can identify what changed, why it changed, who
-              authorized it, what evidence supported it, what failed,
-              and how the earlier state can still be reconstructed.
-            </p>
-          </article>
-
-          <article
-            class="contrast-card"
-            data-mode="false"
-          >
-            <span>False Stability</span>
-
-            <strong>
-              Nothing appears broken because contradiction was removed.
-            </strong>
-
-            <p>
-              Records are simplified, dissent disappears, failure is
-              renamed, and the institution becomes unable to explain how
-              its current state was reached.
-            </p>
-          </article>
-
-          <article
-            class="contrast-card"
-            data-mode="stable"
-          >
-            <span>Real Continuity</span>
-
-            <strong>
-              Return still changes nothing essential.
-            </strong>
-
-            <p>
-              A visitor can leave, come back, and recover the same central
-              references even though the world around them has evolved.
-            </p>
-          </article>
-
-          <article
-            class="contrast-card"
-            data-mode="false"
-          >
-            <span>False Stability</span>
-
-            <strong>
-              The name remains while the function disappears.
-            </strong>
-
-            <p>
-              A structure may retain its title, symbol, or ceremony while
-              no longer preserving the relationship it was created to
-              protect.
-            </p>
-          </article>
-        </div>
-      </section>
-
-      <section
-        class="practical-return"
+        class="practical-return reveal"
         aria-labelledby="practical-title"
       >
         <div class="practical-copy">
@@ -2379,16 +2482,15 @@
           </span>
 
           <h2 id="practical-title">
-            Change boldly. Preserve the proof.
+            Hold form before force.
           </h2>
 
           <p>
-            Replace what fails, but retain the record of why it failed.
-            Build what is better, but preserve the path from the old
-            structure to the new one. A system becomes trustworthy not
-            because it never changes, but because its changes remain
-            visible, attributable, reversible where necessary, and
-            connected to the continuity they were meant to protect.
+            The Diamond partially stabilizes, but it does not open full
+            agency. You can perceive more than before, and you now know
+            why that still is not enough. If form can hold under
+            pressure, the next question is whether you can read
+            relationship, direction, and distance across a larger field.
           </p>
         </div>
 
@@ -2402,9 +2504,9 @@
 
           <a
             class="button"
-            href="/showroom/"
+            href="/showroom/wonders/window/"
           >
-            Choose Another Chamber
+            Return to the Window
           </a>
         </div>
       </section>
@@ -2412,9 +2514,9 @@
       <details class="evidence-disclosure">
         <summary>
           <span>
-            <strong>Diamond Continuity Boundary</strong>
+            <strong>Story Reveal Boundary</strong>
             <small>
-              What the Diamond preserves—and what it does not decide
+              What this chamber reveals, and what remains withheld
             </small>
           </span>
 
@@ -2423,42 +2525,39 @@
 
         <div class="evidence-body">
           <p>
-            The Diamond is a persistent continuity reference within the
-            Mirrorland narrative architecture. It preserves recognition,
-            relationship, traceability, historical continuity, and
-            recoverable return. It does not provide total truth, dictate
-            every decision, replace the Clock, govern route selection, or
-            establish scientific validation outside the narrative
-            system.
+            This chamber reveals that agency requires stable form. The
+            player cannot act merely because they can see. Perception,
+            identity, intention, and continuity must remain coherent
+            under pressure before agency can safely increase.
           </p>
 
           <div class="evidence-grid">
             <article>
-              <span>Established Here</span>
+              <span>Revealed Here</span>
 
               <p>
-                Continuity requires a persistent reference, an ongoing
-                Clock, traceable evidence, preserved hierarchy, and a
-                recoverable return path.
+                The Diamond tests form under pressure. It shows that
+                agency without coherence would magnify fracture.
               </p>
             </article>
 
             <article>
-              <span>Not Established Here</span>
+              <span>Withheld Here</span>
 
               <p>
-                Universal answers, automatic correctness, ownership of
-                every route, or authority to reject all change.
+                Full agency, full embodiment, full conjugation, Hearth,
+                H-Earth, ZIONTS, full Audralia systems, and final Earth
+                stakes remain closed.
               </p>
             </article>
 
             <article>
-              <span>Expansion Requirement</span>
+              <span>Next Pressure</span>
 
               <p>
-                New stories, systems, worlds, and interpretations may be
-                added only when foundational continuity remains
-                recognizable and reconstructable.
+                If form can hold under pressure, the next chamber must
+                test whether the player can read relationship, direction,
+                and distance across a larger field.
               </p>
             </article>
           </div>
@@ -2473,7 +2572,7 @@
         </strong>
 
         <span>
-          Change is permitted. Disorientation is not.
+          Form is what keeps pressure from becoming fracture.
         </span>
       </div>
 
@@ -2496,20 +2595,161 @@
       </nav>
     </footer>
   </div>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const CONTRACT =
+        "SHOWROOM_SATELLITE_BEHOLD_THE_DIAMOND_HTML_TNT_v2_FORM_UNDER_PRESSURE";
+
+      const root =
+        document.documentElement;
+
+      root.classList.add("js");
+
+      const reducedMotionQuery =
+        window.matchMedia &&
+        window.matchMedia("(prefers-reduced-motion: reduce)");
+
+      const reducedMotion =
+        Boolean(
+          reducedMotionQuery &&
+          reducedMotionQuery.matches
+        );
+
+      function markVisible(elements) {
+        for (const element of elements) {
+          element.classList.add("is-visible");
+        }
+      }
+
+      function initializeReveals() {
+        const revealElements =
+          Array.from(
+            document.querySelectorAll(".reveal")
+          );
+
+        if (!revealElements.length) {
+          return;
+        }
+
+        if (
+          reducedMotion ||
+          typeof IntersectionObserver !== "function"
+        ) {
+          markVisible(revealElements);
+          return;
+        }
+
+        const observer =
+          new IntersectionObserver(
+            entries => {
+              for (const entry of entries) {
+                if (!entry.isIntersecting) {
+                  continue;
+                }
+
+                entry.target.classList.add("is-visible");
+                observer.unobserve(entry.target);
+              }
+            },
+            {
+              root: null,
+              threshold: 0.14,
+              rootMargin: "0px 0px -6% 0px"
+            }
+          );
+
+        for (const element of revealElements) {
+          observer.observe(element);
+        }
+      }
+
+      function initializeDiamondStage() {
+        const diamondStage =
+          document.querySelector(".diamond-stage");
+
+        if (!diamondStage || reducedMotion) {
+          return;
+        }
+
+        window.setTimeout(
+          () => {
+            diamondStage.classList.add("is-awake");
+          },
+          240
+        );
+      }
+
+      function publishReceipt() {
+        const payload = {
+          contract: CONTRACT,
+          route: "/showroom/wonders/diamond/",
+          routeId: "south-2",
+          page: "Behold the Diamond",
+          localEnhancementOnly: true,
+          globalRuntimeOwned: false,
+          navigationOwned: false,
+          systematicReveal: "agency-requires-stable-form",
+          previousRoute: "/showroom/wonders/window/",
+          nextRoute: "/showroom/wonders/stars/",
+          diamondRole: "persistent-continuity-reference",
+          diamondReplacementAuthority: false,
+          continuityModel: "diamond-clock-return",
+          pressureField: true,
+          fullAgencyGranted: false,
+          reducedMotion: reducedMotion,
+          timestamp: new Date().toISOString()
+        };
+
+        window.dispatchEvent(
+          new CustomEvent(
+            "SHOWROOM_SATELLITE_PAGE_READY",
+            {
+              detail: Object.freeze(payload)
+            }
+          )
+        );
+      }
+
+      if (document.readyState === "loading") {
+        document.addEventListener(
+          "DOMContentLoaded",
+          () => {
+            initializeReveals();
+            initializeDiamondStage();
+            publishReceipt();
+          },
+          {
+            once: true
+          }
+        );
+      } else {
+        initializeReveals();
+        initializeDiamondStage();
+        publishReceipt();
+      }
+    })();
+  </script>
 </body>
 </html>
 
 <!--
-SHOWROOM_SATELLITE_BEHOLD_THE_DIAMOND_HTML_RECEIPT_v1
+SHOWROOM_SATELLITE_BEHOLD_THE_DIAMOND_HTML_RECEIPT_v2_FORM_UNDER_PRESSURE
 
 TARGET:
 /showroom/wonders/diamond/index.html
 
 STATUS:
-COMPLETE NEW SELF-CONTAINED HTML FILE
+COMPLETE SELF-CONTAINED HTML REPLACEMENT
 
-EMBEDDED VISUAL SYSTEM:
-SHOWROOM_SATELLITE_PAGE_EMBEDDED_VISUAL_SYSTEM_v1
+SOURCE BASELINE:
+SHOWROOM_SATELLITE_BEHOLD_THE_DIAMOND_HTML_TNT_v1
+supplied by user as current source baseline for south-2.
+
+NEW CONTRACT:
+SHOWROOM_SATELLITE_BEHOLD_THE_DIAMOND_HTML_TNT_v2_FORM_UNDER_PRESSURE
 
 ROUTE FAMILY:
 Wonders / South
@@ -2517,57 +2757,109 @@ Wonders / South
 ROUTE ID:
 south-2
 
+ROUTE TITLE:
+Behold the Diamond
+
+PARENT:
+/showroom/
+
 PREVIOUS ROUTE:
 /showroom/wonders/window/
 
 NEXT ROUTE:
 /showroom/wonders/stars/
 
-PARENT:
+RETURN ROUTE:
 /showroom/
 
-PURPOSE:
-- continue directly from Open the Window;
-- shift the South sequence from visibility to continuity;
-- establish the Diamond as a persistent reference;
-- distinguish continuity from sameness and stillness;
-- define five invariants that must survive expansion;
-- distinguish real continuity from false stability;
-- prepare the visitor for constellation-scale relationships in Read the Stars.
+MAIN COMPASS:
+/index.html
 
-PRESENTATION STANDARD:
-- immersive;
-- second-person;
-- architectural;
-- dialogue-driven;
-- continuity-oriented;
-- practical;
-- evidence boundary retained beneath the experience.
+DIAMOND ROLE:
+persistent-continuity-reference
 
-ARCHITECTURAL FEATURES:
-- complete embedded CSS;
-- Showroom-aligned cosmic atmosphere;
-- CSS-built Diamond chamber;
-- three continuity revelations;
-- visitor and Diamond dialogue;
-- five-invariant continuity grid;
-- real-continuity versus false-stability comparison;
-- practical continuity rule;
-- evidence-boundary disclosure;
-- responsive mobile composition;
-- keyboard focus;
-- reduced motion;
-- reduced transparency;
-- forced colors;
-- print handling.
+DIAMOND REPLACEMENT AUTHORITY:
+false
 
-NON-CLAIMS:
-- no universal decision authority;
-- no scientific validation;
-- no replacement of the Clock;
-- no route-selection authority;
-- no Earth-transfer authorization;
-- no runtime dependency;
-- no controller ownership;
-- no JavaScript requirement.
+CONTINUITY MODEL:
+diamond-clock-return
+
+NARRATIVE AUTHORITY:
+SHOWROOM_MIRRORLAND_AUDRALIA_ROUTE_PAGE_NARRATIVE_FREEZE_PACKET_v1_1
+SHOWROOM_ROUTE_PAGE_RENEWAL_RULES_LOCK_v1
+
+PRIMARY NARRATIVE CORRECTIONS FROM v1:
+- Reframed the Diamond as a form-under-pressure chamber instead of primarily a continuity-governance briefing.
+- Preserved infrastructure routes, route identity, diamond metadata, and continuity metadata.
+- Continued directly from south-1: perception without agency.
+- Established that agency requires stable form.
+- Preserved the Diamond’s continuity role without turning the page into full invariant exposition.
+- Withheld full agency, full embodiment, full conjugation, Hearth, H-Earth, ZIONTS, full Audralia systems, and final Earth stakes.
+- Connected south-2 to south-3 through relationship, direction, and distance across a larger field.
+
+PAGE 6 / SOUTH-2 STORY SPINE:
+1. The player leaves the Window still unable to touch.
+2. The chamber darkens around a suspended Diamond.
+3. Pressure arrives from several directions.
+4. The Diamond trembles and refracts the pressure.
+5. Facets briefly misalign.
+6. The player realizes form is not decoration.
+7. Form keeps perception from breaking into false certainty.
+8. The Diamond partially stabilizes, but does not grant full agency yet.
+
+CONTROLLED REVEAL:
+Agency requires stable form.
+The player cannot act merely because they can see.
+Perception, identity, intention, and continuity must remain coherent under pressure before agency can safely increase.
+
+WITHHELD:
+- full agency;
+- full embodiment;
+- full conjugation;
+- Hearth;
+- H-Earth;
+- ZIONTS;
+- full Audralia systems;
+- final Earth stakes.
+
+DOMINANT ANIMATION IDEA:
+Pressure waves strike the Diamond from multiple directions.
+Facets tremble, misalign, and then partially stabilize.
+
+ANTI-TILED-STAR CORRECTION:
+The page does not use repeating square-cell starfields as the main atmosphere.
+Atmospheric stars are hand-positioned through fixed radial points.
+The dominant animated visual is the Diamond pressure field.
+
+EMBEDDED SYSTEM:
+- HTML structure
+- embedded CSS
+- embedded page-local JavaScript
+- no external dependencies
+- no shared runtime ownership
+
+PAGE-LOCAL JAVASCRIPT AUTHORITY:
+- local reveal enhancement only
+- local Diamond-stage awakening only
+- local readiness event only
+- no navigation ownership
+- no controller calls
+- no constellation mutation
+- no Main Compass ownership
+- safe without JavaScript
+
+ACCESSIBILITY / RESILIENCE:
+- skip link
+- semantic sections
+- focus-visible handling
+- reduced-motion support
+- reduced-transparency support
+- forced-colors support
+- print handling
+- readable without JavaScript
+
+NOT CLAIMED:
+- runtime validation
+- browser visual pass
+- deployment pass
 -->

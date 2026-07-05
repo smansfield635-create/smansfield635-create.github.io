@@ -1,6 +1,6 @@
 <!-- TARGET FILE: /showroom/wonders/window/index.html -->
-<!-- COMPLETE NEW FILE -->
-<!-- SHOWROOM_SATELLITE_OPEN_THE_WINDOW_HTML_TNT_v1 -->
+<!-- COMPLETE REPLACEMENT -->
+<!-- SHOWROOM_SATELLITE_OPEN_THE_WINDOW_HTML_TNT_v2_PERCEPTION_WITHOUT_AGENCY -->
 
 <!doctype html>
 
@@ -8,8 +8,8 @@
   lang="en"
   data-route="/showroom/wonders/window/"
   data-page="showroom-wonders-window"
-  data-version="SHOWROOM-SATELLITE-OPEN-THE-WINDOW-1.0.0"
-  data-contract="SHOWROOM_SATELLITE_OPEN_THE_WINDOW_HTML_TNT_v1"
+  data-version="SHOWROOM-SATELLITE-OPEN-THE-WINDOW-2.0.0"
+  data-contract="SHOWROOM_SATELLITE_OPEN_THE_WINDOW_HTML_TNT_v2_PERCEPTION_WITHOUT_AGENCY"
   data-showroom-satellite="true"
   data-showroom-route-family="wonders"
   data-showroom-route-id="south-1"
@@ -37,19 +37,27 @@
 
   <meta
     name="description"
-    content="Open the Window into Mirrorland. Watch distance collapse, enter the visible world layer, and confront the difference between seeing a place and understanding the lives inside it."
+    content="After the threshold, arrival begins as perception without agency. Open the Window, see the visible world layer, and learn that seeing is real but not yet touching, changing, or understanding."
   >
 
   <meta
     name="showroom-page-contract"
-    content="SHOWROOM_SATELLITE_OPEN_THE_WINDOW_HTML_TNT_v1"
+    content="SHOWROOM_SATELLITE_OPEN_THE_WINDOW_HTML_TNT_v2_PERCEPTION_WITHOUT_AGENCY"
   >
 
   <style>
     /* ============================================================
-       SHOWROOM SATELLITE PAGE EMBEDDED VISUAL SYSTEM v1
-       Wonders / South expression
-       Window chamber
+       SHOWROOM SATELLITE PAGE EMBEDDED VISUAL SYSTEM v2
+       PAGE: south-1 · Open the Window
+
+       Page-specific standard:
+       - one-file route page;
+       - embedded CSS;
+       - page-local JavaScript only;
+       - no external dependencies;
+       - no shared Showroom runtime ownership;
+       - no repeating tiled starfield as primary atmosphere;
+       - dominant animation object: chamber window clearing.
        ============================================================ */
 
     :root {
@@ -67,6 +75,7 @@
 
       --gold: #e0b85b;
       --gold-bright: #f4d47e;
+      --gold-soft: #ffe7a5;
       --gold-faint: rgba(224, 184, 91, 0.14);
 
       --cyan: #75e9ff;
@@ -77,12 +86,10 @@
       --violet-soft: #d5c5ff;
       --violet-faint: rgba(183, 152, 255, 0.13);
 
-      --green: #8ce4ae;
-      --rose: #ff91a3;
-
       --border: rgba(226, 197, 128, 0.24);
       --border-strong: rgba(239, 205, 125, 0.5);
       --border-cool: rgba(117, 233, 255, 0.25);
+      --border-violet: rgba(183, 152, 255, 0.26);
       --rule: rgba(255, 255, 255, 0.085);
 
       --glass:
@@ -106,13 +113,9 @@
       --radius-xl: 2rem;
 
       --page-width: 84rem;
-      --reading-width: 49rem;
+      --reading-width: 52rem;
 
-      --space-1: 0.4rem;
-      --space-2: 0.65rem;
-      --space-3: 0.95rem;
       --space-4: 1.3rem;
-      --space-5: 1.8rem;
       --space-6: 2.5rem;
       --space-7: 3.5rem;
 
@@ -189,34 +192,39 @@
       pointer-events: none;
       content: "";
 
-      opacity: 0.72;
+      opacity: 0.62;
 
-      background-image:
+      background:
         radial-gradient(
-          circle,
-          rgba(255, 255, 255, 0.82) 0 0.05rem,
-          transparent 0.065rem
-        ),
-        radial-gradient(
-          circle,
-          rgba(117, 233, 255, 0.58) 0 0.04rem,
+          circle at 17% 18%,
+          rgba(255, 255, 255, 0.82) 0 0.045rem,
           transparent 0.06rem
         ),
         radial-gradient(
-          circle,
-          rgba(239, 205, 126, 0.5) 0 0.045rem,
+          circle at 79% 16%,
+          rgba(117, 233, 255, 0.72) 0 0.04rem,
+          transparent 0.06rem
+        ),
+        radial-gradient(
+          circle at 91% 68%,
+          rgba(244, 212, 126, 0.7) 0 0.045rem,
           transparent 0.065rem
+        ),
+        radial-gradient(
+          circle at 34% 83%,
+          rgba(255, 255, 255, 0.58) 0 0.036rem,
+          transparent 0.055rem
+        ),
+        radial-gradient(
+          circle at 11% 66%,
+          rgba(117, 233, 255, 0.48) 0 0.032rem,
+          transparent 0.052rem
+        ),
+        radial-gradient(
+          circle at 58% 31%,
+          rgba(244, 212, 126, 0.42) 0 0.032rem,
+          transparent 0.052rem
         );
-
-      background-size:
-        6.2rem 6.2rem,
-        9.4rem 9.4rem,
-        13.6rem 13.6rem;
-
-      background-position:
-        0 0,
-        2.2rem 3.4rem,
-        5.7rem 1.6rem;
     }
 
     body::after {
@@ -242,6 +250,13 @@
         );
     }
 
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+    }
+
     a,
     button {
       -webkit-tap-highlight-color: transparent;
@@ -255,10 +270,7 @@
     h2,
     h3,
     p,
-    blockquote,
-    dl,
-    dd,
-    ul {
+    blockquote {
       margin-top: 0;
     }
 
@@ -271,15 +283,33 @@
     }
 
     p,
-    li,
-    dd,
     blockquote {
       text-wrap: pretty;
+    }
+
+    [hidden] {
+      display: none !important;
     }
 
     :focus-visible {
       outline: 3px solid var(--cyan);
       outline-offset: 4px;
+    }
+
+    .sr-only {
+      position: absolute !important;
+
+      width: 1px !important;
+      height: 1px !important;
+
+      padding: 0 !important;
+      margin: -1px !important;
+
+      overflow: hidden !important;
+      clip: rect(0, 0, 0, 0) !important;
+
+      white-space: nowrap !important;
+      border: 0 !important;
     }
 
     .skip-link {
@@ -322,7 +352,7 @@
 
     .eyebrow,
     .route-kicker,
-    .chapter-index,
+    .scene-index,
     .window-label,
     .practical-label {
       color: var(--gold-bright);
@@ -413,6 +443,10 @@
       transform: translateY(-1px);
     }
 
+    .button:active {
+      transform: translateY(0);
+    }
+
     .button-gold {
       border-color: rgba(255, 222, 142, 0.76);
       color: #171006;
@@ -428,6 +462,14 @@
       box-shadow:
         0 0.95rem 2.3rem rgba(156, 105, 25, 0.24),
         0 0 1.7rem rgba(245, 213, 130, 0.16);
+    }
+
+    .button-gold:hover {
+      border-color: #fff1bf;
+
+      box-shadow:
+        0 1rem 2.7rem rgba(156, 105, 25, 0.3),
+        0 0 2rem rgba(245, 213, 130, 0.22);
     }
 
     /* ============================================================
@@ -572,6 +614,10 @@
       letter-spacing: 0.05em;
       text-decoration: none;
       text-transform: uppercase;
+
+      transition:
+        color var(--transition-fast),
+        background var(--transition-fast);
     }
 
     .topbar-nav a:hover {
@@ -618,7 +664,7 @@
     .route-hero {
       position: relative;
 
-      min-height: min(80vh, 50rem);
+      min-height: min(82vh, 52rem);
       overflow: hidden;
 
       border: 1px solid rgba(224, 184, 91, 0.23);
@@ -626,23 +672,58 @@
 
       background:
         radial-gradient(
-          circle at 17% 18%,
+          circle at 16% 18%,
           rgba(117, 233, 255, 0.14),
           transparent 24rem
         ),
         radial-gradient(
-          circle at 82% 72%,
-          rgba(183, 152, 255, 0.15),
-          transparent 29rem
+          circle at 83% 70%,
+          rgba(136, 170, 255, 0.14),
+          transparent 28rem
+        ),
+        radial-gradient(
+          circle at 58% 50%,
+          rgba(244, 212, 126, 0.08),
+          transparent 20rem
         ),
         linear-gradient(
           145deg,
           rgba(16, 25, 46, 0.9),
-          rgba(3, 6, 15, 0.96)
+          rgba(3, 6, 15, 0.97)
         );
 
       box-shadow: var(--shadow-deep);
       isolation: isolate;
+    }
+
+    .route-hero::before {
+      position: absolute;
+      z-index: -1;
+      inset: 0;
+
+      content: "";
+
+      background:
+        linear-gradient(
+          115deg,
+          transparent 0 42%,
+          rgba(117, 233, 255, 0.035) 42.4%,
+          transparent 43% 58%,
+          rgba(224, 184, 91, 0.035) 58.5%,
+          transparent 59%
+        ),
+        radial-gradient(
+          circle at 70% 42%,
+          transparent 0 9rem,
+          rgba(117, 233, 255, 0.055) 9.1rem 9.2rem,
+          transparent 9.3rem
+        ),
+        radial-gradient(
+          circle at 70% 42%,
+          transparent 0 14rem,
+          rgba(224, 184, 91, 0.045) 14.1rem 14.2rem,
+          transparent 14.3rem
+        );
     }
 
     .route-hero__inner {
@@ -651,8 +732,8 @@
       min-height: inherit;
 
       grid-template-columns:
-        minmax(0, 1.15fr)
-        minmax(18rem, 0.85fr);
+        minmax(0, 1.08fr)
+        minmax(18rem, 0.92fr);
 
       align-items: center;
       gap: clamp(2rem, 6vw, 6rem);
@@ -676,10 +757,11 @@
 
       content: "";
       background: currentColor;
+      box-shadow: 0 0 1rem rgba(224, 184, 91, 0.3);
     }
 
     .hero-subtitle {
-      max-width: 34rem;
+      max-width: 35rem;
       margin-bottom: 0.85rem;
 
       color: var(--cyan-soft);
@@ -694,7 +776,7 @@
     }
 
     .hero-lead {
-      max-width: 44rem;
+      max-width: 45rem;
       margin-bottom: 1.5rem;
 
       color: var(--muted-strong);
@@ -707,16 +789,31 @@
       gap: 0.7rem;
     }
 
-    .window-structure {
+    .window-stage {
       position: relative;
 
-      min-height: 27rem;
+      display: grid;
+      align-content: end;
+      gap: 1rem;
+
+      min-height: 28rem;
+      overflow: hidden;
       padding: 1.4rem;
 
       border: 1px solid var(--border-cool);
       border-radius: var(--radius-lg);
 
       background:
+        radial-gradient(
+          circle at 50% 35%,
+          rgba(117, 233, 255, 0.18),
+          transparent 10rem
+        ),
+        radial-gradient(
+          circle at 50% 30%,
+          rgba(244, 212, 126, 0.08),
+          transparent 13rem
+        ),
         linear-gradient(
           180deg,
           rgba(19, 31, 55, 0.94),
@@ -728,32 +825,26 @@
         inset 0.24rem 0 0 rgba(117, 233, 255, 0.28);
     }
 
-    .window-frame {
+    .chamber-window {
       position: absolute;
       top: 8%;
       left: 50%;
 
-      width: min(75%, 15rem);
-      height: 16rem;
+      width: min(76%, 17rem);
+      height: 17rem;
 
       overflow: hidden;
 
       border: 0.18rem solid rgba(244, 212, 126, 0.54);
-      border-radius: 0.5rem;
+      border-radius: 0.65rem;
 
       background:
-        radial-gradient(
-          circle at 60% 26%,
-          rgba(244, 212, 126, 0.8) 0 0.35rem,
-          rgba(117, 233, 255, 0.22) 0.5rem 3rem,
-          transparent 3.2rem
-        ),
         linear-gradient(
           180deg,
-          #17304e 0%,
-          #385f71 42%,
-          #223940 43%,
-          #101a21 100%
+          rgba(16, 31, 54, 0.98) 0%,
+          rgba(18, 52, 75, 0.96) 36%,
+          rgba(41, 72, 70, 0.96) 37%,
+          rgba(13, 24, 26, 0.98) 100%
         );
 
       box-shadow:
@@ -764,34 +855,40 @@
       transform: translateX(-50%);
     }
 
-    .window-frame::before {
+    .chamber-window::before {
       position: absolute;
       inset: 0;
 
       content: "";
 
       background:
+        radial-gradient(
+          circle at 66% 22%,
+          rgba(244, 212, 126, 0.85) 0 0.34rem,
+          rgba(117, 233, 255, 0.22) 0.5rem 3.1rem,
+          transparent 3.2rem
+        ),
         linear-gradient(
           90deg,
           transparent 49.5%,
-          rgba(244, 212, 126, 0.38) 50%,
+          rgba(244, 212, 126, 0.35) 50%,
           transparent 50.5%
         ),
         linear-gradient(
           180deg,
           transparent 49.5%,
-          rgba(244, 212, 126, 0.32) 50%,
+          rgba(244, 212, 126, 0.28) 50%,
           transparent 50.5%
         );
     }
 
-    .window-frame::after {
+    .chamber-window::after {
       position: absolute;
-      right: -8%;
-      bottom: -14%;
+      right: -10%;
+      bottom: -15%;
 
-      width: 72%;
-      height: 44%;
+      width: 78%;
+      height: 45%;
 
       content: "";
 
@@ -800,40 +897,105 @@
       background:
         linear-gradient(
           160deg,
-          rgba(40, 89, 74, 0.9),
+          rgba(43, 99, 78, 0.9),
           rgba(11, 27, 31, 0.98)
         );
 
       box-shadow:
-        -5rem 0 0 rgba(27, 62, 57, 0.88);
+        -5.8rem 0 0 rgba(27, 62, 57, 0.86),
+        -8.5rem -0.6rem 0 rgba(31, 72, 67, 0.42);
+    }
+
+    .window-fog {
+      position: absolute;
+      top: 8%;
+      left: 50%;
+
+      width: min(76%, 17rem);
+      height: 17rem;
+
+      pointer-events: none;
+
+      border-radius: 0.65rem;
+
+      background:
+        radial-gradient(
+          ellipse at 50% 43%,
+          rgba(255, 255, 255, 0.36),
+          rgba(180, 245, 255, 0.24) 35%,
+          rgba(180, 245, 255, 0.08) 61%,
+          transparent 100%
+        );
+
+      filter: blur(0.2rem);
+      opacity: 0.78;
+
+      transform: translateX(-50%);
+      animation: windowClears 7s ease-in-out infinite;
     }
 
     .window-light {
       position: absolute;
-      top: 10%;
+      top: 8%;
       left: 50%;
 
-      width: min(75%, 15rem);
-      height: 16rem;
+      width: min(76%, 17rem);
+      height: 17rem;
 
       pointer-events: none;
 
       background:
         linear-gradient(
           125deg,
-          rgba(255, 255, 255, 0.14),
+          rgba(255, 255, 255, 0.18),
           transparent 36%
         );
 
       transform: translateX(-50%);
     }
 
-    .window-copy {
+    .distance-line {
       position: absolute;
+      right: 13%;
+      bottom: 23%;
+
+      width: 5rem;
+      height: 1px;
+
+      background:
+        linear-gradient(
+          90deg,
+          transparent,
+          rgba(244, 212, 126, 0.9)
+        );
+
+      box-shadow:
+        0 0 1rem rgba(244, 212, 126, 0.34);
+
+      transform: rotate(-16deg);
+    }
+
+    .distance-line::after {
+      position: absolute;
+      top: 50%;
+      right: 0;
+
+      width: 0.48rem;
+      height: 0.48rem;
+
+      content: "";
+
+      border-top: 1px solid var(--gold-bright);
+      border-right: 1px solid var(--gold-bright);
+
+      transform:
+        translateY(-50%)
+        rotate(45deg);
+    }
+
+    .window-copy {
+      position: relative;
       z-index: 2;
-      right: 1.4rem;
-      bottom: 1.4rem;
-      left: 1.4rem;
     }
 
     .window-label {
@@ -865,15 +1027,15 @@
     }
 
     /* ============================================================
-       THREE REVELATIONS
+       STORY CARDS
        ============================================================ */
 
-    .revelation-stage {
+    .story-stage {
       display: grid;
       gap: 1rem;
     }
 
-    .revelation-grid {
+    .scene-grid {
       display: grid;
 
       grid-template-columns:
@@ -882,7 +1044,7 @@
       gap: 0.9rem;
     }
 
-    .revelation-card {
+    .scene-card {
       position: relative;
 
       min-width: 0;
@@ -902,7 +1064,7 @@
         box-shadow var(--transition);
     }
 
-    .revelation-card:hover {
+    .scene-card:hover {
       border-color: rgba(224, 184, 91, 0.34);
 
       box-shadow:
@@ -912,22 +1074,43 @@
       transform: translateY(-3px);
     }
 
-    .chapter-index {
+    .scene-card::before {
+      position: absolute;
+      top: 0;
+      right: 0;
+
+      width: 8rem;
+      height: 8rem;
+
+      pointer-events: none;
+      content: "";
+
+      background:
+        radial-gradient(
+          circle at 100% 0,
+          rgba(117, 233, 255, 0.11),
+          transparent 68%
+        );
+    }
+
+    .scene-index {
       display: block;
       margin-bottom: 0.8rem;
     }
 
-    .revelation-card h3 {
+    .scene-card h3 {
       margin-bottom: 0.65rem;
     }
 
-    .revelation-card p {
+    .scene-card p {
       margin-bottom: 0;
       color: var(--muted-strong);
     }
 
-    .revelation-card blockquote {
-      margin: 1rem 0 0;
+    .scene-card blockquote {
+      margin:
+        1rem 0
+        0;
       padding: 0.85rem 0.95rem;
 
       border-left: 0.2rem solid var(--cyan);
@@ -945,15 +1128,15 @@
     }
 
     /* ============================================================
-       OBSERVER DIALOGUE
+       WINDOW DIALOGUE
        ============================================================ */
 
     .dialogue-stage {
       display: grid;
 
       grid-template-columns:
-        minmax(0, 0.82fr)
-        minmax(0, 1.18fr);
+        minmax(0, 0.86fr)
+        minmax(0, 1.14fr);
 
       gap: 1rem;
     }
@@ -983,7 +1166,7 @@
 
     .dialogue-panel {
       display: grid;
-      gap: 0.8rem;
+      gap: 0.85rem;
     }
 
     .dialogue-line {
@@ -999,14 +1182,14 @@
       background: rgba(255, 255, 255, 0.025);
     }
 
-    .dialogue-line[data-speaker="observer"] {
+    .dialogue-line[data-side="you"] {
       justify-self: start;
 
       border-color: rgba(117, 233, 255, 0.19);
       box-shadow: inset 0.2rem 0 0 rgba(117, 233, 255, 0.3);
     }
 
-    .dialogue-line[data-speaker="window"] {
+    .dialogue-line[data-side="window"] {
       justify-self: end;
 
       border-color: rgba(224, 184, 91, 0.2);
@@ -1028,68 +1211,62 @@
     }
 
     /* ============================================================
-       SIGHT VERSUS UNDERSTANDING
+       ACCESS GRID
        ============================================================ */
 
-    .comparison-section {
+    .access-section {
       display: grid;
       gap: 1rem;
 
       padding: clamp(1rem, 2.8vw, 2rem);
 
-      border: 1px solid var(--border-cool);
+      border: 1px solid var(--border-violet);
       border-radius: var(--radius-xl);
 
       background:
         radial-gradient(
           circle at 100% 0,
-          rgba(117, 233, 255, 0.09),
+          rgba(183, 152, 255, 0.1),
           transparent 22rem
         ),
         linear-gradient(
           145deg,
-          rgba(12, 24, 42, 0.86),
-          rgba(4, 7, 16, 0.94)
+          rgba(17, 20, 43, 0.9),
+          rgba(4, 7, 16, 0.95)
         );
 
       box-shadow: var(--shadow-deep);
     }
 
-    .comparison-grid {
+    .access-grid {
       display: grid;
 
       grid-template-columns:
-        repeat(2, minmax(0, 1fr));
+        repeat(4, minmax(0, 1fr));
 
-      gap: 0.8rem;
+      gap: 0.75rem;
     }
 
-    .comparison-card {
+    .access-card {
       min-width: 0;
-      padding: 1.15rem;
+      padding: 1rem;
 
-      border: 1px solid rgba(117, 233, 255, 0.14);
+      border: 1px solid rgba(183, 152, 255, 0.16);
       border-radius: var(--radius-md);
 
       background:
         linear-gradient(
           145deg,
-          rgba(117, 233, 255, 0.05),
+          rgba(183, 152, 255, 0.065),
           rgba(255, 255, 255, 0.015)
         );
     }
 
-    .comparison-card[data-mode="visible"] {
-      box-shadow: inset 0.2rem 0 0 var(--cyan);
-    }
-
-    .comparison-card[data-mode="hidden"] {
-      box-shadow: inset 0.2rem 0 0 var(--violet);
-    }
-
-    .comparison-card span {
+    .access-card span {
       display: block;
       margin-bottom: 0.55rem;
+
+      color: var(--violet-soft);
 
       font-size: 0.62rem;
       font-weight: 850;
@@ -1097,15 +1274,7 @@
       text-transform: uppercase;
     }
 
-    .comparison-card[data-mode="visible"] span {
-      color: var(--cyan);
-    }
-
-    .comparison-card[data-mode="hidden"] span {
-      color: var(--violet-soft);
-    }
-
-    .comparison-card strong {
+    .access-card strong {
       display: block;
       margin-bottom: 0.45rem;
 
@@ -1114,14 +1283,16 @@
         "Times New Roman",
         serif;
 
-      font-size: 1.35rem;
+      font-size: 1.2rem;
       font-weight: 600;
       line-height: 1.16;
     }
 
-    .comparison-card p {
+    .access-card p {
       margin-bottom: 0;
-      color: var(--muted-strong);
+
+      color: var(--muted);
+      font-size: 0.8rem;
     }
 
     /* ============================================================
@@ -1161,7 +1332,7 @@
     }
 
     .practical-copy h2 {
-      max-width: 13ch;
+      max-width: 12ch;
       margin-bottom: 0.8rem;
 
       font-size: clamp(2rem, 4.7vw, 4rem);
@@ -1286,7 +1457,7 @@
       border-top: 1px solid var(--rule);
     }
 
-    .evidence-body > p {
+    .evidence-body p {
       max-width: var(--reading-width);
       margin-bottom: 0;
 
@@ -1325,8 +1496,6 @@
     }
 
     .evidence-grid p {
-      margin-bottom: 0;
-
       color: var(--muted);
       font-size: 0.76rem;
     }
@@ -1394,17 +1563,61 @@
     }
 
     /* ============================================================
+       ANIMATION
+       ============================================================ */
+
+    @keyframes windowClears {
+      0%,
+      100% {
+        opacity: 0.78;
+        transform:
+          translateX(-50%)
+          scale(1.02);
+      }
+
+      50% {
+        opacity: 0.18;
+        transform:
+          translateX(-50%)
+          scale(1);
+      }
+    }
+
+    .js .reveal {
+      opacity: 0;
+      transform: translateY(1rem);
+      transition:
+        opacity 520ms ease,
+        transform 520ms cubic-bezier(0.2, 0.72, 0.25, 1);
+    }
+
+    .js .reveal.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .js .window-stage.is-awake .window-fog {
+      animation:
+        windowClears 7s ease-in-out infinite;
+    }
+
+    /* ============================================================
        RESPONSIVE
        ============================================================ */
 
     @media (max-width: 68rem) {
-      .revelation-grid {
+      .scene-grid {
         grid-template-columns:
           repeat(2, minmax(0, 1fr));
       }
 
-      .revelation-card:last-child {
+      .scene-card:last-child {
         grid-column: 1 / -1;
+      }
+
+      .access-grid {
+        grid-template-columns:
+          repeat(2, minmax(0, 1fr));
       }
 
       .evidence-grid {
@@ -1421,8 +1634,8 @@
         grid-template-columns: 1fr;
       }
 
-      .window-structure {
-        min-height: 24rem;
+      .window-stage {
+        min-height: 25rem;
       }
 
       .section-heading {
@@ -1526,38 +1739,38 @@
         width: 100%;
       }
 
-      .window-structure {
+      .window-stage {
         min-height: 22rem;
         padding: 1rem;
       }
 
-      .window-frame,
+      .chamber-window,
+      .window-fog,
       .window-light {
-        width: 10.5rem;
-        height: 13rem;
+        width: 11rem;
+        height: 13.5rem;
       }
 
-      .revelation-grid,
-      .comparison-grid,
+      .scene-grid,
+      .access-grid,
       .evidence-grid {
         grid-template-columns: 1fr;
       }
 
-      .revelation-card:last-child {
+      .scene-card:last-child {
         grid-column: auto;
       }
 
-      .revelation-card,
+      .scene-card,
       .dialogue-intro,
       .dialogue-panel,
-      .comparison-section,
-      .comparison-card,
+      .access-section,
       .practical-return {
         border-radius: 1rem;
       }
 
       .dialogue-line {
-        max-width: 95%;
+        max-width: 96%;
       }
 
       .page-footer {
@@ -1590,19 +1803,23 @@
         transition-duration: 0.001ms !important;
       }
 
-      .revelation-card:hover,
+      .scene-card:hover,
       .button:hover {
+        transform: none;
+      }
+
+      .js .reveal {
+        opacity: 1;
         transform: none;
       }
     }
 
     @media (prefers-reduced-transparency: reduce) {
       .page-topbar,
-      .revelation-card,
+      .scene-card,
       .dialogue-intro,
       .dialogue-panel,
-      .comparison-section,
-      .comparison-card,
+      .access-section,
       .practical-return,
       .evidence-disclosure {
         background-color: var(--ink-1);
@@ -1614,12 +1831,13 @@
       body,
       .page-topbar,
       .route-hero,
-      .window-structure,
-      .revelation-card,
+      .window-stage,
+      .chamber-window,
+      .scene-card,
       .dialogue-intro,
       .dialogue-panel,
-      .comparison-section,
-      .comparison-card,
+      .access-section,
+      .access-card,
       .practical-return,
       .evidence-disclosure {
         color: CanvasText;
@@ -1633,7 +1851,7 @@
       }
 
       .brand-mark,
-      .window-frame {
+      .chamber-window {
         border: 2px solid ButtonText;
         background: ButtonFace;
         box-shadow: none;
@@ -1651,7 +1869,11 @@
       .page-topbar,
       .hero-actions,
       .practical-actions,
-      .page-footer {
+      .page-footer,
+      .chamber-window,
+      .window-fog,
+      .window-light,
+      .distance-line {
         display: none !important;
       }
 
@@ -1660,12 +1882,12 @@
       }
 
       .route-hero,
-      .window-structure,
-      .revelation-card,
+      .window-stage,
+      .scene-card,
       .dialogue-intro,
       .dialogue-panel,
-      .comparison-section,
-      .comparison-card,
+      .access-section,
+      .access-card,
       .practical-return,
       .evidence-disclosure {
         color: #111;
@@ -1675,13 +1897,8 @@
       }
 
       .route-hero,
-      .window-structure {
+      .window-stage {
         min-height: 0;
-      }
-
-      .window-frame,
-      .window-light {
-        display: none;
       }
 
       .evidence-disclosure:not([open])
@@ -1697,7 +1914,7 @@
     class="skip-link"
     href="#main"
   >
-    Skip to the Window
+    Skip to the story
   </a>
 
   <div class="page-shell">
@@ -1730,7 +1947,7 @@
         </a>
 
         <a href="/showroom/wonders/diamond/">
-          Diamond
+          Next
         </a>
 
         <a href="/index.html">
@@ -1745,7 +1962,7 @@
         aria-labelledby="page-title"
       >
         <div class="route-hero__inner">
-          <div>
+          <div class="reveal">
             <div class="route-kicker">
               South Route · Chamber One
             </div>
@@ -1755,17 +1972,16 @@
             </h1>
 
             <p class="hero-subtitle">
-              Distance collapses before understanding does.
+              You crossed the door. Now you learn that arrival begins as seeing.
             </p>
 
             <p class="hero-lead">
-              The glass clears. A world that existed as coordinates,
-              reports, and archived testimony becomes visible all at
-              once. You can see roofs, roads, water, lights, walls, and
-              movement. The danger is immediate: visibility feels like
-              knowledge. It is not. The Window gives you access to a
-              surface. The lives behind that surface remain deeper than
-              the view.
+              You expected the first step to feel like entering a world.
+              Instead, you wake in a chamber facing glass. The threshold
+              did not reject you. It did not complete you either. Beyond
+              the Window, a living layer brightens into view. You are
+              close enough to know it is real and limited enough to know
+              you cannot touch it yet.
             </p>
 
             <div class="hero-actions">
@@ -1786,18 +2002,28 @@
           </div>
 
           <aside
-            class="window-structure"
-            aria-label="Mirrorland Window"
+            class="window-stage reveal"
+            aria-label="Mirrorland chamber window"
           >
-            <div
-              class="window-frame"
+            <span
+              class="chamber-window"
               aria-hidden="true"
-            ></div>
+            ></span>
 
-            <div
+            <span
+              class="window-fog"
+              aria-hidden="true"
+            ></span>
+
+            <span
               class="window-light"
               aria-hidden="true"
-            ></div>
+            ></span>
+
+            <span
+              class="distance-line"
+              aria-hidden="true"
+            ></span>
 
             <div class="window-copy">
               <span class="window-label">
@@ -1805,12 +2031,12 @@
               </span>
 
               <strong>
-                You can finally see the world.
+                Perception opens before agency.
               </strong>
 
               <p>
-                What you see first will be the easiest part to
-                misunderstand.
+                The visible world is not a possession. It is the first
+                layer you are allowed to witness.
               </p>
             </div>
           </aside>
@@ -1819,89 +2045,87 @@
 
       <section
         id="first-view"
-        class="revelation-stage"
+        class="story-stage"
         aria-labelledby="first-view-title"
       >
-        <header class="section-heading">
+        <header class="section-heading reveal">
           <div>
             <div class="eyebrow">
               The First View
             </div>
 
             <h2 id="first-view-title">
-              Three things become visible immediately.
+              The glass clears slowly.
             </h2>
           </div>
 
           <p>
-            None of them tells you the whole story.
+            The first South lesson is not wonder alone. It is limitation
+            inside wonder.
           </p>
         </header>
 
-        <div class="revelation-grid">
-          <article class="revelation-card">
-            <span class="chapter-index">
-              01 · Structure
+        <div class="scene-grid">
+          <article class="scene-card reveal">
+            <span class="scene-index">
+              01 · You Can See
             </span>
 
             <h3>
-              You see what people built.
+              A world becomes visible.
             </h3>
 
             <p>
-              Roads reveal where movement was expected. Walls reveal what
-              someone feared. Towers reveal where authority gathered.
-              Empty foundations reveal what could not be sustained.
+              Roofs appear first. Then roads, water, distant light, and a
+              horizon that does not behave like a picture. Something is
+              moving out there. The view is not symbolic. The layer
+              beyond the glass is alive.
             </p>
 
             <blockquote>
-              “Architecture remembers decisions long after the decision
-              makers are gone.”
+              Seeing confirms arrival, but it does not complete arrival.
             </blockquote>
           </article>
 
-          <article class="revelation-card">
-            <span class="chapter-index">
-              02 · Pattern
+          <article class="scene-card reveal">
+            <span class="scene-index">
+              02 · You Cannot Touch
             </span>
 
             <h3>
-              You see what repeats.
+              Your hand stops at the glass.
             </h3>
 
             <p>
-              Light clusters around some districts and disappears from
-              others. Water follows engineered channels. Crowds gather
-              where access is permitted. Repetition reveals systems, but
-              not yet whether those systems are trusted, tolerated, or
-              feared.
+              You reach before you decide to. The chamber lets you try.
+              Your fingers meet the Window, and the world remains just
+              beyond contact. You are present, but your presence has not
+              become action.
             </p>
 
             <blockquote>
-              “A pattern can show you where pressure accumulates. It
-              cannot tell you how the pressure feels.”
+              Access crossed the threshold. Agency did not.
             </blockquote>
           </article>
 
-          <article class="revelation-card">
-            <span class="chapter-index">
-              03 · Absence
+          <article class="scene-card reveal">
+            <span class="scene-index">
+              03 · You Cannot Command
             </span>
 
             <h3>
-              You see what should be there but is not.
+              The world does not answer your will.
             </h3>
 
             <p>
-              Silence appears beside infrastructure. Abandoned spaces sit
-              near functioning ones. Records mention institutions the
-              landscape no longer contains. Absence is evidence, but it
-              is not yet explanation.
+              You focus on a road and nothing changes. You look toward a
+              light and it does not move closer. The Window is not a
+              control panel. It is a boundary that lets perception begin
+              without allowing power to arrive too early.
             </p>
 
             <blockquote>
-              “What is missing may be the most important thing the Window
-              shows you.”
+              A world that can be seen is not yet a world that can be used.
             </blockquote>
           </article>
         </div>
@@ -1911,189 +2135,175 @@
         class="dialogue-stage"
         aria-labelledby="dialogue-title"
       >
-        <div class="dialogue-intro">
+        <div class="dialogue-intro reveal">
           <div class="eyebrow">
-            The Observer’s Mistake
+            The Window’s Correction
           </div>
 
           <h2 id="dialogue-title">
-            You think the view is neutral.
+            You mistake nearness for entry.
           </h2>
 
           <p>
-            The Window frames the world. It determines what fits inside
-            the view and what remains outside it. Every observation
-            begins from a position, at a distance, through a boundary.
+            Distance has changed. That matters. But distance is not the
+            only boundary. The Window teaches you the difference between
+            seeing a place and belonging to the conditions inside it.
           </p>
         </div>
 
         <div
-          class="dialogue-panel"
-          aria-label="Window observation dialogue"
+          class="dialogue-panel reveal"
+          aria-label="Window dialogue"
         >
           <div
             class="dialogue-line"
-            data-speaker="observer"
+            data-side="you"
           >
-            <span>Observer</span>
+            <span>You</span>
 
             <p>
-              “I can see the settlement clearly.”
+              “I crossed the door. Why am I still outside?”
             </p>
           </div>
 
           <div
             class="dialogue-line"
-            data-speaker="window"
+            data-side="window"
           >
             <span>Window</span>
 
             <p>
-              “You can see the part of the settlement facing you.”
+              “You are not outside. You are not inside in the way you
+              expected.”
             </p>
           </div>
 
           <div
             class="dialogue-line"
-            data-speaker="observer"
+            data-side="you"
           >
-            <span>Observer</span>
+            <span>You</span>
 
             <p>
-              “The streets are calm.”
+              “Then what am I allowed to do?”
             </p>
           </div>
 
           <div
             class="dialogue-line"
-            data-speaker="window"
-          >
-            <span>Window</span>
-
-            <p>
-              “Calm may mean safety. It may also mean curfew, exhaustion,
-              absence, or fear.”
-            </p>
-          </div>
-
-          <div
-            class="dialogue-line"
-            data-speaker="observer"
-          >
-            <span>Observer</span>
-
-            <p>
-              “Then what am I allowed to conclude?”
-            </p>
-          </div>
-
-          <div
-            class="dialogue-line"
-            data-speaker="window"
+            data-side="window"
           >
             <span>Window</span>
 
             <p>
-              “Conclude what the view supports. Preserve everything else
-              as a question.”
+              “Look. Notice the frame. Notice the distance. Notice what
+              your desire to act makes you ignore.”
+            </p>
+          </div>
+
+          <div
+            class="dialogue-line"
+            data-side="you"
+          >
+            <span>You</span>
+
+            <p>
+              “What comes after seeing?”
+            </p>
+          </div>
+
+          <div
+            class="dialogue-line"
+            data-side="window"
+          >
+            <span>Window</span>
+
+            <p>
+              “Pressure. If perception is honest, the next chamber will
+              ask whether you can hold form under it.”
             </p>
           </div>
         </div>
       </section>
 
       <section
-        class="comparison-section"
-        aria-labelledby="comparison-title"
+        class="access-section"
+        aria-labelledby="access-title"
       >
-        <header class="section-heading">
+        <header class="section-heading reveal">
           <div>
             <div class="eyebrow">
-              Sight Is Not Understanding
+              What the Window Gives
             </div>
 
-            <h2 id="comparison-title">
-              The visible world has a hidden cost.
+            <h2 id="access-title">
+              The first layer is perception without agency.
             </h2>
           </div>
 
           <p>
-            A surface can be accurately observed and still be
-            fundamentally misunderstood.
+            The Window is generous and strict. It opens the visible world
+            layer while protecting that world from premature command.
           </p>
         </header>
 
-        <div class="comparison-grid">
-          <article
-            class="comparison-card"
-            data-mode="visible"
-          >
-            <span>What the Window Can Show</span>
+        <div class="access-grid">
+          <article class="access-card reveal">
+            <span>Granted</span>
 
             <strong>
-              Form, movement, pattern, condition, and change.
+              View.
             </strong>
 
             <p>
-              You can observe structures, distances, flows, weather,
-              damage, density, boundaries, and the visible effects of
-              earlier choices.
+              You can see structures, motion, distance, weather, light,
+              absence, and the first shape of the world beyond.
             </p>
           </article>
 
-          <article
-            class="comparison-card"
-            data-mode="hidden"
-          >
-            <span>What the Window Cannot Supply Alone</span>
+          <article class="access-card reveal">
+            <span>Granted</span>
 
             <strong>
-              Meaning, memory, motive, fear, trust, and legitimacy.
+              Orientation.
             </strong>
 
             <p>
-              You cannot see why a person stayed, why a family left, why
-              a rule is obeyed, why a building is sacred, or why a system
-              that looks stable may already be failing.
+              You can begin learning where you are, what faces you, and
+              what the frame does not include.
             </p>
           </article>
 
-          <article
-            class="comparison-card"
-            data-mode="visible"
-          >
-            <span>What the View Can Confirm</span>
+          <article class="access-card reveal">
+            <span>Withheld</span>
 
             <strong>
-              Something exists in a particular condition.
+              Touch.
             </strong>
 
             <p>
-              The view can establish observable state at a defined place,
-              time, angle, scale, and distance.
+              You cannot yet reach into the scene, alter objects, answer
+              need, or disturb what lives beyond the glass.
             </p>
           </article>
 
-          <article
-            class="comparison-card"
-            data-mode="hidden"
-          >
-            <span>What Requires Entry</span>
+          <article class="access-card reveal">
+            <span>Withheld</span>
 
             <strong>
-              How the condition became ordinary life.
+              Understanding.
             </strong>
 
             <p>
-              Understanding requires records, testimony, history,
-              relationships, system ownership, and the lived experience
-              of people inside the scene.
+              You cannot yet know motive, memory, legitimacy, fear, trust,
+              or what any visible pattern costs to endure.
             </p>
           </article>
         </div>
       </section>
 
       <section
-        class="practical-return"
+        class="practical-return reveal"
         aria-labelledby="practical-title"
       >
         <div class="practical-copy">
@@ -2102,15 +2312,14 @@
           </span>
 
           <h2 id="practical-title">
-            Describe before you explain.
+            Do not explain what you can only see.
           </h2>
 
           <p>
-            Say what you can actually see. Name the angle, distance,
-            time, and limits of the view. Do not turn pattern into motive
-            or appearance into certainty. The strongest observation is
-            not the one that explains everything. It is the one that
-            preserves the boundary between evidence and interpretation.
+            Name the frame. Name the distance. Name the limit. The Window
+            has opened, but the world has not submitted itself to your
+            interpretation. The next chamber will ask whether perception
+            can survive pressure without breaking into false certainty.
           </p>
         </div>
 
@@ -2134,9 +2343,9 @@
       <details class="evidence-disclosure">
         <summary>
           <span>
-            <strong>Window Observation Boundary</strong>
+            <strong>Story Reveal Boundary</strong>
             <small>
-              What this chamber establishes—and what remains beyond the view
+              What this chamber reveals, and what remains withheld
             </small>
           </span>
 
@@ -2145,39 +2354,38 @@
 
         <div class="evidence-body">
           <p>
-            The Window is a foreground threshold within the Mirrorland
-            narrative architecture. It enables visible encounter with a
-            deeper world layer. It does not grant complete historical,
-            cultural, personal, institutional, or scientific
-            understanding of what appears through it.
+            This chamber reveals that the player’s first South arrival is
+            perceptual, not embodied. The Window opens the visible world
+            layer, but it does not grant touch, control, full agency,
+            complete understanding, or permission to intervene.
           </p>
 
           <div class="evidence-grid">
             <article>
-              <span>Established Here</span>
+              <span>Revealed Here</span>
 
               <p>
-                The Window collapses distance and exposes observable
-                structures, patterns, conditions, movement, and absence.
+                The player can see into the next layer after crossing the
+                threshold, but perception arrives before agency.
               </p>
             </article>
 
             <article>
-              <span>Not Established Here</span>
+              <span>Withheld Here</span>
 
               <p>
-                Motive, legitimacy, total history, private experience,
-                system truth, or permission to intervene.
+                Touch, control, full embodiment, full conjugation, Hearth,
+                H-Earth, ZIONTS, full Audralia systems, and final Earth
+                stakes remain closed.
               </p>
             </article>
 
             <article>
-              <span>Continuity Requirement</span>
+              <span>Next Pressure</span>
 
               <p>
-                Every observation should preserve position, time, scale,
-                framing, uncertainty, and a route back to the larger
-                Constellation.
+                After seeing without agency, the player must face the
+                Diamond and learn whether form can hold under pressure.
               </p>
             </article>
           </div>
@@ -2192,7 +2400,7 @@
         </strong>
 
         <span>
-          The world is visible. Its meaning is still ahead of you.
+          The world is visible. It is not yet yours to touch.
         </span>
       </div>
 
@@ -2211,20 +2419,162 @@
       </nav>
     </footer>
   </div>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const CONTRACT =
+        "SHOWROOM_SATELLITE_OPEN_THE_WINDOW_HTML_TNT_v2_PERCEPTION_WITHOUT_AGENCY";
+
+      const root =
+        document.documentElement;
+
+      root.classList.add("js");
+
+      const reducedMotionQuery =
+        window.matchMedia &&
+        window.matchMedia("(prefers-reduced-motion: reduce)");
+
+      const reducedMotion =
+        Boolean(
+          reducedMotionQuery &&
+          reducedMotionQuery.matches
+        );
+
+      function markVisible(elements) {
+        for (const element of elements) {
+          element.classList.add("is-visible");
+        }
+      }
+
+      function initializeReveals() {
+        const revealElements =
+          Array.from(
+            document.querySelectorAll(".reveal")
+          );
+
+        if (!revealElements.length) {
+          return;
+        }
+
+        if (
+          reducedMotion ||
+          typeof IntersectionObserver !== "function"
+        ) {
+          markVisible(revealElements);
+          return;
+        }
+
+        const observer =
+          new IntersectionObserver(
+            entries => {
+              for (const entry of entries) {
+                if (!entry.isIntersecting) {
+                  continue;
+                }
+
+                entry.target.classList.add("is-visible");
+                observer.unobserve(entry.target);
+              }
+            },
+            {
+              root: null,
+              threshold: 0.14,
+              rootMargin: "0px 0px -6% 0px"
+            }
+          );
+
+        for (const element of revealElements) {
+          observer.observe(element);
+        }
+      }
+
+      function initializeWindowStage() {
+        const windowStage =
+          document.querySelector(".window-stage");
+
+        if (!windowStage || reducedMotion) {
+          return;
+        }
+
+        window.setTimeout(
+          () => {
+            windowStage.classList.add("is-awake");
+          },
+          240
+        );
+      }
+
+      function publishReceipt() {
+        const payload = {
+          contract: CONTRACT,
+          route: "/showroom/wonders/window/",
+          routeId: "south-1",
+          page: "Open the Window",
+          localEnhancementOnly: true,
+          globalRuntimeOwned: false,
+          navigationOwned: false,
+          systematicReveal: "perception-without-agency",
+          previousRoute: "/showroom/",
+          nextRoute: "/showroom/wonders/diamond/",
+          windowState: "open",
+          windowPurpose: "foreground-threshold-to-visible-world-layer",
+          observationBoundary: "access-does-not-equal-understanding",
+          perceptionGranted: true,
+          agencyAutomatic: false,
+          touchGranted: false,
+          reducedMotion: reducedMotion,
+          timestamp: new Date().toISOString()
+        };
+
+        window.dispatchEvent(
+          new CustomEvent(
+            "SHOWROOM_SATELLITE_PAGE_READY",
+            {
+              detail: Object.freeze(payload)
+            }
+          )
+        );
+      }
+
+      if (document.readyState === "loading") {
+        document.addEventListener(
+          "DOMContentLoaded",
+          () => {
+            initializeReveals();
+            initializeWindowStage();
+            publishReceipt();
+          },
+          {
+            once: true
+          }
+        );
+      } else {
+        initializeReveals();
+        initializeWindowStage();
+        publishReceipt();
+      }
+    })();
+  </script>
 </body>
 </html>
 
 <!--
-SHOWROOM_SATELLITE_OPEN_THE_WINDOW_HTML_RECEIPT_v1
+SHOWROOM_SATELLITE_OPEN_THE_WINDOW_HTML_RECEIPT_v2_PERCEPTION_WITHOUT_AGENCY
 
 TARGET:
 /showroom/wonders/window/index.html
 
 STATUS:
-COMPLETE NEW SELF-CONTAINED HTML FILE
+COMPLETE SELF-CONTAINED HTML REPLACEMENT
 
-EMBEDDED VISUAL SYSTEM:
-SHOWROOM_SATELLITE_PAGE_EMBEDDED_VISUAL_SYSTEM_v1
+SOURCE BASELINE:
+SHOWROOM_SATELLITE_OPEN_THE_WINDOW_HTML_TNT_v1
+supplied by user as current source baseline for south-1.
+
+NEW CONTRACT:
+SHOWROOM_SATELLITE_OPEN_THE_WINDOW_HTML_TNT_v2_PERCEPTION_WITHOUT_AGENCY
 
 ROUTE FAMILY:
 Wonders / South
@@ -2232,55 +2582,108 @@ Wonders / South
 ROUTE ID:
 south-1
 
+ROUTE TITLE:
+Open the Window
+
+PARENT:
+/showroom/
+
 PREVIOUS ROUTE:
 /showroom/
 
 NEXT ROUTE:
 /showroom/wonders/diamond/
 
-PARENT:
+RETURN ROUTE:
 /showroom/
 
-PURPOSE:
-- begin the South wonders sequence;
-- open the Mirrorland Window as a foreground threshold;
-- collapse distance without claiming complete understanding;
-- distinguish observation from interpretation;
-- establish framing, scale, position, and absence as evidence conditions;
-- prepare the visitor for the Diamond continuity chamber.
+MAIN COMPASS:
+/index.html
 
-PRESENTATION STANDARD:
-- immersive;
-- second-person;
-- visual;
-- dialogue-driven;
-- observation-oriented;
-- practical;
-- architectural;
-- evidence boundary retained beneath the experience.
+WINDOW STATE:
+open
 
-ARCHITECTURAL FEATURES:
-- complete embedded CSS;
-- Showroom-aligned cosmic atmosphere;
-- CSS-built Window object;
-- three-part first-view sequence;
-- observer and Window dialogue;
-- sight-versus-understanding comparison;
-- practical observation rule;
-- evidence-boundary disclosure;
-- responsive mobile composition;
-- keyboard focus;
-- reduced motion;
-- reduced transparency;
-- forced colors;
-- print handling.
+WINDOW PURPOSE:
+foreground-threshold-to-visible-world-layer
 
-NON-CLAIMS:
-- no complete world understanding;
-- no scientific validation;
-- no intervention authorization;
-- no Earth-transfer authorization;
-- no runtime dependency;
-- no controller ownership;
-- no JavaScript requirement.
+OBSERVATION BOUNDARY:
+access-does-not-equal-understanding
+
+NARRATIVE AUTHORITY:
+SHOWROOM_MIRRORLAND_AUDRALIA_ROUTE_PAGE_NARRATIVE_FREEZE_PACKET_v1_1
+SHOWROOM_ROUTE_PAGE_RENEWAL_RULES_LOCK_v1
+
+PRIMARY NARRATIVE CORRECTIONS FROM v1:
+- Reframed South-1 as the first post-door condition rather than a general observation-discipline page.
+- Preserved infrastructure routes, route identity, window metadata, and observation-boundary metadata.
+- Established that the player crossed the threshold but begins South as perception without agency.
+- Preserved the Window as foreground threshold to a visible world layer.
+- Withheld touch, control, full agency, full understanding, embodiment, and deeper systems.
+- Connected the page to south-2 by making the next pressure form-under-pressure through the Diamond.
+
+PAGE 5 / SOUTH-1 STORY SPINE:
+1. The player has crossed the door.
+2. The first arrival is not full entry into action.
+3. The player wakes in a chamber facing glass.
+4. The Window clears slowly.
+5. A living world layer becomes visible.
+6. The player can see but cannot touch.
+7. The player learns perception arrives before agency.
+8. The next chamber becomes the Diamond, where pressure tests form.
+
+CONTROLLED REVEAL:
+The player’s first arrival is perceptual, not embodied.
+They can see into the next layer, but cannot yet touch, change, command, or fully understand it.
+
+WITHHELD:
+- touch;
+- control;
+- full agency;
+- full embodiment;
+- full conjugation;
+- Hearth;
+- H-Earth;
+- ZIONTS;
+- full Audralia systems;
+- final Earth stakes.
+
+DOMINANT ANIMATION IDEA:
+The chamber Window slowly clears, revealing a visible but unreachable world layer.
+
+ANTI-TILED-STAR CORRECTION:
+The page does not use repeating square-cell starfields as the main atmosphere.
+Atmospheric stars are hand-positioned through fixed radial points.
+The dominant animated visual is the clearing Window.
+
+EMBEDDED SYSTEM:
+- HTML structure
+- embedded CSS
+- embedded page-local JavaScript
+- no external dependencies
+- no shared runtime ownership
+
+PAGE-LOCAL JAVASCRIPT AUTHORITY:
+- local reveal enhancement only
+- local window-stage awakening only
+- local readiness event only
+- no navigation ownership
+- no controller calls
+- no constellation mutation
+- no Main Compass ownership
+- safe without JavaScript
+
+ACCESSIBILITY / RESILIENCE:
+- skip link
+- semantic sections
+- focus-visible handling
+- reduced-motion support
+- reduced-transparency support
+- forced-colors support
+- print handling
+- readable without JavaScript
+
+NOT CLAIMED:
+- runtime validation
+- browser visual pass
+- deployment pass
 -->

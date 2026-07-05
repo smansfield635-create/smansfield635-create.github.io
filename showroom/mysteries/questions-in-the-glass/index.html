@@ -1,15 +1,15 @@
 <!-- TARGET FILE: /showroom/mysteries/questions-in-the-glass/index.html -->
-<!-- COMPLETE NEW FILE -->
-<!-- SHOWROOM_SATELLITE_QUESTIONS_IN_THE_GLASS_HTML_TNT_v1 -->
+<!-- COMPLETE REPLACEMENT -->
+<!-- SHOWROOM_SATELLITE_QUESTIONS_IN_THE_GLASS_HTML_TNT_v2_QUESTION_REFLECTION_FIELD -->
 
-<!doctype html> 
+<!doctype html>
 
 <html
   lang="en"
   data-route="/showroom/mysteries/questions-in-the-glass/"
   data-page="showroom-mysteries-questions-in-the-glass"
-  data-version="SHOWROOM-SATELLITE-QUESTIONS-IN-THE-GLASS-1.0.0"
-  data-contract="SHOWROOM_SATELLITE_QUESTIONS_IN_THE_GLASS_HTML_TNT_v1"
+  data-version="SHOWROOM-SATELLITE-QUESTIONS-IN-THE-GLASS-2.0.0"
+  data-contract="SHOWROOM_SATELLITE_QUESTIONS_IN_THE_GLASS_HTML_TNT_v2_QUESTION_REFLECTION_FIELD"
   data-showroom-satellite="true"
   data-showroom-route-family="mysteries"
   data-showroom-route-id="west-2"
@@ -37,19 +37,27 @@
 
   <meta
     name="description"
-    content="Stand before the Glass of Mirrorland. Examine how questions reveal the observer, how reflection becomes distortion, and why no answer is trustworthy until position and framing are preserved."
+    content="After the Unfinished World reveals visible gaps, the Glass reflects the player's questions back. The question itself becomes evidence of position, assumption, fear, desire, and readiness."
   >
 
   <meta
     name="showroom-page-contract"
-    content="SHOWROOM_SATELLITE_QUESTIONS_IN_THE_GLASS_HTML_TNT_v1"
+    content="SHOWROOM_SATELLITE_QUESTIONS_IN_THE_GLASS_HTML_TNT_v2_QUESTION_REFLECTION_FIELD"
   >
 
   <style>
     /* ============================================================
-       SHOWROOM SATELLITE PAGE EMBEDDED VISUAL SYSTEM v1
-       Mysteries / West expression
-       Questions in the Glass chamber
+       SHOWROOM SATELLITE PAGE EMBEDDED VISUAL SYSTEM v2
+       PAGE: west-2 · Questions in the Glass
+
+       Page-specific standard:
+       - one-file route page;
+       - embedded CSS;
+       - page-local JavaScript only;
+       - no external dependencies;
+       - no shared Showroom runtime ownership;
+       - no repeating tiled starfield as primary atmosphere;
+       - dominant animation object: reflective question-glass field.
        ============================================================ */
 
     :root {
@@ -59,7 +67,6 @@
       --ink-1: #050914;
       --ink-2: #091020;
       --ink-3: #101a30;
-      --ink-4: #17233d;
 
       --cream: #f5eddd;
       --cream-soft: #ddd3c1;
@@ -68,6 +75,7 @@
 
       --gold: #e0b85b;
       --gold-bright: #f4d47e;
+      --gold-soft: #ffe7a5;
       --gold-faint: rgba(224, 184, 91, 0.14);
 
       --cyan: #75e9ff;
@@ -116,13 +124,9 @@
       --radius-xl: 2rem;
 
       --page-width: 84rem;
-      --reading-width: 49rem;
+      --reading-width: 52rem;
 
-      --space-1: 0.4rem;
-      --space-2: 0.65rem;
-      --space-3: 0.95rem;
       --space-4: 1.3rem;
-      --space-5: 1.8rem;
       --space-6: 2.5rem;
       --space-7: 3.5rem;
 
@@ -199,34 +203,39 @@
       pointer-events: none;
       content: "";
 
-      opacity: 0.66;
+      opacity: 0.62;
 
-      background-image:
+      background:
         radial-gradient(
-          circle,
-          rgba(255, 255, 255, 0.8) 0 0.05rem,
-          transparent 0.067rem
-        ),
-        radial-gradient(
-          circle,
-          rgba(183, 152, 255, 0.58) 0 0.04rem,
+          circle at 17% 18%,
+          rgba(255, 255, 255, 0.74) 0 0.045rem,
           transparent 0.06rem
         ),
         radial-gradient(
-          circle,
-          rgba(117, 233, 255, 0.45) 0 0.045rem,
+          circle at 79% 16%,
+          rgba(183, 152, 255, 0.62) 0 0.04rem,
+          transparent 0.06rem
+        ),
+        radial-gradient(
+          circle at 91% 68%,
+          rgba(117, 233, 255, 0.56) 0 0.045rem,
           transparent 0.065rem
+        ),
+        radial-gradient(
+          circle at 34% 83%,
+          rgba(255, 255, 255, 0.46) 0 0.036rem,
+          transparent 0.055rem
+        ),
+        radial-gradient(
+          circle at 11% 66%,
+          rgba(183, 152, 255, 0.44) 0 0.032rem,
+          transparent 0.052rem
+        ),
+        radial-gradient(
+          circle at 58% 31%,
+          rgba(244, 212, 126, 0.34) 0 0.032rem,
+          transparent 0.052rem
         );
-
-      background-size:
-        6.1rem 6.1rem,
-        9.8rem 9.8rem,
-        14.2rem 14.2rem;
-
-      background-position:
-        0 0,
-        2.5rem 3.7rem,
-        6rem 1.8rem;
     }
 
     body::after {
@@ -252,6 +261,13 @@
         );
     }
 
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+    }
+
     a,
     button {
       -webkit-tap-highlight-color: transparent;
@@ -265,10 +281,7 @@
     h2,
     h3,
     p,
-    blockquote,
-    dl,
-    dd,
-    ul {
+    blockquote {
       margin-top: 0;
     }
 
@@ -281,10 +294,12 @@
     }
 
     p,
-    li,
-    dd,
     blockquote {
       text-wrap: pretty;
+    }
+
+    [hidden] {
+      display: none !important;
     }
 
     :focus-visible {
@@ -332,7 +347,7 @@
 
     .eyebrow,
     .route-kicker,
-    .chapter-index,
+    .scene-index,
     .glass-label,
     .practical-label {
       color: var(--gold-bright);
@@ -423,6 +438,10 @@
       transform: translateY(-1px);
     }
 
+    .button:active {
+      transform: translateY(0);
+    }
+
     .button-gold {
       border-color: rgba(255, 222, 142, 0.76);
       color: #171006;
@@ -438,6 +457,14 @@
       box-shadow:
         0 0.95rem 2.3rem rgba(156, 105, 25, 0.24),
         0 0 1.7rem rgba(245, 213, 130, 0.16);
+    }
+
+    .button-gold:hover {
+      border-color: #fff1bf;
+
+      box-shadow:
+        0 1rem 2.7rem rgba(156, 105, 25, 0.3),
+        0 0 2rem rgba(245, 213, 130, 0.22);
     }
 
     /* ============================================================
@@ -592,6 +619,10 @@
       letter-spacing: 0.05em;
       text-decoration: none;
       text-transform: uppercase;
+
+      transition:
+        color var(--transition-fast),
+        background var(--transition-fast);
     }
 
     .topbar-nav a:hover {
@@ -632,13 +663,13 @@
     }
 
     /* ============================================================
-       HERO GLASS
+       HERO / QUESTION GLASS
        ============================================================ */
 
     .route-hero {
       position: relative;
 
-      min-height: min(80vh, 50rem);
+      min-height: min(82vh, 52rem);
       overflow: hidden;
 
       border: 1px solid rgba(183, 152, 255, 0.24);
@@ -665,14 +696,36 @@
       isolation: isolate;
     }
 
+    .route-hero::before {
+      position: absolute;
+      z-index: -1;
+      inset: 0;
+
+      content: "";
+
+      background:
+        radial-gradient(
+          circle at 70% 42%,
+          transparent 0 9rem,
+          rgba(220, 231, 242, 0.055) 9.1rem 9.2rem,
+          transparent 9.3rem
+        ),
+        radial-gradient(
+          circle at 70% 42%,
+          transparent 0 14rem,
+          rgba(183, 152, 255, 0.045) 14.1rem 14.2rem,
+          transparent 14.3rem
+        );
+    }
+
     .route-hero__inner {
       display: grid;
 
       min-height: inherit;
 
       grid-template-columns:
-        minmax(0, 1.15fr)
-        minmax(18rem, 0.85fr);
+        minmax(0, 1.08fr)
+        minmax(18rem, 0.92fr);
 
       align-items: center;
       gap: clamp(2rem, 6vw, 6rem);
@@ -714,7 +767,7 @@
     }
 
     .hero-lead {
-      max-width: 44rem;
+      max-width: 45rem;
       margin-bottom: 1.5rem;
 
       color: var(--muted-strong);
@@ -727,8 +780,12 @@
       gap: 0.7rem;
     }
 
-    .glass-vault {
+    .glass-stage {
       position: relative;
+
+      display: grid;
+      align-content: end;
+      gap: 1rem;
 
       min-height: 28rem;
       overflow: hidden;
@@ -754,13 +811,22 @@
         inset 0.24rem 0 0 rgba(183, 152, 255, 0.28);
     }
 
-    .glass-frame {
+    .question-field {
       position: absolute;
-      top: 6%;
+      inset: 1rem 1rem 6.5rem;
+
+      pointer-events: none;
+    }
+
+    .glass-pane {
+      position: absolute;
+      top: 48%;
       left: 50%;
 
-      width: 12rem;
+      width: min(76%, 17rem);
       height: 16rem;
+
+      overflow: hidden;
 
       border: 1px solid rgba(220, 231, 242, 0.48);
       border-radius: 6rem 6rem 1rem 1rem;
@@ -786,12 +852,12 @@
         0 0 3rem rgba(183, 152, 255, 0.18),
         inset 0 0 2rem rgba(255, 255, 255, 0.05);
 
-      transform: translateX(-50%);
+      transform: translate(-50%, -50%);
     }
 
-    .glass-frame::before {
+    .glass-pane::before {
       position: absolute;
-      inset: 0.7rem;
+      inset: 0.8rem;
 
       content: "";
 
@@ -806,7 +872,7 @@
         );
     }
 
-    .glass-frame::after {
+    .glass-pane::after {
       position: absolute;
       inset: 0;
 
@@ -829,33 +895,129 @@
       border-radius: inherit;
     }
 
-    .glass-question {
+    .question-mark {
       position: absolute;
-      z-index: 2;
-      top: 7.7rem;
-      left: 50%;
+      z-index: 3;
 
-      color: rgba(245, 237, 221, 0.84);
+      color: rgba(245, 237, 221, 0.78);
 
       font-family:
         Georgia,
         "Times New Roman",
         serif;
 
-      font-size: 4.5rem;
       line-height: 1;
-
       text-shadow:
         0 0 1.5rem rgba(117, 233, 255, 0.25),
         0 0 2.5rem rgba(183, 152, 255, 0.22);
 
-      transform: translateX(-50%);
+      opacity: 0;
+      animation: questionFloat 7s ease-in-out infinite;
     }
 
-    .glass-shadow {
+    .question-mark--large {
+      top: 31%;
+      left: 50%;
+
+      font-size: 4.7rem;
+      transform: translateX(-50%);
+      animation-delay: -0.2s;
+    }
+
+    .question-mark--small-a {
+      top: 23%;
+      left: 30%;
+
+      font-size: 1.5rem;
+      color: rgba(117, 233, 255, 0.55);
+      animation-delay: -1.5s;
+    }
+
+    .question-mark--small-b {
+      top: 53%;
+      right: 28%;
+
+      font-size: 1.25rem;
+      color: rgba(244, 212, 126, 0.58);
+      animation-delay: -2.7s;
+    }
+
+    .question-fragment {
       position: absolute;
-      top: 9.5rem;
-      left: calc(50% + 1.4rem);
+      z-index: 4;
+
+      max-width: 6.8rem;
+
+      color: rgba(220, 231, 242, 0.46);
+
+      font-size: 0.58rem;
+      font-weight: 760;
+      letter-spacing: 0.1em;
+      line-height: 1.35;
+      text-transform: uppercase;
+
+      opacity: 0;
+      animation: fragmentReveal 7s ease-in-out infinite;
+    }
+
+    .question-fragment--one {
+      top: 28%;
+      left: 17%;
+      animation-delay: -0.7s;
+    }
+
+    .question-fragment--two {
+      right: 14%;
+      top: 37%;
+      animation-delay: -2.2s;
+    }
+
+    .question-fragment--three {
+      bottom: 29%;
+      left: 25%;
+      animation-delay: -3.5s;
+    }
+
+    .ripple {
+      position: absolute;
+      z-index: 2;
+
+      width: 5rem;
+      height: 5rem;
+
+      border: 1px solid rgba(117, 233, 255, 0.28);
+      border-radius: 50%;
+
+      opacity: 0;
+      transform: scale(0.45);
+      animation: rippleGlass 7s ease-in-out infinite;
+    }
+
+    .ripple--one {
+      top: 33%;
+      left: 42%;
+      animation-delay: -0.5s;
+    }
+
+    .ripple--two {
+      top: 48%;
+      left: 52%;
+      border-color: rgba(183, 152, 255, 0.32);
+      animation-delay: -2.2s;
+    }
+
+    .ripple--three {
+      top: 26%;
+      left: 34%;
+      border-color: rgba(255, 145, 163, 0.25);
+      animation-delay: -3.8s;
+    }
+
+    .reflection-shadow {
+      position: absolute;
+      z-index: 2;
+      top: 49%;
+      left: calc(50% + 1.25rem);
 
       width: 3.2rem;
       height: 5.4rem;
@@ -871,14 +1033,12 @@
 
       filter: blur(0.15rem);
       opacity: 0.58;
+      transform: translateY(-50%);
     }
 
     .glass-copy {
-      position: absolute;
-      z-index: 3;
-      right: 1.4rem;
-      bottom: 1.4rem;
-      left: 1.4rem;
+      position: relative;
+      z-index: 5;
     }
 
     .glass-label {
@@ -910,15 +1070,15 @@
     }
 
     /* ============================================================
-       QUESTION REVELATIONS
+       STORY CARDS
        ============================================================ */
 
-    .revelation-stage {
+    .story-stage {
       display: grid;
       gap: 1rem;
     }
 
-    .revelation-grid {
+    .scene-grid {
       display: grid;
 
       grid-template-columns:
@@ -927,8 +1087,12 @@
       gap: 0.9rem;
     }
 
-    .revelation-card {
+    .scene-card {
+      position: relative;
+
       min-width: 0;
+      overflow: hidden;
+
       padding: 1.25rem;
 
       border: 1px solid rgba(183, 152, 255, 0.18);
@@ -943,7 +1107,7 @@
         box-shadow var(--transition);
     }
 
-    .revelation-card:hover {
+    .scene-card:hover {
       border-color: rgba(183, 152, 255, 0.42);
 
       box-shadow:
@@ -953,22 +1117,43 @@
       transform: translateY(-3px);
     }
 
-    .chapter-index {
+    .scene-card::before {
+      position: absolute;
+      top: 0;
+      right: 0;
+
+      width: 8rem;
+      height: 8rem;
+
+      pointer-events: none;
+      content: "";
+
+      background:
+        radial-gradient(
+          circle at 100% 0,
+          rgba(183, 152, 255, 0.11),
+          transparent 68%
+        );
+    }
+
+    .scene-index {
       display: block;
       margin-bottom: 0.8rem;
     }
 
-    .revelation-card h3 {
+    .scene-card h3 {
       margin-bottom: 0.65rem;
     }
 
-    .revelation-card p {
+    .scene-card p {
       margin-bottom: 0;
       color: var(--muted-strong);
     }
 
-    .revelation-card blockquote {
-      margin: 1rem 0 0;
+    .scene-card blockquote {
+      margin:
+        1rem 0
+        0;
       padding: 0.85rem 0.95rem;
 
       border-left: 0.2rem solid var(--violet);
@@ -993,8 +1178,8 @@
       display: grid;
 
       grid-template-columns:
-        minmax(0, 0.82fr)
-        minmax(0, 1.18fr);
+        minmax(0, 0.86fr)
+        minmax(0, 1.14fr);
 
       gap: 1rem;
     }
@@ -1024,7 +1209,7 @@
 
     .dialogue-panel {
       display: grid;
-      gap: 0.8rem;
+      gap: 0.85rem;
     }
 
     .dialogue-line {
@@ -1040,14 +1225,14 @@
       background: rgba(255, 255, 255, 0.025);
     }
 
-    .dialogue-line[data-speaker="visitor"] {
+    .dialogue-line[data-side="you"] {
       justify-self: start;
 
       border-color: rgba(117, 233, 255, 0.18);
       box-shadow: inset 0.2rem 0 0 rgba(117, 233, 255, 0.27);
     }
 
-    .dialogue-line[data-speaker="glass"] {
+    .dialogue-line[data-side="glass"] {
       justify-self: end;
 
       border-color: rgba(183, 152, 255, 0.22);
@@ -1151,84 +1336,6 @@
 
       color: var(--muted);
       font-size: 0.8rem;
-    }
-
-    /* ============================================================
-       INQUIRY VERSUS DISTORTION
-       ============================================================ */
-
-    .contrast-section {
-      display: grid;
-      gap: 1rem;
-    }
-
-    .contrast-grid {
-      display: grid;
-
-      grid-template-columns:
-        repeat(2, minmax(0, 1fr));
-
-      gap: 0.8rem;
-    }
-
-    .contrast-card {
-      min-width: 0;
-      padding: 1.15rem;
-
-      border: 1px solid rgba(224, 184, 91, 0.16);
-      border-radius: var(--radius-md);
-
-      background: var(--glass);
-      box-shadow: var(--shadow);
-    }
-
-    .contrast-card[data-mode="inquiry"] {
-      box-shadow:
-        var(--shadow),
-        inset 0.2rem 0 0 var(--green);
-    }
-
-    .contrast-card[data-mode="distortion"] {
-      box-shadow:
-        var(--shadow),
-        inset 0.2rem 0 0 var(--rose);
-    }
-
-    .contrast-card span {
-      display: block;
-      margin-bottom: 0.55rem;
-
-      font-size: 0.62rem;
-      font-weight: 850;
-      letter-spacing: 0.11em;
-      text-transform: uppercase;
-    }
-
-    .contrast-card[data-mode="inquiry"] span {
-      color: var(--green);
-    }
-
-    .contrast-card[data-mode="distortion"] span {
-      color: var(--rose);
-    }
-
-    .contrast-card strong {
-      display: block;
-      margin-bottom: 0.45rem;
-
-      font-family:
-        Georgia,
-        "Times New Roman",
-        serif;
-
-      font-size: 1.35rem;
-      font-weight: 600;
-      line-height: 1.16;
-    }
-
-    .contrast-card p {
-      margin-bottom: 0;
-      color: var(--muted-strong);
     }
 
     /* ============================================================
@@ -1393,7 +1500,7 @@
       border-top: 1px solid var(--rule);
     }
 
-    .evidence-body > p {
+    .evidence-body p {
       max-width: var(--reading-width);
       margin-bottom: 0;
 
@@ -1432,8 +1539,6 @@
     }
 
     .evidence-grid p {
-      margin-bottom: 0;
-
       color: var(--muted);
       font-size: 0.76rem;
     }
@@ -1501,6 +1606,103 @@
     }
 
     /* ============================================================
+       ANIMATION
+       ============================================================ */
+
+    @keyframes questionFloat {
+      0%,
+      18% {
+        opacity: 0;
+        transform:
+          translateX(-50%)
+          translateY(0)
+          scale(0.92);
+      }
+
+      38%,
+      72% {
+        opacity: 0.9;
+        transform:
+          translateX(-50%)
+          translateY(-0.25rem)
+          scale(1);
+      }
+
+      100% {
+        opacity: 0.48;
+        transform:
+          translateX(-50%)
+          translateY(0.15rem)
+          scale(0.97);
+      }
+    }
+
+    @keyframes fragmentReveal {
+      0%,
+      24% {
+        opacity: 0;
+        filter: blur(0.2rem);
+      }
+
+      44%,
+      76% {
+        opacity: 0.72;
+        filter: blur(0);
+      }
+
+      100% {
+        opacity: 0.28;
+        filter: blur(0.04rem);
+      }
+    }
+
+    @keyframes rippleGlass {
+      0%,
+      22% {
+        opacity: 0;
+        transform: scale(0.4);
+      }
+
+      44% {
+        opacity: 0.64;
+      }
+
+      78%,
+      100% {
+        opacity: 0;
+        transform: scale(1.7);
+      }
+    }
+
+    .js .reveal {
+      opacity: 0;
+      transform: translateY(1rem);
+      transition:
+        opacity 520ms ease,
+        transform 520ms cubic-bezier(0.2, 0.72, 0.25, 1);
+    }
+
+    .js .reveal.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .js .glass-stage.is-awake .question-mark {
+      animation:
+        questionFloat 7s ease-in-out infinite;
+    }
+
+    .js .glass-stage.is-awake .question-fragment {
+      animation:
+        fragmentReveal 7s ease-in-out infinite;
+    }
+
+    .js .glass-stage.is-awake .ripple {
+      animation:
+        rippleGlass 7s ease-in-out infinite;
+    }
+
+    /* ============================================================
        RESPONSIVE
        ============================================================ */
 
@@ -1512,12 +1714,12 @@
     }
 
     @media (max-width: 68rem) {
-      .revelation-grid {
+      .scene-grid {
         grid-template-columns:
           repeat(2, minmax(0, 1fr));
       }
 
-      .revelation-card:last-child {
+      .scene-card:last-child {
         grid-column: 1 / -1;
       }
 
@@ -1535,17 +1737,12 @@
         grid-template-columns: 1fr;
       }
 
-      .glass-vault {
+      .glass-stage {
         min-height: 25rem;
       }
 
       .section-heading {
         gap: 0.75rem;
-      }
-
-      .anatomy-grid {
-        grid-template-columns:
-          repeat(2, minmax(0, 1fr));
       }
 
       .practical-actions {
@@ -1645,52 +1842,50 @@
         width: 100%;
       }
 
-      .glass-vault {
-        min-height: 23rem;
+      .glass-stage {
+        min-height: 22rem;
         padding: 1rem;
       }
 
-      .glass-frame {
-        width: 9.5rem;
+      .glass-pane {
+        width: 10.2rem;
         height: 13rem;
       }
 
-      .glass-question {
-        top: 6.8rem;
-        font-size: 3.6rem;
+      .question-mark--large {
+        top: 34%;
+        font-size: 3.7rem;
       }
 
-      .glass-shadow {
-        top: 8rem;
-        left: calc(50% + 1rem);
-
-        width: 2.6rem;
-        height: 4.4rem;
+      .question-fragment {
+        max-width: 5.8rem;
+        font-size: 0.52rem;
       }
 
-      .revelation-grid,
+      .question-fragment--two {
+        right: 8%;
+      }
+
+      .scene-grid,
       .anatomy-grid,
-      .contrast-grid,
       .evidence-grid {
         grid-template-columns: 1fr;
       }
 
-      .revelation-card:last-child {
+      .scene-card:last-child {
         grid-column: auto;
       }
 
-      .revelation-card,
+      .scene-card,
       .dialogue-intro,
       .dialogue-panel,
       .anatomy-section,
-      .anatomy-card,
-      .contrast-card,
       .practical-return {
         border-radius: 1rem;
       }
 
       .dialogue-line {
-        max-width: 95%;
+        max-width: 96%;
       }
 
       .page-footer {
@@ -1723,20 +1918,29 @@
         transition-duration: 0.001ms !important;
       }
 
-      .revelation-card:hover,
+      .scene-card:hover,
       .button:hover {
         transform: none;
+      }
+
+      .js .reveal {
+        opacity: 1;
+        transform: none;
+      }
+
+      .question-mark,
+      .question-fragment,
+      .ripple {
+        opacity: 0.8;
       }
     }
 
     @media (prefers-reduced-transparency: reduce) {
       .page-topbar,
-      .revelation-card,
+      .scene-card,
       .dialogue-intro,
       .dialogue-panel,
       .anatomy-section,
-      .anatomy-card,
-      .contrast-card,
       .practical-return,
       .evidence-disclosure {
         background-color: var(--ink-1);
@@ -1748,15 +1952,15 @@
       body,
       .page-topbar,
       .route-hero,
-      .glass-vault,
-      .revelation-card,
+      .glass-stage,
+      .scene-card,
       .dialogue-intro,
       .dialogue-panel,
       .anatomy-section,
       .anatomy-card,
-      .contrast-card,
       .practical-return,
-      .evidence-disclosure {
+      .evidence-disclosure,
+      .glass-pane {
         color: CanvasText;
         background: Canvas;
         box-shadow: none;
@@ -1768,7 +1972,7 @@
       }
 
       .brand-mark,
-      .glass-frame {
+      .glass-pane {
         border: 2px solid ButtonText;
         background: ButtonFace;
         box-shadow: none;
@@ -1786,7 +1990,8 @@
       .page-topbar,
       .hero-actions,
       .practical-actions,
-      .page-footer {
+      .page-footer,
+      .question-field {
         display: none !important;
       }
 
@@ -1795,13 +2000,12 @@
       }
 
       .route-hero,
-      .glass-vault,
-      .revelation-card,
+      .glass-stage,
+      .scene-card,
       .dialogue-intro,
       .dialogue-panel,
       .anatomy-section,
       .anatomy-card,
-      .contrast-card,
       .practical-return,
       .evidence-disclosure {
         color: #111;
@@ -1811,14 +2015,8 @@
       }
 
       .route-hero,
-      .glass-vault {
+      .glass-stage {
         min-height: 0;
-      }
-
-      .glass-frame,
-      .glass-question,
-      .glass-shadow {
-        display: none;
       }
 
       .evidence-disclosure:not([open])
@@ -1834,7 +2032,7 @@
     class="skip-link"
     href="#main"
   >
-    Skip to the Glass
+    Skip to the story
   </a>
 
   <div class="page-shell">
@@ -1866,8 +2064,8 @@
           Previous
         </a>
 
-        <a href="/showroom/">
-          Constellation
+        <a href="/showroom/mysteries/paths-not-yet-open/">
+          Next
         </a>
 
         <a href="/index.html">
@@ -1882,7 +2080,7 @@
         aria-labelledby="page-title"
       >
         <div class="route-hero__inner">
-          <div>
+          <div class="reveal">
             <div class="route-kicker">
               West Route · Chamber Two
             </div>
@@ -1892,22 +2090,23 @@
             </h1>
 
             <p class="hero-subtitle">
-              The Glass does not answer first. It shows you who is asking.
+              The unfinished map does not answer you. It reflects the
+              question back first.
             </p>
 
             <p class="hero-lead">
-              The Unfinished World taught you not to close a gap before
-              understanding it. The Glass turns that discipline back
-              toward you. Every question carries a position, a fear, an
-              expectation, and a preferred shape of answer. The surface
-              may reflect the world accurately and still distort the
-              inquiry because the observer entered unseen.
+              You ask what the missing regions mean. The Glass forms over
+              the map before the world can reply. Your question appears
+              on the surface, then bends. One part clarifies the gap.
+              Another part reveals your fear of it. Another shows the
+              answer you hoped would be waiting. The Glass does not
+              accuse you. It makes the asker visible.
             </p>
 
             <div class="hero-actions">
               <a
                 class="button button-gold"
-                href="#questions"
+                href="#question-reflection"
               >
                 Face the Glass
               </a>
@@ -1922,25 +2121,37 @@
           </div>
 
           <aside
-            class="glass-vault"
-            aria-label="The reflective Glass of Mirrorland"
+            class="glass-stage reveal"
+            aria-label="Reflective question-glass field"
           >
             <div
-              class="glass-frame"
-              aria-hidden="true"
-            ></div>
-
-            <div
-              class="glass-question"
+              class="question-field"
               aria-hidden="true"
             >
-              ?
-            </div>
+              <span class="glass-pane"></span>
 
-            <div
-              class="glass-shadow"
-              aria-hidden="true"
-            ></div>
+              <span class="ripple ripple--one"></span>
+              <span class="ripple ripple--two"></span>
+              <span class="ripple ripple--three"></span>
+
+              <span class="question-mark question-mark--large">?</span>
+              <span class="question-mark question-mark--small-a">?</span>
+              <span class="question-mark question-mark--small-b">?</span>
+
+              <span class="question-fragment question-fragment--one">
+                Who asks?
+              </span>
+
+              <span class="question-fragment question-fragment--two">
+                What answer is desired?
+              </span>
+
+              <span class="question-fragment question-fragment--three">
+                What is excluded?
+              </span>
+
+              <span class="reflection-shadow"></span>
+            </div>
 
             <div class="glass-copy">
               <span class="glass-label">
@@ -1961,91 +2172,88 @@
       </section>
 
       <section
-        id="questions"
-        class="revelation-stage"
+        id="question-reflection"
+        class="story-stage"
         aria-labelledby="questions-title"
       >
-        <header class="section-heading">
+        <header class="section-heading reveal">
           <div>
             <div class="eyebrow">
-              Three Things the Glass Reveals
+              What the Glass Reflects
             </div>
 
             <h2 id="questions-title">
-              A question is never only a sentence.
+              A question is not only a request.
             </h2>
           </div>
 
           <p>
-            It also contains the observer’s position, the frame placed
-            around the problem, and the answer the observer is prepared
-            to recognize.
+            It carries the observer into the inquiry before any answer
+            appears.
           </p>
         </header>
 
-        <div class="revelation-grid">
-          <article class="revelation-card">
-            <span class="chapter-index">
+        <div class="scene-grid">
+          <article class="scene-card reveal">
+            <span class="scene-index">
               01 · Position
             </span>
 
             <h3>
-              Where you stand determines what appears obvious.
+              Where you stand decides what seems obvious.
             </h3>
 
             <p>
-              A leader, witness, resident, outsider, child, archivist,
-              engineer, or survivor may ask about the same event and
-              receive different truths because each occupies a different
-              relationship to the consequence.
+              The same unfinished route looks different to a builder, a
+              survivor, a planner, a child, a witness, and an outsider.
+              The Glass does not erase the question. It asks where the
+              question is standing.
             </p>
 
             <blockquote>
-              “The question begins before the first word is spoken.”
+              The question begins before the first word is spoken.
             </blockquote>
           </article>
 
-          <article class="revelation-card">
-            <span class="chapter-index">
-              02 · Frame
+          <article class="scene-card reveal">
+            <span class="scene-index">
+              02 · Pressure
             </span>
 
             <h3>
-              The wording decides what may count as an answer.
+              What you fear can narrow what you ask.
             </h3>
 
             <p>
-              Ask why someone failed and you may hide the system around
-              them. Ask why the system failed and you may erase the
-              person’s choices. Every frame reveals and excludes at the
-              same time.
+              If you fear delay, every gap may look like failure. If you
+              fear responsibility, every gap may look like someone else’s
+              fault. The Glass shows pressure before it becomes
+              certainty.
             </p>
 
             <blockquote>
-              “A narrow frame can produce a precise answer to the wrong
-              problem.”
+              A frightened question can still sound precise.
             </blockquote>
           </article>
 
-          <article class="revelation-card">
-            <span class="chapter-index">
-              03 · Expectation
+          <article class="scene-card reveal">
+            <span class="scene-index">
+              03 · Desire
             </span>
 
             <h3>
-              You may recognize only the answer you already imagined.
+              The answer you want may shape the question you allow.
             </h3>
 
             <p>
-              Evidence that confirms the expected story feels coherent.
-              Evidence that changes the story feels irrelevant,
-              inconvenient, or hostile. The Glass exposes that preference
-              before it hardens into interpretation.
+              A desired answer can hide inside careful language. It can
+              choose the frame, exclude the contradiction, and call the
+              remaining reflection objective.
             </p>
 
             <blockquote>
-              “The most dangerous answer may be the one that arrives
-              exactly as expected.”
+              The most dangerous answer may be the one that arrives
+              exactly as expected.
             </blockquote>
           </article>
         </div>
@@ -2055,7 +2263,7 @@
         class="dialogue-stage"
         aria-labelledby="dialogue-title"
       >
-        <div class="dialogue-intro">
+        <div class="dialogue-intro reveal">
           <div class="eyebrow">
             The Questioner’s Defense
           </div>
@@ -2065,105 +2273,81 @@
           </h2>
 
           <p>
-            Questions can open inquiry. They can also accuse, narrow,
-            imply, redirect, conceal, and pressure. Neutral language does
-            not guarantee a neutral frame.
+            The Glass does not reject the question. It slows the question
+            down until the hidden parts become visible.
           </p>
         </div>
 
         <div
-          class="dialogue-panel"
+          class="dialogue-panel reveal"
           aria-label="Questions in the Glass dialogue"
         >
           <div
             class="dialogue-line"
-            data-speaker="visitor"
+            data-side="you"
           >
-            <span>Visitor</span>
+            <span>You</span>
 
             <p>
-              “Why did they let the city fail?”
+              “Why is this part of the world still unfinished?”
             </p>
           </div>
 
           <div
             class="dialogue-line"
-            data-speaker="glass"
+            data-side="glass"
           >
             <span>Glass</span>
 
             <p>
-              “Your question already assumes they possessed the power to
-              prevent it.”
+              “Do you ask because you want to understand the gap, or
+              because you want permission to close it?”
             </p>
           </div>
 
           <div
             class="dialogue-line"
-            data-speaker="visitor"
+            data-side="you"
           >
-            <span>Visitor</span>
+            <span>You</span>
 
             <p>
-              “Then what should I ask?”
+              “I need to know what went wrong.”
             </p>
           </div>
 
           <div
             class="dialogue-line"
-            data-speaker="glass"
-          >
-            <span>Glass</span>
-
-            <p>
-              “Ask what power they had, what they knew, what they feared,
-              and what alternatives were available.”
-            </p>
-          </div>
-
-          <div
-            class="dialogue-line"
-            data-speaker="visitor"
-          >
-            <span>Visitor</span>
-
-            <p>
-              “But I still need to know who was responsible.”
-            </p>
-          </div>
-
-          <div
-            class="dialogue-line"
-            data-speaker="glass"
+            data-side="glass"
           >
             <span>Glass</span>
 
             <p>
-              “Responsibility becomes clearer when it is traced rather
-              than assumed.”
+              “Then do not begin by assuming wrongness is the only
+              explanation.”
             </p>
           </div>
 
           <div
             class="dialogue-line"
-            data-speaker="visitor"
+            data-side="you"
           >
-            <span>Visitor</span>
+            <span>You</span>
 
             <p>
-              “What if my question was wrong from the beginning?”
+              “How do I ask without distorting it?”
             </p>
           </div>
 
           <div
             class="dialogue-line"
-            data-speaker="glass"
+            data-side="glass"
           >
             <span>Glass</span>
 
             <p>
-              “Then changing the question is evidence of learning, not
-              failure.”
+              “Name your position. Name your pressure. Name the answer
+              you hope is not true.”
             </p>
           </div>
         </div>
@@ -2173,7 +2357,7 @@
         class="anatomy-section"
         aria-labelledby="anatomy-title"
       >
-        <header class="section-heading">
+        <header class="section-heading reveal">
           <div>
             <div class="eyebrow">
               The Anatomy of a Responsible Question
@@ -2185,14 +2369,13 @@
           </div>
 
           <p>
-            A trustworthy question reveals its position and boundaries
-            so another observer can understand what it asks, what it
-            excludes, and how the answer may be tested.
+            A trustworthy question leaves enough of itself visible that
+            another observer can see how it was built.
           </p>
         </header>
 
         <div class="anatomy-grid">
-          <article class="anatomy-card">
+          <article class="anatomy-card reveal">
             <span>Position</span>
 
             <strong>
@@ -2200,25 +2383,25 @@
             </strong>
 
             <p>
-              Name the observer’s role, access, relationship, interests,
-              and distance from the consequence.
+              Name the observer’s role, access, distance, interests, and
+              relationship to the consequence.
             </p>
           </article>
 
-          <article class="anatomy-card">
+          <article class="anatomy-card reveal">
             <span>Object</span>
 
             <strong>
-              What is actually being examined?
+              What is being examined?
             </strong>
 
             <p>
-              Separate the person, event, system, decision, record, or
-              outcome from the interpretation attached to it.
+              Separate the event, person, gap, system, decision, or route
+              from the interpretation attached to it.
             </p>
           </article>
 
-          <article class="anatomy-card">
+          <article class="anatomy-card reveal">
             <span>Frame</span>
 
             <strong>
@@ -2226,25 +2409,25 @@
             </strong>
 
             <p>
-              Declare the time, scale, participants, conditions, and
-              relationships placed inside the inquiry.
+              Declare the time, scale, participants, missing evidence,
+              and relationships placed inside the inquiry.
             </p>
           </article>
 
-          <article class="anatomy-card">
-            <span>Exclusion</span>
+          <article class="anatomy-card reveal">
+            <span>Pressure</span>
 
             <strong>
-              What remains outside?
+              What does the asker need?
             </strong>
 
             <p>
-              Preserve omitted perspectives, unavailable evidence,
-              alternative explanations, and unresolved context.
+              Identify urgency, fear, loyalty, guilt, hope, anger, or
+              desire before it becomes hidden instruction.
             </p>
           </article>
 
-          <article class="anatomy-card">
+          <article class="anatomy-card reveal">
             <span>Revision</span>
 
             <strong>
@@ -2253,103 +2436,14 @@
 
             <p>
               State which new evidence or perspective would require the
-              frame to be widened, narrowed, or replaced.
+              question to widen, narrow, pause, or be rebuilt.
             </p>
           </article>
         </div>
       </section>
 
       <section
-        class="contrast-section"
-        aria-labelledby="contrast-title"
-      >
-        <header class="section-heading">
-          <div>
-            <div class="eyebrow">
-              Inquiry Versus Distortion
-            </div>
-
-            <h2 id="contrast-title">
-              Both can sound intelligent.
-            </h2>
-          </div>
-
-          <p>
-            The difference is whether the question remains open to
-            evidence that changes the observer’s preferred answer.
-          </p>
-        </header>
-
-        <div class="contrast-grid">
-          <article
-            class="contrast-card"
-            data-mode="inquiry"
-          >
-            <span>Responsible Inquiry</span>
-
-            <strong>
-              The question exposes its assumptions.
-            </strong>
-
-            <p>
-              Position, terms, boundaries, uncertainty, and alternative
-              explanations remain visible and revisable.
-            </p>
-          </article>
-
-          <article
-            class="contrast-card"
-            data-mode="distortion"
-          >
-            <span>Reflective Distortion</span>
-
-            <strong>
-              The question hides its conclusion inside the frame.
-            </strong>
-
-            <p>
-              The answer can only confirm blame, loyalty, inevitability,
-              superiority, or another result chosen in advance.
-            </p>
-          </article>
-
-          <article
-            class="contrast-card"
-            data-mode="inquiry"
-          >
-            <span>Responsible Inquiry</span>
-
-            <strong>
-              Contradiction improves the question.
-            </strong>
-
-            <p>
-              Evidence that does not fit becomes a reason to examine the
-              frame, not a reason to discard the evidence.
-            </p>
-          </article>
-
-          <article
-            class="contrast-card"
-            data-mode="distortion"
-          >
-            <span>Reflective Distortion</span>
-
-            <strong>
-              Contradiction is treated as resistance.
-            </strong>
-
-            <p>
-              Unwanted testimony is dismissed, uncertainty is framed as
-              weakness, and the observer’s preferred story remains
-              protected.
-            </p>
-          </article>
-        </div>
-      </section>
-
-      <section
-        class="practical-return"
+        class="practical-return reveal"
         aria-labelledby="practical-title"
       >
         <div class="practical-copy">
@@ -2362,11 +2456,11 @@
           </h2>
 
           <p>
-            Name who is asking, what is being examined, which boundaries
-            shape the inquiry, what evidence remains unavailable, and
-            what could force the question to change. A strong answer
-            cannot rescue a distorted frame. Sometimes the most
-            important discovery is that the question must be rebuilt.
+            The Glass does not give full truth. It reveals the frame that
+            asks for truth. When the question is distorted, even a strong
+            answer can become dangerous. When the question becomes
+            inspectable, the next boundary can be faced without pretending
+            every path should open.
           </p>
         </div>
 
@@ -2375,14 +2469,14 @@
             class="button button-gold"
             href="/showroom/mysteries/paths-not-yet-open/"
           >
-            Continue to the Closed Paths
+            Continue to Closed Paths
           </a>
 
           <a
             class="button"
-            href="/showroom/"
+            href="/showroom/mysteries/unfinished-world/"
           >
-            Choose Another Chamber
+            Return to the Unfinished World
           </a>
         </div>
       </section>
@@ -2390,9 +2484,9 @@
       <details class="evidence-disclosure">
         <summary>
           <span>
-            <strong>Reflective Inquiry Boundary</strong>
+            <strong>Story Reveal Boundary</strong>
             <small>
-              What the Glass reveals—and what reflection cannot settle alone
+              What this chamber reveals, and what remains withheld
             </small>
           </span>
 
@@ -2401,42 +2495,40 @@
 
         <div class="evidence-body">
           <p>
-            The Glass is a reflective inquiry environment within the
-            Mirrorland narrative architecture. It exposes observer
-            position, framing, assumptions, exclusions, and preferred
-            answers. Reflection may reveal distortion in the inquiry, but
-            it does not independently establish the final truth of the
-            event or system under examination.
+            This chamber reveals that the player’s questions are not
+            neutral. A question carries position, pressure, frame,
+            desire, exclusion, and revision conditions before any answer
+            appears.
           </p>
 
           <div class="evidence-grid">
             <article>
-              <span>Established Here</span>
+              <span>Revealed Here</span>
 
               <p>
-                Questions carry position, framing, expectation,
-                exclusions, and revision conditions that should remain
-                visible.
+                Reflective inquiry exposes the asker as part of the
+                question. A responsible question must remain inspectable
+                and revisable.
               </p>
             </article>
 
             <article>
-              <span>Not Established Here</span>
+              <span>Withheld Here</span>
 
               <p>
-                Final causation, automatic guilt, total objectivity,
-                complete observer neutrality, or truth through reflection
-                alone.
+                Full agency, full embodiment, full conjugation, H-Earth,
+                ZIONTS, final Audralia traversal, and final Earth stakes
+                remain closed.
               </p>
             </article>
 
             <article>
-              <span>Continuity Requirement</span>
+              <span>Next Pressure</span>
 
               <p>
-                Later answers should preserve the original question, its
-                assumptions, subsequent revisions, contradictory
-                evidence, and the position from which each answer arose.
+                The next route shows that some paths remain closed
+                because opening them would require readiness the player,
+                world, or system has not yet proven.
               </p>
             </article>
           </div>
@@ -2474,20 +2566,161 @@
       </nav>
     </footer>
   </div>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const CONTRACT =
+        "SHOWROOM_SATELLITE_QUESTIONS_IN_THE_GLASS_HTML_TNT_v2_QUESTION_REFLECTION_FIELD";
+
+      const root =
+        document.documentElement;
+
+      root.classList.add("js");
+
+      const reducedMotionQuery =
+        window.matchMedia &&
+        window.matchMedia("(prefers-reduced-motion: reduce)");
+
+      const reducedMotion =
+        Boolean(
+          reducedMotionQuery &&
+          reducedMotionQuery.matches
+        );
+
+      function markVisible(elements) {
+        for (const element of elements) {
+          element.classList.add("is-visible");
+        }
+      }
+
+      function initializeReveals() {
+        const revealElements =
+          Array.from(
+            document.querySelectorAll(".reveal")
+          );
+
+        if (!revealElements.length) {
+          return;
+        }
+
+        if (
+          reducedMotion ||
+          typeof IntersectionObserver !== "function"
+        ) {
+          markVisible(revealElements);
+          return;
+        }
+
+        const observer =
+          new IntersectionObserver(
+            entries => {
+              for (const entry of entries) {
+                if (!entry.isIntersecting) {
+                  continue;
+                }
+
+                entry.target.classList.add("is-visible");
+                observer.unobserve(entry.target);
+              }
+            },
+            {
+              root: null,
+              threshold: 0.14,
+              rootMargin: "0px 0px -6% 0px"
+            }
+          );
+
+        for (const element of revealElements) {
+          observer.observe(element);
+        }
+      }
+
+      function initializeGlassStage() {
+        const glassStage =
+          document.querySelector(".glass-stage");
+
+        if (!glassStage || reducedMotion) {
+          return;
+        }
+
+        window.setTimeout(
+          () => {
+            glassStage.classList.add("is-awake");
+          },
+          240
+        );
+      }
+
+      function publishReceipt() {
+        const payload = {
+          contract: CONTRACT,
+          route: "/showroom/mysteries/questions-in-the-glass/",
+          routeId: "west-2",
+          page: "Questions in the Glass",
+          localEnhancementOnly: true,
+          globalRuntimeOwned: false,
+          navigationOwned: false,
+          systematicReveal: "question-reflection-field",
+          previousRoute: "/showroom/mysteries/unfinished-world/",
+          nextRoute: "/showroom/mysteries/paths-not-yet-open/",
+          glassRole: "reflective-question-boundary",
+          glassAnswerAuthority: false,
+          inquiryModel: "reflection-distortion-position-return",
+          continuousStoryHandoff: true,
+          fullAgencyGranted: false,
+          reducedMotion: reducedMotion,
+          timestamp: new Date().toISOString()
+        };
+
+        window.dispatchEvent(
+          new CustomEvent(
+            "SHOWROOM_SATELLITE_PAGE_READY",
+            {
+              detail: Object.freeze(payload)
+            }
+          )
+        );
+      }
+
+      if (document.readyState === "loading") {
+        document.addEventListener(
+          "DOMContentLoaded",
+          () => {
+            initializeReveals();
+            initializeGlassStage();
+            publishReceipt();
+          },
+          {
+            once: true
+          }
+        );
+      } else {
+        initializeReveals();
+        initializeGlassStage();
+        publishReceipt();
+      }
+    })();
+  </script>
 </body>
 </html>
 
 <!--
-SHOWROOM_SATELLITE_QUESTIONS_IN_THE_GLASS_HTML_RECEIPT_v1
+SHOWROOM_SATELLITE_QUESTIONS_IN_THE_GLASS_HTML_RECEIPT_v2_QUESTION_REFLECTION_FIELD
 
 TARGET:
 /showroom/mysteries/questions-in-the-glass/index.html
 
 STATUS:
-COMPLETE NEW SELF-CONTAINED HTML FILE
+COMPLETE SELF-CONTAINED HTML REPLACEMENT
 
-EMBEDDED VISUAL SYSTEM:
-SHOWROOM_SATELLITE_PAGE_EMBEDDED_VISUAL_SYSTEM_v1
+SOURCE BASELINE:
+SHOWROOM_SATELLITE_QUESTIONS_IN_THE_GLASS_HTML_TNT_v1
+supplied by user as current source baseline for west-2.
+
+NEW CONTRACT:
+SHOWROOM_SATELLITE_QUESTIONS_IN_THE_GLASS_HTML_TNT_v2_QUESTION_REFLECTION_FIELD
 
 ROUTE FAMILY:
 Mysteries / West
@@ -2495,58 +2728,136 @@ Mysteries / West
 ROUTE ID:
 west-2
 
+ROUTE TITLE:
+Questions in the Glass
+
+PARENT:
+/showroom/
+
 PREVIOUS ROUTE:
 /showroom/mysteries/unfinished-world/
 
 NEXT ROUTE:
 /showroom/mysteries/paths-not-yet-open/
 
-PARENT:
+RETURN ROUTE:
 /showroom/
 
-PURPOSE:
-- continue directly from The Unfinished World;
-- turn the inquiry toward the observer;
-- establish that questions carry position, framing, expectation, and exclusion;
-- distinguish responsible inquiry from reflective distortion;
-- define a five-part anatomy for inspectable questions;
-- preserve question revision as evidence of learning;
-- prepare the visitor for Paths Not Yet Open.
+MAIN COMPASS:
+/index.html
 
-PRESENTATION STANDARD:
-- immersive;
-- second-person;
-- reflective;
-- dialogue-driven;
-- inquiry-oriented;
-- practical;
-- uncertainty preserved beneath the experience.
+GLASS ROLE:
+reflective-question-boundary
 
-ARCHITECTURAL FEATURES:
-- complete embedded CSS;
-- Showroom-aligned cosmic atmosphere;
-- CSS-built reflective Glass object;
-- three-part question sequence;
-- visitor and Glass dialogue;
-- five-part question anatomy;
-- inquiry-versus-distortion comparison;
-- practical question rule;
-- evidence-boundary disclosure;
-- responsive mobile composition;
-- keyboard focus;
-- reduced motion;
-- reduced transparency;
-- forced colors;
-- print handling.
+GLASS ANSWER AUTHORITY:
+false
 
-NON-CLAIMS:
-- no final causation claim;
-- no automatic guilt or innocence;
-- no total observer neutrality;
-- no truth through reflection alone;
-- no scientific validation;
-- no Earth-transfer authorization;
-- no runtime dependency;
-- no controller ownership;
-- no JavaScript requirement.
+INQUIRY MODEL:
+reflection-distortion-position-return
+
+NARRATIVE AUTHORITY:
+SHOWROOM_MIRRORLAND_AUDRALIA_ROUTE_PAGE_NARRATIVE_FREEZE_PACKET_v1_1
+SHOWROOM_ROUTE_PAGE_RENEWAL_RULES_LOCK_v1
+CONTINUOUS STORY HANDOFF RULE
+
+PRIMARY NARRATIVE CORRECTIONS FROM v1:
+- Reframed west-2 as a direct consequence of west-1’s unfinished map.
+- Made the Glass actively reflect the player's question back rather than teaching abstract inquiry.
+- Preserved route identity, Glass metadata, answer-authority boundary, and inquiry model.
+- Established that questions reveal the asker’s position, pressure, fear, desire, and readiness.
+- Connected west-2 to west-3 by making the next pressure closed paths and readiness.
+
+PAGE 10 / WEST-2 STORY SPINE:
+1. The player leaves the Unfinished World with questions about the gaps.
+2. The Glass forms over the unfinished map.
+3. The player’s question appears in the surface.
+4. The question bends into position, pressure, and desire.
+5. Some ripples clarify the map.
+6. Some ripples distort it.
+7. The player learns that questions are not neutral.
+8. The next route shows that some paths remain closed until readiness is proven.
+
+CONTROLLED REVEAL:
+The player’s questions are not neutral.
+When the unfinished world reflects a question back through glass, the question reveals the condition, assumptions, fear, desire, and readiness of the one asking.
+
+WITHHELD:
+- full agency;
+- full embodiment;
+- full conjugation;
+- H-Earth;
+- ZIONTS;
+- final Audralia traversal;
+- final Earth stakes.
+
+DOMINANT ANIMATION IDEA:
+A glass pane forms over the unfinished map.
+Question marks and sentence fragments appear faintly inside it.
+Each question creates a ripple.
+Some ripples clarify the map.
+Some distort it.
+The player learns that a question can become a lens before it becomes a path.
+
+ANTI-TILED-STAR CORRECTION:
+The page does not use repeating square-cell starfields as the main atmosphere.
+Atmospheric stars are hand-positioned through fixed radial points.
+The dominant animated visual is the reflective question-glass field.
+
+EMBEDDED SYSTEM:
+- HTML structure
+- embedded CSS
+- embedded page-local JavaScript
+- no external dependencies
+- no shared runtime ownership
+
+PAGE-LOCAL JAVASCRIPT AUTHORITY:
+- local reveal enhancement only
+- local Glass-stage awakening only
+- local readiness event only
+- no navigation ownership
+- no controller calls
+- no constellation mutation
+- no Main Compass ownership
+- safe without JavaScript
+
+ACCESSIBILITY / RESILIENCE:
+- skip link
+- semantic sections
+- focus-visible handling
+- reduced-motion support
+- reduced-transparency support
+- forced-colors support
+- print handling
+- readable without JavaScript
+
+NOT CLAIMED:
+- runtime validation
+- browser visual pass
+- deployment pass
+
+NEXT FILE SETUP:
+TARGET:
+/showroom/mysteries/paths-not-yet-open/index.html
+
+ROUTE:
+west-3 · Paths Not Yet Open
+
+EXPECTED PREVIOUS:
+/showroom/mysteries/questions-in-the-glass/
+
+EXPECTED NEXT:
+west-4 · Journey into Audralia
+
+FUNCTION:
+After the Glass reveals that questions expose the asker, west-3 shows that not every path may be opened just because the player wants access.
+
+CONTROLLED REVEAL:
+Some paths remain closed because the player, the world, or the system is not ready to survive what opening would require.
+
+DOMINANT MECHANIC:
+sealed paths / locked routes / threshold glyphs that pulse but do not open.
+
+REQUEST:
+Send the current baseline for:
+/showroom/mysteries/paths-not-yet-open/index.html
 -->

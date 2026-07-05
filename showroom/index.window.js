@@ -1,5 +1,5 @@
 /* TARGET FILE: /showroom/index.window.js */
-/* COMPLETE REPLACEMENT */ 
+/* COMPLETE REPLACEMENT */
 /* SHOWROOM_WINDOW_OBJECT_v1_3_FOREGROUND_LENS_APERTURE_FOCUS_OPTIMIZED_BASE */
 
 /*
@@ -13,8 +13,10 @@
   - Keep only a minimal emergency fallback definition so the object remains functional
     if /showroom/index.window.definition.js is absent.
   - Render the Window as luminous backlit glass, not opaque painted stone.
+  - Add definition-driven whole-object atmospheric halo support.
+  - Add stronger definition-driven age, patina, scratch, and glass-wear hooks.
   - Leave final material doctrine, pane optics, glass density, aperture color doctrine,
-    frame/came doctrine, and surface age doctrine to the definition file.
+    frame/came doctrine, halo doctrine, and surface age doctrine to the definition file.
   - Remain pointer-transparent.
   - Never own button behavior, Diamond behavior, route state, orbit gestures,
     Compass, stars, CSS layout, or broad page state.
@@ -25,9 +27,11 @@
   - Receipt surface remains compatible.
   - Definition consumption is internal and optional.
   - Missing definition must not make the Window unavailable.
-  - Host renderer now honors luminous glass fields such as saturation, glow,
-    edgeLight, jewelDepth, paneGlowMultiplier, leadContrast, and frame accent values
-    when supplied by the external definition.
+  - Host renderer honors luminous glass fields such as saturation, glow,
+    edgeLight, jewelDepth, paneGlowMultiplier, leadContrast, and frame accent values.
+  - Host renderer now honors whole-object halo fields such as outerGlowAlpha,
+    outerGlowBlur, outerGlowSpread, outerGlowWarmth, outerGlowCold, and
+    outerGlowMultiplier when supplied by the external definition.
 */
 
 (() => {
@@ -41,10 +45,10 @@
       "SHOWROOM_WINDOW_OBJECT_v1_2_CRISP_3D_COMPOUND_CURTAIN_HOST",
 
     internalArchitecture:
-      "compatible-v1_3-luminous-definition-consuming-window-host",
+      "compatible-v1_3-luminous-definition-consuming-window-host-with-halo",
 
     internalArchitectureVersion:
-      "1.5-luminous-glass-host-renewal",
+      "1.6-luminous-aged-glass-host-with-definition-driven-outer-halo",
 
     file:
       "/showroom/index.window.js",
@@ -65,7 +69,7 @@
       "visual-object-host-only",
 
     rendererModel:
-      "canvas-2d-luminous-backlit-glass-foreground-lens-aperture-focus-definition-consuming-compatible-host",
+      "canvas-2d-luminous-aged-backlit-glass-foreground-lens-aperture-focus-definition-consuming-compatible-host",
 
     motionModel:
       "motionless-object-transition-only",
@@ -80,6 +84,12 @@
       true,
 
     backlitPaneModel:
+      true,
+
+    atmosphericHaloModel:
+      true,
+
+    agedGlassModel:
       true,
 
     definitionReady:
@@ -374,8 +384,20 @@
             patina:
               [38, 76, 76],
 
+            verdigris:
+              [52, 126, 118],
+
+            oldCopper:
+              [124, 76, 42],
+
             coldEdge:
-              [100, 136, 142]
+              [100, 136, 142],
+
+            haloWarm:
+              [255, 205, 118],
+
+            haloCold:
+              [114, 218, 238]
           },
 
         lead:
@@ -399,7 +421,10 @@
               [240, 194, 112],
 
             coldHairline:
-              [112, 194, 208]
+              [112, 194, 208],
+
+            patina:
+              [42, 82, 78]
           },
 
         aperture:
@@ -456,20 +481,44 @@
               [184, 148, 220],
 
             moonstone:
-              [212, 238, 255]
+              [212, 238, 255],
+
+            ageWhite:
+              [246, 244, 226],
+
+            scratchWhite:
+              [255, 255, 246]
           }
       },
 
     optical:
       {
         objectShadowAlpha:
-          0.10,
+          0.08,
 
         objectShadowBlur:
-          12,
+          11,
 
         frameShadowBlur:
-          10,
+          9,
+
+        outerGlowAlpha:
+          0.30,
+
+        outerGlowBlur:
+          24,
+
+        outerGlowSpread:
+          1.08,
+
+        outerGlowWarmth:
+          0.58,
+
+        outerGlowCold:
+          0.42,
+
+        outerGlowRimAlpha:
+          0.16,
 
         glassAlpha:
           0.38,
@@ -490,16 +539,31 @@
           0.30,
 
         textureLineCount:
-          2,
+          3,
 
         textureSpeckCount:
-          10,
+          16,
+
+        scratchLineCount:
+          7,
+
+        scratchAlpha:
+          0.18,
+
+        scratchLength:
+          0.62,
+
+        patinaIntensity:
+          0.22,
+
+        patinaSpeckCount:
+          18,
 
         paneDefaultAlpha:
           0.34,
 
         paneDefaultAge:
-          0.12,
+          0.18,
 
         paneDefaultRefraction:
           0.42,
@@ -531,11 +595,17 @@
         leadHighlight:
           0.28,
 
+        leadPatina:
+          0.18,
+
         frameGoldAccent:
           0.32,
 
         frameColdAccent:
           0.20,
+
+        framePatina:
+          0.22,
 
         apertureGoldDominance:
           0.64,
@@ -567,7 +637,13 @@
               1,
 
             frameContrastMultiplier:
-              0.86
+              0.86,
+
+            outerGlowMultiplier:
+              1,
+
+            ageMultiplier:
+              1
           },
 
         opening:
@@ -585,7 +661,13 @@
               1.06,
 
             frameContrastMultiplier:
-              0.78
+              0.78,
+
+            outerGlowMultiplier:
+              1.10,
+
+            ageMultiplier:
+              0.92
           },
 
         closing:
@@ -603,7 +685,13 @@
               0.96,
 
             frameContrastMultiplier:
-              0.84
+              0.84,
+
+            outerGlowMultiplier:
+              0.96,
+
+            ageMultiplier:
+              1
           },
 
         open:
@@ -621,6 +709,12 @@
               0,
 
             frameContrastMultiplier:
+              0,
+
+            outerGlowMultiplier:
+              0,
+
+            ageMultiplier:
               0
           }
       }
@@ -768,6 +862,12 @@
       true,
 
     backlitPaneModel:
+      true,
+
+    atmosphericHaloModel:
+      true,
+
+    agedGlassModel:
       true,
 
     definitionReady:
@@ -1324,7 +1424,7 @@
           0.92,
 
         age:
-          0.08,
+          0.12,
 
         refraction:
           0.56,
@@ -1351,7 +1451,13 @@
           0.44,
 
         jewelDepth:
-          0.12
+          0.12,
+
+        scratch:
+          0.22,
+
+        patina:
+          0.08
       };
     }
 
@@ -1374,7 +1480,7 @@
           0.80,
 
         age:
-          0.14,
+          0.22,
 
         refraction:
           0.42,
@@ -1401,7 +1507,13 @@
           0.28,
 
         jewelDepth:
-          0.34
+          0.34,
+
+        scratch:
+          0.26,
+
+        patina:
+          0.18
       };
     }
 
@@ -1419,34 +1531,40 @@
         0.84,
 
       age:
-        0.10,
+        0.16,
 
       refraction:
         0.44,
 
-        internalContrast:
-          0.14,
+      internalContrast:
+        0.14,
 
-        coldLight:
-          0.28,
+      coldLight:
+        0.28,
 
-        warmLight:
-          0.08,
+      warmLight:
+        0.08,
 
-        phase:
-          pane.phase,
+      phase:
+        pane.phase,
 
-        saturation:
-          1.08,
+      saturation:
+        1.08,
 
-        glow:
-          0.26,
+      glow:
+        0.26,
 
-        edgeLight:
-          0.30,
+      edgeLight:
+        0.30,
 
-        jewelDepth:
-          0.24
+      jewelDepth:
+        0.24,
+
+      scratch:
+        0.22,
+
+      patina:
+        0.12
     };
   }
 
@@ -1541,6 +1659,12 @@
           true,
 
         backlitPaneModel:
+          true,
+
+        atmosphericHaloModel:
+          true,
+
+        agedGlassModel:
           true,
 
         definitionReady:
@@ -1657,6 +1781,12 @@
       state.canvas.dataset.showroomWindowLuminousGlass =
         "true";
 
+      state.canvas.dataset.showroomWindowAtmosphericHalo =
+        "true";
+
+      state.canvas.dataset.showroomWindowAgedGlass =
+        "true";
+
       state.canvas.dataset.visualPassClaimed =
         "false";
     }
@@ -1680,6 +1810,12 @@
         "true";
 
       state.mount.dataset.showroomWindowLuminousGlass =
+        "true";
+
+      state.mount.dataset.showroomWindowAtmosphericHalo =
+        "true";
+
+      state.mount.dataset.showroomWindowAgedGlass =
         "true";
 
       state.mount.dataset.showroomWindowDefinitionContract =
@@ -2375,6 +2511,12 @@
     canvas.dataset.showroomWindowLuminousGlass =
       "true";
 
+    canvas.dataset.showroomWindowAtmosphericHalo =
+      "true";
+
+    canvas.dataset.showroomWindowAgedGlass =
+      "true";
+
     canvas.setAttribute("aria-hidden", "true");
     canvas.setAttribute("role", "presentation");
 
@@ -2587,6 +2729,190 @@
     return false;
   }
 
+  function drawObjectOuterGlow(context, layout, amount) {
+    const profile =
+      getDefinitionProfile();
+
+    const adjusted =
+      amount *
+      numeric(profile.opacityMultiplier, 1) *
+      numeric(profile.outerGlowMultiplier, 1);
+
+    const outerGlowAlpha =
+      numeric(optical("outerGlowAlpha"), 0.30);
+
+    if (
+      adjusted <= 0.002 ||
+      outerGlowAlpha <= 0.002
+    ) {
+      return;
+    }
+
+    const blur =
+      lineWidth(numeric(optical("outerGlowBlur"), 24));
+
+    const spread =
+      numeric(optical("outerGlowSpread"), 1.08);
+
+    const warmth =
+      clamp(numeric(optical("outerGlowWarmth"), 0.58), 0, 1);
+
+    const coldness =
+      clamp(numeric(optical("outerGlowCold"), 0.42), 0, 1);
+
+    const rimAlpha =
+      numeric(optical("outerGlowRimAlpha"), 0.16);
+
+    const warmColor =
+      material("frame", "haloWarm");
+
+    const coldColor =
+      material("frame", "haloCold");
+
+    const centerX =
+      layout.centerX;
+
+    const centerY =
+      layout.centerY + layout.scaleY * 0.02;
+
+    const radiusX =
+      layout.scaleX * 0.88 * spread;
+
+    const radiusY =
+      layout.scaleY * 0.95 * spread;
+
+    context.save();
+
+    context.globalCompositeOperation =
+      "screen";
+
+    context.filter =
+      `blur(${blur}px)`;
+
+    const radial =
+      context.createRadialGradient(
+        centerX,
+        centerY,
+        radiusX * 0.22,
+        centerX,
+        centerY,
+        radiusX
+      );
+
+    radial.addColorStop(
+      0,
+      rgba(
+        mixColor(warmColor, coldColor, 0.35),
+        outerGlowAlpha * 0.055 * adjusted
+      )
+    );
+
+    radial.addColorStop(
+      0.58,
+      rgba(
+        warmColor,
+        outerGlowAlpha * 0.20 * warmth * adjusted
+      )
+    );
+
+    radial.addColorStop(
+      0.76,
+      rgba(
+        coldColor,
+        outerGlowAlpha * 0.18 * coldness * adjusted
+      )
+    );
+
+    radial.addColorStop(
+      1,
+      "rgba(255, 255, 255, 0)"
+    );
+
+    context.beginPath();
+
+    context.ellipse(
+      centerX,
+      centerY,
+      radiusX,
+      radiusY,
+      0,
+      0,
+      Math.PI * 2
+    );
+
+    context.fillStyle =
+      radial;
+
+    context.fill();
+
+    context.filter =
+      "none";
+
+    context.lineCap =
+      "round";
+
+    context.lineJoin =
+      "round";
+
+    state.geometry.frameBands
+      .filter(band => band.tier === "outer-face")
+      .forEach(
+        band => {
+          const projected =
+            projectPolygon(band.points, layout);
+
+          traceCurve(context, projected);
+
+          context.strokeStyle =
+            rgba(
+              warmColor,
+              rimAlpha * warmth * adjusted
+            );
+
+          context.lineWidth =
+            lineWidth(8.4);
+
+          context.shadowBlur =
+            lineWidth(16) * adjusted;
+
+          context.shadowColor =
+            rgba(
+              warmColor,
+              0.22 * warmth * adjusted
+            );
+
+          context.stroke();
+
+          traceCurve(context, projected);
+
+          context.strokeStyle =
+            rgba(
+              coldColor,
+              rimAlpha * coldness * adjusted
+            );
+
+          context.lineWidth =
+            lineWidth(4.8);
+
+          context.shadowBlur =
+            lineWidth(10) * adjusted;
+
+          context.shadowColor =
+            rgba(
+              coldColor,
+              0.18 * coldness * adjusted
+            );
+
+          context.stroke();
+        }
+      );
+
+    context.shadowBlur =
+      0;
+
+    context.restore();
+  }
+
   function drawObjectLocalShadow(context, layout, amount) {
     const profile =
       getDefinitionProfile();
@@ -2627,16 +2953,16 @@
       );
 
     const shadowAlpha =
-      numeric(optical("objectShadowAlpha"), 0.10);
+      numeric(optical("objectShadowAlpha"), 0.08);
 
     gradient.addColorStop(
       0,
-      `rgba(0, 0, 0, ${0.008 * adjusted})`
+      `rgba(0, 0, 0, ${0.006 * adjusted})`
     );
 
     gradient.addColorStop(
       0.58,
-      `rgba(0, 0, 0, ${0.030 * adjusted})`
+      `rgba(0, 0, 0, ${0.024 * adjusted})`
     );
 
     gradient.addColorStop(
@@ -2660,7 +2986,7 @@
       gradient;
 
     context.filter =
-      `blur(${lineWidth(numeric(optical("objectShadowBlur"), 12))}px)`;
+      `blur(${lineWidth(numeric(optical("objectShadowBlur"), 11))}px)`;
 
     context.fill();
 
@@ -2688,6 +3014,9 @@
 
     const frameColdAccent =
       numeric(optical("frameColdAccent"), 0.20);
+
+    const framePatina =
+      numeric(optical("framePatina"), numeric(optical("patinaIntensity"), 0.22));
 
     const projected =
       projectPolygon(band.points, layout);
@@ -2736,11 +3065,12 @@
           box.maxY
         );
 
-      gradient.addColorStop(0, rgba(material("frame", "shadow"), 0.52));
-      gradient.addColorStop(0.30, rgba(material("frame", "body"), 0.66));
-      gradient.addColorStop(0.58, rgba(material("frame", "bevel"), 0.34));
+      gradient.addColorStop(0, rgba(material("frame", "shadow"), 0.48));
+      gradient.addColorStop(0.26, rgba(material("frame", "body"), 0.62));
+      gradient.addColorStop(0.48, rgba(material("frame", "patina"), 0.12 * framePatina));
+      gradient.addColorStop(0.62, rgba(material("frame", "bevel"), 0.32));
       gradient.addColorStop(0.82, rgba(material("frame", "gold"), 0.18 * frameGoldAccent));
-      gradient.addColorStop(1, rgba(material("frame", "shadow"), 0.54));
+      gradient.addColorStop(1, rgba(material("frame", "shadow"), 0.52));
 
       context.fillStyle =
         gradient;
@@ -2749,7 +3079,7 @@
         lineWidth(3) * adjusted;
 
       context.shadowColor =
-        `rgba(0, 0, 0, ${0.16 * adjusted})`;
+        `rgba(0, 0, 0, ${0.14 * adjusted})`;
 
       context.fill();
 
@@ -2781,13 +3111,13 @@
       traceCurve(context, projected);
 
       context.shadowBlur =
-        lineWidth(numeric(optical("frameShadowBlur"), 10)) * adjusted;
+        lineWidth(numeric(optical("frameShadowBlur"), 9)) * adjusted;
 
       context.shadowColor =
-        `rgba(0, 0, 0, ${0.20 * adjusted})`;
+        `rgba(0, 0, 0, ${0.16 * adjusted})`;
 
       context.strokeStyle =
-        rgba(material("frame", "shadow"), 0.46 * adjusted);
+        rgba(material("frame", "shadow"), 0.42 * adjusted);
 
       context.lineWidth =
         lineWidth(band.width + 4);
@@ -2802,7 +3132,7 @@
       traceCurve(context, projected);
 
       context.strokeStyle =
-        rgba(material("frame", "black"), 0.56 * adjusted);
+        rgba(material("frame", "black"), 0.50 * adjusted);
 
       context.lineWidth =
         lineWidth(band.width + 2);
@@ -2812,7 +3142,14 @@
       traceCurve(context, projected);
 
       context.strokeStyle =
-        rgba(material("frame", "body"), 0.62 * adjusted);
+        rgba(
+          mixColor(
+            material("frame", "body"),
+            material("frame", "patina"),
+            framePatina * 0.28
+          ),
+          0.62 * adjusted
+        );
 
       context.lineWidth =
         lineWidth(band.width * 0.90);
@@ -2822,10 +3159,20 @@
       traceCurve(context, projected);
 
       context.strokeStyle =
-        rgba(material("frame", "patina"), 0.08 * adjusted);
+        rgba(material("frame", "patina"), 0.16 * framePatina * adjusted);
 
       context.lineWidth =
         lineWidth(band.width * 0.42);
+
+      context.stroke();
+
+      traceCurve(context, projected);
+
+      context.strokeStyle =
+        rgba(material("frame", "verdigris"), 0.06 * framePatina * adjusted);
+
+      context.lineWidth =
+        lineWidth(band.width * 0.24);
 
       context.stroke();
 
@@ -2864,7 +3211,7 @@
       traceCurve(context, projected);
 
       context.strokeStyle =
-        rgba(material("frame", "shadow"), 0.42 * adjusted);
+        rgba(material("frame", "shadow"), 0.38 * adjusted);
 
       context.lineWidth =
         lineWidth(band.width + 3);
@@ -2874,7 +3221,14 @@
       traceCurve(context, projected);
 
       context.strokeStyle =
-        rgba(material("frame", "body"), 0.56 * adjusted);
+        rgba(
+          mixColor(
+            material("frame", "body"),
+            material("frame", "oldCopper"),
+            framePatina * 0.18
+          ),
+          0.56 * adjusted
+        );
 
       context.lineWidth =
         lineWidth(band.width * 0.84);
@@ -2950,6 +3304,14 @@
     const globalGlassAlpha =
       numeric(optical("glassAlpha"), 0.38);
 
+    const age =
+      numeric(visual.age, numeric(optical("paneDefaultAge"), 0.18)) *
+      profileValue("ageMultiplier", 1);
+
+    const patina =
+      numeric(visual.patina, 0) +
+      numeric(optical("patinaIntensity"), 0.22) * 0.16;
+
     const baseAlpha =
       paneAlpha *
       globalGlassAlpha *
@@ -2958,7 +3320,11 @@
 
     const color =
       glassColor(
-        visual.materialColor,
+        mixColor(
+          visual.materialColor,
+          material("glass", "ageWhite"),
+          clamp(age * 0.08 + patina * 0.06, 0, 0.18)
+        ),
         saturation,
         lerp(0.30, 0.52, clamp(transmission, 0, 1))
       );
@@ -3211,7 +3577,8 @@
       Math.max(1, box.maxY - box.minY);
 
     const age =
-      numeric(visual.age, numeric(optical("paneDefaultAge"), 0.12));
+      numeric(visual.age, numeric(optical("paneDefaultAge"), 0.18)) *
+      profileValue("ageMultiplier", 1);
 
     const refraction =
       numeric(visual.refraction, numeric(optical("paneDefaultRefraction"), 0.42));
@@ -3343,6 +3710,8 @@
       context.stroke();
     }
 
+    drawGlassScratches(context, pane, box, amount, age);
+
     tracePolygon(context, projected);
 
     context.strokeStyle =
@@ -3362,6 +3731,117 @@
       lineWidth(0.38);
 
     context.stroke();
+
+    context.restore();
+  }
+
+  function drawGlassScratches(context, pane, box, amount, age) {
+    const visual =
+      paneVisual(pane);
+
+    const scratchLineCount =
+      Math.max(0, Math.floor(numeric(optical("scratchLineCount"), 7)));
+
+    if (
+      scratchLineCount <= 0 ||
+      amount <= 0.002
+    ) {
+      return;
+    }
+
+    const width =
+      Math.max(1, box.maxX - box.minX);
+
+    const height =
+      Math.max(1, box.maxY - box.minY);
+
+    const scratchAlpha =
+      numeric(optical("scratchAlpha"), 0.18) *
+      numeric(visual.scratch, 0.22) *
+      Math.max(0.18, age);
+
+    const scratchLength =
+      numeric(optical("scratchLength"), 0.62);
+
+    context.save();
+
+    context.globalCompositeOperation =
+      "screen";
+
+    context.lineCap =
+      "round";
+
+    for (
+      let index = 0;
+      index < scratchLineCount;
+      index += 1
+    ) {
+      const seed =
+        numeric(visual.phase, pane.phase || 0) * 31.91 +
+        index * 11.47;
+
+      const x =
+        box.minX +
+        width *
+          (
+            0.08 +
+            0.84 *
+            (Math.sin(seed) * 0.5 + 0.5)
+          );
+
+      const y =
+        box.minY +
+        height *
+          (
+            0.10 +
+            0.80 *
+            (Math.cos(seed * 0.73) * 0.5 + 0.5)
+          );
+
+      const length =
+        width *
+        (
+          0.05 +
+          scratchLength * 0.10 *
+          (Math.sin(seed * 1.13) * 0.5 + 0.5)
+        );
+
+      const tilt =
+        -0.70 +
+        (Math.sin(seed * 0.41) * 0.5 + 0.5) * 1.40;
+
+      context.beginPath();
+
+      context.moveTo(
+        x - Math.cos(tilt) * length * 0.5,
+        y - Math.sin(tilt) * length * 0.5
+      );
+
+      context.lineTo(
+        x + Math.cos(tilt) * length * 0.5,
+        y + Math.sin(tilt) * length * 0.5
+      );
+
+      context.strokeStyle =
+        rgba(
+          material("glass", "scratchWhite"),
+          scratchAlpha * amount *
+          (
+            0.35 +
+            0.65 *
+            (Math.sin(seed * 2.07) * 0.5 + 0.5)
+          )
+        );
+
+      context.lineWidth =
+        lineWidth(
+          0.22 +
+          0.22 *
+          (Math.sin(seed * 3.11) * 0.5 + 0.5)
+        );
+
+      context.stroke();
+    }
 
     context.restore();
   }
@@ -3469,6 +3949,9 @@
     const leadHighlight =
       numeric(optical("leadHighlight"), 0.28);
 
+    const leadPatina =
+      numeric(optical("leadPatina"), numeric(optical("patinaIntensity"), 0.18));
+
     const side =
       projectPolygon(
         segment.points,
@@ -3495,7 +3978,7 @@
     context.lineTo(side[1].x, side[1].y);
 
     context.strokeStyle =
-      rgba(material("lead", "shadow"), 0.46 * adjusted);
+      rgba(material("lead", "shadow"), 0.42 * adjusted);
 
     context.lineWidth =
       lineWidth(BASE_RENDER.cameSideWidth * 0.82);
@@ -3507,7 +3990,7 @@
     context.lineTo(face[1].x, face[1].y);
 
     context.strokeStyle =
-      rgba(material("lead", "dark"), 0.58 * adjusted);
+      rgba(material("lead", "dark"), 0.54 * adjusted);
 
     context.lineWidth =
       lineWidth(BASE_RENDER.cameWidth * 0.88);
@@ -3519,7 +4002,14 @@
     context.lineTo(face[1].x, face[1].y);
 
     context.strokeStyle =
-      rgba(material("lead", "body"), 0.56 * adjusted);
+      rgba(
+        mixColor(
+          material("lead", "body"),
+          material("lead", "patina"),
+          leadPatina * 0.24
+        ),
+        0.56 * adjusted
+      );
 
     context.lineWidth =
       lineWidth(BASE_RENDER.cameWidth * 0.64);
@@ -3794,7 +4284,7 @@
     tracePolygon(context, outer);
 
     context.strokeStyle =
-      rgba(material("aperture", "wall"), 0.70 * adjusted);
+      rgba(material("aperture", "wall"), 0.68 * adjusted);
 
     context.lineWidth =
       lineWidth(BASE_RENDER.apertureWallWidth);
@@ -3803,7 +4293,7 @@
       lineWidth(5) * adjusted;
 
     context.shadowColor =
-      `rgba(0, 0, 0, ${0.22 * adjusted})`;
+      `rgba(0, 0, 0, ${0.20 * adjusted})`;
 
     context.stroke();
 
@@ -3813,7 +4303,7 @@
     tracePolygon(context, outer);
 
     context.strokeStyle =
-      rgba(material("aperture", "deepBronze"), 0.72 * adjusted);
+      rgba(material("aperture", "deepBronze"), 0.70 * adjusted);
 
     context.lineWidth =
       lineWidth(BASE_RENDER.apertureFaceWidth + 2.0);
@@ -3963,10 +4453,17 @@
 
     const adjusted =
       amount *
-      numeric(profile.densityMultiplier, 1);
+      numeric(profile.densityMultiplier, 1) *
+      numeric(profile.ageMultiplier, 1);
 
     const speckCount =
-      Math.max(0, Math.floor(numeric(optical("textureSpeckCount"), 10)));
+      Math.max(0, Math.floor(numeric(optical("textureSpeckCount"), 16)));
+
+    const patinaSpeckCount =
+      Math.max(0, Math.floor(numeric(optical("patinaSpeckCount"), 18)));
+
+    const patinaIntensity =
+      numeric(optical("patinaIntensity"), 0.22);
 
     context.save();
 
@@ -4007,7 +4504,51 @@
       );
 
       context.fillStyle =
-        `rgba(245, 238, 208, ${0.007 * adjusted})`;
+        `rgba(245, 238, 208, ${0.008 * adjusted})`;
+
+      context.fill();
+    }
+
+    context.globalCompositeOperation =
+      "source-over";
+
+    for (
+      let index = 0;
+      index < patinaSpeckCount;
+      index += 1
+    ) {
+      const seed =
+        index * 21.119;
+
+      const x =
+        layout.centerX +
+        Math.sin(seed) * layout.scaleX * 0.84;
+
+      const y =
+        layout.centerY +
+        Math.cos(seed * 0.67) * layout.scaleY * 0.92;
+
+      const radius =
+        lineWidth(
+          0.24 +
+          (Math.sin(seed * 1.91) * 0.5 + 0.5) * 0.42
+        );
+
+      context.beginPath();
+
+      context.arc(
+        x,
+        y,
+        radius,
+        0,
+        Math.PI * 2
+      );
+
+      context.fillStyle =
+        rgba(
+          material("frame", "verdigris"),
+          0.010 * patinaIntensity * adjusted
+        );
 
       context.fill();
     }
@@ -4060,7 +4601,8 @@
       state.pixelRatio
     );
 
-    drawObjectLocalShadow(context, layout, amount * 0.68);
+    drawObjectOuterGlow(context, layout, amount);
+    drawObjectLocalShadow(context, layout, amount * 0.56);
     drawFrameBands(context, layout, amount * 0.86);
     drawGlassPanes(context, layout, amount);
     drawLeadCame(context, layout, amount * 0.74);
@@ -4112,7 +4654,7 @@
 
     updateReceipt({
       lastAction:
-        "window-object-rendered-luminous-glass",
+        "window-object-rendered-luminous-aged-glass-with-halo",
 
       lastFailure:
         null
@@ -4818,7 +5360,7 @@
           : FALLBACK_DEFINITION.contractId,
 
       geometryQualityIntent:
-        "luminous-backlit-foreground-lens-aperture-focus-compatible-definition-consuming-host"
+        "luminous-aged-backlit-foreground-lens-aperture-focus-compatible-definition-consuming-host-with-atmospheric-halo"
     });
   }
 
@@ -4845,6 +5387,12 @@
         true,
 
       backlitPaneModel:
+        true,
+
+      atmosphericHaloModel:
+        true,
+
+      agedGlassModel:
         true,
 
       visualPassClaimed:
@@ -4972,6 +5520,12 @@
       state.mount.dataset.showroomWindowLuminousGlass =
         "true";
 
+      state.mount.dataset.showroomWindowAtmosphericHalo =
+        "true";
+
+      state.mount.dataset.showroomWindowAgedGlass =
+        "true";
+
       state.geometry =
         makeGeometry();
 
@@ -5061,7 +5615,7 @@
           isCurtainHidden(),
 
         lastAction:
-          "window-object-initialized-compatible-luminous-definition-consuming-host",
+          "window-object-initialized-compatible-luminous-aged-definition-consuming-host-with-halo",
 
         lastFailure:
           null

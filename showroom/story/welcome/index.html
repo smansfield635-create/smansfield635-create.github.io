@@ -1,15 +1,15 @@
 <!-- TARGET FILE: /showroom/story/welcome/index.html -->
 <!-- COMPLETE REPLACEMENT -->
-<!-- SHOWROOM_SATELLITE_WELCOME_TO_MIRRORLAND_HTML_TNT_v2_INVITATION_STANDARD -->
+<!-- SHOWROOM_SATELLITE_WELCOME_TO_MIRRORLAND_HTML_TNT_v3_TICKET_ACCESS_TEAM_REVEAL -->
 
 <!doctype html>
 
 <html
-  lang="en" 
+  lang="en"
   data-route="/showroom/story/welcome/"
   data-page="showroom-story-welcome"
-  data-version="SHOWROOM-SATELLITE-WELCOME-TO-MIRRORLAND-2.0.0"
-  data-contract="SHOWROOM_SATELLITE_WELCOME_TO_MIRRORLAND_HTML_TNT_v2_INVITATION_STANDARD"
+  data-version="SHOWROOM-SATELLITE-WELCOME-TO-MIRRORLAND-3.0.0"
+  data-contract="SHOWROOM_SATELLITE_WELCOME_TO_MIRRORLAND_HTML_TNT_v3_TICKET_ACCESS_TEAM_REVEAL"
   data-showroom-satellite="true"
   data-showroom-route-family="story"
   data-showroom-route-id="north-1"
@@ -33,27 +33,27 @@
 
   <meta
     name="description"
-    content="You thought the door had closed. Then the invitation found you. Enter the first Mirrorland threshold as the scientific novelist and independent researcher Audralia did not expect Earth to send."
+    content="You thought the door had closed. Then the invitation found you. Open the impossible ticket, meet the first hint of the team beyond the threshold, and enter Mirrorland."
   >
 
   <meta
     name="showroom-page-contract"
-    content="SHOWROOM_SATELLITE_WELCOME_TO_MIRRORLAND_HTML_TNT_v2_INVITATION_STANDARD"
+    content="SHOWROOM_SATELLITE_WELCOME_TO_MIRRORLAND_HTML_TNT_v3_TICKET_ACCESS_TEAM_REVEAL"
   >
 
   <style>
     /* ============================================================
-       SHOWROOM SATELLITE PAGE EMBEDDED VISUAL SYSTEM v2
+       SHOWROOM SATELLITE PAGE EMBEDDED VISUAL SYSTEM v3
        PAGE: north-1 · Welcome to Mirrorland
 
-       Page-specific standard:
+       Authority:
        - one-file route page;
        - embedded CSS;
        - page-local JavaScript only;
        - no external dependencies;
        - no shared Showroom runtime ownership;
        - no repeating tiled starfield as primary atmosphere;
-       - dominant animation object: the impossible invitation.
+       - dominant animation object: the impossible ticket.
        ============================================================ */
 
     :root {
@@ -82,7 +82,6 @@
 
       --satellite-secondary: #88aaff;
       --satellite-violet: #b798ff;
-      --satellite-rose: #ffb3c3;
 
       --satellite-border: rgba(226, 197, 128, 0.24);
       --satellite-border-strong: rgba(239, 205, 125, 0.5);
@@ -379,8 +378,7 @@
     .route-kicker,
     .chapter-index,
     .ticket-label,
-    .practical-label,
-    .evidence-label {
+    .practical-label {
       color: var(--satellite-gold-bright);
 
       font-size: 0.69rem;
@@ -1147,10 +1145,10 @@
     }
 
     /* ============================================================
-       NARRATIVE STAGE
+       STORY STAGE
        ============================================================ */
 
-    .narrative-stage {
+    .story-stage {
       display: grid;
       gap: 1rem;
     }
@@ -1174,7 +1172,7 @@
       color: var(--satellite-muted-strong);
     }
 
-    .chapter-grid {
+    .scene-grid {
       display: grid;
 
       grid-template-columns:
@@ -1183,7 +1181,7 @@
       gap: 0.9rem;
     }
 
-    .chapter {
+    .scene-card {
       position: relative;
 
       min-width: 0;
@@ -1203,7 +1201,7 @@
         box-shadow var(--satellite-transition);
     }
 
-    .chapter:hover {
+    .scene-card:hover {
       border-color: rgba(224, 184, 91, 0.34);
 
       box-shadow:
@@ -1213,7 +1211,7 @@
       transform: translateY(-3px);
     }
 
-    .chapter::before {
+    .scene-card::before {
       position: absolute;
       top: 0;
       right: 0;
@@ -1237,19 +1235,19 @@
       margin-bottom: 0.8rem;
     }
 
-    .chapter h3 {
+    .scene-card h3 {
       margin-bottom: 0.65rem;
 
       font-size: clamp(1.45rem, 2.4vw, 2.1rem);
     }
 
-    .chapter p {
+    .scene-card p {
       margin-bottom: 0;
 
       color: var(--satellite-muted-strong);
     }
 
-    .chapter blockquote {
+    .scene-card blockquote {
       margin:
         1rem 0
         0;
@@ -1270,21 +1268,21 @@
     }
 
     /* ============================================================
-       LETTER STAGE
+       ENVELOPE / LETTER STAGE
        ============================================================ */
 
-    .letter-stage {
+    .envelope-stage {
       display: grid;
 
       grid-template-columns:
-        minmax(0, 0.88fr)
-        minmax(0, 1.12fr);
+        minmax(0, 0.86fr)
+        minmax(0, 1.14fr);
 
       gap: 1rem;
     }
 
-    .letter-intro,
-    .letter-panel {
+    .envelope-intro,
+    .envelope-panel {
       min-width: 0;
       padding: clamp(1.2rem, 3vw, 2rem);
 
@@ -1295,24 +1293,24 @@
       box-shadow: var(--satellite-shadow);
     }
 
-    .letter-intro {
+    .envelope-intro {
       display: grid;
       align-content: center;
       gap: 0.9rem;
     }
 
-    .letter-intro p {
+    .envelope-intro p {
       margin-bottom: 0;
 
       color: var(--satellite-muted-strong);
     }
 
-    .letter-panel {
+    .envelope-panel {
       position: relative;
       overflow: hidden;
     }
 
-    .letter-panel::before {
+    .envelope-panel::before {
       position: absolute;
       inset: 1rem;
 
@@ -1352,10 +1350,12 @@
 
     .letter strong {
       color: var(--satellite-gold-soft);
+
       font-family:
         Georgia,
         "Times New Roman",
         serif;
+
       font-size: 1.2rem;
       font-weight: 600;
     }
@@ -1390,10 +1390,10 @@
     }
 
     /* ============================================================
-       PRESSURE GRID
+       CONTENTS GRID
        ============================================================ */
 
-    .pressure-section {
+    .contents-section {
       display: grid;
       gap: 1rem;
 
@@ -1412,7 +1412,7 @@
       box-shadow: var(--satellite-shadow-deep);
     }
 
-    .pressure-grid {
+    .contents-grid {
       display: grid;
 
       grid-template-columns:
@@ -1421,7 +1421,7 @@
       gap: 0.75rem;
     }
 
-    .pressure-card {
+    .content-card {
       min-width: 0;
       padding: 1rem;
 
@@ -1436,7 +1436,7 @@
         );
     }
 
-    .pressure-card span {
+    .content-card span {
       display: block;
       margin-bottom: 0.55rem;
 
@@ -1448,7 +1448,7 @@
       text-transform: uppercase;
     }
 
-    .pressure-card strong {
+    .content-card strong {
       display: block;
       margin-bottom: 0.45rem;
 
@@ -1464,7 +1464,7 @@
       line-height: 1.16;
     }
 
-    .pressure-card p {
+    .content-card p {
       margin-bottom: 0;
 
       color: var(--satellite-muted);
@@ -1531,7 +1531,7 @@
     }
 
     /* ============================================================
-       EVIDENCE DISCLOSURE
+       REVEAL DISCLOSURE
        ============================================================ */
 
     .evidence-disclosure {
@@ -1833,16 +1833,16 @@
        ============================================================ */
 
     @media (max-width: 68rem) {
-      .chapter-grid {
+      .scene-grid {
         grid-template-columns:
           repeat(2, minmax(0, 1fr));
       }
 
-      .chapter:last-child {
+      .scene-card:last-child {
         grid-column: 1 / -1;
       }
 
-      .pressure-grid {
+      .contents-grid {
         grid-template-columns:
           repeat(2, minmax(0, 1fr));
       }
@@ -1855,7 +1855,7 @@
 
     @media (max-width: 54rem) {
       .route-hero__inner,
-      .letter-stage,
+      .envelope-stage,
       .practical-return,
       .section-heading {
         grid-template-columns: 1fr;
@@ -1990,20 +1990,20 @@
         width: 11rem;
       }
 
-      .chapter-grid,
-      .pressure-grid,
+      .scene-grid,
+      .contents-grid,
       .evidence-grid {
         grid-template-columns: 1fr;
       }
 
-      .chapter:last-child {
+      .scene-card:last-child {
         grid-column: auto;
       }
 
-      .chapter,
-      .letter-intro,
-      .letter-panel,
-      .pressure-section,
+      .scene-card,
+      .envelope-intro,
+      .envelope-panel,
+      .contents-section,
       .practical-return {
         border-radius: 1rem;
       }
@@ -2038,7 +2038,7 @@
         transition-duration: 0.001ms !important;
       }
 
-      .chapter:hover,
+      .scene-card:hover,
       .button:hover {
         transform: none;
       }
@@ -2055,10 +2055,10 @@
 
     @media (prefers-reduced-transparency: reduce) {
       .page-topbar,
-      .chapter,
-      .letter-intro,
-      .letter-panel,
-      .pressure-section,
+      .scene-card,
+      .envelope-intro,
+      .envelope-panel,
+      .contents-section,
       .practical-return,
       .evidence-disclosure {
         background-color: var(--satellite-ink-1);
@@ -2074,11 +2074,11 @@
       body,
       .page-topbar,
       .route-hero,
-      .chapter,
-      .letter-intro,
-      .letter-panel,
-      .pressure-section,
-      .pressure-card,
+      .scene-card,
+      .envelope-intro,
+      .envelope-panel,
+      .contents-section,
+      .content-card,
       .practical-return,
       .evidence-disclosure,
       .invitation-stage,
@@ -2130,11 +2130,11 @@
       }
 
       .route-hero,
-      .chapter,
-      .letter-intro,
-      .letter-panel,
-      .pressure-section,
-      .pressure-card,
+      .scene-card,
+      .envelope-intro,
+      .envelope-panel,
+      .contents-section,
+      .content-card,
       .practical-return,
       .evidence-disclosure,
       .invitation-stage,
@@ -2232,17 +2232,17 @@
             </p>
 
             <p class="hero-lead">
-              Public word had already gone out: every ticket was settled.
-              The chance to reach Audralia had passed into other hands.
-              You accepted it, or tried to. Then one envelope arrived
-              with your name written as if the world had not forgotten you
-              after all.
+              The announcement had already gone out: every ticket was
+              settled. The chance to reach Audralia had passed into other
+              hands. You tried to accept that. Then an envelope appeared
+              where no envelope should have been, and the name on it was
+              yours.
             </p>
 
             <div class="hero-actions">
               <a
                 class="button button-gold"
-                href="#invitation"
+                href="#ticket-arrives"
               >
                 Open the Invitation
               </a>
@@ -2257,7 +2257,7 @@
           </div>
 
           <aside
-            id="invitation"
+            id="ticket-arrives"
             class="invitation-stage reveal"
             aria-label="Impossible invitation"
           >
@@ -2307,7 +2307,7 @@
             >
               <div class="invitation-ticket__inner">
                 <span class="invitation-ticket__code">
-                  Final Ticket · Reopened
+                  Final Ticket · Active
                 </span>
 
                 <span class="invitation-ticket__title">
@@ -2315,7 +2315,7 @@
                 </span>
 
                 <span class="invitation-ticket__subtitle">
-                  Admit one witness
+                  Access granted
                 </span>
               </div>
             </div>
@@ -2326,13 +2326,12 @@
               </span>
 
               <strong>
-                The door did not open for a crowd.
+                This is not a viewing pass.
               </strong>
 
               <p>
-                It opened for the person Audralia still needed:
-                someone close enough to Earth to notice what official
-                instruments might overlook.
+                The ticket gives access. What it does not give is control
+                over what the first door will ask of you.
               </p>
             </div>
           </aside>
@@ -2340,115 +2339,113 @@
       </section>
 
       <section
-        class="narrative-stage"
-        aria-labelledby="arrival-title"
+        class="story-stage"
+        aria-labelledby="story-title"
       >
         <header class="section-heading reveal">
           <div>
             <div class="eyebrow">
-              The First Recognition
+              The Day the Ticket Arrived
             </div>
 
-            <h2 id="arrival-title">
-              You were not chosen by accident.
+            <h2 id="story-title">
+              The story did not begin as wonder.
             </h2>
           </div>
 
           <p>
-            The invitation does not explain its full cost.
-            Not yet.
+            It began with trying to live as if nothing impossible was
+            coming.
           </p>
         </header>
 
-        <div class="chapter-grid">
-          <article class="chapter reveal">
+        <div class="scene-grid">
+          <article class="scene-card reveal">
             <span class="chapter-index">
-              01 · The Closed Door
+              01 · The Announcement
             </span>
 
             <h3>
-              You thought your chance was gone.
+              All tickets were gone.
             </h3>
 
             <p>
-              The announcements had already ended. Others had earned
-              their passage. Others would step toward the world everyone
-              was calling paradise, frontier, proof, and possible answer.
-              You were left with the ache of almost.
+              The official word was clean, final, and impossible to
+              argue with. Every passage had been assigned. Every name had
+              been settled. Whatever Audralia was going to become, it was
+              going to happen without you.
             </p>
 
             <blockquote>
-              You thought the story had moved on without you.
+              You closed the article before you finished reading it twice.
             </blockquote>
           </article>
 
-          <article class="chapter reveal">
+          <article class="scene-card reveal">
             <span class="chapter-index">
-              02 · The Found Name
+              02 · The Ordinary Morning
             </span>
 
             <h3>
-              Then the ticket arrived.
+              You went back to work.
             </h3>
 
             <p>
-              It did not arrive as a prize for status. It did not list
-              institutional rank as the reason. It named your work:
-              scientific novelist, independent researcher, observer of
-              patterns that do not always survive official language.
+              There were notes on your desk, half-shaped chapters,
+              research fragments, and questions no one had asked you to
+              answer. You made coffee. You opened the same files. You
+              told yourself almost was not the same as lost.
             </p>
 
             <blockquote>
-              Audralia did not ask only for credentials. It asked for sight.
+              Then something struck the floor near the door.
             </blockquote>
           </article>
 
-          <article class="chapter reveal">
+          <article class="scene-card reveal">
             <span class="chapter-index">
-              03 · The Unasked Question
+              03 · The Envelope
             </span>
 
             <h3>
-              Recognition came before explanation.
+              It should not have existed.
             </h3>
 
             <p>
-              No one told you the whole burden. The invitation offered
-              wonder first: a door, a route, a chance to see what Earth
-              had only begun to imagine. The cost waited beneath the
-              shine.
+              No stamp. No courier mark. No return address. Only your
+              name, written twice: once as the world knew it, and once
+              with a title you had never used publicly.
             </p>
 
             <blockquote>
-              You were chosen before you understood what choosing would require.
+              Scientific novelist. Independent researcher.
             </blockquote>
           </article>
         </div>
       </section>
 
       <section
-        class="letter-stage"
+        class="envelope-stage"
         aria-labelledby="letter-title"
       >
-        <div class="letter-intro reveal">
+        <div class="envelope-intro reveal">
           <div class="eyebrow">
-            The Message Inside
+            Inside the Envelope
           </div>
 
           <h2 id="letter-title">
-            The invitation speaks carefully.
+            The invitation was short.
           </h2>
 
           <p>
-            It does not flatter you into certainty. It does not tell you
-            that you are ready. It only tells you that the perspective you
-            carry matters, and that the next door cannot be understood
-            from the outside.
+            It did not explain Audralia. It did not explain the cost. It
+            did not tell you why the process reopened after everyone said
+            it was closed. It only gave enough to make the next step real.
           </p>
         </div>
 
         <div
-          class="letter-panel reveal"
+          class="envelope-panel reveal"
           aria-label="Invitation message"
         >
           <article class="letter">
@@ -2459,98 +2456,103 @@
 
             <p>
               <strong>
-                To the one who thought the chance had passed:
+                To the one who thought the door had closed:
               </strong>
             </p>
 
             <p>
-              You were not selected because Earth needed another official
-              witness. You were selected because Audralia requires a
-              real-world eye: one able to notice consequence, meaning,
-              blind spots, moral pressure, and the patterns that form
-              between systems and people.
+              Your ticket has been activated. You are not being invited
+              because Earth needs another official witness. You are being
+              invited because Audralia needs a real-world eye: someone
+              trained to notice what happens between systems and people.
             </p>
 
             <p>
-              You are invited to enter Mirrorland first.
-              Do not mistake the threshold for the destination.
-              Do not mistake wonder for permission.
+              You will begin in Mirrorland. The first threshold will not
+              give you the whole world. It will give you access to the
+              place where access must become trust.
+            </p>
+
+            <p>
+              A team is already expecting you. You will learn them one by
+              one. For now, bring your questions and step through the
+              first door.
             </p>
           </article>
         </div>
       </section>
 
       <section
-        class="pressure-section"
-        aria-labelledby="pressure-title"
+        class="contents-section"
+        aria-labelledby="contents-title"
       >
         <header class="section-heading reveal">
           <div>
             <div class="eyebrow">
-              What the Ticket Begins
+              What the Envelope Contains
             </div>
 
-            <h2 id="pressure-title">
-              Four truths arrive quietly.
+            <h2 id="contents-title">
+              Four things become clear.
             </h2>
           </div>
 
           <p>
-            The first chamber does not reveal the whole burden.
-            It only lets you feel the shape of it.
+            Not the whole burden. Only enough to understand that the
+            ticket is real.
           </p>
         </header>
 
-        <div class="pressure-grid">
-          <article class="pressure-card reveal">
-            <span>Truth One</span>
+        <div class="contents-grid">
+          <article class="content-card reveal">
+            <span>One</span>
 
             <strong>
-              You were chosen.
+              The ticket is active.
             </strong>
 
             <p>
-              The door did not reopen randomly. Something in your way of
-              seeing made the invitation return.
+              It is not symbolic. It grants entry to the Mirrorland
+              threshold.
             </p>
           </article>
 
-          <article class="pressure-card reveal">
-            <span>Truth Two</span>
+          <article class="content-card reveal">
+            <span>Two</span>
 
             <strong>
-              You are not yet ready.
+              Your work was named.
             </strong>
 
             <p>
-              Being chosen is not the same as being prepared. Mirrorland
-              begins with preparation, not control.
+              The invitation recognized the way you study patterns,
+              consequence, and human meaning.
             </p>
           </article>
 
-          <article class="pressure-card reveal">
-            <span>Truth Three</span>
+          <article class="content-card reveal">
+            <span>Three</span>
 
             <strong>
-              Sight is not ownership.
+              They are expecting you.
             </strong>
 
             <p>
-              You may be allowed to see what others cannot, but seeing is
-              only the first responsibility.
+              No roster is given. No biographies. Only the first hint
+              that a team is already beyond the door.
             </p>
           </article>
 
-          <article class="pressure-card reveal">
-            <span>Truth Four</span>
+          <article class="content-card reveal">
+            <span>Four</span>
 
             <strong>
-              The question matters.
+              Mirrorland comes first.
             </strong>
 
             <p>
-              You have not been asked to leave Earth behind. You have
-              been asked to see what Earth has not yet learned how to ask.
+              Not Audralia yet. First, you must learn how to enter
+              without mistaking access for readiness.
             </p>
           </article>
         </div>
@@ -2566,13 +2568,13 @@
           </span>
 
           <h2 id="practical-title">
-            Open the door.
+            Enter with the ticket.
           </h2>
 
           <p>
-            You do not enter Mirrorland as a conqueror, tourist, or
-            owner. You enter as someone unexpectedly recognized. Wonder
-            opens the door. Limitation will reveal the path.
+            The invitation does not ask you to leave Earth behind. It
+            asks whether you can help Earth ask a better question.
+            Mirrorland is where that question begins.
           </p>
         </div>
 
@@ -2596,9 +2598,9 @@
       <details class="evidence-disclosure">
         <summary>
           <span>
-            <strong>Premise and Reveal Boundary</strong>
+            <strong>Story Reveal Boundary</strong>
             <small>
-              What this first chamber establishes—and what it withholds
+              What this first chamber reveals, and what it keeps closed
             </small>
           </span>
 
@@ -2607,21 +2609,20 @@
 
         <div class="evidence-body">
           <p>
-            This chamber establishes the player-character’s unexpected
-            selection after the public ticket process appeared complete.
-            The player enters as a scientific novelist and independent
-            researcher whose real-world perspective matters to the path
-            ahead.
+            This chamber reveals that the player received real access
+            after the public ticket process appeared complete. It also
+            reveals why the player was selected and lightly introduces
+            the existence of a team beyond the threshold.
           </p>
 
           <div class="evidence-grid">
             <article>
-              <span>Established Here</span>
+              <span>Revealed Here</span>
 
               <p>
-                The ticket arrived after the door seemed closed, and the
-                player was selected for perspective rather than formal
-                institutional rank.
+                The ticket is active, the player was selected as a
+                scientific novelist and independent researcher, and
+                Mirrorland is the first threshold.
               </p>
             </article>
 
@@ -2629,19 +2630,18 @@
               <span>Withheld Here</span>
 
               <p>
-                The full cost of the ticket, Earth’s danger, conjugation,
-                frontier systems, H-Earth, Hearth, and later Audralia
-                mechanics remain unrevealed.
+                The team’s identities, the full cost of access, Earth’s
+                danger, conjugation, Hearth, H-Earth, ZIONTS, and the
+                deeper Audralia systems remain unrevealed.
               </p>
             </article>
 
             <article>
-              <span>Continuity Requirement</span>
+              <span>Next Pressure</span>
 
               <p>
-                The route must preserve the Constellation, Diamond,
-                300-Year Clock, Mirrorland preparation, and recoverable
-                Main Compass return.
+                If the ticket opens the door, the next question is why
+                Mirrorland exists and what kind of trust it is preparing.
               </p>
             </article>
           </div>
@@ -2681,7 +2681,7 @@
       "use strict";
 
       const CONTRACT =
-        "SHOWROOM_SATELLITE_WELCOME_TO_MIRRORLAND_HTML_TNT_v2_INVITATION_STANDARD";
+        "SHOWROOM_SATELLITE_WELCOME_TO_MIRRORLAND_HTML_TNT_v3_TICKET_ACCESS_TEAM_REVEAL";
 
       const root =
         document.documentElement;
@@ -2755,6 +2755,9 @@
           localEnhancementOnly: true,
           globalRuntimeOwned: false,
           navigationOwned: false,
+          ticketGivesAccess: true,
+          teamIntroducedLightly: true,
+          systematicReveal: "ticket-access-team-hint-mirrorland-first",
           reducedMotion: reducedMotion,
           timestamp: new Date().toISOString()
         };
@@ -2790,7 +2793,7 @@
 </html>
 
 <!--
-SHOWROOM_SATELLITE_WELCOME_TO_MIRRORLAND_HTML_RECEIPT_v2_INVITATION_STANDARD
+SHOWROOM_SATELLITE_WELCOME_TO_MIRRORLAND_HTML_RECEIPT_v3_TICKET_ACCESS_TEAM_REVEAL
 
 TARGET:
 /showroom/story/welcome/index.html
@@ -2800,10 +2803,10 @@ COMPLETE SELF-CONTAINED HTML REPLACEMENT
 
 SOURCE BASELINE:
 SHOWROOM_SATELLITE_WELCOME_TO_MIRRORLAND_HTML_TNT_v1
-confirmed by user as current source baseline.
+Confirmed by user as current source baseline.
 
 NEW CONTRACT:
-SHOWROOM_SATELLITE_WELCOME_TO_MIRRORLAND_HTML_TNT_v2_INVITATION_STANDARD
+SHOWROOM_SATELLITE_WELCOME_TO_MIRRORLAND_HTML_TNT_v3_TICKET_ACCESS_TEAM_REVEAL
 
 ROUTE FAMILY:
 Story / North
@@ -2825,27 +2828,40 @@ MAIN COMPASS:
 
 NARRATIVE AUTHORITY:
 SHOWROOM_MIRRORLAND_AUDRALIA_ROUTE_PAGE_NARRATIVE_FREEZE_PACKET_v1_1
+SHOWROOM_ROUTE_PAGE_RENEWAL_RULES_LOCK_v1
 
-PRIMARY NARRATIVE CORRECTION:
-- Replaced Dextrion anomaly / first-contact mission framing.
-- Established the player’s unexpected invitation after all tickets appeared settled.
-- Established the player as a scientific novelist and independent researcher.
-- Preserved wonder, recognition, curiosity, and light hidden burden.
-- Withheld Earth danger, conjugation, frontier systems, H-Earth, Hearth, ZIONTS, and full Audralia mechanics.
+PRIMARY NARRATIVE CORRECTIONS FROM v2:
+- Removed redundant chosen/ticket abstraction.
+- Rebuilt the page as one concrete unfolding scene.
+- Preserved the ticket visual and single-file route-page model.
+- Clarified that the ticket gives real access, not mere observation.
+- Added informal team introduction without listing characters.
+- Added systematic Page 1 reveal:
+    active ticket;
+    player selected after ticket process appeared closed;
+    selected as scientific novelist and independent researcher;
+    team is already expecting the player;
+    Mirrorland comes first.
 
-PAGE 1 GOVERNING LINES:
-- You thought the door had closed.
-- Then the invitation found you.
-- You have not been asked to leave Earth behind.
-- You have been asked to see what Earth has not yet learned how to ask.
+PAGE 1 STORY SPINE:
+1. Public word says all tickets are settled.
+2. The player believes the chance is gone.
+3. The player returns to ordinary work.
+4. The impossible envelope appears.
+5. The envelope names the player and their work.
+6. The ticket is active and gives access.
+7. The invitation explains why the player’s perspective matters.
+8. The team is lightly foreshadowed.
+9. Mirrorland is revealed as the first threshold.
+10. The player is invited to continue.
 
 DOMINANT ANIMATION IDEA:
 The impossible invitation / ticket arrives through darkness.
 
 ANTI-TILED-STAR CORRECTION:
-The page no longer relies on repeating square-cell star backgrounds as the primary atmosphere.
-Stars are hand-positioned as sparse fixed atmosphere through layered radial points.
-The dominant visual object is the ticket, not a generic starfield.
+The page does not use repeating square-cell starfields as the main atmosphere.
+Atmospheric stars are hand-positioned through fixed radial points.
+The dominant animated visual is the ticket object.
 
 EMBEDDED SYSTEM:
 - HTML structure

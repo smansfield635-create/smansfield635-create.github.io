@@ -1,14 +1,15 @@
 /* TARGET FILE: /showroom/index.cosmos.js */
-/* TNT FULL-FILE REPLACEMENT */
-/* SHOWROOM_COSMOS_HARDENED_v1 */ 
+/* COMPLETE REPLACEMENT */
+/* SHOWROOM_COSMOS_HARDENED_v2_IRREGULAR_STARFIELD_DUAL_SPACECRAFT */
 
 /*
-  Showroom — Autonomous cosmic atmosphere and randomized spacecraft engine.
+  Showroom — Autonomous cosmic atmosphere and dual spacecraft engine.
 
   Contract:
   - Creates one inert fixed 2D canvas behind the Showroom estate.
-  - Creates one inert SVG spacecraft with randomized cubic Bézier flights.
-  - Preserves stars, dust, sparkles, rare meteors, adaptive quality,
+  - Creates two inert SVG spacecraft with independent randomized cubic Bézier flights.
+  - Replaces geometric-looking star placement with an irregular natural star field.
+  - Preserves stars, deep dust, glints, sparkles, rare meteors, adaptive quality,
     capped device-pixel ratio, and 30 FPS pacing.
   - Treats reduced motion as environmental authority.
   - Suspends dynamic work on document visibility loss, pagehide,
@@ -33,6 +34,11 @@
   - #showroom-cosmos-layer
   - #showroom-cosmos-canvas
   - #showroom-cosmos-spacecraft
+  - #showroom-cosmos-spacecraft-secondary
+
+  External CSS note:
+  - The static CSS star fallback should be visually reduced separately:
+      --showroom-static-star-opacity: 0.18;
 */
 
 (() => {
@@ -53,8 +59,11 @@
   const CANVAS_ID =
     "showroom-cosmos-canvas";
 
-  const SPACECRAFT_ID =
+  const SPACECRAFT_PRIMARY_ID =
     "showroom-cosmos-spacecraft";
+
+  const SPACECRAFT_SECONDARY_ID =
+    "showroom-cosmos-spacecraft-secondary";
 
   const REDUCED_MOTION_EVENT =
     "SHOWROOM_REDUCED_MOTION_CHANGE";
@@ -80,22 +89,25 @@
 
   const CONTRACT = Object.freeze({
     id:
+      "SHOWROOM_COSMOS_HARDENED_v2_IRREGULAR_STARFIELD_DUAL_SPACECRAFT",
+
+    previousId:
       "SHOWROOM_COSMOS_HARDENED_v1",
 
     version:
-      "1.0.0",
+      "2.0.0",
 
     file:
       "/showroom/index.cosmos.js",
 
     releaseId:
-      "showroom-cosmos-hardened-v1",
+      "showroom-cosmos-hardened-v2-irregular-starfield-dual-spacecraft",
 
     owner:
       "/showroom/index.cosmos.js",
 
     rendererClass:
-      "AUTONOMOUS_FIXED_2D_COSMOS_AND_SPACECRAFT",
+      "AUTONOMOUS_FIXED_2D_IRREGULAR_COSMOS_AND_DUAL_SPACECRAFT",
 
     attachmentSelector:
       "[data-showroom-root]",
@@ -127,6 +139,15 @@
     windowAuthority:
       false,
 
+    pointerAuthority:
+      false,
+
+    irregularStarField:
+      true,
+
+    dualSpacecraft:
+      true,
+
     visualPassClaimed:
       false,
 
@@ -157,70 +178,61 @@
       1.25,
 
     minimumStars:
-      90,
+      95,
 
     maximumStars:
-      260,
+      300,
 
     starAreaDivisor:
-      7600,
+      7100,
 
     minimumDust:
-      18,
+      24,
 
     maximumDust:
-      58,
+      74,
 
     dustAreaDivisor:
-      32000,
+      27500,
+
+    minimumGlints:
+      6,
+
+    maximumGlints:
+      18,
 
     minimumSparkles:
-      8,
+      5,
 
     maximumSparkles:
-      22,
+      14,
 
     maximumMeteors:
       1,
 
     meteorSpawnMinimumMs:
-      11000,
-
-    meteorSpawnMaximumMs:
-      28000,
-
-    spacecraftInitialDelayMinimumMs:
-      5000,
-
-    spacecraftInitialDelayMaximumMs:
       12000,
 
-    spacecraftDelayMinimumMs:
-      18000,
-
-    spacecraftDelayMaximumMs:
-      52000,
-
-    spacecraftDurationMinimumMs:
-      9000,
-
-    spacecraftDurationMaximumMs:
-      17000,
+    meteorSpawnMaximumMs:
+      32000,
 
     spacecraftCandidateCount:
-      14,
+      18,
+
+    spacecraftPathSeparationBias:
+      0.32,
 
     adaptiveCheckIntervalMs:
       5000,
 
     adaptiveSlowRenderMs:
-      7.5,
+      8.25,
 
     adaptiveFastRenderMs:
-      3.0,
+      3.15,
 
     adaptiveMinimumQuality:
-      0.48,
+      0.46,
 
     adaptiveMaximumQuality:
       1,
@@ -245,12 +257,126 @@
       ])
   });
 
+  const SPACECRAFT_CONFIGS = Object.freeze([
+    Object.freeze({
+      key:
+        "primary",
+
+      id:
+        SPACECRAFT_PRIMARY_ID,
+
+      label:
+        "primary",
+
+      variant:
+        "gold-cyan-cruiser",
+
+      initialDelayMinimumMs:
+        5200,
+
+      initialDelayMaximumMs:
+        13500,
+
+      delayMinimumMs:
+        21000,
+
+      delayMaximumMs:
+        54000,
+
+      durationMinimumMs:
+        9500,
+
+      durationMaximumMs:
+        17500,
+
+      horizontalBias:
+        0.72,
+
+      scaleDesktopMinimum:
+        0.50,
+
+      scaleDesktopMaximum:
+        0.86,
+
+      scaleMobileMinimum:
+        0.38,
+
+      scaleMobileMaximum:
+        0.64,
+
+      opacityMinimum:
+        0.40,
+
+      opacityMaximum:
+        0.66
+    }),
+
+    Object.freeze({
+      key:
+        "secondary",
+
+      id:
+        SPACECRAFT_SECONDARY_ID,
+
+      label:
+        "secondary",
+
+      variant:
+        "blue-violet-scout",
+
+      initialDelayMinimumMs:
+        12000,
+
+      initialDelayMaximumMs:
+        26000,
+
+      delayMinimumMs:
+        36000,
+
+      delayMaximumMs:
+        82000,
+
+      durationMinimumMs:
+        7600,
+
+      durationMaximumMs:
+        14500,
+
+      horizontalBias:
+        0.58,
+
+      scaleDesktopMinimum:
+        0.34,
+
+      scaleDesktopMaximum:
+        0.58,
+
+      scaleMobileMinimum:
+        0.26,
+
+      scaleMobileMaximum:
+        0.46,
+
+      opacityMinimum:
+        0.30,
+
+      opacityMaximum:
+        0.52
+    })
+  ]);
+
   const COLORS = Object.freeze({
     stone:
       "255, 248, 224",
 
+    whiteSoft:
+      "231, 238, 246",
+
     blue:
       "124, 220, 255",
+
+    blueSoft:
+      "172, 235, 255",
 
     gold:
       "232, 199, 119",
@@ -262,7 +388,13 @@
       "102, 224, 210",
 
     dust:
-      "188, 213, 226"
+      "188, 213, 226",
+
+    dustBlue:
+      "138, 188, 226",
+
+    dustViolet:
+      "177, 154, 225"
   });
 
   const RECEIPT = {
@@ -271,6 +403,9 @@
 
     contractId:
       CONTRACT.id,
+
+    previousContractId:
+      CONTRACT.previousId,
 
     version:
       CONTRACT.version,
@@ -350,6 +485,15 @@
     spacecraftPresent:
       false,
 
+    spacecraftCount:
+      0,
+
+    activeSpacecraftCount:
+      0,
+
+    spacecraftTimerCount:
+      0,
+
     viewportWidth:
       0,
 
@@ -384,6 +528,9 @@
       dust:
         0,
 
+      glints:
+        0,
+
       sparkles:
         0,
 
@@ -395,6 +542,9 @@
       0,
 
     dustCount:
+      0,
+
+    glintCount:
       0,
 
     sparkleCount:
@@ -430,6 +580,12 @@
     staticFrameRendered:
       false,
 
+    irregularStarField:
+      true,
+
+    dualSpacecraft:
+      true,
+
     controllerMutated:
       false,
 
@@ -451,6 +607,9 @@
     navigationAffected:
       false,
 
+    pointerAuthority:
+      false,
+
     staticFallbackRetained:
       true,
 
@@ -461,6 +620,12 @@
       null,
 
     visualPassClaimed:
+      false,
+
+    productionAuthorized:
+      false,
+
+    deploymentAuthorized:
       false
   };
 
@@ -507,8 +672,8 @@
     context:
       null,
 
-    spacecraft:
-      null,
+    spacecrafts:
+      [],
 
     createdStyle:
       false,
@@ -529,6 +694,9 @@
       [],
 
     dust:
+      [],
+
+    glints:
       [],
 
     sparkles:
@@ -557,15 +725,6 @@
 
     nextMeteorTime:
       0,
-
-    spacecraftFlight:
-      null,
-
-    spacecraftTimer:
-      0,
-
-    lastSpacecraftPath:
-      null,
 
     resizeObserver:
       null,
@@ -648,12 +807,26 @@
       launchSpacecraft,
 
     cancelSpacecraft(
-      reason =
-        "api"
+      keyOrReason =
+        "api",
+      maybeReason =
+        ""
     ) {
-      return cancelSpacecraftFlight(
-        false,
-        `api:${normalizeReason(reason)}`
+      const craft =
+        getSpacecraftByKey(
+          keyOrReason
+        );
+
+      if (craft) {
+        return cancelSpacecraftFlight(
+          craft,
+          false,
+          maybeReason || "api"
+        );
+      }
+
+      return cancelAllSpacecraftFlights(
+        String(keyOrReason || "api")
       );
     },
 
@@ -731,14 +904,39 @@
               state.pixelRatio
           },
 
+          spacecrafts:
+            state.spacecrafts.map(
+              craft => ({
+                key:
+                  craft.key,
+
+                id:
+                  craft.id,
+
+                active:
+                  Boolean(
+                    craft.flight
+                  ),
+
+                timerActive:
+                  Boolean(
+                    craft.timer
+                  )
+              })
+            ),
+
           spacecraftActive:
-            Boolean(
-              state.spacecraftFlight
+            state.spacecrafts.some(
+              craft => Boolean(
+                craft.flight
+              )
             ),
 
           spacecraftTimerActive:
-            Boolean(
-              state.spacecraftTimer
+            state.spacecrafts.some(
+              craft => Boolean(
+                craft.timer
+              )
             ),
 
           meteorCount:
@@ -750,6 +948,9 @@
 
             dust:
               state.dust.length,
+
+            glints:
+              state.glints.length,
 
             sparkles:
               state.sparkles.length,
@@ -777,6 +978,9 @@
             false,
 
           navigationAffected:
+            false,
+
+          pointerAuthority:
             false
         })
   };
@@ -917,6 +1121,9 @@
               contract:
                 CONTRACT.id,
 
+              previousContract:
+                CONTRACT.previousId,
+
               version:
                 CONTRACT.version,
 
@@ -947,6 +1154,9 @@
               navigationAffected:
                 false,
 
+              pointerAuthority:
+                false,
+
               ...detail
             })
         }
@@ -963,6 +1173,22 @@
         : document.querySelector(
             CONFIG.receiptSelector
           );
+  }
+
+  function spacecraftActiveCount() {
+    return state.spacecrafts.filter(
+      craft => Boolean(
+        craft.flight
+      )
+    ).length;
+  }
+
+  function spacecraftTimerCount() {
+    return state.spacecrafts.filter(
+      craft => Boolean(
+        craft.timer
+      )
+    ).length;
   }
 
   function emitReceipt(
@@ -998,6 +1224,9 @@
 
         contractId:
           CONTRACT.id,
+
+        previousContractId:
+          CONTRACT.previousId,
 
         version:
           CONTRACT.version,
@@ -1094,9 +1323,17 @@
           ),
 
         spacecraftPresent:
-          Boolean(
-            state.spacecraft
-          ),
+          state.spacecrafts.length >
+          0,
+
+        spacecraftCount:
+          state.spacecrafts.length,
+
+        activeSpacecraftCount:
+          spacecraftActiveCount(),
+
+        spacecraftTimerCount:
+          spacecraftTimerCount(),
 
         viewportWidth:
           state.width,
@@ -1135,6 +1372,9 @@
           dust:
             state.dust.length,
 
+          glints:
+            state.glints.length,
+
           sparkles:
             state.sparkles.length,
 
@@ -1148,6 +1388,9 @@
         dustCount:
           state.dust.length,
 
+        glintCount:
+          state.glints.length,
+
         sparkleCount:
           state.sparkles.length,
 
@@ -1159,19 +1402,16 @@
           0,
 
         activeSpacecraft:
-          Boolean(
-            state.spacecraftFlight
-          ),
+          spacecraftActiveCount() >
+          0,
 
         spacecraftActive:
-          Boolean(
-            state.spacecraftFlight
-          ),
+          spacecraftActiveCount() >
+          0,
 
         spacecraftTimerActive:
-          Boolean(
-            state.spacecraftTimer
-          ),
+          spacecraftTimerCount() >
+          0,
 
         animationFrameActive:
           Boolean(
@@ -1194,6 +1434,12 @@
             .controllerFrameUnsubscribe ===
           "function",
 
+        irregularStarField:
+          true,
+
+        dualSpacecraft:
+          true,
+
         controllerMutated:
           false,
 
@@ -1215,10 +1461,19 @@
         navigationAffected:
           false,
 
+        pointerAuthority:
+          false,
+
         staticFallbackRetained:
           true,
 
         visualPassClaimed:
+          false,
+
+        productionAuthorized:
+          false,
+
+        deploymentAuthorized:
           false
       },
 
@@ -1237,7 +1492,31 @@
         suspensionReasons: [
           ...RECEIPT
             .suspensionReasons
-        ]
+        ],
+
+        spacecrafts:
+          state.spacecrafts.map(
+            craft => ({
+              key:
+                craft.key,
+
+              id:
+                craft.id,
+
+              variant:
+                craft.variant,
+
+              active:
+                Boolean(
+                  craft.flight
+                ),
+
+              timerActive:
+                Boolean(
+                  craft.timer
+                )
+            })
+          )
       });
 
     const serialized =
@@ -1274,6 +1553,14 @@
         state.suspended
           ? "true"
           : "false";
+
+      state.root.dataset
+        .showroomCosmosIrregularStarField =
+        "true";
+
+      state.root.dataset
+        .showroomCosmosDualSpacecraft =
+        "true";
     }
 
     if (
@@ -1293,6 +1580,14 @@
         state.running
           ? "true"
           : "false";
+
+      state.layer.dataset
+        .showroomCosmosIrregularStarField =
+        "true";
+
+      state.layer.dataset
+        .showroomCosmosDualSpacecraft =
+        "true";
     }
 
     if (
@@ -1356,11 +1651,16 @@
       );
 
     stopAnimationFrame();
-    clearSpacecraftTimer();
-    hideAndResetSpacecraft();
+    clearAllSpacecraftTimers();
+    hideAndResetAllSpacecraft();
 
-    state.spacecraftFlight =
-      null;
+    for (
+      const craft of
+      state.spacecrafts
+    ) {
+      craft.flight =
+        null;
+    }
 
     state.meteors.length =
       0;
@@ -1556,17 +1856,15 @@
         pointer-events: none;
         user-select: none;
         -webkit-user-select: none;
-        opacity: 0.72;
+        opacity: 0.82;
       }
 
-      #${SPACECRAFT_ID} {
+      .showroom-cosmos-spacecraft {
         position: absolute;
         left: 0;
         top: 0;
         z-index: 1;
         display: block;
-        width: 148px;
-        height: 60px;
         max-width: none;
         overflow: visible;
         pointer-events: none;
@@ -1574,21 +1872,34 @@
         -webkit-user-select: none;
         opacity: 0;
         transform:
-          translate3d(-260px, -160px, 0)
+          translate3d(-280px, -180px, 0)
           rotate(0deg)
-          scale(0.68);
+          scale(0.58);
         transform-origin: 50% 50%;
         will-change: transform, opacity;
-        filter:
-          drop-shadow(0 0 5px rgba(124, 220, 255, 0.18))
-          drop-shadow(0 0 10px rgba(232, 199, 119, 0.07));
       }
 
-      #${SPACECRAFT_ID}[data-flying="true"] {
+      #${SPACECRAFT_PRIMARY_ID} {
+        width: 148px;
+        height: 60px;
+        filter:
+          drop-shadow(0 0 5px rgba(124, 220, 255, 0.20))
+          drop-shadow(0 0 10px rgba(232, 199, 119, 0.08));
+      }
+
+      #${SPACECRAFT_SECONDARY_ID} {
+        width: 118px;
+        height: 48px;
+        filter:
+          drop-shadow(0 0 4px rgba(124, 220, 255, 0.16))
+          drop-shadow(0 0 9px rgba(159, 137, 255, 0.08));
+      }
+
+      .showroom-cosmos-spacecraft[data-flying="true"] {
         opacity: 1;
       }
 
-      #${SPACECRAFT_ID} .showroom-spacecraft-engine-core {
+      .showroom-cosmos-spacecraft .showroom-spacecraft-engine-core {
         animation:
           showroom-spacecraft-engine-pulse
           1.45s
@@ -1598,7 +1909,7 @@
         transform-origin: center;
       }
 
-      #${SPACECRAFT_ID} .showroom-spacecraft-running-light {
+      .showroom-cosmos-spacecraft .showroom-spacecraft-running-light {
         animation:
           showroom-spacecraft-light-pulse
           2.25s
@@ -1607,20 +1918,28 @@
           alternate;
       }
 
-      #${SPACECRAFT_ID}
+      .showroom-cosmos-spacecraft
       .showroom-spacecraft-running-light--secondary {
         animation-delay: -1.1s;
       }
 
+      #${SPACECRAFT_SECONDARY_ID} .showroom-spacecraft-engine-core {
+        animation-duration: 1.12s;
+      }
+
+      #${SPACECRAFT_SECONDARY_ID} .showroom-spacecraft-running-light {
+        animation-duration: 1.72s;
+      }
+
       @keyframes showroom-spacecraft-engine-pulse {
         0% {
-          opacity: 0.44;
+          opacity: 0.42;
           transform: scaleX(0.80);
         }
 
         100% {
-          opacity: 0.82;
-          transform: scaleX(1.04);
+          opacity: 0.84;
+          transform: scaleX(1.05);
         }
       }
 
@@ -1636,36 +1955,49 @@
 
       @media (max-width: 820px) {
         #${CANVAS_ID} {
-          opacity: 0.64;
+          opacity: 0.76;
         }
 
-        #${SPACECRAFT_ID} {
+        #${SPACECRAFT_PRIMARY_ID} {
           width: 124px;
           height: 50px;
+        }
+
+        #${SPACECRAFT_SECONDARY_ID} {
+          width: 102px;
+          height: 41px;
         }
       }
 
       @media (max-width: 560px) {
         #${CANVAS_ID} {
-          opacity: 0.56;
+          opacity: 0.70;
         }
 
-        #${SPACECRAFT_ID} {
+        #${SPACECRAFT_PRIMARY_ID} {
           width: 98px;
           height: 40px;
           filter:
             drop-shadow(0 0 3px rgba(124, 220, 255, 0.15))
             drop-shadow(0 0 7px rgba(232, 199, 119, 0.05));
         }
+
+        #${SPACECRAFT_SECONDARY_ID} {
+          width: 82px;
+          height: 34px;
+          filter:
+            drop-shadow(0 0 3px rgba(124, 220, 255, 0.13))
+            drop-shadow(0 0 6px rgba(159, 137, 255, 0.05));
+        }
       }
 
       @media (prefers-reduced-motion: reduce) {
-        #${SPACECRAFT_ID} {
+        .showroom-cosmos-spacecraft {
           display: none !important;
           animation: none !important;
         }
 
-        #${SPACECRAFT_ID} * {
+        .showroom-cosmos-spacecraft * {
           animation: none !important;
         }
       }
@@ -1694,20 +2026,9 @@
           `#${CANVAS_ID}`
         );
 
-      state.spacecraft =
-        existing.querySelector(
-          `#${SPACECRAFT_ID}`
-        );
-
       if (!state.canvas) {
         throw new Error(
           "SHOWROOM_COSMOS_EXISTING_LAYER_CANVAS_MISSING"
-        );
-      }
-
-      if (!state.spacecraft) {
-        throw new Error(
-          "SHOWROOM_COSMOS_EXISTING_LAYER_SPACECRAFT_MISSING"
         );
       }
 
@@ -1729,6 +2050,32 @@
         );
       }
 
+      state.spacecrafts =
+        SPACECRAFT_CONFIGS.map(
+          config => {
+            let element =
+              existing.querySelector(
+                `#${config.id}`
+              );
+
+            if (!element) {
+              element =
+                createSpacecraft(
+                  config
+                );
+
+              existing.appendChild(
+                element
+              );
+            }
+
+            return createSpacecraftState(
+              config,
+              element
+            );
+          }
+        );
+
       return;
     }
 
@@ -1741,9 +2088,6 @@
       document.createElement(
         "canvas"
       );
-
-    const spacecraft =
-      createSpacecraft();
 
     state.createdLayer =
       true;
@@ -1766,6 +2110,16 @@
       "false"
     );
 
+    layer.setAttribute(
+      "data-showroom-cosmos-irregular-star-field",
+      "true"
+    );
+
+    layer.setAttribute(
+      "data-showroom-cosmos-dual-spacecraft",
+      "true"
+    );
+
     canvas.id =
       CANVAS_ID;
 
@@ -1779,10 +2133,28 @@
       "2d-canvas"
     );
 
-    layer.append(
-      canvas,
-      spacecraft
+    layer.appendChild(
+      canvas
     );
+
+    state.spacecrafts =
+      SPACECRAFT_CONFIGS.map(
+        config => {
+          const element =
+            createSpacecraft(
+              config
+            );
+
+          layer.appendChild(
+            element
+          );
+
+          return createSpacecraftState(
+            config,
+            element
+          );
+        }
+      );
 
     document.body.prepend(
       layer
@@ -1793,9 +2165,6 @@
 
     state.canvas =
       canvas;
-
-    state.spacecraft =
-      spacecraft;
 
     state.context =
       canvas.getContext(
@@ -1816,7 +2185,38 @@
     }
   }
 
-  function createSpacecraft() {
+  function createSpacecraftState(
+    config,
+    element
+  ) {
+    return {
+      key:
+        config.key,
+
+      id:
+        config.id,
+
+      variant:
+        config.variant,
+
+      config,
+
+      element,
+
+      flight:
+        null,
+
+      timer:
+        0,
+
+      lastPath:
+        null
+    };
+  }
+
+  function createSpacecraft(
+    config
+  ) {
     const namespace =
       "http://www.w3.org/2000/svg";
 
@@ -1827,7 +2227,11 @@
       );
 
     svg.id =
-      SPACECRAFT_ID;
+      config.id;
+
+    svg.classList.add(
+      "showroom-cosmos-spacecraft"
+    );
 
     svg.setAttribute(
       "viewBox",
@@ -1856,134 +2260,82 @@
 
     svg.setAttribute(
       "data-showroom-cosmos-spacecraft",
-      "true"
+      config.key
     );
 
-    svg.innerHTML = `
+    svg.setAttribute(
+      "data-showroom-cosmos-spacecraft-variant",
+      config.variant
+    );
+
+    svg.innerHTML =
+      config.key ===
+        "secondary"
+        ? spacecraftMarkupSecondary()
+        : spacecraftMarkupPrimary();
+
+    return svg;
+  }
+
+  function spacecraftMarkupPrimary() {
+    return `
       <defs>
         <linearGradient
-          id="showroom-spacecraft-hull-gradient"
+          id="showroom-spacecraft-primary-hull-gradient"
           x1="0"
           y1="0"
           x2="1"
           y2="1"
         >
-          <stop
-            offset="0%"
-            stop-color="#f4df9f"
-          />
-          <stop
-            offset="22%"
-            stop-color="#8eaab7"
-          />
-          <stop
-            offset="52%"
-            stop-color="#253642"
-          />
-          <stop
-            offset="78%"
-            stop-color="#111923"
-          />
-          <stop
-            offset="100%"
-            stop-color="#060a10"
-          />
+          <stop offset="0%" stop-color="#f4df9f" />
+          <stop offset="22%" stop-color="#8eaab7" />
+          <stop offset="52%" stop-color="#253642" />
+          <stop offset="78%" stop-color="#111923" />
+          <stop offset="100%" stop-color="#060a10" />
         </linearGradient>
 
         <linearGradient
-          id="showroom-spacecraft-wing-gradient"
+          id="showroom-spacecraft-primary-wing-gradient"
           x1="0"
           y1="0"
           x2="1"
           y2="0"
         >
-          <stop
-            offset="0%"
-            stop-color="#101923"
-          />
-          <stop
-            offset="48%"
-            stop-color="#334d60"
-          />
-          <stop
-            offset="100%"
-            stop-color="#090e15"
-          />
+          <stop offset="0%" stop-color="#101923" />
+          <stop offset="48%" stop-color="#334d60" />
+          <stop offset="100%" stop-color="#090e15" />
         </linearGradient>
 
         <linearGradient
-          id="showroom-spacecraft-canopy-gradient"
+          id="showroom-spacecraft-primary-canopy-gradient"
           x1="0"
           y1="0"
           x2="1"
           y2="1"
         >
-          <stop
-            offset="0%"
-            stop-color="#d8f7ff"
-            stop-opacity="0.90"
-          />
-          <stop
-            offset="34%"
-            stop-color="#72d9ff"
-            stop-opacity="0.66"
-          />
-          <stop
-            offset="74%"
-            stop-color="#2b385c"
-            stop-opacity="0.88"
-          />
-          <stop
-            offset="100%"
-            stop-color="#090d18"
-          />
+          <stop offset="0%" stop-color="#d8f7ff" stop-opacity="0.90" />
+          <stop offset="34%" stop-color="#72d9ff" stop-opacity="0.66" />
+          <stop offset="74%" stop-color="#2b385c" stop-opacity="0.88" />
+          <stop offset="100%" stop-color="#090d18" />
         </linearGradient>
 
         <linearGradient
-          id="showroom-spacecraft-engine-gradient"
+          id="showroom-spacecraft-primary-engine-gradient"
           x1="0"
           y1="0"
           x2="1"
           y2="0"
         >
-          <stop
-            offset="0%"
-            stop-color="#72d9ff"
-            stop-opacity="0"
-          />
-          <stop
-            offset="40%"
-            stop-color="#72d9ff"
-            stop-opacity="0.46"
-          />
-          <stop
-            offset="78%"
-            stop-color="#e8c777"
-            stop-opacity="0.68"
-          />
-          <stop
-            offset="100%"
-            stop-color="#ffffff"
-            stop-opacity="0.82"
-          />
+          <stop offset="0%" stop-color="#72d9ff" stop-opacity="0" />
+          <stop offset="40%" stop-color="#72d9ff" stop-opacity="0.46" />
+          <stop offset="78%" stop-color="#e8c777" stop-opacity="0.68" />
+          <stop offset="100%" stop-color="#ffffff" stop-opacity="0.82" />
         </linearGradient>
 
-        <radialGradient
-          id="showroom-spacecraft-light-gradient"
-        >
-          <stop
-            offset="0%"
-            stop-color="#ffffff"
-          />
-          <stop
-            offset="38%"
-            stop-color="#e8c777"
-          />
-          <stop
-            offset="100%"
-            stop-color="#d8b86a"
-            stop-opacity="0"
-          />
+        <radialGradient id="showroom-spacecraft-primary-light-gradient">
+          <stop offset="0%" stop-color="#ffffff" />
+          <stop offset="38%" stop-color="#e8c777" />
+          <stop offset="100%" stop-color="#d8b86a" stop-opacity="0" />
         </radialGradient>
       </defs>
 
@@ -1991,13 +2343,13 @@
         <path
           class="showroom-spacecraft-engine-core"
           d="M41 42 L4 48 L41 54 Z"
-          fill="url(#showroom-spacecraft-engine-gradient)"
+          fill="url(#showroom-spacecraft-primary-engine-gradient)"
           opacity="0.72"
         />
 
         <path
           d="M49 34 L17 25 L37 46 L17 69 L55 58 Z"
-          fill="url(#showroom-spacecraft-wing-gradient)"
+          fill="url(#showroom-spacecraft-primary-wing-gradient)"
           stroke="rgba(124,220,255,0.34)"
           stroke-width="1.2"
         />
@@ -2023,7 +2375,7 @@
              C211 54, 188 63, 160 68
              C112 75, 70 68, 43 56
              Z"
-          fill="url(#showroom-spacecraft-hull-gradient)"
+          fill="url(#showroom-spacecraft-primary-hull-gradient)"
           stroke="rgba(232,199,119,0.48)"
           stroke-width="1.35"
         />
@@ -2034,7 +2386,7 @@
              L173 43
              L101 43
              Z"
-          fill="url(#showroom-spacecraft-canopy-gradient)"
+          fill="url(#showroom-spacecraft-primary-canopy-gradient)"
           stroke="rgba(124,220,255,0.54)"
           stroke-width="1.2"
         />
@@ -2091,7 +2443,7 @@
           cx="204"
           cy="44"
           r="7"
-          fill="url(#showroom-spacecraft-light-gradient)"
+          fill="url(#showroom-spacecraft-primary-light-gradient)"
         />
 
         <circle
@@ -2099,7 +2451,7 @@
           cx="84"
           cy="59"
           r="4.6"
-          fill="url(#showroom-spacecraft-light-gradient)"
+          fill="url(#showroom-spacecraft-primary-light-gradient)"
           opacity="0.56"
         />
 
@@ -2134,8 +2486,203 @@
         />
       </g>
     `;
+  }
 
-    return svg;
+  function spacecraftMarkupSecondary() {
+    return `
+      <defs>
+        <linearGradient
+          id="showroom-spacecraft-secondary-hull-gradient"
+          x1="0"
+          y1="0"
+          x2="1"
+          y2="1"
+        >
+          <stop offset="0%" stop-color="#d9f7ff" />
+          <stop offset="24%" stop-color="#8394c8" />
+          <stop offset="54%" stop-color="#26314d" />
+          <stop offset="80%" stop-color="#101626" />
+          <stop offset="100%" stop-color="#060912" />
+        </linearGradient>
+
+        <linearGradient
+          id="showroom-spacecraft-secondary-wing-gradient"
+          x1="0"
+          y1="0"
+          x2="1"
+          y2="0"
+        >
+          <stop offset="0%" stop-color="#0d1425" />
+          <stop offset="50%" stop-color="#35446a" />
+          <stop offset="100%" stop-color="#080c16" />
+        </linearGradient>
+
+        <linearGradient
+          id="showroom-spacecraft-secondary-canopy-gradient"
+          x1="0"
+          y1="0"
+          x2="1"
+          y2="1"
+        >
+          <stop offset="0%" stop-color="#f0fbff" stop-opacity="0.86" />
+          <stop offset="34%" stop-color="#8fe8ff" stop-opacity="0.60" />
+          <stop offset="76%" stop-color="#3a316c" stop-opacity="0.82" />
+          <stop offset="100%" stop-color="#090b18" />
+        </linearGradient>
+
+        <linearGradient
+          id="showroom-spacecraft-secondary-engine-gradient"
+          x1="0"
+          y1="0"
+          x2="1"
+          y2="0"
+        >
+          <stop offset="0%" stop-color="#b697ff" stop-opacity="0" />
+          <stop offset="42%" stop-color="#75e9ff" stop-opacity="0.42" />
+          <stop offset="82%" stop-color="#b697ff" stop-opacity="0.58" />
+          <stop offset="100%" stop-color="#ffffff" stop-opacity="0.72" />
+        </linearGradient>
+
+        <radialGradient id="showroom-spacecraft-secondary-light-gradient">
+          <stop offset="0%" stop-color="#ffffff" />
+          <stop offset="42%" stop-color="#75e9ff" />
+          <stop offset="100%" stop-color="#b697ff" stop-opacity="0" />
+        </radialGradient>
+      </defs>
+
+      <g>
+        <path
+          class="showroom-spacecraft-engine-core"
+          d="M48 42 L10 48 L48 54 Z"
+          fill="url(#showroom-spacecraft-secondary-engine-gradient)"
+          opacity="0.66"
+        />
+
+        <path
+          d="M54 38 L20 30 L42 48 L20 66 L58 58 Z"
+          fill="url(#showroom-spacecraft-secondary-wing-gradient)"
+          stroke="rgba(159,137,255,0.32)"
+          stroke-width="1"
+        />
+
+        <path
+          d="M55 39 L36 18 L84 38 Z"
+          fill="#141d34"
+          stroke="rgba(124,220,255,0.26)"
+          stroke-width="0.95"
+        />
+
+        <path
+          d="M55 57 L36 78 L86 58 Z"
+          fill="#10192c"
+          stroke="rgba(159,137,255,0.24)"
+          stroke-width="0.95"
+        />
+
+        <path
+          d="M47 41
+             C72 29, 115 25, 156 32
+             C181 36, 205 43, 226 48
+             C204 54, 180 62, 154 66
+             C113 72, 73 67, 47 55
+             Z"
+          fill="url(#showroom-spacecraft-secondary-hull-gradient)"
+          stroke="rgba(124,220,255,0.38)"
+          stroke-width="1.15"
+        />
+
+        <path
+          d="M100 33
+             C116 23, 143 23, 160 34
+             L166 44
+             L99 44
+             Z"
+          fill="url(#showroom-spacecraft-secondary-canopy-gradient)"
+          stroke="rgba(182,151,255,0.44)"
+          stroke-width="1"
+        />
+
+        <path
+          d="M96 49 L212 49"
+          fill="none"
+          stroke="rgba(124,220,255,0.22)"
+          stroke-width="0.8"
+        />
+
+        <path
+          d="M73 44 L95 37 L96 59 L74 54 Z"
+          fill="rgba(7,12,22,0.76)"
+          stroke="rgba(159,137,255,0.28)"
+          stroke-width="0.9"
+        />
+
+        <ellipse
+          cx="54"
+          cy="48"
+          rx="7.5"
+          ry="11.2"
+          fill="#060b13"
+          stroke="rgba(159,137,255,0.36)"
+          stroke-width="1.1"
+        />
+
+        <ellipse
+          cx="54"
+          cy="48"
+          rx="3.4"
+          ry="6.0"
+          fill="#b697ff"
+          opacity="0.58"
+        />
+
+        <circle
+          class="showroom-spacecraft-running-light"
+          cx="196"
+          cy="45"
+          r="5.6"
+          fill="url(#showroom-spacecraft-secondary-light-gradient)"
+        />
+
+        <circle
+          class="showroom-spacecraft-running-light showroom-spacecraft-running-light--secondary"
+          cx="91"
+          cy="59"
+          r="3.8"
+          fill="url(#showroom-spacecraft-secondary-light-gradient)"
+          opacity="0.50"
+        />
+
+        <circle
+          cx="176"
+          cy="56"
+          r="1.8"
+          fill="#75e9ff"
+          opacity="0.62"
+        />
+
+        <circle
+          cx="151"
+          cy="62"
+          r="1.5"
+          fill="#b697ff"
+          opacity="0.58"
+        />
+
+        <path
+          d="M109 38 L150 38"
+          fill="none"
+          stroke="rgba(255,255,255,0.20)"
+          stroke-width="0.7"
+        />
+
+        <path
+          d="M63 42 C92 32, 130 30, 166 34"
+          fill="none"
+          stroke="rgba(231,238,246,0.20)"
+          stroke-width="0.85"
+        />
+      </g>
+    `;
   }
 
   function initialize() {
@@ -2209,7 +2756,7 @@
       if (
         canEnvironmentRun()
       ) {
-        scheduleNextSpacecraftFlight(
+        scheduleAllSpacecraftFlights(
           true
         );
       }
@@ -2219,7 +2766,7 @@
           "available",
 
         lastAction:
-          "cosmos-initialized",
+          "cosmos-initialized-irregular-starfield-dual-spacecraft",
 
         lastFailure:
           null,
@@ -2246,8 +2793,15 @@
               STYLE_ID,
               LAYER_ID,
               CANVAS_ID,
-              SPACECRAFT_ID
+              SPACECRAFT_PRIMARY_ID,
+              SPACECRAFT_SECONDARY_ID
             ]),
+
+          irregularStarField:
+            true,
+
+          dualSpacecraft:
+            true,
 
           functionalDependency:
             false
@@ -2875,14 +3429,9 @@
     const started =
       start();
 
-    if (
-      !state.spacecraftFlight &&
-      !state.spacecraftTimer
-    ) {
-      scheduleNextSpacecraftFlight(
-        true
-      );
-    }
+    scheduleMissingSpacecraftFlights(
+      true
+    );
 
     if (
       state.nextMeteorTime <=
@@ -2935,10 +3484,9 @@
       true;
 
     stopAnimationFrame();
-    clearSpacecraftTimer();
+    clearAllSpacecraftTimers();
 
-    cancelSpacecraftFlight(
-      false,
+    cancelAllSpacecraftFlights(
       normalizedReason,
       false
     );
@@ -3392,6 +3940,16 @@
         CONFIG.maximumDust
       );
 
+    const glintCount =
+      clamp(
+        Math.floor(
+          CONFIG.maximumGlints *
+          quality
+        ),
+        CONFIG.minimumGlints,
+        CONFIG.maximumGlints
+      );
+
     const sparkleCount =
       clamp(
         Math.floor(
@@ -3403,110 +3961,309 @@
       );
 
     state.stars =
-      Array.from(
-        {
-          length:
-            starCount
-        },
-        createStar
+      createIrregularStarField(
+        starCount
       );
 
     state.dust =
-      Array.from(
-        {
-          length:
-            dustCount
-        },
-        createDust
+      createIrregularDustField(
+        dustCount
+      );
+
+    state.glints =
+      createIrregularGlintField(
+        glintCount
       );
 
     state.sparkles =
-      Array.from(
-        {
-          length:
-            sparkleCount
-        },
-        createSparkle
+      createIrregularSparkleField(
+        sparkleCount
       );
 
     state.meteors.length =
       0;
   }
 
-  function createStar() {
-    const depth =
-      Math.pow(
-        Math.random(),
-        1.8
-      );
+  function createIrregularStarField(
+    count
+  ) {
+    const stars =
+      [];
 
-    const paletteRoll =
+    const looseMinimumDistance =
+      state.width <=
+      560
+        ? 14
+        : state.width <=
+            820
+          ? 18
+          : 23;
+
+    const centerProtectionRadius =
+      Math.min(
+        state.width,
+        state.height
+      ) * 0.075;
+
+    const centerX =
+      state.width * 0.5;
+
+    const centerY =
+      state.height * 0.5;
+
+    const voids =
+      createStarVoids();
+
+    let attempts =
+      0;
+
+    const maximumAttempts =
+      count * 20;
+
+    while (
+      stars.length < count &&
+      attempts < maximumAttempts
+    ) {
+      attempts +=
+        1;
+
+      const candidate =
+        createStarCandidate();
+
+      const centerDistance =
+        Math.hypot(
+          candidate.x -
+          centerX,
+          candidate.y -
+          centerY
+        );
+
+      if (
+        centerDistance <
+        centerProtectionRadius &&
+        Math.random() <
+        0.76
+      ) {
+        continue;
+      }
+
+      if (
+        isInsideSoftVoid(
+          candidate,
+          voids
+        ) &&
+        Math.random() <
+        0.82
+      ) {
+        continue;
+      }
+
+      const minimumDistance =
+        looseMinimumDistance *
+        (
+          0.34 +
+          candidate.depth *
+          0.78
+        );
+
+      const tooClose =
+        stars.some(
+          existing => {
+            const distance =
+              Math.hypot(
+                existing.x -
+                  candidate.x,
+                existing.y -
+                  candidate.y
+              );
+
+            const weightedDistance =
+              minimumDistance *
+              (
+                existing.radius >
+                  1.05 ||
+                candidate.radius >
+                  1.05
+                  ? 1.18
+                  : 0.56
+              );
+
+            return distance <
+              weightedDistance;
+          }
+        );
+
+      if (
+        tooClose &&
+        Math.random() <
+        0.86
+      ) {
+        continue;
+      }
+
+      stars.push(
+        candidate
+      );
+    }
+
+    while (
+      stars.length < count
+    ) {
+      stars.push(
+        createStarCandidate()
+      );
+    }
+
+    return stars;
+  }
+
+  function createStarVoids() {
+    const count =
+      state.width <=
+      560
+        ? 2
+        : 3;
+
+    return Array.from(
+      {
+        length:
+          count
+      },
+      () => ({
+        x:
+          random(
+            state.width * 0.12,
+            state.width * 0.88
+          ),
+
+        y:
+          random(
+            state.height * 0.12,
+            state.height * 0.88
+          ),
+
+        radius:
+          random(
+            Math.min(
+              state.width,
+              state.height
+            ) * 0.08,
+            Math.min(
+              state.width,
+              state.height
+            ) * 0.18
+          )
+      })
+    );
+  }
+
+  function isInsideSoftVoid(
+    candidate,
+    voids
+  ) {
+    return voids.some(
+      voidPoint => {
+        const distance =
+          Math.hypot(
+            candidate.x -
+              voidPoint.x,
+            candidate.y -
+              voidPoint.y
+          );
+
+        return distance <
+          voidPoint.radius;
+      }
+    );
+  }
+
+  function createStarCandidate() {
+    const depthRoll =
       Math.random();
 
-    let color =
-      COLORS.stone;
+    const depth =
+      depthRoll < 0.62
+        ? random(
+            0.12,
+            0.42
+          )
+        : depthRoll < 0.91
+          ? random(
+              0.42,
+              0.78
+            )
+          : random(
+              0.78,
+              1
+            );
+
+    const bandRoll =
+      Math.random();
+
+    let radius;
 
     if (
-      paletteRoll >
-        0.79 &&
-      paletteRoll <=
-        0.91
+      bandRoll < 0.68
     ) {
-      color =
-        COLORS.blue;
+      radius =
+        random(
+          0.24,
+          0.66
+        );
     } else if (
-      paletteRoll >
-        0.91 &&
-      paletteRoll <=
-        0.965
+      bandRoll < 0.93
     ) {
-      color =
-        COLORS.gold;
-    } else if (
-      paletteRoll >
-        0.965 &&
-      paletteRoll <=
-        0.988
-    ) {
-      color =
-        COLORS.violet;
-    } else if (
-      paletteRoll >
-      0.988
-    ) {
-      color =
-        COLORS.teal;
+      radius =
+        random(
+          0.66,
+          1.12
+        );
+    } else {
+      radius =
+        random(
+          1.12,
+          1.78
+        );
     }
+
+    const color =
+      chooseStarColor();
+
+    const margin =
+      6;
 
     return {
       x:
-        Math.random() *
-        state.width,
+        random(
+          -margin,
+          state.width +
+          margin
+        ),
 
       y:
-        Math.random() *
-        state.height,
+        random(
+          -margin,
+          state.height +
+          margin
+        ),
 
       radius:
-        random(
-          0.35,
-          1.55
-        ) *
+        radius *
         (
-          0.55 +
+          0.72 +
           depth *
-          0.75
+          0.46
         ),
 
       alpha:
         random(
-          0.11,
-          0.58
+          0.075,
+          0.42
         ) *
         (
-          0.55 +
+          0.72 +
           depth *
-          0.55
+          0.58
         ),
 
       color,
@@ -3521,64 +4278,233 @@
 
       twinkleRate:
         random(
-          0.00055,
-          0.0018
+          0.00040,
+          0.00145
+        ) *
+        (
+          0.78 +
+          depth *
+          0.42
         ),
 
       driftX:
         random(
-          -0.0035,
-          0.0035
+          -0.0026,
+          0.0026
         ) *
         (
-          0.3 +
+          0.22 +
           depth
         ),
 
       driftY:
         random(
-          -0.0024,
-          0.0024
+          -0.0018,
+          0.0018
         ) *
         (
-          0.3 +
+          0.22 +
           depth
         )
     };
   }
 
+  function chooseStarColor() {
+    const paletteRoll =
+      Math.random();
+
+    if (
+      paletteRoll <=
+      0.735
+    ) {
+      return COLORS.stone;
+    }
+
+    if (
+      paletteRoll <=
+      0.865
+    ) {
+      return COLORS.whiteSoft;
+    }
+
+    if (
+      paletteRoll <=
+      0.925
+    ) {
+      return COLORS.blue;
+    }
+
+    if (
+      paletteRoll <=
+      0.970
+    ) {
+      return COLORS.gold;
+    }
+
+    if (
+      paletteRoll <=
+      0.990
+    ) {
+      return COLORS.violet;
+    }
+
+    return COLORS.teal;
+  }
+
+  function createStar() {
+    return createStarCandidate();
+  }
+
+  function createIrregularDustField(
+    count
+  ) {
+    return Array.from(
+      {
+        length:
+          count
+      },
+      () => ({
+        x:
+          Math.random() *
+          state.width,
+
+        y:
+          Math.random() *
+          state.height,
+
+        radius:
+          random(
+            0.35,
+            1.35
+          ),
+
+        alpha:
+          random(
+            0.016,
+            0.082
+          ),
+
+        speedX:
+          random(
+            -0.0048,
+            0.0048
+          ),
+
+        speedY:
+          random(
+            -0.0036,
+            0.0036
+          ),
+
+        phase:
+          random(
+            0,
+            Math.PI *
+            2
+          ),
+
+        color:
+          randomChoice([
+            COLORS.dust,
+            COLORS.dust,
+            COLORS.dustBlue,
+            COLORS.dustViolet
+          ])
+      })
+    );
+  }
+
   function createDust() {
+    return createIrregularDustField(
+      1
+    )[0];
+  }
+
+  function createIrregularGlintField(
+    count
+  ) {
+    const glints =
+      [];
+
+    const minimumDistance =
+      state.width <=
+      560
+        ? 86
+        : 138;
+
+    let attempts =
+      0;
+
+    while (
+      glints.length < count &&
+      attempts < count * 24
+    ) {
+      attempts +=
+        1;
+
+      const candidate =
+        createGlint();
+
+      const tooClose =
+        glints.some(
+          glint =>
+            Math.hypot(
+              glint.x -
+                candidate.x,
+              glint.y -
+                candidate.y
+            ) <
+            minimumDistance
+        );
+
+      if (
+        tooClose
+      ) {
+        continue;
+      }
+
+      glints.push(
+        candidate
+      );
+    }
+
+    while (
+      glints.length < count
+    ) {
+      glints.push(
+        createGlint()
+      );
+    }
+
+    return glints;
+  }
+
+  function createGlint() {
     return {
       x:
-        Math.random() *
+        random(
+          0.04,
+          0.96
+        ) *
         state.width,
 
       y:
-        Math.random() *
+        random(
+          0.04,
+          0.96
+        ) *
         state.height,
 
       radius:
         random(
-          0.4,
-          1.45
+          1.15,
+          2.05
         ),
 
       alpha:
         random(
-          0.02,
-          0.10
-        ),
-
-      speedX:
-        random(
-          -0.006,
-          0.006
-        ),
-
-      speedY:
-        random(
-          -0.005,
-          0.005
+          0.20,
+          0.48
         ),
 
       phase:
@@ -3586,8 +4512,87 @@
           0,
           Math.PI *
           2
+        ),
+
+      rate:
+        random(
+          0.00048,
+          0.00125
+        ),
+
+      color:
+        randomChoice([
+          COLORS.stone,
+          COLORS.whiteSoft,
+          COLORS.blue,
+          COLORS.gold
+        ]),
+
+      angle:
+        random(
+          0,
+          Math.PI
         )
     };
+  }
+
+  function createIrregularSparkleField(
+    count
+  ) {
+    const sparkles =
+      [];
+
+    let attempts =
+      0;
+
+    const minimumDistance =
+      state.width <=
+      560
+        ? 76
+        : 126;
+
+    while (
+      sparkles.length < count &&
+      attempts < count * 22
+    ) {
+      attempts +=
+        1;
+
+      const candidate =
+        createSparkle();
+
+      const tooClose =
+        sparkles.some(
+          sparkle =>
+            Math.hypot(
+              sparkle.x -
+                candidate.x,
+              sparkle.y -
+                candidate.y
+            ) <
+            minimumDistance
+        );
+
+      if (
+        tooClose
+      ) {
+        continue;
+      }
+
+      sparkles.push(
+        candidate
+      );
+    }
+
+    while (
+      sparkles.length < count
+    ) {
+      sparkles.push(
+        createSparkle()
+      );
+    }
+
+    return sparkles;
   }
 
   function createSparkle() {
@@ -3608,14 +4613,14 @@
 
       radius:
         random(
-          1.0,
-          2.0
+          0.85,
+          1.65
         ),
 
       alpha:
         random(
-          0.28,
-          0.62
+          0.20,
+          0.44
         ),
 
       phase:
@@ -3627,8 +4632,8 @@
 
       rate:
         random(
-          0.001,
-          0.0024
+          0.00085,
+          0.0020
         ),
 
       color:
@@ -3658,7 +4663,7 @@
       timestamp
     );
 
-    updateSpacecraft(
+    updateSpacecrafts(
       timestamp
     );
   }
@@ -3859,8 +4864,8 @@
 
     const speed =
       random(
-        0.40,
-        0.68
+        0.38,
+        0.62
       );
 
     return {
@@ -3885,26 +4890,26 @@
       velocityY:
         downward
           ? random(
-              0.14,
-              0.28
+              0.12,
+              0.25
             )
           : random(
-              -0.20,
-              -0.10
+              -0.18,
+              -0.08
             ),
 
       length,
 
       alpha:
         random(
-          0.30,
-          0.64
+          0.24,
+          0.54
         ),
 
       width:
         random(
-          0.65,
-          1.15
+          0.58,
+          1.05
         ),
 
       elapsed:
@@ -3912,8 +4917,8 @@
 
       duration:
         random(
-          1300,
-          2300
+          1350,
+          2350
         ),
 
       color:
@@ -3947,6 +4952,11 @@
     );
 
     drawStars(
+      context,
+      timestamp
+    );
+
+    drawGlints(
       context,
       timestamp
     );
@@ -4005,16 +5015,16 @@
       const shimmer =
         state.reducedMotion
           ? 1
-          : 0.72 +
+          : 0.74 +
             Math.sin(
               timestamp *
-              0.00028 +
+              0.00024 +
               particle.phase
             ) *
-            0.28;
+            0.26;
 
       context.fillStyle =
-        `rgba(${COLORS.dust}, ${
+        `rgba(${particle.color}, ${
           particle.alpha *
           shimmer
         })`;
@@ -4049,31 +5059,193 @@
       const twinkle =
         state.reducedMotion
           ? 1
-          : 0.70 +
+          : 0.76 +
             Math.sin(
               timestamp *
               star.twinkleRate +
               star.phase
             ) *
-            0.30;
+            0.24;
 
       const alpha =
         clamp(
           star.alpha *
           twinkle,
-          0.03,
-          0.82
+          0.022,
+          0.76
         );
 
       context.fillStyle =
         `rgba(${star.color}, ${alpha})`;
 
-      context.fillRect(
+      context.beginPath();
+
+      context.arc(
         star.x,
         star.y,
         star.radius,
-        star.radius
+        0,
+        Math.PI *
+        2
       );
+
+      context.fill();
+
+      if (
+        star.radius >
+          1.08 &&
+        alpha >
+          0.16
+      ) {
+        context.fillStyle =
+          `rgba(${star.color}, ${alpha * 0.13})`;
+
+        context.beginPath();
+
+        context.arc(
+          star.x,
+          star.y,
+          star.radius * 2.65,
+          0,
+          Math.PI *
+          2
+        );
+
+        context.fill();
+      }
+    }
+
+    context.restore();
+  }
+
+  function drawGlints(
+    context,
+    timestamp
+  ) {
+    context.save();
+
+    context.lineCap =
+      "round";
+
+    for (
+      const glint of
+      state.glints
+    ) {
+      const pulse =
+        state.reducedMotion
+          ? 0.42
+          : 0.5 +
+            Math.sin(
+              timestamp *
+              glint.rate +
+              glint.phase
+            ) *
+            0.5;
+
+      if (
+        pulse <
+        0.56
+      ) {
+        continue;
+      }
+
+      const alpha =
+        glint.alpha *
+        Math.pow(
+          pulse,
+          2.6
+        );
+
+      const reach =
+        glint.radius *
+        (
+          2.0 +
+          pulse *
+          2.2
+        );
+
+      context.strokeStyle =
+        `rgba(${glint.color}, ${alpha})`;
+
+      context.lineWidth =
+        0.52;
+
+      const cos =
+        Math.cos(
+          glint.angle
+        );
+
+      const sin =
+        Math.sin(
+          glint.angle
+        );
+
+      context.beginPath();
+
+      context.moveTo(
+        glint.x -
+          cos *
+          reach,
+        glint.y -
+          sin *
+          reach
+      );
+
+      context.lineTo(
+        glint.x +
+          cos *
+          reach,
+        glint.y +
+          sin *
+          reach
+      );
+
+      context.moveTo(
+        glint.x -
+          sin *
+          reach *
+          0.62,
+        glint.y +
+          cos *
+          reach *
+          0.62
+      );
+
+      context.lineTo(
+        glint.x +
+          sin *
+          reach *
+          0.62,
+        glint.y -
+          cos *
+          reach *
+          0.62
+      );
+
+      context.stroke();
+
+      context.fillStyle =
+        `rgba(${glint.color}, ${
+          clamp(
+            alpha *
+            1.08,
+            0,
+            1
+          )
+        })`;
+
+      context.beginPath();
+
+      context.arc(
+        glint.x,
+        glint.y,
+        glint.radius * 0.66,
+        0,
+        Math.PI *
+        2
+      );
+
+      context.fill();
     }
 
     context.restore();
@@ -4109,7 +5281,7 @@
 
       if (
         pulse <
-        0.60
+        0.68
       ) {
         continue;
       }
@@ -4118,22 +5290,22 @@
         sparkle.alpha *
         Math.pow(
           pulse,
-          2.2
+          2.35
         );
 
       const reach =
         sparkle.radius *
         (
-          2.0 +
+          1.6 +
           pulse *
-          2.6
+          1.8
         );
 
       context.strokeStyle =
         `rgba(${sparkle.color}, ${alpha})`;
 
       context.lineWidth =
-        0.65;
+        0.48;
 
       context.beginPath();
 
@@ -4167,7 +5339,7 @@
         `rgba(${sparkle.color}, ${
           clamp(
             alpha *
-            1.12,
+            1.04,
             0,
             1
           )
@@ -4178,7 +5350,7 @@
       context.arc(
         sparkle.x,
         sparkle.y,
-        sparkle.radius,
+        sparkle.radius * 0.74,
         0,
         Math.PI *
         2
@@ -4269,7 +5441,7 @@
         `rgba(${meteor.color}, ${
           meteor.alpha *
           fade *
-          0.36
+          0.34
         })`
       );
 
@@ -4313,7 +5485,7 @@
         meteor.x,
         meteor.y,
         meteor.width *
-        1.35,
+        1.25,
         0,
         Math.PI *
         2
@@ -4325,64 +5497,156 @@
     context.restore();
   }
 
-  function clearSpacecraftTimer() {
+  function getSpacecraftByKey(
+    key
+  ) {
+    const normalized =
+      String(
+        key || ""
+      ).trim();
+
+    return state.spacecrafts.find(
+      craft =>
+        craft.key ===
+          normalized ||
+        craft.id ===
+          normalized
+    ) ||
+      null;
+  }
+
+  function scheduleAllSpacecraftFlights(
+    initial =
+      false
+  ) {
+    let scheduled =
+      false;
+
+    for (
+      const craft of
+      state.spacecrafts
+    ) {
+      scheduled =
+        scheduleNextSpacecraftFlight(
+          craft,
+          initial
+        ) ||
+        scheduled;
+    }
+
+    return scheduled;
+  }
+
+  function scheduleMissingSpacecraftFlights(
+    initial =
+      false
+  ) {
+    let scheduled =
+      false;
+
+    for (
+      const craft of
+      state.spacecrafts
+    ) {
+      if (
+        !craft.flight &&
+        !craft.timer
+      ) {
+        scheduled =
+          scheduleNextSpacecraftFlight(
+            craft,
+            initial
+          ) ||
+          scheduled;
+      }
+    }
+
+    return scheduled;
+  }
+
+  function clearSpacecraftTimer(
+    craft
+  ) {
     if (
-      state.spacecraftTimer
+      craft &&
+      craft.timer
     ) {
       clearTimeout(
-        state.spacecraftTimer
+        craft.timer
       );
 
-      state.spacecraftTimer =
+      craft.timer =
         0;
     }
   }
 
+  function clearAllSpacecraftTimers() {
+    for (
+      const craft of
+      state.spacecrafts
+    ) {
+      clearSpacecraftTimer(
+        craft
+      );
+    }
+  }
+
   function scheduleNextSpacecraftFlight(
+    craft,
     initial =
       false
   ) {
     if (
+      !craft ||
       !canEnvironmentRun() ||
-      !state.spacecraft ||
-      state.spacecraftFlight
+      !craft.element ||
+      craft.flight
     ) {
       return false;
     }
 
-    clearSpacecraftTimer();
+    clearSpacecraftTimer(
+      craft
+    );
+
+    const config =
+      craft.config;
 
     const delay =
       initial
         ? random(
-            CONFIG
-              .spacecraftInitialDelayMinimumMs,
-            CONFIG
-              .spacecraftInitialDelayMaximumMs
+            config
+              .initialDelayMinimumMs,
+            config
+              .initialDelayMaximumMs
           )
         : random(
-            CONFIG
-              .spacecraftDelayMinimumMs,
-            CONFIG
-              .spacecraftDelayMaximumMs
+            config
+              .delayMinimumMs,
+            config
+              .delayMaximumMs
           );
 
-    state.spacecraftTimer =
+    craft.timer =
       window.setTimeout(
-        handleSpacecraftTimer,
+        () => handleSpacecraftTimer(
+          craft
+        ),
         delay
       );
 
     emitReceipt({
       lastAction:
-        "spacecraft-flight-scheduled"
+        `spacecraft-flight-scheduled:${craft.key}`
     });
 
     return true;
   }
 
-  function handleSpacecraftTimer() {
-    state.spacecraftTimer =
+  function handleSpacecraftTimer(
+    craft
+  ) {
+    craft.timer =
       0;
 
     if (
@@ -4391,49 +5655,66 @@
       return;
     }
 
-    launchSpacecraft();
+    launchSpacecraft(
+      craft.key
+    );
   }
 
-  function launchSpacecraft() {
+  function launchSpacecraft(
+    key =
+      ""
+  ) {
+    const craft =
+      getSpacecraftByKey(
+        key
+      ) ||
+      chooseAvailableSpacecraft();
+
     if (
+      !craft ||
       !canEnvironmentRun() ||
-      !state.spacecraft ||
-      state.spacecraftFlight
+      !craft.element ||
+      craft.flight
     ) {
       return false;
     }
 
+    const config =
+      craft.config;
+
     const path =
-      generateSpacecraftPath();
+      generateSpacecraftPath(
+        craft
+      );
 
     const duration =
       random(
-        CONFIG
-          .spacecraftDurationMinimumMs,
-        CONFIG
-          .spacecraftDurationMaximumMs
+        config
+          .durationMinimumMs,
+        config
+          .durationMaximumMs
       );
 
     const scale =
       random(
         state.width <=
         560
-          ? 0.38
-          : 0.50,
+          ? config.scaleMobileMinimum
+          : config.scaleDesktopMinimum,
 
         state.width <=
         560
-          ? 0.64
-          : 0.86
+          ? config.scaleMobileMaximum
+          : config.scaleDesktopMaximum
       );
 
     const opacity =
       random(
-        0.42,
-        0.68
+        config.opacityMinimum,
+        config.opacityMaximum
       );
 
-    state.spacecraftFlight = {
+    craft.flight = {
       path,
 
       startTime:
@@ -4447,15 +5728,15 @@
         false
     };
 
-    state.lastSpacecraftPath =
+    craft.lastPath =
       path;
 
-    state.spacecraft.setAttribute(
+    craft.element.setAttribute(
       "data-flying",
       "true"
     );
 
-    state.spacecraft.style.opacity =
+    craft.element.style.opacity =
       String(
         opacity
       );
@@ -4468,32 +5749,69 @@
 
     emitReceipt({
       lastAction:
-        "spacecraft-flight-launched"
+        `spacecraft-flight-launched:${craft.key}`
     });
 
     return true;
   }
 
-  function hideAndResetSpacecraft() {
+  function chooseAvailableSpacecraft() {
+    const available =
+      state.spacecrafts.filter(
+        craft =>
+          !craft.flight &&
+          !craft.timer
+      );
+
     if (
-      !state.spacecraft
+      available.length
+    ) {
+      return randomChoice(
+        available
+      );
+    }
+
+    return state.spacecrafts.find(
+      craft => !craft.flight
+    ) ||
+      null;
+  }
+
+  function hideAndResetSpacecraft(
+    craft
+  ) {
+    if (
+      !craft ||
+      !craft.element
     ) {
       return;
     }
 
-    state.spacecraft.setAttribute(
+    craft.element.setAttribute(
       "data-flying",
       "false"
     );
 
-    state.spacecraft.style.opacity =
+    craft.element.style.opacity =
       "0";
 
-    state.spacecraft.style.transform =
-      "translate3d(-260px, -160px, 0) rotate(0deg) scale(0.68)";
+    craft.element.style.transform =
+      "translate3d(-280px, -180px, 0) rotate(0deg) scale(0.58)";
+  }
+
+  function hideAndResetAllSpacecraft() {
+    for (
+      const craft of
+      state.spacecrafts
+    ) {
+      hideAndResetSpacecraft(
+        craft
+      );
+    }
   }
 
   function cancelSpacecraftFlight(
+    craft,
     scheduleNext =
       false,
     reason =
@@ -4501,18 +5819,27 @@
     publish =
       true
   ) {
-    clearSpacecraftTimer();
+    if (!craft) {
+      return false;
+    }
 
-    state.spacecraftFlight =
+    clearSpacecraftTimer(
+      craft
+    );
+
+    craft.flight =
       null;
 
-    hideAndResetSpacecraft();
+    hideAndResetSpacecraft(
+      craft
+    );
 
     if (
       scheduleNext &&
       canEnvironmentRun()
     ) {
       scheduleNextSpacecraftFlight(
+        craft,
         false
       );
     }
@@ -4522,22 +5849,81 @@
     ) {
       emitReceipt({
         lastAction:
-          `spacecraft-flight-cancelled:${normalizeReason(reason)}`
+          `spacecraft-flight-cancelled:${craft.key}:${normalizeReason(reason)}`
       });
     }
 
     return true;
   }
 
+  function cancelAllSpacecraftFlights(
+    reason =
+      "cancelled",
+    publish =
+      true
+  ) {
+    let changed =
+      false;
+
+    for (
+      const craft of
+      state.spacecrafts
+    ) {
+      clearSpacecraftTimer(
+        craft
+      );
+
+      if (
+        craft.flight
+      ) {
+        changed =
+          true;
+      }
+
+      craft.flight =
+        null;
+
+      hideAndResetSpacecraft(
+        craft
+      );
+    }
+
+    if (
+      publish
+    ) {
+      emitReceipt({
+        lastAction:
+          `spacecraft-flights-cancelled:${normalizeReason(reason)}`
+      });
+    }
+
+    return changed;
+  }
+
+  function updateSpacecrafts(
+    timestamp
+  ) {
+    for (
+      const craft of
+      state.spacecrafts
+    ) {
+      updateSpacecraft(
+        craft,
+        timestamp
+      );
+    }
+  }
+
   function updateSpacecraft(
+    craft,
     timestamp
   ) {
     const flight =
-      state.spacecraftFlight;
+      craft.flight;
 
     if (
       !flight ||
-      !state.spacecraft
+      !craft.element
     ) {
       return;
     }
@@ -4553,7 +5939,9 @@
       rawProgress >=
       1
     ) {
-      completeSpacecraftFlight();
+      completeSpacecraftFlight(
+        craft
+      );
 
       return;
     }
@@ -4624,44 +6012,56 @@
         progress *
         Math.PI
       ) *
-      0.07;
+      (
+        craft.key ===
+          "secondary"
+          ? 0.045
+          : 0.07
+      );
 
     const scale =
       flight.scale *
       depthPulse;
 
-    state.spacecraft.style.opacity =
+    craft.element.style.opacity =
       String(
         opacity
       );
 
-    state.spacecraft.style.transform =
+    craft.element.style.transform =
       `translate3d(${point.x}px, ${point.y}px, 0) ` +
       `rotate(${angle}deg) ` +
       `scale(${scale})`;
   }
 
-  function completeSpacecraftFlight() {
-    state.spacecraftFlight =
+  function completeSpacecraftFlight(
+    craft
+  ) {
+    craft.flight =
       null;
 
-    hideAndResetSpacecraft();
+    hideAndResetSpacecraft(
+      craft
+    );
 
     if (
       canEnvironmentRun()
     ) {
       scheduleNextSpacecraftFlight(
+        craft,
         false
       );
     }
 
     emitReceipt({
       lastAction:
-        "spacecraft-flight-completed"
+        `spacecraft-flight-completed:${craft.key}`
     });
   }
 
-  function generateSpacecraftPath() {
+  function generateSpacecraftPath(
+    craft
+  ) {
     const protectedRects =
       collectProtectedRects();
 
@@ -4681,7 +6081,9 @@
         1
     ) {
       const candidate =
-        createRandomPath();
+        createRandomPath(
+          craft
+        );
 
       const score =
         scorePath(
@@ -4690,7 +6092,11 @@
         ) +
         scorePathSimilarity(
           candidate,
-          state.lastSpacecraftPath
+          craft.lastPath
+        ) +
+        scoreActivePathConflict(
+          candidate,
+          craft
         );
 
       if (
@@ -4706,7 +6112,7 @@
 
       if (
         score <=
-        0.5
+        0.42
       ) {
         break;
       }
@@ -4714,11 +6120,18 @@
 
     return (
       bestPath ||
-      createRandomPath()
+      createRandomPath(
+        craft
+      )
     );
   }
 
-  function createRandomPath() {
+  function createRandomPath(
+    craft
+  ) {
+    const config =
+      craft.config;
+
     const marginX =
       Math.max(
         180,
@@ -4735,7 +6148,7 @@
 
     const horizontal =
       Math.random() <
-      0.72;
+      config.horizontalBias;
 
     const reverse =
       Math.random() <
@@ -4757,9 +6170,9 @@
         y:
           random(
             -marginY *
-            0.2,
+            0.22,
             state.height *
-            0.82
+            0.84
           )
       };
 
@@ -4775,15 +6188,15 @@
             start.y +
             random(
               -state.height *
-              0.34,
+              0.36,
               state.height *
-              0.34
+              0.36
             ),
             -marginY *
-            0.4,
+            0.45,
             state.height +
             marginY *
-            0.4
+            0.45
           )
       };
     } else {
@@ -4791,10 +6204,10 @@
         x:
           random(
             -marginX *
-            0.2,
+            0.25,
             state.width +
             marginX *
-            0.2
+            0.25
           ),
 
         y:
@@ -4810,15 +6223,15 @@
             start.x +
             random(
               -state.width *
-              0.42,
+              0.46,
               state.width *
-              0.42
+              0.46
             ),
             -marginX *
-            0.4,
+            0.45,
             state.width +
             marginX *
-            0.4
+            0.45
           ),
 
         y:
@@ -4856,8 +6269,14 @@
 
     const curveStrength =
       random(
-        0.08,
-        0.28
+        craft.key ===
+          "secondary"
+          ? 0.10
+          : 0.08,
+        craft.key ===
+          "secondary"
+          ? 0.34
+          : 0.28
       ) *
       Math.min(
         state.width,
@@ -4870,7 +6289,7 @@
         start.x +
         dx *
         random(
-          0.20,
+          0.18,
           0.36
         ) +
         normalX *
@@ -4880,7 +6299,7 @@
         start.y +
         dy *
         random(
-          0.20,
+          0.18,
           0.36
         ) +
         normalY *
@@ -4893,7 +6312,7 @@
         dx *
         random(
           0.64,
-          0.82
+          0.84
         ) -
         normalX *
         curveStrength *
@@ -4907,7 +6326,7 @@
         dy *
         random(
           0.64,
-          0.82
+          0.84
         ) -
         normalY *
         curveStrength *
@@ -5012,7 +6431,7 @@
       0;
 
     const samples =
-      28;
+      30;
 
     for (
       let index =
@@ -5141,6 +6560,77 @@
     ) {
       penalty +=
         2;
+    }
+
+    return penalty;
+  }
+
+  function scoreActivePathConflict(
+    path,
+    craft
+  ) {
+    let penalty =
+      0;
+
+    const samples =
+      12;
+
+    for (
+      const other of
+      state.spacecrafts
+    ) {
+      if (
+        other ===
+          craft ||
+        !other.flight
+      ) {
+        continue;
+      }
+
+      for (
+        let index =
+          0;
+        index <=
+          samples;
+        index +=
+          1
+      ) {
+        const t =
+          index /
+          samples;
+
+        const candidatePoint =
+          cubicPoint(
+            path,
+            t
+          );
+
+        const otherPoint =
+          cubicPoint(
+            other.flight.path,
+            t
+          );
+
+        const distance =
+          Math.hypot(
+            candidatePoint.x -
+              otherPoint.x,
+            candidatePoint.y -
+              otherPoint.y
+          );
+
+        if (
+          distance <
+          Math.min(
+            state.width,
+            state.height
+          ) *
+          CONFIG.spacecraftPathSeparationBias
+        ) {
+          penalty +=
+            0.32;
+        }
+      }
     }
 
     return penalty;
@@ -5287,8 +6777,8 @@
     state.context =
       null;
 
-    state.spacecraft =
-      null;
+    state.spacecrafts =
+      [];
   }
 
   function clearCollections() {
@@ -5296,6 +6786,9 @@
       0;
 
     state.dust.length =
+      0;
+
+    state.glints.length =
       0;
 
     state.sparkles.length =
@@ -5307,19 +6800,27 @@
     state.renderCostSamples.length =
       0;
 
-    state.spacecraftFlight =
-      null;
+    for (
+      const craft of
+      state.spacecrafts
+    ) {
+      craft.flight =
+        null;
 
-    state.lastSpacecraftPath =
-      null;
+      craft.lastPath =
+        null;
+
+      craft.timer =
+        0;
+    }
   }
 
   function rollbackPartialInitialization(
     reason
   ) {
     stopAnimationFrame();
-    clearSpacecraftTimer();
-    hideAndResetSpacecraft();
+    clearAllSpacecraftTimers();
+    hideAndResetAllSpacecraft();
     uninstallObservers();
     removeCreatedSurfaces();
     clearCollections();
@@ -5368,8 +6869,8 @@
       );
 
     stopAnimationFrame();
-    clearSpacecraftTimer();
-    hideAndResetSpacecraft();
+    clearAllSpacecraftTimers();
+    hideAndResetAllSpacecraft();
     uninstallObservers();
     removeCreatedSurfaces();
     clearCollections();

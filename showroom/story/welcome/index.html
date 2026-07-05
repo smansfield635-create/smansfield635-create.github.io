@@ -1,6 +1,6 @@
 <!-- TARGET FILE: /showroom/story/welcome/index.html -->
-<!-- COMPLETE NEW FILE -->
-<!-- SHOWROOM_SATELLITE_WELCOME_TO_MIRRORLAND_HTML_TNT_v1 -->
+<!-- COMPLETE REPLACEMENT -->
+<!-- SHOWROOM_SATELLITE_WELCOME_TO_MIRRORLAND_HTML_TNT_v2_INVITATION_STANDARD -->
 
 <!doctype html>
 
@@ -8,8 +8,8 @@
   lang="en"
   data-route="/showroom/story/welcome/"
   data-page="showroom-story-welcome"
-  data-version="SHOWROOM-SATELLITE-WELCOME-TO-MIRRORLAND-1.0.0"
-  data-contract="SHOWROOM_SATELLITE_WELCOME_TO_MIRRORLAND_HTML_TNT_v1"
+  data-version="SHOWROOM-SATELLITE-WELCOME-TO-MIRRORLAND-2.0.0"
+  data-contract="SHOWROOM_SATELLITE_WELCOME_TO_MIRRORLAND_HTML_TNT_v2_INVITATION_STANDARD"
   data-showroom-satellite="true"
   data-showroom-route-family="story"
   data-showroom-route-id="north-1"
@@ -33,26 +33,27 @@
 
   <meta
     name="description"
-    content="Enter the first Mirrorland threshold. Follow Dextrion’s anomaly from impossible signal to operational crossing, then confront the responsibility created when another future becomes reachable."
+    content="You thought the door had closed. Then the invitation found you. Enter the first Mirrorland threshold as the scientific novelist and independent researcher Audralia did not expect Earth to send."
   >
 
   <meta
     name="showroom-page-contract"
-    content="SHOWROOM_SATELLITE_WELCOME_TO_MIRRORLAND_HTML_TNT_v1"
+    content="SHOWROOM_SATELLITE_WELCOME_TO_MIRRORLAND_HTML_TNT_v2_INVITATION_STANDARD"
   >
 
   <style>
     /* ============================================================
-       SHOWROOM SATELLITE PAGE EMBEDDED VISUAL SYSTEM v1
+       SHOWROOM SATELLITE PAGE EMBEDDED VISUAL SYSTEM v2
+       PAGE: north-1 · Welcome to Mirrorland
 
-       Shared architectural language for:
-       - story routes;
-       - wonders routes;
-       - mystery routes.
-
-       This file uses the Story / North expression.
-
-       No external page-specific stylesheet is required.
+       Page-specific standard:
+       - one-file route page;
+       - embedded CSS;
+       - page-local JavaScript only;
+       - no external dependencies;
+       - no shared Showroom runtime ownership;
+       - no repeating tiled starfield as primary atmosphere;
+       - dominant animation object: the impossible invitation.
        ============================================================ */
 
     :root {
@@ -61,7 +62,7 @@
       --satellite-ink-0: #02040a;
       --satellite-ink-1: #050914;
       --satellite-ink-2: #091020;
-      --satellite-ink-3: #101a30;
+      --satellite-ink-3: #111a2f;
       --satellite-ink-4: #17233d;
 
       --satellite-cream: #f5eddd;
@@ -71,6 +72,7 @@
 
       --satellite-gold: #e0b85b;
       --satellite-gold-bright: #f4d47e;
+      --satellite-gold-soft: #ffe7a5;
       --satellite-gold-deep: #805b1c;
       --satellite-gold-faint: rgba(224, 184, 91, 0.14);
 
@@ -79,13 +81,8 @@
       --satellite-accent-faint: rgba(117, 233, 255, 0.13);
 
       --satellite-secondary: #88aaff;
-      --satellite-secondary-soft: #bdccff;
-      --satellite-secondary-faint: rgba(136, 170, 255, 0.14);
-
       --satellite-violet: #b798ff;
-      --satellite-danger: #ff91a3;
-      --satellite-success: #8ce4ae;
-      --satellite-warning: #ffd17a;
+      --satellite-rose: #ffb3c3;
 
       --satellite-border: rgba(226, 197, 128, 0.24);
       --satellite-border-strong: rgba(239, 205, 125, 0.5);
@@ -113,7 +110,7 @@
       --satellite-radius-xl: 2rem;
 
       --satellite-page-width: 84rem;
-      --satellite-reading-width: 49rem;
+      --satellite-reading-width: 52rem;
 
       --satellite-space-1: 0.4rem;
       --satellite-space-2: 0.65rem;
@@ -197,34 +194,49 @@
       pointer-events: none;
       content: "";
 
-      opacity: 0.72;
+      opacity: 0.78;
 
-      background-image:
+      background:
         radial-gradient(
-          circle,
-          rgba(255, 255, 255, 0.82) 0 0.05rem,
-          transparent 0.065rem
-        ),
-        radial-gradient(
-          circle,
-          rgba(117, 233, 255, 0.58) 0 0.04rem,
+          circle at 18% 22%,
+          rgba(255, 255, 255, 0.9) 0 0.045rem,
           transparent 0.06rem
         ),
         radial-gradient(
-          circle,
-          rgba(239, 205, 126, 0.5) 0 0.045rem,
-          transparent 0.065rem
+          circle at 77% 17%,
+          rgba(117, 233, 255, 0.78) 0 0.04rem,
+          transparent 0.06rem
+        ),
+        radial-gradient(
+          circle at 89% 72%,
+          rgba(244, 212, 126, 0.82) 0 0.05rem,
+          transparent 0.068rem
+        ),
+        radial-gradient(
+          circle at 35% 81%,
+          rgba(255, 255, 255, 0.7) 0 0.04rem,
+          transparent 0.06rem
+        ),
+        radial-gradient(
+          circle at 12% 68%,
+          rgba(117, 233, 255, 0.58) 0 0.035rem,
+          transparent 0.058rem
+        ),
+        radial-gradient(
+          circle at 58% 33%,
+          rgba(244, 212, 126, 0.52) 0 0.035rem,
+          transparent 0.055rem
+        ),
+        radial-gradient(
+          circle at 46% 11%,
+          rgba(255, 255, 255, 0.62) 0 0.035rem,
+          transparent 0.055rem
+        ),
+        radial-gradient(
+          circle at 71% 89%,
+          rgba(117, 233, 255, 0.5) 0 0.032rem,
+          transparent 0.052rem
         );
-
-      background-size:
-        6.2rem 6.2rem,
-        9.4rem 9.4rem,
-        13.6rem 13.6rem;
-
-      background-position:
-        0 0,
-        2.2rem 3.4rem,
-        5.7rem 1.6rem;
     }
 
     body::after {
@@ -366,7 +378,7 @@
     .eyebrow,
     .route-kicker,
     .chapter-index,
-    .signal-label,
+    .ticket-label,
     .practical-label,
     .evidence-label {
       color: var(--satellite-gold-bright);
@@ -652,7 +664,7 @@
     .route-hero {
       position: relative;
 
-      min-height: min(79vh, 49rem);
+      min-height: min(82vh, 52rem);
       overflow: hidden;
 
       border: 1px solid rgba(224, 184, 91, 0.23);
@@ -660,19 +672,24 @@
 
       background:
         radial-gradient(
-          circle at 17% 20%,
+          circle at 16% 18%,
           rgba(117, 233, 255, 0.14),
           transparent 24rem
         ),
         radial-gradient(
-          circle at 84% 72%,
-          rgba(136, 170, 255, 0.13),
+          circle at 83% 70%,
+          rgba(136, 170, 255, 0.14),
           transparent 28rem
+        ),
+        radial-gradient(
+          circle at 58% 50%,
+          rgba(244, 212, 126, 0.08),
+          transparent 20rem
         ),
         linear-gradient(
           145deg,
-          rgba(16, 25, 46, 0.89),
-          rgba(3, 6, 15, 0.96)
+          rgba(16, 25, 46, 0.9),
+          rgba(3, 6, 15, 0.97)
         );
 
       box-shadow: var(--satellite-shadow-deep);
@@ -689,20 +706,20 @@
       background:
         linear-gradient(
           115deg,
-          transparent 0 44%,
-          rgba(117, 233, 255, 0.035) 45%,
-          transparent 46% 58%,
-          rgba(224, 184, 91, 0.035) 59%,
-          transparent 60%
+          transparent 0 42%,
+          rgba(117, 233, 255, 0.035) 42.4%,
+          transparent 43% 58%,
+          rgba(224, 184, 91, 0.035) 58.5%,
+          transparent 59%
         ),
         radial-gradient(
-          circle at 72% 42%,
+          circle at 70% 42%,
           transparent 0 9rem,
           rgba(117, 233, 255, 0.055) 9.1rem 9.2rem,
           transparent 9.3rem
         ),
         radial-gradient(
-          circle at 72% 42%,
+          circle at 70% 42%,
           transparent 0 14rem,
           rgba(224, 184, 91, 0.045) 14.1rem 14.2rem,
           transparent 14.3rem
@@ -715,8 +732,8 @@
       min-height: inherit;
 
       grid-template-columns:
-        minmax(0, 1.2fr)
-        minmax(17rem, 0.8fr);
+        minmax(0, 1.1fr)
+        minmax(18rem, 0.9fr);
 
       align-items: center;
       gap: clamp(2rem, 6vw, 6rem);
@@ -749,7 +766,7 @@
     }
 
     .hero-subtitle {
-      max-width: 32rem;
+      max-width: 34rem;
       margin-bottom: 0.85rem;
 
       color: var(--satellite-accent-soft);
@@ -764,7 +781,7 @@
     }
 
     .hero-lead {
-      max-width: 44rem;
+      max-width: 45rem;
       margin-bottom: 1.5rem;
 
       color: var(--satellite-muted-strong);
@@ -777,14 +794,19 @@
       gap: 0.7rem;
     }
 
-    .hero-signal {
+    /* ============================================================
+       IMPOSSIBLE INVITATION OBJECT
+       ============================================================ */
+
+    .invitation-stage {
       position: relative;
 
       display: grid;
       align-content: end;
       gap: 1rem;
 
-      min-height: 24rem;
+      min-height: 27rem;
+      overflow: hidden;
       padding: 1.4rem;
 
       border: 1px solid var(--satellite-border-cool);
@@ -792,9 +814,14 @@
 
       background:
         radial-gradient(
-          circle at 50% 32%,
-          rgba(117, 233, 255, 0.17),
-          transparent 9rem
+          circle at 50% 29%,
+          rgba(117, 233, 255, 0.18),
+          transparent 9.5rem
+        ),
+        radial-gradient(
+          circle at 50% 28%,
+          rgba(244, 212, 126, 0.08),
+          transparent 13rem
         ),
         linear-gradient(
           180deg,
@@ -807,76 +834,296 @@
         inset 0.24rem 0 0 rgba(117, 233, 255, 0.28);
     }
 
-    .hero-signal::before {
+    .invitation-stage__beam {
       position: absolute;
-      top: 14%;
+      top: -12%;
       left: 50%;
 
-      width: 9.5rem;
+      width: 11rem;
+      height: 23rem;
+
+      pointer-events: none;
+
+      background:
+        linear-gradient(
+          180deg,
+          rgba(180, 245, 255, 0),
+          rgba(180, 245, 255, 0.12) 42%,
+          rgba(244, 212, 126, 0.16) 62%,
+          rgba(244, 212, 126, 0)
+        );
+
+      filter: blur(0.2rem);
+      opacity: 0.78;
+      transform:
+        translateX(-50%)
+        perspective(24rem)
+        rotateX(32deg);
+
+      clip-path: polygon(
+        48% 0,
+        52% 0,
+        100% 100%,
+        0 100%
+      );
+
+      animation:
+        invitationBeam 4.8s ease-in-out infinite;
+    }
+
+    .invitation-stage__orbit {
+      position: absolute;
+      top: 12.5%;
+      left: 50%;
+
+      width: 13rem;
+      aspect-ratio: 1;
+
+      pointer-events: none;
+
+      border: 1px solid rgba(117, 233, 255, 0.24);
+      border-radius: 50%;
+
+      box-shadow:
+        0 0 3rem rgba(117, 233, 255, 0.13),
+        inset 0 0 2rem rgba(117, 233, 255, 0.06);
+
+      transform: translateX(-50%);
+      animation:
+        invitationOrbit 14s linear infinite;
+    }
+
+    .invitation-stage__orbit::before,
+    .invitation-stage__orbit::after {
+      position: absolute;
+      inset: 14%;
+
+      content: "";
+      border: 1px solid rgba(244, 212, 126, 0.18);
+      border-radius: 50%;
+      transform: rotate(32deg) scaleY(0.54);
+    }
+
+    .invitation-stage__orbit::after {
+      inset: 26%;
+      border-color: rgba(117, 233, 255, 0.18);
+      transform: rotate(-28deg) scaleY(0.46);
+    }
+
+    .invitation-ticket {
+      position: absolute;
+      top: 21%;
+      left: 50%;
+
+      display: grid;
+      place-items: center;
+
+      width: min(15rem, 62vw);
+      aspect-ratio: 1.55;
+
+      border: 1px solid rgba(255, 231, 165, 0.72);
+      border-radius: 1rem;
+
+      color: var(--satellite-gold-soft);
+
+      background:
+        linear-gradient(
+          135deg,
+          rgba(255, 231, 165, 0.16),
+          rgba(117, 233, 255, 0.06) 48%,
+          rgba(5, 9, 20, 0.92)
+        );
+
+      box-shadow:
+        0 0 3.2rem rgba(244, 212, 126, 0.18),
+        0 1.4rem 3rem rgba(0, 0, 0, 0.42),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.08),
+        inset 0 0 2rem rgba(244, 212, 126, 0.08);
+
+      transform:
+        translateX(-50%)
+        translateY(0)
+        rotate(-4deg);
+
+      animation:
+        invitationFloat 5.6s ease-in-out infinite;
+    }
+
+    .invitation-ticket::before,
+    .invitation-ticket::after {
+      position: absolute;
+      top: 50%;
+
+      width: 1.15rem;
       aspect-ratio: 1;
 
       content: "";
 
-      border: 1px solid rgba(117, 233, 255, 0.34);
       border-radius: 50%;
-
-      background:
-        radial-gradient(
-          circle,
-          rgba(245, 213, 130, 0.9) 0 0.28rem,
-          rgba(117, 233, 255, 0.35) 0.35rem 0.5rem,
-          transparent 0.62rem
-        ),
-        repeating-radial-gradient(
-          circle,
-          transparent 0 1.2rem,
-          rgba(117, 233, 255, 0.08) 1.23rem 1.27rem
-        );
-
+      background: rgba(5, 9, 20, 0.96);
+      transform: translateY(-50%);
       box-shadow:
-        0 0 3rem rgba(117, 233, 255, 0.15),
-        inset 0 0 2rem rgba(117, 233, 255, 0.08);
-
-      transform: translateX(-50%);
+        0 0 0 1px rgba(255, 231, 165, 0.42);
     }
 
-    .hero-signal::after {
-      position: absolute;
-      top: calc(14% + 4.75rem);
-      left: 50%;
+    .invitation-ticket::before {
+      left: -0.57rem;
+    }
 
-      width: 13rem;
-      height: 1px;
+    .invitation-ticket::after {
+      right: -0.57rem;
+    }
+
+    .invitation-ticket__inner {
+      position: relative;
+
+      display: grid;
+      place-items: center;
+      gap: 0.3rem;
+
+      width: calc(100% - 1.6rem);
+      height: calc(100% - 1.2rem);
+
+      border: 1px dashed rgba(255, 231, 165, 0.38);
+      border-radius: 0.7rem;
+
+      text-align: center;
+    }
+
+    .invitation-ticket__inner::before {
+      position: absolute;
+      inset: 0.62rem;
 
       content: "";
 
+      border-radius: 0.45rem;
       background:
         linear-gradient(
           90deg,
           transparent,
-          rgba(117, 233, 255, 0.8),
+          rgba(255, 231, 165, 0.13),
           transparent
         );
 
-      box-shadow:
-        0 0 1.2rem rgba(117, 233, 255, 0.38);
-
-      transform: translateX(-50%);
+      transform: translateX(-110%);
+      animation:
+        ticketScan 4.6s ease-in-out infinite;
     }
 
-    .signal-copy {
+    .invitation-ticket__code {
+      position: relative;
+
+      color: var(--satellite-accent-soft);
+
+      font-size: 0.58rem;
+      font-weight: 850;
+      letter-spacing: 0.17em;
+      text-transform: uppercase;
+    }
+
+    .invitation-ticket__title {
+      position: relative;
+
+      color: var(--satellite-cream);
+
+      font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+      font-size: clamp(1.35rem, 3vw, 2.05rem);
+      line-height: 1;
+    }
+
+    .invitation-ticket__subtitle {
+      position: relative;
+
+      max-width: 12rem;
+
+      color: var(--satellite-gold-soft);
+      font-size: 0.7rem;
+      font-weight: 780;
+      letter-spacing: 0.08em;
+      line-height: 1.35;
+      text-transform: uppercase;
+    }
+
+    .invitation-particle {
+      position: absolute;
+
+      width: 0.28rem;
+      aspect-ratio: 1;
+
+      pointer-events: none;
+
+      border-radius: 50%;
+      background: rgba(180, 245, 255, 0.78);
+      box-shadow:
+        0 0 0.9rem rgba(180, 245, 255, 0.52);
+
+      opacity: 0.72;
+
+      animation:
+        particleDrift 8s ease-in-out infinite;
+    }
+
+    .invitation-particle:nth-of-type(1) {
+      top: 15%;
+      left: 14%;
+      animation-delay: -1s;
+    }
+
+    .invitation-particle:nth-of-type(2) {
+      top: 23%;
+      left: 78%;
+      width: 0.2rem;
+      background: rgba(244, 212, 126, 0.78);
+      animation-delay: -2.4s;
+    }
+
+    .invitation-particle:nth-of-type(3) {
+      top: 42%;
+      left: 18%;
+      width: 0.16rem;
+      animation-delay: -4.2s;
+    }
+
+    .invitation-particle:nth-of-type(4) {
+      top: 58%;
+      left: 83%;
+      width: 0.22rem;
+      background: rgba(244, 212, 126, 0.7);
+      animation-delay: -3.1s;
+    }
+
+    .invitation-particle:nth-of-type(5) {
+      top: 74%;
+      left: 38%;
+      width: 0.19rem;
+      animation-delay: -5.3s;
+    }
+
+    .invitation-particle:nth-of-type(6) {
+      top: 10%;
+      left: 54%;
+      width: 0.18rem;
+      background: rgba(255, 255, 255, 0.68);
+      animation-delay: -6.2s;
+    }
+
+    .ticket-copy {
       position: relative;
       z-index: 2;
     }
 
-    .signal-label {
+    .ticket-label {
       display: block;
       margin-bottom: 0.45rem;
 
       color: var(--satellite-accent);
     }
 
-    .signal-copy strong {
+    .ticket-copy strong {
       display: block;
       margin-bottom: 0.65rem;
 
@@ -892,7 +1139,7 @@
       line-height: 1.12;
     }
 
-    .signal-copy p {
+    .ticket-copy p {
       margin-bottom: 0;
 
       color: var(--satellite-muted);
@@ -1023,21 +1270,21 @@
     }
 
     /* ============================================================
-       DIALOGUE STAGE
+       LETTER STAGE
        ============================================================ */
 
-    .dialogue-stage {
+    .letter-stage {
       display: grid;
 
       grid-template-columns:
-        minmax(0, 0.82fr)
-        minmax(0, 1.18fr);
+        minmax(0, 0.88fr)
+        minmax(0, 1.12fr);
 
       gap: 1rem;
     }
 
-    .dialogue-intro,
-    .dialogue-panel {
+    .letter-intro,
+    .letter-panel {
       min-width: 0;
       padding: clamp(1.2rem, 3vw, 2rem);
 
@@ -1048,63 +1295,98 @@
       box-shadow: var(--satellite-shadow);
     }
 
-    .dialogue-intro {
+    .letter-intro {
       display: grid;
       align-content: center;
       gap: 0.9rem;
     }
 
-    .dialogue-intro p {
+    .letter-intro p {
       margin-bottom: 0;
 
       color: var(--satellite-muted-strong);
     }
 
-    .dialogue-panel {
-      display: grid;
-      gap: 0.8rem;
+    .letter-panel {
+      position: relative;
+      overflow: hidden;
     }
 
-    .dialogue-line {
+    .letter-panel::before {
+      position: absolute;
+      inset: 1rem;
+
+      pointer-events: none;
+      content: "";
+
+      border: 1px solid rgba(244, 212, 126, 0.16);
+      border-radius: 1rem;
+    }
+
+    .letter {
+      position: relative;
+      z-index: 1;
+
       display: grid;
-      gap: 0.2rem;
+      gap: 1rem;
 
-      max-width: 88%;
-      padding: 0.85rem 1rem;
+      padding: clamp(1rem, 2.4vw, 1.55rem);
 
-      border: 1px solid rgba(255, 255, 255, 0.07);
+      border: 1px solid rgba(255, 231, 165, 0.32);
       border-radius: var(--satellite-radius-md);
 
-      background: rgba(255, 255, 255, 0.025);
+      background:
+        linear-gradient(
+          145deg,
+          rgba(255, 231, 165, 0.08),
+          rgba(117, 233, 255, 0.035)
+        ),
+        rgba(255, 255, 255, 0.025);
     }
 
-    .dialogue-line[data-speaker="dextrion"] {
-      justify-self: start;
-
-      border-color: rgba(117, 233, 255, 0.19);
-      box-shadow: inset 0.2rem 0 0 rgba(117, 233, 255, 0.3);
-    }
-
-    .dialogue-line[data-speaker="mission"] {
-      justify-self: end;
-
-      border-color: rgba(224, 184, 91, 0.2);
-      box-shadow: inset -0.2rem 0 0 rgba(224, 184, 91, 0.3);
-    }
-
-    .dialogue-line span {
-      color: var(--satellite-gold-bright);
-
-      font-size: 0.61rem;
-      font-weight: 850;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-    }
-
-    .dialogue-line p {
+    .letter p {
       margin-bottom: 0;
 
       color: var(--satellite-cream-soft);
+    }
+
+    .letter strong {
+      color: var(--satellite-gold-soft);
+      font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+
+    .letter__seal {
+      display: inline-grid;
+
+      width: 3.3rem;
+      aspect-ratio: 1;
+      place-items: center;
+
+      border: 1px solid rgba(244, 212, 126, 0.58);
+      border-radius: 50%;
+
+      color: var(--satellite-gold-soft);
+      background:
+        radial-gradient(
+          circle,
+          rgba(244, 212, 126, 0.16),
+          rgba(4, 7, 16, 0.9)
+        );
+    }
+
+    .letter__seal::before {
+      width: 1.45rem;
+      aspect-ratio: 1;
+
+      content: "";
+
+      border: 1px solid currentColor;
+      transform: rotate(45deg);
     }
 
     /* ============================================================
@@ -1459,6 +1741,94 @@
     }
 
     /* ============================================================
+       ANIMATION
+       ============================================================ */
+
+    @keyframes invitationFloat {
+      0%,
+      100% {
+        transform:
+          translateX(-50%)
+          translateY(0)
+          rotate(-4deg);
+      }
+
+      50% {
+        transform:
+          translateX(-50%)
+          translateY(-0.7rem)
+          rotate(-1.5deg);
+      }
+    }
+
+    @keyframes invitationBeam {
+      0%,
+      100% {
+        opacity: 0.42;
+        transform:
+          translateX(-50%)
+          perspective(24rem)
+          rotateX(32deg)
+          scaleX(0.72);
+      }
+
+      48% {
+        opacity: 0.9;
+        transform:
+          translateX(-50%)
+          perspective(24rem)
+          rotateX(32deg)
+          scaleX(1);
+      }
+    }
+
+    @keyframes invitationOrbit {
+      to {
+        transform:
+          translateX(-50%)
+          rotate(360deg);
+      }
+    }
+
+    @keyframes ticketScan {
+      0%,
+      42% {
+        transform: translateX(-120%);
+      }
+
+      64%,
+      100% {
+        transform: translateX(120%);
+      }
+    }
+
+    @keyframes particleDrift {
+      0%,
+      100% {
+        opacity: 0.28;
+        transform: translate3d(0, 0, 0);
+      }
+
+      48% {
+        opacity: 0.86;
+        transform: translate3d(0.6rem, -0.9rem, 0);
+      }
+    }
+
+    .js .reveal {
+      opacity: 0;
+      transform: translateY(1rem);
+      transition:
+        opacity 520ms ease,
+        transform 520ms cubic-bezier(0.2, 0.72, 0.25, 1);
+    }
+
+    .js .reveal.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ============================================================
        RESPONSIVE
        ============================================================ */
 
@@ -1485,7 +1855,7 @@
 
     @media (max-width: 54rem) {
       .route-hero__inner,
-      .dialogue-stage,
+      .letter-stage,
       .practical-return,
       .section-heading {
         grid-template-columns: 1fr;
@@ -1495,8 +1865,8 @@
         align-items: start;
       }
 
-      .hero-signal {
-        min-height: 21rem;
+      .invitation-stage {
+        min-height: 24rem;
       }
 
       .section-heading {
@@ -1605,18 +1975,19 @@
         width: 100%;
       }
 
-      .hero-signal {
-        min-height: 19rem;
+      .invitation-stage {
+        min-height: 21rem;
         padding: 1rem;
       }
 
-      .hero-signal::before {
-        width: 8rem;
+      .invitation-ticket {
+        top: 19%;
+        width: min(13rem, 70vw);
       }
 
-      .hero-signal::after {
-        top: calc(14% + 4rem);
-        width: 10rem;
+      .invitation-stage__orbit {
+        top: 10%;
+        width: 11rem;
       }
 
       .chapter-grid,
@@ -1630,15 +2001,11 @@
       }
 
       .chapter,
-      .dialogue-intro,
-      .dialogue-panel,
+      .letter-intro,
+      .letter-panel,
       .pressure-section,
       .practical-return {
         border-radius: 1rem;
-      }
-
-      .dialogue-line {
-        max-width: 95%;
       }
 
       .page-footer {
@@ -1675,6 +2042,11 @@
       .button:hover {
         transform: none;
       }
+
+      .js .reveal {
+        opacity: 1;
+        transform: none;
+      }
     }
 
     /* ============================================================
@@ -1684,8 +2056,8 @@
     @media (prefers-reduced-transparency: reduce) {
       .page-topbar,
       .chapter,
-      .dialogue-intro,
-      .dialogue-panel,
+      .letter-intro,
+      .letter-panel,
       .pressure-section,
       .practical-return,
       .evidence-disclosure {
@@ -1703,12 +2075,15 @@
       .page-topbar,
       .route-hero,
       .chapter,
-      .dialogue-intro,
-      .dialogue-panel,
+      .letter-intro,
+      .letter-panel,
       .pressure-section,
       .pressure-card,
       .practical-return,
-      .evidence-disclosure {
+      .evidence-disclosure,
+      .invitation-stage,
+      .invitation-ticket,
+      .letter {
         color: CanvasText;
         background: Canvas;
         box-shadow: none;
@@ -1720,7 +2095,8 @@
       }
 
       .brand-mark,
-      .hero-signal::before {
+      .invitation-ticket,
+      .invitation-stage__orbit {
         border: 2px solid ButtonText;
         background: ButtonFace;
         box-shadow: none;
@@ -1742,7 +2118,10 @@
       .page-topbar,
       .hero-actions,
       .practical-actions,
-      .page-footer {
+      .page-footer,
+      .invitation-stage__beam,
+      .invitation-stage__orbit,
+      .invitation-particle {
         display: none !important;
       }
 
@@ -1752,29 +2131,29 @@
 
       .route-hero,
       .chapter,
-      .dialogue-intro,
-      .dialogue-panel,
+      .letter-intro,
+      .letter-panel,
       .pressure-section,
       .pressure-card,
       .practical-return,
-      .evidence-disclosure {
+      .evidence-disclosure,
+      .invitation-stage,
+      .invitation-ticket,
+      .letter {
         color: #111;
         background: #fff;
         border: 1px solid #777;
         box-shadow: none;
       }
 
-      .route-hero {
+      .route-hero,
+      .invitation-stage {
         min-height: 0;
       }
 
-      .hero-signal {
-        min-height: 0;
-      }
-
-      .hero-signal::before,
-      .hero-signal::after {
-        display: none;
+      .invitation-ticket {
+        position: static;
+        transform: none;
       }
 
       .evidence-disclosure:not([open])
@@ -1823,7 +2202,7 @@
         </a>
 
         <a href="/showroom/story/mission/">
-          Mission
+          Next
         </a>
 
         <a href="/index.html">
@@ -1838,7 +2217,7 @@
         aria-labelledby="page-title"
       >
         <div class="route-hero__inner">
-          <div class="route-hero__copy">
+          <div class="route-hero__copy reveal">
             <div class="route-kicker">
               North Route · Chamber One
             </div>
@@ -1848,23 +2227,24 @@
             </h1>
 
             <p class="hero-subtitle">
-              The signal was never supposed to answer back.
+              You thought the door had closed.
+              Then the invitation found you.
             </p>
 
             <p class="hero-lead">
-              Dextrion began with an anomaly near the Bermuda region:
-              a repeating distortion where there should have been only
-              noise. Then the pattern changed. It responded. Not like
-              weather. Not like machinery. Like something on the other
-              side had noticed that someone was listening.
+              Public word had already gone out: every ticket was settled.
+              The chance to reach Audralia had passed into other hands.
+              You accepted it, or tried to. Then one envelope arrived
+              with your name written as if the world had not forgotten you
+              after all.
             </p>
 
             <div class="hero-actions">
               <a
                 class="button button-gold"
-                href="#first-contact"
+                href="#invitation"
               >
-                Follow the Signal
+                Open the Invitation
               </a>
 
               <a
@@ -1877,21 +2257,82 @@
           </div>
 
           <aside
-            class="hero-signal"
-            aria-label="First-contact signal"
+            id="invitation"
+            class="invitation-stage reveal"
+            aria-label="Impossible invitation"
           >
-            <div class="signal-copy">
-              <span class="signal-label">
-                First Contact
+            <span
+              class="invitation-stage__beam"
+              aria-hidden="true"
+            ></span>
+
+            <span
+              class="invitation-stage__orbit"
+              aria-hidden="true"
+            ></span>
+
+            <span
+              class="invitation-particle"
+              aria-hidden="true"
+            ></span>
+
+            <span
+              class="invitation-particle"
+              aria-hidden="true"
+            ></span>
+
+            <span
+              class="invitation-particle"
+              aria-hidden="true"
+            ></span>
+
+            <span
+              class="invitation-particle"
+              aria-hidden="true"
+            ></span>
+
+            <span
+              class="invitation-particle"
+              aria-hidden="true"
+            ></span>
+
+            <span
+              class="invitation-particle"
+              aria-hidden="true"
+            ></span>
+
+            <div
+              class="invitation-ticket"
+              aria-hidden="true"
+            >
+              <div class="invitation-ticket__inner">
+                <span class="invitation-ticket__code">
+                  Final Ticket · Reopened
+                </span>
+
+                <span class="invitation-ticket__title">
+                  Mirrorland
+                </span>
+
+                <span class="invitation-ticket__subtitle">
+                  Admit one witness
+                </span>
+              </div>
+            </div>
+
+            <div class="ticket-copy">
+              <span class="ticket-label">
+                Unexpected Selection
               </span>
 
               <strong>
-                Something answered.
+                The door did not open for a crowd.
               </strong>
 
               <p>
-                The discovery did not create Mirrorland. It created a
-                path to a future that had already been living without us.
+                It opened for the person Audralia still needed:
+                someone close enough to Earth to notice what official
+                instruments might overlook.
               </p>
             </div>
           </aside>
@@ -1899,161 +2340,143 @@
       </section>
 
       <section
-        id="first-contact"
         class="narrative-stage"
-        aria-labelledby="first-contact-title"
+        aria-labelledby="arrival-title"
       >
-        <header class="section-heading">
+        <header class="section-heading reveal">
           <div>
             <div class="eyebrow">
-              The First Crossing
+              The First Recognition
             </div>
 
-            <h2 id="first-contact-title">
-              Curiosity opened the door.
+            <h2 id="arrival-title">
+              You were not chosen by accident.
             </h2>
           </div>
 
           <p>
-            Responsibility entered one step later.
+            The invitation does not explain its full cost.
+            Not yet.
           </p>
         </header>
 
         <div class="chapter-grid">
-          <article class="chapter">
+          <article class="chapter reveal">
             <span class="chapter-index">
-              01 · The Distortion
+              01 · The Closed Door
             </span>
 
             <h3>
-              At first, it looked like an error.
+              You thought your chance was gone.
             </h3>
 
             <p>
-              The anomaly appeared where measurements should have
-              stabilized. Instruments disagreed. Signals returned with
-              impossible timing. The easiest explanation was equipment
-              failure.
+              The announcements had already ended. Others had earned
+              their passage. Others would step toward the world everyone
+              was calling paradise, frontier, proof, and possible answer.
+              You were left with the ache of almost.
             </p>
 
             <blockquote>
-              “Run it again. Same coordinates. No assumptions.”
+              You thought the story had moved on without you.
             </blockquote>
           </article>
 
-          <article class="chapter">
+          <article class="chapter reveal">
             <span class="chapter-index">
-              02 · The Reply
+              02 · The Found Name
             </span>
 
             <h3>
-              Then the pattern reacted.
+              Then the ticket arrived.
             </h3>
 
             <p>
-              Dextrion changed the transmission. The anomaly changed
-              with it. The response was imperfect, delayed, and unlike
-              any known language—but it was not random.
+              It did not arrive as a prize for status. It did not list
+              institutional rank as the reason. It named your work:
+              scientific novelist, independent researcher, observer of
+              patterns that do not always survive official language.
             </p>
 
             <blockquote>
-              “We are not observing it anymore. It is observing us.”
+              Audralia did not ask only for credentials. It asked for sight.
             </blockquote>
           </article>
 
-          <article class="chapter">
+          <article class="chapter reveal">
             <span class="chapter-index">
-              03 · The Crossing
+              03 · The Unasked Question
             </span>
 
             <h3>
-              The question stopped being theoretical.
+              Recognition came before explanation.
             </h3>
 
             <p>
-              Once passage became possible, no one could pretend the
-              discovery was only scientific. A reachable future carries
-              people, history, danger, loss, and claims of its own.
+              No one told you the whole burden. The invitation offered
+              wonder first: a door, a route, a chance to see what Earth
+              had only begun to imagine. The cost waited beneath the
+              shine.
             </p>
 
             <blockquote>
-              “Before we cross, decide what crossing makes us responsible for.”
+              You were chosen before you understood what choosing would require.
             </blockquote>
           </article>
         </div>
       </section>
 
       <section
-        class="dialogue-stage"
-        aria-labelledby="dialogue-title"
+        class="letter-stage"
+        aria-labelledby="letter-title"
       >
-        <div class="dialogue-intro">
+        <div class="letter-intro reveal">
           <div class="eyebrow">
-            The Conversation No One Could Avoid
+            The Message Inside
           </div>
 
-          <h2 id="dialogue-title">
-            What do you owe a future you can reach?
+          <h2 id="letter-title">
+            The invitation speaks carefully.
           </h2>
 
           <p>
-            This is where the mission begins—not with possession, but
-            with restraint. Discovery gives you access. It does not give
-            you ownership, understanding, or permission to act without
-            consequence.
+            It does not flatter you into certainty. It does not tell you
+            that you are ready. It only tells you that the perspective you
+            carry matters, and that the next door cannot be understood
+            from the outside.
           </p>
         </div>
 
         <div
-          class="dialogue-panel"
-          aria-label="Dextrion first-contact dialogue"
+          class="letter-panel reveal"
+          aria-label="Invitation message"
         >
-          <div
-            class="dialogue-line"
-            data-speaker="dextrion"
-          >
-            <span>Dextrion</span>
+          <article class="letter">
+            <span
+              class="letter__seal"
+              aria-hidden="true"
+            ></span>
 
             <p>
-              “We found a way through.”
+              <strong>
+                To the one who thought the chance had passed:
+              </strong>
             </p>
-          </div>
-
-          <div
-            class="dialogue-line"
-            data-speaker="mission"
-          >
-            <span>Mission Control</span>
 
             <p>
-              “That answers whether we can cross. It does not answer
-              whether we should.”
+              You were not selected because Earth needed another official
+              witness. You were selected because Audralia requires a
+              real-world eye: one able to notice consequence, meaning,
+              blind spots, moral pressure, and the patterns that form
+              between systems and people.
             </p>
-          </div>
-
-          <div
-            class="dialogue-line"
-            data-speaker="dextrion"
-          >
-            <span>Dextrion</span>
 
             <p>
-              “If the world is real, someone is already living with the
-              consequences we are only beginning to see.”
+              You are invited to enter Mirrorland first.
+              Do not mistake the threshold for the destination.
+              Do not mistake wonder for permission.
             </p>
-          </div>
-
-          <div
-            class="dialogue-line"
-            data-speaker="mission"
-          >
-            <span>Mission Control</span>
-
-            <p>
-              “Then the first rule is simple: we enter as witnesses
-              before we behave like architects.”
-            </p>
-          </div>
+          </article>
         </div>
       </section>
 
@@ -2061,99 +2484,95 @@
         class="pressure-section"
         aria-labelledby="pressure-title"
       >
-        <header class="section-heading">
+        <header class="section-heading reveal">
           <div>
             <div class="eyebrow">
-              What First Contact Changes
+              What the Ticket Begins
             </div>
 
             <h2 id="pressure-title">
-              Four assumptions break immediately.
+              Four truths arrive quietly.
             </h2>
           </div>
 
           <p>
-            The practical danger is not only what waits on the other
-            side. It is what people bring with them when they believe
-            discovery makes them entitled to control.
+            The first chamber does not reveal the whole burden.
+            It only lets you feel the shape of it.
           </p>
         </header>
 
         <div class="pressure-grid">
-          <article class="pressure-card">
-            <span>Assumption One</span>
+          <article class="pressure-card reveal">
+            <span>Truth One</span>
 
             <strong>
-              Reachable does not mean understood.
+              You were chosen.
             </strong>
 
             <p>
-              Access reveals a surface. It does not provide the complete
-              history, culture, system logic, or consequence map behind
-              it.
+              The door did not reopen randomly. Something in your way of
+              seeing made the invitation return.
             </p>
           </article>
 
-          <article class="pressure-card">
-            <span>Assumption Two</span>
+          <article class="pressure-card reveal">
+            <span>Truth Two</span>
 
             <strong>
-              Discovery does not create ownership.
+              You are not yet ready.
             </strong>
 
             <p>
-              Mirrorland existed before Dextrion found it. Contact
-              changes the relationship, not the world’s right to exist
-              independently.
+              Being chosen is not the same as being prepared. Mirrorland
+              begins with preparation, not control.
             </p>
           </article>
 
-          <article class="pressure-card">
-            <span>Assumption Three</span>
+          <article class="pressure-card reveal">
+            <span>Truth Three</span>
 
             <strong>
-              Good intentions do not prevent damage.
+              Sight is not ownership.
             </strong>
 
             <p>
-              Help offered without context can destabilize the system it
-              is meant to repair.
+              You may be allowed to see what others cannot, but seeing is
+              only the first responsibility.
             </p>
           </article>
 
-          <article class="pressure-card">
-            <span>Assumption Four</span>
+          <article class="pressure-card reveal">
+            <span>Truth Four</span>
 
             <strong>
-              Returning home does not erase responsibility.
+              The question matters.
             </strong>
 
             <p>
-              Once you carry knowledge across the threshold, you must
-              decide what can be repeated, tested, adapted, or withheld.
+              You have not been asked to leave Earth behind. You have
+              been asked to see what Earth has not yet learned how to ask.
             </p>
           </article>
         </div>
       </section>
 
       <section
-        class="practical-return"
+        class="practical-return reveal"
         aria-labelledby="practical-title"
       >
         <div class="practical-copy">
           <span class="practical-label">
-            Your First Mission Decision
+            Your First Threshold
           </span>
 
           <h2 id="practical-title">
-            Enter as a witness.
+            Open the door.
           </h2>
 
           <p>
-            Before you try to fix a system, learn what it is protecting.
-            Before you transfer an idea, learn what conditions made it
-            work. Before you call something progress, identify who bears
-            the cost when it fails.
+            You do not enter Mirrorland as a conqueror, tourist, or
+            owner. You enter as someone unexpectedly recognized. Wonder
+            opens the door. Limitation will reveal the path.
           </p>
         </div>
 
@@ -2162,7 +2581,7 @@
             class="button button-gold"
             href="/showroom/story/mission/"
           >
-            Continue to the Mission
+            Continue the North Route
           </a>
 
           <a
@@ -2177,9 +2596,9 @@
       <details class="evidence-disclosure">
         <summary>
           <span>
-            <strong>Premise and Evidence Boundary</strong>
+            <strong>Premise and Reveal Boundary</strong>
             <small>
-              What this chamber establishes—and what it does not claim
+              What this first chamber establishes—and what it withholds
             </small>
           </span>
 
@@ -2188,11 +2607,11 @@
 
         <div class="evidence-body">
           <p>
-            Dextrion’s anomaly, the operational crossing, Mirrorland as a
-            reachable future-shadow, and the first-contact mission are
-            governing premises within
-            <em>Shadows Never Shatter in Mirrorland</em>. This page does
-            not present them as externally validated scientific facts.
+            This chamber establishes the player-character’s unexpected
+            selection after the public ticket process appeared complete.
+            The player enters as a scientific novelist and independent
+            researcher whose real-world perspective matters to the path
+            ahead.
           </p>
 
           <div class="evidence-grid">
@@ -2200,17 +2619,19 @@
               <span>Established Here</span>
 
               <p>
-                The visitor enters after contact has become operational
-                and before responsible interpretation has been completed.
+                The ticket arrived after the door seemed closed, and the
+                player was selected for perspective rather than formal
+                institutional rank.
               </p>
             </article>
 
             <article>
-              <span>Not Established Here</span>
+              <span>Withheld Here</span>
 
               <p>
-                Complete Mirrorland history, scientific proof, universal
-                transferability, or authority to intervene.
+                The full cost of the ticket, Earth’s danger, conjugation,
+                frontier systems, H-Earth, Hearth, and later Audralia
+                mechanics remain unrevealed.
               </p>
             </article>
 
@@ -2218,8 +2639,9 @@
               <span>Continuity Requirement</span>
 
               <p>
-                Every path must preserve the Constellation, Diamond,
-                300-Year Clock, and recoverable Compass return.
+                The route must preserve the Constellation, Diamond,
+                300-Year Clock, Mirrorland preparation, and recoverable
+                Main Compass return.
               </p>
             </article>
           </div>
@@ -2234,7 +2656,7 @@
         </strong>
 
         <span>
-          You found the door. The next question is why you should enter.
+          You thought the door had closed. Then the invitation found you.
         </span>
       </div>
 
@@ -2253,20 +2675,135 @@
       </nav>
     </footer>
   </div>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const CONTRACT =
+        "SHOWROOM_SATELLITE_WELCOME_TO_MIRRORLAND_HTML_TNT_v2_INVITATION_STANDARD";
+
+      const root =
+        document.documentElement;
+
+      root.classList.add("js");
+
+      const reducedMotionQuery =
+        window.matchMedia &&
+        window.matchMedia("(prefers-reduced-motion: reduce)");
+
+      const reducedMotion =
+        Boolean(
+          reducedMotionQuery &&
+          reducedMotionQuery.matches
+        );
+
+      function markVisible(elements) {
+        for (const element of elements) {
+          element.classList.add("is-visible");
+        }
+      }
+
+      function initializeReveals() {
+        const revealElements =
+          Array.from(
+            document.querySelectorAll(".reveal")
+          );
+
+        if (!revealElements.length) {
+          return;
+        }
+
+        if (
+          reducedMotion ||
+          typeof IntersectionObserver !== "function"
+        ) {
+          markVisible(revealElements);
+          return;
+        }
+
+        const observer =
+          new IntersectionObserver(
+            entries => {
+              for (const entry of entries) {
+                if (!entry.isIntersecting) {
+                  continue;
+                }
+
+                entry.target.classList.add("is-visible");
+                observer.unobserve(entry.target);
+              }
+            },
+            {
+              root: null,
+              threshold: 0.14,
+              rootMargin: "0px 0px -6% 0px"
+            }
+          );
+
+        for (const element of revealElements) {
+          observer.observe(element);
+        }
+      }
+
+      function publishReceipt() {
+        const payload = {
+          contract: CONTRACT,
+          route: "/showroom/story/welcome/",
+          routeId: "north-1",
+          page: "Welcome to Mirrorland",
+          localEnhancementOnly: true,
+          globalRuntimeOwned: false,
+          navigationOwned: false,
+          reducedMotion: reducedMotion,
+          timestamp: new Date().toISOString()
+        };
+
+        window.dispatchEvent(
+          new CustomEvent(
+            "SHOWROOM_SATELLITE_PAGE_READY",
+            {
+              detail: Object.freeze(payload)
+            }
+          )
+        );
+      }
+
+      if (document.readyState === "loading") {
+        document.addEventListener(
+          "DOMContentLoaded",
+          () => {
+            initializeReveals();
+            publishReceipt();
+          },
+          {
+            once: true
+          }
+        );
+      } else {
+        initializeReveals();
+        publishReceipt();
+      }
+    })();
+  </script>
 </body>
 </html>
 
 <!--
-SHOWROOM_SATELLITE_WELCOME_TO_MIRRORLAND_HTML_RECEIPT_v1
+SHOWROOM_SATELLITE_WELCOME_TO_MIRRORLAND_HTML_RECEIPT_v2_INVITATION_STANDARD
 
 TARGET:
 /showroom/story/welcome/index.html
 
 STATUS:
-COMPLETE NEW SELF-CONTAINED HTML FILE
+COMPLETE SELF-CONTAINED HTML REPLACEMENT
 
-EMBEDDED VISUAL SYSTEM:
-SHOWROOM_SATELLITE_PAGE_EMBEDDED_VISUAL_SYSTEM_v1
+SOURCE BASELINE:
+SHOWROOM_SATELLITE_WELCOME_TO_MIRRORLAND_HTML_TNT_v1
+confirmed by user as current source baseline.
+
+NEW CONTRACT:
+SHOWROOM_SATELLITE_WELCOME_TO_MIRRORLAND_HTML_TNT_v2_INVITATION_STANDARD
 
 ROUTE FAMILY:
 Story / North
@@ -2274,49 +2811,70 @@ Story / North
 ROUTE ID:
 north-1
 
+ROUTE TITLE:
+Welcome to Mirrorland
+
 PARENT:
 /showroom/
 
-NEXT ROUTE:
+NEXT ROUTE PRESERVED FROM BASELINE:
 /showroom/story/mission/
 
-PURPOSE:
-- establish the first operational Mirrorland threshold;
-- dramatize Dextrion’s anomaly and first contact;
-- convert discovery into responsibility;
-- introduce the evidence boundary;
-- hand the visitor into the mission chamber.
+MAIN COMPASS:
+/index.html
 
-PRESENTATION STANDARD:
-- immersive;
-- second-person;
-- dialogue-driven;
-- pressure-oriented;
-- practical consequence;
-- TED Talk-style progression;
-- technical structure subordinate to narrative experience.
+NARRATIVE AUTHORITY:
+SHOWROOM_MIRRORLAND_AUDRALIA_ROUTE_PAGE_NARRATIVE_FREEZE_PACKET_v1_1
 
-ARCHITECTURAL FEATURES:
-- self-contained embedded CSS;
-- cosmic Showroom atmosphere;
-- threshold hero;
-- live signal object;
-- three-part narrative sequence;
-- dialogue panel;
-- four-pressure grid;
-- practical return decision;
-- evidence-boundary disclosure;
-- responsive mobile composition;
-- keyboard focus;
-- reduced motion;
-- reduced transparency;
-- forced colors;
-- print handling.
+PRIMARY NARRATIVE CORRECTION:
+- Replaced Dextrion anomaly / first-contact mission framing.
+- Established the player’s unexpected invitation after all tickets appeared settled.
+- Established the player as a scientific novelist and independent researcher.
+- Preserved wonder, recognition, curiosity, and light hidden burden.
+- Withheld Earth danger, conjugation, frontier systems, H-Earth, Hearth, ZIONTS, and full Audralia mechanics.
 
-NON-CLAIMS:
-- no external scientific validation;
-- no runtime or renderer dependency;
-- no controller ownership;
-- no JavaScript requirement;
-- no Earth-transfer authorization.
+PAGE 1 GOVERNING LINES:
+- You thought the door had closed.
+- Then the invitation found you.
+- You have not been asked to leave Earth behind.
+- You have been asked to see what Earth has not yet learned how to ask.
+
+DOMINANT ANIMATION IDEA:
+The impossible invitation / ticket arrives through darkness.
+
+ANTI-TILED-STAR CORRECTION:
+The page no longer relies on repeating square-cell star backgrounds as the primary atmosphere.
+Stars are hand-positioned as sparse fixed atmosphere through layered radial points.
+The dominant visual object is the ticket, not a generic starfield.
+
+EMBEDDED SYSTEM:
+- HTML structure
+- embedded CSS
+- embedded page-local JavaScript
+- no external dependencies
+- no shared runtime ownership
+
+PAGE-LOCAL JAVASCRIPT AUTHORITY:
+- local reveal enhancement only
+- local readiness event only
+- no navigation ownership
+- no controller calls
+- no constellation mutation
+- no Main Compass ownership
+- safe without JavaScript
+
+ACCESSIBILITY / RESILIENCE:
+- skip link
+- semantic sections
+- focus-visible handling
+- reduced-motion support
+- reduced-transparency support
+- forced-colors support
+- print handling
+- readable without JavaScript
+
+NOT CLAIMED:
+- runtime validation
+- browser visual pass
+- deployment pass
 -->

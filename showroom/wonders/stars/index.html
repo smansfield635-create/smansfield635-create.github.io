@@ -1,6 +1,6 @@
 <!-- TARGET FILE: /showroom/wonders/stars/index.html -->
-<!-- COMPLETE NEW FILE -->
-<!-- SHOWROOM_SATELLITE_READ_THE_STARS_HTML_TNT_v1 -->
+<!-- COMPLETE REPLACEMENT -->
+<!-- SHOWROOM_SATELLITE_READ_THE_STARS_HTML_TNT_v2_RELATIONAL_NAVIGATION_FIELD_CONTINUOUS_SOUTH_HANDOFF -->
 
 <!doctype html>
 
@@ -8,15 +8,15 @@
   lang="en"
   data-route="/showroom/wonders/stars/"
   data-page="showroom-wonders-stars"
-  data-version="SHOWROOM-SATELLITE-READ-THE-STARS-1.0.0"
-  data-contract="SHOWROOM_SATELLITE_READ_THE_STARS_HTML_TNT_v1"
+  data-version="SHOWROOM-SATELLITE-READ-THE-STARS-2.0.0"
+  data-contract="SHOWROOM_SATELLITE_READ_THE_STARS_HTML_TNT_v2_RELATIONAL_NAVIGATION_FIELD_CONTINUOUS_SOUTH_HANDOFF"
   data-showroom-satellite="true"
   data-showroom-route-family="wonders"
   data-showroom-route-id="south-3"
   data-showroom-route-title="Read the Stars"
   data-showroom-parent-route="/showroom/"
   data-showroom-previous-route="/showroom/wonders/diamond/"
-  data-showroom-next-route="/showroom/mysteries/unfinished-world/"
+  data-showroom-next-route="/showroom/globe/hearth/"
   data-showroom-return-route="/showroom/"
   data-showroom-main-compass-route="/index.html"
   data-showroom-star-role="constellation-scale-orientation"
@@ -37,19 +37,27 @@
 
   <meta
     name="description"
-    content="Read the Stars of Mirrorland. Learn how separate lights become constellations, how patterns guide without becoming proof, and how orientation differs from projection."
+    content="After the Diamond tests form under pressure, the Stars teach relational navigation. A single light is not guidance until distance, direction, and relationship can be read across the larger field."
   >
 
   <meta
     name="showroom-page-contract"
-    content="SHOWROOM_SATELLITE_READ_THE_STARS_HTML_TNT_v1"
+    content="SHOWROOM_SATELLITE_READ_THE_STARS_HTML_TNT_v2_RELATIONAL_NAVIGATION_FIELD_CONTINUOUS_SOUTH_HANDOFF"
   >
 
   <style>
     /* ============================================================
-       SHOWROOM SATELLITE PAGE EMBEDDED VISUAL SYSTEM v1
-       Wonders / South expression
-       Stars chamber
+       SHOWROOM SATELLITE PAGE EMBEDDED VISUAL SYSTEM v2
+       PAGE: south-3 · Read the Stars
+
+       Page-specific standard:
+       - one-file route page;
+       - embedded CSS;
+       - page-local JavaScript only;
+       - no external dependencies;
+       - no shared Showroom runtime ownership;
+       - no repeating tiled starfield as primary atmosphere;
+       - dominant animation object: hand-placed relational constellation.
        ============================================================ */
 
     :root {
@@ -59,7 +67,6 @@
       --ink-1: #050914;
       --ink-2: #091020;
       --ink-3: #101a30;
-      --ink-4: #17233d;
 
       --cream: #f5eddd;
       --cream-soft: #ddd3c1;
@@ -68,7 +75,7 @@
 
       --gold: #e0b85b;
       --gold-bright: #f4d47e;
-      --gold-deep: #805b1c;
+      --gold-soft: #ffe7a5;
       --gold-faint: rgba(224, 184, 91, 0.14);
 
       --cyan: #75e9ff;
@@ -79,12 +86,12 @@
       --violet-soft: #d5c5ff;
       --violet-faint: rgba(183, 152, 255, 0.13);
 
+      --rose: #ff91a3;
+      --rose-faint: rgba(255, 145, 163, 0.11);
+
       --sapphire: #5aa9ff;
       --sapphire-soft: #a9d2ff;
       --sapphire-faint: rgba(90, 169, 255, 0.13);
-
-      --green: #8ce4ae;
-      --rose: #ff91a3;
 
       --border: rgba(226, 197, 128, 0.24);
       --border-strong: rgba(239, 205, 125, 0.5);
@@ -113,13 +120,9 @@
       --radius-xl: 2rem;
 
       --page-width: 84rem;
-      --reading-width: 49rem;
+      --reading-width: 52rem;
 
-      --space-1: 0.4rem;
-      --space-2: 0.65rem;
-      --space-3: 0.95rem;
       --space-4: 1.3rem;
-      --space-5: 1.8rem;
       --space-6: 2.5rem;
       --space-7: 3.5rem;
 
@@ -196,34 +199,39 @@
       pointer-events: none;
       content: "";
 
-      opacity: 0.74;
+      opacity: 0.62;
 
-      background-image:
+      background:
         radial-gradient(
-          circle,
-          rgba(255, 255, 255, 0.86) 0 0.05rem,
-          transparent 0.067rem
-        ),
-        radial-gradient(
-          circle,
-          rgba(117, 233, 255, 0.62) 0 0.04rem,
+          circle at 17% 18%,
+          rgba(255, 255, 255, 0.82) 0 0.045rem,
           transparent 0.06rem
         ),
         radial-gradient(
-          circle,
-          rgba(239, 205, 126, 0.56) 0 0.045rem,
+          circle at 79% 16%,
+          rgba(117, 233, 255, 0.72) 0 0.04rem,
+          transparent 0.06rem
+        ),
+        radial-gradient(
+          circle at 91% 68%,
+          rgba(244, 212, 126, 0.7) 0 0.045rem,
           transparent 0.065rem
+        ),
+        radial-gradient(
+          circle at 34% 83%,
+          rgba(255, 255, 255, 0.58) 0 0.036rem,
+          transparent 0.055rem
+        ),
+        radial-gradient(
+          circle at 11% 66%,
+          rgba(117, 233, 255, 0.48) 0 0.032rem,
+          transparent 0.052rem
+        ),
+        radial-gradient(
+          circle at 58% 31%,
+          rgba(244, 212, 126, 0.42) 0 0.032rem,
+          transparent 0.052rem
         );
-
-      background-size:
-        5.8rem 5.8rem,
-        9.4rem 9.4rem,
-        13.8rem 13.8rem;
-
-      background-position:
-        0 0,
-        2.2rem 3.4rem,
-        5.7rem 1.6rem;
     }
 
     body::after {
@@ -249,6 +257,13 @@
         );
     }
 
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+    }
+
     a,
     button {
       -webkit-tap-highlight-color: transparent;
@@ -262,10 +277,7 @@
     h2,
     h3,
     p,
-    blockquote,
-    dl,
-    dd,
-    ul {
+    blockquote {
       margin-top: 0;
     }
 
@@ -278,10 +290,12 @@
     }
 
     p,
-    li,
-    dd,
     blockquote {
       text-wrap: pretty;
+    }
+
+    [hidden] {
+      display: none !important;
     }
 
     :focus-visible {
@@ -329,7 +343,7 @@
 
     .eyebrow,
     .route-kicker,
-    .chapter-index,
+    .scene-index,
     .star-label,
     .practical-label {
       color: var(--gold-bright);
@@ -420,6 +434,10 @@
       transform: translateY(-1px);
     }
 
+    .button:active {
+      transform: translateY(0);
+    }
+
     .button-gold {
       border-color: rgba(255, 222, 142, 0.76);
       color: #171006;
@@ -435,6 +453,14 @@
       box-shadow:
         0 0.95rem 2.3rem rgba(156, 105, 25, 0.24),
         0 0 1.7rem rgba(245, 213, 130, 0.16);
+    }
+
+    .button-gold:hover {
+      border-color: #fff1bf;
+
+      box-shadow:
+        0 1rem 2.7rem rgba(156, 105, 25, 0.3),
+        0 0 2rem rgba(245, 213, 130, 0.22);
     }
 
     /* ============================================================
@@ -592,6 +618,10 @@
       letter-spacing: 0.05em;
       text-decoration: none;
       text-transform: uppercase;
+
+      transition:
+        color var(--transition-fast),
+        background var(--transition-fast);
     }
 
     .topbar-nav a:hover {
@@ -632,13 +662,13 @@
     }
 
     /* ============================================================
-       HERO CONSTELLATION
+       HERO / RELATIONAL CONSTELLATION
        ============================================================ */
 
     .route-hero {
       position: relative;
 
-      min-height: min(80vh, 50rem);
+      min-height: min(82vh, 52rem);
       overflow: hidden;
 
       border: 1px solid rgba(224, 184, 91, 0.23);
@@ -646,23 +676,58 @@
 
       background:
         radial-gradient(
-          circle at 17% 18%,
+          circle at 16% 18%,
           rgba(117, 233, 255, 0.14),
           transparent 24rem
         ),
         radial-gradient(
-          circle at 82% 72%,
-          rgba(183, 152, 255, 0.15),
-          transparent 29rem
+          circle at 83% 70%,
+          rgba(136, 170, 255, 0.14),
+          transparent 28rem
+        ),
+        radial-gradient(
+          circle at 58% 50%,
+          rgba(244, 212, 126, 0.08),
+          transparent 20rem
         ),
         linear-gradient(
           145deg,
           rgba(16, 25, 46, 0.9),
-          rgba(3, 6, 15, 0.96)
+          rgba(3, 6, 15, 0.97)
         );
 
       box-shadow: var(--shadow-deep);
       isolation: isolate;
+    }
+
+    .route-hero::before {
+      position: absolute;
+      z-index: -1;
+      inset: 0;
+
+      content: "";
+
+      background:
+        linear-gradient(
+          115deg,
+          transparent 0 42%,
+          rgba(117, 233, 255, 0.035) 42.4%,
+          transparent 43% 58%,
+          rgba(224, 184, 91, 0.035) 58.5%,
+          transparent 59%
+        ),
+        radial-gradient(
+          circle at 70% 42%,
+          transparent 0 9rem,
+          rgba(117, 233, 255, 0.055) 9.1rem 9.2rem,
+          transparent 9.3rem
+        ),
+        radial-gradient(
+          circle at 70% 42%,
+          transparent 0 14rem,
+          rgba(224, 184, 91, 0.045) 14.1rem 14.2rem,
+          transparent 14.3rem
+        );
     }
 
     .route-hero__inner {
@@ -671,8 +736,8 @@
       min-height: inherit;
 
       grid-template-columns:
-        minmax(0, 1.15fr)
-        minmax(18rem, 0.85fr);
+        minmax(0, 1.08fr)
+        minmax(18rem, 0.92fr);
 
       align-items: center;
       gap: clamp(2rem, 6vw, 6rem);
@@ -696,10 +761,11 @@
 
       content: "";
       background: currentColor;
+      box-shadow: 0 0 1rem rgba(224, 184, 91, 0.3);
     }
 
     .hero-subtitle {
-      max-width: 34rem;
+      max-width: 35rem;
       margin-bottom: 0.85rem;
 
       color: var(--cyan-soft);
@@ -714,7 +780,7 @@
     }
 
     .hero-lead {
-      max-width: 44rem;
+      max-width: 45rem;
       margin-bottom: 1.5rem;
 
       color: var(--muted-strong);
@@ -727,8 +793,12 @@
       gap: 0.7rem;
     }
 
-    .constellation-vault {
+    .stars-stage {
       position: relative;
+
+      display: grid;
+      align-content: end;
+      gap: 1rem;
 
       min-height: 28rem;
       overflow: hidden;
@@ -739,9 +809,14 @@
 
       background:
         radial-gradient(
-          circle at 50% 38%,
-          rgba(90, 169, 255, 0.18),
-          transparent 11rem
+          circle at 50% 35%,
+          rgba(117, 233, 255, 0.18),
+          transparent 10rem
+        ),
+        radial-gradient(
+          circle at 50% 30%,
+          rgba(244, 212, 126, 0.08),
+          transparent 13rem
         ),
         linear-gradient(
           180deg,
@@ -754,139 +829,242 @@
         inset 0.24rem 0 0 rgba(117, 233, 255, 0.28);
     }
 
-    .constellation-map {
+    .starfield {
       position: absolute;
-      top: 7%;
-      left: 50%;
-
-      width: min(78%, 18rem);
-      height: 17rem;
-
-      border: 1px solid rgba(117, 233, 255, 0.14);
-      border-radius: 50%;
-
-      background:
-        radial-gradient(
-          circle at 19% 25%,
-          var(--gold-bright) 0 0.15rem,
-          transparent 0.18rem
-        ),
-        radial-gradient(
-          circle at 36% 43%,
-          var(--cyan) 0 0.2rem,
-          transparent 0.23rem
-        ),
-        radial-gradient(
-          circle at 51% 25%,
-          var(--cream) 0 0.12rem,
-          transparent 0.15rem
-        ),
-        radial-gradient(
-          circle at 67% 45%,
-          var(--violet-soft) 0 0.18rem,
-          transparent 0.21rem
-        ),
-        radial-gradient(
-          circle at 79% 70%,
-          var(--gold-bright) 0 0.15rem,
-          transparent 0.18rem
-        ),
-        radial-gradient(
-          circle at 51% 72%,
-          var(--cyan) 0 0.16rem,
-          transparent 0.19rem
-        ),
-        radial-gradient(
-          circle at 26% 78%,
-          var(--sapphire-soft) 0 0.18rem,
-          transparent 0.21rem
-        ),
-        radial-gradient(
-          circle at 50% 50%,
-          rgba(117, 233, 255, 0.1),
-          transparent 55%
-        ),
-        rgba(2, 6, 15, 0.7);
-
-      box-shadow:
-        0 0 3rem rgba(90, 169, 255, 0.12),
-        inset 0 0 2rem rgba(117, 233, 255, 0.05);
-
-      transform: translateX(-50%);
-    }
-
-    .constellation-map::before,
-    .constellation-map::after {
-      position: absolute;
-      inset: 0;
+      inset: 1rem 1rem 6.5rem;
 
       pointer-events: none;
-      content: "";
     }
 
-    .constellation-map::before {
+    .starfield-ring {
+      position: absolute;
+      top: 49%;
+      left: 50%;
+
+      width: 18rem;
+      aspect-ratio: 1;
+
+      border: 1px solid rgba(117, 233, 255, 0.13);
+      border-radius: 50%;
+
       background:
-        linear-gradient(
-          38deg,
-          transparent 0 20%,
-          rgba(117, 233, 255, 0.3) 20.2% 20.5%,
-          transparent 20.7% 100%
-        ),
-        linear-gradient(
-          145deg,
-          transparent 0 37%,
-          rgba(244, 212, 126, 0.27) 37.2% 37.5%,
-          transparent 37.7% 100%
-        ),
-        linear-gradient(
-          72deg,
-          transparent 0 52%,
-          rgba(183, 152, 255, 0.26) 52.2% 52.5%,
-          transparent 52.7% 100%
+        radial-gradient(
+          circle,
+          rgba(117, 233, 255, 0.07),
+          transparent 56%
         );
+
+      transform: translate(-50%, -50%);
     }
 
-    .constellation-map::after {
-      inset: 11%;
+    .starfield-ring::before,
+    .starfield-ring::after {
+      position: absolute;
+      inset: 14%;
 
-      border: 1px dashed rgba(224, 184, 91, 0.18);
+      content: "";
+
+      border: 1px dashed rgba(244, 212, 126, 0.16);
       border-radius: 50%;
     }
 
-    .constellation-crosshair {
+    .starfield-ring::after {
+      inset: 28%;
+      border-color: rgba(183, 152, 255, 0.14);
+    }
+
+    .star {
       position: absolute;
       z-index: 2;
-      top: 7%;
+
+      width: 0.48rem;
+      height: 0.48rem;
+
+      border-radius: 50%;
+
+      background: var(--cream);
+      box-shadow:
+        0 0 0.8rem rgba(255, 255, 255, 0.52),
+        0 0 1.6rem rgba(117, 233, 255, 0.22);
+
+      opacity: 0;
+      transform: scale(0.75);
+      animation: starAppear 6s ease-in-out infinite;
+    }
+
+    .star::after {
+      position: absolute;
+      inset: -0.32rem;
+
+      content: "";
+
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 50%;
+    }
+
+    .star--one {
+      top: 18%;
+      left: 19%;
+      background: var(--gold-bright);
+      animation-delay: -0.2s;
+    }
+
+    .star--two {
+      top: 38%;
+      left: 33%;
+      background: var(--cyan);
+      animation-delay: -0.8s;
+    }
+
+    .star--three {
+      top: 22%;
+      left: 54%;
+      background: var(--cream);
+      animation-delay: -1.4s;
+    }
+
+    .star--four {
+      top: 44%;
+      left: 70%;
+      background: var(--violet-soft);
+      animation-delay: -2s;
+    }
+
+    .star--five {
+      top: 72%;
+      left: 78%;
+      background: var(--gold-bright);
+      animation-delay: -2.6s;
+    }
+
+    .star--six {
+      top: 74%;
       left: 50%;
+      background: var(--cyan);
+      animation-delay: -3.2s;
+    }
 
-      width: min(78%, 18rem);
-      height: 17rem;
+    .star--seven {
+      top: 79%;
+      left: 26%;
+      background: var(--sapphire-soft);
+      animation-delay: -3.8s;
+    }
 
-      pointer-events: none;
+    .star-line {
+      position: absolute;
+      z-index: 1;
+
+      height: 1px;
 
       background:
         linear-gradient(
           90deg,
-          transparent 49.7%,
-          rgba(117, 233, 255, 0.13) 50%,
-          transparent 50.3%
-        ),
-        linear-gradient(
-          180deg,
-          transparent 49.7%,
-          rgba(117, 233, 255, 0.13) 50%,
-          transparent 50.3%
+          rgba(117, 233, 255, 0),
+          rgba(117, 233, 255, 0.5),
+          rgba(244, 212, 126, 0.34),
+          rgba(117, 233, 255, 0)
         );
 
-      transform: translateX(-50%);
+      box-shadow:
+        0 0 0.9rem rgba(117, 233, 255, 0.18);
+
+      opacity: 0;
+      transform-origin: left center;
+      animation: lineResolve 6s ease-in-out infinite;
+    }
+
+    .star-line--one {
+      top: 30%;
+      left: 22%;
+      width: 5.7rem;
+      transform: rotate(33deg);
+      animation-delay: -1.2s;
+    }
+
+    .star-line--two {
+      top: 33%;
+      left: 38%;
+      width: 6.2rem;
+      transform: rotate(-26deg);
+      animation-delay: -2s;
+    }
+
+    .star-line--three {
+      top: 35%;
+      left: 56%;
+      width: 5.8rem;
+      transform: rotate(27deg);
+      animation-delay: -2.8s;
+    }
+
+    .star-line--four {
+      top: 58%;
+      left: 66%;
+      width: 5.4rem;
+      transform: rotate(62deg);
+      animation-delay: -3.6s;
+    }
+
+    .star-line--five {
+      top: 75%;
+      left: 43%;
+      width: 6.7rem;
+      transform: rotate(-3deg);
+      animation-delay: -4.2s;
+    }
+
+    .star-line--six {
+      top: 75%;
+      left: 29%;
+      width: 6.1rem;
+      transform: rotate(-4deg);
+      animation-delay: -4.7s;
+    }
+
+    .orientation-arrow {
+      position: absolute;
+      z-index: 3;
+      right: 12%;
+      bottom: 12%;
+
+      width: 5.2rem;
+      height: 1px;
+
+      background:
+        linear-gradient(
+          90deg,
+          transparent,
+          rgba(244, 212, 126, 0.9)
+        );
+
+      box-shadow:
+        0 0 1rem rgba(244, 212, 126, 0.34);
+
+      transform: rotate(-18deg);
+    }
+
+    .orientation-arrow::after {
+      position: absolute;
+      top: 50%;
+      right: 0;
+
+      width: 0.48rem;
+      height: 0.48rem;
+
+      content: "";
+
+      border-top: 1px solid var(--gold-bright);
+      border-right: 1px solid var(--gold-bright);
+
+      transform:
+        translateY(-50%)
+        rotate(45deg);
     }
 
     .constellation-copy {
-      position: absolute;
-      z-index: 3;
-      right: 1.4rem;
-      bottom: 1.4rem;
-      left: 1.4rem;
+      position: relative;
+      z-index: 4;
     }
 
     .star-label {
@@ -918,15 +1096,15 @@
     }
 
     /* ============================================================
-       STAR REVELATIONS
+       STORY CARDS
        ============================================================ */
 
-    .revelation-stage {
+    .story-stage {
       display: grid;
       gap: 1rem;
     }
 
-    .revelation-grid {
+    .scene-grid {
       display: grid;
 
       grid-template-columns:
@@ -935,7 +1113,7 @@
       gap: 0.9rem;
     }
 
-    .revelation-card {
+    .scene-card {
       position: relative;
 
       min-width: 0;
@@ -955,7 +1133,7 @@
         box-shadow var(--transition);
     }
 
-    .revelation-card:hover {
+    .scene-card:hover {
       border-color: rgba(224, 184, 91, 0.34);
 
       box-shadow:
@@ -965,22 +1143,43 @@
       transform: translateY(-3px);
     }
 
-    .chapter-index {
+    .scene-card::before {
+      position: absolute;
+      top: 0;
+      right: 0;
+
+      width: 8rem;
+      height: 8rem;
+
+      pointer-events: none;
+      content: "";
+
+      background:
+        radial-gradient(
+          circle at 100% 0,
+          rgba(117, 233, 255, 0.11),
+          transparent 68%
+        );
+    }
+
+    .scene-index {
       display: block;
       margin-bottom: 0.8rem;
     }
 
-    .revelation-card h3 {
+    .scene-card h3 {
       margin-bottom: 0.65rem;
     }
 
-    .revelation-card p {
+    .scene-card p {
       margin-bottom: 0;
       color: var(--muted-strong);
     }
 
-    .revelation-card blockquote {
-      margin: 1rem 0 0;
+    .scene-card blockquote {
+      margin:
+        1rem 0
+        0;
       padding: 0.85rem 0.95rem;
 
       border-left: 0.2rem solid var(--cyan);
@@ -1005,8 +1204,8 @@
       display: grid;
 
       grid-template-columns:
-        minmax(0, 0.82fr)
-        minmax(0, 1.18fr);
+        minmax(0, 0.86fr)
+        minmax(0, 1.14fr);
 
       gap: 1rem;
     }
@@ -1036,7 +1235,7 @@
 
     .dialogue-panel {
       display: grid;
-      gap: 0.8rem;
+      gap: 0.85rem;
     }
 
     .dialogue-line {
@@ -1052,14 +1251,14 @@
       background: rgba(255, 255, 255, 0.025);
     }
 
-    .dialogue-line[data-speaker="visitor"] {
+    .dialogue-line[data-side="you"] {
       justify-self: start;
 
       border-color: rgba(117, 233, 255, 0.19);
       box-shadow: inset 0.2rem 0 0 rgba(117, 233, 255, 0.3);
     }
 
-    .dialogue-line[data-speaker="stars"] {
+    .dialogue-line[data-side="stars"] {
       justify-self: end;
 
       border-color: rgba(224, 184, 91, 0.2);
@@ -1081,62 +1280,62 @@
     }
 
     /* ============================================================
-       READING METHOD
+       NAVIGATION GRID
        ============================================================ */
 
-    .method-section {
+    .navigation-section {
       display: grid;
       gap: 1rem;
 
       padding: clamp(1rem, 2.8vw, 2rem);
 
-      border: 1px solid var(--border-cool);
+      border: 1px solid var(--border-violet);
       border-radius: var(--radius-xl);
 
       background:
         radial-gradient(
           circle at 100% 0,
-          rgba(117, 233, 255, 0.09),
+          rgba(183, 152, 255, 0.1),
           transparent 22rem
         ),
         linear-gradient(
           145deg,
-          rgba(12, 24, 42, 0.86),
-          rgba(4, 7, 16, 0.94)
+          rgba(17, 20, 43, 0.9),
+          rgba(4, 7, 16, 0.95)
         );
 
       box-shadow: var(--shadow-deep);
     }
 
-    .method-grid {
+    .navigation-grid {
       display: grid;
 
       grid-template-columns:
-        repeat(5, minmax(0, 1fr));
+        repeat(4, minmax(0, 1fr));
 
-      gap: 0.7rem;
+      gap: 0.75rem;
     }
 
-    .method-card {
+    .navigation-card {
       min-width: 0;
       padding: 1rem;
 
-      border: 1px solid rgba(117, 233, 255, 0.14);
+      border: 1px solid rgba(183, 152, 255, 0.16);
       border-radius: var(--radius-md);
 
       background:
         linear-gradient(
           145deg,
-          rgba(117, 233, 255, 0.05),
+          rgba(183, 152, 255, 0.065),
           rgba(255, 255, 255, 0.015)
         );
     }
 
-    .method-card span {
+    .navigation-card span {
       display: block;
       margin-bottom: 0.55rem;
 
-      color: var(--cyan);
+      color: var(--violet-soft);
 
       font-size: 0.62rem;
       font-weight: 850;
@@ -1144,7 +1343,7 @@
       text-transform: uppercase;
     }
 
-    .method-card strong {
+    .navigation-card strong {
       display: block;
       margin-bottom: 0.45rem;
 
@@ -1153,94 +1352,16 @@
         "Times New Roman",
         serif;
 
-      font-size: 1.14rem;
+      font-size: 1.2rem;
       font-weight: 600;
       line-height: 1.16;
     }
 
-    .method-card p {
+    .navigation-card p {
       margin-bottom: 0;
 
       color: var(--muted);
       font-size: 0.8rem;
-    }
-
-    /* ============================================================
-       ORIENTATION VERSUS PROJECTION
-       ============================================================ */
-
-    .contrast-section {
-      display: grid;
-      gap: 1rem;
-    }
-
-    .contrast-grid {
-      display: grid;
-
-      grid-template-columns:
-        repeat(2, minmax(0, 1fr));
-
-      gap: 0.8rem;
-    }
-
-    .contrast-card {
-      min-width: 0;
-      padding: 1.15rem;
-
-      border: 1px solid rgba(224, 184, 91, 0.17);
-      border-radius: var(--radius-md);
-
-      background: var(--glass);
-      box-shadow: var(--shadow);
-    }
-
-    .contrast-card[data-mode="orientation"] {
-      box-shadow:
-        var(--shadow),
-        inset 0.2rem 0 0 var(--cyan);
-    }
-
-    .contrast-card[data-mode="projection"] {
-      box-shadow:
-        var(--shadow),
-        inset 0.2rem 0 0 var(--rose);
-    }
-
-    .contrast-card span {
-      display: block;
-      margin-bottom: 0.55rem;
-
-      font-size: 0.62rem;
-      font-weight: 850;
-      letter-spacing: 0.11em;
-      text-transform: uppercase;
-    }
-
-    .contrast-card[data-mode="orientation"] span {
-      color: var(--cyan);
-    }
-
-    .contrast-card[data-mode="projection"] span {
-      color: var(--rose);
-    }
-
-    .contrast-card strong {
-      display: block;
-      margin-bottom: 0.45rem;
-
-      font-family:
-        Georgia,
-        "Times New Roman",
-        serif;
-
-      font-size: 1.35rem;
-      font-weight: 600;
-      line-height: 1.16;
-    }
-
-    .contrast-card p {
-      margin-bottom: 0;
-      color: var(--muted-strong);
     }
 
     /* ============================================================
@@ -1280,7 +1401,7 @@
     }
 
     .practical-copy h2 {
-      max-width: 13ch;
+      max-width: 12ch;
       margin-bottom: 0.8rem;
 
       font-size: clamp(2rem, 4.7vw, 4rem);
@@ -1405,7 +1526,7 @@
       border-top: 1px solid var(--rule);
     }
 
-    .evidence-body > p {
+    .evidence-body p {
       max-width: var(--reading-width);
       margin-bottom: 0;
 
@@ -1444,8 +1565,6 @@
     }
 
     .evidence-grid p {
-      margin-bottom: 0;
-
       color: var(--muted);
       font-size: 0.76rem;
     }
@@ -1513,24 +1632,87 @@
     }
 
     /* ============================================================
-       RESPONSIVE
+       ANIMATION
        ============================================================ */
 
-    @media (max-width: 74rem) {
-      .method-grid {
-        grid-template-columns:
-          repeat(3, minmax(0, 1fr));
+    @keyframes starAppear {
+      0%,
+      12% {
+        opacity: 0;
+        transform: scale(0.72);
+      }
+
+      32%,
+      86% {
+        opacity: 1;
+        transform: scale(1);
+      }
+
+      100% {
+        opacity: 0.72;
+        transform: scale(0.94);
       }
     }
 
+    @keyframes lineResolve {
+      0%,
+      34% {
+        opacity: 0;
+        clip-path: inset(0 100% 0 0);
+      }
+
+      56%,
+      86% {
+        opacity: 0.84;
+        clip-path: inset(0 0 0 0);
+      }
+
+      100% {
+        opacity: 0.38;
+        clip-path: inset(0 0 0 0);
+      }
+    }
+
+    .js .reveal {
+      opacity: 0;
+      transform: translateY(1rem);
+      transition:
+        opacity 520ms ease,
+        transform 520ms cubic-bezier(0.2, 0.72, 0.25, 1);
+    }
+
+    .js .reveal.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .js .stars-stage.is-awake .star {
+      animation:
+        starAppear 6s ease-in-out infinite;
+    }
+
+    .js .stars-stage.is-awake .star-line {
+      animation:
+        lineResolve 6s ease-in-out infinite;
+    }
+
+    /* ============================================================
+       RESPONSIVE
+       ============================================================ */
+
     @media (max-width: 68rem) {
-      .revelation-grid {
+      .scene-grid {
         grid-template-columns:
           repeat(2, minmax(0, 1fr));
       }
 
-      .revelation-card:last-child {
+      .scene-card:last-child {
         grid-column: 1 / -1;
+      }
+
+      .navigation-grid {
+        grid-template-columns:
+          repeat(2, minmax(0, 1fr));
       }
 
       .evidence-grid {
@@ -1547,17 +1729,12 @@
         grid-template-columns: 1fr;
       }
 
-      .constellation-vault {
+      .stars-stage {
         min-height: 25rem;
       }
 
       .section-heading {
         gap: 0.75rem;
-      }
-
-      .method-grid {
-        grid-template-columns:
-          repeat(2, minmax(0, 1fr));
       }
 
       .practical-actions {
@@ -1657,40 +1834,50 @@
         width: 100%;
       }
 
-      .constellation-vault {
-        min-height: 23rem;
+      .stars-stage {
+        min-height: 22rem;
         padding: 1rem;
       }
 
-      .constellation-map,
-      .constellation-crosshair {
+      .starfield-ring {
         width: 13rem;
-        height: 13rem;
       }
 
-      .revelation-grid,
-      .method-grid,
-      .contrast-grid,
+      .star-line--one {
+        width: 4.2rem;
+      }
+
+      .star-line--two,
+      .star-line--three,
+      .star-line--five,
+      .star-line--six {
+        width: 4.6rem;
+      }
+
+      .star-line--four {
+        width: 4rem;
+      }
+
+      .scene-grid,
+      .navigation-grid,
       .evidence-grid {
         grid-template-columns: 1fr;
       }
 
-      .revelation-card:last-child {
+      .scene-card:last-child {
         grid-column: auto;
       }
 
-      .revelation-card,
+      .scene-card,
       .dialogue-intro,
       .dialogue-panel,
-      .method-section,
-      .method-card,
-      .contrast-card,
+      .navigation-section,
       .practical-return {
         border-radius: 1rem;
       }
 
       .dialogue-line {
-        max-width: 95%;
+        max-width: 96%;
       }
 
       .page-footer {
@@ -1723,20 +1910,29 @@
         transition-duration: 0.001ms !important;
       }
 
-      .revelation-card:hover,
+      .scene-card:hover,
       .button:hover {
         transform: none;
+      }
+
+      .js .reveal {
+        opacity: 1;
+        transform: none;
+      }
+
+      .star,
+      .star-line {
+        opacity: 1;
+        clip-path: none;
       }
     }
 
     @media (prefers-reduced-transparency: reduce) {
       .page-topbar,
-      .revelation-card,
+      .scene-card,
       .dialogue-intro,
       .dialogue-panel,
-      .method-section,
-      .method-card,
-      .contrast-card,
+      .navigation-section,
       .practical-return,
       .evidence-disclosure {
         background-color: var(--ink-1);
@@ -1748,13 +1944,12 @@
       body,
       .page-topbar,
       .route-hero,
-      .constellation-vault,
-      .revelation-card,
+      .stars-stage,
+      .scene-card,
       .dialogue-intro,
       .dialogue-panel,
-      .method-section,
-      .method-card,
-      .contrast-card,
+      .navigation-section,
+      .navigation-card,
       .practical-return,
       .evidence-disclosure {
         color: CanvasText;
@@ -1768,7 +1963,8 @@
       }
 
       .brand-mark,
-      .constellation-map {
+      .starfield-ring,
+      .star {
         border: 2px solid ButtonText;
         background: ButtonFace;
         box-shadow: none;
@@ -1786,7 +1982,8 @@
       .page-topbar,
       .hero-actions,
       .practical-actions,
-      .page-footer {
+      .page-footer,
+      .starfield {
         display: none !important;
       }
 
@@ -1795,13 +1992,12 @@
       }
 
       .route-hero,
-      .constellation-vault,
-      .revelation-card,
+      .stars-stage,
+      .scene-card,
       .dialogue-intro,
       .dialogue-panel,
-      .method-section,
-      .method-card,
-      .contrast-card,
+      .navigation-section,
+      .navigation-card,
       .practical-return,
       .evidence-disclosure {
         color: #111;
@@ -1811,13 +2007,8 @@
       }
 
       .route-hero,
-      .constellation-vault {
+      .stars-stage {
         min-height: 0;
-      }
-
-      .constellation-map,
-      .constellation-crosshair {
-        display: none;
       }
 
       .evidence-disclosure:not([open])
@@ -1833,7 +2024,7 @@
     class="skip-link"
     href="#main"
   >
-    Skip to the Stars
+    Skip to the story
   </a>
 
   <div class="page-shell">
@@ -1865,8 +2056,8 @@
           Previous
         </a>
 
-        <a href="/showroom/">
-          Constellation
+        <a href="/showroom/globe/hearth/">
+          Next
         </a>
 
         <a href="/index.html">
@@ -1881,7 +2072,7 @@
         aria-labelledby="page-title"
       >
         <div class="route-hero__inner">
-          <div>
+          <div class="reveal">
             <div class="route-kicker">
               South Route · Chamber Three
             </div>
@@ -1891,25 +2082,22 @@
             </h1>
 
             <p class="hero-subtitle">
-              A single light tells you where something is. A
-              constellation tells you how separate things may belong
-              together.
+              The Diamond held under pressure. Now the field opens wider.
             </p>
 
             <p class="hero-lead">
-              The Window taught you to describe before explaining. The
-              Diamond taught you to preserve continuity while the world
-              changes. Now the sky opens wider. Routes, worlds,
-              characters, signals, and unresolved events appear as
-              separate lights. Your task is not merely to notice them.
-              It is to determine which relationships are real, which are
-              temporary, and which exist only because you connected them.
+              You have seen a world without touching it. You have watched
+              form tremble under pressure and partially hold. The chamber
+              now darkens into a sky. One star appears, then another,
+              then another. A single light gives you a point. It does not
+              give you direction. Direction begins when distance,
+              relationship, and orientation can be read together.
             </p>
 
             <div class="hero-actions">
               <a
                 class="button button-gold"
-                href="#reading-the-sky"
+                href="#relational-field"
               >
                 Enter the Starfield
               </a>
@@ -1924,31 +2112,45 @@
           </div>
 
           <aside
-            class="constellation-vault"
-            aria-label="Mirrorland constellation map"
+            class="stars-stage reveal"
+            aria-label="Relational constellation field"
           >
             <div
-              class="constellation-map"
+              class="starfield"
               aria-hidden="true"
-            ></div>
+            >
+              <span class="starfield-ring"></span>
 
-            <div
-              class="constellation-crosshair"
-              aria-hidden="true"
-            ></div>
+              <span class="star star--one"></span>
+              <span class="star star--two"></span>
+              <span class="star star--three"></span>
+              <span class="star star--four"></span>
+              <span class="star star--five"></span>
+              <span class="star star--six"></span>
+              <span class="star star--seven"></span>
+
+              <span class="star-line star-line--one"></span>
+              <span class="star-line star-line--two"></span>
+              <span class="star-line star-line--three"></span>
+              <span class="star-line star-line--four"></span>
+              <span class="star-line star-line--five"></span>
+              <span class="star-line star-line--six"></span>
+
+              <span class="orientation-arrow"></span>
+            </div>
 
             <div class="constellation-copy">
               <span class="star-label">
-                Constellation-Scale Orientation
+                Relational Navigation Field
               </span>
 
               <strong>
-                The pattern can guide you without proving itself.
+                A star is not a route until its relationships can be read.
               </strong>
 
               <p>
-                Every line between stars is an interpretation until the
-                relationship survives evidence, time, and return.
+                The pattern may guide you. It does not replace the lights
+                it connects.
               </p>
             </div>
           </aside>
@@ -1956,90 +2158,87 @@
       </section>
 
       <section
-        id="reading-the-sky"
-        class="revelation-stage"
-        aria-labelledby="reading-title"
+        id="relational-field"
+        class="story-stage"
+        aria-labelledby="field-title"
       >
-        <header class="section-heading">
+        <header class="section-heading reveal">
           <div>
             <div class="eyebrow">
-              What the Starfield Reveals
+              The Relational Field
             </div>
 
-            <h2 id="reading-title">
-              Three scales of meaning appear.
+            <h2 id="field-title">
+              The first light is not enough.
             </h2>
           </div>
 
           <p>
-            The sky becomes useful only when you distinguish the light,
-            the line, and the larger route they may form together.
+            After the Diamond, the next test is not strength. It is
+            orientation.
           </p>
         </header>
 
-        <div class="revelation-grid">
-          <article class="revelation-card">
-            <span class="chapter-index">
-              01 · The Star
+        <div class="scene-grid">
+          <article class="scene-card reveal">
+            <span class="scene-index">
+              01 · Point
             </span>
 
             <h3>
-              A single signal occupies a real position.
+              A single star appears.
             </h3>
 
             <p>
-              One event, person, world, object, or record can be located
-              and described without claiming it explains anything
-              beyond itself.
+              It is bright enough to hold your attention. That is the
+              danger. Brightness can make one signal feel central before
+              anything has shown what it belongs to, what it is distant
+              from, or whether it can guide movement.
             </p>
 
             <blockquote>
-              “Begin with what is actually there before deciding what it
-              belongs to.”
+              A point can locate attention. It cannot orient the journey.
             </blockquote>
           </article>
 
-          <article class="revelation-card">
-            <span class="chapter-index">
-              02 · The Line
+          <article class="scene-card reveal">
+            <span class="scene-index">
+              02 · Distance
             </span>
 
             <h3>
-              Relationship appears when two signals are connected.
+              The second star changes the first.
             </h3>
 
             <p>
-              The connection may represent sequence, influence,
-              similarity, dependency, conflict, distance, or shared
-              consequence. The line is useful only when its meaning is
-              declared.
+              Nothing about the first light moves. Yet its meaning
+              changes when another appears. Near and far become possible.
+              Direction becomes possible. A field begins where isolation
+              ends.
             </p>
 
             <blockquote>
-              “A connection is not neutral merely because it can be
-              drawn.”
+              Distance is not empty space. It is information.
             </blockquote>
           </article>
 
-          <article class="revelation-card">
-            <span class="chapter-index">
-              03 · The Constellation
+          <article class="scene-card reveal">
+            <span class="scene-index">
+              03 · Pattern
             </span>
 
             <h3>
-              Multiple relationships become a navigable pattern.
+              Lines appear only after enough lights remain.
             </h3>
 
             <p>
-              A constellation can help you orient across a larger system.
-              It reveals routes and clusters that no single signal could
-              show alone. It may still be incomplete, temporary, or
-              wrong.
+              The chamber refuses to draw the constellation too early.
+              It waits until the stars hold position long enough for
+              relationship to become readable without forcing certainty.
             </p>
 
             <blockquote>
-              “A useful pattern remains open to correction by the stars
-              it claims to connect.”
+              A pattern that arrives before relationship is projection.
             </blockquote>
           </article>
         </div>
@@ -2049,301 +2248,176 @@
         class="dialogue-stage"
         aria-labelledby="dialogue-title"
       >
-        <div class="dialogue-intro">
+        <div class="dialogue-intro reveal">
           <div class="eyebrow">
-            The Reader’s Temptation
+            The Reader’s Correction
           </div>
 
           <h2 id="dialogue-title">
-            You want the pattern to mean more than it does.
+            You want the brightest star to be the answer.
           </h2>
 
           <p>
-            Human beings connect lights quickly. That ability makes
-            navigation possible. It also allows expectation, fear, and
-            desire to turn coincidence into destiny.
+            The Stars do not punish attention. They correct isolation.
+            A bright signal may matter, but it still has to be read
+            inside a field.
           </p>
         </div>
 
         <div
-          class="dialogue-panel"
-          aria-label="Starfield interpretation dialogue"
+          class="dialogue-panel reveal"
+          aria-label="Stars relational dialogue"
         >
           <div
             class="dialogue-line"
-            data-speaker="visitor"
+            data-side="you"
           >
-            <span>Visitor</span>
+            <span>You</span>
 
             <p>
-              “These three events form the same shape.”
+              “That one is brightest. Shouldn’t I follow it?”
             </p>
           </div>
 
           <div
             class="dialogue-line"
-            data-speaker="stars"
+            data-side="stars"
           >
             <span>Stars</span>
 
             <p>
-              “Similarity is visible. Cause is not.”
+              “Brightness tells you intensity. It does not tell you
+              direction.”
             </p>
           </div>
 
           <div
             class="dialogue-line"
-            data-speaker="visitor"
+            data-side="you"
           >
-            <span>Visitor</span>
+            <span>You</span>
 
             <p>
-              “But the sequence repeats.”
+              “Then what makes it guidance?”
             </p>
           </div>
 
           <div
             class="dialogue-line"
-            data-speaker="stars"
-          >
-            <span>Stars</span>
-
-            <p>
-              “Then record the repetition. Do not call it law until the
-              relationship survives alternative explanations.”
-            </p>
-          </div>
-
-          <div
-            class="dialogue-line"
-            data-speaker="visitor"
-          >
-            <span>Visitor</span>
-
-            <p>
-              “How do I know whether the constellation is real?”
-            </p>
-          </div>
-
-          <div
-            class="dialogue-line"
-            data-speaker="stars"
+            data-side="stars"
           >
             <span>Stars</span>
 
             <p>
-              “Test whether the route remains useful when the viewpoint
-              changes.”
+              “Relationship. Distance. Pattern. A route that can still be
+              recovered when the viewpoint changes.”
             </p>
           </div>
 
           <div
             class="dialogue-line"
-            data-speaker="visitor"
+            data-side="you"
           >
-            <span>Visitor</span>
+            <span>You</span>
 
             <p>
-              “And if the pattern disappears?”
+              “What if I connect the wrong lights?”
             </p>
           </div>
 
           <div
             class="dialogue-line"
-            data-speaker="stars"
+            data-side="stars"
           >
             <span>Stars</span>
 
             <p>
-              “Then you discovered something about your position, not
-              necessarily about the sky.”
+              “Then the route will fail under return. The stars remain.
+              The false line does not.”
             </p>
           </div>
         </div>
       </section>
 
       <section
-        class="method-section"
-        aria-labelledby="method-title"
+        class="navigation-section"
+        aria-labelledby="navigation-title"
       >
-        <header class="section-heading">
+        <header class="section-heading reveal">
           <div>
             <div class="eyebrow">
-              Five Steps for Reading the Sky
+              What Must Be Read
             </div>
 
-            <h2 id="method-title">
-              Build the pattern without becoming trapped by it.
+            <h2 id="navigation-title">
+              Navigation requires more than recognition.
             </h2>
           </div>
 
           <p>
-            A responsible constellation remains traceable to its
-            component signals and revisable when those signals change.
+            The Diamond gave partial stability. The Stars ask whether
+            that stable form can orient inside a field larger than one
+            object, one pressure, or one desire.
           </p>
         </header>
 
-        <div class="method-grid">
-          <article class="method-card">
-            <span>Step One</span>
+        <div class="navigation-grid">
+          <article class="navigation-card reveal">
+            <span>Signal</span>
 
             <strong>
-              Locate each light.
+              What is actually visible?
             </strong>
 
             <p>
-              Record the signal’s identity, time, position, source, and
-              observable state before drawing any relationship.
+              Begin with the star itself: source, position, intensity,
+              timing, and what can be seen without interpretation.
             </p>
           </article>
 
-          <article class="method-card">
-            <span>Step Two</span>
+          <article class="navigation-card reveal">
+            <span>Distance</span>
 
             <strong>
-              Declare each line.
+              What changes when another light appears?
             </strong>
 
             <p>
-              Name whether the connection represents sequence,
-              similarity, dependency, ownership, conflict, or another
-              bounded relation.
+              Distance gives scale. Scale prevents one signal from
+              becoming the whole field.
             </p>
           </article>
 
-          <article class="method-card">
-            <span>Step Three</span>
+          <article class="navigation-card reveal">
+            <span>Relationship</span>
 
             <strong>
-              Change the viewpoint.
+              What kind of line is being drawn?
             </strong>
 
             <p>
-              Test the pattern from another time, scale, route, witness,
-              world, or institutional position.
+              A line may mean sequence, dependency, contrast, orbit,
+              warning, memory, or shared pressure. It must be named.
             </p>
           </article>
 
-          <article class="method-card">
-            <span>Step Four</span>
+          <article class="navigation-card reveal">
+            <span>Orientation</span>
 
             <strong>
-              Preserve the gaps.
+              Can the route survive return?
             </strong>
 
             <p>
-              Do not invent a line merely because the pattern feels
-              incomplete. Missing relationships remain meaningful
-              uncertainty.
-            </p>
-          </article>
-
-          <article class="method-card">
-            <span>Step Five</span>
-
-            <strong>
-              Return to the stars.
-            </strong>
-
-            <p>
-              Any constellation must remain recoverable as individual
-              signals rather than replacing them with the pattern.
+              Guidance becomes trustworthy only when another pass can
+              recover the stars, the line, and the reason for following.
             </p>
           </article>
         </div>
       </section>
 
       <section
-        class="contrast-section"
-        aria-labelledby="contrast-title"
-      >
-        <header class="section-heading">
-          <div>
-            <div class="eyebrow">
-              Orientation Versus Projection
-            </div>
-
-            <h2 id="contrast-title">
-              A map can guide you or merely resemble your expectations.
-            </h2>
-          </div>
-
-          <p>
-            Both may feel coherent. Only one remains accountable to the
-            world outside the reader.
-          </p>
-        </header>
-
-        <div class="contrast-grid">
-          <article
-            class="contrast-card"
-            data-mode="orientation"
-          >
-            <span>Orientation</span>
-
-            <strong>
-              The pattern helps you move among real signals.
-            </strong>
-
-            <p>
-              Routes remain connected to observable locations, declared
-              relationships, recoverable evidence, and clear limits.
-            </p>
-          </article>
-
-          <article
-            class="contrast-card"
-            data-mode="projection"
-          >
-            <span>Projection</span>
-
-            <strong>
-              The pattern explains whatever the reader wants explained.
-            </strong>
-
-            <p>
-              Contradictory signals are dismissed, missing lines are
-              invented, and every new event is absorbed into the same
-              interpretation.
-            </p>
-          </article>
-
-          <article
-            class="contrast-card"
-            data-mode="orientation"
-          >
-            <span>Orientation</span>
-
-            <strong>
-              The constellation survives a change in viewpoint.
-            </strong>
-
-            <p>
-              Another observer may describe it differently, but the
-              underlying relationships remain visible and testable.
-            </p>
-          </article>
-
-          <article
-            class="contrast-card"
-            data-mode="projection"
-          >
-            <span>Projection</span>
-
-            <strong>
-              The constellation exists only from one preferred angle.
-            </strong>
-
-            <p>
-              Move the observer, change the scale, or inspect the omitted
-              evidence and the apparent order disappears.
-            </p>
-          </article>
-        </div>
-      </section>
-
-      <section
-        class="practical-return"
+        class="practical-return reveal"
         aria-labelledby="practical-title"
       >
         <div class="practical-copy">
@@ -2352,24 +2426,24 @@
           </span>
 
           <h2 id="practical-title">
-            Use the pattern. Do not worship it.
+            Follow relation, not brightness.
           </h2>
 
           <p>
-            A constellation is a navigational achievement, not a final
-            truth. Let it guide your next question, reveal a route, or
-            expose a missing relationship. Then return to the individual
-            signals. The moment the pattern becomes more important than
-            the stars, orientation has become projection.
+            The sky does not give full agency. It gives orientation. If
+            you can read the field without worshiping one light, the next
+            chamber can show you where this orientation is being used:
+            the hidden facility, the work behind the window, and the
+            place where Audralia is being developed.
           </p>
         </div>
 
         <div class="practical-actions">
           <a
             class="button button-gold"
-            href="/showroom/mysteries/unfinished-world/"
+            href="/showroom/globe/hearth/"
           >
-            Enter the Unfinished World
+            Continue to the Hearth
           </a>
 
           <a
@@ -2384,9 +2458,9 @@
       <details class="evidence-disclosure">
         <summary>
           <span>
-            <strong>Constellation Interpretation Boundary</strong>
+            <strong>Story Reveal Boundary</strong>
             <small>
-              What the stars can orient—and what the pattern cannot prove
+              What this chamber reveals, and what remains withheld
             </small>
           </span>
 
@@ -2395,42 +2469,40 @@
 
         <div class="evidence-body">
           <p>
-            The Stars provide constellation-scale orientation within the
-            Mirrorland narrative architecture. They allow separate
-            signals to be located, related, clustered, and used for
-            navigation. A constellation does not automatically establish
-            causation, universal law, destiny, scientific proof, or
-            authority over the objects it connects.
+            This chamber reveals that the player cannot navigate by
+            isolated lights. A star becomes useful only when its
+            relationship to other stars can be read. Direction requires
+            pattern, distance, relationship, and orientation, but the
+            pattern does not become proof by itself.
           </p>
 
           <div class="evidence-grid">
             <article>
-              <span>Established Here</span>
+              <span>Revealed Here</span>
 
               <p>
-                Responsible interpretation begins with individual
-                signals, declared lines, viewpoint testing, preserved
-                gaps, and recoverable return.
+                Relational navigation begins when signals can be read as
+                position, distance, relationship, and recoverable route.
               </p>
             </article>
 
             <article>
-              <span>Not Established Here</span>
+              <span>Withheld Here</span>
 
               <p>
-                Causation from visual similarity, certainty from
-                repetition, universal meaning, or proof through pattern
-                alone.
+                Full agency, full embodiment, full conjugation, H-Earth,
+                ZIONTS, full Audralia systems, and final Earth stakes
+                remain closed.
               </p>
             </article>
 
             <article>
-              <span>Continuity Requirement</span>
+              <span>Next Pressure</span>
 
               <p>
-                Every constellation must remain subordinate to the
-                signals, evidence, routes, and Diamond continuity
-                references from which it was constructed.
+                The next chamber must show where the orientation points:
+                the Hearth facility and the work behind the visible world
+                layer.
               </p>
             </article>
           </div>
@@ -2445,7 +2517,7 @@
         </strong>
 
         <span>
-          The pattern can orient you. The lights remain the evidence.
+          A single light is not a route.
         </span>
       </div>
 
@@ -2454,7 +2526,7 @@
           Previous Chamber
         </a>
 
-        <a href="/showroom/mysteries/unfinished-world/">
+        <a href="/showroom/globe/hearth/">
           Next Chamber
         </a>
 
@@ -2468,20 +2540,161 @@
       </nav>
     </footer>
   </div>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const CONTRACT =
+        "SHOWROOM_SATELLITE_READ_THE_STARS_HTML_TNT_v2_RELATIONAL_NAVIGATION_FIELD_CONTINUOUS_SOUTH_HANDOFF";
+
+      const root =
+        document.documentElement;
+
+      root.classList.add("js");
+
+      const reducedMotionQuery =
+        window.matchMedia &&
+        window.matchMedia("(prefers-reduced-motion: reduce)");
+
+      const reducedMotion =
+        Boolean(
+          reducedMotionQuery &&
+          reducedMotionQuery.matches
+        );
+
+      function markVisible(elements) {
+        for (const element of elements) {
+          element.classList.add("is-visible");
+        }
+      }
+
+      function initializeReveals() {
+        const revealElements =
+          Array.from(
+            document.querySelectorAll(".reveal")
+          );
+
+        if (!revealElements.length) {
+          return;
+        }
+
+        if (
+          reducedMotion ||
+          typeof IntersectionObserver !== "function"
+        ) {
+          markVisible(revealElements);
+          return;
+        }
+
+        const observer =
+          new IntersectionObserver(
+            entries => {
+              for (const entry of entries) {
+                if (!entry.isIntersecting) {
+                  continue;
+                }
+
+                entry.target.classList.add("is-visible");
+                observer.unobserve(entry.target);
+              }
+            },
+            {
+              root: null,
+              threshold: 0.14,
+              rootMargin: "0px 0px -6% 0px"
+            }
+          );
+
+        for (const element of revealElements) {
+          observer.observe(element);
+        }
+      }
+
+      function initializeStarsStage() {
+        const starsStage =
+          document.querySelector(".stars-stage");
+
+        if (!starsStage || reducedMotion) {
+          return;
+        }
+
+        window.setTimeout(
+          () => {
+            starsStage.classList.add("is-awake");
+          },
+          240
+        );
+      }
+
+      function publishReceipt() {
+        const payload = {
+          contract: CONTRACT,
+          route: "/showroom/wonders/stars/",
+          routeId: "south-3",
+          page: "Read the Stars",
+          localEnhancementOnly: true,
+          globalRuntimeOwned: false,
+          navigationOwned: false,
+          systematicReveal: "relational-navigation-field",
+          previousRoute: "/showroom/wonders/diamond/",
+          nextRoute: "/showroom/globe/hearth/",
+          starRole: "constellation-scale-orientation",
+          starProofAuthority: false,
+          interpretationModel: "signal-pattern-route-boundary",
+          continuousSouthHandoff: true,
+          fullAgencyGranted: false,
+          reducedMotion: reducedMotion,
+          timestamp: new Date().toISOString()
+        };
+
+        window.dispatchEvent(
+          new CustomEvent(
+            "SHOWROOM_SATELLITE_PAGE_READY",
+            {
+              detail: Object.freeze(payload)
+            }
+          )
+        );
+      }
+
+      if (document.readyState === "loading") {
+        document.addEventListener(
+          "DOMContentLoaded",
+          () => {
+            initializeReveals();
+            initializeStarsStage();
+            publishReceipt();
+          },
+          {
+            once: true
+          }
+        );
+      } else {
+        initializeReveals();
+        initializeStarsStage();
+        publishReceipt();
+      }
+    })();
+  </script>
 </body>
 </html>
 
 <!--
-SHOWROOM_SATELLITE_READ_THE_STARS_HTML_RECEIPT_v1
+SHOWROOM_SATELLITE_READ_THE_STARS_HTML_RECEIPT_v2_RELATIONAL_NAVIGATION_FIELD_CONTINUOUS_SOUTH_HANDOFF
 
 TARGET:
 /showroom/wonders/stars/index.html
 
 STATUS:
-COMPLETE NEW SELF-CONTAINED HTML FILE
+COMPLETE SELF-CONTAINED HTML REPLACEMENT
 
-EMBEDDED VISUAL SYSTEM:
-SHOWROOM_SATELLITE_PAGE_EMBEDDED_VISUAL_SYSTEM_v1
+SOURCE BASELINE:
+SHOWROOM_SATELLITE_READ_THE_STARS_HTML_TNT_v1
+supplied by user as current source baseline for south-3.
+
+NEW CONTRACT:
+SHOWROOM_SATELLITE_READ_THE_STARS_HTML_TNT_v2_RELATIONAL_NAVIGATION_FIELD_CONTINUOUS_SOUTH_HANDOFF
 
 ROUTE FAMILY:
 Wonders / South
@@ -2489,57 +2702,124 @@ Wonders / South
 ROUTE ID:
 south-3
 
-PREVIOUS ROUTE:
-/showroom/wonders/diamond/
-
-NEXT ROUTE:
-/showroom/mysteries/unfinished-world/
+ROUTE TITLE:
+Read the Stars
 
 PARENT:
 /showroom/
 
-PURPOSE:
-- continue directly from Behold the Diamond;
-- complete the South wonders sequence;
-- move from continuity into constellation-scale interpretation;
-- distinguish stars, lines, constellations, and routes;
-- establish that patterns guide without becoming proof;
-- distinguish orientation from projection;
-- transition the visitor into the West mysteries sequence.
+PREVIOUS ROUTE:
+/showroom/wonders/diamond/
 
-PRESENTATION STANDARD:
-- immersive;
-- second-person;
-- cosmic;
-- dialogue-driven;
-- interpretation-oriented;
-- practical;
-- evidence boundary retained beneath the experience.
+CORRECTED NEXT ROUTE:
+/showroom/globe/hearth/
 
-ARCHITECTURAL FEATURES:
-- complete embedded CSS;
-- Showroom-aligned cosmic atmosphere;
-- CSS-built constellation map;
-- three-part starfield interpretation sequence;
-- visitor and Stars dialogue;
-- five-step constellation reading method;
-- orientation-versus-projection comparison;
-- practical interpretation rule;
-- evidence-boundary disclosure;
-- responsive mobile composition;
-- keyboard focus;
-- reduced motion;
-- reduced transparency;
-- forced colors;
-- print handling.
+RETURN ROUTE:
+/showroom/
 
-NON-CLAIMS:
-- no causation from pattern alone;
-- no universal law;
-- no destiny claim;
-- no scientific validation;
-- no Earth-transfer authorization;
-- no runtime dependency;
-- no controller ownership;
-- no JavaScript requirement.
+MAIN COMPASS:
+/index.html
+
+STAR ROLE:
+constellation-scale-orientation
+
+STAR PROOF AUTHORITY:
+false
+
+INTERPRETATION MODEL:
+signal-pattern-route-boundary
+
+NARRATIVE AUTHORITY:
+SHOWROOM_MIRRORLAND_AUDRALIA_ROUTE_PAGE_NARRATIVE_FREEZE_PACKET_v1_1
+SHOWROOM_ROUTE_PAGE_RENEWAL_RULES_LOCK_v1
+CONTINUOUS STORY HANDOFF RULE
+
+PRIMARY ROUTE CORRECTION:
+The source baseline routed south-3 directly to:
+/showroom/mysteries/unfinished-world/
+
+That route skips the frozen fourth South chamber.
+The renewed file corrects the forward handoff to the existing Hearth path:
+/showroom/globe/hearth/
+
+This preserves the intended South sequence:
+south-1 · Open the Window
+south-2 · Behold the Diamond
+south-3 · Read the Stars
+south-4 · Hearth
+
+PRIMARY NARRATIVE CORRECTIONS FROM v1:
+- Reframed the Stars as relational navigation after the Diamond’s pressure test.
+- Reduced method-heavy interpretation framing.
+- Preserved infrastructure identity, star metadata, and interpretation-boundary metadata.
+- Corrected the forward story handoff to Hearth.
+- Established that the player cannot navigate by isolated lights.
+- Connected south-3 to south-4 by making the Stars point toward the facility/work behind the visible world layer.
+- Withheld full agency, full embodiment, full conjugation, H-Earth, ZIONTS, full Audralia systems, and final Earth stakes.
+
+PAGE 7 / SOUTH-3 STORY SPINE:
+1. The player leaves the Diamond with partial form stability.
+2. The chamber opens into a relational sky.
+3. A single star appears and draws attention.
+4. More stars appear, changing the first star’s meaning.
+5. Lines draw only after enough stars remain visible.
+6. The player learns that brightness is not direction.
+7. Direction requires distance, relationship, pattern, and orientation.
+8. The field points toward Hearth as the next South chamber.
+
+CONTROLLED REVEAL:
+The player cannot navigate by isolated lights.
+A star only becomes guidance when its relationship to other stars can be read.
+Direction requires pattern, distance, relationship, and orientation.
+
+WITHHELD:
+- full agency;
+- full embodiment;
+- full conjugation;
+- H-Earth;
+- ZIONTS;
+- full Audralia systems;
+- final Earth stakes.
+
+DOMINANT ANIMATION IDEA:
+Hand-placed stars appear one by one.
+Lines draw only after enough stars are visible.
+The relational field resolves into orientation without treating the constellation as proof.
+
+ANTI-TILED-STAR CORRECTION:
+The page does not use repeating square-cell starfields as the main atmosphere.
+Atmospheric stars are hand-positioned through fixed radial points.
+The dominant animated visual is the hand-placed relational constellation.
+
+EMBEDDED SYSTEM:
+- HTML structure
+- embedded CSS
+- embedded page-local JavaScript
+- no external dependencies
+- no shared runtime ownership
+
+PAGE-LOCAL JAVASCRIPT AUTHORITY:
+- local reveal enhancement only
+- local Stars-stage awakening only
+- local readiness event only
+- no navigation ownership
+- no controller calls
+- no constellation mutation
+- no Main Compass ownership
+- safe without JavaScript
+
+ACCESSIBILITY / RESILIENCE:
+- skip link
+- semantic sections
+- focus-visible handling
+- reduced-motion support
+- reduced-transparency support
+- forced-colors support
+- print handling
+- readable without JavaScript
+
+NOT CLAIMED:
+- runtime validation
+- browser visual pass
+- deployment pass
 -->

@@ -1,6 +1,6 @@
 <!-- TARGET FILE: /showroom/mysteries/paths-not-yet-open/index.html -->
 <!-- COMPLETE REPLACEMENT -->
-<!-- SHOWROOM_SATELLITE_PATHS_NOT_YET_OPEN_HTML_TNT_v2_CLOSED_PATHS_BEFORE_AUDRALIA -->
+<!-- SHOWROOM_SATELLITE_PATHS_NOT_YET_OPEN_HTML_TNT_v3_THRESHOLD_DISTRIBUTION_TO_AUDRALIA_HEARTH_H_EARTH -->
 
 <!doctype html>
 
@@ -8,21 +8,27 @@
   lang="en"
   data-route="/showroom/mysteries/paths-not-yet-open/"
   data-page="showroom-mysteries-paths-not-yet-open"
-  data-version="SHOWROOM-SATELLITE-PATHS-NOT-YET-OPEN-2.0.0"
-  data-contract="SHOWROOM_SATELLITE_PATHS_NOT_YET_OPEN_HTML_TNT_v2_CLOSED_PATHS_BEFORE_AUDRALIA"
+  data-version="SHOWROOM-SATELLITE-PATHS-NOT-YET-OPEN-3.0.0"
+  data-contract="SHOWROOM_SATELLITE_PATHS_NOT_YET_OPEN_HTML_TNT_v3_THRESHOLD_DISTRIBUTION_TO_AUDRALIA_HEARTH_H_EARTH"
+  data-previous-contract="SHOWROOM_SATELLITE_PATHS_NOT_YET_OPEN_HTML_TNT_v2_CLOSED_PATHS_BEFORE_AUDRALIA"
   data-showroom-satellite="true"
   data-showroom-route-family="mysteries"
   data-showroom-route-id="west-3"
   data-showroom-route-title="Paths Not Yet Open"
   data-showroom-parent-route="/showroom/"
   data-showroom-previous-route="/showroom/mysteries/questions-in-the-glass/"
-  data-showroom-next-route="/showroom/mysteries/journey-into-audralia/"
+  data-showroom-next-route="/showroom/globe/audralia/"
   data-showroom-return-route="/showroom/"
   data-showroom-main-compass-route="/index.html"
+  data-showroom-audralia-route="/showroom/globe/audralia/"
+  data-showroom-hearth-route="/showroom/globe/hearth/"
+  data-showroom-h-earth-route="/showroom/globe/h-earth/"
+  data-showroom-earth-route="/showroom/globe/earth/"
   data-showroom-path-state="closed-pending-conditions"
   data-showroom-path-opening-authority="false"
   data-showroom-closure-model="threshold-evidence-readiness-return"
-  data-showroom-next-route-inferred="true"
+  data-showroom-next-route-inferred="false"
+  data-showroom-threshold-distribution="true"
 >
 <head>
   <meta charset="utf-8">
@@ -38,29 +44,15 @@
 
   <meta
     name="description"
-    content="After the Glass reveals that questions expose readiness, stand before the sealed paths. A visible route is not authorized passage; some thresholds remain closed until the player, world, and system can survive opening."
+    content="Mirrorland ends by revealing the next unfinished thresholds. Continue toward Audralia, return to Hearth, approach H-Earth, or return to the Constellation."
   >
 
   <meta
     name="showroom-page-contract"
-    content="SHOWROOM_SATELLITE_PATHS_NOT_YET_OPEN_HTML_TNT_v2_CLOSED_PATHS_BEFORE_AUDRALIA"
+    content="SHOWROOM_SATELLITE_PATHS_NOT_YET_OPEN_HTML_TNT_v3_THRESHOLD_DISTRIBUTION_TO_AUDRALIA_HEARTH_H_EARTH"
   >
 
   <style>
-    /* ============================================================
-       SHOWROOM SATELLITE PAGE EMBEDDED VISUAL SYSTEM v2
-       PAGE: west-3 · Paths Not Yet Open
-
-       Authority:
-       - one-file route page;
-       - embedded CSS;
-       - page-local JavaScript only;
-       - no external dependencies;
-       - no shared Showroom runtime ownership;
-       - no route-opening authority;
-       - dominant animation: sealed paths / threshold glyphs.
-       ============================================================ */
-
     :root {
       color-scheme: dark;
 
@@ -76,25 +68,18 @@
 
       --gold: #e0b85b;
       --gold-bright: #f4d47e;
-      --gold-soft: #ffe7a5;
-      --gold-faint: rgba(224, 184, 91, 0.14);
-
       --cyan: #75e9ff;
       --cyan-soft: #b4f5ff;
-      --cyan-faint: rgba(117, 233, 255, 0.13);
-
       --violet: #b798ff;
       --violet-soft: #d5c5ff;
-      --violet-faint: rgba(183, 152, 255, 0.13);
-
       --rose: #ff91a3;
-      --rose-faint: rgba(255, 145, 163, 0.11);
-
       --green: #8ce4ae;
-      --green-faint: rgba(140, 228, 174, 0.11);
 
-      --silver: #dce7f2;
-      --silver-soft: #eff7ff;
+      --gold-faint: rgba(224, 184, 91, 0.14);
+      --cyan-faint: rgba(117, 233, 255, 0.13);
+      --violet-faint: rgba(183, 152, 255, 0.13);
+      --rose-faint: rgba(255, 145, 163, 0.11);
+      --green-faint: rgba(140, 228, 174, 0.11);
 
       --border: rgba(226, 197, 128, 0.24);
       --border-strong: rgba(239, 205, 125, 0.5);
@@ -348,7 +333,8 @@
     .route-kicker,
     .scene-index,
     .path-label,
-    .practical-label {
+    .practical-label,
+    .option-kicker {
       color: var(--gold-bright);
 
       font-size: 0.69rem;
@@ -466,10 +452,6 @@
         0 0 2rem rgba(245, 213, 130, 0.22);
     }
 
-    /* ============================================================
-       TOPBAR
-       ============================================================ */
-
     .page-topbar {
       display: flex;
 
@@ -518,8 +500,6 @@
 
       border: 1px solid rgba(241, 207, 123, 0.58);
       border-radius: 50%;
-
-      color: var(--gold-bright);
 
       background:
         radial-gradient(
@@ -636,10 +616,6 @@
       background: rgba(255, 255, 255, 0.06);
     }
 
-    /* ============================================================
-       MAIN
-       ============================================================ */
-
     main {
       display: grid;
       gap: var(--space-7);
@@ -667,10 +643,6 @@
       margin-bottom: 0.25rem;
       color: var(--muted-strong);
     }
-
-    /* ============================================================
-       HERO / SEALED PATHS
-       ============================================================ */
 
     .route-hero {
       position: relative;
@@ -820,7 +792,6 @@
     .sealed-field {
       position: absolute;
       inset: 1rem 1rem 6.5rem;
-
       pointer-events: none;
     }
 
@@ -1060,7 +1031,6 @@
     .path-label {
       display: block;
       margin-bottom: 0.45rem;
-
       color: var(--violet-soft);
     }
 
@@ -1080,16 +1050,12 @@
 
     .path-copy p {
       margin-bottom: 0;
-
       color: var(--muted);
       font-size: 0.9rem;
     }
 
-    /* ============================================================
-       STORY CARDS
-       ============================================================ */
-
-    .story-stage {
+    .story-stage,
+    .options-section {
       display: grid;
       gap: 1rem;
     }
@@ -1103,7 +1069,8 @@
       gap: 0.9rem;
     }
 
-    .scene-card {
+    .scene-card,
+    .option-card {
       position: relative;
 
       min-width: 0;
@@ -1123,7 +1090,8 @@
         box-shadow var(--transition);
     }
 
-    .scene-card:hover {
+    .scene-card:hover,
+    .option-card:hover {
       border-color: rgba(183, 152, 255, 0.42);
 
       box-shadow:
@@ -1133,7 +1101,8 @@
       transform: translateY(-3px);
     }
 
-    .scene-card::before {
+    .scene-card::before,
+    .option-card::before {
       position: absolute;
       top: 0;
       right: 0;
@@ -1157,11 +1126,13 @@
       margin-bottom: 0.8rem;
     }
 
-    .scene-card h3 {
+    .scene-card h3,
+    .option-card h3 {
       margin-bottom: 0.65rem;
     }
 
-    .scene-card p {
+    .scene-card p,
+    .option-card p {
       margin-bottom: 0;
       color: var(--muted-strong);
     }
@@ -1185,10 +1156,6 @@
       font-size: 1.02rem;
       line-height: 1.5;
     }
-
-    /* ============================================================
-       GATE DIALOGUE
-       ============================================================ */
 
     .dialogue-stage {
       display: grid;
@@ -1269,101 +1236,72 @@
       color: var(--cream-soft);
     }
 
-    /* ============================================================
-       CONDITIONS
-       ============================================================ */
-
-    .conditions-section {
+    .options-grid {
       display: grid;
-      gap: 1rem;
 
-      padding: clamp(1rem, 2.8vw, 2rem);
+      grid-template-columns:
+        repeat(4, minmax(0, 1fr));
 
-      border: 1px solid var(--border-violet);
-      border-radius: var(--radius-xl);
+      gap: 0.8rem;
+    }
+
+    .option-card {
+      display: grid;
+      align-content: start;
+      gap: 0.7rem;
+
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .option-card[data-primary="true"] {
+      border-color: rgba(244, 212, 126, 0.5);
 
       background:
         radial-gradient(
           circle at 100% 0,
-          rgba(183, 152, 255, 0.11),
-          transparent 22rem
+          rgba(224, 184, 91, 0.15),
+          transparent 10rem
         ),
-        linear-gradient(
-          145deg,
-          rgba(17, 19, 42, 0.88),
-          rgba(4, 7, 16, 0.95)
-        );
-
-      box-shadow: var(--shadow-deep);
+        var(--glass);
     }
 
-    .conditions-grid {
-      display: grid;
-
-      grid-template-columns:
-        repeat(5, minmax(0, 1fr));
-
-      gap: 0.7rem;
+    .option-card[data-primary="true"] .option-kicker {
+      color: var(--gold-bright);
     }
 
-    .condition-card {
-      min-width: 0;
-      padding: 1rem;
-
-      border: 1px solid rgba(183, 152, 255, 0.15);
-      border-radius: var(--radius-md);
-
-      background:
-        linear-gradient(
-          145deg,
-          rgba(183, 152, 255, 0.055),
-          rgba(255, 255, 255, 0.015)
-        );
+    .option-card[data-kind="hearth"] .option-kicker {
+      color: var(--cyan-soft);
     }
 
-    .condition-card span {
-      display: block;
-      margin-bottom: 0.55rem;
+    .option-card[data-kind="h-earth"] .option-kicker {
+      color: var(--green);
+    }
 
+    .option-card[data-kind="constellation"] .option-kicker {
       color: var(--violet-soft);
-
-      font-size: 0.62rem;
-      font-weight: 850;
-      letter-spacing: 0.11em;
-      text-transform: uppercase;
     }
 
-    .condition-card strong {
-      display: block;
-      margin-bottom: 0.45rem;
-
-      font-family:
-        Georgia,
-        "Times New Roman",
-        serif;
-
-      font-size: 1.14rem;
-      font-weight: 600;
-      line-height: 1.16;
-    }
-
-    .condition-card p {
+    .option-card h3 {
       margin-bottom: 0;
 
-      color: var(--muted);
-      font-size: 0.8rem;
+      font-size: clamp(1.35rem, 2.4vw, 2rem);
     }
 
-    /* ============================================================
-       PRACTICAL RETURN
-       ============================================================ */
+    .option-card span:last-child {
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-weight: 760;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
 
     .practical-return {
       display: grid;
 
       grid-template-columns:
         minmax(0, 1fr)
-        minmax(16rem, 0.7fr);
+        minmax(17rem, 0.82fr);
 
       align-items: center;
       gap: 1.3rem;
@@ -1417,10 +1355,6 @@
     .practical-actions .button {
       width: 100%;
     }
-
-    /* ============================================================
-       EVIDENCE
-       ============================================================ */
 
     .evidence-disclosure {
       overflow: clip;
@@ -1564,10 +1498,6 @@
       font-size: 0.76rem;
     }
 
-    /* ============================================================
-       FOOTER
-       ============================================================ */
-
     .page-footer {
       display: flex;
 
@@ -1626,10 +1556,6 @@
       background: var(--violet-faint);
     }
 
-    /* ============================================================
-       ANIMATION
-       ============================================================ */
-
     @keyframes sealPulse {
       0%,
       100% {
@@ -1683,14 +1609,10 @@
         glyphPulse 6s ease-in-out infinite;
     }
 
-    /* ============================================================
-       RESPONSIVE
-       ============================================================ */
-
     @media (max-width: 74rem) {
-      .conditions-grid {
+      .options-grid {
         grid-template-columns:
-          repeat(3, minmax(0, 1fr));
+          repeat(2, minmax(0, 1fr));
       }
     }
 
@@ -1851,7 +1773,7 @@
       }
 
       .scene-grid,
-      .conditions-grid,
+      .options-grid,
       .evidence-grid {
         grid-template-columns: 1fr;
       }
@@ -1863,7 +1785,7 @@
       .scene-card,
       .dialogue-intro,
       .dialogue-panel,
-      .conditions-section,
+      .option-card,
       .practical-return {
         border-radius: 1rem;
       }
@@ -1882,10 +1804,6 @@
       }
     }
 
-    /* ============================================================
-       ACCESSIBILITY MODES
-       ============================================================ */
-
     @media (prefers-reduced-motion: reduce) {
       html {
         scroll-behavior: auto;
@@ -1903,6 +1821,7 @@
       }
 
       .scene-card:hover,
+      .option-card:hover,
       .button:hover {
         transform: none;
       }
@@ -1923,7 +1842,7 @@
       .scene-card,
       .dialogue-intro,
       .dialogue-panel,
-      .conditions-section,
+      .option-card,
       .practical-return,
       .evidence-disclosure {
         background-color: var(--ink-1);
@@ -1939,8 +1858,7 @@
       .scene-card,
       .dialogue-intro,
       .dialogue-panel,
-      .conditions-section,
-      .condition-card,
+      .option-card,
       .practical-return,
       .evidence-disclosure,
       .path-gate {
@@ -1989,8 +1907,7 @@
       .scene-card,
       .dialogue-intro,
       .dialogue-panel,
-      .conditions-section,
-      .condition-card,
+      .option-card,
       .practical-return,
       .evidence-disclosure {
         color: #111;
@@ -2049,8 +1966,8 @@
           Previous
         </a>
 
-        <a href="/showroom/mysteries/journey-into-audralia/">
-          Next
+        <a href="/showroom/globe/audralia/">
+          Audralia
         </a>
 
         <a href="/index.html">
@@ -2075,7 +1992,8 @@
             </h1>
 
             <p class="hero-subtitle">
-              The path exists. That does not mean it is safe to cross.
+              Mirrorland does not end by closing the world. It ends by
+              showing which thresholds come next.
             </p>
 
             <p class="hero-lead">
@@ -2083,24 +2001,26 @@
               pressure, fear, and desire. Now the route answers your
               desire for access with a sealed threshold. Several paths
               stand ahead. Their glyphs pulse. Their roads are visible.
-              None open. The gate is not mocking you. It is preserving
-              the player, the world, and the system around the crossing
-              until passage can survive what it asks.
+              Some were closed because you were not ready to mistake
+              access for authority. Now Mirrorland does not open every
+              door. It reveals the next unfinished paths and asks you to
+              choose where to continue with memory, restraint, and
+              orientation intact.
             </p>
 
             <div class="hero-actions">
               <a
                 class="button button-gold"
-                href="#closed-paths"
+                href="/showroom/globe/audralia/"
               >
-                Approach the Sealed Paths
+                Continue Toward Audralia
               </a>
 
               <a
                 class="button"
-                href="/showroom/mysteries/questions-in-the-glass/"
+                href="#threshold-options"
               >
-                Return to the Glass
+                View All Thresholds
               </a>
             </div>
           </div>
@@ -2127,16 +2047,16 @@
 
             <div class="path-copy">
               <span class="path-label">
-                Closed Pending Conditions
+                Threshold Distribution
               </span>
 
               <strong>
-                A visible path is not authorized passage.
+                A visible path is not the same as possession.
               </strong>
 
               <p>
-                The seal holds until the crossing, consequence,
-                continuity, and return can be proven.
+                Audralia, Hearth, and H-Earth now become available as
+                distinct unfinished directions.
               </p>
             </div>
           </aside>
@@ -2151,7 +2071,7 @@
         <header class="section-heading reveal">
           <div>
             <div class="eyebrow">
-              Why the Paths Stay Closed
+              Why These Paths Were Closed
             </div>
 
             <h2 id="closed-paths-title">
@@ -2168,18 +2088,17 @@
         <div class="scene-grid">
           <article class="scene-card reveal">
             <span class="scene-index">
-              01 · The Player Is Not Ready
+              01 · The Player Needed Orientation
             </span>
 
             <h3>
-              Access would outpace form.
+              Access would have outpaced form.
             </h3>
 
             <p>
               The Window gave sight, the Diamond tested form, the Stars
               taught orientation, and the Glass exposed the asker. The
-              seal asks whether those lessons can hold together when the
-              next threshold begins to answer back.
+              seal waited until those lessons could hold together.
             </p>
 
             <blockquote>
@@ -2190,7 +2109,7 @@
 
           <article class="scene-card reveal">
             <span class="scene-index">
-              02 · The World Is Not Ready
+              02 · The World Needed Protection
             </span>
 
             <h3>
@@ -2198,10 +2117,9 @@
             </h3>
 
             <p>
-              Audralia remains unfinished. Some regions, systems, and
-              routes are still under development. Crossing too early may
-              collapse evidence, expose unfinished life, or force a
-              fragile system to answer before it can survive response.
+              Audralia remains unfinished. Hearth remains a working
+              facility. H-Earth remains a ground-level approach. Each path
+              can reveal more than the player is prepared to interpret.
             </p>
 
             <blockquote>
@@ -2212,7 +2130,7 @@
 
           <article class="scene-card reveal">
             <span class="scene-index">
-              03 · The System Is Not Ready
+              03 · The System Needed Return
             </span>
 
             <h3>
@@ -2222,7 +2140,7 @@
             <p>
               Passage is not a line on a map. It is a system event.
               Entry, memory, consequence, return, authority, and failure
-              path must all remain coherent before the gate can release.
+              path must remain coherent before the threshold can release.
             </p>
 
             <blockquote>
@@ -2239,22 +2157,22 @@
       >
         <div class="dialogue-intro reveal">
           <div class="eyebrow">
-            The Explorer’s Objection
+            The Gate’s Correction
           </div>
 
           <h2 id="dialogue-title">
-            You believe the gate is refusing the story.
+            You thought the closed paths meant refusal.
           </h2>
 
           <p>
-            The sealed path answers without opening. That restraint is
-            the message.
+            The gate does not erase the future. It distinguishes
+            directions that must not be collapsed into one doorway.
           </p>
         </div>
 
         <div
           class="dialogue-panel reveal"
-          aria-label="Closed path dialogue"
+          aria-label="Threshold distribution dialogue"
         >
           <div
             class="dialogue-line"
@@ -2263,7 +2181,7 @@
             <span>You</span>
 
             <p>
-              “I can see the road. Why won’t it open?”
+              “Are the paths still closed?”
             </p>
           </div>
 
@@ -2274,7 +2192,8 @@
             <span>Gate</span>
 
             <p>
-              “Because sight is not proof of safe passage.”
+              “They are no longer hidden from you. That is not the same
+              as owning them.”
             </p>
           </div>
 
@@ -2285,7 +2204,7 @@
             <span>You</span>
 
             <p>
-              “I already questioned myself in the Glass.”
+              “Then what opens now?”
             </p>
           </div>
 
@@ -2296,8 +2215,8 @@
             <span>Gate</span>
 
             <p>
-              “Then you know desire for an answer can still outrun
-              readiness for consequence.”
+              “Audralia as living frontier. Hearth as facility. H-Earth
+              as ground-level approach. The Constellation as return.”
             </p>
           </div>
 
@@ -2308,7 +2227,7 @@
             <span>You</span>
 
             <p>
-              “What must be proven?”
+              “Which one is the end?”
             </p>
           </div>
 
@@ -2319,101 +2238,129 @@
             <span>Gate</span>
 
             <p>
-              “That you can cross without losing form, that the world can
-              receive you without fracture, and that return remains more
-              than a wish.”
+              “None. Mirrorland prepared you to approach them without
+              confusing access with completion.”
             </p>
           </div>
         </div>
       </section>
 
       <section
-        class="conditions-section"
-        aria-labelledby="conditions-title"
+        id="threshold-options"
+        class="options-section"
+        aria-labelledby="threshold-options-title"
       >
         <header class="section-heading reveal">
           <div>
             <div class="eyebrow">
-              Five Conditions Before Opening
+              The Next Unfinished Thresholds
             </div>
 
-            <h2 id="conditions-title">
-              The future must become accountable.
+            <h2 id="threshold-options-title">
+              Choose the direction that matches the question.
             </h2>
           </div>
 
           <p>
-            A path becomes eligible for opening only when its crossing,
-            consequence, and return can be inspected before passage
-            begins.
+            Mirrorland ends by distributing the player toward live
+            paths, not by pretending the journey is complete.
           </p>
         </header>
 
-        <div class="conditions-grid">
-          <article class="condition-card reveal">
-            <span>Condition One</span>
+        <div class="options-grid">
+          <a
+            class="option-card reveal"
+            href="/showroom/globe/audralia/"
+            data-primary="true"
+            data-kind="audralia"
+          >
+            <span class="option-kicker">
+              Living Frontier
+            </span>
 
-            <strong>
-              The route is mapped.
-            </strong>
-
-            <p>
-              Entry, transition, destination, hazards, boundaries, and
-              known points of no return are declared.
-            </p>
-          </article>
-
-          <article class="condition-card reveal">
-            <span>Condition Two</span>
-
-            <strong>
-              The affected world is known.
-            </strong>
+            <h3>
+              Audralia
+            </h3>
 
             <p>
-              People, systems, records, terrain, and unfinished regions
-              exposed by the crossing are identified.
+              Continue toward the living world under development. This is
+              the frontier threshold, not final possession of the world.
             </p>
-          </article>
 
-          <article class="condition-card reveal">
-            <span>Condition Three</span>
+            <span>
+              Continue toward Audralia
+            </span>
+          </a>
 
-            <strong>
-              Ownership is assigned.
-            </strong>
+          <a
+            class="option-card reveal"
+            href="/showroom/globe/hearth/"
+            data-kind="hearth"
+          >
+            <span class="option-kicker">
+              Facility Interface
+            </span>
+
+            <h3>
+              Hearth
+            </h3>
 
             <p>
-              Someone is responsible for authorization, supervision,
-              interruption, consequence, and closure.
+              Return to the facility behind the window where Audralia is
+              observed, developed, tested, and prepared.
             </p>
-          </article>
 
-          <article class="condition-card reveal">
-            <span>Condition Four</span>
+            <span>
+              Continue to Hearth
+            </span>
+          </a>
 
-            <strong>
-              Continuity is preserved.
-            </strong>
+          <a
+            class="option-card reveal"
+            href="/showroom/globe/h-earth/"
+            data-kind="h-earth"
+          >
+            <span class="option-kicker">
+              Ground-Level Approach
+            </span>
+
+            <h3>
+              H-Earth
+            </h3>
 
             <p>
-              The evidence trail, identity, memory, source route, and
-              return hierarchy remain recoverable.
+              Approach the ground-level path connected to the world
+              beyond the chamber. This remains a distinct threshold from
+              Hearth and Audralia.
             </p>
-          </article>
 
-          <article class="condition-card reveal">
-            <span>Condition Five</span>
+            <span>
+              Continue to H-Earth
+            </span>
+          </a>
 
-            <strong>
-              Return is executable.
-            </strong>
+          <a
+            class="option-card reveal"
+            href="/showroom/"
+            data-kind="constellation"
+          >
+            <span class="option-kicker">
+              Return Route
+            </span>
+
+            <h3>
+              Constellation
+            </h3>
 
             <p>
-              The way back is not merely imagined. It is defined,
-              testable, and able to survive failure.
+              Return to the Showroom route field with the Mirrorland
+              sequence, South preparation, and West boundaries preserved.
             </p>
-          </article>
+
+            <span>
+              Return to Constellation
+            </span>
+          </a>
         </div>
       </section>
 
@@ -2427,32 +2374,46 @@
           </span>
 
           <h2 id="practical-title">
-            Preserve the door until the crossing can survive.
+            The door opens as a choice, not a claim.
           </h2>
 
           <p>
-            A closed path is not the end of motion. It is a boundary that
-            remembers the future without pretending the future is ready.
-            If a path opens too early, it may turn discovery into damage.
-            If it never opens, restraint becomes avoidance. The next
-            threshold must show whether Audralia can be approached
-            without confusing access with possession.
+            Mirrorland has not made you owner of the world beyond it. It
+            has taught you how to approach the next thresholds without
+            erasing the boundary between access, readiness, facility,
+            frontier, and ground-level world. Choose where to continue,
+            or return to the Constellation before crossing another
+            threshold.
           </p>
         </div>
 
         <div class="practical-actions">
           <a
             class="button button-gold"
-            href="/showroom/mysteries/journey-into-audralia/"
+            href="/showroom/globe/audralia/"
           >
             Continue Toward Audralia
           </a>
 
           <a
             class="button"
-            href="/showroom/mysteries/questions-in-the-glass/"
+            href="/showroom/globe/hearth/"
           >
-            Return to the Glass
+            Continue to Hearth
+          </a>
+
+          <a
+            class="button"
+            href="/showroom/globe/h-earth/"
+          >
+            Continue to H-Earth
+          </a>
+
+          <a
+            class="button"
+            href="/showroom/"
+          >
+            Return to Constellation
           </a>
         </div>
       </section>
@@ -2471,11 +2432,11 @@
 
         <div class="evidence-body">
           <p>
-            This chamber reveals that visible paths may remain closed
-            because opening them too early would endanger the player, the
-            world, or the system around the crossing. It does not grant
-            route-opening authority, full agency, or final entry into
-            Audralia.
+            This chamber reveals that the end of Mirrorland is a threshold
+            distribution point. Audralia, Hearth, and H-Earth are live
+            onward paths under /showroom/globe/. The page does not grant
+            full agency, full embodiment, final world ownership, or final
+            Audralia traversal.
           </p>
 
           <div class="evidence-grid">
@@ -2483,9 +2444,9 @@
               <span>Revealed Here</span>
 
               <p>
-                Possibility is not permission. A route must preserve
-                readiness, consequence, continuity, ownership, and return
-                before it can responsibly open.
+                Mirrorland now points toward Audralia, Hearth, H-Earth,
+                and Constellation return as distinct paths with distinct
+                meanings.
               </p>
             </article>
 
@@ -2493,19 +2454,19 @@
               <span>Withheld Here</span>
 
               <p>
-                Full agency, full embodiment, full conjugation, H-Earth,
-                ZIONTS, final Audralia traversal, and final Earth stakes
-                remain closed.
+                Full agency, full embodiment, full conjugation, ZIONTS,
+                final Audralia traversal, and final Earth stakes remain
+                closed.
               </p>
             </article>
 
             <article>
-              <span>Next Pressure</span>
+              <span>Route Binding</span>
 
               <p>
-                The next route becomes the controlled Audralia threshold:
-                not a final arrival, but the beginning of approach toward
-                the living world.
+                Audralia, Hearth, H-Earth, and Earth paths are bound from
+                the visible /showroom/globe/ folder structure supplied by
+                the user.
               </p>
             </article>
           </div>
@@ -2520,7 +2481,7 @@
         </strong>
 
         <span>
-          The route exists. The crossing must still be earned.
+          Mirrorland ends by revealing the next unfinished thresholds.
         </span>
       </div>
 
@@ -2529,8 +2490,20 @@
           Previous Chamber
         </a>
 
-        <a href="/showroom/mysteries/journey-into-audralia/">
-          Next Chamber
+        <a href="/showroom/globe/audralia/">
+          Audralia
+        </a>
+
+        <a href="/showroom/globe/hearth/">
+          Hearth
+        </a>
+
+        <a href="/showroom/globe/h-earth/">
+          H-Earth
+        </a>
+
+        <a href="/showroom/globe/earth/">
+          Earth
         </a>
 
         <a href="/showroom/">
@@ -2549,7 +2522,7 @@
       "use strict";
 
       const CONTRACT =
-        "SHOWROOM_SATELLITE_PATHS_NOT_YET_OPEN_HTML_TNT_v2_CLOSED_PATHS_BEFORE_AUDRALIA";
+        "SHOWROOM_SATELLITE_PATHS_NOT_YET_OPEN_HTML_TNT_v3_THRESHOLD_DISTRIBUTION_TO_AUDRALIA_HEARTH_H_EARTH";
 
       const root =
         document.documentElement;
@@ -2639,13 +2612,19 @@
           localEnhancementOnly: true,
           globalRuntimeOwned: false,
           navigationOwned: false,
-          systematicReveal: "closed-paths-before-audralia",
+          systematicReveal: "threshold-distribution-to-audralia-hearth-h-earth",
           previousRoute: "/showroom/mysteries/questions-in-the-glass/",
-          nextRoute: "/showroom/mysteries/journey-into-audralia/",
-          nextRouteInferredUntilBaseline: true,
+          nextRoute: "/showroom/globe/audralia/",
+          nextRouteInferredUntilBaseline: false,
+          audraliaRoute: "/showroom/globe/audralia/",
+          hearthRoute: "/showroom/globe/hearth/",
+          hEarthRoute: "/showroom/globe/h-earth/",
+          earthRoute: "/showroom/globe/earth/",
+          constellationRoute: "/showroom/",
           pathState: "closed-pending-conditions",
           pathOpeningAuthority: false,
           closureModel: "threshold-evidence-readiness-return",
+          thresholdDistribution: true,
           continuousStoryHandoff: true,
           fullAgencyGranted: false,
           reducedMotion: reducedMotion,
@@ -2685,7 +2664,7 @@
 </html>
 
 <!--
-SHOWROOM_SATELLITE_PATHS_NOT_YET_OPEN_HTML_RECEIPT_v2_CLOSED_PATHS_BEFORE_AUDRALIA
+SHOWROOM_SATELLITE_PATHS_NOT_YET_OPEN_HTML_RECEIPT_v3_THRESHOLD_DISTRIBUTION_TO_AUDRALIA_HEARTH_H_EARTH
 
 TARGET:
 /showroom/mysteries/paths-not-yet-open/index.html
@@ -2697,8 +2676,11 @@ SOURCE BASELINE:
 SHOWROOM_SATELLITE_PATHS_NOT_YET_OPEN_HTML_TNT_v1
 supplied by user as current source baseline for west-3.
 
-NEW CONTRACT:
+PRIOR RENEWAL:
 SHOWROOM_SATELLITE_PATHS_NOT_YET_OPEN_HTML_TNT_v2_CLOSED_PATHS_BEFORE_AUDRALIA
+
+NEW CONTRACT:
+SHOWROOM_SATELLITE_PATHS_NOT_YET_OPEN_HTML_TNT_v3_THRESHOLD_DISTRIBUTION_TO_AUDRALIA_HEARTH_H_EARTH
 
 ROUTE FAMILY:
 Mysteries / West
@@ -2716,12 +2698,25 @@ PREVIOUS ROUTE:
 /showroom/mysteries/questions-in-the-glass/
 
 NEXT ROUTE:
-/showroom/mysteries/journey-into-audralia/
+/showroom/globe/audralia/
 
 NEXT ROUTE STATUS:
-INFERRED UNTIL WEST-4 BASELINE IS SUPPLIED.
-The inferred path follows the established route-slug pattern and the frozen route title:
-west-4 · Journey into Audralia
+SOURCE-BOUND FROM CURRENT HEARTH BASELINE AND USER-SUPPLIED /showroom/globe/ FOLDER STRUCTURE.
+
+AUDRALIA ROUTE:
+/showroom/globe/audralia/
+
+HEARTH ROUTE:
+/showroom/globe/hearth/
+
+H-EARTH ROUTE:
+/showroom/globe/h-earth/
+
+EARTH ROUTE:
+/showroom/globe/earth/
+
+CONSTELLATION ROUTE:
+/showroom/
 
 RETURN ROUTE:
 /showroom/
@@ -2743,57 +2738,61 @@ SHOWROOM_MIRRORLAND_AUDRALIA_ROUTE_PAGE_NARRATIVE_FREEZE_PACKET_v1_1
 SHOWROOM_ROUTE_PAGE_RENEWAL_RULES_LOCK_v1
 CONTINUOUS STORY HANDOFF RULE
 
-PRIMARY ROUTE CORRECTION:
-The source baseline routed west-3 next directly to:
-/showroom/
-
-The frozen 12-page non-character route arc requires:
-west-3 · Paths Not Yet Open
-→ west-4 · Journey into Audralia
-
-This replacement uses the inferred west-4 path:
+PRIMARY ROUTE CORRECTION FROM v2:
+Removed dead inferred route:
 /showroom/mysteries/journey-into-audralia/
 
-This inferred path must be confirmed against the west-4 source baseline before final repository binding.
+Replaced with source-bound live Audralia route:
+/showroom/globe/audralia/
 
-PRIMARY NARRATIVE CORRECTIONS FROM v1:
-- Removed final-satellite closure language.
-- Reframed west-3 as the last gate before Journey into Audralia.
-- Preserved route identity, path-state metadata, opening-authority boundary, and closure model.
-- Connected west-2 to west-3 by showing that the player's desire for access is not sufficient after the Glass reveals question-pressure.
-- Connected west-3 to west-4 by making the next pressure the controlled Audralia threshold.
+Added onward threshold options:
+- /showroom/globe/audralia/
+- /showroom/globe/hearth/
+- /showroom/globe/h-earth/
+- /showroom/
+
+Bound visible but secondary route:
+- /showroom/globe/earth/
+
+PRIMARY NARRATIVE CORRECTION:
+The end of Mirrorland is not final closure and not a dead link to an inferred west-4 page.
+It is a threshold distribution point into the next available unfinished paths.
 
 PAGE 11 / WEST-3 STORY SPINE:
 1. The player leaves the Glass after learning that questions reveal the asker.
 2. Several paths appear ahead.
-3. Their glyphs pulse, but none open.
-4. The player learns that visible routes do not equal authorized passage.
-5. Closed paths protect the player, the world, and the surrounding system.
-6. Opening requires mapped crossing, affected-world knowledge, ownership, continuity, and executable return.
-7. The next route becomes the controlled threshold toward Audralia.
+3. Their glyphs pulse.
+4. The player learns that visible routes do not equal ownership.
+5. The closed-path lesson remains valid.
+6. Mirrorland now reveals the next live thresholds:
+   - Audralia as living frontier.
+   - Hearth as facility/interface.
+   - H-Earth as ground-level approach.
+   - Constellation as route-field return.
+7. The player chooses where to continue without confusing access with completion.
 
 CONTROLLED REVEAL:
-Some paths remain closed because opening them too early would endanger the player, the world, or the system around the path.
-A visible route is not the same as authorized passage.
+Mirrorland does not end by completing the player.
+Mirrorland ends by revealing the next unfinished thresholds.
+A visible path is not the same as possession or final authority.
 
 WITHHELD:
 - full agency;
 - full embodiment;
 - full conjugation;
-- H-Earth;
 - ZIONTS;
 - final Audralia traversal;
 - final Earth stakes.
 
 DOMINANT ANIMATION IDEA:
 Sealed paths and threshold glyphs pulse.
-The route-road remains visible.
-The central seal does not open.
+The central seal remains visible.
+The path-stage represents threshold distribution, not permanent refusal.
 
 ANTI-TILED-STAR CORRECTION:
 The page does not use repeating square-cell starfields as the main atmosphere.
 Atmospheric stars are hand-positioned through fixed radial points.
-The dominant animated visual is the sealed-path threshold.
+The dominant animated visual is the sealed threshold distribution field.
 
 EMBEDDED SYSTEM:
 - HTML structure
@@ -2830,28 +2829,32 @@ NOT CLAIMED:
 
 NEXT FILE SETUP:
 TARGET:
-UNPROVEN until baseline is supplied, likely:
-/showroom/mysteries/journey-into-audralia/index.html
+/showroom/globe/audralia/index.html
 
 ROUTE:
-west-4 · Journey into Audralia
+Audralia
 
 EXPECTED PREVIOUS:
 /showroom/mysteries/paths-not-yet-open/
 
-EXPECTED NEXT:
-Unknown until baseline is supplied.
+RELATED LIVE PATHS:
+Hearth:
+/showroom/globe/hearth/
+
+H-Earth:
+/showroom/globe/h-earth/
+
+Earth:
+/showroom/globe/earth/
 
 FUNCTION:
-After west-3 teaches that visible paths do not automatically authorize passage, west-4 becomes the controlled Audralia threshold.
+The next renewal should inspect the existing Audralia route and decide whether it is a world-threshold page, globe route page, or bridge into the larger Audralia/H-Earth structure.
 
-CONTROLLED REVEAL:
-Audralia is not the end of the journey. It is the frontier threshold where the player begins approaching the living world, with H-Earth still ahead as the first playable ground-level view and ZIONTS still withheld as consequence horizon.
-
-DOMINANT MECHANIC:
-Audralia horizon / chamber-to-world threshold / distant ground-level approach
+CONTROLLED AUDRALIA BOUNDARY:
+Audralia should not be treated as completed paradise or final possession.
+It is the living frontier world under development beyond Hearth and Mirrorland preparation.
 
 REQUEST:
-Send the current baseline for the west-4 route file before crafting:
-likely /showroom/mysteries/journey-into-audralia/index.html
+Send the current baseline for:
+/showroom/globe/audralia/index.html
 -->

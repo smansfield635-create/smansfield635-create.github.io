@@ -102,7 +102,7 @@
           </p>
         </details>
 
-        <details class="compass-formula-artifact">
+        <details class="compass-formula-artifact compass-formula-artifact--primary">
           <summary aria-label="Expand the collapse predicate">
             <span class="compass-formula-artifact__title">
               The Collapse Predicate
@@ -169,7 +169,11 @@
               data-compass-lens-panel="practical"
             >
               <p>
-                Collapse rarely begins with a dramatic moment. It begins when the person or part holding everything together becomes the reason no one sees what is failing elsewhere. Survival can look like stability until the last remaining capacity disappears.
+                Qualified collapse is not defined by discomfort, conflict, or one visible failure. It appears only when internal burden is saturated, external pressure is saturated, and the weakest required coherence axis falls below its governed threshold.
+              </p>
+
+              <p>
+                Stronger areas do not erase the weakest required function. Missing or corrupt evidence is not proof.
               </p>
             </div>
 
@@ -181,7 +185,7 @@
               hidden
             >
               <p>
-                <i>B</i><sub>256</sub> represents the internal burden field. <i>P</i><sub>192</sub> represents the external pressure field. <i>E</i>, <i>I</i>, and <i>V</i> form the noncompensatory coherence spine. No stronger axis replaces the function of another required axis.
+                <i>B</i><sub>256</sub> represents the 256-cell internal burden field. <i>P</i><sub>192</sub> represents the 192-channel external pressure field. <i>E</i>, <i>I</i>, and <i>V</i> form the required noncompensatory coherence spine. The minimum operator identifies the weakest required axis.
               </p>
             </div>
 
@@ -193,7 +197,196 @@
               hidden
             >
               <p>
-                This predicate is under empirical reduction and validation. It is presented as a disciplined candidate structure, not a completed universal proof claim.
+                This predicate defines qualified collapse as a mathematical and evidentiary condition. It does not by itself claim universal empirical validity, production readiness, clinical validity, infrastructure validation, or domain-general proof.
+              </p>
+            </div>
+          </div>
+        </details>
+
+        <details class="compass-formula-artifact compass-formula-artifact--stacked">
+          <summary aria-label="Expand the pressure capacity ratio">
+            <span class="compass-formula-artifact__title">
+              A3D-E / Pressure–Capacity Ratio
+            </span>
+
+            <span class="compass-formula-artifact__math">
+              <span class="formula-line">Π = <i>G</i> · <i>X</i></span>
+              <span class="formula-line"><i>K</i> = <i>P</i> · <i>R</i> · <i>A</i> · <i>C</i></span>
+              <span class="formula-line"><i>K</i><sub>used</sub> = max(<i>K</i>, ε<sub>K</sub>)</span>
+              <span class="formula-line"><i>PCR</i> = Π / <i>K</i><sub>used</sub></span>
+            </span>
+          </summary>
+
+          <div
+            class="compass-formula-artifact__body"
+            data-compass-lens-set="pressure-capacity-ratio"
+          >
+            <div
+              class="compass-lens-tabs"
+              role="tablist"
+              aria-label="Pressure capacity ratio lenses"
+              data-compass-lens-count="3"
+            >
+              <button
+                class="compass-lens-tab"
+                type="button"
+                role="tab"
+                aria-selected="true"
+                aria-controls="pcr-practical"
+                data-compass-lens-tab="practical"
+              >
+                Practical
+              </button>
+
+              <button
+                class="compass-lens-tab"
+                type="button"
+                role="tab"
+                aria-selected="false"
+                aria-controls="pcr-engineering"
+                data-compass-lens-tab="engineering"
+              >
+                Engineering
+              </button>
+
+              <button
+                class="compass-lens-tab"
+                type="button"
+                role="tab"
+                aria-selected="false"
+                aria-controls="pcr-evidence"
+                data-compass-lens-tab="evidence"
+              >
+                Evidence
+              </button>
+            </div>
+
+            <div
+              id="pcr-practical"
+              class="compass-lens-panel"
+              role="tabpanel"
+              data-compass-lens-panel="practical"
+            >
+              <p>
+                A system remains stable when usable capacity can meet the pressure being placed on it. It enters collapse pressure when applied pressure exceeds usable capacity.
+              </p>
+            </div>
+
+            <div
+              id="pcr-engineering"
+              class="compass-lens-panel"
+              role="tabpanel"
+              data-compass-lens-panel="engineering"
+              hidden
+            >
+              <p>
+                Π is pressure mass. <i>G</i> is governing load. <i>X</i> is exposure, environmental stress, or decay acceleration. <i>K</i> is usable capacity, composed from preservation, recovery, adaptation, and control capacity factors. <i>K</i><sub>used</sub> prevents division collapse as <i>K</i> approaches zero.
+              </p>
+            </div>
+
+            <div
+              id="pcr-evidence"
+              class="compass-lens-panel"
+              role="tabpanel"
+              data-compass-lens-panel="evidence"
+              hidden
+            >
+              <p>
+                SAFE_MODE is triggered by <i>K</i> ≤ ε<sub>K</sub>, not by PCR alone. If Π = 0 and <i>K</i> &gt; ε<sub>K</sub>, the system is a low-pressure pass candidate, not a collapse case.
+              </p>
+            </div>
+          </div>
+        </details>
+
+        <details class="compass-formula-artifact compass-formula-artifact--stacked">
+          <summary aria-label="Expand the stability and collapse pressure split">
+            <span class="compass-formula-artifact__title">
+              Stability and Collapse-Pressure Split
+            </span>
+
+            <span class="compass-formula-artifact__math">
+              <span class="formula-line"><i>S</i>* = 1 / (1 + <i>PCR</i>)</span>
+              <span class="formula-line"><i>H</i>* = <i>PCR</i> / (1 + <i>PCR</i>)</span>
+              <span class="formula-line"><i>S</i>* + <i>H</i>* = 1</span>
+            </span>
+          </summary>
+
+          <div
+            class="compass-formula-artifact__body"
+            data-compass-lens-set="stability-collapse-pressure"
+          >
+            <div
+              class="compass-lens-tabs"
+              role="tablist"
+              aria-label="Stability and collapse pressure lenses"
+              data-compass-lens-count="3"
+            >
+              <button
+                class="compass-lens-tab"
+                type="button"
+                role="tab"
+                aria-selected="true"
+                aria-controls="split-practical"
+                data-compass-lens-tab="practical"
+              >
+                Practical
+              </button>
+
+              <button
+                class="compass-lens-tab"
+                type="button"
+                role="tab"
+                aria-selected="false"
+                aria-controls="split-engineering"
+                data-compass-lens-tab="engineering"
+              >
+                Engineering
+              </button>
+
+              <button
+                class="compass-lens-tab"
+                type="button"
+                role="tab"
+                aria-selected="false"
+                aria-controls="split-evidence"
+                data-compass-lens-tab="evidence"
+              >
+                Evidence
+              </button>
+            </div>
+
+            <div
+              id="split-practical"
+              class="compass-lens-panel"
+              role="tabpanel"
+              data-compass-lens-panel="practical"
+            >
+              <p>
+                The same pressure-capacity relation can be read as remaining stability or as collapse-pressure mass. The split makes the tradeoff visible instead of hiding pressure behind a single score.
+              </p>
+            </div>
+
+            <div
+              id="split-engineering"
+              class="compass-lens-panel"
+              role="tabpanel"
+              data-compass-lens-panel="engineering"
+              hidden
+            >
+              <p>
+                <i>S</i>* is normalized stability mass. <i>H</i>* is normalized collapse-pressure mass. Both derive from PCR, and the invariant <i>S</i>* + <i>H</i>* = 1 prevents hidden mass or unaccounted pressure.
+              </p>
+            </div>
+
+            <div
+              id="split-evidence"
+              class="compass-lens-panel"
+              role="tabpanel"
+              data-compass-lens-panel="evidence"
+              hidden
+            >
+              <p>
+                The split is a bounded mathematical presentation of current research structure. It is not a standalone empirical-validation claim.
               </p>
             </div>
           </div>
@@ -910,7 +1103,7 @@
                 class="compass-lens-tabs"
                 role="tablist"
                 aria-label="Minimum principle lenses"
-                data-compass-lens-count="2"
+                data-compass-lens-count="3"
               >
                 <button
                   class="compass-lens-tab"
@@ -932,6 +1125,17 @@
                   data-compass-lens-tab="engineering"
                 >
                   Engineering
+                </button>
+
+                <button
+                  class="compass-lens-tab"
+                  type="button"
+                  role="tab"
+                  aria-selected="false"
+                  aria-controls="minimum-evidence"
+                  data-compass-lens-tab="evidence"
+                >
+                  Evidence
                 </button>
               </div>
 
@@ -957,6 +1161,18 @@
                   The coherence spine is noncompensatory. The system state is governed by the weakest required axis, because each axis contributes a distinct function that cannot be replaced by excess strength elsewhere.
                 </p>
               </div>
+
+              <div
+                id="minimum-evidence"
+                class="compass-lens-panel"
+                role="tabpanel"
+                data-compass-lens-panel="evidence"
+                hidden
+              >
+                <p>
+                  The minimum principle is a structural evaluation rule. It is not empirical validation by itself.
+                </p>
+              </div>
             </div>
           </details>
         </details>
@@ -970,28 +1186,27 @@
             What can measurement clarify when it is used as one source of evidence rather than as the whole decision?
           </p>
 
-          <details class="compass-formula-artifact">
+          <details class="compass-formula-artifact compass-formula-artifact--stacked">
             <summary>
               <span class="compass-formula-artifact__title">
-                Operational Coherence
+                Pressure–Capacity Ratio
               </span>
 
               <span class="compass-formula-artifact__math">
-                <i>coherenceHolds</i> =
-                (<i>minimumConstraint</i> ≥ <i>appliedLoad</i>)
-                ∧
-                (<i>violationTrajectory</i> ≤ 0)
+                <span class="formula-line">Π = <i>G</i> · <i>X</i></span>
+                <span class="formula-line"><i>K</i> = <i>P</i> · <i>R</i> · <i>A</i> · <i>C</i></span>
+                <span class="formula-line"><i>PCR</i> = Π / <i>K</i><sub>used</sub></span>
               </span>
             </summary>
 
             <div
               class="compass-formula-artifact__body"
-              data-compass-lens-set="operational-coherence"
+              data-compass-lens-set="measurement-pcr"
             >
               <div
                 class="compass-lens-tabs"
                 role="tablist"
-                aria-label="Operational coherence lenses"
+                aria-label="Pressure capacity measurement lenses"
                 data-compass-lens-count="3"
               >
                 <button
@@ -999,7 +1214,7 @@
                   type="button"
                   role="tab"
                   aria-selected="true"
-                  aria-controls="operational-practical"
+                  aria-controls="measurement-pcr-practical"
                   data-compass-lens-tab="practical"
                 >
                   Practical
@@ -1010,7 +1225,7 @@
                   type="button"
                   role="tab"
                   aria-selected="false"
-                  aria-controls="operational-engineering"
+                  aria-controls="measurement-pcr-engineering"
                   data-compass-lens-tab="engineering"
                 >
                   Engineering
@@ -1021,7 +1236,7 @@
                   type="button"
                   role="tab"
                   aria-selected="false"
-                  aria-controls="operational-evidence"
+                  aria-controls="measurement-pcr-evidence"
                   data-compass-lens-tab="evidence"
                 >
                   Evidence
@@ -1029,37 +1244,131 @@
               </div>
 
               <div
-                id="operational-practical"
+                id="measurement-pcr-practical"
                 class="compass-lens-panel"
                 role="tabpanel"
                 data-compass-lens-panel="practical"
               >
                 <p>
-                  Growth, rescue, and opportunity can each add demand. Measurement helps show whether the system can carry that demand, while context explains why the demand exists and judgment determines what should happen next.
+                  Measurement helps separate pressure from usable capacity. It can show whether a system is stable, strained, or moving toward collapse pressure without treating the number as the whole decision.
                 </p>
               </div>
 
               <div
-                id="operational-engineering"
+                id="measurement-pcr-engineering"
                 class="compass-lens-panel"
                 role="tabpanel"
                 data-compass-lens-panel="engineering"
                 hidden
               >
                 <p>
-                  <i>minimumConstraint</i> is the lowest required capacity available to the system. <i>appliedLoad</i> is the active demand placed on it. <i>violationTrajectory</i> tracks whether breaks, failures, or constraint violations are increasing or declining.
+                  Π is pressure mass. <i>K</i> is usable capacity. <i>K</i><sub>used</sub> is bounded by max(<i>K</i>, ε<sub>K</sub>) to prevent division collapse. SAFE_MODE is triggered by <i>K</i> ≤ ε<sub>K</sub>, not by PCR alone.
                 </p>
               </div>
 
               <div
-                id="operational-evidence"
+                id="measurement-pcr-evidence"
                 class="compass-lens-panel"
                 role="tabpanel"
                 data-compass-lens-panel="evidence"
                 hidden
               >
                 <p>
-                  This condition evaluates whether coherence currently holds. It is not declared identical to the collapse predicate; the relationship remains future-derived.
+                  Finance Track A is supported in the tested sample as a coincident stress-state index. Finance Track B remains bounded and mixed as a forward-prediction lane.
+                </p>
+              </div>
+            </div>
+          </details>
+
+          <details class="compass-formula-artifact compass-formula-artifact--stacked">
+            <summary>
+              <span class="compass-formula-artifact__title">
+                Stability / Collapse-Pressure Split
+              </span>
+
+              <span class="compass-formula-artifact__math">
+                <span class="formula-line"><i>S</i>* = 1 / (1 + <i>PCR</i>)</span>
+                <span class="formula-line"><i>H</i>* = <i>PCR</i> / (1 + <i>PCR</i>)</span>
+                <span class="formula-line"><i>S</i>* + <i>H</i>* = 1</span>
+              </span>
+            </summary>
+
+            <div
+              class="compass-formula-artifact__body"
+              data-compass-lens-set="measurement-stability-split"
+            >
+              <div
+                class="compass-lens-tabs"
+                role="tablist"
+                aria-label="Stability split lenses"
+                data-compass-lens-count="3"
+              >
+                <button
+                  class="compass-lens-tab"
+                  type="button"
+                  role="tab"
+                  aria-selected="true"
+                  aria-controls="measurement-split-practical"
+                  data-compass-lens-tab="practical"
+                >
+                  Practical
+                </button>
+
+                <button
+                  class="compass-lens-tab"
+                  type="button"
+                  role="tab"
+                  aria-selected="false"
+                  aria-controls="measurement-split-engineering"
+                  data-compass-lens-tab="engineering"
+                >
+                  Engineering
+                </button>
+
+                <button
+                  class="compass-lens-tab"
+                  type="button"
+                  role="tab"
+                  aria-selected="false"
+                  aria-controls="measurement-split-evidence"
+                  data-compass-lens-tab="evidence"
+                >
+                  Evidence
+                </button>
+              </div>
+
+              <div
+                id="measurement-split-practical"
+                class="compass-lens-panel"
+                role="tabpanel"
+                data-compass-lens-panel="practical"
+              >
+                <p>
+                  The split keeps stability and collapse pressure visible at the same time. A system can still have stability remaining while collapse pressure is rising.
+                </p>
+              </div>
+
+              <div
+                id="measurement-split-engineering"
+                class="compass-lens-panel"
+                role="tabpanel"
+                data-compass-lens-panel="engineering"
+                hidden
+              >
+                <p>
+                  <i>S</i>* and <i>H</i>* are normalized outputs from the same PCR relation. Their sum remains one, preserving the full pressure-capacity mass without hidden remainder.
+                </p>
+              </div>
+
+              <div
+                id="measurement-split-evidence"
+                class="compass-lens-panel"
+                role="tabpanel"
+                data-compass-lens-panel="evidence"
+                hidden
+              >
+                <p>
+                  The split summarizes current mathematical standing. It does not claim universal proof, production validation, clinical validation, active infrastructure bounds, state-engine integration, or completed real-telemetry validation.
                 </p>
               </div>
             </div>
@@ -1094,7 +1403,7 @@
                 class="compass-lens-tabs"
                 role="tablist"
                 aria-label="Structural compression lenses"
-                data-compass-lens-count="2"
+                data-compass-lens-count="3"
               >
                 <button
                   class="compass-lens-tab"
@@ -1116,6 +1425,17 @@
                   data-compass-lens-tab="engineering"
                 >
                   Engineering
+                </button>
+
+                <button
+                  class="compass-lens-tab"
+                  type="button"
+                  role="tab"
+                  aria-selected="false"
+                  aria-controls="compression-evidence"
+                  data-compass-lens-tab="evidence"
+                >
+                  Evidence
                 </button>
               </div>
 
@@ -1141,6 +1461,18 @@
                   256 defines the internal burden field. 192 defines the external pressure field. 3 defines the required coherence spine: <i>E</i>, <i>I</i>, and <i>V</i>. The model preserves each field so no category dominates or disappears inside a blended score.
                 </p>
               </div>
+
+              <div
+                id="compression-evidence"
+                class="compass-lens-panel"
+                role="tabpanel"
+                data-compass-lens-panel="evidence"
+                hidden
+              >
+                <p>
+                  451 defines a structural envelope. It does not mean all domain telemetry fields, thresholds, calibration values, or validation results are complete.
+                </p>
+              </div>
             </div>
           </details>
         </details>
@@ -1163,6 +1495,63 @@
               Discovery begins when an idea becomes accountable. A pattern must survive challenge, measurement, context, and the possibility of being wrong. Broader reach remains a research question, not a completed public claim.
             </p>
           </details>
+        </details>
+
+        <details class="compass-discovery__item compass-discovery__item--wide">
+          <summary>
+            Research Standing
+          </summary>
+
+          <p>
+            What is currently supported, what remains bounded, and what is not claimed?
+          </p>
+
+          <div class="compass-equation-status">
+            <div class="compass-equation-status__row">
+              <span class="compass-equation-status__label">
+                Finance Track A
+              </span>
+
+              <span class="compass-equation-status__value">
+                Supported in the tested sample as a coincident stress-state index.
+              </span>
+            </div>
+
+            <div class="compass-equation-status__row">
+              <span class="compass-equation-status__label">
+                Finance Track B
+              </span>
+
+              <span class="compass-equation-status__value">
+                Bounded and mixed as a forward-prediction lane.
+              </span>
+            </div>
+
+            <div class="compass-equation-status__row">
+              <span class="compass-equation-status__label">
+                Pathway 8 SOH
+              </span>
+
+              <span class="compass-equation-status__value">
+                Claim-candidate-output-ready through the corridor, not empirically validated.
+              </span>
+            </div>
+
+            <div class="compass-equation-status__row">
+              <span class="compass-equation-status__label">
+                OSF Discovery
+              </span>
+
+              <span class="compass-equation-status__value">
+                Early discovery and engagement signal, not model validation.
+              </span>
+            </div>
+          </div>
+
+          <p class="compass-equation-boundary">
+            <strong>Boundary:</strong>
+            This page summarizes current mathematical and research standing. It does not claim universal proof, production validation, clinical validation, active infrastructure bounds, state-engine integration, or completed real-telemetry validation.
+          </p>
         </details>
 
         <details class="compass-discovery__item">

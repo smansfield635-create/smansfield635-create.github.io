@@ -1,27 +1,28 @@
 <!-- TARGET FILE: /showroom/mysteries/paths-not-yet-open/index.html -->
-<!-- COMPLETE NEW FILE -->
-<!-- SHOWROOM_SATELLITE_PATHS_NOT_YET_OPEN_HTML_TNT_v1 -->
+<!-- COMPLETE REPLACEMENT -->
+<!-- SHOWROOM_SATELLITE_PATHS_NOT_YET_OPEN_HTML_TNT_v2_CLOSED_PATHS_BEFORE_AUDRALIA -->
 
 <!doctype html>
 
 <html
-  lang="en" 
+  lang="en"
   data-route="/showroom/mysteries/paths-not-yet-open/"
   data-page="showroom-mysteries-paths-not-yet-open"
-  data-version="SHOWROOM-SATELLITE-PATHS-NOT-YET-OPEN-1.0.0"
-  data-contract="SHOWROOM_SATELLITE_PATHS_NOT_YET_OPEN_HTML_TNT_v1"
+  data-version="SHOWROOM-SATELLITE-PATHS-NOT-YET-OPEN-2.0.0"
+  data-contract="SHOWROOM_SATELLITE_PATHS_NOT_YET_OPEN_HTML_TNT_v2_CLOSED_PATHS_BEFORE_AUDRALIA"
   data-showroom-satellite="true"
   data-showroom-route-family="mysteries"
   data-showroom-route-id="west-3"
   data-showroom-route-title="Paths Not Yet Open"
   data-showroom-parent-route="/showroom/"
   data-showroom-previous-route="/showroom/mysteries/questions-in-the-glass/"
-  data-showroom-next-route="/showroom/"
+  data-showroom-next-route="/showroom/mysteries/journey-into-audralia/"
   data-showroom-return-route="/showroom/"
   data-showroom-main-compass-route="/index.html"
   data-showroom-path-state="closed-pending-conditions"
   data-showroom-path-opening-authority="false"
   data-showroom-closure-model="threshold-evidence-readiness-return"
+  data-showroom-next-route-inferred="true"
 >
 <head>
   <meta charset="utf-8">
@@ -37,19 +38,27 @@
 
   <meta
     name="description"
-    content="Stand before the paths Mirrorland has not yet opened. Learn why some routes remain closed, what conditions must be met before passage, and why possibility is not permission."
+    content="After the Glass reveals that questions expose readiness, stand before the sealed paths. A visible route is not authorized passage; some thresholds remain closed until the player, world, and system can survive opening."
   >
 
   <meta
     name="showroom-page-contract"
-    content="SHOWROOM_SATELLITE_PATHS_NOT_YET_OPEN_HTML_TNT_v1"
+    content="SHOWROOM_SATELLITE_PATHS_NOT_YET_OPEN_HTML_TNT_v2_CLOSED_PATHS_BEFORE_AUDRALIA"
   >
 
   <style>
     /* ============================================================
-       SHOWROOM SATELLITE PAGE EMBEDDED VISUAL SYSTEM v1
-       Mysteries / West expression
-       Final satellite chamber
+       SHOWROOM SATELLITE PAGE EMBEDDED VISUAL SYSTEM v2
+       PAGE: west-3 · Paths Not Yet Open
+
+       Authority:
+       - one-file route page;
+       - embedded CSS;
+       - page-local JavaScript only;
+       - no external dependencies;
+       - no shared Showroom runtime ownership;
+       - no route-opening authority;
+       - dominant animation: sealed paths / threshold glyphs.
        ============================================================ */
 
     :root {
@@ -59,7 +68,6 @@
       --ink-1: #050914;
       --ink-2: #091020;
       --ink-3: #101a30;
-      --ink-4: #17233d;
 
       --cream: #f5eddd;
       --cream-soft: #ddd3c1;
@@ -68,7 +76,7 @@
 
       --gold: #e0b85b;
       --gold-bright: #f4d47e;
-      --gold-deep: #805b1c;
+      --gold-soft: #ffe7a5;
       --gold-faint: rgba(224, 184, 91, 0.14);
 
       --cyan: #75e9ff;
@@ -115,13 +123,9 @@
       --radius-xl: 2rem;
 
       --page-width: 84rem;
-      --reading-width: 49rem;
+      --reading-width: 52rem;
 
-      --space-1: 0.4rem;
-      --space-2: 0.65rem;
-      --space-3: 0.95rem;
       --space-4: 1.3rem;
-      --space-5: 1.8rem;
       --space-6: 2.5rem;
       --space-7: 3.5rem;
 
@@ -198,34 +202,39 @@
       pointer-events: none;
       content: "";
 
-      opacity: 0.66;
+      opacity: 0.62;
 
-      background-image:
+      background:
         radial-gradient(
-          circle,
-          rgba(255, 255, 255, 0.8) 0 0.05rem,
-          transparent 0.067rem
-        ),
-        radial-gradient(
-          circle,
-          rgba(183, 152, 255, 0.58) 0 0.04rem,
+          circle at 17% 18%,
+          rgba(255, 255, 255, 0.74) 0 0.045rem,
           transparent 0.06rem
         ),
         radial-gradient(
-          circle,
-          rgba(117, 233, 255, 0.45) 0 0.045rem,
+          circle at 79% 16%,
+          rgba(183, 152, 255, 0.62) 0 0.04rem,
+          transparent 0.06rem
+        ),
+        radial-gradient(
+          circle at 91% 68%,
+          rgba(117, 233, 255, 0.56) 0 0.045rem,
           transparent 0.065rem
+        ),
+        radial-gradient(
+          circle at 34% 83%,
+          rgba(255, 255, 255, 0.46) 0 0.036rem,
+          transparent 0.055rem
+        ),
+        radial-gradient(
+          circle at 11% 66%,
+          rgba(183, 152, 255, 0.44) 0 0.032rem,
+          transparent 0.052rem
+        ),
+        radial-gradient(
+          circle at 58% 31%,
+          rgba(244, 212, 126, 0.34) 0 0.032rem,
+          transparent 0.052rem
         );
-
-      background-size:
-        6.1rem 6.1rem,
-        9.8rem 9.8rem,
-        14.2rem 14.2rem;
-
-      background-position:
-        0 0,
-        2.5rem 3.7rem,
-        6rem 1.8rem;
     }
 
     body::after {
@@ -251,6 +260,13 @@
         );
     }
 
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+    }
+
     a,
     button {
       -webkit-tap-highlight-color: transparent;
@@ -264,10 +280,7 @@
     h2,
     h3,
     p,
-    blockquote,
-    dl,
-    dd,
-    ul {
+    blockquote {
       margin-top: 0;
     }
 
@@ -280,10 +293,12 @@
     }
 
     p,
-    li,
-    dd,
     blockquote {
       text-wrap: pretty;
+    }
+
+    [hidden] {
+      display: none !important;
     }
 
     :focus-visible {
@@ -331,7 +346,7 @@
 
     .eyebrow,
     .route-kicker,
-    .chapter-index,
+    .scene-index,
     .path-label,
     .practical-label {
       color: var(--gold-bright);
@@ -422,6 +437,10 @@
       transform: translateY(-1px);
     }
 
+    .button:active {
+      transform: translateY(0);
+    }
+
     .button-gold {
       border-color: rgba(255, 222, 142, 0.76);
       color: #171006;
@@ -437,6 +456,14 @@
       box-shadow:
         0 0.95rem 2.3rem rgba(156, 105, 25, 0.24),
         0 0 1.7rem rgba(245, 213, 130, 0.16);
+    }
+
+    .button-gold:hover {
+      border-color: #fff1bf;
+
+      box-shadow:
+        0 1rem 2.7rem rgba(156, 105, 25, 0.3),
+        0 0 2rem rgba(245, 213, 130, 0.22);
     }
 
     /* ============================================================
@@ -598,6 +625,10 @@
       letter-spacing: 0.05em;
       text-decoration: none;
       text-transform: uppercase;
+
+      transition:
+        color var(--transition-fast),
+        background var(--transition-fast);
     }
 
     .topbar-nav a:hover {
@@ -638,13 +669,13 @@
     }
 
     /* ============================================================
-       HERO CLOSED PATH
+       HERO / SEALED PATHS
        ============================================================ */
 
     .route-hero {
       position: relative;
 
-      min-height: min(80vh, 50rem);
+      min-height: min(82vh, 52rem);
       overflow: hidden;
 
       border: 1px solid rgba(183, 152, 255, 0.24);
@@ -671,14 +702,36 @@
       isolation: isolate;
     }
 
+    .route-hero::before {
+      position: absolute;
+      z-index: -1;
+      inset: 0;
+
+      content: "";
+
+      background:
+        radial-gradient(
+          circle at 70% 42%,
+          transparent 0 9rem,
+          rgba(220, 231, 242, 0.055) 9.1rem 9.2rem,
+          transparent 9.3rem
+        ),
+        radial-gradient(
+          circle at 70% 42%,
+          transparent 0 14rem,
+          rgba(183, 152, 255, 0.045) 14.1rem 14.2rem,
+          transparent 14.3rem
+        );
+    }
+
     .route-hero__inner {
       display: grid;
 
       min-height: inherit;
 
       grid-template-columns:
-        minmax(0, 1.15fr)
-        minmax(18rem, 0.85fr);
+        minmax(0, 1.08fr)
+        minmax(18rem, 0.92fr);
 
       align-items: center;
       gap: clamp(2rem, 6vw, 6rem);
@@ -720,7 +773,7 @@
     }
 
     .hero-lead {
-      max-width: 44rem;
+      max-width: 45rem;
       margin-bottom: 1.5rem;
 
       color: var(--muted-strong);
@@ -733,8 +786,12 @@
       gap: 0.7rem;
     }
 
-    .path-vault {
+    .path-stage {
       position: relative;
+
+      display: grid;
+      align-content: end;
+      gap: 1rem;
 
       min-height: 28rem;
       overflow: hidden;
@@ -760,12 +817,19 @@
         inset 0.24rem 0 0 rgba(183, 152, 255, 0.28);
     }
 
+    .sealed-field {
+      position: absolute;
+      inset: 1rem 1rem 6.5rem;
+
+      pointer-events: none;
+    }
+
     .path-gate {
       position: absolute;
-      top: 6%;
+      top: 48%;
       left: 50%;
 
-      width: 13rem;
+      width: min(76%, 17rem);
       height: 16rem;
 
       border: 1px solid rgba(220, 231, 242, 0.38);
@@ -785,7 +849,7 @@
         0 0 3rem rgba(183, 152, 255, 0.16),
         inset 0 0 2rem rgba(117, 233, 255, 0.05);
 
-      transform: translateX(-50%);
+      transform: translate(-50%, -50%);
     }
 
     .path-gate::before {
@@ -825,7 +889,8 @@
 
     .path-road {
       position: absolute;
-      top: 9rem;
+      z-index: 2;
+      top: 43%;
       left: 50%;
 
       width: 8rem;
@@ -853,17 +918,17 @@
 
     .path-seal {
       position: absolute;
-      z-index: 2;
-      top: 9.2rem;
+      z-index: 4;
+      top: 48%;
       left: 50%;
 
       display: grid;
 
-      width: 4.2rem;
-      height: 4.2rem;
+      width: 4.5rem;
+      height: 4.5rem;
       place-items: center;
 
-      border: 1px solid rgba(255, 145, 163, 0.5);
+      border: 1px solid rgba(255, 145, 163, 0.52);
       border-radius: 50%;
 
       color: var(--rose);
@@ -878,22 +943,118 @@
       box-shadow:
         0 0 1.8rem rgba(255, 145, 163, 0.2);
 
-      font-size: 1.5rem;
+      font-size: 1.55rem;
       font-weight: 300;
 
-      transform: translateX(-50%);
+      transform: translate(-50%, -50%);
+      animation: sealPulse 5.5s ease-in-out infinite;
     }
 
     .path-seal::before {
       content: "×";
     }
 
-    .path-copy {
+    .threshold-glyph {
       position: absolute;
       z-index: 3;
-      right: 1.4rem;
-      bottom: 1.4rem;
-      left: 1.4rem;
+
+      width: 1.45rem;
+      height: 1.45rem;
+
+      border: 1px solid rgba(183, 152, 255, 0.42);
+      border-radius: 50%;
+
+      background:
+        radial-gradient(
+          circle,
+          rgba(183, 152, 255, 0.22),
+          rgba(5, 9, 20, 0.85)
+        );
+
+      box-shadow:
+        0 0 1.2rem rgba(183, 152, 255, 0.22);
+
+      opacity: 0.4;
+      animation: glyphPulse 6s ease-in-out infinite;
+    }
+
+    .threshold-glyph::before {
+      position: absolute;
+      inset: 0.38rem;
+
+      content: "";
+
+      border: 1px solid rgba(244, 212, 126, 0.45);
+      border-radius: 50%;
+    }
+
+    .threshold-glyph--one {
+      top: 30%;
+      left: 31%;
+      animation-delay: -0.6s;
+    }
+
+    .threshold-glyph--two {
+      top: 31%;
+      right: 30%;
+      animation-delay: -1.8s;
+    }
+
+    .threshold-glyph--three {
+      bottom: 33%;
+      left: 27%;
+      animation-delay: -3s;
+    }
+
+    .threshold-glyph--four {
+      right: 26%;
+      bottom: 34%;
+      animation-delay: -4.2s;
+    }
+
+    .closed-line {
+      position: absolute;
+      z-index: 1;
+
+      height: 1px;
+
+      background:
+        linear-gradient(
+          90deg,
+          rgba(117, 233, 255, 0),
+          rgba(117, 233, 255, 0.55),
+          rgba(255, 145, 163, 0.42),
+          rgba(117, 233, 255, 0)
+        );
+
+      opacity: 0.28;
+      transform-origin: center;
+    }
+
+    .closed-line--one {
+      top: 38%;
+      left: 24%;
+      width: 11rem;
+      transform: rotate(18deg);
+    }
+
+    .closed-line--two {
+      top: 57%;
+      right: 22%;
+      width: 10rem;
+      transform: rotate(-24deg);
+    }
+
+    .closed-line--three {
+      top: 47%;
+      left: 28%;
+      width: 13rem;
+      transform: rotate(-3deg);
+    }
+
+    .path-copy {
+      position: relative;
+      z-index: 5;
     }
 
     .path-label {
@@ -925,15 +1086,15 @@
     }
 
     /* ============================================================
-       CLOSED PATH REASONS
+       STORY CARDS
        ============================================================ */
 
-    .revelation-stage {
+    .story-stage {
       display: grid;
       gap: 1rem;
     }
 
-    .revelation-grid {
+    .scene-grid {
       display: grid;
 
       grid-template-columns:
@@ -942,8 +1103,12 @@
       gap: 0.9rem;
     }
 
-    .revelation-card {
+    .scene-card {
+      position: relative;
+
       min-width: 0;
+      overflow: hidden;
+
       padding: 1.25rem;
 
       border: 1px solid rgba(183, 152, 255, 0.18);
@@ -958,7 +1123,7 @@
         box-shadow var(--transition);
     }
 
-    .revelation-card:hover {
+    .scene-card:hover {
       border-color: rgba(183, 152, 255, 0.42);
 
       box-shadow:
@@ -968,22 +1133,43 @@
       transform: translateY(-3px);
     }
 
-    .chapter-index {
+    .scene-card::before {
+      position: absolute;
+      top: 0;
+      right: 0;
+
+      width: 8rem;
+      height: 8rem;
+
+      pointer-events: none;
+      content: "";
+
+      background:
+        radial-gradient(
+          circle at 100% 0,
+          rgba(183, 152, 255, 0.11),
+          transparent 68%
+        );
+    }
+
+    .scene-index {
       display: block;
       margin-bottom: 0.8rem;
     }
 
-    .revelation-card h3 {
+    .scene-card h3 {
       margin-bottom: 0.65rem;
     }
 
-    .revelation-card p {
+    .scene-card p {
       margin-bottom: 0;
       color: var(--muted-strong);
     }
 
-    .revelation-card blockquote {
-      margin: 1rem 0 0;
+    .scene-card blockquote {
+      margin:
+        1rem 0
+        0;
       padding: 0.85rem 0.95rem;
 
       border-left: 0.2rem solid var(--violet);
@@ -1008,8 +1194,8 @@
       display: grid;
 
       grid-template-columns:
-        minmax(0, 0.82fr)
-        minmax(0, 1.18fr);
+        minmax(0, 0.86fr)
+        minmax(0, 1.14fr);
 
       gap: 1rem;
     }
@@ -1039,7 +1225,7 @@
 
     .dialogue-panel {
       display: grid;
-      gap: 0.8rem;
+      gap: 0.85rem;
     }
 
     .dialogue-line {
@@ -1055,14 +1241,14 @@
       background: rgba(255, 255, 255, 0.025);
     }
 
-    .dialogue-line[data-speaker="visitor"] {
+    .dialogue-line[data-side="you"] {
       justify-self: start;
 
       border-color: rgba(117, 233, 255, 0.18);
       box-shadow: inset 0.2rem 0 0 rgba(117, 233, 255, 0.27);
     }
 
-    .dialogue-line[data-speaker="gate"] {
+    .dialogue-line[data-side="gate"] {
       justify-self: end;
 
       border-color: rgba(183, 152, 255, 0.22);
@@ -1084,7 +1270,7 @@
     }
 
     /* ============================================================
-       OPENING CONDITIONS
+       CONDITIONS
        ============================================================ */
 
     .conditions-section {
@@ -1169,88 +1355,10 @@
     }
 
     /* ============================================================
-       RESTRAINT VERSUS FEAR
+       PRACTICAL RETURN
        ============================================================ */
 
-    .contrast-section {
-      display: grid;
-      gap: 1rem;
-    }
-
-    .contrast-grid {
-      display: grid;
-
-      grid-template-columns:
-        repeat(2, minmax(0, 1fr));
-
-      gap: 0.8rem;
-    }
-
-    .contrast-card {
-      min-width: 0;
-      padding: 1.15rem;
-
-      border: 1px solid rgba(224, 184, 91, 0.16);
-      border-radius: var(--radius-md);
-
-      background: var(--glass);
-      box-shadow: var(--shadow);
-    }
-
-    .contrast-card[data-mode="restraint"] {
-      box-shadow:
-        var(--shadow),
-        inset 0.2rem 0 0 var(--green);
-    }
-
-    .contrast-card[data-mode="avoidance"] {
-      box-shadow:
-        var(--shadow),
-        inset 0.2rem 0 0 var(--rose);
-    }
-
-    .contrast-card span {
-      display: block;
-      margin-bottom: 0.55rem;
-
-      font-size: 0.62rem;
-      font-weight: 850;
-      letter-spacing: 0.11em;
-      text-transform: uppercase;
-    }
-
-    .contrast-card[data-mode="restraint"] span {
-      color: var(--green);
-    }
-
-    .contrast-card[data-mode="avoidance"] span {
-      color: var(--rose);
-    }
-
-    .contrast-card strong {
-      display: block;
-      margin-bottom: 0.45rem;
-
-      font-family:
-        Georgia,
-        "Times New Roman",
-        serif;
-
-      font-size: 1.35rem;
-      font-weight: 600;
-      line-height: 1.16;
-    }
-
-    .contrast-card p {
-      margin-bottom: 0;
-      color: var(--muted-strong);
-    }
-
-    /* ============================================================
-       FINAL RETURN
-       ============================================================ */
-
-    .final-return {
+    .practical-return {
       display: grid;
 
       grid-template-columns:
@@ -1287,26 +1395,26 @@
         inset 0.22rem 0 0 var(--gold);
     }
 
-    .final-copy h2 {
+    .practical-copy h2 {
       max-width: 13ch;
       margin-bottom: 0.8rem;
 
       font-size: clamp(2rem, 4.7vw, 4rem);
     }
 
-    .final-copy p {
+    .practical-copy p {
       max-width: var(--reading-width);
       margin-bottom: 0;
 
       color: var(--muted-strong);
     }
 
-    .final-actions {
+    .practical-actions {
       display: grid;
       gap: 0.6rem;
     }
 
-    .final-actions .button {
+    .practical-actions .button {
       width: 100%;
     }
 
@@ -1413,7 +1521,7 @@
       border-top: 1px solid var(--rule);
     }
 
-    .evidence-body > p {
+    .evidence-body p {
       max-width: var(--reading-width);
       margin-bottom: 0;
 
@@ -1452,8 +1560,6 @@
     }
 
     .evidence-grid p {
-      margin-bottom: 0;
-
       color: var(--muted);
       font-size: 0.76rem;
     }
@@ -1521,6 +1627,63 @@
     }
 
     /* ============================================================
+       ANIMATION
+       ============================================================ */
+
+    @keyframes sealPulse {
+      0%,
+      100% {
+        opacity: 0.72;
+        transform:
+          translate(-50%, -50%)
+          scale(0.96);
+      }
+
+      50% {
+        opacity: 1;
+        transform:
+          translate(-50%, -50%)
+          scale(1.05);
+      }
+    }
+
+    @keyframes glyphPulse {
+      0%,
+      100% {
+        opacity: 0.28;
+        transform: scale(0.92);
+      }
+
+      50% {
+        opacity: 0.9;
+        transform: scale(1.08);
+      }
+    }
+
+    .js .reveal {
+      opacity: 0;
+      transform: translateY(1rem);
+      transition:
+        opacity 520ms ease,
+        transform 520ms cubic-bezier(0.2, 0.72, 0.25, 1);
+    }
+
+    .js .reveal.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .js .path-stage.is-awake .path-seal {
+      animation:
+        sealPulse 5.5s ease-in-out infinite;
+    }
+
+    .js .path-stage.is-awake .threshold-glyph {
+      animation:
+        glyphPulse 6s ease-in-out infinite;
+    }
+
+    /* ============================================================
        RESPONSIVE
        ============================================================ */
 
@@ -1532,12 +1695,12 @@
     }
 
     @media (max-width: 68rem) {
-      .revelation-grid {
+      .scene-grid {
         grid-template-columns:
           repeat(2, minmax(0, 1fr));
       }
 
-      .revelation-card:last-child {
+      .scene-card:last-child {
         grid-column: 1 / -1;
       }
 
@@ -1550,12 +1713,12 @@
     @media (max-width: 54rem) {
       .route-hero__inner,
       .dialogue-stage,
-      .final-return,
+      .practical-return,
       .section-heading {
         grid-template-columns: 1fr;
       }
 
-      .path-vault {
+      .path-stage {
         min-height: 25rem;
       }
 
@@ -1563,12 +1726,7 @@
         gap: 0.75rem;
       }
 
-      .conditions-grid {
-        grid-template-columns:
-          repeat(2, minmax(0, 1fr));
-      }
-
-      .final-actions {
+      .practical-actions {
         grid-template-columns:
           repeat(2, minmax(0, 1fr));
       }
@@ -1655,61 +1813,63 @@
       }
 
       .hero-actions,
-      .final-actions {
+      .practical-actions {
         display: grid;
         grid-template-columns: 1fr;
       }
 
       .hero-actions .button,
-      .final-actions .button {
+      .practical-actions .button {
         width: 100%;
       }
 
-      .path-vault {
-        min-height: 23rem;
+      .path-stage {
+        min-height: 22rem;
         padding: 1rem;
       }
 
       .path-gate {
-        width: 10rem;
+        width: 10.2rem;
         height: 13rem;
       }
 
       .path-road {
-        top: 7.4rem;
+        top: 43%;
         width: 6.5rem;
         height: 8.5rem;
       }
 
       .path-seal {
-        top: 7.8rem;
         width: 3.5rem;
         height: 3.5rem;
       }
 
-      .revelation-grid,
+      .closed-line--one,
+      .closed-line--two,
+      .closed-line--three {
+        width: 8rem;
+      }
+
+      .scene-grid,
       .conditions-grid,
-      .contrast-grid,
       .evidence-grid {
         grid-template-columns: 1fr;
       }
 
-      .revelation-card:last-child {
+      .scene-card:last-child {
         grid-column: auto;
       }
 
-      .revelation-card,
+      .scene-card,
       .dialogue-intro,
       .dialogue-panel,
       .conditions-section,
-      .condition-card,
-      .contrast-card,
-      .final-return {
+      .practical-return {
         border-radius: 1rem;
       }
 
       .dialogue-line {
-        max-width: 95%;
+        max-width: 96%;
       }
 
       .page-footer {
@@ -1742,21 +1902,29 @@
         transition-duration: 0.001ms !important;
       }
 
-      .revelation-card:hover,
+      .scene-card:hover,
       .button:hover {
         transform: none;
+      }
+
+      .js .reveal {
+        opacity: 1;
+        transform: none;
+      }
+
+      .path-seal,
+      .threshold-glyph {
+        opacity: 0.85;
       }
     }
 
     @media (prefers-reduced-transparency: reduce) {
       .page-topbar,
-      .revelation-card,
+      .scene-card,
       .dialogue-intro,
       .dialogue-panel,
       .conditions-section,
-      .condition-card,
-      .contrast-card,
-      .final-return,
+      .practical-return,
       .evidence-disclosure {
         background-color: var(--ink-1);
         backdrop-filter: none;
@@ -1767,15 +1935,15 @@
       body,
       .page-topbar,
       .route-hero,
-      .path-vault,
-      .revelation-card,
+      .path-stage,
+      .scene-card,
       .dialogue-intro,
       .dialogue-panel,
       .conditions-section,
       .condition-card,
-      .contrast-card,
-      .final-return,
-      .evidence-disclosure {
+      .practical-return,
+      .evidence-disclosure,
+      .path-gate {
         color: CanvasText;
         background: Canvas;
         box-shadow: none;
@@ -1788,7 +1956,8 @@
 
       .brand-mark,
       .path-gate,
-      .path-seal {
+      .path-seal,
+      .threshold-glyph {
         border: 2px solid ButtonText;
         background: ButtonFace;
         box-shadow: none;
@@ -1805,8 +1974,9 @@
       body::after,
       .page-topbar,
       .hero-actions,
-      .final-actions,
-      .page-footer {
+      .practical-actions,
+      .page-footer,
+      .sealed-field {
         display: none !important;
       }
 
@@ -1815,14 +1985,13 @@
       }
 
       .route-hero,
-      .path-vault,
-      .revelation-card,
+      .path-stage,
+      .scene-card,
       .dialogue-intro,
       .dialogue-panel,
       .conditions-section,
       .condition-card,
-      .contrast-card,
-      .final-return,
+      .practical-return,
       .evidence-disclosure {
         color: #111;
         background: #fff;
@@ -1831,14 +2000,8 @@
       }
 
       .route-hero,
-      .path-vault {
+      .path-stage {
         min-height: 0;
-      }
-
-      .path-gate,
-      .path-road,
-      .path-seal {
-        display: none;
       }
 
       .evidence-disclosure:not([open])
@@ -1854,7 +2017,7 @@
     class="skip-link"
     href="#main"
   >
-    Skip to the closed paths
+    Skip to the story
   </a>
 
   <div class="page-shell">
@@ -1886,8 +2049,8 @@
           Previous
         </a>
 
-        <a href="/showroom/">
-          Constellation
+        <a href="/showroom/mysteries/journey-into-audralia/">
+          Next
         </a>
 
         <a href="/index.html">
@@ -1902,7 +2065,7 @@
         aria-labelledby="page-title"
       >
         <div class="route-hero__inner">
-          <div>
+          <div class="reveal">
             <div class="route-kicker">
               West Route · Chamber Three
             </div>
@@ -1912,18 +2075,17 @@
             </h1>
 
             <p class="hero-subtitle">
-              Possibility is not permission.
+              The path exists. That does not mean it is safe to cross.
             </p>
 
             <p class="hero-lead">
-              The Unfinished World showed you why absence must be
-              preserved. The Glass showed you why the observer must be
-              examined. Now you arrive at routes that exist, can be seen,
-              and may one day be crossed—but remain closed. Some lack
-              evidence. Some lack ownership. Some would expose people or
-              worlds to consequences no one is yet prepared to carry.
-              The final mystery is not what lies beyond the gate. It is
-              whether opening it would be responsible.
+              The Glass showed you that questions carry position,
+              pressure, fear, and desire. Now the route answers your
+              desire for access with a sealed threshold. Several paths
+              stand ahead. Their glyphs pulse. Their roads are visible.
+              None open. The gate is not mocking you. It is preserving
+              the player, the world, and the system around the crossing
+              until passage can survive what it asks.
             </p>
 
             <div class="hero-actions">
@@ -1931,7 +2093,7 @@
                 class="button button-gold"
                 href="#closed-paths"
               >
-                Approach the Gate
+                Approach the Sealed Paths
               </a>
 
               <a
@@ -1944,23 +2106,24 @@
           </div>
 
           <aside
-            class="path-vault"
-            aria-label="A sealed Mirrorland route"
+            class="path-stage reveal"
+            aria-label="Sealed threshold paths"
           >
             <div
-              class="path-gate"
+              class="sealed-field"
               aria-hidden="true"
-            ></div>
-
-            <div
-              class="path-road"
-              aria-hidden="true"
-            ></div>
-
-            <div
-              class="path-seal"
-              aria-hidden="true"
-            ></div>
+            >
+              <span class="path-gate"></span>
+              <span class="path-road"></span>
+              <span class="closed-line closed-line--one"></span>
+              <span class="closed-line closed-line--two"></span>
+              <span class="closed-line closed-line--three"></span>
+              <span class="threshold-glyph threshold-glyph--one"></span>
+              <span class="threshold-glyph threshold-glyph--two"></span>
+              <span class="threshold-glyph threshold-glyph--three"></span>
+              <span class="threshold-glyph threshold-glyph--four"></span>
+              <span class="path-seal"></span>
+            </div>
 
             <div class="path-copy">
               <span class="path-label">
@@ -1968,13 +2131,12 @@
               </span>
 
               <strong>
-                The route exists. Passage is not yet authorized.
+                A visible path is not authorized passage.
               </strong>
 
               <p>
-                A visible path may remain closed until evidence,
-                ownership, safety, continuity, and return have all been
-                established.
+                The seal holds until the crossing, consequence,
+                continuity, and return can be proven.
               </p>
             </div>
           </aside>
@@ -1983,86 +2145,89 @@
 
       <section
         id="closed-paths"
-        class="revelation-stage"
+        class="story-stage"
         aria-labelledby="closed-paths-title"
       >
-        <header class="section-heading">
+        <header class="section-heading reveal">
           <div>
             <div class="eyebrow">
-              Why a Path Remains Closed
+              Why the Paths Stay Closed
             </div>
 
             <h2 id="closed-paths-title">
-              A closed gate is not always a refusal.
+              Desire is not readiness.
             </h2>
           </div>
 
           <p>
-            It may be a boundary preserving people, evidence, continuity,
-            or a future that would be damaged by premature entry.
+            West does not punish curiosity. It tests whether curiosity
+            can survive responsibility.
           </p>
         </header>
 
-        <div class="revelation-grid">
-          <article class="revelation-card">
-            <span class="chapter-index">
-              01 · The Route Is Not Understood
+        <div class="scene-grid">
+          <article class="scene-card reveal">
+            <span class="scene-index">
+              01 · The Player Is Not Ready
             </span>
 
             <h3>
-              The destination is visible, but the passage is not mapped.
+              Access would outpace form.
             </h3>
 
             <p>
-              A doorway may exist without a reliable account of what it
-              crosses, what it changes, or whether the same route can be
-              followed back.
+              The Window gave sight, the Diamond tested form, the Stars
+              taught orientation, and the Glass exposed the asker. The
+              seal asks whether those lessons can hold together when the
+              next threshold begins to answer back.
             </p>
 
             <blockquote>
-              “A destination does not make the journey safe.”
+              A path should not open faster than the one crossing it can
+              remain whole.
             </blockquote>
           </article>
 
-          <article class="revelation-card">
-            <span class="chapter-index">
-              02 · The Consequence Is Not Owned
+          <article class="scene-card reveal">
+            <span class="scene-index">
+              02 · The World Is Not Ready
             </span>
 
             <h3>
-              No one has accepted responsibility for what entry may do.
+              Opening can damage what it reveals.
             </h3>
 
             <p>
-              Opening a route can expose residents, alter systems,
-              disturb evidence, transfer pressure, or create obligations
-              that remain after the visitor leaves.
+              Audralia remains unfinished. Some regions, systems, and
+              routes are still under development. Crossing too early may
+              collapse evidence, expose unfinished life, or force a
+              fragile system to answer before it can survive response.
             </p>
 
             <blockquote>
-              “A path should not open merely because no one has yet been
-              assigned the cost.”
+              A world under development is not obligated to become a
+              doorway.
             </blockquote>
           </article>
 
-          <article class="revelation-card">
-            <span class="chapter-index">
-              03 · Return Is Not Proven
+          <article class="scene-card reveal">
+            <span class="scene-index">
+              03 · The System Is Not Ready
             </span>
 
             <h3>
-              Passage may be possible in only one direction.
+              A route must survive its own opening.
             </h3>
 
             <p>
-              A route that cannot preserve identity, evidence, memory,
-              or recoverable return may transform exploration into
-              permanent separation.
+              Passage is not a line on a map. It is a system event.
+              Entry, memory, consequence, return, authority, and failure
+              path must all remain coherent before the gate can release.
             </p>
 
             <blockquote>
-              “Before opening the future, prove that the past can still
-              be found.”
+              In Audralia, hope is not a plan. Every repair must survive
+              its own failure path.
             </blockquote>
           </article>
         </div>
@@ -2072,114 +2237,91 @@
         class="dialogue-stage"
         aria-labelledby="dialogue-title"
       >
-        <div class="dialogue-intro">
+        <div class="dialogue-intro reveal">
           <div class="eyebrow">
             The Explorer’s Objection
           </div>
 
           <h2 id="dialogue-title">
-            You believe the gate is wasting time.
+            You believe the gate is refusing the story.
           </h2>
 
           <p>
-            Delay can become fear, bureaucracy, or control. It can also
-            be the only thing preventing curiosity from becoming
-            irreversible harm.
+            The sealed path answers without opening. That restraint is
+            the message.
           </p>
         </div>
 
         <div
-          class="dialogue-panel"
+          class="dialogue-panel reveal"
           aria-label="Closed path dialogue"
         >
           <div
             class="dialogue-line"
-            data-speaker="visitor"
+            data-side="you"
           >
-            <span>Visitor</span>
+            <span>You</span>
 
             <p>
-              “The path is already there. Why not take it?”
+              “I can see the road. Why won’t it open?”
             </p>
           </div>
 
           <div
             class="dialogue-line"
-            data-speaker="gate"
+            data-side="gate"
           >
             <span>Gate</span>
 
             <p>
-              “Existence establishes possibility, not readiness.”
+              “Because sight is not proof of safe passage.”
             </p>
           </div>
 
           <div
             class="dialogue-line"
-            data-speaker="visitor"
+            data-side="you"
           >
-            <span>Visitor</span>
+            <span>You</span>
 
             <p>
-              “How will we learn what is beyond it without entering?”
+              “I already questioned myself in the Glass.”
             </p>
           </div>
 
           <div
             class="dialogue-line"
-            data-speaker="gate"
-          >
-            <span>Gate</span>
-
-            <p>
-              “Learn first what the crossing itself will change.”
-            </p>
-          </div>
-
-          <div
-            class="dialogue-line"
-            data-speaker="visitor"
-          >
-            <span>Visitor</span>
-
-            <p>
-              “What if waiting costs us the opportunity?”
-            </p>
-          </div>
-
-          <div
-            class="dialogue-line"
-            data-speaker="gate"
+            data-side="gate"
           >
             <span>Gate</span>
 
             <p>
-              “Then measure the cost of waiting against the cost of an
-              opening that cannot be undone.”
+              “Then you know desire for an answer can still outrun
+              readiness for consequence.”
             </p>
           </div>
 
           <div
             class="dialogue-line"
-            data-speaker="visitor"
+            data-side="you"
           >
-            <span>Visitor</span>
+            <span>You</span>
 
             <p>
-              “Who decides when the route is ready?”
+              “What must be proven?”
             </p>
           </div>
 
           <div
             class="dialogue-line"
-            data-speaker="gate"
+            data-side="gate"
           >
             <span>Gate</span>
 
             <p>
-              “Not the person most eager to cross. The decision belongs
-              to the evidence, the affected owners, the continuity
-              conditions, and the authority responsible for return.”
+              “That you can cross without losing form, that the world can
+              receive you without fracture, and that return remains more
+              than a wish.”
             </p>
           </div>
         </div>
@@ -2189,7 +2331,7 @@
         class="conditions-section"
         aria-labelledby="conditions-title"
       >
-        <header class="section-heading">
+        <header class="section-heading reveal">
           <div>
             <div class="eyebrow">
               Five Conditions Before Opening
@@ -2201,14 +2343,14 @@
           </div>
 
           <p>
-            A path becomes eligible for opening only when the crossing,
-            its consequence, and its return can be inspected before
-            passage begins.
+            A path becomes eligible for opening only when its crossing,
+            consequence, and return can be inspected before passage
+            begins.
           </p>
         </header>
 
         <div class="conditions-grid">
-          <article class="condition-card">
+          <article class="condition-card reveal">
             <span>Condition One</span>
 
             <strong>
@@ -2216,25 +2358,25 @@
             </strong>
 
             <p>
-              Entry, transition, destination, boundaries, hazards, and
+              Entry, transition, destination, hazards, boundaries, and
               known points of no return are declared.
             </p>
           </article>
 
-          <article class="condition-card">
+          <article class="condition-card reveal">
             <span>Condition Two</span>
 
             <strong>
-              The affected parties are known.
+              The affected world is known.
             </strong>
 
             <p>
-              People, systems, worlds, records, and institutions exposed
-              by the crossing are identified.
+              People, systems, records, terrain, and unfinished regions
+              exposed by the crossing are identified.
             </p>
           </article>
 
-          <article class="condition-card">
+          <article class="condition-card reveal">
             <span>Condition Three</span>
 
             <strong>
@@ -2243,11 +2385,11 @@
 
             <p>
               Someone is responsible for authorization, supervision,
-              consequence, interruption, and closure.
+              interruption, consequence, and closure.
             </p>
           </article>
 
-          <article class="condition-card">
+          <article class="condition-card reveal">
             <span>Condition Four</span>
 
             <strong>
@@ -2255,12 +2397,12 @@
             </strong>
 
             <p>
-              The Diamond, Clock, evidence trail, identity, hierarchy,
-              and source route remain recoverable.
+              The evidence trail, identity, memory, source route, and
+              return hierarchy remain recoverable.
             </p>
           </article>
 
-          <article class="condition-card">
+          <article class="condition-card reveal">
             <span>Condition Five</span>
 
             <strong>
@@ -2268,7 +2410,7 @@
             </strong>
 
             <p>
-              The route home is not merely imagined. It is defined,
+              The way back is not merely imagined. It is defined,
               testable, and able to survive failure.
             </p>
           </article>
@@ -2276,132 +2418,41 @@
       </section>
 
       <section
-        class="contrast-section"
-        aria-labelledby="contrast-title"
+        class="practical-return reveal"
+        aria-labelledby="practical-title"
       >
-        <header class="section-heading">
-          <div>
-            <div class="eyebrow">
-              Restraint Versus Avoidance
-            </div>
-
-            <h2 id="contrast-title">
-              Not every closed path is wise.
-            </h2>
-          </div>
-
-          <p>
-            A responsible boundary has stated conditions for opening.
-            Fear hides behind indefinite delay and refuses to become
-            testable.
-          </p>
-        </header>
-
-        <div class="contrast-grid">
-          <article
-            class="contrast-card"
-            data-mode="restraint"
-          >
-            <span>Responsible Restraint</span>
-
-            <strong>
-              The gate explains what remains unresolved.
-            </strong>
-
-            <p>
-              Missing evidence, ownership, safety, continuity, and return
-              conditions are named, measured, and linked to an opening
-              process.
-            </p>
-          </article>
-
-          <article
-            class="contrast-card"
-            data-mode="avoidance"
-          >
-            <span>Fearful Avoidance</span>
-
-            <strong>
-              The gate remains closed because uncertainty is intolerable.
-            </strong>
-
-            <p>
-              No test, threshold, review, or future condition is allowed
-              to challenge the refusal.
-            </p>
-          </article>
-
-          <article
-            class="contrast-card"
-            data-mode="restraint"
-          >
-            <span>Responsible Restraint</span>
-
-            <strong>
-              Readiness can be earned.
-            </strong>
-
-            <p>
-              The route may open when declared conditions are satisfied
-              and independent review confirms the crossing is bounded.
-            </p>
-          </article>
-
-          <article
-            class="contrast-card"
-            data-mode="avoidance"
-          >
-            <span>Fearful Avoidance</span>
-
-            <strong>
-              Closure becomes permanent without admitting it.
-            </strong>
-
-            <p>
-              Requirements shift whenever they are met, authority remains
-              undefined, and delay becomes the hidden objective.
-            </p>
-          </article>
-        </div>
-      </section>
-
-      <section
-        class="final-return"
-        aria-labelledby="final-title"
-      >
-        <div class="final-copy">
+        <div class="practical-copy">
           <span class="practical-label">
-            The Final Rule of the Satellite Journey
+            The Rule of the Sealed Paths
           </span>
 
-          <h2 id="final-title">
-            Leave some doors closed—and preserve how they may open.
+          <h2 id="practical-title">
+            Preserve the door until the crossing can survive.
           </h2>
 
           <p>
-            You have crossed the invitation, looked through the Window,
-            stood before the Diamond, read the Stars, entered an
-            unfinished world, and faced your own questions in the Glass.
-            The journey ends at a boundary, not a conclusion. Return to
-            the Constellation carrying what you learned, what remains
-            uncertain, and the exact conditions under which the unopened
-            future may one day become a responsible route.
+            A closed path is not the end of motion. It is a boundary that
+            remembers the future without pretending the future is ready.
+            If a path opens too early, it may turn discovery into damage.
+            If it never opens, restraint becomes avoidance. The next
+            threshold must show whether Audralia can be approached
+            without confusing access with possession.
           </p>
         </div>
 
-        <div class="final-actions">
+        <div class="practical-actions">
           <a
             class="button button-gold"
-            href="/showroom/"
+            href="/showroom/mysteries/journey-into-audralia/"
           >
-            Return to the Constellation
+            Continue Toward Audralia
           </a>
 
           <a
             class="button"
-            href="/showroom/story/welcome/"
+            href="/showroom/mysteries/questions-in-the-glass/"
           >
-            Begin the Journey Again
+            Return to the Glass
           </a>
         </div>
       </section>
@@ -2409,9 +2460,9 @@
       <details class="evidence-disclosure">
         <summary>
           <span>
-            <strong>Closed-Path and Final Journey Boundary</strong>
+            <strong>Story Reveal Boundary</strong>
             <small>
-              What this chamber completes—and what remains unopened
+              What this chamber reveals, and what remains withheld
             </small>
           </span>
 
@@ -2420,44 +2471,41 @@
 
         <div class="evidence-body">
           <p>
-            Paths Not Yet Open completes the current satellite sequence
-            within the Mirrorland Showroom. It establishes that a route
-            may be visible and technically possible while remaining
-            unauthorized because evidence, ownership, consequence,
-            continuity, or return conditions are incomplete. It does not
-            permanently prohibit future paths or grant this chamber
-            authority to open them.
+            This chamber reveals that visible paths may remain closed
+            because opening them too early would endanger the player, the
+            world, or the system around the crossing. It does not grant
+            route-opening authority, full agency, or final entry into
+            Audralia.
           </p>
 
           <div class="evidence-grid">
             <article>
-              <span>Established Here</span>
+              <span>Revealed Here</span>
 
               <p>
-                Responsible opening requires a mapped route, known
-                affected parties, assigned ownership, preserved
-                continuity, and executable return.
+                Possibility is not permission. A route must preserve
+                readiness, consequence, continuity, ownership, and return
+                before it can responsibly open.
               </p>
             </article>
 
             <article>
-              <span>Not Established Here</span>
+              <span>Withheld Here</span>
 
               <p>
-                Permanent closure, automatic safety, authority through
-                curiosity, scientific validation, or permission to cross
-                undeclared boundaries.
+                Full agency, full embodiment, full conjugation, H-Earth,
+                ZIONTS, final Audralia traversal, and final Earth stakes
+                remain closed.
               </p>
             </article>
 
             <article>
-              <span>Journey Completion</span>
+              <span>Next Pressure</span>
 
               <p>
-                The ten satellite destinations now form a continuous
-                route from welcome and mission through visibility,
-                continuity, interpretation, mystery, inquiry, restraint,
-                and return.
+                The next route becomes the controlled Audralia threshold:
+                not a final arrival, but the beginning of approach toward
+                the living world.
               </p>
             </article>
           </div>
@@ -2472,7 +2520,7 @@
         </strong>
 
         <span>
-          The journey ends with a boundary that still remembers the future.
+          The route exists. The crossing must still be earned.
         </span>
       </div>
 
@@ -2481,12 +2529,12 @@
           Previous Chamber
         </a>
 
-        <a href="/showroom/">
-          Return to Constellation
+        <a href="/showroom/mysteries/journey-into-audralia/">
+          Next Chamber
         </a>
 
-        <a href="/showroom/story/welcome/">
-          Begin Again
+        <a href="/showroom/">
+          Constellation
         </a>
 
         <a href="/index.html">
@@ -2495,20 +2543,162 @@
       </nav>
     </footer>
   </div>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const CONTRACT =
+        "SHOWROOM_SATELLITE_PATHS_NOT_YET_OPEN_HTML_TNT_v2_CLOSED_PATHS_BEFORE_AUDRALIA";
+
+      const root =
+        document.documentElement;
+
+      root.classList.add("js");
+
+      const reducedMotionQuery =
+        window.matchMedia &&
+        window.matchMedia("(prefers-reduced-motion: reduce)");
+
+      const reducedMotion =
+        Boolean(
+          reducedMotionQuery &&
+          reducedMotionQuery.matches
+        );
+
+      function markVisible(elements) {
+        for (const element of elements) {
+          element.classList.add("is-visible");
+        }
+      }
+
+      function initializeReveals() {
+        const revealElements =
+          Array.from(
+            document.querySelectorAll(".reveal")
+          );
+
+        if (!revealElements.length) {
+          return;
+        }
+
+        if (
+          reducedMotion ||
+          typeof IntersectionObserver !== "function"
+        ) {
+          markVisible(revealElements);
+          return;
+        }
+
+        const observer =
+          new IntersectionObserver(
+            entries => {
+              for (const entry of entries) {
+                if (!entry.isIntersecting) {
+                  continue;
+                }
+
+                entry.target.classList.add("is-visible");
+                observer.unobserve(entry.target);
+              }
+            },
+            {
+              root: null,
+              threshold: 0.14,
+              rootMargin: "0px 0px -6% 0px"
+            }
+          );
+
+        for (const element of revealElements) {
+          observer.observe(element);
+        }
+      }
+
+      function initializePathStage() {
+        const pathStage =
+          document.querySelector(".path-stage");
+
+        if (!pathStage || reducedMotion) {
+          return;
+        }
+
+        window.setTimeout(
+          () => {
+            pathStage.classList.add("is-awake");
+          },
+          240
+        );
+      }
+
+      function publishReceipt() {
+        const payload = {
+          contract: CONTRACT,
+          route: "/showroom/mysteries/paths-not-yet-open/",
+          routeId: "west-3",
+          page: "Paths Not Yet Open",
+          localEnhancementOnly: true,
+          globalRuntimeOwned: false,
+          navigationOwned: false,
+          systematicReveal: "closed-paths-before-audralia",
+          previousRoute: "/showroom/mysteries/questions-in-the-glass/",
+          nextRoute: "/showroom/mysteries/journey-into-audralia/",
+          nextRouteInferredUntilBaseline: true,
+          pathState: "closed-pending-conditions",
+          pathOpeningAuthority: false,
+          closureModel: "threshold-evidence-readiness-return",
+          continuousStoryHandoff: true,
+          fullAgencyGranted: false,
+          reducedMotion: reducedMotion,
+          timestamp: new Date().toISOString()
+        };
+
+        window.dispatchEvent(
+          new CustomEvent(
+            "SHOWROOM_SATELLITE_PAGE_READY",
+            {
+              detail: Object.freeze(payload)
+            }
+          )
+        );
+      }
+
+      if (document.readyState === "loading") {
+        document.addEventListener(
+          "DOMContentLoaded",
+          () => {
+            initializeReveals();
+            initializePathStage();
+            publishReceipt();
+          },
+          {
+            once: true
+          }
+        );
+      } else {
+        initializeReveals();
+        initializePathStage();
+        publishReceipt();
+      }
+    })();
+  </script>
 </body>
 </html>
 
 <!--
-SHOWROOM_SATELLITE_PATHS_NOT_YET_OPEN_HTML_RECEIPT_v1
+SHOWROOM_SATELLITE_PATHS_NOT_YET_OPEN_HTML_RECEIPT_v2_CLOSED_PATHS_BEFORE_AUDRALIA
 
 TARGET:
 /showroom/mysteries/paths-not-yet-open/index.html
 
 STATUS:
-COMPLETE NEW SELF-CONTAINED HTML FILE
+COMPLETE SELF-CONTAINED HTML REPLACEMENT
 
-EMBEDDED VISUAL SYSTEM:
-SHOWROOM_SATELLITE_PAGE_EMBEDDED_VISUAL_SYSTEM_v1
+SOURCE BASELINE:
+SHOWROOM_SATELLITE_PATHS_NOT_YET_OPEN_HTML_TNT_v1
+supplied by user as current source baseline for west-3.
+
+NEW CONTRACT:
+SHOWROOM_SATELLITE_PATHS_NOT_YET_OPEN_HTML_TNT_v2_CLOSED_PATHS_BEFORE_AUDRALIA
 
 ROUTE FAMILY:
 Mysteries / West
@@ -2516,71 +2706,152 @@ Mysteries / West
 ROUTE ID:
 west-3
 
-PREVIOUS ROUTE:
-/showroom/mysteries/questions-in-the-glass/
-
-NEXT ROUTE:
-/showroom/
+ROUTE TITLE:
+Paths Not Yet Open
 
 PARENT:
 /showroom/
 
-PURPOSE:
-- complete the West mysteries sequence;
-- complete the current ten-page satellite journey;
-- distinguish possibility from permission;
-- establish why visible routes may remain closed;
-- define five conditions required before opening;
-- distinguish responsible restraint from fearful avoidance;
-- return the visitor to the Showroom constellation with evidence,
-  uncertainty, boundaries, and future opening conditions preserved.
+PREVIOUS ROUTE:
+/showroom/mysteries/questions-in-the-glass/
 
-PRESENTATION STANDARD:
-- immersive;
-- second-person;
-- threshold-oriented;
-- dialogue-driven;
-- restraint-focused;
-- practical;
-- final without claiming permanent closure;
-- evidence boundary retained beneath the experience.
+NEXT ROUTE:
+/showroom/mysteries/journey-into-audralia/
 
-ARCHITECTURAL FEATURES:
-- complete embedded CSS;
-- Showroom-aligned cosmic atmosphere;
-- CSS-built sealed path and gate;
-- three-part closed-path explanation;
-- visitor and Gate dialogue;
-- five-condition opening framework;
-- restraint-versus-avoidance comparison;
-- final constellation return;
-- evidence-boundary disclosure;
-- responsive mobile composition;
-- keyboard focus;
-- reduced motion;
-- reduced transparency;
-- forced colors;
-- print handling.
+NEXT ROUTE STATUS:
+INFERRED UNTIL WEST-4 BASELINE IS SUPPLIED.
+The inferred path follows the established route-slug pattern and the frozen route title:
+west-4 · Journey into Audralia
 
-SATELLITE SEQUENCE COMPLETED:
-1. /showroom/story/welcome/
-2. /showroom/story/mission/
-3. /showroom/story/timeline/
-4. /showroom/story/invitation/
-5. /showroom/wonders/window/
-6. /showroom/wonders/diamond/
-7. /showroom/wonders/stars/
-8. /showroom/mysteries/unfinished-world/
-9. /showroom/mysteries/questions-in-the-glass/
-10. /showroom/mysteries/paths-not-yet-open/
+RETURN ROUTE:
+/showroom/
 
-NON-CLAIMS:
-- no permanent closure claim;
-- no automatic route-opening authority;
-- no safety guarantee;
-- no scientific validation;
-- no Earth-transfer authorization;
-- no runtime dependency;
-- no controller ownership;
-- no JavaScript requirement.
+MAIN COMPASS:
+/index.html
+
+PATH STATE:
+closed-pending-conditions
+
+PATH OPENING AUTHORITY:
+false
+
+CLOSURE MODEL:
+threshold-evidence-readiness-return
+
+NARRATIVE AUTHORITY:
+SHOWROOM_MIRRORLAND_AUDRALIA_ROUTE_PAGE_NARRATIVE_FREEZE_PACKET_v1_1
+SHOWROOM_ROUTE_PAGE_RENEWAL_RULES_LOCK_v1
+CONTINUOUS STORY HANDOFF RULE
+
+PRIMARY ROUTE CORRECTION:
+The source baseline routed west-3 next directly to:
+/showroom/
+
+The frozen 12-page non-character route arc requires:
+west-3 · Paths Not Yet Open
+→ west-4 · Journey into Audralia
+
+This replacement uses the inferred west-4 path:
+/showroom/mysteries/journey-into-audralia/
+
+This inferred path must be confirmed against the west-4 source baseline before final repository binding.
+
+PRIMARY NARRATIVE CORRECTIONS FROM v1:
+- Removed final-satellite closure language.
+- Reframed west-3 as the last gate before Journey into Audralia.
+- Preserved route identity, path-state metadata, opening-authority boundary, and closure model.
+- Connected west-2 to west-3 by showing that the player's desire for access is not sufficient after the Glass reveals question-pressure.
+- Connected west-3 to west-4 by making the next pressure the controlled Audralia threshold.
+
+PAGE 11 / WEST-3 STORY SPINE:
+1. The player leaves the Glass after learning that questions reveal the asker.
+2. Several paths appear ahead.
+3. Their glyphs pulse, but none open.
+4. The player learns that visible routes do not equal authorized passage.
+5. Closed paths protect the player, the world, and the surrounding system.
+6. Opening requires mapped crossing, affected-world knowledge, ownership, continuity, and executable return.
+7. The next route becomes the controlled threshold toward Audralia.
+
+CONTROLLED REVEAL:
+Some paths remain closed because opening them too early would endanger the player, the world, or the system around the path.
+A visible route is not the same as authorized passage.
+
+WITHHELD:
+- full agency;
+- full embodiment;
+- full conjugation;
+- H-Earth;
+- ZIONTS;
+- final Audralia traversal;
+- final Earth stakes.
+
+DOMINANT ANIMATION IDEA:
+Sealed paths and threshold glyphs pulse.
+The route-road remains visible.
+The central seal does not open.
+
+ANTI-TILED-STAR CORRECTION:
+The page does not use repeating square-cell starfields as the main atmosphere.
+Atmospheric stars are hand-positioned through fixed radial points.
+The dominant animated visual is the sealed-path threshold.
+
+EMBEDDED SYSTEM:
+- HTML structure
+- embedded CSS
+- embedded page-local JavaScript
+- no external dependencies
+- no shared runtime ownership
+
+PAGE-LOCAL JAVASCRIPT AUTHORITY:
+- local reveal enhancement only
+- local Path-stage awakening only
+- local readiness event only
+- no navigation ownership
+- no controller calls
+- no constellation mutation
+- no Main Compass ownership
+- no route-opening authority
+- safe without JavaScript
+
+ACCESSIBILITY / RESILIENCE:
+- skip link
+- semantic sections
+- focus-visible handling
+- reduced-motion support
+- reduced-transparency support
+- forced-colors support
+- print handling
+- readable without JavaScript
+
+NOT CLAIMED:
+- runtime validation
+- browser visual pass
+- deployment pass
+
+NEXT FILE SETUP:
+TARGET:
+UNPROVEN until baseline is supplied, likely:
+/showroom/mysteries/journey-into-audralia/index.html
+
+ROUTE:
+west-4 · Journey into Audralia
+
+EXPECTED PREVIOUS:
+/showroom/mysteries/paths-not-yet-open/
+
+EXPECTED NEXT:
+Unknown until baseline is supplied.
+
+FUNCTION:
+After west-3 teaches that visible paths do not automatically authorize passage, west-4 becomes the controlled Audralia threshold.
+
+CONTROLLED REVEAL:
+Audralia is not the end of the journey. It is the frontier threshold where the player begins approaching the living world, with H-Earth still ahead as the first playable ground-level view and ZIONTS still withheld as consequence horizon.
+
+DOMINANT MECHANIC:
+Audralia horizon / chamber-to-world threshold / distant ground-level approach
+
+REQUEST:
+Send the current baseline for the west-4 route file before crafting:
+likely /showroom/mysteries/journey-into-audralia/index.html
 -->

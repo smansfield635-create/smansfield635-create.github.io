@@ -1,6 +1,6 @@
 <!-- TARGET FILE: /showroom/mysteries/unfinished-world/index.html -->
-<!-- COMPLETE NEW FILE -->
-<!-- SHOWROOM_SATELLITE_THE_UNFINISHED_WORLD_HTML_TNT_v1 -->
+<!-- COMPLETE REPLACEMENT -->
+<!-- SHOWROOM_SATELLITE_THE_UNFINISHED_WORLD_HTML_TNT_v2_AUDRALIA_INCOMPLETE_FRONTIER -->
 
 <!doctype html>
 
@@ -8,14 +8,14 @@
   lang="en"
   data-route="/showroom/mysteries/unfinished-world/"
   data-page="showroom-mysteries-unfinished-world"
-  data-version="SHOWROOM-SATELLITE-THE-UNFINISHED-WORLD-1.0.0"
-  data-contract="SHOWROOM_SATELLITE_THE_UNFINISHED_WORLD_HTML_TNT_v1"
+  data-version="SHOWROOM-SATELLITE-THE-UNFINISHED-WORLD-2.0.0"
+  data-contract="SHOWROOM_SATELLITE_THE_UNFINISHED_WORLD_HTML_TNT_v2_AUDRALIA_INCOMPLETE_FRONTIER"
   data-showroom-satellite="true"
   data-showroom-route-family="mysteries"
   data-showroom-route-id="west-1"
   data-showroom-route-title="The Unfinished World"
   data-showroom-parent-route="/showroom/"
-  data-showroom-previous-route="/showroom/wonders/stars/"
+  data-showroom-previous-route="/showroom/globe/hearth/"
   data-showroom-next-route="/showroom/mysteries/questions-in-the-glass/"
   data-showroom-return-route="/showroom/"
   data-showroom-main-compass-route="/index.html"
@@ -37,19 +37,27 @@
 
   <meta
     name="description"
-    content="Enter the Unfinished World, where missing structures, interrupted histories, and unresolved futures reveal what completion would conceal."
+    content="After Hearth reveals the facility behind the window, confront the Unfinished World. Audralia is not a completed paradise; it is a living frontier whose gaps, halted paths, and unfinished systems must be faced honestly."
   >
 
   <meta
     name="showroom-page-contract"
-    content="SHOWROOM_SATELLITE_THE_UNFINISHED_WORLD_HTML_TNT_v1"
+    content="SHOWROOM_SATELLITE_THE_UNFINISHED_WORLD_HTML_TNT_v2_AUDRALIA_INCOMPLETE_FRONTIER"
   >
 
   <style>
     /* ============================================================
-       SHOWROOM SATELLITE PAGE EMBEDDED VISUAL SYSTEM v1
-       Mysteries / West expression
-       Unfinished World chamber
+       SHOWROOM SATELLITE PAGE EMBEDDED VISUAL SYSTEM v2
+       PAGE: west-1 · The Unfinished World
+
+       Page-specific standard:
+       - one-file route page;
+       - embedded CSS;
+       - page-local JavaScript only;
+       - no external dependencies;
+       - no shared Showroom runtime ownership;
+       - no repeating tiled starfield as primary atmosphere;
+       - dominant animation object: unfinished map / halted route.
        ============================================================ */
 
     :root {
@@ -59,7 +67,6 @@
       --ink-1: #050914;
       --ink-2: #091020;
       --ink-3: #101a30;
-      --ink-4: #17233d;
 
       --cream: #f5eddd;
       --cream-soft: #ddd3c1;
@@ -68,6 +75,7 @@
 
       --gold: #e0b85b;
       --gold-bright: #f4d47e;
+      --gold-soft: #ffe7a5;
       --gold-faint: rgba(224, 184, 91, 0.14);
 
       --cyan: #75e9ff;
@@ -111,13 +119,9 @@
       --radius-xl: 2rem;
 
       --page-width: 84rem;
-      --reading-width: 49rem;
+      --reading-width: 52rem;
 
-      --space-1: 0.4rem;
-      --space-2: 0.65rem;
-      --space-3: 0.95rem;
       --space-4: 1.3rem;
-      --space-5: 1.8rem;
       --space-6: 2.5rem;
       --space-7: 3.5rem;
 
@@ -194,34 +198,39 @@
       pointer-events: none;
       content: "";
 
-      opacity: 0.67;
+      opacity: 0.62;
 
-      background-image:
+      background:
         radial-gradient(
-          circle,
-          rgba(255, 255, 255, 0.8) 0 0.05rem,
-          transparent 0.067rem
-        ),
-        radial-gradient(
-          circle,
-          rgba(183, 152, 255, 0.58) 0 0.04rem,
+          circle at 17% 18%,
+          rgba(255, 255, 255, 0.74) 0 0.045rem,
           transparent 0.06rem
         ),
         radial-gradient(
-          circle,
-          rgba(117, 233, 255, 0.45) 0 0.045rem,
+          circle at 79% 16%,
+          rgba(183, 152, 255, 0.62) 0 0.04rem,
+          transparent 0.06rem
+        ),
+        radial-gradient(
+          circle at 91% 68%,
+          rgba(117, 233, 255, 0.56) 0 0.045rem,
           transparent 0.065rem
+        ),
+        radial-gradient(
+          circle at 34% 83%,
+          rgba(255, 255, 255, 0.46) 0 0.036rem,
+          transparent 0.055rem
+        ),
+        radial-gradient(
+          circle at 11% 66%,
+          rgba(183, 152, 255, 0.44) 0 0.032rem,
+          transparent 0.052rem
+        ),
+        radial-gradient(
+          circle at 58% 31%,
+          rgba(244, 212, 126, 0.34) 0 0.032rem,
+          transparent 0.052rem
         );
-
-      background-size:
-        6.1rem 6.1rem,
-        9.8rem 9.8rem,
-        14.2rem 14.2rem;
-
-      background-position:
-        0 0,
-        2.5rem 3.7rem,
-        6rem 1.8rem;
     }
 
     body::after {
@@ -247,6 +256,13 @@
         );
     }
 
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+    }
+
     a,
     button {
       -webkit-tap-highlight-color: transparent;
@@ -260,10 +276,7 @@
     h2,
     h3,
     p,
-    blockquote,
-    dl,
-    dd,
-    ul {
+    blockquote {
       margin-top: 0;
     }
 
@@ -276,10 +289,12 @@
     }
 
     p,
-    li,
-    dd,
     blockquote {
       text-wrap: pretty;
+    }
+
+    [hidden] {
+      display: none !important;
     }
 
     :focus-visible {
@@ -327,7 +342,7 @@
 
     .eyebrow,
     .route-kicker,
-    .chapter-index,
+    .scene-index,
     .world-label,
     .practical-label {
       color: var(--gold-bright);
@@ -418,6 +433,10 @@
       transform: translateY(-1px);
     }
 
+    .button:active {
+      transform: translateY(0);
+    }
+
     .button-gold {
       border-color: rgba(255, 222, 142, 0.76);
       color: #171006;
@@ -433,6 +452,14 @@
       box-shadow:
         0 0.95rem 2.3rem rgba(156, 105, 25, 0.24),
         0 0 1.7rem rgba(245, 213, 130, 0.16);
+    }
+
+    .button-gold:hover {
+      border-color: #fff1bf;
+
+      box-shadow:
+        0 1rem 2.7rem rgba(156, 105, 25, 0.3),
+        0 0 2rem rgba(245, 213, 130, 0.22);
     }
 
     /* ============================================================
@@ -587,6 +614,10 @@
       letter-spacing: 0.05em;
       text-decoration: none;
       text-transform: uppercase;
+
+      transition:
+        color var(--transition-fast),
+        background var(--transition-fast);
     }
 
     .topbar-nav a:hover {
@@ -627,13 +658,13 @@
     }
 
     /* ============================================================
-       HERO WORLD
+       HERO / UNFINISHED MAP
        ============================================================ */
 
     .route-hero {
       position: relative;
 
-      min-height: min(80vh, 50rem);
+      min-height: min(82vh, 52rem);
       overflow: hidden;
 
       border: 1px solid rgba(183, 152, 255, 0.24);
@@ -660,14 +691,36 @@
       isolation: isolate;
     }
 
+    .route-hero::before {
+      position: absolute;
+      z-index: -1;
+      inset: 0;
+
+      content: "";
+
+      background:
+        radial-gradient(
+          circle at 70% 42%,
+          transparent 0 9rem,
+          rgba(183, 152, 255, 0.055) 9.1rem 9.2rem,
+          transparent 9.3rem
+        ),
+        radial-gradient(
+          circle at 70% 42%,
+          transparent 0 14rem,
+          rgba(224, 184, 91, 0.045) 14.1rem 14.2rem,
+          transparent 14.3rem
+        );
+    }
+
     .route-hero__inner {
       display: grid;
 
       min-height: inherit;
 
       grid-template-columns:
-        minmax(0, 1.15fr)
-        minmax(18rem, 0.85fr);
+        minmax(0, 1.08fr)
+        minmax(18rem, 0.92fr);
 
       align-items: center;
       gap: clamp(2rem, 6vw, 6rem);
@@ -709,7 +762,7 @@
     }
 
     .hero-lead {
-      max-width: 44rem;
+      max-width: 45rem;
       margin-bottom: 1.5rem;
 
       color: var(--muted-strong);
@@ -722,8 +775,12 @@
       gap: 0.7rem;
     }
 
-    .world-vault {
+    .world-stage {
       position: relative;
+
+      display: grid;
+      align-content: end;
+      gap: 1rem;
 
       min-height: 28rem;
       overflow: hidden;
@@ -749,154 +806,243 @@
         inset 0.24rem 0 0 rgba(183, 152, 255, 0.28);
     }
 
-    .world-disc {
+    .unfinished-map {
       position: absolute;
-      top: 7%;
+      inset: 1rem 1rem 6.5rem;
+
+      pointer-events: none;
+    }
+
+    .map-plate {
+      position: absolute;
+      top: 48%;
       left: 50%;
 
-      width: 14rem;
-      height: 14rem;
+      width: min(78%, 18rem);
+      height: 15.5rem;
 
       overflow: hidden;
 
-      border: 1px solid rgba(183, 152, 255, 0.36);
-      border-radius: 50%;
+      border: 1px solid rgba(183, 152, 255, 0.28);
+      border-radius: 1rem;
 
       background:
         radial-gradient(
-          circle at 36% 29%,
-          rgba(117, 233, 255, 0.18),
-          transparent 20%
+          ellipse at 37% 34%,
+          rgba(117, 233, 255, 0.13),
+          transparent 32%
         ),
         radial-gradient(
-          circle at 63% 60%,
-          rgba(224, 184, 91, 0.13),
-          transparent 24%
+          ellipse at 68% 67%,
+          rgba(224, 184, 91, 0.12),
+          transparent 28%
         ),
         linear-gradient(
           145deg,
-          #1b3350 0%,
-          #27464e 34%,
-          #182a2f 58%,
-          #0d1520 100%
+          rgba(21, 36, 54, 0.96),
+          rgba(7, 12, 26, 0.98)
         );
 
       box-shadow:
         0 0 3rem rgba(183, 152, 255, 0.16),
-        inset -2.8rem -2rem 4rem rgba(0, 0, 0, 0.5);
+        inset 0 0 2rem rgba(0, 0, 0, 0.38);
 
-      transform: translateX(-50%);
+      transform: translate(-50%, -50%);
     }
 
-    .world-disc::before {
+    .terrain {
       position: absolute;
-      inset: 0;
 
-      content: "";
-
-      background:
-        linear-gradient(
-          32deg,
-          transparent 0 47%,
-          rgba(255, 255, 255, 0.13) 48%,
-          transparent 49%
-        ),
-        linear-gradient(
-          115deg,
-          transparent 0 39%,
-          rgba(255, 145, 163, 0.24) 40% 41%,
-          transparent 42%
-        ),
-        radial-gradient(
-          ellipse at 30% 64%,
-          rgba(36, 87, 68, 0.88) 0 20%,
-          transparent 21%
-        ),
-        radial-gradient(
-          ellipse at 66% 37%,
-          rgba(46, 85, 74, 0.9) 0 17%,
-          transparent 18%
-        );
-    }
-
-    .world-disc::after {
-      position: absolute;
-      top: 20%;
-      right: -7%;
-      bottom: 12%;
-      left: 54%;
-
-      content: "";
-
-      background: rgba(2, 4, 10, 0.72);
-
-      clip-path:
-        polygon(
-          10% 0,
-          100% 0,
-          100% 100%,
-          36% 100%,
-          46% 81%,
-          27% 62%,
-          39% 46%,
-          15% 28%
-        );
-    }
-
-    .world-fragment {
-      position: absolute;
-      z-index: 2;
-      top: 5.5rem;
-      left: calc(50% + 4.8rem);
-
-      width: 3.8rem;
-      height: 5.2rem;
-
-      border: 1px solid rgba(255, 145, 163, 0.3);
-
+      border: 1px solid rgba(117, 233, 255, 0.24);
       background:
         linear-gradient(
           145deg,
-          rgba(41, 63, 90, 0.92),
-          rgba(14, 20, 34, 0.95)
+          rgba(47, 99, 76, 0.72),
+          rgba(18, 37, 40, 0.84)
+        );
+
+      box-shadow:
+        0 0 1.4rem rgba(117, 233, 255, 0.1);
+    }
+
+    .terrain--one {
+      top: 19%;
+      left: 12%;
+
+      width: 5.4rem;
+      height: 4.2rem;
+
+      border-radius: 58% 42% 55% 45%;
+      clip-path:
+        polygon(
+          9% 16%,
+          64% 0,
+          100% 36%,
+          82% 100%,
+          20% 86%,
+          0 48%
+        );
+    }
+
+    .terrain--two {
+      right: 13%;
+      bottom: 15%;
+
+      width: 6.2rem;
+      height: 4.6rem;
+
+      border-radius: 48% 52% 42% 58%;
+      clip-path:
+        polygon(
+          18% 0,
+          80% 10%,
+          100% 56%,
+          68% 100%,
+          0 82%,
+          12% 36%
+        );
+    }
+
+    .terrain--three {
+      bottom: 23%;
+      left: 32%;
+
+      width: 4.1rem;
+      height: 3.2rem;
+
+      border-color: rgba(244, 212, 126, 0.18);
+      background:
+        linear-gradient(
+          145deg,
+          rgba(83, 78, 48, 0.58),
+          rgba(26, 30, 31, 0.88)
         );
 
       clip-path:
         polygon(
-          14% 0,
-          100% 12%,
-          83% 100%,
-          0 78%
+          20% 8%,
+          76% 0,
+          100% 44%,
+          72% 92%,
+          21% 100%,
+          0 48%
+        );
+    }
+
+    .veil {
+      position: absolute;
+      right: 7%;
+      top: 12%;
+
+      width: 5.5rem;
+      height: 6.2rem;
+
+      border: 1px solid rgba(255, 145, 163, 0.2);
+      border-radius: 1.4rem;
+
+      background:
+        radial-gradient(
+          circle at 40% 35%,
+          rgba(255, 145, 163, 0.12),
+          transparent 45%
+        ),
+        rgba(2, 4, 10, 0.46);
+
+      filter: blur(0.02rem);
+    }
+
+    .draw-route {
+      position: absolute;
+      z-index: 2;
+
+      height: 1px;
+
+      background:
+        linear-gradient(
+          90deg,
+          rgba(117, 233, 255, 0),
+          rgba(117, 233, 255, 0.78),
+          rgba(244, 212, 126, 0.52)
         );
 
       box-shadow:
-        0 0 1.5rem rgba(255, 145, 163, 0.13);
+        0 0 0.9rem rgba(117, 233, 255, 0.22);
 
-      transform: rotate(8deg);
+      opacity: 0;
+      transform-origin: left center;
+      animation: routeDrawStops 6.2s ease-in-out infinite;
     }
 
-    .world-orbit {
+    .draw-route::after {
       position: absolute;
-      top: 10%;
-      left: 50%;
+      top: 50%;
+      right: 0;
 
-      width: 18rem;
-      height: 12rem;
+      width: 0.42rem;
+      height: 0.42rem;
 
-      border: 1px dashed rgba(117, 233, 255, 0.18);
+      content: "";
+
+      border: 1px solid var(--rose);
       border-radius: 50%;
 
-      transform:
-        translateX(-50%)
-        rotate(-12deg);
+      background: rgba(255, 145, 163, 0.35);
+      box-shadow: 0 0 0.85rem rgba(255, 145, 163, 0.3);
+
+      transform: translateY(-50%);
+    }
+
+    .draw-route--one {
+      top: 42%;
+      left: 24%;
+      width: 8.2rem;
+      transform: rotate(18deg);
+      animation-delay: -0.3s;
+    }
+
+    .draw-route--two {
+      top: 63%;
+      left: 38%;
+      width: 5.6rem;
+      transform: rotate(-32deg);
+      animation-delay: -2.1s;
+    }
+
+    .draw-route--three {
+      top: 29%;
+      left: 42%;
+      width: 5.1rem;
+      transform: rotate(-9deg);
+      animation-delay: -3.5s;
+    }
+
+    .missing-marker {
+      position: absolute;
+      z-index: 3;
+      top: 52%;
+      left: 68%;
+
+      width: 2.4rem;
+      height: 2.4rem;
+
+      border: 1px dashed rgba(255, 145, 163, 0.52);
+      border-radius: 50%;
+
+      background:
+        radial-gradient(
+          circle,
+          rgba(255, 145, 163, 0.14),
+          transparent 62%
+        );
+
+      box-shadow:
+        0 0 1.4rem rgba(255, 145, 163, 0.16);
+      animation: missingPulse 5s ease-in-out infinite;
     }
 
     .world-copy {
-      position: absolute;
-      z-index: 3;
-      right: 1.4rem;
-      bottom: 1.4rem;
-      left: 1.4rem;
+      position: relative;
+      z-index: 4;
     }
 
     .world-label {
@@ -928,15 +1074,15 @@
     }
 
     /* ============================================================
-       THREE UNFINISHED STATES
+       STORY CARDS
        ============================================================ */
 
-    .revelation-stage {
+    .story-stage {
       display: grid;
       gap: 1rem;
     }
 
-    .revelation-grid {
+    .scene-grid {
       display: grid;
 
       grid-template-columns:
@@ -945,8 +1091,12 @@
       gap: 0.9rem;
     }
 
-    .revelation-card {
+    .scene-card {
+      position: relative;
+
       min-width: 0;
+      overflow: hidden;
+
       padding: 1.25rem;
 
       border: 1px solid rgba(183, 152, 255, 0.18);
@@ -961,7 +1111,7 @@
         box-shadow var(--transition);
     }
 
-    .revelation-card:hover {
+    .scene-card:hover {
       border-color: rgba(183, 152, 255, 0.42);
 
       box-shadow:
@@ -971,22 +1121,43 @@
       transform: translateY(-3px);
     }
 
-    .chapter-index {
+    .scene-card::before {
+      position: absolute;
+      top: 0;
+      right: 0;
+
+      width: 8rem;
+      height: 8rem;
+
+      pointer-events: none;
+      content: "";
+
+      background:
+        radial-gradient(
+          circle at 100% 0,
+          rgba(183, 152, 255, 0.11),
+          transparent 68%
+        );
+    }
+
+    .scene-index {
       display: block;
       margin-bottom: 0.8rem;
     }
 
-    .revelation-card h3 {
+    .scene-card h3 {
       margin-bottom: 0.65rem;
     }
 
-    .revelation-card p {
+    .scene-card p {
       margin-bottom: 0;
       color: var(--muted-strong);
     }
 
-    .revelation-card blockquote {
-      margin: 1rem 0 0;
+    .scene-card blockquote {
+      margin:
+        1rem 0
+        0;
       padding: 0.85rem 0.95rem;
 
       border-left: 0.2rem solid var(--violet);
@@ -1004,15 +1175,15 @@
     }
 
     /* ============================================================
-       MYSTERY DIALOGUE
+       WORLD DIALOGUE
        ============================================================ */
 
     .dialogue-stage {
       display: grid;
 
       grid-template-columns:
-        minmax(0, 0.82fr)
-        minmax(0, 1.18fr);
+        minmax(0, 0.86fr)
+        minmax(0, 1.14fr);
 
       gap: 1rem;
     }
@@ -1042,7 +1213,7 @@
 
     .dialogue-panel {
       display: grid;
-      gap: 0.8rem;
+      gap: 0.85rem;
     }
 
     .dialogue-line {
@@ -1058,14 +1229,14 @@
       background: rgba(255, 255, 255, 0.025);
     }
 
-    .dialogue-line[data-speaker="visitor"] {
+    .dialogue-line[data-side="you"] {
       justify-self: start;
 
       border-color: rgba(117, 233, 255, 0.18);
       box-shadow: inset 0.2rem 0 0 rgba(117, 233, 255, 0.27);
     }
 
-    .dialogue-line[data-speaker="world"] {
+    .dialogue-line[data-side="world"] {
       justify-self: end;
 
       border-color: rgba(183, 152, 255, 0.22);
@@ -1087,7 +1258,7 @@
     }
 
     /* ============================================================
-       UNFINISHED MAP
+       MAP GRID
        ============================================================ */
 
     .map-section {
@@ -1169,84 +1340,6 @@
 
       color: var(--muted);
       font-size: 0.8rem;
-    }
-
-    /* ============================================================
-       COMPLETION VERSUS CLOSURE
-       ============================================================ */
-
-    .contrast-section {
-      display: grid;
-      gap: 1rem;
-    }
-
-    .contrast-grid {
-      display: grid;
-
-      grid-template-columns:
-        repeat(2, minmax(0, 1fr));
-
-      gap: 0.8rem;
-    }
-
-    .contrast-card {
-      min-width: 0;
-      padding: 1.15rem;
-
-      border: 1px solid rgba(224, 184, 91, 0.16);
-      border-radius: var(--radius-md);
-
-      background: var(--glass);
-      box-shadow: var(--shadow);
-    }
-
-    .contrast-card[data-mode="honest"] {
-      box-shadow:
-        var(--shadow),
-        inset 0.2rem 0 0 var(--green);
-    }
-
-    .contrast-card[data-mode="false"] {
-      box-shadow:
-        var(--shadow),
-        inset 0.2rem 0 0 var(--rose);
-    }
-
-    .contrast-card span {
-      display: block;
-      margin-bottom: 0.55rem;
-
-      font-size: 0.62rem;
-      font-weight: 850;
-      letter-spacing: 0.11em;
-      text-transform: uppercase;
-    }
-
-    .contrast-card[data-mode="honest"] span {
-      color: var(--green);
-    }
-
-    .contrast-card[data-mode="false"] span {
-      color: var(--rose);
-    }
-
-    .contrast-card strong {
-      display: block;
-      margin-bottom: 0.45rem;
-
-      font-family:
-        Georgia,
-        "Times New Roman",
-        serif;
-
-      font-size: 1.35rem;
-      font-weight: 600;
-      line-height: 1.16;
-    }
-
-    .contrast-card p {
-      margin-bottom: 0;
-      color: var(--muted-strong);
     }
 
     /* ============================================================
@@ -1411,7 +1504,7 @@
       border-top: 1px solid var(--rule);
     }
 
-    .evidence-body > p {
+    .evidence-body p {
       max-width: var(--reading-width);
       margin-bottom: 0;
 
@@ -1450,8 +1543,6 @@
     }
 
     .evidence-grid p {
-      margin-bottom: 0;
-
       color: var(--muted);
       font-size: 0.76rem;
     }
@@ -1519,16 +1610,75 @@
     }
 
     /* ============================================================
+       ANIMATION
+       ============================================================ */
+
+    @keyframes routeDrawStops {
+      0%,
+      18% {
+        opacity: 0;
+        clip-path: inset(0 100% 0 0);
+      }
+
+      45%,
+      72% {
+        opacity: 0.92;
+        clip-path: inset(0 22% 0 0);
+      }
+
+      100% {
+        opacity: 0.42;
+        clip-path: inset(0 22% 0 0);
+      }
+    }
+
+    @keyframes missingPulse {
+      0%,
+      100% {
+        opacity: 0.42;
+        transform: scale(0.96);
+      }
+
+      50% {
+        opacity: 1;
+        transform: scale(1.06);
+      }
+    }
+
+    .js .reveal {
+      opacity: 0;
+      transform: translateY(1rem);
+      transition:
+        opacity 520ms ease,
+        transform 520ms cubic-bezier(0.2, 0.72, 0.25, 1);
+    }
+
+    .js .reveal.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .js .world-stage.is-awake .draw-route {
+      animation:
+        routeDrawStops 6.2s ease-in-out infinite;
+    }
+
+    .js .world-stage.is-awake .missing-marker {
+      animation:
+        missingPulse 5s ease-in-out infinite;
+    }
+
+    /* ============================================================
        RESPONSIVE
        ============================================================ */
 
     @media (max-width: 68rem) {
-      .revelation-grid {
+      .scene-grid {
         grid-template-columns:
           repeat(2, minmax(0, 1fr));
       }
 
-      .revelation-card:last-child {
+      .scene-card:last-child {
         grid-column: 1 / -1;
       }
 
@@ -1551,7 +1701,7 @@
         grid-template-columns: 1fr;
       }
 
-      .world-vault {
+      .world-stage {
         min-height: 25rem;
       }
 
@@ -1656,52 +1806,60 @@
         width: 100%;
       }
 
-      .world-vault {
-        min-height: 23rem;
+      .world-stage {
+        min-height: 22rem;
         padding: 1rem;
       }
 
-      .world-disc {
-        width: 11rem;
-        height: 11rem;
+      .map-plate {
+        width: 13.5rem;
+        height: 12.5rem;
       }
 
-      .world-orbit {
-        width: 14rem;
-        height: 9rem;
+      .terrain--one {
+        width: 4.1rem;
+        height: 3.3rem;
       }
 
-      .world-fragment {
-        top: 4.8rem;
-        left: calc(50% + 3.6rem);
-
-        width: 3rem;
-        height: 4rem;
+      .terrain--two {
+        width: 4.8rem;
+        height: 3.6rem;
       }
 
-      .revelation-grid,
+      .terrain--three {
+        width: 3.2rem;
+        height: 2.5rem;
+      }
+
+      .draw-route--one {
+        width: 5.8rem;
+      }
+
+      .draw-route--two,
+      .draw-route--three {
+        width: 4rem;
+      }
+
+      .scene-grid,
       .map-grid,
-      .contrast-grid,
       .evidence-grid {
         grid-template-columns: 1fr;
       }
 
-      .revelation-card:last-child {
+      .scene-card:last-child {
         grid-column: auto;
       }
 
-      .revelation-card,
+      .scene-card,
       .dialogue-intro,
       .dialogue-panel,
       .map-section,
-      .map-card,
-      .contrast-card,
       .practical-return {
         border-radius: 1rem;
       }
 
       .dialogue-line {
-        max-width: 95%;
+        max-width: 96%;
       }
 
       .page-footer {
@@ -1734,20 +1892,32 @@
         transition-duration: 0.001ms !important;
       }
 
-      .revelation-card:hover,
+      .scene-card:hover,
       .button:hover {
         transform: none;
+      }
+
+      .js .reveal {
+        opacity: 1;
+        transform: none;
+      }
+
+      .draw-route {
+        opacity: 0.85;
+        clip-path: inset(0 22% 0 0);
+      }
+
+      .missing-marker {
+        opacity: 0.85;
       }
     }
 
     @media (prefers-reduced-transparency: reduce) {
       .page-topbar,
-      .revelation-card,
+      .scene-card,
       .dialogue-intro,
       .dialogue-panel,
       .map-section,
-      .map-card,
-      .contrast-card,
       .practical-return,
       .evidence-disclosure {
         background-color: var(--ink-1);
@@ -1759,15 +1929,15 @@
       body,
       .page-topbar,
       .route-hero,
-      .world-vault,
-      .revelation-card,
+      .world-stage,
+      .scene-card,
       .dialogue-intro,
       .dialogue-panel,
       .map-section,
       .map-card,
-      .contrast-card,
       .practical-return,
-      .evidence-disclosure {
+      .evidence-disclosure,
+      .map-plate {
         color: CanvasText;
         background: Canvas;
         box-shadow: none;
@@ -1779,8 +1949,9 @@
       }
 
       .brand-mark,
-      .world-disc,
-      .world-fragment {
+      .map-plate,
+      .terrain,
+      .missing-marker {
         border: 2px solid ButtonText;
         background: ButtonFace;
         box-shadow: none;
@@ -1798,7 +1969,8 @@
       .page-topbar,
       .hero-actions,
       .practical-actions,
-      .page-footer {
+      .page-footer,
+      .unfinished-map {
         display: none !important;
       }
 
@@ -1807,13 +1979,12 @@
       }
 
       .route-hero,
-      .world-vault,
-      .revelation-card,
+      .world-stage,
+      .scene-card,
       .dialogue-intro,
       .dialogue-panel,
       .map-section,
       .map-card,
-      .contrast-card,
       .practical-return,
       .evidence-disclosure {
         color: #111;
@@ -1823,14 +1994,8 @@
       }
 
       .route-hero,
-      .world-vault {
+      .world-stage {
         min-height: 0;
-      }
-
-      .world-disc,
-      .world-fragment,
-      .world-orbit {
-        display: none;
       }
 
       .evidence-disclosure:not([open])
@@ -1846,7 +2011,7 @@
     class="skip-link"
     href="#main"
   >
-    Skip to the Unfinished World
+    Skip to the story
   </a>
 
   <div class="page-shell">
@@ -1874,12 +2039,12 @@
         class="topbar-nav"
         aria-label="Direct routes"
       >
-        <a href="/showroom/wonders/stars/">
+        <a href="/showroom/globe/hearth/">
           Previous
         </a>
 
-        <a href="/showroom/">
-          Constellation
+        <a href="/showroom/mysteries/questions-in-the-glass/">
+          Next
         </a>
 
         <a href="/index.html">
@@ -1894,7 +2059,7 @@
         aria-labelledby="page-title"
       >
         <div class="route-hero__inner">
-          <div>
+          <div class="reveal">
             <div class="route-kicker">
               West Route · Chamber One
             </div>
@@ -1904,68 +2069,70 @@
             </h1>
 
             <p class="hero-subtitle">
-              Completion would make this place easier to explain—and less
-              honest.
+              Hearth showed the work behind the window. Now the world
+              refuses to look complete.
             </p>
 
             <p class="hero-lead">
-              The Stars gave you patterns. The Unfinished World gives you
-              interruption. Structures stop before their purpose becomes
-              clear. Histories break between generations. Roads lead
-              toward settlements that were never built. Some absences
-              were caused by failure. Others were deliberate restraint.
-              You are standing inside a world whose missing pieces still
-              carry evidence.
+              You leave the facility with the wrong kind of relief. You
+              expected Hearth to prove that Audralia was ready. Instead,
+              the next view opens into a map that keeps stopping. Some
+              terrain resolves. Some routes begin and halt. Some regions
+              stay veiled. Audralia is not a finished paradise waiting to
+              be entered. It is a living frontier whose incompletion must
+              be faced honestly.
             </p>
 
             <div class="hero-actions">
               <a
                 class="button button-gold"
-                href="#unfinished-states"
+                href="#unfinished-frontier"
               >
-                Enter the Incomplete Record
+                Read the Unfinished Map
               </a>
 
               <a
                 class="button"
-                href="/showroom/wonders/stars/"
+                href="/showroom/globe/hearth/"
               >
-                Return to the Stars
+                Return to Hearth
               </a>
             </div>
           </div>
 
           <aside
-            class="world-vault"
-            aria-label="The Unfinished World"
+            class="world-stage reveal"
+            aria-label="Unfinished frontier map"
           >
             <div
-              class="world-disc"
+              class="unfinished-map"
               aria-hidden="true"
-            ></div>
-
-            <div
-              class="world-fragment"
-              aria-hidden="true"
-            ></div>
-
-            <div
-              class="world-orbit"
-              aria-hidden="true"
-            ></div>
+            >
+              <span class="map-plate">
+                <span class="terrain terrain--one"></span>
+                <span class="terrain terrain--two"></span>
+                <span class="terrain terrain--three"></span>
+                <span class="veil"></span>
+                <span class="draw-route draw-route--one"></span>
+                <span class="draw-route draw-route--two"></span>
+                <span class="draw-route draw-route--three"></span>
+                <span class="missing-marker"></span>
+              </span>
+            </div>
 
             <div class="world-copy">
               <span class="world-label">
-                Unresolved World State
+                Incomplete Frontier
               </span>
 
               <strong>
-                The missing piece may be damage, restraint, or possibility.
+                The missing piece may be failure, restraint, or work not
+                ready to be closed.
               </strong>
 
               <p>
-                Do not repair the absence until you know what kind of
-                absence it is.
+                Do not repair the gap until you know what kind of gap it
+                is.
               </p>
             </div>
           </aside>
@@ -1973,89 +2140,87 @@
       </section>
 
       <section
-        id="unfinished-states"
-        class="revelation-stage"
+        id="unfinished-frontier"
+        class="story-stage"
         aria-labelledby="unfinished-title"
       >
-        <header class="section-heading">
+        <header class="section-heading reveal">
           <div>
             <div class="eyebrow">
-              Three Forms of Incompletion
+              The First West Condition
             </div>
 
             <h2 id="unfinished-title">
-              Not every unfinished thing failed.
+              Incompletion is not automatically failure.
             </h2>
           </div>
 
           <p>
-            An incomplete world can contain collapse, interruption, or a
-            disciplined refusal to proceed without enough evidence.
+            The West path begins by refusing false closure.
           </p>
         </header>
 
-        <div class="revelation-grid">
-          <article class="revelation-card">
-            <span class="chapter-index">
+        <div class="scene-grid">
+          <article class="scene-card reveal">
+            <span class="scene-index">
               01 · Broken
             </span>
 
             <h3>
-              Something began and could not continue.
+              Some things stopped because they could not survive.
             </h3>
 
             <p>
-              Resources disappeared. Leadership fractured. A system
-              exceeded its limits. The remaining structure points toward
-              an intended future that never arrived.
+              A route ends where the ground buckled. A structure leans
+              toward a purpose it never reached. A system exceeded its
+              limits and left evidence in the shape of its fracture.
             </p>
 
             <blockquote>
-              “A ruin preserves both ambition and the boundary ambition
-              failed to respect.”
+              A broken thing still records the pressure that broke it.
             </blockquote>
           </article>
 
-          <article class="revelation-card">
-            <span class="chapter-index">
+          <article class="scene-card reveal">
+            <span class="scene-index">
               02 · Interrupted
             </span>
 
             <h3>
-              Something stopped because another pressure took priority.
+              Some things stopped because another pressure took priority.
             </h3>
 
             <p>
-              War, migration, ecological change, political transition, or
-              emergency may have redirected the people who began the work.
-              The project remains incomplete without necessarily being
-              rejected.
+              Work may have been redirected, delayed, evacuated, or
+              postponed. The unfinished section is not proof that the
+              mission was abandoned. It may be proof that the world
+              demanded triage.
             </p>
 
             <blockquote>
-              “What stopped may still matter even when no one returned to
-              finish it.”
+              What stopped may still matter even when no one returned to
+              finish it.
             </blockquote>
           </article>
 
-          <article class="revelation-card">
-            <span class="chapter-index">
+          <article class="scene-card reveal">
+            <span class="scene-index">
               03 · Deliberately Open
             </span>
 
             <h3>
-              Something was left unresolved to prevent false closure.
+              Some things remain open because closure would be dishonest.
             </h3>
 
             <p>
-              The builders may have recognized that the available
-              evidence could not support a final structure. The gap was
-              retained so a later generation could continue without
-              mistaking uncertainty for failure.
+              A responsible builder can leave a gap visible when the
+              available evidence cannot support a final structure. The
+              absence protects a later generation from inheriting false
+              certainty.
             </p>
 
             <blockquote>
-              “Restraint can look unfinished from the outside.”
+              Restraint can look unfinished from the outside.
             </blockquote>
           </article>
         </div>
@@ -2065,114 +2230,91 @@
         class="dialogue-stage"
         aria-labelledby="dialogue-title"
       >
-        <div class="dialogue-intro">
+        <div class="dialogue-intro reveal">
           <div class="eyebrow">
             The Repairer’s Temptation
           </div>
 
           <h2 id="dialogue-title">
-            You want to fill the missing piece.
+            You want to complete what the map leaves open.
           </h2>
 
           <p>
-            Completion feels productive. Empty space looks like neglect.
-            But a repair made before the absence is understood can erase
-            the strongest evidence the world still contains.
+            Completion feels like progress. But repair without diagnosis
+            can destroy the very evidence that tells you what kind of
+            world you are standing in.
           </p>
         </div>
 
         <div
-          class="dialogue-panel"
+          class="dialogue-panel reveal"
           aria-label="Unfinished World dialogue"
         >
           <div
             class="dialogue-line"
-            data-speaker="visitor"
+            data-side="you"
           >
-            <span>Visitor</span>
+            <span>You</span>
 
             <p>
-              “The structure is obviously incomplete.”
+              “The route stops. Shouldn’t it be finished?”
             </p>
           </div>
 
           <div
             class="dialogue-line"
-            data-speaker="world"
+            data-side="world"
           >
             <span>World</span>
 
             <p>
-              “Incomplete compared with which plan?”
+              “Not until you know why it stopped.”
             </p>
           </div>
 
           <div
             class="dialogue-line"
-            data-speaker="visitor"
+            data-side="you"
           >
-            <span>Visitor</span>
+            <span>You</span>
 
             <p>
-              “The road ends before it reaches the settlement.”
+              “But Hearth is developing this place.”
             </p>
           </div>
 
           <div
             class="dialogue-line"
-            data-speaker="world"
-          >
-            <span>World</span>
-
-            <p>
-              “Or the settlement was never authorized. Or the ground
-              failed. Or the people chose not to continue.”
-            </p>
-          </div>
-
-          <div
-            class="dialogue-line"
-            data-speaker="visitor"
-          >
-            <span>Visitor</span>
-
-            <p>
-              “Then how do I know whether to repair it?”
-            </p>
-          </div>
-
-          <div
-            class="dialogue-line"
-            data-speaker="world"
+            data-side="world"
           >
             <span>World</span>
 
             <p>
-              “Recover the intention, the interruption, the ownership,
-              and the consequence of completion.”
+              “Development is not permission to declare the work
+              complete.”
             </p>
           </div>
 
           <div
             class="dialogue-line"
-            data-speaker="visitor"
+            data-side="you"
           >
-            <span>Visitor</span>
+            <span>You</span>
 
             <p>
-              “What if the record is gone?”
+              “Then what do I do with the missing regions?”
             </p>
           </div>
 
           <div
             class="dialogue-line"
-            data-speaker="world"
+            data-side="world"
           >
             <span>World</span>
 
             <p>
-              “Then preserve the uncertainty. Do not let confidence
-              become a substitute for history.”
+              “Preserve the absence. Recover the intention. Test the
+              consequence of completion.”
             </p>
           </div>
         </div>
@@ -2182,7 +2324,7 @@
         class="map-section"
         aria-labelledby="map-title"
       >
-        <header class="section-heading">
+        <header class="section-heading reveal">
           <div>
             <div class="eyebrow">
               The Map of What Is Missing
@@ -2194,14 +2336,13 @@
           </div>
 
           <p>
-            Missing pieces become intelligible when their position,
-            ownership, time, and relationship to the larger world are
-            preserved.
+            A gap becomes intelligible only when its place in the larger
+            system remains visible.
           </p>
         </header>
 
         <div class="map-grid">
-          <article class="map-card">
+          <article class="map-card reveal">
             <span>Location</span>
 
             <strong>
@@ -2209,13 +2350,13 @@
             </strong>
 
             <p>
-              A missing bridge, record, district, institution, route, or
-              generation means something different depending on where it
+              A missing bridge, district, route, archive, body, or
+              system means something different depending on where it
               belongs.
             </p>
           </article>
 
-          <article class="map-card">
+          <article class="map-card reveal">
             <span>Intention</span>
 
             <strong>
@@ -2223,13 +2364,12 @@
             </strong>
 
             <p>
-              Recover plans, testimony, earlier states, contracts, or
-              physical traces without pretending the intended future was
-              inevitable.
+              Recover the plan without pretending the planned future was
+              inevitable, complete, or safe.
             </p>
           </article>
 
-          <article class="map-card">
+          <article class="map-card reveal">
             <span>Interruption</span>
 
             <strong>
@@ -2237,118 +2377,30 @@
             </strong>
 
             <p>
-              Identify pressure, conflict, scarcity, uncertainty,
-              prohibition, abandonment, or deliberate restraint.
+              Identify failure, scarcity, uncertainty, restraint,
+              displacement, prohibition, or a pressure that forced
+              priority elsewhere.
             </p>
           </article>
 
-          <article class="map-card">
+          <article class="map-card reveal">
             <span>Consequence</span>
 
             <strong>
-              What does the gap do now?
+              What would completion change?
             </strong>
 
             <p>
-              An unfinished structure may create danger, preserve choice,
-              expose history, block movement, or protect the world from a
-              premature path.
+              A repair may reduce danger, erase evidence, create new
+              pressure, close choice, or open a path the system is not
+              ready to survive.
             </p>
           </article>
         </div>
       </section>
 
       <section
-        class="contrast-section"
-        aria-labelledby="contrast-title"
-      >
-        <header class="section-heading">
-          <div>
-            <div class="eyebrow">
-              Honest Incompletion Versus False Closure
-            </div>
-
-            <h2 id="contrast-title">
-              A finished surface can hide an unresolved system.
-            </h2>
-          </div>
-
-          <p>
-            The mystery is not always why something remains unfinished.
-            Sometimes the deeper mystery is why something was declared
-            complete.
-          </p>
-        </header>
-
-        <div class="contrast-grid">
-          <article
-            class="contrast-card"
-            data-mode="honest"
-          >
-            <span>Honest Incompletion</span>
-
-            <strong>
-              The gap remains visible because the answer is not ready.
-            </strong>
-
-            <p>
-              Uncertainty, missing evidence, competing needs, and
-              unresolved ownership remain part of the record.
-            </p>
-          </article>
-
-          <article
-            class="contrast-card"
-            data-mode="false"
-          >
-            <span>False Closure</span>
-
-            <strong>
-              The appearance of completion is protected at any cost.
-            </strong>
-
-            <p>
-              Missing sections are concealed, contradictory accounts are
-              removed, and unresolved risk is pushed into the future.
-            </p>
-          </article>
-
-          <article
-            class="contrast-card"
-            data-mode="honest"
-          >
-            <span>Honest Incompletion</span>
-
-            <strong>
-              Later generations can continue from the real boundary.
-            </strong>
-
-            <p>
-              They receive the evidence, uncertainty, failed attempts,
-              and conditions required to move forward responsibly.
-            </p>
-          </article>
-
-          <article
-            class="contrast-card"
-            data-mode="false"
-          >
-            <span>False Closure</span>
-
-            <strong>
-              Later generations inherit confidence without context.
-            </strong>
-
-            <p>
-              They believe the problem was solved until the concealed gap
-              reappears as crisis.
-            </p>
-          </article>
-        </div>
-      </section>
-
-      <section
-        class="practical-return"
+        class="practical-return reveal"
         aria-labelledby="practical-title"
       >
         <div class="practical-copy">
@@ -2361,11 +2413,11 @@
           </h2>
 
           <p>
-            First identify the intended structure, the reason work
-            stopped, who owned the decision, what evidence remains, and
-            what completion would change. A visible gap may be a defect.
-            It may also be the last honest record of a question no one
-            was qualified to close.
+            Audralia’s incompletion is not a defect to hide. It is the
+            frontier condition. Some gaps mark damage. Some mark
+            restraint. Some mark future work not yet safe to close. The
+            next chamber turns the unfinished map back toward you and
+            asks what your own questions reveal.
           </p>
         </div>
 
@@ -2379,9 +2431,9 @@
 
           <a
             class="button"
-            href="/showroom/"
+            href="/showroom/globe/hearth/"
           >
-            Choose Another Chamber
+            Return to Hearth
           </a>
         </div>
       </section>
@@ -2389,9 +2441,9 @@
       <details class="evidence-disclosure">
         <summary>
           <span>
-            <strong>Unfinished World Boundary</strong>
+            <strong>Story Reveal Boundary</strong>
             <small>
-              What incompletion can reveal—and what it cannot establish alone
+              What this chamber reveals, and what remains withheld
             </small>
           </span>
 
@@ -2400,42 +2452,40 @@
 
         <div class="evidence-body">
           <p>
-            The Unfinished World is a bounded mystery environment within
-            the Mirrorland narrative architecture. It preserves missing
-            structures, interrupted histories, unresolved decisions, and
-            deliberately open questions as inspectable evidence. It does
-            not establish that every incomplete structure should remain
-            unfinished or that every absence is meaningful by design.
+            This chamber reveals that Audralia is an incomplete frontier,
+            not a finished paradise. Its unfinished state may reflect
+            failure, interruption, restraint, unresolved systems, or work
+            that cannot honestly be declared complete.
           </p>
 
           <div class="evidence-grid">
             <article>
-              <span>Established Here</span>
+              <span>Revealed Here</span>
 
               <p>
-                Incompletion may result from failure, interruption, or
-                deliberate restraint, and those states should not be
-                collapsed into one explanation.
+                The world’s visible incompletion is evidence. Gaps must
+                be inspected before they are repaired, closed, or
+                explained away.
               </p>
             </article>
 
             <article>
-              <span>Not Established Here</span>
+              <span>Withheld Here</span>
 
               <p>
-                Final causation, automatic repair authority, complete
-                historical reconstruction, or universal value in every
-                unresolved condition.
+                Full agency, full embodiment, full conjugation, H-Earth,
+                ZIONTS, final Audralia traversal, and final Earth stakes
+                remain closed.
               </p>
             </article>
 
             <article>
-              <span>Continuity Requirement</span>
+              <span>Next Pressure</span>
 
               <p>
-                Any later repair or closure should preserve the prior gap,
-                source evidence, uncertainty, ownership, rejected paths,
-                and consequence of completion.
+                The next route asks what the player’s questions reveal
+                when the unfinished world reflects them through the
+                glass.
               </p>
             </article>
           </div>
@@ -2455,7 +2505,7 @@
       </div>
 
       <nav aria-label="Footer routes">
-        <a href="/showroom/wonders/stars/">
+        <a href="/showroom/globe/hearth/">
           Previous Chamber
         </a>
 
@@ -2473,20 +2523,161 @@
       </nav>
     </footer>
   </div>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const CONTRACT =
+        "SHOWROOM_SATELLITE_THE_UNFINISHED_WORLD_HTML_TNT_v2_AUDRALIA_INCOMPLETE_FRONTIER";
+
+      const root =
+        document.documentElement;
+
+      root.classList.add("js");
+
+      const reducedMotionQuery =
+        window.matchMedia &&
+        window.matchMedia("(prefers-reduced-motion: reduce)");
+
+      const reducedMotion =
+        Boolean(
+          reducedMotionQuery &&
+          reducedMotionQuery.matches
+        );
+
+      function markVisible(elements) {
+        for (const element of elements) {
+          element.classList.add("is-visible");
+        }
+      }
+
+      function initializeReveals() {
+        const revealElements =
+          Array.from(
+            document.querySelectorAll(".reveal")
+          );
+
+        if (!revealElements.length) {
+          return;
+        }
+
+        if (
+          reducedMotion ||
+          typeof IntersectionObserver !== "function"
+        ) {
+          markVisible(revealElements);
+          return;
+        }
+
+        const observer =
+          new IntersectionObserver(
+            entries => {
+              for (const entry of entries) {
+                if (!entry.isIntersecting) {
+                  continue;
+                }
+
+                entry.target.classList.add("is-visible");
+                observer.unobserve(entry.target);
+              }
+            },
+            {
+              root: null,
+              threshold: 0.14,
+              rootMargin: "0px 0px -6% 0px"
+            }
+          );
+
+        for (const element of revealElements) {
+          observer.observe(element);
+        }
+      }
+
+      function initializeWorldStage() {
+        const worldStage =
+          document.querySelector(".world-stage");
+
+        if (!worldStage || reducedMotion) {
+          return;
+        }
+
+        window.setTimeout(
+          () => {
+            worldStage.classList.add("is-awake");
+          },
+          240
+        );
+      }
+
+      function publishReceipt() {
+        const payload = {
+          contract: CONTRACT,
+          route: "/showroom/mysteries/unfinished-world/",
+          routeId: "west-1",
+          page: "The Unfinished World",
+          localEnhancementOnly: true,
+          globalRuntimeOwned: false,
+          navigationOwned: false,
+          systematicReveal: "audralia-incomplete-frontier",
+          previousRoute: "/showroom/globe/hearth/",
+          nextRoute: "/showroom/mysteries/questions-in-the-glass/",
+          mysteryState: "unresolved",
+          worldCompletionClaim: false,
+          inquiryModel: "absence-fracture-possibility-boundary",
+          continuousStoryHandoff: true,
+          fullAgencyGranted: false,
+          reducedMotion: reducedMotion,
+          timestamp: new Date().toISOString()
+        };
+
+        window.dispatchEvent(
+          new CustomEvent(
+            "SHOWROOM_SATELLITE_PAGE_READY",
+            {
+              detail: Object.freeze(payload)
+            }
+          )
+        );
+      }
+
+      if (document.readyState === "loading") {
+        document.addEventListener(
+          "DOMContentLoaded",
+          () => {
+            initializeReveals();
+            initializeWorldStage();
+            publishReceipt();
+          },
+          {
+            once: true
+          }
+        );
+      } else {
+        initializeReveals();
+        initializeWorldStage();
+        publishReceipt();
+      }
+    })();
+  </script>
 </body>
 </html>
 
 <!--
-SHOWROOM_SATELLITE_THE_UNFINISHED_WORLD_HTML_RECEIPT_v1
+SHOWROOM_SATELLITE_THE_UNFINISHED_WORLD_HTML_RECEIPT_v2_AUDRALIA_INCOMPLETE_FRONTIER
 
 TARGET:
 /showroom/mysteries/unfinished-world/index.html
 
 STATUS:
-COMPLETE NEW SELF-CONTAINED HTML FILE
+COMPLETE SELF-CONTAINED HTML REPLACEMENT
 
-EMBEDDED VISUAL SYSTEM:
-SHOWROOM_SATELLITE_PAGE_EMBEDDED_VISUAL_SYSTEM_v1
+SOURCE BASELINE:
+SHOWROOM_SATELLITE_THE_UNFINISHED_WORLD_HTML_TNT_v1
+supplied by user as current source baseline for west-1.
+
+NEW CONTRACT:
+SHOWROOM_SATELLITE_THE_UNFINISHED_WORLD_HTML_TNT_v2_AUDRALIA_INCOMPLETE_FRONTIER
 
 ROUTE FAMILY:
 Mysteries / West
@@ -2494,57 +2685,121 @@ Mysteries / West
 ROUTE ID:
 west-1
 
-PREVIOUS ROUTE:
-/showroom/wonders/stars/
-
-NEXT ROUTE:
-/showroom/mysteries/questions-in-the-glass/
+ROUTE TITLE:
+The Unfinished World
 
 PARENT:
 /showroom/
 
-PURPOSE:
-- begin the West mysteries sequence;
-- continue directly from Read the Stars;
-- distinguish broken, interrupted, and deliberately open states;
-- preserve absence as inspectable evidence;
-- resist premature repair and false closure;
-- establish a four-part map for investigating incompletion;
-- prepare the visitor for Questions in the Glass.
+PREVIOUS ROUTE:
+/showroom/globe/hearth/
 
-PRESENTATION STANDARD:
-- immersive;
-- second-person;
-- mysterious;
-- dialogue-driven;
-- evidence-oriented;
-- practical;
-- uncertainty preserved beneath the experience.
+NEXT ROUTE:
+/showroom/mysteries/questions-in-the-glass/
 
-ARCHITECTURAL FEATURES:
-- complete embedded CSS;
-- Showroom-aligned cosmic atmosphere;
-- CSS-built incomplete world object;
-- three-part incompletion sequence;
-- visitor and World dialogue;
-- four-part absence map;
-- honest-incompletion versus false-closure comparison;
-- practical restraint rule;
-- evidence-boundary disclosure;
-- responsive mobile composition;
-- keyboard focus;
-- reduced motion;
-- reduced transparency;
-- forced colors;
-- print handling.
+RETURN ROUTE:
+/showroom/
 
-NON-CLAIMS:
-- no universal repair prohibition;
-- no final causation claim;
-- no complete historical reconstruction;
-- no scientific validation;
-- no Earth-transfer authorization;
-- no runtime dependency;
-- no controller ownership;
-- no JavaScript requirement.
+MAIN COMPASS:
+/index.html
+
+MYSTERY STATE:
+unresolved
+
+WORLD COMPLETION CLAIM:
+false
+
+INQUIRY MODEL:
+absence-fracture-possibility-boundary
+
+NARRATIVE AUTHORITY:
+SHOWROOM_MIRRORLAND_AUDRALIA_ROUTE_PAGE_NARRATIVE_FREEZE_PACKET_v1_1
+SHOWROOM_ROUTE_PAGE_RENEWAL_RULES_LOCK_v1
+CONTINUOUS STORY HANDOFF RULE
+
+PRIMARY ROUTE CORRECTION:
+The source baseline routed west-1 previous directly to:
+/showroom/wonders/stars/
+
+The renewed South sequence now includes Hearth as south-4:
+/showroom/globe/hearth/
+
+This replacement corrects west-1 previous-route continuity to:
+/showroom/globe/hearth/
+
+PRIMARY NARRATIVE CORRECTIONS FROM v1:
+- Reframed west-1 as direct consequence of Hearth rather than direct continuation from Stars.
+- Established Audralia as an incomplete frontier, not a completed paradise.
+- Preserved mystery-state, world-completion false claim, and inquiry-model metadata.
+- Replaced broad “unfinished evidence” framing with the specific frontier condition after Hearth.
+- Preserved incompletion as evidence without making every absence meaningful by default.
+- Connected west-1 to west-2 by making the next pressure the player’s questions reflected through glass.
+
+PAGE 9 / WEST-1 STORY SPINE:
+1. The player leaves Hearth after seeing the facility behind the window.
+2. The next view opens as a map that begins drawing itself.
+3. Some terrain resolves.
+4. Some routes begin and stop.
+5. Some regions remain veiled.
+6. The player learns that Audralia is not a finished paradise.
+7. Incompletion can be failure, interruption, restraint, unresolved systems, or future work.
+8. The next route asks what the player’s questions reveal in the glass.
+
+CONTROLLED REVEAL:
+Audralia is unfinished by design and by necessity.
+The visible incompletion is not only failure.
+It is evidence of development, restraint, unresolved systems, and work that cannot be honestly declared complete.
+
+WITHHELD:
+- full agency;
+- full embodiment;
+- full conjugation;
+- H-Earth;
+- ZIONTS;
+- final Audralia traversal;
+- final Earth stakes.
+
+DOMINANT ANIMATION IDEA:
+An unfinished map begins drawing.
+Some terrain resolves.
+Some route-lines stop mid-path.
+Some regions remain veiled.
+One path tries to complete and halts before the missing structure.
+
+ANTI-TILED-STAR CORRECTION:
+The page does not use repeating square-cell starfields as the main atmosphere.
+Atmospheric stars are hand-positioned through fixed radial points.
+The dominant animated visual is the unfinished map.
+
+EMBEDDED SYSTEM:
+- HTML structure
+- embedded CSS
+- embedded page-local JavaScript
+- no external dependencies
+- no shared runtime ownership
+
+PAGE-LOCAL JAVASCRIPT AUTHORITY:
+- local reveal enhancement only
+- local World-stage awakening only
+- local readiness event only
+- no navigation ownership
+- no controller calls
+- no constellation mutation
+- no Main Compass ownership
+- safe without JavaScript
+
+ACCESSIBILITY / RESILIENCE:
+- skip link
+- semantic sections
+- focus-visible handling
+- reduced-motion support
+- reduced-transparency support
+- forced-colors support
+- print handling
+- readable without JavaScript
+
+NOT CLAIMED:
+- runtime validation
+- browser visual pass
+- deployment pass
 -->

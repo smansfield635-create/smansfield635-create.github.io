@@ -2,30 +2,22 @@
 <html
   lang="en"
   data-route="/explore/"
-  data-page="explore-manor-contextual-route-map"
+  data-page="explore-frontier-surface"
   data-room="explore"
-  data-public-label="manor"
-  data-former-label="manor"
-  data-version="G2-V5"
-  data-contract="EXPLORE_MANOR_CONTEXTUAL_GEM_SCALE_DROPDOWN_RENEWAL_TNT_v2"
-  data-previous-contract="EXPLORE_LAWS_ALIGNED_AMETHYST_GEM_RENEWAL_TNT_v1"
-  data-alignment-contract="DGB_SITEWIDE_GEM_SYSTEM_AUDIT_AND_PRIMITIVE_BINDING_v1"
-  data-animation-standard="LIGHTWEIGHT_CSS_DIAMOND_ROUTE_MAP_STANDARD_v1"
-  data-gem-standard="LAWS_ALIGNED_AMETHYST_ROUTE_MAP_CRYSTAL_v1"
-  data-background-authority="inline-css-only"
-  data-motion-authority="css-only"
-  data-status="active"
-  data-role="manor-estate-directory"
-  data-manor-contextual-expansion="true"
-  data-manor-dropdown-menu="true"
-  data-top-nav-bubbles-removed="true"
-  data-systematic-gem-scaling="true"
-  data-orbital-diamonds-preserved="true"
-  data-platform-engineering-lens="true"
-  data-readable-text-stable="true"
-  data-readable-text-independent-animation="false"
-  data-object-motion-only="true"
-  data-purple-theme="active"
+  data-public-facing-name="Explore"
+  data-version="EXPLORE-FRONTIER-SURFACE-v1"
+  data-contract="EXPLORE_FRONTIER_SURFACE_SCRATCH_ENTRY_TNT_v1"
+  data-role="frontier-surface-entry"
+  data-purpose="objective-frontier-label-education"
+  data-primary-destination="/explore/frontier/"
+  data-compass-behavior="retired"
+  data-manor-identity="retired"
+  data-estate-directory="false"
+  data-frontier-surface-labels="true"
+  data-objective-stance="true"
+  data-narrative-stance="false"
+  data-inline-css="true"
+  data-inline-js="false"
   data-heavy-runtime-loaded="false"
   data-generated-image="false"
   data-graphic-box="false"
@@ -36,1216 +28,571 @@
 >
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta
+    name="viewport"
+    content="width=device-width,initial-scale=1,viewport-fit=cover"
+  >
 
-  <title>Manor · Estate Directory · Diamond Gate Bridge</title>
+  <title>Explore · Frontier Surface · Diamond Gate Bridge</title>
+
   <meta
     name="description"
-    content="The Manor is the Diamond Gate Bridge estate directory: a contextual route map that keeps proof, story, systems, and practical rooms legible without collapsing the whole site into one explanation."
+    content="Explore introduces the Frontier surface labels in objective, practical language. Each label opens the Frontier hub, where deeper lane selection happens."
   >
 
   <style>
-    :root{
-      color-scheme:dark;
-      --bg:#04010d;
-      --ink:#fff4f9;
-      --muted:rgba(237,226,255,.80);
-      --faint:rgba(237,226,255,.50);
-      --gold:#f3c86f;
-      --gold2:#ffe8a3;
-      --violet:#b58cff;
-      --purple:#8f65ff;
-      --purple2:#5e35d6;
-      --plum:#2d0f58;
-      --magenta:#d083ff;
-      --blue:#8dd8ff;
-      --panel:rgba(16,8,34,.88);
-      --line:rgba(190,151,255,.24);
-      --line2:rgba(243,200,111,.24);
-      --shadow:0 32px 110px rgba(0,0,0,.50);
-      --max:1180px;
-      --inner-orbit-duration:46s;
-      --outer-orbit-duration:72s;
+    :root {
+      color-scheme: dark;
+
+      --bg: #03050a;
+      --bg-2: #07101a;
+      --bg-3: #0a121d;
+
+      --ink: #f5f7ff;
+      --soft: rgba(245, 247, 255, 0.74);
+      --muted: rgba(245, 247, 255, 0.54);
+      --faint: rgba(245, 247, 255, 0.36);
+
+      --gold: #f2c76f;
+      --gold-2: #ffe7a3;
+      --blue: #8dd8ff;
+      --green: #8df2c2;
+
+      --panel: rgba(255, 255, 255, 0.055);
+      --panel-2: rgba(255, 255, 255, 0.035);
+      --panel-3: rgba(0, 0, 0, 0.20);
+
+      --line: rgba(255, 255, 255, 0.13);
+      --line-strong: rgba(242, 199, 111, 0.42);
+
+      --shadow: rgba(0, 0, 0, 0.44);
+
+      --radius-lg: 30px;
+      --radius-md: 22px;
+      --radius-sm: 16px;
+
+      --max: 1120px;
     }
 
-    *{box-sizing:border-box}
-
-    html{
-      min-width:320px;
-      min-height:100%;
-      background:var(--bg);
-      scroll-behavior:smooth;
-      overflow-x:hidden;
+    * {
+      box-sizing: border-box;
     }
 
-    body{
-      margin:0;
-      min-width:320px;
-      min-height:100svh;
-      color:var(--ink);
-      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-      line-height:1.5;
-      overflow-x:hidden;
+    html,
+    body {
+      margin: 0;
+      min-width: 320px;
+      min-height: 100%;
       background:
-        radial-gradient(circle at 50% -10%,rgba(208,131,255,.22),transparent 30rem),
-        radial-gradient(circle at 8% 16%,rgba(143,101,255,.28),transparent 30rem),
-        radial-gradient(circle at 92% 22%,rgba(102,58,214,.22),transparent 30rem),
-        radial-gradient(circle at 52% 72%,rgba(243,200,111,.10),transparent 38rem),
-        linear-gradient(180deg,#10041f 0%,#070214 52%,#020106 100%);
-      -webkit-font-smoothing:antialiased;
-      text-rendering:geometricPrecision;
+        radial-gradient(circle at 50% -8%, rgba(242, 199, 111, 0.095), transparent 30rem),
+        radial-gradient(circle at 10% 18%, rgba(141, 216, 255, 0.105), transparent 28rem),
+        radial-gradient(circle at 92% 16%, rgba(141, 242, 194, 0.07), transparent 24rem),
+        radial-gradient(circle at 50% 82%, rgba(242, 199, 111, 0.055), transparent 34rem),
+        linear-gradient(180deg, var(--bg-2), var(--bg));
+      color: var(--ink);
+      font-family:
+        Inter,
+        ui-sans-serif,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+      scroll-behavior: smooth;
+      overflow-x: hidden;
     }
 
-    body::before{
-      content:"";
-      position:fixed;
-      inset:0;
-      z-index:0;
-      pointer-events:none;
+    body {
+      min-height: 100svh;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: geometricPrecision;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
       background-image:
-        radial-gradient(circle,rgba(255,255,255,.18) 0 1px,transparent 1.5px),
-        linear-gradient(rgba(181,140,255,.045) 1px,transparent 1px),
-        linear-gradient(90deg,rgba(181,140,255,.045) 1px,transparent 1px);
-      background-size:220px 260px,54px 54px,54px 54px;
-      opacity:.24;
-      mask-image:linear-gradient(180deg,rgba(0,0,0,.94),rgba(0,0,0,.58) 64%,rgba(0,0,0,.22));
+        radial-gradient(circle, rgba(255, 255, 255, 0.16) 0 1px, transparent 1.5px),
+        linear-gradient(rgba(141, 216, 255, 0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(141, 216, 255, 0.035) 1px, transparent 1px);
+      background-size: 230px 260px, 58px 58px, 58px 58px;
+      opacity: 0.20;
+      mask-image: linear-gradient(
+        180deg,
+        rgba(0, 0, 0, 0.92),
+        rgba(0, 0, 0, 0.55) 64%,
+        rgba(0, 0, 0, 0.16)
+      );
     }
 
-    a{color:inherit;text-decoration:none}
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
 
     a:focus-visible,
-    button:focus-visible,
-    summary:focus-visible,
-    label:focus-visible{
-      outline:2px solid var(--gold);
-      outline-offset:4px;
+    summary:focus-visible {
+      outline: 2px solid var(--gold);
+      outline-offset: 4px;
     }
 
-    .gem-defs{
-      position:absolute;
-      width:0;
-      height:0;
-      overflow:hidden;
-      pointer-events:none;
+    .skip {
+      position: absolute;
+      top: 8px;
+      left: -999px;
+      z-index: 50;
+      padding: 0.72rem 1rem;
+      border-radius: 999px;
+      color: #07101a;
+      background: linear-gradient(135deg, var(--gold-2), var(--gold));
+      font-weight: 950;
     }
 
-    .skip{
-      position:absolute;
-      left:-999px;
-      top:8px;
-      z-index:50;
-      padding:.75rem 1rem;
-      border-radius:999px;
-      color:#09020f;
-      background:linear-gradient(135deg,var(--gold2),var(--gold));
-      font-weight:950;
+    .skip:focus {
+      left: 8px;
     }
 
-    .skip:focus{left:8px}
-
-    .shell{
-      position:relative;
-      z-index:2;
-      width:min(var(--max),calc(100% - 28px));
-      margin:0 auto;
-      padding:max(22px,env(safe-area-inset-top)) 0 max(46px,env(safe-area-inset-bottom));
+    .shell {
+      position: relative;
+      z-index: 2;
+      width: min(var(--max), calc(100% - 32px));
+      margin: 0 auto;
+      padding:
+        max(24px, env(safe-area-inset-top))
+        0
+        max(52px, env(safe-area-inset-bottom));
     }
 
-    .topbar{
-      display:grid;
-      grid-template-columns:auto 1fr;
-      align-items:center;
-      gap:18px;
-      padding:12px 0 18px;
+    .topbar {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 38px;
     }
 
-    .brand{
-      display:grid;
-      grid-template-columns:auto 1fr;
-      align-items:center;
-      gap:.9rem;
-      min-width:260px;
+    .brand {
+      display: grid;
+      gap: 5px;
+      min-width: 220px;
     }
 
-    .brand-mark{
-      width:4.2rem;
-      height:3.1rem;
-      position:relative;
-      display:grid;
-      place-items:center;
-      filter:
-        drop-shadow(0 1.1rem 1.8rem rgba(0,0,0,.44))
-        drop-shadow(0 0 1.6rem rgba(181,140,255,.28));
+    .brand span {
+      color: var(--gold);
+      font-size: 0.82rem;
+      font-weight: 950;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
     }
 
-    .brand-mark svg{
-      position:absolute;
-      inset:0;
-      width:100%;
-      height:100%;
-      overflow:visible;
+    .brand strong {
+      color: var(--soft);
+      font-size: 0.98rem;
+      font-weight: 800;
     }
 
-    .brand-mark span{
-      position:relative;
-      z-index:2;
-      font-weight:950;
-      letter-spacing:.04em;
-      color:rgba(255,244,249,.98);
-      text-shadow:0 2px 10px rgba(0,0,0,.84);
+    .nav {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 8px;
     }
 
-    .brand-copy{
-      display:grid;
-      gap:.18rem;
+    .nav a {
+      min-height: 2.55rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 0.62rem 0.92rem;
+      color: var(--ink);
+      background: rgba(255, 255, 255, 0.052);
+      font-size: 0.88rem;
+      font-weight: 900;
+      line-height: 1;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+      transition:
+        border-color 160ms ease,
+        background 160ms ease,
+        transform 160ms ease;
     }
 
-    .brand-copy span{
-      color:var(--muted);
-      font-size:.74rem;
-      font-weight:950;
-      letter-spacing:.14em;
-      text-transform:uppercase;
+    .nav a:hover,
+    .nav a:focus-visible {
+      border-color: rgba(242, 199, 111, 0.44);
+      background: rgba(242, 199, 111, 0.11);
+      transform: translateY(-1px);
     }
 
-    .brand-copy strong{
-      font-size:clamp(1.08rem,3vw,1.7rem);
-      line-height:1;
-      letter-spacing:-.045em;
+    .nav a[aria-current="page"] {
+      border-color: var(--line-strong);
+      background: rgba(242, 199, 111, 0.14);
     }
 
-    .site-menu{
-      justify-self:end;
-      position:relative;
-      z-index:10;
-      width:min(100%,48rem);
-    }
-
-    .site-menu-summary{
-      list-style:none;
-      width:fit-content;
-      margin-left:auto;
-      min-height:2.75rem;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap:.7rem;
-      padding:.62rem 1rem;
-      border:1px solid rgba(210,178,255,.24);
-      border-radius:999px;
-      color:rgba(244,238,255,.92);
+    .hero {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      padding: clamp(24px, 5vw, 54px);
       background:
-        radial-gradient(circle at 20% 0%,rgba(208,131,255,.16),transparent 70%),
-        radial-gradient(circle at 80% 100%,rgba(243,200,111,.10),transparent 70%),
-        rgba(181,140,255,.065);
-      box-shadow:
-        0 .8rem 1.8rem rgba(0,0,0,.18),
-        inset 0 1px 0 rgba(255,255,255,.09);
-      cursor:pointer;
-      user-select:none;
-      transition:border-color .18s ease,background .18s ease;
-    }
-
-    .site-menu-summary::-webkit-details-marker{display:none}
-
-    .site-menu-summary span{
-      font-size:.72rem;
-      font-weight:950;
-      letter-spacing:.10em;
-      text-transform:uppercase;
-    }
-
-    .site-menu-summary b{
-      color:var(--gold2);
-      font-size:.68rem;
-      font-weight:950;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-    }
-
-    .site-menu-summary::before{
-      content:"";
-      width:.72rem;
-      height:.72rem;
-      transform:rotate(45deg);
-      border-radius:.14rem;
-      background:linear-gradient(135deg,var(--magenta),var(--purple));
-      box-shadow:
-        0 0 .9rem rgba(181,140,255,.48),
-        0 0 1.35rem rgba(208,131,255,.22);
-      flex:0 0 auto;
-    }
-
-    .site-menu-summary::after{
-      content:"Open";
-      min-width:3.3rem;
-      text-align:center;
-      padding:.28rem .52rem;
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:999px;
-      color:rgba(255,244,249,.88);
-      background:rgba(9,2,18,.35);
-      font-size:.58rem;
-      font-weight:950;
-      letter-spacing:.09em;
-      text-transform:uppercase;
-    }
-
-    .site-menu[open] .site-menu-summary{
-      border-color:rgba(243,200,111,.58);
-      background:
-        radial-gradient(circle at 20% 0%,rgba(208,131,255,.20),transparent 70%),
-        radial-gradient(circle at 80% 100%,rgba(243,200,111,.14),transparent 70%),
-        rgba(181,140,255,.085);
-    }
-
-    .site-menu[open] .site-menu-summary::after{content:"Close"}
-
-    .site-menu-panel{
-      position:absolute;
-      right:0;
-      top:calc(100% + .7rem);
-      width:min(48rem,calc(100vw - 28px));
-      padding:1rem;
-      border:1px solid rgba(210,178,255,.22);
-      border-radius:1.45rem;
-      background:
-        linear-gradient(180deg,rgba(255,255,255,.075),rgba(255,255,255,.026)),
-        rgba(9,3,24,.96);
-      box-shadow:
-        0 1.5rem 3.5rem rgba(0,0,0,.44),
-        inset 0 1px 0 rgba(255,255,255,.08);
-      overflow:hidden;
-    }
-
-    .site-menu-panel::before{
-      content:"";
-      position:absolute;
-      inset:0;
-      z-index:0;
-      pointer-events:none;
-      opacity:.36;
-      background:
-        radial-gradient(circle at 9% 14%,rgba(208,131,255,.28) 0 .08rem,rgba(181,140,255,.12) .09rem .24rem,transparent .26rem),
-        radial-gradient(circle at 17% 68%,rgba(239,231,255,.25) 0 .07rem,rgba(181,140,255,.12) .08rem .20rem,transparent .22rem),
-        radial-gradient(circle at 35% 28%,rgba(255,255,255,.22) 0 .06rem,rgba(208,131,255,.13) .07rem .17rem,transparent .19rem),
-        radial-gradient(circle at 53% 82%,rgba(243,200,111,.22) 0 .07rem,rgba(243,200,111,.12) .08rem .20rem,transparent .22rem),
-        radial-gradient(circle at 70% 22%,rgba(239,231,255,.24) 0 .08rem,rgba(181,140,255,.12) .09rem .22rem,transparent .24rem),
-        radial-gradient(circle at 89% 59%,rgba(208,131,255,.28) 0 .07rem,rgba(181,140,255,.13) .08rem .20rem,transparent .22rem),
-        radial-gradient(ellipse at 50% 0%,rgba(181,140,255,.12),transparent 72%);
-    }
-
-    .site-menu-grid{
-      position:relative;
-      z-index:1;
-      display:grid;
-      grid-template-columns:repeat(4,minmax(0,1fr));
-      gap:.75rem;
-    }
-
-    .site-menu-group{
-      display:grid;
-      gap:.55rem;
-      align-content:start;
-      min-height:100%;
-      padding:.8rem;
-      border:1px solid rgba(255,255,255,.11);
-      border-radius:1.05rem;
-      background:
-        radial-gradient(circle at 12% 0%,rgba(181,140,255,.14),transparent 70%),
-        rgba(12,4,30,.56);
-    }
-
-    .site-menu-group strong{
-      color:var(--gold);
-      font-size:.68rem;
-      font-weight:950;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-    }
-
-    .site-menu-links{
-      display:grid;
-      gap:.42rem;
-    }
-
-    .site-menu-links a{
-      min-height:2.15rem;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:.65rem;
-      padding:.52rem .62rem;
-      border:1px solid rgba(255,255,255,.10);
-      border-radius:.82rem;
-      color:rgba(244,238,255,.86);
-      background:rgba(181,140,255,.045);
-      font-size:.74rem;
-      font-weight:900;
-      letter-spacing:.035em;
-      line-height:1.15;
-      transition:border-color .18s ease,background .18s ease,color .18s ease;
-    }
-
-    .site-menu-links a:hover,
-    .site-menu-links a:focus-visible{
-      border-color:rgba(243,200,111,.52);
-      background:rgba(243,200,111,.075);
-      color:rgba(255,244,249,.96);
-      outline:none;
-    }
-
-    .site-menu-links a[aria-current="page"]{
-      border-color:rgba(243,200,111,.86);
-      color:#09020f;
-      background:linear-gradient(135deg,#fff2a8,#f3c86f);
-    }
-
-    .site-menu-links a[aria-current="page"]::after{
-      content:"Current";
-      color:#09020f;
-      font-size:.56rem;
-      font-weight:950;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-      opacity:.82;
-    }
-
-    .panel{
-      border:1px solid var(--line);
-      border-radius:clamp(1.35rem,5vw,2.35rem);
-      background:
-        radial-gradient(circle at 14% 0%,rgba(208,131,255,.14),transparent 28rem),
-        radial-gradient(circle at 86% 18%,rgba(143,101,255,.18),transparent 28rem),
-        linear-gradient(180deg,rgba(255,255,255,.075),rgba(255,255,255,.026)),
+        radial-gradient(circle at 14% 12%, rgba(242, 199, 111, 0.13), transparent 23rem),
+        radial-gradient(circle at 88% 70%, rgba(141, 216, 255, 0.12), transparent 25rem),
+        linear-gradient(135deg, rgba(255, 255, 255, 0.062), rgba(255, 255, 255, 0.026)),
         var(--panel);
-      box-shadow:var(--shadow),inset 0 1px 0 rgba(255,255,255,.08);
-      overflow:hidden;
+      box-shadow: 0 24px 70px var(--shadow);
     }
 
-    .hero{
-      position:relative;
-      min-height:clamp(23rem,42vw,33rem);
-      display:grid;
-      align-content:center;
-      gap:1rem;
-      padding:clamp(1.45rem,5vw,3.4rem);
-      margin-top:.6rem;
-      isolation:isolate;
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 18px;
+      border: 1px solid rgba(242, 199, 111, 0.09);
+      border-radius: calc(var(--radius-lg) - 10px);
+      pointer-events: none;
     }
 
-    .hero::before{
-      content:"";
-      position:absolute;
-      right:clamp(1rem,6vw,5.5rem);
-      top:50%;
-      z-index:0;
-      width:clamp(9rem,25vw,18rem);
-      height:clamp(6.5rem,18vw,13rem);
-      transform:translateY(-50%);
-      background:
-        radial-gradient(circle at 34% 20%,rgba(255,255,255,.14),transparent 42%),
-        radial-gradient(circle at 60% 74%,rgba(181,140,255,.24),transparent 62%),
-        conic-gradient(from 40deg at 50% 52%,rgba(255,255,255,.16),rgba(181,140,255,.16),rgba(45,15,88,.34),rgba(243,200,111,.08),rgba(255,255,255,.16));
-      clip-path:polygon(50% 0%,66% 9%,85% 15%,100% 50%,85% 85%,66% 91%,50% 100%,34% 91%,15% 85%,0% 50%,15% 15%,34% 9%);
-      animation:backgroundAnchorPulse 8s ease-in-out infinite;
-      pointer-events:none;
-      opacity:.48;
+    .hero-grid {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: minmax(0, 1.22fr) minmax(260px, 0.78fr);
+      gap: clamp(18px, 4vw, 36px);
+      align-items: end;
     }
 
-    @keyframes backgroundAnchorPulse{
-      0%,100%{opacity:.38;filter:brightness(.95)}
-      50%{opacity:.56;filter:brightness(1.14)}
+    .kicker {
+      margin: 0 0 12px;
+      color: var(--gold);
+      font-size: 0.78rem;
+      font-weight: 950;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
     }
 
-    .kicker{
-      width:fit-content;
-      display:inline-flex;
-      align-items:center;
-      gap:.58rem;
-      padding:.58rem .95rem;
-      border:1px solid rgba(210,178,255,.20);
-      border-radius:999px;
-      color:rgba(244,238,255,.88);
-      background:rgba(181,140,255,.08);
-      font-size:.72rem;
-      font-weight:950;
-      letter-spacing:.14em;
-      text-transform:uppercase;
-      position:relative;
-      z-index:2;
+    h1,
+    h2,
+    h3 {
+      color: var(--ink);
     }
 
-    .kicker::before{
-      content:"";
-      width:.72rem;
-      height:.72rem;
-      transform:rotate(45deg);
-      border-radius:.14rem;
-      background:linear-gradient(135deg,var(--magenta),var(--purple));
-      box-shadow:0 0 1.1rem rgba(181,140,255,.56);
+    h1 {
+      max-width: 900px;
+      margin: 0 0 18px;
+      font-size: clamp(2.55rem, 9vw, 6rem);
+      line-height: 0.88;
+      letter-spacing: -0.075em;
+      text-wrap: balance;
     }
 
-    h1{
-      margin:0;
-      max-width:980px;
-      font-size:clamp(3.1rem,10vw,7rem);
-      line-height:.84;
-      letter-spacing:-.105em;
-      text-wrap:balance;
-      position:relative;
-      z-index:2;
+    h2 {
+      margin: 0 0 12px;
+      font-size: clamp(1.45rem, 4vw, 2.3rem);
+      line-height: 1.04;
+      letter-spacing: -0.04em;
+      text-wrap: balance;
     }
 
-    h2{
-      margin:0;
-      color:var(--gold);
-      font-size:clamp(1.45rem,4.7vw,2.65rem);
-      line-height:.98;
-      letter-spacing:-.07em;
-      text-wrap:balance;
-      position:relative;
-      z-index:2;
+    h3 {
+      margin: 0;
+      font-size: clamp(1.08rem, 3vw, 1.45rem);
+      line-height: 1.12;
+      letter-spacing: -0.025em;
     }
 
-    h3{
-      margin:0;
-      color:rgba(255,244,249,.98);
-      font-size:clamp(1.18rem,3vw,1.58rem);
-      line-height:1.05;
-      letter-spacing:-.045em;
+    p {
+      margin: 0;
+      max-width: 820px;
+      color: var(--soft);
+      font-size: clamp(0.98rem, 2.7vw, 1.12rem);
+      line-height: 1.58;
     }
 
-    p{
-      margin:0;
-      color:var(--muted);
-      font-size:clamp(.98rem,2.7vw,1.16rem);
-      line-height:1.55;
+    p + p {
+      margin-top: 0.9rem;
     }
 
-    .lead{
-      max-width:930px;
-      position:relative;
-      z-index:2;
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+      margin-top: 1.15rem;
     }
 
-    .quote{
-      max-width:900px;
-      padding:1rem 1.1rem;
-      border:1px solid rgba(181,140,255,.26);
-      border-radius:1.2rem;
-      color:rgba(255,244,249,.93);
-      background:
-        radial-gradient(circle at 0% 0%,rgba(208,131,255,.14),transparent 62%),
-        rgba(143,101,255,.075);
-      font-weight:850;
-      position:relative;
-      z-index:2;
-    }
-
-    .actions{
-      display:flex;
-      flex-wrap:wrap;
-      gap:.62rem;
-      margin-top:.2rem;
-      position:relative;
-      z-index:2;
-    }
-
-    .button{
-      min-height:2.65rem;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      border:1px solid rgba(210,178,255,.18);
-      border-radius:999px;
-      padding:.65rem 1rem;
-      background:rgba(181,140,255,.065);
-      color:rgba(244,238,255,.90);
-      font-size:.76rem;
-      font-weight:950;
-      letter-spacing:.055em;
-      text-transform:uppercase;
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.07);
-      transition:transform .18s ease,border-color .18s ease,background .18s ease;
+    .button {
+      min-height: 2.72rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 999px;
+      padding: 0.68rem 1rem;
+      color: var(--ink);
+      background: rgba(255, 255, 255, 0.055);
+      font-size: 0.78rem;
+      font-weight: 950;
+      letter-spacing: 0.055em;
+      text-transform: uppercase;
+      transition:
+        border-color 160ms ease,
+        background 160ms ease,
+        transform 160ms ease;
     }
 
     .button:hover,
-    .button:focus-visible{
-      transform:translateY(-2px);
-      border-color:rgba(243,200,111,.62);
-      outline:none;
+    .button:focus-visible {
+      border-color: rgba(242, 199, 111, 0.54);
+      background: rgba(242, 199, 111, 0.11);
+      transform: translateY(-1px);
     }
 
-    .button.gold{
-      border-color:rgba(243,200,111,.9);
-      color:#09020f;
-      background:linear-gradient(135deg,#fff2a8,#f3c86f);
-      box-shadow:0 .8rem 1.8rem rgba(243,200,111,.13);
+    .button.primary {
+      border-color: rgba(242, 199, 111, 0.78);
+      color: #07101a;
+      background: linear-gradient(135deg, var(--gold-2), var(--gold));
+      box-shadow: 0 0.8rem 1.8rem rgba(242, 199, 111, 0.12);
     }
 
-    .section{
-      margin-top:1.15rem;
-      padding:clamp(1rem,3vw,1.45rem);
-      display:grid;
-      gap:1.05rem;
-    }
-
-    .explore-stage{
-      position:relative;
-      min-height:clamp(39rem,78vw,60rem);
-      display:grid;
-      place-items:center;
-      overflow:hidden;
-      isolation:isolate;
-      border:1px solid rgba(190,151,255,.20);
-      border-radius:clamp(1.35rem,5vw,2.35rem);
+    .scope-card {
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: var(--radius-md);
       background:
-        radial-gradient(circle at 50% 44%,rgba(181,140,255,.18),transparent 22rem),
-        radial-gradient(circle at 50% 50%,rgba(243,200,111,.055),transparent 20rem),
-        linear-gradient(180deg,rgba(10,3,25,.76),rgba(4,2,12,.94));
-      box-shadow:
-        inset 0 1px 0 rgba(255,255,255,.06),
-        inset 0 0 90px rgba(143,101,255,.08);
+        linear-gradient(135deg, rgba(0, 0, 0, 0.24), rgba(255, 255, 255, 0.03)),
+        rgba(0, 0, 0, 0.16);
+      padding: 18px;
     }
 
-    .explore-stage::before,
-    .explore-stage::after{
-      content:"";
-      position:absolute;
-      left:50%;
-      top:50%;
-      border-radius:50%;
-      transform:translate(-50%,-50%);
-      pointer-events:none;
+    .scope-list {
+      display: grid;
+      gap: 10px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
     }
 
-    .explore-stage::before{
-      width:min(86%,43rem);
-      height:min(86%,43rem);
-      border:1px solid rgba(243,200,111,.10);
-      box-shadow:0 0 3.4rem rgba(181,140,255,.16);
+    .scope-list li {
+      display: grid;
+      grid-template-columns: 7.4rem minmax(0, 1fr);
+      gap: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.105);
+      border-radius: var(--radius-sm);
+      padding: 10px 12px;
+      background: rgba(255, 255, 255, 0.035);
     }
 
-    .explore-stage::after{
-      width:min(61%,29rem);
-      height:min(61%,29rem);
-      border:1px solid rgba(181,140,255,.22);
+    .scope-list strong {
+      color: var(--gold);
+      font-size: 0.72rem;
+      font-weight: 950;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
     }
 
-    .explore-center-anchor,
-    .diamond-node{
-      position:absolute;
-      display:grid;
-      place-items:center;
-      text-align:center;
-      color:var(--ink);
+    .scope-list span {
+      color: var(--soft);
+      font-size: 0.92rem;
+      line-height: 1.42;
     }
 
-    .explore-center-anchor{
-      left:50%;
-      top:50%;
-      z-index:1;
-      width:clamp(10.8rem,25vw,15.4rem);
-      height:clamp(7.86rem,18.2vw,11.2rem);
-      transform:translate(-50%,-50%);
-      pointer-events:none;
-      opacity:.72;
-      filter:
-        drop-shadow(0 1.4rem 2.1rem rgba(0,0,0,.36))
-        drop-shadow(0 0 2.2rem rgba(181,140,255,.20));
-      animation:exploreAnchorPulse 7s ease-in-out infinite;
-    }
-
-    @keyframes exploreAnchorPulse{
-      0%,100%{transform:translate(-50%,-50%) scale(.985);opacity:.60}
-      50%{transform:translate(-50%,-50%) scale(1.02);opacity:.80}
-    }
-
-    .gem-svg{
-      position:absolute;
-      inset:0;
-      width:100%;
-      height:100%;
-      overflow:visible;
-      pointer-events:none;
-      filter:
-        drop-shadow(0 1.08rem 1.35rem rgba(0,0,0,.30))
-        drop-shadow(0 0 1.05rem rgba(181,140,255,.18))
-        drop-shadow(0 0 .72rem rgba(243,200,111,.08));
-    }
-
-    .gem-glint-sweep{
-      animation:gemSweep 9.5s ease-in-out infinite;
-      animation-delay:calc(var(--gem-delay,0s) * -1);
-      transform-origin:110px 80px;
-    }
-
-    @keyframes gemSweep{
-      0%,100%{opacity:.08;transform:translateX(-36px)}
-      48%,55%{opacity:.34;transform:translateX(28px)}
-    }
-
-    .gem-star{
-      opacity:.70;
-    }
-
-    .explore-center-anchor .gem-star{
-      animation:centerFacetTurn 26s linear infinite;
-      transform-origin:110px 80px;
-    }
-
-    @keyframes centerFacetTurn{
-      from{transform:rotate(0deg)}
-      to{transform:rotate(-360deg)}
-    }
-
-    .orbit-ring{
-      position:absolute;
-      left:50%;
-      top:50%;
-      border-radius:999px;
-      pointer-events:none;
-      transform:translate(-50%,-50%);
-    }
-
-    .orbit-ring.inner{
-      width:18.6rem;
-      height:18.6rem;
-      z-index:4;
-      animation:orbitClockwise var(--inner-orbit-duration) linear infinite;
-    }
-
-    .orbit-ring.outer{
-      width:34.8rem;
-      height:34.8rem;
-      z-index:6;
-      animation:orbitCounter var(--outer-orbit-duration) linear infinite;
-    }
-
-    @keyframes orbitClockwise{
-      to{transform:translate(-50%,-50%) rotate(360deg)}
-    }
-
-    @keyframes orbitCounter{
-      to{transform:translate(-50%,-50%) rotate(-360deg)}
-    }
-
-    .diamond-node{
-      --radius:-14rem;
-      --lift:1;
-      --gem-hue:0deg;
-      --gem-sat:1;
-      --gem-bright:1;
-      --gem-delay:0s;
-      left:50%;
-      top:50%;
-      margin:0;
-      transform:
-        rotate(var(--angle))
-        translateY(var(--radius))
-        rotate(calc(-1 * var(--angle)))
-        translate(-50%,-50%)
-        scale(var(--lift));
-      pointer-events:auto;
-      transition:filter .18s ease,transform .18s ease;
-      filter:hue-rotate(var(--gem-hue)) saturate(var(--gem-sat)) brightness(var(--gem-bright));
-      outline:none;
-    }
-
-    .orbit-ring.inner .diamond-node{
-      --radius:-8.8rem;
-      width:6.55rem;
-      height:4.76rem;
-    }
-
-    .orbit-ring.outer .diamond-node{
-      --radius:-17rem;
-      width:5.95rem;
-      height:4.33rem;
-    }
-
-    .diamond-node:hover,
-    .diamond-node:focus-visible{
-      --lift:1.06;
-      filter:hue-rotate(var(--gem-hue)) brightness(1.13) saturate(1.16) contrast(1.04);
-    }
-
-    .diamond-object{
-      position:absolute;
-      inset:0;
-      display:grid;
-      place-items:center;
-      pointer-events:none;
-      transform-origin:50% 50%;
-    }
-
-    .orbit-ring.inner .diamond-object{
-      animation:objectCounterInner var(--inner-orbit-duration) linear infinite;
-    }
-
-    .orbit-ring.outer .diamond-object{
-      animation:objectCounterOuter var(--outer-orbit-duration) linear infinite;
-    }
-
-    @keyframes objectCounterInner{
-      to{transform:rotate(-360deg)}
-    }
-
-    @keyframes objectCounterOuter{
-      to{transform:rotate(360deg)}
-    }
-
-    .diamond-content{
-      position:relative;
-      z-index:4;
-      width:68%;
-      display:grid;
-      gap:.10rem;
-      place-items:center;
-      text-align:center;
-      pointer-events:none;
-      user-select:none;
-    }
-
-    .diamond-content::before{
-      content:"";
-      position:absolute;
-      z-index:-1;
-      left:50%;
-      top:50%;
-      width:116%;
-      height:76%;
-      transform:translate(-50%,-50%);
-      clip-path:polygon(18% 13%,82% 13%,94% 50%,82% 87%,18% 87%,6% 50%);
+    .section {
+      margin-top: 24px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      padding: clamp(20px, 4vw, 34px);
       background:
-        radial-gradient(circle at 38% 20%,rgba(255,255,255,.12),transparent 32%),
-        linear-gradient(180deg,rgba(78,37,132,.42),rgba(18,5,45,.58));
-      border:1px solid rgba(255,244,249,.10);
-      box-shadow:
-        inset 0 1px 0 rgba(255,255,255,.10),
-        inset 0 -9px 14px rgba(0,0,0,.18),
-        0 0 15px rgba(0,0,0,.20);
-      opacity:.78;
+        linear-gradient(180deg, rgba(255, 255, 255, 0.046), rgba(255, 255, 255, 0.022)),
+        var(--panel-2);
     }
 
-    .diamond-content strong{
-      color:rgba(255,244,249,.99);
-      font-size:.62rem;
-      line-height:1.02;
-      font-weight:950;
-      letter-spacing:.05em;
-      text-transform:uppercase;
-      text-shadow:
-        0 2px 12px rgba(0,0,0,.94),
-        0 0 9px rgba(45,15,88,.72),
-        0 0 2px rgba(255,255,255,.48);
+    .section-header {
+      display: grid;
+      gap: 4px;
+      margin-bottom: 18px;
     }
 
-    .orbit-ring.outer .diamond-content strong{
-      font-size:.55rem;
+    .section-header p {
+      margin: 0;
     }
 
-    .diamond-content span{
-      color:rgba(237,226,255,.78);
-      font-size:.43rem;
-      line-height:1;
-      font-weight:850;
-      letter-spacing:.04em;
-      text-transform:uppercase;
-      text-shadow:0 2px 8px rgba(0,0,0,.74);
+    .surface-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
     }
 
-    .explore-center-anchor .diamond-content{
-      width:60%;
-    }
-
-    .explore-center-anchor .diamond-content strong{
-      font-size:clamp(.76rem,1.95vw,1rem);
-      letter-spacing:.14em;
-      line-height:1.15;
-    }
-
-    .status-card{
-      border:1px solid rgba(210,178,255,.16);
-      border-radius:1.2rem;
-      background:rgba(181,140,255,.055);
-      padding:1rem;
-      color:var(--muted);
-      font-size:.92rem;
-      line-height:1.55;
-    }
-
-    .status-card strong{
-      color:var(--gold);
-    }
-
-    .lens-shell{
-      position:relative;
-      display:grid;
-      gap:.85rem;
-      padding:1rem;
-      border:1px solid rgba(210,178,255,.16);
-      border-radius:1.25rem;
+    .surface-card {
+      position: relative;
+      display: grid;
+      gap: 10px;
+      min-height: 100%;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      padding: 16px;
       background:
-        radial-gradient(circle at 18% 0%,rgba(181,140,255,.12),transparent 42rem),
-        rgba(181,140,255,.045);
+        radial-gradient(circle at 16% 0%, rgba(242, 199, 111, 0.085), transparent 14rem),
+        rgba(255, 255, 255, 0.038);
+      transition:
+        border-color 160ms ease,
+        background 160ms ease,
+        transform 160ms ease;
     }
 
-    .lens-radio{
-      position:absolute;
-      opacity:0;
-      pointer-events:none;
-    }
-
-    .lens-tabs{
-      display:flex;
-      flex-wrap:wrap;
-      gap:.45rem;
-    }
-
-    .lens-tab{
-      cursor:pointer;
-      min-height:2.35rem;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      border:1px solid rgba(210,178,255,.18);
-      border-radius:999px;
-      padding:.56rem .84rem;
-      color:rgba(244,238,255,.84);
-      background:rgba(181,140,255,.055);
-      font-size:.68rem;
-      font-weight:950;
-      letter-spacing:.07em;
-      text-transform:uppercase;
-      user-select:none;
-      transition:transform .18s ease,border-color .18s ease,background .18s ease;
-    }
-
-    .lens-tab:hover{
-      transform:translateY(-2px);
-      border-color:rgba(243,200,111,.46);
-    }
-
-    .platform-radio:checked ~ .lens-tabs .platform-tab,
-    .engineering-radio:checked ~ .lens-tabs .engineering-tab{
-      border-color:rgba(243,200,111,.86);
-      color:#09020f;
-      background:linear-gradient(135deg,#fff2a8,#f3c86f);
-    }
-
-    .lens-body{
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:1.15rem;
+    .surface-card:hover,
+    .surface-card:focus-visible {
+      border-color: rgba(242, 199, 111, 0.48);
       background:
-        radial-gradient(circle at 10% 0%,rgba(181,140,255,.10),transparent 24rem),
-        linear-gradient(180deg,rgba(255,255,255,.052),rgba(255,255,255,.022));
-      overflow:hidden;
+        radial-gradient(circle at 16% 0%, rgba(242, 199, 111, 0.125), transparent 14rem),
+        rgba(255, 255, 255, 0.052);
+      transform: translateY(-2px);
+      outline: none;
     }
 
-    .lens-copy{
-      display:none;
-      padding:1rem;
+    .surface-card small {
+      color: var(--gold);
+      font-size: 0.68rem;
+      font-weight: 950;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
     }
 
-    .platform-radio:checked ~ .lens-body .platform-copy,
-    .engineering-radio:checked ~ .lens-body .engineering-copy{
-      display:grid;
-      gap:.78rem;
+    .surface-card p {
+      font-size: 0.94rem;
+      line-height: 1.44;
     }
 
-    .lens-copy b{
-      color:var(--gold);
-      font-size:.7rem;
-      letter-spacing:.13em;
-      text-transform:uppercase;
+    .surface-card .action {
+      margin-top: auto;
+      color: var(--gold);
+      font-size: 0.76rem;
+      font-weight: 950;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
     }
 
-    .lens-list{
-      display:grid;
-      gap:.55rem;
-      margin:0;
-      padding:0;
-      list-style:none;
+    .explanation-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
     }
 
-    .lens-list li{
-      padding:.68rem .76rem;
-      border:1px solid rgba(255,255,255,.10);
-      border-radius:.9rem;
-      background:rgba(181,140,255,.040);
-      color:var(--muted);
-      font-size:.92rem;
-      line-height:1.4;
-    }
-
-    .map-grid,
-    .room-grid{
-      display:grid;
-      gap:.85rem;
-    }
-
-    .map-grid{
-      grid-template-columns:repeat(4,minmax(0,1fr));
-    }
-
-    .room-grid{
-      grid-template-columns:repeat(4,minmax(0,1fr));
-    }
-
-    .info-card,
-    .room-card{
-      min-height:10rem;
-      display:grid;
-      gap:.55rem;
-      align-content:start;
-      padding:1rem;
-      border:1px solid rgba(210,178,255,.16);
-      border-radius:1.2rem;
+    .explanation-card {
+      border: 1px solid rgba(255, 255, 255, 0.11);
+      border-radius: var(--radius-md);
+      padding: 16px;
       background:
-        radial-gradient(circle at 20% 0%,rgba(181,140,255,.14),transparent 60%),
-        rgba(181,140,255,.045);
-      transition:transform .18s ease,border-color .18s ease,background .18s ease;
+        radial-gradient(circle at 12% 0%, rgba(141, 216, 255, 0.075), transparent 15rem),
+        rgba(0, 0, 0, 0.16);
     }
 
-    .room-card{
-      min-height:8.25rem;
+    .explanation-card strong {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--gold);
+      font-size: 0.76rem;
+      font-weight: 950;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
     }
 
-    .info-card:hover,
-    .room-card:hover,
-    .info-card:focus-visible,
-    .room-card:focus-visible{
-      transform:translateY(-3px);
-      border-color:rgba(243,200,111,.48);
-      outline:none;
+    .explanation-card p {
+      font-size: 0.95rem;
+    }
+
+    .boundary {
+      border: 1px solid rgba(242, 199, 111, 0.28);
+      border-radius: var(--radius-md);
       background:
-        radial-gradient(circle at 20% 0%,rgba(181,140,255,.20),transparent 60%),
-        rgba(181,140,255,.07);
+        radial-gradient(circle at 10% 0%, rgba(242, 199, 111, 0.08), transparent 18rem),
+        rgba(0, 0, 0, 0.20);
+      padding: 16px;
     }
 
-    .info-card b,
-    .room-card small{
-      color:var(--gold);
-      font-size:.68rem;
-      font-weight:950;
-      letter-spacing:.12em;
-      text-transform:uppercase;
+    .boundary strong {
+      color: var(--gold);
     }
 
-    .info-card strong,
-    .room-card strong{
-      color:rgba(255,244,249,.98);
-      font-size:1.05rem;
-      line-height:1.1;
-    }
-
-    .info-card span,
-    .room-card span{
-      color:var(--muted);
-      font-size:.92rem;
-      line-height:1.4;
+    .footer {
+      padding: 22px 0 0;
+      color: var(--muted);
+      text-align: center;
+      font-size: 0.82rem;
     }
 
     .route-receipt,
-    [data-route-receipt],
-    [data-contract-receipt],
-    [data-debug-receipt]{
-      display:none!important;
-      visibility:hidden!important;
-      overflow:hidden!important;
-      width:0!important;
-      height:0!important;
-      max-width:0!important;
-      max-height:0!important;
-      margin:0!important;
-      padding:0!important;
-      border:0!important;
-      opacity:0!important;
-      pointer-events:none!important;
-      position:absolute!important;
-      inset:auto!important;
-      clip-path:inset(50%)!important;
-      white-space:nowrap!important;
+    [data-route-receipt] {
+      display: none !important;
+      visibility: hidden !important;
+      overflow: hidden !important;
+      width: 0 !important;
+      height: 0 !important;
+      max-width: 0 !important;
+      max-height: 0 !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      border: 0 !important;
+      opacity: 0 !important;
+      pointer-events: none !important;
+      position: absolute !important;
+      clip-path: inset(50%) !important;
+      white-space: nowrap !important;
     }
 
-    footer{
-      padding:1.35rem 0 .5rem;
-      color:var(--faint);
-      text-align:center;
-      font-size:.76rem;
-    }
-
-    @media (max-width:1080px){
-      .site-menu-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-      .map-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-      .room-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-    }
-
-    @media (max-width:980px){
-      .topbar{
-        grid-template-columns:1fr;
-        align-items:start;
-      }
-
-      .site-menu{
-        justify-self:stretch;
-        width:100%;
-      }
-
-      .site-menu-summary{
-        margin-left:0;
-      }
-
-      .site-menu-panel{
-        position:relative;
-        right:auto;
-        top:auto;
-        width:100%;
-        margin-top:.7rem;
+    @media (max-width: 940px) {
+      .hero-grid,
+      .surface-grid,
+      .explanation-grid {
+        grid-template-columns: 1fr;
       }
     }
 
-    @media (max-width:720px){
-      .shell{width:min(100% - 22px,var(--max))}
-      h1{font-size:clamp(3rem,17vw,5rem)}
-
-      .hero{
-        min-height:27rem;
-        padding:1rem;
+    @media (max-width: 720px) {
+      .shell {
+        width: min(100% - 28px, var(--max));
+        padding-top: 22px;
       }
 
-      .site-menu-summary{
-        width:100%;
-        justify-content:space-between;
+      .topbar {
+        display: grid;
       }
 
-      .site-menu-grid{
-        grid-template-columns:1fr;
+      .nav {
+        justify-content: flex-start;
       }
 
-      .explore-stage{
-        min-height:35rem;
+      .nav a {
+        min-height: 2.45rem;
+        padding: 0.6rem 0.86rem;
       }
 
-      .explore-center-anchor{
-        width:8.45rem;
-        height:6.15rem;
+      .scope-list li {
+        grid-template-columns: 1fr;
       }
 
-      .orbit-ring.inner{
-        width:14.2rem;
-        height:14.2rem;
+      .hero-actions {
+        display: grid;
       }
 
-      .orbit-ring.outer{
-        width:25.4rem;
-        height:25.4rem;
+      .button {
+        width: 100%;
       }
 
-      .orbit-ring.inner .diamond-node{
-        --radius:-6.65rem;
-        width:5.1rem;
-        height:3.71rem;
-      }
-
-      .orbit-ring.outer .diamond-node{
-        --radius:-12.1rem;
-        width:4.45rem;
-        height:3.24rem;
-      }
-
-      .diamond-content strong{
-        font-size:.42rem;
-        letter-spacing:.035em;
-      }
-
-      .orbit-ring.outer .diamond-content strong{
-        font-size:.34rem;
-      }
-
-      .diamond-content span{display:none}
-
-      .explore-center-anchor .diamond-content strong{
-        font-size:.58rem;
-      }
-
-      .map-grid,
-      .room-grid{
-        grid-template-columns:1fr;
-      }
-
-      .lens-tabs{
-        display:grid;
-        grid-template-columns:1fr 1fr;
-      }
-
-      .actions{display:grid}
-
-      .button{width:100%}
-    }
-
-    @media (max-width:460px){
-      .explore-stage{min-height:32rem}
-
-      .explore-center-anchor{
-        width:7.2rem;
-        height:5.25rem;
-      }
-
-      .orbit-ring.inner{
-        width:12.4rem;
-        height:12.4rem;
-      }
-
-      .orbit-ring.outer{
-        width:21.4rem;
-        height:21.4rem;
-      }
-
-      .orbit-ring.inner .diamond-node{
-        --radius:-5.75rem;
-        width:4.35rem;
-        height:3.16rem;
-      }
-
-      .orbit-ring.outer .diamond-node{
-        --radius:-10.15rem;
-        width:3.65rem;
-        height:2.66rem;
-      }
-
-      .diamond-content strong{
-        font-size:.33rem;
-      }
-
-      .orbit-ring.outer .diamond-content strong{
-        font-size:.28rem;
-      }
-
-      .explore-center-anchor .diamond-content strong{
-        font-size:.50rem;
+      h1 {
+        letter-spacing: -0.058em;
       }
     }
 
-    @media (prefers-reduced-motion:reduce){
+    @media (prefers-reduced-motion: reduce) {
       *,
       *::before,
-      *::after{
-        scroll-behavior:auto!important;
-        animation-duration:.01ms!important;
-        animation-iteration-count:1!important;
-        transition-duration:.01ms!important;
-      }
-
-      .gem-glint-sweep,
-      .explore-center-anchor .gem-star,
-      .orbit-ring,
-      .diamond-object,
-      .explore-center-anchor,
-      .hero::before{
-        animation:none!important;
+      *::after {
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
       }
     }
   </style>
@@ -1254,585 +601,372 @@
 <body
   data-route="/explore/"
   data-room="explore"
-  data-public-label="manor"
-  data-contract="EXPLORE_MANOR_CONTEXTUAL_GEM_SCALE_DROPDOWN_RENEWAL_TNT_v2"
+  data-contract="EXPLORE_FRONTIER_SURFACE_SCRATCH_ENTRY_TNT_v1"
+  data-primary-destination="/explore/frontier/"
+  data-objective-stance="true"
+  data-narrative-stance="false"
   data-generated-image="false"
-  data-graphic-box="false"
+  data-heavy-runtime-loaded="false"
   data-visual-pass-claimed="false"
 >
-  <svg class="gem-defs" aria-hidden="true" focusable="false">
-    <defs>
-      <linearGradient id="exploreAmethystBody" x1="18" y1="8" x2="202" y2="152" gradientUnits="userSpaceOnUse">
-        <stop offset="0" stop-color="#ffffff" stop-opacity="0.74"/>
-        <stop offset="0.12" stop-color="#e5d6ff" stop-opacity="0.66"/>
-        <stop offset="0.28" stop-color="#b58cff" stop-opacity="0.62"/>
-        <stop offset="0.48" stop-color="#7c45f0" stop-opacity="0.76"/>
-        <stop offset="0.66" stop-color="#3f168e" stop-opacity="0.84"/>
-        <stop offset="0.84" stop-color="#18073d" stop-opacity="0.92"/>
-        <stop offset="1" stop-color="#070111" stop-opacity="0.98"/>
-      </linearGradient>
-
-      <linearGradient id="exploreAmethystAir" x1="48" y1="10" x2="168" y2="80" gradientUnits="userSpaceOnUse">
-        <stop offset="0" stop-color="#ffffff" stop-opacity="0.82"/>
-        <stop offset="0.34" stop-color="#eadcff" stop-opacity="0.46"/>
-        <stop offset="0.68" stop-color="#f3c86f" stop-opacity="0.14"/>
-        <stop offset="1" stop-color="#8f65ff" stop-opacity="0.08"/>
-      </linearGradient>
-
-      <linearGradient id="exploreAmethystDepth" x1="110" y1="36" x2="110" y2="156" gradientUnits="userSpaceOnUse">
-        <stop offset="0" stop-color="#ffffff" stop-opacity="0.18"/>
-        <stop offset="0.34" stop-color="#d083ff" stop-opacity="0.20"/>
-        <stop offset="0.62" stop-color="#8f65ff" stop-opacity="0.18"/>
-        <stop offset="1" stop-color="#080119" stop-opacity="0.62"/>
-      </linearGradient>
-
-      <radialGradient id="exploreAmethystTableGlow" cx="50%" cy="38%" r="64%">
-        <stop offset="0" stop-color="#ffffff" stop-opacity="0.48"/>
-        <stop offset="0.28" stop-color="#eadcff" stop-opacity="0.30"/>
-        <stop offset="0.58" stop-color="#8f65ff" stop-opacity="0.16"/>
-        <stop offset="1" stop-color="#05010d" stop-opacity="0"/>
-      </radialGradient>
-
-      <linearGradient id="exploreAmethystGlint" x1="28" y1="130" x2="184" y2="24" gradientUnits="userSpaceOnUse">
-        <stop offset="0" stop-color="#ffffff" stop-opacity="0"/>
-        <stop offset="0.44" stop-color="#ffffff" stop-opacity="0.72"/>
-        <stop offset="0.52" stop-color="#ffe8a3" stop-opacity="0.18"/>
-        <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
-      </linearGradient>
-
-      <filter id="exploreAmethystGlow" x="-40%" y="-48%" width="180%" height="196%">
-        <feGaussianBlur in="SourceAlpha" stdDeviation="2.4" result="blur"/>
-        <feColorMatrix
-          in="blur"
-          type="matrix"
-          values="
-            0.90 0 0 0 0.18
-            0 0.65 0 0 0.06
-            0 0 1.00 0 0.34
-            0 0 0 0.44 0"
-          result="glow"
-        />
-        <feMerge>
-          <feMergeNode in="glow"/>
-          <feMergeNode in="SourceGraphic"/>
-        </feMerge>
-      </filter>
-
-      <symbol id="exploreAmethystRouteGem" viewBox="0 0 220 160">
-        <g filter="url(#exploreAmethystGlow)">
-          <path
-            d="M110 5 L145 13 L182 38 L210 75 L190 106 L150 137 L110 155 L70 137 L30 106 L10 75 L38 38 L75 13 Z"
-            fill="url(#exploreAmethystBody)"
-            stroke="rgba(255,244,249,0.48)"
-            stroke-width="1.25"
-          />
-          <path d="M110 5 L145 13 L132 37 L110 29 L88 37 L75 13 Z" fill="url(#exploreAmethystAir)" opacity="0.74"/>
-          <path d="M75 13 L88 37 L62 58 L38 38 Z" fill="rgba(255,255,255,0.20)"/>
-          <path d="M145 13 L132 37 L158 58 L182 38 Z" fill="rgba(255,255,255,0.16)"/>
-          <path d="M38 38 L62 58 L55 82 L10 75 Z" fill="rgba(208,131,255,0.16)"/>
-          <path d="M182 38 L158 58 L165 82 L210 75 Z" fill="rgba(243,200,111,0.10)"/>
-          <path
-            d="M88 37 L110 29 L132 37 L158 58 L148 82 L110 101 L72 82 L62 58 Z"
-            fill="url(#exploreAmethystTableGlow)"
-            stroke="rgba(255,244,249,0.22)"
-            stroke-width="0.85"
-          />
-          <path d="M10 75 L55 82 L70 137 L30 106 Z" fill="rgba(27,8,73,0.34)"/>
-          <path d="M210 75 L165 82 L150 137 L190 106 Z" fill="rgba(181,140,255,0.14)"/>
-          <path d="M55 82 L72 82 L110 155 L70 137 Z" fill="rgba(4,0,18,0.44)"/>
-          <path d="M165 82 L148 82 L110 155 L150 137 Z" fill="rgba(141,216,255,0.08)"/>
-          <path d="M72 82 L110 101 L110 155 Z" fill="url(#exploreAmethystDepth)" opacity="0.72"/>
-          <path d="M148 82 L110 101 L110 155 Z" fill="rgba(5,1,24,0.38)"/>
-          <path d="M68 64 L152 64 L167 82 L148 103 L110 116 L72 103 L53 82 Z" fill="rgba(43,13,88,0.32)" stroke="rgba(255,244,249,0.10)" stroke-width="0.75"/>
-          <path d="M110 5 L110 155" stroke="rgba(255,255,255,0.26)" stroke-width="1.0"/>
-          <path d="M10 75 L210 75" stroke="rgba(255,255,255,0.20)" stroke-width="0.95"/>
-          <path d="M38 38 L190 106" stroke="rgba(255,255,255,0.13)" stroke-width="0.85"/>
-          <path d="M182 38 L30 106" stroke="rgba(255,255,255,0.13)" stroke-width="0.85"/>
-          <path d="M75 13 L110 101 L145 13" stroke="rgba(255,255,255,0.15)" stroke-width="0.85" fill="none"/>
-          <path d="M38 38 L110 101 L182 38" stroke="rgba(255,255,255,0.14)" stroke-width="0.85" fill="none"/>
-          <path d="M30 106 L110 101 L190 106" stroke="rgba(243,200,111,0.11)" stroke-width="0.85" fill="none"/>
-          <g class="gem-star">
-            <path d="M110 26 L116 70 L110 106 L104 70 Z" fill="rgba(255,255,255,0.20)"/>
-            <path d="M62 58 L105 72 L158 58 L116 78 Z" fill="rgba(255,255,255,0.13)"/>
-            <path d="M72 82 L105 75 L148 82 L114 91 Z" fill="rgba(208,131,255,0.12)"/>
-            <path d="M110 101 L126 81 L148 82 L129 96 Z" fill="rgba(255,255,255,0.10)"/>
-            <path d="M110 101 L94 81 L72 82 L91 96 Z" fill="rgba(243,200,111,0.08)"/>
-          </g>
-          <path class="gem-glint-sweep" d="M34 117 L176 22 L188 38 L48 130 Z" fill="url(#exploreAmethystGlint)"/>
-        </g>
-      </symbol>
-
-      <symbol id="exploreAmethystMapSeal" viewBox="0 0 220 160">
-        <g filter="url(#exploreAmethystGlow)">
-          <path
-            d="M110 4 L136 14 L166 14 L191 39 L191 62 L210 80 L191 98 L191 121 L166 146 L136 146 L110 156 L84 146 L54 146 L29 121 L29 98 L10 80 L29 62 L29 39 L54 14 L84 14 Z"
-            fill="url(#exploreAmethystBody)"
-            stroke="rgba(255,244,249,0.52)"
-            stroke-width="1.35"
-          />
-          <path d="M110 4 L136 14 L124 40 L110 31 L96 40 L84 14 Z" fill="url(#exploreAmethystAir)" opacity="0.76"/>
-          <path d="M54 14 L96 40 L70 62 L29 39 Z" fill="rgba(255,255,255,0.16)"/>
-          <path d="M166 14 L124 40 L150 62 L191 39 Z" fill="rgba(255,255,255,0.13)"/>
-          <path d="M29 62 L70 62 L62 84 L10 80 Z" fill="rgba(208,131,255,0.12)"/>
-          <path d="M191 62 L150 62 L158 84 L210 80 Z" fill="rgba(243,200,111,0.10)"/>
-          <path d="M70 62 L96 40 L110 31 L124 40 L150 62 L158 84 L136 106 L110 116 L84 106 L62 84 Z" fill="url(#exploreAmethystTableGlow)" stroke="rgba(255,244,249,0.20)" stroke-width="0.85"/>
-          <path d="M58 61 L162 61 L178 82 L146 111 L110 124 L74 111 L42 82 Z" fill="rgba(42,12,86,0.35)" stroke="rgba(255,244,249,0.10)" stroke-width="0.75"/>
-          <path d="M10 80 L62 84 L54 146 L29 121 Z" fill="rgba(5,0,22,0.36)"/>
-          <path d="M210 80 L158 84 L166 146 L191 121 Z" fill="rgba(181,140,255,0.11)"/>
-          <path d="M54 146 L84 106 L110 156 L84 146 Z" fill="rgba(4,0,19,0.46)"/>
-          <path d="M166 146 L136 106 L110 156 L136 146 Z" fill="rgba(255,255,255,0.08)"/>
-          <path d="M84 106 L110 116 L136 106 L110 156 Z" fill="url(#exploreAmethystDepth)" opacity="0.62"/>
-          <path d="M110 4 L110 156" stroke="rgba(255,255,255,0.24)" stroke-width="1.0"/>
-          <path d="M10 80 L210 80" stroke="rgba(255,255,255,0.20)" stroke-width="0.95"/>
-          <path d="M29 39 L191 121" stroke="rgba(255,255,255,0.13)" stroke-width="0.85"/>
-          <path d="M191 39 L29 121" stroke="rgba(255,255,255,0.13)" stroke-width="0.85"/>
-          <g class="gem-star">
-            <path d="M110 30 L116 76 L110 118 L104 76 Z" fill="rgba(255,255,255,0.20)"/>
-            <path d="M62 84 L105 77 L158 84 L114 92 Z" fill="rgba(255,255,255,0.12)"/>
-            <path d="M70 62 L105 74 L150 62 L116 80 Z" fill="rgba(208,131,255,0.12)"/>
-            <path d="M84 106 L110 86 L136 106 L110 116 Z" fill="rgba(243,200,111,0.08)"/>
-          </g>
-          <path class="gem-glint-sweep" d="M35 118 L174 24 L187 42 L49 132 Z" fill="url(#exploreAmethystGlint)"/>
-        </g>
-      </symbol>
-    </defs>
-  </svg>
-
-  <a class="skip" href="/explore/#main">Skip to Manor</a>
+  <a
+    class="skip"
+    href="#main"
+  >
+    Skip to frontier surfaces
+  </a>
 
   <div class="shell">
-    <header class="topbar" aria-label="Manor header">
-      <a class="brand" href="/" aria-label="Diamond Gate Bridge home">
-        <span class="brand-mark" aria-hidden="true">
-          <svg viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#exploreAmethystRouteGem"></use></svg>
-          <span>MN</span>
+    <header
+      class="topbar"
+      aria-label="Explore header"
+    >
+      <a
+        class="brand"
+        href="/"
+        aria-label="Diamond Gate Bridge Compass"
+      >
+        <span>
+          Diamond Gate Bridge
         </span>
-        <span class="brand-copy">
-          <span>Diamond Gate Bridge</span>
-          <strong>Manor · Estate Directory</strong>
-        </span>
+
+        <strong>
+          Explore · Frontier Surface
+        </strong>
       </a>
 
-      <details class="site-menu">
-        <summary class="site-menu-summary">
-          <span>Manor Menu</span>
-          <b>Estate Directory</b>
-        </summary>
+      <nav
+        class="nav"
+        aria-label="Primary route options"
+      >
+        <a href="/laws/">
+          Laws
+        </a>
 
-        <div class="site-menu-panel" aria-label="Manor estate-directory dropdown menu">
-          <div class="site-menu-grid">
-            <section class="site-menu-group" aria-labelledby="menu-north">
-              <strong id="menu-north">North · Laws / Proof</strong>
-              <div class="site-menu-links">
-                <a href="/laws/">Laws</a>
-                <a href="/gauges/">Gauges</a>
-              </div>
-            </section>
+        <a
+          href="/explore/"
+          aria-current="page"
+        >
+          Explore
+        </a>
 
-            <section class="site-menu-group" aria-labelledby="menu-east">
-              <strong id="menu-east">East · Story / World</strong>
-              <div class="site-menu-links">
-                <a href="/showroom/globe/">Interactive Narrative</a>
-                <a href="/showroom/">Showroom</a>
-                <a href="/nine-summits/universe/">Universe</a>
-                <a href="/nine-summits/">Nine Summits</a>
-                <a href="/nine-summits-of-love/">Book</a>
-                <a href="/characters/">Characters</a>
-                <a href="/showroom/globe/h-earth/">H-Earth</a>
-                <a href="/showroom/globe/audralia/">Audralia</a>
-                <a href="/showroom/globe/earth/">Earth</a>
-                <a href="/showroom/globe/hearth/">Hearth</a>
-              </div>
-            </section>
+        <a href="/showroom/">
+          Mirrorland
+        </a>
 
-            <section class="site-menu-group" aria-labelledby="menu-south">
-              <strong id="menu-south">South · Frontier / Systems</strong>
-              <div class="site-menu-links">
-                <a href="/explore/frontier/">Frontier</a>
-                <a href="/explore/frontier/energy/">Energy</a>
-                <a href="/explore/frontier/water/">Water</a>
-                <a href="/explore/frontier/waste/">Waste</a>
-                <a href="/explore/frontier/lattice/">Lattice</a>
-                <a href="/explore/frontier/urban/">Urban</a>
-                <a href="/explore/frontier/closed-loop/">Closed Loop</a>
-                <a href="/explore/frontier/manual/">Manual</a>
-                <a href="/explore/frontier/shimmer/">Shimmer</a>
-                <a href="/explore/frontier/infrastructure/">Infrastructure</a>
-                <a href="/explore/frontier/trajectory/">Trajectory</a>
-              </div>
-            </section>
-
-            <section class="site-menu-group" aria-labelledby="menu-west">
-              <strong id="menu-west">West · House / Practical</strong>
-              <div class="site-menu-links">
-                <a href="/">Compass</a>
-                <a href="/door/">Door</a>
-                <a href="/home/">Home</a>
-                <a href="/explore/" aria-current="page">Manor / Explore</a>
-                <a href="/products/">Products</a>
-                <a href="/meet-sean-mansfield/">Meet Sean</a>
-                <a href="/about-this-underdog/">Underdog</a>
-                <a href="/products/five-flags/">Five Flags</a>
-              </div>
-            </section>
-          </div>
-        </div>
-      </details>
+        <a href="/">
+          Compass
+        </a>
+      </nav>
     </header>
 
     <main id="main">
-      <section class="panel hero" aria-labelledby="page-title">
-        <div class="kicker">Manor · Estate Directory</div>
-        <h1 id="page-title">One Manor. Many rooms. Clear paths.</h1>
+      <section
+        class="hero"
+        aria-labelledby="page-title"
+      >
+        <div class="hero-grid">
+          <div>
+            <p class="kicker">
+              Frontier Surface · Objective Entry
+            </p>
 
-        <p class="lead">
-          The Manor is the estate directory for Diamond Gate Bridge. It keeps the rooms legible, separates proof from story, separates systems from products, and lets the visitor move without collapsing the whole site into one explanation.
-        </p>
+            <h1 id="page-title">
+              Scratch the surface of the frontier.
+            </h1>
 
-        <div class="quote">
-          “A map should not impress you first. It should help you move.”
-        </div>
+            <p>
+              Explore introduces the frontier labels in plain language. It does not try to behave like the Compass, and it does not send visitors directly into every specialized lane.
+            </p>
 
-        <div class="actions">
-          <a class="button gold" href="/home/">Return Home</a>
-          <a class="button" href="#manor-lenses">Open Manor Lenses</a>
-          <a class="button" href="/products/">Open Products</a>
-          <a class="button" href="/showroom/">Open Showroom</a>
-        </div>
-      </section>
+            <p>
+              Choose the surface you want to scratch. Each option opens the same Frontier hub, where the actual lane system is organized for deeper review.
+            </p>
 
-      <section class="panel section" aria-labelledby="field-title">
-        <div class="kicker">Primary rooms and deeper routes</div>
-        <h2 id="field-title">The orbital diamonds stay intact. The room labels now have more space to breathe.</h2>
+            <div
+              class="hero-actions"
+              aria-label="Primary Explore actions"
+            >
+              <a
+                class="button primary"
+                href="/explore/frontier/"
+              >
+                Open Frontier Lanes
+              </a>
 
-        <div class="explore-stage" aria-label="Manor estate diamond route field">
-          <div class="explore-center-anchor" aria-hidden="true">
-            <svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#exploreAmethystMapSeal"></use></svg>
-            <div class="diamond-content">
-              <strong>Manor<br>Estate<br>Map</strong>
+              <a
+                class="button"
+                href="#frontier-surfaces"
+              >
+                Review Surface Labels
+              </a>
             </div>
           </div>
 
-          <div class="orbit-ring inner" aria-label="Primary route ring">
-            <a class="diamond-node" style="--angle:0deg;--gem-delay:.2s;--gem-hue:-4deg;--gem-sat:1.05;--gem-bright:1.02;" href="/home/" aria-label="Home">
-              <span class="diamond-object">
-                <svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#exploreAmethystRouteGem"></use></svg>
-                <span class="diamond-content"><strong>Home</strong><span>Receive</span></span>
-              </span>
-            </a>
+          <aside
+            class="scope-card"
+            aria-label="Explore page scope"
+          >
+            <p class="kicker">
+              Page Scope
+            </p>
 
-            <a class="diamond-node" style="--angle:90deg;--gem-delay:.9s;--gem-hue:5deg;--gem-sat:1.03;--gem-bright:1.01;" href="/products/" aria-label="Products">
-              <span class="diamond-object">
-                <svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#exploreAmethystRouteGem"></use></svg>
-                <span class="diamond-content"><strong>Products</strong><span>Use</span></span>
-              </span>
-            </a>
+            <ul class="scope-list">
+              <li>
+                <strong>Route</strong>
+                <span>/explore/</span>
+              </li>
 
-            <a class="diamond-node" style="--angle:180deg;--gem-delay:1.6s;--gem-hue:-8deg;--gem-sat:1.02;--gem-bright:1.02;" href="/showroom/" aria-label="Showroom">
-              <span class="diamond-object">
-                <svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#exploreAmethystRouteGem"></use></svg>
-                <span class="diamond-content"><strong>Showroom</strong><span>Inspect</span></span>
-              </span>
-            </a>
+              <li>
+                <strong>Purpose</strong>
+                <span>Surface-level frontier education</span>
+              </li>
 
-            <a class="diamond-node" style="--angle:270deg;--gem-delay:2.3s;--gem-hue:9deg;--gem-sat:1.06;--gem-bright:1;" href="/gauges/" aria-label="Gauges">
-              <span class="diamond-object">
-                <svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#exploreAmethystRouteGem"></use></svg>
-                <span class="diamond-content"><strong>Gauges</strong><span>Measure</span></span>
-              </span>
-            </a>
-          </div>
+              <li>
+                <strong>Action</strong>
+                <span>All frontier labels open /explore/frontier/</span>
+              </li>
 
-          <div class="orbit-ring outer" aria-label="Deeper route ring">
-            <a class="diamond-node" style="--angle:0deg;--gem-delay:.4s;--gem-hue:-10deg;--gem-sat:.99;--gem-bright:.99;" href="/" aria-label="Compass">
-              <span class="diamond-object">
-                <svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#exploreAmethystRouteGem"></use></svg>
-                <span class="diamond-content"><strong>Compass</strong></span>
-              </span>
-            </a>
-
-            <a class="diamond-node" style="--angle:45deg;--gem-delay:1.1s;--gem-hue:3deg;--gem-sat:1.02;--gem-bright:.99;" href="/door/" aria-label="Door">
-              <span class="diamond-object">
-                <svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#exploreAmethystRouteGem"></use></svg>
-                <span class="diamond-content"><strong>Door</strong></span>
-              </span>
-            </a>
-
-            <a class="diamond-node" style="--angle:90deg;--gem-delay:1.8s;--gem-hue:11deg;--gem-sat:.98;--gem-bright:1;" href="/laws/" aria-label="Laws">
-              <span class="diamond-object">
-                <svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#exploreAmethystRouteGem"></use></svg>
-                <span class="diamond-content"><strong>Laws</strong></span>
-              </span>
-            </a>
-
-            <a class="diamond-node" style="--angle:135deg;--gem-delay:2.5s;--gem-hue:-5deg;--gem-sat:1.03;--gem-bright:.99;" href="/nine-summits/" aria-label="Nine Summits">
-              <span class="diamond-object">
-                <svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#exploreAmethystRouteGem"></use></svg>
-                <span class="diamond-content"><strong>Nine<br>Summits</strong></span>
-              </span>
-            </a>
-
-            <a class="diamond-node" style="--angle:180deg;--gem-delay:3.2s;--gem-hue:7deg;--gem-sat:1.01;--gem-bright:.99;" href="/nine-summits-of-love/" aria-label="Book">
-              <span class="diamond-object">
-                <svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#exploreAmethystRouteGem"></use></svg>
-                <span class="diamond-content"><strong>Book</strong></span>
-              </span>
-            </a>
-
-            <a class="diamond-node" style="--angle:225deg;--gem-delay:3.9s;--gem-hue:-13deg;--gem-sat:1.04;--gem-bright:1;" href="/explore/frontier/" aria-label="Frontier">
-              <span class="diamond-object">
-                <svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#exploreAmethystRouteGem"></use></svg>
-                <span class="diamond-content"><strong>Frontier</strong></span>
-              </span>
-            </a>
-
-            <a class="diamond-node" style="--angle:270deg;--gem-delay:4.6s;--gem-hue:14deg;--gem-sat:.98;--gem-bright:.98;" href="/about-this-underdog/" aria-label="Underdog">
-              <span class="diamond-object">
-                <svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#exploreAmethystRouteGem"></use></svg>
-                <span class="diamond-content"><strong>Under<br>dog</strong></span>
-              </span>
-            </a>
-
-            <a class="diamond-node" style="--angle:315deg;--gem-delay:5.3s;--gem-hue:-2deg;--gem-sat:1.02;--gem-bright:.99;" href="/meet-sean-mansfield/" aria-label="Meet Sean">
-              <span class="diamond-object">
-                <svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#exploreAmethystRouteGem"></use></svg>
-                <span class="diamond-content"><strong>Meet<br>Sean</strong></span>
-              </span>
-            </a>
-          </div>
-        </div>
-
-        <aside class="status-card" aria-label="Manor status">
-          <strong>Manor status:</strong>
-          The estate directory dropdown is active. The orbital amethyst diamonds are preserved, scaled proportionally, and kept CSS-only. Route labels remain attached to their gems as object motion, with no independent readable-text animation.
-        </aside>
-      </section>
-
-      <section class="panel section" id="manor-lenses" aria-labelledby="lens-title">
-        <div class="kicker">Manor lenses</div>
-        <h2 id="lens-title">The Manor can speak clearly without getting lost in technicality.</h2>
-
-        <div class="lens-shell">
-          <input class="lens-radio platform-radio" id="manor-platform" name="manor-lens" type="radio" checked>
-          <input class="lens-radio engineering-radio" id="manor-engineering" name="manor-lens" type="radio">
-
-          <div class="lens-tabs">
-            <label class="lens-tab platform-tab" for="manor-platform">Platform Lens</label>
-            <label class="lens-tab engineering-tab" for="manor-engineering">Engineering Lens</label>
-          </div>
-
-          <div class="lens-body">
-            <div class="lens-copy platform-copy">
-              <b>Platform Lens</b>
-              <h3>The Manor gives the visitor a human-readable way through the estate.</h3>
-              <p>
-                This page can carry TED Talk-driven language because the Manor is not trying to prove every technical detail at once. It gives the visitor a clean story of movement: enter, orient, choose the room, and keep going.
-              </p>
-              <ul class="lens-list">
-                <li>The public message stays simple: one Manor, many rooms, clear paths.</li>
-                <li>The visitor can understand the estate before needing implementation language.</li>
-                <li>The page keeps expressive language grounded by routing visitors to the correct proof, story, system, or practical room.</li>
-              </ul>
-            </div>
-
-            <div class="lens-copy engineering-copy">
-              <b>Engineering Lens</b>
-              <h3>The Manor is the route-classification layer.</h3>
-              <p>
-                The Manor separates routes by role: proof responsibility, story/world responsibility, systems responsibility, and practical-use responsibility. This prevents expressive copy from becoming technical speculation.
-              </p>
-              <ul class="lens-list">
-                <li>North handles Laws and measurement-oriented proof routes.</li>
-                <li>East handles story, world, universe, character, and showroom routes.</li>
-                <li>South handles Frontier systems, water, energy, waste, lattice, and infrastructure routes.</li>
-                <li>West handles house, practical, product, person, and entry routes.</li>
-              </ul>
-            </div>
-          </div>
+              <li>
+                <strong>Not</strong>
+                <span>Compass, estate directory, governance surface, or lane-specific proof page</span>
+              </li>
+            </ul>
+          </aside>
         </div>
       </section>
 
-      <section class="panel section" aria-labelledby="map-title">
-        <div class="kicker">Main movement</div>
-        <h2 id="map-title">Start with the rooms that move the visitor forward.</h2>
+      <section
+        class="section"
+        id="frontier-surfaces"
+        aria-labelledby="surface-title"
+      >
+        <header class="section-header">
+          <p class="kicker">
+            Surface Labels
+          </p>
 
-        <div class="map-grid">
-          <a class="info-card" href="/home/">
-            <b>Receiver</b>
-            <strong>Home stabilizes the visitor.</strong>
-            <span>Start here when the visitor needs the clearest place to land.</span>
+          <h2 id="surface-title">
+            What kind of frontier question are you carrying?
+          </h2>
+
+          <p>
+            These cards are not separate route decisions. They are practical labels that help the visitor recognize the kind of system concern they are approaching. Every card opens the Frontier hub.
+          </p>
+        </header>
+
+        <div class="surface-grid">
+          <a
+            class="surface-card"
+            href="/explore/frontier/"
+          >
+            <small>Energy</small>
+            <h3>Power, storage, load, and loss.</h3>
+            <p>
+              Use this surface when the question involves generation, transfer, storage, efficiency, capacity, demand, or power-system stress.
+            </p>
+            <span class="action">Open Frontier Lanes</span>
           </a>
 
-          <a class="info-card" href="/products/">
-            <b>Use</b>
-            <strong>Products turn the message into action.</strong>
-            <span>Move here when the visitor needs something practical to open.</span>
+          <a
+            class="surface-card"
+            href="/explore/frontier/"
+          >
+            <small>Water</small>
+            <h3>Supply, movement, treatment, and access.</h3>
+            <p>
+              Use this surface when the question involves water sourcing, storage, distribution, quality, reuse, continuity, or conservation.
+            </p>
+            <span class="action">Open Frontier Lanes</span>
           </a>
 
-          <a class="info-card" href="/showroom/">
-            <b>Inspect</b>
-            <strong>Showroom displays built expression.</strong>
-            <span>Use this path when the visitor needs to see the work, not just read about it.</span>
+          <a
+            class="surface-card"
+            href="/explore/frontier/"
+          >
+            <small>Waste</small>
+            <h3>Discard, reuse, sanitation, and byproducts.</h3>
+            <p>
+              Use this surface when the question involves what a system throws away, leaks, fails to recover, or must remove safely.
+            </p>
+            <span class="action">Open Frontier Lanes</span>
           </a>
 
-          <a class="info-card" href="/gauges/">
-            <b>Measure</b>
-            <strong>Gauges keeps measurement separate from display.</strong>
-            <span>Use this path when the system needs verification instead of impression.</span>
+          <a
+            class="surface-card"
+            href="/explore/frontier/"
+          >
+            <small>Infrastructure</small>
+            <h3>Support systems that keep operation possible.</h3>
+            <p>
+              Use this surface when the question involves utilities, networks, physical support, maintenance, repair, dependency, or continuity.
+            </p>
+            <span class="action">Open Frontier Lanes</span>
+          </a>
+
+          <a
+            class="surface-card"
+            href="/explore/frontier/"
+          >
+            <small>Urban</small>
+            <h3>Built environments and public systems.</h3>
+            <p>
+              Use this surface when the question involves density, housing, access, transportation, municipal systems, public space, or city-scale pressure.
+            </p>
+            <span class="action">Open Frontier Lanes</span>
+          </a>
+
+          <a
+            class="surface-card"
+            href="/explore/frontier/"
+          >
+            <small>Closed Loop</small>
+            <h3>Systems that preserve value by recirculating outputs.</h3>
+            <p>
+              Use this surface when the question involves reuse, recovery, reduced waste, input-output mapping, or limiting uncontrolled dependency.
+            </p>
+            <span class="action">Open Frontier Lanes</span>
+          </a>
+
+          <a
+            class="surface-card"
+            href="/explore/frontier/"
+          >
+            <small>Lattice</small>
+            <h3>Relationships among connected parts.</h3>
+            <p>
+              Use this surface when the question depends on interdependence, constraints, nodes, connections, propagation, or distributed system behavior.
+            </p>
+            <span class="action">Open Frontier Lanes</span>
+          </a>
+
+          <a
+            class="surface-card"
+            href="/explore/frontier/"
+          >
+            <small>Trajectory</small>
+            <h3>Direction, timing, and consequence over time.</h3>
+            <p>
+              Use this surface when the question involves trend, path dependence, thresholds, timing, future state, or accumulated pressure.
+            </p>
+            <span class="action">Open Frontier Lanes</span>
+          </a>
+
+          <a
+            class="surface-card"
+            href="/explore/frontier/"
+          >
+            <small>Manual</small>
+            <h3>Operating instructions and review steps.</h3>
+            <p>
+              Use this surface when the question involves procedure, operating guidance, practical steps, user instruction, or repeatable review.
+            </p>
+            <span class="action">Open Frontier Lanes</span>
+          </a>
+
+          <a
+            class="surface-card"
+            href="/explore/frontier/"
+          >
+            <small>Shimmer</small>
+            <h3>Early signals and perception-level cues.</h3>
+            <p>
+              Use this surface when the question involves weak indicators, surface changes, visible cues, signal emergence, or early-stage perception.
+            </p>
+            <span class="action">Open Frontier Lanes</span>
           </a>
         </div>
       </section>
 
-      <section class="panel section" aria-labelledby="rooms-title">
-        <div class="kicker">Deeper estate paths</div>
-        <h2 id="rooms-title">Each room keeps its own job.</h2>
+      <section
+        class="section"
+        aria-labelledby="method-title"
+      >
+        <header class="section-header">
+          <p class="kicker">
+            How This Page Works
+          </p>
 
-        <div class="room-grid">
-          <a class="room-card" href="/">
-            <small>Root</small>
-            <strong>Compass</strong>
-            <span>Choose the broad direction.</span>
-          </a>
+          <h2 id="method-title">
+            Explore prepares the question. Frontier handles the lane.
+          </h2>
 
-          <a class="room-card" href="/door/">
-            <small>Entry</small>
-            <strong>Door</strong>
-            <span>Enter through a clear threshold.</span>
-          </a>
+          <p>
+            The distinction is intentional. Explore helps visitors name the surface of the issue. The Frontier hub is where deeper lane selection and applied review belong.
+          </p>
+        </header>
 
-          <a class="room-card" href="/laws/">
-            <small>Boundary</small>
-            <strong>Laws</strong>
-            <span>Separate rule, proof, and scientific structure.</span>
-          </a>
+        <div class="explanation-grid">
+          <article class="explanation-card">
+            <strong>Explore</strong>
+            <p>
+              Introduces the frontier labels at a practical level. It helps the visitor recognize whether the issue is about energy, water, waste, infrastructure, trajectory, or another frontier surface.
+            </p>
+          </article>
 
-          <a class="room-card" href="/nine-summits/">
-            <small>Climb</small>
-            <strong>Nine Summits</strong>
-            <span>Follow the public-facing ascent.</span>
-          </a>
-
-          <a class="room-card" href="/nine-summits-of-love/">
-            <small>Book</small>
-            <strong>Nine Summits of Love</strong>
-            <span>Read the long-form path.</span>
-          </a>
-
-          <a class="room-card" href="/nine-summits/universe/">
-            <small>World</small>
-            <strong>Universe</strong>
-            <span>Open the broader world structure.</span>
-          </a>
-
-          <a class="room-card" href="/explore/frontier/">
-            <small>Edge</small>
+          <article class="explanation-card">
             <strong>Frontier</strong>
-            <span>Move to the expansion edge.</span>
-          </a>
+            <p>
+              Receives the visitor after the surface has been identified. The Frontier hub is the correct place to choose or inspect the actual applied lane structure.
+            </p>
+          </article>
 
-          <a class="room-card" href="/about-this-underdog/">
-            <small>Voice</small>
-            <strong>Underdog</strong>
-            <span>Understand the public signal.</span>
-          </a>
-
-          <a class="room-card" href="/meet-sean-mansfield/">
-            <small>Origin</small>
-            <strong>Meet Sean</strong>
-            <span>Get the human context.</span>
-          </a>
-
-          <a class="room-card" href="/products/five-flags/">
-            <small>Game</small>
-            <strong>Five Flags</strong>
-            <span>Open a product branch.</span>
-          </a>
-
-          <a class="room-card" href="/showroom/globe/">
-            <small>Selector</small>
-            <strong>Globe</strong>
-            <span>Choose a world route.</span>
-          </a>
-
-          <a class="room-card" href="/showroom/globe/h-earth/">
-            <small>Scene</small>
-            <strong>H-Earth</strong>
-            <span>Open the current ground-level child route.</span>
-          </a>
+          <article class="explanation-card">
+            <strong>Evidence</strong>
+            <p>
+              A surface label is not proof. It does not validate a technology, certify feasibility, approve a claim, or establish production readiness.
+            </p>
+          </article>
         </div>
       </section>
 
-      <template id="route-receipt" data-route-receipt>
-EXPLORE_MANOR_CONTEXTUAL_GEM_SCALE_DROPDOWN_RENEWAL_TNT_v2
-previous=EXPLORE_LAWS_ALIGNED_AMETHYST_GEM_RENEWAL_TNT_v1
+      <section
+        class="section"
+        aria-label="Explore boundary"
+      >
+        <div class="boundary">
+          <p>
+            <strong>Boundary:</strong>
+            Explore is a surface-scratch entry page for frontier labels. It does not replace the Compass, does not operate as Governance, does not validate frontier claims, and does not independently route into specialized lane pages. Every frontier surface option intentionally opens the same Frontier hub at <strong>/explore/frontier/</strong>.
+          </p>
+        </div>
+      </section>
+
+      <template
+        class="route-receipt"
+        data-route-receipt
+      >
+EXPLORE_FRONTIER_SURFACE_SCRATCH_ENTRY_TNT_v1
 route=/explore/
-page=explore_manor_contextual_route_map
-room=explore
-public_label=manor
-role=manor_estate_directory
-public_identity=manor_first_explore_route_second
-message=one_manor_many_rooms_clear_paths
-sitewide_binding=DGB_SITEWIDE_GEM_SYSTEM_AUDIT_AND_PRIMITIVE_BINDING_v1
-primary_law=manor_maps_the_estate_manor_does_not_render_worlds
-background_authority=inline_css_only
-motion_authority=css_only
-top_nav_bubbles_removed=true
-manor_dropdown_menu=true
-dropdown_label=Manor_Menu_Estate_Directory
-north=Laws_Gauges
-east=Interactive_Narrative_Showroom_Universe_Nine_Summits_Book_Characters_H_Earth_Audralia_Earth_Hearth
-south=Frontier_Energy_Water_Waste_Lattice_Urban_Closed_Loop_Manual_Shimmer_Infrastructure_Trajectory
-west=Compass_Door_Home_Manor_Products_Meet_Sean_Underdog_Five_Flags
-orbital_diamonds_preserved=true
-systematic_gem_scaling=true
-center_seal_scaled=true
-inner_ring_gems_scaled=true
-outer_ring_gems_scaled=true
-orbit_radius_scaled_with_gems=true
-stage_height_scaled_with_orbit=true
-ring_system=4_plus_8
-inner_ring=home,products,showroom,gauges
-outer_ring=compass,door,laws,nine_summits,book,frontier,underdog,meet_sean
-frontier_route_corrected=/explore/frontier/
-platform_engineering_lens=true
-platform_lens=human_readable_estate_directory_ted_talk_language
-engineering_lens=route_classification_layer_cardinal_function_proof_story_systems_practical
-text_motion_law=readable_text_stable
-readable_text_independent_animation=false
-diamond_content_animation_removed=true
-object_motion_only=true
-allowed_text_motion=attached_to_moving_gem_object_only
-gem_wrapper_counter_motion=true
-animation_targets=orbit_rings,gem_object_wrapper,svg_facets,glint,center_anchor
-forbidden_text_animation=shimmer,pulse,blur,bounce,flicker,independent_rotation,vibration
-gem_standard=LAWS_ALIGNED_AMETHYST_ROUTE_MAP_CRYSTAL_v1
-gem_method=inline_svg_symbol_gems_local_until_asset_extraction
-gem_family=amethyst_route_map_crystal
-visual_system=purple_manor_estate_directory_with_laws_aligned_amethyst_gems
-copy_standard=contextual_public_facing_manor_directory_language
-accessibility=skip_link_absolute,dropdown_summary,keyboard_links,prefers_reduced_motion,readable_cards,inset_gem_labels
-mobile_law=cards_remain_primary_orbit_compacts_no_horizontal_overflow
-preserved=explore_route,purple_identity,one_manor_many_rooms_concept,route_map_function,route_links,card_grid,css_only_motion,amethyst_orbital_diamond_design
-renewed=manor_context,dropdown_navigation,gem_scale,orbit_spacing,lens_section,frontier_route_alignment,metadata,receipt
-retired=top_bubble_navigation,frontier_root_route,independent_diamond_content_text_animation
-route_owns=manor_map,estate_traversal,diamond_route_field,room_cards,purple_route_identity,amethyst_route_gem_material,manor_dropdown,lens_section
-route_does_not_own=h_earth_condition_stack,globe_parent_selector,planet_surface_rendering,gauges_logic,product_chamber_content,laws_branch_content,child_route_rendering
-external_background_js=false
-external_motion_js=false
-shared_orbit_css=false
+page=explore_frontier_surface
+role=frontier_surface_entry
+primary_destination=/explore/frontier/
+top_nav=laws,explore,mirrorland,compass
+governance_route_removed=true
+compass_behavior_retired=true
+manor_identity_retired=true
+estate_directory_retired=true
+orbital_diamonds_retired=true
+mega_menu_retired=true
+direct_lane_routing_retired=true
+objective_stance=true
+narrative_stance=false
+surface_cards=energy,water,waste,infrastructure,urban,closed_loop,lattice,trajectory,manual,shimmer
+surface_card_destination=/explore/frontier/
+javascript_required=false
+inline_css=true
+external_css=false
+external_js=false
 canvas_runtime=false
-requestAnimationFrame=false
-heavy_runtime_loaded=false
-javascript_added=false
+request_animation_frame=false
 generated_image=false
-graphic_box=false
-streaming=false
 visual_pass_claimed=false
+boundary=explore_names_the_surface_frontier_handles_lane_selection
       </template>
     </main>
 
-    <footer>
-      EXPLORE_MANOR_CONTEXTUAL_GEM_SCALE_DROPDOWN_RENEWAL_TNT_v2 · Manor · Estate Directory · Amethyst orbit preserved · Dropdown active · Text stable.
+    <footer class="footer">
+      Explore · Frontier Surface Entry · All surface labels open the Frontier hub.
     </footer>
   </div>
 </body>

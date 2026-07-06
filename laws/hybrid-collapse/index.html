@@ -1,13 +1,14 @@
 <!-- TARGET FILE: /laws/hybrid-collapse/index.html -->
-<!-- NEW FILE / PLACEHOLDER BUILD -->
-<!-- DGB_LAWS_HYBRID_COLLAPSE_AUXILIARY_BRANCH_HTML_TNT_v1_0_0 -->
+<!-- COMPLETE REPLACEMENT -->
+<!-- DGB_LAWS_HYBRID_COLLAPSE_AUXILIARY_BRANCH_HTML_TNT_v1_1_0 -->
 <!doctype html>
 
 <html
   lang="en"
   data-route="/laws/hybrid-collapse/"
   data-page="laws-hybrid-collapse"
-  data-contract="DGB_LAWS_HYBRID_COLLAPSE_AUXILIARY_BRANCH_HTML_TNT_v1_0_0"
+  data-contract="DGB_LAWS_HYBRID_COLLAPSE_AUXILIARY_BRANCH_HTML_TNT_v1_1_0"
+  data-previous-contract="DGB_LAWS_HYBRID_COLLAPSE_AUXILIARY_BRANCH_HTML_TNT_v1_0_0"
   data-laws-auxiliary-branch="true"
   data-laws-sixteen-star-registry-member="false"
   data-laws-universal-validation-claimed="false"
@@ -31,12 +32,12 @@
 
   <meta
     name="description"
-    content="Hybrid Collapse is an auxiliary Diamond Gate Bridge Laws branch for reading mixed collapse structures across internal burden, external pressure, usable capacity, coherence failure, and evidence boundaries without promoting candidate structure into validation."
+    content="Hybrid Collapse is an auxiliary Diamond Gate Bridge Laws branch for reading mixed collapse structures across internal burden, external pressure, usable capacity, coherence failure, platform engineering translation, and evidence boundaries without promoting candidate structure into validation."
   >
 
   <meta
     name="laws-page-contract"
-    content="DGB_LAWS_HYBRID_COLLAPSE_AUXILIARY_BRANCH_HTML_TNT_v1_0_0"
+    content="DGB_LAWS_HYBRID_COLLAPSE_AUXILIARY_BRANCH_HTML_TNT_v1_1_0"
   >
 
   <style>
@@ -423,6 +424,61 @@
       color: var(--ink-soft);
     }
 
+    .section-lenses {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0.75rem;
+      margin-top: 0.25rem;
+    }
+
+    .section-lenses article {
+      min-width: 0;
+      padding: 0.85rem;
+      border: 1px solid rgba(255, 255, 255, 0.085);
+      border-radius: var(--radius-md);
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.026));
+    }
+
+    .section-lenses article:nth-child(1) {
+      border-color: rgba(255, 228, 155, 0.16);
+    }
+
+    .section-lenses article:nth-child(2) {
+      border-color: rgba(120, 233, 255, 0.16);
+    }
+
+    .section-lenses article:nth-child(3) {
+      border-color: rgba(143, 240, 178, 0.16);
+    }
+
+    .section-lenses span {
+      display: block;
+      margin-bottom: 0.28rem;
+      font-size: 0.7rem;
+      font-weight: 850;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .section-lenses article:nth-child(1) span {
+      color: var(--gold);
+    }
+
+    .section-lenses article:nth-child(2) span {
+      color: var(--cyan);
+    }
+
+    .section-lenses article:nth-child(3) span {
+      color: var(--green);
+    }
+
+    .section-lenses p {
+      margin: 0;
+      color: var(--ink-soft);
+      font-size: 0.93rem;
+    }
+
     .equation-grid,
     .branch-grid,
     .evidence-grid,
@@ -690,6 +746,7 @@
 
       .threshold-grid,
       .toc,
+      .section-lenses,
       .equation-grid,
       .branch-grid,
       .evidence-grid,
@@ -889,6 +946,32 @@
           </p>
         </header>
 
+        <div
+          class="section-lenses"
+          aria-label="Collapse qualification reading lenses"
+        >
+          <article>
+            <span>Plain English</span>
+            <p>
+              Collapse is not just stress. It is the point where the system is overloaded internally, pressured externally, and fails at its weakest required function.
+            </p>
+          </article>
+
+          <article>
+            <span>Platform Engineering</span>
+            <p>
+              Read this as incident qualification: backlog or internal load is saturated, external demand is saturated, and a required control such as state, interface, ownership, or feedback drops below safe threshold.
+            </p>
+          </article>
+
+          <article>
+            <span>Evidence</span>
+            <p>
+              Evidence would require observable records for burden, pressure, and weakest-function failure. The formula alone is structure, not validation.
+            </p>
+          </article>
+        </div>
+
         <div class="equation-grid">
           <article class="equation-card equation-card--gold">
             <div class="equation-label">
@@ -949,6 +1032,32 @@ AND
             Hybrid collapse can be read as pressure mass acting against usable capacity. The same relation can be expressed as remaining stability or collapse-pressure mass.
           </p>
         </header>
+
+        <div
+          class="section-lenses"
+          aria-label="Pressure capacity reading lenses"
+        >
+          <article>
+            <span>Plain English</span>
+            <p>
+              The system becomes unsafe when pressure grows faster than the capacity available to answer it.
+            </p>
+          </article>
+
+          <article>
+            <span>Platform Engineering</span>
+            <p>
+              Pressure maps to demand, traffic, volatility, attack, dependency failure, or operational load. Capacity maps to throughput, recovery margin, redundancy, staffing, reserves, and control authority.
+            </p>
+          </article>
+
+          <article>
+            <span>Evidence</span>
+            <p>
+              Support requires measured pressure and measured usable capacity. A claim is stronger when the capacity basis, threshold, and time window are explicit.
+            </p>
+          </article>
+        </div>
 
         <div class="equation-grid">
           <article class="equation-card equation-card--gold">
@@ -1056,6 +1165,32 @@ S* + H* = 1</code></pre>
           </p>
         </header>
 
+        <div
+          class="section-lenses"
+          aria-label="Hybrid collapse reading lenses"
+        >
+          <article>
+            <span>Plain English</span>
+            <p>
+              Hybrid means the visible problem is not the whole cause. Several failures are interacting at once.
+            </p>
+          </article>
+
+          <article>
+            <span>Platform Engineering</span>
+            <p>
+              Treat this like a multi-cause incident model. Do not diagnose from the loudest symptom alone; inspect queues, dependencies, interfaces, ownership, state, retries, and recovery paths together.
+            </p>
+          </article>
+
+          <article>
+            <span>Evidence</span>
+            <p>
+              Evidence should separate causes rather than blend them. Each claimed contributor needs its own source, observation, or bounded measurement.
+            </p>
+          </article>
+        </div>
+
         <div class="evidence-grid">
           <article class="evidence-card">
             <span>Internal</span>
@@ -1147,6 +1282,32 @@ UnrelatedAxisStrength</code></pre>
           </p>
         </header>
 
+        <div
+          class="section-lenses"
+          aria-label="Applied reading lenses"
+        >
+          <article>
+            <span>Plain English</span>
+            <p>
+              Use Hybrid Collapse to ask whether the system is failing through a combination of stress, weak repair, bad handoffs, unclear authority, and missing correction.
+            </p>
+          </article>
+
+          <article>
+            <span>Platform Engineering</span>
+            <p>
+              Convert the example into an operational map: pressure source, affected subsystem, degraded capacity, failed interface, missing owner, broken feedback loop, and recovery path.
+            </p>
+          </article>
+
+          <article>
+            <span>Evidence</span>
+            <p>
+              Applied examples are illustrations unless they include source-bound observations, thresholds, comparison, and review. Examples alone do not validate the model.
+            </p>
+          </article>
+        </div>
+
         <div class="branch-grid">
           <a
             class="branch-card"
@@ -1235,6 +1396,32 @@ UnrelatedAxisStrength</code></pre>
           </p>
         </header>
 
+        <div
+          class="section-lenses"
+          aria-label="Evidence boundary reading lenses"
+        >
+          <article>
+            <span>Plain English</span>
+            <p>
+              This page explains how to read mixed collapse. It does not prove that every mixed collapse case has been validated.
+            </p>
+          </article>
+
+          <article>
+            <span>Platform Engineering</span>
+            <p>
+              A runtime receipt, route, dashboard, fixture, or visual page is not the same as production validation. Operational claims need logs, telemetry, comparison, and failure handling.
+            </p>
+          </article>
+
+          <article>
+            <span>Evidence</span>
+            <p>
+              The evidence ladder runs from formula structure, to synthetic fixtures, to source-bound artifacts, to real telemetry, to comparison, to bounded validation review.
+            </p>
+          </article>
+        </div>
+
         <ul class="boundary-list">
           <li>
             Does not claim universal proof.
@@ -1307,6 +1494,32 @@ VisualSurface ≠ ScientificConfirmation</code></pre>
             Hybrid Collapse belongs to Laws as a supporting branch. It does not alter the four-category, sixteen-law registry. The registry remains Flow, Integrity, Reality, and Structure, with four law routes in each family.
           </p>
         </header>
+
+        <div
+          class="section-lenses"
+          aria-label="Laws Compass relationship reading lenses"
+        >
+          <article>
+            <span>Plain English</span>
+            <p>
+              Hybrid Collapse is a supporting branch. It helps explain mixed failure, but it does not become a new star in the main Laws Compass.
+            </p>
+          </article>
+
+          <article>
+            <span>Platform Engineering</span>
+            <p>
+              Treat it as documentation and diagnostic framing, not as a registry mutation. It does not change controller routes, category count, law count, or runtime authority.
+            </p>
+          </article>
+
+          <article>
+            <span>Evidence</span>
+            <p>
+              Being useful as an explanatory branch does not validate the model. Registry status, evidence status, and validation status stay separate.
+            </p>
+          </article>
+        </div>
 
         <div class="equation-grid">
           <article class="equation-card equation-card--gold">
@@ -1387,21 +1600,38 @@ law-creation authority</code></pre>
       id="hybrid-collapse-html-receipt"
       data-hybrid-collapse-html-receipt
     >
-DGB_LAWS_HYBRID_COLLAPSE_AUXILIARY_BRANCH_HTML_RECEIPT_v1_0_0
+DGB_LAWS_HYBRID_COLLAPSE_AUXILIARY_BRANCH_HTML_RECEIPT_v1_1_0
 
 TARGET:
 /laws/hybrid-collapse/index.html
 
 CONTRACT:
+DGB_LAWS_HYBRID_COLLAPSE_AUXILIARY_BRANCH_HTML_TNT_v1_1_0
+
+PREVIOUS CONTRACT:
 DGB_LAWS_HYBRID_COLLAPSE_AUXILIARY_BRANCH_HTML_TNT_v1_0_0
 
 STATUS:
-New placeholder-build file.
-No existing source baseline was supplied.
+Complete single-file replacement.
+Built from prior placeholder-build page plus section-local reading lenses.
 No runtime execution performed.
 No visual acceptance claimed.
 No production authorization claimed.
 No deployment authorization claimed.
+
+MAJOR v1.1 CHANGE:
+Added section-local three-lens explanation cards near the top of each major section:
+- Plain English
+- Platform Engineering
+- Evidence
+
+SECTIONS WITH LENSES:
+- Collapse Qualification
+- Pressure / Capacity
+- Why Hybrid
+- Applied Reading
+- Evidence Boundary
+- Relationship to the Laws Compass
 
 PAGE ROLE:
 Auxiliary Laws branch.
@@ -1424,6 +1654,23 @@ CORE STRUCTURES SURFACED:
   - interface failure
   - feedback failure
   - evidence boundary failure
+
+PLATFORM ENGINEERING TRANSLATION SURFACED:
+- incident qualification
+- backlog / internal load
+- external demand / traffic / volatility / dependency failure
+- throughput / recovery margin / redundancy / staffing / reserve
+- state, interface, ownership, feedback, governance, retry, and recovery path inspection
+- multi-cause incident model
+- operational mapping before solution
+
+EVIDENCE TRANSLATION SURFACED:
+- formula structure is inspection support only
+- observable burden, pressure, and weakest-function records required
+- measured pressure and measured usable capacity required
+- each claimed contributor needs its own source or measurement
+- examples are illustrations unless source-bound and reviewed
+- evidence ladder remains separate from validation
 
 CLAIM BOUNDARIES:
 - Formula structure is not empirical validation.

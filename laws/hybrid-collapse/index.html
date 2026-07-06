@@ -1,14 +1,14 @@
 <!-- TARGET FILE: /laws/hybrid-collapse/index.html -->
 <!-- COMPLETE REPLACEMENT -->
-<!-- DGB_LAWS_HYBRID_COLLAPSE_AUXILIARY_BRANCH_HTML_TNT_v1_1_0 -->
+<!-- DGB_LAWS_HYBRID_COLLAPSE_AUXILIARY_BRANCH_HTML_TNT_v1_2_0 -->
 <!doctype html>
 
 <html
   lang="en"
   data-route="/laws/hybrid-collapse/"
   data-page="laws-hybrid-collapse"
-  data-contract="DGB_LAWS_HYBRID_COLLAPSE_AUXILIARY_BRANCH_HTML_TNT_v1_1_0"
-  data-previous-contract="DGB_LAWS_HYBRID_COLLAPSE_AUXILIARY_BRANCH_HTML_TNT_v1_0_0"
+  data-contract="DGB_LAWS_HYBRID_COLLAPSE_AUXILIARY_BRANCH_HTML_TNT_v1_2_0"
+  data-previous-contract="DGB_LAWS_HYBRID_COLLAPSE_AUXILIARY_BRANCH_HTML_TNT_v1_1_0"
   data-laws-auxiliary-branch="true"
   data-laws-sixteen-star-registry-member="false"
   data-laws-universal-validation-claimed="false"
@@ -37,7 +37,7 @@
 
   <meta
     name="laws-page-contract"
-    content="DGB_LAWS_HYBRID_COLLAPSE_AUXILIARY_BRANCH_HTML_TNT_v1_1_0"
+    content="DGB_LAWS_HYBRID_COLLAPSE_AUXILIARY_BRANCH_HTML_TNT_v1_2_0"
   >
 
   <style>
@@ -138,7 +138,8 @@
 
     button,
     a,
-    summary {
+    summary,
+    label {
       -webkit-tap-highlight-color: transparent;
     }
 
@@ -424,59 +425,110 @@
       color: var(--ink-soft);
     }
 
-    .section-lenses {
+    .section-tabs {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 0.75rem;
       margin-top: 0.25rem;
     }
 
-    .section-lenses article {
-      min-width: 0;
-      padding: 0.85rem;
+    .section-tabs > input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .section-tab-labels {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+      padding: 0.35rem;
+      border: 1px solid rgba(255, 255, 255, 0.075);
+      border-radius: var(--radius-full);
+      background: rgba(255, 255, 255, 0.035);
+    }
+
+    .section-tab-labels label {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 2.25rem;
+      padding: 0.52rem 0.78rem;
+      border: 1px solid transparent;
+      border-radius: var(--radius-full);
+      color: var(--ink-soft);
+      cursor: pointer;
+      font-size: 0.76rem;
+      font-weight: 850;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+
+    .section-tab-panels {
+      display: grid;
+    }
+
+    .section-tab-panel {
+      display: none;
+      padding: 0.9rem;
       border: 1px solid rgba(255, 255, 255, 0.085);
       border-radius: var(--radius-md);
       background:
         linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.026));
     }
 
-    .section-lenses article:nth-child(1) {
-      border-color: rgba(255, 228, 155, 0.16);
-    }
-
-    .section-lenses article:nth-child(2) {
-      border-color: rgba(120, 233, 255, 0.16);
-    }
-
-    .section-lenses article:nth-child(3) {
-      border-color: rgba(143, 240, 178, 0.16);
-    }
-
-    .section-lenses span {
+    .section-tab-panel span {
       display: block;
-      margin-bottom: 0.28rem;
+      margin-bottom: 0.25rem;
       font-size: 0.7rem;
       font-weight: 850;
       letter-spacing: 0.12em;
       text-transform: uppercase;
     }
 
-    .section-lenses article:nth-child(1) span {
+    .section-tab-panel p {
+      margin: 0;
+      color: var(--ink-soft);
+      font-size: 0.94rem;
+    }
+
+    .section-tabs input[data-tab-kind="plain"]:checked ~ .section-tab-labels label[data-tab-kind="plain"],
+    .section-tabs input[data-tab-kind="platform"]:checked ~ .section-tab-labels label[data-tab-kind="platform"],
+    .section-tabs input[data-tab-kind="evidence"]:checked ~ .section-tab-labels label[data-tab-kind="evidence"] {
+      color: #140f03;
+      border-color: rgba(255, 228, 155, 0.42);
+      background:
+        linear-gradient(135deg, #ffe49b, #e0b85b 62%, #b47b2d);
+      box-shadow: 0 0.85rem 2.1rem rgba(224, 184, 91, 0.2);
+    }
+
+    .section-tabs input[data-tab-kind="plain"]:checked ~ .section-tab-panels .section-tab-panel[data-tab-kind="plain"],
+    .section-tabs input[data-tab-kind="platform"]:checked ~ .section-tab-panels .section-tab-panel[data-tab-kind="platform"],
+    .section-tabs input[data-tab-kind="evidence"]:checked ~ .section-tab-panels .section-tab-panel[data-tab-kind="evidence"] {
+      display: block;
+    }
+
+    .section-tab-panel[data-tab-kind="plain"] {
+      border-color: rgba(255, 228, 155, 0.16);
+    }
+
+    .section-tab-panel[data-tab-kind="platform"] {
+      border-color: rgba(120, 233, 255, 0.16);
+    }
+
+    .section-tab-panel[data-tab-kind="evidence"] {
+      border-color: rgba(143, 240, 178, 0.16);
+    }
+
+    .section-tab-panel[data-tab-kind="plain"] span {
       color: var(--gold);
     }
 
-    .section-lenses article:nth-child(2) span {
+    .section-tab-panel[data-tab-kind="platform"] span {
       color: var(--cyan);
     }
 
-    .section-lenses article:nth-child(3) span {
+    .section-tab-panel[data-tab-kind="evidence"] span {
       color: var(--green);
-    }
-
-    .section-lenses p {
-      margin: 0;
-      color: var(--ink-soft);
-      font-size: 0.93rem;
     }
 
     .equation-grid,
@@ -746,13 +798,20 @@
 
       .threshold-grid,
       .toc,
-      .section-lenses,
       .equation-grid,
       .branch-grid,
       .evidence-grid,
       .state-grid,
       .boundary-list {
         grid-template-columns: 1fr;
+      }
+
+      .section-tab-labels {
+        border-radius: var(--radius-md);
+      }
+
+      .section-tab-labels label {
+        flex: 1 1 100%;
       }
 
       code {
@@ -947,29 +1006,92 @@
         </header>
 
         <div
-          class="section-lenses"
-          aria-label="Collapse qualification reading lenses"
+          class="section-tabs"
+          aria-label="Collapse qualification reading tabs"
         >
-          <article>
-            <span>Plain English</span>
-            <p>
-              Collapse is not just stress. It is the point where the system is overloaded internally, pressured externally, and fails at its weakest required function.
-            </p>
-          </article>
+          <input
+            id="predicate-tab-plain"
+            name="predicate-tabs"
+            type="radio"
+            data-tab-kind="plain"
+            checked
+          >
 
-          <article>
-            <span>Platform Engineering</span>
-            <p>
-              Read this as incident qualification: backlog or internal load is saturated, external demand is saturated, and a required control such as state, interface, ownership, or feedback drops below safe threshold.
-            </p>
-          </article>
+          <input
+            id="predicate-tab-platform"
+            name="predicate-tabs"
+            type="radio"
+            data-tab-kind="platform"
+          >
 
-          <article>
-            <span>Evidence</span>
-            <p>
-              Evidence would require observable records for burden, pressure, and weakest-function failure. The formula alone is structure, not validation.
-            </p>
-          </article>
+          <input
+            id="predicate-tab-evidence"
+            name="predicate-tabs"
+            type="radio"
+            data-tab-kind="evidence"
+          >
+
+          <div
+            class="section-tab-labels"
+            role="tablist"
+            aria-label="Collapse qualification lenses"
+          >
+            <label
+              for="predicate-tab-plain"
+              role="tab"
+              data-tab-kind="plain"
+            >
+              Plain English
+            </label>
+
+            <label
+              for="predicate-tab-platform"
+              role="tab"
+              data-tab-kind="platform"
+            >
+              Platform Engineering
+            </label>
+
+            <label
+              for="predicate-tab-evidence"
+              role="tab"
+              data-tab-kind="evidence"
+            >
+              Evidence
+            </label>
+          </div>
+
+          <div class="section-tab-panels">
+            <article
+              class="section-tab-panel"
+              data-tab-kind="plain"
+            >
+              <span>Plain English</span>
+              <p>
+                Collapse is not just stress. It is the point where the system is overloaded internally, pressured externally, and fails at its weakest required function.
+              </p>
+            </article>
+
+            <article
+              class="section-tab-panel"
+              data-tab-kind="platform"
+            >
+              <span>Platform Engineering</span>
+              <p>
+                Read this as incident qualification: backlog or internal load is saturated, external demand is saturated, and a required control such as state, interface, ownership, or feedback drops below safe threshold.
+              </p>
+            </article>
+
+            <article
+              class="section-tab-panel"
+              data-tab-kind="evidence"
+            >
+              <span>Evidence</span>
+              <p>
+                Evidence would require observable records for burden, pressure, and weakest-function failure. The formula alone is structure, not validation.
+              </p>
+            </article>
+          </div>
         </div>
 
         <div class="equation-grid">
@@ -1034,29 +1156,92 @@ AND
         </header>
 
         <div
-          class="section-lenses"
-          aria-label="Pressure capacity reading lenses"
+          class="section-tabs"
+          aria-label="Pressure capacity reading tabs"
         >
-          <article>
-            <span>Plain English</span>
-            <p>
-              The system becomes unsafe when pressure grows faster than the capacity available to answer it.
-            </p>
-          </article>
+          <input
+            id="pressure-tab-plain"
+            name="pressure-tabs"
+            type="radio"
+            data-tab-kind="plain"
+            checked
+          >
 
-          <article>
-            <span>Platform Engineering</span>
-            <p>
-              Pressure maps to demand, traffic, volatility, attack, dependency failure, or operational load. Capacity maps to throughput, recovery margin, redundancy, staffing, reserves, and control authority.
-            </p>
-          </article>
+          <input
+            id="pressure-tab-platform"
+            name="pressure-tabs"
+            type="radio"
+            data-tab-kind="platform"
+          >
 
-          <article>
-            <span>Evidence</span>
-            <p>
-              Support requires measured pressure and measured usable capacity. A claim is stronger when the capacity basis, threshold, and time window are explicit.
-            </p>
-          </article>
+          <input
+            id="pressure-tab-evidence"
+            name="pressure-tabs"
+            type="radio"
+            data-tab-kind="evidence"
+          >
+
+          <div
+            class="section-tab-labels"
+            role="tablist"
+            aria-label="Pressure capacity lenses"
+          >
+            <label
+              for="pressure-tab-plain"
+              role="tab"
+              data-tab-kind="plain"
+            >
+              Plain English
+            </label>
+
+            <label
+              for="pressure-tab-platform"
+              role="tab"
+              data-tab-kind="platform"
+            >
+              Platform Engineering
+            </label>
+
+            <label
+              for="pressure-tab-evidence"
+              role="tab"
+              data-tab-kind="evidence"
+            >
+              Evidence
+            </label>
+          </div>
+
+          <div class="section-tab-panels">
+            <article
+              class="section-tab-panel"
+              data-tab-kind="plain"
+            >
+              <span>Plain English</span>
+              <p>
+                The system becomes unsafe when pressure grows faster than the capacity available to answer it.
+              </p>
+            </article>
+
+            <article
+              class="section-tab-panel"
+              data-tab-kind="platform"
+            >
+              <span>Platform Engineering</span>
+              <p>
+                Pressure maps to demand, traffic, volatility, attack, dependency failure, or operational load. Capacity maps to throughput, recovery margin, redundancy, staffing, reserves, and control authority.
+              </p>
+            </article>
+
+            <article
+              class="section-tab-panel"
+              data-tab-kind="evidence"
+            >
+              <span>Evidence</span>
+              <p>
+                Support requires measured pressure and measured usable capacity. A claim is stronger when the capacity basis, threshold, and time window are explicit.
+              </p>
+            </article>
+          </div>
         </div>
 
         <div class="equation-grid">
@@ -1166,29 +1351,92 @@ S* + H* = 1</code></pre>
         </header>
 
         <div
-          class="section-lenses"
-          aria-label="Hybrid collapse reading lenses"
+          class="section-tabs"
+          aria-label="Hybrid collapse reading tabs"
         >
-          <article>
-            <span>Plain English</span>
-            <p>
-              Hybrid means the visible problem is not the whole cause. Several failures are interacting at once.
-            </p>
-          </article>
+          <input
+            id="hybrid-tab-plain"
+            name="hybrid-tabs"
+            type="radio"
+            data-tab-kind="plain"
+            checked
+          >
 
-          <article>
-            <span>Platform Engineering</span>
-            <p>
-              Treat this like a multi-cause incident model. Do not diagnose from the loudest symptom alone; inspect queues, dependencies, interfaces, ownership, state, retries, and recovery paths together.
-            </p>
-          </article>
+          <input
+            id="hybrid-tab-platform"
+            name="hybrid-tabs"
+            type="radio"
+            data-tab-kind="platform"
+          >
 
-          <article>
-            <span>Evidence</span>
-            <p>
-              Evidence should separate causes rather than blend them. Each claimed contributor needs its own source, observation, or bounded measurement.
-            </p>
-          </article>
+          <input
+            id="hybrid-tab-evidence"
+            name="hybrid-tabs"
+            type="radio"
+            data-tab-kind="evidence"
+          >
+
+          <div
+            class="section-tab-labels"
+            role="tablist"
+            aria-label="Hybrid collapse lenses"
+          >
+            <label
+              for="hybrid-tab-plain"
+              role="tab"
+              data-tab-kind="plain"
+            >
+              Plain English
+            </label>
+
+            <label
+              for="hybrid-tab-platform"
+              role="tab"
+              data-tab-kind="platform"
+            >
+              Platform Engineering
+            </label>
+
+            <label
+              for="hybrid-tab-evidence"
+              role="tab"
+              data-tab-kind="evidence"
+            >
+              Evidence
+            </label>
+          </div>
+
+          <div class="section-tab-panels">
+            <article
+              class="section-tab-panel"
+              data-tab-kind="plain"
+            >
+              <span>Plain English</span>
+              <p>
+                Hybrid means the visible problem is not the whole cause. Several failures are interacting at once.
+              </p>
+            </article>
+
+            <article
+              class="section-tab-panel"
+              data-tab-kind="platform"
+            >
+              <span>Platform Engineering</span>
+              <p>
+                Treat this like a multi-cause incident model. Do not diagnose from the loudest symptom alone; inspect queues, dependencies, interfaces, ownership, state, retries, and recovery paths together.
+              </p>
+            </article>
+
+            <article
+              class="section-tab-panel"
+              data-tab-kind="evidence"
+            >
+              <span>Evidence</span>
+              <p>
+                Evidence should separate causes rather than blend them. Each claimed contributor needs its own source, observation, or bounded measurement.
+              </p>
+            </article>
+          </div>
         </div>
 
         <div class="evidence-grid">
@@ -1283,29 +1531,92 @@ UnrelatedAxisStrength</code></pre>
         </header>
 
         <div
-          class="section-lenses"
-          aria-label="Applied reading lenses"
+          class="section-tabs"
+          aria-label="Applied reading tabs"
         >
-          <article>
-            <span>Plain English</span>
-            <p>
-              Use Hybrid Collapse to ask whether the system is failing through a combination of stress, weak repair, bad handoffs, unclear authority, and missing correction.
-            </p>
-          </article>
+          <input
+            id="applied-tab-plain"
+            name="applied-tabs"
+            type="radio"
+            data-tab-kind="plain"
+            checked
+          >
 
-          <article>
-            <span>Platform Engineering</span>
-            <p>
-              Convert the example into an operational map: pressure source, affected subsystem, degraded capacity, failed interface, missing owner, broken feedback loop, and recovery path.
-            </p>
-          </article>
+          <input
+            id="applied-tab-platform"
+            name="applied-tabs"
+            type="radio"
+            data-tab-kind="platform"
+          >
 
-          <article>
-            <span>Evidence</span>
-            <p>
-              Applied examples are illustrations unless they include source-bound observations, thresholds, comparison, and review. Examples alone do not validate the model.
-            </p>
-          </article>
+          <input
+            id="applied-tab-evidence"
+            name="applied-tabs"
+            type="radio"
+            data-tab-kind="evidence"
+          >
+
+          <div
+            class="section-tab-labels"
+            role="tablist"
+            aria-label="Applied reading lenses"
+          >
+            <label
+              for="applied-tab-plain"
+              role="tab"
+              data-tab-kind="plain"
+            >
+              Plain English
+            </label>
+
+            <label
+              for="applied-tab-platform"
+              role="tab"
+              data-tab-kind="platform"
+            >
+              Platform Engineering
+            </label>
+
+            <label
+              for="applied-tab-evidence"
+              role="tab"
+              data-tab-kind="evidence"
+            >
+              Evidence
+            </label>
+          </div>
+
+          <div class="section-tab-panels">
+            <article
+              class="section-tab-panel"
+              data-tab-kind="plain"
+            >
+              <span>Plain English</span>
+              <p>
+                Use Hybrid Collapse to ask whether the system is failing through a combination of stress, weak repair, bad handoffs, unclear authority, and missing correction.
+              </p>
+            </article>
+
+            <article
+              class="section-tab-panel"
+              data-tab-kind="platform"
+            >
+              <span>Platform Engineering</span>
+              <p>
+                Convert the example into an operational map: pressure source, affected subsystem, degraded capacity, failed interface, missing owner, broken feedback loop, and recovery path.
+              </p>
+            </article>
+
+            <article
+              class="section-tab-panel"
+              data-tab-kind="evidence"
+            >
+              <span>Evidence</span>
+              <p>
+                Applied examples are illustrations unless they include source-bound observations, thresholds, comparison, and review. Examples alone do not validate the model.
+              </p>
+            </article>
+          </div>
         </div>
 
         <div class="branch-grid">
@@ -1397,29 +1708,92 @@ UnrelatedAxisStrength</code></pre>
         </header>
 
         <div
-          class="section-lenses"
-          aria-label="Evidence boundary reading lenses"
+          class="section-tabs"
+          aria-label="Evidence boundary reading tabs"
         >
-          <article>
-            <span>Plain English</span>
-            <p>
-              This page explains how to read mixed collapse. It does not prove that every mixed collapse case has been validated.
-            </p>
-          </article>
+          <input
+            id="boundary-tab-plain"
+            name="boundary-tabs"
+            type="radio"
+            data-tab-kind="plain"
+            checked
+          >
 
-          <article>
-            <span>Platform Engineering</span>
-            <p>
-              A runtime receipt, route, dashboard, fixture, or visual page is not the same as production validation. Operational claims need logs, telemetry, comparison, and failure handling.
-            </p>
-          </article>
+          <input
+            id="boundary-tab-platform"
+            name="boundary-tabs"
+            type="radio"
+            data-tab-kind="platform"
+          >
 
-          <article>
-            <span>Evidence</span>
-            <p>
-              The evidence ladder runs from formula structure, to synthetic fixtures, to source-bound artifacts, to real telemetry, to comparison, to bounded validation review.
-            </p>
-          </article>
+          <input
+            id="boundary-tab-evidence"
+            name="boundary-tabs"
+            type="radio"
+            data-tab-kind="evidence"
+          >
+
+          <div
+            class="section-tab-labels"
+            role="tablist"
+            aria-label="Evidence boundary lenses"
+          >
+            <label
+              for="boundary-tab-plain"
+              role="tab"
+              data-tab-kind="plain"
+            >
+              Plain English
+            </label>
+
+            <label
+              for="boundary-tab-platform"
+              role="tab"
+              data-tab-kind="platform"
+            >
+              Platform Engineering
+            </label>
+
+            <label
+              for="boundary-tab-evidence"
+              role="tab"
+              data-tab-kind="evidence"
+            >
+              Evidence
+            </label>
+          </div>
+
+          <div class="section-tab-panels">
+            <article
+              class="section-tab-panel"
+              data-tab-kind="plain"
+            >
+              <span>Plain English</span>
+              <p>
+                This page explains how to read mixed collapse. It does not prove that every mixed collapse case has been validated.
+              </p>
+            </article>
+
+            <article
+              class="section-tab-panel"
+              data-tab-kind="platform"
+            >
+              <span>Platform Engineering</span>
+              <p>
+                A runtime receipt, route, dashboard, fixture, or visual page is not the same as production validation. Operational claims need logs, telemetry, comparison, and failure handling.
+              </p>
+            </article>
+
+            <article
+              class="section-tab-panel"
+              data-tab-kind="evidence"
+            >
+              <span>Evidence</span>
+              <p>
+                The evidence ladder runs from formula structure, to synthetic fixtures, to source-bound artifacts, to real telemetry, to comparison, to bounded validation review.
+              </p>
+            </article>
+          </div>
         </div>
 
         <ul class="boundary-list">
@@ -1496,29 +1870,92 @@ VisualSurface ≠ ScientificConfirmation</code></pre>
         </header>
 
         <div
-          class="section-lenses"
-          aria-label="Laws Compass relationship reading lenses"
+          class="section-tabs"
+          aria-label="Laws Compass relationship reading tabs"
         >
-          <article>
-            <span>Plain English</span>
-            <p>
-              Hybrid Collapse is a supporting branch. It helps explain mixed failure, but it does not become a new star in the main Laws Compass.
-            </p>
-          </article>
+          <input
+            id="relationship-tab-plain"
+            name="relationship-tabs"
+            type="radio"
+            data-tab-kind="plain"
+            checked
+          >
 
-          <article>
-            <span>Platform Engineering</span>
-            <p>
-              Treat it as documentation and diagnostic framing, not as a registry mutation. It does not change controller routes, category count, law count, or runtime authority.
-            </p>
-          </article>
+          <input
+            id="relationship-tab-platform"
+            name="relationship-tabs"
+            type="radio"
+            data-tab-kind="platform"
+          >
 
-          <article>
-            <span>Evidence</span>
-            <p>
-              Being useful as an explanatory branch does not validate the model. Registry status, evidence status, and validation status stay separate.
-            </p>
-          </article>
+          <input
+            id="relationship-tab-evidence"
+            name="relationship-tabs"
+            type="radio"
+            data-tab-kind="evidence"
+          >
+
+          <div
+            class="section-tab-labels"
+            role="tablist"
+            aria-label="Laws Compass relationship lenses"
+          >
+            <label
+              for="relationship-tab-plain"
+              role="tab"
+              data-tab-kind="plain"
+            >
+              Plain English
+            </label>
+
+            <label
+              for="relationship-tab-platform"
+              role="tab"
+              data-tab-kind="platform"
+            >
+              Platform Engineering
+            </label>
+
+            <label
+              for="relationship-tab-evidence"
+              role="tab"
+              data-tab-kind="evidence"
+            >
+              Evidence
+            </label>
+          </div>
+
+          <div class="section-tab-panels">
+            <article
+              class="section-tab-panel"
+              data-tab-kind="plain"
+            >
+              <span>Plain English</span>
+              <p>
+                Hybrid Collapse is a supporting branch. It helps explain mixed failure, but it does not become a new star in the main Laws Compass.
+              </p>
+            </article>
+
+            <article
+              class="section-tab-panel"
+              data-tab-kind="platform"
+            >
+              <span>Platform Engineering</span>
+              <p>
+                Treat it as documentation and diagnostic framing, not as a registry mutation. It does not change controller routes, category count, law count, or runtime authority.
+              </p>
+            </article>
+
+            <article
+              class="section-tab-panel"
+              data-tab-kind="evidence"
+            >
+              <span>Evidence</span>
+              <p>
+                Being useful as an explanatory branch does not validate the model. Registry status, evidence status, and validation status stay separate.
+              </p>
+            </article>
+          </div>
         </div>
 
         <div class="equation-grid">
@@ -1600,32 +2037,44 @@ law-creation authority</code></pre>
       id="hybrid-collapse-html-receipt"
       data-hybrid-collapse-html-receipt
     >
-DGB_LAWS_HYBRID_COLLAPSE_AUXILIARY_BRANCH_HTML_RECEIPT_v1_1_0
+DGB_LAWS_HYBRID_COLLAPSE_AUXILIARY_BRANCH_HTML_RECEIPT_v1_2_0
 
 TARGET:
 /laws/hybrid-collapse/index.html
 
 CONTRACT:
-DGB_LAWS_HYBRID_COLLAPSE_AUXILIARY_BRANCH_HTML_TNT_v1_1_0
+DGB_LAWS_HYBRID_COLLAPSE_AUXILIARY_BRANCH_HTML_TNT_v1_2_0
 
 PREVIOUS CONTRACT:
-DGB_LAWS_HYBRID_COLLAPSE_AUXILIARY_BRANCH_HTML_TNT_v1_0_0
+DGB_LAWS_HYBRID_COLLAPSE_AUXILIARY_BRANCH_HTML_TNT_v1_1_0
 
 STATUS:
 Complete single-file replacement.
-Built from prior placeholder-build page plus section-local reading lenses.
+Built from prior v1.1 page but replaces stacked section lenses with section-local toggle tabs.
 No runtime execution performed.
 No visual acceptance claimed.
 No production authorization claimed.
 No deployment authorization claimed.
 
-MAJOR v1.1 CHANGE:
-Added section-local three-lens explanation cards near the top of each major section:
+MAJOR v1.2 CHANGE:
+Replaced stacked three-card lenses with section-local toggle tabs.
+Only one local lens panel is visible at a time.
+No JavaScript dependency added.
+
+TAB GROUPS:
+- predicate-tabs
+- pressure-tabs
+- hybrid-tabs
+- applied-tabs
+- boundary-tabs
+- relationship-tabs
+
+TABS PER SECTION:
 - Plain English
 - Platform Engineering
 - Evidence
 
-SECTIONS WITH LENSES:
+SECTIONS WITH LOCAL TOGGLE TABS:
 - Collapse Qualification
 - Pressure / Capacity
 - Why Hybrid
@@ -1695,6 +2144,7 @@ ROUTE RELATIONSHIPS:
 
 IMPLEMENTATION:
 Single-file HTML with inline CSS.
+CSS-only radio tab system.
 No JavaScript dependency.
 No controller authority.
 No compositor authority.

@@ -1,4 +1,4 @@
-/* /laws/index.interactions.js 
+/* /laws/index.interactions.js
    LAW COMPASS pointer, gesture, direct-manipulation, hit-testing,
    release-swipe, motion-quaternion, and interaction-priority authority.
 

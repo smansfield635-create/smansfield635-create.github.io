@@ -4,7 +4,7 @@
 
    Module:
    DGB_LAWS_INTERACTIONS
-   1.0.0-pointer-gesture-interpreter
+   1.0.1-pointer-gesture-interpreter-category-admission-tune
 
    Required controller:
    DGB_LAWS_CONTROLLER
@@ -14,57 +14,18 @@
    DGB_LAWS_COMPLETE_QUATERNION_MOTION_CONTRACT_v1
    1.0.0
 
-   Controlling distinction:
-
-   INTERACTIONS DETERMINES MOTION.
-   CONTROLLER DETERMINES AUTHORITY.
-
-   Gesture distinction:
-
-   FINGER HELD + MOVEMENT
-   =
-   DIRECT DRAG / ROTATION
-
-   QUALIFIED HORIZONTAL SWIPE + RELEASE
-   =
-   RETURN TO CONSTELLATION
-
-   Interactions owns:
-   - pointer lifecycle and capture;
-   - tap-versus-drag arbitration;
-   - whole-crystal and semantic-control hit testing;
-   - Compass/front/rear interaction priority;
-   - drag direction and sensitivity;
-   - incremental complete-quaternion construction;
-   - grabbed-object tracking and correction;
-   - primary visual identity calculation;
-   - horizontal release-swipe classification;
-   - synthetic-click suppression;
-   - projection-driven semantic-control application;
-   - cleanup, validation, and receipts.
-
-   Interactions does not own:
-   - canonical navigation state;
-   - transition legality;
-   - canonical routes;
-   - authoritative quaternion storage;
-   - navigation execution;
-   - camera or projection mathematics;
-   - crystal geometry or WebGL drawing;
-   - Compass geometry or renderer lifecycle;
-   - human-law statements;
-   - software-law statements;
-   - failure-pattern statements;
-   - audit-question statements;
-   - page doctrine;
-   - contextual narrative.
-
-   Controller preview payloads contain exactly:
-   - quaternion
-   - primaryId
+   Category-opening tune:
+   - preserves original renderer/controller design;
+   - widens projected hit corridors for mobile;
+   - keeps rear constellation categories tappable even when overlapping
+     the Compass visual zone;
+   - preserves stricter overlap suppression for laws;
+   - adds fallback constellation tap resolution near visible category records;
+   - shifts/narrows Compass return hit-zone upward so it interferes less
+     with center-field manipulation.
 
    Source status:
-   LAW_COMPASS_INTERACTIONS_POINTER_GESTURE_STANDARD
+   LAW_COMPASS_INTERACTIONS_POINTER_GESTURE_STANDARD_CATEGORY_ADMISSION_TUNE
    !=
    RUNTIME_PASS
    !=
@@ -81,7 +42,7 @@
       "DGB_LAWS_INTERACTIONS",
 
     version:
-      "1.0.0-pointer-gesture-interpreter",
+      "1.0.1-pointer-gesture-interpreter-category-admission-tune",
 
     file:
       "/laws/index.interactions.js",
@@ -214,13 +175,31 @@
       0.72,
 
     minimumProjectedHitRadiusPx:
-      22,
+      32,
 
     maximumProjectedHitRadiusPx:
-      96,
+      124,
 
     hitRadiusScale:
+      1.36,
+
+    constellationCategoryFallbackRadiusScale:
       1.18,
+
+    constellationCategoryFallbackMinimumRadiusPx:
+      42,
+
+    constellationCategoryFallbackMaximumRadiusPx:
+      148,
+
+    compassHitZoneVerticalShiftPx:
+      -44,
+
+    compassHitZoneHeightScale:
+      0.64,
+
+    compassHitZoneWidthScale:
+      0.86,
 
     clusterSwipeMinimumHorizontalDistancePx:
       72,
@@ -770,8 +749,11 @@
 
     if (!rect) {
       return Object.freeze({
-        x: 0,
-        y: 0
+        x:
+          0,
+
+        y:
+          0
       });
     }
 
@@ -981,6 +963,23 @@
     applyProjectionFactsToControls();
   }
 
+  function isCategoryProjectionRecord(record) {
+    return Boolean(
+      record &&
+      (
+        record.kind === "category" ||
+        record.kind === "direction"
+      )
+    );
+  }
+
+  function isLawProjectionRecord(record) {
+    return Boolean(
+      record &&
+      record.kind === "law"
+    );
+  }
+
   function projectedHitRadius(record) {
     const declared =
       Math.max(
@@ -1011,12 +1010,36 @@
     );
   }
 
+  function constellationCategoryFallbackRadius(record) {
+    const base =
+      projectedHitRadius(
+        record
+      );
+
+    return clamp(
+      base *
+        MOTION
+          .constellationCategoryFallbackRadiusScale,
+
+      MOTION
+        .constellationCategoryFallbackMinimumRadiusPx,
+
+      MOTION
+        .constellationCategoryFallbackMaximumRadiusPx
+    );
+  }
+
   /*
    * Visual interaction order:
    *
    * front crystal
    * Compass
    * rear crystal outside Compass overlap
+   *
+   * Category-opening tune:
+   * rear category/direction records remain tappable in CONSTELLATION
+   * even when compositor marks them as Compass-overlapping. Laws retain
+   * stricter rear-overlap suppression.
    */
   function deriveInteractionPriority(record) {
     if (
@@ -1039,11 +1062,16 @@
       record.depthLayer ===
       DEPTH_LAYERS.REAR
     ) {
-      return record.compassOverlap
-        ? INTERACTION_PRIORITY
-            .INACTIVE
-        : INTERACTION_PRIORITY
-            .REAR;
+      if (
+        record.compassOverlap &&
+        !isCategoryProjectionRecord(record)
+      ) {
+        return INTERACTION_PRIORITY
+          .INACTIVE;
+      }
+
+      return INTERACTION_PRIORITY
+        .REAR;
     }
 
     return INTERACTION_PRIORITY
@@ -1359,6 +1387,67 @@
     );
   }
 
+  function pointInCompassReturnHitZone(
+    element,
+    clientX,
+    clientY
+  ) {
+    if (!element) {
+      return false;
+    }
+
+    const rect =
+      element.getBoundingClientRect();
+
+    if (
+      !rect ||
+      rect.width <= 0 ||
+      rect.height <= 0
+    ) {
+      return false;
+    }
+
+    const width =
+      rect.width *
+      MOTION.compassHitZoneWidthScale;
+
+    const height =
+      rect.height *
+      MOTION.compassHitZoneHeightScale;
+
+    const centerX =
+      rect.left +
+      rect.width * 0.5;
+
+    const centerY =
+      rect.top +
+      rect.height * 0.5 +
+      MOTION.compassHitZoneVerticalShiftPx;
+
+    const left =
+      centerX -
+      width * 0.5;
+
+    const right =
+      centerX +
+      width * 0.5;
+
+    const top =
+      centerY -
+      height * 0.5;
+
+    const bottom =
+      centerY +
+      height * 0.5;
+
+    return (
+      clientX >= left &&
+      clientX <= right &&
+      clientY >= top &&
+      clientY <= bottom
+    );
+  }
+
   function compassHit(
     clientX,
     clientY
@@ -1369,7 +1458,7 @@
         .dataset
         .interactionEnabled ===
         "false" ||
-      !pointInElementRect(
+      !pointInCompassReturnHitZone(
         state.compassControl,
         clientX,
         clientY
@@ -1447,11 +1536,14 @@
       }
 
       const isCategory =
-        record.kind === "category" ||
-        record.kind === "direction";
+        isCategoryProjectionRecord(
+          record
+        );
 
       const isLaw =
-        record.kind === "law";
+        isLawProjectionRecord(
+          record
+        );
 
       if (
         mode ===
@@ -1567,6 +1659,99 @@
     return hits;
   }
 
+  function constellationCategoryFallbackHit(
+    sceneX,
+    sceneY
+  ) {
+    if (
+      activePresentationMode() !==
+      PRESENTATION_MODES.CONSTELLATION
+    ) {
+      return null;
+    }
+
+    let best =
+      null;
+
+    for (
+      const record
+      of state.projections
+    ) {
+      if (
+        !record.visible ||
+        !isCategoryProjectionRecord(record)
+      ) {
+        continue;
+      }
+
+      const priority =
+        deriveInteractionPriority(
+          record
+        );
+
+      if (
+        priority <=
+        INTERACTION_PRIORITY.INACTIVE
+      ) {
+        continue;
+      }
+
+      const radius =
+        constellationCategoryFallbackRadius(
+          record
+        );
+
+      const hitDistance =
+        distance(
+          sceneX,
+          sceneY,
+          record.x,
+          record.y
+        );
+
+      if (
+        hitDistance > radius
+      ) {
+        continue;
+      }
+
+      const candidate =
+        Object.freeze({
+          kind:
+            HIT_KINDS.CATEGORY,
+
+          id:
+            record.id,
+
+          priority,
+          distance:
+            hitDistance,
+
+          radius,
+          record,
+
+          element:
+            findSemanticControlForRecord(
+              record
+            ),
+
+          fallback:
+            true
+        });
+
+      if (
+        !best ||
+        candidate.distance <
+          best.distance
+      ) {
+        best =
+          candidate;
+      }
+    }
+
+    return best;
+  }
+
   function semanticTargetFromEvent(event) {
     const target =
       event &&
@@ -1602,6 +1787,16 @@
       identity.kind ===
       HIT_KINDS.COMPASS
     ) {
+      if (
+        !pointInCompassReturnHitZone(
+          target,
+          event.clientX,
+          event.clientY
+        )
+      ) {
+        return null;
+      }
+
       return Object.freeze({
         kind:
           HIT_KINDS.COMPASS,
@@ -1637,11 +1832,8 @@
           }
 
           return (
-            (
-              projection.kind ===
-                "category" ||
-              projection.kind ===
-                "direction"
+            isCategoryProjectionRecord(
+              projection
             ) &&
             projection.id ===
               identity.id
@@ -1650,6 +1842,20 @@
       ) ||
       null;
 
+    const priority =
+      record
+        ? deriveInteractionPriority(
+            record
+          )
+        : INTERACTION_PRIORITY.REAR;
+
+    if (
+      priority <=
+      INTERACTION_PRIORITY.INACTIVE
+    ) {
+      return null;
+    }
+
     return Object.freeze({
       kind:
         identity.kind,
@@ -1657,13 +1863,7 @@
       id:
         identity.id,
 
-      priority:
-        record
-          ? deriveInteractionPriority(
-              record
-            )
-          : INTERACTION_PRIORITY.REAR,
-
+      priority,
       record,
 
       element:
@@ -1690,6 +1890,12 @@
       )[0] ||
       null;
 
+    const fallbackCategory =
+      constellationCategoryFallbackHit(
+        point.x,
+        point.y
+      );
+
     const compass =
       compassHit(
         event.clientX,
@@ -1700,6 +1906,7 @@
       [
         direct,
         crystal,
+        fallbackCategory,
         compass
       ].filter(Boolean);
 
@@ -1707,15 +1914,32 @@
       (
         first,
         second
-      ) =>
-        finiteNumber(
-          second.priority,
-          0
-        ) -
-        finiteNumber(
-          first.priority,
-          0
-        )
+      ) => {
+        const priorityDelta =
+          finiteNumber(
+            second.priority,
+            0
+          ) -
+          finiteNumber(
+            first.priority,
+            0
+          );
+
+        if (priorityDelta !== 0) {
+          return priorityDelta;
+        }
+
+        return (
+          finiteNumber(
+            first.distance,
+            Infinity
+          ) -
+          finiteNumber(
+            second.distance,
+            Infinity
+          )
+        );
+      }
     );
 
     if (
@@ -1757,12 +1981,7 @@
       return state.projections.filter(
         record =>
           record.visible &&
-          (
-            record.kind ===
-              "category" ||
-            record.kind ===
-              "direction"
-          )
+          isCategoryProjectionRecord(record)
       );
     }
 
@@ -1971,11 +2190,8 @@
           }
 
           return (
-            (
-              record.kind ===
-                "category" ||
-              record.kind ===
-                "direction"
+            isCategoryProjectionRecord(
+              record
             ) &&
             record.id ===
               state.grabbed.id
@@ -1991,8 +2207,11 @@
   ) {
     if (!state.grabbed) {
       return Object.freeze({
-        dx: 0,
-        dy: 0
+        dx:
+          0,
+
+        dy:
+          0
       });
     }
 
@@ -2001,8 +2220,11 @@
 
     if (!projection) {
       return Object.freeze({
-        dx: 0,
-        dy: 0
+        dx:
+          0,
+
+        dy:
+          0
       });
     }
 
@@ -2474,7 +2696,9 @@
       PRESENTATION_MODES.CLUSTER
     ) {
       return Object.freeze({
-        qualified: false,
+        qualified:
+          false,
+
         reason:
           "NOT_CLUSTER_MODE"
       });
@@ -2486,7 +2710,9 @@
         HIT_KINDS.COMPASS
     ) {
       return Object.freeze({
-        qualified: false,
+        qualified:
+          false,
+
         reason:
           "COMPASS_ORIGIN"
       });
@@ -3318,8 +3544,11 @@
       "pointerdown",
       handlePointerDown,
       {
-        passive: false,
-        capture: true
+        passive:
+          false,
+
+        capture:
+          true
       }
     );
 
@@ -3328,7 +3557,8 @@
       "pointermove",
       handlePointerMove,
       {
-        passive: false
+        passive:
+          false
       }
     );
 
@@ -3337,7 +3567,8 @@
       "pointerup",
       handlePointerUp,
       {
-        passive: false
+        passive:
+          false
       }
     );
 
@@ -3346,7 +3577,8 @@
       "pointercancel",
       handlePointerCancel,
       {
-        passive: false
+        passive:
+          false
       }
     );
 
@@ -3544,7 +3776,8 @@
     );
 
     return Object.freeze({
-      pass: true,
+      pass:
+        true,
 
       completeQuaternionOutput:
         true,
@@ -3590,7 +3823,8 @@
     );
 
     return Object.freeze({
-      pass: true,
+      pass:
+        true,
 
       evaluatedOnRelease:
         true,
@@ -3620,7 +3854,8 @@
 
   function validateResponsibilityContract() {
     return Object.freeze({
-      pass: true,
+      pass:
+        true,
 
       pointerLifecycleOwned:
         true,
@@ -3650,6 +3885,12 @@
         true,
 
       grabbedObjectTrackingOwned:
+        true,
+
+      categoryAdmissionTuneOwned:
+        true,
+
+      compassReturnHitZoneTuneOwned:
         true,
 
       canonicalNavigationStateOwned:
@@ -3824,6 +4065,27 @@
       radialExitClassification:
         false,
 
+      categoryAdmissionTune:
+        true,
+
+      categoryRearCompassOverlapTappable:
+        true,
+
+      fallbackCategoryTapResolution:
+        true,
+
+      compassReturnHitZoneShifted:
+        true,
+
+      compassHitZoneVerticalShiftPx:
+        MOTION.compassHitZoneVerticalShiftPx,
+
+      compassHitZoneHeightScale:
+        MOTION.compassHitZoneHeightScale,
+
+      compassHitZoneWidthScale:
+        MOTION.compassHitZoneWidthScale,
+
       motionOwner:
         MODULE.id,
 
@@ -3873,6 +4135,14 @@
       state.root.dataset
         .lawsInteractionsContainLawContent =
         "false";
+
+      state.root.dataset
+        .lawsCategoryAdmissionTune =
+        "true";
+
+      state.root.dataset
+        .lawsCompassReturnHitZoneShifted =
+        "true";
     }
 
     return receipt;
@@ -4086,6 +4356,12 @@
               radialExitClassification:
                 false,
 
+              categoryAdmissionTune:
+                true,
+
+              compassReturnHitZoneShifted:
+                true,
+
               interactionsContainLawContent:
                 false
             })
@@ -4292,7 +4568,8 @@
       "LAWS_CONTROLLER_READY",
       handleControllerReady,
       {
-        once: true
+        once:
+          true
       }
     );
   }
@@ -4305,7 +4582,8 @@
       "DOMContentLoaded",
       waitForController,
       {
-        once: true
+        once:
+          true
       }
     );
   } else {
@@ -4314,14 +4592,14 @@
 })();
 
 /*
-DGB_LAWS_INTERACTIONS_HORIZONTAL_RELEASE_SWIPE_RESULT_v1
+DGB_LAWS_INTERACTIONS_CATEGORY_ADMISSION_TUNE_RESULT_v1
 
 Artifact:
  /laws/index.interactions.js
 
 Module:
  DGB_LAWS_INTERACTIONS
- 1.0.0-pointer-gesture-interpreter
+ 1.0.1-pointer-gesture-interpreter-category-admission-tune
 
 Required controller:
  DGB_LAWS_CONTROLLER
@@ -4331,104 +4609,29 @@ Motion contract:
  DGB_LAWS_COMPLETE_QUATERNION_MOTION_CONTRACT_v1
  1.0.0
 
-Exact coordinated pair:
- 1. /laws/index.controller.js
- 2. /laws/index.interactions.js
+Renewal:
+- preserves pointer lifecycle
+- preserves tap-versus-drag arbitration
+- preserves direct drag/rotation
+- preserves complete-quaternion preview payloads
+- preserves release-swipe cluster return
+- preserves controller authority
+- preserves route authority boundary
+- widens projected hit corridors
+- preserves rear law overlap suppression
+- allows rear constellation category taps despite Compass overlap
+- adds fallback constellation category tap resolution
+- shifts and narrows Compass return hit zone upward
 
 No controller modification required.
 No compositor modification required.
 No crystals modification required.
+No planet modification required.
 No HTML modification required.
 No CSS modification required.
 
-Conversion:
- - cardinal/coin targets converted to category/direction targets
- - room targets converted to law targets
- - wing state converted to direction state
- - room registry lookup converted to law registry lookup
- - Archcoin selectors converted to Laws selectors
- - Archcoin events converted to Laws events
- - Archcoin receipts converted to Laws receipts
-
-Controlling gesture distinction:
-
- FINGER HELD + MOVEMENT
- =
- DRAG / ROTATION
-
- QUALIFIED HORIZONTAL SWIPE + RELEASE
- =
- RETURN TO CONSTELLATION
-
-Removed cluster-return requirements:
-- outward radial movement
-- scene-center radial alignment
-- bottom-left origin
-- downward movement
-- corner-specific movement
-- pre-release exit locking
-
-Implemented cluster-return requirements:
-- release-time classification
-- left-to-right swipe
-- right-to-left swipe
-- minimum horizontal distance
-- horizontal-over-vertical dominance
-- maximum swipe duration
-- minimum average horizontal velocity
-- provisional cluster rotation cancellation
-- exact controller return request
-
-Return request:
- controller.requestReturnToConstellation({
-   source: "cluster-horizontal-swipe",
-   scrollToScene: true
- });
-
-Controller preview payload:
- {
-   quaternion: [x, y, z, w],
-   primaryId: "canonical-identity"
- }
-
-No controller motion payload contains:
-- yaw
-- pitch
-- roll
-- dx
-- dy
-- axis
-- angle
-- direction
-- distance
-- sensitivity
-
-Compass behavior:
-- Compass tap remains selectable
-- Compass-origin drag does not rotate constellation
-- Compass-origin drag does not rotate cluster
-- moved Compass gesture does not activate on release
-
-Interactions contains human-law statements:
- FALSE
-
-Interactions contains software-law statements:
- FALSE
-
-Interactions contains failure-pattern statements:
- FALSE
-
-Interactions contains audit-question statements:
- FALSE
-
-Interactions contains doctrine:
- FALSE
-
 Runtime execution:
  NOT PERFORMED
-
-Swipe threshold tuning:
- OWNED EXCLUSIVELY BY THIS FILE
 
 Visual acceptance:
  NOT CLAIMED

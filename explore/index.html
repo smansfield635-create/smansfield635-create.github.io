@@ -5,8 +5,8 @@
   data-page="explore-frontier-curiosity-surface"
   data-room="explore"
   data-public-facing-name="Explore"
-  data-version="EXPLORE-FRONTIER-CURIOSITY-SURFACE-v4"
-  data-contract="EXPLORE_FRONTIER_CURIOSITY_SURFACE_ENTRY_TNT_v4"
+  data-version="EXPLORE-FRONTIER-CURIOSITY-SURFACE-v5"
+  data-contract="EXPLORE_FRONTIER_CURIOSITY_SURFACE_ENTRY_TNT_v5"
   data-role="frontier-curiosity-entry"
   data-purpose="curiosity-led-frontier-surface-selection"
   data-primary-destination="/explore/frontier/"
@@ -918,7 +918,7 @@
 <body
   data-route="/explore/"
   data-room="explore"
-  data-contract="EXPLORE_FRONTIER_CURIOSITY_SURFACE_ENTRY_TNT_v4"
+  data-contract="EXPLORE_FRONTIER_CURIOSITY_SURFACE_ENTRY_TNT_v5"
   data-primary-destination="/explore/frontier/"
   data-objective-stance="true"
   data-narrative-stance="false"
@@ -1403,7 +1403,7 @@
         class="route-receipt"
         data-route-receipt
       >
-EXPLORE_FRONTIER_CURIOSITY_SURFACE_ENTRY_TNT_v4
+EXPLORE_FRONTIER_CURIOSITY_SURFACE_ENTRY_TNT_v5
 route=/explore/
 page=explore_frontier_curiosity_surface
 role=frontier_curiosity_entry
@@ -1426,6 +1426,7 @@ dropdown_before_frontier_action=true
 auto_scroll_preview_on_surface_select=true
 back_to_lanes_action=true
 back_to_lanes_target=lane_selection_top
+back_to_lanes_scroll_method=manual_window_scrollTo
 inline_css=true
 inline_js=true
 external_css=false
@@ -1658,7 +1659,19 @@ boundary=explore_names_the_surface_frontier_handles_lane_selection
     const target =
       document.querySelector("[data-lane-selection-top]");
 
-    scrollToElement(target);
+    if (!target) {
+      return;
+    }
+
+    const y =
+      target.getBoundingClientRect().top +
+      window.pageYOffset -
+      14;
+
+    window.scrollTo({
+      top: y,
+      behavior: prefersReducedMotion() ? "auto" : "smooth"
+    });
   }
 
   function setText(root, selector, value) {
@@ -1690,7 +1703,7 @@ boundary=explore_names_the_surface_frontier_handles_lane_selection
     }
 
     board
-      .querySelectorAll("[data-surface]")
+      .querySelectorAll(".surface-tab[data-surface]")
       .forEach(button => {
         button.setAttribute(
           "aria-selected",
@@ -1726,12 +1739,13 @@ boundary=explore_names_the_surface_frontier_handles_lane_selection
 
   function initializeExploreSurface() {
     const buttons =
-      document.querySelectorAll("[data-curiosity-board] [data-surface]");
+      document.querySelectorAll("[data-curiosity-board] .surface-tab[data-surface]");
 
     buttons.forEach(button => {
       button.addEventListener(
         "click",
-        () => {
+        event => {
+          event.stopPropagation();
           selectSurface(button.dataset.surface);
         }
       );
@@ -1745,6 +1759,7 @@ boundary=explore_names_the_surface_frontier_handles_lane_selection
         "click",
         event => {
           event.preventDefault();
+          event.stopPropagation();
           scrollToLanes();
         }
       );
@@ -1760,10 +1775,11 @@ boundary=explore_names_the_surface_frontier_handles_lane_selection
           detail: Object.freeze({
             route: "/explore/",
             page: "explore-frontier-curiosity-surface",
-            contract: "EXPLORE_FRONTIER_CURIOSITY_SURFACE_ENTRY_TNT_v4",
+            contract: "EXPLORE_FRONTIER_CURIOSITY_SURFACE_ENTRY_TNT_v5",
             primaryDestination: "/explore/frontier/",
             interaction: "surface-tab-preview-dropdown-frontier-action-back-to-lanes",
             backToLanesTarget: "lane-selection-top",
+            backToLanesScrollMethod: "manual-window-scrollTo",
             stance: "objective-practical",
             directLaneRouting: false
           })

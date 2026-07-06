@@ -1,15 +1,15 @@
-<!-- TARGET FILE: /laws/categories/structure/governance.html -->
+<!-- TARGET FILE: /laws/categories/structure/boundaries.html -->
 <!-- NEW FILE / 404 FILL -->
-<!-- DGB_LAWS_STRUCTURE_GOVERNANCE_STACKED_LINEAR_TRACK_HTML_TNT_v1_0_0 -->
+<!-- DGB_LAWS_STRUCTURE_BOUNDARIES_STACKED_LINEAR_TRACK_HTML_TNT_v1_0_0 -->
 <!doctype html>
 
 <html
   lang="en"
-  data-route="/laws/categories/structure/governance.html"
-  data-page="laws-structure-governance"
-  data-contract="DGB_LAWS_STRUCTURE_GOVERNANCE_STACKED_LINEAR_TRACK_HTML_TNT_v1_0_0"
+  data-route="/laws/categories/structure/boundaries.html"
+  data-page="laws-structure-boundaries"
+  data-contract="DGB_LAWS_STRUCTURE_BOUNDARIES_STACKED_LINEAR_TRACK_HTML_TNT_v1_0_0"
   data-laws-category="structure"
-  data-laws-track="governance"
+  data-laws-track="boundaries"
   data-laws-layout="stacked-linear"
   data-laws-new-file="true"
   data-laws-404-fill="true"
@@ -27,22 +27,22 @@
   >
 
   <title>
-    Governance · Structure · Laws · Diamond Gate Bridge
+    Boundaries · Structure · Laws · Diamond Gate Bridge
   </title>
 
   <meta
     name="description"
-    content="Governance is a Structure track in the Laws constellation. It defines how rules stay real under pressure through authority, incentives, gates, and stability."
+    content="Boundaries is a Structure track in the Laws constellation. It defines what separates domains, prevents leakage, controls crossing, preserves containment, and protects identity at the edge."
   >
 
   <meta
     name="laws-page-contract"
-    content="DGB_LAWS_STRUCTURE_GOVERNANCE_STACKED_LINEAR_TRACK_HTML_TNT_v1_0_0"
+    content="DGB_LAWS_STRUCTURE_BOUNDARIES_STACKED_LINEAR_TRACK_HTML_TNT_v1_0_0"
   >
 
   <link
     rel="canonical"
-    href="https://diamondgatebridge.com/laws/categories/structure/governance.html"
+    href="https://diamondgatebridge.com/laws/categories/structure/boundaries.html"
   >
 
   <style>
@@ -93,10 +93,10 @@
     html {
       min-height: 100%;
       background:
-        radial-gradient(circle at 10% 4%, rgba(255, 228, 155, 0.16), transparent 24rem),
-        radial-gradient(circle at 88% 8%, rgba(180, 140, 255, 0.14), transparent 25rem),
-        radial-gradient(circle at 18% 48%, rgba(120, 233, 255, 0.10), transparent 28rem),
-        radial-gradient(circle at 82% 72%, rgba(143, 240, 178, 0.08), transparent 26rem),
+        radial-gradient(circle at 10% 4%, rgba(255, 184, 107, 0.15), transparent 24rem),
+        radial-gradient(circle at 88% 8%, rgba(120, 233, 255, 0.14), transparent 25rem),
+        radial-gradient(circle at 18% 48%, rgba(180, 140, 255, 0.09), transparent 28rem),
+        radial-gradient(circle at 82% 72%, rgba(255, 116, 116, 0.08), transparent 26rem),
         linear-gradient(180deg, #03040a 0%, #07101b 52%, #05060d 100%);
       scroll-behavior: smooth;
     }
@@ -106,7 +106,7 @@
       margin: 0;
       color: var(--ink);
       background:
-        linear-gradient(90deg, rgba(255, 228, 155, 0.035), transparent 24%, transparent 76%, rgba(180, 140, 255, 0.035)),
+        linear-gradient(90deg, rgba(255, 184, 107, 0.035), transparent 24%, transparent 76%, rgba(120, 233, 255, 0.035)),
         transparent;
       font-family:
         Inter,
@@ -128,11 +128,11 @@
       pointer-events: none;
       background:
         radial-gradient(circle at 12% 18%, rgba(255, 248, 224, 0.38) 0 0.055rem, transparent 0.09rem),
-        radial-gradient(circle at 25% 36%, rgba(120, 233, 255, 0.28) 0 0.05rem, transparent 0.09rem),
-        radial-gradient(circle at 48% 22%, rgba(255, 228, 155, 0.34) 0 0.055rem, transparent 0.1rem),
-        radial-gradient(circle at 78% 18%, rgba(180, 140, 255, 0.30) 0 0.05rem, transparent 0.09rem),
+        radial-gradient(circle at 25% 36%, rgba(120, 233, 255, 0.30) 0 0.05rem, transparent 0.09rem),
+        radial-gradient(circle at 48% 22%, rgba(255, 184, 107, 0.32) 0 0.055rem, transparent 0.1rem),
+        radial-gradient(circle at 78% 18%, rgba(180, 140, 255, 0.28) 0 0.05rem, transparent 0.09rem),
         radial-gradient(circle at 88% 62%, rgba(143, 240, 178, 0.22) 0 0.05rem, transparent 0.09rem),
-        radial-gradient(circle at 34% 82%, rgba(255, 116, 116, 0.24) 0 0.055rem, transparent 0.1rem);
+        radial-gradient(circle at 34% 82%, rgba(255, 116, 116, 0.26) 0 0.055rem, transparent 0.1rem);
       background-size:
         17rem 13rem,
         23rem 19rem,
@@ -260,7 +260,8 @@
     }
 
     .nav a,
-    .on-page a {
+    .on-page a,
+    .boxed-link {
       border: 1px solid rgba(255, 255, 255, 0.085);
       border-radius: var(--radius-full);
       color: var(--ink-soft);
@@ -276,7 +277,9 @@
     .nav a:hover,
     .nav a:focus-visible,
     .on-page a:hover,
-    .on-page a:focus-visible {
+    .on-page a:focus-visible,
+    .boxed-link:hover,
+    .boxed-link:focus-visible {
       color: var(--gold);
       border-color: rgba(255, 228, 155, 0.28);
       box-shadow: 0 0 1.35rem rgba(255, 228, 155, 0.13);
@@ -311,8 +314,8 @@
       gap: 0.85rem;
       padding: clamp(1.15rem, 3vw, 1.8rem);
       background:
-        radial-gradient(circle at 0% 0%, rgba(255, 228, 155, 0.13), transparent 20rem),
-        radial-gradient(circle at 100% 0%, rgba(180, 140, 255, 0.12), transparent 20rem),
+        radial-gradient(circle at 0% 0%, rgba(255, 184, 107, 0.13), transparent 20rem),
+        radial-gradient(circle at 100% 0%, rgba(120, 233, 255, 0.10), transparent 20rem),
         linear-gradient(180deg, rgba(16, 18, 38, 0.86), rgba(7, 10, 24, 0.72));
     }
 
@@ -392,8 +395,8 @@
       height: 0.52rem;
       margin-top: 0.48rem;
       border-radius: 50%;
-      background: var(--gold);
-      box-shadow: 0 0 1rem rgba(255, 228, 155, 0.35);
+      background: var(--amber);
+      box-shadow: 0 0 1rem rgba(255, 184, 107, 0.35);
       content: "";
     }
 
@@ -421,35 +424,35 @@
       scroll-margin-top: 7rem;
     }
 
-    .track-card[data-track="authority"] {
-      border-color: rgba(255, 228, 155, 0.24);
+    .track-card[data-track="separation"] {
+      border-color: rgba(255, 184, 107, 0.24);
       background:
-        radial-gradient(circle at 0% 0%, rgba(255, 228, 155, 0.14), transparent 18rem),
+        radial-gradient(circle at 0% 0%, rgba(255, 184, 107, 0.14), transparent 18rem),
         radial-gradient(circle at 100% 0%, rgba(120, 233, 255, 0.08), transparent 18rem),
-        linear-gradient(180deg, rgba(24, 20, 30, 0.88), rgba(7, 10, 24, 0.72));
+        linear-gradient(180deg, rgba(24, 18, 28, 0.88), rgba(7, 10, 24, 0.72));
     }
 
-    .track-card[data-track="incentives"] {
+    .track-card[data-track="crossing"] {
       border-color: rgba(120, 233, 255, 0.24);
       background:
         radial-gradient(circle at 0% 0%, rgba(120, 233, 255, 0.14), transparent 18rem),
-        radial-gradient(circle at 100% 10%, rgba(143, 240, 178, 0.10), transparent 18rem),
+        radial-gradient(circle at 100% 10%, rgba(180, 140, 255, 0.11), transparent 18rem),
         linear-gradient(180deg, rgba(9, 18, 36, 0.88), rgba(7, 10, 24, 0.72));
     }
 
-    .track-card[data-track="gates"] {
-      border-color: rgba(180, 140, 255, 0.24);
+    .track-card[data-track="leakage"] {
+      border-color: rgba(255, 116, 116, 0.22);
       background:
-        radial-gradient(circle at 0% 0%, rgba(180, 140, 255, 0.13), transparent 18rem),
-        radial-gradient(circle at 100% 0%, rgba(255, 228, 155, 0.10), transparent 18rem),
-        linear-gradient(180deg, rgba(17, 13, 34, 0.88), rgba(7, 10, 24, 0.72));
+        radial-gradient(circle at 0% 0%, rgba(255, 116, 116, 0.12), transparent 18rem),
+        radial-gradient(circle at 100% 0%, rgba(255, 184, 107, 0.10), transparent 18rem),
+        linear-gradient(180deg, rgba(24, 13, 24, 0.88), rgba(7, 10, 24, 0.72));
     }
 
-    .track-card[data-track="stability"] {
+    .track-card[data-track="containment"] {
       border-color: rgba(143, 240, 178, 0.22);
       background:
         radial-gradient(circle at 0% 0%, rgba(143, 240, 178, 0.12), transparent 18rem),
-        radial-gradient(circle at 100% 0%, rgba(255, 184, 107, 0.09), transparent 18rem),
+        radial-gradient(circle at 100% 0%, rgba(120, 233, 255, 0.09), transparent 18rem),
         linear-gradient(180deg, rgba(8, 21, 27, 0.88), rgba(7, 10, 24, 0.72));
     }
 
@@ -663,8 +666,8 @@
       border: 1px solid var(--line);
       border-radius: var(--radius-xl);
       background:
-        radial-gradient(circle at 0% 0%, rgba(255, 228, 155, 0.08), transparent 18rem),
-        radial-gradient(circle at 100% 0%, rgba(180, 140, 255, 0.08), transparent 18rem),
+        radial-gradient(circle at 0% 0%, rgba(255, 184, 107, 0.08), transparent 18rem),
+        radial-gradient(circle at 100% 0%, rgba(120, 233, 255, 0.08), transparent 18rem),
         linear-gradient(180deg, rgba(10, 14, 34, 0.78), rgba(7, 10, 24, 0.64));
     }
 
@@ -849,13 +852,13 @@
     class="skip"
     href="#main"
   >
-    Skip to Governance
+    Skip to Boundaries
   </a>
 
   <div class="shell">
     <header
       class="topbar"
-      aria-label="Governance header"
+      aria-label="Boundaries header"
     >
       <a
         class="brand"
@@ -871,13 +874,13 @@
 
         <span class="brand-copy">
           <span>Structure · Laws</span>
-          <strong>Governance</strong>
+          <strong>Boundaries</strong>
         </span>
       </a>
 
       <nav
         class="nav"
-        aria-label="Governance navigation"
+        aria-label="Boundaries navigation"
       >
         <a href="/laws/">
           Compass
@@ -887,20 +890,20 @@
           Structure
         </a>
 
-        <a href="#authority">
-          Authority
+        <a href="#separation">
+          Separation
         </a>
 
-        <a href="#incentives">
-          Incentives
+        <a href="#crossing">
+          Crossing
         </a>
 
-        <a href="#gates">
-          Gates
+        <a href="#leakage">
+          Leakage
         </a>
 
-        <a href="#stability">
-          Stability
+        <a href="#containment">
+          Containment
         </a>
       </nav>
     </header>
@@ -908,18 +911,18 @@
     <main id="main">
       <section
         class="hero"
-        aria-label="Governance threshold"
+        aria-label="Boundaries threshold"
       >
         <p class="kicker">
-          Structure Track · Governance
+          Structure Track · Boundaries
         </p>
 
         <h1>
-          Rules that stay real.
+          What separates domains.
         </h1>
 
         <p class="lead">
-          Governance is the structure that keeps rules active after pressure arrives. It defines who has authority, what incentives pull behavior, which gates control passage, and whether the system stays stable when conditions change.
+          Boundaries define what belongs inside, what must remain outside, what may cross, and what must never leak. They protect identity, containment, permission, and domain integrity.
         </p>
 
         <div class="hero-grid">
@@ -929,7 +932,7 @@
             </strong>
 
             <p>
-              Governance is the fourth Structure track in the sixteen-track Laws constellation. It completes the Structure sequence after Constraints, Interfaces, and Boundaries.
+              Boundaries is one Structure track in the sixteen-track Laws constellation. It sits after Interfaces and before Governance.
             </p>
 
             <ul class="status-list">
@@ -942,42 +945,42 @@
               </li>
 
               <li>
-                Boundaries preserve separation and containment.
+                Boundaries define separation and controlled crossing.
               </li>
 
               <li>
-                Governance keeps rules active under pressure.
+                Governance keeps the rules active under pressure.
               </li>
             </ul>
           </div>
 
           <div class="summary-card">
             <strong>
-              Governance signature
+              Boundary signature
             </strong>
 
             <p>
-              Strong governance has legitimate authority, aligned incentives, enforceable gates, and stability when pressure, scale, or advantage changes.
+              A strong boundary has clear separation, declared crossing rules, leakage detection, and containment when failure occurs.
             </p>
 
             <nav
               class="on-page"
-              aria-label="Governance sections"
+              aria-label="Boundaries sections"
             >
-              <a href="#authority">
-                Authority
+              <a href="#separation">
+                Separation
               </a>
 
-              <a href="#incentives">
-                Incentives
+              <a href="#crossing">
+                Crossing
               </a>
 
-              <a href="#gates">
-                Gates
+              <a href="#leakage">
+                Leakage
               </a>
 
-              <a href="#stability">
-                Stability
+              <a href="#containment">
+                Containment
               </a>
             </nav>
           </div>
@@ -986,57 +989,57 @@
 
       <div
         class="track-stack"
-        aria-label="Governance stacked sections"
+        aria-label="Boundaries stacked sections"
       >
         <section
-          id="authority"
+          id="separation"
           class="track-card"
-          data-track="authority"
-          aria-labelledby="authority-title"
+          data-track="separation"
+          aria-labelledby="separation-title"
         >
           <header class="track-header">
             <p class="kicker">
-              Governance Section 01
+              Boundaries Section 01
             </p>
 
-            <h2 id="authority-title">
-              Authority
+            <h2 id="separation-title">
+              Separation
             </h2>
 
             <p>
-              Authority defines who may decide, who may change the rule, who may enforce it, and who must answer when it fails.
+              Separation defines what belongs to one domain and what does not. Without separation, identity blurs and responsibility diffuses.
             </p>
 
             <div class="track-meta">
-              <span>Decision right</span>
-              <span>Rule custody</span>
-              <span>Enforcement role</span>
-              <span>Responsibility</span>
+              <span>Domain identity</span>
+              <span>Scope line</span>
+              <span>Responsibility edge</span>
+              <span>Inside / outside</span>
             </div>
           </header>
 
           <div
             class="section-tabs"
-            aria-label="Authority reading tabs"
+            aria-label="Separation reading tabs"
           >
             <input
-              id="authority-tab-platform"
-              name="authority-tabs"
+              id="separation-tab-platform"
+              name="separation-tabs"
               type="radio"
               data-tab-kind="platform"
               checked
             >
 
             <input
-              id="authority-tab-engineering"
-              name="authority-tabs"
+              id="separation-tab-engineering"
+              name="separation-tabs"
               type="radio"
               data-tab-kind="engineering"
             >
 
             <input
-              id="authority-tab-evidence"
-              name="authority-tabs"
+              id="separation-tab-evidence"
+              name="separation-tabs"
               type="radio"
               data-tab-kind="evidence"
             >
@@ -1044,10 +1047,10 @@
             <div
               class="section-tab-labels"
               role="tablist"
-              aria-label="Authority lenses"
+              aria-label="Separation lenses"
             >
               <label
-                for="authority-tab-platform"
+                for="separation-tab-platform"
                 role="tab"
                 data-tab-kind="platform"
               >
@@ -1055,7 +1058,7 @@
               </label>
 
               <label
-                for="authority-tab-engineering"
+                for="separation-tab-engineering"
                 role="tab"
                 data-tab-kind="engineering"
               >
@@ -1063,7 +1066,7 @@
               </label>
 
               <label
-                for="authority-tab-evidence"
+                for="separation-tab-evidence"
                 role="tab"
                 data-tab-kind="evidence"
               >
@@ -1079,14 +1082,14 @@
                 <span>Platform</span>
 
                 <p>
-                  Authority is not volume, preference, or proximity. It is the recognized right to decide, preserve, enforce, and answer for a rule.
+                  Separation is the first act of boundary integrity. It says what belongs here, what belongs elsewhere, and what cannot be treated as the same thing.
                 </p>
 
                 <ul>
-                  <li>Name who owns the rule.</li>
-                  <li>Name who may change the rule.</li>
-                  <li>Name who enforces the rule when pressure rises.</li>
-                  <li>Name who is accountable when the rule fails.</li>
+                  <li>Name the domain before assigning responsibility.</li>
+                  <li>Separate ownership from adjacency.</li>
+                  <li>Do not merge unlike categories because they touch.</li>
+                  <li>Prevent emotional, political, or operational pressure from erasing the line.</li>
                 </ul>
               </article>
 
@@ -1097,14 +1100,14 @@
                 <span>Engineering</span>
 
                 <p>
-                  In engineering terms, authority maps to ownership records, permission models, administrative roles, maintainers, approval rights, policy owners, and source-of-truth custody.
+                  In engineering terms, separation maps to namespaces, scopes, modules, access domains, service ownership, tenant isolation, environment boundaries, and trust zones.
                 </p>
 
                 <ul>
-                  <li>Separate read access from change authority.</li>
-                  <li>Separate implementation control from governance control.</li>
-                  <li>Require explicit approval for rule mutation.</li>
-                  <li>Preserve audit trails for authority-sensitive changes.</li>
+                  <li>Declare scope explicitly.</li>
+                  <li>Separate public, private, internal, and protected domains.</li>
+                  <li>Keep ownership boundaries visible in code, data, and operations.</li>
+                  <li>Prevent one domain from silently inheriting another domain’s responsibility.</li>
                 </ul>
               </article>
 
@@ -1115,14 +1118,14 @@
                 <span>Evidence</span>
 
                 <p>
-                  Evidence for authority requires more than a title. It requires records showing that decision rights, enforcement rights, and responsibility are recognized and used.
+                  Evidence for separation requires visible domain lines and records showing that the lines are enforced.
                 </p>
 
                 <ul>
-                  <li>Strong evidence: approval records, ownership registry, change authority logs, enforcement history.</li>
-                  <li>Useful evidence: role maps, maintainer records, delegation receipts, review trails.</li>
-                  <li>Failure mode: informal influence overrides declared authority.</li>
-                  <li>Boundary: authority without accountability becomes power, not governance.</li>
+                  <li>Strong evidence: access maps, ownership maps, scope records, environment separation, domain diagrams.</li>
+                  <li>Useful evidence: policy boundaries, module boundaries, access logs, ownership receipts.</li>
+                  <li>Failure mode: adjacent domains are treated as interchangeable.</li>
+                  <li>Boundary: separation is not isolation; it is controlled identity preservation.</li>
                 </ul>
               </article>
             </div>
@@ -1130,54 +1133,54 @@
         </section>
 
         <section
-          id="incentives"
+          id="crossing"
           class="track-card"
-          data-track="incentives"
-          aria-labelledby="incentives-title"
+          data-track="crossing"
+          aria-labelledby="crossing-title"
         >
           <header class="track-header">
             <p class="kicker">
-              Governance Section 02
+              Boundaries Section 02
             </p>
 
-            <h2 id="incentives-title">
-              Incentives
+            <h2 id="crossing-title">
+              Crossing Rule
             </h2>
 
             <p>
-              Incentives reveal what the system will actually protect. If incentives reward violation, governance becomes decorative.
+              A boundary must define how crossing occurs. If anything can cross by pressure, convenience, or assumption, the boundary is decorative.
             </p>
 
             <div class="track-meta">
-              <span>Reward structure</span>
-              <span>Penalty structure</span>
-              <span>Pressure vector</span>
-              <span>Behavior pull</span>
+              <span>Permission</span>
+              <span>Gate condition</span>
+              <span>Transfer rule</span>
+              <span>Boundary crossing</span>
             </div>
           </header>
 
           <div
             class="section-tabs"
-            aria-label="Incentives reading tabs"
+            aria-label="Crossing rule reading tabs"
           >
             <input
-              id="incentives-tab-platform"
-              name="incentives-tabs"
+              id="crossing-tab-platform"
+              name="crossing-tabs"
               type="radio"
               data-tab-kind="platform"
               checked
             >
 
             <input
-              id="incentives-tab-engineering"
-              name="incentives-tabs"
+              id="crossing-tab-engineering"
+              name="crossing-tabs"
               type="radio"
               data-tab-kind="engineering"
             >
 
             <input
-              id="incentives-tab-evidence"
-              name="incentives-tabs"
+              id="crossing-tab-evidence"
+              name="crossing-tabs"
               type="radio"
               data-tab-kind="evidence"
             >
@@ -1185,10 +1188,10 @@
             <div
               class="section-tab-labels"
               role="tablist"
-              aria-label="Incentives lenses"
+              aria-label="Crossing rule lenses"
             >
               <label
-                for="incentives-tab-platform"
+                for="crossing-tab-platform"
                 role="tab"
                 data-tab-kind="platform"
               >
@@ -1196,7 +1199,7 @@
               </label>
 
               <label
-                for="incentives-tab-engineering"
+                for="crossing-tab-engineering"
                 role="tab"
                 data-tab-kind="engineering"
               >
@@ -1204,7 +1207,7 @@
               </label>
 
               <label
-                for="incentives-tab-evidence"
+                for="crossing-tab-evidence"
                 role="tab"
                 data-tab-kind="evidence"
               >
@@ -1220,14 +1223,14 @@
                 <span>Platform</span>
 
                 <p>
-                  Incentives are the hidden gravity of governance. A rule that is spoken but punished in practice will not remain real.
+                  Crossing rules explain what may pass the boundary, under which condition, with whose permission, and with what preserved accountability.
                 </p>
 
                 <ul>
-                  <li>Identify what behavior is rewarded.</li>
-                  <li>Identify what behavior is punished.</li>
-                  <li>Identify where shortcuts gain advantage.</li>
-                  <li>Correct incentive conflict before it becomes culture.</li>
+                  <li>Define what may cross.</li>
+                  <li>Define who authorizes crossing.</li>
+                  <li>Define what must be transformed, logged, or rejected.</li>
+                  <li>Do not allow urgency to replace permission.</li>
                 </ul>
               </article>
 
@@ -1238,14 +1241,14 @@
                 <span>Engineering</span>
 
                 <p>
-                  Incentives map to performance targets, cost models, approval friction, deadline pressure, compensation systems, operational metrics, and reward loops.
+                  Crossing rules map to access control, authorization gates, firewall rules, API permissions, validation policy, data transfer rules, and domain transition states.
                 </p>
 
                 <ul>
-                  <li>Compare stated policy against measured reward behavior.</li>
-                  <li>Detect metrics that reward bypassing the gate.</li>
-                  <li>Monitor pressure vectors that increase violation probability.</li>
-                  <li>Align incentives with rule preservation rather than optics.</li>
+                  <li>Gate crossing through declared permission checks.</li>
+                  <li>Validate before transfer.</li>
+                  <li>Log cross-boundary movement.</li>
+                  <li>Preserve provenance when data changes domain.</li>
                 </ul>
               </article>
 
@@ -1256,14 +1259,14 @@
                 <span>Evidence</span>
 
                 <p>
-                  Evidence for incentive alignment requires showing that protected behavior is actually rewarded and violation is not made profitable.
+                  Evidence for crossing quality requires proof that allowed crossings are governed and rejected crossings are handled deliberately.
                 </p>
 
                 <ul>
-                  <li>Strong evidence: reward records, violation consequences, metric alignment, behavior change after incentive correction.</li>
-                  <li>Useful evidence: KPI maps, compensation logic, deadline pressure logs, exception patterns.</li>
-                  <li>Failure mode: the rule says one thing while incentives pay for the opposite.</li>
-                  <li>Boundary: incentives do not excuse violation, but they explain where governance will fail first.</li>
+                  <li>Strong evidence: access logs, authorization records, transfer receipts, rejected crossing records.</li>
+                  <li>Useful evidence: permission maps, policy tests, boundary transition traces.</li>
+                  <li>Failure mode: crossing happens because systems are adjacent, not because permission exists.</li>
+                  <li>Boundary: a crossing rule can permit exchange without collapsing domain separation.</li>
                 </ul>
               </article>
             </div>
@@ -1271,54 +1274,54 @@
         </section>
 
         <section
-          id="gates"
+          id="leakage"
           class="track-card"
-          data-track="gates"
-          aria-labelledby="gates-title"
+          data-track="leakage"
+          aria-labelledby="leakage-title"
         >
           <header class="track-header">
             <p class="kicker">
-              Governance Section 03
+              Boundaries Section 03
             </p>
 
-            <h2 id="gates-title">
-              Gates
+            <h2 id="leakage-title">
+              Leakage Control
             </h2>
 
             <p>
-              Gates decide what may pass. A governance rule without a gate is only advice.
+              Leakage is boundary failure without declared crossing. It occurs when meaning, data, responsibility, pressure, risk, or authority escapes its proper domain.
             </p>
 
             <div class="track-meta">
-              <span>Admission</span>
-              <span>Rejection</span>
-              <span>Threshold</span>
-              <span>Review point</span>
+              <span>Leak detection</span>
+              <span>Unowned transfer</span>
+              <span>Contamination</span>
+              <span>Scope creep</span>
             </div>
           </header>
 
           <div
             class="section-tabs"
-            aria-label="Gates reading tabs"
+            aria-label="Leakage control reading tabs"
           >
             <input
-              id="gates-tab-platform"
-              name="gates-tabs"
+              id="leakage-tab-platform"
+              name="leakage-tabs"
               type="radio"
               data-tab-kind="platform"
               checked
             >
 
             <input
-              id="gates-tab-engineering"
-              name="gates-tabs"
+              id="leakage-tab-engineering"
+              name="leakage-tabs"
               type="radio"
               data-tab-kind="engineering"
             >
 
             <input
-              id="gates-tab-evidence"
-              name="gates-tabs"
+              id="leakage-tab-evidence"
+              name="leakage-tabs"
               type="radio"
               data-tab-kind="evidence"
             >
@@ -1326,10 +1329,10 @@
             <div
               class="section-tab-labels"
               role="tablist"
-              aria-label="Gates lenses"
+              aria-label="Leakage control lenses"
             >
               <label
-                for="gates-tab-platform"
+                for="leakage-tab-platform"
                 role="tab"
                 data-tab-kind="platform"
               >
@@ -1337,7 +1340,7 @@
               </label>
 
               <label
-                for="gates-tab-engineering"
+                for="leakage-tab-engineering"
                 role="tab"
                 data-tab-kind="engineering"
               >
@@ -1345,7 +1348,7 @@
               </label>
 
               <label
-                for="gates-tab-evidence"
+                for="leakage-tab-evidence"
                 role="tab"
                 data-tab-kind="evidence"
               >
@@ -1361,14 +1364,14 @@
                 <span>Platform</span>
 
                 <p>
-                  Gates are the places where governance becomes operational. They decide whether something proceeds, stops, returns for correction, or remains under review.
+                  Leakage is not always dramatic. It often begins as a small tolerated transfer: a responsibility pushed into the wrong room, a risk hidden in another layer, or an exception normalized at the edge.
                 </p>
 
                 <ul>
-                  <li>Define the threshold before the decision.</li>
-                  <li>Separate pass, fail, hold, and revise states.</li>
-                  <li>Require evidence at the gate.</li>
-                  <li>Do not let urgency erase admission criteria.</li>
+                  <li>Detect responsibility moving without ownership.</li>
+                  <li>Detect private pressure changing public structure.</li>
+                  <li>Detect risk moved downstream without disclosure.</li>
+                  <li>Detect scope expansion without boundary revision.</li>
                 </ul>
               </article>
 
@@ -1379,14 +1382,14 @@
                 <span>Engineering</span>
 
                 <p>
-                  Gates map to validation checks, release approvals, CI/CD controls, admission controllers, quality gates, policy checks, review queues, and deployment blockers.
+                  Leakage maps to data exfiltration, privilege bleed, state bleed, dependency contamination, cross-tenant exposure, scope creep, configuration drift, and implicit coupling.
                 </p>
 
                 <ul>
-                  <li>Automate objective gates where possible.</li>
-                  <li>Record manual overrides explicitly.</li>
-                  <li>Keep gate criteria source-bound and inspectable.</li>
-                  <li>Fail closed when missing evidence creates unsafe passage.</li>
+                  <li>Monitor unauthorized domain movement.</li>
+                  <li>Detect privilege or state bleed across scopes.</li>
+                  <li>Prevent hidden coupling between separated systems.</li>
+                  <li>Treat repeated leakage as boundary erosion.</li>
                 </ul>
               </article>
 
@@ -1397,14 +1400,14 @@
                 <span>Evidence</span>
 
                 <p>
-                  Evidence for gate integrity requires records of what was admitted, rejected, delayed, or revised and why.
+                  Evidence for leakage control requires both detection and response. A boundary is weak if it notices leakage but never repairs the cause.
                 </p>
 
                 <ul>
-                  <li>Strong evidence: gate logs, admission receipts, rejection reasons, override records, threshold history.</li>
-                  <li>Useful evidence: review notes, blocked release records, policy check outputs.</li>
-                  <li>Failure mode: gates exist but are bypassed whenever they matter.</li>
-                  <li>Boundary: a gate can be flexible only when its flexibility rule is itself governed.</li>
+                  <li>Strong evidence: leakage logs, boundary violation records, contamination traces, repair verification.</li>
+                  <li>Useful evidence: scope-change logs, access anomalies, downstream exposure reports.</li>
+                  <li>Failure mode: leakage is reframed as normal collaboration.</li>
+                  <li>Boundary: lawful crossing is not leakage when permission, provenance, and containment are preserved.</li>
                 </ul>
               </article>
             </div>
@@ -1412,54 +1415,54 @@
         </section>
 
         <section
-          id="stability"
+          id="containment"
           class="track-card"
-          data-track="stability"
-          aria-labelledby="stability-title"
+          data-track="containment"
+          aria-labelledby="containment-title"
         >
           <header class="track-header">
             <p class="kicker">
-              Governance Section 04
+              Boundaries Section 04
             </p>
 
-            <h2 id="stability-title">
-              Stability
+            <h2 id="containment-title">
+              Containment
             </h2>
 
             <p>
-              Stability asks whether governance remains real when pressure, scale, advantage, conflict, or fatigue tries to bend it.
+              Containment prevents boundary failure from becoming system failure. It limits spread, preserves recovery space, and keeps one domain’s collapse from becoming every domain’s collapse.
             </p>
 
             <div class="track-meta">
-              <span>Rule persistence</span>
-              <span>Pressure resistance</span>
-              <span>Correction loop</span>
-              <span>Institutional memory</span>
+              <span>Spread limit</span>
+              <span>Recovery space</span>
+              <span>Blast radius</span>
+              <span>Isolation under failure</span>
             </div>
           </header>
 
           <div
             class="section-tabs"
-            aria-label="Stability reading tabs"
+            aria-label="Containment reading tabs"
           >
             <input
-              id="stability-tab-platform"
-              name="stability-tabs"
+              id="containment-tab-platform"
+              name="containment-tabs"
               type="radio"
               data-tab-kind="platform"
               checked
             >
 
             <input
-              id="stability-tab-engineering"
-              name="stability-tabs"
+              id="containment-tab-engineering"
+              name="containment-tabs"
               type="radio"
               data-tab-kind="engineering"
             >
 
             <input
-              id="stability-tab-evidence"
-              name="stability-tabs"
+              id="containment-tab-evidence"
+              name="containment-tabs"
               type="radio"
               data-tab-kind="evidence"
             >
@@ -1467,10 +1470,10 @@
             <div
               class="section-tab-labels"
               role="tablist"
-              aria-label="Stability lenses"
+              aria-label="Containment lenses"
             >
               <label
-                for="stability-tab-platform"
+                for="containment-tab-platform"
                 role="tab"
                 data-tab-kind="platform"
               >
@@ -1478,7 +1481,7 @@
               </label>
 
               <label
-                for="stability-tab-engineering"
+                for="containment-tab-engineering"
                 role="tab"
                 data-tab-kind="engineering"
               >
@@ -1486,7 +1489,7 @@
               </label>
 
               <label
-                for="stability-tab-evidence"
+                for="containment-tab-evidence"
                 role="tab"
                 data-tab-kind="evidence"
               >
@@ -1502,14 +1505,14 @@
                 <span>Platform</span>
 
                 <p>
-                  Stability is governance after the meeting ends. The rule must continue when the original enforcer is absent, when the cost rises, and when a shortcut becomes attractive.
+                  Containment is the boundary’s emergency function. When something fails, containment keeps the damage from spreading beyond the domain that can repair it.
                 </p>
 
                 <ul>
-                  <li>Keep rules active after leadership attention moves elsewhere.</li>
-                  <li>Preserve correction memory after failure.</li>
-                  <li>Prevent temporary exceptions from becoming permanent drift.</li>
-                  <li>Test governance during pressure, not only calm periods.</li>
+                  <li>Limit spread before explaining failure.</li>
+                  <li>Preserve recovery space.</li>
+                  <li>Prevent blame, risk, or defect migration into unrelated domains.</li>
+                  <li>Keep the repairable problem from becoming a system-wide condition.</li>
                 </ul>
               </article>
 
@@ -1520,14 +1523,14 @@
                 <span>Engineering</span>
 
                 <p>
-                  Stability maps to policy durability, governance-as-code, audit cadence, drift detection, control monitoring, regression prevention, and sustained enforcement.
+                  Containment maps to sandboxing, isolation, circuit breakers, rate limits, blast-radius reduction, rollback boundaries, access revocation, quarantine, and fail-closed behavior.
                 </p>
 
                 <ul>
-                  <li>Monitor governance drift over time.</li>
-                  <li>Use recurring audits to preserve rule memory.</li>
-                  <li>Detect stale approvals and expired exceptions.</li>
-                  <li>Measure whether gates and incentives still enforce the declared rule.</li>
+                  <li>Define blast radius before failure occurs.</li>
+                  <li>Use isolation to stop propagation.</li>
+                  <li>Fail closed where unsafe spread is possible.</li>
+                  <li>Restore only after recovery conditions are met.</li>
                 </ul>
               </article>
 
@@ -1538,14 +1541,14 @@
                 <span>Evidence</span>
 
                 <p>
-                  Evidence for stability requires time. Governance that works once is not yet stable.
+                  Evidence for containment requires records that show spread was limited and recovery remained possible.
                 </p>
 
                 <ul>
-                  <li>Strong evidence: repeated enforcement, audit history, reduced drift, stable gate behavior under pressure.</li>
-                  <li>Useful evidence: exception age, control checks, policy-change history, sustained compliance records.</li>
-                  <li>Failure mode: governance collapses when the pressure window opens.</li>
-                  <li>Boundary: stable governance can evolve, but evolution must be recorded and controlled.</li>
+                  <li>Strong evidence: incident boundary, blast-radius record, quarantine log, rollback receipt, recovery verification.</li>
+                  <li>Useful evidence: rate-limit records, isolation tests, failover drills, restored-state checks.</li>
+                  <li>Failure mode: one domain fails and silently contaminates the rest.</li>
+                  <li>Boundary: containment is not denial; it is controlled limitation of spread.</li>
                 </ul>
               </article>
             </div>
@@ -1559,31 +1562,31 @@
         aria-labelledby="canonical-laws-title"
       >
         <p class="kicker">
-          Canonical Governance Laws
+          Canonical Boundary Laws
         </p>
 
         <h2 id="canonical-laws-title">
-          A rule is not governance until it can be enforced.
+          What cannot be separated cannot be protected.
         </h2>
 
         <p>
-          Governance holds structure by assigning authority, aligning incentives, operating gates, and preserving stability after pressure changes the cost of obedience.
+          Boundaries hold structure by preserving domain identity, controlling crossing, detecting leakage, and containing failure before it becomes systemic.
         </p>
 
         <div class="law-grid">
           <article class="law-card">
             <span>Canonical Law</span>
-            <strong>Authority Custody Law</strong>
+            <strong>Boundary Preservation Law</strong>
             <p>
-              A rule remains governable only when custody, change authority, enforcement authority, and accountability are distinguishable.
+              A domain remains stable only while its identity, responsibility, and crossing rules remain distinguishable.
             </p>
           </article>
 
           <article class="law-card">
             <span>Canonical Law</span>
-            <strong>Gate Enforcement Law</strong>
+            <strong>Leakage Detection Law</strong>
             <p>
-              A governance rule becomes real only where admission, rejection, override, and correction are controlled.
+              Undeclared transfer across a boundary is structural leakage until permission, provenance, and containment are restored.
             </p>
           </article>
         </div>
@@ -1591,17 +1594,17 @@
         <div class="metric-grid">
           <article class="metric-card">
             <span>Signature</span>
-            <strong>Rule preservation under pressure</strong>
+            <strong>Protected separation</strong>
             <p>
-              Authority is clear, incentives reinforce the rule, gates operate, and enforcement persists over time.
+              Clear domain line, governed crossing, leakage detection, and containment under failure.
             </p>
           </article>
 
           <article class="metric-card">
             <span>Failure Pattern</span>
-            <strong>Decorative governance</strong>
+            <strong>Boundary erosion</strong>
             <p>
-              The rule is stated publicly but bypassed privately when incentives, urgency, or power make violation useful.
+              Pressure, risk, responsibility, data, or authority moves across domains without declared permission.
             </p>
           </article>
         </div>
@@ -1612,7 +1615,7 @@
         aria-label="Linear Laws constellation navigation"
         data-law-constellation-nav
         data-law-path-category="structure"
-        data-law-path-track="governance"
+        data-law-path-track="boundaries"
         data-law-path-mode="linear"
       >
         <header class="constellation-nav__header">
@@ -1621,11 +1624,11 @@
           </p>
 
           <h2>
-            Governance completes the Structure sequence.
+            Boundaries is the third Structure track.
           </h2>
 
           <p>
-            The Structure sequence moves from Constraints to Interfaces, Boundaries, and finally Governance.
+            The Structure sequence moves from Constraints to Interfaces, then into Boundaries and Governance.
           </p>
         </header>
 
@@ -1639,34 +1642,33 @@
           </a>
 
           <a
-            href="/laws/categories/structure/boundaries.html"
+            href="/laws/categories/structure/interfaces.html"
             data-law-path-action="previous"
           >
             <span>Previous</span>
-            <strong>Boundaries</strong>
+            <strong>Interfaces</strong>
           </a>
 
           <a
-            href="/laws/"
-            data-law-path-action="complete"
-            data-law-path-target-status="pending-global-sequence-lock"
+            href="/laws/categories/structure/governance.html"
+            data-law-path-action="continue"
           >
-            <span>Complete</span>
-            <strong>Return to Compass</strong>
+            <span>Continue</span>
+            <strong>Governance</strong>
           </a>
         </div>
       </nav>
 
       <section
         class="closing"
-        aria-label="Governance closing"
+        aria-label="Boundaries closing"
       >
         <p class="kicker">
-          Governance is structure after pressure arrives.
+          Boundaries are structure at the edge of identity.
         </p>
 
         <p>
-          Authority defines who may decide. Incentives reveal what the system will actually protect. Gates make rules operational. Stability proves governance survives time, pressure, and advantage.
+          Separation defines the domain. Crossing controls movement. Leakage exposes undeclared transfer. Containment prevents one domain’s failure from becoming every domain’s failure.
         </p>
 
         <div class="route-grid">
@@ -1683,12 +1685,12 @@
 
           <a
             class="route-card"
-            href="/laws/"
+            href="/laws/categories/structure/governance.html"
           >
-            <span>Compass</span>
-            <strong>Return to Laws</strong>
+            <span>Next Track</span>
+            <strong>Governance</strong>
             <p>
-              Return to the central Laws Compass.
+              Continue from domain separation into rule preservation under pressure.
             </p>
           </a>
         </div>
@@ -1698,11 +1700,11 @@
     <footer class="footer">
       <div>
         <strong>
-          Governance · Structure · Laws
+          Boundaries · Structure · Laws
         </strong>
 
         <span>
-          New 404-fill Structure track. Authority, Incentives, Gates, and Stability. No validation claim or registry mutation.
+          New 404-fill Structure track. Separation, Crossing Rule, Leakage Control, and Containment. No validation claim or registry mutation.
         </span>
       </div>
 
@@ -1715,20 +1717,20 @@
           Structure
         </a>
 
-        <a href="#authority">
-          Authority
+        <a href="#separation">
+          Separation
         </a>
 
-        <a href="#incentives">
-          Incentives
+        <a href="#crossing">
+          Crossing
         </a>
 
-        <a href="#gates">
-          Gates
+        <a href="#leakage">
+          Leakage
         </a>
 
-        <a href="#stability">
-          Stability
+        <a href="#containment">
+          Containment
         </a>
 
         <a href="#main">
@@ -1738,19 +1740,19 @@
     </footer>
 
     <template
-      id="governance-stacked-linear-html-receipt"
-      data-governance-stacked-linear-html-receipt
+      id="boundaries-stacked-linear-html-receipt"
+      data-boundaries-stacked-linear-html-receipt
     >
-DGB_LAWS_STRUCTURE_GOVERNANCE_STACKED_LINEAR_TRACK_HTML_RECEIPT_v1_0_0
+DGB_LAWS_STRUCTURE_BOUNDARIES_STACKED_LINEAR_TRACK_HTML_RECEIPT_v1_0_0
 
 TARGET:
-/laws/categories/structure/governance.html
+/laws/categories/structure/boundaries.html
 
 CONTRACT:
-DGB_LAWS_STRUCTURE_GOVERNANCE_STACKED_LINEAR_TRACK_HTML_TNT_v1_0_0
+DGB_LAWS_STRUCTURE_BOUNDARIES_STACKED_LINEAR_TRACK_HTML_TNT_v1_0_0
 
 STATUS:
-New file / 404 fill for Structure Governance track.
+New file / 404 fill for Structure Boundaries track.
 No prior full source baseline supplied.
 No runtime execution performed.
 No visual acceptance claimed.
@@ -1761,7 +1763,7 @@ CATEGORY:
 Structure
 
 TRACK:
-Governance
+Boundaries
 
 STRUCTURE SEQUENCE:
 Constraints → Interfaces → Boundaries → Governance
@@ -1773,10 +1775,10 @@ NARRATIVE SEPARATION:
 - Governance = how rules stay real under pressure.
 
 SECTIONS:
-- Authority
-- Incentives
-- Gates
-- Stability
+- Separation
+- Crossing Rule
+- Leakage Control
+- Containment
 
 SECTION-LOCAL TABS:
 Each section includes:
@@ -1784,29 +1786,29 @@ Each section includes:
 - Engineering
 - Evidence
 
-CANONICAL GOVERNANCE LAWS:
-- Authority Custody Law
-- Gate Enforcement Law
+CANONICAL BOUNDARY LAWS:
+- Boundary Preservation Law
+- Leakage Detection Law
 
-GOVERNANCE SIGNATURE:
-- legitimate authority
-- aligned incentives
-- enforceable gates
-- rule stability under pressure
+BOUNDARY SIGNATURE:
+- protected separation
+- governed crossing
+- leakage detection
+- containment under failure
 
 VISUAL RULE:
 - No plain underlined text-link styling.
 - All navigation links are presented as pills, boxes, or route cards.
 
 CONSTELLATION PATH:
-- Previous: /laws/categories/structure/boundaries.html
-- Current: /laws/categories/structure/governance.html
-- Complete: /laws/ pending global sequence lock
+- Previous: /laws/categories/structure/interfaces.html
+- Current: /laws/categories/structure/boundaries.html
+- Next: /laws/categories/structure/governance.html
 - Return: /laws/
 
 REGISTRY STATUS:
-- Governance is one Structure track.
-- Authority / Incentives / Gates / Stability are internal sections, not new registry tracks.
+- Boundaries is one Structure track.
+- Separation / Crossing Rule / Leakage Control / Containment are internal sections, not new registry tracks.
 - No sixteen-track mutation claimed.
 
 CLAIM BOUNDARIES:
@@ -1834,11 +1836,11 @@ No external JS dependency.
       "use strict";
 
       const CONTRACT =
-        "DGB_LAWS_STRUCTURE_GOVERNANCE_STACKED_LINEAR_TRACK_HTML_TNT_v1_0_0";
+        "DGB_LAWS_STRUCTURE_BOUNDARIES_STACKED_LINEAR_TRACK_HTML_TNT_v1_0_0";
 
       const receiptTemplate =
         document.querySelector(
-          "[data-governance-stacked-linear-html-receipt]"
+          "[data-boundaries-stacked-linear-html-receipt]"
         );
 
       function collectCheckedTabs() {
@@ -1867,13 +1869,13 @@ No external JS dependency.
             CONTRACT,
 
           route:
-            "/laws/categories/structure/governance.html",
+            "/laws/categories/structure/boundaries.html",
 
           category:
             "structure",
 
           track:
-            "governance",
+            "boundaries",
 
           layout:
             "stacked-linear",
@@ -1883,10 +1885,10 @@ No external JS dependency.
 
           sections:
             [
-              "authority",
-              "incentives",
-              "gates",
-              "stability"
+              "separation",
+              "crossing-rule",
+              "leakage-control",
+              "containment"
             ],
 
           sectionTabs:
@@ -1897,10 +1899,10 @@ No external JS dependency.
             ],
 
           previous:
-            "/laws/categories/structure/boundaries.html",
+            "/laws/categories/structure/interfaces.html",
 
-          complete:
-            "/laws/",
+          next:
+            "/laws/categories/structure/governance.html",
 
           visualRule:
             "boxed-links-no-legacy-underlined-text-links",
@@ -1919,12 +1921,12 @@ No external JS dependency.
         };
 
         document.documentElement.dataset
-          .governanceStackedLinearReceipt =
+          .boundariesStackedLinearReceipt =
           JSON.stringify(receipt);
 
         if (receiptTemplate) {
           receiptTemplate.dataset
-            .governanceStackedReceiptUpdated =
+            .boundariesStackedReceiptUpdated =
             receipt.timestamp;
         }
       }

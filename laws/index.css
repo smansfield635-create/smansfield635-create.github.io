@@ -21,6 +21,8 @@
   - visible first-paint compass category stars
   - Flow north, Integrity east, Reality south, Structure west
   - Showroom/Audralia WebGL center planet mount
+  - external /laws/index.planet.js bridge compatibility
+  - no inline planet bridge dependency
   - no CSS-generated fake center planet
   - no visible compass/star label bubbles
   - semantic controls preserved as hit targets
@@ -635,20 +637,23 @@ canvas[data-laws-compositor-layer="front"] {
 [data-laws-planet-mount] {
   position: absolute;
   inset: 0;
-  display: grid;
-  place-items: center;
-  pointer-events: none;
-}
-
-.laws-planetary-center > .showroom-planet-root,
-[data-laws-planet-mount] > .showroom-planet-root {
-  position: absolute;
-  inset: 0;
   display: block;
   width: 100%;
   height: 100%;
   pointer-events: none;
   transform: translateZ(0);
+}
+
+.laws-planetary-center > .showroom-planet-root,
+[data-laws-planet-mount] > .showroom-planet-root {
+  position: absolute;
+  inset: 50% auto auto 50%;
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  transform-origin: 50% 50%;
 }
 
 .showroom-planet-root {
@@ -657,9 +662,13 @@ canvas[data-laws-compositor-layer="front"] {
   --showroom-planet-pulse: 0;
 
   position: absolute;
-  inset: 0;
+  inset: 50% auto auto 50%;
   display: block;
+  width: 100%;
+  height: 100%;
   pointer-events: none;
+  transform: translate(-50%, -50%);
+  transform-origin: 50% 50%;
 }
 
 .showroom-planet-glow,
@@ -1765,7 +1774,8 @@ code {
 }
 
 [data-laws-root][data-laws-planet-status="mount-timeout"] [data-laws-planet-mount],
-[data-laws-root][data-laws-planet-status="mount-target-missing"] [data-laws-planet-mount] {
+[data-laws-root][data-laws-planet-status="mount-target-missing"] [data-laws-planet-mount],
+[data-laws-root][data-laws-planet-status="failed"] [data-laws-planet-mount] {
   border-radius: 50%;
   background:
     radial-gradient(circle at 50% 50%,
@@ -2013,8 +2023,8 @@ The v2.1 /laws/index.css file is used as the working structural baseline for:
 
 MAJOR INTEGRATED CHANGES FROM v2.1:
 - No tail patches.
-- Contract updated to v2.2.
-- Pairing HTML updated to v2.2.
+- Contract remains v2.2.
+- Pairing HTML remains v2.2.
 - Value deck supports three cards.
 - Formula/context grid strengthened for heavier Laws content.
 - Evidence, maturity, applied-system, claim-language, and source-custody cards receive expanded layout support.
@@ -2022,7 +2032,7 @@ MAJOR INTEGRATED CHANGES FROM v2.1:
   - .laws-planetary-center__body
   - .laws-planetary-center__atmosphere
   - .laws-planetary-center__ring
-- Center mount now supports Showroom/Audralia WebGL planet surfaces:
+- Center mount supports Showroom/Audralia WebGL planet surfaces emitted by the upstream renderer:
   - .showroom-planet-root
   - .showroom-planet-glow
   - .showroom-planet-orbit-line
@@ -2037,6 +2047,21 @@ MAJOR INTEGRATED CHANGES FROM v2.1:
   - .showroom-planet-fulcrum
   - .showroom-planet-axis
   - .showroom-planet-fallback
+- Centering discipline corrected for the separated /laws/index.planet.js bridge:
+  - [data-laws-planet-mount] remains the mount surface.
+  - .showroom-planet-root is centered with inset: 50% and transform: translate(-50%, -50%).
+  - CSS does not duplicate renderer logic.
+  - CSS does not mount or initialize the planet.
+- External bridge supported:
+  - /laws/index.planet.js
+  - LAWS_CENTER_PLANET_BRIDGE_TNT_v1
+- Inline planet bridge is not required.
+- Upstream renderer remains:
+  - /showroom/index.planet.js
+  - SHOWROOM_PLANETARY_FULCRUM_INDEPENDENT_CENTER_PLANET_TNT_v1
+- Geometry authority remains:
+  - /assets/audralia/audralia.planet.js
+  - AUDRALIA_G1_DETERMINISTIC_PLANET_GEOMETRY_AUTHORITY_TNT_v1
 - Planet remains decorative.
 - [data-upstream-compass-control] remains the click/tap authority.
 - Visible center labels are not styled into visibility.
@@ -2073,7 +2098,12 @@ CENTER PLANET:
 - Showroom/Audralia WebGL planet supported.
 - Visual identity: mini-audralia.
 - Renderer global expected: SHOWROOM_PLANET.
+- Renderer source expected: /showroom/index.planet.js.
+- Renderer contract expected: SHOWROOM_PLANETARY_FULCRUM_INDEPENDENT_CENTER_PLANET_TNT_v1.
+- Laws bridge expected: /laws/index.planet.js.
+- Laws bridge contract expected: LAWS_CENTER_PLANET_BRIDGE_TNT_v1.
 - Geometry global expected: DGBAudraliaPlanetGeometry.
+- Geometry contract expected: AUDRALIA_G1_DETERMINISTIC_PLANET_GEOMETRY_AUTHORITY_TNT_v1.
 - Decorative only.
 - Route authority: false.
 - Click authority: false.

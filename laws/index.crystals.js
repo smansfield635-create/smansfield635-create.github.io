@@ -3,7 +3,7 @@
 
    Module:
    DGB_LAWS_CRYSTALS
-   1.0.0-controller-decoupled-crystal-renderer
+   1.1.0-controller-decoupled-crystal-renderer-with-planet-participant
 
    Controller anchor:
    DGB_LAWS_CONTROLLER
@@ -13,6 +13,10 @@
    DGB_LAWS_COMPOSITOR
    1.0.0-camera-depth-layer-orchestration
 
+   Planet participant anchor:
+   DGB_LAWS_PLANET_WORLD_PARTICIPANT
+   1.0.0-laws-world-pass-participant
+
    Owned:
    - crystal meshes and materials;
    - category and law geometry;
@@ -20,11 +24,18 @@
    - crystal target positions and animation;
    - WebGL programs, buffers, and crystal drawing;
    - canonical crystal-to-semantic-control association;
-   - visible-node delivery to the compositor;
+   - visible law/category node delivery to the compositor;
+   - optional center-planet participant admission into the shared pass;
+   - planet draw delegation to DGB_LAWS_PLANET_WORLD_PARTICIPANT;
    - compositor projection-record forwarding to the controller;
    - crystal-renderer lifecycle and failure reporting.
 
    Not owned:
+   - planet identity;
+   - Audralia geometry source;
+   - planet terrain source;
+   - planet rotation state;
+   - planet mesh/material authority;
    - pointer or swipe interpretation;
    - drag quaternion generation;
    - orbit or cluster gesture authority;
@@ -53,14 +64,16 @@
    controller frame
    -> visual quaternion interpolation
    -> crystal world targets
+   -> optional planet participant node request
    -> compositor depth classification
    -> rear/front WebGL drawing
-   -> compositor projection records
+   -> planet draw delegated to participant when encountered
+   -> compositor projection records for law/category controls only
    -> controller.updateSemanticProjection(records)
    -> CSS presents canonical labels
 
    Source status:
-   LAW_COMPASS_CRYSTALS_RENDERER_STANDARD
+   LAW_COMPASS_CRYSTALS_RENDERER_STANDARD_WITH_PLANET_PARTICIPANT
    !=
    RUNTIME_PASS
    !=
@@ -74,10 +87,10 @@
 
   const CONTRACT = Object.freeze({
     id:
-      "DGB_LAWS_CRYSTALS_CONTROLLER_DECOUPLED_RENDERER_v1",
+      "DGB_LAWS_CRYSTALS_CONTROLLER_DECOUPLED_RENDERER_WITH_PLANET_PARTICIPANT_v1",
 
     version:
-      "1.0.0-controller-decoupled-crystal-renderer",
+      "1.1.0-controller-decoupled-crystal-renderer-with-planet-participant",
 
     file:
       "/laws/index.crystals.js",
@@ -94,6 +107,18 @@
     compositorModuleVersion:
       "1.0.0-camera-depth-layer-orchestration",
 
+    planetParticipantModuleId:
+      "DGB_LAWS_PLANET_WORLD_PARTICIPANT",
+
+    planetParticipantModuleVersion:
+      "1.0.0-laws-world-pass-participant",
+
+    planetParticipantNodeType:
+      "compass-planet",
+
+    planetParticipantNodeId:
+      "main-compass-planet",
+
     visualPassClaimed:
       false,
 
@@ -104,6 +129,9 @@
       false,
 
     crystalsContainLawContent:
+      false,
+
+    crystalsOwnPlanetAuthority:
       false
   });
 
@@ -119,7 +147,10 @@
       "category",
 
     LAW:
-      "law"
+      "law",
+
+    PLANET:
+      "compass-planet"
   });
 
   const SCENE_PROJECTIONS = Object.freeze({
@@ -476,6 +507,57 @@
     compositorModuleVersion:
       "",
 
+    planetParticipantModuleId:
+      "",
+
+    planetParticipantModuleVersion:
+      "",
+
+    planetParticipantAvailable:
+      false,
+
+    planetParticipantAccepted:
+      false,
+
+    planetParticipantNodeAvailable:
+      false,
+
+    planetParticipantNodeAdmitted:
+      false,
+
+    planetParticipantNodeType:
+      CONTRACT.planetParticipantNodeType,
+
+    planetParticipantNodeId:
+      CONTRACT.planetParticipantNodeId,
+
+    planetDrawDelegated:
+      false,
+
+    planetDrawCallsLastFrame:
+      0,
+
+    planetVisibleObjectCount:
+      0,
+
+    planetRegistryMember:
+      false,
+
+    planetCategoryMember:
+      false,
+
+    planetLawMember:
+      false,
+
+    planetAuthorityOwned:
+      false,
+
+    planetGeometryOwned:
+      false,
+
+    planetRotationOwned:
+      false,
+
     rendererInitialized:
       false,
 
@@ -612,6 +694,18 @@
 
     compositor:
       null,
+
+    planetParticipant:
+      null,
+
+    planetNode:
+      null,
+
+    planetNodeAdmitted:
+      false,
+
+    planetDrawCallsLastFrame:
+      0,
 
     compositorInitializedHere:
       false,
@@ -2808,6 +2902,62 @@
     return compositor;
   }
 
+  function resolvePlanetParticipant() {
+    const participant =
+      globalThis
+        .DGB_LAWS_PLANET_WORLD_PARTICIPANT;
+
+    if (
+      !participant ||
+      typeof participant !== "object"
+    ) {
+      state.planetParticipant =
+        null;
+
+      return null;
+    }
+
+    if (
+      participant.moduleId !==
+        CONTRACT.planetParticipantModuleId
+    ) {
+      state.planetParticipant =
+        null;
+
+      return null;
+    }
+
+    if (
+      participant.moduleVersion !==
+        CONTRACT.planetParticipantModuleVersion
+    ) {
+      state.planetParticipant =
+        null;
+
+      return null;
+    }
+
+    [
+      "getNode",
+      "getWorldCenter",
+      "isPlanetNode",
+      "draw"
+    ].forEach(
+      surface => {
+        invariant(
+          typeof participant[surface] ===
+            "function",
+          `LAWS_CRYSTALS_PLANET_PARTICIPANT_SURFACE_REQUIRED:${surface}`
+        );
+      }
+    );
+
+    state.planetParticipant =
+      participant;
+
+    return participant;
+  }
+
   function resolveDom() {
     state.root =
       qs("[data-laws-root]");
@@ -3958,7 +4108,47 @@
     );
   }
 
+  function isPlanetNode(node) {
+    const participant =
+      state.planetParticipant ||
+      resolvePlanetParticipant();
+
+    if (
+      participant &&
+      typeof participant.isPlanetNode === "function"
+    ) {
+      return Boolean(
+        participant.isPlanetNode(node)
+      );
+    }
+
+    return Boolean(
+      node &&
+      node.type === NODE_TYPES.PLANET &&
+      node.id === CONTRACT.planetParticipantNodeId
+    );
+  }
+
   function worldCenter(node) {
+    if (isPlanetNode(node)) {
+      const participant =
+        state.planetParticipant ||
+        resolvePlanetParticipant();
+
+      if (
+        participant &&
+        typeof participant.getWorldCenter === "function"
+      ) {
+        return participant.getWorldCenter(node);
+      }
+
+      return [
+        0,
+        0,
+        0
+      ];
+    }
+
     return [
       node.transform.x,
 
@@ -4079,11 +4269,74 @@
     );
   }
 
+  function drawPlanetNode(
+    renderer,
+    node,
+    haloPass
+  ) {
+    const participant =
+      state.planetParticipant ||
+      resolvePlanetParticipant();
+
+    if (
+      !participant ||
+      typeof participant.draw !== "function"
+    ) {
+      return 0;
+    }
+
+    const drawCalls =
+      participant.draw({
+        renderer,
+        node,
+        haloPass:
+          Boolean(haloPass),
+
+        viewMatrix:
+          state.compositor
+            .getViewMatrix(),
+
+        projectionMatrix:
+          state.compositor
+            .getProjectionMatrix(),
+
+        time:
+          state.time,
+
+        deltaSeconds:
+          state.compositorFrame
+            ? state.compositorFrame.deltaSeconds
+            : 0.016,
+
+        frame:
+          state.frame,
+
+        compositorFrame:
+          state.compositorFrame,
+
+        reducedMotion:
+          state.reducedMotion
+      }) || 0;
+
+    state.planetDrawCallsLastFrame +=
+      drawCalls;
+
+    return drawCalls;
+  }
+
   function drawNode(
     renderer,
     node,
     haloPass
   ) {
+    if (isPlanetNode(node)) {
+      return drawPlanetNode(
+        renderer,
+        node,
+        haloPass
+      );
+    }
+
     const mesh =
       renderer.meshes.get(
         node.meshKey
@@ -4138,6 +4391,10 @@
           model
         )
       );
+
+    gl.useProgram(
+      renderer.program
+    );
 
     gl.uniformMatrix4fv(
       renderer.uniforms.model,
@@ -4299,40 +4556,80 @@
   }
 
   /*
-   * Crystals supplies identity and world position.
+   * Crystals supplies identity and world position for law/category nodes.
    * Compositor supplies screen position, depth, and overlap facts.
    * Controller supplies interaction authorization.
    * CSS supplies visible label presentation.
+   *
+   * Planet nodes are intentionally excluded from semantic law/category
+   * projection records. The semantic Main Compass control remains
+   * [data-upstream-compass-control].
    */
   function buildSemanticProjectionRecords(
     visibleNodes
   ) {
     const records = [];
 
-    visibleNodes.forEach(
-      node => {
-        const projected =
-          state.compositor
-            .projectWorldPoint(
-              worldCenter(node),
-              {
-                projectedRadius:
-                  projectedRadiusForNode(
-                    node
-                  ),
+    visibleNodes
+      .filter(
+        node =>
+          node &&
+          (
+            node.type === NODE_TYPES.CATEGORY ||
+            node.type === NODE_TYPES.LAW
+          )
+      )
+      .forEach(
+        node => {
+          const projected =
+            state.compositor
+              .projectWorldPoint(
+                worldCenter(node),
+                {
+                  projectedRadius:
+                    projectedRadiusForNode(
+                      node
+                    ),
 
-                nodeId:
-                  node.id,
+                  nodeId:
+                    node.id,
 
-                nodeType:
-                  node.type
-              }
-            );
+                  nodeType:
+                    node.type
+                }
+              );
 
-        node.projectedScreen =
-          projected || null;
+          node.projectedScreen =
+            projected || null;
 
-        if (!projected) {
+          if (!projected) {
+            records.push({
+              id:
+                node.id,
+
+              kind:
+                node.type,
+
+              x:
+                0,
+
+              y:
+                0,
+
+              depthLayer:
+                node.depthLayer
+                  .toLowerCase(),
+
+              compassOverlap:
+                false,
+
+              visible:
+                false
+            });
+
+            return;
+          }
+
           records.push({
             id:
               node.id,
@@ -4341,66 +4638,39 @@
               node.type,
 
             x:
-              0,
+              finiteNumber(
+                projected.x,
+                0
+              ),
 
             y:
-              0,
+              finiteNumber(
+                projected.y,
+                0
+              ),
+
+            radiusPx:
+              projectedRadiusForNode(
+                node
+              ),
 
             depthLayer:
               node.depthLayer
                 .toLowerCase(),
 
             compassOverlap:
-              false,
+              Boolean(
+                projected.compassOverlap
+              ),
 
             visible:
-              false
+              node.visible &&
+              node.transform.prominence >=
+                QUALITY.projectionVisibilityThreshold &&
+              projected.visible !== false
           });
-
-          return;
         }
-
-        records.push({
-          id:
-            node.id,
-
-          kind:
-            node.type,
-
-          x:
-            finiteNumber(
-              projected.x,
-              0
-            ),
-
-          y:
-            finiteNumber(
-              projected.y,
-              0
-            ),
-
-          radiusPx:
-            projectedRadiusForNode(
-              node
-            ),
-
-          depthLayer:
-            node.depthLayer
-              .toLowerCase(),
-
-          compassOverlap:
-            Boolean(
-              projected.compassOverlap
-            ),
-
-          visible:
-            node.visible &&
-            node.transform.prominence >=
-              QUALITY.projectionVisibilityThreshold &&
-            projected.visible !== false
-        });
-      }
-    );
+      );
 
     return records;
   }
@@ -4419,7 +4689,112 @@
       accepted !== false;
   }
 
+  function visibleRegistryNodes() {
+    return Array.from(
+      state.registry.values()
+    ).filter(
+      node =>
+        node.visible &&
+        node.transform.prominence >=
+          0.04
+    );
+  }
+
+  function resolvePlanetNode(deltaSeconds) {
+    const participant =
+      state.planetParticipant ||
+      resolvePlanetParticipant();
+
+    if (!participant) {
+      state.planetNode =
+        null;
+
+      state.planetNodeAdmitted =
+        false;
+
+      return null;
+    }
+
+    let node =
+      null;
+
+    try {
+      node =
+        participant.getNode({
+          time:
+            state.time,
+
+          nowSeconds:
+            state.time,
+
+          deltaSeconds,
+
+          frame:
+            state.frame,
+
+          compositorFrame:
+            state.compositorFrame,
+
+          reducedMotion:
+            state.reducedMotion
+        });
+    } catch (error) {
+      state.planetNode =
+        null;
+
+      state.planetNodeAdmitted =
+        false;
+
+      emitFailure(
+        "LAWS_CRYSTALS_PLANET_NODE_REQUEST_FAILED",
+        {
+          code:
+            error && error.code
+              ? error.code
+              : "",
+
+          message:
+            error && error.message
+              ? error.message
+              : String(error),
+
+          details:
+            error && error.details
+              ? error.details
+              : null
+        }
+      );
+
+      return null;
+    }
+
+    if (
+      node &&
+      participant.isPlanetNode(node)
+    ) {
+      state.planetNode =
+        node;
+
+      state.planetNodeAdmitted =
+        true;
+
+      return node;
+    }
+
+    state.planetNode =
+      null;
+
+    state.planetNodeAdmitted =
+      false;
+
+    return null;
+  }
+
   function emitReceipt(extra = {}) {
+    const participant =
+      state.planetParticipant ||
+      null;
+
     Object.assign(
       RECEIPT,
       {
@@ -4442,6 +4817,61 @@
           state.compositor
             ? state.compositor.moduleVersion
             : "",
+
+        planetParticipantModuleId:
+          participant
+            ? participant.moduleId || ""
+            : "",
+
+        planetParticipantModuleVersion:
+          participant
+            ? participant.moduleVersion || ""
+            : "",
+
+        planetParticipantAvailable:
+          Boolean(participant),
+
+        planetParticipantAccepted:
+          Boolean(
+            participant &&
+            participant.moduleId ===
+              CONTRACT.planetParticipantModuleId &&
+            participant.moduleVersion ===
+              CONTRACT.planetParticipantModuleVersion
+          ),
+
+        planetParticipantNodeAvailable:
+          Boolean(state.planetNode),
+
+        planetParticipantNodeAdmitted:
+          Boolean(state.planetNodeAdmitted),
+
+        planetDrawDelegated:
+          state.planetDrawCallsLastFrame > 0,
+
+        planetDrawCallsLastFrame:
+          state.planetDrawCallsLastFrame,
+
+        planetVisibleObjectCount:
+          state.planetNodeAdmitted ? 1 : 0,
+
+        planetRegistryMember:
+          false,
+
+        planetCategoryMember:
+          false,
+
+        planetLawMember:
+          false,
+
+        planetAuthorityOwned:
+          false,
+
+        planetGeometryOwned:
+          false,
+
+        planetRotationOwned:
+          false,
 
         sceneProjection:
           state.sceneProjection,
@@ -4592,6 +5022,30 @@
         "false";
 
       state.root.dataset
+        .lawsCrystalsPlanetParticipantAvailable =
+        participant ? "true" : "false";
+
+      state.root.dataset
+        .lawsCrystalsPlanetParticipantAdmitted =
+        state.planetNodeAdmitted ? "true" : "false";
+
+      state.root.dataset
+        .lawsCrystalsPlanetAuthorityOwned =
+        "false";
+
+      state.root.dataset
+        .lawsCrystalsPlanetGeometryOwned =
+        "false";
+
+      state.root.dataset
+        .lawsCrystalsPlanetRotationOwned =
+        "false";
+
+      state.root.dataset
+        .lawsCrystalsPlanetRegistryMember =
+        "false";
+
+      state.root.dataset
         .visualPassClaimed =
         "false";
     }
@@ -4683,6 +5137,9 @@
     state.lastTime = seconds;
     state.time = seconds;
 
+    state.planetDrawCallsLastFrame =
+      0;
+
     try {
       state.frame =
         state.controller
@@ -4715,15 +5172,19 @@
         deltaSeconds
       );
 
-      const visibleNodes =
-        Array.from(
-          state.registry.values()
-        ).filter(
-          node =>
-            node.visible &&
-            node.transform.prominence >=
-              0.04
+      const lawAndCategoryNodes =
+        visibleRegistryNodes();
+
+      const planetNode =
+        resolvePlanetNode(
+          deltaSeconds
         );
+
+      const visibleNodes =
+        [
+          ...lawAndCategoryNodes,
+          planetNode
+        ].filter(Boolean);
 
       const result =
         state.compositor
@@ -4736,7 +5197,8 @@
 
             getPreviousLayer:
               node =>
-                node.previousDepthLayer,
+                node.previousDepthLayer ||
+                DEPTH_LAYERS.REAR,
 
             setClassification:
               (
@@ -4783,7 +5245,7 @@
 
       const projectionRecords =
         buildSemanticProjectionRecords(
-          visibleNodes
+          lawAndCategoryNodes
         );
 
       submitSemanticProjection(
@@ -4936,6 +5398,9 @@
         sphere:
           SPHERE,
 
+        nodeTypes:
+          NODE_TYPES,
+
         receipt:
           () =>
             Object.freeze({
@@ -4981,9 +5446,62 @@
 
                   return result;
                 },
-                {}
+                state.planetNode
+                  ? {
+                      [state.planetNode.id]:
+                        Object.freeze({
+                          layer:
+                            state.planetNode
+                              .depthLayer,
+
+                          viewDepth:
+                            state.planetNode
+                              .viewDepth,
+
+                          offsetFromCompassPlane:
+                            state.planetNode
+                              .depthOffsetFromCompassPlane
+                        })
+                    }
+                  : {}
               )
             ),
+
+        getPlanetParticipantState:
+          () =>
+            Object.freeze({
+              available:
+                Boolean(
+                  state.planetParticipant
+                ),
+
+              admitted:
+                Boolean(
+                  state.planetNodeAdmitted
+                ),
+
+              nodeId:
+                state.planetNode
+                  ? state.planetNode.id
+                  : "",
+
+              nodeType:
+                state.planetNode
+                  ? state.planetNode.type
+                  : "",
+
+              registryMember:
+                false,
+
+              categoryMember:
+                false,
+
+              lawMember:
+                false,
+
+              authorityOwned:
+                false
+            }),
 
         stop:
           () => {
@@ -5075,6 +5593,12 @@
       frontVisibleObjectCount:
         0,
 
+      planetVisibleObjectCount:
+        0,
+
+      planetParticipantNodeAdmitted:
+        false,
+
       semanticProjectionRecordCount:
         0,
 
@@ -5140,6 +5664,13 @@
       state.compositor =
         requireCompositor();
 
+      try {
+        resolvePlanetParticipant();
+      } catch (_) {
+        state.planetParticipant =
+          null;
+      }
+
       initializeCompositor();
 
       relocateCanonicalLawControls();
@@ -5202,6 +5733,34 @@
           false,
 
         doctrineOwned:
+          false,
+
+        planetParticipantAvailable:
+          Boolean(
+            state.planetParticipant
+          ),
+
+        planetParticipantAccepted:
+          Boolean(
+            state.planetParticipant
+          ),
+
+        planetAuthorityOwned:
+          false,
+
+        planetGeometryOwned:
+          false,
+
+        planetRotationOwned:
+          false,
+
+        planetRegistryMember:
+          false,
+
+        planetCategoryMember:
+          false,
+
+        planetLawMember:
           false
       });
 
@@ -5246,14 +5805,14 @@
 })();
 
 /*
-DGB_LAWS_CRYSTALS_CONTROLLER_DECOUPLING_RESULT_v1
+DGB_LAWS_CRYSTALS_CONTROLLER_DECOUPLING_WITH_PLANET_PARTICIPANT_RESULT_v1
 
 Artifact:
  /laws/index.crystals.js
 
 Module:
  DGB_LAWS_CRYSTALS
- 1.0.0-controller-decoupled-crystal-renderer
+ 1.1.0-controller-decoupled-crystal-renderer-with-planet-participant
 
 Controller dependency:
  DGB_LAWS_CONTROLLER
@@ -5263,21 +5822,24 @@ Compositor dependency:
  DGB_LAWS_COMPOSITOR
  1.0.0-camera-depth-layer-orchestration
 
-Source template:
- /products/archcoin/index.crystals.js
- DGB_ARCHCOIN_CRYSTALS
- 2.0.0-controller-decoupled-crystal-renderer
+Optional planet participant dependency:
+ DGB_LAWS_PLANET_WORLD_PARTICIPANT
+ 1.0.0-laws-world-pass-participant
 
-Conversion:
-- cardinal geometry converted to category geometry
-- room geometry converted to law geometry
-- wing registry converted to direction registry
-- room-control relocation converted to law-control relocation
-- Archcoin selectors converted to Laws selectors
-- Archcoin controller/compositor dependencies converted to Laws dependencies
-- Archcoin events converted to Laws events
-- Archcoin receipts converted to Laws receipts
-- projection records now use category/law kinds
+Renewal:
+- adds NODE_TYPES.PLANET = "compass-planet"
+- admits optional DGB_LAWS_PLANET_WORLD_PARTICIPANT node into shared compositor pass
+- delegates planet draw to DGB_LAWS_PLANET_WORLD_PARTICIPANT.draw()
+- uses participant.getWorldCenter() for planet world center
+- uses participant.isPlanetNode() for participant identification
+- preserves crystal renderer as shared pass consumer, not planet authority
+- keeps semantic projection records limited to law/category nodes
+- emits planet participant receipt fields
+- preserves category count at 4
+- preserves law count at 16
+- preserves canonical law-control relocation
+- preserves controller authority boundary
+- preserves compositor camera/depth/layer authority boundary
 
 Retained:
 - crystal meshes
@@ -5302,6 +5864,12 @@ Retained:
 - controller.updateSemanticProjection(records)
 
 Not owned:
+- planet identity
+- Audralia geometry source
+- planet terrain source
+- planet material source
+- planet rotation state
+- planet receipt authority
 - pointerdown handling
 - pointermove handling
 - pointerup handling
@@ -5347,7 +5915,8 @@ Runtime authority:
 - interactions owns swipe classification
 - controller owns accepted state and navigation transition
 - compositor owns camera, projection, depth, and layer ordering
-- crystals only renders controller state and forwards bounded projection facts
+- planet participant owns planet identity, geometry adaptation, and rotation state
+- crystals owns shared world-pass consumption and law/category crystal rendering
 
 Crystals contains human-law statements:
  FALSE
@@ -5362,6 +5931,9 @@ Crystals contains audit-question statements:
  FALSE
 
 Crystals contains doctrine:
+ FALSE
+
+Crystals owns planet authority:
  FALSE
 
 Controller modified:

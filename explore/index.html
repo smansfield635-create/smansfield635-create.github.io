@@ -1,12 +1,12 @@
-<!doctype html> 
+<!doctype html>
 <html
   lang="en"
   data-route="/explore/"
   data-page="explore-frontier-curiosity-surface"
   data-room="explore"
   data-public-facing-name="Explore"
-  data-version="EXPLORE-FRONTIER-CURIOSITY-SURFACE-v2"
-  data-contract="EXPLORE_FRONTIER_CURIOSITY_SURFACE_ENTRY_TNT_v2"
+  data-version="EXPLORE-FRONTIER-CURIOSITY-SURFACE-v3"
+  data-contract="EXPLORE_FRONTIER_CURIOSITY_SURFACE_ENTRY_TNT_v3"
   data-role="frontier-curiosity-entry"
   data-purpose="curiosity-led-frontier-surface-selection"
   data-primary-destination="/explore/frontier/"
@@ -567,6 +567,7 @@
       --accent-soft: rgba(242, 199, 111, 0.16);
       --accent-line: rgba(242, 199, 111, 0.48);
 
+      scroll-margin-top: 1rem;
       border: 1px solid var(--accent-line);
       border-radius: var(--radius-lg);
       background:
@@ -577,6 +578,10 @@
       box-shadow:
         0 18px 46px rgba(0, 0, 0, 0.28),
         inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    }
+
+    #curiosity-selector {
+      scroll-margin-top: 1rem;
     }
 
     .preview-panel[data-surface="energy"] {
@@ -768,18 +773,18 @@
 
     .preview-action {
       display: grid;
+      grid-template-columns: auto auto;
+      align-items: center;
+      justify-content: start;
       gap: 8px;
       margin-top: 14px;
-    }
-
-    .preview-action .button {
-      width: fit-content;
     }
 
     .preview-note {
       color: var(--muted);
       font-size: 0.9rem;
       line-height: 1.45;
+      margin-top: 10px;
     }
 
     .method-grid {
@@ -856,10 +861,6 @@
       .method-grid {
         grid-template-columns: 1fr;
       }
-
-      .preview-action .button {
-        width: 100%;
-      }
     }
 
     @media (max-width: 720px) {
@@ -886,8 +887,9 @@
         grid-template-columns: 1fr;
       }
 
-      .hero-actions {
-        display: grid;
+      .hero-actions,
+      .preview-action {
+        grid-template-columns: 1fr;
       }
 
       .button {
@@ -919,7 +921,7 @@
 <body
   data-route="/explore/"
   data-room="explore"
-  data-contract="EXPLORE_FRONTIER_CURIOSITY_SURFACE_ENTRY_TNT_v2"
+  data-contract="EXPLORE_FRONTIER_CURIOSITY_SURFACE_ENTRY_TNT_v3"
   data-primary-destination="/explore/frontier/"
   data-objective-stance="true"
   data-narrative-stance="false"
@@ -1329,10 +1331,18 @@
                 Open Frontier Lanes
               </a>
 
-              <p class="preview-note">
-                The Frontier hub handles the deeper lane choice.
-              </p>
+              <a
+                class="button"
+                href="#curiosity-selector"
+                data-back-to-lanes
+              >
+                Back to the Lanes
+              </a>
             </div>
+
+            <p class="preview-note">
+              The Frontier hub handles the deeper lane choice.
+            </p>
           </article>
         </div>
       </section>
@@ -1394,7 +1404,7 @@
         class="route-receipt"
         data-route-receipt
       >
-EXPLORE_FRONTIER_CURIOSITY_SURFACE_ENTRY_TNT_v2
+EXPLORE_FRONTIER_CURIOSITY_SURFACE_ENTRY_TNT_v3
 route=/explore/
 page=explore_frontier_curiosity_surface
 role=frontier_curiosity_entry
@@ -1414,6 +1424,8 @@ surface_groups=power_flow,waste_recovery,built_systems,patterns_direction,use_si
 surface_tabs=energy,water,waste,closed_loop,infrastructure,urban,lattice,trajectory,manual,shimmer
 surface_destination=/explore/frontier/
 dropdown_before_frontier_action=true
+auto_scroll_preview_on_surface_select=true
+back_to_lanes_action=true
 inline_css=true
 inline_js=true
 external_css=false
@@ -1627,6 +1639,28 @@ boundary=explore_names_the_surface_frontier_handles_lane_selection
     }
   };
 
+  function prefersReducedMotion() {
+    return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  }
+
+  function scrollToElement(element) {
+    if (!element) {
+      return;
+    }
+
+    element.scrollIntoView({
+      behavior: prefersReducedMotion() ? "auto" : "smooth",
+      block: "start"
+    });
+  }
+
+  function scrollToLanes() {
+    const target =
+      document.querySelector("#curiosity-selector");
+
+    scrollToElement(target);
+  }
+
   function setText(root, selector, value) {
     const element =
       root.querySelector(selector);
@@ -1678,6 +1712,16 @@ boundary=explore_names_the_surface_frontier_handles_lane_selection
     setText(panel, "[data-preview-questions]", surface.questions);
     setText(panel, "[data-preview-belongs]", surface.belongs);
     setText(panel, "[data-preview-limit]", surface.limit);
+
+    const details =
+      panel.querySelector("[data-scratch-details]");
+
+    if (details) {
+      details.open =
+        false;
+    }
+
+    scrollToElement(panel);
   }
 
   function initializeExploreSurface() {
@@ -1693,6 +1737,19 @@ boundary=explore_names_the_surface_frontier_handles_lane_selection
       );
     });
 
+    const backToLanes =
+      document.querySelector("[data-back-to-lanes]");
+
+    if (backToLanes) {
+      backToLanes.addEventListener(
+        "click",
+        event => {
+          event.preventDefault();
+          scrollToLanes();
+        }
+      );
+    }
+
     document.documentElement.dataset.exploreJs =
       "active";
 
@@ -1703,9 +1760,9 @@ boundary=explore_names_the_surface_frontier_handles_lane_selection
           detail: Object.freeze({
             route: "/explore/",
             page: "explore-frontier-curiosity-surface",
-            contract: "EXPLORE_FRONTIER_CURIOSITY_SURFACE_ENTRY_TNT_v2",
+            contract: "EXPLORE_FRONTIER_CURIOSITY_SURFACE_ENTRY_TNT_v3",
             primaryDestination: "/explore/frontier/",
-            interaction: "surface-tab-preview-dropdown-frontier-action",
+            interaction: "surface-tab-preview-dropdown-frontier-action-back-to-lanes",
             stance: "objective-practical",
             directLaneRouting: false
           })

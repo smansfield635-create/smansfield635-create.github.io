@@ -2116,3 +2116,126 @@ code {
     text-decoration: underline !important;
   }
 }
+/* ============================================================
+   URGENT COMPASS RESTORATION BLOCK
+   LAWS_COMPASS_VISIBLE_CATEGORY_FORCE_REPAIR_v1_0
+
+   Purpose:
+   Restore visible four-category compass stars around Main Compass.
+   CSS-only.
+   HTML_REOPEN: FALSE
+   CONTROLLER_REOPEN: FALSE
+   ============================================================ */
+
+#laws-orbit [data-laws-orbit-field],
+#laws-orbit [data-laws-scene-field],
+#laws-orbit .laws-orbit__field {
+  position: relative !important;
+  min-height: 640px !important;
+  overflow: visible !important;
+}
+
+#laws-orbit [data-laws-semantic-star-layer],
+#laws-orbit [data-laws-primary-stars],
+#laws-orbit .laws-primary-stars {
+  position: absolute !important;
+  inset: 0 !important;
+  z-index: 30 !important;
+  display: block !important;
+  pointer-events: none !important;
+}
+
+#laws-orbit [data-laws-category] {
+  position: absolute !important;
+  z-index: 40 !important;
+  display: grid !important;
+  width: clamp(3.6rem, 13vw, 5.6rem) !important;
+  height: clamp(3.6rem, 13vw, 5.6rem) !important;
+  place-items: center !important;
+  border: 1px solid rgba(255, 255, 255, 0.42) !important;
+  border-radius: 999px !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+  transform: translate(-50%, -50%) !important;
+  translate: none !important;
+  background:
+    radial-gradient(circle at 50% 35%, rgba(255, 255, 255, 0.34), transparent 35%),
+    radial-gradient(circle at 50% 50%, currentColor 0 8%, rgba(9, 20, 40, 0.92) 62%) !important;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.14),
+    0 0 34px currentColor !important;
+}
+
+#laws-orbit [data-laws-category]::before,
+#laws-orbit [data-laws-category]::after {
+  pointer-events: none !important;
+}
+
+#laws-orbit [data-laws-category][data-direction="flow"] {
+  top: 12% !important;
+  left: 50% !important;
+  color: var(--laws-flow, #94d7ff) !important;
+}
+
+#laws-orbit [data-laws-category][data-direction="integrity"] {
+  top: 50% !important;
+  left: 88% !important;
+  color: var(--laws-integrity, #f4d38a) !important;
+}
+
+#laws-orbit [data-laws-category][data-direction="reality"] {
+  top: 88% !important;
+  left: 50% !important;
+  color: var(--laws-reality, #bca7ff) !important;
+}
+
+#laws-orbit [data-laws-category][data-direction="structure"] {
+  top: 50% !important;
+  left: 12% !important;
+  color: var(--laws-structure, #92efc4) !important;
+}
+
+#laws-orbit [data-laws-compass-layer],
+#laws-orbit .laws-compass-layer {
+  z-index: 20 !important;
+}
+
+#laws-orbit [data-laws-panel],
+#laws-orbit .laws-controller-panel,
+#laws-orbit .laws-atlas-key {
+  z-index: 50 !important;
+}
+
+@media (max-width: 720px) {
+  #laws-orbit [data-laws-orbit-field],
+  #laws-orbit [data-laws-scene-field],
+  #laws-orbit .laws-orbit__field {
+    min-height: 560px !important;
+  }
+
+  #laws-orbit [data-laws-category] {
+    width: clamp(3rem, 14vw, 4.4rem) !important;
+    height: clamp(3rem, 14vw, 4.4rem) !important;
+  }
+
+  #laws-orbit [data-laws-category][data-direction="flow"] {
+    top: 13% !important;
+    left: 50% !important;
+  }
+
+  #laws-orbit [data-laws-category][data-direction="integrity"] {
+    top: 50% !important;
+    left: 86% !important;
+  }
+
+  #laws-orbit [data-laws-category][data-direction="reality"] {
+    top: 87% !important;
+    left: 50% !important;
+  }
+
+  #laws-orbit [data-laws-category][data-direction="structure"] {
+    top: 50% !important;
+    left: 14% !important;
+  }
+}

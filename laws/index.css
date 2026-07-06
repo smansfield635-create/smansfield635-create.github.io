@@ -1731,3 +1731,75 @@ FALSE
 DEPLOYMENT AUTHORIZATION:
 FALSE
 */
+/* ============================================================
+   15. LANE B LABEL SUPPRESSION PATCH
+   Contract:
+   LAWS_COMPASS_LANE_B_LABEL_SUPPRESSION_PATCH_v1_0_0
+
+   Purpose:
+   Remove visible compass/return/helper labels from the Laws compass
+   while preserving semantic controls, aria labels, sr-only text, pointer
+   behavior, controller bindings, interactions, compositor, and crystals.
+
+   Runtime status:
+   NOT EXECUTED
+
+   Visual acceptance:
+   NOT CLAIMED
+   ============================================================ */
+
+/* Hide the visible fixed accessibility return pill that appears over the stage. */
+.laws-accessible-orbit-return {
+  display: none !important;
+}
+
+/* Hide visible Main Compass text while preserving the button hit target. */
+.laws-compass-control__label,
+.laws-compass-control__instruction {
+  display: none !important;
+}
+
+/* Keep the center compass control fully interactive without text overlays. */
+.laws-compass-control,
+[data-upstream-compass-control],
+[data-laws-compass-control] {
+  place-content: center !important;
+  align-content: center !important;
+  justify-items: center !important;
+  padding: 0 !important;
+  color: transparent !important;
+  text-shadow: none !important;
+}
+
+/* Prevent any non-sr-only child text from leaking into the star field. */
+[data-laws-scene-field] [data-laws-objects] .laws-star > span:not(.sr-only),
+[data-laws-scene-field] [data-laws-objects] [data-laws-category] > span:not(.sr-only),
+[data-laws-scene-field] [data-laws-objects] [data-laws-law] > span:not(.sr-only) {
+  display: none !important;
+}
+
+/* Keep semantic-only text accessible but never visually rendered. */
+[data-laws-scene-field] .sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  white-space: nowrap !important;
+  clip: rect(0, 0, 0, 0) !important;
+  border: 0 !important;
+}
+
+/*
+LABEL SUPPRESSION RECEIPT:
+- Visible compass labels suppressed.
+- Visible accessibility return pill suppressed.
+- Semantic controls preserved.
+- aria-labels preserved.
+- sr-only text preserved.
+- Pointer behavior preserved.
+- Controller/interactions/compositor/crystals untouched.
+- Runtime execution not performed.
+- Visual acceptance not claimed.
+*/

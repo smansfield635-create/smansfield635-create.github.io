@@ -1103,8 +1103,7 @@
                   survive truth, consequence, and restraint.
                 </p>
               </article>
-
-              <article
+                            <article
                 class="showroom-atlas-narrative-record"
                 data-showroom-atlas-narrative-record="north-1"
               >
@@ -4436,58 +4435,332 @@ CompassRuntimeLoad = false</code></pre>
     src="/showroom/index.controller.js?v=SHOWROOM_MIRRORLAND_CONSTELLATION_CONTROLLER_TNT_v9"
     defer
     data-showroom-child="controller"
+    data-showroom-startup-critical="true"
   ></script>
 
   <script
-    src="/showroom/index.diamond.geometry.js?v=SHOWROOM_DIAMOND_G3_16X16_256_SEAT_GEOMETRY_AUTHORITY_TNT_v1"
-    defer
-    data-showroom-diamond-g3-child="geometry"
-  ></script>
-
-  <script
-    src="/showroom/index.diamond.js?v=SHOWROOM_DIAMOND_G3_NATIVE_WEBGL_OBJECT_LATTICE_RENDERER_TNT_v1"
-    defer
-    data-showroom-diamond-g3-child="renderer"
-  ></script>
-
-  <script
-    src="/showroom/index.compositor.js?v=SHOWROOM_CONSTELLATION_SINGLE_FRAME_COMPOSITOR_TNT_v6"
-    defer
-    data-showroom-child="compositor"
-  ></script>
-
-  <script
-    src="/assets/audralia/audralia.planet.js?v=AUDRALIA_G1_DETERMINISTIC_PLANET_GEOMETRY_AUTHORITY_TNT_v1"
-    defer
-    data-showroom-child="audralia-planet-geometry-authority"
-    data-audralia-planet-geometry-authority="true"
-    data-audralia-planet-geometry-contract="AUDRALIA_G1_DETERMINISTIC_PLANET_GEOMETRY_AUTHORITY_TNT_v1"
-  ></script>
-
-  <script
-    src="/showroom/index.planet.js?v=AUDRALIA_GEOMETRY_AUTHORITY_MINIATURE_3D_RENDERER_v1"
-    defer
-    data-showroom-child="planet"
-    data-showroom-planet-renderer-model="AUDRALIA_GEOMETRY_AUTHORITY_MINIATURE_3D_RENDERER_v1"
-    data-showroom-planet-source-authority="/assets/audralia/audralia.planet.js"
-  ></script>
-
-  <script
-    defer
-    data-showroom-child="planet-mount"
+    data-showroom-staged-loader="true"
+    data-showroom-staged-loader-contract="SHOWROOM_RUNTIME_STAGED_LOADING_BOOTSTRAP_TNT_v1"
   >
 (() => {
   "use strict";
 
   const CONTRACT =
+    "SHOWROOM_RUNTIME_STAGED_LOADING_BOOTSTRAP_TNT_v1";
+
+  const PLANET_CONTRACT =
     "SHOWROOM_PLANETARY_FULCRUM_INDEPENDENT_CENTER_PLANET_TNT_v1";
+
+  const documentElement =
+    document.documentElement;
+
+  const showroomRoot =
+    document.querySelector("[data-showroom-root]");
+
+  const reducedMotionQuery =
+    window.matchMedia
+      ? window.matchMedia("(prefers-reduced-motion: reduce)")
+      : null;
+
+  const reducedMotion =
+    Boolean(
+      reducedMotionQuery &&
+      reducedMotionQuery.matches
+    );
+
+  const state = {
+    orbitLoaded: false,
+    interactionLoaded: false,
+    diamondLoaded: false,
+    idleLoaded: false,
+    planetMounted: false,
+    loading: Object.create(null),
+    loaded: Object.create(null),
+    failed: Object.create(null)
+  };
+
+  function setRootFlag(name, value) {
+    if (!showroomRoot) {
+      return;
+    }
+
+    showroomRoot.setAttribute(
+      name,
+      value
+    );
+  }
+
+  function setDocumentStatus(name, value) {
+    documentElement.dataset[name] =
+      value;
+  }
+
+  function runWhenIdle(callback, timeout = 1600) {
+    if ("requestIdleCallback" in window) {
+      window.requestIdleCallback(
+        callback,
+        {
+          timeout
+        }
+      );
+
+      return;
+    }
+
+    window.setTimeout(
+      callback,
+      Math.min(timeout, 1200)
+    );
+  }
+
+  function loadScript(source, attributes = {}) {
+    if (state.loaded[source]) {
+      return Promise.resolve(source);
+    }
+
+    if (state.loading[source]) {
+      return state.loading[source];
+    }
+
+    state.loading[source] =
+      new Promise((resolve, reject) => {
+        const script =
+          document.createElement("script");
+
+        script.src =
+          source;
+
+        script.async =
+          false;
+
+        for (const [key, value] of Object.entries(attributes)) {
+          if (
+            value === false ||
+            value === null ||
+            typeof value === "undefined"
+          ) {
+            continue;
+          }
+
+          if (value === true) {
+            script.setAttribute(key, "");
+            continue;
+          }
+
+          script.setAttribute(
+            key,
+            String(value)
+          );
+        }
+
+        script.onload =
+          () => {
+            state.loaded[source] =
+              true;
+
+            delete state.loading[source];
+
+            resolve(source);
+          };
+
+        script.onerror =
+          () => {
+            state.failed[source] =
+              true;
+
+            delete state.loading[source];
+
+            reject(
+              new Error(
+                "Showroom staged loader failed: " + source
+              )
+            );
+          };
+
+        document.head.appendChild(script);
+      });
+
+    return state.loading[source];
+  }
+
+  async function loadSerial(records) {
+    for (const record of records) {
+      if (
+        reducedMotion &&
+        record.skipWhenReducedMotion
+      ) {
+        continue;
+      }
+
+      await loadScript(
+        record.src,
+        record.attributes || {}
+      );
+    }
+  }
+
+  const orbitScripts = [
+    {
+      src:
+        "/showroom/index.compositor.js?v=SHOWROOM_CONSTELLATION_SINGLE_FRAME_COMPOSITOR_TNT_v6",
+      attributes: {
+        "data-showroom-child": "compositor",
+        "data-showroom-staged-group": "orbit"
+      }
+    },
+    {
+      src:
+        "/assets/audralia/audralia.planet.js?v=AUDRALIA_G1_DETERMINISTIC_PLANET_GEOMETRY_AUTHORITY_TNT_v1",
+      attributes: {
+        "data-showroom-child": "audralia-planet-geometry-authority",
+        "data-audralia-planet-geometry-authority": "true",
+        "data-audralia-planet-geometry-contract":
+          "AUDRALIA_G1_DETERMINISTIC_PLANET_GEOMETRY_AUTHORITY_TNT_v1",
+        "data-showroom-staged-group": "orbit"
+      }
+    },
+    {
+      src:
+        "/showroom/index.planet.js?v=AUDRALIA_GEOMETRY_AUTHORITY_MINIATURE_3D_RENDERER_v1",
+      attributes: {
+        "data-showroom-child": "planet",
+        "data-showroom-planet-renderer-model":
+          "AUDRALIA_GEOMETRY_AUTHORITY_MINIATURE_3D_RENDERER_v1",
+        "data-showroom-planet-source-authority":
+          "/assets/audralia/audralia.planet.js",
+        "data-showroom-staged-group": "orbit"
+      }
+    },
+    {
+      src:
+        "/showroom/index.crystals.js?v=SHOWROOM_FOUR_BY_FOUR_NARRATIVE_CONSTELLATION_CRYSTALS_TNT_v8",
+      attributes: {
+        "data-showroom-child": "crystals",
+        "data-showroom-staged-group": "orbit"
+      }
+    }
+  ];
+
+  const interactionScripts = [
+    {
+      src:
+        "/showroom/index.interaction.gestures.js?v=SHOWROOM_INTERACTION_GESTURE_SUPPORT_TNT_v1",
+      attributes: {
+        "data-showroom-child": "interaction-gestures",
+        "data-showroom-staged-group": "interaction"
+      }
+    },
+    {
+      src:
+        "/showroom/index.interactions.js?v=SHOWROOM_COMPLETE_QUATERNION_INTERACTIONS_TNT_v6",
+      attributes: {
+        "data-showroom-child": "interactions",
+        "data-showroom-staged-group": "interaction"
+      }
+    }
+  ];
+
+  const diamondScripts = [
+    {
+      src:
+        "/showroom/index.diamond.geometry.js?v=SHOWROOM_DIAMOND_G3_16X16_256_SEAT_GEOMETRY_AUTHORITY_TNT_v1",
+      attributes: {
+        "data-showroom-diamond-g3-child": "geometry",
+        "data-showroom-staged-group": "diamond"
+      }
+    },
+    {
+      src:
+        "/showroom/index.diamond.js?v=SHOWROOM_DIAMOND_G3_NATIVE_WEBGL_OBJECT_LATTICE_RENDERER_TNT_v1",
+      attributes: {
+        "data-showroom-diamond-g3-child": "renderer",
+        "data-showroom-staged-group": "diamond"
+      }
+    },
+    {
+      src:
+        "/showroom/index.window.definition.js?v=SHOWROOM_WINDOW_OBJECT_DEFINITION_v1_FOREGROUND_LENS_SPLENDOR_AUTHORITY",
+      attributes: {
+        "data-showroom-child": "window-definition",
+        "data-showroom-staged-group": "diamond"
+      }
+    },
+    {
+      src:
+        "/showroom/index.window.js?v=SHOWROOM_WINDOW_OBJECT_v1_3_FOREGROUND_LENS_APERTURE_FOCUS_OPTIMIZED_BASE",
+      attributes: {
+        "data-showroom-child": "window-object",
+        "data-showroom-staged-group": "diamond"
+      }
+    },
+    {
+      src:
+        "/showroom/index.object-stage.js?v=SHOWROOM_WINDOW_DIAMOND_STAGE_CASE_v2_256_LATTICE_CORRIDOR_ENVIRONMENT",
+      attributes: {
+        "data-showroom-child": "object-stage",
+        "data-showroom-object-stage": "true",
+        "data-showroom-staged-group": "diamond"
+      }
+    },
+    {
+      src:
+        "/showroom/index.window.controller.js?v=SHOWROOM_WINDOW_CONTROLLER_v1_EXISTING_BUTTON_CURTAIN_TOGGLE",
+      attributes: {
+        "data-showroom-child": "window-controller",
+        "data-showroom-staged-group": "diamond"
+      }
+    },
+    {
+      src:
+        "/showroom/index.ui.js?v=SHOWROOM_DIAMOND_G3_OBJECT_LATTICE_UI_CONTROLLER_TNT_v1",
+      attributes: {
+        "data-showroom-diamond-g3-child": "ui",
+        "data-showroom-staged-group": "diamond"
+      }
+    }
+  ];
+
+  const idleScripts = [
+    {
+      src:
+        "/showroom/index.cosmos.js?v=SHOWROOM_COSMOS_HARDENED_v1",
+      attributes: {
+        "data-showroom-child": "cosmos",
+        "data-showroom-staged-group": "idle"
+      },
+      skipWhenReducedMotion: true
+    },
+    {
+      src:
+        "/assets/manor-blueprint/manor.blueprint.registry.js?v=MANOR_BLUEPRINT_MENU_CATEGORY_OWNERSHIP_REGISTRY_TNT_v1",
+      attributes: {
+        "data-mirrorland-blueprint-marker": "true",
+        "data-blueprint-page-scoped": "true",
+        "data-showroom-staged-group": "idle"
+      }
+    },
+    {
+      src:
+        "/assets/manor-blueprint/manor.blueprint.js?v=MANOR_BLUEPRINT_MENU_CATEGORY_OWNERSHIP_RUNTIME_TNT_v1",
+      attributes: {
+        "data-mirrorland-blueprint-marker": "true",
+        "data-blueprint-page-scoped": "true",
+        "data-showroom-staged-group": "idle"
+      }
+    },
+    {
+      src:
+        "/assets/elara/elara.room-entry.js?v=ELARA_ROOM_ENTRY_ISOLATED_HARD_NAVIGATION_ASSET_TNT_v1",
+      attributes: {
+        "data-elara-room-entry-asset": "true",
+        "data-showroom-staged-group": "idle"
+      }
+    }
+  ];
 
   function mountPlanet() {
     const planet =
       window.SHOWROOM_PLANET;
-
-    const root =
-      document.querySelector("[data-showroom-root]");
 
     const mount =
       document.querySelector("[data-showroom-planet-mount]");
@@ -4497,17 +4770,15 @@ CompassRuntimeLoad = false</code></pre>
 
     if (
       !planet ||
-      planet.contract !== CONTRACT ||
+      planet.contract !== PLANET_CONTRACT ||
       typeof planet.mount !== "function" ||
-      !root ||
+      !showroomRoot ||
       !mount
     ) {
-      if (root) {
-        root.setAttribute(
-          "data-showroom-planet-mounted",
-          "false"
-        );
-      }
+      setRootFlag(
+        "data-showroom-planet-mounted",
+        "false"
+      );
 
       return false;
     }
@@ -4518,11 +4789,14 @@ CompassRuntimeLoad = false</code></pre>
         {
           receiptTarget,
           reason:
-            "group-f-audralia-geometry-authority-miniature-3d-renderer"
+            "staged-loader-audralia-geometry-authority-miniature-3d-renderer"
         }
       ) !== false;
 
-    root.setAttribute(
+    state.planetMounted =
+      accepted;
+
+    setRootFlag(
       "data-showroom-planet-mounted",
       accepted
         ? "true"
@@ -4532,95 +4806,416 @@ CompassRuntimeLoad = false</code></pre>
     return accepted;
   }
 
+  async function loadOrbitSystems(reason = "visibility") {
+    if (state.orbitLoaded) {
+      return;
+    }
+
+    state.orbitLoaded =
+      true;
+
+    setDocumentStatus(
+      "showroomOrbitLoadReason",
+      reason
+    );
+
+    setRootFlag(
+      "data-showroom-staged-orbit-loading",
+      "true"
+    );
+
+    try {
+      await loadSerial(orbitScripts);
+
+      runWhenIdle(
+        mountPlanet,
+        1000
+      );
+
+      setRootFlag(
+        "data-showroom-staged-orbit-loaded",
+        "true"
+      );
+    } catch (error) {
+      setRootFlag(
+        "data-showroom-staged-orbit-error",
+        "true"
+      );
+
+      console.error(error);
+    } finally {
+      setRootFlag(
+        "data-showroom-staged-orbit-loading",
+        "false"
+      );
+    }
+  }
+
+  async function loadInteractionSystems(reason = "first-interaction") {
+    if (state.interactionLoaded) {
+      return;
+    }
+
+    state.interactionLoaded =
+      true;
+
+    setDocumentStatus(
+      "showroomInteractionLoadReason",
+      reason
+    );
+
+    setRootFlag(
+      "data-showroom-staged-interaction-loading",
+      "true"
+    );
+
+    try {
+      await loadSerial(interactionScripts);
+
+      setRootFlag(
+        "data-showroom-staged-interaction-loaded",
+        "true"
+      );
+    } catch (error) {
+      setRootFlag(
+        "data-showroom-staged-interaction-error",
+        "true"
+      );
+
+      console.error(error);
+    } finally {
+      setRootFlag(
+        "data-showroom-staged-interaction-loading",
+        "false"
+      );
+    }
+  }
+
+  async function loadDiamondSystems(reason = "visibility") {
+    if (state.diamondLoaded) {
+      return;
+    }
+
+    state.diamondLoaded =
+      true;
+
+    setDocumentStatus(
+      "showroomDiamondLoadReason",
+      reason
+    );
+
+    setRootFlag(
+      "data-showroom-staged-diamond-loading",
+      "true"
+    );
+
+    try {
+      await loadSerial(diamondScripts);
+
+      setRootFlag(
+        "data-showroom-staged-diamond-loaded",
+        "true"
+      );
+    } catch (error) {
+      setRootFlag(
+        "data-showroom-staged-diamond-error",
+        "true"
+      );
+
+      console.error(error);
+    } finally {
+      setRootFlag(
+        "data-showroom-staged-diamond-loading",
+        "false"
+      );
+    }
+  }
+
+  async function loadIdleSystems(reason = "idle") {
+    if (state.idleLoaded) {
+      return;
+    }
+
+    state.idleLoaded =
+      true;
+
+    setDocumentStatus(
+      "showroomIdleLoadReason",
+      reason
+    );
+
+    setRootFlag(
+      "data-showroom-staged-idle-loading",
+      "true"
+    );
+
+    try {
+      await loadSerial(idleScripts);
+
+      setRootFlag(
+        "data-showroom-staged-idle-loaded",
+        "true"
+      );
+    } catch (error) {
+      setRootFlag(
+        "data-showroom-staged-idle-error",
+        "true"
+      );
+
+      console.error(error);
+    } finally {
+      setRootFlag(
+        "data-showroom-staged-idle-loading",
+        "false"
+      );
+    }
+  }
+
+  function observeSection(selector, callback, options = {}) {
+    const element =
+      document.querySelector(selector);
+
+    if (!element) {
+      return false;
+    }
+
+    if (typeof IntersectionObserver !== "function") {
+      runWhenIdle(
+        () => callback("no-intersection-observer"),
+        1400
+      );
+
+      return true;
+    }
+
+    const observer =
+      new IntersectionObserver(
+        entries => {
+          const visible =
+            entries.some(
+              entry => entry.isIntersecting
+            );
+
+          if (!visible) {
+            return;
+          }
+
+          observer.disconnect();
+
+          callback("section-visible");
+        },
+        {
+          root: null,
+          rootMargin:
+            options.rootMargin || "480px 0px",
+          threshold:
+            options.threshold || 0.01
+        }
+      );
+
+    observer.observe(element);
+
+    return true;
+  }
+
+  function installInteractionTriggers() {
+    let armed =
+      true;
+
+    function trigger(event) {
+      if (!armed) {
+        return;
+      }
+
+      armed =
+        false;
+
+      window.removeEventListener(
+        "pointerdown",
+        trigger
+      );
+
+      window.removeEventListener(
+        "touchstart",
+        trigger
+      );
+
+      window.removeEventListener(
+        "keydown",
+        trigger
+      );
+
+      runWhenIdle(
+        () => {
+          loadInteractionSystems(
+            event.type || "first-interaction"
+          );
+        },
+        700
+      );
+    }
+
+    window.addEventListener(
+      "pointerdown",
+      trigger,
+      {
+        once: true,
+        passive: true
+      }
+    );
+
+    window.addEventListener(
+      "touchstart",
+      trigger,
+      {
+        once: true,
+        passive: true
+      }
+    );
+
+    window.addEventListener(
+      "keydown",
+      trigger,
+      {
+        once: true
+      }
+    );
+  }
+
+  function publishLoaderSurface() {
+    window.DGBShowroomStagedLoader =
+      Object.freeze({
+        contract: CONTRACT,
+
+        loadOrbitSystems:
+          () => loadOrbitSystems("manual"),
+
+        loadInteractionSystems:
+          () => loadInteractionSystems("manual"),
+
+        loadDiamondSystems:
+          () => loadDiamondSystems("manual"),
+
+        loadIdleSystems:
+          () => loadIdleSystems("manual"),
+
+        mountPlanet:
+          () => mountPlanet(),
+
+        status:
+          () => Object.freeze({
+            contract: CONTRACT,
+            orbitLoaded: state.orbitLoaded,
+            interactionLoaded: state.interactionLoaded,
+            diamondLoaded: state.diamondLoaded,
+            idleLoaded: state.idleLoaded,
+            planetMounted: state.planetMounted,
+            reducedMotion,
+            loaded: Object.keys(state.loaded),
+            failed: Object.keys(state.failed)
+          })
+      });
+  }
+
+  function initialize() {
+    setDocumentStatus(
+      "showroomStagedLoader",
+      "booting"
+    );
+
+    setRootFlag(
+      "data-showroom-staged-loader",
+      "active"
+    );
+
+    setRootFlag(
+      "data-showroom-staged-loader-contract",
+      CONTRACT
+    );
+
+    observeSection(
+      "#showroom-orbit",
+      reason => {
+        runWhenIdle(
+          () => {
+            loadOrbitSystems(reason);
+          },
+          900
+        );
+      },
+      {
+        rootMargin:
+          "520px 0px"
+      }
+    );
+
+    observeSection(
+      "#showroom-diamond-reveal",
+      reason => {
+        runWhenIdle(
+          () => {
+            loadDiamondSystems(reason);
+          },
+          1400
+        );
+      },
+      {
+        rootMargin:
+          "520px 0px"
+      }
+    );
+
+    installInteractionTriggers();
+
+    runWhenIdle(
+      () => {
+        loadIdleSystems("post-startup-idle");
+      },
+      reducedMotion
+        ? 3200
+        : 2400
+    );
+
+    publishLoaderSurface();
+
+    window.dispatchEvent(
+      new CustomEvent(
+        "DGB_SHOWROOM_STAGED_LOADER_READY",
+        {
+          detail: Object.freeze({
+            contract: CONTRACT,
+            route: "/showroom/",
+            reducedMotion,
+            startupCriticalOnly: true,
+            stagedLoading: true,
+            orbit: "visibility",
+            interaction: "first-user-input",
+            diamond: "visibility",
+            idle: "post-startup-idle"
+          })
+        }
+      )
+    );
+
+    setDocumentStatus(
+      "showroomStagedLoader",
+      "active"
+    );
+  }
+
   if (document.readyState === "loading") {
     document.addEventListener(
       "DOMContentLoaded",
-      mountPlanet,
+      initialize,
       {
-        once:
-          true
+        once: true
       }
     );
   } else {
-    mountPlanet();
+    initialize();
   }
 })();
   </script>
-
-  <script
-    src="/showroom/index.crystals.js?v=SHOWROOM_FOUR_BY_FOUR_NARRATIVE_CONSTELLATION_CRYSTALS_TNT_v8"
-    defer
-    data-showroom-child="crystals"
-  ></script>
-
-  <script
-    src="/showroom/index.interaction.gestures.js?v=SHOWROOM_INTERACTION_GESTURE_SUPPORT_TNT_v1"
-    defer
-    data-showroom-child="interaction-gestures"
-  ></script>
-
-  <script
-    src="/showroom/index.interactions.js?v=SHOWROOM_COMPLETE_QUATERNION_INTERACTIONS_TNT_v6"
-    defer
-    data-showroom-child="interactions"
-  ></script>
-
-  <script
-    src="/showroom/index.window.definition.js?v=SHOWROOM_WINDOW_OBJECT_DEFINITION_v1_FOREGROUND_LENS_SPLENDOR_AUTHORITY"
-    defer
-    data-showroom-child="window-definition"
-  ></script>
-
-  <script
-    src="/showroom/index.window.js?v=SHOWROOM_WINDOW_OBJECT_v1_3_FOREGROUND_LENS_APERTURE_FOCUS_OPTIMIZED_BASE"
-    defer
-    data-showroom-child="window-object"
-  ></script>
-
-  <script
-    src="/showroom/index.object-stage.js?v=SHOWROOM_WINDOW_DIAMOND_STAGE_CASE_v2_256_LATTICE_CORRIDOR_ENVIRONMENT"
-    defer
-    data-showroom-child="object-stage"
-    data-showroom-object-stage="true"
-  ></script>
-
-  <script
-    src="/showroom/index.window.controller.js?v=SHOWROOM_WINDOW_CONTROLLER_v1_EXISTING_BUTTON_CURTAIN_TOGGLE"
-    defer
-    data-showroom-child="window-controller"
-  ></script>
-
-  <script
-    src="/showroom/index.ui.js?v=SHOWROOM_DIAMOND_G3_OBJECT_LATTICE_UI_CONTROLLER_TNT_v1"
-    defer
-    data-showroom-diamond-g3-child="ui"
-  ></script>
-
-  <script
-    src="/showroom/index.cosmos.js?v=SHOWROOM_COSMOS_HARDENED_v1"
-    defer
-    data-showroom-child="cosmos"
-  ></script>
-
-  <script
-    src="/assets/manor-blueprint/manor.blueprint.registry.js?v=MANOR_BLUEPRINT_MENU_CATEGORY_OWNERSHIP_REGISTRY_TNT_v1"
-    defer
-    data-mirrorland-blueprint-marker="true"
-    data-blueprint-page-scoped="true"
-  ></script>
-
-  <script
-    src="/assets/manor-blueprint/manor.blueprint.js?v=MANOR_BLUEPRINT_MENU_CATEGORY_OWNERSHIP_RUNTIME_TNT_v1"
-    defer
-    data-mirrorland-blueprint-marker="true"
-    data-blueprint-page-scoped="true"
-  ></script>
-
-  <script
-    src="/assets/elara/elara.room-entry.js?v=ELARA_ROOM_ENTRY_ISOLATED_HARD_NAVIGATION_ASSET_TNT_v1"
-    defer
-    data-elara-room-entry-asset="true"
-  ></script>
 </body>
 </html>
 
@@ -4670,24 +5265,33 @@ CONTENT RENEWAL:
 - Existing route URLs, content IDs, lens values, route labels, previews, and accessible route labels remain in place.
 
 SOURCE INSTALLATION:
-- Showroom controller remains first active route authority.
-- Diamond geometry and renderer retain their existing relative order.
-- Showroom compositor loads after Diamond renderer.
-- Audralia geometry authority loads after compositor and before the Showroom planet renderer.
-- Showroom independent planet renderer loads after the Audralia geometry authority.
-- Planet mount bridge mounts /showroom/index.planet.js into the retained center compatibility mount.
-- Crystal runtime loads after planet center integration.
-- Gesture helper loads before interactions.
-- Interactions remain after gesture helper.
-- Window definition loads before Window object runtime.
-- Window object runtime loads after interactions.
-- Object-stage runtime loads after the Window object runtime.
-- Window controller runtime loads after the Object-stage runtime.
-- Diamond UI, Cosmos, blueprint, and Elara assets remain loaded.
+- Showroom controller remains first active route authority and the only direct startup-critical Showroom script.
+- Heavy runtime systems are loaded by SHOWROOM_RUNTIME_STAGED_LOADING_BOOTSTRAP_TNT_v1.
+- Direct startup execution of planet, crystal, diamond, window, object-stage, UI, cosmos, blueprint, and Elara systems has been removed.
+- Orbit systems load when #showroom-orbit approaches view.
+- Diamond geometry, Diamond renderer, Window definition, Window runtime, Object-stage, Window controller, and Diamond UI load when #showroom-diamond-reveal approaches view.
+- Gesture helper and interactions load after first pointer, touch, or keyboard interaction.
+- Cosmos, blueprint registry, blueprint runtime, and Elara support load after idle.
+- Reduced-motion users skip Cosmos idle loading.
+- Existing dependency order is preserved inside each staged load group.
 - universal Compass geometry root load remains absent from Showroom HTML.
 - universal Compass renderer root load remains absent from Showroom HTML.
 - Showroom Compass adapter root load remains absent from Showroom HTML.
 - shared Compass asset files are not deleted or modified by this HTML.
+
+STAGED LOADING UPDATE:
+- Startup now loads only the Showroom controller directly.
+- Heavy runtime systems are loaded by SHOWROOM_RUNTIME_STAGED_LOADING_BOOTSTRAP_TNT_v1.
+- Orbit systems load when the orbit approaches view.
+- Diamond and Window systems load when the Diamond reveal approaches view.
+- Interaction systems load after first pointer, touch, or keyboard interaction.
+- Cosmos, Blueprint, and Elara support load after idle.
+- Reduced-motion users skip Cosmos startup loading.
+- Direct startup execution of planet, crystal, diamond, window, object-stage, UI, cosmos, blueprint, and Elara systems has been removed.
+- Existing dependency order is preserved inside each staged load group.
+
+PERFORMANCE PURPOSE:
+Reduce mobile Lighthouse Total Blocking Time and JavaScript execution pressure without deleting Showroom visual systems or route architecture.
 
 WINDOW / DIAMOND STAGE-CASE INTEGRATION:
 - /showroom/index.object-stage.js is loaded as a passive stage-case authority.
@@ -4772,12 +5376,12 @@ PRESERVED:
 - all route sr-only labels;
 - all content IDs and lens values;
 - receipt structure;
-- Diamond assets and loading;
-- Window object/controller assets and loading;
-- Object-stage passive stage-case loading;
-- Cosmos assets and loading;
-- blueprint assets;
-- Elara assets;
+- Diamond assets and loading contract through staged loader;
+- Window object/controller assets and loading contract through staged loader;
+- Object-stage passive stage-case loading contract through staged loader;
+- Cosmos asset retained as idle staged enhancement;
+- blueprint assets retained as idle staged enhancements;
+- Elara asset retained as idle staged enhancement;
 - compositor/interactions compatibility selectors;
 - semantic activation bridge;
 - all 23 compact Atlas record containers;
@@ -4787,25 +5391,14 @@ PRESERVED:
 - runtime evidence structure.
 
 MODIFIED:
-- document version and contract metadata;
-- document title;
-- meta description;
-- threshold copy;
-- constellation visible framing;
-- controller panel default purpose/guidance text;
-- compact Atlas narrative copy;
-- Narrative Position explanatory copy;
-- Diamond public framing copy;
-- five native narrative foundation disclosures;
-- footer line;
-- receipt comment.
+- bottom script loading architecture;
+- receipt comment source-installation and staged-loading status.
 
 NOT MODIFIED:
 - CSS file contents;
 - JavaScript file contents;
 - CSS cache query from supplied v17_8 baseline;
 - root-load architecture;
-- script order;
 - runtime controller hooks;
 - route labels required by controller validation;
 - route URLs;
@@ -4817,6 +5410,8 @@ NOT MODIFIED:
 - hidden front-host placement.
 
 ABANDONED FOR SHOWROOM ROOT LOAD:
+- direct startup loading of all heavy Showroom runtime systems;
+- direct DOMContentLoaded planet mount bridge;
 - multi-file Showroom Compass runtime plan;
 - universal Compass renderer root load;
 - universal Compass geometry root load;

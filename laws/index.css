@@ -1,891 +1,1327 @@
 /* ============================================================
-/laws/index.css 
-LAWS_COMPASS_CSS_SELECTOR_AND_STATE_CONTRACT_FREEZE_v1_0
+   /laws/index.css
+   COMPLETE REPLACEMENT
 
-STATUS:
-CSS_DRAFT_CANDIDATE_ONLY
+   CSS STATUS:
+   CSS_DRAFT_CANDIDATE_ONLY
 
-LIVE_STANDARD:
-FALSE
+   PAIRED HTML:
+   LAWS_COMPASS_SIXTEEN_REGISTRY_AUXILIARY_BRANCHES_EVIDENCE_HTML_TNT_v1_1_0
 
-PATCH_MODE:
-LATE_CORRECTIVE_BLOCK
+   LIVE_STANDARD:
+   FALSE
 
-PATCH_PLACEMENT:
-ABSOLUTE_END_OF_FILE
+   TEST STATUS:
+   READY_FOR_LIVE_TEST_AFTER_PATCH
+   VISUAL_ACCEPTANCE_NOT_CLAIMED
+   DEPLOY_STANDARD_NOT_CLAIMED
 
-HTML_REOPEN:
-FALSE
+   AUTHORITY:
+   CSS visual layout / atmosphere / responsive / accessibility only.
+   No route, controller, registry, law-content, or evidence-claim authority.
+   ============================================================ */
 
-CONTROLLER_REOPEN:
-FALSE
-
-TEST_STATUS_AFTER_PATCH:
-READY_FOR_LIVE_TEST
-
-VISUAL_ACCEPTANCE:
-NOT YET CLAIMED
-
-DEPLOY_STANDARD:
-NOT YET CLAIMED
-============================================================ */
 
 /* ============================================================
-0. RESET / BASE TOKENS
-============================================================ */
+   0. BASE RESET / TOKENS
+   ============================================================ */
 
 :root {
---laws-bg-0: #030612;
---laws-bg-1: #071021;
---laws-bg-2: #0d1a33;
+  --laws-bg-0: #030612;
+  --laws-bg-1: #071021;
+  --laws-bg-2: #0d1a33;
+  --laws-bg-3: #102444;
 
---laws-ink-0: #f7fbff;
---laws-ink-1: #dce8f6;
---laws-ink-2: #aebed1;
---laws-ink-3: #7f90a7;
+  --laws-ink-0: #f7fbff;
+  --laws-ink-1: #dce8f6;
+  --laws-ink-2: #aebed1;
+  --laws-ink-3: #8191a8;
 
---laws-line-0: rgba(255, 255, 255, 0.16);
---laws-line-1: rgba(255, 255, 255, 0.28);
+  --laws-line-0: rgba(255, 255, 255, 0.14);
+  --laws-line-1: rgba(255, 255, 255, 0.24);
+  --laws-line-2: rgba(255, 255, 255, 0.36);
 
---laws-panel-0: rgba(7, 16, 33, 0.76);
---laws-panel-1: rgba(12, 25, 48, 0.86);
---laws-panel-2: rgba(19, 39, 71, 0.9);
+  --laws-panel-0: rgba(7, 16, 33, 0.72);
+  --laws-panel-1: rgba(12, 25, 48, 0.84);
+  --laws-panel-2: rgba(19, 39, 71, 0.9);
 
---laws-glass: blur(18px) saturate(140%);
+  --laws-glass: blur(18px) saturate(140%);
 
---laws-radius-xl: 32px;
---laws-radius-lg: 24px;
---laws-radius-md: 16px;
---laws-radius-sm: 10px;
+  --laws-radius-xl: 32px;
+  --laws-radius-lg: 24px;
+  --laws-radius-md: 16px;
+  --laws-radius-sm: 10px;
 
---laws-shadow-0: 0 24px 80px rgba(0, 0, 0, 0.34);
---laws-shadow-1: 0 18px 52px rgba(0, 0, 0, 0.28);
+  --laws-shadow-0: 0 24px 80px rgba(0, 0, 0, 0.36);
+  --laws-shadow-1: 0 18px 52px rgba(0, 0, 0, 0.28);
+  --laws-shadow-2: 0 8px 28px rgba(0, 0, 0, 0.24);
 
---laws-focus: rgba(170, 215, 255, 0.86);
+  --laws-flow: #94d7ff;
+  --laws-integrity: #f4d38a;
+  --laws-reality: #bca7ff;
+  --laws-structure: #92efc4;
 
---laws-flow: #94d7ff;
---laws-integrity: #f4d38a;
---laws-reality: #bca7ff;
---laws-structure: #92efc4;
+  --laws-focus: rgba(170, 215, 255, 0.9);
 
---laws-star-size-category: clamp(4.5rem, 8vw, 7.6rem);
---laws-star-size-law: clamp(2.6rem, 4.8vw, 4.1rem);
+  --laws-shell-pad: clamp(1rem, 3vw, 3rem);
+  --laws-page-width: min(1180px, calc(100vw - 2rem));
 
---laws-compass-size: min(78vw, 760px);
---laws-compass-min: 320px;
---laws-compass-core: clamp(8.5rem, 20vw, 14rem);
+  --laws-compass-size: min(78vw, 760px);
+  --laws-compass-min: 320px;
+  --laws-compass-core: clamp(8.5rem, 20vw, 14rem);
 
---laws-panel-width: min(94vw, 520px);
---laws-shell-pad: clamp(1rem, 3vw, 3rem);
+  --laws-star-size-category: clamp(4.5rem, 8vw, 7.6rem);
+  --laws-star-size-law: clamp(2.6rem, 4.8vw, 4.1rem);
 
-color-scheme: dark;
+  --laws-panel-width: min(94vw, 520px);
+
+  color-scheme: dark;
 }
 
 *,
 *::before,
 *::after {
-box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 html {
-min-height: 100%;
-background: var(--laws-bg-0);
+  min-height: 100%;
+  background: var(--laws-bg-0);
+  scroll-behavior: smooth;
 }
 
 body {
-min-height: 100%;
-margin: 0;
-background:
-radial-gradient(circle at 50% 22%, rgba(92, 148, 220, 0.18), transparent 34rem),
-radial-gradient(circle at 12% 12%, rgba(148, 215, 255, 0.12), transparent 24rem),
-radial-gradient(circle at 86% 72%, rgba(146, 239, 196, 0.1), transparent 28rem),
-linear-gradient(180deg, var(--laws-bg-0), var(--laws-bg-1) 46%, #02040b);
-color: var(--laws-ink-0);
-font-family:
-Inter,
-ui-sans-serif,
-system-ui,
--apple-system,
-BlinkMacSystemFont,
-"Segoe UI",
-sans-serif;
-line-height: 1.5;
+  min-height: 100%;
+  margin: 0;
+  background:
+    radial-gradient(circle at 50% 18%, rgba(92, 148, 220, 0.2), transparent 34rem),
+    radial-gradient(circle at 12% 12%, rgba(148, 215, 255, 0.13), transparent 24rem),
+    radial-gradient(circle at 88% 72%, rgba(146, 239, 196, 0.1), transparent 28rem),
+    linear-gradient(180deg, var(--laws-bg-0), var(--laws-bg-1) 46%, #02040b);
+  color: var(--laws-ink-0);
+  font-family:
+    Inter,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+  line-height: 1.5;
 }
 
 button,
-a {
-font: inherit;
-}
-
-a {
-color: inherit;
+a,
+input,
+textarea,
+select {
+  font: inherit;
 }
 
 button {
-color: inherit;
+  color: inherit;
+}
+
+button:not(:disabled) {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+a {
+  color: inherit;
+}
+
+pre,
+code {
+  font-family:
+    "SFMono-Regular",
+    Consolas,
+    "Liberation Mono",
+    Menlo,
+    monospace;
 }
 
 [hidden] {
-display: none !important;
+  display: none !important;
 }
+
 
 /* ============================================================
+   1. ACCESSIBILITY UTILITIES
+   ============================================================ */
 
-1. ROOT / SHELL
-============================================================ */
+.sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+.skip,
+.laws-accessible-orbit-return {
+  position: fixed;
+  left: 1rem;
+  z-index: 1000;
+  transform: translateY(-150%);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.7rem;
+  padding: 0.7rem 1rem;
+  border-radius: 999px;
+  background: var(--laws-ink-0);
+  color: var(--laws-bg-0);
+  text-decoration: none;
+  font-weight: 800;
+  box-shadow: var(--laws-shadow-2);
+  transition: transform 160ms ease;
+}
+
+.skip {
+  top: 1rem;
+}
+
+.laws-accessible-orbit-return {
+  top: 4rem;
+}
+
+.skip:focus,
+.laws-accessible-orbit-return:focus {
+  transform: translateY(0);
+}
+
+:focus-visible {
+  outline: 3px solid var(--laws-focus);
+  outline-offset: 5px;
+}
 
 
+/* ============================================================
+   2. ROOT / SHELL / STATIC ATMOSPHERE
+   ============================================================ */
 
-data-laws-root,
+[data-laws-root],
 .laws-shell {
-position: relative;
-isolation: isolate;
-min-height: 100vh;
-overflow-x: clip;
-color: var(--laws-ink-0);
+  position: relative;
+  isolation: isolate;
+  min-height: 100vh;
+  overflow-x: clip;
+  color: var(--laws-ink-0);
 }
 
 .laws-shell {
-padding: var(--laws-shell-pad);
+  padding: 0 var(--laws-shell-pad) var(--laws-shell-pad);
 }
 
+[data-laws-root]::before,
 .laws-shell::before {
-content: "";
-position: fixed;
-inset: 0;
-z-index: -3;
-pointer-events: none;
-background:
-radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.08) 0 1px, transparent 1.5px),
-radial-gradient(circle at 18% 30%, rgba(255, 255, 255, 0.08) 0 1px, transparent 1.5px),
-radial-gradient(circle at 82% 18%, rgba(255, 255, 255, 0.1) 0 1px, transparent 1.5px),
-radial-gradient(circle at 72% 80%, rgba(255, 255, 255, 0.06) 0 1px, transparent 1.5px);
-background-size:
-220px 220px,
-340px 340px,
-280px 280px,
-420px 420px;
-opacity: 0.72;
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -3;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.08) 0 1px, transparent 1.5px),
+    radial-gradient(circle at 18% 30%, rgba(255, 255, 255, 0.08) 0 1px, transparent 1.5px),
+    radial-gradient(circle at 82% 18%, rgba(255, 255, 255, 0.1) 0 1px, transparent 1.5px),
+    radial-gradient(circle at 72% 80%, rgba(255, 255, 255, 0.06) 0 1px, transparent 1.5px);
+  background-size:
+    220px 220px,
+    340px 340px,
+    280px 280px,
+    420px 420px;
+  opacity: 0.72;
 }
+
+[data-laws-root]::after,
+.laws-shell::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 50% 34%, rgba(148, 215, 255, 0.08), transparent 30rem),
+    radial-gradient(circle at 50% 80%, rgba(188, 167, 255, 0.06), transparent 34rem);
+}
+
 
 /* ============================================================
-2. SCENE / COSMIC FALLBACK
-============================================================ */
+   3. TOPBAR / NAVIGATION
+   ============================================================ */
 
-[data-laws-scene],
-[data-laws-orbit-scene] {
-position: relative;
-display: grid;
-min-height: 100vh;
-place-items: center;
-padding: clamp(2rem, 5vw, 5rem) var(--laws-shell-pad);
+.laws-topbar {
+  position: relative;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.25rem;
+  width: var(--laws-page-width);
+  margin: 0 auto;
+  padding: 1rem 0;
 }
 
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--laws-ink-0);
+  text-align: left;
+}
+
+.brand-mark {
+  display: grid;
+  width: 3rem;
+  height: 3rem;
+  place-items: center;
+  border: 1px solid var(--laws-line-1);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 50% 32%, rgba(255, 255, 255, 0.18), transparent 40%),
+    rgba(255, 255, 255, 0.08);
+  box-shadow: 0 0 24px rgba(148, 215, 255, 0.12);
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+}
+
+.brand-copy {
+  display: grid;
+  gap: 0.1rem;
+  color: var(--laws-ink-2);
+  font-size: 0.82rem;
+}
+
+.brand-copy strong {
+  color: var(--laws-ink-0);
+  font-size: 1rem;
+  line-height: 1.1;
+}
+
+.laws-nav,
+.nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.55rem;
+}
+
+.laws-nav a,
+.nav a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.35rem;
+  padding: 0.45rem 0.75rem;
+  border: 1px solid var(--laws-line-0);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--laws-ink-1);
+  text-decoration: none;
+  transition:
+    transform 160ms ease,
+    border-color 160ms ease,
+    background 160ms ease;
+}
+
+.laws-nav a:hover,
+.nav a:hover {
+  transform: translateY(-1px);
+  border-color: var(--laws-line-1);
+  background: rgba(255, 255, 255, 0.09);
+}
+
+
+/* ============================================================
+   4. SHARED BUTTONS
+   ============================================================ */
+
+.button,
+[data-laws-enter],
+[data-laws-return-to-orbit],
+[data-laws-return-home-compass] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.8rem;
+  padding: 0.72rem 1rem;
+  border: 1px solid var(--laws-line-1);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--laws-ink-0);
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    transform 160ms ease,
+    background 160ms ease,
+    border-color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.button:hover,
+[data-laws-enter]:not(:disabled):hover,
+[data-laws-return-to-orbit]:not(:disabled):hover,
+[data-laws-return-home-compass]:hover {
+  transform: translateY(-1px);
+  border-color: var(--laws-line-2);
+  background: rgba(255, 255, 255, 0.13);
+}
+
+.button-gold {
+  border-color: rgba(244, 211, 138, 0.5);
+  background:
+    radial-gradient(circle at 50% 0%, rgba(244, 211, 138, 0.18), transparent 70%),
+    rgba(244, 211, 138, 0.12);
+  box-shadow: 0 0 26px rgba(244, 211, 138, 0.1);
+}
+
+.button-gold:hover {
+  box-shadow: 0 0 34px rgba(244, 211, 138, 0.16);
+}
+
+
+/* ============================================================
+   5. THRESHOLD / ARRIVAL
+   ============================================================ */
+
+.laws-threshold {
+  position: relative;
+  z-index: 10;
+  width: var(--laws-page-width);
+  margin: 0 auto;
+  padding: clamp(3rem, 8vw, 7rem) 0 clamp(2rem, 5vw, 4rem);
+}
+
+.laws-threshold__frame {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(280px, 0.6fr);
+  gap: clamp(1rem, 4vw, 3rem);
+  align-items: center;
+}
+
+.laws-threshold__copy,
+.laws-threshold__signal {
+  border: 1px solid var(--laws-line-0);
+  border-radius: var(--laws-radius-lg);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.08), transparent 30%),
+    rgba(8, 18, 36, 0.72);
+  box-shadow: var(--laws-shadow-1);
+  backdrop-filter: var(--laws-glass);
+}
+
+.laws-threshold__copy,
+.laws-threshold__signal {
+  padding: clamp(1.2rem, 3vw, 2rem);
+}
+
+.laws-gate-badge,
+.kicker,
+.laws-branches__heading span,
+.laws-route-maturity__heading span,
+.laws-foundations__heading span {
+  color: var(--laws-ink-3);
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.laws-threshold h1,
+.laws-orbit__heading h2,
+.laws-foundations__heading h2,
+.laws-branches__heading h2,
+.laws-route-maturity__heading h2 {
+  margin: 0.55rem 0;
+  color: var(--laws-ink-0);
+  line-height: 1.02;
+  letter-spacing: -0.045em;
+}
+
+.laws-threshold h1 {
+  font-size: clamp(2.6rem, 8vw, 6.4rem);
+}
+
+.laws-orbit__heading h2,
+.laws-foundations__heading h2,
+.laws-branches__heading h2,
+.laws-route-maturity__heading h2 {
+  font-size: clamp(1.8rem, 4vw, 3.4rem);
+}
+
+.laws-door-subtitle,
+.laws-threshold__lead,
+.laws-orbit__heading p,
+.laws-foundations__heading p,
+.laws-branches__heading p,
+.laws-route-maturity__heading p {
+  color: var(--laws-ink-2);
+  font-size: clamp(0.98rem, 1.7vw, 1.12rem);
+}
+
+.laws-threshold__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1.3rem;
+}
+
+.laws-threshold__signal {
+  display: grid;
+  gap: 0.7rem;
+  align-self: stretch;
+  align-content: center;
+}
+
+.laws-threshold__signal span {
+  color: var(--laws-integrity);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.laws-threshold__signal strong {
+  display: block;
+  color: var(--laws-ink-0);
+  font-size: clamp(1.35rem, 2.5vw, 2rem);
+  line-height: 1.12;
+}
+
+.laws-threshold__signal p {
+  margin: 0;
+  color: var(--laws-ink-2);
+}
+
+
+/* ============================================================
+   6. ORBIT / SCENE
+   ============================================================ */
+
+.laws-orbit,
+[data-laws-orbit-scene],
+[data-laws-scene] {
+  position: relative;
+  z-index: 10;
+  width: var(--laws-page-width);
+  margin: 0 auto;
+}
+
+[data-laws-orbit-scene],
+[data-laws-scene] {
+  display: grid;
+  min-height: auto;
+  padding: clamp(2rem, 5vw, 5rem) 0;
+  place-items: center;
+}
+
+.laws-orbit__heading {
+  display: grid;
+  gap: 0.8rem;
+  width: 100%;
+  margin-bottom: clamp(1rem, 3vw, 2rem);
+  padding: clamp(1.1rem, 3vw, 1.8rem);
+  border: 1px solid var(--laws-line-0);
+  border-radius: var(--laws-radius-lg);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.08), transparent 30%),
+    rgba(8, 18, 36, 0.72);
+  box-shadow: var(--laws-shadow-1);
+  backdrop-filter: var(--laws-glass);
+}
+
+[data-laws-orbit-field],
 [data-laws-scene-field],
-[data-laws-orbit-field] {
-position: relative;
-display: grid;
-width: 100%;
-min-height: min(82vh, 900px);
-place-items: center;
+.laws-orbit__field {
+  position: relative;
+  display: grid;
+  width: 100%;
+  min-height: min(82vh, 900px);
+  place-items: center;
+  overflow: visible;
 }
 
-data-laws-cosmic-field,
+[data-laws-cosmic-field],
 .laws-cosmic-field {
-position: absolute;
-inset: 0;
-z-index: -2;
-overflow: hidden;
-pointer-events: none;
-background:
-radial-gradient(circle at 50% 50%, rgba(148, 215, 255, 0.12), transparent 20rem),
-radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.08), transparent 36rem);
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  border-radius: var(--laws-radius-xl);
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 50% 50%, rgba(148, 215, 255, 0.13), transparent 20rem),
+    radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.08), transparent 36rem),
+    rgba(255, 255, 255, 0.015);
 }
 
+[data-laws-cosmic-field]::before,
 .laws-cosmic-field::before {
-content: "";
-position: absolute;
-inset: -20%;
-background:
-radial-gradient(circle at 30% 28%, rgba(255, 255, 255, 0.16) 0 1px, transparent 1.7px),
-radial-gradient(circle at 74% 38%, rgba(255, 255, 255, 0.12) 0 1px, transparent 1.5px),
-radial-gradient(circle at 52% 78%, rgba(255, 255, 255, 0.14) 0 1px, transparent 1.5px);
-background-size:
-180px 180px,
-260px 260px,
-330px 330px;
-opacity: 0.68;
+  content: "";
+  position: absolute;
+  inset: -20%;
+  background:
+    radial-gradient(circle at 30% 28%, rgba(255, 255, 255, 0.16) 0 1px, transparent 1.7px),
+    radial-gradient(circle at 74% 38%, rgba(255, 255, 255, 0.12) 0 1px, transparent 1.5px),
+    radial-gradient(circle at 52% 78%, rgba(255, 255, 255, 0.14) 0 1px, transparent 1.5px);
+  background-size:
+    180px 180px,
+    260px 260px,
+    330px 330px;
+  opacity: 0.68;
 }
+
 
 /* ============================================================
-3. COMPASS LAYER
-============================================================ */
+   7. COMPASS CENTER
+   Current HTML uses same element for:
+   [data-laws-compass-layer][data-laws-center-layer]
+   ============================================================ */
 
 [data-laws-compass-layer],
 .laws-compass-layer {
-position: relative;
-display: grid;
-width: 100%;
-min-height: min(84vh, 960px);
-place-items: center;
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  display: grid;
+  min-height: 0;
+  place-items: center;
+  pointer-events: none;
+}
+
+[data-laws-compass-layer][data-laws-center-layer] {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  min-height: 0;
+  place-items: center;
+  pointer-events: none;
 }
 
 [data-laws-center-layer] {
-position: absolute;
-inset: 0;
-display: grid;
-place-items: center;
-pointer-events: none;
+  position: absolute;
+  inset: 0;
+  display: grid;
+  min-height: 0;
+  place-items: center;
+  pointer-events: none;
+}
+
+[data-laws-compass-visual-mount],
+.laws-compass-mount,
+[data-laws-compass-control],
+[data-upstream-compass-control],
+.laws-compass-control {
+  grid-area: 1 / 1;
 }
 
 [data-laws-compass-visual-mount],
 .laws-compass-mount {
-position: relative;
-display: grid;
-width: max(var(--laws-compass-min), var(--laws-compass-size));
-max-width: 100%;
-aspect-ratio: 1;
-place-items: center;
+  position: relative;
+  display: grid;
+  width: max(var(--laws-compass-min), var(--laws-compass-size));
+  max-width: 100%;
+  aspect-ratio: 1;
+  place-items: center;
+  pointer-events: none;
+}
+
+[data-laws-compass-visual-mount]::before,
+.laws-compass-mount::before {
+  content: "";
+  position: absolute;
+  inset: 13%;
+  border: 1px solid rgba(255, 255, 255, 0.11);
+  border-radius: 50%;
+  box-shadow:
+    0 0 0 1px rgba(148, 215, 255, 0.06),
+    0 0 80px rgba(148, 215, 255, 0.09);
+}
+
+[data-laws-compass-visual-mount]::after,
+.laws-compass-mount::after {
+  content: "";
+  position: absolute;
+  inset: 28%;
+  border: 1px dashed rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
 }
 
 .laws-compass-core {
-position: relative;
-z-index: 4;
-display: grid;
-width: var(--laws-compass-core);
-aspect-ratio: 1;
-place-items: center;
-border: 1px solid var(--laws-line-1);
-border-radius: 50%;
-background:
-radial-gradient(circle at 50% 42%, rgba(255, 255, 255, 0.18), transparent 38%),
-radial-gradient(circle at 50% 50%, rgba(148, 215, 255, 0.18), rgba(7, 16, 33, 0.86) 64%);
-box-shadow:
-0 0 0 1px rgba(148, 215, 255, 0.16),
-0 0 56px rgba(148, 215, 255, 0.18),
-var(--laws-shadow-1);
-text-align: center;
-pointer-events: auto;
+  position: relative;
+  z-index: 2;
+  display: grid;
+  width: var(--laws-compass-core);
+  aspect-ratio: 1;
+  place-items: center;
+  border: 1px solid var(--laws-line-1);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 50% 42%, rgba(255, 255, 255, 0.18), transparent 38%),
+    radial-gradient(circle at 50% 50%, rgba(148, 215, 255, 0.18), rgba(7, 16, 33, 0.86) 64%);
+  box-shadow:
+    0 0 0 1px rgba(148, 215, 255, 0.16),
+    0 0 56px rgba(148, 215, 255, 0.18),
+    var(--laws-shadow-1);
+  color: var(--laws-ink-0);
+  text-align: center;
+  font-weight: 850;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
-data-laws-compass-control,
-data-upstream-compass-control,
+[data-laws-compass-control],
+[data-upstream-compass-control],
 .laws-compass-control {
-position: relative;
-z-index: 5;
-display: inline-grid;
-min-width: 8.5rem;
-min-height: 8.5rem;
-place-items: center;
-padding: 1rem;
-border: 1px solid var(--laws-line-1);
-border-radius: 999px;
-background:
-radial-gradient(circle at 50% 35%, rgba(255, 255, 255, 0.16), transparent 42%),
-rgba(7, 16, 33, 0.72);
-color: var(--laws-ink-0);
-text-align: center;
-text-decoration: none;
-cursor: pointer;
-transition:
-transform 180ms ease,
-border-color 180ms ease,
-background 180ms ease,
-box-shadow 180ms ease;
+  position: relative;
+  z-index: 8;
+  display: inline-grid;
+  min-width: 8.5rem;
+  min-height: 8.5rem;
+  place-items: center;
+  padding: 1rem;
+  border: 1px solid var(--laws-line-1);
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at 50% 35%, rgba(255, 255, 255, 0.16), transparent 42%),
+    rgba(7, 16, 33, 0.76);
+  color: var(--laws-ink-0);
+  text-align: center;
+  text-decoration: none;
+  box-shadow:
+    0 0 0 1px rgba(148, 215, 255, 0.11),
+    0 0 44px rgba(148, 215, 255, 0.16);
+  pointer-events: auto;
+  transition:
+    transform 180ms ease,
+    border-color 180ms ease,
+    background 180ms ease,
+    box-shadow 180ms ease;
 }
 
+[data-laws-compass-control]:hover,
+[data-upstream-compass-control]:hover,
 .laws-compass-control:hover {
-transform: translateY(-2px) scale(1.015);
-border-color: rgba(255, 255, 255, 0.4);
-box-shadow: 0 0 42px rgba(148, 215, 255, 0.18);
+  transform: translateY(-2px) scale(1.015);
+  border-color: rgba(255, 255, 255, 0.4);
+  box-shadow:
+    0 0 0 1px rgba(148, 215, 255, 0.18),
+    0 0 52px rgba(148, 215, 255, 0.22);
 }
 
-.laws-compass-control:focus-visible,
-[data-laws-category-control]:focus-visible,
-[data-laws-law-control]:focus-visible,
-data-laws-enter:focus-visible,
-data-laws-return-to-orbit:focus-visible,
-[data-laws-return-home-compass]:focus-visible {
-outline: 3px solid var(--laws-focus);
-outline-offset: 5px;
+.laws-compass-control__label,
+.laws-compass-control__instruction {
+  display: block;
 }
+
+.laws-compass-control__label {
+  font-weight: 850;
+}
+
+.laws-compass-control__instruction {
+  color: var(--laws-ink-2);
+  font-size: 0.78rem;
+}
+
 
 /* ============================================================
-4. SEMANTIC STAR LAYERS
-============================================================ */
+   8. SEMANTIC STAR LAYERS
+   ============================================================ */
 
 [data-laws-semantic-star-layer],
+.laws-semantic-star-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+}
+
 [data-laws-primary-stars],
 [data-laws-category-layer],
 [data-laws-fallback-star-layer],
-.laws-semantic-star-layer,
 .laws-primary-stars {
-position: absolute;
-inset: 0;
-z-index: 3;
-pointer-events: none;
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
 }
 
-[data-laws-category-layer],
 [data-laws-primary-stars],
+[data-laws-category-layer],
 .laws-primary-stars {
-z-index: 4;
+  z-index: 6;
 }
 
 [data-laws-fallback-star-layer] {
-z-index: 2;
-opacity: 0.78;
+  z-index: 5;
 }
 
+
 /* ============================================================
-5. BASE STAR STYLING
-============================================================ */
+   9. STAR BASE
+   Current category HTML:
+   [data-laws-category][data-direction="flow"]
+   ============================================================ */
 
 .laws-star,
 [data-laws-semantic-star],
 [data-laws-fallback-star],
 [data-laws-category],
 [data-laws-law] {
-position: absolute;
-display: grid;
-place-items: center;
-translate: -50% -50%;
-pointer-events: auto;
-color: var(--laws-ink-0);
+  position: absolute;
+  display: grid;
+  place-items: center;
+  translate: -50% -50%;
+  pointer-events: auto;
+  color: var(--laws-ink-0);
+  text-align: center;
+  touch-action: manipulation;
+  transition:
+    transform 180ms ease,
+    opacity 180ms ease,
+    filter 180ms ease,
+    box-shadow 180ms ease,
+    border-color 180ms ease,
+    background 180ms ease;
 }
 
-.laws-star button,
-.laws-star a,
+.laws-star,
 [data-laws-category-control],
 [data-laws-law-control] {
-width: 100%;
-min-width: 0;
-min-height: 0;
-}
-
-[data-laws-category-control],
-[data-laws-law-control],
-.laws-star {
-border: 0;
+  border: 0;
 }
 
 [data-laws-category-control],
 [data-laws-law-control] {
-display: grid;
-place-items: center;
-border-radius: 999px;
-background: transparent;
-color: inherit;
-cursor: pointer;
-text-align: center;
+  border-radius: 999px;
+  background: transparent;
+  color: inherit;
 }
 
 .laws-star--large,
 .laws-star--category,
 [data-laws-category] {
-width: var(--laws-star-size-category);
-height: var(--laws-star-size-category);
+  width: var(--laws-star-size-category);
+  height: var(--laws-star-size-category);
 }
 
 .laws-star--small,
 .laws-star--law,
 [data-laws-law] {
-width: var(--laws-star-size-law);
-height: var(--laws-star-size-law);
-}
-
-.laws-star--category [data-laws-category-control],
-[data-laws-category-control],
-.laws-star--large {
-min-width: var(--laws-star-size-category);
-min-height: var(--laws-star-size-category);
-}
-
-.laws-star--law [data-laws-law-control],
-[data-laws-law-control],
-.laws-star--small {
-min-width: var(--laws-star-size-law);
-min-height: var(--laws-star-size-law);
+  width: var(--laws-star-size-law);
+  height: var(--laws-star-size-law);
 }
 
 .laws-star--category,
 [data-laws-category] {
-border-radius: 50%;
-background:
-radial-gradient(circle at 50% 36%, rgba(255, 255, 255, 0.24), transparent 36%),
-radial-gradient(circle at 50% 50%, rgba(148, 215, 255, 0.18), rgba(12, 25, 48, 0.78) 68%);
-border: 1px solid var(--laws-line-1);
-box-shadow:
-0 0 0 1px rgba(255, 255, 255, 0.07),
-0 0 42px rgba(148, 215, 255, 0.2);
-backdrop-filter: var(--laws-glass);
+  border: 1px solid var(--laws-line-1);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 50% 36%, rgba(255, 255, 255, 0.24), transparent 36%),
+    radial-gradient(circle at 50% 50%, rgba(148, 215, 255, 0.18), rgba(12, 25, 48, 0.78) 68%);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.07),
+    0 0 42px rgba(148, 215, 255, 0.2);
+  backdrop-filter: var(--laws-glass);
 }
 
 .laws-star--law,
 [data-laws-law] {
-border-radius: 50%;
-background:
-radial-gradient(circle at 50% 35%, rgba(255, 255, 255, 0.22), transparent 38%),
-radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.08), rgba(9, 20, 40, 0.82) 70%);
-border: 1px solid rgba(255, 255, 255, 0.2);
-box-shadow:
-0 0 0 1px rgba(255, 255, 255, 0.05),
-0 0 28px rgba(255, 255, 255, 0.1);
-backdrop-filter: var(--laws-glass);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 50% 35%, rgba(255, 255, 255, 0.22), transparent 38%),
+    radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.08), rgba(9, 20, 40, 0.82) 70%);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.05),
+    0 0 28px rgba(255, 255, 255, 0.1);
+  backdrop-filter: var(--laws-glass);
+}
+
+.laws-star--category::before,
+[data-laws-category]::before,
+.laws-star--law::before,
+[data-laws-law]::before {
+  content: "";
+  position: absolute;
+  inset: 18%;
+  border-radius: 50%;
+  border: 1px solid currentColor;
+  opacity: 0.18;
+  pointer-events: none;
+}
+
+.laws-star--category::after,
+[data-laws-category]::after,
+.laws-star--law::after,
+[data-laws-law]::after {
+  content: "";
+  position: absolute;
+  inset: 43%;
+  border-radius: 50%;
+  background: currentColor;
+  box-shadow: 0 0 28px currentColor;
+  opacity: 0.62;
+  pointer-events: none;
 }
 
 .laws-star--category:hover,
 [data-laws-category]:hover,
 .laws-star--law:hover,
 [data-laws-law]:hover {
-z-index: 8;
-transform: scale(1.04);
+  z-index: 20;
+  transform: scale(1.04);
+  border-color: rgba(255, 255, 255, 0.38);
 }
 
-.laws-star--category,
-[data-laws-category],
-.laws-star--law,
-[data-laws-law] {
-transition:
-transform 180ms ease,
-opacity 180ms ease,
-filter 180ms ease,
-box-shadow 180ms ease;
-}
 
 /* ============================================================
-6. CATEGORY COLOR / POSITION
-NOTE:
-These include legacy/value-bearing compatibility selectors.
-The live boolean-marker correction is appended at EOF.
-============================================================ */
+   10. CATEGORY STAR POSITIONING
+   Live current selector shape is primary:
+   [data-laws-category][data-direction="..."]
+   ============================================================ */
+
+[data-laws-category][data-direction="flow"],
+.laws-star--category[data-direction="flow"] {
+  top: 8%;
+  left: 50%;
+  color: var(--laws-flow);
+}
+
+[data-laws-category][data-direction="integrity"],
+.laws-star--category[data-direction="integrity"] {
+  top: 50%;
+  left: 92%;
+  color: var(--laws-integrity);
+}
+
+[data-laws-category][data-direction="reality"],
+.laws-star--category[data-direction="reality"] {
+  top: 92%;
+  left: 50%;
+  color: var(--laws-reality);
+}
+
+[data-laws-category][data-direction="structure"],
+.laws-star--category[data-direction="structure"] {
+  top: 50%;
+  left: 8%;
+  color: var(--laws-structure);
+}
+
+/* Compatibility aliases only. */
 
 [data-laws-category="flow"],
 [data-laws-category][data-laws-direction="flow"],
-.laws-star--category[data-laws-category="flow"] {
-top: 8%;
-left: 50%;
-color: var(--laws-flow);
+.laws-category[data-direction="flow"],
+.laws-category[data-laws-category="flow"] {
+  top: 8%;
+  left: 50%;
+  color: var(--laws-flow);
 }
 
 [data-laws-category="integrity"],
 [data-laws-category][data-laws-direction="integrity"],
-.laws-star--category[data-laws-category="integrity"] {
-top: 50%;
-left: 92%;
-color: var(--laws-integrity);
+.laws-category[data-direction="integrity"],
+.laws-category[data-laws-category="integrity"] {
+  top: 50%;
+  left: 92%;
+  color: var(--laws-integrity);
 }
 
 [data-laws-category="reality"],
 [data-laws-category][data-laws-direction="reality"],
-.laws-star--category[data-laws-category="reality"] {
-top: 92%;
-left: 50%;
-color: var(--laws-reality);
+.laws-category[data-direction="reality"],
+.laws-category[data-laws-category="reality"] {
+  top: 92%;
+  left: 50%;
+  color: var(--laws-reality);
 }
 
 [data-laws-category="structure"],
 [data-laws-category][data-laws-direction="structure"],
-.laws-star--category[data-laws-category="structure"] {
-top: 50%;
-left: 8%;
-color: var(--laws-structure);
-}
-
-/* Compatibility for older category class names only. */
-
-.laws-category[data-direction="flow"],
-.laws-category[data-laws-category="flow"] {
-top: 8%;
-left: 50%;
-}
-
-.laws-category[data-direction="integrity"],
-.laws-category[data-laws-category="integrity"] {
-top: 50%;
-left: 92%;
-}
-
-.laws-category[data-direction="reality"],
-.laws-category[data-laws-category="reality"] {
-top: 92%;
-left: 50%;
-}
-
 .laws-category[data-direction="structure"],
 .laws-category[data-laws-category="structure"] {
-top: 50%;
-left: 8%;
+  top: 50%;
+  left: 8%;
+  color: var(--laws-structure);
 }
 
+
 /* ============================================================
-7. LAW CLUSTERS — DEFAULT DORMANT
-============================================================ */
+   11. CATEGORY ACTIVE STATE
+   Controller runtime family is primary.
+   ============================================================ */
+
+[data-laws-root][data-active-law-cluster="true"] [data-laws-category],
+[data-laws-root][data-active-law-cluster="true"] .laws-star--category {
+  opacity: 0.48;
+  filter: saturate(0.8);
+}
+
+[data-laws-root][data-selected-direction="flow"] [data-laws-category][data-direction="flow"],
+[data-laws-root][data-active-cluster-direction="flow"] [data-laws-category][data-direction="flow"],
+[data-laws-root][data-laws-selected-direction="flow"] [data-laws-category][data-direction="flow"],
+[data-laws-root][data-laws-active-direction="flow"] [data-laws-category][data-direction="flow"],
+[data-laws-root][data-laws-active-category="flow"] [data-laws-category][data-direction="flow"],
+[data-laws-root][data-selected-direction="integrity"] [data-laws-category][data-direction="integrity"],
+[data-laws-root][data-active-cluster-direction="integrity"] [data-laws-category][data-direction="integrity"],
+[data-laws-root][data-laws-selected-direction="integrity"] [data-laws-category][data-direction="integrity"],
+[data-laws-root][data-laws-active-direction="integrity"] [data-laws-category][data-direction="integrity"],
+[data-laws-root][data-laws-active-category="integrity"] [data-laws-category][data-direction="integrity"],
+[data-laws-root][data-selected-direction="reality"] [data-laws-category][data-direction="reality"],
+[data-laws-root][data-active-cluster-direction="reality"] [data-laws-category][data-direction="reality"],
+[data-laws-root][data-laws-selected-direction="reality"] [data-laws-category][data-direction="reality"],
+[data-laws-root][data-laws-active-direction="reality"] [data-laws-category][data-direction="reality"],
+[data-laws-root][data-laws-active-category="reality"] [data-laws-category][data-direction="reality"],
+[data-laws-root][data-selected-direction="structure"] [data-laws-category][data-direction="structure"],
+[data-laws-root][data-active-cluster-direction="structure"] [data-laws-category][data-direction="structure"],
+[data-laws-root][data-laws-selected-direction="structure"] [data-laws-category][data-direction="structure"],
+[data-laws-root][data-laws-active-direction="structure"] [data-laws-category][data-direction="structure"],
+[data-laws-root][data-laws-active-category="structure"] [data-laws-category][data-direction="structure"] {
+  opacity: 1;
+  filter: saturate(1.18);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.18),
+    0 0 54px currentColor;
+}
+
+
+/* ============================================================
+   12. LAW CLUSTERS / HIDDEN COMPATIBILITY
+   HTML currently carries hidden on cluster containers.
+   CSS overrides hidden only when active state says cluster is open.
+   ============================================================ */
 
 [data-laws-cluster],
 [data-laws-cluster-id],
 .laws-star-cluster {
-position: absolute;
-inset: 0;
-z-index: 5;
-opacity: 0;
-visibility: hidden;
-pointer-events: none;
-transform: scale(0.96);
-transition:
-opacity 200ms ease,
-visibility 200ms ease,
-transform 200ms ease;
+  position: absolute;
+  inset: 0;
+  z-index: 7;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: scale(0.96);
+  transition:
+    opacity 200ms ease,
+    visibility 200ms ease,
+    transform 200ms ease;
 }
 
 [data-laws-cluster] [data-laws-law],
 [data-laws-cluster-id] [data-laws-law],
 .laws-star-cluster [data-laws-law],
 .laws-star-cluster .laws-star--law {
-pointer-events: auto;
+  pointer-events: auto;
 }
 
-/* Static first-load readability fallback when fallback stars are separately present. */
-
-data-laws-root:not([data-active-law-cluster="true"]) [data-laws-fallback-star-layer] [data-laws-law],
-data-laws-root:not([data-active-law-cluster="true"]) [data-laws-fallback-star-layer] .laws-star--law {
-opacity: 0.42;
-visibility: visible;
-}
-
-/* Runtime controller activation family. */
-
-[data-laws-root][data-active-law-cluster="true"] [data-laws-cluster],
-[data-laws-root][data-active-law-cluster="true"] [data-laws-cluster-id],
-[data-laws-root][data-active-law-cluster="true"] .laws-star-cluster {
-visibility: visible;
+[data-laws-root][data-active-law-cluster="true"] [data-laws-cluster][hidden],
+[data-laws-root][data-active-law-cluster="true"] [data-laws-cluster-id][hidden],
+[data-laws-root][data-active-law-cluster="true"] .laws-star-cluster[hidden],
+[data-laws-root][data-laws-active-cluster="flow"] .laws-star-cluster[hidden],
+[data-laws-root][data-laws-active-cluster="integrity"] .laws-star-cluster[hidden],
+[data-laws-root][data-laws-active-cluster="reality"] .laws-star-cluster[hidden],
+[data-laws-root][data-laws-active-cluster="structure"] .laws-star-cluster[hidden] {
+  display: block !important;
 }
 
 [data-laws-root][data-active-cluster-direction="flow"] [data-laws-cluster-id="flow"],
-[data-laws-root][data-active-cluster-direction="flow"] [data-laws-cluster="flow"],
-[data-laws-root][data-active-cluster-direction="flow"] .laws-star-cluster[data-laws-cluster-id="flow"],
-[data-laws-root][data-active-cluster-direction="flow"] .laws-star-cluster[data-direction="flow"],
-[data-laws-root][data-active-cluster-direction="integrity"] [data-laws-cluster-id="integrity"],
-[data-laws-root][data-active-cluster-direction="integrity"] [data-laws-cluster="integrity"],
-[data-laws-root][data-active-cluster-direction="integrity"] .laws-star-cluster[data-laws-cluster-id="integrity"],
-[data-laws-root][data-active-cluster-direction="integrity"] .laws-star-cluster[data-direction="integrity"],
-[data-laws-root][data-active-cluster-direction="reality"] [data-laws-cluster-id="reality"],
-[data-laws-root][data-active-cluster-direction="reality"] [data-laws-cluster="reality"],
-[data-laws-root][data-active-cluster-direction="reality"] .laws-star-cluster[data-laws-cluster-id="reality"],
-[data-laws-root][data-active-cluster-direction="reality"] .laws-star-cluster[data-direction="reality"],
-[data-laws-root][data-active-cluster-direction="structure"] [data-laws-cluster-id="structure"],
-[data-laws-root][data-active-cluster-direction="structure"] [data-laws-cluster="structure"],
-[data-laws-root][data-active-cluster-direction="structure"] .laws-star-cluster[data-laws-cluster-id="structure"],
-[data-laws-root][data-active-cluster-direction="structure"] .laws-star-cluster[data-direction="structure"] {
-opacity: 1;
-visibility: visible;
-pointer-events: auto;
-transform: scale(1);
-}
-
-/* HTML fallback activation family. */
-
+[data-laws-root][data-active-cluster-direction="flow"] .laws-star-cluster--flow,
 [data-laws-root][data-laws-active-cluster="flow"] [data-laws-cluster-id="flow"],
-[data-laws-root][data-laws-active-cluster="flow"] [data-laws-cluster="flow"],
+[data-laws-root][data-laws-active-cluster="flow"] .laws-star-cluster--flow {
+  display: block !important;
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: scale(1);
+}
+
+[data-laws-root][data-active-cluster-direction="integrity"] [data-laws-cluster-id="integrity"],
+[data-laws-root][data-active-cluster-direction="integrity"] .laws-star-cluster--integrity,
 [data-laws-root][data-laws-active-cluster="integrity"] [data-laws-cluster-id="integrity"],
-[data-laws-root][data-laws-active-cluster="integrity"] [data-laws-cluster="integrity"],
+[data-laws-root][data-laws-active-cluster="integrity"] .laws-star-cluster--integrity {
+  display: block !important;
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: scale(1);
+}
+
+[data-laws-root][data-active-cluster-direction="reality"] [data-laws-cluster-id="reality"],
+[data-laws-root][data-active-cluster-direction="reality"] .laws-star-cluster--reality,
 [data-laws-root][data-laws-active-cluster="reality"] [data-laws-cluster-id="reality"],
-[data-laws-root][data-laws-active-cluster="reality"] [data-laws-cluster="reality"],
+[data-laws-root][data-laws-active-cluster="reality"] .laws-star-cluster--reality {
+  display: block !important;
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: scale(1);
+}
+
+[data-laws-root][data-active-cluster-direction="structure"] [data-laws-cluster-id="structure"],
+[data-laws-root][data-active-cluster-direction="structure"] .laws-star-cluster--structure,
 [data-laws-root][data-laws-active-cluster="structure"] [data-laws-cluster-id="structure"],
-[data-laws-root][data-laws-active-cluster="structure"] [data-laws-cluster="structure"] {
-opacity: 1;
-visibility: visible;
-pointer-events: auto;
-transform: scale(1);
+[data-laws-root][data-laws-active-cluster="structure"] .laws-star-cluster--structure {
+  display: block !important;
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: scale(1);
 }
 
-/* Category stars remain visible by default. */
-
-[data-laws-root][data-active-law-cluster="true"] [data-laws-category],
-[data-laws-root][data-active-law-cluster="true"] .laws-star--category {
-opacity: 0.48;
-filter: saturate(0.8);
-}
-
-/* Active category emphasis — mixed compatibility layer. */
-
-[data-laws-root][data-laws-active-category="flow"] [data-laws-category="flow"],
-[data-laws-root][data-laws-active-direction="flow"] [data-laws-category="flow"],
-[data-laws-root][data-selected-direction="flow"] [data-laws-category="flow"],
-[data-laws-root][data-laws-selected-direction="flow"] [data-laws-category="flow"],
-[data-laws-root][data-laws-active-category="integrity"] [data-laws-category="integrity"],
-[data-laws-root][data-laws-active-direction="integrity"] [data-laws-category="integrity"],
-[data-laws-root][data-selected-direction="integrity"] [data-laws-category="integrity"],
-[data-laws-root][data-laws-selected-direction="integrity"] [data-laws-category="integrity"],
-[data-laws-root][data-laws-active-category="reality"] [data-laws-category="reality"],
-[data-laws-root][data-laws-active-direction="reality"] [data-laws-category="reality"],
-[data-laws-root][data-selected-direction="reality"] [data-laws-category="reality"],
-[data-laws-root][data-laws-selected-direction="reality"] [data-laws-category="reality"],
-[data-laws-root][data-laws-active-category="structure"] [data-laws-category="structure"],
-[data-laws-root][data-laws-active-direction="structure"] [data-laws-category="structure"],
-[data-laws-root][data-selected-direction="structure"] [data-laws-category="structure"],
-[data-laws-root][data-laws-selected-direction="structure"] [data-laws-category="structure"] {
-opacity: 1;
-filter: saturate(1.15);
-box-shadow:
-0 0 0 1px rgba(255, 255, 255, 0.16),
-0 0 54px currentColor;
-}
 
 /* ============================================================
-8. CLUSTER-SCOPED LAW POSITIONING
-No document-wide mixed-cluster nth-of-type logic.
-============================================================ */
+   13. CLUSTER-SCOPED LAW POSITIONING
+   No document-wide mixed-cluster nth-of-type assumptions.
+   ============================================================ */
 
 /* Flow cluster around north. */
 
 [data-laws-cluster-id="flow"] [data-laws-law]:nth-child(1),
-[data-laws-cluster="flow"] [data-laws-law]:nth-child(1),
-.laws-star-cluster[data-laws-cluster-id="flow"] .laws-star--law:nth-child(1) {
-top: 22%;
-left: 35%;
+.laws-star-cluster--flow [data-laws-law]:nth-child(1) {
+  top: 22%;
+  left: 35%;
 }
 
 [data-laws-cluster-id="flow"] [data-laws-law]:nth-child(2),
-[data-laws-cluster="flow"] [data-laws-law]:nth-child(2),
-.laws-star-cluster[data-laws-cluster-id="flow"] .laws-star--law:nth-child(2) {
-top: 18%;
-left: 50%;
+.laws-star-cluster--flow [data-laws-law]:nth-child(2) {
+  top: 18%;
+  left: 50%;
 }
 
 [data-laws-cluster-id="flow"] [data-laws-law]:nth-child(3),
-[data-laws-cluster="flow"] [data-laws-law]:nth-child(3),
-.laws-star-cluster[data-laws-cluster-id="flow"] .laws-star--law:nth-child(3) {
-top: 22%;
-left: 65%;
+.laws-star-cluster--flow [data-laws-law]:nth-child(3) {
+  top: 22%;
+  left: 65%;
 }
 
 [data-laws-cluster-id="flow"] [data-laws-law]:nth-child(4),
-[data-laws-cluster="flow"] [data-laws-law]:nth-child(4),
-.laws-star-cluster[data-laws-cluster-id="flow"] .laws-star--law:nth-child(4) {
-top: 33%;
-left: 50%;
+.laws-star-cluster--flow [data-laws-law]:nth-child(4) {
+  top: 33%;
+  left: 50%;
 }
 
 /* Integrity cluster around east. */
 
 [data-laws-cluster-id="integrity"] [data-laws-law]:nth-child(1),
-[data-laws-cluster="integrity"] [data-laws-law]:nth-child(1),
-.laws-star-cluster[data-laws-cluster-id="integrity"] .laws-star--law:nth-child(1) {
-top: 35%;
-left: 78%;
+.laws-star-cluster--integrity [data-laws-law]:nth-child(1) {
+  top: 35%;
+  left: 78%;
 }
 
 [data-laws-cluster-id="integrity"] [data-laws-law]:nth-child(2),
-[data-laws-cluster="integrity"] [data-laws-law]:nth-child(2),
-.laws-star-cluster[data-laws-cluster-id="integrity"] .laws-star--law:nth-child(2) {
-top: 50%;
-left: 82%;
+.laws-star-cluster--integrity [data-laws-law]:nth-child(2) {
+  top: 50%;
+  left: 82%;
 }
 
 [data-laws-cluster-id="integrity"] [data-laws-law]:nth-child(3),
-[data-laws-cluster="integrity"] [data-laws-law]:nth-child(3),
-.laws-star-cluster[data-laws-cluster-id="integrity"] .laws-star--law:nth-child(3) {
-top: 65%;
-left: 78%;
+.laws-star-cluster--integrity [data-laws-law]:nth-child(3) {
+  top: 65%;
+  left: 78%;
 }
 
 [data-laws-cluster-id="integrity"] [data-laws-law]:nth-child(4),
-[data-laws-cluster="integrity"] [data-laws-law]:nth-child(4),
-.laws-star-cluster[data-laws-cluster-id="integrity"] .laws-star--law:nth-child(4) {
-top: 50%;
-left: 67%;
+.laws-star-cluster--integrity [data-laws-law]:nth-child(4) {
+  top: 50%;
+  left: 67%;
 }
 
 /* Reality cluster around south. */
 
 [data-laws-cluster-id="reality"] [data-laws-law]:nth-child(1),
-[data-laws-cluster="reality"] [data-laws-law]:nth-child(1),
-.laws-star-cluster[data-laws-cluster-id="reality"] .laws-star--law:nth-child(1) {
-top: 67%;
-left: 50%;
+.laws-star-cluster--reality [data-laws-law]:nth-child(1) {
+  top: 67%;
+  left: 50%;
 }
 
 [data-laws-cluster-id="reality"] [data-laws-law]:nth-child(2),
-[data-laws-cluster="reality"] [data-laws-law]:nth-child(2),
-.laws-star-cluster[data-laws-cluster-id="reality"] .laws-star--law:nth-child(2) {
-top: 78%;
-left: 35%;
+.laws-star-cluster--reality [data-laws-law]:nth-child(2) {
+  top: 78%;
+  left: 35%;
 }
 
 [data-laws-cluster-id="reality"] [data-laws-law]:nth-child(3),
-[data-laws-cluster="reality"] [data-laws-law]:nth-child(3),
-.laws-star-cluster[data-laws-cluster-id="reality"] .laws-star--law:nth-child(3) {
-top: 82%;
-left: 50%;
+.laws-star-cluster--reality [data-laws-law]:nth-child(3) {
+  top: 82%;
+  left: 50%;
 }
 
 [data-laws-cluster-id="reality"] [data-laws-law]:nth-child(4),
-[data-laws-cluster="reality"] [data-laws-law]:nth-child(4),
-.laws-star-cluster[data-laws-cluster-id="reality"] .laws-star--law:nth-child(4) {
-top: 78%;
-left: 65%;
+.laws-star-cluster--reality [data-laws-law]:nth-child(4) {
+  top: 78%;
+  left: 65%;
 }
 
 /* Structure cluster around west. */
 
 [data-laws-cluster-id="structure"] [data-laws-law]:nth-child(1),
-[data-laws-cluster="structure"] [data-laws-law]:nth-child(1),
-.laws-star-cluster[data-laws-cluster-id="structure"] .laws-star--law:nth-child(1) {
-top: 35%;
-left: 22%;
+.laws-star-cluster--structure [data-laws-law]:nth-child(1) {
+  top: 35%;
+  left: 22%;
 }
 
 [data-laws-cluster-id="structure"] [data-laws-law]:nth-child(2),
-[data-laws-cluster="structure"] [data-laws-law]:nth-child(2),
-.laws-star-cluster[data-laws-cluster-id="structure"] .laws-star--law:nth-child(2) {
-top: 50%;
-left: 18%;
+.laws-star-cluster--structure [data-laws-law]:nth-child(2) {
+  top: 50%;
+  left: 18%;
 }
 
 [data-laws-cluster-id="structure"] [data-laws-law]:nth-child(3),
-[data-laws-cluster="structure"] [data-laws-law]:nth-child(3),
-.laws-star-cluster[data-laws-cluster-id="structure"] .laws-star--law:nth-child(3) {
-top: 65%;
-left: 22%;
+.laws-star-cluster--structure [data-laws-law]:nth-child(3) {
+  top: 65%;
+  left: 22%;
 }
 
 [data-laws-cluster-id="structure"] [data-laws-law]:nth-child(4),
-[data-laws-cluster="structure"] [data-laws-law]:nth-child(4),
-.laws-star-cluster[data-laws-cluster-id="structure"] .laws-star--law:nth-child(4) {
-top: 50%;
-left: 33%;
+.laws-star-cluster--structure [data-laws-law]:nth-child(4) {
+  top: 50%;
+  left: 33%;
 }
 
-/* Law star category coloring. */
 
+/* ============================================================
+   14. LAW STAR CATEGORY COLOR
+   ============================================================ */
+
+[data-laws-law][data-direction="flow"],
 [data-laws-cluster-id="flow"] [data-laws-law],
-[data-laws-cluster="flow"] [data-laws-law],
-.laws-star-cluster[data-laws-cluster-id="flow"] .laws-star--law {
-color: var(--laws-flow);
+.laws-star-cluster--flow [data-laws-law] {
+  color: var(--laws-flow);
 }
 
+[data-laws-law][data-direction="integrity"],
 [data-laws-cluster-id="integrity"] [data-laws-law],
-[data-laws-cluster="integrity"] [data-laws-law],
-.laws-star-cluster[data-laws-cluster-id="integrity"] .laws-star--law {
-color: var(--laws-integrity);
+.laws-star-cluster--integrity [data-laws-law] {
+  color: var(--laws-integrity);
 }
 
+[data-laws-law][data-direction="reality"],
 [data-laws-cluster-id="reality"] [data-laws-law],
-[data-laws-cluster="reality"] [data-laws-law],
-.laws-star-cluster[data-laws-cluster-id="reality"] .laws-star--law {
-color: var(--laws-reality);
+.laws-star-cluster--reality [data-laws-law] {
+  color: var(--laws-reality);
 }
 
+[data-laws-law][data-direction="structure"],
 [data-laws-cluster-id="structure"] [data-laws-law],
-[data-laws-cluster="structure"] [data-laws-law],
-.laws-star-cluster[data-laws-cluster-id="structure"] .laws-star--law {
-color: var(--laws-structure);
+.laws-star-cluster--structure [data-laws-law] {
+  color: var(--laws-structure);
 }
-
-/* Selected law emphasis. */
 
 [data-laws-root][data-compass-selected="true"] [data-laws-law],
 [data-laws-root][data-laws-compass-selected="true"] [data-laws-law] {
-opacity: 0.74;
+  opacity: 0.74;
 }
 
 [data-laws-root][data-held="true"] [data-laws-law],
 [data-laws-root][data-laws-held="true"] [data-laws-law] {
-filter: saturate(1.18);
+  filter: saturate(1.18);
 }
 
 [data-laws-law][aria-current="true"],
 [data-laws-law][data-selected="true"],
 .laws-star--law[aria-current="true"],
 .laws-star--law[data-selected="true"] {
-opacity: 1;
-transform: scale(1.08);
-box-shadow:
-0 0 0 1px rgba(255, 255, 255, 0.24),
-0 0 44px currentColor;
+  opacity: 1;
+  transform: scale(1.08);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.24),
+    0 0 44px currentColor;
 }
 
+
 /* ============================================================
-9. PANEL / ATLAS KEY
-============================================================ */
+   15. CONTROLLER PANEL / ATLAS KEY
+   ============================================================ */
 
 [data-laws-panel],
 .laws-controller-panel,
 .laws-atlas-key {
-position: relative;
-z-index: 12;
-width: var(--laws-panel-width);
-max-width: 100%;
-padding: clamp(1.1rem, 3vw, 1.8rem);
-border: 1px solid var(--laws-line-0);
-border-radius: var(--laws-radius-lg);
-background:
-linear-gradient(180deg, rgba(255, 255, 255, 0.08), transparent 28%),
-var(--laws-panel-1);
-box-shadow: var(--laws-shadow-0);
-backdrop-filter: var(--laws-glass);
+  position: relative;
+  z-index: 20;
+  width: var(--laws-panel-width);
+  max-width: 100%;
+  padding: clamp(1.1rem, 3vw, 1.8rem);
+  border: 1px solid var(--laws-line-0);
+  border-radius: var(--laws-radius-lg);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.08), transparent 28%),
+    var(--laws-panel-1);
+  box-shadow: var(--laws-shadow-0);
+  backdrop-filter: var(--laws-glass);
 }
 
 [data-laws-panel] {
-position: absolute;
-right: clamp(1rem, 4vw, 4rem);
-bottom: clamp(1rem, 4vw, 4rem);
+  position: absolute;
+  right: clamp(1rem, 4vw, 4rem);
+  bottom: clamp(1rem, 4vw, 4rem);
 }
 
 .laws-atlas-key__header {
-display: flex;
-align-items: flex-start;
-justify-content: space-between;
-gap: 1rem;
-margin-bottom: 1rem;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
 }
 
 .laws-atlas-key__identity {
-display: grid;
-gap: 0.35rem;
+  display: grid;
+  gap: 0.35rem;
 }
 
 [data-laws-panel-eyebrow],
 .laws-atlas-key__eyebrow {
-margin: 0;
-color: var(--laws-ink-3);
-font-size: 0.76rem;
-font-weight: 700;
-letter-spacing: 0.12em;
-text-transform: uppercase;
+  margin: 0;
+  color: var(--laws-ink-3);
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 }
 
 [data-laws-panel-title],
 .laws-atlas-key__identity h1,
 .laws-atlas-key__identity h2,
 .laws-atlas-key__identity h3 {
-margin: 0;
-color: var(--laws-ink-0);
-font-size: clamp(1.35rem, 3vw, 2.05rem);
-line-height: 1.08;
-letter-spacing: -0.03em;
+  margin: 0;
+  color: var(--laws-ink-0);
+  font-size: clamp(1.35rem, 3vw, 2.05rem);
+  line-height: 1.08;
+  letter-spacing: -0.03em;
 }
 
 .laws-atlas-key__state,
 [data-laws-panel-selection-state],
 [data-laws-panel-route-status] {
-display: inline-flex;
-align-items: center;
-width: fit-content;
-min-height: 2rem;
-padding: 0.35rem 0.65rem;
-border: 1px solid var(--laws-line-0);
-border-radius: 999px;
-background: rgba(255, 255, 255, 0.06);
-color: var(--laws-ink-2);
-font-size: 0.78rem;
-font-weight: 650;
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  min-height: 2rem;
+  padding: 0.35rem 0.65rem;
+  border: 1px solid var(--laws-line-0);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--laws-ink-2);
+  font-size: 0.78rem;
+  font-weight: 700;
 }
 
 .laws-atlas-key__body {
-display: grid;
-gap: 0.9rem;
+  display: grid;
+  gap: 0.9rem;
 }
 
 [data-laws-panel-purpose],
@@ -897,157 +1333,410 @@ gap: 0.9rem;
 .laws-atlas-key__purpose,
 .laws-atlas-key__relationship,
 .laws-atlas-key__technical {
-margin: 0;
-color: var(--laws-ink-1);
-font-size: clamp(0.95rem, 1.6vw, 1.05rem);
+  margin: 0;
+  color: var(--laws-ink-1);
+  font-size: clamp(0.95rem, 1.6vw, 1.05rem);
 }
 
 [data-laws-panel-relationship],
 .laws-atlas-key__relationship {
-color: var(--laws-ink-2);
+  color: var(--laws-ink-2);
+}
+
+.laws-law-layers {
+  display: grid;
+  gap: 0.7rem;
+}
+
+.laws-layer-record {
+  padding: 0.8rem;
+  border: 1px solid var(--laws-line-0);
+  border-radius: var(--laws-radius-sm);
+  background: rgba(255, 255, 255, 0.045);
+}
+
+.laws-layer-record span {
+  display: block;
+  color: var(--laws-ink-0);
+  font-weight: 800;
+}
+
+.laws-layer-record p {
+  margin: 0.35rem 0 0;
+  color: var(--laws-ink-2);
 }
 
 .laws-atlas-key__legend {
-display: grid;
-gap: 0.45rem;
-margin-top: 0.4rem;
-color: var(--laws-ink-2);
-font-size: 0.9rem;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.45rem;
+  margin-top: 0.4rem;
+  color: var(--laws-ink-2);
+  font-size: 0.9rem;
 }
 
-.laws-atlas-key__actions {
-display: flex;
-flex-wrap: wrap;
-gap: 0.75rem;
-margin-top: 1rem;
+.laws-atlas-key__legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
 }
 
-data-laws-enter,
-data-laws-return-to-orbit,
-[data-laws-return-home-compass] {
-display: inline-flex;
-align-items: center;
-justify-content: center;
-min-height: 2.8rem;
-padding: 0.72rem 1rem;
-border: 1px solid var(--laws-line-1);
-border-radius: 999px;
-background: rgba(255, 255, 255, 0.08);
-color: var(--laws-ink-0);
-text-decoration: none;
-cursor: pointer;
-transition:
-transform 160ms ease,
-background 160ms ease,
-border-color 160ms ease;
+.laws-atlas-key__legend strong {
+  display: grid;
+  width: 1.45rem;
+  height: 1.45rem;
+  place-items: center;
+  border: 1px solid var(--laws-line-0);
+  border-radius: 50%;
+  color: var(--laws-ink-0);
+  font-size: 0.75rem;
 }
 
-[data-laws-return-home-compass]:hover {
-transform: translateY(-1px);
-border-color: rgba(255, 255, 255, 0.38);
-background: rgba(255, 255, 255, 0.13);
+[data-laws-atlas-category="flow"] strong {
+  color: var(--laws-flow);
+}
+
+[data-laws-atlas-category="integrity"] strong {
+  color: var(--laws-integrity);
+}
+
+[data-laws-atlas-category="reality"] strong {
+  color: var(--laws-reality);
+}
+
+[data-laws-atlas-category="structure"] strong {
+  color: var(--laws-structure);
+}
+
+.laws-atlas-key__actions,
+.laws-controller-panel__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.laws-atlas-key__technical {
+  margin-top: 1rem;
+}
+
+.laws-atlas-key__technical summary {
+  cursor: pointer;
+  color: var(--laws-ink-1);
+}
+
+.laws-controller-panel__facts {
+  display: grid;
+  gap: 0.6rem;
+  margin: 1rem 0 0;
+}
+
+.laws-controller-panel__facts div {
+  display: grid;
+  grid-template-columns: 8rem minmax(0, 1fr);
+  gap: 0.75rem;
+  padding: 0.45rem 0;
+  border-bottom: 1px solid var(--laws-line-0);
+}
+
+.laws-controller-panel__facts dt {
+  color: var(--laws-ink-3);
+  font-weight: 800;
+}
+
+.laws-controller-panel__facts dd {
+  margin: 0;
+  color: var(--laws-ink-1);
+  overflow-wrap: anywhere;
 }
 
 [data-laws-guidance] {
-margin-top: 1rem;
-color: var(--laws-ink-3);
-font-size: 0.9rem;
+  margin-top: 1rem;
+  color: var(--laws-ink-2);
 }
 
-/* Panel descended state — visual interpretation only. */
-
-[data-laws-root][data-panel-descended="true"] [data-laws-panel],
-[data-laws-root][data-laws-panel-descended="true"] [data-laws-panel],
-[data-laws-root][data-panel-descended="true"] .laws-controller-panel,
-[data-laws-root][data-laws-panel-descended="true"] .laws-controller-panel {
-transform: translateY(0);
-opacity: 1;
-}
 
 /* ============================================================
-10. FOUNDATION / EVIDENCE / RECEIPT SECTIONS
-Evidence styling remains separate from sixteen-star registry.
-============================================================ */
+   16. FOUNDATIONS / DETAILS / EVIDENCE POSTURE
+   ============================================================ */
 
 .laws-foundations,
-.laws-evidence-grid,
+.laws-branches,
+.laws-route-maturity,
 .laws-runtime-evidence,
 .laws-ownership-chain,
 .laws-receipt-accordion {
-position: relative;
-z-index: 10;
-width: min(1120px, calc(100vw - 2rem));
-margin: clamp(2rem, 6vw, 5rem) auto;
+  position: relative;
+  z-index: 10;
+  width: var(--laws-page-width);
+  margin: clamp(2rem, 6vw, 5rem) auto;
 }
 
-.laws-foundations {
-display: grid;
-gap: 1rem;
+.laws-foundations__heading,
+.laws-branches__heading,
+.laws-route-maturity__heading {
+  display: grid;
+  gap: 0.8rem;
+  margin-bottom: clamp(1rem, 3vw, 2rem);
+  padding: clamp(1.1rem, 3vw, 1.8rem);
+  border: 1px solid var(--laws-line-0);
+  border-radius: var(--laws-radius-lg);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.08), transparent 30%),
+    rgba(8, 18, 36, 0.72);
+  box-shadow: var(--laws-shadow-1);
+  backdrop-filter: var(--laws-glass);
+}
+
+.laws-foundations__list {
+  display: grid;
+  gap: 1rem;
 }
 
 .laws-foundation,
 .laws-equation-card,
 .laws-runtime-evidence__group,
 .laws-receipt-record,
-.laws-raw-receipt-disclosure {
-border: 1px solid var(--laws-line-0);
-border-radius: var(--laws-radius-md);
-background:
-linear-gradient(180deg, rgba(255, 255, 255, 0.07), transparent 32%),
-rgba(8, 18, 36, 0.82);
-box-shadow: var(--laws-shadow-1);
-backdrop-filter: var(--laws-glass);
+.laws-raw-receipt-disclosure,
+.laws-runtime-evidence > details {
+  border: 1px solid var(--laws-line-0);
+  border-radius: var(--laws-radius-md);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.07), transparent 32%),
+    rgba(8, 18, 36, 0.82);
+  box-shadow: var(--laws-shadow-1);
+  backdrop-filter: var(--laws-glass);
 }
 
 .laws-foundation,
 .laws-equation-card,
-.laws-runtime-evidence__group {
-padding: clamp(1rem, 2.2vw, 1.45rem);
+.laws-runtime-evidence__group,
+.laws-receipt-record,
+.laws-raw-receipt-disclosure,
+.laws-runtime-evidence > details {
+  padding: clamp(1rem, 2.2vw, 1.45rem);
+}
+
+.laws-foundation summary,
+.laws-runtime-evidence summary,
+.laws-runtime-evidence__group summary,
+.laws-receipt-record summary,
+.laws-raw-receipt-disclosure summary {
+  cursor: pointer;
+  color: var(--laws-ink-0);
+}
+
+.laws-foundation__body,
+.laws-runtime-evidence__body {
+  margin-top: 1rem;
+  color: var(--laws-ink-2);
 }
 
 .laws-evidence-grid {
-display: grid;
-grid-template-columns: repeat(3, minmax(0, 1fr));
-gap: clamp(0.85rem, 2vw, 1.25rem);
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(0.85rem, 2vw, 1.25rem);
 }
 
+.laws-evidence-grid article {
+  padding: 1rem;
+  border: 1px solid var(--laws-line-0);
+  border-radius: var(--laws-radius-md);
+  background: rgba(255, 255, 255, 0.045);
+}
+
+.laws-evidence-grid h3,
+.laws-maturity-grid h3,
+.laws-equation-card h3 {
+  margin-top: 0;
+  color: var(--laws-ink-0);
+}
+
+.laws-equation-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(0.75rem, 1.8vw, 1.1rem);
+}
+
+.laws-equation-card {
+  --laws-evidence-accent: rgba(188, 167, 255, 0.44);
+  border-color: var(--laws-evidence-accent);
+}
+
+.laws-equation-card__label {
+  margin-bottom: 0.65rem;
+  color: var(--laws-ink-3);
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.laws-equation-card pre,
+.laws-raw-receipt {
+  overflow: auto;
+  max-width: 100%;
+  margin: 0;
+  padding: 1rem;
+  border-radius: var(--laws-radius-sm);
+  background: rgba(0, 0, 0, 0.26);
+  color: var(--laws-ink-1);
+  font-size: 0.82rem;
+  line-height: 1.55;
+  white-space: pre-wrap;
+}
+
+
+/* ============================================================
+   17. AUXILIARY BRANCHES / ROUTE MATURITY
+   ============================================================ */
+
+.laws-branch-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: clamp(0.75rem, 1.8vw, 1.1rem);
+}
+
+.laws-branch-card {
+  position: relative;
+  z-index: 10;
+  display: grid;
+  gap: 0.5rem;
+  min-height: 11rem;
+  padding: 1rem;
+  border: 1px solid var(--laws-line-0);
+  border-radius: var(--laws-radius-md);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.06), transparent 32%),
+    rgba(8, 18, 36, 0.72);
+  color: var(--laws-ink-1);
+  text-decoration: none;
+  box-shadow: var(--laws-shadow-1);
+  transition:
+    transform 160ms ease,
+    border-color 160ms ease,
+    background 160ms ease;
+}
+
+.laws-branch-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--laws-line-1);
+  background: rgba(13, 28, 54, 0.84);
+}
+
+.laws-branch-card span {
+  color: var(--laws-ink-3);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.laws-branch-card strong {
+  color: var(--laws-ink-0);
+  font-size: 1.15rem;
+  line-height: 1.1;
+}
+
+.laws-branch-card p {
+  margin: 0;
+  color: var(--laws-ink-2);
+}
+
+.laws-maturity-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(0.75rem, 1.8vw, 1.1rem);
+}
+
+.laws-maturity-grid article {
+  padding: clamp(1rem, 2vw, 1.25rem);
+  border: 1px solid var(--laws-line-0);
+  border-radius: var(--laws-radius-md);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.07), transparent 32%),
+    rgba(8, 18, 36, 0.72);
+  color: var(--laws-ink-2);
+  box-shadow: var(--laws-shadow-1);
+}
+
+
+/* ============================================================
+   18. RUNTIME EVIDENCE / RECEIPTS
+   ============================================================ */
+
 .laws-runtime-evidence {
-display: grid;
-gap: 1rem;
+  display: grid;
+  gap: 1rem;
+}
+
+.laws-runtime-evidence__body {
+  display: grid;
+  gap: 1rem;
 }
 
 .laws-ownership-chain {
-display: grid;
-gap: 0.75rem;
-color: var(--laws-ink-2);
+  display: grid;
+  gap: 0.75rem;
+  color: var(--laws-ink-2);
+}
+
+.laws-ownership-chain article {
+  padding: 1rem;
+  border: 1px solid var(--laws-line-0);
+  border-radius: var(--laws-radius-md);
+  background: rgba(255, 255, 255, 0.045);
+}
+
+.laws-ownership-chain strong {
+  color: var(--laws-ink-0);
+}
+
+.laws-ownership-chain p {
+  margin-bottom: 0;
 }
 
 .laws-receipt-accordion {
-display: grid;
-gap: 0.75rem;
+  display: grid;
+  gap: 0.75rem;
+  width: 100%;
+  margin: 1rem 0 0;
 }
 
-.laws-receipt-record,
-.laws-raw-receipt-disclosure {
-padding: 1rem;
+.laws-receipt-record dl {
+  display: grid;
+  gap: 0.5rem;
+  margin: 1rem 0 0;
 }
 
-.laws-raw-receipt {
-overflow: auto;
-max-width: 100%;
-padding: 1rem;
-border-radius: var(--laws-radius-sm);
-background: rgba(0, 0, 0, 0.26);
-color: var(--laws-ink-1);
-font-family:
-"SFMono-Regular",
-Consolas,
-"Liberation Mono",
-Menlo,
-monospace;
-font-size: 0.82rem;
-line-height: 1.55;
-white-space: pre-wrap;
+.laws-receipt-record dl div {
+  display: grid;
+  grid-template-columns: 10rem minmax(0, 1fr);
+  gap: 0.75rem;
+  padding: 0.45rem 0;
+  border-bottom: 1px solid var(--laws-line-0);
+}
+
+.laws-receipt-record dt {
+  color: var(--laws-ink-3);
+  font-weight: 800;
+}
+
+.laws-receipt-record dd {
+  margin: 0;
+  color: var(--laws-ink-1);
+}
+
+.laws-receipt-summary__status {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 0.5rem;
+  padding: 0.22rem 0.55rem;
+  border: 1px solid var(--laws-line-0);
+  border-radius: 999px;
+  color: var(--laws-ink-2);
+  font-size: 0.76rem;
+  font-weight: 800;
 }
 
 [data-laws-controller-receipt],
@@ -1056,531 +1745,374 @@ white-space: pre-wrap;
 [data-laws-compositor-receipt],
 [data-laws-crystals-receipt],
 [data-laws-cosmos-receipt] {
-display: block;
-overflow-wrap: anywhere;
-color: var(--laws-ink-2);
+  display: block;
+  overflow-wrap: anywhere;
+  color: var(--laws-ink-2);
 }
 
-/* Evidence posture: visually distinct from route stars. */
-
-.laws-evidence-grid,
-.laws-runtime-evidence,
-.laws-equation-card {
---laws-evidence-accent: rgba(188, 167, 255, 0.44);
-}
-
-.laws-equation-card {
-border-color: var(--laws-evidence-accent);
-}
 
 /* ============================================================
-11. STATE-SPECIFIC PRESENTATION MODES
-============================================================ */
+   19. FOOTER
+   ============================================================ */
+
+.laws-footer {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  width: var(--laws-page-width);
+  margin: clamp(3rem, 8vw, 6rem) auto 0;
+  padding: 1.5rem 0 2rem;
+  border-top: 1px solid var(--laws-line-0);
+  color: var(--laws-ink-2);
+}
+
+.laws-footer div {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.laws-footer strong {
+  color: var(--laws-ink-0);
+}
+
+.laws-footer nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+.laws-footer a {
+  color: var(--laws-ink-1);
+  text-decoration: none;
+}
+
+.laws-footer a:hover {
+  text-decoration: underline;
+}
+
+
+/* ============================================================
+   20. STATE MODES
+   ============================================================ */
 
 [data-laws-root][data-laws-presentation-mode="compact"] {
---laws-compass-size: min(72vw, 640px);
---laws-star-size-category: clamp(4rem, 7vw, 6.2rem);
---laws-star-size-law: clamp(2.4rem, 4vw, 3.5rem);
+  --laws-compass-size: min(72vw, 640px);
+  --laws-star-size-category: clamp(4rem, 7vw, 6.2rem);
+  --laws-star-size-law: clamp(2.4rem, 4vw, 3.5rem);
 }
 
 [data-laws-root][data-laws-display-mode="fallback"] [data-laws-fallback-star-layer],
 [data-laws-root][data-laws-controller-status="fallback"] [data-laws-fallback-star-layer] {
-opacity: 1;
+  opacity: 1;
 }
 
 [data-laws-root][data-laws-navigation-state="routing"] [data-laws-panel],
 [data-laws-root][data-laws-controller-state="routing"] [data-laws-panel] {
-border-color: rgba(148, 215, 255, 0.42);
+  border-color: rgba(148, 215, 255, 0.42);
 }
 
 [data-laws-root][data-orbit-focus="true"] [data-laws-compass-visual-mount],
 [data-laws-root][data-orbit-focus="true"] .laws-compass-mount {
-filter: saturate(1.1);
+  filter: saturate(1.1);
 }
+
 
 /* ============================================================
-12. AUXILIARY BRANCH COMPATIBILITY
-Separate from sixteen-star visual registry unless HTML declares
-[data-laws-law].
-============================================================ */
+   21. RESPONSIVE
+   ============================================================ */
 
-.laws-auxiliary-branches,
-.laws-branch-grid,
-.laws-branch-card {
-position: relative;
-z-index: 10;
+@media (max-width: 1100px) {
+  .laws-evidence-grid,
+  .laws-equation-grid,
+  .laws-maturity-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .laws-branch-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
 }
 
-.laws-auxiliary-branches,
-.laws-branch-grid {
-width: min(1120px, calc(100vw - 2rem));
-margin: clamp(2rem, 6vw, 5rem) auto;
+@media (max-width: 980px) {
+  [data-laws-orbit-scene],
+  [data-laws-scene] {
+    padding-top: 2rem;
+  }
+
+  [data-laws-orbit-field],
+  [data-laws-scene-field],
+  .laws-orbit__field {
+    min-height: 760px;
+  }
+
+  [data-laws-panel] {
+    position: relative;
+    right: auto;
+    bottom: auto;
+    margin: 2rem auto 0;
+  }
+
+  .laws-threshold__frame {
+    grid-template-columns: 1fr;
+  }
+
+  .laws-topbar,
+  .laws-footer {
+    display: grid;
+  }
+
+  .laws-nav,
+  .laws-footer nav {
+    justify-content: flex-start;
+  }
 }
 
-.laws-branch-grid {
-display: grid;
-grid-template-columns: repeat(5, minmax(0, 1fr));
-gap: clamp(0.75rem, 1.8vw, 1.1rem);
+@media (max-width: 720px) {
+  :root {
+    --laws-compass-size: min(94vw, 520px);
+    --laws-compass-min: 280px;
+    --laws-star-size-category: clamp(3.4rem, 16vw, 5rem);
+    --laws-star-size-law: clamp(2.2rem, 10vw, 3rem);
+    --laws-compass-core: clamp(7.2rem, 31vw, 10rem);
+  }
+
+  .laws-shell {
+    padding-inline: 1rem;
+  }
+
+  [data-laws-orbit-field],
+  [data-laws-scene-field],
+  .laws-orbit__field {
+    min-height: 640px;
+  }
+
+  [data-laws-category][data-direction="flow"],
+  .laws-star--category[data-direction="flow"] {
+    top: 10%;
+    left: 50%;
+  }
+
+  [data-laws-category][data-direction="integrity"],
+  .laws-star--category[data-direction="integrity"] {
+    top: 50%;
+    left: 90%;
+  }
+
+  [data-laws-category][data-direction="reality"],
+  .laws-star--category[data-direction="reality"] {
+    top: 90%;
+    left: 50%;
+  }
+
+  [data-laws-category][data-direction="structure"],
+  .laws-star--category[data-direction="structure"] {
+    top: 50%;
+    left: 10%;
+  }
+
+  [data-laws-cluster-id="flow"] [data-laws-law]:nth-child(1),
+  .laws-star-cluster--flow [data-laws-law]:nth-child(1) {
+    top: 24%;
+    left: 34%;
+  }
+
+  [data-laws-cluster-id="flow"] [data-laws-law]:nth-child(2),
+  .laws-star-cluster--flow [data-laws-law]:nth-child(2) {
+    top: 21%;
+    left: 50%;
+  }
+
+  [data-laws-cluster-id="flow"] [data-laws-law]:nth-child(3),
+  .laws-star-cluster--flow [data-laws-law]:nth-child(3) {
+    top: 24%;
+    left: 66%;
+  }
+
+  [data-laws-cluster-id="flow"] [data-laws-law]:nth-child(4),
+  .laws-star-cluster--flow [data-laws-law]:nth-child(4) {
+    top: 36%;
+    left: 50%;
+  }
+
+  .laws-atlas-key__header,
+  .laws-atlas-key__actions,
+  .laws-controller-panel__actions {
+    display: grid;
+  }
+
+  [data-laws-enter],
+  [data-laws-return-to-orbit],
+  [data-laws-return-home-compass],
+  .button {
+    width: 100%;
+  }
+
+  .laws-branch-grid,
+  .laws-evidence-grid,
+  .laws-equation-grid,
+  .laws-maturity-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .laws-controller-panel__facts div,
+  .laws-receipt-record dl div {
+    grid-template-columns: 1fr;
+  }
 }
 
-.laws-branch-card {
-min-height: 9rem;
-padding: 1rem;
-border: 1px solid var(--laws-line-0);
-border-radius: var(--laws-radius-md);
-background: rgba(8, 18, 36, 0.72);
-color: var(--laws-ink-1);
-text-decoration: none;
-box-shadow: var(--laws-shadow-1);
+@media (max-width: 520px) {
+  [data-laws-orbit-field],
+  [data-laws-scene-field],
+  .laws-orbit__field {
+    min-height: 580px;
+  }
+
+  [data-laws-panel],
+  .laws-controller-panel,
+  .laws-atlas-key,
+  .laws-threshold__copy,
+  .laws-threshold__signal,
+  .laws-orbit__heading,
+  .laws-foundations__heading,
+  .laws-branches__heading,
+  .laws-route-maturity__heading {
+    border-radius: var(--laws-radius-md);
+  }
 }
 
-.laws-branch-card:hover {
-border-color: var(--laws-line-1);
-background: rgba(13, 28, 54, 0.84);
-}
 
 /* ============================================================
-13. ACCESSIBILITY / REDUCED MOTION
-============================================================ */
+   22. REDUCED MOTION
+   ============================================================ */
 
 @media (prefers-reduced-motion: reduce) {
-*,
-*::before,
-*::after {
-scroll-behavior: auto !important;
-transition-duration: 0.001ms !important;
-animation-duration: 0.001ms !important;
-animation-iteration-count: 1 !important;
-}
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.001ms !important;
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+  }
 }
 
 [data-laws-root][data-reduced-motion="true"] *,
 [data-laws-root][data-reduced-motion="true"] *::before,
 [data-laws-root][data-reduced-motion="true"] *::after {
-scroll-behavior: auto !important;
-transition-duration: 0.001ms !important;
-animation-duration: 0.001ms !important;
-animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
 }
+
 
 /* ============================================================
-14. RESPONSIVE LAYOUT
-============================================================ */
-
-@media (max-width: 980px) {
-[data-laws-scene],
-[data-laws-orbit-scene] {
-min-height: auto;
-padding-top: 2rem;
-}
-
-[data-laws-scene-field],
-[data-laws-orbit-field] {
-min-height: 760px;
-}
-
-[data-laws-panel] {
-position: relative;
-right: auto;
-bottom: auto;
-margin: 2rem auto 0;
-}
-
-.laws-evidence-grid {
-grid-template-columns: 1fr;
-}
-
-.laws-branch-grid {
-grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-}
-
-@media (max-width: 720px) {
-:root {
---laws-compass-size: min(94vw, 520px);
---laws-compass-min: 280px;
---laws-star-size-category: clamp(3.4rem, 16vw, 5rem);
---laws-star-size-law: clamp(2.2rem, 10vw, 3rem);
---laws-compass-core: clamp(7.2rem, 31vw, 10rem);
-}
-
-[data-laws-scene-field],
-[data-laws-orbit-field] {
-min-height: 640px;
-}
-
-[data-laws-category="flow"],
-[data-laws-category][data-laws-direction="flow"] {
-top: 10%;
-left: 50%;
-}
-
-[data-laws-category="integrity"],
-[data-laws-category][data-laws-direction="integrity"] {
-top: 50%;
-left: 90%;
-}
-
-[data-laws-category="reality"],
-[data-laws-category][data-laws-direction="reality"] {
-top: 90%;
-left: 50%;
-}
-
-[data-laws-category="structure"],
-[data-laws-category][data-laws-direction="structure"] {
-top: 50%;
-left: 10%;
-}
-
-.laws-atlas-key__header {
-display: grid;
-}
-
-.laws-atlas-key__actions {
-display: grid;
-}
-
-data-laws-enter,
-data-laws-return-to-orbit,
-[data-laws-return-home-compass] {
-width: 100%;
-}
-}
-
-@media (max-width: 520px) {
-[data-laws-scene-field],
-[data-laws-orbit-field] {
-min-height: 580px;
-}
-
-.laws-branch-grid {
-grid-template-columns: 1fr;
-}
-
-[data-laws-panel],
-.laws-controller-panel,
-.laws-atlas-key {
-border-radius: var(--laws-radius-md);
-}
-}
-
-/* ============================================================
-15. PRINT FALLBACK
-============================================================ */
+   23. PRINT FALLBACK
+   ============================================================ */
 
 @media print {
-html,
-body,
-data-laws-root,
-.laws-shell {
-background: #ffffff !important;
-color: #111111 !important;
-}
+  html,
+  body,
+  [data-laws-root],
+  .laws-shell {
+    background: #ffffff !important;
+    color: #111111 !important;
+  }
 
-data-laws-cosmic-field,
-.laws-cosmic-field,
-data-laws-cosmic-field::before,
-.laws-cosmic-field::before,
-data-laws-root::before,
-.laws-shell::before {
-display: none !important;
-}
+  [data-laws-cosmic-field],
+  .laws-cosmic-field,
+  [data-laws-cosmic-field]::before,
+  .laws-cosmic-field::before,
+  [data-laws-root]::before,
+  [data-laws-root]::after,
+  .laws-shell::before,
+  .laws-shell::after {
+    display: none !important;
+  }
 
-[data-laws-scene],
-[data-laws-orbit-scene],
-[data-laws-scene-field],
-[data-laws-orbit-field],
-[data-laws-compass-layer],
-.laws-compass-layer,
-[data-laws-compass-visual-mount],
-.laws-compass-mount {
-display: block !important;
-width: auto !important;
-min-height: auto !important;
-aspect-ratio: auto !important;
-padding: 0 !important;
-}
+  .laws-topbar,
+  .laws-nav,
+  [data-laws-orbit-scene],
+  [data-laws-scene],
+  [data-laws-orbit-field],
+  [data-laws-scene-field],
+  [data-laws-compass-layer],
+  .laws-compass-layer,
+  [data-laws-compass-visual-mount],
+  .laws-compass-mount,
+  [data-laws-semantic-star-layer],
+  [data-laws-primary-stars],
+  [data-laws-category-layer],
+  [data-laws-fallback-star-layer],
+  .laws-semantic-star-layer,
+  .laws-primary-stars,
+  [data-laws-cluster],
+  [data-laws-cluster-id],
+  .laws-star-cluster,
+  .laws-star,
+  [data-laws-category],
+  [data-laws-law] {
+    position: static !important;
+    display: block !important;
+    width: auto !important;
+    height: auto !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    translate: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    color: #111111 !important;
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    pointer-events: auto !important;
+  }
 
-[data-laws-semantic-star-layer],
-[data-laws-primary-stars],
-[data-laws-category-layer],
-[data-laws-fallback-star-layer],
-.laws-semantic-star-layer,
-.laws-primary-stars,
-[data-laws-cluster],
-[data-laws-cluster-id],
-.laws-star-cluster,
-.laws-star,
-[data-laws-category],
-[data-laws-law] {
-position: static !important;
-display: block !important;
-width: auto !important;
-height: auto !important;
-min-width: 0 !important;
-min-height: 0 !important;
-translate: none !important;
-transform: none !important;
-opacity: 1 !important;
-visibility: visible !important;
-color: #111111 !important;
-background: transparent !important;
-border: 0 !important;
-box-shadow: none !important;
-}
+  [hidden] {
+    display: block !important;
+  }
 
-[data-laws-panel],
-.laws-controller-panel,
-.laws-atlas-key,
-.laws-foundation,
-.laws-equation-card,
-.laws-runtime-evidence__group,
-.laws-receipt-record,
-.laws-raw-receipt-disclosure,
-.laws-branch-card {
-position: static !important;
-width: auto !important;
-max-width: none !important;
-margin: 1rem 0 !important;
-color: #111111 !important;
-background: transparent !important;
-border: 1px solid #999999 !important;
-box-shadow: none !important;
-backdrop-filter: none !important;
-}
+  [data-laws-panel],
+  .laws-controller-panel,
+  .laws-atlas-key,
+  .laws-threshold__copy,
+  .laws-threshold__signal,
+  .laws-orbit__heading,
+  .laws-foundation,
+  .laws-equation-card,
+  .laws-runtime-evidence__group,
+  .laws-receipt-record,
+  .laws-raw-receipt-disclosure,
+  .laws-branch-card,
+  .laws-maturity-grid article {
+    position: static !important;
+    width: auto !important;
+    max-width: none !important;
+    margin: 1rem 0 !important;
+    color: #111111 !important;
+    background: transparent !important;
+    border: 1px solid #999999 !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+  }
 
-.laws-evidence-grid,
-.laws-branch-grid {
-display: block !important;
-width: auto !important;
-}
+  .laws-evidence-grid,
+  .laws-branch-grid,
+  .laws-maturity-grid,
+  .laws-equation-grid {
+    display: block !important;
+    width: auto !important;
+  }
 
-a {
-color: #111111 !important;
-text-decoration: underline !important;
-}
-}
-
-/* ============================================================
-16. LATE CORRECTIVE BLOCK
-LAWS_COMPASS_CSS_LATE_SELECTOR_AND_HIDDEN_CLUSTER_REPAIR_v1_0
-
-STATUS:
-TEST-READY COMPATIBILITY PATCH
-
-STANDARDIZATION:
-PENDING LIVE VISUAL ACCEPTANCE
-
-PURPOSE:
-Repair only visual binding:
-
-boolean [data-laws-category] + value-bearing [data-direction]
-
-active cluster rendering compatibility where hidden remains present
-
-
-HTML_REOPEN:
-FALSE
-
-CONTROLLER_REOPEN:
-FALSE
-
-AUTHORITY:
-CSS visual compatibility only
-============================================================ */
-
-/* ------------------------------------------------------------
-16.1 CATEGORY STAR POSITION REPAIR
-
-Current live HTML shape:
-[data-laws-category][data-direction="flow"]
-
-Not:
-[data-laws-category="flow"]
------------------------------------------------------------- */
-
-[data-laws-category][data-direction="flow"] {
-top: 8%;
-left: 50%;
-color: var(--laws-flow);
-}
-
-[data-laws-category][data-direction="integrity"] {
-top: 50%;
-left: 92%;
-color: var(--laws-integrity);
-}
-
-[data-laws-category][data-direction="reality"] {
-top: 92%;
-left: 50%;
-color: var(--laws-reality);
-}
-
-[data-laws-category][data-direction="structure"] {
-top: 50%;
-left: 8%;
-color: var(--laws-structure);
-}
-
-/* Compatibility aliases only. */
-
-[data-laws-category][data-laws-direction="flow"],
-.laws-star--category[data-direction="flow"] {
-top: 8%;
-left: 50%;
-color: var(--laws-flow);
-}
-
-[data-laws-category][data-laws-direction="integrity"],
-.laws-star--category[data-direction="integrity"] {
-top: 50%;
-left: 92%;
-color: var(--laws-integrity);
-}
-
-[data-laws-category][data-laws-direction="reality"],
-.laws-star--category[data-direction="reality"] {
-top: 92%;
-left: 50%;
-color: var(--laws-reality);
-}
-
-[data-laws-category][data-laws-direction="structure"],
-.laws-star--category[data-direction="structure"] {
-top: 50%;
-left: 8%;
-color: var(--laws-structure);
-}
-
-/* ------------------------------------------------------------
-16.2 ACTIVE CATEGORY EMPHASIS REPAIR
-
-Controller-emitted dataset family is primary.
------------------------------------------------------------- */
-
-[data-laws-root][data-selected-direction="flow"] [data-laws-category][data-direction="flow"],
-[data-laws-root][data-active-cluster-direction="flow"] [data-laws-category][data-direction="flow"],
-[data-laws-root][data-selected-direction="integrity"] [data-laws-category][data-direction="integrity"],
-[data-laws-root][data-active-cluster-direction="integrity"] [data-laws-category][data-direction="integrity"],
-[data-laws-root][data-selected-direction="reality"] [data-laws-category][data-direction="reality"],
-[data-laws-root][data-active-cluster-direction="reality"] [data-laws-category][data-direction="reality"],
-[data-laws-root][data-selected-direction="structure"] [data-laws-category][data-direction="structure"],
-[data-laws-root][data-active-cluster-direction="structure"] [data-laws-category][data-direction="structure"] {
-opacity: 1;
-filter: saturate(1.18);
-box-shadow:
-0 0 0 1px rgba(255, 255, 255, 0.18),
-0 0 54px currentColor;
-}
-
-/* ------------------------------------------------------------
-16.3 HIDDEN CLUSTER CSS-ONLY REPAIR
-
-Clean future HTML standard:
-remove hidden from CSS-state-managed law cluster containers.
-
-Current non-reopen lane:
-override hidden only when controller state indicates active cluster.
------------------------------------------------------------- */
-
-[data-laws-root][data-active-law-cluster="true"] [data-laws-cluster][hidden],
-[data-laws-root][data-active-law-cluster="true"] [data-laws-cluster-id][hidden],
-[data-laws-root][data-active-law-cluster="true"] .laws-star-cluster[hidden] {
-display: block !important;
-}
-
-/* Flow active cluster. */
-
-[data-laws-root][data-active-cluster-direction="flow"] [data-laws-cluster-id="flow"],
-[data-laws-root][data-active-cluster-direction="flow"] .laws-star-cluster--flow {
-display: block !important;
-opacity: 1;
-visibility: visible;
-pointer-events: auto;
-transform: scale(1);
-}
-
-/* Integrity active cluster. */
-
-[data-laws-root][data-active-cluster-direction="integrity"] [data-laws-cluster-id="integrity"],
-[data-laws-root][data-active-cluster-direction="integrity"] .laws-star-cluster--integrity {
-display: block !important;
-opacity: 1;
-visibility: visible;
-pointer-events: auto;
-transform: scale(1);
-}
-
-/* Reality active cluster. */
-
-[data-laws-root][data-active-cluster-direction="reality"] [data-laws-cluster-id="reality"],
-[data-laws-root][data-active-cluster-direction="reality"] .laws-star-cluster--reality {
-display: block !important;
-opacity: 1;
-visibility: visible;
-pointer-events: auto;
-transform: scale(1);
-}
-
-/* Structure active cluster. */
-
-[data-laws-root][data-active-cluster-direction="structure"] [data-laws-cluster-id="structure"],
-[data-laws-root][data-active-cluster-direction="structure"] .laws-star-cluster--structure {
-display: block !important;
-opacity: 1;
-visibility: visible;
-pointer-events: auto;
-transform: scale(1);
-}
-
-/* ------------------------------------------------------------
-16.4 HTML-FAMILY FALLBACK CLUSTER STATES
-
-Secondary only.
-Controller runtime family remains primary.
------------------------------------------------------------- */
-
-[data-laws-root][data-laws-active-cluster="flow"] [data-laws-cluster-id="flow"],
-[data-laws-root][data-laws-active-cluster="flow"] .laws-star-cluster--flow,
-[data-laws-root][data-laws-active-cluster="integrity"] [data-laws-cluster-id="integrity"],
-[data-laws-root][data-laws-active-cluster="integrity"] .laws-star-cluster--integrity,
-[data-laws-root][data-laws-active-cluster="reality"] [data-laws-cluster-id="reality"],
-[data-laws-root][data-laws-active-cluster="reality"] .laws-star-cluster--reality,
-[data-laws-root][data-laws-active-cluster="structure"] [data-laws-cluster-id="structure"],
-[data-laws-root][data-laws-active-cluster="structure"] .laws-star-cluster--structure {
-display: block !important;
-opacity: 1;
-visibility: visible;
-pointer-events: auto;
-transform: scale(1);
-}
-
-/* ------------------------------------------------------------
-16.5 RESPONSIVE CATEGORY POSITION REPAIR
-
-Mirrors corrected boolean-marker selector shape.
------------------------------------------------------------- */
-
-@media (max-width: 720px) {
-[data-laws-category][data-direction="flow"] {
-top: 10%;
-left: 50%;
-}
-
-[data-laws-category][data-direction="integrity"] {
-top: 50%;
-left: 90%;
-}
-
-[data-laws-category][data-direction="reality"] {
-top: 90%;
-left: 50%;
-}
-
-[data-laws-category][data-direction="structure"] {
-top: 50%;
-left: 10%;
-}
+  a {
+    color: #111111 !important;
+    text-decoration: underline !important;
+  }
 }

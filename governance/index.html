@@ -92,8 +92,16 @@
       font: inherit;
     }
 
+    button {
+      cursor: pointer;
+    }
+
     summary {
       cursor: pointer;
+    }
+
+    summary::-webkit-details-marker {
+      display: none;
     }
 
     .page {
@@ -107,7 +115,7 @@
       align-items: flex-start;
       justify-content: space-between;
       gap: 18px;
-      margin-bottom: 42px;
+      margin-bottom: 38px;
     }
 
     .brand {
@@ -129,16 +137,14 @@
       font-size: 0.95rem;
     }
 
-    .nav,
-    .links {
+    .nav {
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
       justify-content: flex-end;
     }
 
-    .nav a,
-    .pill {
+    .nav a {
       border: 1px solid var(--line);
       border-radius: 999px;
       background: rgba(255, 255, 255, 0.055);
@@ -153,17 +159,10 @@
         transform 160ms ease;
     }
 
-    .nav a:hover,
-    .pill:hover {
+    .nav a:hover {
       border-color: rgba(242, 199, 111, 0.42);
       background: rgba(242, 199, 111, 0.11);
       transform: translateY(-1px);
-    }
-
-    .nav a[aria-current="page"],
-    .pill.primary {
-      border-color: var(--line-strong);
-      background: rgba(242, 199, 111, 0.14);
     }
 
     .hero {
@@ -189,6 +188,24 @@
       pointer-events: none;
     }
 
+    .hero__grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.22fr) minmax(260px, 0.78fr);
+      gap: clamp(18px, 4vw, 36px);
+      align-items: end;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero__panel {
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: var(--radius-md);
+      background:
+        linear-gradient(135deg, rgba(0, 0, 0, 0.26), rgba(255, 255, 255, 0.03)),
+        rgba(0, 0, 0, 0.18);
+      padding: 18px;
+    }
+
     .kicker {
       margin: 0 0 12px;
       color: var(--gold);
@@ -200,7 +217,8 @@
 
     h1,
     h2,
-    h3 {
+    h3,
+    h4 {
       color: var(--ink);
     }
 
@@ -220,9 +238,16 @@
     }
 
     h3 {
+      margin: 0;
+      font-size: clamp(1.15rem, 3vw, 1.55rem);
+      line-height: 1.08;
+      letter-spacing: -0.025em;
+    }
+
+    h4 {
       margin: 0 0 8px;
-      font-size: 1.05rem;
-      line-height: 1.15;
+      font-size: 1rem;
+      line-height: 1.16;
     }
 
     p {
@@ -235,24 +260,6 @@
       margin-bottom: 0;
     }
 
-    .hero__grid {
-      display: grid;
-      grid-template-columns: minmax(0, 1.25fr) minmax(260px, 0.75fr);
-      gap: clamp(18px, 4vw, 36px);
-      align-items: end;
-      position: relative;
-      z-index: 1;
-    }
-
-    .hero__panel {
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: var(--radius-md);
-      background:
-        linear-gradient(135deg, rgba(0, 0, 0, 0.26), rgba(255, 255, 255, 0.03)),
-        rgba(0, 0, 0, 0.18);
-      padding: 18px;
-    }
-
     .status-list {
       display: grid;
       gap: 10px;
@@ -263,7 +270,7 @@
 
     .status-list li {
       display: grid;
-      grid-template-columns: 9.5rem minmax(0, 1fr);
+      grid-template-columns: 8.5rem minmax(0, 1fr);
       gap: 10px;
       border: 1px solid rgba(255, 255, 255, 0.105);
       border-radius: 14px;
@@ -336,7 +343,12 @@
       font-size: 0.95rem;
     }
 
-    .lens-card {
+    .chamber-stack {
+      display: grid;
+      gap: 14px;
+    }
+
+    .chamber {
       border: 1px solid var(--line);
       border-radius: var(--radius-md);
       background:
@@ -345,74 +357,135 @@
       overflow: hidden;
     }
 
-    .lens-card + .lens-card {
-      margin-top: 14px;
+    .chamber[open] {
+      border-color: rgba(242, 199, 111, 0.30);
+      background:
+        radial-gradient(circle at 12% 0%, rgba(242, 199, 111, 0.07), transparent 18rem),
+        linear-gradient(135deg, rgba(255, 255, 255, 0.048), rgba(255, 255, 255, 0.020)),
+        var(--panel-3);
     }
 
-    .lens-card__header {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 14px;
-      padding: 16px 16px 0;
-    }
-
-    .lens-card__header p {
-      margin: 0;
-      font-size: 0.94rem;
-    }
-
-    .lens-card__title {
+    .chamber__summary {
       display: grid;
-      gap: 4px;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 14px;
+      align-items: center;
+      padding: 18px;
+      list-style: none;
     }
 
-    .lens-card__title span {
+    .chamber__title {
+      display: grid;
+      gap: 6px;
+    }
+
+    .chamber__title span {
       color: var(--gold);
-      font-size: 0.7rem;
+      font-size: 0.72rem;
       font-weight: 950;
-      letter-spacing: 0.13em;
+      letter-spacing: 0.14em;
       text-transform: uppercase;
     }
 
-    .lens-tabs {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      padding: 16px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.10);
+    .chamber__title p {
+      margin: 0;
+      max-width: 760px;
+      font-size: 0.96rem;
     }
 
-    .lens-tab {
+    .chamber__icon {
+      display: inline-grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      border: 1px solid rgba(242, 199, 111, 0.28);
+      border-radius: 999px;
+      color: var(--gold);
+      background: rgba(242, 199, 111, 0.06);
+      font-weight: 950;
+    }
+
+    .chamber__icon::before {
+      content: "+";
+    }
+
+    .chamber[open] .chamber__icon::before {
+      content: "–";
+    }
+
+    .chamber__body {
+      border-top: 1px solid rgba(255, 255, 255, 0.10);
+      padding: 16px 18px 18px;
+    }
+
+    .sublayer-stack {
+      display: grid;
+      gap: 10px;
+    }
+
+    .sublayer {
+      border: 1px solid rgba(255, 255, 255, 0.11);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.032);
+      overflow: hidden;
+    }
+
+    .sublayer[open] {
+      border-color: rgba(242, 199, 111, 0.22);
+      background: rgba(242, 199, 111, 0.045);
+    }
+
+    .sublayer__summary {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 12px;
+      align-items: center;
+      padding: 13px 14px;
+      list-style: none;
+    }
+
+    .sublayer__summary strong {
+      color: var(--ink);
+      font-size: 0.95rem;
+    }
+
+    .sublayer__summary span {
+      display: block;
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 0.86rem;
+      line-height: 1.35;
+    }
+
+    .sublayer__icon {
+      display: inline-grid;
+      place-items: center;
+      width: 26px;
+      height: 26px;
       border: 1px solid rgba(255, 255, 255, 0.14);
       border-radius: 999px;
-      background: rgba(255, 255, 255, 0.045);
-      color: var(--soft);
-      padding: 9px 12px;
-      font-size: 0.84rem;
-      font-weight: 900;
-      cursor: pointer;
+      color: var(--gold);
+      font-weight: 950;
     }
 
-    .lens-tab[aria-selected="true"] {
-      border-color: rgba(242, 199, 111, 0.52);
-      background: rgba(242, 199, 111, 0.14);
-      color: var(--ink);
+    .sublayer__icon::before {
+      content: "+";
     }
 
-    .lens-panel {
-      padding: 16px;
+    .sublayer[open] .sublayer__icon::before {
+      content: "–";
     }
 
-    .lens-panel[hidden] {
-      display: none;
+    .sublayer__body {
+      border-top: 1px solid rgba(255, 255, 255, 0.09);
+      padding: 14px;
     }
 
-    .lens-panel p:first-child {
+    .sublayer__body p:first-child {
       margin-top: 0;
     }
 
-    .lens-panel p:last-child {
+    .sublayer__body p:last-child {
       margin-bottom: 0;
     }
 
@@ -447,11 +520,9 @@
       display: grid;
       grid-template-columns: repeat(6, minmax(0, 1fr));
       gap: 10px;
-      margin-top: 16px;
     }
 
     .chain__step {
-      position: relative;
       border: 1px solid rgba(242, 199, 111, 0.22);
       border-radius: 18px;
       background: rgba(242, 199, 111, 0.065);
@@ -520,7 +591,6 @@
       color: var(--ink);
       padding: 12px;
       text-align: left;
-      cursor: pointer;
     }
 
     .decision-button span {
@@ -711,12 +781,16 @@
     }
 
     @media (max-width: 680px) {
+      .page {
+        width: min(100% - 28px, var(--max));
+        padding-top: 22px;
+      }
+
       .top {
         display: grid;
       }
 
-      .nav,
-      .links {
+      .nav {
         justify-content: flex-start;
       }
 
@@ -732,8 +806,13 @@
         grid-template-columns: 1fr;
       }
 
-      .lens-card__header {
-        display: grid;
+      .chamber__summary {
+        grid-template-columns: 1fr auto;
+        padding: 16px;
+      }
+
+      .sublayer__summary {
+        padding: 12px;
       }
 
       h1 {
@@ -841,53 +920,6 @@
           <p>
             Governance is the public decision surface for Diamond Gate Bridge. It separates policy language, compliance review, public risk, authority boundaries, and decision records so the estate can act without pretending every statement has the same status.
           </p>
-
-          <div
-            class="links"
-            aria-label="Governance backlinks"
-          >
-            <a
-              class="pill primary"
-              href="/"
-            >
-              Compass
-            </a>
-
-            <a
-              class="pill"
-              href="/explore/"
-            >
-              Explore
-            </a>
-
-            <a
-              class="pill"
-              href="/products/"
-            >
-              Products
-            </a>
-
-            <a
-              class="pill"
-              href="/laws/"
-            >
-              Laws
-            </a>
-
-            <a
-              class="pill"
-              href="/showroom/"
-            >
-              Showroom
-            </a>
-
-            <a
-              class="pill"
-              href="/gauges/"
-            >
-              Gauges
-            </a>
-          </div>
         </div>
 
         <aside
@@ -937,7 +969,7 @@
         </h2>
 
         <p>
-          Each pillar is readable through the same three-lens standard: practical meaning, engineering structure, and evidence boundary.
+          This is the compact map. Open the governance chambers below when you need practical meaning, engineering structure, or evidence boundaries.
         </p>
       </header>
 
@@ -1002,503 +1034,447 @@
 
     <section
       class="section"
-      aria-labelledby="lens-standard-title"
+      aria-labelledby="governance-chambers-title"
     >
       <header class="section__header">
         <p class="kicker">
-          Practical · Engineering · Evidence
+          Expandable Governance Chambers
         </p>
 
-        <h2 id="lens-standard-title">
-          Every major governance function is read through three lenses.
+        <h2 id="governance-chambers-title">
+          Open only the layer you need.
         </h2>
 
         <p>
-          Use the tabs to switch between public meaning, system structure, and evidentiary boundary. This pattern is intentional: governance must not collapse explanation, mechanism, and proof into the same sentence.
+          Each chamber contains three sub-layers: practical, engineering, and evidence. This keeps the page from forcing a full governance brief into one continuous scroll.
         </p>
       </header>
 
-      <article
-        class="lens-card"
-        data-governance-lens-card="policy-engine"
-      >
-        <header class="lens-card__header">
-          <div class="lens-card__title">
-            <span>Policy Engine</span>
-            <h3>Rules must remain readable before they become actions.</h3>
-          </div>
-
-          <p>
-            Policy Engine organizes language used for boundaries, permissions, restrictions, escalation, and public commitments.
-          </p>
-        </header>
-
-        <div
-          class="lens-tabs"
-          role="tablist"
-          aria-label="Policy Engine lenses"
+      <div class="chamber-stack">
+        <details
+          class="chamber"
+          data-governance-chamber="policy-engine"
         >
-          <button
-            class="lens-tab"
-            type="button"
-            role="tab"
-            aria-selected="true"
-            data-governance-lens-tab="practical"
-          >
-            Practical
-          </button>
+          <summary class="chamber__summary">
+            <span class="chamber__title">
+              <span>Policy Engine</span>
+              <h3>Rules must remain readable before they become actions.</h3>
+              <p>
+                Policy Engine organizes language used for boundaries, permissions, restrictions, escalation, and public commitments.
+              </p>
+            </span>
 
-          <button
-            class="lens-tab"
-            type="button"
-            role="tab"
-            aria-selected="false"
-            data-governance-lens-tab="engineering"
-          >
-            Engineering
-          </button>
+            <span
+              class="chamber__icon"
+              aria-hidden="true"
+            ></span>
+          </summary>
 
-          <button
-            class="lens-tab"
-            type="button"
-            role="tab"
-            aria-selected="false"
-            data-governance-lens-tab="evidence"
-          >
-            Evidence
-          </button>
-        </div>
+          <div class="chamber__body">
+            <div class="sublayer-stack">
+              <details class="sublayer">
+                <summary class="sublayer__summary">
+                  <span>
+                    <strong>Practical</strong>
+                    <span>What policy means to visitors, builders, reviewers, and collaborators.</span>
+                  </span>
 
-        <div
-          class="lens-panel"
-          role="tabpanel"
-          data-governance-lens-panel="practical"
-        >
-          <p>
-            Practical governance tells visitors, builders, reviewers, and collaborators what kind of statement they are reading. A rule is different from a proposal. A proposal is different from a result. A result is different from a validated claim.
-          </p>
+                  <span
+                    class="sublayer__icon"
+                    aria-hidden="true"
+                  ></span>
+                </summary>
 
-          <div class="mini-grid">
-            <div class="mini">
-              <strong>Visitor</strong>
-              <span>Can see what the estate is and is not claiming.</span>
+                <div class="sublayer__body">
+                  <p>
+                    Practical governance tells people what kind of statement they are reading. A rule is different from a proposal. A proposal is different from a result. A result is different from a validated claim.
+                  </p>
+
+                  <div class="mini-grid">
+                    <div class="mini">
+                      <strong>Visitor</strong>
+                      <span>Can see what the estate is and is not claiming.</span>
+                    </div>
+
+                    <div class="mini">
+                      <strong>Builder</strong>
+                      <span>Can act without overstating authority.</span>
+                    </div>
+
+                    <div class="mini">
+                      <strong>Reviewer</strong>
+                      <span>Can separate language from proof.</span>
+                    </div>
+                  </div>
+                </div>
+              </details>
+
+              <details class="sublayer">
+                <summary class="sublayer__summary">
+                  <span>
+                    <strong>Engineering</strong>
+                    <span>What policy does as a state-bearing system layer.</span>
+                  </span>
+
+                  <span
+                    class="sublayer__icon"
+                    aria-hidden="true"
+                  ></span>
+                </summary>
+
+                <div class="sublayer__body">
+                  <p>
+                    Engineering governance treats policy as a state-bearing layer. Rules should identify scope, permission, restriction, dependency, escalation path, and receipt requirement without taking over measurement, narrative, product, or runtime authority.
+                  </p>
+
+                  <div class="mini-grid">
+                    <div class="mini">
+                      <strong>State</strong>
+                      <span>Draft, review, held, approved, blocked, or retired.</span>
+                    </div>
+
+                    <div class="mini">
+                      <strong>Scope</strong>
+                      <span>Route, product, instrument, world, claim, or public copy.</span>
+                    </div>
+
+                    <div class="mini">
+                      <strong>Receipt</strong>
+                      <span>Decision marker, review marker, or public-summary marker.</span>
+                    </div>
+                  </div>
+                </div>
+              </details>
+
+              <details class="sublayer">
+                <summary class="sublayer__summary">
+                  <span>
+                    <strong>Evidence</strong>
+                    <span>What this public page supports and what it does not prove.</span>
+                  </span>
+
+                  <span
+                    class="sublayer__icon"
+                    aria-hidden="true"
+                  ></span>
+                </summary>
+
+                <div class="sublayer__body">
+                  <p>
+                    The public page can show that governance structure exists. It does not prove legal compliance, regulatory certification, production readiness, scientific validation, or implementation correctness by itself.
+                  </p>
+
+                  <p>
+                    Evidence remains bounded to visible markers, route structure, published language, and later review records when those records are explicitly provided.
+                  </p>
+                </div>
+              </details>
             </div>
+          </div>
+        </details>
 
-            <div class="mini">
-              <strong>Builder</strong>
-              <span>Can act without overstating authority.</span>
-            </div>
+        <details
+          class="chamber"
+          data-governance-chamber="compliance-grid"
+        >
+          <summary class="chamber__summary">
+            <span class="chamber__title">
+              <span>Compliance Grid</span>
+              <h3>Checks must be visible without becoming certification.</h3>
+              <p>
+                Compliance Grid gives review language a place to stand while preserving the difference between internal checks and external compliance status.
+              </p>
+            </span>
 
-            <div class="mini">
-              <strong>Reviewer</strong>
-              <span>Can separate language from proof.</span>
+            <span
+              class="chamber__icon"
+              aria-hidden="true"
+            ></span>
+          </summary>
+
+          <div class="chamber__body">
+            <div class="sublayer-stack">
+              <details class="sublayer">
+                <summary class="sublayer__summary">
+                  <span>
+                    <strong>Practical</strong>
+                    <span>How compliance language prevents confusion.</span>
+                  </span>
+
+                  <span
+                    class="sublayer__icon"
+                    aria-hidden="true"
+                  ></span>
+                </summary>
+
+                <div class="sublayer__body">
+                  <p>
+                    Compliance language should prevent confusion. A page can be reviewed for clarity, safety, routing, claims, accessibility, and public boundaries without implying that a regulator, court, lab, or external authority has certified it.
+                  </p>
+                </div>
+              </details>
+
+              <details class="sublayer">
+                <summary class="sublayer__summary">
+                  <span>
+                    <strong>Engineering</strong>
+                    <span>How review classes remain separated.</span>
+                  </span>
+
+                  <span
+                    class="sublayer__icon"
+                    aria-hidden="true"
+                  ></span>
+                </summary>
+
+                <div class="sublayer__body">
+                  <p>
+                    The grid separates review classes: claim review, route review, copy review, evidence review, accessibility review, runtime review, and deployment review. A pass in one class does not automatically propagate to all classes.
+                  </p>
+
+                  <div class="mini-grid">
+                    <div class="mini">
+                      <strong>Copy Review</strong>
+                      <span>Checks whether public language overstates its standing.</span>
+                    </div>
+
+                    <div class="mini">
+                      <strong>Evidence Review</strong>
+                      <span>Checks whether support exists for the stated level of claim.</span>
+                    </div>
+
+                    <div class="mini">
+                      <strong>Runtime Review</strong>
+                      <span>Checks whether behavior is supported by execution evidence.</span>
+                    </div>
+                  </div>
+                </div>
+              </details>
+
+              <details class="sublayer">
+                <summary class="sublayer__summary">
+                  <span>
+                    <strong>Evidence</strong>
+                    <span>Why an internal check is not an external certificate.</span>
+                  </span>
+
+                  <span
+                    class="sublayer__icon"
+                    aria-hidden="true"
+                  ></span>
+                </summary>
+
+                <div class="sublayer__body">
+                  <p>
+                    Current public standing is a governance surface with visible markers. It is not an external compliance certificate, legal opinion, production authorization, or completed third-party audit.
+                  </p>
+                </div>
+              </details>
             </div>
           </div>
-        </div>
+        </details>
 
-        <div
-          class="lens-panel"
-          role="tabpanel"
-          data-governance-lens-panel="engineering"
-          hidden
+        <details
+          class="chamber"
+          data-governance-chamber="risk-meter"
         >
-          <p>
-            Engineering governance treats policy as a state-bearing layer. Rules should identify scope, permission, restriction, dependency, escalation path, and receipt requirement without taking over measurement, narrative, product, or runtime authority.
-          </p>
+          <summary class="chamber__summary">
+            <span class="chamber__title">
+              <span>Public Risk Meter</span>
+              <h3>Risk should be classified before it is minimized.</h3>
+              <p>
+                The meter gives public-facing risk language a restrained set of categories.
+              </p>
+            </span>
 
-          <div class="mini-grid">
-            <div class="mini">
-              <strong>State</strong>
-              <span>Draft, review, held, approved, blocked, or retired.</span>
+            <span
+              class="chamber__icon"
+              aria-hidden="true"
+            ></span>
+          </summary>
+
+          <div class="chamber__body">
+            <div class="sublayer-stack">
+              <details class="sublayer">
+                <summary class="sublayer__summary">
+                  <span>
+                    <strong>Practical</strong>
+                    <span>How readers understand risk without panic or false certainty.</span>
+                  </span>
+
+                  <span
+                    class="sublayer__icon"
+                    aria-hidden="true"
+                  ></span>
+                </summary>
+
+                <div class="sublayer__body">
+                  <p>
+                    Public risk categories tell the reader whether a surface is informational, under review, held, blocked, or escalated. This protects the estate from presenting uncertainty as confidence.
+                  </p>
+                </div>
+              </details>
+
+              <details class="sublayer">
+                <summary class="sublayer__summary">
+                  <span>
+                    <strong>Engineering</strong>
+                    <span>How risk states can affect routing, copy, and controls.</span>
+                  </span>
+
+                  <span
+                    class="sublayer__icon"
+                    aria-hidden="true"
+                  ></span>
+                </summary>
+
+                <div class="sublayer__body">
+                  <p>
+                    Risk states should be machine-readable where appropriate and human-readable everywhere. A risk state can inform copy, navigation, disabled actions, receipts, review banners, and downstream routing.
+                  </p>
+
+                  <div class="risk-grid">
+                    <article
+                      class="risk"
+                      data-risk="watch"
+                    >
+                      <strong>Watch</strong>
+                      <span>The surface is active, but future changes should be monitored.</span>
+                    </article>
+
+                    <article
+                      class="risk"
+                      data-risk="review"
+                    >
+                      <strong>Review</strong>
+                      <span>The surface needs inspection before stronger claims or decisions are attached.</span>
+                    </article>
+
+                    <article
+                      class="risk"
+                      data-risk="hold"
+                    >
+                      <strong>Hold</strong>
+                      <span>The surface should not advance until the relevant issue is resolved.</span>
+                    </article>
+
+                    <article
+                      class="risk"
+                      data-risk="block"
+                    >
+                      <strong>Block</strong>
+                      <span>The proposed action is not allowed under the current boundary.</span>
+                    </article>
+                  </div>
+                </div>
+              </details>
+
+              <details class="sublayer">
+                <summary class="sublayer__summary">
+                  <span>
+                    <strong>Evidence</strong>
+                    <span>Why risk classification is not proof of safety.</span>
+                  </span>
+
+                  <span
+                    class="sublayer__icon"
+                    aria-hidden="true"
+                  ></span>
+                </summary>
+
+                <div class="sublayer__body">
+                  <p>
+                    Risk states are governance classifications. They are not proof that no risk exists, not a safety certification, and not a substitute for domain-specific review.
+                  </p>
+                </div>
+              </details>
             </div>
+          </div>
+        </details>
 
-            <div class="mini">
-              <strong>Scope</strong>
-              <span>Route, product, instrument, world, claim, or public copy.</span>
+        <details
+          class="chamber"
+          data-governance-chamber="decision-index"
+        >
+          <summary class="chamber__summary">
+            <span class="chamber__title">
+              <span>Decision Index</span>
+              <h3>Decisions need class, reason, boundary, and receipt.</h3>
+              <p>
+                Decision Index turns action into a traceable record instead of a loose instruction.
+              </p>
+            </span>
+
+            <span
+              class="chamber__icon"
+              aria-hidden="true"
+            ></span>
+          </summary>
+
+          <div class="chamber__body">
+            <div class="sublayer-stack">
+              <details class="sublayer">
+                <summary class="sublayer__summary">
+                  <span>
+                    <strong>Practical</strong>
+                    <span>How a decision communicates what happened and what did not happen.</span>
+                  </span>
+
+                  <span
+                    class="sublayer__icon"
+                    aria-hidden="true"
+                  ></span>
+                </summary>
+
+                <div class="sublayer__body">
+                  <p>
+                    A decision should tell people what happened and what did not happen. Approved does not mean universally validated. Blocked does not mean permanently impossible. Review required does not mean failed.
+                  </p>
+                </div>
+              </details>
+
+              <details class="sublayer">
+                <summary class="sublayer__summary">
+                  <span>
+                    <strong>Engineering</strong>
+                    <span>How a record preserves decision meaning for later systems.</span>
+                  </span>
+
+                  <span
+                    class="sublayer__icon"
+                    aria-hidden="true"
+                  ></span>
+                </summary>
+
+                <div class="sublayer__body">
+                  <p>
+                    Decision records should preserve identifier, class, scope, dependency, reason, allowed action, prohibited inference, and receipt surface. Later systems may consume the record without rewriting its meaning.
+                  </p>
+                </div>
+              </details>
+
+              <details class="sublayer">
+                <summary class="sublayer__summary">
+                  <span>
+                    <strong>Evidence</strong>
+                    <span>What the public decision-index model does not publish by itself.</span>
+                  </span>
+
+                  <span
+                    class="sublayer__icon"
+                    aria-hidden="true"
+                  ></span>
+                </summary>
+
+                <div class="sublayer__body">
+                  <p>
+                    This public page shows the decision-index model. It does not publish a complete governance database, historical audit log, or external review record unless those artifacts are separately provided.
+                  </p>
+                </div>
+              </details>
             </div>
-
-            <div class="mini">
-              <strong>Receipt</strong>
-              <span>Decision marker, review marker, or public-summary marker.</span>
-            </div>
           </div>
-        </div>
-
-        <div
-          class="lens-panel"
-          role="tabpanel"
-          data-governance-lens-panel="evidence"
-          hidden
-        >
-          <p>
-            The public page can show that governance structure exists. It does not prove legal compliance, regulatory certification, production readiness, scientific validation, or implementation correctness by itself.
-          </p>
-
-          <p>
-            Evidence remains bounded to visible markers, route structure, published language, and later review records when those records are explicitly provided.
-          </p>
-        </div>
-      </article>
-
-      <article
-        class="lens-card"
-        data-governance-lens-card="compliance-grid"
-      >
-        <header class="lens-card__header">
-          <div class="lens-card__title">
-            <span>Compliance Grid</span>
-            <h3>Checks must be visible without becoming certification.</h3>
-          </div>
-
-          <p>
-            Compliance Grid gives review language a place to stand while preserving the difference between internal checks and external compliance status.
-          </p>
-        </header>
-
-        <div
-          class="lens-tabs"
-          role="tablist"
-          aria-label="Compliance Grid lenses"
-        >
-          <button
-            class="lens-tab"
-            type="button"
-            role="tab"
-            aria-selected="true"
-            data-governance-lens-tab="practical"
-          >
-            Practical
-          </button>
-
-          <button
-            class="lens-tab"
-            type="button"
-            role="tab"
-            aria-selected="false"
-            data-governance-lens-tab="engineering"
-          >
-            Engineering
-          </button>
-
-          <button
-            class="lens-tab"
-            type="button"
-            role="tab"
-            aria-selected="false"
-            data-governance-lens-tab="evidence"
-          >
-            Evidence
-          </button>
-        </div>
-
-        <div
-          class="lens-panel"
-          role="tabpanel"
-          data-governance-lens-panel="practical"
-        >
-          <p>
-            Compliance language should prevent confusion. A page can be reviewed for clarity, safety, routing, claims, accessibility, and public boundaries without implying that a regulator, court, lab, or external authority has certified it.
-          </p>
-        </div>
-
-        <div
-          class="lens-panel"
-          role="tabpanel"
-          data-governance-lens-panel="engineering"
-          hidden
-        >
-          <p>
-            The grid separates review classes: claim review, route review, copy review, evidence review, accessibility review, runtime review, and deployment review. A pass in one class does not automatically propagate to all classes.
-          </p>
-        </div>
-
-        <div
-          class="lens-panel"
-          role="tabpanel"
-          data-governance-lens-panel="evidence"
-          hidden
-        >
-          <p>
-            Current public standing is a governance surface with visible markers. It is not an external compliance certificate, legal opinion, production authorization, or completed third-party audit.
-          </p>
-        </div>
-      </article>
-
-      <article
-        class="lens-card"
-        data-governance-lens-card="risk-meter"
-      >
-        <header class="lens-card__header">
-          <div class="lens-card__title">
-            <span>Public Risk Meter</span>
-            <h3>Risk should be classified before it is minimized.</h3>
-          </div>
-
-          <p>
-            The meter gives public-facing risk language a restrained set of categories.
-          </p>
-        </header>
-
-        <div
-          class="lens-tabs"
-          role="tablist"
-          aria-label="Public Risk Meter lenses"
-        >
-          <button
-            class="lens-tab"
-            type="button"
-            role="tab"
-            aria-selected="true"
-            data-governance-lens-tab="practical"
-          >
-            Practical
-          </button>
-
-          <button
-            class="lens-tab"
-            type="button"
-            role="tab"
-            aria-selected="false"
-            data-governance-lens-tab="engineering"
-          >
-            Engineering
-          </button>
-
-          <button
-            class="lens-tab"
-            type="button"
-            role="tab"
-            aria-selected="false"
-            data-governance-lens-tab="evidence"
-          >
-            Evidence
-          </button>
-        </div>
-
-        <div
-          class="lens-panel"
-          role="tabpanel"
-          data-governance-lens-panel="practical"
-        >
-          <p>
-            Public risk categories tell the reader whether a surface is informational, under review, held, blocked, or escalated. This protects the estate from presenting uncertainty as confidence.
-          </p>
-        </div>
-
-        <div
-          class="lens-panel"
-          role="tabpanel"
-          data-governance-lens-panel="engineering"
-          hidden
-        >
-          <p>
-            Risk states should be machine-readable where appropriate and human-readable everywhere. A risk state can inform copy, navigation, disabled actions, receipts, review banners, and downstream routing.
-          </p>
-        </div>
-
-        <div
-          class="lens-panel"
-          role="tabpanel"
-          data-governance-lens-panel="evidence"
-          hidden
-        >
-          <p>
-            Risk states are governance classifications. They are not proof that no risk exists, not a safety certification, and not a substitute for domain-specific review.
-          </p>
-        </div>
-      </article>
-
-      <article
-        class="lens-card"
-        data-governance-lens-card="decision-index"
-      >
-        <header class="lens-card__header">
-          <div class="lens-card__title">
-            <span>Decision Index</span>
-            <h3>Decisions need class, reason, boundary, and receipt.</h3>
-          </div>
-
-          <p>
-            Decision Index turns action into a traceable record instead of a loose instruction.
-          </p>
-        </header>
-
-        <div
-          class="lens-tabs"
-          role="tablist"
-          aria-label="Decision Index lenses"
-        >
-          <button
-            class="lens-tab"
-            type="button"
-            role="tab"
-            aria-selected="true"
-            data-governance-lens-tab="practical"
-          >
-            Practical
-          </button>
-
-          <button
-            class="lens-tab"
-            type="button"
-            role="tab"
-            aria-selected="false"
-            data-governance-lens-tab="engineering"
-          >
-            Engineering
-          </button>
-
-          <button
-            class="lens-tab"
-            type="button"
-            role="tab"
-            aria-selected="false"
-            data-governance-lens-tab="evidence"
-          >
-            Evidence
-          </button>
-        </div>
-
-        <div
-          class="lens-panel"
-          role="tabpanel"
-          data-governance-lens-panel="practical"
-        >
-          <p>
-            A decision should tell people what happened and what did not happen. Approved does not mean universally validated. Blocked does not mean permanently impossible. Review required does not mean failed.
-          </p>
-        </div>
-
-        <div
-          class="lens-panel"
-          role="tabpanel"
-          data-governance-lens-panel="engineering"
-          hidden
-        >
-          <p>
-            Decision records should preserve identifier, class, scope, dependency, reason, allowed action, prohibited inference, and receipt surface. Later systems may consume the record without rewriting its meaning.
-          </p>
-        </div>
-
-        <div
-          class="lens-panel"
-          role="tabpanel"
-          data-governance-lens-panel="evidence"
-          hidden
-        >
-          <p>
-            This public page shows the decision-index model. It does not publish a complete governance database, historical audit log, or external review record unless those artifacts are separately provided.
-          </p>
-        </div>
-      </article>
-    </section>
-
-    <section
-      class="section"
-      aria-labelledby="decision-chain-title"
-    >
-      <header class="section__header">
-        <p class="kicker">
-          Governance Chain
-        </p>
-
-        <h2 id="decision-chain-title">
-          Decisions move through a bounded chain.
-        </h2>
-
-        <p>
-          The chain keeps observation, rule, review, decision, receipt, and return distinct enough to audit.
-        </p>
-      </header>
-
-      <div class="chain">
-        <div class="chain__step">
-          <strong>Observation</strong>
-          <span>Something is noticed, reported, measured, or proposed.</span>
-        </div>
-
-        <div class="chain__step">
-          <strong>Rule</strong>
-          <span>The relevant boundary or standard is identified.</span>
-        </div>
-
-        <div class="chain__step">
-          <strong>Review</strong>
-          <span>The issue is compared against scope, evidence, and authority.</span>
-        </div>
-
-        <div class="chain__step">
-          <strong>Decision</strong>
-          <span>The action is classed without overstating its reach.</span>
-        </div>
-
-        <div class="chain__step">
-          <strong>Receipt</strong>
-          <span>The record preserves what was decided and what was not.</span>
-        </div>
-
-        <div class="chain__step">
-          <strong>Return</strong>
-          <span>The estate returns to the right room, route, or review queue.</span>
-        </div>
-      </div>
-
-      <div class="boundary">
-        <p>
-          <strong>Boundary:</strong>
-          Governance may organize decision flow, route authority, public language, and review status. It does not replace evidence, law, scientific validation, runtime testing, or domain-specific professional review.
-        </p>
-      </div>
-    </section>
-
-    <section
-      class="section"
-      aria-labelledby="authority-boundaries-title"
-    >
-      <header class="section__header">
-        <p class="kicker">
-          Authority Boundaries
-        </p>
-
-        <h2 id="authority-boundaries-title">
-          Governance has power only where its authority is declared.
-        </h2>
-      </header>
-
-      <div class="authority-grid">
-        <article
-          class="authority-box"
-          data-authority="may"
-        >
-          <h3>
-            Governance may decide
-          </h3>
-
-          <ul>
-            <li>Whether public copy needs a boundary statement.</li>
-            <li>Whether a claim requires review before publication.</li>
-            <li>Whether a route should be held, revised, or escalated.</li>
-            <li>Whether a decision needs a receipt or visible status marker.</li>
-            <li>Whether a page should distinguish practical, engineering, and evidence interpretations.</li>
-          </ul>
-        </article>
-
-        <article
-          class="authority-box"
-          data-authority="may-not"
-        >
-          <h3>
-            Governance may not decide
-          </h3>
-
-          <ul>
-            <li>That a scientific claim is validated without supporting evidence.</li>
-            <li>That a legal or regulatory requirement is satisfied without appropriate review.</li>
-            <li>That a runtime system works without execution evidence.</li>
-            <li>That a production deployment is authorized by public copy alone.</li>
-            <li>That one room absorbs the authority of the entire estate.</li>
-          </ul>
-        </article>
+        </details>
       </div>
     </section>
 
@@ -1516,7 +1492,7 @@
         </h2>
 
         <p>
-          Select a class to preview the governing meaning. This is a local public interface only; it does not write to a database or authorize deployment.
+          This section stays visible because it is the practical control surface. Select a class to preview the governing meaning. This is a local public interface only; it does not write to a database or authorize deployment.
         </p>
       </header>
 
@@ -1597,118 +1573,241 @@
             Advisory means the page or proposal may guide interpretation, but it does not authorize implementation, validation, compliance status, or deployment.
           </p>
 
-          <div class="mini-grid">
-            <div class="mini">
-              <strong>Allowed</strong>
-              <span data-decision-allowed>Orientation, explanation, and bounded recommendation.</span>
+          <details class="sublayer" open>
+            <summary class="sublayer__summary">
+              <span>
+                <strong>Class Details</strong>
+                <span>Allowed action, requirement, and boundary for the selected class.</span>
+              </span>
+
+              <span
+                class="sublayer__icon"
+                aria-hidden="true"
+              ></span>
+            </summary>
+
+            <div class="sublayer__body">
+              <div class="mini-grid">
+                <div class="mini">
+                  <strong>Allowed</strong>
+                  <span data-decision-allowed>Orientation, explanation, and bounded recommendation.</span>
+                </div>
+
+                <div class="mini">
+                  <strong>Requires</strong>
+                  <span data-decision-requires>Clear boundary language.</span>
+                </div>
+
+                <div class="mini">
+                  <strong>Not claimed</strong>
+                  <span data-decision-boundary>Execution authority or proof.</span>
+                </div>
+              </div>
+            </div>
+          </details>
+        </article>
+      </div>
+    </section>
+
+    <section
+      class="section"
+      aria-labelledby="additional-chambers-title"
+    >
+      <header class="section__header">
+        <p class="kicker">
+          Review Chambers
+        </p>
+
+        <h2 id="additional-chambers-title">
+          Supporting governance layers remain collapsed until needed.
+        </h2>
+      </header>
+
+      <div class="chamber-stack">
+        <details
+          class="chamber"
+          data-governance-chamber="chain"
+        >
+          <summary class="chamber__summary">
+            <span class="chamber__title">
+              <span>Governance Chain</span>
+              <h3>Observation moves through rule, review, decision, receipt, and return.</h3>
+              <p>
+                The chain keeps decision stages separated enough to audit without forcing the visitor to read every stage by default.
+              </p>
+            </span>
+
+            <span
+              class="chamber__icon"
+              aria-hidden="true"
+            ></span>
+          </summary>
+
+          <div class="chamber__body">
+            <div class="chain">
+              <div class="chain__step">
+                <strong>Observation</strong>
+                <span>Something is noticed, reported, measured, or proposed.</span>
+              </div>
+
+              <div class="chain__step">
+                <strong>Rule</strong>
+                <span>The relevant boundary or standard is identified.</span>
+              </div>
+
+              <div class="chain__step">
+                <strong>Review</strong>
+                <span>The issue is compared against scope, evidence, and authority.</span>
+              </div>
+
+              <div class="chain__step">
+                <strong>Decision</strong>
+                <span>The action is classed without overstating its reach.</span>
+              </div>
+
+              <div class="chain__step">
+                <strong>Receipt</strong>
+                <span>The record preserves what was decided and what was not.</span>
+              </div>
+
+              <div class="chain__step">
+                <strong>Return</strong>
+                <span>The estate returns to the right room, route, or review queue.</span>
+              </div>
             </div>
 
-            <div class="mini">
-              <strong>Requires</strong>
-              <span data-decision-requires>Clear boundary language.</span>
-            </div>
-
-            <div class="mini">
-              <strong>Not claimed</strong>
-              <span data-decision-boundary>Execution authority or proof.</span>
+            <div class="boundary">
+              <p>
+                <strong>Boundary:</strong>
+                Governance may organize decision flow, route authority, public language, and review status. It does not replace evidence, law, scientific validation, runtime testing, or domain-specific professional review.
+              </p>
             </div>
           </div>
-        </article>
+        </details>
+
+        <details
+          class="chamber"
+          data-governance-chamber="authority-boundaries"
+        >
+          <summary class="chamber__summary">
+            <span class="chamber__title">
+              <span>Authority Boundaries</span>
+              <h3>Governance has power only where its authority is declared.</h3>
+              <p>
+                This chamber separates what governance may decide from what it may not claim.
+              </p>
+            </span>
+
+            <span
+              class="chamber__icon"
+              aria-hidden="true"
+            ></span>
+          </summary>
+
+          <div class="chamber__body">
+            <div class="authority-grid">
+              <article
+                class="authority-box"
+                data-authority="may"
+              >
+                <h3>
+                  Governance may decide
+                </h3>
+
+                <ul>
+                  <li>Whether public copy needs a boundary statement.</li>
+                  <li>Whether a claim requires review before publication.</li>
+                  <li>Whether a route should be held, revised, or escalated.</li>
+                  <li>Whether a decision needs a receipt or visible status marker.</li>
+                  <li>Whether a page should distinguish practical, engineering, and evidence interpretations.</li>
+                </ul>
+              </article>
+
+              <article
+                class="authority-box"
+                data-authority="may-not"
+              >
+                <h3>
+                  Governance may not decide
+                </h3>
+
+                <ul>
+                  <li>That a scientific claim is validated without supporting evidence.</li>
+                  <li>That a legal or regulatory requirement is satisfied without appropriate review.</li>
+                  <li>That a runtime system works without execution evidence.</li>
+                  <li>That a production deployment is authorized by public copy alone.</li>
+                  <li>That one room absorbs the authority of the entire estate.</li>
+                </ul>
+              </article>
+            </div>
+          </div>
+        </details>
+
+        <details
+          class="chamber"
+          data-governance-chamber="receipt-ledger"
+        >
+          <summary class="chamber__summary">
+            <span class="chamber__title">
+              <span>Receipt Ledger</span>
+              <h3>Current public records remain summary-level.</h3>
+              <p>
+                These rows preserve public-facing governance status. They are not a full internal audit database.
+              </p>
+            </span>
+
+            <span
+              class="chamber__icon"
+              aria-hidden="true"
+            ></span>
+          </summary>
+
+          <div class="chamber__body">
+            <div class="ledger">
+              <div class="ledger-row">
+                <strong>GOV-PUBLIC-SURFACE</strong>
+                <span>Governance route is attached as a public decision and review surface.</span>
+                <span class="badge">Visible</span>
+              </div>
+
+              <div class="ledger-row">
+                <strong>PLANETARY-ATTACHMENT</strong>
+                <span>Estate, manor, house-field, gauges-truth, construct-class, and attachment markers are preserved.</span>
+                <span class="badge">Present</span>
+              </div>
+
+              <div class="ledger-row">
+                <strong>THREE-LENS-STANDARD</strong>
+                <span>Practical, engineering, and evidence sub-layers are installed as the interpretation pattern for major governance functions.</span>
+                <span class="badge">Installed</span>
+              </div>
+
+              <div class="ledger-row">
+                <strong>CLAIM-BOUNDARY</strong>
+                <span>The page does not claim legal certification, regulatory compliance, scientific validation, production approval, or runtime execution proof.</span>
+                <span class="badge">Bounded</span>
+              </div>
+            </div>
+          </div>
+        </details>
       </div>
     </section>
 
     <section
       class="section"
-      aria-labelledby="risk-meter-title"
+      aria-label="Governance boundary statement"
     >
-      <header class="section__header">
-        <p class="kicker">
-          Public Risk Meter
-        </p>
+      <p class="kicker">
+        Boundary
+      </p>
 
-        <h2 id="risk-meter-title">
-          Public risk is shown as a status, not hidden behind confidence.
-        </h2>
-      </header>
+      <h2>
+        Governance organizes decisions. It does not replace proof.
+      </h2>
 
-      <div class="risk-grid">
-        <article
-          class="risk"
-          data-risk="watch"
-        >
-          <strong>Watch</strong>
-          <span>The surface is active, but future changes should be monitored.</span>
-        </article>
-
-        <article
-          class="risk"
-          data-risk="review"
-        >
-          <strong>Review</strong>
-          <span>The surface needs inspection before stronger claims or decisions are attached.</span>
-        </article>
-
-        <article
-          class="risk"
-          data-risk="hold"
-        >
-          <strong>Hold</strong>
-          <span>The surface should not advance until the relevant issue is resolved.</span>
-        </article>
-
-        <article
-          class="risk"
-          data-risk="block"
-        >
-          <strong>Block</strong>
-          <span>The proposed action is not allowed under the current boundary.</span>
-        </article>
-      </div>
-    </section>
-
-    <section
-      class="section"
-      aria-labelledby="receipt-ledger-title"
-    >
-      <header class="section__header">
-        <p class="kicker">
-          Receipt Ledger
-        </p>
-
-        <h2 id="receipt-ledger-title">
-          Current public records remain summary-level.
-        </h2>
-
-        <p>
-          These rows preserve public-facing governance status. They are not a full internal audit database.
-        </p>
-      </header>
-
-      <div class="ledger">
-        <div class="ledger-row">
-          <strong>GOV-PUBLIC-SURFACE</strong>
-          <span>Governance route is attached as a public decision and review surface.</span>
-          <span class="badge">Visible</span>
-        </div>
-
-        <div class="ledger-row">
-          <strong>PLANETARY-ATTACHMENT</strong>
-          <span>Estate, manor, house-field, gauges-truth, construct-class, and attachment markers are preserved.</span>
-          <span class="badge">Present</span>
-        </div>
-
-        <div class="ledger-row">
-          <strong>THREE-LENS-STANDARD</strong>
-          <span>Practical, engineering, and evidence tabs are installed as the interpretation pattern for major governance functions.</span>
-          <span class="badge">Installed</span>
-        </div>
-
-        <div class="ledger-row">
-          <strong>CLAIM-BOUNDARY</strong>
-          <span>The page does not claim legal certification, regulatory compliance, scientific validation, production approval, or runtime execution proof.</span>
-          <span class="badge">Bounded</span>
-        </div>
-      </div>
+      <p>
+        This page summarizes public governance structure, authority routing, decision classes, and evidence boundaries. It does not claim legal certification, regulatory compliance, scientific validation, production readiness, runtime correctness, or completed third-party audit.
+      </p>
     </section>
 
     <footer class="footer">
@@ -1809,54 +1908,6 @@
     }
   };
 
-  function setLens(card, selectedLens) {
-    const tabs =
-      card.querySelectorAll("[data-governance-lens-tab]");
-
-    const panels =
-      card.querySelectorAll("[data-governance-lens-panel]");
-
-    tabs.forEach(tab => {
-      const active =
-        tab.dataset.governanceLensTab === selectedLens;
-
-      tab.setAttribute(
-        "aria-selected",
-        active ? "true" : "false"
-      );
-    });
-
-    panels.forEach(panel => {
-      const active =
-        panel.dataset.governanceLensPanel === selectedLens;
-
-      panel.hidden =
-        !active;
-    });
-  }
-
-  function installLensTabs() {
-    const cards =
-      document.querySelectorAll("[data-governance-lens-card]");
-
-    cards.forEach(card => {
-      const tabs =
-        card.querySelectorAll("[data-governance-lens-tab]");
-
-      tabs.forEach(tab => {
-        tab.addEventListener(
-          "click",
-          () => {
-            setLens(
-              card,
-              tab.dataset.governanceLensTab
-            );
-          }
-        );
-      });
-    });
-  }
-
   function installDecisionBoard() {
     const board =
       document.querySelector("[data-governance-decision-board]");
@@ -1935,9 +1986,49 @@
     });
   }
 
+  function installChamberMemory() {
+    const chambers =
+      document.querySelectorAll("[data-governance-chamber]");
+
+    if (!("sessionStorage" in window)) {
+      return;
+    }
+
+    chambers.forEach(chamber => {
+      const key =
+        "dgb-governance-chamber-" + chamber.dataset.governanceChamber;
+
+      try {
+        const stored =
+          window.sessionStorage.getItem(key);
+
+        if (stored === "open") {
+          chamber.open =
+            true;
+        }
+      } catch (error) {
+        return;
+      }
+
+      chamber.addEventListener(
+        "toggle",
+        () => {
+          try {
+            window.sessionStorage.setItem(
+              key,
+              chamber.open ? "open" : "closed"
+            );
+          } catch (error) {
+            return;
+          }
+        }
+      );
+    });
+  }
+
   function initializeGovernancePage() {
-    installLensTabs();
     installDecisionBoard();
+    installChamberMemory();
 
     document.documentElement.dataset.governanceJs =
       "active";
@@ -1954,6 +2045,8 @@
               "engineering",
               "evidence"
             ],
+            disclosureModel:
+              "nested-details-chambers",
             contract:
               "PLANETARY_ATTACHMENT_MARKER_TNT_v1",
             runtimeClaim:

@@ -5,8 +5,8 @@
   data-page="explore-frontier-curiosity-surface"
   data-room="explore"
   data-public-facing-name="Explore"
-  data-version="EXPLORE-FRONTIER-CURIOSITY-SURFACE-v3"
-  data-contract="EXPLORE_FRONTIER_CURIOSITY_SURFACE_ENTRY_TNT_v3"
+  data-version="EXPLORE-FRONTIER-CURIOSITY-SURFACE-v4"
+  data-contract="EXPLORE_FRONTIER_CURIOSITY_SURFACE_ENTRY_TNT_v4"
   data-role="frontier-curiosity-entry"
   data-purpose="curiosity-led-frontier-surface-selection"
   data-primary-destination="/explore/frontier/"
@@ -444,6 +444,7 @@
     .surface-groups {
       display: grid;
       gap: 12px;
+      scroll-margin-top: 1rem;
     }
 
     .surface-group {
@@ -578,10 +579,6 @@
       box-shadow:
         0 18px 46px rgba(0, 0, 0, 0.28),
         inset 0 1px 0 rgba(255, 255, 255, 0.06);
-    }
-
-    #curiosity-selector {
-      scroll-margin-top: 1rem;
     }
 
     .preview-panel[data-surface="energy"] {
@@ -921,7 +918,7 @@
 <body
   data-route="/explore/"
   data-room="explore"
-  data-contract="EXPLORE_FRONTIER_CURIOSITY_SURFACE_ENTRY_TNT_v3"
+  data-contract="EXPLORE_FRONTIER_CURIOSITY_SURFACE_ENTRY_TNT_v4"
   data-primary-destination="/explore/frontier/"
   data-objective-stance="true"
   data-narrative-stance="false"
@@ -1009,7 +1006,7 @@
             >
               <a
                 class="button primary"
-                href="#curiosity-selector"
+                href="#lane-selection-top"
               >
                 Choose a Surface
               </a>
@@ -1081,6 +1078,8 @@
         >
           <div
             class="surface-groups"
+            id="lane-selection-top"
+            data-lane-selection-top
             role="tablist"
             aria-label="Frontier surface selector"
           >
@@ -1333,7 +1332,7 @@
 
               <a
                 class="button"
-                href="#curiosity-selector"
+                href="#lane-selection-top"
                 data-back-to-lanes
               >
                 Back to the Lanes
@@ -1404,7 +1403,7 @@
         class="route-receipt"
         data-route-receipt
       >
-EXPLORE_FRONTIER_CURIOSITY_SURFACE_ENTRY_TNT_v3
+EXPLORE_FRONTIER_CURIOSITY_SURFACE_ENTRY_TNT_v4
 route=/explore/
 page=explore_frontier_curiosity_surface
 role=frontier_curiosity_entry
@@ -1426,6 +1425,7 @@ surface_destination=/explore/frontier/
 dropdown_before_frontier_action=true
 auto_scroll_preview_on_surface_select=true
 back_to_lanes_action=true
+back_to_lanes_target=lane_selection_top
 inline_css=true
 inline_js=true
 external_css=false
@@ -1656,7 +1656,7 @@ boundary=explore_names_the_surface_frontier_handles_lane_selection
 
   function scrollToLanes() {
     const target =
-      document.querySelector("#curiosity-selector");
+      document.querySelector("[data-lane-selection-top]");
 
     scrollToElement(target);
   }
@@ -1760,9 +1760,10 @@ boundary=explore_names_the_surface_frontier_handles_lane_selection
           detail: Object.freeze({
             route: "/explore/",
             page: "explore-frontier-curiosity-surface",
-            contract: "EXPLORE_FRONTIER_CURIOSITY_SURFACE_ENTRY_TNT_v3",
+            contract: "EXPLORE_FRONTIER_CURIOSITY_SURFACE_ENTRY_TNT_v4",
             primaryDestination: "/explore/frontier/",
             interaction: "surface-tab-preview-dropdown-frontier-action-back-to-lanes",
+            backToLanesTarget: "lane-selection-top",
             stance: "objective-practical",
             directLaneRouting: false
           })

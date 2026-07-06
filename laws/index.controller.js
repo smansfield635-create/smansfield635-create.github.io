@@ -1,11 +1,11 @@
 /* /laws/index.controller.js
-   LAW COMPASS navigation, state, route, transition, panel,
-   four-direction law-category, sixteen-law registry, and
-   human-first / engineering-secondary authority.
+   LAW COMPASS controller for navigation, state, route validation,
+   selection authority, panel plumbing, receipts, and paired interaction
+   coordination.
 
    Module:
    DGB_LAWS_CONTROLLER
-   1.0.0-law-compass-human-first-authority
+   1.0.0-law-compass-controller-authority
 
    Paired module:
    DGB_LAWS_INTERACTIONS
@@ -16,40 +16,34 @@
    DGB_ARCHCOIN_CONTROLLER
    7.0.0-controller-interaction-semantic-priority
 
-   Template conversion:
-   ARCHCOIN financial domains:
-   - contract
-   - receivable
-   - payable
-   - allocation
-
-   LAW COMPASS directions:
-   - flow
-   - integrity
-   - reality
-   - structure
-
-   Anchoring distinction:
+   Core boundary:
 
    INTERACTIONS DETERMINES MOTION.
    CONTROLLER DETERMINES AUTHORITY.
 
    Controller owns:
-   - canonical navigation and selection state;
-   - legal transitions;
-   - canonical category and law-route registry;
+   - canonical runtime navigation state;
+   - legal state transitions;
+   - route registry admission from declared DOM placeholders;
+   - category and law selection;
+   - route authorization and execution;
    - gesture transaction begin, preview acceptance, commit, and cancel;
-   - complete-quaternion validation and authoritative normalization;
+   - complete-quaternion validation and normalization;
    - preview, committed, and origin quaternion storage;
    - explicit primary-direction and primary-law validation;
-   - navigation authorization and execution;
-   - panel and viewport choreography;
+   - panel wiring from declared DOM data;
+   - viewport choreography;
    - reduced-motion and held-state authority;
-   - semantic projection fact validation, storage, and publication;
-   - human-first law profile publication;
+   - semantic projection fact storage and publication;
    - receipts and validation.
 
    Controller does not own:
+   - human law statements;
+   - software-law statements;
+   - failure-pattern statements;
+   - audit-question statements;
+   - page doctrine;
+   - contextual narrative;
    - pointer lifecycle;
    - tap-versus-drag arbitration;
    - swipe or cluster-exit classification;
@@ -62,36 +56,33 @@
    - interaction-priority derivation;
    - projection-to-interaction DOM application.
 
-   Human-first law standard:
+   Route policy:
 
-   Each law route preserves:
-   - human law as primary expression;
-   - software / engineering expression as secondary parallel;
-   - code / route expression as implementation parallel;
-   - failure pattern;
-   - audit question;
-   - placeholder status until full law page expansion.
+   The controller does not invent law routes.
+   The controller admits the sixteen existing placeholder routes declared
+   by the HTML through [data-laws-law][data-route].
 
-   Gesture contract:
+   Required DOM declaration:
+   - 4 [data-laws-category] controls, one per direction.
+   - 16 [data-laws-law] controls.
+   - Each law declares:
+     data-law-id
+     data-direction
+     data-route
 
-   Orbit:
-   - beginOrbitGesture()
-   - requestOrbitPreview({ quaternion, primaryId })
-   - requestOrbitCommit()
-   - requestOrbitCancel(reason)
+   Required directions:
+   - flow
+   - integrity
+   - reality
+   - structure
 
-   Cluster:
-   - beginClusterGesture(direction)
-   - requestClusterPreview(direction, { quaternion, primaryId })
-   - requestClusterCommit(direction)
-   - requestClusterCancel(direction, reason)
-
-   Preview payloads permit exactly:
-   - quaternion
-   - primaryId
+   Required count:
+   - 4 directions
+   - 16 declared law routes
+   - 4 laws per direction
 
    Source status:
-   LAW_COMPASS_CONTROLLER_CONVERSION_STANDARD
+   LAW_COMPASS_CONTROLLER_AUTHORITY_STANDARD
    !=
    RUNTIME_PASS
    !=
@@ -105,7 +96,7 @@
 
   const MODULE = Object.freeze({
     id: "DGB_LAWS_CONTROLLER",
-    version: "1.0.0-law-compass-human-first-authority",
+    version: "1.0.0-law-compass-controller-authority",
     file: "/laws/index.controller.js",
 
     interactionModuleId: "DGB_LAWS_INTERACTIONS",
@@ -179,20 +170,6 @@
     structure: "Structure"
   });
 
-  const DIRECTION_COORDINATES = Object.freeze({
-    flow: "Movement",
-    integrity: "Trust",
-    reality: "Truth",
-    structure: "Form"
-  });
-
-  const DIRECTION_TO_CATEGORY_ROUTE = Object.freeze({
-    flow: "/laws/categories/flow/",
-    integrity: "/laws/categories/integrity/",
-    reality: "/laws/categories/reality/",
-    structure: "/laws/categories/structure/"
-  });
-
   const MAIN_COMPASS = Object.freeze({
     destinationType: DESTINATION_TYPES.HOME_COMPASS,
     destinationId: "home-compass",
@@ -220,12 +197,7 @@
 
   const CANONICAL_CONSTELLATION_QUATERNIONS =
     Object.freeze({
-      flow: Object.freeze([
-        0,
-        0,
-        0,
-        1
-      ]),
+      flow: Object.freeze([0, 0, 0, 1]),
 
       integrity: Object.freeze([
         0,
@@ -234,12 +206,7 @@
         HALF_SQRT_TWO
       ]),
 
-      reality: Object.freeze([
-        0,
-        0,
-        1,
-        0
-      ]),
+      reality: Object.freeze([0, 0, 1, 0]),
 
       structure: Object.freeze([
         0,
@@ -305,324 +272,6 @@
     ])
   });
 
-  const CANONICAL_LAW_RECORDS = Object.freeze([
-    Object.freeze({
-      direction: "flow",
-      lawId: "route-law",
-      lawLabel: "Route Law",
-      route: "/laws/categories/flow/route/",
-      humanPrimary:
-        "Every person, role, relationship, institution, or decision path needs a place, a responsibility, a boundary, and a way to move without losing orientation.",
-      engineeringSecondary:
-        "Every page or route must know where it lives, how it is entered, what it owns, where it may send the visitor, and how return remains possible.",
-      codeExpression:
-        "Route identity, owner function, inbound path, outbound path, and return path must be explicit.",
-      failurePattern:
-        "A path exists, but nobody can tell what owns it, where it belongs, or how to return.",
-      auditQuestion:
-        "Can the path state where it lives, what it owns, and how a user returns?"
-    }),
-
-    Object.freeze({
-      direction: "flow",
-      lawId: "return-law",
-      lawLabel: "Return Law",
-      route: "/laws/categories/flow/return/",
-      humanPrimary:
-        "Exploration is not abandonment. A healthy system allows people to move outward and still return to orientation.",
-      engineeringSecondary:
-        "Every outward movement, section jump, route transition, or deep content path must preserve a return anchor.",
-      codeExpression:
-        "Back controls, return anchors, and restoration states must resolve to the intended parent context.",
-      failurePattern:
-        "The user enters depth and loses the map.",
-      auditQuestion:
-        "Can the user return to the correct parent state without guessing?"
-    }),
-
-    Object.freeze({
-      direction: "flow",
-      lawId: "interaction-law",
-      lawLabel: "Interaction Law",
-      route: "/laws/categories/flow/interaction/",
-      humanPrimary:
-        "People should not have to guess what is being asked of them. A valid interaction makes the available action clear before commitment.",
-      engineeringSecondary:
-        "Clickable, draggable, expandable, decorative, and inert objects must be visually and semantically distinguishable.",
-      codeExpression:
-        "Interactive controls require appropriate roles, labels, event handling, and non-deceptive state changes.",
-      failurePattern:
-        "A visitor cannot tell what can be touched, opened, dragged, ignored, or trusted.",
-      auditQuestion:
-        "Is the action legible before activation?"
-    }),
-
-    Object.freeze({
-      direction: "flow",
-      lawId: "runtime-law",
-      lawLabel: "Runtime Law",
-      route: "/laws/categories/flow/runtime/",
-      humanPrimary:
-        "Activity must serve responsibility. Motion, urgency, or busyness does not prove value.",
-      engineeringSecondary:
-        "Runtime behavior must serve the route’s purpose and may not take authority from the page structure.",
-      codeExpression:
-        "Heavy runtime, animation loops, canvas, WebGL, or state engines must be authorized by route class and contract.",
-      failurePattern:
-        "Movement hides weak structure or makes a simple page unstable.",
-      auditQuestion:
-        "Does runtime behavior serve the law, or has it taken over the law?"
-    }),
-
-    Object.freeze({
-      direction: "integrity",
-      lawId: "authority-law",
-      lawLabel: "Authority Law",
-      route: "/laws/categories/integrity/authority/",
-      humanPrimary:
-        "A person, office, role, or institution must not claim authority it has not earned, received, or been assigned.",
-      engineeringSecondary:
-        "Every route, module, claim, and controller must declare what it owns and what it does not own.",
-      codeExpression:
-        "Authority boundaries must be encoded through route contracts, data attributes, module receipts, and explicit ownership fields.",
-      failurePattern:
-        "A component speaks for the whole system without authority.",
-      auditQuestion:
-        "Who is allowed to decide, and where is that authority recorded?"
-    }),
-
-    Object.freeze({
-      direction: "integrity",
-      lawId: "proof-law",
-      lawLabel: "Proof Law",
-      route: "/laws/categories/integrity/proof/",
-      humanPrimary:
-        "Confidence, status, emotion, repetition, and urgency do not make a claim true. Trust requires something checkable.",
-      engineeringSecondary:
-        "A route, interface, visual state, or runtime flag cannot claim success unless observable behavior, source state, receipt, or test output supports it.",
-      codeExpression:
-        "No status flag, visual label, contract name, or deployment statement may outrank implemented and inspectable behavior.",
-      failurePattern:
-        "The system asks for belief where evidence is required.",
-      auditQuestion:
-        "What can be checked?"
-    }),
-
-    Object.freeze({
-      direction: "integrity",
-      lawId: "receipt-law",
-      lawLabel: "Receipt Law",
-      route: "/laws/categories/integrity/receipt/",
-      humanPrimary:
-        "A serious decision leaves a record clear enough for later responsibility.",
-      engineeringSecondary:
-        "Every major page, module, route, or contract change must preserve a traceable receipt.",
-      codeExpression:
-        "Receipts must identify route, file, contract, changed scope, preserved scope, runtime posture, visual posture, and claim boundary.",
-      failurePattern:
-        "A change occurs, but the next reviewer cannot tell what changed or why.",
-      auditQuestion:
-        "Can another reviewer reconstruct the change from the record?"
-    }),
-
-    Object.freeze({
-      direction: "integrity",
-      lawId: "scope-law",
-      lawLabel: "Scope Law",
-      route: "/laws/categories/integrity/scope/",
-      humanPrimary:
-        "A responsibility must not silently expand beyond what was agreed. Momentum without boundary becomes damage.",
-      engineeringSecondary:
-        "A file, route, patch, or module change must stay inside the authorized target and contract.",
-      codeExpression:
-        "No neighboring file, hidden dependency, root route, runtime layer, or visual claim may be changed unless explicitly authorized.",
-      failurePattern:
-        "A bounded fix becomes an unapproved rewrite.",
-      auditQuestion:
-        "Did the change stay inside the authorized boundary?"
-    }),
-
-    Object.freeze({
-      direction: "reality",
-      lawId: "generation-law",
-      lawLabel: "Generation Law",
-      route: "/laws/categories/reality/generation/",
-      humanPrimary:
-        "A beginning is not a completion. A first working form must not pretend to be the final form.",
-      engineeringSecondary:
-        "A baseline, prototype, render, or pass candidate must state what it actually proves and what remains open.",
-      codeExpression:
-        "Generation labels, version names, route contracts, and receipts must distinguish baseline, readiness, runtime pass, visual pass, and production authorization.",
-      failurePattern:
-        "The first coherent version is treated as finished.",
-      auditQuestion:
-        "What generation is this, and what does that generation actually prove?"
-    }),
-
-    Object.freeze({
-      direction: "reality",
-      lawId: "visual-claim-law",
-      lawLabel: "Visual Claim Law",
-      route: "/laws/categories/reality/visual-claim/",
-      humanPrimary:
-        "What looks convincing is not automatically true. Beauty may support understanding, but it does not replace evidence.",
-      engineeringSecondary:
-        "A diamond, planet, orbit, animation, 3D surface, screenshot, or layout cannot claim source truth or validation by appearance alone.",
-      codeExpression:
-        "Visual-pass status remains false unless the proper review path accepts it.",
-      failurePattern:
-        "A polished visual is mistaken for proof.",
-      auditQuestion:
-        "Is the claim based on appearance, or on verified behavior?"
-    }),
-
-    Object.freeze({
-      direction: "reality",
-      lawId: "human-boundary-law",
-      lawLabel: "Human Boundary Law",
-      route: "/laws/categories/reality/human-boundary/",
-      humanPrimary:
-        "A system can help organize, clarify, and prepare, but it must not replace human judgment or qualified authority where those are required.",
-      engineeringSecondary:
-        "High-stakes medical, legal, financial, safety, scientific, and official claims must preserve appropriate verification boundaries.",
-      codeExpression:
-        "Public pages must distinguish support, explanation, research posture, and final authority.",
-      failurePattern:
-        "A tool acts as though it can replace the authority it should only support.",
-      auditQuestion:
-        "Is the page supporting judgment or impersonating final authority?"
-    }),
-
-    Object.freeze({
-      direction: "reality",
-      lawId: "stale-language-law",
-      lawLabel: "Stale Language Law",
-      route: "/laws/categories/reality/stale-language/",
-      humanPrimary:
-        "Old language must not keep governing a situation that has changed.",
-      engineeringSecondary:
-        "Retired labels, old route identities, deprecated contracts, and previous generation language must not remain active unless intentionally preserved.",
-      codeExpression:
-        "Current data attributes, receipts, headings, route labels, and UI copy must reflect current authority.",
-      failurePattern:
-        "A page advances, but old names continue controlling interpretation.",
-      auditQuestion:
-        "Is any stale language still acting as current truth?"
-    }),
-
-    Object.freeze({
-      direction: "structure",
-      lawId: "animation-law",
-      lawLabel: "Animation Law",
-      route: "/laws/categories/structure/animation/",
-      humanPrimary:
-        "Movement should reveal relationship, not conceal disorder.",
-      engineeringSecondary:
-        "Animation may express hierarchy, motion, and transition, but it cannot replace semantic structure.",
-      codeExpression:
-        "Reduced-motion fallback, static readability, and control clarity must survive without animation.",
-      failurePattern:
-        "The page only makes sense while moving.",
-      auditQuestion:
-        "Does the law still hold when motion is disabled?"
-    }),
-
-    Object.freeze({
-      direction: "structure",
-      lawId: "product-planet-separation-law",
-      lawLabel: "Product and Planet Separation Law",
-      route: "/laws/categories/structure/product-planet-separation/",
-      humanPrimary:
-        "Different kinds of things must not be blended just because they share style, language, or atmosphere.",
-      engineeringSecondary:
-        "Products, planets, laws, showrooms, frontier lanes, diagnostics, and governance routes must preserve their distinct route classes.",
-      codeExpression:
-        "Route class, public role, data-page, contract, and destination behavior must not collapse into one another.",
-      failurePattern:
-        "A page feels impressive but no longer knows what kind of thing it is.",
-      auditQuestion:
-        "Is the object still in the correct class?"
-    }),
-
-    Object.freeze({
-      direction: "structure",
-      lawId: "foreground-law",
-      lawLabel: "Foreground Law",
-      route: "/laws/categories/structure/foreground/",
-      humanPrimary:
-        "The most important responsibility must remain visible enough to guide action.",
-      engineeringSecondary:
-        "Core controls, governing paths, proof surfaces, and return actions must not be buried under decoration or secondary content.",
-      codeExpression:
-        "Primary navigation, selected state, call-to-action, return controls, and boundary notices must remain reachable and legible.",
-      failurePattern:
-        "The page is beautiful but the user cannot find what matters.",
-      auditQuestion:
-        "What must stay in the foreground?"
-    }),
-
-    Object.freeze({
-      direction: "structure",
-      lawId: "access-law",
-      lawLabel: "Access Law",
-      route: "/laws/categories/structure/access/",
-      humanPrimary:
-        "A governing standard that cannot be reached cannot govern.",
-      engineeringSecondary:
-        "Core public pages, law pages, category pages, and proof pages must remain discoverable from the route system.",
-      codeExpression:
-        "Index routes, category routes, canonical links, and public navigation must not orphan major law content.",
-      failurePattern:
-        "The law exists, but the visitor cannot find it.",
-      auditQuestion:
-        "Can the user reach the law from the public system?"
-    })
-  ]);
-
-  const CANONICAL_LAW_ROUTES = Object.freeze(
-    CANONICAL_LAW_RECORDS.map(
-      record => record.route
-    )
-  );
-
-  const LAW_BY_ID = new Map(
-    CANONICAL_LAW_RECORDS.map(
-      record => [
-        record.lawId,
-        record
-      ]
-    )
-  );
-
-  const LAW_BY_ROUTE = new Map(
-    CANONICAL_LAW_RECORDS.map(
-      record => [
-        record.route,
-        record
-      ]
-    )
-  );
-
-  const LAWS_BY_DIRECTION = new Map(
-    DIRECTIONS.map(
-      direction => [
-        direction,
-
-        Object.freeze(
-          CANONICAL_LAW_RECORDS
-            .filter(
-              record =>
-                record.direction === direction
-            )
-            .map(
-              record =>
-                record.lawId
-            )
-        )
-      ]
-    )
-  );
-
   const subscribers = Object.freeze({
     frame: new Set(),
     reducedMotion: new Set(),
@@ -630,6 +279,14 @@
     compassState: new Set(),
     semanticProjection: new Set()
   });
+
+  const registry = {
+    lawRecords: Object.freeze([]),
+    lawRoutes: Object.freeze([]),
+    lawById: new Map(),
+    lawByRoute: new Map(),
+    lawsByDirection: new Map()
+  };
 
   const state = {
     root: null,
@@ -647,11 +304,6 @@
     panelSelectionState: null,
     panelRouteStatus: null,
     panelLens: null,
-    panelHumanLaw: null,
-    panelEngineeringLaw: null,
-    panelCodeExpression: null,
-    panelFailurePattern: null,
-    panelAuditQuestion: null,
 
     enterButton: null,
     enterLabel: null,
@@ -679,14 +331,13 @@
     clusters: new Map(),
 
     selectedDirection: "",
-    selectedCategory: "",
     selectedLaw: "",
     selectedDestinationType: DESTINATION_TYPES.NONE,
     selectedDestinationId: "",
     selectedDestinationLabel: "",
     selectedRoute: "",
     selectedContentId: "",
-    selectedLens: "human",
+    selectedLens: "",
     selectedParagraph: "",
 
     compassSelected: false,
@@ -720,8 +371,10 @@
     }
 
     const error = new Error(code);
+
     error.code = code;
     error.details = details;
+
     throw error;
   }
 
@@ -762,7 +415,7 @@
       : "";
   }
 
-  function normalizeLawId(value) {
+  function normalizeId(value) {
     return String(value || "").trim();
   }
 
@@ -955,28 +608,37 @@
     if (unexpectedKeys.length > 0) {
       return Object.freeze({
         pass: false,
-        code: "LAWS_ORBIT_PREVIEW_UNEXPECTED_FIELDS_FORBIDDEN",
-        unexpectedKeys: Object.freeze(unexpectedKeys.slice())
+        code:
+          "LAWS_ORBIT_PREVIEW_UNEXPECTED_FIELDS_FORBIDDEN",
+        unexpectedKeys: Object.freeze(
+          unexpectedKeys.slice()
+        )
       });
     }
 
     const quaternion =
-      normalizeQuaternionStrict(payload.quaternion);
+      normalizeQuaternionStrict(
+        payload.quaternion
+      );
 
     if (!quaternion) {
       return Object.freeze({
         pass: false,
-        code: "LAWS_ORBIT_PREVIEW_COMPLETE_QUATERNION_REQUIRED"
+        code:
+          "LAWS_ORBIT_PREVIEW_COMPLETE_QUATERNION_REQUIRED"
       });
     }
 
     const primaryId =
-      normalizeDirection(payload.primaryId);
+      normalizeDirection(
+        payload.primaryId
+      );
 
     if (!primaryId) {
       return Object.freeze({
         pass: false,
-        code: "LAWS_ORBIT_PREVIEW_CANONICAL_PRIMARY_DIRECTION_REQUIRED"
+        code:
+          "LAWS_ORBIT_PREVIEW_CANONICAL_PRIMARY_DIRECTION_REQUIRED"
       });
     }
 
@@ -984,7 +646,10 @@
       pass: true,
 
       orientation: Object.freeze({
-        quaternion: Object.freeze(quaternion.slice()),
+        quaternion: Object.freeze(
+          quaternion.slice()
+        ),
+
         primaryId
       })
     });
@@ -1012,23 +677,31 @@
     if (unexpectedKeys.length > 0) {
       return Object.freeze({
         pass: false,
-        code: "LAWS_CLUSTER_PREVIEW_UNEXPECTED_FIELDS_FORBIDDEN",
-        unexpectedKeys: Object.freeze(unexpectedKeys.slice())
+        code:
+          "LAWS_CLUSTER_PREVIEW_UNEXPECTED_FIELDS_FORBIDDEN",
+        unexpectedKeys: Object.freeze(
+          unexpectedKeys.slice()
+        )
       });
     }
 
     const quaternion =
-      normalizeQuaternionStrict(payload.quaternion);
+      normalizeQuaternionStrict(
+        payload.quaternion
+      );
 
     if (!quaternion) {
       return Object.freeze({
         pass: false,
-        code: "LAWS_CLUSTER_PREVIEW_COMPLETE_QUATERNION_REQUIRED"
+        code:
+          "LAWS_CLUSTER_PREVIEW_COMPLETE_QUATERNION_REQUIRED"
       });
     }
 
     const primaryId =
-      normalizeLawId(payload.primaryId);
+      normalizeId(
+        payload.primaryId
+      );
 
     if (
       !primaryId ||
@@ -1036,7 +709,8 @@
     ) {
       return Object.freeze({
         pass: false,
-        code: `LAWS_CLUSTER_PREVIEW_CANONICAL_PRIMARY_LAW_REQUIRED:${cluster.direction}`
+        code:
+          `LAWS_CLUSTER_PREVIEW_CANONICAL_PRIMARY_LAW_REQUIRED:${cluster.direction}`
       });
     }
 
@@ -1044,7 +718,10 @@
       pass: true,
 
       orientation: Object.freeze({
-        quaternion: Object.freeze(quaternion.slice()),
+        quaternion: Object.freeze(
+          quaternion.slice()
+        ),
+
         primaryId
       })
     });
@@ -1065,89 +742,8 @@
 
     return (
       DIRECTION_LABELS[normalizedDirection] ||
-      ""
+      normalizedDirection
     );
-  }
-
-  function directionCoordinate(direction) {
-    const normalizedDirection =
-      normalizeDirection(direction);
-
-    return (
-      DIRECTION_COORDINATES[normalizedDirection] ||
-      ""
-    );
-  }
-
-  function directionRoute(direction) {
-    const normalizedDirection =
-      normalizeDirection(direction);
-
-    return (
-      DIRECTION_TO_CATEGORY_ROUTE[normalizedDirection] ||
-      ""
-    );
-  }
-
-  function createClusterState(direction) {
-    const lawIds =
-      LAWS_BY_DIRECTION.get(direction) ||
-      Object.freeze([]);
-
-    const primaryLaw =
-      lawIds[0] || "";
-
-    const orientation =
-      createOrientation(
-        QUATERNION.identity,
-        primaryLaw
-      );
-
-    return {
-      direction,
-      lawIds: Array.from(lawIds),
-
-      primaryLaw,
-      previewPrimaryLaw: primaryLaw,
-
-      phase: ORIENTATION_PHASES.COMMITTED,
-
-      gestureActive: false,
-      previewAccepted: false,
-      revision: 0,
-
-      orientation:
-        cloneOrientation(orientation),
-
-      committedOrientation:
-        cloneOrientation(orientation),
-
-      gestureOrigin: null
-    };
-  }
-
-  function getCluster(direction) {
-    const normalizedDirection =
-      normalizeDirection(direction);
-
-    return normalizedDirection
-      ? state.clusters.get(normalizedDirection) || null
-      : null;
-  }
-
-  function activeClusterDirection() {
-    if (
-      state.current === STATES.CLUSTER_OPEN ||
-      state.current === STATES.LAW_SELECTED
-    ) {
-      return normalizeDirection(state.selectedDirection);
-    }
-
-    return "";
-  }
-
-  function activeCluster() {
-    return getCluster(activeClusterDirection());
   }
 
   function canTransition(
@@ -1241,7 +837,7 @@
 
   function findLawElement(lawId) {
     const id =
-      normalizeLawId(lawId);
+      normalizeId(lawId);
 
     if (
       !id ||
@@ -1256,6 +852,97 @@
     );
   }
 
+  function lawRecordById(lawId) {
+    return (
+      registry.lawById.get(
+        normalizeId(lawId)
+      ) || null
+    );
+  }
+
+  function lawRecordByRoute(route) {
+    return (
+      registry.lawByRoute.get(
+        normalizeRoute(route)
+      ) || null
+    );
+  }
+
+  function lawIdsByDirection(direction) {
+    const normalizedDirection =
+      normalizeDirection(direction);
+
+    return (
+      registry.lawsByDirection.get(
+        normalizedDirection
+      ) || Object.freeze([])
+    );
+  }
+
+  function createClusterState(direction) {
+    const lawIds =
+      lawIdsByDirection(direction);
+
+    const primaryLaw =
+      lawIds[0] || "";
+
+    const orientation =
+      createOrientation(
+        QUATERNION.identity,
+        primaryLaw
+      );
+
+    return {
+      direction,
+      lawIds: Array.from(lawIds),
+
+      primaryLaw,
+      previewPrimaryLaw: primaryLaw,
+
+      phase: ORIENTATION_PHASES.COMMITTED,
+
+      gestureActive: false,
+      previewAccepted: false,
+      revision: 0,
+
+      orientation:
+        cloneOrientation(orientation),
+
+      committedOrientation:
+        cloneOrientation(orientation),
+
+      gestureOrigin: null
+    };
+  }
+
+  function getCluster(direction) {
+    const normalizedDirection =
+      normalizeDirection(direction);
+
+    return normalizedDirection
+      ? state.clusters.get(normalizedDirection) || null
+      : null;
+  }
+
+  function activeClusterDirection() {
+    if (
+      state.current === STATES.CLUSTER_OPEN ||
+      state.current === STATES.LAW_SELECTED
+    ) {
+      return normalizeDirection(
+        state.selectedDirection
+      );
+    }
+
+    return "";
+  }
+
+  function activeCluster() {
+    return getCluster(
+      activeClusterDirection()
+    );
+  }
+
   function canonicalControlExists(record) {
     const kind = String(record.kind || "")
       .trim()
@@ -1265,7 +952,6 @@
       record.id ||
       record.lawId ||
       record.direction ||
-      record.categoryId ||
       ""
     ).trim();
 
@@ -1302,13 +988,12 @@
         .trim()
         .toLowerCase(),
 
-      destinationId: String(
+      destinationId: normalizeId(
         element.dataset.destinationId ||
         element.dataset.lawId ||
-        element.dataset.categoryId ||
         element.dataset.direction ||
         ""
-      ).trim(),
+      ),
 
       label: normalizeLabel(
         element.dataset.label ||
@@ -1324,15 +1009,22 @@
     });
   }
 
-  function lawParagraphFromElement(element) {
-    return normalizeLabel(
-      element.dataset.humanLaw ||
-      element.dataset.preview ||
-      element.dataset.panelBody ||
-      element.dataset.whyEnter,
+  function defaultPanel() {
+    return Object.freeze({
+      eyebrow: "Law Compass",
+      title: "Select direction",
+      purpose: "",
+      relationship: ""
+    });
+  }
 
-      "This law is a human-first governing principle with a software and route expression."
-    );
+  function compassPanel() {
+    return Object.freeze({
+      eyebrow: "Main Compass",
+      title: "Main Compass",
+      purpose: "",
+      relationship: ""
+    });
   }
 
   function panelFromCategory(element) {
@@ -1343,28 +1035,26 @@
 
     return Object.freeze({
       eyebrow: normalizeLabel(
-        element.dataset.categoryLabel ||
-        directionLabel(direction),
-        "Selected category"
+        element.dataset.panelEyebrow ||
+        element.dataset.categoryLabel,
+        directionLabel(direction)
       ),
 
       title: normalizeLabel(
         element.dataset.panelTitle ||
-        element.dataset.categoryTitle ||
-        directionLabel(direction),
-        "Selected category"
+        element.dataset.categoryLabel,
+        directionLabel(direction)
       ),
 
       purpose: normalizeLabel(
-        element.dataset.panelBody ||
-        element.dataset.categoryBody,
-        "This law direction opens four human-first laws with software parallels."
+        element.dataset.panelBody,
+        ""
       ),
 
       relationship: normalizeLabel(
-        element.dataset.panelWhy ||
-        element.dataset.categoryWhy,
-        "Rotate the cluster and choose the law that matches the issue in front of you."
+        element.dataset.panelRelationship ||
+        element.dataset.panelWhy,
+        ""
       )
     });
   }
@@ -1372,49 +1062,28 @@
   function panelFromLaw(element) {
     return Object.freeze({
       eyebrow: normalizeLabel(
-        element.dataset.lawType ||
-        element.dataset.lawLensLabel,
+        element.dataset.panelEyebrow ||
+        element.dataset.lawLabel,
         "Selected law"
       ),
 
       title: normalizeLabel(
         element.dataset.panelTitle ||
-        element.dataset.label ||
+        element.dataset.lawLabel ||
         element.textContent,
         "Selected law"
       ),
 
-      purpose:
-        lawParagraphFromElement(element),
+      purpose: normalizeLabel(
+        element.dataset.panelBody,
+        ""
+      ),
 
-      relationship:
-        "Human law is primary. The software and code expression are secondary parallels. Choose Enter Selected Law to open the canonical placeholder route."
-    });
-  }
-
-  function defaultPanel() {
-    return Object.freeze({
-      eyebrow: "Law Compass",
-      title: "Choose a law direction",
-
-      purpose:
-        "Begin with the direction closest to the issue: Flow, Integrity, Reality, or Structure.",
-
-      relationship:
-        "Each direction opens four laws. Each law begins with the human principle and then shows the software parallel."
-    });
-  }
-
-  function compassPanel() {
-    return Object.freeze({
-      eyebrow: "Main Compass",
-      title: "Choose where to return",
-
-      purpose:
-        "The fixed-center Compass is selected. It does not navigate until you choose the explicit return action.",
-
-      relationship:
-        "Return to Main Compass opens the Diamond Gate Bridge homepage. Return to Orbit restores the Law Compass field."
+      relationship: normalizeLabel(
+        element.dataset.panelRelationship ||
+        element.dataset.panelWhy,
+        ""
+      )
     });
   }
 
@@ -1426,12 +1095,12 @@
   }) {
     if (state.panelEyebrow) {
       state.panelEyebrow.textContent =
-        eyebrow || "Selected path";
+        eyebrow || "";
     }
 
     if (state.panelTitle) {
       state.panelTitle.textContent =
-        title || "Choose a law direction";
+        title || "";
     }
 
     if (state.panelPurpose) {
@@ -1446,65 +1115,41 @@
   }
 
   function setPanelMetadata({
-    domain = "None",
-    functionLabel = "Unassigned",
-    coordinate = "—",
-    selection = "Idle",
-    route = "Not selected",
-    lens = "Human Law"
+    domain = "",
+    functionLabel = "",
+    coordinate = "",
+    selection = "",
+    route = "",
+    lens = ""
   } = {}) {
     if (state.panelDomain) {
-      state.panelDomain.textContent = domain;
+      state.panelDomain.textContent =
+        domain;
     }
 
     if (state.panelFunction) {
-      state.panelFunction.textContent = functionLabel;
+      state.panelFunction.textContent =
+        functionLabel;
     }
 
     if (state.panelCoordinate) {
-      state.panelCoordinate.textContent = coordinate;
+      state.panelCoordinate.textContent =
+        coordinate;
     }
 
     if (state.panelSelectionState) {
-      state.panelSelectionState.textContent = selection;
+      state.panelSelectionState.textContent =
+        selection;
     }
 
     if (state.panelRouteStatus) {
-      state.panelRouteStatus.textContent = route;
+      state.panelRouteStatus.textContent =
+        route;
     }
 
     if (state.panelLens) {
-      state.panelLens.textContent = lens;
-    }
-  }
-
-  function setPanelLawProfile(record) {
-    const fallback =
-      "Select a law to inspect its human-first profile.";
-
-    if (state.panelHumanLaw) {
-      state.panelHumanLaw.textContent =
-        record ? record.humanPrimary : fallback;
-    }
-
-    if (state.panelEngineeringLaw) {
-      state.panelEngineeringLaw.textContent =
-        record ? record.engineeringSecondary : fallback;
-    }
-
-    if (state.panelCodeExpression) {
-      state.panelCodeExpression.textContent =
-        record ? record.codeExpression : fallback;
-    }
-
-    if (state.panelFailurePattern) {
-      state.panelFailurePattern.textContent =
-        record ? record.failurePattern : fallback;
-    }
-
-    if (state.panelAuditQuestion) {
-      state.panelAuditQuestion.textContent =
-        record ? record.auditQuestion : fallback;
+      state.panelLens.textContent =
+        lens;
     }
   }
 
@@ -1517,7 +1162,7 @@
 
   function setEnterEnabled(
     enabled,
-    label = "Enter Selected Law"
+    label = "Enter"
   ) {
     if (!state.enterButton) {
       return;
@@ -1532,15 +1177,17 @@
     );
 
     if (state.enterLabel) {
-      state.enterLabel.textContent = label;
+      state.enterLabel.textContent =
+        label;
     } else {
-      state.enterButton.textContent = label;
+      state.enterButton.textContent =
+        label;
     }
   }
 
   function setReturnToOrbitVisible(
     visible,
-    label = "Return to Law Compass"
+    label = "Return"
   ) {
     const control =
       state.returnToOrbitButton;
@@ -1598,24 +1245,36 @@
 
   function clearPanelDescentSchedule() {
     if (state.panelDescentFrame) {
-      cancelAnimationFrame(state.panelDescentFrame);
+      cancelAnimationFrame(
+        state.panelDescentFrame
+      );
+
       state.panelDescentFrame = 0;
     }
 
     if (state.panelDescentCommitFrame) {
-      cancelAnimationFrame(state.panelDescentCommitFrame);
+      cancelAnimationFrame(
+        state.panelDescentCommitFrame
+      );
+
       state.panelDescentCommitFrame = 0;
     }
   }
 
   function clearSceneAscentSchedule() {
     if (state.sceneAscentFrame) {
-      cancelAnimationFrame(state.sceneAscentFrame);
+      cancelAnimationFrame(
+        state.sceneAscentFrame
+      );
+
       state.sceneAscentFrame = 0;
     }
 
     if (state.sceneAscentCommitFrame) {
-      cancelAnimationFrame(state.sceneAscentCommitFrame);
+      cancelAnimationFrame(
+        state.sceneAscentCommitFrame
+      );
+
       state.sceneAscentCommitFrame = 0;
     }
   }
@@ -1658,6 +1317,7 @@
             });
 
             state.panelDescended = true;
+
             recordAction(action);
           });
       });
@@ -1728,25 +1388,20 @@
     preserveCompass = false
   } = {}) {
     state.selectedDirection = "";
-    state.selectedCategory = "";
     state.selectedLaw = "";
-
     state.selectedDestinationType =
       DESTINATION_TYPES.NONE;
-
     state.selectedDestinationId = "";
     state.selectedDestinationLabel = "";
     state.selectedRoute = "";
     state.selectedContentId = "";
-    state.selectedLens = "human";
+    state.selectedLens = "";
     state.selectedParagraph = "";
     state.panelDescended = false;
 
     if (!preserveCompass) {
       state.compassSelected = false;
     }
-
-    setPanelLawProfile(null);
   }
 
   function createPresentationState() {
@@ -1803,7 +1458,9 @@
 
   function createSemanticProjectionSnapshot() {
     return Object.freeze(
-      Array.from(state.semanticProjection.values()).map(record =>
+      Array.from(
+        state.semanticProjection.values()
+      ).map(record =>
         Object.freeze({
           id: record.id,
           kind: record.kind,
@@ -1881,7 +1538,6 @@
           : null,
 
       selectedDirection: state.selectedDirection,
-      selectedCategory: state.selectedCategory,
       selectedLaw: state.selectedLaw,
       selectedDestinationType: state.selectedDestinationType,
       selectedDestinationId: state.selectedDestinationId,
@@ -1904,21 +1560,22 @@
       semanticProjection:
         createSemanticProjectionSnapshot(),
 
+      directions: DIRECTIONS,
+
       canonicalLawRecords:
-        CANONICAL_LAW_RECORDS,
+        registry.lawRecords,
 
       canonicalLawRoutes:
-        CANONICAL_LAW_ROUTES,
+        registry.lawRoutes,
 
-      directions:
-        DIRECTIONS,
+      lawCount:
+        registry.lawRecords.length,
 
-      mainCompass:
-        MAIN_COMPASS,
+      mainCompass: MAIN_COMPASS,
 
       humanLawPrimary: true,
       softwareLawSecondary: true,
-      placeholderPagesPermitted: true,
+      controllerContainsLawContent: false,
 
       interactionModuleId:
         MODULE.interactionModuleId,
@@ -1943,7 +1600,7 @@
   function createCompatibilityReceipt(frame) {
     return Object.freeze({
       contractId:
-        "LAWS_CONTROLLER_FOUR_DIRECTION_HUMAN_FIRST_v1",
+        "LAWS_CONTROLLER_ROUTE_AUTHORITY_NO_CONTENT_v1",
 
       motionContractId:
         MODULE.motionContractId,
@@ -2004,7 +1661,6 @@
           : QUATERNION.identity,
 
       selectedDirection: frame.selectedDirection,
-      selectedCategory: frame.selectedCategory,
       selectedLaw: frame.selectedLaw,
       selectedDestinationType: frame.selectedDestinationType,
       selectedDestinationId: frame.selectedDestinationId,
@@ -2018,17 +1674,20 @@
 
       compassFixedCenter: frame.compass.fixedCenter,
       compassImmediateNavigation: frame.compass.immediateNavigation,
-      compassExplicitReturnRequired: frame.compass.explicitReturnRequired,
-      mainCompassRoute: frame.compass.mainCompassRoute,
+      compassExplicitReturnRequired:
+        frame.compass.explicitReturnRequired,
 
-      directionCount: 4,
-      lawCount: 16,
+      mainCompassRoute:
+        frame.compass.mainCompassRoute,
+
+      directionCount: DIRECTIONS.length,
+      lawCount: registry.lawRecords.length,
       lawsPerDirection: 4,
 
       humanLawPrimary: true,
       softwareLawSecondary: true,
-      codeExpressionTertiary: true,
-      placeholderPagesPermitted: true,
+      controllerContainsLawContent: false,
+      routeRegistrySource: "DECLARED_DOM_PLACEHOLDERS",
 
       semanticProjectionRevision:
         frame.semanticProjectionRevision,
@@ -2091,13 +1750,19 @@
       frame.presentationMode;
 
     state.root.dataset.outerCategoriesActive =
-      frame.presentation.outerCategoriesActive ? "true" : "false";
+      frame.presentation.outerCategoriesActive
+        ? "true"
+        : "false";
 
     state.root.dataset.activeLawCluster =
-      frame.presentation.activeLawCluster ? "true" : "false";
+      frame.presentation.activeLawCluster
+        ? "true"
+        : "false";
 
     state.root.dataset.lawSelectionPermitted =
-      frame.presentation.lawSelectionPermitted ? "true" : "false";
+      frame.presentation.lawSelectionPermitted
+        ? "true"
+        : "false";
 
     state.root.dataset.additiveCoRenderingAuthorized =
       "false";
@@ -2112,16 +1777,22 @@
       frame.orbitPhase;
 
     state.root.dataset.orbitGestureActive =
-      frame.orbitGestureActive ? "true" : "false";
+      frame.orbitGestureActive
+        ? "true"
+        : "false";
 
     state.root.dataset.orbitPreviewAccepted =
-      frame.orbitPreviewAccepted ? "true" : "false";
+      frame.orbitPreviewAccepted
+        ? "true"
+        : "false";
 
     state.root.dataset.orbitRevision =
       String(frame.orbitRevision);
 
     state.root.dataset.orbitQuaternion =
-      JSON.stringify(frame.orbitOrientation.quaternion);
+      JSON.stringify(
+        frame.orbitOrientation.quaternion
+      );
 
     state.root.dataset.activeClusterDirection =
       frame.activeClusterDirection;
@@ -2136,10 +1807,14 @@
       cluster ? cluster.phase : ORIENTATION_PHASES.IDLE;
 
     state.root.dataset.clusterGestureActive =
-      cluster && cluster.gestureActive ? "true" : "false";
+      cluster && cluster.gestureActive
+        ? "true"
+        : "false";
 
     state.root.dataset.clusterPreviewAccepted =
-      cluster && cluster.previewAccepted ? "true" : "false";
+      cluster && cluster.previewAccepted
+        ? "true"
+        : "false";
 
     state.root.dataset.clusterRevision =
       String(cluster ? cluster.revision : 0);
@@ -2151,9 +1826,6 @@
 
     state.root.dataset.selectedDirection =
       frame.selectedDirection;
-
-    state.root.dataset.selectedCategory =
-      frame.selectedCategory;
 
     state.root.dataset.selectedLaw =
       frame.selectedLaw;
@@ -2180,16 +1852,24 @@
       frame.selectedParagraph;
 
     state.root.dataset.compassSelected =
-      frame.compassSelected ? "true" : "false";
+      frame.compassSelected
+        ? "true"
+        : "false";
 
     state.root.dataset.panelDescended =
-      frame.panelDescended ? "true" : "false";
+      frame.panelDescended
+        ? "true"
+        : "false";
 
     state.root.dataset.reducedMotion =
-      frame.reducedMotion ? "true" : "false";
+      frame.reducedMotion
+        ? "true"
+        : "false";
 
     state.root.dataset.held =
-      frame.held ? "true" : "false";
+      frame.held
+        ? "true"
+        : "false";
 
     state.root.dataset.compassFixedCenter =
       "true";
@@ -2233,6 +1913,9 @@
     state.root.dataset.softwareLawSecondary =
       "true";
 
+    state.root.dataset.controllerContainsLawContent =
+      "false";
+
     state.root.dataset.semanticProjectionRevision =
       String(frame.semanticProjectionRevision);
 
@@ -2241,7 +1924,9 @@
       state.root
     ).forEach(element => {
       const direction =
-        normalizeDirection(element.dataset.direction);
+        normalizeDirection(
+          element.dataset.direction
+        );
 
       const active =
         frame.presentation.outerCategoriesActive;
@@ -2255,7 +1940,8 @@
 
       element.dataset.selected =
         !frame.compassSelected &&
-        frame.selectedDestinationType === DESTINATION_TYPES.CATEGORY &&
+        frame.selectedDestinationType ===
+          DESTINATION_TYPES.CATEGORY &&
         frame.selectedDirection === direction
           ? "true"
           : "false";
@@ -2269,9 +1955,14 @@
       );
 
       if (primary) {
-        element.setAttribute("aria-current", "true");
+        element.setAttribute(
+          "aria-current",
+          "true"
+        );
       } else {
-        element.removeAttribute("aria-current");
+        element.removeAttribute(
+          "aria-current"
+        );
       }
     });
 
@@ -2280,10 +1971,12 @@
       state.root
     ).forEach(element => {
       const lawId =
-        normalizeLawId(element.dataset.lawId);
+        normalizeId(
+          element.dataset.lawId
+        );
 
       const lawRecord =
-        LAW_BY_ID.get(lawId);
+        lawRecordById(lawId);
 
       const inActiveCluster =
         Boolean(
@@ -2312,41 +2005,59 @@
 
       element.setAttribute(
         "aria-disabled",
-        inActiveCluster ? "false" : "true"
+        inActiveCluster
+          ? "false"
+          : "true"
       );
 
       if (
         selected ||
         primary
       ) {
-        element.setAttribute("aria-current", "true");
+        element.setAttribute(
+          "aria-current",
+          "true"
+        );
       } else {
-        element.removeAttribute("aria-current");
+        element.removeAttribute(
+          "aria-current"
+        );
       }
     });
 
     if (state.compassControl) {
       state.compassControl.dataset.selected =
-        frame.compassSelected ? "true" : "false";
+        frame.compassSelected
+          ? "true"
+          : "false";
 
       state.compassControl.dataset.fixedCenter =
         "true";
 
       state.compassControl.dataset.interactionEnabled =
-        frame.compass.interactionEnabled ? "true" : "false";
+        frame.compass.interactionEnabled
+          ? "true"
+          : "false";
 
       state.compassControl.dataset.immediateNavigation =
         "false";
 
       state.compassControl.setAttribute(
         "aria-expanded",
-        frame.compassSelected ? "true" : "false"
+        frame.compassSelected
+          ? "true"
+          : "false"
       );
 
       if (frame.compassSelected) {
-        state.compassControl.setAttribute("aria-current", "true");
+        state.compassControl.setAttribute(
+          "aria-current",
+          "true"
+        );
       } else {
-        state.compassControl.removeAttribute("aria-current");
+        state.compassControl.removeAttribute(
+          "aria-current"
+        );
       }
     }
   }
@@ -2365,10 +2076,12 @@
 
     if (state.controllerReceiptOutput) {
       if ("value" in state.controllerReceiptOutput) {
-        state.controllerReceiptOutput.value = serialized;
+        state.controllerReceiptOutput.value =
+          serialized;
       }
 
-      state.controllerReceiptOutput.textContent = serialized;
+      state.controllerReceiptOutput.textContent =
+        serialized;
     }
 
     globalThis.DGB_LAWS_CONTROLLER_RECEIPT =
@@ -2414,33 +2127,24 @@
 
       setPanelMetadata({
         domain: "Main Compass",
-        functionLabel: "Website gateway",
+        functionLabel: "",
         coordinate: "Fixed center",
-        selection: "Compass selected",
+        selection: "Selected",
         route: MAIN_COMPASS.route,
         lens: "Return"
       });
 
-      setPanelLawProfile(null);
-
-      setEnterEnabled(
-        false,
-        "Enter Selected Law"
-      );
-
+      setEnterEnabled(false, "Enter");
       setReturnHomeVisible(true);
 
       setReturnToOrbitVisible(
         true,
         state.current === STATES.CONSTELLATION
-          ? "Return to Law Compass"
-          : "Return to Category"
+          ? "Return"
+          : "Return"
       );
 
-      setGuidance(
-        "The Compass is selected. Use Return to Main Compass to leave the Laws chamber, or Return to Law Compass to restore this field."
-      );
-
+      setGuidance("");
       return;
     }
 
@@ -2448,20 +2152,19 @@
 
     if (state.current === STATES.CONSTELLATION) {
       setPanel(defaultPanel());
-      setPanelMetadata();
-      setPanelLawProfile(null);
 
-      setEnterEnabled(
-        false,
-        "Enter Selected Law"
-      );
+      setPanelMetadata({
+        domain: "",
+        functionLabel: "",
+        coordinate: "",
+        selection: "Idle",
+        route: "",
+        lens: ""
+      });
 
+      setEnterEnabled(false, "Enter");
       setReturnToOrbitVisible(false);
-
-      setGuidance(
-        "Tap Flow, Integrity, Reality, or Structure to open its four-law cluster."
-      );
-
+      setGuidance("");
       return;
     }
 
@@ -2470,44 +2173,42 @@
         findCategoryElement(state.selectedDirection);
 
       if (category) {
-        setPanel(panelFromCategory(category));
+        setPanel(
+          panelFromCategory(category)
+        );
 
         setPanelMetadata({
-          domain: directionLabel(state.selectedDirection),
+          domain:
+            normalizeLabel(
+              category.dataset.categoryLabel,
+              directionLabel(state.selectedDirection)
+            ),
 
           functionLabel:
             normalizeLabel(
-              category.dataset.panelTitle ||
-              category.dataset.categoryFunction ||
-              category.dataset.label,
-              "Law direction"
+              category.dataset.panelFunction,
+              ""
             ),
 
           coordinate:
             normalizeLabel(
               category.dataset.coordinateLabel,
-              directionCoordinate(state.selectedDirection)
+              state.selectedDirection
             ),
 
           selection: "Category open",
-          route: "Law required",
-          lens: "Human Law"
+          route: "",
+          lens:
+            normalizeLabel(
+              category.dataset.lens,
+              ""
+            )
         });
       }
 
-      setPanelLawProfile(null);
-
-      setEnterEnabled(
-        false,
-        "Enter Selected Law"
-      );
-
+      setEnterEnabled(false, "Enter");
       setReturnToOrbitVisible(false);
-
-      setGuidance(
-        "Choose one law inside this direction. Human law is primary; software law is secondary."
-      );
-
+      setGuidance("");
       return;
     }
 
@@ -2516,80 +2217,72 @@
         findLawElement(state.selectedLaw);
 
       const record =
-        LAW_BY_ID.get(state.selectedLaw) || null;
+        lawRecordById(state.selectedLaw);
 
       if (law) {
-        setPanel(panelFromLaw(law));
+        setPanel(
+          panelFromLaw(law)
+        );
 
         setPanelMetadata({
-          domain: directionLabel(state.selectedDirection),
+          domain:
+            directionLabel(state.selectedDirection),
 
           functionLabel:
             normalizeLabel(
-              law.dataset.localFunction,
-              "Human-first law"
+              law.dataset.panelFunction,
+              ""
             ),
 
           coordinate:
             normalizeLabel(
-              law.dataset.localCoordinate,
+              law.dataset.coordinateLabel,
               state.selectedLaw
             ),
 
           selection: "Law selected",
-          route: state.selectedRoute || "Not selected",
-          lens: "Human First"
+
+          route:
+            record ? record.route : "",
+
+          lens:
+            normalizeLabel(
+              law.dataset.lens,
+              ""
+            )
         });
       }
 
-      setPanelLawProfile(record);
-
       setEnterEnabled(
-        Boolean(state.selectedRoute),
-        "Enter Selected Law"
+        Boolean(record && record.route),
+        "Enter"
       );
 
-      setReturnToOrbitVisible(
-        true,
-        "Return to Category"
-      );
-
-      setGuidance(
-        "Review the selected law. Enter Selected Law opens its canonical placeholder route. Return to Category restores the four-law cluster."
-      );
-
+      setReturnToOrbitVisible(true, "Return");
+      setGuidance("");
       return;
     }
 
     setPanel({
-      eyebrow: "System held",
-      title: "Law Compass is unavailable",
-
-      purpose:
-        "The controller could not establish or preserve a safe interaction state.",
-
-      relationship:
-        "Static content may remain available, but interactive requests are rejected."
+      eyebrow: "Held",
+      title: "Unavailable",
+      purpose: "",
+      relationship: ""
     });
 
     setPanelMetadata({
-      domain: "Unavailable",
-      functionLabel: "Held",
-      coordinate: "—",
+      domain: "",
+      functionLabel: "",
+      coordinate: "",
       selection: "Held",
-      route: "Unavailable",
-      lens: "Failure"
+      route: "",
+      lens: ""
     });
-
-    setPanelLawProfile(null);
 
     setEnterEnabled(false, "Unavailable");
     setReturnHomeVisible(false);
     setReturnToOrbitVisible(false);
-
-    setGuidance(
-      "The Law Compass is held because its controller foundation could not be validated."
-    );
+    setGuidance("");
   }
 
   function applyState(
@@ -2613,7 +2306,10 @@
 
     for (const [key, value] of Object.entries(patch)) {
       if (
-        Object.prototype.hasOwnProperty.call(state, key)
+        Object.prototype.hasOwnProperty.call(
+          state,
+          key
+        )
       ) {
         state[key] = value;
       }
@@ -2625,8 +2321,15 @@
       recordAction(action);
 
     if (previousHeld !== frame.held) {
-      publish(CHANNELS.HELD_STATE, createHeldState());
-      publish(CHANNELS.COMPASS_STATE, createCompassState());
+      publish(
+        CHANNELS.HELD_STATE,
+        createHeldState()
+      );
+
+      publish(
+        CHANNELS.COMPASS_STATE,
+        createCompassState()
+      );
     }
 
     return true;
@@ -2692,7 +2395,9 @@
       cloneOrientation(orientation);
 
     invariant(
-      cluster.lawIds.includes(normalized.primaryId),
+      cluster.lawIds.includes(
+        normalized.primaryId
+      ),
       `LAWS_CLUSTER_PRIMARY_LAW_INVALID:${cluster.direction}`
     );
 
@@ -2740,7 +2445,9 @@
     }
 
     state.orbitGestureOrigin =
-      cloneOrientation(state.committedOrbitOrientation);
+      cloneOrientation(
+        state.committedOrbitOrientation
+      );
 
     setConstellationOrientation(
       state.orbitOrientation,
@@ -2832,7 +2539,9 @@
     }
 
     const committed =
-      cloneOrientation(state.orbitOrientation);
+      cloneOrientation(
+        state.orbitOrientation
+      );
 
     setConstellationOrientation(
       committed,
@@ -2923,7 +2632,9 @@
     }
 
     setConstellationOrientation(
-      canonicalConstellationOrientation(normalizedDirection),
+      canonicalConstellationOrientation(
+        normalizedDirection
+      ),
       {
         committed: true,
         phase: ORIENTATION_PHASES.COMMITTED,
@@ -2976,7 +2687,9 @@
     }
 
     cluster.gestureOrigin =
-      cloneOrientation(cluster.committedOrientation);
+      cloneOrientation(
+        cluster.committedOrientation
+      );
 
     setClusterOrientation(
       cluster,
@@ -3106,7 +2819,9 @@
     }
 
     const committed =
-      cloneOrientation(cluster.orientation);
+      cloneOrientation(
+        cluster.orientation
+      );
 
     setClusterOrientation(
       cluster,
@@ -3200,7 +2915,10 @@
 
     for (const cluster of state.clusters.values()) {
       if (cluster.gestureActive) {
-        requestClusterCancel(cluster.direction, reason);
+        requestClusterCancel(
+          cluster.direction,
+          reason
+        );
       }
     }
   }
@@ -3253,7 +2971,6 @@
       STATES.CLUSTER_OPEN,
       {
         selectedDirection: direction,
-        selectedCategory: direction,
 
         selectedDestinationType:
           DESTINATION_TYPES.CATEGORY,
@@ -3265,7 +2982,20 @@
             ? destination.label || directionLabel(direction)
             : directionLabel(direction),
 
-        selectedRoute: "",
+        selectedRoute: destination
+          ? destination.route
+          : "",
+
+        selectedContentId:
+          normalizeId(
+            element.dataset.contentId
+          ),
+
+        selectedLens:
+          normalizeId(
+            element.dataset.lens
+          ),
+
         selectedParagraph: "",
         compassSelected: false,
         panelDescended: false
@@ -3276,7 +3006,7 @@
 
   function requestLawSelection(lawId) {
     const id =
-      normalizeLawId(lawId);
+      normalizeId(lawId);
 
     if (
       isHeld() ||
@@ -3290,7 +3020,7 @@
     }
 
     const canonical =
-      LAW_BY_ID.get(id);
+      lawRecordById(id);
 
     const element =
       findLawElement(id);
@@ -3364,9 +3094,11 @@
       applyState(
         STATES.LAW_SELECTED,
         {
-          selectedDirection: canonical.direction,
-          selectedCategory: canonical.direction,
-          selectedLaw: canonical.lawId,
+          selectedDirection:
+            canonical.direction,
+
+          selectedLaw:
+            canonical.lawId,
 
           selectedDestinationType:
             DESTINATION_TYPES.LAW,
@@ -3383,16 +3115,16 @@
             canonical.route,
 
           selectedContentId:
-            normalizeLawId(element.dataset.contentId),
+            normalizeId(
+              element.dataset.contentId
+            ),
 
           selectedLens:
-            String(element.dataset.lens || "human")
-              .trim()
-              .toLowerCase() || "human",
+            normalizeId(
+              element.dataset.lens
+            ),
 
-          selectedParagraph:
-            lawParagraphFromElement(element),
-
+          selectedParagraph: "",
           compassSelected: false,
           panelDescended: true
         },
@@ -3403,7 +3135,9 @@
       return false;
     }
 
-    scheduleLawPanelDescent(canonical.lawId);
+    scheduleLawPanelDescent(
+      canonical.lawId
+    );
 
     return true;
   }
@@ -3434,10 +3168,7 @@
       "home-compass";
 
     state.selectedLens = "return";
-
-    state.selectedParagraph =
-      "Return to the Diamond Gate Bridge Main Compass only after choosing the explicit return action.";
-
+    state.selectedParagraph = "";
     state.panelDescended = true;
 
     syncPresentation();
@@ -3464,14 +3195,14 @@
     }
 
     const canonical =
-      LAW_BY_ID.get(state.selectedLaw);
+      lawRecordById(state.selectedLaw);
 
     if (
       !canonical ||
       state.selectedDestinationType !== DESTINATION_TYPES.LAW ||
       state.selectedDestinationId !== canonical.lawId ||
       state.selectedRoute !== canonical.route ||
-      !LAW_BY_ROUTE.has(state.selectedRoute)
+      !lawRecordByRoute(state.selectedRoute)
     ) {
       recordAction(
         "selected-law-entry-rejected",
@@ -3485,7 +3216,9 @@
       `selected-law-entry-confirmed:${canonical.lawId}`
     );
 
-    globalThis.location.assign(canonical.route);
+    globalThis.location.assign(
+      canonical.route
+    );
 
     return true;
   }
@@ -3500,7 +3233,9 @@
 
     recordAction("main-compass-return-confirmed");
 
-    globalThis.location.assign(MAIN_COMPASS.route);
+    globalThis.location.assign(
+      MAIN_COMPASS.route
+    );
 
     return true;
   }
@@ -3518,7 +3253,9 @@
 
       if (state.current === STATES.LAW_SELECTED) {
         const direction =
-          normalizeDirection(state.selectedDirection);
+          normalizeDirection(
+            state.selectedDirection
+          );
 
         if (!direction) {
           return false;
@@ -3535,7 +3272,6 @@
             STATES.CLUSTER_OPEN,
             {
               selectedDirection: direction,
-              selectedCategory: direction,
               selectedLaw: "",
 
               selectedDestinationType:
@@ -3549,9 +3285,11 @@
                   ? destination.label || directionLabel(direction)
                   : directionLabel(direction),
 
-              selectedRoute: "",
+              selectedRoute:
+                destination ? destination.route : "",
+
               selectedContentId: "",
-              selectedLens: "human",
+              selectedLens: "",
               selectedParagraph: "",
               compassSelected: false,
               panelDescended: false
@@ -3560,7 +3298,10 @@
           );
 
         if (committed) {
-          scheduleSceneAscent(STATES.CLUSTER_OPEN, direction);
+          scheduleSceneAscent(
+            STATES.CLUSTER_OPEN,
+            direction
+          );
         }
 
         return committed;
@@ -3597,9 +3338,13 @@
         resetSelection();
         syncPresentation();
 
-        recordAction("compass-returned-to-constellation");
+        recordAction(
+          "compass-returned-to-constellation"
+        );
 
-        scheduleSceneAscent(STATES.CONSTELLATION);
+        scheduleSceneAscent(
+          STATES.CONSTELLATION
+        );
 
         return true;
       }
@@ -3610,7 +3355,9 @@
     }
 
     const direction =
-      normalizeDirection(state.selectedDirection);
+      normalizeDirection(
+        state.selectedDirection
+      );
 
     if (!direction) {
       recordAction(
@@ -3632,7 +3379,6 @@
         STATES.CLUSTER_OPEN,
         {
           selectedDirection: direction,
-          selectedCategory: direction,
           selectedLaw: "",
 
           selectedDestinationType:
@@ -3645,9 +3391,11 @@
               ? destination.label || directionLabel(direction)
               : directionLabel(direction),
 
-          selectedRoute: "",
+          selectedRoute:
+            destination ? destination.route : "",
+
           selectedContentId: "",
-          selectedLens: "human",
+          selectedLens: "",
           selectedParagraph: "",
           compassSelected: false,
           panelDescended: false
@@ -3656,7 +3404,10 @@
       );
 
     if (committed) {
-      scheduleSceneAscent(STATES.CLUSTER_OPEN, direction);
+      scheduleSceneAscent(
+        STATES.CLUSTER_OPEN,
+        direction
+      );
     }
 
     return committed;
@@ -3705,7 +3456,9 @@
       committed &&
       options.scrollToScene !== false
     ) {
-      scheduleSceneAscent(STATES.CONSTELLATION);
+      scheduleSceneAscent(
+        STATES.CONSTELLATION
+      );
     }
 
     return committed;
@@ -3730,7 +3483,6 @@
         input.id ||
         input.lawId ||
         input.direction ||
-        input.categoryId ||
         ""
       ).trim();
 
@@ -3762,7 +3514,8 @@
           radiusPx: Math.max(
             0,
             finiteNumber(
-              input.radiusPx ?? input.projectedRadius,
+              input.radiusPx ??
+              input.projectedRadius,
               0
             )
           ),
@@ -3792,7 +3545,10 @@
     const snapshot =
       createSemanticProjectionSnapshot();
 
-    publish(CHANNELS.SEMANTIC_PROJECTION, snapshot);
+    publish(
+      CHANNELS.SEMANTIC_PROJECTION,
+      snapshot
+    );
 
     recordAction(
       `semantic-projection-updated:${snapshot.length}`
@@ -3838,10 +3594,6 @@
 
     cancelActiveGestures("crystals-failure");
 
-    setGuidance(
-      "The visual law field is temporarily unavailable. Canonical law routes and semantic records remain preserved."
-    );
-
     recordAction(
       "crystals-renderer-failed",
       reason
@@ -3883,8 +3635,15 @@
         return;
       }
 
-      publish(CHANNELS.REDUCED_MOTION, state.reducedMotion);
-      publish(CHANNELS.COMPASS_STATE, createCompassState());
+      publish(
+        CHANNELS.REDUCED_MOTION,
+        state.reducedMotion
+      );
+
+      publish(
+        CHANNELS.COMPASS_STATE,
+        createCompassState()
+      );
 
       recordAction("reduced-motion-updated");
     };
@@ -3940,39 +3699,308 @@
       "LAWS_PANEL_NOT_FOUND"
     );
 
-    state.panelEyebrow = qs("[data-laws-panel-eyebrow]", state.root);
-    state.panelTitle = qs("[data-laws-panel-title]", state.root);
-    state.panelPurpose = qs("[data-laws-panel-purpose]", state.root);
-    state.panelRelationship = qs("[data-laws-panel-relationship]", state.root);
-    state.panelDomain = qs("[data-laws-panel-domain]", state.root);
-    state.panelFunction = qs("[data-laws-panel-function]", state.root);
-    state.panelCoordinate = qs("[data-laws-panel-coordinate]", state.root);
-    state.panelSelectionState = qs("[data-laws-panel-selection-state]", state.root);
-    state.panelRouteStatus = qs("[data-laws-panel-route-status]", state.root);
-    state.panelLens = qs("[data-laws-panel-lens]", state.root);
+    state.panelEyebrow = qs(
+      "[data-laws-panel-eyebrow]",
+      state.root
+    );
 
-    state.panelHumanLaw = qs("[data-laws-panel-human-law]", state.root);
-    state.panelEngineeringLaw = qs("[data-laws-panel-engineering-law]", state.root);
-    state.panelCodeExpression = qs("[data-laws-panel-code-expression]", state.root);
-    state.panelFailurePattern = qs("[data-laws-panel-failure-pattern]", state.root);
-    state.panelAuditQuestion = qs("[data-laws-panel-audit-question]", state.root);
+    state.panelTitle = qs(
+      "[data-laws-panel-title]",
+      state.root
+    );
 
-    state.enterButton = qs("[data-laws-enter]", state.root);
-    state.enterLabel = qs("[data-laws-enter-label]", state.root);
-    state.returnToOrbitButton = qs("[data-laws-return-to-orbit]", state.root);
-    state.returnToOrbitLabel = qs("[data-laws-return-to-orbit-label]", state.root);
-    state.returnHomeButton = qs("[data-laws-return-home-compass]", state.root);
-    state.guidance = qs("[data-laws-guidance]", state.root);
+    state.panelPurpose = qs(
+      "[data-laws-panel-purpose]",
+      state.root
+    );
 
-    state.controllerReceiptOutput = qs("[data-laws-controller-receipt]", state.root);
-    state.controllerValidationOutput = qs("[data-laws-controller-validation]", state.root);
+    state.panelRelationship = qs(
+      "[data-laws-panel-relationship]",
+      state.root
+    );
 
-    state.compassControl = qs("[data-upstream-compass-control]", state.root);
+    state.panelDomain = qs(
+      "[data-laws-panel-domain]",
+      state.root
+    );
+
+    state.panelFunction = qs(
+      "[data-laws-panel-function]",
+      state.root
+    );
+
+    state.panelCoordinate = qs(
+      "[data-laws-panel-coordinate]",
+      state.root
+    );
+
+    state.panelSelectionState = qs(
+      "[data-laws-panel-selection-state]",
+      state.root
+    );
+
+    state.panelRouteStatus = qs(
+      "[data-laws-panel-route-status]",
+      state.root
+    );
+
+    state.panelLens = qs(
+      "[data-laws-panel-lens]",
+      state.root
+    );
+
+    state.enterButton = qs(
+      "[data-laws-enter]",
+      state.root
+    );
+
+    state.enterLabel = qs(
+      "[data-laws-enter-label]",
+      state.root
+    );
+
+    state.returnToOrbitButton = qs(
+      "[data-laws-return-to-orbit]",
+      state.root
+    );
+
+    state.returnToOrbitLabel = qs(
+      "[data-laws-return-to-orbit-label]",
+      state.root
+    );
+
+    state.returnHomeButton = qs(
+      "[data-laws-return-home-compass]",
+      state.root
+    );
+
+    state.guidance = qs(
+      "[data-laws-guidance]",
+      state.root
+    );
+
+    state.controllerReceiptOutput = qs(
+      "[data-laws-controller-receipt]",
+      state.root
+    );
+
+    state.controllerValidationOutput = qs(
+      "[data-laws-controller-validation]",
+      state.root
+    );
+
+    state.compassControl = qs(
+      "[data-upstream-compass-control]",
+      state.root
+    );
 
     invariant(
       state.compassControl,
       "LAWS_COMPASS_CONTROL_NOT_FOUND"
     );
+  }
+
+  function readDeclaredRegistry() {
+    const categoryElements = qsa(
+      "[data-laws-category]",
+      state.root
+    );
+
+    invariant(
+      categoryElements.length === 4,
+      "LAWS_DECLARED_CATEGORY_COUNT_INVALID",
+      {
+        expected: 4,
+        actual: categoryElements.length
+      }
+    );
+
+    const seenDirections = new Set();
+
+    for (const element of categoryElements) {
+      const direction =
+        normalizeDirection(
+          element.dataset.direction
+        );
+
+      invariant(
+        direction,
+        "LAWS_CATEGORY_DIRECTION_INVALID"
+      );
+
+      invariant(
+        !seenDirections.has(direction),
+        "LAWS_DUPLICATE_DECLARED_CATEGORY_DIRECTION",
+        { direction }
+      );
+
+      seenDirections.add(direction);
+    }
+
+    for (const direction of DIRECTIONS) {
+      invariant(
+        seenDirections.has(direction),
+        "LAWS_REQUIRED_CATEGORY_MISSING",
+        { direction }
+      );
+    }
+
+    const lawElements = qsa(
+      "[data-laws-law]",
+      state.root
+    );
+
+    invariant(
+      lawElements.length === 16,
+      "LAWS_DECLARED_LAW_COUNT_INVALID",
+      {
+        expected: 16,
+        actual: lawElements.length
+      }
+    );
+
+    const lawRecords = [];
+    const ids = new Set();
+    const routes = new Set();
+    const lawsByDirection = new Map(
+      DIRECTIONS.map(direction => [
+        direction,
+        []
+      ])
+    );
+
+    for (const element of lawElements) {
+      const lawId =
+        normalizeId(
+          element.dataset.lawId
+        );
+
+      const direction =
+        normalizeDirection(
+          element.dataset.direction
+        );
+
+      const route =
+        normalizeRoute(
+          element.dataset.route ||
+          element.getAttribute("href")
+        );
+
+      invariant(
+        lawId,
+        "LAWS_DECLARED_LAW_ID_REQUIRED"
+      );
+
+      invariant(
+        direction,
+        "LAWS_DECLARED_LAW_DIRECTION_REQUIRED",
+        { lawId }
+      );
+
+      invariant(
+        route,
+        "LAWS_DECLARED_LAW_ROUTE_REQUIRED",
+        { lawId }
+      );
+
+      invariant(
+        route.startsWith("/laws/categories/"),
+        "LAWS_DECLARED_LAW_ROUTE_OUTSIDE_CATEGORIES",
+        { lawId, route }
+      );
+
+      invariant(
+        !ids.has(lawId),
+        "LAWS_DUPLICATE_DECLARED_LAW_ID",
+        { lawId }
+      );
+
+      invariant(
+        !routes.has(route),
+        "LAWS_DUPLICATE_DECLARED_LAW_ROUTE",
+        { route }
+      );
+
+      ids.add(lawId);
+      routes.add(route);
+
+      const label =
+        normalizeLabel(
+          element.dataset.lawLabel ||
+          element.dataset.label ||
+          element.textContent,
+          lawId
+        );
+
+      const record =
+        Object.freeze({
+          direction,
+          lawId,
+          lawLabel: label,
+          route,
+          placeholderExisting: true,
+          registrySource: "declared-dom"
+        });
+
+      lawRecords.push(record);
+
+      lawsByDirection.get(direction).push(lawId);
+    }
+
+    for (const direction of DIRECTIONS) {
+      const list =
+        lawsByDirection.get(direction);
+
+      invariant(
+        list.length === 4,
+        "LAWS_PER_DIRECTION_INVALID",
+        {
+          direction,
+          count: list.length
+        }
+      );
+
+      lawsByDirection.set(
+        direction,
+        Object.freeze(list.slice())
+      );
+    }
+
+    registry.lawRecords =
+      Object.freeze(lawRecords.slice());
+
+    registry.lawRoutes =
+      Object.freeze(
+        lawRecords.map(record => record.route)
+      );
+
+    registry.lawById =
+      new Map(
+        lawRecords.map(record => [
+          record.lawId,
+          record
+        ])
+      );
+
+    registry.lawByRoute =
+      new Map(
+        lawRecords.map(record => [
+          record.route,
+          record
+        ])
+      );
+
+    registry.lawsByDirection =
+      lawsByDirection;
+
+    return Object.freeze({
+      pass: true,
+      categoryCount: 4,
+      lawCount: 16,
+      routeCount: 16,
+      lawsPerDirection: 4,
+      registrySource: "declared-dom"
+    });
   }
 
   function initializeOrientationState() {
@@ -3982,7 +4010,9 @@
       ) || "flow";
 
     let initial =
-      canonicalConstellationOrientation(requestedFocus);
+      canonicalConstellationOrientation(
+        requestedFocus
+      );
 
     const serialized = String(
       state.root.dataset.orbitQuaternion || ""
@@ -4043,7 +4073,10 @@
         }
       );
 
-      state.clusters.set(direction, cluster);
+      state.clusters.set(
+        direction,
+        cluster
+      );
     }
   }
 
@@ -4070,14 +4103,18 @@
       revision: cluster.revision,
 
       orientation:
-        freezeOrientation(cluster.orientation),
+        freezeOrientation(
+          cluster.orientation
+        ),
 
       committedOrientation:
-        freezeOrientation(cluster.committedOrientation)
+        freezeOrientation(
+          cluster.committedOrientation
+        )
     });
   }
 
-  function validateCanonicalRegistry() {
+  function validateSourceConstants() {
     invariant(
       DIRECTIONS.length === 4,
       "LAWS_DIRECTION_COUNT_INVALID"
@@ -4089,88 +4126,20 @@
     );
 
     invariant(
-      CANONICAL_LAW_RECORDS.length === 16,
-      "LAWS_CANONICAL_LAW_COUNT_INVALID"
-    );
-
-    const ids = new Set();
-    const routes = new Set();
-
-    for (const direction of DIRECTIONS) {
-      const laws =
-        LAWS_BY_DIRECTION.get(direction);
-
-      invariant(
-        laws &&
-        laws.length === 4,
-        "LAWS_PER_DIRECTION_INVALID",
-        { direction }
-      );
-    }
-
-    for (const record of CANONICAL_LAW_RECORDS) {
-      invariant(
-        DIRECTIONS.includes(record.direction),
-        "LAWS_RECORD_DIRECTION_INVALID"
-      );
-
-      invariant(
-        !ids.has(record.lawId),
-        "LAWS_DUPLICATE_LAW_ID"
-      );
-
-      invariant(
-        !routes.has(record.route),
-        "LAWS_DUPLICATE_LAW_ROUTE"
-      );
-
-      invariant(
-        Boolean(record.humanPrimary),
-        "LAWS_HUMAN_PRIMARY_REQUIRED"
-      );
-
-      invariant(
-        Boolean(record.engineeringSecondary),
-        "LAWS_ENGINEERING_SECONDARY_REQUIRED"
-      );
-
-      invariant(
-        Boolean(record.codeExpression),
-        "LAWS_CODE_EXPRESSION_REQUIRED"
-      );
-
-      invariant(
-        Boolean(record.failurePattern),
-        "LAWS_FAILURE_PATTERN_REQUIRED"
-      );
-
-      invariant(
-        Boolean(record.auditQuestion),
-        "LAWS_AUDIT_QUESTION_REQUIRED"
-      );
-
-      ids.add(record.lawId);
-      routes.add(record.route);
-    }
-
-    invariant(
-      LAW_BY_ID.size === 16,
-      "LAWS_LAW_ID_REGISTRY_INVALID"
+      MODULE.motionContractId ===
+        "DGB_LAWS_COMPLETE_QUATERNION_MOTION_CONTRACT_v1",
+      "LAWS_MOTION_CONTRACT_ID_INVALID"
     );
 
     invariant(
-      LAW_BY_ROUTE.size === 16,
-      "LAWS_ROUTE_REGISTRY_INVALID"
+      MODULE.motionContractVersion === "1.0.0",
+      "LAWS_MOTION_CONTRACT_VERSION_INVALID"
     );
 
     return Object.freeze({
       pass: true,
       directionCount: 4,
-      lawCount: 16,
-      routeCount: 16,
-      lawsPerDirection: 4,
-      humanLawPrimary: true,
-      softwareLawSecondary: true
+      controllerContainsLawContent: false
     });
   }
 
@@ -4184,27 +4153,42 @@
     );
 
     invariant(
-      canTransition(STATES.CONSTELLATION, STATES.CLUSTER_OPEN),
+      canTransition(
+        STATES.CONSTELLATION,
+        STATES.CLUSTER_OPEN
+      ),
       "LAWS_REQUIRED_TRANSITION_MISSING"
     );
 
     invariant(
-      canTransition(STATES.CLUSTER_OPEN, STATES.LAW_SELECTED),
+      canTransition(
+        STATES.CLUSTER_OPEN,
+        STATES.LAW_SELECTED
+      ),
       "LAWS_REQUIRED_TRANSITION_MISSING"
     );
 
     invariant(
-      canTransition(STATES.LAW_SELECTED, STATES.CLUSTER_OPEN),
+      canTransition(
+        STATES.LAW_SELECTED,
+        STATES.CLUSTER_OPEN
+      ),
       "LAWS_REQUIRED_TRANSITION_MISSING"
     );
 
     invariant(
-      canTransition(STATES.CLUSTER_OPEN, STATES.CONSTELLATION),
+      canTransition(
+        STATES.CLUSTER_OPEN,
+        STATES.CONSTELLATION
+      ),
       "LAWS_REQUIRED_TRANSITION_MISSING"
     );
 
     invariant(
-      canTransition(STATES.LAW_SELECTED, STATES.CONSTELLATION),
+      canTransition(
+        STATES.LAW_SELECTED,
+        STATES.CONSTELLATION
+      ),
       "LAWS_REQUIRED_TRANSITION_MISSING"
     );
 
@@ -4284,16 +4268,6 @@
   }
 
   function validateMotionContract() {
-    invariant(
-      MODULE.motionContractId === "DGB_LAWS_COMPLETE_QUATERNION_MOTION_CONTRACT_v1",
-      "LAWS_MOTION_CONTRACT_ID_INVALID"
-    );
-
-    invariant(
-      MODULE.motionContractVersion === "1.0.0",
-      "LAWS_MOTION_CONTRACT_VERSION_INVALID"
-    );
-
     const validOrbit =
       validateOrbitPreviewPayload({
         quaternion: [0, 0.2, 0, 0.98],
@@ -4330,62 +4304,6 @@
       "LAWS_CONTROLLER_MUST_REJECT_MIXED_MOTION_PAYLOAD"
     );
 
-    const missingOrbitPrimary =
-      validateOrbitPreviewPayload({
-        quaternion: [0, 0, 0, 1]
-      });
-
-    invariant(
-      missingOrbitPrimary.pass === false,
-      "LAWS_ORBIT_PRIMARY_ID_MUST_BE_REQUIRED"
-    );
-
-    const testCluster =
-      createClusterState("integrity");
-
-    const validCluster =
-      validateClusterPreviewPayload(
-        testCluster,
-        {
-          quaternion: [0.1, 0, 0, 0.99],
-          primaryId: "proof-law"
-        }
-      );
-
-    invariant(
-      validCluster.pass === true,
-      "LAWS_VALID_CLUSTER_PREVIEW_REJECTED"
-    );
-
-    const foreignLaw =
-      validateClusterPreviewPayload(
-        testCluster,
-        {
-          quaternion: [0, 0, 0, 1],
-          primaryId: "route-law"
-        }
-      );
-
-    invariant(
-      foreignLaw.pass === false,
-      "LAWS_FOREIGN_CLUSTER_LAW_ACCEPTED"
-    );
-
-    const mixedCluster =
-      validateClusterPreviewPayload(
-        testCluster,
-        {
-          quaternion: [0, 0, 0, 1],
-          primaryId: "proof-law",
-          axis: [0, 1, 0]
-        }
-      );
-
-    invariant(
-      mixedCluster.pass === false,
-      "LAWS_CLUSTER_MIXED_MOTION_PAYLOAD_ACCEPTED"
-    );
-
     invariant(
       beginOrbitGesture.length === 0,
       "LAWS_ORBIT_BEGIN_SIGNATURE_INVALID"
@@ -4420,24 +4338,15 @@
       pass: true,
       motionContractId: MODULE.motionContractId,
       motionContractVersion: MODULE.motionContractVersion,
-
-      previewPayloadKeys:
-        Object.freeze(PREVIEW_PAYLOAD_KEYS.slice()),
-
+      previewPayloadKeys: Object.freeze(
+        PREVIEW_PAYLOAD_KEYS.slice()
+      ),
       unexpectedPreviewFieldsForbidden: true,
       completeQuaternionPreviewRequired: true,
       explicitPrimaryIdentityRequired: true,
-
-      orbitBeginPayloadPermitted: false,
-      clusterBeginMotionPayloadPermitted: false,
-      orbitCommitPayloadPermitted: false,
-      clusterCommitMotionPayloadPermitted: false,
-
       controllerInfersPrimaryFromQuaternion: false,
       controllerInterpretsEulerMotion: false,
       controllerConstructsGestureQuaternion: false,
-      canonicalSettlementQuaternionsPublic: false,
-
       motionOwner: MODULE.interactionModuleId,
       acceptedStateAuthority: MODULE.id
     });
@@ -4456,24 +4365,26 @@
     });
 
     invariant(
-      !Object.prototype.hasOwnProperty.call(sample, "interactionPriority"),
+      !Object.prototype.hasOwnProperty.call(
+        sample,
+        "interactionPriority"
+      ),
       "LAWS_CONTROLLER_MUST_NOT_STORE_INTERACTION_PRIORITY"
     );
 
     return Object.freeze({
       pass: true,
 
-      storedFields:
-        Object.freeze([
-          "id",
-          "kind",
-          "x",
-          "y",
-          "radiusPx",
-          "depthLayer",
-          "compassOverlap",
-          "visible"
-        ]),
+      storedFields: Object.freeze([
+        "id",
+        "kind",
+        "x",
+        "y",
+        "radiusPx",
+        "depthLayer",
+        "compassOverlap",
+        "visible"
+      ]),
 
       projectionMathOwned: false,
       interactionPriorityAccepted: false,
@@ -4487,12 +4398,18 @@
 
   function validateFileSplitContract() {
     invariant(
-      !Object.prototype.hasOwnProperty.call(state, "pointer"),
+      !Object.prototype.hasOwnProperty.call(
+        state,
+        "pointer"
+      ),
       "LAWS_CONTROLLER_POINTER_STATE_NOT_EXTRACTED"
     );
 
     invariant(
-      !Object.prototype.hasOwnProperty.call(state, "suppressedSemanticClick"),
+      !Object.prototype.hasOwnProperty.call(
+        state,
+        "suppressedSemanticClick"
+      ),
       "LAWS_CONTROLLER_CLICK_SUPPRESSION_NOT_EXTRACTED"
     );
 
@@ -4520,81 +4437,47 @@
     });
   }
 
-  function validateDeclaredLaws() {
-    if (!state.root) {
-      return Object.freeze({
-        pass: false,
-        skipped: true,
-        reason: "LAWS_ROOT_NOT_RESOLVED"
-      });
-    }
-
-    const declared =
-      qsa("[data-laws-law]", state.root);
-
+  function validateRuntimeRegistry() {
     invariant(
-      declared.length === 16,
-      "LAWS_DECLARED_LAW_COUNT_INVALID",
-      {
-        expected: 16,
-        actual: declared.length
-      }
+      registry.lawRecords.length === 16,
+      "LAWS_RUNTIME_REGISTRY_LAW_COUNT_INVALID"
     );
 
-    const seenIds = new Set();
-    const seenRoutes = new Set();
+    invariant(
+      registry.lawRoutes.length === 16,
+      "LAWS_RUNTIME_REGISTRY_ROUTE_COUNT_INVALID"
+    );
 
-    for (const element of declared) {
-      const lawId =
-        normalizeLawId(element.dataset.lawId);
+    invariant(
+      registry.lawById.size === 16,
+      "LAWS_RUNTIME_REGISTRY_ID_MAP_INVALID"
+    );
 
-      const direction =
-        normalizeDirection(element.dataset.direction);
+    invariant(
+      registry.lawByRoute.size === 16,
+      "LAWS_RUNTIME_REGISTRY_ROUTE_MAP_INVALID"
+    );
 
-      const route =
-        normalizeRoute(
-          element.dataset.route ||
-          element.getAttribute("href")
-        );
-
-      const canonical =
-        LAW_BY_ID.get(lawId);
-
-      invariant(
-        canonical,
-        "LAWS_UNKNOWN_LAW_ID",
-        { lawId }
-      );
+    for (const direction of DIRECTIONS) {
+      const laws =
+        lawIdsByDirection(direction);
 
       invariant(
-        !seenIds.has(lawId),
-        "LAWS_DUPLICATE_DECLARED_LAW_ID"
+        laws.length === 4,
+        "LAWS_RUNTIME_REGISTRY_DIRECTION_COUNT_INVALID",
+        {
+          direction,
+          count: laws.length
+        }
       );
-
-      invariant(
-        !seenRoutes.has(route),
-        "LAWS_DUPLICATE_DECLARED_LAW_ROUTE"
-      );
-
-      invariant(
-        route === canonical.route,
-        "LAWS_LAW_ROUTE_MISMATCH"
-      );
-
-      invariant(
-        direction === canonical.direction,
-        "LAWS_LAW_DIRECTION_MISMATCH"
-      );
-
-      seenIds.add(lawId);
-      seenRoutes.add(route);
     }
 
     return Object.freeze({
       pass: true,
-      declaredLawCount: 16,
-      declaredRouteCount: 16,
-      generatedLawProxiesRequired: false
+      registrySource: "declared-dom",
+      lawCount: 16,
+      routeCount: 16,
+      lawsPerDirection: 4
     });
   }
 
@@ -4602,7 +4485,7 @@
     includeDom = false
   } = {}) {
     const results = {
-      registry: validateCanonicalRegistry(),
+      sourceConstants: validateSourceConstants(),
       transitions: validateTransitionTable(),
       presentation: validatePresentationContract(),
       compass: validateCompassContract(),
@@ -4610,9 +4493,9 @@
       projectionStorage: validateProjectionStorageContract(),
       fileSplit: validateFileSplitContract(),
 
-      declaredLaws:
+      runtimeRegistry:
         includeDom
-          ? validateDeclaredLaws()
+          ? validateRuntimeRegistry()
           : Object.freeze({
               pass: true,
               skipped: true
@@ -4626,7 +4509,7 @@
 
     return Object.freeze({
       receiptSchema:
-        "LAWS_CONTROLLER_FOUR_DIRECTION_HUMAN_FIRST_VALIDATION_RECEIPT_v1",
+        "LAWS_CONTROLLER_ROUTE_AUTHORITY_NO_CONTENT_VALIDATION_RECEIPT_v1",
 
       moduleId: MODULE.id,
       moduleVersion: MODULE.version,
@@ -4636,13 +4519,15 @@
       pass,
 
       directionCount: 4,
-      lawCount: 16,
-      lawsPerDirection: 4,
+      lawCount: includeDom ? registry.lawRecords.length : 0,
+      lawsPerDirection: includeDom ? 4 : 0,
 
+      routeRegistrySource:
+        includeDom ? "declared-dom" : "pending-dom",
+
+      controllerContainsLawContent: false,
       humanLawPrimary: true,
       softwareLawSecondary: true,
-      codeExpressionTertiary: true,
-      placeholderPagesPermitted: true,
 
       pointerInterpreterOwner: MODULE.interactionModuleId,
       pointerTapArbitrationOwner: MODULE.interactionModuleId,
@@ -4689,10 +4574,12 @@
 
     if (state.controllerValidationOutput) {
       if ("value" in state.controllerValidationOutput) {
-        state.controllerValidationOutput.value = serialized;
+        state.controllerValidationOutput.value =
+          serialized;
       }
 
-      state.controllerValidationOutput.textContent = serialized;
+      state.controllerValidationOutput.textContent =
+        serialized;
     }
 
     globalThis.DGB_LAWS_CONTROLLER_VALIDATION_RECEIPT =
@@ -4705,11 +4592,17 @@
         moduleId: MODULE.id,
         moduleVersion: MODULE.version,
 
-        interactionModuleId: MODULE.interactionModuleId,
-        interactionModuleVersion: MODULE.interactionModuleVersion,
+        interactionModuleId:
+          MODULE.interactionModuleId,
 
-        motionContractId: MODULE.motionContractId,
-        motionContractVersion: MODULE.motionContractVersion,
+        interactionModuleVersion:
+          MODULE.interactionModuleVersion,
+
+        motionContractId:
+          MODULE.motionContractId,
+
+        motionContractVersion:
+          MODULE.motionContractVersion,
 
         states: STATES,
         presentationModes: PRESENTATION_MODES,
@@ -4720,11 +4613,12 @@
         mainCompass: MAIN_COMPASS,
         directions: DIRECTIONS,
         directionLabels: DIRECTION_LABELS,
-        directionCoordinates: DIRECTION_COORDINATES,
-        directionRoutes: DIRECTION_TO_CATEGORY_ROUTE,
 
-        canonicalLawRecords: CANONICAL_LAW_RECORDS,
-        canonicalLawRoutes: CANONICAL_LAW_ROUTES,
+        getCanonicalLawRecords:
+          () => registry.lawRecords,
+
+        getCanonicalLawRoutes:
+          () => registry.lawRoutes,
 
         getFrameState: createFrameState,
 
@@ -4857,8 +4751,15 @@
       const frame =
         publishFrame();
 
-      publish(CHANNELS.HELD_STATE, createHeldState());
-      publish(CHANNELS.COMPASS_STATE, frame.compass);
+      publish(
+        CHANNELS.HELD_STATE,
+        createHeldState()
+      );
+
+      publish(
+        CHANNELS.COMPASS_STATE,
+        frame.compass
+      );
     } catch (_) {}
 
     globalThis.dispatchEvent(
@@ -4888,6 +4789,16 @@
 
       resolveDom();
       readReducedMotion();
+
+      const declaredRegistryReceipt =
+        readDeclaredRegistry();
+
+      invariant(
+        declaredRegistryReceipt.pass === true,
+        "LAWS_DECLARED_REGISTRY_FAILED",
+        declaredRegistryReceipt
+      );
+
       initializeOrientationState();
       initializeClusters();
 
@@ -4915,9 +4826,20 @@
       const frame =
         recordAction("controller-initialized");
 
-      publish(CHANNELS.REDUCED_MOTION, state.reducedMotion);
-      publish(CHANNELS.HELD_STATE, createHeldState());
-      publish(CHANNELS.COMPASS_STATE, frame.compass);
+      publish(
+        CHANNELS.REDUCED_MOTION,
+        state.reducedMotion
+      );
+
+      publish(
+        CHANNELS.HELD_STATE,
+        createHeldState()
+      );
+
+      publish(
+        CHANNELS.COMPASS_STATE,
+        frame.compass
+      );
 
       globalThis.dispatchEvent(
         new CustomEvent(
@@ -4938,6 +4860,15 @@
               exactPreviewPayloadRequired: true,
               explicitPrimaryIdentityRequired: true,
 
+              routeRegistrySource: "declared-dom",
+              directionCount: 4,
+              lawCount: registry.lawRecords.length,
+              lawsPerDirection: 4,
+
+              controllerContainsLawContent: false,
+              humanLawPrimary: true,
+              softwareLawSecondary: true,
+
               semanticProjectionFactsOnly: true,
               interactionPriorityPublished: false,
               interactionPriorityOwner: MODULE.interactionModuleId,
@@ -4948,13 +4879,7 @@
               motionSensitivityOwner: MODULE.interactionModuleId,
 
               acceptedStateAuthority: MODULE.id,
-              navigationTransitionAuthority: MODULE.id,
-
-              directionCount: 4,
-              lawCount: 16,
-              lawsPerDirection: 4,
-              humanLawPrimary: true,
-              softwareLawSecondary: true
+              navigationTransitionAuthority: MODULE.id
             })
           }
         )
@@ -4978,14 +4903,14 @@
 })();
 
 /*
-DGB_LAWS_CONTROLLER_FOUR_DIRECTION_HUMAN_FIRST_RESULT_v1
+DGB_LAWS_CONTROLLER_ROUTE_AUTHORITY_NO_CONTENT_RESULT_v1
 
 Artifact:
  /laws/index.controller.js
 
 Module:
  DGB_LAWS_CONTROLLER
- 1.0.0-law-compass-human-first-authority
+ 1.0.0-law-compass-controller-authority
 
 Source template:
  /products/archcoin/index.controller.js
@@ -4997,7 +4922,7 @@ Motion contract:
  1.0.0
 
 Implementation status:
- LAW_COMPASS_CONTROLLER_CONVERSION_STANDARD
+ LAW_COMPASS_CONTROLLER_AUTHORITY_STANDARD
 
 Exact coordinated pair:
  1. /laws/index.controller.js
@@ -5009,26 +4934,42 @@ Anchoring rule:
  INTERACTIONS DETERMINES MOTION.
  CONTROLLER DETERMINES AUTHORITY.
 
-Converted model:
- ARCHCOIN four domains converted to four law directions:
+Controller route registry:
+ DECLARED_DOM_PLACEHOLDERS
+
+Controller-created law routes:
+ FALSE
+
+Controller contains human-law statements:
+ FALSE
+
+Controller contains software-law statements:
+ FALSE
+
+Controller contains failure-pattern statements:
+ FALSE
+
+Controller contains audit-question statements:
+ FALSE
+
+Controller contains doctrine:
+ FALSE
+
+Required HTML declaration:
+ - 4 category controls using [data-laws-category]
+ - 16 law controls using [data-laws-law]
+ - each law declares data-law-id, data-direction, data-route
+
+Required directions:
  - flow
  - integrity
  - reality
  - structure
 
-Sixteen law records:
+Required counts:
  - 4 directions
+ - 16 law routes
  - 4 laws per direction
- - 16 canonical placeholder routes
-
-Human-first standard:
- TRUE
-
-Software-law secondary:
- TRUE
-
-Code-expression tertiary:
- TRUE
 
 Controller accepts:
 - beginOrbitGesture()

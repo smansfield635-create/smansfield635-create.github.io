@@ -1,0 +1,3704 @@
+/* TARGET FILE: /laws/index.css
+   COMPLETE REPLACEMENT
+
+   LAWS_COMPASS_HUMAN_ENGINEERING_EVIDENCE_CSS_TNT_v1_0_SHOWROOM_DERIVATIVE_STAGE
+
+   Scope:
+   - renews /laws/index.css as a Showroom-modeled Laws Compass stage;
+   - styles the four-category Laws cardinal field and four-law clusters;
+   - styles the fixed Main Compass return control;
+   - styles the controller selection panel;
+   - styles Human / Practical, Engineering, and Evidence content layers;
+   - includes static Cosmos-compatible atmosphere fallback;
+   - prepares selectors for /laws/index.cosmos.js without requiring it;
+   - does not create route authority, controller state, interaction logic, law doctrine, or evidence claims;
+   - does not style by invented JavaScript-only state outside the declared Laws controller dataset contract.
+
+   Controller compatibility:
+   - /laws/index.controller.js
+   - DGB_LAWS_CONTROLLER
+   - 1.0.0-law-compass-controller-authority
+
+   Cosmos compatibility:
+   - /laws/index.cosmos.js
+   - decorative only
+   - functional dependency false
+   - navigation authority false
+   - controller authority false
+   - compositor authority false
+*/
+
+/* ================================================================
+   1. DESIGN TOKENS
+   ================================================================ */
+
+:root {
+  color-scheme: dark;
+
+  --laws-ink-0: #02040a;
+  --laws-ink-1: #050814;
+  --laws-ink-2: #080d1b;
+  --laws-ink-3: #0d1428;
+  --laws-ink-4: #14203b;
+
+  --laws-glass-strong: rgba(7, 11, 24, 0.9);
+  --laws-glass: rgba(9, 14, 30, 0.76);
+  --laws-glass-soft: rgba(15, 23, 43, 0.58);
+  --laws-glass-faint: rgba(18, 27, 49, 0.34);
+
+  --laws-cream: #f6eedf;
+  --laws-cream-soft: #dcd2c0;
+  --laws-muted: #a9b0c0;
+  --laws-muted-strong: #c4c9d4;
+
+  --laws-gold: #e0b85b;
+  --laws-gold-bright: #f5d582;
+  --laws-gold-deep: #8e6724;
+  --laws-gold-faint: rgba(224, 184, 91, 0.15);
+
+  --laws-cyan: #75e9ff;
+  --laws-cyan-soft: #a8f2ff;
+  --laws-cyan-faint: rgba(117, 233, 255, 0.13);
+
+  --laws-violet: #b697ff;
+  --laws-violet-soft: #d4c4ff;
+  --laws-violet-faint: rgba(182, 151, 255, 0.14);
+
+  --laws-blue: #76a7ff;
+  --laws-blue-faint: rgba(118, 167, 255, 0.13);
+
+  --laws-green: #8de6b0;
+  --laws-green-faint: rgba(141, 230, 176, 0.11);
+
+  --laws-red: #ff8d9f;
+  --laws-red-faint: rgba(255, 141, 159, 0.1);
+
+  --laws-warning: #ffd27a;
+
+  --laws-border: rgba(226, 197, 128, 0.24);
+  --laws-border-strong: rgba(238, 204, 124, 0.52);
+  --laws-border-cool: rgba(117, 233, 255, 0.25);
+  --laws-border-violet: rgba(182, 151, 255, 0.27);
+  --laws-border-green: rgba(141, 230, 176, 0.32);
+  --laws-rule: rgba(255, 255, 255, 0.085);
+
+  --laws-stage-star-a: rgba(255, 255, 255, 0.28);
+  --laws-stage-star-b: rgba(117, 233, 255, 0.22);
+  --laws-stage-star-c: rgba(245, 213, 130, 0.18);
+  --laws-stage-violet-mist: rgba(112, 79, 185, 0.12);
+  --laws-stage-cyan-mist: rgba(45, 155, 190, 0.11);
+  --laws-stage-gold-mist: rgba(204, 144, 44, 0.08);
+
+  --laws-shadow:
+    0 1.2rem 3.5rem rgba(0, 0, 0, 0.38),
+    0 0 0 1px rgba(255, 255, 255, 0.018) inset;
+
+  --laws-shadow-deep:
+    0 2rem 6rem rgba(0, 0, 0, 0.52),
+    0 0 3.4rem rgba(48, 92, 168, 0.08);
+
+  --laws-radius-xs: 0.55rem;
+  --laws-radius-sm: 0.78rem;
+  --laws-radius-md: 1.05rem;
+  --laws-radius-lg: 1.45rem;
+  --laws-radius-xl: 2rem;
+
+  --laws-page-width: 88rem;
+  --laws-reading-width: 58rem;
+
+  --laws-space-1: 0.35rem;
+  --laws-space-2: 0.6rem;
+  --laws-space-3: 0.9rem;
+  --laws-space-4: 1.25rem;
+  --laws-space-5: 1.75rem;
+  --laws-space-6: 2.4rem;
+  --laws-space-7: 3.25rem;
+  --laws-space-8: 4.5rem;
+
+  --laws-transition-fast: 150ms ease;
+  --laws-transition: 240ms ease;
+  --laws-transition-slow:
+    420ms cubic-bezier(0.2, 0.75, 0.25, 1);
+
+  --laws-center-size:
+    clamp(12rem, 24vw, 18.5rem);
+
+  --laws-compass-core-size:
+    clamp(8.9rem, 18vw, 13.5rem);
+}
+
+/* ================================================================
+   2. RESET AND DOCUMENT FOUNDATION
+   ================================================================ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  min-width: 20rem;
+  scroll-behavior: smooth;
+  background: var(--laws-ink-0);
+}
+
+body {
+  position: relative;
+  min-width: 20rem;
+  min-height: 100vh;
+  margin: 0;
+  overflow-x: hidden;
+  color: var(--laws-cream);
+  background:
+    radial-gradient(
+      circle at 50% -8%,
+      rgba(54, 88, 155, 0.23),
+      transparent 35rem
+    ),
+    radial-gradient(
+      circle at 7% 18%,
+      rgba(84, 47, 151, 0.12),
+      transparent 30rem
+    ),
+    radial-gradient(
+      circle at 92% 56%,
+      rgba(15, 119, 156, 0.1),
+      transparent 32rem
+    ),
+    radial-gradient(
+      ellipse at 50% 100%,
+      rgba(13, 22, 45, 0.7),
+      transparent 44rem
+    ),
+    linear-gradient(
+      180deg,
+      #030711 0%,
+      #02040a 45%,
+      #050812 100%
+    );
+  font-family:
+    Inter,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+  font-size: 1rem;
+  line-height: 1.6;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+body::before {
+  position: fixed;
+  z-index: 0;
+  inset: 0;
+  pointer-events: none;
+  content: "";
+  opacity: 0.72;
+  background:
+    radial-gradient(
+      circle at 12% 18%,
+      rgba(117, 233, 255, 0.12),
+      transparent 0.12rem
+    ),
+    radial-gradient(
+      circle at 82% 14%,
+      rgba(245, 213, 130, 0.12),
+      transparent 0.1rem
+    ),
+    radial-gradient(
+      circle at 28% 38%,
+      rgba(255, 255, 255, 0.1),
+      transparent 0.08rem
+    ),
+    radial-gradient(
+      circle at 67% 43%,
+      rgba(182, 151, 255, 0.09),
+      transparent 0.1rem
+    ),
+    radial-gradient(
+      circle at 18% 72%,
+      rgba(117, 233, 255, 0.08),
+      transparent 0.09rem
+    ),
+    radial-gradient(
+      circle at 75% 78%,
+      rgba(255, 255, 255, 0.09),
+      transparent 0.075rem
+    ),
+    radial-gradient(
+      ellipse at 50% 20%,
+      rgba(83, 122, 210, 0.065),
+      transparent 36rem
+    ),
+    radial-gradient(
+      ellipse at 15% 70%,
+      rgba(117, 233, 255, 0.038),
+      transparent 30rem
+    ),
+    radial-gradient(
+      ellipse at 88% 88%,
+      rgba(245, 213, 130, 0.032),
+      transparent 28rem
+    );
+  background-repeat: no-repeat;
+}
+
+body::after {
+  position: fixed;
+  z-index: 2;
+  inset: 0;
+  pointer-events: none;
+  content: "";
+  background:
+    linear-gradient(
+      90deg,
+      rgba(0, 0, 0, 0.34),
+      transparent 12%,
+      transparent 88%,
+      rgba(0, 0, 0, 0.34)
+    ),
+    radial-gradient(
+      ellipse at center,
+      transparent 42%,
+      rgba(0, 0, 0, 0.38) 100%
+    );
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button {
+  color: inherit;
+}
+
+a {
+  color: inherit;
+}
+
+img,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+h1,
+h2,
+h3,
+h4,
+p,
+dl,
+dd,
+ol,
+ul,
+pre {
+  margin-top: 0;
+}
+
+h1,
+h2,
+h3,
+h4,
+strong,
+summary {
+  text-wrap: balance;
+}
+
+p,
+li,
+dd {
+  text-wrap: pretty;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+/* ================================================================
+   3. ACCESSIBILITY UTILITIES
+   ================================================================ */
+
+.sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+.skip,
+.laws-accessible-orbit-return {
+  position: fixed;
+  z-index: 100000;
+  top: 0.75rem;
+  left: 0.75rem;
+  padding: 0.7rem 1rem;
+  border: 1px solid var(--laws-gold-bright);
+  border-radius: var(--laws-radius-sm);
+  color: var(--laws-ink-0);
+  background: var(--laws-gold-bright);
+  font-weight: 800;
+  text-decoration: none;
+  transform: translateY(-220%);
+  transition: transform var(--laws-transition-fast);
+}
+
+.laws-accessible-orbit-return {
+  top: 3.9rem;
+}
+
+.skip:focus,
+.laws-accessible-orbit-return:focus {
+  transform: translateY(0);
+}
+
+:focus-visible {
+  outline: 3px solid var(--laws-cyan);
+  outline-offset: 4px;
+}
+
+summary:focus-visible {
+  outline-offset: -3px;
+}
+
+/* ================================================================
+   4. LAYER OWNERSHIP
+   ================================================================ */
+
+#laws-cosmos-layer,
+[data-laws-cosmos-layer],
+.laws-cosmos-layer {
+  z-index: 1 !important;
+  pointer-events: none !important;
+}
+
+#laws-cosmos-canvas {
+  opacity: 0.74;
+}
+
+[data-laws-root],
+.laws-shell {
+  position: relative;
+  z-index: 3;
+  isolation: isolate;
+}
+
+.laws-shell {
+  width: min(
+    calc(100% - 2rem),
+    var(--laws-page-width)
+  );
+  margin-inline: auto;
+  padding-bottom: var(--laws-space-6);
+}
+
+/* ================================================================
+   5. GLOBAL TYPOGRAPHY AND COMMON CONTROLS
+   ================================================================ */
+
+.kicker,
+.laws-gate-badge,
+.laws-panel__eyebrow,
+.laws-equation-card__label,
+.laws-foundations__heading > span,
+.laws-layer-label {
+  color: var(--laws-gold-bright);
+  font-size: 0.72rem;
+  font-weight: 850;
+  letter-spacing: 0.17em;
+  line-height: 1.35;
+  text-transform: uppercase;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+  color: var(--laws-cream);
+  font-weight: 600;
+  line-height: 1.02;
+}
+
+h1 {
+  max-width: 12ch;
+  margin-bottom: 0.8rem;
+  font-size: clamp(3rem, 7vw, 6.7rem);
+  letter-spacing: -0.045em;
+}
+
+h2 {
+  margin-bottom: 0;
+  font-size: clamp(2.2rem, 4.8vw, 4.6rem);
+  letter-spacing: -0.035em;
+}
+
+h3 {
+  font-size: clamp(1.35rem, 2.3vw, 2.2rem);
+  letter-spacing: -0.02em;
+}
+
+h4 {
+  margin-bottom: 0.35rem;
+  color: var(--laws-cyan-soft);
+  font-size: 1.02rem;
+  letter-spacing: -0.01em;
+}
+
+.button {
+  display: inline-flex;
+  min-height: 2.9rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  padding: 0.72rem 1.05rem;
+  border: 1px solid rgba(222, 226, 238, 0.24);
+  border-radius: 999px;
+  color: var(--laws-cream);
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.075),
+      rgba(255, 255, 255, 0.025)
+    ),
+    rgba(6, 10, 21, 0.78);
+  box-shadow:
+    0 0.55rem 1.5rem rgba(0, 0, 0, 0.18),
+    0 0 0 1px rgba(255, 255, 255, 0.018) inset;
+  font-size: 0.83rem;
+  font-weight: 850;
+  letter-spacing: 0.055em;
+  line-height: 1;
+  text-align: center;
+  text-decoration: none;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition:
+    border-color var(--laws-transition-fast),
+    color var(--laws-transition-fast),
+    background var(--laws-transition-fast),
+    box-shadow var(--laws-transition-fast),
+    transform var(--laws-transition-fast);
+}
+
+.button:hover:not(:disabled) {
+  border-color: var(--laws-border-strong);
+  transform: translateY(-1px);
+}
+
+.button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.button-gold,
+.button.gold {
+  border-color: rgba(255, 219, 133, 0.76);
+  color: #171007;
+  background:
+    linear-gradient(
+      135deg,
+      #f5d784 0%,
+      #d6aa4f 52%,
+      #f3ce70 100%
+    );
+  box-shadow:
+    0 0.9rem 2.2rem rgba(164, 111, 26, 0.22),
+    0 0 1.5rem rgba(245, 213, 130, 0.16);
+}
+
+.button-gold:hover:not(:disabled),
+.button.gold:hover:not(:disabled) {
+  border-color: #fff0bd;
+  box-shadow:
+    0 1rem 2.5rem rgba(164, 111, 26, 0.3),
+    0 0 2rem rgba(245, 213, 130, 0.24);
+}
+
+.button:disabled {
+  opacity: 0.38;
+  cursor: not-allowed;
+  filter: saturate(0.55);
+}
+
+/* ================================================================
+   6. TOPBAR
+   ================================================================ */
+
+.laws-topbar {
+  display: flex;
+  min-height: 4.6rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--laws-space-4);
+  margin-top: 0.8rem;
+  padding: 0.72rem 0.9rem;
+  border: 1px solid rgba(225, 197, 127, 0.18);
+  border-radius: var(--laws-radius-lg);
+  background:
+    linear-gradient(
+      180deg,
+      rgba(18, 26, 48, 0.76),
+      rgba(5, 9, 20, 0.7)
+    );
+  box-shadow: var(--laws-shadow);
+  backdrop-filter: blur(1.1rem);
+}
+
+.brand {
+  display: inline-flex;
+  min-width: 0;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.25rem;
+  border: 0;
+  color: inherit;
+  background: transparent;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.brand-mark {
+  display: grid;
+  width: 2.75rem;
+  height: 2.75rem;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 1px solid rgba(241, 207, 123, 0.6);
+  border-radius: 50%;
+  color: var(--laws-gold-bright);
+  background:
+    radial-gradient(
+      circle,
+      rgba(221, 181, 89, 0.17),
+      rgba(12, 17, 33, 0.95)
+    );
+  box-shadow:
+    0 0 1.4rem rgba(220, 180, 87, 0.14),
+    inset 0 0 0 0.22rem rgba(255, 255, 255, 0.025);
+}
+
+.brand-mark span {
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.brand-copy {
+  display: grid;
+  min-width: 0;
+  gap: 0.05rem;
+}
+
+.brand-copy > span {
+  color: var(--laws-muted);
+  font-size: 0.62rem;
+  font-weight: 750;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.brand-copy strong {
+  overflow: hidden;
+  color: var(--laws-cream);
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+  font-size: 1.05rem;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.laws-nav {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.laws-nav a {
+  padding: 0.5rem 0.68rem;
+  border-radius: 999px;
+  color: var(--laws-muted-strong);
+  font-size: 0.74rem;
+  font-weight: 750;
+  letter-spacing: 0.045em;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition:
+    color var(--laws-transition-fast),
+    background var(--laws-transition-fast);
+}
+
+.laws-nav a:hover,
+.laws-nav a[aria-current="page"] {
+  color: var(--laws-cream);
+  background: rgba(255, 255, 255, 0.065);
+}
+
+.laws-nav a[aria-current="page"] {
+  color: var(--laws-gold-bright);
+}
+
+/* ================================================================
+   7. MAIN COMPOSITION
+   ================================================================ */
+
+main {
+  display: grid;
+  gap: var(--laws-space-7);
+  padding-top: var(--laws-space-4);
+}
+
+.laws-threshold,
+.laws-orbit,
+.laws-foundations,
+.laws-evidence,
+.laws-receipts {
+  position: relative;
+  scroll-margin-top: 1rem;
+}
+
+/* ================================================================
+   8. THRESHOLD
+   ================================================================ */
+
+.laws-threshold {
+  min-height: 0;
+  padding-block:
+    clamp(2rem, 5vw, 4.4rem)
+    clamp(1.4rem, 3vw, 2.5rem);
+}
+
+.laws-threshold::before {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  content: "";
+  background:
+    radial-gradient(
+      circle at 14% 22%,
+      rgba(116, 168, 255, 0.13),
+      transparent 26rem
+    ),
+    radial-gradient(
+      circle at 86% 64%,
+      rgba(178, 146, 255, 0.1),
+      transparent 22rem
+    );
+}
+
+.laws-threshold__frame {
+  position: relative;
+  display: grid;
+  grid-template-columns:
+    minmax(0, 1.45fr)
+    minmax(17rem, 0.55fr);
+  align-items: end;
+  gap: clamp(1.5rem, 5vw, 5rem);
+  padding: clamp(1.4rem, 3.2vw, 2.8rem);
+  border-top: 1px solid rgba(238, 207, 133, 0.27);
+  border-bottom: 1px solid rgba(238, 207, 133, 0.16);
+  background:
+    linear-gradient(
+      90deg,
+      rgba(8, 12, 25, 0.56),
+      rgba(8, 12, 25, 0.14) 62%,
+      rgba(10, 14, 29, 0.46)
+    );
+  box-shadow:
+    inset 0 1px rgba(255, 255, 255, 0.025),
+    inset 0 -1px rgba(255, 255, 255, 0.018);
+}
+
+.laws-threshold__copy {
+  position: relative;
+  z-index: 1;
+}
+
+.laws-gate-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-bottom: 1rem;
+}
+
+.laws-gate-badge::before {
+  width: 1.5rem;
+  height: 1px;
+  content: "";
+  background: currentColor;
+}
+
+.laws-subtitle {
+  margin-bottom: 0.75rem;
+  color: var(--laws-cyan-soft);
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+  font-size: clamp(1.15rem, 2.2vw, 1.65rem);
+  line-height: 1.25;
+}
+
+.laws-threshold__lead {
+  max-width: 50rem;
+  margin-bottom: 1.4rem;
+  color: var(--laws-muted-strong);
+  font-size: clamp(1rem, 1.55vw, 1.16rem);
+}
+
+.laws-threshold__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+}
+
+.laws-threshold__signal {
+  position: relative;
+  padding: 1.25rem 1.25rem 1.15rem;
+  border: 1px solid var(--laws-border);
+  border-radius: var(--laws-radius-md);
+  background:
+    linear-gradient(
+      145deg,
+      rgba(23, 31, 55, 0.82),
+      rgba(6, 10, 22, 0.78)
+    );
+  box-shadow:
+    var(--laws-shadow),
+    inset 0.22rem 0 0 rgba(117, 233, 255, 0.3);
+}
+
+.laws-threshold__signal > span {
+  display: block;
+  margin-bottom: 0.55rem;
+  color: var(--laws-cyan);
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.laws-threshold__signal strong {
+  display: block;
+  margin-bottom: 0.65rem;
+  color: var(--laws-cream);
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+  font-size: 1.45rem;
+  font-weight: 600;
+  line-height: 1.15;
+}
+
+.laws-threshold__signal p {
+  margin-bottom: 0;
+  color: var(--laws-muted);
+  font-size: 0.9rem;
+}
+
+/* ================================================================
+   9. LAWS COMPASS CONSTELLATION FRAME
+   ================================================================ */
+
+.laws-orbit {
+  display: grid;
+  gap: 1rem;
+  padding: clamp(1rem, 2.4vw, 1.8rem);
+  border: 1px solid rgba(224, 184, 91, 0.24);
+  border-radius: var(--laws-radius-xl);
+  background:
+    linear-gradient(
+      180deg,
+      rgba(15, 22, 42, 0.68),
+      rgba(4, 7, 16, 0.78)
+    );
+  box-shadow: var(--laws-shadow-deep);
+  backdrop-filter: blur(0.55rem);
+}
+
+.laws-orbit::before {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  content: "";
+  background:
+    radial-gradient(
+      circle at 50% 38%,
+      rgba(41, 88, 157, 0.14),
+      transparent 38rem
+    ),
+    radial-gradient(
+      circle at 18% 82%,
+      rgba(117, 233, 255, 0.045),
+      transparent 18rem
+    ),
+    radial-gradient(
+      circle at 82% 18%,
+      rgba(245, 213, 130, 0.038),
+      transparent 17rem
+    ),
+    linear-gradient(
+      115deg,
+      transparent,
+      rgba(117, 233, 255, 0.02),
+      transparent
+    );
+}
+
+.laws-orbit__heading {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns:
+    minmax(0, 1fr)
+    minmax(15rem, 28rem);
+  align-items: end;
+  gap: 1.5rem;
+  padding: 0.45rem 0.45rem 0.2rem;
+}
+
+.laws-orbit__heading p {
+  margin-bottom: 0.25rem;
+  color: var(--laws-muted-strong);
+}
+
+.laws-orbit__field,
+[data-laws-scene-field] {
+  position: relative;
+  z-index: 1;
+  min-height: clamp(27rem, 60vw, 47rem);
+  overflow: hidden;
+  touch-action: none;
+  overscroll-behavior: contain;
+  user-select: none;
+  -webkit-user-select: none;
+  border: 1px solid rgba(117, 233, 255, 0.14);
+  border-radius:
+    calc(var(--laws-radius-xl) - 0.35rem);
+  background:
+    radial-gradient(
+      circle at 50% 50%,
+      rgba(39, 79, 141, 0.20),
+      transparent 22%
+    ),
+    radial-gradient(
+      circle at 18% 28%,
+      rgba(117, 233, 255, 0.055),
+      transparent 16rem
+    ),
+    radial-gradient(
+      circle at 84% 68%,
+      rgba(182, 151, 255, 0.06),
+      transparent 18rem
+    ),
+    radial-gradient(
+      circle at 50% 50%,
+      rgba(8, 18, 39, 0.13),
+      rgba(2, 5, 13, 0.86) 72%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(8, 14, 29, 0.64),
+      rgba(3, 6, 14, 0.88)
+    );
+  box-shadow:
+    inset 0 0 4rem rgba(0, 0, 0, 0.42),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.018);
+}
+
+.laws-orbit__field::before,
+[data-laws-scene-field]::before {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  pointer-events: none;
+  content: "";
+  background:
+    radial-gradient(circle at 11% 16%, var(--laws-stage-star-a), transparent 0.08rem),
+    radial-gradient(circle at 23% 71%, var(--laws-stage-star-b), transparent 0.07rem),
+    radial-gradient(circle at 36% 27%, rgba(255, 255, 255, 0.18), transparent 0.055rem),
+    radial-gradient(circle at 48% 83%, var(--laws-stage-star-c), transparent 0.07rem),
+    radial-gradient(circle at 61% 19%, rgba(255, 255, 255, 0.15), transparent 0.055rem),
+    radial-gradient(circle at 72% 64%, var(--laws-stage-star-b), transparent 0.075rem),
+    radial-gradient(circle at 88% 31%, rgba(255, 255, 255, 0.16), transparent 0.055rem),
+    radial-gradient(circle at 92% 88%, var(--laws-stage-star-c), transparent 0.065rem);
+  background-repeat: no-repeat;
+  opacity: 0.7;
+}
+
+.laws-orbit__field::after,
+[data-laws-scene-field]::after {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  pointer-events: none;
+  content: "";
+  background:
+    radial-gradient(
+      ellipse at 50% 42%,
+      rgba(117, 233, 255, 0.05),
+      transparent 26rem
+    ),
+    radial-gradient(
+      ellipse at 20% 70%,
+      var(--laws-stage-violet-mist),
+      transparent 20rem
+    ),
+    radial-gradient(
+      ellipse at 78% 24%,
+      var(--laws-stage-cyan-mist),
+      transparent 22rem
+    );
+  opacity: 0.72;
+}
+
+.laws-cosmic-field {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.72;
+  background:
+    radial-gradient(
+      circle at 50% 50%,
+      transparent 0 26%,
+      rgba(104, 154, 255, 0.045) 26.5% 27%,
+      transparent 27.5%
+    ),
+    radial-gradient(
+      circle at 50% 50%,
+      transparent 0 38%,
+      rgba(117, 233, 255, 0.035) 38.5% 39%,
+      transparent 39.5%
+    ),
+    conic-gradient(
+      from 45deg at 50% 50%,
+      transparent 0 11%,
+      rgba(117, 233, 255, 0.024) 12%,
+      transparent 13% 36%,
+      rgba(224, 184, 91, 0.024) 37%,
+      transparent 38% 61%,
+      rgba(182, 151, 255, 0.024) 62%,
+      transparent 63% 86%,
+      rgba(117, 233, 255, 0.024) 87%,
+      transparent 88%
+    );
+}
+
+.laws-cosmic-field::before,
+.laws-cosmic-field::after {
+  position: absolute;
+  inset: 8%;
+  border: 1px solid rgba(157, 198, 255, 0.045);
+  border-radius: 50%;
+  content: "";
+}
+
+.laws-cosmic-field::after {
+  inset: 18%;
+  border-color: rgba(231, 197, 119, 0.055);
+}
+
+/* ================================================================
+   10. CENTER COMPASS LAYER AND MAIN COMPASS CONTROL
+   ================================================================ */
+
+.laws-compass-layer,
+[data-laws-compass-layer],
+[data-laws-center-layer] {
+  position: absolute;
+  z-index: 5;
+  inset: 50% auto auto 50%;
+  width: var(--laws-center-size);
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+}
+
+.laws-compass-mount,
+[data-laws-compass-mount],
+[data-laws-compass-visual-mount] {
+  position: absolute;
+  inset: -7%;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      circle at 50% 50%,
+      rgba(117, 233, 255, 0.06),
+      rgba(117, 233, 255, 0.018) 34%,
+      transparent 66%
+    );
+  filter:
+    drop-shadow(
+      0 0 0.8rem rgba(117, 233, 255, 0.04)
+    );
+}
+
+.laws-compass-mount::before,
+[data-laws-compass-mount]::before,
+[data-laws-compass-visual-mount]::before {
+  position: absolute;
+  inset: 12%;
+  border: 1px solid rgba(117, 233, 255, 0.08);
+  border-radius: 50%;
+  content: "";
+  box-shadow:
+    inset 0 0 2.4rem rgba(117, 233, 255, 0.035),
+    0 0 2rem rgba(117, 233, 255, 0.035);
+}
+
+.laws-compass-mount::after,
+[data-laws-compass-mount]::after,
+[data-laws-compass-visual-mount]::after {
+  position: absolute;
+  inset: 25%;
+  border: 1px solid rgba(245, 213, 130, 0.14);
+  border-radius: 50%;
+  content: "";
+  transform:
+    rotateX(62deg)
+    rotateZ(-18deg);
+}
+
+.laws-compass-core {
+  position: relative;
+  display: grid;
+  width: var(--laws-compass-core-size);
+  aspect-ratio: 1;
+  place-items: center;
+  border: 1px solid rgba(245, 213, 130, 0.34);
+  border-radius: 50%;
+  color: var(--laws-gold-bright);
+  background:
+    radial-gradient(
+      circle at 50% 28%,
+      rgba(245, 213, 130, 0.16),
+      transparent 40%
+    ),
+    radial-gradient(
+      circle at 50% 50%,
+      rgba(117, 233, 255, 0.07),
+      rgba(7, 11, 24, 0.78) 66%
+    );
+  box-shadow:
+    0 0 2.5rem rgba(245, 213, 130, 0.08),
+    inset 0 0 1.4rem rgba(117, 233, 255, 0.08);
+  pointer-events: none;
+}
+
+.laws-compass-core::before {
+  position: absolute;
+  inset: 12%;
+  border: 1px solid rgba(255, 255, 255, 0.065);
+  border-radius: 50%;
+  content: "";
+}
+
+.laws-compass-core::after {
+  position: absolute;
+  width: 42%;
+  height: 42%;
+  border: 1px solid rgba(245, 213, 130, 0.2);
+  border-radius: 0.5rem;
+  content: "";
+  transform: rotate(45deg);
+}
+
+.laws-compass-core span {
+  position: relative;
+  z-index: 2;
+  max-width: 7.5rem;
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+  font-size: clamp(0.95rem, 1.7vw, 1.3rem);
+  line-height: 1.05;
+  text-align: center;
+}
+
+.laws-compass-control,
+[data-upstream-compass-control],
+[data-laws-compass-control],
+[data-laws-full-center-hit-target="true"] {
+  position: absolute;
+  z-index: 20;
+  inset: -6%;
+  display: grid;
+  place-content: end center;
+  gap: 0.1rem;
+  padding:
+    0
+    18%
+    20%;
+  border: 0;
+  border-radius: 50%;
+  color: var(--laws-cream);
+  background: transparent;
+  text-align: center;
+  cursor: pointer;
+  pointer-events: auto;
+  touch-action: manipulation;
+}
+
+.laws-compass-control::before,
+[data-upstream-compass-control]::before,
+[data-laws-compass-control]::before,
+[data-laws-full-center-hit-target="true"]::before {
+  position: absolute;
+  right: 18%;
+  bottom: 17%;
+  left: 18%;
+  min-height: 2.35rem;
+  border: 1px solid rgba(245, 213, 130, 0.18);
+  border-radius: 999px;
+  content: "";
+  background:
+    linear-gradient(
+      180deg,
+      rgba(7, 11, 24, 0.64),
+      rgba(7, 11, 24, 0.44)
+    );
+  box-shadow:
+    0 0.45rem 1rem rgba(0, 0, 0, 0.26),
+    inset 0 0 0.55rem rgba(117, 233, 255, 0.05);
+  backdrop-filter: blur(0.25rem);
+  pointer-events: none;
+  transition:
+    border-color var(--laws-transition-fast),
+    background var(--laws-transition-fast),
+    box-shadow var(--laws-transition-fast);
+}
+
+.laws-compass-control:hover::before,
+.laws-compass-control:focus-visible::before,
+[data-upstream-compass-control]:hover::before,
+[data-upstream-compass-control]:focus-visible::before,
+[data-laws-compass-control]:hover::before,
+[data-laws-compass-control]:focus-visible::before {
+  border-color: rgba(245, 213, 130, 0.46);
+  background:
+    linear-gradient(
+      180deg,
+      rgba(7, 11, 24, 0.72),
+      rgba(7, 11, 24, 0.5)
+    );
+  box-shadow:
+    0 0.55rem 1.35rem rgba(0, 0, 0, 0.32),
+    0 0 1.3rem rgba(245, 213, 130, 0.14);
+}
+
+.laws-compass-control:focus-visible,
+[data-upstream-compass-control]:focus-visible,
+[data-laws-compass-control]:focus-visible {
+  outline: 3px solid var(--laws-cyan);
+  outline-offset: 0.24rem;
+}
+
+.laws-compass-control__label,
+.laws-compass-control__instruction {
+  position: relative;
+  z-index: 2;
+  pointer-events: none;
+  text-shadow:
+    0 0.12rem 0.45rem rgba(0, 0, 0, 0.88),
+    0 0 0.7rem rgba(7, 11, 24, 0.96);
+}
+
+.laws-compass-control__label {
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+  font-size: clamp(0.7rem, 1.15vw, 0.9rem);
+  font-weight: 650;
+  line-height: 1.02;
+}
+
+.laws-compass-control__instruction {
+  color: var(--laws-cream-soft);
+  font-size: 0.48rem;
+  font-weight: 850;
+  letter-spacing: 0.12em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+/* ================================================================
+   11. SEMANTIC LAW CARDINALS AND CLUSTERS
+   ================================================================ */
+
+.laws-semantic-layer,
+.laws-primary-categories,
+.laws-law-cluster,
+[data-laws-semantic-layer],
+[data-laws-primary-categories],
+[data-laws-category-layer],
+[data-laws-cluster] {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.laws-semantic-layer {
+  z-index: 7;
+}
+
+.laws-category,
+.laws-law,
+[data-laws-category],
+[data-laws-law] {
+  pointer-events: auto;
+}
+
+.laws-category,
+.laws-law {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  color: var(--laws-gold-bright);
+  background: transparent;
+  cursor: pointer;
+  transition:
+    opacity var(--laws-transition),
+    filter var(--laws-transition),
+    transform var(--laws-transition);
+}
+
+.laws-category::before,
+.laws-law::before {
+  display: block;
+  width: 100%;
+  height: 100%;
+  content: "";
+  clip-path:
+    polygon(
+      50% 0,
+      61% 35%,
+      98% 35%,
+      68% 57%,
+      79% 94%,
+      50% 72%,
+      21% 94%,
+      32% 57%,
+      2% 35%,
+      39% 35%
+    );
+  background:
+    radial-gradient(
+      circle at 50% 38%,
+      #fff9d9 0 7%,
+      var(--laws-gold-bright) 8% 28%,
+      #9e7123 62%,
+      rgba(92, 62, 20, 0.4) 100%
+    );
+  box-shadow:
+    0 0 1.4rem currentColor,
+    0 0 2.8rem rgba(224, 184, 91, 0.24);
+  filter:
+    drop-shadow(
+      0 0 0.45rem rgba(255, 223, 143, 0.66)
+    )
+    drop-shadow(
+      0 0 1.2rem rgba(224, 184, 91, 0.3)
+    );
+}
+
+.laws-category:hover,
+.laws-law:hover {
+  filter: brightness(1.2);
+}
+
+.laws-category:active,
+.laws-law:active {
+  transform: scale(0.96);
+}
+
+.laws-category {
+  width: clamp(3.2rem, 6.4vw, 5.2rem);
+  aspect-ratio: 1;
+}
+
+.laws-law {
+  width: clamp(1.7rem, 3.6vw, 3rem);
+  aspect-ratio: 1;
+}
+
+[data-direction="flow"][data-laws-category] {
+  top: 9%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+[data-direction="integrity"][data-laws-category] {
+  top: 50%;
+  right: 10%;
+  transform: translateY(-50%);
+}
+
+[data-direction="reality"][data-laws-category] {
+  bottom: 9%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+[data-direction="structure"][data-laws-category] {
+  top: 50%;
+  left: 10%;
+  transform: translateY(-50%);
+}
+
+[data-direction="flow"][data-laws-category]:hover,
+[data-direction="reality"][data-laws-category]:hover {
+  transform:
+    translateX(-50%)
+    scale(1.08);
+}
+
+[data-direction="integrity"][data-laws-category]:hover,
+[data-direction="structure"][data-laws-category]:hover {
+  transform:
+    translateY(-50%)
+    scale(1.08);
+}
+
+[data-laws-category][data-primary="true"]::before,
+[data-laws-law][data-primary="true"]::before,
+[data-laws-category][data-selected="true"]::before,
+[data-laws-law][data-selected="true"]::before {
+  filter:
+    drop-shadow(
+      0 0 0.75rem rgba(255, 223, 143, 0.78)
+    )
+    drop-shadow(
+      0 0 1.8rem rgba(117, 233, 255, 0.32)
+    );
+}
+
+[data-laws-category][aria-disabled="true"],
+[data-laws-law][aria-disabled="true"] {
+  opacity: 0.34;
+}
+
+[data-laws-category][aria-disabled="true"] {
+  pointer-events: auto;
+}
+
+[data-laws-law][aria-disabled="true"] {
+  pointer-events: none;
+}
+
+[data-laws-cluster] {
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity var(--laws-transition),
+    visibility var(--laws-transition);
+}
+
+[data-laws-root][data-active-law-cluster="true"]
+[data-laws-cluster][data-direction],
+[data-laws-root][data-active-law-cluster="true"]
+[data-laws-cluster][data-laws-cluster] {
+  opacity: 1;
+  visibility: visible;
+}
+
+[data-laws-root][data-active-cluster-direction="flow"]
+[data-laws-cluster][data-direction="flow"],
+[data-laws-root][data-active-cluster-direction="integrity"]
+[data-laws-cluster][data-direction="integrity"],
+[data-laws-root][data-active-cluster-direction="reality"]
+[data-laws-cluster][data-direction="reality"],
+[data-laws-root][data-active-cluster-direction="structure"]
+[data-laws-cluster][data-direction="structure"] {
+  opacity: 1;
+  visibility: visible;
+}
+
+.laws-law--flow-1,
+[data-direction="flow"][data-laws-law]:nth-of-type(1) {
+  top: 18%;
+  left: 31%;
+}
+
+.laws-law--flow-2,
+[data-direction="flow"][data-laws-law]:nth-of-type(2) {
+  top: 11%;
+  left: 41%;
+}
+
+.laws-law--flow-3,
+[data-direction="flow"][data-laws-law]:nth-of-type(3) {
+  top: 11%;
+  right: 41%;
+}
+
+.laws-law--flow-4,
+[data-direction="flow"][data-laws-law]:nth-of-type(4) {
+  top: 18%;
+  right: 31%;
+}
+
+.laws-law--integrity-1,
+[data-direction="integrity"][data-laws-law]:nth-of-type(1) {
+  top: 31%;
+  right: 18%;
+}
+
+.laws-law--integrity-2,
+[data-direction="integrity"][data-laws-law]:nth-of-type(2) {
+  top: 41%;
+  right: 11%;
+}
+
+.laws-law--integrity-3,
+[data-direction="integrity"][data-laws-law]:nth-of-type(3) {
+  right: 11%;
+  bottom: 41%;
+}
+
+.laws-law--integrity-4,
+[data-direction="integrity"][data-laws-law]:nth-of-type(4) {
+  right: 18%;
+  bottom: 31%;
+}
+
+.laws-law--structure-1,
+[data-direction="structure"][data-laws-law]:nth-of-type(1) {
+  top: 31%;
+  left: 18%;
+}
+
+.laws-law--structure-2,
+[data-direction="structure"][data-laws-law]:nth-of-type(2) {
+  top: 41%;
+  left: 11%;
+}
+
+.laws-law--structure-3,
+[data-direction="structure"][data-laws-law]:nth-of-type(3) {
+  bottom: 41%;
+  left: 11%;
+}
+
+.laws-law--structure-4,
+[data-direction="structure"][data-laws-law]:nth-of-type(4) {
+  bottom: 31%;
+  left: 18%;
+}
+
+.laws-law--reality-1,
+[data-direction="reality"][data-laws-law]:nth-of-type(1) {
+  bottom: 18%;
+  left: 31%;
+}
+
+.laws-law--reality-2,
+[data-direction="reality"][data-laws-law]:nth-of-type(2) {
+  bottom: 11%;
+  left: 41%;
+}
+
+.laws-law--reality-3,
+[data-direction="reality"][data-laws-law]:nth-of-type(3) {
+  right: 41%;
+  bottom: 11%;
+}
+
+.laws-law--reality-4,
+[data-direction="reality"][data-laws-law]:nth-of-type(4) {
+  right: 31%;
+  bottom: 18%;
+}
+
+[data-direction="integrity"][data-laws-category],
+[data-direction="integrity"][data-laws-law] {
+  color: var(--laws-cyan);
+}
+
+[data-direction="integrity"][data-laws-category]::before,
+[data-direction="integrity"][data-laws-law]::before {
+  background:
+    radial-gradient(
+      circle at 50% 38%,
+      #effcff 0 7%,
+      var(--laws-cyan) 8% 28%,
+      #2c7892 62%,
+      rgba(24, 71, 88, 0.4) 100%
+    );
+}
+
+[data-direction="reality"][data-laws-category],
+[data-direction="reality"][data-laws-law] {
+  color: var(--laws-violet);
+}
+
+[data-direction="reality"][data-laws-category]::before,
+[data-direction="reality"][data-laws-law]::before {
+  background:
+    radial-gradient(
+      circle at 50% 38%,
+      #fbf8ff 0 7%,
+      var(--laws-violet-soft) 8% 28%,
+      #664a9c 62%,
+      rgba(55, 35, 86, 0.4) 100%
+    );
+}
+
+[data-direction="structure"][data-laws-category],
+[data-direction="structure"][data-laws-law] {
+  color: var(--laws-green);
+}
+
+[data-direction="structure"][data-laws-category]::before,
+[data-direction="structure"][data-laws-law]::before {
+  background:
+    radial-gradient(
+      circle at 50% 38%,
+      #f4fff8 0 7%,
+      var(--laws-green) 8% 28%,
+      #34855b 62%,
+      rgba(28, 70, 49, 0.4) 100%
+    );
+}
+
+/* ================================================================
+   12. CONTROLLER PANEL / BASELINE INFORMATION BOX
+   ================================================================ */
+
+.laws-controller-panel,
+.laws-panel,
+[data-laws-panel] {
+  position: relative;
+  z-index: 3;
+  display: grid;
+  grid-template-columns:
+    minmax(11rem, 0.72fr)
+    minmax(16rem, 1.35fr)
+    auto;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.95rem 1rem;
+  border: 1px solid var(--laws-border);
+  border-radius: var(--laws-radius-lg);
+  background:
+    radial-gradient(
+      circle at 8% 0,
+      rgba(117, 233, 255, 0.05),
+      transparent 16rem
+    ),
+    linear-gradient(
+      115deg,
+      rgba(23, 30, 53, 0.86),
+      rgba(7, 11, 24, 0.91) 58%,
+      rgba(10, 17, 32, 0.86)
+    );
+  box-shadow:
+    0 1rem 2.8rem rgba(0, 0, 0, 0.28),
+    inset 0.22rem 0 0 rgba(224, 184, 91, 0.42);
+  backdrop-filter: blur(0.78rem);
+}
+
+.laws-panel__header {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.7rem;
+}
+
+.laws-panel__identity {
+  min-width: 0;
+}
+
+.laws-panel__eyebrow,
+[data-laws-panel-eyebrow] {
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.laws-panel h3,
+[data-laws-panel-title] {
+  margin-bottom: 0;
+  overflow: hidden;
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+  font-size: clamp(1.35rem, 2.4vw, 2rem);
+  text-overflow: ellipsis;
+}
+
+.laws-panel__state,
+[data-laws-panel-selection-state] {
+  flex: 0 0 auto;
+  padding: 0.35rem 0.55rem;
+  border: 1px solid var(--laws-border-cool);
+  border-radius: 999px;
+  color: var(--laws-cyan-soft);
+  background: var(--laws-cyan-faint);
+  font-size: 0.62rem;
+  font-weight: 850;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.laws-panel__body {
+  min-width: 0;
+}
+
+.laws-panel__purpose,
+.laws-panel__guidance,
+[data-laws-panel-purpose],
+[data-laws-guidance] {
+  margin-bottom: 0;
+}
+
+.laws-panel__purpose,
+[data-laws-panel-purpose] {
+  color: var(--laws-cream-soft);
+  font-size: 0.94rem;
+}
+
+.laws-panel__guidance,
+[data-laws-guidance] {
+  margin-top: 0.18rem;
+  color: var(--laws-muted);
+  font-size: 0.8rem;
+}
+
+.laws-panel__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.45rem;
+}
+
+.laws-panel__actions .button {
+  min-height: 2.55rem;
+  padding-inline: 0.85rem;
+  font-size: 0.7rem;
+}
+
+.laws-panel__narrative {
+  min-width: 0;
+  margin-top: 0.75rem;
+}
+
+.laws-panel-record {
+  display: none;
+  min-width: 0;
+  padding: 0.75rem 0.8rem;
+  border: 1px solid rgba(117, 233, 255, 0.13);
+  border-radius: var(--laws-radius-sm);
+  background:
+    linear-gradient(
+      145deg,
+      rgba(117, 233, 255, 0.05),
+      rgba(255, 255, 255, 0.016)
+    );
+  box-shadow:
+    inset 0.18rem 0 0 rgba(117, 233, 255, 0.26);
+}
+
+.laws-panel-record__category {
+  display: block;
+  margin-bottom: 0.32rem;
+  color: var(--laws-gold-bright);
+  font-size: 0.62rem;
+  font-weight: 850;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.laws-panel-record__purpose {
+  margin-bottom: 0.35rem;
+  color: var(--laws-cream-soft);
+  font-size: 0.85rem;
+  line-height: 1.48;
+}
+
+.laws-panel-record__relationship {
+  margin-bottom: 0;
+  color: var(--laws-muted);
+  font-size: 0.76rem;
+  line-height: 1.46;
+}
+
+.laws-panel__legend {
+  display: none;
+  grid-template-columns:
+    repeat(4, minmax(0, 1fr));
+  gap: 0.3rem;
+  margin-top: 0.65rem;
+}
+
+.laws-panel__legend span {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 0.35rem;
+  color: var(--laws-muted);
+  font-size: 0.68rem;
+  white-space: nowrap;
+}
+
+.laws-panel__legend strong {
+  display: grid;
+  width: 1.35rem;
+  height: 1.35rem;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 1px solid rgba(224, 184, 91, 0.38);
+  border-radius: 50%;
+  color: var(--laws-gold-bright);
+  background: rgba(224, 184, 91, 0.07);
+  font-size: 0.58rem;
+}
+
+/* ================================================================
+   13. PANEL TECHNICAL DETAILS
+   ================================================================ */
+
+.laws-panel__technical {
+  grid-column: 1 / -1;
+  overflow: clip;
+  border-top: 1px solid var(--laws-rule);
+}
+
+.laws-panel__technical > summary {
+  display: flex;
+  min-height: 2.65rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.6rem 0.2rem 0.2rem;
+  color: var(--laws-muted-strong);
+  list-style: none;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.laws-panel__technical
+> summary::-webkit-details-marker {
+  display: none;
+}
+
+.laws-panel__technical
+> summary span:last-child {
+  color: var(--laws-gold-bright);
+  font-size: 1rem;
+  transition:
+    transform var(--laws-transition-fast);
+}
+
+.laws-panel__technical[open]
+> summary span:last-child {
+  transform: rotate(45deg);
+}
+
+.laws-panel__detail-group {
+  margin-top: 0.55rem;
+  overflow: clip;
+  border: 1px solid rgba(255, 255, 255, 0.075);
+  border-radius: var(--laws-radius-sm);
+  background: rgba(255, 255, 255, 0.018);
+}
+
+.laws-panel__detail-group > summary {
+  display: flex;
+  min-height: 2.9rem;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.72rem 0.82rem;
+  color: var(--laws-cyan-soft);
+  list-style: none;
+  font-size: 0.69rem;
+  font-weight: 850;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.laws-panel__detail-group
+> summary::-webkit-details-marker {
+  display: none;
+}
+
+.laws-panel__detail-group
+> summary::after {
+  content: "+";
+  color: var(--laws-gold-bright);
+  font-size: 1rem;
+  transition:
+    transform var(--laws-transition-fast);
+}
+
+.laws-panel__detail-group[open]
+> summary::after {
+  transform: rotate(45deg);
+}
+
+.laws-panel-details {
+  padding: 0 0.72rem 0.72rem;
+  border-top: 1px solid var(--laws-rule);
+}
+
+.laws-panel-detail-record {
+  display: none;
+}
+
+.laws-panel-detail-record dl {
+  display: grid;
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+  gap: 0.55rem;
+  margin: 0;
+  padding-top: 0.72rem;
+}
+
+.laws-panel-detail-record dl > div {
+  min-width: 0;
+  padding: 0.72rem;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: var(--laws-radius-sm);
+  background: rgba(255, 255, 255, 0.022);
+}
+
+.laws-panel-detail-record dt,
+.laws-panel__facts dt {
+  margin-bottom: 0.24rem;
+  color: var(--laws-cyan);
+  font-size: 0.56rem;
+  font-weight: 850;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.laws-panel-detail-record dd,
+.laws-panel__facts dd {
+  margin: 0;
+  color: var(--laws-muted-strong);
+  font-size: 0.74rem;
+  line-height: 1.48;
+  overflow-wrap: anywhere;
+}
+
+.laws-panel__facts {
+  display: grid;
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+  gap: 0.55rem;
+  margin: 0;
+  padding: 0.72rem;
+  border-top: 1px solid var(--laws-rule);
+}
+
+.laws-panel__facts > div {
+  min-width: 0;
+  padding: 0.7rem;
+  border: 1px solid rgba(255, 255, 255, 0.065);
+  border-radius: var(--laws-radius-sm);
+  background: rgba(255, 255, 255, 0.025);
+}
+
+/* ================================================================
+   14. PANEL STATE PRECEDENCE
+   ================================================================ */
+
+[data-laws-root][data-held="true"]
+[data-laws-panel-record="held"],
+[data-laws-root][data-held="true"]
+[data-laws-panel-detail-record="held"] {
+  display: block;
+}
+
+[data-laws-root][data-held="false"][data-compass-selected="true"]
+[data-laws-panel-record="compass"],
+[data-laws-root][data-held="false"][data-compass-selected="true"]
+[data-laws-panel-detail-record="compass"] {
+  display: block;
+}
+
+[data-laws-root][data-held="false"][data-compass-selected="false"]:not([data-selected-law=""])
+[data-laws-panel-record],
+[data-laws-root][data-held="false"][data-compass-selected="false"]:not([data-selected-law=""])
+[data-laws-panel-detail-record] {
+  display: none;
+}
+
+[data-laws-root][data-held="false"][data-compass-selected="false"][data-selected-law=""][data-selected-direction="flow"]
+[data-laws-panel-record="flow"],
+[data-laws-root][data-held="false"][data-compass-selected="false"][data-selected-law=""][data-selected-direction="flow"]
+[data-laws-panel-detail-record="flow"],
+[data-laws-root][data-held="false"][data-compass-selected="false"][data-selected-law=""][data-selected-direction="integrity"]
+[data-laws-panel-record="integrity"],
+[data-laws-root][data-held="false"][data-compass-selected="false"][data-selected-law=""][data-selected-direction="integrity"]
+[data-laws-panel-detail-record="integrity"],
+[data-laws-root][data-held="false"][data-compass-selected="false"][data-selected-law=""][data-selected-direction="reality"]
+[data-laws-panel-record="reality"],
+[data-laws-root][data-held="false"][data-compass-selected="false"][data-selected-law=""][data-selected-direction="reality"]
+[data-laws-panel-detail-record="reality"],
+[data-laws-root][data-held="false"][data-compass-selected="false"][data-selected-law=""][data-selected-direction="structure"]
+[data-laws-panel-record="structure"],
+[data-laws-root][data-held="false"][data-compass-selected="false"][data-selected-law=""][data-selected-direction="structure"]
+[data-laws-panel-detail-record="structure"] {
+  display: block;
+}
+
+[data-laws-root][data-held="false"][data-compass-selected="false"][data-selected-law=""][data-selected-direction=""]
+[data-laws-panel-record="idle"],
+[data-laws-root][data-held="false"][data-compass-selected="false"][data-selected-law=""][data-selected-direction=""]
+[data-laws-panel-detail-record="idle"] {
+  display: block;
+}
+
+[data-laws-root][data-held="false"][data-compass-selected="false"][data-selected-law=""][data-selected-direction=""]
+[data-laws-panel-legend] {
+  display: grid;
+}
+
+/* ================================================================
+   15. PANEL STATE EMPHASIS
+   ================================================================ */
+
+[data-laws-root][data-held="true"]
+.laws-panel,
+[data-laws-root][data-held="true"]
+[data-laws-panel] {
+  border-color: rgba(255, 141, 159, 0.44);
+  box-shadow:
+    0 1.15rem 3rem rgba(0, 0, 0, 0.32),
+    inset 0.22rem 0 0 var(--laws-red);
+}
+
+[data-laws-root][data-held="true"]
+.laws-panel__state,
+[data-laws-root][data-held="true"]
+[data-laws-panel-selection-state] {
+  border-color: rgba(255, 141, 159, 0.42);
+  color: var(--laws-red);
+  background: rgba(255, 141, 159, 0.08);
+}
+
+[data-laws-root][data-held="false"][data-compass-selected="true"]
+.laws-panel,
+[data-laws-root][data-held="false"][data-compass-selected="true"]
+[data-laws-panel] {
+  border-color: var(--laws-border-strong);
+  box-shadow:
+    0 1.15rem 3rem rgba(0, 0, 0, 0.32),
+    inset 0.22rem 0 0 var(--laws-gold);
+}
+
+[data-laws-root][data-held="false"][data-compass-selected="true"]
+.laws-panel__state,
+[data-laws-root][data-held="false"][data-compass-selected="true"]
+[data-laws-panel-selection-state] {
+  border-color: var(--laws-border-strong);
+  color: var(--laws-gold-bright);
+  background: var(--laws-gold-faint);
+}
+
+[data-laws-root][data-held="false"][data-compass-selected="false"]:not([data-selected-law=""])
+.laws-panel,
+[data-laws-root][data-held="false"][data-compass-selected="false"]:not([data-selected-law=""])
+[data-laws-panel] {
+  border-color: rgba(141, 230, 176, 0.4);
+  box-shadow:
+    0 1.15rem 3rem rgba(0, 0, 0, 0.32),
+    inset 0.22rem 0 0 var(--laws-green);
+}
+
+[data-laws-root][data-held="false"][data-compass-selected="false"]:not([data-selected-law=""])
+.laws-panel__state,
+[data-laws-root][data-held="false"][data-compass-selected="false"]:not([data-selected-law=""])
+[data-laws-panel-selection-state] {
+  border-color: rgba(141, 230, 176, 0.4);
+  color: var(--laws-green);
+  background: rgba(141, 230, 176, 0.09);
+}
+
+/* ================================================================
+   16. FOUNDATIONS / HUMAN AND ENGINEERING LAYERS
+   ================================================================ */
+
+.laws-foundations,
+.laws-evidence,
+.laws-receipts {
+  display: grid;
+  gap: 1.2rem;
+  padding: clamp(1rem, 2.8vw, 2rem);
+  border: 1px solid rgba(224, 184, 91, 0.21);
+  border-radius: var(--laws-radius-xl);
+  background:
+    radial-gradient(
+      circle at 9% 0,
+      rgba(117, 233, 255, 0.045),
+      transparent 18rem
+    ),
+    linear-gradient(
+      145deg,
+      rgba(14, 20, 39, 0.78),
+      rgba(4, 7, 16, 0.86)
+    );
+  box-shadow: var(--laws-shadow-deep);
+  backdrop-filter: blur(0.72rem);
+}
+
+.laws-foundations__heading,
+.laws-evidence__heading,
+.laws-receipts__heading {
+  display: grid;
+  gap: 0.65rem;
+  max-width: 66rem;
+  padding: 0.3rem;
+}
+
+.laws-foundations__heading h2,
+.laws-evidence__heading h2,
+.laws-receipts__heading h2 {
+  max-width: 16ch;
+}
+
+.laws-foundations__heading p,
+.laws-evidence__heading p,
+.laws-receipts__heading p {
+  max-width: var(--laws-reading-width);
+  margin-bottom: 0;
+  color: var(--laws-muted-strong);
+}
+
+.laws-foundations__list,
+.laws-layer-grid {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.laws-layer-grid {
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+}
+
+.laws-layer-card,
+.laws-foundation,
+.laws-evidence-card,
+.laws-runtime-evidence,
+.laws-runtime-evidence__group,
+.laws-raw-receipt-disclosure {
+  overflow: clip;
+  border: 1px solid rgba(224, 184, 91, 0.17);
+  border-radius: var(--laws-radius-md);
+  background:
+    linear-gradient(
+      180deg,
+      rgba(17, 24, 44, 0.77),
+      rgba(7, 11, 23, 0.84)
+    );
+  transition:
+    border-color var(--laws-transition),
+    box-shadow var(--laws-transition);
+}
+
+.laws-layer-card {
+  display: grid;
+  gap: 0.85rem;
+  padding: 1rem;
+}
+
+.laws-layer-card--human {
+  border-color: rgba(245, 213, 130, 0.24);
+  box-shadow:
+    inset 0.2rem 0 0 rgba(245, 213, 130, 0.34);
+}
+
+.laws-layer-card--engineering {
+  border-color: rgba(117, 233, 255, 0.22);
+  box-shadow:
+    inset 0.2rem 0 0 rgba(117, 233, 255, 0.3);
+}
+
+.laws-layer-card--evidence {
+  border-color: rgba(141, 230, 176, 0.22);
+  box-shadow:
+    inset 0.2rem 0 0 rgba(141, 230, 176, 0.3);
+}
+
+.laws-layer-card p {
+  margin-bottom: 0;
+  color: var(--laws-muted-strong);
+}
+
+.laws-layer-card ul {
+  display: grid;
+  gap: 0.45rem;
+  margin-bottom: 0;
+  padding-left: 1.2rem;
+  color: var(--laws-muted-strong);
+}
+
+.laws-layer-card li::marker {
+  color: var(--laws-gold-bright);
+}
+
+/* ================================================================
+   17. NATIVE DISCLOSURES
+   ================================================================ */
+
+.laws-foundation[open],
+.laws-runtime-evidence[open],
+.laws-runtime-evidence__group[open],
+.laws-raw-receipt-disclosure[open] {
+  border-color: rgba(224, 184, 91, 0.34);
+  box-shadow:
+    0 1rem 2.8rem rgba(0, 0, 0, 0.23),
+    inset 0.2rem 0 0 rgba(117, 233, 255, 0.25);
+}
+
+.laws-foundation > summary,
+.laws-runtime-evidence > summary {
+  display: flex;
+  min-height: 4.5rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.1rem;
+  color: var(--laws-cream);
+  list-style: none;
+  cursor: pointer;
+}
+
+.laws-foundation
+> summary::-webkit-details-marker,
+.laws-runtime-evidence
+> summary::-webkit-details-marker,
+.laws-runtime-evidence__group
+> summary::-webkit-details-marker,
+.laws-raw-receipt-disclosure
+> summary::-webkit-details-marker {
+  display: none;
+}
+
+.laws-foundation
+> summary > span:first-child,
+.laws-runtime-evidence
+> summary > span:first-child {
+  display: grid;
+  gap: 0.12rem;
+}
+
+.laws-foundation
+> summary strong,
+.laws-runtime-evidence
+> summary strong {
+  color: var(--laws-gold-bright);
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+  font-size: clamp(1.18rem, 2.3vw, 1.65rem);
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.laws-foundation
+> summary > span:first-child {
+  color: var(--laws-muted-strong);
+  font-size: 0.8rem;
+}
+
+.laws-foundation
+> summary > span:last-child,
+.laws-runtime-evidence
+> summary > span:last-child {
+  display: grid;
+  width: 2rem;
+  height: 2rem;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 1px solid var(--laws-border-cool);
+  border-radius: 50%;
+  color: var(--laws-cyan);
+  background: var(--laws-cyan-faint);
+  font-size: 1rem;
+  transition:
+    transform var(--laws-transition-fast);
+}
+
+.laws-foundation[open]
+> summary > span:last-child,
+.laws-runtime-evidence[open]
+> summary > span:last-child {
+  transform: rotate(45deg);
+}
+
+.laws-foundation__body {
+  display: grid;
+  gap: 0.9rem;
+  padding: 0 1rem 1rem;
+  border-top: 1px solid var(--laws-rule);
+}
+
+.laws-foundation__answer {
+  max-width: var(--laws-reading-width);
+  margin: 0;
+  padding-top: 1rem;
+  color: var(--laws-muted-strong);
+}
+
+.laws-foundation__deeper,
+.laws-evidence-disclosure {
+  overflow: clip;
+  border: 1px solid rgba(117, 233, 255, 0.14);
+  border-radius: var(--laws-radius-sm);
+  background: rgba(117, 233, 255, 0.025);
+}
+
+.laws-foundation__deeper > summary,
+.laws-runtime-evidence__group > summary,
+.laws-raw-receipt-disclosure > summary,
+.laws-evidence-disclosure > summary {
+  display: flex;
+  min-height: 3rem;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 0.85rem;
+  color: var(--laws-cyan-soft);
+  list-style: none;
+  font-size: 0.7rem;
+  font-weight: 850;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.laws-foundation__deeper
+> summary::after,
+.laws-runtime-evidence__group
+> summary::after,
+.laws-evidence-disclosure
+> summary::after {
+  content: "+";
+  color: var(--laws-gold-bright);
+  font-size: 1rem;
+  transition:
+    transform var(--laws-transition-fast);
+}
+
+.laws-foundation__deeper[open]
+> summary::after,
+.laws-runtime-evidence__group[open]
+> summary::after,
+.laws-evidence-disclosure[open]
+> summary::after {
+  transform: rotate(45deg);
+}
+
+.laws-foundation__deeper
+> :not(summary),
+.laws-evidence-disclosure
+> :not(summary) {
+  margin-right: 0.85rem;
+  margin-left: 0.85rem;
+}
+
+.laws-foundation-return {
+  justify-self: start;
+  padding: 0.45rem 0;
+  color: var(--laws-gold-bright);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.25rem;
+  text-transform: uppercase;
+}
+
+.laws-foundation-return:hover {
+  color: #fff0bd;
+}
+
+/* ================================================================
+   18. LAW CONTENT CARDS
+   ================================================================ */
+
+.laws-law-content-grid {
+  display: grid;
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.laws-law-content-card {
+  display: grid;
+  gap: 0.85rem;
+  min-width: 0;
+  padding: 1rem;
+  border: 1px solid rgba(117, 233, 255, 0.16);
+  border-radius: var(--laws-radius-md);
+  background:
+    radial-gradient(
+      circle at 100% 0,
+      rgba(117, 233, 255, 0.045),
+      transparent 13rem
+    ),
+    rgba(255, 255, 255, 0.022);
+}
+
+.laws-law-content-card header {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.laws-law-content-card header span {
+  color: var(--laws-gold-bright);
+  font-size: 0.62rem;
+  font-weight: 850;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.laws-law-content-card header h3 {
+  margin-bottom: 0;
+  font-size: clamp(1.25rem, 2.2vw, 1.8rem);
+}
+
+.laws-law-content-card p {
+  margin-bottom: 0;
+  color: var(--laws-muted-strong);
+}
+
+.laws-dual-layer {
+  display: grid;
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+  gap: 0.65rem;
+}
+
+.laws-human-layer,
+.laws-engineering-layer,
+.laws-evidence-layer {
+  display: grid;
+  gap: 0.45rem;
+  min-width: 0;
+  padding: 0.8rem;
+  border-radius: var(--laws-radius-sm);
+}
+
+.laws-human-layer {
+  border: 1px solid rgba(245, 213, 130, 0.22);
+  background: rgba(245, 213, 130, 0.045);
+}
+
+.laws-engineering-layer {
+  border: 1px solid rgba(117, 233, 255, 0.2);
+  background: rgba(117, 233, 255, 0.04);
+}
+
+.laws-evidence-layer {
+  border: 1px solid rgba(141, 230, 176, 0.2);
+  background: rgba(141, 230, 176, 0.04);
+}
+
+.laws-human-layer strong,
+.laws-engineering-layer strong,
+.laws-evidence-layer strong {
+  color: var(--laws-cream);
+}
+
+.laws-human-layer p,
+.laws-engineering-layer p,
+.laws-evidence-layer p {
+  color: var(--laws-muted-strong);
+  font-size: 0.86rem;
+}
+
+.laws-audit-question {
+  padding: 0.75rem 0.85rem;
+  border: 1px solid rgba(141, 216, 255, 0.18);
+  border-radius: 0.9rem;
+  color: rgba(235, 246, 255, 0.92);
+  background: rgba(141, 216, 255, 0.055);
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.laws-audit-question span {
+  display: block;
+  margin-bottom: 0.2rem;
+  color: var(--laws-gold-bright);
+  font-size: 0.66rem;
+  font-weight: 950;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/* ================================================================
+   19. EVIDENCE SECTION
+   ================================================================ */
+
+.laws-evidence-grid {
+  display: grid;
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.laws-evidence-card {
+  display: grid;
+  gap: 0.7rem;
+  min-width: 0;
+  padding: 1rem;
+}
+
+.laws-evidence-card h3 {
+  margin-bottom: 0;
+  color: var(--laws-green);
+  font-size: clamp(1.15rem, 2vw, 1.55rem);
+}
+
+.laws-evidence-card p {
+  margin-bottom: 0;
+  color: var(--laws-muted-strong);
+  font-size: 0.9rem;
+}
+
+.laws-evidence-card dl {
+  display: grid;
+  gap: 0.55rem;
+  margin: 0;
+}
+
+.laws-evidence-card dl > div {
+  min-width: 0;
+  padding: 0.65rem;
+  border: 1px solid rgba(255, 255, 255, 0.065);
+  border-radius: 0.65rem;
+  background: rgba(255, 255, 255, 0.022);
+}
+
+.laws-evidence-card dt {
+  margin-bottom: 0.2rem;
+  color: var(--laws-cyan);
+  font-size: 0.55rem;
+  font-weight: 850;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.laws-evidence-card dd {
+  margin: 0;
+  color: var(--laws-muted-strong);
+  font-size: 0.78rem;
+  overflow-wrap: anywhere;
+}
+
+.laws-evidence-boundary {
+  padding: 0.9rem 1rem;
+  border-left: 0.22rem solid var(--laws-green);
+  color: var(--laws-cream);
+  background: var(--laws-green-faint);
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+  font-size: clamp(1rem, 2vw, 1.3rem);
+}
+
+/* ================================================================
+   20. FORMAL EQUATIONS
+   ================================================================ */
+
+.laws-equation-grid {
+  display: grid;
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.laws-equation-grid > :only-child {
+  grid-column: 1 / -1;
+}
+
+.laws-equation-card {
+  position: relative;
+  min-width: 0;
+  margin: 0;
+  padding: 1rem;
+  border: 1px solid rgba(117, 233, 255, 0.22);
+  border-radius: var(--laws-radius-sm);
+  background:
+    radial-gradient(
+      circle at 100% 0,
+      rgba(117, 233, 255, 0.075),
+      transparent 14rem
+    ),
+    linear-gradient(
+      145deg,
+      rgba(8, 18, 34, 0.9),
+      rgba(5, 8, 18, 0.94)
+    );
+  box-shadow:
+    inset 0.18rem 0 0 rgba(117, 233, 255, 0.36),
+    0 0 1.8rem rgba(117, 233, 255, 0.045);
+}
+
+.laws-equation-card__label {
+  margin-bottom: 0.65rem;
+  color: var(--laws-cyan);
+}
+
+.laws-equation-card pre {
+  max-width: 100%;
+  margin-bottom: 0.75rem;
+  overflow-x: auto;
+  color: var(--laws-cream);
+  background: transparent;
+  font-family:
+    "SFMono-Regular",
+    Consolas,
+    "Liberation Mono",
+    Menlo,
+    monospace;
+  font-size: clamp(0.72rem, 1.4vw, 0.94rem);
+  line-height: 1.65;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.laws-equation-card code {
+  color: inherit;
+  font: inherit;
+}
+
+.laws-equation-card p {
+  margin-bottom: 0;
+  color: var(--laws-muted);
+  font-size: 0.79rem;
+}
+
+/* ================================================================
+   21. METRICS AND OWNERSHIP
+   ================================================================ */
+
+.laws-metric-grid {
+  display: grid;
+  grid-template-columns:
+    repeat(4, minmax(0, 1fr));
+  gap: 0.65rem;
+}
+
+.laws-metric-grid article {
+  display: grid;
+  min-height: 7rem;
+  align-content: space-between;
+  gap: 0.6rem;
+  padding: 0.9rem;
+  border: 1px solid rgba(182, 151, 255, 0.2);
+  border-radius: var(--laws-radius-sm);
+  background:
+    linear-gradient(
+      145deg,
+      rgba(182, 151, 255, 0.075),
+      rgba(255, 255, 255, 0.015)
+    );
+}
+
+.laws-metric-grid span {
+  color: var(--laws-muted);
+  font-size: 0.66rem;
+  font-weight: 750;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.laws-metric-grid strong {
+  color: var(--laws-violet-soft);
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+  font-size: clamp(1.8rem, 4vw, 3.1rem);
+  font-weight: 600;
+  line-height: 1;
+}
+
+.laws-ownership-chain {
+  display: grid;
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+  gap: 0.65rem;
+}
+
+.laws-ownership-chain article {
+  padding: 0.85rem;
+  border: 1px solid rgba(117, 233, 255, 0.14);
+  border-radius: var(--laws-radius-sm);
+  background: rgba(117, 233, 255, 0.028);
+}
+
+.laws-ownership-chain strong {
+  display: block;
+  margin-bottom: 0.35rem;
+  color: var(--laws-cyan-soft);
+}
+
+.laws-ownership-chain p {
+  margin-bottom: 0;
+  color: var(--laws-muted);
+  font-size: 0.75rem;
+}
+
+/* ================================================================
+   22. SECONDARY RUNTIME EVIDENCE
+   ================================================================ */
+
+.laws-runtime-evidence {
+  margin-top: 0.4rem;
+}
+
+.laws-runtime-evidence > summary {
+  min-height: 4.2rem;
+}
+
+.laws-runtime-evidence
+> summary strong {
+  font-size: 1.12rem;
+}
+
+.laws-runtime-evidence
+> summary > span:first-child {
+  color: var(--laws-muted);
+  font-size: 0.74rem;
+}
+
+.laws-runtime-evidence__body {
+  display: grid;
+  gap: 0.65rem;
+  padding: 0.8rem;
+  border-top: 1px solid var(--laws-rule);
+}
+
+.laws-runtime-evidence__group {
+  background:
+    linear-gradient(
+      180deg,
+      rgba(12, 18, 34, 0.82),
+      rgba(5, 9, 20, 0.88)
+    );
+}
+
+.laws-runtime-evidence__group
+> :not(summary) {
+  margin-right: 0.85rem;
+  margin-left: 0.85rem;
+}
+
+.laws-runtime-evidence__group
+> .laws-equation-grid,
+.laws-runtime-evidence__group
+> .laws-ownership-chain {
+  padding-block: 0.85rem;
+}
+
+.laws-runtime-evidence__group > p {
+  padding-top: 0.85rem;
+  color: var(--laws-muted-strong);
+}
+
+/* ================================================================
+   23. RECEIPT ACCORDION
+   ================================================================ */
+
+.laws-receipt-accordion {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.laws-receipt-record {
+  overflow: clip;
+  border: 1px solid rgba(255, 255, 255, 0.085);
+  border-radius: var(--laws-radius-sm);
+  background:
+    linear-gradient(
+      180deg,
+      rgba(18, 25, 45, 0.72),
+      rgba(7, 11, 23, 0.8)
+    );
+}
+
+.laws-receipt-record[open] {
+  border-color: rgba(117, 233, 255, 0.28);
+  box-shadow:
+    inset 0.18rem 0 0 rgba(117, 233, 255, 0.32),
+    0 0.8rem 2rem rgba(0, 0, 0, 0.2);
+}
+
+.laws-receipt-record > summary {
+  display: flex;
+  min-height: 4rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem 0.9rem;
+  list-style: none;
+  cursor: pointer;
+}
+
+.laws-receipt-record
+> summary::-webkit-details-marker {
+  display: none;
+}
+
+.laws-receipt-record
+> summary > span:first-child {
+  display: grid;
+  min-width: 0;
+}
+
+.laws-receipt-record
+> summary strong {
+  overflow: hidden;
+  color: var(--laws-cream);
+  text-overflow: ellipsis;
+}
+
+.laws-receipt-record
+> summary small {
+  color: var(--laws-muted);
+  font-size: 0.7rem;
+}
+
+.laws-receipt-summary__status {
+  flex: 0 0 auto;
+  padding: 0.34rem 0.55rem;
+  border: 1px solid rgba(169, 176, 192, 0.28);
+  border-radius: 999px;
+  color: var(--laws-muted-strong);
+  background: rgba(169, 176, 192, 0.07);
+  font-size: 0.58rem;
+  font-weight: 850;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+[data-laws-receipt-status="available"],
+[data-laws-receipt-status="ready"],
+[data-laws-receipt-status="running"] {
+  border-color: rgba(141, 230, 176, 0.42);
+  color: var(--laws-green);
+  background: rgba(141, 230, 176, 0.08);
+}
+
+[data-laws-receipt-status="suspended"] {
+  border-color: rgba(255, 210, 122, 0.42);
+  color: var(--laws-warning);
+  background: rgba(255, 210, 122, 0.08);
+}
+
+[data-laws-receipt-status="held"],
+[data-laws-receipt-status="failed"],
+[data-laws-receipt-status="destroyed"] {
+  border-color: rgba(255, 141, 159, 0.42);
+  color: var(--laws-red);
+  background: rgba(255, 141, 159, 0.08);
+}
+
+.laws-receipt-record dl {
+  display: grid;
+  grid-template-columns:
+    repeat(5, minmax(0, 1fr));
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0.8rem;
+  border-top: 1px solid var(--laws-rule);
+}
+
+.laws-receipt-record dl > div {
+  min-width: 0;
+  padding: 0.65rem;
+  border: 1px solid rgba(255, 255, 255, 0.055);
+  border-radius: 0.6rem;
+  background: rgba(255, 255, 255, 0.018);
+}
+
+.laws-receipt-record dt {
+  margin-bottom: 0.2rem;
+  color: var(--laws-cyan);
+  font-size: 0.55rem;
+  font-weight: 850;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.laws-receipt-record dd {
+  margin: 0;
+  color: var(--laws-muted-strong);
+  font-size: 0.69rem;
+  overflow-wrap: anywhere;
+}
+
+.laws-raw-receipt-disclosure {
+  margin-bottom: 0.85rem;
+}
+
+.laws-raw-receipt {
+  max-height: 28rem;
+  overflow: auto;
+  margin-bottom: 1rem !important;
+  padding: 1rem;
+  border: 1px solid rgba(117, 233, 255, 0.16);
+  border-radius: var(--laws-radius-sm);
+  color: var(--laws-cyan-soft);
+  background: #030711;
+  font-family:
+    "SFMono-Regular",
+    Consolas,
+    "Liberation Mono",
+    Menlo,
+    monospace;
+  font-size: 0.7rem;
+  line-height: 1.55;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* ================================================================
+   24. FRONT HOST
+   ================================================================ */
+
+.laws-front-host {
+  position: fixed;
+  z-index: 50;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* ================================================================
+   25. FOOTER
+   ================================================================ */
+
+.laws-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: var(--laws-space-6);
+  padding: 1.1rem 0.2rem 0.5rem;
+  border-top: 1px solid rgba(224, 184, 91, 0.18);
+}
+
+.laws-footer > div {
+  display: grid;
+  gap: 0.1rem;
+}
+
+.laws-footer strong {
+  color: var(--laws-cream);
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+  font-weight: 600;
+}
+
+.laws-footer span {
+  color: var(--laws-muted);
+  font-size: 0.74rem;
+}
+
+.laws-footer nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.35rem;
+}
+
+.laws-footer a {
+  padding: 0.42rem 0.58rem;
+  border-radius: 999px;
+  color: var(--laws-muted-strong);
+  font-size: 0.68rem;
+  font-weight: 750;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.laws-footer a:hover {
+  color: var(--laws-gold-bright);
+  background: var(--laws-gold-faint);
+}
+
+/* ================================================================
+   26. LARGE TABLET
+   ================================================================ */
+
+@media (max-width: 72rem) {
+  .laws-controller-panel,
+  .laws-panel,
+  [data-laws-panel] {
+    grid-template-columns:
+      minmax(11rem, 0.7fr)
+      minmax(0, 1.3fr);
+  }
+
+  .laws-panel__actions {
+    grid-column: 1 / -1;
+    justify-content: flex-start;
+  }
+
+  .laws-panel-detail-record dl,
+  .laws-panel__facts {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+  .laws-receipt-record dl {
+    grid-template-columns:
+      repeat(3, minmax(0, 1fr));
+  }
+
+  .laws-evidence-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+  .laws-metric-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* ================================================================
+   27. TABLET
+   ================================================================ */
+
+@media (max-width: 58rem) {
+  .laws-shell {
+    width: min(
+      calc(100% - 1.25rem),
+      var(--laws-page-width)
+    );
+  }
+
+  .laws-threshold__frame {
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+
+  .laws-threshold__signal {
+    max-width: 34rem;
+  }
+
+  .laws-orbit__heading {
+    grid-template-columns: 1fr;
+    align-items: start;
+    gap: 0.7rem;
+  }
+
+  .laws-controller-panel,
+  .laws-panel,
+  [data-laws-panel] {
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+
+  .laws-panel__actions {
+    grid-column: auto;
+    justify-content: flex-start;
+  }
+
+  .laws-panel__technical {
+    grid-column: auto;
+  }
+
+  .laws-equation-grid,
+  .laws-ownership-chain,
+  .laws-layer-grid,
+  .laws-dual-layer {
+    grid-template-columns: 1fr;
+  }
+
+  .laws-evidence-grid,
+  .laws-law-content-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .laws-receipt-record dl {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* ================================================================
+   28. MOBILE
+   ================================================================ */
+
+@media (max-width: 42rem) {
+  :root {
+    --laws-space-7: 2.2rem;
+    --laws-space-8: 3rem;
+
+    --laws-center-size:
+      clamp(10.6rem, 48vw, 14.8rem);
+
+    --laws-compass-core-size:
+      clamp(7.4rem, 36vw, 11.2rem);
+  }
+
+  body {
+    font-size: 0.96rem;
+  }
+
+  body::before {
+    opacity: 0.58;
+  }
+
+  #laws-cosmos-canvas {
+    opacity: 0.62;
+  }
+
+  .laws-shell {
+    width: min(
+      calc(100% - 0.8rem),
+      var(--laws-page-width)
+    );
+    padding-bottom: 1.4rem;
+  }
+
+  .laws-topbar {
+    min-height: 3.85rem;
+    margin-top: 0.4rem;
+    padding: 0.5rem 0.55rem;
+    border-radius: 1rem;
+  }
+
+  .brand {
+    gap: 0.55rem;
+  }
+
+  .brand-mark {
+    width: 2.2rem;
+    height: 2.2rem;
+  }
+
+  .brand-copy > span {
+    display: none;
+  }
+
+  .brand-copy strong {
+    font-size: 0.92rem;
+  }
+
+  .laws-nav {
+    gap: 0.05rem;
+  }
+
+  .laws-nav a {
+    padding: 0.4rem 0.42rem;
+    font-size: 0.6rem;
+  }
+
+  .laws-nav a:nth-child(2) {
+    display: none;
+  }
+
+  main {
+    gap: 2.2rem;
+    padding-top: 0.35rem;
+  }
+
+  h1 {
+    max-width: 10ch;
+    margin-bottom: 0.6rem;
+    font-size: clamp(2.65rem, 13.5vw, 4.5rem);
+    line-height: 0.98;
+  }
+
+  h2 {
+    font-size: clamp(2rem, 10.5vw, 3.3rem);
+  }
+
+  .laws-threshold {
+    padding-block: 1rem 0.2rem;
+  }
+
+  .laws-threshold__frame {
+    gap: 1rem;
+    padding: 1rem 0.65rem 1.1rem;
+  }
+
+  .laws-gate-badge {
+    margin-bottom: 0.75rem;
+    font-size: 0.62rem;
+  }
+
+  .laws-subtitle {
+    margin-bottom: 0.6rem;
+    font-size: 1.08rem;
+  }
+
+  .laws-threshold__lead {
+    margin-bottom: 1rem;
+    font-size: 0.93rem;
+  }
+
+  .laws-threshold__actions {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .laws-threshold__actions .button {
+    width: 100%;
+  }
+
+  .laws-threshold__signal {
+    padding: 0.9rem;
+  }
+
+  .laws-threshold__signal strong {
+    font-size: 1.18rem;
+  }
+
+  .laws-orbit,
+  .laws-foundations,
+  .laws-evidence,
+  .laws-receipts {
+    padding: 0.62rem;
+    border-radius: 1.2rem;
+  }
+
+  .laws-orbit__heading {
+    padding: 0.35rem 0.25rem;
+  }
+
+  .laws-orbit__heading p {
+    font-size: 0.83rem;
+  }
+
+  .laws-orbit__field,
+  [data-laws-scene-field] {
+    min-height: min(124vw, 31rem);
+    border-radius: 0.95rem;
+  }
+
+  .laws-compass-control,
+  [data-upstream-compass-control],
+  [data-laws-compass-control],
+  [data-laws-full-center-hit-target="true"] {
+    inset: -5%;
+    padding:
+      0
+      15%
+      19%;
+  }
+
+  .laws-compass-control::before,
+  [data-upstream-compass-control]::before,
+  [data-laws-compass-control]::before,
+  [data-laws-full-center-hit-target="true"]::before {
+    right: 15%;
+    bottom: 15%;
+    left: 15%;
+    min-height: 2.05rem;
+  }
+
+  .laws-compass-control__label {
+    font-size: 0.68rem;
+  }
+
+  .laws-compass-control__instruction {
+    font-size: 0.46rem;
+  }
+
+  .laws-category {
+    width: clamp(2.4rem, 10vw, 3.2rem);
+  }
+
+  .laws-law {
+    width: clamp(1.3rem, 5.8vw, 2rem);
+  }
+
+  [data-direction="flow"][data-laws-category] {
+    top: 8%;
+  }
+
+  [data-direction="integrity"][data-laws-category] {
+    right: 7%;
+  }
+
+  [data-direction="reality"][data-laws-category] {
+    bottom: 8%;
+  }
+
+  [data-direction="structure"][data-laws-category] {
+    left: 7%;
+  }
+
+  .laws-controller-panel,
+  .laws-panel,
+  [data-laws-panel] {
+    gap: 0.72rem;
+    padding: 0.82rem;
+    border-radius: 1rem;
+  }
+
+  .laws-panel__header {
+    align-items: flex-start;
+  }
+
+  .laws-panel__state,
+  [data-laws-panel-selection-state] {
+    font-size: 0.52rem;
+  }
+
+  .laws-panel h3,
+  [data-laws-panel-title] {
+    font-size: 1.45rem;
+  }
+
+  .laws-panel__purpose,
+  [data-laws-panel-purpose] {
+    font-size: 0.86rem;
+  }
+
+  .laws-panel__guidance,
+  [data-laws-guidance] {
+    font-size: 0.73rem;
+  }
+
+  .laws-panel-record {
+    padding: 0.7rem;
+  }
+
+  .laws-panel-record__purpose {
+    font-size: 0.8rem;
+  }
+
+  .laws-panel-record__relationship {
+    font-size: 0.72rem;
+  }
+
+  .laws-panel__legend {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+    gap: 0.38rem;
+  }
+
+  .laws-panel__actions {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .laws-panel__actions .button {
+    width: 100%;
+  }
+
+  .laws-panel-detail-record dl,
+  .laws-panel__facts {
+    grid-template-columns: 1fr;
+  }
+
+  .laws-panel-detail-record dl > div,
+  .laws-panel__facts > div {
+    padding: 0.62rem;
+  }
+
+  .laws-foundations,
+  .laws-evidence,
+  .laws-receipts {
+    gap: 0.75rem;
+  }
+
+  .laws-foundations__heading,
+  .laws-evidence__heading,
+  .laws-receipts__heading {
+    padding: 0.35rem 0.25rem;
+  }
+
+  .laws-foundations__heading h2,
+  .laws-evidence__heading h2,
+  .laws-receipts__heading h2 {
+    max-width: 12ch;
+  }
+
+  .laws-foundation > summary,
+  .laws-runtime-evidence > summary {
+    min-height: 3.8rem;
+    padding: 0.8rem;
+  }
+
+  .laws-foundation
+  > summary strong {
+    font-size: 1.05rem;
+  }
+
+  .laws-foundation__body {
+    padding: 0 0.7rem 0.7rem;
+  }
+
+  .laws-equation-card {
+    padding: 0.82rem;
+  }
+
+  .laws-equation-card pre {
+    font-size: 0.68rem;
+  }
+
+  .laws-metric-grid,
+  .laws-ownership-chain,
+  .laws-receipt-record dl,
+  .laws-evidence-grid,
+  .laws-law-content-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .laws-metric-grid article {
+    min-height: 5.7rem;
+  }
+
+  .laws-receipt-record > summary {
+    min-height: 3.65rem;
+    padding: 0.65rem;
+  }
+
+  .laws-receipt-record
+  > summary small {
+    font-size: 0.62rem;
+  }
+
+  .laws-receipt-summary__status {
+    font-size: 0.5rem;
+  }
+
+  .laws-footer {
+    align-items: flex-start;
+    flex-direction: column;
+    padding-inline: 0.3rem;
+  }
+
+  .laws-footer nav {
+    justify-content: flex-start;
+  }
+}
+
+/* ================================================================
+   29. VERY SMALL VIEWPORTS
+   ================================================================ */
+
+@media (max-width: 25rem) {
+  :root {
+    --laws-center-size:
+      clamp(9.5rem, 53vw, 12.75rem);
+
+    --laws-compass-core-size:
+      clamp(6.6rem, 40vw, 9.6rem);
+  }
+
+  .laws-shell {
+    width: calc(100% - 0.45rem);
+  }
+
+  .laws-nav a:last-child {
+    display: none;
+  }
+
+  .laws-panel__legend {
+    grid-template-columns: 1fr;
+  }
+
+  .laws-compass-control,
+  [data-upstream-compass-control],
+  [data-laws-compass-control],
+  [data-laws-full-center-hit-target="true"] {
+    inset: -4%;
+  }
+
+  .laws-compass-control__label {
+    font-size: 0.62rem;
+  }
+
+  .laws-compass-control__instruction {
+    font-size: 0.42rem;
+  }
+}
+
+/* ================================================================
+   30. REDUCED MOTION
+   ================================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+
+  .laws-category:hover,
+  .laws-law:hover,
+  .button:hover:not(:disabled) {
+    transform: none;
+  }
+}
+
+[data-laws-root][data-reduced-motion="true"] *,
+[data-laws-root][data-laws-reduced-motion="true"] * {
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
+}
+
+/* ================================================================
+   31. REDUCED TRANSPARENCY
+   ================================================================ */
+
+@media (prefers-reduced-transparency: reduce) {
+  .laws-topbar,
+  .laws-orbit,
+  .laws-controller-panel,
+  .laws-panel,
+  [data-laws-panel],
+  .laws-foundations,
+  .laws-evidence,
+  .laws-receipts {
+    background-color: var(--laws-ink-1);
+    backdrop-filter: none;
+  }
+}
+
+/* ================================================================
+   32. FORCED COLORS
+   ================================================================ */
+
+@media (forced-colors: active) {
+  body,
+  .laws-topbar,
+  .laws-orbit,
+  .laws-controller-panel,
+  .laws-panel,
+  [data-laws-panel],
+  .laws-foundations,
+  .laws-evidence,
+  .laws-receipts,
+  .laws-foundation,
+  .laws-runtime-evidence,
+  .laws-runtime-evidence__group,
+  .laws-receipt-record,
+  .laws-equation-card {
+    color: CanvasText;
+    background: Canvas;
+    box-shadow: none;
+  }
+
+  .button,
+  .laws-category,
+  .laws-law,
+  .laws-compass-control,
+  [data-upstream-compass-control],
+  [data-laws-compass-control],
+  summary {
+    forced-color-adjust: auto;
+  }
+
+  .laws-category::before,
+  .laws-law::before {
+    border: 2px solid ButtonText;
+    background: ButtonFace;
+    box-shadow: none;
+    filter: none;
+  }
+}
+
+/* ================================================================
+   33. PRINT
+   ================================================================ */
+
+@media print {
+  body {
+    color: #111;
+    background: #fff;
+  }
+
+  body::before,
+  body::after,
+  #laws-cosmos-layer,
+  [data-laws-cosmos-layer],
+  .laws-orbit__field,
+  [data-laws-scene-field],
+  .laws-front-host,
+  .laws-topbar,
+  .laws-footer {
+    display: none !important;
+  }
+
+  .laws-shell {
+    width: 100%;
+  }
+
+  .laws-threshold,
+  .laws-orbit,
+  .laws-foundations,
+  .laws-evidence,
+  .laws-receipts,
+  .laws-controller-panel,
+  .laws-panel,
+  [data-laws-panel],
+  .laws-foundation,
+  .laws-runtime-evidence,
+  .laws-runtime-evidence__group {
+    color: #111;
+    background: #fff;
+    border: 1px solid #777;
+    box-shadow: none;
+  }
+
+  .laws-foundation,
+  .laws-runtime-evidence,
+  .laws-runtime-evidence__group {
+    break-inside: avoid;
+    margin-bottom: 0.75rem;
+  }
+
+  .laws-foundation:not([open])
+  > :not(summary),
+  .laws-runtime-evidence:not([open])
+  > :not(summary),
+  .laws-runtime-evidence__group:not([open])
+  > :not(summary),
+  .laws-receipt-record:not([open])
+  > :not(summary) {
+    display: block;
+  }
+
+  .laws-panel-record,
+  .laws-panel-detail-record {
+    display: none !important;
+  }
+
+  [data-laws-root][data-held="true"]
+  [data-laws-panel-record="held"],
+  [data-laws-root][data-held="true"]
+  [data-laws-panel-detail-record="held"] {
+    display: block !important;
+  }
+
+  [data-laws-root][data-held="false"][data-compass-selected="true"]
+  [data-laws-panel-record="compass"],
+  [data-laws-root][data-held="false"][data-compass-selected="true"]
+  [data-laws-panel-detail-record="compass"] {
+    display: block !important;
+  }
+
+  [data-laws-root][data-held="false"][data-compass-selected="false"][data-selected-law=""][data-selected-direction=""]
+  [data-laws-panel-record="idle"],
+  [data-laws-root][data-held="false"][data-compass-selected="false"][data-selected-law=""][data-selected-direction=""]
+  [data-laws-panel-detail-record="idle"] {
+    display: block !important;
+  }
+}
+
+/* ================================================================
+   END RECEIPT
+
+   CONTRACT:
+   LAWS_COMPASS_HUMAN_ENGINEERING_EVIDENCE_CSS_TNT_v1_0_SHOWROOM_DERIVATIVE_STAGE
+
+   TARGET:
+   /laws/index.css
+
+   DERIVATIVE VISUAL SOURCE:
+   /showroom/index.css
+   SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v14_0_COSMOS_COMPLEMENTARY_STAGE_RENEWAL
+
+   CONTROLLER COMPATIBILITY:
+   /laws/index.controller.js
+   DGB_LAWS_CONTROLLER
+   1.0.0-law-compass-controller-authority
+
+   PRIMARY CHANGES:
+   - Showroom selectors converted to Laws selectors;
+   - four-cardinal stage retained as Laws category compass;
+   - category model bound to Flow, Integrity, Reality, Structure;
+   - four-law clusters supported through [data-laws-law];
+   - fixed Main Compass semantic control supported through [data-upstream-compass-control];
+   - controller panel styling bound to [data-laws-panel] and controller dataset fields;
+   - Human / Practical, Engineering, Evidence, and Receipt layer styles added;
+   - static Cosmos-compatible atmosphere installed;
+   - no repeated tiled CSS star grid added;
+   - no law doctrine added through CSS content;
+   - no JavaScript behavior added.
+
+   COSMOS RELATIONSHIP:
+   - /laws/index.cosmos.js remains future dynamic decorative atmosphere authority.
+   - CSS does not require Cosmos for readability or layout.
+   - CSS does not grant Cosmos navigation, controller, compositor, or interaction authority.
+
+   ROUTE AUTHORITY:
+   CSS_ROUTE_AUTHORITY = FALSE
+
+   CONTROLLER_STATE_AUTHORITY:
+   CSS_CONTROLLER_STATE_AUTHORITY = FALSE
+
+   LAW_CONTENT_AUTHORITY:
+   CSS_LAW_CONTENT_AUTHORITY = FALSE
+
+   EVIDENCE_CLAIM_AUTHORITY:
+   CSS_EVIDENCE_CLAIM_AUTHORITY = FALSE
+
+   RUNTIME VALIDATION:
+   NOT RUN
+
+   VISUAL VALIDATION:
+   NOT RUN
+
+   PRODUCTION AUTHORIZATION:
+   FALSE
+
+   DEPLOYMENT AUTHORIZATION:
+   FALSE
+   ================================================================ */

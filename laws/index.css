@@ -1,27 +1,34 @@
 /* TARGET FILE: /laws/index.css */
 /* COMPLETE REPLACEMENT */
-/* LAWS_COMPASS_LANE_B_INDEX_DERIVED_CSS_TNT_v2_1_0 */
+/* LAWS_COMPASS_LANE_B_CONTEXT_AND_EMPIRICAL_SUPPORT_CSS_TNT_v2_2_0 */
 
 /*
   Contract:
-  LAWS_COMPASS_LANE_B_INDEX_DERIVED_CSS_TNT_v2_1_0
+  LAWS_COMPASS_LANE_B_CONTEXT_AND_EMPIRICAL_SUPPORT_CSS_TNT_v2_2_0
 
   Pairing HTML:
-  LAWS_COMPASS_LANE_B_INDEX_DERIVED_HTML_TNT_v2_1_0
+  LAWS_COMPASS_LANE_B_CONTEXT_AND_EMPIRICAL_SUPPORT_HTML_TNT_v2_2_0
+
+  Previous CSS contract:
+  LAWS_COMPASS_LANE_B_INDEX_DERIVED_CSS_TNT_v2_1_0
 
   Purpose:
-  Index-derived Laws visual system.
+  Context-restored, index-derived Laws visual system.
 
   Required result:
   - compact page composition
   - non-linear disclosure/discovery system
   - visible first-paint compass category stars
   - Flow north, Integrity east, Reality south, Structure west
-  - fixed planetary center
+  - Showroom/Audralia WebGL center planet mount
+  - no CSS-generated fake center planet
   - no visible compass/star label bubbles
   - semantic controls preserved as hit targets
   - law stars visible only when their family is active
   - compositor/crystals/interactions compatible
+  - expanded formula, empirical-support, applied-system, route-maturity,
+    source-custody, and claim-boundary sections
+  - Frontier link-out cards for heavier applied-system lanes
   - Cosmos remains decorative only
 
   Runtime status:
@@ -65,6 +72,7 @@
   --laws-violet: #b48cff;
   --laws-red: #ff7474;
   --laws-warm: #ff9d63;
+  --laws-green: #8ff0b2;
 
   --laws-line: rgba(255, 228, 155, 0.17);
   --laws-line-strong: rgba(255, 228, 155, 0.31);
@@ -80,12 +88,12 @@
   --laws-radius-xl: 1.8rem;
   --laws-radius-full: 999rem;
 
-  --laws-shell-max: 1160px;
+  --laws-shell-max: 1180px;
   --laws-page-pad: clamp(1rem, 3vw, 2.25rem);
 
-  --laws-center-size: clamp(8.25rem, 18vw, 13.25rem);
-  --laws-category-size: clamp(3.1rem, 6vw, 5.15rem);
-  --laws-law-size: clamp(2rem, 3.8vw, 3.15rem);
+  --laws-center-size: clamp(8.6rem, 18vw, 13.75rem);
+  --laws-category-size: clamp(3.05rem, 5.7vw, 4.95rem);
+  --laws-law-size: clamp(1.95rem, 3.55vw, 2.95rem);
 
   --laws-shadow-deep:
     0 1.6rem 5.2rem rgba(0, 0, 0, 0.54),
@@ -343,7 +351,7 @@ img {
 .laws-threshold--compact {
   display: grid;
   gap: 0.75rem;
-  max-width: 66rem;
+  max-width: 70rem;
   padding: clamp(1rem, 2.5vw, 1.45rem);
   border: 1px solid rgba(255, 228, 155, 0.16);
   border-radius: var(--laws-radius-xl);
@@ -364,7 +372,7 @@ img {
 .laws-threshold__lead,
 .laws-orbit-intro p,
 .laws-closing p {
-  max-width: 62rem;
+  max-width: 68rem;
   margin: 0;
   color: var(--laws-ink-soft);
 }
@@ -422,7 +430,7 @@ img {
 
 .laws-value-deck {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 0.85rem;
 }
 
@@ -597,7 +605,7 @@ canvas[data-laws-compositor-layer="front"] {
 
 
 /* ============================================================
-   8. PLANETARY CENTER / COMPASS HIT TARGET
+   8. SHOWROOM / AUDRALIA CENTER PLANET
    ============================================================ */
 
 .laws-compass-layer,
@@ -617,72 +625,185 @@ canvas[data-laws-compositor-layer="front"] {
 [data-laws-compass-visual-mount] {
   position: absolute;
   z-index: 1;
-  inset: -8%;
+  inset: -10%;
   display: grid;
   place-items: center;
   pointer-events: none;
 }
 
-.laws-planetary-center {
-  position: relative;
-  display: block;
-  width: 100%;
-  aspect-ratio: 1;
+.laws-planetary-center,
+[data-laws-planet-mount] {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
   pointer-events: none;
 }
 
-.laws-planetary-center__body {
+.laws-planetary-center > .showroom-planet-root,
+[data-laws-planet-mount] > .showroom-planet-root {
   position: absolute;
-  z-index: 2;
-  inset: 17%;
-  border: 1px solid rgba(120, 233, 255, 0.23);
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  transform: translateZ(0);
+}
+
+.showroom-planet-root {
+  --showroom-planet-turn: 0deg;
+  --showroom-planet-cloud-turn: 0deg;
+  --showroom-planet-pulse: 0;
+
+  position: absolute;
+  inset: 0;
+  display: block;
+  pointer-events: none;
+}
+
+.showroom-planet-glow,
+.showroom-planet-orbit-line,
+.showroom-planet-shell,
+.showroom-planet-body,
+.showroom-planet-atmosphere,
+.showroom-planet-rim,
+.showroom-planet-terminator,
+.showroom-planet-shadow,
+.showroom-planet-meridian,
+.showroom-planet-fulcrum,
+.showroom-planet-axis,
+.showroom-planet-fallback {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.showroom-planet-glow {
   border-radius: 50%;
   background:
-    radial-gradient(circle at 39% 31%,
-      rgba(182, 238, 255, 0.9) 0%,
-      rgba(117, 190, 231, 0.55) 15%,
-      rgba(34, 70, 123, 0.74) 36%,
-      rgba(9, 16, 36, 0.98) 68%,
-      rgba(3, 5, 13, 1) 100%
+    radial-gradient(circle at 50% 50%,
+      rgba(120, 233, 255, 0.24),
+      rgba(120, 233, 255, 0.08) 38%,
+      transparent 72%
+    );
+  filter: blur(0.2rem);
+  opacity: 0.86;
+}
+
+.showroom-planet-orbit-line {
+  border: 1px solid rgba(255, 228, 155, 0.12);
+  border-radius: 50%;
+  transform: rotate(-17deg) scaleX(1.24) scaleY(0.44);
+  opacity: 0.76;
+}
+
+.showroom-planet-shell {
+  inset: 10.5%;
+  border-radius: 50%;
+  transform: translateZ(0);
+}
+
+.showroom-planet-body {
+  overflow: hidden;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 40% 32%,
+      rgba(182, 238, 255, 0.5),
+      rgba(30, 74, 124, 0.16) 36%,
+      rgba(4, 8, 18, 0.86) 72%
     );
   box-shadow:
-    inset -1rem -1.25rem 2.3rem rgba(0, 0, 0, 0.76),
-    inset 0.7rem 0.45rem 1.35rem rgba(190, 240, 255, 0.22),
-    0 0 1.35rem rgba(120, 233, 255, 0.26),
-    0 0 4rem rgba(120, 233, 255, 0.12),
-    0 0 5.2rem rgba(255, 228, 155, 0.08);
+    inset -1rem -1.2rem 2.2rem rgba(0, 0, 0, 0.72),
+    inset 0.65rem 0.42rem 1.25rem rgba(190, 240, 255, 0.18),
+    0 0 1.4rem rgba(120, 233, 255, 0.22),
+    0 0 3.8rem rgba(120, 233, 255, 0.12);
 }
 
-.laws-planetary-center__atmosphere {
-  position: absolute;
-  z-index: 1;
-  inset: 10%;
+.showroom-planet-canvas {
+  position: relative;
+  z-index: 2;
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.showroom-planet-atmosphere {
   border-radius: 50%;
   background:
-    radial-gradient(circle, rgba(120, 233, 255, 0.1), transparent 64%);
+    radial-gradient(circle at 50% 50%,
+      transparent 50%,
+      rgba(120, 233, 255, 0.16) 64%,
+      transparent 74%
+    );
   box-shadow:
-    0 0 2.4rem rgba(120, 233, 255, 0.14),
-    0 0 5.5rem rgba(120, 233, 255, 0.08);
+    0 0 1.5rem rgba(120, 233, 255, 0.18),
+    0 0 3.8rem rgba(120, 233, 255, 0.1);
+  opacity: 0.92;
 }
 
-.laws-planetary-center__ring {
-  position: absolute;
+.showroom-planet-rim {
   z-index: 3;
-  inset: 4%;
   border-radius: 50%;
-  border: 1px solid rgba(255, 228, 155, 0.12);
-  transform: rotate(-18deg) scaleX(1.18) scaleY(0.42);
   box-shadow:
-    0 0 1.3rem rgba(255, 228, 155, 0.09),
-    inset 0 0 1.6rem rgba(120, 233, 255, 0.055);
+    inset 0 0 0 1px rgba(120, 233, 255, 0.28),
+    inset 0 0 1.1rem rgba(120, 233, 255, 0.12);
 }
 
-.laws-planetary-center__ring--two {
-  inset: 0%;
-  z-index: 0;
-  border-color: rgba(120, 233, 255, 0.1);
-  transform: rotate(17deg) scaleX(1.32) scaleY(0.5);
+.showroom-planet-terminator {
+  z-index: 4;
+  border-radius: 50%;
+  background:
+    linear-gradient(115deg,
+      transparent 0 42%,
+      rgba(0, 0, 0, 0.22) 58%,
+      rgba(0, 0, 0, 0.54) 100%
+    );
+  mix-blend-mode: multiply;
   opacity: 0.72;
+}
+
+.showroom-planet-shadow {
+  z-index: 5;
+  border-radius: 50%;
+  box-shadow:
+    inset -1.4rem -1.2rem 2.2rem rgba(0, 0, 0, 0.56);
+}
+
+.showroom-planet-meridian {
+  z-index: 6;
+  border-radius: 50%;
+  border-left: 1px solid rgba(120, 233, 255, 0.08);
+  border-right: 1px solid rgba(255, 228, 155, 0.06);
+  transform: scaleX(0.34);
+  opacity: 0.55;
+}
+
+.showroom-planet-fulcrum {
+  z-index: 7;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 45% 38%,
+      rgba(255, 228, 155, 0.08),
+      transparent 32%
+    );
+}
+
+.showroom-planet-axis {
+  z-index: 8;
+  border-radius: 50%;
+  border-top: 1px solid rgba(120, 233, 255, 0.06);
+  border-bottom: 1px solid rgba(120, 233, 255, 0.05);
+  transform: rotate(-18deg) scaleY(0.46);
+  opacity: 0.6;
+}
+
+.showroom-planet-fallback {
+  display: none;
 }
 
 .laws-compass-control,
@@ -1264,7 +1385,7 @@ button:disabled,
 
 
 /* ============================================================
-   13. DISCOVERY / DROPDOWN SYSTEM
+   13. DISCOVERY / CONTEXT-RESTORED DROPDOWN SYSTEM
    ============================================================ */
 
 .laws-discovery {
@@ -1305,7 +1426,7 @@ button:disabled,
 
 .laws-discovery__item > p,
 .laws-discovery__item > .laws-equation-boundary {
-  max-width: 70rem;
+  max-width: 72rem;
   margin: 0;
   padding: 0 clamp(0.95rem, 2vw, 1.15rem) clamp(0.95rem, 2vw, 1.15rem);
   color: var(--laws-ink-soft);
@@ -1316,11 +1437,17 @@ button:disabled,
 }
 
 .laws-equation-card {
-  margin: 0 0.95rem 0.95rem;
+  margin: 0;
   padding: 0.9rem;
   border: 1px solid rgba(120, 233, 255, 0.14);
   border-radius: var(--laws-radius-md);
-  background: rgba(5, 9, 22, 0.72);
+  background:
+    radial-gradient(circle at 0 0, rgba(120, 233, 255, 0.07), transparent 13rem),
+    rgba(5, 9, 22, 0.72);
+}
+
+.laws-discovery__more .laws-equation-card {
+  margin: 0 0.95rem 0.95rem;
 }
 
 .laws-equation-card__label {
@@ -1330,6 +1457,11 @@ button:disabled,
   font-weight: 850;
   letter-spacing: 0.12em;
   text-transform: uppercase;
+}
+
+.laws-equation-card p {
+  margin: 0.65rem 0 0;
+  color: var(--laws-ink-soft);
 }
 
 pre {
@@ -1359,6 +1491,10 @@ code {
   padding: 0 clamp(0.95rem, 2vw, 1.15rem) clamp(0.95rem, 2vw, 1.15rem);
 }
 
+.laws-equation-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
 .laws-branch-card,
 .laws-maturity-grid article,
 .laws-evidence-grid article,
@@ -1367,7 +1503,8 @@ code {
   padding: 0.92rem;
   border: 1px solid rgba(255, 255, 255, 0.085);
   border-radius: var(--laws-radius-md);
-  background: rgba(255, 255, 255, 0.035);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.026));
 }
 
 .laws-branch-card {
@@ -1378,6 +1515,7 @@ code {
 .laws-branch-card:hover,
 .laws-branch-card:focus-visible {
   border-color: rgba(255, 228, 155, 0.28);
+  box-shadow: var(--laws-shadow-gold);
 }
 
 .laws-branch-card span {
@@ -1407,12 +1545,29 @@ code {
   color: var(--laws-ink-soft);
 }
 
+.laws-evidence-grid article:nth-child(3n + 1),
+.laws-maturity-grid article:nth-child(3n + 1) {
+  border-color: rgba(255, 228, 155, 0.13);
+}
+
+.laws-evidence-grid article:nth-child(3n + 2),
+.laws-maturity-grid article:nth-child(3n + 2) {
+  border-color: rgba(120, 233, 255, 0.13);
+}
+
+.laws-evidence-grid article:nth-child(3n + 3),
+.laws-maturity-grid article:nth-child(3n + 3) {
+  border-color: rgba(180, 140, 255, 0.13);
+}
+
 .laws-runtime-evidence__group {
   margin: 0 clamp(0.95rem, 2vw, 1.15rem) 0.75rem;
 }
 
 .laws-runtime-evidence__group > p {
+  margin: 0;
   padding: 0 0.95rem 0.95rem;
+  color: var(--laws-ink-soft);
 }
 
 .laws-receipt-accordion {
@@ -1475,6 +1630,7 @@ code {
 .laws-receipt-record dd {
   margin: 0.16rem 0 0;
   color: var(--laws-ink-soft);
+  word-break: break-word;
 }
 
 .laws-raw-receipt {
@@ -1487,7 +1643,56 @@ code {
 
 
 /* ============================================================
-   14. CLOSING / FOOTER
+   14. CONTEXT-SPECIFIC EMPIRICAL / CLAIM BOUNDARY EMPHASIS
+   ============================================================ */
+
+[data-laws-discovery-item="evidence-boundary"] {
+  border-color: rgba(255, 228, 155, 0.16);
+}
+
+[data-laws-discovery-item="formula-context"] {
+  border-color: rgba(120, 233, 255, 0.16);
+}
+
+[data-laws-discovery-item="applied-systems"] {
+  border-color: rgba(180, 140, 255, 0.15);
+}
+
+[data-laws-discovery-item="claim-language"] {
+  border-color: rgba(255, 116, 116, 0.16);
+}
+
+[data-laws-formula-card="collapse-qualified"],
+[data-laws-formula-card="pcr-kernel"],
+[data-laws-formula-card="ice"] {
+  border-color: rgba(255, 228, 155, 0.18);
+}
+
+[data-laws-frontier-link] {
+  position: relative;
+  overflow: hidden;
+}
+
+[data-laws-frontier-link]::after {
+  position: absolute;
+  right: 0.85rem;
+  bottom: 0.72rem;
+  content: "↗";
+  color: rgba(120, 233, 255, 0.72);
+  font-weight: 900;
+}
+
+[data-laws-discovery-item="claim-language"] .laws-evidence-grid article:first-child {
+  border-color: rgba(143, 240, 178, 0.24);
+}
+
+[data-laws-discovery-item="claim-language"] .laws-evidence-grid article:nth-child(2) {
+  border-color: rgba(255, 116, 116, 0.24);
+}
+
+
+/* ============================================================
+   15. CLOSING / FOOTER
    ============================================================ */
 
 .laws-closing {
@@ -1536,7 +1741,7 @@ code {
 
 
 /* ============================================================
-   15. STATE / FAILURE-SAFE RULES
+   16. STATE / FAILURE-SAFE RULES
    ============================================================ */
 
 [data-laws-root][data-held="true"] .laws-orbit__field,
@@ -1559,10 +1764,31 @@ code {
     inset 0 0 0 1px rgba(255, 116, 116, 0.18);
 }
 
+[data-laws-root][data-laws-planet-status="mount-timeout"] [data-laws-planet-mount],
+[data-laws-root][data-laws-planet-status="mount-target-missing"] [data-laws-planet-mount] {
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 50% 50%,
+      rgba(120, 233, 255, 0.12),
+      rgba(120, 233, 255, 0.035) 42%,
+      transparent 72%
+    );
+}
+
 
 /* ============================================================
-   16. RESPONSIVE
+   17. RESPONSIVE
    ============================================================ */
+
+@media (max-width: 1040px) {
+  .laws-value-deck {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .laws-equation-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
 
 @media (max-width: 960px) {
   .laws-topbar,
@@ -1579,8 +1805,7 @@ code {
   .laws-branch-grid,
   .laws-maturity-grid,
   .laws-evidence-grid,
-  .laws-ownership-chain,
-  .laws-equation-grid {
+  .laws-ownership-chain {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
@@ -1588,17 +1813,13 @@ code {
   .laws-receipt-record dl {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-
-  .laws-value-deck {
-    grid-template-columns: 1fr;
-  }
 }
 
 @media (max-width: 680px) {
   :root {
-    --laws-center-size: clamp(7rem, 34vw, 9rem);
-    --laws-category-size: clamp(2.45rem, 13vw, 3.5rem);
-    --laws-law-size: clamp(1.65rem, 8.5vw, 2.35rem);
+    --laws-center-size: clamp(7rem, 34vw, 9.15rem);
+    --laws-category-size: clamp(2.35rem, 12.5vw, 3.35rem);
+    --laws-law-size: clamp(1.58rem, 8vw, 2.22rem);
     --laws-stage-min: min(124vw, 32rem);
   }
 
@@ -1609,6 +1830,21 @@ code {
   .laws-threshold h1,
   .laws-orbit-intro h2 {
     max-width: 100%;
+  }
+
+  .laws-value-deck,
+  .laws-branch-grid,
+  .laws-maturity-grid,
+  .laws-evidence-grid,
+  .laws-ownership-chain,
+  .laws-equation-grid,
+  .laws-controller-panel__facts,
+  .laws-receipt-record dl {
+    grid-template-columns: 1fr;
+  }
+
+  .showroom-planet-orbit-line {
+    opacity: 0.56;
   }
 
   [data-laws-category][data-direction="flow"] {
@@ -1706,15 +1942,19 @@ code {
     bottom: 25%;
     left: 17%;
   }
+}
 
-  .laws-branch-grid,
-  .laws-maturity-grid,
-  .laws-evidence-grid,
-  .laws-ownership-chain,
-  .laws-equation-grid,
-  .laws-controller-panel__facts,
-  .laws-receipt-record dl {
-    grid-template-columns: 1fr;
+@media (max-width: 430px) {
+  .laws-nav a {
+    font-size: 0.8rem;
+  }
+
+  code {
+    font-size: 0.78rem;
+  }
+
+  .laws-discovery__item > summary {
+    align-items: flex-start;
   }
 }
 
@@ -1735,36 +1975,80 @@ code {
 
 
 /* ============================================================
-   17. RECEIPT
+   18. RECEIPT
    ============================================================ */
 
 /*
-LAWS_COMPASS_LANE_B_INDEX_DERIVED_CSS_RECEIPT_v2_1_0
+LAWS_COMPASS_LANE_B_CONTEXT_AND_EMPIRICAL_SUPPORT_CSS_RECEIPT_v2_2_0
 
 TARGET:
 /laws/index.css
 
 CONTRACT:
-LAWS_COMPASS_LANE_B_INDEX_DERIVED_CSS_TNT_v2_1_0
+LAWS_COMPASS_LANE_B_CONTEXT_AND_EMPIRICAL_SUPPORT_CSS_TNT_v2_2_0
 
 PAIRING HTML:
-LAWS_COMPASS_LANE_B_INDEX_DERIVED_HTML_TNT_v2_1_0
+LAWS_COMPASS_LANE_B_CONTEXT_AND_EMPIRICAL_SUPPORT_HTML_TNT_v2_2_0
+
+PREVIOUS CSS CONTRACT:
+LAWS_COMPASS_LANE_B_INDEX_DERIVED_CSS_TNT_v2_1_0
 
 INDEX MODEL USE:
 Presentation architecture only.
 
-MAJOR INTEGRATED CHANGES:
+BASELINE USE:
+The v2.1 /laws/index.css file is used as the working structural baseline for:
+- reset/tokens
+- topbar
+- compact page flow
+- compass scene
+- semantic object layer
+- first-paint fallback star geometry
+- active law-family visibility
+- compositor/crystals/projection compatibility
+- controller panel
+- disclosure/discovery system
+- runtime receipts
+- responsive behavior
+
+MAJOR INTEGRATED CHANGES FROM v2.1:
 - No tail patches.
+- Contract updated to v2.2.
+- Pairing HTML updated to v2.2.
+- Value deck supports three cards.
+- Formula/context grid strengthened for heavier Laws content.
+- Evidence, maturity, applied-system, claim-language, and source-custody cards receive expanded layout support.
+- Old CSS-generated fake center planet removed:
+  - .laws-planetary-center__body
+  - .laws-planetary-center__atmosphere
+  - .laws-planetary-center__ring
+- Center mount now supports Showroom/Audralia WebGL planet surfaces:
+  - .showroom-planet-root
+  - .showroom-planet-glow
+  - .showroom-planet-orbit-line
+  - .showroom-planet-shell
+  - .showroom-planet-body
+  - .showroom-planet-canvas
+  - .showroom-planet-atmosphere
+  - .showroom-planet-rim
+  - .showroom-planet-terminator
+  - .showroom-planet-shadow
+  - .showroom-planet-meridian
+  - .showroom-planet-fulcrum
+  - .showroom-planet-axis
+  - .showroom-planet-fallback
+- Planet remains decorative.
+- [data-upstream-compass-control] remains the click/tap authority.
 - Visible center labels are not styled into visibility.
 - Star child labels remain sr-only only.
-- Body-level Back to law compass pill is not part of the paired v2.1 HTML.
-- Planetary center is a first-class visual structure.
-- Secondary content uses index-derived disclosure/discovery structure.
+- Body-level Back to law compass pill is not part of the paired v2.2 HTML.
+- Secondary content remains disclosure/discovery based.
 - Runtime canvases remain pointer transparent.
 - Semantic controls remain hit targets.
 - First-paint category fallback remains visible.
 - Law controls remain hidden until active cluster/projection state.
 - Crystals/projection mode may suppress fallback skins while retaining hit targets.
+- Claim-language and evidence-boundary sections are visually emphasized without implying validation.
 
 RUNTIME SURFACES SUPPORTED:
 - [data-laws-root]
@@ -1773,6 +2057,7 @@ RUNTIME SURFACES SUPPORTED:
 - [data-laws-panel]
 - [data-upstream-compass-control]
 - [data-upstream-compass-mount]
+- [data-laws-planet-mount]
 - [data-laws-objects]
 - [data-laws-category]
 - [data-laws-law]
@@ -1782,6 +2067,43 @@ RUNTIME SURFACES SUPPORTED:
 - [data-laws-compositor-receipt]
 - [data-laws-crystals-receipt]
 - [data-laws-cosmos-receipt]
+- [data-laws-planet-receipt]
+
+CENTER PLANET:
+- Showroom/Audralia WebGL planet supported.
+- Visual identity: mini-audralia.
+- Renderer global expected: SHOWROOM_PLANET.
+- Geometry global expected: DGBAudraliaPlanetGeometry.
+- Decorative only.
+- Route authority: false.
+- Click authority: false.
+- Semantic activation authority: false.
+- Click authority owner remains [data-upstream-compass-control].
+
+CONTEXT-RESTORED SECTIONS SUPPORTED:
+- Foundation / Domain Separation.
+- Formula Context.
+- Scientific Law / Reality Test.
+- Evidence Boundary.
+- Research Standing.
+- Applied Systems / Frontier Link-Outs.
+- Auxiliary Branches.
+- Route Maturity.
+- Runtime Ownership / Source Custody.
+- Claim-Language Filter.
+
+CLAIM BOUNDARIES PRESERVED:
+- Evidence is not validation.
+- Candidate output is not active bound.
+- Warranty evidence is not observed equipment performance.
+- Synthetic fixture is not empirical evidence.
+- Observation insertion is not validation.
+- Runtime receipt is not production validation.
+- Route existence is not route maturity.
+- Visual pass is not scientific confirmation.
+- Discovery signal is not scientific acceptance.
+- Applied example is not universal proof.
+- Diagnostic framing is not clinical validation.
 
 CONTROLLER REOPEN:
 FALSE
@@ -1797,6 +2119,9 @@ FALSE
 
 COSMOS FUNCTIONAL DEPENDENCY:
 FALSE
+
+SHOWROOM CONTROLLER REVIEW:
+NOT REQUIRED
 
 RUNTIME EXECUTION:
 NOT PERFORMED

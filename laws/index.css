@@ -1,41 +1,28 @@
 /* TARGET FILE: /laws/index.css */
 /* COMPLETE REPLACEMENT */
-/* LAWS_COMPASS_LANE_B_REBUILT_CSS_TNT_v2_0_0 */
+/* LAWS_COMPASS_LANE_B_INDEX_DERIVED_CSS_TNT_v2_1_0 */
 
 /*
   Contract:
-  LAWS_COMPASS_LANE_B_REBUILT_CSS_TNT_v2_0_0
+  LAWS_COMPASS_LANE_B_INDEX_DERIVED_CSS_TNT_v2_1_0
 
   Pairing HTML:
-  LAWS_COMPASS_LANE_B_REBUILT_HTML_TNT_v2_0_0
-
-  Lane:
-  B
+  LAWS_COMPASS_LANE_B_INDEX_DERIVED_HTML_TNT_v2_1_0
 
   Purpose:
-  Rebuild the Laws route as a compass-first page while preserving the
-  runtime selector contracts required by:
+  Index-derived Laws visual system.
 
-  - /laws/index.controller.js
-  - /laws/index.interactions.js
-  - /laws/index.compositor.js
-  - /laws/index.crystals.js
-
-  Visual outcome:
-  - first-paint visible center Main Compass
-  - first-paint visible four category stars
-  - Flow north
-  - Integrity east
-  - Reality south
-  - Structure west
-  - law controls available to controller/crystals/interactions
-  - law controls visually suppressed until active cluster/projection state
-  - compositor canvases supported
-  - crystals/interactions inline projection styles respected
-
-  Boundary:
-  This CSS does not create route authority, validation claims, empirical
-  proof, registry authority, or runtime success.
+  Required result:
+  - compact page composition
+  - non-linear disclosure/discovery system
+  - visible first-paint compass category stars
+  - Flow north, Integrity east, Reality south, Structure west
+  - fixed planetary center
+  - no visible compass/star label bubbles
+  - semantic controls preserved as hit targets
+  - law stars visible only when their family is active
+  - compositor/crystals/interactions compatible
+  - Cosmos remains decorative only
 
   Runtime status:
   NOT EXECUTED
@@ -50,62 +37,71 @@
   FALSE
 */
 
+
 /* ============================================================
-   0. RESET / TOKENS
+   0. TOKENS / RESET
    ============================================================ */
 
 :root {
   color-scheme: dark;
 
-  --laws-bg-0: #050714;
-  --laws-bg-1: #090d21;
-  --laws-bg-2: #111734;
+  --laws-bg-0: #03050d;
+  --laws-bg-1: #070b1b;
+  --laws-bg-2: #0d1430;
+  --laws-bg-3: #141c3d;
+
   --laws-ink: #f8f1dd;
   --laws-ink-soft: rgba(248, 241, 221, 0.76);
-  --laws-ink-muted: rgba(248, 241, 221, 0.58);
+  --laws-ink-muted: rgba(248, 241, 221, 0.56);
   --laws-ink-faint: rgba(248, 241, 221, 0.36);
 
   --laws-gold: #e0b85b;
   --laws-gold-bright: #ffe49b;
-  --laws-gold-soft: rgba(224, 184, 91, 0.42);
-  --laws-cyan: #75e9ff;
+  --laws-gold-soft: rgba(224, 184, 91, 0.4);
+
+  --laws-cyan: #78e9ff;
+  --laws-cyan-soft: rgba(120, 233, 255, 0.34);
   --laws-blue: #7f93ff;
   --laws-violet: #b48cff;
+  --laws-red: #ff7474;
   --laws-warm: #ff9d63;
-  --laws-red: #ff6c6c;
 
-  --laws-line: rgba(255, 228, 155, 0.18);
-  --laws-line-strong: rgba(255, 228, 155, 0.34);
-  --laws-cyan-line: rgba(117, 233, 255, 0.22);
-  --laws-panel: rgba(9, 13, 33, 0.82);
-  --laws-panel-strong: rgba(12, 18, 43, 0.94);
+  --laws-line: rgba(255, 228, 155, 0.17);
+  --laws-line-strong: rgba(255, 228, 155, 0.31);
+  --laws-cyan-line: rgba(120, 233, 255, 0.22);
 
-  --laws-radius-sm: 0.65rem;
+  --laws-card: rgba(9, 13, 33, 0.78);
+  --laws-card-strong: rgba(11, 16, 38, 0.92);
+  --laws-glass: rgba(255, 255, 255, 0.046);
+
+  --laws-radius-sm: 0.7rem;
   --laws-radius-md: 1rem;
   --laws-radius-lg: 1.35rem;
-  --laws-radius-xl: 1.75rem;
+  --laws-radius-xl: 1.8rem;
   --laws-radius-full: 999rem;
 
-  --laws-shell-max: 1180px;
-  --laws-page-pad: clamp(1rem, 3vw, 2.5rem);
+  --laws-shell-max: 1160px;
+  --laws-page-pad: clamp(1rem, 3vw, 2.25rem);
+
+  --laws-center-size: clamp(8.25rem, 18vw, 13.25rem);
+  --laws-category-size: clamp(3.1rem, 6vw, 5.15rem);
+  --laws-law-size: clamp(2rem, 3.8vw, 3.15rem);
 
   --laws-shadow-deep:
-    0 1.4rem 5rem rgba(0, 0, 0, 0.54),
+    0 1.6rem 5.2rem rgba(0, 0, 0, 0.54),
     inset 0 0 0 1px rgba(255, 255, 255, 0.035);
 
   --laws-shadow-gold:
-    0 0 1.1rem rgba(255, 228, 155, 0.26),
-    0 0 2.5rem rgba(224, 184, 91, 0.14);
+    0 0 1.1rem rgba(255, 228, 155, 0.28),
+    0 0 2.6rem rgba(224, 184, 91, 0.15);
 
   --laws-shadow-cyan:
-    0 0 1.1rem rgba(117, 233, 255, 0.22),
-    0 0 2.5rem rgba(117, 233, 255, 0.11);
+    0 0 1.1rem rgba(120, 233, 255, 0.22),
+    0 0 2.8rem rgba(120, 233, 255, 0.12);
 
-  --laws-center-size: clamp(8rem, 19vw, 13.5rem);
-  --laws-category-size: clamp(3.25rem, 6.2vw, 5.35rem);
-  --laws-law-size: clamp(2rem, 3.8vw, 3.25rem);
+  --laws-focus: 0 0 0 3px rgba(120, 233, 255, 0.38);
 
-  --laws-focus: 0 0 0 3px rgba(117, 233, 255, 0.35);
+  --laws-stage-min: clamp(30rem, 66vw, 48rem);
 }
 
 *,
@@ -117,10 +113,10 @@
 html {
   min-height: 100%;
   background:
-    radial-gradient(circle at 50% -10%, rgba(117, 233, 255, 0.18), transparent 34rem),
-    radial-gradient(circle at 10% 10%, rgba(180, 140, 255, 0.13), transparent 26rem),
-    radial-gradient(circle at 90% 20%, rgba(224, 184, 91, 0.13), transparent 28rem),
-    linear-gradient(180deg, var(--laws-bg-0), #02040c 62%, #03040a);
+    radial-gradient(circle at 50% -12%, rgba(120, 233, 255, 0.17), transparent 31rem),
+    radial-gradient(circle at 12% 8%, rgba(180, 140, 255, 0.11), transparent 27rem),
+    radial-gradient(circle at 88% 16%, rgba(224, 184, 91, 0.12), transparent 27rem),
+    linear-gradient(180deg, var(--laws-bg-0), #02030a 60%, #03040a);
   scroll-behavior: smooth;
 }
 
@@ -129,8 +125,8 @@ body {
   margin: 0;
   color: var(--laws-ink);
   background:
-    radial-gradient(circle at 20% 8%, rgba(117, 233, 255, 0.07), transparent 18rem),
-    radial-gradient(circle at 78% 4%, rgba(255, 157, 99, 0.06), transparent 20rem),
+    radial-gradient(circle at 20% 0%, rgba(120, 233, 255, 0.06), transparent 22rem),
+    radial-gradient(circle at 82% 4%, rgba(255, 157, 99, 0.055), transparent 22rem),
     transparent;
   font-family:
     Inter,
@@ -141,12 +137,6 @@ body {
     "Segoe UI",
     sans-serif;
   line-height: 1.55;
-}
-
-img,
-svg,
-canvas {
-  max-width: 100%;
 }
 
 button,
@@ -165,6 +155,12 @@ a {
   color: inherit;
 }
 
+canvas,
+svg,
+img {
+  max-width: 100%;
+}
+
 [hidden] {
   display: none !important;
 }
@@ -175,16 +171,16 @@ a {
 }
 
 ::selection {
-  color: #051018;
+  color: #061019;
   background: var(--laws-gold-bright);
 }
 
+
 /* ============================================================
-   1. ACCESSIBILITY UTILITIES
+   1. ACCESSIBILITY
    ============================================================ */
 
-.skip,
-.laws-accessible-orbit-return {
+.skip {
   position: fixed;
   z-index: 999;
   top: 0.75rem;
@@ -200,13 +196,8 @@ a {
   transition: transform 160ms ease;
 }
 
-.skip:focus,
-.laws-accessible-orbit-return:focus {
+.skip:focus {
   transform: translateY(0);
-}
-
-.laws-accessible-orbit-return {
-  top: 3.65rem;
 }
 
 .sr-only {
@@ -221,8 +212,16 @@ a {
   border: 0 !important;
 }
 
+.laws-accessibility-note {
+  max-width: 72rem;
+  margin: 1rem auto 0;
+  color: var(--laws-ink-muted);
+  font-size: 0.88rem;
+}
+
+
 /* ============================================================
-   2. PAGE SHELL / HEADER
+   2. SHELL / HEADER
    ============================================================ */
 
 [data-laws-root],
@@ -232,7 +231,7 @@ a {
   isolation: isolate;
   width: min(var(--laws-shell-max), calc(100% - var(--laws-page-pad) * 2));
   margin: 0 auto;
-  padding: clamp(0.85rem, 2vw, 1.4rem) 0 clamp(2.5rem, 5vw, 5rem);
+  padding: clamp(0.75rem, 2vw, 1.25rem) 0 clamp(2.5rem, 5vw, 5rem);
 }
 
 .laws-topbar {
@@ -243,7 +242,7 @@ a {
   align-items: center;
   justify-content: space-between;
   gap: 1.1rem;
-  padding: 0.9rem 0;
+  padding: 0.85rem 0;
   backdrop-filter: blur(0.65rem);
 }
 
@@ -252,19 +251,19 @@ a {
   align-items: center;
   gap: 0.78rem;
   min-width: 0;
-  padding: 0.45rem 0.62rem 0.45rem 0.45rem;
+  padding: 0.44rem 0.64rem 0.44rem 0.44rem;
   border: 1px solid rgba(255, 228, 155, 0.18);
   border-radius: var(--laws-radius-full);
   color: var(--laws-ink);
   background:
-    linear-gradient(135deg, rgba(255, 228, 155, 0.12), rgba(117, 233, 255, 0.06)),
+    linear-gradient(135deg, rgba(255, 228, 155, 0.12), rgba(120, 233, 255, 0.06)),
     rgba(5, 8, 19, 0.76);
-  cursor: pointer;
+  text-decoration: none;
 }
 
 .brand-mark {
   display: grid;
-  width: 2.6rem;
+  width: 2.55rem;
   aspect-ratio: 1;
   place-items: center;
   border: 1px solid rgba(255, 228, 155, 0.38);
@@ -277,7 +276,7 @@ a {
 }
 
 .brand-mark span {
-  font-size: 0.63rem;
+  font-size: 0.62rem;
   font-weight: 800;
   letter-spacing: 0.11em;
 }
@@ -286,7 +285,6 @@ a {
   display: grid;
   min-width: 0;
   line-height: 1.1;
-  text-align: left;
 }
 
 .brand-copy span {
@@ -308,8 +306,8 @@ a {
 }
 
 .laws-nav a {
-  padding: 0.55rem 0.76rem;
-  border: 1px solid rgba(255, 255, 255, 0.07);
+  padding: 0.53rem 0.74rem;
+  border: 1px solid rgba(255, 255, 255, 0.075);
   border-radius: var(--laws-radius-full);
   color: var(--laws-ink-soft);
   background: rgba(255, 255, 255, 0.035);
@@ -323,124 +321,202 @@ a {
   border-color: rgba(255, 228, 155, 0.28);
 }
 
-/* ============================================================
-   3. BUTTONS / COMMON CARDS
-   ============================================================ */
-
-.button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.45rem;
-  min-height: 2.65rem;
-  padding: 0.66rem 0.95rem;
-  border: 1px solid rgba(255, 255, 255, 0.11);
-  border-radius: var(--laws-radius-full);
-  color: var(--laws-ink);
-  background: rgba(255, 255, 255, 0.055);
-  text-decoration: none;
-  cursor: pointer;
-}
-
-.button:hover,
-.button:focus-visible {
-  border-color: rgba(255, 228, 155, 0.3);
-}
-
-.button:disabled,
-.button[aria-disabled="true"] {
-  color: rgba(248, 241, 221, 0.35);
-  cursor: not-allowed;
-  opacity: 0.58;
-}
-
-.button-gold {
-  border-color: rgba(255, 228, 155, 0.34);
-  color: #140f03;
-  background:
-    linear-gradient(135deg, #ffe49b, #e0b85b 62%, #b47b2d);
-  box-shadow: 0 0.75rem 2.1rem rgba(224, 184, 91, 0.22);
-}
-
-.button-gold:disabled {
-  color: rgba(20, 15, 3, 0.56);
-  background:
-    linear-gradient(135deg, rgba(255, 228, 155, 0.45), rgba(224, 184, 91, 0.35));
-}
 
 /* ============================================================
-   4. ORBIT STAGE
+   3. INDEX-DERIVED PAGE FLOW
    ============================================================ */
 
-.laws-orbit {
+.laws-estate {
   display: grid;
-  gap: 1rem;
-  padding: clamp(1rem, 2.4vw, 1.8rem);
-  border: 1px solid rgba(224, 184, 91, 0.24);
-  border-radius: var(--laws-radius-xl);
-  background:
-    linear-gradient(180deg, rgba(8, 12, 30, 0.92), rgba(6, 8, 20, 0.74)),
-    radial-gradient(circle at 50% 0%, rgba(117, 233, 255, 0.11), transparent 26rem);
-  box-shadow: var(--laws-shadow-deep);
-  backdrop-filter: blur(0.55rem);
+  gap: clamp(1rem, 2.6vw, 1.75rem);
 }
 
-.laws-orbit__heading {
-  display: flex;
-  align-items: end;
-  justify-content: space-between;
-  gap: 1.4rem;
-}
-
-.kicker,
-.laws-foundations__heading span,
-.laws-branches__heading span,
-.laws-route-maturity__heading span {
+.kicker {
+  margin: 0;
   color: var(--laws-gold-bright);
   font-size: 0.72rem;
-  font-weight: 800;
+  font-weight: 850;
   letter-spacing: 0.18em;
   text-transform: uppercase;
 }
 
-.laws-orbit__heading h1,
-.laws-foundations__heading h2,
-.laws-branches__heading h2,
-.laws-route-maturity__heading h2,
-.laws-threshold h2 {
-  max-width: 15ch;
-  margin: 0.18rem 0 0;
-  font-size: clamp(1.65rem, 4.3vw, 3.6rem);
-  line-height: 0.98;
-  letter-spacing: -0.045em;
+.laws-threshold--compact {
+  display: grid;
+  gap: 0.75rem;
+  max-width: 66rem;
+  padding: clamp(1rem, 2.5vw, 1.45rem);
+  border: 1px solid rgba(255, 228, 155, 0.16);
+  border-radius: var(--laws-radius-xl);
+  background:
+    linear-gradient(180deg, rgba(10, 14, 34, 0.72), rgba(7, 10, 24, 0.54));
+  box-shadow: var(--laws-shadow-deep);
 }
 
-.laws-orbit__heading p {
-  max-width: 43rem;
+.laws-threshold h1,
+.laws-orbit-intro h2 {
+  max-width: 16ch;
+  margin: 0;
+  font-size: clamp(1.8rem, 5vw, 4.25rem);
+  line-height: 0.95;
+  letter-spacing: -0.052em;
+}
+
+.laws-threshold__lead,
+.laws-orbit-intro p,
+.laws-closing p {
+  max-width: 62rem;
   margin: 0;
   color: var(--laws-ink-soft);
+}
+
+.laws-threshold__more,
+.laws-discovery__more,
+.laws-runtime-evidence__group,
+.laws-raw-receipt-disclosure {
+  border: 1px solid rgba(255, 255, 255, 0.085);
+  border-radius: var(--laws-radius-md);
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.laws-threshold__more summary,
+.laws-discovery__more summary,
+.laws-runtime-evidence__group summary,
+.laws-raw-receipt-disclosure summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.85rem;
+  padding: 0.82rem 0.95rem;
+  cursor: pointer;
+  color: var(--laws-gold-bright);
+  font-weight: 750;
+}
+
+.laws-threshold__more summary::after,
+.laws-discovery__more summary::after,
+.laws-runtime-evidence__group summary::after,
+.laws-raw-receipt-disclosure summary::after {
+  content: "+";
+  color: var(--laws-cyan);
+  font-weight: 900;
+}
+
+.laws-threshold__more[open] summary::after,
+.laws-discovery__more[open] summary::after,
+.laws-runtime-evidence__group[open] summary::after,
+.laws-raw-receipt-disclosure[open] summary::after {
+  content: "–";
+}
+
+.laws-threshold__more p,
+.laws-discovery__more p {
+  margin: 0;
+  padding: 0 0.95rem 0.95rem;
+  color: var(--laws-ink-soft);
+}
+
+
+/* ============================================================
+   4. VALUE DECK
+   ============================================================ */
+
+.laws-value-deck {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.85rem;
+}
+
+.laws-value-card {
+  display: grid;
+  gap: 0.45rem;
+  min-width: 0;
+  padding: clamp(0.95rem, 2vw, 1.2rem);
+  border: 1px solid rgba(255, 255, 255, 0.085);
+  border-radius: var(--laws-radius-lg);
+  color: var(--laws-ink);
+  background:
+    radial-gradient(circle at 0% 0%, rgba(120, 233, 255, 0.09), transparent 14rem),
+    rgba(255, 255, 255, 0.04);
+  text-decoration: none;
+}
+
+.laws-value-card:hover,
+.laws-value-card:focus-visible {
+  border-color: rgba(255, 228, 155, 0.28);
+  box-shadow: var(--laws-shadow-gold);
+}
+
+.laws-value-card__eyebrow {
+  color: var(--laws-cyan);
+  font-size: 0.72rem;
+  font-weight: 850;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.laws-value-card__label {
+  color: var(--laws-gold-bright);
+  font-size: clamp(1.1rem, 2.2vw, 1.35rem);
+  font-weight: 850;
+}
+
+.laws-value-card__purpose {
+  color: var(--laws-ink-soft);
+}
+
+.laws-value-card__action {
+  justify-self: start;
+  margin-top: 0.15rem;
+  padding: 0.38rem 0.58rem;
+  border: 1px solid rgba(255, 228, 155, 0.2);
+  border-radius: var(--laws-radius-full);
+  color: var(--laws-gold-bright);
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+
+/* ============================================================
+   5. ORBIT INTRO
+   ============================================================ */
+
+.laws-orbit-intro {
+  display: grid;
+  gap: 0.6rem;
+  max-width: 68rem;
+}
+
+
+/* ============================================================
+   6. COMPASS SCENE / STAGE
+   ============================================================ */
+
+.laws-orbit {
+  position: relative;
+  z-index: 1;
 }
 
 .laws-orbit__field,
 [data-laws-scene-field] {
   position: relative;
   z-index: 1;
-  min-height: clamp(28rem, 62vw, 48rem);
+  min-height: var(--laws-stage-min);
   overflow: hidden;
   touch-action: none;
   overscroll-behavior: contain;
   user-select: none;
   -webkit-user-select: none;
-  border: 1px solid rgba(117, 233, 255, 0.14);
-  border-radius: calc(var(--laws-radius-xl) - 0.35rem);
+  border: 1px solid rgba(120, 233, 255, 0.14);
+  border-radius: var(--laws-radius-xl);
   background:
-    radial-gradient(circle at 50% 50%, rgba(255, 228, 155, 0.09), transparent 8.5rem),
-    radial-gradient(circle at 50% 10%, rgba(117, 233, 255, 0.13), transparent 22rem),
-    radial-gradient(circle at 15% 75%, rgba(180, 140, 255, 0.09), transparent 20rem),
+    radial-gradient(circle at 50% 50%, rgba(255, 228, 155, 0.08), transparent 8.5rem),
+    radial-gradient(circle at 50% 10%, rgba(120, 233, 255, 0.12), transparent 22rem),
+    radial-gradient(circle at 15% 75%, rgba(180, 140, 255, 0.085), transparent 20rem),
     linear-gradient(180deg, rgba(4, 7, 17, 0.96), rgba(6, 9, 21, 0.9));
   box-shadow:
     inset 0 0 6rem rgba(0, 0, 0, 0.5),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.025);
+    inset 0 0 0 1px rgba(255, 255, 255, 0.025),
+    var(--laws-shadow-deep);
   isolation: isolate;
 }
 
@@ -453,11 +529,11 @@ a {
   background:
     radial-gradient(circle at 18% 24%, rgba(255, 255, 255, 0.42) 0 0.06rem, transparent 0.08rem),
     radial-gradient(circle at 78% 18%, rgba(255, 228, 155, 0.5) 0 0.055rem, transparent 0.08rem),
-    radial-gradient(circle at 62% 76%, rgba(117, 233, 255, 0.46) 0 0.055rem, transparent 0.08rem),
+    radial-gradient(circle at 62% 76%, rgba(120, 233, 255, 0.46) 0 0.055rem, transparent 0.08rem),
     radial-gradient(circle at 28% 70%, rgba(255, 255, 255, 0.35) 0 0.045rem, transparent 0.07rem),
     radial-gradient(circle at 88% 58%, rgba(255, 255, 255, 0.35) 0 0.05rem, transparent 0.075rem),
     radial-gradient(circle at 44% 34%, rgba(180, 140, 255, 0.42) 0 0.045rem, transparent 0.07rem);
-  opacity: 0.72;
+  opacity: 0.7;
 }
 
 .laws-orbit__field::after {
@@ -470,14 +546,14 @@ a {
     conic-gradient(
       from 12deg at 50% 50%,
       transparent,
-      rgba(117, 233, 255, 0.08),
+      rgba(120, 233, 255, 0.075),
       transparent 28%,
-      rgba(255, 228, 155, 0.08),
+      rgba(255, 228, 155, 0.075),
       transparent 58%,
-      rgba(180, 140, 255, 0.08),
+      rgba(180, 140, 255, 0.075),
       transparent
     );
-  opacity: 0.7;
+  opacity: 0.72;
   filter: blur(0.35rem);
 }
 
@@ -488,15 +564,16 @@ a {
   inset: 0;
   pointer-events: none;
   background:
-    radial-gradient(circle at 50% 50%, transparent 0 7rem, rgba(255, 228, 155, 0.08) 7.1rem 7.2rem, transparent 7.32rem),
-    radial-gradient(circle at 50% 50%, transparent 0 13.5rem, rgba(117, 233, 255, 0.055) 13.6rem 13.72rem, transparent 13.9rem),
-    linear-gradient(90deg, transparent calc(50% - 0.04rem), rgba(255, 228, 155, 0.08) 50%, transparent calc(50% + 0.04rem)),
-    linear-gradient(0deg, transparent calc(50% - 0.04rem), rgba(255, 228, 155, 0.08) 50%, transparent calc(50% + 0.04rem));
-  opacity: 0.75;
+    radial-gradient(circle at 50% 50%, transparent 0 7rem, rgba(255, 228, 155, 0.075) 7.1rem 7.2rem, transparent 7.32rem),
+    radial-gradient(circle at 50% 50%, transparent 0 13.5rem, rgba(120, 233, 255, 0.052) 13.6rem 13.72rem, transparent 13.9rem),
+    linear-gradient(90deg, transparent calc(50% - 0.04rem), rgba(255, 228, 155, 0.075) 50%, transparent calc(50% + 0.04rem)),
+    linear-gradient(0deg, transparent calc(50% - 0.04rem), rgba(255, 228, 155, 0.075) 50%, transparent calc(50% + 0.04rem));
+  opacity: 0.72;
 }
 
+
 /* ============================================================
-   5. COMPOSITOR / CRYSTALS LAYER SUPPORT
+   7. COMPOSITOR / RUNTIME CANVAS SUPPORT
    ============================================================ */
 
 canvas[data-laws-compositor-layer],
@@ -518,6 +595,11 @@ canvas[data-laws-compositor-layer="front"] {
   z-index: 3 !important;
 }
 
+
+/* ============================================================
+   8. PLANETARY CENTER / COMPASS HIT TARGET
+   ============================================================ */
+
 .laws-compass-layer,
 [data-laws-compass-layer],
 [data-laws-center-layer] {
@@ -534,66 +616,73 @@ canvas[data-laws-compositor-layer="front"] {
 [data-upstream-compass-mount],
 [data-laws-compass-visual-mount] {
   position: absolute;
-  inset: -7%;
   z-index: 1;
+  inset: -8%;
   display: grid;
   place-items: center;
-  border-radius: 50%;
   pointer-events: none;
 }
 
-.laws-compass-mount::before,
-[data-upstream-compass-mount]::before {
+.laws-planetary-center {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+  pointer-events: none;
+}
+
+.laws-planetary-center__body {
   position: absolute;
-  inset: 0;
-  border: 1px solid rgba(255, 228, 155, 0.26);
+  z-index: 2;
+  inset: 17%;
+  border: 1px solid rgba(120, 233, 255, 0.23);
   border-radius: 50%;
-  content: "";
   background:
-    radial-gradient(circle at 50% 44%, rgba(255, 228, 155, 0.24), transparent 32%),
-    radial-gradient(circle at 50% 50%, rgba(117, 233, 255, 0.13), transparent 54%),
-    conic-gradient(
-      from 0deg,
-      rgba(255, 228, 155, 0.18),
-      rgba(117, 233, 255, 0.12),
-      rgba(180, 140, 255, 0.13),
-      rgba(255, 157, 99, 0.12),
-      rgba(255, 228, 155, 0.18)
+    radial-gradient(circle at 39% 31%,
+      rgba(182, 238, 255, 0.9) 0%,
+      rgba(117, 190, 231, 0.55) 15%,
+      rgba(34, 70, 123, 0.74) 36%,
+      rgba(9, 16, 36, 0.98) 68%,
+      rgba(3, 5, 13, 1) 100%
     );
   box-shadow:
-    0 0 2.2rem rgba(255, 228, 155, 0.2),
-    inset 0 0 2.2rem rgba(255, 255, 255, 0.065);
+    inset -1rem -1.25rem 2.3rem rgba(0, 0, 0, 0.76),
+    inset 0.7rem 0.45rem 1.35rem rgba(190, 240, 255, 0.22),
+    0 0 1.35rem rgba(120, 233, 255, 0.26),
+    0 0 4rem rgba(120, 233, 255, 0.12),
+    0 0 5.2rem rgba(255, 228, 155, 0.08);
 }
 
-.laws-compass-mount::after,
-[data-upstream-compass-mount]::after {
+.laws-planetary-center__atmosphere {
   position: absolute;
-  inset: 16%;
-  border: 1px solid rgba(117, 233, 255, 0.22);
+  z-index: 1;
+  inset: 10%;
   border-radius: 50%;
-  content: "";
   background:
-    radial-gradient(circle, rgba(5, 8, 18, 0.15), rgba(5, 8, 18, 0.65));
+    radial-gradient(circle, rgba(120, 233, 255, 0.1), transparent 64%);
+  box-shadow:
+    0 0 2.4rem rgba(120, 233, 255, 0.14),
+    0 0 5.5rem rgba(120, 233, 255, 0.08);
 }
 
-.laws-compass-core {
-  position: relative;
-  z-index: 2;
-  display: grid;
-  width: 54%;
-  aspect-ratio: 1;
-  place-items: center;
-  border: 1px solid rgba(255, 228, 155, 0.38);
+.laws-planetary-center__ring {
+  position: absolute;
+  z-index: 3;
+  inset: 4%;
   border-radius: 50%;
-  color: var(--laws-gold-bright);
-  background:
-    radial-gradient(circle, rgba(255, 228, 155, 0.18), transparent 62%),
-    rgba(5, 8, 18, 0.86);
-  font-size: clamp(0.9rem, 2vw, 1.25rem);
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  box-shadow: var(--laws-shadow-gold);
+  border: 1px solid rgba(255, 228, 155, 0.12);
+  transform: rotate(-18deg) scaleX(1.18) scaleY(0.42);
+  box-shadow:
+    0 0 1.3rem rgba(255, 228, 155, 0.09),
+    inset 0 0 1.6rem rgba(120, 233, 255, 0.055);
+}
+
+.laws-planetary-center__ring--two {
+  inset: 0%;
+  z-index: 0;
+  border-color: rgba(120, 233, 255, 0.1);
+  transform: rotate(17deg) scaleX(1.32) scaleY(0.5);
+  opacity: 0.72;
 }
 
 .laws-compass-control,
@@ -602,46 +691,24 @@ canvas[data-laws-compositor-layer="front"] {
   position: absolute;
   z-index: 20;
   inset: -6%;
-  display: grid;
-  align-content: end;
-  justify-items: center;
-  gap: 0.1rem;
-  padding: 0 0 0.85rem;
+  display: block;
+  padding: 0;
   border: 0;
   border-radius: 50%;
-  color: var(--laws-ink);
+  color: transparent;
   background: transparent;
   cursor: pointer;
   pointer-events: auto;
   touch-action: manipulation;
 }
 
-.laws-compass-control__label {
-  padding: 0.25rem 0.5rem;
-  border: 1px solid rgba(255, 228, 155, 0.18);
-  border-radius: var(--laws-radius-full);
-  color: var(--laws-gold-bright);
-  background: rgba(5, 8, 18, 0.62);
-  font-size: 0.72rem;
-  font-weight: 800;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
+.laws-compass-control > *:not(.sr-only) {
+  display: none !important;
 }
 
-.laws-compass-control__instruction {
-  color: var(--laws-ink-muted);
-  font-size: 0.68rem;
-}
-
-.laws-compass-control[data-selected="true"] .laws-compass-control__label,
-[data-laws-root][data-compass-selected="true"] .laws-compass-control__label {
-  border-color: rgba(117, 233, 255, 0.34);
-  color: var(--laws-cyan);
-  box-shadow: var(--laws-shadow-cyan);
-}
 
 /* ============================================================
-   6. SEMANTIC OBJECT LAYER / STAR BASE
+   9. SEMANTIC OBJECT LAYER / STAR CONTROLS
    ============================================================ */
 
 .laws-object-layer,
@@ -664,18 +731,46 @@ canvas[data-laws-compositor-layer="front"] {
   place-items: center;
   padding: 0;
   border: 0;
-  color: var(--laws-gold-bright);
+  color: transparent;
   background: transparent;
   cursor: pointer;
   pointer-events: auto;
   touch-action: manipulation;
+  text-shadow: none;
   transition:
     opacity 180ms ease,
     filter 180ms ease,
     transform 180ms ease;
 }
 
-.laws-star::before {
+.laws-star > *:not(.sr-only),
+[data-laws-category] > *:not(.sr-only),
+[data-laws-law] > *:not(.sr-only),
+[data-laws-fallback-star] > *:not(.sr-only),
+[data-laws-semantic-star] > *:not(.sr-only) {
+  display: none !important;
+}
+
+.laws-star--large,
+[data-laws-category] {
+  width: var(--laws-category-size);
+  aspect-ratio: 1;
+}
+
+.laws-star--small,
+[data-laws-law] {
+  width: var(--laws-law-size);
+  aspect-ratio: 1;
+}
+
+/*
+  Fallback star skins exist only so first paint is legible before crystals
+  and projection are active. They are never text labels.
+*/
+
+.laws-star::before,
+[data-laws-category]::before,
+[data-laws-law]::before {
   display: block;
   width: 100%;
   height: 100%;
@@ -695,7 +790,12 @@ canvas[data-laws-compositor-layer="front"] {
     40% 34%
   );
   background:
-    radial-gradient(circle at 42% 35%, rgba(255, 255, 255, 0.92), rgba(255, 228, 155, 0.82) 20%, rgba(224, 184, 91, 0.88) 48%, rgba(126, 78, 24, 0.92) 82%);
+    radial-gradient(circle at 42% 35%,
+      rgba(255, 255, 255, 0.92),
+      rgba(255, 228, 155, 0.82) 20%,
+      rgba(224, 184, 91, 0.88) 48%,
+      rgba(126, 78, 24, 0.92) 82%
+    );
   box-shadow:
     inset 0 0 0.3rem rgba(255, 255, 255, 0.62),
     inset 0 0 0.85rem rgba(88, 51, 13, 0.6),
@@ -704,36 +804,39 @@ canvas[data-laws-compositor-layer="front"] {
   filter: drop-shadow(0 0 0.6rem rgba(255, 228, 155, 0.36));
 }
 
-.laws-star--large,
-[data-laws-category] {
-  width: var(--laws-category-size);
-  aspect-ratio: 1;
-}
-
-.laws-star--small,
-[data-laws-law] {
-  width: var(--laws-law-size);
-  aspect-ratio: 1;
-}
-
 [data-direction="integrity"]::before {
   background:
-    radial-gradient(circle at 42% 35%, rgba(255, 255, 255, 0.92), rgba(117, 233, 255, 0.8) 20%, rgba(58, 178, 209, 0.86) 52%, rgba(15, 62, 92, 0.94) 84%);
+    radial-gradient(circle at 42% 35%,
+      rgba(255, 255, 255, 0.92),
+      rgba(120, 233, 255, 0.8) 20%,
+      rgba(58, 178, 209, 0.86) 52%,
+      rgba(15, 62, 92, 0.94) 84%
+    );
   box-shadow:
     inset 0 0 0.3rem rgba(255, 255, 255, 0.58),
     inset 0 0 0.85rem rgba(12, 64, 83, 0.6),
-    0 0 1rem rgba(117, 233, 255, 0.42),
-    0 0 2.4rem rgba(117, 233, 255, 0.16);
+    0 0 1rem rgba(120, 233, 255, 0.42),
+    0 0 2.4rem rgba(120, 233, 255, 0.16);
 }
 
 [data-direction="reality"]::before {
   background:
-    radial-gradient(circle at 42% 35%, rgba(255, 255, 255, 0.9), rgba(255, 198, 118, 0.82) 20%, rgba(255, 157, 99, 0.9) 52%, rgba(116, 52, 22, 0.94) 84%);
+    radial-gradient(circle at 42% 35%,
+      rgba(255, 255, 255, 0.9),
+      rgba(255, 198, 118, 0.82) 20%,
+      rgba(255, 157, 99, 0.9) 52%,
+      rgba(116, 52, 22, 0.94) 84%
+    );
 }
 
 [data-direction="structure"]::before {
   background:
-    radial-gradient(circle at 42% 35%, rgba(255, 255, 255, 0.9), rgba(255, 167, 134, 0.8) 20%, rgba(229, 90, 70, 0.88) 52%, rgba(88, 27, 32, 0.94) 84%);
+    radial-gradient(circle at 42% 35%,
+      rgba(255, 255, 255, 0.9),
+      rgba(255, 167, 134, 0.8) 20%,
+      rgba(229, 90, 70, 0.88) 52%,
+      rgba(88, 27, 32, 0.94) 84%
+    );
 }
 
 .laws-star:hover,
@@ -747,17 +850,20 @@ canvas[data-laws-compositor-layer="front"] {
     drop-shadow(0 0 1rem rgba(255, 228, 155, 0.4));
 }
 
-.laws-star[aria-disabled="true"],
-[data-laws-law][aria-disabled="true"],
-[data-laws-category][aria-disabled="true"] {
-  cursor: default;
+[data-selected="true"]::before,
+[data-laws-law][data-selected="true"]::before {
+  box-shadow:
+    inset 0 0 0.35rem rgba(255, 255, 255, 0.68),
+    inset 0 0 0.85rem rgba(88, 51, 13, 0.6),
+    0 0 1.25rem rgba(120, 233, 255, 0.46),
+    0 0 3.2rem rgba(120, 233, 255, 0.22);
 }
 
+
 /* ============================================================
-   7. FIRST-PAINT FALLBACK GEOMETRY
+   10. FALLBACK GEOMETRY
    ============================================================ */
 
-/* Primary category positions. */
 [data-laws-category][data-direction="flow"] {
   top: 9%;
   left: 50%;
@@ -782,24 +888,13 @@ canvas[data-laws-compositor-layer="front"] {
   transform: translateY(-50%);
 }
 
-/*
-  Law controls live directly in [data-laws-objects] in the rebuilt HTML.
-  Crystals may also keep them there after initialization. Therefore
-  cluster visibility is root-state based, not container based.
-*/
-
 [data-laws-law] {
-  opacity: 0;
-  pointer-events: none;
-  visibility: hidden;
-}
-
-[data-laws-root][data-active-law-cluster="true"] [data-laws-law] {
   visibility: hidden;
   opacity: 0;
   pointer-events: none;
 }
 
+/* Active law-family exposure. */
 [data-laws-root][data-active-law-cluster="true"][data-active-cluster-direction="flow"] [data-laws-law][data-direction="flow"],
 [data-laws-root][data-active-law-cluster="true"][data-selected-direction="flow"] [data-laws-law][data-direction="flow"],
 [data-laws-root][data-active-law-cluster="true"][data-active-cluster-direction="integrity"] [data-laws-law][data-direction="integrity"],
@@ -813,7 +908,6 @@ canvas[data-laws-compositor-layer="front"] {
   pointer-events: auto;
 }
 
-/* Fallback law positions by family. */
 [data-laws-law][data-law-id="flow-signals"] {
   top: 18%;
   left: 31%;
@@ -910,10 +1004,15 @@ canvas[data-laws-compositor-layer="front"] {
   transform: translate(-50%, 50%);
 }
 
+
+/* ============================================================
+   11. CRYSTALS / PROJECTION MODE
+   ============================================================ */
+
 /*
-  When interactions applies projection facts, it writes inline position,
-  left/top/width/height/transform and projection datasets. Do not fight
-  those inline coordinates. These rules only supply visual styling.
+  Once projection says an item is visible, semantic controls remain usable.
+  When the crystal renderer is ready, fallback skins can become invisible
+  hit targets while the canvas/crystal object remains visually dominant.
 */
 
 [data-projection-visible="true"] {
@@ -930,51 +1029,60 @@ canvas[data-laws-compositor-layer="front"] {
   pointer-events: none !important;
 }
 
-/* Category controls remain available in constellation fallback. */
-[data-laws-root][data-outer-categories-active="false"] [data-laws-category] {
-  opacity: 0.42;
+[data-laws-root][data-laws-crystals-ready="true"] [data-laws-category],
+[data-laws-root][data-laws-crystals-ready="true"] [data-laws-law],
+[data-laws-root][data-laws-crystals-status="available"] [data-laws-category],
+[data-laws-root][data-laws-crystals-status="available"] [data-laws-law],
+[data-laws-root][data-laws-crystals-status="ready"] [data-laws-category],
+[data-laws-root][data-laws-crystals-status="ready"] [data-laws-law] {
+  color: transparent !important;
+  background: transparent !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
 }
 
-[data-laws-root][data-active-law-cluster="true"] [data-laws-category] {
-  opacity: 0.22;
-  pointer-events: none;
+[data-laws-root][data-laws-crystals-ready="true"] [data-laws-category]::before,
+[data-laws-root][data-laws-crystals-ready="true"] [data-laws-law]::before,
+[data-laws-root][data-laws-crystals-status="available"] [data-laws-category]::before,
+[data-laws-root][data-laws-crystals-status="available"] [data-laws-law]::before,
+[data-laws-root][data-laws-crystals-status="ready"] [data-laws-category]::before,
+[data-laws-root][data-laws-crystals-status="ready"] [data-laws-law]::before {
+  opacity: 0;
+  background: transparent !important;
+  box-shadow: none !important;
+  filter: none !important;
 }
 
-[data-laws-root][data-active-law-cluster="true"] [data-laws-category][data-selected="true"],
-[data-laws-root][data-active-law-cluster="true"] [data-laws-category][data-direction="flow"][data-active="true"],
-[data-laws-root][data-active-law-cluster="true"] [data-laws-category][data-direction="integrity"][data-active="true"],
-[data-laws-root][data-active-law-cluster="true"] [data-laws-category][data-direction="reality"][data-active="true"],
-[data-laws-root][data-active-law-cluster="true"] [data-laws-category][data-direction="structure"][data-active="true"] {
-  opacity: 0.64;
+/* Preserve hit targets after fallback skins are hidden. */
+[data-laws-root][data-laws-crystals-ready="true"] [data-laws-category],
+[data-laws-root][data-laws-crystals-status="available"] [data-laws-category],
+[data-laws-root][data-laws-crystals-status="ready"] [data-laws-category] {
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto;
 }
 
-/* Primary/selected emphasis from controller. */
-[data-primary="true"]::before {
-  filter: brightness(1.15);
+[data-laws-root][data-laws-crystals-ready="true"][data-active-law-cluster="true"] [data-laws-law],
+[data-laws-root][data-laws-crystals-status="available"][data-active-law-cluster="true"] [data-laws-law],
+[data-laws-root][data-laws-crystals-status="ready"][data-active-law-cluster="true"] [data-laws-law] {
+  pointer-events: auto;
 }
 
-[data-selected="true"]::before,
-[data-laws-law][data-selected="true"]::before {
-  box-shadow:
-    inset 0 0 0.35rem rgba(255, 255, 255, 0.68),
-    inset 0 0 0.85rem rgba(88, 51, 13, 0.6),
-    0 0 1.25rem rgba(117, 233, 255, 0.46),
-    0 0 3.2rem rgba(117, 233, 255, 0.22);
-}
 
 /* ============================================================
-   8. CONTROLLER PANEL
+   12. INSPECTION PANEL
    ============================================================ */
 
 .laws-controller-panel,
 .laws-atlas-key {
   display: grid;
-  gap: 1rem;
-  padding: clamp(1rem, 2.2vw, 1.35rem);
-  border: 1px solid rgba(255, 228, 155, 0.18);
+  gap: 0.9rem;
+  padding: clamp(0.95rem, 2vw, 1.2rem);
+  border: 1px solid rgba(255, 228, 155, 0.16);
   border-radius: var(--laws-radius-lg);
   background:
-    linear-gradient(180deg, rgba(9, 13, 33, 0.92), rgba(6, 9, 22, 0.82));
+    linear-gradient(180deg, rgba(9, 13, 33, 0.88), rgba(6, 9, 22, 0.72));
   box-shadow: var(--laws-shadow-deep);
 }
 
@@ -987,32 +1095,32 @@ canvas[data-laws-compositor-layer="front"] {
 
 .laws-atlas-key__eyebrow {
   color: var(--laws-gold-bright);
-  font-size: 0.73rem;
-  font-weight: 800;
-  letter-spacing: 0.16em;
+  font-size: 0.72rem;
+  font-weight: 850;
+  letter-spacing: 0.15em;
   text-transform: uppercase;
 }
 
 .laws-atlas-key__identity h2 {
-  margin: 0.2rem 0 0;
-  font-size: clamp(1.35rem, 2.5vw, 2rem);
-  line-height: 1.1;
+  margin: 0.18rem 0 0;
+  font-size: clamp(1.28rem, 2.4vw, 1.9rem);
+  line-height: 1.08;
 }
 
 .laws-atlas-key__state {
   flex: 0 0 auto;
   padding: 0.35rem 0.62rem;
-  border: 1px solid rgba(117, 233, 255, 0.2);
+  border: 1px solid rgba(120, 233, 255, 0.2);
   border-radius: var(--laws-radius-full);
   color: var(--laws-cyan);
-  background: rgba(117, 233, 255, 0.06);
+  background: rgba(120, 233, 255, 0.06);
   font-size: 0.78rem;
-  font-weight: 800;
+  font-weight: 850;
 }
 
 .laws-atlas-key__body {
   display: grid;
-  gap: 0.85rem;
+  gap: 0.75rem;
 }
 
 .laws-atlas-key__purpose,
@@ -1024,12 +1132,12 @@ canvas[data-laws-compositor-layer="front"] {
 
 .laws-law-layers {
   display: grid;
-  gap: 0.75rem;
+  gap: 0.65rem;
 }
 
 .laws-layer-record {
   display: none;
-  padding: 0.9rem;
+  padding: 0.82rem;
   border: 1px solid rgba(255, 255, 255, 0.075);
   border-radius: var(--laws-radius-md);
   background: rgba(255, 255, 255, 0.035);
@@ -1044,14 +1152,14 @@ canvas[data-laws-compositor-layer="front"] {
 .laws-layer-record span {
   display: block;
   color: var(--laws-gold-bright);
-  font-size: 0.78rem;
-  font-weight: 800;
+  font-size: 0.76rem;
+  font-weight: 850;
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
 .laws-layer-record p {
-  margin: 0.3rem 0 0;
+  margin: 0.25rem 0 0;
   color: var(--laws-ink-soft);
 }
 
@@ -1065,7 +1173,7 @@ canvas[data-laws-compositor-layer="front"] {
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
-  padding: 0.45rem 0.62rem;
+  padding: 0.42rem 0.6rem;
   border: 1px solid rgba(255, 255, 255, 0.09);
   border-radius: var(--laws-radius-full);
   color: var(--laws-ink-soft);
@@ -1080,12 +1188,43 @@ canvas[data-laws-compositor-layer="front"] {
 .laws-atlas-key__actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.6rem;
+  gap: 0.55rem;
+}
+
+.button,
+.laws-atlas-key__actions button,
+.laws-atlas-key__actions a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.55rem;
+  padding: 0.62rem 0.9rem;
+  border: 1px solid rgba(255, 255, 255, 0.11);
+  border-radius: var(--laws-radius-full);
+  color: var(--laws-ink);
+  background: rgba(255, 255, 255, 0.055);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.button-gold,
+.laws-atlas-key__primary {
+  border-color: rgba(255, 228, 155, 0.34) !important;
+  color: #140f03 !important;
+  background:
+    linear-gradient(135deg, #ffe49b, #e0b85b 62%, #b47b2d) !important;
+  box-shadow: 0 0.75rem 2.1rem rgba(224, 184, 91, 0.22);
+}
+
+button:disabled,
+[aria-disabled="true"] {
+  cursor: not-allowed;
+  opacity: 0.56;
 }
 
 .laws-atlas-key__technical {
   border-top: 1px solid rgba(255, 255, 255, 0.08);
-  padding-top: 0.75rem;
+  padding-top: 0.7rem;
 }
 
 .laws-atlas-key__technical summary {
@@ -1099,13 +1238,13 @@ canvas[data-laws-compositor-layer="front"] {
 .laws-controller-panel__facts {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 0.55rem;
-  margin: 0.8rem 0 0;
+  gap: 0.5rem;
+  margin: 0.75rem 0 0;
 }
 
 .laws-controller-panel__facts div {
   min-width: 0;
-  padding: 0.65rem;
+  padding: 0.62rem;
   border: 1px solid rgba(255, 255, 255, 0.075);
   border-radius: var(--laws-radius-sm);
   background: rgba(255, 255, 255, 0.035);
@@ -1123,136 +1262,63 @@ canvas[data-laws-compositor-layer="front"] {
   word-break: break-word;
 }
 
+
 /* ============================================================
-   9. THRESHOLD / FOUNDATIONS / CONTENT
+   13. DISCOVERY / DROPDOWN SYSTEM
    ============================================================ */
 
-.laws-threshold,
-.laws-foundations,
-.laws-branches,
-.laws-route-maturity,
-.laws-runtime-evidence {
-  margin-top: clamp(1rem, 3vw, 2rem);
-  padding: clamp(1rem, 2.6vw, 1.65rem);
+.laws-discovery {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.laws-discovery__item {
   border: 1px solid rgba(255, 255, 255, 0.085);
-  border-radius: var(--laws-radius-xl);
+  border-radius: var(--laws-radius-lg);
   background:
-    linear-gradient(180deg, rgba(10, 14, 34, 0.78), rgba(7, 10, 24, 0.7));
+    linear-gradient(180deg, rgba(10, 14, 34, 0.72), rgba(7, 10, 24, 0.62));
   box-shadow: var(--laws-shadow-deep);
 }
 
-.laws-threshold__frame {
-  display: grid;
-  grid-template-columns: minmax(0, 1.4fr) minmax(16rem, 0.6fr);
-  gap: clamp(1rem, 3vw, 2rem);
-  align-items: stretch;
-}
-
-.laws-gate-badge {
-  display: inline-flex;
-  width: fit-content;
-  max-width: 100%;
-  padding: 0.38rem 0.58rem;
-  border: 1px solid rgba(255, 228, 155, 0.2);
-  border-radius: var(--laws-radius-full);
-  color: var(--laws-gold-bright);
-  background: rgba(255, 228, 155, 0.065);
-  font-size: 0.72rem;
-  font-weight: 800;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-}
-
-.laws-door-subtitle {
-  max-width: 48rem;
-  margin: 0.8rem 0 0;
-  color: var(--laws-ink);
-  font-size: clamp(1.05rem, 2vw, 1.35rem);
-}
-
-.laws-threshold__lead,
-.laws-foundations__heading p,
-.laws-branches__heading p,
-.laws-route-maturity__heading p {
-  max-width: 64rem;
-  color: var(--laws-ink-soft);
-}
-
-.laws-threshold__actions {
+.laws-discovery__item > summary {
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.65rem;
-  margin-top: 1.1rem;
-}
-
-.laws-threshold__signal {
-  display: grid;
-  align-content: center;
-  gap: 0.7rem;
-  padding: clamp(1rem, 2.2vw, 1.35rem);
-  border: 1px solid rgba(117, 233, 255, 0.18);
-  border-radius: var(--laws-radius-lg);
-  background:
-    radial-gradient(circle at 20% 0%, rgba(117, 233, 255, 0.15), transparent 14rem),
-    rgba(255, 255, 255, 0.035);
-}
-
-.laws-threshold__signal span {
-  color: var(--laws-cyan);
-  font-size: 0.74rem;
-  font-weight: 800;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-}
-
-.laws-threshold__signal strong {
-  font-size: clamp(1.2rem, 2.3vw, 1.75rem);
-  line-height: 1.12;
-}
-
-.laws-threshold__signal p {
-  margin: 0;
-  color: var(--laws-ink-soft);
-}
-
-.laws-foundations__list {
-  display: grid;
-  gap: 0.8rem;
-  margin-top: 1rem;
-}
-
-.laws-foundation,
-.laws-runtime-evidence details,
-.laws-atlas-key__technical,
-.laws-raw-receipt-disclosure {
-  border: 1px solid rgba(255, 255, 255, 0.085);
-  border-radius: var(--laws-radius-md);
-  background: rgba(255, 255, 255, 0.035);
-}
-
-.laws-foundation summary,
-.laws-runtime-evidence summary,
-.laws-raw-receipt-disclosure summary {
-  display: flex;
+  align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  padding: 0.9rem 1rem;
+  padding: clamp(0.95rem, 2vw, 1.15rem);
   cursor: pointer;
-}
-
-.laws-foundation summary strong,
-.laws-runtime-evidence summary strong {
   color: var(--laws-gold-bright);
+  font-size: clamp(1rem, 2vw, 1.22rem);
+  font-weight: 850;
 }
 
-.laws-foundation__body,
-.laws-runtime-evidence__body {
-  padding: 0 1rem 1rem;
+.laws-discovery__item > summary::after {
+  content: "+";
+  color: var(--laws-cyan);
+  font-size: 1.25rem;
+  font-weight: 900;
+}
+
+.laws-discovery__item[open] > summary::after {
+  content: "–";
+}
+
+.laws-discovery__item > p,
+.laws-discovery__item > .laws-equation-boundary {
+  max-width: 70rem;
+  margin: 0;
+  padding: 0 clamp(0.95rem, 2vw, 1.15rem) clamp(0.95rem, 2vw, 1.15rem);
+  color: var(--laws-ink-soft);
+}
+
+.laws-discovery__more {
+  margin: 0 clamp(0.95rem, 2vw, 1.15rem) 0.75rem;
 }
 
 .laws-equation-card {
+  margin: 0 0.95rem 0.95rem;
   padding: 0.9rem;
-  border: 1px solid rgba(117, 233, 255, 0.14);
+  border: 1px solid rgba(120, 233, 255, 0.14);
   border-radius: var(--laws-radius-md);
   background: rgba(5, 9, 22, 0.72);
 }
@@ -1261,7 +1327,7 @@ canvas[data-laws-compositor-layer="front"] {
   margin-bottom: 0.45rem;
   color: var(--laws-cyan);
   font-size: 0.72rem;
-  font-weight: 800;
+  font-weight: 850;
   letter-spacing: 0.12em;
   text-transform: uppercase;
 }
@@ -1282,22 +1348,23 @@ code {
   font-size: 0.86rem;
 }
 
-.laws-evidence-grid,
-.laws-maturity-grid,
 .laws-branch-grid,
-.laws-equation-grid,
-.laws-ownership-chain {
+.laws-maturity-grid,
+.laws-evidence-grid,
+.laws-ownership-chain,
+.laws-equation-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 0.85rem;
+  padding: 0 clamp(0.95rem, 2vw, 1.15rem) clamp(0.95rem, 2vw, 1.15rem);
 }
 
-.laws-evidence-grid article,
+.laws-branch-card,
 .laws-maturity-grid article,
-.laws-ownership-chain article,
-.laws-branch-card {
+.laws-evidence-grid article,
+.laws-ownership-chain article {
   min-width: 0;
-  padding: 0.95rem;
+  padding: 0.92rem;
   border: 1px solid rgba(255, 255, 255, 0.085);
   border-radius: var(--laws-radius-md);
   background: rgba(255, 255, 255, 0.035);
@@ -1317,43 +1384,56 @@ code {
   display: block;
   color: var(--laws-cyan);
   font-size: 0.72rem;
-  font-weight: 800;
+  font-weight: 850;
   letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 
 .laws-branch-card strong,
+.laws-maturity-grid h3,
 .laws-evidence-grid h3,
-.laws-maturity-grid h3 {
+.laws-ownership-chain strong {
   display: block;
-  margin: 0.32rem 0;
+  margin: 0.3rem 0;
   color: var(--laws-gold-bright);
-  font-size: 1.05rem;
+  font-size: 1.03rem;
 }
 
 .laws-branch-card p,
-.laws-evidence-grid p,
 .laws-maturity-grid p,
+.laws-evidence-grid p,
 .laws-ownership-chain p {
-  margin: 0.35rem 0 0;
+  margin: 0.34rem 0 0;
   color: var(--laws-ink-soft);
 }
 
-/* ============================================================
-   10. RECEIPTS / RUNTIME EVIDENCE
-   ============================================================ */
-
 .laws-runtime-evidence__group {
-  margin-top: 0.75rem;
+  margin: 0 clamp(0.95rem, 2vw, 1.15rem) 0.75rem;
+}
+
+.laws-runtime-evidence__group > p {
+  padding: 0 0.95rem 0.95rem;
 }
 
 .laws-receipt-accordion {
   display: grid;
   gap: 0.65rem;
+  padding: 0 0.95rem 0.95rem;
+}
+
+.laws-receipt-record {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--laws-radius-md);
+  background: rgba(255, 255, 255, 0.03);
 }
 
 .laws-receipt-record summary {
+  display: flex;
   align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.78rem;
+  cursor: pointer;
 }
 
 .laws-receipt-record small {
@@ -1367,8 +1447,8 @@ code {
   border-radius: var(--laws-radius-full);
   color: var(--laws-gold-bright);
   background: rgba(255, 228, 155, 0.055);
-  font-size: 0.75rem;
-  font-weight: 800;
+  font-size: 0.74rem;
+  font-weight: 850;
 }
 
 .laws-receipt-record dl {
@@ -1376,12 +1456,12 @@ code {
   grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 0.5rem;
   margin: 0;
-  padding: 0 1rem 1rem;
+  padding: 0 0.78rem 0.78rem;
 }
 
 .laws-receipt-record dl div {
   min-width: 0;
-  padding: 0.65rem;
+  padding: 0.62rem;
   border: 1px solid rgba(255, 255, 255, 0.075);
   border-radius: var(--laws-radius-sm);
   background: rgba(255, 255, 255, 0.03);
@@ -1400,14 +1480,24 @@ code {
 .laws-raw-receipt {
   overflow: auto;
   max-height: 20rem;
-  padding: 1rem;
+  padding: 0.95rem;
   border-top: 1px solid rgba(255, 255, 255, 0.075);
   color: var(--laws-ink-soft);
 }
 
+
 /* ============================================================
-   11. FOOTER
+   14. CLOSING / FOOTER
    ============================================================ */
+
+.laws-closing {
+  display: grid;
+  gap: 0.4rem;
+  padding: clamp(0.9rem, 2vw, 1.1rem);
+  border: 1px solid rgba(120, 233, 255, 0.13);
+  border-radius: var(--laws-radius-lg);
+  background: rgba(255, 255, 255, 0.035);
+}
 
 .laws-footer {
   display: flex;
@@ -1444,13 +1534,14 @@ code {
   color: var(--laws-gold-bright);
 }
 
+
 /* ============================================================
-   12. SYSTEM STATES / FAILURE SAFE
+   15. STATE / FAILURE-SAFE RULES
    ============================================================ */
 
 [data-laws-root][data-held="true"] .laws-orbit__field,
 [data-laws-root][data-laws-held="true"] .laws-orbit__field {
-  border-color: rgba(255, 108, 108, 0.28);
+  border-color: rgba(255, 116, 116, 0.28);
 }
 
 [data-laws-root][data-held="true"] [data-laws-category],
@@ -1465,22 +1556,16 @@ code {
 [data-laws-staged-interaction-error="true"] .laws-orbit__field {
   box-shadow:
     var(--laws-shadow-deep),
-    inset 0 0 0 1px rgba(255, 108, 108, 0.18);
+    inset 0 0 0 1px rgba(255, 116, 116, 0.18);
 }
 
-/* If crystals are running, fallback stars remain semantic controls. */
-[data-laws-crystals-status="available"] [data-laws-fallback-star],
-[data-laws-crystals-ready="true"] [data-laws-fallback-star] {
-  pointer-events: auto;
-}
 
 /* ============================================================
-   13. RESPONSIVE
+   16. RESPONSIVE
    ============================================================ */
 
-@media (max-width: 900px) {
+@media (max-width: 960px) {
   .laws-topbar,
-  .laws-orbit__heading,
   .laws-footer {
     align-items: stretch;
     flex-direction: column;
@@ -1491,12 +1576,11 @@ code {
     justify-content: flex-start;
   }
 
-  .laws-threshold__frame,
-  .laws-evidence-grid,
-  .laws-maturity-grid,
   .laws-branch-grid,
-  .laws-equation-grid,
-  .laws-ownership-chain {
+  .laws-maturity-grid,
+  .laws-evidence-grid,
+  .laws-ownership-chain,
+  .laws-equation-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
@@ -1504,25 +1588,27 @@ code {
   .laws-receipt-record dl {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+
+  .laws-value-deck {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 680px) {
   :root {
-    --laws-center-size: clamp(7rem, 33vw, 9rem);
+    --laws-center-size: clamp(7rem, 34vw, 9rem);
     --laws-category-size: clamp(2.45rem, 13vw, 3.5rem);
     --laws-law-size: clamp(1.65rem, 8.5vw, 2.35rem);
+    --laws-stage-min: min(124vw, 32rem);
   }
 
   .laws-shell {
     width: min(100% - 1rem, var(--laws-shell-max));
   }
 
-  .laws-orbit {
-    padding: 0.75rem;
-  }
-
-  .laws-orbit__field {
-    min-height: min(124vw, 32rem);
+  .laws-threshold h1,
+  .laws-orbit-intro h2 {
+    max-width: 100%;
   }
 
   [data-laws-category][data-direction="flow"] {
@@ -1621,23 +1707,14 @@ code {
     left: 17%;
   }
 
-  .laws-threshold__frame,
-  .laws-evidence-grid,
-  .laws-maturity-grid,
   .laws-branch-grid,
-  .laws-equation-grid,
+  .laws-maturity-grid,
+  .laws-evidence-grid,
   .laws-ownership-chain,
+  .laws-equation-grid,
   .laws-controller-panel__facts,
   .laws-receipt-record dl {
     grid-template-columns: 1fr;
-  }
-
-  .laws-orbit__heading h1,
-  .laws-threshold h2,
-  .laws-foundations__heading h2,
-  .laws-branches__heading h2,
-  .laws-route-maturity__heading h2 {
-    max-width: 100%;
   }
 }
 
@@ -1656,56 +1733,55 @@ code {
   }
 }
 
+
 /* ============================================================
-   14. RECEIPT
+   17. RECEIPT
    ============================================================ */
 
 /*
-LAWS_COMPASS_LANE_B_REBUILT_CSS_RECEIPT_v2_0_0
+LAWS_COMPASS_LANE_B_INDEX_DERIVED_CSS_RECEIPT_v2_1_0
 
 TARGET:
 /laws/index.css
 
 CONTRACT:
-LAWS_COMPASS_LANE_B_REBUILT_CSS_TNT_v2_0_0
+LAWS_COMPASS_LANE_B_INDEX_DERIVED_CSS_TNT_v2_1_0
 
 PAIRING HTML:
-LAWS_COMPASS_LANE_B_REBUILT_HTML_TNT_v2_0_0
+LAWS_COMPASS_LANE_B_INDEX_DERIVED_HTML_TNT_v2_1_0
 
-LANE:
-B
+INDEX MODEL USE:
+Presentation architecture only.
 
-VISIBLE FIRST-PAINT INTENT:
-- fixed Main Compass center
-- four category stars visible
-- Flow north
-- Integrity east
-- Reality south
-- Structure west
-- CSS atmosphere available without Cosmos
-- no compositor/crystals dependency for first-paint category visibility
+MAJOR INTEGRATED CHANGES:
+- No tail patches.
+- Visible center labels are not styled into visibility.
+- Star child labels remain sr-only only.
+- Body-level Back to law compass pill is not part of the paired v2.1 HTML.
+- Planetary center is a first-class visual structure.
+- Secondary content uses index-derived disclosure/discovery structure.
+- Runtime canvases remain pointer transparent.
+- Semantic controls remain hit targets.
+- First-paint category fallback remains visible.
+- Law controls remain hidden until active cluster/projection state.
+- Crystals/projection mode may suppress fallback skins while retaining hit targets.
 
-RUNTIME PAIRING:
-- Preserves [data-laws-scene-field] as compositor field.
-- Preserves [data-upstream-compass-mount] layer.
-- Preserves [data-upstream-compass-control] pointer surface.
-- Preserves [data-laws-objects] semantic layer.
-- Preserves [data-laws-category] controls.
-- Preserves [data-laws-law] controls.
-- Supports controller root-state selectors.
-- Supports interactions projection datasets.
-- Does not intentionally override interactions inline projection coordinates.
-- Supports compositor rear/front canvases.
-- Keeps compositor canvases pointer-events:none.
-
-REGISTRY CLAIM:
-None. Registry authority remains controller/declared DOM.
-
-EVIDENCE CLAIM:
-None. Evidence remains separate.
-
-COSMOS DEPENDENCY:
-FALSE
+RUNTIME SURFACES SUPPORTED:
+- [data-laws-root]
+- [data-laws-scene]
+- [data-laws-scene-field]
+- [data-laws-panel]
+- [data-upstream-compass-control]
+- [data-upstream-compass-mount]
+- [data-laws-objects]
+- [data-laws-category]
+- [data-laws-law]
+- [data-laws-controller-receipt]
+- [data-laws-controller-validation]
+- [data-laws-interactions-receipt]
+- [data-laws-compositor-receipt]
+- [data-laws-crystals-receipt]
+- [data-laws-cosmos-receipt]
 
 CONTROLLER REOPEN:
 FALSE
@@ -1719,6 +1795,9 @@ FALSE
 CRYSTALS REOPEN:
 FALSE
 
+COSMOS FUNCTIONAL DEPENDENCY:
+FALSE
+
 RUNTIME EXECUTION:
 NOT PERFORMED
 
@@ -1730,76 +1809,4 @@ FALSE
 
 DEPLOYMENT AUTHORIZATION:
 FALSE
-*/
-/* ============================================================
-   15. LANE B LABEL SUPPRESSION PATCH
-   Contract:
-   LAWS_COMPASS_LANE_B_LABEL_SUPPRESSION_PATCH_v1_0_0
-
-   Purpose:
-   Remove visible compass/return/helper labels from the Laws compass
-   while preserving semantic controls, aria labels, sr-only text, pointer
-   behavior, controller bindings, interactions, compositor, and crystals.
-
-   Runtime status:
-   NOT EXECUTED
-
-   Visual acceptance:
-   NOT CLAIMED
-   ============================================================ */
-
-/* Hide the visible fixed accessibility return pill that appears over the stage. */
-.laws-accessible-orbit-return {
-  display: none !important;
-}
-
-/* Hide visible Main Compass text while preserving the button hit target. */
-.laws-compass-control__label,
-.laws-compass-control__instruction {
-  display: none !important;
-}
-
-/* Keep the center compass control fully interactive without text overlays. */
-.laws-compass-control,
-[data-upstream-compass-control],
-[data-laws-compass-control] {
-  place-content: center !important;
-  align-content: center !important;
-  justify-items: center !important;
-  padding: 0 !important;
-  color: transparent !important;
-  text-shadow: none !important;
-}
-
-/* Prevent any non-sr-only child text from leaking into the star field. */
-[data-laws-scene-field] [data-laws-objects] .laws-star > span:not(.sr-only),
-[data-laws-scene-field] [data-laws-objects] [data-laws-category] > span:not(.sr-only),
-[data-laws-scene-field] [data-laws-objects] [data-laws-law] > span:not(.sr-only) {
-  display: none !important;
-}
-
-/* Keep semantic-only text accessible but never visually rendered. */
-[data-laws-scene-field] .sr-only {
-  position: absolute !important;
-  width: 1px !important;
-  height: 1px !important;
-  padding: 0 !important;
-  margin: -1px !important;
-  overflow: hidden !important;
-  white-space: nowrap !important;
-  clip: rect(0, 0, 0, 0) !important;
-  border: 0 !important;
-}
-
-/*
-LABEL SUPPRESSION RECEIPT:
-- Visible compass labels suppressed.
-- Visible accessibility return pill suppressed.
-- Semantic controls preserved.
-- aria-labels preserved.
-- sr-only text preserved.
-- Pointer behavior preserved.
-- Controller/interactions/compositor/crystals untouched.
-- Runtime execution not performed.
-- Visual acceptance not claimed.
 */

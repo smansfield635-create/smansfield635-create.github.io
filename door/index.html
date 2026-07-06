@@ -1,18 +1,16 @@
 <!-- TARGET FILE: /door/index.html -->
 <!-- COMPLETE REPLACEMENT -->
-<!-- DOOR_FRONT_WEBSITE_THRESHOLD_PRACTICAL_ENTRY_AI_GUIDES_SINGLE_FILE_TNT_v2 -->
+<!-- DOOR_FRONT_WEBSITE_THRESHOLD_PRACTICAL_ENTRY_AI_GUIDES_SINGLE_FILE_TNT_v3_SHOWROOM_ROUTE_CLEAN -->
 
-<!doctype html> 
+<!doctype html>
 
 <html
   lang="en"
   data-route="/door/"
   data-page="door"
-  data-version="DOOR-FRONT-WEBSITE-THRESHOLD-2.0.0"
-  data-contract="DOOR_FRONT_WEBSITE_THRESHOLD_PRACTICAL_ENTRY_AI_GUIDES_SINGLE_FILE_TNT_v2"
-  data-previous-contract="DOOR_FRONT_WEBSITE_THRESHOLD_MIRRORLAND_PRODUCTS_AI_CHARACTERS_SINGLE_FILE_TNT_v1"
-  data-previous-source-contract="DOOR_THRESHOLD_DROPDOWN_LEGIBLE_ROUTE_GEMS_TNT_v5"
-  data-previous-js-contract="DOOR_TRUE_3D_SOLID_OPAQUE_ROUTE_GEM_BROWSER_RENEWAL_HTML_JS_TNT_v3"
+  data-version="DOOR-FRONT-WEBSITE-THRESHOLD-3.0.0"
+  data-contract="DOOR_FRONT_WEBSITE_THRESHOLD_PRACTICAL_ENTRY_AI_GUIDES_SINGLE_FILE_TNT_v3_SHOWROOM_ROUTE_CLEAN"
+  data-previous-contract="DOOR_FRONT_WEBSITE_THRESHOLD_PRACTICAL_ENTRY_AI_GUIDES_SINGLE_FILE_TNT_v2"
   data-role="website-front-threshold"
   data-door-not-compass="true"
   data-door-not-narrative-room="true"
@@ -41,9 +39,7 @@
     content="width=device-width,initial-scale=1,viewport-fit=cover"
   >
 
-  <title>
-    Door · Diamond Gate Bridge
-  </title>
+  <title>Door · Diamond Gate Bridge</title>
 
   <meta
     name="description"
@@ -62,28 +58,10 @@
 
   <meta
     name="door-page-contract"
-    content="DOOR_FRONT_WEBSITE_THRESHOLD_PRACTICAL_ENTRY_AI_GUIDES_SINGLE_FILE_TNT_v2"
+    content="DOOR_FRONT_WEBSITE_THRESHOLD_PRACTICAL_ENTRY_AI_GUIDES_SINGLE_FILE_TNT_v3_SHOWROOM_ROUTE_CLEAN"
   >
 
   <style>
-    /* ============================================================
-       DOOR FRONT WEBSITE THRESHOLD EMBEDDED VISUAL SYSTEM v2
-
-       Page:
-       /door/
-
-       Authority:
-       - complete self-contained HTML replacement;
-       - embedded CSS;
-       - embedded page-local JavaScript;
-       - no external Door JS dependency;
-       - no dropdown menu;
-       - no WebGL;
-       - no gem orbit;
-       - no compass module behavior;
-       - Door is website-front practical threshold, not Mirrorland room.
-       ============================================================ */
-
     :root {
       color-scheme: dark;
 
@@ -91,10 +69,8 @@
       --door-bg-1: #050914;
       --door-bg-2: #091020;
       --door-bg-3: #111a2f;
-      --door-bg-4: #17233d;
 
       --door-cream: #fff3dc;
-      --door-cream-soft: #e5d8c1;
       --door-muted: #aeb8c9;
       --door-muted-strong: #cbd3df;
 
@@ -109,10 +85,8 @@
 
       --door-violet: #b798ff;
       --door-violet-soft: #d7c7ff;
-      --door-violet-faint: rgba(183, 152, 255, 0.13);
 
       --door-green: #92f0c5;
-      --door-green-faint: rgba(146, 240, 197, 0.12);
 
       --door-border: rgba(226, 197, 128, 0.24);
       --door-border-strong: rgba(239, 205, 125, 0.5);
@@ -142,14 +116,9 @@
       --door-page-width: 84rem;
       --door-reading-width: 54rem;
 
-      --door-space-1: 0.4rem;
-      --door-space-2: 0.65rem;
-      --door-space-3: 0.95rem;
       --door-space-4: 1.3rem;
-      --door-space-5: 1.8rem;
       --door-space-6: 2.5rem;
       --door-space-7: 3.5rem;
-      --door-space-8: 5rem;
 
       --door-transition-fast: 150ms ease;
       --door-transition:
@@ -170,42 +139,17 @@
 
     body {
       position: relative;
-
       min-width: 20rem;
       min-height: 100vh;
       margin: 0;
       overflow-x: hidden;
-
       color: var(--door-cream);
-
       background:
-        radial-gradient(
-          circle at 50% -12%,
-          rgba(71, 113, 190, 0.34),
-          transparent 35rem
-        ),
-        radial-gradient(
-          circle at 8% 30%,
-          rgba(34, 132, 167, 0.12),
-          transparent 27rem
-        ),
-        radial-gradient(
-          circle at 88% 48%,
-          rgba(120, 82, 181, 0.14),
-          transparent 31rem
-        ),
-        radial-gradient(
-          circle at 50% 96%,
-          rgba(224, 184, 91, 0.1),
-          transparent 30rem
-        ),
-        linear-gradient(
-          180deg,
-          #050916 0%,
-          #02040b 48%,
-          #070b15 100%
-        );
-
+        radial-gradient(circle at 50% -12%, rgba(71, 113, 190, 0.34), transparent 35rem),
+        radial-gradient(circle at 8% 30%, rgba(34, 132, 167, 0.12), transparent 27rem),
+        radial-gradient(circle at 88% 48%, rgba(120, 82, 181, 0.14), transparent 31rem),
+        radial-gradient(circle at 50% 96%, rgba(224, 184, 91, 0.1), transparent 30rem),
+        linear-gradient(180deg, #050916 0%, #02040b 48%, #070b15 100%);
       font-family:
         Inter,
         ui-sans-serif,
@@ -214,7 +158,6 @@
         BlinkMacSystemFont,
         "Segoe UI",
         sans-serif;
-
       font-size: 1rem;
       line-height: 1.65;
       text-rendering: optimizeLegibility;
@@ -225,63 +168,26 @@
       position: fixed;
       z-index: 0;
       inset: 0;
-
       pointer-events: none;
       content: "";
-
       opacity: 0.74;
-
       background:
-        radial-gradient(
-          circle at 18% 22%,
-          rgba(255, 255, 255, 0.82) 0 0.045rem,
-          transparent 0.06rem
-        ),
-        radial-gradient(
-          circle at 77% 17%,
-          rgba(125, 231, 255, 0.72) 0 0.04rem,
-          transparent 0.06rem
-        ),
-        radial-gradient(
-          circle at 89% 72%,
-          rgba(245, 212, 127, 0.78) 0 0.05rem,
-          transparent 0.068rem
-        ),
-        radial-gradient(
-          circle at 35% 81%,
-          rgba(255, 255, 255, 0.68) 0 0.04rem,
-          transparent 0.06rem
-        ),
-        radial-gradient(
-          circle at 12% 68%,
-          rgba(125, 231, 255, 0.54) 0 0.035rem,
-          transparent 0.058rem
-        ),
-        radial-gradient(
-          circle at 58% 33%,
-          rgba(245, 212, 127, 0.48) 0 0.035rem,
-          transparent 0.055rem
-        ),
-        radial-gradient(
-          circle at 46% 11%,
-          rgba(255, 255, 255, 0.58) 0 0.035rem,
-          transparent 0.055rem
-        ),
-        radial-gradient(
-          circle at 71% 89%,
-          rgba(125, 231, 255, 0.46) 0 0.032rem,
-          transparent 0.052rem
-        );
+        radial-gradient(circle at 18% 22%, rgba(255, 255, 255, 0.82) 0 0.045rem, transparent 0.06rem),
+        radial-gradient(circle at 77% 17%, rgba(125, 231, 255, 0.72) 0 0.04rem, transparent 0.06rem),
+        radial-gradient(circle at 89% 72%, rgba(245, 212, 127, 0.78) 0 0.05rem, transparent 0.068rem),
+        radial-gradient(circle at 35% 81%, rgba(255, 255, 255, 0.68) 0 0.04rem, transparent 0.06rem),
+        radial-gradient(circle at 12% 68%, rgba(125, 231, 255, 0.54) 0 0.035rem, transparent 0.058rem),
+        radial-gradient(circle at 58% 33%, rgba(245, 212, 127, 0.48) 0 0.035rem, transparent 0.055rem),
+        radial-gradient(circle at 46% 11%, rgba(255, 255, 255, 0.58) 0 0.035rem, transparent 0.055rem),
+        radial-gradient(circle at 71% 89%, rgba(125, 231, 255, 0.46) 0 0.032rem, transparent 0.052rem);
     }
 
     body::after {
       position: fixed;
       z-index: 1;
       inset: 0;
-
       pointer-events: none;
       content: "";
-
       background:
         linear-gradient(
           90deg,
@@ -356,39 +262,18 @@
       outline-offset: 4px;
     }
 
-    .sr-only {
-      position: absolute !important;
-
-      width: 1px !important;
-      height: 1px !important;
-
-      padding: 0 !important;
-      margin: -1px !important;
-
-      overflow: hidden !important;
-      clip: rect(0, 0, 0, 0) !important;
-
-      white-space: nowrap !important;
-      border: 0 !important;
-    }
-
     .skip-link {
       position: fixed;
       z-index: 10000;
       top: 0.75rem;
       left: 0.75rem;
-
       padding: 0.72rem 1rem;
-
       border: 1px solid var(--door-gold-bright);
       border-radius: var(--door-radius-sm);
-
       color: var(--door-bg-0);
       background: var(--door-gold-bright);
-
       font-weight: 850;
       text-decoration: none;
-
       transform: translateY(-220%);
       transition: transform var(--door-transition-fast);
     }
@@ -400,12 +285,7 @@
     .page-shell {
       position: relative;
       z-index: 2;
-
-      width: min(
-        calc(100% - 2rem),
-        var(--door-page-width)
-      );
-
+      width: min(calc(100% - 2rem), var(--door-page-width));
       margin-inline: auto;
       padding-bottom: var(--door-space-6);
     }
@@ -416,7 +296,6 @@
     .threshold-label,
     .practical-label {
       color: var(--door-gold-bright);
-
       font-size: 0.69rem;
       font-weight: 850;
       letter-spacing: 0.16em;
@@ -431,7 +310,6 @@
         Georgia,
         "Times New Roman",
         serif;
-
       color: var(--door-cream);
       font-weight: 600;
       line-height: 1.02;
@@ -440,14 +318,12 @@
     h1 {
       max-width: 10ch;
       margin-bottom: 0.95rem;
-
       font-size: clamp(3.5rem, 9vw, 7.8rem);
       letter-spacing: -0.055em;
     }
 
     h2 {
       margin-bottom: 0;
-
       font-size: clamp(2.2rem, 5vw, 4.8rem);
       letter-spacing: -0.04em;
     }
@@ -459,30 +335,20 @@
 
     .button {
       display: inline-flex;
-
       min-height: 2.9rem;
       align-items: center;
       justify-content: center;
       gap: 0.55rem;
-
       padding: 0.75rem 1.05rem;
-
       border: 1px solid rgba(226, 231, 241, 0.23);
       border-radius: 999px;
-
       color: var(--door-cream);
       background:
-        linear-gradient(
-          180deg,
-          rgba(255, 255, 255, 0.075),
-          rgba(255, 255, 255, 0.024)
-        ),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.024)),
         rgba(5, 9, 20, 0.84);
-
       box-shadow:
         0 0.7rem 1.8rem rgba(0, 0, 0, 0.2),
         0 0 0 1px rgba(255, 255, 255, 0.018) inset;
-
       font-size: 0.76rem;
       font-weight: 850;
       letter-spacing: 0.065em;
@@ -490,9 +356,7 @@
       text-align: center;
       text-decoration: none;
       text-transform: uppercase;
-
       cursor: pointer;
-
       transition:
         border-color var(--door-transition-fast),
         color var(--door-transition-fast),
@@ -513,7 +377,6 @@
     .button-gold {
       border-color: rgba(255, 222, 142, 0.76);
       color: #171006;
-
       background:
         linear-gradient(
           135deg,
@@ -521,18 +384,9 @@
           #d4a94c 52%,
           #f0ca69 100%
         );
-
       box-shadow:
         0 0.95rem 2.3rem rgba(156, 105, 25, 0.24),
         0 0 1.7rem rgba(245, 213, 130, 0.16);
-    }
-
-    .button-gold:hover {
-      border-color: #fff1bf;
-
-      box-shadow:
-        0 1rem 2.7rem rgba(156, 105, 25, 0.3),
-        0 0 2rem rgba(245, 213, 130, 0.22);
     }
 
     .button-blue {
@@ -547,71 +401,44 @@
         rgba(5, 9, 20, 0.84);
     }
 
-    .button-violet {
-      border-color: rgba(183, 152, 255, 0.48);
-      color: var(--door-violet-soft);
-      background:
-        linear-gradient(
-          180deg,
-          rgba(183, 152, 255, 0.1),
-          rgba(255, 255, 255, 0.02)
-        ),
-        rgba(5, 9, 20, 0.84);
-    }
-
-    /* ============================================================
-       TOPBAR
-       ============================================================ */
-
     .page-topbar {
       display: flex;
-
       min-height: 4.7rem;
       align-items: center;
       justify-content: space-between;
       gap: 1rem;
-
       margin-top: 0.8rem;
       padding: 0.72rem 0.88rem;
-
       border: 1px solid rgba(225, 197, 127, 0.18);
       border-radius: var(--door-radius-lg);
-
       background:
         linear-gradient(
           180deg,
           rgba(18, 26, 48, 0.84),
           rgba(5, 9, 20, 0.78)
         );
-
       box-shadow: var(--door-shadow);
       backdrop-filter: blur(1rem);
     }
 
     .brand {
       display: inline-flex;
-
       min-width: 0;
       align-items: center;
       gap: 0.75rem;
-
       color: inherit;
       text-decoration: none;
     }
 
     .brand-mark {
       position: relative;
-
       display: grid;
-
       width: 2.75rem;
       height: 2.75rem;
       flex: 0 0 auto;
       place-items: center;
-
       border: 1px solid rgba(241, 207, 123, 0.58);
       border-radius: 50%;
-
       color: var(--door-gold-bright);
       background:
         radial-gradient(
@@ -619,7 +446,6 @@
           rgba(221, 181, 89, 0.17),
           rgba(12, 17, 33, 0.95)
         );
-
       box-shadow:
         0 0 1.4rem rgba(220, 180, 87, 0.14),
         inset 0 0 0 0.22rem rgba(255, 255, 255, 0.025);
@@ -629,9 +455,7 @@
     .brand-mark::after {
       position: absolute;
       inset: 24%;
-
       content: "";
-
       border: 1px solid currentColor;
       transform: rotate(45deg);
     }
@@ -649,7 +473,6 @@
 
     .brand-copy span {
       color: var(--door-muted);
-
       font-size: 0.61rem;
       font-weight: 750;
       letter-spacing: 0.12em;
@@ -658,14 +481,11 @@
 
     .brand-copy strong {
       overflow: hidden;
-
       color: var(--door-cream);
-
       font-family:
         Georgia,
         "Times New Roman",
         serif;
-
       font-size: 1.02rem;
       font-weight: 600;
       text-overflow: ellipsis;
@@ -680,17 +500,13 @@
 
     .topbar-nav a {
       padding: 0.48rem 0.68rem;
-
       border-radius: 999px;
-
       color: var(--door-muted-strong);
-
       font-size: 0.69rem;
       font-weight: 800;
       letter-spacing: 0.05em;
       text-decoration: none;
       text-transform: uppercase;
-
       transition:
         color var(--door-transition-fast),
         background var(--door-transition-fast);
@@ -700,10 +516,6 @@
       color: var(--door-cream);
       background: rgba(255, 255, 255, 0.06);
     }
-
-    /* ============================================================
-       MAIN FLOW
-       ============================================================ */
 
     main {
       display: grid;
@@ -715,41 +527,17 @@
       scroll-margin-top: 1rem;
     }
 
-    /* ============================================================
-       HERO THRESHOLD
-       ============================================================ */
-
     .route-hero {
       position: relative;
-
       min-height: min(82vh, 52rem);
       overflow: hidden;
-
       border: 1px solid rgba(224, 184, 91, 0.23);
       border-radius: var(--door-radius-xl);
-
       background:
-        radial-gradient(
-          circle at 16% 18%,
-          rgba(125, 231, 255, 0.14),
-          transparent 24rem
-        ),
-        radial-gradient(
-          circle at 83% 70%,
-          rgba(183, 152, 255, 0.14),
-          transparent 28rem
-        ),
-        radial-gradient(
-          circle at 58% 50%,
-          rgba(245, 212, 127, 0.08),
-          transparent 20rem
-        ),
-        linear-gradient(
-          145deg,
-          rgba(16, 25, 46, 0.9),
-          rgba(3, 6, 15, 0.97)
-        );
-
+        radial-gradient(circle at 16% 18%, rgba(125, 231, 255, 0.14), transparent 24rem),
+        radial-gradient(circle at 83% 70%, rgba(183, 152, 255, 0.14), transparent 28rem),
+        radial-gradient(circle at 58% 50%, rgba(245, 212, 127, 0.08), transparent 20rem),
+        linear-gradient(145deg, rgba(16, 25, 46, 0.9), rgba(3, 6, 15, 0.97));
       box-shadow: var(--door-shadow-deep);
       isolation: isolate;
     }
@@ -758,9 +546,7 @@
       position: absolute;
       z-index: -1;
       inset: 0;
-
       content: "";
-
       background:
         linear-gradient(
           115deg,
@@ -770,32 +556,18 @@
           rgba(224, 184, 91, 0.035) 58.5%,
           transparent 59%
         ),
-        radial-gradient(
-          circle at 70% 42%,
-          transparent 0 9rem,
-          rgba(125, 231, 255, 0.055) 9.1rem 9.2rem,
-          transparent 9.3rem
-        ),
-        radial-gradient(
-          circle at 70% 42%,
-          transparent 0 14rem,
-          rgba(224, 184, 91, 0.045) 14.1rem 14.2rem,
-          transparent 14.3rem
-        );
+        radial-gradient(circle at 70% 42%, transparent 0 9rem, rgba(125, 231, 255, 0.055) 9.1rem 9.2rem, transparent 9.3rem),
+        radial-gradient(circle at 70% 42%, transparent 0 14rem, rgba(224, 184, 91, 0.045) 14.1rem 14.2rem, transparent 14.3rem);
     }
 
     .route-hero__inner {
       display: grid;
-
       min-height: inherit;
-
       grid-template-columns:
         minmax(0, 1.06fr)
         minmax(18rem, 0.94fr);
-
       align-items: center;
       gap: clamp(2rem, 6vw, 6rem);
-
       padding:
         clamp(2rem, 6vw, 5rem)
         clamp(1.2rem, 4vw, 4rem);
@@ -810,14 +582,12 @@
       display: inline-flex;
       align-items: center;
       gap: 0.5rem;
-
       margin-bottom: 1.2rem;
     }
 
     .route-kicker::before {
       width: 1.75rem;
       height: 1px;
-
       content: "";
       background: currentColor;
       box-shadow: 0 0 1rem rgba(224, 184, 91, 0.3);
@@ -826,14 +596,11 @@
     .hero-subtitle {
       max-width: 38rem;
       margin-bottom: 0.85rem;
-
       color: var(--door-blue-soft);
-
       font-family:
         Georgia,
         "Times New Roman",
         serif;
-
       font-size: clamp(1.25rem, 2.7vw, 2rem);
       line-height: 1.22;
     }
@@ -841,7 +608,6 @@
     .hero-lead {
       max-width: 47rem;
       margin-bottom: 1.5rem;
-
       color: var(--door-muted-strong);
       font-size: clamp(1rem, 1.5vw, 1.15rem);
     }
@@ -852,41 +618,20 @@
       gap: 0.7rem;
     }
 
-    /* ============================================================
-       THRESHOLD OBJECT
-       ============================================================ */
-
     .threshold-stage {
       position: relative;
-
       display: grid;
       align-content: end;
       gap: 1rem;
-
       min-height: 27rem;
       overflow: hidden;
       padding: 1.4rem;
-
       border: 1px solid var(--door-border-cool);
       border-radius: var(--door-radius-lg);
-
       background:
-        radial-gradient(
-          circle at 50% 35%,
-          rgba(125, 231, 255, 0.17),
-          transparent 10.5rem
-        ),
-        radial-gradient(
-          circle at 50% 38%,
-          rgba(245, 212, 127, 0.08),
-          transparent 14rem
-        ),
-        linear-gradient(
-          180deg,
-          rgba(19, 31, 55, 0.92),
-          rgba(5, 9, 20, 0.96)
-        );
-
+        radial-gradient(circle at 50% 35%, rgba(125, 231, 255, 0.17), transparent 10.5rem),
+        radial-gradient(circle at 50% 38%, rgba(245, 212, 127, 0.08), transparent 14rem),
+        linear-gradient(180deg, rgba(19, 31, 55, 0.92), rgba(5, 9, 20, 0.96));
       box-shadow:
         var(--door-shadow),
         inset 0.24rem 0 0 rgba(125, 231, 255, 0.28);
@@ -896,12 +641,9 @@
       position: absolute;
       top: -10%;
       left: 50%;
-
       width: 12rem;
       height: 24rem;
-
       pointer-events: none;
-
       background:
         linear-gradient(
           180deg,
@@ -910,38 +652,25 @@
           rgba(245, 212, 127, 0.15) 64%,
           rgba(245, 212, 127, 0)
         );
-
       filter: blur(0.2rem);
       opacity: 0.78;
       transform:
         translateX(-50%)
         perspective(24rem)
         rotateX(32deg);
-
-      clip-path: polygon(
-        48% 0,
-        52% 0,
-        100% 100%,
-        0 100%
-      );
-
-      animation:
-        thresholdBeam 4.8s ease-in-out infinite;
+      clip-path: polygon(48% 0, 52% 0, 100% 100%, 0 100%);
+      animation: thresholdBeam 4.8s ease-in-out infinite;
     }
 
     .threshold-frame {
       position: absolute;
       top: 12%;
       left: 50%;
-
       width: min(15rem, 62vw);
       height: 18rem;
-
       pointer-events: none;
-
       border: 1px solid rgba(255, 231, 165, 0.62);
       border-radius: 1.35rem 1.35rem 0.75rem 0.75rem;
-
       background:
         linear-gradient(
           145deg,
@@ -949,33 +678,25 @@
           rgba(125, 231, 255, 0.045) 48%,
           rgba(5, 9, 20, 0.68)
         );
-
       box-shadow:
         0 0 3.2rem rgba(245, 212, 127, 0.14),
         0 1.4rem 3rem rgba(0, 0, 0, 0.42),
         inset 0 0 0 1px rgba(255, 255, 255, 0.08),
         inset 0 0 2rem rgba(245, 212, 127, 0.08);
-
       transform:
         translateX(-50%)
         translateY(0);
-
-      animation:
-        thresholdFloat 5.6s ease-in-out infinite;
+      animation: thresholdFloat 5.6s ease-in-out infinite;
     }
 
     .threshold-frame::before {
       position: absolute;
       top: 0.9rem;
       left: 50%;
-
       width: 0.16rem;
       height: calc(100% - 1.8rem);
-
       content: "";
-
       border-radius: 999px;
-
       background:
         linear-gradient(
           180deg,
@@ -984,65 +705,33 @@
           rgba(255, 231, 165, 0.5),
           rgba(125, 231, 255, 0)
         );
-
       box-shadow:
         0 0 1.2rem rgba(125, 231, 255, 0.55),
         0 0 2.4rem rgba(245, 212, 127, 0.2);
-
       transform: translateX(-50%);
-      animation:
-        thresholdSeam 3.8s ease-in-out infinite;
-    }
-
-    .threshold-frame::after {
-      position: absolute;
-      inset: 0.72rem;
-
-      content: "";
-
-      border: 1px solid rgba(125, 231, 255, 0.2);
-      border-radius: 0.9rem 0.9rem 0.55rem 0.55rem;
-
-      background:
-        linear-gradient(
-          90deg,
-          transparent,
-          rgba(255, 231, 165, 0.08),
-          transparent
-        );
-
-      transform: translateX(-110%);
-      animation:
-        thresholdScan 4.6s ease-in-out infinite;
+      animation: thresholdSeam 3.8s ease-in-out infinite;
     }
 
     .threshold-ring {
       position: absolute;
       top: 15%;
       left: 50%;
-
       width: 14rem;
       aspect-ratio: 1;
-
       pointer-events: none;
-
       border: 1px solid rgba(125, 231, 255, 0.2);
       border-radius: 50%;
-
       box-shadow:
         0 0 3rem rgba(125, 231, 255, 0.11),
         inset 0 0 2rem rgba(125, 231, 255, 0.05);
-
       transform: translateX(-50%);
-      animation:
-        thresholdRing 16s linear infinite;
+      animation: thresholdRing 16s linear infinite;
     }
 
     .threshold-ring::before,
     .threshold-ring::after {
       position: absolute;
       inset: 14%;
-
       content: "";
       border: 1px solid rgba(245, 212, 127, 0.17);
       border-radius: 50%;
@@ -1057,21 +746,14 @@
 
     .threshold-particle {
       position: absolute;
-
       width: 0.28rem;
       aspect-ratio: 1;
-
       pointer-events: none;
-
       border-radius: 50%;
       background: rgba(183, 245, 255, 0.78);
-      box-shadow:
-        0 0 0.9rem rgba(183, 245, 255, 0.52);
-
+      box-shadow: 0 0 0.9rem rgba(183, 245, 255, 0.52);
       opacity: 0.72;
-
-      animation:
-        particleDrift 8s ease-in-out infinite;
+      animation: particleDrift 8s ease-in-out infinite;
     }
 
     .threshold-particle:nth-of-type(1) {
@@ -1126,21 +808,17 @@
     .threshold-label {
       display: block;
       margin-bottom: 0.45rem;
-
       color: var(--door-blue);
     }
 
     .threshold-copy strong {
       display: block;
       margin-bottom: 0.65rem;
-
       color: var(--door-cream);
-
       font-family:
         Georgia,
         "Times New Roman",
         serif;
-
       font-size: clamp(1.35rem, 2.5vw, 2rem);
       font-weight: 600;
       line-height: 1.12;
@@ -1148,65 +826,68 @@
 
     .threshold-copy p {
       margin-bottom: 0;
-
       color: var(--door-muted);
       font-size: 0.9rem;
     }
 
-    /* ============================================================
-       ENTRY GRID
-       ============================================================ */
-
-    .entry-section {
+    .entry-section,
+    .character-section {
       display: grid;
       gap: 1rem;
     }
 
     .section-heading {
       display: grid;
-
       grid-template-columns:
         minmax(0, 1fr)
         minmax(16rem, 27rem);
-
       align-items: end;
       gap: 1.5rem;
-
       padding-inline: 0.35rem;
     }
 
     .section-heading p {
       margin-bottom: 0.25rem;
-
       color: var(--door-muted-strong);
     }
 
     .entry-grid {
       display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 0.9rem;
+    }
 
-      grid-template-columns:
-        repeat(4, minmax(0, 1fr));
+    .character-section {
+      padding: clamp(1rem, 2.8vw, 2rem);
+      border: 1px solid rgba(125, 231, 255, 0.18);
+      border-radius: var(--door-radius-xl);
+      background:
+        linear-gradient(
+          145deg,
+          rgba(12, 24, 42, 0.86),
+          rgba(4, 7, 16, 0.94)
+        );
+      box-shadow: var(--door-shadow-deep);
+    }
 
+    .character-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 0.9rem;
     }
 
     .entry-card,
     .character-card {
       position: relative;
-
       min-width: 0;
       overflow: hidden;
-
       padding: 1.25rem;
-
       border: 1px solid rgba(224, 184, 91, 0.17);
       border-radius: var(--door-radius-lg);
-
       color: inherit;
       background: var(--door-glass);
       box-shadow: var(--door-shadow);
       text-decoration: none;
-
       transition:
         transform var(--door-transition),
         border-color var(--door-transition),
@@ -1216,11 +897,9 @@
     .entry-card:hover,
     .character-card:hover {
       border-color: rgba(224, 184, 91, 0.34);
-
       box-shadow:
         0 1.7rem 4.5rem rgba(0, 0, 0, 0.48),
         inset 0.2rem 0 0 rgba(125, 231, 255, 0.22);
-
       transform: translateY(-3px);
     }
 
@@ -1229,13 +908,10 @@
       position: absolute;
       top: 0;
       right: 0;
-
       width: 8rem;
       height: 8rem;
-
       pointer-events: none;
       content: "";
-
       background:
         radial-gradient(
           circle at 100% 0,
@@ -1281,30 +957,23 @@
     .entry-card h3,
     .character-card h3 {
       margin-bottom: 0.65rem;
-
       font-size: clamp(1.45rem, 2.4vw, 2.1rem);
     }
 
     .entry-card p,
     .character-card p {
       margin-bottom: 0;
-
       color: var(--door-muted-strong);
     }
 
-    .entry-card .card-route,
-    .character-card .card-route {
+    .card-route {
       display: inline-flex;
-
       margin-top: 1rem;
       padding: 0.42rem 0.62rem;
-
       border: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: 999px;
-
       color: var(--door-blue-soft);
       background: rgba(125, 231, 255, 0.06);
-
       font-size: 0.62rem;
       font-weight: 850;
       letter-spacing: 0.1em;
@@ -1312,50 +981,14 @@
       text-transform: uppercase;
     }
 
-    /* ============================================================
-       CHARACTER SECTION
-       ============================================================ */
-
-    .character-section {
-      display: grid;
-      gap: 1rem;
-
-      padding: clamp(1rem, 2.8vw, 2rem);
-
-      border: 1px solid rgba(125, 231, 255, 0.18);
-      border-radius: var(--door-radius-xl);
-
-      background:
-        linear-gradient(
-          145deg,
-          rgba(12, 24, 42, 0.86),
-          rgba(4, 7, 16, 0.94)
-        );
-
-      box-shadow: var(--door-shadow-deep);
-    }
-
-    .character-grid {
-      display: grid;
-
-      grid-template-columns:
-        repeat(3, minmax(0, 1fr));
-
-      gap: 0.9rem;
-    }
-
     .character-mark {
       display: grid;
-
       width: 3.4rem;
       aspect-ratio: 1;
       place-items: center;
-
       margin-bottom: 0.9rem;
-
       border: 1px solid rgba(245, 212, 127, 0.54);
       border-radius: 50%;
-
       color: var(--door-gold-soft);
       background:
         radial-gradient(
@@ -1363,12 +996,10 @@
           rgba(245, 212, 127, 0.15),
           rgba(4, 7, 16, 0.92)
         );
-
       font-family:
         Georgia,
         "Times New Roman",
         serif;
-
       font-size: 1.15rem;
       font-weight: 700;
     }
@@ -1406,17 +1037,11 @@
         );
     }
 
-    /* ============================================================
-       DIAGNOSTIC BOUNDARY
-       ============================================================ */
-
     .diagnostic-boundary {
       display: grid;
-
       grid-template-columns:
         minmax(0, 0.88fr)
         minmax(0, 1.12fr);
-
       gap: 1rem;
     }
 
@@ -1424,10 +1049,8 @@
     .diagnostic-panel {
       min-width: 0;
       padding: clamp(1.2rem, 3vw, 2rem);
-
       border: 1px solid var(--door-border);
       border-radius: var(--door-radius-lg);
-
       background: var(--door-glass);
       box-shadow: var(--door-shadow);
     }
@@ -1440,7 +1063,6 @@
 
     .diagnostic-intro p {
       margin-bottom: 0;
-
       color: var(--door-muted-strong);
     }
 
@@ -1452,10 +1074,8 @@
     .diagnostic-panel::before {
       position: absolute;
       inset: 1rem;
-
       pointer-events: none;
       content: "";
-
       border: 1px solid rgba(245, 212, 127, 0.16);
       border-radius: 1rem;
     }
@@ -1463,36 +1083,28 @@
     .diagnostic-list {
       position: relative;
       z-index: 1;
-
       display: grid;
       gap: 0.7rem;
-
       margin: 0;
       padding: 0;
-
       list-style: none;
     }
 
     .diagnostic-list li {
       display: grid;
       gap: 0.25rem;
-
       padding: 0.85rem 0.95rem;
-
       border: 1px solid rgba(255, 255, 255, 0.075);
       border-radius: var(--door-radius-sm);
-
       background: rgba(255, 255, 255, 0.025);
     }
 
     .diagnostic-list strong {
       color: var(--door-gold-soft);
-
       font-family:
         Georgia,
         "Times New Roman",
         serif;
-
       font-size: 1.05rem;
       font-weight: 600;
     }
@@ -1503,37 +1115,19 @@
       line-height: 1.45;
     }
 
-    /* ============================================================
-       PRACTICAL RETURN
-       ============================================================ */
-
     .practical-return {
       display: grid;
-
       grid-template-columns:
         minmax(0, 1fr)
         minmax(16rem, 0.7fr);
-
       align-items: center;
       gap: 1.3rem;
-
       padding: clamp(1.25rem, 3vw, 2rem);
-
       border: 1px solid var(--door-border-strong);
       border-radius: var(--door-radius-lg);
-
       background:
-        radial-gradient(
-          circle at 100% 0,
-          rgba(224, 184, 91, 0.13),
-          transparent 20rem
-        ),
-        linear-gradient(
-          145deg,
-          rgba(25, 31, 49, 0.9),
-          rgba(7, 11, 22, 0.96)
-        );
-
+        radial-gradient(circle at 100% 0, rgba(224, 184, 91, 0.13), transparent 20rem),
+        linear-gradient(145deg, rgba(25, 31, 49, 0.9), rgba(7, 11, 22, 0.96));
       box-shadow:
         var(--door-shadow),
         inset 0.22rem 0 0 var(--door-gold);
@@ -1542,14 +1136,12 @@
     .practical-copy h2 {
       max-width: 12ch;
       margin-bottom: 0.8rem;
-
       font-size: clamp(2rem, 4.7vw, 4rem);
     }
 
     .practical-copy p {
       max-width: var(--door-reading-width);
       margin-bottom: 0;
-
       color: var(--door-muted-strong);
     }
 
@@ -1562,16 +1154,10 @@
       width: 100%;
     }
 
-    /* ============================================================
-       RECEIPT DISCLOSURE
-       ============================================================ */
-
     .evidence-disclosure {
       overflow: clip;
-
       border: 1px solid rgba(224, 184, 91, 0.17);
       border-radius: var(--door-radius-md);
-
       background:
         linear-gradient(
           180deg,
@@ -1582,7 +1168,6 @@
 
     .evidence-disclosure[open] {
       border-color: rgba(224, 184, 91, 0.34);
-
       box-shadow:
         0 1rem 2.8rem rgba(0, 0, 0, 0.24),
         inset 0.2rem 0 0 rgba(125, 231, 255, 0.26);
@@ -1590,113 +1175,89 @@
 
     .evidence-disclosure > summary {
       display: flex;
-
       min-height: 4rem;
       align-items: center;
       justify-content: space-between;
       gap: 1rem;
-
       padding: 0.9rem 1rem;
-
       color: var(--door-cream);
       list-style: none;
       cursor: pointer;
     }
 
-    .evidence-disclosure
-    > summary::-webkit-details-marker {
+    .evidence-disclosure > summary::-webkit-details-marker {
       display: none;
     }
 
-    .evidence-disclosure
-    > summary > span:first-child {
+    .evidence-disclosure > summary > span:first-child {
       display: grid;
       gap: 0.1rem;
     }
 
-    .evidence-disclosure
-    > summary strong {
+    .evidence-disclosure > summary strong {
       color: var(--door-gold-bright);
-
       font-family:
         Georgia,
         "Times New Roman",
         serif;
-
       font-size: 1.2rem;
       font-weight: 600;
     }
 
-    .evidence-disclosure
-    > summary small {
+    .evidence-disclosure > summary small {
       color: var(--door-muted);
       font-size: 0.72rem;
     }
 
-    .evidence-disclosure
-    > summary > span:last-child {
+    .evidence-disclosure > summary > span:last-child {
       display: grid;
-
       width: 2rem;
       height: 2rem;
       flex: 0 0 auto;
       place-items: center;
-
       border: 1px solid var(--door-border-cool);
       border-radius: 50%;
-
       color: var(--door-blue);
       background: var(--door-blue-faint);
-
       transition: transform var(--door-transition-fast);
     }
 
-    .evidence-disclosure[open]
-    > summary > span:last-child {
+    .evidence-disclosure[open] > summary > span:last-child {
       transform: rotate(45deg);
     }
 
     .evidence-body {
       display: grid;
       gap: 0.75rem;
-
       padding: 1rem;
-
       border-top: 1px solid var(--door-rule);
     }
 
     .evidence-body p {
       max-width: var(--door-reading-width);
       margin-bottom: 0;
-
       color: var(--door-muted-strong);
     }
 
     .evidence-grid {
       display: grid;
-
       grid-template-columns:
         repeat(3, minmax(0, 1fr));
-
       gap: 0.65rem;
     }
 
     .evidence-grid article {
       min-width: 0;
       padding: 0.85rem;
-
       border: 1px solid rgba(255, 255, 255, 0.065);
       border-radius: var(--door-radius-sm);
-
       background: rgba(255, 255, 255, 0.022);
     }
 
     .evidence-grid span {
       display: block;
       margin-bottom: 0.3rem;
-
       color: var(--door-blue);
-
       font-size: 0.58rem;
       font-weight: 850;
       letter-spacing: 0.1em;
@@ -1708,20 +1269,13 @@
       font-size: 0.76rem;
     }
 
-    /* ============================================================
-       FOOTER
-       ============================================================ */
-
     .page-footer {
       display: flex;
-
       align-items: center;
       justify-content: space-between;
       gap: 1rem;
-
       margin-top: var(--door-space-6);
       padding: 1.1rem 0.2rem 0.5rem;
-
       border-top: 1px solid rgba(224, 184, 91, 0.18);
     }
 
@@ -1732,12 +1286,10 @@
 
     .page-footer strong {
       color: var(--door-cream);
-
       font-family:
         Georgia,
         "Times New Roman",
         serif;
-
       font-weight: 600;
     }
 
@@ -1755,11 +1307,8 @@
 
     .page-footer a {
       padding: 0.42rem 0.58rem;
-
       border-radius: 999px;
-
       color: var(--door-muted-strong);
-
       font-size: 0.67rem;
       font-weight: 760;
       letter-spacing: 0.045em;
@@ -1771,10 +1320,6 @@
       color: var(--door-gold-bright);
       background: var(--door-gold-faint);
     }
-
-    /* ============================================================
-       ANIMATION
-       ============================================================ */
 
     @keyframes thresholdFloat {
       0%,
@@ -1833,18 +1378,6 @@
       }
     }
 
-    @keyframes thresholdScan {
-      0%,
-      42% {
-        transform: translateX(-120%);
-      }
-
-      64%,
-      100% {
-        transform: translateX(120%);
-      }
-    }
-
     @keyframes particleDrift {
       0%,
       100% {
@@ -1870,10 +1403,6 @@
       opacity: 1;
       transform: translateY(0);
     }
-
-    /* ============================================================
-       RESPONSIVE
-       ============================================================ */
 
     @media (max-width: 68rem) {
       .entry-grid {
@@ -1932,20 +1461,14 @@
       }
 
       .page-shell {
-        width: min(
-          calc(100% - 0.8rem),
-          var(--door-page-width)
-        );
-
+        width: min(calc(100% - 0.8rem), var(--door-page-width));
         padding-bottom: 1.2rem;
       }
 
       .page-topbar {
         min-height: 3.9rem;
-
         margin-top: 0.4rem;
         padding: 0.5rem 0.55rem;
-
         border-radius: 1rem;
       }
 
@@ -2059,10 +1582,6 @@
       }
     }
 
-    /* ============================================================
-       REDUCED MOTION
-       ============================================================ */
-
     @media (prefers-reduced-motion: reduce) {
       html {
         scroll-behavior: auto;
@@ -2072,10 +1591,8 @@
       *::before,
       *::after {
         scroll-behavior: auto !important;
-
         animation-duration: 0.001ms !important;
         animation-iteration-count: 1 !important;
-
         transition-duration: 0.001ms !important;
       }
 
@@ -2090,28 +1607,6 @@
         transform: none;
       }
     }
-
-    /* ============================================================
-       REDUCED TRANSPARENCY
-       ============================================================ */
-
-    @media (prefers-reduced-transparency: reduce) {
-      .page-topbar,
-      .entry-card,
-      .character-card,
-      .diagnostic-intro,
-      .diagnostic-panel,
-      .character-section,
-      .practical-return,
-      .evidence-disclosure {
-        background-color: var(--door-bg-1);
-        backdrop-filter: none;
-      }
-    }
-
-    /* ============================================================
-       FORCED COLORS
-       ============================================================ */
 
     @media (forced-colors: active) {
       body,
@@ -2144,65 +1639,6 @@
         border: 2px solid ButtonText;
         background: ButtonFace;
         box-shadow: none;
-      }
-    }
-
-    /* ============================================================
-       PRINT
-       ============================================================ */
-
-    @media print {
-      body {
-        color: #111;
-        background: #fff;
-      }
-
-      body::before,
-      body::after,
-      .page-topbar,
-      .hero-actions,
-      .practical-actions,
-      .page-footer,
-      .threshold-stage__beam,
-      .threshold-ring,
-      .threshold-particle {
-        display: none !important;
-      }
-
-      .page-shell {
-        width: 100%;
-      }
-
-      .route-hero,
-      .entry-card,
-      .character-card,
-      .diagnostic-intro,
-      .diagnostic-panel,
-      .character-section,
-      .practical-return,
-      .evidence-disclosure,
-      .threshold-stage,
-      .threshold-frame,
-      .diagnostic-list li {
-        color: #111;
-        background: #fff;
-        border: 1px solid #777;
-        box-shadow: none;
-      }
-
-      .route-hero,
-      .threshold-stage {
-        min-height: 0;
-      }
-
-      .threshold-frame {
-        position: static;
-        transform: none;
-      }
-
-      .evidence-disclosure:not([open])
-      > :not(summary) {
-        display: block;
       }
     }
   </style>
@@ -2639,9 +2075,7 @@
         >
           <ul class="diagnostic-list">
             <li>
-              <strong>
-                Stable
-              </strong>
+              <strong>Stable</strong>
 
               <span>
                 The system still has enough usable capacity to keep
@@ -2650,9 +2084,7 @@
             </li>
 
             <li>
-              <strong>
-                Strained
-              </strong>
+              <strong>Strained</strong>
 
               <span>
                 Pressure is visible, but the evidence does not justify
@@ -2661,9 +2093,7 @@
             </li>
 
             <li>
-              <strong>
-                Constrained
-              </strong>
+              <strong>Constrained</strong>
 
               <span>
                 Capacity is being consumed faster than the system can
@@ -2672,9 +2102,7 @@
             </li>
 
             <li>
-              <strong>
-                Evidence-Incomplete
-              </strong>
+              <strong>Evidence-Incomplete</strong>
 
               <span>
                 The required inputs are missing, corrupt, or non-admissible,
@@ -2683,9 +2111,7 @@
             </li>
 
             <li>
-              <strong>
-                Collapse-Qualified
-              </strong>
+              <strong>Collapse-Qualified</strong>
 
               <span>
                 Pressure, burden, capacity loss, weakest-axis failure, and
@@ -2831,7 +2257,7 @@
       "use strict";
 
       const CONTRACT =
-        "DOOR_FRONT_WEBSITE_THRESHOLD_PRACTICAL_ENTRY_AI_GUIDES_SINGLE_FILE_TNT_v2";
+        "DOOR_FRONT_WEBSITE_THRESHOLD_PRACTICAL_ENTRY_AI_GUIDES_SINGLE_FILE_TNT_v3_SHOWROOM_ROUTE_CLEAN";
 
       const root =
         document.documentElement;
@@ -2967,6 +2393,7 @@
           communityLabelRemoved: true,
           productsLabelCorrected: true,
           publicCopyRenewed: true,
+          generalMirrorlandRouteCleaned: true,
           routes: {
             compass: "/",
             mirrorland: "/showroom/",
@@ -3044,7 +2471,7 @@
 </html>
 
 <!--
-DOOR_FRONT_WEBSITE_THRESHOLD_HTML_RECEIPT_v2
+DOOR_FRONT_WEBSITE_THRESHOLD_HTML_RECEIPT_v3_SHOWROOM_ROUTE_CLEAN
 
 TARGET:
 /door/index.html
@@ -3053,42 +2480,25 @@ STATUS:
 COMPLETE SELF-CONTAINED HTML REPLACEMENT
 
 NEW CONTRACT:
-DOOR_FRONT_WEBSITE_THRESHOLD_PRACTICAL_ENTRY_AI_GUIDES_SINGLE_FILE_TNT_v2
+DOOR_FRONT_WEBSITE_THRESHOLD_PRACTICAL_ENTRY_AI_GUIDES_SINGLE_FILE_TNT_v3_SHOWROOM_ROUTE_CLEAN
 
-PREVIOUS CONTRACT:
-DOOR_FRONT_WEBSITE_THRESHOLD_MIRRORLAND_PRODUCTS_AI_CHARACTERS_SINGLE_FILE_TNT_v1
+CRITICAL ROUTE CORRECTION:
+All general Mirrorland / Showroom entry links now route to:
+/showroom/
 
-SOURCE PREVIOUS HTML CONTRACT:
-DOOR_THRESHOLD_DROPDOWN_LEGIBLE_ROUTE_GEMS_TNT_v5
+The obsolete general target:
+/showroom/globe/
 
-SOURCE PREVIOUS JS CONTRACT:
-DOOR_TRUE_3D_SOLID_OPAQUE_ROUTE_GEM_BROWSER_RENEWAL_HTML_JS_TNT_v3
+has been removed from all general Mirrorland buttons, cards, topbar links, footer links, and route metadata.
+
+ONLY REMAINING /showroom/globe/ REFERENCE:
+Jeeves remains bound to:
+/showroom/globe/hearth/jeeves/
+
+That is a character-specific route, not the general Mirrorland entry route.
 
 PAGE ROLE:
 Website-front practical threshold.
-
-COPY CORRECTION FROM v1:
-- Removed internal governance-heavy public language.
-- Removed visible language such as:
-    this page is not another Compass;
-    this page is not a Mirrorland chamber;
-    the Door no longer carries the dropdown;
-    the Door does not map every route.
-- Reframed public copy around practical visitor intent.
-- Preserved narrative expression without converting the page into a narrative room.
-- Added TED Talk-style practical framing:
-    start with the question that brought you here;
-    one bridge, several ways in;
-    what are you here to understand;
-    pressure is not the same as failure.
-
-NOT A COMPASS:
-The Door does not duplicate the Compass.
-The Compass remains the root orientation route.
-
-NOT A MIRRORLAND ROOM:
-The Door borrows the single-file construction style from the renewed
-Mirrorland narrative pages, but it remains on the website-front axis.
 
 PRIMARY CORRECTIONS PRESERVED:
 - Removed top dropdown menu.
@@ -3102,7 +2512,7 @@ PRIMARY CORRECTIONS PRESERVED:
     Jeeves;
     Elara.
 - Preserved direct return to Compass.
-- Preserved direct entry to Mirrorland.
+- Preserved direct entry to Mirrorland through /showroom/.
 
 BOUND ROUTES:
 Compass:
@@ -3146,13 +2556,6 @@ PAGE-LOCAL JAVASCRIPT AUTHORITY:
 - no Compass mutation
 - no Mirrorland runtime mutation
 - safe without JavaScript
-
-PRACTICAL DIAGNOSTIC COPY:
-The page introduces the bounded diagnostic distinction:
-pressure is not the same as failure;
-visible stress is not automatically collapse;
-stable-looking systems can still hide fragility;
-evidence, pressure, burden, capacity, and weakest-axis status matter.
 
 NOT CLAIMED:
 - runtime validation

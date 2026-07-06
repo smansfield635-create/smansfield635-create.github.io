@@ -1,110 +1,2248 @@
+<!-- TARGET FILE: /laws/categories/integrity/continuity/index.html -->
+<!-- COMPLETE REPLACEMENT -->
+<!-- DGB_LAWS_INTEGRITY_CONTINUITY_CONSOLIDATED_TRACK_HTML_TNT_v1_0_0 -->
 <!doctype html>
-<html lang="en">
+
+<html
+  lang="en"
+  data-route="/laws/categories/integrity/continuity/"
+  data-page="laws-integrity-continuity"
+  data-contract="DGB_LAWS_INTEGRITY_CONTINUITY_CONSOLIDATED_TRACK_HTML_TNT_v1_0_0"
+  data-laws-category="integrity"
+  data-laws-track="continuity"
+  data-laws-track-consolidated="true"
+  data-laws-source-files="memory.html transfer.html trajectory.html decay.html"
+  data-laws-constellation-path="true"
+  data-laws-validation-claimed="false"
+  data-laws-production-validation-claimed="false"
+  data-laws-route-registry-mutated="false"
+>
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Continuity · Integrity · Laws · Geodiametrics</title>
+  <meta charset="utf-8">
 
-<link rel="stylesheet" href="/assets/ui.css"/>
-<link rel="stylesheet" href="/assets/branch.css"/>
+  <meta
+    name="viewport"
+    content="width=device-width,initial-scale=1,viewport-fit=cover"
+  >
 
-<style>
-html,body{height:100%;margin:0}
-body{
-  background:radial-gradient(1200px 800px at 50% 20%,#152532,#0a141b);
-  color:#eaf2f6;
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
-}
-.page{
-  min-height:100vh;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:flex-start;
-  padding:24px 12px;
-}
-.h{text-align:center;margin-bottom:12px}
-.h h1{font-size:48px;font-weight:900;margin:0}
-.h p{opacity:.7;margin-top:8px}
-.stage{flex:1;display:flex;align-items:center;justify-content:center;width:100%}
-.platform{position:relative;width:min(420px,88vw);aspect-ratio:1/1}
-.platform::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  transform:rotate(45deg);
-  border-radius:28px;
-  background:rgba(255,255,255,.06);
-  box-shadow:0 0 0 1px rgba(255,255,255,.12) inset;
-}
-.diamond{
-  position:absolute;
-  width:42%;
-  height:42%;
-  transform:rotate(45deg);
-  border-radius:18px;
-  background:rgba(255,255,255,.16);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  text-decoration:none;
-  color:#eaf2f6;
-}
-.diamond span{transform:rotate(-45deg);text-align:center;font-weight:900}
-.top{top:2%;left:29%}
-.right{top:29%;right:2%}
-.bottom{bottom:2%;left:29%}
-.left{top:29%;left:2%}
-.nav{display:flex;gap:12px;margin-top:16px;flex-wrap:wrap;justify-content:center}
-.nav a{
-  padding:14px 22px;
-  border-radius:18px;
-  background:rgba(255,255,255,.10);
-  text-decoration:none;
-  color:#eaf2f6;
-  font-weight:900;
-}
-footer{text-align:center;opacity:.55;margin-top:12px;letter-spacing:3px;font-size:12px}
-</style>
+  <title>
+    Continuity · Integrity · Laws · Diamond Gate Bridge
+  </title>
+
+  <meta
+    name="description"
+    content="Continuity is an Integrity track in the Laws constellation. This consolidated single-file page embeds Memory, Transfer, Trajectory, and Decay with practical, platform engineering, and evidence tabs for each section."
+  >
+
+  <meta
+    name="laws-page-contract"
+    content="DGB_LAWS_INTEGRITY_CONTINUITY_CONSOLIDATED_TRACK_HTML_TNT_v1_0_0"
+  >
+
+  <link
+    rel="canonical"
+    href="https://diamondgatebridge.com/laws/categories/integrity/continuity/"
+  >
+
+  <style>
+    :root {
+      color-scheme: dark;
+
+      --bg-0: #03050d;
+      --bg-1: #07101a;
+      --bg-2: #0d1828;
+      --ink: #eaf2f6;
+      --ink-strong: #fff8df;
+      --ink-soft: rgba(234, 242, 246, 0.78);
+      --ink-muted: rgba(234, 242, 246, 0.56);
+      --gold: #ffe49b;
+      --gold-2: #e0b85b;
+      --cyan: #78e9ff;
+      --blue: #78aaff;
+      --green: #8ff0b2;
+      --violet: #b48cff;
+      --red: #ff7474;
+      --warm: #ff9d63;
+      --line: rgba(255, 228, 155, 0.18);
+      --line-soft: rgba(255, 255, 255, 0.085);
+      --cyan-line: rgba(120, 233, 255, 0.22);
+      --card: rgba(9, 14, 28, 0.82);
+      --card-strong: rgba(11, 18, 34, 0.94);
+      --radius-sm: 0.75rem;
+      --radius-md: 1rem;
+      --radius-lg: 1.45rem;
+      --radius-xl: 1.9rem;
+      --radius-full: 999rem;
+      --max: 1160px;
+      --pad: clamp(1rem, 3vw, 2.25rem);
+      --shadow:
+        0 1.6rem 5.2rem rgba(0, 0, 0, 0.54),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.035);
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      background:
+        radial-gradient(circle at 50% -12%, rgba(120, 233, 255, 0.16), transparent 31rem),
+        radial-gradient(circle at 10% 11%, rgba(180, 140, 255, 0.12), transparent 27rem),
+        radial-gradient(circle at 88% 16%, rgba(224, 184, 91, 0.12), transparent 27rem),
+        linear-gradient(180deg, var(--bg-0), #02040a 62%, #03040a);
+      scroll-behavior: smooth;
+    }
+
+    body {
+      min-height: 100%;
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 20% 0%, rgba(120, 233, 255, 0.06), transparent 22rem),
+        radial-gradient(circle at 82% 4%, rgba(255, 157, 99, 0.055), transparent 22rem),
+        transparent;
+      font-family:
+        Inter,
+        ui-sans-serif,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        sans-serif;
+      line-height: 1.55;
+    }
+
+    body::before {
+      position: fixed;
+      inset: -6%;
+      z-index: 0;
+      content: "";
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 12% 18%, rgba(255, 248, 224, 0.52) 0 0.06rem, transparent 0.09rem),
+        radial-gradient(circle at 25% 36%, rgba(120, 233, 255, 0.36) 0 0.055rem, transparent 0.09rem),
+        radial-gradient(circle at 48% 22%, rgba(255, 228, 155, 0.44) 0 0.06rem, transparent 0.1rem),
+        radial-gradient(circle at 78% 18%, rgba(180, 140, 255, 0.34) 0 0.055rem, transparent 0.09rem),
+        radial-gradient(circle at 88% 62%, rgba(120, 233, 255, 0.32) 0 0.055rem, transparent 0.09rem),
+        radial-gradient(circle at 34% 82%, rgba(255, 248, 224, 0.42) 0 0.06rem, transparent 0.1rem);
+      background-size:
+        17rem 13rem,
+        23rem 19rem,
+        31rem 25rem,
+        37rem 29rem,
+        29rem 23rem,
+        41rem 31rem;
+      opacity: 0.36;
+      mix-blend-mode: screen;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    button,
+    a,
+    label {
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    button {
+      font: inherit;
+    }
+
+    :focus-visible {
+      outline: 3px solid rgba(120, 233, 255, 0.56);
+      outline-offset: 4px;
+    }
+
+    .skip {
+      position: fixed;
+      z-index: 999;
+      top: 0.75rem;
+      left: 0.75rem;
+      transform: translateY(-160%);
+      padding: 0.7rem 0.9rem;
+      border: 1px solid var(--cyan-line);
+      border-radius: var(--radius-full);
+      color: var(--ink);
+      background: rgba(6, 10, 24, 0.96);
+      text-decoration: none;
+      transition: transform 160ms ease;
+    }
+
+    .skip:focus {
+      transform: translateY(0);
+    }
+
+    .shell {
+      position: relative;
+      z-index: 2;
+      width: min(var(--max), calc(100% - var(--pad) * 2));
+      margin: 0 auto;
+      padding: clamp(0.75rem, 2vw, 1.25rem) 0 clamp(2.5rem, 5vw, 5rem);
+    }
+
+    .topbar {
+      position: sticky;
+      z-index: 30;
+      top: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0.85rem 0;
+      backdrop-filter: blur(0.65rem);
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.78rem;
+      min-width: 0;
+      padding: 0.44rem 0.64rem 0.44rem 0.44rem;
+      border: 1px solid rgba(255, 228, 155, 0.18);
+      border-radius: var(--radius-full);
+      color: var(--ink);
+      background:
+        linear-gradient(135deg, rgba(255, 228, 155, 0.12), rgba(120, 233, 255, 0.06)),
+        rgba(5, 8, 19, 0.76);
+      text-decoration: none;
+    }
+
+    .brand-mark {
+      display: grid;
+      width: 2.55rem;
+      aspect-ratio: 1;
+      place-items: center;
+      border: 1px solid rgba(255, 228, 155, 0.38);
+      border-radius: 50%;
+      color: var(--gold);
+      background:
+        radial-gradient(circle, rgba(255, 228, 155, 0.2), transparent 58%),
+        rgba(6, 10, 24, 0.9);
+      box-shadow:
+        0 0 1.1rem rgba(255, 228, 155, 0.22),
+        0 0 2.6rem rgba(224, 184, 91, 0.12);
+    }
+
+    .brand-mark span {
+      font-size: 0.62rem;
+      font-weight: 850;
+      letter-spacing: 0.11em;
+    }
+
+    .brand-copy {
+      display: grid;
+      min-width: 0;
+      line-height: 1.1;
+    }
+
+    .brand-copy span {
+      color: var(--ink-muted);
+      font-size: 0.75rem;
+    }
+
+    .brand-copy strong {
+      color: var(--ink);
+      font-size: 0.93rem;
+      letter-spacing: 0.02em;
+    }
+
+    .nav {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 0.45rem;
+    }
+
+    .nav a {
+      padding: 0.53rem 0.74rem;
+      border: 1px solid rgba(255, 255, 255, 0.075);
+      border-radius: var(--radius-full);
+      color: var(--ink-soft);
+      background: rgba(255, 255, 255, 0.035);
+      font-size: 0.88rem;
+      text-decoration: none;
+    }
+
+    .nav a:hover,
+    .nav a:focus-visible {
+      color: var(--gold);
+      border-color: rgba(255, 228, 155, 0.28);
+    }
+
+    main {
+      display: grid;
+      gap: clamp(1rem, 2.6vw, 1.75rem);
+    }
+
+    .kicker {
+      margin: 0;
+      color: var(--gold);
+      font-size: 0.72rem;
+      font-weight: 850;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    .hero,
+    .selector-card,
+    .track-panel,
+    .constellation-nav,
+    .closing {
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+      background:
+        radial-gradient(circle at 0% 0%, rgba(120, 233, 255, 0.075), transparent 19rem),
+        linear-gradient(180deg, rgba(10, 14, 34, 0.78), rgba(7, 10, 24, 0.64));
+      box-shadow: var(--shadow);
+    }
+
+    .hero {
+      display: grid;
+      gap: 0.8rem;
+      padding: clamp(1.15rem, 3vw, 1.8rem);
+    }
+
+    h1,
+    h2,
+    h3 {
+      margin: 0;
+      line-height: 1.05;
+    }
+
+    h1 {
+      max-width: 12ch;
+      color: var(--ink-strong);
+      font-size: clamp(2.35rem, 8vw, 6rem);
+      letter-spacing: -0.065em;
+    }
+
+    .lead {
+      max-width: 76rem;
+      margin: 0;
+      color: var(--ink-soft);
+      font-size: clamp(1.02rem, 1.55vw, 1.18rem);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.25fr) minmax(18rem, 0.75fr);
+      gap: 1rem;
+      align-items: stretch;
+      margin-top: 0.4rem;
+    }
+
+    .status-card,
+    .law-card,
+    .facet-card,
+    .equation-card,
+    .route-card {
+      border: 1px solid rgba(255, 255, 255, 0.085);
+      border-radius: var(--radius-md);
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.026));
+    }
+
+    .status-card {
+      display: grid;
+      gap: 0.65rem;
+      padding: 1rem;
+    }
+
+    .status-card strong {
+      color: var(--gold);
+      font-size: 1.1rem;
+    }
+
+    .status-card p {
+      margin: 0;
+      color: var(--ink-soft);
+    }
+
+    .status-list {
+      display: grid;
+      gap: 0.45rem;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .status-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+      color: var(--ink-soft);
+      font-size: 0.94rem;
+    }
+
+    .status-list li::before {
+      flex: 0 0 auto;
+      width: 0.52rem;
+      height: 0.52rem;
+      margin-top: 0.48rem;
+      border-radius: 50%;
+      background: var(--cyan);
+      box-shadow: 0 0 1rem rgba(120, 233, 255, 0.35);
+      content: "";
+    }
+
+    .selector-card {
+      display: grid;
+      gap: 1rem;
+      padding: clamp(1rem, 2.4vw, 1.35rem);
+    }
+
+    .selector-header {
+      display: grid;
+      gap: 0.35rem;
+    }
+
+    .selector-header h2,
+    .track-panel h2 {
+      color: var(--ink-strong);
+      font-size: clamp(1.5rem, 3.2vw, 2.6rem);
+      letter-spacing: -0.035em;
+    }
+
+    .selector-header p,
+    .track-panel p,
+    .facet-card p,
+    .law-card p,
+    .route-card p {
+      max-width: 76rem;
+      margin: 0;
+      color: var(--ink-soft);
+    }
+
+    .selector-layout {
+      display: grid;
+      grid-template-columns: minmax(18rem, 0.78fr) minmax(0, 1.22fr);
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .stage {
+      display: grid;
+      min-height: 23rem;
+      place-items: center;
+    }
+
+    .platform {
+      position: relative;
+      width: min(420px, 88vw);
+      aspect-ratio: 1 / 1;
+    }
+
+    .platform::before {
+      position: absolute;
+      inset: 0;
+      transform: rotate(45deg);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 28px;
+      background:
+        radial-gradient(circle at 50% 50%, rgba(255, 228, 155, 0.075), transparent 46%),
+        rgba(255, 255, 255, 0.055);
+      box-shadow:
+        0 0 0 1px rgba(255, 255, 255, 0.08) inset,
+        0 0 3.6rem rgba(120, 233, 255, 0.1);
+      content: "";
+    }
+
+    .diamond-button {
+      position: absolute;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 42%;
+      height: 42%;
+      border: 1px solid rgba(255, 255, 255, 0.13);
+      border-radius: 18px;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 28% 22%, rgba(255, 228, 155, 0.18), transparent 42%),
+        rgba(255, 255, 255, 0.11);
+      cursor: pointer;
+      transform: rotate(45deg);
+      text-decoration: none;
+      transition:
+        border-color 180ms ease,
+        background 180ms ease,
+        box-shadow 180ms ease,
+        color 180ms ease;
+    }
+
+    .diamond-button span {
+      display: block;
+      transform: rotate(-45deg);
+      text-align: center;
+      font-weight: 900;
+      letter-spacing: 0.02em;
+    }
+
+    .diamond-button:hover,
+    .diamond-button:focus-visible,
+    .diamond-button[aria-pressed="true"] {
+      color: #140f03;
+      border-color: rgba(255, 228, 155, 0.56);
+      background:
+        linear-gradient(135deg, #ffe49b, #e0b85b 62%, #b47b2d);
+      box-shadow:
+        0 0 1.2rem rgba(255, 228, 155, 0.28),
+        0 0 2.6rem rgba(120, 233, 255, 0.16);
+    }
+
+    .diamond-button.top {
+      top: 2%;
+      left: 29%;
+    }
+
+    .diamond-button.right {
+      top: 29%;
+      right: 2%;
+    }
+
+    .diamond-button.bottom {
+      bottom: 2%;
+      left: 29%;
+    }
+
+    .diamond-button.left {
+      top: 29%;
+      left: 2%;
+    }
+
+    .selector-copy {
+      display: grid;
+      gap: 0.75rem;
+    }
+
+    .facet-summary-grid,
+    .law-grid,
+    .route-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.75rem;
+    }
+
+    .facet-card,
+    .law-card,
+    .route-card {
+      padding: 0.9rem;
+    }
+
+    .facet-card span,
+    .law-card span,
+    .route-card span {
+      display: block;
+      margin-bottom: 0.25rem;
+      color: var(--cyan);
+      font-size: 0.72rem;
+      font-weight: 850;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .facet-card strong,
+    .law-card strong,
+    .route-card strong {
+      display: block;
+      margin-bottom: 0.3rem;
+      color: var(--gold);
+      font-size: 1.02rem;
+    }
+
+    .track-panel {
+      display: none;
+      gap: 0.9rem;
+      padding: clamp(1rem, 2.4vw, 1.35rem);
+    }
+
+    .track-panel[data-active="true"] {
+      display: grid;
+    }
+
+    .track-header {
+      display: grid;
+      gap: 0.35rem;
+    }
+
+    .track-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+      margin-top: 0.15rem;
+    }
+
+    .track-meta span {
+      display: inline-flex;
+      align-items: center;
+      min-height: 1.95rem;
+      padding: 0.35rem 0.65rem;
+      border: 1px solid rgba(255, 255, 255, 0.085);
+      border-radius: var(--radius-full);
+      color: var(--ink-soft);
+      background: rgba(255, 255, 255, 0.035);
+      font-size: 0.78rem;
+      font-weight: 780;
+    }
+
+    .section-tabs {
+      display: grid;
+      gap: 0.75rem;
+      margin-top: 0.25rem;
+    }
+
+    .section-tabs > input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .section-tab-labels {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+      padding: 0.35rem;
+      border: 1px solid rgba(255, 255, 255, 0.075);
+      border-radius: var(--radius-full);
+      background: rgba(255, 255, 255, 0.035);
+    }
+
+    .section-tab-labels label {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 2.25rem;
+      padding: 0.52rem 0.78rem;
+      border: 1px solid transparent;
+      border-radius: var(--radius-full);
+      color: var(--ink-soft);
+      cursor: pointer;
+      font-size: 0.76rem;
+      font-weight: 850;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+
+    .section-tab-panels {
+      display: grid;
+    }
+
+    .section-tab-panel {
+      display: none;
+      padding: 0.95rem;
+      border: 1px solid rgba(255, 255, 255, 0.085);
+      border-radius: var(--radius-md);
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.026));
+    }
+
+    .section-tab-panel span {
+      display: block;
+      margin-bottom: 0.25rem;
+      font-size: 0.7rem;
+      font-weight: 850;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .section-tab-panel p {
+      margin: 0;
+      color: var(--ink-soft);
+      font-size: 0.94rem;
+    }
+
+    .section-tabs input[data-tab-kind="practical"]:checked ~ .section-tab-labels label[data-tab-kind="practical"],
+    .section-tabs input[data-tab-kind="platform"]:checked ~ .section-tab-labels label[data-tab-kind="platform"],
+    .section-tabs input[data-tab-kind="evidence"]:checked ~ .section-tab-labels label[data-tab-kind="evidence"] {
+      color: #140f03;
+      border-color: rgba(255, 228, 155, 0.42);
+      background:
+        linear-gradient(135deg, #ffe49b, #e0b85b 62%, #b47b2d);
+      box-shadow: 0 0.85rem 2.1rem rgba(224, 184, 91, 0.2);
+    }
+
+    .section-tabs input[data-tab-kind="practical"]:checked ~ .section-tab-panels .section-tab-panel[data-tab-kind="practical"],
+    .section-tabs input[data-tab-kind="platform"]:checked ~ .section-tab-panels .section-tab-panel[data-tab-kind="platform"],
+    .section-tabs input[data-tab-kind="evidence"]:checked ~ .section-tab-panels .section-tab-panel[data-tab-kind="evidence"] {
+      display: block;
+    }
+
+    .section-tab-panel[data-tab-kind="practical"] {
+      border-color: rgba(255, 228, 155, 0.16);
+    }
+
+    .section-tab-panel[data-tab-kind="platform"] {
+      border-color: rgba(120, 233, 255, 0.16);
+    }
+
+    .section-tab-panel[data-tab-kind="evidence"] {
+      border-color: rgba(143, 240, 178, 0.16);
+    }
+
+    .section-tab-panel[data-tab-kind="practical"] span {
+      color: var(--gold);
+    }
+
+    .section-tab-panel[data-tab-kind="platform"] span {
+      color: var(--cyan);
+    }
+
+    .section-tab-panel[data-tab-kind="evidence"] span {
+      color: var(--green);
+    }
+
+    .section-tab-panel ul {
+      display: grid;
+      gap: 0.4rem;
+      margin: 0.7rem 0 0;
+      padding-left: 1.1rem;
+      color: var(--ink-soft);
+    }
+
+    .equation-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.85rem;
+    }
+
+    .equation-card {
+      min-width: 0;
+      padding: 0.95rem;
+      border-color: rgba(120, 233, 255, 0.15);
+      background:
+        radial-gradient(circle at 0 0, rgba(120, 233, 255, 0.07), transparent 13rem),
+        rgba(5, 9, 22, 0.78);
+    }
+
+    .equation-card--gold {
+      border-color: rgba(255, 228, 155, 0.2);
+      background:
+        radial-gradient(circle at 0 0, rgba(255, 228, 155, 0.07), transparent 13rem),
+        rgba(5, 9, 22, 0.78);
+    }
+
+    .equation-label {
+      margin-bottom: 0.45rem;
+      color: var(--cyan);
+      font-size: 0.72rem;
+      font-weight: 850;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .equation-card--gold .equation-label {
+      color: var(--gold);
+    }
+
+    pre {
+      margin: 0;
+      white-space: pre-wrap;
+    }
+
+    code {
+      color: var(--ink);
+      font-family:
+        "SFMono-Regular",
+        Consolas,
+        "Liberation Mono",
+        Menlo,
+        monospace;
+      font-size: 0.88rem;
+      line-height: 1.55;
+    }
+
+    .constellation-nav {
+      display: grid;
+      gap: 0.85rem;
+      padding: clamp(1rem, 2.4vw, 1.35rem);
+    }
+
+    .constellation-nav__header {
+      display: grid;
+      gap: 0.25rem;
+    }
+
+    .constellation-nav__header h2 {
+      color: var(--ink-strong);
+      font-size: clamp(1.35rem, 2.4vw, 2rem);
+      letter-spacing: -0.025em;
+    }
+
+    .constellation-nav__header p {
+      margin: 0;
+      color: var(--ink-soft);
+    }
+
+    .constellation-nav__actions {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0.65rem;
+    }
+
+    .constellation-nav__actions a {
+      display: grid;
+      gap: 0.25rem;
+      min-height: 5.8rem;
+      align-content: center;
+      padding: 0.9rem;
+      border: 1px solid rgba(255, 255, 255, 0.085);
+      border-radius: var(--radius-md);
+      color: var(--ink);
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.026));
+      text-decoration: none;
+    }
+
+    .constellation-nav__actions a:hover,
+    .constellation-nav__actions a:focus-visible {
+      color: var(--gold);
+      border-color: rgba(255, 228, 155, 0.28);
+      box-shadow:
+        0 0 1.2rem rgba(255, 228, 155, 0.18),
+        0 0 2.8rem rgba(224, 184, 91, 0.1);
+    }
+
+    .constellation-nav__actions span {
+      color: var(--cyan);
+      font-size: 0.72rem;
+      font-weight: 850;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .constellation-nav__actions strong {
+      color: inherit;
+      font-size: 1.02rem;
+    }
+
+    .closing {
+      display: grid;
+      gap: 0.45rem;
+      padding: clamp(1rem, 2.4vw, 1.35rem);
+    }
+
+    .closing p {
+      margin: 0;
+      color: var(--ink-soft);
+    }
+
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 1.2rem;
+      margin-top: clamp(1rem, 3vw, 2rem);
+      padding: 1rem 0;
+      color: var(--ink-muted);
+    }
+
+    .footer div {
+      display: grid;
+      gap: 0.2rem;
+    }
+
+    .footer strong {
+      color: var(--ink);
+    }
+
+    .footer nav {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 0.65rem;
+    }
+
+    .footer a {
+      color: var(--ink-soft);
+      text-decoration: none;
+    }
+
+    .footer a:hover,
+    .footer a:focus-visible {
+      color: var(--gold);
+    }
+
+    @media (max-width: 980px) {
+      .topbar,
+      .footer {
+        align-items: stretch;
+        flex-direction: column;
+      }
+
+      .nav,
+      .footer nav {
+        justify-content: flex-start;
+      }
+
+      .hero-grid,
+      .selector-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .facet-summary-grid,
+      .law-grid,
+      .route-grid,
+      .constellation-nav__actions {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 720px) {
+      .shell {
+        width: min(100% - 1rem, var(--max));
+      }
+
+      h1 {
+        max-width: 100%;
+      }
+
+      .stage {
+        min-height: 20rem;
+      }
+
+      .facet-summary-grid,
+      .law-grid,
+      .route-grid,
+      .equation-grid,
+      .constellation-nav__actions {
+        grid-template-columns: 1fr;
+      }
+
+      .section-tab-labels {
+        border-radius: var(--radius-md);
+      }
+
+      .section-tab-labels label {
+        flex: 1 1 100%;
+      }
+
+      code {
+        font-size: 0.8rem;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: 0.001ms !important;
+      }
+    }
+  </style>
 </head>
 
 <body>
-<div class="page">
+  <a
+    class="skip"
+    href="#main"
+  >
+    Skip to Continuity
+  </a>
 
-  <div class="h">
-    <h1>Continuity</h1>
-    <p>Integrity · What persists across time.</p>
+  <div class="shell">
+    <header
+      class="topbar"
+      aria-label="Continuity header"
+    >
+      <a
+        class="brand"
+        href="/laws/"
+        aria-label="Return to Laws Compass"
+      >
+        <span
+          class="brand-mark"
+          aria-hidden="true"
+        >
+          <span>LAW</span>
+        </span>
+
+        <span class="brand-copy">
+          <span>Integrity · Laws</span>
+          <strong>Continuity</strong>
+        </span>
+      </a>
+
+      <nav
+        class="nav"
+        aria-label="Continuity navigation"
+      >
+        <a href="/laws/">
+          Compass
+        </a>
+
+        <a href="/laws/categories/integrity/">
+          Integrity
+        </a>
+
+        <a href="#memory">
+          Memory
+        </a>
+
+        <a href="#transfer">
+          Transfer
+        </a>
+
+        <a href="#trajectory">
+          Trajectory
+        </a>
+
+        <a href="#decay">
+          Decay
+        </a>
+      </nav>
+    </header>
+
+    <main id="main">
+      <section
+        class="hero"
+        aria-label="Continuity threshold"
+      >
+        <p class="kicker">
+          Integrity Track · Consolidated Continuity
+        </p>
+
+        <h1>
+          What persists across time.
+        </h1>
+
+        <p class="lead">
+          Continuity is the Integrity track that asks whether identity, standards, correction, and evidence survive time. This page consolidates Memory, Transfer, Trajectory, and Decay into one linear track file with local Practical, Platform Engineering, and Evidence tabs for each section.
+        </p>
+
+        <div class="hero-grid">
+          <div class="status-card">
+            <strong>
+              Track standing
+            </strong>
+
+            <p>
+              Continuity remains one Integrity track. Memory, Transfer, Trajectory, and Decay are embedded subfacets inside this track, not separate registry mutations.
+            </p>
+
+            <ul class="status-list">
+              <li>
+                One consolidated page replaces four separate leaf dependencies.
+              </li>
+
+              <li>
+                Each facet keeps its own local practical, platform, and evidence translation.
+              </li>
+
+              <li>
+                The page supports a linear constellation path while preserving return to the Compass.
+              </li>
+            </ul>
+          </div>
+
+          <div class="status-card">
+            <strong>
+              Core question
+            </strong>
+
+            <p>
+              If the explanation fades, the environment changes, the trend continues, or correction is delayed, does the same integrity still remain?
+            </p>
+
+            <ul class="status-list">
+              <li>
+                Memory tests retained state.
+              </li>
+
+              <li>
+                Transfer tests standard survival.
+              </li>
+
+              <li>
+                Trajectory tests direction over time.
+              </li>
+
+              <li>
+                Decay tests uncorrected exception growth.
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section
+        class="selector-card"
+        aria-labelledby="selector-title"
+      >
+        <header class="selector-header">
+          <p class="kicker">
+            Continuity Diamond
+          </p>
+
+          <h2 id="selector-title">
+            Choose a subfacet without leaving the track.
+          </h2>
+
+          <p>
+            The original leaf files are now embedded as in-page sections. The diamond controls update the visible section and preserve direct hash access.
+          </p>
+        </header>
+
+        <div class="selector-layout">
+          <div
+            class="stage"
+            aria-label="Continuity diamond selector"
+          >
+            <div class="platform">
+              <button
+                class="diamond-button top"
+                type="button"
+                data-track-control="memory"
+                aria-pressed="true"
+              >
+                <span>Memory</span>
+              </button>
+
+              <button
+                class="diamond-button right"
+                type="button"
+                data-track-control="transfer"
+                aria-pressed="false"
+              >
+                <span>Transfer</span>
+              </button>
+
+              <button
+                class="diamond-button bottom"
+                type="button"
+                data-track-control="trajectory"
+                aria-pressed="false"
+              >
+                <span>Trajectory</span>
+              </button>
+
+              <button
+                class="diamond-button left"
+                type="button"
+                data-track-control="decay"
+                aria-pressed="false"
+              >
+                <span>Decay</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="selector-copy">
+            <div class="facet-summary-grid">
+              <article class="facet-card">
+                <span>Memory</span>
+                <strong>Retained state</strong>
+                <p>
+                  What persists after explanation fades.
+                </p>
+              </article>
+
+              <article class="facet-card">
+                <span>Transfer</span>
+                <strong>Standard survival</strong>
+                <p>
+                  Whether standards survive environment change.
+                </p>
+              </article>
+
+              <article class="facet-card">
+                <span>Trajectory</span>
+                <strong>Repeated direction</strong>
+                <p>
+                  The direction implied by repeated decisions.
+                </p>
+              </article>
+
+              <article class="facet-card">
+                <span>Decay</span>
+                <strong>Uncorrected exception</strong>
+                <p>
+                  The quiet accumulation of uncorrected exceptions.
+                </p>
+              </article>
+            </div>
+
+            <div class="equation-card equation-card--gold">
+              <div class="equation-label">
+                Continuity Reading
+              </div>
+
+              <pre><code>Continuity =
+Memory + Transfer + Trajectory - Decay
+
+Retain what is true.
+Move it across context.
+Read the direction.
+Correct the exception before it becomes structure.</code></pre>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section
+        id="memory"
+        class="track-panel"
+        data-track-panel="memory"
+        data-active="true"
+        aria-labelledby="memory-title"
+      >
+        <header class="track-header">
+          <p class="kicker">
+            Continuity Subfacet 01
+          </p>
+
+          <h2 id="memory-title">
+            Memory
+          </h2>
+
+          <p>
+            Memory is what persists after explanation fades. It asks what remains when the speech, pressure, justification, or performance is gone.
+          </p>
+
+          <div class="track-meta">
+            <span>Continuity</span>
+            <span>Integrity</span>
+            <span>Retained state</span>
+            <span>Persistence Law</span>
+            <span>Evidence Retention Law</span>
+          </div>
+        </header>
+
+        <div
+          class="section-tabs"
+          aria-label="Memory reading tabs"
+        >
+          <input
+            id="memory-tab-practical"
+            name="memory-tabs"
+            type="radio"
+            data-tab-kind="practical"
+            checked
+          >
+
+          <input
+            id="memory-tab-platform"
+            name="memory-tabs"
+            type="radio"
+            data-tab-kind="platform"
+          >
+
+          <input
+            id="memory-tab-evidence"
+            name="memory-tabs"
+            type="radio"
+            data-tab-kind="evidence"
+          >
+
+          <div
+            class="section-tab-labels"
+            role="tablist"
+            aria-label="Memory lenses"
+          >
+            <label
+              for="memory-tab-practical"
+              role="tab"
+              data-tab-kind="practical"
+            >
+              Practical
+            </label>
+
+            <label
+              for="memory-tab-platform"
+              role="tab"
+              data-tab-kind="platform"
+            >
+              Platform Engineering
+            </label>
+
+            <label
+              for="memory-tab-evidence"
+              role="tab"
+              data-tab-kind="evidence"
+            >
+              Evidence
+            </label>
+          </div>
+
+          <div class="section-tab-panels">
+            <article
+              class="section-tab-panel"
+              data-tab-kind="practical"
+            >
+              <span>Practical</span>
+              <p>
+                Memory is the difference between a lesson and a performance. A person, team, or institution has memory when the standard remains after the meeting, conflict, explanation, or emotional moment has passed.
+              </p>
+
+              <ul>
+                <li>Personal memory: what you still do when no one is reminding you.</li>
+                <li>Relational memory: whether prior trust, harm, repair, and promises still count.</li>
+                <li>Organizational memory: whether the system remembers its own failures.</li>
+                <li>False memory: when a story replaces the retained record.</li>
+              </ul>
+            </article>
+
+            <article
+              class="section-tab-panel"
+              data-tab-kind="platform"
+            >
+              <span>Platform Engineering</span>
+              <p>
+                Memory maps to retained state. In a platform, the question is whether state survives restart, handoff, deployment, migration, user return, failure, and audit.
+              </p>
+
+              <ul>
+                <li>Persist state deliberately; do not rely on temporary execution context.</li>
+                <li>Separate source-of-truth records from derived caches.</li>
+                <li>Track schema changes, migrations, and data retention boundaries.</li>
+                <li>Detect measurement drift when the record appears stable but meaning changes.</li>
+              </ul>
+            </article>
+
+            <article
+              class="section-tab-panel"
+              data-tab-kind="evidence"
+            >
+              <span>Evidence</span>
+              <p>
+                Evidence for memory requires retained records, not recollection alone. A claim that something persisted should be supported by timestamped state, version history, audit trails, repeated behavior, or recoverable artifacts.
+              </p>
+
+              <ul>
+                <li>Strong evidence: durable logs, versioned artifacts, preserved records, repeated action.</li>
+                <li>Weak evidence: self-description without record.</li>
+                <li>Failure mode: memory is claimed, but no record survives.</li>
+                <li>Boundary: retained state does not automatically prove correctness.</li>
+              </ul>
+            </article>
+          </div>
+        </div>
+
+        <div class="law-grid">
+          <article class="law-card">
+            <span>Canonical Law</span>
+            <strong>Persistence Law</strong>
+            <p>
+              What matters must remain recoverable across time, pressure, and fading explanation.
+            </p>
+          </article>
+
+          <article class="law-card">
+            <span>Canonical Law</span>
+            <strong>Evidence Retention Law</strong>
+            <p>
+              A retained claim is only as strong as the record that can still be inspected.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section
+        id="transfer"
+        class="track-panel"
+        data-track-panel="transfer"
+        data-active="false"
+        aria-labelledby="transfer-title"
+      >
+        <header class="track-header">
+          <p class="kicker">
+            Continuity Subfacet 02
+          </p>
+
+          <h2 id="transfer-title">
+            Transfer
+          </h2>
+
+          <p>
+            Transfer asks whether your standards survive environment change. Integrity is weak if it only works in one room, one role, one incentive system, or one audience.
+          </p>
+
+          <div class="track-meta">
+            <span>Continuity</span>
+            <span>Integrity</span>
+            <span>Environment change</span>
+            <span>Context Law</span>
+            <span>Stability Law</span>
+          </div>
+        </header>
+
+        <div
+          class="section-tabs"
+          aria-label="Transfer reading tabs"
+        >
+          <input
+            id="transfer-tab-practical"
+            name="transfer-tabs"
+            type="radio"
+            data-tab-kind="practical"
+            checked
+          >
+
+          <input
+            id="transfer-tab-platform"
+            name="transfer-tabs"
+            type="radio"
+            data-tab-kind="platform"
+          >
+
+          <input
+            id="transfer-tab-evidence"
+            name="transfer-tabs"
+            type="radio"
+            data-tab-kind="evidence"
+          >
+
+          <div
+            class="section-tab-labels"
+            role="tablist"
+            aria-label="Transfer lenses"
+          >
+            <label
+              for="transfer-tab-practical"
+              role="tab"
+              data-tab-kind="practical"
+            >
+              Practical
+            </label>
+
+            <label
+              for="transfer-tab-platform"
+              role="tab"
+              data-tab-kind="platform"
+            >
+              Platform Engineering
+            </label>
+
+            <label
+              for="transfer-tab-evidence"
+              role="tab"
+              data-tab-kind="evidence"
+            >
+              Evidence
+            </label>
+          </div>
+
+          <div class="section-tab-panels">
+            <article
+              class="section-tab-panel"
+              data-tab-kind="practical"
+            >
+              <span>Practical</span>
+              <p>
+                Transfer is tested when the environment changes. A standard that exists only under friendly conditions is not yet continuity.
+              </p>
+
+              <ul>
+                <li>Role change: does the standard survive promotion, demotion, or new responsibility?</li>
+                <li>Incentive change: does the standard survive reward pressure?</li>
+                <li>Audience change: does the same integrity remain in public and private?</li>
+                <li>Context change: does the rule still apply when conditions are less convenient?</li>
+              </ul>
+            </article>
+
+            <article
+              class="section-tab-panel"
+              data-tab-kind="platform"
+            >
+              <span>Platform Engineering</span>
+              <p>
+                Transfer maps to portability and invariance. A platform standard must survive deployment target, runtime environment, dependency change, data shape change, and interface boundary.
+              </p>
+
+              <ul>
+                <li>Test distribution shift rather than only ideal fixtures.</li>
+                <li>Preserve interface contracts across implementations.</li>
+                <li>Watch for environment-specific hidden assumptions.</li>
+                <li>Measure stable performance across contexts, not only one benchmark.</li>
+              </ul>
+            </article>
+
+            <article
+              class="section-tab-panel"
+              data-tab-kind="evidence"
+            >
+              <span>Evidence</span>
+              <p>
+                Evidence for transfer requires cross-context observation. One successful case does not prove that a standard transfers.
+              </p>
+
+              <ul>
+                <li>Strong evidence: same standard holds across environments.</li>
+                <li>Useful evidence: context-labeled comparisons and edge cases.</li>
+                <li>Failure mode: performance depends on one hidden context.</li>
+                <li>Boundary: transfer evidence must name the environments tested.</li>
+              </ul>
+            </article>
+          </div>
+        </div>
+
+        <div class="law-grid">
+          <article class="law-card">
+            <span>Canonical Law</span>
+            <strong>Context Law</strong>
+            <p>
+              A standard must name the context in which it is valid and the conditions under which it changes.
+            </p>
+          </article>
+
+          <article class="law-card">
+            <span>Canonical Law</span>
+            <strong>Stability Law</strong>
+            <p>
+              What transfers without distortion has stronger continuity than what only works in one setting.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section
+        id="trajectory"
+        class="track-panel"
+        data-track-panel="trajectory"
+        data-active="false"
+        aria-labelledby="trajectory-title"
+      >
+        <header class="track-header">
+          <p class="kicker">
+            Continuity Subfacet 03
+          </p>
+
+          <h2 id="trajectory-title">
+            Trajectory
+          </h2>
+
+          <p>
+            Trajectory is the direction implied by repeated decisions. It asks whether the system is moving toward repair, drift, compounding strength, or compounding failure.
+          </p>
+
+          <div class="track-meta">
+            <span>Continuity</span>
+            <span>Integrity</span>
+            <span>Direction over time</span>
+            <span>Directional Law</span>
+            <span>Compounding Law</span>
+          </div>
+        </header>
+
+        <div
+          class="section-tabs"
+          aria-label="Trajectory reading tabs"
+        >
+          <input
+            id="trajectory-tab-practical"
+            name="trajectory-tabs"
+            type="radio"
+            data-tab-kind="practical"
+            checked
+          >
+
+          <input
+            id="trajectory-tab-platform"
+            name="trajectory-tabs"
+            type="radio"
+            data-tab-kind="platform"
+          >
+
+          <input
+            id="trajectory-tab-evidence"
+            name="trajectory-tabs"
+            type="radio"
+            data-tab-kind="evidence"
+          >
+
+          <div
+            class="section-tab-labels"
+            role="tablist"
+            aria-label="Trajectory lenses"
+          >
+            <label
+              for="trajectory-tab-practical"
+              role="tab"
+              data-tab-kind="practical"
+            >
+              Practical
+            </label>
+
+            <label
+              for="trajectory-tab-platform"
+              role="tab"
+              data-tab-kind="platform"
+            >
+              Platform Engineering
+            </label>
+
+            <label
+              for="trajectory-tab-evidence"
+              role="tab"
+              data-tab-kind="evidence"
+            >
+              Evidence
+            </label>
+          </div>
+
+          <div class="section-tab-panels">
+            <article
+              class="section-tab-panel"
+              data-tab-kind="practical"
+            >
+              <span>Practical</span>
+              <p>
+                A single event can mislead. Trajectory asks what the repeated pattern is doing. One repair can be real, but repeated avoidance tells a different story.
+              </p>
+
+              <ul>
+                <li>Trend versus event: do not confuse one moment with direction.</li>
+                <li>Drift: small repeated deviations become a new path.</li>
+                <li>Correction speed: slow correction can become permission for decay.</li>
+                <li>Compounding: repeated choices create momentum.</li>
+              </ul>
+            </article>
+
+            <article
+              class="section-tab-panel"
+              data-tab-kind="platform"
+            >
+              <span>Platform Engineering</span>
+              <p>
+                Trajectory maps to time-ordered system state. It tracks trend, variance, feedback, latency, perturbation response, and whether correction is keeping pace with drift.
+              </p>
+
+              <ul>
+                <li>Measure time series, not isolated metrics.</li>
+                <li>Track directional change after perturbations.</li>
+                <li>Monitor feedback latency and correction lag.</li>
+                <li>Distinguish stable variance from directional deterioration.</li>
+              </ul>
+            </article>
+
+            <article
+              class="section-tab-panel"
+              data-tab-kind="evidence"
+            >
+              <span>Evidence</span>
+              <p>
+                Evidence for trajectory requires ordered observations. A direction claim needs time, sequence, repeated samples, and a declared window.
+              </p>
+
+              <ul>
+                <li>Strong evidence: repeated records across a defined interval.</li>
+                <li>Useful evidence: before / after response to correction.</li>
+                <li>Failure mode: claiming direction from one point.</li>
+                <li>Boundary: trajectory does not prove final outcome; it shows current direction.</li>
+              </ul>
+            </article>
+          </div>
+        </div>
+
+        <div class="law-grid">
+          <article class="law-card">
+            <span>Canonical Law</span>
+            <strong>Directional Law</strong>
+            <p>
+              Repeated decisions disclose direction more reliably than isolated declarations.
+            </p>
+          </article>
+
+          <article class="law-card">
+            <span>Canonical Law</span>
+            <strong>Compounding Law</strong>
+            <p>
+              Small repeated choices become structural force when they continue without correction.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section
+        id="decay"
+        class="track-panel"
+        data-track-panel="decay"
+        data-active="false"
+        aria-labelledby="decay-title"
+      >
+        <header class="track-header">
+          <p class="kicker">
+            Continuity Subfacet 04
+          </p>
+
+          <h2 id="decay-title">
+            Decay
+          </h2>
+
+          <p>
+            Decay is the quiet accumulation of uncorrected exceptions. It begins when the exception is tolerated long enough to become the new structure.
+          </p>
+
+          <div class="track-meta">
+            <span>Continuity</span>
+            <span>Integrity</span>
+            <span>Uncorrected exception</span>
+            <span>Entropy Law</span>
+            <span>Maintenance Law</span>
+          </div>
+        </header>
+
+        <div
+          class="section-tabs"
+          aria-label="Decay reading tabs"
+        >
+          <input
+            id="decay-tab-practical"
+            name="decay-tabs"
+            type="radio"
+            data-tab-kind="practical"
+            checked
+          >
+
+          <input
+            id="decay-tab-platform"
+            name="decay-tabs"
+            type="radio"
+            data-tab-kind="platform"
+          >
+
+          <input
+            id="decay-tab-evidence"
+            name="decay-tabs"
+            type="radio"
+            data-tab-kind="evidence"
+          >
+
+          <div
+            class="section-tab-labels"
+            role="tablist"
+            aria-label="Decay lenses"
+          >
+            <label
+              for="decay-tab-practical"
+              role="tab"
+              data-tab-kind="practical"
+            >
+              Practical
+            </label>
+
+            <label
+              for="decay-tab-platform"
+              role="tab"
+              data-tab-kind="platform"
+            >
+              Platform Engineering
+            </label>
+
+            <label
+              for="decay-tab-evidence"
+              role="tab"
+              data-tab-kind="evidence"
+            >
+              Evidence
+            </label>
+          </div>
+
+          <div class="section-tab-panels">
+            <article
+              class="section-tab-panel"
+              data-tab-kind="practical"
+            >
+              <span>Practical</span>
+              <p>
+                Decay often looks harmless at first. It begins as an exception, becomes a habit, then becomes the system’s actual rule.
+              </p>
+
+              <ul>
+                <li>Exception creep: the tolerated exception expands.</li>
+                <li>Excuse replacing repair: explanation becomes a substitute for correction.</li>
+                <li>Pressure accelerators: stress makes unresolved exceptions spread faster.</li>
+                <li>Delayed repair: the cost of correction rises over time.</li>
+              </ul>
+            </article>
+
+            <article
+              class="section-tab-panel"
+              data-tab-kind="platform"
+            >
+              <span>Platform Engineering</span>
+              <p>
+                Decay maps to correction latency, entropy, drift, backlog, dependency rot, incentive inversion, and downstream amplification.
+              </p>
+
+              <ul>
+                <li>Track known exceptions as debt, not background noise.</li>
+                <li>Measure correction latency and recurrence.</li>
+                <li>Detect when manual override becomes normal operation.</li>
+                <li>Watch for downstream amplification from unresolved defects.</li>
+              </ul>
+            </article>
+
+            <article
+              class="section-tab-panel"
+              data-tab-kind="evidence"
+            >
+              <span>Evidence</span>
+              <p>
+                Evidence for decay requires a record of unresolved exceptions over time. The key question is not whether a defect existed, but whether it remained uncorrected long enough to alter behavior.
+              </p>
+
+              <ul>
+                <li>Strong evidence: recurring exception logs and delayed repair records.</li>
+                <li>Useful evidence: known issue age, recurrence, and downstream impact.</li>
+                <li>Failure mode: treating exceptions as isolated incidents.</li>
+                <li>Boundary: decay evidence must separate cause, delay, and consequence.</li>
+              </ul>
+            </article>
+          </div>
+        </div>
+
+        <div class="law-grid">
+          <article class="law-card">
+            <span>Canonical Law</span>
+            <strong>Entropy Law</strong>
+            <p>
+              Uncorrected disorder tends to spread into the surrounding structure.
+            </p>
+          </article>
+
+          <article class="law-card">
+            <span>Canonical Law</span>
+            <strong>Maintenance Law</strong>
+            <p>
+              What is not maintained will eventually be governed by the cost of neglect.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <nav
+        class="constellation-nav"
+        aria-label="Linear Laws constellation navigation"
+        data-law-constellation-nav
+        data-law-path-category="integrity"
+        data-law-path-track="continuity"
+        data-law-path-mode="linear"
+      >
+        <header class="constellation-nav__header">
+          <p class="kicker">
+            Linear Constellation Path
+          </p>
+
+          <h2>
+            Continue through the Laws without losing the Compass.
+          </h2>
+
+          <p>
+            This page is a consolidated Integrity track. The Compass remains the central return point; the constellation path provides a guided forward route.
+          </p>
+        </header>
+
+        <div class="constellation-nav__actions">
+          <a
+            href="/laws/"
+            data-law-path-action="return"
+          >
+            <span>Return</span>
+            <strong>Back to Compass</strong>
+          </a>
+
+          <a
+            href="/laws/categories/integrity/"
+            data-law-path-action="previous"
+          >
+            <span>Previous</span>
+            <strong>Integrity Category</strong>
+          </a>
+
+          <a
+            href="/laws/"
+            data-law-path-action="continue"
+            data-law-path-target-status="pending-sequence-lock"
+          >
+            <span>Continue</span>
+            <strong>Next Constellation Track</strong>
+          </a>
+        </div>
+      </nav>
+
+      <section
+        class="closing"
+        aria-label="Continuity closing"
+      >
+        <p class="kicker">
+          Continuity is integrity under time.
+        </p>
+
+        <p>
+          Memory retains the record. Transfer tests the standard across context. Trajectory reveals direction. Decay shows what happens when exceptions are not corrected. Together they make Continuity readable as a practical, platform, and evidence discipline.
+        </p>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div>
+        <strong>
+          Continuity · Integrity · Laws
+        </strong>
+
+        <span>
+          Consolidated single-file track. Memory, Transfer, Trajectory, and Decay embedded inline. No validation claim or registry mutation.
+        </span>
+      </div>
+
+      <nav aria-label="Footer links">
+        <a href="/laws/">
+          Compass
+        </a>
+
+        <a href="/laws/categories/integrity/">
+          Integrity
+        </a>
+
+        <a href="#memory">
+          Memory
+        </a>
+
+        <a href="#transfer">
+          Transfer
+        </a>
+
+        <a href="#trajectory">
+          Trajectory
+        </a>
+
+        <a href="#decay">
+          Decay
+        </a>
+
+        <a href="#main">
+          Top
+        </a>
+      </nav>
+    </footer>
+
+    <template
+      id="continuity-consolidated-html-receipt"
+      data-continuity-consolidated-html-receipt
+    >
+DGB_LAWS_INTEGRITY_CONTINUITY_CONSOLIDATED_TRACK_HTML_RECEIPT_v1_0_0
+
+TARGET:
+/laws/categories/integrity/continuity/index.html
+
+CONTRACT:
+DGB_LAWS_INTEGRITY_CONTINUITY_CONSOLIDATED_TRACK_HTML_TNT_v1_0_0
+
+STATUS:
+Complete replacement for existing continuity index page.
+Consolidates four local continuity leaf files into one HTML document.
+No runtime execution performed.
+No visual acceptance claimed.
+No production authorization claimed.
+No deployment authorization claimed.
+
+SOURCE FILES CONSOLIDATED:
+- /laws/categories/integrity/continuity/memory.html
+- /laws/categories/integrity/continuity/transfer.html
+- /laws/categories/integrity/continuity/trajectory.html
+- /laws/categories/integrity/continuity/decay.html
+
+CONSOLIDATED SUBFACETS:
+- Memory
+- Transfer
+- Trajectory
+- Decay
+
+SECTION-LOCAL TABS:
+Each subfacet includes:
+- Practical
+- Platform Engineering
+- Evidence
+
+HASH SUPPORT:
+- #memory
+- #transfer
+- #trajectory
+- #decay
+
+INTERACTION:
+- Diamond controls switch in-page panels.
+- Hash changes switch visible panel.
+- Browser back / forward hash navigation is supported.
+- Original leaf-page dependency is removed from the hub controls.
+
+CONSTELLATION PATH:
+- Return to Compass included.
+- Previous route returns to Integrity category.
+- Continue route is present but conservatively points to /laws/ pending exact 16-track sequence lock.
+- No route registry mutation claimed.
+
+REGISTRY STATUS:
+- Continuity remains an Integrity track.
+- Memory / Transfer / Trajectory / Decay are subfacets, not new registry tracks.
+- No sixteen-track mutation claimed.
+
+CLAIM BOUNDARIES:
+- No validation claim.
+- No production validation claim.
+- No evidence-status upgrade.
+- No source artifact promoted beyond page content.
+- No runtime authority mutation.
+- No controller authority.
+- No compositor authority.
+- No crystals authority.
+- No interactions authority.
+
+IMPLEMENTATION:
+Single-file HTML with inline CSS and inline JavaScript.
+No external CSS dependency.
+No external JS dependency.
+    </template>
   </div>
 
-  <div class="stage">
-    <div class="platform">
+  <script>
+    (() => {
+      "use strict";
 
-      <a class="diamond top" href="/laws/categories/integrity/continuity/memory.html">
-        <span>Memory</span>
-      </a>
+      const CONTRACT =
+        "DGB_LAWS_INTEGRITY_CONTINUITY_CONSOLIDATED_TRACK_HTML_TNT_v1_0_0";
 
-      <a class="diamond right" href="/laws/categories/integrity/continuity/transfer.html">
-        <span>Transfer</span>
-      </a>
+      const TRACKS =
+        Object.freeze([
+          "memory",
+          "transfer",
+          "trajectory",
+          "decay"
+        ]);
 
-      <a class="diamond bottom" href="/laws/categories/integrity/continuity/trajectory.html">
-        <span>Trajectory</span>
-      </a>
+      const controls =
+        Array.from(
+          document.querySelectorAll(
+            "[data-track-control]"
+          )
+        );
 
-      <a class="diamond left" href="/laws/categories/integrity/continuity/decay.html">
-        <span>Decay</span>
-      </a>
+      const panels =
+        Array.from(
+          document.querySelectorAll(
+            "[data-track-panel]"
+          )
+        );
 
-    </div>
-  </div>
+      const receiptTemplate =
+        document.querySelector(
+          "[data-continuity-consolidated-html-receipt]"
+        );
 
-  <div class="nav">
-    <a href="/laws/categories/integrity/">Back to Integrity</a>
-    <a href="/home/">Home</a>
-  </div>
+      function normalizeTrack(value) {
+        const normalized =
+          String(value || "")
+            .trim()
+            .replace(/^#/, "")
+            .toLowerCase();
 
-  <footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
+        return TRACKS.includes(normalized)
+          ? normalized
+          : "memory";
+      }
 
-</div>
+      function setActiveTrack(
+        value,
+        options = {}
+      ) {
+        const track =
+          normalizeTrack(value);
+
+        for (const control of controls) {
+          const active =
+            control.dataset.trackControl ===
+            track;
+
+          control.setAttribute(
+            "aria-pressed",
+            active ? "true" : "false"
+          );
+        }
+
+        for (const panel of panels) {
+          const active =
+            panel.dataset.trackPanel ===
+            track;
+
+          panel.dataset.active =
+            active ? "true" : "false";
+
+          panel.toggleAttribute(
+            "hidden",
+            !active
+          );
+        }
+
+        document.documentElement.dataset
+          .activeContinuityTrack =
+          track;
+
+        document.body.dataset
+          .activeContinuityTrack =
+          track;
+
+        if (
+          options.updateHash !== false &&
+          window.location.hash !==
+            `#${track}`
+        ) {
+          history.pushState(
+            {
+              contract:
+                CONTRACT,
+
+              track
+            },
+            "",
+            `#${track}`
+          );
+        }
+
+        if (options.scroll === true) {
+          const activePanel =
+            document.querySelector(
+              `[data-track-panel="${track}"]`
+            );
+
+          activePanel?.scrollIntoView({
+            behavior:
+              window.matchMedia(
+                "(prefers-reduced-motion: reduce)"
+              ).matches
+                ? "auto"
+                : "smooth",
+
+            block:
+              "start"
+          });
+        }
+
+        emitReceipt(track);
+
+        return track;
+      }
+
+      function emitReceipt(activeTrack) {
+        const receipt = {
+          contract:
+            CONTRACT,
+
+          route:
+            "/laws/categories/integrity/continuity/",
+
+          activeTrack,
+
+          consolidated:
+            true,
+
+          sourceFiles:
+            [
+              "memory.html",
+              "transfer.html",
+              "trajectory.html",
+              "decay.html"
+            ],
+
+          sectionTabs:
+            [
+              "practical",
+              "platform-engineering",
+              "evidence"
+            ],
+
+          hashSupport:
+            TRACKS.map(
+              track => `#${track}`
+            ),
+
+          routeRegistryMutated:
+            false,
+
+          validationClaimed:
+            false,
+
+          runtimeAuthorityMutated:
+            false,
+
+          timestamp:
+            new Date().toISOString()
+        };
+
+        document.documentElement.dataset
+          .continuityConsolidatedReceipt =
+          JSON.stringify(receipt);
+
+        if (receiptTemplate) {
+          receiptTemplate.dataset
+            .activeContinuityTrack =
+            activeTrack;
+        }
+      }
+
+      for (const control of controls) {
+        control.addEventListener(
+          "click",
+          () => {
+            setActiveTrack(
+              control.dataset.trackControl,
+              {
+                updateHash:
+                  true,
+
+                scroll:
+                  true
+              }
+            );
+          }
+        );
+      }
+
+      window.addEventListener(
+        "hashchange",
+        () => {
+          setActiveTrack(
+            window.location.hash,
+            {
+              updateHash:
+                false,
+
+              scroll:
+                false
+            }
+          );
+        }
+      );
+
+      for (const panel of panels) {
+        panel.toggleAttribute(
+          "hidden",
+          panel.dataset.active !== "true"
+        );
+      }
+
+      setActiveTrack(
+        window.location.hash || "memory",
+        {
+          updateHash:
+            false,
+
+          scroll:
+            false
+        }
+      );
+    })();
+  </script>
 </body>
 </html>

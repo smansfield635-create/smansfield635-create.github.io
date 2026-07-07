@@ -1,13 +1,13 @@
 // TARGET FILE: /assets/site-guide/site-guide.js
 // COMPLETE REPLACEMENT
-// SITE GUIDE RESURRECTION JS
-// SITE_GUIDE_BLUEPRINT_HARD_JUMP_PAD_CONTROLLER_RESURRECTION_TNT_v1
+// SITE GUIDE DEPTH INTERACTION CONTROLLER
+// SITE_GUIDE_DEPTH_INTERACTION_CONTROLLER_TNT_v2
 
 (() => {
   "use strict";
 
   const CONTRACT =
-    "SITE_GUIDE_BLUEPRINT_HARD_JUMP_PAD_CONTROLLER_RESURRECTION_TNT_v1";
+    "SITE_GUIDE_DEPTH_INTERACTION_CONTROLLER_TNT_v2";
 
   const ROUTE =
     "/site-guide/";
@@ -24,7 +24,8 @@
         "Next move: open Compass or preview another room"
       ],
       actionLabel: "Open Compass",
-      actionHref: "/"
+      actionHref: "/",
+      jumpTarget: "#jump-compass"
     },
 
     guide: {
@@ -38,7 +39,8 @@
         "Next move: stay here or preview another room"
       ],
       actionLabel: "Open Guide Desk",
-      actionHref: "/site-guide/"
+      actionHref: "/site-guide/",
+      jumpTarget: "#jump-guide"
     },
 
     main: {
@@ -52,7 +54,8 @@
         "Next move: open Main Hall or preview another room"
       ],
       actionLabel: "Open Main Hall",
-      actionHref: "/home/"
+      actionHref: "/home/",
+      jumpTarget: "#jump-main"
     },
 
     atrium: {
@@ -66,7 +69,8 @@
         "Next move: enter Atrium or preview another room"
       ],
       actionLabel: "Enter Atrium",
-      actionHref: "/showroom/"
+      actionHref: "/showroom/",
+      jumpTarget: "#jump-atrium"
     },
 
     atlas: {
@@ -80,7 +84,8 @@
         "Next move: open Atlas Study or preview a world room"
       ],
       actionLabel: "Open Atlas Study",
-      actionHref: "/showroom/globe/"
+      actionHref: "/showroom/globe/",
+      jumpTarget: "#jump-atlas"
     },
 
     zionts: {
@@ -94,7 +99,8 @@
         "Next move: enter ZIONTS or preview another world room"
       ],
       actionLabel: "Enter ZIONTS",
-      actionHref: "/showroom/globe/earth/"
+      actionHref: "/showroom/globe/earth/",
+      jumpTarget: "#jump-zionts"
     },
 
     audralia: {
@@ -108,7 +114,8 @@
         "Next move: enter Conservatory or preview another room"
       ],
       actionLabel: "Enter Conservatory",
-      actionHref: "/showroom/globe/audralia/"
+      actionHref: "/showroom/globe/audralia/",
+      jumpTarget: "#jump-audralia"
     },
 
     worldroom: {
@@ -122,7 +129,8 @@
         "Next move: inspect Worldroom or preview another room"
       ],
       actionLabel: "Inspect Worldroom",
-      actionHref: "/showroom/globe/audralia/planet/"
+      actionHref: "/showroom/globe/audralia/planet/",
+      jumpTarget: "#jump-worldroom"
     },
 
     cockpit: {
@@ -136,7 +144,8 @@
         "Next move: open Cockpit or preview another room"
       ],
       actionLabel: "Open Cockpit",
-      actionHref: "/showroom/globe/audralia/disposition/"
+      actionHref: "/showroom/globe/audralia/disposition/",
+      jumpTarget: "#jump-cockpit"
     },
 
     frontier: {
@@ -150,7 +159,8 @@
         "Next move: enter Workshop Yard or preview another room"
       ],
       actionLabel: "Enter Workshop Yard",
-      actionHref: "/explore/frontier/"
+      actionHref: "/explore/frontier/",
+      jumpTarget: "#jump-frontier"
     },
 
     product: {
@@ -164,7 +174,8 @@
         "Next move: open Product Gallery or preview another room"
       ],
       actionLabel: "Open Product Gallery",
-      actionHref: "/products/"
+      actionHref: "/products/",
+      jumpTarget: "#jump-product"
     },
 
     lab: {
@@ -178,7 +189,8 @@
         "Next move: open The Lab or preview another room"
       ],
       actionLabel: "Open The Lab",
-      actionHref: "/gauges/"
+      actionHref: "/gauges/",
+      jumpTarget: "#jump-lab"
     },
 
     law: {
@@ -192,7 +204,8 @@
         "Next move: open Law Library or preview another room"
       ],
       actionLabel: "Open Law Library",
-      actionHref: "/laws/"
+      actionHref: "/laws/",
+      jumpTarget: "#jump-law"
     }
   };
 
@@ -429,6 +442,20 @@
     }
   };
 
+  const STATE = {
+    selectedFeature: null,
+    selectedLens: "presentation",
+    selectedBlueprintRoom: "atrium",
+    selectedRouteStart: "new",
+    selectedRouteGoal: "orientation",
+    selectedMatrix: null,
+    selectedSpectrum: null,
+    blueprintOpen: false,
+    orbitFocused: false,
+    focusMode: false,
+    lastFocusSource: null
+  };
+
   function qs(selector, scope = document) {
     return scope.querySelector(selector);
   }
@@ -437,34 +464,27 @@
     return Array.from(scope.querySelectorAll(selector));
   }
 
-  function setActiveWithinGroup(target, groupSelector, activeAttr = "data-active") {
-    const group =
-      target.closest("[data-select-group]") ||
-      target.parentElement;
+  function supportsEscape() {
+    return Boolean(window.CSS && typeof window.CSS.escape === "function");
+  }
 
-    if (!group) {
-      return;
+  function esc(value) {
+    const stringValue =
+      String(value ?? "");
+
+    if (supportsEscape()) {
+      return CSS.escape(stringValue);
     }
 
-    qsa(groupSelector, group).forEach(item => {
-      item.setAttribute(activeAttr, item === target ? "true" : "false");
-    });
+    return stringValue.replace(/["\\#.:,[\]=]/g, "\\$&");
   }
 
-  function showOnly(target, allPanels) {
-    allPanels.forEach(panel => {
-      const active =
-        panel === target;
-
-      panel.hidden =
-        !active;
-
-      panel.dataset.active =
-        String(active);
-    });
+  function prefersReducedMotion() {
+    return window.matchMedia &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   }
 
-  function smoothFocus(selectorOrElement) {
+  function smoothFocus(selectorOrElement, block = "start") {
     const element =
       typeof selectorOrElement === "string"
         ? qs(selectorOrElement)
@@ -477,36 +497,135 @@
     element.scrollIntoView({
       behavior:
         prefersReducedMotion() ? "auto" : "smooth",
-
-      block:
-        "start"
+      block
     });
   }
 
-  function prefersReducedMotion() {
-    return window.matchMedia &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  }
-
-  function setBodyFocusMode(value) {
-    document.body.dataset.focusMode =
-      value ? "true" : "false";
-  }
-
-  function setFeature(feature) {
-    const gem =
-      qs(`[data-feature-gem][data-feature="${CSS.escape(feature)}"]`);
-
-    const detail =
-      qs(`[data-feature-detail="${CSS.escape(feature)}"]`);
-
-    if (!gem || !detail) {
+  function setDatasetBoolean(element, key, value) {
+    if (!element) {
       return;
     }
 
-    setActiveWithinGroup(
-      gem,
-      "[data-feature-gem]"
+    element.dataset[key] =
+      value ? "true" : "false";
+  }
+
+  function setBodyState() {
+    document.body.dataset.focusMode =
+      STATE.focusMode ? "true" : "false";
+
+    document.body.dataset.orbitFocused =
+      STATE.orbitFocused ? "true" : "false";
+
+    document.body.dataset.blueprintOpen =
+      STATE.blueprintOpen ? "true" : "false";
+
+    if (STATE.selectedFeature) {
+      document.body.dataset.selectedFeature =
+        STATE.selectedFeature;
+    } else {
+      delete document.body.dataset.selectedFeature;
+    }
+
+    if (STATE.selectedBlueprintRoom) {
+      document.body.dataset.selectedBlueprintRoom =
+        STATE.selectedBlueprintRoom;
+    } else {
+      delete document.body.dataset.selectedBlueprintRoom;
+    }
+  }
+
+  function markActive(items, activeItem) {
+    items.forEach(item => {
+      item.dataset.active =
+        item === activeItem ? "true" : "false";
+
+      if (item === activeItem) {
+        item.setAttribute("aria-pressed", "true");
+      } else {
+        item.setAttribute("aria-pressed", "false");
+      }
+    });
+  }
+
+  function clearActive(items) {
+    items.forEach(item => {
+      item.dataset.active =
+        "false";
+
+      item.setAttribute("aria-pressed", "false");
+    });
+  }
+
+  function setHiddenState(panel, active) {
+    panel.hidden =
+      !active;
+
+    panel.dataset.active =
+      active ? "true" : "false";
+  }
+
+  function showOnly(target, panels) {
+    panels.forEach(panel => {
+      setHiddenState(
+        panel,
+        panel === target
+      );
+    });
+  }
+
+  function updateGuideOrbitFocus() {
+    const orbit =
+      qs(".guide-orbit");
+
+    if (!orbit) {
+      return;
+    }
+
+    orbit.dataset.focusActive =
+      STATE.selectedFeature ? "true" : "false";
+
+    orbit.dataset.selectedFeature =
+      STATE.selectedFeature || "";
+  }
+
+  function setFocusMode(value, source = null) {
+    STATE.focusMode =
+      Boolean(value);
+
+    STATE.lastFocusSource =
+      source;
+
+    setBodyState();
+    emitReceipt();
+  }
+
+  function setFeature(feature, options = {}) {
+    const featureKey =
+      String(feature || "");
+
+    const gem =
+      qs(`[data-feature-gem][data-feature="${esc(featureKey)}"]`);
+
+    const detail =
+      qs(`[data-feature-detail="${esc(featureKey)}"]`);
+
+    if (!gem || !detail) {
+      return false;
+    }
+
+    STATE.selectedFeature =
+      featureKey;
+
+    STATE.orbitFocused =
+      true;
+
+    STATE.focusMode =
+      true;
+
+    markActive(
+      qsa("[data-feature-gem]"),
+      gem
     );
 
     showOnly(
@@ -514,116 +633,160 @@
       qsa("[data-feature-detail]")
     );
 
-    setBodyFocusMode(true);
+    updateGuideOrbitFocus();
+    setBodyState();
 
-    document.body.dataset.orbitFocused =
-      "true";
-
-    smoothFocus(detail);
-  }
-
-  function returnToOrbit() {
-    qsa("[data-feature-detail]").forEach(detail => {
-      detail.hidden =
-        true;
-
-      detail.dataset.active =
-        "false";
-    });
-
-    qsa("[data-feature-gem]").forEach(gem => {
-      gem.dataset.active =
-        "false";
-    });
-
-    setBodyFocusMode(false);
-    document.body.dataset.orbitFocused = "false";
-    document.body.dataset.blueprintOpen = "false";
-
-    smoothFocus("#guide-orbit");
-  }
-
-  function setLens(lens) {
-    const button =
-      qs(`[data-lens-button="${CSS.escape(lens)}"]`);
-
-    const panel =
-      qs(`[data-lens-panel="${CSS.escape(lens)}"]`);
-
-    if (!button || !panel) {
-      return;
+    if (options.scroll !== false) {
+      smoothFocus(detail);
     }
 
-    qsa("[data-lens-button]").forEach(item => {
-      item.dataset.active =
-        String(item === button);
+    emitReceipt();
+
+    return true;
+  }
+
+  function returnToOrbit(options = {}) {
+    STATE.selectedFeature =
+      null;
+
+    STATE.orbitFocused =
+      false;
+
+    STATE.focusMode =
+      false;
+
+    STATE.lastFocusSource =
+      "return-to-orbit";
+
+    clearActive(
+      qsa("[data-feature-gem]")
+    );
+
+    qsa("[data-feature-detail]").forEach(detail => {
+      setHiddenState(detail, false);
     });
+
+    updateGuideOrbitFocus();
+    setBodyState();
+
+    if (options.scroll !== false) {
+      smoothFocus("#guide-orbit");
+    }
+
+    emitReceipt();
+  }
+
+  function setLens(lens, options = {}) {
+    const lensKey =
+      String(lens || "");
+
+    const button =
+      qs(`[data-lens-button="${esc(lensKey)}"]`);
+
+    const panel =
+      qs(`[data-lens-panel="${esc(lensKey)}"]`);
+
+    if (!button || !panel) {
+      return false;
+    }
+
+    STATE.selectedLens =
+      lensKey;
+
+    markActive(
+      qsa("[data-lens-button]"),
+      button
+    );
 
     qsa("[data-lens-panel]").forEach(item => {
       const active =
         item === panel;
 
-      item.hidden =
-        !active;
-
-      item.dataset.active =
-        String(active);
+      setHiddenState(item, active);
     });
 
-    setBodyFocusMode(true);
-    smoothFocus(panel);
-  }
+    STATE.focusMode =
+      true;
 
-  function setCategory(category) {
-    const button =
-      qs(`[data-category-button][data-category="${CSS.escape(category)}"]`);
+    STATE.lastFocusSource =
+      `lens:${lensKey}`;
 
-    const panel =
-      qs(`[data-category-panel="${CSS.escape(category)}"]`);
+    setBodyState();
 
-    if (!button || !panel) {
-      return;
+    if (options.scroll !== false) {
+      smoothFocus(panel);
     }
 
-    setActiveWithinGroup(
-      button,
-      "[data-category-button]"
+    emitReceipt();
+
+    return true;
+  }
+
+  function setCategory(category, options = {}) {
+    const categoryKey =
+      String(category || "");
+
+    const button =
+      qs(`[data-category-button][data-category="${esc(categoryKey)}"]`);
+
+    const panel =
+      qs(`[data-category-panel="${esc(categoryKey)}"]`);
+
+    if (!button || !panel) {
+      return false;
+    }
+
+    markActive(
+      qsa("[data-category-button]"),
+      button
     );
 
     qsa("[data-category-panel]").forEach(item => {
-      const active =
-        item === panel;
-
-      item.hidden =
-        !active;
-
-      item.dataset.active =
-        String(active);
+      setHiddenState(
+        item,
+        item === panel
+      );
     });
+
+    if (options.scroll) {
+      smoothFocus(panel);
+    }
+
+    emitReceipt();
+
+    return true;
   }
 
   function setDemoCard(card) {
-    setActiveWithinGroup(
-      card,
-      "[data-demo-card]"
+    if (!(card instanceof HTMLElement)) {
+      return false;
+    }
+
+    const group =
+      card.closest("[data-select-group]") ||
+      card.parentElement;
+
+    if (!group) {
+      return false;
+    }
+
+    markActive(
+      qsa("[data-demo-card]", group),
+      card
     );
+
+    emitReceipt();
+
+    return true;
   }
 
-  function setBlueprintRoom(roomKey, options = {}) {
+  function updateBlueprintDetail(roomKey) {
     const room =
       BLUEPRINT_ROOMS[roomKey];
 
-    const roomButton =
-      qs(`[data-blueprint-room][data-room="${CSS.escape(roomKey)}"]`);
-
-    if (!room || !roomButton) {
-      return;
+    if (!room) {
+      return false;
     }
-
-    qsa("[data-blueprint-room]").forEach(item => {
-      item.dataset.active =
-        String(item === roomButton);
-    });
 
     const kicker =
       qs("[data-blueprint-kicker]");
@@ -656,17 +819,20 @@
     }
 
     if (list) {
-      list.replaceChildren(
-        ...room.list.map(item => {
-          const li =
-            document.createElement("li");
+      const fragment =
+        document.createDocumentFragment();
 
-          li.textContent =
-            item;
+      room.list.forEach(item => {
+        const li =
+          document.createElement("li");
 
-          return li;
-        })
-      );
+        li.textContent =
+          item;
+
+        fragment.appendChild(li);
+      });
+
+      list.replaceChildren(fragment);
     }
 
     if (action) {
@@ -677,53 +843,164 @@
         room.actionHref;
     }
 
-    document.body.dataset.blueprintOpen =
-      "true";
+    return true;
+  }
 
-    document.body.dataset.selectedBlueprintRoom =
-      roomKey;
+  function focusJumpSurface(roomKey, options = {}) {
+    const room =
+      BLUEPRINT_ROOMS[roomKey];
 
-    setBodyFocusMode(true);
+    if (!room) {
+      return;
+    }
 
-    if (options.jump !== false) {
-      const target =
-        roomButton.dataset.jumpTarget;
+    const target =
+      qs(room.jumpTarget) ||
+      qs(`[data-jump-section="${esc(roomKey)}"]`);
 
-      if (target) {
-        smoothFocus(target);
+    if (!target) {
+      return;
+    }
+
+    qsa(".jump-surface").forEach(surface => {
+      const active =
+        surface === target;
+
+      surface.dataset.active =
+        active ? "true" : "false";
+
+      if (active) {
+        surface.dataset.selectedPreview =
+          "true";
       } else {
-        smoothFocus(".blueprint-detail");
+        delete surface.dataset.selectedPreview;
       }
+    });
+
+    if (options.scroll !== false) {
+      smoothFocus(target);
+    }
+  }
+
+  function setBlueprintRoom(roomKey, options = {}) {
+    const key =
+      String(roomKey || "");
+
+    const room =
+      BLUEPRINT_ROOMS[key];
+
+    const button =
+      qs(`[data-blueprint-room][data-room="${esc(key)}"]`);
+
+    if (!room || !button) {
+      return false;
+    }
+
+    STATE.selectedBlueprintRoom =
+      key;
+
+    STATE.blueprintOpen =
+      true;
+
+    STATE.focusMode =
+      true;
+
+    STATE.lastFocusSource =
+      `blueprint:${key}`;
+
+    markActive(
+      qsa("[data-blueprint-room]"),
+      button
+    );
+
+    updateBlueprintDetail(key);
+
+    setBodyState();
+
+    if (options.preview !== false) {
+      focusJumpSurface(key, {
+        scroll:
+          options.jump !== false
+      });
+    } else if (options.jump !== false) {
+      smoothFocus(".blueprint-detail");
+    }
+
+    emitReceipt();
+
+    return true;
+  }
+
+  function returnToBlueprint(options = {}) {
+    STATE.blueprintOpen =
+      true;
+
+    STATE.focusMode =
+      true;
+
+    STATE.lastFocusSource =
+      "return-to-blueprint";
+
+    setBodyState();
+
+    if (options.scroll !== false) {
+      smoothFocus(".estate-blueprint");
     }
 
     emitReceipt();
   }
 
-  function returnToBlueprint() {
-    document.body.dataset.blueprintOpen =
-      "true";
+  function openBlueprint(options = {}) {
+    setLens("presentation", {
+      scroll:
+        false
+    });
 
-    smoothFocus(".estate-blueprint");
-  }
+    STATE.blueprintOpen =
+      true;
 
-  function openBlueprint() {
-    setLens("presentation");
-    document.body.dataset.blueprintOpen = "true";
-    setBodyFocusMode(true);
-    smoothFocus(".estate-blueprint");
+    STATE.focusMode =
+      true;
+
+    STATE.lastFocusSource =
+      "open-blueprint";
+
+    setBodyState();
+
+    if (options.scroll !== false) {
+      smoothFocus(".estate-blueprint");
+    }
+
+    emitReceipt();
   }
 
   function setMatrixCell(cell) {
-    setActiveWithinGroup(
-      cell,
-      "[data-matrix-cell]"
+    if (!(cell instanceof HTMLElement)) {
+      return false;
+    }
+
+    const group =
+      cell.closest("[data-select-group]") ||
+      cell.closest(".matrix-4x4");
+
+    if (!group) {
+      return false;
+    }
+
+    markActive(
+      qsa("[data-matrix-cell]", group),
+      cell
     );
 
-    document.documentElement.dataset
-      .siteGuideSelectedMatrix =
+    STATE.selectedMatrix =
       cell.textContent.trim();
 
+    document.documentElement.dataset.siteGuideSelectedMatrix =
+      STATE.selectedMatrix;
+
     emitReceipt();
+
+    return true;
   }
 
   function buildSpectrum() {
@@ -762,30 +1039,39 @@
     }
 
     spectrum.appendChild(fragment);
-    spectrum.dataset.spectrumBuilt = "true";
+    spectrum.dataset.spectrumBuilt =
+      "true";
   }
 
   function setSpectrumCell(cell) {
+    if (!(cell instanceof HTMLElement)) {
+      return false;
+    }
+
     const group =
       cell.closest(".spectrum-16x16");
 
     if (!group) {
-      return;
+      return false;
     }
 
-    qsa("[data-spectrum-cell]", group).forEach(item => {
-      item.dataset.active =
-        String(item === cell);
-    });
+    markActive(
+      qsa("[data-spectrum-cell]", group),
+      cell
+    );
 
     const index =
-      cell.dataset.spectrumCell || cell.textContent.trim();
+      Number(cell.dataset.spectrumCell || cell.textContent.trim());
+
+    if (!Number.isFinite(index)) {
+      return false;
+    }
 
     const row =
-      Math.ceil(Number(index) / 16);
+      Math.ceil(index / 16);
 
     const column =
-      ((Number(index) - 1) % 16) + 1;
+      ((index - 1) % 16) + 1;
 
     const readout =
       qs("[data-spectrum-readout]");
@@ -795,25 +1081,26 @@
         `Selected state: ${index} · row ${row} · column ${column}.`;
     }
 
-    document.documentElement.dataset
-      .siteGuideSelectedSpectrum =
-      JSON.stringify({
-        index:
-          Number(index),
-
+    STATE.selectedSpectrum =
+      {
+        index,
         row,
         column,
+        scope: "16x16-256"
+      };
 
-        scope:
-          "16x16-256"
-      });
+    document.documentElement.dataset.siteGuideSelectedSpectrum =
+      JSON.stringify(STATE.selectedSpectrum);
 
     emitReceipt();
+
+    return true;
   }
 
   function getActiveRouteStart() {
     return (
       qs("[data-route-start][data-active='true']")?.dataset.routeStart ||
+      STATE.selectedRouteStart ||
       "new"
     );
   }
@@ -821,13 +1108,26 @@
   function getActiveRouteGoal() {
     return (
       qs("[data-route-goal][data-active='true']")?.dataset.routeGoal ||
+      STATE.selectedRouteGoal ||
       "orientation"
     );
   }
 
   function updateRoutePlan() {
+    const start =
+      getActiveRouteStart();
+
+    const goal =
+      getActiveRouteGoal();
+
+    STATE.selectedRouteStart =
+      start;
+
+    STATE.selectedRouteGoal =
+      goal;
+
     const key =
-      `${getActiveRouteStart()}:${getActiveRouteGoal()}`;
+      `${start}:${goal}`;
 
     const plan =
       ROUTE_PLANS[key] ||
@@ -861,32 +1161,33 @@
     }
 
     if (rail) {
-      rail.replaceChildren(
-        ...plan.steps.map(([label, href]) => {
-          const link =
-            document.createElement("a");
+      const fragment =
+        document.createDocumentFragment();
 
-          link.className =
-            "path-step";
+      plan.steps.forEach(([label, href]) => {
+        const link =
+          document.createElement("a");
 
-          link.href =
-            href;
+        link.className =
+          "path-step";
 
-          link.textContent =
-            label;
+        link.href =
+          href;
 
-          return link;
-        })
-      );
+        link.textContent =
+          label;
+
+        fragment.appendChild(link);
+      });
+
+      rail.replaceChildren(fragment);
     }
 
-    document.documentElement.dataset
-      .siteGuideRoutePlan =
+    document.documentElement.dataset.siteGuideRoutePlan =
       JSON.stringify({
         key,
         title:
           plan.title,
-
         steps:
           plan.steps.map(([label, href]) => ({
             label,
@@ -898,21 +1199,149 @@
   }
 
   function setRouteStart(button) {
-    setActiveWithinGroup(
-      button,
-      "[data-route-start]"
+    if (!(button instanceof HTMLElement)) {
+      return false;
+    }
+
+    const group =
+      button.closest("[data-select-group]") ||
+      button.parentElement;
+
+    if (!group) {
+      return false;
+    }
+
+    markActive(
+      qsa("[data-route-start]", group),
+      button
     );
 
+    STATE.selectedRouteStart =
+      button.dataset.routeStart || "new";
+
     updateRoutePlan();
+
+    return true;
   }
 
   function setRouteGoal(button) {
-    setActiveWithinGroup(
-      button,
-      "[data-route-goal]"
+    if (!(button instanceof HTMLElement)) {
+      return false;
+    }
+
+    const group =
+      button.closest("[data-select-group]") ||
+      button.parentElement;
+
+    if (!group) {
+      return false;
+    }
+
+    markActive(
+      qsa("[data-route-goal]", group),
+      button
     );
 
+    STATE.selectedRouteGoal =
+      button.dataset.routeGoal || "orientation";
+
     updateRoutePlan();
+
+    return true;
+  }
+
+  function restoreFromHash() {
+    const hash =
+      window.location.hash;
+
+    if (!hash || hash.length < 2) {
+      return false;
+    }
+
+    const id =
+      hash.slice(1);
+
+    const target =
+      document.getElementById(id);
+
+    if (!target) {
+      return false;
+    }
+
+    const lensPanel =
+      target.closest("[data-lens-panel]");
+
+    if (lensPanel instanceof HTMLElement && lensPanel.dataset.lensPanel) {
+      setLens(lensPanel.dataset.lensPanel, {
+        scroll:
+          false
+      });
+    }
+
+    const jumpSection =
+      target.closest("[data-jump-section]");
+
+    if (jumpSection instanceof HTMLElement && jumpSection.dataset.jumpSection) {
+      setBlueprintRoom(jumpSection.dataset.jumpSection, {
+        jump:
+          false,
+        preview:
+          true
+      });
+    }
+
+    const featureDetail =
+      target.closest("[data-feature-detail]");
+
+    if (featureDetail instanceof HTMLElement && featureDetail.dataset.featureDetail) {
+      setFeature(featureDetail.dataset.featureDetail, {
+        scroll:
+          false
+      });
+    }
+
+    smoothFocus(target);
+
+    emitReceipt();
+
+    return true;
+  }
+
+  function bootManorBlueprintSafeMode() {
+    const manorRuntimePresent =
+      Boolean(window.DGB_MANOR_BLUEPRINT) ||
+      Boolean(window.MANOR_BLUEPRINT) ||
+      Boolean(document.querySelector("[data-manor-blueprint-root]"));
+
+    document.documentElement.dataset.siteGuideManorBlueprintRuntimePresent =
+      manorRuntimePresent ? "true" : "false";
+
+    document.documentElement.dataset.siteGuideManorBlueprintSafeFailure =
+      manorRuntimePresent ? "false" : "true";
+  }
+
+  function enhanceAccessibility() {
+    qsa("[data-feature-gem]").forEach(button => {
+      button.setAttribute("aria-pressed", button.dataset.active === "true" ? "true" : "false");
+    });
+
+    qsa("[data-blueprint-room]").forEach(button => {
+      button.setAttribute("aria-pressed", button.dataset.active === "true" ? "true" : "false");
+    });
+
+    qsa("[data-lens-button]").forEach(button => {
+      button.setAttribute("aria-pressed", button.dataset.active === "true" ? "true" : "false");
+    });
+
+    qsa("[data-demo-card]").forEach(button => {
+      if (button instanceof HTMLButtonElement) {
+        button.setAttribute("aria-pressed", button.dataset.active === "true" ? "true" : "false");
+      }
+    });
+
+    qsa("[data-route-start], [data-route-goal], [data-matrix-cell]").forEach(button => {
+      button.setAttribute("aria-pressed", button.dataset.active === "true" ? "true" : "false");
+    });
   }
 
   function emitReceipt() {
@@ -922,6 +1351,12 @@
 
       route:
         ROUTE,
+
+      htmlContract:
+        document.documentElement.dataset.contract || null,
+
+      cssContract:
+        document.documentElement.dataset.cssContract || null,
 
       resurrectedAssets:
         {
@@ -933,31 +1368,37 @@
         },
 
       selectedFeature:
-        qs("[data-feature-gem][data-active='true']")?.dataset.feature || null,
+        STATE.selectedFeature,
 
       selectedLens:
-        qs("[data-lens-button][data-active='true']")?.dataset.lensButton || null,
+        STATE.selectedLens,
 
       selectedBlueprintRoom:
-        document.body.dataset.selectedBlueprintRoom || null,
+        STATE.selectedBlueprintRoom,
 
       selectedRouteStart:
-        getActiveRouteStart(),
+        STATE.selectedRouteStart,
 
       selectedRouteGoal:
-        getActiveRouteGoal(),
+        STATE.selectedRouteGoal,
 
       selectedMatrix:
-        document.documentElement.dataset.siteGuideSelectedMatrix || null,
+        STATE.selectedMatrix,
 
       selectedSpectrum:
-        document.documentElement.dataset.siteGuideSelectedSpectrum || null,
+        STATE.selectedSpectrum,
 
       blueprintOpen:
-        document.body.dataset.blueprintOpen === "true",
+        STATE.blueprintOpen,
+
+      orbitFocused:
+        STATE.orbitFocused,
 
       focusMode:
-        document.body.dataset.focusMode === "true",
+        STATE.focusMode,
+
+      lastFocusSource:
+        STATE.lastFocusSource,
 
       canvas:
         false,
@@ -972,8 +1413,7 @@
         new Date().toISOString()
     };
 
-    document.documentElement.dataset
-      .siteGuideControllerReceipt =
+    document.documentElement.dataset.siteGuideControllerReceipt =
       JSON.stringify(receipt);
   }
 
@@ -991,7 +1431,11 @@
 
       if (featureGem instanceof HTMLElement) {
         event.preventDefault();
-        setFeature(featureGem.dataset.feature || "");
+
+        setFeature(
+          featureGem.dataset.feature || ""
+        );
+
         return;
       }
 
@@ -1000,7 +1444,9 @@
 
       if (returnOrbit) {
         event.preventDefault();
+
         returnToOrbit();
+
         return;
       }
 
@@ -1009,7 +1455,9 @@
 
       if (openBlueprintButton) {
         event.preventDefault();
+
         openBlueprint();
+
         return;
       }
 
@@ -1018,7 +1466,9 @@
 
       if (returnBlueprint) {
         event.preventDefault();
+
         returnToBlueprint();
+
         return;
       }
 
@@ -1027,7 +1477,11 @@
 
       if (lensButton instanceof HTMLElement) {
         event.preventDefault();
-        setLens(lensButton.dataset.lensButton || "");
+
+        setLens(
+          lensButton.dataset.lensButton || ""
+        );
+
         return;
       }
 
@@ -1036,7 +1490,15 @@
 
       if (categoryButton instanceof HTMLElement) {
         event.preventDefault();
-        setCategory(categoryButton.dataset.category || "");
+
+        setCategory(
+          categoryButton.dataset.category || "",
+          {
+            scroll:
+              false
+          }
+        );
+
         return;
       }
 
@@ -1045,7 +1507,9 @@
 
       if (demoCard instanceof HTMLElement) {
         event.preventDefault();
+
         setDemoCard(demoCard);
+
         return;
       }
 
@@ -1054,7 +1518,11 @@
 
       if (roomButton instanceof HTMLElement) {
         event.preventDefault();
-        setBlueprintRoom(roomButton.dataset.room || "");
+
+        setBlueprintRoom(
+          roomButton.dataset.room || ""
+        );
+
         return;
       }
 
@@ -1063,7 +1531,9 @@
 
       if (routeStart instanceof HTMLElement) {
         event.preventDefault();
+
         setRouteStart(routeStart);
+
         return;
       }
 
@@ -1072,7 +1542,9 @@
 
       if (routeGoal instanceof HTMLElement) {
         event.preventDefault();
+
         setRouteGoal(routeGoal);
+
         return;
       }
 
@@ -1081,7 +1553,9 @@
 
       if (matrixCell instanceof HTMLElement) {
         event.preventDefault();
+
         setMatrixCell(matrixCell);
+
         return;
       }
 
@@ -1090,82 +1564,46 @@
 
       if (spectrumCell instanceof HTMLElement) {
         event.preventDefault();
+
         setSpectrumCell(spectrumCell);
       }
     });
-  }
 
-  function restoreFromHash() {
-    const hash =
-      window.location.hash;
-
-    if (!hash || hash.length < 2) {
-      return;
-    }
-
-    const target =
-      qs(hash);
-
-    if (!target) {
-      return;
-    }
-
-    const lensPanel =
-      target.closest("[data-lens-panel]");
-
-    if (lensPanel instanceof HTMLElement && lensPanel.dataset.lensPanel) {
-      setLens(lensPanel.dataset.lensPanel);
-    }
-
-    target.hidden =
-      false;
-
-    setBodyFocusMode(true);
-    smoothFocus(target);
-  }
-
-  function bootManorBlueprintSafeMode() {
-    const manorRuntimePresent =
-      Boolean(window.DGB_MANOR_BLUEPRINT) ||
-      Boolean(window.MANOR_BLUEPRINT) ||
-      Boolean(document.querySelector("[data-manor-blueprint-root]"));
-
-    document.documentElement.dataset
-      .siteGuideManorBlueprintRuntimePresent =
-      String(manorRuntimePresent);
-
-    if (!manorRuntimePresent) {
-      document.documentElement.dataset
-        .siteGuideManorBlueprintSafeFailure =
-        "true";
-    }
+    window.addEventListener("hashchange", () => {
+      restoreFromHash();
+    });
   }
 
   function initializeDefaults() {
     buildSpectrum();
+    enhanceAccessibility();
 
-    document.body.dataset.focusMode =
-      "false";
+    STATE.selectedFeature =
+      null;
 
-    document.body.dataset.orbitFocused =
-      "false";
+    STATE.orbitFocused =
+      false;
 
-    document.body.dataset.blueprintOpen =
-      "false";
+    STATE.focusMode =
+      false;
 
     const activeLens =
       qs("[data-lens-button][data-active='true']");
 
     if (activeLens?.dataset.lensButton) {
+      STATE.selectedLens =
+        activeLens.dataset.lensButton;
+
       qsa("[data-lens-panel]").forEach(panel => {
-        const active =
-          panel.dataset.lensPanel === activeLens.dataset.lensButton;
-
-        panel.hidden =
-          !active;
-
-        panel.dataset.active =
-          String(active);
+        setHiddenState(
+          panel,
+          panel.dataset.lensPanel === STATE.selectedLens
+        );
+      });
+    } else {
+      setLens("presentation", {
+        scroll:
+          false
       });
     }
 
@@ -1173,32 +1611,60 @@
       qs("[data-category-button][data-active='true']");
 
     if (activeCategory?.dataset.category) {
-      setCategory(activeCategory.dataset.category);
+      setCategory(
+        activeCategory.dataset.category,
+        {
+          scroll:
+            false
+        }
+      );
     }
 
-    const defaultRoom =
+    const activeRoom =
       qs("[data-blueprint-room][data-active='true']")?.dataset.room ||
       "atrium";
 
-    setBlueprintRoom(defaultRoom, {
-      jump:
+    STATE.selectedBlueprintRoom =
+      activeRoom;
+
+    updateBlueprintDetail(activeRoom);
+
+    markActive(
+      qsa("[data-blueprint-room]"),
+      qs(`[data-blueprint-room][data-room="${esc(activeRoom)}"]`)
+    );
+
+    focusJumpSurface(activeRoom, {
+      scroll:
         false
     });
 
+    STATE.blueprintOpen =
+      false;
+
+    STATE.selectedRouteStart =
+      getActiveRouteStart();
+
+    STATE.selectedRouteGoal =
+      getActiveRouteGoal();
+
     updateRoutePlan();
 
-    restoreFromHash();
-
+    setBodyState();
+    updateGuideOrbitFocus();
     bootManorBlueprintSafeMode();
 
-    emitReceipt();
+    const restored =
+      restoreFromHash();
+
+    if (!restored) {
+      emitReceipt();
+    }
   }
 
   function boot() {
     bindEvents();
     initializeDefaults();
-
-    window.addEventListener("hashchange", restoreFromHash);
 
     window.DGB_SITE_GUIDE =
       Object.freeze({
@@ -1207,6 +1673,9 @@
 
         route:
           ROUTE,
+
+        state:
+          STATE,
 
         setFeature,
         returnToOrbit,

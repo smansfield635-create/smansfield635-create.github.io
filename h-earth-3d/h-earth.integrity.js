@@ -1,4 +1,4 @@
-/**
+/** 
  * H-Earth Scratch Rebuild · Step 016B · Room 6
  * File: h-earth-3d/h-earth.integrity.js
  * Lane: Wiring / Harness / Review

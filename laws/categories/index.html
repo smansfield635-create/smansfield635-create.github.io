@@ -1,15 +1,17 @@
 <!-- TARGET FILE: /laws/categories/index.html -->
 <!-- COMPLETE REPLACEMENT -->
-<!-- RETIRES SVG CRYSTALS / NO 3D COMPASS ELEMENT -->
-<!-- DGB_LAWS_CATEGORIES_SPINE_INDEX_NO_SVG_CRYSTALS_HTML_TNT_v1_0_0 -->
+<!-- PUBLIC SPINE INDEX / NO USER-FACING IMPLEMENTATION RETIREMENT CONTENT -->
+<!-- DGB_LAWS_CATEGORIES_SPINE_INDEX_PUBLIC_RENEWAL_HTML_TNT_v1_0_1 -->
 <!doctype html>
 
 <html
   lang="en"
   data-route="/laws/categories/"
   data-page="laws-categories-spine-index"
-  data-contract="DGB_LAWS_CATEGORIES_SPINE_INDEX_NO_SVG_CRYSTALS_HTML_TNT_v1_0_0"
+  data-contract="DGB_LAWS_CATEGORIES_SPINE_INDEX_PUBLIC_RENEWAL_HTML_TNT_v1_0_1"
+  data-previous-contract="DGB_LAWS_CATEGORIES_SPINE_INDEX_NO_SVG_CRYSTALS_HTML_TNT_v1_0_0"
   data-laws-page-role="spine-index"
+  data-laws-public-implementation-notes="false"
   data-laws-svg-crystals-retired="true"
   data-laws-3d-compass-element="false"
   data-laws-category-count="4"
@@ -33,12 +35,12 @@
 
   <meta
     name="description"
-    content="Laws Categories is a spine index for the four Laws categories: Flow, Integrity, Reality, and Structure. This page retires the SVG crystal selector and uses boxed route cards instead of a 3D compass element."
+    content="Laws Categories is a public spine index for the four Laws categories: Flow, Integrity, Reality, and Structure."
   >
 
   <meta
     name="laws-page-contract"
-    content="DGB_LAWS_CATEGORIES_SPINE_INDEX_NO_SVG_CRYSTALS_HTML_TNT_v1_0_0"
+    content="DGB_LAWS_CATEGORIES_SPINE_INDEX_PUBLIC_RENEWAL_HTML_TNT_v1_0_1"
   >
 
   <link
@@ -58,7 +60,6 @@
       --ink-muted: rgba(244, 241, 230, 0.56);
 
       --gold: #ffe49b;
-      --gold-2: #dfb85d;
       --cyan: #78e9ff;
       --violet: #b48cff;
       --green: #8ff0b2;
@@ -66,7 +67,6 @@
       --amber: #ffb86b;
 
       --line: rgba(255, 228, 155, 0.18);
-      --line-soft: rgba(255, 255, 255, 0.085);
       --cyan-line: rgba(120, 233, 255, 0.22);
 
       --radius-md: 1rem;
@@ -310,7 +310,7 @@
     .hero,
     .spine-panel,
     .category-card,
-    .rule-panel,
+    .guide-panel,
     .constellation-nav,
     .closing {
       border: 1px solid var(--line);
@@ -358,7 +358,7 @@
 
     .summary-card,
     .route-card,
-    .law-card {
+    .guide-card {
       border: 1px solid rgba(255, 255, 255, 0.085);
       border-radius: var(--radius-md);
       background:
@@ -408,27 +408,31 @@
       content: "";
     }
 
-    .spine-panel {
+    .spine-panel,
+    .guide-panel,
+    .constellation-nav,
+    .closing {
       display: grid;
       gap: 0.9rem;
       padding: clamp(1rem, 2.4vw, 1.35rem);
-      border-color: rgba(120, 233, 255, 0.18);
       background:
         radial-gradient(circle at 0% 0%, rgba(120, 233, 255, 0.09), transparent 20rem),
         linear-gradient(180deg, rgba(10, 14, 34, 0.78), rgba(7, 10, 24, 0.64));
     }
 
-    .spine-panel h2 {
+    .spine-panel h2,
+    .guide-panel h2,
+    .constellation-nav__header h2 {
       color: #fff6da;
       font-size: clamp(1.55rem, 3vw, 2.35rem);
       letter-spacing: -0.03em;
     }
 
     .spine-rail {
+      position: relative;
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 0.75rem;
-      position: relative;
     }
 
     .spine-rail::before {
@@ -458,7 +462,20 @@
         rgba(5, 8, 19, 0.88);
     }
 
-    .spine-node span {
+    .spine-node:hover,
+    .spine-node:focus-visible,
+    .route-card:hover,
+    .route-card:focus-visible {
+      color: var(--gold);
+      border-color: rgba(255, 228, 155, 0.28);
+      box-shadow:
+        0 0 1.2rem rgba(255, 228, 155, 0.18),
+        0 0 2.8rem rgba(224, 184, 91, 0.1);
+    }
+
+    .spine-node span,
+    .route-card span,
+    .guide-card span {
       color: var(--cyan);
       font-size: 0.72rem;
       font-weight: 850;
@@ -466,15 +483,19 @@
       text-transform: uppercase;
     }
 
-    .spine-node strong {
+    .spine-node strong,
+    .route-card strong,
+    .guide-card strong {
       color: var(--gold);
       font-size: 1.08rem;
     }
 
-    .spine-node p {
+    .spine-node p,
+    .route-card p,
+    .guide-card p {
       margin: 0;
       color: var(--ink-soft);
-      font-size: 0.9rem;
+      font-size: 0.92rem;
     }
 
     .category-grid {
@@ -526,16 +547,14 @@
       gap: 0.4rem;
     }
 
-    .category-header h2,
-    .rule-panel h2,
-    .constellation-nav__header h2 {
+    .category-header h2 {
       color: #fff6da;
       font-size: clamp(1.65rem, 3.4vw, 2.75rem);
       letter-spacing: -0.035em;
     }
 
     .category-header p,
-    .rule-panel p,
+    .guide-panel p,
     .constellation-nav__header p,
     .closing p {
       max-width: 76rem;
@@ -677,67 +696,20 @@
     }
 
     .route-grid,
-    .law-grid {
+    .guide-grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 0.75rem;
     }
 
     .route-card,
-    .law-card {
+    .guide-card {
       display: grid;
       gap: 0.25rem;
       min-height: 5.8rem;
       align-content: center;
       padding: 0.9rem;
-      border: 1px solid rgba(255, 255, 255, 0.085);
-      border-radius: var(--radius-md);
       color: var(--ink);
-      background:
-        linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.026));
-      text-decoration: none;
-    }
-
-    .route-card:hover,
-    .route-card:focus-visible {
-      color: var(--gold);
-      border-color: rgba(255, 228, 155, 0.28);
-      box-shadow:
-        0 0 1.2rem rgba(255, 228, 155, 0.18),
-        0 0 2.8rem rgba(224, 184, 91, 0.1);
-    }
-
-    .route-card span,
-    .law-card span {
-      color: var(--cyan);
-      font-size: 0.72rem;
-      font-weight: 850;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-    }
-
-    .route-card strong,
-    .law-card strong {
-      color: var(--gold);
-      font-size: 1.02rem;
-    }
-
-    .route-card p,
-    .law-card p {
-      margin: 0;
-      color: var(--ink-soft);
-    }
-
-    .rule-panel,
-    .constellation-nav,
-    .closing {
-      display: grid;
-      gap: 0.85rem;
-      padding: clamp(1rem, 2.4vw, 1.35rem);
-      background:
-        radial-gradient(circle at 0% 0%, rgba(255, 228, 155, 0.08), transparent 18rem),
-        radial-gradient(circle at 100% 0%, rgba(120, 233, 255, 0.08), transparent 18rem),
-        linear-gradient(180deg, rgba(10, 14, 34, 0.78), rgba(7, 10, 24, 0.64));
     }
 
     .constellation-nav__header {
@@ -849,7 +821,7 @@
       }
 
       .route-grid,
-      .law-grid {
+      .guide-grid {
         grid-template-columns: 1fr;
       }
 
@@ -967,7 +939,7 @@
         </h1>
 
         <p class="lead">
-          The Laws categories organize the compass without relying on SVG crystals or a 3D selector. This page acts as the category spine: a direct index into Flow, Integrity, Reality, and Structure.
+          The Laws categories give the compass a readable index path. Use this page to enter Flow, Integrity, Reality, or Structure without needing the main compass interface.
         </p>
 
         <div class="hero-grid">
@@ -977,24 +949,24 @@
             </strong>
 
             <p>
-              This is a navigational spine. It gives the Laws system a readable index path for users who need orientation before entering a category.
+              This is the public category spine. It helps visitors choose the right category before entering the deeper track pages.
             </p>
 
             <ul class="status-list">
               <li>
-                No SVG crystal selector.
+                Flow reads movement and change.
               </li>
 
               <li>
-                No 3D compass element.
+                Integrity reads what stays true.
               </li>
 
               <li>
-                No plain underlined legacy-link navigation.
+                Reality reads what is actually present.
               </li>
 
               <li>
-                Category entry is handled through route cards, pills, and spine panels.
+                Structure reads what holds.
               </li>
             </ul>
           </div>
@@ -1005,7 +977,7 @@
             </strong>
 
             <p>
-              The user can move through the categories in sequence or jump directly to the category needed.
+              Move through the categories in sequence, or jump directly to the category that matches the question.
             </p>
 
             <nav
@@ -1756,52 +1728,52 @@
       </section>
 
       <section
-        id="retirement-rule"
-        class="rule-panel"
-        aria-labelledby="retirement-title"
+        id="category-use"
+        class="guide-panel"
+        aria-labelledby="category-use-title"
       >
         <p class="kicker">
-          Retired Visual System
+          How to Use This Index
         </p>
 
-        <h2 id="retirement-title">
-          The crystal selector is no longer the category index.
+        <h2 id="category-use-title">
+          Choose the category that matches the question.
         </h2>
 
         <p>
-          This replacement removes the SVG crystal hub behavior from the category page. The page now operates as a readable spine and index, with no embedded SVG crystals and no 3D compass element.
+          Use this page as a decision surface. Each category answers a different kind of systems question.
         </p>
 
-        <div class="law-grid">
-          <article class="law-card">
-            <span>Retired</span>
-            <strong>SVG crystal selector</strong>
+        <div class="guide-grid">
+          <article class="guide-card">
+            <span>Flow</span>
+            <strong>What is moving?</strong>
             <p>
-              Category navigation is no longer driven by crystal geometry or SVG shape selection.
+              Use this path for transition, pressure, timing, and directional change.
             </p>
           </article>
 
-          <article class="law-card">
-            <span>Retired</span>
-            <strong>3D compass dependency</strong>
+          <article class="guide-card">
+            <span>Integrity</span>
+            <strong>What stays true?</strong>
             <p>
-              This page does not load or require the 3D compass element used by the main Laws page.
+              Use this path for consistency, accountability, continuity, and coherence.
             </p>
           </article>
 
-          <article class="law-card">
-            <span>Current</span>
-            <strong>Spine index</strong>
+          <article class="guide-card">
+            <span>Reality</span>
+            <strong>What is actually present?</strong>
             <p>
-              Navigation is handled through route cards, category panels, pills, and readable sequence.
+              Use this path for observation, evidence, boundaries, and condition checks.
             </p>
           </article>
 
-          <article class="law-card">
-            <span>Boundary</span>
-            <strong>No registry mutation</strong>
+          <article class="guide-card">
+            <span>Structure</span>
+            <strong>What holds?</strong>
             <p>
-              The page updates presentation and indexing only. It does not claim a route-registry mutation.
+              Use this path for constraints, interfaces, boundaries, and governance.
             </p>
           </article>
         </div>
@@ -1809,7 +1781,7 @@
 
       <nav
         class="constellation-nav"
-        aria-label="Linear Laws constellation navigation"
+        aria-label="Linear Laws category navigation"
         data-law-constellation-nav
         data-law-path-mode="category-spine"
       >
@@ -1899,7 +1871,7 @@
         </strong>
 
         <span>
-          Spine index replacement. SVG crystals retired. No 3D compass element. No validation claim or registry mutation.
+          Public spine index. Flow, Integrity, Reality, Structure.
         </span>
       </div>
 
@@ -1934,25 +1906,25 @@
       id="categories-spine-index-html-receipt"
       data-categories-spine-index-html-receipt
     >
-DGB_LAWS_CATEGORIES_SPINE_INDEX_NO_SVG_CRYSTALS_HTML_RECEIPT_v1_0_0
+DGB_LAWS_CATEGORIES_SPINE_INDEX_PUBLIC_RENEWAL_HTML_RECEIPT_v1_0_1
 
 TARGET:
 /laws/categories/index.html
 
 CONTRACT:
-DGB_LAWS_CATEGORIES_SPINE_INDEX_NO_SVG_CRYSTALS_HTML_TNT_v1_0_0
+DGB_LAWS_CATEGORIES_SPINE_INDEX_PUBLIC_RENEWAL_HTML_TNT_v1_0_1
 
 STATUS:
 Complete replacement for Laws Categories index page.
-Retires SVG crystal selector behavior.
-Does not include a 3D compass element.
+Public-facing retirement/implementation-status cards removed.
+No user-facing "retired", "dependency", or "registry mutation" cards.
 No runtime execution performed.
 No visual acceptance claimed.
 No production authorization claimed.
 No deployment authorization claimed.
 
 PAGE ROLE:
-Spine index and category gateway.
+Public spine index and category gateway.
 
 CATEGORY SEQUENCE:
 1. Flow
@@ -1966,11 +1938,16 @@ CATEGORY ROUTES:
 - /laws/categories/reality/
 - /laws/categories/structure/
 
-VISUAL RETIREMENT:
-- SVG crystals retired.
-- 3D compass element absent.
-- Crystal selector behavior absent.
-- Plain underlined text-link styling avoided.
+PUBLIC CONTENT RULE:
+- Do not render implementation-retirement notes to visitors.
+- Do not show "Retired SVG crystal selector" as a public card.
+- Do not show "3D compass dependency" as a public card.
+- Do not show "No registry mutation" as a public card.
+- Use "How to Use This Index" instead.
+
+VISUAL SYSTEM:
+- No SVG crystal markup.
+- No 3D compass markup.
 - Navigation uses pills, route cards, boxed panels, and spine nodes.
 
 CATEGORY CARD TABS:
@@ -2018,7 +1995,7 @@ No external JS dependency.
       "use strict";
 
       const CONTRACT =
-        "DGB_LAWS_CATEGORIES_SPINE_INDEX_NO_SVG_CRYSTALS_HTML_TNT_v1_0_0";
+        "DGB_LAWS_CATEGORIES_SPINE_INDEX_PUBLIC_RENEWAL_HTML_TNT_v1_0_1";
 
       const receiptTemplate =
         document.querySelector(
@@ -2054,15 +2031,18 @@ No external JS dependency.
             "/laws/categories/",
 
           pageRole:
-            "spine-index",
+            "public-spine-index",
 
           layout:
             "category-spine-index",
 
-          svgCrystalsRetired:
-            true,
+          publicImplementationNotes:
+            false,
 
-          crystalSelectorPresent:
+          publicRetirementCards:
+            false,
+
+          svgCrystalMarkupPresent:
             false,
 
           threeDCompassElementPresent:
@@ -2108,7 +2088,7 @@ No external JS dependency.
             false,
 
           visualRule:
-            "boxed-links-no-svg-crystals-no-3d-compass-element",
+            "public-spine-index-no-user-facing-implementation-retirement-cards",
 
           activeTabs:
             collectCheckedTabs(),

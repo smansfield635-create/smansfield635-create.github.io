@@ -1,4 +1,4 @@
-/**
+/** 
  * h-earth.receipts.js
  *
  * DGB H-Earth Scratch Rebuild

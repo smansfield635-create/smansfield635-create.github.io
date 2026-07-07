@@ -1,18 +1,21 @@
 <!-- TARGET FILE: /laws/categories/reality/index.html -->
 <!-- COMPLETE REPLACEMENT -->
-<!-- MODERN REALITY CATEGORY SPINE / NO GEM / NO LEGACY LENS -->
-<!-- DGB_LAWS_REALITY_CATEGORY_MODERN_SPINE_HTML_TNT_v1_1_0 -->
+<!-- DROPDOWN RENEWAL / FLOATING BUBBLES / BUTTON-ACTIVATED TABS -->
+<!-- DGB_LAWS_REALITY_CATEGORY_DROPDOWN_SPINE_HTML_TNT_v1_2_0 -->
 <!doctype html>
 
 <html
   lang="en"
   data-route="/laws/categories/reality/"
-  data-page="laws-reality-category-modern-spine"
-  data-contract="DGB_LAWS_REALITY_CATEGORY_MODERN_SPINE_HTML_TNT_v1_1_0"
-  data-previous-contract="DGB_LAWS_REALITY_CATEGORY_SIMPLIFIED_SPINE_HTML_TNT_v1_0_0"
+  data-page="laws-reality-category-dropdown-spine"
+  data-contract="DGB_LAWS_REALITY_CATEGORY_DROPDOWN_SPINE_HTML_TNT_v1_2_0"
+  data-previous-contract="DGB_LAWS_REALITY_CATEGORY_MODERN_SPINE_HTML_TNT_v1_1_0"
   data-laws-category="reality"
-  data-laws-layout="modern-spine"
+  data-laws-layout="dropdown-spine"
   data-internal-sections="reality,theory,evidence,measure,limits,audit"
+  data-laws-floating-bubbles="true"
+  data-laws-dropdown-sections="true"
+  data-laws-button-tabs="true"
   data-svg-gem-field-retired="true"
   data-gem-language-public="false"
   data-legacy-lens-public="false"
@@ -40,12 +43,12 @@
 
   <meta
     name="description"
-    content="Reality is the Laws category for tested claims. Theory, Evidence, Measure, Limits, and Audit form a clean checkpoint path for deciding what holds after a claim is tested."
+    content="Reality is the Laws category for tested claims. Theory, Evidence, Measure, Limits, and Audit form a dropdown checkpoint path for deciding what holds after a claim is tested."
   >
 
   <meta
     name="laws-page-contract"
-    content="DGB_LAWS_REALITY_CATEGORY_MODERN_SPINE_HTML_TNT_v1_1_0"
+    content="DGB_LAWS_REALITY_CATEGORY_DROPDOWN_SPINE_HTML_TNT_v1_2_0"
   >
 
   <link
@@ -68,6 +71,7 @@
       --gold: #ffe49b;
       --gold-2: #dfb85d;
       --cyan: #78e9ff;
+      --blue: #7ea7ff;
       --violet: #b48cff;
       --green: #8ff0b2;
       --red: #ff7474;
@@ -77,6 +81,7 @@
       --line-soft: rgba(255, 255, 255, 0.085);
       --cyan-line: rgba(120, 233, 255, 0.22);
 
+      --radius-sm: 0.75rem;
       --radius-md: 1rem;
       --radius-lg: 1.35rem;
       --radius-xl: 1.85rem;
@@ -97,26 +102,23 @@
     }
 
     html {
-      min-width: 320px;
       min-height: 100%;
-      scroll-behavior: smooth;
       background:
-        radial-gradient(circle at 10% 4%, rgba(255, 228, 155, 0.16), transparent 24rem),
+        radial-gradient(circle at 10% 4%, rgba(180, 140, 255, 0.15), transparent 24rem),
         radial-gradient(circle at 88% 8%, rgba(120, 233, 255, 0.14), transparent 25rem),
-        radial-gradient(circle at 18% 48%, rgba(180, 140, 255, 0.09), transparent 28rem),
+        radial-gradient(circle at 18% 48%, rgba(255, 228, 155, 0.09), transparent 28rem),
         radial-gradient(circle at 82% 72%, rgba(143, 240, 178, 0.08), transparent 26rem),
         linear-gradient(180deg, #03040a 0%, #07101b 52%, #05060d 100%);
-      overflow-x: hidden;
+      scroll-behavior: smooth;
+      scroll-padding-top: 10.5rem;
     }
 
     body {
-      min-width: 320px;
-      min-height: 100vh;
+      min-height: 100%;
       margin: 0;
-      overflow-x: hidden;
       color: var(--ink);
       background:
-        linear-gradient(90deg, rgba(255, 228, 155, 0.035), transparent 24%, transparent 76%, rgba(120, 233, 255, 0.035)),
+        linear-gradient(90deg, rgba(180, 140, 255, 0.035), transparent 24%, transparent 76%, rgba(120, 233, 255, 0.035)),
         transparent;
       font-family:
         Inter,
@@ -128,8 +130,6 @@
         Roboto,
         sans-serif;
       line-height: 1.55;
-      -webkit-font-smoothing: antialiased;
-      text-rendering: geometricPrecision;
     }
 
     body::before {
@@ -140,11 +140,11 @@
       pointer-events: none;
       background:
         radial-gradient(circle at 12% 18%, rgba(255, 248, 224, 0.38) 0 0.055rem, transparent 0.09rem),
-        radial-gradient(circle at 25% 36%, rgba(120, 233, 255, 0.28) 0 0.05rem, transparent 0.09rem),
-        radial-gradient(circle at 48% 22%, rgba(255, 228, 155, 0.34) 0 0.055rem, transparent 0.1rem),
-        radial-gradient(circle at 78% 18%, rgba(180, 140, 255, 0.30) 0 0.05rem, transparent 0.09rem),
+        radial-gradient(circle at 25% 36%, rgba(120, 233, 255, 0.30) 0 0.05rem, transparent 0.09rem),
+        radial-gradient(circle at 48% 22%, rgba(255, 228, 155, 0.32) 0 0.055rem, transparent 0.1rem),
+        radial-gradient(circle at 78% 18%, rgba(180, 140, 255, 0.28) 0 0.05rem, transparent 0.09rem),
         radial-gradient(circle at 88% 62%, rgba(143, 240, 178, 0.22) 0 0.05rem, transparent 0.09rem),
-        radial-gradient(circle at 34% 82%, rgba(255, 184, 107, 0.24) 0 0.055rem, transparent 0.1rem);
+        radial-gradient(circle at 34% 82%, rgba(255, 184, 107, 0.26) 0 0.055rem, transparent 0.1rem);
       background-size:
         17rem 13rem,
         23rem 19rem,
@@ -162,8 +162,19 @@
     }
 
     button,
-    a {
+    a,
+    label,
+    summary {
       -webkit-tap-highlight-color: transparent;
+    }
+
+    summary {
+      list-style: none;
+      cursor: pointer;
+    }
+
+    summary::-webkit-details-marker {
+      display: none;
     }
 
     :focus-visible {
@@ -201,12 +212,10 @@
       position: sticky;
       z-index: 30;
       top: 0;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
+      display: grid;
+      gap: 0.72rem;
       padding: 0.85rem 0;
-      backdrop-filter: blur(0.7rem);
+      backdrop-filter: blur(0.72rem);
     }
 
     .brand {
@@ -214,13 +223,16 @@
       align-items: center;
       gap: 0.78rem;
       min-width: 0;
-      padding: 0.44rem 0.64rem 0.44rem 0.44rem;
+      padding: 0.52rem 0.74rem 0.52rem 0.52rem;
       border: 1px solid rgba(255, 228, 155, 0.18);
       border-radius: var(--radius-full);
       color: var(--ink);
       background:
         linear-gradient(135deg, rgba(255, 228, 155, 0.12), rgba(120, 233, 255, 0.06)),
         rgba(5, 8, 19, 0.76);
+      box-shadow:
+        0 0.9rem 2.6rem rgba(0, 0, 0, 0.32),
+        inset 0 1px 0 rgba(255, 255, 255, 0.06);
     }
 
     .brand-mark {
@@ -262,23 +274,16 @@
       letter-spacing: 0.02em;
     }
 
-    .nav,
-    .on-page,
-    .footer nav,
-    .actions {
+    .nav {
       display: flex;
       flex-wrap: wrap;
       gap: 0.45rem;
     }
 
-    .nav {
-      justify-content: flex-end;
-    }
-
     .nav a,
     .on-page a,
-    .footer a,
-    .button {
+    .boxed-link,
+    .drawer-chip {
       border: 1px solid rgba(255, 255, 255, 0.085);
       border-radius: var(--radius-full);
       color: var(--ink-soft);
@@ -287,49 +292,24 @@
     }
 
     .nav a {
-      padding: 0.53rem 0.74rem;
+      flex: 1 1 auto;
+      min-width: min(9.5rem, 100%);
+      padding: 0.58rem 0.8rem;
       font-size: 0.88rem;
-    }
-
-    .on-page a,
-    .footer a,
-    .button {
-      padding: 0.55rem 0.78rem;
-      font-size: 0.86rem;
-    }
-
-    .button {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 2.45rem;
-      font-weight: 850;
+      text-align: center;
     }
 
     .nav a:hover,
     .nav a:focus-visible,
     .on-page a:hover,
     .on-page a:focus-visible,
-    .footer a:hover,
-    .footer a:focus-visible,
-    .button:hover,
-    .button:focus-visible {
+    .boxed-link:hover,
+    .boxed-link:focus-visible,
+    .drawer-chip:hover,
+    .drawer-chip:focus-visible {
       color: var(--gold);
       border-color: rgba(255, 228, 155, 0.28);
       box-shadow: 0 0 1.35rem rgba(255, 228, 155, 0.13);
-    }
-
-    .button-primary {
-      color: #120f05;
-      border-color: rgba(255, 228, 155, 0.42);
-      background:
-        linear-gradient(135deg, #ffe49b, #e0b85b 62%, #b47b2d);
-      box-shadow: 0 0.75rem 1.8rem rgba(224, 184, 91, 0.18);
-    }
-
-    .button-primary:hover,
-    .button-primary:focus-visible {
-      color: #120f05;
     }
 
     main {
@@ -347,9 +327,8 @@
     }
 
     .hero,
-    .spine-panel,
-    .checkpoint,
-    .guide-panel,
+    .track-card,
+    .law-panel,
     .constellation-nav,
     .closing {
       border: 1px solid var(--line);
@@ -359,11 +338,11 @@
 
     .hero {
       display: grid;
-      gap: 0.9rem;
+      gap: 0.85rem;
       padding: clamp(1.15rem, 3vw, 1.8rem);
       background:
-        radial-gradient(circle at 0% 0%, rgba(255, 228, 155, 0.13), transparent 20rem),
-        radial-gradient(circle at 100% 0%, rgba(120, 233, 255, 0.12), transparent 20rem),
+        radial-gradient(circle at 0% 0%, rgba(180, 140, 255, 0.13), transparent 20rem),
+        radial-gradient(circle at 100% 0%, rgba(120, 233, 255, 0.10), transparent 20rem),
         linear-gradient(180deg, rgba(16, 18, 38, 0.86), rgba(7, 10, 24, 0.72));
     }
 
@@ -381,18 +360,6 @@
       letter-spacing: -0.065em;
     }
 
-    h2 {
-      color: #fff6da;
-      font-size: clamp(1.65rem, 3.4vw, 2.75rem);
-      letter-spacing: -0.035em;
-    }
-
-    h3 {
-      color: var(--gold);
-      font-size: 1.04rem;
-      letter-spacing: -0.02em;
-    }
-
     .lead {
       max-width: 76rem;
       margin: 0;
@@ -408,11 +375,9 @@
     }
 
     .summary-card,
-    .route-card,
-    .test-card,
     .law-card,
-    .spine-node,
-    .guide-card {
+    .route-card,
+    .metric-card {
       border: 1px solid rgba(255, 255, 255, 0.085);
       border-radius: var(--radius-md);
       background:
@@ -457,62 +422,377 @@
       height: 0.52rem;
       margin-top: 0.48rem;
       border-radius: 50%;
-      background: var(--gold);
-      box-shadow: 0 0 1rem rgba(255, 228, 155, 0.35);
+      background: var(--violet);
+      box-shadow: 0 0 1rem rgba(180, 140, 255, 0.35);
       content: "";
     }
 
-    .spine-panel,
-    .checkpoint,
-    .guide-panel,
-    .constellation-nav,
-    .closing {
+    .on-page {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .on-page a {
+      padding: 0.55rem 0.78rem;
+      font-size: 0.88rem;
+    }
+
+    .track-stack {
+      display: grid;
+      gap: clamp(0.8rem, 2vw, 1rem);
+    }
+
+    .track-card,
+    .law-panel {
+      scroll-margin-top: 11rem;
+      overflow: clip;
+    }
+
+    .track-card[data-track="reality"] {
+      border-color: rgba(255, 228, 155, 0.24);
+      background:
+        radial-gradient(circle at 0% 0%, rgba(255, 228, 155, 0.14), transparent 18rem),
+        radial-gradient(circle at 100% 0%, rgba(120, 233, 255, 0.08), transparent 18rem),
+        linear-gradient(180deg, rgba(24, 20, 30, 0.88), rgba(7, 10, 24, 0.72));
+    }
+
+    .track-card[data-track="theory"] {
+      border-color: rgba(120, 233, 255, 0.24);
+      background:
+        radial-gradient(circle at 0% 0%, rgba(120, 233, 255, 0.14), transparent 18rem),
+        radial-gradient(circle at 100% 10%, rgba(180, 140, 255, 0.11), transparent 18rem),
+        linear-gradient(180deg, rgba(9, 18, 36, 0.88), rgba(7, 10, 24, 0.72));
+    }
+
+    .track-card[data-track="evidence"] {
+      border-color: rgba(143, 240, 178, 0.24);
+      background:
+        radial-gradient(circle at 0% 0%, rgba(143, 240, 178, 0.12), transparent 18rem),
+        radial-gradient(circle at 100% 0%, rgba(120, 233, 255, 0.09), transparent 18rem),
+        linear-gradient(180deg, rgba(8, 21, 27, 0.88), rgba(7, 10, 24, 0.72));
+    }
+
+    .track-card[data-track="measure"] {
+      border-color: rgba(180, 140, 255, 0.24);
+      background:
+        radial-gradient(circle at 0% 0%, rgba(180, 140, 255, 0.13), transparent 18rem),
+        radial-gradient(circle at 100% 0%, rgba(255, 228, 155, 0.08), transparent 18rem),
+        linear-gradient(180deg, rgba(17, 13, 34, 0.88), rgba(7, 10, 24, 0.72));
+    }
+
+    .track-card[data-track="limits"] {
+      border-color: rgba(255, 184, 107, 0.24);
+      background:
+        radial-gradient(circle at 0% 0%, rgba(255, 184, 107, 0.14), transparent 18rem),
+        radial-gradient(circle at 100% 0%, rgba(255, 228, 155, 0.08), transparent 18rem),
+        linear-gradient(180deg, rgba(24, 18, 24, 0.88), rgba(7, 10, 24, 0.72));
+    }
+
+    .track-card[data-track="audit"] {
+      border-color: rgba(255, 228, 155, 0.24);
+      background:
+        radial-gradient(circle at 0% 0%, rgba(255, 228, 155, 0.12), transparent 18rem),
+        radial-gradient(circle at 100% 0%, rgba(120, 233, 255, 0.09), transparent 18rem),
+        linear-gradient(180deg, rgba(18, 18, 30, 0.88), rgba(7, 10, 24, 0.72));
+    }
+
+    .drawer-summary {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: 1rem;
+      padding: clamp(1rem, 2.4vw, 1.35rem);
+    }
+
+    .drawer-summary:hover h2,
+    .drawer-summary:focus-visible h2 {
+      color: var(--gold);
+    }
+
+    .drawer-title {
+      display: grid;
+      gap: 0.4rem;
+    }
+
+    .drawer-title h2,
+    .law-panel h2 {
+      color: #fff6da;
+      font-size: clamp(1.65rem, 3.4vw, 2.75rem);
+      letter-spacing: -0.035em;
+    }
+
+    .drawer-title p,
+    .law-panel p {
+      max-width: 76rem;
+      margin: 0;
+      color: var(--ink-soft);
+    }
+
+    .drawer-icon {
+      display: grid;
+      width: 2.35rem;
+      aspect-ratio: 1;
+      place-items: center;
+      border: 1px solid rgba(255, 228, 155, 0.24);
+      border-radius: 50%;
+      color: var(--gold);
+      background: rgba(255, 255, 255, 0.04);
+      font-size: 1.4rem;
+      line-height: 1;
+      transition: transform 180ms ease, border-color 180ms ease;
+    }
+
+    .drawer-icon::before {
+      content: "+";
+      transform: translateY(-0.08rem);
+    }
+
+    details[open] > .drawer-summary .drawer-icon {
+      border-color: rgba(255, 228, 155, 0.48);
+      transform: rotate(45deg);
+    }
+
+    .drawer-body {
       display: grid;
       gap: 0.9rem;
-      padding: clamp(1rem, 2.4vw, 1.35rem);
+      padding: 0 clamp(1rem, 2.4vw, 1.35rem) clamp(1rem, 2.4vw, 1.35rem);
+    }
+
+    .track-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+      margin-top: 0.25rem;
+    }
+
+    .track-meta span,
+    .drawer-chip {
+      display: inline-flex;
+      align-items: center;
+      min-height: 1.9rem;
+      padding: 0.34rem 0.62rem;
+      color: var(--ink-soft);
+      font-size: 0.76rem;
+      font-weight: 780;
+    }
+
+    .section-tabs {
+      display: grid;
+      gap: 0.7rem;
+    }
+
+    .section-tabs > input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .section-tab-labels {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0.35rem;
+      padding: 0.3rem;
+      border: 1px solid rgba(255, 255, 255, 0.075);
+      border-radius: var(--radius-lg);
+      background: rgba(255, 255, 255, 0.035);
+    }
+
+    .section-tab-labels label {
+      display: grid;
+      min-height: 2.15rem;
+      place-items: center;
+      padding: 0.48rem 0.55rem;
+      border: 1px solid transparent;
+      border-radius: var(--radius-full);
+      color: var(--ink-soft);
+      cursor: pointer;
+      font-size: clamp(0.68rem, 2.5vw, 0.76rem);
+      font-weight: 850;
+      letter-spacing: 0.075em;
+      text-align: center;
+      text-transform: uppercase;
+    }
+
+    .section-tab-panels {
+      display: grid;
+    }
+
+    .section-tab-panel {
+      display: none;
+      padding: 0.95rem;
+      border: 1px solid rgba(255, 255, 255, 0.085);
+      border-radius: var(--radius-md);
       background:
-        radial-gradient(circle at 0% 0%, rgba(120, 233, 255, 0.09), transparent 20rem),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.052), rgba(255, 255, 255, 0.028));
+    }
+
+    .section-tab-panel span {
+      display: block;
+      margin-bottom: 0.25rem;
+      font-size: 0.7rem;
+      font-weight: 850;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .section-tab-panel p {
+      margin: 0;
+      color: var(--ink-soft);
+      font-size: 0.94rem;
+    }
+
+    .section-tab-panel ul {
+      display: grid;
+      gap: 0.42rem;
+      margin: 0.7rem 0 0;
+      padding-left: 1.1rem;
+      color: var(--ink-soft);
+    }
+
+    .section-tabs input[data-tab-kind="platform"]:checked ~ .section-tab-labels label[data-tab-kind="platform"],
+    .section-tabs input[data-tab-kind="engineering"]:checked ~ .section-tab-labels label[data-tab-kind="engineering"],
+    .section-tabs input[data-tab-kind="evidence"]:checked ~ .section-tab-labels label[data-tab-kind="evidence"] {
+      color: #120f05;
+      border-color: rgba(255, 228, 155, 0.42);
+      background:
+        linear-gradient(135deg, #ffe49b, #e0b85b 62%, #b47b2d);
+      box-shadow: 0 0.75rem 1.8rem rgba(224, 184, 91, 0.18);
+    }
+
+    .section-tabs input[data-tab-kind="platform"]:checked ~ .section-tab-panels .section-tab-panel[data-tab-kind="platform"],
+    .section-tabs input[data-tab-kind="engineering"]:checked ~ .section-tab-panels .section-tab-panel[data-tab-kind="engineering"],
+    .section-tabs input[data-tab-kind="evidence"]:checked ~ .section-tab-panels .section-tab-panel[data-tab-kind="evidence"] {
+      display: block;
+    }
+
+    .section-tab-panel[data-tab-kind="platform"] {
+      border-color: rgba(255, 228, 155, 0.16);
+    }
+
+    .section-tab-panel[data-tab-kind="engineering"] {
+      border-color: rgba(120, 233, 255, 0.16);
+    }
+
+    .section-tab-panel[data-tab-kind="evidence"] {
+      border-color: rgba(143, 240, 178, 0.16);
+    }
+
+    .section-tab-panel[data-tab-kind="platform"] span {
+      color: var(--gold);
+    }
+
+    .section-tab-panel[data-tab-kind="engineering"] span {
+      color: var(--cyan);
+    }
+
+    .section-tab-panel[data-tab-kind="evidence"] span {
+      color: var(--green);
+    }
+
+    .law-panel {
+      overflow: clip;
+      border-color: rgba(255, 228, 155, 0.22);
+      background:
+        radial-gradient(circle at 0% 0%, rgba(255, 228, 155, 0.10), transparent 18rem),
+        radial-gradient(circle at 100% 0%, rgba(120, 233, 255, 0.08), transparent 18rem),
         linear-gradient(180deg, rgba(10, 14, 34, 0.78), rgba(7, 10, 24, 0.64));
     }
 
-    .spine-panel {
-      border-color: rgba(120, 233, 255, 0.18);
-    }
-
-    .spine-rail {
-      position: relative;
+    .law-grid,
+    .route-grid,
+    .metric-grid {
       display: grid;
-      grid-template-columns: repeat(6, minmax(0, 1fr));
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 0.75rem;
     }
 
-    .spine-rail::before {
-      position: absolute;
-      top: 50%;
-      right: 0.5rem;
-      left: 0.5rem;
-      height: 1px;
-      content: "";
-      background:
-        linear-gradient(90deg, transparent, rgba(255, 228, 155, 0.28), rgba(120, 233, 255, 0.24), transparent);
-      transform: translateY(-50%);
+    .law-card,
+    .route-card,
+    .metric-card {
+      padding: 0.9rem;
     }
 
-    .spine-node {
-      position: relative;
-      z-index: 1;
+    .law-card span,
+    .route-card span,
+    .metric-card span {
+      display: block;
+      margin-bottom: 0.25rem;
+      color: var(--cyan);
+      font-size: 0.72rem;
+      font-weight: 850;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .law-card strong,
+    .route-card strong,
+    .metric-card strong {
+      display: block;
+      margin-bottom: 0.3rem;
+      color: var(--gold);
+      font-size: 1.02rem;
+    }
+
+    .law-card p,
+    .route-card p,
+    .metric-card p {
+      margin: 0;
+      color: var(--ink-soft);
+    }
+
+    .constellation-nav,
+    .closing {
       display: grid;
-      gap: 0.35rem;
-      min-height: 7.4rem;
-      align-content: center;
-      padding: 0.85rem;
+      gap: 0.85rem;
+      padding: clamp(1rem, 2.4vw, 1.35rem);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
       background:
-        linear-gradient(180deg, rgba(255, 255, 255, 0.065), rgba(255, 255, 255, 0.028)),
-        rgba(5, 8, 19, 0.88);
+        radial-gradient(circle at 0% 0%, rgba(180, 140, 255, 0.08), transparent 18rem),
+        radial-gradient(circle at 100% 0%, rgba(120, 233, 255, 0.08), transparent 18rem),
+        linear-gradient(180deg, rgba(10, 14, 34, 0.78), rgba(7, 10, 24, 0.64));
     }
 
-    .spine-node:hover,
-    .spine-node:focus-visible,
+    .constellation-nav__header {
+      display: grid;
+      gap: 0.25rem;
+    }
+
+    .constellation-nav__header h2 {
+      color: #fff6da;
+      font-size: clamp(1.35rem, 2.4vw, 2rem);
+      letter-spacing: -0.025em;
+    }
+
+    .constellation-nav__header p,
+    .closing p {
+      margin: 0;
+      color: var(--ink-soft);
+    }
+
+    .constellation-nav__actions {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0.65rem;
+    }
+
+    .constellation-nav__actions a {
+      display: grid;
+      gap: 0.25rem;
+      min-height: 5.8rem;
+      align-content: center;
+      padding: 0.9rem;
+      border: 1px solid rgba(255, 255, 255, 0.085);
+      border-radius: var(--radius-md);
+      color: var(--ink);
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.026));
+      text-decoration: none;
+    }
+
+    .constellation-nav__actions a:hover,
+    .constellation-nav__actions a:focus-visible,
     .route-card:hover,
     .route-card:focus-visible {
       color: var(--gold);
@@ -522,11 +802,7 @@
         0 0 2.8rem rgba(224, 184, 91, 0.1);
     }
 
-    .spine-node span,
-    .route-card span,
-    .test-card span,
-    .law-card span,
-    .guide-card span {
+    .constellation-nav__actions span {
       color: var(--cyan);
       font-size: 0.72rem;
       font-weight: 850;
@@ -534,126 +810,9 @@
       text-transform: uppercase;
     }
 
-    .spine-node strong,
-    .route-card strong,
-    .test-card strong,
-    .law-card strong,
-    .guide-card strong {
-      display: block;
-      color: var(--gold);
+    .constellation-nav__actions strong {
+      color: inherit;
       font-size: 1.02rem;
-    }
-
-    .spine-node p,
-    .route-card p,
-    .test-card p,
-    .law-card p,
-    .guide-card p,
-    .checkpoint p,
-    .guide-panel p,
-    .closing p,
-    .constellation-nav p {
-      margin: 0;
-      color: var(--ink-soft);
-    }
-
-    .checkpoint {
-      scroll-margin-top: 7rem;
-    }
-
-    .checkpoint[data-checkpoint="reality"] {
-      border-color: rgba(255, 228, 155, 0.22);
-      background:
-        radial-gradient(circle at 0% 0%, rgba(255, 228, 155, 0.10), transparent 18rem),
-        radial-gradient(circle at 100% 0%, rgba(120, 233, 255, 0.08), transparent 18rem),
-        linear-gradient(180deg, rgba(10, 14, 34, 0.78), rgba(7, 10, 24, 0.64));
-    }
-
-    .checkpoint[data-checkpoint="theory"] {
-      border-color: rgba(120, 233, 255, 0.22);
-    }
-
-    .checkpoint[data-checkpoint="evidence"] {
-      border-color: rgba(143, 240, 178, 0.22);
-    }
-
-    .checkpoint[data-checkpoint="measure"] {
-      border-color: rgba(180, 140, 255, 0.22);
-    }
-
-    .checkpoint[data-checkpoint="limits"] {
-      border-color: rgba(255, 184, 107, 0.22);
-    }
-
-    .checkpoint[data-checkpoint="audit"] {
-      border-color: rgba(255, 228, 155, 0.22);
-    }
-
-    .checkpoint-header {
-      display: grid;
-      gap: 0.45rem;
-    }
-
-    .checkpoint-meta {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.45rem;
-      margin-top: 0.15rem;
-    }
-
-    .checkpoint-meta span {
-      display: inline-flex;
-      align-items: center;
-      min-height: 1.9rem;
-      padding: 0.34rem 0.62rem;
-      border: 1px solid rgba(255, 255, 255, 0.085);
-      border-radius: var(--radius-full);
-      color: var(--ink-soft);
-      background: rgba(255, 255, 255, 0.04);
-      font-size: 0.76rem;
-      font-weight: 780;
-    }
-
-    .test-grid,
-    .route-grid,
-    .guide-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 0.75rem;
-    }
-
-    .test-card,
-    .law-card,
-    .route-card,
-    .guide-card {
-      display: grid;
-      gap: 0.35rem;
-      min-height: 6rem;
-      align-content: start;
-      padding: 0.9rem;
-    }
-
-    .law-card {
-      border-color: rgba(255, 228, 155, 0.16);
-    }
-
-    .test-card[data-kind="engineering"] {
-      border-color: rgba(120, 233, 255, 0.18);
-    }
-
-    .test-card[data-kind="practical"] {
-      border-color: rgba(255, 228, 155, 0.16);
-    }
-
-    .closing-boundary {
-      display: grid;
-      gap: 0.4rem;
-      padding: 0.95rem;
-      border: 1px solid rgba(255, 228, 155, 0.22);
-      border-radius: var(--radius-md);
-      background:
-        radial-gradient(circle at 0% 0%, rgba(255, 228, 155, 0.09), transparent 16rem),
-        rgba(255, 255, 255, 0.035);
     }
 
     .footer {
@@ -675,41 +834,52 @@
     }
 
     .footer nav {
+      display: flex;
+      flex-wrap: wrap;
       justify-content: flex-end;
+      gap: 0.65rem;
+    }
+
+    .footer a {
+      padding: 0.35rem 0.62rem;
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      border-radius: var(--radius-full);
+      color: var(--ink-soft);
+      background: rgba(255, 255, 255, 0.035);
+      text-decoration: none;
+    }
+
+    .footer a:hover,
+    .footer a:focus-visible {
+      color: var(--gold);
+      border-color: rgba(255, 228, 155, 0.28);
     }
 
     [data-route-receipt] {
       display: none !important;
     }
 
-    @media (max-width: 1080px) {
-      .spine-rail {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-      }
-
-      .spine-rail::before {
-        display: none;
-      }
-    }
-
     @media (max-width: 980px) {
-      .topbar,
       .footer {
         align-items: stretch;
         flex-direction: column;
       }
 
-      .nav,
       .footer nav {
         justify-content: flex-start;
       }
 
-      .hero-grid {
+      .hero-grid,
+      .constellation-nav__actions {
         grid-template-columns: 1fr;
       }
     }
 
     @media (max-width: 720px) {
+      html {
+        scroll-padding-top: 13.25rem;
+      }
+
       .shell {
         width: min(100% - 1rem, var(--max));
       }
@@ -718,29 +888,39 @@
         max-width: 100%;
       }
 
-      .spine-rail,
-      .test-grid,
+      .drawer-summary {
+        grid-template-columns: 1fr auto;
+        gap: 0.75rem;
+      }
+
+      .law-grid,
       .route-grid,
-      .guide-grid {
+      .metric-grid {
         grid-template-columns: 1fr;
       }
 
-      .spine-node {
-        min-height: 5.8rem;
+      .section-tab-labels {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 0.25rem;
+        border-radius: var(--radius-md);
+      }
+
+      .section-tab-labels label {
+        min-height: 2.05rem;
+        padding-inline: 0.3rem;
+        letter-spacing: 0.045em;
       }
     }
 
     @media (max-width: 430px) {
       .nav a,
-      .on-page a,
-      .footer a,
-      .button {
+      .on-page a {
         flex: 1 1 auto;
         text-align: center;
       }
 
-      .actions {
-        display: grid;
+      .section-tab-labels label {
+        font-size: 0.64rem;
       }
     }
 
@@ -787,7 +967,7 @@
         </span>
 
         <span class="brand-copy">
-          <span>Laws Category</span>
+          <span>Category · Laws</span>
           <strong>Reality</strong>
         </span>
       </a>
@@ -804,8 +984,8 @@
           Categories
         </a>
 
-        <a href="#index">
-          Index
+        <a href="#reality-check">
+          Reality
         </a>
 
         <a href="#theory">
@@ -833,15 +1013,14 @@
     <main id="main">
       <section
         class="hero"
-        id="reality"
         aria-label="Reality category threshold"
       >
         <p class="kicker">
-          Laws / Categories / Reality
+          Laws Category · Reality
         </p>
 
         <h1>
-          Reality is what holds after the claim is tested.
+          What holds after the claim is tested.
         </h1>
 
         <p class="lead">
@@ -855,12 +1034,12 @@
             </strong>
 
             <p>
-              Reality is used when a statement needs to become answerable. It does not reward confidence, presentation, or preference before the claim has survived testing.
+              Reality is used when a statement needs to become answerable. It does not reward confidence, performance, preference, or presentation before the claim survives testing.
             </p>
 
             <ul class="status-list">
               <li>
-                A theory must face the terrain.
+                Theory must face terrain.
               </li>
 
               <li>
@@ -872,7 +1051,7 @@
               </li>
 
               <li>
-                Limits and audit decide what can proceed.
+                Limits and audit decide what may proceed.
               </li>
             </ul>
           </div>
@@ -883,15 +1062,15 @@
             </strong>
 
             <p>
-              Move through the checkpoints in order, or jump directly to the question that needs review.
+              Open each checkpoint when needed. Each checkpoint contains Platform, Engineering, and Evidence tabs, with one active panel at a time.
             </p>
 
             <nav
               class="on-page"
               aria-label="Reality checkpoint shortcuts"
             >
-              <a href="#index">
-                Index
+              <a href="#reality-check">
+                Reality
               </a>
 
               <a href="#theory">
@@ -916,680 +1095,1070 @@
             </nav>
           </div>
         </div>
-
-        <div class="actions">
-          <a
-            class="button button-primary"
-            href="#index"
-          >
-            Open Reality Index
-          </a>
-
-          <a
-            class="button"
-            href="/laws/categories/"
-          >
-            Back to Categories
-          </a>
-        </div>
       </section>
 
-      <section
-        class="spine-panel"
-        id="index"
-        aria-labelledby="index-title"
+      <div
+        class="track-stack"
+        aria-label="Reality dropdown checkpoints"
       >
-        <p class="kicker">
-          Reality Spine
-        </p>
-
-        <h2 id="index-title">
-          Six checkpoints for testing a claim.
-        </h2>
-
-        <p>
-          The Reality category now uses a direct spine instead of a gem field. Each checkpoint has a practical test, an engineering test, and a law card.
-        </p>
-
-        <div
-          class="spine-rail"
-          aria-label="Reality checkpoint sequence"
+        <details
+          id="reality-check"
+          class="track-card"
+          data-track="reality"
         >
-          <a
-            class="spine-node"
-            href="#reality-check"
+          <summary
+            class="drawer-summary"
+            aria-label="Open Reality checkpoint"
           >
-            <span>01</span>
-            <strong>Reality</strong>
-            <p>
-              Is the claim answerable?
-            </p>
-          </a>
+            <span class="drawer-title">
+              <span class="kicker">
+                Checkpoint 01
+              </span>
 
-          <a
-            class="spine-node"
-            href="#theory"
-          >
-            <span>02</span>
-            <strong>Theory</strong>
-            <p>
-              Does the model face the terrain?
-            </p>
-          </a>
+              <h2>
+                Reality
+              </h2>
 
-          <a
-            class="spine-node"
-            href="#evidence"
-          >
-            <span>03</span>
-            <strong>Evidence</strong>
-            <p>
-              Can it be checked?
-            </p>
-          </a>
+              <p>
+                Make the claim answerable.
+              </p>
+            </span>
 
-          <a
-            class="spine-node"
-            href="#measure"
-          >
-            <span>04</span>
-            <strong>Measure</strong>
-            <p>
-              Are the coordinates shared?
-            </p>
-          </a>
+            <span
+              class="drawer-icon"
+              aria-hidden="true"
+            ></span>
+          </summary>
 
-          <a
-            class="spine-node"
-            href="#limits"
-          >
-            <span>05</span>
-            <strong>Limits</strong>
-            <p>
-              Where does certainty stop?
-            </p>
-          </a>
+          <div class="drawer-body">
+            <div class="track-meta">
+              <span>Claim</span>
+              <span>Condition</span>
+              <span>Test</span>
+              <span>Disposition</span>
+            </div>
 
-          <a
-            class="spine-node"
-            href="#audit"
-          >
-            <span>06</span>
-            <strong>Audit</strong>
-            <p>
-              What is the disposition?
-            </p>
-          </a>
-        </div>
-      </section>
+            <div
+              class="section-tabs"
+              aria-label="Reality reading tabs"
+            >
+              <input
+                id="reality-tab-platform"
+                name="reality-tabs"
+                type="radio"
+                data-tab-kind="platform"
+                checked
+              >
 
-      <section
-        class="checkpoint"
-        id="reality-check"
-        data-checkpoint="reality"
-        aria-labelledby="reality-check-title"
-      >
-        <header class="checkpoint-header">
-          <p class="kicker">
-            Checkpoint 01 · Reality
-          </p>
+              <input
+                id="reality-tab-engineering"
+                name="reality-tabs"
+                type="radio"
+                data-tab-kind="engineering"
+              >
 
-          <h2 id="reality-check-title">
-            Make the claim answerable.
-          </h2>
+              <input
+                id="reality-tab-evidence"
+                name="reality-tabs"
+                type="radio"
+                data-tab-kind="evidence"
+              >
 
-          <p>
-            Reality begins when a claim can be tested against something outside the claimant. The first question is not whether the claim sounds persuasive. The first question is whether it can be made answerable.
-          </p>
+              <div
+                class="section-tab-labels"
+                role="tablist"
+                aria-label="Reality lenses"
+              >
+                <label
+                  for="reality-tab-platform"
+                  role="tab"
+                  data-tab-kind="platform"
+                >
+                  Platform
+                </label>
 
-          <div class="checkpoint-meta">
-            <span>Claim</span>
-            <span>Condition</span>
-            <span>Test</span>
-            <span>Disposition</span>
+                <label
+                  for="reality-tab-engineering"
+                  role="tab"
+                  data-tab-kind="engineering"
+                >
+                  Engineering
+                </label>
+
+                <label
+                  for="reality-tab-evidence"
+                  role="tab"
+                  data-tab-kind="evidence"
+                >
+                  Evidence
+                </label>
+              </div>
+
+              <div class="section-tab-panels">
+                <article
+                  class="section-tab-panel"
+                  data-tab-kind="platform"
+                >
+                  <span>Platform</span>
+
+                  <p>
+                    Reality begins when a claim can be tested against something outside the claimant. The first question is not whether the claim sounds persuasive. The first question is whether it can be made answerable.
+                  </p>
+
+                  <ul>
+                    <li>Separate claim from appearance.</li>
+                    <li>Separate confidence from condition.</li>
+                    <li>Separate preference from tested result.</li>
+                    <li>Do not let presentation outrank constraint.</li>
+                  </ul>
+                </article>
+
+                <article
+                  class="section-tab-panel"
+                  data-tab-kind="engineering"
+                >
+                  <span>Engineering</span>
+
+                  <p>
+                    Reality is the classification state assigned after a claim survives constraint testing.
+                  </p>
+
+                  <ul>
+                    <li>Define the claim.</li>
+                    <li>Expose the claim to evidence.</li>
+                    <li>Declare measurement and limit conditions.</li>
+                    <li>Assign a disposition state: proceed, revise, reject, hold, retest, recalibrate, or escalate.</li>
+                  </ul>
+                </article>
+
+                <article
+                  class="section-tab-panel"
+                  data-tab-kind="evidence"
+                >
+                  <span>Evidence</span>
+
+                  <p>
+                    Evidence for Reality requires a claim that can be inspected, bounded, measured, and challenged.
+                  </p>
+
+                  <ul>
+                    <li>Strong evidence: testable claim, recordable condition, traceable review, defined outcome state.</li>
+                    <li>Useful evidence: claim inventory, review criteria, challenge record, disposition receipt.</li>
+                    <li>Failure mode: the claim survives only as private certainty.</li>
+                    <li>Boundary: a claim is not Reality because it is strongly believed.</li>
+                  </ul>
+                </article>
+              </div>
+            </div>
           </div>
-        </header>
+        </details>
 
-        <div class="test-grid">
-          <article
-            class="test-card"
-            data-kind="practical"
+        <details
+          id="theory"
+          class="track-card"
+          data-track="theory"
+        >
+          <summary
+            class="drawer-summary"
+            aria-label="Open Theory checkpoint"
           >
-            <span>Practical Test</span>
-            <strong>Can someone else inspect it?</strong>
-            <p>
-              A claim is not ready if it only survives inside the speaker’s confidence, preference, or private interpretation.
-            </p>
-          </article>
+            <span class="drawer-title">
+              <span class="kicker">
+                Checkpoint 02
+              </span>
 
-          <article
-            class="test-card"
-            data-kind="engineering"
-          >
-            <span>Engineering Test</span>
-            <strong>Does the claim expose a classification state?</strong>
-            <p>
-              The claim must be capable of proceeding, revising, rejecting, holding, retesting, recalibrating, or escalating.
-            </p>
-          </article>
-        </div>
+              <h2>
+                Theory
+              </h2>
 
-        <article class="law-card">
-          <span>Reality Constraint Law</span>
-          <strong>A claim becomes real only when it survives constraint.</strong>
-          <p>
-            Presentation, certainty, and preference do not establish Reality. Tested constraint does.
-          </p>
-        </article>
+              <p>
+                The map must face the terrain.
+              </p>
+            </span>
 
-        <div class="actions">
-          <a
-            class="button button-primary"
-            href="#index"
-          >
-            Return to Index
-          </a>
+            <span
+              class="drawer-icon"
+              aria-hidden="true"
+            ></span>
+          </summary>
 
-          <a
-            class="button"
-            href="#theory"
-          >
-            Continue to Theory
-          </a>
-        </div>
-      </section>
+          <div class="drawer-body">
+            <div class="track-meta">
+              <span>Model</span>
+              <span>Assumption</span>
+              <span>Prediction</span>
+              <span>Revision</span>
+            </div>
 
-      <section
-        class="checkpoint"
-        id="theory"
-        data-checkpoint="theory"
-        aria-labelledby="theory-title"
-      >
-        <header class="checkpoint-header">
-          <p class="kicker">
-            Checkpoint 02 · Theory
-          </p>
+            <div
+              class="section-tabs"
+              aria-label="Theory reading tabs"
+            >
+              <input
+                id="theory-tab-platform"
+                name="theory-tabs"
+                type="radio"
+                data-tab-kind="platform"
+                checked
+              >
 
-          <h2 id="theory-title">
-            Theory is a map. Reality is the terrain.
-          </h2>
+              <input
+                id="theory-tab-engineering"
+                name="theory-tabs"
+                type="radio"
+                data-tab-kind="engineering"
+              >
 
-          <p>
-            A theory helps people move through complexity. It becomes dangerous when the map is defended after the terrain proves it wrong.
-          </p>
+              <input
+                id="theory-tab-evidence"
+                name="theory-tabs"
+                type="radio"
+                data-tab-kind="evidence"
+              >
 
-          <div class="checkpoint-meta">
-            <span>Model</span>
-            <span>Assumption</span>
-            <span>Prediction</span>
-            <span>Revision</span>
+              <div
+                class="section-tab-labels"
+                role="tablist"
+                aria-label="Theory lenses"
+              >
+                <label
+                  for="theory-tab-platform"
+                  role="tab"
+                  data-tab-kind="platform"
+                >
+                  Platform
+                </label>
+
+                <label
+                  for="theory-tab-engineering"
+                  role="tab"
+                  data-tab-kind="engineering"
+                >
+                  Engineering
+                </label>
+
+                <label
+                  for="theory-tab-evidence"
+                  role="tab"
+                  data-tab-kind="evidence"
+                >
+                  Evidence
+                </label>
+              </div>
+
+              <div class="section-tab-panels">
+                <article
+                  class="section-tab-panel"
+                  data-tab-kind="platform"
+                >
+                  <span>Platform</span>
+
+                  <p>
+                    A theory helps people move through complexity, but it becomes dangerous when the map is defended after the terrain proves it wrong.
+                  </p>
+
+                  <ul>
+                    <li>Theory earns trust when it predicts what happens next.</li>
+                    <li>Theory loses trust when it needs excuses to stay right.</li>
+                    <li>The model must not pretend to be the world.</li>
+                    <li>The lawful move after contradiction is revision, not defense.</li>
+                  </ul>
+                </article>
+
+                <article
+                  class="section-tab-panel"
+                  data-tab-kind="engineering"
+                >
+                  <span>Engineering</span>
+
+                  <p>
+                    Theory is a constrained explanatory model. It must declare assumptions, define variables, generate testable predictions, expose falsification conditions, and revise or fail when evidence contradicts the model.
+                  </p>
+
+                  <ul>
+                    <li>Model assumptions must be explicit.</li>
+                    <li>Predictions must be observable.</li>
+                    <li>Falsification conditions must exist.</li>
+                    <li>Contradiction must trigger revision, rejection, or hold-state classification.</li>
+                  </ul>
+                </article>
+
+                <article
+                  class="section-tab-panel"
+                  data-tab-kind="evidence"
+                >
+                  <span>Evidence</span>
+
+                  <p>
+                    Evidence for Theory requires more than explanation. The theory must risk mismatch with the world.
+                  </p>
+
+                  <ul>
+                    <li>Strong evidence: successful prediction, contradiction handling, revised model history, explicit assumptions.</li>
+                    <li>Useful evidence: model diagrams, variable definitions, prediction logs, failed-case records.</li>
+                    <li>Failure mode: the model explains everything after the fact but predicts nothing before the test.</li>
+                    <li>Boundary: theory may guide inspection, but it does not outrank Reality.</li>
+                  </ul>
+                </article>
+              </div>
+            </div>
           </div>
-        </header>
+        </details>
 
-        <div class="test-grid">
-          <article
-            class="test-card"
-            data-kind="practical"
+        <details
+          id="evidence"
+          class="track-card"
+          data-track="evidence"
+        >
+          <summary
+            class="drawer-summary"
+            aria-label="Open Evidence checkpoint"
           >
-            <span>Practical Test</span>
-            <strong>Does the map still match the land?</strong>
-            <p>
-              A useful theory predicts what happens next. A weak theory needs excuses to stay right.
-            </p>
-          </article>
+            <span class="drawer-title">
+              <span class="kicker">
+                Checkpoint 03
+              </span>
 
-          <article
-            class="test-card"
-            data-kind="engineering"
-          >
-            <span>Engineering Test</span>
-            <strong>Can the model fail?</strong>
-            <p>
-              A valid theory declares assumptions, defines variables, predicts observable states, permits falsification, and revises when contradicted.
-            </p>
-          </article>
-        </div>
+              <h2>
+                Evidence
+              </h2>
 
-        <div class="test-grid">
-          <article class="law-card">
-            <span>Map / Terrain Law</span>
-            <strong>The model does not outrank the world.</strong>
-            <p>
-              Theory may guide inspection, but Reality decides whether the model survives.
-            </p>
-          </article>
+              <p>
+                Evidence is what can be checked.
+              </p>
+            </span>
 
-          <article class="law-card">
-            <span>Prediction Burden Law</span>
-            <strong>A theory must risk being wrong.</strong>
-            <p>
-              If a theory never exposes itself to failure, it is not functioning as a reality-facing model.
-            </p>
-          </article>
-        </div>
+            <span
+              class="drawer-icon"
+              aria-hidden="true"
+            ></span>
+          </summary>
 
-        <div class="actions">
-          <a
-            class="button button-primary"
-            href="#index"
-          >
-            Return to Index
-          </a>
+          <div class="drawer-body">
+            <div class="track-meta">
+              <span>Observation</span>
+              <span>Record</span>
+              <span>Provenance</span>
+              <span>Checkability</span>
+            </div>
 
-          <a
-            class="button"
-            href="#evidence"
-          >
-            Continue to Evidence
-          </a>
-        </div>
-      </section>
+            <div
+              class="section-tabs"
+              aria-label="Evidence reading tabs"
+            >
+              <input
+                id="evidence-tab-platform"
+                name="evidence-tabs"
+                type="radio"
+                data-tab-kind="platform"
+                checked
+              >
 
-      <section
-        class="checkpoint"
-        id="evidence"
-        data-checkpoint="evidence"
-        aria-labelledby="evidence-title"
-      >
-        <header class="checkpoint-header">
-          <p class="kicker">
-            Checkpoint 03 · Evidence
-          </p>
+              <input
+                id="evidence-tab-engineering"
+                name="evidence-tabs"
+                type="radio"
+                data-tab-kind="engineering"
+              >
 
-          <h2 id="evidence-title">
-            Evidence is what can be checked.
-          </h2>
+              <input
+                id="evidence-tab-evidence"
+                name="evidence-tabs"
+                type="radio"
+                data-tab-kind="evidence"
+              >
 
-          <p>
-            Evidence moves a claim out of private insistence. It gives others something to inspect instead of asking them to trust the loudest voice in the room.
-          </p>
+              <div
+                class="section-tab-labels"
+                role="tablist"
+                aria-label="Evidence lenses"
+              >
+                <label
+                  for="evidence-tab-platform"
+                  role="tab"
+                  data-tab-kind="platform"
+                >
+                  Platform
+                </label>
 
-          <div class="checkpoint-meta">
-            <span>Observation</span>
-            <span>Record</span>
-            <span>Provenance</span>
-            <span>Checkability</span>
+                <label
+                  for="evidence-tab-engineering"
+                  role="tab"
+                  data-tab-kind="engineering"
+                >
+                  Engineering
+                </label>
+
+                <label
+                  for="evidence-tab-evidence"
+                  role="tab"
+                  data-tab-kind="evidence"
+                >
+                  Evidence
+                </label>
+              </div>
+
+              <div class="section-tab-panels">
+                <article
+                  class="section-tab-panel"
+                  data-tab-kind="platform"
+                >
+                  <span>Platform</span>
+
+                  <p>
+                    Evidence moves a claim out of private insistence. It gives others something to inspect instead of asking them to trust the loudest voice in the room.
+                  </p>
+
+                  <ul>
+                    <li>Good evidence is observable.</li>
+                    <li>Good evidence is recorded.</li>
+                    <li>Good evidence does not depend only on who says it.</li>
+                    <li>Explanation may organize evidence, but it cannot replace it.</li>
+                  </ul>
+                </article>
+
+                <article
+                  class="section-tab-panel"
+                  data-tab-kind="engineering"
+                >
+                  <span>Engineering</span>
+
+                  <p>
+                    Evidence requires observable data, provenance, collection method, sampling context, source reliability, bias exposure, and independent checkability.
+                  </p>
+
+                  <ul>
+                    <li>Sampling method must be named.</li>
+                    <li>Measurement method must be named.</li>
+                    <li>Source posture must be traceable.</li>
+                    <li>Evidence must be inspectable beyond the original claimant.</li>
+                  </ul>
+                </article>
+
+                <article
+                  class="section-tab-panel"
+                  data-tab-kind="evidence"
+                >
+                  <span>Evidence</span>
+
+                  <p>
+                    Evidence for Evidence sounds redundant, but it is the core discipline: the evidence itself must carry enough information to be checked.
+                  </p>
+
+                  <ul>
+                    <li>Strong evidence: raw record, metadata, provenance, collection method, independent check path.</li>
+                    <li>Useful evidence: logs, observations, chain-of-custody notes, replication posture.</li>
+                    <li>Failure mode: proof is asserted but not inspectable.</li>
+                    <li>Boundary: evidence without provenance is weak support for durable inference.</li>
+                  </ul>
+                </article>
+              </div>
+            </div>
           </div>
-        </header>
+        </details>
 
-        <div class="test-grid">
-          <article
-            class="test-card"
-            data-kind="practical"
+        <details
+          id="measure"
+          class="track-card"
+          data-track="measure"
+        >
+          <summary
+            class="drawer-summary"
+            aria-label="Open Measure checkpoint"
           >
-            <span>Practical Test</span>
-            <strong>Can the evidence be inspected?</strong>
-            <p>
-              Good evidence is observable, recorded, and not dependent only on who says it.
-            </p>
-          </article>
+            <span class="drawer-title">
+              <span class="kicker">
+                Checkpoint 04
+              </span>
 
-          <article
-            class="test-card"
-            data-kind="engineering"
-          >
-            <span>Engineering Test</span>
-            <strong>Does evidence carry its origin path?</strong>
-            <p>
-              Evidence must include how it was obtained, how it was measured, what context produced it, and what bias or uncertainty may affect it.
-            </p>
-          </article>
-        </div>
+              <h2>
+                Measure
+              </h2>
 
-        <div class="test-grid">
-          <article class="law-card">
-            <span>Evidence Precedence Law</span>
-            <strong>Evidence outranks explanation.</strong>
-            <p>
-              Explanation may organize evidence, but it cannot replace it.
-            </p>
-          </article>
+              <p>
+                Measurement turns observation into coordinates.
+              </p>
+            </span>
 
-          <article class="law-card">
-            <span>Provenance Law</span>
-            <strong>Evidence must carry its origin path.</strong>
-            <p>
-              Without provenance, evidence cannot support a durable inference.
-            </p>
-          </article>
-        </div>
+            <span
+              class="drawer-icon"
+              aria-hidden="true"
+            ></span>
+          </summary>
 
-        <div class="actions">
-          <a
-            class="button button-primary"
-            href="#index"
-          >
-            Return to Index
-          </a>
+          <div class="drawer-body">
+            <div class="track-meta">
+              <span>Unit</span>
+              <span>Calibration</span>
+              <span>Sampling</span>
+              <span>Uncertainty</span>
+            </div>
 
-          <a
-            class="button"
-            href="#measure"
-          >
-            Continue to Measure
-          </a>
-        </div>
-      </section>
+            <div
+              class="section-tabs"
+              aria-label="Measure reading tabs"
+            >
+              <input
+                id="measure-tab-platform"
+                name="measure-tabs"
+                type="radio"
+                data-tab-kind="platform"
+                checked
+              >
 
-      <section
-        class="checkpoint"
-        id="measure"
-        data-checkpoint="measure"
-        aria-labelledby="measure-title"
-      >
-        <header class="checkpoint-header">
-          <p class="kicker">
-            Checkpoint 04 · Measure
-          </p>
+              <input
+                id="measure-tab-engineering"
+                name="measure-tabs"
+                type="radio"
+                data-tab-kind="engineering"
+              >
 
-          <h2 id="measure-title">
-            Measurement turns observation into coordinates.
-          </h2>
+              <input
+                id="measure-tab-evidence"
+                name="measure-tabs"
+                type="radio"
+                data-tab-kind="evidence"
+              >
 
-          <p>
-            Measurement gives people shared coordinates. Without measurement, arguments stay trapped in opinion. With measurement, people can compare what happened, how it happened, and whether enough has been shown.
-          </p>
+              <div
+                class="section-tab-labels"
+                role="tablist"
+                aria-label="Measure lenses"
+              >
+                <label
+                  for="measure-tab-platform"
+                  role="tab"
+                  data-tab-kind="platform"
+                >
+                  Platform
+                </label>
 
-          <div class="checkpoint-meta">
-            <span>Unit</span>
-            <span>Calibration</span>
-            <span>Sampling</span>
-            <span>Uncertainty</span>
+                <label
+                  for="measure-tab-engineering"
+                  role="tab"
+                  data-tab-kind="engineering"
+                >
+                  Engineering
+                </label>
+
+                <label
+                  for="measure-tab-evidence"
+                  role="tab"
+                  data-tab-kind="evidence"
+                >
+                  Evidence
+                </label>
+              </div>
+
+              <div class="section-tab-panels">
+                <article
+                  class="section-tab-panel"
+                  data-tab-kind="platform"
+                >
+                  <span>Platform</span>
+
+                  <p>
+                    Measurement gives people shared coordinates. Without measurement, arguments stay trapped in opinion. With measurement, people can compare what happened, how it happened, and whether enough has been shown.
+                  </p>
+
+                  <ul>
+                    <li>What are we measuring?</li>
+                    <li>How are we measuring it?</li>
+                    <li>When are we measuring it?</li>
+                    <li>What counts as enough?</li>
+                  </ul>
+                </article>
+
+                <article
+                  class="section-tab-panel"
+                  data-tab-kind="engineering"
+                >
+                  <span>Engineering</span>
+
+                  <p>
+                    Measurement requires defined units, calibration, sampling frame, error bounds, uncertainty range, coordinate system, and classification rule.
+                  </p>
+
+                  <ul>
+                    <li>Units define the scale.</li>
+                    <li>Calibration defines instrument trust.</li>
+                    <li>Sampling frame defines observation scope.</li>
+                    <li>Uncertainty defines the boundary of confidence.</li>
+                  </ul>
+                </article>
+
+                <article
+                  class="section-tab-panel"
+                  data-tab-kind="evidence"
+                >
+                  <span>Evidence</span>
+
+                  <p>
+                    Evidence for Measure requires proof that different qualified observers can classify the same condition under the same measurement contract.
+                  </p>
+
+                  <ul>
+                    <li>Strong evidence: unit definitions, calibration record, sampling record, uncertainty range, observer agreement.</li>
+                    <li>Useful evidence: measurement protocol, threshold definition, instrument notes, error-bound statement.</li>
+                    <li>Failure mode: the measurement changes depending on who wants the answer.</li>
+                    <li>Boundary: measurement is a shared contract, not personal interpretation.</li>
+                  </ul>
+                </article>
+              </div>
+            </div>
           </div>
-        </header>
+        </details>
 
-        <div class="test-grid">
-          <article
-            class="test-card"
-            data-kind="practical"
+        <details
+          id="limits"
+          class="track-card"
+          data-track="limits"
+        >
+          <summary
+            class="drawer-summary"
+            aria-label="Open Limits checkpoint"
           >
-            <span>Practical Test</span>
-            <strong>Can people measure it the same way?</strong>
-            <p>
-              Bad measurement makes good people fight. Good measurement moves arguments into evidence.
-            </p>
-          </article>
+            <span class="drawer-title">
+              <span class="kicker">
+                Checkpoint 05
+              </span>
 
-          <article
-            class="test-card"
-            data-kind="engineering"
-          >
-            <span>Engineering Test</span>
-            <strong>Are the coordinates defined?</strong>
-            <p>
-              A valid measurement contract defines units, calibration, sampling frame, uncertainty, instrument limits, and classification rules.
-            </p>
-          </article>
-        </div>
+              <h2>
+                Limits
+              </h2>
 
-        <div class="test-grid">
-          <article class="law-card">
-            <span>Measurement Contract Law</span>
-            <strong>Measurement is a shared contract.</strong>
-            <p>
-              Measurement is not personal interpretation. It is a coordinated method for classifying observation.
-            </p>
-          </article>
+              <p>
+                Limits are where certainty stops.
+              </p>
+            </span>
 
-          <article class="law-card">
-            <span>Observer Invariance Law</span>
-            <strong>Classification must not depend on who looks.</strong>
-            <p>
-              The same evidence under the same measurement contract should yield the same classification across qualified observers.
-            </p>
-          </article>
-        </div>
+            <span
+              class="drawer-icon"
+              aria-hidden="true"
+            ></span>
+          </summary>
 
-        <div class="actions">
-          <a
-            class="button button-primary"
-            href="#index"
-          >
-            Return to Index
-          </a>
+          <div class="drawer-body">
+            <div class="track-meta">
+              <span>Boundary</span>
+              <span>Unknown</span>
+              <span>Error</span>
+              <span>Applicability</span>
+            </div>
 
-          <a
-            class="button"
-            href="#limits"
-          >
-            Continue to Limits
-          </a>
-        </div>
-      </section>
+            <div
+              class="section-tabs"
+              aria-label="Limits reading tabs"
+            >
+              <input
+                id="limits-tab-platform"
+                name="limits-tabs"
+                type="radio"
+                data-tab-kind="platform"
+                checked
+              >
 
-      <section
-        class="checkpoint"
-        id="limits"
-        data-checkpoint="limits"
-        aria-labelledby="limits-title"
-      >
-        <header class="checkpoint-header">
-          <p class="kicker">
-            Checkpoint 05 · Limits
-          </p>
+              <input
+                id="limits-tab-engineering"
+                name="limits-tabs"
+                type="radio"
+                data-tab-kind="engineering"
+              >
 
-          <h2 id="limits-title">
-            Limits are where certainty stops.
-          </h2>
+              <input
+                id="limits-tab-evidence"
+                name="limits-tabs"
+                type="radio"
+                data-tab-kind="evidence"
+              >
 
-          <p>
-            Naming limits does not weaken a claim. It protects the claim from pretending to know more than it knows.
-          </p>
+              <div
+                class="section-tab-labels"
+                role="tablist"
+                aria-label="Limits lenses"
+              >
+                <label
+                  for="limits-tab-platform"
+                  role="tab"
+                  data-tab-kind="platform"
+                >
+                  Platform
+                </label>
 
-          <div class="checkpoint-meta">
-            <span>Boundary</span>
-            <span>Unknown</span>
-            <span>Error</span>
-            <span>Applicability</span>
+                <label
+                  for="limits-tab-engineering"
+                  role="tab"
+                  data-tab-kind="engineering"
+                >
+                  Engineering
+                </label>
+
+                <label
+                  for="limits-tab-evidence"
+                  role="tab"
+                  data-tab-kind="evidence"
+                >
+                  Evidence
+                </label>
+              </div>
+
+              <div class="section-tab-panels">
+                <article
+                  class="section-tab-panel"
+                  data-tab-kind="platform"
+                >
+                  <span>Platform</span>
+
+                  <p>
+                    Limits are where honest certainty stops. Naming limits does not weaken a claim; it protects the claim from pretending to know more than it knows.
+                  </p>
+
+                  <ul>
+                    <li>Limits prevent false certainty.</li>
+                    <li>Limits protect decision quality.</li>
+                    <li>Limits keep unknowns visible.</li>
+                    <li>Limits separate what is known from what is still open.</li>
+                  </ul>
+                </article>
+
+                <article
+                  class="section-tab-panel"
+                  data-tab-kind="engineering"
+                >
+                  <span>Engineering</span>
+
+                  <p>
+                    Limits define uncertainty, applicability boundaries, model mismatch, sampling weakness, unknown variables, unresolved contradiction, and hold-state conditions.
+                  </p>
+
+                  <ul>
+                    <li>Error bounds define claim strength.</li>
+                    <li>Model mismatch defines transfer risk.</li>
+                    <li>Unknown variables define hold states.</li>
+                    <li>Applicability boundaries prevent overreach.</li>
+                  </ul>
+                </article>
+
+                <article
+                  class="section-tab-panel"
+                  data-tab-kind="evidence"
+                >
+                  <span>Evidence</span>
+
+                  <p>
+                    Evidence for Limits requires named uncertainty and visible boundaries around the claim.
+                  </p>
+
+                  <ul>
+                    <li>Strong evidence: uncertainty ranges, boundary conditions, sampling limits, unresolved contradiction records.</li>
+                    <li>Useful evidence: hold-state logs, limitation statements, applicability maps, error bars.</li>
+                    <li>Failure mode: partial truth is presented as total certainty.</li>
+                    <li>Boundary: certainty without boundaries is narrative, not stable Reality classification.</li>
+                  </ul>
+                </article>
+              </div>
+            </div>
           </div>
-        </header>
+        </details>
 
-        <div class="test-grid">
-          <article
-            class="test-card"
-            data-kind="practical"
+        <details
+          id="audit"
+          class="track-card"
+          data-track="audit"
+        >
+          <summary
+            class="drawer-summary"
+            aria-label="Open Audit checkpoint"
           >
-            <span>Practical Test</span>
-            <strong>What does the claim not know?</strong>
-            <p>
-              Limits prevent false certainty. They keep unknowns visible instead of hiding them under confident language.
-            </p>
-          </article>
+            <span class="drawer-title">
+              <span class="kicker">
+                Checkpoint 06
+              </span>
 
-          <article
-            class="test-card"
-            data-kind="engineering"
-          >
-            <span>Engineering Test</span>
-            <strong>Are uncertainty and applicability bounded?</strong>
-            <p>
-              Valid conclusions carry measurement error, model mismatch, sampling bias, unobservable variables, applicability limits, and unresolved contradiction states.
-            </p>
-          </article>
-        </div>
+              <h2>
+                Audit
+              </h2>
 
-        <div class="test-grid">
-          <article class="law-card">
-            <span>Bounded Certainty Law</span>
-            <strong>Every claim carries uncertainty bounds.</strong>
-            <p>
-              Certainty without boundaries is narrative, not stable Reality classification.
-            </p>
-          </article>
+              <p>
+                Audit decides what may proceed.
+              </p>
+            </span>
 
-          <article class="law-card">
-            <span>Unknown-State Protection Law</span>
-            <strong>Unknown must remain visible.</strong>
-            <p>
-              When the state is unknown, the lawful move is to name it, not bury it under confidence language.
-            </p>
-          </article>
-        </div>
+            <span
+              class="drawer-icon"
+              aria-hidden="true"
+            ></span>
+          </summary>
 
-        <div class="actions">
-          <a
-            class="button button-primary"
-            href="#index"
-          >
-            Return to Index
-          </a>
+          <div class="drawer-body">
+            <div class="track-meta">
+              <span>Proceed</span>
+              <span>Revise</span>
+              <span>Reject</span>
+              <span>Hold</span>
+            </div>
 
-          <a
-            class="button"
-            href="#audit"
-          >
-            Continue to Audit
-          </a>
-        </div>
-      </section>
+            <div
+              class="section-tabs"
+              aria-label="Audit reading tabs"
+            >
+              <input
+                id="audit-tab-platform"
+                name="audit-tabs"
+                type="radio"
+                data-tab-kind="platform"
+                checked
+              >
 
-      <section
-        class="checkpoint"
-        id="audit"
-        data-checkpoint="audit"
-        aria-labelledby="audit-title"
-      >
-        <header class="checkpoint-header">
-          <p class="kicker">
-            Checkpoint 06 · Audit
-          </p>
+              <input
+                id="audit-tab-engineering"
+                name="audit-tabs"
+                type="radio"
+                data-tab-kind="engineering"
+              >
 
-          <h2 id="audit-title">
-            Audit decides what may proceed.
-          </h2>
+              <input
+                id="audit-tab-evidence"
+                name="audit-tabs"
+                type="radio"
+                data-tab-kind="evidence"
+              >
 
-          <p>
-            Audit is the final pressure test. What holds may proceed. What fails must be revised. What remains unknown must be named.
-          </p>
+              <div
+                class="section-tab-labels"
+                role="tablist"
+                aria-label="Audit lenses"
+              >
+                <label
+                  for="audit-tab-platform"
+                  role="tab"
+                  data-tab-kind="platform"
+                >
+                  Platform
+                </label>
 
-          <div class="checkpoint-meta">
-            <span>Proceed</span>
-            <span>Revise</span>
-            <span>Reject</span>
-            <span>Hold</span>
+                <label
+                  for="audit-tab-engineering"
+                  role="tab"
+                  data-tab-kind="engineering"
+                >
+                  Engineering
+                </label>
+
+                <label
+                  for="audit-tab-evidence"
+                  role="tab"
+                  data-tab-kind="evidence"
+                >
+                  Evidence
+                </label>
+              </div>
+
+              <div class="section-tab-panels">
+                <article
+                  class="section-tab-panel"
+                  data-tab-kind="platform"
+                >
+                  <span>Platform</span>
+
+                  <p>
+                    Audit is the final pressure test. What holds may proceed. What fails must be revised. What remains unknown must be named.
+                  </p>
+
+                  <ul>
+                    <li>Separate established condition from open question.</li>
+                    <li>Separate unstable claim from false claim.</li>
+                    <li>Separate audit-ready claim from unreviewed claim.</li>
+                    <li>Do not let certainty theater replace conclusion state.</li>
+                  </ul>
+                </article>
+
+                <article
+                  class="section-tab-panel"
+                  data-tab-kind="engineering"
+                >
+                  <span>Engineering</span>
+
+                  <p>
+                    Audit determines claim disposition: proceed, revise, reject, hold, retest, recalibrate, or escalate.
+                  </p>
+
+                  <ul>
+                    <li>If theory fails, revise the model.</li>
+                    <li>If evidence fails, hold or reject the claim.</li>
+                    <li>If measurement fails, recalibrate before proceeding.</li>
+                    <li>If limits are missing, name the uncertainty before proceeding.</li>
+                  </ul>
+                </article>
+
+                <article
+                  class="section-tab-panel"
+                  data-tab-kind="evidence"
+                >
+                  <span>Evidence</span>
+
+                  <p>
+                    Evidence for Audit requires a traceable conclusion path.
+                  </p>
+
+                  <ul>
+                    <li>Strong evidence: audit trail, disposition receipt, contradiction handling, evidence review, limit declaration.</li>
+                    <li>Useful evidence: review notes, retest records, escalation logs, revision records.</li>
+                    <li>Failure mode: the claim proceeds without review because it sounds complete.</li>
+                    <li>Boundary: audit is not hostility; it is the lawful closure of a claim.</li>
+                  </ul>
+                </article>
+              </div>
+            </div>
           </div>
-        </header>
+        </details>
+      </div>
 
-        <div class="test-grid">
-          <article
-            class="test-card"
-            data-kind="practical"
-          >
-            <span>Practical Test</span>
-            <strong>What survives challenge?</strong>
-            <p>
-              A strong Reality claim separates established condition from open question, false claim, unstable claim, and audit-ready claim.
-            </p>
-          </article>
-
-          <article
-            class="test-card"
-            data-kind="engineering"
-          >
-            <span>Engineering Test</span>
-            <strong>Is the conclusion traceable?</strong>
-            <p>
-              Audit requires traceable evidence, declared limits, measurement validity, contradiction handling, provenance, source posture, and conclusion state.
-            </p>
-          </article>
-        </div>
-
-        <div class="closing-boundary">
-          <h3>
-            Final boundary
-          </h3>
-
-          <p>
-            What holds may proceed. What fails must be revised. What remains unknown must be named.
-          </p>
-        </div>
-
-        <div class="actions">
-          <a
-            class="button button-primary"
-            href="#index"
-          >
-            Return to Index
-          </a>
-
-          <a
-            class="button"
-            href="/laws/categories/"
-          >
-            Back to Categories
-          </a>
-
-          <a
-            class="button"
-            href="/laws/"
-          >
-            Back to Laws
-          </a>
-        </div>
-      </section>
-
-      <section
-        class="guide-panel"
-        id="use"
-        aria-labelledby="use-title"
+      <details
+        id="canonical-laws"
+        class="law-panel"
       >
-        <p class="kicker">
-          How to Use Reality
-        </p>
+        <summary
+          class="drawer-summary"
+          aria-label="Open Canonical Reality Laws"
+        >
+          <span class="drawer-title">
+            <span class="kicker">
+              Canonical Reality Laws
+            </span>
 
-        <h2 id="use-title">
-          Use this category when a claim needs to be separated from appearance.
-        </h2>
+            <h2>
+              Reality is what survives testable constraint.
+            </h2>
 
-        <div class="guide-grid">
-          <article class="guide-card">
-            <span>Claim</span>
-            <strong>What is being asserted?</strong>
             <p>
-              State the claim clearly before testing it.
+              Open for laws, signatures, and failure patterns.
             </p>
-          </article>
+          </span>
 
-          <article class="guide-card">
-            <span>Evidence</span>
-            <strong>What can be checked?</strong>
-            <p>
-              Identify what exists beyond private insistence.
-            </p>
-          </article>
+          <span
+            class="drawer-icon"
+            aria-hidden="true"
+          ></span>
+        </summary>
 
-          <article class="guide-card">
-            <span>Measure</span>
-            <strong>How is it classified?</strong>
-            <p>
-              Define coordinates, units, and thresholds.
-            </p>
-          </article>
+        <div class="drawer-body">
+          <p>
+            Reality protects the system from certainty theater. It requires theory, evidence, measurement, limits, and audit before a claim is treated as stable.
+          </p>
 
-          <article class="guide-card">
-            <span>Audit</span>
-            <strong>What is the disposition?</strong>
-            <p>
-              Proceed, revise, reject, hold, retest, recalibrate, or escalate.
-            </p>
-          </article>
+          <div class="law-grid">
+            <article class="law-card">
+              <span>Canonical Law</span>
+              <strong>Reality Constraint Law</strong>
+              <p>
+                A claim becomes real only when it survives testable constraint.
+              </p>
+            </article>
+
+            <article class="law-card">
+              <span>Canonical Law</span>
+              <strong>Evidence Precedence Law</strong>
+              <p>
+                Evidence outranks explanation. Explanation may organize evidence, but it cannot replace it.
+              </p>
+            </article>
+
+            <article class="law-card">
+              <span>Canonical Law</span>
+              <strong>Measurement Contract Law</strong>
+              <p>
+                Measurement is a shared contract, not personal interpretation.
+              </p>
+            </article>
+
+            <article class="law-card">
+              <span>Canonical Law</span>
+              <strong>Bounded Certainty Law</strong>
+              <p>
+                Every claim carries uncertainty bounds; what remains unknown must be named.
+              </p>
+            </article>
+          </div>
+
+          <div class="metric-grid">
+            <article class="metric-card">
+              <span>Signature</span>
+              <strong>Tested condition</strong>
+              <p>
+                Theory faces terrain, evidence is checkable, measurement defines coordinates, limits are named, and audit assigns disposition.
+              </p>
+            </article>
+
+            <article class="metric-card">
+              <span>Failure Pattern</span>
+              <strong>Certainty theater</strong>
+              <p>
+                A claim proceeds because it sounds complete while theory, evidence, measurement, limits, or audit remain unresolved.
+              </p>
+            </article>
+          </div>
         </div>
-      </section>
+      </details>
 
       <nav
         class="constellation-nav"
-        aria-label="Reality closing navigation"
+        aria-label="Linear Laws category navigation"
+        data-law-constellation-nav
+        data-law-path-category="reality"
+        data-law-path-mode="category"
+      >
+        <header class="constellation-nav__header">
+          <p class="kicker">
+            Category Path
+          </p>
+
+          <h2>
+            Reality is the category for tested condition.
+          </h2>
+
+          <p>
+            Return to the category spine or the central Laws compass.
+          </p>
+        </header>
+
+        <div class="constellation-nav__actions">
+          <a
+            href="/laws/"
+            data-law-path-action="return"
+          >
+            <span>Return</span>
+            <strong>Back to Compass</strong>
+          </a>
+
+          <a
+            href="/laws/categories/"
+            data-law-path-action="previous"
+          >
+            <span>Categories</span>
+            <strong>Back to Category Spine</strong>
+          </a>
+
+          <a
+            href="/laws/categories/structure/"
+            data-law-path-action="continue"
+          >
+            <span>Continue</span>
+            <strong>Structure</strong>
+          </a>
+        </div>
+      </nav>
+
+      <section
+        class="closing"
+        aria-label="Reality closing"
       >
         <p class="kicker">
-          Reality Category Path
+          Reality is the end of performance and the beginning of answerability.
         </p>
 
-        <h2>
-          Reality is the category for tested condition.
-        </h2>
-
         <p>
-          Continue through the Laws system from the central compass or return to the category spine.
+          What holds may proceed. What fails must be revised. What remains unknown must be named.
         </p>
 
         <div class="route-grid">
@@ -1598,9 +2167,9 @@
             href="/laws/categories/"
           >
             <span>Categories</span>
-            <strong>Back to Categories</strong>
+            <strong>Return to Category Spine</strong>
             <p>
-              Return to Flow, Integrity, Reality, and Structure.
+              Review Flow, Integrity, Reality, and Structure.
             </p>
           </a>
 
@@ -1609,37 +2178,36 @@
             href="/laws/"
           >
             <span>Laws</span>
-            <strong>Back to Laws</strong>
+            <strong>Return to Compass</strong>
             <p>
               Return to the central Laws page.
             </p>
           </a>
         </div>
-      </nav>
+      </section>
 
       <template
-        id="route-receipt"
+        id="reality-dropdown-html-receipt"
         data-route-receipt
+        data-reality-dropdown-html-receipt
       >
-DGB_LAWS_REALITY_CATEGORY_MODERN_SPINE_HTML_RECEIPT_v1_1_0
+DGB_LAWS_REALITY_CATEGORY_DROPDOWN_SPINE_HTML_RECEIPT_v1_2_0
 
 TARGET:
 /laws/categories/reality/index.html
 
 CONTRACT:
+DGB_LAWS_REALITY_CATEGORY_DROPDOWN_SPINE_HTML_TNT_v1_2_0
+
+PREVIOUS:
 DGB_LAWS_REALITY_CATEGORY_MODERN_SPINE_HTML_TNT_v1_1_0
 
 STATUS:
 Complete replacement.
-Modern Reality category spine.
-Gem field removed from public interface.
-Legacy Platform / Engineering toggle removed from public interface.
-No SVG gem renderer.
-No canvas.
-No WebGL.
-No generated image.
-No external CSS dependency.
-No JavaScript dependency.
+Dropdown renewal for Reality category.
+Floating bubble navigation preserved.
+Button-activated Platform / Engineering / Evidence tabs preserved.
+Sections are collapsed by default.
 No runtime execution performed.
 No visual acceptance claimed.
 No production authorization claimed.
@@ -1649,15 +2217,21 @@ CATEGORY:
 Reality
 
 PUBLIC ROLE:
-Reality category spine and checkpoint index.
+Reality category dropdown spine and checkpoint index.
 
-INTERNAL CHECKPOINTS:
-1. Reality
-2. Theory
-3. Evidence
-4. Measure
-5. Limits
-6. Audit
+CHECKPOINTS:
+- Reality
+- Theory
+- Evidence
+- Measure
+- Limits
+- Audit
+
+SECTION BEHAVIOR:
+- Each major checkpoint is a dropdown details drawer.
+- Each drawer has Platform / Engineering / Evidence tab buttons.
+- Only the selected tab panel is visible.
+- Hash navigation opens the target drawer.
 
 PUBLIC THESIS:
 Reality is what holds after the claim is tested.
@@ -1681,7 +2255,8 @@ VISUAL RULE:
 - No public implementation-retirement cards.
 - No 3D compass element.
 - No plain underlined navigation style.
-- Use cards, pills, sections, and direct spine navigation.
+- Floating bubble top navigation preserved.
+- Dropdown major sections reduce first-glance load.
 
 CLAIM BOUNDARIES:
 - No validation claim.
@@ -1703,7 +2278,7 @@ CLAIM BOUNDARIES:
         </strong>
 
         <span>
-          Modern category spine. Reality, Theory, Evidence, Measure, Limits, Audit.
+          Dropdown renewal. Reality, Theory, Evidence, Measure, Limits, Audit.
         </span>
       </div>
 
@@ -1716,8 +2291,8 @@ CLAIM BOUNDARIES:
           Categories
         </a>
 
-        <a href="#index">
-          Index
+        <a href="#reality-check">
+          Reality
         </a>
 
         <a href="#theory">
@@ -1746,5 +2321,163 @@ CLAIM BOUNDARIES:
       </nav>
     </footer>
   </div>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const CONTRACT =
+        "DGB_LAWS_REALITY_CATEGORY_DROPDOWN_SPINE_HTML_TNT_v1_2_0";
+
+      function openDrawerFromHash() {
+        const hash = window.location.hash;
+
+        if (!hash || hash.length < 2) {
+          return;
+        }
+
+        const target =
+          document.getElementById(hash.slice(1));
+
+        if (!target) {
+          return;
+        }
+
+        const drawer =
+          target.matches("details")
+            ? target
+            : target.closest("details");
+
+        if (drawer) {
+          drawer.open = true;
+        }
+      }
+
+      function collectCheckedTabs() {
+        return Array
+          .from(
+            document.querySelectorAll(
+              ".section-tabs input[type='radio']:checked"
+            )
+          )
+          .map(input => ({
+            group:
+              input.name,
+
+            tab:
+              input.dataset.tabKind || "",
+
+            id:
+              input.id
+          }));
+      }
+
+      function collectOpenDrawers() {
+        return Array
+          .from(document.querySelectorAll("details[open]"))
+          .map(drawer => drawer.id)
+          .filter(Boolean);
+      }
+
+      function emitReceipt() {
+        const receipt = {
+          contract:
+            CONTRACT,
+
+          route:
+            "/laws/categories/reality/",
+
+          target:
+            "/laws/categories/reality/index.html",
+
+          category:
+            "reality",
+
+          layout:
+            "dropdown-spine",
+
+          sections:
+            [
+              "reality-check",
+              "theory",
+              "evidence",
+              "measure",
+              "limits",
+              "audit"
+            ],
+
+          sectionTabs:
+            [
+              "platform",
+              "engineering",
+              "evidence"
+            ],
+
+          dropdownSections:
+            true,
+
+          floatingBubbles:
+            true,
+
+          buttonTabs:
+            true,
+
+          routeRegistryMutated:
+            false,
+
+          validationClaimed:
+            false,
+
+          openDrawers:
+            collectOpenDrawers(),
+
+          activeTabs:
+            collectCheckedTabs(),
+
+          timestamp:
+            new Date().toISOString()
+        };
+
+        document.documentElement.dataset
+          .realityDropdownReceipt =
+          JSON.stringify(receipt);
+      }
+
+      window.addEventListener(
+        "hashchange",
+        () => {
+          openDrawerFromHash();
+          emitReceipt();
+        }
+      );
+
+      document.addEventListener(
+        "toggle",
+        event => {
+          if (event.target instanceof HTMLDetailsElement) {
+            emitReceipt();
+          }
+        },
+        true
+      );
+
+      document.addEventListener(
+        "change",
+        event => {
+          const target = event.target;
+
+          if (
+            target instanceof HTMLInputElement &&
+            target.matches(".section-tabs input[type='radio']")
+          ) {
+            emitReceipt();
+          }
+        }
+      );
+
+      openDrawerFromHash();
+      emitReceipt();
+    })();
+  </script>
 </body>
 </html>

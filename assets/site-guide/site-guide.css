@@ -1,43 +1,72 @@
 /* TARGET FILE: /assets/site-guide/site-guide.css */
 /* COMPLETE REPLACEMENT */
-/* SITE GUIDE RESURRECTION CSS */
-/* SITE_GUIDE_RESURRECTION_CSS_TNT_v1 */
+/* SITE GUIDE ORIGINAL-STYLE EDUCATIONAL BLUEPRINT RESTORATION CSS */
+/* SITE_GUIDE_ORIGINAL_STYLE_EDUCATIONAL_BLUEPRINT_RESTORATION_CSS_TNT_v1 */
+
+/*
+  Restoration basis:
+  - Rebinds to the recovered /site-guide/ HTML selectors.
+  - Restores the educational spatial experience: Guide Orbit + Blueprint Room Map.
+  - Does not collapse the Guide Orbit into a linear list on mobile.
+  - Does not collapse the Estate Blueprint into a generic vertical card menu.
+  - Preserves select → focus → preview → return as the teaching model.
+*/
 
 :root {
   color-scheme: dark;
 
-  --sg-bg: #02040b;
-  --sg-bg-2: #07101b;
-  --sg-panel: rgba(8, 13, 27, 0.88);
-  --sg-panel-2: rgba(12, 18, 36, 0.78);
+  --sg-bg: #030611;
+  --sg-bg-deep: #01030a;
+  --sg-panel: rgba(13, 19, 36, 0.88);
+  --sg-panel-soft: rgba(17, 24, 44, 0.68);
+  --sg-panel-glass: rgba(255, 255, 255, 0.045);
 
-  --sg-ink: #fff4d8;
+  --sg-ink: #fff3dc;
   --sg-text: #eaf2f6;
-  --sg-muted: rgba(230, 238, 255, 0.78);
-  --sg-faint: rgba(230, 238, 255, 0.52);
+  --sg-muted: rgba(226, 234, 249, 0.74);
+  --sg-faint: rgba(226, 234, 249, 0.48);
 
   --sg-gold: #f3c86f;
-  --sg-gold-2: #ffe8a3;
+  --sg-gold-2: #ffe6a3;
   --sg-blue: #8dd8ff;
-  --sg-cyan: #78e9ff;
+  --sg-cyan: #84f1ff;
   --sg-green: #8ff0c3;
   --sg-violet: #9f7cff;
   --sg-amber: #ffbd73;
   --sg-ruby: #ff8f8f;
 
-  --sg-line: rgba(184, 205, 255, 0.18);
-  --sg-line-2: rgba(243, 200, 111, 0.24);
-  --sg-shadow:
-    0 34px 115px rgba(0, 0, 0, 0.52),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  --sg-line: rgba(183, 207, 255, 0.17);
+  --sg-line-strong: rgba(243, 200, 111, 0.32);
+  --sg-blue-line: rgba(141, 216, 255, 0.22);
+  --sg-green-line: rgba(143, 240, 195, 0.22);
 
   --sg-max: 1220px;
-  --sg-radius-sm: 0.8rem;
+
+  --sg-radius-xs: 0.5rem;
+  --sg-radius-sm: 0.78rem;
   --sg-radius-md: 1.1rem;
   --sg-radius-lg: 1.55rem;
-  --sg-radius-xl: 2rem;
+  --sg-radius-xl: 2.05rem;
   --sg-radius-full: 999rem;
-  --sg-gem-path: polygon(50% 0%, 78% 9%, 100% 35%, 90% 75%, 50% 100%, 10% 75%, 0% 35%, 22% 9%);
+
+  --sg-shadow:
+    0 2rem 6rem rgba(0, 0, 0, 0.52),
+    inset 0 1px 0 rgba(255, 255, 255, 0.055);
+
+  --sg-soft-shadow:
+    0 1rem 2.5rem rgba(0, 0, 0, 0.36),
+    inset 0 1px 0 rgba(255, 255, 255, 0.055);
+
+  --sg-gem-path: polygon(
+    50% 0%,
+    78% 9%,
+    100% 35%,
+    90% 75%,
+    50% 100%,
+    10% 75%,
+    0% 35%,
+    22% 9%
+  );
 }
 
 *,
@@ -49,10 +78,10 @@
 html {
   min-width: 320px;
   min-height: 100%;
-  background: var(--sg-bg);
-  scroll-behavior: smooth;
-  scroll-padding-top: 8.5rem;
   overflow-x: hidden;
+  background: var(--sg-bg-deep);
+  scroll-behavior: smooth;
+  scroll-padding-top: 9rem;
 }
 
 body {
@@ -62,10 +91,10 @@ body {
   overflow-x: hidden;
   color: var(--sg-ink);
   background:
-    radial-gradient(circle at 50% -12%, rgba(243, 200, 111, 0.24), transparent 34rem),
-    radial-gradient(circle at 12% 17%, rgba(36, 120, 255, 0.22), transparent 34rem),
-    radial-gradient(circle at 88% 30%, rgba(141, 216, 255, 0.14), transparent 32rem),
-    radial-gradient(circle at 50% 78%, rgba(159, 124, 255, 0.12), transparent 36rem),
+    radial-gradient(circle at 50% -8%, rgba(243, 200, 111, 0.18), transparent 31rem),
+    radial-gradient(circle at 7% 12%, rgba(141, 216, 255, 0.14), transparent 27rem),
+    radial-gradient(circle at 92% 16%, rgba(159, 124, 255, 0.12), transparent 30rem),
+    radial-gradient(circle at 50% 72%, rgba(143, 240, 195, 0.08), transparent 34rem),
     linear-gradient(180deg, #070b16 0%, #030713 56%, #010207 100%);
   font-family:
     Inter,
@@ -87,13 +116,30 @@ body::before {
   z-index: 0;
   pointer-events: none;
   content: "";
-  opacity: 0.22;
+  opacity: 0.24;
   background-image:
-    radial-gradient(circle, rgba(255, 255, 255, 0.18) 0 1px, transparent 1.5px),
-    linear-gradient(rgba(141, 216, 255, 0.045) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(141, 216, 255, 0.045) 1px, transparent 1px);
+    radial-gradient(circle, rgba(255, 255, 255, 0.17) 0 1px, transparent 1.55px),
+    linear-gradient(rgba(141, 216, 255, 0.044) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(141, 216, 255, 0.044) 1px, transparent 1px);
   background-size: 230px 260px, 56px 56px, 56px 56px;
-  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.92), rgba(0, 0, 0, 0.55) 66%, rgba(0, 0, 0, 0.20));
+  mask-image: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.95),
+    rgba(0, 0, 0, 0.62) 66%,
+    rgba(0, 0, 0, 0.24)
+  );
+}
+
+body::after {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  content: "";
+  opacity: 0.28;
+  background:
+    linear-gradient(90deg, rgba(141, 216, 255, 0.06), transparent 18%, transparent 82%, rgba(243, 200, 111, 0.055)),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.035), transparent 18%, transparent 88%, rgba(0, 0, 0, 0.18));
 }
 
 a {
@@ -120,15 +166,15 @@ summary::-webkit-details-marker {
   display: none;
 }
 
+[hidden] {
+  display: none !important;
+}
+
 a:focus-visible,
 button:focus-visible,
 summary:focus-visible {
   outline: 2px solid var(--sg-gold);
   outline-offset: 4px;
-}
-
-[hidden] {
-  display: none !important;
 }
 
 .skip {
@@ -150,6 +196,10 @@ summary:focus-visible {
   transform: translateY(0);
 }
 
+/* ============================================================
+   SHELL / HEADER
+   ============================================================ */
+
 .shell {
   position: relative;
   z-index: 2;
@@ -167,7 +217,7 @@ summary:focus-visible {
   gap: 18px;
   align-items: start;
   padding: 12px 0 18px;
-  backdrop-filter: blur(0.72rem);
+  backdrop-filter: blur(0.8rem);
 }
 
 .brand {
@@ -187,7 +237,14 @@ summary:focus-visible {
   border: 1px solid rgba(243, 200, 111, 0.45);
   background:
     linear-gradient(35deg, transparent 0 20%, rgba(255, 255, 255, 0.28) 21% 23%, transparent 24%),
-    conic-gradient(from 45deg at 50% 50%, rgba(255, 255, 255, 0.28), rgba(36, 120, 255, 0.22), rgba(1, 15, 60, 0.62), rgba(243, 200, 111, 0.20), rgba(255, 255, 255, 0.28)),
+    conic-gradient(
+      from 45deg at 50% 50%,
+      rgba(255, 255, 255, 0.28),
+      rgba(36, 120, 255, 0.22),
+      rgba(1, 15, 60, 0.62),
+      rgba(243, 200, 111, 0.20),
+      rgba(255, 255, 255, 0.28)
+    ),
     radial-gradient(circle at 48% 22%, rgba(255, 255, 255, 0.32), transparent 42%),
     linear-gradient(145deg, rgba(9, 44, 112, 0.95), rgba(5, 8, 20, 0.98));
   box-shadow:
@@ -218,13 +275,15 @@ summary:focus-visible {
 }
 
 .brand-copy strong {
+  color: var(--sg-ink);
   font-size: clamp(1.08rem, 3vw, 1.65rem);
   line-height: 1;
   letter-spacing: -0.045em;
 }
 
 .quick-nav,
-.actions {
+.actions,
+.hero-actions {
   display: flex;
   flex-wrap: wrap;
   gap: 0.6rem;
@@ -299,6 +358,10 @@ summary:focus-visible {
   border-color: rgba(255, 189, 115, 0.52);
   background: linear-gradient(135deg, #ffe1bd, var(--sg-amber) 62%, #b86624);
 }
+
+/* ============================================================
+   GENERAL PANELS
+   ============================================================ */
 
 main {
   display: grid;
@@ -382,7 +445,7 @@ h1 {
 
 .return-primer {
   display: grid;
-  gap: 0.2rem;
+  gap: 0.45rem;
   max-width: 62rem;
   padding: 0.92rem 1rem;
   border-radius: var(--sg-radius-md);
@@ -412,13 +475,6 @@ h1 {
 .final-band p {
   margin: 0;
   color: var(--sg-muted);
-}
-
-.hero-actions,
-.actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.65rem;
 }
 
 .hero-proof {
@@ -481,63 +537,117 @@ h1 {
   color: var(--sg-muted);
 }
 
+/* ============================================================
+   GUIDE ORBIT — SPATIAL EDUCATIONAL SYSTEM
+   ============================================================ */
+
 .guide-orbit {
   position: relative;
-  display: grid;
-  min-height: clamp(31rem, 55vw, 42rem);
-  place-items: center;
+  min-height: clamp(34rem, 58vw, 45rem);
   isolation: isolate;
+  border: 1px solid rgba(184, 205, 255, 0.13);
+  border-radius: var(--sg-radius-xl);
+  background:
+    radial-gradient(circle at 50% 54%, rgba(243, 200, 111, 0.11), transparent 10rem),
+    radial-gradient(circle at 50% 54%, rgba(141, 216, 255, 0.08), transparent 18rem),
+    linear-gradient(rgba(141, 216, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(141, 216, 255, 0.03) 1px, transparent 1px),
+    rgba(2, 6, 18, 0.58);
+  background-size: auto, auto, 34px 34px, 34px 34px, auto;
+  overflow: hidden;
 }
 
-.orbit-core {
-  position: relative;
-  z-index: 2;
-  display: grid;
-  width: clamp(8.5rem, 18vw, 12rem);
-  aspect-ratio: 1;
-  place-items: center;
-  border: 1px solid rgba(243, 200, 111, 0.34);
+.guide-orbit::before,
+.guide-orbit::after {
+  position: absolute;
+  left: 50%;
+  top: 54%;
+  z-index: 0;
+  content: "";
+  border: 1px solid rgba(141, 216, 255, 0.14);
   border-radius: 50%;
-  color: var(--sg-gold-2);
-  background:
-    radial-gradient(circle, rgba(243, 200, 111, 0.22), rgba(36, 120, 255, 0.10) 54%, rgba(3, 7, 19, 0.88) 70%);
-  box-shadow:
-    0 0 4rem rgba(243, 200, 111, 0.16),
-    inset 0 0 1.8rem rgba(255, 255, 255, 0.06);
-  font-weight: 950;
-  text-align: center;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
 }
 
 .guide-orbit::before {
-  position: absolute;
-  inset: 12%;
-  z-index: 0;
-  content: "";
-  border: 1px solid rgba(141, 216, 255, 0.16);
-  border-radius: 50%;
+  width: min(68%, 30rem);
+  aspect-ratio: 1;
   box-shadow:
-    inset 0 0 2rem rgba(141, 216, 255, 0.08),
-    0 0 3rem rgba(36, 120, 255, 0.08);
+    0 0 4rem rgba(141, 216, 255, 0.06),
+    inset 0 0 2rem rgba(243, 200, 111, 0.035);
+}
+
+.guide-orbit::after {
+  width: min(45%, 20rem);
+  aspect-ratio: 1;
+  border-color: rgba(141, 216, 255, 0.12);
+}
+
+.orbit-core {
+  position: absolute;
+  left: 50%;
+  top: 54%;
+  z-index: 3;
+  display: grid;
+  width: clamp(8.5rem, 17vw, 12.5rem);
+  aspect-ratio: 1;
+  place-items: center;
+  color: var(--sg-gold-2);
+  background:
+    radial-gradient(circle at 48% 40%, rgba(255, 235, 170, 0.20), transparent 34%),
+    radial-gradient(circle at 52% 58%, rgba(141, 216, 255, 0.10), transparent 60%),
+    linear-gradient(145deg, rgba(91, 75, 50, 0.54), rgba(6, 12, 29, 0.92));
+  clip-path: polygon(
+    50% 0%,
+    79% 10%,
+    100% 37%,
+    88% 76%,
+    50% 100%,
+    12% 76%,
+    0% 37%,
+    21% 10%
+  );
+  box-shadow:
+    0 0 4rem rgba(243, 200, 111, 0.16),
+    0 1.4rem 3.2rem rgba(0, 0, 0, 0.44),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.orbit-core span {
+  font-weight: 950;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.72);
 }
 
 .feature-gem {
   position: absolute;
-  z-index: 3;
+  z-index: 4;
   display: grid;
-  gap: 0.22rem;
-  width: clamp(9.4rem, 19vw, 13rem);
-  min-height: 5.8rem;
-  padding: 0.85rem;
-  border: 1px solid rgba(184, 205, 255, 0.18);
-  border-radius: 1.35rem;
+  gap: 0.28rem;
+  width: clamp(10.4rem, 19vw, 14.2rem);
+  min-height: clamp(6.4rem, 11vw, 8.6rem);
+  padding: 1rem;
+  border: 1px solid rgba(184, 205, 255, 0.17);
+  border-radius: clamp(1.15rem, 2vw, 1.75rem);
   color: var(--sg-ink);
   background:
-    radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.11), transparent 75%),
-    rgba(8, 13, 27, 0.84);
+    radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.11), transparent 76%),
+    linear-gradient(180deg, rgba(18, 25, 44, 0.80), rgba(3, 7, 19, 0.72));
   box-shadow:
-    0 1rem 2.8rem rgba(0, 0, 0, 0.36),
-    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    0 1.1rem 2.7rem rgba(0, 0, 0, 0.38),
+    inset 0 1px 0 rgba(255, 255, 255, 0.055);
   cursor: pointer;
+  text-align: left;
+  transition:
+    opacity 180ms ease,
+    filter 180ms ease,
+    transform 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease;
 }
 
 .feature-gem::before {
@@ -550,54 +660,73 @@ h1 {
 .feature-gem b {
   color: var(--sg-gold);
   font-size: 0.72rem;
+  font-weight: 950;
   letter-spacing: 0.13em;
   text-transform: uppercase;
 }
 
 .feature-gem strong {
   color: var(--sg-ink);
-  font-size: 0.95rem;
+  font-size: clamp(0.95rem, 1.7vw, 1.18rem);
+  line-height: 1.12;
 }
 
 .feature-gem[data-active="true"],
 .feature-gem:hover,
 .feature-gem:focus-visible {
-  border-color: rgba(243, 200, 111, 0.46);
+  border-color: rgba(132, 241, 255, 0.75);
   box-shadow:
-    0 0 1.6rem rgba(243, 200, 111, 0.16),
-    0 1rem 2.8rem rgba(0, 0, 0, 0.4);
+    0 0 1.8rem rgba(132, 241, 255, 0.18),
+    0 0 4rem rgba(132, 241, 255, 0.07),
+    0 1.1rem 2.7rem rgba(0, 0, 0, 0.46);
+  transform: translateY(-2px);
 }
 
-.feature-gem:nth-of-type(1) {
-  top: 5%;
+.guide-orbit[data-focus-active="true"] .feature-gem:not([data-active="true"]),
+body[data-focus-mode="true"] .guide-orbit .feature-gem:not([data-active="true"]) {
+  opacity: 0.42;
+  filter: grayscale(0.65) saturate(0.72);
+}
+
+.feature-gem[data-feature="estate"] {
   left: 50%;
+  top: 7%;
   transform: translateX(-50%);
 }
 
-.feature-gem:nth-of-type(2) {
-  top: 25%;
-  right: 4%;
+.feature-gem[data-feature="blueprint"] {
+  left: 8%;
+  top: 28%;
 }
 
-.feature-gem:nth-of-type(3) {
-  right: 10%;
-  bottom: 10%;
+.feature-gem[data-feature="gems"] {
+  right: 8%;
+  top: 28%;
 }
 
-.feature-gem:nth-of-type(4) {
-  bottom: 5%;
+.feature-gem[data-feature="return"] {
   left: 50%;
+  bottom: 7%;
   transform: translateX(-50%);
 }
 
-.feature-gem:nth-of-type(5) {
-  bottom: 10%;
-  left: 10%;
+.feature-gem[data-feature="portal"] {
+  left: 8%;
+  bottom: 18%;
 }
 
-.feature-gem:nth-of-type(6) {
-  top: 25%;
-  left: 4%;
+.feature-gem[data-feature="categories"] {
+  right: 8%;
+  bottom: 18%;
+}
+
+.feature-gem[data-feature="estate"]:hover,
+.feature-gem[data-feature="estate"]:focus-visible,
+.feature-gem[data-feature="estate"][data-active="true"],
+.feature-gem[data-feature="return"]:hover,
+.feature-gem[data-feature="return"]:focus-visible,
+.feature-gem[data-feature="return"][data-active="true"] {
+  transform: translateX(-50%) translateY(-2px);
 }
 
 .feature-detail {
@@ -605,7 +734,12 @@ h1 {
   gap: 0.7rem;
   padding: clamp(1rem, 2.4vw, 1.35rem);
   border-radius: var(--sg-radius-lg);
+  box-shadow: var(--sg-soft-shadow);
 }
+
+/* ============================================================
+   DEMO / CATEGORY / MINI MAP
+   ============================================================ */
 
 .demo-grid,
 .ledger-grid {
@@ -775,6 +909,10 @@ h1 {
   font-size: 0.82rem;
 }
 
+/* ============================================================
+   LENS RAIL
+   ============================================================ */
+
 .lens-rail {
   position: sticky;
   z-index: 70;
@@ -810,54 +948,204 @@ h1 {
   gap: 1rem;
 }
 
+/* ============================================================
+   ESTATE BLUEPRINT — SHAPED EDUCATIONAL ROOM MAP
+   ============================================================ */
+
 .blueprint-wrap {
-  grid-template-columns: minmax(0, 1.15fr) minmax(17rem, 0.85fr);
+  grid-template-columns: minmax(0, 1.12fr) minmax(18rem, 0.88fr);
 }
 
 .estate-blueprint {
   position: relative;
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  grid-auto-rows: minmax(6rem, auto);
-  gap: 0.65rem;
-  padding: 1rem;
-  border: 1px solid rgba(184, 205, 255, 0.16);
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+  grid-auto-rows: minmax(4.6rem, auto);
+  gap: 0.72rem;
+  min-height: clamp(36rem, 66vw, 52rem);
+  padding: clamp(0.85rem, 2vw, 1.2rem);
+  border: 1px solid rgba(243, 200, 111, 0.25);
   border-radius: var(--sg-radius-xl);
   background:
-    linear-gradient(rgba(141, 216, 255, 0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(141, 216, 255, 0.04) 1px, transparent 1px),
-    rgba(255, 255, 255, 0.025);
-  background-size: 28px 28px;
+    radial-gradient(circle at 50% 46%, rgba(243, 200, 111, 0.08), transparent 15rem),
+    linear-gradient(rgba(141, 216, 255, 0.048) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(141, 216, 255, 0.048) 1px, transparent 1px),
+    rgba(3, 8, 21, 0.74);
+  background-size: auto, 28px 28px, 28px 28px, auto;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.025),
+    inset 0 0 3rem rgba(141, 216, 255, 0.035),
+    0 1.2rem 3rem rgba(0, 0, 0, 0.28);
+  overflow: hidden;
+}
+
+.estate-blueprint::before {
+  position: absolute;
+  inset: 1.2rem;
+  z-index: 0;
+  content: "";
+  border: 1px solid rgba(243, 200, 111, 0.14);
+  border-radius: calc(var(--sg-radius-xl) - 0.5rem);
+  pointer-events: none;
+}
+
+.estate-blueprint::after {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 0;
+  width: 17rem;
+  aspect-ratio: 1;
+  content: "";
+  border: 1px solid rgba(141, 216, 255, 0.10);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, rgba(141, 216, 255, 0.08), transparent 66%);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
 }
 
 .room-shape {
+  position: relative;
+  z-index: 1;
   display: grid;
-  gap: 0.18rem;
+  gap: 0.2rem;
   align-content: center;
-  min-height: 6rem;
-  padding: 0.75rem;
-  border-radius: var(--sg-radius-md);
+  min-height: 6.25rem;
+  padding: clamp(0.72rem, 1.6vw, 1rem);
+  border: 1px solid rgba(184, 205, 255, 0.16);
+  border-radius: clamp(1rem, 2vw, 1.6rem);
   color: var(--sg-ink);
+  background:
+    radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.06), transparent 72%),
+    linear-gradient(180deg, rgba(15, 22, 39, 0.78), rgba(6, 10, 22, 0.70));
+  box-shadow:
+    0 0.9rem 2.1rem rgba(0, 0, 0, 0.26),
+    inset 0 1px 0 rgba(255, 255, 255, 0.045);
   cursor: pointer;
   text-align: left;
+  transition:
+    transform 180ms ease,
+    opacity 180ms ease,
+    filter 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease;
 }
 
 .room-shape b {
   color: var(--sg-gold);
   font-size: 0.65rem;
   font-weight: 950;
-  letter-spacing: 0.13em;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
 }
 
 .room-shape strong {
   color: var(--sg-ink);
-  font-size: 0.92rem;
+  font-size: clamp(0.95rem, 1.5vw, 1.16rem);
+  line-height: 1.1;
 }
 
 .room-shape span {
   color: var(--sg-muted);
-  font-size: 0.8rem;
+  font-size: clamp(0.78rem, 1.25vw, 0.92rem);
+}
+
+.room-shape[data-active="true"] {
+  border-color: rgba(243, 200, 111, 0.58);
+  box-shadow:
+    0 0 1.5rem rgba(243, 200, 111, 0.15),
+    0 1rem 2rem rgba(0, 0, 0, 0.34);
+}
+
+.room-shape:hover,
+.room-shape:focus-visible {
+  transform: translateY(-2px);
+}
+
+/* Shaped room footprints */
+.room-shape[data-room="compass"] {
+  grid-column: 1 / span 3;
+  grid-row: 1 / span 2;
+}
+
+.room-shape[data-room="guide"] {
+  grid-column: 4 / span 2;
+  grid-row: 1 / span 2;
+}
+
+.room-shape[data-room="main"] {
+  grid-column: 6 / span 3;
+  grid-row: 1 / span 2;
+}
+
+.room-shape[data-room="atrium"] {
+  grid-column: 2 / span 6;
+  grid-row: 3 / span 2;
+  min-height: 7.1rem;
+  border-color: rgba(243, 200, 111, 0.38);
+}
+
+.room-shape[data-room="atlas"] {
+  grid-column: 1 / span 4;
+  grid-row: 5 / span 2;
+}
+
+.room-shape[data-room="zionts"] {
+  grid-column: 5 / span 4;
+  grid-row: 5 / span 2;
+}
+
+.room-shape[data-room="audralia"] {
+  grid-column: 1 / span 3;
+  grid-row: 7 / span 2;
+}
+
+.room-shape[data-room="worldroom"] {
+  grid-column: 4 / span 2;
+  grid-row: 7 / span 2;
+}
+
+.room-shape[data-room="cockpit"] {
+  grid-column: 6 / span 3;
+  grid-row: 7 / span 2;
+}
+
+.room-shape[data-room="frontier"] {
+  grid-column: 1 / span 4;
+  grid-row: 9 / span 2;
+}
+
+.room-shape[data-room="product"] {
+  grid-column: 5 / span 4;
+  grid-row: 9 / span 2;
+}
+
+.room-shape[data-room="lab"] {
+  grid-column: 1 / span 4;
+  grid-row: 11 / span 2;
+}
+
+.room-shape[data-room="law"] {
+  grid-column: 5 / span 4;
+  grid-row: 11 / span 2;
+}
+
+body[data-blueprint-open="true"] .estate-blueprint {
+  border-color: rgba(243, 200, 111, 0.38);
+  box-shadow:
+    0 0 2rem rgba(243, 200, 111, 0.10),
+    inset 0 0 1.5rem rgba(141, 216, 255, 0.04);
+}
+
+body[data-blueprint-open="true"] .estate-blueprint .room-shape:not([data-active="true"]) {
+  opacity: 0.58;
+  filter: saturate(0.78);
+}
+
+body[data-blueprint-open="true"] .estate-blueprint .room-shape[data-active="true"] {
+  opacity: 1;
+  filter: none;
 }
 
 .blueprint-detail {
@@ -867,6 +1155,7 @@ h1 {
   gap: 0.75rem;
   padding: 1rem;
   border-radius: var(--sg-radius-lg);
+  box-shadow: var(--sg-soft-shadow);
 }
 
 .blueprint-detail ul {
@@ -880,6 +1169,21 @@ h1 {
 .jump-surface {
   scroll-margin-top: 12rem;
 }
+
+/* Preview deck remains a preview surface, not the primary map */
+#scratch-surface-jump-deck .demo-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.jump-surface {
+  min-height: auto;
+  border-radius: var(--sg-radius-lg);
+  padding: clamp(1rem, 2vw, 1.35rem);
+}
+
+/* ============================================================
+   ROUTE CHOICE BOARD
+   ============================================================ */
 
 .route-choice-board {
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -913,6 +1217,10 @@ h1 {
   border-color: rgba(243, 200, 111, 0.48);
   color: var(--sg-gold-2);
 }
+
+/* ============================================================
+   DIAGNOSTIC MATRIX / SPECTRUM
+   ============================================================ */
 
 .diagnostic-layout {
   grid-template-columns: minmax(0, 1.15fr) minmax(17rem, 0.85fr);
@@ -977,6 +1285,10 @@ h1 {
     rgba(255, 255, 255, 0.06);
 }
 
+/* ============================================================
+   LEDGER / FINAL
+   ============================================================ */
+
 .ledger-grid {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
@@ -1005,13 +1317,6 @@ footer {
   text-transform: uppercase;
 }
 
-body[data-blueprint-open="true"] .estate-blueprint {
-  border-color: rgba(243, 200, 111, 0.34);
-  box-shadow:
-    0 0 2rem rgba(243, 200, 111, 0.10),
-    inset 0 0 1.5rem rgba(141, 216, 255, 0.04);
-}
-
 body[data-orbit-focused="true"] .guide-orbit {
   filter: saturate(1.08);
 }
@@ -1023,6 +1328,10 @@ body[data-focus-mode="true"] .jump-surface:target {
     0 0 1.8rem rgba(243, 200, 111, 0.14),
     inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
+
+/* ============================================================
+   RESPONSIVE RESTORATION
+   ============================================================ */
 
 @media (max-width: 1080px) {
   .topbar {
@@ -1050,7 +1359,12 @@ body[data-focus-mode="true"] .jump-surface:target {
   }
 
   .blueprint-detail {
-    position: static;
+    position: relative;
+    top: auto;
+  }
+
+  .estate-blueprint {
+    min-height: 50rem;
   }
 }
 
@@ -1074,31 +1388,155 @@ body[data-focus-mode="true"] .jump-surface:target {
     flex: 1 1 auto;
   }
 
+  /*
+    Critical restoration:
+    The orbit stays spatial on mobile.
+    It does NOT collapse into a vertical feature list.
+  */
   .guide-orbit {
-    display: grid;
-    min-height: auto;
-    gap: 0.65rem;
-    padding: 1rem 0;
+    min-height: 44rem;
   }
 
   .guide-orbit::before {
-    display: none;
+    width: 23rem;
+  }
+
+  .guide-orbit::after {
+    width: 15.5rem;
   }
 
   .orbit-core {
-    width: 8rem;
-    margin: 0 auto 0.4rem;
+    width: 9rem;
   }
 
   .feature-gem {
-    position: relative;
-    inset: auto !important;
-    width: 100%;
-    transform: none !important;
+    width: min(43vw, 12.4rem);
+    min-height: 6.8rem;
+    padding: 0.82rem;
   }
 
+  .feature-gem strong {
+    font-size: 0.95rem;
+  }
+
+  .feature-gem[data-feature="estate"] {
+    top: 5%;
+  }
+
+  .feature-gem[data-feature="blueprint"] {
+    left: 3.5%;
+    top: 26%;
+  }
+
+  .feature-gem[data-feature="gems"] {
+    right: 3.5%;
+    top: 26%;
+  }
+
+  .feature-gem[data-feature="portal"] {
+    left: 3.5%;
+    bottom: 15%;
+  }
+
+  .feature-gem[data-feature="categories"] {
+    right: 3.5%;
+    bottom: 15%;
+  }
+
+  .feature-gem[data-feature="return"] {
+    bottom: 4%;
+  }
+
+  /*
+    Critical restoration:
+    The blueprint stays a shaped room map on mobile.
+    It does NOT collapse into ordinary vertical cards.
+  */
   .estate-blueprint {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    grid-auto-rows: minmax(4.75rem, auto);
+    gap: 0.58rem;
+    min-height: 64rem;
+    padding: 0.78rem;
+  }
+
+  .room-shape {
+    min-height: 5.9rem;
+    padding: 0.72rem;
+    border-radius: 1.1rem;
+  }
+
+  .room-shape strong {
+    font-size: 0.94rem;
+  }
+
+  .room-shape span {
+    font-size: 0.8rem;
+  }
+
+  .room-shape[data-room="compass"] {
+    grid-column: 1 / span 3;
+    grid-row: 1 / span 2;
+  }
+
+  .room-shape[data-room="guide"] {
+    grid-column: 4 / span 3;
+    grid-row: 1 / span 2;
+  }
+
+  .room-shape[data-room="main"] {
+    grid-column: 1 / span 6;
+    grid-row: 3 / span 2;
+  }
+
+  .room-shape[data-room="atrium"] {
+    grid-column: 1 / span 6;
+    grid-row: 5 / span 2;
+  }
+
+  .room-shape[data-room="atlas"] {
+    grid-column: 1 / span 3;
+    grid-row: 7 / span 2;
+  }
+
+  .room-shape[data-room="zionts"] {
+    grid-column: 4 / span 3;
+    grid-row: 7 / span 2;
+  }
+
+  .room-shape[data-room="audralia"] {
+    grid-column: 1 / span 3;
+    grid-row: 9 / span 2;
+  }
+
+  .room-shape[data-room="worldroom"] {
+    grid-column: 4 / span 3;
+    grid-row: 9 / span 2;
+  }
+
+  .room-shape[data-room="cockpit"] {
+    grid-column: 1 / span 6;
+    grid-row: 11 / span 2;
+  }
+
+  .room-shape[data-room="frontier"] {
+    grid-column: 1 / span 3;
+    grid-row: 13 / span 2;
+  }
+
+  .room-shape[data-room="product"] {
+    grid-column: 4 / span 3;
+    grid-row: 13 / span 2;
+  }
+
+  .room-shape[data-room="lab"] {
+    grid-column: 1 / span 3;
+    grid-row: 15 / span 2;
+  }
+
+  .room-shape[data-room="law"] {
+    grid-column: 4 / span 3;
+    grid-row: 15 / span 2;
   }
 
   .matrix-4x4 {
@@ -1108,6 +1546,10 @@ body[data-focus-mode="true"] .jump-surface:target {
 
   .spectrum-16x16 {
     gap: 0.12rem;
+  }
+
+  #scratch-surface-jump-deck .demo-grid {
+    grid-template-columns: 1fr;
   }
 }
 
@@ -1122,12 +1564,7 @@ body[data-focus-mode="true"] .jump-surface:target {
 
   .hero-proof,
   .demo-grid,
-  .ledger-grid,
-  .micro-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .estate-blueprint {
+  .ledger-grid {
     grid-template-columns: 1fr;
   }
 
@@ -1136,12 +1573,179 @@ body[data-focus-mode="true"] .jump-surface:target {
     border-radius: var(--sg-radius-lg);
   }
 
+  .guide-orbit {
+    min-height: 42rem;
+  }
+
+  .guide-orbit::before {
+    width: 21rem;
+  }
+
+  .guide-orbit::after {
+    width: 14rem;
+  }
+
+  .orbit-core {
+    top: 54%;
+    width: 8rem;
+  }
+
+  .feature-gem {
+    width: min(44vw, 11.2rem);
+    min-height: 6.25rem;
+    padding: 0.74rem;
+  }
+
+  .feature-gem::before {
+    font-size: 1.15rem;
+  }
+
+  .feature-gem b {
+    font-size: 0.62rem;
+  }
+
+  .feature-gem strong {
+    font-size: 0.84rem;
+  }
+
+  .feature-gem[data-feature="estate"] {
+    top: 4%;
+  }
+
+  .feature-gem[data-feature="blueprint"] {
+    left: 2.5%;
+    top: 25%;
+  }
+
+  .feature-gem[data-feature="gems"] {
+    right: 2.5%;
+    top: 25%;
+  }
+
+  .feature-gem[data-feature="portal"] {
+    left: 2.5%;
+    bottom: 14%;
+  }
+
+  .feature-gem[data-feature="categories"] {
+    right: 2.5%;
+    bottom: 14%;
+  }
+
+  .feature-gem[data-feature="return"] {
+    bottom: 3.5%;
+  }
+
+  .estate-blueprint {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-auto-rows: minmax(4.95rem, auto);
+    min-height: 76rem;
+  }
+
+  .room-shape {
+    min-height: 6.2rem;
+  }
+
+  .room-shape[data-room="compass"] {
+    grid-column: 1 / span 2;
+    grid-row: 1 / span 2;
+  }
+
+  .room-shape[data-room="guide"] {
+    grid-column: 3 / span 2;
+    grid-row: 1 / span 2;
+  }
+
+  .room-shape[data-room="main"] {
+    grid-column: 1 / span 4;
+    grid-row: 3 / span 2;
+  }
+
+  .room-shape[data-room="atrium"] {
+    grid-column: 1 / span 4;
+    grid-row: 5 / span 2;
+  }
+
+  .room-shape[data-room="atlas"] {
+    grid-column: 1 / span 2;
+    grid-row: 7 / span 2;
+  }
+
+  .room-shape[data-room="zionts"] {
+    grid-column: 3 / span 2;
+    grid-row: 7 / span 2;
+  }
+
+  .room-shape[data-room="audralia"] {
+    grid-column: 1 / span 2;
+    grid-row: 9 / span 2;
+  }
+
+  .room-shape[data-room="worldroom"] {
+    grid-column: 3 / span 2;
+    grid-row: 9 / span 2;
+  }
+
+  .room-shape[data-room="cockpit"] {
+    grid-column: 1 / span 4;
+    grid-row: 11 / span 2;
+  }
+
+  .room-shape[data-room="frontier"] {
+    grid-column: 1 / span 2;
+    grid-row: 13 / span 2;
+  }
+
+  .room-shape[data-room="product"] {
+    grid-column: 3 / span 2;
+    grid-row: 13 / span 2;
+  }
+
+  .room-shape[data-room="lab"] {
+    grid-column: 1 / span 2;
+    grid-row: 15 / span 2;
+  }
+
+  .room-shape[data-room="law"] {
+    grid-column: 3 / span 2;
+    grid-row: 15 / span 2;
+  }
+
   .spectrum-16x16 {
     grid-template-columns: repeat(8, minmax(0, 1fr));
   }
 
+  .mini-node {
+    min-width: 7.5rem;
+    font-size: 0.82rem;
+  }
+
   footer {
     text-align: left;
+  }
+}
+
+@media (max-width: 390px) {
+  .guide-orbit {
+    min-height: 39rem;
+  }
+
+  .orbit-core {
+    width: 7.2rem;
+  }
+
+  .feature-gem {
+    width: 45vw;
+    min-height: 5.9rem;
+    padding: 0.66rem;
+  }
+
+  .feature-gem strong {
+    font-size: 0.78rem;
+  }
+
+  .feature-gem b {
+    letter-spacing: 0.1em;
   }
 }
 

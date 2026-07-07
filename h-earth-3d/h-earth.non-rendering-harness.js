@@ -1,4 +1,4 @@
-/**
+/** 
  * H-Earth Scratch Rebuild · Step 016B · Room 6
  * File: h-earth-3d/h-earth.non-rendering-harness.js
  * Lane: Wiring / Harness / Review

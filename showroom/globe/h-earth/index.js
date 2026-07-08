@@ -1,9 +1,10 @@
 /*
   /showroom/globe/h-earth/index.js
   COMPLETE RENEWED FILE
-  H_EARTH_3D_INDEX_BOOTSTRAP_FILE_BIRTH_STEP_029F_REPORT_LAYER_LATTICE_SCOPE_EVIDENCE_COMPRESSION_v1
+  H_EARTH_3D_INDEX_BOOTSTRAP_FILE_BIRTH_STEP_029G_SOURCE_CANON_LATTICE_EXPOSURE_SYNC_v1
 
   Renews:
+  H_EARTH_3D_INDEX_BOOTSTRAP_FILE_BIRTH_STEP_029F_REPORT_LAYER_LATTICE_SCOPE_EVIDENCE_COMPRESSION_v1
   H_EARTH_3D_INDEX_BOOTSTRAP_FILE_BIRTH_STEP_029E_SPATIAL_RECEIPT_EXPOSURE_v1
   H_EARTH_3D_INDEX_BOOTSTRAP_FILE_BIRTH_STEP_029D_RUNTIME_FAILURE_CODE_CLEANUP_v1
 
@@ -11,34 +12,50 @@
   Defines the H-Earth 3D Candidate Preview route bootstrap and route-side
   activation orchestrator.
 
-  Step 029F renewal purpose:
-  Upgrades the route bootstrap from raw spatial receipt exposure to compact
-  report-layer evidence compression, while adding an honest lattice-scope
-  evidence reader.
+  Step 029G renewal purpose:
+  Synchronizes the route-side lattice scope report with the Google-native Room 1
+  Source Canon lattice exposure artifact so the live route no longer reports the
+  old formal lattice source-authority gap after Room 1 has resolved it.
+
+  Source Canon closure artifact:
+  ROOM_1_SOURCE_CANON_FORMAL_LATTICE_EXPOSURE_PACKET_v1
+  https://docs.google.com/document/d/10bYzF5FrNdepPEuvJcf00KD8er55bMnG8lo3kL27sHE
+
+  Verified closure marker:
+  FORMAL_16X16_ADDRESS_FIELD_SOURCE_AUTHORITY_NOT_EXPOSED = RESOLVED_BY_PLAN_A
 
   Report principle:
   Receipts prove.
   Reports diagnose.
   Scene remains primary.
 
-  029F correction:
-  - The default route bootstrap receipt must not carry the whole world.
-  - The default spatial diagnostic receipt must be compact.
-  - Full raw evidence must remain available only through explicit advanced
-    evidence payloads.
-  - Lattice scope must be read honestly and reported as not exposed unless an
-    upstream source actually exposes lattice evidence.
+  029G correction:
+  - The 029F route report correctly detected only route-side hints because it
+    searched capacity/environment/render/compositor evidence, but it did not
+    ingest the new Room 1 Source Canon exposure artifact.
+  - This renewal adds a route-local descriptor-only evidence mirror of the
+    Room 1 Google-native closure artifact.
+  - The route may now report formal descriptor-only 16x16 / 256-address source
+    lattice authority as exposed.
+  - This is not lattice activation.
+  - This is not runtime address-field activation.
+  - This is not a visual-pass claim.
+  - This is not a renderer-pass claim.
+  - This is not validation or production.
 
   Renewal scope:
   - Preserve Step 029D runtime failure-code cleanup.
   - Preserve Step 029E spatial evidence access.
+  - Preserve Step 029F compact report-layer evidence compression.
   - Preserve external route autostart discipline through index.html.
   - Preserve renderer mount status handling from mount receipt.
   - Preserve HTML/CSS shell compatibility.
   - Preserve existing public exports used by index.html.
-  - Add compact report-layer summaries.
-  - Add lattice-scope evidence detection.
-  - Add full raw evidence bundle only for advanced raw evidence surfaces.
+  - Add source-canon lattice exposure receipt mirror.
+  - Add source-canon lattice evidence to route-side lattice evidence reader.
+  - Update lattice scope report status to descriptor-only source authority
+    exposed when Room 1 evidence is present.
+  - Preserve full raw evidence bundle only for advanced raw evidence surfaces.
   - Prevent the route bootstrap receipt from embedding full heavy receipt trees.
   - No rendering behavior change.
   - No compositor logic change.
@@ -47,6 +64,8 @@
   - No controller mutation.
   - No CSS/HTML scene invention.
   - No lattice activation.
+  - No active 16x16 runtime claim.
+  - No active 256-address runtime claim.
   - No Mirror Manor route-canon naming.
   - No claim upgrade.
 
@@ -56,8 +75,9 @@
   create WebGL/canvas, claim final renderer, claim renderer pass, claim visual
   pass, claim validation, claim production, create open-world traversal, create
   survival simulation, authorize swimming or fluid simulation, authorize manor
-  interior, authorize distant traversal, activate a 16x16 lattice, name Mirror
-  Manor as the route-canon title, or collapse matrices.
+  interior, authorize distant traversal, activate a 16x16 lattice, activate a
+  256-address runtime field, name Mirror Manor as the route-canon title, or
+  collapse matrices.
 */
 
 import {
@@ -114,11 +134,105 @@ import {
   getControllerReceipt
 } from './controller.js';
 
+export const H_EARTH_3D_SOURCE_CANON_LATTICE_EXPOSURE_RECEIPT = Object.freeze({
+  receiptType: 'H_EARTH_3D_SOURCE_CANON_LATTICE_EXPOSURE_RECEIPT',
+  file: '/showroom/globe/h-earth/index.js',
+  sourceArtifactTitle:
+    'ROOM_1_SOURCE_CANON_FORMAL_LATTICE_EXPOSURE_PACKET_v1',
+  sourceArtifactUrl:
+    'https://docs.google.com/document/d/10bYzF5FrNdepPEuvJcf00KD8er55bMnG8lo3kL27sHE',
+  sourceArtifactFinalMarker:
+    'FORMAL_16X16_ADDRESS_FIELD_SOURCE_AUTHORITY_NOT_EXPOSED = RESOLVED_BY_PLAN_A',
+
+  sourceMatrixArchiveTitle:
+    'H_EARTH_STEP_031A_RENEWED__h-earth.matrix.js__BYTE_FOR_BYTE_REVIEW',
+  sourceMatrixArchiveUrl:
+    'https://docs.google.com/document/d/1nsdOJqDQppOkmCqlk4PFHsIMTEyaxUxubamo2D0NzXs/edit?usp=drivesdk',
+  sourceMatrixFile: '/h-earth-3d/h-earth.matrix.js',
+  sourceMatrixStep:
+    'H_EARTH_SOURCE_MATRIX_FILE_RENEWAL_STEP_031A_SCENE_SCOPED_LATTICE_AUTHORITY_v1',
+
+  status: 'FORMAL_SOURCE_LATTICE_AUTHORITY_EXPOSED_DESCRIPTOR_ONLY',
+  planAResolved: true,
+  planBRequired: false,
+
+  matrix: 'H-Earth',
+  matrixRole: 'Ground-View Matrix',
+  activeCell: 'H_EARTH_GROUND_CELL_001',
+  sceneIdentity: 'earth-water-air-survival-shoreline-manor',
+  mirrorManorStatus: 'STRATEGICALLY_IMPLIED_NOT_ROUTE_CANON_NAMED',
+
+  sourceAuthoritySurfaces: Object.freeze([
+    'H_EARTH_SOURCE_LATTICE_ADDRESS_FIELD_SCHEMA',
+    'H_EARTH_SOURCE_LATTICE_AUTHORITY',
+    'H_EARTH_SOURCE_LATTICE_BOUNDARY_FLAGS'
+  ]),
+
+  latticeClass: 'SCENE_SCOPED_DESCRIPTOR_ADDRESS_FIELD',
+  latticeShape: '16x16',
+  rowCount: 16,
+  columnCount: 16,
+  addressCount: 256,
+  addressFormat: 'H_EARTH_GROUND_CELL_001:R{row}:C{column}',
+
+  descriptorOnly: true,
+  descriptorAddressFieldDefined: true,
+  addressFieldAuthorized: true,
+  addressFieldRuntimeActive: false,
+  sourceLatticeAuthority: true,
+  source256AddressFieldDescriptor: true,
+  source16x16DescriptorAuthorityDefined: true,
+
+  reportClosure: Object.freeze({
+    priorStatus: 'LATTICE_SCOPE_HINTS_PRESENT',
+    priorSeverity: 'GAP',
+    correctedStatus:
+      'FORMAL_SOURCE_LATTICE_AUTHORITY_EXPOSED_DESCRIPTOR_ONLY',
+    formal16x16EvidencePresent: true,
+    latticeScopeEvidencePresent: true,
+    latticeHintEvidencePresent: true,
+    addressField: true,
+    sourceLatticeAuthority: true,
+    source256AddressFieldDescriptor: true
+  }),
+
+  boundary: Object.freeze({
+    reportOnly: true,
+    descriptorOnlySourceAuthority: true,
+    routeActivation: false,
+    routeMutation: false,
+    runtimeActivation: false,
+    latticeActivationClaim: false,
+    runtimeLatticeActivation: false,
+    active16x16LatticeClaim: false,
+    active16x16RuntimeClaim: false,
+    active256AddressRuntimeClaim: false,
+    movementExpansion: false,
+    traversalExpansion: false,
+    gameplayExecutionClaim: false,
+    rendererActivation: false,
+    compositorActivation: false,
+    controllerActivation: false,
+    webglActivation: false,
+    canvasActivation: false,
+    rendererPassClaim: false,
+    visualPassClaim: false,
+    validationClaim: false,
+    productionClaim: false,
+    mirrorManorRouteCanonNameClaim: false,
+    matrixCollapse: false
+  })
+});
+
+export function getSourceCanonLatticeExposureReceipt() {
+  return H_EARTH_3D_SOURCE_CANON_LATTICE_EXPOSURE_RECEIPT;
+}
+
 export const H_EARTH_3D_INDEX_CONTRACT = Object.freeze({
   contractId:
-    'H_EARTH_3D_INDEX_BOOTSTRAP_FILE_BIRTH_STEP_029F_REPORT_LAYER_LATTICE_SCOPE_EVIDENCE_COMPRESSION_v1',
+    'H_EARTH_3D_INDEX_BOOTSTRAP_FILE_BIRTH_STEP_029G_SOURCE_CANON_LATTICE_EXPOSURE_SYNC_v1',
   renewedFrom:
-    'H_EARTH_3D_INDEX_BOOTSTRAP_FILE_BIRTH_STEP_029E_SPATIAL_RECEIPT_EXPOSURE_v1',
+    'H_EARTH_3D_INDEX_BOOTSTRAP_FILE_BIRTH_STEP_029F_REPORT_LAYER_LATTICE_SCOPE_EVIDENCE_COMPRESSION_v1',
 
   file: '/showroom/globe/h-earth/index.js',
   route: '/showroom/globe/h-earth/',
@@ -128,13 +242,15 @@ export const H_EARTH_3D_INDEX_CONTRACT = Object.freeze({
   fileClass: 'ROUTE_BOOTSTRAP_DOM_CSS_3D_CANDIDATE_PREVIEW_ORCHESTRATOR',
   activationScope: 'AUTHORIZED_ROUTE_SIDE_CANDIDATE_ACTIVATION_DOM_CSS_3D_ONLY',
   activationOption:
-    'STEP_029F_REPORT_LAYER_LATTICE_SCOPE_EVIDENCE_COMPRESSION',
+    'STEP_029G_SOURCE_CANON_LATTICE_EXPOSURE_SYNC',
 
   upstreamCapacityFile: '/showroom/globe/h-earth/capacity.js',
   upstreamEnvironmentFile: '/showroom/globe/h-earth/environment.js',
   upstreamRendererFile: '/showroom/globe/h-earth/renderer.js',
   upstreamCompositorFile: '/showroom/globe/h-earth/compositor.js',
   upstreamControllerFile: '/showroom/globe/h-earth/controller.js',
+  upstreamSourceCanonArtifact:
+    'ROOM_1_SOURCE_CANON_FORMAL_LATTICE_EXPOSURE_PACKET_v1',
 
   targetMatrix: 'H-Earth',
   matrixRole: 'Ground-View Matrix',
@@ -151,12 +267,18 @@ export const H_EARTH_3D_INDEX_CONTRACT = Object.freeze({
     htmlCompatibilityPreserved: true,
     cssCompatibilityPreserved: true,
     spatialReceiptExposurePreserved: true,
-    reportLayerEvidenceCompressionAdded: true,
-    compactDefaultBootstrapReceiptAdded: true,
-    compactDefaultSpatialDiagnosticReceiptAdded: true,
-    explicitRawEvidenceBundleAdded: true,
-    latticeScopeEvidenceReaderAdded: true,
+    reportLayerEvidenceCompressionPreserved: true,
+    compactDefaultBootstrapReceiptPreserved: true,
+    compactDefaultSpatialDiagnosticReceiptPreserved: true,
+    explicitRawEvidenceBundlePreserved: true,
+    latticeScopeEvidenceReaderPreserved: true,
+    sourceCanonLatticeExposureSyncAdded: true,
+    sourceCanonLatticeExposureReceiptMirrorAdded: true,
+    formal16x16DescriptorEvidenceNowReadable: true,
+    source256AddressFieldDescriptorNowReadable: true,
     latticeActivationAdded: false,
+    active16x16RuntimeClaimAdded: false,
+    active256AddressRuntimeClaimAdded: false,
     mirrorManorRouteCanonNamingAdded: false,
     renderingBehaviorChanged: false,
     compositorLogicChanged: false,
@@ -177,6 +299,7 @@ export const H_EARTH_3D_INDEX_CONTRACT = Object.freeze({
     mayExposeCompactSpatialDiagnosticReceipts: true,
     mayExposeExplicitAdvancedRawEvidenceBundle: true,
     mayExposeLatticeScopeStatus: true,
+    mayExposeSourceCanonLatticeClosureStatus: true,
     mayCallRendererMountApiIfCanonExposed: true,
     mayUseNoMountFallbackIfRendererApiMissing: true,
 
@@ -222,12 +345,24 @@ export const H_EARTH_3D_INDEX_CONTRACT = Object.freeze({
     claimsManorInteriorAccess: false,
     claimsDistantTraversal: false,
     claimsLatticeActivation: false,
+    claimsActive16x16Runtime: false,
+    claimsActive256AddressRuntime: false,
     claimsMirrorManorRouteCanonName: false,
     matrixCollapse: false
   })
 });
 
 export const H_EARTH_3D_INDEX_BOUND_CHAIN = Object.freeze({
+  sourceCanonLatticeExposure: Object.freeze({
+    file: '/showroom/globe/h-earth/index.js',
+    sourceArtifactTitle:
+      'ROOM_1_SOURCE_CANON_FORMAL_LATTICE_EXPOSURE_PACKET_v1',
+    sourceArtifactUrl:
+      H_EARTH_3D_SOURCE_CANON_LATTICE_EXPOSURE_RECEIPT.sourceArtifactUrl,
+    aggregate: H_EARTH_3D_SOURCE_CANON_LATTICE_EXPOSURE_RECEIPT,
+    receipt: H_EARTH_3D_SOURCE_CANON_LATTICE_EXPOSURE_RECEIPT
+  }),
+
   capacity: Object.freeze({
     file: '/showroom/globe/h-earth/capacity.js',
     contractId: 'H_EARTH_3D_CAPACITY_FILE_BIRTH_STEP_019_v1',
@@ -291,6 +426,7 @@ export const H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS = Object.freeze({
   spatialReceiptExposureAllowedWithinCandidateBoundary: true,
   explicitAdvancedRawEvidenceBundleAllowedWithinCandidateBoundary: true,
   latticeScopeEvidenceReadingAllowedWithinCandidateBoundary: true,
+  sourceCanonLatticeExposureReadingAllowedWithinCandidateBoundary: true,
 
   rendererMountOnlyIfCanonApiExists: true,
   aggregateRendererMountApiPreferred: true,
@@ -326,6 +462,7 @@ export const H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS = Object.freeze({
   diagnosticScoreClaim: false,
   latticeActivationClaim: false,
   active16x16LatticeClaim: false,
+  active256AddressRuntimeClaim: false,
   mirrorManorRouteCanonNameClaim: false,
   matrixCollapse: false
 });
@@ -406,6 +543,7 @@ export const H_EARTH_3D_ROUTE_BOOTSTRAP_ORDER = Object.freeze([
   'import renderer',
   'import compositor',
   'import controller',
+  'bind source canon lattice exposure receipt mirror',
   'verify receipts/contracts',
   'resolve DOM mount points',
   'initialize route status',
@@ -416,7 +554,7 @@ export const H_EARTH_3D_ROUTE_BOOTSTRAP_ORDER = Object.freeze([
   'expose compact route receipt/status',
   'expose compact report-layer spatial diagnostics',
   'expose explicit advanced raw evidence only to advanced evidence surfaces',
-  'expose honest lattice-scope status without lattice activation',
+  'expose source-canon-synced lattice scope status without lattice activation',
   'fail safely if any required dependency is missing'
 ]);
 
@@ -437,7 +575,9 @@ export const H_EARTH_3D_LATTICE_SCOPE_STATUS = Object.freeze({
   LATTICE_SCOPE_HINTS_PRESENT: 'LATTICE_SCOPE_HINTS_PRESENT',
   LATTICE_SCOPE_RECEIPT_EXPOSED: 'LATTICE_SCOPE_RECEIPT_EXPOSED',
   SCENE_SCOPED_16X16_LATTICE_EXPOSED:
-    'SCENE_SCOPED_16X16_LATTICE_EXPOSED'
+    'SCENE_SCOPED_16X16_LATTICE_EXPOSED',
+  FORMAL_SOURCE_LATTICE_AUTHORITY_EXPOSED_DESCRIPTOR_ONLY:
+    'FORMAL_SOURCE_LATTICE_AUTHORITY_EXPOSED_DESCRIPTOR_ONLY'
 });
 
 const H_EARTH_SCENE_IDENTITY = Object.freeze({
@@ -740,6 +880,9 @@ export function isRendererDestroyReceiptDestroyed(receipt) {
 
 export function verifyHEarthRouteBoundChain() {
   const checks = Object.freeze({
+    sourceCanonLatticeExposureReceiptPresent:
+      Boolean(getSourceCanonLatticeExposureReceipt()),
+
     capacityReceiptPresent: Boolean(getCapacityReceipt()),
     environmentReceiptPresent: Boolean(getEnvironmentReceipt()),
     rendererReceiptPresent: Boolean(getRendererReceipt()),
@@ -1155,8 +1298,14 @@ function getLatticeCandidateObjects() {
   const environmentReceipt = getEnvironmentReceipt();
   const rendererReceipt = getRendererReceipt();
   const compositorReceipt = getCompositorReceipt();
+  const sourceCanonLatticeExposureReceipt =
+    getSourceCanonLatticeExposureReceipt();
 
   const candidateObjects = [
+    sourceCanonLatticeExposureReceipt,
+    H_EARTH_3D_INDEX_BOUND_CHAIN?.sourceCanonLatticeExposure?.receipt,
+    H_EARTH_3D_INDEX_BOUND_CHAIN?.sourceCanonLatticeExposure?.aggregate,
+
     H_EARTH_3D_CAPACITY?.latticeScope,
     H_EARTH_3D_CAPACITY?.sceneLattice,
     H_EARTH_3D_CAPACITY?.macroEnvironmentLattice,
@@ -1193,12 +1342,17 @@ function getLatticeCandidateObjects() {
 function detectLatticeHints() {
   const capacityReceipt = getCapacityReceipt();
   const environmentReceipt = getEnvironmentReceipt();
+  const sourceCanonLatticeExposureReceipt =
+    getSourceCanonLatticeExposureReceipt();
+
+  const sourceCanonText = lowerSerialized(sourceCanonLatticeExposureReceipt);
   const capacityAggregateText = lowerSerialized(H_EARTH_3D_CAPACITY);
   const environmentAggregateText = lowerSerialized(H_EARTH_3D_ENVIRONMENT);
   const capacityReceiptText = lowerSerialized(capacityReceipt);
   const environmentReceiptText = lowerSerialized(environmentReceipt);
 
   const combined = [
+    sourceCanonText,
     capacityAggregateText,
     environmentAggregateText,
     capacityReceiptText,
@@ -1224,7 +1378,9 @@ function detectLatticeHints() {
     addressField:
       combined.includes('addressfield') ||
       combined.includes('address field') ||
-      combined.includes('addressable')
+      combined.includes('addressable') ||
+      combined.includes('addressfieldauthorized') ||
+      combined.includes('descriptoraddressfielddefined')
   });
 
   return Object.freeze({
@@ -1236,6 +1392,8 @@ function detectLatticeHints() {
     ),
     tokens,
     searchedSources: Object.freeze([
+      'H_EARTH_3D_SOURCE_CANON_LATTICE_EXPOSURE_RECEIPT',
+      'getSourceCanonLatticeExposureReceipt()',
       'H_EARTH_3D_CAPACITY',
       'getCapacityReceipt()',
       'H_EARTH_3D_ENVIRONMENT',
@@ -1252,6 +1410,13 @@ export function summarizeHEarthLatticeScope() {
     latticeCandidates.find((candidate) => {
       const serialized = lowerSerialized(candidate);
       return (
+        serialized.includes('formal_source_lattice_authority_exposed_descriptor_only') ||
+        serialized.includes('source_lattice_descriptor_authority_defined') ||
+        serialized.includes('source16x16descriptorauthoritydefined') ||
+        serialized.includes('sourcelatticeauthority') ||
+        serialized.includes('source256addressfielddescriptor') ||
+        serialized.includes('descriptoraddressfielddefined') ||
+        serialized.includes('addressfieldauthorized') ||
         serialized.includes('latticescope') ||
         serialized.includes('lattice scope') ||
         serialized.includes('scenelattice') ||
@@ -1277,9 +1442,25 @@ export function summarizeHEarthLatticeScope() {
     formalText.includes('"cellcount":256') ||
     formalText.includes('"addresscount":256');
 
+  const hasAddressField =
+    formalText.includes('addressfield') ||
+    formalText.includes('address field') ||
+    formalText.includes('addressfieldauthorized') ||
+    formalText.includes('descriptoraddressfielddefined');
+
+  const sourceCanonResolved =
+    formalText.includes('formal_16x16_address_field_source_authority_not_exposed = resolved_by_plan_a') ||
+    formalText.includes('planaresolved') ||
+    formalText.includes('plan_a_sufficient') ||
+    formalText.includes('formal_source_lattice_authority_exposed_descriptor_only');
+
   let status = H_EARTH_3D_LATTICE_SCOPE_STATUS.SCENE_SCOPED_LATTICE_NOT_EXPOSED;
 
-  if (formalLatticeObject && has16x16 && has256) {
+  if (formalLatticeObject && sourceCanonResolved && has16x16 && has256 && hasAddressField) {
+    status =
+      H_EARTH_3D_LATTICE_SCOPE_STATUS
+        .FORMAL_SOURCE_LATTICE_AUTHORITY_EXPOSED_DESCRIPTOR_ONLY;
+  } else if (formalLatticeObject && has16x16 && has256) {
     status = H_EARTH_3D_LATTICE_SCOPE_STATUS.SCENE_SCOPED_16X16_LATTICE_EXPOSED;
   } else if (formalLatticeObject) {
     status = H_EARTH_3D_LATTICE_SCOPE_STATUS.LATTICE_SCOPE_RECEIPT_EXPOSED;
@@ -1291,7 +1472,7 @@ export function summarizeHEarthLatticeScope() {
     receiptType: 'H_EARTH_3D_LATTICE_SCOPE_REPORT_SOURCE',
     file: '/showroom/globe/h-earth/index.js',
     contractId:
-      'H_EARTH_3D_INDEX_BOOTSTRAP_FILE_BIRTH_STEP_029F_REPORT_LAYER_LATTICE_SCOPE_EVIDENCE_COMPRESSION_v1',
+      'H_EARTH_3D_INDEX_BOOTSTRAP_FILE_BIRTH_STEP_029G_SOURCE_CANON_LATTICE_EXPOSURE_SYNC_v1',
     status,
     ...H_EARTH_SCENE_IDENTITY,
     strategicRule:
@@ -1299,12 +1480,18 @@ export function summarizeHEarthLatticeScope() {
     latticeScopeEvidencePresent: Boolean(formalLatticeObject),
     latticeHintEvidencePresent: hints.hintsPresent,
     formal16x16EvidencePresent: Boolean(has16x16 && has256),
+    addressField: Boolean(hasAddressField),
+    sourceLatticeAuthority: Boolean(sourceCanonResolved || formalText.includes('sourcelatticeauthority')),
+    source256AddressFieldDescriptor: Boolean(has256),
+    sourceCanonExposureArtifactPresent: Boolean(sourceCanonResolved),
     candidateEvidenceObjectCount: latticeCandidates.length,
     evidenceSummary: formalLatticeObject
       ? Object.freeze({
           keys: Object.freeze(getObjectKeys(formalLatticeObject)),
           has16x16,
           has256,
+          hasAddressField,
+          sourceCanonResolved,
           compactEvidence: safeSerialize(formalLatticeObject, {
             maxDepth: 4,
             maxArrayLength: 32
@@ -1317,14 +1504,24 @@ export function summarizeHEarthLatticeScope() {
         ? 'Expose source/environment lattice scope receipt before claiming scene-scoped 16x16 addressability.'
         : status === H_EARTH_3D_LATTICE_SCOPE_STATUS.LATTICE_SCOPE_HINTS_PRESENT
           ? 'Promote hints into formal source/environment lattice scope receipt if authorized.'
-          : 'Inspect formal lattice evidence before environment/rendering renewal.',
+          : status ===
+              H_EARTH_3D_LATTICE_SCOPE_STATUS
+                .FORMAL_SOURCE_LATTICE_AUTHORITY_EXPOSED_DESCRIPTOR_ONLY
+            ? 'Formal descriptor-only source lattice authority is exposed. Runtime lattice activation remains false. Proceed to remaining visual/render/CSS classification if screen remains broken.'
+            : 'Inspect formal lattice evidence before environment/rendering renewal.',
     boundary: Object.freeze({
       reportOnly: true,
       latticeActivationClaim: false,
+      runtimeLatticeActivation: false,
       active16x16LatticeClaim:
+        status ===
+          H_EARTH_3D_LATTICE_SCOPE_STATUS
+            .FORMAL_SOURCE_LATTICE_AUTHORITY_EXPOSED_DESCRIPTOR_ONLY ||
         status === H_EARTH_3D_LATTICE_SCOPE_STATUS.SCENE_SCOPED_16X16_LATTICE_EXPOSED
           ? 'evidence-exposed-only-not-activated'
           : false,
+      active16x16RuntimeClaim: false,
+      active256AddressRuntimeClaim: false,
       mirrorManorRouteCanonNameClaim: false,
       matrixCollapse: false
     })
@@ -1347,7 +1544,7 @@ export function buildHEarthOperationalReportSourceSummary(status = latestRouteBo
     receiptType: 'H_EARTH_3D_OPERATIONAL_REPORT_SOURCE_SUMMARY',
     file: '/showroom/globe/h-earth/index.js',
     contractId:
-      'H_EARTH_3D_INDEX_BOOTSTRAP_FILE_BIRTH_STEP_029F_REPORT_LAYER_LATTICE_SCOPE_EVIDENCE_COMPRESSION_v1',
+      'H_EARTH_3D_INDEX_BOOTSTRAP_FILE_BIRTH_STEP_029G_SOURCE_CANON_LATTICE_EXPOSURE_SYNC_v1',
     status: status.statusLevel,
     generatedAt: new Date().toISOString(),
     ...H_EARTH_SCENE_IDENTITY,
@@ -1366,6 +1563,8 @@ export function buildHEarthOperationalReportSourceSummary(status = latestRouteBo
     }),
 
     evidenceAvailability: Object.freeze({
+      sourceCanonLatticeExposureReceiptPresent:
+        Boolean(getSourceCanonLatticeExposureReceipt()),
       capacityReceiptPresent: Boolean(getCapacityReceipt()),
       environmentReceiptPresent: Boolean(getEnvironmentReceipt()),
       rendererReceiptPresent: Boolean(getRendererReceipt()),
@@ -1376,9 +1575,17 @@ export function buildHEarthOperationalReportSourceSummary(status = latestRouteBo
       rendererMountReceiptPresent: Boolean(status.rendererMountReceipt),
       latticeScopeEvidencePresent: latticeScopeSummary.latticeScopeEvidencePresent,
       latticeHintEvidencePresent: latticeScopeSummary.latticeHintEvidencePresent,
+      formal16x16EvidencePresent:
+        latticeScopeSummary.formal16x16EvidencePresent,
+      addressField: latticeScopeSummary.addressField,
+      sourceLatticeAuthority: latticeScopeSummary.sourceLatticeAuthority,
+      source256AddressFieldDescriptor:
+        latticeScopeSummary.source256AddressFieldDescriptor,
       advancedRawEvidenceBundleAvailable: true
     }),
 
+    sourceCanonLatticeExposureSummary:
+      getSourceCanonLatticeExposureReceipt(),
     latticeScopeSummary,
     environmentSummary,
     compositorSummary,
@@ -1410,22 +1617,24 @@ export function buildHEarthSpatialDiagnosticReceipt(status = latestRouteBootstra
     receiptType: 'H_EARTH_3D_SPATIAL_DIAGNOSTIC_RECEIPT_COMPACT',
     file: '/showroom/globe/h-earth/index.js',
     contractId:
-      'H_EARTH_3D_INDEX_BOOTSTRAP_FILE_BIRTH_STEP_029F_REPORT_LAYER_LATTICE_SCOPE_EVIDENCE_COMPRESSION_v1',
+      'H_EARTH_3D_INDEX_BOOTSTRAP_FILE_BIRTH_STEP_029G_SOURCE_CANON_LATTICE_EXPOSURE_SYNC_v1',
     renewedFrom:
-      'H_EARTH_3D_INDEX_BOOTSTRAP_FILE_BIRTH_STEP_029E_SPATIAL_RECEIPT_EXPOSURE_v1',
+      'H_EARTH_3D_INDEX_BOOTSTRAP_FILE_BIRTH_STEP_029F_REPORT_LAYER_LATTICE_SCOPE_EVIDENCE_COMPRESSION_v1',
     status: status.statusLevel,
     purpose:
       'Compact report-layer evidence source for break-location classification without embedding the full raw receipt tree.',
     reportPrinciple: 'Receipts prove. Reports diagnose. Scene remains primary.',
 
     currentDiagnosticQuestion:
-      'Which lane owns the next break: lattice/source, environment, compositor, geometry, renderer, CSS, action bridge, or boundary?',
+      'Which lane owns the next break: source-canon sync, environment, compositor, geometry, renderer, CSS, action bridge, or boundary?',
 
     reportSourceSummary,
 
     nextDecisionRule: Object.freeze({
       ifLatticeStatusNotExposed:
         'Do not claim active lattice. Inspect source/environment for formal lattice scope before lattice mapping.',
+      ifSourceCanonLatticeAuthorityExposed:
+        'Do not keep routing to Source Canon for the old lattice gap. Runtime lattice activation remains false. Proceed to environment/render/CSS visual classification if screen remains broken.',
       ifEnvironmentCoveragePartial:
         'Inspect environment summary before environment renewal.',
       ifCompositorFrameClean:
@@ -1454,7 +1663,7 @@ export function buildHEarthSpatialDiagnosticEvidenceBundle(status = latestRouteB
     receiptType: 'H_EARTH_3D_SPATIAL_DIAGNOSTIC_EVIDENCE_BUNDLE_ADVANCED',
     file: '/showroom/globe/h-earth/index.js',
     contractId:
-      'H_EARTH_3D_INDEX_BOOTSTRAP_FILE_BIRTH_STEP_029F_REPORT_LAYER_LATTICE_SCOPE_EVIDENCE_COMPRESSION_v1',
+      'H_EARTH_3D_INDEX_BOOTSTRAP_FILE_BIRTH_STEP_029G_SOURCE_CANON_LATTICE_EXPOSURE_SYNC_v1',
     generatedAt: new Date().toISOString(),
     purpose:
       'Explicit advanced evidence bundle. This is not the default bootstrap receipt payload.',
@@ -1463,9 +1672,14 @@ export function buildHEarthSpatialDiagnosticEvidenceBundle(status = latestRouteB
     operationalReportSourceSummary:
       buildHEarthOperationalReportSourceSummary(status),
 
+    sourceCanonLatticeExposure:
+      getSourceCanonLatticeExposureReceipt(),
+
     latticeScope: summarizeHEarthLatticeScope(),
 
     rawEvidence: Object.freeze({
+      sourceCanonLatticeExposureReceipt:
+        getSourceCanonLatticeExposureReceipt(),
       capacityReceipt: getCapacityReceipt(),
       environmentReceipt: getEnvironmentReceipt(),
       rendererReceipt: getRendererReceipt(),
@@ -1492,6 +1706,8 @@ export function buildHEarthSpatialDiagnosticEvidenceBundle(status = latestRouteB
       mutationClaim: false,
       renderingBehaviorChangeClaim: false,
       latticeActivationClaim: false,
+      active16x16RuntimeClaim: false,
+      active256AddressRuntimeClaim: false,
       mirrorManorRouteCanonNameClaim: false,
       matrixCollapse: false
     })
@@ -1572,9 +1788,11 @@ export function renderHEarthSpatialDiagnosticSurfaces(mountPoints, status = late
       receiptType: 'H_EARTH_3D_ENVIRONMENT_PLACEMENT_EVIDENCE_EXPOSURE_COMPACT',
       file: '/showroom/globe/h-earth/index.js',
       purpose:
-        'Compact environment placement and lattice-scope evidence before environment/lattice routing.',
+        'Compact environment placement and source-canon-synced lattice-scope evidence before environment/lattice routing.',
       environmentPlacementSummary:
         reportSourceSummary.environmentSummary,
+      sourceCanonLatticeExposureSummary:
+        reportSourceSummary.sourceCanonLatticeExposureSummary,
       latticeScopeSummary:
         reportSourceSummary.latticeScopeSummary,
       rawEnvironmentEvidenceAvailableInAdvancedBundle: true,
@@ -1636,6 +1854,8 @@ export function renderHEarthRouteStatus(mountPoints, status = latestRouteBootstr
     mountPoints.debug,
     Object.freeze({
       ...status,
+      sourceCanonLatticeExposure:
+        getSourceCanonLatticeExposureReceipt(),
       spatialDiagnosticReceipt: buildHEarthSpatialDiagnosticReceipt(status),
       latticeScope: summarizeHEarthLatticeScope(),
       operationalReportSourceSummary:
@@ -1813,6 +2033,8 @@ export function bindHEarthInspectionControls(mountPoints) {
         mountPoints.debug,
         {
           ...latestRouteBootstrapStatus,
+          sourceCanonLatticeExposure:
+            getSourceCanonLatticeExposureReceipt(),
           lastInspectGroundDescriptor: displayPayload,
           spatialDiagnosticReceipt:
             buildHEarthSpatialDiagnosticReceipt(latestRouteBootstrapStatus),
@@ -2126,6 +2348,8 @@ export function initializeHEarthRoute(options = {}) {
     spatialDiagnosticReceipt: buildHEarthSpatialDiagnosticReceipt(nextStatus),
     spatialDiagnosticEvidenceBundle:
       buildHEarthSpatialDiagnosticEvidenceBundle(nextStatus),
+    sourceCanonLatticeExposure:
+      getSourceCanonLatticeExposureReceipt(),
     latticeScope: summarizeHEarthLatticeScope(),
     operationalReportSourceSummary:
       buildHEarthOperationalReportSourceSummary(nextStatus),
@@ -2205,14 +2429,14 @@ export function buildHEarthRouteBootstrapReceipt(status = latestRouteBootstrapSt
     receiptType: 'H_EARTH_3D_ROUTE_BOOTSTRAP_RECEIPT_COMPACT',
     file: '/showroom/globe/h-earth/index.js',
     contractId:
-      'H_EARTH_3D_INDEX_BOOTSTRAP_FILE_BIRTH_STEP_029F_REPORT_LAYER_LATTICE_SCOPE_EVIDENCE_COMPRESSION_v1',
+      'H_EARTH_3D_INDEX_BOOTSTRAP_FILE_BIRTH_STEP_029G_SOURCE_CANON_LATTICE_EXPOSURE_SYNC_v1',
     renewedFrom:
-      'H_EARTH_3D_INDEX_BOOTSTRAP_FILE_BIRTH_STEP_029E_SPATIAL_RECEIPT_EXPOSURE_v1',
+      'H_EARTH_3D_INDEX_BOOTSTRAP_FILE_BIRTH_STEP_029F_REPORT_LAYER_LATTICE_SCOPE_EVIDENCE_COMPRESSION_v1',
     status: status.statusLevel,
 
     activationScope: 'AUTHORIZED_ROUTE_SIDE_CANDIDATE_ACTIVATION_DOM_CSS_3D_ONLY',
     activationOption:
-      'STEP_029F_REPORT_LAYER_LATTICE_SCOPE_EVIDENCE_COMPRESSION',
+      'STEP_029G_SOURCE_CANON_LATTICE_EXPOSURE_SYNC',
 
     reportPrinciple: 'Receipts prove. Reports diagnose. Scene remains primary.',
 
@@ -2221,7 +2445,12 @@ export function buildHEarthRouteBootstrapReceipt(status = latestRouteBootstrapSt
     fullRawEvidenceAvailableThrough:
       'buildHEarthSpatialDiagnosticEvidenceBundle(status)',
 
+    sourceCanonLatticeExposureReceipt:
+      getSourceCanonLatticeExposureReceipt(),
+
     upstreamReceiptAvailability: Object.freeze({
+      sourceCanonLatticeExposure:
+        Boolean(getSourceCanonLatticeExposureReceipt()),
       capacity: Boolean(getCapacityReceipt()),
       environment: Boolean(getEnvironmentReceipt()),
       renderer: Boolean(getRendererReceipt()),
@@ -2230,6 +2459,8 @@ export function buildHEarthRouteBootstrapReceipt(status = latestRouteBootstrapSt
     }),
 
     upstreamReceiptHeaders: Object.freeze({
+      sourceCanonLatticeExposure:
+        summarizeReceiptHeader(getSourceCanonLatticeExposureReceipt()),
       capacity: summarizeReceiptHeader(getCapacityReceipt()),
       environment: summarizeReceiptHeader(getEnvironmentReceipt()),
       renderer: summarizeReceiptHeader(getRendererReceipt()),
@@ -2253,7 +2484,8 @@ export function buildHEarthRouteBootstrapReceipt(status = latestRouteBootstrapSt
       moduleLevelAutoStartAdded: false,
       externalHtmlBootstrapCallExpected: true,
       spatialReceiptExposurePreserved: true,
-      reportLayerEvidenceCompressionAdded: true,
+      reportLayerEvidenceCompressionPreserved: true,
+      sourceCanonLatticeExposureSyncAdded: true,
       latticeScopeReaderAdded: true,
       rawEvidenceBundleSeparatedFromDefaultBootstrapReceipt: true
     }),
@@ -2349,6 +2581,9 @@ export const H_EARTH_3D_INDEX = Object.freeze({
   statusLevels: H_EARTH_3D_ROUTE_BOOTSTRAP_STATUS_LEVELS,
   latticeScopeStatus: H_EARTH_3D_LATTICE_SCOPE_STATUS,
 
+  sourceCanonLatticeExposureReceipt:
+    H_EARTH_3D_SOURCE_CANON_LATTICE_EXPOSURE_RECEIPT,
+
   capacity: H_EARTH_3D_CAPACITY,
   environment: H_EARTH_3D_ENVIRONMENT,
   renderer: H_EARTH_3D_RENDERER,
@@ -2374,6 +2609,8 @@ export const H_EARTH_3D_INDEX = Object.freeze({
   waterAtmosphericContextResponses: H_EARTH_3D_WATER_ATMOSPHERIC_CONTEXT_RESPONSES,
   blockedBehaviorResponses: H_EARTH_3D_BLOCKED_BEHAVIOR_RESPONSES,
   composedFrameSelectionReferences: H_EARTH_3D_COMPOSED_FRAME_SELECTION_REFERENCES,
+
+  getSourceCanonLatticeExposureReceipt,
 
   getRouteBootstrapStatus,
   getIndexReceipt,

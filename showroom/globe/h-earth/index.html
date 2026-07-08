@@ -1,29 +1,36 @@
 <!--
   /showroom/globe/h-earth/index.html
   RENEWED FILE
-  H_EARTH_3D_ROUTE_SHELL_FILE_BIRTH_STEP_030D_PUBLIC_SCENE_ROUTE_ADOPTION_v1
+  H_EARTH_3D_ROUTE_SHELL_FILE_BIRTH_STEP_030E_SPATIAL_COMPOSITION_INSPECTION_SURFACE_v1
 
   Renews:
-  H_EARTH_3D_ROUTE_SHELL_FILE_BIRTH_STEP_030B_WORLD_FIRST_EXPERIENCE_RESTRUCTURE_v1
-  H_EARTH_3D_ROUTE_SHELL_HTML_FILE_BIRTH_STEP_030B_RECEIPT_COPY_AND_DIAGNOSTIC_SURFACE_RENEWAL_v1
+  H_EARTH_3D_ROUTE_SHELL_FILE_BIRTH_STEP_030D_PUBLIC_SCENE_ROUTE_ADOPTION_v1
 
   Companion CSS renewal:
   /showroom/globe/h-earth/index.css
-  H_EARTH_3D_ROUTE_SHELL_STYLE_FILE_BIRTH_STEP_030D_PUBLIC_SCENE_ROUTE_ADOPTION_v1
+  H_EARTH_3D_ROUTE_SHELL_STYLE_FILE_BIRTH_STEP_030E_SPATIAL_COMPOSITION_INSPECTION_SURFACE_v1
 
   Purpose:
-  Reframes the H-Earth 3D Candidate Preview as a public scene route, not a
-  visible diagnostic document. The renderer stage is the central public object.
-  Status, Inspect Ground, selected surface, and a compact public ground readout
-  remain visible. Full target facts, raw readout payloads, receipts, bootstrap
-  debug, boundary flags, and index contract remain accessible only through
-  collapsed route/developer drawers.
+  Keeps the public H-Earth scene route intact while adding a lawful spatial
+  composition inspection surface that can answer why the current view reads
+  as a broken 2D map instead of a ground-level 3D universal landscape.
 
-  Adoption basis:
-  - Developed route pattern: compact public arrival, central stage, primary
-    action surface, collapsed technical/diagnostic scope.
-  - Diagnostics remain available but do not dominate the public route flow.
-  - Receipts remain copyable but are not public-page content.
+  This file does not create the 3D environment.
+  The 3D environment remains owned by:
+  - capacity.js
+  - environment.js
+  - compositor.js
+  - renderer.js
+  - controller.js
+  - index.js
+
+  This file provides:
+  - the public renderer mount surface
+  - public route shell
+  - collapsed selectable target drawer
+  - collapsed developer diagnostics drawer
+  - spatial composition inspector slots for compositor, frame, renderer
+    placement, and environment placement evidence.
 
   Boundaries:
   - No shell-owned scene objects.
@@ -93,9 +100,69 @@
       }
     }
 
+    function getBootstrapStatus() {
+      try {
+        return getRouteBootstrapStatus();
+      } catch (_error) {
+        return null;
+      }
+    }
+
+    function getBootstrapReceipt() {
+      try {
+        return getRouteBootstrapReceipt();
+      } catch (_error) {
+        return null;
+      }
+    }
+
+    function getRendererMountReceipt() {
+      const status = getBootstrapStatus();
+      return status?.rendererMountReceipt || null;
+    }
+
+    function getSpatialSummary() {
+      const status = getBootstrapStatus();
+      const receipt = getBootstrapReceipt();
+      const rendererMountReceipt = status?.rendererMountReceipt || null;
+
+      return {
+        diagnosticPurpose: 'Identify whether the visible scene is behaving as a ground-level 3D landscape, overhead map, centered diagram, or broken projection.',
+        currentKnownStatus: status?.statusLevel || receipt?.status || null,
+        routeReady: {
+          chainReady: Boolean(status?.chainReady ?? receipt?.chainReady),
+          domReady: Boolean(status?.domReady ?? receipt?.domReady),
+          controllerReady: Boolean(status?.controllerReady ?? receipt?.controllerReady),
+          rendererMountReady: Boolean(status?.rendererMountReady ?? receipt?.rendererMountReady),
+          bootstrapReadyCandidateOnly: Boolean(status?.bootstrapReadyCandidateOnly ?? receipt?.bootstrapReadyCandidateOnly),
+          failureCodes: status?.failureCodes || receipt?.failureCodes || [],
+          warningCodes: status?.warningCodes || receipt?.warningCodes || []
+        },
+        rendererMount: {
+          rendererMounted: Boolean(status?.rendererMounted ?? receipt?.rendererMounted),
+          usedComposedFrame: Boolean(rendererMountReceipt?.usedComposedFrame),
+          selectedRenderInputSource: rendererMountReceipt?.selectedRenderInputSource || null,
+          sourceNodeCount: rendererMountReceipt?.sourceNodeCount ?? null,
+          mountedNodeCount: rendererMountReceipt?.mountedNodeCount ?? null,
+          objectNodeCount: rendererMountReceipt?.objectNodeCount ?? null,
+          placedNodeCount: rendererMountReceipt?.placedNodeCount ?? null,
+          skippedNodeCount: rendererMountReceipt?.skippedNodeCount ?? null,
+          warningCodes: rendererMountReceipt?.warningCodes || [],
+          failureCodes: rendererMountReceipt?.failureCodes || []
+        },
+        neededNextEvidence: [
+          'composedCandidateFrame.composedNodes with per-object x/y/z, scale, layer, depth, projected bounds',
+          'compositor receipt with cameraFrameResolved, depthCompositionResolved, layerCompositionResolved, viewportFitResolved',
+          'renderer mounted-node placement sample with className, transform, zIndex, layerName, materialClass',
+          'environment resolved-object placement summary with zones, depth model, candidate placement hints, camera capacity'
+        ],
+        questionToAnswer: 'Is the map-like visual coming from compositor projection, renderer transform interpretation, CSS material/shape styling, or model constraints upstream?'
+      };
+    }
+
     function resolveCopyPayload(targetId) {
-      const status = getRouteBootstrapStatus();
-      const receipt = getRouteBootstrapReceipt();
+      const status = getBootstrapStatus();
+      const receipt = getBootstrapReceipt();
 
       if (targetId === 'h-earth-3d-copy-bootstrap-debug') {
         return readNodeText('h-earth-3d-debug') || stringifyForCopy(status);
@@ -119,6 +186,26 @@
 
       if (targetId === 'h-earth-3d-copy-boundary-flags') {
         return stringifyForCopy(status?.boundary || H_EARTH_3D_INDEX?.boundaryFlags || null);
+      }
+
+      if (targetId === 'h-earth-3d-copy-spatial-summary') {
+        return stringifyForCopy(getSpatialSummary());
+      }
+
+      if (targetId === 'h-earth-3d-copy-composed-frame') {
+        return readNodeText('h-earth-3d-composed-frame-payload');
+      }
+
+      if (targetId === 'h-earth-3d-copy-compositor-receipt') {
+        return readNodeText('h-earth-3d-compositor-receipt-payload');
+      }
+
+      if (targetId === 'h-earth-3d-copy-renderer-placement') {
+        return readNodeText('h-earth-3d-renderer-placement-payload');
+      }
+
+      if (targetId === 'h-earth-3d-copy-environment-placement') {
+        return readNodeText('h-earth-3d-environment-placement-payload');
       }
 
       return '';
@@ -210,8 +297,9 @@
     }
 
     function syncReceiptSurfaces() {
-      const status = getRouteBootstrapStatus();
-      const receipt = getRouteBootstrapReceipt();
+      const status = getBootstrapStatus();
+      const receipt = getBootstrapReceipt();
+      const rendererMountReceipt = status?.rendererMountReceipt || null;
 
       writeNodeText(
         'h-earth-3d-route-bootstrap-receipt',
@@ -220,7 +308,7 @@
 
       writeNodeText(
         'h-earth-3d-renderer-mount-receipt',
-        stringifyForCopy(status?.rendererMountReceipt || null)
+        stringifyForCopy(rendererMountReceipt)
       );
 
       writeNodeText(
@@ -231,6 +319,127 @@
       writeNodeText(
         'h-earth-3d-index-contract',
         stringifyForCopy(H_EARTH_3D_INDEX?.contract || null)
+      );
+
+      writeNodeText(
+        'h-earth-3d-spatial-summary-payload',
+        stringifyForCopy(getSpatialSummary())
+      );
+
+      writeNodeText(
+        'h-earth-3d-composed-frame-payload',
+        stringifyForCopy({
+          status: 'EXTRACTION_REQUIRED_FROM_BOOTSTRAP_DEBUG_OR_COMPOSITOR_RECEIPT',
+          purpose: 'Paste or expose composedCandidateFrame.composedNodes here if available.',
+          expectedFields: [
+            'nodeId',
+            'objectId',
+            'label',
+            'layer',
+            'material',
+            'x',
+            'y',
+            'z',
+            'scale',
+            'depthBand',
+            'projectedBounds',
+            'viewportFit',
+            'cameraFrame'
+          ],
+          availableFromCurrentRouteStatus: {
+            selectedRenderInputSource: rendererMountReceipt?.selectedRenderInputSource || null,
+            usedComposedFrame: rendererMountReceipt?.usedComposedFrame ?? null,
+            sourceNodeCount: rendererMountReceipt?.sourceNodeCount ?? null,
+            mountedNodeCount: rendererMountReceipt?.mountedNodeCount ?? null,
+            placedNodeCount: rendererMountReceipt?.placedNodeCount ?? null
+          }
+        })
+      );
+
+      writeNodeText(
+        'h-earth-3d-compositor-receipt-payload',
+        stringifyForCopy({
+          status: 'PASTE_COMPOSITOR_RECEIPT_HERE_IF_AVAILABLE',
+          purpose: 'Determine whether the compositor is creating a ground-level landscape or a flattened map/diagram projection.',
+          expectedFields: [
+            'cameraFrameResolved',
+            'depthCompositionResolved',
+            'layerCompositionResolved',
+            'focusPriorityResolved',
+            'viewportFitResolved',
+            'composedCandidateFrameResolved',
+            'composedNodeCount',
+            'compositionPressureClass',
+            'primaryFocusObjectId',
+            'composedNodes'
+          ]
+        })
+      );
+
+      writeNodeText(
+        'h-earth-3d-renderer-placement-payload',
+        stringifyForCopy({
+          status: 'NEEDS_RENDERER_NODE_PLACEMENT_SAMPLE',
+          purpose: 'Determine whether renderer transform interpretation is flattening or centering scene objects.',
+          expectedFields: [
+            'nodeId',
+            'className',
+            'style.left',
+            'style.top',
+            'transform',
+            'translate',
+            'rotate',
+            'scale',
+            'zIndex',
+            'layerName',
+            'materialClass'
+          ],
+          availableRendererMountSummary: rendererMountReceipt
+            ? {
+                rendererMounted: rendererMountReceipt.rendererMounted,
+                usedComposedFrame: rendererMountReceipt.usedComposedFrame,
+                sourceNodeCount: rendererMountReceipt.sourceNodeCount,
+                mountedNodeCount: rendererMountReceipt.mountedNodeCount,
+                objectNodeCount: rendererMountReceipt.objectNodeCount,
+                placedNodeCount: rendererMountReceipt.placedNodeCount,
+                skippedNodeCount: rendererMountReceipt.skippedNodeCount
+              }
+            : null
+        })
+      );
+
+      writeNodeText(
+        'h-earth-3d-environment-placement-payload',
+        stringifyForCopy({
+          status: 'NEEDS_ENVIRONMENT_OBJECT_PLACEMENT_SUMMARY_IF_AVAILABLE',
+          purpose: 'Determine whether the environment model supports ground-view landscape posture before blaming CSS.',
+          expectedFields: [
+            'resolvedObjects',
+            'resolvedZones',
+            'candidatePlacementHintsConsumed',
+            'depthModelConsumed',
+            'zoneBandsConsumed',
+            'cameraCapacityReferenced',
+            'environmentalFormGrammarConsumed',
+            'inspectionAnchorsConsumed'
+          ],
+          knownFromBootstrapReceiptIfPresent: {
+            upstreamEnvironmentReceipt: receipt?.upstreamEnvironmentReceipt
+              ? {
+                  resolvedObjects: receipt.upstreamEnvironmentReceipt.resolvedObjects,
+                  resolvedZones: receipt.upstreamEnvironmentReceipt.resolvedZones,
+                  resolvedInspectableAnchors: receipt.upstreamEnvironmentReceipt.resolvedInspectableAnchors,
+                  resolvedMaterialChannels: receipt.upstreamEnvironmentReceipt.resolvedMaterialChannels,
+                  environmentCoverageRatio: receipt.upstreamEnvironmentReceipt.environmentCoverageRatio,
+                  cameraCapacityReferenced: receipt.upstreamEnvironmentReceipt.cameraCapacityReferenced,
+                  depthModelConsumed: receipt.upstreamEnvironmentReceipt.depthModelConsumed,
+                  zoneBandsConsumed: receipt.upstreamEnvironmentReceipt.zoneBandsConsumed,
+                  candidatePlacementHintsConsumed: receipt.upstreamEnvironmentReceipt.candidatePlacementHintsConsumed,
+                  environmentalFormGrammarConsumed: receipt.upstreamEnvironmentReceipt.environmentalFormGrammarConsumed
+                }
+              : null
+          }
+        })
       );
     }
 
@@ -268,13 +477,14 @@
     id="h-earth-3d-route-root"
     class="h-earth-3d-route-root"
     data-h-earth-route="candidate-preview"
-    data-h-earth-page-mode="public-scene-route"
+    data-h-earth-page-mode="public-scene-route-with-spatial-inspector"
     data-h-earth-matrix="H-Earth"
     data-h-earth-matrix-role="Ground-View Matrix"
     data-h-earth-active-cell="H_EARTH_GROUND_CELL_001"
     data-h-earth-scene-identity="earth-water-air-survival-shoreline-manor"
     data-h-earth-matrix-collapse="false"
     data-public-scene-route="true"
+    data-spatial-composition-inspector="true"
     data-diagnostic-scope-collapsed="true"
     data-receipt-scope-collapsed="true"
     data-visible-diagnostic-wall="false"
@@ -310,16 +520,16 @@
           </h1>
 
           <p class="h-earth-3d-lead">
-            H-Earth is the Ground-View Matrix: a DOM/CSS-3D candidate scene for
-            the first shoreline inspection surface. The route is public-facing;
-            receipts and raw diagnostics are held behind drawers.
+            H-Earth is the Ground-View Matrix. The route must become a
+            ground-level 3D universal landscape, not a flat inspection map.
           </p>
         </div>
 
         <aside class="h-earth-3d-arrival-note" aria-label="Route boundary summary">
           <p>
-            Candidate preview only. No WebGL, canvas, visual-pass, validation,
-            production, traversal, simulation, or matrix collapse.
+            Candidate preview only. The shell can inspect spatial composition,
+            but the environment remains owned by capacity, environment,
+            compositor, renderer, controller, and route bootstrap files.
           </p>
         </aside>
       </section>
@@ -412,9 +622,9 @@
           </div>
 
           <p class="h-earth-3d-public-readout-line">
-            Descriptor-only ground condition is available for the primary
-            inspection surface. Full object facts and raw bridge payload remain
-            in the route details below.
+            Descriptor-only ground condition is available. Full object facts
+            and raw bridge payload remain collapsed so the public route is not
+            reduced to a diagnostic wall.
           </p>
 
           <details class="h-earth-3d-public-readout-details">
@@ -459,6 +669,174 @@
           </details>
         </section>
       </section>
+
+      <details
+        id="h-earth-3d-spatial-inspector"
+        class="h-earth-3d-spatial-inspector"
+        open
+      >
+        <summary
+          id="h-earth-3d-spatial-inspector-toggle"
+          class="h-earth-3d-spatial-inspector-toggle"
+        >
+          Spatial Composition Inspector
+        </summary>
+
+        <section
+          class="h-earth-3d-spatial-inspector-body"
+          aria-label="H-Earth spatial composition inspector"
+        >
+          <section class="h-earth-3d-spatial-diagnosis-card">
+            <p class="h-earth-3d-card-kicker">Current Visual Question</p>
+            <h2 class="h-earth-3d-card-title">
+              Why does this read as a broken 2D map instead of a ground-level landscape?
+            </h2>
+            <p class="h-earth-3d-spatial-diagnosis-copy">
+              This inspector separates shell success from spatial truth. Route
+              bootstrap, renderer mount, and Inspect Ground can pass while the
+              composed scene still reads as overhead, centered, flattened, or
+              map-like.
+            </p>
+          </section>
+
+          <section
+            id="h-earth-3d-landscape-diagnosis"
+            class="h-earth-3d-landscape-diagnosis"
+            aria-label="Landscape diagnosis checklist"
+          >
+            <article class="h-earth-3d-diagnosis-tile" data-landscape-question="camera">
+              <b>Camera posture</b>
+              <span>Ground-level or overhead?</span>
+            </article>
+
+            <article class="h-earth-3d-diagnosis-tile" data-landscape-question="depth">
+              <b>Depth bands</b>
+              <span>Foreground, middle, distance, horizon?</span>
+            </article>
+
+            <article class="h-earth-3d-diagnosis-tile" data-landscape-question="projection">
+              <b>Projection read</b>
+              <span>Landscape, map, centered diagram, or broken projection?</span>
+            </article>
+
+            <article class="h-earth-3d-diagnosis-tile" data-landscape-question="renderer">
+              <b>Renderer placement</b>
+              <span>Layered terrain or centered tokens?</span>
+            </article>
+          </section>
+
+          <section
+            id="h-earth-3d-composition-readout"
+            class="h-earth-3d-composition-readout"
+            aria-label="Spatial composition readout"
+          >
+            <section class="h-earth-3d-panel h-earth-3d-spatial-panel">
+              <div class="h-earth-3d-panel-heading-row">
+                <h2 class="h-earth-3d-panel-title">Spatial Summary</h2>
+                <button
+                  type="button"
+                  class="h-earth-3d-inline-copy-button"
+                  data-h-earth-copy-action="copy"
+                  data-h-earth-copy-target="h-earth-3d-copy-spatial-summary"
+                  data-h-earth-copy-label="Spatial Summary"
+                >
+                  Copy
+                </button>
+              </div>
+
+              <pre
+                id="h-earth-3d-spatial-summary-payload"
+                class="h-earth-3d-receipt-output h-earth-3d-spatial-output"
+                aria-label="Spatial Summary payload"
+              >Spatial summary pending.</pre>
+            </section>
+
+            <section class="h-earth-3d-panel h-earth-3d-spatial-panel">
+              <div class="h-earth-3d-panel-heading-row">
+                <h2 class="h-earth-3d-panel-title">Composed Candidate Frame Needed</h2>
+                <button
+                  type="button"
+                  class="h-earth-3d-inline-copy-button"
+                  data-h-earth-copy-action="copy"
+                  data-h-earth-copy-target="h-earth-3d-copy-composed-frame"
+                  data-h-earth-copy-label="Composed Candidate Frame"
+                >
+                  Copy
+                </button>
+              </div>
+
+              <pre
+                id="h-earth-3d-composed-frame-payload"
+                class="h-earth-3d-receipt-output h-earth-3d-spatial-output"
+                aria-label="Composed Candidate Frame payload"
+              >Composed frame payload pending.</pre>
+            </section>
+
+            <section class="h-earth-3d-panel h-earth-3d-spatial-panel">
+              <div class="h-earth-3d-panel-heading-row">
+                <h2 class="h-earth-3d-panel-title">Compositor Receipt Needed</h2>
+                <button
+                  type="button"
+                  class="h-earth-3d-inline-copy-button"
+                  data-h-earth-copy-action="copy"
+                  data-h-earth-copy-target="h-earth-3d-copy-compositor-receipt"
+                  data-h-earth-copy-label="Compositor Receipt"
+                >
+                  Copy
+                </button>
+              </div>
+
+              <pre
+                id="h-earth-3d-compositor-receipt-payload"
+                class="h-earth-3d-receipt-output h-earth-3d-spatial-output"
+                aria-label="Compositor Receipt payload"
+              >Compositor receipt payload pending.</pre>
+            </section>
+
+            <section class="h-earth-3d-panel h-earth-3d-spatial-panel">
+              <div class="h-earth-3d-panel-heading-row">
+                <h2 class="h-earth-3d-panel-title">Renderer Placement Needed</h2>
+                <button
+                  type="button"
+                  class="h-earth-3d-inline-copy-button"
+                  data-h-earth-copy-action="copy"
+                  data-h-earth-copy-target="h-earth-3d-copy-renderer-placement"
+                  data-h-earth-copy-label="Renderer Placement Sample"
+                >
+                  Copy
+                </button>
+              </div>
+
+              <pre
+                id="h-earth-3d-renderer-placement-payload"
+                class="h-earth-3d-receipt-output h-earth-3d-spatial-output"
+                aria-label="Renderer Placement Sample payload"
+              >Renderer placement payload pending.</pre>
+            </section>
+
+            <section class="h-earth-3d-panel h-earth-3d-spatial-panel">
+              <div class="h-earth-3d-panel-heading-row">
+                <h2 class="h-earth-3d-panel-title">Environment Placement Summary</h2>
+                <button
+                  type="button"
+                  class="h-earth-3d-inline-copy-button"
+                  data-h-earth-copy-action="copy"
+                  data-h-earth-copy-target="h-earth-3d-copy-environment-placement"
+                  data-h-earth-copy-label="Environment Placement Summary"
+                >
+                  Copy
+                </button>
+              </div>
+
+              <pre
+                id="h-earth-3d-environment-placement-payload"
+                class="h-earth-3d-receipt-output h-earth-3d-spatial-output"
+                aria-label="Environment Placement Summary payload"
+              >Environment placement payload pending.</pre>
+            </section>
+          </section>
+        </section>
+      </details>
 
       <details
         id="h-earth-3d-target-drawer"
@@ -715,12 +1093,12 @@
           <section class="h-earth-3d-claim-boundary">
             <h2 class="h-earth-3d-panel-title">Boundary Notice</h2>
             <p>
-              This route shell supports a DOM/CSS-3D candidate preview only.
-              It does not activate WebGL or canvas, does not claim final
-              renderer status, does not claim renderer pass, visual pass,
-              validation, production, traversal, survival simulation, manor
-              interior access, distant traversal, swimming, fluid simulation,
-              or matrix collapse.
+              This route shell supports a DOM/CSS-3D candidate preview and
+              spatial composition inspection surface only. It does not activate
+              WebGL or canvas, does not claim final renderer status, renderer
+              pass, visual pass, validation, production, traversal, survival
+              simulation, manor interior access, distant traversal, swimming,
+              fluid simulation, or matrix collapse.
             </p>
           </section>
         </section>

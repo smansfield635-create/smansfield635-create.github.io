@@ -1,22 +1,28 @@
 // /showroom/globe/h-earth/renderer.js
 // COMPLETE RENEWED FILE
-// H_EARTH_3D_RENDERER_FILE_BIRTH_STEP_023B_PROJECTION_SCALE_SHAPE_STANDARD_RENEWAL_v1
+// H_EARTH_3D_RENDERER_FILE_BIRTH_STEP_023C_LANDSCAPE_GRADE_DOM_CSS3D_PROJECTION_RENEWAL_v1
 //
 // Renews:
-// H_EARTH_3D_RENDERER_FILE_BIRTH_STEP_023A_MOUNT_API_AND_RENDER_PORT_RENEWAL_PACKET_v1
+// H_EARTH_3D_RENDERER_FILE_BIRTH_STEP_023B_PROJECTION_SCALE_SHAPE_STANDARD_RENEWAL_v1
 //
 // Purpose:
-// Multi-port DOM/CSS-3D candidate renderer host with explicit mount/destroy API.
+// Multi-port DOM/CSS-3D candidate renderer host with explicit mount/destroy API,
+// renderer-owned projection scale shape, and landscape-grade composed-node
+// normalization before DOM node creation.
 //
 // Renewal scope:
-// - Preserve Step 023A mount/destroy API.
-// - Preserve Step 023A render ports.
-// - Preserve Step 023A previewContainer compatibility.
-// - Add canonical renderer-owned projection scale shape required by compositor.
-// - Expose H_EARTH_3D_RENDER_PROJECTION_MODEL.scale.unitToCssPixel.
-// - Expose H_EARTH_3D_RENDER_PROJECTION_MODEL.scale.yInversionFactor.
-// - Expose H_EARTH_3D_RENDER_PROJECTION_MODEL.scale.zDepthMultiplier.
-// - Preserve descriptor renderer role.
+// - Preserve Step 023B mount/destroy API.
+// - Preserve Step 023B render ports.
+// - Preserve Step 023B projection scale shape required by compositor.
+// - Preserve Step 023B previewContainer compatibility.
+// - Add explicit candidateWidthPx/candidateHeightPx to previewContainer.
+// - Normalize live composedCandidateFrame.composedNodes before node factory use.
+// - Always emit cssTransformDescriptor.cssTransform for mounted nodes.
+// - Correct numeric candidateTransform.scale handling.
+// - Correct candidateTransform.rotate handling.
+// - Add primitive-aware landscape transforms for terrain, shoreline, water,
+//   rocks, haze, manor context, distant context, and inspection anchors.
+// - Preserve descriptor-only renderer posture.
 // - Preserve all no-WebGL, no-canvas, no-final-renderer, no-renderer-pass,
 //   no-visual-pass, no-validation, no-production, no-traversal,
 //   no-simulation, and no-matrix-collapse boundaries.
@@ -56,19 +62,20 @@ import {
 
 export const H_EARTH_3D_RENDERER_CONTRACT = Object.freeze({
   contractId:
-    'H_EARTH_3D_RENDERER_FILE_BIRTH_STEP_023B_PROJECTION_SCALE_SHAPE_STANDARD_RENEWAL_v1',
+    'H_EARTH_3D_RENDERER_FILE_BIRTH_STEP_023C_LANDSCAPE_GRADE_DOM_CSS3D_PROJECTION_RENEWAL_v1',
   renewedFrom:
+    'H_EARTH_3D_RENDERER_FILE_BIRTH_STEP_023B_PROJECTION_SCALE_SHAPE_STANDARD_RENEWAL_v1',
+  priorRendererBaseline:
     'H_EARTH_3D_RENDERER_FILE_BIRTH_STEP_023A_MOUNT_API_AND_RENDER_PORT_RENEWAL_PACKET_v1',
-  priorRendererBaseline: 'H_EARTH_3D_RENDERER_FILE_BIRTH_STEP_023_v1',
 
   file: '/showroom/globe/h-earth/renderer.js',
   route: '/showroom/globe/h-earth/',
   sourceRoot: '/h-earth-3d/',
 
   fileClass:
-    'MULTI_PORT_DOM_CSS_3D_RENDERER_HOST_WITH_PROJECTION_SCALE_STANDARD',
+    'MULTI_PORT_DOM_CSS_3D_RENDERER_HOST_WITH_LANDSCAPE_GRADE_CANDIDATE_PROJECTION',
   status:
-    'DETERMINISTIC_DOM_CSS_3D_CANDIDATE_RENDERER_HOST_DEFINED_RENEWED_PROJECTION_SCALE_COMPATIBLE',
+    'DETERMINISTIC_DOM_CSS_3D_CANDIDATE_RENDERER_HOST_DEFINED_RENEWED_LANDSCAPE_PROJECTION_COMPATIBLE',
 
   targetMatrix: 'H-Earth',
   matrixRole: 'Ground-View Matrix',
@@ -82,25 +89,28 @@ export const H_EARTH_3D_RENDERER_CONTRACT = Object.freeze({
   craftBasis: Object.freeze({
     currentRouteChainLiveBaselinesRecoveredFromDrive: false,
     constructionBasis: Object.freeze([
-      'existing in-room Step 023A renderer.js renewal',
-      'accepted renderer/compositor projection-shape standard',
-      'compositor import failure evidence',
-      'Step 029D index.js route-bootstrap consumer shape',
-      'recovered scratch context only'
+      'Step 023B renderer.js full source supplied by user',
+      'Step 023A render support ports supplied by user',
+      'spatial diagnostic receipt closed as sufficient',
+      'composedCandidateFrame.composedNodes confirmed as live input',
+      'renderer output confirmed shallow token transform before renewal',
+      'nodes.js confirmed to consume cssTransformDescriptor.cssTransform'
     ])
   }),
 
   renewalScope: Object.freeze({
-    step023aMountApiPreserved: true,
-    step023aDestroyApiPreserved: true,
-    step023aSelectRenderInputHelperPreserved: true,
-    step023aRenderPortsPreserved: true,
-    step023aPreviewContainerPreserved: true,
-    projectionScaleShapeAdded: true,
-    projectionScaleUnitToCssPixelAdded: true,
-    projectionScaleYInversionFactorAdded: true,
-    projectionScaleZDepthMultiplierAdded: true,
-    compositorProjectionShapeCompatibilityAdded: true,
+    step023bMountApiPreserved: true,
+    step023bDestroyApiPreserved: true,
+    step023bSelectRenderInputHelperPreserved: true,
+    step023bRenderPortsPreserved: true,
+    step023bProjectionScaleShapePreserved: true,
+    step023bPreviewContainerPreserved: true,
+    previewContainerCandidateDimensionsAdded: true,
+    composedNodeLivePathNormalizationAdded: true,
+    cssTransformDescriptorAlwaysEmittedForRenderableNodes: true,
+    numericCandidateTransformScaleHandled: true,
+    candidateTransformRotateHandled: true,
+    primitiveAwareLandscapeProjectionAdded: true,
     descriptorExportsPreserved: true,
     step029IndexCompatibilityPreserved: true
   }),
@@ -112,6 +122,7 @@ export const H_EARTH_3D_RENDERER_CONTRACT = Object.freeze({
     ownsRendererHostContract: true,
     ownsRenderPortRegistry: true,
     orchestratesNodeMaterialLayerPorts: true,
+    ownsLiveNodeLandscapeNormalization: true,
 
     ownsCapacityLaw: false,
     ownsEnvironmentObjectDefinitions: false,
@@ -181,6 +192,7 @@ export const H_EARTH_3D_RENDERER_MOUNT_CONTRACT = Object.freeze({
   usesNodeFactoryPort: true,
   usesMaterialPort: true,
   usesLayerPort: true,
+  normalizesComposedNodesBeforeFactory: true,
 
   noIndexRewriteRequiredByContract: true,
   step029CompatibilityTarget: true,
@@ -189,18 +201,18 @@ export const H_EARTH_3D_RENDERER_MOUNT_CONTRACT = Object.freeze({
 });
 
 export const H_EARTH_3D_RENDER_PROJECTION_MODEL = Object.freeze({
-  modelId: 'H_EARTH_3D_RENDER_PROJECTION_MODEL_STEP_023B',
-  renewedFrom: 'H_EARTH_3D_RENDER_PROJECTION_MODEL_STEP_023A',
-  projectionClass: 'CSS_3D_CANDIDATE_PROJECTION_DESCRIPTOR',
+  modelId: 'H_EARTH_3D_RENDER_PROJECTION_MODEL_STEP_023C',
+  renewedFrom: 'H_EARTH_3D_RENDER_PROJECTION_MODEL_STEP_023B',
+  projectionClass: 'CSS_3D_CANDIDATE_LANDSCAPE_PROJECTION_DESCRIPTOR',
   coordinateSystem: 'candidate-local-x-y-z',
   cssTransformUnit: 'px',
 
   scale: Object.freeze({
-    unitToCssPixel: 1,
+    unitToCssPixel: 9,
     yInversionFactor: -1,
-    zDepthMultiplier: 1,
+    zDepthMultiplier: 3.2,
 
-    source: 'CANON_RENDERER_SCALE',
+    source: 'CANON_RENDERER_LANDSCAPE_SCALE',
     rendererOwnedProjectionConstants: true,
     compositorMayNormalize: true,
     indexMayPatchProjectionMath: false,
@@ -213,12 +225,37 @@ export const H_EARTH_3D_RENDER_PROJECTION_MODEL = Object.freeze({
     claimBoundaryPreserved: true
   }),
 
+  landscapeProjection: Object.freeze({
+    enabled: true,
+    descriptorOnly: true,
+    stageCenterXPx: 0,
+    stageGroundYPx: 150,
+    horizonYPx: -135,
+    foregroundDepthBoost: 1.35,
+    shorelineDepthBoost: 1.1,
+    waterDepthBoost: 0.72,
+    contextDepthBoost: 0.52,
+    horizonDepthBoost: 0.38,
+    defaultGroundTiltDegrees: 64,
+    terrainTiltDegrees: 66,
+    waterTiltDegrees: 71,
+    shorelineTiltDegrees: 68,
+    scatterTiltDegrees: 58,
+    atmosphericTiltDegrees: 0,
+    silhouetteTiltDegrees: 0,
+    anchorTiltDegrees: 0,
+    finalProjectionValidationClaim: false,
+    visualPassClaim: false,
+    validationClaim: false,
+    claimBoundaryPreserved: true
+  }),
+
   transformOrder: Object.freeze([
     'translate3d',
     'rotateX',
     'rotateY',
     'rotateZ',
-    'scale'
+    'scale3d'
   ]),
 
   projectionShapeStandard: Object.freeze({
@@ -241,13 +278,15 @@ export const H_EARTH_3D_RENDER_PROJECTION_MODEL = Object.freeze({
 });
 
 export const H_EARTH_3D_RENDER_VOLUME_MODEL = Object.freeze({
-  modelId: 'H_EARTH_3D_RENDER_VOLUME_MODEL_STEP_023B',
-  renewedFrom: 'H_EARTH_3D_RENDER_VOLUME_MODEL_STEP_023A',
+  modelId: 'H_EARTH_3D_RENDER_VOLUME_MODEL_STEP_023C',
+  renewedFrom: 'H_EARTH_3D_RENDER_VOLUME_MODEL_STEP_023B',
   previewVolumeOnly: true,
   css3dCandidateVolume: true,
 
   previewContainer: Object.freeze({
     containerId: 'h-earth-3d-renderer-mount',
+    candidateWidthPx: 1180,
+    candidateHeightPx: 720,
     routeScopedMountOnly: true,
     suppliedMountNodeRequired: true,
     rendererMayCreateInsideMountNodeOnly: true,
@@ -294,8 +333,8 @@ export const H_EARTH_3D_RENDER_VOLUME_MODEL = Object.freeze({
 });
 
 export const H_EARTH_3D_RENDER_GEOMETRY_MAP = Object.freeze({
-  modelId: 'H_EARTH_3D_RENDER_GEOMETRY_MAP_STEP_023B',
-  geometryClass: 'CANDIDATE_DESCRIPTOR_GEOMETRY_MAP',
+  modelId: 'H_EARTH_3D_RENDER_GEOMETRY_MAP_STEP_023C',
+  geometryClass: 'CANDIDATE_DESCRIPTOR_LANDSCAPE_GEOMETRY_MAP',
   finalGeometryClaim: false,
   rendererPassClaim: false,
   visualPassClaim: false,
@@ -305,7 +344,7 @@ export const H_EARTH_3D_RENDER_GEOMETRY_MAP = Object.freeze({
 });
 
 export const H_EARTH_3D_RENDER_SURFACE_SAMPLING_MODEL = Object.freeze({
-  modelId: 'H_EARTH_3D_RENDER_SURFACE_SAMPLING_MODEL_STEP_023B',
+  modelId: 'H_EARTH_3D_RENDER_SURFACE_SAMPLING_MODEL_STEP_023C',
   candidateSurfaceSamplingOnly: true,
   terrainEngineClaim: false,
   physicsClaim: false,
@@ -314,7 +353,7 @@ export const H_EARTH_3D_RENDER_SURFACE_SAMPLING_MODEL = Object.freeze({
 });
 
 export const H_EARTH_3D_RENDER_SHORELINE_CURVE_MODEL = Object.freeze({
-  modelId: 'H_EARTH_3D_RENDER_SHORELINE_CURVE_MODEL_STEP_023B',
+  modelId: 'H_EARTH_3D_RENDER_SHORELINE_CURVE_MODEL_STEP_023C',
   candidateShorelineCurveOnly: true,
   fluidSimulationClaim: false,
   swimmingClaim: false,
@@ -323,7 +362,7 @@ export const H_EARTH_3D_RENDER_SHORELINE_CURVE_MODEL = Object.freeze({
 });
 
 export const H_EARTH_3D_RENDER_CLUSTER_MODEL = Object.freeze({
-  modelId: 'H_EARTH_3D_RENDER_CLUSTER_MODEL_STEP_023B',
+  modelId: 'H_EARTH_3D_RENDER_CLUSTER_MODEL_STEP_023C',
   candidateClusterDescriptorsOnly: true,
   collisionClaim: false,
   traversalClaim: false,
@@ -332,7 +371,7 @@ export const H_EARTH_3D_RENDER_CLUSTER_MODEL = Object.freeze({
 });
 
 export const H_EARTH_3D_RENDER_CONTEXT_COMPRESSION_MODEL = Object.freeze({
-  modelId: 'H_EARTH_3D_RENDER_CONTEXT_COMPRESSION_MODEL_STEP_023B',
+  modelId: 'H_EARTH_3D_RENDER_CONTEXT_COMPRESSION_MODEL_STEP_023C',
   contextCompressionOnly: true,
   manorInteriorAccessClaim: false,
   distantTraversalClaim: false,
@@ -384,7 +423,7 @@ export const H_EARTH_3D_RENDER_NODE_BUDGET = Object.freeze({
 });
 
 export const H_EARTH_3D_RENDER_INSPECTION_AFFORDANCE_MODEL = Object.freeze({
-  modelId: 'H_EARTH_3D_RENDER_INSPECTION_AFFORDANCE_MODEL_STEP_023B',
+  modelId: 'H_EARTH_3D_RENDER_INSPECTION_AFFORDANCE_MODEL_STEP_023C',
   descriptorAffordancesOnly: true,
   defaultAffordancesEnabled: false,
   actionExecutionClaim: false,
@@ -412,6 +451,22 @@ export const H_EARTH_3D_RENDER_PORTS = Object.freeze({
 export function normalizeHEarthRenderNumber(value, fallback = 0) {
   const numberValue = Number(value);
   return Number.isFinite(numberValue) ? numberValue : fallback;
+}
+
+export function clampHEarthRenderNumber(value, min, max, fallback = 0) {
+  const numberValue = normalizeHEarthRenderNumber(value, fallback);
+  return Math.max(min, Math.min(max, numberValue));
+}
+
+export function normalizeHEarthRenderToken(value, fallback = 'unresolved') {
+  return String(value || fallback)
+    .trim()
+    .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
+    .replace(/[_\s]+/g, '-')
+    .replace(/[^a-zA-Z0-9-]/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '')
+    .toLowerCase() || fallback;
 }
 
 export function resolveRenderLayer(objectId, node = {}) {
@@ -448,9 +503,11 @@ export function resolveRenderLayer(objectId, node = {}) {
 export function resolveMaterialToken(object) {
   const materialKey =
     object?.materialKey ||
+    object?.materialToken?.materialKey ||
     object?.materialIdentity?.materialKey ||
     object?.materialIdentity?.key ||
     object?.materialChannel?.materialKey ||
+    object?.materialChannel?.sourceMaterialKey ||
     object?.materialChannel?.key ||
     'unresolved';
 
@@ -467,33 +524,410 @@ export function resolveMaterialToken(object) {
   });
 }
 
-export function resolveProjectedPosition(object) {
+export function resolveNodeCenter(object = {}) {
   const center =
-    object?.center ||
-    object?.position ||
-    object?.candidateTransform?.position ||
+    object.center ||
+    object.position ||
+    object.candidateTransform?.translate ||
+    object.candidateTransform?.position ||
+    object.projected?.position ||
     Object.freeze({ x: 0, y: 0, z: 0 });
 
-  const scale = H_EARTH_3D_RENDER_PROJECTION_MODEL.scale;
-  const unitToCssPixel = normalizeHEarthRenderNumber(scale.unitToCssPixel, 1);
-  const yInversionFactor = normalizeHEarthRenderNumber(scale.yInversionFactor, -1);
-  const zDepthMultiplier = normalizeHEarthRenderNumber(scale.zDepthMultiplier, 1);
+  return Object.freeze({
+    x: normalizeHEarthRenderNumber(center.x, 0),
+    y: normalizeHEarthRenderNumber(center.y, 0),
+    z: normalizeHEarthRenderNumber(center.z, 0)
+  });
+}
 
-  const x = normalizeHEarthRenderNumber(center.x, 0);
-  const y = normalizeHEarthRenderNumber(center.y, 0);
-  const z = normalizeHEarthRenderNumber(center.z, 0);
+export function resolveNodeExtent(object = {}) {
+  const extent =
+    object.extent ||
+    object.candidateTransform?.extent ||
+    Object.freeze({
+      x:
+        normalizeHEarthRenderNumber(object?.bounds?.x?.max, 1) -
+        normalizeHEarthRenderNumber(object?.bounds?.x?.min, -1),
+      y:
+        normalizeHEarthRenderNumber(object?.bounds?.y?.max, 1) -
+        normalizeHEarthRenderNumber(object?.bounds?.y?.min, -1),
+      z:
+        normalizeHEarthRenderNumber(object?.bounds?.z?.max, 1) -
+        normalizeHEarthRenderNumber(object?.bounds?.z?.min, -1)
+    });
 
   return Object.freeze({
-    x,
-    y,
-    z,
+    x: Math.max(0.1, Math.abs(normalizeHEarthRenderNumber(extent.x, 1))),
+    y: Math.max(0.1, Math.abs(normalizeHEarthRenderNumber(extent.y, 1))),
+    z: Math.max(0.1, Math.abs(normalizeHEarthRenderNumber(extent.z, 1)))
+  });
+}
+
+export function resolveCandidateScaleTriplet(object = {}) {
+  const rawScale =
+    object.scale ??
+    object.candidateTransform?.scale ??
+    object.candidateTransform?.baseScale ??
+    1;
+
+  const contextScale = normalizeHEarthRenderNumber(
+    object.candidateTransform?.contextScale ?? object.contextScale,
+    1
+  );
+
+  if (typeof rawScale === 'number' || typeof rawScale === 'string') {
+    const scalar = Math.max(0.01, normalizeHEarthRenderNumber(rawScale, 1));
+    return Object.freeze({
+      x: scalar * contextScale,
+      y: scalar * contextScale,
+      z: scalar * contextScale,
+      scalar,
+      contextScale,
+      source: 'numeric-scale'
+    });
+  }
+
+  const scaleX = normalizeHEarthRenderNumber(rawScale?.x, 1);
+  const scaleY = normalizeHEarthRenderNumber(rawScale?.y, 1);
+  const scaleZ = normalizeHEarthRenderNumber(rawScale?.z, 1);
+
+  return Object.freeze({
+    x: scaleX * contextScale,
+    y: scaleY * contextScale,
+    z: scaleZ * contextScale,
+    scalar: Math.max(scaleX, scaleY, scaleZ),
+    contextScale,
+    source: 'object-scale'
+  });
+}
+
+export function resolveCandidateRotation(object = {}) {
+  const rotation =
+    object.rotation ||
+    object.rotate ||
+    object.candidateTransform?.rotation ||
+    object.candidateTransform?.rotate ||
+    Object.freeze({ x: 0, y: 0, z: 0 });
+
+  return Object.freeze({
+    x: normalizeHEarthRenderNumber(rotation.x, 0),
+    y: normalizeHEarthRenderNumber(rotation.y, 0),
+    z: normalizeHEarthRenderNumber(rotation.z, 0),
+    source:
+      object?.candidateTransform?.rotate ? 'candidateTransform.rotate' :
+      object?.candidateTransform?.rotation ? 'candidateTransform.rotation' :
+      object?.rotate ? 'rotate' :
+      object?.rotation ? 'rotation' :
+      'default'
+  });
+}
+
+export function resolveDepthClassForNode(object = {}) {
+  return (
+    object.primaryDepthClass ||
+    object.depthClass ||
+    object.depthComposition?.primaryDepthClass ||
+    object.depthComposition?.depthClass ||
+    object.focus?.primaryDepthClass ||
+    'foreground'
+  );
+}
+
+export function resolveNormalizedDepthForNode(object = {}) {
+  return clampHEarthRenderNumber(
+    object.normalizedDepth ??
+      object.focus?.normalizedDepth ??
+      object.depthComposition?.normalizedDepth ??
+      object.candidateTransform?.normalizedPosition?.normalizedDepth,
+    0,
+    1,
+    0.2
+  );
+}
+
+export function resolvePrimitiveProjectionProfile(primitiveType, depthClass) {
+  const primitive = String(primitiveType || 'unresolvedPrimitive');
+
+  const defaultProfile = Object.freeze({
+    profileId: 'default-object',
+    rotateX: 0,
+    rotateY: 0,
+    rotateZ: 0,
+    scaleXMultiplier: 1,
+    scaleYMultiplier: 1,
+    scaleZMultiplier: 1,
+    widthMultiplier: 1,
+    heightMultiplier: 1,
+    depthMultiplier: 1,
+    translateYOffsetPx: 0,
+    className: 'h-earth-landscape-object',
+    groundPlane: false
+  });
+
+  const profiles = Object.freeze({
+    contouredTerrainBand: Object.freeze({
+      profileId: 'foreground-contoured-terrain-band',
+      rotateX: H_EARTH_3D_RENDER_PROJECTION_MODEL.landscapeProjection.terrainTiltDegrees,
+      rotateY: 0,
+      rotateZ: 0,
+      scaleXMultiplier: 1.18,
+      scaleYMultiplier: 0.42,
+      scaleZMultiplier: 0.72,
+      widthMultiplier: 1.24,
+      heightMultiplier: 0.72,
+      depthMultiplier: 1,
+      translateYOffsetPx: 96,
+      className: 'h-earth-landscape-ground-plane',
+      groundPlane: true
+    }),
+
+    terrainBand: Object.freeze({
+      profileId: 'dry-sand-terrain-band',
+      rotateX: H_EARTH_3D_RENDER_PROJECTION_MODEL.landscapeProjection.terrainTiltDegrees,
+      rotateY: 0,
+      rotateZ: -1.5,
+      scaleXMultiplier: 1.08,
+      scaleYMultiplier: 0.38,
+      scaleZMultiplier: 0.68,
+      widthMultiplier: 1.08,
+      heightMultiplier: 0.58,
+      depthMultiplier: 0.88,
+      translateYOffsetPx: 44,
+      className: 'h-earth-landscape-ground-plane',
+      groundPlane: true
+    }),
+
+    irregularShorelineBand: Object.freeze({
+      profileId: 'shoreline-foam-band',
+      rotateX: H_EARTH_3D_RENDER_PROJECTION_MODEL.landscapeProjection.shorelineTiltDegrees,
+      rotateY: 0,
+      rotateZ: -1,
+      scaleXMultiplier: 1.02,
+      scaleYMultiplier: 0.18,
+      scaleZMultiplier: 0.34,
+      widthMultiplier: 1.12,
+      heightMultiplier: 0.26,
+      depthMultiplier: 0.54,
+      translateYOffsetPx: -8,
+      className: 'h-earth-landscape-shoreline-band',
+      groundPlane: true
+    }),
+
+    waterDepthBand: Object.freeze({
+      profileId: 'nearshore-wave-band',
+      rotateX: H_EARTH_3D_RENDER_PROJECTION_MODEL.landscapeProjection.waterTiltDegrees,
+      rotateY: 0,
+      rotateZ: 0,
+      scaleXMultiplier: 1.06,
+      scaleYMultiplier: 0.2,
+      scaleZMultiplier: 0.5,
+      widthMultiplier: 1.18,
+      heightMultiplier: 0.34,
+      depthMultiplier: 0.66,
+      translateYOffsetPx: -48,
+      className: 'h-earth-landscape-water-band',
+      groundPlane: true
+    }),
+
+    waterPlane: Object.freeze({
+      profileId: 'water-surface-plane',
+      rotateX: H_EARTH_3D_RENDER_PROJECTION_MODEL.landscapeProjection.waterTiltDegrees,
+      rotateY: 0,
+      rotateZ: 0,
+      scaleXMultiplier: 1.18,
+      scaleYMultiplier: 0.25,
+      scaleZMultiplier: 0.7,
+      widthMultiplier: 1.28,
+      heightMultiplier: 0.58,
+      depthMultiplier: 0.82,
+      translateYOffsetPx: -86,
+      className: 'h-earth-landscape-water-plane',
+      groundPlane: true
+    }),
+
+    atmosphericLayer: Object.freeze({
+      profileId: 'atmospheric-haze-layer',
+      rotateX: 0,
+      rotateY: 0,
+      rotateZ: 0,
+      scaleXMultiplier: 1,
+      scaleYMultiplier: 0.62,
+      scaleZMultiplier: 0.42,
+      widthMultiplier: 1.24,
+      heightMultiplier: 1.02,
+      depthMultiplier: 0.42,
+      translateYOffsetPx: -165,
+      className: 'h-earth-landscape-atmosphere',
+      groundPlane: false
+    }),
+
+    layeredSilhouette: Object.freeze({
+      profileId: 'manor-context-silhouette',
+      rotateX: 0,
+      rotateY: -8,
+      rotateZ: 0,
+      scaleXMultiplier: 0.9,
+      scaleYMultiplier: 1,
+      scaleZMultiplier: 0.42,
+      widthMultiplier: 0.74,
+      heightMultiplier: 1.05,
+      depthMultiplier: 0.4,
+      translateYOffsetPx: -95,
+      className: 'h-earth-landscape-context-silhouette',
+      groundPlane: false
+    }),
+
+    distantCluster: Object.freeze({
+      profileId: 'distant-rock-cluster',
+      rotateX: 0,
+      rotateY: -4,
+      rotateZ: 0,
+      scaleXMultiplier: 0.72,
+      scaleYMultiplier: 0.82,
+      scaleZMultiplier: 0.32,
+      widthMultiplier: 0.72,
+      heightMultiplier: 0.86,
+      depthMultiplier: 0.32,
+      translateYOffsetPx: -122,
+      className: 'h-earth-landscape-distant-cluster',
+      groundPlane: false
+    }),
+
+    scatterCluster: Object.freeze({
+      profileId: 'surface-scatter-cluster',
+      rotateX: H_EARTH_3D_RENDER_PROJECTION_MODEL.landscapeProjection.scatterTiltDegrees,
+      rotateY: 0,
+      rotateZ: 0,
+      scaleXMultiplier: 0.72,
+      scaleYMultiplier: 0.72,
+      scaleZMultiplier: 0.54,
+      widthMultiplier: 0.72,
+      heightMultiplier: 0.52,
+      depthMultiplier: 0.48,
+      translateYOffsetPx: 52,
+      className: 'h-earth-landscape-surface-detail',
+      groundPlane: true
+    }),
+
+    rockCluster: Object.freeze({
+      profileId: 'foreground-rock-cluster',
+      rotateX: 0,
+      rotateY: -6,
+      rotateZ: -3,
+      scaleXMultiplier: 0.8,
+      scaleYMultiplier: 1,
+      scaleZMultiplier: 0.56,
+      widthMultiplier: 0.72,
+      heightMultiplier: 1,
+      depthMultiplier: 0.5,
+      translateYOffsetPx: 38,
+      className: 'h-earth-landscape-rock-cluster',
+      groundPlane: false
+    }),
+
+    inspectionAnchor: Object.freeze({
+      profileId: 'inspection-anchor',
+      rotateX: 0,
+      rotateY: 0,
+      rotateZ: 0,
+      scaleXMultiplier: 0.35,
+      scaleYMultiplier: 0.35,
+      scaleZMultiplier: 0.35,
+      widthMultiplier: 0.32,
+      heightMultiplier: 0.32,
+      depthMultiplier: 0.32,
+      translateYOffsetPx: 42,
+      className: 'h-earth-landscape-inspection-anchor',
+      groundPlane: false
+    })
+  });
+
+  if (profiles[primitive]) {
+    return profiles[primitive];
+  }
+
+  if (depthClass === 'horizon') {
+    return profiles.distantCluster;
+  }
+
+  if (depthClass === 'water') {
+    return profiles.waterPlane;
+  }
+
+  return defaultProfile;
+}
+
+export function resolveDepthProjectionMultiplier(depthClass, normalizedDepth) {
+  const depth = clampHEarthRenderNumber(normalizedDepth, 0, 1, 0.2);
+  const landscape = H_EARTH_3D_RENDER_PROJECTION_MODEL.landscapeProjection;
+
+  if (depthClass === 'foreground') {
+    return landscape.foregroundDepthBoost * (1.08 - depth * 0.25);
+  }
+
+  if (depthClass === 'shoreline') {
+    return landscape.shorelineDepthBoost * (0.98 - depth * 0.16);
+  }
+
+  if (depthClass === 'water') {
+    return landscape.waterDepthBoost * (0.92 - depth * 0.12);
+  }
+
+  if (depthClass === 'context') {
+    return landscape.contextDepthBoost * (0.88 - depth * 0.08);
+  }
+
+  if (depthClass === 'horizon') {
+    return landscape.horizonDepthBoost * (0.82 - depth * 0.04);
+  }
+
+  return 1;
+}
+
+export function resolveProjectedPosition(object) {
+  const center = resolveNodeCenter(object);
+  const scale = H_EARTH_3D_RENDER_PROJECTION_MODEL.scale;
+  const unitToCssPixel = normalizeHEarthRenderNumber(scale.unitToCssPixel, 9);
+  const yInversionFactor = normalizeHEarthRenderNumber(scale.yInversionFactor, -1);
+  const zDepthMultiplier = normalizeHEarthRenderNumber(scale.zDepthMultiplier, 3.2);
+
+  const normalizedDepth = resolveNormalizedDepthForNode(object);
+  const depthClass = resolveDepthClassForNode(object);
+  const depthMultiplier = resolveDepthProjectionMultiplier(
+    depthClass,
+    normalizedDepth
+  );
+
+  const landscape = H_EARTH_3D_RENDER_PROJECTION_MODEL.landscapeProjection;
+
+  const projectedX =
+    landscape.stageCenterXPx +
+    center.x * unitToCssPixel * depthMultiplier;
+
+  const projectedY =
+    landscape.stageGroundYPx +
+    center.y * yInversionFactor * unitToCssPixel -
+    center.z * zDepthMultiplier * depthMultiplier +
+    normalizedDepth * -42;
+
+  const projectedZ =
+    center.z * zDepthMultiplier * depthMultiplier +
+    normalizedDepth * 260;
+
+  return Object.freeze({
+    x: center.x,
+    y: center.y,
+    z: center.z,
     unitToCssPixel,
     yInversionFactor,
     zDepthMultiplier,
-    projectedX: x * unitToCssPixel,
-    projectedY: y * yInversionFactor * unitToCssPixel,
-    projectedZ: z * zDepthMultiplier * unitToCssPixel,
-    projectionScaleSource: scale.source || 'CANON_RENDERER_SCALE',
+    normalizedDepth,
+    depthClass,
+    depthProjectionMultiplier: depthMultiplier,
+    projectedX,
+    projectedY,
+    projectedZ,
+    projectionScaleSource: scale.source || 'CANON_RENDERER_LANDSCAPE_SCALE',
     projectionOnly: true,
     finalProjectionValidationClaim: false,
     rendererPassClaim: false,
@@ -503,29 +937,120 @@ export function resolveProjectedPosition(object) {
   });
 }
 
+export function resolveLandscapeRenderDimensions(object = {}) {
+  const extent = resolveNodeExtent(object);
+  const primitiveType =
+    object?.primitiveType ||
+    object?.primitive?.primitiveType ||
+    object?.primitiveSchema?.primitiveType ||
+    'unresolvedPrimitive';
+
+  const depthClass = resolveDepthClassForNode(object);
+  const normalizedDepth = resolveNormalizedDepthForNode(object);
+  const profile = resolvePrimitiveProjectionProfile(primitiveType, depthClass);
+  const scaleTriplet = resolveCandidateScaleTriplet(object);
+
+  const widthPx = Math.max(
+    8,
+    extent.x *
+      H_EARTH_3D_RENDER_PROJECTION_MODEL.scale.unitToCssPixel *
+      profile.widthMultiplier *
+      Math.max(0.28, scaleTriplet.contextScale)
+  );
+
+  const heightPx = Math.max(
+    6,
+    Math.max(extent.y, extent.z * 0.32) *
+      H_EARTH_3D_RENDER_PROJECTION_MODEL.scale.unitToCssPixel *
+      profile.heightMultiplier *
+      Math.max(0.28, scaleTriplet.contextScale)
+  );
+
+  const depthPx = Math.max(
+    1,
+    extent.z *
+      H_EARTH_3D_RENDER_PROJECTION_MODEL.scale.zDepthMultiplier *
+      profile.depthMultiplier
+  );
+
+  return Object.freeze({
+    primitiveType,
+    depthClass,
+    normalizedDepth,
+    profileId: profile.profileId,
+    profileClassName: profile.className,
+    groundPlane: profile.groundPlane,
+    widthPx,
+    heightPx,
+    depthPx,
+    extent,
+    scaleTriplet,
+    descriptorOnly: true,
+    finalGeometryClaim: false,
+    visualPassClaim: false,
+    validationClaim: false,
+    claimBoundaryPreserved: true
+  });
+}
+
 export function resolveCssTransform(object) {
   const projected = resolveProjectedPosition(object);
 
-  const rotation =
-    object?.rotation ||
-    object?.candidateTransform?.rotation ||
-    Object.freeze({ x: 0, y: 0, z: 0 });
+  const primitiveType =
+    object?.primitiveType ||
+    object?.primitive?.primitiveType ||
+    object?.primitiveSchema?.primitiveType ||
+    'unresolvedPrimitive';
 
-  const scale =
-    object?.scale ||
-    object?.candidateTransform?.scale ||
-    Object.freeze({ x: 1, y: 1, z: 1 });
+  const depthClass = resolveDepthClassForNode(object);
+  const normalizedDepth = resolveNormalizedDepthForNode(object);
+  const profile = resolvePrimitiveProjectionProfile(primitiveType, depthClass);
+  const candidateRotation = resolveCandidateRotation(object);
+  const candidateScale = resolveCandidateScaleTriplet(object);
 
-  const rotateX = normalizeHEarthRenderNumber(rotation.x, 0);
-  const rotateY = normalizeHEarthRenderNumber(rotation.y, 0);
-  const rotateZ = normalizeHEarthRenderNumber(rotation.z, 0);
+  const profileDepthScale = resolveDepthProjectionMultiplier(
+    depthClass,
+    normalizedDepth
+  );
 
-  const scaleX = normalizeHEarthRenderNumber(scale.x, 1);
-  const scaleY = normalizeHEarthRenderNumber(scale.y, 1);
-  const scaleZ = normalizeHEarthRenderNumber(scale.z, 1);
+  const rotateX = normalizeHEarthRenderNumber(
+    candidateRotation.x + profile.rotateX,
+    profile.rotateX
+  );
+  const rotateY = normalizeHEarthRenderNumber(
+    candidateRotation.y + profile.rotateY,
+    profile.rotateY
+  );
+  const rotateZ = normalizeHEarthRenderNumber(
+    candidateRotation.z + profile.rotateZ,
+    profile.rotateZ
+  );
+
+  const scaleX = Math.max(
+    0.05,
+    normalizeHEarthRenderNumber(candidateScale.x, 1) *
+      profile.scaleXMultiplier *
+      profileDepthScale
+  );
+
+  const scaleY = Math.max(
+    0.05,
+    normalizeHEarthRenderNumber(candidateScale.y, 1) *
+      profile.scaleYMultiplier *
+      profileDepthScale
+  );
+
+  const scaleZ = Math.max(
+    0.05,
+    normalizeHEarthRenderNumber(candidateScale.z, 1) *
+      profile.scaleZMultiplier *
+      Math.max(0.2, profileDepthScale)
+  );
+
+  const translatedY = projected.projectedY + profile.translateYOffsetPx;
 
   const cssTransform = [
-    `translate3d(${projected.projectedX}px, ${projected.projectedY}px, ${projected.projectedZ}px)`,
+    `translate3d(${projected.projectedX}px, ${translatedY}px, ${projected.projectedZ}px)`,
     `rotateX(${rotateX}deg)`,
     `rotateY(${rotateY}deg)`,
     `rotateZ(${rotateZ}deg)`,
@@ -535,13 +1060,21 @@ export function resolveCssTransform(object) {
   return Object.freeze({
     cssTransform,
     projected,
+    primitiveType,
+    depthClass,
+    normalizedDepth,
+    profileId: profile.profileId,
+    profileClassName: profile.className,
+    groundPlane: profile.groundPlane,
     rotateX,
     rotateY,
     rotateZ,
     scaleX,
     scaleY,
     scaleZ,
+    profileDepthScale,
     candidateTransformOnly: true,
+    landscapeProjectionApplied: true,
     finalGeometryClaim: false,
     rendererPassClaim: false,
     visualPassClaim: false,
@@ -561,22 +1094,51 @@ export function resolvePrimitiveRenderGeometry(object) {
   const material = resolveMaterialToken(object);
   const layerId = resolveRenderLayer(objectId, object);
   const cssTransformDescriptor = resolveCssTransform(object);
+  const primitiveGeometry = resolveLandscapeRenderDimensions(object);
 
   return Object.freeze({
-    nodeId: `render-node-${objectId}`,
-    sourceNodeId: `render-node-${objectId}`,
+    nodeId: object?.nodeId || object?.sourceNodeId || `render-node-${objectId}`,
+    sourceNodeId:
+      object?.sourceNodeId ||
+      object?.nodeId ||
+      object?.composedNodeId ||
+      `render-node-${objectId}`,
+    composedNodeId: object?.composedNodeId || null,
     objectId,
     objectLabel: object?.label || object?.objectLabel || objectId,
+    label: object?.label || object?.objectLabel || objectId,
+
     primitiveType,
     materialKey: material.materialKey,
     materialToken: material,
     layerId,
     layerOrder:
+      object?.layerOrder ??
       H_EARTH_3D_RENDER_LAYER_ORDER.find((layer) => layer.layerId === layerId)
-        ?.order ?? 999,
+        ?.order ??
+      999,
+
     cssTransformDescriptor,
+    primitiveGeometry,
+
+    landscapeClassName: cssTransformDescriptor.profileClassName,
+    primitiveClassName: `h-earth-primitive-${normalizeHEarthRenderToken(primitiveType)}`,
+    renderWidthPx: primitiveGeometry.widthPx,
+    renderHeightPx: primitiveGeometry.heightPx,
+    renderDepthPx: primitiveGeometry.depthPx,
+
     candidateTransform: object?.candidateTransform || null,
+    focus: object?.focus || null,
+    contextComposition: object?.contextComposition || null,
+    projectedBounds: object?.projectedBounds || null,
+    viewportOverflowClass: object?.viewportOverflowClass || null,
+    nodePriority: object?.nodePriority ?? null,
+    normalizedDepth: primitiveGeometry.normalizedDepth,
+    depthClass: primitiveGeometry.depthClass,
+    primaryDepthClass: object?.primaryDepthClass || primitiveGeometry.depthClass,
+
     sourceObject: object,
+
     descriptorOnly: true,
     finalGeometryClaim: false,
     rendererPassClaim: false,
@@ -585,6 +1147,39 @@ export function resolvePrimitiveRenderGeometry(object) {
     productionClaim: false,
     claimBoundaryPreserved: true
   });
+}
+
+export function resolveLandscapeRenderNode(node) {
+  const normalized = resolvePrimitiveRenderGeometry(node);
+
+  return Object.freeze({
+    ...node,
+    ...normalized,
+
+    cssTransformDescriptor: normalized.cssTransformDescriptor,
+    primitiveGeometry: normalized.primitiveGeometry,
+    materialToken: normalized.materialToken,
+
+    landscapeProjectionNormalized: true,
+    landscapeProjectionContract:
+      'H_EARTH_3D_RENDERER_FILE_BIRTH_STEP_023C_LANDSCAPE_GRADE_DOM_CSS3D_PROJECTION_RENEWAL_v1',
+
+    descriptorOnly: true,
+    finalGeometryClaim: false,
+    rendererPassClaim: false,
+    visualPassClaim: false,
+    validationClaim: false,
+    productionClaim: false,
+    claimBoundaryPreserved: true
+  });
+}
+
+export function normalizeLandscapeRenderNodes(nodes = []) {
+  const safeNodes = Array.isArray(nodes) ? nodes : [];
+
+  return Object.freeze(
+    safeNodes.map((node) => resolveLandscapeRenderNode(node))
+  );
 }
 
 export function resolveCandidateRenderNodes(
@@ -665,13 +1260,18 @@ export function selectHEarthRenderInput({
     : [];
 
   if (composedNodes.length > 0) {
+    const normalizedNodes = normalizeLandscapeRenderNodes(composedNodes);
+
     return Object.freeze({
-      nodes: Object.freeze(composedNodes),
+      nodes: normalizedNodes,
+      rawNodes: Object.freeze(composedNodes),
       source: 'composedCandidateFrame.composedNodes',
       sourceDescriptorType: 'COMPOSED_CANDIDATE_FRAME',
       usedComposedFrame: true,
       usedRenderSceneFallback: false,
-      nodeCount: composedNodes.length,
+      nodeCount: normalizedNodes.length,
+      rawNodeCount: composedNodes.length,
+      landscapeNormalizationApplied: true,
       missingInput: false,
       warningCodes: Object.freeze([]),
       failureCodes: Object.freeze([]),
@@ -684,13 +1284,18 @@ export function selectHEarthRenderInput({
     : [];
 
   if (candidateNodes.length > 0) {
+    const normalizedNodes = normalizeLandscapeRenderNodes(candidateNodes);
+
     return Object.freeze({
-      nodes: Object.freeze(candidateNodes),
+      nodes: normalizedNodes,
+      rawNodes: Object.freeze(candidateNodes),
       source: 'candidateRenderScene.nodes',
       sourceDescriptorType: 'CANDIDATE_RENDER_SCENE_FALLBACK',
       usedComposedFrame: false,
       usedRenderSceneFallback: true,
-      nodeCount: candidateNodes.length,
+      nodeCount: normalizedNodes.length,
+      rawNodeCount: candidateNodes.length,
+      landscapeNormalizationApplied: true,
       missingInput: false,
       warningCodes: Object.freeze(['COMPOSED_FRAME_NODES_ABSENT_FALLBACK_USED']),
       failureCodes: Object.freeze([]),
@@ -700,11 +1305,14 @@ export function selectHEarthRenderInput({
 
   return Object.freeze({
     nodes: Object.freeze([]),
+    rawNodes: Object.freeze([]),
     source: 'none',
     sourceDescriptorType: 'NONE',
     usedComposedFrame: false,
     usedRenderSceneFallback: false,
     nodeCount: 0,
+    rawNodeCount: 0,
+    landscapeNormalizationApplied: false,
     missingInput: true,
     warningCodes: Object.freeze([]),
     failureCodes: Object.freeze(['NO_DESCRIPTOR_NODES']),
@@ -743,6 +1351,7 @@ export function buildRendererMountReceipt({
   sourceDescriptorType = 'NONE',
   usedComposedFrame = false,
   usedRenderSceneFallback = false,
+  landscapeNormalizationApplied = false,
   sourceNodeCount = 0,
   objectNodeCount = 0,
   placedNodeCount = 0,
@@ -753,6 +1362,9 @@ export function buildRendererMountReceipt({
   layerPortUsed = false,
   nodeFactoryPortUsed = false,
   missingObjectCount = 0,
+  transformDescriptorAppliedCount = 0,
+  transformDescriptorMissingCount = 0,
+  primitiveGeometryAppliedCount = 0,
   warningCodes = [],
   failureCodes = [],
   boundary = {}
@@ -781,6 +1393,7 @@ export function buildRendererMountReceipt({
     sourceDescriptorType,
     usedComposedFrame,
     usedRenderSceneFallback,
+    landscapeNormalizationApplied,
     sourceNodeCount,
 
     mountedNodeCount: objectNodeCount,
@@ -795,12 +1408,19 @@ export function buildRendererMountReceipt({
     nodeFactoryPortUsed,
 
     missingObjectCount,
+    transformDescriptorAppliedCount,
+    transformDescriptorMissingCount,
+    primitiveGeometryAppliedCount,
 
     warningCodes: Object.freeze(warningCodes),
     failureCodes: Object.freeze(failureCodes),
 
     createsDomCss3DCandidateNodes: rendererMounted === true,
     mountsCandidateDomDescriptors: rendererMounted === true,
+    emitsLandscapeGradeCssTransforms:
+      landscapeNormalizationApplied === true &&
+      transformDescriptorAppliedCount > 0,
+    emitsPrimitiveGeometryDescriptors: primitiveGeometryAppliedCount > 0,
 
     finalRendererClaim: false,
     rendererPassClaim: false,
@@ -913,6 +1533,7 @@ export function mountHEarthRenderer({
       sourceDescriptorType: selectedInput.sourceDescriptorType,
       usedComposedFrame: selectedInput.usedComposedFrame,
       usedRenderSceneFallback: selectedInput.usedRenderSceneFallback,
+      landscapeNormalizationApplied: selectedInput.landscapeNormalizationApplied,
       sourceNodeCount: 0,
       materialPortUsed: true,
       layerPortUsed: true,
@@ -945,6 +1566,7 @@ export function mountHEarthRenderer({
         sourceDescriptorType: selectedInput.sourceDescriptorType,
         usedComposedFrame: selectedInput.usedComposedFrame,
         usedRenderSceneFallback: selectedInput.usedRenderSceneFallback,
+        landscapeNormalizationApplied: selectedInput.landscapeNormalizationApplied,
         sourceNodeCount: selectedInput.nodeCount,
         materialPortUsed: true,
         layerPortUsed: true,
@@ -980,6 +1602,7 @@ export function mountHEarthRenderer({
         sourceDescriptorType: selectedInput.sourceDescriptorType,
         usedComposedFrame: selectedInput.usedComposedFrame,
         usedRenderSceneFallback: selectedInput.usedRenderSceneFallback,
+        landscapeNormalizationApplied: selectedInput.landscapeNormalizationApplied,
         sourceNodeCount: selectedInput.nodeCount,
         materialPortUsed: true,
         layerPortUsed: true,
@@ -998,6 +1621,9 @@ export function mountHEarthRenderer({
     let labelNodeCount = 0;
     let affordanceNodeCount = 0;
     let missingObjectCount = 0;
+    let transformDescriptorAppliedCount = 0;
+    let transformDescriptorMissingCount = 0;
+    let primitiveGeometryAppliedCount = 0;
 
     const warningCodes = [
       ...(Array.isArray(selectedInput.warningCodes)
@@ -1020,15 +1646,23 @@ export function mountHEarthRenderer({
         return;
       }
 
-      getHEarthRenderClassesForNode(node, controller);
+      const normalizedNode =
+        node?.landscapeProjectionNormalized === true
+          ? node
+          : resolveLandscapeRenderNode(node);
+
+      const classResolution = getHEarthRenderClassesForNode(
+        normalizedNode,
+        controller
+      );
 
       const controllerTarget = resolveControllerTargetForRenderNode(
-        node,
+        normalizedNode,
         controller
       );
 
       const objectResult = createHEarthRenderObjectNode({
-        node,
+        node: normalizedNode,
         controller,
         materialPort: H_EARTH_3D_RENDER_MATERIAL_PORT,
         options: {
@@ -1047,11 +1681,73 @@ export function mountHEarthRenderer({
         return;
       }
 
+      if (classResolution?.className) {
+        classResolution.className
+          .split(/\s+/)
+          .filter(Boolean)
+          .forEach((className) => objectResult.objectNode.classList.add(className));
+      }
+
+      if (normalizedNode.landscapeClassName) {
+        objectResult.objectNode.classList.add(normalizedNode.landscapeClassName);
+      }
+
+      if (normalizedNode.primitiveClassName) {
+        objectResult.objectNode.classList.add(normalizedNode.primitiveClassName);
+      }
+
+      if (normalizedNode.primitiveGeometry) {
+        objectResult.objectNode.setAttribute(
+          'data-h-earth-primitive-profile',
+          String(normalizedNode.primitiveGeometry.profileId)
+        );
+
+        objectResult.objectNode.setAttribute(
+          'data-h-earth-landscape-projection-normalized',
+          'true'
+        );
+
+        objectResult.objectNode.style.setProperty(
+          '--h-earth-render-width',
+          `${normalizedNode.primitiveGeometry.widthPx}px`
+        );
+
+        objectResult.objectNode.style.setProperty(
+          '--h-earth-render-height',
+          `${normalizedNode.primitiveGeometry.heightPx}px`
+        );
+
+        objectResult.objectNode.style.setProperty(
+          '--h-earth-render-depth',
+          `${normalizedNode.primitiveGeometry.depthPx}px`
+        );
+
+        objectResult.objectNode.style.setProperty(
+          '--h-earth-render-depth-scale',
+          String(
+            normalizedNode.cssTransformDescriptor?.profileDepthScale ?? 1
+          )
+        );
+
+        objectResult.objectNode.style.width =
+          `var(--h-earth-render-width)`;
+        objectResult.objectNode.style.height =
+          `var(--h-earth-render-height)`;
+
+        primitiveGeometryAppliedCount += 1;
+      }
+
       objectNodeCount += 1;
+
+      if (objectResult.transformApplied === true) {
+        transformDescriptorAppliedCount += 1;
+      } else {
+        transformDescriptorMissingCount += 1;
+      }
 
       if (options?.showLabels === true) {
         const labelResult = createHEarthRenderLabelNode({
-          node,
+          node: normalizedNode,
           controllerTarget,
           options: {
             ...options,
@@ -1069,7 +1765,7 @@ export function mountHEarthRenderer({
 
       if (options?.showAffordances === true) {
         const affordanceResult = createHEarthRenderAffordanceNode({
-          node,
+          node: normalizedNode,
           controllerTarget,
           options: {
             ...options,
@@ -1090,7 +1786,7 @@ export function mountHEarthRenderer({
 
       const placement = placeHEarthNodeInLayer({
         objectNode: objectResult.objectNode,
-        node,
+        node: normalizedNode,
         layerContainersById: layerResult.layerContainersById
       });
 
@@ -1114,6 +1810,10 @@ export function mountHEarthRenderer({
       warningCodes.push('MOUNT_PARTIAL');
     }
 
+    if (transformDescriptorMissingCount > 0) {
+      warningCodes.push('SOME_TRANSFORM_DESCRIPTORS_MISSING');
+    }
+
     return buildRendererMountReceipt({
       rendererMounted: placedNodeCount > 0,
       mountNodeValid: true,
@@ -1127,6 +1827,7 @@ export function mountHEarthRenderer({
       sourceDescriptorType: selectedInput.sourceDescriptorType,
       usedComposedFrame: selectedInput.usedComposedFrame,
       usedRenderSceneFallback: selectedInput.usedRenderSceneFallback,
+      landscapeNormalizationApplied: selectedInput.landscapeNormalizationApplied,
       sourceNodeCount: selectedInput.nodeCount,
 
       objectNodeCount,
@@ -1140,6 +1841,9 @@ export function mountHEarthRenderer({
       nodeFactoryPortUsed: true,
 
       missingObjectCount,
+      transformDescriptorAppliedCount,
+      transformDescriptorMissingCount,
+      primitiveGeometryAppliedCount,
 
       warningCodes,
       failureCodes,
@@ -1153,6 +1857,7 @@ export function mountHEarthRenderer({
       sourceDescriptorType: selectedInput.sourceDescriptorType,
       usedComposedFrame: selectedInput.usedComposedFrame,
       usedRenderSceneFallback: selectedInput.usedRenderSceneFallback,
+      landscapeNormalizationApplied: selectedInput.landscapeNormalizationApplied,
       sourceNodeCount: selectedInput.nodeCount,
       materialPortUsed: true,
       layerPortUsed: true,
@@ -1218,18 +1923,20 @@ export const H_EARTH_3D_RENDERER_RECEIPT = Object.freeze({
   receiptType: 'H_EARTH_3D_RENDERER_RECEIPT',
   file: '/showroom/globe/h-earth/renderer.js',
   contractId:
-    'H_EARTH_3D_RENDERER_FILE_BIRTH_STEP_023B_PROJECTION_SCALE_SHAPE_STANDARD_RENEWAL_v1',
+    'H_EARTH_3D_RENDERER_FILE_BIRTH_STEP_023C_LANDSCAPE_GRADE_DOM_CSS3D_PROJECTION_RENEWAL_v1',
   renewedFrom:
+    'H_EARTH_3D_RENDERER_FILE_BIRTH_STEP_023B_PROJECTION_SCALE_SHAPE_STANDARD_RENEWAL_v1',
+  priorRendererBaseline:
     'H_EARTH_3D_RENDERER_FILE_BIRTH_STEP_023A_MOUNT_API_AND_RENDER_PORT_RENEWAL_PACKET_v1',
-  priorRendererBaseline: 'H_EARTH_3D_RENDERER_FILE_BIRTH_STEP_023_v1',
 
   currentRouteChainLiveBaselinesRecoveredFromDrive: false,
   constructionBasis: Object.freeze([
-    'existing in-room Step 023A renderer.js renewal',
-    'accepted renderer/compositor projection-shape standard',
-    'compositor import failure evidence',
-    'Step 029D index.js route-bootstrap consumer shape',
-    'recovered scratch context only'
+    'Step 023B renderer.js full source supplied by user',
+    'Step 023A render support ports supplied by user',
+    'spatial diagnostic receipt closed as sufficient',
+    'composedCandidateFrame.composedNodes confirmed as live input',
+    'renderer output confirmed shallow token transform before renewal',
+    'nodes.js confirmed to consume cssTransformDescriptor.cssTransform'
   ]),
 
   environmentReceiptPresent: Boolean(H_EARTH_3D_ENVIRONMENT_RECEIPT),
@@ -1245,12 +1952,21 @@ export const H_EARTH_3D_RENDERER_RECEIPT = Object.freeze({
   layerPortBound: true,
 
   previewContainerPreservedForCompositorCompatibility: true,
+  previewContainerCandidateWidthPxDefined: true,
+  previewContainerCandidateHeightPxDefined: true,
 
   projectionScaleShapeDefined: true,
   projectionScaleUnitToCssPixelDefined: true,
   projectionScaleYInversionFactorDefined: true,
   projectionScaleZDepthMultiplierDefined: true,
   compositorProjectionShapeCompatibilitySupported: true,
+
+  landscapeProjectionModelDefined: true,
+  composedNodeLivePathNormalizationDefined: true,
+  cssTransformDescriptorEmissionDefined: true,
+  primitiveGeometryDescriptorEmissionDefined: true,
+  numericCandidateTransformScaleHandled: true,
+  candidateTransformRotateHandled: true,
 
   step029IndexCompatibilityPreserved: true,
   aggregateExposesMountApi: true,
@@ -1307,11 +2023,24 @@ export const H_EARTH_3D_RENDERER = Object.freeze({
   candidateRenderScene: H_EARTH_3D_CANDIDATE_RENDER_SCENE,
 
   normalizeHEarthRenderNumber,
+  clampHEarthRenderNumber,
+  normalizeHEarthRenderToken,
   resolveRenderLayer,
   resolveMaterialToken,
+  resolveNodeCenter,
+  resolveNodeExtent,
+  resolveCandidateScaleTriplet,
+  resolveCandidateRotation,
+  resolveDepthClassForNode,
+  resolveNormalizedDepthForNode,
+  resolvePrimitiveProjectionProfile,
+  resolveDepthProjectionMultiplier,
   resolveProjectedPosition,
+  resolveLandscapeRenderDimensions,
   resolveCssTransform,
   resolvePrimitiveRenderGeometry,
+  resolveLandscapeRenderNode,
+  normalizeLandscapeRenderNodes,
   resolveCandidateRenderNodes,
   applyRenderNodeBudget,
   resolveCandidateRenderScene,

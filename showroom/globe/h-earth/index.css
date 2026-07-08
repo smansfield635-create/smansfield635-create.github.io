@@ -1,25 +1,30 @@
 /*
   /showroom/globe/h-earth/index.css
   RENEWED FILE
-  H_EARTH_3D_ROUTE_SHELL_STYLE_FILE_BIRTH_STEP_030B_PRIMARY_VIEWPORT_AND_DIAGNOSTIC_COLLAPSE_RENEWAL_v1
+  H_EARTH_3D_ROUTE_SHELL_STYLE_FILE_BIRTH_STEP_030C_RENDERER_OBJECT_SCALE_AND_MOBILE_DIAGNOSTIC_RENEWAL_v1
 
   Renews:
-  H_EARTH_3D_ROUTE_SHELL_STYLE_FILE_BIRTH_STEP_030_CSS_v1
+  H_EARTH_3D_ROUTE_SHELL_STYLE_FILE_BIRTH_STEP_030B_PRIMARY_VIEWPORT_AND_DIAGNOSTIC_COLLAPSE_RENEWAL_v1
 
   Purpose:
-  Provides route shell, primary renderer viewport, compact HUD/status overlay,
+  Provides route shell, primary renderer viewport, compact status/action surface,
   inspection panel, target list, debug/status, renderer-generated
   layer/object/material/context class support, and controlled fallback styling
   for the H-Earth 3D Candidate Preview.
 
   Renewal scope:
-  - Preserve Step 030 CSS renderer support classes.
-  - Make the renderer stage the dominant visual region.
-  - Improve mobile viewport priority with 75–85vh candidate stage behavior.
-  - Keep Route Status and Action compact and near the stage.
-  - Collapse or reduce diagnostic/control panels by default on mobile.
+  - Preserve Step 030B primary viewport behavior.
+  - Preserve renderer-generated class compatibility from materials.js, layers.js,
+    and nodes.js.
+  - Correct tiny-object presentation by adding renderer-object size rules keyed
+    by layer, material, and context classes.
+  - Render wet sand, dry sand, water, foam, nearshore wave, air haze, manor
+    context, distant rocks, stones, jagged rocks, tide pools, and inspection
+    anchor as candidate DOM/CSS-3D descriptor surfaces.
+  - Keep the renderer stage dominant without hiding route status/action too far
+    below the fold.
+  - Keep diagnostic/control panels compact on mobile but reachable.
   - Preserve Bootstrap Debug availability without making it the primary screen.
-  - Preserve support for renderer-generated DOM/CSS-3D candidate nodes.
   - Do not create shell-owned scene objects.
   - Do not create a CSS-only false beach independent of renderer descriptors.
   - Do not introduce canvas, WebGL, visual-pass, validation, production,
@@ -45,7 +50,7 @@
 
   --h-earth-stage-width: min(100%, 1180px);
   --h-earth-stage-height: clamp(560px, 72vh, 820px);
-  --h-earth-mobile-stage-height: 80svh;
+  --h-earth-mobile-stage-height: min(72svh, 680px);
 
   --h-earth-radius-lg: 28px;
   --h-earth-radius-md: 18px;
@@ -53,11 +58,13 @@
   --h-earth-shadow-stage: 0 28px 80px rgba(0, 0, 0, 0.42);
   --h-earth-shadow-panel: 0 18px 42px rgba(0, 0, 0, 0.28);
 
-  /*
-    Material support variables.
-    Renderer-generated nodes may consume these through material classes.
-    These are candidate styling tokens only, not final material validation.
-  */
+  --h-earth-render-band-wide: min(86vw, 980px);
+  --h-earth-render-band-medium: min(72vw, 760px);
+  --h-earth-render-band-narrow: min(58vw, 620px);
+  --h-earth-render-detail-size: clamp(18px, 3.2vw, 42px);
+  --h-earth-render-rock-size: clamp(26px, 5vw, 72px);
+  --h-earth-render-anchor-size: clamp(22px, 4vw, 40px);
+
   --h-earth-wetSand-base: #5f5146;
   --h-earth-drySand-base: #b79a71;
   --h-earth-foam-base: #eaf8f5;
@@ -193,8 +200,6 @@ button:disabled {
 
 /*
   Primary stage layout.
-  The stage is the primary route viewport. HUD remains compact and attached
-  to the stage region instead of becoming the dominant screen.
 */
 
 .h-earth-3d-stage-shell {
@@ -325,8 +330,6 @@ button:disabled {
 
 /*
   Diagnostic/control panels.
-  Desktop keeps panels available. Mobile compresses them so they do not become
-  the primary experience ahead of the renderer stage.
 */
 
 .h-earth-3d-control-grid {
@@ -404,8 +407,6 @@ button:disabled {
 
 /*
   Bootstrap status classes.
-  These style route status only. They do not claim validation, visual pass,
-  production readiness, or renderer pass.
 */
 
 .h-earth-3d-boot-ready .h-earth-3d-status {
@@ -425,8 +426,6 @@ button:disabled {
 
 /*
   Renderer-generated root/layer/object support.
-  These selectors support nodes created by renderer.js and support ports.
-  They do not create route shell scene geometry.
 */
 
 .h-earth-render-root,
@@ -450,6 +449,8 @@ button:disabled {
   position: absolute;
   left: 50%;
   top: 50%;
+  width: var(--h-earth-render-detail-size);
+  height: var(--h-earth-render-detail-size);
   min-width: 10px;
   min-height: 10px;
   border: 1px solid rgba(255, 255, 255, 0.14);
@@ -496,6 +497,94 @@ button:disabled {
 .h-earth-render-transform-missing {
   outline: 2px dashed var(--h-earth-error);
   outline-offset: 3px;
+}
+
+/*
+  Renderer object scale rules.
+  These rules style renderer-generated descriptors. They do not create objects.
+*/
+
+.h-earth-layer-water-surface-plane .h-earth-render-object,
+.h-earth-material-water {
+  width: var(--h-earth-render-band-wide);
+  height: clamp(150px, 22vh, 240px);
+  border-radius: 45% 45% 18% 18% / 62% 62% 24% 24%;
+}
+
+.h-earth-layer-nearshore-wave-band .h-earth-render-object,
+.h-earth-material-nearshore-wave {
+  width: var(--h-earth-render-band-wide);
+  height: clamp(30px, 6vh, 72px);
+  border-radius: 999px;
+}
+
+.h-earth-layer-shoreline-foam-line .h-earth-render-object,
+.h-earth-material-foam {
+  width: var(--h-earth-render-band-medium);
+  height: clamp(12px, 2.4vh, 28px);
+  border-radius: 999px;
+}
+
+.h-earth-layer-dry-sand-transition .h-earth-render-object,
+.h-earth-material-dry-sand {
+  width: var(--h-earth-render-band-wide);
+  height: clamp(110px, 18vh, 210px);
+  border-radius: 44% 44% 22% 22% / 28% 28% 52% 52%;
+}
+
+.h-earth-layer-foreground-wet-sand .h-earth-render-object,
+.h-earth-material-wet-sand {
+  width: var(--h-earth-render-band-wide);
+  height: clamp(150px, 25vh, 280px);
+  border-radius: 38% 38% 20% 20% / 26% 26% 48% 48%;
+}
+
+.h-earth-layer-tide-pools-stones-rocks-detail .h-earth-material-tide-pool {
+  width: clamp(44px, 9vw, 130px);
+  height: clamp(24px, 5vw, 72px);
+  border-radius: 56% 44% 58% 42%;
+}
+
+.h-earth-layer-tide-pools-stones-rocks-detail .h-earth-material-stone {
+  width: clamp(18px, 3.8vw, 54px);
+  height: clamp(14px, 3vw, 42px);
+  border-radius: 52% 48% 46% 54%;
+}
+
+.h-earth-layer-tide-pools-stones-rocks-detail .h-earth-material-jagged-rock {
+  width: var(--h-earth-render-rock-size);
+  height: clamp(30px, 5.8vw, 88px);
+  border-radius: 28% 58% 34% 44%;
+  clip-path: polygon(8% 86%, 20% 36%, 34% 62%, 48% 18%, 62% 58%, 78% 28%, 94% 86%);
+}
+
+.h-earth-layer-air-haze-light .h-earth-render-object,
+.h-earth-material-air-haze {
+  width: min(96vw, 1120px);
+  height: clamp(240px, 42vh, 460px);
+  border-radius: 999px;
+}
+
+.h-earth-layer-manor-exterior-context .h-earth-render-object,
+.h-earth-material-manor-context {
+  width: clamp(80px, 15vw, 180px);
+  height: clamp(64px, 11vw, 150px);
+  border-radius: 10px 10px 4px 4px;
+}
+
+.h-earth-layer-distant-world-context .h-earth-render-object,
+.h-earth-material-distant-rock {
+  width: clamp(84px, 16vw, 210px);
+  height: clamp(38px, 8vw, 96px);
+  border-radius: 34% 48% 24% 42%;
+  clip-path: polygon(0 88%, 12% 52%, 28% 66%, 42% 34%, 58% 72%, 72% 42%, 100% 88%, 100% 100%, 0 100%);
+}
+
+.h-earth-layer-inspection-anchor-overlay .h-earth-render-object,
+.h-earth-material-inspection-anchor {
+  width: var(--h-earth-render-anchor-size);
+  height: var(--h-earth-render-anchor-size);
+  border-radius: 999px;
 }
 
 /*
@@ -555,6 +644,7 @@ button:disabled {
 .h-earth-material-wet-sand {
   background:
     radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.14), transparent 38%),
+    linear-gradient(180deg, rgba(117, 104, 89, 0.94), rgba(68, 58, 51, 0.96)),
     var(--h-earth-wetSand-base);
   color: #f5e8d4;
   opacity: 0.96;
@@ -563,6 +653,7 @@ button:disabled {
 .h-earth-material-dry-sand {
   background:
     radial-gradient(circle at 28% 30%, rgba(255, 255, 255, 0.16), transparent 32%),
+    linear-gradient(180deg, rgba(202, 171, 125, 0.92), rgba(143, 111, 76, 0.94)),
     var(--h-earth-drySand-base);
   color: #382c20;
   opacity: 0.94;
@@ -578,6 +669,7 @@ button:disabled {
 .h-earth-material-tide-pool {
   background:
     radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.28), transparent 35%),
+    linear-gradient(180deg, rgba(85, 134, 148, 0.94), rgba(39, 84, 96, 0.96)),
     var(--h-earth-tidePool-base);
   color: #e8fbff;
   opacity: 0.84;
@@ -639,7 +731,8 @@ button:disabled {
 }
 
 .h-earth-material-inspection-anchor {
-  background: var(--h-earth-inspectionAnchor-base);
+  background:
+    radial-gradient(circle at 50% 50%, #f8f0ce 0 22%, #a7b0a0 24% 48%, #4f5a55 50% 66%, #f4e7b6 68% 100%);
   color: #2d2513;
   box-shadow: 0 0 18px rgba(244, 231, 182, 0.48);
   opacity: 0.92;
@@ -691,7 +784,6 @@ button:disabled {
 
 /*
   Interaction classes.
-  These mark descriptor behavior only. They do not create gameplay execution.
 */
 
 .h-earth-target-selectable {
@@ -830,12 +922,6 @@ button:disabled {
     min-height: 42px;
   }
 
-  /*
-    Mobile diagnostic compression.
-    Panels remain present and reachable, but the renderer stage remains the
-    primary screen. Focus or tap into a panel to expand its contents.
-  */
-
   .h-earth-3d-control-grid {
     grid-template-columns: 1fr;
     gap: 10px;
@@ -843,7 +929,7 @@ button:disabled {
 
   .h-earth-3d-control-grid .h-earth-3d-panel,
   .h-earth-3d-claim-boundary {
-    max-height: 66px;
+    max-height: 72px;
     overflow: hidden;
     transition:
       max-height 180ms ease,
@@ -874,7 +960,7 @@ button:disabled {
   }
 
   .h-earth-3d-stage {
-    min-height: 82svh;
+    min-height: min(70svh, 620px);
   }
 
   .h-earth-3d-header-copy,
@@ -888,7 +974,21 @@ button:disabled {
 
   .h-earth-3d-control-grid .h-earth-3d-panel,
   .h-earth-3d-claim-boundary {
-    max-height: 62px;
+    max-height: 66px;
+  }
+
+  .h-earth-layer-water-surface-plane .h-earth-render-object,
+  .h-earth-material-water,
+  .h-earth-layer-dry-sand-transition .h-earth-render-object,
+  .h-earth-material-dry-sand,
+  .h-earth-layer-foreground-wet-sand .h-earth-render-object,
+  .h-earth-material-wet-sand {
+    width: 92vw;
+  }
+
+  .h-earth-layer-air-haze-light .h-earth-render-object,
+  .h-earth-material-air-haze {
+    width: 96vw;
   }
 }
 

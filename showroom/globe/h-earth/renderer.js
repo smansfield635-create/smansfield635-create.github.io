@@ -1,25 +1,25 @@
 // /showroom/globe/h-earth/renderer.js
 // COMPLETE RENEWED FILE
-// H_EARTH_3D_RENDERER_FILE_BIRTH_STEP_023A_MOUNT_API_AND_RENDER_PORT_RENEWAL_PACKET_v1
+// H_EARTH_3D_RENDERER_FILE_BIRTH_STEP_023B_PROJECTION_SCALE_SHAPE_STANDARD_RENEWAL_v1
 //
 // Renews:
-// H_EARTH_3D_RENDERER_FILE_BIRTH_STEP_023_v1
-//
-// Craft basis:
-// Current route-chain live baselines were not recovered from Drive. The renderer
-// renewal is based on the existing in-room Step 023 renderer.js baseline, the
-// accepted in-room canon chain, the Step 029 index.js call shape, the API
-// structure approval, and recovered scratch context only.
+// H_EARTH_3D_RENDERER_FILE_BIRTH_STEP_023A_MOUNT_API_AND_RENDER_PORT_RENEWAL_PACKET_v1
 //
 // Purpose:
 // Multi-port DOM/CSS-3D candidate renderer host with explicit mount/destroy API.
 //
-// This file preserves the descriptor-renderer role and adds renderer-side
-// support ports for material class resolution, layer placement, DOM node
-// creation, renderer-owned cleanup, and Step 029 bootstrap compatibility.
-//
-// This complete renewal also preserves
-// H_EARTH_3D_RENDER_VOLUME_MODEL.previewContainer for compositor compatibility.
+// Renewal scope:
+// - Preserve Step 023A mount/destroy API.
+// - Preserve Step 023A render ports.
+// - Preserve Step 023A previewContainer compatibility.
+// - Add canonical renderer-owned projection scale shape required by compositor.
+// - Expose H_EARTH_3D_RENDER_PROJECTION_MODEL.scale.unitToCssPixel.
+// - Expose H_EARTH_3D_RENDER_PROJECTION_MODEL.scale.yInversionFactor.
+// - Expose H_EARTH_3D_RENDER_PROJECTION_MODEL.scale.zDepthMultiplier.
+// - Preserve descriptor renderer role.
+// - Preserve all no-WebGL, no-canvas, no-final-renderer, no-renderer-pass,
+//   no-visual-pass, no-validation, no-production, no-traversal,
+//   no-simulation, and no-matrix-collapse boundaries.
 //
 // This file does not own capacity law, environment object definitions,
 // compositor ordering law, controller inspection law, route shell HTML, route
@@ -56,16 +56,19 @@ import {
 
 export const H_EARTH_3D_RENDERER_CONTRACT = Object.freeze({
   contractId:
+    'H_EARTH_3D_RENDERER_FILE_BIRTH_STEP_023B_PROJECTION_SCALE_SHAPE_STANDARD_RENEWAL_v1',
+  renewedFrom:
     'H_EARTH_3D_RENDERER_FILE_BIRTH_STEP_023A_MOUNT_API_AND_RENDER_PORT_RENEWAL_PACKET_v1',
-  renewedFrom: 'H_EARTH_3D_RENDERER_FILE_BIRTH_STEP_023_v1',
+  priorRendererBaseline: 'H_EARTH_3D_RENDERER_FILE_BIRTH_STEP_023_v1',
 
   file: '/showroom/globe/h-earth/renderer.js',
   route: '/showroom/globe/h-earth/',
   sourceRoot: '/h-earth-3d/',
 
-  fileClass: 'MULTI_PORT_DOM_CSS_3D_RENDERER_HOST_WITH_MOUNT_DESTROY_API',
+  fileClass:
+    'MULTI_PORT_DOM_CSS_3D_RENDERER_HOST_WITH_PROJECTION_SCALE_STANDARD',
   status:
-    'DETERMINISTIC_DOM_CSS_3D_CANDIDATE_RENDERER_HOST_DEFINED_RENEWED',
+    'DETERMINISTIC_DOM_CSS_3D_CANDIDATE_RENDERER_HOST_DEFINED_RENEWED_PROJECTION_SCALE_COMPATIBLE',
 
   targetMatrix: 'H-Earth',
   matrixRole: 'Ground-View Matrix',
@@ -79,28 +82,31 @@ export const H_EARTH_3D_RENDERER_CONTRACT = Object.freeze({
   craftBasis: Object.freeze({
     currentRouteChainLiveBaselinesRecoveredFromDrive: false,
     constructionBasis: Object.freeze([
-      'existing in-room Step 023 renderer.js baseline',
-      'accepted in-room canon chain',
-      'Step 029 index.js call shape',
-      'API structure approval',
+      'existing in-room Step 023A renderer.js renewal',
+      'accepted renderer/compositor projection-shape standard',
+      'compositor import failure evidence',
+      'Step 029D index.js route-bootstrap consumer shape',
       'recovered scratch context only'
     ])
   }),
 
   renewalScope: Object.freeze({
-    mountApiAdded: true,
-    destroyApiAdded: true,
-    selectRenderInputHelperAdded: true,
-    renderPortsAdded: true,
-    nodeFactoryPortAdded: true,
-    materialPortAdded: true,
-    layerPortAdded: true,
-    previewContainerPreservedForCompositorCompatibility: true,
-    step029IndexCompatibilityPreserved: true,
-    descriptorExportsPreserved: true
+    step023aMountApiPreserved: true,
+    step023aDestroyApiPreserved: true,
+    step023aSelectRenderInputHelperPreserved: true,
+    step023aRenderPortsPreserved: true,
+    step023aPreviewContainerPreserved: true,
+    projectionScaleShapeAdded: true,
+    projectionScaleUnitToCssPixelAdded: true,
+    projectionScaleYInversionFactorAdded: true,
+    projectionScaleZDepthMultiplierAdded: true,
+    compositorProjectionShapeCompatibilityAdded: true,
+    descriptorExportsPreserved: true,
+    step029IndexCompatibilityPreserved: true
   }),
 
   rendererRole: Object.freeze({
+    ownsProjectionConstants: true,
     ownsMountApi: true,
     ownsDestroyApi: true,
     ownsRendererHostContract: true,
@@ -183,10 +189,30 @@ export const H_EARTH_3D_RENDERER_MOUNT_CONTRACT = Object.freeze({
 });
 
 export const H_EARTH_3D_RENDER_PROJECTION_MODEL = Object.freeze({
-  modelId: 'H_EARTH_3D_RENDER_PROJECTION_MODEL_STEP_023A',
+  modelId: 'H_EARTH_3D_RENDER_PROJECTION_MODEL_STEP_023B',
+  renewedFrom: 'H_EARTH_3D_RENDER_PROJECTION_MODEL_STEP_023A',
   projectionClass: 'CSS_3D_CANDIDATE_PROJECTION_DESCRIPTOR',
   coordinateSystem: 'candidate-local-x-y-z',
   cssTransformUnit: 'px',
+
+  scale: Object.freeze({
+    unitToCssPixel: 1,
+    yInversionFactor: -1,
+    zDepthMultiplier: 1,
+
+    source: 'CANON_RENDERER_SCALE',
+    rendererOwnedProjectionConstants: true,
+    compositorMayNormalize: true,
+    indexMayPatchProjectionMath: false,
+
+    finalProjectionValidationClaim: false,
+    rendererPassClaim: false,
+    visualPassClaim: false,
+    validationClaim: false,
+    productionClaim: false,
+    claimBoundaryPreserved: true
+  }),
+
   transformOrder: Object.freeze([
     'translate3d',
     'rotateX',
@@ -194,13 +220,29 @@ export const H_EARTH_3D_RENDER_PROJECTION_MODEL = Object.freeze({
     'rotateZ',
     'scale'
   ]),
+
+  projectionShapeStandard: Object.freeze({
+    standardId:
+      'H_EARTH_3D_RENDERER_COMPOSITOR_PROJECTION_SHAPE_STANDARD_PACKET_v1',
+    requiredScaleShapePresent: true,
+    requiredUnitToCssPixelPresent: true,
+    requiredYInversionFactorPresent: true,
+    requiredZDepthMultiplierPresent: true,
+    compositorImportSafetySupported: true,
+    indexSideProjectionPatchingForbidden: true
+  }),
+
   finalProjectionValidationClaim: false,
+  rendererPassClaim: false,
   visualPassClaim: false,
+  validationClaim: false,
+  productionClaim: false,
   claimBoundaryPreserved: true
 });
 
 export const H_EARTH_3D_RENDER_VOLUME_MODEL = Object.freeze({
-  modelId: 'H_EARTH_3D_RENDER_VOLUME_MODEL_STEP_023A',
+  modelId: 'H_EARTH_3D_RENDER_VOLUME_MODEL_STEP_023B',
+  renewedFrom: 'H_EARTH_3D_RENDER_VOLUME_MODEL_STEP_023A',
   previewVolumeOnly: true,
   css3dCandidateVolume: true,
 
@@ -252,7 +294,7 @@ export const H_EARTH_3D_RENDER_VOLUME_MODEL = Object.freeze({
 });
 
 export const H_EARTH_3D_RENDER_GEOMETRY_MAP = Object.freeze({
-  modelId: 'H_EARTH_3D_RENDER_GEOMETRY_MAP_STEP_023A',
+  modelId: 'H_EARTH_3D_RENDER_GEOMETRY_MAP_STEP_023B',
   geometryClass: 'CANDIDATE_DESCRIPTOR_GEOMETRY_MAP',
   finalGeometryClaim: false,
   rendererPassClaim: false,
@@ -263,7 +305,7 @@ export const H_EARTH_3D_RENDER_GEOMETRY_MAP = Object.freeze({
 });
 
 export const H_EARTH_3D_RENDER_SURFACE_SAMPLING_MODEL = Object.freeze({
-  modelId: 'H_EARTH_3D_RENDER_SURFACE_SAMPLING_MODEL_STEP_023A',
+  modelId: 'H_EARTH_3D_RENDER_SURFACE_SAMPLING_MODEL_STEP_023B',
   candidateSurfaceSamplingOnly: true,
   terrainEngineClaim: false,
   physicsClaim: false,
@@ -272,7 +314,7 @@ export const H_EARTH_3D_RENDER_SURFACE_SAMPLING_MODEL = Object.freeze({
 });
 
 export const H_EARTH_3D_RENDER_SHORELINE_CURVE_MODEL = Object.freeze({
-  modelId: 'H_EARTH_3D_RENDER_SHORELINE_CURVE_MODEL_STEP_023A',
+  modelId: 'H_EARTH_3D_RENDER_SHORELINE_CURVE_MODEL_STEP_023B',
   candidateShorelineCurveOnly: true,
   fluidSimulationClaim: false,
   swimmingClaim: false,
@@ -281,7 +323,7 @@ export const H_EARTH_3D_RENDER_SHORELINE_CURVE_MODEL = Object.freeze({
 });
 
 export const H_EARTH_3D_RENDER_CLUSTER_MODEL = Object.freeze({
-  modelId: 'H_EARTH_3D_RENDER_CLUSTER_MODEL_STEP_023A',
+  modelId: 'H_EARTH_3D_RENDER_CLUSTER_MODEL_STEP_023B',
   candidateClusterDescriptorsOnly: true,
   collisionClaim: false,
   traversalClaim: false,
@@ -290,7 +332,7 @@ export const H_EARTH_3D_RENDER_CLUSTER_MODEL = Object.freeze({
 });
 
 export const H_EARTH_3D_RENDER_CONTEXT_COMPRESSION_MODEL = Object.freeze({
-  modelId: 'H_EARTH_3D_RENDER_CONTEXT_COMPRESSION_MODEL_STEP_023A',
+  modelId: 'H_EARTH_3D_RENDER_CONTEXT_COMPRESSION_MODEL_STEP_023B',
   contextCompressionOnly: true,
   manorInteriorAccessClaim: false,
   distantTraversalClaim: false,
@@ -342,7 +384,7 @@ export const H_EARTH_3D_RENDER_NODE_BUDGET = Object.freeze({
 });
 
 export const H_EARTH_3D_RENDER_INSPECTION_AFFORDANCE_MODEL = Object.freeze({
-  modelId: 'H_EARTH_3D_RENDER_INSPECTION_AFFORDANCE_MODEL_STEP_023A',
+  modelId: 'H_EARTH_3D_RENDER_INSPECTION_AFFORDANCE_MODEL_STEP_023B',
   descriptorAffordancesOnly: true,
   defaultAffordancesEnabled: false,
   actionExecutionClaim: false,
@@ -432,6 +474,11 @@ export function resolveProjectedPosition(object) {
     object?.candidateTransform?.position ||
     Object.freeze({ x: 0, y: 0, z: 0 });
 
+  const scale = H_EARTH_3D_RENDER_PROJECTION_MODEL.scale;
+  const unitToCssPixel = normalizeHEarthRenderNumber(scale.unitToCssPixel, 1);
+  const yInversionFactor = normalizeHEarthRenderNumber(scale.yInversionFactor, -1);
+  const zDepthMultiplier = normalizeHEarthRenderNumber(scale.zDepthMultiplier, 1);
+
   const x = normalizeHEarthRenderNumber(center.x, 0);
   const y = normalizeHEarthRenderNumber(center.y, 0);
   const z = normalizeHEarthRenderNumber(center.z, 0);
@@ -440,11 +487,18 @@ export function resolveProjectedPosition(object) {
     x,
     y,
     z,
-    projectedX: x,
-    projectedY: -y,
-    projectedZ: z,
+    unitToCssPixel,
+    yInversionFactor,
+    zDepthMultiplier,
+    projectedX: x * unitToCssPixel,
+    projectedY: y * yInversionFactor * unitToCssPixel,
+    projectedZ: z * zDepthMultiplier * unitToCssPixel,
+    projectionScaleSource: scale.source || 'CANON_RENDERER_SCALE',
     projectionOnly: true,
     finalProjectionValidationClaim: false,
+    rendererPassClaim: false,
+    visualPassClaim: false,
+    validationClaim: false,
     claimBoundaryPreserved: true
   });
 }
@@ -489,6 +543,7 @@ export function resolveCssTransform(object) {
     scaleZ,
     candidateTransformOnly: true,
     finalGeometryClaim: false,
+    rendererPassClaim: false,
     visualPassClaim: false,
     validationClaim: false,
     claimBoundaryPreserved: true
@@ -1163,15 +1218,17 @@ export const H_EARTH_3D_RENDERER_RECEIPT = Object.freeze({
   receiptType: 'H_EARTH_3D_RENDERER_RECEIPT',
   file: '/showroom/globe/h-earth/renderer.js',
   contractId:
+    'H_EARTH_3D_RENDERER_FILE_BIRTH_STEP_023B_PROJECTION_SCALE_SHAPE_STANDARD_RENEWAL_v1',
+  renewedFrom:
     'H_EARTH_3D_RENDERER_FILE_BIRTH_STEP_023A_MOUNT_API_AND_RENDER_PORT_RENEWAL_PACKET_v1',
-  renewedFrom: 'H_EARTH_3D_RENDERER_FILE_BIRTH_STEP_023_v1',
+  priorRendererBaseline: 'H_EARTH_3D_RENDERER_FILE_BIRTH_STEP_023_v1',
 
   currentRouteChainLiveBaselinesRecoveredFromDrive: false,
   constructionBasis: Object.freeze([
-    'existing in-room Step 023 renderer.js baseline',
-    'accepted in-room canon chain',
-    'Step 029 index.js call shape',
-    'API structure approval',
+    'existing in-room Step 023A renderer.js renewal',
+    'accepted renderer/compositor projection-shape standard',
+    'compositor import failure evidence',
+    'Step 029D index.js route-bootstrap consumer shape',
     'recovered scratch context only'
   ]),
 
@@ -1188,6 +1245,12 @@ export const H_EARTH_3D_RENDERER_RECEIPT = Object.freeze({
   layerPortBound: true,
 
   previewContainerPreservedForCompositorCompatibility: true,
+
+  projectionScaleShapeDefined: true,
+  projectionScaleUnitToCssPixelDefined: true,
+  projectionScaleYInversionFactorDefined: true,
+  projectionScaleZDepthMultiplierDefined: true,
+  compositorProjectionShapeCompatibilitySupported: true,
 
   step029IndexCompatibilityPreserved: true,
   aggregateExposesMountApi: true,
@@ -1243,6 +1306,7 @@ export const H_EARTH_3D_RENDERER = Object.freeze({
 
   candidateRenderScene: H_EARTH_3D_CANDIDATE_RENDER_SCENE,
 
+  normalizeHEarthRenderNumber,
   resolveRenderLayer,
   resolveMaterialToken,
   resolveProjectedPosition,

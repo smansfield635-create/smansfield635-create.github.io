@@ -1,24 +1,28 @@
 // /showroom/globe/h-earth/index.js
 // RENEWED FILE
-// H_EARTH_3D_INDEX_BOOTSTRAP_FILE_BIRTH_STEP_029A_RENDERER_API_RENEWAL_v1
+// H_EARTH_3D_INDEX_BOOTSTRAP_FILE_BIRTH_STEP_029D_RUNTIME_FAILURE_CODE_CLEANUP_v1
 //
 // Renews:
-// H_EARTH_3D_INDEX_BOOTSTRAP_FILE_BIRTH_STEP_029_v1
+// H_EARTH_3D_INDEX_BOOTSTRAP_FILE_BIRTH_STEP_029C_MOUNT_RECEIPT_STATUS_CLEANUP_v1
 //
 // Purpose:
 // Defines the H-Earth 3D Candidate Preview route bootstrap and
 // route-side activation orchestrator.
 //
 // Renewal scope:
-// - Update renderer contract reference from Step 023 to Step 023A.
-// - Consume the Step 023A DOM/CSS-3D renderer mount/destroy API.
-// - Import mountHEarthRenderer and destroyHEarthRenderer directly.
-// - Prefer named mount/destroy exports before aggregate fallback.
-// - Preserve safe fallback when mount API, destroy API, or mount node is missing.
-// - Preserve route-side DOM/CSS-3D candidate activation boundary.
-// - Preserve all no-WebGL, no-canvas, no-final-renderer, no-visual-pass,
-//   no-validation, no-production, no-traversal, no-simulation, and
-//   no-matrix-collapse boundaries.
+// - Preserve Step 029C canon export alignment.
+// - Preserve recovered INDEX_029B_ALLOWED_IMPORTS.
+// - Preserve Step 023A aggregate renderer mount/destroy API preference.
+// - Preserve renderer mount status handling from mount receipt.
+// - Preserve renderer destroy status handling from destroy receipt.
+// - Add runtime failure-code reporting for renderer mount fallback.
+// - Preserve descriptor-ready no-renderer-API fallback as warning-only.
+// - Preserve actual fallback failure code when renderer API exists but mount fails.
+// - Preserve external route autostart discipline through index.html.
+// - Preserve HTML/CSS shell compatibility.
+// - Preserve all no-WebGL, no-canvas, no-final-renderer, no-renderer-pass,
+//   no-visual-pass, no-validation, no-production, no-traversal,
+//   no-simulation, and no-matrix-collapse boundaries.
 //
 // This file may lawfully touch the route page and bind DOM controls,
 // but only inside the authorized DOM/CSS-3D candidate boundary.
@@ -44,11 +48,14 @@ import {
 
 import {
   H_EARTH_3D_RENDERER,
-  H_EARTH_3D_CANDIDATE_RENDER_SCENE,
   H_EARTH_3D_RENDERER_RECEIPT,
+  H_EARTH_3D_CANDIDATE_RENDER_SCENE,
   H_EARTH_3D_RENDER_BOUNDARY_FLAGS,
+  H_EARTH_3D_RENDER_VOLUME_MODEL,
+  H_EARTH_3D_RENDER_PORTS,
   mountHEarthRenderer,
   destroyHEarthRenderer,
+  selectHEarthRenderInput,
   getRendererReceipt
 } from './renderer.js';
 
@@ -82,8 +89,8 @@ import {
 } from './controller.js';
 
 export const H_EARTH_3D_INDEX_CONTRACT = Object.freeze({
-  contractId: 'H_EARTH_3D_INDEX_BOOTSTRAP_FILE_BIRTH_STEP_029A_RENDERER_API_RENEWAL_v1',
-  renewedFrom: 'H_EARTH_3D_INDEX_BOOTSTRAP_FILE_BIRTH_STEP_029_v1',
+  contractId: 'H_EARTH_3D_INDEX_BOOTSTRAP_FILE_BIRTH_STEP_029D_RUNTIME_FAILURE_CODE_CLEANUP_v1',
+  renewedFrom: 'H_EARTH_3D_INDEX_BOOTSTRAP_FILE_BIRTH_STEP_029C_MOUNT_RECEIPT_STATUS_CLEANUP_v1',
 
   file: '/showroom/globe/h-earth/index.js',
   route: '/showroom/globe/h-earth/',
@@ -92,7 +99,8 @@ export const H_EARTH_3D_INDEX_CONTRACT = Object.freeze({
 
   fileClass: 'ROUTE_BOOTSTRAP_DOM_CSS_3D_CANDIDATE_PREVIEW_ORCHESTRATOR',
   activationScope: 'AUTHORIZED_ROUTE_SIDE_CANDIDATE_ACTIVATION_DOM_CSS_3D_ONLY',
-  activationOption: 'STEP_023A_RENDERER_API_WITH_SAFE_FALLBACK',
+  activationOption:
+    'STEP_023A_CANON_EXPORT_ALIGNED_RENDERER_API_WITH_RUNTIME_FAILURE_CODE_CLEANUP',
 
   upstreamCapacityFile: '/showroom/globe/h-earth/capacity.js',
   upstreamEnvironmentFile: '/showroom/globe/h-earth/environment.js',
@@ -120,13 +128,28 @@ export const H_EARTH_3D_INDEX_CONTRACT = Object.freeze({
   firstReceipt: 'H_EARTH_GROUND_INSPECTION_RECEIPT',
 
   renewalScope: Object.freeze({
+    canonExportManifestApplied: true,
+    allowedImportSetUsedOnly: true,
     rendererContractUpdatedToStep023A: true,
-    rendererMountApiDirectNamedImportAdded: true,
-    rendererDestroyApiDirectNamedImportAdded: true,
-    namedRendererApiPreferredBeforeAggregateFallback: true,
+    rendererAggregateMountApiPreferred: true,
+    rendererAggregateDestroyApiPreferred: true,
+    namedRendererExportsConfirmedButSecondary: true,
+    speculativeApiFallbacksRemoved: true,
+    unknownCompositorModelImportsExcluded: true,
+    receiptAccessPatternPreservedAsBothAllowed: true,
+    rendererMountReceiptStatusRead: true,
+    rendererDestroyReceiptStatusRead: true,
+    rendererRuntimeFailureCodesReported: true,
+    missingRendererApiFallbackWarningOnly: true,
+    mountNodeMissingWithRendererApiIsFailureCode: true,
+    mountReceiptFailureIsFailureCode: true,
+    noThrowDoesNotEqualMountSuccess: true,
+    noThrowDoesNotEqualDestroySuccess: true,
     safeFallbackPreserved: true,
     htmlCompatibilityPreserved: true,
     cssCompatibilityPreserved: true,
+    externalRouteAutostartPreserved: true,
+    moduleLevelAutoStartAdded: false,
     redesignClaim: false
   }),
 
@@ -136,7 +159,7 @@ export const H_EARTH_3D_INDEX_CONTRACT = Object.freeze({
     initializesRouteStatus: true,
     mayBindSafeControllerControls: true,
     mayExposeDebugStatus: true,
-    mayCallRendererMountApiIfExplicitlyExported: true,
+    mayCallRendererMountApiIfCanonExposed: true,
     mayUseNoMountFallbackIfRendererApiMissing: true,
 
     ownsRenderLogic: false,
@@ -199,9 +222,15 @@ export const H_EARTH_3D_INDEX_BOUND_CHAIN = Object.freeze({
     renewedFrom: 'H_EARTH_3D_RENDERER_FILE_BIRTH_STEP_023_v1',
     aggregate: H_EARTH_3D_RENDERER,
     candidateRenderScene: H_EARTH_3D_CANDIDATE_RENDER_SCENE,
+    renderVolumeModel: H_EARTH_3D_RENDER_VOLUME_MODEL,
+    renderPorts: H_EARTH_3D_RENDER_PORTS,
     boundaryFlags: H_EARTH_3D_RENDER_BOUNDARY_FLAGS,
-    mountApiNamedExportAvailable: typeof mountHEarthRenderer === 'function',
-    destroyApiNamedExportAvailable: typeof destroyHEarthRenderer === 'function',
+    aggregateMountApiAvailable:
+      typeof H_EARTH_3D_RENDERER?.mountHEarthRenderer === 'function',
+    aggregateDestroyApiAvailable:
+      typeof H_EARTH_3D_RENDERER?.destroyHEarthRenderer === 'function',
+    namedMountApiAvailable: typeof mountHEarthRenderer === 'function',
+    namedDestroyApiAvailable: typeof destroyHEarthRenderer === 'function',
     receipt: H_EARTH_3D_RENDERER_RECEIPT
   }),
 
@@ -234,12 +263,18 @@ export const H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS = Object.freeze({
   statusDomUpdateAllowedWithinCandidateBoundary: true,
   descriptorDisplayAllowedWithinCandidateBoundary: true,
 
-  rendererMountOnlyIfExplicitApiExists: true,
+  rendererMountOnlyIfCanonApiExists: true,
   step023aRendererMountApiSupported: true,
-  namedRendererMountApiPreferred: true,
-  aggregateRendererMountApiFallbackAllowed: true,
-  missingRendererMountApiIsControlledDescriptorReadyState: true,
+  aggregateRendererMountApiPreferred: true,
+  namedRendererMountApiAllowed: true,
+  noSpeculativeRendererApi: true,
   noInventedRendererApi: true,
+  mountReceiptMustConfirmMounted: true,
+  destroyReceiptMustConfirmDestroyed: true,
+  runtimeFailureCodesRequiredForMountFailure: true,
+  noThrowDoesNotEqualMountSuccess: true,
+  noThrowDoesNotEqualDestroySuccess: true,
+  missingRendererMountApiIsControlledDescriptorReadyState: true,
 
   repositoryMutation: false,
   unauthorizedRouteExpansion: false,
@@ -299,8 +334,10 @@ export const H_EARTH_3D_ROUTE_MOUNT_CONTRACT = Object.freeze({
   ]),
 
   rendererMountPolicy: Object.freeze({
-    rendererMountNodeRequiredOnlyWhenRendererMountApiExists: true,
+    rendererMountNodeRequiredWhenRendererMountApiExists: true,
     rendererMountNodeMissingWithoutRendererApiIsNotCanonChainFailure: true,
+    mountReceiptRequiredForMountedStatus: true,
+    runtimeFailureCodeRequiredForMountFallback: true,
     noWebGLFallback: true,
     noCanvasFallback: true,
     noFakeRendererMount: true
@@ -319,6 +356,7 @@ export const H_EARTH_3D_ROUTE_FAILURE_CODES = Object.freeze({
   MISSING_RENDERER_MOUNT_NODE: 'MISSING_RENDERER_MOUNT_NODE',
   MISSING_RENDERER_MOUNT_API: 'MISSING_RENDERER_MOUNT_API',
   RENDERER_MOUNT_FAILED: 'RENDERER_MOUNT_FAILED',
+  RENDERER_DESTROY_FAILED: 'RENDERER_DESTROY_FAILED',
   CONTROLLER_BINDING_SKIPPED: 'CONTROLLER_BINDING_SKIPPED',
   BOOTSTRAP_FALLBACK_ACTIVE: 'BOOTSTRAP_FALLBACK_ACTIVE'
 });
@@ -332,7 +370,9 @@ export const H_EARTH_3D_ROUTE_BOOTSTRAP_ORDER = Object.freeze([
   'verify receipts/contracts',
   'resolve DOM mount points',
   'initialize route status',
-  'mount DOM/CSS-3D candidate renderer only if explicit authorized renderer API exists',
+  'mount DOM/CSS-3D candidate renderer only if canon renderer API exists',
+  'read renderer mount receipt before declaring mounted',
+  'record runtime failure code if renderer API exists but mount does not succeed',
   'bind safe inspection controls',
   'expose boot receipt/status',
   'fail safely if any required dependency is missing'
@@ -377,6 +417,12 @@ function freezeStatus(status) {
     rendererMountSkipped: status.rendererMountSkipped === true,
     rendererMountSkipReason: status.rendererMountSkipReason || null,
     rendererMountError: status.rendererMountError || null,
+    rendererMountReceipt: status.rendererMountReceipt || null,
+
+    rendererDestroyAttempted: status.rendererDestroyAttempted === true,
+    rendererDestroyed: status.rendererDestroyed === true,
+    rendererDestroyError: status.rendererDestroyError || null,
+    rendererDestroyReceipt: status.rendererDestroyReceipt || null,
 
     rendererApiSource: status.rendererApiSource || null,
     rendererDestroyApiSource: status.rendererDestroyApiSource || null,
@@ -419,51 +465,59 @@ function setRouteBootstrapStatus(nextStatus) {
 }
 
 export function getRendererMountApi() {
-  if (typeof mountHEarthRenderer === 'function') {
-    return mountHEarthRenderer;
-  }
-
   if (typeof H_EARTH_3D_RENDERER?.mountHEarthRenderer === 'function') {
     return H_EARTH_3D_RENDERER.mountHEarthRenderer;
+  }
+
+  if (typeof mountHEarthRenderer === 'function') {
+    return mountHEarthRenderer;
   }
 
   return null;
 }
 
 export function getRendererMountApiSource() {
-  if (typeof mountHEarthRenderer === 'function') {
-    return 'NAMED_EXPORT_mountHEarthRenderer';
+  if (typeof H_EARTH_3D_RENDERER?.mountHEarthRenderer === 'function') {
+    return 'AGGREGATE_PROPERTY_H_EARTH_3D_RENDERER.mountHEarthRenderer';
   }
 
-  if (typeof H_EARTH_3D_RENDERER?.mountHEarthRenderer === 'function') {
-    return 'AGGREGATE_EXPORT_H_EARTH_3D_RENDERER.mountHEarthRenderer';
+  if (typeof mountHEarthRenderer === 'function') {
+    return 'NAMED_EXPORT_mountHEarthRenderer';
   }
 
   return null;
 }
 
 export function getRendererDestroyApi() {
-  if (typeof destroyHEarthRenderer === 'function') {
-    return destroyHEarthRenderer;
-  }
-
   if (typeof H_EARTH_3D_RENDERER?.destroyHEarthRenderer === 'function') {
     return H_EARTH_3D_RENDERER.destroyHEarthRenderer;
+  }
+
+  if (typeof destroyHEarthRenderer === 'function') {
+    return destroyHEarthRenderer;
   }
 
   return null;
 }
 
 export function getRendererDestroyApiSource() {
+  if (typeof H_EARTH_3D_RENDERER?.destroyHEarthRenderer === 'function') {
+    return 'AGGREGATE_PROPERTY_H_EARTH_3D_RENDERER.destroyHEarthRenderer';
+  }
+
   if (typeof destroyHEarthRenderer === 'function') {
     return 'NAMED_EXPORT_destroyHEarthRenderer';
   }
 
-  if (typeof H_EARTH_3D_RENDERER?.destroyHEarthRenderer === 'function') {
-    return 'AGGREGATE_EXPORT_H_EARTH_3D_RENDERER.destroyHEarthRenderer';
-  }
-
   return null;
+}
+
+export function isRendererMountReceiptMounted(receipt) {
+  return receipt?.rendererMounted === true || receipt?.mounted === true;
+}
+
+export function isRendererDestroyReceiptDestroyed(receipt) {
+  return receipt?.destroyed === true;
 }
 
 export function verifyHEarthRouteBoundChain() {
@@ -474,6 +528,12 @@ export function verifyHEarthRouteBoundChain() {
     compositorReceiptPresent: Boolean(getCompositorReceipt()),
     controllerReceiptPresent: Boolean(getControllerReceipt()),
 
+    capacityReceiptConstantPresent: Boolean(H_EARTH_3D_CAPACITY_RECEIPT),
+    environmentReceiptConstantPresent: Boolean(H_EARTH_3D_ENVIRONMENT_RECEIPT),
+    rendererReceiptConstantPresent: Boolean(H_EARTH_3D_RENDERER_RECEIPT),
+    compositorReceiptConstantPresent: Boolean(H_EARTH_3D_COMPOSITOR_RECEIPT),
+    controllerReceiptConstantPresent: Boolean(H_EARTH_3D_CONTROLLER_RECEIPT),
+
     capacityAggregatePresent: Boolean(H_EARTH_3D_CAPACITY),
     environmentAggregatePresent: Boolean(H_EARTH_3D_ENVIRONMENT),
     rendererAggregatePresent: Boolean(H_EARTH_3D_RENDERER),
@@ -483,7 +543,11 @@ export function verifyHEarthRouteBoundChain() {
     rendererMountApiPresent: Boolean(getRendererMountApi()),
     rendererDestroyApiPresent: Boolean(getRendererDestroyApi()),
     rendererMountApiSource: getRendererMountApiSource(),
-    rendererDestroyApiSource: getRendererDestroyApiSource()
+    rendererDestroyApiSource: getRendererDestroyApiSource(),
+
+    rendererVolumeModelPresent: Boolean(H_EARTH_3D_RENDER_VOLUME_MODEL),
+    rendererPortsPresent: Boolean(H_EARTH_3D_RENDER_PORTS),
+    rendererInputSelectorPresent: typeof selectHEarthRenderInput === 'function'
   });
 
   const failureCodes = [];
@@ -608,9 +672,9 @@ export function renderHEarthRouteStatus(mountPoints, status = latestRouteBootstr
     const fallbackMessage = status.bootstrapFallbackActive
       ? `H-Earth bootstrap fallback active: ${status.failureCodes.join(', ')}`
       : status.bootstrapReadyDescriptorOnlyNoRendererMountApi
-        ? 'H-Earth descriptor bootstrap ready. Renderer mount skipped because explicit renderer mount API is missing.'
+        ? 'H-Earth descriptor bootstrap ready. Renderer mount skipped because canon renderer mount API is missing.'
         : status.bootstrapReadyCandidateOnly
-          ? 'H-Earth DOM/CSS-3D candidate bootstrap ready. Renderer mount API was called within candidate boundary.'
+          ? 'H-Earth DOM/CSS-3D candidate bootstrap ready. Renderer mount receipt confirmed mounted.'
           : 'H-Earth route bootstrap status pending.';
 
     writeText(mountPoints.fallbackNode, fallbackMessage);
@@ -822,6 +886,7 @@ export function attemptHEarthRendererMount(mountPoints, options = {}) {
       rendererMountSkipped: true,
       rendererMountSkipReason: H_EARTH_3D_ROUTE_FAILURE_CODES.MISSING_RENDERER_MOUNT_API,
       rendererMountError: null,
+      rendererMountReceipt: null,
       statusLevel:
         H_EARTH_3D_ROUTE_BOOTSTRAP_STATUS_LEVELS
           .BOOTSTRAP_READY_DESCRIPTOR_ONLY_NO_RENDERER_MOUNT_API,
@@ -840,6 +905,7 @@ export function attemptHEarthRendererMount(mountPoints, options = {}) {
       rendererMountSkipped: true,
       rendererMountSkipReason: H_EARTH_3D_ROUTE_FAILURE_CODES.MISSING_RENDERER_MOUNT_NODE,
       rendererMountError: null,
+      rendererMountReceipt: null,
       statusLevel: H_EARTH_3D_ROUTE_BOOTSTRAP_STATUS_LEVELS.BOOTSTRAP_FALLBACK_ACTIVE,
       boundary: H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS
     });
@@ -856,18 +922,24 @@ export function attemptHEarthRendererMount(mountPoints, options = {}) {
       boundary: H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS
     });
 
+    const mounted = isRendererMountReceiptMounted(result);
+
     return Object.freeze({
       rendererMountApiConfirmed: true,
       rendererDestroyApiConfirmed: Boolean(rendererDestroyApi),
       rendererApiSource,
       rendererDestroyApiSource,
       rendererMountAttempted: true,
-      rendererMounted: true,
+      rendererMounted: mounted,
       rendererMountSkipped: false,
-      rendererMountSkipReason: null,
+      rendererMountSkipReason: mounted
+        ? null
+        : H_EARTH_3D_ROUTE_FAILURE_CODES.RENDERER_MOUNT_FAILED,
       rendererMountError: null,
-      rendererMountResult: result || null,
-      statusLevel: H_EARTH_3D_ROUTE_BOOTSTRAP_STATUS_LEVELS.BOOTSTRAP_READY_CANDIDATE_ONLY,
+      rendererMountReceipt: result || null,
+      statusLevel: mounted
+        ? H_EARTH_3D_ROUTE_BOOTSTRAP_STATUS_LEVELS.BOOTSTRAP_READY_CANDIDATE_ONLY
+        : H_EARTH_3D_ROUTE_BOOTSTRAP_STATUS_LEVELS.BOOTSTRAP_FALLBACK_ACTIVE,
       boundary: H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS
     });
   } catch (error) {
@@ -879,8 +951,9 @@ export function attemptHEarthRendererMount(mountPoints, options = {}) {
       rendererMountAttempted: true,
       rendererMounted: false,
       rendererMountSkipped: false,
-      rendererMountSkipReason: null,
+      rendererMountSkipReason: H_EARTH_3D_ROUTE_FAILURE_CODES.RENDERER_MOUNT_FAILED,
       rendererMountError: error instanceof Error ? error.message : String(error),
+      rendererMountReceipt: null,
       statusLevel: H_EARTH_3D_ROUTE_BOOTSTRAP_STATUS_LEVELS.BOOTSTRAP_FALLBACK_ACTIVE,
       boundary: H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS
     });
@@ -937,7 +1010,8 @@ export function initializeHEarthRoute(options = {}) {
       rendererMountSkipped: true,
       rendererMountSkipReason: strictFailure
         ? H_EARTH_3D_ROUTE_FAILURE_CODES.BOOTSTRAP_FALLBACK_ACTIVE
-        : null
+        : null,
+      rendererMountReceipt: null
     });
 
     renderHEarthRouteStatus(mountPoints, failedStatus);
@@ -958,6 +1032,24 @@ export function initializeHEarthRoute(options = {}) {
 
   if (rendererMount.rendererMountSkipped && rendererMount.rendererMountSkipReason) {
     warningCodes.push(rendererMount.rendererMountSkipReason);
+  }
+
+  if (
+    rendererMount.rendererMountAttempted === true &&
+    rendererMount.rendererMounted !== true &&
+    rendererMount.rendererMountSkipReason
+  ) {
+    warningCodes.push(rendererMount.rendererMountSkipReason);
+  }
+
+  const runtimeFailureCodes = [];
+
+  if (
+    rendererMount.rendererMountApiConfirmed === true &&
+    rendererMount.rendererMounted !== true &&
+    rendererMount.rendererMountSkipReason
+  ) {
+    runtimeFailureCodes.push(rendererMount.rendererMountSkipReason);
   }
 
   const descriptorReadyNoMount =
@@ -983,7 +1075,10 @@ export function initializeHEarthRoute(options = {}) {
     chainReady: chain.chainReady,
     domReady: mountPoints.strictRequiredFound,
     controllerReady: controllerBinding.controllerReady,
-    rendererMountReady: rendererMount.rendererMountApiConfirmed && Boolean(mountPoints.rendererMount),
+    rendererMountReady:
+      rendererMount.rendererMountApiConfirmed &&
+      Boolean(mountPoints.rendererMount) &&
+      rendererMount.rendererMounted === true,
 
     bootstrapReadyCandidateOnly: candidateReady,
     bootstrapReadyDescriptorOnlyNoRendererMountApi: descriptorReadyNoMount,
@@ -992,8 +1087,8 @@ export function initializeHEarthRoute(options = {}) {
 
     statusLevel: finalStatusLevel,
 
-    failureCodes: Object.freeze([]),
-    warningCodes,
+    failureCodes: Object.freeze(runtimeFailureCodes),
+    warningCodes: Object.freeze(warningCodes),
 
     rendererMountApiConfirmed: rendererMount.rendererMountApiConfirmed,
     rendererDestroyApiConfirmed: rendererMount.rendererDestroyApiConfirmed,
@@ -1002,6 +1097,7 @@ export function initializeHEarthRoute(options = {}) {
     rendererMountSkipped: rendererMount.rendererMountSkipped,
     rendererMountSkipReason: rendererMount.rendererMountSkipReason,
     rendererMountError: rendererMount.rendererMountError,
+    rendererMountReceipt: rendererMount.rendererMountReceipt,
     rendererApiSource: rendererMount.rendererApiSource,
     rendererDestroyApiSource: rendererMount.rendererDestroyApiSource,
 
@@ -1024,6 +1120,8 @@ export function initializeHEarthRoute(options = {}) {
     chain,
     controllerBinding,
     rendererMount,
+    runtimeFailureCodes: Object.freeze(runtimeFailureCodes),
+    renderInputSelector: selectHEarthRenderInput,
     boundary: H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS
   });
 }
@@ -1034,16 +1132,22 @@ export function destroyHEarthRoute(options = {}) {
 
   let rendererDestroyed = false;
   let rendererDestroyError = null;
+  let rendererDestroyReceipt = null;
+  let rendererDestroyAttempted = false;
 
   if (destroyApi) {
+    rendererDestroyAttempted = true;
+
     try {
-      destroyApi({
+      rendererDestroyReceipt = destroyApi({
         mountNode: mountPoints.rendererMount,
         boundary: H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS
       });
-      rendererDestroyed = true;
+
+      rendererDestroyed = isRendererDestroyReceiptDestroyed(rendererDestroyReceipt);
     } catch (error) {
       rendererDestroyError = error instanceof Error ? error.message : String(error);
+      rendererDestroyed = false;
     }
   }
 
@@ -1055,11 +1159,15 @@ export function destroyHEarthRoute(options = {}) {
     rendererMounted: false,
     rendererMountAttempted: false,
     rendererMountSkipped: true,
+    rendererDestroyAttempted,
+    rendererDestroyed,
     rendererDestroyApiConfirmed: Boolean(destroyApi),
     rendererDestroyApiSource: getRendererDestroyApiSource(),
+    rendererDestroyReceipt,
+    rendererDestroyError,
     rendererMountSkipReason: rendererDestroyed
       ? null
-      : H_EARTH_3D_ROUTE_FAILURE_CODES.MISSING_RENDERER_MOUNT_API,
+      : H_EARTH_3D_ROUTE_FAILURE_CODES.RENDERER_DESTROY_FAILED,
     rendererMountError: rendererDestroyError,
     targetListBound: false,
     inspectGroundControlBound: false
@@ -1068,8 +1176,10 @@ export function destroyHEarthRoute(options = {}) {
   renderHEarthRouteStatus(mountPoints, nextStatus);
 
   return Object.freeze({
-    destroyed: true,
+    destroyed: rendererDestroyed,
     rendererDestroyed,
+    rendererDestroyAttempted,
+    rendererDestroyReceipt,
     rendererDestroyError,
     status: nextStatus,
     boundary: H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS
@@ -1080,12 +1190,13 @@ export function buildHEarthRouteBootstrapReceipt(status = latestRouteBootstrapSt
   return Object.freeze({
     receiptType: 'H_EARTH_3D_ROUTE_BOOTSTRAP_RECEIPT',
     file: '/showroom/globe/h-earth/index.js',
-    contractId: 'H_EARTH_3D_INDEX_BOOTSTRAP_FILE_BIRTH_STEP_029A_RENDERER_API_RENEWAL_v1',
-    renewedFrom: 'H_EARTH_3D_INDEX_BOOTSTRAP_FILE_BIRTH_STEP_029_v1',
+    contractId: 'H_EARTH_3D_INDEX_BOOTSTRAP_FILE_BIRTH_STEP_029D_RUNTIME_FAILURE_CODE_CLEANUP_v1',
+    renewedFrom: 'H_EARTH_3D_INDEX_BOOTSTRAP_FILE_BIRTH_STEP_029C_MOUNT_RECEIPT_STATUS_CLEANUP_v1',
     status: status.statusLevel,
 
     activationScope: 'AUTHORIZED_ROUTE_SIDE_CANDIDATE_ACTIVATION_DOM_CSS_3D_ONLY',
-    activationOption: 'STEP_023A_RENDERER_API_WITH_SAFE_FALLBACK',
+    activationOption:
+      'STEP_023A_CANON_EXPORT_ALIGNED_RENDERER_API_WITH_RUNTIME_FAILURE_CODE_CLEANUP',
 
     upstreamCapacityReceipt: getCapacityReceipt(),
     upstreamEnvironmentReceipt: getEnvironmentReceipt(),
@@ -1095,6 +1206,25 @@ export function buildHEarthRouteBootstrapReceipt(status = latestRouteBootstrapSt
 
     upstreamRendererContractId:
       'H_EARTH_3D_RENDERER_FILE_BIRTH_STEP_023A_MOUNT_API_AND_RENDER_PORT_RENEWAL_PACKET_v1',
+
+    canonExportAlignment: Object.freeze({
+      allowedImportSetUsedOnly: true,
+      rendererMountApiCanonPath: 'BOTH_NAMED_EXPORT_AND_AGGREGATE_PROPERTY',
+      preferredRendererMountPath: 'AGGREGATE_PROPERTY_PREFERRED',
+      unknownCompositorModelImportsExcluded: true,
+      speculativeApiFallbacksRemoved: true
+    }),
+
+    functionalStatusCleanup: Object.freeze({
+      rendererMountedDerivedFromMountReceipt: true,
+      rendererDestroyedDerivedFromDestroyReceipt: true,
+      runtimeFailureCodesReportedForRendererMountFallback: true,
+      missingRendererApiFallbackWarningOnly: true,
+      noThrowDoesNotEqualMountSuccess: true,
+      noThrowDoesNotEqualDestroySuccess: true,
+      moduleLevelAutoStartAdded: false,
+      externalHtmlBootstrapCallExpected: true
+    }),
 
     chainReady: status.chainReady,
     domReady: status.domReady,
@@ -1115,6 +1245,12 @@ export function buildHEarthRouteBootstrapReceipt(status = latestRouteBootstrapSt
     rendererMountSkipped: status.rendererMountSkipped,
     rendererMountSkipReason: status.rendererMountSkipReason,
     rendererMountError: status.rendererMountError,
+    rendererMountReceipt: status.rendererMountReceipt,
+
+    rendererDestroyAttempted: status.rendererDestroyAttempted,
+    rendererDestroyed: status.rendererDestroyed,
+    rendererDestroyError: status.rendererDestroyError,
+    rendererDestroyReceipt: status.rendererDestroyReceipt,
 
     failureCodes: status.failureCodes,
     warningCodes: status.warningCodes,
@@ -1148,10 +1284,14 @@ export function buildHEarthRouteBootstrapReceipt(status = latestRouteBootstrapSt
       routeBootstrapOrchestrated: true,
       routeSideCandidateActivationDomCss3dOnly: true,
       step023aRendererMountApiSupported: true,
-      namedRendererApiPreferred: true,
-      aggregateRendererApiFallbackAllowed: true,
+      aggregateRendererApiPreferred: true,
+      namedRendererApiAllowed: true,
       descriptorOnlyReadyStateAllowed: true,
+      noSpeculativeRendererApi: true,
       noInventedRendererApi: true,
+      mountReceiptMustConfirmMounted: true,
+      destroyReceiptMustConfirmDestroyed: true,
+      runtimeFailureCodesRequiredForMountFailure: true,
 
       mutatesGitHub: false,
       unauthorizedRouteExpansion: false,
@@ -1211,6 +1351,8 @@ export const H_EARTH_3D_INDEX = Object.freeze({
   compositor: H_EARTH_3D_COMPOSITOR,
   controller: H_EARTH_3D_CONTROLLER,
 
+  renderVolumeModel: H_EARTH_3D_RENDER_VOLUME_MODEL,
+  renderPorts: H_EARTH_3D_RENDER_PORTS,
   candidateRenderScene: H_EARTH_3D_CANDIDATE_RENDER_SCENE,
   composedCandidateFrame: H_EARTH_3D_COMPOSED_CANDIDATE_FRAME,
   selectableTargetRegistry: H_EARTH_3D_SELECTABLE_TARGET_REGISTRY,
@@ -1230,6 +1372,8 @@ export const H_EARTH_3D_INDEX = Object.freeze({
   getRendererDestroyApi,
   getRendererMountApiSource,
   getRendererDestroyApiSource,
+  isRendererMountReceiptMounted,
+  isRendererDestroyReceiptDestroyed,
   initializeHEarthRoute,
   destroyHEarthRoute
 });

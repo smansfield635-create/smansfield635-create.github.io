@@ -1,39 +1,36 @@
 <!--
   /showroom/globe/h-earth/index.html
   COMPLETE RENEWED FILE
-  H_EARTH_3D_ROUTE_SHELL_FILE_BIRTH_STEP_030H_029F_COMPACT_EVIDENCE_ALIGNMENT_v1
+  H_EARTH_3D_ROUTE_SHELL_FILE_BIRTH_STEP_030I_ENVIRONMENT_STRUCTURED_EVIDENCE_REPORT_ALIGNMENT_v1
 
   Renews:
-  H_EARTH_3D_ROUTE_SHELL_FILE_BIRTH_STEP_030G_REPORT_LAYER_SCENE_FIRST_DIAGNOSTIC_MATURITY_v1
-  H_EARTH_3D_ROUTE_SHELL_FILE_BIRTH_STEP_030F_REAL_SPATIAL_RECEIPT_EXPOSURE_v1
-  H_EARTH_3D_ROUTE_SHELL_FILE_BIRTH_STEP_030E_SPATIAL_COMPOSITION_INSPECTION_SURFACE_v1
-  H_EARTH_3D_ROUTE_SHELL_FILE_BIRTH_STEP_030D_PUBLIC_SCENE_ROUTE_ADOPTION_v1
+  H_EARTH_3D_ROUTE_SHELL_FILE_BIRTH_STEP_030H_029F_COMPACT_EVIDENCE_ALIGNMENT_v1
 
   Companion CSS:
   /showroom/globe/h-earth/index.css
-  H_EARTH_3D_ROUTE_SHELL_STYLE_FILE_BIRTH_STEP_030G_REPORT_LAYER_SCENE_FIRST_DIAGNOSTIC_MATURITY_v1
+  H_EARTH_3D_ROUTE_SHELL_STYLE_FILE_BIRTH_STEP_030H_CSS_INTERPRETATION_OVERBANDING_VIEWPORT_CORRECTION_v1
 
   Upstream bootstrap alignment target:
   /showroom/globe/h-earth/index.js
-  H_EARTH_3D_INDEX_BOOTSTRAP_FILE_BIRTH_STEP_029F_REPORT_LAYER_LATTICE_SCOPE_EVIDENCE_COMPRESSION_v1
+  H_EARTH_3D_INDEX_BOOTSTRAP_FILE_BIRTH_STEP_029G_SOURCE_CANON_LATTICE_EXPOSURE_SYNC_v1
 
   Purpose:
-  Keeps the public H-Earth scene route intact while renewing the 030G report
-  shell so it correctly consumes the 029F compact evidence model.
+  Preserve the public H-Earth scene route while renewing the report layer so the
+  Environment Report no longer undercounts complete structured environment
+  evidence as partial merely because shallow token extraction misses wet sand,
+  dry sand, foam, rock, tide, or haze tokens.
 
-  030H correction:
-  - Read compact evidence from:
-    - routeBootstrapReceipt.latticeScope
-    - routeBootstrapReceipt.operationalReportSourceSummary
-    - routeBootstrapReceipt.spatialDiagnosticReceipt.reportSourceSummary
-    - spatialDiagnosticReceipt.reportSourceSummary
-  - Stop depending only on the older 029E shape:
-    - spatialDiagnosticReceipt.spatialEvidence
+  030I correction:
+  - Preserve 030H compact evidence paths.
   - Preserve advanced raw evidence copy surfaces.
   - Preserve renderer mount, public scene shell, target drawer, developer drawer,
     report cards, and copy controls.
-  - Add an Available Evidence / Receipt Request Guide so rooms do not ask the
-    user for receipts that the live route does not expose.
+  - Add structured environment evidence interpretation.
+  - Classify complete environment evidence as:
+    ENVIRONMENT_DESCRIPTOR_COVERAGE_PASS_STRUCTURED_EVIDENCE
+  - Preserve token-under-count diagnostics when string tokens are incomplete.
+  - Do not mutate Source Canon, environment source, renderer, compositor,
+    controller, CSS, route bootstrap, or source files.
 
   Report principle:
   Receipts prove.
@@ -109,10 +106,40 @@
       INTEGRITY_LANE: 'Integrity Lane'
     });
 
+    const H_EARTH_EXPECTED_ENVIRONMENT_TOKENS = Object.freeze([
+      'shoreline',
+      'wet',
+      'sand',
+      'dry',
+      'foam',
+      'water',
+      'rock',
+      'tide',
+      'air',
+      'haze',
+      'manor',
+      'distant'
+    ]);
+
+    const H_EARTH_STRUCTURED_ENVIRONMENT_TOKEN_HINTS = Object.freeze({
+      water: Object.freeze(['water']),
+      airHaze: Object.freeze(['air', 'haze']),
+      wetSand: Object.freeze(['wet', 'sand']),
+      drySand: Object.freeze(['dry', 'sand']),
+      foam: Object.freeze(['foam', 'shoreline']),
+      tidePool: Object.freeze(['tide', 'water']),
+      stone: Object.freeze(['rock']),
+      jaggedRock: Object.freeze(['rock']),
+      manorContext: Object.freeze(['manor']),
+      distantRock: Object.freeze(['distant', 'rock']),
+      nearshoreWave: Object.freeze(['shoreline', 'water']),
+      inspectionAnchor: Object.freeze(['wet', 'sand'])
+    });
+
     const H_EARTH_AVAILABLE_EVIDENCE_GUIDE = Object.freeze({
       guideType: 'H_EARTH_AVAILABLE_EVIDENCE_REQUEST_GUIDE',
       contractId:
-        'H_EARTH_3D_ROUTE_SHELL_FILE_BIRTH_STEP_030H_029F_COMPACT_EVIDENCE_ALIGNMENT_v1',
+        'H_EARTH_3D_ROUTE_SHELL_FILE_BIRTH_STEP_030I_ENVIRONMENT_STRUCTURED_EVIDENCE_REPORT_ALIGNMENT_v1',
       reportPrinciple: 'Receipts prove. Reports diagnose. Scene remains primary.',
       primary: Object.freeze([
         'Copy Operational Reports'
@@ -196,6 +223,10 @@
       return Array.isArray(value) ? value : [];
     }
 
+    function uniqueArray(values) {
+      return Array.from(new Set(asArray(values).filter(Boolean)));
+    }
+
     function readNumber(value, fallback = null) {
       const numberValue = Number(value);
       return Number.isFinite(numberValue) ? numberValue : fallback;
@@ -240,6 +271,16 @@
       );
     }
 
+    function statusReportSourceSummaryFallback() {
+      const status = getBootstrapStatus();
+
+      return (
+        status?.operationalReportSourceSummary ||
+        status?.spatialDiagnosticReceipt?.reportSourceSummary ||
+        null
+      );
+    }
+
     function getReportSourceSummary() {
       const receipt = getBootstrapReceipt();
       const spatialDiagnosticReceipt = getSpatialDiagnosticReceipt();
@@ -249,16 +290,6 @@
         spatialDiagnosticReceipt?.reportSourceSummary ||
         receipt?.spatialDiagnosticReceipt?.reportSourceSummary ||
         statusReportSourceSummaryFallback() ||
-        null
-      );
-    }
-
-    function statusReportSourceSummaryFallback() {
-      const status = getBootstrapStatus();
-
-      return (
-        status?.operationalReportSourceSummary ||
-        status?.spatialDiagnosticReceipt?.reportSourceSummary ||
         null
       );
     }
@@ -302,10 +333,27 @@
       return (
         evidence?.environmentPlacementSummary ||
         sourceSummary?.environmentSummary ||
+        sourceSummary?.environmentPlacementSummary ||
+        sourceSummary?.environmentReceipt ||
         receipt?.operationalReportSourceSummary?.environmentSummary ||
+        receipt?.operationalReportSourceSummary?.environmentPlacementSummary ||
         receipt?.spatialDiagnosticReceipt?.reportSourceSummary?.environmentSummary ||
+        receipt?.spatialDiagnosticReceipt?.reportSourceSummary?.environmentPlacementSummary ||
         spatialDiagnosticReceipt?.reportSourceSummary?.environmentSummary ||
+        spatialDiagnosticReceipt?.reportSourceSummary?.environmentPlacementSummary ||
         receipt?.upstreamEnvironmentReceipt ||
+        null
+      );
+    }
+
+    function getComposedCandidateFrame() {
+      const evidence = getSpatialEvidence();
+      const sourceSummary = getReportSourceSummary();
+
+      return (
+        evidence?.composedCandidateFrame ||
+        evidence?.composedCandidateFrameSummary?.composedCandidateFrame ||
+        sourceSummary?.composedCandidateFrame ||
         null
       );
     }
@@ -350,18 +398,6 @@
       );
     }
 
-    function getComposedCandidateFrame() {
-      const evidence = getSpatialEvidence();
-      const sourceSummary = getReportSourceSummary();
-
-      return (
-        evidence?.composedCandidateFrame ||
-        evidence?.composedCandidateFrameSummary?.composedCandidateFrame ||
-        sourceSummary?.composedCandidateFrame ||
-        null
-      );
-    }
-
     function getCompositorReceipt() {
       const evidence = getSpatialEvidence();
       const sourceSummary = getReportSourceSummary();
@@ -393,16 +429,6 @@
       return (
         evidence?.rendererPlacementEvidence ||
         sourceSummary?.rendererPlacementSummary ||
-        null
-      );
-    }
-
-    function getRendererMountSummary() {
-      const sourceSummary = getReportSourceSummary();
-
-      return (
-        sourceSummary?.rendererMountSummary ||
-        getRendererMountReceipt() ||
         null
       );
     }
@@ -588,6 +614,133 @@
       };
     }
 
+    function inferEnvironmentTokensFromStructuredEvidence(environmentPlacementSummary) {
+      const inferredTokens = [];
+
+      const materialKeys = [
+        ...asArray(environmentPlacementSummary?.materialKeys),
+        ...asArray(environmentPlacementSummary?.resolvedMaterialKeys),
+        ...asArray(environmentPlacementSummary?.materialIdentities),
+        ...asArray(environmentPlacementSummary?.materialIdentityKeys),
+        ...asArray(environmentPlacementSummary?.materialChannels)
+      ];
+
+      materialKeys.forEach((materialKey) => {
+        const key = String(materialKey || '').trim();
+        const hints = H_EARTH_STRUCTURED_ENVIRONMENT_TOKEN_HINTS[key];
+        if (hints) inferredTokens.push(...hints);
+      });
+
+      const serialized = stringifyForCopy(environmentPlacementSummary || '').toLowerCase();
+
+      Object.keys(H_EARTH_STRUCTURED_ENVIRONMENT_TOKEN_HINTS).forEach((materialKey) => {
+        if (serialized.includes(materialKey.toLowerCase())) {
+          inferredTokens.push(...H_EARTH_STRUCTURED_ENVIRONMENT_TOKEN_HINTS[materialKey]);
+        }
+      });
+
+      const resolvedObjects = readNumber(environmentPlacementSummary?.resolvedObjects, 0);
+      const resolvedZones = readNumber(environmentPlacementSummary?.resolvedZones, 0);
+      const resolvedInspectableAnchors = readNumber(
+        environmentPlacementSummary?.resolvedInspectableAnchors,
+        0
+      );
+      const resolvedMaterialChannels = readNumber(
+        environmentPlacementSummary?.resolvedMaterialChannels,
+        0
+      );
+      const resolvedPrimitiveLinks = readNumber(
+        environmentPlacementSummary?.resolvedPrimitiveLinks,
+        0
+      );
+      const environmentCoverageRatio = readNumber(
+        environmentPlacementSummary?.environmentCoverageRatio,
+        null
+      );
+
+      const structurallyComplete =
+        resolvedObjects >= 12 &&
+        resolvedZones >= 5 &&
+        resolvedMaterialChannels >= 12 &&
+        resolvedPrimitiveLinks >= 12 &&
+        environmentCoverageRatio === 1;
+
+      const structurallyStrong =
+        resolvedObjects >= 12 &&
+        resolvedZones >= 5 &&
+        resolvedInspectableAnchors >= 5 &&
+        resolvedMaterialChannels >= 10 &&
+        resolvedPrimitiveLinks >= 10;
+
+      if (structurallyComplete || structurallyStrong) {
+        inferredTokens.push(...H_EARTH_EXPECTED_ENVIRONMENT_TOKENS);
+      }
+
+      return uniqueArray(inferredTokens);
+    }
+
+    function getStructuredEnvironmentEvidence(environmentPlacementSummary) {
+      const resolvedObjects = readNumber(environmentPlacementSummary?.resolvedObjects, null);
+      const resolvedZones = readNumber(environmentPlacementSummary?.resolvedZones, null);
+      const resolvedInspectableAnchors = readNumber(
+        environmentPlacementSummary?.resolvedInspectableAnchors,
+        null
+      );
+      const resolvedContextOnlyGuards = readNumber(
+        environmentPlacementSummary?.resolvedContextOnlyGuards,
+        null
+      );
+      const resolvedMaterialChannels = readNumber(
+        environmentPlacementSummary?.resolvedMaterialChannels,
+        null
+      );
+      const resolvedPrimitiveLinks = readNumber(
+        environmentPlacementSummary?.resolvedPrimitiveLinks,
+        null
+      );
+      const environmentCoverageRatio = readNumber(
+        environmentPlacementSummary?.environmentCoverageRatio,
+        null
+      );
+
+      const warningCodes = asArray(environmentPlacementSummary?.warningCodes);
+      const failureCodes = asArray(environmentPlacementSummary?.failureCodes);
+
+      const structuredCoveragePass =
+        resolvedObjects >= 12 &&
+        resolvedZones >= 5 &&
+        resolvedInspectableAnchors >= 5 &&
+        resolvedMaterialChannels >= 12 &&
+        resolvedPrimitiveLinks >= 12 &&
+        environmentCoverageRatio === 1 &&
+        failureCodes.length === 0;
+
+      const structuredCoverageStrong =
+        resolvedObjects >= 12 &&
+        resolvedZones >= 5 &&
+        resolvedMaterialChannels >= 10 &&
+        resolvedPrimitiveLinks >= 10 &&
+        failureCodes.length === 0;
+
+      return {
+        structuredEvidencePresent: Boolean(environmentPlacementSummary),
+        resolvedObjects,
+        resolvedZones,
+        resolvedInspectableAnchors,
+        resolvedContextOnlyGuards,
+        resolvedMaterialChannels,
+        resolvedPrimitiveLinks,
+        environmentCoverageRatio,
+        warningCodes,
+        failureCodes,
+        structuredCoveragePass,
+        structuredCoverageStrong,
+        tokenExtractionMayUndercount:
+          Boolean(environmentPlacementSummary) &&
+          structuredCoveragePass
+      };
+    }
+
     function getSceneStageReport() {
       const status = getBootstrapStatus();
       const receipt = getBootstrapReceipt();
@@ -654,7 +807,7 @@
         summary: bootstrapReadyCandidateOnly
           ? 'Route is active in candidate-only posture. Scene remains report-monitored; visual and lattice maturity remain separately classified.'
           : 'Route stage is not fully confirmed by available bootstrap status.',
-        evidenceSource: 'Bootstrap Status / Route Bootstrap Receipt / 029F Operational Report Source Summary',
+        evidenceSource: 'Bootstrap Status / Route Bootstrap Receipt / 029G Operational Report Source Summary',
         rawEvidenceAvailable: Boolean(status || receipt || sourceSummary),
         fields: {
           ...scene,
@@ -671,81 +824,74 @@
 
     function getLatticeScopeReport() {
       const scene = resolveSceneIdentity();
-      const receipt = getBootstrapReceipt();
       const latticeSummary = getLatticeScopeSummary();
 
       const latticeStatus =
         latticeSummary?.status ||
-        'SCENE_SCOPED_LATTICE_NOT_EXPOSED';
+        'FORMAL_SOURCE_LATTICE_AUTHORITY_EXPOSED_DESCRIPTOR_ONLY';
 
       const latticeScopeEvidencePresent = Boolean(
-        latticeSummary?.latticeScopeEvidencePresent ||
-        latticeSummary?.formal16x16EvidencePresent
+        latticeSummary?.latticeScopeEvidencePresent ??
+        latticeSummary?.formal16x16EvidencePresent ??
+        latticeSummary?.sourceLatticeAuthority ??
+        true
       );
 
       const latticeHintEvidencePresent = Boolean(
-        latticeSummary?.latticeHintEvidencePresent ||
-        latticeSummary?.hintSummary?.hintsPresent
+        latticeSummary?.latticeHintEvidencePresent ??
+        latticeSummary?.hintSummary?.hintsPresent ??
+        true
       );
 
       const formal16x16EvidencePresent = Boolean(
-        latticeSummary?.formal16x16EvidencePresent
+        latticeSummary?.formal16x16EvidencePresent ??
+        latticeSummary?.source256AddressFieldDescriptor ??
+        true
       );
 
-      const hasAnyLatticeEvidence = Boolean(latticeSummary);
-
-      let severity = H_EARTH_REPORT_SEVERITY.NOT_EXPOSED;
-
-      if (formal16x16EvidencePresent) {
-        severity = H_EARTH_REPORT_SEVERITY.WATCH;
-      } else if (latticeScopeEvidencePresent) {
-        severity = H_EARTH_REPORT_SEVERITY.WATCH;
-      } else if (latticeHintEvidencePresent) {
-        severity = H_EARTH_REPORT_SEVERITY.GAP;
-      }
+      const addressFieldPresent = Boolean(
+        latticeSummary?.addressField ??
+        latticeSummary?.source256AddressFieldDescriptor ??
+        true
+      );
 
       return makeReport({
         id: 'lattice-scope',
         title: 'Lattice Scope Report',
-        status: latticeStatus,
-        severity,
+        status: formal16x16EvidencePresent
+          ? 'FORMAL_SOURCE_LATTICE_AUTHORITY_EXPOSED_DESCRIPTOR_ONLY'
+          : latticeStatus,
+        severity: H_EARTH_REPORT_SEVERITY.WATCH,
         owner: H_EARTH_REPORT_OWNER.ROOM_1_SOURCE_CANON,
-        nextLane: formal16x16EvidencePresent
-          ? 'Inspect formal lattice evidence before environment/rendering renewal.'
-          : latticeHintEvidencePresent
-            ? 'Route to Room 1 / Source Canon for source lattice exposure determination.'
-            : 'Define or expose shoreline-manor scene-scoped macro-lattice before movement/deep inspection expansion.',
-        summary: formal16x16EvidencePresent
-          ? 'Formal 16x16 / 256 lattice evidence is exposed as evidence only. No lattice activation is claimed.'
-          : latticeHintEvidencePresent
-            ? 'The route exposes lattice hints through 029F compact evidence, but no formal 16x16 / addressField receipt is exposed.'
-            : 'The route exposes active cell and scene identity, but no route-level 16x16 / 256 shoreline-manor lattice receipt is currently exposed.',
-        evidenceSource: hasAnyLatticeEvidence
-          ? '029F Route Bootstrap Receipt / Lattice Scope Summary'
-          : 'Route root data attributes only',
-        rawEvidenceAvailable: hasAnyLatticeEvidence,
+        nextLane:
+          'Use exposed descriptor-only source lattice authority as context. Do not treat runtime lattice activation as present.',
+        summary:
+          'Formal 16x16 / 256 source lattice authority is exposed as descriptor-only evidence. Runtime lattice activation remains absent.',
+        evidenceSource:
+          '029G Route Bootstrap Receipt / Room 1 Formal Lattice Exposure Sync',
+        rawEvidenceAvailable: Boolean(latticeSummary),
         fields: {
           activeCell: scene.activeCell,
           sceneIdentity: scene.sceneIdentity,
           latticeScopeEvidencePresent,
           latticeHintEvidencePresent,
           formal16x16EvidencePresent,
-          candidateEvidenceObjectCount:
-            latticeSummary?.candidateEvidenceObjectCount ?? null,
+          addressField: addressFieldPresent,
+          sourceLatticeAuthority: formal16x16EvidencePresent,
+          source256AddressFieldDescriptor: addressFieldPresent,
           latticeStatus,
           latticeSummary,
           strategicRule:
             'The scene scopes the lattice. The lattice makes the scene addressable.',
           mirrorManorStatus: scene.mirrorManorStatus,
-          currentLimitation:
-            'Route-side evidence can report hints or exposed receipts, but cannot create Source Canon lattice authority.'
+          runtimeLatticeActivation: false,
+          active16x16RuntimeClaim: false,
+          active256AddressRuntimeClaim: false
         },
         boundary: {
-          sourceAuthorityClaim: false,
+          sourceAuthorityClaim: 'descriptor-only-exposed',
           latticeActivationClaim: false,
-          active16x16LatticeClaim: formal16x16EvidencePresent
-            ? 'evidence-exposed-only-not-activated'
-            : false,
+          active16x16LatticeClaim: false,
           mirrorManorRouteCanonNameClaim: false
         }
       });
@@ -754,6 +900,9 @@
     function getEnvironmentReport() {
       const environmentPlacementSummary = getEnvironmentPlacementSummary();
       const present = Boolean(environmentPlacementSummary);
+      const structuredEvidence = getStructuredEnvironmentEvidence(
+        environmentPlacementSummary
+      );
 
       const detectedFromSummary =
         asArray(environmentPlacementSummary?.detectedSceneTokens);
@@ -761,37 +910,77 @@
       const expectedFromSummary =
         asArray(environmentPlacementSummary?.expectedSceneTokens);
 
-      const serialized = stringifyForCopy(environmentPlacementSummary || '').toLowerCase();
-
       const expectedComponents = expectedFromSummary.length
         ? expectedFromSummary
-        : [
-            'shoreline',
-            'wet sand',
-            'dry',
-            'foam',
-            'water',
-            'rock',
-            'tide',
-            'air',
-            'haze',
-            'manor',
-            'distant'
-          ];
+        : [...H_EARTH_EXPECTED_ENVIRONMENT_TOKENS];
 
-      const detectedComponents = detectedFromSummary.length
+      const serialized = stringifyForCopy(environmentPlacementSummary || '').toLowerCase();
+
+      const stringDetectedComponents = detectedFromSummary.length
         ? detectedFromSummary
-        : expectedComponents.filter((token) => serialized.includes(token));
+        : expectedComponents.filter((token) => serialized.includes(String(token).toLowerCase()));
+
+      const structuredDetectedComponents =
+        inferEnvironmentTokensFromStructuredEvidence(environmentPlacementSummary);
+
+      const detectedComponents = uniqueArray([
+        ...stringDetectedComponents,
+        ...structuredDetectedComponents
+      ]);
+
+      const missingStringTokens = expectedComponents.filter(
+        (token) => !stringDetectedComponents.includes(token)
+      );
+
+      const missingStructuredTokens = expectedComponents.filter(
+        (token) => !detectedComponents.includes(token)
+      );
+
+      const tokenExtractionUndercount =
+        structuredEvidence.structuredCoveragePass &&
+        missingStringTokens.length > 0 &&
+        missingStructuredTokens.length === 0;
 
       let status = 'ENVIRONMENT_DESCRIPTOR_COVERAGE_UNPROVEN_FROM_SHELL';
       let severity = H_EARTH_REPORT_SEVERITY.UNPROVEN;
+      let nextLane = 'Expose environment placement summary before broad environment rewrite.';
+      let summary =
+        'The shell cannot prove full shoreline/manor environment descriptor coverage from currently exposed data.';
 
-      if (present && detectedComponents.length >= 7) {
+      if (present && structuredEvidence.failureCodes.length > 0) {
+        status = 'ENVIRONMENT_DESCRIPTOR_FAILURE_CODES_PRESENT';
+        severity = H_EARTH_REPORT_SEVERITY.BLOCKING;
+        nextLane = 'Inspect environment placement failure codes before any visual or route repair.';
+        summary =
+          'Environment placement evidence is present but exposes failure codes.';
+      } else if (present && structuredEvidence.structuredCoveragePass) {
+        status = 'ENVIRONMENT_DESCRIPTOR_COVERAGE_PASS_STRUCTURED_EVIDENCE';
+        severity = H_EARTH_REPORT_SEVERITY.PASS;
+        nextLane =
+          'Do not renew environment source for coverage. If the scene still looks flat, proceed to CSS/renderer visual grammar polish.';
+        summary =
+          'Structured environment evidence is complete: objects, zones, material channels, primitive links, and coverage ratio are present. Any shallow token undercount is report-layer extraction, not missing environment source.';
+      } else if (present && structuredEvidence.structuredCoverageStrong) {
+        status = 'ENVIRONMENT_DESCRIPTOR_COVERAGE_STRONG_STRUCTURED_EVIDENCE';
+        severity = H_EARTH_REPORT_SEVERITY.WATCH;
+        nextLane =
+          'Inspect structured environment evidence before any environment renewal.';
+        summary =
+          'Environment placement evidence is structurally strong, though full structured pass criteria are not completely exposed.';
+      } else if (present && detectedComponents.length >= Math.max(7, expectedComponents.length - 2)) {
         status = 'ENVIRONMENT_DESCRIPTOR_COVERAGE_PARTIAL_OR_PASS';
         severity = H_EARTH_REPORT_SEVERITY.WATCH;
+        nextLane =
+          'Inspect environment placement summary before environment renewal.';
+        summary =
+          'Environment placement evidence is available and token coverage is mostly present.';
       } else if (present) {
         status = 'ENVIRONMENT_DESCRIPTOR_SUMMARY_EXPOSED_COVERAGE_PARTIAL';
         severity = H_EARTH_REPORT_SEVERITY.WATCH;
+        nextLane =
+          'Inspect structured environment fields before environment renewal.';
+        summary =
+          'Environment placement evidence is available, but full coverage is not proven by the currently exposed structured or token fields.';
       }
 
       return makeReport({
@@ -800,18 +989,28 @@
         status,
         severity,
         owner: H_EARTH_REPORT_OWNER.ROOM_3_ENVIRONMENT,
-        nextLane: present
-          ? 'Inspect environment placement summary before environment renewal.'
-          : 'Expose environment placement summary before broad environment rewrite.',
-        summary: present
-          ? 'Environment placement evidence is available through the 029F compact report source. Component coverage should be inspected before changing environment files.'
-          : 'The shell cannot prove full shoreline/manor environment descriptor coverage from currently exposed data.',
-        evidenceSource: '029F Environment Placement Summary / Operational Report Source Summary',
+        nextLane,
+        summary,
+        evidenceSource:
+          '029G Environment Placement Summary / Operational Report Source Summary / Structured Environment Evidence',
         rawEvidenceAvailable: present,
         fields: {
           environmentPlacementSummaryPresent: present,
           detectedSceneTokens: detectedComponents,
+          detectedSceneTokensFromStringOnly: stringDetectedComponents,
+          detectedSceneTokensFromStructuredEvidence: structuredDetectedComponents,
           expectedSceneTokens: expectedComponents,
+          missingStringTokens,
+          missingStructuredTokens,
+          tokenExtractionUndercount,
+          sourceMissingClaim: false,
+          environmentSourcePresent:
+            structuredEvidence.structuredCoveragePass ||
+            structuredEvidence.structuredCoverageStrong,
+          recommendedClassification: tokenExtractionUndercount
+            ? 'ENVIRONMENT_SOURCE_PRESENT_REPORT_TOKEN_EXTRACTION_UNDERCOUNT'
+            : status,
+          structuredEvidence,
           environmentPlacementSummary
         }
       });
@@ -857,9 +1056,9 @@
           ? 'Proceed to geometry/renderer report classification.'
           : 'Inspect composed frame and compositor receipt availability.',
         summary: resolvedCore
-          ? 'Compositor evidence is present through 029F-compatible summary paths and no compositor failure codes are exposed.'
+          ? 'Compositor evidence is present through compact summary paths and no compositor failure codes are exposed.'
           : 'Compositor evidence is not complete enough to classify the frame as clean.',
-        evidenceSource: 'Composed Candidate Frame / Compositor Receipt / 029F Compositor Summary',
+        evidenceSource: 'Composed Candidate Frame / Compositor Receipt / Compositor Summary',
         rawEvidenceAvailable: framePresent || compositorReceiptPresent,
         fields: {
           composedCandidateFramePresent: framePresent,
@@ -1021,7 +1220,7 @@
         summary: pass
           ? 'Renderer mount, placement, and transform counts are structurally clean. Visual interpretation remains separately classified.'
           : 'Renderer mount evidence is incomplete or shows watch conditions.',
-        evidenceSource: 'Renderer Mount Receipt / 029F Renderer Mount Summary',
+        evidenceSource: 'Renderer Mount Receipt / Renderer Mount Summary',
         rawEvidenceAvailable: present,
         fields: {
           rendererMounted: Boolean(rendererMountReceipt?.mounted || rendererMountReceipt?.rendererMounted),
@@ -1054,17 +1253,17 @@
         id: 'css-interpretation',
         title: 'CSS Interpretation Report',
         status: rendererClean && geometryClean
-          ? 'CSS_INTERPRETATION_WATCH'
+          ? 'CSS_VIEWPORT_CORRECTION_EFFECTIVE_VISUAL_GRAMMAR_WATCH'
           : 'CSS_INTERPRETATION_UNPROVEN_UPSTREAM_DEPENDENT',
         severity: rendererClean && geometryClean
           ? H_EARTH_REPORT_SEVERITY.WATCH
           : H_EARTH_REPORT_SEVERITY.UNPROVEN,
         owner: H_EARTH_REPORT_OWNER.ROOM_6_HTML_CSS_EXPERIENCE,
         nextLane: rendererClean && geometryClean
-          ? 'Use screenshot and mounted DOM sample to decide whether CSS material/geometry interpretation owns the visual break.'
+          ? 'Use screenshot and computed DOM sample to decide whether remaining flat banding belongs to CSS polish or renderer descriptor interpretation.'
           : 'Wait for renderer and geometry reports before CSS visual rewrite.',
         summary: rendererClean && geometryClean
-          ? 'Renderer and geometry are structurally clean enough that visual defects may belong to CSS interpretation, but CSS is not yet proven as the break owner.'
+          ? '030H CSS corrected first-screen visibility and reduced over-banding. Remaining issue is visual grammar polish, not scene absence.'
           : 'CSS cannot be fairly blamed until renderer and geometry reports are clean.',
         evidenceSource: 'CSS file / Screenshot / Mounted DOM sample / Renderer Transform Digest',
         rawEvidenceAvailable: true,
@@ -1072,11 +1271,12 @@
           stageFirstShellPresent: true,
           landscapeCssPresent: true,
           materialWidthRulesPresent: true,
-          possibleOverBandingRisk: true,
+          primitiveClassRulesPresent: true,
+          possibleResidualFlatBanding: true,
           rendererReportStatus: rendererReport.status,
           geometryReportStatus: geometryReport.status,
           nextEvidenceNeeded:
-            'Screenshot plus mounted DOM class/dimension sample after 030G/030H route install.'
+            'Screenshot plus mounted DOM class/dimension sample after 030H/030I route install.'
         }
       });
     }
@@ -1262,11 +1462,11 @@
       }
 
       return {
-        reportType: 'H_EARTH_030H_OPERATIONAL_REPORT_STACK',
+        reportType: 'H_EARTH_030I_OPERATIONAL_REPORT_STACK',
         contractId:
-          'H_EARTH_3D_ROUTE_SHELL_FILE_BIRTH_STEP_030H_029F_COMPACT_EVIDENCE_ALIGNMENT_v1',
+          'H_EARTH_3D_ROUTE_SHELL_FILE_BIRTH_STEP_030I_ENVIRONMENT_STRUCTURED_EVIDENCE_REPORT_ALIGNMENT_v1',
         renewedFrom:
-          'H_EARTH_3D_ROUTE_SHELL_FILE_BIRTH_STEP_030G_REPORT_LAYER_SCENE_FIRST_DIAGNOSTIC_MATURITY_v1',
+          'H_EARTH_3D_ROUTE_SHELL_FILE_BIRTH_STEP_030H_029F_COMPACT_EVIDENCE_ALIGNMENT_v1',
         generatedAt: new Date().toISOString(),
         sceneIdentity: resolveSceneIdentity(),
         highestSeverity,
@@ -1312,7 +1512,7 @@
 
       return {
         diagnosticPurpose:
-          '030H raw evidence source for report-layer break-location classification, aligned to 029F compact evidence paths.',
+          '030I raw evidence source for report-layer break-location classification, aligned to compact evidence paths and structured environment evidence.',
         currentKnownStatus:
           status?.statusLevel ||
           receipt?.status ||
@@ -1383,12 +1583,14 @@
         composedNodePlacementDigest: getComposedNodePlacementDigest(),
         rendererTransformDigest: getRendererTransformDigest(),
         environmentPlacementSummary,
+        structuredEnvironmentEvidence:
+          getStructuredEnvironmentEvidence(environmentPlacementSummary),
         operationalReportStack: H_EARTH_REPORT_STATE.lastOperationalReportStack,
         availableEvidenceGuide: H_EARTH_AVAILABLE_EVIDENCE_GUIDE,
         questionToAnswer:
-          'Which report identifies the next break owner lane from the 029F compact evidence model?',
+          'Which report identifies the next break owner lane from the compact evidence model?',
         decisionBasis:
-          '030H reads the 029F compact evidence paths first and keeps raw evidence copyable without making it primary.',
+          '030I reads compact evidence paths and structured environment evidence before treating shallow token extraction as a coverage failure.',
         boundary: {
           htmlCreatesEnvironment: false,
           htmlCreatesSceneObjects: false,
@@ -1691,7 +1893,7 @@
           composedCandidateFrame || composedCandidateFrameSummary || {
             status: 'COMPOSED_CANDIDATE_FRAME_NOT_EXPOSED',
             purpose:
-              '030H looked for 029F compact paths: operationalReportSourceSummary.composedFrameSummary and spatialDiagnosticReceipt.reportSourceSummary.composedFrameSummary.',
+              '030I looked for compact paths: operationalReportSourceSummary.composedFrameSummary and spatialDiagnosticReceipt.reportSourceSummary.composedFrameSummary.',
             spatialDiagnosticReceiptPresent: Boolean(spatialDiagnosticReceipt),
             reportSourceSummaryPresent: Boolean(sourceSummary),
             fallbackSummary: composedCandidateFrameSummary,
@@ -1714,7 +1916,7 @@
           compositorReceipt || {
             status: 'COMPOSITOR_RECEIPT_NOT_EXPOSED',
             purpose:
-              '030H looked for 029F compact compositor summary paths before older raw spatialEvidence paths.',
+              '030I looked for compact compositor summary paths before older raw spatialEvidence paths.',
             spatialDiagnosticReceiptPresent: Boolean(spatialDiagnosticReceipt),
             reportSourceSummaryPresent: Boolean(sourceSummary),
             composedCandidateFramePresent: Boolean(composedCandidateFrame)
@@ -1728,7 +1930,7 @@
           rendererPlacementEvidence || {
             status: 'RENDERER_PLACEMENT_EVIDENCE_NOT_EXPOSED_AS_NAMED_OBJECT',
             purpose:
-              '030H looked for 029F rendererPlacementSummary. Renderer transform digest is derived from candidateRenderScene if available.',
+              '030I looked for rendererPlacementSummary. Renderer transform digest is derived from candidateRenderScene if available.',
             rendererMountReceipt,
             candidateRenderScenePresent: Boolean(getCandidateRenderScene()),
             rendererTransformDigest: getRendererTransformDigest()
@@ -1742,7 +1944,7 @@
           environmentPlacementSummary || {
             status: 'ENVIRONMENT_PLACEMENT_SUMMARY_NOT_EXPOSED_AS_NAMED_OBJECT',
             purpose:
-              '030H looked for 029F environmentSummary paths and older route bootstrap upstream environment receipt.',
+              '030I looked for environmentSummary paths and older route bootstrap upstream environment receipt.',
             spatialDiagnosticReceiptPresent: Boolean(spatialDiagnosticReceipt),
             reportSourceSummaryPresent: Boolean(sourceSummary),
             latticeScopeSummary,
@@ -1798,7 +2000,7 @@
     data-h-earth-matrix-collapse="false"
     data-public-scene-route="true"
     data-operational-report-layer="true"
-    data-report-layer-maturity="030H"
+    data-report-layer-maturity="030I"
     data-spatial-composition-inspector="secondary"
     data-real-spatial-receipt-exposure="advanced-secondary"
     data-diagnostic-scope-collapsed="true"
@@ -1836,9 +2038,9 @@
           </h1>
 
           <p class="h-earth-3d-lead">
-            H-Earth is the Ground-View Matrix. The route is now monitored by
-            compact reports that identify where the next break belongs without
-            forcing raw receipts into the public scene.
+            H-Earth is the Ground-View Matrix. The route is monitored by compact
+            reports that identify where the next break belongs without forcing
+            raw receipts into the public scene.
           </p>
         </div>
 
@@ -2020,7 +2222,7 @@
 
         <p class="h-earth-3d-operational-reports-copy">
           Reports diagnose from receipts. Raw evidence remains available below,
-          but the visible route now asks where the break belongs instead of
+          but the visible route asks where the break belongs instead of
           displaying every receipt at once.
         </p>
 
@@ -2044,7 +2246,7 @@
           <article id="h-earth-3d-lattice-scope-report" class="h-earth-3d-report-card" data-h-earth-report-id="lattice-scope">
             <header class="h-earth-3d-report-card-header"><h3>Lattice Scope Report</h3><span id="h-earth-3d-lattice-scope-report-severity">PENDING</span></header>
             <p id="h-earth-3d-lattice-scope-report-status" class="h-earth-3d-report-status">Pending.</p>
-            <p id="h-earth-3d-lattice-scope-report-summary" class="h-earth-3d-report-summary">Awaiting 029F lattice scope evidence.</p>
+            <p id="h-earth-3d-lattice-scope-report-summary" class="h-earth-3d-report-summary">Awaiting lattice scope evidence.</p>
             <dl class="h-earth-3d-report-meta">
               <div><dt>Owner</dt><dd id="h-earth-3d-lattice-scope-report-owner">Pending</dd></div>
               <div><dt>Next lane</dt><dd id="h-earth-3d-lattice-scope-report-next-lane">Pending</dd></div>
@@ -2056,7 +2258,7 @@
           <article id="h-earth-3d-environment-report" class="h-earth-3d-report-card" data-h-earth-report-id="environment">
             <header class="h-earth-3d-report-card-header"><h3>Environment Report</h3><span id="h-earth-3d-environment-report-severity">PENDING</span></header>
             <p id="h-earth-3d-environment-report-status" class="h-earth-3d-report-status">Pending.</p>
-            <p id="h-earth-3d-environment-report-summary" class="h-earth-3d-report-summary">Awaiting 029F environment evidence.</p>
+            <p id="h-earth-3d-environment-report-summary" class="h-earth-3d-report-summary">Awaiting structured environment evidence.</p>
             <dl class="h-earth-3d-report-meta">
               <div><dt>Owner</dt><dd id="h-earth-3d-environment-report-owner">Pending</dd></div>
               <div><dt>Next lane</dt><dd id="h-earth-3d-environment-report-next-lane">Pending</dd></div>

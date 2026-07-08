@@ -1,9 +1,10 @@
 /*
   /showroom/globe/h-earth/index.css
   RENEWED FILE
-  H_EARTH_3D_ROUTE_SHELL_STYLE_FILE_BIRTH_STEP_030C_WORLD_FIRST_VIEWPORT_AND_DEVELOPER_DRAWER_RESTRUCTURE_v1
+  H_EARTH_3D_ROUTE_SHELL_STYLE_FILE_BIRTH_STEP_030C_WORLD_FIRST_VIEWPORT_AND_DEVELOPER_DRAWER_RESTRUCTURE_v1_1
 
   Renews:
+  H_EARTH_3D_ROUTE_SHELL_STYLE_FILE_BIRTH_STEP_030C_WORLD_FIRST_VIEWPORT_AND_DEVELOPER_DRAWER_RESTRUCTURE_v1
   H_EARTH_3D_ROUTE_SHELL_STYLE_FILE_BIRTH_STEP_030E_RENDER_OBJECT_CENTERING_AND_RECEIPT_COPY_UI_RENEWAL_v1
 
   Companion HTML renewal:
@@ -16,23 +17,21 @@
   and descriptor-only Ground Condition Read presentation remain player-facing.
   Bootstrap Debug, Renderer Mount Receipt, Route Bootstrap Receipt, Boundary
   Flags, Index Contract, raw bridge payloads, and copy controls remain available
-  inside a collapsed developer drawer.
+  inside collapsed drawers.
 
-  Renewal scope:
-  - Preserve Step 030E renderer-object centering and renderer class support.
-  - Preserve renderer-generated layer/object/material/context compatibility.
-  - Add world-first viewport hierarchy.
-  - Add compact world overlay and selected target card.
-  - Add player-facing descriptor-only readout card.
-  - Move diagnostic and receipt surfaces into secondary drawer styling.
-  - Preserve copy toolbar and copy buttons inside developer drawer.
-  - Preserve mobile stage-first policy.
-  - Preserve reduced-motion safety.
-  - Do not create shell-owned scene objects.
-  - Do not create a CSS-only false beach independent of renderer descriptors.
-  - Do not introduce canvas, WebGL, visual-pass, validation, production,
-    traversal, survival simulation, swimming/fluid simulation, manor interior,
-    distant traversal, or matrix-collapse authority.
+  Correction:
+  Fixes the prior mobile layout failure where the page still behaved like a
+  stacked diagnostic document and the selected target card intruded into the
+  renderer viewport.
+
+  Scope:
+  CSS only.
+  No renderer touch.
+  No compositor touch.
+  No environment touch.
+  No capacity touch.
+  No source canon touch.
+  No fake scene geometry.
 */
 
 :root {
@@ -55,7 +54,7 @@
 
   --h-earth-stage-width: min(100%, 1320px);
   --h-earth-stage-height: clamp(680px, 78vh, 920px);
-  --h-earth-mobile-stage-height: clamp(560px, 78svh, 760px);
+  --h-earth-mobile-stage-height: clamp(520px, 74svh, 720px);
 
   --h-earth-radius-xl: 34px;
   --h-earth-radius-lg: 28px;
@@ -143,10 +142,7 @@ button:disabled {
   margin: 0 auto;
 }
 
-/*
-  Header and boundary summary.
-  Kept compact so the world viewport becomes the first dominant route fact.
-*/
+/* Header */
 
 .h-earth-3d-header {
   display: grid;
@@ -211,9 +207,7 @@ button:disabled {
   font-size: 0.86rem;
 }
 
-/*
-  World-first shell.
-*/
+/* World-first shell */
 
 .h-earth-3d-world-shell {
   display: grid;
@@ -298,10 +292,7 @@ button:disabled {
   color: rgba(174, 232, 194, 0.88);
 }
 
-/*
-  Compact world overlay.
-  This makes route controls available without turning the page into a dashboard.
-*/
+/* Compact overlay */
 
 .h-earth-3d-world-overlay {
   position: absolute;
@@ -446,9 +437,7 @@ button:disabled {
   overflow-wrap: anywhere;
 }
 
-/*
-  Player-facing descriptor readout.
-*/
+/* Player readout */
 
 .h-earth-3d-readout-card {
   display: grid;
@@ -479,11 +468,10 @@ button:disabled {
   font-size: 0.82rem;
 }
 
-/*
-  Selectable targets drawer.
-*/
+/* Drawers */
 
-.h-earth-3d-target-drawer {
+.h-earth-3d-target-drawer,
+.h-earth-3d-developer-drawer {
   overflow: hidden;
 }
 
@@ -572,12 +560,7 @@ button:disabled {
   color: var(--h-earth-accent-warm);
 }
 
-/*
-  Developer drawer / diagnostics.
-*/
-
 .h-earth-3d-developer-drawer {
-  overflow: hidden;
   background: var(--h-earth-bg-panel-soft);
 }
 
@@ -700,9 +683,7 @@ button:disabled {
   margin: 0;
 }
 
-/*
-  Bootstrap status classes.
-*/
+/* Bootstrap status */
 
 .h-earth-3d-boot-ready .h-earth-3d-status {
   border-color: rgba(174, 232, 194, 0.42);
@@ -719,9 +700,7 @@ button:disabled {
   color: var(--h-earth-error);
 }
 
-/*
-  Renderer-generated root/layer/object support.
-*/
+/* Renderer-generated root/layer/object support */
 
 .h-earth-render-root,
 .h-earth-css-3d-candidate-root {
@@ -795,10 +774,7 @@ button:disabled {
   outline-offset: 3px;
 }
 
-/*
-  Renderer object scale rules.
-  These rules style renderer-generated descriptors. They do not create objects.
-*/
+/* Renderer descriptor scale rules. These do not create objects. */
 
 .h-earth-layer-water-surface-plane .h-earth-render-object,
 .h-earth-material-water {
@@ -883,9 +859,7 @@ button:disabled {
   border-radius: 999px;
 }
 
-/*
-  Layer classes.
-*/
+/* Layer classes */
 
 .h-earth-layer-distant-world-context {
   z-index: 10;
@@ -932,10 +906,7 @@ button:disabled {
   z-index: 999;
 }
 
-/*
-  Material classes.
-  Candidate tokens only. Not final material validation.
-*/
+/* Material classes. Candidate tokens only. Not final material validation. */
 
 .h-earth-material-wet-sand {
   background:
@@ -1039,9 +1010,7 @@ button:disabled {
   color: var(--h-earth-error);
 }
 
-/*
-  Context classes.
-*/
+/* Context classes */
 
 .h-earth-context-primary-inspection {
   outline: 2px solid rgba(216, 189, 142, 0.68);
@@ -1078,9 +1047,7 @@ button:disabled {
   outline: 1px dotted rgba(255, 176, 163, 0.54);
 }
 
-/*
-  Interaction classes.
-*/
+/* Interaction classes */
 
 .h-earth-target-selectable {
   cursor: pointer;
@@ -1105,9 +1072,7 @@ button:disabled {
   color: var(--h-earth-error);
 }
 
-/*
-  Responsive route shell behavior.
-*/
+/* Responsive */
 
 @media (max-width: 1120px) {
   .h-earth-3d-header {
@@ -1136,297 +1101,7 @@ button:disabled {
   }
 }
 
-@media (max-width: 760px) {
-  .h-earth-3d-route-root {
-    padding: 10px;
-  }
-
-  .h-earth-3d-shell {
-    gap: 12px;
-  }
-
-  .h-earth-3d-header {
-    gap: 12px;
-  }
-
-  .h-earth-3d-header-copy,
-  .h-earth-3d-boundary-card,
-  .h-earth-3d-panel,
-  .h-earth-3d-hud-panel,
-  .h-earth-3d-claim-boundary,
-  .h-earth-3d-copy-toolbar,
-  .h-earth-3d-selected-target-card,
-  .h-earth-3d-readout-card {
-    padding: 12px;
-  }
-
-  .h-earth-3d-header-copy {
-    padding-top: 16px;
-    padding-bottom: 16px;
-  }
-
-  .h-earth-3d-title {
-    font-size: clamp(1.8rem, 10vw, 3.15rem);
-  }
-
-  .h-earth-3d-subtitle {
-    margin-top: 12px;
-  }
-
-  .h-earth-3d-boundary-card {
-    gap: 5px;
-  }
-
-  .h-earth-3d-boundary-line {
-    font-size: 0.82rem;
-  }
-
-  .h-earth-3d-world-stage,
-  .h-earth-3d-stage {
-    min-height: var(--h-earth-mobile-stage-height);
-    border-radius: 22px;
-  }
-
-  .h-earth-3d-world-overlay {
-    top: 10px;
-    right: 10px;
-    left: 10px;
-    width: auto;
-    gap: 8px;
-  }
-
-  .h-earth-3d-hud,
-  .h-earth-3d-primary-hud .h-earth-3d-hud {
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-  }
-
-  .h-earth-3d-hud-panel {
-    padding: 10px;
-  }
-
-  .h-earth-3d-selected-target-card {
-    max-height: 34svh;
-    overflow: auto;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  .h-earth-3d-card-title {
-    font-size: 1rem;
-  }
-
-  .h-earth-3d-compact-facts {
-    gap: 6px;
-  }
-
-  .h-earth-3d-panel-title {
-    margin-bottom: 8px;
-    font-size: 0.74rem;
-  }
-
-  .h-earth-3d-status {
-    min-height: 36px;
-    padding: 8px 10px;
-    font-size: 0.74rem;
-  }
-
-  .h-earth-3d-action-button {
-    min-height: 40px;
-    font-size: 0.82rem;
-  }
-
-  .h-earth-3d-renderer-mount:empty::before {
-    left: 14px;
-    bottom: 72px;
-    font-size: 0.7rem;
-  }
-
-  .h-earth-3d-fallback {
-    left: 12px;
-    right: 12px;
-    bottom: 12px;
-    width: auto;
-    padding: 8px 10px;
-    font-size: 0.72rem;
-  }
-
-  .h-earth-3d-readout-card {
-    gap: 12px;
-  }
-
-  .h-earth-3d-readout-facts {
-    grid-template-columns: 1fr;
-  }
-
-  .h-earth-3d-readout-boundary {
-    font-size: 0.78rem;
-  }
-
-  .h-earth-3d-target-drawer-toggle,
-  .h-earth-3d-developer-drawer-toggle {
-    min-height: 46px;
-    padding: 12px;
-    font-size: 0.75rem;
-  }
-
-  .h-earth-3d-copy-actions {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .h-earth-3d-copy-button {
-    width: 100%;
-  }
-
-  .h-earth-3d-control-grid,
-  .h-earth-3d-receipt-stack,
-  .h-earth-3d-receipt-grid {
-    gap: 10px;
-  }
-
-  .h-earth-3d-control-grid .h-earth-3d-panel,
-  .h-earth-3d-receipt-grid .h-earth-3d-panel,
-  .h-earth-3d-receipt-stack .h-earth-3d-panel,
-  .h-earth-3d-claim-boundary {
-    max-height: none;
-    overflow: visible;
-  }
-
-  .h-earth-3d-inspection-panel,
-  .h-earth-3d-debug,
-  .h-earth-3d-receipt-output {
-    display: block;
-    min-height: 220px;
-    max-height: 58svh;
-    overflow: auto;
-    -webkit-overflow-scrolling: touch;
-    font-size: 0.72rem;
-  }
-
-  .h-earth-3d-target-list {
-    max-height: 48svh;
-    overflow: auto;
-    -webkit-overflow-scrolling: touch;
-  }
-}
-
-@media (max-width: 520px) {
-  .h-earth-3d-route-root {
-    padding: 8px;
-  }
-
-  .h-earth-3d-world-stage,
-  .h-earth-3d-stage {
-    min-height: min(82svh, 700px);
-    border-radius: 18px;
-  }
-
-  .h-earth-3d-header-copy,
-  .h-earth-3d-boundary-card,
-  .h-earth-3d-selected-target-card,
-  .h-earth-3d-readout-card {
-    border-radius: 16px;
-  }
-
-  .h-earth-3d-world-overlay {
-    top: 8px;
-    right: 8px;
-    left: 8px;
-  }
-
-  .h-earth-3d-hud,
-  .h-earth-3d-primary-hud .h-earth-3d-hud {
-    grid-template-columns: 1fr;
-  }
-
-  .h-earth-3d-selected-target-card {
-    max-height: 28svh;
-  }
-
-  .h-earth-3d-copy-actions {
-    grid-template-columns: 1fr;
-  }
-
-  .h-earth-3d-panel-heading-row {
-    align-items: flex-start;
-  }
-
-  .h-earth-3d-control-grid .h-earth-3d-panel,
-  .h-earth-3d-receipt-grid .h-earth-3d-panel,
-  .h-earth-3d-receipt-stack .h-earth-3d-panel,
-  .h-earth-3d-claim-boundary {
-    max-height: none;
-    overflow: visible;
-  }
-
-  .h-earth-3d-inspection-panel,
-  .h-earth-3d-debug,
-  .h-earth-3d-receipt-output {
-    min-height: 240px;
-    max-height: 62svh;
-  }
-
-  .h-earth-3d-target-list {
-    max-height: 52svh;
-  }
-
-  .h-earth-layer-water-surface-plane .h-earth-render-object,
-  .h-earth-material-water,
-  .h-earth-layer-dry-sand-transition .h-earth-render-object,
-  .h-earth-material-dry-sand,
-  .h-earth-layer-foreground-wet-sand .h-earth-render-object,
-  .h-earth-material-wet-sand {
-    width: 92vw;
-  }
-
-  .h-earth-layer-air-haze-light .h-earth-render-object,
-  .h-earth-material-air-haze {
-    width: 96vw;
-  }
-}
-
-@media (max-height: 700px) and (max-width: 760px) {
-  .h-earth-3d-world-stage,
-  .h-earth-3d-stage {
-    min-height: 78svh;
-  }
-
-  .h-earth-3d-selected-target-card {
-    max-height: 24svh;
-  }
-}
-
-/*
-  Reduced-motion safety.
-*/
-
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    scroll-behavior: auto !important;
-    transition-duration: 0.001ms !important;
-    animation-duration: 0.001ms !important;
-    animation-iteration-count: 1 !important;
-  }
-}
-/*
-  PATCH
-  /showroom/globe/h-earth/index.css
-  H_EARTH_3D_ROUTE_SHELL_STYLE_PATCH_030C_MOBILE_WORLD_FIRST_LAYOUT_CORRECTION_v1
-
-  Scope:
-  CSS only.
-  Corrects mobile world-first layout after the route remained visually
-  dashboard/document-first despite successful bootstrap and renderer mount.
-
-  No renderer touch.
-  No compositor touch.
-  No environment touch.
-  No capacity touch.
-  No source canon touch.
-  No fake scene geometry.
-*/
+/* Mobile correction */
 
 @media (max-width: 760px) {
   .h-earth-3d-route-root {
@@ -1474,23 +1149,24 @@ button:disabled {
 
   .h-earth-3d-world-stage,
   .h-earth-3d-stage {
-    min-height: 72svh;
+    min-height: var(--h-earth-mobile-stage-height);
     max-height: 78svh;
     border-radius: 20px;
   }
 
   .h-earth-3d-world-overlay {
-    top: 8px;
-    left: 8px;
-    right: 8px;
+    position: absolute;
+    inset: 8px;
     width: auto;
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 6px;
+    display: block;
     pointer-events: none;
   }
 
   .h-earth-3d-primary-hud {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
     pointer-events: auto;
   }
 
@@ -1532,9 +1208,9 @@ button:disabled {
 
   .h-earth-3d-selected-target-card {
     position: absolute;
-    left: 8px;
-    right: 8px;
-    bottom: 8px;
+    left: 0;
+    right: 0;
+    bottom: 0;
     max-height: none;
     padding: 8px 10px;
     border-radius: 14px;
@@ -1563,9 +1239,9 @@ button:disabled {
   .h-earth-3d-fallback {
     left: 8px;
     right: 8px;
-    bottom: 58px;
+    bottom: 54px;
     width: auto;
-    max-height: 64px;
+    max-height: 58px;
     padding: 7px 9px;
     font-size: 0.7rem;
     line-height: 1.3;
@@ -1634,13 +1310,58 @@ button:disabled {
     padding: 10px 12px;
     font-size: 0.72rem;
   }
+
+  .h-earth-3d-copy-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .h-earth-3d-copy-button {
+    width: 100%;
+  }
+
+  .h-earth-3d-control-grid,
+  .h-earth-3d-receipt-stack,
+  .h-earth-3d-receipt-grid {
+    gap: 10px;
+  }
+
+  .h-earth-3d-control-grid .h-earth-3d-panel,
+  .h-earth-3d-receipt-grid .h-earth-3d-panel,
+  .h-earth-3d-receipt-stack .h-earth-3d-panel,
+  .h-earth-3d-claim-boundary {
+    max-height: none;
+    overflow: visible;
+  }
+
+  .h-earth-3d-inspection-panel,
+  .h-earth-3d-debug,
+  .h-earth-3d-receipt-output {
+    display: block;
+    min-height: 220px;
+    max-height: 58svh;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+    font-size: 0.72rem;
+  }
+
+  .h-earth-3d-target-list {
+    max-height: 48svh;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+  }
 }
 
 @media (max-width: 420px) {
+  .h-earth-3d-route-root {
+    padding: 6px;
+  }
+
   .h-earth-3d-world-stage,
   .h-earth-3d-stage {
     min-height: 70svh;
     max-height: 76svh;
+    border-radius: 18px;
   }
 
   .h-earth-3d-title {
@@ -1661,11 +1382,42 @@ button:disabled {
     gap: 1px;
   }
 
-  .h-earth-3d-selected-target-card {
-    bottom: 8px;
-  }
-
   .h-earth-3d-fallback {
     bottom: 54px;
+  }
+
+  .h-earth-layer-water-surface-plane .h-earth-render-object,
+  .h-earth-material-water,
+  .h-earth-layer-dry-sand-transition .h-earth-render-object,
+  .h-earth-material-dry-sand,
+  .h-earth-layer-foreground-wet-sand .h-earth-render-object,
+  .h-earth-material-wet-sand {
+    width: 92vw;
+  }
+
+  .h-earth-layer-air-haze-light .h-earth-render-object,
+  .h-earth-material-air-haze {
+    width: 96vw;
+  }
+}
+
+@media (max-height: 700px) and (max-width: 760px) {
+  .h-earth-3d-world-stage,
+  .h-earth-3d-stage {
+    min-height: 72svh;
+    max-height: 76svh;
+  }
+}
+
+/* Reduced-motion safety */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.001ms !important;
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
   }
 }

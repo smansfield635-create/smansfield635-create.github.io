@@ -1,38 +1,44 @@
 /*
   /showroom/globe/h-earth/index.css
   COMPLETE RENEWED FILE
-  H_EARTH_3D_ROUTE_SHELL_STYLE_FILE_BIRTH_STEP_030H_CSS_INTERPRETATION_OVERBANDING_VIEWPORT_CORRECTION_v1
+  H_EARTH_3D_ROUTE_SHELL_STYLE_FILE_BIRTH_STEP_030I_VISUAL_GRAMMAR_POLISH_DESCRIPTOR_SAFE_v1
 
   Renews:
-  H_EARTH_3D_ROUTE_SHELL_STYLE_FILE_BIRTH_STEP_030G_REPORT_LAYER_SCENE_FIRST_DIAGNOSTIC_MATURITY_v1
+  H_EARTH_3D_ROUTE_SHELL_STYLE_FILE_BIRTH_STEP_030H_CSS_INTERPRETATION_OVERBANDING_VIEWPORT_CORRECTION_v1
 
   Companion route shell:
   /showroom/globe/h-earth/index.html
-  H_EARTH_3D_ROUTE_SHELL_FILE_BIRTH_STEP_030H_029F_COMPACT_EVIDENCE_ALIGNMENT_v1
+  H_EARTH_3D_ROUTE_SHELL_FILE_BIRTH_STEP_030I_ENVIRONMENT_STRUCTURED_EVIDENCE_REPORT_ALIGNMENT_v1
 
   Purpose:
-  Correct the confirmed CSS interpretation / over-banding / viewport presentation
-  issue without touching renderer, compositor, environment, capacity, controller,
-  index bootstrap, or source canon.
+  Preserve the 030H viewport correction while improving visual grammar,
+  depth readability, primitive differentiation, material readability, and
+  shoreline/water/ground separation without mutating renderer, compositor,
+  environment, capacity, controller, route bootstrap, or source canon.
 
-  Correction scope:
-  - Make the renderer/world stage visually primary through CSS ordering.
-  - Prevent the arrival/report layer from pushing the scene out of the first
-    meaningful viewport.
+  030I visual correction:
+  - Keep the world stage first-screen visible.
+  - Keep mobile bands inside the stage.
+  - Stop broad layer selectors from over-sizing every renderer-owned child node.
+  - Make primitive classes the primary visual geometry interpreters.
+  - Keep material classes responsible for surface/color/texture only.
+  - Add descriptor-safe atmospheric, water, sand, foam, rock, manor, distant,
+    and inspection-anchor visual differentiation.
   - Preserve stable renderer mount height.
   - Preserve perspective and transform-style.
-  - Replace over-wide mobile band rules with safer stage-relative bands.
-  - Add primitive-specific CSS interpretation classes.
-  - Preserve material, layer, context, interaction, report, diagnostic, receipt,
-    drawer, copy, and bootstrap status styles.
-  - Keep diagnostics and raw receipts secondary/collapsed by default.
+  - Preserve report, drawer, receipt, diagnostic, and copy surfaces.
 
   Boundary:
   CSS only.
   No shell-owned scene objects.
-  No fake beach / false scene geometry.
+  No fake scene geometry in HTML.
+  No renderer mutation.
+  No compositor mutation.
+  No environment mutation.
   No WebGL activation.
   No canvas activation.
+  No SVG activation.
+  No iframe activation.
   No final-renderer claim.
   No renderer-pass claim.
   No visual-pass claim.
@@ -47,12 +53,9 @@
 :root {
   color-scheme: dark;
 
-  --h-earth-bg-deep: #061018;
   --h-earth-bg-page: #02060d;
   --h-earth-bg-panel: rgba(7, 17, 25, 0.82);
   --h-earth-bg-panel-soft: rgba(7, 17, 25, 0.62);
-  --h-earth-bg-panel-strong: rgba(7, 17, 25, 0.94);
-  --h-earth-bg-glass: rgba(5, 13, 20, 0.68);
 
   --h-earth-border: rgba(221, 234, 239, 0.18);
   --h-earth-border-strong: rgba(221, 234, 239, 0.34);
@@ -78,7 +81,6 @@
   --h-earth-mobile-stage-height: clamp(540px, 76svh, 760px);
 
   --h-earth-radius-xl: 34px;
-  --h-earth-radius-lg: 26px;
   --h-earth-radius-md: 18px;
   --h-earth-radius-sm: 10px;
 
@@ -87,18 +89,20 @@
   --h-earth-shadow-overlay: 0 20px 54px rgba(0, 0, 0, 0.36);
 
   /*
-    030H correction:
-    These are stage-safe visual interpretation bands. They avoid the old
-    mobile 112vw / 118vw over-banding while still allowing landscape width.
+    030I:
+    Stage-contained bands. These are intentionally below 100vw on mobile.
   */
-  --h-earth-render-band-wide: min(96%, 1180px);
-  --h-earth-render-band-medium: min(86%, 980px);
-  --h-earth-render-band-narrow: min(68%, 760px);
-  --h-earth-render-band-haze: min(98%, 1240px);
+  --h-earth-band-water: min(92%, 1120px);
+  --h-earth-band-wave: min(84%, 940px);
+  --h-earth-band-foam: min(78%, 840px);
+  --h-earth-band-dry-sand: min(90%, 1080px);
+  --h-earth-band-wet-sand: min(92%, 1120px);
+  --h-earth-band-haze: min(96%, 1180px);
 
-  --h-earth-render-detail-size: clamp(18px, 3.2vw, 42px);
-  --h-earth-render-rock-size: clamp(34px, 6vw, 96px);
-  --h-earth-render-anchor-size: clamp(18px, 3vw, 32px);
+  --h-earth-detail-size: clamp(16px, 3vw, 40px);
+  --h-earth-stone-size: clamp(18px, 3.6vw, 52px);
+  --h-earth-rock-size: clamp(34px, 6vw, 96px);
+  --h-earth-anchor-size: clamp(18px, 3vw, 32px);
 
   --h-earth-wetSand-base: #5f5146;
   --h-earth-drySand-base: #b79a71;
@@ -189,6 +193,8 @@ summary:focus-visible {
   outline-offset: 3px;
 }
 
+/* Route shell ordering */
+
 .h-earth-3d-route-root {
   position: relative;
   z-index: 1;
@@ -203,30 +209,11 @@ summary:focus-visible {
   margin: 0 auto;
 }
 
-/*
-  030H correction:
-  The world shell is visually promoted above the narrative arrival block.
-  This is CSS ordering only. It does not move DOM authority or create objects.
-*/
-.h-earth-3d-public-header {
-  order: 0;
-}
-
-.h-earth-3d-world-shell {
-  order: 1;
-}
-
-.h-earth-3d-arrival {
-  order: 2;
-}
-
-.h-earth-3d-readout-card {
-  order: 3;
-}
-
-.h-earth-3d-operational-reports {
-  order: 4;
-}
+.h-earth-3d-public-header { order: 0; }
+.h-earth-3d-world-shell { order: 1; }
+.h-earth-3d-arrival { order: 2; }
+.h-earth-3d-readout-card { order: 3; }
+.h-earth-3d-operational-reports { order: 4; }
 
 .h-earth-3d-spatial-inspector,
 .h-earth-3d-target-drawer,
@@ -234,7 +221,7 @@ summary:focus-visible {
   order: 5;
 }
 
-/* Public route header */
+/* Header */
 
 .h-earth-3d-public-header {
   display: grid;
@@ -272,7 +259,6 @@ summary:focus-visible {
   color: var(--h-earth-text);
   font-size: 1rem;
   font-weight: 950;
-  letter-spacing: 0.02em;
 }
 
 .h-earth-3d-brand-copy {
@@ -317,7 +303,6 @@ summary:focus-visible {
   font-weight: 850;
   letter-spacing: 0.055em;
   text-transform: uppercase;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
 
 /* Shared panels */
@@ -343,7 +328,7 @@ summary:focus-visible {
   backdrop-filter: blur(16px);
 }
 
-/* Public arrival demoted to compact explanatory panel */
+/* Arrival */
 
 .h-earth-3d-arrival {
   display: grid;
@@ -423,7 +408,7 @@ summary:focus-visible {
   line-height: 1.38;
 }
 
-/* Scene route */
+/* World stage */
 
 .h-earth-3d-world-shell {
   display: grid;
@@ -439,8 +424,8 @@ summary:focus-visible {
   border: 1px solid var(--h-earth-border-strong);
   border-radius: var(--h-earth-radius-xl);
   background:
-    linear-gradient(180deg, rgba(176, 210, 222, 0.24) 0%, rgba(97, 151, 169, 0.16) 20%, rgba(21, 70, 91, 0.16) 43%, rgba(7, 24, 35, 0.72) 62%, rgba(4, 12, 18, 0.98) 100%),
-    radial-gradient(ellipse at 50% 100%, rgba(216, 189, 142, 0.28), transparent 46%),
+    linear-gradient(180deg, rgba(190, 219, 230, 0.24) 0%, rgba(97, 151, 169, 0.15) 19%, rgba(21, 70, 91, 0.15) 40%, rgba(7, 24, 35, 0.72) 62%, rgba(4, 12, 18, 0.98) 100%),
+    radial-gradient(ellipse at 50% 94%, rgba(216, 189, 142, 0.24), transparent 46%),
     linear-gradient(180deg, #061421, #02070d);
   box-shadow: var(--h-earth-shadow-stage);
   isolation: isolate;
@@ -454,9 +439,9 @@ summary:focus-visible {
   z-index: 9;
   pointer-events: none;
   background:
-    radial-gradient(ellipse at 50% 42%, rgba(197, 214, 223, 0.12), transparent 34%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, transparent 18%, transparent 70%, rgba(0, 0, 0, 0.28) 100%);
-  opacity: 0.92;
+    radial-gradient(ellipse at 50% 35%, rgba(197, 214, 223, 0.11), transparent 32%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, transparent 18%, transparent 70%, rgba(0, 0, 0, 0.26) 100%);
+  opacity: 0.88;
 }
 
 .h-earth-3d-world-stage::after,
@@ -466,22 +451,22 @@ summary:focus-visible {
   left: -10%;
   right: -10%;
   bottom: -18%;
-  height: 46%;
+  height: 44%;
   z-index: 10;
   pointer-events: none;
   background:
-    radial-gradient(ellipse at 50% 10%, rgba(216, 189, 142, 0.20), transparent 48%),
-    linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.28) 52%, rgba(0, 0, 0, 0.62) 100%);
+    radial-gradient(ellipse at 50% 12%, rgba(216, 189, 142, 0.18), transparent 48%),
+    linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.24) 52%, rgba(0, 0, 0, 0.58) 100%);
   transform: perspective(900px) rotateX(64deg);
   transform-origin: 50% 100%;
-  opacity: 0.66;
+  opacity: 0.56;
 }
 
 .h-earth-3d-renderer-mount {
   position: absolute;
   inset: 0;
   overflow: hidden;
-  perspective: 1080px;
+  perspective: 1120px;
   perspective-origin: 50% 42%;
   transform-style: preserve-3d;
   transform-origin: 50% 50%;
@@ -526,7 +511,7 @@ summary:focus-visible {
   display: none;
 }
 
-/* Scene overlay */
+/* Overlay */
 
 .h-earth-3d-world-overlay {
   position: absolute;
@@ -615,7 +600,7 @@ summary:focus-visible {
   letter-spacing: -0.04em;
 }
 
-/* Compact public readout */
+/* Public readout */
 
 .h-earth-3d-readout-card {
   display: grid;
@@ -693,7 +678,7 @@ summary:focus-visible {
   line-height: 1.4;
 }
 
-/* Operational report layer */
+/* Reports */
 
 .h-earth-3d-operational-reports {
   display: grid;
@@ -863,7 +848,7 @@ summary:focus-visible {
   display: none;
 }
 
-/* Report severity states */
+/* Report severity */
 
 .h-earth-3d-report-card[data-h-earth-report-severity="PASS"] {
   border-color: rgba(174, 232, 194, 0.30);
@@ -892,9 +877,6 @@ summary:focus-visible {
 .h-earth-3d-report-card[data-h-earth-report-severity="UNPROVEN"],
 .h-earth-3d-report-card[data-h-earth-report-severity="NOT_EXPOSED"] {
   border-color: rgba(149, 213, 232, 0.24);
-  background:
-    linear-gradient(180deg, rgba(149, 213, 232, 0.065), rgba(255, 255, 255, 0.014)),
-    rgba(4, 12, 18, 0.56);
 }
 
 .h-earth-3d-report-card[data-h-earth-report-severity="UNPROVEN"] .h-earth-3d-report-card-header span,
@@ -907,9 +889,6 @@ summary:focus-visible {
 .h-earth-3d-report-card[data-h-earth-report-severity="GAP"],
 .h-earth-3d-report-card[data-h-earth-report-severity="HIGH"] {
   border-color: rgba(255, 176, 163, 0.34);
-  background:
-    linear-gradient(180deg, rgba(255, 176, 163, 0.085), rgba(255, 255, 255, 0.016)),
-    rgba(4, 12, 18, 0.58);
 }
 
 .h-earth-3d-report-card[data-h-earth-report-severity="GAP"] .h-earth-3d-report-card-header span,
@@ -924,57 +903,14 @@ summary:focus-visible {
   background:
     linear-gradient(180deg, rgba(255, 143, 126, 0.13), rgba(255, 255, 255, 0.018)),
     rgba(4, 12, 18, 0.62);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.045),
-    0 0 0 1px rgba(255, 143, 126, 0.08);
 }
 
-.h-earth-3d-report-card[data-h-earth-report-severity="BLOCKING"] .h-earth-3d-report-card-header span,
-.h-earth-3d-report-card[data-h-earth-report-severity="BLOCKING"] .h-earth-3d-report-status {
-  color: var(--h-earth-report-blocking);
-}
+/* Raw evidence / drawers */
 
-.h-earth-3d-operational-reports[data-h-earth-report-severity="PASS"] .h-earth-3d-report-layer-status {
-  border-color: rgba(174, 232, 194, 0.36);
-  color: var(--h-earth-report-pass);
-  background: rgba(174, 232, 194, 0.08);
-}
-
-.h-earth-3d-operational-reports[data-h-earth-report-severity="WATCH"] .h-earth-3d-report-layer-status {
-  border-color: rgba(242, 212, 146, 0.38);
-  color: var(--h-earth-report-watch);
-  background: rgba(242, 212, 146, 0.08);
-}
-
-.h-earth-3d-operational-reports[data-h-earth-report-severity="UNPROVEN"] .h-earth-3d-report-layer-status,
-.h-earth-3d-operational-reports[data-h-earth-report-severity="NOT_EXPOSED"] .h-earth-3d-report-layer-status {
-  border-color: rgba(149, 213, 232, 0.34);
-  color: var(--h-earth-report-info);
-  background: rgba(149, 213, 232, 0.08);
-}
-
-.h-earth-3d-operational-reports[data-h-earth-report-severity="GAP"] .h-earth-3d-report-layer-status,
-.h-earth-3d-operational-reports[data-h-earth-report-severity="HIGH"] .h-earth-3d-report-layer-status,
-.h-earth-3d-operational-reports[data-h-earth-report-severity="BLOCKING"] .h-earth-3d-report-layer-status {
-  border-color: rgba(255, 176, 163, 0.44);
-  color: var(--h-earth-report-gap);
-  background: rgba(255, 176, 163, 0.08);
-}
-
-/* Advanced raw evidence and diagnostics */
-
-.h-earth-3d-spatial-inspector {
+.h-earth-3d-spatial-inspector,
+.h-earth-3d-target-drawer,
+.h-earth-3d-developer-drawer {
   overflow: hidden;
-  border-color: rgba(149, 213, 232, 0.20);
-  background:
-    radial-gradient(circle at 8% 0%, rgba(149, 213, 232, 0.10), transparent 30rem),
-    radial-gradient(circle at 92% 18%, rgba(216, 189, 142, 0.09), transparent 30rem),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.020)),
-    rgba(7, 16, 25, 0.70);
-}
-
-.h-earth-3d-advanced-spatial-evidence {
-  box-shadow: none;
 }
 
 .h-earth-3d-spatial-inspector-toggle,
@@ -1012,8 +948,6 @@ summary:focus-visible {
   border: 1px solid var(--h-earth-border);
   border-radius: 999px;
   color: var(--h-earth-accent);
-  font-size: 1rem;
-  line-height: 1;
 }
 
 .h-earth-3d-spatial-inspector[open] > .h-earth-3d-spatial-inspector-toggle::after,
@@ -1022,154 +956,49 @@ summary:focus-visible {
   content: "–";
 }
 
-.h-earth-3d-spatial-inspector-body {
+.h-earth-3d-spatial-inspector-body,
+.h-earth-3d-developer-drawer-body {
   display: grid;
   gap: 14px;
   padding: 0 14px 14px;
 }
 
-.h-earth-3d-spatial-diagnosis-card {
-  display: grid;
-  gap: 0.7rem;
+.h-earth-3d-spatial-diagnosis-card,
+.h-earth-3d-copy-toolbar,
+.h-earth-3d-panel,
+.h-earth-3d-claim-boundary {
   padding: 14px;
   box-shadow: none;
 }
 
-.h-earth-3d-spatial-diagnosis-copy {
+.h-earth-3d-spatial-diagnosis-copy,
+.h-earth-3d-copy-status,
+.h-earth-3d-claim-boundary p,
+.h-earth-3d-empty-panel-note {
   margin: 0;
   color: var(--h-earth-text-muted);
-  font-size: 0.92rem;
+  font-size: 0.84rem;
   line-height: 1.45;
 }
 
-.h-earth-3d-landscape-diagnosis {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 10px;
-}
-
-.h-earth-3d-diagnosis-tile {
-  min-width: 0;
-  padding: 12px;
-  border: 1px solid rgba(149, 213, 232, 0.22);
-  border-radius: var(--h-earth-radius-md);
-  background:
-    linear-gradient(180deg, rgba(149, 213, 232, 0.09), rgba(149, 213, 232, 0.025)),
-    rgba(7, 16, 25, 0.48);
-}
-
-.h-earth-3d-diagnosis-tile b {
-  display: block;
-  color: var(--h-earth-text);
-  font-size: 0.84rem;
-  letter-spacing: 0.02em;
-}
-
-.h-earth-3d-diagnosis-tile span {
-  display: block;
-  margin-top: 4px;
-  color: var(--h-earth-text-muted);
-  font-size: 0.74rem;
-  line-height: 1.35;
-}
-
 .h-earth-3d-composition-readout,
-.h-earth-3d-raw-evidence-grid {
+.h-earth-3d-raw-evidence-grid,
+.h-earth-3d-control-grid,
+.h-earth-3d-receipt-stack,
+.h-earth-3d-receipt-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(280px, 1fr));
   gap: 14px;
 }
 
-.h-earth-3d-spatial-panel {
-  min-width: 0;
-}
-
-.h-earth-3d-spatial-output {
-  min-height: 190px;
-  max-height: 360px;
-}
-
-/* Drawers and developer diagnostics */
-
-.h-earth-3d-target-drawer,
-.h-earth-3d-developer-drawer {
-  overflow: hidden;
-}
-
-.h-earth-3d-target-panel {
-  margin: 0 14px 14px;
-  box-shadow: none;
-}
-
-.h-earth-3d-target-list {
-  display: grid;
-  gap: 8px;
-}
-
-.h-earth-3d-empty-panel-note {
-  margin: 0;
-  color: var(--h-earth-text-dim);
-  font-size: 0.84rem;
-}
-
-.h-earth-3d-target-button {
-  width: 100%;
-  padding: 10px 12px;
-  border: 1px solid var(--h-earth-border);
-  border-radius: var(--h-earth-radius-sm);
-  background: rgba(255, 255, 255, 0.05);
-  color: var(--h-earth-text-muted);
-  text-align: left;
-}
-
-.h-earth-3d-target-button[aria-current="true"] {
-  border-color: rgba(216, 189, 142, 0.58);
-  background: rgba(216, 189, 142, 0.12);
-  color: var(--h-earth-accent-warm);
-}
-
-.h-earth-3d-developer-drawer {
-  background: var(--h-earth-bg-panel-soft);
-}
-
-.h-earth-3d-developer-drawer-body {
-  display: grid;
-  gap: 16px;
-  padding: 0 14px 14px;
-}
-
-.h-earth-3d-copy-toolbar {
-  display: grid;
-  gap: 12px;
-  padding: 14px;
-  box-shadow: none;
-}
-
+.h-earth-3d-panel-heading-row,
 .h-earth-3d-copy-toolbar-header {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px 14px;
+  gap: 10px;
   align-items: center;
   justify-content: space-between;
-}
-
-.h-earth-3d-copy-toolbar-header .h-earth-3d-panel-title {
-  margin: 0;
-}
-
-.h-earth-3d-copy-status {
-  margin: 0;
-  color: var(--h-earth-text-muted);
-  font-size: 0.82rem;
-  overflow-wrap: anywhere;
-}
-
-.h-earth-3d-copy-status[data-h-earth-copy-status="error"] {
-  color: var(--h-earth-error);
-}
-
-.h-earth-3d-copy-status[data-h-earth-copy-status="ready"] {
-  color: var(--h-earth-ready);
+  margin-bottom: 12px;
 }
 
 .h-earth-3d-copy-actions {
@@ -1192,27 +1021,29 @@ summary:focus-visible {
   text-transform: uppercase;
 }
 
-.h-earth-3d-control-grid {
+.h-earth-3d-target-list {
   display: grid;
-  grid-template-columns: repeat(2, minmax(280px, 1fr));
-  gap: 16px;
-  align-items: start;
+  gap: 8px;
 }
 
-.h-earth-3d-panel {
-  padding: 14px;
+.h-earth-3d-target-panel {
+  margin: 0 14px 14px;
 }
 
-.h-earth-3d-panel-heading-row {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 12px;
+.h-earth-3d-target-button {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--h-earth-border);
+  border-radius: var(--h-earth-radius-sm);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--h-earth-text-muted);
+  text-align: left;
 }
 
-.h-earth-3d-panel-heading-row .h-earth-3d-panel-title {
-  margin: 0;
+.h-earth-3d-target-button[aria-current="true"] {
+  border-color: rgba(216, 189, 142, 0.58);
+  background: rgba(216, 189, 142, 0.12);
+  color: var(--h-earth-accent-warm);
 }
 
 .h-earth-3d-inspection-panel,
@@ -1228,45 +1059,14 @@ summary:focus-visible {
   border-radius: var(--h-earth-radius-sm);
   background: rgba(0, 0, 0, 0.22);
   color: var(--h-earth-text-muted);
-  font-family:
-    "SFMono-Regular",
-    Consolas,
-    "Liberation Mono",
-    monospace;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
   font-size: 0.78rem;
   line-height: 1.55;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
 
-.h-earth-3d-receipt-stack,
-.h-earth-3d-receipt-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(280px, 1fr));
-  gap: 16px;
-}
-
-.h-earth-3d-receipt-card,
-.h-earth-3d-receipt-panel {
-  min-width: 0;
-}
-
-.h-earth-3d-receipt-output {
-  min-height: 180px;
-  max-height: 360px;
-}
-
-.h-earth-3d-claim-boundary {
-  padding: 14px;
-  color: var(--h-earth-text-muted);
-  box-shadow: none;
-}
-
-.h-earth-3d-claim-boundary p {
-  margin: 0;
-}
-
-/* Bootstrap status */
+/* Bootstrap */
 
 .h-earth-3d-boot-ready .h-earth-3d-status {
   border-color: rgba(174, 232, 194, 0.42);
@@ -1283,7 +1083,7 @@ summary:focus-visible {
   color: var(--h-earth-error);
 }
 
-/* Renderer-generated root/layer/object support */
+/* Renderer roots */
 
 .h-earth-render-root,
 .h-earth-css-3d-candidate-root {
@@ -1307,8 +1107,8 @@ summary:focus-visible {
   left: 50%;
   top: 50%;
   translate: -50% -50%;
-  width: var(--h-earth-render-detail-size);
-  height: var(--h-earth-render-detail-size);
+  width: var(--h-earth-detail-size);
+  height: var(--h-earth-detail-size);
   min-width: 6px;
   min-height: 6px;
   border: 0;
@@ -1358,7 +1158,26 @@ summary:focus-visible {
   outline-offset: 3px;
 }
 
-/* Primitive-specific interpretation added in 030H */
+/* Layer order */
+
+.h-earth-layer-distant-world-context { z-index: 10; }
+.h-earth-layer-air-haze-light { z-index: 20; opacity: 0.62; }
+.h-earth-layer-water-surface-plane { z-index: 30; }
+.h-earth-layer-nearshore-wave-band { z-index: 40; }
+.h-earth-layer-shoreline-foam-line { z-index: 50; }
+.h-earth-layer-manor-exterior-context { z-index: 60; }
+.h-earth-layer-dry-sand-transition { z-index: 70; }
+.h-earth-layer-foreground-wet-sand { z-index: 80; }
+.h-earth-layer-tide-pools-stones-rocks-detail { z-index: 90; }
+.h-earth-layer-inspection-anchor-overlay { z-index: 100; }
+.h-earth-layer-unclassified-render { z-index: 999; }
+
+/*
+  030I primitive-first visual grammar:
+  Primitive classes carry dimensions.
+  Material classes carry color/texture.
+  Broad layer selectors are fallback-only.
+*/
 
 .h-earth-primitive-water-plane,
 .h-earth-primitive-water-depth-band,
@@ -1375,64 +1194,107 @@ summary:focus-visible {
   transform-style: preserve-3d;
 }
 
+.h-earth-primitive-atmospheric-layer {
+  width: var(--h-earth-band-haze);
+  height: clamp(140px, 28vh, 360px);
+  border-radius: 999px;
+}
+
 .h-earth-primitive-water-plane {
-  width: var(--h-earth-render-band-wide);
-  height: clamp(120px, 18vh, 240px);
+  width: var(--h-earth-band-water);
+  height: clamp(86px, 15vh, 190px);
   border-radius: 46% 46% 18% 18% / 64% 64% 20% 20%;
 }
 
 .h-earth-primitive-water-depth-band {
-  width: var(--h-earth-render-band-medium);
-  height: clamp(18px, 3.4vh, 42px);
+  width: var(--h-earth-band-wave);
+  height: clamp(14px, 2.8vh, 34px);
   border-radius: 999px;
-}
-
-.h-earth-primitive-contoured-terrain-band,
-.h-earth-primitive-terrain-band {
-  width: var(--h-earth-render-band-wide);
-  height: clamp(110px, 22vh, 260px);
-  border-radius: 42% 42% 18% 18% / 30% 30% 60% 60%;
 }
 
 .h-earth-primitive-irregular-shoreline-band {
-  width: var(--h-earth-render-band-medium);
-  height: clamp(6px, 1.2vh, 14px);
+  width: var(--h-earth-band-foam);
+  height: clamp(5px, 1vh, 12px);
   border-radius: 999px;
 }
 
-.h-earth-primitive-atmospheric-layer {
-  width: var(--h-earth-render-band-haze);
-  height: clamp(180px, 34vh, 420px);
-  border-radius: 999px;
+.h-earth-primitive-terrain-band {
+  width: var(--h-earth-band-dry-sand);
+  height: clamp(66px, 11vh, 140px);
+  border-radius: 44% 44% 18% 18% / 32% 32% 58% 58%;
+}
+
+.h-earth-primitive-contoured-terrain-band {
+  width: var(--h-earth-band-wet-sand);
+  height: clamp(86px, 17vh, 190px);
+  border-radius: 42% 42% 18% 18% / 30% 30% 60% 60%;
 }
 
 .h-earth-primitive-layered-silhouette,
 .h-earth-primitive-distant-cluster {
-  width: clamp(88px, 14vw, 210px);
-  height: clamp(42px, 8vw, 104px);
+  width: clamp(78px, 12vw, 190px);
+  height: clamp(38px, 7vw, 92px);
   border-radius: 34% 48% 24% 42%;
 }
 
 .h-earth-primitive-scatter-cluster {
-  width: clamp(18px, 3.6vw, 52px);
+  width: var(--h-earth-stone-size);
   height: clamp(12px, 2.6vw, 36px);
   border-radius: 52% 48% 46% 54%;
 }
 
 .h-earth-primitive-rock-cluster {
-  width: var(--h-earth-render-rock-size);
-  height: clamp(38px, 6.4vw, 106px);
+  width: var(--h-earth-rock-size);
+  height: clamp(34px, 6vw, 96px);
   border-radius: 28% 58% 34% 44%;
   clip-path: polygon(8% 86%, 20% 36%, 34% 62%, 48% 18%, 62% 58%, 78% 28%, 94% 86%);
 }
 
 .h-earth-primitive-inspection-anchor {
-  width: var(--h-earth-render-anchor-size);
-  height: var(--h-earth-render-anchor-size);
+  width: var(--h-earth-anchor-size);
+  height: var(--h-earth-anchor-size);
   border-radius: 999px;
 }
 
-/* Landscape-grade descriptor interpretation */
+/* Fallback dimensions only when primitive class is absent */
+
+.h-earth-layer-water-surface-plane .h-earth-render-object:not([class*="h-earth-primitive-"]) {
+  width: var(--h-earth-band-water);
+  height: clamp(86px, 15vh, 190px);
+  border-radius: 46% 46% 18% 18% / 64% 64% 20% 20%;
+}
+
+.h-earth-layer-nearshore-wave-band .h-earth-render-object:not([class*="h-earth-primitive-"]) {
+  width: var(--h-earth-band-wave);
+  height: clamp(14px, 2.8vh, 34px);
+  border-radius: 999px;
+}
+
+.h-earth-layer-shoreline-foam-line .h-earth-render-object:not([class*="h-earth-primitive-"]) {
+  width: var(--h-earth-band-foam);
+  height: clamp(5px, 1vh, 12px);
+  border-radius: 999px;
+}
+
+.h-earth-layer-dry-sand-transition .h-earth-render-object:not([class*="h-earth-primitive-"]) {
+  width: var(--h-earth-band-dry-sand);
+  height: clamp(66px, 11vh, 140px);
+  border-radius: 44% 44% 18% 18% / 32% 32% 58% 58%;
+}
+
+.h-earth-layer-foreground-wet-sand .h-earth-render-object:not([class*="h-earth-primitive-"]) {
+  width: var(--h-earth-band-wet-sand);
+  height: clamp(86px, 17vh, 190px);
+  border-radius: 42% 42% 18% 18% / 30% 30% 60% 60%;
+}
+
+.h-earth-layer-air-haze-light .h-earth-render-object:not([class*="h-earth-primitive-"]) {
+  width: var(--h-earth-band-haze);
+  height: clamp(140px, 28vh, 360px);
+  border-radius: 999px;
+}
+
+/* Landscape semantic hooks */
 
 .h-earth-landscape-ground-plane,
 .h-earth-landscape-water-plane,
@@ -1448,146 +1310,60 @@ summary:focus-visible {
   transform-style: preserve-3d;
 }
 
-/*
-  030H correction:
-  Landscape layer/material rules remain, but dimensions are safer and no longer
-  exceed the stage on mobile.
-*/
+/* Material classes: color/texture only */
 
-.h-earth-layer-water-surface-plane .h-earth-render-object,
 .h-earth-material-water {
-  width: var(--h-earth-render-band-wide);
-  height: clamp(120px, 18vh, 240px);
-  border-radius: 46% 46% 18% 18% / 64% 64% 20% 20%;
-}
-
-.h-earth-layer-nearshore-wave-band .h-earth-render-object,
-.h-earth-material-nearshore-wave {
-  width: var(--h-earth-render-band-medium);
-  height: clamp(18px, 3.4vh, 42px);
-  border-radius: 999px;
-}
-
-.h-earth-layer-shoreline-foam-line .h-earth-render-object,
-.h-earth-material-foam {
-  width: var(--h-earth-render-band-medium);
-  height: clamp(6px, 1.2vh, 14px);
-  border-radius: 999px;
-}
-
-.h-earth-layer-dry-sand-transition .h-earth-render-object,
-.h-earth-material-dry-sand {
-  width: var(--h-earth-render-band-wide);
-  height: clamp(90px, 15vh, 190px);
-  border-radius: 44% 44% 18% 18% / 32% 32% 58% 58%;
-}
-
-.h-earth-layer-foreground-wet-sand .h-earth-render-object,
-.h-earth-material-wet-sand {
-  width: var(--h-earth-render-band-wide);
-  height: clamp(120px, 22vh, 260px);
-  border-radius: 42% 42% 18% 18% / 30% 30% 60% 60%;
-}
-
-.h-earth-layer-tide-pools-stones-rocks-detail .h-earth-material-tide-pool {
-  width: clamp(54px, 10vw, 150px);
-  height: clamp(18px, 4vw, 58px);
-  border-radius: 56% 44% 58% 42%;
-}
-
-.h-earth-layer-tide-pools-stones-rocks-detail .h-earth-material-stone {
-  width: clamp(18px, 3.6vw, 52px);
-  height: clamp(12px, 2.6vw, 36px);
-  border-radius: 52% 48% 46% 54%;
-}
-
-.h-earth-layer-tide-pools-stones-rocks-detail .h-earth-material-jagged-rock {
-  width: var(--h-earth-render-rock-size);
-  height: clamp(38px, 6.4vw, 106px);
-  border-radius: 28% 58% 34% 44%;
-  clip-path: polygon(8% 86%, 20% 36%, 34% 62%, 48% 18%, 62% 58%, 78% 28%, 94% 86%);
-}
-
-.h-earth-layer-air-haze-light .h-earth-render-object,
-.h-earth-material-air-haze {
-  width: var(--h-earth-render-band-haze);
-  height: clamp(180px, 34vh, 420px);
-  border-radius: 999px;
-}
-
-.h-earth-layer-manor-exterior-context .h-earth-render-object,
-.h-earth-material-manor-context {
-  width: clamp(80px, 15vw, 190px);
-  height: clamp(70px, 12vw, 160px);
-  border-radius: 10px 10px 4px 4px;
-}
-
-.h-earth-layer-distant-world-context .h-earth-render-object,
-.h-earth-material-distant-rock {
-  width: clamp(88px, 14vw, 210px);
-  height: clamp(42px, 8vw, 104px);
-  border-radius: 34% 48% 24% 42%;
-  clip-path: polygon(0 88%, 12% 52%, 28% 66%, 42% 34%, 58% 72%, 72% 42%, 100% 88%, 100% 100%, 0 100%);
-}
-
-.h-earth-layer-inspection-anchor-overlay .h-earth-render-object,
-.h-earth-material-inspection-anchor {
-  width: var(--h-earth-render-anchor-size);
-  height: var(--h-earth-render-anchor-size);
-  border-radius: 999px;
-}
-
-/* Layer classes */
-
-.h-earth-layer-distant-world-context { z-index: 10; }
-.h-earth-layer-air-haze-light { z-index: 20; opacity: 0.76; }
-.h-earth-layer-water-surface-plane { z-index: 30; }
-.h-earth-layer-nearshore-wave-band { z-index: 40; }
-.h-earth-layer-shoreline-foam-line { z-index: 50; }
-.h-earth-layer-manor-exterior-context { z-index: 60; }
-.h-earth-layer-dry-sand-transition { z-index: 70; }
-.h-earth-layer-foreground-wet-sand { z-index: 80; }
-.h-earth-layer-tide-pools-stones-rocks-detail { z-index: 90; }
-.h-earth-layer-inspection-anchor-overlay { z-index: 100; }
-.h-earth-layer-unclassified-render { z-index: 999; }
-
-/* Material classes. Candidate tokens only. Not final material validation. */
-
-.h-earth-material-wet-sand {
   background:
-    radial-gradient(ellipse at 40% 16%, rgba(255, 255, 255, 0.18), transparent 28%),
-    radial-gradient(ellipse at 60% 72%, rgba(27, 34, 33, 0.34), transparent 40%),
-    linear-gradient(180deg, rgba(129, 113, 93, 0.96), rgba(67, 56, 48, 0.98)),
-    var(--h-earth-wetSand-base);
-  color: #f5e8d4;
-  opacity: 0.98;
-  filter: saturate(0.98) contrast(1.03);
+    radial-gradient(ellipse at 50% 20%, rgba(255, 255, 255, 0.18), transparent 26%),
+    linear-gradient(180deg, rgba(83, 151, 173, 0.50), rgba(29, 88, 108, 0.64) 56%, rgba(12, 42, 60, 0.86));
+  color: #e4fbff;
+  opacity: 0.66;
+  filter: saturate(0.96);
+}
+
+.h-earth-material-nearshore-wave {
+  background:
+    linear-gradient(90deg, transparent 0%, rgba(234, 248, 245, 0.42) 12%, rgba(107, 169, 177, 0.56) 52%, rgba(234, 248, 245, 0.42) 86%, transparent 100%);
+  color: #f7ffff;
+  opacity: 0.78;
+  filter: blur(0.35px);
+}
+
+.h-earth-material-foam {
+  background:
+    linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.88) 18%, rgba(234, 248, 245, 0.62) 50%, rgba(255, 255, 255, 0.84) 82%, transparent 100%);
+  color: #183238;
+  opacity: 0.86;
+  filter: blur(0.2px);
 }
 
 .h-earth-material-dry-sand {
   background:
     radial-gradient(ellipse at 38% 26%, rgba(255, 255, 255, 0.20), transparent 28%),
-    linear-gradient(180deg, rgba(208, 176, 126, 0.96), rgba(139, 107, 73, 0.96)),
+    linear-gradient(180deg, rgba(208, 176, 126, 0.90), rgba(139, 107, 73, 0.92)),
     var(--h-earth-drySand-base);
   color: #382c20;
-  opacity: 0.96;
+  opacity: 0.90;
 }
 
-.h-earth-material-foam {
+.h-earth-material-wet-sand {
   background:
-    linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.84) 18%, rgba(234, 248, 245, 0.58) 50%, rgba(255, 255, 255, 0.82) 82%, transparent 100%);
-  color: #183238;
-  opacity: 0.92;
-  filter: blur(0.2px);
+    radial-gradient(ellipse at 40% 16%, rgba(255, 255, 255, 0.18), transparent 28%),
+    radial-gradient(ellipse at 60% 72%, rgba(27, 34, 33, 0.34), transparent 40%),
+    linear-gradient(180deg, rgba(129, 113, 93, 0.92), rgba(67, 56, 48, 0.96)),
+    var(--h-earth-wetSand-base);
+  color: #f5e8d4;
+  opacity: 0.96;
+  filter: saturate(0.98) contrast(1.04);
 }
 
 .h-earth-material-tide-pool {
   background:
-    radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.30), transparent 34%),
-    linear-gradient(180deg, rgba(85, 134, 148, 0.88), rgba(39, 84, 96, 0.96)),
+    radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.34), transparent 34%),
+    linear-gradient(180deg, rgba(85, 134, 148, 0.84), rgba(39, 84, 96, 0.94)),
     var(--h-earth-tidePool-base);
   color: #e8fbff;
-  opacity: 0.88;
+  opacity: 0.90;
   box-shadow:
     inset 0 0 18px rgba(255, 255, 255, 0.12),
     0 4px 14px rgba(0, 0, 0, 0.24);
@@ -1611,28 +1387,11 @@ summary:focus-visible {
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.38);
 }
 
-.h-earth-material-water {
-  background:
-    radial-gradient(ellipse at 50% 24%, rgba(255, 255, 255, 0.14), transparent 28%),
-    linear-gradient(180deg, rgba(83, 151, 173, 0.54), rgba(29, 88, 108, 0.76) 58%, rgba(12, 42, 60, 0.88));
-  color: #e4fbff;
-  opacity: 0.78;
-  filter: saturate(0.96);
-}
-
-.h-earth-material-nearshore-wave {
-  background:
-    linear-gradient(90deg, transparent 0%, rgba(234, 248, 245, 0.50) 12%, rgba(107, 169, 177, 0.52) 52%, rgba(234, 248, 245, 0.48) 86%, transparent 100%);
-  color: #f7ffff;
-  opacity: 0.82;
-  filter: blur(0.3px);
-}
-
 .h-earth-material-air-haze {
   background:
     radial-gradient(ellipse at 50% 44%, rgba(197, 214, 223, 0.30), rgba(197, 214, 223, 0.04) 64%, transparent 78%);
   color: #f7fbff;
-  opacity: 0.36;
+  opacity: 0.26;
   border-color: rgba(255, 255, 255, 0.04);
   filter: blur(1.2px);
 }
@@ -1662,7 +1421,7 @@ summary:focus-visible {
     linear-gradient(135deg, rgba(255, 255, 255, 0.09), transparent 50%),
     var(--h-earth-distantRock-base);
   color: #dfe7eb;
-  opacity: 0.76;
+  opacity: 0.72;
   filter: saturate(0.78);
 }
 
@@ -1671,7 +1430,7 @@ summary:focus-visible {
     radial-gradient(circle at 50% 50%, #f8f0ce 0 18%, #a7b0a0 20% 42%, #4f5a55 44% 58%, rgba(244, 231, 182, 0.86) 60% 100%);
   color: #2d2513;
   box-shadow: 0 0 18px rgba(244, 231, 182, 0.38);
-  opacity: 0.62;
+  opacity: 0.68;
 }
 
 .h-earth-material-unresolved {
@@ -1679,7 +1438,7 @@ summary:focus-visible {
   color: var(--h-earth-error);
 }
 
-/* Context classes */
+/* Context / interaction */
 
 .h-earth-context-primary-inspection {
   outline: 1px solid rgba(216, 189, 142, 0.32);
@@ -1715,8 +1474,6 @@ summary:focus-visible {
 .h-earth-context-unclassified {
   outline: 1px dotted rgba(255, 176, 163, 0.54);
 }
-
-/* Interaction classes */
 
 .h-earth-target-selectable {
   cursor: pointer;
@@ -1766,7 +1523,6 @@ summary:focus-visible {
   }
 
   .h-earth-3d-readout-facts,
-  .h-earth-3d-landscape-diagnosis,
   .h-earth-3d-composition-readout,
   .h-earth-3d-raw-evidence-grid,
   .h-earth-3d-control-grid,
@@ -1778,10 +1534,12 @@ summary:focus-visible {
 
 @media (max-width: 760px) {
   :root {
-    --h-earth-render-band-wide: min(96%, calc(100vw - 24px));
-    --h-earth-render-band-medium: min(88%, calc(100vw - 34px));
-    --h-earth-render-band-narrow: min(72%, calc(100vw - 52px));
-    --h-earth-render-band-haze: min(98%, calc(100vw - 16px));
+    --h-earth-band-water: min(92%, calc(100vw - 34px));
+    --h-earth-band-wave: min(84%, calc(100vw - 48px));
+    --h-earth-band-foam: min(76%, calc(100vw - 62px));
+    --h-earth-band-dry-sand: min(90%, calc(100vw - 40px));
+    --h-earth-band-wet-sand: min(92%, calc(100vw - 34px));
+    --h-earth-band-haze: min(96%, calc(100vw - 24px));
   }
 
   .h-earth-3d-route-root {
@@ -1839,7 +1597,7 @@ summary:focus-visible {
   }
 
   .h-earth-3d-renderer-mount {
-    perspective: 860px;
+    perspective: 900px;
     perspective-origin: 50% 44%;
   }
 
@@ -1974,11 +1732,6 @@ summary:focus-visible {
     font-size: 0.58rem;
   }
 
-  .h-earth-3d-operational-reports-copy {
-    font-size: 0.78rem;
-    line-height: 1.34;
-  }
-
   .h-earth-3d-report-layer {
     grid-template-columns: 1fr;
     gap: 0.5rem;
@@ -2006,10 +1759,6 @@ summary:focus-visible {
   .h-earth-3d-report-summary {
     font-size: 0.70rem;
     line-height: 1.30;
-  }
-
-  .h-earth-3d-report-meta {
-    gap: 0.22rem;
   }
 
   .h-earth-3d-report-meta div {
@@ -2041,16 +1790,6 @@ summary:focus-visible {
     font-size: 0.70rem;
   }
 
-  .h-earth-3d-spatial-inspector-body {
-    padding: 0 10px 10px;
-  }
-
-  .h-earth-3d-landscape-diagnosis,
-  .h-earth-3d-composition-readout,
-  .h-earth-3d-raw-evidence-grid {
-    grid-template-columns: 1fr;
-  }
-
   .h-earth-3d-spatial-output,
   .h-earth-3d-inspection-panel,
   .h-earth-3d-debug,
@@ -2073,35 +1812,6 @@ summary:focus-visible {
     max-height: 48svh;
     overflow: auto;
     -webkit-overflow-scrolling: touch;
-  }
-
-  /*
-    030H correction:
-    No 112vw / 118vw mobile landscape bands.
-    Mobile bands stay inside the mounted stage.
-  */
-  .h-earth-layer-water-surface-plane .h-earth-render-object,
-  .h-earth-material-water {
-    width: var(--h-earth-render-band-wide);
-    height: clamp(100px, 18svh, 190px);
-  }
-
-  .h-earth-layer-dry-sand-transition .h-earth-render-object,
-  .h-earth-material-dry-sand {
-    width: var(--h-earth-render-band-wide);
-    height: clamp(82px, 14svh, 160px);
-  }
-
-  .h-earth-layer-foreground-wet-sand .h-earth-render-object,
-  .h-earth-material-wet-sand {
-    width: var(--h-earth-render-band-wide);
-    height: clamp(100px, 20svh, 210px);
-  }
-
-  .h-earth-layer-air-haze-light .h-earth-render-object,
-  .h-earth-material-air-haze {
-    width: var(--h-earth-render-band-haze);
-    height: clamp(140px, 30svh, 320px);
   }
 }
 
@@ -2156,8 +1866,6 @@ summary:focus-visible {
     max-height: 74svh;
   }
 }
-
-/* Reduced-motion safety */
 
 @media (prefers-reduced-motion: reduce) {
   *,

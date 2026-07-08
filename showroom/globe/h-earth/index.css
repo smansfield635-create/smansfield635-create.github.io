@@ -1,26 +1,33 @@
 /*
   /showroom/globe/h-earth/index.css
   RENEWED FILE
-  H_EARTH_3D_ROUTE_SHELL_STYLE_FILE_BIRTH_STEP_030D_MOBILE_DIAGNOSTIC_UNBLOCK_RENEWAL_v1
+  H_EARTH_3D_ROUTE_SHELL_STYLE_FILE_BIRTH_STEP_030E_RENDER_OBJECT_CENTERING_AND_RECEIPT_COPY_UI_RENEWAL_v1
 
   Renews:
-  H_EARTH_3D_ROUTE_SHELL_STYLE_FILE_BIRTH_STEP_030C_RENDERER_OBJECT_SCALE_AND_MOBILE_DIAGNOSTIC_RENEWAL_v1
+  H_EARTH_3D_ROUTE_SHELL_STYLE_FILE_BIRTH_STEP_030D_MOBILE_DIAGNOSTIC_UNBLOCK_RENEWAL_v1
+
+  Companion HTML renewal:
+  /showroom/globe/h-earth/index.html
+  H_EARTH_3D_ROUTE_SHELL_HTML_FILE_BIRTH_STEP_030B_RECEIPT_COPY_AND_DIAGNOSTIC_SURFACE_RENEWAL_v1
 
   Purpose:
   Provides route shell, primary renderer viewport, compact status/action surface,
-  inspection panel, target list, debug/status, renderer-generated
-  layer/object/material/context class support, and controlled fallback styling
-  for the H-Earth 3D Candidate Preview.
+  inspection panel, target list, debug/status, receipt-copy surfaces,
+  renderer-generated layer/object/material/context class support, and controlled
+  fallback styling for the H-Earth 3D Candidate Preview.
 
   Renewal scope:
+  - Preserve Step 030D mobile diagnostic unblock.
   - Preserve Step 030C renderer-object scale support.
+  - Add renderer-object centering using independent CSS translate so inline
+    renderer transforms remain intact.
+  - Reduce status/fallback overlay dominance after bootstrap.
+  - Add receipt-copy toolbar, copy buttons, receipt grid, and readable receipt
+    output styling for the renewed HTML shell.
+  - Keep Bootstrap Debug, Renderer Mount Receipt, Route Bootstrap Receipt,
+    Boundary Flags, Index Contract, and Ground Condition Read Bridge readable.
   - Preserve renderer-generated class compatibility from materials.js, layers.js,
     and nodes.js.
-  - Keep the renderer stage usable on mobile without blocking diagnostics.
-  - Remove mobile diagnostic panel clipping caused by max-height + overflow hidden.
-  - Make Selectable Targets, Ground Condition Read Bridge, Bootstrap Debug, and
-    Boundary Notice readable on mobile.
-  - Preserve Bootstrap Debug availability as a real diagnostic surface.
   - Do not create shell-owned scene objects.
   - Do not create a CSS-only false beach independent of renderer descriptors.
   - Do not introduce canvas, WebGL, visual-pass, validation, production,
@@ -147,7 +154,8 @@ button:disabled {
 .h-earth-3d-boundary-card,
 .h-earth-3d-panel,
 .h-earth-3d-hud-panel,
-.h-earth-3d-claim-boundary {
+.h-earth-3d-claim-boundary,
+.h-earth-3d-copy-toolbar {
   border: 1px solid var(--h-earth-border);
   border-radius: var(--h-earth-radius-md);
   background: var(--h-earth-bg-panel);
@@ -259,20 +267,27 @@ button:disabled {
 
 .h-earth-3d-fallback {
   position: absolute;
-  left: 20px;
-  right: 20px;
-  bottom: 20px;
+  left: 16px;
+  right: auto;
+  bottom: 16px;
   z-index: 20;
-  max-width: 760px;
-  max-height: 22svh;
+  width: min(520px, calc(100% - 32px));
+  max-height: 18svh;
   overflow: auto;
   -webkit-overflow-scrolling: touch;
-  padding: 12px 14px;
-  border: 1px solid rgba(242, 212, 146, 0.34);
+  padding: 9px 11px;
+  border: 1px solid rgba(242, 212, 146, 0.30);
   border-radius: var(--h-earth-radius-sm);
-  background: rgba(20, 20, 12, 0.74);
+  background: rgba(20, 20, 12, 0.62);
   color: var(--h-earth-fallback);
-  font-size: 0.88rem;
+  font-size: 0.78rem;
+  line-height: 1.35;
+}
+
+.h-earth-3d-boot-ready .h-earth-3d-fallback {
+  border-color: rgba(174, 232, 194, 0.28);
+  background: rgba(7, 16, 25, 0.42);
+  color: rgba(174, 232, 194, 0.88);
 }
 
 .h-earth-3d-hud {
@@ -310,9 +325,9 @@ button:disabled {
   overflow-wrap: anywhere;
 }
 
-.h-earth-3d-action-button {
-  width: 100%;
-  min-height: 48px;
+.h-earth-3d-action-button,
+.h-earth-3d-copy-button,
+.h-earth-3d-inline-copy-button {
   border: 1px solid rgba(149, 213, 232, 0.38);
   border-radius: var(--h-earth-radius-sm);
   background:
@@ -321,10 +336,74 @@ button:disabled {
   font-weight: 700;
 }
 
+.h-earth-3d-action-button {
+  width: 100%;
+  min-height: 48px;
+}
+
+.h-earth-3d-copy-button {
+  min-height: 38px;
+  padding: 8px 10px;
+  font-size: 0.78rem;
+}
+
+.h-earth-3d-inline-copy-button {
+  min-height: 30px;
+  padding: 5px 8px;
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
 .h-earth-3d-action-button:focus-visible,
-.h-earth-3d-target-button:focus-visible {
+.h-earth-3d-target-button:focus-visible,
+.h-earth-3d-copy-button:focus-visible,
+.h-earth-3d-inline-copy-button:focus-visible {
   outline: 3px solid rgba(149, 213, 232, 0.64);
   outline-offset: 2px;
+}
+
+/*
+  Receipt copy toolbar.
+*/
+
+.h-earth-3d-copy-toolbar {
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+}
+
+.h-earth-3d-copy-toolbar-header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.h-earth-3d-copy-toolbar-header .h-earth-3d-panel-title {
+  margin: 0;
+}
+
+.h-earth-3d-copy-status {
+  margin: 0;
+  color: var(--h-earth-text-muted);
+  font-size: 0.82rem;
+  overflow-wrap: anywhere;
+}
+
+.h-earth-3d-copy-status[data-h-earth-copy-status="error"] {
+  color: var(--h-earth-error);
+}
+
+.h-earth-3d-copy-status[data-h-earth-copy-status="ready"] {
+  color: var(--h-earth-ready);
+}
+
+.h-earth-3d-copy-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
 /*
@@ -336,6 +415,24 @@ button:disabled {
   grid-template-columns: minmax(220px, 0.85fr) minmax(280px, 1.2fr) minmax(280px, 1fr);
   gap: 20px;
   align-items: start;
+}
+
+.h-earth-3d-panel-heading-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.h-earth-3d-panel-heading-row .h-earth-3d-panel-title {
+  margin: 0;
+}
+
+.h-earth-3d-empty-panel-note {
+  margin: 0;
+  color: var(--h-earth-text-dim);
+  font-size: 0.84rem;
 }
 
 .h-earth-3d-target-list {
@@ -372,7 +469,8 @@ button:disabled {
 }
 
 .h-earth-3d-inspection-panel,
-.h-earth-3d-debug {
+.h-earth-3d-debug,
+.h-earth-3d-receipt-output {
   min-height: 220px;
   max-height: 420px;
   margin: 0;
@@ -391,10 +489,26 @@ button:disabled {
   font-size: 0.78rem;
   line-height: 1.55;
   white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
 
 .h-earth-3d-debug-panel {
   min-width: 0;
+}
+
+.h-earth-3d-receipt-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.h-earth-3d-receipt-panel {
+  min-width: 0;
+}
+
+.h-earth-3d-receipt-output {
+  min-height: 180px;
+  max-height: 360px;
 }
 
 .h-earth-3d-claim-boundary {
@@ -449,6 +563,7 @@ button:disabled {
   position: absolute;
   left: 50%;
   top: 50%;
+  translate: -50% -50%;
   width: var(--h-earth-render-detail-size);
   height: var(--h-earth-render-detail-size);
   min-width: 10px;
@@ -816,7 +931,8 @@ button:disabled {
 @media (max-width: 1040px) {
   .h-earth-3d-header,
   .h-earth-3d-stage-shell,
-  .h-earth-3d-control-grid {
+  .h-earth-3d-control-grid,
+  .h-earth-3d-receipt-grid {
     grid-template-columns: 1fr;
   }
 
@@ -828,7 +944,8 @@ button:disabled {
     grid-template-columns: 1fr 1fr;
   }
 
-  .h-earth-3d-control-grid {
+  .h-earth-3d-control-grid,
+  .h-earth-3d-receipt-grid {
     gap: 14px;
   }
 }
@@ -850,7 +967,8 @@ button:disabled {
   .h-earth-3d-boundary-card,
   .h-earth-3d-panel,
   .h-earth-3d-hud-panel,
-  .h-earth-3d-claim-boundary {
+  .h-earth-3d-claim-boundary,
+  .h-earth-3d-copy-toolbar {
     padding: 12px;
   }
 
@@ -894,8 +1012,9 @@ button:disabled {
     left: 12px;
     right: 12px;
     bottom: 12px;
-    padding: 10px 11px;
-    font-size: 0.78rem;
+    width: auto;
+    padding: 8px 10px;
+    font-size: 0.74rem;
   }
 
   .h-earth-3d-hud {
@@ -922,19 +1041,31 @@ button:disabled {
     min-height: 42px;
   }
 
-  .h-earth-3d-control-grid {
+  .h-earth-3d-copy-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .h-earth-3d-copy-button {
+    width: 100%;
+  }
+
+  .h-earth-3d-control-grid,
+  .h-earth-3d-receipt-grid {
     grid-template-columns: 1fr;
     gap: 10px;
   }
 
   .h-earth-3d-control-grid .h-earth-3d-panel,
+  .h-earth-3d-receipt-grid .h-earth-3d-panel,
   .h-earth-3d-claim-boundary {
     max-height: none;
     overflow: visible;
   }
 
   .h-earth-3d-inspection-panel,
-  .h-earth-3d-debug {
+  .h-earth-3d-debug,
+  .h-earth-3d-receipt-output {
     display: block;
     min-height: 240px;
     max-height: 62svh;
@@ -965,14 +1096,24 @@ button:disabled {
     border-radius: 16px;
   }
 
+  .h-earth-3d-copy-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .h-earth-3d-panel-heading-row {
+    align-items: flex-start;
+  }
+
   .h-earth-3d-control-grid .h-earth-3d-panel,
+  .h-earth-3d-receipt-grid .h-earth-3d-panel,
   .h-earth-3d-claim-boundary {
     max-height: none;
     overflow: visible;
   }
 
   .h-earth-3d-inspection-panel,
-  .h-earth-3d-debug {
+  .h-earth-3d-debug,
+  .h-earth-3d-receipt-output {
     min-height: 260px;
     max-height: 64svh;
   }

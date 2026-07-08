@@ -8,28 +8,26 @@
 // Purpose:
 // Multi-port DOM/CSS-3D candidate renderer host with explicit mount/destroy API,
 // renderer-owned projection scale shape, landscape-grade composed-node
-// normalization, and Step 031 geometry-expansion port binding before DOM node
+// normalization, and Step 031B geometry-expansion port binding before DOM node
 // creation.
 //
-// Renewal scope:
-// - Preserve Step 023C mount/destroy API.
-// - Preserve Step 023C render support ports.
-// - Preserve Step 023C projection scale shape required by compositor.
-// - Preserve Step 023C previewContainer compatibility.
-// - Preserve Step 023C composedCandidateFrame primary input path.
-// - Bind /showroom/globe/h-earth/render/geometry.js as geometry port.
-// - Expand normalized composed descriptors before node factory use.
-// - Preserve CSS3D candidate-only posture.
-// - Preserve no-WebGL, no-canvas, no-final-renderer, no-renderer-pass,
-//   no-visual-pass, no-validation, no-production, no-traversal,
-//   no-simulation, and no-matrix-collapse boundaries.
+// This file preserves the Step 023C renderer API and binds:
+// /showroom/globe/h-earth/render/geometry.js
 //
-// This file does not own capacity law, environment object definitions,
-// compositor ordering law, controller inspection law, route shell HTML, route
-// CSS, WebGL, canvas, final renderer status, renderer-pass status, visual-pass
-// status, validation status, production status, traversal, simulation, manor
-// interior access, distant traversal, swimming, fluid simulation, weather
-// simulation, survival simulation, or matrix collapse.
+// Boundary:
+// - No WebGL
+// - No canvas
+// - No SVG
+// - No iframe
+// - No script creation
+// - No final renderer claim
+// - No renderer-pass claim
+// - No visual-pass claim
+// - No validation claim
+// - No production claim
+// - No traversal claim
+// - No simulation claim
+// - No matrix collapse
 
 import {
   H_EARTH_3D_RESOLVED_ENVIRONMENT_OBJECTS,
@@ -93,8 +91,7 @@ export const H_EARTH_3D_RENDERER_CONTRACT = Object.freeze({
     currentRouteChainLiveBaselinesRecoveredFromDrive: false,
     constructionBasis: Object.freeze([
       'Step 023C renderer.js full source supplied by user',
-      'Step 023A render support ports supplied by user',
-      'Step 031 geometry-expansion target identified from renderer placement evidence',
+      'Step 031B geometry.js full source supplied by user',
       'renderPorts.deferredPorts.geometryPort confirmed false before renewal',
       'descriptorOnly render-node posture confirmed as visual flattening source',
       'clusterMembers confirmed present in source objects but not mounted as child nodes',
@@ -115,6 +112,7 @@ export const H_EARTH_3D_RENDERER_CONTRACT = Object.freeze({
     geometryPortBound: true,
     geometryExpansionBeforeNodeFactoryAdded: true,
     geometryExpansionReceiptExposed: true,
+    geometryExpandedNodeIdentityPreserved: true,
     descriptorExportsPreserved: true,
     step029IndexCompatibilityPreserved: true
   }),
@@ -1222,19 +1220,67 @@ export function resolvePrimitiveRenderGeometry(object) {
 export function resolveLandscapeRenderNode(node) {
   const normalized = resolvePrimitiveRenderGeometry(node);
 
+  const geometryExpanded = node?.geometryExpanded === true;
+  const candidateGeometryOnly = node?.candidateGeometryOnly === true;
+  const geometryPortNode = geometryExpanded === true || candidateGeometryOnly === true;
+
+  const preservedPrimitiveGeometry =
+    geometryPortNode && node?.primitiveGeometry
+      ? Object.freeze({
+          ...normalized.primitiveGeometry,
+          ...node.primitiveGeometry,
+          descriptorOnly: false,
+          candidateGeometryOnly: true,
+          finalGeometryClaim: false,
+          rendererPassClaim: false,
+          visualPassClaim: false,
+          validationClaim: false,
+          claimBoundaryPreserved: true
+        })
+      : normalized.primitiveGeometry;
+
+  const landscapeClassName =
+    geometryPortNode && preservedPrimitiveGeometry?.profileClassName
+      ? preservedPrimitiveGeometry.profileClassName
+      : normalized.landscapeClassName;
+
+  const primitiveClassName =
+    node?.primitiveClassName ||
+    normalized.primitiveClassName ||
+    `h-earth-primitive-${normalizeHEarthRenderToken(normalized.primitiveType)}`;
+
   return Object.freeze({
     ...node,
     ...normalized,
 
     cssTransformDescriptor: normalized.cssTransformDescriptor,
-    primitiveGeometry: normalized.primitiveGeometry,
+    primitiveGeometry: preservedPrimitiveGeometry,
     materialToken: normalized.materialToken,
+
+    landscapeClassName,
+    primitiveClassName,
+
+    renderWidthPx:
+      preservedPrimitiveGeometry?.widthPx ?? normalized.renderWidthPx,
+    renderHeightPx:
+      preservedPrimitiveGeometry?.heightPx ?? normalized.renderHeightPx,
+    renderDepthPx:
+      preservedPrimitiveGeometry?.depthPx ?? normalized.renderDepthPx,
+
+    geometryExpansion: node?.geometryExpansion || null,
+    geometryExpansionRole: node?.geometryExpansionRole || null,
+    geometryExpanded,
+    geometryParentObjectId: node?.geometryParentObjectId || null,
+    geometryParentNodeId: node?.geometryParentNodeId || null,
+    geometryChildIndex:
+      node?.geometryChildIndex === undefined ? null : node.geometryChildIndex,
 
     landscapeProjectionNormalized: true,
     landscapeProjectionContract:
       'H_EARTH_3D_RENDERER_FILE_BIRTH_STEP_031B_GEOMETRY_EXPANSION_PORT_BINDING_v1',
 
-    descriptorOnly: true,
+    descriptorOnly: geometryPortNode ? false : true,
+    candidateGeometryOnly: geometryPortNode,
     finalGeometryClaim: false,
     rendererPassClaim: false,
     visualPassClaim: false,
@@ -2103,10 +2149,8 @@ export function mountHEarthRenderer({
           String(normalizedNode.cssTransformDescriptor?.profileDepthScale ?? 1)
         );
 
-        objectResult.objectNode.style.width =
-          `var(--h-earth-render-width)`;
-        objectResult.objectNode.style.height =
-          `var(--h-earth-render-height)`;
+        objectResult.objectNode.style.width = 'var(--h-earth-render-width)';
+        objectResult.objectNode.style.height = 'var(--h-earth-render-height)';
 
         primitiveGeometryAppliedCount += 1;
       }
@@ -2328,8 +2372,7 @@ export const H_EARTH_3D_RENDERER_RECEIPT = Object.freeze({
   currentRouteChainLiveBaselinesRecoveredFromDrive: false,
   constructionBasis: Object.freeze([
     'Step 023C renderer.js full source supplied by user',
-    'Step 023A render support ports supplied by user',
-    'Step 031 geometry-expansion target identified from renderer placement evidence',
+    'Step 031B geometry.js full source supplied by user',
     'renderPorts.deferredPorts.geometryPort confirmed false before renewal',
     'descriptorOnly render-node posture confirmed as visual flattening source',
     'clusterMembers confirmed present in source objects but not mounted as child nodes',
@@ -2363,6 +2406,7 @@ export const H_EARTH_3D_RENDERER_RECEIPT = Object.freeze({
   landscapeProjectionModelDefined: true,
   composedNodeLivePathNormalizationDefined: true,
   geometryExpansionBeforeNodeFactoryDefined: true,
+  geometryExpandedNodeIdentityPreservationDefined: true,
   cssTransformDescriptorEmissionDefined: true,
   primitiveGeometryDescriptorEmissionDefined: true,
   numericCandidateTransformScaleHandled: true,

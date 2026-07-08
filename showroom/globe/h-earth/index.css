@@ -1,25 +1,33 @@
 /*
   /showroom/globe/h-earth/index.css
-  RENEWED FILE
-  H_EARTH_3D_ROUTE_SHELL_STYLE_FILE_BIRTH_STEP_030E_SPATIAL_COMPOSITION_INSPECTION_SURFACE_v1
+  COMPLETE RENEWED FILE
+  H_EARTH_3D_ROUTE_SHELL_STYLE_FILE_BIRTH_STEP_030F_GROUND_LEVEL_LANDSCAPE_VISUAL_INTERPRETATION_v1
 
   Renews:
-  H_EARTH_3D_ROUTE_SHELL_STYLE_FILE_BIRTH_STEP_030D_PUBLIC_SCENE_ROUTE_ADOPTION_v1
+  H_EARTH_3D_ROUTE_SHELL_STYLE_FILE_BIRTH_STEP_030E_SPATIAL_COMPOSITION_INSPECTION_SURFACE_v1
 
-  Companion HTML renewal:
+  Companion route shell:
   /showroom/globe/h-earth/index.html
   H_EARTH_3D_ROUTE_SHELL_FILE_BIRTH_STEP_030E_SPATIAL_COMPOSITION_INSPECTION_SURFACE_v1
 
+  Upstream renderer confirmed:
+  /showroom/globe/h-earth/renderer.js
+  H_EARTH_3D_RENDERER_FILE_BIRTH_STEP_023C_LANDSCAPE_GRADE_DOM_CSS3D_PROJECTION_RENEWAL_v1
+
   Purpose:
-  Styles the public H-Earth route and adds a spatial composition inspection
-  surface so the route can answer why the visible output reads as a broken
-  2D map instead of a ground-level 3D universal landscape.
+  Preserve the public route shell and diagnostic surfaces while changing the
+  visual interpretation of renderer-owned DOM/CSS-3D candidate descriptors
+  from a flat inspection-map / stacked-band reading into a ground-level
+  shoreline landscape candidate.
 
   Scope:
   CSS only.
   This file does not create the 3D environment.
+  This file does not change compositor, renderer, controller, capacity, or
+  environment logic.
   This file styles shell, renderer mount, visible candidate descriptors,
-  diagnostics, copy surfaces, and spatial inspection panels.
+  diagnostics, copy surfaces, spatial inspection panels, and renderer-owned
+  candidate nodes.
 
   Boundaries:
   No WebGL activation.
@@ -35,12 +43,12 @@
 :root {
   color-scheme: dark;
 
-  --h-earth-bg-deep: #071019;
-  --h-earth-bg-page: #030812;
-  --h-earth-bg-panel: rgba(9, 19, 29, 0.82);
-  --h-earth-bg-panel-soft: rgba(9, 19, 29, 0.62);
-  --h-earth-bg-panel-strong: rgba(9, 19, 29, 0.94);
-  --h-earth-bg-glass: rgba(7, 16, 25, 0.68);
+  --h-earth-bg-deep: #061018;
+  --h-earth-bg-page: #02060d;
+  --h-earth-bg-panel: rgba(7, 17, 25, 0.82);
+  --h-earth-bg-panel-soft: rgba(7, 17, 25, 0.62);
+  --h-earth-bg-panel-strong: rgba(7, 17, 25, 0.94);
+  --h-earth-bg-glass: rgba(5, 13, 20, 0.68);
 
   --h-earth-border: rgba(221, 234, 239, 0.18);
   --h-earth-border-strong: rgba(221, 234, 239, 0.34);
@@ -56,24 +64,24 @@
   --h-earth-error: #ffb0a3;
 
   --h-earth-stage-width: min(100%, 1320px);
-  --h-earth-stage-height: clamp(680px, 78vh, 920px);
-  --h-earth-mobile-stage-height: clamp(520px, 72svh, 720px);
+  --h-earth-stage-height: clamp(700px, 80vh, 940px);
+  --h-earth-mobile-stage-height: clamp(560px, 76svh, 760px);
 
   --h-earth-radius-xl: 34px;
   --h-earth-radius-lg: 26px;
   --h-earth-radius-md: 18px;
   --h-earth-radius-sm: 10px;
 
-  --h-earth-shadow-stage: 0 34px 94px rgba(0, 0, 0, 0.48);
+  --h-earth-shadow-stage: 0 34px 94px rgba(0, 0, 0, 0.50);
   --h-earth-shadow-panel: 0 18px 42px rgba(0, 0, 0, 0.28);
   --h-earth-shadow-overlay: 0 20px 54px rgba(0, 0, 0, 0.36);
 
-  --h-earth-render-band-wide: min(86vw, 980px);
-  --h-earth-render-band-medium: min(72vw, 760px);
-  --h-earth-render-band-narrow: min(58vw, 620px);
+  --h-earth-render-band-wide: min(104vw, 1280px);
+  --h-earth-render-band-medium: min(92vw, 1040px);
+  --h-earth-render-band-narrow: min(72vw, 780px);
   --h-earth-render-detail-size: clamp(18px, 3.2vw, 42px);
-  --h-earth-render-rock-size: clamp(26px, 5vw, 72px);
-  --h-earth-render-anchor-size: clamp(22px, 4vw, 40px);
+  --h-earth-render-rock-size: clamp(34px, 6vw, 96px);
+  --h-earth-render-anchor-size: clamp(18px, 3vw, 32px);
 
   --h-earth-wetSand-base: #5f5146;
   --h-earth-drySand-base: #b79a71;
@@ -117,9 +125,8 @@ body {
     sans-serif;
   line-height: 1.5;
   background:
-    radial-gradient(circle at 18% -8%, rgba(149, 213, 232, 0.18), transparent 28rem),
-    radial-gradient(circle at 88% 12%, rgba(216, 189, 142, 0.14), transparent 30rem),
-    radial-gradient(circle at 50% 82%, rgba(29, 88, 108, 0.16), transparent 38rem),
+    radial-gradient(circle at 18% -8%, rgba(149, 213, 232, 0.16), transparent 28rem),
+    radial-gradient(circle at 88% 12%, rgba(216, 189, 142, 0.12), transparent 30rem),
     linear-gradient(180deg, #071019 0%, #030812 58%, #01040a 100%);
   -webkit-font-smoothing: antialiased;
   text-rendering: geometricPrecision;
@@ -131,13 +138,12 @@ body::before {
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  opacity: 0.18;
-  background-image:
-    linear-gradient(rgba(149, 213, 232, 0.045) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(149, 213, 232, 0.045) 1px, transparent 1px),
-    radial-gradient(circle, rgba(255, 255, 255, 0.14) 0 1px, transparent 1.6px);
-  background-size: 56px 56px, 56px 56px, 220px 260px;
-  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.95), rgba(0, 0, 0, 0.58) 68%, rgba(0, 0, 0, 0.18));
+  opacity: 0.12;
+  background:
+    radial-gradient(circle at 20% 12%, rgba(255, 255, 255, 0.11) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 72% 22%, rgba(255, 255, 255, 0.10) 0 1px, transparent 1.7px);
+  background-size: 220px 260px, 310px 280px;
+  mask-image: linear-gradient(180deg, black, rgba(0, 0, 0, 0.48) 62%, transparent);
 }
 
 a {
@@ -384,9 +390,9 @@ summary:focus-visible {
   border: 1px solid var(--h-earth-border-strong);
   border-radius: var(--h-earth-radius-xl);
   background:
-    radial-gradient(circle at 50% 38%, rgba(149, 213, 232, 0.13), transparent 21rem),
-    radial-gradient(circle at 50% 62%, rgba(29, 88, 108, 0.18), transparent 28rem),
-    linear-gradient(180deg, rgba(0, 6, 18, 0.72), rgba(1, 5, 15, 0.96));
+    linear-gradient(180deg, rgba(176, 210, 222, 0.24) 0%, rgba(97, 151, 169, 0.16) 20%, rgba(21, 70, 91, 0.16) 43%, rgba(7, 24, 35, 0.72) 62%, rgba(4, 12, 18, 0.98) 100%),
+    radial-gradient(ellipse at 50% 100%, rgba(216, 189, 142, 0.28), transparent 46%),
+    linear-gradient(180deg, #061421, #02070d);
   box-shadow: var(--h-earth-shadow-stage);
   isolation: isolate;
 }
@@ -399,18 +405,35 @@ summary:focus-visible {
   z-index: 9;
   pointer-events: none;
   background:
-    linear-gradient(rgba(149, 213, 232, 0.035) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(149, 213, 232, 0.035) 1px, transparent 1px),
-    radial-gradient(circle at 50% 100%, rgba(0, 0, 0, 0.36), transparent 58%);
-  background-size: 38px 38px, 38px 38px, auto;
-  opacity: 0.82;
+    radial-gradient(ellipse at 50% 42%, rgba(197, 214, 223, 0.12), transparent 34%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, transparent 18%, transparent 70%, rgba(0, 0, 0, 0.28) 100%);
+  opacity: 0.92;
+}
+
+.h-earth-3d-world-stage::after,
+.h-earth-3d-stage::after {
+  content: "";
+  position: absolute;
+  left: -10%;
+  right: -10%;
+  bottom: -18%;
+  height: 46%;
+  z-index: 10;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 50% 10%, rgba(216, 189, 142, 0.20), transparent 48%),
+    linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.28) 52%, rgba(0, 0, 0, 0.62) 100%);
+  transform: perspective(900px) rotateX(64deg);
+  transform-origin: 50% 100%;
+  opacity: 0.66;
 }
 
 .h-earth-3d-renderer-mount {
   position: absolute;
   inset: 0;
   overflow: hidden;
-  perspective: 900px;
+  perspective: 1080px;
+  perspective-origin: 50% 42%;
   transform-style: preserve-3d;
   transform-origin: 50% 50%;
   contain: layout paint style;
@@ -532,6 +555,7 @@ summary:focus-visible {
   bottom: 0;
   width: min(390px, 100%);
   pointer-events: auto;
+  background: rgba(4, 12, 18, 0.76);
 }
 
 .h-earth-3d-card-title {
@@ -620,7 +644,7 @@ summary:focus-visible {
   line-height: 1.4;
 }
 
-/* Spatial inspector */
+/* Spatial inspector and diagnostics */
 
 .h-earth-3d-spatial-inspector {
   overflow: hidden;
@@ -963,14 +987,15 @@ summary:focus-visible {
   translate: -50% -50%;
   width: var(--h-earth-render-detail-size);
   height: var(--h-earth-render-detail-size);
-  min-width: 10px;
-  min-height: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  min-width: 6px;
+  min-height: 6px;
+  border: 0;
   border-radius: 999px;
   transform-style: preserve-3d;
   transform-origin: 50% 50%;
   pointer-events: auto;
-  will-change: transform, opacity;
+  will-change: transform, opacity, filter;
+  box-shadow: none;
 }
 
 .h-earth-render-label {
@@ -1000,8 +1025,8 @@ summary:focus-visible {
 .h-earth-render-descriptor-only::after {
   content: "";
   position: absolute;
-  inset: -2px;
-  border: 1px solid rgba(149, 213, 232, 0.22);
+  inset: -1px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: inherit;
   pointer-events: none;
 }
@@ -1011,80 +1036,96 @@ summary:focus-visible {
   outline-offset: 3px;
 }
 
-/* Renderer descriptor scale rules. These style renderer descriptors only. */
+/* Landscape-grade descriptor interpretation */
+
+.h-earth-landscape-ground-plane,
+.h-earth-landscape-water-plane,
+.h-earth-landscape-water-band,
+.h-earth-landscape-shoreline-band,
+.h-earth-landscape-surface-detail {
+  backface-visibility: visible;
+}
+
+.h-earth-landscape-atmosphere,
+.h-earth-landscape-context-silhouette,
+.h-earth-landscape-distant-cluster {
+  backface-visibility: visible;
+}
+
+/* Renderer descriptor scale rules */
 
 .h-earth-layer-water-surface-plane .h-earth-render-object,
 .h-earth-material-water {
   width: var(--h-earth-render-band-wide);
-  height: clamp(150px, 22vh, 240px);
-  border-radius: 45% 45% 18% 18% / 62% 62% 24% 24%;
+  height: clamp(220px, 30vh, 340px);
+  border-radius: 46% 46% 18% 18% / 64% 64% 20% 20%;
 }
 
 .h-earth-layer-nearshore-wave-band .h-earth-render-object,
 .h-earth-material-nearshore-wave {
   width: var(--h-earth-render-band-wide);
-  height: clamp(30px, 6vh, 72px);
+  height: clamp(26px, 5.5vh, 64px);
   border-radius: 999px;
 }
 
 .h-earth-layer-shoreline-foam-line .h-earth-render-object,
 .h-earth-material-foam {
   width: var(--h-earth-render-band-medium);
-  height: clamp(12px, 2.4vh, 28px);
+  height: clamp(7px, 1.6vh, 18px);
   border-radius: 999px;
 }
 
 .h-earth-layer-dry-sand-transition .h-earth-render-object,
 .h-earth-material-dry-sand {
   width: var(--h-earth-render-band-wide);
-  height: clamp(110px, 18vh, 210px);
-  border-radius: 44% 44% 22% 22% / 28% 28% 52% 52%;
+  height: clamp(120px, 17vh, 220px);
+  border-radius: 44% 44% 18% 18% / 32% 32% 58% 58%;
 }
 
 .h-earth-layer-foreground-wet-sand .h-earth-render-object,
 .h-earth-material-wet-sand {
   width: var(--h-earth-render-band-wide);
-  height: clamp(150px, 25vh, 280px);
-  border-radius: 38% 38% 20% 20% / 26% 26% 48% 48%;
+  height: clamp(210px, 32vh, 380px);
+  border-radius: 42% 42% 18% 18% / 30% 30% 60% 60%;
 }
 
 .h-earth-layer-tide-pools-stones-rocks-detail .h-earth-material-tide-pool {
-  width: clamp(44px, 9vw, 130px);
-  height: clamp(24px, 5vw, 72px);
+  width: clamp(54px, 10vw, 150px);
+  height: clamp(18px, 4vw, 58px);
   border-radius: 56% 44% 58% 42%;
 }
 
 .h-earth-layer-tide-pools-stones-rocks-detail .h-earth-material-stone {
-  width: clamp(18px, 3.8vw, 54px);
-  height: clamp(14px, 3vw, 42px);
+  width: clamp(18px, 3.6vw, 52px);
+  height: clamp(12px, 2.6vw, 36px);
   border-radius: 52% 48% 46% 54%;
 }
 
 .h-earth-layer-tide-pools-stones-rocks-detail .h-earth-material-jagged-rock {
   width: var(--h-earth-render-rock-size);
-  height: clamp(30px, 5.8vw, 88px);
+  height: clamp(38px, 6.4vw, 106px);
   border-radius: 28% 58% 34% 44%;
   clip-path: polygon(8% 86%, 20% 36%, 34% 62%, 48% 18%, 62% 58%, 78% 28%, 94% 86%);
 }
 
 .h-earth-layer-air-haze-light .h-earth-render-object,
 .h-earth-material-air-haze {
-  width: min(96vw, 1120px);
-  height: clamp(240px, 42vh, 460px);
+  width: min(112vw, 1360px);
+  height: clamp(300px, 48vh, 540px);
   border-radius: 999px;
 }
 
 .h-earth-layer-manor-exterior-context .h-earth-render-object,
 .h-earth-material-manor-context {
-  width: clamp(80px, 15vw, 180px);
-  height: clamp(64px, 11vw, 150px);
+  width: clamp(80px, 15vw, 190px);
+  height: clamp(70px, 12vw, 160px);
   border-radius: 10px 10px 4px 4px;
 }
 
 .h-earth-layer-distant-world-context .h-earth-render-object,
 .h-earth-material-distant-rock {
-  width: clamp(84px, 16vw, 210px);
-  height: clamp(38px, 8vw, 96px);
+  width: clamp(92px, 18vw, 230px);
+  height: clamp(42px, 8.5vw, 104px);
   border-radius: 34% 48% 24% 42%;
   clip-path: polygon(0 88%, 12% 52%, 28% 66%, 42% 34%, 58% 72%, 72% 42%, 100% 88%, 100% 100%, 0 100%);
 }
@@ -1099,7 +1140,7 @@ summary:focus-visible {
 /* Layer classes */
 
 .h-earth-layer-distant-world-context { z-index: 10; }
-.h-earth-layer-air-haze-light { z-index: 20; opacity: 0.72; }
+.h-earth-layer-air-haze-light { z-index: 20; opacity: 0.76; }
 .h-earth-layer-water-surface-plane { z-index: 30; }
 .h-earth-layer-nearshore-wave-band { z-index: 40; }
 .h-earth-layer-shoreline-foam-line { z-index: 50; }
@@ -1114,99 +1155,123 @@ summary:focus-visible {
 
 .h-earth-material-wet-sand {
   background:
-    radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.14), transparent 38%),
-    linear-gradient(180deg, rgba(117, 104, 89, 0.94), rgba(68, 58, 51, 0.96)),
+    radial-gradient(ellipse at 40% 16%, rgba(255, 255, 255, 0.18), transparent 28%),
+    radial-gradient(ellipse at 60% 72%, rgba(27, 34, 33, 0.34), transparent 40%),
+    linear-gradient(180deg, rgba(129, 113, 93, 0.96), rgba(67, 56, 48, 0.98)),
     var(--h-earth-wetSand-base);
   color: #f5e8d4;
-  opacity: 0.96;
+  opacity: 0.98;
+  filter: saturate(0.98) contrast(1.03);
 }
 
 .h-earth-material-dry-sand {
   background:
-    radial-gradient(circle at 28% 30%, rgba(255, 255, 255, 0.16), transparent 32%),
-    linear-gradient(180deg, rgba(202, 171, 125, 0.92), rgba(143, 111, 76, 0.94)),
+    radial-gradient(ellipse at 38% 26%, rgba(255, 255, 255, 0.20), transparent 28%),
+    linear-gradient(180deg, rgba(208, 176, 126, 0.96), rgba(139, 107, 73, 0.96)),
     var(--h-earth-drySand-base);
   color: #382c20;
-  opacity: 0.94;
+  opacity: 0.96;
 }
 
 .h-earth-material-foam {
   background:
-    radial-gradient(circle, rgba(255, 255, 255, 0.86), rgba(234, 248, 245, 0.54));
+    linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.84) 18%, rgba(234, 248, 245, 0.58) 50%, rgba(255, 255, 255, 0.82) 82%, transparent 100%);
   color: #183238;
-  opacity: 0.88;
+  opacity: 0.92;
+  filter: blur(0.2px);
 }
 
 .h-earth-material-tide-pool {
   background:
-    radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.28), transparent 35%),
-    linear-gradient(180deg, rgba(85, 134, 148, 0.94), rgba(39, 84, 96, 0.96)),
+    radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.30), transparent 34%),
+    linear-gradient(180deg, rgba(85, 134, 148, 0.88), rgba(39, 84, 96, 0.96)),
     var(--h-earth-tidePool-base);
   color: #e8fbff;
-  opacity: 0.84;
+  opacity: 0.88;
+  box-shadow:
+    inset 0 0 18px rgba(255, 255, 255, 0.12),
+    0 4px 14px rgba(0, 0, 0, 0.24);
 }
 
 .h-earth-material-stone {
   background:
-    radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.12), transparent 30%),
+    radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.14), transparent 30%),
     var(--h-earth-stone-base);
   color: #f0eee8;
-  opacity: 0.96;
+  opacity: 0.98;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.28);
 }
 
 .h-earth-material-jagged-rock {
   background:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.10), transparent),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.12), transparent),
     var(--h-earth-jaggedRock-base);
   color: #edf2f4;
   opacity: 0.98;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.38);
 }
 
 .h-earth-material-water {
   background:
-    radial-gradient(circle at 30% 35%, rgba(255, 255, 255, 0.16), transparent 34%),
-    linear-gradient(180deg, rgba(88, 159, 177, 0.72), rgba(29, 88, 108, 0.64));
+    radial-gradient(ellipse at 50% 24%, rgba(255, 255, 255, 0.14), transparent 28%),
+    linear-gradient(180deg, rgba(83, 151, 173, 0.54), rgba(29, 88, 108, 0.76) 58%, rgba(12, 42, 60, 0.88));
   color: #e4fbff;
-  opacity: 0.68;
+  opacity: 0.78;
+  filter: saturate(0.96);
 }
 
 .h-earth-material-nearshore-wave {
   background:
-    linear-gradient(90deg, rgba(234, 248, 245, 0.60), rgba(107, 169, 177, 0.48));
+    linear-gradient(90deg, transparent 0%, rgba(234, 248, 245, 0.50) 12%, rgba(107, 169, 177, 0.52) 52%, rgba(234, 248, 245, 0.48) 86%, transparent 100%);
   color: #f7ffff;
-  opacity: 0.76;
+  opacity: 0.82;
+  filter: blur(0.3px);
 }
 
 .h-earth-material-air-haze {
   background:
-    radial-gradient(circle, rgba(197, 214, 223, 0.28), rgba(197, 214, 223, 0.04));
+    radial-gradient(ellipse at 50% 44%, rgba(197, 214, 223, 0.30), rgba(197, 214, 223, 0.04) 64%, transparent 78%);
   color: #f7fbff;
-  opacity: 0.34;
-  border-color: rgba(255, 255, 255, 0.08);
+  opacity: 0.36;
+  border-color: rgba(255, 255, 255, 0.04);
+  filter: blur(1.2px);
 }
 
 .h-earth-material-manor-context {
   background:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.10), transparent 45%),
-    var(--h-earth-manorContext-base);
+    linear-gradient(135deg, rgba(255, 255, 255, 0.12), transparent 45%),
+    linear-gradient(180deg, rgba(108, 93, 74, 0.94), rgba(62, 51, 41, 0.98));
   color: #fff2df;
   opacity: 0.82;
+  box-shadow: 0 12px 34px rgba(0, 0, 0, 0.36);
+}
+
+.h-earth-material-manor-context::before {
+  content: "";
+  position: absolute;
+  left: 12%;
+  right: 12%;
+  top: -16%;
+  height: 38%;
+  background: rgba(58, 47, 38, 0.98);
+  clip-path: polygon(50% 0, 100% 100%, 0 100%);
 }
 
 .h-earth-material-distant-rock {
   background:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.08), transparent 50%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.09), transparent 50%),
     var(--h-earth-distantRock-base);
   color: #dfe7eb;
-  opacity: 0.72;
+  opacity: 0.76;
+  filter: saturate(0.78);
 }
 
 .h-earth-material-inspection-anchor {
   background:
-    radial-gradient(circle at 50% 50%, #f8f0ce 0 22%, #a7b0a0 24% 48%, #4f5a55 50% 66%, #f4e7b6 68% 100%);
+    radial-gradient(circle at 50% 50%, #f8f0ce 0 18%, #a7b0a0 20% 42%, #4f5a55 44% 58%, rgba(244, 231, 182, 0.86) 60% 100%);
   color: #2d2513;
-  box-shadow: 0 0 18px rgba(244, 231, 182, 0.48);
-  opacity: 0.92;
+  box-shadow: 0 0 18px rgba(244, 231, 182, 0.38);
+  opacity: 0.62;
 }
 
 .h-earth-material-unresolved {
@@ -1217,22 +1282,22 @@ summary:focus-visible {
 /* Context classes */
 
 .h-earth-context-primary-inspection {
-  outline: 2px solid rgba(216, 189, 142, 0.68);
-  outline-offset: 3px;
+  outline: 1px solid rgba(216, 189, 142, 0.32);
+  outline-offset: 2px;
 }
 
 .h-earth-context-supporting-inspection {
-  outline: 1px solid rgba(149, 213, 232, 0.52);
-  outline-offset: 3px;
+  outline: 1px solid rgba(149, 213, 232, 0.30);
+  outline-offset: 2px;
 }
 
 .h-earth-context-secondary-surface {
-  outline: 1px dashed rgba(216, 189, 142, 0.48);
-  outline-offset: 3px;
+  outline: 1px dashed rgba(216, 189, 142, 0.30);
+  outline-offset: 2px;
 }
 
 .h-earth-context-water-atmospheric {
-  filter: saturate(0.86);
+  filter: saturate(0.88);
 }
 
 .h-earth-context-hearth-only {
@@ -1244,7 +1309,7 @@ summary:focus-visible {
 }
 
 .h-earth-context-only {
-  opacity: 0.72;
+  opacity: 0.74;
 }
 
 .h-earth-context-unclassified {
@@ -1258,7 +1323,9 @@ summary:focus-visible {
 }
 
 .h-earth-target-inspectable {
-  box-shadow: 0 0 0 2px rgba(216, 189, 142, 0.34);
+  box-shadow:
+    0 0 0 1px rgba(216, 189, 142, 0.24),
+    0 0 18px rgba(216, 189, 142, 0.10);
 }
 
 .h-earth-target-blocked {
@@ -1268,7 +1335,7 @@ summary:focus-visible {
 
 .h-earth-target-context-only {
   cursor: default;
-  opacity: 0.68;
+  opacity: 0.70;
 }
 
 .h-earth-3d-blocked-response {
@@ -1353,8 +1420,13 @@ summary:focus-visible {
   .h-earth-3d-world-stage,
   .h-earth-3d-stage {
     min-height: var(--h-earth-mobile-stage-height);
-    max-height: 76svh;
+    max-height: 78svh;
     border-radius: 20px;
+  }
+
+  .h-earth-3d-renderer-mount {
+    perspective: 860px;
+    perspective-origin: 50% 44%;
   }
 
   .h-earth-3d-world-overlay {
@@ -1511,6 +1583,20 @@ summary:focus-visible {
     overflow: auto;
     -webkit-overflow-scrolling: touch;
   }
+
+  .h-earth-layer-water-surface-plane .h-earth-render-object,
+  .h-earth-material-water,
+  .h-earth-layer-dry-sand-transition .h-earth-render-object,
+  .h-earth-material-dry-sand,
+  .h-earth-layer-foreground-wet-sand .h-earth-render-object,
+  .h-earth-material-wet-sand {
+    width: 112vw;
+  }
+
+  .h-earth-layer-air-haze-light .h-earth-render-object,
+  .h-earth-material-air-haze {
+    width: 118vw;
+  }
 }
 
 @media (max-width: 420px) {
@@ -1533,8 +1619,8 @@ summary:focus-visible {
 
   .h-earth-3d-world-stage,
   .h-earth-3d-stage {
-    min-height: 70svh;
-    max-height: 74svh;
+    min-height: 72svh;
+    max-height: 76svh;
     border-radius: 18px;
   }
 
@@ -1549,20 +1635,6 @@ summary:focus-visible {
   .h-earth-3d-readout-facts div {
     grid-template-columns: 1fr;
     gap: 1px;
-  }
-
-  .h-earth-layer-water-surface-plane .h-earth-render-object,
-  .h-earth-material-water,
-  .h-earth-layer-dry-sand-transition .h-earth-render-object,
-  .h-earth-material-dry-sand,
-  .h-earth-layer-foreground-wet-sand .h-earth-render-object,
-  .h-earth-material-wet-sand {
-    width: 92vw;
-  }
-
-  .h-earth-layer-air-haze-light .h-earth-render-object,
-  .h-earth-material-air-haze {
-    width: 96vw;
   }
 }
 

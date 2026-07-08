@@ -1,6 +1,6 @@
 // /showroom/globe/h-earth/render/materials.js
 // COMPLETE RENEWED FILE
-// H_EARTH_3D_RENDER_MATERIAL_PORT_FILE_BIRTH_STEP_031F_SUPPORT_PORT_RENUMERIZATION_RENEWAL_v1
+// H_EARTH_3D_RENDER_MATERIAL_PORT_FILE_BIRTH_STEP_031F_TRUE_MATERIAL_RENUMERIZATION_RENEWAL_v1
 //
 // Renews:
 // H_EARTH_3D_RENDER_MATERIAL_PORT_FILE_BIRTH_STEP_023A_v1
@@ -8,24 +8,26 @@
 // Parent standard:
 // H_EARTH_RENDER_SUPPORT_RENUMERIZATION_UNIFICATION_STANDARD_v1
 //
+// Parent geometry renewal:
+// H_EARTH_3D_RENDER_GEOMETRY_PORT_FILE_BIRTH_STEP_031E_SUPPORT_PORT_RENUMERIZATION_RENEWAL_v1
+//
 // Purpose:
-// Material, primitive, landscape, context, interaction, and CSS class
-// renumerization port for the H-Earth DOM/CSS-3D Candidate Renderer.
+// Optimized material-only resolver for the H-Earth DOM/CSS-3D Candidate Renderer.
 //
-// This file maps candidate render/composed/geometry-expanded descriptors to
-// stable CSS-addressable class arrays. It consumes class-ready descriptor fields
-// from geometry.js when present, resolves parent-aware identity for geometry
-// children, and returns complete class grammar for nodes.js to emit.
+// This file owns material-key normalization, material class lookup, material
+// category metadata, canonical material fallback from parent primitive type,
+// preservation of geometry-provided material class fields, and material dataset
+// export.
 //
-// This file does not create DOM nodes, touch DOM, import renderer.js, import
-// compositor.js, import controller.js, create WebGL/canvas materials, claim
-// physical material validation, claim renderer pass, claim visual pass, claim
-// validation, claim production, authorize traversal, authorize simulation,
-// or collapse matrices.
+// This file does not own final DOM class emission, geometry expansion,
+// primitive grammar, landscape grammar, layer membership, controller target
+// classification, interaction state, route shell, compositor law, renderer
+// orchestration, gameplay, traversal, simulation, WebGL, canvas, visual-pass
+// claims, validation claims, production claims, or matrix collapse.
 
 export const H_EARTH_3D_RENDER_MATERIAL_PORT_CONTRACT = Object.freeze({
   contractId:
-    'H_EARTH_3D_RENDER_MATERIAL_PORT_FILE_BIRTH_STEP_031F_SUPPORT_PORT_RENUMERIZATION_RENEWAL_v1',
+    'H_EARTH_3D_RENDER_MATERIAL_PORT_FILE_BIRTH_STEP_031F_TRUE_MATERIAL_RENUMERIZATION_RENEWAL_v1',
   renewedFrom: 'H_EARTH_3D_RENDER_MATERIAL_PORT_FILE_BIRTH_STEP_023A_v1',
 
   parentStandard: 'H_EARTH_RENDER_SUPPORT_RENUMERIZATION_UNIFICATION_STANDARD_v1',
@@ -37,31 +39,41 @@ export const H_EARTH_3D_RENDER_MATERIAL_PORT_CONTRACT = Object.freeze({
   route: '/showroom/globe/h-earth/',
   sourceRoot: '/h-earth-3d/',
 
-  fileClass: 'DOM_CSS_3D_CANDIDATE_MATERIAL_RENUMERIZATION_PORT',
-  status: 'MATERIAL_CLASS_PORT_RENUMERIZED_NON_RENDERING',
+  fileClass: 'DOM_CSS_3D_CANDIDATE_TRUE_MATERIAL_RESOLUTION_PORT',
+  status: 'TRUE_MATERIAL_PORT_RENUMERIZED_NON_RENDERING',
 
   targetMatrix: 'H-Earth',
   matrixRole: 'Ground-View Matrix',
   activeCell: 'H_EARTH_GROUND_CELL_001',
   sceneIdentity: 'earth-water-air-survival-shoreline-manor',
 
-  renumerization: Object.freeze({
-    consumesGeometryClassReadyDescriptors: true,
-    emitsCompleteClassArrays: true,
-    parentAwareGeometryChildResolution: true,
-    canonicalAndDetailClassGrammarPreserved: true,
-    dataAttributesDoNotSubstituteForClassGrammar: true,
-    createsDomNodes: false,
-    touchesDom: false
+  owns: Object.freeze({
+    materialKeyNormalization: true,
+    materialClassLookup: true,
+    canonicalMaterialFallback: true,
+    geometryProvidedMaterialClassPreservation: true,
+    materialDataset: true
+  }),
+
+  doesNotOwn: Object.freeze({
+    geometryExpansion: true,
+    primitiveClassGeneration: true,
+    landscapeClassGeneration: true,
+    layerMembershipResolution: true,
+    contextClassification: true,
+    interactionResolution: true,
+    finalDomClassEmission: true,
+    rendererOrchestration: true
   }),
 
   boundary: Object.freeze({
     createsDomNodes: false,
     touchesDom: false,
-    definesCssClassesOnly: true,
+    definesMaterialCssClassesOnly: true,
     importsRenderer: false,
     importsCompositor: false,
     importsController: false,
+    importsGeometry: false,
     webglMaterialClaim: false,
     canvasClaim: false,
     physicalMaterialValidationClaim: false,
@@ -82,6 +94,8 @@ export const H_EARTH_3D_RENDER_MATERIAL_CLASS_MAP = Object.freeze({
     className: 'h-earth-material-wet-sand',
     cssVariablePrefix: '--h-earth-wet-sand',
     category: 'ground-surface',
+    materialFamily: 'sand',
+    surfaceRole: 'primary-wet-ground',
     candidateMaterialOnly: true,
     webglMaterialClaim: false,
     physicalMaterialClaim: false,
@@ -93,6 +107,8 @@ export const H_EARTH_3D_RENDER_MATERIAL_CLASS_MAP = Object.freeze({
     className: 'h-earth-material-dry-sand',
     cssVariablePrefix: '--h-earth-dry-sand',
     category: 'ground-surface',
+    materialFamily: 'sand',
+    surfaceRole: 'secondary-dry-ground',
     candidateMaterialOnly: true,
     webglMaterialClaim: false,
     physicalMaterialClaim: false,
@@ -104,6 +120,8 @@ export const H_EARTH_3D_RENDER_MATERIAL_CLASS_MAP = Object.freeze({
     className: 'h-earth-material-foam',
     cssVariablePrefix: '--h-earth-foam',
     category: 'shoreline-contact',
+    materialFamily: 'water-contact',
+    surfaceRole: 'shoreline-foam-contact',
     candidateMaterialOnly: true,
     webglMaterialClaim: false,
     physicalMaterialClaim: false,
@@ -115,6 +133,8 @@ export const H_EARTH_3D_RENDER_MATERIAL_CLASS_MAP = Object.freeze({
     className: 'h-earth-material-tide-pool',
     cssVariablePrefix: '--h-earth-tide-pool',
     category: 'reflective-shore-detail',
+    materialFamily: 'water-detail',
+    surfaceRole: 'reflective-puddle-detail',
     candidateMaterialOnly: true,
     webglMaterialClaim: false,
     physicalMaterialClaim: false,
@@ -127,6 +147,8 @@ export const H_EARTH_3D_RENDER_MATERIAL_CLASS_MAP = Object.freeze({
     className: 'h-earth-material-stone',
     cssVariablePrefix: '--h-earth-stone',
     category: 'shore-detail',
+    materialFamily: 'stone',
+    surfaceRole: 'small-beach-stone-detail',
     candidateMaterialOnly: true,
     webglMaterialClaim: false,
     physicalMaterialClaim: false,
@@ -139,6 +161,8 @@ export const H_EARTH_3D_RENDER_MATERIAL_CLASS_MAP = Object.freeze({
     className: 'h-earth-material-jagged-rock',
     cssVariablePrefix: '--h-earth-jagged-rock',
     category: 'foreground-rock-detail',
+    materialFamily: 'rock',
+    surfaceRole: 'foreground-jagged-rock-detail',
     candidateMaterialOnly: true,
     webglMaterialClaim: false,
     physicalMaterialClaim: false,
@@ -151,6 +175,8 @@ export const H_EARTH_3D_RENDER_MATERIAL_CLASS_MAP = Object.freeze({
     className: 'h-earth-material-water',
     cssVariablePrefix: '--h-earth-water',
     category: 'water-context',
+    materialFamily: 'water',
+    surfaceRole: 'background-water-surface',
     candidateMaterialOnly: true,
     webglMaterialClaim: false,
     physicalMaterialClaim: false,
@@ -164,6 +190,8 @@ export const H_EARTH_3D_RENDER_MATERIAL_CLASS_MAP = Object.freeze({
     className: 'h-earth-material-nearshore-wave',
     cssVariablePrefix: '--h-earth-nearshore-wave',
     category: 'water-context',
+    materialFamily: 'water',
+    surfaceRole: 'nearshore-wave-band',
     candidateMaterialOnly: true,
     webglMaterialClaim: false,
     physicalMaterialClaim: false,
@@ -177,6 +205,8 @@ export const H_EARTH_3D_RENDER_MATERIAL_CLASS_MAP = Object.freeze({
     className: 'h-earth-material-air-haze',
     cssVariablePrefix: '--h-earth-air-haze',
     category: 'atmospheric-context',
+    materialFamily: 'atmosphere',
+    surfaceRole: 'air-haze-light-layer',
     candidateMaterialOnly: true,
     webglMaterialClaim: false,
     physicalMaterialClaim: false,
@@ -190,6 +220,8 @@ export const H_EARTH_3D_RENDER_MATERIAL_CLASS_MAP = Object.freeze({
     className: 'h-earth-material-manor-context',
     cssVariablePrefix: '--h-earth-manor-context',
     category: 'hearth-context',
+    materialFamily: 'distant-structure',
+    surfaceRole: 'manor-exterior-context',
     candidateMaterialOnly: true,
     webglMaterialClaim: false,
     physicalMaterialClaim: false,
@@ -202,6 +234,8 @@ export const H_EARTH_3D_RENDER_MATERIAL_CLASS_MAP = Object.freeze({
     className: 'h-earth-material-distant-rock',
     cssVariablePrefix: '--h-earth-distant-rock',
     category: 'audralia-context',
+    materialFamily: 'distant-rock',
+    surfaceRole: 'distant-rock-stack-islet-context',
     candidateMaterialOnly: true,
     webglMaterialClaim: false,
     physicalMaterialClaim: false,
@@ -214,6 +248,8 @@ export const H_EARTH_3D_RENDER_MATERIAL_CLASS_MAP = Object.freeze({
     className: 'h-earth-material-inspection-anchor',
     cssVariablePrefix: '--h-earth-inspection-anchor',
     category: 'inspection-descriptor',
+    materialFamily: 'inspection-marker',
+    surfaceRole: 'primary-ground-inspection-anchor',
     candidateMaterialOnly: true,
     webglMaterialClaim: false,
     physicalMaterialClaim: false,
@@ -227,42 +263,14 @@ export const H_EARTH_3D_RENDER_MATERIAL_CLASS_MAP = Object.freeze({
     className: 'h-earth-material-unresolved',
     cssVariablePrefix: '--h-earth-material-unresolved',
     category: 'unresolved-material',
+    materialFamily: 'unresolved',
+    surfaceRole: 'unresolved-material',
     candidateMaterialOnly: true,
     fallbackMaterial: true,
     webglMaterialClaim: false,
     physicalMaterialClaim: false,
     visualValidationClaim: false
   })
-});
-
-export const H_EARTH_3D_RENDER_PRIMITIVE_CLASS_MAP = Object.freeze({
-  contouredTerrainBand: 'h-earth-primitive-contoured-terrain-band',
-  terrainBand: 'h-earth-primitive-terrain-band',
-  irregularShorelineBand: 'h-earth-primitive-irregular-shoreline-band',
-  waterDepthBand: 'h-earth-primitive-water-depth-band',
-  waterPlane: 'h-earth-primitive-water-plane',
-  scatterCluster: 'h-earth-primitive-scatter-cluster',
-  rockCluster: 'h-earth-primitive-rock-cluster',
-  atmosphericLayer: 'h-earth-primitive-atmospheric-layer',
-  layeredSilhouette: 'h-earth-primitive-layered-silhouette',
-  distantCluster: 'h-earth-primitive-distant-cluster',
-  inspectionAnchor: 'h-earth-primitive-inspection-anchor',
-  unresolved: 'h-earth-primitive-unresolved'
-});
-
-export const H_EARTH_3D_RENDER_LANDSCAPE_CLASS_MAP = Object.freeze({
-  contouredTerrainBand: 'h-earth-landscape-ground-plane',
-  terrainBand: 'h-earth-landscape-ground-plane',
-  irregularShorelineBand: 'h-earth-landscape-shoreline-band',
-  waterDepthBand: 'h-earth-landscape-water-band',
-  waterPlane: 'h-earth-landscape-water-plane',
-  scatterCluster: 'h-earth-landscape-surface-detail',
-  rockCluster: 'h-earth-landscape-rock-cluster',
-  atmosphericLayer: 'h-earth-landscape-atmosphere',
-  layeredSilhouette: 'h-earth-landscape-context-silhouette',
-  distantCluster: 'h-earth-landscape-distant-cluster',
-  inspectionAnchor: 'h-earth-landscape-inspection-anchor',
-  unresolved: 'h-earth-landscape-unresolved'
 });
 
 export const H_EARTH_3D_RENDER_PARENT_PRIMITIVE_TO_MATERIAL_KEY = Object.freeze({
@@ -279,73 +287,56 @@ export const H_EARTH_3D_RENDER_PARENT_PRIMITIVE_TO_MATERIAL_KEY = Object.freeze(
   inspectionAnchor: 'inspectionAnchor'
 });
 
-export const H_EARTH_3D_RENDER_CONTEXT_CLASS_MAP = Object.freeze({
-  PRIMARY_INSPECTION_TARGET: Object.freeze({
-    classification: 'PRIMARY_INSPECTION_TARGET',
-    className: 'h-earth-context-primary-inspection',
-    contextOnly: false
-  }),
+export const H_EARTH_3D_RENDER_CHILD_PRIMITIVE_TO_MATERIAL_KEY = Object.freeze({
+  candidateWetSandGroundPlane: 'wetSand',
+  candidateWetSandContourRidge: 'wetSand',
+  candidateWetSandMoisturePatch: 'wetSand',
+  candidateWetSandReflectiveSheen: 'wetSand',
+  candidateWetSandGrainDetail: 'wetSand',
 
-  SUPPORTING_INSPECTION_TARGET: Object.freeze({
-    classification: 'SUPPORTING_INSPECTION_TARGET',
-    className: 'h-earth-context-supporting-inspection',
-    contextOnly: false
-  }),
+  candidateDrySandGroundPlane: 'drySand',
+  candidateDrySandTransitionRidge: 'drySand',
+  candidateDrySandSurfacePatch: 'drySand',
 
-  SECONDARY_SURFACE_CONTEXT: Object.freeze({
-    classification: 'SECONDARY_SURFACE_CONTEXT',
-    className: 'h-earth-context-secondary-surface',
-    contextOnly: false
-  }),
+  candidateShorelineContactBase: 'foam',
+  candidateShorelineIrregularEdge: 'foam',
+  candidateShorelineFoamBreak: 'foam',
 
-  WATER_ATMOSPHERIC_CONTEXT: Object.freeze({
-    classification: 'WATER_ATMOSPHERIC_CONTEXT',
-    className: 'h-earth-context-water-atmospheric',
-    contextOnly: true
-  }),
+  candidateNearshoreWaterDepthBase: 'nearshoreWave',
+  candidateNearshoreRippleStrip: 'nearshoreWave',
 
-  HEARTH_CONTEXT_ONLY: Object.freeze({
-    classification: 'HEARTH_CONTEXT_ONLY',
-    className: 'h-earth-context-hearth-only',
-    contextOnly: true
-  }),
+  candidateWaterSurfacePlane: 'water',
+  candidateWaterDepthBand: 'water',
+  candidateWaterReflectionStrip: 'water',
 
-  AUDRALIA_CONTEXT_ONLY: Object.freeze({
-    classification: 'AUDRALIA_CONTEXT_ONLY',
-    className: 'h-earth-context-audralia-only',
-    contextOnly: true
-  }),
+  candidateSurfaceScatterMember: 'tidePool',
+  candidateRockClusterMember: 'jaggedRock',
 
-  CONTEXT_ONLY_TARGET: Object.freeze({
-    classification: 'CONTEXT_ONLY_TARGET',
-    className: 'h-earth-context-only',
-    contextOnly: true
-  }),
+  candidateAirHazePanel: 'airHaze',
+  candidateAirLightBand: 'airHaze',
 
-  UNCLASSIFIED_TARGET: Object.freeze({
-    classification: 'UNCLASSIFIED_TARGET',
-    className: 'h-earth-context-unclassified',
-    contextOnly: false
-  })
+  candidateManorContextBody: 'manorContext',
+  candidateManorContextRoof: 'manorContext',
+  candidateManorContextVerticalSegment: 'manorContext',
+
+  candidateDistantWorldSilhouette: 'distantRock',
+  candidateInspectionAnchorMarker: 'inspectionAnchor'
 });
 
-export const H_EARTH_3D_RENDER_CLASS_POLICY = Object.freeze({
-  baseObjectClass: 'h-earth-render-object',
-  descriptorOnlyClass: 'h-earth-render-descriptor-only',
-  selectableClass: 'h-earth-target-selectable',
-  inspectableClass: 'h-earth-target-inspectable',
-  blockedClass: 'h-earth-target-blocked',
-  contextOnlyClass: 'h-earth-target-context-only',
-  layerMemberBaseClass: 'h-earth-layer-member',
-  unresolvedMaterialClass: 'h-earth-material-unresolved',
-  unresolvedPrimitiveClass: 'h-earth-primitive-unresolved',
-  unresolvedLandscapeClass: 'h-earth-landscape-unresolved',
-  unresolvedContextClass: 'h-earth-context-unclassified',
+export const H_EARTH_3D_RENDER_MATERIAL_POLICY = Object.freeze({
+  unresolvedMaterialKey: 'unresolved',
+  unresolvedMaterialClassName: 'h-earth-material-unresolved',
 
   boundary: Object.freeze({
-    classPolicyOnly: true,
+    materialOnlyPolicy: true,
     createsDomNodes: false,
-    bindsEvents: false,
+    touchesDom: false,
+    primitiveGrammarOwner: false,
+    landscapeGrammarOwner: false,
+    layerGrammarOwner: false,
+    contextGrammarOwner: false,
+    interactionGrammarOwner: false,
+    finalDomClassEmissionOwner: false,
     rendererPassClaim: false,
     visualPassClaim: false,
     validationClaim: false,
@@ -355,20 +346,80 @@ export const H_EARTH_3D_RENDER_CLASS_POLICY = Object.freeze({
   })
 });
 
-export function normalizeHEarthClassToken(value, fallback = 'unresolved') {
-  return (
-    String(value || fallback)
-      .trim()
-      .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
-      .replace(/[_\s]+/g, '-')
-      .replace(/[^a-zA-Z0-9-]/g, '-')
-      .replace(/-+/g, '-')
-      .replace(/^-|-$/g, '')
-      .toLowerCase() || fallback
-  );
+export function normalizeHEarthMaterialToken(value, fallback = 'unresolved') {
+  const raw = String(value || fallback).trim();
+
+  if (!raw) {
+    return fallback;
+  }
+
+  const normalized = raw
+    .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
+    .replace(/[_\s]+/g, '-')
+    .replace(/[^a-zA-Z0-9-]/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '')
+    .toLowerCase();
+
+  const tokenMap = Object.freeze({
+    'wet-sand': 'wetSand',
+    'damp-sand': 'wetSand',
+    'foreground-wet-sand': 'wetSand',
+
+    'dry-sand': 'drySand',
+    'sand-transition': 'drySand',
+    'dry-sand-transition': 'drySand',
+
+    foam: 'foam',
+    'shoreline-foam': 'foam',
+    'foam-line': 'foam',
+
+    'tide-pool': 'tidePool',
+    'tide-pools': 'tidePool',
+    puddle: 'tidePool',
+    puddles: 'tidePool',
+
+    stone: 'stone',
+    stones: 'stone',
+    'small-stone': 'stone',
+    'small-beach-stone': 'stone',
+
+    'jagged-rock': 'jaggedRock',
+    'jagged-rocks': 'jaggedRock',
+    rock: 'jaggedRock',
+    rocks: 'jaggedRock',
+
+    water: 'water',
+    'water-plane': 'water',
+    'water-surface': 'water',
+
+    'nearshore-wave': 'nearshoreWave',
+    'nearshore-water': 'nearshoreWave',
+    wave: 'nearshoreWave',
+
+    'air-haze': 'airHaze',
+    haze: 'airHaze',
+    atmosphere: 'airHaze',
+
+    'manor-context': 'manorContext',
+    manor: 'manorContext',
+    'manor-exterior': 'manorContext',
+
+    'distant-rock': 'distantRock',
+    'distant-rocks': 'distantRock',
+    islet: 'distantRock',
+    islets: 'distantRock',
+
+    'inspection-anchor': 'inspectionAnchor',
+    anchor: 'inspectionAnchor',
+
+    unresolved: 'unresolved'
+  });
+
+  return tokenMap[normalized] || raw || fallback;
 }
 
-export function normalizeHEarthClassArray(value) {
+export function normalizeHEarthMaterialClassArray(value) {
   if (Array.isArray(value)) {
     return value;
   }
@@ -380,11 +431,11 @@ export function normalizeHEarthClassArray(value) {
   return [];
 }
 
-export function uniqueHEarthClassNames(classNames = []) {
+export function uniqueHEarthMaterialClassNames(classNames = []) {
   const seen = new Set();
 
   return Object.freeze(
-    normalizeHEarthClassArray(classNames)
+    normalizeHEarthMaterialClassArray(classNames)
       .flatMap((value) => String(value || '').split(/\s+/))
       .map((value) => value.trim())
       .filter(Boolean)
@@ -399,67 +450,57 @@ export function uniqueHEarthClassNames(classNames = []) {
   );
 }
 
-export function joinHEarthClassNames(classNames = []) {
-  return uniqueHEarthClassNames(classNames).join(' ');
+export function joinHEarthMaterialClassNames(classNames = []) {
+  return uniqueHEarthMaterialClassNames(classNames).join(' ');
 }
 
-export function resolveHEarthObjectIdForNode(node = {}) {
+export function resolveHEarthMaterialObjectId(node = {}) {
   return (
     node.objectId ||
-    node.dataset?.hEarthObjectId ||
     node.sourceObject?.objectId ||
     node.sourceObjectId ||
+    node.parentObjectId ||
+    node.geometryParentObjectId ||
+    node.geometryExpansion?.parentObjectId ||
     null
   );
 }
 
-export function resolveHEarthSourceObjectIdForNode(node = {}) {
+export function resolveHEarthMaterialSourceObjectId(node = {}) {
   return (
     node.sourceObjectId ||
-    node.dataset?.hEarthSourceObjectId ||
     node.parentObjectId ||
     node.geometryParentObjectId ||
     node.geometryExpansion?.parentObjectId ||
     node.sourceObject?.objectId ||
-    resolveHEarthObjectIdForNode(node)
+    resolveHEarthMaterialObjectId(node)
   );
 }
 
-export function resolveHEarthParentObjectIdForNode(node = {}) {
+export function resolveHEarthMaterialParentObjectId(node = {}) {
   return (
     node.parentObjectId ||
     node.geometryParentObjectId ||
     node.geometryExpansion?.parentObjectId ||
     node.sourceObjectId ||
     node.sourceObject?.objectId ||
-    resolveHEarthObjectIdForNode(node)
+    resolveHEarthMaterialObjectId(node)
   );
 }
 
-export function getHEarthIdentityCandidatesForNode(node = {}) {
-  return Object.freeze(
-    uniqueHEarthClassNames([
-      resolveHEarthObjectIdForNode(node),
-      resolveHEarthSourceObjectIdForNode(node),
-      resolveHEarthParentObjectIdForNode(node),
-      node.geometryExpansion?.parentObjectId,
-      node.geometryParentObjectId,
-      node.sourceObject?.objectId
-    ])
-  );
-}
-
-export function resolveHEarthNodeIdForNode(node = {}) {
+export function resolveHEarthMaterialNodeId(node = {}) {
   return (
-    node.sourceNodeId ||
     node.nodeId ||
+    node.sourceNodeId ||
     node.composedNodeId ||
-    node.dataset?.hEarthRenderNodeId ||
+    node.parentNodeId ||
+    node.geometryParentNodeId ||
+    node.geometryExpansion?.parentNodeId ||
     null
   );
 }
 
-export function resolveHEarthParentPrimitiveTypeForNode(node = {}) {
+export function resolveHEarthMaterialParentPrimitiveType(node = {}) {
   return (
     node.geometryExpansion?.parentPrimitiveType ||
     node.parentPrimitiveType ||
@@ -469,26 +510,56 @@ export function resolveHEarthParentPrimitiveTypeForNode(node = {}) {
   );
 }
 
-export function resolveHEarthPrimitiveTypeForNode(node = {}) {
+export function resolveHEarthMaterialChildPrimitiveType(node = {}) {
   return (
+    node.geometryExpansion?.childPrimitiveType ||
     node.primitiveType ||
     node.primitive?.primitiveType ||
     node.primitiveSchema?.primitiveType ||
-    node.geometryExpansion?.childPrimitiveType ||
-    resolveHEarthParentPrimitiveTypeForNode(node) ||
-    'unresolved'
+    null
+  );
+}
+
+export function resolveHEarthCanonicalMaterialKeyForNode(node = {}) {
+  const explicitCanonical =
+    node.canonicalMaterialKey ||
+    node.geometryExpansion?.canonicalMaterialKey ||
+    null;
+
+  if (explicitCanonical) {
+    return normalizeHEarthMaterialToken(explicitCanonical);
+  }
+
+  const parentPrimitiveType = resolveHEarthMaterialParentPrimitiveType(node);
+  const parentMapped =
+    H_EARTH_3D_RENDER_PARENT_PRIMITIVE_TO_MATERIAL_KEY[parentPrimitiveType];
+
+  if (parentMapped) {
+    return parentMapped;
+  }
+
+  const childPrimitiveType = resolveHEarthMaterialChildPrimitiveType(node);
+  const childMapped =
+    H_EARTH_3D_RENDER_CHILD_PRIMITIVE_TO_MATERIAL_KEY[childPrimitiveType];
+
+  if (childMapped) {
+    return childMapped;
+  }
+
+  return normalizeHEarthMaterialToken(
+    node.materialKey ||
+      node.materialToken?.materialKey ||
+      node.material?.materialKey ||
+      node.sourceObject?.materialKey ||
+      node.sourceObject?.materialToken?.materialKey ||
+      node.sourceObject?.materialIdentity?.materialKey ||
+      H_EARTH_3D_RENDER_MATERIAL_POLICY.unresolvedMaterialKey
   );
 }
 
 export function resolveHEarthMaterialKeyForNode(node = {}) {
-  const parentPrimitiveType = resolveHEarthParentPrimitiveTypeForNode(node);
-  const mappedMaterialKey =
-    H_EARTH_3D_RENDER_PARENT_PRIMITIVE_TO_MATERIAL_KEY[parentPrimitiveType];
-
-  return (
-    node.canonicalMaterialKey ||
+  const rawMaterialKey =
     node.materialKey ||
-    node.geometryExpansion?.canonicalMaterialKey ||
     node.geometryExpansion?.childMaterialKey ||
     node.geometryExpansion?.parentMaterialKey ||
     node.materialToken?.materialKey ||
@@ -496,628 +567,159 @@ export function resolveHEarthMaterialKeyForNode(node = {}) {
     node.sourceObject?.materialKey ||
     node.sourceObject?.materialToken?.materialKey ||
     node.sourceObject?.materialIdentity?.materialKey ||
-    mappedMaterialKey ||
-    'unresolved'
+    null;
+
+  if (rawMaterialKey) {
+    return normalizeHEarthMaterialToken(rawMaterialKey);
+  }
+
+  return resolveHEarthCanonicalMaterialKeyForNode(node);
+}
+
+export function getHEarthMaterialDefinition(materialKey) {
+  const normalizedMaterialKey = normalizeHEarthMaterialToken(materialKey);
+
+  return (
+    H_EARTH_3D_RENDER_MATERIAL_CLASS_MAP[normalizedMaterialKey] ||
+    H_EARTH_3D_RENDER_MATERIAL_CLASS_MAP[
+      H_EARTH_3D_RENDER_MATERIAL_POLICY.unresolvedMaterialKey
+    ]
   );
 }
 
-export function resolveHEarthCanonicalMaterialKeyForNode(node = {}) {
-  const parentPrimitiveType = resolveHEarthParentPrimitiveTypeForNode(node);
-  const mappedMaterialKey =
-    H_EARTH_3D_RENDER_PARENT_PRIMITIVE_TO_MATERIAL_KEY[parentPrimitiveType];
-
-  return (
-    node.canonicalMaterialKey ||
-    node.geometryExpansion?.canonicalMaterialKey ||
-    mappedMaterialKey ||
-    resolveHEarthMaterialKeyForNode(node)
-  );
-}
-
-export function resolveHEarthLayerIdForNode(node = {}) {
-  return (
-    node.layerId ||
-    node.renderLayerId ||
-    node.layer?.layerId ||
-    node.composition?.layerId ||
-    node.sourceObject?.layerId ||
-    'unclassified-render-layer'
-  );
-}
-
-export function resolveHEarthLayerMemberClassNameForNode(node = {}) {
-  return (
-    node.layerMemberClassName ||
-    node.geometryExpansion?.layerMemberClassName ||
-    `h-earth-layer-member-${normalizeHEarthClassToken(
-      String(resolveHEarthLayerIdForNode(node)).replace(/-layer$/, '')
-    )}`
-  );
+export function getHEarthGeometryProvidedMaterialClasses(node = {}) {
+  return uniqueHEarthMaterialClassNames([
+    node.canonicalMaterialClassName,
+    node.materialClassName,
+    node.geometryExpansion?.canonicalMaterialClassName,
+    node.geometryExpansion?.materialClassName,
+    node.primitiveGeometry?.canonicalMaterialClassName,
+    node.primitiveGeometry?.materialClassName
+  ]);
 }
 
 export function getHEarthMaterialClassForNode(node = {}) {
   const materialKey = resolveHEarthMaterialKeyForNode(node);
   const canonicalMaterialKey = resolveHEarthCanonicalMaterialKeyForNode(node);
 
-  const material =
-    H_EARTH_3D_RENDER_MATERIAL_CLASS_MAP[materialKey] ||
-    H_EARTH_3D_RENDER_MATERIAL_CLASS_MAP.unresolved;
+  const material = getHEarthMaterialDefinition(materialKey);
+  const canonicalMaterial = getHEarthMaterialDefinition(canonicalMaterialKey);
+  const geometryProvidedClassNames = getHEarthGeometryProvidedMaterialClasses(node);
 
-  const canonicalMaterial =
-    H_EARTH_3D_RENDER_MATERIAL_CLASS_MAP[canonicalMaterialKey] ||
-    H_EARTH_3D_RENDER_MATERIAL_CLASS_MAP[materialKey] ||
-    H_EARTH_3D_RENDER_MATERIAL_CLASS_MAP.unresolved;
-
-  const geometryProvidedClass =
-    node.canonicalMaterialClassName ||
-    node.geometryExpansion?.canonicalMaterialClassName ||
-    node.materialClassName ||
-    null;
-
-  const classNames = uniqueHEarthClassNames([
+  const classNames = uniqueHEarthMaterialClassNames([
     canonicalMaterial.className,
     material.className,
-    geometryProvidedClass
+    geometryProvidedClassNames
   ]);
 
   const fallbackUsed =
-    material.materialKey === 'unresolved' &&
-    canonicalMaterial.materialKey === 'unresolved';
+    material.materialKey === H_EARTH_3D_RENDER_MATERIAL_POLICY.unresolvedMaterialKey &&
+    canonicalMaterial.materialKey ===
+      H_EARTH_3D_RENDER_MATERIAL_POLICY.unresolvedMaterialKey;
 
   return Object.freeze({
-    objectId: resolveHEarthObjectIdForNode(node),
-    sourceObjectId: resolveHEarthSourceObjectIdForNode(node),
-    parentObjectId: resolveHEarthParentObjectIdForNode(node),
-    nodeId: resolveHEarthNodeIdForNode(node),
+    objectId: resolveHEarthMaterialObjectId(node),
+    sourceObjectId: resolveHEarthMaterialSourceObjectId(node),
+    parentObjectId: resolveHEarthMaterialParentObjectId(node),
+    nodeId: resolveHEarthMaterialNodeId(node),
 
     materialKey: material.materialKey,
     canonicalMaterialKey: canonicalMaterial.materialKey,
-    className: classNames[0] || H_EARTH_3D_RENDER_CLASS_POLICY.unresolvedMaterialClass,
+
+    className:
+      classNames[0] ||
+      H_EARTH_3D_RENDER_MATERIAL_POLICY.unresolvedMaterialClassName,
     classNames,
+    classNameJoined: joinHEarthMaterialClassNames(classNames),
+
     cssVariablePrefix: material.cssVariablePrefix,
+    canonicalCssVariablePrefix: canonicalMaterial.cssVariablePrefix,
     category: material.category,
+    canonicalCategory: canonicalMaterial.category,
+    materialFamily: material.materialFamily,
+    surfaceRole: material.surfaceRole,
+
+    geometryProvidedClassNames,
+    geometryProvidedMaterialClassPreserved:
+      geometryProvidedClassNames.length > 0,
 
     resolved: fallbackUsed === false,
     fallbackUsed,
-    geometryProvidedClassUsed: Boolean(geometryProvidedClass),
     candidateMaterialOnly: true,
 
-    webglMaterialClaim: false,
-    canvasMaterialClaim: false,
-    physicalMaterialClaim: false,
-    rendererPassClaim: false,
-    visualPassClaim: false,
-    validationClaim: false,
-    productionClaim: false,
-    claimBoundaryPreserved: true
-  });
-}
-
-export function getHEarthPrimitiveClassForNode(node = {}) {
-  const primitiveType = resolveHEarthPrimitiveTypeForNode(node);
-  const parentPrimitiveType = resolveHEarthParentPrimitiveTypeForNode(node);
-  const canonicalPrimitiveClassName =
-    node.canonicalPrimitiveClassName ||
-    node.geometryExpansion?.canonicalPrimitiveClassName ||
-    H_EARTH_3D_RENDER_PRIMITIVE_CLASS_MAP[parentPrimitiveType] ||
-    H_EARTH_3D_RENDER_PRIMITIVE_CLASS_MAP[primitiveType] ||
-    H_EARTH_3D_RENDER_PRIMITIVE_CLASS_MAP.unresolved;
-
-  const detailPrimitiveClassName =
-    node.detailPrimitiveClassName ||
-    node.primitiveGeometry?.detailPrimitiveClassName ||
-    (
-      primitiveType && primitiveType !== parentPrimitiveType
-        ? `h-earth-primitive-${normalizeHEarthClassToken(primitiveType)}`
-        : null
-    );
-
-  const primitiveClassName =
-    node.primitiveClassName ||
-    canonicalPrimitiveClassName ||
-    `h-earth-primitive-${normalizeHEarthClassToken(primitiveType)}`;
-
-  const classNames = uniqueHEarthClassNames([
-    canonicalPrimitiveClassName,
-    primitiveClassName,
-    detailPrimitiveClassName
-  ]);
-
-  const fallbackUsed =
-    primitiveType === 'unresolved' ||
-    classNames.includes(H_EARTH_3D_RENDER_PRIMITIVE_CLASS_MAP.unresolved);
-
-  return Object.freeze({
-    objectId: resolveHEarthObjectIdForNode(node),
-    sourceObjectId: resolveHEarthSourceObjectIdForNode(node),
-    parentObjectId: resolveHEarthParentObjectIdForNode(node),
-    nodeId: resolveHEarthNodeIdForNode(node),
-
-    primitiveType,
-    parentPrimitiveType,
-    canonicalPrimitiveClassName,
-    primitiveClassName,
-    detailPrimitiveClassName,
-    className: classNames[0] || H_EARTH_3D_RENDER_CLASS_POLICY.unresolvedPrimitiveClass,
-    classNames,
-
-    resolved: fallbackUsed === false,
-    fallbackUsed,
-    candidateGeometryOnly: true,
-    finalGeometryClaim: false,
-    rendererPassClaim: false,
-    visualPassClaim: false,
-    validationClaim: false,
-    productionClaim: false,
-    claimBoundaryPreserved: true
-  });
-}
-
-export function getHEarthLandscapeClassForNode(node = {}) {
-  const primitiveType = resolveHEarthPrimitiveTypeForNode(node);
-  const parentPrimitiveType = resolveHEarthParentPrimitiveTypeForNode(node);
-
-  const canonicalLandscapeClassName =
-    node.canonicalLandscapeClassName ||
-    node.geometryExpansion?.canonicalLandscapeClassName ||
-    H_EARTH_3D_RENDER_LANDSCAPE_CLASS_MAP[parentPrimitiveType] ||
-    H_EARTH_3D_RENDER_LANDSCAPE_CLASS_MAP[primitiveType] ||
-    H_EARTH_3D_RENDER_LANDSCAPE_CLASS_MAP.unresolved;
-
-  const canonicalLandscapeFamilyClassName =
-    node.canonicalLandscapeFamilyClassName ||
-    node.primitiveGeometry?.canonicalLandscapeFamilyClassName ||
-    null;
-
-  const detailLandscapeClassName =
-    node.detailLandscapeClassName ||
-    node.primitiveGeometry?.detailLandscapeClassName ||
-    null;
-
-  const landscapeClassName =
-    node.landscapeClassName ||
-    canonicalLandscapeClassName ||
-    H_EARTH_3D_RENDER_CLASS_POLICY.unresolvedLandscapeClass;
-
-  const classNames = uniqueHEarthClassNames([
-    canonicalLandscapeClassName,
-    canonicalLandscapeFamilyClassName,
-    landscapeClassName,
-    detailLandscapeClassName
-  ]);
-
-  const fallbackUsed =
-    classNames.includes(H_EARTH_3D_RENDER_LANDSCAPE_CLASS_MAP.unresolved);
-
-  return Object.freeze({
-    objectId: resolveHEarthObjectIdForNode(node),
-    sourceObjectId: resolveHEarthSourceObjectIdForNode(node),
-    parentObjectId: resolveHEarthParentObjectIdForNode(node),
-    nodeId: resolveHEarthNodeIdForNode(node),
-
-    canonicalLandscapeClassName,
-    canonicalLandscapeFamilyClassName,
-    landscapeClassName,
-    detailLandscapeClassName,
-    className: classNames[0] || H_EARTH_3D_RENDER_CLASS_POLICY.unresolvedLandscapeClass,
-    classNames,
-
-    resolved: fallbackUsed === false,
-    fallbackUsed,
-    candidateLandscapeOnly: true,
-    rendererPassClaim: false,
-    visualPassClaim: false,
-    validationClaim: false,
-    productionClaim: false,
-    claimBoundaryPreserved: true
-  });
-}
-
-export function resolveHEarthClassificationForNode(node = {}, controller) {
-  const identityCandidates = getHEarthIdentityCandidatesForNode(node);
-
-  if (
-    controller &&
-    typeof controller.getControllerTargetClassification === 'function'
-  ) {
-    for (const candidate of identityCandidates) {
-      const classification =
-        controller.getControllerTargetClassification(candidate);
-
-      if (classification) {
-        return classification;
-      }
-    }
-  }
-
-  for (const candidate of identityCandidates) {
-    if (controller?.selectableTargetRegistry?.[candidate]?.classification) {
-      return controller.selectableTargetRegistry[candidate].classification;
-    }
-  }
-
-  for (const candidate of identityCandidates) {
-    if (controller?.inspectionTargetModel?.primaryInspectionTarget === candidate) {
-      return 'PRIMARY_INSPECTION_TARGET';
-    }
-
-    if (
-      controller?.inspectionTargetModel?.supportingInspectionTargets?.includes?.(
-        candidate
-      )
-    ) {
-      return 'SUPPORTING_INSPECTION_TARGET';
-    }
-
-    if (
-      controller?.inspectionTargetModel?.secondarySurfaceContextTargets?.includes?.(
-        candidate
-      )
-    ) {
-      return 'SECONDARY_SURFACE_CONTEXT';
-    }
-
-    if (
-      controller?.inspectionTargetModel?.waterAtmosphericContextTargets?.includes?.(
-        candidate
-      )
-    ) {
-      return 'WATER_ATMOSPHERIC_CONTEXT';
-    }
-
-    if (
-      controller?.inspectionTargetModel?.hearthContextTargets?.includes?.(candidate)
-    ) {
-      return 'HEARTH_CONTEXT_ONLY';
-    }
-
-    if (
-      controller?.inspectionTargetModel?.audraliaContextTargets?.includes?.(candidate)
-    ) {
-      return 'AUDRALIA_CONTEXT_ONLY';
-    }
-
-    if (
-      controller?.inspectionTargetModel?.contextOnlyTargets?.includes?.(candidate)
-    ) {
-      return 'CONTEXT_ONLY_TARGET';
-    }
-  }
-
-  if (node.contextOnly === true || node.sourceObject?.contextOnly === true) {
-    return 'CONTEXT_ONLY_TARGET';
-  }
-
-  if (node.geometryExpansion?.parentPrimitiveType === 'layeredSilhouette') {
-    return 'HEARTH_CONTEXT_ONLY';
-  }
-
-  if (node.geometryExpansion?.parentPrimitiveType === 'distantCluster') {
-    return 'AUDRALIA_CONTEXT_ONLY';
-  }
-
-  if (
-    node.geometryExpansion?.parentPrimitiveType === 'waterPlane' ||
-    node.geometryExpansion?.parentPrimitiveType === 'waterDepthBand' ||
-    node.geometryExpansion?.parentPrimitiveType === 'atmosphericLayer'
-  ) {
-    return 'WATER_ATMOSPHERIC_CONTEXT';
-  }
-
-  return 'UNCLASSIFIED_TARGET';
-}
-
-export function getHEarthContextClassForNode(node = {}, controller) {
-  const classification = resolveHEarthClassificationForNode(node, controller);
-  const context =
-    H_EARTH_3D_RENDER_CONTEXT_CLASS_MAP[classification] ||
-    H_EARTH_3D_RENDER_CONTEXT_CLASS_MAP.UNCLASSIFIED_TARGET;
-
-  const fallbackUsed = context.classification === 'UNCLASSIFIED_TARGET';
-
-  return Object.freeze({
-    objectId: resolveHEarthObjectIdForNode(node),
-    sourceObjectId: resolveHEarthSourceObjectIdForNode(node),
-    parentObjectId: resolveHEarthParentObjectIdForNode(node),
-    nodeId: resolveHEarthNodeIdForNode(node),
-
-    classification: context.classification,
-    className: context.className,
-    classNames: Object.freeze([context.className]),
-
-    resolved: fallbackUsed === false,
-    fallbackUsed,
-    contextOnly: context.contextOnly === true,
-    parentAwareResolution: true,
-
-    traversalClaim: false,
-    swimmingClaim: false,
-    fluidSimulationClaim: false,
-    manorInteriorAccessClaim: false,
-    distantTraversalClaim: false,
-    rendererPassClaim: false,
-    visualPassClaim: false,
-    validationClaim: false,
-    productionClaim: false,
-    matrixCollapse: false,
-    claimBoundaryPreserved: true
-  });
-}
-
-export function resolveHEarthControllerTargetForNode(node = {}, controller) {
-  const identityCandidates = getHEarthIdentityCandidatesForNode(node);
-
-  for (const candidate of identityCandidates) {
-    if (controller?.selectableTargetRegistry?.[candidate]) {
-      return Object.freeze({
-        objectId: candidate,
-        target: controller.selectableTargetRegistry[candidate],
-        source: 'selectableTargetRegistry',
-        found: true,
-        parentAwareResolution: true
-      });
-    }
-  }
-
-  return Object.freeze({
-    objectId: identityCandidates[0] || null,
-    target: null,
-    source: 'none',
-    found: false,
-    parentAwareResolution: true
-  });
-}
-
-export function getHEarthInteractionClassForNode(node = {}, controller) {
-  const controllerTarget = resolveHEarthControllerTargetForNode(node, controller);
-  const target = controllerTarget.target;
-  const context = getHEarthContextClassForNode(node, controller);
-
-  const selectable =
-    target?.selectable === true ||
-    target?.isSelectable === true ||
-    node.selectable === true ||
-    node.controllerTarget?.selectable === true;
-
-  const inspectable =
-    target?.inspectable === true ||
-    target?.isInspectable === true ||
-    node.inspectable === true ||
-    node.controllerTarget?.inspectable === true;
-
-  const contextOnly = context.contextOnly === true;
-
-  const classNames = uniqueHEarthClassNames([
-    selectable ? H_EARTH_3D_RENDER_CLASS_POLICY.selectableClass : null,
-    inspectable ? H_EARTH_3D_RENDER_CLASS_POLICY.inspectableClass : null,
-    contextOnly ? H_EARTH_3D_RENDER_CLASS_POLICY.contextOnlyClass : null,
-    selectable === false && inspectable === false && contextOnly === false
-      ? H_EARTH_3D_RENDER_CLASS_POLICY.blockedClass
-      : null
-  ]);
-
-  return Object.freeze({
-    objectId: resolveHEarthObjectIdForNode(node),
-    sourceObjectId: resolveHEarthSourceObjectIdForNode(node),
-    parentObjectId: resolveHEarthParentObjectIdForNode(node),
-    resolvedControllerTargetId: controllerTarget.objectId,
-    nodeId: resolveHEarthNodeIdForNode(node),
-
-    selectable,
-    inspectable,
-    contextOnly,
-    classNames,
-    className: joinHEarthClassNames(classNames),
-    targetFound: controllerTarget.found,
-    targetResolutionSource: controllerTarget.source,
-    parentAwareResolution: true,
-
-    domEventBindingClaim: false,
-    gameplayExecutionClaim: false,
-    actionExecutionClaim: false,
-    readoutProductionClaim: false,
-    receiptCreationClaim: false,
-    rendererPassClaim: false,
-    visualPassClaim: false,
-    validationClaim: false,
-    productionClaim: false,
-    claimBoundaryPreserved: true
-  });
-}
-
-export function getHEarthLayerClassForNode(node = {}) {
-  const layerId = resolveHEarthLayerIdForNode(node);
-  const layerMemberClassName = resolveHEarthLayerMemberClassNameForNode(node);
-  const layerClassName =
-    node.layerClassName ||
-    node.geometryExpansion?.layerClassName ||
-    `h-earth-layer-${normalizeHEarthClassToken(
-      String(layerId).replace(/-layer$/, '')
-    )}`;
-
-  const classNames = uniqueHEarthClassNames([
-    H_EARTH_3D_RENDER_CLASS_POLICY.layerMemberBaseClass,
-    layerMemberClassName
-  ]);
-
-  return Object.freeze({
-    objectId: resolveHEarthObjectIdForNode(node),
-    sourceObjectId: resolveHEarthSourceObjectIdForNode(node),
-    parentObjectId: resolveHEarthParentObjectIdForNode(node),
-    nodeId: resolveHEarthNodeIdForNode(node),
-
-    layerId,
-    layerClassName,
-    layerMemberClassName,
-    classNames,
-    className: joinHEarthClassNames(classNames),
-    objectLayerMembershipClassRequired: true,
-
-    rendererPassClaim: false,
-    visualPassClaim: false,
-    validationClaim: false,
-    productionClaim: false,
-    claimBoundaryPreserved: true
-  });
-}
-
-export function getHEarthObjectClassForNode(node = {}) {
-  const objectId = resolveHEarthObjectIdForNode(node);
-  const sourceObjectId = resolveHEarthSourceObjectIdForNode(node);
-  const parentObjectId = resolveHEarthParentObjectIdForNode(node);
-
-  return Object.freeze({
-    objectId,
-    sourceObjectId,
-    parentObjectId,
-    nodeId: resolveHEarthNodeIdForNode(node),
-
-    objectClassName: `h-earth-object-${normalizeHEarthClassToken(objectId)}`,
-    sourceObjectClassName: `h-earth-source-object-${normalizeHEarthClassToken(
-      sourceObjectId
-    )}`,
-    parentObjectClassName: `h-earth-parent-object-${normalizeHEarthClassToken(
-      parentObjectId
-    )}`,
-
-    classNames: uniqueHEarthClassNames([
-      `h-earth-object-${normalizeHEarthClassToken(objectId)}`,
-      `h-earth-source-object-${normalizeHEarthClassToken(sourceObjectId)}`,
-      `h-earth-parent-object-${normalizeHEarthClassToken(parentObjectId)}`
-    ]),
-
-    parentAwareResolution: true,
-    claimBoundaryPreserved: true
-  });
-}
-
-export function getHEarthGeometryClassForNode(node = {}) {
-  const classNames = uniqueHEarthClassNames([
-    node.geometryClassNames,
-    node.renumerizedClassNames,
-    node.geometryClassName,
-    node.renumerizedClassName,
-    node.geometryProfileClassName,
-    node.geometryNodeClassName,
-    node.geometryRoleClassName
-  ]);
-
-  return Object.freeze({
-    objectId: resolveHEarthObjectIdForNode(node),
-    sourceObjectId: resolveHEarthSourceObjectIdForNode(node),
-    parentObjectId: resolveHEarthParentObjectIdForNode(node),
-    nodeId: resolveHEarthNodeIdForNode(node),
-
-    classNames,
-    className: joinHEarthClassNames(classNames),
-    geometryProvidedClassReadyDescriptor:
-      node.classReadyDescriptor === true ||
-      node.visualGrammarReadyDescriptor === true ||
-      classNames.length > 0,
-
-    candidateGeometryOnly: node.candidateGeometryOnly === true,
-    finalGeometryClaim: false,
-    rendererPassClaim: false,
-    visualPassClaim: false,
-    validationClaim: false,
-    productionClaim: false,
-    claimBoundaryPreserved: true
+    boundary: Object.freeze({
+      materialResolutionOnly: true,
+      createsDomNodes: false,
+      touchesDom: false,
+      primitiveGrammarOwner: false,
+      landscapeGrammarOwner: false,
+      layerGrammarOwner: false,
+      contextGrammarOwner: false,
+      interactionGrammarOwner: false,
+      finalDomClassEmissionOwner: false,
+      webglMaterialClaim: false,
+      canvasMaterialClaim: false,
+      physicalMaterialClaim: false,
+      rendererPassClaim: false,
+      visualPassClaim: false,
+      validationClaim: false,
+      productionClaim: false,
+      claimBoundaryPreserved: true
+    })
   });
 }
 
 export function getHEarthMaterialDataset(node = {}) {
   const material = getHEarthMaterialClassForNode(node);
-  const primitive = getHEarthPrimitiveClassForNode(node);
-  const landscape = getHEarthLandscapeClassForNode(node);
-  const layer = getHEarthLayerClassForNode(node);
-  const context = getHEarthContextClassForNode(node, null);
 
   return Object.freeze({
     hEarthMaterialKey: material.materialKey,
     hEarthCanonicalMaterialKey: material.canonicalMaterialKey,
     hEarthMaterialCategory: material.category,
-    hEarthPrimitiveType: primitive.primitiveType,
-    hEarthParentPrimitiveType: primitive.parentPrimitiveType || '',
-    hEarthLayerId: layer.layerId,
-    hEarthContextClassification: context.classification,
+    hEarthCanonicalMaterialCategory: material.canonicalCategory,
+    hEarthMaterialFamily: material.materialFamily,
+    hEarthMaterialSurfaceRole: material.surfaceRole,
+    hEarthMaterialCssVariablePrefix: material.cssVariablePrefix,
     hEarthCandidateMaterialOnly: 'true',
     hEarthMaterialValidationClaim: 'false',
     hEarthVisualPassClaim: 'false',
-    hEarthRenumerizedClassReady: 'true'
+    hEarthPhysicalMaterialClaim: 'false',
+    hEarthWebglMaterialClaim: 'false'
   });
 }
 
-export function getHEarthRenderClassesForNode(node = {}, controller) {
-  const object = getHEarthObjectClassForNode(node);
-  const geometry = getHEarthGeometryClassForNode(node);
+export function getHEarthRenderClassesForNode(node = {}) {
   const material = getHEarthMaterialClassForNode(node);
-  const primitive = getHEarthPrimitiveClassForNode(node);
-  const landscape = getHEarthLandscapeClassForNode(node);
-  const layer = getHEarthLayerClassForNode(node);
-  const context = getHEarthContextClassForNode(node, controller);
-  const interaction = getHEarthInteractionClassForNode(node, controller);
-
-  const classNames = uniqueHEarthClassNames([
-    H_EARTH_3D_RENDER_CLASS_POLICY.baseObjectClass,
-    H_EARTH_3D_RENDER_CLASS_POLICY.descriptorOnlyClass,
-
-    object.classNames,
-    geometry.classNames,
-    material.classNames,
-    primitive.classNames,
-    landscape.classNames,
-    layer.classNames,
-    context.classNames,
-    interaction.classNames
-  ]);
-
-  const resolved =
-    Boolean(object.objectId) &&
-    material.resolved === true &&
-    primitive.resolved === true &&
-    landscape.resolved === true &&
-    classNames.length > 0;
-
-  const fallbackUsed =
-    material.fallbackUsed === true ||
-    primitive.fallbackUsed === true ||
-    landscape.fallbackUsed === true ||
-    context.fallbackUsed === true;
 
   return Object.freeze({
-    objectId: object.objectId,
-    sourceObjectId: object.sourceObjectId,
-    parentObjectId: object.parentObjectId,
-    nodeId: resolveHEarthNodeIdForNode(node),
+    objectId: material.objectId,
+    sourceObjectId: material.sourceObjectId,
+    parentObjectId: material.parentObjectId,
+    nodeId: material.nodeId,
 
-    classNames,
-    className: joinHEarthClassNames(classNames),
+    classNames: material.classNames,
+    className: material.classNameJoined || material.className,
 
-    object,
-    geometry,
     material,
-    primitive,
-    landscape,
-    layer,
-    context,
-    interaction,
 
-    resolved,
-    fallbackUsed,
+    resolved: material.resolved,
+    fallbackUsed: material.fallbackUsed,
 
-    parentAwareGeometryChildResolution: true,
-    completeClassArrayReturned: true,
-    canonicalAndDetailClassGrammarPreserved: true,
-    visualGrammarReadyDescriptor:
-      geometry.geometryProvidedClassReadyDescriptor === true ||
-      node.visualGrammarReadyDescriptor === true ||
-      node.classReadyDescriptor === true,
+    materialOnlyClassResolution: true,
+    completeRenderClassStackOwner: false,
+    finalDomClassEmissionOwner: false,
 
     boundary: Object.freeze({
-      classResolutionOnly: true,
+      materialClassResolutionOnly: true,
       createsDomNodes: false,
       touchesDom: false,
       bindsEvents: false,
+      primitiveGrammarOwner: false,
+      landscapeGrammarOwner: false,
+      layerGrammarOwner: false,
+      contextGrammarOwner: false,
+      interactionGrammarOwner: false,
+      finalDomClassEmissionOwner: false,
       candidateMaterialOnly: true,
       finalMaterialClaim: false,
       finalGeometryClaim: false,
@@ -1143,16 +745,19 @@ export const H_EARTH_3D_RENDER_MATERIAL_PORT_RECEIPT = Object.freeze({
     H_EARTH_3D_RENDER_MATERIAL_PORT_CONTRACT.parentGeometryRenewal,
 
   materialClassMapDefined: true,
-  primitiveClassMapDefined: true,
-  landscapeClassMapDefined: true,
-  contextClassMapDefined: true,
-  classPolicyDefined: true,
+  parentPrimitiveToMaterialFallbackDefined: true,
+  childPrimitiveToMaterialFallbackDefined: true,
+  materialKeyNormalizationDefined: true,
+  geometryProvidedMaterialClassPreservationDefined: true,
+  materialDatasetDefined: true,
+  materialOnlyClassResolutionDefined: true,
 
-  parentAwareIdentityResolutionDefined: true,
-  geometryClassReadyDescriptorConsumptionDefined: true,
-  completeClassArrayEmissionDefined: true,
-  canonicalAndDetailClassGrammarPreserved: true,
-  objectLayerMembershipClassConsumptionDefined: true,
+  primitiveClassGenerationOwnedHere: false,
+  landscapeClassGenerationOwnedHere: false,
+  layerMembershipResolutionOwnedHere: false,
+  contextClassificationOwnedHere: false,
+  interactionResolutionOwnedHere: false,
+  finalDomClassEmissionOwnedHere: false,
 
   requiredMaterialCategories: Object.freeze([
     'wetSand',
@@ -1174,10 +779,11 @@ export const H_EARTH_3D_RENDER_MATERIAL_PORT_RECEIPT = Object.freeze({
   importsRenderer: false,
   importsCompositor: false,
   importsController: false,
+  importsGeometry: false,
 
   boundary: Object.freeze({
     materialPortOnly: true,
-    renumerizationPortOnly: true,
+    trueMaterialResolver: true,
     webglMaterialClaim: false,
     canvasClaim: false,
     physicalMaterialValidationClaim: false,
@@ -1203,39 +809,27 @@ export const H_EARTH_3D_RENDER_MATERIAL_PORT = Object.freeze({
   contract: H_EARTH_3D_RENDER_MATERIAL_PORT_CONTRACT,
   classMap: H_EARTH_3D_RENDER_MATERIAL_CLASS_MAP,
   materialClassMap: H_EARTH_3D_RENDER_MATERIAL_CLASS_MAP,
-  primitiveClassMap: H_EARTH_3D_RENDER_PRIMITIVE_CLASS_MAP,
-  landscapeClassMap: H_EARTH_3D_RENDER_LANDSCAPE_CLASS_MAP,
   parentPrimitiveToMaterialKey: H_EARTH_3D_RENDER_PARENT_PRIMITIVE_TO_MATERIAL_KEY,
-  contextClassMap: H_EARTH_3D_RENDER_CONTEXT_CLASS_MAP,
-  classPolicy: H_EARTH_3D_RENDER_CLASS_POLICY,
+  childPrimitiveToMaterialKey: H_EARTH_3D_RENDER_CHILD_PRIMITIVE_TO_MATERIAL_KEY,
+  policy: H_EARTH_3D_RENDER_MATERIAL_POLICY,
 
-  normalizeClassToken: normalizeHEarthClassToken,
-  normalizeClassArray: normalizeHEarthClassArray,
-  uniqueClassNames: uniqueHEarthClassNames,
-  joinClassNames: joinHEarthClassNames,
+  normalizeMaterialToken: normalizeHEarthMaterialToken,
+  normalizeClassArray: normalizeHEarthMaterialClassArray,
+  uniqueClassNames: uniqueHEarthMaterialClassNames,
+  joinClassNames: joinHEarthMaterialClassNames,
 
-  resolveObjectId: resolveHEarthObjectIdForNode,
-  resolveSourceObjectId: resolveHEarthSourceObjectIdForNode,
-  resolveParentObjectId: resolveHEarthParentObjectIdForNode,
-  getIdentityCandidates: getHEarthIdentityCandidatesForNode,
-  resolveNodeId: resolveHEarthNodeIdForNode,
-  resolveParentPrimitiveType: resolveHEarthParentPrimitiveTypeForNode,
-  resolvePrimitiveType: resolveHEarthPrimitiveTypeForNode,
-  resolveMaterialKey: resolveHEarthMaterialKeyForNode,
+  resolveObjectId: resolveHEarthMaterialObjectId,
+  resolveSourceObjectId: resolveHEarthMaterialSourceObjectId,
+  resolveParentObjectId: resolveHEarthMaterialParentObjectId,
+  resolveNodeId: resolveHEarthMaterialNodeId,
+  resolveParentPrimitiveType: resolveHEarthMaterialParentPrimitiveType,
+  resolveChildPrimitiveType: resolveHEarthMaterialChildPrimitiveType,
   resolveCanonicalMaterialKey: resolveHEarthCanonicalMaterialKeyForNode,
-  resolveLayerId: resolveHEarthLayerIdForNode,
-  resolveLayerMemberClassName: resolveHEarthLayerMemberClassNameForNode,
-  resolveClassification: resolveHEarthClassificationForNode,
-  resolveControllerTarget: resolveHEarthControllerTargetForNode,
+  resolveMaterialKey: resolveHEarthMaterialKeyForNode,
 
-  getObjectClassForNode: getHEarthObjectClassForNode,
-  getGeometryClassForNode: getHEarthGeometryClassForNode,
+  getMaterialDefinition: getHEarthMaterialDefinition,
+  getGeometryProvidedMaterialClasses: getHEarthGeometryProvidedMaterialClasses,
   getMaterialClassForNode: getHEarthMaterialClassForNode,
-  getPrimitiveClassForNode: getHEarthPrimitiveClassForNode,
-  getLandscapeClassForNode: getHEarthLandscapeClassForNode,
-  getLayerClassForNode: getHEarthLayerClassForNode,
-  getContextClassForNode: getHEarthContextClassForNode,
-  getInteractionClassForNode: getHEarthInteractionClassForNode,
   getRenderClassesForNode: getHEarthRenderClassesForNode,
   getMaterialDataset: getHEarthMaterialDataset,
   getReceipt: getRenderMaterialPortReceipt,

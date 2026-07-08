@@ -1,31 +1,35 @@
 /*
   /showroom/globe/h-earth/index.css
   RENEWED FILE
-  H_EARTH_3D_ROUTE_SHELL_STYLE_FILE_BIRTH_STEP_030D_PUBLIC_SCENE_ROUTE_ADOPTION_v1
+  H_EARTH_3D_ROUTE_SHELL_STYLE_FILE_BIRTH_STEP_030E_SPATIAL_COMPOSITION_INSPECTION_SURFACE_v1
 
   Renews:
-  H_EARTH_3D_ROUTE_SHELL_STYLE_FILE_BIRTH_STEP_030C_WORLD_FIRST_VIEWPORT_AND_DEVELOPER_DRAWER_RESTRUCTURE_v1
-  H_EARTH_3D_ROUTE_SHELL_STYLE_FILE_BIRTH_STEP_030E_RENDER_OBJECT_CENTERING_AND_RECEIPT_COPY_UI_RENEWAL_v1
+  H_EARTH_3D_ROUTE_SHELL_STYLE_FILE_BIRTH_STEP_030D_PUBLIC_SCENE_ROUTE_ADOPTION_v1
 
   Companion HTML renewal:
   /showroom/globe/h-earth/index.html
-  H_EARTH_3D_ROUTE_SHELL_FILE_BIRTH_STEP_030D_PUBLIC_SCENE_ROUTE_ADOPTION_v1
+  H_EARTH_3D_ROUTE_SHELL_FILE_BIRTH_STEP_030E_SPATIAL_COMPOSITION_INSPECTION_SURFACE_v1
 
   Purpose:
-  Styles H-Earth as a public scene route, not a visible diagnostic document.
-  The renderer stage is the central public object. Status, Inspect Ground,
-  selected surface, and compact Ground Condition posture remain visible.
-  Full route facts, receipts, bootstrap debug, raw bridge payloads, boundary
-  flags, and index contract remain inside collapsed drawers.
+  Styles the public H-Earth route and adds a spatial composition inspection
+  surface so the route can answer why the visible output reads as a broken
+  2D map instead of a ground-level 3D universal landscape.
 
   Scope:
   CSS only.
-  No shell-owned scene objects.
-  No CSS-only false beach independent of renderer descriptors.
-  No WebGL, canvas, final-renderer, renderer-pass, visual-pass, validation,
-  production, traversal, survival simulation, swimming, fluid simulation,
-  manor interior, distant traversal, gameplay execution, runtime receipt
-  persistence, or matrix-collapse authority.
+  This file does not create the 3D environment.
+  This file styles shell, renderer mount, visible candidate descriptors,
+  diagnostics, copy surfaces, and spatial inspection panels.
+
+  Boundaries:
+  No WebGL activation.
+  No canvas activation.
+  No final-renderer claim.
+  No renderer-pass claim.
+  No visual-pass claim.
+  No validation claim.
+  No production claim.
+  No traversal or survival simulation claim.
 */
 
 :root {
@@ -262,15 +266,17 @@ summary:focus-visible {
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
 
-/* Public arrival */
+/* Shared panels */
 
 .h-earth-3d-arrival,
 .h-earth-3d-readout-card,
 .h-earth-3d-target-drawer,
 .h-earth-3d-developer-drawer,
+.h-earth-3d-spatial-inspector,
 .h-earth-3d-panel,
 .h-earth-3d-copy-toolbar,
-.h-earth-3d-claim-boundary {
+.h-earth-3d-claim-boundary,
+.h-earth-3d-spatial-diagnosis-card {
   border: 1px solid var(--h-earth-border);
   border-radius: var(--h-earth-radius-md);
   background:
@@ -281,6 +287,8 @@ summary:focus-visible {
   box-shadow: var(--h-earth-shadow-panel);
   backdrop-filter: blur(16px);
 }
+
+/* Public arrival */
 
 .h-earth-3d-arrival {
   display: grid;
@@ -443,9 +451,7 @@ summary:focus-visible {
 }
 
 .h-earth-3d-boot-ready .h-earth-3d-fallback {
-  border-color: rgba(174, 232, 194, 0.28);
-  background: rgba(7, 16, 25, 0.42);
-  color: rgba(174, 232, 194, 0.88);
+  display: none;
 }
 
 /* Scene overlay */
@@ -614,13 +620,19 @@ summary:focus-visible {
   line-height: 1.4;
 }
 
-/* Drawers */
+/* Spatial inspector */
 
-.h-earth-3d-target-drawer,
-.h-earth-3d-developer-drawer {
+.h-earth-3d-spatial-inspector {
   overflow: hidden;
+  border-color: rgba(149, 213, 232, 0.26);
+  background:
+    radial-gradient(circle at 8% 0%, rgba(149, 213, 232, 0.13), transparent 30rem),
+    radial-gradient(circle at 92% 18%, rgba(216, 189, 142, 0.12), transparent 30rem),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.025)),
+    rgba(7, 16, 25, 0.76);
 }
 
+.h-earth-3d-spatial-inspector-toggle,
 .h-earth-3d-target-drawer-toggle,
 .h-earth-3d-developer-drawer-toggle {
   min-height: 50px;
@@ -638,11 +650,13 @@ summary:focus-visible {
   list-style: none;
 }
 
+.h-earth-3d-spatial-inspector-toggle::-webkit-details-marker,
 .h-earth-3d-target-drawer-toggle::-webkit-details-marker,
 .h-earth-3d-developer-drawer-toggle::-webkit-details-marker {
   display: none;
 }
 
+.h-earth-3d-spatial-inspector-toggle::after,
 .h-earth-3d-target-drawer-toggle::after,
 .h-earth-3d-developer-drawer-toggle::after {
   content: "+";
@@ -657,9 +671,83 @@ summary:focus-visible {
   line-height: 1;
 }
 
+.h-earth-3d-spatial-inspector[open] > .h-earth-3d-spatial-inspector-toggle::after,
 .h-earth-3d-target-drawer[open] > .h-earth-3d-target-drawer-toggle::after,
 .h-earth-3d-developer-drawer[open] > .h-earth-3d-developer-drawer-toggle::after {
   content: "–";
+}
+
+.h-earth-3d-spatial-inspector-body {
+  display: grid;
+  gap: 14px;
+  padding: 0 14px 14px;
+}
+
+.h-earth-3d-spatial-diagnosis-card {
+  display: grid;
+  gap: 0.7rem;
+  padding: 14px;
+  box-shadow: none;
+}
+
+.h-earth-3d-spatial-diagnosis-copy {
+  margin: 0;
+  color: var(--h-earth-text-muted);
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+
+.h-earth-3d-landscape-diagnosis {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.h-earth-3d-diagnosis-tile {
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid rgba(149, 213, 232, 0.22);
+  border-radius: var(--h-earth-radius-md);
+  background:
+    linear-gradient(180deg, rgba(149, 213, 232, 0.09), rgba(149, 213, 232, 0.025)),
+    rgba(7, 16, 25, 0.48);
+}
+
+.h-earth-3d-diagnosis-tile b {
+  display: block;
+  color: var(--h-earth-text);
+  font-size: 0.84rem;
+  letter-spacing: 0.02em;
+}
+
+.h-earth-3d-diagnosis-tile span {
+  display: block;
+  margin-top: 4px;
+  color: var(--h-earth-text-muted);
+  font-size: 0.74rem;
+  line-height: 1.35;
+}
+
+.h-earth-3d-composition-readout {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(280px, 1fr));
+  gap: 14px;
+}
+
+.h-earth-3d-spatial-panel {
+  min-width: 0;
+}
+
+.h-earth-3d-spatial-output {
+  min-height: 190px;
+  max-height: 360px;
+}
+
+/* Drawers and developer diagnostics */
+
+.h-earth-3d-target-drawer,
+.h-earth-3d-developer-drawer {
+  overflow: hidden;
 }
 
 .h-earth-3d-target-panel {
@@ -1010,50 +1098,17 @@ summary:focus-visible {
 
 /* Layer classes */
 
-.h-earth-layer-distant-world-context {
-  z-index: 10;
-}
-
-.h-earth-layer-air-haze-light {
-  z-index: 20;
-  opacity: 0.72;
-}
-
-.h-earth-layer-water-surface-plane {
-  z-index: 30;
-}
-
-.h-earth-layer-nearshore-wave-band {
-  z-index: 40;
-}
-
-.h-earth-layer-shoreline-foam-line {
-  z-index: 50;
-}
-
-.h-earth-layer-manor-exterior-context {
-  z-index: 60;
-}
-
-.h-earth-layer-dry-sand-transition {
-  z-index: 70;
-}
-
-.h-earth-layer-foreground-wet-sand {
-  z-index: 80;
-}
-
-.h-earth-layer-tide-pools-stones-rocks-detail {
-  z-index: 90;
-}
-
-.h-earth-layer-inspection-anchor-overlay {
-  z-index: 100;
-}
-
-.h-earth-layer-unclassified-render {
-  z-index: 999;
-}
+.h-earth-layer-distant-world-context { z-index: 10; }
+.h-earth-layer-air-haze-light { z-index: 20; opacity: 0.72; }
+.h-earth-layer-water-surface-plane { z-index: 30; }
+.h-earth-layer-nearshore-wave-band { z-index: 40; }
+.h-earth-layer-shoreline-foam-line { z-index: 50; }
+.h-earth-layer-manor-exterior-context { z-index: 60; }
+.h-earth-layer-dry-sand-transition { z-index: 70; }
+.h-earth-layer-foreground-wet-sand { z-index: 80; }
+.h-earth-layer-tide-pools-stones-rocks-detail { z-index: 90; }
+.h-earth-layer-inspection-anchor-overlay { z-index: 100; }
+.h-earth-layer-unclassified-render { z-index: 999; }
 
 /* Material classes. Candidate tokens only. Not final material validation. */
 
@@ -1237,10 +1292,9 @@ summary:focus-visible {
     grid-template-columns: 1fr;
   }
 
-  .h-earth-3d-readout-facts {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
+  .h-earth-3d-readout-facts,
+  .h-earth-3d-landscape-diagnosis,
+  .h-earth-3d-composition-readout,
   .h-earth-3d-control-grid,
   .h-earth-3d-receipt-stack,
   .h-earth-3d-receipt-grid {
@@ -1375,21 +1429,9 @@ summary:focus-visible {
     text-overflow: ellipsis;
   }
 
-  .h-earth-3d-fallback {
-    left: 8px;
-    right: 8px;
-    bottom: 54px;
-    width: auto;
-    max-height: 58px;
-    padding: 7px 9px;
-    font-size: 0.68rem;
-    line-height: 1.28;
-    background: rgba(20, 20, 12, 0.58);
-  }
-
   .h-earth-3d-renderer-mount:empty::before {
     left: 10px;
-    bottom: 112px;
+    bottom: 72px;
     font-size: 0.62rem;
   }
 
@@ -1429,23 +1471,30 @@ summary:focus-visible {
     gap: 0.55rem;
   }
 
-  .h-earth-3d-readout-facts dt {
-    font-size: 0.58rem;
-  }
-
-  .h-earth-3d-readout-facts dd {
-    font-size: 0.74rem;
-  }
-
-  .h-earth-3d-readout-boundary {
-    font-size: 0.72rem;
-  }
-
+  .h-earth-3d-spatial-inspector-toggle,
   .h-earth-3d-target-drawer-toggle,
   .h-earth-3d-developer-drawer-toggle {
     min-height: 42px;
     padding: 10px 12px;
     font-size: 0.70rem;
+  }
+
+  .h-earth-3d-spatial-inspector-body {
+    padding: 0 10px 10px;
+  }
+
+  .h-earth-3d-landscape-diagnosis,
+  .h-earth-3d-composition-readout {
+    grid-template-columns: 1fr;
+  }
+
+  .h-earth-3d-spatial-output,
+  .h-earth-3d-inspection-panel,
+  .h-earth-3d-debug,
+  .h-earth-3d-receipt-output {
+    min-height: 220px;
+    max-height: 58svh;
+    font-size: 0.72rem;
   }
 
   .h-earth-3d-copy-actions {
@@ -1455,14 +1504,6 @@ summary:focus-visible {
 
   .h-earth-3d-copy-button {
     width: 100%;
-  }
-
-  .h-earth-3d-inspection-panel,
-  .h-earth-3d-debug,
-  .h-earth-3d-receipt-output {
-    min-height: 220px;
-    max-height: 58svh;
-    font-size: 0.72rem;
   }
 
   .h-earth-3d-target-list {

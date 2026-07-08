@@ -1,32 +1,37 @@
 /*
   /showroom/globe/h-earth/index.css
   COMPLETE RENEWED FILE
-  H_EARTH_3D_ROUTE_SHELL_STYLE_FILE_BIRTH_STEP_030F_GROUND_LEVEL_LANDSCAPE_VISUAL_INTERPRETATION_v1
+  H_EARTH_3D_ROUTE_SHELL_STYLE_FILE_BIRTH_STEP_030G_REPORT_LAYER_SCENE_FIRST_DIAGNOSTIC_MATURITY_v1
 
   Renews:
+  H_EARTH_3D_ROUTE_SHELL_STYLE_FILE_BIRTH_STEP_030F_GROUND_LEVEL_LANDSCAPE_VISUAL_INTERPRETATION_v1
   H_EARTH_3D_ROUTE_SHELL_STYLE_FILE_BIRTH_STEP_030E_SPATIAL_COMPOSITION_INSPECTION_SURFACE_v1
 
   Companion route shell:
   /showroom/globe/h-earth/index.html
-  H_EARTH_3D_ROUTE_SHELL_FILE_BIRTH_STEP_030E_SPATIAL_COMPOSITION_INSPECTION_SURFACE_v1
+  H_EARTH_3D_ROUTE_SHELL_FILE_BIRTH_STEP_030G_REPORT_LAYER_SCENE_FIRST_DIAGNOSTIC_MATURITY_v1
 
-  Upstream renderer confirmed:
-  /showroom/globe/h-earth/renderer.js
-  H_EARTH_3D_RENDERER_FILE_BIRTH_STEP_023C_LANDSCAPE_GRADE_DOM_CSS3D_PROJECTION_RENEWAL_v1
+  Active report principle:
+  Receipts prove.
+  Reports diagnose.
+  Scene remains primary.
 
   Purpose:
-  Preserve the public route shell and diagnostic surfaces while changing the
-  visual interpretation of renderer-owned DOM/CSS-3D candidate descriptors
-  from a flat inspection-map / stacked-band reading into a ground-level
-  shoreline landscape candidate.
+  Preserve the public H-Earth scene route, renderer mount, HUD, readout,
+  drawer system, raw receipt copy surface, and candidate DOM/CSS-3D visual
+  interpretation while adding the 030G compact operational report layer.
+
+  This file demotes raw receipt/evidence panels to advanced secondary access
+  and styles operational report cards as an early-warning break-location
+  control surface.
 
   Scope:
   CSS only.
   This file does not create the 3D environment.
-  This file does not change compositor, renderer, controller, capacity, or
-  environment logic.
-  This file styles shell, renderer mount, visible candidate descriptors,
-  diagnostics, copy surfaces, spatial inspection panels, and renderer-owned
+  This file does not change compositor, renderer, controller, capacity,
+  environment, geometry, or route bootstrap logic.
+  This file styles shell, renderer mount, public scene surfaces, operational
+  reports, advanced raw evidence, diagnostics, copy surfaces, and renderer-owned
   candidate nodes.
 
   Boundaries:
@@ -38,6 +43,7 @@
   No validation claim.
   No production claim.
   No traversal or survival simulation claim.
+  No Mirror Manor route-canon naming claim.
 */
 
 :root {
@@ -62,6 +68,13 @@
   --h-earth-ready: #aee8c2;
   --h-earth-fallback: #f2d492;
   --h-earth-error: #ffb0a3;
+
+  --h-earth-report-pass: #aee8c2;
+  --h-earth-report-watch: #f2d492;
+  --h-earth-report-gap: #ffb0a3;
+  --h-earth-report-info: #95d5e8;
+  --h-earth-report-muted: #a8bac4;
+  --h-earth-report-blocking: #ff8f7e;
 
   --h-earth-stage-width: min(100%, 1320px);
   --h-earth-stage-height: clamp(700px, 80vh, 940px);
@@ -279,6 +292,7 @@ summary:focus-visible {
 .h-earth-3d-target-drawer,
 .h-earth-3d-developer-drawer,
 .h-earth-3d-spatial-inspector,
+.h-earth-3d-operational-reports,
 .h-earth-3d-panel,
 .h-earth-3d-copy-toolbar,
 .h-earth-3d-claim-boundary,
@@ -644,16 +658,288 @@ summary:focus-visible {
   line-height: 1.4;
 }
 
-/* Spatial inspector and diagnostics */
+/* 030G operational report layer */
+
+.h-earth-3d-operational-reports {
+  display: grid;
+  gap: 0.78rem;
+  padding: clamp(0.9rem, 2vw, 1.2rem);
+  border-color: rgba(149, 213, 232, 0.24);
+  background:
+    radial-gradient(circle at 8% 0%, rgba(149, 213, 232, 0.11), transparent 28rem),
+    radial-gradient(circle at 92% 18%, rgba(216, 189, 142, 0.08), transparent 30rem),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.022)),
+    rgba(7, 16, 25, 0.72);
+}
+
+.h-earth-3d-operational-reports-header {
+  display: flex;
+  gap: 0.9rem;
+  align-items: end;
+  justify-content: space-between;
+}
+
+.h-earth-3d-operational-reports-header > div:first-child {
+  display: grid;
+  gap: 0.45rem;
+  min-width: 0;
+}
+
+.h-earth-3d-operational-reports-copy {
+  max-width: 980px;
+  margin: 0;
+  color: var(--h-earth-text-muted);
+  font-size: 0.88rem;
+  line-height: 1.42;
+}
+
+.h-earth-3d-report-layer-status {
+  flex: 0 0 auto;
+  max-width: min(420px, 42vw);
+  padding: 0.58rem 0.72rem;
+  border: 1px solid rgba(149, 213, 232, 0.28);
+  border-radius: 999px;
+  background: rgba(149, 213, 232, 0.08);
+  color: var(--h-earth-accent);
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.h-earth-3d-report-layer {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.62rem;
+}
+
+.h-earth-3d-report-card {
+  display: grid;
+  gap: 0.54rem;
+  min-width: 0;
+  min-height: 0;
+  padding: 0.74rem;
+  border: 1px solid rgba(221, 234, 239, 0.15);
+  border-radius: var(--h-earth-radius-md);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.018)),
+    rgba(4, 12, 18, 0.58);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.045);
+}
+
+.h-earth-3d-report-card-header {
+  display: flex;
+  gap: 0.55rem;
+  align-items: start;
+  justify-content: space-between;
+}
+
+.h-earth-3d-report-card-header h3 {
+  min-width: 0;
+  margin: 0;
+  color: var(--h-earth-text);
+  font-size: 0.82rem;
+  line-height: 1.1;
+  letter-spacing: -0.018em;
+}
+
+.h-earth-3d-report-card-header span {
+  flex: 0 0 auto;
+  max-width: 8.5rem;
+  padding: 0.22rem 0.4rem;
+  border: 1px solid rgba(149, 213, 232, 0.26);
+  border-radius: 999px;
+  background: rgba(149, 213, 232, 0.08);
+  color: var(--h-earth-report-info);
+  font-size: 0.56rem;
+  font-weight: 950;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.h-earth-3d-report-status {
+  margin: 0;
+  color: var(--h-earth-accent);
+  font-size: 0.62rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  line-height: 1.28;
+  text-transform: uppercase;
+  overflow-wrap: anywhere;
+}
+
+.h-earth-3d-report-summary {
+  margin: 0;
+  color: var(--h-earth-text-muted);
+  font-size: 0.76rem;
+  line-height: 1.36;
+}
+
+.h-earth-3d-report-meta {
+  display: grid;
+  gap: 0.34rem;
+  margin: 0;
+  padding: 0.54rem 0 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.h-earth-3d-report-meta div {
+  display: grid;
+  grid-template-columns: 4.9rem minmax(0, 1fr);
+  gap: 0.46rem;
+  min-width: 0;
+}
+
+.h-earth-3d-report-meta dt {
+  color: var(--h-earth-text-dim);
+  font-size: 0.56rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.h-earth-3d-report-meta dd {
+  margin: 0;
+  color: var(--h-earth-text-muted);
+  font-size: 0.64rem;
+  line-height: 1.28;
+  overflow-wrap: anywhere;
+}
+
+.h-earth-3d-report-card .h-earth-3d-inline-copy-button {
+  width: fit-content;
+  min-height: 28px;
+  padding: 0.34rem 0.48rem;
+  font-size: 0.62rem;
+}
+
+.h-earth-3d-report-stack-copy-row {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.h-earth-3d-report-stack-payload[hidden] {
+  display: none;
+}
+
+/* Report severity states */
+
+.h-earth-3d-report-card[data-h-earth-report-severity="PASS"] {
+  border-color: rgba(174, 232, 194, 0.30);
+  background:
+    linear-gradient(180deg, rgba(174, 232, 194, 0.08), rgba(255, 255, 255, 0.016)),
+    rgba(4, 12, 18, 0.58);
+}
+
+.h-earth-3d-report-card[data-h-earth-report-severity="PASS"] .h-earth-3d-report-card-header span,
+.h-earth-3d-report-card[data-h-earth-report-severity="PASS"] .h-earth-3d-report-status {
+  color: var(--h-earth-report-pass);
+}
+
+.h-earth-3d-report-card[data-h-earth-report-severity="WATCH"] {
+  border-color: rgba(242, 212, 146, 0.32);
+  background:
+    linear-gradient(180deg, rgba(242, 212, 146, 0.075), rgba(255, 255, 255, 0.016)),
+    rgba(4, 12, 18, 0.58);
+}
+
+.h-earth-3d-report-card[data-h-earth-report-severity="WATCH"] .h-earth-3d-report-card-header span,
+.h-earth-3d-report-card[data-h-earth-report-severity="WATCH"] .h-earth-3d-report-status {
+  color: var(--h-earth-report-watch);
+}
+
+.h-earth-3d-report-card[data-h-earth-report-severity="UNPROVEN"],
+.h-earth-3d-report-card[data-h-earth-report-severity="NOT_EXPOSED"] {
+  border-color: rgba(149, 213, 232, 0.24);
+  background:
+    linear-gradient(180deg, rgba(149, 213, 232, 0.065), rgba(255, 255, 255, 0.014)),
+    rgba(4, 12, 18, 0.56);
+}
+
+.h-earth-3d-report-card[data-h-earth-report-severity="UNPROVEN"] .h-earth-3d-report-card-header span,
+.h-earth-3d-report-card[data-h-earth-report-severity="UNPROVEN"] .h-earth-3d-report-status,
+.h-earth-3d-report-card[data-h-earth-report-severity="NOT_EXPOSED"] .h-earth-3d-report-card-header span,
+.h-earth-3d-report-card[data-h-earth-report-severity="NOT_EXPOSED"] .h-earth-3d-report-status {
+  color: var(--h-earth-report-info);
+}
+
+.h-earth-3d-report-card[data-h-earth-report-severity="GAP"],
+.h-earth-3d-report-card[data-h-earth-report-severity="HIGH"] {
+  border-color: rgba(255, 176, 163, 0.34);
+  background:
+    linear-gradient(180deg, rgba(255, 176, 163, 0.085), rgba(255, 255, 255, 0.016)),
+    rgba(4, 12, 18, 0.58);
+}
+
+.h-earth-3d-report-card[data-h-earth-report-severity="GAP"] .h-earth-3d-report-card-header span,
+.h-earth-3d-report-card[data-h-earth-report-severity="GAP"] .h-earth-3d-report-status,
+.h-earth-3d-report-card[data-h-earth-report-severity="HIGH"] .h-earth-3d-report-card-header span,
+.h-earth-3d-report-card[data-h-earth-report-severity="HIGH"] .h-earth-3d-report-status {
+  color: var(--h-earth-report-gap);
+}
+
+.h-earth-3d-report-card[data-h-earth-report-severity="BLOCKING"] {
+  border-color: rgba(255, 143, 126, 0.54);
+  background:
+    linear-gradient(180deg, rgba(255, 143, 126, 0.13), rgba(255, 255, 255, 0.018)),
+    rgba(4, 12, 18, 0.62);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.045),
+    0 0 0 1px rgba(255, 143, 126, 0.08);
+}
+
+.h-earth-3d-report-card[data-h-earth-report-severity="BLOCKING"] .h-earth-3d-report-card-header span,
+.h-earth-3d-report-card[data-h-earth-report-severity="BLOCKING"] .h-earth-3d-report-status {
+  color: var(--h-earth-report-blocking);
+}
+
+.h-earth-3d-operational-reports[data-h-earth-report-severity="PASS"] .h-earth-3d-report-layer-status {
+  border-color: rgba(174, 232, 194, 0.36);
+  color: var(--h-earth-report-pass);
+  background: rgba(174, 232, 194, 0.08);
+}
+
+.h-earth-3d-operational-reports[data-h-earth-report-severity="WATCH"] .h-earth-3d-report-layer-status {
+  border-color: rgba(242, 212, 146, 0.38);
+  color: var(--h-earth-report-watch);
+  background: rgba(242, 212, 146, 0.08);
+}
+
+.h-earth-3d-operational-reports[data-h-earth-report-severity="UNPROVEN"] .h-earth-3d-report-layer-status,
+.h-earth-3d-operational-reports[data-h-earth-report-severity="NOT_EXPOSED"] .h-earth-3d-report-layer-status {
+  border-color: rgba(149, 213, 232, 0.34);
+  color: var(--h-earth-report-info);
+  background: rgba(149, 213, 232, 0.08);
+}
+
+.h-earth-3d-operational-reports[data-h-earth-report-severity="GAP"] .h-earth-3d-report-layer-status,
+.h-earth-3d-operational-reports[data-h-earth-report-severity="HIGH"] .h-earth-3d-report-layer-status,
+.h-earth-3d-operational-reports[data-h-earth-report-severity="BLOCKING"] .h-earth-3d-report-layer-status {
+  border-color: rgba(255, 176, 163, 0.44);
+  color: var(--h-earth-report-gap);
+  background: rgba(255, 176, 163, 0.08);
+}
+
+/* Advanced raw evidence and diagnostics */
 
 .h-earth-3d-spatial-inspector {
   overflow: hidden;
-  border-color: rgba(149, 213, 232, 0.26);
+  border-color: rgba(149, 213, 232, 0.20);
   background:
-    radial-gradient(circle at 8% 0%, rgba(149, 213, 232, 0.13), transparent 30rem),
-    radial-gradient(circle at 92% 18%, rgba(216, 189, 142, 0.12), transparent 30rem),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.025)),
-    rgba(7, 16, 25, 0.76);
+    radial-gradient(circle at 8% 0%, rgba(149, 213, 232, 0.10), transparent 30rem),
+    radial-gradient(circle at 92% 18%, rgba(216, 189, 142, 0.09), transparent 30rem),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.020)),
+    rgba(7, 16, 25, 0.70);
+}
+
+.h-earth-3d-advanced-spatial-evidence {
+  box-shadow: none;
 }
 
 .h-earth-3d-spatial-inspector-toggle,
@@ -752,7 +1038,8 @@ summary:focus-visible {
   line-height: 1.35;
 }
 
-.h-earth-3d-composition-readout {
+.h-earth-3d-composition-readout,
+.h-earth-3d-raw-evidence-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(280px, 1fr));
   gap: 14px;
@@ -1052,7 +1339,7 @@ summary:focus-visible {
   backface-visibility: visible;
 }
 
-/* Renderer descriptor scale rules */
+/* Renderer descriptor scale rules. Preserved from 030F; not visually rewritten in 030G. */
 
 .h-earth-layer-water-surface-plane .h-earth-render-object,
 .h-earth-material-water {
@@ -1345,6 +1632,12 @@ summary:focus-visible {
 
 /* Responsive */
 
+@media (max-width: 1260px) {
+  .h-earth-3d-report-layer {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 @media (max-width: 1120px) {
   .h-earth-3d-public-header,
   .h-earth-3d-arrival {
@@ -1362,6 +1655,7 @@ summary:focus-visible {
   .h-earth-3d-readout-facts,
   .h-earth-3d-landscape-diagnosis,
   .h-earth-3d-composition-readout,
+  .h-earth-3d-raw-evidence-grid,
   .h-earth-3d-control-grid,
   .h-earth-3d-receipt-stack,
   .h-earth-3d-receipt-grid {
@@ -1543,6 +1837,82 @@ summary:focus-visible {
     gap: 0.55rem;
   }
 
+  .h-earth-3d-operational-reports {
+    padding: 0.72rem;
+    border-radius: 18px;
+  }
+
+  .h-earth-3d-operational-reports-header {
+    display: grid;
+    gap: 0.62rem;
+    align-items: start;
+  }
+
+  .h-earth-3d-report-layer-status {
+    max-width: 100%;
+    width: fit-content;
+    font-size: 0.58rem;
+  }
+
+  .h-earth-3d-operational-reports-copy {
+    font-size: 0.78rem;
+    line-height: 1.34;
+  }
+
+  .h-earth-3d-report-layer {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+
+  .h-earth-3d-report-card {
+    gap: 0.42rem;
+    padding: 0.62rem;
+    border-radius: 14px;
+  }
+
+  .h-earth-3d-report-card-header h3 {
+    font-size: 0.76rem;
+  }
+
+  .h-earth-3d-report-card-header span {
+    max-width: 7rem;
+    font-size: 0.50rem;
+  }
+
+  .h-earth-3d-report-status {
+    font-size: 0.56rem;
+  }
+
+  .h-earth-3d-report-summary {
+    font-size: 0.70rem;
+    line-height: 1.30;
+  }
+
+  .h-earth-3d-report-meta {
+    gap: 0.22rem;
+  }
+
+  .h-earth-3d-report-meta div {
+    grid-template-columns: 4.4rem minmax(0, 1fr);
+    gap: 0.32rem;
+  }
+
+  .h-earth-3d-report-meta dt {
+    font-size: 0.50rem;
+  }
+
+  .h-earth-3d-report-meta dd {
+    font-size: 0.58rem;
+  }
+
+  .h-earth-3d-report-stack-copy-row {
+    justify-content: stretch;
+  }
+
+  .h-earth-3d-report-stack-copy-row .h-earth-3d-copy-button {
+    width: 100%;
+  }
+
   .h-earth-3d-spatial-inspector-toggle,
   .h-earth-3d-target-drawer-toggle,
   .h-earth-3d-developer-drawer-toggle {
@@ -1556,7 +1926,8 @@ summary:focus-visible {
   }
 
   .h-earth-3d-landscape-diagnosis,
-  .h-earth-3d-composition-readout {
+  .h-earth-3d-composition-readout,
+  .h-earth-3d-raw-evidence-grid {
     grid-template-columns: 1fr;
   }
 
@@ -1632,9 +2003,14 @@ summary:focus-visible {
     width: 100%;
   }
 
-  .h-earth-3d-readout-facts div {
+  .h-earth-3d-readout-facts div,
+  .h-earth-3d-report-meta div {
     grid-template-columns: 1fr;
     gap: 1px;
+  }
+
+  .h-earth-3d-copy-actions {
+    grid-template-columns: 1fr;
   }
 }
 

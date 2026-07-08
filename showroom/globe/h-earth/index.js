@@ -1,37 +1,51 @@
-// /showroom/globe/h-earth/index.js
-// RENEWED FILE
-// H_EARTH_3D_INDEX_BOOTSTRAP_FILE_BIRTH_STEP_029D_RUNTIME_FAILURE_CODE_CLEANUP_v1
-//
-// Renews:
-// H_EARTH_3D_INDEX_BOOTSTRAP_FILE_BIRTH_STEP_029C_MOUNT_RECEIPT_STATUS_CLEANUP_v1
-//
-// Purpose:
-// Defines the H-Earth 3D Candidate Preview route bootstrap and
-// route-side activation orchestrator.
-//
-// Renewal scope:
-// - Preserve Step 029C canon export alignment.
-// - Preserve recovered INDEX_029B_ALLOWED_IMPORTS.
-// - Preserve Step 023A aggregate renderer mount/destroy API preference.
-// - Preserve renderer mount status handling from mount receipt.
-// - Preserve renderer destroy status handling from destroy receipt.
-// - Add runtime failure-code reporting for renderer mount fallback.
-// - Preserve descriptor-ready no-renderer-API fallback as warning-only.
-// - Preserve actual fallback failure code when renderer API exists but mount fails.
-// - Preserve external route autostart discipline through index.html.
-// - Preserve HTML/CSS shell compatibility.
-// - Preserve all no-WebGL, no-canvas, no-final-renderer, no-renderer-pass,
-//   no-visual-pass, no-validation, no-production, no-traversal,
-//   no-simulation, and no-matrix-collapse boundaries.
-//
-// This file may lawfully touch the route page and bind DOM controls,
-// but only inside the authorized DOM/CSS-3D candidate boundary.
-//
-// This file does not mutate GitHub, create WebGL/canvas, claim final renderer,
-// claim renderer pass, claim visual pass, claim validation, claim production,
-// create open-world traversal, create survival simulation, authorize swimming
-// or fluid simulation, authorize manor interior, authorize distant traversal,
-// or collapse matrices.
+/*
+  /showroom/globe/h-earth/index.js
+  RENEWED FILE
+  H_EARTH_3D_INDEX_BOOTSTRAP_FILE_BIRTH_STEP_029E_SPATIAL_RECEIPT_EXPOSURE_v1
+
+  Renews:
+  H_EARTH_3D_INDEX_BOOTSTRAP_FILE_BIRTH_STEP_029D_RUNTIME_FAILURE_CODE_CLEANUP_v1
+
+  Purpose:
+  Defines the H-Earth 3D Candidate Preview route bootstrap and route-side
+  activation orchestrator.
+
+  Step 029E renewal purpose:
+  Exposes the spatial diagnostic evidence already imported by this file so the
+  route can answer whether the visible result is being produced as a ground-level
+  3D landscape, overhead map, centered diagram, or broken projection.
+
+  Renewal scope:
+  - Preserve Step 029D runtime failure-code cleanup.
+  - Preserve external route autostart discipline through index.html.
+  - Preserve renderer mount status handling from mount receipt.
+  - Preserve HTML/CSS shell compatibility.
+  - Add spatial diagnostic receipt exposure for:
+    - H_EARTH_3D_COMPOSED_CANDIDATE_FRAME
+    - H_EARTH_3D_COMPOSITOR_RECEIPT
+    - H_EARTH_3D_CANDIDATE_RENDER_SCENE
+    - H_EARTH_3D_RENDER_VOLUME_MODEL
+    - H_EARTH_3D_RENDERER_RECEIPT
+    - H_EARTH_3D_ENVIRONMENT_RECEIPT
+    - mounted renderer receipt summary
+  - Write spatial diagnostic payloads into existing Step 030E HTML inspection
+    surfaces when those nodes exist.
+  - No rendering behavior change.
+  - No compositor logic change.
+  - No environment mutation.
+  - No renderer mutation.
+  - No controller mutation.
+  - No CSS/HTML scene invention.
+  - No claim upgrade.
+
+  Boundaries:
+  This file may lawfully touch the route page and bind DOM controls only inside
+  the authorized DOM/CSS-3D candidate boundary. It does not mutate GitHub,
+  create WebGL/canvas, claim final renderer, claim renderer pass, claim visual
+  pass, claim validation, claim production, create open-world traversal, create
+  survival simulation, authorize swimming or fluid simulation, authorize manor
+  interior, authorize distant traversal, or collapse matrices.
+*/
 
 import {
   H_EARTH_3D_CAPACITY,
@@ -84,13 +98,12 @@ import {
   getControllerTargetClassification,
   resolveInspectGroundControllerBridge,
   resolveGroundConditionReadBridge,
-  resolveBlockedBehaviorResponse,
   getControllerReceipt
 } from './controller.js';
 
 export const H_EARTH_3D_INDEX_CONTRACT = Object.freeze({
-  contractId: 'H_EARTH_3D_INDEX_BOOTSTRAP_FILE_BIRTH_STEP_029D_RUNTIME_FAILURE_CODE_CLEANUP_v1',
-  renewedFrom: 'H_EARTH_3D_INDEX_BOOTSTRAP_FILE_BIRTH_STEP_029C_MOUNT_RECEIPT_STATUS_CLEANUP_v1',
+  contractId: 'H_EARTH_3D_INDEX_BOOTSTRAP_FILE_BIRTH_STEP_029E_SPATIAL_RECEIPT_EXPOSURE_v1',
+  renewedFrom: 'H_EARTH_3D_INDEX_BOOTSTRAP_FILE_BIRTH_STEP_029D_RUNTIME_FAILURE_CODE_CLEANUP_v1',
 
   file: '/showroom/globe/h-earth/index.js',
   route: '/showroom/globe/h-earth/',
@@ -107,17 +120,6 @@ export const H_EARTH_3D_INDEX_CONTRACT = Object.freeze({
   upstreamRendererFile: '/showroom/globe/h-earth/renderer.js',
   upstreamCompositorFile: '/showroom/globe/h-earth/compositor.js',
   upstreamControllerFile: '/showroom/globe/h-earth/controller.js',
-
-  upstreamCapacityContractId: 'H_EARTH_3D_CAPACITY_FILE_BIRTH_STEP_019_v1',
-  upstreamEnvironmentContractId:
-    'H_EARTH_3D_ENVIRONMENT_FILE_BIRTH_STEP_021A_RENEWAL_CLEANUP_PACKET_v1',
-  upstreamRendererContractId:
-    'H_EARTH_3D_RENDERER_FILE_BIRTH_STEP_023A_MOUNT_API_AND_RENDER_PORT_RENEWAL_PACKET_v1',
-  upstreamRendererRenewedFrom: 'H_EARTH_3D_RENDERER_FILE_BIRTH_STEP_023_v1',
-  upstreamCompositorContractId:
-    'H_EARTH_3D_COMPOSITOR_FILE_BIRTH_STEP_025A_RENEWAL_CLEANUP_PACKET_v1',
-  upstreamControllerContractId:
-    'H_EARTH_3D_CONTROLLER_FILE_BIRTH_STEP_027A_RENEWAL_CLEANUP_PACKET_v1',
 
   targetMatrix: 'H-Earth',
   matrixRole: 'Ground-View Matrix',
@@ -150,6 +152,13 @@ export const H_EARTH_3D_INDEX_CONTRACT = Object.freeze({
     cssCompatibilityPreserved: true,
     externalRouteAutostartPreserved: true,
     moduleLevelAutoStartAdded: false,
+    spatialReceiptExposureAdded: true,
+    spatialReceiptExposureOnly: true,
+    renderingBehaviorChanged: false,
+    compositorLogicChanged: false,
+    environmentMutation: false,
+    rendererMutation: false,
+    controllerMutation: false,
     redesignClaim: false
   }),
 
@@ -159,6 +168,7 @@ export const H_EARTH_3D_INDEX_CONTRACT = Object.freeze({
     initializesRouteStatus: true,
     mayBindSafeControllerControls: true,
     mayExposeDebugStatus: true,
+    mayExposeSpatialDiagnosticReceipts: true,
     mayCallRendererMountApiIfCanonExposed: true,
     mayUseNoMountFallbackIfRendererApiMissing: true,
 
@@ -262,6 +272,7 @@ export const H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS = Object.freeze({
   directDomControlBindingAllowedWithinCandidateBoundary: true,
   statusDomUpdateAllowedWithinCandidateBoundary: true,
   descriptorDisplayAllowedWithinCandidateBoundary: true,
+  spatialReceiptExposureAllowedWithinCandidateBoundary: true,
 
   rendererMountOnlyIfCanonApiExists: true,
   step023aRendererMountApiSupported: true,
@@ -316,6 +327,14 @@ export const H_EARTH_3D_ROUTE_MOUNT_CONTRACT = Object.freeze({
     targetList: 'h-earth-3d-target-list',
     debug: 'h-earth-3d-debug',
     inspectGroundAction: 'h-earth-3d-action-inspect-ground'
+  }),
+
+  spatialDiagnosticIds: Object.freeze({
+    spatialSummary: 'h-earth-3d-spatial-summary-payload',
+    composedFrame: 'h-earth-3d-composed-frame-payload',
+    compositorReceipt: 'h-earth-3d-compositor-receipt-payload',
+    rendererPlacement: 'h-earth-3d-renderer-placement-payload',
+    environmentPlacement: 'h-earth-3d-environment-placement-payload'
   }),
 
   classHooks: Object.freeze([
@@ -375,6 +394,7 @@ export const H_EARTH_3D_ROUTE_BOOTSTRAP_ORDER = Object.freeze([
   'record runtime failure code if renderer API exists but mount does not succeed',
   'bind safe inspection controls',
   'expose boot receipt/status',
+  'expose spatial diagnostic receipts',
   'fail safely if any required dependency is missing'
 ]);
 
@@ -435,9 +455,10 @@ function freezeStatus(status) {
     targetListBound: status.targetListBound === true,
     inspectGroundControlBound: status.inspectGroundControlBound === true,
     debugStatusExposed: status.debugStatusExposed === true,
+    spatialDiagnosticsExposed: status.spatialDiagnosticsExposed === true,
 
     selectedObjectId:
-      status.selectedObjectId || H_EARTH_3D_CONTROLLER.receipt.primaryInspectionTarget,
+      status.selectedObjectId || H_EARTH_3D_CONTROLLER_RECEIPT.primaryInspectionTarget,
 
     boundary: H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS
   });
@@ -462,6 +483,91 @@ function setRouteBootstrapStatus(nextStatus) {
   });
 
   return latestRouteBootstrapStatus;
+}
+
+function safeSerialize(value, options = {}) {
+  const maxDepth = Number.isFinite(options.maxDepth) ? options.maxDepth : 12;
+  const maxArrayLength = Number.isFinite(options.maxArrayLength) ? options.maxArrayLength : 256;
+  const seen = new WeakSet();
+
+  function visit(input, depth) {
+    if (input === null) return null;
+
+    const type = typeof input;
+
+    if (type === 'string' || type === 'number' || type === 'boolean') {
+      return input;
+    }
+
+    if (type === 'bigint') {
+      return String(input);
+    }
+
+    if (type === 'undefined') {
+      return null;
+    }
+
+    if (type === 'function') {
+      return `[Function ${input.name || 'anonymous'}]`;
+    }
+
+    if (depth > maxDepth) {
+      return '[MaxDepthExceeded]';
+    }
+
+    if (type === 'object') {
+      if (seen.has(input)) {
+        return '[Circular]';
+      }
+
+      seen.add(input);
+
+      if (Array.isArray(input)) {
+        return input.slice(0, maxArrayLength).map((item) => visit(item, depth + 1));
+      }
+
+      const output = {};
+
+      Object.keys(input).forEach((key) => {
+        if (key === 'mountNode' || key === 'routeRoot' || key === 'statusNode') {
+          output[key] = '[DOMNodeOmitted]';
+          return;
+        }
+
+        output[key] = visit(input[key], depth + 1);
+      });
+
+      return output;
+    }
+
+    return String(input);
+  }
+
+  return visit(value, 0);
+}
+
+function writeText(node, value) {
+  if (!node) return false;
+  node.textContent = String(value);
+  return true;
+}
+
+function writeJson(node, value) {
+  if (!node) return false;
+  node.textContent = JSON.stringify(safeSerialize(value), null, 2);
+  return true;
+}
+
+function addClass(node, className) {
+  if (!node || !node.classList) return false;
+  node.classList.add(className);
+  return true;
+}
+
+function removeClass(node, className) {
+  if (!node || !node.classList) return false;
+  node.classList.remove(className);
+  return true;
 }
 
 export function getRendererMountApi() {
@@ -547,7 +653,10 @@ export function verifyHEarthRouteBoundChain() {
 
     rendererVolumeModelPresent: Boolean(H_EARTH_3D_RENDER_VOLUME_MODEL),
     rendererPortsPresent: Boolean(H_EARTH_3D_RENDER_PORTS),
-    rendererInputSelectorPresent: typeof selectHEarthRenderInput === 'function'
+    rendererInputSelectorPresent: typeof selectHEarthRenderInput === 'function',
+
+    composedCandidateFramePresent: Boolean(H_EARTH_3D_COMPOSED_CANDIDATE_FRAME),
+    candidateRenderScenePresent: Boolean(H_EARTH_3D_CANDIDATE_RENDER_SCENE)
   });
 
   const failureCodes = [];
@@ -593,6 +702,11 @@ export function resolveHEarthRouteMountPoints(rootDocument = globalThis.document
       targetList: null,
       debug: null,
       inspectGroundAction: null,
+      spatialSummary: null,
+      composedFramePayload: null,
+      compositorReceiptPayload: null,
+      rendererPlacementPayload: null,
+      environmentPlacementPayload: null,
       strictRequiredFound: false,
       rendererMountFound: false,
       missingStrictRequiredIds: Object.freeze([
@@ -607,6 +721,7 @@ export function resolveHEarthRouteMountPoints(rootDocument = globalThis.document
   const strictIds = H_EARTH_3D_ROUTE_MOUNT_CONTRACT.strictRequiredIds;
   const conditionalIds = H_EARTH_3D_ROUTE_MOUNT_CONTRACT.conditionallyRequiredIds;
   const optionalIds = H_EARTH_3D_ROUTE_MOUNT_CONTRACT.optionalIds;
+  const spatialIds = H_EARTH_3D_ROUTE_MOUNT_CONTRACT.spatialDiagnosticIds;
 
   const routeRoot = rootDocument.getElementById(strictIds.routeRoot);
   const statusNode = rootDocument.getElementById(strictIds.status);
@@ -630,6 +745,13 @@ export function resolveHEarthRouteMountPoints(rootDocument = globalThis.document
     targetList: rootDocument.getElementById(optionalIds.targetList),
     debug: rootDocument.getElementById(optionalIds.debug),
     inspectGroundAction: rootDocument.getElementById(optionalIds.inspectGroundAction),
+
+    spatialSummary: rootDocument.getElementById(spatialIds.spatialSummary),
+    composedFramePayload: rootDocument.getElementById(spatialIds.composedFrame),
+    compositorReceiptPayload: rootDocument.getElementById(spatialIds.compositorReceipt),
+    rendererPlacementPayload: rootDocument.getElementById(spatialIds.rendererPlacement),
+    environmentPlacementPayload: rootDocument.getElementById(spatialIds.environmentPlacement),
+
     strictRequiredFound: missingStrictRequiredIds.length === 0,
     rendererMountFound: Boolean(rendererMount),
     missingStrictRequiredIds: Object.freeze(missingStrictRequiredIds),
@@ -637,28 +759,290 @@ export function resolveHEarthRouteMountPoints(rootDocument = globalThis.document
   });
 }
 
-function writeText(node, value) {
-  if (!node) return false;
-  node.textContent = String(value);
-  return true;
+function summarizeRendererMountReceipt(receipt) {
+  if (!receipt) return null;
+
+  return Object.freeze({
+    receiptType: receipt.receiptType || null,
+    rendererMounted: receipt.rendererMounted === true,
+    mounted: receipt.mounted === true,
+    mountAttempted: receipt.mountAttempted === true,
+    mountNodeAccepted: receipt.mountNodeAccepted === true,
+    mountNodeValid: receipt.mountNodeValid === true,
+    renderRootCreated: receipt.renderRootCreated === true,
+    layerContainerCount: receipt.layerContainerCount ?? receipt.layerCount ?? null,
+    selectedRenderInputSource: receipt.selectedRenderInputSource || null,
+    sourceDescriptorType: receipt.sourceDescriptorType || null,
+    usedComposedFrame: receipt.usedComposedFrame === true,
+    usedRenderSceneFallback: receipt.usedRenderSceneFallback === true,
+    sourceNodeCount: receipt.sourceNodeCount ?? null,
+    mountedNodeCount: receipt.mountedNodeCount ?? null,
+    objectNodeCount: receipt.objectNodeCount ?? null,
+    placedNodeCount: receipt.placedNodeCount ?? null,
+    skippedNodeCount: receipt.skippedNodeCount ?? null,
+    materialPortUsed: receipt.materialPortUsed === true,
+    layerPortUsed: receipt.layerPortUsed === true,
+    nodeFactoryPortUsed: receipt.nodeFactoryPortUsed === true,
+    warningCodes: Object.freeze([...(receipt.warningCodes || [])]),
+    failureCodes: Object.freeze([...(receipt.failureCodes || [])]),
+    claimBoundaryPreserved: receipt.claimBoundaryPreserved === true,
+    boundary: receipt.boundary || null
+  });
 }
 
-function writeJson(node, value) {
-  if (!node) return false;
-  node.textContent = JSON.stringify(value, null, 2);
-  return true;
+function extractComposedNodes(frame) {
+  if (!frame) return null;
+
+  if (Array.isArray(frame.composedNodes)) {
+    return frame.composedNodes;
+  }
+
+  if (Array.isArray(frame.nodes)) {
+    return frame.nodes;
+  }
+
+  if (Array.isArray(frame.candidateNodes)) {
+    return frame.candidateNodes;
+  }
+
+  return null;
 }
 
-function addClass(node, className) {
-  if (!node || !node.classList) return false;
-  node.classList.add(className);
-  return true;
+function summarizeComposedFrame(frame) {
+  if (!frame) return null;
+
+  const composedNodes = extractComposedNodes(frame);
+
+  return Object.freeze({
+    framePresent: true,
+    id: frame.id || frame.frameId || null,
+    status: frame.status || null,
+    matrix: frame.matrix || 'H-Earth',
+    matrixRole: frame.matrixRole || 'Ground-View Matrix',
+    sceneIdentity: frame.sceneIdentity || 'earth-water-air-survival-shoreline-manor',
+    primaryFocusObjectId:
+      frame.primaryFocusObjectId ||
+      frame.primaryObjectId ||
+      H_EARTH_3D_COMPOSITOR_RECEIPT?.primaryFocusObjectId ||
+      null,
+    composedNodeCount:
+      frame.composedNodeCount ??
+      frame.nodeCount ??
+      composedNodes?.length ??
+      H_EARTH_3D_COMPOSITOR_RECEIPT?.composedNodeCount ??
+      null,
+    composedNodes: composedNodes || null,
+    cameraFrame: frame.cameraFrame || frame.camera || null,
+    depthComposition: frame.depthComposition || frame.depth || null,
+    layerComposition: frame.layerComposition || frame.layers || null,
+    focusPriority: frame.focusPriority || frame.focusPriorityModel || null,
+    contextComposition: frame.contextComposition || null,
+    viewportFit: frame.viewportFit || frame.viewport || null,
+    compositionPressure:
+      frame.compositionPressure || frame.compositionPressureClass || null,
+    boundary: frame.boundary || H_EARTH_3D_COMPOSITION_BOUNDARY_FLAGS
+  });
 }
 
-function removeClass(node, className) {
-  if (!node || !node.classList) return false;
-  node.classList.remove(className);
-  return true;
+function summarizeEnvironmentPlacement(receipt = getEnvironmentReceipt()) {
+  if (!receipt) return null;
+
+  return Object.freeze({
+    receiptType: receipt.receiptType || null,
+    status: receipt.status || null,
+    matrix: receipt.matrix || 'H-Earth',
+    matrixRole: receipt.matrixRole || 'Ground-View Matrix',
+    activeCell: receipt.activeCell || 'H_EARTH_GROUND_CELL_001',
+    sceneIdentity: receipt.sceneIdentity || 'earth-water-air-survival-shoreline-manor',
+    coordinateSystemConsumed: receipt.coordinateSystemConsumed === true,
+    scaleModelConsumed: receipt.scaleModelConsumed === true,
+    worldBoundsConsumed: receipt.worldBoundsConsumed === true,
+    depthModelConsumed: receipt.depthModelConsumed === true,
+    zoneBandsConsumed: receipt.zoneBandsConsumed === true,
+    primitiveSchemaConsumed: receipt.primitiveSchemaConsumed === true,
+    materialIdentitiesConsumed: receipt.materialIdentitiesConsumed === true,
+    objectCapacityReferencesConsumed: receipt.objectCapacityReferencesConsumed === true,
+    candidatePlacementHintsConsumed: receipt.candidatePlacementHintsConsumed === true,
+    environmentalFormGrammarConsumed: receipt.environmentalFormGrammarConsumed === true,
+    cameraCapacityReferenced: receipt.cameraCapacityReferenced === true,
+    inspectionAnchorsConsumed: receipt.inspectionAnchorsConsumed === true,
+    resolvedObjects: receipt.resolvedObjects ?? null,
+    resolvedZones: receipt.resolvedZones ?? null,
+    resolvedInspectableAnchors: receipt.resolvedInspectableAnchors ?? null,
+    resolvedContextOnlyGuards: receipt.resolvedContextOnlyGuards ?? null,
+    resolvedMaterialChannels: receipt.resolvedMaterialChannels ?? null,
+    resolvedPrimitiveLinks: receipt.resolvedPrimitiveLinks ?? null,
+    environmentCoverageRatio: receipt.environmentCoverageRatio ?? null,
+    firstAction: receipt.firstAction || 'Inspect Ground',
+    firstReadout: receipt.firstReadout || 'Ground Condition Read',
+    firstReceipt: receipt.firstReceipt || 'H_EARTH_GROUND_INSPECTION_RECEIPT',
+    boundary: receipt.boundary || null
+  });
+}
+
+function summarizeRendererPlacement() {
+  return Object.freeze({
+    purpose:
+      'Determine whether renderer transform interpretation is flattening, centering, or correctly placing composed nodes.',
+    rendererReceipt: getRendererReceipt(),
+    renderVolumeModel: H_EARTH_3D_RENDER_VOLUME_MODEL,
+    renderPorts: H_EARTH_3D_RENDER_PORTS,
+    candidateRenderScene: H_EARTH_3D_CANDIDATE_RENDER_SCENE,
+    renderBoundaryFlags: H_EARTH_3D_RENDER_BOUNDARY_FLAGS,
+    mountedReceiptSummary: summarizeRendererMountReceipt(latestRouteBootstrapStatus.rendererMountReceipt)
+  });
+}
+
+export function buildHEarthSpatialDiagnosticReceipt(status = latestRouteBootstrapStatus) {
+  const composedFrameSummary = summarizeComposedFrame(H_EARTH_3D_COMPOSED_CANDIDATE_FRAME);
+  const compositorReceipt = getCompositorReceipt();
+  const environmentReceipt = getEnvironmentReceipt();
+  const rendererReceipt = getRendererReceipt();
+
+  return Object.freeze({
+    receiptType: 'H_EARTH_3D_SPATIAL_DIAGNOSTIC_RECEIPT',
+    file: '/showroom/globe/h-earth/index.js',
+    contractId: 'H_EARTH_3D_INDEX_BOOTSTRAP_FILE_BIRTH_STEP_029E_SPATIAL_RECEIPT_EXPOSURE_v1',
+    status: status.statusLevel,
+    purpose:
+      'Expose spatial receipts needed to determine whether H-Earth is composed as a ground-level 3D landscape, overhead map, centered diagram, or broken projection.',
+
+    currentVisualQuestion:
+      'Why does the visible result read like a broken 2D map instead of a ground-level 3D universal landscape?',
+
+    routeReady: Object.freeze({
+      chainReady: status.chainReady,
+      domReady: status.domReady,
+      controllerReady: status.controllerReady,
+      rendererMountReady: status.rendererMountReady,
+      bootstrapReadyCandidateOnly: status.bootstrapReadyCandidateOnly,
+      failureCodes: status.failureCodes,
+      warningCodes: status.warningCodes
+    }),
+
+    rendererMount: summarizeRendererMountReceipt(status.rendererMountReceipt),
+
+    spatialEvidence: Object.freeze({
+      composedCandidateFramePresent: Boolean(H_EARTH_3D_COMPOSED_CANDIDATE_FRAME),
+      composedCandidateFrame: H_EARTH_3D_COMPOSED_CANDIDATE_FRAME,
+      composedCandidateFrameSummary: composedFrameSummary,
+
+      compositorReceiptPresent: Boolean(compositorReceipt),
+      compositorReceipt,
+
+      candidateRenderScenePresent: Boolean(H_EARTH_3D_CANDIDATE_RENDER_SCENE),
+      candidateRenderScene: H_EARTH_3D_CANDIDATE_RENDER_SCENE,
+
+      renderVolumeModelPresent: Boolean(H_EARTH_3D_RENDER_VOLUME_MODEL),
+      renderVolumeModel: H_EARTH_3D_RENDER_VOLUME_MODEL,
+
+      rendererReceiptPresent: Boolean(rendererReceipt),
+      rendererReceipt,
+
+      environmentReceiptPresent: Boolean(environmentReceipt),
+      environmentReceipt,
+      environmentPlacementSummary: summarizeEnvironmentPlacement(environmentReceipt),
+
+      rendererPlacementEvidence: summarizeRendererPlacement()
+    }),
+
+    diagnosticQuestions: Object.freeze({
+      compositorProjection:
+        'Do composed nodes encode ground-level depth bands, or do they flatten into centered map geometry?',
+      rendererTransform:
+        'Does renderer transform interpretation preserve depth, layer, and scale, or center all objects as tokens?',
+      cssDescriptorStyling:
+        'Does CSS make landscape planes read as terrain, or does it turn them into map ovals and radar markers?',
+      upstreamModel:
+        'Does capacity/environment provide enough camera/depth/placement information for a true landscape projection?'
+    }),
+
+    nextDecisionRule: Object.freeze({
+      ifComposedNodesAreFlatOrCentered: 'Renew compositor projection/camera/depth model before CSS polish.',
+      ifComposedNodesHaveDepthButRendererFlattens: 'Renew renderer transform interpretation.',
+      ifRendererPlacementIsCorrectButVisualStillMapLike: 'Renew CSS descriptor material/shape styling.',
+      ifEnvironmentLacksGroundViewHints: 'Renew environment/capacity placement grammar with authority.'
+    }),
+
+    boundary: H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS
+  });
+}
+
+export function getSpatialDiagnosticReceipt() {
+  return buildHEarthSpatialDiagnosticReceipt(latestRouteBootstrapStatus);
+}
+
+export function renderHEarthSpatialDiagnosticSurfaces(mountPoints, status = latestRouteBootstrapStatus) {
+  if (!mountPoints) return false;
+
+  const spatialReceipt = buildHEarthSpatialDiagnosticReceipt(status);
+
+  const wroteSpatialSummary = writeJson(
+    mountPoints.spatialSummary,
+    spatialReceipt
+  );
+
+  const wroteComposedFrame = writeJson(
+    mountPoints.composedFramePayload,
+    Object.freeze({
+      receiptType: 'H_EARTH_3D_COMPOSED_CANDIDATE_FRAME_EXPOSURE',
+      file: '/showroom/globe/h-earth/index.js',
+      source: 'H_EARTH_3D_COMPOSED_CANDIDATE_FRAME',
+      purpose:
+        'Show the actual composed candidate frame consumed by the renderer, including composedNodes when present.',
+      composedCandidateFramePresent: Boolean(H_EARTH_3D_COMPOSED_CANDIDATE_FRAME),
+      composedCandidateFrameSummary: summarizeComposedFrame(H_EARTH_3D_COMPOSED_CANDIDATE_FRAME),
+      composedCandidateFrame: H_EARTH_3D_COMPOSED_CANDIDATE_FRAME,
+      boundary: H_EARTH_3D_COMPOSITION_BOUNDARY_FLAGS
+    })
+  );
+
+  const wroteCompositorReceipt = writeJson(
+    mountPoints.compositorReceiptPayload,
+    Object.freeze({
+      receiptType: 'H_EARTH_3D_COMPOSITOR_RECEIPT_EXPOSURE',
+      file: '/showroom/globe/h-earth/index.js',
+      source: 'getCompositorReceipt()',
+      purpose:
+        'Show compositor evidence for camera, depth, layer composition, viewport fit, primary focus, and composed frame resolution.',
+      compositorReceiptPresent: Boolean(getCompositorReceipt()),
+      compositorReceipt: getCompositorReceipt(),
+      compositorAggregate: H_EARTH_3D_COMPOSITOR,
+      compositionBoundaryFlags: H_EARTH_3D_COMPOSITION_BOUNDARY_FLAGS
+    })
+  );
+
+  const wroteRendererPlacement = writeJson(
+    mountPoints.rendererPlacementPayload,
+    Object.freeze({
+      receiptType: 'H_EARTH_3D_RENDERER_PLACEMENT_EVIDENCE_EXPOSURE',
+      file: '/showroom/globe/h-earth/index.js',
+      purpose:
+        'Show renderer, render volume, render scene, and mount receipt evidence needed to identify transform/placement flattening.',
+      rendererPlacementEvidence: summarizeRendererPlacement()
+    })
+  );
+
+  const wroteEnvironmentPlacement = writeJson(
+    mountPoints.environmentPlacementPayload,
+    Object.freeze({
+      receiptType: 'H_EARTH_3D_ENVIRONMENT_PLACEMENT_EVIDENCE_EXPOSURE',
+      file: '/showroom/globe/h-earth/index.js',
+      purpose:
+        'Show environment placement, depth, zone, camera, and material evidence before blaming CSS.',
+      environmentPlacementSummary: summarizeEnvironmentPlacement(getEnvironmentReceipt()),
+      environmentReceipt: getEnvironmentReceipt(),
+      environmentAggregate: H_EARTH_3D_ENVIRONMENT
+    })
+  );
+
+  return Boolean(
+    wroteSpatialSummary ||
+    wroteComposedFrame ||
+    wroteCompositorReceipt ||
+    wroteRendererPlacement ||
+    wroteEnvironmentPlacement
+  );
 }
 
 export function renderHEarthRouteStatus(mountPoints, status = latestRouteBootstrapStatus) {
@@ -697,7 +1081,15 @@ export function renderHEarthRouteStatus(mountPoints, status = latestRouteBootstr
     }
   }
 
-  writeJson(mountPoints.debug, status);
+  writeJson(
+    mountPoints.debug,
+    Object.freeze({
+      ...status,
+      spatialDiagnosticReceipt: buildHEarthSpatialDiagnosticReceipt(status)
+    })
+  );
+
+  renderHEarthSpatialDiagnosticSurfaces(mountPoints, status);
 
   return true;
 }
@@ -849,8 +1241,10 @@ export function bindHEarthInspectionControls(mountPoints) {
       writeJson(mountPoints.inspectionPanel, displayPayload);
       writeJson(mountPoints.debug, {
         ...latestRouteBootstrapStatus,
-        lastInspectGroundDescriptor: displayPayload
+        lastInspectGroundDescriptor: displayPayload,
+        spatialDiagnosticReceipt: buildHEarthSpatialDiagnosticReceipt(latestRouteBootstrapStatus)
       });
+      renderHEarthSpatialDiagnosticSurfaces(mountPoints, latestRouteBootstrapStatus);
     });
 
     inspectGroundControlBound = true;
@@ -1011,7 +1405,8 @@ export function initializeHEarthRoute(options = {}) {
       rendererMountSkipReason: strictFailure
         ? H_EARTH_3D_ROUTE_FAILURE_CODES.BOOTSTRAP_FALLBACK_ACTIVE
         : null,
-      rendererMountReceipt: null
+      rendererMountReceipt: null,
+      spatialDiagnosticsExposed: false
     });
 
     renderHEarthRouteStatus(mountPoints, failedStatus);
@@ -1071,6 +1466,14 @@ export function initializeHEarthRoute(options = {}) {
           .BOOTSTRAP_READY_DESCRIPTOR_ONLY_NO_RENDERER_MOUNT_API
       : rendererMount.statusLevel;
 
+  const spatialDiagnosticsExposed = Boolean(
+    mountPoints.spatialSummary ||
+    mountPoints.composedFramePayload ||
+    mountPoints.compositorReceiptPayload ||
+    mountPoints.rendererPlacementPayload ||
+    mountPoints.environmentPlacementPayload
+  );
+
   const nextStatus = setRouteBootstrapStatus({
     chainReady: chain.chainReady,
     domReady: mountPoints.strictRequiredFound,
@@ -1108,7 +1511,8 @@ export function initializeHEarthRoute(options = {}) {
 
     targetListBound: controllerBinding.targetListBound,
     inspectGroundControlBound: controllerBinding.inspectGroundControlBound,
-    debugStatusExposed: Boolean(mountPoints.debug)
+    debugStatusExposed: Boolean(mountPoints.debug),
+    spatialDiagnosticsExposed
   });
 
   renderHEarthRouteStatus(mountPoints, nextStatus);
@@ -1120,6 +1524,7 @@ export function initializeHEarthRoute(options = {}) {
     chain,
     controllerBinding,
     rendererMount,
+    spatialDiagnosticReceipt: buildHEarthSpatialDiagnosticReceipt(nextStatus),
     runtimeFailureCodes: Object.freeze(runtimeFailureCodes),
     renderInputSelector: selectHEarthRenderInput,
     boundary: H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS
@@ -1170,7 +1575,8 @@ export function destroyHEarthRoute(options = {}) {
       : H_EARTH_3D_ROUTE_FAILURE_CODES.RENDERER_DESTROY_FAILED,
     rendererMountError: rendererDestroyError,
     targetListBound: false,
-    inspectGroundControlBound: false
+    inspectGroundControlBound: false,
+    spatialDiagnosticsExposed: false
   });
 
   renderHEarthRouteStatus(mountPoints, nextStatus);
@@ -1190,8 +1596,8 @@ export function buildHEarthRouteBootstrapReceipt(status = latestRouteBootstrapSt
   return Object.freeze({
     receiptType: 'H_EARTH_3D_ROUTE_BOOTSTRAP_RECEIPT',
     file: '/showroom/globe/h-earth/index.js',
-    contractId: 'H_EARTH_3D_INDEX_BOOTSTRAP_FILE_BIRTH_STEP_029D_RUNTIME_FAILURE_CODE_CLEANUP_v1',
-    renewedFrom: 'H_EARTH_3D_INDEX_BOOTSTRAP_FILE_BIRTH_STEP_029C_MOUNT_RECEIPT_STATUS_CLEANUP_v1',
+    contractId: 'H_EARTH_3D_INDEX_BOOTSTRAP_FILE_BIRTH_STEP_029E_SPATIAL_RECEIPT_EXPOSURE_v1',
+    renewedFrom: 'H_EARTH_3D_INDEX_BOOTSTRAP_FILE_BIRTH_STEP_029D_RUNTIME_FAILURE_CODE_CLEANUP_v1',
     status: status.statusLevel,
 
     activationScope: 'AUTHORIZED_ROUTE_SIDE_CANDIDATE_ACTIVATION_DOM_CSS_3D_ONLY',
@@ -1203,6 +1609,8 @@ export function buildHEarthRouteBootstrapReceipt(status = latestRouteBootstrapSt
     upstreamRendererReceipt: getRendererReceipt(),
     upstreamCompositorReceipt: getCompositorReceipt(),
     upstreamControllerReceipt: getControllerReceipt(),
+
+    spatialDiagnosticReceipt: buildHEarthSpatialDiagnosticReceipt(status),
 
     upstreamRendererContractId:
       'H_EARTH_3D_RENDERER_FILE_BIRTH_STEP_023A_MOUNT_API_AND_RENDER_PORT_RENEWAL_PACKET_v1',
@@ -1223,7 +1631,8 @@ export function buildHEarthRouteBootstrapReceipt(status = latestRouteBootstrapSt
       noThrowDoesNotEqualMountSuccess: true,
       noThrowDoesNotEqualDestroySuccess: true,
       moduleLevelAutoStartAdded: false,
-      externalHtmlBootstrapCallExpected: true
+      externalHtmlBootstrapCallExpected: true,
+      spatialReceiptExposureAdded: true
     }),
 
     chainReady: status.chainReady,
@@ -1263,6 +1672,7 @@ export function buildHEarthRouteBootstrapReceipt(status = latestRouteBootstrapSt
     targetListBound: status.targetListBound,
     inspectGroundControlBound: status.inspectGroundControlBound,
     debugStatusExposed: status.debugStatusExposed,
+    spatialDiagnosticsExposed: status.spatialDiagnosticsExposed,
 
     firstAction: 'Inspect Ground',
     firstReadout: 'Ground Condition Read',
@@ -1283,6 +1693,7 @@ export function buildHEarthRouteBootstrapReceipt(status = latestRouteBootstrapSt
     boundary: Object.freeze({
       routeBootstrapOrchestrated: true,
       routeSideCandidateActivationDomCss3dOnly: true,
+      spatialReceiptExposureAllowed: true,
       step023aRendererMountApiSupported: true,
       aggregateRendererApiPreferred: true,
       namedRendererApiAllowed: true,
@@ -1351,6 +1762,12 @@ export const H_EARTH_3D_INDEX = Object.freeze({
   compositor: H_EARTH_3D_COMPOSITOR,
   controller: H_EARTH_3D_CONTROLLER,
 
+  capacityReceipt: H_EARTH_3D_CAPACITY_RECEIPT,
+  environmentReceipt: H_EARTH_3D_ENVIRONMENT_RECEIPT,
+  rendererReceipt: H_EARTH_3D_RENDERER_RECEIPT,
+  compositorReceipt: H_EARTH_3D_COMPOSITOR_RECEIPT,
+  controllerReceipt: H_EARTH_3D_CONTROLLER_RECEIPT,
+
   renderVolumeModel: H_EARTH_3D_RENDER_VOLUME_MODEL,
   renderPorts: H_EARTH_3D_RENDER_PORTS,
   candidateRenderScene: H_EARTH_3D_CANDIDATE_RENDER_SCENE,
@@ -1368,6 +1785,9 @@ export const H_EARTH_3D_INDEX = Object.freeze({
   getRouteBootstrapStatus,
   getIndexReceipt,
   getRouteBootstrapReceipt,
+  getSpatialDiagnosticReceipt,
+  buildHEarthSpatialDiagnosticReceipt,
+  renderHEarthSpatialDiagnosticSurfaces,
   getRendererMountApi,
   getRendererDestroyApi,
   getRendererMountApiSource,

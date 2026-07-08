@@ -1,39 +1,43 @@
 <!--
   /showroom/globe/h-earth/index.html
   RENEWED FILE
-  H_EARTH_3D_ROUTE_SHELL_FILE_BIRTH_STEP_030B_WORLD_FIRST_EXPERIENCE_RESTRUCTURE_v1
+  H_EARTH_3D_ROUTE_SHELL_FILE_BIRTH_STEP_030D_PUBLIC_SCENE_ROUTE_ADOPTION_v1
 
   Renews:
+  H_EARTH_3D_ROUTE_SHELL_FILE_BIRTH_STEP_030B_WORLD_FIRST_EXPERIENCE_RESTRUCTURE_v1
   H_EARTH_3D_ROUTE_SHELL_HTML_FILE_BIRTH_STEP_030B_RECEIPT_COPY_AND_DIAGNOSTIC_SURFACE_RENEWAL_v1
 
   Companion CSS renewal:
   /showroom/globe/h-earth/index.css
-  H_EARTH_3D_ROUTE_SHELL_STYLE_FILE_BIRTH_STEP_030C_WORLD_FIRST_VIEWPORT_AND_DEVELOPER_DRAWER_RESTRUCTURE_v1
+  H_EARTH_3D_ROUTE_SHELL_STYLE_FILE_BIRTH_STEP_030D_PUBLIC_SCENE_ROUTE_ADOPTION_v1
 
   Purpose:
-  Provides the H-Earth 3D Candidate Preview route shell as a world-first
-  candidate route experience. The renderer stage is the primary page surface.
-  Route status, Inspect Ground, selected target summary, and descriptor-only
-  Ground Condition Read are presented as compact player-facing surfaces.
-  Bootstrap debug, route receipts, renderer receipts, raw controller/readout
-  payloads, boundary flags, index contract, and copy controls are preserved
-  inside a developer drawer.
+  Reframes the H-Earth 3D Candidate Preview as a public scene route, not a
+  visible diagnostic document. The renderer stage is the central public object.
+  Status, Inspect Ground, selected surface, and a compact public ground readout
+  remain visible. Full target facts, raw readout payloads, receipts, bootstrap
+  debug, boundary flags, and index contract remain accessible only through
+  collapsed route/developer drawers.
 
-  Renewal scope:
-  - Preserve required route mount IDs consumed by index.js.
-  - Preserve renderer mount ID consumed by renderer/index chain.
-  - Preserve external route bootstrap discipline through module script call.
-  - Preserve receipt-copy capability.
-  - Move diagnostics and receipts to secondary developer drawer.
-  - Add world-first structural zones.
-  - Add player-facing descriptor-only Inspect Ground / Ground readout card.
-  - Keep the raw Ground Condition Read Bridge payload available for copy.
-  - Do not create scene objects in HTML.
-  - Do not create a CSS-only false beach.
-  - Do not introduce WebGL, canvas, final-renderer claim, renderer-pass claim,
-    visual-pass claim, validation claim, production claim, traversal, survival
-    simulation, swimming/fluid simulation, manor interior, distant traversal,
-    or matrix collapse.
+  Adoption basis:
+  - Developed route pattern: compact public arrival, central stage, primary
+    action surface, collapsed technical/diagnostic scope.
+  - Diagnostics remain available but do not dominate the public route flow.
+  - Receipts remain copyable but are not public-page content.
+
+  Boundaries:
+  - No shell-owned scene objects.
+  - No fake beach / false scene geometry in HTML.
+  - No WebGL activation.
+  - No canvas activation.
+  - No final-renderer claim.
+  - No renderer-pass claim.
+  - No visual-pass claim.
+  - No validation claim.
+  - No production claim.
+  - No traversal, survival simulation, swimming, fluid simulation, manor
+    interior, distant traversal, gameplay execution, runtime receipt
+    persistence, or matrix collapse.
 -->
 
 <!doctype html>
@@ -264,57 +268,71 @@
     id="h-earth-3d-route-root"
     class="h-earth-3d-route-root"
     data-h-earth-route="candidate-preview"
+    data-h-earth-page-mode="public-scene-route"
     data-h-earth-matrix="H-Earth"
     data-h-earth-matrix-role="Ground-View Matrix"
     data-h-earth-active-cell="H_EARTH_GROUND_CELL_001"
     data-h-earth-scene-identity="earth-water-air-survival-shoreline-manor"
     data-h-earth-matrix-collapse="false"
+    data-public-scene-route="true"
+    data-diagnostic-scope-collapsed="true"
+    data-receipt-scope-collapsed="true"
+    data-visible-diagnostic-wall="false"
   >
     <div class="h-earth-3d-shell">
-      <header class="h-earth-3d-header" aria-labelledby="h-earth-3d-title">
-        <section class="h-earth-3d-header-copy">
-          <p class="h-earth-3d-kicker">H-Earth · Ground-View Matrix</p>
+      <header class="h-earth-3d-public-header" aria-labelledby="h-earth-3d-title">
+        <a class="h-earth-3d-brand" href="/showroom/globe/" aria-label="Return to Globe">
+          <span class="h-earth-3d-brand-mark" aria-hidden="true"><span>H</span></span>
+          <span class="h-earth-3d-brand-copy">
+            <span>Ground-View Matrix</span>
+            <strong>H-Earth</strong>
+          </span>
+        </a>
+
+        <nav class="h-earth-3d-public-nav" aria-label="H-Earth route navigation">
+          <a href="/showroom/globe/">Globe</a>
+          <a href="/showroom/globe/hearth/">Hearth</a>
+          <a href="/showroom/globe/audralia/">Audralia</a>
+          <a href="/showroom/globe/hearth/diagnostic/">Control Room</a>
+        </nav>
+      </header>
+
+      <section
+        class="h-earth-3d-arrival"
+        aria-labelledby="h-earth-3d-title"
+        data-h-earth-arrival="true"
+      >
+        <div class="h-earth-3d-arrival-copy">
+          <p class="h-earth-3d-kicker">H-Earth · Candidate Preview</p>
 
           <h1 id="h-earth-3d-title" class="h-earth-3d-title">
-            H-Earth 3D Candidate Preview
+            Inspect the ground before the world opens.
           </h1>
 
-          <p class="h-earth-3d-subtitle">
-            Candidate world-facing route for
-            <strong>H_EARTH_GROUND_CELL_001</strong>. The route is active as a
-            DOM/CSS-3D candidate preview surface. Diagnostics remain available
-            in the developer drawer.
+          <p class="h-earth-3d-lead">
+            H-Earth is the Ground-View Matrix: a DOM/CSS-3D candidate scene for
+            the first shoreline inspection surface. The route is public-facing;
+            receipts and raw diagnostics are held behind drawers.
           </p>
-        </section>
+        </div>
 
-        <aside
-          class="h-earth-3d-boundary-card"
-          aria-label="H-Earth matrix boundary summary"
-        >
-          <p class="h-earth-3d-boundary-line">
-            H-Earth remains Ground-View Matrix.
-          </p>
-          <p class="h-earth-3d-boundary-line">
-            Hearth remains support/control context only.
-          </p>
-          <p class="h-earth-3d-boundary-line">
-            Audralia remains planetary-world context only.
-          </p>
-          <p class="h-earth-3d-boundary-line">
-            matrixCollapse = false.
+        <aside class="h-earth-3d-arrival-note" aria-label="Route boundary summary">
+          <p>
+            Candidate preview only. No WebGL, canvas, visual-pass, validation,
+            production, traversal, simulation, or matrix collapse.
           </p>
         </aside>
-      </header>
+      </section>
 
       <section
         id="h-earth-3d-world-shell"
         class="h-earth-3d-world-shell"
-        aria-label="H-Earth world-first candidate route"
+        aria-label="H-Earth public scene route"
       >
         <section
           id="h-earth-3d-world-stage"
           class="h-earth-3d-world-stage h-earth-3d-stage"
-          aria-label="H-Earth primary candidate renderer viewport"
+          aria-label="H-Earth primary renderer stage"
         >
           <div
             id="h-earth-3d-renderer-mount"
@@ -335,12 +353,12 @@
           <aside
             id="h-earth-3d-world-overlay"
             class="h-earth-3d-world-overlay"
-            aria-label="H-Earth compact route overlay"
+            aria-label="H-Earth scene controls"
           >
             <section
               id="h-earth-3d-primary-hud"
               class="h-earth-3d-primary-hud"
-              aria-label="H-Earth primary HUD"
+              aria-label="Scene status and action"
             >
               <div
                 id="h-earth-3d-hud"
@@ -375,39 +393,33 @@
             <section
               id="h-earth-3d-selected-target-card"
               class="h-earth-3d-selected-target-card"
-              aria-label="Selected H-Earth target summary"
+              aria-label="Selected H-Earth surface"
             >
               <p class="h-earth-3d-card-kicker">Selected Surface</p>
               <h2 class="h-earth-3d-card-title">Foreground Wet Sand</h2>
-              <dl class="h-earth-3d-compact-facts">
-                <div>
-                  <dt>Object ID</dt>
-                  <dd>OBJ_002_FOREGROUND_WET_SAND</dd>
-                </div>
-                <div>
-                  <dt>Zone</dt>
-                  <dd>ZONE_001_FOREGROUND_INSPECTION_ZONE</dd>
-                </div>
-                <div>
-                  <dt>Classification</dt>
-                  <dd>PRIMARY_INSPECTION_TARGET</dd>
-                </div>
-              </dl>
             </section>
           </aside>
         </section>
 
         <section
           id="h-earth-3d-readout-card"
-          class="h-earth-3d-readout-card"
-          aria-label="Player-facing Ground Condition Read descriptor"
+          class="h-earth-3d-readout-card h-earth-3d-public-ground-card"
+          aria-label="Compact public Ground Condition Read"
         >
           <div class="h-earth-3d-readout-heading">
-            <p class="h-earth-3d-card-kicker">Ground Condition Read</p>
-            <h2 class="h-earth-3d-card-title">Descriptor-only inspection result</h2>
+            <p class="h-earth-3d-card-kicker">Ground Condition</p>
+            <h2 class="h-earth-3d-card-title">Foreground Wet Sand · Inspect Ground</h2>
           </div>
 
-          <div class="h-earth-3d-readout-body">
+          <p class="h-earth-3d-public-readout-line">
+            Descriptor-only ground condition is available for the primary
+            inspection surface. Full object facts and raw bridge payload remain
+            in the route details below.
+          </p>
+
+          <details class="h-earth-3d-public-readout-details">
+            <summary>Show route facts</summary>
+
             <dl class="h-earth-3d-readout-facts">
               <div>
                 <dt>Selected surface</dt>
@@ -444,7 +456,7 @@
               receipt creation claim. No runtime receipt persistence. No
               validation claim. No production claim.
             </p>
-          </div>
+          </details>
         </section>
       </section>
 

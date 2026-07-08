@@ -1,33 +1,33 @@
 /*
   /showroom/globe/h-earth/index.css
   RENEWED FILE
-  H_EARTH_3D_ROUTE_SHELL_STYLE_FILE_BIRTH_STEP_030E_RENDER_OBJECT_CENTERING_AND_RECEIPT_COPY_UI_RENEWAL_v1
+  H_EARTH_3D_ROUTE_SHELL_STYLE_FILE_BIRTH_STEP_030C_WORLD_FIRST_VIEWPORT_AND_DEVELOPER_DRAWER_RESTRUCTURE_v1
 
   Renews:
-  H_EARTH_3D_ROUTE_SHELL_STYLE_FILE_BIRTH_STEP_030D_MOBILE_DIAGNOSTIC_UNBLOCK_RENEWAL_v1
+  H_EARTH_3D_ROUTE_SHELL_STYLE_FILE_BIRTH_STEP_030E_RENDER_OBJECT_CENTERING_AND_RECEIPT_COPY_UI_RENEWAL_v1
 
   Companion HTML renewal:
   /showroom/globe/h-earth/index.html
-  H_EARTH_3D_ROUTE_SHELL_HTML_FILE_BIRTH_STEP_030B_RECEIPT_COPY_AND_DIAGNOSTIC_SURFACE_RENEWAL_v1
+  H_EARTH_3D_ROUTE_SHELL_FILE_BIRTH_STEP_030B_WORLD_FIRST_EXPERIENCE_RESTRUCTURE_v1
 
   Purpose:
-  Provides route shell, primary renderer viewport, compact status/action surface,
-  inspection panel, target list, debug/status, receipt-copy surfaces,
-  renderer-generated layer/object/material/context class support, and controlled
-  fallback styling for the H-Earth 3D Candidate Preview.
+  Provides a world-first route shell for the H-Earth 3D Candidate Preview.
+  The renderer stage is the primary route surface. Compact HUD, selected target,
+  and descriptor-only Ground Condition Read presentation remain player-facing.
+  Bootstrap Debug, Renderer Mount Receipt, Route Bootstrap Receipt, Boundary
+  Flags, Index Contract, raw bridge payloads, and copy controls remain available
+  inside a collapsed developer drawer.
 
   Renewal scope:
-  - Preserve Step 030D mobile diagnostic unblock.
-  - Preserve Step 030C renderer-object scale support.
-  - Add renderer-object centering using independent CSS translate so inline
-    renderer transforms remain intact.
-  - Reduce status/fallback overlay dominance after bootstrap.
-  - Add receipt-copy toolbar, copy buttons, receipt grid, and readable receipt
-    output styling for the renewed HTML shell.
-  - Keep Bootstrap Debug, Renderer Mount Receipt, Route Bootstrap Receipt,
-    Boundary Flags, Index Contract, and Ground Condition Read Bridge readable.
-  - Preserve renderer-generated class compatibility from materials.js, layers.js,
-    and nodes.js.
+  - Preserve Step 030E renderer-object centering and renderer class support.
+  - Preserve renderer-generated layer/object/material/context compatibility.
+  - Add world-first viewport hierarchy.
+  - Add compact world overlay and selected target card.
+  - Add player-facing descriptor-only readout card.
+  - Move diagnostic and receipt surfaces into secondary drawer styling.
+  - Preserve copy toolbar and copy buttons inside developer drawer.
+  - Preserve mobile stage-first policy.
+  - Preserve reduced-motion safety.
   - Do not create shell-owned scene objects.
   - Do not create a CSS-only false beach independent of renderer descriptors.
   - Do not introduce canvas, WebGL, visual-pass, validation, production,
@@ -38,7 +38,9 @@
 :root {
   --h-earth-bg-deep: #071019;
   --h-earth-bg-panel: rgba(9, 19, 29, 0.82);
+  --h-earth-bg-panel-soft: rgba(9, 19, 29, 0.64);
   --h-earth-bg-panel-strong: rgba(9, 19, 29, 0.94);
+  --h-earth-bg-glass: rgba(7, 16, 25, 0.66);
   --h-earth-border: rgba(221, 234, 239, 0.18);
   --h-earth-border-strong: rgba(221, 234, 239, 0.32);
   --h-earth-text: #edf7fb;
@@ -51,15 +53,17 @@
   --h-earth-fallback: #f2d492;
   --h-earth-error: #ffb0a3;
 
-  --h-earth-stage-width: min(100%, 1180px);
-  --h-earth-stage-height: clamp(560px, 72vh, 820px);
-  --h-earth-mobile-stage-height: min(58svh, 520px);
+  --h-earth-stage-width: min(100%, 1320px);
+  --h-earth-stage-height: clamp(680px, 78vh, 920px);
+  --h-earth-mobile-stage-height: clamp(560px, 78svh, 760px);
 
+  --h-earth-radius-xl: 34px;
   --h-earth-radius-lg: 28px;
   --h-earth-radius-md: 18px;
   --h-earth-radius-sm: 10px;
-  --h-earth-shadow-stage: 0 28px 80px rgba(0, 0, 0, 0.42);
+  --h-earth-shadow-stage: 0 34px 94px rgba(0, 0, 0, 0.48);
   --h-earth-shadow-panel: 0 18px 42px rgba(0, 0, 0, 0.28);
+  --h-earth-shadow-overlay: 0 20px 54px rgba(0, 0, 0, 0.36);
 
   --h-earth-render-band-wide: min(86vw, 980px);
   --h-earth-render-band-medium: min(72vw, 760px);
@@ -126,7 +130,7 @@ button:disabled {
 
 .h-earth-3d-route-root {
   min-height: 100vh;
-  padding: clamp(18px, 3vw, 40px);
+  padding: clamp(14px, 2.4vw, 34px);
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent 18rem),
     transparent;
@@ -134,19 +138,20 @@ button:disabled {
 
 .h-earth-3d-shell {
   display: grid;
-  gap: clamp(18px, 2.6vw, 30px);
-  max-width: 1440px;
+  gap: clamp(14px, 2vw, 24px);
+  max-width: 1500px;
   margin: 0 auto;
 }
 
 /*
   Header and boundary summary.
+  Kept compact so the world viewport becomes the first dominant route fact.
 */
 
 .h-earth-3d-header {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(260px, 420px);
-  gap: 20px;
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 390px);
+  gap: 16px;
   align-items: stretch;
 }
 
@@ -155,7 +160,11 @@ button:disabled {
 .h-earth-3d-panel,
 .h-earth-3d-hud-panel,
 .h-earth-3d-claim-boundary,
-.h-earth-3d-copy-toolbar {
+.h-earth-3d-copy-toolbar,
+.h-earth-3d-selected-target-card,
+.h-earth-3d-readout-card,
+.h-earth-3d-developer-drawer,
+.h-earth-3d-target-drawer {
   border: 1px solid var(--h-earth-border);
   border-radius: var(--h-earth-radius-md);
   background: var(--h-earth-bg-panel);
@@ -164,62 +173,61 @@ button:disabled {
 }
 
 .h-earth-3d-header-copy {
-  padding: clamp(20px, 3vw, 34px);
+  padding: clamp(16px, 2.4vw, 26px);
 }
 
 .h-earth-3d-kicker {
   margin: 0 0 8px;
   color: var(--h-earth-accent);
-  font-size: 0.82rem;
+  font-size: 0.78rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
 }
 
 .h-earth-3d-title {
   margin: 0;
-  font-size: clamp(2.2rem, 6vw, 5rem);
-  line-height: 0.95;
-  letter-spacing: -0.055em;
+  font-size: clamp(2rem, 5vw, 4.4rem);
+  line-height: 0.96;
+  letter-spacing: -0.052em;
 }
 
 .h-earth-3d-subtitle {
-  max-width: 64ch;
-  margin: 18px 0 0;
+  max-width: 72ch;
+  margin: 14px 0 0;
   color: var(--h-earth-text-muted);
-  font-size: clamp(0.98rem, 1.5vw, 1.15rem);
+  font-size: clamp(0.94rem, 1.3vw, 1.06rem);
 }
 
 .h-earth-3d-boundary-card {
   display: grid;
   align-content: center;
-  gap: 8px;
-  padding: 20px;
+  gap: 6px;
+  padding: 16px;
 }
 
 .h-earth-3d-boundary-line {
   margin: 0;
   color: var(--h-earth-text-muted);
-  font-size: 0.92rem;
+  font-size: 0.86rem;
 }
 
 /*
-  Primary stage layout.
+  World-first shell.
 */
 
-.h-earth-3d-stage-shell {
+.h-earth-3d-world-shell {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(240px, 300px);
-  gap: 18px;
-  align-items: start;
+  gap: 16px;
 }
 
+.h-earth-3d-world-stage,
 .h-earth-3d-stage {
   position: relative;
   width: var(--h-earth-stage-width);
   min-height: var(--h-earth-stage-height);
   overflow: hidden;
   border: 1px solid var(--h-earth-border-strong);
-  border-radius: var(--h-earth-radius-lg);
+  border-radius: var(--h-earth-radius-xl);
   background:
     linear-gradient(180deg, rgba(112, 156, 177, 0.18), transparent 36%),
     radial-gradient(circle at 50% 18%, rgba(255, 255, 255, 0.08), transparent 36rem),
@@ -228,6 +236,7 @@ button:disabled {
   isolation: isolate;
 }
 
+.h-earth-3d-world-stage::before,
 .h-earth-3d-stage::before {
   content: "";
   position: absolute;
@@ -267,11 +276,10 @@ button:disabled {
 
 .h-earth-3d-fallback {
   position: absolute;
-  left: 16px;
-  right: auto;
-  bottom: 16px;
-  z-index: 20;
-  width: min(520px, calc(100% - 32px));
+  left: 18px;
+  bottom: 18px;
+  z-index: 30;
+  width: min(520px, calc(100% - 36px));
   max-height: 18svh;
   overflow: auto;
   -webkit-overflow-scrolling: touch;
@@ -290,36 +298,64 @@ button:disabled {
   color: rgba(174, 232, 194, 0.88);
 }
 
-.h-earth-3d-hud {
+/*
+  Compact world overlay.
+  This makes route controls available without turning the page into a dashboard.
+*/
+
+.h-earth-3d-world-overlay {
+  position: absolute;
+  z-index: 40;
+  top: 18px;
+  right: 18px;
   display: grid;
-  align-content: start;
-  gap: 14px;
+  gap: 12px;
+  width: min(360px, calc(100% - 36px));
+  pointer-events: none;
+}
+
+.h-earth-3d-primary-hud,
+.h-earth-3d-selected-target-card {
+  pointer-events: auto;
+}
+
+.h-earth-3d-hud,
+.h-earth-3d-primary-hud .h-earth-3d-hud {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 10px;
 }
 
 .h-earth-3d-hud-panel,
 .h-earth-3d-panel,
 .h-earth-3d-claim-boundary {
-  padding: 16px;
+  padding: 14px;
+}
+
+.h-earth-3d-hud-panel,
+.h-earth-3d-selected-target-card {
+  background: var(--h-earth-bg-glass);
+  box-shadow: var(--h-earth-shadow-overlay);
 }
 
 .h-earth-3d-panel-title {
-  margin: 0 0 12px;
+  margin: 0 0 10px;
   color: var(--h-earth-text);
-  font-size: 0.85rem;
+  font-size: 0.78rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 
 .h-earth-3d-status {
-  min-height: 42px;
+  min-height: 38px;
   display: grid;
   place-items: center start;
-  padding: 10px 12px;
+  padding: 9px 11px;
   border: 1px solid var(--h-earth-border);
   border-radius: var(--h-earth-radius-sm);
   background: rgba(255, 255, 255, 0.05);
   color: var(--h-earth-accent);
-  font-size: 0.86rem;
+  font-size: 0.8rem;
   font-weight: 700;
   letter-spacing: 0.06em;
   overflow-wrap: anywhere;
@@ -338,7 +374,7 @@ button:disabled {
 
 .h-earth-3d-action-button {
   width: 100%;
-  min-height: 48px;
+  min-height: 46px;
 }
 
 .h-earth-3d-copy-button {
@@ -358,19 +394,204 @@ button:disabled {
 .h-earth-3d-action-button:focus-visible,
 .h-earth-3d-target-button:focus-visible,
 .h-earth-3d-copy-button:focus-visible,
-.h-earth-3d-inline-copy-button:focus-visible {
+.h-earth-3d-inline-copy-button:focus-visible,
+.h-earth-3d-developer-drawer-toggle:focus-visible,
+.h-earth-3d-target-drawer-toggle:focus-visible {
   outline: 3px solid rgba(149, 213, 232, 0.64);
   outline-offset: 2px;
 }
 
+.h-earth-3d-card-kicker {
+  margin: 0 0 6px;
+  color: var(--h-earth-accent);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.h-earth-3d-card-title {
+  margin: 0;
+  color: var(--h-earth-text);
+  font-size: clamp(1rem, 1.5vw, 1.25rem);
+  line-height: 1.16;
+}
+
+.h-earth-3d-compact-facts,
+.h-earth-3d-readout-facts {
+  display: grid;
+  gap: 8px;
+  margin: 12px 0 0;
+}
+
+.h-earth-3d-compact-facts div,
+.h-earth-3d-readout-facts div {
+  display: grid;
+  gap: 2px;
+}
+
+.h-earth-3d-compact-facts dt,
+.h-earth-3d-readout-facts dt {
+  color: var(--h-earth-text-dim);
+  font-size: 0.68rem;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+}
+
+.h-earth-3d-compact-facts dd,
+.h-earth-3d-readout-facts dd {
+  margin: 0;
+  color: var(--h-earth-text-muted);
+  font-size: 0.8rem;
+  overflow-wrap: anywhere;
+}
+
 /*
-  Receipt copy toolbar.
+  Player-facing descriptor readout.
 */
+
+.h-earth-3d-readout-card {
+  display: grid;
+  grid-template-columns: minmax(220px, 0.34fr) minmax(0, 1fr);
+  gap: 16px;
+  padding: clamp(16px, 2.4vw, 24px);
+  background:
+    radial-gradient(circle at 0% 0%, rgba(216, 189, 142, 0.16), transparent 22rem),
+    var(--h-earth-bg-panel);
+}
+
+.h-earth-3d-readout-body {
+  min-width: 0;
+}
+
+.h-earth-3d-readout-facts {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-top: 0;
+}
+
+.h-earth-3d-readout-boundary {
+  margin: 14px 0 0;
+  padding: 10px 12px;
+  border: 1px solid rgba(216, 189, 142, 0.28);
+  border-radius: var(--h-earth-radius-sm);
+  background: rgba(216, 189, 142, 0.08);
+  color: var(--h-earth-text-muted);
+  font-size: 0.82rem;
+}
+
+/*
+  Selectable targets drawer.
+*/
+
+.h-earth-3d-target-drawer {
+  overflow: hidden;
+}
+
+.h-earth-3d-target-drawer-toggle,
+.h-earth-3d-developer-drawer-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 50px;
+  padding: 14px 16px;
+  color: var(--h-earth-text);
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  list-style: none;
+}
+
+.h-earth-3d-target-drawer-toggle::-webkit-details-marker,
+.h-earth-3d-developer-drawer-toggle::-webkit-details-marker {
+  display: none;
+}
+
+.h-earth-3d-target-drawer-toggle::after,
+.h-earth-3d-developer-drawer-toggle::after {
+  content: "+";
+  display: inline-grid;
+  place-items: center;
+  width: 1.6rem;
+  height: 1.6rem;
+  border: 1px solid var(--h-earth-border);
+  border-radius: 999px;
+  color: var(--h-earth-accent);
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.h-earth-3d-target-drawer[open] > .h-earth-3d-target-drawer-toggle::after,
+.h-earth-3d-developer-drawer[open] > .h-earth-3d-developer-drawer-toggle::after {
+  content: "–";
+}
+
+.h-earth-3d-target-panel {
+  margin: 0 14px 14px;
+  box-shadow: none;
+}
+
+.h-earth-3d-target-list {
+  display: grid;
+  gap: 8px;
+}
+
+.h-earth-3d-empty-panel-note {
+  margin: 0;
+  color: var(--h-earth-text-dim);
+  font-size: 0.84rem;
+}
+
+.h-earth-3d-target-button {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--h-earth-border);
+  border-radius: var(--h-earth-radius-sm);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--h-earth-text-muted);
+  text-align: left;
+  transition:
+    border-color 160ms ease,
+    background 160ms ease,
+    color 160ms ease,
+    transform 160ms ease;
+}
+
+.h-earth-3d-target-button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  border-color: rgba(149, 213, 232, 0.42);
+  background: rgba(149, 213, 232, 0.09);
+  color: var(--h-earth-text);
+}
+
+.h-earth-3d-target-button[aria-current="true"] {
+  border-color: rgba(216, 189, 142, 0.58);
+  background: rgba(216, 189, 142, 0.12);
+  color: var(--h-earth-accent-warm);
+}
+
+/*
+  Developer drawer / diagnostics.
+*/
+
+.h-earth-3d-developer-drawer {
+  overflow: hidden;
+  background: var(--h-earth-bg-panel-soft);
+}
+
+.h-earth-3d-developer-drawer-body {
+  display: grid;
+  gap: 16px;
+  padding: 0 14px 14px;
+}
 
 .h-earth-3d-copy-toolbar {
   display: grid;
   gap: 12px;
-  padding: 16px;
+  padding: 14px;
+  box-shadow: none;
 }
 
 .h-earth-3d-copy-toolbar-header {
@@ -406,14 +627,10 @@ button:disabled {
   gap: 8px;
 }
 
-/*
-  Diagnostic/control panels.
-*/
-
 .h-earth-3d-control-grid {
   display: grid;
-  grid-template-columns: minmax(220px, 0.85fr) minmax(280px, 1.2fr) minmax(280px, 1fr);
-  gap: 20px;
+  grid-template-columns: repeat(2, minmax(280px, 1fr));
+  gap: 16px;
   align-items: start;
 }
 
@@ -427,45 +644,6 @@ button:disabled {
 
 .h-earth-3d-panel-heading-row .h-earth-3d-panel-title {
   margin: 0;
-}
-
-.h-earth-3d-empty-panel-note {
-  margin: 0;
-  color: var(--h-earth-text-dim);
-  font-size: 0.84rem;
-}
-
-.h-earth-3d-target-list {
-  display: grid;
-  gap: 8px;
-}
-
-.h-earth-3d-target-button {
-  width: 100%;
-  padding: 10px 12px;
-  border: 1px solid var(--h-earth-border);
-  border-radius: var(--h-earth-radius-sm);
-  background: rgba(255, 255, 255, 0.05);
-  color: var(--h-earth-text-muted);
-  text-align: left;
-  transition:
-    border-color 160ms ease,
-    background 160ms ease,
-    color 160ms ease,
-    transform 160ms ease;
-}
-
-.h-earth-3d-target-button:hover:not(:disabled) {
-  transform: translateY(-1px);
-  border-color: rgba(149, 213, 232, 0.42);
-  background: rgba(149, 213, 232, 0.09);
-  color: var(--h-earth-text);
-}
-
-.h-earth-3d-target-button[aria-current="true"] {
-  border-color: rgba(216, 189, 142, 0.58);
-  background: rgba(216, 189, 142, 0.12);
-  color: var(--h-earth-accent-warm);
 }
 
 .h-earth-3d-inspection-panel,
@@ -496,12 +674,14 @@ button:disabled {
   min-width: 0;
 }
 
+.h-earth-3d-receipt-stack,
 .h-earth-3d-receipt-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(280px, 1fr));
-  gap: 20px;
+  gap: 16px;
 }
 
+.h-earth-3d-receipt-card,
 .h-earth-3d-receipt-panel {
   min-width: 0;
 }
@@ -513,6 +693,7 @@ button:disabled {
 
 .h-earth-3d-claim-boundary {
   color: var(--h-earth-text-muted);
+  box-shadow: none;
 }
 
 .h-earth-3d-claim-boundary p {
@@ -928,29 +1109,34 @@ button:disabled {
   Responsive route shell behavior.
 */
 
-@media (max-width: 1040px) {
-  .h-earth-3d-header,
-  .h-earth-3d-stage-shell,
-  .h-earth-3d-control-grid,
-  .h-earth-3d-receipt-grid {
+@media (max-width: 1120px) {
+  .h-earth-3d-header {
     grid-template-columns: 1fr;
   }
 
-  .h-earth-3d-stage {
-    width: 100%;
+  .h-earth-3d-world-overlay {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    width: min(340px, calc(100% - 28px));
   }
 
-  .h-earth-3d-hud {
-    grid-template-columns: 1fr 1fr;
+  .h-earth-3d-readout-card {
+    grid-template-columns: 1fr;
+  }
+
+  .h-earth-3d-readout-facts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .h-earth-3d-control-grid,
+  .h-earth-3d-receipt-stack,
   .h-earth-3d-receipt-grid {
-    gap: 14px;
+    grid-template-columns: 1fr;
   }
 }
 
-@media (max-width: 680px) {
+@media (max-width: 760px) {
   .h-earth-3d-route-root {
     padding: 10px;
   }
@@ -968,7 +1154,9 @@ button:disabled {
   .h-earth-3d-panel,
   .h-earth-3d-hud-panel,
   .h-earth-3d-claim-boundary,
-  .h-earth-3d-copy-toolbar {
+  .h-earth-3d-copy-toolbar,
+  .h-earth-3d-selected-target-card,
+  .h-earth-3d-readout-card {
     padding: 12px;
   }
 
@@ -993,13 +1181,58 @@ button:disabled {
     font-size: 0.82rem;
   }
 
-  .h-earth-3d-stage-shell {
-    gap: 10px;
-  }
-
+  .h-earth-3d-world-stage,
   .h-earth-3d-stage {
     min-height: var(--h-earth-mobile-stage-height);
-    border-radius: 20px;
+    border-radius: 22px;
+  }
+
+  .h-earth-3d-world-overlay {
+    top: 10px;
+    right: 10px;
+    left: 10px;
+    width: auto;
+    gap: 8px;
+  }
+
+  .h-earth-3d-hud,
+  .h-earth-3d-primary-hud .h-earth-3d-hud {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .h-earth-3d-hud-panel {
+    padding: 10px;
+  }
+
+  .h-earth-3d-selected-target-card {
+    max-height: 34svh;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .h-earth-3d-card-title {
+    font-size: 1rem;
+  }
+
+  .h-earth-3d-compact-facts {
+    gap: 6px;
+  }
+
+  .h-earth-3d-panel-title {
+    margin-bottom: 8px;
+    font-size: 0.74rem;
+  }
+
+  .h-earth-3d-status {
+    min-height: 36px;
+    padding: 8px 10px;
+    font-size: 0.74rem;
+  }
+
+  .h-earth-3d-action-button {
+    min-height: 40px;
+    font-size: 0.82rem;
   }
 
   .h-earth-3d-renderer-mount:empty::before {
@@ -1014,31 +1247,26 @@ button:disabled {
     bottom: 12px;
     width: auto;
     padding: 8px 10px;
-    font-size: 0.74rem;
+    font-size: 0.72rem;
   }
 
-  .h-earth-3d-hud {
+  .h-earth-3d-readout-card {
+    gap: 12px;
+  }
+
+  .h-earth-3d-readout-facts {
     grid-template-columns: 1fr;
-    gap: 10px;
   }
 
-  .h-earth-3d-hud-panel {
-    padding: 10px;
-  }
-
-  .h-earth-3d-panel-title {
-    margin-bottom: 8px;
-    font-size: 0.76rem;
-  }
-
-  .h-earth-3d-status {
-    min-height: 38px;
-    padding: 8px 10px;
+  .h-earth-3d-readout-boundary {
     font-size: 0.78rem;
   }
 
-  .h-earth-3d-action-button {
-    min-height: 42px;
+  .h-earth-3d-target-drawer-toggle,
+  .h-earth-3d-developer-drawer-toggle {
+    min-height: 46px;
+    padding: 12px;
+    font-size: 0.75rem;
   }
 
   .h-earth-3d-copy-actions {
@@ -1051,13 +1279,14 @@ button:disabled {
   }
 
   .h-earth-3d-control-grid,
+  .h-earth-3d-receipt-stack,
   .h-earth-3d-receipt-grid {
-    grid-template-columns: 1fr;
     gap: 10px;
   }
 
   .h-earth-3d-control-grid .h-earth-3d-panel,
   .h-earth-3d-receipt-grid .h-earth-3d-panel,
+  .h-earth-3d-receipt-stack .h-earth-3d-panel,
   .h-earth-3d-claim-boundary {
     max-height: none;
     overflow: visible;
@@ -1067,8 +1296,8 @@ button:disabled {
   .h-earth-3d-debug,
   .h-earth-3d-receipt-output {
     display: block;
-    min-height: 240px;
-    max-height: 62svh;
+    min-height: 220px;
+    max-height: 58svh;
     overflow: auto;
     -webkit-overflow-scrolling: touch;
     font-size: 0.72rem;
@@ -1081,19 +1310,37 @@ button:disabled {
   }
 }
 
-@media (max-width: 420px) {
+@media (max-width: 520px) {
   .h-earth-3d-route-root {
     padding: 8px;
   }
 
+  .h-earth-3d-world-stage,
   .h-earth-3d-stage {
-    min-height: min(52svh, 460px);
+    min-height: min(82svh, 700px);
     border-radius: 18px;
   }
 
   .h-earth-3d-header-copy,
-  .h-earth-3d-boundary-card {
+  .h-earth-3d-boundary-card,
+  .h-earth-3d-selected-target-card,
+  .h-earth-3d-readout-card {
     border-radius: 16px;
+  }
+
+  .h-earth-3d-world-overlay {
+    top: 8px;
+    right: 8px;
+    left: 8px;
+  }
+
+  .h-earth-3d-hud,
+  .h-earth-3d-primary-hud .h-earth-3d-hud {
+    grid-template-columns: 1fr;
+  }
+
+  .h-earth-3d-selected-target-card {
+    max-height: 28svh;
   }
 
   .h-earth-3d-copy-actions {
@@ -1106,6 +1353,7 @@ button:disabled {
 
   .h-earth-3d-control-grid .h-earth-3d-panel,
   .h-earth-3d-receipt-grid .h-earth-3d-panel,
+  .h-earth-3d-receipt-stack .h-earth-3d-panel,
   .h-earth-3d-claim-boundary {
     max-height: none;
     overflow: visible;
@@ -1114,8 +1362,8 @@ button:disabled {
   .h-earth-3d-inspection-panel,
   .h-earth-3d-debug,
   .h-earth-3d-receipt-output {
-    min-height: 260px;
-    max-height: 64svh;
+    min-height: 240px;
+    max-height: 62svh;
   }
 
   .h-earth-3d-target-list {
@@ -1134,6 +1382,17 @@ button:disabled {
   .h-earth-layer-air-haze-light .h-earth-render-object,
   .h-earth-material-air-haze {
     width: 96vw;
+  }
+}
+
+@media (max-height: 700px) and (max-width: 760px) {
+  .h-earth-3d-world-stage,
+  .h-earth-3d-stage {
+    min-height: 78svh;
+  }
+
+  .h-earth-3d-selected-target-card {
+    max-height: 24svh;
   }
 }
 

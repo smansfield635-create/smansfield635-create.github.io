@@ -1,7 +1,7 @@
 /*
   /showroom/globe/h-earth/index.css
   RENEWED FILE
-  H_EARTH_3D_ROUTE_SHELL_STYLE_FILE_BIRTH_STEP_030C_WORLD_FIRST_VIEWPORT_AND_DEVELOPER_DRAWER_RESTRUCTURE_v1_1
+  H_EARTH_3D_ROUTE_SHELL_STYLE_FILE_BIRTH_STEP_030D_PUBLIC_SCENE_ROUTE_ADOPTION_v1
 
   Renews:
   H_EARTH_3D_ROUTE_SHELL_STYLE_FILE_BIRTH_STEP_030C_WORLD_FIRST_VIEWPORT_AND_DEVELOPER_DRAWER_RESTRUCTURE_v1
@@ -9,57 +9,57 @@
 
   Companion HTML renewal:
   /showroom/globe/h-earth/index.html
-  H_EARTH_3D_ROUTE_SHELL_FILE_BIRTH_STEP_030B_WORLD_FIRST_EXPERIENCE_RESTRUCTURE_v1
+  H_EARTH_3D_ROUTE_SHELL_FILE_BIRTH_STEP_030D_PUBLIC_SCENE_ROUTE_ADOPTION_v1
 
   Purpose:
-  Provides a world-first route shell for the H-Earth 3D Candidate Preview.
-  The renderer stage is the primary route surface. Compact HUD, selected target,
-  and descriptor-only Ground Condition Read presentation remain player-facing.
-  Bootstrap Debug, Renderer Mount Receipt, Route Bootstrap Receipt, Boundary
-  Flags, Index Contract, raw bridge payloads, and copy controls remain available
-  inside collapsed drawers.
-
-  Correction:
-  Fixes the prior mobile layout failure where the page still behaved like a
-  stacked diagnostic document and the selected target card intruded into the
-  renderer viewport.
+  Styles H-Earth as a public scene route, not a visible diagnostic document.
+  The renderer stage is the central public object. Status, Inspect Ground,
+  selected surface, and compact Ground Condition posture remain visible.
+  Full route facts, receipts, bootstrap debug, raw bridge payloads, boundary
+  flags, and index contract remain inside collapsed drawers.
 
   Scope:
   CSS only.
-  No renderer touch.
-  No compositor touch.
-  No environment touch.
-  No capacity touch.
-  No source canon touch.
-  No fake scene geometry.
+  No shell-owned scene objects.
+  No CSS-only false beach independent of renderer descriptors.
+  No WebGL, canvas, final-renderer, renderer-pass, visual-pass, validation,
+  production, traversal, survival simulation, swimming, fluid simulation,
+  manor interior, distant traversal, gameplay execution, runtime receipt
+  persistence, or matrix-collapse authority.
 */
 
 :root {
+  color-scheme: dark;
+
   --h-earth-bg-deep: #071019;
+  --h-earth-bg-page: #030812;
   --h-earth-bg-panel: rgba(9, 19, 29, 0.82);
-  --h-earth-bg-panel-soft: rgba(9, 19, 29, 0.64);
+  --h-earth-bg-panel-soft: rgba(9, 19, 29, 0.62);
   --h-earth-bg-panel-strong: rgba(9, 19, 29, 0.94);
-  --h-earth-bg-glass: rgba(7, 16, 25, 0.66);
+  --h-earth-bg-glass: rgba(7, 16, 25, 0.68);
+
   --h-earth-border: rgba(221, 234, 239, 0.18);
-  --h-earth-border-strong: rgba(221, 234, 239, 0.32);
+  --h-earth-border-strong: rgba(221, 234, 239, 0.34);
+
   --h-earth-text: #edf7fb;
   --h-earth-text-muted: #a8bac4;
   --h-earth-text-dim: #758a96;
+
   --h-earth-accent: #95d5e8;
   --h-earth-accent-warm: #d8bd8e;
-  --h-earth-danger: #ffb0a3;
   --h-earth-ready: #aee8c2;
   --h-earth-fallback: #f2d492;
   --h-earth-error: #ffb0a3;
 
   --h-earth-stage-width: min(100%, 1320px);
   --h-earth-stage-height: clamp(680px, 78vh, 920px);
-  --h-earth-mobile-stage-height: clamp(520px, 74svh, 720px);
+  --h-earth-mobile-stage-height: clamp(520px, 72svh, 720px);
 
   --h-earth-radius-xl: 34px;
-  --h-earth-radius-lg: 28px;
+  --h-earth-radius-lg: 26px;
   --h-earth-radius-md: 18px;
   --h-earth-radius-sm: 10px;
+
   --h-earth-shadow-stage: 0 34px 94px rgba(0, 0, 0, 0.48);
   --h-earth-shadow-panel: 0 18px 42px rgba(0, 0, 0, 0.28);
   --h-earth-shadow-overlay: 0 20px 54px rgba(0, 0, 0, 0.36);
@@ -90,17 +90,19 @@
 }
 
 html {
+  min-width: 320px;
   min-height: 100%;
-  background:
-    radial-gradient(circle at 30% 0%, rgba(94, 134, 154, 0.24), transparent 32rem),
-    radial-gradient(circle at 85% 16%, rgba(171, 132, 91, 0.18), transparent 28rem),
-    var(--h-earth-bg-deep);
+  overflow-x: hidden;
+  background: var(--h-earth-bg-page);
   color: var(--h-earth-text);
 }
 
 body {
-  min-height: 100%;
+  min-width: 320px;
+  min-height: 100vh;
   margin: 0;
+  overflow-x: hidden;
+  color: var(--h-earth-text);
   font-family:
     Inter,
     ui-sans-serif,
@@ -110,7 +112,33 @@ body {
     "Segoe UI",
     sans-serif;
   line-height: 1.5;
-  color: var(--h-earth-text);
+  background:
+    radial-gradient(circle at 18% -8%, rgba(149, 213, 232, 0.18), transparent 28rem),
+    radial-gradient(circle at 88% 12%, rgba(216, 189, 142, 0.14), transparent 30rem),
+    radial-gradient(circle at 50% 82%, rgba(29, 88, 108, 0.16), transparent 38rem),
+    linear-gradient(180deg, #071019 0%, #030812 58%, #01040a 100%);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: geometricPrecision;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.18;
+  background-image:
+    linear-gradient(rgba(149, 213, 232, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(149, 213, 232, 0.045) 1px, transparent 1px),
+    radial-gradient(circle, rgba(255, 255, 255, 0.14) 0 1px, transparent 1.6px);
+  background-size: 56px 56px, 56px 56px, 220px 260px;
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.95), rgba(0, 0, 0, 0.58) 68%, rgba(0, 0, 0, 0.18));
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
 }
 
 button,
@@ -127,91 +155,216 @@ button:disabled {
   opacity: 0.56;
 }
 
+a:focus-visible,
+button:focus-visible,
+summary:focus-visible {
+  outline: 3px solid rgba(149, 213, 232, 0.64);
+  outline-offset: 3px;
+}
+
 .h-earth-3d-route-root {
+  position: relative;
+  z-index: 1;
   min-height: 100vh;
-  padding: clamp(14px, 2.4vw, 34px);
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent 18rem),
-    transparent;
+  padding: max(14px, env(safe-area-inset-top)) clamp(12px, 2.4vw, 34px) max(36px, env(safe-area-inset-bottom));
 }
 
 .h-earth-3d-shell {
   display: grid;
-  gap: clamp(14px, 2vw, 24px);
-  max-width: 1500px;
+  gap: clamp(12px, 1.8vw, 22px);
+  width: min(1500px, 100%);
   margin: 0 auto;
 }
 
-/* Header */
+/* Public route header */
 
-.h-earth-3d-header {
+.h-earth-3d-public-header {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(260px, 390px);
-  gap: 16px;
-  align-items: stretch;
+  grid-template-columns: auto minmax(12rem, 1fr);
+  gap: 1rem;
+  align-items: center;
 }
 
-.h-earth-3d-header-copy,
-.h-earth-3d-boundary-card,
-.h-earth-3d-panel,
-.h-earth-3d-hud-panel,
-.h-earth-3d-claim-boundary,
-.h-earth-3d-copy-toolbar,
-.h-earth-3d-selected-target-card,
+.h-earth-3d-brand {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.82rem;
+  align-items: center;
+  min-width: 0;
+}
+
+.h-earth-3d-brand-mark {
+  width: 3.65rem;
+  height: 3.65rem;
+  display: grid;
+  place-items: center;
+  clip-path: polygon(50% 0%, 78% 10%, 100% 35%, 90% 74%, 50% 100%, 10% 74%, 0 35%, 22% 10%);
+  border: 1px solid rgba(149, 213, 232, 0.32);
+  background:
+    radial-gradient(circle at 32% 18%, rgba(255, 255, 255, 0.34), transparent 26%),
+    conic-gradient(from 45deg, rgba(255, 255, 255, 0.18), rgba(149, 213, 232, 0.38), rgba(3, 10, 28, 0.92), rgba(216, 189, 142, 0.18), rgba(255, 255, 255, 0.18)),
+    linear-gradient(145deg, #172a3c, #06101c);
+  box-shadow:
+    0 1rem 2rem rgba(0, 0, 0, 0.42),
+    0 0 1.6rem rgba(149, 213, 232, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.16);
+}
+
+.h-earth-3d-brand-mark span {
+  color: var(--h-earth-text);
+  font-size: 1rem;
+  font-weight: 950;
+  letter-spacing: 0.02em;
+}
+
+.h-earth-3d-brand-copy {
+  display: grid;
+  gap: 0.12rem;
+  min-width: 0;
+}
+
+.h-earth-3d-brand-copy span {
+  color: var(--h-earth-text-muted);
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.h-earth-3d-brand-copy strong {
+  color: var(--h-earth-text);
+  font-size: clamp(1rem, 3vw, 1.45rem);
+  line-height: 1;
+  letter-spacing: -0.045em;
+}
+
+.h-earth-3d-public-nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.48rem;
+}
+
+.h-earth-3d-public-nav a {
+  min-height: 2.25rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 0.74rem;
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.035);
+  color: rgba(237, 247, 251, 0.84);
+  font-size: 0.68rem;
+  font-weight: 850;
+  letter-spacing: 0.055em;
+  text-transform: uppercase;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+/* Public arrival */
+
+.h-earth-3d-arrival,
 .h-earth-3d-readout-card,
+.h-earth-3d-target-drawer,
 .h-earth-3d-developer-drawer,
-.h-earth-3d-target-drawer {
+.h-earth-3d-panel,
+.h-earth-3d-copy-toolbar,
+.h-earth-3d-claim-boundary {
   border: 1px solid var(--h-earth-border);
   border-radius: var(--h-earth-radius-md);
-  background: var(--h-earth-bg-panel);
+  background:
+    radial-gradient(circle at 14% 0%, rgba(149, 213, 232, 0.10), transparent 28rem),
+    radial-gradient(circle at 88% 16%, rgba(216, 189, 142, 0.10), transparent 30rem),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.065), rgba(255, 255, 255, 0.022)),
+    var(--h-earth-bg-panel);
   box-shadow: var(--h-earth-shadow-panel);
   backdrop-filter: blur(16px);
 }
 
-.h-earth-3d-header-copy {
-  padding: clamp(16px, 2.4vw, 26px);
+.h-earth-3d-arrival {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(16rem, 0.34fr);
+  gap: 1rem;
+  align-items: stretch;
+  padding: clamp(1rem, 3vw, 1.65rem);
 }
 
-.h-earth-3d-kicker {
-  margin: 0 0 8px;
-  color: var(--h-earth-accent);
-  font-size: 0.78rem;
+.h-earth-3d-arrival-copy {
+  display: grid;
+  align-content: center;
+  gap: 0.8rem;
+}
+
+.h-earth-3d-kicker,
+.h-earth-3d-card-kicker {
+  width: fit-content;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0.48rem 0.78rem;
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.045);
+  color: rgba(230, 238, 255, 0.86);
+  font-size: 0.64rem;
+  font-weight: 900;
   letter-spacing: 0.14em;
   text-transform: uppercase;
 }
 
+.h-earth-3d-kicker::before,
+.h-earth-3d-card-kicker::before {
+  content: "";
+  width: 0.62rem;
+  height: 0.62rem;
+  border-radius: 0.16rem;
+  transform: rotate(45deg);
+  background: linear-gradient(135deg, #f6e3b5, var(--h-earth-accent-warm));
+  box-shadow: 0 0 0.9rem rgba(216, 189, 142, 0.40);
+}
+
 .h-earth-3d-title {
+  max-width: 980px;
   margin: 0;
-  font-size: clamp(2rem, 5vw, 4.4rem);
-  line-height: 0.96;
-  letter-spacing: -0.052em;
+  color: var(--h-earth-text);
+  font-size: clamp(2.55rem, 7.8vw, 5.65rem);
+  line-height: 0.88;
+  letter-spacing: -0.105em;
+  text-wrap: balance;
 }
 
-.h-earth-3d-subtitle {
-  max-width: 72ch;
-  margin: 14px 0 0;
+.h-earth-3d-lead {
+  max-width: 900px;
+  margin: 0;
   color: var(--h-earth-text-muted);
-  font-size: clamp(0.94rem, 1.3vw, 1.06rem);
+  font-size: clamp(0.98rem, 2.4vw, 1.16rem);
+  line-height: 1.5;
 }
 
-.h-earth-3d-boundary-card {
+.h-earth-3d-arrival-note {
   display: grid;
   align-content: center;
-  gap: 6px;
-  padding: 16px;
+  min-width: 0;
+  padding: 1rem;
+  border: 1px solid rgba(216, 189, 142, 0.20);
+  border-radius: var(--h-earth-radius-md);
+  background: rgba(216, 189, 142, 0.06);
 }
 
-.h-earth-3d-boundary-line {
+.h-earth-3d-arrival-note p {
   margin: 0;
   color: var(--h-earth-text-muted);
   font-size: 0.86rem;
+  line-height: 1.45;
 }
 
-/* World-first shell */
+/* Scene route */
 
 .h-earth-3d-world-shell {
   display: grid;
-  gap: 16px;
+  gap: 0.85rem;
 }
 
 .h-earth-3d-world-stage,
@@ -223,9 +376,9 @@ button:disabled {
   border: 1px solid var(--h-earth-border-strong);
   border-radius: var(--h-earth-radius-xl);
   background:
-    linear-gradient(180deg, rgba(112, 156, 177, 0.18), transparent 36%),
-    radial-gradient(circle at 50% 18%, rgba(255, 255, 255, 0.08), transparent 36rem),
-    rgba(5, 12, 18, 0.92);
+    radial-gradient(circle at 50% 38%, rgba(149, 213, 232, 0.13), transparent 21rem),
+    radial-gradient(circle at 50% 62%, rgba(29, 88, 108, 0.18), transparent 28rem),
+    linear-gradient(180deg, rgba(0, 6, 18, 0.72), rgba(1, 5, 15, 0.96));
   box-shadow: var(--h-earth-shadow-stage);
   isolation: isolate;
 }
@@ -235,11 +388,14 @@ button:disabled {
   content: "";
   position: absolute;
   inset: 0;
+  z-index: 9;
   pointer-events: none;
   background:
-    linear-gradient(90deg, rgba(255, 255, 255, 0.06), transparent 18%, transparent 82%, rgba(255, 255, 255, 0.04)),
-    radial-gradient(circle at 50% 100%, rgba(0, 0, 0, 0.38), transparent 58%);
-  z-index: 10;
+    linear-gradient(rgba(149, 213, 232, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(149, 213, 232, 0.035) 1px, transparent 1px),
+    radial-gradient(circle at 50% 100%, rgba(0, 0, 0, 0.36), transparent 58%);
+  background-size: 38px 38px, 38px 38px, auto;
+  opacity: 0.82;
 }
 
 .h-earth-3d-renderer-mount {
@@ -263,7 +419,7 @@ button:disabled {
   border-radius: var(--h-earth-radius-sm);
   background: rgba(7, 16, 25, 0.78);
   color: var(--h-earth-text-dim);
-  font-size: 0.78rem;
+  font-size: 0.72rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
@@ -282,7 +438,7 @@ button:disabled {
   border-radius: var(--h-earth-radius-sm);
   background: rgba(20, 20, 12, 0.62);
   color: var(--h-earth-fallback);
-  font-size: 0.78rem;
+  font-size: 0.76rem;
   line-height: 1.35;
 }
 
@@ -292,47 +448,43 @@ button:disabled {
   color: rgba(174, 232, 194, 0.88);
 }
 
-/* Compact overlay */
+/* Scene overlay */
 
 .h-earth-3d-world-overlay {
   position: absolute;
   z-index: 40;
-  top: 18px;
-  right: 18px;
-  display: grid;
-  gap: 12px;
-  width: min(360px, calc(100% - 36px));
+  inset: 18px;
   pointer-events: none;
 }
 
-.h-earth-3d-primary-hud,
-.h-earth-3d-selected-target-card {
+.h-earth-3d-primary-hud {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: min(360px, 100%);
   pointer-events: auto;
 }
 
-.h-earth-3d-hud,
-.h-earth-3d-primary-hud .h-earth-3d-hud {
+.h-earth-3d-hud {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: 10px;
 }
 
 .h-earth-3d-hud-panel,
-.h-earth-3d-panel,
-.h-earth-3d-claim-boundary {
-  padding: 14px;
-}
-
-.h-earth-3d-hud-panel,
 .h-earth-3d-selected-target-card {
-  background: var(--h-earth-bg-glass);
+  padding: 12px;
+  border: 1px solid var(--h-earth-border);
+  border-radius: var(--h-earth-radius-md);
+  background: rgba(7, 16, 25, 0.70);
   box-shadow: var(--h-earth-shadow-overlay);
+  backdrop-filter: blur(16px);
 }
 
 .h-earth-3d-panel-title {
-  margin: 0 0 10px;
+  margin: 0 0 8px;
   color: var(--h-earth-text);
-  font-size: 0.78rem;
+  font-size: 0.72rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
 }
@@ -346,9 +498,9 @@ button:disabled {
   border-radius: var(--h-earth-radius-sm);
   background: rgba(255, 255, 255, 0.05);
   color: var(--h-earth-accent);
-  font-size: 0.8rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
   overflow-wrap: anywhere;
 }
 
@@ -360,7 +512,7 @@ button:disabled {
   background:
     linear-gradient(180deg, rgba(149, 213, 232, 0.20), rgba(149, 213, 232, 0.08));
   color: var(--h-earth-text);
-  font-weight: 700;
+  font-weight: 800;
 }
 
 .h-earth-3d-action-button {
@@ -368,104 +520,98 @@ button:disabled {
   min-height: 46px;
 }
 
-.h-earth-3d-copy-button {
-  min-height: 38px;
-  padding: 8px 10px;
-  font-size: 0.78rem;
-}
-
-.h-earth-3d-inline-copy-button {
-  min-height: 30px;
-  padding: 5px 8px;
-  font-size: 0.72rem;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-}
-
-.h-earth-3d-action-button:focus-visible,
-.h-earth-3d-target-button:focus-visible,
-.h-earth-3d-copy-button:focus-visible,
-.h-earth-3d-inline-copy-button:focus-visible,
-.h-earth-3d-developer-drawer-toggle:focus-visible,
-.h-earth-3d-target-drawer-toggle:focus-visible {
-  outline: 3px solid rgba(149, 213, 232, 0.64);
-  outline-offset: 2px;
-}
-
-.h-earth-3d-card-kicker {
-  margin: 0 0 6px;
-  color: var(--h-earth-accent);
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+.h-earth-3d-selected-target-card {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: min(390px, 100%);
+  pointer-events: auto;
 }
 
 .h-earth-3d-card-title {
   margin: 0;
   color: var(--h-earth-text);
-  font-size: clamp(1rem, 1.5vw, 1.25rem);
-  line-height: 1.16;
+  font-size: clamp(1.05rem, 2vw, 1.45rem);
+  line-height: 1.06;
+  letter-spacing: -0.04em;
 }
 
-.h-earth-3d-compact-facts,
-.h-earth-3d-readout-facts {
-  display: grid;
-  gap: 8px;
-  margin: 12px 0 0;
-}
-
-.h-earth-3d-compact-facts div,
-.h-earth-3d-readout-facts div {
-  display: grid;
-  gap: 2px;
-}
-
-.h-earth-3d-compact-facts dt,
-.h-earth-3d-readout-facts dt {
-  color: var(--h-earth-text-dim);
-  font-size: 0.68rem;
-  letter-spacing: 0.10em;
-  text-transform: uppercase;
-}
-
-.h-earth-3d-compact-facts dd,
-.h-earth-3d-readout-facts dd {
-  margin: 0;
-  color: var(--h-earth-text-muted);
-  font-size: 0.8rem;
-  overflow-wrap: anywhere;
-}
-
-/* Player readout */
+/* Compact public readout */
 
 .h-earth-3d-readout-card {
   display: grid;
   grid-template-columns: minmax(220px, 0.34fr) minmax(0, 1fr);
-  gap: 16px;
-  padding: clamp(16px, 2.4vw, 24px);
-  background:
-    radial-gradient(circle at 0% 0%, rgba(216, 189, 142, 0.16), transparent 22rem),
-    var(--h-earth-bg-panel);
+  gap: 1rem;
+  padding: clamp(1rem, 2.4vw, 1.35rem);
 }
 
-.h-earth-3d-readout-body {
-  min-width: 0;
+.h-earth-3d-readout-heading {
+  display: grid;
+  align-content: center;
+  gap: 0.55rem;
+}
+
+.h-earth-3d-public-readout-line {
+  margin: 0;
+  align-self: center;
+  color: var(--h-earth-text-muted);
+  font-size: clamp(0.95rem, 2.2vw, 1.06rem);
+  line-height: 1.45;
+}
+
+.h-earth-3d-public-readout-details {
+  grid-column: 1 / -1;
+  border-top: 1px solid var(--h-earth-border);
+  padding-top: 0.8rem;
+}
+
+.h-earth-3d-public-readout-details summary {
+  width: fit-content;
+  cursor: pointer;
+  color: var(--h-earth-accent);
+  font-size: 0.72rem;
+  font-weight: 850;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 }
 
 .h-earth-3d-readout-facts {
+  display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  margin-top: 0;
+  gap: 0.7rem;
+  margin: 0.85rem 0 0;
+}
+
+.h-earth-3d-readout-facts div {
+  display: grid;
+  gap: 0.2rem;
+  min-width: 0;
+}
+
+.h-earth-3d-readout-facts dt {
+  color: var(--h-earth-text-dim);
+  font-size: 0.66rem;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+}
+
+.h-earth-3d-readout-facts dd {
+  margin: 0;
+  color: var(--h-earth-text-muted);
+  font-size: 0.78rem;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
 }
 
 .h-earth-3d-readout-boundary {
-  margin: 14px 0 0;
-  padding: 10px 12px;
+  margin: 0.85rem 0 0;
+  padding: 0.7rem 0.8rem;
   border: 1px solid rgba(216, 189, 142, 0.28);
   border-radius: var(--h-earth-radius-sm);
   background: rgba(216, 189, 142, 0.08);
   color: var(--h-earth-text-muted);
-  font-size: 0.82rem;
+  font-size: 0.78rem;
+  line-height: 1.4;
 }
 
 /* Drawers */
@@ -477,15 +623,15 @@ button:disabled {
 
 .h-earth-3d-target-drawer-toggle,
 .h-earth-3d-developer-drawer-toggle {
+  min-height: 50px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  min-height: 50px;
   padding: 14px 16px;
   color: var(--h-earth-text);
   font-size: 0.82rem;
-  font-weight: 800;
+  font-weight: 850;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   cursor: pointer;
@@ -540,18 +686,6 @@ button:disabled {
   background: rgba(255, 255, 255, 0.05);
   color: var(--h-earth-text-muted);
   text-align: left;
-  transition:
-    border-color 160ms ease,
-    background 160ms ease,
-    color 160ms ease,
-    transform 160ms ease;
-}
-
-.h-earth-3d-target-button:hover:not(:disabled) {
-  transform: translateY(-1px);
-  border-color: rgba(149, 213, 232, 0.42);
-  background: rgba(149, 213, 232, 0.09);
-  color: var(--h-earth-text);
 }
 
 .h-earth-3d-target-button[aria-current="true"] {
@@ -610,11 +744,29 @@ button:disabled {
   gap: 8px;
 }
 
+.h-earth-3d-copy-button {
+  min-height: 38px;
+  padding: 8px 10px;
+  font-size: 0.78rem;
+}
+
+.h-earth-3d-inline-copy-button {
+  min-height: 30px;
+  padding: 5px 8px;
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
 .h-earth-3d-control-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(280px, 1fr));
   gap: 16px;
   align-items: start;
+}
+
+.h-earth-3d-panel {
+  padding: 14px;
 }
 
 .h-earth-3d-panel-heading-row {
@@ -653,10 +805,6 @@ button:disabled {
   overflow-wrap: anywhere;
 }
 
-.h-earth-3d-debug-panel {
-  min-width: 0;
-}
-
 .h-earth-3d-receipt-stack,
 .h-earth-3d-receipt-grid {
   display: grid;
@@ -675,6 +823,7 @@ button:disabled {
 }
 
 .h-earth-3d-claim-boundary {
+  padding: 14px;
   color: var(--h-earth-text-muted);
   box-shadow: none;
 }
@@ -774,7 +923,7 @@ button:disabled {
   outline-offset: 3px;
 }
 
-/* Renderer descriptor scale rules. These do not create objects. */
+/* Renderer descriptor scale rules. These style renderer descriptors only. */
 
 .h-earth-layer-water-surface-plane .h-earth-render-object,
 .h-earth-material-water {
@@ -1075,15 +1224,13 @@ button:disabled {
 /* Responsive */
 
 @media (max-width: 1120px) {
-  .h-earth-3d-header {
+  .h-earth-3d-public-header,
+  .h-earth-3d-arrival {
     grid-template-columns: 1fr;
   }
 
-  .h-earth-3d-world-overlay {
-    position: absolute;
-    top: 14px;
-    right: 14px;
-    width: min(340px, calc(100% - 28px));
+  .h-earth-3d-public-nav {
+    justify-content: flex-start;
   }
 
   .h-earth-3d-readout-card {
@@ -1101,87 +1248,79 @@ button:disabled {
   }
 }
 
-/* Mobile correction */
-
 @media (max-width: 760px) {
   .h-earth-3d-route-root {
-    padding: 6px;
+    padding: max(10px, env(safe-area-inset-top)) 8px max(28px, env(safe-area-inset-bottom));
   }
 
   .h-earth-3d-shell {
     gap: 8px;
   }
 
-  .h-earth-3d-header {
-    display: block;
+  .h-earth-3d-public-header {
+    gap: 0.7rem;
   }
 
-  .h-earth-3d-header-copy {
-    padding: 12px 14px;
+  .h-earth-3d-brand-mark {
+    width: 3rem;
+    height: 3rem;
+  }
+
+  .h-earth-3d-public-nav {
+    gap: 0.35rem;
+  }
+
+  .h-earth-3d-public-nav a {
+    min-height: 2rem;
+    padding: 0.42rem 0.58rem;
+    font-size: 0.58rem;
+  }
+
+  .h-earth-3d-arrival {
+    padding: 0.9rem;
     border-radius: 18px;
   }
 
-  .h-earth-3d-kicker {
-    margin-bottom: 6px;
-    font-size: 0.68rem;
-    letter-spacing: 0.16em;
-  }
-
   .h-earth-3d-title {
-    font-size: clamp(2rem, 12vw, 3.2rem);
-    line-height: 0.94;
-    letter-spacing: -0.065em;
+    font-size: clamp(2.15rem, 11vw, 3.35rem);
+    line-height: 0.90;
+    letter-spacing: -0.095em;
   }
 
-  .h-earth-3d-subtitle {
-    margin-top: 10px;
-    font-size: 0.9rem;
-    line-height: 1.45;
+  .h-earth-3d-lead {
+    font-size: 0.88rem;
+    line-height: 1.42;
   }
 
-  .h-earth-3d-boundary-card {
+  .h-earth-3d-arrival-note {
     display: none;
-  }
-
-  .h-earth-3d-world-shell {
-    gap: 8px;
   }
 
   .h-earth-3d-world-stage,
   .h-earth-3d-stage {
     min-height: var(--h-earth-mobile-stage-height);
-    max-height: 78svh;
+    max-height: 76svh;
     border-radius: 20px;
   }
 
   .h-earth-3d-world-overlay {
-    position: absolute;
     inset: 8px;
-    width: auto;
-    display: block;
-    pointer-events: none;
   }
 
   .h-earth-3d-primary-hud {
-    position: absolute;
-    top: 0;
     left: 0;
     right: 0;
-    pointer-events: auto;
+    width: auto;
   }
 
-  .h-earth-3d-primary-hud .h-earth-3d-hud,
   .h-earth-3d-hud {
-    display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
     gap: 6px;
-    align-items: stretch;
   }
 
   .h-earth-3d-hud-panel {
     padding: 7px;
     border-radius: 12px;
-    background: rgba(7, 16, 25, 0.72);
     box-shadow: none;
   }
 
@@ -1192,36 +1331,40 @@ button:disabled {
   .h-earth-3d-status {
     min-height: 36px;
     padding: 6px 8px;
-    font-size: 0.62rem;
+    font-size: 0.60rem;
     line-height: 1.2;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.035em;
   }
 
   .h-earth-3d-action-button {
-    min-height: 36px;
     width: auto;
     min-width: 128px;
+    min-height: 36px;
     padding: 6px 10px;
     font-size: 0.82rem;
     white-space: nowrap;
   }
 
   .h-earth-3d-selected-target-card {
-    position: absolute;
     left: 0;
     right: 0;
     bottom: 0;
-    max-height: none;
+    width: auto;
     padding: 8px 10px;
     border-radius: 14px;
-    background: rgba(7, 16, 25, 0.70);
     box-shadow: none;
-    pointer-events: auto;
   }
 
   .h-earth-3d-selected-target-card .h-earth-3d-card-kicker {
     margin-bottom: 2px;
-    font-size: 0.58rem;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    font-size: 0.56rem;
+  }
+
+  .h-earth-3d-selected-target-card .h-earth-3d-card-kicker::before {
+    display: none;
   }
 
   .h-earth-3d-selected-target-card .h-earth-3d-card-title {
@@ -1232,10 +1375,6 @@ button:disabled {
     text-overflow: ellipsis;
   }
 
-  .h-earth-3d-selected-target-card .h-earth-3d-compact-facts {
-    display: none;
-  }
-
   .h-earth-3d-fallback {
     left: 8px;
     right: 8px;
@@ -1243,8 +1382,8 @@ button:disabled {
     width: auto;
     max-height: 58px;
     padding: 7px 9px;
-    font-size: 0.7rem;
-    line-height: 1.3;
+    font-size: 0.68rem;
+    line-height: 1.28;
     background: rgba(20, 20, 12, 0.58);
   }
 
@@ -1256,59 +1395,57 @@ button:disabled {
 
   .h-earth-3d-readout-card {
     display: block;
-    padding: 12px 14px;
+    padding: 0.9rem;
     border-radius: 18px;
   }
 
-  .h-earth-3d-readout-heading {
-    margin-bottom: 8px;
-  }
-
-  .h-earth-3d-readout-card .h-earth-3d-card-kicker {
-    font-size: 0.64rem;
-    margin-bottom: 4px;
+  .h-earth-3d-card-kicker {
+    padding: 0.42rem 0.62rem;
+    font-size: 0.58rem;
   }
 
   .h-earth-3d-readout-card .h-earth-3d-card-title {
-    font-size: 1.35rem;
-    line-height: 1.08;
+    margin-top: 0.55rem;
+    font-size: 1.18rem;
+  }
+
+  .h-earth-3d-public-readout-line {
+    margin-top: 0.65rem;
+    font-size: 0.86rem;
+    line-height: 1.38;
+  }
+
+  .h-earth-3d-public-readout-details {
+    margin-top: 0.75rem;
   }
 
   .h-earth-3d-readout-facts {
-    display: grid;
     grid-template-columns: 1fr;
-    gap: 6px;
+    gap: 0.55rem;
   }
 
   .h-earth-3d-readout-facts div {
-    display: grid;
-    grid-template-columns: 9.5rem minmax(0, 1fr);
-    gap: 8px;
-    align-items: baseline;
+    grid-template-columns: 8.5rem minmax(0, 1fr);
+    gap: 0.55rem;
   }
 
   .h-earth-3d-readout-facts dt {
-    font-size: 0.62rem;
+    font-size: 0.58rem;
   }
 
   .h-earth-3d-readout-facts dd {
-    font-size: 0.82rem;
-    line-height: 1.25;
-    overflow-wrap: anywhere;
+    font-size: 0.74rem;
   }
 
   .h-earth-3d-readout-boundary {
-    margin-top: 10px;
-    padding: 8px 10px;
-    font-size: 0.74rem;
-    line-height: 1.4;
+    font-size: 0.72rem;
   }
 
   .h-earth-3d-target-drawer-toggle,
   .h-earth-3d-developer-drawer-toggle {
     min-height: 42px;
     padding: 10px 12px;
-    font-size: 0.72rem;
+    font-size: 0.70rem;
   }
 
   .h-earth-3d-copy-actions {
@@ -1320,28 +1457,11 @@ button:disabled {
     width: 100%;
   }
 
-  .h-earth-3d-control-grid,
-  .h-earth-3d-receipt-stack,
-  .h-earth-3d-receipt-grid {
-    gap: 10px;
-  }
-
-  .h-earth-3d-control-grid .h-earth-3d-panel,
-  .h-earth-3d-receipt-grid .h-earth-3d-panel,
-  .h-earth-3d-receipt-stack .h-earth-3d-panel,
-  .h-earth-3d-claim-boundary {
-    max-height: none;
-    overflow: visible;
-  }
-
   .h-earth-3d-inspection-panel,
   .h-earth-3d-debug,
   .h-earth-3d-receipt-output {
-    display: block;
     min-height: 220px;
     max-height: 58svh;
-    overflow: auto;
-    -webkit-overflow-scrolling: touch;
     font-size: 0.72rem;
   }
 
@@ -1354,21 +1474,29 @@ button:disabled {
 
 @media (max-width: 420px) {
   .h-earth-3d-route-root {
-    padding: 6px;
+    padding-left: 6px;
+    padding-right: 6px;
+  }
+
+  .h-earth-3d-brand-copy span {
+    font-size: 0.58rem;
+  }
+
+  .h-earth-3d-brand-copy strong {
+    font-size: 1.05rem;
+  }
+
+  .h-earth-3d-title {
+    font-size: clamp(1.9rem, 10vw, 2.85rem);
   }
 
   .h-earth-3d-world-stage,
   .h-earth-3d-stage {
     min-height: 70svh;
-    max-height: 76svh;
+    max-height: 74svh;
     border-radius: 18px;
   }
 
-  .h-earth-3d-title {
-    font-size: clamp(1.85rem, 11vw, 2.85rem);
-  }
-
-  .h-earth-3d-primary-hud .h-earth-3d-hud,
   .h-earth-3d-hud {
     grid-template-columns: 1fr;
   }
@@ -1380,10 +1508,6 @@ button:disabled {
   .h-earth-3d-readout-facts div {
     grid-template-columns: 1fr;
     gap: 1px;
-  }
-
-  .h-earth-3d-fallback {
-    bottom: 54px;
   }
 
   .h-earth-layer-water-surface-plane .h-earth-render-object,
@@ -1404,8 +1528,8 @@ button:disabled {
 @media (max-height: 700px) and (max-width: 760px) {
   .h-earth-3d-world-stage,
   .h-earth-3d-stage {
-    min-height: 72svh;
-    max-height: 76svh;
+    min-height: 70svh;
+    max-height: 74svh;
   }
 }
 

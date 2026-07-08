@@ -1,10 +1,10 @@
 /*
   /showroom/globe/h-earth/index.css
   RENEWED FILE
-  H_EARTH_3D_ROUTE_SHELL_STYLE_FILE_BIRTH_STEP_030C_RENDERER_OBJECT_SCALE_AND_MOBILE_DIAGNOSTIC_RENEWAL_v1
+  H_EARTH_3D_ROUTE_SHELL_STYLE_FILE_BIRTH_STEP_030D_MOBILE_DIAGNOSTIC_UNBLOCK_RENEWAL_v1
 
   Renews:
-  H_EARTH_3D_ROUTE_SHELL_STYLE_FILE_BIRTH_STEP_030B_PRIMARY_VIEWPORT_AND_DIAGNOSTIC_COLLAPSE_RENEWAL_v1
+  H_EARTH_3D_ROUTE_SHELL_STYLE_FILE_BIRTH_STEP_030C_RENDERER_OBJECT_SCALE_AND_MOBILE_DIAGNOSTIC_RENEWAL_v1
 
   Purpose:
   Provides route shell, primary renderer viewport, compact status/action surface,
@@ -13,18 +13,14 @@
   for the H-Earth 3D Candidate Preview.
 
   Renewal scope:
-  - Preserve Step 030B primary viewport behavior.
+  - Preserve Step 030C renderer-object scale support.
   - Preserve renderer-generated class compatibility from materials.js, layers.js,
     and nodes.js.
-  - Correct tiny-object presentation by adding renderer-object size rules keyed
-    by layer, material, and context classes.
-  - Render wet sand, dry sand, water, foam, nearshore wave, air haze, manor
-    context, distant rocks, stones, jagged rocks, tide pools, and inspection
-    anchor as candidate DOM/CSS-3D descriptor surfaces.
-  - Keep the renderer stage dominant without hiding route status/action too far
-    below the fold.
-  - Keep diagnostic/control panels compact on mobile but reachable.
-  - Preserve Bootstrap Debug availability without making it the primary screen.
+  - Keep the renderer stage usable on mobile without blocking diagnostics.
+  - Remove mobile diagnostic panel clipping caused by max-height + overflow hidden.
+  - Make Selectable Targets, Ground Condition Read Bridge, Bootstrap Debug, and
+    Boundary Notice readable on mobile.
+  - Preserve Bootstrap Debug availability as a real diagnostic surface.
   - Do not create shell-owned scene objects.
   - Do not create a CSS-only false beach independent of renderer descriptors.
   - Do not introduce canvas, WebGL, visual-pass, validation, production,
@@ -50,7 +46,7 @@
 
   --h-earth-stage-width: min(100%, 1180px);
   --h-earth-stage-height: clamp(560px, 72vh, 820px);
-  --h-earth-mobile-stage-height: min(72svh, 680px);
+  --h-earth-mobile-stage-height: min(58svh, 520px);
 
   --h-earth-radius-lg: 28px;
   --h-earth-radius-md: 18px;
@@ -268,6 +264,9 @@ button:disabled {
   bottom: 20px;
   z-index: 20;
   max-width: 760px;
+  max-height: 22svh;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
   padding: 12px 14px;
   border: 1px solid rgba(242, 212, 146, 0.34);
   border-radius: var(--h-earth-radius-sm);
@@ -379,6 +378,7 @@ button:disabled {
   margin: 0;
   padding: 14px;
   overflow: auto;
+  -webkit-overflow-scrolling: touch;
   border: 1px solid var(--h-earth-border);
   border-radius: var(--h-earth-radius-sm);
   background: rgba(0, 0, 0, 0.22);
@@ -929,28 +929,24 @@ button:disabled {
 
   .h-earth-3d-control-grid .h-earth-3d-panel,
   .h-earth-3d-claim-boundary {
-    max-height: 72px;
-    overflow: hidden;
-    transition:
-      max-height 180ms ease,
-      border-color 180ms ease,
-      background 180ms ease;
-  }
-
-  .h-earth-3d-control-grid .h-earth-3d-panel:hover,
-  .h-earth-3d-control-grid .h-earth-3d-panel:focus-within,
-  .h-earth-3d-claim-boundary:hover,
-  .h-earth-3d-claim-boundary:focus-within {
-    max-height: 72svh;
-    border-color: var(--h-earth-border-strong);
-    background: var(--h-earth-bg-panel-strong);
+    max-height: none;
+    overflow: visible;
   }
 
   .h-earth-3d-inspection-panel,
   .h-earth-3d-debug {
-    min-height: 140px;
-    max-height: 48svh;
+    display: block;
+    min-height: 240px;
+    max-height: 62svh;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
     font-size: 0.72rem;
+  }
+
+  .h-earth-3d-target-list {
+    max-height: 48svh;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
   }
 }
 
@@ -960,7 +956,8 @@ button:disabled {
   }
 
   .h-earth-3d-stage {
-    min-height: min(70svh, 620px);
+    min-height: min(52svh, 460px);
+    border-radius: 18px;
   }
 
   .h-earth-3d-header-copy,
@@ -968,13 +965,20 @@ button:disabled {
     border-radius: 16px;
   }
 
-  .h-earth-3d-stage {
-    border-radius: 18px;
-  }
-
   .h-earth-3d-control-grid .h-earth-3d-panel,
   .h-earth-3d-claim-boundary {
-    max-height: 66px;
+    max-height: none;
+    overflow: visible;
+  }
+
+  .h-earth-3d-inspection-panel,
+  .h-earth-3d-debug {
+    min-height: 260px;
+    max-height: 64svh;
+  }
+
+  .h-earth-3d-target-list {
+    max-height: 52svh;
   }
 
   .h-earth-layer-water-surface-plane .h-earth-render-object,

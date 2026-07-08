@@ -1,23 +1,38 @@
 // /showroom/globe/h-earth/renderer.js
 // COMPLETE RENEWED FILE
-// H_EARTH_3D_RENDERER_FILE_BIRTH_STEP_031D_SINGLE_PASS_GEOMETRY_EXPANSION_GUARDED_BINDING_v1
+// H_EARTH_3D_RENDERER_FILE_BIRTH_STEP_031E_SUPPORT_PORT_WIRING_AND_FINAL_DOM_CLASS_RECEIPT_ALIGNMENT_v1
 //
 // Renews:
-// H_EARTH_3D_RENDERER_FILE_BIRTH_STEP_031C_SINGLE_PASS_GEOMETRY_EXPANSION_BINDING_v1
+// H_EARTH_3D_RENDERER_FILE_BIRTH_STEP_031D_SINGLE_PASS_GEOMETRY_EXPANSION_GUARDED_BINDING_v1
+//
+// Preserves:
+// H_EARTH_3D_RENDER_GEOMETRY_PORT_FILE_BIRTH_STEP_031E_SUPPORT_PORT_RENUMERIZATION_RENEWAL_v1
+// H_EARTH_3D_RENDER_MATERIAL_PORT_FILE_BIRTH_STEP_031F_TRUE_MATERIAL_RENUMERIZATION_RENEWAL_v1
+// H_EARTH_3D_RENDER_LAYER_PORT_FILE_BIRTH_STEP_031G_TRUE_LAYER_RENUMERIZATION_RENEWAL_v1
+// H_EARTH_3D_RENDER_NODE_FACTORY_FILE_BIRTH_STEP_031I_RENDERER_COMPATIBILITY_AND_FINAL_DOM_CLASS_EMISSION_ALIGNMENT_v1
 //
 // Purpose:
 // DOM/CSS3D candidate renderer host with mount/destroy API, parent-only
-// candidate scene output for compositor, and guarded single-pass geometry
-// expansion only after final render-input selection.
+// candidate scene output for compositor, guarded single-pass geometry
+// expansion only after final render-input selection, complete support-port
+// injection into the node factory, and mount receipt evidence for final DOM
+// class-emission posture.
 //
-// Critical corrections:
-// - resolveCandidateRenderScene(...) emits parent descriptors only.
-// - Geometry expansion is never applied before compositor.
-// - Geometry expansion is skipped if selected input already contains expanded
-//   geometry markers.
-// - Geometry-port child dimensions/classes are preserved before renderer
+// Critical corrections from 031D:
+// - resolveCandidateRenderScene(...) still emits parent descriptors only.
+// - Geometry expansion is still never applied before compositor.
+// - Geometry expansion is still skipped if selected input already contains
+//   expanded geometry markers.
+// - Geometry-port child dimensions/classes are still preserved before renderer
 //   profile fallback.
-// - maxExpandedNodes is explicitly passed to geometry.js.
+// - maxExpandedNodes is still explicitly passed to geometry.js.
+// - layerPort is now injected into createHEarthRenderObjectNode(...).
+// - documentRef is passed directly and through options for node-factory safety.
+// - node-factory visualGrammarReady / visualGrammarIncomplete counts are
+//   reported in the mount receipt.
+// - finalDomClassEmissionAuthority is reported when the 031I node factory is
+//   used.
+// - support-port contract/receipt evidence is exposed in renderer receipts.
 //
 // Boundary:
 // DOM/CSS3D candidate descriptors only. No WebGL. No canvas. No SVG.
@@ -59,18 +74,18 @@ import {
 
 export const H_EARTH_3D_RENDERER_CONTRACT = Object.freeze({
   contractId:
-    'H_EARTH_3D_RENDERER_FILE_BIRTH_STEP_031D_SINGLE_PASS_GEOMETRY_EXPANSION_GUARDED_BINDING_v1',
+    'H_EARTH_3D_RENDERER_FILE_BIRTH_STEP_031E_SUPPORT_PORT_WIRING_AND_FINAL_DOM_CLASS_RECEIPT_ALIGNMENT_v1',
   renewedFrom:
-    'H_EARTH_3D_RENDERER_FILE_BIRTH_STEP_031C_SINGLE_PASS_GEOMETRY_EXPANSION_BINDING_v1',
+    'H_EARTH_3D_RENDERER_FILE_BIRTH_STEP_031D_SINGLE_PASS_GEOMETRY_EXPANSION_GUARDED_BINDING_v1',
   priorRendererBaseline:
-    'H_EARTH_3D_RENDERER_FILE_BIRTH_STEP_031B_GEOMETRY_EXPANSION_PORT_BINDING_v1',
+    'H_EARTH_3D_RENDERER_FILE_BIRTH_STEP_031C_SINGLE_PASS_GEOMETRY_EXPANSION_BINDING_v1',
   file: '/showroom/globe/h-earth/renderer.js',
   route: '/showroom/globe/h-earth/',
   sourceRoot: '/h-earth-3d/',
   fileClass:
-    'MULTI_PORT_DOM_CSS_3D_RENDERER_HOST_WITH_GUARDED_SINGLE_PASS_GEOMETRY_EXPANSION',
+    'MULTI_PORT_DOM_CSS_3D_RENDERER_HOST_WITH_SUPPORT_PORT_WIRING_AND_FINAL_DOM_CLASS_RECEIPT_ALIGNMENT',
   status:
-    'DETERMINISTIC_DOM_CSS_3D_CANDIDATE_RENDERER_HOST_DEFINED_GUARDED_SINGLE_PASS_GEOMETRY_EXPANSION_BOUND',
+    'DETERMINISTIC_DOM_CSS_3D_CANDIDATE_RENDERER_HOST_SUPPORT_PORT_WIRING_AND_RECEIPT_ALIGNMENT_BOUND',
   targetMatrix: 'H-Earth',
   matrixRole: 'Ground-View Matrix',
   activeCell: 'H_EARTH_GROUND_CELL_001',
@@ -86,6 +101,11 @@ export const H_EARTH_3D_RENDERER_CONTRACT = Object.freeze({
     geometryPortDimensionsPreserved: true,
     geometryPortClassesPreserved: true,
     explicitMaxExpandedNodesPassedToGeometryPort: true,
+    materialPortInjectionPreserved: true,
+    layerPortInjectionAdded: true,
+    nodeFactory031ICompatibilityPreserved: true,
+    finalDomClassEmissionReceiptAlignmentAdded: true,
+    supportPortReceiptEvidenceAdded: true,
     step029IndexCompatibilityPreserved: true
   })
 });
@@ -143,6 +163,10 @@ export const H_EARTH_3D_RENDERER_MOUNT_CONTRACT = Object.freeze({
   usesMaterialPort: true,
   usesLayerPort: true,
   usesGeometryPort: true,
+  injectsMaterialPortIntoNodeFactory: true,
+  injectsLayerPortIntoNodeFactory: true,
+  injectsDocumentRefIntoNodeFactory: true,
+  reportsFinalDomClassEmissionAuthority: true,
   candidateRenderSceneParentDescriptorsOnly: true,
   compositorReceivesUnexpandedCandidateScene: true,
   geometryExpansionAfterCompositorSelectionOnly: true,
@@ -151,8 +175,8 @@ export const H_EARTH_3D_RENDERER_MOUNT_CONTRACT = Object.freeze({
 });
 
 export const H_EARTH_3D_RENDER_PROJECTION_MODEL = Object.freeze({
-  modelId: 'H_EARTH_3D_RENDER_PROJECTION_MODEL_STEP_031D',
-  renewedFrom: 'H_EARTH_3D_RENDER_PROJECTION_MODEL_STEP_031C',
+  modelId: 'H_EARTH_3D_RENDER_PROJECTION_MODEL_STEP_031E',
+  renewedFrom: 'H_EARTH_3D_RENDER_PROJECTION_MODEL_STEP_031D',
   projectionClass: 'CSS_3D_CANDIDATE_LANDSCAPE_PROJECTION_DESCRIPTOR',
   coordinateSystem: 'candidate-local-x-y-z',
   cssTransformUnit: 'px',
@@ -221,8 +245,8 @@ export const H_EARTH_3D_RENDER_PROJECTION_MODEL = Object.freeze({
 });
 
 export const H_EARTH_3D_RENDER_VOLUME_MODEL = Object.freeze({
-  modelId: 'H_EARTH_3D_RENDER_VOLUME_MODEL_STEP_031D',
-  renewedFrom: 'H_EARTH_3D_RENDER_VOLUME_MODEL_STEP_031C',
+  modelId: 'H_EARTH_3D_RENDER_VOLUME_MODEL_STEP_031E',
+  renewedFrom: 'H_EARTH_3D_RENDER_VOLUME_MODEL_STEP_031D',
   previewVolumeOnly: true,
   css3dCandidateVolume: true,
   previewContainer: Object.freeze({
@@ -263,8 +287,8 @@ export const H_EARTH_3D_RENDER_VOLUME_MODEL = Object.freeze({
 });
 
 export const H_EARTH_3D_RENDER_GEOMETRY_MAP = Object.freeze({
-  modelId: 'H_EARTH_3D_RENDER_GEOMETRY_MAP_STEP_031D',
-  renewedFrom: 'H_EARTH_3D_RENDER_GEOMETRY_MAP_STEP_031C',
+  modelId: 'H_EARTH_3D_RENDER_GEOMETRY_MAP_STEP_031E',
+  renewedFrom: 'H_EARTH_3D_RENDER_GEOMETRY_MAP_STEP_031D',
   geometryClass:
     'CANDIDATE_DESCRIPTOR_LANDSCAPE_GEOMETRY_MAP_WITH_GUARDED_SINGLE_PASS_EXPANSION_PORT',
   geometryPortBound: true,
@@ -282,7 +306,8 @@ export const H_EARTH_3D_RENDER_GEOMETRY_MAP = Object.freeze({
 });
 
 export const H_EARTH_3D_RENDER_GEOMETRY_EXPANSION_MODEL = Object.freeze({
-  modelId: 'H_EARTH_3D_RENDER_GEOMETRY_EXPANSION_MODEL_STEP_031D',
+  modelId: 'H_EARTH_3D_RENDER_GEOMETRY_EXPANSION_MODEL_STEP_031E',
+  renewedFrom: 'H_EARTH_3D_RENDER_GEOMETRY_EXPANSION_MODEL_STEP_031D',
   file: '/showroom/globe/h-earth/renderer.js',
   portFile: '/showroom/globe/h-earth/render/geometry.js',
   geometryPortBound: true,
@@ -312,7 +337,8 @@ export const H_EARTH_3D_RENDER_GEOMETRY_EXPANSION_MODEL = Object.freeze({
 });
 
 export const H_EARTH_3D_RENDER_SURFACE_SAMPLING_MODEL = Object.freeze({
-  modelId: 'H_EARTH_3D_RENDER_SURFACE_SAMPLING_MODEL_STEP_031D',
+  modelId: 'H_EARTH_3D_RENDER_SURFACE_SAMPLING_MODEL_STEP_031E',
+  renewedFrom: 'H_EARTH_3D_RENDER_SURFACE_SAMPLING_MODEL_STEP_031D',
   candidateSurfaceSamplingOnly: true,
   geometryPortMayEmitSurfaceSamples: true,
   terrainEngineClaim: false,
@@ -322,7 +348,8 @@ export const H_EARTH_3D_RENDER_SURFACE_SAMPLING_MODEL = Object.freeze({
 });
 
 export const H_EARTH_3D_RENDER_SHORELINE_CURVE_MODEL = Object.freeze({
-  modelId: 'H_EARTH_3D_RENDER_SHORELINE_CURVE_MODEL_STEP_031D',
+  modelId: 'H_EARTH_3D_RENDER_SHORELINE_CURVE_MODEL_STEP_031E',
+  renewedFrom: 'H_EARTH_3D_RENDER_SHORELINE_CURVE_MODEL_STEP_031D',
   candidateShorelineCurveOnly: true,
   geometryPortMayEmitShorelineSegments: true,
   fluidSimulationClaim: false,
@@ -332,7 +359,8 @@ export const H_EARTH_3D_RENDER_SHORELINE_CURVE_MODEL = Object.freeze({
 });
 
 export const H_EARTH_3D_RENDER_CLUSTER_MODEL = Object.freeze({
-  modelId: 'H_EARTH_3D_RENDER_CLUSTER_MODEL_STEP_031D',
+  modelId: 'H_EARTH_3D_RENDER_CLUSTER_MODEL_STEP_031E',
+  renewedFrom: 'H_EARTH_3D_RENDER_CLUSTER_MODEL_STEP_031D',
   candidateClusterDescriptorsOnly: true,
   geometryPortMayEmitClusterChildDescriptors: true,
   collisionClaim: false,
@@ -342,7 +370,8 @@ export const H_EARTH_3D_RENDER_CLUSTER_MODEL = Object.freeze({
 });
 
 export const H_EARTH_3D_RENDER_CONTEXT_COMPRESSION_MODEL = Object.freeze({
-  modelId: 'H_EARTH_3D_RENDER_CONTEXT_COMPRESSION_MODEL_STEP_031D',
+  modelId: 'H_EARTH_3D_RENDER_CONTEXT_COMPRESSION_MODEL_STEP_031E',
+  renewedFrom: 'H_EARTH_3D_RENDER_CONTEXT_COMPRESSION_MODEL_STEP_031D',
   contextCompressionOnly: true,
   manorInteriorAccessClaim: false,
   distantTraversalClaim: false,
@@ -396,7 +425,8 @@ export const H_EARTH_3D_RENDER_NODE_BUDGET = Object.freeze({
 });
 
 export const H_EARTH_3D_RENDER_INSPECTION_AFFORDANCE_MODEL = Object.freeze({
-  modelId: 'H_EARTH_3D_RENDER_INSPECTION_AFFORDANCE_MODEL_STEP_031D',
+  modelId: 'H_EARTH_3D_RENDER_INSPECTION_AFFORDANCE_MODEL_STEP_031E',
+  renewedFrom: 'H_EARTH_3D_RENDER_INSPECTION_AFFORDANCE_MODEL_STEP_031D',
   descriptorAffordancesOnly: true,
   defaultAffordancesEnabled: false,
   actionExecutionClaim: false,
@@ -411,6 +441,15 @@ export const H_EARTH_3D_RENDER_PORTS = Object.freeze({
   materialPort: H_EARTH_3D_RENDER_MATERIAL_PORT,
   layerPort: H_EARTH_3D_RENDER_LAYER_PORT,
   geometryPort: H_EARTH_3D_RENDER_GEOMETRY_PORT,
+  supportPortWiring: Object.freeze({
+    geometryPort: true,
+    materialPort: true,
+    layerPort: true,
+    nodeFactoryPort: true,
+    layerPortInjectedIntoNodeFactory: true,
+    materialPortInjectedIntoNodeFactory: true,
+    documentRefInjectedIntoNodeFactory: true
+  }),
   deferredPorts: Object.freeze({
     geometryPort: true,
     effectPort: false,
@@ -439,6 +478,80 @@ export function normalizeHEarthRenderToken(value, fallback = 'unresolved') {
     .replace(/-+/g, '-')
     .replace(/^-|-$/g, '')
     .toLowerCase() || fallback;
+}
+
+export function resolveHEarthPortContractId(port, fallback = null) {
+  return (
+    port?.contract?.contractId ||
+    port?.receipt?.contractId ||
+    port?.CONTRACT?.contractId ||
+    port?.id ||
+    fallback
+  );
+}
+
+export function resolveHEarthPortReceipt(port, fallbackReceiptType) {
+  return (
+    port?.receipt ||
+    port?.getReceipt?.() ||
+    Object.freeze({
+      receiptType: fallbackReceiptType,
+      available: Boolean(port),
+      contractId: resolveHEarthPortContractId(port),
+      claimBoundaryPreserved: true
+    })
+  );
+}
+
+export function resolveNodeFactoryReceiptSafe() {
+  try {
+    return resolveHEarthPortReceipt(
+      H_EARTH_3D_RENDER_NODE_FACTORY,
+      'H_EARTH_3D_RENDER_NODE_FACTORY_RECEIPT_REFERENCE'
+    );
+  } catch (error) {
+    return Object.freeze({
+      receiptType: 'H_EARTH_3D_RENDER_NODE_FACTORY_RECEIPT_UNAVAILABLE',
+      available: false,
+      failureCode: 'NODE_FACTORY_RECEIPT_EXCEPTION',
+      message: String(error?.message || error || 'UNKNOWN_NODE_FACTORY_RECEIPT_ERROR'),
+      claimBoundaryPreserved: true
+    });
+  }
+}
+
+export function resolveMaterialPortReceiptSafe() {
+  try {
+    return resolveHEarthPortReceipt(
+      H_EARTH_3D_RENDER_MATERIAL_PORT,
+      'H_EARTH_3D_RENDER_MATERIAL_PORT_RECEIPT_REFERENCE'
+    );
+  } catch (error) {
+    return Object.freeze({
+      receiptType: 'H_EARTH_3D_RENDER_MATERIAL_PORT_RECEIPT_UNAVAILABLE',
+      available: false,
+      failureCode: 'MATERIAL_PORT_RECEIPT_EXCEPTION',
+      message: String(error?.message || error || 'UNKNOWN_MATERIAL_PORT_RECEIPT_ERROR'),
+      claimBoundaryPreserved: true
+    });
+  }
+}
+
+export function resolveLayerPortReceiptSafe() {
+  try {
+    return resolveHEarthPortReceipt(
+      H_EARTH_3D_RENDER_LAYER_PORT,
+      'H_EARTH_3D_RENDER_LAYER_PORT_RECEIPT_REFERENCE'
+    );
+  } catch (error) {
+    return Object.freeze({
+      receiptType: 'H_EARTH_3D_RENDER_LAYER_PORT_RECEIPT_UNAVAILABLE',
+      available: false,
+      failureCode: 'LAYER_PORT_RECEIPT_EXCEPTION',
+      message: String(error?.message || error || 'UNKNOWN_LAYER_PORT_RECEIPT_ERROR'),
+      claimBoundaryPreserved: true
+    });
+  }
 }
 
 export function isHEarthGeometryExpandedNode(node) {
@@ -1288,7 +1401,6 @@ export function expandLandscapeRenderNodesWithGeometryPort({
   boundary = H_EARTH_3D_RENDER_BOUNDARY_FLAGS
 } = {}) {
   const parentNodes = Array.isArray(nodes) ? nodes : [];
-
   const alreadyExpanded = inputContainsHEarthGeometryExpansion(parentNodes);
 
   if (alreadyExpanded === true) {
@@ -1566,6 +1678,9 @@ export function resolveCandidateRenderScene({
     geometryParentNodeCount: budgeted.returnedNodeCount,
     geometryChildNodeCount: 0,
     geometryReceipt: resolveGeometryPortReceiptSafe(),
+    nodeFactoryReceipt: resolveNodeFactoryReceiptSafe(),
+    materialPortReceipt: resolveMaterialPortReceiptSafe(),
+    layerPortReceipt: resolveLayerPortReceiptSafe(),
     layerOrder: H_EARTH_3D_RENDER_LAYER_ORDER,
     projectionModel: H_EARTH_3D_RENDER_PROJECTION_MODEL,
     renderVolumeModel: H_EARTH_3D_RENDER_VOLUME_MODEL,
@@ -1771,18 +1886,38 @@ export function buildRendererMountReceipt({
   materialPortUsed = false,
   layerPortUsed = false,
   nodeFactoryPortUsed = false,
+  geometryPortContractId = resolveHEarthPortContractId(H_EARTH_3D_RENDER_GEOMETRY_PORT),
+  materialPortContractId = resolveHEarthPortContractId(H_EARTH_3D_RENDER_MATERIAL_PORT),
+  layerPortContractId = resolveHEarthPortContractId(H_EARTH_3D_RENDER_LAYER_PORT),
+  nodeFactoryContractId = resolveHEarthPortContractId(H_EARTH_3D_RENDER_NODE_FACTORY),
+  nodeFactoryReceipt = resolveNodeFactoryReceiptSafe(),
+  materialPortReceipt = resolveMaterialPortReceiptSafe(),
+  layerPortReceipt = resolveLayerPortReceiptSafe(),
   missingObjectCount = 0,
   transformDescriptorAppliedCount = 0,
   transformDescriptorMissingCount = 0,
   primitiveGeometryAppliedCount = 0,
+  visualGrammarReadyCount = 0,
+  visualGrammarIncompleteCount = 0,
+  finalDomClassEmissionAuthorityCount = 0,
+  materialClassEmissionCount = 0,
+  primitiveClassEmissionCount = 0,
+  landscapeClassEmissionCount = 0,
+  layerMembershipClassEmissionCount = 0,
   warningCodes = [],
   failureCodes = [],
   boundary = {}
 } = {}) {
+  const finalDomClassEmissionAuthority =
+    nodeFactoryPortUsed === true &&
+    finalDomClassEmissionAuthorityCount > 0;
+
   return Object.freeze({
     receiptType: 'H_EARTH_3D_RENDERER_MOUNT_RECEIPT',
     contractId: H_EARTH_3D_RENDERER_CONTRACT.contractId,
     renewedFrom: H_EARTH_3D_RENDERER_CONTRACT.renewedFrom,
+    priorRendererBaseline: H_EARTH_3D_RENDERER_CONTRACT.priorRendererBaseline,
+
     rendererMounted,
     mounted: rendererMounted,
     mountAttempted,
@@ -1792,15 +1927,18 @@ export function buildRendererMountReceipt({
     priorRendererOwnedNodesCleared: priorOwnedNodesCleared,
     priorOwnedNodesCleared,
     priorOwnedNodeCountRemoved,
+
     layerContainersCreated,
     layerContainerCount: layerCount,
     layerCount,
+
     selectedRenderInputSource,
     sourceDescriptorType,
     usedComposedFrame,
     usedRenderSceneFallback,
     landscapeNormalizationApplied,
     candidateRenderScenePreExpanded: false,
+
     geometryExpansionStage: geometryPortUsed
       ? 'after-input-selection-before-node-factory'
       : 'not-applied',
@@ -1816,6 +1954,15 @@ export function buildRendererMountReceipt({
     geometryParentNodeCount,
     geometryChildNodeCount,
     geometryReceipt,
+
+    geometryPortContractId,
+    materialPortContractId,
+    layerPortContractId,
+    nodeFactoryContractId,
+    nodeFactoryReceipt,
+    materialPortReceipt,
+    layerPortReceipt,
+
     sourceNodeCount,
     rawSourceNodeCount,
     mountedNodeCount: objectNodeCount,
@@ -1824,15 +1971,31 @@ export function buildRendererMountReceipt({
     skippedNodeCount,
     labelNodeCount,
     affordanceNodeCount,
+
     materialPortUsed,
     layerPortUsed,
     nodeFactoryPortUsed,
+    materialPortInjectedIntoNodeFactory: materialPortUsed === true,
+    layerPortInjectedIntoNodeFactory: layerPortUsed === true,
+    documentRefInjectedIntoNodeFactory: nodeFactoryPortUsed === true,
+
     missingObjectCount,
     transformDescriptorAppliedCount,
     transformDescriptorMissingCount,
     primitiveGeometryAppliedCount,
+
+    visualGrammarReadyCount,
+    visualGrammarIncompleteCount,
+    finalDomClassEmissionAuthority,
+    finalDomClassEmissionAuthorityCount,
+    materialClassEmissionCount,
+    primitiveClassEmissionCount,
+    landscapeClassEmissionCount,
+    layerMembershipClassEmissionCount,
+
     warningCodes: Object.freeze(warningCodes),
     failureCodes: Object.freeze(failureCodes),
+
     createsDomCss3DCandidateNodes: rendererMounted === true,
     mountsCandidateDomDescriptors: rendererMounted === true,
     emitsLandscapeGradeCssTransforms:
@@ -1848,17 +2011,20 @@ export function buildRendererMountReceipt({
       geometryPortUsed === true &&
       geometryChildNodeCount > 0 &&
       placedNodeCount > geometryParentNodeCount,
+
     finalRendererClaim: false,
     rendererPassClaim: false,
     visualPassClaim: false,
     validationClaim: false,
     productionClaim: false,
     claimBoundaryPreserved: true,
+
     boundary: Object.freeze({
       ...H_EARTH_3D_RENDER_BOUNDARY_FLAGS,
       ...boundary,
       claimBoundaryPreserved: true
     }),
+
     matrixSeparation: Object.freeze({
       hEarth: 'Ground-View Matrix',
       hearth: 'support/control context only',
@@ -1881,6 +2047,7 @@ export function buildRendererDestroyReceipt({
     receiptType: 'H_EARTH_3D_RENDERER_DESTROY_RECEIPT',
     contractId: H_EARTH_3D_RENDERER_CONTRACT.contractId,
     renewedFrom: H_EARTH_3D_RENDERER_CONTRACT.renewedFrom,
+    priorRendererBaseline: H_EARTH_3D_RENDERER_CONTRACT.priorRendererBaseline,
     destroyAttempted,
     destroyed,
     mountNodeAccepted: mountNodeValid,
@@ -1908,6 +2075,27 @@ export function buildRendererDestroyReceipt({
       audralia: 'planetary-world context only',
       matrixCollapse: false
     })
+  });
+}
+
+export function countHEarthClassSurface(objectNode) {
+  const classNames = Array.from(objectNode?.classList || []);
+
+  return Object.freeze({
+    hasMaterialClass: classNames.some((className) =>
+      className.startsWith('h-earth-material-')
+    ),
+    hasPrimitiveClass: classNames.some((className) =>
+      className.startsWith('h-earth-primitive-')
+    ),
+    hasLandscapeClass: classNames.some((className) =>
+      className.startsWith('h-earth-landscape-')
+    ),
+    hasLayerMembershipClass: classNames.some((className) =>
+      className.startsWith('h-earth-layer-member')
+    ),
+    classNames: Object.freeze(classNames),
+    claimBoundaryPreserved: true
   });
 }
 
@@ -1983,7 +2171,11 @@ export function mountHEarthRenderer({
       mountNode,
       documentRef: mountNode.ownerDocument,
       receiptId,
-      options
+      options: {
+        ...options,
+        mountNode,
+        documentRef: mountNode.ownerDocument
+      }
     });
 
     if (rootResult.created !== true || !rootResult.rootNode) {
@@ -2081,6 +2273,13 @@ export function mountHEarthRenderer({
     let transformDescriptorAppliedCount = 0;
     let transformDescriptorMissingCount = 0;
     let primitiveGeometryAppliedCount = 0;
+    let visualGrammarReadyCount = 0;
+    let visualGrammarIncompleteCount = 0;
+    let finalDomClassEmissionAuthorityCount = 0;
+    let materialClassEmissionCount = 0;
+    let primitiveClassEmissionCount = 0;
+    let landscapeClassEmissionCount = 0;
+    let layerMembershipClassEmissionCount = 0;
 
     const warningCodes = [
       ...(Array.isArray(selectedInput.warningCodes)
@@ -2123,9 +2322,11 @@ export function mountHEarthRenderer({
       );
 
       const objectResult = createHEarthRenderObjectNode({
+        documentRef: mountNode.ownerDocument,
         node: normalizedNode,
         controller,
         materialPort: H_EARTH_3D_RENDER_MATERIAL_PORT,
+        layerPort: H_EARTH_3D_RENDER_LAYER_PORT,
         options: {
           ...options,
           mountNode,
@@ -2252,8 +2453,37 @@ export function mountHEarthRenderer({
         transformDescriptorMissingCount += 1;
       }
 
+      if (objectResult.visualGrammarReady === true) {
+        visualGrammarReadyCount += 1;
+      } else {
+        visualGrammarIncompleteCount += 1;
+      }
+
+      if (objectResult.finalDomClassEmissionAuthority === true) {
+        finalDomClassEmissionAuthorityCount += 1;
+      }
+
+      const classSurface = countHEarthClassSurface(objectResult.objectNode);
+
+      if (classSurface.hasMaterialClass === true) {
+        materialClassEmissionCount += 1;
+      }
+
+      if (classSurface.hasPrimitiveClass === true) {
+        primitiveClassEmissionCount += 1;
+      }
+
+      if (classSurface.hasLandscapeClass === true) {
+        landscapeClassEmissionCount += 1;
+      }
+
+      if (classSurface.hasLayerMembershipClass === true) {
+        layerMembershipClassEmissionCount += 1;
+      }
+
       if (options?.showLabels === true) {
         const labelResult = createHEarthRenderLabelNode({
+          documentRef: mountNode.ownerDocument,
           node: normalizedNode,
           controllerTarget,
           options: {
@@ -2272,6 +2502,7 @@ export function mountHEarthRenderer({
 
       if (options?.showAffordances === true) {
         const affordanceResult = createHEarthRenderAffordanceNode({
+          documentRef: mountNode.ownerDocument,
           node: normalizedNode,
           controllerTarget,
           options: {
@@ -2321,6 +2552,14 @@ export function mountHEarthRenderer({
       warningCodes.push('SOME_TRANSFORM_DESCRIPTORS_MISSING');
     }
 
+    if (visualGrammarIncompleteCount > 0 && visualGrammarReadyCount > 0) {
+      warningCodes.push('VISUAL_GRAMMAR_PARTIAL');
+    }
+
+    if (visualGrammarReadyCount === 0 && objectNodeCount > 0) {
+      warningCodes.push('VISUAL_GRAMMAR_READY_COUNT_ZERO');
+    }
+
     return buildRendererMountReceipt({
       rendererMounted: placedNodeCount > 0,
       mountNodeValid: true,
@@ -2361,6 +2600,13 @@ export function mountHEarthRenderer({
       transformDescriptorAppliedCount,
       transformDescriptorMissingCount,
       primitiveGeometryAppliedCount,
+      visualGrammarReadyCount,
+      visualGrammarIncompleteCount,
+      finalDomClassEmissionAuthorityCount,
+      materialClassEmissionCount,
+      primitiveClassEmissionCount,
+      landscapeClassEmissionCount,
+      layerMembershipClassEmissionCount,
       warningCodes,
       failureCodes,
       boundary
@@ -2450,22 +2696,38 @@ export const H_EARTH_3D_RENDERER_RECEIPT = Object.freeze({
   receiptType: 'H_EARTH_3D_RENDERER_RECEIPT',
   file: '/showroom/globe/h-earth/renderer.js',
   contractId:
-    'H_EARTH_3D_RENDERER_FILE_BIRTH_STEP_031D_SINGLE_PASS_GEOMETRY_EXPANSION_GUARDED_BINDING_v1',
+    'H_EARTH_3D_RENDERER_FILE_BIRTH_STEP_031E_SUPPORT_PORT_WIRING_AND_FINAL_DOM_CLASS_RECEIPT_ALIGNMENT_v1',
   renewedFrom:
-    'H_EARTH_3D_RENDERER_FILE_BIRTH_STEP_031C_SINGLE_PASS_GEOMETRY_EXPANSION_BINDING_v1',
+    'H_EARTH_3D_RENDERER_FILE_BIRTH_STEP_031D_SINGLE_PASS_GEOMETRY_EXPANSION_GUARDED_BINDING_v1',
   priorRendererBaseline:
-    'H_EARTH_3D_RENDERER_FILE_BIRTH_STEP_031B_GEOMETRY_EXPANSION_PORT_BINDING_v1',
+    'H_EARTH_3D_RENDERER_FILE_BIRTH_STEP_031C_SINGLE_PASS_GEOMETRY_EXPANSION_BINDING_v1',
+
   environmentReceiptPresent: Boolean(H_EARTH_3D_ENVIRONMENT_RECEIPT),
   descriptorRendererPreserved: true,
   mountApiDefined: true,
   destroyApiDefined: true,
   selectRenderInputHelperDefined: true,
+
   renderPortsDefined: true,
   nodeFactoryPortBound: true,
   materialPortBound: true,
   layerPortBound: true,
   geometryPortBound: true,
+
+  nodeFactoryPortContractId:
+    resolveHEarthPortContractId(H_EARTH_3D_RENDER_NODE_FACTORY),
+  materialPortContractId:
+    resolveHEarthPortContractId(H_EARTH_3D_RENDER_MATERIAL_PORT),
+  layerPortContractId:
+    resolveHEarthPortContractId(H_EARTH_3D_RENDER_LAYER_PORT),
+  geometryPortContractId:
+    resolveHEarthPortContractId(H_EARTH_3D_RENDER_GEOMETRY_PORT),
+
+  nodeFactoryReceiptAvailable: Boolean(resolveNodeFactoryReceiptSafe()),
+  materialPortReceiptAvailable: Boolean(resolveMaterialPortReceiptSafe()),
+  layerPortReceiptAvailable: Boolean(resolveLayerPortReceiptSafe()),
   geometryPortReceiptAvailable: Boolean(resolveGeometryPortReceiptSafe()),
+
   previewContainerPreservedForCompositorCompatibility: true,
   previewContainerCandidateWidthPxDefined: true,
   previewContainerCandidateHeightPxDefined: true,
@@ -2476,6 +2738,7 @@ export const H_EARTH_3D_RENDERER_RECEIPT = Object.freeze({
   compositorProjectionShapeCompatibilitySupported: true,
   landscapeProjectionModelDefined: true,
   composedNodeLivePathNormalizationDefined: true,
+
   candidateRenderScenePreExpansionRemoved: true,
   candidateRenderSceneParentDescriptorsOnly: true,
   compositorReceivesParentDescriptorsOnly: true,
@@ -2485,11 +2748,21 @@ export const H_EARTH_3D_RENDERER_RECEIPT = Object.freeze({
   geometryPortDimensionsPreserved: true,
   geometryPortClassesPreserved: true,
   explicitMaxExpandedNodesPassedToGeometryPort: true,
+
+  materialPortInjectedIntoNodeFactory: true,
+  layerPortInjectedIntoNodeFactory: true,
+  documentRefInjectedIntoNodeFactory: true,
+  finalDomClassEmissionReceiptAlignmentDefined: true,
+  visualGrammarReadyCountingDefined: true,
+  visualGrammarIncompleteCountingDefined: true,
+  supportPortReceiptEvidenceDefined: true,
+
   cssTransformDescriptorEmissionDefined: true,
   primitiveGeometryDescriptorEmissionDefined: true,
   numericCandidateTransformScaleHandled: true,
   candidateTransformRotateHandled: true,
   step029IndexCompatibilityPreserved: true,
+
   aggregateExposesMountApi: true,
   aggregateExposesDestroyApi: true,
   dataOwnershipMarker: 'data-h-earth-render-owned="true"',
@@ -2498,11 +2771,13 @@ export const H_EARTH_3D_RENDERER_RECEIPT = Object.freeze({
   createsDomCss3DCandidateNodes: true,
   mountsCandidateDomDescriptors: true,
   expandsCandidateGeometryDescriptorsAtMountOnly: true,
+
   claimsFinalRenderer: false,
   claimsRendererPass: false,
   claimsVisualPass: false,
   claimsValidation: false,
   claimsProduction: false,
+
   boundary: Object.freeze({
     ...H_EARTH_3D_RENDER_BOUNDARY_FLAGS,
     claimBoundaryPreserved: true
@@ -2534,10 +2809,20 @@ export const H_EARTH_3D_RENDERER = Object.freeze({
   nodeBudget: H_EARTH_3D_RENDER_NODE_BUDGET,
   inspectionAffordanceModel: H_EARTH_3D_RENDER_INSPECTION_AFFORDANCE_MODEL,
   renderPorts: H_EARTH_3D_RENDER_PORTS,
+
   candidateRenderScene: H_EARTH_3D_CANDIDATE_RENDER_SCENE,
+
   normalizeHEarthRenderNumber,
   clampHEarthRenderNumber,
   normalizeHEarthRenderToken,
+
+  resolveHEarthPortContractId,
+  resolveHEarthPortReceipt,
+  resolveNodeFactoryReceiptSafe,
+  resolveMaterialPortReceiptSafe,
+  resolveLayerPortReceiptSafe,
+  resolveGeometryPortReceiptSafe,
+
   isHEarthGeometryExpandedNode,
   inputContainsHEarthGeometryExpansion,
   resolveRenderLayer,
@@ -2557,7 +2842,6 @@ export const H_EARTH_3D_RENDERER = Object.freeze({
   resolvePrimitiveRenderGeometry,
   resolveLandscapeRenderNode,
   normalizeLandscapeRenderNodes,
-  resolveGeometryPortReceiptSafe,
   applyExpandedRenderNodeBudget,
   expandLandscapeRenderNodesWithGeometryPort,
   resolveCandidateRenderNodes,
@@ -2565,8 +2849,13 @@ export const H_EARTH_3D_RENDERER = Object.freeze({
   applyRenderNodeBudget,
   resolveCandidateRenderScene,
   selectHEarthRenderInput,
+  resolveControllerTargetForRenderNode,
+  countHEarthClassSurface,
+  buildRendererMountReceipt,
+  buildRendererDestroyReceipt,
   mountHEarthRenderer,
   destroyHEarthRenderer,
+
   getReceipt: getRendererReceipt,
   receipt: H_EARTH_3D_RENDERER_RECEIPT
 });

@@ -1,19 +1,30 @@
 /*
   /showroom/globe/h-earth/index.css
-  NEW FILE
+  RENEWED FILE
+  H_EARTH_3D_ROUTE_SHELL_STYLE_FILE_BIRTH_STEP_030B_PRIMARY_VIEWPORT_AND_DIAGNOSTIC_COLLAPSE_RENEWAL_v1
+
+  Renews:
   H_EARTH_3D_ROUTE_SHELL_STYLE_FILE_BIRTH_STEP_030_CSS_v1
 
   Purpose:
-  Provides route shell, renderer mount, HUD, inspection panel, target list,
-  debug/status, renderer-generated layer/object/material/context class support,
-  and controlled fallback styling for the H-Earth 3D Candidate Preview.
+  Provides route shell, primary renderer viewport, compact HUD/status overlay,
+  inspection panel, target list, debug/status, renderer-generated
+  layer/object/material/context class support, and controlled fallback styling
+  for the H-Earth 3D Candidate Preview.
 
-  This stylesheet supports renderer-generated DOM/CSS-3D candidate nodes.
-  It does not create shell-owned scene objects.
-  It does not create a CSS-only false beach independent of renderer descriptors.
-  It does not introduce canvas, WebGL, visual-pass, validation, production,
-  traversal, survival simulation, swimming/fluid simulation, manor interior,
-  distant traversal, or matrix-collapse authority.
+  Renewal scope:
+  - Preserve Step 030 CSS renderer support classes.
+  - Make the renderer stage the dominant visual region.
+  - Improve mobile viewport priority with 75–85vh candidate stage behavior.
+  - Keep Route Status and Action compact and near the stage.
+  - Collapse or reduce diagnostic/control panels by default on mobile.
+  - Preserve Bootstrap Debug availability without making it the primary screen.
+  - Preserve support for renderer-generated DOM/CSS-3D candidate nodes.
+  - Do not create shell-owned scene objects.
+  - Do not create a CSS-only false beach independent of renderer descriptors.
+  - Do not introduce canvas, WebGL, visual-pass, validation, production,
+    traversal, survival simulation, swimming/fluid simulation, manor interior,
+    distant traversal, or matrix-collapse authority.
 */
 
 :root {
@@ -32,8 +43,10 @@
   --h-earth-fallback: #f2d492;
   --h-earth-error: #ffb0a3;
 
-  --h-earth-stage-width: min(100%, 1120px);
-  --h-earth-stage-height: clamp(420px, 62vh, 720px);
+  --h-earth-stage-width: min(100%, 1180px);
+  --h-earth-stage-height: clamp(560px, 72vh, 820px);
+  --h-earth-mobile-stage-height: 80svh;
+
   --h-earth-radius-lg: 28px;
   --h-earth-radius-md: 18px;
   --h-earth-radius-sm: 10px;
@@ -112,9 +125,13 @@ button:disabled {
 .h-earth-3d-shell {
   display: grid;
   gap: clamp(18px, 2.6vw, 30px);
-  max-width: 1380px;
+  max-width: 1440px;
   margin: 0 auto;
 }
+
+/*
+  Header and boundary summary.
+*/
 
 .h-earth-3d-header {
   display: grid;
@@ -174,11 +191,17 @@ button:disabled {
   font-size: 0.92rem;
 }
 
+/*
+  Primary stage layout.
+  The stage is the primary route viewport. HUD remains compact and attached
+  to the stage region instead of becoming the dominant screen.
+*/
+
 .h-earth-3d-stage-shell {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(240px, 320px);
-  gap: 20px;
-  align-items: stretch;
+  grid-template-columns: minmax(0, 1fr) minmax(240px, 300px);
+  gap: 18px;
+  align-items: start;
 }
 
 .h-earth-3d-stage {
@@ -251,7 +274,7 @@ button:disabled {
 .h-earth-3d-hud {
   display: grid;
   align-content: start;
-  gap: 16px;
+  gap: 14px;
 }
 
 .h-earth-3d-hud-panel,
@@ -299,6 +322,12 @@ button:disabled {
   outline: 3px solid rgba(149, 213, 232, 0.64);
   outline-offset: 2px;
 }
+
+/*
+  Diagnostic/control panels.
+  Desktop keeps panels available. Mobile compresses them so they do not become
+  the primary experience ahead of the renderer stage.
+*/
 
 .h-earth-3d-control-grid {
   display: grid;
@@ -706,11 +735,23 @@ button:disabled {
   .h-earth-3d-hud {
     grid-template-columns: 1fr 1fr;
   }
+
+  .h-earth-3d-control-grid {
+    gap: 14px;
+  }
 }
 
 @media (max-width: 680px) {
   .h-earth-3d-route-root {
-    padding: 12px;
+    padding: 10px;
+  }
+
+  .h-earth-3d-shell {
+    gap: 12px;
+  }
+
+  .h-earth-3d-header {
+    gap: 12px;
   }
 
   .h-earth-3d-header-copy,
@@ -718,20 +759,136 @@ button:disabled {
   .h-earth-3d-panel,
   .h-earth-3d-hud-panel,
   .h-earth-3d-claim-boundary {
-    padding: 14px;
+    padding: 12px;
+  }
+
+  .h-earth-3d-header-copy {
+    padding-top: 16px;
+    padding-bottom: 16px;
+  }
+
+  .h-earth-3d-title {
+    font-size: clamp(1.8rem, 10vw, 3.15rem);
+  }
+
+  .h-earth-3d-subtitle {
+    margin-top: 12px;
+  }
+
+  .h-earth-3d-boundary-card {
+    gap: 5px;
+  }
+
+  .h-earth-3d-boundary-line {
+    font-size: 0.82rem;
+  }
+
+  .h-earth-3d-stage-shell {
+    gap: 10px;
   }
 
   .h-earth-3d-stage {
-    min-height: 420px;
-    border-radius: 18px;
+    min-height: var(--h-earth-mobile-stage-height);
+    border-radius: 20px;
+  }
+
+  .h-earth-3d-renderer-mount:empty::before {
+    left: 14px;
+    bottom: 72px;
+    font-size: 0.7rem;
+  }
+
+  .h-earth-3d-fallback {
+    left: 12px;
+    right: 12px;
+    bottom: 12px;
+    padding: 10px 11px;
+    font-size: 0.78rem;
   }
 
   .h-earth-3d-hud {
     grid-template-columns: 1fr;
+    gap: 10px;
   }
 
-  .h-earth-3d-title {
-    font-size: clamp(2rem, 12vw, 3.4rem);
+  .h-earth-3d-hud-panel {
+    padding: 10px;
+  }
+
+  .h-earth-3d-panel-title {
+    margin-bottom: 8px;
+    font-size: 0.76rem;
+  }
+
+  .h-earth-3d-status {
+    min-height: 38px;
+    padding: 8px 10px;
+    font-size: 0.78rem;
+  }
+
+  .h-earth-3d-action-button {
+    min-height: 42px;
+  }
+
+  /*
+    Mobile diagnostic compression.
+    Panels remain present and reachable, but the renderer stage remains the
+    primary screen. Focus or tap into a panel to expand its contents.
+  */
+
+  .h-earth-3d-control-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .h-earth-3d-control-grid .h-earth-3d-panel,
+  .h-earth-3d-claim-boundary {
+    max-height: 66px;
+    overflow: hidden;
+    transition:
+      max-height 180ms ease,
+      border-color 180ms ease,
+      background 180ms ease;
+  }
+
+  .h-earth-3d-control-grid .h-earth-3d-panel:hover,
+  .h-earth-3d-control-grid .h-earth-3d-panel:focus-within,
+  .h-earth-3d-claim-boundary:hover,
+  .h-earth-3d-claim-boundary:focus-within {
+    max-height: 72svh;
+    border-color: var(--h-earth-border-strong);
+    background: var(--h-earth-bg-panel-strong);
+  }
+
+  .h-earth-3d-inspection-panel,
+  .h-earth-3d-debug {
+    min-height: 140px;
+    max-height: 48svh;
+    font-size: 0.72rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .h-earth-3d-route-root {
+    padding: 8px;
+  }
+
+  .h-earth-3d-stage {
+    min-height: 82svh;
+  }
+
+  .h-earth-3d-header-copy,
+  .h-earth-3d-boundary-card {
+    border-radius: 16px;
+  }
+
+  .h-earth-3d-stage {
+    border-radius: 18px;
+  }
+
+  .h-earth-3d-control-grid .h-earth-3d-panel,
+  .h-earth-3d-claim-boundary {
+    max-height: 62px;
   }
 }
 

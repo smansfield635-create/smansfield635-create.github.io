@@ -1,5 +1,5 @@
 // /showroom/globe/h-earth/renderer.js
-// RENEWED FILE
+// COMPLETE RENEWED FILE
 // H_EARTH_3D_RENDERER_FILE_BIRTH_STEP_023A_MOUNT_API_AND_RENDER_PORT_RENEWAL_PACKET_v1
 //
 // Renews:
@@ -17,6 +17,9 @@
 // This file preserves the descriptor-renderer role and adds renderer-side
 // support ports for material class resolution, layer placement, DOM node
 // creation, renderer-owned cleanup, and Step 029 bootstrap compatibility.
+//
+// This complete renewal also preserves
+// H_EARTH_3D_RENDER_VOLUME_MODEL.previewContainer for compositor compatibility.
 //
 // This file does not own capacity law, environment object definitions,
 // compositor ordering law, controller inspection law, route shell HTML, route
@@ -92,6 +95,7 @@ export const H_EARTH_3D_RENDERER_CONTRACT = Object.freeze({
     nodeFactoryPortAdded: true,
     materialPortAdded: true,
     layerPortAdded: true,
+    previewContainerPreservedForCompositorCompatibility: true,
     step029IndexCompatibilityPreserved: true,
     descriptorExportsPreserved: true
   }),
@@ -199,9 +203,51 @@ export const H_EARTH_3D_RENDER_VOLUME_MODEL = Object.freeze({
   modelId: 'H_EARTH_3D_RENDER_VOLUME_MODEL_STEP_023A',
   previewVolumeOnly: true,
   css3dCandidateVolume: true,
+
+  previewContainer: Object.freeze({
+    containerId: 'h-earth-3d-renderer-mount',
+    routeScopedMountOnly: true,
+    suppliedMountNodeRequired: true,
+    rendererMayCreateInsideMountNodeOnly: true,
+    rendererMayQueryGlobalDocument: false,
+    rendererMayReplaceRouteShell: false,
+    rendererMayReplaceIndexHtml: false,
+    rendererMayReplaceIndexCss: false,
+    domCss3DCandidateOnly: true,
+    webglActivation: false,
+    canvasActivation: false,
+    finalRendererClaim: false,
+    rendererPassClaim: false,
+    visualPassClaim: false,
+    validationClaim: false,
+    productionClaim: false,
+    claimBoundaryPreserved: true
+  }),
+
+  renderBounds: Object.freeze({
+    candidateBoundsOnly: true,
+    finalViewportValidationClaim: false,
+    visualPassClaim: false,
+    validationClaim: false,
+    productionClaim: false
+  }),
+
   openWorldVolumeClaim: false,
+  freeFlightClaim: false,
+  walkingSystemClaim: false,
+  swimmingClaim: false,
+  fluidSimulationClaim: false,
+  weatherSimulationClaim: false,
+  survivalSimulationClaim: false,
+  manorInteriorAccessClaim: false,
+  distantTraversalClaim: false,
+  matrixCollapse: false,
+
   finalRendererClaim: false,
+  rendererPassClaim: false,
+  visualPassClaim: false,
   validationClaim: false,
+  productionClaim: false,
   claimBoundaryPreserved: true
 });
 
@@ -1140,6 +1186,8 @@ export const H_EARTH_3D_RENDERER_RECEIPT = Object.freeze({
   nodeFactoryPortBound: true,
   materialPortBound: true,
   layerPortBound: true,
+
+  previewContainerPreservedForCompositorCompatibility: true,
 
   step029IndexCompatibilityPreserved: true,
   aggregateExposesMountApi: true,

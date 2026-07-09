@@ -1,19 +1,21 @@
 // /showroom/globe/h-earth/renderer.js
 // COMPLETE RENEWED FILE
-// H_EARTH_3D_RENDERER_FILE_BIRTH_STEP_032D_OPTIMIZED_LATTICE_ADMISSION_RENDERER_WIRING_v1
+// H_EARTH_3D_RENDERER_FILE_BIRTH_STEP_032E_GEOMETRY_032D_ORGANIC_VARIATION_SYNC_v1
 //
 // Renews:
-// H_EARTH_3D_RENDERER_FILE_BIRTH_STEP_032C_LATTICE_ADMISSION_COMPATIBLE_RENDERER_WIRING_v1
+// H_EARTH_3D_RENDERER_FILE_BIRTH_STEP_032D_OPTIMIZED_LATTICE_ADMISSION_RENDERER_WIRING_v1
 //
 // Complements:
-// H_EARTH_3D_RENDER_GEOMETRY_PORT_FILE_BIRTH_STEP_032C_LATTICE_ADMISSION_GATED_GEOMETRY_PORT_v1
+// H_EARTH_3D_RENDER_GEOMETRY_PORT_FILE_BIRTH_STEP_032D_ORGANIC_LANDSCAPE_CHILD_VARIATION_v1
 //
 // Purpose:
 // Robust DOM/CSS3D candidate renderer host with mount/destroy API,
 // parent-only candidate scene output for compositor, guarded single-pass
 // geometry expansion after final render-input selection, explicit landscape
 // lattice admission forwarding, prepared render descriptors, deduplicated
-// receipts, and reduced repeated projection/class/material resolution.
+// receipts, reduced repeated projection/class/material resolution, and
+// synchronized forwarding/preservation of geometry 032D organic child-variation
+// evidence.
 //
 // Boundary:
 // DOM/CSS3D candidate descriptors only. No WebGL. No canvas. No SVG.
@@ -67,18 +69,18 @@ import {
 
 export const H_EARTH_3D_RENDERER_CONTRACT = Object.freeze({
   contractId:
-    'H_EARTH_3D_RENDERER_FILE_BIRTH_STEP_032D_OPTIMIZED_LATTICE_ADMISSION_RENDERER_WIRING_v1',
+    'H_EARTH_3D_RENDERER_FILE_BIRTH_STEP_032E_GEOMETRY_032D_ORGANIC_VARIATION_SYNC_v1',
   renewedFrom:
-    'H_EARTH_3D_RENDERER_FILE_BIRTH_STEP_032C_LATTICE_ADMISSION_COMPATIBLE_RENDERER_WIRING_v1',
+    'H_EARTH_3D_RENDERER_FILE_BIRTH_STEP_032D_OPTIMIZED_LATTICE_ADMISSION_RENDERER_WIRING_v1',
   complementaryGeometryPort:
-    'H_EARTH_3D_RENDER_GEOMETRY_PORT_FILE_BIRTH_STEP_032C_LATTICE_ADMISSION_GATED_GEOMETRY_PORT_v1',
+    'H_EARTH_3D_RENDER_GEOMETRY_PORT_FILE_BIRTH_STEP_032D_ORGANIC_LANDSCAPE_CHILD_VARIATION_v1',
   file: '/showroom/globe/h-earth/renderer.js',
   route: '/showroom/globe/h-earth/',
   sourceRoot: '/h-earth-3d/',
   fileClass:
-    'DOM_CSS_3D_RENDERER_HOST_WITH_OPTIMIZED_LATTICE_ADMISSION_GEOMETRY_WIRING',
+    'DOM_CSS_3D_RENDERER_HOST_WITH_GEOMETRY_032D_ORGANIC_VARIATION_SYNC',
   status:
-    'CANDIDATE_RENDERER_HOST_OPTIMIZED_LATTICE_ADMISSION_COMPATIBLE_BOUND',
+    'CANDIDATE_RENDERER_HOST_GEOMETRY_032D_ORGANIC_VARIATION_SYNC_BOUND',
   targetMatrix: 'H-Earth',
   matrixRole: 'Ground-View Matrix',
   activeCell: 'H_EARTH_GROUND_CELL_001',
@@ -100,7 +102,18 @@ export const H_EARTH_3D_RENDERER_CONTRACT = Object.freeze({
     classSurfaceCountingDefined: true,
     materialPortInjectionPreserved: true,
     layerPortInjectionPreserved: true,
-    nodeFactoryCompatibilityPreserved: true
+    nodeFactoryCompatibilityPreserved: true,
+
+    geometry032DOrganicVariationRecognized: true,
+    geometryOrganicVariationEvidenceForwarded: true,
+    primitiveSpecificChildPlacementEvidenceForwarded: true,
+    latticeRegularBandingMitigationEvidenceForwarded: true,
+    deterministicOrganicVariationEvidenceForwarded: true,
+    organicClassSurfacePreserved: true,
+    organicDataAttributeEmissionDefined: true,
+    projectionPrimitiveParentFamilyPreserved: true,
+    childPrimitiveEvidencePreserved: true,
+    randomRuntimeVariationUsed: false
   })
 });
 
@@ -162,12 +175,13 @@ export const H_EARTH_3D_RENDERER_MOUNT_CONTRACT = Object.freeze({
   geometryExpansionAfterCompositorSelectionOnly: true,
   alreadyExpandedInputGuardRequired: true,
   landscapeLatticeAdmissionRequiredForGeometryExpansion: true,
+  geometry032DOrganicVariationSyncRequired: true,
   boundary: H_EARTH_3D_RENDER_BOUNDARY_FLAGS
 });
 
 export const H_EARTH_3D_RENDER_PROJECTION_MODEL = Object.freeze({
-  modelId: 'H_EARTH_3D_RENDER_PROJECTION_MODEL_STEP_032D',
-  renewedFrom: 'H_EARTH_3D_RENDER_PROJECTION_MODEL_STEP_032C',
+  modelId: 'H_EARTH_3D_RENDER_PROJECTION_MODEL_STEP_032E',
+  renewedFrom: 'H_EARTH_3D_RENDER_PROJECTION_MODEL_STEP_032D',
   projectionClass: 'CSS_3D_CANDIDATE_LANDSCAPE_PROJECTION_DESCRIPTOR',
   coordinateSystem: 'candidate-local-x-y-z',
   cssTransformUnit: 'px',
@@ -203,6 +217,8 @@ export const H_EARTH_3D_RENDER_PROJECTION_MODEL = Object.freeze({
     atmosphericTiltDegrees: 0,
     silhouetteTiltDegrees: 0,
     anchorTiltDegrees: 0,
+    projectionParentPrimitiveFamilyPreserved: true,
+    childPrimitiveEvidencePreserved: true,
     finalProjectionValidationClaim: false,
     visualPassClaim: false,
     validationClaim: false,
@@ -224,8 +240,8 @@ export const H_EARTH_3D_RENDER_PROJECTION_MODEL = Object.freeze({
 });
 
 export const H_EARTH_3D_RENDER_VOLUME_MODEL = Object.freeze({
-  modelId: 'H_EARTH_3D_RENDER_VOLUME_MODEL_STEP_032D',
-  renewedFrom: 'H_EARTH_3D_RENDER_VOLUME_MODEL_STEP_032C',
+  modelId: 'H_EARTH_3D_RENDER_VOLUME_MODEL_STEP_032E',
+  renewedFrom: 'H_EARTH_3D_RENDER_VOLUME_MODEL_STEP_032D',
   previewVolumeOnly: true,
   css3dCandidateVolume: true,
   previewContainer: Object.freeze({
@@ -259,10 +275,10 @@ export const H_EARTH_3D_RENDER_VOLUME_MODEL = Object.freeze({
 });
 
 export const H_EARTH_3D_RENDER_GEOMETRY_MAP = Object.freeze({
-  modelId: 'H_EARTH_3D_RENDER_GEOMETRY_MAP_STEP_032D',
-  renewedFrom: 'H_EARTH_3D_RENDER_GEOMETRY_MAP_STEP_032C',
+  modelId: 'H_EARTH_3D_RENDER_GEOMETRY_MAP_STEP_032E',
+  renewedFrom: 'H_EARTH_3D_RENDER_GEOMETRY_MAP_STEP_032D',
   geometryClass:
-    'CANDIDATE_DESCRIPTOR_LANDSCAPE_GEOMETRY_MAP_WITH_OPTIMIZED_LATTICE_ADMISSION_GATE',
+    'CANDIDATE_DESCRIPTOR_LANDSCAPE_GEOMETRY_MAP_WITH_GEOMETRY_032D_ORGANIC_VARIATION_SYNC',
   geometryPortBound: true,
   candidateScenePreExpansion: false,
   mountSelectionExpansionOnly: true,
@@ -271,6 +287,10 @@ export const H_EARTH_3D_RENDER_GEOMETRY_MAP = Object.freeze({
   geometryPortClassPreservation: true,
   latticeAdmissionRequired: true,
   silentGeometryFallbackAllowed: false,
+  organicLandscapeChildVariationRecognized: true,
+  primitiveSpecificChildPlacementRecognized: true,
+  geometry032DOrganicClassSurfaceRecognized: true,
+  organicVariationEvidenceForwardingDefined: true,
   finalGeometryClaim: false,
   rendererPassClaim: false,
   visualPassClaim: false,
@@ -280,11 +300,12 @@ export const H_EARTH_3D_RENDER_GEOMETRY_MAP = Object.freeze({
 });
 
 export const H_EARTH_3D_RENDER_GEOMETRY_EXPANSION_MODEL = Object.freeze({
-  modelId: 'H_EARTH_3D_RENDER_GEOMETRY_EXPANSION_MODEL_STEP_032D',
-  renewedFrom: 'H_EARTH_3D_RENDER_GEOMETRY_EXPANSION_MODEL_STEP_032C',
+  modelId: 'H_EARTH_3D_RENDER_GEOMETRY_EXPANSION_MODEL_STEP_032E',
+  renewedFrom: 'H_EARTH_3D_RENDER_GEOMETRY_EXPANSION_MODEL_STEP_032D',
   file: '/showroom/globe/h-earth/renderer.js',
   portFile: '/showroom/globe/h-earth/render/geometry.js',
   geometryPortBound: true,
+  geometry032DOrganicVariationExpected: true,
   expansionStage: 'after-compositor-handoff-before-node-factory',
   candidateRenderSceneExpansionAllowed: false,
   composedFrameExpansionAllowed: true,
@@ -293,6 +314,11 @@ export const H_EARTH_3D_RENDER_GEOMETRY_EXPANSION_MODEL = Object.freeze({
   expandsParentDescriptorsIntoCandidateChildDescriptors: true,
   forwardsLandscapeLatticeBundle: true,
   requiresGeometryLatticeAdmission: true,
+  organicVariationAfterLatticeAdmission: true,
+  deterministicVariationOnly: true,
+  randomRuntimeVariationAllowed: false,
+  primitiveSpecificChildPlacementExpected: true,
+  cssDependentOrganicClassSurfaceExpected: true,
   silentFallbackUsedOnAdmissionFailure: false,
   createsDomNodes: false,
   touchesDom: false,
@@ -312,9 +338,10 @@ export const H_EARTH_3D_RENDER_GEOMETRY_EXPANSION_MODEL = Object.freeze({
 });
 
 export const H_EARTH_3D_RENDER_SURFACE_SAMPLING_MODEL = Object.freeze({
-  modelId: 'H_EARTH_3D_RENDER_SURFACE_SAMPLING_MODEL_STEP_032D',
+  modelId: 'H_EARTH_3D_RENDER_SURFACE_SAMPLING_MODEL_STEP_032E',
   candidateSurfaceSamplingOnly: true,
   geometryPortMayEmitSurfaceSamples: true,
+  geometry032DOrganicVariationMayShapeSurfaceSamples: true,
   terrainEngineClaim: false,
   physicsClaim: false,
   validationClaim: false,
@@ -322,9 +349,10 @@ export const H_EARTH_3D_RENDER_SURFACE_SAMPLING_MODEL = Object.freeze({
 });
 
 export const H_EARTH_3D_RENDER_SHORELINE_CURVE_MODEL = Object.freeze({
-  modelId: 'H_EARTH_3D_RENDER_SHORELINE_CURVE_MODEL_STEP_032D',
+  modelId: 'H_EARTH_3D_RENDER_SHORELINE_CURVE_MODEL_STEP_032E',
   candidateShorelineCurveOnly: true,
   geometryPortMayEmitShorelineSegments: true,
+  geometry032DOrganicVariationMayShapeShorelineSegments: true,
   fluidSimulationClaim: false,
   swimmingClaim: false,
   validationClaim: false,
@@ -332,9 +360,10 @@ export const H_EARTH_3D_RENDER_SHORELINE_CURVE_MODEL = Object.freeze({
 });
 
 export const H_EARTH_3D_RENDER_CLUSTER_MODEL = Object.freeze({
-  modelId: 'H_EARTH_3D_RENDER_CLUSTER_MODEL_STEP_032D',
+  modelId: 'H_EARTH_3D_RENDER_CLUSTER_MODEL_STEP_032E',
   candidateClusterDescriptorsOnly: true,
   geometryPortMayEmitClusterChildDescriptors: true,
+  geometry032DOrganicVariationMayShapeClusterMembers: true,
   collisionClaim: false,
   traversalClaim: false,
   validationClaim: false,
@@ -342,8 +371,9 @@ export const H_EARTH_3D_RENDER_CLUSTER_MODEL = Object.freeze({
 });
 
 export const H_EARTH_3D_RENDER_CONTEXT_COMPRESSION_MODEL = Object.freeze({
-  modelId: 'H_EARTH_3D_RENDER_CONTEXT_COMPRESSION_MODEL_STEP_032D',
+  modelId: 'H_EARTH_3D_RENDER_CONTEXT_COMPRESSION_MODEL_STEP_032E',
   contextCompressionOnly: true,
+  geometry032DOrganicVariationMayShapeContextSilhouettes: true,
   manorInteriorAccessClaim: false,
   distantTraversalClaim: false,
   matrixCollapse: false,
@@ -393,7 +423,7 @@ export const H_EARTH_3D_RENDER_NODE_BUDGET = Object.freeze({
 });
 
 export const H_EARTH_3D_RENDER_INSPECTION_AFFORDANCE_MODEL = Object.freeze({
-  modelId: 'H_EARTH_3D_RENDER_INSPECTION_AFFORDANCE_MODEL_STEP_032D',
+  modelId: 'H_EARTH_3D_RENDER_INSPECTION_AFFORDANCE_MODEL_STEP_032E',
   descriptorAffordancesOnly: true,
   defaultAffordancesEnabled: false,
   actionExecutionClaim: false,
@@ -416,7 +446,8 @@ export const H_EARTH_3D_RENDER_PORTS = Object.freeze({
     layerPortInjectedIntoNodeFactory: true,
     materialPortInjectedIntoNodeFactory: true,
     documentRefInjectedIntoNodeFactory: true,
-    latticeBundleForwardedIntoGeometryPort: true
+    latticeBundleForwardedIntoGeometryPort: true,
+    geometry032DOrganicVariationForwarded: true
   }),
   boundary: H_EARTH_3D_RENDER_BOUNDARY_FLAGS
 });
@@ -763,6 +794,51 @@ export function resolveGeometryPortReceiptSafe(latticeContext = Object.freeze({}
   }
 }
 
+export function extractHEarthGeometryOrganicEvidence(geometryReceipt = null) {
+  return Object.freeze({
+    geometryOrganicVariationApplied:
+      geometryReceipt?.geometryOrganicVariationApplied === true ||
+      geometryReceipt?.organicVariationSummary?.organicLandscapeChildVariationApplied === true,
+
+    organicLandscapeChildVariationDefined:
+      geometryReceipt?.organicLandscapeChildVariationDefined === true,
+
+    primitiveSpecificChildPlacementApplied:
+      geometryReceipt?.primitiveSpecificChildPlacementApplied === true ||
+      geometryReceipt?.organicVariationSummary?.primitiveSpecificChildPlacementApplied === true,
+
+    latticeRegularBandingMitigated:
+      geometryReceipt?.latticeRegularBandingMitigated === true ||
+      geometryReceipt?.organicVariationSummary?.latticeRegularBandingMitigated === true,
+
+    organicVariationSeededDeterministically:
+      geometryReceipt?.organicVariationSeededDeterministically === true ||
+      geometryReceipt?.organicVariationSummary?.deterministicOrganicVariation === true,
+
+    randomRuntimeVariationUsed:
+      geometryReceipt?.randomRuntimeVariationUsed === true ||
+      geometryReceipt?.organicVariationSummary?.randomRuntimeVariationUsed === true,
+
+    organicVariationSummary: geometryReceipt?.organicVariationSummary || null,
+    claimBoundaryPreserved: true
+  });
+}
+
+export function makeHEarthDefaultOrganicEvidence(geometryReceipt = null) {
+  return Object.freeze({
+    geometryOrganicVariationApplied: false,
+    organicLandscapeChildVariationDefined:
+      geometryReceipt?.organicLandscapeChildVariationDefined === true,
+    primitiveSpecificChildPlacementApplied: false,
+    latticeRegularBandingMitigated: false,
+    organicVariationSeededDeterministically:
+      geometryReceipt?.organicVariationSeededDeterministically === true,
+    randomRuntimeVariationUsed: false,
+    organicVariationSummary: geometryReceipt?.organicVariationSummary || null,
+    claimBoundaryPreserved: true
+  });
+}
+
 export function isHEarthGeometryExpandedNode(node) {
   return Boolean(
     node?.geometryExpansion ||
@@ -963,21 +1039,51 @@ export function resolveNormalizedDepthForNode(object = {}) {
   );
 }
 
-export function resolveProjectionPrimitiveTypeForNode(object = {}) {
-  const primitiveType =
+export function resolveChildPrimitiveEvidenceForNode(object = {}) {
+  const childPrimitiveType =
+    object?.geometryExpansion?.childPrimitiveType ||
     object?.primitiveType ||
     object?.primitive?.primitiveType ||
     object?.primitiveSchema?.primitiveType ||
     'unresolvedPrimitive';
 
-  if (
-    object?.geometryExpansion?.parentPrimitiveType &&
-    String(primitiveType).startsWith('candidate')
-  ) {
-    return object.geometryExpansion.parentPrimitiveType;
-  }
+  const parentPrimitiveType =
+    object?.geometryExpansion?.parentPrimitiveType ||
+    object?.sourceObject?.primitiveType ||
+    null;
 
-  return primitiveType;
+  const primitiveStartsCandidate = String(childPrimitiveType).startsWith('candidate');
+
+  return Object.freeze({
+    childPrimitiveType,
+    parentPrimitiveType,
+    organicPlacementRole:
+      object?.organicPlacementRole ||
+      object?.geometryExpansion?.organicPlacementRole ||
+      null,
+    organicProfileId:
+      object?.organicProfileId ||
+      object?.geometryExpansion?.organicProfileId ||
+      null,
+    organicVariationApplied:
+      object?.organicVariationApplied === true ||
+      object?.geometryExpansion?.organicVariationApplied === true,
+    usesParentPrimitiveProjection:
+      Boolean(parentPrimitiveType) === true && primitiveStartsCandidate === true,
+    projectionPrimitiveType:
+      Boolean(parentPrimitiveType) === true && primitiveStartsCandidate === true
+        ? parentPrimitiveType
+        : childPrimitiveType,
+    randomRuntimeVariationUsed:
+      object?.randomRuntimeVariationUsed === true ||
+      object?.geometryExpansion?.randomRuntimeVariationUsed === true,
+    claimBoundaryPreserved: true
+  });
+}
+
+export function resolveProjectionPrimitiveTypeForNode(object = {}) {
+  const evidence = resolveChildPrimitiveEvidenceForNode(object);
+  return evidence.projectionPrimitiveType;
 }
 
 export function resolvePrimitiveProjectionProfile(primitiveType, depthClass) {
@@ -1235,6 +1341,7 @@ export function resolveLandscapeRenderDimensions(object = {}) {
     'unresolvedPrimitive';
 
   const projectionPrimitiveType = resolveProjectionPrimitiveTypeForNode(object);
+  const childPrimitiveEvidence = resolveChildPrimitiveEvidenceForNode(object);
   const depthClass = resolveDepthClassForNode(object);
   const normalizedDepth = resolveNormalizedDepthForNode(object);
   const profile = resolvePrimitiveProjectionProfile(projectionPrimitiveType, depthClass);
@@ -1255,6 +1362,8 @@ export function resolveLandscapeRenderDimensions(object = {}) {
 
   return Object.freeze({
     primitiveType,
+    projectionPrimitiveType,
+    childPrimitiveEvidence,
     depthClass,
     normalizedDepth,
     profileId: object?.primitiveGeometry?.profileId || profile.profileId,
@@ -1310,6 +1419,7 @@ export function resolveCssTransform(object = {}) {
     'unresolvedPrimitive';
 
   const projectionPrimitiveType = resolveProjectionPrimitiveTypeForNode(object);
+  const childPrimitiveEvidence = resolveChildPrimitiveEvidenceForNode(object);
   const depthClass = resolveDepthClassForNode(object);
   const normalizedDepth = resolveNormalizedDepthForNode(object);
   const profile = resolvePrimitiveProjectionProfile(projectionPrimitiveType, depthClass);
@@ -1361,6 +1471,7 @@ export function resolveCssTransform(object = {}) {
     projected,
     primitiveType,
     projectionPrimitiveType,
+    childPrimitiveEvidence,
     depthClass,
     normalizedDepth,
     profileId,
@@ -1375,6 +1486,9 @@ export function resolveCssTransform(object = {}) {
     profileDepthScale,
     candidateTransformOnly: true,
     landscapeProjectionApplied: true,
+    projectionParentPrimitiveFamilyPreserved:
+      childPrimitiveEvidence.usesParentPrimitiveProjection === true,
+    childPrimitiveEvidencePreserved: true,
     finalGeometryClaim: false,
     rendererPassClaim: false,
     visualPassClaim: false,
@@ -1395,6 +1509,7 @@ export function resolvePrimitiveRenderGeometry(object = {}) {
   const layerId = resolveRenderLayer(objectId, object);
   const cssTransformDescriptor = resolveCssTransform(object);
   const primitiveGeometry = resolveLandscapeRenderDimensions(object);
+  const childPrimitiveEvidence = resolveChildPrimitiveEvidenceForNode(object);
 
   return Object.freeze({
     nodeId: object?.nodeId || object?.sourceNodeId || `render-node-${objectId}`,
@@ -1417,6 +1532,7 @@ export function resolvePrimitiveRenderGeometry(object = {}) {
       999,
     cssTransformDescriptor,
     primitiveGeometry,
+    childPrimitiveEvidence,
     landscapeClassName:
       object?.landscapeClassName || primitiveGeometry.profileClassName,
     primitiveClassName:
@@ -1442,6 +1558,42 @@ export function resolvePrimitiveRenderGeometry(object = {}) {
       object?.parentNodeId || object?.geometryExpansion?.parentNodeId || null,
     descriptorOnly: object?.descriptorOnly === false ? false : true,
     candidateGeometryOnly: object?.candidateGeometryOnly === true,
+
+    organicVariationApplied:
+      object?.organicVariationApplied === true ||
+      object?.geometryExpansion?.organicVariationApplied === true,
+    organicProfileId:
+      object?.organicProfileId ||
+      object?.geometryExpansion?.organicProfileId ||
+      null,
+    organicPlacementRole:
+      object?.organicPlacementRole ||
+      object?.geometryExpansion?.organicPlacementRole ||
+      null,
+    organicVariationIndex:
+      object?.organicVariationIndex ??
+      object?.geometryExpansion?.organicVariationIndex ??
+      null,
+    organicVariationSeed:
+      object?.organicVariationSeed ??
+      object?.geometryExpansion?.organicVariationSeed ??
+      null,
+    deterministicOrganicVariation:
+      object?.deterministicOrganicVariation === true ||
+      object?.geometryExpansion?.deterministicOrganicVariation === true,
+    randomRuntimeVariationUsed:
+      object?.randomRuntimeVariationUsed === true ||
+      object?.geometryExpansion?.randomRuntimeVariationUsed === true,
+    geometryOrganicClassName:
+      object?.geometryOrganicClassName ||
+      (
+        object?.organicPlacementRole
+          ? `h-earth-organic-${normalizeHEarthRenderToken(object.organicPlacementRole)}`
+          : object?.geometryExpansion?.organicPlacementRole
+            ? `h-earth-organic-${normalizeHEarthRenderToken(object.geometryExpansion.organicPlacementRole)}`
+            : null
+      ),
+
     finalGeometryClaim: false,
     rendererPassClaim: false,
     visualPassClaim: false,
@@ -1460,6 +1612,7 @@ export function resolveLandscapeRenderNode(node = {}) {
     cssTransformDescriptor: normalized.cssTransformDescriptor,
     primitiveGeometry: normalized.primitiveGeometry,
     materialToken: normalized.materialToken,
+    childPrimitiveEvidence: normalized.childPrimitiveEvidence,
     landscapeProjectionNormalized: true,
     landscapeProjectionContract: H_EARTH_3D_RENDERER_CONTRACT.contractId,
     finalGeometryClaim: false,
@@ -1540,6 +1693,8 @@ export function expandLandscapeRenderNodesWithGeometryPort({
   if (alreadyExpanded === true) {
     const normalizedExpandedNodes = normalizeLandscapeRenderNodes(parentNodes);
     const budgeted = applyExpandedRenderNodeBudget(normalizedExpandedNodes);
+    const geometryReceipt = resolveGeometryPortReceiptSafe(latticeContext);
+    const organicEvidence = makeHEarthDefaultOrganicEvidence(geometryReceipt);
 
     return Object.freeze({
       nodes: budgeted.nodes,
@@ -1566,7 +1721,8 @@ export function expandLandscapeRenderNodesWithGeometryPort({
       geometryLatticeAdmissionFailed:
         latticeAdmissionEvidence.geometryLatticeAdmissionFailed,
       rendererLatticeAdmissionEvidence: latticeAdmissionEvidence,
-      geometryReceipt: resolveGeometryPortReceiptSafe(latticeContext),
+      geometryReceipt,
+      ...organicEvidence,
       warningCodes: uniqueHEarthRenderCodes([
         'GEOMETRY_INPUT_ALREADY_EXPANDED_SINGLE_PASS_GUARD',
         ...latticeAdmissionEvidence.warningCodes
@@ -1586,6 +1742,9 @@ export function expandLandscapeRenderNodesWithGeometryPort({
   const normalizedParentNodes = normalizeLandscapeRenderNodes(parentNodes);
 
   if (typeof expandHEarthCandidateGeometryNodes !== 'function') {
+    const geometryReceipt = resolveGeometryPortReceiptSafe(latticeContext);
+    const organicEvidence = makeHEarthDefaultOrganicEvidence(geometryReceipt);
+
     return Object.freeze({
       nodes: normalizedParentNodes,
       rawNodes: normalizedParentNodes,
@@ -1611,7 +1770,8 @@ export function expandLandscapeRenderNodesWithGeometryPort({
       geometryLatticeAdmissionFailed:
         latticeAdmissionEvidence.geometryLatticeAdmissionFailed,
       rendererLatticeAdmissionEvidence: latticeAdmissionEvidence,
-      geometryReceipt: resolveGeometryPortReceiptSafe(latticeContext),
+      geometryReceipt,
+      ...organicEvidence,
       warningCodes: uniqueHEarthRenderCodes([
         'GEOMETRY_PORT_FUNCTION_MISSING',
         ...latticeAdmissionEvidence.warningCodes
@@ -1682,6 +1842,8 @@ export function expandLandscapeRenderNodesWithGeometryPort({
     expansion?.receipt ||
     expansion?.geometryReceipt ||
     resolveGeometryPortReceiptSafe(latticeContext);
+
+  const organicEvidence = extractHEarthGeometryOrganicEvidence(geometryReceipt);
 
   const descriptorLandscapeLatticeAdmitted =
     expansion?.descriptorLandscapeLatticeAdmitted === true ||
@@ -1775,6 +1937,7 @@ export function expandLandscapeRenderNodesWithGeometryPort({
     geometryLatticeAdmissionFailed,
     rendererLatticeAdmissionEvidence: latticeAdmissionEvidence,
     geometryReceipt,
+    ...organicEvidence,
     warningCodes: expansionWarningCodes,
     failureCodes: expansionFailureCodes,
     boundary: Object.freeze({
@@ -1845,6 +2008,7 @@ export function resolveCandidateRenderScene({
     geometryPortUsed: false,
     geometryExpansionApplied: false,
     geometryExpansionDeferredUntilMountSelection: true,
+    geometry032DOrganicVariationDeferredUntilMountSelection: true,
     landscapeLatticeBundle,
     rendererLatticeAdmissionEvidence: latticeAdmissionEvidence,
     landscapeLatticeBundlePresent: Boolean(landscapeLatticeBundle),
@@ -1887,7 +2051,14 @@ export function selectHEarthRenderInput({
     ? composedCandidateFrame.composedNodes
     : [];
 
-  const makeSelection = ({ nodes, source, sourceDescriptorType, usedComposedFrame, usedRenderSceneFallback, preWarnings = [] }) => {
+  const makeSelection = ({
+    nodes,
+    source,
+    sourceDescriptorType,
+    usedComposedFrame,
+    usedRenderSceneFallback,
+    preWarnings = []
+  }) => {
     const expanded = expandLandscapeRenderNodesWithGeometryPort({
       nodes,
       source,
@@ -1933,6 +2104,22 @@ export function selectHEarthRenderInput({
       rendererLatticeAdmissionEvidence:
         expanded.rendererLatticeAdmissionEvidence,
       geometryReceipt: expanded.geometryReceipt,
+
+      geometryOrganicVariationApplied:
+        expanded.geometryOrganicVariationApplied === true,
+      organicLandscapeChildVariationDefined:
+        expanded.organicLandscapeChildVariationDefined === true,
+      primitiveSpecificChildPlacementApplied:
+        expanded.primitiveSpecificChildPlacementApplied === true,
+      latticeRegularBandingMitigated:
+        expanded.latticeRegularBandingMitigated === true,
+      organicVariationSeededDeterministically:
+        expanded.organicVariationSeededDeterministically === true,
+      randomRuntimeVariationUsed:
+        expanded.randomRuntimeVariationUsed === true,
+      organicVariationSummary:
+        expanded.organicVariationSummary || null,
+
       missingInput: false,
       warningCodes: uniqueHEarthRenderCodes([
         ...preWarnings,
@@ -1998,6 +2185,15 @@ export function selectHEarthRenderInput({
     geometryLatticeAdmissionFailed: false,
     rendererLatticeAdmissionEvidence: null,
     geometryReceipt: resolveGeometryPortReceiptSafe(),
+
+    geometryOrganicVariationApplied: false,
+    organicLandscapeChildVariationDefined: false,
+    primitiveSpecificChildPlacementApplied: false,
+    latticeRegularBandingMitigated: false,
+    organicVariationSeededDeterministically: false,
+    randomRuntimeVariationUsed: false,
+    organicVariationSummary: null,
+
     missingInput: true,
     warningCodes: Object.freeze([]),
     failureCodes: Object.freeze(['NO_DESCRIPTOR_NODES']),
@@ -2042,6 +2238,12 @@ export function countHEarthClassSurface(objectNode) {
     hasLayerMembershipClass: classNames.some((className) =>
       className.startsWith('h-earth-layer-member')
     ),
+    hasOrganicClass: classNames.some((className) =>
+      className.startsWith('h-earth-organic-')
+    ),
+    hasOrganicVariationReadyClass: classNames.includes(
+      'h-earth-render-organic-variation-ready'
+    ),
     classNames: Object.freeze(classNames),
     claimBoundaryPreserved: true
   });
@@ -2079,6 +2281,15 @@ export function buildRendererMountReceipt({
   geometryLatticeAdmissionFailed = false,
   rendererLatticeAdmissionEvidence = null,
   geometryReceipt = null,
+
+  geometryOrganicVariationApplied = false,
+  organicLandscapeChildVariationDefined = false,
+  primitiveSpecificChildPlacementApplied = false,
+  latticeRegularBandingMitigated = false,
+  organicVariationSeededDeterministically = false,
+  randomRuntimeVariationUsed = false,
+  organicVariationSummary = null,
+
   sourceNodeCount = 0,
   rawSourceNodeCount = 0,
   objectNodeCount = 0,
@@ -2107,6 +2318,8 @@ export function buildRendererMountReceipt({
   primitiveClassEmissionCount = 0,
   landscapeClassEmissionCount = 0,
   layerMembershipClassEmissionCount = 0,
+  organicClassEmissionCount = 0,
+  organicVariationReadyCount = 0,
   warningCodes = [],
   failureCodes = [],
   boundary = {}
@@ -2119,6 +2332,8 @@ export function buildRendererMountReceipt({
     receiptType: 'H_EARTH_3D_RENDERER_MOUNT_RECEIPT',
     contractId: H_EARTH_3D_RENDERER_CONTRACT.contractId,
     renewedFrom: H_EARTH_3D_RENDERER_CONTRACT.renewedFrom,
+    complementaryGeometryPort:
+      H_EARTH_3D_RENDERER_CONTRACT.complementaryGeometryPort,
 
     rendererMounted,
     mounted: rendererMounted,
@@ -2166,6 +2381,14 @@ export function buildRendererMountReceipt({
 
     geometryReceipt,
 
+    geometryOrganicVariationApplied,
+    organicLandscapeChildVariationDefined,
+    primitiveSpecificChildPlacementApplied,
+    latticeRegularBandingMitigated,
+    organicVariationSeededDeterministically,
+    randomRuntimeVariationUsed,
+    organicVariationSummary,
+
     geometryPortContractId,
     materialPortContractId,
     layerPortContractId,
@@ -2203,6 +2426,8 @@ export function buildRendererMountReceipt({
     primitiveClassEmissionCount,
     landscapeClassEmissionCount,
     layerMembershipClassEmissionCount,
+    organicClassEmissionCount,
+    organicVariationReadyCount,
 
     warningCodes: uniqueHEarthRenderCodes(warningCodes),
     failureCodes: uniqueHEarthRenderCodes(failureCodes),
@@ -2222,6 +2447,14 @@ export function buildRendererMountReceipt({
       geometryPortUsed === true &&
       geometryChildNodeCount > 0 &&
       placedNodeCount > geometryParentNodeCount,
+
+    geometry032DOrganicVariationSyncDefined: true,
+    geometryOrganicVariationEvidenceForwarded:
+      organicLandscapeChildVariationDefined === true,
+    organicClassSurfaceMountPreservationDefined: true,
+    organicDataAttributeEmissionDefined: true,
+    childPrimitiveEvidencePreservationDefined: true,
+    projectionParentPrimitiveFamilyPreserved: true,
 
     finalRendererClaim: false,
     rendererPassClaim: false,
@@ -2399,6 +2632,75 @@ export function applyHEarthRendererGeometryAttributes(objectNode, normalizedNode
     );
   }
 
+  const organicVariationApplied =
+    normalizedNode.organicVariationApplied === true ||
+    normalizedNode.geometryExpansion?.organicVariationApplied === true;
+
+  objectNode.setAttribute(
+    'data-h-earth-organic-variation-applied',
+    organicVariationApplied ? 'true' : 'false'
+  );
+
+  const organicProfileId =
+    normalizedNode.organicProfileId ||
+    normalizedNode.geometryExpansion?.organicProfileId ||
+    '';
+
+  const organicPlacementRole =
+    normalizedNode.organicPlacementRole ||
+    normalizedNode.geometryExpansion?.organicPlacementRole ||
+    '';
+
+  const organicVariationIndex =
+    normalizedNode.organicVariationIndex ??
+    normalizedNode.geometryExpansion?.organicVariationIndex ??
+    '';
+
+  const organicVariationSeed =
+    normalizedNode.organicVariationSeed ??
+    normalizedNode.geometryExpansion?.organicVariationSeed ??
+    '';
+
+  objectNode.setAttribute(
+    'data-h-earth-organic-profile-id',
+    String(organicProfileId)
+  );
+
+  objectNode.setAttribute(
+    'data-h-earth-organic-placement-role',
+    String(organicPlacementRole)
+  );
+
+  objectNode.setAttribute(
+    'data-h-earth-organic-variation-index',
+    String(organicVariationIndex)
+  );
+
+  objectNode.setAttribute(
+    'data-h-earth-organic-variation-seed',
+    String(organicVariationSeed)
+  );
+
+  objectNode.setAttribute(
+    'data-h-earth-deterministic-organic-variation',
+    (
+      normalizedNode.deterministicOrganicVariation === true ||
+      normalizedNode.geometryExpansion?.deterministicOrganicVariation === true
+    )
+      ? 'true'
+      : 'false'
+  );
+
+  objectNode.setAttribute(
+    'data-h-earth-random-runtime-variation-used',
+    (
+      normalizedNode.randomRuntimeVariationUsed === true ||
+      normalizedNode.geometryExpansion?.randomRuntimeVariationUsed === true
+    )
+      ? 'true'
+      : 'false'
+  );
+
   return true;
 }
 
@@ -2449,6 +2751,41 @@ export function applyHEarthRendererPrimitiveGeometryStyles(objectNode, normalize
   objectNode.style.height = 'var(--h-earth-render-height)';
 
   return true;
+}
+
+export function applyHEarthRendererOrganicClassSurface(objectNode, normalizedNode) {
+  if (!objectNode || !normalizedNode) return false;
+
+  let applied = false;
+
+  if (normalizedNode.geometryOrganicClassName) {
+    objectNode.classList.add(normalizedNode.geometryOrganicClassName);
+    applied = true;
+  }
+
+  if (normalizedNode.organicProfileId) {
+    objectNode.classList.add(
+      `h-earth-organic-profile-${normalizeHEarthRenderToken(normalizedNode.organicProfileId)}`
+    );
+    applied = true;
+  }
+
+  if (normalizedNode.organicPlacementRole) {
+    objectNode.classList.add(
+      `h-earth-organic-${normalizeHEarthRenderToken(normalizedNode.organicPlacementRole)}`
+    );
+    applied = true;
+  }
+
+  if (
+    normalizedNode.organicVariationApplied === true ||
+    normalizedNode.geometryExpansion?.organicVariationApplied === true
+  ) {
+    objectNode.classList.add('h-earth-render-organic-variation-ready');
+    applied = true;
+  }
+
+  return applied;
 }
 
 export function mountHEarthPreparedRenderDescriptor({
@@ -2510,6 +2847,9 @@ export function mountHEarthPreparedRenderDescriptor({
   if (normalizedNode.primitiveClassName) {
     objectResult.objectNode.classList.add(normalizedNode.primitiveClassName);
   }
+
+  const organicClassSurfaceApplied =
+    applyHEarthRendererOrganicClassSurface(objectResult.objectNode, normalizedNode);
 
   applyHEarthRendererGeometryAttributes(objectResult.objectNode, normalizedNode);
   const primitiveGeometryApplied =
@@ -2574,6 +2914,7 @@ export function mountHEarthPreparedRenderDescriptor({
     labelCreated,
     affordanceCreated,
     primitiveGeometryApplied,
+    organicClassSurfaceApplied,
     classSurface,
     transformApplied: objectResult.transformApplied === true,
     visualGrammarReady: objectResult.visualGrammarReady === true,
@@ -2586,6 +2927,57 @@ export function mountHEarthPreparedRenderDescriptor({
       ? null
       : placement.failureCode || 'NODE_PLACEMENT_FAILED',
     claimBoundaryPreserved: true
+  });
+}
+
+function buildHEarthSelectedInputMountFields(selectedInput = {}) {
+  return Object.freeze({
+    selectedRenderInputSource: selectedInput.source,
+    sourceDescriptorType: selectedInput.sourceDescriptorType,
+    usedComposedFrame: selectedInput.usedComposedFrame,
+    usedRenderSceneFallback: selectedInput.usedRenderSceneFallback,
+    landscapeNormalizationApplied: selectedInput.landscapeNormalizationApplied,
+    geometryPortUsed: selectedInput.geometryPortUsed,
+    geometryExpansionApplied: selectedInput.geometryExpansionApplied,
+    geometryExpansionSkippedBecauseAlreadyExpanded:
+      selectedInput.geometryExpansionSkippedBecauseAlreadyExpanded,
+    geometryExpansionSource: selectedInput.geometryExpansionSource,
+    geometrySourceNodeCount: selectedInput.geometrySourceNodeCount,
+    geometryExpandedNodeCount: selectedInput.geometryExpandedNodeCount,
+    geometryReturnedNodeCount: selectedInput.geometryReturnedNodeCount,
+    geometrySkippedNodeCount: selectedInput.geometrySkippedNodeCount,
+    geometryBudgetSkippedNodeCount: selectedInput.geometryBudgetSkippedNodeCount,
+    geometryParentNodeCount: selectedInput.geometryParentNodeCount,
+    geometryChildNodeCount: selectedInput.geometryChildNodeCount,
+    landscapeLatticeBundleForwarded: selectedInput.landscapeLatticeBundleForwarded,
+    landscapeLatticeSource: selectedInput.landscapeLatticeSource,
+    descriptorLandscapeLatticeAdmitted:
+      selectedInput.descriptorLandscapeLatticeAdmitted,
+    geometryLatticeAdmissionStatus:
+      selectedInput.geometryLatticeAdmissionStatus,
+    geometryLatticeAdmissionFailed:
+      selectedInput.geometryLatticeAdmissionFailed,
+    rendererLatticeAdmissionEvidence:
+      selectedInput.rendererLatticeAdmissionEvidence,
+    geometryReceipt: selectedInput.geometryReceipt,
+
+    geometryOrganicVariationApplied:
+      selectedInput.geometryOrganicVariationApplied === true,
+    organicLandscapeChildVariationDefined:
+      selectedInput.organicLandscapeChildVariationDefined === true,
+    primitiveSpecificChildPlacementApplied:
+      selectedInput.primitiveSpecificChildPlacementApplied === true,
+    latticeRegularBandingMitigated:
+      selectedInput.latticeRegularBandingMitigated === true,
+    organicVariationSeededDeterministically:
+      selectedInput.organicVariationSeededDeterministically === true,
+    randomRuntimeVariationUsed:
+      selectedInput.randomRuntimeVariationUsed === true,
+    organicVariationSummary:
+      selectedInput.organicVariationSummary || null,
+
+    sourceNodeCount: selectedInput.nodeCount,
+    rawSourceNodeCount: selectedInput.rawNodeCount
   });
 }
 
@@ -2627,36 +3019,8 @@ export function mountHEarthRenderer({
       mountNodeValid: true,
       priorOwnedNodesCleared: clearResult.cleared === true,
       priorOwnedNodeCountRemoved: clearResult.removedCount || 0,
-      selectedRenderInputSource: selectedInput.source,
-      sourceDescriptorType: selectedInput.sourceDescriptorType,
-      usedComposedFrame: selectedInput.usedComposedFrame,
-      usedRenderSceneFallback: selectedInput.usedRenderSceneFallback,
-      landscapeNormalizationApplied: selectedInput.landscapeNormalizationApplied,
-      geometryPortUsed: selectedInput.geometryPortUsed,
-      geometryExpansionApplied: selectedInput.geometryExpansionApplied,
-      geometryExpansionSkippedBecauseAlreadyExpanded:
-        selectedInput.geometryExpansionSkippedBecauseAlreadyExpanded,
-      geometryExpansionSource: selectedInput.geometryExpansionSource,
-      geometrySourceNodeCount: selectedInput.geometrySourceNodeCount,
-      geometryExpandedNodeCount: selectedInput.geometryExpandedNodeCount,
-      geometryReturnedNodeCount: selectedInput.geometryReturnedNodeCount,
-      geometrySkippedNodeCount: selectedInput.geometrySkippedNodeCount,
-      geometryBudgetSkippedNodeCount: selectedInput.geometryBudgetSkippedNodeCount,
-      geometryParentNodeCount: selectedInput.geometryParentNodeCount,
-      geometryChildNodeCount: selectedInput.geometryChildNodeCount,
-      landscapeLatticeBundleForwarded: selectedInput.landscapeLatticeBundleForwarded,
-      landscapeLatticeSource: selectedInput.landscapeLatticeSource,
-      descriptorLandscapeLatticeAdmitted:
-        selectedInput.descriptorLandscapeLatticeAdmitted,
-      geometryLatticeAdmissionStatus:
-        selectedInput.geometryLatticeAdmissionStatus,
-      geometryLatticeAdmissionFailed:
-        selectedInput.geometryLatticeAdmissionFailed,
-      rendererLatticeAdmissionEvidence:
-        selectedInput.rendererLatticeAdmissionEvidence,
-      geometryReceipt: selectedInput.geometryReceipt,
+      ...buildHEarthSelectedInputMountFields(selectedInput),
       sourceNodeCount: 0,
-      rawSourceNodeCount: selectedInput.rawNodeCount,
       materialPortUsed: true,
       layerPortUsed: true,
       nodeFactoryPortUsed: true,
@@ -2687,36 +3051,7 @@ export function mountHEarthRenderer({
         mountNodeValid: true,
         priorOwnedNodesCleared: clearResult.cleared === true,
         priorOwnedNodeCountRemoved: clearResult.removedCount || 0,
-        selectedRenderInputSource: selectedInput.source,
-        sourceDescriptorType: selectedInput.sourceDescriptorType,
-        usedComposedFrame: selectedInput.usedComposedFrame,
-        usedRenderSceneFallback: selectedInput.usedRenderSceneFallback,
-        landscapeNormalizationApplied: selectedInput.landscapeNormalizationApplied,
-        geometryPortUsed: selectedInput.geometryPortUsed,
-        geometryExpansionApplied: selectedInput.geometryExpansionApplied,
-        geometryExpansionSkippedBecauseAlreadyExpanded:
-          selectedInput.geometryExpansionSkippedBecauseAlreadyExpanded,
-        geometryExpansionSource: selectedInput.geometryExpansionSource,
-        geometrySourceNodeCount: selectedInput.geometrySourceNodeCount,
-        geometryExpandedNodeCount: selectedInput.geometryExpandedNodeCount,
-        geometryReturnedNodeCount: selectedInput.geometryReturnedNodeCount,
-        geometrySkippedNodeCount: selectedInput.geometrySkippedNodeCount,
-        geometryBudgetSkippedNodeCount: selectedInput.geometryBudgetSkippedNodeCount,
-        geometryParentNodeCount: selectedInput.geometryParentNodeCount,
-        geometryChildNodeCount: selectedInput.geometryChildNodeCount,
-        landscapeLatticeBundleForwarded: selectedInput.landscapeLatticeBundleForwarded,
-        landscapeLatticeSource: selectedInput.landscapeLatticeSource,
-        descriptorLandscapeLatticeAdmitted:
-          selectedInput.descriptorLandscapeLatticeAdmitted,
-        geometryLatticeAdmissionStatus:
-          selectedInput.geometryLatticeAdmissionStatus,
-        geometryLatticeAdmissionFailed:
-          selectedInput.geometryLatticeAdmissionFailed,
-        rendererLatticeAdmissionEvidence:
-          selectedInput.rendererLatticeAdmissionEvidence,
-        geometryReceipt: selectedInput.geometryReceipt,
-        sourceNodeCount: selectedInput.nodeCount,
-        rawSourceNodeCount: selectedInput.rawNodeCount,
+        ...buildHEarthSelectedInputMountFields(selectedInput),
         materialPortUsed: true,
         layerPortUsed: true,
         nodeFactoryPortUsed: true,
@@ -2746,36 +3081,7 @@ export function mountHEarthRenderer({
         renderRootCreated: true,
         priorOwnedNodesCleared: clearResult.cleared === true,
         priorOwnedNodeCountRemoved: clearResult.removedCount || 0,
-        selectedRenderInputSource: selectedInput.source,
-        sourceDescriptorType: selectedInput.sourceDescriptorType,
-        usedComposedFrame: selectedInput.usedComposedFrame,
-        usedRenderSceneFallback: selectedInput.usedRenderSceneFallback,
-        landscapeNormalizationApplied: selectedInput.landscapeNormalizationApplied,
-        geometryPortUsed: selectedInput.geometryPortUsed,
-        geometryExpansionApplied: selectedInput.geometryExpansionApplied,
-        geometryExpansionSkippedBecauseAlreadyExpanded:
-          selectedInput.geometryExpansionSkippedBecauseAlreadyExpanded,
-        geometryExpansionSource: selectedInput.geometryExpansionSource,
-        geometrySourceNodeCount: selectedInput.geometrySourceNodeCount,
-        geometryExpandedNodeCount: selectedInput.geometryExpandedNodeCount,
-        geometryReturnedNodeCount: selectedInput.geometryReturnedNodeCount,
-        geometrySkippedNodeCount: selectedInput.geometrySkippedNodeCount,
-        geometryBudgetSkippedNodeCount: selectedInput.geometryBudgetSkippedNodeCount,
-        geometryParentNodeCount: selectedInput.geometryParentNodeCount,
-        geometryChildNodeCount: selectedInput.geometryChildNodeCount,
-        landscapeLatticeBundleForwarded: selectedInput.landscapeLatticeBundleForwarded,
-        landscapeLatticeSource: selectedInput.landscapeLatticeSource,
-        descriptorLandscapeLatticeAdmitted:
-          selectedInput.descriptorLandscapeLatticeAdmitted,
-        geometryLatticeAdmissionStatus:
-          selectedInput.geometryLatticeAdmissionStatus,
-        geometryLatticeAdmissionFailed:
-          selectedInput.geometryLatticeAdmissionFailed,
-        rendererLatticeAdmissionEvidence:
-          selectedInput.rendererLatticeAdmissionEvidence,
-        geometryReceipt: selectedInput.geometryReceipt,
-        sourceNodeCount: selectedInput.nodeCount,
-        rawSourceNodeCount: selectedInput.rawNodeCount,
+        ...buildHEarthSelectedInputMountFields(selectedInput),
         materialPortUsed: true,
         layerPortUsed: true,
         nodeFactoryPortUsed: true,
@@ -2803,6 +3109,8 @@ export function mountHEarthRenderer({
     let primitiveClassEmissionCount = 0;
     let landscapeClassEmissionCount = 0;
     let layerMembershipClassEmissionCount = 0;
+    let organicClassEmissionCount = 0;
+    let organicVariationReadyCount = 0;
 
     const warningCodes = [
       ...(Array.isArray(selectedInput.warningCodes)
@@ -2882,6 +3190,8 @@ export function mountHEarthRenderer({
       if (mountResult.classSurface?.hasPrimitiveClass === true) primitiveClassEmissionCount += 1;
       if (mountResult.classSurface?.hasLandscapeClass === true) landscapeClassEmissionCount += 1;
       if (mountResult.classSurface?.hasLayerMembershipClass === true) layerMembershipClassEmissionCount += 1;
+      if (mountResult.classSurface?.hasOrganicClass === true) organicClassEmissionCount += 1;
+      if (mountResult.classSurface?.hasOrganicVariationReadyClass === true) organicVariationReadyCount += 1;
 
       warningCodes.push(...(Array.isArray(mountResult.warningCodes) ? mountResult.warningCodes : []));
     });
@@ -2900,36 +3210,7 @@ export function mountHEarthRenderer({
       priorOwnedNodeCountRemoved: clearResult.removedCount || 0,
       layerContainersCreated: layerResult.created === true,
       layerCount: layerResult.layerCount || 0,
-      selectedRenderInputSource: selectedInput.source,
-      sourceDescriptorType: selectedInput.sourceDescriptorType,
-      usedComposedFrame: selectedInput.usedComposedFrame,
-      usedRenderSceneFallback: selectedInput.usedRenderSceneFallback,
-      landscapeNormalizationApplied: selectedInput.landscapeNormalizationApplied,
-      geometryPortUsed: selectedInput.geometryPortUsed,
-      geometryExpansionApplied: selectedInput.geometryExpansionApplied,
-      geometryExpansionSkippedBecauseAlreadyExpanded:
-        selectedInput.geometryExpansionSkippedBecauseAlreadyExpanded,
-      geometryExpansionSource: selectedInput.geometryExpansionSource,
-      geometrySourceNodeCount: selectedInput.geometrySourceNodeCount,
-      geometryExpandedNodeCount: selectedInput.geometryExpandedNodeCount,
-      geometryReturnedNodeCount: selectedInput.geometryReturnedNodeCount,
-      geometrySkippedNodeCount: selectedInput.geometrySkippedNodeCount,
-      geometryBudgetSkippedNodeCount: selectedInput.geometryBudgetSkippedNodeCount,
-      geometryParentNodeCount: selectedInput.geometryParentNodeCount,
-      geometryChildNodeCount: selectedInput.geometryChildNodeCount,
-      landscapeLatticeBundleForwarded: selectedInput.landscapeLatticeBundleForwarded,
-      landscapeLatticeSource: selectedInput.landscapeLatticeSource,
-      descriptorLandscapeLatticeAdmitted:
-        selectedInput.descriptorLandscapeLatticeAdmitted,
-      geometryLatticeAdmissionStatus:
-        selectedInput.geometryLatticeAdmissionStatus,
-      geometryLatticeAdmissionFailed:
-        selectedInput.geometryLatticeAdmissionFailed,
-      rendererLatticeAdmissionEvidence:
-        selectedInput.rendererLatticeAdmissionEvidence,
-      geometryReceipt: selectedInput.geometryReceipt,
-      sourceNodeCount: selectedInput.nodeCount,
-      rawSourceNodeCount: selectedInput.rawNodeCount,
+      ...buildHEarthSelectedInputMountFields(selectedInput),
       objectNodeCount,
       placedNodeCount,
       skippedNodeCount,
@@ -2949,6 +3230,8 @@ export function mountHEarthRenderer({
       primitiveClassEmissionCount,
       landscapeClassEmissionCount,
       layerMembershipClassEmissionCount,
+      organicClassEmissionCount,
+      organicVariationReadyCount,
       warningCodes,
       failureCodes,
       boundary
@@ -2957,36 +3240,7 @@ export function mountHEarthRenderer({
     return buildRendererMountReceipt({
       rendererMounted: false,
       mountNodeValid: true,
-      selectedRenderInputSource: selectedInput.source,
-      sourceDescriptorType: selectedInput.sourceDescriptorType,
-      usedComposedFrame: selectedInput.usedComposedFrame,
-      usedRenderSceneFallback: selectedInput.usedRenderSceneFallback,
-      landscapeNormalizationApplied: selectedInput.landscapeNormalizationApplied,
-      geometryPortUsed: selectedInput.geometryPortUsed,
-      geometryExpansionApplied: selectedInput.geometryExpansionApplied,
-      geometryExpansionSkippedBecauseAlreadyExpanded:
-        selectedInput.geometryExpansionSkippedBecauseAlreadyExpanded,
-      geometryExpansionSource: selectedInput.geometryExpansionSource,
-      geometrySourceNodeCount: selectedInput.geometrySourceNodeCount,
-      geometryExpandedNodeCount: selectedInput.geometryExpandedNodeCount,
-      geometryReturnedNodeCount: selectedInput.geometryReturnedNodeCount,
-      geometrySkippedNodeCount: selectedInput.geometrySkippedNodeCount,
-      geometryBudgetSkippedNodeCount: selectedInput.geometryBudgetSkippedNodeCount,
-      geometryParentNodeCount: selectedInput.geometryParentNodeCount,
-      geometryChildNodeCount: selectedInput.geometryChildNodeCount,
-      landscapeLatticeBundleForwarded: selectedInput.landscapeLatticeBundleForwarded,
-      landscapeLatticeSource: selectedInput.landscapeLatticeSource,
-      descriptorLandscapeLatticeAdmitted:
-        selectedInput.descriptorLandscapeLatticeAdmitted,
-      geometryLatticeAdmissionStatus:
-        selectedInput.geometryLatticeAdmissionStatus,
-      geometryLatticeAdmissionFailed:
-        selectedInput.geometryLatticeAdmissionFailed,
-      rendererLatticeAdmissionEvidence:
-        selectedInput.rendererLatticeAdmissionEvidence,
-      geometryReceipt: selectedInput.geometryReceipt,
-      sourceNodeCount: selectedInput.nodeCount,
-      rawSourceNodeCount: selectedInput.rawNodeCount,
+      ...buildHEarthSelectedInputMountFields(selectedInput),
       materialPortUsed: true,
       layerPortUsed: true,
       nodeFactoryPortUsed: true,
@@ -3048,11 +3302,11 @@ export const H_EARTH_3D_RENDERER_RECEIPT = Object.freeze({
   receiptType: 'H_EARTH_3D_RENDERER_RECEIPT',
   file: '/showroom/globe/h-earth/renderer.js',
   contractId:
-    'H_EARTH_3D_RENDERER_FILE_BIRTH_STEP_032D_OPTIMIZED_LATTICE_ADMISSION_RENDERER_WIRING_v1',
+    'H_EARTH_3D_RENDERER_FILE_BIRTH_STEP_032E_GEOMETRY_032D_ORGANIC_VARIATION_SYNC_v1',
   renewedFrom:
-    'H_EARTH_3D_RENDERER_FILE_BIRTH_STEP_032C_LATTICE_ADMISSION_COMPATIBLE_RENDERER_WIRING_v1',
+    'H_EARTH_3D_RENDERER_FILE_BIRTH_STEP_032D_OPTIMIZED_LATTICE_ADMISSION_RENDERER_WIRING_v1',
   complementaryGeometryPort:
-    'H_EARTH_3D_RENDER_GEOMETRY_PORT_FILE_BIRTH_STEP_032C_LATTICE_ADMISSION_GATED_GEOMETRY_PORT_v1',
+    'H_EARTH_3D_RENDER_GEOMETRY_PORT_FILE_BIRTH_STEP_032D_ORGANIC_LANDSCAPE_CHILD_VARIATION_v1',
 
   environmentReceiptPresent: Boolean(H_EARTH_3D_ENVIRONMENT_RECEIPT),
   descriptorRendererPreserved: true,
@@ -3090,6 +3344,15 @@ export const H_EARTH_3D_RENDERER_RECEIPT = Object.freeze({
   geometryPortDimensionsPreserved: true,
   geometryPortClassesPreserved: true,
   explicitMaxExpandedNodesPassedToGeometryPort: true,
+
+  geometry032DOrganicVariationSyncDefined: true,
+  geometryOrganicVariationEvidenceForwardingDefined: true,
+  primitiveSpecificChildPlacementEvidenceForwardingDefined: true,
+  organicClassSurfaceMountPreservationDefined: true,
+  organicDataAttributeEmissionDefined: true,
+  childPrimitiveEvidencePreservationDefined: true,
+  projectionParentPrimitiveFamilyPreserved: true,
+  randomRuntimeVariationUsed: false,
 
   preparedRenderDescriptorPassDefined: true,
   duplicateWarningDeduplicationDefined: true,
@@ -3166,6 +3429,8 @@ export const H_EARTH_3D_RENDERER = Object.freeze({
   resolveHEarthRendererLandscapeLatticeBundle,
   normalizeHEarthLandscapeLatticeAdmissionEvidence,
   resolveGeometryPortReceiptSafe,
+  extractHEarthGeometryOrganicEvidence,
+  makeHEarthDefaultOrganicEvidence,
 
   isHEarthGeometryExpandedNode,
   inputContainsHEarthGeometryExpansion,
@@ -3177,6 +3442,7 @@ export const H_EARTH_3D_RENDERER = Object.freeze({
   resolveCandidateRotation,
   resolveDepthClassForNode,
   resolveNormalizedDepthForNode,
+  resolveChildPrimitiveEvidenceForNode,
   resolveProjectionPrimitiveTypeForNode,
   resolvePrimitiveProjectionProfile,
   resolveDepthProjectionMultiplier,
@@ -3199,8 +3465,10 @@ export const H_EARTH_3D_RENDERER = Object.freeze({
   prepareHEarthRenderDescriptor,
   applyHEarthRendererGeometryAttributes,
   applyHEarthRendererPrimitiveGeometryStyles,
+  applyHEarthRendererOrganicClassSurface,
   mountHEarthPreparedRenderDescriptor,
 
+  buildHEarthSelectedInputMountFields,
   buildRendererMountReceipt,
   buildRendererDestroyReceipt,
   mountHEarthRenderer,

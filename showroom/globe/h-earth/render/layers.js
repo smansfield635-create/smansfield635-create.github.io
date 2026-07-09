@@ -1,50 +1,56 @@
 // /showroom/globe/h-earth/render/layers.js
 // COMPLETE RENEWED FILE
-// H_EARTH_3D_RENDER_LAYER_PORT_FILE_BIRTH_STEP_031G_TRUE_LAYER_RENUMERIZATION_RENEWAL_v1
+// H_EARTH_3D_RENDER_LAYER_PORT_FILE_BIRTH_STEP_032G_RENDERER_032D_GEOMETRY_032C_NODE_032E_MATERIAL_032F_LAYER_ALIGNMENT_v1
 //
 // Renews:
-// H_EARTH_3D_RENDER_LAYER_PORT_FILE_BIRTH_STEP_023A_v1
+// H_EARTH_3D_RENDER_LAYER_PORT_FILE_BIRTH_STEP_031G_TRUE_LAYER_RENUMERIZATION_RENEWAL_v1
 //
-// Parent standard:
-// H_EARTH_RENDER_SUPPORT_RENUMERIZATION_UNIFICATION_STANDARD_v1
-//
-// Upstream support renewals:
-// H_EARTH_3D_RENDER_GEOMETRY_PORT_FILE_BIRTH_STEP_031E_SUPPORT_PORT_RENUMERIZATION_RENEWAL_v1
-// H_EARTH_3D_RENDER_MATERIAL_PORT_FILE_BIRTH_STEP_031F_TRUE_MATERIAL_RENUMERIZATION_RENEWAL_v1
+// Aligns with:
+// H_EARTH_3D_RENDERER_FILE_BIRTH_STEP_032D_OPTIMIZED_LATTICE_ADMISSION_RENDERER_WIRING_v1
+// H_EARTH_3D_RENDER_GEOMETRY_PORT_FILE_BIRTH_STEP_032C_LATTICE_ADMISSION_GATED_GEOMETRY_PORT_v1
+// H_EARTH_3D_RENDER_NODE_FACTORY_FILE_BIRTH_STEP_032E_RENDERER_032D_GEOMETRY_032C_CLASS_SURFACE_ALIGNMENT_v1
+// H_EARTH_3D_RENDER_MATERIAL_PORT_FILE_BIRTH_STEP_032F_RENDERER_032D_GEOMETRY_032C_NODE_032E_MATERIAL_ALIGNMENT_v1
 //
 // Purpose:
-// Optimized layer-only resolver and placement port for the H-Earth
-// DOM/CSS-3D Candidate Renderer.
+// Layer-only resolver and placement port for the H-Earth DOM/CSS3D Candidate
+// Renderer.
 //
-// This file owns layer-id normalization, layer container class resolution,
-// deterministic layer ordering, object-level layer membership class resolution,
-// parent/child layer consistency for geometry-expanded nodes, layer dataset
-// export, and renderer-compatible placement of already-created object nodes.
+// This renewal preserves the 031G layer contract while aligning layer
+// container creation, layer ordering, object membership class resolution,
+// geometry-expanded parent/child layer consistency, and renderer 032D placement.
 //
-// This file does not own material classes, primitive classes, landscape classes,
-// geometry expansion, context classification, interaction state, final DOM class
-// emission, renderer orchestration, route shell, route CSS, gameplay, traversal,
-// simulation, WebGL, canvas, visual-pass claims, validation claims, production
-// claims, or matrix collapse.
+// Boundary:
+// Creates layer containers only inside supplied render root. Places already
+// created object nodes only. No object node creation. No material class
+// ownership. No primitive/landscape class ownership. No geometry expansion.
+// No compositor bypass. No WebGL. No canvas. No visual-pass claim.
+// No validation claim. No production claim. No traversal. No simulation.
+// No matrix collapse.
 
 export const H_EARTH_3D_RENDER_LAYER_PORT_CONTRACT = Object.freeze({
   contractId:
+    'H_EARTH_3D_RENDER_LAYER_PORT_FILE_BIRTH_STEP_032G_RENDERER_032D_GEOMETRY_032C_NODE_032E_MATERIAL_032F_LAYER_ALIGNMENT_v1',
+  renewedFrom:
     'H_EARTH_3D_RENDER_LAYER_PORT_FILE_BIRTH_STEP_031G_TRUE_LAYER_RENUMERIZATION_RENEWAL_v1',
-  renewedFrom: 'H_EARTH_3D_RENDER_LAYER_PORT_FILE_BIRTH_STEP_023A_v1',
 
-  parentStandard: 'H_EARTH_RENDER_SUPPORT_RENUMERIZATION_UNIFICATION_STANDARD_v1',
-  parentGeometryRenewal:
-    'H_EARTH_3D_RENDER_GEOMETRY_PORT_FILE_BIRTH_STEP_031E_SUPPORT_PORT_RENUMERIZATION_RENEWAL_v1',
-  parentMaterialRenewal:
-    'H_EARTH_3D_RENDER_MATERIAL_PORT_FILE_BIRTH_STEP_031F_TRUE_MATERIAL_RENUMERIZATION_RENEWAL_v1',
+  rendererCompatibilityTarget:
+    'H_EARTH_3D_RENDERER_FILE_BIRTH_STEP_032D_OPTIMIZED_LATTICE_ADMISSION_RENDERER_WIRING_v1',
+  geometryCompatibilityTarget:
+    'H_EARTH_3D_RENDER_GEOMETRY_PORT_FILE_BIRTH_STEP_032C_LATTICE_ADMISSION_GATED_GEOMETRY_PORT_v1',
+  nodeFactoryCompatibilityTarget:
+    'H_EARTH_3D_RENDER_NODE_FACTORY_FILE_BIRTH_STEP_032E_RENDERER_032D_GEOMETRY_032C_CLASS_SURFACE_ALIGNMENT_v1',
+  materialCompatibilityTarget:
+    'H_EARTH_3D_RENDER_MATERIAL_PORT_FILE_BIRTH_STEP_032F_RENDERER_032D_GEOMETRY_032C_NODE_032E_MATERIAL_ALIGNMENT_v1',
 
   file: '/showroom/globe/h-earth/render/layers.js',
   parentFile: '/showroom/globe/h-earth/renderer.js',
   route: '/showroom/globe/h-earth/',
   sourceRoot: '/h-earth-3d/',
 
-  fileClass: 'DOM_CSS_3D_CANDIDATE_TRUE_LAYER_RESOLUTION_PORT',
-  status: 'TRUE_LAYER_PORT_RENUMERIZED_NON_FINAL_RENDERING',
+  fileClass:
+    'DOM_CSS_3D_CANDIDATE_LAYER_ONLY_RESOLUTION_AND_PLACEMENT_PORT_RENDERER_032D_ALIGNED',
+  status:
+    'RENDERER_032D_GEOMETRY_032C_NODE_032E_MATERIAL_032F_LAYER_ALIGNED_CANDIDATE_ONLY',
 
   targetMatrix: 'H-Earth',
   matrixRole: 'Ground-View Matrix',
@@ -53,13 +59,18 @@ export const H_EARTH_3D_RENDER_LAYER_PORT_CONTRACT = Object.freeze({
 
   owns: Object.freeze({
     layerIdNormalization: true,
+    layerAliasResolution: true,
     layerContainerClassResolution: true,
     deterministicLayerOrdering: true,
+    requiredFallbackLayerContainer: true,
     objectLayerMembershipClassResolution: true,
     parentAwareGeometryChildLayerResolution: true,
-    layerDataset: true,
+    layerDatasetExport: true,
     layerContainerCreation: true,
-    objectNodePlacement: true
+    alreadyCreatedObjectNodePlacement: true,
+    renderer032DPlacementCompatibility: true,
+    node032EClassAggregationCompatibility: true,
+    material032FSeparationCompatibility: true
   }),
 
   doesNotOwn: Object.freeze({
@@ -67,17 +78,30 @@ export const H_EARTH_3D_RENDER_LAYER_PORT_CONTRACT = Object.freeze({
     primitiveClassResolution: true,
     landscapeClassResolution: true,
     geometryExpansion: true,
+    geometryProfileAuthority: true,
     contextClassification: true,
     interactionResolution: true,
     finalDomClassEmission: true,
     rendererOrchestration: true,
-    routeCss: true
+    compositorOrdering: true,
+    routeShell: true,
+    routeCss: true,
+    traversal: true,
+    simulation: true,
+    validation: true,
+    production: true,
+    matrixCollapse: true
   }),
 
   boundary: Object.freeze({
     createsLayerContainers: true,
     createsObjectNodes: false,
+    createsRendererRoot: false,
     definesMaterialClasses: false,
+    definesPrimitiveClasses: false,
+    definesLandscapeClasses: false,
+    expandsGeometry: false,
+
     ownsCompositorOrdering: false,
     bypassesCompositor: false,
     queriesGlobalDocument: false,
@@ -115,11 +139,15 @@ export const H_EARTH_3D_RENDER_LAYER_DATASET_KEYS = Object.freeze({
   renderNodeType: 'hEarthRenderNodeType',
   layerId: 'hEarthLayerId',
   requestedLayerId: 'hEarthRequestedLayerId',
+  normalizedRequestedLayerId: 'hEarthNormalizedRequestedLayerId',
+  fallbackLayerId: 'hEarthFallbackLayerId',
   layerOrder: 'hEarthLayerOrder',
   layerClass: 'hEarthLayerClass',
   layerMemberClass: 'hEarthLayerMemberClass',
+  layerRole: 'hEarthLayerRole',
   layerResolutionSource: 'hEarthLayerResolutionSource',
-  layerFallbackUsed: 'hEarthLayerFallbackUsed'
+  layerFallbackUsed: 'hEarthLayerFallbackUsed',
+  parentAwareLayerResolution: 'hEarthParentAwareLayerResolution'
 });
 
 export const H_EARTH_3D_RENDER_LAYER_POLICY = Object.freeze({
@@ -158,6 +186,7 @@ export const H_EARTH_3D_RENDER_LAYER_CLASS_MAP = Object.freeze({
   'distant-world-context-layer': Object.freeze({
     layerId: 'distant-world-context-layer',
     className: 'h-earth-layer-distant-world-context',
+    layerClassName: 'h-earth-layer-distant-world-context',
     layerMemberClassName: 'h-earth-layer-member-distant-world-context',
     defaultOrder: 10,
     layerRole: 'distant-world-context'
@@ -166,6 +195,7 @@ export const H_EARTH_3D_RENDER_LAYER_CLASS_MAP = Object.freeze({
   'air-haze-light-layer': Object.freeze({
     layerId: 'air-haze-light-layer',
     className: 'h-earth-layer-air-haze-light',
+    layerClassName: 'h-earth-layer-air-haze-light',
     layerMemberClassName: 'h-earth-layer-member-air-haze-light',
     defaultOrder: 20,
     layerRole: 'air-haze-light'
@@ -174,6 +204,7 @@ export const H_EARTH_3D_RENDER_LAYER_CLASS_MAP = Object.freeze({
   'water-surface-plane-layer': Object.freeze({
     layerId: 'water-surface-plane-layer',
     className: 'h-earth-layer-water-surface-plane',
+    layerClassName: 'h-earth-layer-water-surface-plane',
     layerMemberClassName: 'h-earth-layer-member-water-surface-plane',
     defaultOrder: 30,
     layerRole: 'water-surface-plane'
@@ -182,6 +213,7 @@ export const H_EARTH_3D_RENDER_LAYER_CLASS_MAP = Object.freeze({
   'nearshore-wave-band-layer': Object.freeze({
     layerId: 'nearshore-wave-band-layer',
     className: 'h-earth-layer-nearshore-wave-band',
+    layerClassName: 'h-earth-layer-nearshore-wave-band',
     layerMemberClassName: 'h-earth-layer-member-nearshore-wave-band',
     defaultOrder: 40,
     layerRole: 'nearshore-wave-band'
@@ -190,6 +222,7 @@ export const H_EARTH_3D_RENDER_LAYER_CLASS_MAP = Object.freeze({
   'shoreline-foam-line-layer': Object.freeze({
     layerId: 'shoreline-foam-line-layer',
     className: 'h-earth-layer-shoreline-foam-line',
+    layerClassName: 'h-earth-layer-shoreline-foam-line',
     layerMemberClassName: 'h-earth-layer-member-shoreline-foam-line',
     defaultOrder: 50,
     layerRole: 'shoreline-foam-line'
@@ -198,6 +231,7 @@ export const H_EARTH_3D_RENDER_LAYER_CLASS_MAP = Object.freeze({
   'manor-exterior-context-layer': Object.freeze({
     layerId: 'manor-exterior-context-layer',
     className: 'h-earth-layer-manor-exterior-context',
+    layerClassName: 'h-earth-layer-manor-exterior-context',
     layerMemberClassName: 'h-earth-layer-member-manor-exterior-context',
     defaultOrder: 60,
     layerRole: 'manor-exterior-context'
@@ -206,6 +240,7 @@ export const H_EARTH_3D_RENDER_LAYER_CLASS_MAP = Object.freeze({
   'dry-sand-transition-layer': Object.freeze({
     layerId: 'dry-sand-transition-layer',
     className: 'h-earth-layer-dry-sand-transition',
+    layerClassName: 'h-earth-layer-dry-sand-transition',
     layerMemberClassName: 'h-earth-layer-member-dry-sand-transition',
     defaultOrder: 70,
     layerRole: 'dry-sand-transition'
@@ -214,6 +249,7 @@ export const H_EARTH_3D_RENDER_LAYER_CLASS_MAP = Object.freeze({
   'foreground-wet-sand-layer': Object.freeze({
     layerId: 'foreground-wet-sand-layer',
     className: 'h-earth-layer-foreground-wet-sand',
+    layerClassName: 'h-earth-layer-foreground-wet-sand',
     layerMemberClassName: 'h-earth-layer-member-foreground-wet-sand',
     defaultOrder: 80,
     layerRole: 'foreground-wet-sand'
@@ -222,6 +258,7 @@ export const H_EARTH_3D_RENDER_LAYER_CLASS_MAP = Object.freeze({
   'tide-pools-stones-rocks-detail-layer': Object.freeze({
     layerId: 'tide-pools-stones-rocks-detail-layer',
     className: 'h-earth-layer-tide-pools-stones-rocks-detail',
+    layerClassName: 'h-earth-layer-tide-pools-stones-rocks-detail',
     layerMemberClassName:
       'h-earth-layer-member-tide-pools-stones-rocks-detail',
     defaultOrder: 90,
@@ -231,6 +268,7 @@ export const H_EARTH_3D_RENDER_LAYER_CLASS_MAP = Object.freeze({
   'inspection-anchor-overlay-layer': Object.freeze({
     layerId: 'inspection-anchor-overlay-layer',
     className: 'h-earth-layer-inspection-anchor-overlay',
+    layerClassName: 'h-earth-layer-inspection-anchor-overlay',
     layerMemberClassName: 'h-earth-layer-member-inspection-anchor-overlay',
     defaultOrder: 100,
     layerRole: 'inspection-anchor-overlay'
@@ -239,6 +277,7 @@ export const H_EARTH_3D_RENDER_LAYER_CLASS_MAP = Object.freeze({
   'unclassified-render-layer': Object.freeze({
     layerId: 'unclassified-render-layer',
     className: 'h-earth-layer-unclassified-render',
+    layerClassName: 'h-earth-layer-unclassified-render',
     layerMemberClassName: 'h-earth-layer-member-unclassified-render',
     defaultOrder: 999,
     layerRole: 'unclassified-render'
@@ -295,15 +334,77 @@ export const H_EARTH_3D_RENDER_CHILD_PRIMITIVE_TO_LAYER_ID = Object.freeze({
   candidateInspectionAnchorMarker: 'inspection-anchor-overlay-layer'
 });
 
+export const H_EARTH_3D_RENDER_LAYER_ALIAS_MAP = Object.freeze({
+  distant: 'distant-world-context-layer',
+  'distant-world': 'distant-world-context-layer',
+  'distant-context': 'distant-world-context-layer',
+  'distant-world-context': 'distant-world-context-layer',
+  'distant-rock': 'distant-world-context-layer',
+  'distant-rocks': 'distant-world-context-layer',
+
+  atmosphere: 'air-haze-light-layer',
+  atmospheric: 'air-haze-light-layer',
+  haze: 'air-haze-light-layer',
+  air: 'air-haze-light-layer',
+  'air-haze': 'air-haze-light-layer',
+  'air-haze-light': 'air-haze-light-layer',
+
+  water: 'water-surface-plane-layer',
+  'water-surface': 'water-surface-plane-layer',
+  'water-plane': 'water-surface-plane-layer',
+  'water-surface-plane': 'water-surface-plane-layer',
+
+  nearshore: 'nearshore-wave-band-layer',
+  wave: 'nearshore-wave-band-layer',
+  waves: 'nearshore-wave-band-layer',
+  'nearshore-wave': 'nearshore-wave-band-layer',
+  'nearshore-wave-band': 'nearshore-wave-band-layer',
+
+  shoreline: 'shoreline-foam-line-layer',
+  foam: 'shoreline-foam-line-layer',
+  'foam-line': 'shoreline-foam-line-layer',
+  'shoreline-foam': 'shoreline-foam-line-layer',
+  'shoreline-foam-line': 'shoreline-foam-line-layer',
+
+  manor: 'manor-exterior-context-layer',
+  'manor-context': 'manor-exterior-context-layer',
+  'manor-exterior': 'manor-exterior-context-layer',
+  silhouette: 'manor-exterior-context-layer',
+
+  dry: 'dry-sand-transition-layer',
+  'dry-sand': 'dry-sand-transition-layer',
+  'sand-transition': 'dry-sand-transition-layer',
+  'dry-sand-transition': 'dry-sand-transition-layer',
+
+  wet: 'foreground-wet-sand-layer',
+  'wet-sand': 'foreground-wet-sand-layer',
+  foreground: 'foreground-wet-sand-layer',
+  'foreground-wet-sand': 'foreground-wet-sand-layer',
+
+  detail: 'tide-pools-stones-rocks-detail-layer',
+  'surface-detail': 'tide-pools-stones-rocks-detail-layer',
+  'tide-pools': 'tide-pools-stones-rocks-detail-layer',
+  stones: 'tide-pools-stones-rocks-detail-layer',
+  rocks: 'tide-pools-stones-rocks-detail-layer',
+  'tide-pools-stones-rocks-detail':
+    'tide-pools-stones-rocks-detail-layer',
+
+  anchor: 'inspection-anchor-overlay-layer',
+  inspection: 'inspection-anchor-overlay-layer',
+  'inspection-anchor': 'inspection-anchor-overlay-layer',
+  'inspection-anchor-overlay': 'inspection-anchor-overlay-layer',
+
+  unclassified: 'unclassified-render-layer',
+  'unclassified-render': 'unclassified-render-layer'
+});
+
 export function normalizeHEarthLayerId(
   layerId,
   fallback = H_EARTH_3D_RENDER_LAYER_POLICY.fallbackLayerId
 ) {
   const raw = String(layerId || fallback).trim();
 
-  if (!raw) {
-    return fallback;
-  }
+  if (!raw) return fallback;
 
   const normalized = raw
     .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
@@ -313,66 +414,9 @@ export function normalizeHEarthLayerId(
     .replace(/^-|-$/g, '')
     .toLowerCase();
 
-  const aliasMap = Object.freeze({
-    distant: 'distant-world-context-layer',
-    'distant-world': 'distant-world-context-layer',
-    'distant-context': 'distant-world-context-layer',
-    'distant-world-context': 'distant-world-context-layer',
-
-    atmosphere: 'air-haze-light-layer',
-    haze: 'air-haze-light-layer',
-    'air-haze': 'air-haze-light-layer',
-    'air-haze-light': 'air-haze-light-layer',
-
-    water: 'water-surface-plane-layer',
-    'water-surface': 'water-surface-plane-layer',
-    'water-plane': 'water-surface-plane-layer',
-    'water-surface-plane': 'water-surface-plane-layer',
-
-    nearshore: 'nearshore-wave-band-layer',
-    wave: 'nearshore-wave-band-layer',
-    'nearshore-wave': 'nearshore-wave-band-layer',
-    'nearshore-wave-band': 'nearshore-wave-band-layer',
-
-    shoreline: 'shoreline-foam-line-layer',
-    foam: 'shoreline-foam-line-layer',
-    'foam-line': 'shoreline-foam-line-layer',
-    'shoreline-foam-line': 'shoreline-foam-line-layer',
-
-    manor: 'manor-exterior-context-layer',
-    'manor-context': 'manor-exterior-context-layer',
-    'manor-exterior': 'manor-exterior-context-layer',
-
-    dry: 'dry-sand-transition-layer',
-    'dry-sand': 'dry-sand-transition-layer',
-    'dry-sand-transition': 'dry-sand-transition-layer',
-
-    wet: 'foreground-wet-sand-layer',
-    'wet-sand': 'foreground-wet-sand-layer',
-    'foreground-wet-sand': 'foreground-wet-sand-layer',
-
-    detail: 'tide-pools-stones-rocks-detail-layer',
-    'tide-pools': 'tide-pools-stones-rocks-detail-layer',
-    stones: 'tide-pools-stones-rocks-detail-layer',
-    rocks: 'tide-pools-stones-rocks-detail-layer',
-    'tide-pools-stones-rocks-detail':
-      'tide-pools-stones-rocks-detail-layer',
-
-    anchor: 'inspection-anchor-overlay-layer',
-    inspection: 'inspection-anchor-overlay-layer',
-    'inspection-anchor': 'inspection-anchor-overlay-layer',
-    'inspection-anchor-overlay': 'inspection-anchor-overlay-layer',
-
-    unclassified: 'unclassified-render-layer',
-    'unclassified-render': 'unclassified-render-layer'
-  });
-
-  if (H_EARTH_3D_RENDER_LAYER_CLASS_MAP[normalized]) {
-    return normalized;
-  }
-
-  if (aliasMap[normalized]) {
-    return aliasMap[normalized];
+  if (H_EARTH_3D_RENDER_LAYER_CLASS_MAP[normalized]) return normalized;
+  if (H_EARTH_3D_RENDER_LAYER_ALIAS_MAP[normalized]) {
+    return H_EARTH_3D_RENDER_LAYER_ALIAS_MAP[normalized];
   }
 
   const withLayerSuffix = normalized.endsWith('-layer')
@@ -386,31 +430,35 @@ export function normalizeHEarthLayerId(
   return fallback;
 }
 
-export function normalizeHEarthLayerClassArray(value) {
+export function flattenHEarthLayerClassValues(value) {
   if (Array.isArray(value)) {
-    return value;
+    return value.flatMap((entry) => flattenHEarthLayerClassValues(entry));
   }
 
   if (typeof value === 'string') {
     return value.split(/\s+/).filter(Boolean);
   }
 
-  return [];
+  if (value === null || value === undefined || value === false) {
+    return [];
+  }
+
+  return [String(value)];
+}
+
+export function normalizeHEarthLayerClassArray(value) {
+  return flattenHEarthLayerClassValues(value);
 }
 
 export function uniqueHEarthLayerClassNames(classNames = []) {
   const seen = new Set();
 
   return Object.freeze(
-    normalizeHEarthLayerClassArray(classNames)
-      .flatMap((value) => String(value || '').split(/\s+/))
-      .map((value) => value.trim())
+    flattenHEarthLayerClassValues(classNames)
+      .map((value) => String(value || '').trim())
       .filter(Boolean)
       .filter((value) => {
-        if (seen.has(value)) {
-          return false;
-        }
-
+        if (seen.has(value)) return false;
         seen.add(value);
         return true;
       })
@@ -501,21 +549,17 @@ export function resolveHEarthRequestedLayerIdForNode(node = {}) {
 }
 
 export function resolveHEarthFallbackLayerIdForNode(node = {}) {
-  const parentPrimitiveType = resolveHEarthParentPrimitiveTypeForLayer(node);
-  const parentPrimitiveLayer =
-    H_EARTH_3D_RENDER_PARENT_PRIMITIVE_TO_LAYER_ID[parentPrimitiveType];
-
-  if (parentPrimitiveLayer) {
-    return parentPrimitiveLayer;
-  }
-
   const childPrimitiveType = resolveHEarthChildPrimitiveTypeForLayer(node);
   const childPrimitiveLayer =
     H_EARTH_3D_RENDER_CHILD_PRIMITIVE_TO_LAYER_ID[childPrimitiveType];
 
-  if (childPrimitiveLayer) {
-    return childPrimitiveLayer;
-  }
+  if (childPrimitiveLayer) return childPrimitiveLayer;
+
+  const parentPrimitiveType = resolveHEarthParentPrimitiveTypeForLayer(node);
+  const parentPrimitiveLayer =
+    H_EARTH_3D_RENDER_PARENT_PRIMITIVE_TO_LAYER_ID[parentPrimitiveType];
+
+  if (parentPrimitiveLayer) return parentPrimitiveLayer;
 
   return H_EARTH_3D_RENDER_LAYER_POLICY.fallbackLayerId;
 }
@@ -535,7 +579,7 @@ export function resolveHEarthLayerClass(layerId) {
     layerId: layer.layerId,
     requestedLayerId: layerId || null,
     className: layer.className,
-    layerClassName: layer.className,
+    layerClassName: layer.layerClassName || layer.className,
     layerMemberClassName: layer.layerMemberClassName,
     defaultOrder: layer.defaultOrder,
     layerRole: layer.layerRole,
@@ -557,6 +601,7 @@ export function resolveHEarthLayerOrderForNode(node = {}, resolvedLayer = null) 
     node.renderLayerOrder ??
     node.layer?.order ??
     node.composition?.layerOrder ??
+    node.geometryExpansion?.layerOrder ??
     resolvedLayer?.defaultOrder;
 
   const numberValue = Number(rawLayerOrder);
@@ -572,6 +617,7 @@ export function resolveHEarthLayerOrderForNode(node = {}, resolvedLayer = null) 
 export function resolveHEarthLayerMembershipForNode(node = {}) {
   const requestedLayerId = resolveHEarthRequestedLayerIdForNode(node);
   const fallbackLayerId = resolveHEarthFallbackLayerIdForNode(node);
+
   const normalizedRequestedLayerId = requestedLayerId
     ? normalizeHEarthLayerId(requestedLayerId, fallbackLayerId)
     : fallbackLayerId;
@@ -593,6 +639,7 @@ export function resolveHEarthLayerMembershipForNode(node = {}) {
   const layerMemberClassNames = uniqueHEarthLayerClassNames([
     H_EARTH_3D_RENDER_LAYER_POLICY.baseLayerMemberClass,
     node.layerMemberClassName,
+    node.layerMembershipClassNames,
     node.geometryExpansion?.layerMemberClassName,
     resolvedLayer.layerMemberClassName
   ]);
@@ -651,6 +698,8 @@ export function resolveHEarthLayerIdForNode(node = {}) {
 
     layerId: membership.layerId,
     requestedLayerId: membership.requestedLayerId,
+    normalizedRequestedLayerId: membership.normalizedRequestedLayerId,
+    fallbackLayerId: membership.fallbackLayerId,
     layerOrder: membership.layerOrder,
     resolved: membership.resolved,
     fallbackUsed: membership.fallbackUsed,
@@ -669,9 +718,13 @@ export function getHEarthLayerDataset(node = {}) {
   return Object.freeze({
     hEarthLayerId: membership.layerId,
     hEarthRequestedLayerId: membership.requestedLayerId || '',
+    hEarthNormalizedRequestedLayerId:
+      membership.normalizedRequestedLayerId || '',
+    hEarthFallbackLayerId: membership.fallbackLayerId || '',
     hEarthLayerOrder: String(membership.layerOrder),
     hEarthLayerClass: membership.layerClassName,
     hEarthLayerMemberClass: membership.layerMemberClassName,
+    hEarthLayerRole: membership.layerRole,
     hEarthLayerResolutionSource: membership.resolutionSource,
     hEarthLayerFallbackUsed: String(membership.fallbackUsed === true),
     hEarthParentAwareLayerResolution: 'true',
@@ -691,7 +744,11 @@ export function getHEarthLayerClassForNode(node = {}) {
 
     layerId: membership.layerId,
     requestedLayerId: membership.requestedLayerId,
+    normalizedRequestedLayerId: membership.normalizedRequestedLayerId,
+    fallbackLayerId: membership.fallbackLayerId,
     layerOrder: membership.layerOrder,
+    layerRole: membership.layerRole,
+
     layerClassName: membership.layerClassName,
     layerMemberClassName: membership.layerMemberClassName,
 
@@ -717,7 +774,12 @@ export function getHEarthLayerClassForNode(node = {}) {
     interactionClassOwnership: false,
     finalDomClassEmissionOwnership: false,
 
-    boundary: H_EARTH_3D_RENDER_LAYER_POLICY.boundary
+    renderer032DCompatible: true,
+    node032ECompatible: true,
+    material032FSeparated: true,
+
+    boundary: H_EARTH_3D_RENDER_LAYER_POLICY.boundary,
+    claimBoundaryPreserved: true
   });
 }
 
@@ -826,10 +888,7 @@ export function resolveHEarthLayerDescriptors({
   const seen = new Set();
   const deduped = descriptors
     .filter((descriptor) => {
-      if (!descriptor?.layerId || seen.has(descriptor.layerId)) {
-        return false;
-      }
-
+      if (!descriptor?.layerId || seen.has(descriptor.layerId)) return false;
       seen.add(descriptor.layerId);
       return true;
     })
@@ -890,15 +949,16 @@ export function createHEarthLayerContainer({
     H_EARTH_3D_RENDER_LAYER_POLICY.ownershipAttribute,
     H_EARTH_3D_RENDER_LAYER_POLICY.ownershipValue
   );
-
   layerContainer.setAttribute(
     'data-h-earth-render-node-type',
     H_EARTH_3D_RENDER_LAYER_POLICY.layerNodeType
   );
-
   layerContainer.setAttribute('data-h-earth-layer-id', resolvedLayer.layerId);
   layerContainer.setAttribute('data-h-earth-layer-order', String(layerOrder));
-  layerContainer.setAttribute('data-h-earth-layer-class', resolvedLayer.layerClassName);
+  layerContainer.setAttribute(
+    'data-h-earth-layer-class',
+    resolvedLayer.layerClassName
+  );
   layerContainer.setAttribute(
     'data-h-earth-layer-member-class',
     resolvedLayer.layerMemberClassName
@@ -917,7 +977,10 @@ export function createHEarthLayerContainer({
     layerContainer.dataset.hEarthLayerRole = resolvedLayer.layerRole;
   }
 
-  layerContainer.style.transformStyle = 'preserve-3d';
+  if (layerContainer.style) {
+    layerContainer.style.transformStyle = 'preserve-3d';
+    layerContainer.style.position = layerContainer.style.position || 'absolute';
+  }
 
   return Object.freeze({
     layerContainer,
@@ -947,7 +1010,8 @@ export function createHEarthLayerContainer({
       validationClaim: false,
       productionClaim: false,
       claimBoundaryPreserved: true
-    })
+    }),
+    claimBoundaryPreserved: true
   });
 }
 
@@ -971,7 +1035,8 @@ export function createHEarthLayerContainers({
       boundary: Object.freeze({
         rendererRootAccepted: false,
         claimBoundaryPreserved: true
-      })
+      }),
+      claimBoundaryPreserved: true
     });
   }
 
@@ -988,7 +1053,8 @@ export function createHEarthLayerContainers({
       boundary: Object.freeze({
         rendererRootAccepted: true,
         claimBoundaryPreserved: true
-      })
+      }),
+      claimBoundaryPreserved: true
     });
   }
 
@@ -1041,7 +1107,8 @@ export function createHEarthLayerContainers({
       validationClaim: false,
       productionClaim: false,
       claimBoundaryPreserved: true
-    })
+    }),
+    claimBoundaryPreserved: true
   });
 }
 
@@ -1050,7 +1117,6 @@ export function getHEarthLayerContainer({
   layerId
 } = {}) {
   const resolved = resolveHEarthLayerClass(layerId);
-
   const directContainer = layerContainersById?.[resolved.layerId] || null;
 
   if (directContainer) {
@@ -1105,6 +1171,10 @@ export function applyHEarthLayerMembershipToObjectNode({
     'data-h-earth-layer-fallback-used',
     String(membership.fallbackUsed === true)
   );
+  objectNode.setAttribute(
+    'data-h-earth-parent-aware-layer-resolution',
+    'true'
+  );
 
   if (objectNode.dataset) {
     objectNode.dataset.hEarthLayerId = membership.layerId;
@@ -1115,6 +1185,7 @@ export function applyHEarthLayerMembershipToObjectNode({
     objectNode.dataset.hEarthLayerFallbackUsed = String(
       membership.fallbackUsed === true
     );
+    objectNode.dataset.hEarthParentAwareLayerResolution = 'true';
   }
 
   const classNamesApplied = [];
@@ -1212,6 +1283,8 @@ export function placeHEarthNodeInLayer({
     layerId: targetLayer.layerId,
     requestedLayerId: membership.layerId,
     originalRequestedLayerId: membership.requestedLayerId,
+    normalizedRequestedLayerId: membership.normalizedRequestedLayerId,
+    fallbackLayerId: membership.fallbackLayerId,
     layerOrder: membership.layerOrder,
     layerClassName: membership.layerClassName,
     layerMemberClassName: membership.layerMemberClassName,
@@ -1253,13 +1326,18 @@ export const H_EARTH_3D_RENDER_LAYER_PORT_RECEIPT = Object.freeze({
   file: '/showroom/globe/h-earth/render/layers.js',
   contractId: H_EARTH_3D_RENDER_LAYER_PORT_CONTRACT.contractId,
   renewedFrom: H_EARTH_3D_RENDER_LAYER_PORT_CONTRACT.renewedFrom,
-  parentStandard: H_EARTH_3D_RENDER_LAYER_PORT_CONTRACT.parentStandard,
-  parentGeometryRenewal:
-    H_EARTH_3D_RENDER_LAYER_PORT_CONTRACT.parentGeometryRenewal,
-  parentMaterialRenewal:
-    H_EARTH_3D_RENDER_LAYER_PORT_CONTRACT.parentMaterialRenewal,
+
+  rendererCompatibilityTarget:
+    H_EARTH_3D_RENDER_LAYER_PORT_CONTRACT.rendererCompatibilityTarget,
+  geometryCompatibilityTarget:
+    H_EARTH_3D_RENDER_LAYER_PORT_CONTRACT.geometryCompatibilityTarget,
+  nodeFactoryCompatibilityTarget:
+    H_EARTH_3D_RENDER_LAYER_PORT_CONTRACT.nodeFactoryCompatibilityTarget,
+  materialCompatibilityTarget:
+    H_EARTH_3D_RENDER_LAYER_PORT_CONTRACT.materialCompatibilityTarget,
 
   layerClassMapDefined: true,
+  layerAliasMapDefined: true,
   layerDatasetKeysDefined: true,
   layerContainerFactoryDefined: true,
   layerPlacementFunctionDefined: true,
@@ -1268,6 +1346,12 @@ export const H_EARTH_3D_RENDER_LAYER_PORT_RECEIPT = Object.freeze({
   childPrimitiveLayerFallbackDefined: true,
   objectLayerMembershipClassResolutionDefined: true,
   parentAwareGeometryChildLayerResolutionDefined: true,
+  requiredFallbackLayerContainerDefined: true,
+
+  renderer032DCompatible: true,
+  geometry032CCompatible: true,
+  node032ECompatible: true,
+  material032FSeparated: true,
 
   requiredLayerIds: Object.freeze([
     'distant-world-context-layer',
@@ -1328,28 +1412,15 @@ export const H_EARTH_3D_RENDER_LAYER_PORT_RECEIPT = Object.freeze({
   interactionClassOwnership: false,
   finalDomClassEmissionOwnership: false,
 
-  boundary: Object.freeze({
-    layerPortOnly: true,
-    trueLayerResolver: true,
-    mutatesOnlySuppliedRenderRoot: true,
-    webglActivation: false,
-    canvasActivation: false,
-    svgActivation: false,
-    iframeActivation: false,
-    scriptCreation: false,
-    finalRendererClaim: false,
-    rendererPassClaim: false,
-    visualPassClaim: false,
-    validationClaim: false,
-    productionClaim: false,
-    traversalClaim: false,
-    simulationClaim: false,
-    matrixCollapse: false,
-    claimBoundaryPreserved: true
-  })
+  boundary: H_EARTH_3D_RENDER_LAYER_PORT_CONTRACT.boundary,
+  claimBoundaryPreserved: true
 });
 
 export function getRenderLayerPortReceipt() {
+  return H_EARTH_3D_RENDER_LAYER_PORT_RECEIPT;
+}
+
+export function getHEarthRenderLayerPortReceipt() {
   return H_EARTH_3D_RENDER_LAYER_PORT_RECEIPT;
 }
 
@@ -1359,12 +1430,15 @@ export const H_EARTH_3D_RENDER_LAYER_PORT = Object.freeze({
 
   contract: H_EARTH_3D_RENDER_LAYER_PORT_CONTRACT,
   classMap: H_EARTH_3D_RENDER_LAYER_CLASS_MAP,
+  layerClassMap: H_EARTH_3D_RENDER_LAYER_CLASS_MAP,
+  aliasMap: H_EARTH_3D_RENDER_LAYER_ALIAS_MAP,
   datasetKeys: H_EARTH_3D_RENDER_LAYER_DATASET_KEYS,
   policy: H_EARTH_3D_RENDER_LAYER_POLICY,
   parentPrimitiveToLayerId: H_EARTH_3D_RENDER_PARENT_PRIMITIVE_TO_LAYER_ID,
   childPrimitiveToLayerId: H_EARTH_3D_RENDER_CHILD_PRIMITIVE_TO_LAYER_ID,
 
   normalizeLayerId: normalizeHEarthLayerId,
+  flattenClassValues: flattenHEarthLayerClassValues,
   normalizeClassArray: normalizeHEarthLayerClassArray,
   uniqueClassNames: uniqueHEarthLayerClassNames,
   joinClassNames: joinHEarthLayerClassNames,
@@ -1393,7 +1467,6 @@ export const H_EARTH_3D_RENDER_LAYER_PORT = Object.freeze({
   placeNodeInLayer: placeHEarthNodeInLayer,
 
   getReceipt: getRenderLayerPortReceipt,
-
   receipt: H_EARTH_3D_RENDER_LAYER_PORT_RECEIPT
 });
 

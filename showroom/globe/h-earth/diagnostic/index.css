@@ -1,25 +1,26 @@
 /*
   /showroom/globe/h-earth/diagnostic/index.css
-  COMPLETE NEW FILE
+  COMPLETE RENEWED FILE
+  H_EARTH_3D_DIAGNOSTIC_ROUTE_STYLE_FILE_BIRTH_STEP_033G_LIVE_PUBLIC_RENDERER_SYNC_PANEL_v1
+
+  Renews:
   H_EARTH_3D_DIAGNOSTIC_ROUTE_STYLE_FILE_BIRTH_STEP_033F_REPORT_WALL_ROUTE_v1
 
   Complements:
   /showroom/globe/h-earth/diagnostic/index.html
-  H_EARTH_3D_DIAGNOSTIC_ROUTE_SHELL_FILE_BIRTH_STEP_033E_REPORT_WALL_ROUTE_v1
+  H_EARTH_3D_DIAGNOSTIC_ROUTE_SHELL_FILE_BIRTH_STEP_033F_LIVE_PUBLIC_RENDERER_SYNC_PANEL_v1
 
   /showroom/globe/h-earth/diagnostic/index.js
-  H_EARTH_3D_DIAGNOSTIC_BOOTSTRAP_FILE_BIRTH_STEP_033D_ROUTE_REPORT_SPLIT_v1
+  H_EARTH_3D_DIAGNOSTIC_BOOTSTRAP_FILE_BIRTH_STEP_033E_LIVE_PUBLIC_RENDERER_SYNC_EVIDENCE_REQUEST_v1
 
-  Public split source:
+  Public route:
   /showroom/globe/h-earth/
-  H_EARTH_3D_ROUTE_SHELL_FILE_BIRTH_STEP_033B_PUBLIC_SCENE_ONLY_DIAGNOSTIC_SPLIT_v1
-  H_EARTH_3D_ROUTE_SHELL_STYLE_FILE_BIRTH_STEP_033C_PUBLIC_SCENE_ONLY_DIAGNOSTIC_SPLIT_v1
-  H_EARTH_3D_INDEX_PUBLIC_BOOTSTRAP_FILE_BIRTH_STEP_033A_DIAGNOSTIC_ROUTE_SPLIT_RENDERER_031D_COMPAT_v1
 
   Purpose:
   Dedicated H-Earth diagnostic route stylesheet. Styles the report wall,
   operational cards, copy toolbar, diagnostic payload grid, JSON output panels,
-  route status surface, and diagnostic boundary footer.
+  live public renderer sync evidence panel, route status surface, and diagnostic
+  boundary footer.
 
   Boundary:
   Diagnostic/report CSS only.
@@ -70,6 +71,8 @@
   --h-earth-diagnostic-error: #ff9b9b;
   --h-earth-diagnostic-ok: #b9f3ce;
   --h-earth-diagnostic-info: #a9d7ff;
+  --h-earth-diagnostic-sync: #c9bbff;
+  --h-earth-diagnostic-sync-strong: #eee8ff;
 
   --h-earth-diagnostic-radius-lg: 28px;
   --h-earth-diagnostic-radius-md: 18px;
@@ -379,6 +382,10 @@ pre {
   border-color: rgba(242, 212, 156, 0.24);
 }
 
+.h-earth-3d-copy-actions button:nth-child(4) {
+  border-color: rgba(201, 187, 255, 0.24);
+}
+
 .h-earth-3d-operational-reports {
   padding: 18px;
 }
@@ -500,6 +507,22 @@ pre {
   background: rgba(255, 177, 132, 0.065);
 }
 
+.h-earth-3d-report-card[data-h-earth-report-id="live-public-renderer-sync"],
+.h-earth-3d-report-card[data-h-earth-report-severity="SYNC"] {
+  border-color: rgba(201, 187, 255, 0.32);
+  background:
+    radial-gradient(circle at 90% 12%, rgba(201, 187, 255, 0.16), transparent 34%),
+    linear-gradient(180deg, rgba(201, 187, 255, 0.055), rgba(255, 255, 255, 0.02)),
+    rgba(0, 0, 0, 0.14);
+}
+
+.h-earth-3d-report-card[data-h-earth-report-id="live-public-renderer-sync"] .h-earth-3d-report-status,
+.h-earth-3d-report-card[data-h-earth-report-severity="SYNC"] .h-earth-3d-report-status {
+  color: var(--h-earth-diagnostic-sync-strong);
+  border-color: rgba(201, 187, 255, 0.34);
+  background: rgba(201, 187, 255, 0.08);
+}
+
 .h-earth-3d-report-card[data-h-earth-report-severity="ERROR"] {
   border-color: rgba(255, 155, 155, 0.32);
 }
@@ -532,6 +555,45 @@ pre {
 
 .h-earth-3d-panel-primary {
   grid-column: span 12;
+}
+
+.h-earth-3d-live-public-renderer-sync-panel {
+  border-color: rgba(201, 187, 255, 0.26);
+  background:
+    radial-gradient(circle at 92% 8%, rgba(201, 187, 255, 0.15), transparent 32%),
+    linear-gradient(135deg, rgba(201, 187, 255, 0.075), transparent 58%),
+    var(--h-earth-diagnostic-panel);
+}
+
+.h-earth-3d-live-public-renderer-sync-panel .h-earth-3d-diagnostic-kicker {
+  color: rgba(238, 232, 255, 0.76);
+}
+
+.h-earth-3d-live-public-renderer-sync-panel h2 {
+  color: var(--h-earth-diagnostic-sync-strong);
+}
+
+.h-earth-3d-live-public-renderer-sync-panel .h-earth-3d-copy-button {
+  border-color: rgba(201, 187, 255, 0.28);
+}
+
+.h-earth-3d-live-public-renderer-sync-panel .h-earth-3d-copy-button:hover,
+.h-earth-3d-live-public-renderer-sync-panel .h-earth-3d-copy-button:focus-visible {
+  border-color: rgba(238, 232, 255, 0.52);
+  background: rgba(201, 187, 255, 0.12);
+  color: var(--h-earth-diagnostic-sync-strong);
+}
+
+#h-earth-3d-live-public-renderer-sync-payload {
+  border-color: rgba(201, 187, 255, 0.22);
+  background:
+    linear-gradient(180deg, rgba(201, 187, 255, 0.045), transparent 110px),
+    rgba(0, 0, 0, 0.26);
+}
+
+#h-earth-3d-live-public-renderer-sync-payload::selection {
+  color: #090611;
+  background: rgba(238, 232, 255, 0.9);
 }
 
 .h-earth-3d-panel-heading-row {
@@ -591,6 +653,14 @@ pre {
   background: rgba(221, 255, 245, 0.34);
 }
 
+#h-earth-3d-live-public-renderer-sync-payload::-webkit-scrollbar-thumb {
+  background: rgba(201, 187, 255, 0.25);
+}
+
+#h-earth-3d-live-public-renderer-sync-payload::-webkit-scrollbar-thumb:hover {
+  background: rgba(201, 187, 255, 0.4);
+}
+
 .h-earth-3d-diagnostic-boundary,
 .h-earth-3d-claim-boundary {
   padding: 16px 18px;
@@ -619,6 +689,10 @@ pre {
   --h-earth-diagnostic-route-bound: 1;
 }
 
+.h-earth-3d-diagnostic-route-root[data-h-earth-live-public-renderer-sync-panel="true"] {
+  --h-earth-live-public-renderer-sync-panel-bound: 1;
+}
+
 /* State hooks */
 
 .h-earth-3d-diagnostic-ready .h-earth-3d-diagnostic-status {
@@ -640,6 +714,26 @@ pre {
   background: rgba(255, 155, 155, 0.075);
 }
 
+/* Live-public-renderer-sync status hooks */
+
+.h-earth-3d-live-public-renderer-sync-panel[data-h-earth-sync-status="PUBLIC_ROUTE_LIVE_RECEIPT_REQUIRED"] {
+  border-color: rgba(255, 217, 141, 0.3);
+}
+
+.h-earth-3d-live-public-renderer-sync-panel[data-h-earth-sync-status="CSS_INTERPRETATION_NEXT"] {
+  border-color: rgba(185, 243, 206, 0.32);
+}
+
+.h-earth-3d-live-public-renderer-sync-panel[data-h-earth-sync-status="RENDERER_STALE"],
+.h-earth-3d-live-public-renderer-sync-panel[data-h-earth-sync-status="GEOMETRY_STALE"],
+.h-earth-3d-live-public-renderer-sync-panel[data-h-earth-sync-status="NODE_FACTORY_OR_MATERIAL_CLASS_SURFACE_NEXT"] {
+  border-color: rgba(255, 177, 132, 0.3);
+}
+
+.h-earth-3d-live-public-renderer-sync-panel[data-h-earth-sync-status="FAILURE_CODE_NEXT"] {
+  border-color: rgba(255, 155, 155, 0.34);
+}
+
 /* Compatibility aliases for earlier report wall naming */
 
 .h-earth-3d-report-layer,
@@ -652,6 +746,7 @@ pre {
 
 .h-earth-3d-operational-report-stack,
 .h-earth-3d-spatial-summary,
+.h-earth-3d-live-public-renderer-sync,
 .h-earth-3d-composed-frame,
 .h-earth-3d-compositor-receipt,
 .h-earth-3d-renderer-placement,

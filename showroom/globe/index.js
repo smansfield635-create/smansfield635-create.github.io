@@ -1,1228 +1,1966 @@
-// /showroom/index.js
-// TNT FULL-FILE REPLACEMENT
-// SHOWROOM_DIAMOND_G2_CRYSTALLINE_FIBONACCI_BEAUTY_REFINEMENT_JS_TNT_v1
+// /showroom/globe/h-earth/index.js
+// COMPLETE RENEWED FILE
+// H_EARTH_3D_INDEX_PUBLIC_BOOTSTRAP_FILE_BIRTH_STEP_033A_DIAGNOSTIC_ROUTE_SPLIT_RENDERER_031D_COMPAT_v1
 //
-// Preserves recovered baseline:
-// SHOWROOM_DIAMOND_G2_CONSUMPTION_FINGERPRINT_AUDIT_JS_TNT_v1
+// Renews:
+// H_EARTH_3D_INDEX_BOOTSTRAP_FILE_BIRTH_STEP_029F_REPORT_LAYER_LATTICE_SCOPE_EVIDENCE_COMPRESSION_v1
 //
-// Governing standard:
-// SHOWROOM_DIAMOND_G2_FIBONACCI_16_NODE_256_LATTICE_PROOF_OBJECT_STANDARD_v1
+// Preserves public-route compatibility from:
+// H_EARTH_3D_INDEX_BOOTSTRAP_FILE_BIRTH_STEP_029E_SPATIAL_RECEIPT_EXPOSURE_v1
+// H_EARTH_3D_INDEX_BOOTSTRAP_FILE_BIRTH_STEP_029D_RUNTIME_FAILURE_CODE_CLEANUP_v1
 //
-// Scope: /showroom/ diamond proof-object renderer only.
+// Renderer compatibility target:
+// H_EARTH_3D_RENDERER_FILE_BIRTH_STEP_031D_SINGLE_PASS_GEOMETRY_EXPANSION_GUARDED_BINDING_v1
+//
 // Purpose:
-// - Refine the recovered G2 Diamond into a sharper, more crystalline, more beautiful proof object.
-// - Preserve canonical canvas consumption, duplicate-canvas neutralization, hidden fingerprint API,
-//   finger drag, momentum, double-tap reset, Crystal Form, and Lattice Structure.
-// - Make Fibonacci structure more visibly intentional in the lattice lens.
-// - Maintain 16 radial nodes × 16 Fibonacci-governed bands = 256 addressable lattice seats.
-// - No HTML rewrite. No generated image. No GraphicBox. No Audralia inheritance. No planet-template inheritance.
+// Public H-Earth route bootstrap only.
+// Mounts the DOM/CSS3D candidate renderer when the canon renderer mount API is
+// available, binds compact public inspection/readout controls, exposes compact
+// route status/receipt, and links to the separate diagnostic route.
+//
+// Diagnostic split:
+// The former Step 029F report-layer, lattice-scope reader, raw spatial evidence
+// bundle, operational report source summary, report cards, receipt wall, copy
+// surfaces, and advanced diagnostic payload surfaces are intentionally removed
+// from this public route bootstrap and assigned to:
+//
+// /showroom/globe/h-earth/diagnostic/index.js
+//
+// Report principle preserved:
+// Receipts prove.
+// Reports diagnose.
+// Scene remains primary.
+//
+// Boundary:
+// Route-side public bootstrap only.
+// No diagnostic wall.
+// No source mutation.
+// No GitHub mutation.
+// No route install claim.
+// No WebGL.
+// No canvas.
+// No SVG.
+// No iframe.
+// No fake HTML scene geometry.
+// No shell-owned scene objects.
+// No final renderer claim.
+// No renderer-pass claim.
+// No visual-pass claim.
+// No validation claim.
+// No production claim.
+// No traversal.
+// No survival simulation.
+// No swimming.
+// No fluid simulation.
+// No manor interior access.
+// No distant traversal.
+// No runtime lattice activation.
+// No active 16x16 lattice runtime claim.
+// No active 256-address runtime claim.
+// No Mirror Manor route-canon naming.
+// No matrix collapse.
 
-const BEAUTY_REFINEMENT_CONTRACT = "SHOWROOM_DIAMOND_G2_CRYSTALLINE_FIBONACCI_BEAUTY_REFINEMENT_JS_TNT_v1";
-const PREVIOUS_CONSUMPTION_AUDIT_CONTRACT = "SHOWROOM_DIAMOND_G2_CONSUMPTION_FINGERPRINT_AUDIT_JS_TNT_v1";
-const ACTIVE_STANDARD = "SHOWROOM_DIAMOND_G2_FIBONACCI_16_NODE_256_LATTICE_PROOF_OBJECT_STANDARD_v1";
-const PAIRED_HTML_CONTRACT = "SHOWROOM_DIAMOND_G2_FIBONACCI_16_NODE_256_LATTICE_HTML_STAGE_BINDING_TNT_v1";
+import {
+  H_EARTH_3D_CAPACITY,
+  H_EARTH_3D_CAPACITY_RECEIPT,
+  H_EARTH_3D_FORBIDDEN_CAPABILITY_FLAGS,
+  getCapacityReceipt
+} from './capacity.js';
 
-const RADIAL_NODES = 16;
-const FIBONACCI_BANDS = 16;
-const LATTICE_STATES = 256;
-const TAU = Math.PI * 2;
+import {
+  H_EARTH_3D_ENVIRONMENT,
+  H_EARTH_3D_ENVIRONMENT_RECEIPT,
+  getEnvironmentReceipt
+} from './environment.js';
 
-const FIBONACCI_SEQUENCE = Object.freeze([
-  1, 1, 2, 3, 5, 8, 13, 21,
-  34, 55, 89, 144, 233, 377, 610, 987
+import {
+  H_EARTH_3D_RENDERER,
+  H_EARTH_3D_RENDERER_RECEIPT,
+  H_EARTH_3D_CANDIDATE_RENDER_SCENE,
+  H_EARTH_3D_RENDER_BOUNDARY_FLAGS,
+  H_EARTH_3D_RENDER_VOLUME_MODEL,
+  H_EARTH_3D_RENDER_PORTS,
+  mountHEarthRenderer,
+  destroyHEarthRenderer,
+  selectHEarthRenderInput,
+  getRendererReceipt
+} from './renderer.js';
+
+import {
+  H_EARTH_3D_COMPOSITOR,
+  H_EARTH_3D_COMPOSED_CANDIDATE_FRAME,
+  H_EARTH_3D_COMPOSITOR_RECEIPT,
+  H_EARTH_3D_COMPOSITION_BOUNDARY_FLAGS,
+  getCompositorReceipt
+} from './compositor.js';
+
+import {
+  H_EARTH_3D_CONTROLLER,
+  H_EARTH_3D_CONTROLLER_RECEIPT,
+  H_EARTH_3D_SELECTABLE_TARGET_REGISTRY,
+  H_EARTH_3D_INSPECTION_ACTION_ROUTING,
+  H_EARTH_3D_GROUND_CONDITION_READ_BRIDGE,
+  H_EARTH_3D_GROUND_INSPECTION_RECEIPT_BRIDGE,
+  H_EARTH_3D_CONTEXT_ONLY_BLOCK_RESPONSES,
+  H_EARTH_3D_SECONDARY_SURFACE_CONTEXT_RESPONSES,
+  H_EARTH_3D_WATER_ATMOSPHERIC_CONTEXT_RESPONSES,
+  H_EARTH_3D_BLOCKED_BEHAVIOR_RESPONSES,
+  H_EARTH_3D_COMPOSED_FRAME_SELECTION_REFERENCES,
+  H_EARTH_3D_CONTROLLER_BOUNDARY_FLAGS,
+  getSelectableTarget,
+  getControllerTargetClassification,
+  resolveInspectGroundControllerBridge,
+  resolveGroundConditionReadBridge,
+  getControllerReceipt
+} from './controller.js';
+
+export const H_EARTH_3D_INDEX_CONTRACT = Object.freeze({
+  contractId:
+    'H_EARTH_3D_INDEX_PUBLIC_BOOTSTRAP_FILE_BIRTH_STEP_033A_DIAGNOSTIC_ROUTE_SPLIT_RENDERER_031D_COMPAT_v1',
+  renewedFrom:
+    'H_EARTH_3D_INDEX_BOOTSTRAP_FILE_BIRTH_STEP_029F_REPORT_LAYER_LATTICE_SCOPE_EVIDENCE_COMPRESSION_v1',
+
+  file: '/showroom/globe/h-earth/index.js',
+  route: '/showroom/globe/h-earth/',
+  diagnosticRoute: '/showroom/globe/h-earth/diagnostic/',
+  sourceRoot: '/h-earth-3d/',
+  createdFor: 'H_EARTH_3D_CANDIDATE_PREVIEW',
+
+  fileClass:
+    'PUBLIC_ROUTE_BOOTSTRAP_DOM_CSS_3D_CANDIDATE_PREVIEW_ORCHESTRATOR_DIAGNOSTIC_SPLIT',
+  activationScope:
+    'AUTHORIZED_PUBLIC_ROUTE_SIDE_CANDIDATE_ACTIVATION_DOM_CSS_3D_ONLY',
+  activationOption:
+    'STEP_033A_PUBLIC_ROUTE_BOOTSTRAP_DIAGNOSTIC_ROUTE_SPLIT',
+
+  upstreamCapacityFile: '/showroom/globe/h-earth/capacity.js',
+  upstreamEnvironmentFile: '/showroom/globe/h-earth/environment.js',
+  upstreamRendererFile: '/showroom/globe/h-earth/renderer.js',
+  upstreamCompositorFile: '/showroom/globe/h-earth/compositor.js',
+  upstreamControllerFile: '/showroom/globe/h-earth/controller.js',
+
+  rendererCompatibilityTarget:
+    'H_EARTH_3D_RENDERER_FILE_BIRTH_STEP_031D_SINGLE_PASS_GEOMETRY_EXPANSION_GUARDED_BINDING_v1',
+  diagnosticRouteCompatibilityTarget:
+    'H_EARTH_3D_DIAGNOSTIC_BOOTSTRAP_FILE_BIRTH_STEP_033D_ROUTE_REPORT_SPLIT_v1',
+
+  targetMatrix: 'H-Earth',
+  matrixRole: 'Ground-View Matrix',
+  activeCell: 'H_EARTH_GROUND_CELL_001',
+  sceneIdentity: 'earth-water-air-survival-shoreline-manor',
+  firstAction: 'Inspect Ground',
+  firstReadout: 'Ground Condition Read',
+  firstReceipt: 'H_EARTH_GROUND_INSPECTION_RECEIPT',
+
+  reportPrinciple: 'Receipts prove. Reports diagnose. Scene remains primary.',
+
+  renewalScope: Object.freeze({
+    publicBootstrapOnly: true,
+    diagnosticRouteSplitApplied: true,
+    renderer031DCompatibilityDeclared: true,
+
+    runtimeFailureCodeCleanupPreserved: true,
+    externalRouteAutostartPreserved: true,
+    rendererMountReceiptStatusRead: true,
+    htmlCompatibilityPreservedForPublicShell: true,
+    cssCompatibilityPreservedForPublicShell: true,
+    existingPublicExportsPreserved: true,
+
+    rendererMountOrchestrationPreserved: true,
+    controllerInspectionBridgePreserved: true,
+    compactPublicReadoutAdded: true,
+    compactRouteReceiptPreserved: true,
+    diagnosticRouteHandoffAdded: true,
+
+    former029FReportLayerMovedOut: true,
+    former029FLatticeScopeReaderMovedOut: true,
+    former029FSpatialDiagnosticReceiptMovedOut: true,
+    former029FSpatialDiagnosticEvidenceBundleMovedOut: true,
+    former029FOperationalReportSourceSummaryMovedOut: true,
+    former029FAdvancedRawEvidenceSurfacesMovedOut: true,
+
+    publicRouteRequiresDiagnosticPayloadIds: false,
+    publicRouteWritesDiagnosticPayloadIds: false,
+    publicRouteEmbedsDiagnosticWall: false,
+    publicRouteEmbedsReceiptWall: false,
+    publicRouteEmbedsCopySurface: false,
+    publicRouteEmbedsOperationalReports: false,
+
+    renderingBehaviorChanged: false,
+    compositorLogicChanged: false,
+    environmentMutation: false,
+    rendererMutation: false,
+    controllerMutation: false,
+    routeShellHtmlMutation: false,
+    routeCssMutation: false,
+
+    latticeActivationAdded: false,
+    mirrorManorRouteCanonNamingAdded: false,
+    claimUpgradeAdded: false,
+    redesignClaim: false
+  }),
+
+  indexRole: Object.freeze({
+    verifiesCanonChain: true,
+    resolvesRouteDomMountPoints: true,
+    initializesRouteStatus: true,
+    mayBindSafeControllerControls: true,
+    mayExposeDebugStatus: true,
+    mayCallRendererMountApiIfCanonExposed: true,
+    mayUseNoMountFallbackIfRendererApiMissing: true,
+    mayLinkDiagnosticRoute: true,
+
+    ownsRenderLogic: false,
+    ownsCompositorOrdering: false,
+    ownsControllerCanon: false,
+    ownsRouteShellHtml: false,
+    ownsRouteCss: false,
+    ownsDiagnosticReports: false,
+    ownsRawEvidenceWall: false,
+    ownsCopySurface: false,
+    ownsReceiptWall: false,
+    ownsLatticeCanon: false,
+    ownsMirrorManorNaming: false,
+    ownsWebGL: false,
+    ownsCanvas: false
+  }),
+
+  matrixSeparation: Object.freeze({
+    hEarth: 'Ground-View Matrix',
+    hearth: 'support/control context only',
+    audralia: 'planetary-world context only',
+    matrixCollapse: false
+  }),
+
+  mirrorManorBoundary: Object.freeze({
+    shorelineManorSceneIdentity: 'earth-water-air-survival-shoreline-manor',
+    mirrorManorStrategicallyImplied: true,
+    mirrorManorRouteCanonNamed: false
+  }),
+
+  boundaryClaims: Object.freeze({
+    mutatesGitHub: false,
+    installsRoute: false,
+    expandsRoute: false,
+    activatesWebGL: false,
+    activatesCanvas: false,
+    activatesSvg: false,
+    activatesIframe: false,
+    createsShellOwnedSceneObjects: false,
+    createsFakeHtmlSceneGeometry: false,
+    claimsFinalRenderer: false,
+    claimsRendererPass: false,
+    claimsVisualPass: false,
+    claimsValidation: false,
+    claimsProduction: false,
+    claimsOpenWorldTraversal: false,
+    claimsSurvivalSimulation: false,
+    claimsSwimming: false,
+    claimsFluidSimulation: false,
+    claimsManorInteriorAccess: false,
+    claimsDistantTraversal: false,
+    claimsLatticeActivation: false,
+    claimsActive16x16Runtime: false,
+    claimsActive256AddressRuntime: false,
+    claimsMirrorManorRouteCanonName: false,
+    matrixCollapse: false
+  })
+});
+
+export const H_EARTH_3D_INDEX_BOUND_CHAIN = Object.freeze({
+  capacity: Object.freeze({
+    file: '/showroom/globe/h-earth/capacity.js',
+    aggregate: H_EARTH_3D_CAPACITY,
+    receipt: H_EARTH_3D_CAPACITY_RECEIPT
+  }),
+
+  environment: Object.freeze({
+    file: '/showroom/globe/h-earth/environment.js',
+    aggregate: H_EARTH_3D_ENVIRONMENT,
+    receipt: H_EARTH_3D_ENVIRONMENT_RECEIPT
+  }),
+
+  renderer: Object.freeze({
+    file: '/showroom/globe/h-earth/renderer.js',
+    compatibilityTarget:
+      'H_EARTH_3D_RENDERER_FILE_BIRTH_STEP_031D_SINGLE_PASS_GEOMETRY_EXPANSION_GUARDED_BINDING_v1',
+    aggregate: H_EARTH_3D_RENDERER,
+    candidateRenderScene: H_EARTH_3D_CANDIDATE_RENDER_SCENE,
+    renderVolumeModel: H_EARTH_3D_RENDER_VOLUME_MODEL,
+    renderPorts: H_EARTH_3D_RENDER_PORTS,
+    boundaryFlags: H_EARTH_3D_RENDER_BOUNDARY_FLAGS,
+    aggregateMountApiAvailable:
+      typeof H_EARTH_3D_RENDERER?.mountHEarthRenderer === 'function',
+    aggregateDestroyApiAvailable:
+      typeof H_EARTH_3D_RENDERER?.destroyHEarthRenderer === 'function',
+    namedMountApiAvailable: typeof mountHEarthRenderer === 'function',
+    namedDestroyApiAvailable: typeof destroyHEarthRenderer === 'function',
+    selectRenderInputHelperAvailable:
+      typeof selectHEarthRenderInput === 'function',
+    receipt: H_EARTH_3D_RENDERER_RECEIPT
+  }),
+
+  compositor: Object.freeze({
+    file: '/showroom/globe/h-earth/compositor.js',
+    aggregate: H_EARTH_3D_COMPOSITOR,
+    composedCandidateFrame: H_EARTH_3D_COMPOSED_CANDIDATE_FRAME,
+    boundaryFlags: H_EARTH_3D_COMPOSITION_BOUNDARY_FLAGS,
+    receipt: H_EARTH_3D_COMPOSITOR_RECEIPT
+  }),
+
+  controller: Object.freeze({
+    file: '/showroom/globe/h-earth/controller.js',
+    aggregate: H_EARTH_3D_CONTROLLER,
+    targetRegistry: H_EARTH_3D_SELECTABLE_TARGET_REGISTRY,
+    boundaryFlags: H_EARTH_3D_CONTROLLER_BOUNDARY_FLAGS,
+    receipt: H_EARTH_3D_CONTROLLER_RECEIPT
+  })
+});
+
+export const H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS = Object.freeze({
+  routeBootstrapOrchestrator: true,
+  publicRouteBootstrapOnly: true,
+  diagnosticRouteSplit: true,
+  authorizedRouteSideCandidateActivationDomCss3dOnly: true,
+
+  directDomControlBindingAllowedWithinCandidateBoundary: true,
+  statusDomUpdateAllowedWithinCandidateBoundary: true,
+  descriptorDisplayAllowedWithinCandidateBoundary: true,
+  compactPublicReadoutAllowedWithinCandidateBoundary: true,
+  diagnosticRouteLinkAllowedWithinCandidateBoundary: true,
+
+  diagnosticReportLayerAllowedInPublicRoute: false,
+  spatialReceiptExposureAllowedInPublicRoute: false,
+  explicitAdvancedRawEvidenceBundleAllowedInPublicRoute: false,
+  latticeScopeEvidenceReadingAllowedInPublicRoute: false,
+  copySurfaceAllowedInPublicRoute: false,
+  receiptWallAllowedInPublicRoute: false,
+  reportCardClassificationAllowedInPublicRoute: false,
+
+  rendererMountOnlyIfCanonApiExists: true,
+  aggregateRendererMountApiPreferred: true,
+  namedRendererMountApiAllowed: true,
+  noSpeculativeRendererApi: true,
+  noInventedRendererApi: true,
+  mountReceiptMustConfirmMounted: true,
+  destroyReceiptMustConfirmDestroyed: true,
+  runtimeFailureCodesRequiredForMountFailure: true,
+  noThrowDoesNotEqualMountSuccess: true,
+  noThrowDoesNotEqualDestroySuccess: true,
+  missingRendererMountApiIsControlledDescriptorReadyState: true,
+
+  repositoryMutation: false,
+  unauthorizedRouteExpansion: false,
+  webglActivation: false,
+  canvasActivation: false,
+  svgActivation: false,
+  iframeActivation: false,
+  shellOwnedSceneObjectCreation: false,
+  fakeHtmlSceneGeometry: false,
+  finalRendererClaim: false,
+  rendererPassClaim: false,
+  visualPassClaim: false,
+  validationClaim: false,
+  productionClaim: false,
+  openWorldTraversalClaim: false,
+  survivalSimulationClaim: false,
+  swimmingClaim: false,
+  fluidSimulationClaim: false,
+  manorInteriorAccessClaim: false,
+  distantTraversalClaim: false,
+  gameplayExecutionClaim: false,
+  runtimeReceiptPersistence: false,
+  survivalScoreClaim: false,
+  healthScoreClaim: false,
+  diagnosticScoreClaim: false,
+  latticeActivationClaim: false,
+  active16x16LatticeClaim: false,
+  active256AddressRuntimeClaim: false,
+  mirrorManorRouteCanonNameClaim: false,
+  matrixCollapse: false,
+  claimBoundaryPreserved: true
+});
+
+export const H_EARTH_3D_ROUTE_MOUNT_CONTRACT = Object.freeze({
+  strictRequiredIds: Object.freeze({
+    routeRoot: 'h-earth-3d-route-root',
+    status: 'h-earth-3d-status',
+    fallback: 'h-earth-3d-fallback'
+  }),
+
+  conditionallyRequiredIds: Object.freeze({
+    rendererMount: 'h-earth-3d-renderer-mount'
+  }),
+
+  optionalPublicIds: Object.freeze({
+    hud: 'h-earth-3d-hud',
+    inspectionPanel: 'h-earth-3d-inspection-panel',
+    targetList: 'h-earth-3d-target-list',
+    debug: 'h-earth-3d-debug',
+    inspectGroundAction: 'h-earth-3d-action-inspect-ground',
+    selectedTargetLabel: 'h-earth-3d-selected-target-label',
+    selectedTargetClassification:
+      'h-earth-3d-selected-target-classification',
+    selectedTargetObjectId: 'h-earth-3d-selected-target-object-id',
+    publicReadout: 'h-earth-3d-public-readout',
+    publicReadoutTitle: 'h-earth-3d-public-readout-title',
+    publicReadoutLine: 'h-earth-3d-public-readout-line',
+    diagnosticLink: 'h-earth-3d-diagnostic-link'
+  }),
+
+  diagnosticIdsRemovedFromPublicRoute: Object.freeze([
+    'h-earth-3d-operational-report-stack-payload',
+    'h-earth-3d-report-layer-status',
+    'h-earth-3d-spatial-summary-payload',
+    'h-earth-3d-composed-frame-payload',
+    'h-earth-3d-compositor-receipt-payload',
+    'h-earth-3d-renderer-placement-payload',
+    'h-earth-3d-environment-placement-payload',
+    'h-earth-3d-route-bootstrap-receipt',
+    'h-earth-3d-renderer-mount-receipt',
+    'h-earth-3d-boundary-flags',
+    'h-earth-3d-index-contract',
+    'h-earth-3d-copy-status'
+  ]),
+
+  classHooks: Object.freeze([
+    'h-earth-3d-route-root',
+    'h-earth-3d-renderer-mount',
+    'h-earth-3d-status',
+    'h-earth-3d-fallback',
+    'h-earth-3d-hud',
+    'h-earth-3d-inspection-panel',
+    'h-earth-3d-target-list',
+    'h-earth-3d-target-button',
+    'h-earth-3d-action-button',
+    'h-earth-3d-blocked-response',
+    'h-earth-3d-boot-ready',
+    'h-earth-3d-boot-fallback',
+    'h-earth-3d-boot-error'
+  ]),
+
+  rendererMountPolicy: Object.freeze({
+    rendererMountNodeRequiredWhenRendererMountApiExists: true,
+    rendererMountNodeMissingWithoutRendererApiIsNotCanonChainFailure: true,
+    mountReceiptRequiredForMountedStatus: true,
+    runtimeFailureCodeRequiredForMountFallback: true,
+    noWebGLFallback: true,
+    noCanvasFallback: true,
+    noFakeRendererMount: true
+  })
+});
+
+export const H_EARTH_3D_ROUTE_FAILURE_CODES = Object.freeze({
+  MISSING_CAPACITY_RECEIPT: 'MISSING_CAPACITY_RECEIPT',
+  MISSING_ENVIRONMENT_RECEIPT: 'MISSING_ENVIRONMENT_RECEIPT',
+  MISSING_RENDERER_RECEIPT: 'MISSING_RENDERER_RECEIPT',
+  MISSING_COMPOSITOR_RECEIPT: 'MISSING_COMPOSITOR_RECEIPT',
+  MISSING_CONTROLLER_RECEIPT: 'MISSING_CONTROLLER_RECEIPT',
+  MISSING_ROUTE_ROOT: 'MISSING_ROUTE_ROOT',
+  MISSING_STATUS_NODE: 'MISSING_STATUS_NODE',
+  MISSING_FALLBACK_NODE: 'MISSING_FALLBACK_NODE',
+  MISSING_RENDERER_MOUNT_NODE: 'MISSING_RENDERER_MOUNT_NODE',
+  MISSING_RENDERER_MOUNT_API: 'MISSING_RENDERER_MOUNT_API',
+  RENDERER_MOUNT_FAILED: 'RENDERER_MOUNT_FAILED',
+  RENDERER_DESTROY_FAILED: 'RENDERER_DESTROY_FAILED',
+  CONTROLLER_BINDING_SKIPPED: 'CONTROLLER_BINDING_SKIPPED',
+  BOOTSTRAP_FALLBACK_ACTIVE: 'BOOTSTRAP_FALLBACK_ACTIVE'
+});
+
+export const H_EARTH_3D_ROUTE_BOOTSTRAP_ORDER = Object.freeze([
+  'import capacity',
+  'import environment',
+  'import renderer',
+  'import compositor',
+  'import controller',
+  'verify receipts/contracts',
+  'resolve public route DOM mount points',
+  'initialize route status',
+  'mount DOM/CSS-3D candidate renderer only if canon renderer API exists',
+  'read renderer mount receipt before declaring mounted',
+  'record runtime failure code if renderer API exists but mount does not succeed',
+  'bind safe public inspection controls',
+  'expose compact public route receipt/status',
+  'link separate diagnostic route',
+  'fail safely if any required dependency is missing'
 ]);
 
-const SHOWROOM_DIAMOND_STATE = Object.freeze({
-  contract: BEAUTY_REFINEMENT_CONTRACT,
-  previousContract: PREVIOUS_CONSUMPTION_AUDIT_CONTRACT,
-  pairedHtmlContract: PAIRED_HTML_CONTRACT,
-  standard: ACTIVE_STANDARD,
-  route: "/showroom/",
-  generation: "G2",
-  generationOneStatus: "lost-overwritten",
-  diamondLock: "CROWN_CUT_256_LATTICE_FIXED_FORM",
-  renderer: "native-webgl",
-  renderModel: "single-canonical-canvas-deterministic-fibonacci-lattice-webgl",
-  refinement: "crystalline-fibonacci-beauty-pass",
-  radialNodes: RADIAL_NODES,
-  fibonacciBands: FIBONACCI_BANDS,
-  latticeStates: LATTICE_STATES,
-  latticeEquation: "16_RADIAL_NODES_X_16_FIBONACCI_BANDS_EQUALS_256_LATTICE_SEATS",
-  touchGlide: true,
-  doubleTapReset: true,
-  generatedImage: false,
-  graphicBox: false,
-  audraliaInheritance: false,
-  planetTemplateInheritance: false,
-  visualPassClaim: false
+export const H_EARTH_3D_ROUTE_BOOTSTRAP_STATUS_LEVELS = Object.freeze({
+  CHAIN_READY: 'CHAIN_READY',
+  DOM_READY: 'DOM_READY',
+  CONTROLLER_READY: 'CONTROLLER_READY',
+  RENDERER_MOUNT_READY: 'RENDERER_MOUNT_READY',
+  BOOTSTRAP_READY_CANDIDATE_ONLY: 'BOOTSTRAP_READY_CANDIDATE_ONLY',
+  BOOTSTRAP_READY_DESCRIPTOR_ONLY_NO_RENDERER_MOUNT_API:
+    'BOOTSTRAP_READY_DESCRIPTOR_ONLY_NO_RENDERER_MOUNT_API',
+  BOOTSTRAP_FALLBACK_ACTIVE: 'BOOTSTRAP_FALLBACK_ACTIVE',
+  BOOTSTRAP_NOT_STARTED: 'BOOTSTRAP_NOT_STARTED'
 });
 
-const LENS_COPY = Object.freeze({
-  crystal: {
-    title: "Crystal Form",
-    route: "Crystal Form → G2 Crystalline Crown Cut Diamond · Fibonacci proof object",
-    copy:
-      "This view presents the renewed Generation 2 Diamond as a sharper Crown Cut proof object: wider table, cleaner crown, stronger girdle break, deeper crystalline pavilion, finger drag, and release momentum. The object is generated from the same 16-node × 16 Fibonacci-band lattice used by the structural lens."
-  },
-  lattice: {
-    title: "Lattice Structure",
-    route: "Lattice Structure → 16 radial nodes × 16 Fibonacci bands = 256 lattice seats",
-    copy:
-      "This view exposes the computable structure beneath the Diamond. Sixteen radial nodes move through sixteen Fibonacci-governed bands to produce 256 addressable seats, with Fibonacci offset links using 1, 2, 3, 5, 8, and 13."
-  }
+const H_EARTH_SCENE_IDENTITY = Object.freeze({
+  matrix: 'H-Earth',
+  matrixRole: 'Ground-View Matrix',
+  activeCell: 'H_EARTH_GROUND_CELL_001',
+  sceneIdentity: 'earth-water-air-survival-shoreline-manor',
+  mirrorManorStatus: 'STRATEGICALLY_IMPLIED_NOT_ROUTE_CANON_NAMED'
 });
 
-const state = {
-  lens: "crystal",
+const H_EARTH_DEFAULT_SELECTED_OBJECT_ID = 'OBJ_002_FOREGROUND_WET_SAND';
 
-  stage: null,
-  canvas: null,
-  gl: null,
-
-  solidProgram: null,
-  lineProgram: null,
-  pointProgram: null,
-
-  solidPositionBuffer: null,
-  solidColorBuffer: null,
-  linePositionBuffer: null,
-  lineColorBuffer: null,
-  pointPositionBuffer: null,
-  pointColorBuffer: null,
-  pointSizeBuffer: null,
-
-  seats: [],
-  triangles: [],
-  crystalEdges: [],
-  crystallineFacetLines: [],
-  latticeLines: [],
-  fibonacciHighlightLines: [],
-  crystalPoints: [],
-  latticePoints: [],
-
-  yaw: -0.62,
-  pitch: -0.22,
-  roll: 0.015,
-  velocityYaw: 0,
-  velocityPitch: 0,
-  dragging: false,
-  pointerX: 0,
-  pointerY: 0,
-  lastTap: 0,
-
-  dpr: 1,
-  time: 0,
-  lastFrame: 0,
-  raf: 0,
-  renderCount: 0,
-
-  geometryBuilt: false,
-  crystalMeshReady: false,
-  latticeMeshReady: false,
-  canvasReady: false,
-  glReady: false,
-  touchReady: false,
-  initialized: false,
-  duplicateCanvasCount: 0,
-  canonicalCanvasBound: false,
-
-  errors: []
-};
-
-function finite(value, fallback = 0) {
-  const number = Number(value);
-  return Number.isFinite(number) ? number : fallback;
+function asArray(value) {
+  return Array.isArray(value) ? value : [];
 }
 
-function clamp(value, min, max) {
-  return Math.max(min, Math.min(max, finite(value, min)));
+function nowIso() {
+  return new Date().toISOString();
 }
 
-function lerp(a, b, t) {
-  return a + (b - a) * clamp(t, 0, 1);
+function getDocumentFromOptions(options = {}) {
+  return options.document || globalThis.document || null;
 }
 
-function mixColor(a, b, t) {
-  return [
-    lerp(a[0], b[0], t),
-    lerp(a[1], b[1], t),
-    lerp(a[2], b[2], t),
-    lerp(a[3], b[3], t)
-  ];
-}
+function safeSerialize(value, options = {}) {
+  const maxDepth = Number.isFinite(options.maxDepth) ? options.maxDepth : 5;
+  const maxArrayLength = Number.isFinite(options.maxArrayLength)
+    ? options.maxArrayLength
+    : 60;
+  const seen = new WeakSet();
 
-function normalize3(v) {
-  const length = Math.hypot(v.x, v.y, v.z) || 1;
-  return { x: v.x / length, y: v.y / length, z: v.z / length };
-}
+  function visit(input, depth) {
+    if (input === null) return null;
 
-function sub3(a, b) {
-  return { x: a.x - b.x, y: a.y - b.y, z: a.z - b.z };
-}
+    const type = typeof input;
 
-function cross3(a, b) {
-  return {
-    x: a.y * b.z - a.z * b.y,
-    y: a.z * b.x - a.x * b.z,
-    z: a.x * b.y - a.y * b.x
-  };
-}
-
-function faceNormal(a, b, c) {
-  return normalize3(cross3(sub3(b, a), sub3(c, a)));
-}
-
-function fibonacciWeight(band) {
-  const max = FIBONACCI_SEQUENCE[FIBONACCI_SEQUENCE.length - 1];
-  return FIBONACCI_SEQUENCE[band] / max;
-}
-
-function pointFromSeat(seat) {
-  return { x: seat.x, y: seat.y, z: seat.z };
-}
-
-function roleColor(role, alpha = 1) {
-  if (role === "table") return [0.96, 0.995, 1.00, 0.92 * alpha];
-  if (role === "crown") return [0.70, 0.93, 1.00, 0.82 * alpha];
-  if (role === "girdle") return [1.00, 0.88, 0.42, 0.78 * alpha];
-  if (role === "pavilion") return [0.20, 0.43, 0.88, 0.84 * alpha];
-  return [0.70, 0.88, 1.00, 0.70 * alpha];
-}
-
-function createSeat(band, radial) {
-  const radiusProfile = [
-    0.245, 0.330, 0.420, 0.545,
-    0.700, 0.875, 1.055, 1.145,
-    1.085, 0.900, 0.710, 0.535,
-    0.380, 0.235, 0.115, 0.032
-  ];
-
-  const heightProfile = [
-    0.620, 0.575, 0.520, 0.425,
-    0.305, 0.175, 0.060, -0.025,
-    -0.110, -0.230, -0.365, -0.500,
-    -0.625, -0.725, -0.800, -0.845
-  ];
-
-  const fib = FIBONACCI_SEQUENCE[band];
-  const fibNorm = fibonacciWeight(band);
-  const angle = (radial / RADIAL_NODES) * TAU;
-
-  const compassCut = radial % 2 === 0 ? 1.0 : 0.942;
-  const cardinalBoost = radial % 4 === 0 ? 1.065 : 1.0;
-  const nodalFacetCut = radial % 4 === 2 ? 0.982 : 1.0;
-  const fibonacciBreath = 1 + (fibNorm - 0.5) * 0.052;
-  const radius = radiusProfile[band] * compassCut * cardinalBoost * nodalFacetCut * fibonacciBreath;
-  const height = heightProfile[band];
-
-  const role =
-    band <= 2 ? "table" :
-    band <= 5 ? "crown" :
-    band <= 8 ? "girdle" :
-    band <= 14 ? "pavilion" :
-    "culet";
-
-  return Object.freeze({
-    seatIndex: band * RADIAL_NODES + radial,
-    band,
-    radial,
-    fibonacci: fib,
-    fibonacciWeight: fibNorm,
-    angle,
-    radius,
-    height,
-    x: Math.cos(angle) * radius,
-    y: height,
-    z: Math.sin(angle) * radius * 0.68,
-    role,
-    visibilityPriority: radial % 4 === 0 ? 1 : radial % 2 === 0 ? 0.80 : 0.58,
-    connectionPriority: radial % 4 === 0 ? 1 : radial % 2 === 0 ? 0.74 : 0.54
-  });
-}
-
-function buildGeometry() {
-  const rings = [];
-
-  for (let band = 0; band < FIBONACCI_BANDS; band += 1) {
-    const ring = [];
-
-    for (let radial = 0; radial < RADIAL_NODES; radial += 1) {
-      ring.push(createSeat(band, radial));
+    if (type === 'string' || type === 'number' || type === 'boolean') {
+      return input;
     }
 
-    rings.push(Object.freeze(ring));
-  }
+    if (type === 'bigint') return String(input);
+    if (type === 'undefined') return null;
+    if (type === 'function') return `[Function ${input.name || 'anonymous'}]`;
+    if (depth > maxDepth) return '[MaxDepthExceeded]';
 
-  const triangles = [];
-  const crystalEdges = [];
-  const crystallineFacetLines = [];
-  const latticeLines = [];
-  const fibonacciHighlightLines = [];
-  const crystalPoints = [];
-  const latticePoints = [];
+    if (type === 'object') {
+      if (seen.has(input)) return '[Circular]';
+      seen.add(input);
 
-  function seat(band, radial) {
-    return rings[band][((radial % RADIAL_NODES) + RADIAL_NODES) % RADIAL_NODES];
-  }
+      if (Array.isArray(input)) {
+        const output = input
+          .slice(0, maxArrayLength)
+          .map((entry) => visit(entry, depth + 1));
 
-  function addTriangle(a, b, c, color, family = "crystal-facet") {
-    triangles.push({
-      a,
-      b,
-      c,
-      normal: faceNormal(pointFromSeat(a), pointFromSeat(b), pointFromSeat(c)),
-      color,
-      role: a.role,
-      family
-    });
-  }
+        if (input.length > maxArrayLength) {
+          output.push(`[ArrayTruncated ${input.length - maxArrayLength}]`);
+        }
 
-  function addCrystalEdge(a, b, color, weight = 1, family = "crystal-edge") {
-    crystalEdges.push({ a, b, color, weight, family });
-  }
-
-  function addFacetLine(a, b, color, weight = 1, family = "crystalline-facet-line") {
-    crystallineFacetLines.push({ a, b, color, weight, family });
-  }
-
-  function addLatticeLine(a, b, color, weight = 1, family = "lattice-line") {
-    latticeLines.push({ a, b, color, weight, family });
-  }
-
-  function addFibonacciHighlight(a, b, color, weight = 1, family = "fibonacci-highlight") {
-    fibonacciHighlightLines.push({ a, b, color, weight, family });
-  }
-
-  for (let band = 0; band < FIBONACCI_BANDS - 1; band += 1) {
-    for (let radial = 0; radial < RADIAL_NODES; radial += 1) {
-      const next = radial + 1;
-
-      const a = seat(band, radial);
-      const b = seat(band, next);
-      const c = seat(band + 1, next);
-      const d = seat(band + 1, radial);
-
-      const base = roleColor(a.role, 1);
-      const goldTint = [1.0, 0.82, 0.36, 0.76];
-      const iceTint = [0.88, 0.98, 1.0, 0.90];
-
-      const fibMix = Math.min(0.22, a.fibonacciWeight * 0.34);
-      const roleMix = a.role === "girdle" ? 0.26 : a.role === "table" ? 0.16 : 0.10;
-      const color = mixColor(mixColor(base, goldTint, fibMix), iceTint, roleMix);
-
-      addTriangle(a, d, c, color);
-      addTriangle(a, c, b, color);
-
-      if (radial % 2 === 0) {
-        addFacetLine(
-          a,
-          c,
-          radial % 4 === 0 ? [1.0, 0.92, 0.58, 0.50] : [0.88, 0.98, 1.0, 0.34],
-          radial % 4 === 0 ? 1.25 : 0.85,
-          "crystal-diagonal-facet"
-        );
-      } else {
-        addFacetLine(
-          b,
-          d,
-          [0.70, 0.92, 1.0, 0.26],
-          0.72,
-          "crystal-counter-facet"
-        );
+        return output;
       }
-    }
-  }
 
-  for (let band = 0; band < FIBONACCI_BANDS; band += 1) {
-    for (let radial = 0; radial < RADIAL_NODES; radial += 1) {
-      const a = seat(band, radial);
-      const b = seat(band, radial + 1);
-      const major = radial % 4 === 0;
-      const even = radial % 2 === 0;
-      const girdle = band === 6 || band === 7 || band === 8;
+      const output = {};
 
-      addCrystalEdge(
-        a,
-        b,
-        major || girdle ? [1.0, 0.90, 0.48, 0.92] : [0.84, 0.97, 1.0, 0.56],
-        major ? 1.95 : girdle ? 1.70 : even ? 1.35 : 1.0,
-        girdle ? "girdle-break-edge" : "band-edge"
-      );
+      Object.keys(input).forEach((key) => {
+        if (
+          key === 'mountNode' ||
+          key === 'routeRoot' ||
+          key === 'statusNode' ||
+          key === 'fallbackNode' ||
+          key === 'rendererMount'
+        ) {
+          output[key] = '[DOMNodeOmitted]';
+          return;
+        }
 
-      addLatticeLine(
-        a,
-        b,
-        major ? [1.0, 0.84, 0.34, 0.94] : [0.48, 0.86, 1.0, 0.66],
-        major ? 1.90 : 1.05,
-        "fibonacci-band-ring"
-      );
-    }
-  }
-
-  for (let radial = 0; radial < RADIAL_NODES; radial += 1) {
-    for (let band = 0; band < FIBONACCI_BANDS - 1; band += 1) {
-      const a = seat(band, radial);
-      const b = seat(band + 1, radial);
-      const major = radial % 4 === 0;
-      const even = radial % 2 === 0;
-
-      addCrystalEdge(
-        a,
-        b,
-        major ? [1.0, 0.94, 0.58, 0.88] : even ? [0.90, 0.99, 1.0, 0.54] : [0.70, 0.90, 1.0, 0.38],
-        major ? 1.86 : even ? 1.18 : 0.86,
-        major ? "cardinal-crystal-spine" : "radial-crystal-spine"
-      );
-
-      addLatticeLine(
-        a,
-        b,
-        major ? [1.0, 0.88, 0.44, 0.94] : [0.56, 0.88, 1.0, 0.66],
-        major ? 2.0 : 1.05,
-        major ? "cardinal-radial-node-spine" : "radial-node-spine"
-      );
-    }
-  }
-
-  const fibonacciOffsets = [1, 2, 3, 5, 8, 13];
-
-  for (let band = 0; band < FIBONACCI_BANDS - 1; band += 1) {
-    const offset = fibonacciOffsets[band % fibonacciOffsets.length];
-
-    for (let radial = 0; radial < RADIAL_NODES; radial += 1) {
-      const a = seat(band, radial);
-      const b = seat(band + 1, radial + offset);
-      const c = seat(band + 1, radial - offset);
-      const priority = radial % 4 === 0 || band % 4 === 0;
-
-      addLatticeLine(
-        a,
-        b,
-        priority ? [1.0, 0.76, 0.28, 0.58] : [0.42, 0.76, 1.0, 0.32],
-        priority ? 1.14 : 0.74,
-        "fibonacci-forward-link"
-      );
-
-      addFibonacciHighlight(
-        a,
-        b,
-        priority ? [1.0, 0.86, 0.38, 0.78] : [0.72, 0.92, 1.0, 0.40],
-        priority ? 1.26 : 0.84,
-        `fibonacci-offset-${offset}`
-      );
-
-      if (band % 2 === 0) {
-        addLatticeLine(
-          a,
-          c,
-          priority ? [0.92, 0.98, 1.0, 0.44] : [0.44, 0.70, 1.0, 0.26],
-          priority ? 0.96 : 0.64,
-          "fibonacci-return-link"
-        );
-      }
-    }
-  }
-
-  for (let band = 0; band < FIBONACCI_BANDS; band += 1) {
-    for (let radial = 0; radial < RADIAL_NODES; radial += 1) {
-      const s = seat(band, radial);
-      const major = radial % 4 === 0;
-      const even = radial % 2 === 0;
-      const girdle = band === 6 || band === 7 || band === 8;
-
-      latticePoints.push({
-        seat: s,
-        color: major ? [1.0, 0.84, 0.34, 0.98] : even ? [0.68, 0.94, 1.0, 0.80] : [0.50, 0.78, 1.0, 0.58],
-        size: major ? 8.4 : girdle ? 6.5 : even ? 5.9 : 4.5,
-        family: "256-seat"
+        output[key] = visit(input[key], depth + 1);
       });
 
-      if (band === 0 || band === 2 || band === 6 || band === 7 || band === 8 || band === 14 || major) {
-        crystalPoints.push({
-          seat: s,
-          color: major ? [1.0, 0.90, 0.48, 0.88] : girdle ? [1.0, 0.84, 0.38, 0.76] : [0.86, 0.98, 1.0, 0.66],
-          size: major ? 6.0 : girdle ? 5.0 : 4.2,
-          family: "crystal-anchor"
-        });
-      }
-    }
-  }
-
-  state.seats = rings.flat();
-  state.triangles = triangles;
-  state.crystalEdges = crystalEdges;
-  state.crystallineFacetLines = crystallineFacetLines;
-  state.latticeLines = latticeLines;
-  state.fibonacciHighlightLines = fibonacciHighlightLines;
-  state.crystalPoints = crystalPoints;
-  state.latticePoints = latticePoints;
-
-  state.geometryBuilt = state.seats.length === LATTICE_STATES;
-  state.crystalMeshReady = triangles.length > 0 && crystalEdges.length > 0;
-  state.latticeMeshReady = latticeLines.length > 0 && latticePoints.length === LATTICE_STATES;
-}
-
-function rotatePoint(point) {
-  let x = point.x;
-  let y = point.y;
-  let z = point.z;
-
-  const cy = Math.cos(state.yaw);
-  const sy = Math.sin(state.yaw);
-  const yx = x * cy + z * sy;
-  const yz = -x * sy + z * cy;
-  x = yx;
-  z = yz;
-
-  const cp = Math.cos(state.pitch);
-  const sp = Math.sin(state.pitch);
-  const py = y * cp - z * sp;
-  const pz = y * sp + z * cp;
-  y = py;
-  z = pz;
-
-  const cr = Math.cos(state.roll);
-  const sr = Math.sin(state.roll);
-  const rx = x * cr - y * sr;
-  const ry = x * sr + y * cr;
-
-  return { x: rx, y: ry, z };
-}
-
-function stageFit() {
-  const canvas = state.canvas;
-  const width = canvas ? canvas.width : 640;
-  const height = canvas ? canvas.height : 720;
-  const rect = canvas && canvas.getBoundingClientRect ? canvas.getBoundingClientRect() : { width, height };
-  const mobile = rect.width < 680;
-  const aspect = width / Math.max(1, height);
-
-  return {
-    scale: mobile ? 0.70 : 0.76,
-    offsetY: mobile ? 0.225 : 0.205,
-    aspectFit: aspect > 1 ? 1 / aspect : 1,
-    cameraDistance: 4.65
-  };
-}
-
-function projectPoint(point) {
-  const rotated = rotatePoint(point);
-  const fit = stageFit();
-  const perspective = fit.cameraDistance / (fit.cameraDistance - rotated.z);
-
-  return {
-    x: rotated.x * fit.scale * fit.aspectFit * perspective,
-    y: rotated.y * fit.scale * perspective + fit.offsetY,
-    z: rotated.z,
-    perspective
-  };
-}
-
-function projectedSeat(seat) {
-  return projectPoint(pointFromSeat(seat));
-}
-
-function triangleDepth(triangle) {
-  const a = rotatePoint(pointFromSeat(triangle.a));
-  const b = rotatePoint(pointFromSeat(triangle.b));
-  const c = rotatePoint(pointFromSeat(triangle.c));
-
-  return (a.z + b.z + c.z) / 3;
-}
-
-function lightingForTriangle(triangle) {
-  const normal = rotatePoint(triangle.normal);
-  const key = normalize3({ x: -0.42, y: 0.72, z: 0.86 });
-  const rim = normalize3({ x: 0.74, y: 0.22, z: 0.58 });
-  const under = normalize3({ x: -0.16, y: -0.68, z: 0.42 });
-
-  const keyDot = Math.max(0, normal.x * key.x + normal.y * key.y + normal.z * key.z);
-  const rimDot = Math.max(0, normal.x * rim.x + normal.y * rim.y + normal.z * rim.z);
-  const underDot = Math.max(0, normal.x * under.x + normal.y * under.y + normal.z * under.z);
-  const pulse = 0.5 + 0.5 * Math.sin(state.time * 1.9 + triangle.a.band * 0.45 + triangle.a.radial * 0.24);
-
-  return clamp(0.50 + keyDot * 0.58 + rimDot * 0.30 + underDot * 0.12 + pulse * 0.085, 0.36, 1.24);
-}
-
-function shadedColor(color, light, alphaScale = 1) {
-  return [
-    clamp(color[0] * light + 0.052, 0, 1),
-    clamp(color[1] * light + 0.052, 0, 1),
-    clamp(color[2] * light + 0.060, 0, 1),
-    clamp(color[3] * alphaScale, 0, 1)
-  ];
-}
-
-function createShader(gl, type, source) {
-  const shader = gl.createShader(type);
-
-  gl.shaderSource(shader, source);
-  gl.compileShader(shader);
-
-  if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-    const error = gl.getShaderInfoLog(shader) || "Shader compile failed.";
-    gl.deleteShader(shader);
-    throw new Error(error);
-  }
-
-  return shader;
-}
-
-function createProgram(gl, vertexSource, fragmentSource) {
-  const vertex = createShader(gl, gl.VERTEX_SHADER, vertexSource);
-  const fragment = createShader(gl, gl.FRAGMENT_SHADER, fragmentSource);
-  const program = gl.createProgram();
-
-  gl.attachShader(program, vertex);
-  gl.attachShader(program, fragment);
-  gl.linkProgram(program);
-
-  gl.deleteShader(vertex);
-  gl.deleteShader(fragment);
-
-  if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-    const error = gl.getProgramInfoLog(program) || "Program link failed.";
-    gl.deleteProgram(program);
-    throw new Error(error);
-  }
-
-  return program;
-}
-
-function createBuffer(gl) {
-  const out = gl.createBuffer();
-  gl.bindBuffer(gl.ARRAY_BUFFER, out);
-  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(0), gl.DYNAMIC_DRAW);
-  return out;
-}
-
-function updateBuffer(gl, targetBuffer, data) {
-  gl.bindBuffer(gl.ARRAY_BUFFER, targetBuffer);
-  gl.bufferData(gl.ARRAY_BUFFER, data, gl.DYNAMIC_DRAW);
-}
-
-function bindAttrib(gl, program, targetBuffer, name, size) {
-  const location = gl.getAttribLocation(program, name);
-  if (location < 0) return;
-
-  gl.bindBuffer(gl.ARRAY_BUFFER, targetBuffer);
-  gl.enableVertexAttribArray(location);
-  gl.vertexAttribPointer(location, size, gl.FLOAT, false, 0, 0);
-}
-
-function initPrograms(gl) {
-  const solidVertex = `
-    precision mediump float;
-
-    attribute vec2 aPosition;
-    attribute vec4 aColor;
-
-    varying vec4 vColor;
-
-    void main() {
-      vColor = aColor;
-      gl_Position = vec4(aPosition, 0.0, 1.0);
-    }
-  `;
-
-  const solidFragment = `
-    precision mediump float;
-
-    varying vec4 vColor;
-
-    void main() {
-      gl_FragColor = vColor;
-    }
-  `;
-
-  const pointVertex = `
-    precision mediump float;
-
-    attribute vec2 aPosition;
-    attribute vec4 aColor;
-    attribute float aSize;
-
-    varying vec4 vColor;
-
-    void main() {
-      vColor = aColor;
-      gl_Position = vec4(aPosition, 0.0, 1.0);
-      gl_PointSize = aSize;
-    }
-  `;
-
-  const pointFragment = `
-    precision mediump float;
-
-    varying vec4 vColor;
-
-    void main() {
-      vec2 coord = gl_PointCoord - vec2(0.5);
-      float d = length(coord);
-      if (d > 0.5) discard;
-
-      float core = smoothstep(0.5, 0.08, d);
-      float rim = smoothstep(0.5, 0.32, d) * 0.34;
-      float shine = smoothstep(0.18, 0.0, length(coord - vec2(-0.13, -0.14))) * 0.24;
-
-      gl_FragColor = vec4(vColor.rgb + shine, vColor.a * (core + rim));
-    }
-  `;
-
-  state.solidProgram = createProgram(gl, solidVertex, solidFragment);
-  state.lineProgram = createProgram(gl, solidVertex, solidFragment);
-  state.pointProgram = createProgram(gl, pointVertex, pointFragment);
-
-  state.solidPositionBuffer = createBuffer(gl);
-  state.solidColorBuffer = createBuffer(gl);
-  state.linePositionBuffer = createBuffer(gl);
-  state.lineColorBuffer = createBuffer(gl);
-  state.pointPositionBuffer = createBuffer(gl);
-  state.pointColorBuffer = createBuffer(gl);
-  state.pointSizeBuffer = createBuffer(gl);
-}
-
-function resizeCanvas() {
-  if (!state.canvas || !state.gl) return;
-
-  const rect = state.canvas.getBoundingClientRect();
-  const dpr = Math.min(1.85, window.devicePixelRatio || 1);
-  const width = Math.max(320, Math.floor((rect.width || 640) * dpr));
-  const height = Math.max(520, Math.floor((rect.height || 720) * dpr));
-
-  if (state.canvas.width !== width) state.canvas.width = width;
-  if (state.canvas.height !== height) state.canvas.height = height;
-
-  state.dpr = dpr;
-  state.gl.viewport(0, 0, width, height);
-}
-
-function drawTriangles(gl, triangles, alphaScale = 1) {
-  const positions = [];
-  const colors = [];
-  const sorted = triangles.slice().sort((a, b) => triangleDepth(a) - triangleDepth(b));
-
-  for (const triangle of sorted) {
-    const a = projectedSeat(triangle.a);
-    const b = projectedSeat(triangle.b);
-    const c = projectedSeat(triangle.c);
-    const light = lightingForTriangle(triangle);
-    const color = shadedColor(triangle.color, light, alphaScale);
-
-    positions.push(a.x, a.y, b.x, b.y, c.x, c.y);
-    colors.push(...color, ...color, ...color);
-  }
-
-  if (!positions.length) return;
-
-  gl.useProgram(state.solidProgram);
-  updateBuffer(gl, state.solidPositionBuffer, new Float32Array(positions));
-  updateBuffer(gl, state.solidColorBuffer, new Float32Array(colors));
-
-  bindAttrib(gl, state.solidProgram, state.solidPositionBuffer, "aPosition", 2);
-  bindAttrib(gl, state.solidProgram, state.solidColorBuffer, "aColor", 4);
-
-  gl.drawArrays(gl.TRIANGLES, 0, positions.length / 2);
-}
-
-function drawLines(gl, lines, alphaScale = 1) {
-  const positions = [];
-  const colors = [];
-
-  for (const line of lines) {
-    const a = projectedSeat(line.a);
-    const b = projectedSeat(line.b);
-    const depth = clamp(0.84 + ((a.z + b.z) / 2) * 0.09, 0.58, 1.16);
-    const pulse = line.family && line.family.includes("fibonacci")
-      ? 0.88 + Math.sin(state.time * 1.72 + line.a.band * 0.45 + line.a.radial * 0.18) * 0.12
-      : 1;
-
-    const color = [
-      clamp(line.color[0] * depth, 0, 1),
-      clamp(line.color[1] * depth, 0, 1),
-      clamp(line.color[2] * depth, 0, 1),
-      clamp(line.color[3] * alphaScale * pulse, 0, 1)
-    ];
-
-    positions.push(a.x, a.y, b.x, b.y);
-    colors.push(...color, ...color);
-  }
-
-  if (!positions.length) return;
-
-  gl.useProgram(state.lineProgram);
-  updateBuffer(gl, state.linePositionBuffer, new Float32Array(positions));
-  updateBuffer(gl, state.lineColorBuffer, new Float32Array(colors));
-
-  bindAttrib(gl, state.lineProgram, state.linePositionBuffer, "aPosition", 2);
-  bindAttrib(gl, state.lineProgram, state.lineColorBuffer, "aColor", 4);
-
-  gl.drawArrays(gl.LINES, 0, positions.length / 2);
-}
-
-function drawPoints(gl, points, alphaScale = 1) {
-  const positions = [];
-  const colors = [];
-  const sizes = [];
-
-  for (const point of points) {
-    const projected = projectedSeat(point.seat);
-    const pulse = 0.88 + Math.sin(state.time * 2.15 + point.seat.band * 0.42 + point.seat.radial * 0.31) * 0.12;
-    const depth = clamp(0.86 + projected.z * 0.11, 0.64, 1.20);
-
-    const color = [
-      clamp(point.color[0] * depth, 0, 1),
-      clamp(point.color[1] * depth, 0, 1),
-      clamp(point.color[2] * depth, 0, 1),
-      clamp(point.color[3] * alphaScale * pulse, 0, 1)
-    ];
-
-    positions.push(projected.x, projected.y);
-    colors.push(...color);
-    sizes.push(Math.max(2.5, point.size * state.dpr * projected.perspective));
-  }
-
-  if (!positions.length) return;
-
-  gl.useProgram(state.pointProgram);
-  updateBuffer(gl, state.pointPositionBuffer, new Float32Array(positions));
-  updateBuffer(gl, state.pointColorBuffer, new Float32Array(colors));
-  updateBuffer(gl, state.pointSizeBuffer, new Float32Array(sizes));
-
-  bindAttrib(gl, state.pointProgram, state.pointPositionBuffer, "aPosition", 2);
-  bindAttrib(gl, state.pointProgram, state.pointColorBuffer, "aColor", 4);
-  bindAttrib(gl, state.pointProgram, state.pointSizeBuffer, "aSize", 1);
-
-  gl.drawArrays(gl.POINTS, 0, positions.length / 2);
-}
-
-function renderWebGL() {
-  if (!state.gl || !state.geometryBuilt) return;
-
-  const gl = state.gl;
-
-  resizeCanvas();
-
-  gl.clearColor(0.004, 0.014, 0.034, 0.0);
-  gl.clear(gl.COLOR_BUFFER_BIT);
-  gl.disable(gl.DEPTH_TEST);
-  gl.enable(gl.BLEND);
-  gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
-
-  if (state.lens === "crystal") {
-    drawTriangles(gl, state.triangles, 1.0);
-    drawLines(gl, state.crystallineFacetLines, 0.58);
-    drawLines(gl, state.crystalEdges, 0.90);
-    drawPoints(gl, state.crystalPoints, 0.94);
-  } else {
-    drawTriangles(gl, state.triangles, 0.13);
-    drawLines(gl, state.latticeLines, 0.92);
-    drawLines(gl, state.fibonacciHighlightLines, 0.98);
-    drawLines(gl, state.crystalEdges, 0.28);
-    drawPoints(gl, state.latticePoints, 0.98);
-  }
-
-  state.renderCount += 1;
-  publishFingerprint("render");
-}
-
-function step(timestamp) {
-  const dt = state.lastFrame ? clamp((timestamp - state.lastFrame) / 1000, 0, 0.05) : 0;
-  state.lastFrame = timestamp;
-  state.time += dt;
-
-  if (!state.dragging) {
-    state.yaw += state.velocityYaw;
-    state.pitch += state.velocityPitch;
-
-    const damping = Math.pow(0.938, dt * 60);
-    state.velocityYaw *= damping;
-    state.velocityPitch *= damping;
-
-    if (Math.abs(state.velocityYaw) < 0.00008) state.velocityYaw = 0;
-    if (Math.abs(state.velocityPitch) < 0.00008) state.velocityPitch = 0;
-
-    if (state.velocityYaw === 0 && state.velocityPitch === 0) {
-      state.yaw += Math.sin(state.time * 0.24) * dt * 0.018;
-    }
-  }
-
-  state.pitch = clamp(state.pitch, -0.94, 0.74);
-  state.roll = Math.sin(state.time * 0.18) * 0.013;
-
-  renderWebGL();
-
-  state.raf = window.requestAnimationFrame(step);
-}
-
-function resetDiamond() {
-  state.yaw = -0.62;
-  state.pitch = -0.22;
-  state.roll = 0.015;
-  state.velocityYaw = 0;
-  state.velocityPitch = 0;
-  state.time = 0;
-  renderWebGL();
-}
-
-function bindPointer(stage) {
-  stage.style.touchAction = "none";
-
-  stage.addEventListener("pointerdown", (event) => {
-    const time = performance.now();
-
-    if (time - state.lastTap < 320) {
-      resetDiamond();
+      return output;
     }
 
-    state.lastTap = time;
-    state.dragging = true;
-    state.pointerX = event.clientX;
-    state.pointerY = event.clientY;
-    state.velocityYaw = 0;
-    state.velocityPitch = 0;
+    return String(input);
+  }
 
-    try {
-      stage.setPointerCapture?.(event.pointerId);
-      event.preventDefault();
-    } catch (_error) {}
-  }, { passive: false });
-
-  stage.addEventListener("pointermove", (event) => {
-    if (!state.dragging) return;
-
-    const dx = event.clientX - state.pointerX;
-    const dy = event.clientY - state.pointerY;
-
-    state.pointerX = event.clientX;
-    state.pointerY = event.clientY;
-
-    state.yaw += dx * 0.0085;
-    state.pitch = clamp(state.pitch + dy * 0.0058, -0.94, 0.74);
-
-    state.velocityYaw = clamp(dx * 0.0024, -0.052, 0.052);
-    state.velocityPitch = clamp(dy * 0.0016, -0.040, 0.040);
-
-    try {
-      event.preventDefault();
-    } catch (_error) {}
-  }, { passive: false });
-
-  const release = (event) => {
-    if (!state.dragging) return;
-    state.dragging = false;
-
-    try {
-      stage.releasePointerCapture?.(event.pointerId);
-    } catch (_error) {}
-  };
-
-  stage.addEventListener("pointerup", release, { passive: true });
-  stage.addEventListener("pointercancel", release, { passive: true });
-  stage.addEventListener("pointerleave", release, { passive: true });
-
-  state.touchReady = true;
+  return visit(value, 0);
 }
 
-function setLens(nextLens) {
-  const lens = nextLens === "lattice" ? "lattice" : "crystal";
-  state.lens = lens;
-
-  document.documentElement.dataset.showroomDiamondLens = lens;
-  if (document.body) document.body.dataset.showroomDiamondLens = lens;
-
-  document.querySelectorAll("[data-diamond-lens]").forEach((button) => {
-    button.setAttribute("aria-pressed", button.dataset.diamondLens === lens ? "true" : "false");
-  });
-
-  const title = document.querySelector("[data-diamond-lens-title]");
-  const copy = document.querySelector("[data-diamond-lens-copy]");
-  const route = document.querySelector("[data-diamond-route-label]");
-
-  if (title) title.textContent = LENS_COPY[lens].title;
-  if (copy) copy.textContent = LENS_COPY[lens].copy;
-  if (route) route.textContent = LENS_COPY[lens].route;
-
-  renderWebGL();
+function writeText(node, value) {
+  if (!node) return false;
+  node.textContent = String(value ?? '');
+  return true;
 }
 
-function bindLensControls() {
-  document.querySelectorAll("[data-diamond-lens]").forEach((button) => {
-    button.addEventListener("click", () => {
-      setLens(button.dataset.diamondLens);
-    });
-  });
-
-  setLens(state.lens);
+function writeJson(node, value, options = {}) {
+  if (!node) return false;
+  node.textContent = JSON.stringify(safeSerialize(value, options), null, 2);
+  return true;
 }
 
-function createWebGLContext(canvas) {
+function addClass(node, className) {
+  if (!node?.classList || !className) return false;
+  node.classList.add(className);
+  return true;
+}
+
+function removeClass(node, className) {
+  if (!node?.classList || !className) return false;
+  node.classList.remove(className);
+  return true;
+}
+
+function setNodeDataset(node, key, value) {
+  if (!node?.dataset || !key) return false;
+  node.dataset[key] = value === null || value === undefined ? '' : String(value);
+  return true;
+}
+
+function getTargetLabel(target, objectId) {
   return (
-    canvas.getContext("webgl", {
-      alpha: true,
-      antialias: true,
-      depth: false,
-      premultipliedAlpha: false,
-      preserveDrawingBuffer: false
-    }) ||
-    canvas.getContext("experimental-webgl", {
-      alpha: true,
-      antialias: true,
-      depth: false,
-      premultipliedAlpha: false,
-      preserveDrawingBuffer: false
-    })
+    target?.label ||
+    target?.objectLabel ||
+    target?.objectId ||
+    objectId ||
+    H_EARTH_DEFAULT_SELECTED_OBJECT_ID
   );
 }
 
-function neutralizeDuplicateCanvases(stage, canonicalCanvas) {
-  const canvases = Array.from(stage.querySelectorAll("canvas"));
-  let duplicates = 0;
+function freezeStatus(status) {
+  return Object.freeze({
+    timestamp: status.timestamp || null,
 
-  for (const canvas of canvases) {
-    if (canvas === canonicalCanvas) continue;
+    chainReady: status.chainReady === true,
+    domReady: status.domReady === true,
+    controllerReady: status.controllerReady === true,
+    rendererMountReady: status.rendererMountReady === true,
 
-    duplicates += 1;
-    canvas.setAttribute("data-showroom-diamond-legacy-neutralized", "true");
-    canvas.style.display = "none";
-    canvas.style.visibility = "hidden";
-    canvas.style.pointerEvents = "none";
+    bootstrapReadyCandidateOnly: status.bootstrapReadyCandidateOnly === true,
+    bootstrapReadyDescriptorOnlyNoRendererMountApi:
+      status.bootstrapReadyDescriptorOnlyNoRendererMountApi === true,
+    bootstrapFallbackActive: status.bootstrapFallbackActive === true,
 
-    try {
-      canvas.remove();
-    } catch (_error) {}
-  }
+    statusLevel:
+      status.statusLevel ||
+      H_EARTH_3D_ROUTE_BOOTSTRAP_STATUS_LEVELS.BOOTSTRAP_NOT_STARTED,
 
-  state.duplicateCanvasCount += duplicates;
+    failureCodes: Object.freeze(asArray(status.failureCodes)),
+    warningCodes: Object.freeze(asArray(status.warningCodes)),
+
+    rendererMountApiConfirmed: status.rendererMountApiConfirmed === true,
+    rendererDestroyApiConfirmed: status.rendererDestroyApiConfirmed === true,
+    rendererMountAttempted: status.rendererMountAttempted === true,
+    rendererMounted: status.rendererMounted === true,
+    rendererMountSkipped: status.rendererMountSkipped === true,
+    rendererMountSkipReason: status.rendererMountSkipReason || null,
+    rendererMountError: status.rendererMountError || null,
+    rendererMountReceipt: status.rendererMountReceipt || null,
+
+    rendererDestroyAttempted: status.rendererDestroyAttempted === true,
+    rendererDestroyed: status.rendererDestroyed === true,
+    rendererDestroyError: status.rendererDestroyError || null,
+    rendererDestroyReceipt: status.rendererDestroyReceipt || null,
+
+    rendererApiSource: status.rendererApiSource || null,
+    rendererDestroyApiSource: status.rendererDestroyApiSource || null,
+
+    routeRootFound: status.routeRootFound === true,
+    statusNodeFound: status.statusNodeFound === true,
+    fallbackNodeFound: status.fallbackNodeFound === true,
+    rendererMountNodeFound: status.rendererMountNodeFound === true,
+
+    targetListBound: status.targetListBound === true,
+    inspectGroundControlBound: status.inspectGroundControlBound === true,
+    selectedTargetCardUpdated: status.selectedTargetCardUpdated === true,
+    compactReadoutRendered: status.compactReadoutRendered === true,
+    debugStatusExposed: status.debugStatusExposed === true,
+    diagnosticRouteLinked: status.diagnosticRouteLinked === true,
+
+    selectedObjectId:
+      status.selectedObjectId ||
+      H_EARTH_DEFAULT_SELECTED_OBJECT_ID,
+
+    publicBootstrapOnly: true,
+    diagnosticRoute:
+      status.diagnosticRoute ||
+      H_EARTH_3D_INDEX_CONTRACT.diagnosticRoute,
+
+    boundary: H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS
+  });
 }
 
-function enforceCanonicalCanvas(stage, canvas) {
-  neutralizeDuplicateCanvases(stage, canvas);
+let latestRouteBootstrapStatus = freezeStatus({
+  statusLevel: H_EARTH_3D_ROUTE_BOOTSTRAP_STATUS_LEVELS.BOOTSTRAP_NOT_STARTED,
+  selectedObjectId: H_EARTH_DEFAULT_SELECTED_OBJECT_ID
+});
 
-  Object.assign(canvas.style, {
-    position: "absolute",
-    inset: "0",
-    width: "100%",
-    height: "100%",
-    display: "block",
-    zIndex: "2",
-    pointerEvents: "none",
-    background: "transparent",
-    imageRendering: "auto"
+export const H_EARTH_3D_ROUTE_BOOTSTRAP_STATUS =
+  latestRouteBootstrapStatus;
+
+export function getRouteBootstrapStatus() {
+  return latestRouteBootstrapStatus;
+}
+
+function setRouteBootstrapStatus(nextStatus) {
+  latestRouteBootstrapStatus = freezeStatus({
+    ...latestRouteBootstrapStatus,
+    ...nextStatus,
+    timestamp: nowIso()
   });
 
-  canvas.setAttribute("data-showroom-diamond-canonical-canvas", "true");
-  canvas.setAttribute("data-showroom-diamond-contract", BEAUTY_REFINEMENT_CONTRACT);
-  canvas.setAttribute("data-showroom-diamond-previous-consumption-audit-contract", PREVIOUS_CONSUMPTION_AUDIT_CONTRACT);
-  canvas.setAttribute("data-generation", "G2");
-  canvas.setAttribute("data-radial-nodes", String(RADIAL_NODES));
-  canvas.setAttribute("data-fibonacci-bands", String(FIBONACCI_BANDS));
-  canvas.setAttribute("data-lattice-states", String(LATTICE_STATES));
-  canvas.setAttribute("data-generated-image", "false");
-  canvas.setAttribute("data-graphic-box", "false");
+  return latestRouteBootstrapStatus;
+}
 
-  state.canonicalCanvasBound = true;
+export function getRendererMountApi() {
+  if (typeof H_EARTH_3D_RENDERER?.mountHEarthRenderer === 'function') {
+    return H_EARTH_3D_RENDERER.mountHEarthRenderer;
+  }
 
-  if (typeof MutationObserver === "function") {
-    const observer = new MutationObserver(() => {
-      neutralizeDuplicateCanvases(stage, canvas);
+  if (typeof mountHEarthRenderer === 'function') {
+    return mountHEarthRenderer;
+  }
+
+  return null;
+}
+
+export function getRendererMountApiSource() {
+  if (typeof H_EARTH_3D_RENDERER?.mountHEarthRenderer === 'function') {
+    return 'AGGREGATE_PROPERTY_H_EARTH_3D_RENDERER.mountHEarthRenderer';
+  }
+
+  if (typeof mountHEarthRenderer === 'function') {
+    return 'NAMED_EXPORT_mountHEarthRenderer';
+  }
+
+  return null;
+}
+
+export function getRendererDestroyApi() {
+  if (typeof H_EARTH_3D_RENDERER?.destroyHEarthRenderer === 'function') {
+    return H_EARTH_3D_RENDERER.destroyHEarthRenderer;
+  }
+
+  if (typeof destroyHEarthRenderer === 'function') {
+    return destroyHEarthRenderer;
+  }
+
+  return null;
+}
+
+export function getRendererDestroyApiSource() {
+  if (typeof H_EARTH_3D_RENDERER?.destroyHEarthRenderer === 'function') {
+    return 'AGGREGATE_PROPERTY_H_EARTH_3D_RENDERER.destroyHEarthRenderer';
+  }
+
+  if (typeof destroyHEarthRenderer === 'function') {
+    return 'NAMED_EXPORT_destroyHEarthRenderer';
+  }
+
+  return null;
+}
+
+export function isRendererMountReceiptMounted(receipt) {
+  return receipt?.rendererMounted === true || receipt?.mounted === true;
+}
+
+export function isRendererDestroyReceiptDestroyed(receipt) {
+  return receipt?.destroyed === true;
+}
+
+export function verifyHEarthRouteBoundChain() {
+  const checks = Object.freeze({
+    capacityReceiptPresent: Boolean(getCapacityReceipt()),
+    environmentReceiptPresent: Boolean(getEnvironmentReceipt()),
+    rendererReceiptPresent: Boolean(getRendererReceipt()),
+    compositorReceiptPresent: Boolean(getCompositorReceipt()),
+    controllerReceiptPresent: Boolean(getControllerReceipt()),
+
+    capacityReceiptConstantPresent: Boolean(H_EARTH_3D_CAPACITY_RECEIPT),
+    environmentReceiptConstantPresent: Boolean(H_EARTH_3D_ENVIRONMENT_RECEIPT),
+    rendererReceiptConstantPresent: Boolean(H_EARTH_3D_RENDERER_RECEIPT),
+    compositorReceiptConstantPresent: Boolean(H_EARTH_3D_COMPOSITOR_RECEIPT),
+    controllerReceiptConstantPresent: Boolean(H_EARTH_3D_CONTROLLER_RECEIPT),
+
+    capacityAggregatePresent: Boolean(H_EARTH_3D_CAPACITY),
+    environmentAggregatePresent: Boolean(H_EARTH_3D_ENVIRONMENT),
+    rendererAggregatePresent: Boolean(H_EARTH_3D_RENDERER),
+    compositorAggregatePresent: Boolean(H_EARTH_3D_COMPOSITOR),
+    controllerAggregatePresent: Boolean(H_EARTH_3D_CONTROLLER),
+
+    rendererMountApiPresent: Boolean(getRendererMountApi()),
+    rendererDestroyApiPresent: Boolean(getRendererDestroyApi()),
+    rendererMountApiSource: getRendererMountApiSource(),
+    rendererDestroyApiSource: getRendererDestroyApiSource(),
+
+    rendererVolumeModelPresent: Boolean(H_EARTH_3D_RENDER_VOLUME_MODEL),
+    rendererPortsPresent: Boolean(H_EARTH_3D_RENDER_PORTS),
+    rendererInputSelectorPresent: typeof selectHEarthRenderInput === 'function',
+
+    composedCandidateFramePresent: Boolean(H_EARTH_3D_COMPOSED_CANDIDATE_FRAME),
+    candidateRenderScenePresent: Boolean(H_EARTH_3D_CANDIDATE_RENDER_SCENE)
+  });
+
+  const failureCodes = [];
+
+  if (!checks.capacityReceiptPresent) {
+    failureCodes.push(H_EARTH_3D_ROUTE_FAILURE_CODES.MISSING_CAPACITY_RECEIPT);
+  }
+
+  if (!checks.environmentReceiptPresent) {
+    failureCodes.push(H_EARTH_3D_ROUTE_FAILURE_CODES.MISSING_ENVIRONMENT_RECEIPT);
+  }
+
+  if (!checks.rendererReceiptPresent) {
+    failureCodes.push(H_EARTH_3D_ROUTE_FAILURE_CODES.MISSING_RENDERER_RECEIPT);
+  }
+
+  if (!checks.compositorReceiptPresent) {
+    failureCodes.push(H_EARTH_3D_ROUTE_FAILURE_CODES.MISSING_COMPOSITOR_RECEIPT);
+  }
+
+  if (!checks.controllerReceiptPresent) {
+    failureCodes.push(H_EARTH_3D_ROUTE_FAILURE_CODES.MISSING_CONTROLLER_RECEIPT);
+  }
+
+  return Object.freeze({
+    checks,
+    chainReady: failureCodes.length === 0,
+    failureCodes: Object.freeze(failureCodes),
+    boundary: H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS
+  });
+}
+
+export function resolveHEarthRouteMountPoints(rootDocument = globalThis.document) {
+  const strictIds = H_EARTH_3D_ROUTE_MOUNT_CONTRACT.strictRequiredIds;
+  const conditionalIds = H_EARTH_3D_ROUTE_MOUNT_CONTRACT.conditionallyRequiredIds;
+  const optionalIds = H_EARTH_3D_ROUTE_MOUNT_CONTRACT.optionalPublicIds;
+
+  if (!rootDocument || typeof rootDocument.getElementById !== 'function') {
+    return Object.freeze({
+      documentAvailable: false,
+      routeRoot: null,
+      rendererMount: null,
+      statusNode: null,
+      fallbackNode: null,
+      hud: null,
+      inspectionPanel: null,
+      targetList: null,
+      debug: null,
+      inspectGroundAction: null,
+      selectedTargetLabel: null,
+      selectedTargetClassification: null,
+      selectedTargetObjectId: null,
+      publicReadout: null,
+      publicReadoutTitle: null,
+      publicReadoutLine: null,
+      diagnosticLink: null,
+      strictRequiredFound: false,
+      rendererMountFound: false,
+      missingStrictRequiredIds: Object.freeze([
+        strictIds.routeRoot,
+        strictIds.status,
+        strictIds.fallback
+      ]),
+      boundary: H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS
+    });
+  }
+
+  const routeRoot = rootDocument.getElementById(strictIds.routeRoot);
+  const statusNode = rootDocument.getElementById(strictIds.status);
+  const fallbackNode = rootDocument.getElementById(strictIds.fallback);
+  const rendererMount = rootDocument.getElementById(conditionalIds.rendererMount);
+
+  const missingStrictRequiredIds = [];
+
+  if (!routeRoot) missingStrictRequiredIds.push(strictIds.routeRoot);
+  if (!statusNode) missingStrictRequiredIds.push(strictIds.status);
+  if (!fallbackNode) missingStrictRequiredIds.push(strictIds.fallback);
+
+  return Object.freeze({
+    documentAvailable: true,
+    routeRoot,
+    rendererMount,
+    statusNode,
+    fallbackNode,
+    hud: rootDocument.getElementById(optionalIds.hud),
+    inspectionPanel: rootDocument.getElementById(optionalIds.inspectionPanel),
+    targetList: rootDocument.getElementById(optionalIds.targetList),
+    debug: rootDocument.getElementById(optionalIds.debug),
+    inspectGroundAction:
+      rootDocument.getElementById(optionalIds.inspectGroundAction),
+    selectedTargetLabel:
+      rootDocument.getElementById(optionalIds.selectedTargetLabel),
+    selectedTargetClassification:
+      rootDocument.getElementById(optionalIds.selectedTargetClassification),
+    selectedTargetObjectId:
+      rootDocument.getElementById(optionalIds.selectedTargetObjectId),
+    publicReadout: rootDocument.getElementById(optionalIds.publicReadout),
+    publicReadoutTitle:
+      rootDocument.getElementById(optionalIds.publicReadoutTitle),
+    publicReadoutLine:
+      rootDocument.getElementById(optionalIds.publicReadoutLine),
+    diagnosticLink: rootDocument.getElementById(optionalIds.diagnosticLink),
+    strictRequiredFound: missingStrictRequiredIds.length === 0,
+    rendererMountFound: Boolean(rendererMount),
+    missingStrictRequiredIds: Object.freeze(missingStrictRequiredIds),
+    boundary: H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS
+  });
+}
+
+function summarizeReceiptHeader(receipt, fallback = {}) {
+  if (!receipt) return null;
+
+  return Object.freeze({
+    receiptType: receipt.receiptType || fallback.receiptType || null,
+    status: receipt.status || fallback.status || null,
+    contractId: receipt.contractId || fallback.contractId || null,
+    file: receipt.file || fallback.file || null,
+    matrix: receipt.matrix || fallback.matrix || 'H-Earth',
+    matrixRole:
+      receipt.matrixRole || fallback.matrixRole || 'Ground-View Matrix',
+    activeCell:
+      receipt.activeCell || fallback.activeCell || 'H_EARTH_GROUND_CELL_001',
+    sceneIdentity:
+      receipt.sceneIdentity ||
+      fallback.sceneIdentity ||
+      'earth-water-air-survival-shoreline-manor',
+    warningCodes: Object.freeze(asArray(receipt.warningCodes)),
+    failureCodes: Object.freeze(asArray(receipt.failureCodes))
+  });
+}
+
+function summarizeRendererMountReceipt(receipt) {
+  if (!receipt) return null;
+
+  return Object.freeze({
+    receiptType: receipt.receiptType || null,
+    contractId: receipt.contractId || null,
+    rendererMounted: receipt.rendererMounted === true,
+    mounted: receipt.mounted === true,
+    mountAttempted: receipt.mountAttempted === true,
+    mountNodeAccepted: receipt.mountNodeAccepted === true,
+    mountNodeValid: receipt.mountNodeValid === true,
+    renderRootCreated: receipt.renderRootCreated === true,
+    layerContainerCount:
+      receipt.layerContainerCount ?? receipt.layerCount ?? null,
+
+    selectedRenderInputSource: receipt.selectedRenderInputSource || null,
+    sourceDescriptorType: receipt.sourceDescriptorType || null,
+    rawSourceNodeCount: receipt.rawSourceNodeCount ?? null,
+    usedComposedFrame: receipt.usedComposedFrame === true,
+    usedRenderSceneFallback: receipt.usedRenderSceneFallback === true,
+
+    geometryPortUsed: receipt.geometryPortUsed === true,
+    geometryExpansionApplied: receipt.geometryExpansionApplied === true,
+    geometryExpansionSkippedBecauseAlreadyExpanded:
+      receipt.geometryExpansionSkippedBecauseAlreadyExpanded === true,
+    geometryExpansionSource: receipt.geometryExpansionSource || null,
+    geometrySourceNodeCount: receipt.geometrySourceNodeCount ?? null,
+    geometryExpandedNodeCount: receipt.geometryExpandedNodeCount ?? null,
+    geometryReturnedNodeCount: receipt.geometryReturnedNodeCount ?? null,
+    geometrySkippedNodeCount: receipt.geometrySkippedNodeCount ?? null,
+    geometryBudgetSkippedNodeCount:
+      receipt.geometryBudgetSkippedNodeCount ?? null,
+    geometryParentNodeCount: receipt.geometryParentNodeCount ?? null,
+    geometryChildNodeCount: receipt.geometryChildNodeCount ?? null,
+
+    sourceNodeCount: receipt.sourceNodeCount ?? null,
+    mountedNodeCount: receipt.mountedNodeCount ?? null,
+    objectNodeCount: receipt.objectNodeCount ?? null,
+    placedNodeCount: receipt.placedNodeCount ?? null,
+    skippedNodeCount: receipt.skippedNodeCount ?? null,
+    transformDescriptorAppliedCount:
+      receipt.transformDescriptorAppliedCount ?? null,
+    transformDescriptorMissingCount:
+      receipt.transformDescriptorMissingCount ?? null,
+    primitiveGeometryAppliedCount:
+      receipt.primitiveGeometryAppliedCount ?? null,
+
+    materialPortUsed: receipt.materialPortUsed === true,
+    layerPortUsed: receipt.layerPortUsed === true,
+    nodeFactoryPortUsed: receipt.nodeFactoryPortUsed === true,
+
+    warningCodes: Object.freeze(asArray(receipt.warningCodes)),
+    failureCodes: Object.freeze(asArray(receipt.failureCodes)),
+    claimBoundaryPreserved: receipt.claimBoundaryPreserved === true,
+    boundaryPresent: Boolean(receipt.boundary)
+  });
+}
+
+function summarizeRendererDestroyReceipt(receipt) {
+  if (!receipt) return null;
+
+  return Object.freeze({
+    receiptType: receipt.receiptType || null,
+    contractId: receipt.contractId || null,
+    destroyAttempted: receipt.destroyAttempted === true,
+    destroyed: receipt.destroyed === true,
+    mountNodeAccepted: receipt.mountNodeAccepted === true,
+    mountNodeValid: receipt.mountNodeValid === true,
+    removedOwnedNodeCount:
+      receipt.removedOwnedNodeCount ?? receipt.removedNodeCount ?? null,
+    routeShellPreserved: receipt.routeShellPreserved === true,
+    canonDescriptorsPreserved: receipt.canonDescriptorsPreserved === true,
+    warningCodes: Object.freeze(asArray(receipt.warningCodes)),
+    failureCodes: Object.freeze(asArray(receipt.failureCodes)),
+    claimBoundaryPreserved: receipt.claimBoundaryPreserved === true,
+    boundaryPresent: Boolean(receipt.boundary)
+  });
+}
+
+export function buildHEarthPublicReadoutPayload(objectId) {
+  const selectedObjectId = objectId || H_EARTH_DEFAULT_SELECTED_OBJECT_ID;
+  const target = getSelectableTarget(selectedObjectId);
+  const classification = getControllerTargetClassification(selectedObjectId);
+  const actionBridge = resolveInspectGroundControllerBridge(selectedObjectId);
+  const readoutBridge = resolveGroundConditionReadBridge(selectedObjectId);
+
+  const blockedResponse =
+    actionBridge?.contextOnlyBlockResponse ||
+    actionBridge?.waterAtmosphericContextResponse?.blockResponse ||
+    actionBridge?.secondarySurfaceContextResponse ||
+    null;
+
+  return Object.freeze({
+    receiptType: 'H_EARTH_3D_PUBLIC_GROUND_CONDITION_READOUT',
+    file: '/showroom/globe/h-earth/index.js',
+    contractId: H_EARTH_3D_INDEX_CONTRACT.contractId,
+
+    ...H_EARTH_SCENE_IDENTITY,
+
+    selectedObjectId,
+    label: getTargetLabel(target, selectedObjectId),
+    classification,
+    selectable: target?.selectable === true,
+    inspectable: target?.inspectable === true,
+
+    action: 'Inspect Ground',
+    actionId: 'H_EARTH_INSPECT_GROUND_ACTION',
+    readout: 'Ground Condition Read',
+    readoutId: 'H_EARTH_GROUND_CONDITION_READ',
+    receipt: 'H_EARTH_GROUND_INSPECTION_RECEIPT',
+
+    actionBridgeResolved: actionBridge?.bridgeResolved === true,
+    readoutBridgeResolved: readoutBridge?.bridgeResolved === true,
+    bridgeResolved:
+      actionBridge?.bridgeResolved === true ||
+      readoutBridge?.bridgeResolved === true,
+
+    blockedResponse,
+
+    descriptorOnly: true,
+    publicRouteReadoutOnly: true,
+    runtimeActionExecutionClaim: false,
+    readoutProductionClaim: false,
+    receiptCreationClaim: false,
+    runtimeReceiptPersistence: false,
+    rendererPassClaim: false,
+    visualPassClaim: false,
+    validationClaim: false,
+    productionClaim: false,
+    matrixCollapse: false,
+
+    actionBridge,
+    readoutBridge,
+
+    boundary: H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS
+  });
+}
+
+export function renderHEarthSelectedTargetCard(mountPoints, objectId) {
+  if (!mountPoints) return false;
+
+  const selectedObjectId = objectId || H_EARTH_DEFAULT_SELECTED_OBJECT_ID;
+  const target = getSelectableTarget(selectedObjectId);
+  const classification = getControllerTargetClassification(selectedObjectId);
+  const label = getTargetLabel(target, selectedObjectId);
+
+  const wroteLabel = writeText(mountPoints.selectedTargetLabel, label);
+
+  const wroteClassification = writeText(
+    mountPoints.selectedTargetClassification,
+    classification || 'UNCLASSIFIED_TARGET'
+  );
+
+  const wroteObjectId = writeText(
+    mountPoints.selectedTargetObjectId,
+    selectedObjectId
+  );
+
+  if (mountPoints.routeRoot) {
+    setNodeDataset(
+      mountPoints.routeRoot,
+      'hEarthSelectedObjectId',
+      selectedObjectId
+    );
+
+    setNodeDataset(
+      mountPoints.routeRoot,
+      'hEarthSelectedObjectLabel',
+      label
+    );
+
+    setNodeDataset(
+      mountPoints.routeRoot,
+      'hEarthSelectedTargetClassification',
+      classification || 'UNCLASSIFIED_TARGET'
+    );
+  }
+
+  return Boolean(wroteLabel || wroteClassification || wroteObjectId);
+}
+
+export function renderHEarthPublicReadout(mountPoints, objectId) {
+  if (!mountPoints) return false;
+
+  const selectedObjectId = objectId || H_EARTH_DEFAULT_SELECTED_OBJECT_ID;
+  const payload = buildHEarthPublicReadoutPayload(selectedObjectId);
+  const title = `${payload.label} · Inspect Ground`;
+
+  const line =
+    payload.blockedResponse?.message ||
+    (
+      payload.readoutBridgeResolved
+        ? 'Descriptor-only Ground Condition Read bridge is available for this target.'
+        : 'This target is selectable as a descriptor, but it does not create runtime action execution or receipt production.'
+    );
+
+  const wroteTitle = writeText(mountPoints.publicReadoutTitle, title);
+  const wroteLine = writeText(mountPoints.publicReadoutLine, line);
+
+  const wrotePanel = writeJson(mountPoints.inspectionPanel, payload, {
+    maxDepth: 7,
+    maxArrayLength: 80
+  });
+
+  return Boolean(wroteTitle || wroteLine || wrotePanel);
+}
+
+export function createTargetButtonDescriptor(target) {
+  return Object.freeze({
+    tagName: 'button',
+    className: 'h-earth-3d-target-button',
+    dataset: Object.freeze({
+      hEarthObjectId: target.objectId,
+      hEarthTargetClassification: target.classification
+    }),
+    label: target.label || target.objectId,
+    selectable: target.selectable === true,
+    inspectable: target.inspectable === true,
+    descriptorOnly: true,
+    publicRouteControlOnly: true,
+    domMutationClaim: false,
+    gameplayExecutionClaim: false,
+    runtimeReceiptPersistence: false
+  });
+}
+
+export function renderHEarthTargetList(mountPoints, selectedObjectId) {
+  const documentRef =
+    mountPoints?.targetList?.ownerDocument || globalThis.document || null;
+
+  if (!mountPoints?.targetList || !documentRef) return false;
+
+  const targetList = mountPoints.targetList;
+  targetList.textContent = '';
+
+  Object.values(H_EARTH_3D_SELECTABLE_TARGET_REGISTRY).forEach((target) => {
+    if (!target || target.targetResolved !== true) return;
+
+    const descriptor = createTargetButtonDescriptor(target);
+    const button = documentRef.createElement(descriptor.tagName);
+
+    button.type = 'button';
+    button.className = descriptor.className;
+    button.textContent = descriptor.label;
+    button.dataset.hEarthObjectId = descriptor.dataset.hEarthObjectId;
+    button.dataset.hEarthTargetClassification =
+      descriptor.dataset.hEarthTargetClassification;
+    button.disabled = descriptor.selectable !== true;
+
+    if (target.objectId === selectedObjectId) {
+      button.setAttribute('aria-current', 'true');
+    }
+
+    button.addEventListener('click', () => {
+      selectHEarthPublicTarget({
+        mountPoints,
+        objectId: target.objectId
+      });
     });
 
-    observer.observe(stage, { childList: true, subtree: false });
-  }
-}
-
-function markRoute() {
-  const markers = {
-    showroomContract: BEAUTY_REFINEMENT_CONTRACT,
-    showroomPreviousConsumptionAuditContract: PREVIOUS_CONSUMPTION_AUDIT_CONTRACT,
-    showroomStandard: ACTIVE_STANDARD,
-    showroomPairedHtmlContract: PAIRED_HTML_CONTRACT,
-    showroomGeneration: "G2",
-    showroomGenerationOneStatus: "lost-overwritten",
-    showroomStatus: "g2-crystalline-fibonacci-beauty-refinement-active",
-    diamondLock: "CROWN_CUT_256_LATTICE_FIXED_FORM",
-    renderer: "native-webgl",
-    renderModel: "single-canonical-canvas-deterministic-fibonacci-lattice-webgl",
-    radialNodes: String(RADIAL_NODES),
-    fibonacciBands: String(FIBONACCI_BANDS),
-    latticeStates: String(LATTICE_STATES),
-    latticeEquation: "16_RADIAL_NODES_X_16_FIBONACCI_BANDS_EQUALS_256_LATTICE_SEATS",
-    defaultLens: "crystal-form",
-    secondaryLens: "lattice-structure",
-    touchGlideDiamond: "true",
-    doubleTapReset: "true",
-    generatedImage: "false",
-    graphicBox: "false",
-    audraliaInheritance: "false",
-    planetTemplateInheritance: "false",
-    visualPassClaimed: "false"
-  };
-
-  Object.entries(markers).forEach(([key, value]) => {
-    document.documentElement.dataset[key] = value;
-    if (document.body) document.body.dataset[key] = value;
+    targetList.appendChild(button);
   });
 
-  window.DGB_SHOWROOM_JS_CACHE_KEY = BEAUTY_REFINEMENT_CONTRACT;
-  window.DGB_SHOWROOM_DIAMOND_REFINEMENT_CONTRACT = BEAUTY_REFINEMENT_CONTRACT;
+  return true;
 }
 
-function recordError(scope, error) {
-  const message = error && error.message ? error.message : String(error || scope);
+export function selectHEarthPublicTarget({
+  mountPoints,
+  objectId
+} = {}) {
+  const selectedObjectId = objectId || H_EARTH_DEFAULT_SELECTED_OBJECT_ID;
 
-  state.errors.push({
-    scope,
-    message,
-    time: new Date().toISOString()
+  const nextStatus = setRouteBootstrapStatus({
+    selectedObjectId
   });
 
-  document.documentElement.dataset.showroomDiamondError = message;
-  publishFingerprint(`error:${scope}`);
-}
+  const selectedTargetCardUpdated = renderHEarthSelectedTargetCard(
+    mountPoints,
+    selectedObjectId
+  );
 
-function publishFingerprint(scope = "publish") {
-  const payload = Object.freeze({
-    scope,
-    contract: BEAUTY_REFINEMENT_CONTRACT,
-    previousContract: PREVIOUS_CONSUMPTION_AUDIT_CONTRACT,
-    pairedHtmlContract: PAIRED_HTML_CONTRACT,
-    standard: ACTIVE_STANDARD,
-    generation: "G2",
-    generationOneStatus: "lost-overwritten",
-    route: "/showroom/",
-    renderer: "native-webgl",
-    canonicalCanvasBound: state.canonicalCanvasBound,
-    duplicateCanvasCount: state.duplicateCanvasCount,
-    activeLens: state.lens,
-    radialNodes: RADIAL_NODES,
-    fibonacciBands: FIBONACCI_BANDS,
-    latticeStates: LATTICE_STATES,
-    latticeNodeCount: state.latticePoints.length,
-    latticeSeats: state.seats.length,
-    geometryBuilt: state.geometryBuilt,
-    crystalMeshReady: state.crystalMeshReady,
-    latticeMeshReady: state.latticeMeshReady,
-    crystallineFacetLineCount: state.crystallineFacetLines.length,
-    fibonacciHighlightLineCount: state.fibonacciHighlightLines.length,
-    touchReady: state.touchReady,
-    canvasReady: state.canvasReady,
-    glReady: state.glReady,
-    initialized: state.initialized,
-    renderCount: state.renderCount,
-    yaw: state.yaw,
-    pitch: state.pitch,
-    generatedImage: false,
-    graphicBox: false,
-    audraliaInheritance: false,
-    planetTemplateInheritance: false,
-    visualPassClaim: false,
-    errors: state.errors.slice()
+  const compactReadoutRendered = renderHEarthPublicReadout(
+    mountPoints,
+    selectedObjectId
+  );
+
+  renderHEarthTargetList(mountPoints, selectedObjectId);
+
+  renderHEarthRouteStatus(mountPoints, {
+    ...nextStatus,
+    selectedTargetCardUpdated,
+    compactReadoutRendered
   });
 
-  window.DGB_SHOWROOM_DIAMOND_CONSUMPTION_FINGERPRINT = payload;
-  window.DGBShowroomDiamondConsumptionFingerprint = payload;
-  window.DGB_SHOWROOM_DIAMOND_BEAUTY_REFINEMENT_FINGERPRINT = payload;
-
-  document.documentElement.dataset.showroomDiamondRenderCount = String(state.renderCount);
-  document.documentElement.dataset.showroomDiamondLatticeNodeCount = String(state.latticePoints.length);
-  document.documentElement.dataset.showroomDiamondGeometryBuilt = state.geometryBuilt ? "true" : "false";
-  document.documentElement.dataset.showroomDiamondCanvasReady = state.canvasReady ? "true" : "false";
-  document.documentElement.dataset.showroomDiamondGlReady = state.glReady ? "true" : "false";
-
-  return payload;
+  return Object.freeze({
+    selected: true,
+    selectedObjectId,
+    selectedTargetCardUpdated,
+    compactReadoutRendered,
+    descriptorOnly: true,
+    runtimeActionExecutionClaim: false,
+    receiptCreationClaim: false,
+    runtimeReceiptPersistence: false,
+    matrixCollapse: false,
+    boundary: H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS
+  });
 }
 
-function publishApi() {
-  window.DGBShowroomDiamond = {
-    ...SHOWROOM_DIAMOND_STATE,
-    setLens,
-    resetDiamond,
-    render: renderWebGL,
-    status() {
-      return publishFingerprint("status");
-    }
-  };
-
-  return window.DGBShowroomDiamond;
-}
-
-function initWebGL(canvas) {
-  const gl = createWebGLContext(canvas);
-
-  if (!gl) {
-    document.documentElement.dataset.showroomWebglError = "WEBGL_CONTEXT_UNAVAILABLE";
-    return null;
+export function bindHEarthInspectionControls(mountPoints) {
+  if (!mountPoints) {
+    return Object.freeze({
+      targetListBound: false,
+      inspectionPanelRendered: false,
+      selectedTargetCardUpdated: false,
+      compactReadoutRendered: false,
+      inspectGroundControlBound: false,
+      controllerReady: false,
+      reason: 'MISSING_MOUNT_POINTS',
+      boundary: H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS
+    });
   }
 
-  initPrograms(gl);
+  const selectedObjectId =
+    latestRouteBootstrapStatus.selectedObjectId ||
+    H_EARTH_DEFAULT_SELECTED_OBJECT_ID;
 
-  state.gl = gl;
-  state.glReady = true;
+  const targetListBound = renderHEarthTargetList(mountPoints, selectedObjectId);
 
-  return gl;
+  const selectedTargetCardUpdated = renderHEarthSelectedTargetCard(
+    mountPoints,
+    selectedObjectId
+  );
+
+  const compactReadoutRendered = renderHEarthPublicReadout(
+    mountPoints,
+    selectedObjectId
+  );
+
+  let inspectGroundControlBound = false;
+
+  if (mountPoints.inspectGroundAction) {
+    mountPoints.inspectGroundAction.addEventListener('click', () => {
+      const currentObjectId =
+        latestRouteBootstrapStatus.selectedObjectId ||
+        H_EARTH_DEFAULT_SELECTED_OBJECT_ID;
+
+      renderHEarthPublicReadout(mountPoints, currentObjectId);
+      renderHEarthRouteStatus(mountPoints, latestRouteBootstrapStatus);
+    });
+
+    inspectGroundControlBound = true;
+  }
+
+  return Object.freeze({
+    targetListBound,
+    inspectionPanelRendered: Boolean(mountPoints.inspectionPanel),
+    selectedTargetCardUpdated,
+    compactReadoutRendered,
+    inspectGroundControlBound,
+    controllerReady: Boolean(
+      targetListBound ||
+      compactReadoutRendered ||
+      selectedTargetCardUpdated ||
+      inspectGroundControlBound
+    ),
+    descriptorOnly: true,
+    publicRouteControlOnly: true,
+    gameplayExecutionClaim: false,
+    runtimeReceiptPersistence: false,
+    validationClaim: false,
+    matrixCollapse: false,
+    boundary: H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS
+  });
 }
 
-function initShowroomDiamond() {
+export function attemptHEarthRendererMount(mountPoints, options = {}) {
+  const rendererMountApi = getRendererMountApi();
+  const rendererDestroyApi = getRendererDestroyApi();
+  const rendererApiSource = getRendererMountApiSource();
+  const rendererDestroyApiSource = getRendererDestroyApiSource();
+
+  if (!rendererMountApi) {
+    return Object.freeze({
+      rendererMountApiConfirmed: false,
+      rendererDestroyApiConfirmed: Boolean(rendererDestroyApi),
+      rendererApiSource,
+      rendererDestroyApiSource,
+      rendererMountAttempted: false,
+      rendererMounted: false,
+      rendererMountSkipped: true,
+      rendererMountSkipReason:
+        H_EARTH_3D_ROUTE_FAILURE_CODES.MISSING_RENDERER_MOUNT_API,
+      rendererMountError: null,
+      rendererMountReceipt: null,
+      statusLevel:
+        H_EARTH_3D_ROUTE_BOOTSTRAP_STATUS_LEVELS
+          .BOOTSTRAP_READY_DESCRIPTOR_ONLY_NO_RENDERER_MOUNT_API,
+      boundary: H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS
+    });
+  }
+
+  if (!mountPoints?.rendererMount) {
+    return Object.freeze({
+      rendererMountApiConfirmed: true,
+      rendererDestroyApiConfirmed: Boolean(rendererDestroyApi),
+      rendererApiSource,
+      rendererDestroyApiSource,
+      rendererMountAttempted: false,
+      rendererMounted: false,
+      rendererMountSkipped: true,
+      rendererMountSkipReason:
+        H_EARTH_3D_ROUTE_FAILURE_CODES.MISSING_RENDERER_MOUNT_NODE,
+      rendererMountError: null,
+      rendererMountReceipt: null,
+      statusLevel:
+        H_EARTH_3D_ROUTE_BOOTSTRAP_STATUS_LEVELS.BOOTSTRAP_FALLBACK_ACTIVE,
+      boundary: H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS
+    });
+  }
+
   try {
-    markRoute();
+    const result = rendererMountApi({
+      mountNode: mountPoints.rendererMount,
+      renderer: H_EARTH_3D_RENDERER,
+      candidateRenderScene: H_EARTH_3D_CANDIDATE_RENDER_SCENE,
+      composedCandidateFrame: H_EARTH_3D_COMPOSED_CANDIDATE_FRAME,
+      controller: H_EARTH_3D_CONTROLLER,
+      options: Object.freeze({ ...options }),
+      boundary: H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS
+    });
 
-    const stage = document.querySelector("[data-showroom-diamond-stage]");
-    const canvas = document.querySelector("[data-showroom-diamond-canvas]");
+    const mounted = isRendererMountReceiptMounted(result);
 
-    if (!stage || !canvas) {
-      document.documentElement.dataset.showroomDiamondError = "STAGE_OR_CANVAS_MISSING";
-      publishFingerprint("stage-or-canvas-missing");
-      return null;
-    }
-
-    state.stage = stage;
-    state.canvas = canvas;
-
-    enforceCanonicalCanvas(stage, canvas);
-    buildGeometry();
-    bindLensControls();
-
-    const gl = initWebGL(canvas);
-    if (!gl) return null;
-
-    bindPointer(stage);
-    resizeCanvas();
-
-    state.canvasReady = true;
-    state.initialized = true;
-
-    renderWebGL();
-    publishApi();
-
-    window.addEventListener("resize", renderWebGL, { passive: true });
-
-    if (!state.raf) {
-      state.raf = window.requestAnimationFrame(step);
-    }
-
-    publishFingerprint("init-complete");
-
-    return window.DGBShowroomDiamond;
+    return Object.freeze({
+      rendererMountApiConfirmed: true,
+      rendererDestroyApiConfirmed: Boolean(rendererDestroyApi),
+      rendererApiSource,
+      rendererDestroyApiSource,
+      rendererMountAttempted: true,
+      rendererMounted: mounted,
+      rendererMountSkipped: false,
+      rendererMountSkipReason: mounted
+        ? null
+        : H_EARTH_3D_ROUTE_FAILURE_CODES.RENDERER_MOUNT_FAILED,
+      rendererMountError: null,
+      rendererMountReceipt: result || null,
+      statusLevel: mounted
+        ? H_EARTH_3D_ROUTE_BOOTSTRAP_STATUS_LEVELS.BOOTSTRAP_READY_CANDIDATE_ONLY
+        : H_EARTH_3D_ROUTE_BOOTSTRAP_STATUS_LEVELS.BOOTSTRAP_FALLBACK_ACTIVE,
+      boundary: H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS
+    });
   } catch (error) {
-    recordError("initShowroomDiamond", error);
-    return null;
+    return Object.freeze({
+      rendererMountApiConfirmed: true,
+      rendererDestroyApiConfirmed: Boolean(rendererDestroyApi),
+      rendererApiSource,
+      rendererDestroyApiSource,
+      rendererMountAttempted: true,
+      rendererMounted: false,
+      rendererMountSkipped: false,
+      rendererMountSkipReason:
+        H_EARTH_3D_ROUTE_FAILURE_CODES.RENDERER_MOUNT_FAILED,
+      rendererMountError: error instanceof Error ? error.message : String(error),
+      rendererMountReceipt: null,
+      statusLevel:
+        H_EARTH_3D_ROUTE_BOOTSTRAP_STATUS_LEVELS.BOOTSTRAP_FALLBACK_ACTIVE,
+      boundary: H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS
+    });
   }
 }
 
-if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", initShowroomDiamond, { once: true });
-} else {
-  initShowroomDiamond();
+export function renderHEarthRouteStatus(
+  mountPoints,
+  status = latestRouteBootstrapStatus
+) {
+  if (!mountPoints) return false;
+
+  writeText(mountPoints.statusNode, status.statusLevel);
+
+  if (mountPoints.fallbackNode) {
+    const fallbackMessage = status.bootstrapFallbackActive
+      ? `H-Earth bootstrap fallback active: ${status.failureCodes.join(', ')}`
+      : status.bootstrapReadyDescriptorOnlyNoRendererMountApi
+        ? 'H-Earth descriptor bootstrap ready. Renderer mount skipped because canon renderer mount API is missing.'
+        : status.bootstrapReadyCandidateOnly
+          ? 'H-Earth DOM/CSS-3D candidate bootstrap ready. Renderer mount receipt confirmed mounted.'
+          : 'H-Earth route bootstrap status pending.';
+
+    writeText(mountPoints.fallbackNode, fallbackMessage);
+  }
+
+  if (mountPoints.routeRoot) {
+    removeClass(mountPoints.routeRoot, 'h-earth-3d-boot-ready');
+    removeClass(mountPoints.routeRoot, 'h-earth-3d-boot-fallback');
+    removeClass(mountPoints.routeRoot, 'h-earth-3d-boot-error');
+
+    if (
+      status.bootstrapReadyCandidateOnly ||
+      status.bootstrapReadyDescriptorOnlyNoRendererMountApi
+    ) {
+      addClass(mountPoints.routeRoot, 'h-earth-3d-boot-ready');
+    } else if (status.bootstrapFallbackActive) {
+      addClass(mountPoints.routeRoot, 'h-earth-3d-boot-fallback');
+    } else {
+      addClass(mountPoints.routeRoot, 'h-earth-3d-boot-error');
+    }
+
+    setNodeDataset(mountPoints.routeRoot, 'hEarthStatusLevel', status.statusLevel);
+
+    setNodeDataset(
+      mountPoints.routeRoot,
+      'hEarthRendererMounted',
+      String(status.rendererMounted === true)
+    );
+
+    setNodeDataset(
+      mountPoints.routeRoot,
+      'hEarthDiagnosticRoute',
+      H_EARTH_3D_INDEX_CONTRACT.diagnosticRoute
+    );
+
+    setNodeDataset(
+      mountPoints.routeRoot,
+      'hEarthPublicBootstrapOnly',
+      'true'
+    );
+  }
+
+  if (mountPoints.diagnosticLink) {
+    mountPoints.diagnosticLink.setAttribute(
+      'href',
+      H_EARTH_3D_INDEX_CONTRACT.diagnosticRoute
+    );
+  }
+
+  if (mountPoints.debug) {
+    writeJson(
+      mountPoints.debug,
+      Object.freeze({
+        ...status,
+        publicBootstrapOnly: true,
+        diagnosticRoute: H_EARTH_3D_INDEX_CONTRACT.diagnosticRoute,
+        compactReceipt: buildHEarthRouteBootstrapReceipt(status),
+        rendererMountReceiptSummary:
+          summarizeRendererMountReceipt(status.rendererMountReceipt),
+        diagnosticWallEmbedded: false,
+        rawSpatialEvidenceEmbedded: false,
+        receiptWallEmbedded: false,
+        copySurfaceEmbedded: false
+      }),
+      { maxDepth: 6, maxArrayLength: 80 }
+    );
+  }
+
+  return true;
 }
 
-export {
-  SHOWROOM_DIAMOND_STATE,
-  BEAUTY_REFINEMENT_CONTRACT,
-  PREVIOUS_CONSUMPTION_AUDIT_CONTRACT,
-  initShowroomDiamond,
-  setLens,
-  resetDiamond
-};
+export function initializeHEarthRoute(options = {}) {
+  const rootDocument = getDocumentFromOptions(options);
+  const chain = verifyHEarthRouteBoundChain();
+  const mountPoints = resolveHEarthRouteMountPoints(rootDocument);
+  const rendererMountApi = getRendererMountApi();
 
-export default SHOWROOM_DIAMOND_STATE;
+  const failureCodes = [...chain.failureCodes];
+
+  if (!mountPoints.strictRequiredFound) {
+    mountPoints.missingStrictRequiredIds.forEach((id) => {
+      if (id === H_EARTH_3D_ROUTE_MOUNT_CONTRACT.strictRequiredIds.routeRoot) {
+        failureCodes.push(H_EARTH_3D_ROUTE_FAILURE_CODES.MISSING_ROUTE_ROOT);
+      }
+
+      if (id === H_EARTH_3D_ROUTE_MOUNT_CONTRACT.strictRequiredIds.status) {
+        failureCodes.push(H_EARTH_3D_ROUTE_FAILURE_CODES.MISSING_STATUS_NODE);
+      }
+
+      if (id === H_EARTH_3D_ROUTE_MOUNT_CONTRACT.strictRequiredIds.fallback) {
+        failureCodes.push(H_EARTH_3D_ROUTE_FAILURE_CODES.MISSING_FALLBACK_NODE);
+      }
+    });
+  }
+
+  if (failureCodes.length > 0) {
+    const failedStatus = setRouteBootstrapStatus({
+      chainReady: chain.chainReady,
+      domReady: mountPoints.strictRequiredFound,
+      controllerReady: false,
+      rendererMountReady: false,
+      bootstrapReadyCandidateOnly: false,
+      bootstrapReadyDescriptorOnlyNoRendererMountApi: false,
+      bootstrapFallbackActive: true,
+      statusLevel:
+        H_EARTH_3D_ROUTE_BOOTSTRAP_STATUS_LEVELS.BOOTSTRAP_FALLBACK_ACTIVE,
+      failureCodes,
+      routeRootFound: Boolean(mountPoints.routeRoot),
+      statusNodeFound: Boolean(mountPoints.statusNode),
+      fallbackNodeFound: Boolean(mountPoints.fallbackNode),
+      rendererMountNodeFound: Boolean(mountPoints.rendererMount),
+      rendererMountApiConfirmed: Boolean(rendererMountApi),
+      rendererDestroyApiConfirmed: Boolean(getRendererDestroyApi()),
+      rendererApiSource: getRendererMountApiSource(),
+      rendererDestroyApiSource: getRendererDestroyApiSource(),
+      rendererMountAttempted: false,
+      rendererMounted: false,
+      rendererMountSkipped: true,
+      rendererMountSkipReason:
+        H_EARTH_3D_ROUTE_FAILURE_CODES.BOOTSTRAP_FALLBACK_ACTIVE,
+      rendererMountReceipt: null,
+      diagnosticRouteLinked: Boolean(mountPoints.diagnosticLink)
+    });
+
+    renderHEarthRouteStatus(mountPoints, failedStatus);
+
+    return Object.freeze({
+      initialized: false,
+      status: failedStatus,
+      mountPoints,
+      chain,
+      publicBootstrapOnly: true,
+      diagnosticRoute: H_EARTH_3D_INDEX_CONTRACT.diagnosticRoute,
+      boundary: H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS
+    });
+  }
+
+  const controllerBinding = bindHEarthInspectionControls(mountPoints);
+  const rendererMount = attemptHEarthRendererMount(
+    mountPoints,
+    options.rendererOptions || {}
+  );
+
+  const warningCodes = [];
+
+  if (rendererMount.rendererMountSkipped && rendererMount.rendererMountSkipReason) {
+    warningCodes.push(rendererMount.rendererMountSkipReason);
+  }
+
+  if (
+    rendererMount.rendererMountAttempted === true &&
+    rendererMount.rendererMounted !== true &&
+    rendererMount.rendererMountSkipReason
+  ) {
+    warningCodes.push(rendererMount.rendererMountSkipReason);
+  }
+
+  const runtimeFailureCodes = [];
+
+  if (
+    rendererMount.rendererMountApiConfirmed === true &&
+    rendererMount.rendererMounted !== true &&
+    rendererMount.rendererMountSkipReason
+  ) {
+    runtimeFailureCodes.push(rendererMount.rendererMountSkipReason);
+  }
+
+  const descriptorReadyNoMount =
+    chain.chainReady === true &&
+    mountPoints.strictRequiredFound === true &&
+    controllerBinding.controllerReady === true &&
+    rendererMount.rendererMountApiConfirmed === false;
+
+  const candidateReady =
+    chain.chainReady === true &&
+    mountPoints.strictRequiredFound === true &&
+    controllerBinding.controllerReady === true &&
+    rendererMount.rendererMounted === true;
+
+  const finalStatusLevel = candidateReady
+    ? H_EARTH_3D_ROUTE_BOOTSTRAP_STATUS_LEVELS.BOOTSTRAP_READY_CANDIDATE_ONLY
+    : descriptorReadyNoMount
+      ? H_EARTH_3D_ROUTE_BOOTSTRAP_STATUS_LEVELS
+          .BOOTSTRAP_READY_DESCRIPTOR_ONLY_NO_RENDERER_MOUNT_API
+      : rendererMount.statusLevel;
+
+  const nextStatus = setRouteBootstrapStatus({
+    chainReady: chain.chainReady,
+    domReady: mountPoints.strictRequiredFound,
+    controllerReady: controllerBinding.controllerReady,
+    rendererMountReady:
+      rendererMount.rendererMountApiConfirmed &&
+      Boolean(mountPoints.rendererMount) &&
+      rendererMount.rendererMounted === true,
+
+    bootstrapReadyCandidateOnly: candidateReady,
+    bootstrapReadyDescriptorOnlyNoRendererMountApi: descriptorReadyNoMount,
+    bootstrapFallbackActive:
+      finalStatusLevel ===
+      H_EARTH_3D_ROUTE_BOOTSTRAP_STATUS_LEVELS.BOOTSTRAP_FALLBACK_ACTIVE,
+
+    statusLevel: finalStatusLevel,
+
+    failureCodes: Object.freeze(runtimeFailureCodes),
+    warningCodes: Object.freeze(warningCodes),
+
+    rendererMountApiConfirmed: rendererMount.rendererMountApiConfirmed,
+    rendererDestroyApiConfirmed: rendererMount.rendererDestroyApiConfirmed,
+    rendererMountAttempted: rendererMount.rendererMountAttempted,
+    rendererMounted: rendererMount.rendererMounted,
+    rendererMountSkipped: rendererMount.rendererMountSkipped,
+    rendererMountSkipReason: rendererMount.rendererMountSkipReason,
+    rendererMountError: rendererMount.rendererMountError,
+    rendererMountReceipt: rendererMount.rendererMountReceipt,
+    rendererApiSource: rendererMount.rendererApiSource,
+    rendererDestroyApiSource: rendererMount.rendererDestroyApiSource,
+
+    routeRootFound: Boolean(mountPoints.routeRoot),
+    statusNodeFound: Boolean(mountPoints.statusNode),
+    fallbackNodeFound: Boolean(mountPoints.fallbackNode),
+    rendererMountNodeFound: Boolean(mountPoints.rendererMount),
+
+    targetListBound: controllerBinding.targetListBound,
+    inspectGroundControlBound: controllerBinding.inspectGroundControlBound,
+    selectedTargetCardUpdated: controllerBinding.selectedTargetCardUpdated,
+    compactReadoutRendered: controllerBinding.compactReadoutRendered,
+    debugStatusExposed: Boolean(mountPoints.debug),
+    diagnosticRouteLinked: Boolean(mountPoints.diagnosticLink)
+  });
+
+  renderHEarthRouteStatus(mountPoints, nextStatus);
+
+  return Object.freeze({
+    initialized: true,
+    status: nextStatus,
+    mountPoints,
+    chain,
+    controllerBinding,
+    rendererMount,
+    compactReceipt: buildHEarthRouteBootstrapReceipt(nextStatus),
+    publicReadout: buildHEarthPublicReadoutPayload(nextStatus.selectedObjectId),
+    runtimeFailureCodes: Object.freeze(runtimeFailureCodes),
+    renderInputSelector: selectHEarthRenderInput,
+    publicBootstrapOnly: true,
+    diagnosticRoute: H_EARTH_3D_INDEX_CONTRACT.diagnosticRoute,
+    boundary: H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS
+  });
+}
+
+export function destroyHEarthRoute(options = {}) {
+  const destroyApi = getRendererDestroyApi();
+  const mountPoints = resolveHEarthRouteMountPoints(
+    getDocumentFromOptions(options)
+  );
+
+  let rendererDestroyed = false;
+  let rendererDestroyError = null;
+  let rendererDestroyReceipt = null;
+  let rendererDestroyAttempted = false;
+
+  if (destroyApi) {
+    rendererDestroyAttempted = true;
+
+    try {
+      rendererDestroyReceipt = destroyApi({
+        mountNode: mountPoints.rendererMount,
+        boundary: H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS
+      });
+
+      rendererDestroyed =
+        isRendererDestroyReceiptDestroyed(rendererDestroyReceipt);
+    } catch (error) {
+      rendererDestroyError =
+        error instanceof Error ? error.message : String(error);
+      rendererDestroyed = false;
+    }
+  }
+
+  const nextStatus = setRouteBootstrapStatus({
+    bootstrapReadyCandidateOnly: false,
+    bootstrapReadyDescriptorOnlyNoRendererMountApi: false,
+    bootstrapFallbackActive: false,
+    statusLevel:
+      H_EARTH_3D_ROUTE_BOOTSTRAP_STATUS_LEVELS.BOOTSTRAP_NOT_STARTED,
+    rendererMounted: false,
+    rendererMountAttempted: false,
+    rendererMountSkipped: true,
+    rendererDestroyAttempted,
+    rendererDestroyed,
+    rendererDestroyApiConfirmed: Boolean(destroyApi),
+    rendererDestroyApiSource: getRendererDestroyApiSource(),
+    rendererDestroyReceipt,
+    rendererDestroyError,
+    rendererMountSkipReason: rendererDestroyed
+      ? null
+      : H_EARTH_3D_ROUTE_FAILURE_CODES.RENDERER_DESTROY_FAILED,
+    rendererMountError: rendererDestroyError,
+    targetListBound: false,
+    inspectGroundControlBound: false,
+    selectedTargetCardUpdated: false,
+    compactReadoutRendered: false
+  });
+
+  renderHEarthRouteStatus(mountPoints, nextStatus);
+
+  return Object.freeze({
+    destroyed: rendererDestroyed,
+    rendererDestroyed,
+    rendererDestroyAttempted,
+    rendererDestroyReceipt,
+    rendererDestroyError,
+    rendererDestroyReceiptSummary:
+      summarizeRendererDestroyReceipt(rendererDestroyReceipt),
+    status: nextStatus,
+    publicBootstrapOnly: true,
+    diagnosticRoute: H_EARTH_3D_INDEX_CONTRACT.diagnosticRoute,
+    boundary: H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS
+  });
+}
+
+export function buildHEarthRouteBootstrapReceipt(
+  status = latestRouteBootstrapStatus
+) {
+  return Object.freeze({
+    receiptType: 'H_EARTH_3D_PUBLIC_ROUTE_BOOTSTRAP_RECEIPT_COMPACT',
+    file: '/showroom/globe/h-earth/index.js',
+    contractId: H_EARTH_3D_INDEX_CONTRACT.contractId,
+    renewedFrom: H_EARTH_3D_INDEX_CONTRACT.renewedFrom,
+    status: status.statusLevel,
+
+    activationScope: H_EARTH_3D_INDEX_CONTRACT.activationScope,
+    activationOption: H_EARTH_3D_INDEX_CONTRACT.activationOption,
+    reportPrinciple: H_EARTH_3D_INDEX_CONTRACT.reportPrinciple,
+
+    publicBootstrapOnly: true,
+    diagnosticRouteSplit: true,
+    diagnosticRoute: H_EARTH_3D_INDEX_CONTRACT.diagnosticRoute,
+
+    diagnosticWallEmbedded: false,
+    rawSpatialEvidenceEmbedded: false,
+    spatialDiagnosticReceiptEmbedded: false,
+    operationalReportSourceSummaryEmbedded: false,
+    latticeScopeReaderEmbedded: false,
+    reportCardClassificationEmbedded: false,
+    receiptWallEmbedded: false,
+    copySurfaceEmbedded: false,
+
+    movedToDiagnosticRoute: Object.freeze({
+      former029FReportLayer: true,
+      former029FLatticeScopeReader: true,
+      former029FSpatialDiagnosticReceipt: true,
+      former029FSpatialDiagnosticEvidenceBundle: true,
+      former029FOperationalReportSourceSummary: true,
+      former029FAdvancedRawEvidenceSurfaces: true,
+      destination: H_EARTH_3D_INDEX_CONTRACT.diagnosticRoute
+    }),
+
+    upstreamReceiptAvailability: Object.freeze({
+      capacity: Boolean(getCapacityReceipt()),
+      environment: Boolean(getEnvironmentReceipt()),
+      renderer: Boolean(getRendererReceipt()),
+      compositor: Boolean(getCompositorReceipt()),
+      controller: Boolean(getControllerReceipt())
+    }),
+
+    upstreamReceiptHeaders: Object.freeze({
+      capacity: summarizeReceiptHeader(getCapacityReceipt()),
+      environment: summarizeReceiptHeader(getEnvironmentReceipt()),
+      renderer: summarizeReceiptHeader(getRendererReceipt()),
+      compositor: summarizeReceiptHeader(getCompositorReceipt()),
+      controller: summarizeReceiptHeader(getControllerReceipt())
+    }),
+
+    functionalStatusCleanup: Object.freeze({
+      rendererMountedDerivedFromMountReceipt: true,
+      rendererDestroyedDerivedFromDestroyReceipt: true,
+      runtimeFailureCodesReportedForRendererMountFallback: true,
+      missingRendererApiFallbackWarningOnly: true,
+      noThrowDoesNotEqualMountSuccess: true,
+      noThrowDoesNotEqualDestroySuccess: true,
+      moduleLevelAutoStartAdded: false,
+      externalHtmlBootstrapCallExpected: true
+    }),
+
+    chainReady: status.chainReady,
+    domReady: status.domReady,
+    controllerReady: status.controllerReady,
+    rendererMountReady: status.rendererMountReady,
+
+    bootstrapReadyCandidateOnly: status.bootstrapReadyCandidateOnly,
+    bootstrapReadyDescriptorOnlyNoRendererMountApi:
+      status.bootstrapReadyDescriptorOnlyNoRendererMountApi,
+    bootstrapFallbackActive: status.bootstrapFallbackActive,
+
+    rendererMountApiConfirmed: status.rendererMountApiConfirmed,
+    rendererDestroyApiConfirmed: status.rendererDestroyApiConfirmed,
+    rendererApiSource: status.rendererApiSource,
+    rendererDestroyApiSource: status.rendererDestroyApiSource,
+
+    rendererMountAttempted: status.rendererMountAttempted,
+    rendererMounted: status.rendererMounted,
+    rendererMountSkipped: status.rendererMountSkipped,
+    rendererMountSkipReason: status.rendererMountSkipReason,
+    rendererMountError: status.rendererMountError,
+    rendererMountReceiptSummary:
+      summarizeRendererMountReceipt(status.rendererMountReceipt),
+
+    rendererDestroyAttempted: status.rendererDestroyAttempted,
+    rendererDestroyed: status.rendererDestroyed,
+    rendererDestroyError: status.rendererDestroyError,
+    rendererDestroyReceiptSummary:
+      summarizeRendererDestroyReceipt(status.rendererDestroyReceipt),
+
+    failureCodes: status.failureCodes,
+    warningCodes: status.warningCodes,
+
+    routeRootFound: status.routeRootFound,
+    statusNodeFound: status.statusNodeFound,
+    fallbackNodeFound: status.fallbackNodeFound,
+    rendererMountNodeFound: status.rendererMountNodeFound,
+
+    targetListBound: status.targetListBound,
+    inspectGroundControlBound: status.inspectGroundControlBound,
+    selectedTargetCardUpdated: status.selectedTargetCardUpdated,
+    compactReadoutRendered: status.compactReadoutRendered,
+    debugStatusExposed: status.debugStatusExposed,
+    diagnosticRouteLinked: status.diagnosticRouteLinked,
+
+    selectedObjectId: status.selectedObjectId,
+    selectedTargetClassification:
+      getControllerTargetClassification(status.selectedObjectId) ||
+      'UNCLASSIFIED_TARGET',
+
+    publicReadoutSummary: Object.freeze({
+      action: 'Inspect Ground',
+      readout: 'Ground Condition Read',
+      receipt: 'H_EARTH_GROUND_INSPECTION_RECEIPT',
+      descriptorOnly: true,
+      runtimeActionExecutionClaim: false,
+      receiptCreationClaim: false,
+      runtimeReceiptPersistence: false
+    }),
+
+    firstAction: 'Inspect Ground',
+    firstReadout: 'Ground Condition Read',
+    firstReceipt: 'H_EARTH_GROUND_INSPECTION_RECEIPT',
+
+    ...H_EARTH_SCENE_IDENTITY,
+
+    matrixSeparation: Object.freeze({
+      hEarth: 'Ground-View Matrix',
+      hearth: 'support/control context only',
+      audralia: 'planetary-world context only',
+      matrixCollapse: false
+    }),
+
+    boundary: H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS,
+
+    forbiddenCapabilityFlagsPreserved: H_EARTH_3D_FORBIDDEN_CAPABILITY_FLAGS,
+    rendererBoundaryFlagsPreserved: H_EARTH_3D_RENDER_BOUNDARY_FLAGS,
+    compositionBoundaryFlagsPreserved: H_EARTH_3D_COMPOSITION_BOUNDARY_FLAGS,
+    controllerBoundaryFlagsPreserved: H_EARTH_3D_CONTROLLER_BOUNDARY_FLAGS
+  });
+}
+
+export const H_EARTH_3D_ROUTE_BOOTSTRAP_RECEIPT =
+  buildHEarthRouteBootstrapReceipt(H_EARTH_3D_ROUTE_BOOTSTRAP_STATUS);
+
+export function getIndexReceipt() {
+  return buildHEarthRouteBootstrapReceipt(latestRouteBootstrapStatus);
+}
+
+export function getRouteBootstrapReceipt() {
+  return getIndexReceipt();
+}
+
+export const H_EARTH_3D_INDEX = Object.freeze({
+  id: 'H_EARTH_3D_INDEX',
+  file: '/showroom/globe/h-earth/index.js',
+  route: '/showroom/globe/h-earth/',
+  diagnosticRoute: '/showroom/globe/h-earth/diagnostic/',
+  sourceRoot: '/h-earth-3d/',
+
+  contract: H_EARTH_3D_INDEX_CONTRACT,
+  boundChain: H_EARTH_3D_INDEX_BOUND_CHAIN,
+  mountContract: H_EARTH_3D_ROUTE_MOUNT_CONTRACT,
+  boundaryFlags: H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS,
+  failureCodes: H_EARTH_3D_ROUTE_FAILURE_CODES,
+  bootstrapOrder: H_EARTH_3D_ROUTE_BOOTSTRAP_ORDER,
+  statusLevels: H_EARTH_3D_ROUTE_BOOTSTRAP_STATUS_LEVELS,
+
+  capacity: H_EARTH_3D_CAPACITY,
+  environment: H_EARTH_3D_ENVIRONMENT,
+  renderer: H_EARTH_3D_RENDERER,
+  compositor: H_EARTH_3D_COMPOSITOR,
+  controller: H_EARTH_3D_CONTROLLER,
+
+  capacityReceipt: H_EARTH_3D_CAPACITY_RECEIPT,
+  environmentReceipt: H_EARTH_3D_ENVIRONMENT_RECEIPT,
+  rendererReceipt: H_EARTH_3D_RENDERER_RECEIPT,
+  compositorReceipt: H_EARTH_3D_COMPOSITOR_RECEIPT,
+  controllerReceipt: H_EARTH_3D_CONTROLLER_RECEIPT,
+
+  renderVolumeModel: H_EARTH_3D_RENDER_VOLUME_MODEL,
+  renderPorts: H_EARTH_3D_RENDER_PORTS,
+  candidateRenderScene: H_EARTH_3D_CANDIDATE_RENDER_SCENE,
+  composedCandidateFrame: H_EARTH_3D_COMPOSED_CANDIDATE_FRAME,
+
+  selectableTargetRegistry: H_EARTH_3D_SELECTABLE_TARGET_REGISTRY,
+  inspectionActionRouting: H_EARTH_3D_INSPECTION_ACTION_ROUTING,
+  groundConditionReadBridge: H_EARTH_3D_GROUND_CONDITION_READ_BRIDGE,
+  groundInspectionReceiptBridge: H_EARTH_3D_GROUND_INSPECTION_RECEIPT_BRIDGE,
+  contextOnlyBlockResponses: H_EARTH_3D_CONTEXT_ONLY_BLOCK_RESPONSES,
+  secondarySurfaceContextResponses:
+    H_EARTH_3D_SECONDARY_SURFACE_CONTEXT_RESPONSES,
+  waterAtmosphericContextResponses:
+    H_EARTH_3D_WATER_ATMOSPHERIC_CONTEXT_RESPONSES,
+  blockedBehaviorResponses: H_EARTH_3D_BLOCKED_BEHAVIOR_RESPONSES,
+  composedFrameSelectionReferences:
+    H_EARTH_3D_COMPOSED_FRAME_SELECTION_REFERENCES,
+
+  getRouteBootstrapStatus,
+  getIndexReceipt,
+  getRouteBootstrapReceipt,
+
+  getRendererMountApi,
+  getRendererDestroyApi,
+  getRendererMountApiSource,
+  getRendererDestroyApiSource,
+  isRendererMountReceiptMounted,
+  isRendererDestroyReceiptDestroyed,
+
+  verifyHEarthRouteBoundChain,
+  resolveHEarthRouteMountPoints,
+
+  buildHEarthPublicReadoutPayload,
+  renderHEarthSelectedTargetCard,
+  renderHEarthPublicReadout,
+  createTargetButtonDescriptor,
+  renderHEarthTargetList,
+  selectHEarthPublicTarget,
+  bindHEarthInspectionControls,
+
+  attemptHEarthRendererMount,
+  renderHEarthRouteStatus,
+  initializeHEarthRoute,
+  destroyHEarthRoute,
+
+  receipt: H_EARTH_3D_ROUTE_BOOTSTRAP_RECEIPT,
+  getReceipt: getIndexReceipt
+});
+
+export default H_EARTH_3D_INDEX;

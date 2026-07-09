@@ -4,14 +4,14 @@
   <!--
     /showroom/globe/h-earth/diagnostic/index.html
     COMPLETE RENEWED FILE
-    H_EARTH_3D_DIAGNOSTIC_ROUTE_SHELL_FILE_BIRTH_STEP_033E_1_REPORT_WALL_ROUTE_GUARDED_BOOTSTRAP_v1
+    H_EARTH_3D_DIAGNOSTIC_ROUTE_SHELL_FILE_BIRTH_STEP_033E_2_PANEL_COPY_CONTROLS_v1
 
     Renews:
-    H_EARTH_3D_DIAGNOSTIC_ROUTE_SHELL_FILE_BIRTH_STEP_033E_REPORT_WALL_ROUTE_v1
+    H_EARTH_3D_DIAGNOSTIC_ROUTE_SHELL_FILE_BIRTH_STEP_033E_1_REPORT_WALL_ROUTE_GUARDED_BOOTSTRAP_v1
 
     Companion diagnostic bootstrap:
     /showroom/globe/h-earth/diagnostic/index.js
-    H_EARTH_3D_DIAGNOSTIC_BOOTSTRAP_FILE_BIRTH_STEP_033D_ROUTE_REPORT_SPLIT_v1
+    H_EARTH_3D_DIAGNOSTIC_BOOTSTRAP_FILE_BIRTH_STEP_033D_1_IMPORT_CONTRACT_REPAIR_v1
 
     Companion diagnostic stylesheet:
     /showroom/globe/h-earth/diagnostic/index.css
@@ -23,16 +23,17 @@
     H_EARTH_3D_INDEX_PUBLIC_BOOTSTRAP_FILE_BIRTH_STEP_033A_DIAGNOSTIC_ROUTE_SPLIT_RENDERER_031D_COMPAT_v1
 
     Purpose:
-    Dedicated H-Earth diagnostic route shell with guarded diagnostic bootstrap.
-    Hosts operational report cards, compact spatial diagnostic receipts,
-    advanced evidence payload surfaces, route bootstrap receipt exposure,
-    renderer mount receipt exposure, boundary flags, index/diagnostic contract
-    payloads, copy controls, and visible module-import failure reporting.
+    Dedicated H-Earth diagnostic route shell with guarded diagnostic bootstrap
+    and individual panel-copy controls. Hosts operational report cards, compact
+    spatial diagnostic receipts, advanced evidence payload surfaces, route
+    bootstrap receipt exposure, renderer mount receipt exposure, boundary flags,
+    index/diagnostic contract payloads, copy controls, and visible module-import
+    failure reporting.
 
-    Guarded bootstrap:
-    This file uses dynamic import for ./index.js so the diagnostic route can
-    visibly report missing files, syntax failures, missing exports, or upstream
-    named-export mismatches instead of remaining silently at placeholder state.
+    Panel copy:
+    Each diagnostic payload panel now owns a small local copy button that copies
+    the visible payload text from that panel only. This avoids forcing the user
+    to copy the full diagnostic bundle when only one report is needed.
 
     Boundary:
     Diagnostic/report shell only.
@@ -71,17 +72,17 @@
 
   <meta
     name="description"
-    content="Dedicated H-Earth diagnostic route for operational reports, receipts, evidence payloads, boundary flags, and guarded diagnostic bootstrap reporting."
+    content="Dedicated H-Earth diagnostic route for operational reports, receipts, individual evidence payload copying, boundary flags, and guarded diagnostic bootstrap reporting."
   />
 
   <meta
     name="h-earth-diagnostic-route-shell-contract"
-    content="H_EARTH_3D_DIAGNOSTIC_ROUTE_SHELL_FILE_BIRTH_STEP_033E_1_REPORT_WALL_ROUTE_GUARDED_BOOTSTRAP_v1"
+    content="H_EARTH_3D_DIAGNOSTIC_ROUTE_SHELL_FILE_BIRTH_STEP_033E_2_PANEL_COPY_CONTROLS_v1"
   />
 
   <meta
     name="h-earth-diagnostic-bootstrap-contract"
-    content="H_EARTH_3D_DIAGNOSTIC_BOOTSTRAP_FILE_BIRTH_STEP_033D_ROUTE_REPORT_SPLIT_v1"
+    content="H_EARTH_3D_DIAGNOSTIC_BOOTSTRAP_FILE_BIRTH_STEP_033D_1_IMPORT_CONTRACT_REPAIR_v1"
   />
 
   <meta
@@ -96,7 +97,7 @@
 
   <meta
     name="h-earth-boundary"
-    content="diagnostic-report-shell-only; guarded-bootstrap; no-public-renderer-mount; no-webgl; no-canvas; no-svg; no-final-renderer-claim; no-visual-pass-claim; no-validation-claim; no-production-claim; no-runtime-lattice-activation; no-matrix-collapse"
+    content="diagnostic-report-shell-only; panel-copy-controls; guarded-bootstrap; no-public-renderer-mount; no-webgl; no-canvas; no-svg; no-final-renderer-claim; no-visual-pass-claim; no-validation-claim; no-production-claim; no-runtime-lattice-activation; no-matrix-collapse"
   />
 
   <link rel="stylesheet" href="./index.css" />
@@ -109,6 +110,7 @@
     data-h-earth-page-mode="diagnostic-report-route"
     data-h-earth-diagnostic-route-only="true"
     data-h-earth-guarded-bootstrap="true"
+    data-h-earth-panel-copy-controls="true"
     data-h-earth-public-scene-renderer-mount="false"
     data-h-earth-public-route-mutation="false"
     data-h-earth-scene-geometry-created="false"
@@ -176,8 +178,8 @@
 
           <p class="h-earth-3d-diagnostic-status-note">
             Diagnostic route reads evidence only. Public renderer mount remains
-            owned by the public route. If the diagnostic module fails to load,
-            the failure will appear in the report-layer status panel.
+            owned by the public route. Each payload panel can be copied
+            individually after bootstrap.
           </p>
         </aside>
       </section>
@@ -241,11 +243,20 @@
             <h2>Break-location report cards</h2>
           </div>
 
-          <pre
-            id="h-earth-3d-report-layer-status"
-            class="h-earth-3d-report-layer-status"
-          >Report layer status pending.</pre>
+          <button
+            class="h-earth-3d-copy-button h-earth-3d-panel-copy-button"
+            type="button"
+            data-h-earth-copy-panel="h-earth-3d-report-layer-status"
+            data-h-earth-copy-label="Report Layer Status"
+          >
+            Copy Report Layer
+          </button>
         </div>
+
+        <pre
+          id="h-earth-3d-report-layer-status"
+          class="h-earth-3d-report-layer-status"
+        >Report layer status pending.</pre>
 
         <div
           id="h-earth-3d-report-cards"
@@ -269,6 +280,15 @@
               <p class="h-earth-3d-diagnostic-kicker">Operational Stack</p>
               <h2>Report Source Summary</h2>
             </div>
+
+            <button
+              class="h-earth-3d-copy-button h-earth-3d-panel-copy-button"
+              type="button"
+              data-h-earth-copy-panel="h-earth-3d-operational-report-stack-payload"
+              data-h-earth-copy-label="Operational Stack"
+            >
+              Copy This Report
+            </button>
           </div>
 
           <pre
@@ -283,6 +303,15 @@
               <p class="h-earth-3d-diagnostic-kicker">Spatial Diagnostic</p>
               <h2>Compact Receipt</h2>
             </div>
+
+            <button
+              class="h-earth-3d-copy-button h-earth-3d-panel-copy-button"
+              type="button"
+              data-h-earth-copy-panel="h-earth-3d-spatial-summary-payload"
+              data-h-earth-copy-label="Spatial Diagnostic"
+            >
+              Copy This Report
+            </button>
           </div>
 
           <pre
@@ -297,6 +326,15 @@
               <p class="h-earth-3d-diagnostic-kicker">Compositor</p>
               <h2>Composed Frame</h2>
             </div>
+
+            <button
+              class="h-earth-3d-copy-button h-earth-3d-panel-copy-button"
+              type="button"
+              data-h-earth-copy-panel="h-earth-3d-composed-frame-payload"
+              data-h-earth-copy-label="Composed Frame"
+            >
+              Copy This Report
+            </button>
           </div>
 
           <pre
@@ -311,6 +349,15 @@
               <p class="h-earth-3d-diagnostic-kicker">Compositor</p>
               <h2>Receipt Payload</h2>
             </div>
+
+            <button
+              class="h-earth-3d-copy-button h-earth-3d-panel-copy-button"
+              type="button"
+              data-h-earth-copy-panel="h-earth-3d-compositor-receipt-payload"
+              data-h-earth-copy-label="Compositor Receipt"
+            >
+              Copy This Report
+            </button>
           </div>
 
           <pre
@@ -325,6 +372,15 @@
               <p class="h-earth-3d-diagnostic-kicker">Renderer</p>
               <h2>Placement Evidence</h2>
             </div>
+
+            <button
+              class="h-earth-3d-copy-button h-earth-3d-panel-copy-button"
+              type="button"
+              data-h-earth-copy-panel="h-earth-3d-renderer-placement-payload"
+              data-h-earth-copy-label="Renderer Placement"
+            >
+              Copy This Report
+            </button>
           </div>
 
           <pre
@@ -339,6 +395,15 @@
               <p class="h-earth-3d-diagnostic-kicker">Environment</p>
               <h2>Placement Evidence</h2>
             </div>
+
+            <button
+              class="h-earth-3d-copy-button h-earth-3d-panel-copy-button"
+              type="button"
+              data-h-earth-copy-panel="h-earth-3d-environment-placement-payload"
+              data-h-earth-copy-label="Environment Placement"
+            >
+              Copy This Report
+            </button>
           </div>
 
           <pre
@@ -353,6 +418,15 @@
               <p class="h-earth-3d-diagnostic-kicker">Public Route</p>
               <h2>Bootstrap Receipt</h2>
             </div>
+
+            <button
+              class="h-earth-3d-copy-button h-earth-3d-panel-copy-button"
+              type="button"
+              data-h-earth-copy-panel="h-earth-3d-route-bootstrap-receipt"
+              data-h-earth-copy-label="Route Bootstrap Receipt"
+            >
+              Copy This Report
+            </button>
           </div>
 
           <pre
@@ -367,6 +441,15 @@
               <p class="h-earth-3d-diagnostic-kicker">Renderer</p>
               <h2>Mount Receipt</h2>
             </div>
+
+            <button
+              class="h-earth-3d-copy-button h-earth-3d-panel-copy-button"
+              type="button"
+              data-h-earth-copy-panel="h-earth-3d-renderer-mount-receipt"
+              data-h-earth-copy-label="Renderer Mount Receipt"
+            >
+              Copy This Report
+            </button>
           </div>
 
           <pre
@@ -381,6 +464,15 @@
               <p class="h-earth-3d-diagnostic-kicker">Boundary</p>
               <h2>Flags</h2>
             </div>
+
+            <button
+              class="h-earth-3d-copy-button h-earth-3d-panel-copy-button"
+              type="button"
+              data-h-earth-copy-panel="h-earth-3d-boundary-flags"
+              data-h-earth-copy-label="Boundary Flags"
+            >
+              Copy This Report
+            </button>
           </div>
 
           <pre
@@ -395,6 +487,15 @@
               <p class="h-earth-3d-diagnostic-kicker">Contract</p>
               <h2>Public Index</h2>
             </div>
+
+            <button
+              class="h-earth-3d-copy-button h-earth-3d-panel-copy-button"
+              type="button"
+              data-h-earth-copy-panel="h-earth-3d-index-contract"
+              data-h-earth-copy-label="Public Index Contract"
+            >
+              Copy This Report
+            </button>
           </div>
 
           <pre
@@ -409,6 +510,15 @@
               <p class="h-earth-3d-diagnostic-kicker">Contract</p>
               <h2>Diagnostic Route</h2>
             </div>
+
+            <button
+              class="h-earth-3d-copy-button h-earth-3d-panel-copy-button"
+              type="button"
+              data-h-earth-copy-panel="h-earth-3d-diagnostic-contract"
+              data-h-earth-copy-label="Diagnostic Contract"
+            >
+              Copy This Report
+            </button>
           </div>
 
           <pre
@@ -477,6 +587,65 @@
       }
     };
 
+    const copyTextToClipboard = async (text) => {
+      if (
+        globalThis.navigator?.clipboard &&
+        typeof globalThis.navigator.clipboard.writeText === 'function'
+      ) {
+        await globalThis.navigator.clipboard.writeText(text);
+        return true;
+      }
+
+      return false;
+    };
+
+    const bindPanelCopyButtons = () => {
+      const buttons = Array.from(
+        document.querySelectorAll('[data-h-earth-copy-panel]')
+      );
+
+      buttons.forEach((button) => {
+        button.addEventListener('click', async () => {
+          const targetId = button.getAttribute('data-h-earth-copy-panel');
+          const label =
+            button.getAttribute('data-h-earth-copy-label') ||
+            targetId ||
+            'Diagnostic panel';
+
+          const target = targetId ? document.getElementById(targetId) : null;
+
+          if (!target) {
+            writeCopyStatus(`${label} copy failed: target panel not found.`);
+            return;
+          }
+
+          const text = target.textContent || '';
+
+          if (!text.trim()) {
+            writeCopyStatus(`${label} copy skipped: panel is empty.`);
+            return;
+          }
+
+          try {
+            const copied = await copyTextToClipboard(text);
+
+            if (copied) {
+              writeCopyStatus(`${label} copied.`);
+            } else {
+              writeCopyStatus(
+                `${label} prepared, but Clipboard API is unavailable in this browser context.`
+              );
+            }
+          } catch (error) {
+            const message = error instanceof Error ? error.message : String(error);
+            writeCopyStatus(`${label} copy failed: ${message}`);
+          }
+        });
+      });
+
+      return buttons.length;
+    };
+
     const buildVisibleFailurePayload = (error, phase) => {
       const message = error instanceof Error ? error.message : String(error);
       const stack = error instanceof Error ? error.stack : null;
@@ -486,7 +655,7 @@
         receiptType: 'H_EARTH_3D_DIAGNOSTIC_HTML_GUARDED_BOOTSTRAP_FAILURE',
         file: '/showroom/globe/h-earth/diagnostic/index.html',
         contractId:
-          'H_EARTH_3D_DIAGNOSTIC_ROUTE_SHELL_FILE_BIRTH_STEP_033E_1_REPORT_WALL_ROUTE_GUARDED_BOOTSTRAP_v1',
+          'H_EARTH_3D_DIAGNOSTIC_ROUTE_SHELL_FILE_BIRTH_STEP_033E_2_PANEL_COPY_CONTROLS_v1',
         phase,
         status: 'DIAGNOSTIC_BOOTSTRAP_IMPORT_FAILED',
         modulePath: DIAGNOSTIC_MODULE_PATH,
@@ -518,6 +687,7 @@
         boundary: {
           diagnosticRouteOnly: true,
           reportEvidenceExposureOnly: true,
+          panelCopyControls: true,
           publicSceneRendererMount: false,
           publicRouteMutation: false,
           sourceMutation: false,
@@ -571,7 +741,7 @@
         const resolvedStatus = result?.status || 'DIAGNOSTIC_READY';
 
         writeStatus(resolvedStatus);
-        writeCopyStatus('Diagnostic bootstrap completed.');
+        writeCopyStatus('Diagnostic bootstrap completed. Individual panel copy buttons are ready.');
 
         if (resolvedStatus === 'DIAGNOSTIC_READY') {
           setRouteStateClass('h-earth-3d-diagnostic-ready');
@@ -608,6 +778,8 @@
         console.error('[H-Earth diagnostic bootstrap failed]', error);
       }
     };
+
+    bindPanelCopyButtons();
 
     if (runButton) {
       runButton.addEventListener('click', runDiagnostics);

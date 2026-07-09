@@ -1,25 +1,25 @@
 /*
   /showroom/globe/h-earth/index.css
   COMPLETE RENEWED FILE
-  H_EARTH_3D_ROUTE_SHELL_STYLE_FILE_BIRTH_STEP_033J_CHILD_DETAIL_VISIBILITY_CALIBRATION_v1
+  H_EARTH_3D_ROUTE_SHELL_STYLE_FILE_BIRTH_STEP_033K_033B_033I_LOCAL_COPY_ALIGNMENT_v1
 
   Renews:
-  H_EARTH_3D_ROUTE_SHELL_STYLE_FILE_BIRTH_STEP_033I_032H_HANDOFF_ALIGNED_RENDERER_032E_GEOMETRY_032D_ORGANIC_VISUAL_INTERPRETATION_v1
+  H_EARTH_3D_ROUTE_SHELL_STYLE_FILE_BIRTH_STEP_033J_CHILD_DETAIL_VISIBILITY_CALIBRATION_v1
 
   Restores visual grammar from:
   H_EARTH_3D_ROUTE_SHELL_STYLE_FILE_BIRTH_STEP_030F_GROUND_LEVEL_LANDSCAPE_VISUAL_INTERPRETATION_v1
 
   Companion route shell:
   /showroom/globe/h-earth/index.html
-  H_EARTH_3D_ROUTE_SHELL_FILE_BIRTH_STEP_033H_PUBLIC_SHELL_032H_033I_CACHE_ALIGNMENT_v1
+  H_EARTH_3D_ROUTE_SHELL_FILE_BIRTH_STEP_033I_PUBLIC_SHELL_033B_033J_LOCAL_RECEIPT_COPY_ALIGNMENT_v1
 
   Current public bootstrap:
   /showroom/globe/h-earth/index.js
-  H_EARTH_3D_INDEX_BOOTSTRAP_FILE_BIRTH_STEP_032H_LIVE_PUBLIC_RENDERER_RECEIPT_HANDOFF_v1
+  H_EARTH_3D_INDEX_BOOTSTRAP_FILE_BIRTH_STEP_033B_STRUCTURAL_BASELINE_HANDOFF_AND_PUBLIC_SPLIT_ALIGNMENT_v1
 
-  Current diagnostic handoff reader:
-  /showroom/globe/h-earth/diagnostic/index.js
-  H_EARTH_3D_DIAGNOSTIC_BOOTSTRAP_FILE_BIRTH_STEP_033G_SAME_ORIGIN_PUBLIC_RECEIPT_HANDOFF_READER_v1
+  Current diagnostic transition target:
+  /showroom/globe/h-earth/diagnostic/
+  H_EARTH_3D_DIAGNOSTIC_TRANSITION_001_STRUCTURAL_PIPELINE_BASELINE_TO_VISUAL_COMPOSITION_v1
 
   Current renderer / render ports:
   /showroom/globe/h-earth/renderer.js
@@ -36,21 +36,19 @@
   Organic class emission reached 172 nodes. Organic variation ready count is
   172. Warning and failure codes are empty.
 
-  033J correction:
-  033I correctly separated parent descriptor sizing from geometry child sizing,
-  but the visible page still read as dominant horizontal parent bands. This file
-  keeps the parent/child split and adds a visibility calibration pass:
-  - parent descriptor masses are softened;
-  - expanded geometry children are made visually obvious;
-  - organic role details are lifted in opacity, contrast, and separation;
-  - child nodes receive local z-index treatment inside their existing layers;
-  - stage overlays are reduced so renderer details are less flattened.
+  033K correction:
+  Preserves the 033J visual calibration as the last public CSS visual attempt.
+  Aligns CSS metadata with the 033B public bootstrap and 033I public shell.
+  Adds local receipt copy-control styling for same-page receipt copy buttons.
+  Does not attempt another scene visual fix. Visual-composition diagnosis now
+  belongs to the diagnostic transition track.
 
   Scope:
   CSS only.
   This file styles shell, renderer mount, visible candidate descriptors,
-  public controls, compact public diagnostic drawer, renderer-owned candidate
-  nodes, organic child detail interpretation, and visibility calibration.
+  public controls, compact public diagnostic drawer, local receipt copy controls,
+  renderer-owned candidate nodes, organic child detail interpretation, and the
+  preserved 033J visibility calibration.
 
   Boundaries:
   No WebGL activation.
@@ -869,6 +867,41 @@ summary:focus-visible,
   text-transform: uppercase;
 }
 
+button.h-earth-3d-inline-copy-button {
+  appearance: none;
+}
+
+.h-earth-3d-inline-copy-button[data-h-earth-route-to-diagnostic="false"] {
+  border-color: rgba(149, 213, 232, 0.38);
+}
+
+.h-earth-3d-inline-copy-button[data-h-earth-receipt-copy-button="true"] {
+  min-width: 8.75rem;
+}
+
+.h-earth-3d-copy-status {
+  margin: 0;
+  padding: 10px 12px;
+  border: 1px solid rgba(149, 213, 232, 0.22);
+  border-radius: var(--h-earth-radius-sm);
+  background: rgba(149, 213, 232, 0.06);
+  color: var(--h-earth-text-muted);
+  font-size: 0.78rem;
+  line-height: 1.35;
+}
+
+.h-earth-3d-copy-status[data-h-earth-copy-state="success"] {
+  border-color: rgba(174, 232, 194, 0.42);
+  background: rgba(174, 232, 194, 0.08);
+  color: var(--h-earth-ready);
+}
+
+.h-earth-3d-copy-status[data-h-earth-copy-state="failure"] {
+  border-color: rgba(255, 176, 163, 0.46);
+  background: rgba(255, 176, 163, 0.08);
+  color: var(--h-earth-error);
+}
+
 .h-earth-3d-inspection-panel,
 .h-earth-3d-debug,
 .h-earth-3d-receipt-output,
@@ -902,6 +935,10 @@ summary:focus-visible,
 
 .h-earth-3d-claim-boundary p {
   margin: 0;
+}
+
+.h-earth-3d-claim-boundary p + p {
+  margin-top: 0.75rem;
 }
 
 /* Bootstrap status */
@@ -1719,7 +1756,7 @@ summary:focus-visible,
   mix-blend-mode: screen;
 }
 
-/* 033J visibility calibration */
+/* 033J visibility calibration preserved */
 
 .h-earth-render-descriptor-only,
 [class*="h-earth-parent-object-"] {
@@ -2012,6 +2049,19 @@ summary:focus-visible,
     min-height: 42px;
     padding: 10px 12px;
     font-size: 0.70rem;
+  }
+
+  .h-earth-3d-panel-heading-row {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .h-earth-3d-inline-copy-button {
+    width: 100%;
+  }
+
+  .h-earth-3d-copy-status {
+    font-size: 0.72rem;
   }
 
   .h-earth-3d-inspection-panel,

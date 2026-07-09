@@ -4,36 +4,43 @@
   <!--
     /showroom/globe/h-earth/diagnostic/index.html
     COMPLETE RENEWED FILE
-    H_EARTH_3D_DIAGNOSTIC_ROUTE_SHELL_FILE_BIRTH_STEP_033E_2_PANEL_COPY_CONTROLS_v1
+    H_EARTH_3D_DIAGNOSTIC_ROUTE_SHELL_FILE_BIRTH_STEP_033F_LIVE_PUBLIC_RENDERER_SYNC_PANEL_v1
 
     Renews:
-    H_EARTH_3D_DIAGNOSTIC_ROUTE_SHELL_FILE_BIRTH_STEP_033E_1_REPORT_WALL_ROUTE_GUARDED_BOOTSTRAP_v1
+    H_EARTH_3D_DIAGNOSTIC_ROUTE_SHELL_FILE_BIRTH_STEP_033E_2_PANEL_COPY_CONTROLS_v1
 
     Companion diagnostic bootstrap:
     /showroom/globe/h-earth/diagnostic/index.js
-    H_EARTH_3D_DIAGNOSTIC_BOOTSTRAP_FILE_BIRTH_STEP_033D_1_IMPORT_CONTRACT_REPAIR_v1
+    H_EARTH_3D_DIAGNOSTIC_BOOTSTRAP_FILE_BIRTH_STEP_033E_LIVE_PUBLIC_RENDERER_SYNC_EVIDENCE_REQUEST_v1
 
     Companion diagnostic stylesheet:
     /showroom/globe/h-earth/diagnostic/index.css
-    H_EARTH_3D_DIAGNOSTIC_ROUTE_STYLE_FILE_BIRTH_STEP_033F_REPORT_WALL_ROUTE_v1
+    H_EARTH_3D_DIAGNOSTIC_ROUTE_STYLE_FILE_BIRTH_STEP_033G_LIVE_PUBLIC_RENDERER_SYNC_PANEL_v1
 
     Public route:
     /showroom/globe/h-earth/
-    H_EARTH_3D_ROUTE_SHELL_FILE_BIRTH_STEP_033B_PUBLIC_SCENE_ONLY_DIAGNOSTIC_SPLIT_v1
-    H_EARTH_3D_INDEX_PUBLIC_BOOTSTRAP_FILE_BIRTH_STEP_033A_DIAGNOSTIC_ROUTE_SPLIT_RENDERER_031D_COMPAT_v1
+    H_EARTH_3D_ROUTE_SHELL_FILE_BIRTH_STEP_033G_PUBLIC_SHELL_ANCHOR_RESTORATION_FOR_LANDSCAPE_GRAMMAR_v1
+    H_EARTH_3D_INDEX_BOOTSTRAP_FILE_BIRTH_STEP_032G_ENVIRONMENT_021B_DESCRIPTOR_EXPOSURE_SYNC_v1
 
     Purpose:
-    Dedicated H-Earth diagnostic route shell with guarded diagnostic bootstrap
-    and individual panel-copy controls. Hosts operational report cards, compact
-    spatial diagnostic receipts, advanced evidence payload surfaces, route
-    bootstrap receipt exposure, renderer mount receipt exposure, boundary flags,
+    Dedicated H-Earth diagnostic route shell with guarded diagnostic bootstrap,
+    individual panel-copy controls, and live-public-renderer-sync evidence panel.
+    Hosts operational report cards, compact spatial diagnostic receipts, advanced
+    evidence payload surfaces, route bootstrap receipt exposure, renderer mount
+    receipt exposure, live public renderer sync request/evidence, boundary flags,
     index/diagnostic contract payloads, copy controls, and visible module-import
     failure reporting.
 
+    Live public renderer sync:
+    Adds h-earth-3d-live-public-renderer-sync-payload so the diagnostic bootstrap
+    can expose the specific evidence request needed from the mounted public route.
+    This panel does not observe the public route DOM by itself. It gives the
+    public-route extractor and expected contract comparison target needed to
+    determine stale-file, cache, renderer, geometry, CSS, or HTML handoff state.
+
     Panel copy:
-    Each diagnostic payload panel now owns a small local copy button that copies
-    the visible payload text from that panel only. This avoids forcing the user
-    to copy the full diagnostic bundle when only one report is needed.
+    Each diagnostic payload panel owns a local copy button that copies the
+    visible payload text from that panel only.
 
     Boundary:
     Diagnostic/report shell only.
@@ -72,22 +79,22 @@
 
   <meta
     name="description"
-    content="Dedicated H-Earth diagnostic route for operational reports, receipts, individual evidence payload copying, boundary flags, and guarded diagnostic bootstrap reporting."
+    content="Dedicated H-Earth diagnostic route for operational reports, receipts, live public renderer sync evidence, individual evidence payload copying, boundary flags, and guarded diagnostic bootstrap reporting."
   />
 
   <meta
     name="h-earth-diagnostic-route-shell-contract"
-    content="H_EARTH_3D_DIAGNOSTIC_ROUTE_SHELL_FILE_BIRTH_STEP_033E_2_PANEL_COPY_CONTROLS_v1"
+    content="H_EARTH_3D_DIAGNOSTIC_ROUTE_SHELL_FILE_BIRTH_STEP_033F_LIVE_PUBLIC_RENDERER_SYNC_PANEL_v1"
   />
 
   <meta
     name="h-earth-diagnostic-bootstrap-contract"
-    content="H_EARTH_3D_DIAGNOSTIC_BOOTSTRAP_FILE_BIRTH_STEP_033D_1_IMPORT_CONTRACT_REPAIR_v1"
+    content="H_EARTH_3D_DIAGNOSTIC_BOOTSTRAP_FILE_BIRTH_STEP_033E_LIVE_PUBLIC_RENDERER_SYNC_EVIDENCE_REQUEST_v1"
   />
 
   <meta
     name="h-earth-diagnostic-style-contract"
-    content="H_EARTH_3D_DIAGNOSTIC_ROUTE_STYLE_FILE_BIRTH_STEP_033F_REPORT_WALL_ROUTE_v1"
+    content="H_EARTH_3D_DIAGNOSTIC_ROUTE_STYLE_FILE_BIRTH_STEP_033G_LIVE_PUBLIC_RENDERER_SYNC_PANEL_v1"
   />
 
   <meta
@@ -97,10 +104,10 @@
 
   <meta
     name="h-earth-boundary"
-    content="diagnostic-report-shell-only; panel-copy-controls; guarded-bootstrap; no-public-renderer-mount; no-webgl; no-canvas; no-svg; no-final-renderer-claim; no-visual-pass-claim; no-validation-claim; no-production-claim; no-runtime-lattice-activation; no-matrix-collapse"
+    content="diagnostic-report-shell-only; live-public-renderer-sync-panel; panel-copy-controls; guarded-bootstrap; no-public-renderer-mount; no-webgl; no-canvas; no-svg; no-final-renderer-claim; no-visual-pass-claim; no-validation-claim; no-production-claim; no-runtime-lattice-activation; no-matrix-collapse"
   />
 
-  <link rel="stylesheet" href="./index.css" />
+  <link rel="stylesheet" href="./index.css?v=033g" />
 </head>
 
 <body>
@@ -111,6 +118,7 @@
     data-h-earth-diagnostic-route-only="true"
     data-h-earth-guarded-bootstrap="true"
     data-h-earth-panel-copy-controls="true"
+    data-h-earth-live-public-renderer-sync-panel="true"
     data-h-earth-public-scene-renderer-mount="false"
     data-h-earth-public-route-mutation="false"
     data-h-earth-scene-geometry-created="false"
@@ -157,10 +165,10 @@
             This route owns the diagnostic wall removed from the public H-Earth
             scene route. It reads operational reports, compact spatial
             diagnostics, frame summaries, lattice-scope evidence, renderer
-            placement evidence, environment placement evidence, receipts, and
-            boundary flags without claiming renderer pass, visual pass,
-            validation, production, runtime lattice activation, or matrix
-            collapse.
+            placement evidence, live public renderer sync requests, environment
+            placement evidence, receipts, and boundary flags without claiming
+            renderer pass, visual pass, validation, production, runtime lattice
+            activation, or matrix collapse.
           </p>
         </div>
 
@@ -178,8 +186,8 @@
 
           <p class="h-earth-3d-diagnostic-status-note">
             Diagnostic route reads evidence only. Public renderer mount remains
-            owned by the public route. Each payload panel can be copied
-            individually after bootstrap.
+            owned by the public route. The live public renderer sync panel
+            identifies the exact public-route evidence needed next.
           </p>
         </aside>
       </section>
@@ -318,6 +326,32 @@
             id="h-earth-3d-spatial-summary-payload"
             class="h-earth-3d-diagnostic-output"
           >Spatial diagnostic receipt pending.</pre>
+        </article>
+
+        <article
+          class="h-earth-3d-diagnostic-panel h-earth-3d-live-public-renderer-sync-panel"
+          data-h-earth-panel-role="live-public-renderer-sync"
+        >
+          <div class="h-earth-3d-panel-heading-row">
+            <div>
+              <p class="h-earth-3d-diagnostic-kicker">Live Public Route</p>
+              <h2>Renderer Sync Evidence</h2>
+            </div>
+
+            <button
+              class="h-earth-3d-copy-button h-earth-3d-panel-copy-button"
+              type="button"
+              data-h-earth-copy-panel="h-earth-3d-live-public-renderer-sync-payload"
+              data-h-earth-copy-label="Live Public Renderer Sync"
+            >
+              Copy This Report
+            </button>
+          </div>
+
+          <pre
+            id="h-earth-3d-live-public-renderer-sync-payload"
+            class="h-earth-3d-diagnostic-output"
+          >Live public renderer sync payload pending.</pre>
         </article>
 
         <article class="h-earth-3d-diagnostic-panel">
@@ -530,11 +564,12 @@
 
       <section class="h-earth-3d-diagnostic-boundary" aria-label="Diagnostic route boundary">
         <p>
-          Diagnostic route only. This page reads and displays H-Earth reports
-          and receipts. It does not mount the public renderer, create scene
-          geometry, activate WebGL/canvas/SVG, claim final render, claim visual
-          pass, claim validation, claim production, activate lattice runtime, or
-          collapse matrices.
+          Diagnostic route only. This page reads and displays H-Earth reports,
+          receipts, and live public renderer sync evidence requests. It does
+          not mount the public renderer, create scene geometry, activate
+          WebGL/canvas/SVG, claim final render, claim visual pass, claim
+          validation, claim production, activate lattice runtime, or collapse
+          matrices.
         </p>
       </section>
     </div>
@@ -655,7 +690,7 @@
         receiptType: 'H_EARTH_3D_DIAGNOSTIC_HTML_GUARDED_BOOTSTRAP_FAILURE',
         file: '/showroom/globe/h-earth/diagnostic/index.html',
         contractId:
-          'H_EARTH_3D_DIAGNOSTIC_ROUTE_SHELL_FILE_BIRTH_STEP_033E_2_PANEL_COPY_CONTROLS_v1',
+          'H_EARTH_3D_DIAGNOSTIC_ROUTE_SHELL_FILE_BIRTH_STEP_033F_LIVE_PUBLIC_RENDERER_SYNC_PANEL_v1',
         phase,
         status: 'DIAGNOSTIC_BOOTSTRAP_IMPORT_FAILED',
         modulePath: DIAGNOSTIC_MODULE_PATH,
@@ -667,11 +702,13 @@
           './index.js has a syntax error',
           './index.js imports a missing named export from ../index.js',
           './index.js imports a missing named export from ../renderer.js',
+          './index.js imports a missing named export from ../render/geometry.js',
           './index.js imports a missing named export from ../controller.js',
           './index.js imports a missing named export from ../compositor.js',
           './index.js imports a missing named export from ../environment.js',
           './index.js imports a missing named export from ../capacity.js',
-          'GitHub Pages has not refreshed the latest diagnostic files'
+          'GitHub Pages has not refreshed the latest diagnostic files',
+          'The browser is serving stale cached diagnostic HTML/CSS/JS'
         ],
         requiredFiles: [
           '/showroom/globe/h-earth/diagnostic/index.html',
@@ -682,11 +719,30 @@
           '/showroom/globe/h-earth/environment.js',
           '/showroom/globe/h-earth/renderer.js',
           '/showroom/globe/h-earth/compositor.js',
-          '/showroom/globe/h-earth/controller.js'
+          '/showroom/globe/h-earth/controller.js',
+          '/showroom/globe/h-earth/render/geometry.js',
+          '/showroom/globe/h-earth/render/materials.js',
+          '/showroom/globe/h-earth/render/layers.js',
+          '/showroom/globe/h-earth/render/nodes.js'
+        ],
+        expectedPanels: [
+          'h-earth-3d-operational-report-stack-payload',
+          'h-earth-3d-spatial-summary-payload',
+          'h-earth-3d-live-public-renderer-sync-payload',
+          'h-earth-3d-composed-frame-payload',
+          'h-earth-3d-compositor-receipt-payload',
+          'h-earth-3d-renderer-placement-payload',
+          'h-earth-3d-environment-placement-payload',
+          'h-earth-3d-route-bootstrap-receipt',
+          'h-earth-3d-renderer-mount-receipt',
+          'h-earth-3d-boundary-flags',
+          'h-earth-3d-index-contract',
+          'h-earth-3d-diagnostic-contract'
         ],
         boundary: {
           diagnosticRouteOnly: true,
           reportEvidenceExposureOnly: true,
+          livePublicRendererSyncPanel: true,
           panelCopyControls: true,
           publicSceneRendererMount: false,
           publicRouteMutation: false,
@@ -738,10 +794,17 @@
             diagnosticModule.getDiagnosticReceipt();
         }
 
+        if (typeof diagnosticModule.getLivePublicRendererSyncReceipt === 'function') {
+          globalThis.H_EARTH_3D_LIVE_PUBLIC_RENDERER_SYNC_RECEIPT =
+            diagnosticModule.getLivePublicRendererSyncReceipt();
+        }
+
         const resolvedStatus = result?.status || 'DIAGNOSTIC_READY';
 
         writeStatus(resolvedStatus);
-        writeCopyStatus('Diagnostic bootstrap completed. Individual panel copy buttons are ready.');
+        writeCopyStatus(
+          'Diagnostic bootstrap completed. Individual panel copy buttons are ready.'
+        );
 
         if (resolvedStatus === 'DIAGNOSTIC_READY') {
           setRouteStateClass('h-earth-3d-diagnostic-ready');

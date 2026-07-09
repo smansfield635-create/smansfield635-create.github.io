@@ -1,21 +1,28 @@
 // /showroom/globe/h-earth/diagnostic/index.js
 // COMPLETE RENEWED FILE
-// H_EARTH_3D_DIAGNOSTIC_BOOTSTRAP_FILE_BIRTH_STEP_033D_1_IMPORT_CONTRACT_REPAIR_v1
+// H_EARTH_3D_DIAGNOSTIC_BOOTSTRAP_FILE_BIRTH_STEP_033D_2_PUBLIC_STATE_SCOPE_CLARIFICATION_v1
 //
 // Renews:
-// H_EARTH_3D_DIAGNOSTIC_BOOTSTRAP_FILE_BIRTH_STEP_033D_ROUTE_REPORT_SPLIT_v1
+// H_EARTH_3D_DIAGNOSTIC_BOOTSTRAP_FILE_BIRTH_STEP_033D_1_IMPORT_CONTRACT_REPAIR_v1
 //
-// Repair:
+// Preserves repair:
 // Removes the unsupported named import `buildHEarthPublicReadoutPayload` from
 // ../index.js and removes the same symbol from the diagnostic aggregate export.
 // The diagnostic route must not require the public route to export a public
 // readout helper.
 //
+// New clarification:
+// The diagnostic route imports /showroom/globe/h-earth/index.js as a module.
+// That imported public module state is not the same thing as the already-mounted
+// live public route page at /showroom/globe/h-earth/. Therefore, reports now
+// distinguish imported static public module state from live public route DOM
+// bootstrap state.
+//
 // Extracts diagnostic/report logic from:
 // H_EARTH_3D_INDEX_BOOTSTRAP_FILE_BIRTH_STEP_029F_REPORT_LAYER_LATTICE_SCOPE_EVIDENCE_COMPRESSION_v1
 //
 // Complements:
-// H_EARTH_3D_DIAGNOSTIC_ROUTE_SHELL_FILE_BIRTH_STEP_033E_1_REPORT_WALL_ROUTE_GUARDED_BOOTSTRAP_v1
+// H_EARTH_3D_DIAGNOSTIC_ROUTE_SHELL_FILE_BIRTH_STEP_033E_2_PANEL_COPY_CONTROLS_v1
 // H_EARTH_3D_DIAGNOSTIC_ROUTE_STYLE_FILE_BIRTH_STEP_033F_REPORT_WALL_ROUTE_v1
 // H_EARTH_3D_INDEX_PUBLIC_BOOTSTRAP_FILE_BIRTH_STEP_033A_DIAGNOSTIC_ROUTE_SPLIT_RENDERER_031D_COMPAT_v1
 // H_EARTH_3D_ROUTE_SHELL_FILE_BIRTH_STEP_033B_PUBLIC_SCENE_ONLY_DIAGNOSTIC_SPLIT_v1
@@ -25,7 +32,7 @@
 // Dedicated H-Earth diagnostic route bootstrap.
 // Owns operational reports, compact spatial diagnostics, advanced raw evidence,
 // lattice-scope evidence reading, receipt payloads, boundary payloads, copy
-// surfaces, and diagnostic route status.
+// surfaces, public-state scope clarification, and diagnostic route status.
 //
 // Boundary:
 // Diagnostic/report route only. Does not mount the public scene renderer as a
@@ -98,8 +105,10 @@ import {
 
 export const H_EARTH_3D_DIAGNOSTIC_CONTRACT = Object.freeze({
   contractId:
-    'H_EARTH_3D_DIAGNOSTIC_BOOTSTRAP_FILE_BIRTH_STEP_033D_1_IMPORT_CONTRACT_REPAIR_v1',
+    'H_EARTH_3D_DIAGNOSTIC_BOOTSTRAP_FILE_BIRTH_STEP_033D_2_PUBLIC_STATE_SCOPE_CLARIFICATION_v1',
   renews:
+    'H_EARTH_3D_DIAGNOSTIC_BOOTSTRAP_FILE_BIRTH_STEP_033D_1_IMPORT_CONTRACT_REPAIR_v1',
+  previousRenewal:
     'H_EARTH_3D_DIAGNOSTIC_BOOTSTRAP_FILE_BIRTH_STEP_033D_ROUTE_REPORT_SPLIT_v1',
   extractedFrom:
     'H_EARTH_3D_INDEX_BOOTSTRAP_FILE_BIRTH_STEP_029F_REPORT_LAYER_LATTICE_SCOPE_EVIDENCE_COMPRESSION_v1',
@@ -122,6 +131,19 @@ export const H_EARTH_3D_DIAGNOSTIC_CONTRACT = Object.freeze({
     publicRouteMutationRequired: false
   }),
 
+  publicStateScopeClarification: Object.freeze({
+    importedPublicModuleState: true,
+    importedPublicModuleStateIsLivePublicPageState: false,
+    livePublicRouteStateObservableFromDiagnosticPage: false,
+    livePublicRouteReceiptRequiredFromPublicPage: true,
+    livePublicRouteReceiptGlobalName:
+      'globalThis.H_EARTH_3D_ROUTE_BOOTSTRAP_RECEIPT',
+    livePublicRouteResultGlobalName:
+      'globalThis.H_EARTH_3D_ROUTE_BOOTSTRAP_RESULT',
+    diagnosticRouteMayReadStaticDescriptors: true,
+    diagnosticRouteMayNotClaimLivePublicRendererMount: true
+  }),
+
   targetMatrix: 'H-Earth',
   matrixRole: 'Ground-View Matrix',
   activeCell: 'H_EARTH_GROUND_CELL_001',
@@ -137,6 +159,8 @@ export const H_EARTH_3D_DIAGNOSTIC_CONTRACT = Object.freeze({
     compactSpatialDiagnosticReceipt: true,
     advancedRawEvidenceBundle: true,
     latticeScopeEvidenceReader: true,
+    importedPublicModuleStateExposure: true,
+    livePublicRouteStateClarification: true,
     rendererMountReceiptExposure: true,
     composedFramePayloadExposure: true,
     compositorReceiptPayloadExposure: true,
@@ -155,7 +179,8 @@ export const H_EARTH_3D_DIAGNOSTIC_CONTRACT = Object.freeze({
     mutatesPublicRouteShell: false,
     mutatesPublicRouteCss: false,
     mutatesPublicRouteBootstrap: false,
-    requiresPublicReadoutHelperExport: false
+    requiresPublicReadoutHelperExport: false,
+    observesMountedPublicRouteDom: false
   }),
 
   boundaryClaims: Object.freeze({
@@ -182,6 +207,7 @@ export const H_EARTH_3D_DIAGNOSTIC_CONTRACT = Object.freeze({
     claimsActive16x16Runtime: false,
     claimsActive256AddressRuntime: false,
     claimsMirrorManorRouteCanonName: false,
+    claimsLivePublicPageBootstrap: false,
     matrixCollapse: false
   })
 });
@@ -195,6 +221,9 @@ export const H_EARTH_3D_DIAGNOSTIC_BOUNDARY_FLAGS = Object.freeze({
   advancedRawEvidenceBundleAllowed: true,
   copySurfaceAllowed: true,
   latticeScopeEvidenceReadingAllowed: true,
+  importedPublicModuleStateReadingAllowed: true,
+  livePublicRouteStateObservableFromDiagnosticPage: false,
+  livePublicRendererMountClaimFromDiagnosticPage: false,
 
   publicSceneRendererMount: false,
   publicRouteMutation: false,
@@ -272,6 +301,15 @@ export const H_EARTH_3D_DIAGNOSTIC_STATUS_LEVELS = Object.freeze({
   DIAGNOSTIC_READY: 'DIAGNOSTIC_READY',
   DIAGNOSTIC_PARTIAL: 'DIAGNOSTIC_PARTIAL',
   DIAGNOSTIC_FALLBACK_ACTIVE: 'DIAGNOSTIC_FALLBACK_ACTIVE'
+});
+
+export const H_EARTH_3D_PUBLIC_STATE_SCOPE_STATUS = Object.freeze({
+  PUBLIC_ROUTE_IMPORTED_STATIC_STATE:
+    'PUBLIC_ROUTE_IMPORTED_STATIC_STATE',
+  PUBLIC_ROUTE_LIVE_BOOTSTRAP_NOT_OBSERVABLE_FROM_DIAGNOSTIC_ROUTE:
+    'PUBLIC_ROUTE_LIVE_BOOTSTRAP_NOT_OBSERVABLE_FROM_DIAGNOSTIC_ROUTE',
+  PUBLIC_ROUTE_LIVE_RECEIPT_REQUIRED_FROM_PUBLIC_PAGE:
+    'PUBLIC_ROUTE_LIVE_RECEIPT_REQUIRED_FROM_PUBLIC_PAGE'
 });
 
 const H_EARTH_SCENE_IDENTITY = Object.freeze({
@@ -511,6 +549,80 @@ function summarizeReceiptHeader(receipt, fallback = {}) {
     warningCodes: Object.freeze(asArray(receipt.warningCodes)),
     failureCodes: Object.freeze(asArray(receipt.failureCodes))
   });
+}
+
+function summarizeImportedPublicModuleState(routeStatus = getRouteBootstrapStatus()) {
+  const publicReceipt = getRouteBootstrapReceipt();
+
+  return Object.freeze({
+    receiptType: 'H_EARTH_3D_IMPORTED_PUBLIC_MODULE_STATE_SCOPE',
+    file: '/showroom/globe/h-earth/diagnostic/index.js',
+    contractId: H_EARTH_3D_DIAGNOSTIC_CONTRACT.contractId,
+    status:
+      H_EARTH_3D_PUBLIC_STATE_SCOPE_STATUS.PUBLIC_ROUTE_IMPORTED_STATIC_STATE,
+    publicRouteModule: '/showroom/globe/h-earth/index.js',
+    publicRoutePage: '/showroom/globe/h-earth/',
+    importedPublicModuleState: true,
+    importedPublicModuleStateIsLivePublicPageState: false,
+    livePublicRouteStateObservableFromDiagnosticPage: false,
+    livePublicRouteReceiptRequiredFromPublicPage: true,
+    requiredPublicPageGlobals: Object.freeze([
+      'globalThis.H_EARTH_3D_ROUTE_BOOTSTRAP_RECEIPT',
+      'globalThis.H_EARTH_3D_ROUTE_BOOTSTRAP_RESULT'
+    ]),
+
+    importedStatus: routeStatus?.status || routeStatus?.statusLevel || null,
+    importedReceiptStatus: publicReceipt?.status || null,
+
+    importedDomProbe: Object.freeze({
+      routeRootFound: routeStatus?.routeRootFound === true,
+      statusNodeFound: routeStatus?.statusNodeFound === true,
+      fallbackNodeFound: routeStatus?.fallbackNodeFound === true,
+      rendererMountNodeFound: routeStatus?.rendererMountNodeFound === true,
+      note:
+        'False values here are expected when ../index.js is imported by the diagnostic page, because the diagnostic page does not contain the public route DOM mount IDs.'
+    }),
+
+    importedRendererMountState: Object.freeze({
+      rendererMountAttempted: routeStatus?.rendererMountAttempted === true,
+      rendererMounted: routeStatus?.rendererMounted === true,
+      rendererMountReceiptPresent: Boolean(routeStatus?.rendererMountReceipt),
+      note:
+        'This diagnostic route does not mount the public renderer. Live renderer mount must be confirmed on the public route page.'
+    }),
+
+    publicRouteDomIdsNotExpectedOnDiagnosticPage: Object.freeze([
+      'h-earth-3d-route-root',
+      'h-earth-3d-status',
+      'h-earth-3d-fallback',
+      'h-earth-3d-renderer-mount'
+    ]),
+
+    sourceDescriptorEvidenceStillReadable: Object.freeze({
+      publicIndexAggregatePresent: Boolean(H_EARTH_3D_INDEX),
+      publicRouteBootstrapReceiptPresent: Boolean(publicReceipt),
+      capacityReceiptPresent: Boolean(getCapacityReceipt()),
+      environmentReceiptPresent: Boolean(getEnvironmentReceipt()),
+      rendererReceiptPresent: Boolean(getRendererReceipt()),
+      compositorReceiptPresent: Boolean(getCompositorReceipt()),
+      controllerReceiptPresent: Boolean(getControllerReceipt()),
+      candidateRenderScenePresent: Boolean(H_EARTH_3D_CANDIDATE_RENDER_SCENE),
+      composedCandidateFramePresent: Boolean(H_EARTH_3D_COMPOSED_CANDIDATE_FRAME)
+    }),
+
+    boundary: Object.freeze({
+      diagnosticRouteOnly: true,
+      importedModuleStateOnly: true,
+      livePublicPageStateClaim: false,
+      publicRendererMountClaim: false,
+      publicRouteMutation: false,
+      matrixCollapse: false
+    })
+  });
+}
+
+export function getImportedPublicModuleStateReceipt() {
+  return summarizeImportedPublicModuleState(getRouteBootstrapStatus());
 }
 
 function summarizeRendererMountReceipt(receipt) {
@@ -970,6 +1082,8 @@ export function getLatticeScopeReceipt() {
 export function buildHEarthOperationalReportSourceSummary(
   routeStatus = getRouteBootstrapStatus()
 ) {
+  const importedPublicModuleState =
+    summarizeImportedPublicModuleState(routeStatus);
   const rendererMountSummary =
     summarizeRendererMountReceipt(routeStatus?.rendererMountReceipt);
   const environmentSummary = summarizeEnvironmentPlacement(getEnvironmentReceipt());
@@ -986,11 +1100,19 @@ export function buildHEarthOperationalReportSourceSummary(
     contractId: H_EARTH_3D_DIAGNOSTIC_CONTRACT.contractId,
     status:
       routeStatus?.statusLevel ||
+      routeStatus?.status ||
       H_EARTH_3D_DIAGNOSTIC_STATUS_LEVELS.DIAGNOSTIC_READY,
     generatedAt: nowIso(),
     ...H_EARTH_SCENE_IDENTITY,
 
+    publicStateScope: importedPublicModuleState,
+
     routeReady: Object.freeze({
+      scope:
+        H_EARTH_3D_PUBLIC_STATE_SCOPE_STATUS.PUBLIC_ROUTE_IMPORTED_STATIC_STATE,
+      importedStaticPublicModuleState: true,
+      livePublicRouteStateObservableFromDiagnosticPage: false,
+      livePublicRouteReceiptRequiredFromPublicPage: true,
       chainReady: routeStatus?.chainReady === true,
       domReady: routeStatus?.domReady === true,
       controllerReady: routeStatus?.controllerReady === true,
@@ -1001,7 +1123,9 @@ export function buildHEarthOperationalReportSourceSummary(
         routeStatus?.bootstrapReadyDescriptorOnlyNoRendererMountApi === true,
       bootstrapFallbackActive: routeStatus?.bootstrapFallbackActive === true,
       failureCodes: Object.freeze(asArray(routeStatus?.failureCodes)),
-      warningCodes: Object.freeze(asArray(routeStatus?.warningCodes))
+      warningCodes: Object.freeze(asArray(routeStatus?.warningCodes)),
+      interpretation:
+        'These booleans describe the imported ../index.js module inside the diagnostic page, not the mounted public route page.'
     }),
 
     evidenceAvailability: Object.freeze({
@@ -1015,6 +1139,7 @@ export function buildHEarthOperationalReportSourceSummary(
       composedCandidateFramePresent: Boolean(H_EARTH_3D_COMPOSED_CANDIDATE_FRAME),
       candidateRenderScenePresent: Boolean(H_EARTH_3D_CANDIDATE_RENDER_SCENE),
       rendererMountReceiptPresent: Boolean(routeStatus?.rendererMountReceipt),
+      rendererMountReceiptPresentMeansLivePublicRouteMounted: false,
       latticeScopeEvidencePresent:
         latticeScopeSummary.latticeScopeEvidencePresent,
       latticeHintEvidencePresent:
@@ -1065,17 +1190,25 @@ export function buildHEarthSpatialDiagnosticReceipt(
       'H_EARTH_3D_INDEX_BOOTSTRAP_FILE_BIRTH_STEP_029F_REPORT_LAYER_LATTICE_SCOPE_EVIDENCE_COMPRESSION_v1',
     status:
       routeStatus?.statusLevel ||
+      routeStatus?.status ||
       H_EARTH_3D_DIAGNOSTIC_STATUS_LEVELS.DIAGNOSTIC_READY,
     purpose:
       'Compact report-layer evidence source for break-location classification without embedding the full raw receipt tree.',
     reportPrinciple: H_EARTH_3D_DIAGNOSTIC_CONTRACT.reportPrinciple,
 
+    publicStateScope:
+      summarizeImportedPublicModuleState(routeStatus),
+
     currentDiagnosticQuestion:
-      'Which lane owns the next break: lattice/source, environment, compositor, geometry, renderer, CSS, action bridge, or boundary?',
+      'Which lane owns the next break: lattice/source, environment, compositor, geometry, renderer, CSS, action bridge, boundary, or public-route live-state handoff?',
 
     reportSourceSummary,
 
     nextDecisionRule: Object.freeze({
+      ifLivePublicRouteStateNeeded:
+        'Open /showroom/globe/h-earth/ and read globalThis.H_EARTH_3D_ROUTE_BOOTSTRAP_RECEIPT from that public page context.',
+      ifImportedPublicModuleShowsBootstrapNotStarted:
+        'Do not treat this alone as public route failure. Diagnostic page imports ../index.js without the public route DOM mount IDs.',
       ifLatticeStatusNotExposed:
         'Do not claim active lattice. Inspect source/environment for formal lattice scope before lattice mapping.',
       ifEnvironmentCoveragePartial:
@@ -1113,6 +1246,9 @@ export function buildHEarthSpatialDiagnosticEvidenceBundle(
       'Explicit advanced evidence bundle. This is not the default public route bootstrap receipt payload.',
     ...H_EARTH_SCENE_IDENTITY,
 
+    publicStateScope:
+      summarizeImportedPublicModuleState(routeStatus),
+
     operationalReportSourceSummary:
       buildHEarthOperationalReportSourceSummary(routeStatus),
 
@@ -1124,8 +1260,8 @@ export function buildHEarthSpatialDiagnosticEvidenceBundle(
       rendererReceipt: getRendererReceipt(),
       compositorReceipt: getCompositorReceipt(),
       controllerReceipt: getControllerReceipt(),
-      publicRouteBootstrapReceipt: getRouteBootstrapReceipt(),
-      publicRouteBootstrapStatus: getRouteBootstrapStatus(),
+      importedPublicRouteBootstrapReceipt: getRouteBootstrapReceipt(),
+      importedPublicRouteBootstrapStatus: getRouteBootstrapStatus(),
       publicIndexAggregate: H_EARTH_3D_INDEX,
 
       capacityAggregate: H_EARTH_3D_CAPACITY,
@@ -1138,13 +1274,15 @@ export function buildHEarthSpatialDiagnosticEvidenceBundle(
       candidateRenderScene: H_EARTH_3D_CANDIDATE_RENDER_SCENE,
       renderVolumeModel: H_EARTH_3D_RENDER_VOLUME_MODEL,
       renderPorts: H_EARTH_3D_RENDER_PORTS,
-      rendererMountReceipt: routeStatus?.rendererMountReceipt || null
+      importedRendererMountReceipt: routeStatus?.rendererMountReceipt || null
     }),
 
     boundary: Object.freeze({
       advancedRawEvidenceOnly: true,
       defaultBootstrapReceiptPayload: false,
       routeReportLayerEvidence: true,
+      importedPublicModuleStateOnly: true,
+      livePublicPageStateClaim: false,
       mutationClaim: false,
       renderingBehaviorChangeClaim: false,
       latticeActivationClaim: false,
@@ -1169,21 +1307,25 @@ function buildDiagnosticReportCards(routeStatus = getRouteBootstrapStatus()) {
   const environment = reportSourceSummary.environmentSummary;
   const compositor = reportSourceSummary.compositorSummary;
   const renderer = reportSourceSummary.rendererPlacementSummary;
-  const routeReady = reportSourceSummary.routeReady;
 
   return Object.freeze([
     Object.freeze({
       id: 'route',
-      title: 'Route Bootstrap',
-      status: routeReady.bootstrapFallbackActive
-        ? 'FALLBACK'
-        : routeReady.bootstrapReadyCandidateOnly
-          ? 'READY'
-          : 'DESCRIPTOR_READY',
-      severity: routeReady.bootstrapFallbackActive ? 'WARN' : 'OK',
-      summary: routeReady.bootstrapFallbackActive
-        ? 'Public route reports fallback state.'
-        : 'Public route bootstrap is available for diagnostic reading.'
+      title: 'Public Route State Scope',
+      status:
+        H_EARTH_3D_PUBLIC_STATE_SCOPE_STATUS.PUBLIC_ROUTE_IMPORTED_STATIC_STATE,
+      severity: 'INFO',
+      summary:
+        'Public route source/module state is available. Live public route DOM bootstrap is not observable from this diagnostic page.'
+    }),
+    Object.freeze({
+      id: 'live-public-route',
+      title: 'Live Public Route Receipt',
+      status:
+        H_EARTH_3D_PUBLIC_STATE_SCOPE_STATUS.PUBLIC_ROUTE_LIVE_RECEIPT_REQUIRED_FROM_PUBLIC_PAGE,
+      severity: 'HELD',
+      summary:
+        'To prove live renderer mount, open the public H-Earth route and read globalThis.H_EARTH_3D_ROUTE_BOOTSTRAP_RECEIPT from that page context.'
     }),
     Object.freeze({
       id: 'lattice',
@@ -1224,9 +1366,8 @@ function buildDiagnosticReportCards(routeStatus = getRouteBootstrapStatus()) {
       title: 'Renderer Placement',
       status: renderer?.candidateRenderScenePresent ? 'PRESENT' : 'MISSING',
       severity: renderer?.candidateRenderScenePresent ? 'INFO' : 'WARN',
-      summary: renderer?.mountedReceiptSummary
-        ? `Mount receipt read. Mounted: ${renderer.mountedReceiptSummary.rendererMounted}.`
-        : 'Renderer placement summary available without current mount receipt.'
+      summary:
+        'Renderer descriptors and candidate scene are readable here. Live renderer mount receipt must be confirmed on the public route page.'
     }),
     Object.freeze({
       id: 'boundary',
@@ -1234,7 +1375,7 @@ function buildDiagnosticReportCards(routeStatus = getRouteBootstrapStatus()) {
       status: 'PRESERVED',
       severity: 'OK',
       summary:
-        'Diagnostic route does not claim renderer pass, visual pass, validation, production, lattice activation, or matrix collapse.'
+        'Diagnostic route does not claim renderer pass, visual pass, validation, production, lattice activation, live public route bootstrap, or matrix collapse.'
     })
   ]);
 }
@@ -1280,6 +1421,7 @@ function buildDiagnosticPayloadSet(routeStatus = getRouteBootstrapStatus()) {
   const reportSourceSummary =
     buildHEarthOperationalReportSourceSummary(routeStatus);
   const routeBootstrapReceipt = getRouteBootstrapReceipt();
+  const publicStateScope = summarizeImportedPublicModuleState(routeStatus);
 
   return Object.freeze({
     status: Object.freeze({
@@ -1288,8 +1430,9 @@ function buildDiagnosticPayloadSet(routeStatus = getRouteBootstrapStatus()) {
       contractId: H_EARTH_3D_DIAGNOSTIC_CONTRACT.contractId,
       generatedAt: nowIso(),
       statusLevel: H_EARTH_3D_DIAGNOSTIC_STATUS_LEVELS.DIAGNOSTIC_READY,
-      publicRouteStatus: routeStatus || null,
-      publicRouteReceiptPresent: Boolean(routeBootstrapReceipt),
+      importedPublicModuleStatus: routeStatus || null,
+      importedPublicRouteReceiptPresent: Boolean(routeBootstrapReceipt),
+      publicStateScope,
       diagnosticRouteOnly: true,
       boundary: H_EARTH_3D_DIAGNOSTIC_BOUNDARY_FLAGS
     }),
@@ -1329,9 +1472,10 @@ function buildDiagnosticPayloadSet(routeStatus = getRouteBootstrapStatus()) {
         'H_EARTH_3D_RENDERER_PLACEMENT_EVIDENCE_EXPOSURE_COMPACT',
       file: '/showroom/globe/h-earth/diagnostic/index.js',
       purpose:
-        'Compact renderer placement evidence for transform/placement/geometry break-location classification.',
+        'Compact renderer placement evidence for transform/placement/geometry break-location classification. This does not prove live public route renderer mount.',
       rendererPlacementEvidence:
         reportSourceSummary.rendererPlacementSummary,
+      liveRendererMountMustBeConfirmedOnPublicRoute: true,
       rawRendererEvidenceAvailableInAdvancedBundle: true
     }),
 
@@ -1353,7 +1497,15 @@ function buildDiagnosticPayloadSet(routeStatus = getRouteBootstrapStatus()) {
       })
     }),
 
-    routeBootstrapReceipt,
+    routeBootstrapReceipt: Object.freeze({
+      receiptType:
+        'H_EARTH_3D_IMPORTED_PUBLIC_ROUTE_BOOTSTRAP_RECEIPT_DIAGNOSTIC_EXPOSURE',
+      file: '/showroom/globe/h-earth/diagnostic/index.js',
+      source: '../index.js',
+      publicStateScope,
+      importedPublicRouteBootstrapReceipt: routeBootstrapReceipt,
+      livePublicRouteReceiptRequiredFromPublicPage: true
+    }),
 
     rendererMountReceipt: Object.freeze({
       receiptType: 'H_EARTH_3D_RENDERER_MOUNT_RECEIPT_DIAGNOSTIC_EXPOSURE',
@@ -1361,6 +1513,8 @@ function buildDiagnosticPayloadSet(routeStatus = getRouteBootstrapStatus()) {
       rendererMountReceiptPresent: Boolean(routeStatus?.rendererMountReceipt),
       rendererMountReceiptSummary:
         summarizeRendererMountReceipt(routeStatus?.rendererMountReceipt),
+      publicStateScope,
+      liveRendererMountMustBeConfirmedOnPublicRoute: true,
       rawRendererMountReceiptAvailableInAdvancedBundle: true
     }),
 
@@ -1379,7 +1533,8 @@ function buildDiagnosticPayloadSet(routeStatus = getRouteBootstrapStatus()) {
       receiptType: 'H_EARTH_3D_INDEX_CONTRACT_DIAGNOSTIC_EXPOSURE',
       file: '/showroom/globe/h-earth/diagnostic/index.js',
       publicIndexContract: H_EARTH_3D_INDEX?.contract || null,
-      publicIndexReceipt: routeBootstrapReceipt || null
+      importedPublicIndexReceipt: routeBootstrapReceipt || null,
+      publicStateScope
     }),
 
     diagnosticContract: Object.freeze({
@@ -1640,6 +1795,8 @@ export function initializeHEarthDiagnosticRoute(options = {}) {
     renderResult,
     copyControls,
     routeStatus,
+    publicStateScope:
+      summarizeImportedPublicModuleState(routeStatus),
     spatialDiagnosticReceipt:
       buildHEarthSpatialDiagnosticReceipt(routeStatus),
     spatialDiagnosticEvidenceBundle:
@@ -1663,12 +1820,19 @@ export const H_EARTH_3D_DIAGNOSTIC_RECEIPT = Object.freeze({
   file: '/showroom/globe/h-earth/diagnostic/index.js',
   contractId: H_EARTH_3D_DIAGNOSTIC_CONTRACT.contractId,
   renews:
+    'H_EARTH_3D_DIAGNOSTIC_BOOTSTRAP_FILE_BIRTH_STEP_033D_1_IMPORT_CONTRACT_REPAIR_v1',
+  previousRenewal:
     'H_EARTH_3D_DIAGNOSTIC_BOOTSTRAP_FILE_BIRTH_STEP_033D_ROUTE_REPORT_SPLIT_v1',
   extractedFrom:
     'H_EARTH_3D_INDEX_BOOTSTRAP_FILE_BIRTH_STEP_029F_REPORT_LAYER_LATTICE_SCOPE_EVIDENCE_COMPRESSION_v1',
   diagnosticRouteOnly: true,
   importContractRepairApplied: true,
   unsupportedPublicReadoutImportRemoved: true,
+  publicStateScopeClarificationApplied: true,
+  importedPublicModuleStateReadable: true,
+  importedPublicModuleStateIsLivePublicPageState: false,
+  livePublicRouteStateObservableFromDiagnosticPage: false,
+  livePublicRouteReceiptRequiredFromPublicPage: true,
   operationalReportSourceSummaryDefined: true,
   compactSpatialDiagnosticReceiptDefined: true,
   advancedRawEvidenceBundleDefined: true,
@@ -1705,6 +1869,7 @@ export const H_EARTH_3D_DIAGNOSTIC = Object.freeze({
   mountContract: H_EARTH_3D_DIAGNOSTIC_MOUNT_CONTRACT,
   latticeScopeStatus: H_EARTH_3D_LATTICE_SCOPE_STATUS,
   statusLevels: H_EARTH_3D_DIAGNOSTIC_STATUS_LEVELS,
+  publicStateScopeStatus: H_EARTH_3D_PUBLIC_STATE_SCOPE_STATUS,
 
   capacity: H_EARTH_3D_CAPACITY,
   environment: H_EARTH_3D_ENVIRONMENT,
@@ -1718,7 +1883,7 @@ export const H_EARTH_3D_DIAGNOSTIC = Object.freeze({
   rendererReceipt: H_EARTH_3D_RENDERER_RECEIPT,
   compositorReceipt: H_EARTH_3D_COMPOSITOR_RECEIPT,
   controllerReceipt: H_EARTH_3D_CONTROLLER_RECEIPT,
-  publicRouteBootstrapReceipt: H_EARTH_3D_ROUTE_BOOTSTRAP_RECEIPT,
+  importedPublicRouteBootstrapReceipt: H_EARTH_3D_ROUTE_BOOTSTRAP_RECEIPT,
 
   candidateRenderScene: H_EARTH_3D_CANDIDATE_RENDER_SCENE,
   composedCandidateFrame: H_EARTH_3D_COMPOSED_CANDIDATE_FRAME,
@@ -1738,6 +1903,8 @@ export const H_EARTH_3D_DIAGNOSTIC = Object.freeze({
 
   getRouteBootstrapReceipt,
   getRouteBootstrapStatus,
+  summarizeImportedPublicModuleState,
+  getImportedPublicModuleStateReceipt,
 
   summarizeHEarthLatticeScope,
   getLatticeScopeReceipt,

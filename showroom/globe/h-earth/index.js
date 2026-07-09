@@ -1,7 +1,29 @@
 /*
   /showroom/globe/h-earth/index.js
   COMPLETE RENEWED FILE
+  H_EARTH_3D_INDEX_BOOTSTRAP_FILE_BIRTH_STEP_032G_ENVIRONMENT_021B_DESCRIPTOR_EXPOSURE_SYNC_v1
+
+  Renews:
   H_EARTH_3D_INDEX_BOOTSTRAP_FILE_BIRTH_STEP_032F_RENDERER_032D_COMPOSITOR_SYNC_v1
+
+  Purpose:
+  Preserve the existing public H-Earth route bootstrap, renderer/compositor sync,
+  source-canon lattice exposure, compact report surfaces, and advanced evidence
+  bundle while synchronizing the environment summary reader with the renewed
+  environment descriptor coverage file:
+
+  H_EARTH_3D_ENVIRONMENT_FILE_BIRTH_STEP_021B_DESCRIPTOR_COVERAGE_EXPOSURE_v1
+
+  Repair:
+  summarizeEnvironmentPlacement() now forwards descriptor coverage fields from
+  getEnvironmentReceipt() instead of stripping them from the compact environment
+  placement report.
+
+  Boundary:
+  No renderer behavior change. No environment construction. No compositor
+  mutation. No controller mutation. No CSS mutation. No HTML mutation. No WebGL.
+  No canvas. No renderer-pass claim. No visual-pass claim. No validation claim.
+  No production claim. No traversal. No survival simulation. No matrix collapse.
 */
 
 import {
@@ -97,9 +119,13 @@ export function getSourceCanonLatticeExposureReceipt() {
 
 export const H_EARTH_3D_INDEX_CONTRACT = Object.freeze({
   contractId:
-    'H_EARTH_3D_INDEX_BOOTSTRAP_FILE_BIRTH_STEP_032F_RENDERER_032D_COMPOSITOR_SYNC_v1',
+    'H_EARTH_3D_INDEX_BOOTSTRAP_FILE_BIRTH_STEP_032G_ENVIRONMENT_021B_DESCRIPTOR_EXPOSURE_SYNC_v1',
   renewedFrom:
+    'H_EARTH_3D_INDEX_BOOTSTRAP_FILE_BIRTH_STEP_032F_RENDERER_032D_COMPOSITOR_SYNC_v1',
+  previousSourceCanonRenewal:
     'H_EARTH_3D_INDEX_BOOTSTRAP_FILE_BIRTH_STEP_029G_SOURCE_CANON_LATTICE_EXPOSURE_SYNC_v1',
+  environmentCompatibilityTarget:
+    'H_EARTH_3D_ENVIRONMENT_FILE_BIRTH_STEP_021B_DESCRIPTOR_COVERAGE_EXPOSURE_v1',
   rendererCompatibilityTarget:
     'H_EARTH_3D_RENDERER_FILE_BIRTH_STEP_032D_OPTIMIZED_LATTICE_ADMISSION_RENDERER_WIRING_v1',
   compositorCompatibilityTarget:
@@ -117,8 +143,10 @@ export const H_EARTH_3D_INDEX_CONTRACT = Object.freeze({
   firstReadout: 'Ground Condition Read',
   firstReceipt: 'H_EARTH_GROUND_INSPECTION_RECEIPT',
   renewalScope: Object.freeze({
-    renderer032DMountReceiptConsumption: true,
-    compositorParentDescriptorFrameConsumption: true,
+    environment021BDescriptorCoverageSync: true,
+    forwardsEnvironmentDescriptorCoverageFields: true,
+    preservesRenderer032DMountReceiptConsumption: true,
+    preservesCompositorParentDescriptorFrameConsumption: true,
     latticeSourceCanonMirrorPreserved: true,
     reportLayerEvidenceCompressionPreserved: true,
     compactBootstrapReceiptPreserved: true,
@@ -168,6 +196,7 @@ export const H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS = Object.freeze({
   explicitAdvancedRawEvidenceBundleAllowedWithinCandidateBoundary: true,
   latticeScopeEvidenceReadingAllowedWithinCandidateBoundary: true,
   sourceCanonLatticeExposureReadingAllowedWithinCandidateBoundary: true,
+  environmentDescriptorCoverageReadingAllowedWithinCandidateBoundary: true,
   rendererMountOnlyIfCanonApiExists: true,
   aggregateRendererMountApiPreferred: true,
   namedRendererMountApiAllowed: true,
@@ -850,12 +879,55 @@ function summarizeEnvironmentPlacement(receipt = getEnvironmentReceipt()) {
   if (!receipt) return null;
 
   const serialized = lowerSerialized(receipt);
-  const detectedSceneTokens = H_EARTH_EXPECTED_ENVIRONMENT_TOKENS.filter((token) =>
-    serialized.includes(token)
-  );
+
+  const detectedSceneTokens = Array.isArray(receipt.detectedSceneTokens)
+    ? receipt.detectedSceneTokens
+    : H_EARTH_EXPECTED_ENVIRONMENT_TOKENS.filter((token) =>
+        serialized.includes(token)
+      );
+
+  const expectedSceneTokens = Array.isArray(receipt.expectedSceneTokens)
+    ? receipt.expectedSceneTokens
+    : H_EARTH_EXPECTED_ENVIRONMENT_TOKENS;
+
+  const missingSceneTokens = Array.isArray(receipt.missingSceneTokens)
+    ? receipt.missingSceneTokens
+    : expectedSceneTokens.filter((token) => !detectedSceneTokens.includes(token));
 
   return Object.freeze({
     ...summarizeReceiptHeader(receipt),
+
+    coordinateSystemConsumed: receipt.coordinateSystemConsumed === true,
+    scaleModelConsumed: receipt.scaleModelConsumed === true,
+    worldBoundsConsumed: receipt.worldBoundsConsumed === true,
+    depthModelConsumed: receipt.depthModelConsumed === true,
+    zoneBandsConsumed: receipt.zoneBandsConsumed === true,
+    primitiveSchemaConsumed: receipt.primitiveSchemaConsumed === true,
+    materialIdentitiesConsumed: receipt.materialIdentitiesConsumed === true,
+    objectCapacityReferencesConsumed:
+      receipt.objectCapacityReferencesConsumed === true,
+    candidatePlacementHintsConsumed:
+      receipt.candidatePlacementHintsConsumed === true,
+    environmentalFormGrammarConsumed:
+      receipt.environmentalFormGrammarConsumed === true,
+    detailDensityModelConsumed: receipt.detailDensityModelConsumed === true,
+    shapeIrregularityModelConsumed:
+      receipt.shapeIrregularityModelConsumed === true,
+    silhouetteModelConsumed: receipt.silhouetteModelConsumed === true,
+    contextCompressionConsumed: receipt.contextCompressionConsumed === true,
+    inspectionRadiusModelConsumed:
+      receipt.inspectionRadiusModelConsumed === true,
+    cameraCapacityReferenced: receipt.cameraCapacityReferenced === true,
+    inspectionAnchorsConsumed: receipt.inspectionAnchorsConsumed === true,
+    zoneAdjacencyModelConsumed: receipt.zoneAdjacencyModelConsumed === true,
+    expansionGuardsPreserved: receipt.expansionGuardsPreserved === true,
+    rendererPermissionFlagsPreserved:
+      receipt.rendererPermissionFlagsPreserved === true,
+    forbiddenCapabilityFlagsPreserved:
+      receipt.forbiddenCapabilityFlagsPreserved === true,
+
+    cleanupApplied: receipt.cleanupApplied || null,
+
     resolvedObjects: receipt.resolvedObjects ?? null,
     resolvedZones: receipt.resolvedZones ?? null,
     resolvedInspectableAnchors: receipt.resolvedInspectableAnchors ?? null,
@@ -863,8 +935,47 @@ function summarizeEnvironmentPlacement(receipt = getEnvironmentReceipt()) {
     resolvedMaterialChannels: receipt.resolvedMaterialChannels ?? null,
     resolvedPrimitiveLinks: receipt.resolvedPrimitiveLinks ?? null,
     environmentCoverageRatio: receipt.environmentCoverageRatio ?? null,
+
+    descriptorCoverageApplied:
+      receipt.descriptorCoverageApplied === true,
+    descriptorCoveragePresent:
+      receipt.descriptorCoveragePresent === true,
+    fullDescriptorCoverage:
+      receipt.fullDescriptorCoverage === true,
+    descriptorCoverageRatio:
+      receipt.descriptorCoverageRatio ?? null,
+    expectedSceneTokens: Object.freeze(expectedSceneTokens),
     detectedSceneTokens: Object.freeze(detectedSceneTokens),
-    expectedSceneTokens: H_EARTH_EXPECTED_ENVIRONMENT_TOKENS,
+    missingSceneTokens: Object.freeze(missingSceneTokens),
+
+    shorelineDescriptorCoverage:
+      receipt.shorelineDescriptorCoverage || null,
+    surfaceDescriptorCoverage:
+      receipt.surfaceDescriptorCoverage || null,
+    waterDescriptorCoverage:
+      receipt.waterDescriptorCoverage || null,
+    rockDescriptorCoverage:
+      receipt.rockDescriptorCoverage || null,
+    airDescriptorCoverage:
+      receipt.airDescriptorCoverage || null,
+    manorDescriptorCoverage:
+      receipt.manorDescriptorCoverage || null,
+    descriptorCoverageSummary:
+      receipt.descriptorCoverageSummary || null,
+
+    descriptorCoverageSync: Object.freeze({
+      environment021BTarget:
+        'H_EARTH_3D_ENVIRONMENT_FILE_BIRTH_STEP_021B_DESCRIPTOR_COVERAGE_EXPOSURE_v1',
+      descriptorFieldsForwardedByIndex032G: true,
+      receiptContractObserved: receipt.contractId || null,
+      receiptStatusObserved: receipt.status || null,
+      descriptorCoverageObserved:
+        receipt.descriptorCoveragePresent === true &&
+        receipt.fullDescriptorCoverage === true,
+      fallbackTokenScanUsed: !Array.isArray(receipt.detectedSceneTokens),
+      fallbackMissingSceneTokens: Object.freeze(missingSceneTokens)
+    }),
+
     firstAction: receipt.firstAction || 'Inspect Ground',
     firstReadout: receipt.firstReadout || 'Ground Condition Read',
     firstReceipt: receipt.firstReceipt || 'H_EARTH_GROUND_INSPECTION_RECEIPT',
@@ -1127,6 +1238,10 @@ export function buildHEarthOperationalReportSourceSummary(status = latestRouteBo
       sourceLatticeAuthority: latticeScopeSummary.sourceLatticeAuthority,
       source256AddressFieldDescriptor:
         latticeScopeSummary.source256AddressFieldDescriptor,
+      environmentDescriptorCoveragePresent:
+        getEnvironmentReceipt()?.descriptorCoveragePresent === true,
+      environmentFullDescriptorCoverage:
+        getEnvironmentReceipt()?.fullDescriptorCoverage === true,
       advancedRawEvidenceBundleAvailable: true
     }),
     sourceCanonLatticeExposureSummary:
@@ -1955,6 +2070,23 @@ export function buildHEarthRouteBootstrapReceipt(status = latestRouteBootstrapSt
       renderer: summarizeReceiptHeader(getRendererReceipt()),
       compositor: summarizeReceiptHeader(getCompositorReceipt()),
       controller: summarizeReceiptHeader(getControllerReceipt())
+    }),
+    environmentDescriptorCoverageSync: Object.freeze({
+      indexContractId: H_EARTH_3D_INDEX_CONTRACT.contractId,
+      environmentCompatibilityTarget:
+        H_EARTH_3D_INDEX_CONTRACT.environmentCompatibilityTarget,
+      environmentReceiptContractId: getEnvironmentReceipt()?.contractId || null,
+      environmentReceiptStatus: getEnvironmentReceipt()?.status || null,
+      descriptorCoveragePresent:
+        getEnvironmentReceipt()?.descriptorCoveragePresent === true,
+      fullDescriptorCoverage:
+        getEnvironmentReceipt()?.fullDescriptorCoverage === true,
+      descriptorCoverageRatio:
+        getEnvironmentReceipt()?.descriptorCoverageRatio ?? null,
+      missingSceneTokens:
+        Array.isArray(getEnvironmentReceipt()?.missingSceneTokens)
+          ? Object.freeze(getEnvironmentReceipt().missingSceneTokens)
+          : null
     }),
     spatialDiagnosticReceipt: buildHEarthSpatialDiagnosticReceipt(status),
     latticeScope: summarizeHEarthLatticeScope(),

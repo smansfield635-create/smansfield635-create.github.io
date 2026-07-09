@@ -1,11 +1,22 @@
 // /showroom/globe/h-earth/diagnostic/index.js
-// COMPLETE NEW FILE
+// COMPLETE RENEWED FILE
+// H_EARTH_3D_DIAGNOSTIC_BOOTSTRAP_FILE_BIRTH_STEP_033D_1_IMPORT_CONTRACT_REPAIR_v1
+//
+// Renews:
 // H_EARTH_3D_DIAGNOSTIC_BOOTSTRAP_FILE_BIRTH_STEP_033D_ROUTE_REPORT_SPLIT_v1
+//
+// Repair:
+// Removes the unsupported named import `buildHEarthPublicReadoutPayload` from
+// ../index.js and removes the same symbol from the diagnostic aggregate export.
+// The diagnostic route must not require the public route to export a public
+// readout helper.
 //
 // Extracts diagnostic/report logic from:
 // H_EARTH_3D_INDEX_BOOTSTRAP_FILE_BIRTH_STEP_029F_REPORT_LAYER_LATTICE_SCOPE_EVIDENCE_COMPRESSION_v1
 //
 // Complements:
+// H_EARTH_3D_DIAGNOSTIC_ROUTE_SHELL_FILE_BIRTH_STEP_033E_1_REPORT_WALL_ROUTE_GUARDED_BOOTSTRAP_v1
+// H_EARTH_3D_DIAGNOSTIC_ROUTE_STYLE_FILE_BIRTH_STEP_033F_REPORT_WALL_ROUTE_v1
 // H_EARTH_3D_INDEX_PUBLIC_BOOTSTRAP_FILE_BIRTH_STEP_033A_DIAGNOSTIC_ROUTE_SPLIT_RENDERER_031D_COMPAT_v1
 // H_EARTH_3D_ROUTE_SHELL_FILE_BIRTH_STEP_033B_PUBLIC_SCENE_ONLY_DIAGNOSTIC_SPLIT_v1
 // H_EARTH_3D_ROUTE_SHELL_STYLE_FILE_BIRTH_STEP_033C_PUBLIC_SCENE_ONLY_DIAGNOSTIC_SPLIT_v1
@@ -74,8 +85,6 @@ import {
   H_EARTH_3D_CONTROLLER_BOUNDARY_FLAGS,
   getSelectableTarget,
   getControllerTargetClassification,
-  resolveInspectGroundControllerBridge,
-  resolveGroundConditionReadBridge,
   getControllerReceipt
 } from '../controller.js';
 
@@ -84,12 +93,13 @@ import {
   H_EARTH_3D_ROUTE_BOOTSTRAP_RECEIPT,
   H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS,
   getRouteBootstrapReceipt,
-  getRouteBootstrapStatus,
-  buildHEarthPublicReadoutPayload
+  getRouteBootstrapStatus
 } from '../index.js';
 
 export const H_EARTH_3D_DIAGNOSTIC_CONTRACT = Object.freeze({
   contractId:
+    'H_EARTH_3D_DIAGNOSTIC_BOOTSTRAP_FILE_BIRTH_STEP_033D_1_IMPORT_CONTRACT_REPAIR_v1',
+  renews:
     'H_EARTH_3D_DIAGNOSTIC_BOOTSTRAP_FILE_BIRTH_STEP_033D_ROUTE_REPORT_SPLIT_v1',
   extractedFrom:
     'H_EARTH_3D_INDEX_BOOTSTRAP_FILE_BIRTH_STEP_029F_REPORT_LAYER_LATTICE_SCOPE_EVIDENCE_COMPRESSION_v1',
@@ -103,6 +113,14 @@ export const H_EARTH_3D_DIAGNOSTIC_CONTRACT = Object.freeze({
     'DEDICATED_DIAGNOSTIC_ROUTE_BOOTSTRAP_REPORT_EVIDENCE_RECEIPT_SURFACE',
   activationScope:
     'AUTHORIZED_DIAGNOSTIC_ROUTE_SIDE_REPORT_EVIDENCE_EXPOSURE_ONLY',
+
+  repair: Object.freeze({
+    importContractRepair: true,
+    removedUnsupportedPublicReadoutImport: true,
+    removedUnsupportedPublicReadoutAggregateMember: true,
+    unsupportedImportRemoved: 'buildHEarthPublicReadoutPayload',
+    publicRouteMutationRequired: false
+  }),
 
   targetMatrix: 'H-Earth',
   matrixRole: 'Ground-View Matrix',
@@ -136,7 +154,8 @@ export const H_EARTH_3D_DIAGNOSTIC_CONTRACT = Object.freeze({
     createsSceneGeometry: false,
     mutatesPublicRouteShell: false,
     mutatesPublicRouteCss: false,
-    mutatesPublicRouteBootstrap: false
+    mutatesPublicRouteBootstrap: false,
+    requiresPublicReadoutHelperExport: false
   }),
 
   boundaryClaims: Object.freeze({
@@ -1643,9 +1662,13 @@ export const H_EARTH_3D_DIAGNOSTIC_RECEIPT = Object.freeze({
   receiptType: 'H_EARTH_3D_DIAGNOSTIC_BOOTSTRAP_RECEIPT',
   file: '/showroom/globe/h-earth/diagnostic/index.js',
   contractId: H_EARTH_3D_DIAGNOSTIC_CONTRACT.contractId,
+  renews:
+    'H_EARTH_3D_DIAGNOSTIC_BOOTSTRAP_FILE_BIRTH_STEP_033D_ROUTE_REPORT_SPLIT_v1',
   extractedFrom:
     'H_EARTH_3D_INDEX_BOOTSTRAP_FILE_BIRTH_STEP_029F_REPORT_LAYER_LATTICE_SCOPE_EVIDENCE_COMPRESSION_v1',
   diagnosticRouteOnly: true,
+  importContractRepairApplied: true,
+  unsupportedPublicReadoutImportRemoved: true,
   operationalReportSourceSummaryDefined: true,
   compactSpatialDiagnosticReceiptDefined: true,
   advancedRawEvidenceBundleDefined: true,
@@ -1653,6 +1676,7 @@ export const H_EARTH_3D_DIAGNOSTIC_RECEIPT = Object.freeze({
   copyControlsDefined: true,
   publicRendererMountClaim: false,
   publicRouteMutationClaim: false,
+  publicReadoutHelperDependency: false,
   webglActivation: false,
   canvasActivation: false,
   svgActivation: false,
@@ -1712,7 +1736,6 @@ export const H_EARTH_3D_DIAGNOSTIC = Object.freeze({
   composedFrameSelectionReferences:
     H_EARTH_3D_COMPOSED_FRAME_SELECTION_REFERENCES,
 
-  buildHEarthPublicReadoutPayload,
   getRouteBootstrapReceipt,
   getRouteBootstrapStatus,
 

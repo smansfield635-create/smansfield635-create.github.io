@@ -4,18 +4,18 @@
   <!--
     /showroom/globe/h-earth/index.html
     COMPLETE RENEWED FILE
-    H_EARTH_3D_ROUTE_SHELL_FILE_BIRTH_STEP_033B_PUBLIC_SCENE_ONLY_DIAGNOSTIC_SPLIT_v1
+    H_EARTH_3D_ROUTE_SHELL_FILE_BIRTH_STEP_033F_PUBLIC_STAGE_OVERLAY_SEPARATION_v1
 
     Renews:
-    H_EARTH_3D_ROUTE_SHELL_FILE_BIRTH_STEP_030I_ENVIRONMENT_STRUCTURED_EVIDENCE_REPORT_ALIGNMENT_v1
+    H_EARTH_3D_ROUTE_SHELL_FILE_BIRTH_STEP_033B_PUBLIC_SCENE_ONLY_DIAGNOSTIC_SPLIT_v1
 
     Companion public bootstrap:
     /showroom/globe/h-earth/index.js
-    H_EARTH_3D_INDEX_PUBLIC_BOOTSTRAP_FILE_BIRTH_STEP_033A_DIAGNOSTIC_ROUTE_SPLIT_RENDERER_031D_COMPAT_v1
+    H_EARTH_3D_INDEX_BOOTSTRAP_FILE_BIRTH_STEP_032G_ENVIRONMENT_021B_DESCRIPTOR_EXPOSURE_SYNC_v1
 
     Companion public stylesheet:
     /showroom/globe/h-earth/index.css
-    H_EARTH_3D_ROUTE_SHELL_STYLE_FILE_BIRTH_STEP_033C_PUBLIC_SCENE_ONLY_DIAGNOSTIC_SPLIT_v1
+    H_EARTH_3D_ROUTE_SHELL_STYLE_FILE_BIRTH_STEP_033E_PARENT_DESCRIPTOR_VISUAL_SUPPRESSION_GEOMETRY_CHILD_EXPRESSION_v1
 
     Diagnostic route:
     /showroom/globe/h-earth/diagnostic/
@@ -25,12 +25,18 @@
     mount, compact HUD, selected target card, compact public readout, target
     drawer, optional compact debug panel, and diagnostic route handoff.
 
+    Renewal purpose:
+    Separate public shell controls from the renderer stage so HUD/status/cards
+    no longer sit on top of the public scene preview. The stage now contains the
+    renderer mount only. Public status, action controls, fallback message, and
+    selected target card remain available to index.js through the same required
+    IDs, but are moved outside the visual scene stage.
+
     Diagnostic split:
     The former embedded report wall, raw evidence surfaces, receipt wall, copy
     toolbar, operational report cards, lattice-scope evidence reader display,
     compositor/environment/renderer report panels, and advanced diagnostic
-    payloads are intentionally removed from the public route shell and assigned
-    to /showroom/globe/h-earth/diagnostic/.
+    payloads remain assigned to /showroom/globe/h-earth/diagnostic/.
 
     Public route required IDs:
     - h-earth-3d-route-root
@@ -109,12 +115,17 @@
 
   <meta
     name="h-earth-route-shell-contract"
-    content="H_EARTH_3D_ROUTE_SHELL_FILE_BIRTH_STEP_033B_PUBLIC_SCENE_ONLY_DIAGNOSTIC_SPLIT_v1"
+    content="H_EARTH_3D_ROUTE_SHELL_FILE_BIRTH_STEP_033F_PUBLIC_STAGE_OVERLAY_SEPARATION_v1"
   />
 
   <meta
     name="h-earth-public-bootstrap-contract"
-    content="H_EARTH_3D_INDEX_PUBLIC_BOOTSTRAP_FILE_BIRTH_STEP_033A_DIAGNOSTIC_ROUTE_SPLIT_RENDERER_031D_COMPAT_v1"
+    content="H_EARTH_3D_INDEX_BOOTSTRAP_FILE_BIRTH_STEP_032G_ENVIRONMENT_021B_DESCRIPTOR_EXPOSURE_SYNC_v1"
+  />
+
+  <meta
+    name="h-earth-public-stylesheet-contract"
+    content="H_EARTH_3D_ROUTE_SHELL_STYLE_FILE_BIRTH_STEP_033E_PARENT_DESCRIPTOR_VISUAL_SUPPRESSION_GEOMETRY_CHILD_EXPRESSION_v1"
   />
 
   <meta
@@ -124,10 +135,10 @@
 
   <meta
     name="h-earth-boundary"
-    content="public-route-shell-only; no-webgl; no-canvas; no-svg; no-final-renderer-claim; no-visual-pass-claim; no-validation-claim; no-production-claim; no-runtime-lattice-activation; no-matrix-collapse"
+    content="public-route-shell-only; renderer-stage-mount-only; controls-outside-stage; no-webgl; no-canvas; no-svg; no-final-renderer-claim; no-visual-pass-claim; no-validation-claim; no-production-claim; no-runtime-lattice-activation; no-matrix-collapse"
   />
 
-  <link rel="stylesheet" href="./index.css" />
+  <link rel="stylesheet" href="./index.css?v=033e" />
 </head>
 
 <body>
@@ -140,6 +151,8 @@
     data-h-earth-raw-spatial-evidence-embedded="false"
     data-h-earth-receipt-wall-embedded="false"
     data-h-earth-copy-surface-embedded="false"
+    data-h-earth-stage-overlay-separated="true"
+    data-h-earth-stage-owned-controls="false"
     data-h-earth-matrix="H-Earth"
     data-h-earth-matrix-role="Ground-View Matrix"
     data-h-earth-active-cell="H_EARTH_GROUND_CELL_001"
@@ -173,7 +186,11 @@
       </header>
 
       <section class="h-earth-3d-world-shell" aria-label="H-Earth public scene preview">
-        <div class="h-earth-3d-world-stage h-earth-3d-stage">
+        <div
+          class="h-earth-3d-world-stage h-earth-3d-stage"
+          data-h-earth-stage-renderer-only="true"
+          data-h-earth-stage-overlay-separated="true"
+        >
           <div
             id="h-earth-3d-renderer-mount"
             class="h-earth-3d-renderer-mount"
@@ -183,80 +200,87 @@
             data-h-earth-shell-owned-scene-objects="false"
             data-h-earth-fake-scene-geometry="false"
           ></div>
-
-          <div
-            id="h-earth-3d-fallback"
-            class="h-earth-3d-fallback"
-            role="status"
-            aria-live="polite"
-          >
-            H-Earth route bootstrap pending.
-          </div>
-
-          <div class="h-earth-3d-world-overlay" aria-label="H-Earth public controls">
-            <aside class="h-earth-3d-primary-hud" aria-label="H-Earth status and action HUD">
-              <div id="h-earth-3d-hud" class="h-earth-3d-hud">
-                <div class="h-earth-3d-hud-panel">
-                  <p class="h-earth-3d-panel-title">Route Status</p>
-
-                  <div
-                    id="h-earth-3d-status"
-                    class="h-earth-3d-status"
-                    role="status"
-                    aria-live="polite"
-                  >
-                    BOOTSTRAP_NOT_STARTED
-                  </div>
-                </div>
-
-                <div class="h-earth-3d-hud-panel">
-                  <p class="h-earth-3d-panel-title">First Action</p>
-
-                  <button
-                    id="h-earth-3d-action-inspect-ground"
-                    class="h-earth-3d-action-button"
-                    type="button"
-                    data-h-earth-action="Inspect Ground"
-                    data-h-earth-readout="Ground Condition Read"
-                    data-h-earth-receipt="H_EARTH_GROUND_INSPECTION_RECEIPT"
-                  >
-                    Inspect Ground
-                  </button>
-                </div>
-              </div>
-            </aside>
-
-            <aside
-              class="h-earth-3d-selected-target-card"
-              aria-label="Selected H-Earth target"
-            >
-              <p class="h-earth-3d-card-kicker">Selected Surface</p>
-
-              <h2
-                id="h-earth-3d-selected-target-label"
-                class="h-earth-3d-card-title"
-              >
-                Foreground Wet Sand
-              </h2>
-
-              <dl class="h-earth-3d-selected-target-facts">
-                <div>
-                  <dt>Object</dt>
-                  <dd id="h-earth-3d-selected-target-object-id">
-                    OBJ_002_FOREGROUND_WET_SAND
-                  </dd>
-                </div>
-
-                <div>
-                  <dt>Classification</dt>
-                  <dd id="h-earth-3d-selected-target-classification">
-                    PRIMARY_INSPECTION_TARGET
-                  </dd>
-                </div>
-              </dl>
-            </aside>
-          </div>
         </div>
+      </section>
+
+      <section
+        class="h-earth-3d-public-control-deck"
+        aria-label="H-Earth public status, action, and selected target controls"
+        data-h-earth-controls-outside-renderer-stage="true"
+      >
+        <section
+          class="h-earth-3d-panel h-earth-3d-public-status-panel"
+          aria-label="H-Earth status and first action"
+        >
+          <div id="h-earth-3d-hud" class="h-earth-3d-hud">
+            <div class="h-earth-3d-hud-panel">
+              <p class="h-earth-3d-panel-title">Route Status</p>
+
+              <div
+                id="h-earth-3d-status"
+                class="h-earth-3d-status"
+                role="status"
+                aria-live="polite"
+              >
+                BOOTSTRAP_NOT_STARTED
+              </div>
+            </div>
+
+            <div class="h-earth-3d-hud-panel">
+              <p class="h-earth-3d-panel-title">First Action</p>
+
+              <button
+                id="h-earth-3d-action-inspect-ground"
+                class="h-earth-3d-action-button"
+                type="button"
+                data-h-earth-action="Inspect Ground"
+                data-h-earth-readout="Ground Condition Read"
+                data-h-earth-receipt="H_EARTH_GROUND_INSPECTION_RECEIPT"
+              >
+                Inspect Ground
+              </button>
+            </div>
+
+            <div
+              id="h-earth-3d-fallback"
+              class="h-earth-3d-panel h-earth-3d-public-status-note"
+              role="status"
+              aria-live="polite"
+            >
+              H-Earth route bootstrap pending.
+            </div>
+          </div>
+        </section>
+
+        <section
+          class="h-earth-3d-panel h-earth-3d-selected-target-panel"
+          aria-label="Selected H-Earth target"
+        >
+          <p class="h-earth-3d-card-kicker">Selected Surface</p>
+
+          <h2
+            id="h-earth-3d-selected-target-label"
+            class="h-earth-3d-card-title"
+          >
+            Foreground Wet Sand
+          </h2>
+
+          <dl class="h-earth-3d-selected-target-facts">
+            <div>
+              <dt>Object</dt>
+              <dd id="h-earth-3d-selected-target-object-id">
+                OBJ_002_FOREGROUND_WET_SAND
+              </dd>
+            </div>
+
+            <div>
+              <dt>Classification</dt>
+              <dd id="h-earth-3d-selected-target-classification">
+                PRIMARY_INSPECTION_TARGET
+              </dd>
+            </div>
+          </dl>
+        </section>
       </section>
 
       <section class="h-earth-3d-arrival" aria-label="H-Earth public arrival">
@@ -346,7 +370,10 @@
           Select inspection surface
         </summary>
 
-        <section class="h-earth-3d-panel h-earth-3d-target-panel" aria-label="Selectable H-Earth targets">
+        <section
+          class="h-earth-3d-panel h-earth-3d-target-panel"
+          aria-label="Selectable H-Earth targets"
+        >
           <p class="h-earth-3d-panel-title">Available public targets</p>
 
           <div

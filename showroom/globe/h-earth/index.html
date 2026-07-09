@@ -1,1013 +1,157 @@
-<!--
-  /showroom/globe/h-earth/index.html
-  COMPLETE RENEWED FILE
-  H_EARTH_3D_ROUTE_SHELL_FILE_BIRTH_STEP_030J_030K_CSS_AND_029G_LATTICE_DESCRIPTOR_ALIGNMENT_v1
--->
 <!doctype html>
 <html lang="en">
 <head>
+  <!--
+    /showroom/globe/h-earth/index.html
+    COMPLETE RENEWED FILE
+    H_EARTH_3D_ROUTE_SHELL_FILE_BIRTH_STEP_033B_PUBLIC_SCENE_ONLY_DIAGNOSTIC_SPLIT_v1
+
+    Renews:
+    H_EARTH_3D_ROUTE_SHELL_FILE_BIRTH_STEP_030I_ENVIRONMENT_STRUCTURED_EVIDENCE_REPORT_ALIGNMENT_v1
+
+    Companion public bootstrap:
+    /showroom/globe/h-earth/index.js
+    H_EARTH_3D_INDEX_PUBLIC_BOOTSTRAP_FILE_BIRTH_STEP_033A_DIAGNOSTIC_ROUTE_SPLIT_RENDERER_031D_COMPAT_v1
+
+    Companion public stylesheet:
+    /showroom/globe/h-earth/index.css
+    H_EARTH_3D_ROUTE_SHELL_STYLE_FILE_BIRTH_STEP_033C_PUBLIC_SCENE_ONLY_DIAGNOSTIC_SPLIT_v1
+
+    Diagnostic route:
+    /showroom/globe/h-earth/diagnostic/
+
+    Purpose:
+    Public H-Earth scene shell only. Hosts the DOM/CSS3D candidate renderer
+    mount, compact HUD, selected target card, compact public readout, target
+    drawer, optional compact debug panel, and diagnostic route handoff.
+
+    Diagnostic split:
+    The former embedded report wall, raw evidence surfaces, receipt wall, copy
+    toolbar, operational report cards, lattice-scope evidence reader display,
+    compositor/environment/renderer report panels, and advanced diagnostic
+    payloads are intentionally removed from the public route shell and assigned
+    to /showroom/globe/h-earth/diagnostic/.
+
+    Public route required IDs:
+    - h-earth-3d-route-root
+    - h-earth-3d-status
+    - h-earth-3d-fallback
+    - h-earth-3d-renderer-mount
+
+    Public route optional IDs used by index.js:
+    - h-earth-3d-hud
+    - h-earth-3d-action-inspect-ground
+    - h-earth-3d-inspection-panel
+    - h-earth-3d-target-list
+    - h-earth-3d-debug
+    - h-earth-3d-selected-target-label
+    - h-earth-3d-selected-target-classification
+    - h-earth-3d-selected-target-object-id
+    - h-earth-3d-public-readout
+    - h-earth-3d-public-readout-title
+    - h-earth-3d-public-readout-line
+    - h-earth-3d-diagnostic-link
+
+    Removed from public route:
+    - h-earth-3d-operational-report-stack-payload
+    - h-earth-3d-report-layer-status
+    - h-earth-3d-spatial-summary-payload
+    - h-earth-3d-composed-frame-payload
+    - h-earth-3d-compositor-receipt-payload
+    - h-earth-3d-renderer-placement-payload
+    - h-earth-3d-environment-placement-payload
+    - h-earth-3d-route-bootstrap-receipt
+    - h-earth-3d-renderer-mount-receipt
+    - h-earth-3d-boundary-flags
+    - h-earth-3d-index-contract
+    - h-earth-3d-copy-status
+
+    Boundary:
+    HTML route shell only.
+    No shell-owned scene objects.
+    No fake beach / false scene geometry.
+    No diagnostic wall in public route.
+    No report wall in public route.
+    No raw evidence wall in public route.
+    No copy surface in public route.
+    No receipt wall in public route.
+    No WebGL activation.
+    No canvas activation.
+    No SVG activation.
+    No iframe activation.
+    No final-renderer claim.
+    No renderer-pass claim.
+    No visual-pass claim.
+    No validation claim.
+    No production claim.
+    No traversal.
+    No survival simulation.
+    No swimming.
+    No fluid simulation.
+    No manor interior access.
+    No distant traversal.
+    No runtime lattice activation.
+    No active 16x16 lattice runtime claim.
+    No active 256-address runtime claim.
+    No Mirror Manor route-canon naming.
+    No matrix collapse.
+  -->
+
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="color-scheme" content="dark" />
-  <title>H-Earth 3D Candidate Preview</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <title>H-Earth · Ground-View Matrix</title>
+
+  <meta
+    name="description"
+    content="Public H-Earth DOM/CSS3D candidate preview route for the Ground-View Matrix shoreline-manor scene."
+  />
+
+  <meta
+    name="h-earth-route-shell-contract"
+    content="H_EARTH_3D_ROUTE_SHELL_FILE_BIRTH_STEP_033B_PUBLIC_SCENE_ONLY_DIAGNOSTIC_SPLIT_v1"
+  />
+
+  <meta
+    name="h-earth-public-bootstrap-contract"
+    content="H_EARTH_3D_INDEX_PUBLIC_BOOTSTRAP_FILE_BIRTH_STEP_033A_DIAGNOSTIC_ROUTE_SPLIT_RENDERER_031D_COMPAT_v1"
+  />
+
+  <meta
+    name="h-earth-diagnostic-route"
+    content="/showroom/globe/h-earth/diagnostic/"
+  />
+
+  <meta
+    name="h-earth-boundary"
+    content="public-route-shell-only; no-webgl; no-canvas; no-svg; no-final-renderer-claim; no-visual-pass-claim; no-validation-claim; no-production-claim; no-runtime-lattice-activation; no-matrix-collapse"
+  />
+
   <link rel="stylesheet" href="./index.css" />
-
-  <script type="module">
-    import {
-      initializeHEarthRoute,
-      getRouteBootstrapStatus,
-      getRouteBootstrapReceipt,
-      H_EARTH_3D_INDEX
-    } from './index.js';
-
-    const REPORT_STATE = { stack: null };
-
-    const SEVERITY = Object.freeze({
-      PASS: 'PASS',
-      WATCH: 'WATCH',
-      UNPROVEN: 'UNPROVEN',
-      HIGH: 'HIGH',
-      BLOCKING: 'BLOCKING'
-    });
-
-    const OWNERS = Object.freeze({
-      lead: 'Lead Router',
-      source: 'Room 1 / Source Canon',
-      environment: 'Room 3 / Environment',
-      renderer: 'Room 4 / Renderer',
-      compositor: 'Room 5 / Compositor',
-      css: 'Room 6 / Route HTML/CSS Experience',
-      integrity: 'Integrity Lane'
-    });
-
-    const EXPECTED_ENVIRONMENT_TOKENS = Object.freeze([
-      'shoreline', 'wet', 'sand', 'dry', 'foam', 'water',
-      'rock', 'tide', 'air', 'haze', 'manor', 'distant'
-    ]);
-
-    const STRUCTURED_ENVIRONMENT_HINTS = Object.freeze({
-      water: ['water'],
-      airHaze: ['air', 'haze'],
-      wetSand: ['wet', 'sand'],
-      drySand: ['dry', 'sand'],
-      foam: ['foam', 'shoreline'],
-      tidePool: ['tide', 'water'],
-      stone: ['rock'],
-      jaggedRock: ['rock'],
-      manorContext: ['manor'],
-      distantRock: ['distant', 'rock'],
-      nearshoreWave: ['shoreline', 'water'],
-      inspectionAnchor: ['wet', 'sand']
-    });
-
-    const AVAILABLE_EVIDENCE_GUIDE = Object.freeze({
-      guideType: 'H_EARTH_AVAILABLE_EVIDENCE_REQUEST_GUIDE',
-      contractId:
-        'H_EARTH_3D_ROUTE_SHELL_FILE_BIRTH_STEP_030J_030K_CSS_AND_029G_LATTICE_DESCRIPTOR_ALIGNMENT_v1',
-      reportPrinciple: 'Receipts prove. Reports diagnose. Scene remains primary.',
-      primary: ['Copy Operational Reports'],
-      secondary: [
-        'Copy Route Bootstrap Receipt',
-        'Copy Environment Placement Summary',
-        'Copy Composed Candidate Frame',
-        'Copy Renderer Mount Receipt',
-        'Copy Ground Read Bridge',
-        'Copy Boundary Flags'
-      ],
-      optional: [
-        'Copy Spatial Summary',
-        'Copy Compositor Receipt',
-        'Copy Renderer Placement Evidence',
-        'Copy Index Contract',
-        'Copy Bootstrap Debug'
-      ],
-      currentlyExposedDescriptorOnly: [
-        'Source Canon lattice exposure mirror through index.js 029G',
-        'Formal 16x16 / 256-address descriptor-only source authority status'
-      ],
-      futureNotAvailableFromThisRoute: [
-        'runtime lattice activation receipt',
-        'active 16x16 runtime field receipt',
-        'active 256-address runtime field receipt',
-        'lattice-to-zone map receipt',
-        'lattice-to-object compression map receipt',
-        'lattice-to-inspection-anchor map receipt',
-        'lattice-to-render-expansion map receipt',
-        'Room 3 environment lattice audit receipt'
-      ],
-      boundary: {
-        routeGuideOnly: true,
-        descriptorOnlySourceAuthorityMayBeReported: true,
-        latticeActivationClaim: false,
-        active16x16RuntimeClaim: false,
-        active256AddressRuntimeClaim: false,
-        mirrorManorRouteCanonNameClaim: false,
-        matrixCollapse: false
-      }
-    });
-
-    function byId(id) {
-      return document.getElementById(id);
-    }
-
-    function text(id, value) {
-      const node = byId(id);
-      if (!node) return false;
-      node.textContent = String(value ?? '');
-      return true;
-    }
-
-    function read(id) {
-      return byId(id)?.textContent || '';
-    }
-
-    function asArray(value) {
-      return Array.isArray(value) ? value : [];
-    }
-
-    function unique(values) {
-      return Array.from(new Set(asArray(values).filter(Boolean)));
-    }
-
-    function num(value, fallback = null) {
-      const next = Number(value);
-      return Number.isFinite(next) ? next : fallback;
-    }
-
-    function stringify(value) {
-      if (typeof value === 'string') return value;
-      try {
-        return JSON.stringify(value, null, 2);
-      } catch (_error) {
-        return String(value);
-      }
-    }
-
-    function parseJsonText(value) {
-      try {
-        return JSON.parse(value);
-      } catch (_error) {
-        return null;
-      }
-    }
-
-    function status() {
-      try {
-        return getRouteBootstrapStatus();
-      } catch (_error) {
-        return null;
-      }
-    }
-
-    function receipt() {
-      try {
-        return getRouteBootstrapReceipt();
-      } catch (_error) {
-        return null;
-      }
-    }
-
-    function sourceSummary() {
-      const r = receipt();
-      const s = status();
-      return (
-        r?.operationalReportSourceSummary ||
-        r?.spatialDiagnosticReceipt?.reportSourceSummary ||
-        s?.operationalReportSourceSummary ||
-        s?.spatialDiagnosticReceipt?.reportSourceSummary ||
-        null
-      );
-    }
-
-    function latticeSummary() {
-      const r = receipt();
-      const s = status();
-      const src = sourceSummary();
-      return (
-        r?.latticeScope ||
-        r?.latticeScopeSummary ||
-        r?.operationalReportSourceSummary?.latticeScopeSummary ||
-        r?.spatialDiagnosticReceipt?.reportSourceSummary?.latticeScopeSummary ||
-        src?.latticeScopeSummary ||
-        s?.latticeScope ||
-        s?.latticeScopeSummary ||
-        null
-      );
-    }
-
-    function environmentSummary() {
-      const r = receipt();
-      const src = sourceSummary();
-      return (
-        src?.environmentSummary ||
-        src?.environmentPlacementSummary ||
-        r?.operationalReportSourceSummary?.environmentSummary ||
-        r?.spatialDiagnosticReceipt?.reportSourceSummary?.environmentSummary ||
-        r?.upstreamEnvironmentReceipt ||
-        null
-      );
-    }
-
-    function frameSummary() {
-      const r = receipt();
-      const src = sourceSummary();
-      return (
-        src?.composedFrameSummary ||
-        r?.operationalReportSourceSummary?.composedFrameSummary ||
-        r?.spatialDiagnosticReceipt?.reportSourceSummary?.composedFrameSummary ||
-        null
-      );
-    }
-
-    function compositorSummary() {
-      const src = sourceSummary();
-      return src?.compositorSummary || null;
-    }
-
-    function rendererMountReceipt() {
-      const s = status();
-      const r = receipt();
-      return (
-        s?.rendererMountReceipt ||
-        r?.rendererMountReceipt ||
-        r?.rendererMountReceiptSummary ||
-        null
-      );
-    }
-
-    function rendererPlacementSummary() {
-      const src = sourceSummary();
-      return src?.rendererPlacementSummary || null;
-    }
-
-    function sceneIdentity() {
-      const root = byId('h-earth-3d-route-root');
-      const r = receipt();
-      const src = sourceSummary();
-      const lattice = latticeSummary();
-      return {
-        matrix: root?.dataset.hEarthMatrix || src?.matrix || lattice?.matrix || r?.matrix || 'H-Earth',
-        matrixRole: root?.dataset.hEarthMatrixRole || src?.matrixRole || lattice?.matrixRole || r?.matrixRole || 'Ground-View Matrix',
-        activeCell: root?.dataset.hEarthActiveCell || src?.activeCell || lattice?.activeCell || r?.activeCell || 'H_EARTH_GROUND_CELL_001',
-        sceneIdentity: root?.dataset.hEarthSceneIdentity || src?.sceneIdentity || lattice?.sceneIdentity || r?.sceneIdentity || 'earth-water-air-survival-shoreline-manor',
-        mirrorManorStatus: src?.mirrorManorStatus || lattice?.mirrorManorStatus || r?.mirrorManorStatus || 'STRATEGICALLY_IMPLIED_NOT_ROUTE_CANON_NAMED'
-      };
-    }
-
-    function makeReport(args) {
-      return {
-        id: args.id,
-        title: args.title,
-        status: args.status,
-        severity: args.severity,
-        owner: args.owner,
-        nextLane: args.nextLane,
-        summary: args.summary,
-        evidenceSource: args.evidenceSource,
-        rawEvidenceAvailable: Boolean(args.rawEvidenceAvailable),
-        fields: args.fields || {},
-        boundary: {
-          reportOnly: true,
-          createsEnvironment: false,
-          createsSceneObjects: false,
-          mutatesRenderer: false,
-          mutatesCompositor: false,
-          mutatesEnvironment: false,
-          mutatesController: false,
-          finalRendererClaim: false,
-          rendererPassClaim: false,
-          visualPassClaim: false,
-          validationClaim: false,
-          productionClaim: false,
-          latticeActivationClaim: false,
-          active16x16RuntimeClaim: false,
-          active256AddressRuntimeClaim: false,
-          mirrorManorRouteCanonNameClaim: false,
-          matrixCollapse: false,
-          ...(args.boundary || {})
-        }
-      };
-    }
-
-    function inferStructuredTokens(summary) {
-      if (!summary) return [];
-      const inferred = [];
-      const serialized = stringify(summary).toLowerCase();
-
-      [
-        ...asArray(summary.materialKeys),
-        ...asArray(summary.resolvedMaterialKeys),
-        ...asArray(summary.materialIdentities),
-        ...asArray(summary.materialIdentityKeys),
-        ...asArray(summary.materialChannels)
-      ].forEach((key) => {
-        const hints = STRUCTURED_ENVIRONMENT_HINTS[String(key || '').trim()];
-        if (hints) inferred.push(...hints);
-      });
-
-      Object.keys(STRUCTURED_ENVIRONMENT_HINTS).forEach((key) => {
-        if (serialized.includes(key.toLowerCase())) {
-          inferred.push(...STRUCTURED_ENVIRONMENT_HINTS[key]);
-        }
-      });
-
-      const resolvedObjects = num(summary.resolvedObjects, 0);
-      const resolvedZones = num(summary.resolvedZones, 0);
-      const resolvedInspectableAnchors = num(summary.resolvedInspectableAnchors, 0);
-      const resolvedMaterialChannels = num(summary.resolvedMaterialChannels, 0);
-      const resolvedPrimitiveLinks = num(summary.resolvedPrimitiveLinks, 0);
-      const coverage = num(summary.environmentCoverageRatio, null);
-
-      if (
-        resolvedObjects >= 12 &&
-        resolvedZones >= 5 &&
-        resolvedInspectableAnchors >= 5 &&
-        resolvedMaterialChannels >= 10 &&
-        resolvedPrimitiveLinks >= 10 &&
-        coverage === 1
-      ) {
-        inferred.push(...EXPECTED_ENVIRONMENT_TOKENS);
-      }
-
-      return unique(inferred);
-    }
-
-    function structuredEnvironmentEvidence(summary) {
-      const failureCodes = asArray(summary?.failureCodes);
-      const resolvedObjects = num(summary?.resolvedObjects, null);
-      const resolvedZones = num(summary?.resolvedZones, null);
-      const resolvedInspectableAnchors = num(summary?.resolvedInspectableAnchors, null);
-      const resolvedContextOnlyGuards = num(summary?.resolvedContextOnlyGuards, null);
-      const resolvedMaterialChannels = num(summary?.resolvedMaterialChannels, null);
-      const resolvedPrimitiveLinks = num(summary?.resolvedPrimitiveLinks, null);
-      const environmentCoverageRatio = num(summary?.environmentCoverageRatio, null);
-
-      const structuredCoveragePass =
-        resolvedObjects >= 12 &&
-        resolvedZones >= 5 &&
-        resolvedInspectableAnchors >= 5 &&
-        resolvedMaterialChannels >= 12 &&
-        resolvedPrimitiveLinks >= 12 &&
-        environmentCoverageRatio === 1 &&
-        failureCodes.length === 0;
-
-      const structuredCoverageStrong =
-        resolvedObjects >= 12 &&
-        resolvedZones >= 5 &&
-        resolvedMaterialChannels >= 10 &&
-        resolvedPrimitiveLinks >= 10 &&
-        failureCodes.length === 0;
-
-      return {
-        structuredEvidencePresent: Boolean(summary),
-        resolvedObjects,
-        resolvedZones,
-        resolvedInspectableAnchors,
-        resolvedContextOnlyGuards,
-        resolvedMaterialChannels,
-        resolvedPrimitiveLinks,
-        environmentCoverageRatio,
-        warningCodes: asArray(summary?.warningCodes),
-        failureCodes,
-        structuredCoveragePass,
-        structuredCoverageStrong,
-        tokenExtractionMayUndercount: Boolean(summary) && structuredCoveragePass
-      };
-    }
-
-    function reportSceneStage() {
-      const s = status();
-      const r = receipt();
-      const src = sourceSummary();
-      const routeReady = src?.routeReady || {};
-      const failureCodes = asArray(s?.failureCodes || r?.failureCodes || routeReady.failureCodes);
-      const warningCodes = asArray(s?.warningCodes || r?.warningCodes || routeReady.warningCodes);
-      const candidateReady = Boolean(s?.bootstrapReadyCandidateOnly ?? r?.bootstrapReadyCandidateOnly ?? routeReady.bootstrapReadyCandidateOnly);
-      const rendererReady = Boolean(s?.rendererMountReady ?? r?.rendererMountReady ?? routeReady.rendererMountReady);
-
-      return makeReport({
-        id: 'scene-stage',
-        title: 'Scene Stage Report',
-        status: failureCodes.length ? 'ROUTE_FAILURE_REPORTED' : candidateReady ? 'ACTIVE_CANDIDATE_EXECUTION' : 'BOOTSTRAP_STATUS_PENDING_OR_PARTIAL',
-        severity: failureCodes.length ? SEVERITY.BLOCKING : candidateReady || rendererReady ? SEVERITY.PASS : SEVERITY.WATCH,
-        owner: OWNERS.lead,
-        nextLane: candidateReady ? 'Proceed to report-local break classification.' : 'Inspect route bootstrap receipt.',
-        summary: candidateReady
-          ? 'Route is active in candidate-only posture. Scene remains report-monitored.'
-          : 'Route stage is not fully confirmed by available bootstrap status.',
-        evidenceSource: 'Bootstrap Status / Route Bootstrap Receipt / Operational Report Source Summary',
-        rawEvidenceAvailable: Boolean(s || r || src),
-        fields: {
-          ...sceneIdentity(),
-          chainReady: Boolean(s?.chainReady ?? r?.chainReady ?? routeReady.chainReady),
-          domReady: Boolean(s?.domReady ?? r?.domReady ?? routeReady.domReady),
-          rendererMountReady: rendererReady,
-          bootstrapReadyCandidateOnly: candidateReady,
-          currentKnownStatus: s?.statusLevel || r?.status || src?.status || null,
-          warningCodes,
-          failureCodes
-        }
-      });
-    }
-
-    function reportLattice() {
-      const lattice = latticeSummary();
-      const formal16 =
-        Boolean(lattice?.formal16x16EvidencePresent) ||
-        Boolean(lattice?.source256AddressFieldDescriptor) ||
-        Boolean(lattice?.sourceLatticeAuthority);
-
-      return makeReport({
-        id: 'lattice-scope',
-        title: 'Lattice Scope Report',
-        status: formal16
-          ? 'FORMAL_SOURCE_LATTICE_AUTHORITY_EXPOSED_DESCRIPTOR_ONLY'
-          : lattice?.status || 'LATTICE_SCOPE_DESCRIPTOR_EVIDENCE_UNCONFIRMED',
-        severity: SEVERITY.WATCH,
-        owner: OWNERS.source,
-        nextLane: 'Use descriptor-only source lattice authority as context. Do not treat runtime lattice activation as present.',
-        summary: formal16
-          ? 'Formal 16x16 / 256 source lattice authority is exposed as descriptor-only evidence. Runtime lattice activation remains absent.'
-          : 'Formal runtime lattice activation is not exposed.',
-        evidenceSource: '029G Route Bootstrap Receipt / Source Canon Lattice Exposure Mirror',
-        rawEvidenceAvailable: Boolean(lattice),
-        fields: {
-          ...sceneIdentity(),
-          latticeScopeEvidencePresent: Boolean(lattice?.latticeScopeEvidencePresent || formal16),
-          latticeHintEvidencePresent: Boolean(lattice?.latticeHintEvidencePresent || lattice?.hintSummary?.hintsPresent),
-          formal16x16EvidencePresent: formal16,
-          addressField: Boolean(lattice?.addressField || lattice?.source256AddressFieldDescriptor),
-          sourceLatticeAuthority: Boolean(lattice?.sourceLatticeAuthority || formal16),
-          source256AddressFieldDescriptor: Boolean(lattice?.source256AddressFieldDescriptor || formal16),
-          latticeSummary: lattice,
-          runtimeLatticeActivation: false,
-          active16x16RuntimeClaim: false,
-          active256AddressRuntimeClaim: false
-        },
-        boundary: {
-          sourceAuthorityClaim: formal16 ? 'descriptor-only-exposed' : false
-        }
-      });
-    }
-
-    function reportEnvironment() {
-      const env = environmentSummary();
-      const present = Boolean(env);
-      const structured = structuredEnvironmentEvidence(env);
-      const expected = asArray(env?.expectedSceneTokens).length ? asArray(env.expectedSceneTokens) : EXPECTED_ENVIRONMENT_TOKENS;
-      const serialized = stringify(env || '').toLowerCase();
-      const stringDetected = asArray(env?.detectedSceneTokens).length
-        ? asArray(env.detectedSceneTokens)
-        : expected.filter((token) => serialized.includes(String(token).toLowerCase()));
-      const structuredDetected = inferStructuredTokens(env);
-      const detected = unique([...stringDetected, ...structuredDetected]);
-      const missingStringTokens = expected.filter((token) => !stringDetected.includes(token));
-      const missingStructuredTokens = expected.filter((token) => !detected.includes(token));
-
-      let state = 'ENVIRONMENT_DESCRIPTOR_COVERAGE_UNPROVEN_FROM_SHELL';
-      let severity = SEVERITY.UNPROVEN;
-      let nextLane = 'Expose environment placement summary before broad environment rewrite.';
-      let summary = 'The shell cannot prove full environment coverage from currently exposed data.';
-
-      if (present && structured.failureCodes.length) {
-        state = 'ENVIRONMENT_DESCRIPTOR_FAILURE_CODES_PRESENT';
-        severity = SEVERITY.BLOCKING;
-        nextLane = 'Inspect environment placement failure codes before visual or route repair.';
-        summary = 'Environment placement evidence is present but exposes failure codes.';
-      } else if (present && structured.structuredCoveragePass) {
-        state = 'ENVIRONMENT_DESCRIPTOR_COVERAGE_PASS_STRUCTURED_EVIDENCE';
-        severity = SEVERITY.PASS;
-        nextLane = 'Do not renew environment source for coverage. If the scene still looks flat, proceed to CSS/renderer visual grammar polish.';
-        summary = 'Structured environment evidence is complete. Any shallow token undercount is report-layer extraction, not missing environment source.';
-      } else if (present && structured.structuredCoverageStrong) {
-        state = 'ENVIRONMENT_DESCRIPTOR_COVERAGE_STRONG_STRUCTURED_EVIDENCE';
-        severity = SEVERITY.WATCH;
-        nextLane = 'Inspect structured environment evidence before environment renewal.';
-        summary = 'Environment placement evidence is structurally strong, though full pass criteria are not fully exposed.';
-      } else if (present) {
-        state = 'ENVIRONMENT_DESCRIPTOR_SUMMARY_EXPOSED_COVERAGE_PARTIAL';
-        severity = SEVERITY.WATCH;
-        nextLane = 'Inspect structured environment fields before environment renewal.';
-        summary = 'Environment placement evidence is available, but full coverage is not proven by exposed fields.';
-      }
-
-      return makeReport({
-        id: 'environment',
-        title: 'Environment Report',
-        status: state,
-        severity,
-        owner: OWNERS.environment,
-        nextLane,
-        summary,
-        evidenceSource: '029G Environment Placement Summary / Structured Environment Evidence',
-        rawEvidenceAvailable: present,
-        fields: {
-          environmentPlacementSummaryPresent: present,
-          detectedSceneTokens: detected,
-          detectedSceneTokensFromStringOnly: stringDetected,
-          detectedSceneTokensFromStructuredEvidence: structuredDetected,
-          expectedSceneTokens: expected,
-          missingStringTokens,
-          missingStructuredTokens,
-          tokenExtractionUndercount:
-            structured.structuredCoveragePass &&
-            missingStringTokens.length > 0 &&
-            missingStructuredTokens.length === 0,
-          sourceMissingClaim: false,
-          environmentSourcePresent: structured.structuredCoveragePass || structured.structuredCoverageStrong,
-          structuredEvidence: structured,
-          environmentPlacementSummary: env
-        }
-      });
-    }
-
-    function reportCompositor() {
-      const summary = frameSummary();
-      const comp = compositorSummary();
-      const count = num(comp?.composedNodeCount) ?? num(summary?.composedNodeCount);
-      const failureCodes = asArray(comp?.failureCodes);
-      const present = Boolean(summary || comp);
-
-      return makeReport({
-        id: 'compositor',
-        title: 'Compositor Report',
-        status: present && count !== null && !failureCodes.length ? 'COMPOSED_FRAME_EXPOSED' : present ? 'COMPOSED_FRAME_PARTIAL' : 'COMPOSED_FRAME_NOT_EXPOSED',
-        severity: failureCodes.length ? SEVERITY.BLOCKING : present && count !== null ? SEVERITY.PASS : SEVERITY.WATCH,
-        owner: OWNERS.compositor,
-        nextLane: present && count !== null ? 'Proceed to geometry/renderer report classification.' : 'Inspect composed frame and compositor receipt availability.',
-        summary: present && count !== null
-          ? 'Compositor evidence is present through compact summary paths.'
-          : 'Compositor evidence is not complete enough to classify the frame as clean.',
-        evidenceSource: 'Composed Candidate Frame / Compositor Summary',
-        rawEvidenceAvailable: present,
-        fields: {
-          composedCandidateFramePresent: Boolean(summary),
-          compositorReceiptPresent: Boolean(comp),
-          composedNodeCount: count,
-          cameraFrameResolved: comp?.cameraFrameResolved ?? summary?.cameraFrameResolved ?? null,
-          depthCompositionResolved: comp?.depthCompositionResolved ?? summary?.depthCompositionResolved ?? null,
-          layerCompositionResolved: comp?.layerCompositionResolved ?? summary?.layerCompositionResolved ?? null,
-          viewportFitResolved: comp?.viewportFitResolved ?? summary?.viewportFitResolved ?? null,
-          primaryFocusObjectId: comp?.primaryFocusObjectId || summary?.primaryFocusObjectId || null,
-          compositionPressureClass: comp?.compositionPressureClass || summary?.compositionPressureClass || null,
-          warningCodes: asArray(comp?.warningCodes),
-          failureCodes
-        }
-      });
-    }
-
-    function reportGeometry() {
-      const mount = rendererMountReceipt();
-      const failureCodes = asArray(mount?.failureCodes);
-      const pass =
-        Boolean(mount?.geometryPortUsed) &&
-        Boolean(mount?.geometryExpansionApplied) &&
-        num(mount?.geometryExpandedNodeCount, 0) > num(mount?.geometrySourceNodeCount ?? mount?.rawSourceNodeCount, 0) &&
-        num(mount?.geometrySkippedNodeCount, 0) === 0 &&
-        num(mount?.geometryBudgetSkippedNodeCount, 0) === 0 &&
-        failureCodes.length === 0;
-
-      return makeReport({
-        id: 'geometry',
-        title: 'Geometry Report',
-        status: pass ? 'GEOMETRY_EXPANSION_PASS' : mount ? 'GEOMETRY_EXPANSION_WATCH' : 'GEOMETRY_PORT_NOT_CONFIRMED',
-        severity: failureCodes.length ? SEVERITY.BLOCKING : pass ? SEVERITY.PASS : SEVERITY.WATCH,
-        owner: OWNERS.renderer,
-        nextLane: pass ? 'Proceed to renderer/CSS interpretation report classification.' : 'Inspect renderer mount receipt and geometry expansion summary.',
-        summary: pass
-          ? 'Geometry expansion is structurally passing in the renderer mount receipt.'
-          : 'Geometry expansion is not fully proven by the currently exposed receipt.',
-        evidenceSource: 'Renderer Mount Receipt / Geometry Expansion Summary',
-        rawEvidenceAvailable: Boolean(mount || rendererPlacementSummary()),
-        fields: {
-          geometryPortUsed: Boolean(mount?.geometryPortUsed),
-          geometryExpansionApplied: Boolean(mount?.geometryExpansionApplied),
-          geometrySourceNodeCount: num(mount?.geometrySourceNodeCount ?? mount?.rawSourceNodeCount),
-          geometryExpandedNodeCount: num(mount?.geometryExpandedNodeCount),
-          geometryChildNodeCount: num(mount?.geometryChildNodeCount),
-          geometrySkippedNodeCount: num(mount?.geometrySkippedNodeCount),
-          geometryBudgetSkippedNodeCount: num(mount?.geometryBudgetSkippedNodeCount),
-          warningCodes: asArray(mount?.warningCodes),
-          failureCodes
-        }
-      });
-    }
-
-    function reportRenderer() {
-      const mount = rendererMountReceipt();
-      const failureCodes = asArray(mount?.failureCodes);
-      const mounted = Boolean(mount?.mounted || mount?.rendererMounted);
-      const mountedNodeCount = num(mount?.mountedNodeCount);
-      const placedNodeCount = num(mount?.placedNodeCount);
-      const skippedNodeCount = num(mount?.skippedNodeCount);
-      const transformMissingCount = num(mount?.transformDescriptorMissingCount);
-      const pass =
-        mounted &&
-        mountedNodeCount !== null &&
-        placedNodeCount !== null &&
-        mountedNodeCount === placedNodeCount &&
-        skippedNodeCount === 0 &&
-        transformMissingCount === 0 &&
-        failureCodes.length === 0;
-
-      return makeReport({
-        id: 'renderer',
-        title: 'Renderer Report',
-        status: pass ? 'MOUNT_PLACE_TRANSFORM_PASS_VISUAL_UNPROVEN' : mount ? 'RENDERER_MOUNT_WATCH' : 'RENDERER_MOUNT_RECEIPT_NOT_EXPOSED',
-        severity: failureCodes.length ? SEVERITY.BLOCKING : pass ? SEVERITY.PASS : SEVERITY.WATCH,
-        owner: OWNERS.renderer,
-        nextLane: pass ? 'Proceed to CSS interpretation report and screenshot classification.' : 'Inspect renderer mount receipt.',
-        summary: pass
-          ? 'Renderer mount, placement, and transform counts are structurally clean. Visual interpretation remains separately classified.'
-          : 'Renderer mount evidence is incomplete or shows watch conditions.',
-        evidenceSource: 'Renderer Mount Receipt / Renderer Mount Summary',
-        rawEvidenceAvailable: Boolean(mount),
-        fields: {
-          rendererMounted: mounted,
-          selectedRenderInputSource: mount?.selectedRenderInputSource || null,
-          usedComposedFrame: mount?.usedComposedFrame ?? null,
-          sourceNodeCount: mount?.sourceNodeCount ?? null,
-          mountedNodeCount,
-          placedNodeCount,
-          skippedNodeCount,
-          transformAppliedCount: num(mount?.transformDescriptorAppliedCount),
-          transformMissingCount,
-          primitiveGeometryAppliedCount: num(mount?.primitiveGeometryAppliedCount),
-          warningCodes: asArray(mount?.warningCodes),
-          failureCodes
-        }
-      });
-    }
-
-    function reportCss() {
-      const renderer = reportRenderer();
-      const geometry = reportGeometry();
-      const clean = renderer.severity === SEVERITY.PASS && geometry.severity === SEVERITY.PASS;
-
-      return makeReport({
-        id: 'css-interpretation',
-        title: 'CSS Interpretation Report',
-        status: clean ? 'CSS_030K_FULL_SCREEN_COHERENCE_REFINEMENT_ACTIVE_VISUAL_GRAMMAR_WATCH' : 'CSS_INTERPRETATION_UNPROVEN_UPSTREAM_DEPENDENT',
-        severity: clean ? SEVERITY.WATCH : SEVERITY.UNPROVEN,
-        owner: OWNERS.css,
-        nextLane: clean
-          ? 'Use screenshot and mounted DOM sample to decide remaining CSS polish versus renderer descriptor interpretation.'
-          : 'Wait for renderer and geometry reports before CSS visual rewrite.',
-        summary: clean
-          ? '030K CSS is the active visual refinement layer. Remaining issue is visual grammar polish, not scene absence.'
-          : 'CSS cannot be fairly blamed until renderer and geometry reports are clean.',
-        evidenceSource: 'CSS 030K / Screenshot / Mounted DOM sample / Renderer Transform Digest',
-        rawEvidenceAvailable: true,
-        fields: {
-          companionCss: 'H_EARTH_3D_ROUTE_SHELL_STYLE_FILE_BIRTH_STEP_030K_FULL_SCREEN_COHERENCE_REFINEMENT_v1',
-          stageFirstShellPresent: true,
-          rendererCreatedDomDominant: true,
-          htmlCreatesSceneObjects: false,
-          possibleResidualFlatBanding: true,
-          rendererReportStatus: renderer.status,
-          geometryReportStatus: geometry.status
-        }
-      });
-    }
-
-    function reportActionBridge() {
-      const parsed = parseJsonText(read('h-earth-3d-inspection-panel'));
-      const hasPayload = Boolean(parsed);
-      const bridgeResolved = parsed?.actionBridge?.bridgeResolved ?? parsed?.bridgeResolved ?? null;
-
-      return makeReport({
-        id: 'action-bridge',
-        title: 'Action Bridge Report',
-        status: hasPayload ? bridgeResolved === false ? 'ACTION_BRIDGE_REPORTED_UNRESOLVED' : 'DESCRIPTOR_BRIDGE_EXPOSED' : 'ACTION_BRIDGE_PENDING_SELECTION',
-        severity: hasPayload ? bridgeResolved === false ? SEVERITY.HIGH : SEVERITY.PASS : SEVERITY.WATCH,
-        owner: OWNERS.css,
-        nextLane: hasPayload ? 'Preserve controller/action bridge and keep readout descriptor-only unless controller evidence fails.' : 'Use Inspect Ground to expose bridge payload.',
-        summary: hasPayload
-          ? 'Ground Condition Read bridge evidence is exposed. Runtime action and receipt creation remain boundary-false.'
-          : 'Action bridge is awaiting visible bridge payload from the route controller.',
-        evidenceSource: 'Ground Condition Read Bridge',
-        rawEvidenceAvailable: hasPayload,
-        fields: {
-          selectedObjectId: parsed?.selectedObjectId || 'OBJ_002_FOREGROUND_WET_SAND',
-          action: parsed?.action || 'Inspect Ground',
-          readout: parsed?.readout || 'Ground Condition Read',
-          bridgeResolved,
-          descriptorOnly: parsed?.descriptorOnly ?? true,
-          runtimeActionExecutionClaim: false,
-          receiptCreationClaim: false
-        }
-      });
-    }
-
-    function reportBoundary() {
-      const s = status();
-      const r = receipt();
-      const boundary = s?.boundary || r?.boundary || H_EARTH_3D_INDEX?.boundaryFlags || null;
-      const raw = stringify(boundary || '').toLowerCase();
-      const risky =
-        raw.includes('"webglactivation": true') ||
-        raw.includes('"canvasactivation": true') ||
-        raw.includes('"finalrendererclaim": true') ||
-        raw.includes('"rendererpassclaim": true') ||
-        raw.includes('"visualpassclaim": true') ||
-        raw.includes('"validationclaim": true') ||
-        raw.includes('"productionclaim": true') ||
-        raw.includes('"matrixcollapse": true');
-
-      return makeReport({
-        id: 'boundary',
-        title: 'Boundary Report',
-        status: risky ? 'BOUNDARY_RISK_REPORTED' : 'BOUNDARIES_PRESERVED',
-        severity: risky ? SEVERITY.BLOCKING : SEVERITY.PASS,
-        owner: OWNERS.integrity,
-        nextLane: risky ? 'Stop and inspect boundary flags before further construction.' : 'Continue within candidate-only report-layer scope.',
-        summary: risky
-          ? 'A boundary risk may be present in exposed boundary flags.'
-          : 'No forbidden activation or final-claim boundary is asserted by this report layer.',
-        evidenceSource: 'Boundary Flags / Index Contract / Route Declarations',
-        rawEvidenceAvailable: Boolean(boundary || H_EARTH_3D_INDEX?.contract),
-        fields: {
-          webglActivation: false,
-          canvasActivation: false,
-          finalRendererClaim: false,
-          rendererPassClaim: false,
-          visualPassClaim: false,
-          validationClaim: false,
-          productionClaim: false,
-          traversalClaim: false,
-          survivalSimulationClaim: false,
-          latticeActivationClaim: false,
-          active16x16RuntimeClaim: false,
-          active256AddressRuntimeClaim: false,
-          matrixCollapse: false,
-          exposedBoundaryFlags: boundary
-        }
-      });
-    }
-
-    function operationalReportStack() {
-      const reports = [
-        reportSceneStage(),
-        reportLattice(),
-        reportEnvironment(),
-        reportCompositor(),
-        reportGeometry(),
-        reportRenderer(),
-        reportCss(),
-        reportActionBridge(),
-        reportBoundary()
-      ];
-
-      const rank = { PASS: 0, WATCH: 1, UNPROVEN: 2, HIGH: 5, BLOCKING: 6 };
-      const highestSeverity = reports.reduce((highest, report) =>
-        (rank[report.severity] || 0) > (rank[highest] || 0) ? report.severity : highest,
-        SEVERITY.PASS
-      );
-
-      const currentBreakLocation =
-        reports
-          .filter((report) => report.severity !== SEVERITY.PASS)
-          .sort((a, b) => (rank[b.severity] || 0) - (rank[a.severity] || 0))[0]?.title ||
-        'NONE_CONFIRMED';
-
-      return {
-        reportType: 'H_EARTH_030J_OPERATIONAL_REPORT_STACK',
-        contractId:
-          'H_EARTH_3D_ROUTE_SHELL_FILE_BIRTH_STEP_030J_030K_CSS_AND_029G_LATTICE_DESCRIPTOR_ALIGNMENT_v1',
-        generatedAt: new Date().toISOString(),
-        sceneIdentity: sceneIdentity(),
-        highestSeverity,
-        currentBreakLocation,
-        reportCount: reports.length,
-        reports,
-        availableEvidenceGuide: AVAILABLE_EVIDENCE_GUIDE,
-        rawReceiptsRemainAvailable: true,
-        reportPrinciple: 'Receipts prove. Reports diagnose. Scene remains primary.',
-        boundary: {
-          htmlCreatesEnvironment: false,
-          htmlCreatesSceneObjects: false,
-          webglActivation: false,
-          canvasActivation: false,
-          finalRendererClaim: false,
-          rendererPassClaim: false,
-          visualPassClaim: false,
-          validationClaim: false,
-          productionClaim: false,
-          traversalClaim: false,
-          survivalSimulationClaim: false,
-          latticeActivationClaim: false,
-          active16x16RuntimeClaim: false,
-          active256AddressRuntimeClaim: false,
-          mirrorManorRouteCanonNameClaim: false,
-          matrixCollapse: false
-        }
-      };
-    }
-
-    function spatialSummary() {
-      return {
-        diagnosticPurpose:
-          '030J raw evidence source for report-layer break-location classification, aligned to index.js 029G and CSS 030K.',
-        currentKnownStatus: status()?.statusLevel || receipt()?.status || sourceSummary()?.status || null,
-        routeReady: sourceSummary()?.routeReady || {
-          chainReady: Boolean(status()?.chainReady ?? receipt()?.chainReady),
-          domReady: Boolean(status()?.domReady ?? receipt()?.domReady),
-          controllerReady: Boolean(status()?.controllerReady ?? receipt()?.controllerReady),
-          rendererMountReady: Boolean(status()?.rendererMountReady ?? receipt()?.rendererMountReady),
-          bootstrapReadyCandidateOnly: Boolean(status()?.bootstrapReadyCandidateOnly ?? receipt()?.bootstrapReadyCandidateOnly),
-          failureCodes: status()?.failureCodes || receipt()?.failureCodes || [],
-          warningCodes: status()?.warningCodes || receipt()?.warningCodes || []
-        },
-        latticeScopeSummary: latticeSummary(),
-        environmentPlacementSummary: environmentSummary(),
-        structuredEnvironmentEvidence: structuredEnvironmentEvidence(environmentSummary()),
-        compositor: compositorSummary(),
-        composedCandidateFrame: frameSummary(),
-        rendererPlacementEvidence: rendererPlacementSummary(),
-        rendererMount: rendererMountReceipt(),
-        operationalReportStack: REPORT_STATE.stack,
-        availableEvidenceGuide: AVAILABLE_EVIDENCE_GUIDE,
-        boundary: {
-          htmlCreatesEnvironment: false,
-          htmlCreatesSceneObjects: false,
-          webglActivation: false,
-          canvasActivation: false,
-          finalRendererClaim: false,
-          rendererPassClaim: false,
-          visualPassClaim: false,
-          validationClaim: false,
-          productionClaim: false,
-          latticeActivationClaim: false,
-          active16x16RuntimeClaim: false,
-          active256AddressRuntimeClaim: false,
-          mirrorManorRouteCanonNameClaim: false,
-          matrixCollapse: false
-        }
-      };
-    }
-
-    function renderReportCard(report) {
-      const root = byId(`h-earth-3d-${report.id}-report`);
-      if (!root) return false;
-      root.dataset.hEarthReportStatus = report.status;
-      root.dataset.hEarthReportSeverity = report.severity;
-      text(`h-earth-3d-${report.id}-report-status`, report.status);
-      text(`h-earth-3d-${report.id}-report-severity`, report.severity);
-      text(`h-earth-3d-${report.id}-report-owner`, report.owner);
-      text(`h-earth-3d-${report.id}-report-next-lane`, report.nextLane);
-      text(`h-earth-3d-${report.id}-report-summary`, report.summary);
-      text(`h-earth-3d-${report.id}-report-evidence`, report.evidenceSource);
-      return true;
-    }
-
-    function syncReports() {
-      const stack = operationalReportStack();
-      REPORT_STATE.stack = stack;
-      text('h-earth-3d-operational-report-stack-payload', stringify(stack));
-      text('h-earth-3d-report-layer-status', `${stack.highestSeverity} · ${stack.currentBreakLocation}`);
-      const reportsRoot = byId('h-earth-3d-operational-reports');
-      if (reportsRoot) reportsRoot.dataset.hEarthReportSeverity = stack.highestSeverity;
-      stack.reports.forEach(renderReportCard);
-      return stack;
-    }
-
-    function syncReceipts() {
-      text('h-earth-3d-route-bootstrap-receipt', stringify(receipt()));
-      text('h-earth-3d-renderer-mount-receipt', stringify(rendererMountReceipt()));
-      text('h-earth-3d-boundary-flags', stringify(status()?.boundary || H_EARTH_3D_INDEX?.boundaryFlags || null));
-      text('h-earth-3d-index-contract', stringify(H_EARTH_3D_INDEX?.contract || null));
-      text('h-earth-3d-spatial-summary-payload', stringify(spatialSummary()));
-      text('h-earth-3d-composed-frame-payload', stringify(frameSummary() || { status: 'COMPOSED_CANDIDATE_FRAME_NOT_EXPOSED' }));
-      text('h-earth-3d-compositor-receipt-payload', stringify(compositorSummary() || { status: 'COMPOSITOR_RECEIPT_NOT_EXPOSED' }));
-      text('h-earth-3d-renderer-placement-payload', stringify(rendererPlacementSummary() || { status: 'RENDERER_PLACEMENT_EVIDENCE_NOT_EXPOSED_AS_NAMED_OBJECT' }));
-      text('h-earth-3d-environment-placement-payload', stringify(environmentSummary() || { status: 'ENVIRONMENT_PLACEMENT_SUMMARY_NOT_EXPOSED_AS_NAMED_OBJECT' }));
-    }
-
-    function copyPayload(targetId) {
-      const stack = REPORT_STATE.stack || operationalReportStack();
-      const report = (id) => stack.reports.find((item) => item.id === id) || null;
-
-      const map = {
-        'h-earth-3d-copy-operational-report-stack': stack,
-        'h-earth-3d-copy-scene-stage-report': report('scene-stage'),
-        'h-earth-3d-copy-lattice-scope-report': report('lattice-scope'),
-        'h-earth-3d-copy-environment-report': report('environment'),
-        'h-earth-3d-copy-compositor-report': report('compositor'),
-        'h-earth-3d-copy-geometry-report': report('geometry'),
-        'h-earth-3d-copy-renderer-report': report('renderer'),
-        'h-earth-3d-copy-css-interpretation-report': report('css-interpretation'),
-        'h-earth-3d-copy-action-bridge-report': report('action-bridge'),
-        'h-earth-3d-copy-boundary-report': report('boundary'),
-        'h-earth-3d-copy-available-evidence-guide': AVAILABLE_EVIDENCE_GUIDE,
-        'h-earth-3d-copy-minimum-ui-bundle-guide': {
-          guideType: 'H_EARTH_MINIMUM_AVAILABLE_UI_BUNDLE',
-          items: AVAILABLE_EVIDENCE_GUIDE.secondary.slice(0, 4),
-          boundary: AVAILABLE_EVIDENCE_GUIDE.boundary
-        },
-        'h-earth-3d-copy-bootstrap-debug': read('h-earth-3d-debug') || status(),
-        'h-earth-3d-copy-route-bootstrap-receipt': receipt(),
-        'h-earth-3d-copy-renderer-mount-receipt': rendererMountReceipt(),
-        'h-earth-3d-copy-ground-read-bridge': read('h-earth-3d-inspection-panel'),
-        'h-earth-3d-copy-index-contract': H_EARTH_3D_INDEX?.contract || null,
-        'h-earth-3d-copy-boundary-flags': status()?.boundary || H_EARTH_3D_INDEX?.boundaryFlags || null,
-        'h-earth-3d-copy-spatial-summary': spatialSummary(),
-        'h-earth-3d-copy-composed-frame': read('h-earth-3d-composed-frame-payload'),
-        'h-earth-3d-copy-compositor-receipt': read('h-earth-3d-compositor-receipt-payload'),
-        'h-earth-3d-copy-renderer-placement': read('h-earth-3d-renderer-placement-payload'),
-        'h-earth-3d-copy-environment-placement': read('h-earth-3d-environment-placement-payload')
-      };
-
-      return stringify(map[targetId] ?? '');
-    }
-
-    async function copyText(value) {
-      const payload = stringify(value);
-      if (!payload) return false;
-
-      if (navigator.clipboard?.writeText) {
-        await navigator.clipboard.writeText(payload);
-        return true;
-      }
-
-      const textarea = document.createElement('textarea');
-      textarea.value = payload;
-      textarea.setAttribute('readonly', 'true');
-      textarea.style.position = 'fixed';
-      textarea.style.left = '-9999px';
-      document.body.appendChild(textarea);
-      textarea.select();
-      const copied = document.execCommand('copy');
-      textarea.remove();
-      return copied;
-    }
-
-    function copyStatus(message, isError = false) {
-      const node = byId('h-earth-3d-copy-status');
-      if (!node) return;
-      node.textContent = message;
-      node.dataset.hEarthCopyStatus = isError ? 'error' : 'ready';
-    }
-
-    function bindCopyButtons() {
-      document
-        .querySelectorAll('[data-h-earth-copy-action="copy"]')
-        .forEach((button) => {
-          button.addEventListener('click', async () => {
-            const targetId = button.getAttribute('data-h-earth-copy-target');
-            const label = button.getAttribute('data-h-earth-copy-label') || button.textContent || targetId;
-            try {
-              const copied = await copyText(copyPayload(targetId));
-              copyStatus(copied ? `Copied: ${label}` : `Copy failed: ${label}`, copied !== true);
-            } catch (error) {
-              copyStatus(`Copy failed: ${label} — ${error instanceof Error ? error.message : String(error)}`, true);
-            }
-          });
-        });
-    }
-
-    function syncAll() {
-      syncReceipts();
-      syncReports();
-    }
-
-    globalThis.addEventListener('DOMContentLoaded', () => {
-      const result = initializeHEarthRoute({ document });
-      bindCopyButtons();
-      syncAll();
-      window.setTimeout(syncAll, 250);
-      window.setTimeout(syncAll, 1000);
-      copyStatus(result?.status?.statusLevel
-        ? `Report and copy surface ready: ${result.status.statusLevel}`
-        : 'Report and copy surface ready.');
-    });
-  </script>
 </head>
 
 <body>
   <main
     id="h-earth-3d-route-root"
     class="h-earth-3d-route-root"
-    data-h-earth-route="candidate-preview"
-    data-h-earth-page-mode="public-scene-route-with-operational-report-layer"
+    data-h-earth-page-mode="public-scene-route"
+    data-h-earth-public-bootstrap-only="true"
+    data-h-earth-diagnostic-wall-embedded="false"
+    data-h-earth-raw-spatial-evidence-embedded="false"
+    data-h-earth-receipt-wall-embedded="false"
+    data-h-earth-copy-surface-embedded="false"
     data-h-earth-matrix="H-Earth"
     data-h-earth-matrix-role="Ground-View Matrix"
     data-h-earth-active-cell="H_EARTH_GROUND_CELL_001"
     data-h-earth-scene-identity="earth-water-air-survival-shoreline-manor"
-    data-h-earth-mirror-manor-status="strategically-implied-not-route-canon-named"
-    data-h-earth-matrix-collapse="false"
-    data-public-scene-route="true"
-    data-operational-report-layer="true"
-    data-report-layer-maturity="030J"
-    data-spatial-composition-inspector="secondary"
-    data-real-spatial-receipt-exposure="advanced-secondary"
-    data-diagnostic-scope-collapsed="true"
-    data-receipt-scope-collapsed="true"
-    data-visible-diagnostic-wall="false"
   >
     <div class="h-earth-3d-shell">
-      <header class="h-earth-3d-public-header" aria-labelledby="h-earth-3d-title">
-        <a class="h-earth-3d-brand" href="/showroom/globe/" aria-label="Return to Globe">
-          <span class="h-earth-3d-brand-mark" aria-hidden="true"><span>H</span></span>
+      <header class="h-earth-3d-public-header" aria-label="H-Earth route header">
+        <a class="h-earth-3d-brand" href="/showroom/globe/" aria-label="Back to globe selector">
+          <span class="h-earth-3d-brand-mark" aria-hidden="true">
+            <span>H</span>
+          </span>
+
           <span class="h-earth-3d-brand-copy">
             <span>Ground-View Matrix</span>
             <strong>H-Earth</strong>
@@ -1015,470 +159,276 @@
         </a>
 
         <nav class="h-earth-3d-public-nav" aria-label="H-Earth route navigation">
-          <a href="/showroom/globe/">Globe</a>
+          <a href="/showroom/globe/">Selector</a>
           <a href="/showroom/globe/hearth/">Hearth</a>
           <a href="/showroom/globe/audralia/">Audralia</a>
-          <a href="/showroom/globe/hearth/diagnostic/">Control Room</a>
+          <a
+            id="h-earth-3d-diagnostic-link"
+            href="/showroom/globe/h-earth/diagnostic/"
+            data-h-earth-diagnostic-route-link="true"
+          >
+            Diagnostic
+          </a>
         </nav>
       </header>
 
-      <section class="h-earth-3d-arrival" aria-labelledby="h-earth-3d-title" data-h-earth-arrival="true">
+      <section class="h-earth-3d-world-shell" aria-label="H-Earth public scene preview">
+        <div class="h-earth-3d-world-stage h-earth-3d-stage">
+          <div
+            id="h-earth-3d-renderer-mount"
+            class="h-earth-3d-renderer-mount"
+            role="img"
+            aria-label="H-Earth DOM CSS 3D candidate renderer mount"
+            data-h-earth-renderer-mount="true"
+            data-h-earth-shell-owned-scene-objects="false"
+            data-h-earth-fake-scene-geometry="false"
+          ></div>
+
+          <div
+            id="h-earth-3d-fallback"
+            class="h-earth-3d-fallback"
+            role="status"
+            aria-live="polite"
+          >
+            H-Earth route bootstrap pending.
+          </div>
+
+          <div class="h-earth-3d-world-overlay" aria-label="H-Earth public controls">
+            <aside class="h-earth-3d-primary-hud" aria-label="H-Earth status and action HUD">
+              <div id="h-earth-3d-hud" class="h-earth-3d-hud">
+                <div class="h-earth-3d-hud-panel">
+                  <p class="h-earth-3d-panel-title">Route Status</p>
+
+                  <div
+                    id="h-earth-3d-status"
+                    class="h-earth-3d-status"
+                    role="status"
+                    aria-live="polite"
+                  >
+                    BOOTSTRAP_NOT_STARTED
+                  </div>
+                </div>
+
+                <div class="h-earth-3d-hud-panel">
+                  <p class="h-earth-3d-panel-title">First Action</p>
+
+                  <button
+                    id="h-earth-3d-action-inspect-ground"
+                    class="h-earth-3d-action-button"
+                    type="button"
+                    data-h-earth-action="Inspect Ground"
+                    data-h-earth-readout="Ground Condition Read"
+                    data-h-earth-receipt="H_EARTH_GROUND_INSPECTION_RECEIPT"
+                  >
+                    Inspect Ground
+                  </button>
+                </div>
+              </div>
+            </aside>
+
+            <aside
+              class="h-earth-3d-selected-target-card"
+              aria-label="Selected H-Earth target"
+            >
+              <p class="h-earth-3d-card-kicker">Selected Surface</p>
+
+              <h2
+                id="h-earth-3d-selected-target-label"
+                class="h-earth-3d-card-title"
+              >
+                Foreground Wet Sand
+              </h2>
+
+              <dl class="h-earth-3d-selected-target-facts">
+                <div>
+                  <dt>Object</dt>
+                  <dd id="h-earth-3d-selected-target-object-id">
+                    OBJ_002_FOREGROUND_WET_SAND
+                  </dd>
+                </div>
+
+                <div>
+                  <dt>Classification</dt>
+                  <dd id="h-earth-3d-selected-target-classification">
+                    PRIMARY_INSPECTION_TARGET
+                  </dd>
+                </div>
+              </dl>
+            </aside>
+          </div>
+        </div>
+      </section>
+
+      <section class="h-earth-3d-arrival" aria-label="H-Earth public arrival">
         <div class="h-earth-3d-arrival-copy">
-          <p class="h-earth-3d-kicker">H-Earth · Candidate Preview</p>
-          <h1 id="h-earth-3d-title" class="h-earth-3d-title">
-            Inspect the ground before the world opens.
+          <p class="h-earth-3d-kicker">Public Candidate Preview</p>
+
+          <h1 class="h-earth-3d-title">
+            Stand at the shoreline before the manor.
           </h1>
+
           <p class="h-earth-3d-lead">
-            H-Earth is the Ground-View Matrix. The route is monitored by compact
-            reports that identify where the next break belongs without forcing
-            raw receipts into the public scene.
+            H-Earth opens as a Ground-View Matrix: earth, water, air, survival
+            pressure, shoreline, and distant manor context. This public route is
+            scene-first. The diagnostic wall has been moved to its own route.
           </p>
         </div>
 
-        <aside class="h-earth-3d-arrival-note" aria-label="Route boundary summary">
+        <aside class="h-earth-3d-arrival-note" aria-label="Public route boundary">
           <p>
-            Candidate preview only. Reports diagnose from existing receipts.
-            Raw evidence remains copyable, but the scene remains primary.
+            Public route boundary: DOM/CSS3D candidate preview only. No WebGL,
+            canvas, final renderer claim, visual-pass claim, validation claim,
+            runtime lattice activation, traversal, survival simulation, or
+            matrix collapse.
           </p>
         </aside>
       </section>
 
-      <section id="h-earth-3d-world-shell" class="h-earth-3d-world-shell" aria-label="H-Earth public scene route">
-        <section id="h-earth-3d-world-stage" class="h-earth-3d-world-stage h-earth-3d-stage" aria-label="H-Earth primary renderer stage">
-          <div
-            id="h-earth-3d-renderer-mount"
-            class="h-earth-3d-renderer-mount"
-            aria-label="Renderer mount"
-            data-h-earth-renderer-mount="true"
-          ></div>
+      <section
+        id="h-earth-3d-public-readout"
+        class="h-earth-3d-readout-card"
+        aria-label="Compact H-Earth public readout"
+      >
+        <div class="h-earth-3d-readout-heading">
+          <p class="h-earth-3d-card-kicker">Ground Condition Read</p>
 
-          <div id="h-earth-3d-fallback" class="h-earth-3d-fallback" role="status" aria-live="polite">
-            H-Earth route bootstrap status pending.
-          </div>
-
-          <aside id="h-earth-3d-world-overlay" class="h-earth-3d-world-overlay" aria-label="H-Earth scene controls">
-            <section id="h-earth-3d-primary-hud" class="h-earth-3d-primary-hud" aria-label="Scene status and action">
-              <div id="h-earth-3d-hud" class="h-earth-3d-hud" aria-label="H-Earth route controls">
-                <section class="h-earth-3d-hud-panel h-earth-3d-status-panel">
-                  <h2 class="h-earth-3d-panel-title">Route Status</h2>
-                  <div id="h-earth-3d-status" class="h-earth-3d-status" role="status" aria-live="polite">
-                    BOOTSTRAP_NOT_STARTED
-                  </div>
-                </section>
-
-                <section class="h-earth-3d-hud-panel h-earth-3d-action-panel">
-                  <h2 class="h-earth-3d-panel-title">Action</h2>
-                  <button id="h-earth-3d-action-inspect-ground" class="h-earth-3d-action-button" type="button">
-                    Inspect Ground
-                  </button>
-                </section>
-              </div>
-            </section>
-
-            <section id="h-earth-3d-selected-target-card" class="h-earth-3d-selected-target-card" aria-label="Selected H-Earth surface">
-              <p class="h-earth-3d-card-kicker">Selected Surface</p>
-              <h2 id="h-earth-3d-selected-target-label" class="h-earth-3d-card-title">
-                Foreground Wet Sand
-              </h2>
-            </section>
-          </aside>
-        </section>
-
-        <section id="h-earth-3d-readout-card" class="h-earth-3d-readout-card h-earth-3d-public-ground-card" aria-label="Compact public Ground Condition Read">
-          <div class="h-earth-3d-readout-heading">
-            <p class="h-earth-3d-card-kicker">Ground Condition</p>
-            <h2 class="h-earth-3d-card-title">Foreground Wet Sand · Inspect Ground</h2>
-          </div>
-
-          <p class="h-earth-3d-public-readout-line">
-            Descriptor-only ground condition is available. Full object facts and
-            raw bridge payload remain collapsed so the public route is not
-            reduced to a diagnostic wall.
-          </p>
-
-          <details class="h-earth-3d-public-readout-details">
-            <summary>Show route facts</summary>
-            <dl class="h-earth-3d-readout-facts">
-              <div><dt>Selected surface</dt><dd>Foreground Wet Sand</dd></div>
-              <div><dt>Object ID</dt><dd>OBJ_002_FOREGROUND_WET_SAND</dd></div>
-              <div><dt>Zone</dt><dd>ZONE_001_FOREGROUND_INSPECTION_ZONE</dd></div>
-              <div><dt>Classification</dt><dd>PRIMARY_INSPECTION_TARGET</dd></div>
-              <div><dt>Available action</dt><dd>Inspect Ground</dd></div>
-              <div><dt>Readout</dt><dd>Ground Condition Read</dd></div>
-              <div><dt>Receipt posture</dt><dd>H_EARTH_GROUND_INSPECTION_RECEIPT descriptor-only</dd></div>
-            </dl>
-            <p class="h-earth-3d-readout-boundary">
-              No runtime action execution. No readout production claim. No
-              receipt creation claim. No runtime receipt persistence. No
-              validation claim. No production claim.
-            </p>
-          </details>
-        </section>
-      </section>
-
-      <section id="h-earth-3d-operational-reports" class="h-earth-3d-operational-reports" aria-labelledby="h-earth-3d-operational-reports-title" data-h-earth-report-layer="true">
-        <div class="h-earth-3d-operational-reports-header">
-          <div>
-            <p class="h-earth-3d-card-kicker">Early Warning Reports</p>
-            <h2 id="h-earth-3d-operational-reports-title" class="h-earth-3d-card-title">
-              Current break-location control surface
-            </h2>
-          </div>
-          <div id="h-earth-3d-report-layer-status" class="h-earth-3d-report-layer-status" role="status" aria-live="polite">
-            Reports pending.
-          </div>
+          <h2
+            id="h-earth-3d-public-readout-title"
+            class="h-earth-3d-card-title"
+          >
+            Foreground Wet Sand · Inspect Ground
+          </h2>
         </div>
 
-        <p class="h-earth-3d-operational-reports-copy">
-          Reports diagnose from receipts. Raw evidence remains available below,
-          but the visible route asks where the break belongs instead of
-          displaying every receipt at once.
+        <p
+          id="h-earth-3d-public-readout-line"
+          class="h-earth-3d-public-readout-line"
+        >
+          Descriptor-only Ground Condition Read is waiting for public route
+          bootstrap.
         </p>
 
-        <div id="h-earth-3d-report-layer" class="h-earth-3d-report-layer" aria-label="Operational report cards">
-          <article id="h-earth-3d-scene-stage-report" class="h-earth-3d-report-card" data-h-earth-report-id="scene-stage">
-            <header class="h-earth-3d-report-card-header"><h3>Scene Stage Report</h3><span id="h-earth-3d-scene-stage-report-severity">PENDING</span></header>
-            <p id="h-earth-3d-scene-stage-report-status" class="h-earth-3d-report-status">Pending.</p>
-            <p id="h-earth-3d-scene-stage-report-summary" class="h-earth-3d-report-summary">Awaiting bootstrap.</p>
-            <dl class="h-earth-3d-report-meta">
-              <div><dt>Owner</dt><dd id="h-earth-3d-scene-stage-report-owner">Pending</dd></div>
-              <div><dt>Next lane</dt><dd id="h-earth-3d-scene-stage-report-next-lane">Pending</dd></div>
-              <div><dt>Evidence</dt><dd id="h-earth-3d-scene-stage-report-evidence">Pending</dd></div>
-            </dl>
-            <button type="button" class="h-earth-3d-inline-copy-button" data-h-earth-copy-action="copy" data-h-earth-copy-target="h-earth-3d-copy-scene-stage-report" data-h-earth-copy-label="Scene Stage Report">Copy Report</button>
-          </article>
+        <details class="h-earth-3d-public-readout-details">
+          <summary>Public route facts</summary>
 
-          <article id="h-earth-3d-lattice-scope-report" class="h-earth-3d-report-card" data-h-earth-report-id="lattice-scope">
-            <header class="h-earth-3d-report-card-header"><h3>Lattice Scope Report</h3><span id="h-earth-3d-lattice-scope-report-severity">PENDING</span></header>
-            <p id="h-earth-3d-lattice-scope-report-status" class="h-earth-3d-report-status">Pending.</p>
-            <p id="h-earth-3d-lattice-scope-report-summary" class="h-earth-3d-report-summary">Awaiting lattice scope evidence.</p>
-            <dl class="h-earth-3d-report-meta">
-              <div><dt>Owner</dt><dd id="h-earth-3d-lattice-scope-report-owner">Pending</dd></div>
-              <div><dt>Next lane</dt><dd id="h-earth-3d-lattice-scope-report-next-lane">Pending</dd></div>
-              <div><dt>Evidence</dt><dd id="h-earth-3d-lattice-scope-report-evidence">Pending</dd></div>
-            </dl>
-            <button type="button" class="h-earth-3d-inline-copy-button" data-h-earth-copy-action="copy" data-h-earth-copy-target="h-earth-3d-copy-lattice-scope-report" data-h-earth-copy-label="Lattice Scope Report">Copy Report</button>
-          </article>
+          <dl class="h-earth-3d-readout-facts">
+            <div>
+              <dt>Matrix</dt>
+              <dd>H-Earth</dd>
+            </div>
 
-          <article id="h-earth-3d-environment-report" class="h-earth-3d-report-card" data-h-earth-report-id="environment">
-            <header class="h-earth-3d-report-card-header"><h3>Environment Report</h3><span id="h-earth-3d-environment-report-severity">PENDING</span></header>
-            <p id="h-earth-3d-environment-report-status" class="h-earth-3d-report-status">Pending.</p>
-            <p id="h-earth-3d-environment-report-summary" class="h-earth-3d-report-summary">Awaiting structured environment evidence.</p>
-            <dl class="h-earth-3d-report-meta">
-              <div><dt>Owner</dt><dd id="h-earth-3d-environment-report-owner">Pending</dd></div>
-              <div><dt>Next lane</dt><dd id="h-earth-3d-environment-report-next-lane">Pending</dd></div>
-              <div><dt>Evidence</dt><dd id="h-earth-3d-environment-report-evidence">Pending</dd></div>
-            </dl>
-            <button type="button" class="h-earth-3d-inline-copy-button" data-h-earth-copy-action="copy" data-h-earth-copy-target="h-earth-3d-copy-environment-report" data-h-earth-copy-label="Environment Report">Copy Report</button>
-          </article>
+            <div>
+              <dt>Role</dt>
+              <dd>Ground-View Matrix</dd>
+            </div>
 
-          <article id="h-earth-3d-compositor-report" class="h-earth-3d-report-card" data-h-earth-report-id="compositor">
-            <header class="h-earth-3d-report-card-header"><h3>Compositor Report</h3><span id="h-earth-3d-compositor-report-severity">PENDING</span></header>
-            <p id="h-earth-3d-compositor-report-status" class="h-earth-3d-report-status">Pending.</p>
-            <p id="h-earth-3d-compositor-report-summary" class="h-earth-3d-report-summary">Awaiting compositor evidence.</p>
-            <dl class="h-earth-3d-report-meta">
-              <div><dt>Owner</dt><dd id="h-earth-3d-compositor-report-owner">Pending</dd></div>
-              <div><dt>Next lane</dt><dd id="h-earth-3d-compositor-report-next-lane">Pending</dd></div>
-              <div><dt>Evidence</dt><dd id="h-earth-3d-compositor-report-evidence">Pending</dd></div>
-            </dl>
-            <button type="button" class="h-earth-3d-inline-copy-button" data-h-earth-copy-action="copy" data-h-earth-copy-target="h-earth-3d-copy-compositor-report" data-h-earth-copy-label="Compositor Report">Copy Report</button>
-          </article>
+            <div>
+              <dt>Cell</dt>
+              <dd>H_EARTH_GROUND_CELL_001</dd>
+            </div>
 
-          <article id="h-earth-3d-geometry-report" class="h-earth-3d-report-card" data-h-earth-report-id="geometry">
-            <header class="h-earth-3d-report-card-header"><h3>Geometry Report</h3><span id="h-earth-3d-geometry-report-severity">PENDING</span></header>
-            <p id="h-earth-3d-geometry-report-status" class="h-earth-3d-report-status">Pending.</p>
-            <p id="h-earth-3d-geometry-report-summary" class="h-earth-3d-report-summary">Awaiting geometry expansion evidence.</p>
-            <dl class="h-earth-3d-report-meta">
-              <div><dt>Owner</dt><dd id="h-earth-3d-geometry-report-owner">Pending</dd></div>
-              <div><dt>Next lane</dt><dd id="h-earth-3d-geometry-report-next-lane">Pending</dd></div>
-              <div><dt>Evidence</dt><dd id="h-earth-3d-geometry-report-evidence">Pending</dd></div>
-            </dl>
-            <button type="button" class="h-earth-3d-inline-copy-button" data-h-earth-copy-action="copy" data-h-earth-copy-target="h-earth-3d-copy-geometry-report" data-h-earth-copy-label="Geometry Report">Copy Report</button>
-          </article>
+            <div>
+              <dt>Receipt</dt>
+              <dd>H_EARTH_GROUND_INSPECTION_RECEIPT</dd>
+            </div>
+          </dl>
 
-          <article id="h-earth-3d-renderer-report" class="h-earth-3d-report-card" data-h-earth-report-id="renderer">
-            <header class="h-earth-3d-report-card-header"><h3>Renderer Report</h3><span id="h-earth-3d-renderer-report-severity">PENDING</span></header>
-            <p id="h-earth-3d-renderer-report-status" class="h-earth-3d-report-status">Pending.</p>
-            <p id="h-earth-3d-renderer-report-summary" class="h-earth-3d-report-summary">Awaiting renderer mount evidence.</p>
-            <dl class="h-earth-3d-report-meta">
-              <div><dt>Owner</dt><dd id="h-earth-3d-renderer-report-owner">Pending</dd></div>
-              <div><dt>Next lane</dt><dd id="h-earth-3d-renderer-report-next-lane">Pending</dd></div>
-              <div><dt>Evidence</dt><dd id="h-earth-3d-renderer-report-evidence">Pending</dd></div>
-            </dl>
-            <button type="button" class="h-earth-3d-inline-copy-button" data-h-earth-copy-action="copy" data-h-earth-copy-target="h-earth-3d-copy-renderer-report" data-h-earth-copy-label="Renderer Report">Copy Report</button>
-          </article>
-
-          <article id="h-earth-3d-css-interpretation-report" class="h-earth-3d-report-card" data-h-earth-report-id="css-interpretation">
-            <header class="h-earth-3d-report-card-header"><h3>CSS Interpretation Report</h3><span id="h-earth-3d-css-interpretation-report-severity">PENDING</span></header>
-            <p id="h-earth-3d-css-interpretation-report-status" class="h-earth-3d-report-status">Pending.</p>
-            <p id="h-earth-3d-css-interpretation-report-summary" class="h-earth-3d-report-summary">Awaiting renderer/geometry report basis.</p>
-            <dl class="h-earth-3d-report-meta">
-              <div><dt>Owner</dt><dd id="h-earth-3d-css-interpretation-report-owner">Pending</dd></div>
-              <div><dt>Next lane</dt><dd id="h-earth-3d-css-interpretation-report-next-lane">Pending</dd></div>
-              <div><dt>Evidence</dt><dd id="h-earth-3d-css-interpretation-report-evidence">Pending</dd></div>
-            </dl>
-            <button type="button" class="h-earth-3d-inline-copy-button" data-h-earth-copy-action="copy" data-h-earth-copy-target="h-earth-3d-copy-css-interpretation-report" data-h-earth-copy-label="CSS Interpretation Report">Copy Report</button>
-          </article>
-
-          <article id="h-earth-3d-action-bridge-report" class="h-earth-3d-report-card" data-h-earth-report-id="action-bridge">
-            <header class="h-earth-3d-report-card-header"><h3>Action Bridge Report</h3><span id="h-earth-3d-action-bridge-report-severity">PENDING</span></header>
-            <p id="h-earth-3d-action-bridge-report-status" class="h-earth-3d-report-status">Pending.</p>
-            <p id="h-earth-3d-action-bridge-report-summary" class="h-earth-3d-report-summary">Awaiting Inspect Ground bridge payload.</p>
-            <dl class="h-earth-3d-report-meta">
-              <div><dt>Owner</dt><dd id="h-earth-3d-action-bridge-report-owner">Pending</dd></div>
-              <div><dt>Next lane</dt><dd id="h-earth-3d-action-bridge-report-next-lane">Pending</dd></div>
-              <div><dt>Evidence</dt><dd id="h-earth-3d-action-bridge-report-evidence">Pending</dd></div>
-            </dl>
-            <button type="button" class="h-earth-3d-inline-copy-button" data-h-earth-copy-action="copy" data-h-earth-copy-target="h-earth-3d-copy-action-bridge-report" data-h-earth-copy-label="Action Bridge Report">Copy Report</button>
-          </article>
-
-          <article id="h-earth-3d-boundary-report" class="h-earth-3d-report-card" data-h-earth-report-id="boundary">
-            <header class="h-earth-3d-report-card-header"><h3>Boundary Report</h3><span id="h-earth-3d-boundary-report-severity">PENDING</span></header>
-            <p id="h-earth-3d-boundary-report-status" class="h-earth-3d-report-status">Pending.</p>
-            <p id="h-earth-3d-boundary-report-summary" class="h-earth-3d-report-summary">Awaiting boundary flags.</p>
-            <dl class="h-earth-3d-report-meta">
-              <div><dt>Owner</dt><dd id="h-earth-3d-boundary-report-owner">Pending</dd></div>
-              <div><dt>Next lane</dt><dd id="h-earth-3d-boundary-report-next-lane">Pending</dd></div>
-              <div><dt>Evidence</dt><dd id="h-earth-3d-boundary-report-evidence">Pending</dd></div>
-            </dl>
-            <button type="button" class="h-earth-3d-inline-copy-button" data-h-earth-copy-action="copy" data-h-earth-copy-target="h-earth-3d-copy-boundary-report" data-h-earth-copy-label="Boundary Report">Copy Report</button>
-          </article>
-        </div>
-
-        <div class="h-earth-3d-report-stack-copy-row">
-          <button type="button" class="h-earth-3d-copy-button" data-h-earth-copy-action="copy" data-h-earth-copy-target="h-earth-3d-copy-operational-report-stack" data-h-earth-copy-label="Operational Report Stack">
-            Copy Operational Report Stack
-          </button>
-        </div>
-
-        <pre id="h-earth-3d-operational-report-stack-payload" class="h-earth-3d-report-stack-payload" aria-label="Operational report stack payload" hidden>Operational report stack pending.</pre>
+          <p class="h-earth-3d-readout-boundary">
+            This readout is descriptor-only. It does not execute gameplay,
+            persist runtime receipts, prove visual pass, validate production, or
+            activate lattice traversal.
+          </p>
+        </details>
       </section>
 
-      <details id="h-earth-3d-advanced-spatial-evidence" class="h-earth-3d-spatial-inspector h-earth-3d-advanced-spatial-evidence">
-        <summary id="h-earth-3d-spatial-inspector-toggle" class="h-earth-3d-spatial-inspector-toggle">
-          Advanced Raw Spatial Evidence
+      <details class="h-earth-3d-target-drawer">
+        <summary class="h-earth-3d-target-drawer-toggle">
+          Select inspection surface
         </summary>
 
-        <section class="h-earth-3d-spatial-inspector-body" aria-label="H-Earth advanced raw spatial evidence">
-          <section class="h-earth-3d-spatial-diagnosis-card">
-            <p class="h-earth-3d-card-kicker">Raw Evidence</p>
-            <h2 class="h-earth-3d-card-title">Source receipts and spatial payloads</h2>
-            <p class="h-earth-3d-spatial-diagnosis-copy">
-              Raw evidence remains available for proof and copying. Operational
-              reports above should be used first for break-location routing.
+        <section class="h-earth-3d-panel h-earth-3d-target-panel" aria-label="Selectable H-Earth targets">
+          <p class="h-earth-3d-panel-title">Available public targets</p>
+
+          <div
+            id="h-earth-3d-target-list"
+            class="h-earth-3d-target-list"
+            data-h-earth-public-target-list="true"
+          >
+            <p class="h-earth-3d-empty-panel-note">
+              Target list will populate after route bootstrap.
             </p>
-          </section>
-
-          <section id="h-earth-3d-composition-readout" class="h-earth-3d-composition-readout h-earth-3d-raw-evidence-grid" aria-label="Raw spatial composition readout">
-            <section class="h-earth-3d-panel h-earth-3d-spatial-panel">
-              <div class="h-earth-3d-panel-heading-row">
-                <h2 class="h-earth-3d-panel-title">Spatial Summary</h2>
-                <button type="button" class="h-earth-3d-inline-copy-button" data-h-earth-copy-action="copy" data-h-earth-copy-target="h-earth-3d-copy-spatial-summary" data-h-earth-copy-label="Spatial Summary">Copy</button>
-              </div>
-              <pre id="h-earth-3d-spatial-summary-payload" class="h-earth-3d-receipt-output h-earth-3d-spatial-output" aria-label="Spatial Summary payload">Spatial summary pending.</pre>
-            </section>
-
-            <section class="h-earth-3d-panel h-earth-3d-spatial-panel">
-              <div class="h-earth-3d-panel-heading-row">
-                <h2 class="h-earth-3d-panel-title">Composed Candidate Frame</h2>
-                <button type="button" class="h-earth-3d-inline-copy-button" data-h-earth-copy-action="copy" data-h-earth-copy-target="h-earth-3d-copy-composed-frame" data-h-earth-copy-label="Composed Candidate Frame">Copy</button>
-              </div>
-              <pre id="h-earth-3d-composed-frame-payload" class="h-earth-3d-receipt-output h-earth-3d-spatial-output" aria-label="Composed Candidate Frame payload">Composed frame payload pending.</pre>
-            </section>
-
-            <section class="h-earth-3d-panel h-earth-3d-spatial-panel">
-              <div class="h-earth-3d-panel-heading-row">
-                <h2 class="h-earth-3d-panel-title">Compositor Receipt</h2>
-                <button type="button" class="h-earth-3d-inline-copy-button" data-h-earth-copy-action="copy" data-h-earth-copy-target="h-earth-3d-copy-compositor-receipt" data-h-earth-copy-label="Compositor Receipt">Copy</button>
-              </div>
-              <pre id="h-earth-3d-compositor-receipt-payload" class="h-earth-3d-receipt-output h-earth-3d-spatial-output" aria-label="Compositor Receipt payload">Compositor receipt payload pending.</pre>
-            </section>
-
-            <section class="h-earth-3d-panel h-earth-3d-spatial-panel">
-              <div class="h-earth-3d-panel-heading-row">
-                <h2 class="h-earth-3d-panel-title">Renderer Placement Evidence</h2>
-                <button type="button" class="h-earth-3d-inline-copy-button" data-h-earth-copy-action="copy" data-h-earth-copy-target="h-earth-3d-copy-renderer-placement" data-h-earth-copy-label="Renderer Placement Evidence">Copy</button>
-              </div>
-              <pre id="h-earth-3d-renderer-placement-payload" class="h-earth-3d-receipt-output h-earth-3d-spatial-output" aria-label="Renderer Placement Evidence payload">Renderer placement payload pending.</pre>
-            </section>
-
-            <section class="h-earth-3d-panel h-earth-3d-spatial-panel">
-              <div class="h-earth-3d-panel-heading-row">
-                <h2 class="h-earth-3d-panel-title">Environment Placement Summary</h2>
-                <button type="button" class="h-earth-3d-inline-copy-button" data-h-earth-copy-action="copy" data-h-earth-copy-target="h-earth-3d-copy-environment-placement" data-h-earth-copy-label="Environment Placement Summary">Copy</button>
-              </div>
-              <pre id="h-earth-3d-environment-placement-payload" class="h-earth-3d-receipt-output h-earth-3d-spatial-output" aria-label="Environment Placement Summary payload">Environment placement payload pending.</pre>
-            </section>
-          </section>
-        </section>
-      </details>
-
-      <details id="h-earth-3d-target-drawer" class="h-earth-3d-target-drawer">
-        <summary class="h-earth-3d-target-drawer-toggle">Selectable Targets</summary>
-        <section class="h-earth-3d-panel h-earth-3d-target-panel">
-          <h2 class="h-earth-3d-panel-title">Selectable Targets</h2>
-          <div id="h-earth-3d-target-list" class="h-earth-3d-target-list" aria-label="Selectable H-Earth objects">
-            <p class="h-earth-3d-empty-panel-note">No selectable targets loaded yet.</p>
           </div>
         </section>
       </details>
 
-      <details id="h-earth-3d-developer-drawer" class="h-earth-3d-developer-drawer">
-        <summary id="h-earth-3d-developer-drawer-toggle" class="h-earth-3d-developer-drawer-toggle">
-          Developer diagnostics and receipts
+      <details class="h-earth-3d-developer-drawer">
+        <summary class="h-earth-3d-developer-drawer-toggle">
+          Compact public route receipt
         </summary>
 
-        <section class="h-earth-3d-developer-drawer-body" aria-label="H-Earth developer diagnostics">
-          <section class="h-earth-3d-copy-toolbar" aria-label="Receipt and report copy controls">
-            <div class="h-earth-3d-copy-toolbar-header">
-              <h2 class="h-earth-3d-panel-title">Copy Surface</h2>
-              <p id="h-earth-3d-copy-status" class="h-earth-3d-copy-status" data-h-earth-copy-status="ready">
-                Copy surface pending bootstrap.
-              </p>
+        <div class="h-earth-3d-developer-drawer-body">
+          <section class="h-earth-3d-panel" aria-label="Public inspection payload">
+            <div class="h-earth-3d-panel-heading-row">
+              <p class="h-earth-3d-panel-title">Public Inspection Payload</p>
             </div>
 
-            <section class="h-earth-3d-available-evidence-guide" aria-label="Available evidence request guide">
-              <p class="h-earth-3d-card-kicker">Receipt Request Guide</p>
-              <h3 class="h-earth-3d-card-title">Available Evidence</h3>
-              <p>
-                Use only the copy options available on this page. Source Canon
-                lattice authority is mirrored as descriptor-only evidence through
-                the route bootstrap. Runtime lattice activation and lattice map
-                receipts are not current route receipts.
-              </p>
+            <pre
+              id="h-earth-3d-inspection-panel"
+              class="h-earth-3d-inspection-panel"
+            >Public inspection payload pending.</pre>
+          </section>
 
-              <div class="h-earth-3d-evidence-guide-grid">
-                <section>
-                  <h4>Minimum Bundle</h4>
-                  <ol>
-                    <li>Copy Operational Reports</li>
-                    <li>Copy Route Bootstrap Receipt</li>
-                    <li>Copy Environment Placement Summary</li>
-                    <li>Copy Boundary Flags</li>
-                  </ol>
-                </section>
+          <section class="h-earth-3d-panel" aria-label="Compact public bootstrap debug">
+            <div class="h-earth-3d-panel-heading-row">
+              <p class="h-earth-3d-panel-title">Compact Public Bootstrap</p>
 
-                <section>
-                  <h4>Full Current UI Bundle</h4>
-                  <ol>
-                    <li>Copy Operational Reports</li>
-                    <li>Copy Route Bootstrap Receipt</li>
-                    <li>Copy Environment Placement Summary</li>
-                    <li>Copy Composed Candidate Frame</li>
-                    <li>Copy Renderer Mount Receipt</li>
-                    <li>Copy Ground Read Bridge</li>
-                    <li>Copy Boundary Flags</li>
-                  </ol>
-                </section>
-
-                <section>
-                  <h4>Descriptor-Only Exposed</h4>
-                  <ol>
-                    <li>Source Canon lattice exposure mirror</li>
-                    <li>Formal 16x16 / 256 source-authority status</li>
-                    <li>Address-field descriptor status</li>
-                  </ol>
-                </section>
-
-                <section>
-                  <h4>Future / Not Runtime-Available</h4>
-                  <ol>
-                    <li>Runtime lattice activation receipt</li>
-                    <li>Active 16x16 runtime field receipt</li>
-                    <li>Active 256-address runtime field receipt</li>
-                    <li>lattice-to-zone/object/anchor/render maps</li>
-                    <li>Room 3 environment lattice audit receipt</li>
-                  </ol>
-                </section>
-              </div>
-
-              <div class="h-earth-3d-report-stack-copy-row">
-                <button type="button" class="h-earth-3d-copy-button" data-h-earth-copy-action="copy" data-h-earth-copy-target="h-earth-3d-copy-available-evidence-guide" data-h-earth-copy-label="Available Evidence Guide">Copy Evidence Guide</button>
-                <button type="button" class="h-earth-3d-copy-button" data-h-earth-copy-action="copy" data-h-earth-copy-target="h-earth-3d-copy-minimum-ui-bundle-guide" data-h-earth-copy-label="Minimum UI Bundle Guide">Copy Minimum Bundle</button>
-              </div>
-            </section>
-
-            <div class="h-earth-3d-copy-actions">
-              <button type="button" class="h-earth-3d-copy-button h-earth-3d-copy-receipt-button" data-h-earth-copy-action="copy" data-h-earth-copy-target="h-earth-3d-copy-operational-report-stack" data-h-earth-copy-label="Operational Report Stack">Copy Operational Reports</button>
-              <button type="button" class="h-earth-3d-copy-button h-earth-3d-copy-receipt-button" data-h-earth-copy-action="copy" data-h-earth-copy-target="h-earth-3d-copy-route-bootstrap-receipt" data-h-earth-copy-label="Route Bootstrap Receipt">Copy Route Bootstrap Receipt</button>
-              <button type="button" class="h-earth-3d-copy-button h-earth-3d-copy-receipt-button" data-h-earth-copy-action="copy" data-h-earth-copy-target="h-earth-3d-copy-environment-placement" data-h-earth-copy-label="Environment Placement Summary">Copy Environment Placement Summary</button>
-              <button type="button" class="h-earth-3d-copy-button h-earth-3d-copy-receipt-button" data-h-earth-copy-action="copy" data-h-earth-copy-target="h-earth-3d-copy-boundary-flags" data-h-earth-copy-label="Boundary Flags">Copy Boundary Flags</button>
-              <button type="button" class="h-earth-3d-copy-button h-earth-3d-copy-receipt-button" data-h-earth-copy-action="copy" data-h-earth-copy-target="h-earth-3d-copy-composed-frame" data-h-earth-copy-label="Composed Candidate Frame">Copy Composed Candidate Frame</button>
-              <button type="button" class="h-earth-3d-copy-button h-earth-3d-copy-receipt-button" data-h-earth-copy-action="copy" data-h-earth-copy-target="h-earth-3d-copy-renderer-mount-receipt" data-h-earth-copy-label="Renderer Mount Receipt">Copy Renderer Mount Receipt</button>
-              <button type="button" class="h-earth-3d-copy-button h-earth-3d-copy-receipt-button" data-h-earth-copy-action="copy" data-h-earth-copy-target="h-earth-3d-copy-ground-read-bridge" data-h-earth-copy-label="Ground Condition Read Bridge">Copy Ground Read Bridge</button>
-              <button type="button" class="h-earth-3d-copy-button h-earth-3d-copy-receipt-button" data-h-earth-copy-action="copy" data-h-earth-copy-target="h-earth-3d-copy-bootstrap-debug" data-h-earth-copy-label="Bootstrap Debug">Copy Bootstrap Debug</button>
-              <button type="button" class="h-earth-3d-copy-button h-earth-3d-copy-receipt-button" data-h-earth-copy-action="copy" data-h-earth-copy-target="h-earth-3d-copy-index-contract" data-h-earth-copy-label="Index Contract">Copy Index Contract</button>
+              <a
+                class="h-earth-3d-inline-copy-button"
+                href="/showroom/globe/h-earth/diagnostic/"
+              >
+                Open Diagnostic
+              </a>
             </div>
+
+            <pre
+              id="h-earth-3d-debug"
+              class="h-earth-3d-debug"
+            >Compact public bootstrap receipt pending.</pre>
           </section>
 
-          <section class="h-earth-3d-control-grid" aria-label="H-Earth raw diagnostic panels">
-            <section class="h-earth-3d-panel">
-              <div class="h-earth-3d-panel-heading-row">
-                <h2 class="h-earth-3d-panel-title">Ground Condition Read Bridge</h2>
-                <button type="button" class="h-earth-3d-inline-copy-button" data-h-earth-copy-action="copy" data-h-earth-copy-target="h-earth-3d-copy-ground-read-bridge" data-h-earth-copy-label="Ground Condition Read Bridge">Copy</button>
-              </div>
-              <pre id="h-earth-3d-inspection-panel" class="h-earth-3d-inspection-panel" aria-label="Ground Condition Read Bridge payload">No inspection descriptor selected.</pre>
-            </section>
-
-            <section class="h-earth-3d-panel h-earth-3d-debug-panel">
-              <div class="h-earth-3d-panel-heading-row">
-                <h2 class="h-earth-3d-panel-title">Bootstrap Debug</h2>
-                <button type="button" class="h-earth-3d-inline-copy-button" data-h-earth-copy-action="copy" data-h-earth-copy-target="h-earth-3d-copy-bootstrap-debug" data-h-earth-copy-label="Bootstrap Debug">Copy</button>
-              </div>
-              <pre id="h-earth-3d-debug" class="h-earth-3d-debug" aria-label="Bootstrap Debug payload">No bootstrap debug payload yet.</pre>
-            </section>
-          </section>
-
-          <section id="h-earth-3d-receipt-stack" class="h-earth-3d-receipt-stack h-earth-3d-receipt-grid" aria-label="H-Earth receipt surfaces">
-            <section class="h-earth-3d-panel h-earth-3d-receipt-card h-earth-3d-receipt-panel">
-              <div class="h-earth-3d-panel-heading-row">
-                <h2 class="h-earth-3d-panel-title">Renderer Mount Receipt</h2>
-                <button type="button" class="h-earth-3d-inline-copy-button" data-h-earth-copy-action="copy" data-h-earth-copy-target="h-earth-3d-copy-renderer-mount-receipt" data-h-earth-copy-label="Renderer Mount Receipt">Copy</button>
-              </div>
-              <pre id="h-earth-3d-renderer-mount-receipt" class="h-earth-3d-receipt-output" aria-label="Renderer Mount Receipt">Renderer mount receipt pending.</pre>
-            </section>
-
-            <section class="h-earth-3d-panel h-earth-3d-receipt-card h-earth-3d-receipt-panel">
-              <div class="h-earth-3d-panel-heading-row">
-                <h2 class="h-earth-3d-panel-title">Route Bootstrap Receipt</h2>
-                <button type="button" class="h-earth-3d-inline-copy-button" data-h-earth-copy-action="copy" data-h-earth-copy-target="h-earth-3d-copy-route-bootstrap-receipt" data-h-earth-copy-label="Route Bootstrap Receipt">Copy</button>
-              </div>
-              <pre id="h-earth-3d-route-bootstrap-receipt" class="h-earth-3d-receipt-output" aria-label="Route Bootstrap Receipt">Route bootstrap receipt pending.</pre>
-            </section>
-
-            <section class="h-earth-3d-panel h-earth-3d-receipt-card h-earth-3d-receipt-panel">
-              <div class="h-earth-3d-panel-heading-row">
-                <h2 class="h-earth-3d-panel-title">Boundary Flags</h2>
-                <button type="button" class="h-earth-3d-inline-copy-button" data-h-earth-copy-action="copy" data-h-earth-copy-target="h-earth-3d-copy-boundary-flags" data-h-earth-copy-label="Boundary Flags">Copy</button>
-              </div>
-              <pre id="h-earth-3d-boundary-flags" class="h-earth-3d-receipt-output" aria-label="Boundary Flags">Boundary flags pending.</pre>
-            </section>
-
-            <section class="h-earth-3d-panel h-earth-3d-receipt-card h-earth-3d-receipt-panel">
-              <div class="h-earth-3d-panel-heading-row">
-                <h2 class="h-earth-3d-panel-title">Index Contract</h2>
-                <button type="button" class="h-earth-3d-inline-copy-button" data-h-earth-copy-action="copy" data-h-earth-copy-target="h-earth-3d-copy-index-contract" data-h-earth-copy-label="Index Contract">Copy</button>
-              </div>
-              <pre id="h-earth-3d-index-contract" class="h-earth-3d-receipt-output" aria-label="Index Contract">Index contract pending.</pre>
-            </section>
-          </section>
-
-          <section class="h-earth-3d-claim-boundary">
-            <h2 class="h-earth-3d-panel-title">Boundary Notice</h2>
+          <section class="h-earth-3d-claim-boundary" aria-label="Public route claim boundary">
             <p>
-              This route shell supports a DOM/CSS-3D candidate preview and
-              operational report layer only. It does not activate WebGL or
-              canvas, does not claim final renderer status, renderer pass,
-              visual pass, validation, production, traversal, survival
-              simulation, manor interior access, distant traversal, swimming,
-              fluid simulation, lattice activation, active 16x16 runtime status,
-              active 256-address runtime status, Mirror Manor route-canon
-              naming, or matrix collapse.
+              Full reports, raw evidence, receipt wall, copy toolbar, lattice
+              scope diagnosis, and operational report cards are not embedded in
+              this public route. They belong to the H-Earth diagnostic route.
             </p>
           </section>
-        </section>
+        </div>
       </details>
     </div>
   </main>
+
+  <script type="module">
+    import {
+      initializeHEarthRoute,
+      getRouteBootstrapReceipt,
+      H_EARTH_3D_INDEX
+    } from './index.js';
+
+    const boot = () => {
+      const result = initializeHEarthRoute({ document });
+
+      globalThis.H_EARTH_3D_INDEX = H_EARTH_3D_INDEX;
+      globalThis.H_EARTH_3D_ROUTE_BOOTSTRAP_RESULT = result;
+      globalThis.H_EARTH_3D_ROUTE_BOOTSTRAP_RECEIPT =
+        getRouteBootstrapReceipt();
+    };
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', boot, { once: true });
+    } else {
+      boot();
+    }
+  </script>
 </body>
 </html>

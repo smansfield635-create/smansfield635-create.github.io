@@ -1,10 +1,13 @@
 /*
   /showroom/globe/h-earth/index.css
   COMPLETE RENEWED FILE
-  H_EARTH_3D_ROUTE_SHELL_STYLE_FILE_BIRTH_STEP_033D_COHERENT_ENVIRONMENT_VISUAL_GRAMMAR_v1
+  H_EARTH_3D_ROUTE_SHELL_STYLE_FILE_BIRTH_STEP_033E_PARENT_DESCRIPTOR_VISUAL_SUPPRESSION_GEOMETRY_CHILD_EXPRESSION_v1
 
   Renews:
   H_EARTH_3D_ROUTE_SHELL_STYLE_FILE_BIRTH_STEP_033C_PUBLIC_SCENE_ONLY_DIAGNOSTIC_SPLIT_v1
+
+  Replaces attempted visual grammar direction:
+  H_EARTH_3D_ROUTE_SHELL_STYLE_FILE_BIRTH_STEP_033D_COHERENT_ENVIRONMENT_VISUAL_GRAMMAR_v1
 
   Companion public route shell:
   /showroom/globe/h-earth/index.html
@@ -19,20 +22,44 @@
   Public H-Earth scene stylesheet only. Styles the public shell, renderer mount,
   DOM/CSS3D candidate renderer surface, public HUD, selected target card,
   compact readout, target drawer, compact debug drawer, renderer-generated
-  layer/object/material/primitive/landscape classes, responsive stage, and
-  coherent environment visual grammar for the twelve currently mounted
-  candidate environment objects.
+  layer/object/material/primitive/landscape classes, responsive stage, and the
+  corrected visual split between parent descriptor nodes and expanded geometry
+  child nodes.
+
+  Confirmed live receipt basis:
+  - rendererMounted true
+  - geometryExpansionApplied true
+  - rawSourceNodeCount 12
+  - geometryExpandedNodeCount 172
+  - geometryParentNodeCount 11
+  - geometryChildNodeCount 161
+  - mountedNodeCount 172
+  - placedNodeCount 172
+  - transformDescriptorAppliedCount 172
+  - primitiveGeometryAppliedCount 172
+  - visualGrammarReadyCount 172
+  - warningCodes []
+  - failureCodes []
 
   Renewal scope:
   - Preserve public route shell styling.
   - Preserve diagnostic split.
   - Preserve renderer class bridge.
-  - Strengthen material, primitive, landscape, and object-specific CSS grammar.
-  - Make the already-mounted candidate scene more readable as wet sand, dry sand,
-    tide pools, foam, nearshore wave band, water plane, air haze, manor exterior
-    context, beach stones, foreground jagged rocks, distant rocks/islets, and
-    inspection anchor.
-  - Keep all improvements CSS-only and candidate-only.
+  - Suppress visual dominance of large parent descriptor slabs.
+  - Let expanded geometry child nodes carry visible material/primitive grammar.
+  - Avoid unproven object-id selectors.
+  - Use only confirmed emitted class surfaces:
+    h-earth-render-descriptor-only,
+    h-earth-render-candidate-geometry-only,
+    h-earth-render-class-ready,
+    h-earth-render-visual-grammar-ready,
+    h-earth-material-*,
+    h-earth-primitive-*,
+    h-earth-landscape-*,
+    h-earth-geometry-*,
+    h-earth-geometry-node-*,
+    h-earth-layer-member,
+    h-earth-layer-member-*.
 
   Boundary:
   CSS interpretation only.
@@ -90,17 +117,16 @@
   --h-earth-render-depth-scale: 1;
 
   --h-earth-wet-sand-base: #7f6b52;
-  --h-earth-wet-sand-light: #bda47f;
-  --h-earth-wet-sand-dark: #332b22;
-  --h-earth-wet-sand-glow: rgba(180, 220, 208, 0.16);
+  --h-earth-wet-sand-light: #b19a78;
+  --h-earth-wet-sand-dark: #3f362c;
 
   --h-earth-dry-sand-base: #c5a974;
-  --h-earth-dry-sand-light: #ecd8a6;
-  --h-earth-dry-sand-dark: #765f36;
+  --h-earth-dry-sand-light: #e7d3a1;
+  --h-earth-dry-sand-dark: #7d6840;
 
   --h-earth-foam-base: #e6fff8;
-  --h-earth-foam-soft: rgba(230, 255, 248, 0.62);
-  --h-earth-foam-faint: rgba(230, 255, 248, 0.22);
+  --h-earth-foam-soft: rgba(230, 255, 248, 0.58);
+  --h-earth-foam-faint: rgba(230, 255, 248, 0.2);
 
   --h-earth-tide-pool-base: #2b6d72;
   --h-earth-tide-pool-light: #7ad9d1;
@@ -117,7 +143,6 @@
   --h-earth-water-base: #0f4d65;
   --h-earth-water-light: #4db6ca;
   --h-earth-water-dark: #041923;
-  --h-earth-water-glow: rgba(74, 191, 206, 0.22);
 
   --h-earth-nearshore-wave-base: #3e94a7;
   --h-earth-nearshore-wave-light: #a9eef0;
@@ -129,7 +154,6 @@
   --h-earth-manor-context-base: #564833;
   --h-earth-manor-context-light: #9a805b;
   --h-earth-manor-context-dark: #1e1a14;
-  --h-earth-manor-window: rgba(255, 222, 154, 0.28);
 
   --h-earth-distant-rock-base: #465556;
   --h-earth-distant-rock-light: #89a0a0;
@@ -304,8 +328,6 @@ pre {
   outline: none;
 }
 
-/* Public stage */
-
 .h-earth-3d-world-shell {
   position: relative;
 }
@@ -320,8 +342,8 @@ pre {
   border: 1px solid rgba(217, 255, 243, 0.18);
   border-radius: 34px;
   background:
-    radial-gradient(ellipse at 50% 16%, rgba(235, 249, 243, 0.22), transparent 24%),
-    linear-gradient(180deg, rgba(119, 151, 147, 0.28) 0%, rgba(63, 102, 112, 0.28) 34%, rgba(16, 54, 67, 0.28) 50%, rgba(42, 39, 31, 0.24) 74%, rgba(73, 58, 38, 0.32) 100%),
+    radial-gradient(ellipse at 50% 20%, rgba(226, 246, 241, 0.18), transparent 34%),
+    linear-gradient(180deg, rgba(76, 109, 111, 0.36) 0%, rgba(20, 48, 61, 0.3) 42%, rgba(9, 18, 21, 0.2) 58%, rgba(28, 24, 17, 0.24) 100%),
     #04090c;
   box-shadow: var(--h-earth-shadow-strong);
   isolation: isolate;
@@ -343,10 +365,9 @@ pre {
 .h-earth-3d-world-stage::before,
 .h-earth-3d-stage::before {
   background:
-    radial-gradient(ellipse at 50% 17%, rgba(233, 248, 242, 0.3), transparent 18%),
-    radial-gradient(ellipse at 50% 48%, rgba(169, 238, 240, 0.08), transparent 30%),
-    linear-gradient(180deg, transparent 0%, transparent 42%, rgba(255, 246, 218, 0.08) 45%, transparent 52%),
-    radial-gradient(ellipse at 50% 118%, rgba(165, 129, 77, 0.22), transparent 54%);
+    radial-gradient(ellipse at 50% 18%, rgba(233, 248, 242, 0.28), transparent 18%),
+    linear-gradient(180deg, transparent 0%, transparent 44%, rgba(255, 246, 218, 0.08) 45%, transparent 51%),
+    radial-gradient(ellipse at 50% 118%, rgba(165, 129, 77, 0.2), transparent 54%);
   mix-blend-mode: screen;
 }
 
@@ -732,7 +753,6 @@ pre {
   border-radius: 999px;
   will-change: transform, opacity;
   backface-visibility: hidden;
-  overflow: visible;
 }
 
 .h-earth-render-object::before,
@@ -746,7 +766,7 @@ pre {
 
 .h-earth-render-object::before {
   background: currentColor;
-  opacity: 0.88;
+  opacity: 0.86;
 }
 
 .h-earth-render-object::after {
@@ -784,9 +804,69 @@ pre {
   box-shadow: 0 0 16px rgba(255, 226, 145, 0.45);
 }
 
+/* Confirmed break repair:
+   Parent descriptor nodes are large descriptor surfaces.
+   Geometry child nodes are the intended visual expression layer. */
+
 .h-earth-render-descriptor-only {
-  outline: 1px solid rgba(217, 255, 243, 0.08);
+  outline: 1px solid rgba(217, 255, 243, 0.05);
   outline-offset: 1px;
+}
+
+.h-earth-render-object.h-earth-render-descriptor-only {
+  background: transparent !important;
+  border-color: transparent;
+  box-shadow: none !important;
+  filter: none;
+}
+
+.h-earth-render-object.h-earth-render-descriptor-only::before,
+.h-earth-render-object.h-earth-render-descriptor-only::after {
+  display: none;
+  opacity: 0;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.h-earth-render-object.h-earth-render-descriptor-only.h-earth-render-visual-grammar-ready,
+.h-earth-render-object.h-earth-render-descriptor-only.h-earth-render-class-ready {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.h-earth-render-object.h-earth-render-descriptor-only.h-earth-material-wet-sand,
+.h-earth-render-object.h-earth-render-descriptor-only.h-earth-material-dry-sand,
+.h-earth-render-object.h-earth-render-descriptor-only.h-earth-material-foam,
+.h-earth-render-object.h-earth-render-descriptor-only.h-earth-material-tide-pool,
+.h-earth-render-object.h-earth-render-descriptor-only.h-earth-material-stone,
+.h-earth-render-object.h-earth-render-descriptor-only.h-earth-material-jagged-rock,
+.h-earth-render-object.h-earth-render-descriptor-only.h-earth-material-water,
+.h-earth-render-object.h-earth-render-descriptor-only.h-earth-material-nearshore-wave,
+.h-earth-render-object.h-earth-render-descriptor-only.h-earth-material-air-haze,
+.h-earth-render-object.h-earth-render-descriptor-only.h-earth-material-manor-context,
+.h-earth-render-object.h-earth-render-descriptor-only.h-earth-material-distant-rock,
+.h-earth-render-object.h-earth-render-descriptor-only.h-earth-material-inspection-anchor {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.h-earth-render-candidate-geometry-only,
+.h-earth-render-object[class*="h-earth-geometry-node-"],
+.h-earth-render-object[class*="h-earth-geometry-"] {
+  outline: 1px solid rgba(186, 245, 207, 0.08);
+  outline-offset: 0;
+}
+
+.h-earth-render-object.h-earth-render-candidate-geometry-only::before,
+.h-earth-render-object[class*="h-earth-geometry-node-"]::before,
+.h-earth-render-object[class*="h-earth-geometry-"]::before {
+  opacity: 0.92;
+}
+
+.h-earth-render-object.h-earth-render-candidate-geometry-only::after,
+.h-earth-render-object[class*="h-earth-geometry-node-"]::after,
+.h-earth-render-object[class*="h-earth-geometry-"]::after {
+  opacity: 0.78;
 }
 
 .h-earth-render-candidate-geometry-only {
@@ -800,7 +880,7 @@ pre {
 
 .h-earth-render-class-ready,
 .h-earth-render-visual-grammar-ready {
-  outline-color: rgba(186, 245, 207, 0.2);
+  outline-color: rgba(186, 245, 207, 0.16);
 }
 
 /* Layer ordering */
@@ -858,8 +938,8 @@ pre {
 .h-earth-material-wet-sand {
   color: var(--h-earth-wet-sand-base);
   background:
-    radial-gradient(ellipse at 22% 58%, rgba(216, 230, 218, 0.15), transparent 32%),
-    radial-gradient(ellipse at 74% 40%, rgba(18, 33, 30, 0.2), transparent 38%),
+    radial-gradient(ellipse at 25% 44%, rgba(230, 255, 248, 0.12), transparent 34%),
+    radial-gradient(ellipse at 66% 58%, rgba(24, 33, 30, 0.2), transparent 44%),
     linear-gradient(90deg, rgba(255, 255, 255, 0.13), transparent 24%, rgba(0, 0, 0, 0.18)),
     linear-gradient(180deg, var(--h-earth-wet-sand-light), var(--h-earth-wet-sand-base) 52%, var(--h-earth-wet-sand-dark));
 }
@@ -867,7 +947,7 @@ pre {
 .h-earth-material-dry-sand {
   color: var(--h-earth-dry-sand-base);
   background:
-    radial-gradient(ellipse at 36% 44%, rgba(255, 245, 202, 0.18), transparent 32%),
+    radial-gradient(ellipse at 42% 46%, rgba(255, 236, 174, 0.16), transparent 38%),
     linear-gradient(90deg, rgba(255, 255, 255, 0.18), transparent 30%, rgba(0, 0, 0, 0.12)),
     linear-gradient(180deg, var(--h-earth-dry-sand-light), var(--h-earth-dry-sand-base) 54%, var(--h-earth-dry-sand-dark));
 }
@@ -875,7 +955,7 @@ pre {
 .h-earth-material-foam {
   color: var(--h-earth-foam-base);
   background:
-    radial-gradient(circle at 10% 54%, var(--h-earth-foam-base) 0 4%, transparent 5%),
+    radial-gradient(circle at 8% 50%, rgba(255, 255, 255, 0.9) 0 4%, transparent 5%),
     radial-gradient(circle at 18% 52%, var(--h-earth-foam-base) 0 8%, transparent 9%),
     radial-gradient(circle at 32% 48%, var(--h-earth-foam-soft) 0 5%, transparent 6%),
     radial-gradient(circle at 44% 48%, var(--h-earth-foam-soft) 0 7%, transparent 8%),
@@ -911,14 +991,15 @@ pre {
   color: var(--h-earth-water-base);
   background:
     linear-gradient(90deg, rgba(169, 238, 240, 0.12), transparent 20%, rgba(169, 238, 240, 0.16), transparent 62%),
-    radial-gradient(ellipse at 50% 32%, rgba(96, 202, 216, 0.32), transparent 60%),
+    radial-gradient(ellipse at 50% 32%, rgba(96, 202, 216, 0.26), transparent 60%),
     linear-gradient(180deg, var(--h-earth-water-light), var(--h-earth-water-base) 48%, var(--h-earth-water-dark));
 }
 
 .h-earth-material-nearshore-wave {
   color: var(--h-earth-nearshore-wave-base);
   background:
-    linear-gradient(90deg, rgba(230, 255, 248, 0.72), transparent 10%, rgba(230, 255, 248, 0.28), transparent 38%, rgba(230, 255, 248, 0.22), transparent 70%),
+    linear-gradient(90deg, rgba(230, 255, 248, 0.62), transparent 12%, rgba(230, 255, 248, 0.28), transparent 42%),
+    repeating-linear-gradient(92deg, rgba(230, 255, 248, 0.18) 0 8px, transparent 9px 54px),
     linear-gradient(180deg, var(--h-earth-nearshore-wave-light), var(--h-earth-nearshore-wave-base) 56%, var(--h-earth-nearshore-wave-dark));
 }
 
@@ -934,7 +1015,7 @@ pre {
 .h-earth-material-manor-context {
   color: var(--h-earth-manor-context-base);
   background:
-    linear-gradient(90deg, transparent 0 14%, var(--h-earth-manor-window) 15% 20%, transparent 21% 36%, rgba(255, 225, 170, 0.2) 37% 42%, transparent 43% 58%, rgba(255, 225, 170, 0.18) 59% 64%, transparent 65%),
+    linear-gradient(90deg, transparent 0 14%, rgba(255, 225, 170, 0.2) 15% 20%, transparent 21% 36%, rgba(255, 225, 170, 0.16) 37% 42%, transparent 43% 58%, rgba(255, 225, 170, 0.14) 59% 64%, transparent 65%),
     linear-gradient(180deg, var(--h-earth-manor-context-light), var(--h-earth-manor-context-base) 42%, var(--h-earth-manor-context-dark));
 }
 
@@ -955,6 +1036,12 @@ pre {
 .h-earth-material-unresolved {
   color: var(--h-earth-material-unresolved-base);
   background: linear-gradient(135deg, #9aa2a8, var(--h-earth-material-unresolved-base));
+}
+
+/* Material rules apply visibly only when the node is not a parent descriptor slab. */
+
+.h-earth-render-object.h-earth-render-descriptor-only.h-earth-material-unresolved {
+  background: transparent !important;
 }
 
 /* Primitive interpretation */
@@ -1018,6 +1105,10 @@ pre {
   clip-path: polygon(8% 72%, 21% 38%, 36% 18%, 55% 36%, 70% 12%, 91% 66%, 78% 100%, 22% 96%);
 }
 
+.h-earth-primitive-rock-cluster::before {
+  clip-path: polygon(3% 84%, 12% 52%, 25% 17%, 39% 44%, 52% 10%, 66% 38%, 78% 14%, 96% 78%, 82% 100%, 18% 96%);
+}
+
 .h-earth-primitive-atmospheric-layer {
   border-radius: 999px;
   opacity: 0.46;
@@ -1040,6 +1131,27 @@ pre {
   height: 18px !important;
   border-radius: 50%;
   opacity: 0.9;
+}
+
+/* Parent descriptor primitive suppression must win after primitive rules. */
+
+.h-earth-render-object.h-earth-render-descriptor-only.h-earth-primitive-contoured-terrain-band::before,
+.h-earth-render-object.h-earth-render-descriptor-only.h-earth-primitive-terrain-band::before,
+.h-earth-render-object.h-earth-render-descriptor-only.h-earth-primitive-irregular-shoreline-band::before,
+.h-earth-render-object.h-earth-render-descriptor-only.h-earth-primitive-water-depth-band::before,
+.h-earth-render-object.h-earth-render-descriptor-only.h-earth-primitive-water-plane::before,
+.h-earth-render-object.h-earth-render-descriptor-only.h-earth-primitive-scatter-cluster::before,
+.h-earth-render-object.h-earth-render-descriptor-only.h-earth-primitive-rock-cluster::before,
+.h-earth-render-object.h-earth-render-descriptor-only.h-earth-primitive-atmospheric-layer::before,
+.h-earth-render-object.h-earth-render-descriptor-only.h-earth-primitive-layered-silhouette::before,
+.h-earth-render-object.h-earth-render-descriptor-only.h-earth-primitive-distant-cluster::before,
+.h-earth-render-object.h-earth-render-descriptor-only.h-earth-primitive-inspection-anchor::before,
+.h-earth-render-object.h-earth-render-descriptor-only.h-earth-primitive-water-depth-band::after,
+.h-earth-render-object.h-earth-render-descriptor-only.h-earth-primitive-water-plane::after {
+  display: none;
+  opacity: 0;
+  background: transparent !important;
+  box-shadow: none !important;
 }
 
 /* Landscape profiles */
@@ -1125,268 +1237,112 @@ pre {
   opacity: 0.68;
 }
 
-/* Coherent environment object grammar */
+/* Parent descriptor landscape suppression must win after landscape profiles.
+   Do not use opacity on the parent element because geometry children may be
+   descendants. Suppress only the parent slab's own paint surfaces. */
 
-[class*="OBJ_002_FOREGROUND_WET_SAND"],
-[data-h-earth-object-id="OBJ_002_FOREGROUND_WET_SAND"],
-[data-object-id="OBJ_002_FOREGROUND_WET_SAND"] {
-  opacity: 0.92;
+.h-earth-render-object.h-earth-render-descriptor-only.h-earth-landscape-object,
+.h-earth-render-object.h-earth-render-descriptor-only.h-earth-landscape-ground-plane,
+.h-earth-render-object.h-earth-render-descriptor-only.h-earth-landscape-ground-wet-sand,
+.h-earth-render-object.h-earth-render-descriptor-only.h-earth-landscape-ground-dry-sand,
+.h-earth-render-object.h-earth-render-descriptor-only.h-earth-landscape-shoreline-band,
+.h-earth-render-object.h-earth-render-descriptor-only.h-earth-landscape-shoreline-contact,
+.h-earth-render-object.h-earth-render-descriptor-only.h-earth-landscape-water-band,
+.h-earth-render-object.h-earth-render-descriptor-only.h-earth-landscape-nearshore-wave,
+.h-earth-render-object.h-earth-render-descriptor-only.h-earth-landscape-water-plane,
+.h-earth-render-object.h-earth-render-descriptor-only.h-earth-landscape-water-surface,
+.h-earth-render-object.h-earth-render-descriptor-only.h-earth-landscape-surface-detail,
+.h-earth-render-object.h-earth-render-descriptor-only.h-earth-landscape-ground-scatter-cluster,
+.h-earth-render-object.h-earth-render-descriptor-only.h-earth-landscape-rock-cluster,
+.h-earth-render-object.h-earth-render-descriptor-only.h-earth-landscape-foreground-rocks,
+.h-earth-render-object.h-earth-render-descriptor-only.h-earth-landscape-atmosphere,
+.h-earth-render-object.h-earth-render-descriptor-only.h-earth-landscape-air-haze-light,
+.h-earth-render-object.h-earth-render-descriptor-only.h-earth-landscape-context-silhouette,
+.h-earth-render-object.h-earth-render-descriptor-only.h-earth-landscape-manor-context,
+.h-earth-render-object.h-earth-render-descriptor-only.h-earth-landscape-distant-cluster,
+.h-earth-render-object.h-earth-render-descriptor-only.h-earth-landscape-distant-world-context,
+.h-earth-render-object.h-earth-render-descriptor-only.h-earth-landscape-generic-candidate {
+  background: transparent !important;
+  box-shadow: none !important;
+  filter: none;
+  mix-blend-mode: normal;
+}
+
+.h-earth-render-object.h-earth-render-descriptor-only.h-earth-landscape-inspection-anchor,
+.h-earth-render-object.h-earth-render-descriptor-only.h-earth-landscape-primary-inspection-anchor {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+/* Geometry child expression profiles */
+
+.h-earth-render-object.h-earth-render-candidate-geometry-only.h-earth-material-wet-sand,
+.h-earth-render-object[class*="h-earth-geometry-node-"].h-earth-material-wet-sand,
+.h-earth-render-object[class*="h-earth-geometry-"].h-earth-material-wet-sand {
   filter: saturate(1.08) contrast(1.04);
+}
+
+.h-earth-render-object.h-earth-render-candidate-geometry-only.h-earth-material-water,
+.h-earth-render-object[class*="h-earth-geometry-node-"].h-earth-material-water,
+.h-earth-render-object[class*="h-earth-geometry-"].h-earth-material-water {
+  filter: saturate(1.14);
   box-shadow:
-    inset 0 12px 32px rgba(255, 255, 255, 0.08),
-    inset 0 -22px 44px rgba(35, 25, 18, 0.32),
-    0 22px 44px rgba(0, 0, 0, 0.18);
+    inset 0 0 24px rgba(169, 238, 240, 0.12),
+    0 0 24px rgba(74, 191, 206, 0.08);
 }
 
-[class*="OBJ_002_FOREGROUND_WET_SAND"]::before,
-[data-h-earth-object-id="OBJ_002_FOREGROUND_WET_SAND"]::before,
-[data-object-id="OBJ_002_FOREGROUND_WET_SAND"]::before {
-  background:
-    radial-gradient(ellipse at 25% 42%, rgba(230, 255, 248, 0.18), transparent 36%),
-    radial-gradient(ellipse at 66% 58%, rgba(32, 43, 38, 0.22), transparent 44%),
-    repeating-linear-gradient(94deg, transparent 0 34px, rgba(255, 255, 255, 0.05) 35px 37px, transparent 38px 72px),
-    linear-gradient(180deg, #b8a17d, #7f6b52 50%, #362e26);
-}
-
-[class*="OBJ_003_DRY_SAND_TRANSITION"],
-[data-h-earth-object-id="OBJ_003_DRY_SAND_TRANSITION"],
-[data-object-id="OBJ_003_DRY_SAND_TRANSITION"] {
-  opacity: 0.82;
-  filter: saturate(1.03);
-}
-
-[class*="OBJ_003_DRY_SAND_TRANSITION"]::before,
-[data-h-earth-object-id="OBJ_003_DRY_SAND_TRANSITION"]::before,
-[data-object-id="OBJ_003_DRY_SAND_TRANSITION"]::before {
-  background:
-    radial-gradient(ellipse at 42% 46%, rgba(255, 236, 174, 0.2), transparent 38%),
-    repeating-linear-gradient(96deg, transparent 0 42px, rgba(90, 67, 35, 0.08) 43px 46px, transparent 47px 90px),
-    linear-gradient(180deg, #e8d19b, #c4a66e 54%, #765f36);
-}
-
-[class*="OBJ_004_TIDE_POOLS_AND_REFLECTIVE_PUDDLES"],
-[data-h-earth-object-id="OBJ_004_TIDE_POOLS_AND_REFLECTIVE_PUDDLES"],
-[data-object-id="OBJ_004_TIDE_POOLS_AND_REFLECTIVE_PUDDLES"] {
-  opacity: 0.95;
-  filter: saturate(1.22) contrast(1.04);
-}
-
-[class*="OBJ_004_TIDE_POOLS_AND_REFLECTIVE_PUDDLES"]::before,
-[data-h-earth-object-id="OBJ_004_TIDE_POOLS_AND_REFLECTIVE_PUDDLES"]::before,
-[data-object-id="OBJ_004_TIDE_POOLS_AND_REFLECTIVE_PUDDLES"]::before {
-  background:
-    radial-gradient(ellipse at 18% 48%, rgba(122, 217, 209, 0.96) 0 11%, transparent 12%),
-    radial-gradient(ellipse at 38% 56%, rgba(206, 255, 248, 0.62) 0 8%, transparent 9%),
-    radial-gradient(ellipse at 61% 44%, rgba(50, 139, 145, 0.9) 0 13%, transparent 14%),
-    radial-gradient(ellipse at 78% 59%, rgba(174, 239, 232, 0.54) 0 7%, transparent 8%),
-    radial-gradient(ellipse at 50% 50%, rgba(8, 36, 43, 0.34), transparent 70%);
-}
-
-[class*="OBJ_005_SHORELINE_FOAM_LINE"],
-[data-h-earth-object-id="OBJ_005_SHORELINE_FOAM_LINE"],
-[data-object-id="OBJ_005_SHORELINE_FOAM_LINE"] {
-  opacity: 0.98;
-  min-height: 7px;
-  filter: drop-shadow(0 0 14px rgba(230, 255, 248, 0.28));
-}
-
-[class*="OBJ_005_SHORELINE_FOAM_LINE"]::before,
-[data-h-earth-object-id="OBJ_005_SHORELINE_FOAM_LINE"]::before,
-[data-object-id="OBJ_005_SHORELINE_FOAM_LINE"]::before {
-  background:
-    radial-gradient(circle at 8% 50%, rgba(255, 255, 255, 0.96) 0 4%, transparent 5%),
-    radial-gradient(circle at 17% 48%, rgba(230, 255, 248, 0.9) 0 7%, transparent 8%),
-    radial-gradient(circle at 28% 54%, rgba(230, 255, 248, 0.6) 0 5%, transparent 6%),
-    radial-gradient(circle at 43% 47%, rgba(255, 255, 255, 0.9) 0 4%, transparent 5%),
-    radial-gradient(circle at 58% 53%, rgba(230, 255, 248, 0.74) 0 6%, transparent 7%),
-    radial-gradient(circle at 72% 49%, rgba(255, 255, 255, 0.88) 0 5%, transparent 6%),
-    radial-gradient(circle at 88% 55%, rgba(230, 255, 248, 0.66) 0 4%, transparent 5%),
-    linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.86), transparent);
-}
-
-[class*="OBJ_006_NEARSHORE_WAVE_BAND"],
-[data-h-earth-object-id="OBJ_006_NEARSHORE_WAVE_BAND"],
-[data-object-id="OBJ_006_NEARSHORE_WAVE_BAND"] {
-  opacity: 0.78;
+.h-earth-render-object.h-earth-render-candidate-geometry-only.h-earth-material-nearshore-wave,
+.h-earth-render-object[class*="h-earth-geometry-node-"].h-earth-material-nearshore-wave,
+.h-earth-render-object[class*="h-earth-geometry-"].h-earth-material-nearshore-wave {
   filter: saturate(1.18) brightness(1.04);
 }
 
-[class*="OBJ_006_NEARSHORE_WAVE_BAND"]::before,
-[data-h-earth-object-id="OBJ_006_NEARSHORE_WAVE_BAND"]::before,
-[data-object-id="OBJ_006_NEARSHORE_WAVE_BAND"]::before {
-  background:
-    repeating-linear-gradient(92deg, rgba(230, 255, 248, 0.68) 0 8px, transparent 9px 54px),
-    linear-gradient(180deg, #a9eef0, #3e94a7 58%, #0d3948);
+.h-earth-render-object.h-earth-render-candidate-geometry-only.h-earth-material-foam,
+.h-earth-render-object[class*="h-earth-geometry-node-"].h-earth-material-foam,
+.h-earth-render-object[class*="h-earth-geometry-"].h-earth-material-foam {
+  filter: drop-shadow(0 0 10px rgba(230, 255, 248, 0.28));
 }
 
-[class*="OBJ_007_WATER_SURFACE_PLANE"],
-[data-h-earth-object-id="OBJ_007_WATER_SURFACE_PLANE"],
-[data-object-id="OBJ_007_WATER_SURFACE_PLANE"] {
-  opacity: 0.7;
-  filter: saturate(1.18);
-  box-shadow:
-    inset 0 0 44px rgba(169, 238, 240, 0.12),
-    0 0 54px rgba(74, 191, 206, 0.12);
-}
-
-[class*="OBJ_007_WATER_SURFACE_PLANE"]::before,
-[data-h-earth-object-id="OBJ_007_WATER_SURFACE_PLANE"]::before,
-[data-object-id="OBJ_007_WATER_SURFACE_PLANE"]::before {
-  background:
-    radial-gradient(ellipse at 36% 26%, rgba(169, 238, 240, 0.28), transparent 48%),
-    repeating-linear-gradient(0deg, transparent 0 18px, rgba(255, 255, 255, 0.045) 19px 21px, transparent 22px 42px),
-    linear-gradient(180deg, #4db6ca, #0f4d65 48%, #041923);
-}
-
-[class*="OBJ_008_AIR_HAZE_LIGHT_LAYER"],
-[data-h-earth-object-id="OBJ_008_AIR_HAZE_LIGHT_LAYER"],
-[data-object-id="OBJ_008_AIR_HAZE_LIGHT_LAYER"] {
-  opacity: 0.38;
-  filter: blur(14px) saturate(0.9);
+.h-earth-render-object.h-earth-render-candidate-geometry-only.h-earth-material-air-haze,
+.h-earth-render-object[class*="h-earth-geometry-node-"].h-earth-material-air-haze,
+.h-earth-render-object[class*="h-earth-geometry-"].h-earth-material-air-haze {
+  opacity: 0.34;
+  filter: blur(10px) saturate(0.9);
   mix-blend-mode: screen;
 }
 
-[class*="OBJ_008_AIR_HAZE_LIGHT_LAYER"]::before,
-[data-h-earth-object-id="OBJ_008_AIR_HAZE_LIGHT_LAYER"]::before,
-[data-object-id="OBJ_008_AIR_HAZE_LIGHT_LAYER"]::before {
-  background:
-    radial-gradient(ellipse at 50% 35%, rgba(232, 255, 250, 0.46), transparent 58%),
-    radial-gradient(ellipse at 20% 56%, rgba(255, 239, 198, 0.15), transparent 42%),
-    radial-gradient(ellipse at 80% 48%, rgba(192, 225, 219, 0.13), transparent 38%);
-}
-
-[class*="OBJ_009_MANOR_EXTERIOR_CONTEXT"],
-[data-h-earth-object-id="OBJ_009_MANOR_EXTERIOR_CONTEXT"],
-[data-object-id="OBJ_009_MANOR_EXTERIOR_CONTEXT"] {
-  opacity: 0.76;
+.h-earth-render-object.h-earth-render-candidate-geometry-only.h-earth-material-manor-context,
+.h-earth-render-object[class*="h-earth-geometry-node-"].h-earth-material-manor-context,
+.h-earth-render-object[class*="h-earth-geometry-"].h-earth-material-manor-context {
   filter: contrast(1.02) saturate(0.9);
-  box-shadow:
-    inset 0 0 18px rgba(255, 222, 154, 0.08),
-    0 18px 34px rgba(0, 0, 0, 0.28);
 }
 
-[class*="OBJ_009_MANOR_EXTERIOR_CONTEXT"]::before,
-[data-h-earth-object-id="OBJ_009_MANOR_EXTERIOR_CONTEXT"]::before,
-[data-object-id="OBJ_009_MANOR_EXTERIOR_CONTEXT"]::before {
-  background:
-    linear-gradient(90deg, transparent 0 9%, rgba(12, 10, 8, 0.3) 10% 11%, transparent 12% 20%, var(--h-earth-manor-window) 21% 25%, transparent 26% 36%, rgba(255, 222, 154, 0.22) 37% 42%, transparent 43% 54%, rgba(255, 222, 154, 0.18) 55% 60%, transparent 61% 72%, rgba(14, 11, 8, 0.32) 73% 75%, transparent 76%),
-    linear-gradient(180deg, #9a805b, #564833 45%, #1e1a14);
-}
-
-[class*="OBJ_010_SMALL_BEACH_STONES"],
-[data-h-earth-object-id="OBJ_010_SMALL_BEACH_STONES"],
-[data-object-id="OBJ_010_SMALL_BEACH_STONES"] {
-  opacity: 0.9;
-  filter: contrast(1.05);
-}
-
-[class*="OBJ_010_SMALL_BEACH_STONES"]::before,
-[data-h-earth-object-id="OBJ_010_SMALL_BEACH_STONES"]::before,
-[data-object-id="OBJ_010_SMALL_BEACH_STONES"]::before {
-  background:
-    radial-gradient(circle at 12% 52%, #b8b0a2 0 5%, transparent 6%),
-    radial-gradient(circle at 26% 44%, #807b73 0 7%, transparent 8%),
-    radial-gradient(circle at 43% 62%, #a69f94 0 4%, transparent 5%),
-    radial-gradient(circle at 61% 42%, #625f59 0 8%, transparent 9%),
-    radial-gradient(circle at 79% 58%, #b8b0a2 0 5%, transparent 6%),
-    radial-gradient(circle at 90% 46%, #514f4a 0 4%, transparent 5%);
-}
-
-[class*="OBJ_011_FOREGROUND_JAGGED_ROCKS"],
-[data-h-earth-object-id="OBJ_011_FOREGROUND_JAGGED_ROCKS"],
-[data-object-id="OBJ_011_FOREGROUND_JAGGED_ROCKS"] {
-  opacity: 0.96;
+.h-earth-render-object.h-earth-render-candidate-geometry-only.h-earth-material-jagged-rock,
+.h-earth-render-object[class*="h-earth-geometry-node-"].h-earth-material-jagged-rock,
+.h-earth-render-object[class*="h-earth-geometry-"].h-earth-material-jagged-rock {
   filter: contrast(1.16) saturate(0.86);
 }
 
-[class*="OBJ_011_FOREGROUND_JAGGED_ROCKS"]::before,
-[data-h-earth-object-id="OBJ_011_FOREGROUND_JAGGED_ROCKS"]::before,
-[data-object-id="OBJ_011_FOREGROUND_JAGGED_ROCKS"]::before {
-  clip-path: polygon(3% 84%, 12% 52%, 25% 17%, 39% 44%, 52% 10%, 66% 38%, 78% 14%, 96% 78%, 82% 100%, 18% 96%);
-  background:
-    linear-gradient(124deg, rgba(255, 255, 255, 0.18), transparent 28%),
-    linear-gradient(32deg, #1f201e, #4b4b45 58%, #151615);
-}
-
-[class*="OBJ_012_DISTANCE_ROCK_STACKS_AND_ISLETS"],
-[data-h-earth-object-id="OBJ_012_DISTANCE_ROCK_STACKS_AND_ISLETS"],
-[data-object-id="OBJ_012_DISTANCE_ROCK_STACKS_AND_ISLETS"] {
+.h-earth-render-object.h-earth-render-candidate-geometry-only.h-earth-material-distant-rock,
+.h-earth-render-object[class*="h-earth-geometry-node-"].h-earth-material-distant-rock,
+.h-earth-render-object[class*="h-earth-geometry-"].h-earth-material-distant-rock {
   opacity: 0.68;
   filter: blur(0.35px) saturate(0.78) contrast(0.94);
 }
 
-[class*="OBJ_012_DISTANCE_ROCK_STACKS_AND_ISLETS"]::before,
-[data-h-earth-object-id="OBJ_012_DISTANCE_ROCK_STACKS_AND_ISLETS"]::before,
-[data-object-id="OBJ_012_DISTANCE_ROCK_STACKS_AND_ISLETS"]::before {
-  clip-path: polygon(4% 82%, 18% 42%, 31% 62%, 43% 28%, 58% 64%, 72% 24%, 94% 78%, 94% 100%, 4% 100%);
-  background:
-    linear-gradient(140deg, #89a0a0, #465556 48%, #1b2425);
+/* Geometry class diagnostics */
+
+[class*="h-earth-geometry-node-"] {
+  --h-earth-geometry-node-class-bound: 1;
 }
 
-[class*="OBJ_001_GROUND_SPAWN_ANCHOR"],
-[data-h-earth-object-id="OBJ_001_GROUND_SPAWN_ANCHOR"],
-[data-object-id="OBJ_001_GROUND_SPAWN_ANCHOR"] {
-  opacity: 0.98;
-  mix-blend-mode: screen;
-  filter: brightness(1.12);
+[class*="h-earth-geometry-"] {
+  --h-earth-geometry-class-bound: 1;
 }
 
-/* Lowercase object-class fallback support */
-
-[class*="obj-002-foreground-wet-sand"],
-[class*="foreground-wet-sand"] {
-  --h-earth-object-fallback-wet-sand: 1;
-}
-
-[class*="obj-003-dry-sand-transition"],
-[class*="dry-sand-transition"] {
-  --h-earth-object-fallback-dry-sand: 1;
-}
-
-[class*="obj-004-tide-pools"],
-[class*="tide-pools"] {
-  --h-earth-object-fallback-tide-pools: 1;
-}
-
-[class*="obj-005-shoreline-foam"],
-[class*="shoreline-foam"] {
-  --h-earth-object-fallback-foam: 1;
-}
-
-[class*="obj-006-nearshore-wave"],
-[class*="nearshore-wave"] {
-  --h-earth-object-fallback-nearshore-wave: 1;
-}
-
-[class*="obj-007-water-surface"],
-[class*="water-surface"] {
-  --h-earth-object-fallback-water-surface: 1;
-}
-
-[class*="obj-008-air-haze"],
-[class*="air-haze"] {
-  --h-earth-object-fallback-air-haze: 1;
-}
-
-[class*="obj-009-manor"],
-[class*="manor-exterior"] {
-  --h-earth-object-fallback-manor: 1;
-}
-
-[class*="obj-010-small-beach-stones"],
-[class*="small-beach-stones"] {
-  --h-earth-object-fallback-stones: 1;
-}
-
-[class*="obj-011-foreground-jagged-rocks"],
-[class*="foreground-jagged-rocks"] {
-  --h-earth-object-fallback-jagged-rocks: 1;
-}
-
-[class*="obj-012-distance-rock"],
-[class*="distance-rock"],
-[class*="distant-rock"] {
-  --h-earth-object-fallback-distant-rocks: 1;
+.h-earth-layer-member[class*="h-earth-geometry-node-"],
+.h-earth-layer-member[class*="h-earth-geometry-"] {
+  --h-earth-layered-geometry-class-bound: 1;
 }
 
 /* Context and interaction classes */
@@ -1418,12 +1374,11 @@ pre {
   outline-offset: 2px;
 }
 
-/* Dynamic object identity support */
+/* Dynamic class-surface support */
 
 [class*="h-earth-object-"],
 [class*="h-earth-source-object-"],
-[class*="h-earth-parent-object-"],
-[class*="OBJ_"] {
+[class*="h-earth-parent-object-"] {
   --h-earth-object-class-bound: 1;
 }
 

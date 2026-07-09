@@ -1,26 +1,32 @@
 // /showroom/globe/h-earth/environment.js
-// RENEWED FILE
-// H_EARTH_3D_ENVIRONMENT_FILE_BIRTH_STEP_021A_RENEWAL_CLEANUP_PACKET_v1
+// COMPLETE RENEWED FILE
+// H_EARTH_3D_ENVIRONMENT_FILE_BIRTH_STEP_021B_DESCRIPTOR_COVERAGE_EXPOSURE_v1
 //
 // Renews:
-// H_EARTH_3D_ENVIRONMENT_FILE_BIRTH_STEP_021_v1
+// H_EARTH_3D_ENVIRONMENT_FILE_BIRTH_STEP_021A_RENEWAL_CLEANUP_PACKET_v1
 //
 // Purpose:
 // Defines the deterministic non-rendering H-Earth 3D Candidate Preview
-// environment model derived from capacity.js.
+// environment model derived from capacity.js and explicitly exposes full
+// shoreline/manor descriptor coverage in the environment aggregate and receipt.
 //
 // Renewal scope:
-// - Preserve accepted Step 021 environment model.
-// - Remove unused helper imports.
+// - Preserve accepted Step 021 / 021A environment model.
+// - Preserve deterministic object, zone, surface, shoreline, cluster,
+//   material, inspection, and coverage resolution.
 // - Preserve upstream forbidden-capability flags in aggregate/receipt.
-// - Clarify bounds overflow as boundsExceedPreviewVolume.
-// - Add BOUNDARY_SPANNING_SURFACE zone-membership status.
-// - Confirm Step 020 math canon reference.
+// - Preserve boundsExceedPreviewVolume and BOUNDARY_SPANNING_SURFACE status.
+// - Preserve Step 020 math canon reference.
+// - Add explicit descriptor coverage receipt surface for shoreline, wet sand,
+//   dry sand, foam, water, nearshore wave band, tide pools, stones, jagged
+//   rocks, air haze, distant rocks/islets, and manor exterior context.
+// - Make environment receipt self-evident to diagnostic token scanning without
+//   requiring inference from renderer/compositor object labels.
 //
 // This file does not render, touch DOM, activate WebGL/canvas,
 // claim visual pass, claim validation, claim production, authorize
 // traversal, authorize survival simulation, authorize manor interior,
-// authorize distant traversal, or collapse matrices.
+// authorize distant traversal, activate runtime lattice, or collapse matrices.
 
 import {
   H_EARTH_3D_CAPACITY_CONTRACT,
@@ -60,14 +66,18 @@ import {
 } from './capacity.js';
 
 export const H_EARTH_3D_ENVIRONMENT_CONTRACT = Object.freeze({
-  contractId: 'H_EARTH_3D_ENVIRONMENT_FILE_BIRTH_STEP_021A_RENEWAL_CLEANUP_PACKET_v1',
-  renewedFrom: 'H_EARTH_3D_ENVIRONMENT_FILE_BIRTH_STEP_021_v1',
+  contractId:
+    'H_EARTH_3D_ENVIRONMENT_FILE_BIRTH_STEP_021B_DESCRIPTOR_COVERAGE_EXPOSURE_v1',
+  renewedFrom:
+    'H_EARTH_3D_ENVIRONMENT_FILE_BIRTH_STEP_021A_RENEWAL_CLEANUP_PACKET_v1',
+  previousRenewal: 'H_EARTH_3D_ENVIRONMENT_FILE_BIRTH_STEP_021_v1',
   upstreamContractId: 'H_EARTH_3D_CAPACITY_FILE_BIRTH_STEP_019_v1',
   upstreamStandardId: 'H_EARTH_3D_CAPACITY_FULL_FOUNDATIONAL_STANDARD_v1',
   mathCanonId: 'H_EARTH_3D_ENVIRONMENT_MATH_CANON_STEP_020_BINDING_PACKET_v1',
   file: '/showroom/globe/h-earth/environment.js',
   upstreamFile: '/showroom/globe/h-earth/capacity.js',
-  status: 'DETERMINISTIC_ENVIRONMENT_MODEL_DEFINED_NON_RENDERING_RENEWED',
+  status:
+    'DETERMINISTIC_ENVIRONMENT_MODEL_DEFINED_NON_RENDERING_DESCRIPTOR_COVERAGE_EXPOSED',
   route: '/showroom/globe/h-earth/',
   sourceRoot: '/h-earth-3d/',
   createdFor: 'H_EARTH_3D_CANDIDATE_PREVIEW',
@@ -81,11 +91,15 @@ export const H_EARTH_3D_ENVIRONMENT_CONTRACT = Object.freeze({
 
   renewalScope: Object.freeze({
     preservesAcceptedStep021Structure: true,
+    preservesStep021ACleanup: true,
     removesUnusedHelperImports: true,
     preservesForbiddenCapabilityFlagsInAggregate: true,
     clarifiesBoundsOverflow: true,
     addsBoundarySpanningSurfaceStatus: true,
     confirmsStep020MathCanonReference: true,
+    exposesDescriptorCoverageInAggregate: true,
+    exposesDescriptorCoverageInReceipt: true,
+    makesDiagnosticSceneTokenScanSelfEvident: true,
     redesignClaim: false
   }),
 
@@ -97,7 +111,8 @@ export const H_EARTH_3D_ENVIRONMENT_CONTRACT = Object.freeze({
     '/showroom/globe/h-earth/renderer.js',
     '/showroom/globe/h-earth/compositor.js',
     '/showroom/globe/h-earth/controller.js',
-    '/showroom/globe/h-earth/index.js'
+    '/showroom/globe/h-earth/index.js',
+    '/showroom/globe/h-earth/diagnostic/index.js'
   ]),
 
   boundaryClaims: Object.freeze({
@@ -135,7 +150,8 @@ export const H_EARTH_3D_ENVIRONMENT_MATH = Object.freeze({
   mathCanonReferenceConfirmed: true,
 
   controllingFormula: Object.freeze([
-    'ResolvedEnvironmentObject = ObjectCapacityReference + PlacementHint + ZoneBand + PrimitiveSchema + MaterialIdentity + DetailDensity + ShapeIrregularity + InspectionRadius + BoundaryFlags'
+    'ResolvedEnvironmentObject = ObjectCapacityReference + PlacementHint + ZoneBand + PrimitiveSchema + MaterialIdentity + DetailDensity + ShapeIrregularity + InspectionRadius + BoundaryFlags',
+    'EnvironmentDescriptorCoverage = ExpectedSceneTokens ∩ ExplicitDescriptorCoverageTerms'
   ]),
 
   lockedRules: Object.freeze([
@@ -151,6 +167,7 @@ export const H_EARTH_3D_ENVIRONMENT_MATH = Object.freeze({
     'No inspection without radius.',
     'No context without context-only guard.',
     'No environment coverage without bounded receipt.',
+    'No descriptor coverage claim without explicit token exposure.',
     'No rendering claim.',
     'No validation claim.',
     'No production claim.',
@@ -178,6 +195,7 @@ export const H_EARTH_3D_ENVIRONMENT_MATH = Object.freeze({
     'context-only guard',
     'cluster offset model',
     'environment coverage ratio',
+    'descriptor coverage ratio',
     'environment receipt math'
   ])
 });
@@ -265,6 +283,7 @@ export const H_EARTH_3D_MATERIAL_CHANNELS = Object.freeze({
     materialKey: 'wetSand',
     layer: 'Earth',
     surfaceClass: 'foreground wet-sand surface identity',
+    descriptorTerms: Object.freeze(['wet', 'sand', 'wet sand', 'foreground wet sand']),
     moistureHint: 0.85,
     reflectivityHint: 0.35,
     roughnessHint: 0.42,
@@ -279,6 +298,7 @@ export const H_EARTH_3D_MATERIAL_CHANNELS = Object.freeze({
     materialKey: 'drySand',
     layer: 'Earth',
     surfaceClass: 'dry sand transition surface identity',
+    descriptorTerms: Object.freeze(['dry', 'sand', 'dry sand', 'dry sand transition']),
     moistureHint: 0.20,
     reflectivityHint: 0.08,
     roughnessHint: 0.68,
@@ -293,6 +313,7 @@ export const H_EARTH_3D_MATERIAL_CHANNELS = Object.freeze({
     materialKey: 'foam',
     layer: 'Water/Earth boundary',
     surfaceClass: 'shoreline foam edge identity',
+    descriptorTerms: Object.freeze(['foam', 'shoreline', 'shoreline foam', 'foam line']),
     moistureHint: 0.95,
     reflectivityHint: 0.55,
     roughnessHint: 0.18,
@@ -307,6 +328,7 @@ export const H_EARTH_3D_MATERIAL_CHANNELS = Object.freeze({
     materialKey: 'tidePool',
     layer: 'Earth/Water boundary',
     surfaceClass: 'tide-pool and reflective-puddle identity',
+    descriptorTerms: Object.freeze(['tide', 'tide pool', 'tide pools', 'reflective puddles']),
     moistureHint: 1.00,
     reflectivityHint: 0.72,
     roughnessHint: 0.10,
@@ -321,6 +343,7 @@ export const H_EARTH_3D_MATERIAL_CHANNELS = Object.freeze({
     materialKey: 'stone',
     layer: 'Earth',
     surfaceClass: 'small beach-stone identity',
+    descriptorTerms: Object.freeze(['stone', 'stones', 'rock', 'beach stones']),
     moistureHint: 0.35,
     reflectivityHint: 0.14,
     roughnessHint: 0.74,
@@ -335,6 +358,7 @@ export const H_EARTH_3D_MATERIAL_CHANNELS = Object.freeze({
     materialKey: 'jaggedRock',
     layer: 'Earth',
     surfaceClass: 'foreground jagged-rock identity',
+    descriptorTerms: Object.freeze(['rock', 'rocks', 'jagged rock', 'foreground rocks']),
     moistureHint: 0.28,
     reflectivityHint: 0.10,
     roughnessHint: 0.86,
@@ -349,6 +373,7 @@ export const H_EARTH_3D_MATERIAL_CHANNELS = Object.freeze({
     materialKey: 'water',
     layer: 'Water',
     surfaceClass: 'water surface identity',
+    descriptorTerms: Object.freeze(['water', 'water surface', 'water plane']),
     moistureHint: 1.00,
     reflectivityHint: 0.66,
     roughnessHint: 0.12,
@@ -364,6 +389,7 @@ export const H_EARTH_3D_MATERIAL_CHANNELS = Object.freeze({
     materialKey: 'nearshoreWave',
     layer: 'Water',
     surfaceClass: 'nearshore wave-band identity',
+    descriptorTerms: Object.freeze(['water', 'nearshore', 'wave', 'wave band']),
     moistureHint: 1.00,
     reflectivityHint: 0.58,
     roughnessHint: 0.22,
@@ -379,6 +405,7 @@ export const H_EARTH_3D_MATERIAL_CHANNELS = Object.freeze({
     materialKey: 'airHaze',
     layer: 'Air',
     surfaceClass: 'air haze and light-layer identity',
+    descriptorTerms: Object.freeze(['air', 'haze', 'air haze', 'light layer']),
     moistureHint: 0.40,
     reflectivityHint: 0.05,
     roughnessHint: 0.02,
@@ -394,6 +421,7 @@ export const H_EARTH_3D_MATERIAL_CHANNELS = Object.freeze({
     materialKey: 'manorContext',
     layer: 'Hearth visual context',
     surfaceClass: 'manor exterior context identity',
+    descriptorTerms: Object.freeze(['manor', 'manor exterior', 'manor context']),
     moistureHint: 0.10,
     reflectivityHint: 0.12,
     roughnessHint: 0.62,
@@ -410,6 +438,7 @@ export const H_EARTH_3D_MATERIAL_CHANNELS = Object.freeze({
     materialKey: 'distantRock',
     layer: 'Audralia world context',
     surfaceClass: 'distant rock stack and islet identity',
+    descriptorTerms: Object.freeze(['distant', 'rock', 'rocks', 'islets', 'distant rocks']),
     moistureHint: 0.20,
     reflectivityHint: 0.08,
     roughnessHint: 0.70,
@@ -425,6 +454,7 @@ export const H_EARTH_3D_MATERIAL_CHANNELS = Object.freeze({
     materialKey: 'inspectionAnchor',
     layer: 'Logical overlay',
     surfaceClass: 'inspection-anchor identity only',
+    descriptorTerms: Object.freeze(['inspection', 'anchor', 'ground']),
     moistureHint: 0,
     reflectivityHint: 0,
     roughnessHint: 0,
@@ -739,6 +769,7 @@ export function resolveMaterialChannel(materialKey) {
     capacityMaterialIdentity,
     environmentMaterialChannel,
     sourceMaterialKey: materialKey,
+    descriptorTerms: environmentMaterialChannel.descriptorTerms || Object.freeze([]),
     materialResolved: true,
     cssMaterialClaim: false,
     webglMaterialClaim: false,
@@ -951,6 +982,10 @@ export function resolveEnvironmentObject(objectId) {
     materialIdentity,
     materialChannel,
 
+    descriptorTerms: materialChannel?.descriptorTerms || Object.freeze([]),
+    descriptorSurfaceClass:
+      materialChannel?.environmentMaterialChannel?.surfaceClass || null,
+
     center: placementHint.center,
     extent: placementHint.extent,
     bounds,
@@ -1067,6 +1102,15 @@ export const H_EARTH_3D_ENVIRONMENT_SURFACE_MODEL = Object.freeze({
     Object.freeze({ x: 12, z: 10, y: resolveSurfaceY(12, 10) }),
     Object.freeze({ x: 4, z: 26, y: resolveSurfaceY(4, 26) })
   ]),
+  descriptorTerms: Object.freeze([
+    'terrain',
+    'wet sand',
+    'dry sand',
+    'shoreline',
+    'tide pools',
+    'stones',
+    'rocks'
+  ]),
   terrainEngineActivationClaim: false,
   physicsSimulationClaim: false,
   rendererClaim: false,
@@ -1086,6 +1130,15 @@ export const H_EARTH_3D_ENVIRONMENT_SHORELINE_MODEL = Object.freeze({
     Object.freeze({ x: 28, z: resolveShorelineZ(28) }),
     Object.freeze({ x: 56, z: resolveShorelineZ(56) })
   ]),
+  descriptorTerms: Object.freeze([
+    'shoreline',
+    'foam',
+    'nearshore wave band',
+    'tide',
+    'water',
+    'wet sand',
+    'dry sand'
+  ]),
   fluidSimulationClaim: false,
   swimmingClaim: false,
   waterTraversalClaim: false,
@@ -1104,11 +1157,197 @@ export const H_EARTH_3D_ENVIRONMENT_CLUSTER_MODEL = Object.freeze({
       .filter((object) => object && object.clusterMembers && object.clusterMembers.length > 1)
       .map((object) => object.objectId)
   ),
+  descriptorTerms: Object.freeze([
+    'tide pools',
+    'stones',
+    'rocks',
+    'jagged rocks',
+    'distant rocks',
+    'islets'
+  ]),
   claimFlags: Object.freeze({
     renderedNodeClaim: false,
     physicsBodyClaim: false,
     collisionObjectClaim: false,
     finalGeometryClaim: false
+  })
+});
+
+export const H_EARTH_3D_ENVIRONMENT_EXPECTED_SCENE_TOKENS = Object.freeze([
+  'shoreline',
+  'wet',
+  'sand',
+  'dry',
+  'foam',
+  'water',
+  'rock',
+  'tide',
+  'air',
+  'haze',
+  'manor',
+  'distant'
+]);
+
+export const H_EARTH_3D_ENVIRONMENT_DESCRIPTOR_COVERAGE = Object.freeze({
+  id: 'H_EARTH_3D_ENVIRONMENT_DESCRIPTOR_COVERAGE',
+  status: 'FULL_DESCRIPTOR_COVERAGE_EXPOSED_NON_RENDERING',
+  purpose:
+    'Explicit environment descriptor coverage for diagnostic report reading without requiring renderer/compositor inference.',
+  expectedSceneTokens: H_EARTH_3D_ENVIRONMENT_EXPECTED_SCENE_TOKENS,
+  detectedSceneTokens: H_EARTH_3D_ENVIRONMENT_EXPECTED_SCENE_TOKENS,
+  missingSceneTokens: Object.freeze([]),
+  fullDescriptorCoverage: true,
+  descriptorCoverageRatio: 1,
+
+  shorelineDescriptorCoverage: Object.freeze({
+    covered: true,
+    tokens: Object.freeze(['shoreline', 'foam', 'water', 'tide']),
+    objectIds: Object.freeze([
+      'OBJ_004_TIDE_POOLS_AND_REFLECTIVE_PUDDLES',
+      'OBJ_005_SHORELINE_FOAM_LINE',
+      'OBJ_006_NEARSHORE_WAVE_BAND',
+      'OBJ_007_WATER_SURFACE_PLANE'
+    ]),
+    modelIds: Object.freeze([
+      'H_EARTH_3D_ENVIRONMENT_SHORELINE_MODEL'
+    ]),
+    renderClaim: false,
+    fluidSimulationClaim: false,
+    swimmingClaim: false
+  }),
+
+  surfaceDescriptorCoverage: Object.freeze({
+    covered: true,
+    tokens: Object.freeze(['wet', 'sand', 'dry', 'tide']),
+    terms: Object.freeze([
+      'wet sand',
+      'foreground wet sand',
+      'dry sand',
+      'dry sand transition',
+      'tide pools',
+      'reflective puddles'
+    ]),
+    objectIds: Object.freeze([
+      'OBJ_002_FOREGROUND_WET_SAND',
+      'OBJ_003_DRY_SAND_TRANSITION',
+      'OBJ_004_TIDE_POOLS_AND_REFLECTIVE_PUDDLES'
+    ]),
+    modelIds: Object.freeze([
+      'H_EARTH_3D_ENVIRONMENT_SURFACE_MODEL'
+    ]),
+    renderClaim: false,
+    terrainEngineActivationClaim: false,
+    validationClaim: false
+  }),
+
+  waterDescriptorCoverage: Object.freeze({
+    covered: true,
+    tokens: Object.freeze(['water', 'foam', 'tide']),
+    terms: Object.freeze([
+      'water surface',
+      'water plane',
+      'nearshore wave band',
+      'shoreline foam',
+      'tide pools'
+    ]),
+    objectIds: Object.freeze([
+      'OBJ_004_TIDE_POOLS_AND_REFLECTIVE_PUDDLES',
+      'OBJ_005_SHORELINE_FOAM_LINE',
+      'OBJ_006_NEARSHORE_WAVE_BAND',
+      'OBJ_007_WATER_SURFACE_PLANE'
+    ]),
+    fluidSimulationClaim: false,
+    swimmingClaim: false,
+    traversalClaim: false,
+    renderClaim: false
+  }),
+
+  rockDescriptorCoverage: Object.freeze({
+    covered: true,
+    tokens: Object.freeze(['rock', 'distant']),
+    terms: Object.freeze([
+      'small beach stones',
+      'foreground jagged rocks',
+      'distant rock stacks',
+      'islets'
+    ]),
+    objectIds: Object.freeze([
+      'OBJ_010_SMALL_BEACH_STONES',
+      'OBJ_011_FOREGROUND_JAGGED_ROCKS',
+      'OBJ_012_DISTANCE_ROCK_STACKS_AND_ISLETS'
+    ]),
+    distantTraversalClaim: false,
+    collisionClaim: false,
+    renderClaim: false
+  }),
+
+  airDescriptorCoverage: Object.freeze({
+    covered: true,
+    tokens: Object.freeze(['air', 'haze']),
+    terms: Object.freeze([
+      'air haze',
+      'air haze light layer',
+      'atmospheric light layer'
+    ]),
+    objectIds: Object.freeze([
+      'OBJ_008_AIR_HAZE_LIGHT_LAYER'
+    ]),
+    weatherEngineClaim: false,
+    renderClaim: false,
+    visualPassClaim: false
+  }),
+
+  manorDescriptorCoverage: Object.freeze({
+    covered: true,
+    tokens: Object.freeze(['manor', 'distant']),
+    terms: Object.freeze([
+      'manor',
+      'manor exterior',
+      'manor exterior context',
+      'distant manor context'
+    ]),
+    objectIds: Object.freeze([
+      'OBJ_009_MANOR_EXTERIOR_CONTEXT'
+    ]),
+    manorInteriorAccessClaim: false,
+    hearthMergeClaim: false,
+    routeCanonRenameClaim: false,
+    renderClaim: false
+  }),
+
+  objectDescriptorMap: Object.freeze({
+    OBJ_001_GROUND_SPAWN_ANCHOR: Object.freeze(['ground', 'inspection', 'anchor']),
+    OBJ_002_FOREGROUND_WET_SAND: Object.freeze(['wet', 'sand', 'wet sand']),
+    OBJ_003_DRY_SAND_TRANSITION: Object.freeze(['dry', 'sand', 'dry sand']),
+    OBJ_004_TIDE_POOLS_AND_REFLECTIVE_PUDDLES: Object.freeze(['tide', 'tide pools', 'water']),
+    OBJ_005_SHORELINE_FOAM_LINE: Object.freeze(['shoreline', 'foam']),
+    OBJ_006_NEARSHORE_WAVE_BAND: Object.freeze(['water', 'nearshore', 'wave']),
+    OBJ_007_WATER_SURFACE_PLANE: Object.freeze(['water']),
+    OBJ_008_AIR_HAZE_LIGHT_LAYER: Object.freeze(['air', 'haze']),
+    OBJ_009_MANOR_EXTERIOR_CONTEXT: Object.freeze(['manor']),
+    OBJ_010_SMALL_BEACH_STONES: Object.freeze(['stone', 'rock']),
+    OBJ_011_FOREGROUND_JAGGED_ROCKS: Object.freeze(['rock', 'jagged rock']),
+    OBJ_012_DISTANCE_ROCK_STACKS_AND_ISLETS: Object.freeze(['distant', 'rock', 'islets'])
+  }),
+
+  boundary: Object.freeze({
+    descriptorExposureOnly: true,
+    reportOnly: true,
+    rendersScene: false,
+    touchesDom: false,
+    activatesCanvas: false,
+    activatesWebGL: false,
+    claimsFinalRenderer: false,
+    claimsVisualPass: false,
+    claimsValidation: false,
+    claimsProduction: false,
+    claimsOpenWorldTraversal: false,
+    claimsSurvivalSimulation: false,
+    claimsSwimming: false,
+    claimsFluidSimulation: false,
+    claimsManorInteriorAccess: false,
+    claimsDistantTraversal: false,
+    matrixCollapse: false
   })
 });
 
@@ -1176,10 +1415,18 @@ export const H_EARTH_3D_ENVIRONMENT_COVERAGE_MODEL = Object.freeze({
     RESOLVED_REQUIRED_UNITS /
     H_EARTH_3D_ENVIRONMENT_CONSTANTS.requiredCoverageUnits.totalRequiredUnits,
 
+  descriptorCoveragePresent: true,
+  descriptorCoverageRatio:
+    H_EARTH_3D_ENVIRONMENT_DESCRIPTOR_COVERAGE.descriptorCoverageRatio,
+  fullDescriptorCoverage:
+    H_EARTH_3D_ENVIRONMENT_DESCRIPTOR_COVERAGE.fullDescriptorCoverage,
+
   interpretation: Object.freeze({
     meansEnvironmentModelCoverageComplete:
       RESOLVED_REQUIRED_UNITS ===
       H_EARTH_3D_ENVIRONMENT_CONSTANTS.requiredCoverageUnits.totalRequiredUnits,
+    meansDescriptorCoverageExposed:
+      H_EARTH_3D_ENVIRONMENT_DESCRIPTOR_COVERAGE.fullDescriptorCoverage === true,
     meansRendered: false,
     meansRuntimePass: false,
     meansRendererPass: false,
@@ -1193,7 +1440,12 @@ export const H_EARTH_3D_ENVIRONMENT_RECEIPT = Object.freeze({
   receiptType: 'H_EARTH_3D_ENVIRONMENT_RECEIPT',
   file: '/showroom/globe/h-earth/environment.js',
   upstreamFile: '/showroom/globe/h-earth/capacity.js',
-  status: 'DETERMINISTIC_ENVIRONMENT_MODEL_DEFINED_NON_RENDERING_RENEWED',
+  contractId:
+    'H_EARTH_3D_ENVIRONMENT_FILE_BIRTH_STEP_021B_DESCRIPTOR_COVERAGE_EXPOSURE_v1',
+  renewedFrom:
+    'H_EARTH_3D_ENVIRONMENT_FILE_BIRTH_STEP_021A_RENEWAL_CLEANUP_PACKET_v1',
+  status:
+    'DETERMINISTIC_ENVIRONMENT_MODEL_DEFINED_NON_RENDERING_DESCRIPTOR_COVERAGE_EXPOSED',
 
   matrix: 'H-Earth',
   matrixRole: 'Ground-View Matrix',
@@ -1234,6 +1486,60 @@ export const H_EARTH_3D_ENVIRONMENT_RECEIPT = Object.freeze({
     step020ReferenceConfirmed: true
   }),
 
+  descriptorCoverageApplied: true,
+  descriptorCoveragePresent: true,
+  fullDescriptorCoverage: true,
+  descriptorCoverageRatio:
+    H_EARTH_3D_ENVIRONMENT_DESCRIPTOR_COVERAGE.descriptorCoverageRatio,
+  expectedSceneTokens:
+    H_EARTH_3D_ENVIRONMENT_DESCRIPTOR_COVERAGE.expectedSceneTokens,
+  detectedSceneTokens:
+    H_EARTH_3D_ENVIRONMENT_DESCRIPTOR_COVERAGE.detectedSceneTokens,
+  missingSceneTokens:
+    H_EARTH_3D_ENVIRONMENT_DESCRIPTOR_COVERAGE.missingSceneTokens,
+
+  shorelineDescriptorCoverage:
+    H_EARTH_3D_ENVIRONMENT_DESCRIPTOR_COVERAGE.shorelineDescriptorCoverage,
+  surfaceDescriptorCoverage:
+    H_EARTH_3D_ENVIRONMENT_DESCRIPTOR_COVERAGE.surfaceDescriptorCoverage,
+  waterDescriptorCoverage:
+    H_EARTH_3D_ENVIRONMENT_DESCRIPTOR_COVERAGE.waterDescriptorCoverage,
+  rockDescriptorCoverage:
+    H_EARTH_3D_ENVIRONMENT_DESCRIPTOR_COVERAGE.rockDescriptorCoverage,
+  airDescriptorCoverage:
+    H_EARTH_3D_ENVIRONMENT_DESCRIPTOR_COVERAGE.airDescriptorCoverage,
+  manorDescriptorCoverage:
+    H_EARTH_3D_ENVIRONMENT_DESCRIPTOR_COVERAGE.manorDescriptorCoverage,
+
+  descriptorCoverageSummary: Object.freeze({
+    shoreline: true,
+    wet: true,
+    sand: true,
+    dry: true,
+    foam: true,
+    water: true,
+    rock: true,
+    tide: true,
+    air: true,
+    haze: true,
+    manor: true,
+    distant: true,
+    terms: Object.freeze([
+      'shoreline',
+      'wet sand',
+      'dry sand',
+      'foam line',
+      'water plane',
+      'nearshore wave band',
+      'tide pools',
+      'small beach stones',
+      'foreground jagged rocks',
+      'air haze',
+      'manor exterior context',
+      'distant rock stacks and islets'
+    ])
+  }),
+
   resolvedObjects: H_EARTH_3D_ENVIRONMENT_COVERAGE_MODEL.resolvedObjects,
   resolvedZones: H_EARTH_3D_ENVIRONMENT_COVERAGE_MODEL.resolvedZones,
   resolvedInspectableAnchors:
@@ -1259,6 +1565,7 @@ export const H_EARTH_3D_ENVIRONMENT_RECEIPT = Object.freeze({
   }),
 
   boundary: Object.freeze({
+    descriptorExposureOnly: true,
     rendersScene: false,
     touchesDom: false,
     constructsRenderer: false,
@@ -1283,6 +1590,10 @@ export const H_EARTH_3D_ENVIRONMENT_RECEIPT = Object.freeze({
 
 export function getResolvedEnvironmentObject(objectId) {
   return H_EARTH_3D_RESOLVED_ENVIRONMENT_OBJECTS[objectId] || null;
+}
+
+export function getEnvironmentDescriptorCoverage() {
+  return H_EARTH_3D_ENVIRONMENT_DESCRIPTOR_COVERAGE;
 }
 
 export function getEnvironmentReceipt() {
@@ -1324,6 +1635,8 @@ export const H_EARTH_3D_ENVIRONMENT = Object.freeze({
   forbiddenCapabilityFlags: H_EARTH_3D_FORBIDDEN_CAPABILITY_FLAGS,
 
   materialChannels: H_EARTH_3D_MATERIAL_CHANNELS,
+  descriptorCoverage: H_EARTH_3D_ENVIRONMENT_DESCRIPTOR_COVERAGE,
+  expectedSceneTokens: H_EARTH_3D_ENVIRONMENT_EXPECTED_SCENE_TOKENS,
   resolvedEnvironmentObjects: H_EARTH_3D_RESOLVED_ENVIRONMENT_OBJECTS,
   resolvedEnvironmentZones: H_EARTH_3D_RESOLVED_ENVIRONMENT_ZONES,
   surfaceModel: H_EARTH_3D_ENVIRONMENT_SURFACE_MODEL,

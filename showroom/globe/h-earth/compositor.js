@@ -1,33 +1,28 @@
 // /showroom/globe/h-earth/compositor.js
-// RENEWED FILE
-// H_EARTH_3D_COMPOSITOR_FILE_BIRTH_STEP_025A_RENEWAL_CLEANUP_PACKET_v1
+// COMPLETE RENEWED FILE
+// H_EARTH_3D_COMPOSITOR_FILE_BIRTH_STEP_032F_RENDERER_032D_PARENT_DESCRIPTOR_COMPOSITION_ALIGNMENT_v1
 //
 // Renews:
-// H_EARTH_3D_COMPOSITOR_FILE_BIRTH_STEP_025_v1
+// H_EARTH_3D_COMPOSITOR_FILE_BIRTH_STEP_025A_RENEWAL_CLEANUP_PACKET_v1
+//
+// Aligns with:
+// H_EARTH_3D_RENDERER_FILE_BIRTH_STEP_032D_OPTIMIZED_LATTICE_ADMISSION_RENDERER_WIRING_v1
+// H_EARTH_3D_RENDER_GEOMETRY_PORT_FILE_BIRTH_STEP_032C_LATTICE_ADMISSION_GATED_GEOMETRY_PORT_v1
+// H_EARTH_3D_RENDER_NODE_FACTORY_FILE_BIRTH_STEP_032E_RENDERER_032D_GEOMETRY_032C_CLASS_SURFACE_ALIGNMENT_v1
 //
 // Purpose:
-// Defines the deterministic non-rendering H-Earth 3D Candidate Preview
-// compositor descriptor layer.
+// Deterministic non-rendering H-Earth composed candidate-frame compositor.
 //
-// This file consumes capacity.js, environment.js, and renderer.js outputs
-// and resolves the bounded composed candidate frame: camera frame, depth
-// composition, layer composition, focus priority, context composition,
-// viewport-fit classification, node-budget composition, composition pressure,
-// and final composed-node descriptors.
+// This version composes parent render descriptors only. It does not invoke,
+// duplicate, simulate, or pre-apply geometry expansion. Geometry expansion
+// remains downstream in renderer.js Step 032D after final render-input
+// selection and before node factory creation.
 //
-// Renewal scope:
-// - Remove unused renderer inspection-affordance import.
-// - Perform actual projected-bounds vs preview-container comparison.
-// - Preserve node budget by nodeId, not objectId.
-// - Resolve composed nodes by nodeId, not objectId.
-// - Normalize projected y bounds after y-axis inversion.
-// - Clarify clamp flags as operation-applied versus value-was-clamped.
-//
-// This file does not install a route, mutate GitHub, activate runtime,
-// touch DOM, activate WebGL/canvas, claim final renderer, claim renderer pass,
-// claim visual pass, claim validation, claim production, authorize traversal,
-// authorize survival simulation, authorize manor interior, authorize distant
-// traversal, authorize swimming/fluid simulation, or collapse matrices.
+// Boundary:
+// No DOM. No renderer activation. No geometry expansion. No WebGL. No canvas.
+// No SVG. No route install. No runtime activation. No validation claim.
+// No visual-pass claim. No production claim. No traversal. No simulation.
+// No matrix collapse.
 
 import {
   H_EARTH_3D_CAMERA_CAPACITY,
@@ -68,19 +63,30 @@ import {
 } from './renderer.js';
 
 export const H_EARTH_3D_COMPOSITOR_CONTRACT = Object.freeze({
-  contractId: 'H_EARTH_3D_COMPOSITOR_FILE_BIRTH_STEP_025A_RENEWAL_CLEANUP_PACKET_v1',
-  renewedFrom: 'H_EARTH_3D_COMPOSITOR_FILE_BIRTH_STEP_025_v1',
-  upstreamRendererContractId: 'H_EARTH_3D_RENDERER_FILE_BIRTH_STEP_023_v1',
-  upstreamEnvironmentContractId: 'H_EARTH_3D_ENVIRONMENT_FILE_BIRTH_STEP_021A_RENEWAL_CLEANUP_PACKET_v1',
-  upstreamCapacityContractId: 'H_EARTH_3D_CAPACITY_FILE_BIRTH_STEP_019_v1',
-  upstreamMathMapId: 'H_EARTH_3D_COMPOSITOR_CANON_MATH_MAP_v1',
+  contractId:
+    'H_EARTH_3D_COMPOSITOR_FILE_BIRTH_STEP_032F_RENDERER_032D_PARENT_DESCRIPTOR_COMPOSITION_ALIGNMENT_v1',
+  renewedFrom:
+    'H_EARTH_3D_COMPOSITOR_FILE_BIRTH_STEP_025A_RENEWAL_CLEANUP_PACKET_v1',
+
+  rendererCompatibilityTarget:
+    'H_EARTH_3D_RENDERER_FILE_BIRTH_STEP_032D_OPTIMIZED_LATTICE_ADMISSION_RENDERER_WIRING_v1',
+  geometryCompatibilityTarget:
+    'H_EARTH_3D_RENDER_GEOMETRY_PORT_FILE_BIRTH_STEP_032C_LATTICE_ADMISSION_GATED_GEOMETRY_PORT_v1',
+  nodeFactoryCompatibilityTarget:
+    'H_EARTH_3D_RENDER_NODE_FACTORY_FILE_BIRTH_STEP_032E_RENDERER_032D_GEOMETRY_032C_CLASS_SURFACE_ALIGNMENT_v1',
+
+  upstreamEnvironmentContractId:
+    'H_EARTH_3D_ENVIRONMENT_FILE_BIRTH_STEP_021A_RENEWAL_CLEANUP_PACKET_v1',
+  upstreamCapacityContractId:
+    'H_EARTH_3D_CAPACITY_FILE_BIRTH_STEP_019_v1',
 
   file: '/showroom/globe/h-earth/compositor.js',
   upstreamRendererFile: '/showroom/globe/h-earth/renderer.js',
   upstreamEnvironmentFile: '/showroom/globe/h-earth/environment.js',
   upstreamCapacityFile: '/showroom/globe/h-earth/capacity.js',
 
-  status: 'DETERMINISTIC_COMPOSITOR_DESCRIPTOR_DEFINED_NON_RENDERING_RENEWED',
+  status:
+    'PARENT_DESCRIPTOR_COMPOSED_CANDIDATE_FRAME_DEFINED_NON_RENDERING',
   route: '/showroom/globe/h-earth/',
   sourceRoot: '/h-earth-3d/',
   createdFor: 'H_EARTH_3D_CANDIDATE_PREVIEW',
@@ -105,17 +111,23 @@ export const H_EARTH_3D_COMPOSITOR_CONTRACT = Object.freeze({
   ]),
 
   renewalScope: Object.freeze({
-    unusedRendererInspectionAffordanceImportRemoved: true,
-    actualViewportContainerFitComparisonAdded: true,
+    compositorReceivesParentDescriptorsOnly: true,
+    composedCandidateFramePreservesParentDescriptorsOnly: true,
+    geometryExpansionNotInvokedHere: true,
+    geometryExpansionDeferredToRenderer032D: true,
+    renderer032DInputSelectionCompatible: true,
+    composedNodeIdentityUsesNodeId: true,
+    objectIdRemainsSecondaryMetadata: true,
     nodeBudgetPreservesByNodeId: true,
-    composedNodeResolutionUsesNodeId: true,
     projectedYBoundsNormalizedAfterInversion: true,
+    actualViewportContainerFitComparisonPreserved: true,
     clampFlagsClarified: true,
+    latticeAdmissionEvidenceCarriedForRenderer: true,
     redesignClaim: false
   }),
 
   compositorPosture: Object.freeze({
-    compositorType: 'bounded candidate-frame descriptor compositor',
+    compositorType: 'bounded parent-descriptor candidate-frame compositor',
     resolvesCameraFrame: true,
     resolvesLayerComposition: true,
     resolvesFocusPriority: true,
@@ -125,6 +137,9 @@ export const H_EARTH_3D_COMPOSITOR_CONTRACT = Object.freeze({
     resolvesCompositionPressure: true,
     producesComposedCandidateFrameDescriptor: true,
 
+    expandsGeometry: false,
+    createsCandidateChildGeometryDescriptors: false,
+    invokesGeometryPort: false,
     touchesDomInThisFile: false,
     installsRouteInThisFile: false,
     activatesRuntimeInThisFile: false,
@@ -142,34 +157,17 @@ export const H_EARTH_3D_COMPOSITOR_CONTRACT = Object.freeze({
     hearth: 'support/control context only',
     audralia: 'planetary-world context only',
     matrixCollapse: false
-  }),
-
-  boundaryClaims: Object.freeze({
-    doesNotInstallGitHub: true,
-    doesNotModifyRepository: true,
-    doesNotInstallRoute: true,
-    doesNotActivateRuntime: true,
-    doesNotTouchDom: true,
-    doesNotActivateCanvas: true,
-    doesNotActivateWebGL: true,
-    doesNotClaimFinalRenderer: true,
-    doesNotClaimRendererPass: true,
-    doesNotClaimVisualPass: true,
-    doesNotClaimValidation: true,
-    doesNotClaimProduction: true,
-    doesNotClaimOpenWorldTraversal: true,
-    doesNotClaimSwimming: true,
-    doesNotClaimFluidSimulation: true,
-    doesNotClaimSurvivalSimulation: true,
-    doesNotClaimManorInteriorAccess: true,
-    doesNotClaimDistantTraversal: true,
-    matrixCollapse: false
   })
 });
 
 export const H_EARTH_3D_COMPOSITION_BOUNDARY_FLAGS = Object.freeze({
   compositorDescriptorOnly: true,
   composedCandidateFrameOnly: true,
+  parentDescriptorCompositionOnly: true,
+
+  geometryExpansion: false,
+  geometryPortInvocation: false,
+  candidateGeometryChildCreation: false,
 
   directDomMutation: false,
   routeIntegration: false,
@@ -200,39 +198,29 @@ export const H_EARTH_3D_COMPOSITION_BOUNDARY_FLAGS = Object.freeze({
   collisionClaim: false,
   persistentSaveClaim: false,
 
-  matrixCollapse: false
+  matrixCollapse: false,
+  claimBoundaryPreserved: true
 });
 
 export const H_EARTH_3D_COMPOSITION_MATH = Object.freeze({
-  id: 'H_EARTH_3D_COMPOSITION_MATH',
+  id: 'H_EARTH_3D_COMPOSITION_MATH_STEP_032F',
   controllingEquation:
-    'ComposedCandidateFrame = CameraFrame + DepthComposition + LayerComposition + FocusPriority + ContextCompression + ViewportFit + NodeBudgetComposition + CompositionPressure + BoundaryGuards',
-
-  lockedQuestions: Object.freeze([
-    'What is the camera frame?',
-    'What is the layer order?',
-    'What is the primary focus?',
-    'What is context-only?',
-    'What overflows the preview?',
-    'What gets priority under node pressure?',
-    'What remains prohibited?',
-    'What is the final composed candidate frame descriptor?'
-  ]),
+    'ComposedCandidateFrame = ParentRenderDescriptors + CameraFrame + DepthComposition + LayerComposition + FocusPriority + ContextCompression + ViewportFit + NodeBudgetComposition + CompositionPressure + BoundaryGuards',
 
   lockedRules: Object.freeze([
+    'Compositor composes parent render descriptors only.',
+    'Geometry expansion is not performed by compositor.',
+    'Renderer 032D expands geometry after final render-input selection.',
+    'Node identity is preserved by nodeId.',
+    'Object identity remains secondary metadata.',
     'Camera frame must be clamped to capacity limits.',
-    'Clamp-applied flags mean the clamp operation ran; was-clamped flags mean values changed.',
     'Layer ordering must be deterministic.',
     'Foreground wet sand remains primary focus.',
-    'Supporting inspection targets retain priority over context-only forms.',
-    'Hearth remains support/control context only.',
-    'Audralia remains planetary-world context only.',
     'Projected bounds must be compared against preview container bounds.',
-    'Overflow is classified and never upgraded into open-world authority.',
-    'Node-pressure reduction preserves by nodeId and never only by objectId.',
-    'Node-pressure reduction never removes boundary flags.',
+    'Overflow classification never creates open-world authority.',
+    'Node-pressure reduction preserves boundary flags and matrix separation.',
     'The composed frame is a descriptor, not a rendered scene.',
-    'No visual pass, validation, production, runtime, route, canvas, WebGL, or matrix-collapse claim.'
+    'No visual pass, validation, production, runtime, route, canvas, WebGL, traversal, simulation, or matrix-collapse claim.'
   ]),
 
   requiredOutputs: Object.freeze([
@@ -245,6 +233,8 @@ export const H_EARTH_3D_COMPOSITION_MATH = Object.freeze({
     'nodeBudgetComposition',
     'compositionPressure',
     'composedNodes',
+    'landscapeLatticeBundle',
+    'rendererLatticeAdmissionEvidence',
     'boundary',
     'matrixSeparation',
     'receipt'
@@ -252,7 +242,7 @@ export const H_EARTH_3D_COMPOSITION_MATH = Object.freeze({
 });
 
 export const H_EARTH_3D_CAMERA_FRAME_MODEL = Object.freeze({
-  id: 'H_EARTH_3D_CAMERA_FRAME_MODEL',
+  id: 'H_EARTH_3D_CAMERA_FRAME_MODEL_STEP_032F',
   source: 'H_EARTH_3D_CAMERA_CAPACITY',
   cameraType: 'ground-view composition camera',
   defaultFrame: 'inspection framing',
@@ -290,15 +280,17 @@ export const H_EARTH_3D_CAMERA_FRAME_MODEL = Object.freeze({
     openWorldTraversalClaim: false,
     manorEntryClaim: false,
     distantTraversalClaim: false,
-    controllerActivationClaim: false
+    controllerActivationClaim: false,
+    visualPassClaim: false,
+    validationClaim: false
   })
 });
 
 export const H_EARTH_3D_DEPTH_COMPOSITION_MODEL = Object.freeze({
-  id: 'H_EARTH_3D_DEPTH_COMPOSITION_MODEL',
+  id: 'H_EARTH_3D_DEPTH_COMPOSITION_MODEL_STEP_032F',
   source: 'H_EARTH_3D_DEPTH_MODEL',
   formula:
-    'DepthComposition = sorted node depth + normalizedDepth + primaryDepthClass + lawful context compression',
+    'DepthComposition = sorted parent descriptor depth + normalizedDepth + primaryDepthClass + lawful context compression',
 
   depthClassOrder: Object.freeze({
     foreground: 10,
@@ -311,6 +303,8 @@ export const H_EARTH_3D_DEPTH_COMPOSITION_MODEL = Object.freeze({
 
   boundary: Object.freeze({
     deterministicDepthOrdering: true,
+    parentDescriptorOnly: true,
+    geometryExpansion: false,
     visualPassClaim: false,
     validationClaim: false,
     finalProjectionClaim: false
@@ -318,7 +312,7 @@ export const H_EARTH_3D_DEPTH_COMPOSITION_MODEL = Object.freeze({
 });
 
 export const H_EARTH_3D_LAYER_COMPOSITION_MODEL = Object.freeze({
-  id: 'H_EARTH_3D_LAYER_COMPOSITION_MODEL',
+  id: 'H_EARTH_3D_LAYER_COMPOSITION_MODEL_STEP_032F',
   source: 'H_EARTH_3D_RENDER_LAYER_ORDER',
   formula:
     'LayerSortKey = layerOrder + normalizedDepthWeight + contextDepthAdjustment + focusLiftAdjustment',
@@ -328,12 +322,13 @@ export const H_EARTH_3D_LAYER_COMPOSITION_MODEL = Object.freeze({
   adjustments: Object.freeze({
     normalizedDepthWeight: 0.01,
     contextDepthAdjustment: 0.25,
-    primaryFocusLiftAdjustment: -0.50,
+    primaryFocusLiftAdjustment: -0.5,
     supportingFocusLiftAdjustment: -0.25
   }),
 
   boundary: Object.freeze({
     deterministicSort: true,
+    parentDescriptorOnly: true,
     usesRuntimeEntropy: false,
     usesMathRandom: false,
     domOrderDependent: false,
@@ -343,7 +338,7 @@ export const H_EARTH_3D_LAYER_COMPOSITION_MODEL = Object.freeze({
 });
 
 export const H_EARTH_3D_FOCUS_PRIORITY_MODEL = Object.freeze({
-  id: 'H_EARTH_3D_FOCUS_PRIORITY_MODEL',
+  id: 'H_EARTH_3D_FOCUS_PRIORITY_MODEL_STEP_032F',
   formula:
     'FocusPriority = inspectionWeight + proximityWeight + primaryTargetBoost + supportingTargetBoost - contextOnlyPenalty - distantDepthPenalty',
 
@@ -357,7 +352,7 @@ export const H_EARTH_3D_FOCUS_PRIORITY_MODEL = Object.freeze({
   ]),
 
   weights: Object.freeze({
-    primaryTargetBoost: 1.0,
+    primaryTargetBoost: 1,
     supportingTargetBoost: 0.7,
     inspectableWeight: 0.5,
     foregroundZoneWeight: 0.35,
@@ -386,7 +381,7 @@ export const H_EARTH_3D_FOCUS_PRIORITY_MODEL = Object.freeze({
 });
 
 export const H_EARTH_3D_CONTEXT_COMPOSITION_MODEL = Object.freeze({
-  id: 'H_EARTH_3D_CONTEXT_COMPOSITION_MODEL',
+  id: 'H_EARTH_3D_CONTEXT_COMPOSITION_MODEL_STEP_032F',
   source: 'H_EARTH_3D_CONTEXT_COMPRESSION',
 
   hearthContextObjectIds: Object.freeze([
@@ -407,10 +402,10 @@ export const H_EARTH_3D_CONTEXT_COMPOSITION_MODEL = Object.freeze({
     'ContextVisibility = baseVisibility * contextScale * depthCompression * boundaryMultiplier',
 
   baseVisibility: Object.freeze({
-    foreground: 1.0,
+    foreground: 1,
     shoreline: 0.95,
     water: 0.78,
-    hearthContext: 0.70,
+    hearthContext: 0.7,
     audraliaContext: 0.58,
     atmosphericContext: 0.52
   }),
@@ -438,7 +433,7 @@ export const H_EARTH_3D_CONTEXT_COMPOSITION_MODEL = Object.freeze({
 });
 
 export const H_EARTH_3D_VIEWPORT_FIT_MODEL = Object.freeze({
-  id: 'H_EARTH_3D_VIEWPORT_FIT_MODEL',
+  id: 'H_EARTH_3D_VIEWPORT_FIT_MODEL_STEP_032F',
   source: 'H_EARTH_3D_RENDER_VOLUME_MODEL',
 
   previewContainer: H_EARTH_3D_RENDER_VOLUME_MODEL.previewContainer,
@@ -466,6 +461,7 @@ export const H_EARTH_3D_VIEWPORT_FIT_MODEL = Object.freeze({
 
   boundary: Object.freeze({
     overflowClassificationOnly: true,
+    parentDescriptorOnly: true,
     openWorldOverflowClaim: false,
     expansionClaim: false,
     finalViewportClaim: false,
@@ -475,7 +471,7 @@ export const H_EARTH_3D_VIEWPORT_FIT_MODEL = Object.freeze({
 });
 
 export const H_EARTH_3D_NODE_PRIORITY_MODEL = Object.freeze({
-  id: 'H_EARTH_3D_NODE_PRIORITY_MODEL',
+  id: 'H_EARTH_3D_NODE_PRIORITY_MODEL_STEP_032F',
   formula:
     'NodePriority = focusPriority + inspectionEligibility + layerImportance + boundaryImportance - contextCompressionPenalty',
 
@@ -487,27 +483,26 @@ export const H_EARTH_3D_NODE_PRIORITY_MODEL = Object.freeze({
     'manor exterior context silhouette',
     'distant Audralia context silhouette',
     'atmospheric depth/haze',
-    'extra cluster details'
+    'extra parent descriptors'
   ]),
 
   reductionOrder: Object.freeze([
-    'reduce distant/context detail',
-    'reduce atmospheric detail',
-    'reduce cluster member count',
-    'reduce secondary surface detail',
+    'reduce distant/context parent descriptors last only under pressure',
+    'reduce atmospheric parent descriptors only after context checks',
+    'reduce secondary surface parent descriptors only after focus checks',
     'never remove boundary flags',
     'never remove matrix separation',
     'never remove primary inspection target'
   ]),
 
   weights: Object.freeze({
-    focusPriorityMultiplier: 1.0,
-    inspectionEligibleBoost: 1.0,
+    focusPriorityMultiplier: 1,
+    inspectionEligibleBoost: 1,
     primaryInspectionBoost: 1.5,
     supportingInspectionBoost: 0.85,
     shorelineBoundaryBoost: 0.55,
-    contextPreservationBoost: 0.30,
-    boundaryImportanceBoost: 0.50,
+    contextPreservationBoost: 0.3,
+    boundaryImportanceBoost: 0.5,
     contextCompressionPenalty: 0.25
   }),
 
@@ -518,13 +513,14 @@ export const H_EARTH_3D_NODE_PRIORITY_MODEL = Object.freeze({
     neverRemoveBoundaryFlags: true,
     neverRemoveMatrixSeparation: true,
     neverRemovePrimaryInspectionTarget: true,
+    geometryExpansion: false,
     visualPassClaim: false,
     validationClaim: false
   })
 });
 
 export const H_EARTH_3D_COMPOSITION_PRESSURE_MODEL = Object.freeze({
-  id: 'H_EARTH_3D_COMPOSITION_PRESSURE_MODEL',
+  id: 'H_EARTH_3D_COMPOSITION_PRESSURE_MODEL_STEP_032F',
 
   pressureClasses: Object.freeze({
     low: 'LOW',
@@ -550,9 +546,18 @@ export const H_EARTH_3D_COMPOSITION_PRESSURE_MODEL = Object.freeze({
   })
 });
 
+export function isHEarthCompositorPlainObject(value) {
+  return value !== null && typeof value === 'object' && Array.isArray(value) === false;
+}
+
+export function normalizeHEarthCompositorNumber(value, fallback = 0) {
+  const numberValue = Number(value);
+  return Number.isFinite(numberValue) ? numberValue : fallback;
+}
+
 export function clampNumber(value, min, max) {
-  if (Number.isNaN(value)) return min;
-  return Math.min(Math.max(value, min), max);
+  const numberValue = normalizeHEarthCompositorNumber(value, min);
+  return Math.min(Math.max(numberValue, min), max);
 }
 
 export function clamp01(value) {
@@ -560,7 +565,10 @@ export function clamp01(value) {
 }
 
 export function valuesDiffer(a, b) {
-  return Math.abs(a - b) > Number.EPSILON;
+  return Math.abs(
+    normalizeHEarthCompositorNumber(a, 0) -
+      normalizeHEarthCompositorNumber(b, 0)
+  ) > Number.EPSILON;
 }
 
 export function positionsDiffer(a, b) {
@@ -573,18 +581,70 @@ export function positionsDiffer(a, b) {
   );
 }
 
+export function normalizeRange(minValue, maxValue) {
+  return Object.freeze({
+    min: Math.min(minValue, maxValue),
+    max: Math.max(minValue, maxValue)
+  });
+}
+
+export function getEnvironmentObjectCollection() {
+  if (Array.isArray(H_EARTH_3D_RESOLVED_ENVIRONMENT_OBJECTS)) {
+    return Object.freeze(H_EARTH_3D_RESOLVED_ENVIRONMENT_OBJECTS);
+  }
+
+  return Object.freeze(Object.values(H_EARTH_3D_RESOLVED_ENVIRONMENT_OBJECTS || {}));
+}
+
 export function getEnvironmentObject(objectId) {
-  return H_EARTH_3D_RESOLVED_ENVIRONMENT_OBJECTS[objectId] || null;
-}
+  if (!objectId) return null;
 
-export function getRendererNodeByNodeId(nodeId) {
-  return H_EARTH_3D_CANDIDATE_RENDER_SCENE.nodes.find((node) => node.nodeId === nodeId) || null;
-}
+  if (
+    H_EARTH_3D_RESOLVED_ENVIRONMENT_OBJECTS &&
+    !Array.isArray(H_EARTH_3D_RESOLVED_ENVIRONMENT_OBJECTS) &&
+    H_EARTH_3D_RESOLVED_ENVIRONMENT_OBJECTS[objectId]
+  ) {
+    return H_EARTH_3D_RESOLVED_ENVIRONMENT_OBJECTS[objectId];
+  }
 
-export function getRendererNodesByObjectId(objectId) {
-  return Object.freeze(
-    H_EARTH_3D_CANDIDATE_RENDER_SCENE.nodes.filter((node) => node.objectId === objectId)
+  return (
+    getEnvironmentObjectCollection().find((object) => object?.objectId === objectId) ||
+    null
   );
+}
+
+export function getRendererCandidateParentNodes(
+  rendererScene = H_EARTH_3D_CANDIDATE_RENDER_SCENE
+) {
+  const nodes = Array.isArray(rendererScene?.nodes) ? rendererScene.nodes : [];
+
+  return Object.freeze(
+    nodes
+      .filter(isHEarthCompositorPlainObject)
+      .filter((node) => node.geometryExpansion?.expandedFromParent !== true)
+      .map((node) =>
+        Object.freeze({
+          ...node,
+          candidateRenderSceneParentDescriptor: true,
+          compositorParentDescriptorOnly: true,
+          geometryExpansionDeferredToRenderer: true,
+          finalGeometryClaim: false,
+          rendererPassClaim: false,
+          visualPassClaim: false,
+          validationClaim: false,
+          productionClaim: false,
+          claimBoundaryPreserved: true
+        })
+      )
+  );
+}
+
+export function getRendererNodeByNodeId(nodeId, candidateNodes = getRendererCandidateParentNodes()) {
+  return candidateNodes.find((node) => node.nodeId === nodeId) || null;
+}
+
+export function getRendererNodesByObjectId(objectId, candidateNodes = getRendererCandidateParentNodes()) {
+  return Object.freeze(candidateNodes.filter((node) => node.objectId === objectId));
 }
 
 export function resolveFocusObjectCenter() {
@@ -592,7 +652,7 @@ export function resolveFocusObjectCenter() {
     H_EARTH_3D_FOCUS_PRIORITY_MODEL.primaryFocusObjectId
   );
 
-  if (primaryObject && primaryObject.center) {
+  if (primaryObject?.center) {
     return primaryObject.center;
   }
 
@@ -606,9 +666,9 @@ export function resolveCameraFrame() {
   const defaultLookAt = H_EARTH_3D_CAMERA_CAPACITY.defaultLookAt;
 
   const focusOffset = Object.freeze({
-    x: focusCenter.x * 0.08,
+    x: normalizeHEarthCompositorNumber(focusCenter.x, 0) * 0.08,
     y: 0,
-    z: focusCenter.z * 0.04
+    z: normalizeHEarthCompositorNumber(focusCenter.z, 0) * 0.04
   });
 
   const contextOffset = Object.freeze({
@@ -624,9 +684,9 @@ export function resolveCameraFrame() {
   });
 
   const unclampedLookAt = Object.freeze({
-    x: focusCenter.x,
-    y: focusCenter.y ?? defaultLookAt.y,
-    z: focusCenter.z
+    x: normalizeHEarthCompositorNumber(focusCenter.x, defaultLookAt.x),
+    y: normalizeHEarthCompositorNumber(focusCenter.y, defaultLookAt.y),
+    z: normalizeHEarthCompositorNumber(focusCenter.z, defaultLookAt.z)
   });
 
   const unclampedTiltDegrees = 0;
@@ -646,7 +706,10 @@ export function resolveCameraFrame() {
 
     focusObjectId: H_EARTH_3D_FOCUS_PRIORITY_MODEL.primaryFocusObjectId,
     focusCenter,
-    focusFrameHint: getCameraFrameHint(H_EARTH_3D_FOCUS_PRIORITY_MODEL.primaryFocusObjectId),
+    focusFrameHint:
+      getCameraFrameHint(
+        H_EARTH_3D_FOCUS_PRIORITY_MODEL.primaryFocusObjectId
+      ),
 
     focusOffset,
     contextOffset,
@@ -669,29 +732,46 @@ export function resolveCameraFrame() {
 
     forbiddenControls: H_EARTH_3D_CAMERA_CAPACITY.forbiddenControls,
 
-    boundary: Object.freeze({
-      cameraFrameDescriptorOnly: true,
-      freeFlightClaim: false,
-      walkClaim: false,
-      swimClaim: false,
-      openWorldTraversalClaim: false,
-      manorEntryClaim: false,
-      distantTraversalClaim: false,
-      controllerActivationClaim: false,
-      visualPassClaim: false,
-      validationClaim: false
-    })
+    boundary: H_EARTH_3D_CAMERA_FRAME_MODEL.boundary
   });
 }
 
-export function resolveDepthComposition(candidateNodes = H_EARTH_3D_CANDIDATE_RENDER_SCENE.nodes) {
-  const nodes = candidateNodes || [];
+export function resolveNodeEnvironmentObject(node = {}) {
+  return getEnvironmentObject(node.objectId) || node.sourceObject || null;
+}
+
+export function resolveNodeNormalizedDepth(node = {}) {
+  const environmentObject = resolveNodeEnvironmentObject(node);
+
+  return clamp01(
+    node.normalizedDepth ??
+      environmentObject?.normalizedDepth ??
+      node.focus?.normalizedDepth ??
+      node.depthComposition?.normalizedDepth ??
+      0
+  );
+}
+
+export function resolveNodeDepthClass(node = {}) {
+  const environmentObject = resolveNodeEnvironmentObject(node);
+
+  return (
+    node.primaryDepthClass ||
+    node.depthClass ||
+    environmentObject?.primaryDepthClass ||
+    environmentObject?.depthClass ||
+    'out-of-bounds-depth'
+  );
+}
+
+export function resolveDepthComposition(candidateNodes = getRendererCandidateParentNodes()) {
+  const nodes = Array.isArray(candidateNodes) ? candidateNodes : [];
 
   const depthEntries = nodes.map((node) => {
-    const environmentObject = getEnvironmentObject(node.objectId);
-    const normalizedDepth = environmentObject?.normalizedDepth ?? 0;
-    const depthClass = environmentObject?.depthClass || 'out-of-bounds-depth';
-    const primaryDepthClass = environmentObject?.primaryDepthClass || depthClass;
+    const environmentObject = resolveNodeEnvironmentObject(node);
+    const normalizedDepth = resolveNodeNormalizedDepth(node);
+    const depthClass = environmentObject?.depthClass || node.depthClass || 'out-of-bounds-depth';
+    const primaryDepthClass = resolveNodeDepthClass(node);
     const depthClassOrder =
       H_EARTH_3D_DEPTH_COMPOSITION_MODEL.depthClassOrder[primaryDepthClass] ??
       H_EARTH_3D_DEPTH_COMPOSITION_MODEL.depthClassOrder['out-of-bounds-depth'];
@@ -700,13 +780,14 @@ export function resolveDepthComposition(candidateNodes = H_EARTH_3D_CANDIDATE_RE
       objectId: node.objectId,
       nodeId: node.nodeId,
       layerId: node.layerId,
-      layerOrder: node.layerOrder,
+      layerOrder: normalizeHEarthCompositorNumber(node.layerOrder, 999),
       normalizedDepth,
       depthClass,
       primaryDepthClass,
       depthClassOrder,
-      contextScale: environmentObject?.contextScale ?? 1,
+      contextScale: environmentObject?.contextScale ?? node.contextScale ?? 1,
       depthSortKey: depthClassOrder + normalizedDepth,
+      parentDescriptorOnly: true,
       finalProjectionClaim: false,
       visualPassClaim: false,
       validationClaim: false
@@ -728,6 +809,7 @@ export function resolveDepthComposition(candidateNodes = H_EARTH_3D_CANDIDATE_RE
     sortedEntries: sortedDepthEntries,
     entryCount: depthEntries.length,
     deterministicDepthOrdering: true,
+    parentDescriptorOnly: true,
     usesRuntimeEntropy: false,
     usesMathRandom: false,
     boundary: H_EARTH_3D_DEPTH_COMPOSITION_MODEL.boundary
@@ -740,11 +822,12 @@ export function resolveFocusPriorityForNode(node) {
       objectId: null,
       nodeId: null,
       focusClass: H_EARTH_3D_FOCUS_PRIORITY_MODEL.focusClasses.unclassified,
-      focusPriority: 0
+      focusPriority: 0,
+      parentDescriptorOnly: true
     });
   }
 
-  const environmentObject = getEnvironmentObject(node.objectId);
+  const environmentObject = resolveNodeEnvironmentObject(node);
   const weights = H_EARTH_3D_FOCUS_PRIORITY_MODEL.weights;
 
   const isPrimary =
@@ -754,13 +837,15 @@ export function resolveFocusPriorityForNode(node) {
     H_EARTH_3D_FOCUS_PRIORITY_MODEL.supportingFocusObjectIds.includes(node.objectId);
 
   const inspectionEligible =
-    environmentObject?.inspectionEligibility?.inspectionEligible === true;
+    environmentObject?.inspectionEligibility?.inspectionEligible === true ||
+    node.inspectionEligibility?.inspectionEligible === true;
 
   const contextOnly =
-    environmentObject?.objectReference?.capability?.contextOnly === true;
+    environmentObject?.objectReference?.capability?.contextOnly === true ||
+    node.context?.contextOnly === true;
 
-  const zoneId = environmentObject?.zoneId || '';
-  const normalizedDepth = environmentObject?.normalizedDepth ?? 1;
+  const zoneId = environmentObject?.zoneId || node.zoneId || '';
+  const normalizedDepth = resolveNodeNormalizedDepth(node);
 
   const foregroundZoneWeight =
     zoneId === 'ZONE_001_FOREGROUND_INSPECTION_ZONE'
@@ -825,12 +910,13 @@ export function resolveFocusPriorityForNode(node) {
     focusPriority: clampNumber(rawFocusPriority, 0, 3),
     focusDoesNotCreateTraversal: true,
     focusDoesNotCreateInteraction: true,
-    focusDoesNotCreateReceipt: true
+    focusDoesNotCreateReceipt: true,
+    parentDescriptorOnly: true
   });
 }
 
-export function resolveFocusPriority(candidateNodes = H_EARTH_3D_CANDIDATE_RENDER_SCENE.nodes) {
-  const nodes = candidateNodes || [];
+export function resolveFocusPriority(candidateNodes = getRendererCandidateParentNodes()) {
+  const nodes = Array.isArray(candidateNodes) ? candidateNodes : [];
   const entries = Object.freeze(nodes.map(resolveFocusPriorityForNode));
 
   const sortedEntries = Object.freeze(
@@ -850,17 +936,20 @@ export function resolveFocusPriority(candidateNodes = H_EARTH_3D_CANDIDATE_RENDE
     highestPriorityNodeId: sortedEntries[0]?.nodeId || null,
     primaryInspectionTargetPreserved:
       entries.some((entry) => entry.objectId === H_EARTH_3D_FOCUS_PRIORITY_MODEL.primaryFocusObjectId),
+    parentDescriptorOnly: true,
     model: H_EARTH_3D_FOCUS_PRIORITY_MODEL,
     boundary: H_EARTH_3D_FOCUS_PRIORITY_MODEL.boundary
   });
 }
 
 export function resolveLayerSortKey(node, focusEntry) {
-  const environmentObject = getEnvironmentObject(node.objectId);
+  const environmentObject = resolveNodeEnvironmentObject(node);
   const adjustments = H_EARTH_3D_LAYER_COMPOSITION_MODEL.adjustments;
 
-  const normalizedDepth = environmentObject?.normalizedDepth ?? 0;
-  const contextOnly = environmentObject?.objectReference?.capability?.contextOnly === true;
+  const normalizedDepth = resolveNodeNormalizedDepth(node);
+  const contextOnly =
+    environmentObject?.objectReference?.capability?.contextOnly === true ||
+    node.context?.contextOnly === true;
 
   const normalizedDepthWeight = normalizedDepth * adjustments.normalizedDepthWeight;
   const contextDepthAdjustment = contextOnly ? adjustments.contextDepthAdjustment : 0;
@@ -874,15 +963,15 @@ export function resolveLayerSortKey(node, focusEntry) {
   }
 
   return (
-    node.layerOrder +
+    normalizeHEarthCompositorNumber(node.layerOrder, 999) +
     normalizedDepthWeight +
     contextDepthAdjustment +
     focusLiftAdjustment
   );
 }
 
-export function resolveLayerComposition(candidateNodes = H_EARTH_3D_CANDIDATE_RENDER_SCENE.nodes) {
-  const nodes = candidateNodes || [];
+export function resolveLayerComposition(candidateNodes = getRendererCandidateParentNodes()) {
+  const nodes = Array.isArray(candidateNodes) ? candidateNodes : [];
   const focusPriority = resolveFocusPriority(nodes);
 
   const entries = nodes.map((node) => {
@@ -893,12 +982,13 @@ export function resolveLayerComposition(candidateNodes = H_EARTH_3D_CANDIDATE_RE
       objectId: node.objectId,
       nodeId: node.nodeId,
       layerId: node.layerId,
-      layerOrder: node.layerOrder,
-      normalizedDepth: getEnvironmentObject(node.objectId)?.normalizedDepth ?? 0,
+      layerOrder: normalizeHEarthCompositorNumber(node.layerOrder, 999),
+      normalizedDepth: resolveNodeNormalizedDepth(node),
       focusPriority: focusEntry?.focusPriority ?? 0,
       focusClass: focusEntry?.focusClass || H_EARTH_3D_FOCUS_PRIORITY_MODEL.focusClasses.unclassified,
       layerSortKey: sortKey,
-      deterministicSort: true
+      deterministicSort: true,
+      parentDescriptorOnly: true
     });
   });
 
@@ -916,6 +1006,7 @@ export function resolveLayerComposition(candidateNodes = H_EARTH_3D_CANDIDATE_RE
     entries: Object.freeze(entries),
     sortedEntries,
     deterministicSort: true,
+    parentDescriptorOnly: true,
     usesRuntimeEntropy: false,
     usesMathRandom: false,
     domOrderDependent: false,
@@ -926,12 +1017,14 @@ export function resolveLayerComposition(candidateNodes = H_EARTH_3D_CANDIDATE_RE
 export function resolveContextCompositionForNode(node) {
   if (!node) return null;
 
-  const environmentObject = getEnvironmentObject(node.objectId);
-  if (!environmentObject) return null;
+  const environmentObject = resolveNodeEnvironmentObject(node);
+  if (!environmentObject && !node) return null;
 
-  const context = environmentObject.context || {};
-  const objectReference = environmentObject.objectReference || {};
-  const contextOnly = objectReference.capability?.contextOnly === true;
+  const context = environmentObject?.context || node.context || {};
+  const objectReference = environmentObject?.objectReference || node.objectReference || {};
+  const contextOnly =
+    objectReference.capability?.contextOnly === true ||
+    context.contextOnly === true;
 
   const isHearthContext =
     H_EARTH_3D_CONTEXT_COMPOSITION_MODEL.hearthContextObjectIds.includes(node.objectId);
@@ -942,17 +1035,19 @@ export function resolveContextCompositionForNode(node) {
   const isWaterAtmosphericContext =
     H_EARTH_3D_CONTEXT_COMPOSITION_MODEL.waterAtmosphericContextObjectIds.includes(node.objectId);
 
+  const primitiveType = environmentObject?.primitiveType || node.primitiveType || '';
+
   let baseVisibility = H_EARTH_3D_CONTEXT_COMPOSITION_MODEL.baseVisibility.foreground;
 
   if (isHearthContext) {
     baseVisibility = H_EARTH_3D_CONTEXT_COMPOSITION_MODEL.baseVisibility.hearthContext;
   } else if (isAudraliaContext) {
     baseVisibility = H_EARTH_3D_CONTEXT_COMPOSITION_MODEL.baseVisibility.audraliaContext;
-  } else if (isWaterAtmosphericContext && environmentObject.primitiveType === 'atmosphericLayer') {
+  } else if (isWaterAtmosphericContext && primitiveType === 'atmosphericLayer') {
     baseVisibility = H_EARTH_3D_CONTEXT_COMPOSITION_MODEL.baseVisibility.atmosphericContext;
   } else if (isWaterAtmosphericContext) {
     baseVisibility = H_EARTH_3D_CONTEXT_COMPOSITION_MODEL.baseVisibility.water;
-  } else if (environmentObject.zoneId === 'ZONE_002_SHORELINE_CONTACT_ZONE') {
+  } else if ((environmentObject?.zoneId || node.zoneId) === 'ZONE_002_SHORELINE_CONTACT_ZONE') {
     baseVisibility = H_EARTH_3D_CONTEXT_COMPOSITION_MODEL.baseVisibility.shoreline;
   }
 
@@ -969,8 +1064,9 @@ export function resolveContextCompositionForNode(node) {
       H_EARTH_3D_CONTEXT_COMPOSITION_MODEL.boundaryMultiplier.contextOnly;
   }
 
-  const depthCompression = clampNumber(1 - environmentObject.normalizedDepth * 0.25, 0.2, 1);
-  const contextScale = environmentObject.contextScale ?? 1;
+  const normalizedDepth = resolveNodeNormalizedDepth(node);
+  const depthCompression = clampNumber(1 - normalizedDepth * 0.25, 0.2, 1);
+  const contextScale = environmentObject?.contextScale ?? node.contextScale ?? 1;
 
   const contextVisibility = clamp01(
     baseVisibility * contextScale * depthCompression * boundaryMultiplier
@@ -981,8 +1077,8 @@ export function resolveContextCompositionForNode(node) {
     nodeId: node.nodeId,
     contextOnly,
     hEarthOwned: context.hEarthOwned === true,
-    hearthContextOnly: context.hearthContextOnly === true,
-    audraliaContextOnly: context.audraliaContextOnly === true,
+    hearthContextOnly: context.hearthContextOnly === true || isHearthContext,
+    audraliaContextOnly: context.audraliaContextOnly === true || isAudraliaContext,
     waterAtmosphericContext: isWaterAtmosphericContext,
 
     baseVisibility,
@@ -991,6 +1087,7 @@ export function resolveContextCompositionForNode(node) {
     boundaryMultiplier,
     contextVisibility,
 
+    parentDescriptorOnly: true,
     manorInteriorAccessClaim: false,
     distantTraversalClaim: false,
     swimmingClaim: false,
@@ -1000,8 +1097,8 @@ export function resolveContextCompositionForNode(node) {
   });
 }
 
-export function resolveContextComposition(candidateNodes = H_EARTH_3D_CANDIDATE_RENDER_SCENE.nodes) {
-  const nodes = candidateNodes || [];
+export function resolveContextComposition(candidateNodes = getRendererCandidateParentNodes()) {
+  const nodes = Array.isArray(candidateNodes) ? candidateNodes : [];
   const entries = Object.freeze(
     nodes.map(resolveContextCompositionForNode).filter(Boolean)
   );
@@ -1015,44 +1112,41 @@ export function resolveContextComposition(candidateNodes = H_EARTH_3D_CANDIDATE_
     audraliaContextObjectIds: H_EARTH_3D_CONTEXT_COMPOSITION_MODEL.audraliaContextObjectIds,
     waterAtmosphericContextObjectIds:
       H_EARTH_3D_CONTEXT_COMPOSITION_MODEL.waterAtmosphericContextObjectIds,
+    parentDescriptorOnly: true,
     rules: H_EARTH_3D_CONTEXT_COMPOSITION_MODEL.rules,
     boundary: H_EARTH_3D_CONTEXT_COMPOSITION_MODEL.boundary
-  });
-}
-
-export function normalizeRange(minValue, maxValue) {
-  return Object.freeze({
-    min: Math.min(minValue, maxValue),
-    max: Math.max(minValue, maxValue)
   });
 }
 
 export function resolveProjectedBoundsForNode(node) {
   if (!node) return null;
 
-  const environmentObject = getEnvironmentObject(node.objectId);
-  if (!environmentObject || !environmentObject.bounds) return null;
+  const environmentObject = resolveNodeEnvironmentObject(node);
+  const bounds = environmentObject?.bounds || node.bounds || null;
+
+  if (!bounds) return null;
 
   const multiplier = H_EARTH_3D_RENDER_PROJECTION_MODEL.scale.unitToCssPixel;
   const yFactor = H_EARTH_3D_RENDER_PROJECTION_MODEL.scale.yInversionFactor;
   const zMultiplier = H_EARTH_3D_RENDER_PROJECTION_MODEL.scale.zDepthMultiplier;
 
-  const projectedYMin = environmentObject.bounds.y.min * multiplier * yFactor;
-  const projectedYMax = environmentObject.bounds.y.max * multiplier * yFactor;
+  const projectedYMin = bounds.y.min * multiplier * yFactor;
+  const projectedYMax = bounds.y.max * multiplier * yFactor;
 
   return Object.freeze({
     objectId: node.objectId,
     nodeId: node.nodeId,
     x: normalizeRange(
-      environmentObject.bounds.x.min * multiplier,
-      environmentObject.bounds.x.max * multiplier
+      bounds.x.min * multiplier,
+      bounds.x.max * multiplier
     ),
     y: normalizeRange(projectedYMin, projectedYMax),
     z: normalizeRange(
-      environmentObject.bounds.z.min * zMultiplier,
-      environmentObject.bounds.z.max * zMultiplier
+      bounds.z.min * zMultiplier,
+      bounds.z.max * zMultiplier
     ),
     yInversionNormalized: true,
+    parentDescriptorOnly: true,
     finalProjectionClaim: false,
     visualPassClaim: false,
     validationClaim: false
@@ -1063,8 +1157,10 @@ export function resolvePreviewContainerBounds() {
   const container = H_EARTH_3D_RENDER_VOLUME_MODEL.previewContainer;
   const width = container.candidateWidthPx;
   const height = container.candidateHeightPx;
-  const zMax = H_EARTH_3D_WORLD_BOUNDS.z.max * H_EARTH_3D_RENDER_PROJECTION_MODEL.scale.zDepthMultiplier;
-  const zMin = H_EARTH_3D_WORLD_BOUNDS.z.min * H_EARTH_3D_RENDER_PROJECTION_MODEL.scale.zDepthMultiplier;
+  const zMax = H_EARTH_3D_WORLD_BOUNDS.z.max *
+    H_EARTH_3D_RENDER_PROJECTION_MODEL.scale.zDepthMultiplier;
+  const zMin = H_EARTH_3D_WORLD_BOUNDS.z.min *
+    H_EARTH_3D_RENDER_PROJECTION_MODEL.scale.zDepthMultiplier;
 
   return Object.freeze({
     x: Object.freeze({ min: -width / 2, max: width / 2 }),
@@ -1089,14 +1185,17 @@ export function projectedBoundsWithinPreviewContainer(projectedBounds) {
   );
 }
 
-export function classifyViewportOverflow(node, projectedBounds = resolveProjectedBoundsForNode(node)) {
+export function classifyViewportOverflow(
+  node,
+  projectedBounds = resolveProjectedBoundsForNode(node)
+) {
   if (!node) {
     return H_EARTH_3D_VIEWPORT_FIT_MODEL.overflowClasses.previewVolumeOverflow;
   }
 
-  const environmentObject = getEnvironmentObject(node.objectId);
+  const environmentObject = resolveNodeEnvironmentObject(node);
 
-  if (!environmentObject || !projectedBounds) {
+  if (!environmentObject && !projectedBounds) {
     return H_EARTH_3D_VIEWPORT_FIT_MODEL.overflowClasses.previewVolumeOverflow;
   }
 
@@ -1104,35 +1203,33 @@ export function classifyViewportOverflow(node, projectedBounds = resolveProjecte
     return H_EARTH_3D_VIEWPORT_FIT_MODEL.overflowClasses.noOverflow;
   }
 
-  if (environmentObject.zoneMembership?.boundarySpanningSurface === true) {
+  if (environmentObject?.zoneMembership?.boundarySpanningSurface === true) {
     return H_EARTH_3D_VIEWPORT_FIT_MODEL.overflowClasses.lawfulBoundarySpanningSurface;
   }
 
-  if (environmentObject.zoneMembership?.contextSpanningObject === true) {
+  if (environmentObject?.zoneMembership?.contextSpanningObject === true) {
     return H_EARTH_3D_VIEWPORT_FIT_MODEL.overflowClasses.lawfulContextSpanningObject;
   }
 
-  if (
-    H_EARTH_3D_VIEWPORT_FIT_MODEL.lawfulOverflowPrimitiveTypes.includes(
-      environmentObject.primitiveType
-    )
-  ) {
+  const primitiveType = environmentObject?.primitiveType || node.primitiveType;
+
+  if (H_EARTH_3D_VIEWPORT_FIT_MODEL.lawfulOverflowPrimitiveTypes.includes(primitiveType)) {
     return H_EARTH_3D_VIEWPORT_FIT_MODEL.overflowClasses.lawfulBoundarySpanningSurface;
   }
 
-  if (environmentObject.centerWithinWorld === true) {
+  if (environmentObject?.centerWithinWorld === true) {
     return H_EARTH_3D_VIEWPORT_FIT_MODEL.overflowClasses.previewVolumeOverflow;
   }
 
   return H_EARTH_3D_VIEWPORT_FIT_MODEL.overflowClasses.unauthorizedOpenWorldOverflow;
 }
 
-export function resolveViewportFit(candidateNodes = H_EARTH_3D_CANDIDATE_RENDER_SCENE.nodes) {
-  const nodes = candidateNodes || [];
+export function resolveViewportFit(candidateNodes = getRendererCandidateParentNodes()) {
+  const nodes = Array.isArray(candidateNodes) ? candidateNodes : [];
   const previewContainerBounds = resolvePreviewContainerBounds();
 
   const entries = nodes.map((node) => {
-    const environmentObject = getEnvironmentObject(node.objectId);
+    const environmentObject = resolveNodeEnvironmentObject(node);
     const projectedBounds = resolveProjectedBoundsForNode(node);
     const projectedBoundsWithinContainer =
       projectedBoundsWithinPreviewContainer(projectedBounds);
@@ -1141,7 +1238,7 @@ export function resolveViewportFit(candidateNodes = H_EARTH_3D_CANDIDATE_RENDER_
     return Object.freeze({
       objectId: node.objectId,
       nodeId: node.nodeId,
-      primitiveType: environmentObject?.primitiveType || null,
+      primitiveType: environmentObject?.primitiveType || node.primitiveType || null,
       projectedBounds,
       previewContainerBounds,
       projectedBoundsWithinContainer,
@@ -1154,10 +1251,9 @@ export function resolveViewportFit(candidateNodes = H_EARTH_3D_CANDIDATE_RENDER_
       overflowClass,
       lawfulOverflow:
         overflowClass === H_EARTH_3D_VIEWPORT_FIT_MODEL.overflowClasses.noOverflow ||
-        overflowClass ===
-          H_EARTH_3D_VIEWPORT_FIT_MODEL.overflowClasses.lawfulBoundarySpanningSurface ||
-        overflowClass ===
-          H_EARTH_3D_VIEWPORT_FIT_MODEL.overflowClasses.lawfulContextSpanningObject,
+        overflowClass === H_EARTH_3D_VIEWPORT_FIT_MODEL.overflowClasses.lawfulBoundarySpanningSurface ||
+        overflowClass === H_EARTH_3D_VIEWPORT_FIT_MODEL.overflowClasses.lawfulContextSpanningObject,
+      parentDescriptorOnly: true,
       openWorldOverflowClaim: false,
       expansionClaim: false,
       finalViewportClaim: false,
@@ -1196,6 +1292,7 @@ export function resolveViewportFit(candidateNodes = H_EARTH_3D_CANDIDATE_RENDER_
     unauthorizedOverflowCount,
     actualProjectedBoundsComparedToPreviewContainer: true,
     allOverflowClassified: true,
+    parentDescriptorOnly: true,
     openWorldOverflowClaim: false,
     expansionClaim: false,
     finalViewportClaim: false,
@@ -1207,12 +1304,13 @@ export function resolveViewportFit(candidateNodes = H_EARTH_3D_CANDIDATE_RENDER_
 export function resolveNodePriority(node, focusEntry, contextEntry) {
   if (!node) return 0;
 
-  const environmentObject = getEnvironmentObject(node.objectId);
+  const environmentObject = resolveNodeEnvironmentObject(node);
   const weights = H_EARTH_3D_NODE_PRIORITY_MODEL.weights;
 
   const focusPriority = focusEntry?.focusPriority || 0;
   const inspectionEligible =
-    environmentObject?.inspectionEligibility?.inspectionEligible === true;
+    environmentObject?.inspectionEligibility?.inspectionEligible === true ||
+    node.inspectionEligibility?.inspectionEligible === true;
 
   const isPrimary =
     node.objectId === H_EARTH_3D_FOCUS_PRIORITY_MODEL.primaryFocusObjectId;
@@ -1222,10 +1320,12 @@ export function resolveNodePriority(node, focusEntry, contextEntry) {
 
   const isShorelineBoundary =
     environmentObject?.zoneId === 'ZONE_002_SHORELINE_CONTACT_ZONE' ||
-    environmentObject?.primitiveType === 'irregularShorelineBand';
+    environmentObject?.primitiveType === 'irregularShorelineBand' ||
+    node.primitiveType === 'irregularShorelineBand';
 
   const contextOnly =
-    environmentObject?.objectReference?.capability?.contextOnly === true;
+    environmentObject?.objectReference?.capability?.contextOnly === true ||
+    node.context?.contextOnly === true;
 
   const focusComponent = focusPriority * weights.focusPriorityMultiplier;
   const inspectionComponent = inspectionEligible ? weights.inspectionEligibleBoost : 0;
@@ -1249,11 +1349,14 @@ export function resolveNodePriority(node, focusEntry, contextEntry) {
   return clampNumber(priority, 0, 10);
 }
 
-export function resolveNodeBudgetComposition(candidateNodes = H_EARTH_3D_CANDIDATE_RENDER_SCENE.nodes) {
-  const nodes = candidateNodes || [];
+export function resolveNodeBudgetComposition(candidateNodes = getRendererCandidateParentNodes()) {
+  const nodes = Array.isArray(candidateNodes) ? candidateNodes : [];
   const focusPriority = resolveFocusPriority(nodes);
   const contextComposition = resolveContextComposition(nodes);
-  const maxTotal = H_EARTH_3D_RENDER_NODE_BUDGET.maxTotalCandidateNodes;
+  const maxTotal =
+    H_EARTH_3D_RENDER_NODE_BUDGET.maxParentCandidateNodesBeforeGeometryExpansion ||
+    H_EARTH_3D_RENDER_NODE_BUDGET.maxTotalCandidateNodes ||
+    96;
 
   const entries = nodes.map((node) => {
     const focusEntry = focusPriority.entries.find((entry) => entry.nodeId === node.nodeId);
@@ -1264,7 +1367,7 @@ export function resolveNodeBudgetComposition(candidateNodes = H_EARTH_3D_CANDIDA
       objectId: node.objectId,
       nodeId: node.nodeId,
       layerId: node.layerId,
-      layerOrder: node.layerOrder,
+      layerOrder: normalizeHEarthCompositorNumber(node.layerOrder, 999),
       focusPriority: focusEntry?.focusPriority || 0,
       focusClass: focusEntry?.focusClass || H_EARTH_3D_FOCUS_PRIORITY_MODEL.focusClasses.unclassified,
       contextVisibility: contextEntry?.contextVisibility ?? 1,
@@ -1273,6 +1376,7 @@ export function resolveNodeBudgetComposition(candidateNodes = H_EARTH_3D_CANDIDA
         node.objectId === H_EARTH_3D_FOCUS_PRIORITY_MODEL.primaryFocusObjectId,
       supportingInspectionTarget:
         H_EARTH_3D_FOCUS_PRIORITY_MODEL.supportingFocusObjectIds.includes(node.objectId),
+      parentDescriptorOnly: true,
       boundaryFlagsPreserved: true,
       matrixSeparationPreserved: true
     });
@@ -1315,6 +1419,8 @@ export function resolveNodeBudgetComposition(candidateNodes = H_EARTH_3D_CANDIDA
     reductionDeterministic: true,
     preservesByNodeId: true,
     objectIdUsedAsSecondaryMetadataOnly: true,
+    parentDescriptorOnly: true,
+    geometryExpansion: false,
     boundaryFlagsPreserved: true,
     matrixSeparationPreserved: true,
     primaryInspectionTargetPreserved: preservedEntries.some(
@@ -1323,8 +1429,8 @@ export function resolveNodeBudgetComposition(candidateNodes = H_EARTH_3D_CANDIDA
   });
 }
 
-export function resolveCompositionPressure(candidateNodes = H_EARTH_3D_CANDIDATE_RENDER_SCENE.nodes) {
-  const nodes = candidateNodes || [];
+export function resolveCompositionPressure(candidateNodes = getRendererCandidateParentNodes()) {
+  const nodes = Array.isArray(candidateNodes) ? candidateNodes : [];
   const viewportFit = resolveViewportFit(nodes);
   const nodeBudgetComposition = resolveNodeBudgetComposition(nodes);
   const contextComposition = resolveContextComposition(nodes);
@@ -1355,7 +1461,7 @@ export function resolveCompositionPressure(candidateNodes = H_EARTH_3D_CANDIDATE
 
   const overlapPressure = clamp01(
     nodes.filter((node) => {
-      const environmentObject = getEnvironmentObject(node.objectId);
+      const environmentObject = resolveNodeEnvironmentObject(node);
       return (
         environmentObject?.zoneMembership?.boundarySpanningSurface === true ||
         environmentObject?.zoneMembership?.contextSpanningObject === true
@@ -1395,6 +1501,7 @@ export function resolveCompositionPressure(candidateNodes = H_EARTH_3D_CANDIDATE
     thresholds: H_EARTH_3D_COMPOSITION_PRESSURE_MODEL.thresholds,
 
     pressureClassificationOnly: true,
+    parentDescriptorOnly: true,
     visualQualityClaim: false,
     visualPassClaim: false,
     validationClaim: false,
@@ -1405,7 +1512,7 @@ export function resolveCompositionPressure(candidateNodes = H_EARTH_3D_CANDIDATE
 export function resolveComposedNode(node) {
   if (!node) return null;
 
-  const environmentObject = getEnvironmentObject(node.objectId);
+  const environmentObject = resolveNodeEnvironmentObject(node);
   const focusEntry = resolveFocusPriorityForNode(node);
   const contextEntry = resolveContextCompositionForNode(node);
   const projectedBounds = resolveProjectedBoundsForNode(node);
@@ -1413,14 +1520,16 @@ export function resolveComposedNode(node) {
   const nodePriority = resolveNodePriority(node, focusEntry, contextEntry);
 
   return Object.freeze({
+    ...node,
+
     composedNodeId: `h-earth-composed-node-${node.nodeId}`,
     sourceNodeId: node.nodeId,
     objectId: node.objectId,
-    label: node.label,
+    label: node.label || node.objectLabel || node.objectId,
 
     layerId: node.layerId,
     layerOrder: node.layerOrder,
-    zoneId: node.zoneId,
+    zoneId: node.zoneId || environmentObject?.zoneId || null,
     primitiveType: node.primitiveType,
     materialKey: node.materialKey,
 
@@ -1430,24 +1539,33 @@ export function resolveComposedNode(node) {
     viewportOverflowClass: viewportClass,
     nodePriority,
 
-    cssTransformDescriptor: node.cssTransform,
-    materialToken: node.materialToken,
-    primitiveGeometry: node.primitiveGeometry,
-    inspectionAffordance: node.inspectionAffordance,
+    cssTransformDescriptor: node.cssTransformDescriptor || null,
+    materialToken: node.materialToken || null,
+    primitiveGeometry: node.primitiveGeometry || null,
+    inspectionAffordance: node.inspectionAffordance || null,
 
-    center: environmentObject?.center || null,
-    bounds: environmentObject?.bounds || null,
-    normalizedDepth: environmentObject?.normalizedDepth ?? null,
-    depthClass: environmentObject?.depthClass || null,
-    primaryDepthClass: environmentObject?.primaryDepthClass || null,
-    zoneMembership: environmentObject?.zoneMembership || null,
+    center: environmentObject?.center || node.center || null,
+    bounds: environmentObject?.bounds || node.bounds || null,
+    normalizedDepth: resolveNodeNormalizedDepth(node),
+    depthClass: environmentObject?.depthClass || node.depthClass || null,
+    primaryDepthClass: environmentObject?.primaryDepthClass || node.primaryDepthClass || null,
+    zoneMembership: environmentObject?.zoneMembership || node.zoneMembership || null,
 
-    context: environmentObject?.context || null,
+    context: environmentObject?.context || node.context || null,
     upstreamBoundary: node.boundary || null,
+
+    candidateRenderSceneParentDescriptor: true,
+    compositorParentDescriptorOnly: true,
+    renderer032DGeometryExpansionDeferred: true,
+    geometryExpansion: null,
+    geometryExpanded: false,
+    candidateGeometryOnly: false,
 
     claimFlags: Object.freeze({
       composedDescriptorOnly: true,
-      candidateGeometryOnly: true,
+      parentDescriptorOnly: true,
+      geometryExpansionDeferredToRenderer: true,
+      candidateGeometryChildDescriptorCreatedHere: false,
       domDescriptorOnly: true,
       directDomMutation: false,
       routeIntegration: false,
@@ -1470,13 +1588,15 @@ export function resolveComposedNode(node) {
       manorInteriorAccessClaim: false,
       distantTraversalClaim: false,
       matrixCollapse: false
-    })
+    }),
+
+    claimBoundaryPreserved: true
   });
 }
 
 export function resolveComposedCandidateFrame() {
   const rendererScene = H_EARTH_3D_CANDIDATE_RENDER_SCENE;
-  const candidateNodes = rendererScene.nodes || Object.freeze([]);
+  const candidateNodes = getRendererCandidateParentNodes(rendererScene);
 
   const cameraFrame = resolveCameraFrame();
   const depthComposition = resolveDepthComposition(candidateNodes);
@@ -1491,7 +1611,7 @@ export function resolveComposedCandidateFrame() {
 
   const composedNodes = Object.freeze(
     layerComposition.sortedEntries
-      .map((entry) => getRendererNodeByNodeId(entry.nodeId))
+      .map((entry) => getRendererNodeByNodeId(entry.nodeId, candidateNodes))
       .filter((node) => node && preservedNodeIds.has(node.nodeId))
       .map(resolveComposedNode)
       .filter(Boolean)
@@ -1499,6 +1619,9 @@ export function resolveComposedCandidateFrame() {
 
   return Object.freeze({
     frameId: 'H_EARTH_3D_COMPOSED_CANDIDATE_FRAME',
+    contractId: H_EARTH_3D_COMPOSITOR_CONTRACT.contractId,
+    renewedFrom: H_EARTH_3D_COMPOSITOR_CONTRACT.renewedFrom,
+
     matrix: 'H-Earth',
     matrixRole: 'Ground-View Matrix',
     activeCell: 'H_EARTH_GROUND_CELL_001',
@@ -1523,17 +1646,32 @@ export function resolveComposedCandidateFrame() {
     composedNodes,
     composedNodeCount: composedNodes.length,
 
+    candidateRenderSceneParentDescriptorsOnly: true,
+    compositorReceivesParentDescriptorsOnly: true,
+    geometryExpansionApplied: false,
+    geometryExpansionDeferredToRenderer032D: true,
+    rendererExpectedToExpandAfterInputSelection: true,
+
     rendererScene,
+    sourceCandidateParentNodeCount: candidateNodes.length,
+    sourceCandidateRenderNodeCount: rendererScene.nodeCount,
     renderVolume: H_EARTH_3D_RENDER_VOLUME_MODEL,
     projectionModel: H_EARTH_3D_RENDER_PROJECTION_MODEL,
     zones: H_EARTH_3D_RESOLVED_ENVIRONMENT_ZONES,
 
+    landscapeLatticeBundle: rendererScene.landscapeLatticeBundle || null,
+    rendererLatticeAdmissionEvidence:
+      rendererScene.rendererLatticeAdmissionEvidence || null,
+    landscapeLatticeBundleForwardedForRenderer: true,
+
     finalStableAnswer:
-      'deterministic bounded non-rendering composition descriptor for H_EARTH_GROUND_CELL_001 around Inspect Ground',
+      'deterministic bounded non-rendering parent-descriptor composition frame for H_EARTH_GROUND_CELL_001 around Inspect Ground',
 
     boundary: Object.freeze({
       composedCandidateFrameOnly: true,
+      parentDescriptorOnly: true,
       rendersScene: false,
+      expandsGeometry: false,
       touchesDom: false,
       installsRoute: false,
       activatesRuntime: false,
@@ -1559,19 +1697,32 @@ export function resolveComposedCandidateFrame() {
       hearth: 'support/control context only',
       audralia: 'planetary-world context only',
       matrixCollapse: false
-    })
+    }),
+
+    claimBoundaryPreserved: true
   });
 }
 
-export const H_EARTH_3D_COMPOSED_CANDIDATE_FRAME = resolveComposedCandidateFrame();
+export const H_EARTH_3D_COMPOSED_CANDIDATE_FRAME =
+  resolveComposedCandidateFrame();
 
 export const H_EARTH_3D_COMPOSITOR_RECEIPT = Object.freeze({
   receiptType: 'H_EARTH_3D_COMPOSITOR_RECEIPT',
   file: '/showroom/globe/h-earth/compositor.js',
-  status: 'DETERMINISTIC_COMPOSITOR_DESCRIPTOR_DEFINED_NON_RENDERING_RENEWED',
+  status:
+    'PARENT_DESCRIPTOR_COMPOSED_CANDIDATE_FRAME_DEFINED_NON_RENDERING',
 
-  renewedFrom: 'H_EARTH_3D_COMPOSITOR_FILE_BIRTH_STEP_025_v1',
-  contractId: 'H_EARTH_3D_COMPOSITOR_FILE_BIRTH_STEP_025A_RENEWAL_CLEANUP_PACKET_v1',
+  renewedFrom:
+    'H_EARTH_3D_COMPOSITOR_FILE_BIRTH_STEP_025A_RENEWAL_CLEANUP_PACKET_v1',
+  contractId:
+    'H_EARTH_3D_COMPOSITOR_FILE_BIRTH_STEP_032F_RENDERER_032D_PARENT_DESCRIPTOR_COMPOSITION_ALIGNMENT_v1',
+
+  rendererCompatibilityTarget:
+    H_EARTH_3D_COMPOSITOR_CONTRACT.rendererCompatibilityTarget,
+  geometryCompatibilityTarget:
+    H_EARTH_3D_COMPOSITOR_CONTRACT.geometryCompatibilityTarget,
+  nodeFactoryCompatibilityTarget:
+    H_EARTH_3D_COMPOSITOR_CONTRACT.nodeFactoryCompatibilityTarget,
 
   upstreamRendererFile: '/showroom/globe/h-earth/renderer.js',
   upstreamEnvironmentFile: '/showroom/globe/h-earth/environment.js',
@@ -1607,17 +1758,22 @@ export const H_EARTH_3D_COMPOSITOR_RECEIPT = Object.freeze({
   compositionPressureResolved: true,
   composedCandidateFrameResolved: true,
 
-  cleanupApplied: Object.freeze({
-    unusedRendererInspectionAffordanceImportRemoved: true,
-    actualViewportContainerFitComparisonAdded: true,
-    nodeBudgetPreservesByNodeId: true,
-    composedNodeResolutionUsesNodeId: true,
-    projectedYBoundsNormalizedAfterInversion: true,
-    clampFlagsClarified: true
-  }),
+  parentDescriptorCompositionOnly: true,
+  compositorReceivesParentDescriptorsOnly: true,
+  candidateRenderSceneParentDescriptorsOnly:
+    H_EARTH_3D_CANDIDATE_RENDER_SCENE.candidateRenderSceneParentDescriptorsOnly === true,
+  geometryExpansionAppliedHere: false,
+  geometryPortInvokedHere: false,
+  geometryExpansionDeferredToRenderer032D: true,
+  rendererExpectedExpansionFunctionStage:
+    'after-input-selection-before-node-factory',
 
   composedNodeCount: H_EARTH_3D_COMPOSED_CANDIDATE_FRAME.composedNodeCount,
-  sourceCandidateRenderNodeCount: H_EARTH_3D_CANDIDATE_RENDER_SCENE.nodeCount,
+  sourceCandidateParentNodeCount:
+    H_EARTH_3D_COMPOSED_CANDIDATE_FRAME.sourceCandidateParentNodeCount,
+  sourceCandidateRenderNodeCount:
+    H_EARTH_3D_COMPOSED_CANDIDATE_FRAME.sourceCandidateRenderNodeCount,
+
   environmentCoverageRatio:
     H_EARTH_3D_ENVIRONMENT_COVERAGE_MODEL.environmentCoverageRatio,
   compositionPressureClass:
@@ -1629,6 +1785,12 @@ export const H_EARTH_3D_COMPOSITOR_RECEIPT = Object.freeze({
   boundaryFlagsPreserved:
     H_EARTH_3D_COMPOSED_CANDIDATE_FRAME.nodeBudgetComposition.boundaryFlagsPreserved,
   matrixSeparationPreserved: true,
+
+  landscapeLatticeBundleCarried:
+    Boolean(H_EARTH_3D_COMPOSED_CANDIDATE_FRAME.landscapeLatticeBundle),
+  rendererLatticeAdmissionEvidenceCarried:
+    Boolean(H_EARTH_3D_COMPOSED_CANDIDATE_FRAME.rendererLatticeAdmissionEvidence),
+  latticeAdmissionDecisionOwnedByRendererAndGeometryPort: true,
 
   firstAction: 'Inspect Ground',
   firstReadout: 'Ground Condition Read',
@@ -1644,6 +1806,8 @@ export const H_EARTH_3D_COMPOSITOR_RECEIPT = Object.freeze({
   boundary: Object.freeze({
     rendersScene: false,
     createsComposedDescriptors: true,
+    parentDescriptorOnly: true,
+    expandsGeometry: false,
     touchesDom: false,
     installsRoute: false,
     activatesRuntime: false,
@@ -1661,11 +1825,13 @@ export const H_EARTH_3D_COMPOSITOR_RECEIPT = Object.freeze({
     claimsFluidSimulation: false,
     claimsManorInteriorAccess: false,
     claimsDistantTraversal: false,
-    matrixCollapse: false
+    matrixCollapse: false,
+    claimBoundaryPreserved: true
   }),
 
   forbiddenCapabilityFlagsPreserved: H_EARTH_3D_FORBIDDEN_CAPABILITY_FLAGS,
-  rendererBoundaryFlagsPreserved: H_EARTH_3D_RENDER_BOUNDARY_FLAGS
+  rendererBoundaryFlagsPreserved: H_EARTH_3D_RENDER_BOUNDARY_FLAGS,
+  claimBoundaryPreserved: true
 });
 
 export function getCompositorReceipt() {
@@ -1707,7 +1873,46 @@ export const H_EARTH_3D_COMPOSITOR = Object.freeze({
   upstreamEnvironment: H_EARTH_3D_ENVIRONMENT,
   upstreamRenderer: H_EARTH_3D_RENDERER,
 
+  isPlainObject: isHEarthCompositorPlainObject,
+  normalizeNumber: normalizeHEarthCompositorNumber,
+  clampNumber,
+  clamp01,
+  valuesDiffer,
+  positionsDiffer,
+  normalizeRange,
+
+  getEnvironmentObjectCollection,
+  getEnvironmentObject,
+  getRendererCandidateParentNodes,
+  getRendererNodeByNodeId,
+  getRendererNodesByObjectId,
+
+  resolveFocusObjectCenter,
+  resolveCameraFrame,
+  resolveNodeEnvironmentObject,
+  resolveNodeNormalizedDepth,
+  resolveNodeDepthClass,
+  resolveDepthComposition,
+  resolveFocusPriorityForNode,
+  resolveFocusPriority,
+  resolveLayerSortKey,
+  resolveLayerComposition,
+  resolveContextCompositionForNode,
+  resolveContextComposition,
+  resolveProjectedBoundsForNode,
+  resolvePreviewContainerBounds,
+  projectedBoundsWithinPreviewContainer,
+  classifyViewportOverflow,
+  resolveViewportFit,
+  resolveNodePriority,
+  resolveNodeBudgetComposition,
+  resolveCompositionPressure,
+  resolveComposedNode,
+  resolveComposedCandidateFrame,
+
   composedCandidateFrame: H_EARTH_3D_COMPOSED_CANDIDATE_FRAME,
+
+  getReceipt: getCompositorReceipt,
   receipt: H_EARTH_3D_COMPOSITOR_RECEIPT
 });
 

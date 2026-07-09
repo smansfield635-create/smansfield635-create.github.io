@@ -1,36 +1,42 @@
 // /showroom/globe/h-earth/render/geometry.js
 // COMPLETE RENEWED FILE
-// H_EARTH_3D_RENDER_GEOMETRY_PORT_FILE_BIRTH_STEP_032C_LATTICE_ADMISSION_GATED_GEOMETRY_PORT_v1
+// H_EARTH_3D_RENDER_GEOMETRY_PORT_FILE_BIRTH_STEP_032D_ORGANIC_LANDSCAPE_CHILD_VARIATION_v1
 //
 // Renews:
-// H_EARTH_3D_RENDER_GEOMETRY_PORT_FILE_BIRTH_STEP_032B_LANDSCAPE_LATTICE_DIMENSION_CONSUMPTION_v1
+// H_EARTH_3D_RENDER_GEOMETRY_PORT_FILE_BIRTH_STEP_032C_LATTICE_ADMISSION_GATED_GEOMETRY_PORT_v1
 //
 // Preserves support surface from:
 // H_EARTH_3D_RENDER_GEOMETRY_PORT_FILE_BIRTH_STEP_031E_SUPPORT_PORT_RENUMERIZATION_RENEWAL_v1
 //
+// Preserves organic primitive expansion model from:
+// H_EARTH_3D_RENDER_GEOMETRY_PORT_FILE_BIRTH_STEP_031B_v1
+//
 // Purpose:
 // Candidate-only DOM/CSS3D geometry expansion port for H-Earth.
 //
-// This version preserves the renderer-facing geometry API while removing the
-// operational risk of hard module-load lattice dependency. Lattice data is
-// admitted through input/context/adapter channels. If the descriptor lattice is
-// not admitted as 256-address / 16-row / 16-column / row-oriented, this port
-// fails closed with a safe receipt and no geometry expansion.
+// This version preserves the renderer-facing geometry API, lattice-admission
+// gate, fail-closed behavior, class grammar, material/layer/node factory
+// compatibility, and receipt structure from 032C while renewing child descriptor
+// placement so expanded geometry reads less like regular horizontal lattice
+// bands and more like organic shoreline landscape detail.
 //
 // Boundary:
 // No runtime lattice activation. No traversal grid. No collision grid.
 // No physics grid. No gameplay grid. No survival grid. No WebGL. No canvas.
-// No DOM creation. No DOM mutation. No final renderer claim. No renderer-pass
-// claim. No visual-pass claim. No validation claim. No production claim.
-// No matrix collapse.
+// No SVG. No iframe. No script creation. No DOM creation. No DOM mutation.
+// No global document query. No final geometry claim. No final renderer claim.
+// No renderer-pass claim. No visual-pass claim. No validation claim.
+// No production claim. No matrix collapse.
 
 export const H_EARTH_3D_RENDER_GEOMETRY_PORT_CONTRACT = Object.freeze({
   contractId:
-    'H_EARTH_3D_RENDER_GEOMETRY_PORT_FILE_BIRTH_STEP_032C_LATTICE_ADMISSION_GATED_GEOMETRY_PORT_v1',
+    'H_EARTH_3D_RENDER_GEOMETRY_PORT_FILE_BIRTH_STEP_032D_ORGANIC_LANDSCAPE_CHILD_VARIATION_v1',
   renewedFrom:
-    'H_EARTH_3D_RENDER_GEOMETRY_PORT_FILE_BIRTH_STEP_032B_LANDSCAPE_LATTICE_DIMENSION_CONSUMPTION_v1',
+    'H_EARTH_3D_RENDER_GEOMETRY_PORT_FILE_BIRTH_STEP_032C_LATTICE_ADMISSION_GATED_GEOMETRY_PORT_v1',
   supportSurfacePreservedFrom:
     'H_EARTH_3D_RENDER_GEOMETRY_PORT_FILE_BIRTH_STEP_031E_SUPPORT_PORT_RENUMERIZATION_RENEWAL_v1',
+  organicPrimitiveExpansionModelPreservedFrom:
+    'H_EARTH_3D_RENDER_GEOMETRY_PORT_FILE_BIRTH_STEP_031B_v1',
 
   file: '/showroom/globe/h-earth/render/geometry.js',
   route: '/showroom/globe/h-earth/',
@@ -41,8 +47,9 @@ export const H_EARTH_3D_RENDER_GEOMETRY_PORT_CONTRACT = Object.freeze({
     'H_EARTH_256_LATTICE_LANDSCAPE_DIMENSION_MAP_FILE_BIRTH_STEP_032A_v1',
 
   fileClass:
-    'DOM_CSS_3D_CANDIDATE_GEOMETRY_PORT_WITH_LATTICE_ADMISSION_GATE',
-  status: 'LATTICE_ADMISSION_GATED_CANDIDATE_ONLY',
+    'DOM_CSS_3D_CANDIDATE_GEOMETRY_PORT_WITH_LATTICE_ADMISSION_GATE_AND_ORGANIC_CHILD_VARIATION',
+  status:
+    'LATTICE_ADMISSION_GATED_CANDIDATE_ONLY_ORGANIC_LANDSCAPE_CHILD_VARIATION_DEFINED',
 
   targetMatrix: 'H-Earth',
   matrixRole: 'Ground-View Matrix',
@@ -65,6 +72,19 @@ export const H_EARTH_3D_RENDER_GEOMETRY_PORT_CONTRACT = Object.freeze({
     requiresRowOrientationPreserved: true,
     silentFallbackAllowed: false,
     failClosedOnLatticeAdmissionFailure: true
+  }),
+
+  renewalScope: Object.freeze({
+    organicLandscapeChildVariation: true,
+    primitiveSpecificChildPlacement: true,
+    deterministicOrganicVariation: true,
+    latticeRegularBandingReduced: true,
+    visualBandFlatteningMitigation: true,
+    cssDependentOrganicClassSurfacePrepared: true,
+    preserves032CLatticeAdmissionGate: true,
+    preserves032CRendererCompatibility: true,
+    preserves032CReceiptSurface: true,
+    rollbackTo031B: false
   }),
 
   boundary: Object.freeze({
@@ -245,7 +265,8 @@ export const H_EARTH_3D_RENDER_GEOMETRY_CANONICAL_PROFILE_MAP = Object.freeze({
     carryParentDescriptor: true,
     groundPlane: true,
     depthZone: H_EARTH_3D_RENDER_GEOMETRY_DEPTH_ZONE.FOREGROUND,
-    semanticRole: 'primary-ground-inspection-surface'
+    semanticRole: 'primary-ground-inspection-surface',
+    organicProfileId: 'organic-wet-sand-contoured-ground'
   }),
 
   terrainBand: Object.freeze({
@@ -261,7 +282,8 @@ export const H_EARTH_3D_RENDER_GEOMETRY_CANONICAL_PROFILE_MAP = Object.freeze({
     carryParentDescriptor: true,
     groundPlane: true,
     depthZone: H_EARTH_3D_RENDER_GEOMETRY_DEPTH_ZONE.NEAR_FOREGROUND,
-    semanticRole: 'secondary-ground-transition-surface'
+    semanticRole: 'secondary-ground-transition-surface',
+    organicProfileId: 'organic-dry-sand-transition-ground'
   }),
 
   irregularShorelineBand: Object.freeze({
@@ -277,7 +299,8 @@ export const H_EARTH_3D_RENDER_GEOMETRY_CANONICAL_PROFILE_MAP = Object.freeze({
     carryParentDescriptor: true,
     groundPlane: true,
     depthZone: H_EARTH_3D_RENDER_GEOMETRY_DEPTH_ZONE.MIDGROUND,
-    semanticRole: 'water-ground-contact-boundary'
+    semanticRole: 'water-ground-contact-boundary',
+    organicProfileId: 'organic-shoreline-foam-contact'
   }),
 
   waterDepthBand: Object.freeze({
@@ -293,7 +316,8 @@ export const H_EARTH_3D_RENDER_GEOMETRY_CANONICAL_PROFILE_MAP = Object.freeze({
     carryParentDescriptor: true,
     groundPlane: true,
     depthZone: H_EARTH_3D_RENDER_GEOMETRY_DEPTH_ZONE.MIDGROUND,
-    semanticRole: 'nearshore-water-depth-gradient'
+    semanticRole: 'nearshore-water-depth-gradient',
+    organicProfileId: 'organic-nearshore-wave-ripple'
   }),
 
   waterPlane: Object.freeze({
@@ -309,7 +333,8 @@ export const H_EARTH_3D_RENDER_GEOMETRY_CANONICAL_PROFILE_MAP = Object.freeze({
     carryParentDescriptor: true,
     groundPlane: true,
     depthZone: H_EARTH_3D_RENDER_GEOMETRY_DEPTH_ZONE.BACKGROUND,
-    semanticRole: 'water-surface-horizon-field'
+    semanticRole: 'water-surface-horizon-field',
+    organicProfileId: 'organic-water-surface-depth-reflection'
   }),
 
   scatterCluster: Object.freeze({
@@ -325,7 +350,8 @@ export const H_EARTH_3D_RENDER_GEOMETRY_CANONICAL_PROFILE_MAP = Object.freeze({
     carryParentDescriptor: true,
     groundPlane: true,
     depthZone: H_EARTH_3D_RENDER_GEOMETRY_DEPTH_ZONE.FOREGROUND,
-    semanticRole: 'ground-surface-detail-scatter'
+    semanticRole: 'ground-surface-detail-scatter',
+    organicProfileId: 'organic-tide-pool-stone-scatter'
   }),
 
   rockCluster: Object.freeze({
@@ -341,7 +367,8 @@ export const H_EARTH_3D_RENDER_GEOMETRY_CANONICAL_PROFILE_MAP = Object.freeze({
     carryParentDescriptor: true,
     groundPlane: false,
     depthZone: H_EARTH_3D_RENDER_GEOMETRY_DEPTH_ZONE.NEAR_FOREGROUND,
-    semanticRole: 'raised-rock-cluster-context'
+    semanticRole: 'raised-rock-cluster-context',
+    organicProfileId: 'organic-jagged-rock-cluster'
   }),
 
   atmosphericLayer: Object.freeze({
@@ -357,7 +384,8 @@ export const H_EARTH_3D_RENDER_GEOMETRY_CANONICAL_PROFILE_MAP = Object.freeze({
     carryParentDescriptor: true,
     groundPlane: false,
     depthZone: H_EARTH_3D_RENDER_GEOMETRY_DEPTH_ZONE.SKY,
-    semanticRole: 'air-light-atmospheric-context'
+    semanticRole: 'air-light-atmospheric-context',
+    organicProfileId: 'organic-air-haze-light'
   }),
 
   layeredSilhouette: Object.freeze({
@@ -373,7 +401,8 @@ export const H_EARTH_3D_RENDER_GEOMETRY_CANONICAL_PROFILE_MAP = Object.freeze({
     carryParentDescriptor: true,
     groundPlane: false,
     depthZone: H_EARTH_3D_RENDER_GEOMETRY_DEPTH_ZONE.BACKGROUND,
-    semanticRole: 'distant-manor-exterior-context'
+    semanticRole: 'distant-manor-exterior-context',
+    organicProfileId: 'organic-manor-context-silhouette'
   }),
 
   distantCluster: Object.freeze({
@@ -389,7 +418,8 @@ export const H_EARTH_3D_RENDER_GEOMETRY_CANONICAL_PROFILE_MAP = Object.freeze({
     carryParentDescriptor: true,
     groundPlane: false,
     depthZone: H_EARTH_3D_RENDER_GEOMETRY_DEPTH_ZONE.DISTANT,
-    semanticRole: 'distant-world-boundary-context'
+    semanticRole: 'distant-world-boundary-context',
+    organicProfileId: 'organic-distant-rock-islet-context'
   }),
 
   inspectionAnchor: Object.freeze({
@@ -405,67 +435,68 @@ export const H_EARTH_3D_RENDER_GEOMETRY_CANONICAL_PROFILE_MAP = Object.freeze({
     carryParentDescriptor: false,
     groundPlane: false,
     depthZone: H_EARTH_3D_RENDER_GEOMETRY_DEPTH_ZONE.OVERLAY,
-    semanticRole: 'primary-ground-inspection-anchor'
+    semanticRole: 'primary-ground-inspection-anchor',
+    organicProfileId: 'organic-primary-inspection-anchor'
   })
 });
 
 export const H_EARTH_3D_RENDER_GEOMETRY_PRIMITIVE_NODE_PLAN = Object.freeze({
   contouredTerrainBand: Object.freeze([
-    Object.freeze({ suffix: 'wet-sand-ground-base-plane', primitiveType: 'candidateWetSandGroundPlane', kind: 'GROUND_BASE', widthRatio: 1, heightRatio: 0.35, depthRatio: 1, count: 1, detailToken: 'ground-wet-sand-base-plane' }),
-    Object.freeze({ suffix: 'wet-sand-contour-ridge', primitiveType: 'candidateWetSandContourRidge', kind: 'GROUND_CONTOUR', widthRatio: 0.42, heightRatio: 0.08, depthRatio: 0.08, count: 8, detailToken: 'ground-wet-sand-contour-ridge' }),
-    Object.freeze({ suffix: 'wet-sand-moisture-patch', primitiveType: 'candidateWetSandMoisturePatch', kind: 'GROUND_PATCH', widthRatio: 0.22, heightRatio: 0.04, depthRatio: 0.1, count: 8, detailToken: 'ground-wet-sand-moisture-patch' }),
-    Object.freeze({ suffix: 'wet-sand-reflective-sheen', primitiveType: 'candidateWetSandReflectiveSheen', kind: 'REFLECTIVE_SHEEN', widthRatio: 0.24, heightRatio: 0.025, depthRatio: 0.045, count: 5, detailToken: 'ground-wet-sand-reflective-sheen' }),
-    Object.freeze({ suffix: 'wet-sand-grain-detail', primitiveType: 'candidateWetSandGrainDetail', kind: 'GROUND_GRAIN', widthRatio: 0.08, heightRatio: 0.03, depthRatio: 0.04, count: 6, detailToken: 'ground-wet-sand-grain-detail' })
+    Object.freeze({ suffix: 'wet-sand-ground-base-plane', primitiveType: 'candidateWetSandGroundPlane', kind: 'GROUND_BASE', widthRatio: 1, heightRatio: 0.35, depthRatio: 1, count: 1, detailToken: 'ground-wet-sand-base-plane', organicRole: 'wet-sand-base' }),
+    Object.freeze({ suffix: 'wet-sand-contour-ridge', primitiveType: 'candidateWetSandContourRidge', kind: 'GROUND_CONTOUR', widthRatio: 0.42, heightRatio: 0.08, depthRatio: 0.08, count: 8, detailToken: 'ground-wet-sand-contour-ridge', organicRole: 'wet-sand-contour' }),
+    Object.freeze({ suffix: 'wet-sand-moisture-patch', primitiveType: 'candidateWetSandMoisturePatch', kind: 'GROUND_PATCH', widthRatio: 0.22, heightRatio: 0.04, depthRatio: 0.1, count: 8, detailToken: 'ground-wet-sand-moisture-patch', organicRole: 'wet-sand-moisture' }),
+    Object.freeze({ suffix: 'wet-sand-reflective-sheen', primitiveType: 'candidateWetSandReflectiveSheen', kind: 'REFLECTIVE_SHEEN', widthRatio: 0.24, heightRatio: 0.025, depthRatio: 0.045, count: 5, detailToken: 'ground-wet-sand-reflective-sheen', organicRole: 'wet-sand-sheen' }),
+    Object.freeze({ suffix: 'wet-sand-grain-detail', primitiveType: 'candidateWetSandGrainDetail', kind: 'GROUND_GRAIN', widthRatio: 0.08, heightRatio: 0.03, depthRatio: 0.04, count: 6, detailToken: 'ground-wet-sand-grain-detail', organicRole: 'wet-sand-grain' })
   ]),
 
   terrainBand: Object.freeze([
-    Object.freeze({ suffix: 'dry-sand-ground-base-plane', primitiveType: 'candidateDrySandGroundPlane', kind: 'GROUND_BASE', widthRatio: 1, heightRatio: 0.28, depthRatio: 1, count: 1, detailToken: 'ground-dry-sand-base-plane' }),
-    Object.freeze({ suffix: 'dry-sand-transition-ridge', primitiveType: 'candidateDrySandTransitionRidge', kind: 'GROUND_CONTOUR', widthRatio: 0.32, heightRatio: 0.07, depthRatio: 0.08, count: 6, detailToken: 'ground-dry-sand-transition-ridge' }),
-    Object.freeze({ suffix: 'dry-sand-surface-patch', primitiveType: 'candidateDrySandSurfacePatch', kind: 'GROUND_PATCH', widthRatio: 0.14, heightRatio: 0.04, depthRatio: 0.08, count: 8, detailToken: 'ground-dry-sand-surface-patch' })
+    Object.freeze({ suffix: 'dry-sand-ground-base-plane', primitiveType: 'candidateDrySandGroundPlane', kind: 'GROUND_BASE', widthRatio: 1, heightRatio: 0.28, depthRatio: 1, count: 1, detailToken: 'ground-dry-sand-base-plane', organicRole: 'dry-sand-base' }),
+    Object.freeze({ suffix: 'dry-sand-transition-ridge', primitiveType: 'candidateDrySandTransitionRidge', kind: 'GROUND_CONTOUR', widthRatio: 0.32, heightRatio: 0.07, depthRatio: 0.08, count: 6, detailToken: 'ground-dry-sand-transition-ridge', organicRole: 'dry-sand-ridge' }),
+    Object.freeze({ suffix: 'dry-sand-surface-patch', primitiveType: 'candidateDrySandSurfacePatch', kind: 'GROUND_PATCH', widthRatio: 0.14, heightRatio: 0.04, depthRatio: 0.08, count: 8, detailToken: 'ground-dry-sand-surface-patch', organicRole: 'dry-sand-patch' })
   ]),
 
   irregularShorelineBand: Object.freeze([
-    Object.freeze({ suffix: 'shoreline-contact-base', primitiveType: 'candidateShorelineContactBase', kind: 'SHORELINE_BASE', widthRatio: 1, heightRatio: 0.22, depthRatio: 0.45, count: 1, detailToken: 'shoreline-contact-base' }),
-    Object.freeze({ suffix: 'shoreline-irregular-edge', primitiveType: 'candidateShorelineIrregularEdge', kind: 'SHORELINE_EDGE', widthRatio: 0.12, heightRatio: 0.025, depthRatio: 0.035, count: 6, detailToken: 'shoreline-irregular-edge' }),
-    Object.freeze({ suffix: 'shoreline-foam-break', primitiveType: 'candidateShorelineFoamBreak', kind: 'SHORELINE_FOAM', widthRatio: 0.11, heightRatio: 0.025, depthRatio: 0.04, count: 16, detailToken: 'shoreline-foam-break' })
+    Object.freeze({ suffix: 'shoreline-contact-base', primitiveType: 'candidateShorelineContactBase', kind: 'SHORELINE_BASE', widthRatio: 1, heightRatio: 0.22, depthRatio: 0.45, count: 1, detailToken: 'shoreline-contact-base', organicRole: 'shoreline-base' }),
+    Object.freeze({ suffix: 'shoreline-irregular-edge', primitiveType: 'candidateShorelineIrregularEdge', kind: 'SHORELINE_EDGE', widthRatio: 0.12, heightRatio: 0.025, depthRatio: 0.035, count: 6, detailToken: 'shoreline-irregular-edge', organicRole: 'shoreline-edge' }),
+    Object.freeze({ suffix: 'shoreline-foam-break', primitiveType: 'candidateShorelineFoamBreak', kind: 'SHORELINE_FOAM', widthRatio: 0.11, heightRatio: 0.025, depthRatio: 0.04, count: 16, detailToken: 'shoreline-foam-break', organicRole: 'shoreline-foam-break' })
   ]),
 
   waterDepthBand: Object.freeze([
-    Object.freeze({ suffix: 'nearshore-water-depth-base', primitiveType: 'candidateNearshoreWaterDepthBase', kind: 'WATER_BASE', widthRatio: 1, heightRatio: 0.18, depthRatio: 0.8, count: 1, detailToken: 'water-nearshore-depth-base' }),
-    Object.freeze({ suffix: 'nearshore-ripple-strip', primitiveType: 'candidateNearshoreRippleStrip', kind: 'WATER_RIPPLE', widthRatio: 0.18, heightRatio: 0.025, depthRatio: 0.04, count: 12, detailToken: 'water-nearshore-ripple-strip' })
+    Object.freeze({ suffix: 'nearshore-water-depth-base', primitiveType: 'candidateNearshoreWaterDepthBase', kind: 'WATER_BASE', widthRatio: 1, heightRatio: 0.18, depthRatio: 0.8, count: 1, detailToken: 'water-nearshore-depth-base', organicRole: 'nearshore-base' }),
+    Object.freeze({ suffix: 'nearshore-ripple-strip', primitiveType: 'candidateNearshoreRippleStrip', kind: 'WATER_RIPPLE', widthRatio: 0.18, heightRatio: 0.025, depthRatio: 0.04, count: 12, detailToken: 'water-nearshore-ripple-strip', organicRole: 'nearshore-ripple' })
   ]),
 
   waterPlane: Object.freeze([
-    Object.freeze({ suffix: 'water-surface-base-plane', primitiveType: 'candidateWaterSurfacePlane', kind: 'WATER_BASE', widthRatio: 1, heightRatio: 0.25, depthRatio: 1, count: 1, detailToken: 'water-surface-base-plane' }),
-    Object.freeze({ suffix: 'water-depth-band', primitiveType: 'candidateWaterDepthBand', kind: 'WATER_DEPTH', widthRatio: 0.24, heightRatio: 0.025, depthRatio: 0.08, count: 10, detailToken: 'water-depth-band' }),
-    Object.freeze({ suffix: 'water-reflection-strip', primitiveType: 'candidateWaterReflectionStrip', kind: 'WATER_REFLECTION', widthRatio: 0.18, heightRatio: 0.02, depthRatio: 0.035, count: 6, detailToken: 'water-reflection-strip' })
+    Object.freeze({ suffix: 'water-surface-base-plane', primitiveType: 'candidateWaterSurfacePlane', kind: 'WATER_BASE', widthRatio: 1, heightRatio: 0.25, depthRatio: 1, count: 1, detailToken: 'water-surface-base-plane', organicRole: 'water-base' }),
+    Object.freeze({ suffix: 'water-depth-band', primitiveType: 'candidateWaterDepthBand', kind: 'WATER_DEPTH', widthRatio: 0.24, heightRatio: 0.025, depthRatio: 0.08, count: 10, detailToken: 'water-depth-band', organicRole: 'water-depth' }),
+    Object.freeze({ suffix: 'water-reflection-strip', primitiveType: 'candidateWaterReflectionStrip', kind: 'WATER_REFLECTION', widthRatio: 0.18, heightRatio: 0.02, depthRatio: 0.035, count: 6, detailToken: 'water-reflection-strip', organicRole: 'water-reflection' })
   ]),
 
   scatterCluster: Object.freeze([
-    Object.freeze({ suffix: 'surface-scatter-member', primitiveType: 'candidateSurfaceScatterMember', kind: 'SCATTER_MEMBER', widthRatio: 0.08, heightRatio: 0.04, depthRatio: 0.05, count: 24, detailToken: 'ground-surface-scatter-member' })
+    Object.freeze({ suffix: 'surface-scatter-member', primitiveType: 'candidateSurfaceScatterMember', kind: 'SCATTER_MEMBER', widthRatio: 0.08, heightRatio: 0.04, depthRatio: 0.05, count: 24, detailToken: 'ground-surface-scatter-member', organicRole: 'surface-scatter' })
   ]),
 
   rockCluster: Object.freeze([
-    Object.freeze({ suffix: 'rock-cluster-member', primitiveType: 'candidateRockClusterMember', kind: 'ROCK_MEMBER', widthRatio: 0.09, heightRatio: 0.13, depthRatio: 0.08, count: 24, detailToken: 'rock-cluster-member' })
+    Object.freeze({ suffix: 'rock-cluster-member', primitiveType: 'candidateRockClusterMember', kind: 'ROCK_MEMBER', widthRatio: 0.09, heightRatio: 0.13, depthRatio: 0.08, count: 24, detailToken: 'rock-cluster-member', organicRole: 'rock-member' })
   ]),
 
   atmosphericLayer: Object.freeze([
-    Object.freeze({ suffix: 'air-haze-panel', primitiveType: 'candidateAirHazePanel', kind: 'AIR_HAZE', widthRatio: 1, heightRatio: 1, depthRatio: 0.2, count: 1, detailToken: 'air-haze-panel' }),
-    Object.freeze({ suffix: 'air-light-band', primitiveType: 'candidateAirLightBand', kind: 'AIR_LIGHT', widthRatio: 0.28, heightRatio: 0.08, depthRatio: 0.04, count: 4, detailToken: 'air-light-band' })
+    Object.freeze({ suffix: 'air-haze-panel', primitiveType: 'candidateAirHazePanel', kind: 'AIR_HAZE', widthRatio: 1, heightRatio: 1, depthRatio: 0.2, count: 1, detailToken: 'air-haze-panel', organicRole: 'air-haze' }),
+    Object.freeze({ suffix: 'air-light-band', primitiveType: 'candidateAirLightBand', kind: 'AIR_LIGHT', widthRatio: 0.28, heightRatio: 0.08, depthRatio: 0.04, count: 4, detailToken: 'air-light-band', organicRole: 'air-light' })
   ]),
 
   layeredSilhouette: Object.freeze([
-    Object.freeze({ suffix: 'manor-context-body', primitiveType: 'candidateManorContextBody', kind: 'SILHOUETTE_BODY', widthRatio: 0.5, heightRatio: 0.8, depthRatio: 0.2, count: 1, detailToken: 'manor-context-body' }),
-    Object.freeze({ suffix: 'manor-context-roof', primitiveType: 'candidateManorContextRoof', kind: 'SILHOUETTE_ROOF', widthRatio: 0.62, heightRatio: 0.18, depthRatio: 0.16, count: 1, detailToken: 'manor-context-roof' }),
-    Object.freeze({ suffix: 'manor-context-vertical-segment', primitiveType: 'candidateManorContextVerticalSegment', kind: 'SILHOUETTE_BODY', widthRatio: 0.08, heightRatio: 0.5, depthRatio: 0.08, count: 3, detailToken: 'manor-context-vertical-segment' })
+    Object.freeze({ suffix: 'manor-context-body', primitiveType: 'candidateManorContextBody', kind: 'SILHOUETTE_BODY', widthRatio: 0.5, heightRatio: 0.8, depthRatio: 0.2, count: 1, detailToken: 'manor-context-body', organicRole: 'manor-body' }),
+    Object.freeze({ suffix: 'manor-context-roof', primitiveType: 'candidateManorContextRoof', kind: 'SILHOUETTE_ROOF', widthRatio: 0.62, heightRatio: 0.18, depthRatio: 0.16, count: 1, detailToken: 'manor-context-roof', organicRole: 'manor-roof' }),
+    Object.freeze({ suffix: 'manor-context-vertical-segment', primitiveType: 'candidateManorContextVerticalSegment', kind: 'SILHOUETTE_BODY', widthRatio: 0.08, heightRatio: 0.5, depthRatio: 0.08, count: 3, detailToken: 'manor-context-vertical-segment', organicRole: 'manor-segment' })
   ]),
 
   distantCluster: Object.freeze([
-    Object.freeze({ suffix: 'distant-world-silhouette', primitiveType: 'candidateDistantWorldSilhouette', kind: 'DISTANT_CONTEXT', widthRatio: 0.45, heightRatio: 0.65, depthRatio: 0.12, count: 10, detailToken: 'distant-world-context-form' })
+    Object.freeze({ suffix: 'distant-world-silhouette', primitiveType: 'candidateDistantWorldSilhouette', kind: 'DISTANT_CONTEXT', widthRatio: 0.45, heightRatio: 0.65, depthRatio: 0.12, count: 10, detailToken: 'distant-world-context-form', organicRole: 'distant-context-form' })
   ]),
 
   inspectionAnchor: Object.freeze([
-    Object.freeze({ suffix: 'primary-inspection-anchor-marker', primitiveType: 'candidateInspectionAnchorMarker', kind: 'INSPECTION_ANCHOR', widthRatio: 1, heightRatio: 1, depthRatio: 1, count: 1, detailToken: 'primary-inspection-anchor-marker' })
+    Object.freeze({ suffix: 'primary-inspection-anchor-marker', primitiveType: 'candidateInspectionAnchorMarker', kind: 'INSPECTION_ANCHOR', widthRatio: 1, heightRatio: 1, depthRatio: 1, count: 1, detailToken: 'primary-inspection-anchor-marker', organicRole: 'inspection-anchor' })
   ])
 });
 
@@ -805,16 +836,16 @@ export function resolveHEarthGeometryShapeVariation(node = {}) {
       source.shapeIrregularity ?? node.sourceObject?.shapeIrregularity,
       0,
       1,
-      0
+      0.18
     ),
-    edgeVariation: clampHEarthGeometryNumber(source.edgeVariation, 0, 1, 0.08),
-    heightVariation: clampHEarthGeometryNumber(source.heightVariation, 0, 1, 0.08),
+    edgeVariation: clampHEarthGeometryNumber(source.edgeVariation, 0, 1, 0.16),
+    heightVariation: clampHEarthGeometryNumber(source.heightVariation, 0, 1, 0.14),
     rotationVariationDegrees: normalizeHEarthGeometryNumber(
       source.rotationVariationDegrees,
-      0
+      7
     ),
-    scaleVariation: clampHEarthGeometryNumber(source.scaleVariation, 0, 1, 0.05),
-    clusterSpread: clampHEarthGeometryNumber(source.clusterSpread, 0, 1, 0.12),
+    scaleVariation: clampHEarthGeometryNumber(source.scaleVariation, 0, 1, 0.14),
+    clusterSpread: clampHEarthGeometryNumber(source.clusterSpread, 0, 1, 0.22),
 
     finalMeshClaim: false,
     rendererPassClaim: false,
@@ -844,7 +875,7 @@ export function resolveHEarthGeometryDetailDensity(node = {}) {
     node.sourceObject?.detailDensity ?? node.detailDensity,
     0,
     1,
-    0.25
+    0.55
   );
 }
 
@@ -867,7 +898,8 @@ export function resolveHEarthGeometryCanonicalProfile(node = {}) {
       carryParentDescriptor: true,
       groundPlane: false,
       depthZone: H_EARTH_3D_RENDER_GEOMETRY_DEPTH_ZONE.FOREGROUND,
-      semanticRole: 'generic-candidate-context'
+      semanticRole: 'generic-candidate-context',
+      organicProfileId: 'organic-generic-candidate'
     })
   );
 }
@@ -924,10 +956,14 @@ export function extractHEarthLandscapeLatticeBundle(input = {}, context = {}) {
     return Object.freeze({
       map: bundle,
       receipt: context.landscapeLatticeReceipt || input.landscapeLatticeReceipt || null,
-      rowOrientation: context.landscapeLatticeRowOrientation || input.landscapeLatticeRowOrientation || null,
-      regionSummary: context.landscapeLatticeRegionSummary || input.landscapeLatticeRegionSummary || null,
-      inspectionAddressSummary: context.latticeInspectionAddressSummary || input.latticeInspectionAddressSummary || null,
-      compatibilityCheck: context.latticeCompatibilityCheck || input.latticeCompatibilityCheck || null,
+      rowOrientation:
+        context.landscapeLatticeRowOrientation || input.landscapeLatticeRowOrientation || null,
+      regionSummary:
+        context.landscapeLatticeRegionSummary || input.landscapeLatticeRegionSummary || null,
+      inspectionAddressSummary:
+        context.latticeInspectionAddressSummary || input.latticeInspectionAddressSummary || null,
+      compatibilityCheck:
+        context.latticeCompatibilityCheck || input.latticeCompatibilityCheck || null,
       source: 'plain-lattice-map'
     });
   }
@@ -1129,12 +1165,12 @@ export function resolveHEarthLatticeGuidanceForNode(node = {}, input = {}, conte
 
   const densityHint = average(
     records.map((record) => record.renderHintDescriptorOnly?.densityHint),
-    0.5
+    0.58
   );
 
   const visualPriorityHint = average(
     records.map((record) => record.renderHintDescriptorOnly?.visualPriorityHint),
-    0.5
+    0.58
   );
 
   const renderPriorityHint = average(
@@ -1226,6 +1262,376 @@ export function makeHEarthGeometryChildObjectId(parentNode, suffix, index = null
   }
 
   return `${parentObjectId}__${normalizedSuffix}_${String(index).padStart(2, '0')}`;
+}
+
+export function makeHEarthOrganicHashToken(value = '') {
+  let hash = 2166136261;
+
+  String(value).split('').forEach((char) => {
+    hash ^= char.charCodeAt(0);
+    hash = Math.imul(hash, 16777619);
+  });
+
+  return hash >>> 0;
+}
+
+export function createHEarthOrganicSeed({
+  parentNode = {},
+  part = {},
+  record = {},
+  partIndex = 0,
+  childIndex = 0
+} = {}) {
+  const token = [
+    resolveHEarthGeometryObjectId(parentNode),
+    resolveHEarthGeometryPrimitiveType(parentNode),
+    part.detailToken || part.suffix || 'part',
+    record.address || 'address',
+    record.row ?? 'row',
+    record.column ?? 'column',
+    partIndex,
+    childIndex
+  ].join('|');
+
+  const hash = makeHEarthOrganicHashToken(token);
+  const unit = (shift = 0) => {
+    const shifted = (hash >>> shift) & 0xff;
+    return shifted / 255;
+  };
+
+  return Object.freeze({
+    hash,
+    token,
+    a: unit(0),
+    b: unit(8),
+    c: unit(16),
+    d: unit(24),
+    signedA: unit(0) * 2 - 1,
+    signedB: unit(8) * 2 - 1,
+    signedC: unit(16) * 2 - 1,
+    signedD: unit(24) * 2 - 1,
+    deterministic: true,
+    randomRuntimeVariationUsed: false,
+    claimBoundaryPreserved: true
+  });
+}
+
+export function resolveHEarthOrganicPlacementProfile(parentNode = {}, part = {}) {
+  const primitiveType = resolveHEarthGeometryPrimitiveType(parentNode);
+  const profile = resolveHEarthGeometryCanonicalProfile(parentNode);
+  const role = part.organicRole || part.detailToken || part.suffix || 'generic';
+
+  const base = {
+    organicProfileId: profile.organicProfileId || `organic-${normalizeHEarthGeometryToken(primitiveType)}`,
+    organicPlacementRole: normalizeHEarthGeometryToken(role, 'generic-organic-role'),
+    xSpread: 1,
+    zSpread: 1,
+    yLift: 0.04,
+    rotationZ: 5,
+    rotationY: 3,
+    scaleBase: 0.18,
+    scaleDensity: 0.28,
+    extentBase: 0.08,
+    extentDensity: 0.18,
+    waveAmplitude: 0.08,
+    localCluster: false,
+    raised: false,
+    softPanel: false,
+    silhouette: false
+  };
+
+  if (primitiveType === 'contouredTerrainBand') {
+    return Object.freeze({
+      ...base,
+      organicProfileId: 'organic-wet-sand-contoured-ground',
+      xSpread: role.includes('base') ? 0.08 : role.includes('contour') ? 1.05 : 0.76,
+      zSpread: role.includes('base') ? 0.04 : role.includes('sheen') ? 0.48 : 0.64,
+      yLift: role.includes('base') ? 0.004 : role.includes('grain') ? 0.018 : 0.026,
+      rotationZ: role.includes('contour') ? 11 : 7,
+      rotationY: 2,
+      scaleBase: role.includes('base') ? 1 : role.includes('grain') ? 0.09 : 0.20,
+      scaleDensity: role.includes('base') ? 0 : 0.26,
+      extentBase: role.includes('base') ? 1 : role.includes('grain') ? 0.04 : 0.12,
+      extentDensity: role.includes('base') ? 0 : 0.18,
+      waveAmplitude: 0.16
+    });
+  }
+
+  if (primitiveType === 'terrainBand') {
+    return Object.freeze({
+      ...base,
+      organicProfileId: 'organic-dry-sand-transition-ground',
+      xSpread: role.includes('base') ? 0.08 : 0.82,
+      zSpread: role.includes('base') ? 0.04 : 0.42,
+      yLift: role.includes('base') ? 0.004 : 0.022,
+      rotationZ: 8,
+      scaleBase: role.includes('base') ? 1 : 0.18,
+      scaleDensity: role.includes('base') ? 0 : 0.18,
+      extentBase: role.includes('base') ? 1 : 0.10,
+      extentDensity: role.includes('base') ? 0 : 0.12,
+      waveAmplitude: 0.10
+    });
+  }
+
+  if (primitiveType === 'irregularShorelineBand') {
+    return Object.freeze({
+      ...base,
+      organicProfileId: 'organic-shoreline-foam-contact',
+      xSpread: role.includes('base') ? 0.06 : 1.12,
+      zSpread: role.includes('base') ? 0.04 : 0.26,
+      yLift: role.includes('base') ? 0.006 : 0.035,
+      rotationZ: role.includes('foam') ? 14 : 10,
+      rotationY: 3,
+      scaleBase: role.includes('base') ? 1 : 0.12,
+      scaleDensity: role.includes('base') ? 0 : 0.18,
+      extentBase: role.includes('base') ? 0.45 : 0.075,
+      extentDensity: role.includes('base') ? 0 : 0.10,
+      waveAmplitude: 0.26
+    });
+  }
+
+  if (primitiveType === 'waterDepthBand') {
+    return Object.freeze({
+      ...base,
+      organicProfileId: 'organic-nearshore-wave-ripple',
+      xSpread: role.includes('base') ? 0.04 : 0.88,
+      zSpread: role.includes('base') ? 0.05 : 0.42,
+      yLift: role.includes('base') ? 0.004 : 0.018,
+      rotationZ: 6,
+      rotationY: 2,
+      scaleBase: role.includes('base') ? 1 : 0.13,
+      scaleDensity: role.includes('base') ? 0 : 0.12,
+      extentBase: role.includes('base') ? 0.8 : 0.06,
+      extentDensity: role.includes('base') ? 0 : 0.08,
+      waveAmplitude: 0.14
+    });
+  }
+
+  if (primitiveType === 'waterPlane') {
+    return Object.freeze({
+      ...base,
+      organicProfileId: 'organic-water-surface-depth-reflection',
+      xSpread: role.includes('base') ? 0.03 : 0.74,
+      zSpread: role.includes('base') ? 0.04 : role.includes('reflection') ? 0.34 : 0.58,
+      yLift: role.includes('base') ? 0.002 : 0.012,
+      rotationZ: 3,
+      rotationY: 1.5,
+      scaleBase: role.includes('base') ? 1 : 0.11,
+      scaleDensity: role.includes('base') ? 0 : 0.10,
+      extentBase: role.includes('base') ? 1 : 0.055,
+      extentDensity: role.includes('base') ? 0 : 0.06,
+      waveAmplitude: 0.08,
+      softPanel: true
+    });
+  }
+
+  if (primitiveType === 'scatterCluster') {
+    return Object.freeze({
+      ...base,
+      organicProfileId: 'organic-tide-pool-stone-scatter',
+      xSpread: 0.48,
+      zSpread: 0.34,
+      yLift: 0.025,
+      rotationZ: 18,
+      rotationY: 6,
+      scaleBase: 0.12,
+      scaleDensity: 0.22,
+      extentBase: 0.045,
+      extentDensity: 0.10,
+      waveAmplitude: 0.18,
+      localCluster: true
+    });
+  }
+
+  if (primitiveType === 'rockCluster') {
+    return Object.freeze({
+      ...base,
+      organicProfileId: 'organic-jagged-rock-cluster',
+      xSpread: 0.38,
+      zSpread: 0.26,
+      yLift: 0.12,
+      rotationZ: 22,
+      rotationY: 16,
+      scaleBase: 0.14,
+      scaleDensity: 0.24,
+      extentBase: 0.07,
+      extentDensity: 0.12,
+      waveAmplitude: 0.20,
+      localCluster: true,
+      raised: true
+    });
+  }
+
+  if (primitiveType === 'atmosphericLayer') {
+    return Object.freeze({
+      ...base,
+      organicProfileId: 'organic-air-haze-light',
+      xSpread: role.includes('haze') ? 0.08 : 0.36,
+      zSpread: 0.06,
+      yLift: 0,
+      rotationZ: 2,
+      rotationY: 1,
+      scaleBase: role.includes('haze') ? 1 : 0.18,
+      scaleDensity: role.includes('haze') ? 0 : 0.08,
+      extentBase: role.includes('haze') ? 1 : 0.12,
+      extentDensity: role.includes('haze') ? 0 : 0.06,
+      waveAmplitude: 0.04,
+      softPanel: true
+    });
+  }
+
+  if (primitiveType === 'layeredSilhouette') {
+    return Object.freeze({
+      ...base,
+      organicProfileId: 'organic-manor-context-silhouette',
+      xSpread: role.includes('segment') ? 0.34 : role.includes('roof') ? 0.04 : 0.02,
+      zSpread: 0.04,
+      yLift: role.includes('roof') ? 0.22 : 0.04,
+      rotationZ: role.includes('roof') ? 2 : 1,
+      rotationY: 1,
+      scaleBase: role.includes('body') ? 0.46 : role.includes('roof') ? 0.34 : 0.16,
+      scaleDensity: 0.06,
+      extentBase: role.includes('body') ? 0.22 : 0.12,
+      extentDensity: 0.04,
+      waveAmplitude: 0.02,
+      silhouette: true
+    });
+  }
+
+  if (primitiveType === 'distantCluster') {
+    return Object.freeze({
+      ...base,
+      organicProfileId: 'organic-distant-rock-islet-context',
+      xSpread: 0.92,
+      zSpread: 0.12,
+      yLift: 0.045,
+      rotationZ: 10,
+      rotationY: 4,
+      scaleBase: 0.20,
+      scaleDensity: 0.18,
+      extentBase: 0.08,
+      extentDensity: 0.08,
+      waveAmplitude: 0.14,
+      silhouette: true
+    });
+  }
+
+  return Object.freeze(base);
+}
+
+export function createHEarthOrganicTransformOverride({
+  parentNode,
+  part,
+  record,
+  guidance,
+  partIndex,
+  childIndex,
+  targetCount
+} = {}) {
+  const placement = resolveHEarthOrganicPlacementProfile(parentNode, part);
+  const seed = createHEarthOrganicSeed({ parentNode, part, record, partIndex, childIndex });
+
+  const rowNormalized = clampHEarthGeometryNumber((record.row - 1) / 15, 0, 1, guidance?.normalizedRow ?? 0.5);
+  const columnNormalized = clampHEarthGeometryNumber((record.column - 1) / 15, 0, 1, guidance?.normalizedColumn ?? 0.5);
+
+  const centeredX = columnNormalized - 0.5;
+  const centeredZ = 0.5 - rowNormalized;
+  const t = targetCount > 1 ? childIndex / Math.max(1, targetCount - 1) : 0.5;
+  const phase = Math.sin((t * Math.PI * 2) + seed.a * Math.PI * 2);
+  const phase2 = Math.cos((t * Math.PI * 1.5) + seed.b * Math.PI * 2);
+
+  const density = clampHEarthGeometryNumber(
+    record.renderHintDescriptorOnly?.densityHint,
+    0,
+    1,
+    guidance?.densityHint ?? 0.58
+  );
+
+  const visualPriority = clampHEarthGeometryNumber(
+    record.renderHintDescriptorOnly?.visualPriorityHint,
+    0,
+    1,
+    guidance?.visualPriorityHint ?? 0.58
+  );
+
+  const inspectionWeight = clampHEarthGeometryNumber(
+    record.renderHintDescriptorOnly?.inspectionWeight,
+    0,
+    1,
+    guidance?.inspectionWeight ?? 0.15
+  );
+
+  const localClusterBias = placement.localCluster ? 0.42 : 1;
+  const x =
+    centeredX * placement.xSpread * localClusterBias +
+    seed.signedA * placement.waveAmplitude +
+    phase * placement.waveAmplitude * 0.45;
+
+  const z =
+    centeredZ * placement.zSpread * localClusterBias +
+    seed.signedB * placement.waveAmplitude * 0.85 +
+    phase2 * placement.waveAmplitude * 0.35;
+
+  const y =
+    placement.yLift * (0.45 + visualPriority) +
+    inspectionWeight * 0.04 +
+    (placement.raised ? 0.07 + seed.c * 0.08 : seed.c * 0.014);
+
+  const localScale = Math.max(
+    0.035,
+    placement.scaleBase +
+      density * placement.scaleDensity +
+      visualPriority * 0.07 +
+      seed.signedC * 0.035
+  );
+
+  const extentScale = Math.max(
+    0.025,
+    placement.extentBase +
+      density * placement.extentDensity +
+      seed.signedD * 0.025
+  );
+
+  return Object.freeze({
+    transform: Object.freeze({
+      localOffset: Object.freeze({ x, y, z }),
+      localRotate: Object.freeze({
+        x: placement.raised ? seed.signedA * 5 : 0,
+        y: seed.signedB * placement.rotationY,
+        z: seed.signedC * placement.rotationZ + phase * placement.rotationZ * 0.35
+      }),
+      localScale,
+      extentScale,
+      normalizedDepth: rowNormalized,
+      nx: clampHEarthGeometryNumber(columnNormalized + seed.signedA * 0.028, 0, 1, columnNormalized),
+      ny: clampHEarthGeometryNumber(rowNormalized + seed.signedB * 0.02, 0, 1, rowNormalized),
+      nz: rowNormalized,
+      latticeAddress: record.address,
+      latticeRow: record.row,
+      latticeColumn: record.column
+    }),
+
+    organic: Object.freeze({
+      organicVariationApplied: true,
+      organicProfileId: placement.organicProfileId,
+      organicPlacementRole: placement.organicPlacementRole,
+      organicVariationIndex: childIndex,
+      organicVariationSeed: seed.hash,
+      organicPhase: phase,
+      organicPhaseSecondary: phase2,
+      deterministicOrganicVariation: true,
+      randomRuntimeVariationUsed: false,
+      latticeRegularBandingMitigated: true,
+      claimBoundaryPreserved: true
+    }),
+
+    geometryScale: Object.freeze({
+      scaleX: Math.max(0.04, 1 + seed.signedA * 0.12),
+      scaleY: Math.max(0.04, placement.raised ? 1.1 + seed.c * 0.55 : 1 + seed.signedB * 0.08),
+      scaleZ: Math.max(0.04, 1 + seed.signedD * 0.12),
+      scalar: Math.max(0.04, localScale + seed.signedC * 0.02)
+    })
+  });
 }
 
 export function createHEarthGeometryCandidateTransform(parentNode, override = {}) {
@@ -1393,8 +1799,12 @@ export function createHEarthGeometryPrimitiveDescriptor(
       z: Math.max(0.01, normalizeHEarthGeometryNumber(override.scaleZ, 1)),
       scalar: Math.max(0.01, normalizeHEarthGeometryNumber(override.scalar, 1)),
       contextScale: 1,
-      source: 'geometry-lattice-admission-gated-port'
+      source: 'geometry-lattice-admission-gated-organic-port'
     }),
+
+    organicVariationApplied: override.organicVariationApplied === true,
+    organicProfileId: override.organicProfileId || null,
+    organicPlacementRole: override.organicPlacementRole || null,
 
     descriptorOnly: false,
     candidateGeometryOnly: true,
@@ -1409,12 +1819,12 @@ export function createHEarthGeometryPrimitiveDescriptor(
 export function resolveHEarthGeometryRenumerizedClassContract({
   parentNode,
   childNodeKind,
-  primitiveType,
   materialKey,
   layerId,
   geometryProfileClassName,
   detailPrimitiveClassName,
-  detailLandscapeClassName
+  detailLandscapeClassName,
+  organicClassName = null
 } = {}) {
   const profile = resolveHEarthGeometryCanonicalProfile(parentNode);
 
@@ -1446,6 +1856,10 @@ export function resolveHEarthGeometryRenumerizedClassContract({
     profile.semanticRole,
     'generic-role'
   )}`;
+  const organicProfileClassName = `h-earth-organic-profile-${normalizeHEarthGeometryToken(
+    profile.organicProfileId,
+    'generic'
+  )}`;
 
   const classNames = uniqueHEarthClassNames([
     canonicalMaterialClassName,
@@ -1458,6 +1872,9 @@ export function resolveHEarthGeometryRenumerizedClassContract({
     geometryProfileClassName,
     geometryNodeClassName,
     geometryRoleClassName,
+    organicProfileClassName,
+    organicClassName,
+    'h-earth-render-organic-variation-ready',
     'h-earth-layer-member',
     layerClasses.layerMemberClassName
   ]);
@@ -1482,6 +1899,8 @@ export function resolveHEarthGeometryRenumerizedClassContract({
     geometryProfileClassName,
     geometryNodeClassName,
     geometryRoleClassName,
+    organicProfileClassName,
+    organicClassName,
 
     layerId: resolvedLayerId,
     layerClassName: layerClasses.layerClassName,
@@ -1531,6 +1950,12 @@ export function createHEarthExpandedGeometryNode(parentNode, config = {}) {
     resolveHEarthGeometryNormalizedDepth(parentNode)
   );
 
+  const organic = config.organic || {};
+  const organicClassName =
+    organic.organicPlacementRole
+      ? `h-earth-organic-${normalizeHEarthGeometryToken(organic.organicPlacementRole)}`
+      : null;
+
   const transform = createHEarthGeometryCandidateTransform(parentNode, {
     ...(config.transform || {}),
     normalizedDepth
@@ -1545,7 +1970,10 @@ export function createHEarthExpandedGeometryNode(parentNode, config = {}) {
       depthClass,
       depthZone,
       normalizedDepth,
-      detailToken: config.detailToken || config.geometry?.detailToken || suffix
+      detailToken: config.detailToken || config.geometry?.detailToken || suffix,
+      organicVariationApplied: organic.organicVariationApplied === true,
+      organicProfileId: organic.organicProfileId || profile.organicProfileId,
+      organicPlacementRole: organic.organicPlacementRole || null
     }
   );
 
@@ -1558,12 +1986,12 @@ export function createHEarthExpandedGeometryNode(parentNode, config = {}) {
   const classContract = resolveHEarthGeometryRenumerizedClassContract({
     parentNode,
     childNodeKind: geometryNodeKind,
-    primitiveType,
     materialKey,
     layerId,
     geometryProfileClassName: primitiveGeometry.profileClassName,
     detailPrimitiveClassName: primitiveGeometry.detailPrimitiveClassName,
-    detailLandscapeClassName: primitiveGeometry.detailLandscapeClassName
+    detailLandscapeClassName: primitiveGeometry.detailLandscapeClassName,
+    organicClassName
   });
 
   const nodeId =
@@ -1627,6 +2055,15 @@ export function createHEarthExpandedGeometryNode(parentNode, config = {}) {
       semanticRole: primitiveGeometry.semanticRole,
       geometryChildIndex: childIndex,
 
+      organicVariationApplied: organic.organicVariationApplied === true,
+      organicProfileId: organic.organicProfileId || profile.organicProfileId,
+      organicPlacementRole: organic.organicPlacementRole || null,
+      organicVariationIndex: organic.organicVariationIndex ?? childIndex,
+      organicVariationSeed: organic.organicVariationSeed ?? null,
+      deterministicOrganicVariation: organic.deterministicOrganicVariation === true,
+      randomRuntimeVariationUsed: false,
+      latticeRegularBandingMitigated: organic.latticeRegularBandingMitigated === true,
+
       canonicalMaterialKey: classContract.canonicalMaterialKey,
       canonicalMaterialClassName: classContract.canonicalMaterialClassName,
       canonicalPrimitiveClassName: classContract.canonicalPrimitiveClassName,
@@ -1649,6 +2086,15 @@ export function createHEarthExpandedGeometryNode(parentNode, config = {}) {
 
     candidateTransform: transform,
     primitiveGeometry,
+
+    organicVariationApplied: organic.organicVariationApplied === true,
+    organicProfileId: organic.organicProfileId || profile.organicProfileId,
+    organicPlacementRole: organic.organicPlacementRole || null,
+    organicVariationIndex: organic.organicVariationIndex ?? childIndex,
+    organicVariationSeed: organic.organicVariationSeed ?? null,
+    deterministicOrganicVariation: organic.deterministicOrganicVariation === true,
+    randomRuntimeVariationUsed: false,
+    geometryOrganicClassName: organicClassName,
 
     canonicalMaterialClassName: classContract.canonicalMaterialClassName,
     materialClassName: classContract.materialClassName,
@@ -1712,12 +2158,12 @@ export function createHEarthParentCarryGeometryNode(parentNode, index = 0) {
   const classContract = resolveHEarthGeometryRenumerizedClassContract({
     parentNode,
     childNodeKind: H_EARTH_3D_RENDER_GEOMETRY_NODE_KIND.PARENT,
-    primitiveType: profile.canonicalPrimitiveType,
     materialKey: resolveHEarthGeometryMaterialKey(parentNode),
     layerId,
     geometryProfileClassName: `h-earth-geometry-parent-${normalizeHEarthGeometryToken(profile.parentPrimitiveType, 'descriptor')}`,
     detailPrimitiveClassName: `h-earth-primitive-parent-${normalizeHEarthGeometryToken(profile.parentPrimitiveType, 'descriptor')}`,
-    detailLandscapeClassName: `h-earth-landscape-parent-${normalizeHEarthGeometryToken(profile.parentPrimitiveType, 'descriptor')}`
+    detailLandscapeClassName: `h-earth-landscape-parent-${normalizeHEarthGeometryToken(profile.parentPrimitiveType, 'descriptor')}`,
+    organicClassName: `h-earth-organic-parent-${normalizeHEarthGeometryToken(profile.parentPrimitiveType, 'descriptor')}`
   });
 
   return Object.freeze({
@@ -1755,6 +2201,11 @@ export function createHEarthParentCarryGeometryNode(parentNode, index = 0) {
       parentDepthZone: profile.depthZone,
       semanticRole: profile.semanticRole,
 
+      organicVariationApplied: false,
+      organicProfileId: profile.organicProfileId,
+      deterministicOrganicVariation: true,
+      randomRuntimeVariationUsed: false,
+
       candidateGeometryOnly: true,
       finalGeometryClaim: false,
       rendererPassClaim: false,
@@ -1786,7 +2237,7 @@ export function createHEarthParentCarryGeometryNode(parentNode, index = 0) {
   });
 }
 
-export function createHEarthLatticeDrivenChildNodesForPart(
+export function createHEarthPrimitiveSpecificChildNodesForPart(
   parentNode,
   part,
   partIndex,
@@ -1821,31 +2272,26 @@ export function createHEarthLatticeDrivenChildNodesForPart(
   return Object.freeze(
     Array.from({ length: targetCount }, (_, index) => {
       const record = records[index % records.length];
-      const columnNormalized = clampHEarthGeometryNumber((record.column - 1) / 15, 0, 1, 0.5);
-      const rowNormalized = clampHEarthGeometryNumber((record.row - 1) / 15, 0, 1, 0.5);
-      const centeredX = columnNormalized - 0.5;
-      const centeredZ = 0.5 - rowNormalized;
-      const density = normalizeHEarthGeometryNumber(
-        record.renderHintDescriptorOnly?.densityHint,
-        guidance.densityHint
-      );
-      const visualPriority = normalizeHEarthGeometryNumber(
-        record.renderHintDescriptorOnly?.visualPriorityHint,
-        guidance.visualPriorityHint
-      );
-      const inspectionWeight = normalizeHEarthGeometryNumber(
-        record.renderHintDescriptorOnly?.inspectionWeight,
-        guidance.inspectionWeight
-      );
+      const organicOverride = createHEarthOrganicTransformOverride({
+        parentNode,
+        part,
+        record,
+        guidance,
+        partIndex,
+        childIndex: index,
+        targetCount
+      });
 
-      const side = index % 2 === 0 ? -1 : 1;
-      const wave = ((index % 5) - 2) / 5;
+      const materialKey =
+        record.materialKey ||
+        profile.canonicalMaterialKey ||
+        resolveHEarthGeometryMaterialKey(parentNode);
 
       return createHEarthExpandedGeometryNode(parentNode, {
         suffix: part.suffix,
         index,
         primitiveType: part.primitiveType,
-        materialKey: record.materialKey || profile.canonicalMaterialKey,
+        materialKey,
         geometryNodeKind:
           H_EARTH_3D_RENDER_GEOMETRY_NODE_KIND[part.kind] ||
           H_EARTH_3D_RENDER_GEOMETRY_NODE_KIND.GENERIC,
@@ -1855,29 +2301,10 @@ export function createHEarthLatticeDrivenChildNodesForPart(
         latticeRegionId: record.regionId,
         latticeSurfaceFamily: record.surfaceFamily,
         label: `${resolveHEarthGeometryLabel(parentNode)} ${String(part.suffix).replace(/[-_]+/g, ' ')} ${index + 1}`,
-        transform: {
-          localOffset: {
-            x: centeredX * 1.25 + wave * 0.08,
-            y: inspectionWeight * 0.08,
-            z: centeredZ * 1.25 + side * density * 0.08
-          },
-          localRotate: {
-            x: 0,
-            y: side * visualPriority * 4,
-            z: centeredX * 8
-          },
-          localScale: Math.max(0.06, 0.18 + density * 0.28 + visualPriority * 0.12),
-          extentScale: Math.max(0.04, 0.08 + density * 0.18 + visualPriority * 0.08),
-          normalizedDepth: rowNormalized,
-          nx: columnNormalized,
-          ny: rowNormalized,
-          nz: rowNormalized,
-          latticeAddress: record.address,
-          latticeRow: record.row,
-          latticeColumn: record.column
-        },
+        transform: organicOverride.transform,
+        organic: organicOverride.organic,
         geometry: {
-          profileId: `${part.detailToken}-lattice-guided`,
+          profileId: `${part.detailToken}-organic-lattice-guided`,
           profileClassName: `h-earth-geometry-${part.detailToken}`,
           detailPrimitiveClassName: `h-earth-primitive-${part.detailToken}`,
           detailLandscapeClassName: `h-earth-landscape-${part.detailToken}`,
@@ -1887,10 +2314,34 @@ export function createHEarthLatticeDrivenChildNodesForPart(
           widthRatio: part.widthRatio,
           heightRatio: part.heightRatio,
           depthRatio: part.depthRatio,
-          scalar: Math.max(0.08, 0.2 + density * 0.4)
+          scaleX: organicOverride.geometryScale.scaleX,
+          scaleY: organicOverride.geometryScale.scaleY,
+          scaleZ: organicOverride.geometryScale.scaleZ,
+          scalar: organicOverride.geometryScale.scalar,
+          organicVariationApplied: true,
+          organicProfileId: organicOverride.organic.organicProfileId,
+          organicPlacementRole: organicOverride.organic.organicPlacementRole
         }
       });
     })
+  );
+}
+
+export function createHEarthLatticeDrivenChildNodesForPart(
+  parentNode,
+  part,
+  partIndex,
+  totalPartCount,
+  input = {},
+  context = {}
+) {
+  return createHEarthPrimitiveSpecificChildNodesForPart(
+    parentNode,
+    part,
+    partIndex,
+    totalPartCount,
+    input,
+    context
   );
 }
 
@@ -1907,13 +2358,14 @@ export function expandHEarthGeometryNodeByPrimitive(parentNode, input = {}, cont
         heightRatio: 1,
         depthRatio: 1,
         count: 1,
-        detailToken: 'generic-candidate'
+        detailToken: 'generic-candidate',
+        organicRole: 'generic-candidate'
       })
     ]);
 
   return Object.freeze(
     plan.flatMap((part, partIndex) =>
-      createHEarthLatticeDrivenChildNodesForPart(
+      createHEarthPrimitiveSpecificChildNodesForPart(
         parentNode,
         part,
         partIndex,
@@ -1938,11 +2390,14 @@ export function summarizeHEarthPrimitiveExpansion(sourceNodes, expandedNodes) {
     if (!summary[primitiveType]) {
       summary[primitiveType] = {
         primitiveType,
+        organicProfileId:
+          resolveHEarthGeometryCanonicalProfile(sourceNode).organicProfileId || null,
         sourceNodeCount: 0,
         expandedNodeCount: 0,
         geometryChildNodeCount: 0,
         descriptorParentNodeCount: 0,
         latticeAddressNodeCount: 0,
+        organicVariationNodeCount: 0,
         renumerizedClassReadyNodeCount: 0
       };
     }
@@ -1959,11 +2414,13 @@ export function summarizeHEarthPrimitiveExpansion(sourceNodes, expandedNodes) {
     if (!summary[primitiveType]) {
       summary[primitiveType] = {
         primitiveType,
+        organicProfileId: expandedNode.organicProfileId || null,
         sourceNodeCount: 0,
         expandedNodeCount: 0,
         geometryChildNodeCount: 0,
         descriptorParentNodeCount: 0,
         latticeAddressNodeCount: 0,
+        organicVariationNodeCount: 0,
         renumerizedClassReadyNodeCount: 0
       };
     }
@@ -1982,6 +2439,10 @@ export function summarizeHEarthPrimitiveExpansion(sourceNodes, expandedNodes) {
       summary[primitiveType].latticeAddressNodeCount += 1;
     }
 
+    if (expandedNode.organicVariationApplied === true) {
+      summary[primitiveType].organicVariationNodeCount += 1;
+    }
+
     if (
       expandedNode.classReadyDescriptor === true &&
       Array.isArray(expandedNode.renumerizedClassNames)
@@ -1993,6 +2454,36 @@ export function summarizeHEarthPrimitiveExpansion(sourceNodes, expandedNodes) {
   return Object.freeze(
     Object.values(summary).map((entry) => Object.freeze(entry))
   );
+}
+
+export function summarizeHEarthOrganicVariation(expandedNodes = []) {
+  const safeNodes = normalizeHEarthGeometryArray(expandedNodes);
+
+  const organicNodes = safeNodes.filter(
+    (node) => node.organicVariationApplied === true
+  );
+
+  const roleCounts = {};
+
+  organicNodes.forEach((node) => {
+    const role = node.organicPlacementRole || 'unclassified-organic-role';
+    roleCounts[role] = (roleCounts[role] || 0) + 1;
+  });
+
+  return Object.freeze({
+    organicLandscapeChildVariationDefined: true,
+    organicLandscapeChildVariationApplied: organicNodes.length > 0,
+    organicVariationNodeCount: organicNodes.length,
+    expandedNodeCount: safeNodes.length,
+    organicVariationRatio:
+      safeNodes.length > 0 ? organicNodes.length / safeNodes.length : 0,
+    primitiveSpecificChildPlacementApplied: organicNodes.length > 0,
+    latticeRegularBandingMitigated: organicNodes.length > 0,
+    deterministicOrganicVariation: true,
+    randomRuntimeVariationUsed: false,
+    organicPlacementRoleCounts: Object.freeze(roleCounts),
+    claimBoundaryPreserved: true
+  });
 }
 
 export function makeHEarthGeometryExpansionReceipt({
@@ -2024,6 +2515,7 @@ export function makeHEarthGeometryExpansionReceipt({
       node.renumerizedClassNames.length > 0
   ).length;
 
+  const organicVariationSummary = summarizeHEarthOrganicVariation(expandedNodes);
   const admitted = latticeAdmissionReceipt?.latticeAdmitted === true;
 
   return Object.freeze({
@@ -2031,6 +2523,8 @@ export function makeHEarthGeometryExpansionReceipt({
     file: '/showroom/globe/h-earth/render/geometry.js',
     contractId: H_EARTH_3D_RENDER_GEOMETRY_PORT_CONTRACT.contractId,
     renewedFrom: H_EARTH_3D_RENDER_GEOMETRY_PORT_CONTRACT.renewedFrom,
+    organicPrimitiveExpansionModelPreservedFrom:
+      H_EARTH_3D_RENDER_GEOMETRY_PORT_CONTRACT.organicPrimitiveExpansionModelPreservedFrom,
     source,
 
     geometryPortUsed: true,
@@ -2066,6 +2560,17 @@ export function makeHEarthGeometryExpansionReceipt({
     canonicalAndDetailClassGrammarDefined: true,
     parentAwareChildIdentityDefined: true,
     layerMembershipClassGrammarDefined: true,
+
+    geometryOrganicVariationApplied:
+      organicVariationSummary.organicLandscapeChildVariationApplied,
+    organicLandscapeChildVariationDefined: true,
+    primitiveSpecificChildPlacementApplied:
+      organicVariationSummary.primitiveSpecificChildPlacementApplied,
+    latticeRegularBandingMitigated:
+      organicVariationSummary.latticeRegularBandingMitigated,
+    organicVariationSeededDeterministically: true,
+    randomRuntimeVariationUsed: false,
+    organicVariationSummary,
 
     primitiveExpansionSummary: summarizeHEarthPrimitiveExpansion(
       sourceNodes,
@@ -2195,6 +2700,13 @@ export function makeHEarthGeometryAdmissionFailedResult({
     renumerizationApplied: true,
     classReadyNodeCount: 0,
 
+    geometryOrganicVariationApplied: false,
+    organicLandscapeChildVariationDefined: true,
+    primitiveSpecificChildPlacementApplied: false,
+    latticeRegularBandingMitigated: false,
+    organicVariationSeededDeterministically: true,
+    randomRuntimeVariationUsed: false,
+
     warningCodes: Object.freeze(warnings),
     failureCodes: Object.freeze(failures),
     geometryExpansionWarningCodes: Object.freeze(warnings),
@@ -2282,6 +2794,13 @@ export function expandHEarthGeometryNodes(input = {}, context = {}) {
       renumerizationApplied: true,
       classReadyNodeCount: 0,
 
+      geometryOrganicVariationApplied: false,
+      organicLandscapeChildVariationDefined: true,
+      primitiveSpecificChildPlacementApplied: false,
+      latticeRegularBandingMitigated: false,
+      organicVariationSeededDeterministically: true,
+      randomRuntimeVariationUsed: false,
+
       warningCodes: Object.freeze(warnings),
       failureCodes: Object.freeze(failures),
       geometryExpansionWarningCodes: Object.freeze(warnings),
@@ -2356,6 +2875,13 @@ export function expandHEarthGeometryNodes(input = {}, context = {}) {
       renumerizationApplied: true,
       classReadyNodeCount: receipt.classReadyNodeCount,
 
+      geometryOrganicVariationApplied: false,
+      organicLandscapeChildVariationDefined: true,
+      primitiveSpecificChildPlacementApplied: false,
+      latticeRegularBandingMitigated: false,
+      organicVariationSeededDeterministically: true,
+      randomRuntimeVariationUsed: false,
+
       warningCodes: Object.freeze(warnings),
       failureCodes: Object.freeze(failures),
       geometryExpansionWarningCodes: Object.freeze(warnings),
@@ -2381,6 +2907,7 @@ export function expandHEarthGeometryNodes(input = {}, context = {}) {
           source,
           contextKeys: Object.freeze(Object.keys(resolvedInput.context || {})),
           descriptorLandscapeLatticeAdmitted: true,
+          organicLandscapeChildVariationDefined: true,
           candidateGeometryOnly: true,
           finalGeometryClaim: false,
           rendererPassClaim: false,
@@ -2426,6 +2953,7 @@ export function expandHEarthGeometryNodes(input = {}, context = {}) {
             parentDepthClass: resolveHEarthGeometryDepthClass(parentNode),
             parentDepthZone: resolveHEarthGeometryDepthZone(parentNode),
             descriptorLandscapeLatticeAdmitted: true,
+            organicLandscapeChildVariationDefined: true,
             candidateGeometryOnly: true,
             finalGeometryClaim: false,
             rendererPassClaim: false,
@@ -2512,6 +3040,15 @@ export function expandHEarthGeometryNodes(input = {}, context = {}) {
     parentAwareChildIdentityDefined: true,
     layerMembershipClassGrammarDefined: true,
 
+    geometryOrganicVariationApplied: receipt.geometryOrganicVariationApplied,
+    organicLandscapeChildVariationDefined: true,
+    primitiveSpecificChildPlacementApplied:
+      receipt.primitiveSpecificChildPlacementApplied,
+    latticeRegularBandingMitigated: receipt.latticeRegularBandingMitigated,
+    organicVariationSeededDeterministically: true,
+    randomRuntimeVariationUsed: false,
+    organicVariationSummary: receipt.organicVariationSummary,
+
     warningCodes: Object.freeze(warnings),
     failureCodes: Object.freeze(failures),
     geometryExpansionWarningCodes: Object.freeze(warnings),
@@ -2538,6 +3075,8 @@ export function getHEarthGeometryPortReceipt(input = {}, context = {}) {
     renewedFrom: H_EARTH_3D_RENDER_GEOMETRY_PORT_CONTRACT.renewedFrom,
     supportSurfacePreservedFrom:
       H_EARTH_3D_RENDER_GEOMETRY_PORT_CONTRACT.supportSurfacePreservedFrom,
+    organicPrimitiveExpansionModelPreservedFrom:
+      H_EARTH_3D_RENDER_GEOMETRY_PORT_CONTRACT.organicPrimitiveExpansionModelPreservedFrom,
     status: H_EARTH_3D_RENDER_GEOMETRY_PORT_CONTRACT.status,
 
     sourceLandscapeLatticeFile:
@@ -2574,9 +3113,15 @@ export function getHEarthGeometryPortReceipt(input = {}, context = {}) {
     latticeAdmissionGateDefined: true,
     latticeGuidedChildPlacementDefined: true,
     latticeGuidedDensityDefined: true,
-    latticeGuidedPriorityDefined: true,
     candidateOnlyGeometryDefined: true,
     alreadyExpandedReexpansionGuardDefined: true,
+
+    organicLandscapeChildVariationDefined: true,
+    primitiveSpecificChildPlacementDefined: true,
+    deterministicOrganicVariationDefined: true,
+    randomRuntimeVariationUsed: false,
+    latticeRegularBandingMitigationDefined: true,
+    cssDependentOrganicClassSurfacePrepared: true,
 
     silentFallbackAllowed: false,
     failClosedOnAdmissionFailure: true,
@@ -2686,6 +3231,14 @@ export const H_EARTH_3D_RENDER_GEOMETRY_PORT = Object.freeze({
   resolveLatticeRecordsForNode: resolveHEarthLatticeRecordsForNode,
   resolveLatticeGuidanceForNode: resolveHEarthLatticeGuidanceForNode,
   selectLatticeRecordsForPart: selectHEarthLatticeRecordsForPart,
+
+  makeOrganicHashToken: makeHEarthOrganicHashToken,
+  createOrganicSeed: createHEarthOrganicSeed,
+  resolveOrganicPlacementProfile: resolveHEarthOrganicPlacementProfile,
+  createOrganicTransformOverride: createHEarthOrganicTransformOverride,
+  createPrimitiveSpecificChildNodesForPart:
+    createHEarthPrimitiveSpecificChildNodesForPart,
+  summarizeOrganicVariation: summarizeHEarthOrganicVariation,
 
   isAlreadyExpandedGeometryNode: isHEarthAlreadyExpandedGeometryNode,
 

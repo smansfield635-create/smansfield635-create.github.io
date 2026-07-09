@@ -1,35 +1,53 @@
 /*
   /showroom/globe/h-earth/index.js
   COMPLETE RENEWED FILE
-  H_EARTH_3D_INDEX_BOOTSTRAP_FILE_BIRTH_STEP_032H_LIVE_PUBLIC_RENDERER_RECEIPT_HANDOFF_v1
+  H_EARTH_3D_INDEX_BOOTSTRAP_FILE_BIRTH_STEP_033B_STRUCTURAL_BASELINE_HANDOFF_AND_PUBLIC_SPLIT_ALIGNMENT_v1
 
   Renews:
-  H_EARTH_3D_INDEX_BOOTSTRAP_FILE_BIRTH_STEP_032G_ENVIRONMENT_021B_DESCRIPTOR_EXPOSURE_SYNC_v1
+  H_EARTH_3D_INDEX_BOOTSTRAP_FILE_BIRTH_STEP_032H_LIVE_PUBLIC_RENDERER_RECEIPT_HANDOFF_v1
+  H_EARTH_3D_INDEX_PUBLIC_BOOTSTRAP_FILE_BIRTH_STEP_033A_DIAGNOSTIC_ROUTE_SPLIT_RENDERER_031D_COMPAT_v1
 
   Preserves:
+  H_EARTH_3D_INDEX_BOOTSTRAP_FILE_BIRTH_STEP_032G_ENVIRONMENT_021B_DESCRIPTOR_EXPOSURE_SYNC_v1
   H_EARTH_3D_INDEX_BOOTSTRAP_FILE_BIRTH_STEP_032F_RENDERER_032D_COMPOSITOR_SYNC_v1
 
   Purpose:
-  Preserve the existing public H-Earth route bootstrap, renderer/compositor sync,
-  source-canon lattice exposure, compact report surfaces, advanced evidence
-  bundle, and environment 021B descriptor coverage sync.
+  Public H-Earth route bootstrap only. Aligns the handoff-capable 032H public
+  bootstrap with the public/diagnostic route split discipline from 033A.
 
-  New renewal:
-  Adds same-origin live public renderer receipt handoff for the diagnostic route.
-  The public route writes a compact live renderer mount receipt handoff to
-  sessionStorage, localStorage, and globalThis after public renderer mount status
-  is resolved. The diagnostic route may then read this handoff from the same
-  origin without importing the public page as if it were the mounted public DOM.
+  033B correction:
+  - Preserves live public renderer receipt handoff.
+  - Preserves public route bootstrap, renderer mount, compact status, controls,
+    target list, public readout, and diagnostic route link.
+  - Adds structural pipeline baseline lock receipt.
+  - Moves full diagnostic/report-wall responsibility out of the public route.
+  - Prepares the diagnostic route to transition from structural-pipeline checks
+    to visual-composition diagnostics without losing achieved baseline facts.
 
-  Handoff key:
-  H_EARTH_3D_LIVE_PUBLIC_RENDERER_RECEIPT_HANDOFF_v1
+  Structural baseline:
+  The structural pipeline may be treated as locked when the live route reports:
+  chain ready, DOM ready, controller ready, renderer mount ready, renderer
+  mounted, route status BOOTSTRAP_READY_CANDIDATE_ONLY, same-origin handoff
+  written, renderer mount receipt present, geometry expansion applied, material /
+  layer / node-factory ports used, organic emission present, and no warning or
+  failure codes.
+
+  Diagnostic split:
+  Full reports, raw evidence walls, receipt walls, copy surfaces, visual
+  composition audits, and diagnostic transition receipts belong to:
+  /showroom/globe/h-earth/diagnostic/
 
   Boundary:
-  Receipt handoff only. No renderer behavior change. No environment construction.
-  No compositor mutation. No controller mutation. No CSS mutation. No HTML
-  mutation. No WebGL. No canvas. No renderer-pass claim. No visual-pass claim.
-  No validation claim. No production claim. No traversal. No survival simulation.
-  No matrix collapse.
+  Public bootstrap only. Receipt handoff and structural baseline lock only.
+  No renderer behavior change. No geometry mutation. No compositor mutation.
+  No environment construction. No controller mutation. No CSS mutation.
+  No HTML mutation. No WebGL. No canvas. No SVG. No iframe.
+  No final-renderer claim. No renderer-pass claim. No visual-pass claim.
+  No validation claim. No production claim. No traversal.
+  No survival simulation. No swimming. No fluid simulation.
+  No manor interior access. No distant traversal.
+  No runtime lattice activation. No active 16x16 runtime claim.
+  No active 256-address runtime claim. No matrix collapse.
 */
 
 import {
@@ -86,68 +104,35 @@ import {
   getControllerReceipt
 } from './controller.js';
 
-export const H_EARTH_3D_SOURCE_CANON_LATTICE_EXPOSURE_RECEIPT = Object.freeze({
-  receiptType: 'H_EARTH_3D_SOURCE_CANON_LATTICE_EXPOSURE_RECEIPT',
-  file: '/showroom/globe/h-earth/index.js',
-  sourceArtifactTitle: 'ROOM_1_SOURCE_CANON_FORMAL_LATTICE_EXPOSURE_PACKET_v1',
-  sourceArtifactFinalMarker:
-    'FORMAL_16X16_ADDRESS_FIELD_SOURCE_AUTHORITY_NOT_EXPOSED = RESOLVED_BY_PLAN_A',
-  status: 'FORMAL_SOURCE_LATTICE_AUTHORITY_EXPOSED_DESCRIPTOR_ONLY',
-  planAResolved: true,
-  descriptorOnly: true,
-  descriptorAddressFieldDefined: true,
-  addressFieldAuthorized: true,
-  addressFieldRuntimeActive: false,
-  sourceLatticeAuthority: true,
-  source256AddressFieldDescriptor: true,
-  source16x16DescriptorAuthorityDefined: true,
-  latticeShape: '16x16',
-  rowCount: 16,
-  columnCount: 16,
-  addressCount: 256,
-  boundary: Object.freeze({
-    reportOnly: true,
-    descriptorOnlySourceAuthority: true,
-    runtimeLatticeActivation: false,
-    active16x16RuntimeClaim: false,
-    active256AddressRuntimeClaim: false,
-    rendererPassClaim: false,
-    visualPassClaim: false,
-    validationClaim: false,
-    productionClaim: false,
-    matrixCollapse: false
-  })
-});
-
-export function getSourceCanonLatticeExposureReceipt() {
-  return H_EARTH_3D_SOURCE_CANON_LATTICE_EXPOSURE_RECEIPT;
-}
-
 export const H_EARTH_3D_LIVE_PUBLIC_RENDERER_RECEIPT_HANDOFF_KEY =
   'H_EARTH_3D_LIVE_PUBLIC_RENDERER_RECEIPT_HANDOFF_v1';
 
 export const H_EARTH_3D_INDEX_CONTRACT = Object.freeze({
   contractId:
+    'H_EARTH_3D_INDEX_BOOTSTRAP_FILE_BIRTH_STEP_033B_STRUCTURAL_BASELINE_HANDOFF_AND_PUBLIC_SPLIT_ALIGNMENT_v1',
+
+  renewedFrom: Object.freeze([
     'H_EARTH_3D_INDEX_BOOTSTRAP_FILE_BIRTH_STEP_032H_LIVE_PUBLIC_RENDERER_RECEIPT_HANDOFF_v1',
-  renewedFrom:
+    'H_EARTH_3D_INDEX_PUBLIC_BOOTSTRAP_FILE_BIRTH_STEP_033A_DIAGNOSTIC_ROUTE_SPLIT_RENDERER_031D_COMPAT_v1'
+  ]),
+
+  preservedFrom: Object.freeze([
     'H_EARTH_3D_INDEX_BOOTSTRAP_FILE_BIRTH_STEP_032G_ENVIRONMENT_021B_DESCRIPTOR_EXPOSURE_SYNC_v1',
-  previousRendererCompositorRenewal:
-    'H_EARTH_3D_INDEX_BOOTSTRAP_FILE_BIRTH_STEP_032F_RENDERER_032D_COMPOSITOR_SYNC_v1',
-  previousSourceCanonRenewal:
-    'H_EARTH_3D_INDEX_BOOTSTRAP_FILE_BIRTH_STEP_029G_SOURCE_CANON_LATTICE_EXPOSURE_SYNC_v1',
-  environmentCompatibilityTarget:
-    'H_EARTH_3D_ENVIRONMENT_FILE_BIRTH_STEP_021B_DESCRIPTOR_COVERAGE_EXPOSURE_v1',
-  rendererCompatibilityTarget:
-    'H_EARTH_3D_RENDERER_FILE_BIRTH_STEP_032D_OPTIMIZED_LATTICE_ADMISSION_RENDERER_WIRING_v1',
-  compositorCompatibilityTarget:
-    'H_EARTH_3D_COMPOSITOR_FILE_BIRTH_STEP_032E_RENDERER_032D_PARENT_DESCRIPTOR_SYNC_v1',
-  livePublicRendererReceiptHandoffTarget:
-    H_EARTH_3D_LIVE_PUBLIC_RENDERER_RECEIPT_HANDOFF_KEY,
+    'H_EARTH_3D_INDEX_BOOTSTRAP_FILE_BIRTH_STEP_032F_RENDERER_032D_COMPOSITOR_SYNC_v1'
+  ]),
+
   file: '/showroom/globe/h-earth/index.js',
   route: '/showroom/globe/h-earth/',
+  diagnosticRoute: '/showroom/globe/h-earth/diagnostic/',
   sourceRoot: '/h-earth-3d/',
-  fileClass: 'ROUTE_BOOTSTRAP_DOM_CSS_3D_CANDIDATE_PREVIEW_ORCHESTRATOR',
-  activationScope: 'AUTHORIZED_ROUTE_SIDE_CANDIDATE_ACTIVATION_DOM_CSS_3D_ONLY',
+
+  fileClass:
+    'PUBLIC_ROUTE_BOOTSTRAP_STRUCTURAL_BASELINE_HANDOFF_CARRIER',
+  activationScope:
+    'AUTHORIZED_PUBLIC_ROUTE_SIDE_CANDIDATE_ACTIVATION_DOM_CSS_3D_ONLY',
+  activationOption:
+    'STEP_033B_PUBLIC_BOOTSTRAP_HANDOFF_AND_SPLIT_ALIGNMENT',
+
   targetMatrix: 'H-Earth',
   matrixRole: 'Ground-View Matrix',
   activeCell: 'H_EARTH_GROUND_CELL_001',
@@ -155,36 +140,65 @@ export const H_EARTH_3D_INDEX_CONTRACT = Object.freeze({
   firstAction: 'Inspect Ground',
   firstReadout: 'Ground Condition Read',
   firstReceipt: 'H_EARTH_GROUND_INSPECTION_RECEIPT',
+
+  livePublicRendererReceiptHandoffTarget:
+    H_EARTH_3D_LIVE_PUBLIC_RENDERER_RECEIPT_HANDOFF_KEY,
+
+  diagnosticTransitionPrepared:
+    'STRUCTURAL_PIPELINE_BASELINE_TO_VISUAL_COMPOSITION',
+
+  reportPrinciple:
+    'Receipts prove. Reports diagnose. Scene remains primary.',
+
   renewalScope: Object.freeze({
-    environment021BDescriptorCoverageSync: true,
-    forwardsEnvironmentDescriptorCoverageFields: true,
-    preservesRenderer032DMountReceiptConsumption: true,
-    preservesCompositorParentDescriptorFrameConsumption: true,
-    latticeSourceCanonMirrorPreserved: true,
-    reportLayerEvidenceCompressionPreserved: true,
-    compactBootstrapReceiptPreserved: true,
-    advancedRawEvidenceBundlePreserved: true,
-    livePublicRendererReceiptHandoffDefined: true,
-    sameOriginSessionStorageHandoffAllowed: true,
-    sameOriginLocalStorageHandoffAllowed: true,
-    globalLivePublicRendererReceiptHandoffExposed: true,
-    diagnosticReceiptBridgePrepared: true,
-    noRenderingBehaviorInvented: true,
-    noHtmlShellMutation: true,
-    noCssMutation: true,
+    publicBootstrapOnly: true,
+    publicDiagnosticSplitAligned: true,
+    livePublicRendererReceiptHandoffPreserved: true,
+    structuralPipelineBaselineLockAdded: true,
+    diagnosticTransitionPrepared: true,
+
+    compactPublicReceiptPreserved: true,
+    publicReadoutPreserved: true,
+    publicTargetListPreserved: true,
+    publicDiagnosticRouteLinkPreserved: true,
+    rendererMountOrchestrationPreserved: true,
+    controllerInspectionBridgePreserved: true,
+
+    fullDiagnosticWallMovedOutOfPublicRoute: true,
+    rawEvidenceWallMovedOutOfPublicRoute: true,
+    receiptWallMovedOutOfPublicRoute: true,
+    copySurfaceMovedOutOfPublicRoute: true,
+    visualCompositionDiagnosticMovedToDiagnosticRoute: true,
+
+    renderingBehaviorChanged: false,
+    geometryMutation: false,
+    compositorMutation: false,
+    environmentMutation: false,
+    rendererMutation: false,
+    controllerMutation: false,
+    routeShellHtmlMutation: false,
+    routeCssMutation: false,
+
     latticeActivationAdded: false,
     active16x16RuntimeClaimAdded: false,
     active256AddressRuntimeClaimAdded: false,
     rendererPassClaim: false,
     visualPassClaim: false,
     validationClaim: false,
-    productionClaim: false
+    productionClaim: false,
+    matrixCollapse: false
   }),
+
   boundaryClaims: Object.freeze({
     mutatesGitHub: false,
     installsRoute: false,
+    expandsRoute: false,
     activatesWebGL: false,
     activatesCanvas: false,
+    activatesSvg: false,
+    activatesIframe: false,
+    createsShellOwnedSceneObjects: false,
+    createsFakeHtmlSceneGeometry: false,
     claimsFinalRenderer: false,
     claimsRendererPass: false,
     claimsVisualPass: false,
@@ -199,6 +213,7 @@ export const H_EARTH_3D_INDEX_CONTRACT = Object.freeze({
     claimsLatticeActivation: false,
     claimsActive16x16Runtime: false,
     claimsActive256AddressRuntime: false,
+    claimsMirrorManorRouteCanonName: false,
     matrixCollapse: false
   })
 });
@@ -210,21 +225,25 @@ export const H_EARTH_3D_LIVE_PUBLIC_RENDERER_RECEIPT_HANDOFF_CONTRACT =
     file: '/showroom/globe/h-earth/index.js',
     contractId: H_EARTH_3D_INDEX_CONTRACT.contractId,
     storageKey: H_EARTH_3D_LIVE_PUBLIC_RENDERER_RECEIPT_HANDOFF_KEY,
-    publicRoute: '/showroom/globe/h-earth/',
-    diagnosticRoute: '/showroom/globe/h-earth/diagnostic/',
+    publicRoute: H_EARTH_3D_INDEX_CONTRACT.route,
+    diagnosticRoute: H_EARTH_3D_INDEX_CONTRACT.diagnosticRoute,
+
     sameOriginHandoff: true,
     sessionStorageWriteAllowed: true,
     localStorageWriteAllowed: true,
     globalExposeAllowed: true,
     diagnosticRouteMayRead: true,
+
     boundary: Object.freeze({
       receiptHandoffOnly: true,
       publicRouteMutation: false,
       publicCssMutation: false,
+      publicHtmlMutation: false,
       rendererMutation: false,
       geometryMutation: false,
       compositorMutation: false,
       environmentMutation: false,
+      controllerMutation: false,
       rendererPassClaim: false,
       visualPassClaim: false,
       validationClaim: false,
@@ -235,18 +254,28 @@ export const H_EARTH_3D_LIVE_PUBLIC_RENDERER_RECEIPT_HANDOFF_CONTRACT =
 
 export const H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS = Object.freeze({
   routeBootstrapOrchestrator: true,
+  publicRouteBootstrapOnly: true,
+  diagnosticRouteSplit: true,
   authorizedRouteSideCandidateActivationDomCss3dOnly: true,
+
   directDomControlBindingAllowedWithinCandidateBoundary: true,
   statusDomUpdateAllowedWithinCandidateBoundary: true,
   descriptorDisplayAllowedWithinCandidateBoundary: true,
-  compactReportLayerEvidenceAllowedWithinCandidateBoundary: true,
-  spatialReceiptExposureAllowedWithinCandidateBoundary: true,
-  explicitAdvancedRawEvidenceBundleAllowedWithinCandidateBoundary: true,
-  latticeScopeEvidenceReadingAllowedWithinCandidateBoundary: true,
-  sourceCanonLatticeExposureReadingAllowedWithinCandidateBoundary: true,
-  environmentDescriptorCoverageReadingAllowedWithinCandidateBoundary: true,
+  compactPublicReadoutAllowedWithinCandidateBoundary: true,
+  compactPublicBootstrapReceiptAllowedWithinCandidateBoundary: true,
+  diagnosticRouteLinkAllowedWithinCandidateBoundary: true,
   livePublicRendererReceiptHandoffAllowedWithinCandidateBoundary: true,
   sameOriginReceiptHandoffAllowedWithinCandidateBoundary: true,
+  structuralPipelineBaselineLockAllowedWithinCandidateBoundary: true,
+
+  diagnosticReportLayerAllowedInPublicRoute: false,
+  advancedRawEvidenceWallAllowedInPublicRoute: false,
+  rawEvidenceWallAllowedInPublicRoute: false,
+  latticeScopeDiagnosticWallAllowedInPublicRoute: false,
+  receiptWallAllowedInPublicRoute: false,
+  copySurfaceAllowedInPublicRoute: false,
+  visualCompositionAuditAllowedInPublicRoute: false,
+
   rendererMountOnlyIfCanonApiExists: true,
   aggregateRendererMountApiPreferred: true,
   namedRendererMountApiAllowed: true,
@@ -257,10 +286,16 @@ export const H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS = Object.freeze({
   runtimeFailureCodesRequiredForMountFailure: true,
   noThrowDoesNotEqualMountSuccess: true,
   noThrowDoesNotEqualDestroySuccess: true,
+  missingRendererMountApiIsControlledDescriptorReadyState: true,
+
   repositoryMutation: false,
   unauthorizedRouteExpansion: false,
   webglActivation: false,
   canvasActivation: false,
+  svgActivation: false,
+  iframeActivation: false,
+  shellOwnedSceneObjectCreation: false,
+  fakeHtmlSceneGeometry: false,
   finalRendererClaim: false,
   rendererPassClaim: false,
   visualPassClaim: false,
@@ -273,57 +308,16 @@ export const H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS = Object.freeze({
   manorInteriorAccessClaim: false,
   distantTraversalClaim: false,
   gameplayExecutionClaim: false,
+  runtimeReceiptPersistence: false,
+  survivalScoreClaim: false,
+  healthScoreClaim: false,
+  diagnosticScoreClaim: false,
   latticeActivationClaim: false,
   active16x16LatticeClaim: false,
   active256AddressRuntimeClaim: false,
-  matrixCollapse: false
-});
-
-export const H_EARTH_3D_INDEX_BOUND_CHAIN = Object.freeze({
-  sourceCanonLatticeExposure: Object.freeze({
-    file: '/showroom/globe/h-earth/index.js',
-    aggregate: H_EARTH_3D_SOURCE_CANON_LATTICE_EXPOSURE_RECEIPT,
-    receipt: H_EARTH_3D_SOURCE_CANON_LATTICE_EXPOSURE_RECEIPT
-  }),
-  capacity: Object.freeze({
-    file: '/showroom/globe/h-earth/capacity.js',
-    aggregate: H_EARTH_3D_CAPACITY,
-    receipt: H_EARTH_3D_CAPACITY_RECEIPT
-  }),
-  environment: Object.freeze({
-    file: '/showroom/globe/h-earth/environment.js',
-    aggregate: H_EARTH_3D_ENVIRONMENT,
-    receipt: H_EARTH_3D_ENVIRONMENT_RECEIPT
-  }),
-  renderer: Object.freeze({
-    file: '/showroom/globe/h-earth/renderer.js',
-    aggregate: H_EARTH_3D_RENDERER,
-    candidateRenderScene: H_EARTH_3D_CANDIDATE_RENDER_SCENE,
-    renderVolumeModel: H_EARTH_3D_RENDER_VOLUME_MODEL,
-    renderPorts: H_EARTH_3D_RENDER_PORTS,
-    boundaryFlags: H_EARTH_3D_RENDER_BOUNDARY_FLAGS,
-    aggregateMountApiAvailable:
-      typeof H_EARTH_3D_RENDERER?.mountHEarthRenderer === 'function',
-    aggregateDestroyApiAvailable:
-      typeof H_EARTH_3D_RENDERER?.destroyHEarthRenderer === 'function',
-    namedMountApiAvailable: typeof mountHEarthRenderer === 'function',
-    namedDestroyApiAvailable: typeof destroyHEarthRenderer === 'function',
-    receipt: H_EARTH_3D_RENDERER_RECEIPT
-  }),
-  compositor: Object.freeze({
-    file: '/showroom/globe/h-earth/compositor.js',
-    aggregate: H_EARTH_3D_COMPOSITOR,
-    composedCandidateFrame: H_EARTH_3D_COMPOSED_CANDIDATE_FRAME,
-    boundaryFlags: H_EARTH_3D_COMPOSITION_BOUNDARY_FLAGS,
-    receipt: H_EARTH_3D_COMPOSITOR_RECEIPT
-  }),
-  controller: Object.freeze({
-    file: '/showroom/globe/h-earth/controller.js',
-    aggregate: H_EARTH_3D_CONTROLLER,
-    targetRegistry: H_EARTH_3D_SELECTABLE_TARGET_REGISTRY,
-    boundaryFlags: H_EARTH_3D_CONTROLLER_BOUNDARY_FLAGS,
-    receipt: H_EARTH_3D_CONTROLLER_RECEIPT
-  })
+  mirrorManorRouteCanonNameClaim: false,
+  matrixCollapse: false,
+  claimBoundaryPreserved: true
 });
 
 export const H_EARTH_3D_ROUTE_MOUNT_CONTRACT = Object.freeze({
@@ -332,26 +326,48 @@ export const H_EARTH_3D_ROUTE_MOUNT_CONTRACT = Object.freeze({
     status: 'h-earth-3d-status',
     fallback: 'h-earth-3d-fallback'
   }),
+
   conditionallyRequiredIds: Object.freeze({
     rendererMount: 'h-earth-3d-renderer-mount'
   }),
-  optionalIds: Object.freeze({
+
+  optionalPublicIds: Object.freeze({
     hud: 'h-earth-3d-hud',
     inspectionPanel: 'h-earth-3d-inspection-panel',
     targetList: 'h-earth-3d-target-list',
     debug: 'h-earth-3d-debug',
-    inspectGroundAction: 'h-earth-3d-action-inspect-ground'
+    inspectGroundAction: 'h-earth-3d-action-inspect-ground',
+    selectedTargetLabel: 'h-earth-3d-selected-target-label',
+    selectedTargetClassification:
+      'h-earth-3d-selected-target-classification',
+    selectedTargetObjectId: 'h-earth-3d-selected-target-object-id',
+    publicReadout: 'h-earth-3d-public-readout',
+    publicReadoutTitle: 'h-earth-3d-public-readout-title',
+    publicReadoutLine: 'h-earth-3d-public-readout-line',
+    diagnosticLink: 'h-earth-3d-diagnostic-link'
   }),
-  spatialDiagnosticIds: Object.freeze({
-    spatialSummary: 'h-earth-3d-spatial-summary-payload',
-    composedFrame: 'h-earth-3d-composed-frame-payload',
-    compositorReceipt: 'h-earth-3d-compositor-receipt-payload',
-    rendererPlacement: 'h-earth-3d-renderer-placement-payload',
-    environmentPlacement: 'h-earth-3d-environment-placement-payload'
-  }),
+
+  diagnosticIdsExcludedFromPublicRoute: Object.freeze([
+    'h-earth-3d-operational-report-stack-payload',
+    'h-earth-3d-report-layer-status',
+    'h-earth-3d-spatial-summary-payload',
+    'h-earth-3d-composed-frame-payload',
+    'h-earth-3d-compositor-receipt-payload',
+    'h-earth-3d-renderer-placement-payload',
+    'h-earth-3d-environment-placement-payload',
+    'h-earth-3d-route-bootstrap-receipt',
+    'h-earth-3d-renderer-mount-receipt',
+    'h-earth-3d-boundary-flags',
+    'h-earth-3d-index-contract',
+    'h-earth-3d-copy-status',
+    'h-earth-3d-visual-composition-audit'
+  ]),
+
   rendererMountPolicy: Object.freeze({
     rendererMountNodeRequiredWhenRendererMountApiExists: true,
+    rendererMountNodeMissingWithoutRendererApiIsNotCanonChainFailure: true,
     mountReceiptRequiredForMountedStatus: true,
+    runtimeFailureCodeRequiredForMountFallback: true,
     noWebGLFallback: true,
     noCanvasFallback: true,
     noFakeRendererMount: true
@@ -371,6 +387,7 @@ export const H_EARTH_3D_ROUTE_FAILURE_CODES = Object.freeze({
   MISSING_RENDERER_MOUNT_API: 'MISSING_RENDERER_MOUNT_API',
   RENDERER_MOUNT_FAILED: 'RENDERER_MOUNT_FAILED',
   RENDERER_DESTROY_FAILED: 'RENDERER_DESTROY_FAILED',
+  CONTROLLER_BINDING_SKIPPED: 'CONTROLLER_BINDING_SKIPPED',
   BOOTSTRAP_FALLBACK_ACTIVE: 'BOOTSTRAP_FALLBACK_ACTIVE'
 });
 
@@ -386,34 +403,73 @@ export const H_EARTH_3D_ROUTE_BOOTSTRAP_STATUS_LEVELS = Object.freeze({
   BOOTSTRAP_NOT_STARTED: 'BOOTSTRAP_NOT_STARTED'
 });
 
-export const H_EARTH_3D_LATTICE_SCOPE_STATUS = Object.freeze({
-  SCENE_SCOPED_LATTICE_NOT_EXPOSED: 'SCENE_SCOPED_LATTICE_NOT_EXPOSED',
-  LATTICE_SCOPE_HINTS_PRESENT: 'LATTICE_SCOPE_HINTS_PRESENT',
-  LATTICE_SCOPE_RECEIPT_EXPOSED: 'LATTICE_SCOPE_RECEIPT_EXPOSED',
-  SCENE_SCOPED_16X16_LATTICE_EXPOSED:
-    'SCENE_SCOPED_16X16_LATTICE_EXPOSED',
-  FORMAL_SOURCE_LATTICE_AUTHORITY_EXPOSED_DESCRIPTOR_ONLY:
-    'FORMAL_SOURCE_LATTICE_AUTHORITY_EXPOSED_DESCRIPTOR_ONLY'
+export const H_EARTH_3D_STRUCTURAL_PIPELINE_BASELINE_STATUS = Object.freeze({
+  STRUCTURAL_PIPELINE_LOCKED:
+    'STRUCTURAL_PIPELINE_LOCKED',
+  STRUCTURAL_PIPELINE_NOT_LOCKED:
+    'STRUCTURAL_PIPELINE_NOT_LOCKED',
+  STRUCTURAL_PIPELINE_REGRESSION_DETECTED:
+    'STRUCTURAL_PIPELINE_REGRESSION_DETECTED'
 });
 
-export const H_EARTH_3D_ROUTE_BOOTSTRAP_ORDER = Object.freeze([
-  'import capacity',
-  'import environment',
-  'import renderer',
-  'import compositor',
-  'import controller',
-  'verify receipts/contracts',
-  'resolve DOM mount points',
-  'initialize route status',
-  'mount DOM/CSS-3D candidate renderer only if canon renderer API exists',
-  'read renderer mount receipt before declaring mounted',
-  'write live public renderer receipt handoff for diagnostic route',
-  'bind safe inspection controls',
-  'expose compact route receipt/status',
-  'expose compact spatial diagnostics',
-  'preserve advanced raw evidence bundle behind explicit function',
-  'fail safely if any required dependency is missing'
-]);
+export const H_EARTH_3D_DIAGNOSTIC_TRANSITION_TARGET = Object.freeze({
+  transitionId:
+    'H_EARTH_3D_DIAGNOSTIC_TRANSITION_001_STRUCTURAL_PIPELINE_BASELINE_TO_VISUAL_COMPOSITION_v1',
+  fromDiagnosticDomain: 'STRUCTURAL_PIPELINE_DIAGNOSTIC',
+  toDiagnosticDomain: 'VISUAL_COMPOSITION_DIAGNOSTIC',
+  intendedDiagnosticRoute: '/showroom/globe/h-earth/diagnostic/',
+  publicBootstrapProvidesBaselineOnly: true,
+  publicBootstrapRunsVisualCompositionAudit: false,
+  visualCompositionAuditBelongsToDiagnosticRoute: true
+});
+
+export const H_EARTH_3D_INDEX_BOUND_CHAIN = Object.freeze({
+  capacity: Object.freeze({
+    file: '/showroom/globe/h-earth/capacity.js',
+    aggregate: H_EARTH_3D_CAPACITY,
+    receipt: H_EARTH_3D_CAPACITY_RECEIPT
+  }),
+
+  environment: Object.freeze({
+    file: '/showroom/globe/h-earth/environment.js',
+    aggregate: H_EARTH_3D_ENVIRONMENT,
+    receipt: H_EARTH_3D_ENVIRONMENT_RECEIPT
+  }),
+
+  renderer: Object.freeze({
+    file: '/showroom/globe/h-earth/renderer.js',
+    aggregate: H_EARTH_3D_RENDERER,
+    candidateRenderScene: H_EARTH_3D_CANDIDATE_RENDER_SCENE,
+    renderVolumeModel: H_EARTH_3D_RENDER_VOLUME_MODEL,
+    renderPorts: H_EARTH_3D_RENDER_PORTS,
+    boundaryFlags: H_EARTH_3D_RENDER_BOUNDARY_FLAGS,
+    aggregateMountApiAvailable:
+      typeof H_EARTH_3D_RENDERER?.mountHEarthRenderer === 'function',
+    aggregateDestroyApiAvailable:
+      typeof H_EARTH_3D_RENDERER?.destroyHEarthRenderer === 'function',
+    namedMountApiAvailable: typeof mountHEarthRenderer === 'function',
+    namedDestroyApiAvailable: typeof destroyHEarthRenderer === 'function',
+    selectRenderInputHelperAvailable:
+      typeof selectHEarthRenderInput === 'function',
+    receipt: H_EARTH_3D_RENDERER_RECEIPT
+  }),
+
+  compositor: Object.freeze({
+    file: '/showroom/globe/h-earth/compositor.js',
+    aggregate: H_EARTH_3D_COMPOSITOR,
+    composedCandidateFrame: H_EARTH_3D_COMPOSED_CANDIDATE_FRAME,
+    boundaryFlags: H_EARTH_3D_COMPOSITION_BOUNDARY_FLAGS,
+    receipt: H_EARTH_3D_COMPOSITOR_RECEIPT
+  }),
+
+  controller: Object.freeze({
+    file: '/showroom/globe/h-earth/controller.js',
+    aggregate: H_EARTH_3D_CONTROLLER,
+    targetRegistry: H_EARTH_3D_SELECTABLE_TARGET_REGISTRY,
+    boundaryFlags: H_EARTH_3D_CONTROLLER_BOUNDARY_FLAGS,
+    receipt: H_EARTH_3D_CONTROLLER_RECEIPT
+  })
+});
 
 const H_EARTH_SCENE_IDENTITY = Object.freeze({
   matrix: 'H-Earth',
@@ -423,37 +479,36 @@ const H_EARTH_SCENE_IDENTITY = Object.freeze({
   mirrorManorStatus: 'STRATEGICALLY_IMPLIED_NOT_ROUTE_CANON_NAMED'
 });
 
-const H_EARTH_EXPECTED_ENVIRONMENT_TOKENS = Object.freeze([
-  'shoreline',
-  'wet',
-  'sand',
-  'dry',
-  'foam',
-  'water',
-  'rock',
-  'tide',
-  'air',
-  'haze',
-  'manor',
-  'distant'
-]);
+const H_EARTH_DEFAULT_SELECTED_OBJECT_ID = 'OBJ_002_FOREGROUND_WET_SAND';
 
 function asArray(value) {
   return Array.isArray(value) ? value : [];
 }
 
+function nowIso() {
+  return new Date().toISOString();
+}
+
+function getDocumentFromOptions(options = {}) {
+  return options.document || globalThis.document || null;
+}
+
 function safeSerialize(value, options = {}) {
-  const maxDepth = Number.isFinite(options.maxDepth) ? options.maxDepth : 6;
+  const maxDepth = Number.isFinite(options.maxDepth) ? options.maxDepth : 7;
   const maxArrayLength = Number.isFinite(options.maxArrayLength)
     ? options.maxArrayLength
-    : 80;
+    : 96;
   const seen = new WeakSet();
 
   function visit(input, depth) {
     if (input === null) return null;
+
     const type = typeof input;
 
-    if (type === 'string' || type === 'number' || type === 'boolean') return input;
+    if (type === 'string' || type === 'number' || type === 'boolean') {
+      return input;
+    }
+
     if (type === 'bigint') return String(input);
     if (type === 'undefined') return null;
     if (type === 'function') return `[Function ${input.name || 'anonymous'}]`;
@@ -467,13 +522,16 @@ function safeSerialize(value, options = {}) {
         const output = input
           .slice(0, maxArrayLength)
           .map((entry) => visit(entry, depth + 1));
+
         if (input.length > maxArrayLength) {
           output.push(`[ArrayTruncated ${input.length - maxArrayLength}]`);
         }
+
         return output;
       }
 
       const output = {};
+
       Object.keys(input).forEach((key) => {
         if (
           key === 'mountNode' ||
@@ -488,6 +546,7 @@ function safeSerialize(value, options = {}) {
 
         output[key] = visit(input[key], depth + 1);
       });
+
       return output;
     }
 
@@ -499,7 +558,7 @@ function safeSerialize(value, options = {}) {
 
 function writeText(node, value) {
   if (!node) return false;
-  node.textContent = String(value);
+  node.textContent = String(value ?? '');
   return true;
 }
 
@@ -510,45 +569,54 @@ function writeJson(node, value, options = {}) {
 }
 
 function addClass(node, className) {
-  if (!node?.classList) return false;
+  if (!node?.classList || !className) return false;
   node.classList.add(className);
   return true;
 }
 
 function removeClass(node, className) {
-  if (!node?.classList) return false;
+  if (!node?.classList || !className) return false;
   node.classList.remove(className);
   return true;
 }
 
-function lowerSerialized(value) {
-  try {
-    return JSON.stringify(safeSerialize(value, { maxDepth: 5, maxArrayLength: 80 })).toLowerCase();
-  } catch (_error) {
-    return '';
-  }
+function setNodeDataset(node, key, value) {
+  if (!node?.dataset || !key) return false;
+  node.dataset[key] = value === null || value === undefined ? '' : String(value);
+  return true;
 }
 
-function getObjectKeys(value) {
-  return value && typeof value === 'object' ? Object.keys(value) : [];
+function getTargetLabel(target, objectId) {
+  return (
+    target?.label ||
+    target?.objectLabel ||
+    target?.objectId ||
+    objectId ||
+    H_EARTH_DEFAULT_SELECTED_OBJECT_ID
+  );
 }
 
 function freezeStatus(status) {
   return Object.freeze({
     timestamp: status.timestamp || null,
+
     chainReady: status.chainReady === true,
     domReady: status.domReady === true,
     controllerReady: status.controllerReady === true,
     rendererMountReady: status.rendererMountReady === true,
+
     bootstrapReadyCandidateOnly: status.bootstrapReadyCandidateOnly === true,
     bootstrapReadyDescriptorOnlyNoRendererMountApi:
       status.bootstrapReadyDescriptorOnlyNoRendererMountApi === true,
     bootstrapFallbackActive: status.bootstrapFallbackActive === true,
+
     statusLevel:
       status.statusLevel ||
       H_EARTH_3D_ROUTE_BOOTSTRAP_STATUS_LEVELS.BOOTSTRAP_NOT_STARTED,
+
     failureCodes: Object.freeze(asArray(status.failureCodes)),
     warningCodes: Object.freeze(asArray(status.warningCodes)),
+
     rendererMountApiConfirmed: status.rendererMountApiConfirmed === true,
     rendererDestroyApiConfirmed: status.rendererDestroyApiConfirmed === true,
     rendererMountAttempted: status.rendererMountAttempted === true,
@@ -557,39 +625,57 @@ function freezeStatus(status) {
     rendererMountSkipReason: status.rendererMountSkipReason || null,
     rendererMountError: status.rendererMountError || null,
     rendererMountReceipt: status.rendererMountReceipt || null,
+
     rendererDestroyAttempted: status.rendererDestroyAttempted === true,
     rendererDestroyed: status.rendererDestroyed === true,
     rendererDestroyError: status.rendererDestroyError || null,
     rendererDestroyReceipt: status.rendererDestroyReceipt || null,
+
     rendererApiSource: status.rendererApiSource || null,
     rendererDestroyApiSource: status.rendererDestroyApiSource || null,
-    livePublicRendererReceiptHandoff: status.livePublicRendererReceiptHandoff || null,
+
+    livePublicRendererReceiptHandoff:
+      status.livePublicRendererReceiptHandoff || null,
     livePublicRendererReceiptHandoffWrite:
       status.livePublicRendererReceiptHandoffWrite || null,
+
+    structuralPipelineBaseline:
+      status.structuralPipelineBaseline || null,
+    structuralPipelineBaselineLock:
+      status.structuralPipelineBaselineLock || null,
+
     routeRootFound: status.routeRootFound === true,
     statusNodeFound: status.statusNodeFound === true,
     fallbackNodeFound: status.fallbackNodeFound === true,
     rendererMountNodeFound: status.rendererMountNodeFound === true,
+
     targetListBound: status.targetListBound === true,
     inspectGroundControlBound: status.inspectGroundControlBound === true,
+    selectedTargetCardUpdated: status.selectedTargetCardUpdated === true,
+    compactReadoutRendered: status.compactReadoutRendered === true,
     debugStatusExposed: status.debugStatusExposed === true,
-    spatialDiagnosticsExposed: status.spatialDiagnosticsExposed === true,
-    advancedRawEvidenceExposed: status.advancedRawEvidenceExposed === true,
-    latticeScopeStatusExposed: status.latticeScopeStatusExposed === true,
+    diagnosticRouteLinked: status.diagnosticRouteLinked === true,
+
     selectedObjectId:
       status.selectedObjectId ||
-      H_EARTH_3D_CONTROLLER_RECEIPT?.primaryInspectionTarget ||
-      'OBJ_002_FOREGROUND_WET_SAND',
+      H_EARTH_DEFAULT_SELECTED_OBJECT_ID,
+
+    publicBootstrapOnly: true,
+    diagnosticRoute:
+      status.diagnosticRoute ||
+      H_EARTH_3D_INDEX_CONTRACT.diagnosticRoute,
+
     boundary: H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS
   });
 }
 
 let latestRouteBootstrapStatus = freezeStatus({
   statusLevel: H_EARTH_3D_ROUTE_BOOTSTRAP_STATUS_LEVELS.BOOTSTRAP_NOT_STARTED,
-  selectedObjectId: 'OBJ_002_FOREGROUND_WET_SAND'
+  selectedObjectId: H_EARTH_DEFAULT_SELECTED_OBJECT_ID
 });
 
-export const H_EARTH_3D_ROUTE_BOOTSTRAP_STATUS = latestRouteBootstrapStatus;
+export const H_EARTH_3D_ROUTE_BOOTSTRAP_STATUS =
+  latestRouteBootstrapStatus;
 
 export function getRouteBootstrapStatus() {
   return latestRouteBootstrapStatus;
@@ -599,7 +685,7 @@ function setRouteBootstrapStatus(nextStatus) {
   latestRouteBootstrapStatus = freezeStatus({
     ...latestRouteBootstrapStatus,
     ...nextStatus,
-    timestamp: new Date().toISOString()
+    timestamp: nowIso()
   });
 
   return latestRouteBootstrapStatus;
@@ -663,33 +749,58 @@ export function isRendererDestroyReceiptDestroyed(receipt) {
 
 export function verifyHEarthRouteBoundChain() {
   const checks = Object.freeze({
-    sourceCanonLatticeExposureReceiptPresent:
-      Boolean(getSourceCanonLatticeExposureReceipt()),
     capacityReceiptPresent: Boolean(getCapacityReceipt()),
     environmentReceiptPresent: Boolean(getEnvironmentReceipt()),
     rendererReceiptPresent: Boolean(getRendererReceipt()),
     compositorReceiptPresent: Boolean(getCompositorReceipt()),
     controllerReceiptPresent: Boolean(getControllerReceipt()),
+
+    capacityReceiptConstantPresent: Boolean(H_EARTH_3D_CAPACITY_RECEIPT),
+    environmentReceiptConstantPresent: Boolean(H_EARTH_3D_ENVIRONMENT_RECEIPT),
+    rendererReceiptConstantPresent: Boolean(H_EARTH_3D_RENDERER_RECEIPT),
+    compositorReceiptConstantPresent: Boolean(H_EARTH_3D_COMPOSITOR_RECEIPT),
+    controllerReceiptConstantPresent: Boolean(H_EARTH_3D_CONTROLLER_RECEIPT),
+
     capacityAggregatePresent: Boolean(H_EARTH_3D_CAPACITY),
     environmentAggregatePresent: Boolean(H_EARTH_3D_ENVIRONMENT),
     rendererAggregatePresent: Boolean(H_EARTH_3D_RENDERER),
     compositorAggregatePresent: Boolean(H_EARTH_3D_COMPOSITOR),
     controllerAggregatePresent: Boolean(H_EARTH_3D_CONTROLLER),
+
     rendererMountApiPresent: Boolean(getRendererMountApi()),
     rendererDestroyApiPresent: Boolean(getRendererDestroyApi()),
     rendererMountApiSource: getRendererMountApiSource(),
     rendererDestroyApiSource: getRendererDestroyApiSource(),
+
+    rendererVolumeModelPresent: Boolean(H_EARTH_3D_RENDER_VOLUME_MODEL),
+    rendererPortsPresent: Boolean(H_EARTH_3D_RENDER_PORTS),
     rendererInputSelectorPresent: typeof selectHEarthRenderInput === 'function',
+
     composedCandidateFramePresent: Boolean(H_EARTH_3D_COMPOSED_CANDIDATE_FRAME),
     candidateRenderScenePresent: Boolean(H_EARTH_3D_CANDIDATE_RENDER_SCENE)
   });
 
   const failureCodes = [];
-  if (!checks.capacityReceiptPresent) failureCodes.push(H_EARTH_3D_ROUTE_FAILURE_CODES.MISSING_CAPACITY_RECEIPT);
-  if (!checks.environmentReceiptPresent) failureCodes.push(H_EARTH_3D_ROUTE_FAILURE_CODES.MISSING_ENVIRONMENT_RECEIPT);
-  if (!checks.rendererReceiptPresent) failureCodes.push(H_EARTH_3D_ROUTE_FAILURE_CODES.MISSING_RENDERER_RECEIPT);
-  if (!checks.compositorReceiptPresent) failureCodes.push(H_EARTH_3D_ROUTE_FAILURE_CODES.MISSING_COMPOSITOR_RECEIPT);
-  if (!checks.controllerReceiptPresent) failureCodes.push(H_EARTH_3D_ROUTE_FAILURE_CODES.MISSING_CONTROLLER_RECEIPT);
+
+  if (!checks.capacityReceiptPresent) {
+    failureCodes.push(H_EARTH_3D_ROUTE_FAILURE_CODES.MISSING_CAPACITY_RECEIPT);
+  }
+
+  if (!checks.environmentReceiptPresent) {
+    failureCodes.push(H_EARTH_3D_ROUTE_FAILURE_CODES.MISSING_ENVIRONMENT_RECEIPT);
+  }
+
+  if (!checks.rendererReceiptPresent) {
+    failureCodes.push(H_EARTH_3D_ROUTE_FAILURE_CODES.MISSING_RENDERER_RECEIPT);
+  }
+
+  if (!checks.compositorReceiptPresent) {
+    failureCodes.push(H_EARTH_3D_ROUTE_FAILURE_CODES.MISSING_COMPOSITOR_RECEIPT);
+  }
+
+  if (!checks.controllerReceiptPresent) {
+    failureCodes.push(H_EARTH_3D_ROUTE_FAILURE_CODES.MISSING_CONTROLLER_RECEIPT);
+  }
 
   return Object.freeze({
     checks,
@@ -700,6 +811,10 @@ export function verifyHEarthRouteBoundChain() {
 }
 
 export function resolveHEarthRouteMountPoints(rootDocument = globalThis.document) {
+  const strictIds = H_EARTH_3D_ROUTE_MOUNT_CONTRACT.strictRequiredIds;
+  const conditionalIds = H_EARTH_3D_ROUTE_MOUNT_CONTRACT.conditionallyRequiredIds;
+  const optionalIds = H_EARTH_3D_ROUTE_MOUNT_CONTRACT.optionalPublicIds;
+
   if (!rootDocument || typeof rootDocument.getElementById !== 'function') {
     return Object.freeze({
       documentAvailable: false,
@@ -712,26 +827,23 @@ export function resolveHEarthRouteMountPoints(rootDocument = globalThis.document
       targetList: null,
       debug: null,
       inspectGroundAction: null,
-      spatialSummary: null,
-      composedFramePayload: null,
-      compositorReceiptPayload: null,
-      rendererPlacementPayload: null,
-      environmentPlacementPayload: null,
+      selectedTargetLabel: null,
+      selectedTargetClassification: null,
+      selectedTargetObjectId: null,
+      publicReadout: null,
+      publicReadoutTitle: null,
+      publicReadoutLine: null,
+      diagnosticLink: null,
       strictRequiredFound: false,
       rendererMountFound: false,
       missingStrictRequiredIds: Object.freeze([
-        H_EARTH_3D_ROUTE_MOUNT_CONTRACT.strictRequiredIds.routeRoot,
-        H_EARTH_3D_ROUTE_MOUNT_CONTRACT.strictRequiredIds.status,
-        H_EARTH_3D_ROUTE_MOUNT_CONTRACT.strictRequiredIds.fallback
+        strictIds.routeRoot,
+        strictIds.status,
+        strictIds.fallback
       ]),
       boundary: H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS
     });
   }
-
-  const strictIds = H_EARTH_3D_ROUTE_MOUNT_CONTRACT.strictRequiredIds;
-  const conditionalIds = H_EARTH_3D_ROUTE_MOUNT_CONTRACT.conditionallyRequiredIds;
-  const optionalIds = H_EARTH_3D_ROUTE_MOUNT_CONTRACT.optionalIds;
-  const spatialIds = H_EARTH_3D_ROUTE_MOUNT_CONTRACT.spatialDiagnosticIds;
 
   const routeRoot = rootDocument.getElementById(strictIds.routeRoot);
   const statusNode = rootDocument.getElementById(strictIds.status);
@@ -739,6 +851,7 @@ export function resolveHEarthRouteMountPoints(rootDocument = globalThis.document
   const rendererMount = rootDocument.getElementById(conditionalIds.rendererMount);
 
   const missingStrictRequiredIds = [];
+
   if (!routeRoot) missingStrictRequiredIds.push(strictIds.routeRoot);
   if (!statusNode) missingStrictRequiredIds.push(strictIds.status);
   if (!fallbackNode) missingStrictRequiredIds.push(strictIds.fallback);
@@ -753,12 +866,20 @@ export function resolveHEarthRouteMountPoints(rootDocument = globalThis.document
     inspectionPanel: rootDocument.getElementById(optionalIds.inspectionPanel),
     targetList: rootDocument.getElementById(optionalIds.targetList),
     debug: rootDocument.getElementById(optionalIds.debug),
-    inspectGroundAction: rootDocument.getElementById(optionalIds.inspectGroundAction),
-    spatialSummary: rootDocument.getElementById(spatialIds.spatialSummary),
-    composedFramePayload: rootDocument.getElementById(spatialIds.composedFrame),
-    compositorReceiptPayload: rootDocument.getElementById(spatialIds.compositorReceipt),
-    rendererPlacementPayload: rootDocument.getElementById(spatialIds.rendererPlacement),
-    environmentPlacementPayload: rootDocument.getElementById(spatialIds.environmentPlacement),
+    inspectGroundAction:
+      rootDocument.getElementById(optionalIds.inspectGroundAction),
+    selectedTargetLabel:
+      rootDocument.getElementById(optionalIds.selectedTargetLabel),
+    selectedTargetClassification:
+      rootDocument.getElementById(optionalIds.selectedTargetClassification),
+    selectedTargetObjectId:
+      rootDocument.getElementById(optionalIds.selectedTargetObjectId),
+    publicReadout: rootDocument.getElementById(optionalIds.publicReadout),
+    publicReadoutTitle:
+      rootDocument.getElementById(optionalIds.publicReadoutTitle),
+    publicReadoutLine:
+      rootDocument.getElementById(optionalIds.publicReadoutLine),
+    diagnosticLink: rootDocument.getElementById(optionalIds.diagnosticLink),
     strictRequiredFound: missingStrictRequiredIds.length === 0,
     rendererMountFound: Boolean(rendererMount),
     missingStrictRequiredIds: Object.freeze(missingStrictRequiredIds),
@@ -775,8 +896,10 @@ function summarizeReceiptHeader(receipt, fallback = {}) {
     contractId: receipt.contractId || fallback.contractId || null,
     file: receipt.file || fallback.file || null,
     matrix: receipt.matrix || fallback.matrix || 'H-Earth',
-    matrixRole: receipt.matrixRole || fallback.matrixRole || 'Ground-View Matrix',
-    activeCell: receipt.activeCell || fallback.activeCell || 'H_EARTH_GROUND_CELL_001',
+    matrixRole:
+      receipt.matrixRole || fallback.matrixRole || 'Ground-View Matrix',
+    activeCell:
+      receipt.activeCell || fallback.activeCell || 'H_EARTH_GROUND_CELL_001',
     sceneIdentity:
       receipt.sceneIdentity ||
       fallback.sceneIdentity ||
@@ -797,21 +920,27 @@ function summarizeRendererMountReceipt(receipt) {
       receipt.geometryReceipt?.contractId ||
       receipt.geometryReceiptContractId ||
       null,
+
     rendererMounted: receipt.rendererMounted === true,
     mounted: receipt.mounted === true,
     mountAttempted: receipt.mountAttempted === true,
     mountNodeAccepted: receipt.mountNodeAccepted === true,
+    mountNodeValid: receipt.mountNodeValid === true,
     renderRootCreated: receipt.renderRootCreated === true,
-    layerContainerCount: receipt.layerContainerCount ?? receipt.layerCount ?? null,
+    layerContainerCount:
+      receipt.layerContainerCount ?? receipt.layerCount ?? null,
+
     selectedRenderInputSource: receipt.selectedRenderInputSource || null,
     sourceDescriptorType: receipt.sourceDescriptorType || null,
     rawSourceNodeCount: receipt.rawSourceNodeCount ?? null,
     usedComposedFrame: receipt.usedComposedFrame === true,
     usedRenderSceneFallback: receipt.usedRenderSceneFallback === true,
+
     geometryPortUsed: receipt.geometryPortUsed === true,
     geometryExpansionApplied: receipt.geometryExpansionApplied === true,
     geometryExpansionSkippedBecauseAlreadyExpanded:
       receipt.geometryExpansionSkippedBecauseAlreadyExpanded === true,
+    geometryExpansionSource: receipt.geometryExpansionSource || null,
     geometrySourceNodeCount: receipt.geometrySourceNodeCount ?? null,
     geometryExpandedNodeCount: receipt.geometryExpandedNodeCount ?? null,
     geometryReturnedNodeCount: receipt.geometryReturnedNodeCount ?? null,
@@ -820,6 +949,7 @@ function summarizeRendererMountReceipt(receipt) {
       receipt.geometryBudgetSkippedNodeCount ?? null,
     geometryParentNodeCount: receipt.geometryParentNodeCount ?? null,
     geometryChildNodeCount: receipt.geometryChildNodeCount ?? null,
+
     geometryOrganicVariationApplied:
       receipt.geometryOrganicVariationApplied === true,
     organicLandscapeChildVariationDefined:
@@ -830,31 +960,50 @@ function summarizeRendererMountReceipt(receipt) {
       receipt.latticeRegularBandingMitigated === true,
     organicVariationSeededDeterministically:
       receipt.organicVariationSeededDeterministically === true,
-    randomRuntimeVariationUsed:
-      receipt.randomRuntimeVariationUsed === true,
+    randomRuntimeVariationUsed: receipt.randomRuntimeVariationUsed === true,
     organicVariationSummary: receipt.organicVariationSummary || null,
     organicClassEmissionCount: receipt.organicClassEmissionCount ?? 0,
     organicVariationReadyCount: receipt.organicVariationReadyCount ?? 0,
-    landscapeLatticeBundleForwarded:
-      receipt.landscapeLatticeBundleForwarded === true,
-    descriptorLandscapeLatticeAdmitted:
-      receipt.descriptorLandscapeLatticeAdmitted === true,
-    geometryLatticeAdmissionStatus:
-      receipt.geometryLatticeAdmissionStatus || null,
-    geometryLatticeAdmissionFailed:
-      receipt.geometryLatticeAdmissionFailed === true,
+
+    sourceNodeCount: receipt.sourceNodeCount ?? null,
     mountedNodeCount: receipt.mountedNodeCount ?? null,
     objectNodeCount: receipt.objectNodeCount ?? null,
     placedNodeCount: receipt.placedNodeCount ?? null,
     skippedNodeCount: receipt.skippedNodeCount ?? null,
     transformDescriptorAppliedCount:
       receipt.transformDescriptorAppliedCount ?? null,
+    transformDescriptorMissingCount:
+      receipt.transformDescriptorMissingCount ?? null,
     primitiveGeometryAppliedCount:
       receipt.primitiveGeometryAppliedCount ?? null,
-    visualGrammarReadyCount: receipt.visualGrammarReadyCount ?? null,
+    visualGrammarReadyCount:
+      receipt.visualGrammarReadyCount ?? null,
+
     materialPortUsed: receipt.materialPortUsed === true,
     layerPortUsed: receipt.layerPortUsed === true,
     nodeFactoryPortUsed: receipt.nodeFactoryPortUsed === true,
+
+    warningCodes: Object.freeze(asArray(receipt.warningCodes)),
+    failureCodes: Object.freeze(asArray(receipt.failureCodes)),
+    claimBoundaryPreserved: receipt.claimBoundaryPreserved === true,
+    boundaryPresent: Boolean(receipt.boundary)
+  });
+}
+
+function summarizeRendererDestroyReceipt(receipt) {
+  if (!receipt) return null;
+
+  return Object.freeze({
+    receiptType: receipt.receiptType || null,
+    contractId: receipt.contractId || null,
+    destroyAttempted: receipt.destroyAttempted === true,
+    destroyed: receipt.destroyed === true,
+    mountNodeAccepted: receipt.mountNodeAccepted === true,
+    mountNodeValid: receipt.mountNodeValid === true,
+    removedOwnedNodeCount:
+      receipt.removedOwnedNodeCount ?? receipt.removedNodeCount ?? null,
+    routeShellPreserved: receipt.routeShellPreserved === true,
+    canonDescriptorsPreserved: receipt.canonDescriptorsPreserved === true,
     warningCodes: Object.freeze(asArray(receipt.warningCodes)),
     failureCodes: Object.freeze(asArray(receipt.failureCodes)),
     claimBoundaryPreserved: receipt.claimBoundaryPreserved === true,
@@ -872,10 +1021,10 @@ export function buildHEarthLivePublicRendererReceiptHandoff(
     file: '/showroom/globe/h-earth/index.js',
     contractId: H_EARTH_3D_INDEX_CONTRACT.contractId,
     storageKey: H_EARTH_3D_LIVE_PUBLIC_RENDERER_RECEIPT_HANDOFF_KEY,
-    generatedAt: new Date().toISOString(),
+    generatedAt: nowIso(),
 
-    publicRoute: '/showroom/globe/h-earth/',
-    diagnosticRoute: '/showroom/globe/h-earth/diagnostic/',
+    publicRoute: H_EARTH_3D_INDEX_CONTRACT.route,
+    diagnosticRoute: H_EARTH_3D_INDEX_CONTRACT.diagnosticRoute,
     sameOriginHandoff: true,
 
     routeStatus: status?.statusLevel || null,
@@ -885,12 +1034,8 @@ export function buildHEarthLivePublicRendererReceiptHandoff(
       receipt?.mounted === true ||
       false,
 
-    rendererReceiptContract:
-      receipt?.contractId || null,
-
-    complementaryGeometryPort:
-      receipt?.complementaryGeometryPort || null,
-
+    rendererReceiptContract: receipt?.contractId || null,
+    complementaryGeometryPort: receipt?.complementaryGeometryPort || null,
     geometryReceiptContract:
       receipt?.geometryReceipt?.contractId ||
       receipt?.geometryReceiptContractId ||
@@ -903,27 +1048,19 @@ export function buildHEarthLivePublicRendererReceiptHandoff(
     rendererMountReady:
       status?.rendererMountReady === true,
 
-    geometryPortUsed:
-      receipt?.geometryPortUsed === true,
-    geometryExpansionApplied:
-      receipt?.geometryExpansionApplied === true,
+    geometryPortUsed: receipt?.geometryPortUsed === true,
+    geometryExpansionApplied: receipt?.geometryExpansionApplied === true,
     geometryExpansionSkippedBecauseAlreadyExpanded:
       receipt?.geometryExpansionSkippedBecauseAlreadyExpanded === true,
 
-    geometrySourceNodeCount:
-      receipt?.geometrySourceNodeCount ?? null,
-    geometryExpandedNodeCount:
-      receipt?.geometryExpandedNodeCount ?? null,
-    geometryReturnedNodeCount:
-      receipt?.geometryReturnedNodeCount ?? null,
-    geometrySkippedNodeCount:
-      receipt?.geometrySkippedNodeCount ?? null,
+    geometrySourceNodeCount: receipt?.geometrySourceNodeCount ?? null,
+    geometryExpandedNodeCount: receipt?.geometryExpandedNodeCount ?? null,
+    geometryReturnedNodeCount: receipt?.geometryReturnedNodeCount ?? null,
+    geometrySkippedNodeCount: receipt?.geometrySkippedNodeCount ?? null,
     geometryBudgetSkippedNodeCount:
       receipt?.geometryBudgetSkippedNodeCount ?? null,
-    geometryParentNodeCount:
-      receipt?.geometryParentNodeCount ?? null,
-    geometryChildNodeCount:
-      receipt?.geometryChildNodeCount ?? null,
+    geometryParentNodeCount: receipt?.geometryParentNodeCount ?? null,
+    geometryChildNodeCount: receipt?.geometryChildNodeCount ?? null,
 
     geometryOrganicVariationApplied:
       receipt?.geometryOrganicVariationApplied === true,
@@ -944,21 +1081,14 @@ export function buildHEarthLivePublicRendererReceiptHandoff(
     organicVariationReadyCount:
       receipt?.organicVariationReadyCount ?? 0,
 
-    mountedNodeCount:
-      receipt?.mountedNodeCount ?? null,
-    objectNodeCount:
-      receipt?.objectNodeCount ?? null,
-    placedNodeCount:
-      receipt?.placedNodeCount ?? null,
-    skippedNodeCount:
-      receipt?.skippedNodeCount ?? null,
+    mountedNodeCount: receipt?.mountedNodeCount ?? null,
+    objectNodeCount: receipt?.objectNodeCount ?? null,
+    placedNodeCount: receipt?.placedNodeCount ?? null,
+    skippedNodeCount: receipt?.skippedNodeCount ?? null,
 
-    materialPortUsed:
-      receipt?.materialPortUsed === true,
-    layerPortUsed:
-      receipt?.layerPortUsed === true,
-    nodeFactoryPortUsed:
-      receipt?.nodeFactoryPortUsed === true,
+    materialPortUsed: receipt?.materialPortUsed === true,
+    layerPortUsed: receipt?.layerPortUsed === true,
+    nodeFactoryPortUsed: receipt?.nodeFactoryPortUsed === true,
 
     warningCodes: Object.freeze([
       ...asArray(status?.warningCodes),
@@ -976,10 +1106,12 @@ export function buildHEarthLivePublicRendererReceiptHandoff(
       receiptHandoffOnly: true,
       publicRouteMutation: false,
       publicCssMutation: false,
+      publicHtmlMutation: false,
       rendererMutation: false,
       geometryMutation: false,
       compositorMutation: false,
       environmentMutation: false,
+      controllerMutation: false,
       rendererPassClaim: false,
       visualPassClaim: false,
       validationClaim: false,
@@ -996,7 +1128,7 @@ export function writeHEarthLivePublicRendererReceiptHandoff(
   const handoff = buildHEarthLivePublicRendererReceiptHandoff(status);
   const serialized = JSON.stringify(safeSerialize(handoff, {
     maxDepth: 9,
-    maxArrayLength: 160
+    maxArrayLength: 180
   }));
 
   let sessionStorageWritten = false;
@@ -1031,8 +1163,7 @@ export function writeHEarthLivePublicRendererReceiptHandoff(
   }
 
   try {
-    globalThis.H_EARTH_3D_LIVE_PUBLIC_RENDERER_RECEIPT_HANDOFF =
-      handoff;
+    globalThis.H_EARTH_3D_LIVE_PUBLIC_RENDERER_RECEIPT_HANDOFF = handoff;
     globalWritten = true;
   } catch (error) {
     globalWriteError = error instanceof Error ? error.message : String(error);
@@ -1061,10 +1192,12 @@ export function writeHEarthLivePublicRendererReceiptHandoff(
       receiptHandoffOnly: true,
       publicRouteMutation: false,
       publicCssMutation: false,
+      publicHtmlMutation: false,
       rendererMutation: false,
       geometryMutation: false,
       compositorMutation: false,
       environmentMutation: false,
+      controllerMutation: false,
       rendererPassClaim: false,
       visualPassClaim: false,
       validationClaim: false,
@@ -1140,743 +1273,286 @@ export function readHEarthLivePublicRendererReceiptHandoff() {
   });
 }
 
-function extractComposedNodes(frame) {
-  if (!frame) return null;
-  if (Array.isArray(frame.composedNodes)) return frame.composedNodes;
-  if (Array.isArray(frame.nodes)) return frame.nodes;
-  if (Array.isArray(frame.candidateNodes)) return frame.candidateNodes;
-  return null;
-}
+export function buildHEarthStructuralPipelineBaselineLock(
+  status = latestRouteBootstrapStatus
+) {
+  const receipt = status?.rendererMountReceipt || null;
+  const handoff = buildHEarthLivePublicRendererReceiptHandoff(status);
 
-function summarizeComposedFrame(frame) {
-  if (!frame) return null;
+  const regressionCodes = [];
 
-  const composedNodes = extractComposedNodes(frame);
-
-  return Object.freeze({
-    framePresent: true,
-    id: frame.id || frame.frameId || null,
-    matrix: frame.matrix || 'H-Earth',
-    matrixRole: frame.matrixRole || 'Ground-View Matrix',
-    sceneIdentity: frame.sceneIdentity || 'earth-water-air-survival-shoreline-manor',
-    primaryFocusObjectId:
-      frame.primaryFocusObjectId ||
-      frame.focusPriority?.primaryFocusObjectId ||
-      H_EARTH_3D_COMPOSITOR_RECEIPT?.primaryFocusObjectId ||
-      null,
-    composedNodeCount:
-      frame.composedNodeCount ??
-      frame.nodeCount ??
-      composedNodes?.length ??
-      H_EARTH_3D_COMPOSITOR_RECEIPT?.composedNodeCount ??
-      null,
-    cameraFrameResolved: Boolean(frame.cameraFrame),
-    depthCompositionResolved: Boolean(frame.depthComposition),
-    layerCompositionResolved: Boolean(frame.layerComposition),
-    focusPriorityResolved: Boolean(frame.focusPriority),
-    contextCompositionResolved: Boolean(frame.contextComposition),
-    viewportFitResolved: Boolean(frame.viewportFit),
-    compositionPressureClass:
-      frame.compositionPressure?.pressureClass ||
-      H_EARTH_3D_COMPOSITOR_RECEIPT?.compositionPressureClass ||
-      null,
-    composedNodeDigest: Array.isArray(composedNodes)
-      ? composedNodes.slice(0, 24).map((node) =>
-          Object.freeze({
-            nodeId: node.nodeId || node.sourceNodeId || node.id || null,
-            sourceNodeId: node.sourceNodeId || null,
-            objectId: node.objectId || null,
-            label: node.label || node.objectLabel || null,
-            layerId: node.layerId || null,
-            primitiveType: node.primitiveType || null,
-            materialKey: node.materialKey || null,
-            normalizedDepth: node.normalizedDepth ?? null,
-            depthClass: node.depthClass || null,
-            primaryDepthClass: node.primaryDepthClass || null,
-            viewportOverflowClass: node.viewportOverflowClass || null,
-            primitiveGeometryPresent: Boolean(node.primitiveGeometry),
-            cssTransformDescriptorPresent: Boolean(node.cssTransformDescriptor)
-          })
-        )
-      : null,
-    boundaryPresent: Boolean(frame.boundary || H_EARTH_3D_COMPOSITION_BOUNDARY_FLAGS)
-  });
-}
-
-function summarizeCompositorReceipt(receipt = getCompositorReceipt()) {
-  if (!receipt) return null;
-
-  return Object.freeze({
-    ...summarizeReceiptHeader(receipt),
-    sourceCandidateRenderNodeCount:
-      receipt.sourceCandidateRenderNodeCount ?? null,
-    composedNodeCount: receipt.composedNodeCount ?? null,
-    cameraFrameResolved: receipt.cameraFrameResolved ?? null,
-    depthCompositionResolved: receipt.depthCompositionResolved ?? null,
-    layerCompositionResolved: receipt.layerCompositionResolved ?? null,
-    focusPriorityResolved: receipt.focusPriorityResolved ?? null,
-    contextCompositionResolved: receipt.contextCompositionResolved ?? null,
-    viewportFitResolved: receipt.viewportFitResolved ?? null,
-    nodeBudgetCompositionResolved:
-      receipt.nodeBudgetCompositionResolved ?? null,
-    composedCandidateFrameResolved:
-      receipt.composedCandidateFrameResolved ?? null,
-    compositionPressureClass: receipt.compositionPressureClass || null,
-    primaryFocusObjectId: receipt.primaryFocusObjectId || null,
-    primaryInspectionTargetPreserved:
-      receipt.primaryInspectionTargetPreserved ?? null,
-    matrixSeparationPreserved: receipt.matrixSeparationPreserved ?? null,
-    boundaryPresent: Boolean(receipt.boundary)
-  });
-}
-
-function summarizeEnvironmentPlacement(receipt = getEnvironmentReceipt()) {
-  if (!receipt) return null;
-
-  const serialized = lowerSerialized(receipt);
-
-  const detectedSceneTokens = Array.isArray(receipt.detectedSceneTokens)
-    ? receipt.detectedSceneTokens
-    : H_EARTH_EXPECTED_ENVIRONMENT_TOKENS.filter((token) =>
-        serialized.includes(token)
-      );
-
-  const expectedSceneTokens = Array.isArray(receipt.expectedSceneTokens)
-    ? receipt.expectedSceneTokens
-    : H_EARTH_EXPECTED_ENVIRONMENT_TOKENS;
-
-  const missingSceneTokens = Array.isArray(receipt.missingSceneTokens)
-    ? receipt.missingSceneTokens
-    : expectedSceneTokens.filter((token) => !detectedSceneTokens.includes(token));
-
-  return Object.freeze({
-    ...summarizeReceiptHeader(receipt),
-
-    coordinateSystemConsumed: receipt.coordinateSystemConsumed === true,
-    scaleModelConsumed: receipt.scaleModelConsumed === true,
-    worldBoundsConsumed: receipt.worldBoundsConsumed === true,
-    depthModelConsumed: receipt.depthModelConsumed === true,
-    zoneBandsConsumed: receipt.zoneBandsConsumed === true,
-    primitiveSchemaConsumed: receipt.primitiveSchemaConsumed === true,
-    materialIdentitiesConsumed: receipt.materialIdentitiesConsumed === true,
-    objectCapacityReferencesConsumed:
-      receipt.objectCapacityReferencesConsumed === true,
-    candidatePlacementHintsConsumed:
-      receipt.candidatePlacementHintsConsumed === true,
-    environmentalFormGrammarConsumed:
-      receipt.environmentalFormGrammarConsumed === true,
-    detailDensityModelConsumed: receipt.detailDensityModelConsumed === true,
-    shapeIrregularityModelConsumed:
-      receipt.shapeIrregularityModelConsumed === true,
-    silhouetteModelConsumed: receipt.silhouetteModelConsumed === true,
-    contextCompressionConsumed: receipt.contextCompressionConsumed === true,
-    inspectionRadiusModelConsumed:
-      receipt.inspectionRadiusModelConsumed === true,
-    cameraCapacityReferenced: receipt.cameraCapacityReferenced === true,
-    inspectionAnchorsConsumed: receipt.inspectionAnchorsConsumed === true,
-    zoneAdjacencyModelConsumed: receipt.zoneAdjacencyModelConsumed === true,
-    expansionGuardsPreserved: receipt.expansionGuardsPreserved === true,
-    rendererPermissionFlagsPreserved:
-      receipt.rendererPermissionFlagsPreserved === true,
-    forbiddenCapabilityFlagsPreserved:
-      receipt.forbiddenCapabilityFlagsPreserved === true,
-
-    cleanupApplied: receipt.cleanupApplied || null,
-
-    resolvedObjects: receipt.resolvedObjects ?? null,
-    resolvedZones: receipt.resolvedZones ?? null,
-    resolvedInspectableAnchors: receipt.resolvedInspectableAnchors ?? null,
-    resolvedContextOnlyGuards: receipt.resolvedContextOnlyGuards ?? null,
-    resolvedMaterialChannels: receipt.resolvedMaterialChannels ?? null,
-    resolvedPrimitiveLinks: receipt.resolvedPrimitiveLinks ?? null,
-    environmentCoverageRatio: receipt.environmentCoverageRatio ?? null,
-
-    descriptorCoverageApplied:
-      receipt.descriptorCoverageApplied === true,
-    descriptorCoveragePresent:
-      receipt.descriptorCoveragePresent === true,
-    fullDescriptorCoverage:
-      receipt.fullDescriptorCoverage === true,
-    descriptorCoverageRatio:
-      receipt.descriptorCoverageRatio ?? null,
-    expectedSceneTokens: Object.freeze(expectedSceneTokens),
-    detectedSceneTokens: Object.freeze(detectedSceneTokens),
-    missingSceneTokens: Object.freeze(missingSceneTokens),
-
-    shorelineDescriptorCoverage:
-      receipt.shorelineDescriptorCoverage || null,
-    surfaceDescriptorCoverage:
-      receipt.surfaceDescriptorCoverage || null,
-    waterDescriptorCoverage:
-      receipt.waterDescriptorCoverage || null,
-    rockDescriptorCoverage:
-      receipt.rockDescriptorCoverage || null,
-    airDescriptorCoverage:
-      receipt.airDescriptorCoverage || null,
-    manorDescriptorCoverage:
-      receipt.manorDescriptorCoverage || null,
-    descriptorCoverageSummary:
-      receipt.descriptorCoverageSummary || null,
-
-    descriptorCoverageSync: Object.freeze({
-      environment021BTarget:
-        'H_EARTH_3D_ENVIRONMENT_FILE_BIRTH_STEP_021B_DESCRIPTOR_COVERAGE_EXPOSURE_v1',
-      descriptorFieldsForwardedByIndex032G: true,
-      descriptorFieldsForwardedByIndex032H: true,
-      receiptContractObserved: receipt.contractId || null,
-      receiptStatusObserved: receipt.status || null,
-      descriptorCoverageObserved:
-        receipt.descriptorCoveragePresent === true &&
-        receipt.fullDescriptorCoverage === true,
-      fallbackTokenScanUsed: !Array.isArray(receipt.detectedSceneTokens),
-      fallbackMissingSceneTokens: Object.freeze(missingSceneTokens)
-    }),
-
-    firstAction: receipt.firstAction || 'Inspect Ground',
-    firstReadout: receipt.firstReadout || 'Ground Condition Read',
-    firstReceipt: receipt.firstReceipt || 'H_EARTH_GROUND_INSPECTION_RECEIPT',
-    boundaryPresent: Boolean(receipt.boundary)
-  });
-}
-
-function summarizeRendererReceipt(receipt = getRendererReceipt()) {
-  if (!receipt) return null;
-
-  return Object.freeze({
-    ...summarizeReceiptHeader(receipt),
-    complementaryGeometryPort: receipt.complementaryGeometryPort || null,
-    candidateRenderSceneParentDescriptorsOnly:
-      receipt.candidateRenderSceneParentDescriptorsOnly ?? null,
-    geometryExpansionAfterCompositorHandoffOnly:
-      receipt.geometryExpansionAfterCompositorHandoffOnly ?? null,
-    geometryExpansionDeferredUntilMountSelection:
-      receipt.geometryExpansionDeferredUntilMountSelection ?? null,
-    alreadyExpandedInputGuardDefined:
-      receipt.alreadyExpandedInputGuardDefined ?? null,
-    createsDomCss3DCandidateNodes:
-      receipt.createsDomCss3DCandidateNodes ?? null,
-    mountsCandidateDomDescriptors:
-      receipt.mountsCandidateDomDescriptors ?? null,
-    expandsCandidateGeometryDescriptorsAtMountOnly:
-      receipt.expandsCandidateGeometryDescriptorsAtMountOnly ?? null,
-    descriptorLandscapeLatticeAdmitted:
-      receipt.descriptorLandscapeLatticeAdmitted ?? null,
-    organicVariationSyncDefined:
-      receipt.organicVariationSyncDefined ??
-      receipt.geometryOrganicVariationSyncDefined ??
-      null,
-    boundaryPresent: Boolean(receipt.boundary)
-  });
-}
-
-function summarizeRendererPlacement(status = latestRouteBootstrapStatus) {
-  const candidateScene = H_EARTH_3D_CANDIDATE_RENDER_SCENE;
-  const nodes = Array.isArray(candidateScene?.nodes) ? candidateScene.nodes : [];
-
-  return Object.freeze({
-    purpose:
-      'Compact renderer placement summary for report-layer break-location classification.',
-    rendererReceiptSummary: summarizeRendererReceipt(getRendererReceipt()),
-    renderVolumeModelPresent: Boolean(H_EARTH_3D_RENDER_VOLUME_MODEL),
-    renderPortsPresent: Boolean(H_EARTH_3D_RENDER_PORTS),
-    candidateRenderScenePresent: Boolean(candidateScene),
-    candidateRenderSceneNodeCount:
-      candidateScene?.nodeCount ?? candidateScene?.sourceNodeCount ?? nodes.length ?? null,
-    candidateRenderSceneParentDescriptorsOnly:
-      candidateScene?.candidateRenderSceneParentDescriptorsOnly === true,
-    mountedReceiptSummary: summarizeRendererMountReceipt(status.rendererMountReceipt),
-    rendererTransformDigest: nodes.slice(0, 24).map((node) =>
-      Object.freeze({
-        nodeId: node.nodeId || null,
-        objectId: node.objectId || null,
-        label: node.label || node.objectLabel || null,
-        layerId: node.layerId || null,
-        primitiveType: node.primitiveType || null,
-        materialKey: node.materialKey || null,
-        landscapeClassName: node.landscapeClassName || null,
-        primitiveClassName: node.primitiveClassName || null,
-        renderWidthPx: node.renderWidthPx ?? null,
-        renderHeightPx: node.renderHeightPx ?? null,
-        renderDepthPx: node.renderDepthPx ?? null,
-        normalizedDepth: node.normalizedDepth ?? null,
-        depthClass: node.depthClass || null,
-        primaryDepthClass: node.primaryDepthClass || null,
-        cssTransformPresent: Boolean(node.cssTransformDescriptor?.cssTransform),
-        landscapeProjectionApplied:
-          node.cssTransformDescriptor?.landscapeProjectionApplied ?? null
-      })
-    ),
-    renderBoundaryFlagsPresent: Boolean(H_EARTH_3D_RENDER_BOUNDARY_FLAGS)
-  });
-}
-
-function getLatticeCandidateObjects() {
-  return Object.freeze([
-    getSourceCanonLatticeExposureReceipt(),
-    H_EARTH_3D_INDEX_BOUND_CHAIN?.sourceCanonLatticeExposure?.receipt,
-    H_EARTH_3D_CAPACITY?.latticeScope,
-    H_EARTH_3D_CAPACITY?.sceneLattice,
-    H_EARTH_3D_CAPACITY?.macroEnvironmentLattice,
-    getCapacityReceipt()?.latticeScope,
-    getCapacityReceipt()?.sceneLattice,
-    H_EARTH_3D_ENVIRONMENT?.latticeScope,
-    H_EARTH_3D_ENVIRONMENT?.sceneLattice,
-    getEnvironmentReceipt()?.latticeScope,
-    getRendererReceipt()?.latticeScope,
-    getCompositorReceipt()?.latticeScope
-  ].filter(Boolean));
-}
-
-function detectLatticeHints() {
-  const combined = [
-    lowerSerialized(getSourceCanonLatticeExposureReceipt()),
-    lowerSerialized(H_EARTH_3D_CAPACITY),
-    lowerSerialized(getCapacityReceipt()),
-    lowerSerialized(H_EARTH_3D_ENVIRONMENT),
-    lowerSerialized(getEnvironmentReceipt())
-  ].join('\n');
-
-  const tokens = Object.freeze({
-    lattice: combined.includes('lattice'),
-    sixteenBySixteen:
-      combined.includes('16x16') ||
-      combined.includes('16×16') ||
-      combined.includes('"rowcount":16') ||
-      combined.includes('"columncount":16'),
-    twoHundredFiftySix:
-      combined.includes('256') ||
-      combined.includes('"addresscount":256'),
-    addressField:
-      combined.includes('addressfield') ||
-      combined.includes('address field') ||
-      combined.includes('descriptoraddressfielddefined')
-  });
-
-  return Object.freeze({
-    hintsPresent: Boolean(
-      tokens.lattice ||
-      tokens.sixteenBySixteen ||
-      tokens.twoHundredFiftySix ||
-      tokens.addressField
-    ),
-    tokens
-  });
-}
-
-export function summarizeHEarthLatticeScope() {
-  const latticeCandidates = getLatticeCandidateObjects();
-  const hints = detectLatticeHints();
-
-  const formalLatticeObject =
-    latticeCandidates.find((candidate) => {
-      const serialized = lowerSerialized(candidate);
-      return (
-        serialized.includes('formal_source_lattice_authority_exposed_descriptor_only') ||
-        serialized.includes('sourcelatticeauthority') ||
-        serialized.includes('source256addressfielddescriptor') ||
-        serialized.includes('descriptoraddressfielddefined') ||
-        serialized.includes('addressfieldauthorized') ||
-        serialized.includes('16x16') ||
-        serialized.includes('256')
-      );
-    }) || null;
-
-  const formalText = lowerSerialized(formalLatticeObject);
-
-  const has16x16 =
-    formalText.includes('16x16') ||
-    formalText.includes('16×16') ||
-    formalText.includes('"rowcount":16') ||
-    formalText.includes('"columncount":16');
-
-  const has256 =
-    formalText.includes('256') || formalText.includes('"addresscount":256');
-
-  const hasAddressField =
-    formalText.includes('addressfield') ||
-    formalText.includes('address field') ||
-    formalText.includes('addressfieldauthorized') ||
-    formalText.includes('descriptoraddressfielddefined');
-
-  const sourceCanonResolved =
-    formalText.includes('resolved_by_plan_a') ||
-    formalText.includes('planaresolved') ||
-    formalText.includes('formal_source_lattice_authority_exposed_descriptor_only');
-
-  let status = H_EARTH_3D_LATTICE_SCOPE_STATUS.SCENE_SCOPED_LATTICE_NOT_EXPOSED;
-
-  if (formalLatticeObject && sourceCanonResolved && has16x16 && has256 && hasAddressField) {
-    status =
-      H_EARTH_3D_LATTICE_SCOPE_STATUS
-        .FORMAL_SOURCE_LATTICE_AUTHORITY_EXPOSED_DESCRIPTOR_ONLY;
-  } else if (formalLatticeObject && has16x16 && has256) {
-    status = H_EARTH_3D_LATTICE_SCOPE_STATUS.SCENE_SCOPED_16X16_LATTICE_EXPOSED;
-  } else if (formalLatticeObject) {
-    status = H_EARTH_3D_LATTICE_SCOPE_STATUS.LATTICE_SCOPE_RECEIPT_EXPOSED;
-  } else if (hints.hintsPresent) {
-    status = H_EARTH_3D_LATTICE_SCOPE_STATUS.LATTICE_SCOPE_HINTS_PRESENT;
+  if (status.chainReady !== true) regressionCodes.push('CHAIN_NOT_READY');
+  if (status.domReady !== true) regressionCodes.push('DOM_NOT_READY');
+  if (status.controllerReady !== true) regressionCodes.push('CONTROLLER_NOT_READY');
+  if (status.rendererMountReady !== true) regressionCodes.push('RENDERER_MOUNT_NOT_READY');
+  if (status.bootstrapReadyCandidateOnly !== true) {
+    regressionCodes.push('BOOTSTRAP_NOT_READY_CANDIDATE_ONLY');
   }
+  if (!receipt) regressionCodes.push('RENDERER_MOUNT_RECEIPT_MISSING');
+  if (handoff.rendererMounted !== true) regressionCodes.push('HANDOFF_RENDERER_NOT_MOUNTED');
+  if (handoff.geometryExpansionApplied !== true) regressionCodes.push('GEOMETRY_EXPANSION_NOT_APPLIED');
+  if (handoff.geometryReturnedNodeCount !== 172 && handoff.mountedNodeCount !== 172) {
+    regressionCodes.push('EXPECTED_172_NODE_BASELINE_NOT_OBSERVED');
+  }
+  if (handoff.geometryParentNodeCount !== 11) {
+    regressionCodes.push('EXPECTED_11_PARENT_NODE_BASELINE_NOT_OBSERVED');
+  }
+  if (handoff.geometryChildNodeCount !== 161) {
+    regressionCodes.push('EXPECTED_161_CHILD_NODE_BASELINE_NOT_OBSERVED');
+  }
+  if (handoff.materialPortUsed !== true) regressionCodes.push('MATERIAL_PORT_NOT_USED');
+  if (handoff.layerPortUsed !== true) regressionCodes.push('LAYER_PORT_NOT_USED');
+  if (handoff.nodeFactoryPortUsed !== true) regressionCodes.push('NODE_FACTORY_PORT_NOT_USED');
+  if (handoff.organicClassEmissionCount !== 172) {
+    regressionCodes.push('EXPECTED_172_ORGANIC_CLASS_EMISSION_NOT_OBSERVED');
+  }
+  if (handoff.organicVariationReadyCount !== 172) {
+    regressionCodes.push('EXPECTED_172_ORGANIC_READY_NOT_OBSERVED');
+  }
+  if (asArray(handoff.warningCodes).length > 0) regressionCodes.push('WARNING_CODES_PRESENT');
+  if (asArray(handoff.failureCodes).length > 0) regressionCodes.push('FAILURE_CODES_PRESENT');
+
+  const locked = regressionCodes.length === 0;
 
   return Object.freeze({
-    receiptType: 'H_EARTH_3D_LATTICE_SCOPE_REPORT_SOURCE',
+    receiptType:
+      'H_EARTH_3D_STRUCTURAL_PIPELINE_BASELINE_LOCK_RECEIPT',
     file: '/showroom/globe/h-earth/index.js',
     contractId: H_EARTH_3D_INDEX_CONTRACT.contractId,
-    status,
-    ...H_EARTH_SCENE_IDENTITY,
-    strategicRule:
-      'The scene scopes the lattice. The lattice makes the scene addressable.',
-    latticeScopeEvidencePresent: Boolean(formalLatticeObject),
-    latticeHintEvidencePresent: hints.hintsPresent,
-    formal16x16EvidencePresent: Boolean(has16x16 && has256),
-    addressField: Boolean(hasAddressField),
-    sourceLatticeAuthority:
-      Boolean(sourceCanonResolved || formalText.includes('sourcelatticeauthority')),
-    source256AddressFieldDescriptor: Boolean(has256),
-    sourceCanonExposureArtifactPresent: Boolean(sourceCanonResolved),
-    candidateEvidenceObjectCount: latticeCandidates.length,
-    evidenceSummary: formalLatticeObject
-      ? Object.freeze({
-          keys: Object.freeze(getObjectKeys(formalLatticeObject)),
-          has16x16,
-          has256,
-          hasAddressField,
-          sourceCanonResolved,
-          compactEvidence: safeSerialize(formalLatticeObject, {
-            maxDepth: 4,
-            maxArrayLength: 32
-          })
-        })
-      : null,
-    hintSummary: hints,
-    boundary: Object.freeze({
-      reportOnly: true,
-      latticeActivationClaim: false,
-      runtimeLatticeActivation: false,
-      active16x16RuntimeClaim: false,
-      active256AddressRuntimeClaim: false,
-      matrixCollapse: false
-    })
-  });
-}
+    generatedAt: nowIso(),
 
-export function getLatticeScopeReceipt() {
-  return summarizeHEarthLatticeScope();
-}
+    status: locked
+      ? H_EARTH_3D_STRUCTURAL_PIPELINE_BASELINE_STATUS.STRUCTURAL_PIPELINE_LOCKED
+      : H_EARTH_3D_STRUCTURAL_PIPELINE_BASELINE_STATUS.STRUCTURAL_PIPELINE_NOT_LOCKED,
 
-export function buildHEarthOperationalReportSourceSummary(status = latestRouteBootstrapStatus) {
-  const latticeScopeSummary = summarizeHEarthLatticeScope();
-  const handoffRead = readHEarthLivePublicRendererReceiptHandoff();
+    baselineLocked: locked,
+    regressionCodes: Object.freeze(regressionCodes),
 
-  return Object.freeze({
-    receiptType: 'H_EARTH_3D_OPERATIONAL_REPORT_SOURCE_SUMMARY',
-    file: '/showroom/globe/h-earth/index.js',
-    contractId: H_EARTH_3D_INDEX_CONTRACT.contractId,
-    status: status.statusLevel,
-    generatedAt: new Date().toISOString(),
-    ...H_EARTH_SCENE_IDENTITY,
-    routeReady: Object.freeze({
+    preservedBaseline: Object.freeze({
+      routeStatus: status.statusLevel,
       chainReady: status.chainReady,
       domReady: status.domReady,
       controllerReady: status.controllerReady,
       rendererMountReady: status.rendererMountReady,
       bootstrapReadyCandidateOnly: status.bootstrapReadyCandidateOnly,
-      bootstrapReadyDescriptorOnlyNoRendererMountApi:
-        status.bootstrapReadyDescriptorOnlyNoRendererMountApi,
-      bootstrapFallbackActive: status.bootstrapFallbackActive,
-      failureCodes: status.failureCodes,
-      warningCodes: status.warningCodes
-    }),
-    evidenceAvailability: Object.freeze({
-      sourceCanonLatticeExposureReceiptPresent:
-        Boolean(getSourceCanonLatticeExposureReceipt()),
-      capacityReceiptPresent: Boolean(getCapacityReceipt()),
-      environmentReceiptPresent: Boolean(getEnvironmentReceipt()),
-      rendererReceiptPresent: Boolean(getRendererReceipt()),
-      compositorReceiptPresent: Boolean(getCompositorReceipt()),
-      controllerReceiptPresent: Boolean(getControllerReceipt()),
-      composedCandidateFramePresent: Boolean(H_EARTH_3D_COMPOSED_CANDIDATE_FRAME),
-      candidateRenderScenePresent: Boolean(H_EARTH_3D_CANDIDATE_RENDER_SCENE),
-      rendererMountReceiptPresent: Boolean(status.rendererMountReceipt),
-      livePublicRendererReceiptHandoffAvailable:
-        Boolean(handoffRead.found),
-      latticeScopeEvidencePresent: latticeScopeSummary.latticeScopeEvidencePresent,
-      formal16x16EvidencePresent: latticeScopeSummary.formal16x16EvidencePresent,
-      sourceLatticeAuthority: latticeScopeSummary.sourceLatticeAuthority,
-      source256AddressFieldDescriptor:
-        latticeScopeSummary.source256AddressFieldDescriptor,
-      environmentDescriptorCoveragePresent:
-        getEnvironmentReceipt()?.descriptorCoveragePresent === true,
-      environmentFullDescriptorCoverage:
-        getEnvironmentReceipt()?.fullDescriptorCoverage === true,
-      advancedRawEvidenceBundleAvailable: true
-    }),
-    sourceCanonLatticeExposureSummary:
-      getSourceCanonLatticeExposureReceipt(),
-    latticeScopeSummary,
-    environmentSummary: summarizeEnvironmentPlacement(getEnvironmentReceipt()),
-    compositorSummary: summarizeCompositorReceipt(getCompositorReceipt()),
-    composedFrameSummary: summarizeComposedFrame(H_EARTH_3D_COMPOSED_CANDIDATE_FRAME),
-    rendererMountSummary: summarizeRendererMountReceipt(status.rendererMountReceipt),
-    rendererPlacementSummary: summarizeRendererPlacement(status),
-    livePublicRendererReceiptHandoff:
-      buildHEarthLivePublicRendererReceiptHandoff(status),
-    livePublicRendererReceiptHandoffRead:
-      handoffRead,
-    actionBridgeSummary: Object.freeze({
-      selectedObjectId: status.selectedObjectId,
-      selectedObjectPresent: Boolean(getSelectableTarget(status.selectedObjectId)),
-      classification:
-        getControllerTargetClassification(status.selectedObjectId) || null,
-      action: 'Inspect Ground',
-      readout: 'Ground Condition Read',
-      receipt: 'H_EARTH_GROUND_INSPECTION_RECEIPT',
-      descriptorOnly: true,
-      runtimeActionExecutionClaim: false,
-      receiptCreationClaim: false
-    }),
-    boundary: H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS
-  });
-}
 
-export function buildHEarthSpatialDiagnosticReceipt(status = latestRouteBootstrapStatus) {
-  return Object.freeze({
-    receiptType: 'H_EARTH_3D_SPATIAL_DIAGNOSTIC_RECEIPT_COMPACT',
-    file: '/showroom/globe/h-earth/index.js',
-    contractId: H_EARTH_3D_INDEX_CONTRACT.contractId,
-    renewedFrom: H_EARTH_3D_INDEX_CONTRACT.renewedFrom,
-    status: status.statusLevel,
-    purpose:
-      'Compact report-layer evidence source for break-location classification without embedding full raw receipt trees.',
-    reportPrinciple: 'Receipts prove. Reports diagnose. Scene remains primary.',
-    currentDiagnosticQuestion:
-      'Which lane owns the next break: live public renderer handoff, source-canon, environment, compositor, geometry, renderer, CSS, action bridge, or boundary?',
-    reportSourceSummary: buildHEarthOperationalReportSourceSummary(status),
-    rawEvidencePolicy: Object.freeze({
-      defaultReceiptIsCompact: true,
-      fullRawEvidenceEmbeddedInBootstrapReceipt: false,
-      fullRawEvidenceAvailableThroughExplicitAdvancedBundle: true,
-      advancedBundleFunction:
-        'buildHEarthSpatialDiagnosticEvidenceBundle(status)'
-    }),
-    boundary: H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS
-  });
-}
+      rendererMountApiConfirmed: status.rendererMountApiConfirmed,
+      rendererMountAttempted: status.rendererMountAttempted,
+      rendererMounted: status.rendererMounted,
+      rendererMountReceiptPresent: Boolean(receipt),
 
-export function buildHEarthSpatialDiagnosticEvidenceBundle(status = latestRouteBootstrapStatus) {
-  return Object.freeze({
-    receiptType: 'H_EARTH_3D_SPATIAL_DIAGNOSTIC_EVIDENCE_BUNDLE_ADVANCED',
-    file: '/showroom/globe/h-earth/index.js',
-    contractId: H_EARTH_3D_INDEX_CONTRACT.contractId,
-    generatedAt: new Date().toISOString(),
-    purpose:
-      'Explicit advanced evidence bundle. This is not the default bootstrap receipt payload.',
-    ...H_EARTH_SCENE_IDENTITY,
-    operationalReportSourceSummary:
-      buildHEarthOperationalReportSourceSummary(status),
-    sourceCanonLatticeExposure:
-      getSourceCanonLatticeExposureReceipt(),
-    latticeScope: summarizeHEarthLatticeScope(),
-    livePublicRendererReceiptHandoff:
-      buildHEarthLivePublicRendererReceiptHandoff(status),
-    livePublicRendererReceiptHandoffRead:
-      readHEarthLivePublicRendererReceiptHandoff(),
-    rawEvidence: Object.freeze({
-      sourceCanonLatticeExposureReceipt:
-        getSourceCanonLatticeExposureReceipt(),
-      capacityReceipt: getCapacityReceipt(),
-      environmentReceipt: getEnvironmentReceipt(),
-      rendererReceipt: getRendererReceipt(),
-      compositorReceipt: getCompositorReceipt(),
-      controllerReceipt: getControllerReceipt(),
-      capacityAggregate: H_EARTH_3D_CAPACITY,
-      environmentAggregate: H_EARTH_3D_ENVIRONMENT,
-      rendererAggregate: H_EARTH_3D_RENDERER,
-      compositorAggregate: H_EARTH_3D_COMPOSITOR,
-      controllerAggregate: H_EARTH_3D_CONTROLLER,
-      composedCandidateFrame: H_EARTH_3D_COMPOSED_CANDIDATE_FRAME,
-      candidateRenderScene: H_EARTH_3D_CANDIDATE_RENDER_SCENE,
-      renderVolumeModel: H_EARTH_3D_RENDER_VOLUME_MODEL,
-      renderPorts: H_EARTH_3D_RENDER_PORTS,
-      rendererMountReceipt: status.rendererMountReceipt,
-      livePublicRendererReceiptHandoff:
-        buildHEarthLivePublicRendererReceiptHandoff(status),
-      livePublicRendererReceiptHandoffRead:
-        readHEarthLivePublicRendererReceiptHandoff()
+      sameOriginHandoffAvailable: true,
+      handoffStorageKey: H_EARTH_3D_LIVE_PUBLIC_RENDERER_RECEIPT_HANDOFF_KEY,
+
+      rendererReceiptContract: handoff.rendererReceiptContract,
+      geometryReceiptContract: handoff.geometryReceiptContract,
+      complementaryGeometryPort: handoff.complementaryGeometryPort,
+
+      geometryPortUsed: handoff.geometryPortUsed,
+      geometryExpansionApplied: handoff.geometryExpansionApplied,
+      geometryReturnedNodeCount: handoff.geometryReturnedNodeCount,
+      mountedNodeCount: handoff.mountedNodeCount,
+      objectNodeCount: handoff.objectNodeCount,
+      placedNodeCount: handoff.placedNodeCount,
+      skippedNodeCount: handoff.skippedNodeCount,
+
+      geometryParentNodeCount: handoff.geometryParentNodeCount,
+      geometryChildNodeCount: handoff.geometryChildNodeCount,
+
+      materialPortUsed: handoff.materialPortUsed,
+      layerPortUsed: handoff.layerPortUsed,
+      nodeFactoryPortUsed: handoff.nodeFactoryPortUsed,
+
+      geometryOrganicVariationApplied:
+        handoff.geometryOrganicVariationApplied,
+      organicLandscapeChildVariationDefined:
+        handoff.organicLandscapeChildVariationDefined,
+      primitiveSpecificChildPlacementApplied:
+        handoff.primitiveSpecificChildPlacementApplied,
+      latticeRegularBandingMitigated:
+        handoff.latticeRegularBandingMitigated,
+      organicVariationSeededDeterministically:
+        handoff.organicVariationSeededDeterministically,
+      randomRuntimeVariationUsed:
+        handoff.randomRuntimeVariationUsed,
+      organicClassEmissionCount:
+        handoff.organicClassEmissionCount,
+      organicVariationReadyCount:
+        handoff.organicVariationReadyCount,
+
+      warningCodes: handoff.warningCodes,
+      failureCodes: handoff.failureCodes
     }),
+
+    diagnosticTransitionTarget:
+      H_EARTH_3D_DIAGNOSTIC_TRANSITION_TARGET,
+
+    transitionDisposition: locked
+      ? 'STRUCTURAL_PIPELINE_LOCKED_VISUAL_COMPOSITION_READY'
+      : 'STRUCTURAL_PIPELINE_BASELINE_NOT_LOCKED_REVIEW_REQUIRED',
+
+    nextDiagnosticDomain: locked
+      ? 'VISUAL_COMPOSITION_DIAGNOSTIC'
+      : 'STRUCTURAL_PIPELINE_REGRESSION_REVIEW',
+
+    nonRegressionRule:
+      'Future diagnostics should preserve the structural baseline unless new evidence proves regression. Do not reopen renderer, compositor, environment, geometry, node factory, material, layer, or handoff by default.',
+
     boundary: Object.freeze({
-      advancedRawEvidenceOnly: true,
-      defaultBootstrapReceiptPayload: false,
-      routeReportLayerEvidence: true,
-      mutationClaim: false,
-      renderingBehaviorChangeClaim: false,
-      latticeActivationClaim: false,
-      active16x16RuntimeClaim: false,
-      active256AddressRuntimeClaim: false,
+      baselineLockOnly: true,
+      publicRouteMutation: false,
+      publicCssMutation: false,
+      publicHtmlMutation: false,
+      rendererMutation: false,
+      geometryMutation: false,
+      compositorMutation: false,
+      environmentMutation: false,
+      controllerMutation: false,
+      diagnosticTransitionPrepared: true,
+      visualCompositionAuditRunsHere: false,
+      visualCompositionAuditBelongsToDiagnosticRoute: true,
+      rendererPassClaim: false,
+      visualPassClaim: false,
+      validationClaim: false,
+      productionClaim: false,
       matrixCollapse: false
     })
   });
 }
 
-export function getSpatialDiagnosticReceipt() {
-  return buildHEarthSpatialDiagnosticReceipt(latestRouteBootstrapStatus);
+export function getStructuralPipelineBaselineLockReceipt() {
+  return buildHEarthStructuralPipelineBaselineLock(latestRouteBootstrapStatus);
 }
 
-export function getSpatialDiagnosticEvidenceBundle() {
-  return buildHEarthSpatialDiagnosticEvidenceBundle(latestRouteBootstrapStatus);
+export const H_EARTH_3D_STRUCTURAL_PIPELINE_BASELINE_LOCK_RECEIPT =
+  getStructuralPipelineBaselineLockReceipt();
+
+export function buildHEarthPublicReadoutPayload(objectId) {
+  const selectedObjectId = objectId || H_EARTH_DEFAULT_SELECTED_OBJECT_ID;
+  const target = getSelectableTarget(selectedObjectId);
+  const classification = getControllerTargetClassification(selectedObjectId);
+  const actionBridge = resolveInspectGroundControllerBridge(selectedObjectId);
+  const readoutBridge = resolveGroundConditionReadBridge(selectedObjectId);
+
+  const blockedResponse =
+    actionBridge?.contextOnlyBlockResponse ||
+    actionBridge?.waterAtmosphericContextResponse?.blockResponse ||
+    actionBridge?.secondarySurfaceContextResponse ||
+    null;
+
+  return Object.freeze({
+    receiptType: 'H_EARTH_3D_PUBLIC_GROUND_CONDITION_READOUT',
+    file: '/showroom/globe/h-earth/index.js',
+    contractId: H_EARTH_3D_INDEX_CONTRACT.contractId,
+
+    ...H_EARTH_SCENE_IDENTITY,
+
+    selectedObjectId,
+    label: getTargetLabel(target, selectedObjectId),
+    classification,
+    selectable: target?.selectable === true,
+    inspectable: target?.inspectable === true,
+
+    action: 'Inspect Ground',
+    actionId: 'H_EARTH_INSPECT_GROUND_ACTION',
+    readout: 'Ground Condition Read',
+    readoutId: 'H_EARTH_GROUND_CONDITION_READ',
+    receipt: 'H_EARTH_GROUND_INSPECTION_RECEIPT',
+
+    actionBridgeResolved: actionBridge?.bridgeResolved === true,
+    readoutBridgeResolved: readoutBridge?.bridgeResolved === true,
+    bridgeResolved:
+      actionBridge?.bridgeResolved === true ||
+      readoutBridge?.bridgeResolved === true,
+
+    blockedResponse,
+
+    descriptorOnly: true,
+    publicRouteReadoutOnly: true,
+    runtimeActionExecutionClaim: false,
+    readoutProductionClaim: false,
+    receiptCreationClaim: false,
+    runtimeReceiptPersistence: false,
+    rendererPassClaim: false,
+    visualPassClaim: false,
+    validationClaim: false,
+    productionClaim: false,
+    matrixCollapse: false,
+
+    actionBridge,
+    readoutBridge,
+
+    boundary: H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS
+  });
 }
 
-export function renderHEarthSpatialDiagnosticSurfaces(
-  mountPoints,
-  status = latestRouteBootstrapStatus
-) {
+export function renderHEarthSelectedTargetCard(mountPoints, objectId) {
   if (!mountPoints) return false;
 
-  const compactReceipt = buildHEarthSpatialDiagnosticReceipt(status);
-  const evidenceBundle = buildHEarthSpatialDiagnosticEvidenceBundle(status);
-  const reportSourceSummary = buildHEarthOperationalReportSourceSummary(status);
+  const selectedObjectId = objectId || H_EARTH_DEFAULT_SELECTED_OBJECT_ID;
+  const target = getSelectableTarget(selectedObjectId);
+  const classification = getControllerTargetClassification(selectedObjectId);
+  const label = getTargetLabel(target, selectedObjectId);
 
-  const wroteSpatialSummary = writeJson(
-    mountPoints.spatialSummary,
-    compactReceipt,
-    { maxDepth: 7, maxArrayLength: 96 }
+  const wroteLabel = writeText(mountPoints.selectedTargetLabel, label);
+
+  const wroteClassification = writeText(
+    mountPoints.selectedTargetClassification,
+    classification || 'UNCLASSIFIED_TARGET'
   );
 
-  const wroteComposedFrame = writeJson(
-    mountPoints.composedFramePayload,
-    Object.freeze({
-      receiptType:
-        'H_EARTH_3D_COMPOSED_CANDIDATE_FRAME_EXPOSURE_COMPACT',
-      file: '/showroom/globe/h-earth/index.js',
-      source: 'H_EARTH_3D_COMPOSED_CANDIDATE_FRAME',
-      composedCandidateFramePresent: Boolean(H_EARTH_3D_COMPOSED_CANDIDATE_FRAME),
-      composedCandidateFrameSummary:
-        reportSourceSummary.composedFrameSummary,
-      composedCandidateFrameRawAvailableInAdvancedBundle: true,
-      boundary: H_EARTH_3D_COMPOSITION_BOUNDARY_FLAGS
-    }),
-    { maxDepth: 7, maxArrayLength: 96 }
+  const wroteObjectId = writeText(
+    mountPoints.selectedTargetObjectId,
+    selectedObjectId
   );
-
-  const wroteCompositorReceipt = writeJson(
-    mountPoints.compositorReceiptPayload,
-    Object.freeze({
-      receiptType: 'H_EARTH_3D_COMPOSITOR_RECEIPT_EXPOSURE_COMPACT',
-      file: '/showroom/globe/h-earth/index.js',
-      source: 'getCompositorReceipt()',
-      compositorReceiptPresent: Boolean(getCompositorReceipt()),
-      compositorSummary: reportSourceSummary.compositorSummary,
-      rawCompositorReceiptAvailableInAdvancedBundle: true,
-      compositionBoundaryFlags: H_EARTH_3D_COMPOSITION_BOUNDARY_FLAGS
-    }),
-    { maxDepth: 7, maxArrayLength: 96 }
-  );
-
-  const wroteRendererPlacement = writeJson(
-    mountPoints.rendererPlacementPayload,
-    Object.freeze({
-      receiptType:
-        'H_EARTH_3D_RENDERER_PLACEMENT_EVIDENCE_EXPOSURE_COMPACT',
-      file: '/showroom/globe/h-earth/index.js',
-      rendererPlacementEvidence:
-        reportSourceSummary.rendererPlacementSummary,
-      livePublicRendererReceiptHandoff:
-        reportSourceSummary.livePublicRendererReceiptHandoff,
-      livePublicRendererReceiptHandoffRead:
-        reportSourceSummary.livePublicRendererReceiptHandoffRead,
-      rawRendererEvidenceAvailableInAdvancedBundle: true
-    }),
-    { maxDepth: 7, maxArrayLength: 96 }
-  );
-
-  const wroteEnvironmentPlacement = writeJson(
-    mountPoints.environmentPlacementPayload,
-    Object.freeze({
-      receiptType:
-        'H_EARTH_3D_ENVIRONMENT_PLACEMENT_EVIDENCE_EXPOSURE_COMPACT',
-      file: '/showroom/globe/h-earth/index.js',
-      environmentPlacementSummary:
-        reportSourceSummary.environmentSummary,
-      sourceCanonLatticeExposureSummary:
-        reportSourceSummary.sourceCanonLatticeExposureSummary,
-      latticeScopeSummary:
-        reportSourceSummary.latticeScopeSummary,
-      rawEnvironmentEvidenceAvailableInAdvancedBundle: true,
-      advancedEvidenceBundleSummary: Object.freeze({
-        receiptType: evidenceBundle.receiptType,
-        generatedAt: evidenceBundle.generatedAt,
-        rawEvidenceKeys: Object.freeze(getObjectKeys(evidenceBundle.rawEvidence))
-      })
-    }),
-    { maxDepth: 7, maxArrayLength: 96 }
-  );
-
-  return Boolean(
-    wroteSpatialSummary ||
-    wroteComposedFrame ||
-    wroteCompositorReceipt ||
-    wroteRendererPlacement ||
-    wroteEnvironmentPlacement
-  );
-}
-
-export function renderHEarthRouteStatus(
-  mountPoints,
-  status = latestRouteBootstrapStatus
-) {
-  if (!mountPoints) return false;
-
-  writeText(mountPoints.statusNode, status.statusLevel);
-
-  if (mountPoints.fallbackNode) {
-    const fallbackMessage = status.bootstrapFallbackActive
-      ? `H-Earth bootstrap fallback active: ${status.failureCodes.join(', ')}`
-      : status.bootstrapReadyDescriptorOnlyNoRendererMountApi
-        ? 'H-Earth descriptor bootstrap ready. Renderer mount skipped because canon renderer mount API is missing.'
-        : status.bootstrapReadyCandidateOnly
-          ? 'H-Earth DOM/CSS-3D candidate bootstrap ready. Renderer mount receipt confirmed mounted.'
-          : 'H-Earth route bootstrap status pending.';
-
-    writeText(mountPoints.fallbackNode, fallbackMessage);
-  }
 
   if (mountPoints.routeRoot) {
-    removeClass(mountPoints.routeRoot, 'h-earth-3d-boot-ready');
-    removeClass(mountPoints.routeRoot, 'h-earth-3d-boot-fallback');
-    removeClass(mountPoints.routeRoot, 'h-earth-3d-boot-error');
+    setNodeDataset(
+      mountPoints.routeRoot,
+      'hEarthSelectedObjectId',
+      selectedObjectId
+    );
 
-    if (
-      status.bootstrapReadyCandidateOnly ||
-      status.bootstrapReadyDescriptorOnlyNoRendererMountApi
-    ) {
-      addClass(mountPoints.routeRoot, 'h-earth-3d-boot-ready');
-    } else if (status.bootstrapFallbackActive) {
-      addClass(mountPoints.routeRoot, 'h-earth-3d-boot-fallback');
-    } else {
-      addClass(mountPoints.routeRoot, 'h-earth-3d-boot-error');
-    }
+    setNodeDataset(
+      mountPoints.routeRoot,
+      'hEarthSelectedObjectLabel',
+      label
+    );
+
+    setNodeDataset(
+      mountPoints.routeRoot,
+      'hEarthSelectedTargetClassification',
+      classification || 'UNCLASSIFIED_TARGET'
+    );
   }
 
-  writeJson(
-    mountPoints.debug,
-    Object.freeze({
-      ...status,
-      sourceCanonLatticeExposure:
-        getSourceCanonLatticeExposureReceipt(),
-      livePublicRendererReceiptHandoff:
-        buildHEarthLivePublicRendererReceiptHandoff(status),
-      livePublicRendererReceiptHandoffRead:
-        readHEarthLivePublicRendererReceiptHandoff(),
-      spatialDiagnosticReceipt: buildHEarthSpatialDiagnosticReceipt(status),
-      latticeScope: summarizeHEarthLatticeScope(),
-      operationalReportSourceSummary:
-        buildHEarthOperationalReportSourceSummary(status),
-      advancedRawEvidenceAvailable: true
-    }),
-    { maxDepth: 7, maxArrayLength: 96 }
-  );
+  return Boolean(wroteLabel || wroteClassification || wroteObjectId);
+}
 
-  renderHEarthSpatialDiagnosticSurfaces(mountPoints, status);
-  return true;
+export function renderHEarthPublicReadout(mountPoints, objectId) {
+  if (!mountPoints) return false;
+
+  const selectedObjectId = objectId || H_EARTH_DEFAULT_SELECTED_OBJECT_ID;
+  const payload = buildHEarthPublicReadoutPayload(selectedObjectId);
+  const title = `${payload.label} · Inspect Ground`;
+
+  const line =
+    payload.blockedResponse?.message ||
+    (
+      payload.readoutBridgeResolved
+        ? 'Descriptor-only Ground Condition Read bridge is available for this target.'
+        : 'This target is selectable as a descriptor, but it does not create runtime action execution or receipt production.'
+    );
+
+  const wroteTitle = writeText(mountPoints.publicReadoutTitle, title);
+  const wroteLine = writeText(mountPoints.publicReadoutLine, line);
+
+  const wrotePanel = writeJson(mountPoints.inspectionPanel, payload, {
+    maxDepth: 7,
+    maxArrayLength: 96
+  });
+
+  return Boolean(wroteTitle || wroteLine || wrotePanel);
 }
 
 export function createTargetButtonDescriptor(target) {
@@ -1891,6 +1567,7 @@ export function createTargetButtonDescriptor(target) {
     selectable: target.selectable === true,
     inspectable: target.inspectable === true,
     descriptorOnly: true,
+    publicRouteControlOnly: true,
     domMutationClaim: false,
     gameplayExecutionClaim: false,
     runtimeReceiptPersistence: false
@@ -1898,7 +1575,10 @@ export function createTargetButtonDescriptor(target) {
 }
 
 export function renderHEarthTargetList(mountPoints, selectedObjectId) {
-  if (!mountPoints?.targetList || !globalThis.document) return false;
+  const documentRef =
+    mountPoints?.targetList?.ownerDocument || globalThis.document || null;
+
+  if (!mountPoints?.targetList || !documentRef) return false;
 
   const targetList = mountPoints.targetList;
   targetList.textContent = '';
@@ -1907,7 +1587,7 @@ export function renderHEarthTargetList(mountPoints, selectedObjectId) {
     if (!target || target.targetResolved !== true) return;
 
     const descriptor = createTargetButtonDescriptor(target);
-    const button = globalThis.document.createElement(descriptor.tagName);
+    const button = documentRef.createElement(descriptor.tagName);
 
     button.type = 'button';
     button.className = descriptor.className;
@@ -1922,14 +1602,10 @@ export function renderHEarthTargetList(mountPoints, selectedObjectId) {
     }
 
     button.addEventListener('click', () => {
-      const nextObjectId = target.objectId;
-      const nextStatus = setRouteBootstrapStatus({
-        selectedObjectId: nextObjectId
+      selectHEarthPublicTarget({
+        mountPoints,
+        objectId: target.objectId
       });
-
-      renderHEarthTargetList(mountPoints, nextObjectId);
-      renderHEarthInspectionPanel(mountPoints, nextObjectId);
-      renderHEarthRouteStatus(mountPoints, nextStatus);
     });
 
     targetList.appendChild(button);
@@ -1938,60 +1614,57 @@ export function renderHEarthTargetList(mountPoints, selectedObjectId) {
   return true;
 }
 
-export function renderHEarthInspectionPanel(mountPoints, objectId) {
-  if (!mountPoints?.inspectionPanel) return false;
+export function selectHEarthPublicTarget({
+  mountPoints,
+  objectId
+} = {}) {
+  const selectedObjectId = objectId || H_EARTH_DEFAULT_SELECTED_OBJECT_ID;
 
-  const selectedObjectId =
-    objectId ||
-    latestRouteBootstrapStatus.selectedObjectId ||
-    'OBJ_002_FOREGROUND_WET_SAND';
+  const nextStatus = setRouteBootstrapStatus({
+    selectedObjectId
+  });
 
-  const target = getSelectableTarget(selectedObjectId);
-  const classification = getControllerTargetClassification(selectedObjectId);
-  const actionBridge = resolveInspectGroundControllerBridge(selectedObjectId);
-  const readoutBridge = resolveGroundConditionReadBridge(selectedObjectId);
-
-  const blockedResponse =
-    actionBridge?.contextOnlyBlockResponse ||
-    actionBridge?.waterAtmosphericContextResponse?.blockResponse ||
-    actionBridge?.secondarySurfaceContextResponse ||
-    null;
-
-  writeJson(
-    mountPoints.inspectionPanel,
-    Object.freeze({
-      selectedObjectId,
-      label: target?.label || selectedObjectId,
-      classification,
-      selectable: target?.selectable === true,
-      inspectable: target?.inspectable === true,
-      actionBridgeResolved: actionBridge?.bridgeResolved === true,
-      readoutBridgeResolved: readoutBridge?.bridgeResolved === true,
-      firstAction: 'Inspect Ground',
-      firstReadout: 'Ground Condition Read',
-      firstReceipt: 'H_EARTH_GROUND_INSPECTION_RECEIPT',
-      blockedResponse,
-      descriptorOnly: true,
-      runtimeActionExecutionClaim: false,
-      readoutProductionClaim: false,
-      receiptCreationClaim: false,
-      runtimeReceiptPersistence: false,
-      visualPassClaim: false,
-      validationClaim: false,
-      productionClaim: false,
-      matrixCollapse: false
-    }),
-    { maxDepth: 7, maxArrayLength: 96 }
+  const selectedTargetCardUpdated = renderHEarthSelectedTargetCard(
+    mountPoints,
+    selectedObjectId
   );
 
-  return true;
+  const compactReadoutRendered = renderHEarthPublicReadout(
+    mountPoints,
+    selectedObjectId
+  );
+
+  renderHEarthTargetList(mountPoints, selectedObjectId);
+
+  renderHEarthRouteStatus(mountPoints, {
+    ...nextStatus,
+    selectedTargetCardUpdated,
+    compactReadoutRendered
+  });
+
+  return Object.freeze({
+    selected: true,
+    selectedObjectId,
+    selectedTargetCardUpdated,
+    compactReadoutRendered,
+    descriptorOnly: true,
+    runtimeActionExecutionClaim: false,
+    receiptCreationClaim: false,
+    runtimeReceiptPersistence: false,
+    matrixCollapse: false,
+    boundary: H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS
+  });
 }
 
 export function bindHEarthInspectionControls(mountPoints) {
   if (!mountPoints) {
     return Object.freeze({
       targetListBound: false,
+      inspectionPanelRendered: false,
+      selectedTargetCardUpdated: false,
+      compactReadoutRendered: false,
       inspectGroundControlBound: false,
+      controllerReady: false,
       reason: 'MISSING_MOUNT_POINTS',
       boundary: H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS
     });
@@ -1999,10 +1672,16 @@ export function bindHEarthInspectionControls(mountPoints) {
 
   const selectedObjectId =
     latestRouteBootstrapStatus.selectedObjectId ||
-    'OBJ_002_FOREGROUND_WET_SAND';
+    H_EARTH_DEFAULT_SELECTED_OBJECT_ID;
 
   const targetListBound = renderHEarthTargetList(mountPoints, selectedObjectId);
-  const inspectionPanelRendered = renderHEarthInspectionPanel(
+
+  const selectedTargetCardUpdated = renderHEarthSelectedTargetCard(
+    mountPoints,
+    selectedObjectId
+  );
+
+  const compactReadoutRendered = renderHEarthPublicReadout(
     mountPoints,
     selectedObjectId
   );
@@ -2013,55 +1692,10 @@ export function bindHEarthInspectionControls(mountPoints) {
     mountPoints.inspectGroundAction.addEventListener('click', () => {
       const currentObjectId =
         latestRouteBootstrapStatus.selectedObjectId ||
-        'OBJ_002_FOREGROUND_WET_SAND';
+        H_EARTH_DEFAULT_SELECTED_OBJECT_ID;
 
-      const actionBridge = resolveInspectGroundControllerBridge(currentObjectId);
-      const readoutBridge = resolveGroundConditionReadBridge(currentObjectId);
-
-      const displayPayload = Object.freeze({
-        event: 'Inspect Ground',
-        selectedObjectId: currentObjectId,
-        actionBridge,
-        readoutBridge,
-        descriptorOnly: true,
-        runtimeActionExecutionClaim: false,
-        receiptCreationClaim: false,
-        runtimeReceiptPersistence: false,
-        visualPassClaim: false,
-        validationClaim: false,
-        productionClaim: false,
-        matrixCollapse: false
-      });
-
-      writeJson(mountPoints.inspectionPanel, displayPayload, {
-        maxDepth: 8,
-        maxArrayLength: 128
-      });
-
-      writeJson(
-        mountPoints.debug,
-        Object.freeze({
-          ...latestRouteBootstrapStatus,
-          sourceCanonLatticeExposure:
-            getSourceCanonLatticeExposureReceipt(),
-          livePublicRendererReceiptHandoff:
-            buildHEarthLivePublicRendererReceiptHandoff(latestRouteBootstrapStatus),
-          livePublicRendererReceiptHandoffRead:
-            readHEarthLivePublicRendererReceiptHandoff(),
-          lastInspectGroundDescriptor: displayPayload,
-          spatialDiagnosticReceipt:
-            buildHEarthSpatialDiagnosticReceipt(latestRouteBootstrapStatus),
-          latticeScope: summarizeHEarthLatticeScope(),
-          operationalReportSourceSummary:
-            buildHEarthOperationalReportSourceSummary(latestRouteBootstrapStatus)
-        }),
-        { maxDepth: 8, maxArrayLength: 128 }
-      );
-
-      renderHEarthSpatialDiagnosticSurfaces(
-        mountPoints,
-        latestRouteBootstrapStatus
-      );
+      renderHEarthPublicReadout(mountPoints, currentObjectId);
+      renderHEarthRouteStatus(mountPoints, latestRouteBootstrapStatus);
     });
 
     inspectGroundControlBound = true;
@@ -2069,18 +1703,23 @@ export function bindHEarthInspectionControls(mountPoints) {
 
   return Object.freeze({
     targetListBound,
-    inspectionPanelRendered,
+    inspectionPanelRendered: Boolean(mountPoints.inspectionPanel),
+    selectedTargetCardUpdated,
+    compactReadoutRendered,
     inspectGroundControlBound,
     controllerReady: Boolean(
       targetListBound ||
-      inspectionPanelRendered ||
+      compactReadoutRendered ||
+      selectedTargetCardUpdated ||
       inspectGroundControlBound
     ),
     descriptorOnly: true,
+    publicRouteControlOnly: true,
     gameplayExecutionClaim: false,
     runtimeReceiptPersistence: false,
     validationClaim: false,
-    matrixCollapse: false
+    matrixCollapse: false,
+    boundary: H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS
   });
 }
 
@@ -2180,8 +1819,118 @@ export function attemptHEarthRendererMount(mountPoints, options = {}) {
   }
 }
 
+export function renderHEarthRouteStatus(
+  mountPoints,
+  status = latestRouteBootstrapStatus
+) {
+  if (!mountPoints) return false;
+
+  writeText(mountPoints.statusNode, status.statusLevel);
+
+  if (mountPoints.fallbackNode) {
+    const fallbackMessage = status.bootstrapFallbackActive
+      ? `H-Earth bootstrap fallback active: ${status.failureCodes.join(', ')}`
+      : status.bootstrapReadyDescriptorOnlyNoRendererMountApi
+        ? 'H-Earth descriptor bootstrap ready. Renderer mount skipped because canon renderer mount API is missing.'
+        : status.bootstrapReadyCandidateOnly
+          ? 'H-Earth DOM/CSS-3D candidate bootstrap ready. Renderer mount receipt confirmed mounted.'
+          : 'H-Earth route bootstrap status pending.';
+
+    writeText(mountPoints.fallbackNode, fallbackMessage);
+  }
+
+  if (mountPoints.routeRoot) {
+    removeClass(mountPoints.routeRoot, 'h-earth-3d-boot-ready');
+    removeClass(mountPoints.routeRoot, 'h-earth-3d-boot-fallback');
+    removeClass(mountPoints.routeRoot, 'h-earth-3d-boot-error');
+
+    if (
+      status.bootstrapReadyCandidateOnly ||
+      status.bootstrapReadyDescriptorOnlyNoRendererMountApi
+    ) {
+      addClass(mountPoints.routeRoot, 'h-earth-3d-boot-ready');
+    } else if (status.bootstrapFallbackActive) {
+      addClass(mountPoints.routeRoot, 'h-earth-3d-boot-fallback');
+    } else {
+      addClass(mountPoints.routeRoot, 'h-earth-3d-boot-error');
+    }
+
+    setNodeDataset(mountPoints.routeRoot, 'hEarthStatusLevel', status.statusLevel);
+
+    setNodeDataset(
+      mountPoints.routeRoot,
+      'hEarthRendererMounted',
+      String(status.rendererMounted === true)
+    );
+
+    setNodeDataset(
+      mountPoints.routeRoot,
+      'hEarthDiagnosticRoute',
+      H_EARTH_3D_INDEX_CONTRACT.diagnosticRoute
+    );
+
+    setNodeDataset(
+      mountPoints.routeRoot,
+      'hEarthPublicBootstrapOnly',
+      'true'
+    );
+
+    setNodeDataset(
+      mountPoints.routeRoot,
+      'hEarthStructuralBaselineStatus',
+      status.structuralPipelineBaselineLock?.status || ''
+    );
+
+    setNodeDataset(
+      mountPoints.routeRoot,
+      'hEarthNextDiagnosticDomain',
+      status.structuralPipelineBaselineLock?.nextDiagnosticDomain || ''
+    );
+  }
+
+  if (mountPoints.diagnosticLink) {
+    mountPoints.diagnosticLink.setAttribute(
+      'href',
+      H_EARTH_3D_INDEX_CONTRACT.diagnosticRoute
+    );
+  }
+
+  if (mountPoints.debug) {
+    writeJson(
+      mountPoints.debug,
+      Object.freeze({
+        ...status,
+        publicBootstrapOnly: true,
+        diagnosticRoute: H_EARTH_3D_INDEX_CONTRACT.diagnosticRoute,
+        compactReceipt: buildHEarthRouteBootstrapReceipt(status),
+        rendererMountReceiptSummary:
+          summarizeRendererMountReceipt(status.rendererMountReceipt),
+        livePublicRendererReceiptHandoff:
+          buildHEarthLivePublicRendererReceiptHandoff(status),
+        livePublicRendererReceiptHandoffRead:
+          readHEarthLivePublicRendererReceiptHandoff(),
+        livePublicRendererReceiptHandoffWrite:
+          status.livePublicRendererReceiptHandoffWrite || null,
+        structuralPipelineBaselineLock:
+          status.structuralPipelineBaselineLock ||
+          buildHEarthStructuralPipelineBaselineLock(status),
+        diagnosticTransitionTarget:
+          H_EARTH_3D_DIAGNOSTIC_TRANSITION_TARGET,
+        diagnosticWallEmbedded: false,
+        rawSpatialEvidenceEmbedded: false,
+        receiptWallEmbedded: false,
+        copySurfaceEmbedded: false,
+        visualCompositionAuditEmbedded: false
+      }),
+      { maxDepth: 7, maxArrayLength: 120 }
+    );
+  }
+
+  return true;
+}
+
 export function initializeHEarthRoute(options = {}) {
-  const rootDocument = options.document || globalThis.document;
+  const rootDocument = getDocumentFromOptions(options);
   const chain = verifyHEarthRouteBoundChain();
   const mountPoints = resolveHEarthRouteMountPoints(rootDocument);
   const rendererMountApi = getRendererMountApi();
@@ -2230,33 +1979,40 @@ export function initializeHEarthRoute(options = {}) {
       rendererMountSkipReason:
         H_EARTH_3D_ROUTE_FAILURE_CODES.BOOTSTRAP_FALLBACK_ACTIVE,
       rendererMountReceipt: null,
-      spatialDiagnosticsExposed: false,
-      advancedRawEvidenceExposed: false,
-      latticeScopeStatusExposed: false
+      diagnosticRouteLinked: Boolean(mountPoints.diagnosticLink)
     });
 
     const failedHandoffWrite =
       writeHEarthLivePublicRendererReceiptHandoff(failedStatus);
 
-    const failedStatusWithHandoff = setRouteBootstrapStatus({
+    const failedBaselineLock =
+      buildHEarthStructuralPipelineBaselineLock(failedStatus);
+
+    const failedStatusWithReceipts = setRouteBootstrapStatus({
       ...failedStatus,
       livePublicRendererReceiptHandoff:
         failedHandoffWrite.handoff,
       livePublicRendererReceiptHandoffWrite:
-        failedHandoffWrite
+        failedHandoffWrite,
+      structuralPipelineBaselineLock:
+        failedBaselineLock
     });
 
-    renderHEarthRouteStatus(mountPoints, failedStatusWithHandoff);
+    renderHEarthRouteStatus(mountPoints, failedStatusWithReceipts);
 
     return Object.freeze({
       initialized: false,
-      status: failedStatusWithHandoff,
+      status: failedStatusWithReceipts,
       mountPoints,
       chain,
+      publicBootstrapOnly: true,
+      diagnosticRoute: H_EARTH_3D_INDEX_CONTRACT.diagnosticRoute,
       livePublicRendererReceiptHandoff:
         failedHandoffWrite.handoff,
       livePublicRendererReceiptHandoffWrite:
         failedHandoffWrite,
+      structuralPipelineBaselineLock:
+        failedBaselineLock,
       boundary: H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS
     });
   }
@@ -2268,7 +2024,6 @@ export function initializeHEarthRoute(options = {}) {
   );
 
   const warningCodes = [];
-  const runtimeFailureCodes = [];
 
   if (rendererMount.rendererMountSkipped && rendererMount.rendererMountSkipReason) {
     warningCodes.push(rendererMount.rendererMountSkipReason);
@@ -2281,6 +2036,8 @@ export function initializeHEarthRoute(options = {}) {
   ) {
     warningCodes.push(rendererMount.rendererMountSkipReason);
   }
+
+  const runtimeFailureCodes = [];
 
   if (
     rendererMount.rendererMountApiConfirmed === true &&
@@ -2309,14 +2066,6 @@ export function initializeHEarthRoute(options = {}) {
           .BOOTSTRAP_READY_DESCRIPTOR_ONLY_NO_RENDERER_MOUNT_API
       : rendererMount.statusLevel;
 
-  const spatialDiagnosticsExposed = Boolean(
-    mountPoints.spatialSummary ||
-    mountPoints.composedFramePayload ||
-    mountPoints.compositorReceiptPayload ||
-    mountPoints.rendererPlacementPayload ||
-    mountPoints.environmentPlacementPayload
-  );
-
   const nextStatus = setRouteBootstrapStatus({
     chainReady: chain.chainReady,
     domReady: mountPoints.strictRequiredFound,
@@ -2325,14 +2074,18 @@ export function initializeHEarthRoute(options = {}) {
       rendererMount.rendererMountApiConfirmed &&
       Boolean(mountPoints.rendererMount) &&
       rendererMount.rendererMounted === true,
+
     bootstrapReadyCandidateOnly: candidateReady,
     bootstrapReadyDescriptorOnlyNoRendererMountApi: descriptorReadyNoMount,
     bootstrapFallbackActive:
       finalStatusLevel ===
       H_EARTH_3D_ROUTE_BOOTSTRAP_STATUS_LEVELS.BOOTSTRAP_FALLBACK_ACTIVE,
+
     statusLevel: finalStatusLevel,
+
     failureCodes: Object.freeze(runtimeFailureCodes),
     warningCodes: Object.freeze(warningCodes),
+
     rendererMountApiConfirmed: rendererMount.rendererMountApiConfirmed,
     rendererDestroyApiConfirmed: rendererMount.rendererDestroyApiConfirmed,
     rendererMountAttempted: rendererMount.rendererMountAttempted,
@@ -2343,51 +2096,61 @@ export function initializeHEarthRoute(options = {}) {
     rendererMountReceipt: rendererMount.rendererMountReceipt,
     rendererApiSource: rendererMount.rendererApiSource,
     rendererDestroyApiSource: rendererMount.rendererDestroyApiSource,
+
     routeRootFound: Boolean(mountPoints.routeRoot),
     statusNodeFound: Boolean(mountPoints.statusNode),
     fallbackNodeFound: Boolean(mountPoints.fallbackNode),
     rendererMountNodeFound: Boolean(mountPoints.rendererMount),
+
     targetListBound: controllerBinding.targetListBound,
     inspectGroundControlBound: controllerBinding.inspectGroundControlBound,
+    selectedTargetCardUpdated: controllerBinding.selectedTargetCardUpdated,
+    compactReadoutRendered: controllerBinding.compactReadoutRendered,
     debugStatusExposed: Boolean(mountPoints.debug),
-    spatialDiagnosticsExposed,
-    advancedRawEvidenceExposed: spatialDiagnosticsExposed,
-    latticeScopeStatusExposed: true
+    diagnosticRouteLinked: Boolean(mountPoints.diagnosticLink)
   });
 
   const livePublicRendererReceiptHandoffWrite =
     writeHEarthLivePublicRendererReceiptHandoff(nextStatus);
 
-  const nextStatusWithHandoff = setRouteBootstrapStatus({
+  const statusWithHandoff = setRouteBootstrapStatus({
     ...nextStatus,
     livePublicRendererReceiptHandoff:
       livePublicRendererReceiptHandoffWrite.handoff,
     livePublicRendererReceiptHandoffWrite
   });
 
-  renderHEarthRouteStatus(mountPoints, nextStatusWithHandoff);
+  const structuralPipelineBaselineLock =
+    buildHEarthStructuralPipelineBaselineLock(statusWithHandoff);
+
+  const finalStatus = setRouteBootstrapStatus({
+    ...statusWithHandoff,
+    structuralPipelineBaseline:
+      structuralPipelineBaselineLock.preservedBaseline,
+    structuralPipelineBaselineLock
+  });
+
+  renderHEarthRouteStatus(mountPoints, finalStatus);
 
   return Object.freeze({
     initialized: true,
-    status: nextStatusWithHandoff,
+    status: finalStatus,
     mountPoints,
     chain,
     controllerBinding,
     rendererMount,
+    compactReceipt: buildHEarthRouteBootstrapReceipt(finalStatus),
+    publicReadout: buildHEarthPublicReadoutPayload(finalStatus.selectedObjectId),
     livePublicRendererReceiptHandoff:
       livePublicRendererReceiptHandoffWrite.handoff,
     livePublicRendererReceiptHandoffWrite,
-    spatialDiagnosticReceipt:
-      buildHEarthSpatialDiagnosticReceipt(nextStatusWithHandoff),
-    spatialDiagnosticEvidenceBundle:
-      buildHEarthSpatialDiagnosticEvidenceBundle(nextStatusWithHandoff),
-    sourceCanonLatticeExposure:
-      getSourceCanonLatticeExposureReceipt(),
-    latticeScope: summarizeHEarthLatticeScope(),
-    operationalReportSourceSummary:
-      buildHEarthOperationalReportSourceSummary(nextStatusWithHandoff),
+    structuralPipelineBaselineLock,
+    diagnosticTransitionTarget:
+      H_EARTH_3D_DIAGNOSTIC_TRANSITION_TARGET,
     runtimeFailureCodes: Object.freeze(runtimeFailureCodes),
     renderInputSelector: selectHEarthRenderInput,
+    publicBootstrapOnly: true,
+    diagnosticRoute: H_EARTH_3D_INDEX_CONTRACT.diagnosticRoute,
     boundary: H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS
   });
 }
@@ -2395,7 +2158,7 @@ export function initializeHEarthRoute(options = {}) {
 export function destroyHEarthRoute(options = {}) {
   const destroyApi = getRendererDestroyApi();
   const mountPoints = resolveHEarthRouteMountPoints(
-    options.document || globalThis.document
+    getDocumentFromOptions(options)
   );
 
   let rendererDestroyed = false;
@@ -2412,9 +2175,11 @@ export function destroyHEarthRoute(options = {}) {
         boundary: H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS
       });
 
-      rendererDestroyed = isRendererDestroyReceiptDestroyed(rendererDestroyReceipt);
+      rendererDestroyed =
+        isRendererDestroyReceiptDestroyed(rendererDestroyReceipt);
     } catch (error) {
-      rendererDestroyError = error instanceof Error ? error.message : String(error);
+      rendererDestroyError =
+        error instanceof Error ? error.message : String(error);
       rendererDestroyed = false;
     }
   }
@@ -2423,7 +2188,8 @@ export function destroyHEarthRoute(options = {}) {
     bootstrapReadyCandidateOnly: false,
     bootstrapReadyDescriptorOnlyNoRendererMountApi: false,
     bootstrapFallbackActive: false,
-    statusLevel: H_EARTH_3D_ROUTE_BOOTSTRAP_STATUS_LEVELS.BOOTSTRAP_NOT_STARTED,
+    statusLevel:
+      H_EARTH_3D_ROUTE_BOOTSTRAP_STATUS_LEVELS.BOOTSTRAP_NOT_STARTED,
     rendererMounted: false,
     rendererMountAttempted: false,
     rendererMountSkipped: true,
@@ -2439,23 +2205,27 @@ export function destroyHEarthRoute(options = {}) {
     rendererMountError: rendererDestroyError,
     targetListBound: false,
     inspectGroundControlBound: false,
-    spatialDiagnosticsExposed: false,
-    advancedRawEvidenceExposed: false,
-    latticeScopeStatusExposed: false
+    selectedTargetCardUpdated: false,
+    compactReadoutRendered: false
   });
 
   const destroyHandoffWrite =
     writeHEarthLivePublicRendererReceiptHandoff(nextStatus);
 
-  const nextStatusWithHandoff = setRouteBootstrapStatus({
+  const destroyBaselineLock =
+    buildHEarthStructuralPipelineBaselineLock(nextStatus);
+
+  const nextStatusWithReceipts = setRouteBootstrapStatus({
     ...nextStatus,
     livePublicRendererReceiptHandoff:
       destroyHandoffWrite.handoff,
     livePublicRendererReceiptHandoffWrite:
-      destroyHandoffWrite
+      destroyHandoffWrite,
+    structuralPipelineBaselineLock:
+      destroyBaselineLock
   });
 
-  renderHEarthRouteStatus(mountPoints, nextStatusWithHandoff);
+  renderHEarthRouteStatus(mountPoints, nextStatusWithReceipts);
 
   return Object.freeze({
     destroyed: rendererDestroyed,
@@ -2463,89 +2233,99 @@ export function destroyHEarthRoute(options = {}) {
     rendererDestroyAttempted,
     rendererDestroyReceipt,
     rendererDestroyError,
+    rendererDestroyReceiptSummary:
+      summarizeRendererDestroyReceipt(rendererDestroyReceipt),
     livePublicRendererReceiptHandoff:
       destroyHandoffWrite.handoff,
     livePublicRendererReceiptHandoffWrite:
       destroyHandoffWrite,
-    status: nextStatusWithHandoff,
+    structuralPipelineBaselineLock:
+      destroyBaselineLock,
+    status: nextStatusWithReceipts,
+    publicBootstrapOnly: true,
+    diagnosticRoute: H_EARTH_3D_INDEX_CONTRACT.diagnosticRoute,
     boundary: H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS
   });
 }
 
-export function buildHEarthRouteBootstrapReceipt(status = latestRouteBootstrapStatus) {
+export function buildHEarthRouteBootstrapReceipt(
+  status = latestRouteBootstrapStatus
+) {
   const handoffRead = readHEarthLivePublicRendererReceiptHandoff();
+  const baselineLock =
+    status.structuralPipelineBaselineLock ||
+    buildHEarthStructuralPipelineBaselineLock(status);
 
   return Object.freeze({
-    receiptType: 'H_EARTH_3D_ROUTE_BOOTSTRAP_RECEIPT_COMPACT',
+    receiptType: 'H_EARTH_3D_PUBLIC_ROUTE_BOOTSTRAP_RECEIPT_COMPACT',
     file: '/showroom/globe/h-earth/index.js',
     contractId: H_EARTH_3D_INDEX_CONTRACT.contractId,
     renewedFrom: H_EARTH_3D_INDEX_CONTRACT.renewedFrom,
-    previousRendererCompositorRenewal:
-      H_EARTH_3D_INDEX_CONTRACT.previousRendererCompositorRenewal,
+    preservedFrom: H_EARTH_3D_INDEX_CONTRACT.preservedFrom,
     status: status.statusLevel,
+
     activationScope: H_EARTH_3D_INDEX_CONTRACT.activationScope,
-    reportPrinciple: 'Receipts prove. Reports diagnose. Scene remains primary.',
-    compactReceipt: true,
-    fullRawEvidenceEmbedded: false,
-    fullRawEvidenceAvailableThrough:
-      'buildHEarthSpatialDiagnosticEvidenceBundle(status)',
-    sourceCanonLatticeExposureReceipt:
-      getSourceCanonLatticeExposureReceipt(),
-    livePublicRendererReceiptHandoffContract:
-      H_EARTH_3D_LIVE_PUBLIC_RENDERER_RECEIPT_HANDOFF_CONTRACT,
+    activationOption: H_EARTH_3D_INDEX_CONTRACT.activationOption,
+    reportPrinciple: H_EARTH_3D_INDEX_CONTRACT.reportPrinciple,
+
+    publicBootstrapOnly: true,
+    diagnosticRouteSplit: true,
+    diagnosticRoute: H_EARTH_3D_INDEX_CONTRACT.diagnosticRoute,
+
+    diagnosticWallEmbedded: false,
+    rawSpatialEvidenceEmbedded: false,
+    advancedRawEvidenceWallEmbedded: false,
+    spatialDiagnosticReceiptEmbedded: false,
+    operationalReportSourceSummaryEmbedded: false,
+    latticeScopeReaderEmbedded: false,
+    reportCardClassificationEmbedded: false,
+    receiptWallEmbedded: false,
+    copySurfaceEmbedded: false,
+    visualCompositionAuditEmbedded: false,
+
+    movedToDiagnosticRoute: Object.freeze({
+      fullReports: true,
+      rawEvidenceSurfaces: true,
+      receiptWall: true,
+      copySurface: true,
+      visualCompositionAudit: true,
+      structuralToVisualDiagnosticTransition: true,
+      destination: H_EARTH_3D_INDEX_CONTRACT.diagnosticRoute
+    }),
+
     upstreamReceiptAvailability: Object.freeze({
-      sourceCanonLatticeExposure:
-        Boolean(getSourceCanonLatticeExposureReceipt()),
       capacity: Boolean(getCapacityReceipt()),
       environment: Boolean(getEnvironmentReceipt()),
       renderer: Boolean(getRendererReceipt()),
       compositor: Boolean(getCompositorReceipt()),
       controller: Boolean(getControllerReceipt()),
-      livePublicRendererReceiptHandoff:
-        Boolean(handoffRead.found)
+      livePublicRendererReceiptHandoff: Boolean(handoffRead.found),
+      structuralPipelineBaselineLock: Boolean(baselineLock)
     }),
+
     upstreamReceiptHeaders: Object.freeze({
-      sourceCanonLatticeExposure:
-        summarizeReceiptHeader(getSourceCanonLatticeExposureReceipt()),
       capacity: summarizeReceiptHeader(getCapacityReceipt()),
       environment: summarizeReceiptHeader(getEnvironmentReceipt()),
       renderer: summarizeReceiptHeader(getRendererReceipt()),
       compositor: summarizeReceiptHeader(getCompositorReceipt()),
       controller: summarizeReceiptHeader(getControllerReceipt())
     }),
-    environmentDescriptorCoverageSync: Object.freeze({
-      indexContractId: H_EARTH_3D_INDEX_CONTRACT.contractId,
-      environmentCompatibilityTarget:
-        H_EARTH_3D_INDEX_CONTRACT.environmentCompatibilityTarget,
-      environmentReceiptContractId: getEnvironmentReceipt()?.contractId || null,
-      environmentReceiptStatus: getEnvironmentReceipt()?.status || null,
-      descriptorCoveragePresent:
-        getEnvironmentReceipt()?.descriptorCoveragePresent === true,
-      fullDescriptorCoverage:
-        getEnvironmentReceipt()?.fullDescriptorCoverage === true,
-      descriptorCoverageRatio:
-        getEnvironmentReceipt()?.descriptorCoverageRatio ?? null,
-      missingSceneTokens:
-        Array.isArray(getEnvironmentReceipt()?.missingSceneTokens)
-          ? Object.freeze(getEnvironmentReceipt().missingSceneTokens)
-          : null
-    }),
-    spatialDiagnosticReceipt: buildHEarthSpatialDiagnosticReceipt(status),
-    latticeScope: summarizeHEarthLatticeScope(),
-    operationalReportSourceSummary:
-      buildHEarthOperationalReportSourceSummary(status),
+
     chainReady: status.chainReady,
     domReady: status.domReady,
     controllerReady: status.controllerReady,
     rendererMountReady: status.rendererMountReady,
+
     bootstrapReadyCandidateOnly: status.bootstrapReadyCandidateOnly,
     bootstrapReadyDescriptorOnlyNoRendererMountApi:
       status.bootstrapReadyDescriptorOnlyNoRendererMountApi,
     bootstrapFallbackActive: status.bootstrapFallbackActive,
+
     rendererMountApiConfirmed: status.rendererMountApiConfirmed,
     rendererDestroyApiConfirmed: status.rendererDestroyApiConfirmed,
     rendererApiSource: status.rendererApiSource,
     rendererDestroyApiSource: status.rendererDestroyApiSource,
+
     rendererMountAttempted: status.rendererMountAttempted,
     rendererMounted: status.rendererMounted,
     rendererMountSkipped: status.rendererMountSkipped,
@@ -2553,40 +2333,72 @@ export function buildHEarthRouteBootstrapReceipt(status = latestRouteBootstrapSt
     rendererMountError: status.rendererMountError,
     rendererMountReceiptSummary:
       summarizeRendererMountReceipt(status.rendererMountReceipt),
+
+    livePublicRendererReceiptHandoffContract:
+      H_EARTH_3D_LIVE_PUBLIC_RENDERER_RECEIPT_HANDOFF_CONTRACT,
     livePublicRendererReceiptHandoff:
       buildHEarthLivePublicRendererReceiptHandoff(status),
     livePublicRendererReceiptHandoffRead:
       handoffRead,
     livePublicRendererReceiptHandoffWrite:
       status.livePublicRendererReceiptHandoffWrite || null,
+
+    structuralPipelineBaselineLock:
+      baselineLock,
+    diagnosticTransitionTarget:
+      H_EARTH_3D_DIAGNOSTIC_TRANSITION_TARGET,
+
     rendererDestroyAttempted: status.rendererDestroyAttempted,
     rendererDestroyed: status.rendererDestroyed,
     rendererDestroyError: status.rendererDestroyError,
     rendererDestroyReceiptSummary:
-      summarizeRendererMountReceipt(status.rendererDestroyReceipt),
+      summarizeRendererDestroyReceipt(status.rendererDestroyReceipt),
+
     failureCodes: status.failureCodes,
     warningCodes: status.warningCodes,
+
     routeRootFound: status.routeRootFound,
     statusNodeFound: status.statusNodeFound,
     fallbackNodeFound: status.fallbackNodeFound,
     rendererMountNodeFound: status.rendererMountNodeFound,
+
     targetListBound: status.targetListBound,
     inspectGroundControlBound: status.inspectGroundControlBound,
+    selectedTargetCardUpdated: status.selectedTargetCardUpdated,
+    compactReadoutRendered: status.compactReadoutRendered,
     debugStatusExposed: status.debugStatusExposed,
-    spatialDiagnosticsExposed: status.spatialDiagnosticsExposed,
-    advancedRawEvidenceExposed: status.advancedRawEvidenceExposed,
-    latticeScopeStatusExposed: status.latticeScopeStatusExposed,
+    diagnosticRouteLinked: status.diagnosticRouteLinked,
+
+    selectedObjectId: status.selectedObjectId,
+    selectedTargetClassification:
+      getControllerTargetClassification(status.selectedObjectId) ||
+      'UNCLASSIFIED_TARGET',
+
+    publicReadoutSummary: Object.freeze({
+      action: 'Inspect Ground',
+      readout: 'Ground Condition Read',
+      receipt: 'H_EARTH_GROUND_INSPECTION_RECEIPT',
+      descriptorOnly: true,
+      runtimeActionExecutionClaim: false,
+      receiptCreationClaim: false,
+      runtimeReceiptPersistence: false
+    }),
+
     firstAction: 'Inspect Ground',
     firstReadout: 'Ground Condition Read',
     firstReceipt: 'H_EARTH_GROUND_INSPECTION_RECEIPT',
+
     ...H_EARTH_SCENE_IDENTITY,
+
     matrixSeparation: Object.freeze({
       hEarth: 'Ground-View Matrix',
       hearth: 'support/control context only',
       audralia: 'planetary-world context only',
       matrixCollapse: false
     }),
+
     boundary: H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS,
+
     forbiddenCapabilityFlagsPreserved: H_EARTH_3D_FORBIDDEN_CAPABILITY_FLAGS,
     rendererBoundaryFlagsPreserved: H_EARTH_3D_RENDER_BOUNDARY_FLAGS,
     compositionBoundaryFlagsPreserved: H_EARTH_3D_COMPOSITION_BOUNDARY_FLAGS,
@@ -2609,6 +2421,7 @@ export const H_EARTH_3D_INDEX = Object.freeze({
   id: 'H_EARTH_3D_INDEX',
   file: '/showroom/globe/h-earth/index.js',
   route: '/showroom/globe/h-earth/',
+  diagnosticRoute: '/showroom/globe/h-earth/diagnostic/',
   sourceRoot: '/h-earth-3d/',
 
   contract: H_EARTH_3D_INDEX_CONTRACT,
@@ -2616,12 +2429,31 @@ export const H_EARTH_3D_INDEX = Object.freeze({
   mountContract: H_EARTH_3D_ROUTE_MOUNT_CONTRACT,
   boundaryFlags: H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS,
   failureCodes: H_EARTH_3D_ROUTE_FAILURE_CODES,
-  bootstrapOrder: H_EARTH_3D_ROUTE_BOOTSTRAP_ORDER,
+  bootstrapOrder: Object.freeze([
+    'import capacity',
+    'import environment',
+    'import renderer',
+    'import compositor',
+    'import controller',
+    'verify receipts/contracts',
+    'resolve public route DOM mount points',
+    'initialize public route status',
+    'mount DOM/CSS-3D candidate renderer only if canon renderer API exists',
+    'read renderer mount receipt before declaring mounted',
+    'write same-origin live public renderer receipt handoff',
+    'build structural pipeline baseline lock receipt',
+    'bind safe public inspection controls',
+    'expose compact public route receipt/status',
+    'link separate diagnostic route',
+    'keep full diagnostics out of public route',
+    'prepare diagnostic transition to visual composition domain',
+    'fail safely if any required dependency is missing'
+  ]),
   statusLevels: H_EARTH_3D_ROUTE_BOOTSTRAP_STATUS_LEVELS,
-  latticeScopeStatus: H_EARTH_3D_LATTICE_SCOPE_STATUS,
-
-  sourceCanonLatticeExposureReceipt:
-    H_EARTH_3D_SOURCE_CANON_LATTICE_EXPOSURE_RECEIPT,
+  structuralPipelineBaselineStatus:
+    H_EARTH_3D_STRUCTURAL_PIPELINE_BASELINE_STATUS,
+  diagnosticTransitionTarget:
+    H_EARTH_3D_DIAGNOSTIC_TRANSITION_TARGET,
 
   livePublicRendererReceiptHandoffKey:
     H_EARTH_3D_LIVE_PUBLIC_RENDERER_RECEIPT_HANDOFF_KEY,
@@ -2644,39 +2476,51 @@ export const H_EARTH_3D_INDEX = Object.freeze({
   renderPorts: H_EARTH_3D_RENDER_PORTS,
   candidateRenderScene: H_EARTH_3D_CANDIDATE_RENDER_SCENE,
   composedCandidateFrame: H_EARTH_3D_COMPOSED_CANDIDATE_FRAME,
+
   selectableTargetRegistry: H_EARTH_3D_SELECTABLE_TARGET_REGISTRY,
   inspectionActionRouting: H_EARTH_3D_INSPECTION_ACTION_ROUTING,
   groundConditionReadBridge: H_EARTH_3D_GROUND_CONDITION_READ_BRIDGE,
   groundInspectionReceiptBridge: H_EARTH_3D_GROUND_INSPECTION_RECEIPT_BRIDGE,
   contextOnlyBlockResponses: H_EARTH_3D_CONTEXT_ONLY_BLOCK_RESPONSES,
-  secondarySurfaceContextResponses: H_EARTH_3D_SECONDARY_SURFACE_CONTEXT_RESPONSES,
-  waterAtmosphericContextResponses: H_EARTH_3D_WATER_ATMOSPHERIC_CONTEXT_RESPONSES,
+  secondarySurfaceContextResponses:
+    H_EARTH_3D_SECONDARY_SURFACE_CONTEXT_RESPONSES,
+  waterAtmosphericContextResponses:
+    H_EARTH_3D_WATER_ATMOSPHERIC_CONTEXT_RESPONSES,
   blockedBehaviorResponses: H_EARTH_3D_BLOCKED_BEHAVIOR_RESPONSES,
-  composedFrameSelectionReferences: H_EARTH_3D_COMPOSED_FRAME_SELECTION_REFERENCES,
+  composedFrameSelectionReferences:
+    H_EARTH_3D_COMPOSED_FRAME_SELECTION_REFERENCES,
 
-  getSourceCanonLatticeExposureReceipt,
   getRouteBootstrapStatus,
   getIndexReceipt,
   getRouteBootstrapReceipt,
-  getSpatialDiagnosticReceipt,
-  getSpatialDiagnosticEvidenceBundle,
-  buildHEarthSpatialDiagnosticReceipt,
-  buildHEarthSpatialDiagnosticEvidenceBundle,
-  buildHEarthOperationalReportSourceSummary,
+
   buildHEarthLivePublicRendererReceiptHandoff,
   writeHEarthLivePublicRendererReceiptHandoff,
   readHEarthLivePublicRendererReceiptHandoff,
-  renderHEarthSpatialDiagnosticSurfaces,
-  summarizeHEarthLatticeScope,
-  getLatticeScopeReceipt,
+
+  buildHEarthStructuralPipelineBaselineLock,
+  getStructuralPipelineBaselineLockReceipt,
+
   getRendererMountApi,
   getRendererDestroyApi,
   getRendererMountApiSource,
   getRendererDestroyApiSource,
   isRendererMountReceiptMounted,
   isRendererDestroyReceiptDestroyed,
+
   verifyHEarthRouteBoundChain,
   resolveHEarthRouteMountPoints,
+
+  buildHEarthPublicReadoutPayload,
+  renderHEarthSelectedTargetCard,
+  renderHEarthPublicReadout,
+  createTargetButtonDescriptor,
+  renderHEarthTargetList,
+  selectHEarthPublicTarget,
+  bindHEarthInspectionControls,
+
+  attemptHEarthRendererMount,
+  renderHEarthRouteStatus,
   initializeHEarthRoute,
   destroyHEarthRoute,
 
